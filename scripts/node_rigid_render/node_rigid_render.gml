@@ -6,25 +6,41 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	manual_ungroupable = false;
 	update_on_frame    = true;
 	
+	worldIndex = undefined;
+	worldScale = 100;
+	
+	////- Simulation
+	
+	newInput(2, nodeValue_Float( "Timestep", self, .01));
+	newInput(3, nodeValue_Int(   "Quality",  self, 8));
+	
+	////- Outputs
+	
 	newInput(0, nodeValue_Vec2("Render dimension", self, DEF_SURF));
-		
-	newInput(1, nodeValue_Bool("Round position", self, false))
+	newInput(1, nodeValue_Bool("Round position",   self, false))
+	
+	// inputs 2
 	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	
-	input_display_list = [ 1 ];
+	input_display_list = [ 
+		["Simulation", false], 2, 3, 
+		["Outputs",    false], 1,
+	];
 	
 	attributes.show_objects = true;	
+	attributes.show_debug   = false;	
+	
 	array_push(attributeEditors, "Display");
-	array_push(attributeEditors, ["Show objects", function() /*=>*/ {return attributes.show_objects}, new checkBox(function() /*=>*/ {return toggleAttribute("show_objects")})]);
+	array_push(attributeEditors, ["Show Objects", function() /*=>*/ {return attributes.show_objects}, new checkBox(function() /*=>*/ {return toggleAttribute("show_objects")})]);
+	array_push(attributeEditors, ["Debug",        function() /*=>*/ {return attributes.show_debug},   new checkBox(function() /*=>*/ {return toggleAttribute("show_debug")})]);
 	
 	static createNewInput = function(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
-		newInput(index, nodeValue("Object", self, CONNECT_TYPE.input, VALUE_TYPE.rigid, noone ))
-			.setVisible(true, true);
+		newInput(index, nodeValue("Object", self, CONNECT_TYPE.input, VALUE_TYPE.rigid, noone )).setVisible(true, true);
 		
 		array_push(input_display_list, inAmo);
 		return inputs[index];
@@ -33,60 +49,91 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	setDynamicInput(1, true, VALUE_TYPE.rigid);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var gr = is_instanceof(group, Node_Rigid_Group)? group : noone;
-		if(inline_context != noone) gr = inline_context;
-					
-		if(gr == noone) return;
-		if(!attributes.show_objects) return;
+		if(worldIndex == undefined) return;
 		
-		for( var i = 0, n = array_length(gr.nodes); i < n; i++ ) {
-			var _node = gr.nodes[i];
-			if(!is_instanceof(_node, Node_Rigid_Object)) continue;
-			var _hov = _node.drawOverlayPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-			active = active && !_hov;
+		if(attributes.show_debug) {
+			draw_set_text(_f_debug_s, fa_left, fa_top, c_white);
+			
+			var _awcount = gmlBox2D_World_Get_Awake_Body_Count(worldIndex);
+			var _tx = ui(16);
+			var _ty = ui(80);
+			draw_text_transformed(_tx, _ty, $"Object (awake): {_awcount}", ui(2), ui(2), 0);
+			
 		}
 	} 
 	
 	static update = function(frame = CURRENT_FRAME) { 
-		if(!is(inline_context, Node_Rigid_Group_Inline)) return;
-		var _dim = inline_context.dimension;
+		worldIndex = struct_try_get(inline_context, "worldIndex", undefined);
+		worldScale = struct_try_get(inline_context, "worldScale", 100);
+		if(worldIndex == undefined) return;
 		
+		var _dim    = inline_context.dimension;
+		var _rnd    = getInputData(1);
+		var _timStp = getInputData(2);
+		var _subStp = getInputData(3);
+		
+		var _outSurf    = outputs[0].getValue();
+		    _outSurf    = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		preview_surface = surface_verify(preview_surface, _dim[0], _dim[1], attrDepth());
-		
-		//if(!(TESTING && keyboard_check(ord("D"))) )
-		//	return;
-		
-		var _rnd = getInputData(1);
-		var _outSurf = outputs[0].getValue();
-		
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		outputs[0].setValue(_outSurf);
+		
+		if(IS_PLAYING) gmlBox2D_World_Step(worldIndex, _timStp, _subStp);
 		
 		surface_set_target(_outSurf);
 		DRAW_CLEAR
 		
-		if(TESTING && keyboard_check(ord("D"))) {
-			var flag = phy_debug_render_shapes | phy_debug_render_coms;
-			draw_set_color(c_white);
-			physics_world_draw_debug(flag);
-		} else {
-			for( var i = input_fix_len; i < array_length(inputs); i++ ) {
-				var objNode = getInputData(i);
-				if(!is_array(objNode)) continue;
+		var _p = [0,0];
+		
+		for( var i = input_fix_len, n = array_length(inputs); i < n; i++ ) {
+			var _objects = getInputData(i);
+			if(!is_array(_objects)) continue;
+			
+			for( var j = 0, m = array_length(_objects); j < m; j++ ) {
+				var _o = _objects[j];
+				if(!is(_o, __Box2DObject)) continue;
+					
+				var _objId   = _o.objId;
+				var _texture = _o.texture;
+				if(!is_surface(_texture)) continue;
+					
+				var xx = gmlBox2D_Object_Get_X(_objId) * worldScale;
+				var yy = gmlBox2D_Object_Get_Y(_objId) * worldScale;
+				var rr = gmlBox2D_Object_Get_Rotation(_objId);
+				    rr = -radtodeg(rr);
 				
-				for( var j = 0; j < array_length(objNode); j++ ) {
-					var _o = objNode[j];
-						
-					if(_o == noone || !instance_exists(_o)) continue;
-					if(is_undefined(_o.phy_active)) continue;
-						
-					var ixs = max(0, _o.xscale);
-					var iys = max(0, _o.yscale);
-						
-					var xx = _rnd? round(_o.phy_position_x) : _o.phy_position_x;
-					var yy = _rnd? round(_o.phy_position_y) : _o.phy_position_y;
-						
-					draw_surface_ext_safe(_o.surface, xx, yy, ixs, iys, _o.image_angle, _o.image_blend, _o.image_alpha);
+				var sw = surface_get_width(_texture);
+				var sh = surface_get_height(_texture);
+				
+				point_rotate_origin(-sw/2, -sh/2, rr, _p);
+				draw_surface_ext_safe(_texture, xx + _p[0], yy + _p[1], 1, 1, rr, c_white, 1);
+				
+				if(attributes.show_debug) {
+					var _rr = gmlBox2D_Object_Get_Rotation(_objId);
+					
+					var vx = gmlBox2D_Object_Get_Velocity_X(_objId) * 2;
+					var vy = gmlBox2D_Object_Get_Velocity_Y(_objId) * 2;
+					var vr = gmlBox2D_Object_Get_Angular_Velocity(_objId);
+					
+					var cx = gmlBox2D_Object_Get_WorldCOM_X(_objId) * worldScale;
+					var cy = gmlBox2D_Object_Get_WorldCOM_Y(_objId) * worldScale;
+					
+					var lx = gmlBox2D_Object_Get_LocalCOM_X(_objId) * worldScale;
+					var ly = gmlBox2D_Object_Get_LocalCOM_Y(_objId) * worldScale;
+					
+					var aabb = gmlBox2D_Object_Get_AABB_arr(_objId, worldScale);
+					
+					draw_set_color(c_aqua);
+					draw_line(xx, yy, xx + vx, yy + vy);
+					
+					draw_set_color(c_blue);
+					draw_line(xx, yy, xx + lengthdir_x(8, rr), yy + lengthdir_y(8, rr));
+					
+					draw_set_color(c_red);
+					draw_point(xx, yy);
+					draw_rectangle(aabb[0], aabb[1], aabb[2]-1, aabb[3]-1, true);
+					
+					draw_set_text(_f_debug_s, fa_center, fa_center, c_grey);
+					draw_text(xx, yy, _rr);
 				}
 			}
 		}
@@ -95,7 +142,6 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		physics_draw_debug();
 		
 		surface_reset_target();
-		cacheCurrentFrame(_outSurf);
 	} 
 	
 	static getPreviewValues = function() { 

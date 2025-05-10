@@ -37,7 +37,7 @@ if(winMan_isMinimized()) exit;
 				
 				case VALUE_TYPE.d3object : draw_tooltip_text($"[{__txt("3D Object")}]");                                        break;
 				case VALUE_TYPE.object   : draw_tooltip_text($"[{__txt("Object")}]");                                           break;
-				case VALUE_TYPE.rigid    : draw_tooltip_text($"[{__txt("Rigidbody Object")} (id: {content.object})]");          break;
+				case VALUE_TYPE.rigid    : draw_tooltip_text($"[{__txt("Rigidbody Object")} (id: {content})]");                 break;
 				case VALUE_TYPE.particle : draw_tooltip_text($"[{__txt("Particle Object")} (size: {array_length(content)}) ]"); break;
 				case VALUE_TYPE.sdomain  : draw_tooltip_text($"[{__txt("Domain")} (id: {content})]");                           break;
 				case VALUE_TYPE.d3vertex : draw_tooltip_text($"[{__txt("3D Vertex")} (groups: {array_length(content)})]");      break;

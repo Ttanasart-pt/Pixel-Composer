@@ -44,19 +44,7 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 	array_push(attributeEditors, ["Show objects", function() /*=>*/ {return attributes.show_objects}, new checkBox(function() /*=>*/ {return toggleAttribute("show_objects")})]);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var gr = is_instanceof(group, Node_Rigid_Group)? group : noone;
-		if(inline_context != noone) gr = inline_context;
 		
-		if(attributes.show_objects && gr != noone) 
-		for( var i = 0, n = array_length(gr.nodes); i < n; i++ ) {
-			var _node = gr.nodes[i];
-			if(!is_instanceof(_node, Node_Rigid_Object)) continue;
-			var _hov = _node.drawOverlayPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-			active = active && !_hov;
-		}
-		
-		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
-		return w_hovering;
 	}
 	
 	static step = function() {

@@ -1,13 +1,14 @@
 {
   "$GMScript":"v1",
-  "%Name":"node_rigid_global",
+  "%Name":"__rigidbody",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"node_rigid_global",
+  "name":"__rigidbody",
   "parent":{
-    "name":"old",
-    "path":"folders/nodes/data/simulation/rigidSim/old.yy",
+    "name":"rigidSim",
+    "path":"folders/nodes/data/simulation/rigidSim.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
+  "tags":[],
 }

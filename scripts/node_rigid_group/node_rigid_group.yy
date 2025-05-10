@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_rigid_group",
   "parent":{
-    "name":"rigidSim",
-    "path":"folders/nodes/data/simulation/rigidSim.yy",
+    "name":"old",
+    "path":"folders/nodes/data/simulation/rigidSim/old.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

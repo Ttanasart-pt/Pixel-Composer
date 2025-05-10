@@ -6,23 +6,21 @@ function Node_Rigid_Wall(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	manual_ungroupable	 = false;
 	
-	object = [];
+	worldIndex = undefined;
+	worldScale = 100;
+	objects    = [];
 	
+	newInput(2, nodeValue_Dimension(self));
+	newInput(3, nodeValue_Int("Collision Group", self, 1));
 	newInput(0, nodeValue_Toggle("Sides", self, 0b0010, { data : [ "T", "B", "L", "R" ] }));
+		
+	////- Physics
 		
 	newInput(1, nodeValue_Float("Contact Friction", self, 0.2));
 		
-	newInput(2, nodeValue_Dimension(self));
-	
-	newInput(3, nodeValue_Int("Collision Group", self, 1));
-		
-	input_display_list = [ 3, 0, 
+	input_display_list = [ 0, 
 		["Physics",	false],	1 
 	];
-	
-	static drawOverlayPreview = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		return drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(!is(inline_context, Node_Rigid_Group_Inline)) return;
@@ -42,65 +40,51 @@ function Node_Rigid_Wall(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static spawn = function(side = 0) {
-		if(!is(inline_context, Node_Rigid_Group_Inline)) return;
+		if(worldIndex == undefined) return undefined;
+		
 		var _dim = inline_context.dimension;
-		
 		var _frc = getInputData(1);
-		var _col = getInputData(3);
 		
-		var _dw = _dim[0] / 2;
-		var _dh = _dim[1] / 2;
-		var _x = 0, _y = 0, _w = 1, _h = 1;
+		var ww = _dim[0] / worldScale;
+		var hh = _dim[1] / worldScale;
+		
+		gmlBox2D_Object_Create_Begin(worldIndex, 0, 0);
 		
 		switch(side) {
-			case 0 : //Top	
-				_x = _dw;           _y = -50;
-				_w = _dw;           _h =  50;
-				break;
+			case 0 : gmlBox2D_Object_Create_Shape_Segment( 0,  0, ww,  0); break;
+			case 1 : gmlBox2D_Object_Create_Shape_Segment( 0, hh, ww, hh); break;
+			case 2 : gmlBox2D_Object_Create_Shape_Segment( 0,  0,  0, hh); break;
+			case 3 : gmlBox2D_Object_Create_Shape_Segment(ww,  0, ww, hh); break;
 				
-			case 1 : //Bottom	
-				_x = _dw;           _y = _dim[1] + 50;
-				_w = _dw;           _h = 50;
-				break;
-				
-			case 2 : //Left
-				_x = -50;           _y = _dh;
-				_w =  50;           _h = _dh;
-				break;
-				
-			case 3 : //Rgiht
-				_x = _dim[0] + 50;  _y = _dh;
-				_w = 50;            _h = _dh;
-				break;
 		}
 		
-		var obj = instance_create(_x, _y, oRigidbody);
+		var objId  = gmlBox2D_Object_Create_Complete();
+		var boxObj = new __Box2DObject(objId);
 		
-		var _fix = physics_fixture_create();
-		physics_fixture_set_box_shape(_fix, _w, _h);
-		physics_fixture_set_kinematic(_fix);
-		physics_fixture_set_friction(_fix, _frc);
-		physics_fixture_set_collision_group(_fix, _col);
+		gmlBox2D_Object_Set_Body_Type( objId,    0);
+		gmlBox2D_Shape_Set_Friction(   objId, _frc);
 		
-		array_push(obj.fixture, physics_fixture_bind(_fix, obj));
-		
-		return obj;
+		return boxObj;
 	}
 	
 	static update = function() {
+		worldIndex = struct_try_get(inline_context, "worldIndex", undefined);
+		worldScale = struct_try_get(inline_context, "worldScale", 100);
+		if(worldIndex == undefined) return;
+		
 		if(IS_FIRST_FRAME) reset();
 	}
 	
 	static reset = function() {
-		for( var i = 0, n = array_length(object); i < n; i++ )
-			if(instance_exists(object[i])) instance_destroy(object[i]);
+		for( var i = 0, n = array_length(objects); i < n; i++ )
+			if(instance_exists(objects[i])) instance_destroy(objects[i]);
 		
-		object = [];
+		objects = [];
 		
 		var _sids = getInputData(0);
 		
 		for( var i = 0; i < 4; i++ )
-			if(_sids & (1 << i)) array_push(object, spawn(i));
+			if(_sids & (1 << i)) array_push(objects, spawn(i));
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

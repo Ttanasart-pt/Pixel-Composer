@@ -11,6 +11,11 @@ enum RIGID_SHAPE {
 	mesh
 }
 
+function __Box2DObject(_objId = undefined, _texture = undefined) constructor {
+	objId   = _objId;
+	texture = _texture;
+}
+
 function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Object";
 	color = COLORS.node_blend_simulation;
@@ -20,74 +25,58 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	manual_ungroupable = false;
 	getInputData       = getInputDataForce;
 	
-	object = [];
+	worldIndex      = undefined;
+	worldScale      = 100;
+	objects         = [];
 	attributes.mesh = [];
 	
-	newInput(0, nodeValue_Bool("Affect by force", self, true))
-		.rejectArray()
-		.setAnimable(false);
+	newInput( 8, nodeValue_Bool(  "Spawn",               self, true, "Make object spawn when start."));
 	
-	newInput(1, nodeValue_Float("Weight", self, 0.5))
-		.rejectArray()
-		.setAnimable(false);
+	////- Physics
 	
-	newInput(2, nodeValue_Float("Contact friction", self, 0.2))
-		.rejectArray()
-		.setAnimable(false);
+	newInput(12, nodeValue_Int(    "Collision Group",     self, 1));
+	newInput( 0, nodeValue_Bool(   "Affect by Force",     self, true));
+	newInput( 1, nodeValue_Float(  "Mass",                self, 10));
+	newInput( 2, nodeValue_Slider( "Friction",            self, 0.2));
+	newInput( 3, nodeValue_Slider( "Air Resistance",      self, 0.0));
+	newInput( 4, nodeValue_Slider( "Rotation Resistance", self, 0.1));
+	newInput(13, nodeValue_Slider( "Bounciness",          self, 0.2));
 	
-	newInput(3, nodeValue_Float("Air resistance", self, 0.2))
-		.rejectArray()
-		.setAnimable(false);
+	////- Shape
 	
-	newInput(4, nodeValue_Float("Rotation resistance", self, 0.2))
-		.rejectArray()
-		.setAnimable(false);
+	newInput( 6, nodeValue_Surface(     "Texture", self));
+	newInput( 5, nodeValue_Enum_Scroll( "Shape",   self,  0, [ new scrollItem("Box",    s_node_shape_rectangle, 0), 
+	                                                           new scrollItem("Circle", s_node_shape_circle,    0), 
+	                                                           new scrollItem("Custom", s_node_shape_misc,      1) ]));
+	newInput( 9, nodeValue_Trigger(     "Generate mesh",       self )).setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() /*=>*/ {return generateAllMesh()} });
+	newInput(10, nodeValue_Slider(      "Mesh expansion",      self, 0, [ -2, 2, 0.1 ]));
+	newInput(11, nodeValue_Bool(        "Add pixel collider",  self, true));
 	
-	newInput(5, nodeValue_Enum_Scroll("Shape", self,  0, [ new scrollItem("Box",    s_node_shape_rectangle, 0), 
-	                                                       new scrollItem("Circle", s_node_shape_circle,    0), 
-	                                                       new scrollItem("Custom", s_node_shape_misc,      1) ]))
-		.rejectArray()
-		.setAnimable(false);
+	////- Transform
 	
-	newInput(6, nodeValue_Surface("Texture", self))
-		.setAnimable(false);
-	
-	newInput(7, nodeValue_Vec2("Start position", self, [ 16, 16 ]))
-		.setAnimable(false);
-	
-	newInput(8, nodeValue_Bool("Spawn", self, true, "Make object spawn when start."))
-		.rejectArray()
-		.setAnimable(false);
-	
-	newInput(9, nodeValue_Trigger("Generate mesh", self ))
-		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() /*=>*/ {return generateAllMesh()} });
-	
-	newInput(10, nodeValue_Float("Mesh expansion", self, 0))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ -2, 2, 0.1 ] })
-		.rejectArray()
-		.setAnimable(false);
-	
-	newInput(11, nodeValue_Bool("Add pixel collider", self, true))
-		.rejectArray()
-		.setAnimable(false);
+	newInput( 7, nodeValue_Vec2(        "Start position",      self, [ 16, 16 ]));
 		
-	newInput(12, nodeValue_Int("Collision group", self, 1))
-		.rejectArray()
+	// inputs 14
 		
-	newOutput(0, nodeValue_Output("Object", self, VALUE_TYPE.rigid, object));
+	newOutput(0, nodeValue_Output("Object", self, VALUE_TYPE.rigid, objects));
+	
+	array_foreach(inputs, function(inp, ind) /*=>*/ { 
+		if(ind == 6) inp.setAnimable(false);
+		else         inp.setAnimable(false).rejectArray();
+	})
 	
 	input_display_list = [ 8, 
-		["Physics",	   true], 12, 0, 1, 2, 3, 4, 
+		["Physics",	  false], 12, 0, 1, 2, 3, 4, 13, 
 		["Shape",	  false], 6, 5, 9, 10, 11, 
 		["Transform", false], 7,
 	];
 	
-	static newMesh = function(index) {
-		var mesh = struct_try_get(attributes, "mesh", []);
-		mesh[index] = [ [ 0,  0], 
-						[32,  0], 
-						[32, 32], 
-						[ 0, 32] ];
+	static newMesh = function(_index) {
+		var mesh     = struct_try_get(attributes, "mesh", []);
+		mesh[_index] = [ [ 0,  0], 
+						 [32,  0], 
+						 [32, 32], 
+						 [ 0, 32] ];
 		attributes.mesh = mesh;
 	}
 	newMesh(0);
@@ -95,7 +84,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	tools = [];
 	
 	mesh_tools = [
-		new NodeTool( "Mesh edit",		THEME.mesh_tool_edit ),
+		new NodeTool( "Mesh edit",		THEME.mesh_tool_edit   ),
 		new NodeTool( "Anchor remove",  THEME.mesh_tool_delete ),
 	];
 		
@@ -129,7 +118,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		if(is_array(_tex)) _tex = array_safe_get_fast(_tex, index);
 		
-		if(is_instanceof(_tex, SurfaceAtlas))
+		if(is(_tex, SurfaceAtlas))
 			_tex = _tex.getSurface();
 		
 		if(!is_surface(_tex)) return;
@@ -363,85 +352,22 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	////- Draw
 	
-	static drawOverlayPreviewSingle = function(_i, _x, _y, _s, _pr_x, _pr_y, _tex_s) {
-		var meshes = attributes.mesh;
-		var _shp   = getInputData(5);
-		
-		var ww = surface_get_width_safe(_tex_s);
-		var hh = surface_get_height_safe(_tex_s);
-		var _tex = _tex_s;
-		
-		if(is_instanceof(_tex_s, SurfaceAtlas)) {
-			_tex = _tex_s.getSurface();
-			_pr_x += _tex_s.x * _s;
-			_pr_y += _tex_s.y * _s;
-			
-		} else {
-			_pr_x -= ww * _s / 2;
-			_pr_y -= hh * _s / 2;
-		}
-		
-		if(_shp == 2 && array_length(meshes) > _i) {
-			draw_set_color(is_convex? COLORS._main_accent : COLORS._main_value_negative);
-				
-			var _m = meshes[_i];
-			var _l = array_length(_m);
-					
-			for( var i = 0; i < _l; i++ ) {
-				var _px0 = _m[i][0];
-				var _py0 = _m[i][1];
-				var _px1 = _m[safe_mod(i + 1, _l)][0];
-				var _py1 = _m[safe_mod(i + 1, _l)][1];
-						
-				_px0 = _pr_x + _px0 * _s;
-				_py0 = _pr_y + _py0 * _s;
-				_px1 = _pr_x + _px1 * _s;
-				_py1 = _pr_y + _py1 * _s;
-						
-				draw_line_width(_px0, _py0, _px1, _py1, 1);
-			}
-		}
-			
-		draw_surface_ext_safe(_tex, _pr_x, _pr_y, _s, _s, 0, c_white, 0.5);
-	}
-	
-	static drawOverlayPreview = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _pos = getInputData(7);	
-		var _tex = getInputData(6);
-		
-		var _pr_x = _x + _pos[0] * _s;
-		var _pr_y = _y + _pos[1] * _s;
-			
-		if(is_array(_tex)) {
-			for( var i = 0, n = array_length(_tex); i < n; i++ ) 
-				drawOverlayPreviewSingle(i, _x, _y, _s, _pr_x, _pr_y, _tex[i]);
-		} else 
-			drawOverlayPreviewSingle(0, _x, _y, _s, _pr_x, _pr_y, _tex);
-			
-		InputDrawOverlay(inputs[7].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
-		return w_hovering;
-	}
-	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var gr = is_instanceof(group, Node_Rigid_Group)? group : noone;
+		var gr = is(group, Node_Rigid_Group)? group : noone;
 		if(inline_context != noone) gr = inline_context;
 		if(gr == noone) return;
 		
 		InputDrawOverlay(inputs[7].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		
-		if(previewing == 0) {
-			for( var i = 0, n = array_length(gr.nodes); i < n; i++ ) {
-				var _node = gr.nodes[i];
-				if(!is_instanceof(_node, Node_Rigid_Object)) continue;
-				var _hov = _node.drawOverlayPreview(active, _x, _y, _s, _mx, _my, _snx, _sny);
-				active = active && _hov;
-			}
-			return active;
-		}
-		
 		var _shp = getInputData(5);
 		var _tex = getInputData(6);
+		var _pos = getInputData(7);
 		var _dim = surface_get_dimension(_tex);
+		
+		if(previewing == 0) {
+			_x = _x + (_pos[0] - _dim[0] / 2) * _s;
+			_y = _y + (_pos[1] - _dim[1] / 2) * _s;
+		}
 		
 		draw_set_color(COLORS._main_accent);
 		switch(_shp) {
@@ -552,160 +478,67 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	////- Rigidbody
 	
-	static fixtureCreate = function(fixture, object, dx = 0, dy = 0) {
-		var _mov	  = getInputData(0);
-		var _den	  = getInputData(1);
-		var _cnt_frc  = getInputData(2);
-		var _air_frc  = getInputData(3);
-		var _rot_frc  = getInputData(4);
-		var collIndex = getInputData(12);
+	static spawn = function(_index = 0, _object = noone) {
+		if(worldIndex == undefined) return undefined;
 		
-		if(!_mov) {
-			physics_fixture_set_kinematic(fixture);
-			_den = 0;
-		}
-		
-		physics_fixture_set_density(fixture, _den);
-		physics_fixture_set_friction(fixture, _cnt_frc);
-		physics_fixture_set_linear_damping(fixture, _air_frc);
-		physics_fixture_set_angular_damping(fixture, _rot_frc);
-		physics_fixture_set_awake(fixture, true);
-		physics_fixture_set_collision_group(fixture, collIndex);
-		
-		array_push(object.fixture, physics_fixture_bind_ext(fixture, object, dx, dy));
-		physics_fixture_delete(fixture);
-	}
-	
-	static spawn = function(index = 0, object = noone) {
 		var _shp  = getInputData(5);
 		var _tex  = getInputData(6);
 		var _spos = getInputData(7);
 		
+		gmlBox2D_Object_Create_Begin(worldIndex, _spos[0] / worldScale, _spos[1] / worldScale);
+		
 		if(is_array(_tex)) { 
-			index = safe_mod(index, array_length(_tex)); 
-			_tex = array_safe_get_fast(_tex, index); 
+			_index = safe_mod(_index, array_length(_tex)); 
+			_tex   = array_safe_get_fast(_tex, _index); 
 		}
 		
+		if(is(_tex, SurfaceAtlas))
+			_tex = _tex.getSurface();
+			
 		var ww = surface_get_width_safe(_tex);
 		var hh = surface_get_height_safe(_tex);
-		var sw = ww, sh = hh;
 		
-		var ox = _spos[0];
-		var oy = _spos[1];
-		
-		if(is_instanceof(_tex, SurfaceAtlas)) {
-			ox += _tex.x;
-			oy += _tex.y;
-			sw  = 0;
-			sh  = 0;
-			
-			_tex = _tex.getSurface();
-		}
-		
-		if(object == noone) {
-			object = instance_create_depth(ox - sw / 2, oy - sh / 2, 0, oRigidbody);
-			object.surface = _tex;
-			
-		} else if(instance_exists(object)) {
-			for( var i = 0, n = array_length(object.fixture); i < n; i++ )
-				physics_remove_fixture(object, object.fixture[i]);
-			object.fixture = [];
-			
-		} else 
-			return noone;
-		
-		if(_shp == 0) {
-			var fixture = physics_fixture_create();
-			
-			physics_fixture_set_box_shape(fixture, ww / 2, hh / 2);
-			
-			fixtureCreate(fixture, object, ww / 2, hh / 2);
-			
-			object.type   = RIGID_SHAPE.box;
-			object.width  = ww;
-			object.height = hh;
-			
-		} else if(_shp == 1) {
-			var fixture = physics_fixture_create();
-			var rr = min(ww, hh) / 2;
-			
-			physics_fixture_set_circle_shape(fixture, rr);
-			
-			fixtureCreate(fixture, object, rr, rr);
-			
-			object.type   = RIGID_SHAPE.circle;
-			object.radius = rr;
-			
-		} else if(_shp == 2) {
-			var meshes = attributes.mesh;
-			if(array_safe_get_fast(meshes, index, noone) == noone)
-				return noone;
+		switch(_shp) {
+			case 0 : gmlBox2D_Object_Create_Shape_Box((ww / 2) / worldScale, (hh / 2) / worldScale); break;
+			case 1 : gmlBox2D_Object_Create_Shape_Circle(min(ww, hh) / 2 / worldScale); break;
 				
-			var mesh = meshes[index];
-			var cx   = 0, cy   = 0;
-			var cmx  = 0, cmy  = 0;
-			
-			var len = array_length(mesh), _side = 0;
-			is_convex = true;
-			for( var i = 0; i < len; i++ ) {
-				var _px0 = mesh[safe_mod(i + 0, len)][0];
-				var _py0 = mesh[safe_mod(i + 0, len)][1];
-				var _px1 = mesh[safe_mod(i + 1, len)][0];
-				var _py1 = mesh[safe_mod(i + 1, len)][1];
-				var _px2 = mesh[safe_mod(i + 2, len)][0];
-				var _py2 = mesh[safe_mod(i + 2, len)][1];
-				
-				var side = cross_product(_px0, _py0, _px1, _py1, _px2, _py2);
-				if(_side != 0 && sign(_side) != sign(side)) 
-					is_convex = false;
-				_side = side;
-				
-				cx += _px0;
-				cy += _py0;
-			}
-			
-			cx /= len;
-			cy /= len;
-			
-			if(!is_convex) return object;
-			if(len < 3)    return object;
-				
-			if(len <= 8) {
-				var fixture = physics_fixture_create();
-				physics_fixture_set_polygon_shape(fixture);
-				
-				for( var i = 0; i < len; i++ ) {
-					var _px0 = mesh[i][0];
-					var _py0 = mesh[i][1];
+			case 2 : 
+				var meshes = attributes.mesh;
+				if(array_safe_get_fast(meshes, _index, noone) == noone) return undefined;
 					
-					physics_fixture_add_point(fixture, _px0, _py0);
+				var mesh = meshes[_index];
+				var len  = array_length(mesh);
+				var buff = buffer_create(8 * 2 * len, buffer_fixed, 8);
+				
+				buffer_to_start(buff);
+				for(var i = 0; i < len; i++) {
+					buffer_write(buff, buffer_f64, mesh[i][0] / worldScale);
+					buffer_write(buff, buffer_f64, mesh[i][1] / worldScale);
 				}
 				
-				fixtureCreate(fixture, object, -1, -1);
-				
-			} else {
-				for( var i = 0; i < len; i++ ) {
-					var fixture = physics_fixture_create();
-					physics_fixture_set_polygon_shape(fixture);
-					
-					var _px0 = mesh[safe_mod(i + 0, len)][0];
-					var _py0 = mesh[safe_mod(i + 0, len)][1];
-					var _px1 = mesh[safe_mod(i + 1, len)][0];
-					var _py1 = mesh[safe_mod(i + 1, len)][1];
-					
-					physics_fixture_add_point(fixture,   cx,   cy);
-					physics_fixture_add_point(fixture, _px0, _py0);
-					physics_fixture_add_point(fixture, _px1, _py1);
-				
-					fixtureCreate(fixture, object, -1, -1);
-				}
-			}
-			
-			object.type   = RIGID_SHAPE.mesh;
+				gmlBox2D_Object_Create_Shape_Polygon(buffer_get_address(buff), len, 0);
+				buffer_delete(buff);
+				break;
 		}
 		
-		object.node = self;
-		return object;
+		var objId  = gmlBox2D_Object_Create_Complete(); 
+		var boxObj = new __Box2DObject(objId, _tex);
+		
+		var _mov	  = getInputData(0);
+		var _weig     = getInputData(1);
+		var _cnt_frc  = getInputData(2);
+		var _air_res  = getInputData(3);
+		var _rot_frc  = getInputData(4);
+		var _bouncy   = getInputData(13);
+		var collIndex = getInputData(12);
+		
+		gmlBox2D_Object_Set_Fixed_Angle( objId, false);
+		gmlBox2D_Object_Set_Body_Type(   objId, _mov? 2 : 0);
+		gmlBox2D_Object_Set_Damping(     objId, _air_res, _rot_frc);
+		gmlBox2D_Shape_Set_Friction(     objId, _cnt_frc);
+		gmlBox2D_Shape_Set_Restitution(  objId, _bouncy);
+		
+		return boxObj;
 	}
 	
 	static step = function() {
@@ -727,28 +560,24 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		}
 	}
 	
-	static update = function(frame = CURRENT_FRAME) {
+	static update = function(_frame = CURRENT_FRAME) {
+		worldIndex = struct_try_get(inline_context, "worldIndex", undefined);
+		worldScale = struct_try_get(inline_context, "worldScale", 100);
+		if(worldIndex == undefined) return;
+		
 		if(IS_FIRST_FRAME) reset();
-		outputs[0].setValue(object);
+		
+		outputs[0].setValue(objects);
 	}
 	
 	static reset = function() { 
-		var _tex = getInputData(6);
-		
-		for( var i = 0, n = array_length(object); i < n; i++ ) {
-			if(instance_exists(object[i]))
-				instance_destroy(object[i]);
-		}
-		object = [];
-		
+		var _tex  = getInputData(6);
 		var _spwn = getInputData(8);
+		
+		objects = [];
 		if(!_spwn) return;
 		
-		if(is_array(_tex)) {
-			for( var i = 0, n = array_length(_tex); i < n; i++ )
-				object[i] = spawn(i);
-		} else 
-			object = [ spawn() ];
+		objects = array_create_ext(is_array(_tex)? array_length(_tex) : 1, function(i) /*=>*/ {return spawn(i)});
 	}
 	
 	static getGraphPreviewSurface = function() /*=>*/ {return getInputData(6)};
