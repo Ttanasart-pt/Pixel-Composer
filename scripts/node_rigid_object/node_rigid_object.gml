@@ -43,9 +43,9 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput( 5, nodeValue_Enum_Scroll( "Shape",   self,  0, [ new scrollItem("Box",    s_node_shape_rectangle, 0), 
 	                                                           new scrollItem("Circle", s_node_shape_circle,    0), 
 	                                                           new scrollItem("Custom", s_node_shape_misc,      1) ]));
-	newInput( 9, nodeValue_Trigger(     "Generate mesh",       self )).setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() /*=>*/ {return generateAllMesh()} });
-	newInput(10, nodeValue_Slider(      "Mesh expansion",      self, 0, [ -2, 2, 0.1 ]));
-	newInput(11, nodeValue_Bool(        "Add pixel collider",  self, true));
+	newInput( 9, nodeValue_Trigger(     "Generate Mesh",       self )).setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() /*=>*/ {return generateAllMesh()} });
+	newInput(10, nodeValue_Slider(      "Mesh Expansion",      self, 0, [ -2, 2, 0.1 ]));
+	newInput(11, nodeValue_Bool(        "Add Pixel for Empty", self, true));
 	
 	////- Transform
 	

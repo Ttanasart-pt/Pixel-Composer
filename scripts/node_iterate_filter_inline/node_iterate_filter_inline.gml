@@ -6,8 +6,8 @@ function Node_Iterate_Filter_Inline(_x, _y, _group = noone) : Node_Collection_In
 	input_node  = noone;
 	output_node = noone;
 	
-	input_node_type  = Node_Iterator_Filter_Inline_Input;
-	output_node_type = Node_Iterator_Filter_Inline_Output;
+	input_node_type  = [ Node_Iterator_Filter_Inline_Input ];
+	output_node_types = [ Node_Iterator_Filter_Inline_Output ];
 	
 	iteration_count  = 0;
 	iterated         = 0;

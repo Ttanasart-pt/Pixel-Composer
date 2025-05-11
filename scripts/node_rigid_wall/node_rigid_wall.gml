@@ -2,7 +2,7 @@ function Node_Rigid_Wall(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	name  = "Wall";
 	color = COLORS.node_blend_simulation;
 	icon  = THEME.rigidSim;
-	setDimension(96, 96);
+	setDimension(96, 48);
 	
 	manual_ungroupable	 = false;
 	
@@ -16,10 +16,15 @@ function Node_Rigid_Wall(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 	////- Physics
 		
-	newInput(1, nodeValue_Float("Contact Friction", self, 0.2));
+	newInput(1, nodeValue_Float(  "Contact Friction", self, 0.2));
+	newInput(4, nodeValue_Slider( "Bounciness",       self, 0.2));
 		
+	// input 5
+	
+	newOutput(0, nodeValue_Output("Object", self, VALUE_TYPE.rigid, objects));
+	
 	input_display_list = [ 0, 
-		["Physics",	false],	1 
+		["Physics",	false],	1, 4, 
 	];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
@@ -44,6 +49,7 @@ function Node_Rigid_Wall(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		var _dim = inline_context.dimension;
 		var _frc = getInputData(1);
+		var _res = getInputData(4);
 		
 		var ww = _dim[0] / worldScale;
 		var hh = _dim[1] / worldScale;
@@ -63,6 +69,7 @@ function Node_Rigid_Wall(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		gmlBox2D_Object_Set_Body_Type( objId,    0);
 		gmlBox2D_Shape_Set_Friction(   objId, _frc);
+		gmlBox2D_Shape_Set_Restitution(objId, _res);
 		
 		return boxObj;
 	}
@@ -73,12 +80,10 @@ function Node_Rigid_Wall(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		if(worldIndex == undefined) return;
 		
 		if(IS_FIRST_FRAME) reset();
+		outputs[0].setValue(objects);
 	}
 	
 	static reset = function() {
-		for( var i = 0, n = array_length(objects); i < n; i++ )
-			if(instance_exists(objects[i])) instance_destroy(objects[i]);
-		
 		objects = [];
 		
 		var _sids = getInputData(0);

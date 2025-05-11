@@ -21,10 +21,11 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput( 1, nodeValue_Int(         "Spawn Delay",      self, 4, "Frames delay between each particle spawn." ));
 	newInput(51, nodeValue_Int(         "Burst Duration",   self, 1 ));
 	newInput( 2, nodeValue_Range(       "Spawn Amount",     self, [ 2, 2 ], { linked : true })).setTooltip("Amount of particle spawn in that frame.");
-	newInput( 4, nodeValue_Enum_Scroll( "Spawn Source",     self, 0, [ "Area Inside", "Area Border", "Map", "Path" ] ));
+	newInput( 4, nodeValue_Enum_Scroll( "Spawn Source",     self, 0, [ "Area Inside", "Area Border", "Map", "Path", "Direct Data" ] ));
 	newInput( 3, nodeValue_Area(        "Spawn Area",       self, DEF_AREA_REF )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
 	newInput(30, nodeValue_Surface(     "Distribution Map", self));
 	newInput(55, nodeValue_PathNode(    "Spawn Path",       self));
+	newInput(62, nodeValue_Vector(      "Distribution Data", self, [])).setArrayDepth(1);
 	newInput(24, nodeValue_Enum_Button( "Distribution",     self, 1, [ "Uniform", "Random" ]));
 	newInput(52, nodeValue_Float(       "Uniform Period",   self, 4 ));
 	newInput( 5, nodeValue_Range(       "Lifespan",         self, [ 20, 30 ] ));
@@ -102,7 +103,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput(31, nodeValue_Surface("Atlas",      self, [])).setArrayDepth(1);
 	newInput(48, nodeValue_Trigger("Reset Seed", self )).setDisplay(VALUE_DISPLAY.button, { name: "Trigger" })
 	
-	// inputs 62
+	// inputs 63
 	
 	array_foreach(inputs, function(i) /*=>*/ {return i.rejectArray()}, 1);
 	input_len = array_length(inputs);
@@ -204,6 +205,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var _distrib    	= getInputData( 4);
 		var _dist_map   	= getInputData(30);
 		var _dist_path   	= getInputData(55);
+		var _dist_data      = getInputData(62);
 		var _scatter    	= getInputData(24);
 		var _spawn_period   = getInputData(52);
 		
@@ -254,7 +256,9 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		random_set_seed(seed); seed += 1000;
 		var _amo = irandom_range(_spawn_amount[0], _spawn_amount[1]);
+		
 		if(_distrib == 2) _posDist = get_points_from_dist(_dist_map, _amo, seed);
+		if(_distrib == 4) _amo     = array_length(_dist_data);
 		
 		for( var i = 0; i < _amo; i++ ) {
 			parts_runner = clamp(parts_runner, 0, array_length(parts) - 1);
@@ -310,6 +314,12 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 					
 					xx = _p.x;
 					yy = _p.y;
+					
+				} else if(_distrib == 4) {
+					var _p = _dist_data[i];
+					
+					xx = _p[0];
+					yy = _p[1];
 				}
 				
 			} else {
@@ -568,6 +578,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			inputs[ 3].setVisible(_dist != 3);
 			inputs[30].setVisible(_dist == 2, _dist == 2);
 			inputs[55].setVisible(_dist == 3, _dist == 3);
+			inputs[63].setVisible(_dist == 4, _dist == 4);
 			
 			inputs[35].setVisible(_turn[0] != 0 && _turn[1] != 0);
 			inputs[36].setVisible(_turn[0] != 0 && _turn[1] != 0);

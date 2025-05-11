@@ -12,7 +12,7 @@ function Node_VFX_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 	newInput(1, nodeValue_Dimension(self))
 		.rejectArray();
 	
-	output_node_type   = Node_VFX_Renderer;
+	output_node_types   = [ Node_VFX_Renderer ];
 	input_display_list = [ 1, 0 ]
 	
 	is_simulation      = true;

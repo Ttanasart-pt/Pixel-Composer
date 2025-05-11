@@ -12,8 +12,8 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	group_hover_al = 0;
 	selectable     = false;
 	
-	input_node_type  = noone;
-	output_node_type = noone;
+	input_node_type   = [];
+	output_node_types = [];
 	
 	add_point = false;
 	point_x   = 0;
@@ -86,9 +86,11 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		var _rad = 6;
 		var _stp = 30;
 		
-		var _nx0 = is_instanceof(_node, input_node_type)?  _node.x + _node.w / 2 : _node.x - 32 + _rad;
+		__temp_node = _node;
+		
+		var _nx0 = array_any(input_node_type,   function(n) /*=>*/ {return is(__temp_node, n)})? _node.x + _node.w / 2 : _node.x - 32 + _rad;
 		var _ny0 = _node.y - 32 + _rad;
-		var _nx1 = is_instanceof(_node, output_node_type)? _node.x + _node.w / 2 : _node.x + _node.w + 32 - _rad;
+		var _nx1 = array_any(output_node_types, function(n) /*=>*/ {return is(__temp_node, n)})? _node.x + _node.w / 2 : _node.x + _node.w + 32 - _rad;
 		var _ny1 = _node.y + _node.h + 32 - _rad;
 		
 		for( var i =   0; i <=  90; i += _stp ) _vertex[_ind++] = [ _nx1 + lengthdir_x(_rad, i), _ny0 + lengthdir_y(_rad, i) ];
@@ -359,12 +361,11 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		
         if(!modifiable)
             return false;
+           
+        __temp_node = junc.node;
             
-        if(is_instanceof(junc.node, input_node_type) && junc.connect_type == CONNECT_TYPE.input)
-            return false;
-            
-        if(is_instanceof(junc.node, output_node_type) && junc.connect_type == CONNECT_TYPE.output)
-            return false;
+        if(array_any(input_node_type,   function(n) /*=>*/ {return is(__temp_node, n)}) && junc.connect_type == CONNECT_TYPE.input)  return false;
+        if(array_any(output_node_types, function(n) /*=>*/ {return is(__temp_node, n)}) && junc.connect_type == CONNECT_TYPE.output) return false;
 		
 		return true;
 	}

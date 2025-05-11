@@ -31,7 +31,6 @@ function Node_Rigid_Variable(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		if(worldIndex == undefined) return;
 		
 		var objs = getInputData(0);
-		outputs[0].setValue(objs);
 		
 		var _get = [];
 		var _val = [];

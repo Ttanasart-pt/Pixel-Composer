@@ -138,19 +138,25 @@
             { "label": "Groups" },
             "Node_Group_Input",
             "Node_Group_Output",
-            "Node_Rigid_Global",
             
             { "label": "RigidSim" },
+            { "label": "/Objects" },
             "Node_Rigid_Object",
             "Node_Rigid_Object_Spawner",
             "Node_Rigid_Wall",
-            "Node_Rigid_Render",
+            "Node_Rigid_Path_Collider",
+            
+            { "label": "/Modifiers" },
             "Node_Rigid_Force_Apply",
             "Node_Rigid_Activate",
             
+            { "label": "/Render" },
+            "Node_Rigid_Render",
+            
             { "label": "Variables" },
             "Node_Rigid_Variable",
-            "Node_Rigid_Override"
+            "Node_Rigid_Override",
+            "Node_Rigid_Object_Get_Collision",
         ],
         "context": ["Node_Rigid_Group", "Node_Rigid_Group_Inline"],
         "color": "node_blend_simulation"

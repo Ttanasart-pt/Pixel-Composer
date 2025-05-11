@@ -9,8 +9,8 @@
   "name":"oRigidbody",
   "overriddenProperties":[],
   "parent":{
-    "name":"rigidSim",
-    "path":"folders/nodes/data/simulation/rigidSim.yy",
+    "name":"old",
+    "path":"folders/nodes/data/simulation/rigidSim/old.yy",
   },
   "parentObjectId":null,
   "persistent":true,

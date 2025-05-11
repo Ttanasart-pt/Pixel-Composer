@@ -16,8 +16,8 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	////- Outputs
 	
-	newInput(0, nodeValue_Vec2("Render dimension", self, DEF_SURF));
-	newInput(1, nodeValue_Bool("Round position",   self, false))
+	newInput(0, nodeValue_Vec2("Render Dimension", self, DEF_SURF));
+	newInput(1, nodeValue_Bool("Round Position",   self, false))
 	
 	// inputs 2
 	
@@ -27,7 +27,7 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	input_display_list = [ 
 		["Simulation", false], 2, 3, 
-		["Outputs",    false], 1,
+		["Rendering",  false], 1,
 	];
 	
 	attributes.show_objects = true;	
@@ -117,7 +117,16 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				var sh = surface_get_height(_texture) * yscale;
 				
 				point_rotate_origin(-sw/2, -sh/2, rr, _p);
-				draw_surface_ext_safe(_texture, xx + _p[0], yy + _p[1], xscale, yscale, rr, blend, alpha);
+				
+				var dx = xx + _p[0];
+				var dy = yy + _p[1];
+				
+				if(_rnd) {
+					dx = round(dx);
+					dy = round(dy);
+				}
+				
+				draw_surface_ext_safe(_texture, dx, dy, xscale, yscale, rr, blend, alpha);
 				
 				if(attributes.show_debug) {
 					var _awa = gmlBox2D_Object_Get_Awake(_objId);

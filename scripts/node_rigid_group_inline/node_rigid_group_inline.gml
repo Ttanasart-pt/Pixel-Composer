@@ -5,7 +5,7 @@ function Node_Rigid_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inlin
 	
 	is_simulation      = true;
 	manual_ungroupable = false;
-	output_node_type   = Node_Rigid_Render;
+	output_node_types   = [ Node_Rigid_Render, Node_Rigid_Object_Get_Collision ];
 	
 	worldIndex = undefined;
 	worldScale = 100;

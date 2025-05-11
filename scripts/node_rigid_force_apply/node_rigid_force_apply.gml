@@ -14,7 +14,7 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	////- Type
 	
-	newInput(1, nodeValue_Enum_Scroll( "Force type",  self, 0, [ "Constant", "Impulse", "Torque", "Explode" ]));
+	newInput(1, nodeValue_Enum_Scroll( "Force type",  self, 0, [ "Constant", "Impulse", "Torque", "Torque Impulse", "Explode" ]));
 	newInput(6, nodeValue_Enum_Button( "Scope",       self, 0, [ "Global", "Local" ]));
 	newInput(4, nodeValue_Int(         "Apply frame", self, 0, "Frame index to apply force."));
 	newInput(2, nodeValue_Vec2(        "Position",    self, [ 0, 0 ]));
@@ -101,10 +101,10 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		var _rad = getInputData(8);
 		
 		inputs[3].setVisible(_typ == 2);
-		inputs[4].setVisible(_typ > 0);
+		inputs[4].setVisible(_typ == 1 || _typ == 3 || _typ == 4);
 		inputs[5].setVisible(_typ == 0 || _typ == 1);
-		inputs[6].setVisible(_typ != 3);
-		inputs[8].setVisible(_typ == 3);
+		inputs[6].setVisible(_typ != 4);
+		inputs[8].setVisible(_typ == 4);
 		
 		if(!is_array(_obj)) return;
 		
@@ -133,9 +133,16 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 					else          gmlBox2D_Object_Apply_Impulse_Local( _objId, fx, fy, px, py);
 					break;
 					
-				case 2 : gmlBox2D_Object_Apply_Torque(_objId, _tor * _str); break;
-					
+				case 2 : 
+					gmlBox2D_Object_Apply_Torque(_objId, _tor * _str); 
+					break;
+				
 				case 3 : 
+					if(CURRENT_FRAME != _frm) break;
+					gmlBox2D_Object_Apply_Angular_Impulse( _objId, _tor * _str); 
+					break;
+					
+				case 4 : 
 					if(CURRENT_FRAME != _frm) break;
 					
 					var cx = gmlBox2D_Object_Get_WorldCOM_X(_objId);
