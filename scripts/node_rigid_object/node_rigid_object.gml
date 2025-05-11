@@ -11,11 +11,6 @@ enum RIGID_SHAPE {
 	mesh
 }
 
-function __Box2DObject(_objId = undefined, _texture = undefined) constructor {
-	objId   = _objId;
-	texture = _texture;
-}
-
 function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Object";
 	color = COLORS.node_blend_simulation;
@@ -54,9 +49,15 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	////- Transform
 	
-	newInput( 7, nodeValue_Vec2(        "Start position",      self, [ 16, 16 ]));
+	newInput( 7, nodeValue_Vec2( "Start position", self, [ 16, 16 ]));
+	
+	////- Simulation
+	
+	newInput(14, nodeValue_Bool( "Continuous",   self, false));
+	newInput(15, nodeValue_Bool( "Fix Rotation", self, false));
+	newInput(16, nodeValue_Bool( "Sleepable",    self,  true));
 		
-	// inputs 14
+	// inputs 17
 		
 	newOutput(0, nodeValue_Output("Object", self, VALUE_TYPE.rigid, objects));
 	
@@ -66,17 +67,22 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	})
 	
 	input_display_list = [ 8, 
-		["Physics",	  false], 12, 0, 1, 2, 3, 4, 13, 
-		["Shape",	  false], 6, 5, 9, 10, 11, 
-		["Transform", false], 7,
+		["Physics",	   false], 0, 1, 2, 3, 4, 13, 
+		["Shape",	   false], 6, 5, 9, 10, 11, 
+		["Transform",  false], 7,
+		["Simulation",  true], 14, 15, 16, 
 	];
 	
 	static newMesh = function(_index) {
+		var _tex  = getInputData(6);
+		if(is_array(_tex)) _tex = array_safe_get(_tex, _index);
+		
+		var _sw = surface_get_width_safe(_tex);
+		var _sh = surface_get_height_safe(_tex);
+		
 		var mesh     = struct_try_get(attributes, "mesh", []);
-		mesh[_index] = [ [ 0,  0], 
-						 [32,  0], 
-						 [32, 32], 
-						 [ 0, 32] ];
+		mesh[_index] = [ [  0,   0], [_sw,   0], 
+						 [_sw, _sh], [  0, _sh] ];
 		attributes.mesh = mesh;
 	}
 	newMesh(0);
@@ -89,7 +95,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	];
 		
 	is_convex = true;
-	hover     = -1;
+	hover_index     = -1;
 	anchor_dragging = -1;
 	anchor_drag_sx  = -1;
 	anchor_drag_sy  = -1;
@@ -353,9 +359,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	////- Draw
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var gr = is(group, Node_Rigid_Group)? group : noone;
-		if(inline_context != noone) gr = inline_context;
-		if(gr == noone) return;
+		if(worldIndex == undefined) return;
 		
 		InputDrawOverlay(inputs[7].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		
@@ -364,7 +368,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _pos = getInputData(7);
 		var _dim = surface_get_dimension(_tex);
 		
-		if(previewing == 0) {
+		if(previewing == 0 && isNotUsingTool()) {
 			_x = _x + (_pos[0] - _dim[0] / 2) * _s;
 			_y = _y + (_pos[1] - _dim[1] / 2) * _s;
 		}
@@ -401,7 +405,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _dx1 = _x + _px1 * _s;
 			var _dy1 = _y + _py1 * _s;
 			
-			draw_line_width(_dx0, _dy0, _dx1, _dy1, hover == i + 0.5? 4 : 2);
+			draw_line_width(_dx0, _dy0, _dx1, _dy1, hover_index == i + 0.5? 4 : 2);
 			
 			if(isUsingTool(0) && distance_to_line(_mx, _my, _dx0, _dy0, _dx1, _dy1) < 6)
 				_hover = i + 0.5;
@@ -417,17 +421,16 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _dx = _x + _px * _s;
 			var _dy = _y + _py * _s;
 			
-			//draw_text(_dx, _dy - 8, i);
 			if(isNotUsingTool())
 				draw_circle_prec(_dx, _dy, 4, false)
 			else {
-				draw_sprite_colored(THEME.anchor_selector, hover == i, _dx, _dy);
+				draw_sprite_colored(THEME.anchor_selector, hover_index == i, _dx, _dy);
 				if(point_distance(_mx, _my, _dx, _dy) < 8)
 					_hover = i;
 			}
 		}
 		
-		hover = _hover;
+		hover_index = _hover;
 		
 		if(anchor_dragging > -1) {
 			var dx = anchor_drag_sx + (_mx - anchor_drag_mx) / _s;
@@ -444,24 +447,26 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			return active;
 		}
 		
-		if(hover == -1) return active;
+		if(hover_index == -1) return active;
 			
-		if(frac(hover) == 0) {
+		if(frac(hover_index) == 0) {
 			if(mouse_click(mb_left, active)) {
 				if(isUsingTool(0)) {
-					anchor_dragging = hover;
-					anchor_drag_sx  = mesh[hover][0];
-					anchor_drag_sy  = mesh[hover][1];
+					anchor_dragging = hover_index;
+					anchor_drag_sx  = mesh[hover_index][0];
+					anchor_drag_sy  = mesh[hover_index][1];
 					anchor_drag_mx  = _mx;
 					anchor_drag_my  = _my;
+					
 				} else if(isUsingTool(1)) {
 					if(array_length(mesh) > 3)
-						array_delete(mesh, hover, 1);
+						array_delete(mesh, hover_index, 1);
 				}
 			}
+			
 		} else {
 			if(mouse_click(mb_left, active)) {
-				var ind = ceil(hover);
+				var ind = ceil(hover_index);
 				ds_list_insert(lx, ind, (_mx - _x) / _s);
 				ds_list_insert(ly, ind, (_my - _y) / _s);
 				
@@ -478,14 +483,24 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	////- Rigidbody
 	
-	static spawn = function(_index = 0, _object = noone) {
+	static spawn = function(_index = 0, _position = undefined) {
 		if(worldIndex == undefined) return undefined;
 		
 		var _shp  = getInputData(5);
 		var _tex  = getInputData(6);
 		var _spos = getInputData(7);
+		var _spx, _spy;
 		
-		gmlBox2D_Object_Create_Begin(worldIndex, _spos[0] / worldScale, _spos[1] / worldScale);
+		if(_position == undefined) {
+			_spx = _spos[0] / worldScale;
+			_spy = _spos[1] / worldScale;
+			
+		} else {
+			_spx = _position[0] / worldScale;
+			_spy = _position[1] / worldScale;
+		}
+		
+		gmlBox2D_Object_Create_Begin(worldIndex, _spx, _spy, false);
 		
 		if(is_array(_tex)) { 
 			_index = safe_mod(_index, array_length(_tex)); 
@@ -498,9 +513,12 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var ww = surface_get_width_safe(_tex);
 		var hh = surface_get_height_safe(_tex);
 		
+		var ow = ww / 2 / worldScale;
+		var oh = hh / 2 / worldScale;
+		
 		switch(_shp) {
-			case 0 : gmlBox2D_Object_Create_Shape_Box((ww / 2) / worldScale, (hh / 2) / worldScale); break;
-			case 1 : gmlBox2D_Object_Create_Shape_Circle(min(ww, hh) / 2 / worldScale); break;
+			case 0 : gmlBox2D_Object_Create_Shape_Box(ow, oh);         break;
+			case 1 : gmlBox2D_Object_Create_Shape_Circle(min(ow, oh)); break;
 				
 			case 2 : 
 				var meshes = attributes.mesh;
@@ -512,8 +530,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				
 				buffer_to_start(buff);
 				for(var i = 0; i < len; i++) {
-					buffer_write(buff, buffer_f64, mesh[i][0] / worldScale);
-					buffer_write(buff, buffer_f64, mesh[i][1] / worldScale);
+					buffer_write(buff, buffer_f64, mesh[i][0] / worldScale - ow);
+					buffer_write(buff, buffer_f64, mesh[i][1] / worldScale - oh);
 				}
 				
 				gmlBox2D_Object_Create_Shape_Polygon(buffer_get_address(buff), len, 0);
@@ -531,10 +549,17 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _rot_frc  = getInputData(4);
 		var _bouncy   = getInputData(13);
 		var collIndex = getInputData(12);
+		var _conti    = getInputData(14);
+		var _fixRot   = getInputData(15);
+		var _sleep    = getInputData(16);
 		
 		gmlBox2D_Object_Set_Fixed_Angle( objId, false);
 		gmlBox2D_Object_Set_Body_Type(   objId, _mov? 2 : 0);
 		gmlBox2D_Object_Set_Damping(     objId, _air_res, _rot_frc);
+		gmlBox2D_Object_Set_Continuous(  objId, _conti);
+		gmlBox2D_Object_Set_Fixed_Angle( objId, _fixRot);
+		gmlBox2D_Object_Set_Sleepable(   objId, _sleep);
+		
 		gmlBox2D_Shape_Set_Friction(     objId, _cnt_frc);
 		gmlBox2D_Shape_Set_Restitution(  objId, _bouncy);
 		

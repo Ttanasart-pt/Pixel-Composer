@@ -894,20 +894,20 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		outputDisplayList = [];
 		
-		for( var i = 0, n = array_length(outputs); i < n; i++ )
-			outputDisplayList[i] = outputs[i];
+		for( var i = 0, n = array_length(outputs); i < n; i++ ) {
+			var jun = outputs[i];
+			if(jun.isVisible()) array_push(outputDisplayList, jun);
+		}
 			
 		for( var i = 0; i < array_length(inputs); i++ ) {
 			var jun = inputs[i].bypass_junc;
-			if(jun == noone || !jun.visible) continue;
-			array_push(outputDisplayList, jun);
+			if(jun.isVisible()) array_push(outputDisplayList, jun);
 		}
 		
-		if(attributes.outp_meta) {
-			for(var i = 0; i < array_length(junc_meta); i++) {
-				var jun = junc_meta[i];
-				if(jun.isVisible()) array_push(outputDisplayList, jun);
-			}
+		if(attributes.outp_meta) 
+		for(var i = 0; i < array_length(junc_meta); i++) {
+			var jun = junc_meta[i];
+			if(jun.isVisible()) array_push(outputDisplayList, jun);
 		}
 	}
 	

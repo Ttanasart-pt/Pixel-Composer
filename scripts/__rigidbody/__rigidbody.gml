@@ -1,3 +1,15 @@
+function __Box2DObject(_objId = undefined, _texture = undefined) constructor {
+	objId   = _objId;
+	texture = _texture;
+	
+	xscale  = 1;
+	yscale  = 1;
+	
+	blend   = ca_white;
+	alpha   = 1;
+}
+
+
 function gmlBox2D_Object_Get_AABB_arr(objectId, worldScale = 1) {
 	var b = buffer_create(8*4, buffer_fixed, 8);
 	gmlBox2D_Object_Get_AABB(objectId, buffer_get_address(b));

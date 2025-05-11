@@ -21,12 +21,14 @@ function Node_Rigid_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inlin
 	////- Simulation
 	
 	newInput(2, nodeValue_Float( "Simulation Scale", self, 50 ));
+	newInput(5, nodeValue_Bool(  "Sleepable",        self, true ));
+	newInput(6, nodeValue_Bool(  "Continuous",       self, true ));
 	
-	// inputs 5
+	// inputs 7
 	
 	input_display_list = [ 
 		["World",      false], 1, 3, 4, 
-		["Simulation", false], 2, 
+		["Simulation", false], 2, 5, 6, 
 	];
 	
 	if(NODE_NEW_MANUAL) {
@@ -46,6 +48,8 @@ function Node_Rigid_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inlin
 		var _gra    = getInputData(0);
 		var _gradir = getInputData(3);
 		var _grastr = getInputData(4);
+		var _sleep  = getInputData(5);
+		var _conti  = getInputData(6);
 		
 		if(IS_FIRST_FRAME) {
 			if(worldIndex != undefined) 
@@ -59,6 +63,8 @@ function Node_Rigid_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inlin
 		var gx = lengthdir_x(_grastr, _gradir);
 		var gy = lengthdir_y(_grastr, _gradir);
 		
-		gmlBox2D_World_Set_Gravity(worldIndex, gx, gy);
+		gmlBox2D_World_Set_Gravity(    worldIndex, gx, gy);
+		gmlBox2D_World_Set_Sleeping(   worldIndex, _sleep);
+		gmlBox2D_World_Set_Continuous( worldIndex, _conti);
 	}
 }

@@ -48,7 +48,7 @@ function Node_Rigid_Wall(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var ww = _dim[0] / worldScale;
 		var hh = _dim[1] / worldScale;
 		
-		gmlBox2D_Object_Create_Begin(worldIndex, 0, 0);
+		gmlBox2D_Object_Create_Begin(worldIndex, 0, 0, false);
 		
 		switch(side) {
 			case 0 : gmlBox2D_Object_Create_Shape_Segment( 0,  0, ww,  0); break;

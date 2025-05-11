@@ -11,8 +11,8 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	////- Simulation
 	
-	newInput(2, nodeValue_Float( "Timestep", self, .01));
-	newInput(3, nodeValue_Int(   "Quality",  self, 8));
+	newInput(2, nodeValue_Float( "Timestep (ms)", self, 10));
+	newInput(3, nodeValue_Int(   "Quality",       self,  8));
 	
 	////- Outputs
 	
@@ -54,10 +54,16 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(attributes.show_debug) {
 			draw_set_text(_f_debug_s, fa_left, fa_top, c_white);
 			
-			var _awcount = gmlBox2D_World_Get_Awake_Body_Count(worldIndex);
 			var _tx = ui(16);
 			var _ty = ui(80);
-			draw_text_transformed(_tx, _ty, $"Object (awake): {_awcount}", ui(2), ui(2), 0);
+			
+			var _count   = gmlBox2D_World_Get_Body_Count(worldIndex);
+			var _awcount = gmlBox2D_World_Get_Awake_Body_Count(worldIndex);
+			draw_text_transformed(_tx, _ty, $"Bodies: {_awcount}/{_count}", ui(2), ui(2), 0);
+			
+			_ty += ui(24);
+			var _shcount = gmlBox2D_World_Get_Shape_Count(worldIndex);
+			draw_text_transformed(_tx, _ty, $"Shapes: {_shcount}", ui(2), ui(2), 0);
 			
 		}
 	} 
@@ -77,7 +83,7 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		preview_surface = surface_verify(preview_surface, _dim[0], _dim[1], attrDepth());
 		outputs[0].setValue(_outSurf);
 		
-		if(IS_PLAYING) gmlBox2D_World_Step(worldIndex, _timStp, _subStp);
+		if(IS_PLAYING) gmlBox2D_World_Step(worldIndex, _timStp / 1000, _subStp);
 		
 		surface_set_target(_outSurf);
 		DRAW_CLEAR
@@ -96,19 +102,25 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				var _texture = _o.texture;
 				if(!is_surface(_texture)) continue;
 					
+				var xscale = _o.xscale;
+				var yscale = _o.yscale;
+				
+				var blend  = _o.blend;
+				var alpha  = _o.alpha;
+				
 				var xx = gmlBox2D_Object_Get_X(_objId) * worldScale;
 				var yy = gmlBox2D_Object_Get_Y(_objId) * worldScale;
 				var rr = gmlBox2D_Object_Get_Rotation(_objId);
 				    rr = -radtodeg(rr);
 				
-				var sw = surface_get_width(_texture);
-				var sh = surface_get_height(_texture);
+				var sw = surface_get_width(_texture)  * xscale;
+				var sh = surface_get_height(_texture) * yscale;
 				
 				point_rotate_origin(-sw/2, -sh/2, rr, _p);
-				draw_surface_ext_safe(_texture, xx + _p[0], yy + _p[1], 1, 1, rr, c_white, 1);
+				draw_surface_ext_safe(_texture, xx + _p[0], yy + _p[1], xscale, yscale, rr, blend, alpha);
 				
 				if(attributes.show_debug) {
-					var _rr = gmlBox2D_Object_Get_Rotation(_objId);
+					var _awa = gmlBox2D_Object_Get_Awake(_objId);
 					
 					var vx = gmlBox2D_Object_Get_Velocity_X(_objId) * 2;
 					var vy = gmlBox2D_Object_Get_Velocity_Y(_objId) * 2;
@@ -128,12 +140,12 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					draw_set_color(c_blue);
 					draw_line(xx, yy, xx + lengthdir_x(8, rr), yy + lengthdir_y(8, rr));
 					
-					draw_set_color(c_red);
+					draw_set_color(_awa? c_red : c_blue);
 					draw_point(xx, yy);
 					draw_rectangle(aabb[0], aabb[1], aabb[2]-1, aabb[3]-1, true);
 					
-					draw_set_text(_f_debug_s, fa_center, fa_center, c_grey);
-					draw_text(xx, yy, _rr);
+					// draw_set_text(_f_debug_s, fa_center, fa_center, c_grey);
+					// draw_text(xx, yy, _rr);
 				}
 			}
 		}
