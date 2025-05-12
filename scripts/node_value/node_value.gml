@@ -680,13 +680,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						for( var i = 0, n = array_length(animators); i < n; i++ )
 							animators[i].suffix = $" {array_safe_get_fast(global.displaySuffix_Range, i)}";
 						
-						extract_node = "Node_Vector2";
+						extract_node = "Node_Rotation_Range_Data";
 						break;
 						
 					case VALUE_DISPLAY.rotation_random :
 						editWidget = new rotatorRandom(function(val, i) /*=>*/ {return setValueInspector(val, i)});
 						
-						extract_node = "Node_Number";
+						extract_node = "Node_Rotation_Random_Data";
 						break;
 						
 					case VALUE_DISPLAY.slider :		
@@ -730,7 +730,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						for( var i = 0, n = array_length(animators); i < n; i++ )
 							animators[i].suffix = $" {array_safe_get_fast(global.displaySuffix_Padding, i)}";
 						
-						extract_node = "Node_Vector4";
+						extract_node = "Node_Padding";
 						break;
 						
 					case VALUE_DISPLAY.corner :		
@@ -739,7 +739,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						for( var i = 0, n = array_length(animators); i < n; i++ )
 							animators[i].suffix = $" {array_safe_get_fast(global.displaySuffix_Padding, i)}";
 						
-						extract_node = "Node_Vector4";
+						extract_node = "Node_Corner";
 						break;
 						
 					case VALUE_DISPLAY.puppet_control :

@@ -5,8 +5,8 @@ function Node_Rotation_Range_Data(_x, _y, _group = noone) : Node_Processor(_x, _
 	
 	////- Rotation
 	
-	newInput(0, nodeValue_Rotation( "Start", self,   0 ));
-	newInput(1, nodeValue_Rotation( "End",   self, 360 ));
+	newInput(0, nodeValue_Rotation( "Start", self,   0 )).setVisible(true, true);
+	newInput(1, nodeValue_Rotation( "End",   self, 360 )).setVisible(true, true);
 	
 	// inputs 2
 	

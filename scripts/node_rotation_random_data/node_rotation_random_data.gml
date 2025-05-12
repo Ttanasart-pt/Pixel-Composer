@@ -38,6 +38,7 @@ function Node_Rotation_Random_Data(_x, _y, _group = noone) : Node_Processor(_x, 
 		
 		if(_type == 0) {
 			inputs[1].setName("Angle");
+			inputs[1].setVisible( true,  true);
 			inputs[2].setVisible(false, false);
 			inputs[3].setVisible(false, false);
 			inputs[4].setVisible(false, false);
@@ -46,6 +47,9 @@ function Node_Rotation_Random_Data(_x, _y, _group = noone) : Node_Processor(_x, 
 		}
 		
 		_type--;
+		
+		inputs[1].setVisible( true, true);
+		inputs[2].setVisible( true, true);
 		
 		switch(_type) {
 			case 0 :

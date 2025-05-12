@@ -38,8 +38,7 @@ function rotatorRange(_onModify) : widget() constructor {
 		w = _w;
 		h = _h;
 		
-		if(!is_real(_data[0])) return;
-		if(!is_real(_data[1])) return;
+		if(array_any(_data, function(a) /*=>*/ {return !is_real(a)})) return;
 		
 		var _r  = _h;
 		var _drawRot = _w - _r > ui(64);

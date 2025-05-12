@@ -329,7 +329,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 				
 			var _lif = irandom_range(_life[0], _life[1]);
 				
-			var _rot	  = angle_random_eval(_rotation);
+			var _rot	  = angle_random_eval(is_array(_rotation[0])? _rotation[i] : _rotation);
 			var _rot_spd  = angle_random_eval(_rotation_speed);
 			var _rot_snap = _rotation_snap;
 			

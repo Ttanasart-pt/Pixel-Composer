@@ -89,6 +89,8 @@ function rotatorRandom(_onModify) : widget() constructor {
 		y = _y;
 		w = _w;
 		
+		if(array_any(_data, function(a) /*=>*/ {return !is_real(a)})) return;
+		
 		_data = array_verify(_data, 5);
 		_data[0] = clamp(_data[0], 0, ROTATOR_RANDOM_TYPE.length - 1);
 		

@@ -151,21 +151,22 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _is  = array_length(inputs);
 		var _os  = array_length(outputs);
 		
+		var _out = array_create_ext(_os, function(i) /*=>*/ {return outputs[i].getValue()});
 		var data;
-		var _out = array_create(_os);
-		for(var i = 0; i < _os; i++) _out[i] = outputs[i].getValue();
 		
 		var _surfOut = outputs[0];
-		var _skip = active_index != -1 && !inputs_data[active_index];
+		var _skip    = active_index != -1 && !inputs_data[active_index];
+		
+		if(_skip) {
+			var _skp = inputs_data[0];
+			if(inputs[0].type == VALUE_TYPE.surface)
+				_skp = process_amount == 1? surface_clone(inputs_data[0], _out[0]) : surface_array_clone(inputs_data[0]);
+			_surfOut.setValue(_skp);
+			return;
+		}
 		
 		if(process_amount == 1) {
 			current_data = inputs_data;
-			
-			if(_skip) { // skip
-				var _skp = inputs[0].type == VALUE_TYPE.surface? surface_clone(inputs_data[0], _out[0]) : inputs_data[0];
-				_surfOut.setValue(_skp);
-				return;
-			}
 			
 			if(dimension_index > -1) {
 				var _dim = getDimension();
@@ -191,52 +192,45 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			
 			return;
 		}
+			
+		var _inputs  = array_create(_is);
+		var _outputs = array_create(_os);
 		
-		if(_skip) {
-			
-			var _skp = inputs[0].type == VALUE_TYPE.surface? surface_array_clone(inputs_data[0]) : inputs_data[0];
-			_surfOut.setValue(_skp);
-			
-		} else {
-			
-			var _inputs  = array_create(_is);
-			var _outputs = array_create(_os);
-		
-			for( var l = 0; l < process_amount; l++ ) {
-				for(var i = 0; i < _is; i++) 
-					_inputs[i] = inputs_index[i][l] == -1? inputs_data[i] : inputs_data[i][inputs_index[i][l]];
-					
-				if(l == 0 || l == preview_index) current_data = _inputs;
+		for( var l = 0; l < process_amount; l++ ) {
+			for(var i = 0; i < _is; i++) 
+				_inputs[i] = inputs_index[i][l] == -1? inputs_data[i] : inputs_data[i][inputs_index[i][l]];
 				
-				var _outa = array_create(_os);
+			if(l == 0 || l == preview_index) current_data = _inputs;
+			
+			var _outa = array_create(_os);
+				
+			if(dimension_index > -1) {
+				var _dim  = getDimension(l);
+				for(var i = 0; i < _os; i++) {
+					_outa[i] = array_safe_get(_out[i], l);
 					
-				if(dimension_index > -1) {
-					var _dim  = getDimension(l);
-					for(var i = 0; i < _os; i++) {
-						_outa[i] = array_safe_get(_out[i], l);
-						
-						if(outputs[i].type != VALUE_TYPE.surface) continue;
-						_outa[i] = surface_verify(_outa[i], _dim[0], _dim[1], attrDepth());
-					}
-					
-				} else {
-					for(var i = 0; i < _os; i++)
-						_outa[i] = array_safe_get(_out[i], l);
+					if(outputs[i].type != VALUE_TYPE.surface) continue;
+					_outa[i] = surface_verify(_outa[i], _dim[0], _dim[1], attrDepth());
 				}
 				
-				if(_os == 1) {
-					data = processData(_outa[0], _inputs, l);
-					_outputs[0][l] = data;
-					
-				} else {
-					data = processData(_outa, _inputs, l);
-					for(var i = 0; i < _os; i++) _outputs[i][l] = data[i];
-				}
+			} else {
+				for(var i = 0; i < _os; i++)
+					_outa[i] = array_safe_get(_out[i], l);
 			}
 			
-			for( var i = 0, n = _os; i < n; i++ )
-				outputs[i].setValue(_outputs[i]);
+			if(_os == 1) {
+				data = processData(_outa[0], _inputs, l);
+				_outputs[0][l] = data;
+				
+			} else {
+				data = processData(_outa, _inputs, l);
+				for(var i = 0; i < _os; i++) _outputs[i][l] = data[i];
+			}
 		}
+		
+		for( var i = 0, n = _os; i < n; i++ )
+			outputs[i].setValue(_outputs[i]);
+		
 	} 
 	
 	////- Update
