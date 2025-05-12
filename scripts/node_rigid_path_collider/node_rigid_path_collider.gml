@@ -20,7 +20,7 @@ function Node_Rigid_Path_Collider(_x, _y, _group = noone) : Node(_x, _y, _group)
 	newInput(1, nodeValue_Float(  "Contact Friction", self, 0.2));
 	newInput(2, nodeValue_Slider( "Bounciness",       self, 0.2));
 		
-	// input 3
+	// inputs 4
 		
 	newOutput(0, nodeValue_Output("Object", self, VALUE_TYPE.rigid, objects));
 	
@@ -29,9 +29,25 @@ function Node_Rigid_Path_Collider(_x, _y, _group = noone) : Node(_x, _y, _group)
 		["Physics",	false],	1, 2, 
 	];
 	
+	paths = [];
+	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _path = getInputData(0);
-		if(_path && struct_has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		if(array_empty(paths)) return;
+		
+		var nx, ny;
+		var ox = paths[0][0];
+		var oy = paths[0][1];
+		
+		draw_set_color(COLORS._main_accent);
+		for( var i = 1, n = array_length(paths); i < n; i++ ) {
+			nx = paths[i][0];
+			ny = paths[i][1];
+			
+			draw_line(ox, oy, nx, ny);
+			
+			ox = nx;
+			oy = ny;
+		}
 	}
 	
 	static buildPath = function() {
@@ -51,9 +67,12 @@ function Node_Rigid_Path_Collider(_x, _y, _group = noone) : Node(_x, _y, _group)
 		var ox, oy, nx, ny;
 		var _p = new __vec2P();
 		
+		paths = array_verify(paths, _smp + 1);
+		
 		_p = _pth.getPointRatio(0, 0, _p);
 		ox = _p.x / worldScale;
 		oy = _p.y / worldScale;
+		paths[0] = [ox, oy];
 		
 		for( var i = 1; i < _smp; i++ ) {
 			var _t = clamp(i * _ismp, 0, 0.999);
@@ -61,6 +80,7 @@ function Node_Rigid_Path_Collider(_x, _y, _group = noone) : Node(_x, _y, _group)
 			
 			nx = _p.x / worldScale;
 			ny = _p.y / worldScale;
+			paths[i] = [nx, ny];
 			
 			gmlBox2D_Object_Create_Begin(worldIndex, 0, 0, false);
 			gmlBox2D_Object_Create_Shape_Segment(ox, oy, nx, ny);

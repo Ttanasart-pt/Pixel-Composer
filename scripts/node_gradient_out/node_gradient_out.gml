@@ -1,17 +1,12 @@
 function Node_Gradient_Out(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Gradient";
-	batch_output = false;
 	setDimension(96);
 	
-	newInput(0, nodeValue_Gradient("Gradient", self, new gradientObject([ ca_black, ca_white ])));
-	
-	newInput(1, nodeValue_Float("Sample", self, 0, "Position to sample a color from the gradient."))
-		.setDisplay(VALUE_DISPLAY.slider)
-		.rejectArray();
+	newInput(0, nodeValue_Gradient( "Gradient", self, new gradientObject([ ca_black, ca_white ])));
+	newInput(1, nodeValue_Slider(   "Sample",   self, 0)).setTooltip("Position to sample a color from the gradient.").rejectArray();
 	
 	newOutput(0, nodeValue_Output("Gradient", self, VALUE_TYPE.gradient, new gradientObject(ca_white) ));
-	
-	newOutput(1, nodeValue_Output("Color", self, VALUE_TYPE.color, c_white));
+	newOutput(1, nodeValue_Output("Color",    self, VALUE_TYPE.color, c_white));
 	
 	_pal = -1;
 	
@@ -19,15 +14,15 @@ function Node_Gradient_Out(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		setDimension(96, process_length[0] * 32);
 	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outData, _data, _output_index, _array_index) {
 		var pal = _data[0];
 		var pos = _data[1];
 		
-		if(!is_instanceof(pal, gradientObject)) return 0;
+		if(!is(pal, gradientObject)) return _outData;
 		
-		if(_output_index == 0) return pal;
-		if(_output_index == 1) return pal.eval(pos);
-		return 0;
+		_outData[0] = pal;
+		_outData[1] = pal.eval(pos);
+		return _outData;
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

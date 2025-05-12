@@ -1,7 +1,6 @@
 function Node_Vector_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name  = "Vector Split";
 	color = COLORS.node_blend_number;
-	batch_output = false;
 	draw_padding = 4;
 	
 	setDimension(96, 0);
@@ -29,9 +28,7 @@ function Node_Vector_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	}
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) {
-		var _arr = _data[0];
-		if(!is_array(_arr)) return _arr;
-		return array_safe_get(_arr, _output_index, 0);
+		return _data[0];
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

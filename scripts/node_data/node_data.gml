@@ -135,6 +135,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		inputs           = [];
 		outputs          = [];
 		input_bypass     = [];
+		inputm           = {};
+		
 		inputMap         = {};
 		outputMap        = {};
 		input_value_map  = {};
@@ -712,7 +714,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static newInput = function(i, j) /*=>*/ { 
 		inputs = array_verify_min(inputs, i);
 		
+		inputm[$ j.name] = j;
 		inputs[i] = j; 
+		
 		j.setIndex(i); 
 		if(j.name == "Mask") input_mask_index = i;
 		
@@ -1736,13 +1740,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		draw_name = true;
 		var _si = _s / UI_SCALE;
 		
+		var nodeC = getColor();
 		var aa = (.25 + .5 * renderActive) * (.25 + .75 * isHighlightingInGraph());
-		var cc = getColor();
 		var nh = previewable? name_height * _s : h * _s;
 		var ba = aa;
 		
 		if(_panel && _panel.node_hovering == self) ba = .1;
-		draw_sprite_stretched_ext(THEME.node_bg, 2, xx, yy, w * _s, nh, cc, ba);
+		draw_sprite_stretched_ext(THEME.node_bg, 2, xx, yy, w * _s, nh, nodeC, ba);
 		
 		var cc = renderActive? COLORS._main_text : COLORS._main_text_sub;
 		if(PREFERENCES.node_show_render_status && !rendered)
@@ -1757,11 +1761,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			aa *= .15;
 				
 		if(icon) {
-			tx += _si * 6;
-			draw_sprite_ui_uniform(icon, 0, round(tx) + 1, round(yy + nh / 2) + 1, _si, c_black,    1);
-			draw_sprite_ui_uniform(icon, 0, round(tx),     round(yy + nh / 2),     _si, icon_blend, 1);
-			tx += _si *  12;
-			tw -= _si * (12 + 6);
+			var _icS = _si * .75;
+			
+			tx += _icS * 8;
+			draw_sprite_ui_uniform(icon, 0, round(tx), round(yy + nh / 2), _icS, nodeC, .75);
+			tx += _icS *  16;
+			tw -= _icS * (16 + 6);
 		}
 		
 		var _ts  = _si * 0.275;

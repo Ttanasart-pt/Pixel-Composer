@@ -1,42 +1,26 @@
 function Node_Gradient_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Gradient Data";
-	batch_output = false;
 	setDimension(96);
 	
-	newInput(0, nodeValue_Gradient("Gradient", self, new gradientObject(ca_white)))
-		.setVisible(true, true);
+	newInput(0, nodeValue_Gradient("Gradient", self, new gradientObject(ca_white))).setVisible(true, true);
 	
-	newOutput(0, nodeValue_Output("Colors", self, VALUE_TYPE.color, [] ))
-		.setDisplay(VALUE_DISPLAY.palette);
-	
-	newOutput(1, nodeValue_Output("Positions", self, VALUE_TYPE.float, [] ));
-	outputs[1].array_depth = 1;
-	
-	newOutput(2, nodeValue_Output("Type", self, VALUE_TYPE.integer, 0 ));
+	newOutput(0, nodeValue_Output( "Colors",    self, VALUE_TYPE.color, [] )).setDisplay(VALUE_DISPLAY.palette);
+	newOutput(1, nodeValue_Output( "Positions", self, VALUE_TYPE.float, [] )).setArrayDepth(1);
+	newOutput(2, nodeValue_Output( "Type",      self, VALUE_TYPE.integer, 0 ));
 	
 	static processData_prebatch = function() {
 		setDimension(96, process_length[0] * 32);
 	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
-		var gra  = _data[0];
+	static processData = function(_outData, _data, _output_index, _array_index) {
+		gra = _data[0];
+		len = array_length(gra.keys);
 		
-		switch(_output_index) {
-			case 0 :
-				var pal = [];
-				for( var i = 0, n = array_length(gra.keys); i < n; i++ )
-					pal[i] = gra.keys[i].value;
-				return pal;
-			case 1 :
-				var pos = [];
-				for( var i = 0, n = array_length(gra.keys); i < n; i++ )
-					pos[i] = gra.keys[i].time;
-				return pos;
-			case 2 :
-				return gra.type;
-		}
+		_outData[0] = array_create_ext(len, function(i) /*=>*/ {return gra.keys[i].value});
+		_outData[1] = array_create_ext(len, function(i) /*=>*/ {return gra.keys[i].time});
+		_outData[2] = gra.type;
 		
-		return 0;
+		return _outData;
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

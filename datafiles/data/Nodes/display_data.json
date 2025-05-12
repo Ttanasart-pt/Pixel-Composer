@@ -153,7 +153,7 @@
             { "label": "/Render" },
             "Node_Rigid_Render",
             
-            { "label": "Variables" },
+            { "label": "Data" },
             "Node_Rigid_Variable",
             "Node_Rigid_Override",
             "Node_Rigid_Object_Get_Collision",

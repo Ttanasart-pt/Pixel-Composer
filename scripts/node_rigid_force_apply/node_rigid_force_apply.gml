@@ -2,13 +2,13 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	name  = "Apply Force";
 	color = COLORS.node_blend_simulation;
 	icon  = THEME.rigidSim;
-	update_on_frame = true;
+	update_on_frame    = true;
+	manual_ungroupable = false;
 	setDimension(96, 96);
 	
 	worldIndex = undefined;
 	worldScale = 100;
-	
-	manual_ungroupable	 = false;
+	forceCount = 1;
 	
 	newInput(0, nodeValue("Object", self, CONNECT_TYPE.input, VALUE_TYPE.rigid, noone)).setVisible(true, true);
 	
@@ -17,26 +17,24 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	newInput(1, nodeValue_Enum_Scroll( "Force type",  self, 0, [ "Constant", "Impulse", "Torque", "Torque Impulse", "Explode" ]));
 	newInput(6, nodeValue_Enum_Button( "Scope",       self, 0, [ "Global", "Local" ]));
 	newInput(4, nodeValue_Int(         "Apply frame", self, 0, "Frame index to apply force."));
+	newInput(9, nodeValue_Trigger(     "Trigger",     self, false));
+	
+	////- Force
+	
 	newInput(2, nodeValue_Vec2(        "Position",    self, [ 0, 0 ]));
-	
-	////- Strength
-	
 	newInput(3, nodeValue_Float(       "Torque",      self, 0));
 	newInput(5, nodeValue_Vec2(        "Force",       self, [ 0.1, 0 ]));
 	newInput(8, nodeValue_Float(       "Range",       self, 8));
 	newInput(7, nodeValue_Slider(      "Strength",    self, 1., [0, 16, 0.01]));
 	
-	// inputs 9
+	// inputs 10
 	
 	newOutput(0, nodeValue_Output("Object", self, VALUE_TYPE.rigid, noone));
 	
-	for( var i = 1, n = array_length(inputs); i < n; i++ )
-		inputs[i].rejectArray();
-	
 	input_display_list = [ 0,
-		["Type",     false], 1, 6, 4, 2, 
-		["Strength", false], 3, 5, 8, 7, 
-	]
+		["Type",  false], 1, 6, 4, 9, 
+		["Force", false], 2, 3, 5, 8, 7, 
+	];
 	
 	array_push(attributeEditors, "Display");
 	
@@ -47,8 +45,11 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	array_push(attributeEditors, ["Display scale", function() /*=>*/ {return attributes.display_scale}, textBox_Number(function(v) /*=>*/ {return setAttribute("display_scale", v)})]);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		if(forceCount != 1) return;
+		
 		var _typ = getInputData(1);
 		var _pos = getInputData(2);
+		
 		var px = _x + _pos[0] * _s;
 		var py = _y + _pos[1] * _s;
 			
@@ -83,6 +84,51 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		return w_hovering;
 	}
 	
+	static applyForce = function(_objId, _type, _scope, _position, _torque, _force, _radius, _strength) {
+		
+		var px = _position[0];
+		var py = _position[1];
+		
+		var fx = _force[0];
+		var fy = _force[1];
+		
+		switch(_type) {
+			case 0 : 
+				if(_scope == 0) gmlBox2D_Object_Apply_Force(         _objId, fx, fy, px, py);
+				else            gmlBox2D_Object_Apply_Force_Local(   _objId, fx, fy, px, py);
+				break;
+				
+			case 1 : 
+				if(_scope == 0) gmlBox2D_Object_Apply_Impulse(       _objId, fx, fy, px, py);
+				else            gmlBox2D_Object_Apply_Impulse_Local( _objId, fx, fy, px, py);
+				break;
+				
+			case 2 : 
+				gmlBox2D_Object_Apply_Torque(_objId, _torque); 
+				break;
+			
+			case 3 : 
+				gmlBox2D_Object_Apply_Angular_Impulse( _objId, _torque); 
+				break;
+				
+			case 4 : 
+				var cx = gmlBox2D_Object_Get_WorldCOM_X(_objId);
+				var cy = gmlBox2D_Object_Get_WorldCOM_Y(_objId);
+				
+				var dis = point_distance(px, py, cx, cy);
+				
+				if(dis < _radius) {
+					var dir = point_direction(px, py, cx, cy);
+					
+					var str = _strength * sqr(1 - dis / _radius);
+					var fx  = lengthdir_x(str, dir);
+					var fy  = lengthdir_y(str, dir);
+					gmlBox2D_Object_Apply_Impulse(_objId, px, py, fx, fy);
+				}
+				break;
+		}
+	}
+	
 	static update = function(frame = CURRENT_FRAME) {
 		worldIndex = struct_try_get(inline_context, "worldIndex", undefined);
 		worldScale = struct_try_get(inline_context, "worldScale", 100);
@@ -91,75 +137,51 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		var _obj = getInputData(0);
 		outputs[0].setValue(_obj);
 			
-		var _typ = getInputData(1);
-		var _pos = getInputData(2);
-		var _tor = getInputData(3);
-		var _frm = getInputData(4);
-		var _for = getInputData(5);
-		var _sco = getInputData(6);
-		var _str = getInputData(7);
-		var _rad = getInputData(8);
+		__typ  = getInputData(1);
+		__sco  = getInputData(6);
+		__frm  = getInputData(4);
+		__trig = getInputData(9);
 		
-		inputs[3].setVisible(_typ == 2);
-		inputs[4].setVisible(_typ == 1 || _typ == 3 || _typ == 4);
-		inputs[5].setVisible(_typ == 0 || _typ == 1);
-		inputs[6].setVisible(_typ != 4);
-		inputs[8].setVisible(_typ == 4);
+		__pos  = getInputData(2);
+		__tor  = getInputData(3);
+		__for  = getInputData(5);
+		__rad  = getInputData(8);
+		__str  = getInputData(7);
+		
+		inputs[6].setVisible(__typ != 4);
+		inputs[4].setVisible(__typ == 1 || __typ == 3 || __typ == 4);
+		inputs[9].setVisible(__typ == 1 || __typ == 3 || __typ == 4);
+		
+		inputs[3].setVisible(__typ == 2);
+		inputs[5].setVisible(__typ == 0 || __typ == 1);
+		inputs[8].setVisible(__typ == 4);
 		
 		if(!is_array(_obj)) return;
 		
-		var px = _pos[0] / worldScale;
-		var py = _pos[1] / worldScale;
-		
-		var fx = _for[0] * _str;
-		var fy = _for[1] * _str;
+		var doForce = __typ == 0 || __typ == 2;
+		var doImpul = CURRENT_FRAME == __frm || __trig;
 			
-		for( var i = 0, n = array_length(_obj); i < n; i++ ) {
-			var obj = _obj[i];
-			if(!is(obj, __Box2DObject)) continue;
-				
-			var _objId   = obj.objId;
-				
-			switch(_typ) {
-				case 0 : 
-					if(_sco == 0) gmlBox2D_Object_Apply_Force(         _objId, fx, fy, px, py);
-					else          gmlBox2D_Object_Apply_Force_Local(   _objId, fx, fy, px, py);
-					break;
-					
-				case 1 : 
-					if(CURRENT_FRAME != _frm) break;
-					
-					if(_sco == 0) gmlBox2D_Object_Apply_Impulse(       _objId, fx, fy, px, py);
-					else          gmlBox2D_Object_Apply_Impulse_Local( _objId, fx, fy, px, py);
-					break;
-					
-				case 2 : 
-					gmlBox2D_Object_Apply_Torque(_objId, _tor * _str); 
-					break;
-				
-				case 3 : 
-					if(CURRENT_FRAME != _frm) break;
-					gmlBox2D_Object_Apply_Angular_Impulse( _objId, _tor * _str); 
-					break;
-					
-				case 4 : 
-					if(CURRENT_FRAME != _frm) break;
-					
-					var cx = gmlBox2D_Object_Get_WorldCOM_X(_objId);
-					var cy = gmlBox2D_Object_Get_WorldCOM_Y(_objId);
-					
-					var dis = point_distance(px, py, cx, cy);
-					
-					if(dis < _rad) {
-						var dir = point_direction(px, py, cx, cy);
-						
-						var str = _str * sqr(1 - dis / _rad);
-						var fx = lengthdir_x(str, dir);
-						var fy = lengthdir_y(str, dir);
-						gmlBox2D_Object_Apply_Impulse(_objId, px, py, fx, fy);
-					}
-					break;
-			}
+		if(!doForce && !doImpul) return;
+		
+		forceCount = 1;
+		
+		if(!is_array(__pos[0])) {
+			__ppos = [ __pos[0] / worldScale, __pos[1] / worldScale ];
+			__ffor = [ __for[0] * __str,      __for[1] * __str      ];
+			__ttor = __tor * __str;
+			
+			array_foreach(_obj, function(obj) /*=>*/ { if(is(obj, __Box2DObject)) applyForce(obj.objId, __typ, __sco, __ppos, __ttor, __ffor, __rad, __str) });
+			return;
+		}
+		
+		for( var i = 0, n = array_length(__pos); i < n; i++ ) {
+			var _pos = __pos[i];
+			
+			__ppos = [ _pos[0] / worldScale, _pos[1] / worldScale ];
+			__ffor = [ __for[0] * __str,     __for[1] * __str     ];
+			__ttor = __tor * __str;
+			
+			array_foreach(_obj, function(obj) /*=>*/ { if(is(obj, __Box2DObject)) applyForce(obj.objId, __typ, __sco, __ppos, __ttor, __ffor, __rad, __str) });
 		}
 	}
 	

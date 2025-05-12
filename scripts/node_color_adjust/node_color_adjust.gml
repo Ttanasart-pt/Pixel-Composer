@@ -1,96 +1,51 @@
 function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Color Adjust";
-	batch_output = false;
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newActiveInput(11);
+	newInput(12, nodeValue_Enum_Button( "Input Type", self, 0, [ "Surface", "Color" ]));
+	newInput(15, nodeValue_Toggle(      "Channel",    self, 0b1111, { data: array_create(4, THEME.inspector_channel) }));
+	newInput( 9, nodeValue_Slider(      "Alpha",      self, 1)).setMappable(24);
+	newInput(24, nodeValue_Surface(     "Alpha map",  self)).setVisible(false, false);
 	
-	newInput(1, nodeValue_Float("Brightness", self, 0))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] })
-		.setMappable(18);
+	////- Input
 	
-	newInput(2, nodeValue_Float("Contrast",   self, 0.5))
-		.setDisplay(VALUE_DISPLAY.slider)
-		.setMappable(19);
+	newInput( 0, nodeValue_Surface( "Surface In",   self));
+	newInput( 8, nodeValue_Surface( "Mask",         self));
+	newInput(16, nodeValue_Bool(    "Invert mask",  self, false));
+	newInput(13, nodeValue_Palette( "Color",        self, array_clone(DEF_PALETTE))).setVisible(true, true);
+	newInput(17, nodeValue_Slider(  "Mask feather", self, 1, [ 1, 16, 0.1 ]));
 	
-	newInput(3, nodeValue_Float("Hue",        self, 0))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] })
-		.setMappable(20);
+	////- Brightness
 	
-	newInput(4, nodeValue_Float("Saturation", self, 0))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] })
-		.setMappable(21);
+	newInput( 1, nodeValue_Slider(  "Brightness",     self, 0, [ -1, 1, 0.01 ])).setMappable(18);
+	newInput(18, nodeValue_Surface( "Brightness map", self)).setVisible(false, false);
+	newInput( 2, nodeValue_Slider(  "Contrast",       self, 0.5)).setMappable(19);
+	newInput(19, nodeValue_Surface( "Contrast map",   self)).setVisible(false, false);
+	newInput(10, nodeValue_Slider(  "Exposure",       self, 1, [ 0, 4, 0.01 ])).setMappable(25);
+	newInput(25, nodeValue_Surface( "Exposure map",   self)).setVisible(false, false);
 	
-	newInput(5, nodeValue_Float("Value",      self, 0))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] })
-		.setMappable(22);
+	////- HSV
 	
-	newInput(6, nodeValue_Color("Blend",   self, ca_white));
+	newInput( 3, nodeValue_Slider(  "Hue",            self, 0, [ -1, 1, 0.01 ])).setMappable(20);
+	newInput(20, nodeValue_Surface( "Hue map",        self)).setVisible(false, false);
+	newInput( 4, nodeValue_Slider(  "Saturation",     self, 0, [ -1, 1, 0.01 ])).setMappable(21);
+	newInput(21, nodeValue_Surface( "Saturation map", self)).setVisible(false, false);
+	newInput( 5, nodeValue_Slider(  "Value",          self, 0, [ -1, 1, 0.01 ])).setMappable(22);
+	newInput(22, nodeValue_Surface( "Value map",      self)).setVisible(false, false);
 	
-	newInput(7, nodeValue_Float("Blend amount",  self, 0))
-		.setDisplay(VALUE_DISPLAY.slider)
-		.setMappable(23);
+	////- Color
 	
-	newInput(8, nodeValue_Surface("Mask", self));
+	newInput( 6, nodeValue_Color(       "Blend",         self, ca_white));
+	newInput(14, nodeValue_Enum_Scroll( "Blend mode",    self, 0, BLEND_TYPES));
+	newInput( 7, nodeValue_Slider(      "Blend amount",  self, 0)).setMappable(23);
+	newInput(23, nodeValue_Surface(     "Blend map",     self)).setVisible(false, false);
 	
-	newInput(9, nodeValue_Float("Alpha", self, 1))
-		.setDisplay(VALUE_DISPLAY.slider)
-		.setMappable(24);
+	// inputs 26
 	
-	newInput(10, nodeValue_Float("Exposure", self, 1))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] })
-		.setMappable(25);
+	newOutput(0, nodeValue_Output( "Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(1, nodeValue_Output( "Color out",   self, VALUE_TYPE.color, [])).setDisplay(VALUE_DISPLAY.palette);
 	
-	newInput(11, nodeValue_Bool("Active", self, true));
-		active_index = 11;
-		
-	newInput(12, nodeValue_Enum_Button("Input Type", self,  0, [ "Surface", "Color" ]));
-	
-	newInput(13, nodeValue_Palette("Color", self, array_clone(DEF_PALETTE)))
-		.setVisible(true, true);
-	
-	newInput(14, nodeValue_Enum_Scroll("Blend mode", self,  0, BLEND_TYPES));
-		
-	newInput(15, nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) }));
-	
-	newInput(16, nodeValue_Bool("Invert mask", self, false));
-	
-	newInput(17, nodeValue_Float("Mask feather", self, 1))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
-	
-	////////////////////////////////////////////////////////////////////////////////////////
-	
-	newInput(18, nodeValue_Surface("Brightness map", self))
-		.setVisible(false, false);
-	
-	newInput(19, nodeValue_Surface("Contrast map", self))
-		.setVisible(false, false);
-	
-	newInput(20, nodeValue_Surface("Hue map", self))
-		.setVisible(false, false);
-	
-	newInput(21, nodeValue_Surface("Saturation map", self))
-		.setVisible(false, false);
-	
-	newInput(22, nodeValue_Surface("Value map", self))
-		.setVisible(false, false);
-	
-	newInput(23, nodeValue_Surface("Blend map", self))
-		.setVisible(false, false);
-	
-	newInput(24, nodeValue_Surface("Alpha map", self))
-		.setVisible(false, false);
-	
-	newInput(25, nodeValue_Surface("Exposure map", self))
-		.setVisible(false, false);
-		
-	////////////////////////////////////////////////////////////////////////////////////////
-	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
-	
-	newOutput(1, nodeValue_Output("Color out", self, VALUE_TYPE.color, []))
-		.setDisplay(VALUE_DISPLAY.palette);
-	
-	input_display_list = [11, 12, 15, 9, 24, 
+	input_display_list = [ 11, 12, 15, 9, 24, 
 		["Input",		false], 0, 8, 16, 17, 13, 
 		["Brightness",	false], 1, 18, 10, 25, 2, 19, 
 		["HSV",			false], 3, 20, 4, 21, 5, 22, 
@@ -132,7 +87,7 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		else if(_type == 1) setDimension(96, process_length[13] * 32);
 	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outData, _data, _output_index, _array_index) {
 		var _bri = _data[1];
 		var _con = _data[2];
 		var _hue = _data[3];
@@ -151,12 +106,6 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		var _mskInv = _data[16];
 		var _mskFea = _data[17];
-		
-		if(_type == 0 && _output_index != 0) return [];
-		if(_type == 1 && _output_index != 1) return noone;
-		
-		var _surf     = _data[0];
-		var _baseSurf = _outSurf;
 		
 		_col = array_clone(_col);
 		
@@ -201,8 +150,13 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 				_col[i] = _c;
 			}
 			
-			return _col;
+			_outData[1] = _col;
 		}
+		
+		var _surf     = _data[0];
+		var _baseSurf = _outData[0];
+		
+		if(!is_surface(_surf)) return _outData;
 		
 		#region param
 			var sw = surface_get_width_safe(_baseSurf);
@@ -256,7 +210,8 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			surface_reset_shader();
 		#endregion
 		
-		return _outSurf;
+		_outData[0] = _baseSurf;
+		return _outData;
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

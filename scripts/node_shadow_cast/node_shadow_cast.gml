@@ -1,12 +1,24 @@
 function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Cast Shadow";
-	batch_output = false;
 	
-	newInput(0, nodeValue_Surface("Background", self));
+	newActiveInput(17);
 	
-	newInput(1, nodeValue_Surface("Solid", self));
+	////- Surfaces
 	
-	newInput(2, nodeValue_Vec2("Light Position", self, [ 0, 0 ]))
+	newInput(0, nodeValue_Surface( "Background", self));
+	newInput(1, nodeValue_Surface( "Solid",      self));
+	
+	////- BG Shadow Caster
+	
+	newInput(10, nodeValue_Bool(   "Use BG Color", self, false, "If checked, background color will be used as shadow caster."));
+	newInput(11, nodeValue_Slider( "BG Threshold", self, 0.1));
+	
+	////- Light
+	
+	newInput( 5, nodeValue_Enum_Scroll( "Light Type",      self, 0, __enum_array_gen(["Point", "Sun"], s_node_shadow_type)));
+	newInput(12, nodeValue_Slider(      "Light Intensity", self, 1, [0, 2, 0.01]));
+	newInput( 8, nodeValue_Float(       "Light Radius",    self, 16));
+	newInput( 2, nodeValue_Vec2(        "Light Position",  self, [ 0, 0 ]))
 		.setUnitRef(function(index) { 
 			var _surf = getInputData(0);
 			if(is_array(_surf) && array_length(_surf) == 0)
@@ -21,51 +33,29 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			return [ surface_get_width_safe(_surf), surface_get_height_safe(_surf) ];
 		}, VALUE_UNIT.reference);
 		
-	newInput(3, nodeValue_Float("Soft light radius", self, 1))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 2, 0.01] });
+	////- Soft Light
 	
-	newInput(4, nodeValue_Int("Light density", self, 1))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
-	
-	newInput(5, nodeValue_Enum_Scroll("Light type", self,  0, [ new scrollItem("Point", s_node_shadow_type, 0), 
-												                new scrollItem("Sun",   s_node_shadow_type, 1) ]));
-	
-	newInput(6, nodeValue_Color("Ambient color", self, cola(c_grey)));
-	
-	newInput(7, nodeValue_Color("Light color", self, ca_white));
-	
-	newInput(8, nodeValue_Float("Light radius", self, 16));
-	
-	newInput(9, nodeValue_Bool("Render solid", self, true));
-	
-	newInput(10, nodeValue_Bool("Use BG color", self, false, "If checked, background color will be used as shadow caster."));
-	
-	newInput(11, nodeValue_Float("BG threshold", self, 0.1))
-		.setDisplay(VALUE_DISPLAY.slider);
-	
-	newInput(12, nodeValue_Float("Light intensity", self, 1))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 2, 0.01] });
-	
-	newInput(13, nodeValue_Int("Banding", self, 0))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 0.1] });
-	
-	newInput(14, nodeValue_Enum_Scroll("Attenuation", self,  0, [ new scrollItem("Quadratic",			s_node_curve_type, 0),
-																  new scrollItem("Invert quadratic",	s_node_curve_type, 1),
-																  new scrollItem("Linear",			    s_node_curve_type, 2), ]))
-		.setTooltip("Control how light fade out over distance.");
-	
-	newInput(15, nodeValue_Int("Ambient occlusion", self, 0))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 0.1] });
+	newInput(4, nodeValue_ISlider( "Light Density",     self, 1, [1, 16, 0.1]));
+	newInput(3, nodeValue_Slider(  "Soft Light Radius", self, 1, [0, 2, 0.01]));
 		
-	newInput(16, nodeValue_Float("Ambient occlusion strength", self, 0.1))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 0.5, 0.001] });
+	////- Render
 	
-	newInput(17, nodeValue_Bool("Active", self, true));
-		active_index = 17;
+	newInput(13, nodeValue_ISlider(     "Banding",     self, 0, [0, 16, 0.1]));
+	newInput(14, nodeValue_Enum_Scroll( "Attenuation", self, 0, __enum_array_gen(["Quadratic", "Invert quadratic", "Linear"], s_node_curve_type)))
+		.setTooltip("Control how light fade out over distance.");
+	newInput(7, nodeValue_Color( "Light Color",   self, ca_white));
+	newInput(6, nodeValue_Color( "Ambient Color", self, cola(c_grey)));
+	newInput(9, nodeValue_Bool(  "Render Solid",  self, true));
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	////- Ambient Occlusion
 	
-	newOutput(1, nodeValue_Output("Light mask", self, VALUE_TYPE.surface, noone));
+	newInput(15, nodeValue_ISlider( "Ambient Occlusion",          self,   0, [0, 16, 0.1]));
+	newInput(16, nodeValue_Slider(  "Ambient Occlusion Strength", self, 0.1, [0, 0.5, 0.001]));
+	
+	// inputs 18
+	
+	newOutput(0, nodeValue_Output( "Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(1, nodeValue_Output( "Light mask",  self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 17, 
 		["Surfaces",		   true], 0, 1, 
@@ -96,7 +86,7 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		return w_hovering;
 	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outData, _data, _output_index, _array_index) {
 		var _bg    = _data[0];
 		var _solid = _data[1];
 		var _pos   = _data[2];
@@ -118,34 +108,38 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		
 		inputs[8].setVisible(_type == 0);
 		
-		if(!is_surface(_bg)) return _outSurf;
+		if(!is_surface(_bg)) return _outData;
 		
-		surface_set_shader(_outSurf, sh_shadow_cast);
-			shader_set_f("dimension",         surface_get_width_safe(_bg), surface_get_height_safe(_bg));
-			shader_set_2("lightPos",         _pos);
-			shader_set_color("lightAmb",     _lamb);
-			shader_set_color("lightClr",     _lclr);
-			shader_set_f("lightRadius",      _rad);
-			shader_set_f("pointLightRadius", _lrad);
-			shader_set_f("lightDensity",     _den);
-			shader_set_i("lightType",        _type);
-			shader_set_i("renderSolid",      _sol);
-			shader_set_f("lightInt",         _int);
-			shader_set_f("lightBand",        _band);
-			shader_set_f("lightAttn",        _attn);
-			shader_set_f("ao",               _ao);
-			shader_set_f("aoStr",            _ao_str);
+		for( var i = 0, n = array_length(_outData); i < n; i++ ) {
+			var _outSurf = _outData[i];
 			
-			shader_set_i("mask",             _output_index);
-			shader_set_i("bgUse",            _bg_use);
-			shader_set_f("bgThres",          _bg_thr);
-			
-			shader_set_i("useSolid",         is_surface(_solid));
-			shader_set_surface("solid",      _solid);
+			surface_set_shader(_outSurf, sh_shadow_cast);
+				shader_set_f("dimension",         surface_get_width_safe(_bg), surface_get_height_safe(_bg));
+				shader_set_2("lightPos",         _pos);
+				shader_set_color("lightAmb",     _lamb);
+				shader_set_color("lightClr",     _lclr);
+				shader_set_f("lightRadius",      _rad);
+				shader_set_f("pointLightRadius", _lrad);
+				shader_set_f("lightDensity",     _den);
+				shader_set_i("lightType",        _type);
+				shader_set_i("renderSolid",      _sol);
+				shader_set_f("lightInt",         _int);
+				shader_set_f("lightBand",        _band);
+				shader_set_f("lightAttn",        _attn);
+				shader_set_f("ao",               _ao);
+				shader_set_f("aoStr",            _ao_str);
 				
-			draw_surface_safe(_bg);
-		surface_reset_shader();
+				shader_set_i("mask",             i);
+				shader_set_i("bgUse",            _bg_use);
+				shader_set_f("bgThres",          _bg_thr);
+				
+				shader_set_i("useSolid",         is_surface(_solid));
+				shader_set_surface("solid",      _solid);
+					
+				draw_surface_safe(_bg);
+			surface_reset_shader();
+		}
 		
-		return _outSurf;
+		return _outData;
 	}
 }

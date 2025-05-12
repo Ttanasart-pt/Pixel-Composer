@@ -25,7 +25,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput( 3, nodeValue_Area(        "Spawn Area",       self, DEF_AREA_REF )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
 	newInput(30, nodeValue_Surface(     "Distribution Map", self));
 	newInput(55, nodeValue_PathNode(    "Spawn Path",       self));
-	newInput(62, nodeValue_Vector(      "Distribution Data", self, [])).setArrayDepth(1);
+	newInput(62, nodeValue_Vector(      "Spawn Data",       self, [])).setArrayDepth(1);
 	newInput(24, nodeValue_Enum_Button( "Distribution",     self, 1, [ "Uniform", "Random" ]));
 	newInput(52, nodeValue_Float(       "Uniform Period",   self, 4 ));
 	newInput( 5, nodeValue_Range(       "Lifespan",         self, [ 20, 30 ] ));
@@ -141,7 +141,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	input_display_list = [ 32, 
 		["Sprite",	   false],	    0, dynaDraw_parameter, 22, 23, 49, 26,
-		["Spawn",		true],	   27, 16, 44,  1, 51,  2,  4,  3, 30, 55, 24, __inspc(ui(6), true), 52,  5, 
+		["Spawn",		true],	   27, 16, 44,  1, 51,  2,  4,  3, 30, 55, 62, 24, __inspc(ui(6), true), 52,  5, 
 		["Movement",	true],     29, 53,  6, 18, 60, 
 		["Rotation",	true],	   15,  8,  9, 59, 61, 
 		["Scale",		true],	   10, 17, 11, 
@@ -536,6 +536,9 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		if(_src == 3) {
 			var _path = getInputData(55);
 			if(_path) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		
+		} else if(_src == 4) {
+			
 			
 		} else {
 			if(array_empty(_spr)) return;
@@ -575,10 +578,10 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			
 			inputs[24].setVisible(_dist != 2);
 			
-			inputs[ 3].setVisible(_dist != 3);
+			inputs[ 3].setVisible(_dist != 3 && _dist != 4);
 			inputs[30].setVisible(_dist == 2, _dist == 2);
 			inputs[55].setVisible(_dist == 3, _dist == 3);
-			inputs[63].setVisible(_dist == 4, _dist == 4);
+			inputs[62].setVisible(_dist == 4, _dist == 4);
 			
 			inputs[35].setVisible(_turn[0] != 0 && _turn[1] != 0);
 			inputs[36].setVisible(_turn[0] != 0 && _turn[1] != 0);
