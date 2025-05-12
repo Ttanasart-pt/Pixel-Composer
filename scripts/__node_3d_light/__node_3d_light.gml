@@ -27,7 +27,7 @@ function Node_3D_Light(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group) 
 		return light;
 	}
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) { }
+	static processData = function(_output, _data, _array_index = 0) { }
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		PROCESSOR_OVERLAY_CHECK

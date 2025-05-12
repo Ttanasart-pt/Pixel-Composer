@@ -31,7 +31,7 @@ function Node_Color_OKLCH(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		["Gamut clipping", false], inspector_info, 4, 
 	];
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _array_index) {
 		var l   = _data[0];
 		var c   = _data[1];
 		var h   = _data[2];

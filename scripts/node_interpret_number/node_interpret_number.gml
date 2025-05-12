@@ -48,7 +48,7 @@ function Node_Interpret_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		inputs[3].mappableStep();
 	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _array_index) {
 		static BATCH_SIZE = 128;
 		
 		var _val = _data[0];

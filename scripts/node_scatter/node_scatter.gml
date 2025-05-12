@@ -167,7 +167,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	////=========== PROCESS ===========
 	
-	static processData = function(_outData, _data, _output_index, _array_index) {
+	static processData = function(_outData, _data, _array_index) {
 		#region data
 			var seed       = _data[10];
 			

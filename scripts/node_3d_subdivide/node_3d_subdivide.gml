@@ -10,7 +10,7 @@ function Node_3D_Subdivide(_x, _y, _group = noone) : Node_3D_Modifier(_x, _y, _g
 		["Subdivide", false], in_mesh + 1, 
 	];
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) { 
+	static processData = function(_output, _data, _array_index = 0) { 
 		var _obj = _data[0];
 		var _trg = _data[in_mesh + 0];
 		var _sub = _data[in_mesh + 1];

@@ -62,7 +62,7 @@ function Node_Path_Trim(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		if(struct_has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
-	static processData = function(_outData, _data, _output_index, _array_index = 0) { 
+	static processData = function(_outData, _data, _array_index = 0) { 
 		if(!is(_outData, _trimmedPath)) 
 			_outData = new _trimmedPath();
 		

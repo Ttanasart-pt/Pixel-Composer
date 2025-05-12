@@ -207,7 +207,7 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		surface_reset_target();
 	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _array_index) {
 		var _surf = _data[0];
 		var _dimc = _data[1];
 		var _amo  = _data[2];

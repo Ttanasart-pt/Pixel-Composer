@@ -51,7 +51,7 @@
 // 		__step_mask_modifier();
 // 	}
 	
-// 	static processData = function(_outSurf, _data, _output_index, _array_index) {		
+// 	static processData = function(_outSurf, _data, _array_index) {		
 // 		var _surf  = _data[0];
 // 		var _size  = min(128, _data[1]);
 // 		var _clamp = getAttribute("oversample");

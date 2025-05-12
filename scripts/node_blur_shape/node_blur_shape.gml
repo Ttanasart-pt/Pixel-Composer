@@ -36,7 +36,7 @@ function Node_Blur_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		__step_mask_modifier();
 	} #endregion
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region	
+	static processData = function(_outSurf, _data, _array_index) { #region	
 		if(!is_surface(_data[0])) return _outSurf;
 		
 		var _samp = getAttribute("oversample");

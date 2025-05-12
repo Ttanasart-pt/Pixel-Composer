@@ -108,7 +108,7 @@ function Node_Grid_Tri(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		return _dim;
 	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _array_index) {
 		var _dim  = surface_get_dimension(_outSurf);
 		var _pos  = _data[1];
 		var _sam  = _data[7];

@@ -13,7 +13,7 @@ function Node_Vector_Dot(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		
 	newOutput(0, nodeValue_Output("Result", self, VALUE_TYPE.float, 0 ));
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) {  
+	static processData = function(_output, _data, _array_index = 0) {  
 		var _pnt1 = _data[0];
 		var _pnt2 = _data[1];
 		

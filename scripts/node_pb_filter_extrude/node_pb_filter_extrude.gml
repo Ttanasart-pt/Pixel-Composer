@@ -38,7 +38,7 @@ function Node_PB_FX_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	static step = function() {}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index = 0) { 
+	static processData = function(_outSurf, _data, _array_index = 0) { 
 	    var _surf = _data[0];
 	    var _ang  = _data[1];
 	    var _dist = _data[2];

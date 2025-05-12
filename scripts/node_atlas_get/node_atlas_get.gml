@@ -27,7 +27,7 @@ function Node_Atlas_Get(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newOutput(5, nodeValue_Output("Alpha", self, VALUE_TYPE.float, []))
 		.setArrayDepth(1);
 	
-	static processData = function(_outData, _data, _output_index, _array_index = 0) {
+	static processData = function(_outData, _data, _array_index = 0) {
 		var atl = _data[0];
 		
 		if(!is(atl, Atlas)) return _outData;

@@ -12,7 +12,7 @@ function Node_3D_Set_Material(_x, _y, _group = noone) : Node_3D_Modifier(_x, _y,
 		inputs[in_mesh + 0].setArrayDepth(_sing? 0 : 1);
 	}
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) {
+	static processData = function(_output, _data, _array_index = 0) {
 		var _obj = _data[0];
 		var _mat = _data[in_mesh + 0];
 		

@@ -16,7 +16,7 @@ function Node_Matrix_Multiply_Vector(_x, _y, _group = noone) : Node_Processor(_x
 		
 	input_display_list = [ 0, 1 ];
 	
-	static processData = function(_outData, _data, _output_index, _array_index = 0) {
+	static processData = function(_outData, _data, _array_index = 0) {
 		var _mat = _data[0];
 		var _vec = _data[1];
 		

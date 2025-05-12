@@ -25,7 +25,7 @@ function Node_Shader_Processor(_x, _y, _group = noone) : Node_Shader(_x, _y, _gr
 		return _outSurf;
 	} #endregion
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData = function(_outSurf, _data, _array_index) { #region
 		return processShader(_outSurf, _data);
 	} #endregion
 }

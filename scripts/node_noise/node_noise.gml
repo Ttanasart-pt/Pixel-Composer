@@ -43,7 +43,7 @@ function Node_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		inputs[5].name = _col == 1? "Color B range" : "Color V range";
 	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _array_index) {
 		var _dim = _data[0];
 		var _sed = _data[1];
 		

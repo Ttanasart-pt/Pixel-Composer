@@ -127,7 +127,7 @@ function Node_3D_UV_Remap(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _grou
 		return noone;
 	} #endregion
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
+	static processData = function(_output, _data, _array_index = 0) { #region
 		setTransform(gizmo, _data);
 		
 		var _rot     = _data[1];

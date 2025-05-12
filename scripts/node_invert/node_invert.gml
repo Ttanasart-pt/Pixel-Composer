@@ -29,7 +29,7 @@ function Node_Invert(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		__step_mask_modifier();
 	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {	
+	static processData = function(_outSurf, _data, _array_index) {	
 	
 		surface_set_shader(_outSurf, sh_invert);
 			shader_set_i("alpha", _data[7]);

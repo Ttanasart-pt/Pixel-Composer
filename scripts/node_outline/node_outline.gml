@@ -79,7 +79,7 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		filter_button.index = attributes.filter;
 	}
 	
-	static processData = function(_outData, _data, _output_index, _array_index) {
+	static processData = function(_outData, _data, _array_index) {
 		var surf = _data[ 0];
 		var colr = _data[ 2];
 		var blnd = _data[ 3];

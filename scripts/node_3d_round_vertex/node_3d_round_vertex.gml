@@ -3,7 +3,7 @@ function Node_3D_Round_Vertex(_x, _y, _group = noone) : Node_3D_Modifier(_x, _y,
 	
 	newInput(in_mesh + 0, nodeValue_Float("Step", self, 0.1))
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) {
+	static processData = function(_output, _data, _array_index = 0) {
 		var _obj = _data[0];
 		var _stp = _data[in_mesh + 0];
 		

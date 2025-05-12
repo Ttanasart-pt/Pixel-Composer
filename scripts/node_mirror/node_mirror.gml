@@ -51,7 +51,7 @@ function Node_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		return w_hovering;
 	}
 	
-	static processData = function(_outData, _data, _output_index, _array_index) {
+	static processData = function(_outData, _data, _array_index) {
 		var _suf = _data[0];
 		var _pos = _data[1];
 		var _ang = _data[2];

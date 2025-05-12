@@ -37,7 +37,7 @@ function Node_MK_Blinker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	surface_blur_init();
 	
-	static processData = function(_outData, _data, _output_index, _array_index) {
+	static processData = function(_outData, _data, _array_index) {
 		var _surf = _data[0];
 		var _mask = _data[1];
 		var _seed = _data[2];

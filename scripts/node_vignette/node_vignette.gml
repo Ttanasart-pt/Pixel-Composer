@@ -29,7 +29,7 @@ function Node_Vignette(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	attribute_surface_depth();
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData = function(_outSurf, _data, _array_index) { #region
 		surface_set_shader(_outSurf, sh_vignette);
 			shader_set_f("exposure",   _data[2]);
 			shader_set_f("strength",   _data[3]);

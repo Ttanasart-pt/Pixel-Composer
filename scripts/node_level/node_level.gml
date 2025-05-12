@@ -100,7 +100,7 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		__step_mask_modifier();
 	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {	
+	static processData = function(_outSurf, _data, _array_index) {	
 		var _wi = _data[1];
 		var _ri = _data[2];
 		var _gi = _data[3];

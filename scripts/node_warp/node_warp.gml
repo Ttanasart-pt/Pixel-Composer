@@ -272,7 +272,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		surface_reset_shader();
 	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _array_index) {
 		var tl   = _data[1];
 		var tr   = _data[2];
 		var bl   = _data[3];

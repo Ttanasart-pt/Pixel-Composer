@@ -357,7 +357,7 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	static generate55 = function(_data, _tex0, _tex1, _edge, _crop) { INLINE return generateFull(  _data, _tex0, _tex1, _edge, _crop, index_55, index_55_et, index_55_eb, index_55_el, index_55_er); }
 	static generate48 = function(_data, _tex0, _tex1, _edge, _crop) { INLINE return generateFull(  _data, _tex0, _tex1, _edge, _crop, index_48, index_48_et, index_48_eb, index_48_el, index_48_er); }
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _array_index) {
 		var _tex0 = _data[0];
 		var _tex1 = _data[1];
 		var _type = _data[2];

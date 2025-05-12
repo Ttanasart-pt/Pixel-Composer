@@ -187,7 +187,7 @@ function Node_Warp_Perspective(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		return w_hovering;
 	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _array_index) {
 		var tl = _data[6];
 		var tr = _data[7];
 		var bl = _data[8];

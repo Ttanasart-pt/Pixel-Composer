@@ -8,7 +8,9 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	worldIndex = undefined;
 	worldScale = 100;
-	forceCount = 1;
+	
+	process_amount  = 0;
+	inputs_data_len = [];
 	
 	newInput(0, nodeValue("Object", self, CONNECT_TYPE.input, VALUE_TYPE.rigid, noone)).setVisible(true, true);
 	
@@ -45,10 +47,12 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	array_push(attributeEditors, ["Display scale", function() /*=>*/ {return attributes.display_scale}, textBox_Number(function(v) /*=>*/ {return setAttribute("display_scale", v)})]);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		if(forceCount != 1) return;
+		if(process_amount > 0) return;
 		
 		var _typ = getInputData(1);
 		var _pos = getInputData(2);
+		
+		if(array_empty(_pos)) return;
 		
 		var px = _x + _pos[0] * _s;
 		var py = _y + _pos[1] * _s;
@@ -129,6 +133,20 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		}
 	}
 	
+	static getForceData = function() {
+		var _len = array_length(inputs);
+		
+		process_amount  = 0;
+		inputs_data_len = array_create(array_length(inputs));
+		
+		array_foreach(inputs, function(_in, i) /*=>*/ {
+			var raw = _in.getValue();
+			var amo = _in.arrayLength(raw);
+			inputs_data_len[i] = amo;
+			process_amount = max(process_amount, amo);
+		}, 1);
+	}
+	
 	static update = function(frame = CURRENT_FRAME) {
 		worldIndex = struct_try_get(inline_context, "worldIndex", undefined);
 		worldScale = struct_try_get(inline_context, "worldScale", 100);
@@ -163,9 +181,9 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			
 		if(!doForce && !doImpul) return;
 		
-		forceCount = 1;
+		getForceData();
 		
-		if(!is_array(__pos[0])) {
+		if(process_amount == 0) {
 			__ppos = [ __pos[0] / worldScale, __pos[1] / worldScale ];
 			__ffor = [ __for[0] * __str,      __for[1] * __str      ];
 			__ttor = __tor * __str;
@@ -174,14 +192,17 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			return;
 		}
 		
-		for( var i = 0, n = array_length(__pos); i < n; i++ ) {
-			var _pos = __pos[i];
+		for( var i = 0; i < process_amount; i++ ) {
+			_pos = inputs_data_len[2] == -1? __pos : __pos[i];
+			_for = inputs_data_len[5] == -1? __for : __for[i];
+			_tor = inputs_data_len[3] == -1? __tor : __tor[i];
+			_str = inputs_data_len[7] == -1? __str : __str[i];
 			
 			__ppos = [ _pos[0] / worldScale, _pos[1] / worldScale ];
-			__ffor = [ __for[0] * __str,     __for[1] * __str     ];
-			__ttor = __tor * __str;
+			__ffor = [ _for[0] * _str,       _for[1] * _str       ];
+			__ttor = _tor * _str;
 			
-			array_foreach(_obj, function(obj) /*=>*/ { if(is(obj, __Box2DObject)) applyForce(obj.objId, __typ, __sco, __ppos, __ttor, __ffor, __rad, __str) });
+			array_foreach(_obj, function(obj) /*=>*/ { if(is(obj, __Box2DObject)) applyForce(obj.objId, __typ, __sco, __ppos, __ttor, __ffor, __rad, _str) });
 		}
 	}
 	

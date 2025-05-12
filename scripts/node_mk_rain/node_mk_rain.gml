@@ -60,7 +60,7 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		inputs[17].setVisible(_shap == 0);
 	} #endregion
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData = function(_outSurf, _data, _array_index) { #region
 		var _surf = _data[0];
 		var _dirr = _data[1];
 		var _dens = _data[2];

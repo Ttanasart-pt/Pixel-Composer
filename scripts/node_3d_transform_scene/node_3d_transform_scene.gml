@@ -26,7 +26,7 @@ function Node_3D_Transform_Scene(_x, _y, _group = noone) : Node_3D(_x, _y, _grou
 		["Settings",   true], 4, 5, 6,
 	];
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) {
+	static processData = function(_output, _data, _array_index = 0) {
 		var _scn = _data[0];
 		if(!is_instanceof(_scn, __3dGroup)) return noone;
 		

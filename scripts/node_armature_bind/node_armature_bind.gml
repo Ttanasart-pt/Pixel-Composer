@@ -873,7 +873,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		surface_reset_shader();
 	}
 	
-	static processData = function(_outData, _data, _output_index, _array_index) {
+	static processData = function(_outData, _data, _array_index) {
 		var atlas_data = [];
 		var bind_data  = [];
 		

@@ -21,7 +21,7 @@ function Node_Offset(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	attribute_surface_depth();
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _array_index) {
 		
 		surface_set_shader(_outSurf, sh_offset);
 			shader_set_f("offset", _data[1], _data[2]);

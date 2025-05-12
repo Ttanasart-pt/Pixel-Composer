@@ -195,7 +195,7 @@ function Node_Path_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _g
 	static submitShadow   = function() /*=>*/ {}
 	static submitShader   = function() /*=>*/ {}
 	
-	static processData = function(_outData, _data, _output_index, _array_index = 0) {
+	static processData = function(_outData, _data, _array_index = 0) {
 		#region data
 			curr_pos  = _data[0];
 			curr_rot  = _data[1];

@@ -33,7 +33,7 @@ function Node_3D_Modifier(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 		return noone;
 	}
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) {
+	static processData = function(_output, _data, _array_index = 0) {
 		return modify(_data[0], _data);
 	}
 }

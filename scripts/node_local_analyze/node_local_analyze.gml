@@ -49,7 +49,7 @@ function Node_Local_Analyze(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		__step_mask_modifier();
 	} #endregion
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _array_index) {
 		var _alg = _data[1];
 		var _siz = _data[2];
 		var _shp = _data[4];

@@ -24,6 +24,7 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 		var typ = nod.type;
 		
 		if(typ != VALUE_TYPE.surface) {
+			if(array_empty(val)) return val;
 			var _d = array_get_depth(val);
 			
 			__nod       = nod;

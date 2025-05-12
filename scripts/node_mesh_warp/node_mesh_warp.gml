@@ -773,7 +773,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		else if(_type == 1) tools = tools_mesh;
 	}
 	
-	static processData = function(_outData, _data, _output_index, _array_index) {
+	static processData = function(_outData, _data, _array_index) {
 		if(will_triangluate) {
 			Mesh_build(false);
 			will_triangluate = false;

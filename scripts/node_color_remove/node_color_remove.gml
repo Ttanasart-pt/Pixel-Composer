@@ -50,7 +50,7 @@ function Node_Color_Remove(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		inputs[2].mappableStep();
 	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _array_index) {
 		var frm = _data[1];
 		
 		var _colors = [];

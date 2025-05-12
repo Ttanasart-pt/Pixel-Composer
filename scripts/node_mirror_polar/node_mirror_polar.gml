@@ -87,7 +87,7 @@ function Node_Mirror_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		return _dim;
 	} 
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _array_index) {
 		var _suf = _data[0];
 		var _pos = _data[1];
 		var _ang = _data[2];

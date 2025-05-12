@@ -48,7 +48,7 @@ function Node_Atlas_Set(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	__p0 = [ 0, 0 ];
 	__p1 = [ 0, 0 ];
 	
-	static processData = function(_outData, _data, _output_index, _array_index = 0) {
+	static processData = function(_outData, _data, _array_index = 0) {
 		var atl = _data[0];
 		if(!is(atl, Atlas)) return _outData;
 		

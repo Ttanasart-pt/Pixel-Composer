@@ -36,7 +36,7 @@ function Node_Composite_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		return noone;
 	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index = 0) { 
+	static processData = function(_outSurf, _data, _array_index = 0) { 
 	    draw_transforms[_array_index] = noone;
 	    
 	    var _amo = getInputAmount();

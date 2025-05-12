@@ -16,7 +16,7 @@ function Node_MK_Flame(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		
 	} #endregion
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData = function(_outSurf, _data, _array_index) { #region
 		var _dim  = _data[0];
 		var _dirr = _data[1];
 		

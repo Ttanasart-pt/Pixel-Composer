@@ -62,7 +62,7 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	static step = function() { __step_mask_modifier(); }
 	
-	static processData = function(_outData, _data, _output_index, _array_index) {
+	static processData = function(_outData, _data, _array_index) {
 		var _surf  = _data[0];
 		var _size  = _data[1];
 		var _tole  = _data[2];

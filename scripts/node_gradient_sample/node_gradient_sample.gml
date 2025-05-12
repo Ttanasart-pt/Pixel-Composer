@@ -19,7 +19,7 @@ function Node_Gradient_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		setDimension(96, process_length[0] * 32);
 	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _array_index) {
 		var grad = _data[0];
 		var stp  = _data[1];
 		var shf  = _data[2];

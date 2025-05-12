@@ -25,7 +25,7 @@ function Node_Wrap_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		return w_hovering;
 	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _array_index) {
 		var _inSurf	= _data[0];
 		if(!is_surface(_inSurf)) return _outSurf;
 		

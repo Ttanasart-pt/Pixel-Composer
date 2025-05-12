@@ -53,7 +53,7 @@ function Node_Erode(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		inputs[1].mappableStep();
 	} #endregion
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _array_index) {
 		
 		surface_set_shader(_outSurf, sh_erode);
 			shader_set_f("dimension", surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0]));

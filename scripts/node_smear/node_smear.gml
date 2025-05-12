@@ -73,7 +73,7 @@ function Node_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		inputs[ 2].mappableStep();
 	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _array_index) {
 		var _surf = _data[0];
 		var _dim  = surface_get_dimension(_surf);
 		

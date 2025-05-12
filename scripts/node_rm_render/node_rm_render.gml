@@ -61,7 +61,7 @@ function Node_RM_Render(_x, _y, _group = noone) : Node_RM(_x, _y, _group) constr
 		inputs[3].setVisible(_pro == 1);
 	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index = 0) {
+	static processData = function(_outSurf, _data, _array_index = 0) {
 		var _dim = _data[0];
 		
 		var _pro = _data[1];

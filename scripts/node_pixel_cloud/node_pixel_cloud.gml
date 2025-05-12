@@ -45,7 +45,7 @@ function Node_Pixel_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		inputs[4].mappableStep();
 	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _array_index) {
 		
 		surface_set_shader(_outSurf, sh_pixel_cloud);
 			shader_set_f("seed"    , _data[1]);

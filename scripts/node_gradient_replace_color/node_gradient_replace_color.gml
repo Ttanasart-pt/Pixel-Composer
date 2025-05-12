@@ -18,7 +18,7 @@ function Node_Gradient_Replace_Color(_x, _y, _group = noone) : Node_Processor(_x
 		setDimension(96, process_length[0] * 32);
 	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _array_index) {
 		var gra  = _data[0];
 		var pfr  = _data[1];
 		var pto  = _data[2];

@@ -30,7 +30,7 @@ function Node_Combine_HSV(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		inputs[5].setVisible(_arr, _arr);
 	} #endregion
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData = function(_outSurf, _data, _array_index) { #region
 		var _arr  = _data[4];
 		
 		var _h = _arr? array_safe_get_fast(_data[5], 0) : _data[0];

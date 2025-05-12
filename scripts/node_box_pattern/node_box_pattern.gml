@@ -76,7 +76,7 @@ function Node_Box_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		inputs[2].mappableStep();
 	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _array_index) {
 		var _dim = _data[0];
 		var _pos = _data[3];
 		

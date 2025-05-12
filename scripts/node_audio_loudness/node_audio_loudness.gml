@@ -8,7 +8,7 @@ function Node_Audio_Loudness(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	
 	newOutput(0, nodeValue_Output("Loudness", self, VALUE_TYPE.float, 0));
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _array_index) {
 		var _dat = _data[0];
 		
 		var N    = array_length(_dat);

@@ -185,7 +185,7 @@ function Node_Custom_Shader(_x, _y, _group = noone, _param = {}) : Node_Custom(_
 		}
 	}
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) {
+	static processData = function(_output, _data, _array_index = 0) {
 		var _surf = noone;
 		var sw = 0;
 		var sh = 0;

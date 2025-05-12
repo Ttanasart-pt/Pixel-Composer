@@ -27,7 +27,7 @@ function Node_Transform_Array(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
 	}
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) {  
+	static processData = function(_output, _data, _array_index = 0) {  
 		return [_data[0][0], _data[0][1], _data[1], _data[2][0], _data[2][0]];
 	}
 	

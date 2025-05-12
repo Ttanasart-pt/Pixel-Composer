@@ -32,7 +32,7 @@ function Node_3D_Mesh_Terrain(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 		inputs[in_mesh + 4].setVisible(_inT == 1, _inT == 1);
 	}
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) {
+	static processData = function(_output, _data, _array_index = 0) {
 		var _mat = _data[in_mesh + 0];
 		var _inT = _data[in_mesh + 1];
 		var _sub = _data[in_mesh + 3];

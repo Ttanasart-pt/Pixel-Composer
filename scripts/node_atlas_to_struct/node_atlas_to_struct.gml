@@ -8,7 +8,7 @@ function Node_Atlas_Struct(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newOutput(0, nodeValue_Output("Struct", self, VALUE_TYPE.struct, []))
 		.setArrayDepth(1);
 		
-	static processData = function(_outData, _data, _output_index, _array_index = 0) {
+	static processData = function(_outData, _data, _array_index = 0) {
 		var atl = _data[0];
 		if(!is(atl, Atlas)) return _outData;
 		

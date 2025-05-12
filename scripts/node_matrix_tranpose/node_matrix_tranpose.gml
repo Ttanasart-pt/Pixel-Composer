@@ -13,7 +13,7 @@ function Node_Matrix_Transpose(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		
 	input_display_list = [ 0 ];
 	
-	static processData = function(_outData, _data, _output_index, _array_index = 0) {
+	static processData = function(_outData, _data, _array_index = 0) {
 		var _mat = _data[0];
 		return _mat.transpose();
 	}

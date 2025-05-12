@@ -25,7 +25,7 @@ function Node_Repeat_Texture(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	
 	attribute_surface_depth();
 		
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _array_index) {
 		var _surf = _data[0];
 		var _dim  = _data[1];
 		var _type = _data[2];

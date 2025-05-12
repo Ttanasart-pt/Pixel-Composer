@@ -65,7 +65,7 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 		draw_rectangle(_px, _py, _px + _pws, _py + _phs, true);
 	}
 	
-	static processData = function(_outData, _data, _output_index, _array_index = 0) {
+	static processData = function(_outData, _data, _array_index = 0) {
 		var _surf = _data[in_mesh + 0];
 		var _proj = _data[in_mesh + 1];
 		var _fov  = _data[in_mesh + 2];

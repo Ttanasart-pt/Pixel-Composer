@@ -49,7 +49,7 @@ function Node_Random(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		cmf   : {},
 	};
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) {
+	static processData = function(_output, _data, _array_index = 0) {
 		var _seed    = _data[ 0];
 		var _distTyp = _data[ 9];
 		var _distCrv = _data[10];

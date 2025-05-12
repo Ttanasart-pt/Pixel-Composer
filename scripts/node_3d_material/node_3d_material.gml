@@ -38,7 +38,7 @@ function Node_3D_Material(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 		["Normal",		false], 5, 6,
 	];
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) {
+	static processData = function(_output, _data, _array_index = 0) {
 		var _surf = _data[0];
 		var _diff = _data[1];
 		var _spec = _data[2];

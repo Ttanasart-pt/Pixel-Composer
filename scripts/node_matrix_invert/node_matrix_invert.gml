@@ -14,7 +14,7 @@ function Node_Matrix_Invert(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	square_label = new Inspector_Label("");
 	input_display_list = [ 0, square_label ];
 	
-	static processData = function(_outData, _data, _output_index, _array_index = 0) {
+	static processData = function(_outData, _data, _array_index = 0) {
 		var _mat = _data[0];
 		square_label.text = _mat.isSquare()? "" : "Non-square matrix is non-invertible";
 		

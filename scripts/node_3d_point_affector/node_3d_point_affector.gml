@@ -32,7 +32,7 @@ function Node_3D_Point_Affector(_x, _y, _group = noone) : Node_3D_Object(_x, _y,
 	
 	static step = function() {}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index = 0) { #region
+	static processData = function(_outSurf, _data, _array_index = 0) { #region
 		var _pos  = _data[0];
 		var _rot  = _data[1];
 		var _sca  = _data[2];

@@ -22,7 +22,7 @@ function Node_3D_Mesh_Sphere_UV(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _
 		["Material",	false], in_mesh + 3, in_mesh + 2, 
 	]
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) {
+	static processData = function(_output, _data, _array_index = 0) {
 		var _sideH = _data[in_mesh + 0];
 		var _sideV = _data[in_mesh + 1];
 		var _mat   = _data[in_mesh + 2];

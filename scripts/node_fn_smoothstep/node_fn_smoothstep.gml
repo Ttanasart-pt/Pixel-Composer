@@ -32,7 +32,7 @@ function Node_Fn_SmoothStep(_x, _y, _group = noone) : Node_Fn(_x, _y, _group) co
 		return i / graph_res; 
 	}
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) {
+	static processData = function(_output, _data, _array_index = 0) {
 		value = _data[inl + 0];
 		type  = _data[inl + 1];
 		

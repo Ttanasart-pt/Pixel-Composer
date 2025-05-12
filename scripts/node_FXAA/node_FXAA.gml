@@ -24,7 +24,7 @@ function Node_FXAA(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	attribute_surface_depth();
 	
-	static processData = function(_outData, _data, _output_index, _array_index) {
+	static processData = function(_outData, _data, _array_index) {
 		
 		var _dim = surface_get_dimension(_data[0]);
 		_outData[0] = surface_verify(_outData[0], _dim[0], _dim[1]);

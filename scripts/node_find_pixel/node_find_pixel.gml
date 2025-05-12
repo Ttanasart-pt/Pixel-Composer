@@ -28,7 +28,7 @@ function Node_Find_Pixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	static getPreviewValues = function() { return getInputData(0); }
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) {
+	static processData = function(_output, _data, _array_index = 0) {
 		var _surf = _data[0];
 		var _col  = _data[1];
 		var _tol  = _data[2];

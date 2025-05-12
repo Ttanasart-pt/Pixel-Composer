@@ -314,7 +314,7 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		inputs[1].setValue([ gmTileLayer.tiles.SerialiseWidth, gmTileLayer.tiles.SerialiseHeight ]);
     }
     
-	static processData = function(_outData, _data, _output_index, _array_index) {
+	static processData = function(_outData, _data, _array_index) {
 	    tileset = _data[0];
 	    _outData[2] = tileset;
 	    

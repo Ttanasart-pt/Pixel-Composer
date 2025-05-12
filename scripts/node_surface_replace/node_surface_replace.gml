@@ -82,7 +82,7 @@ function Node_Surface_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		inputs[8].setVisible(_mode == 1);
 	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _array_index) {
 		var _bas = _data[0];
 		var _tar = _data[1];
 		var _rep = _data[2];

@@ -50,7 +50,7 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		inputs[2].setVisible(_mode == 0);
 	} #endregion
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) {
+	static processData = function(_output, _data, _array_index = 0) {
 		var _object = _data[0];
 		var _mode   = _data[1];
 		var _Spos   = _data[3];

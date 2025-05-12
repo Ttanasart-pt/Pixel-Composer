@@ -49,7 +49,7 @@ function Node_Path_Profile(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		if(_path && struct_has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	} #endregion
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index = 0) { #region
+	static processData = function(_outSurf, _data, _array_index = 0) { #region
 		var _dim  = _data[0];
 		var _path = _data[1];
 		var _res  = _data[2]; _res = max(_res, 2);

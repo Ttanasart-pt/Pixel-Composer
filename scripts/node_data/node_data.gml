@@ -2328,7 +2328,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		w_hoverable = hover;
 		w_active    = active;
 		
-		return drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params);
+		try {
+			return drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params);
+		} catch(e) { log_warning($"{toString()}, drawOverlay", exception_print(e)); }
+		
+		return false;
 	}
 	
 	static drawOverlay    = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params = {}) {}

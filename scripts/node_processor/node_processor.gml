@@ -21,20 +21,15 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	manage_atlas = true;
 	atlas_index  = 0;
 	
-	batch_output = true;	//Run processData once with all outputs as array.
-	
 	icon = THEME.node_processor_icon;
 	
 	array_push(attributeEditors, "Array processor");
 	array_push(attributeEditors, [ "Array process type", function() /*=>*/ {return attributes.array_process}, 
 		new scrollBox([ "Loop", "Hold", "Expand", "Expand inverse" ], function(v) /*=>*/ {return setAttribute("array_process", v, true)}, false) ]);
 	
+	////- Getters
+	
 	static getInputData = function(index, def = 0) { INLINE return array_safe_get_fast(inputs_data, index, def); }
-	
-	static processData_prebatch  = function() {}
-	static processData_postbatch = function() {}
-	
-	static processData = function(_outSurf, _data, _output_index, _array_index = 0) { return _outSurf; }
 	
 	static getSingleValue = function(_index, _arr = preview_index, output = false) { 
 		var _l = output? outputs : inputs;
@@ -80,250 +75,11 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		return [1, 1];
 	} 
 	
-	static processDataArray = function(outIndex) { 
-		var _output = outputs[outIndex];
-		var _out    = _output.getValue();
-		var _atlas  = false;
-		var _pAtl   = noone;
-		var _data   = [];
-		var _dep    = attrDepth();
-		
-		if(process_amount == 1) { // render single data
-			if(_output.type == VALUE_TYPE.d3object) //passing 3D vertex call
-				return _out;
-			
-			_data = array_map(inputs, function(_in, i) /*=>*/ {return inputs_data[i]});
-			
-			if(_output.type == VALUE_TYPE.surface) {								// Surface preparation
-				if(manage_atlas) {
-					_pAtl  = _data[atlas_index];
-					_atlas = is_instanceof(_pAtl, SurfaceAtlas);
-					
-					if(_atlas) _data[atlas_index] = _pAtl.getSurface();
-				}
-				
-				if(dimension_index > -1) {
-					var surf = _data[dimension_index];
-					var _sw = 1, _sh = 1;
-					if(inputs[dimension_index].type == VALUE_TYPE.surface) {
-						if(is_surface(surf)) {
-							_sw = surface_get_width_safe(surf);
-							_sh = surface_get_height_safe(surf);
-						} else 
-							return noone;
-							
-					} else if(is_array(surf)) {
-						_sw = array_safe_get_fast(surf, 0, 1);
-						_sh = array_safe_get_fast(surf, 1, 1);
-					}
-					
-					if(is_instanceof(_out, SurfaceAtlas)) {
-						if(manage_atlas) {
-							surface_free_safe(_out.getSurface())
-							_out = surface_verify(_out.getSurface(), _sw, _sh, _dep);
-						}
-					} else
-						_out = surface_verify(_out, _sw, _sh, _dep);
-				}
-			}
-			
-			current_data = _data;
-			
-			if(active_index > -1 && !_data[active_index]) // skip
-				return inputs[0].type == VALUE_TYPE.surface? surface_clone(_data[0], _out) : _data[0];
-			
-			var data = processData(_out, _data, outIndex, 0);					// Process data
-			
-			if(_output.type == VALUE_TYPE.surface) {
-				if(manage_atlas && _atlas && is_surface(data)) {				// Convert back to atlas
-					var _atl = _pAtl.clone();
-					_atl.setSurface(data);
-					return _atl;
-				}
-				
-				//data = surface_project_posterize(data);
-			}
-			
-			return data;
-		} 
-		
-		#region ++++ array preparation ++++
-			if(!is_array(_out))
-				_out = array_create(process_amount);
-			else if(array_length(_out) != process_amount) 
-				array_resize(_out, process_amount);
-		#endregion
-		
-		for(var l = 0; l < process_amount; l++) {
-			
-			for(var i = array_length(inputs) - 1; i >= 0; i--)
-				_data[i] = inputs_index[i][l] == -1? inputs_data[i] : inputs_data[i][inputs_index[i][l]];
-				
-			if(_output.type == VALUE_TYPE.surface) { #region						// Output surface verification
-				if(manage_atlas) {
-					_pAtl  = _data[atlas_index];
-					_atlas = is_instanceof(_pAtl, SurfaceAtlas);
-					
-					if(_atlas) _data[atlas_index] = _pAtl.getSurface();
-				}
-				
-				if(dimension_index > -1) {
-					var surf = _data[dimension_index];
-					var _sw = 1, _sh = 1;
-					if(inputs[dimension_index].type == VALUE_TYPE.surface) {
-						if(is_surface(surf)) {
-							_sw = surface_get_width_safe(surf);
-							_sh = surface_get_height_safe(surf);
-						} else 
-							return noone;
-					} else if(is_array(surf)) {
-						_sw = surf[0];
-						_sh = surf[1];
-					}
-					
-					if(is_instanceof(_out[l], SurfaceAtlas)) {
-						if(manage_atlas) {
-							surface_free_safe(_out[l].surface.surface)
-							_out[l] = surface_verify(_out[l].getSurface(), _sw, _sh, _dep);
-						}
-						
-					} else
-						_out[l] = surface_verify(_out[l], _sw, _sh, _dep);
-				}
-			} #endregion
-			
-			if(l == 0 || l == preview_index) 
-				current_data = _data;
-			
-			if(active_index > -1 && !_data[active_index]) { // skip
-				if(!_atlas && inputs[0].type == VALUE_TYPE.surface)
-					_out[l] = surface_clone(_data[0], _out[l]);
-				else 
-					_out[l] = _data[0];
-					
-			} else {
-				_out[l] = processData(_out[l], _data, outIndex, l);					// Process data
-				
-				if(_output.type == VALUE_TYPE.surface) {
-					if(manage_atlas && _atlas && is_surface(_out[l])) {				// Convert back to atlas
-						var _atl = _pAtl.clone();
-						_atl.setSurface(_out[l]);
-						_out[l] = _atl;
-					}
-					
-					//data = surface_project_posterize(data);
-				}
-			}
-		}
-		
-		return _out;
-	}
+	////- Process
 	
-	static processBatchOutput = function() { 
-		var _is  = array_length(inputs);
-		var _os  = array_length(outputs);
-		
-		var data;
-		var _out = array_create(_os);
-		for(var i = 0; i < _os; i++) _out[i] = outputs[i].getValue();
-		
-		var _surfOut = outputs[0];
-		var _skip = active_index != -1 && !inputs_data[active_index];
-		
-		if(process_amount == 1) {
-			current_data = inputs_data;
-			
-			if(_skip) { // skip
-				var _skp = inputs[0].type == VALUE_TYPE.surface? surface_clone(inputs_data[0], _out[0]) : inputs_data[0];
-				_surfOut.setValue(_skp);
-				return;
-			}
-			
-			if(dimension_index > -1) {
-				var _dim = getDimension();
-				for(var i = 0; i < _os; i++) {
-					if(outputs[i].type != VALUE_TYPE.surface) continue;
-					
-					_out[i] = surface_verify(_out[i], _dim[0], _dim[1], attrDepth());
-				}
-			}
-			
-			if(_os == 1) {
-				data = processData(_out[0], inputs_data, 0, 0);
-				if(data == noone) return;
-				
-				outputs[0].setValue(data);
-				
-			} else {
-				data = processData(_out, inputs_data, 0, 0);
-				if(data == noone) return;
-				
-				for(var i = 0; i < _os; i++) outputs[i].setValue(data[i]);
-			}
-			
-			return;
-		}
-		
-		if(_skip) {
-			
-			var _skp = inputs[0].type == VALUE_TYPE.surface? surface_array_clone(inputs_data[0]) : inputs_data[0];
-			_surfOut.setValue(_skp);
-			
-		} else {
-			
-			var _inputs  = array_create(_is);
-			var _outputs = array_create(_os);
-		
-			for( var l = 0; l < process_amount; l++ ) {
-				for(var i = 0; i < _is; i++) 
-					_inputs[i] = inputs_index[i][l] == -1? inputs_data[i] : inputs_data[i][inputs_index[i][l]];
-					
-				if(l == 0 || l == preview_index) current_data = _inputs;
-				
-				var _outa = array_create(_os);
-					
-				if(dimension_index > -1) {
-					var _dim  = getDimension(l);
-					for(var i = 0; i < _os; i++) {
-						_outa[i] = array_safe_get(_out[i], l);
-						
-						if(outputs[i].type != VALUE_TYPE.surface) continue;
-						_outa[i] = surface_verify(_outa[i], _dim[0], _dim[1], attrDepth());
-					}
-					
-				} else {
-					for(var i = 0; i < _os; i++)
-						_outa[i] = array_safe_get(_out[i], l);
-				}
-				
-				if(_os == 1) {
-					data = processData(_outa[0], _inputs, 0, l);
-					_outputs[0][l] = data;
-					
-				} else {
-					data = processData(_outa, _inputs, 0, l);
-					for(var i = 0; i < _os; i++) _outputs[i][l] = data[i];
-				}
-			}
-			
-			for( var i = 0, n = _os; i < n; i++ )
-				outputs[i].setValue(_outputs[i]);
-		}
-		
-	} 
-	
-	static processOutput = function() { 
-		for(var i = 0; i < array_length(outputs); i++) {
-			var val = outputs[i].process_array? processDataArray(i) : processData(outputs[i].getValue(), noone, i);
-			if(val != undefined)
-				outputs[i].setValue(val);
-		}
-	} 
-	
-	static preGetInputs = function() {}
-	
-	static getInputs = function() {
-		preGetInputs();
+	static preGetInputs  = undefined;
+	static getInputs     = function() {
+		if(preGetInputs != undefined) preGetInputs();
 		
 		var _len = array_length(inputs);
 		
@@ -369,8 +125,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		for( var i = 0; i < _len; i++ ) {
 			amoMax /= process_length[i];
 			process_running[i] = amoMax;
-			
-			inputs_index[i] = array_verify(inputs_index[i], process_amount);
+			inputs_index[i]    = array_verify(inputs_index[i], process_amount);
 		}
 		
 		for(var l = 0; l < process_amount; l++) // input preparation
@@ -388,25 +143,118 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			
 			inputs_index[i][l] = _index;
 		}
-		
-		// print($"{name}: {process_amount}");
 	}
+	
+	static processData   = function(_outSurf, _data, _array_index = 0) { return _outSurf; }
+	
+	static processOutput = function() { 
+		var _is  = array_length(inputs);
+		var _os  = array_length(outputs);
+		
+		var data;
+		var _out = array_create(_os);
+		for(var i = 0; i < _os; i++) _out[i] = outputs[i].getValue();
+		
+		var _surfOut = outputs[0];
+		var _skip = active_index != -1 && !inputs_data[active_index];
+		
+		if(process_amount == 1) {
+			current_data = inputs_data;
+			
+			if(_skip) { // skip
+				var _skp = inputs[0].type == VALUE_TYPE.surface? surface_clone(inputs_data[0], _out[0]) : inputs_data[0];
+				_surfOut.setValue(_skp);
+				return;
+			}
+			
+			if(dimension_index > -1) {
+				var _dim = getDimension();
+				for(var i = 0; i < _os; i++) {
+					if(outputs[i].type != VALUE_TYPE.surface) continue;
+					
+					_out[i] = surface_verify(_out[i], _dim[0], _dim[1], attrDepth());
+				}
+			}
+			
+			if(_os == 1) {
+				data = processData(_out[0], inputs_data, 0);
+				if(data == noone) return;
+				
+				outputs[0].setValue(data);
+				
+			} else {
+				data = processData(_out, inputs_data, 0);
+				if(data == noone) return;
+				
+				for(var i = 0; i < _os; i++) outputs[i].setValue(data[i]);
+			}
+			
+			return;
+		}
+		
+		if(_skip) {
+			
+			var _skp = inputs[0].type == VALUE_TYPE.surface? surface_array_clone(inputs_data[0]) : inputs_data[0];
+			_surfOut.setValue(_skp);
+			
+		} else {
+			
+			var _inputs  = array_create(_is);
+			var _outputs = array_create(_os);
+		
+			for( var l = 0; l < process_amount; l++ ) {
+				for(var i = 0; i < _is; i++) 
+					_inputs[i] = inputs_index[i][l] == -1? inputs_data[i] : inputs_data[i][inputs_index[i][l]];
+					
+				if(l == 0 || l == preview_index) current_data = _inputs;
+				
+				var _outa = array_create(_os);
+					
+				if(dimension_index > -1) {
+					var _dim  = getDimension(l);
+					for(var i = 0; i < _os; i++) {
+						_outa[i] = array_safe_get(_out[i], l);
+						
+						if(outputs[i].type != VALUE_TYPE.surface) continue;
+						_outa[i] = surface_verify(_outa[i], _dim[0], _dim[1], attrDepth());
+					}
+					
+				} else {
+					for(var i = 0; i < _os; i++)
+						_outa[i] = array_safe_get(_out[i], l);
+				}
+				
+				if(_os == 1) {
+					data = processData(_outa[0], _inputs, l);
+					_outputs[0][l] = data;
+					
+				} else {
+					data = processData(_outa, _inputs, l);
+					for(var i = 0; i < _os; i++) _outputs[i][l] = data[i];
+				}
+			}
+			
+			for( var i = 0, n = _os; i < n; i++ )
+				outputs[i].setValue(_outputs[i]);
+		}
+	} 
+	
+	////- Update
+	
+	static processData_prebatch  = undefined;
+	static processData_postbatch = undefined;
+	static postProcess           = undefined;
+	static postPostProcess       = undefined;
 	
 	static update = function(frame = CURRENT_FRAME) { 
-		processData_prebatch();
-		
-		if(batch_output) processBatchOutput();
-		else			 processOutput();
-		
-		processData_postbatch();
-		
-		postProcess();
-		postPostProcess();
+		if(processData_prebatch  != undefined) processData_prebatch();
+			
+		processOutput();
+			
+		if(processData_postbatch != undefined) processData_postbatch();
+		if(postProcess           != undefined) postProcess();
+		if(postPostProcess       != undefined) postPostProcess();
 	}
-	
-	static postProcess = function() {}
-	
-	static postPostProcess = function() {}
 	
 	///////////////////// CACHE /////////////////////
 	

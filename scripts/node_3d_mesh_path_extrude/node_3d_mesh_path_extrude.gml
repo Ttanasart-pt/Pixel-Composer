@@ -48,7 +48,7 @@ function Node_3D_Mesh_Path_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 		inputs[in_mesh + 3].setVisible(_caps, _caps);
 	}
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) {
+	static processData = function(_output, _data, _array_index = 0) {
 		var _path    = _data[in_mesh +  0];
 		var _sides   = _data[in_mesh +  1];
 		var _mat_sid = _data[in_mesh +  2];

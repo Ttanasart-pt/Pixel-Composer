@@ -27,7 +27,7 @@ function Node_PB_Box_Point(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	    return [ _bbox[2] - _bbox[0], _bbox[3] - _bbox[1] ];
 	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _array_index) {
 		var _dim   = group.dimension;
 		var _pbbox = _data[0];
 		var _anchr = _data[1];

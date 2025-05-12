@@ -33,7 +33,7 @@ function Node_Texture_Remap(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	static processData_postbatch = function() { shader_postset_interpolation(); }
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _array_index) {
 		if(!is_surface(_data[1])) return _outSurf;
 		
 		var _dim = _data[3];

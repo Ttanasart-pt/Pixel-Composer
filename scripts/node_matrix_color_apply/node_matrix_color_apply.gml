@@ -36,7 +36,7 @@ function Node_Matrix_Color_Apply(_x, _y, _group = noone) : Node_Processor(_x, _y
 		__step_mask_modifier();
 	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _array_index) {
 		var _surf = _data[0];
 		var _matx = _data[1];
 		var _ints = _data[2];

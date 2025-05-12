@@ -44,7 +44,7 @@ function Node_Bend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		inputs[6].setVisible(_typ == 1);
 	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _array_index) {
 		var _surf = _data[0];
 		var _typ  = _data[2];
 		var _axs  = _data[3];

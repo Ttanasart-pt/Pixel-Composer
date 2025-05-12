@@ -28,7 +28,7 @@ function Node_3D_Mesh_Cube(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 	
 	static onDrawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) {}
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) { 
+	static processData = function(_output, _data, _array_index = 0) { 
 		var i = in_mesh;
 		
 		var _mat_side = _data[i+0];

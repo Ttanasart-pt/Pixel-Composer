@@ -12,7 +12,7 @@ function Node_Gradient_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		setDimension(96, process_length[0] * 32);
 	}
 	
-	static processData = function(_outData, _data, _output_index, _array_index) {
+	static processData = function(_outData, _data, _array_index) {
 		gra = _data[0];
 		len = array_length(gra.keys);
 		

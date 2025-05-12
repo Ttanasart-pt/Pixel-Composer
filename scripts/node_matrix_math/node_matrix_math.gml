@@ -29,7 +29,7 @@ function Node_Matrix_Math(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		
 	input_display_list = [ 2, 0, 1, 3 ];
 	
-	static processData = function(_outData, _data, _output_index, _array_index = 0) {
+	static processData = function(_outData, _data, _array_index = 0) {
 		var _mat1 = _data[0];
 		var _mat2 = _data[1];
 		var _opr  = _data[2];

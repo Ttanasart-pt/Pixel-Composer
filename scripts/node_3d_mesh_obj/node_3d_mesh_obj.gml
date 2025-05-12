@@ -196,7 +196,7 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		if(_path != current_path) updateObjStart(_path);
 	}
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) {
+	static processData = function(_output, _data, _array_index = 0) {
 		if(obj_reading) return noone;
 		
 		var _flip = _data[in_mesh + 1];

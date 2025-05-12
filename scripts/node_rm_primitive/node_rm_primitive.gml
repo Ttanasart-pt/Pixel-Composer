@@ -533,7 +533,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 		inputs[14].setVisible(_ort == 1);
 	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index = 0) {
+	static processData = function(_outSurf, _data, _array_index = 0) {
 		var _dim  = _data[0];
 		var _shp  = _data[1];
 		

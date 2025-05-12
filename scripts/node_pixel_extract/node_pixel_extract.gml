@@ -14,7 +14,7 @@ function Node_Pixel_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		["Output",   false], 1, 
 	]
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _array_index) {
 		var _surf = _data[0];
 		var _skip = _data[1];
 		if(!is_surface(_surf)) return [];

@@ -45,7 +45,7 @@ function Node_Greyscale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		inputs[2].mappableStep();
 	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _array_index) {
 		
 		surface_set_shader(_outSurf, sh_greyscale);
 			shader_set_f_map("brightness", _data[1], _data[ 9], inputs[1]);

@@ -16,7 +16,7 @@ function Node_Atlas(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	attribute_surface_depth();
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
+	static processData = function(_outSurf, _data, _array_index) { #region
 		var _surf = _data[0];
 		var _meth = _data[2];
 		var _dim  = surface_get_dimension(_data[0]);

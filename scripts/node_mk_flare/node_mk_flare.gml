@@ -497,7 +497,7 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		BLEND_ADD draw_surface_ext(temp_surface[0], _x - _r, _y - _r, 1, 1, 0, _b, _a);
 	}
 	
-	static processData = function(_outData, _data, _output_index, _array_index) {
+	static processData = function(_outData, _data, _array_index) {
 		
 		var _surf   = _data[0];
 		var _origin = _data[1];

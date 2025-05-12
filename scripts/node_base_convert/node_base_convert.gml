@@ -13,7 +13,7 @@ function Node_Base_Convert(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newOutput(0, nodeValue_Output("Result", self, VALUE_TYPE.text, ""));
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) { 
+	static processData = function(_output, _data, _array_index = 0) { 
 		var val   = _data[0];
 		var bFrom = max(2, _data[1]);
 		var bTo   = max(2, _data[2]);

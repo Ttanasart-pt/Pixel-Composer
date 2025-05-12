@@ -87,7 +87,7 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		else if(_type == 1) setDimension(96, process_length[13] * 32);
 	}
 	
-	static processData = function(_outData, _data, _output_index, _array_index) {
+	static processData = function(_outData, _data, _array_index) {
 		var _bri = _data[1];
 		var _con = _data[2];
 		var _hue = _data[3];

@@ -161,7 +161,7 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			inputs[index + 1].setName(inputs[index].getValue());
 	}
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) {
+	static processData = function(_output, _data, _array_index = 0) {
 		var eq = _data[0];
 		var params = {};
 		

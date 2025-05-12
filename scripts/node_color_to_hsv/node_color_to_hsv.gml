@@ -9,7 +9,7 @@ function Node_Color_to_HSV(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newOutput(1, nodeValue_Output("Saturation", self, VALUE_TYPE.float, 0));
 	newOutput(2, nodeValue_Output("Value",      self, VALUE_TYPE.float, 0));
 	
-	static processData = function(_outData, _data, _output_index, _array_index = 0) {  
+	static processData = function(_outData, _data, _array_index = 0) {  
 		var _c = _data[0];
 		
 		if(!is_numeric(_c)) return _outData;

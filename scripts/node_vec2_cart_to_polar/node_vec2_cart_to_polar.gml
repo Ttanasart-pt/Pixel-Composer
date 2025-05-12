@@ -11,7 +11,7 @@ function Node_Vector_Cart_To_Polar(_x, _y, _group = noone) : Node_Processor(_x, 
 	newOutput(0, nodeValue_Output("Polar Coord", self, VALUE_TYPE.float, [ 0, 0 ] ))
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) {  
+	static processData = function(_output, _data, _array_index = 0) {  
 		var _car = _data[0];
 		var _rad = _data[1];
 		var _len = point_distance(0, 0, _car[0], _car[1]);

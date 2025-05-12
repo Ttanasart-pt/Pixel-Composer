@@ -40,7 +40,7 @@ function Node_Wiggler(_x, _y, _group = noone) : Node_Fn(_x, _y, _group) construc
 		return lerp(range_min, range_max, _lrp);
 	}
 	
-	static processData = function(_output, _data, _output_index, _array_index = 0) {
+	static processData = function(_output, _data, _array_index = 0) {
 		var ran     = _data[inl + 0];
 		range_min   = array_safe_get_fast(ran, 0);
 		range_max   = array_safe_get_fast(ran, 1);
