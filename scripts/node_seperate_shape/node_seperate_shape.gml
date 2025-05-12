@@ -9,25 +9,20 @@
 function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Separate Shape";
 	
-	newInput(0, nodeValue_Surface("Surface In", self))
-		.rejectArray();
+	////- Shape
 	
-	newInput(1, nodeValue_Float("Tolerance", self, 0.2))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 1, 0.01 ], update_stat: SLIDER_UPDATE.release })
-		.rejectArray();
-		
-	newInput(2, nodeValue_Bool("Override color", self, false))
-		.rejectArray();
+	newInput(0, nodeValue_Surface(     "Surface In",   self)).rejectArray();
+	newInput(5, nodeValue_Enum_Button( "Mode",         self, 0, [ "Greyscale", "Alpha" ] ))
+	newInput(1, nodeValue_Slider(      "Tolerance",    self, 0.2, { range: [ 0, 1, 0.01 ], update_stat: SLIDER_UPDATE.release })).rejectArray();
+	newInput(4, nodeValue_Bool(        "Ignore blank", self, true, "Skip empty shapes.")).rejectArray();
 	
-	newInput(3, nodeValue_Color("Color", self, ca_white))
-		.rejectArray();
+	////- Output
 	
-	newInput(4, nodeValue_Bool("Ignore blank", self, true, "Skip empty shapes."))
-		.rejectArray();
+	newInput(2, nodeValue_Bool(  "Override color", self, false)).rejectArray();
+	newInput(3, nodeValue_Color( "Color",          self, ca_white)).rejectArray();
+	newInput(6, nodeValue_Bool(  "Crop",           self, true ))
 	
-	newInput(5, nodeValue_Enum_Button("Mode", self,  0 , [ "Greyscale", "Alpha" ] ))
-		
-	newInput(6, nodeValue_Bool("Crop", self, true ))
+	// inputs 7
 		
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	

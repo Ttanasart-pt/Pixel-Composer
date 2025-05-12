@@ -87,7 +87,6 @@ function Node_Rigid_Wall(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		objects = [];
 		
 		var _sids = getInputData(0);
-		
 		for( var i = 0; i < 4; i++ )
 			if(_sids & (1 << i)) array_push(objects, spawn(i));
 	}

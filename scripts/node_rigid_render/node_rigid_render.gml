@@ -17,9 +17,9 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	////- Outputs
 	
 	newInput(0, nodeValue_Vec2("Render Dimension", self, DEF_SURF));
-	newInput(1, nodeValue_Bool("Round Position",   self, false))
+	newInput(1, nodeValue_Bool("Round Position",   self, false));
 	
-	// inputs 2
+	// inputs 4
 	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	

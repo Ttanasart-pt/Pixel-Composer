@@ -10,6 +10,7 @@ function Node_Rigid_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inlin
 	worldIndex = undefined;
 	worldScale = 100;
 	dimension  = [ 1, 1 ];
+	objects    = [];
 	
 	////- World
 	
@@ -24,11 +25,19 @@ function Node_Rigid_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inlin
 	newInput(5, nodeValue_Bool(  "Sleepable",        self, true ));
 	newInput(6, nodeValue_Bool(  "Continuous",       self, true ));
 	
-	// inputs 7
+	////- Wall
+	
+	newInput( 7, nodeValue_Bool(   "Use Wall",        self, false));
+	newInput( 8, nodeValue_Toggle( "Walls",           self, 0b0010, { data : [ "T", "B", "L", "R" ] }));
+	newInput( 9, nodeValue_Float(  "Wall Friction",   self, 0.2));
+	newInput(10, nodeValue_Slider( "Wall Bounciness", self, 0.2));
+	
+	// inputs 11
 	
 	input_display_list = [ 
 		["World",      false], 1, 3, 4, 
 		["Simulation", false], 2, 5, 6, 
+		["Wall",    false, 7], 8, 9, 10, 
 	];
 	
 	if(NODE_NEW_MANUAL) {
@@ -39,6 +48,36 @@ function Node_Rigid_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inlin
 		
 		addNode(_object);
 		addNode(_render);
+	}
+	
+	static spawnWall = function(side = 0) {
+		if(worldIndex == undefined) return undefined;
+		
+		var _dim = dimension;
+		var _frc = getInputData(9);
+		var _res = getInputData(10);
+		
+		var ww = _dim[0] / worldScale;
+		var hh = _dim[1] / worldScale;
+		
+		gmlBox2D_Object_Create_Begin(worldIndex, 0, 0, false);
+		
+		switch(side) {
+			case 0 : gmlBox2D_Object_Create_Shape_Segment( 0,  0, ww,  0); break;
+			case 1 : gmlBox2D_Object_Create_Shape_Segment( 0, hh, ww, hh); break;
+			case 2 : gmlBox2D_Object_Create_Shape_Segment( 0,  0,  0, hh); break;
+			case 3 : gmlBox2D_Object_Create_Shape_Segment(ww,  0, ww, hh); break;
+				
+		}
+		
+		var objId  = gmlBox2D_Object_Create_Complete();
+		var boxObj = new __Box2DObject(objId);
+		
+		gmlBox2D_Object_Set_Body_Type( objId,    0);
+		gmlBox2D_Shape_Set_Friction(   objId, _frc);
+		gmlBox2D_Shape_Set_Restitution(objId, _res);
+		
+		return boxObj;
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
@@ -56,6 +95,15 @@ function Node_Rigid_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inlin
 				gmlBox2D_World_Destroy(worldIndex);
 				
 			worldIndex = gmlBox2D_World_Create();
+			
+			var _useWall = getInputData(7);
+			
+			if(_useWall) {
+				objects = [];
+				
+				var _walls = getInputData(8);
+				for( var i = 0; i < 4; i++ ) if(_walls & (1 << i)) array_push(objects, spawnWall(i));
+			}
 		}
 		
 		if(worldIndex == undefined) return;

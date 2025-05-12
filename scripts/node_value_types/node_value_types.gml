@@ -301,7 +301,7 @@ function value_bit(i) {
 		case VALUE_TYPE.sdf 		: return 1 << 37;
 		case VALUE_TYPE.tileset		: return 1 << 38;
 		case VALUE_TYPE.curve 		: return 1 << 38;
-		case VALUE_TYPE.font		: return 1 << 39;
+		case VALUE_TYPE.font		: return 1 << 10;
 		
 		case VALUE_TYPE.any			: return ~0 & ~(1 << 32);
 	}

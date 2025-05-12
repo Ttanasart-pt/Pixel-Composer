@@ -49,16 +49,22 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	////- Transform
 	
-	newInput( 7, nodeValue_Vec2( "Start position", self, [ 16, 16 ]));
+	newInput( 7, nodeValue_Vec2(     "Start Position", self, [ 16, 16 ]));
+	newInput(17, nodeValue_Rotation( "Start Rotation", self, 0));
+	
+	////- Initial Velocity
+	
+	newInput(18, nodeValue_Bool( "Use Initial Velocity", self, false));
+	newInput(19, nodeValue_Vec2( "Initial Velocity",     self, [ 0, 0 ]));
 	
 	////- Simulation
 	
 	newInput(14, nodeValue_Bool( "Continuous",   self, false));
 	newInput(15, nodeValue_Bool( "Fix Rotation", self, false));
 	newInput(16, nodeValue_Bool( "Sleepable",    self,  true));
-		
-	// inputs 17
-		
+	
+	// inputs 20
+	
 	newOutput(0, nodeValue_Output("Object", self, VALUE_TYPE.rigid, objects));
 	
 	array_foreach(inputs, function(inp, ind) /*=>*/ { 
@@ -69,7 +75,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	input_display_list = [ 8, 
 		["Physics",	   false], 0, 1, 2, 3, 4, 13, 
 		["Shape",	   false], 6, 5, 9, 10, 11, 
-		["Transform",  false], 7,
+		["Transform",  false], 7, 17, 
+		["Initial Velocity", false, 18], 19, 
 		["Simulation",  true], 14, 15, 16, 
 	];
 	
@@ -486,9 +493,10 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	static spawn = function(_index = 0, _position = undefined) {
 		if(worldIndex == undefined) return undefined;
 		
-		var _shp  = getInputData(5);
-		var _tex  = getInputData(6);
-		var _spos = getInputData(7);
+		var _shp  = getInputData( 5);
+		var _tex  = getInputData( 6);
+		var _spos = getInputData( 7);
+		var _srot = getInputData(17);
 		var _spx, _spy;
 		
 		if(_position == undefined) {
@@ -553,6 +561,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _fixRot   = getInputData(15);
 		var _sleep    = getInputData(16);
 		
+		gmlBox2D_Object_Set_Rotation(    objId, _srot);
 		gmlBox2D_Object_Set_Fixed_Angle( objId, false);
 		gmlBox2D_Object_Set_Body_Type(   objId, _mov? 2 : 0);
 		gmlBox2D_Object_Set_Damping(     objId, _air_res, _rot_frc);
@@ -562,6 +571,11 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		gmlBox2D_Shape_Set_Friction(     objId, _cnt_frc);
 		gmlBox2D_Shape_Set_Restitution(  objId, _bouncy);
+		
+		var _useInitV = getInputData(18);
+		var _initV    = getInputData(19);
+		
+		if(_useInitV) gmlBox2D_Object_Set_Velocity(objId, _initV[0], _initV[1]);
 		
 		return boxObj;
 	}
@@ -579,7 +593,6 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		if(is_array(_tex)) {
 			var meshes = attributes.mesh;
-			
 			for( var i = array_length(meshes); i < array_length(_tex); i++ )
 				newMesh(i);
 		}
@@ -590,19 +603,14 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		worldScale = struct_try_get(inline_context, "worldScale", 100);
 		if(worldIndex == undefined) return;
 		
-		if(IS_FIRST_FRAME) reset();
+		if(IS_FIRST_FRAME) {
+			var _tex  = getInputData(6);
+			var _spwn = getInputData(8);
+			
+			objects = _spwn? array_create_ext(is_array(_tex)? array_length(_tex) : 1, function(i) /*=>*/ {return spawn(i)}) : [];
+		}
 		
 		outputs[0].setValue(objects);
-	}
-	
-	static reset = function() { 
-		var _tex  = getInputData(6);
-		var _spwn = getInputData(8);
-		
-		objects = [];
-		if(!_spwn) return;
-		
-		objects = array_create_ext(is_array(_tex)? array_length(_tex) : 1, function(i) /*=>*/ {return spawn(i)});
 	}
 	
 	static getGraphPreviewSurface = function() /*=>*/ {return getInputData(6)};
