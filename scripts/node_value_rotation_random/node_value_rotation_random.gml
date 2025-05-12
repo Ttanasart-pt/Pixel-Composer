@@ -18,5 +18,3 @@ function __NodeValue_Rotation_Random(_name, _node, _value, _tooltip = "") : __No
 		return array_verify(val, 5);
 	}
 }
-
-// angle_random_eval

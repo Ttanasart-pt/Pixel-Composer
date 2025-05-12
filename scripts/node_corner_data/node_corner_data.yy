@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_corner_data",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_corner_data",
+  "parent":{
+    "name":"number",
+    "path":"folders/nodes/data/value/number.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

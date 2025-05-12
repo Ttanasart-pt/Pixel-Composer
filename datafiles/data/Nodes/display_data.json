@@ -693,6 +693,10 @@
             "Node_String",
             "Node_Path",
             "Node_Area",
+            "Node_Padding_Data",
+            "Node_Corner_Data",
+            "Node_Rotation_Range_Data",
+            "Node_Rotation_Random_Data",
             
             { "label": "Numbers" },
             { "label": "/Creators" },
@@ -724,6 +728,7 @@
             "Node_Vector_Swizzle",
             { "label": "/Operators" },
             "Node_Vector_Magnitude",
+            "Node_Vector_Direction",
             "Node_Vector_Normalize",
             "Node_Vector_Dot",
             "Node_Vector_Cross_2D",
