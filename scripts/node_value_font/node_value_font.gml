@@ -5,7 +5,12 @@ function __NodeValue_Font(_name, _node, _value = "", _tooltip = "") : NodeValue(
 	/////============== GET =============
 	
 	static valueProcess = function(value, nodeFrom = undefined, applyUnit = true, arrIndex = 0) {
-		return is_string(value)? filepath_resolve(value) : value; 
+		if(!is_string(value)) return "";
+		
+		if(struct_has(FONT_MAP, value))
+			return FONT_MAP[$ value];
+		
+		return filepath_resolve(value); 
 	}
 	
 	static getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { //// Get value
@@ -14,6 +19,7 @@ function __NodeValue_Font(_name, _node, _value = "", _tooltip = "") : NodeValue(
 		
 		if(is_array(val)) val = array_map(val, function(v) /*=>*/ {return valueProcess(v)});
 		else              val = valueProcess(val);
+		
 		return val;
 	}
 	
