@@ -27,7 +27,7 @@ function Node_Shuffle(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		["Shuffle", false], 1, 5, 3, 4, 
 	];
 	
-	temp_surface = [ 0, 0 ];
+	temp_surface = [ noone, noone ];
 	
 	static processData_prebatch  = function() { 
 	    var _type = getSingleValue(1);

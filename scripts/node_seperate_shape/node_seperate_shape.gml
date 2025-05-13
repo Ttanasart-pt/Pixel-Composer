@@ -34,11 +34,6 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	]
 	
 	temp_surface   = [ noone, noone ];
-	surface_buffer = buffer_create(1 * 1 * 4, buffer_fixed, 2);
-	surface_w = 1;
-	surface_h = 1;
-	
-	_prev_type = -1;
 	
 	setTrigger(1,,, function() /*=>*/ {return separateShape()});
 	
@@ -52,8 +47,6 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var _ignore = getInputData(4);
 		var _mode   = getInputData(5);
 		var _crop   = getInputData(6);
-		
-		var t = current_time;
 		
 		if(!is_surface(_inSurf)) return;
 		

@@ -47,7 +47,7 @@ function Node_Blur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		["Directional",	 true],	12, 13, 
 	];
 	
-	temp_surface = [ 0, 0 ];
+	temp_surface = [ noone, noone ];
 	
 	attribute_surface_depth();
 	attribute_oversample();

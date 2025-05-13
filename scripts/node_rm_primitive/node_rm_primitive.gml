@@ -189,7 +189,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 		["Volumetric",  true, 32], 33, 
 	];
 	
-	temp_surface = [ 0, 0 ];
+	temp_surface = [ noone, noone ];
 	environ = new RM_Environment();
 	object  = new RM_Shape();
 	

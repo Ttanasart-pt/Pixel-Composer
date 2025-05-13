@@ -61,7 +61,7 @@ function Node_ASE_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		0, tag_renderer, 1, 
 	];
 	
-	temp_surface = [ 0, 0, 0 ];
+	temp_surface = [ noone, noone, noone ];
 	
 	static processData = function(_outData, _data, _array_index) {
 		var _ase = _data[0];

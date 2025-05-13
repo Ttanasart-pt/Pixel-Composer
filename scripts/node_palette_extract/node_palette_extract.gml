@@ -39,7 +39,7 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		["Palette",	false],	3, 4, 1, 2, 6, 
 	]
 	
-	temp_surface    = [ 0 ];
+	temp_surface    = [ noone ];
 	
 	current_palette = [];
 	current_color   = 0;

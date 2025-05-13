@@ -31,7 +31,7 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	drag_my   = 0;
 	drag_sv   = 0;
 	
-	temp_surface = [ 0, 0 ];
+	temp_surface = [ noone, noone ];
 	
 	draw_transforms = [];
 	static drawOverlayTransform = function(_node) { return array_safe_get(draw_transforms, preview_index, noone); }

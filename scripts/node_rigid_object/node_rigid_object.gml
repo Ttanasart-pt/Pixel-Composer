@@ -17,6 +17,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	icon  = THEME.rigidSim;
 	setDimension(96, 96);
 	
+	update_on_frame    = true;
 	manual_ungroupable = false;
 	getInputData       = getInputDataForce;
 	
@@ -25,7 +26,10 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	objects         = [];
 	attributes.mesh = [];
 	
-	newInput( 8, nodeValue_Bool(  "Spawn",               self, true, "Make object spawn when start."));
+	////- Spawn
+	
+	newInput( 8, nodeValue_Bool(  "Spawn",       self, true, "Make object spawn when start."));
+	newInput(20, nodeValue_Int(   "Spawn Frame", self, 0));
 	
 	////- Physics
 	
@@ -63,7 +67,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(15, nodeValue_Bool( "Fix Rotation", self, false));
 	newInput(16, nodeValue_Bool( "Sleepable",    self,  true));
 	
-	// inputs 20
+	// inputs 21
 	
 	newOutput(0, nodeValue_Output("Object", self, VALUE_TYPE.rigid, objects));
 	
@@ -72,7 +76,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		else         inp.setAnimable(false).rejectArray();
 	})
 	
-	input_display_list = [ 8, 
+	input_display_list = [ 
+		["Spawn",	   false, 8], 20, 
 		["Physics",	   false], 0, 1, 2, 3, 4, 13, 
 		["Shape",	   false], 6, 5, 9, 10, 11, 
 		["Transform",  false], 7, 17, 
@@ -250,14 +255,9 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			ds_map_destroy(_sm);
 		}
 		
-		if(_pix && array_empty(mesh)) {
-			mesh = [ 
-				[ _minx - 0.5, _minx - 0.5 ], 
-				[ _maxx + 0.5, _minx - 0.5 ], 
-				[ _maxx + 0.5, _maxy + 0.5 ], 
-				[ _minx - 0.5, _maxy + 0.5 ],
-			];
-		}
+		if(_pix && array_empty(mesh))
+			mesh = [ [ cmX - .5, cmY - .5 ], [ cmX + .5, cmY - .5 ], 
+				     [ cmX + .5, cmY + .5 ], [ cmX - .5, cmY + .5 ] ];
 		
 		ds_map_destroy(_pm);
 		surface_free(temp);
@@ -603,14 +603,20 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		worldScale = struct_try_get(inline_context, "worldScale", 100);
 		if(worldIndex == undefined) return;
 		
-		if(IS_FIRST_FRAME) {
-			var _tex  = getInputData(6);
-			var _spwn = getInputData(8);
-			
+		if(IS_FIRST_FRAME) objects = [];
+		outputs[0].setValue(objects);
+		
+		var _tex  = getInputData( 6);
+		var _spwn = getInputData( 8);
+		var _spfr = getInputData(20);
+		
+		if(!_spwn) return;
+		
+		if(_frame == _spfr) {
 			objects = _spwn? array_create_ext(is_array(_tex)? array_length(_tex) : 1, function(i) /*=>*/ {return spawn(i)}) : [];
+			outputs[0].setValue(objects);
 		}
 		
-		outputs[0].setValue(objects);
 	}
 	
 	static getGraphPreviewSurface = function() /*=>*/ {return getInputData(6)};

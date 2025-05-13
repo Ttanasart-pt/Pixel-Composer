@@ -215,7 +215,7 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	setDynamicInput(26, false);
 	if(!LOADING && !APPENDING) run_in(1, function() /*=>*/ {return createNewInput()});
 	
-	temp_surface = [ 0, 0 ];
+	temp_surface = [ noone, noone ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _pbase = getSingleValue(0);

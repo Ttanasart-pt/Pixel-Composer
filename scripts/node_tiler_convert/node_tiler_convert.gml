@@ -118,7 +118,7 @@ function Node_Tile_Convert(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
     ];
 	
 	output_display_list = [ 2, 1, 0 ];
-	temp_surface        = [ 0, 0, 0 ];
+	temp_surface        = [ noone, noone, noone ];
 	
 	static refreshPalette = function() {
 		var _surf = inputs[0].getValue();

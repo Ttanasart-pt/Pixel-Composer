@@ -5,6 +5,9 @@ function __Box2DObject(_objId = undefined, _texture = undefined) constructor {
 	xscale  = 1;
 	yscale  = 1;
 	
+	xoffset = 0;
+	yoffset = 0;
+	
 	blend   = ca_white;
 	alpha   = 1;
 }

@@ -31,7 +31,7 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	];
 	
 	attributes.show_objects = true;	
-	attributes.show_debug   = false;	
+	attributes.show_debug   = false;
 	
 	array_push(attributeEditors, "Display");
 	array_push(attributeEditors, ["Show Objects", function() /*=>*/ {return attributes.show_objects}, new checkBox(function() /*=>*/ {return toggleAttribute("show_objects")})]);
@@ -55,8 +55,12 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			draw_set_text(_f_debug_s, fa_left, fa_top, c_white);
 			
 			var _tx = ui(16);
-			var _ty = ui(80);
+			var _ty = ui(56);
 			
+			_ty += ui(24);
+			draw_text_transformed(_tx, _ty, $"World Index: {worldIndex}", ui(2), ui(2), 0);
+			
+			_ty += ui(24);
 			var _count   = gmlBox2D_World_Get_Body_Count(worldIndex);
 			var _awcount = gmlBox2D_World_Get_Awake_Body_Count(worldIndex);
 			draw_text_transformed(_tx, _ty, $"Bodies: {_awcount}/{_count}", ui(2), ui(2), 0);
@@ -64,6 +68,10 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			_ty += ui(24);
 			var _shcount = gmlBox2D_World_Get_Shape_Count(worldIndex);
 			draw_text_transformed(_tx, _ty, $"Shapes: {_shcount}", ui(2), ui(2), 0);
+			
+			_ty += ui(24);
+			var _jcount = gmlBox2D_World_Get_Joint_Count(worldIndex);
+			draw_text_transformed(_tx, _ty, $"Joints: {_jcount}", ui(2), ui(2), 0);
 			
 		}
 	} 
@@ -83,7 +91,10 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		preview_surface = surface_verify(preview_surface, _dim[0], _dim[1], attrDepth());
 		outputs[0].setValue(_outSurf);
 		
-		if(IS_PLAYING) gmlBox2D_World_Step(worldIndex, _timStp / 1000, _subStp);
+		if(IS_PLAYING) {
+			gmlBox2D_World_Step(worldIndex, _timStp / 1000, _subStp);
+			gmlBox2D_World_Step_Joint(worldIndex);
+		}
 		
 		surface_set_target(_outSurf);
 		DRAW_CLEAR
@@ -104,7 +115,7 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					
 				var xscale = _o.xscale;
 				var yscale = _o.yscale;
-				
+				 
 				var blend  = _o.blend;
 				var alpha  = _o.alpha;
 				
@@ -116,7 +127,10 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				var sw = surface_get_width(_texture)  * xscale;
 				var sh = surface_get_height(_texture) * yscale;
 				
-				point_rotate_origin(-sw/2, -sh/2, rr, _p);
+				var ox = -sw / 2 + _o.xoffset;
+				var oy = -sh / 2 + _o.yoffset;
+				
+				point_rotate_origin(ox, oy, rr, _p);
 				
 				var dx = xx + _p[0];
 				var dy = yy + _p[1];

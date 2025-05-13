@@ -30,7 +30,7 @@ function Node_Active_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	brush_prev = noone;
 	brush_next_dist = 0;
 	
-	temp_surface = [ 0, 0, 0 ];
+	temp_surface = [ noone, noone, noone ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));

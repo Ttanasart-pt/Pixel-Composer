@@ -33,7 +33,7 @@ function Node_MK_Blinker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		["Glow",      true, 8], 9, 10, 
 	]
 	
-	temp_surface = [ 0, 0, 0 ];
+	temp_surface = [ noone, noone, noone ];
 	
 	surface_blur_init();
 	

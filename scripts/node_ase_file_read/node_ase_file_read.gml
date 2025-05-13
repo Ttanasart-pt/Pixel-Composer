@@ -172,7 +172,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		return _h;
 	}); 
 	
-	temp_surface = [ 0, 0, 0 ];
+	temp_surface = [ noone, noone, noone ];
 	blend_temp_surface = noone;
 	
 	input_display_list = [ 0, 

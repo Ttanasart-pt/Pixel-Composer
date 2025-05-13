@@ -6,7 +6,7 @@ function canvas_tool_corner() : canvas_tool_shader() constructor {
 	modifying = false;
 	amount    = 0;
 	
-	temp_surface   = [ 0, 0 ];
+	temp_surface   = [ noone, noone ];
 	anchors        = [];
 	anchorsRounded = [];
 	

@@ -25,7 +25,7 @@ function Node_Smoke_Vortex(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	newOutput(0, nodeValue_Output("Domain", self, VALUE_TYPE.sdomain, noone));
 	newOutput(1, nodeValue_Output("Domain", self, VALUE_TYPE.surface, noone));
 	
-	temp_surface = [ 0 ];
+	temp_surface = [ noone ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _pos = getInputData(1);

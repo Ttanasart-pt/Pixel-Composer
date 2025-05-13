@@ -2412,6 +2412,7 @@
     {"name":"s_node_rigid_activate","order":6,"path":"sprites/s_node_rigid_activate/s_node_rigid_activate.yy",},
     {"name":"s_node_rigid_deactivate","order":7,"path":"sprites/s_node_rigid_deactivate/s_node_rigid_deactivate.yy",},
     {"name":"s_node_rigid_force_apply","order":2,"path":"sprites/s_node_rigid_force_apply/s_node_rigid_force_apply.yy",},
+    {"name":"s_node_rigid_fracture","order":15,"path":"sprites/s_node_rigid_fracture/s_node_rigid_fracture.yy",},
     {"name":"s_node_rigid_global","order":4,"path":"sprites/s_node_rigid_global/s_node_rigid_global.yy",},
     {"name":"s_node_rigid_object_get_collision","order":13,"path":"sprites/s_node_rigid_object_get_collision/s_node_rigid_object_get_collision.yy",},
     {"name":"s_node_rigid_object_segment","order":14,"path":"sprites/s_node_rigid_object_segment/s_node_rigid_object_segment.yy",},

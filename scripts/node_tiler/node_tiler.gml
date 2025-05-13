@@ -60,7 +60,7 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		_preview_draw_mask        = surface_create_empty(1, 1);
 		preview_draw_mask         = surface_create_empty(1, 1);
 		
-		temp_surface         = [ 0, 0, 0 ];
+		temp_surface         = [ noone, noone, noone ];
 		selection_mask       = noone;
 	#endregion
 	

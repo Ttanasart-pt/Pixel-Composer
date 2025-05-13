@@ -20,7 +20,8 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(11, nodeValue_Bool(  "Color Filter", self, false));
 	newInput( 5, nodeValue_Color( "Target Color", self, ca_white));
-	newInput( 6, nodeValue_Bool(  "Inner Only",   self, false, "Only fill regions with surrounding pixels."));
+	newInput( 6, nodeValue_Bool(  "Inner Only",   self, false)).setTooltip("Only fill regions with surrounding pixels.");
+	newInput(14, nodeValue_Bool(  "Expands",      self,  true)).setTooltip("Expands filled area to filtered pixels.");
 	
 	////- Fill
 	
@@ -36,13 +37,13 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(7, nodeValue_Enum_Scroll("Draw Original", self,  0, [ "None", "Above", "Behind" ]));
 	
-	//// Inputs 14
+	//// Inputs 15
 	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 4, 
 		["Surfaces", false], 0, 1, 
-		["Filter",   false, 11], 5, 6, 
+		["Filter",   false, 11], 5, 6, 14, 
 		["Fill",	 false], 13, 8, 2, 9, 10, 12, 
 		["Render",	 false], 7, 
 	];
@@ -50,22 +51,24 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	temp_surface = array_create(3);
 		
 	static processData = function(_outSurf, _data, _array_index) {
+		var _seed = _data[4];
+		
 		var _surf = _data[0];
 		var _mask = _data[1];
 		
+		var _fclr = _data[11];
+		var _targ = _data[ 5];
+		var _innr = _data[ 6];
+		var _expn = _data[14];
+		
 		var _thr  = _data[13];
-		var _colr = _data[2];
-		var _fill = _data[3];
-		var _seed = _data[4];
-		var _rnbg = _data[7];
 		var _filt = _data[8];
+		var _colr = _data[2];
 		var _cmap = _data[9];
 		var _tmap = _data[10];
-		
-		var _fclr = _data[11];
-		var _targ = _data[5];
-		var _innr = _data[6];
 		var _trot = _data[12]; 
+		
+		var _rnbg = _data[7];
 		
 		inputs[ 2].setVisible(_filt == 0);
 		inputs[ 9].setVisible(_filt == 1, _filt == 1);
@@ -139,14 +142,18 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 					base = !base;
 				}
 				
-				surface_set_shader(temp_surface[base], sh_region_fill_border);
-					shader_set_f("dimension",       _sw, _sh);
-					shader_set_surface("original",	_surf);
+				if(_expn) {
+					surface_set_shader(temp_surface[base], sh_region_fill_border);
+						shader_set_f("dimension",       _sw, _sh);
+						shader_set_surface("original",	_surf);
+					
+						draw_surface_safe(temp_surface[!base]);
+					surface_reset_shader();
+					
+					base = !base;
+				}
 				
-					draw_surface_safe(temp_surface[!base]);
-				surface_reset_shader();
-				
-				cmap = temp_surface[base];
+				cmap = temp_surface[!base];
 			#endregion
 			
 		} else {

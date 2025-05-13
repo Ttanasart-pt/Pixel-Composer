@@ -24,7 +24,7 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		["Rendering", false], 1, 2, 3, 
 	];
 	
-	temp_surface = [ 0 ];
+	temp_surface = [ noone ];
 	
 	attribute_surface_depth();
 	attribute_interpolation();

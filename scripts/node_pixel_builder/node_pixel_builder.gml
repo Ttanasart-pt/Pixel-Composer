@@ -89,7 +89,7 @@ function Node_Pixel_Builder(_x, _y, _group = noone) : Node_Collection(_x, _y, _g
 	custom_output_index = array_length(outputs);
 	
 	dimension    = [ 1, 1 ];
-	temp_surface = [ 0 ];
+	temp_surface = [ noone ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(!draw_input_overlay) return;

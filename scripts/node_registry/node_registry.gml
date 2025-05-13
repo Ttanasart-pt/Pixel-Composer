@@ -324,7 +324,7 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 			_spr = asset_get_index(_ispr);
 				
 			if(sprite_exists(_spr)) setSpr(_spr);
-			else print($"Node icon not found {_ispr}");
+			else run_in(1, function(s) /*=>*/ {return print(s)}, [ $"Missing_icon|{_ispr}" ]);
 			
 		} else {
 			var pth = $"{sourceDir}/icon.png";

@@ -148,7 +148,7 @@ function Node_Liquefy(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	attribute_oversample();
 	attribute_interpolation();
 	
-	temp_surface = [ 0, 0 ];
+	temp_surface = [ noone, noone ];
 	disp_path = [];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {

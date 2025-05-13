@@ -23,7 +23,7 @@ function Node_PB_FX_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	    ["Highlight",  false, 5], 8, 7, 6, 
     ];
 	
-	temp_surface = [ 0, 0, 0 ];
+	temp_surface = [ noone, noone, noone ];
 	
 	static step = function() {}
 	

@@ -62,7 +62,7 @@ function Node_RM_Combine(_x, _y, _group = noone) : Node_RM(_x, _y, _group) const
 		["Render",  false, 17], 6, 7, 8, 10, 18, 9, 
 	]
 	
-	temp_surface = [ 0, 0 ];
+	temp_surface = [ noone, noone ];
 	environ = new RM_Environment();
 	object  = noone;
 	

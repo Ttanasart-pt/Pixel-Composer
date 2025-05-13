@@ -98,7 +98,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	
 	output_display_list = [ 0, 5, 1, 2, 3, 4 ];
 	
-	temp_surface = [ 0 ];
+	temp_surface = [ noone ];
 	tool_lookat  = new NodeTool( "Move Target", THEME.tools_3d_transform_object );
 	
 	_qi1  = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(0, 1, 0),  90);

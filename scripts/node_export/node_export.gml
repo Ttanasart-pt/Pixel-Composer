@@ -211,7 +211,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	gifski    = filepath_resolve(PREFERENCES.gifski_path) 	   + "win/gifski.exe";
 	ffmpeg    = filepath_resolve(PREFERENCES.ffmpeg_path) 	   + "bin/ffmpeg.exe";
 	
-	temp_surface = [ 0 ]; 
+	temp_surface = [ noone ]; 
 	
 	if(OS == os_windows) {
 		var _w = function(s,p) /*=>*/ {return $"No {s} detected at {p}, please make sure the installation is complete and {s} path is set correctly in the preference."};

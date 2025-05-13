@@ -49,7 +49,7 @@ function Node_RM_Terrain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		["Light",     false], 14, 15, 
 	];
 	
-	temp_surface = [ 0, 0, 0, 0 ];
+	temp_surface = [ noone, noone, noone, noone ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
 	

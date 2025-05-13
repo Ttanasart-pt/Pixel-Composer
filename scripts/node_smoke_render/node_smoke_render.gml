@@ -31,7 +31,7 @@ function Node_Smoke_Render(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	
 	setTrigger(2, "Clear cache", [ THEME.cache, 0, COLORS._main_icon ]);
 	
-	temp_surface = [ 0 ];
+	temp_surface = [ noone ];
 	
 	static onInspector2Update = function() { clearCache(); }
 	

@@ -146,6 +146,7 @@
             "Node_Rigid_Wall",
             "Node_Rigid_Object_Segment",
             "Node_Rigid_Path_Collider",
+            "Node_Rigid_Fracture",
             
             { "label": "/Modifiers" },
             "Node_Rigid_Force_Apply",
