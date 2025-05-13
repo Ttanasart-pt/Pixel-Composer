@@ -461,8 +461,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         
         node_drag_search = false;
         
-        frame_hovering  = noone;
-        _frame_hovering = noone;
+        frame_hovering   = noone;
+        _frame_hovering  = noone;
+        
+        cache_group_edit = noone;
     #endregion
     
     #region // ---- minimap ----
@@ -1484,6 +1486,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         if(value_focus != noone)       return;
         if(!_node.draggable)           return;
     	if(key_mod_press_any())        return;
+    	if(cache_group_edit != noone)  return;
         
         if(mouse_press(mb_left)) {
             node_dragging = _node;
@@ -1586,10 +1589,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                 } else if(mouse_press(mb_left, _focus)) {
                 	
                     if(key_mod_press(SHIFT)) {
-                        if(node_hovering)
-                            array_toggle(nodes_selecting, node_hovering);
-                        else
-                            nodes_selecting = [];
+                        if(node_hovering) array_toggle(nodes_selecting, node_hovering);
+                        else nodes_selecting = [];
                             
                     } else if(value_focus || node_hovering == noone) {
                         nodes_selecting = [];
@@ -1600,7 +1601,23 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                         	if(!PANEL_INSPECTOR.locked) PANEL_INSPECTOR.inspecting = _ctx; 
                         	if(_ctx) PANEL_PREVIEW.setNodePreview(_ctx);
                         }
-                            
+                    
+                    } else if(cache_group_edit != noone) {
+                    	
+                    	var _cache = cache_group_edit;
+                    	if(node_hovering == _cache) {
+                    		cache_group_edit = noone;
+                    		
+                    	} else {
+	                    	if(_cache.containNode(node_hovering))
+	                    		_cache.removeNode(node_hovering);
+	                    	else 
+	                    		_cache.addNode(node_hovering);
+	                    		
+	                    	_cache.refreshCacheGroup();
+	                    	_cache.refreshGroupBG(true);
+                    	}
+                    	
                     } else {
                         if(DOUBLE_CLICK) {
                             PANEL_PREVIEW.setNodePreview(node_hovering);

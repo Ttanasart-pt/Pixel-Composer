@@ -105,7 +105,11 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	// inputs 63
 	
-	array_foreach(inputs, function(i) /*=>*/ {return i.rejectArray()}, 1);
+	array_foreach(inputs, function(inp, i) /*=>*/ {
+		if(i==6||i==8) return;
+		inp.rejectArray();
+	}, 1);
+	
 	input_len = array_length(inputs);
 	
 	dynaDraw_parameter = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
@@ -333,7 +337,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			var _rot_spd  = angle_random_eval(_rotation_speed);
 			var _rot_snap = _rotation_snap;
 			
-			var _dirRand = angle_random_eval(_direction);
+			var _dirRand = angle_random_eval(is_array(_direction[0])? _direction[i] : _direction);
 			var _dirr	 = _dirRand;
 			if(_directCenter) {
 				var _pointDir = point_direction(_spawn_area[0], _spawn_area[1], xx, yy);

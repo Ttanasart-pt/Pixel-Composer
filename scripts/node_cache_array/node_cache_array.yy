@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_cache_array",
   "parent":{
-    "name":"misc",
-    "path":"folders/nodes/data/misc.yy",
+    "name":"cache",
+    "path":"folders/nodes/data/misc/cache.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
