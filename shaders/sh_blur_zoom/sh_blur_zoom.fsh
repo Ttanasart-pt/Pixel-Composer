@@ -23,6 +23,7 @@ uniform int  samples;
 uniform vec2  center;
 uniform int   blurMode;
 uniform int   gamma;
+uniform int   fadeDistance;
 
 uniform vec2      strength;
 uniform int       strengthUseSurf;
@@ -75,16 +76,22 @@ void main() {
 	else if(blurMode == 1)	blrStart = -nsamples;
 	else if(blurMode == 2)	blrStart = -nsamples * 2. - 1.;
 	
-    for(float i = 0.; i < nsamples * 2. + 1.; i++) {
+	float amo = nsamples * 2. + 1.;
+	float div = 0.;
+	
+    for(float i = 0.; i < amo; i++) {
         float scale = 1.0 + ((blrStart + i) * scale_factor);
-		vec2 pos    = uv * scale + center;
+		vec2  pos   = uv * scale + center;
+		float dist  = fadeDistance == 1? i / amo : 1;
 		
 		vec4 col = sampleTexture( gm_BaseTexture, pos );
 		if(gamma == 1) col.rgb = pow(col.rgb, vec3(2.2));
-		color += col;
+		
+		color += col * dist;
+		div   += dist;
     }
     
-    color /= nsamples * 2. + 1.;
+    color /= div;
     if(gamma == 1) color.rgb = pow(color.rgb, vec3(1. / 2.2));
     
 	gl_FragColor = color;

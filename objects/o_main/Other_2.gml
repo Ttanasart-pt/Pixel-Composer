@@ -27,7 +27,7 @@
 		show_debug_message($"Env directory: {DIRECTORY}");
 		var dir_valid = DIRECTORY != "" && directory_exists(DIRECTORY);
 		var tmp = file_text_open_write(DIRECTORY + "val_check.txt");
-	
+		
 		if(tmp == -1) {
 			dir_valid = false;
 			show_message($"WARNING: Inaccessible main directory ({DIRECTORY}) this may be caused by non existing folder, or Pixel Composer has no permission to open the folder.");

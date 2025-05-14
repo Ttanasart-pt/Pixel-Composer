@@ -26,7 +26,7 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	////- Blur
 	
-	newInput(13, nodeValue_es( "Types",        self, 0, [ "Gaussian", "Zoom" ]));
+	newInput(13, nodeValue_es( "Type",         self, 0, [ "Gaussian", "Zoom" ]));
 	newInput(11, nodeValue_s(  "Aspect Ratio", self, 1));
 	newInput(12, nodeValue_r(  "Direction",    self, 0));
 	newInput(14, nodeValue_2(  "Zoom Origin",  self, [ 0.5, 0.5 ])).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
@@ -102,7 +102,7 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var pass1blur;
 		
 		     if(_type == 0) pass1blur = surface_apply_gaussian( temp_surface[0], _size, true, c_black, 1, noone, false, _ratio, _angle);
-		else if(_type == 1) pass1blur = surface_apply_blur_zoom(temp_surface[0], _size, _zoom[0], _zoom[1], 2, 1);
+		else if(_type == 1) pass1blur = surface_apply_blur_zoom(temp_surface[0], _size, _zoom[0], _zoom[1], 2, 1, 64);
 		
 		surface_set_shader(temp_surface[0], sh_bloom_blend);
 			shader_set_c("blend",      _blnd);

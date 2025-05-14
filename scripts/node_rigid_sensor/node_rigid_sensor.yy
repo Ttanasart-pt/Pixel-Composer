@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_rigid_sensor",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_rigid_sensor",
+  "parent":{
+    "name":"rigidSim",
+    "path":"folders/nodes/data/simulation/rigidSim.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

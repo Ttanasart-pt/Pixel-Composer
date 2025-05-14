@@ -40,6 +40,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput( 3, nodeValue_Slider( "Air Resistance",      self, 0.0));
 	newInput( 4, nodeValue_Slider( "Rotation Resistance", self, 0.1));
 	newInput(13, nodeValue_Slider( "Bounciness",          self, 0.2));
+	newInput(22, nodeValue_Float(  "Gravity Scale",       self, 1));
 	
 	////- Shape
 	
@@ -63,11 +64,12 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	////- Simulation
 	
-	newInput(14, nodeValue_Bool( "Continuous",   self, false));
-	newInput(15, nodeValue_Bool( "Fix Rotation", self, false));
-	newInput(16, nodeValue_Bool( "Sleepable",    self,  true));
+	newInput(14, nodeValue_Bool( "Continuous",        self, false));
+	newInput(15, nodeValue_Bool( "Fix Rotation",      self, false));
+	newInput(16, nodeValue_Bool( "Sleepable",         self,  true));
+	newInput(21, nodeValue_Bool( "Activate on Spawn", self,  true));
 	
-	// inputs 21
+	// inputs 23
 	
 	newOutput(0, nodeValue_Output("Object", self, VALUE_TYPE.rigid, objects));
 	
@@ -82,7 +84,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		["Shape",	   false], 6, 5, 9, 10, 11, 
 		["Transform",  false], 7, 17, 
 		["Initial Velocity", false, 18], 19, 
-		["Simulation",  true], 14, 15, 16, 
+		["Simulation",  true], 14, 15, 16, 21, 
 	];
 	
 	static newMesh = function(_index) {
@@ -560,14 +562,18 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _conti    = getInputData(14);
 		var _fixRot   = getInputData(15);
 		var _sleep    = getInputData(16);
+		var _activate = getInputData(21);
+		var _gravSca  = getInputData(22);
 		
-		gmlBox2D_Object_Set_Rotation(    objId, _srot);
-		gmlBox2D_Object_Set_Fixed_Angle( objId, false);
-		gmlBox2D_Object_Set_Body_Type(   objId, _mov? 2 : 0);
-		gmlBox2D_Object_Set_Damping(     objId, _air_res, _rot_frc);
-		gmlBox2D_Object_Set_Continuous(  objId, _conti);
-		gmlBox2D_Object_Set_Fixed_Angle( objId, _fixRot);
-		gmlBox2D_Object_Set_Sleepable(   objId, _sleep);
+		gmlBox2D_Object_Set_Enable(       objId, _activate);
+		gmlBox2D_Object_Set_Rotation(     objId, _srot);
+		gmlBox2D_Object_Set_Fixed_Angle(  objId, false);
+		gmlBox2D_Object_Set_Body_Type(    objId, _mov? 2 : 0);
+		gmlBox2D_Object_Set_Damping(      objId, _air_res, _rot_frc);
+		gmlBox2D_Object_Set_Gravity_Scale(objId, _gravSca);
+		gmlBox2D_Object_Set_Continuous(   objId, _conti);
+		gmlBox2D_Object_Set_Fixed_Angle(  objId, _fixRot);
+		gmlBox2D_Object_Set_Sleepable(    objId, _sleep);
 		
 		gmlBox2D_Shape_Set_Friction(     objId, _cnt_frc);
 		gmlBox2D_Shape_Set_Restitution(  objId, _bouncy);

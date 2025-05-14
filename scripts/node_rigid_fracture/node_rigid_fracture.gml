@@ -26,6 +26,8 @@ function Node_Rigid_Fracture(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput( 6, nodeValue_Slider( "Air Resistance",      self, 0.0));
 	newInput( 7, nodeValue_Slider( "Rotation Resistance", self, 0.1));
 	newInput( 8, nodeValue_Slider( "Bounciness",          self, 0.2));
+	newInput(15, nodeValue_Float(  "Gravity Scale",       self, 1));
+	newInput(14, nodeValue_Bool(   "Activate on Spawn",   self, true));
 	
 	////- Transform
 	
@@ -38,13 +40,13 @@ function Node_Rigid_Fracture(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(12, nodeValue_Slider( "Damping",   self, .5 ));
 	newInput(13, nodeValue_Float(  "Breaking Force", self, 0 )).setTooltip("Amount of force to break the joint, zero for unbreakable.");
 	
-	// input 14
+	// input 16
 	
 	newOutput(0, nodeValue_Output("Object", self, VALUE_TYPE.rigid, objects));
 	
 	input_display_list = [ 0,  
 		["Fracture",  false], 1, button(function() /*=>*/ {return fracture()}).setText("Fracture"), 2, 3, 
-		["Physics",   false], 4, 5, 6, 7, 8, 
+		["Physics",   false], 4, 5, 6, 7, 8, 15, 14, 
 		["Transform", false], 9, 
 		["Joint",     false, 10], 11, 12, 13, 
 	];
@@ -417,6 +419,8 @@ function Node_Rigid_Fracture(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var _rot_frc  = getInputData(7);
 		var _bouncy   = getInputData(8);
 		var _sPos     = getInputData(9);
+		var _gravSca  = getInputData(15);
+		var _activate = getInputData(14);
 		
 		var sw = surface_get_width_safe(_baseSurf);
 		var sh = surface_get_height_safe(_baseSurf);
@@ -465,10 +469,12 @@ function Node_Rigid_Fracture(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			var boxObj = new __Box2DObject(objId, _mesh.texture);
 			
 			// gmlBox2D_Object_Set_Body_Type(  objId, 0);
-			gmlBox2D_Object_Set_Density(    objId, _dens);
-			gmlBox2D_Object_Set_Damping(    objId, _air_res, _rot_frc);
-			gmlBox2D_Shape_Set_Friction(    objId, _cnt_frc);
-			gmlBox2D_Shape_Set_Restitution( objId, _bouncy);
+			gmlBox2D_Object_Set_Enable(        objId, _activate);
+			gmlBox2D_Object_Set_Density(       objId, _dens);
+			gmlBox2D_Object_Set_Damping(       objId, _air_res, _rot_frc);
+			gmlBox2D_Object_Set_Gravity_Scale( objId, _gravSca);
+			gmlBox2D_Shape_Set_Friction(       objId, _cnt_frc);
+			gmlBox2D_Shape_Set_Restitution(    objId, _bouncy);
 			
 			boxObj.px = px * worldScale;
 			boxObj.py = py * worldScale;

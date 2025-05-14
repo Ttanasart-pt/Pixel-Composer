@@ -7,51 +7,40 @@
 function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Zoom Blur";
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
-	
-	newInput(1, nodeValue_Float("Strength", self, 0.2))
-		.setMappable(12);
-	
-	newInput(2, nodeValue_Vec2("Center",   self, [ 0.5, 0.5 ]))
-		.setUnitRef(function(index) /*=>*/ {return getDimension(index)}, VALUE_UNIT.reference);
-		
-	newInput(3, nodeValue_Enum_Scroll("Oversample mode", self,  0, [ "Empty", "Clamp", "Repeat" ]))
-		.setTooltip("How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.");
-		
-	newInput(4, nodeValue_Enum_Scroll("Zoom origin", self,  1, [ "Start", "Middle", "End" ]));
-		
-	newInput(5, nodeValue_Surface("Blur mask", self));
-	
-	newInput(6, nodeValue_Surface("Mask", self));
-	
-	newInput(7, nodeValue_Float("Mix", self, 1))
-		.setDisplay(VALUE_DISPLAY.slider);
-	
-	newInput(8, nodeValue_Bool("Active", self, true));
-		active_index = 8;
-	
+	newActiveInput(8);
 	newInput(9, nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
-	__init_mask_modifier(6); // inputs 10, 11
+	////- Surface
 	
-	//////////////////////////////////////////////////////////////////////////////////////////////////
+	newInput(0, nodeValue_Surface( "Surface In", self));
+	newInput(6, nodeValue_Surface( "Mask",       self));
+	newInput(7, nodeValue_Slider(  "Mix",        self, 1));
+	__init_mask_modifier(6, 10);
+	newInput(5, nodeValue_Surface("Blur mask", self));
 	
-	newInput(12, nodeValueMap("Strength map", self));
+	////- Blur
 	
-	//////////////////////////////////////////////////////////////////////////////////////////////////
+	newInput( 4, nodeValue_Enum_Scroll( "Zoom origin",  self, 1, [ "Start", "Middle", "End" ]));
+	newInput(15, nodeValue_Enum_Button( "Mode",         self, 0, [ "Blur", "Step" ]));
+	newInput( 1, nodeValue_Float(       "Strength",     self, 0.2)).setMappable(12);
+	newInput(12, nodeValueMap(          "Strength map", self));
+	newInput( 2, nodeValue_Vec2(        "Center",       self, [ 0.5, 0.5 ])).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	
-	newInput(13, nodeValue_Bool("Gamma Correction", self, false));
+	////- Render
+		
+	newInput( 3, nodeValue_es(   "Oversample mode",  self, 0, [ "Empty", "Clamp", "Repeat" ]));
+	newInput(14, nodeValue_Int(  "Samples",          self, 64));
+	newInput(13, nodeValue_Bool( "Gamma Correction", self, false));
+	newInput(16, nodeValue_Bool( "Fade",             self, false));
 	
-	newInput(14, nodeValue_Int("Samples", self, 64));
-	
-	newInput(15, nodeValue_Enum_Button("Mode", self, 0, [ "Blur", "Step" ]));
+	// inputs 17
 	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 8, 9,
 		["Surfaces", true],	0, 6, 7, 10, 11, 5, 
 		["Blur",	false],	15, 4, 1, 12, 2, 
-		["Render",	false],	14, 13, 
+		["Render",	false],	14, 13, 16, 
 	];
 	
 	attribute_surface_depth();
@@ -88,6 +77,7 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			shader_set_i("sampleMode",   _sam);
 			shader_set_i("gamma",        _data[13]);
 			shader_set_i("samples",      _data[14]);
+			shader_set_i("fadeDistance", _data[16]);
 			
 			shader_set_i("useMask", is_surface(_data[5]));
 			shader_set_surface("mask", _data[5]);

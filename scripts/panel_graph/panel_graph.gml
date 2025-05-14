@@ -1483,10 +1483,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         
         if(!_focus || !mouse_on_graph) return;
         if(_node == noone)             return;
+    	if(cache_group_edit != noone)  return;
         if(value_focus != noone)       return;
         if(!_node.draggable)           return;
     	if(key_mod_press_any())        return;
-    	if(cache_group_edit != noone)  return;
         
         if(mouse_press(mb_left)) {
             node_dragging = _node;
