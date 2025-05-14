@@ -82,7 +82,7 @@ void main() {
     for(float i = 0.; i < amo; i++) {
         float scale = 1.0 + ((blrStart + i) * scale_factor);
 		vec2  pos   = uv * scale + center;
-		float dist  = fadeDistance == 1? i / amo : 1;
+		float dist  = fadeDistance == 1? i / amo : 1.;
 		
 		vec4 col = sampleTexture( gm_BaseTexture, pos );
 		if(gamma == 1) col.rgb = pow(col.rgb, vec3(2.2));
