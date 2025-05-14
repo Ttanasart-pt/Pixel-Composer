@@ -50,10 +50,6 @@ function Node_Interlaced(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	setTrigger(2, "Clear cache", [ THEME.cache, 0, COLORS._main_icon ], function() /*=>*/ { clearCache(); });
 	
-	static step = function() {
-		__step_mask_modifier();
-	}
-	
 	static processData = function(_outSurf, _data, _array_index) {
 		var _surf = _data[ 0];
 		var _axis = _data[ 7];

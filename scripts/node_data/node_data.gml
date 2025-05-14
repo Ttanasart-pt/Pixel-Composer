@@ -136,6 +136,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		outputs          = [];
 		input_bypass     = [];
 		inputm           = {};
+		inputMappable    = [];
 		
 		inputMap         = {};
 		outputMap        = {};
@@ -193,6 +194,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		toRefreshNodeDisplay = false;
 		input_mask_index     = -1;
+		__mask_index         = undefined;
+		__mask_mod_index     = undefined;
 		
 		run_in(1, function() /*=>*/ {
 			input_buttons   = [];
@@ -702,6 +705,19 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				inspectInput2.setValue(false);
 			}
 		}
+	}
+	
+	static doStep = function() {
+		if(__mask_index != undefined) {
+			var _msk = is_surface(getSingleValue(__mask_index));
+			inputs[__mask_mod_index + 0].setVisible(_msk);
+			inputs[__mask_mod_index + 1].setVisible(_msk);
+		}
+		
+		for( var i = 0, n = array_length(inputMappable); i < n; i++ )
+			inputMappable[i].mappableStep();
+		
+		step();
 	}
 	
 	static step          = function() /*=>*/ {}

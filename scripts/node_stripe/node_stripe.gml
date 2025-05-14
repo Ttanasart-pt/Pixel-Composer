@@ -90,14 +90,6 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		return w_hovering;
 	}
 	
-	static step = function() {
-		inputs[ 1].mappableStep();
-		inputs[ 2].mappableStep();
-		inputs[ 5].mappableStep();
-		inputs[ 7].mappableStep();
-		inputs[10].mappableStep();
-	}
-	
 	static processData = function(_outSurf, _data, _array_index) {
 		var _dim  = _data[0];
 		var _bnd  = _data[3];

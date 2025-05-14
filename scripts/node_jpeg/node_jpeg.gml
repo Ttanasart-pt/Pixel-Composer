@@ -42,15 +42,12 @@ function Node_JPEG(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	attribute_surface_depth();
 	
-	static step = function() { #region
-		__step_mask_modifier();
-		
+	static step = function() {
 		var _reall = getSingleValue(13);
-		
 		inputs[4].setVisible(!_reall);
-	} #endregion
+	}
 	
-	static processData = function(_outSurf, _data, _array_index) { #region
+	static processData = function(_outSurf, _data, _array_index) {
 		var _surf  = _data[0];
 		var _patc  = _data[2];
 		var _comp  = _data[3];
@@ -95,5 +92,5 @@ function Node_JPEG(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		_outSurf = channel_apply(_data[0], _outSurf, _data[7]);
 		
 		return _outSurf;
-	} #endregion
+	}
 }

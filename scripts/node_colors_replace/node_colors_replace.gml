@@ -272,10 +272,6 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		if(index == 0 && attributes.auto_refresh) refreshPalette();
 	}
 	
-	static step = function() {
-		__step_mask_modifier();
-	}
-	
 	static processData = function(_outSurf, _data, _array_index) {		
 		var fr  = _data[1];
 		var to  = _data[2];

@@ -121,14 +121,6 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		return w_hovering;
 	}
 	
-	static step = function() {
-		inputs[2].mappableStep();
-		inputs[3].mappableStep();
-		inputs[4].mappableStep();
-		inputs[5].mappableStep();
-		inputs[8].mappableStep();
-	}
-	
 	static getDimension = function(_arr = 0) {
 		var _dim = getSingleValue( 0, _arr);
 		var _sam = getSingleValue( 7, _arr);

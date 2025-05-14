@@ -71,8 +71,6 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	attribute_surface_depth();
 	
 	static step = function() {
-		__step_mask_modifier();
-		
 		var _type    = getInputData(2);
 		var _mode    = getInputData(6);
 		var _use_pal = getInputData(14);

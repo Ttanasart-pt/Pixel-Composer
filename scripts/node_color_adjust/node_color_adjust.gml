@@ -56,17 +56,6 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	attribute_surface_depth();
 	
-	static step = function() {
-		inputs[ 1].mappableStep();
-		inputs[ 2].mappableStep();
-		inputs[ 3].mappableStep();
-		inputs[ 4].mappableStep();
-		inputs[ 5].mappableStep();
-		inputs[ 7].mappableStep();
-		inputs[ 9].mappableStep();
-		inputs[10].mappableStep();
-	}
-	
 	static processData_prebatch = function() {
 		var _type = getSingleValue(12);
 		

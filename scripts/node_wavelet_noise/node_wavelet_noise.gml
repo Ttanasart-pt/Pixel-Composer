@@ -47,9 +47,4 @@ function Node_Wavelet_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, 
 		return w_hovering;
 	}
 	
-	static step = function() {
-		inputs[2].mappableStep();
-		inputs[4].mappableStep();
-		inputs[5].mappableStep();
-	}
 }

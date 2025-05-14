@@ -83,14 +83,6 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		return w_hovering;
 	}
 	
-	static step = function() {
-		inputs[1].mappableStep();
-		inputs[3].mappableStep();
-		inputs[4].mappableStep();
-		inputs[5].mappableStep();
-		inputs[9].mappableStep();
-	}
-	
 	static processData = function(_outSurf, _data, _array_index) {
 		var _dim  = _data[ 0];
 		var _typ  = _data[ 2];

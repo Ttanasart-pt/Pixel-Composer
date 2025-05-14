@@ -45,10 +45,6 @@ function Node_Local_Analyze(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	attribute_surface_depth();
 	attribute_oversample();
 	
-	static step = function() { #region
-		__step_mask_modifier();
-	} #endregion
-	
 	static processData = function(_outSurf, _data, _array_index) {
 		var _alg = _data[1];
 		var _siz = _data[2];

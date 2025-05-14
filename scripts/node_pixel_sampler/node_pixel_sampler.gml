@@ -34,10 +34,6 @@ function Node_Pixel_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 	temp_surface = [ noone ];
 	
-	static step = function() {
-		inputs[4].mappableStep();
-	}
-	
 	static processData = function(_outSurf, _data, _array_index) {
 		var _base = _data[0];
 		var _samp = _data[1];

@@ -57,12 +57,6 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		return w_hovering;
 	}
 	
-	static step = function() {
-		__step_mask_modifier();
-		
-		inputs[1].mappableStep();
-	}
-	
 	static processData = function(_outSurf, _data, _array_index) {
 		var _sam = getAttribute("oversample");
 		

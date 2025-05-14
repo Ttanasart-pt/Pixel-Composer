@@ -64,14 +64,6 @@ function Node_RD(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	attribute_surface_depth();
 		
 	temp_surface = [ surface_create(1, 1), surface_create(1, 1) ];
-		
-	static step = function() { #region
-		inputs[1].mappableStep();
-		inputs[2].mappableStep();
-		inputs[3].mappableStep();
-		inputs[5].mappableStep();
-		inputs[6].mappableStep();
-	} #endregion
 	
 	static update = function() {
 		var _surf = getInputData(0);

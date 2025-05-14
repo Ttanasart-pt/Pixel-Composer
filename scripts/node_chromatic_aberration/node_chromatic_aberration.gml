@@ -25,8 +25,6 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		inputs[2].mappableStep();
-		
 		var _surf = _data[0];
 		var _cent = _data[1];
 		var _type = _data[5];

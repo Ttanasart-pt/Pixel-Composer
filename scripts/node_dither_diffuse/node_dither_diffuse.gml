@@ -76,10 +76,6 @@ function Node_Dither_Diffuse(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		["Dither",  false], 7, 9, 
 	];
 	
-	static step = function() {
-		__step_mask_modifier();
-	}
-	
 	static processData = function(_outSurf, _data, _array_index) {
 	    var _surf = _data[0];
 	    var _type = _data[7];

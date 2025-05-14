@@ -45,15 +45,6 @@ function Node_MK_Fracture(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		
-	} #endregion
-	
-	static step = function() { #region
-		inputs[2].mappableStep();
-		inputs[4].mappableStep();
-	} #endregion
-	
 	static processData = function(_outSurf, _data, _array_index) {
 		var _surf = _data[0];
 		var _dim  = surface_get_dimension(_surf);

@@ -70,12 +70,6 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	attribute_oversample();
 	
 	static step = function() {
-		__step_mask_modifier();
-		
-		inputs[1].mappableStep();
-		inputs[4].mappableStep();
-		inputs[8].mappableStep();
-		
 		filter_button.index = attributes.filter;
 	}
 	

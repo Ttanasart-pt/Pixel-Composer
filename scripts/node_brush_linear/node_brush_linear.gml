@@ -37,10 +37,6 @@ function Node_Brush_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	attribute_surface_depth();
 	
-	static step = function() {
-		__step_mask_modifier();
-	}
-	
 	static processData = function(_outSurf, _data, _array_index) {
 		
 		surface_set_shader(_outSurf, sh_brush_linear);

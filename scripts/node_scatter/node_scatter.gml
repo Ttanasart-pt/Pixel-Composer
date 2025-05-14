@@ -42,7 +42,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput( 6, nodeValue_Enum_Scroll(    "Distribution",      self,  5, [ "Area", "Border", "Map", "Direct Data", "Path", "Full image + Tile" ]));
 	newInput( 5, nodeValue_Area(           "Area",              self, DEF_AREA_REF, { onSurfaceSize })).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
 	newInput(13, nodeValue_Surface(        "Distribution Map",  self));
-	newInput(14, nodeValue_Vector(         "Distribution Data", self, [])).setArrayDepth(1);
+	
 	newInput(17, nodeValue_Text(           "Extra Value",       self, [], "Apply the third and later values in each data point (if exist) on given properties."))
 		.setDisplay(VALUE_DISPLAY.text_array, { data: [ "Scale", "Rotation", "Color", "Alpha", "Array Index" ] });
 	newInput( 9, nodeValue_Enum_Button(    "Scatter",           self,  1, [ "Uniform", "Random", "Poisson" ]));
@@ -159,10 +159,6 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			
 			update();
 		}
-	}
-	
-	static step = function() {
-		inputs[11].mappableStep();
 	}
 	
 	////=========== PROCESS ===========

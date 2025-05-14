@@ -41,10 +41,6 @@ function Node_Blur_Box(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	attribute_oversample();
 	attribute_interpolation();
 	
-	static step = function() {
-		__step_mask_modifier();
-	}
-	
 	static processData = function(_outSurf, _data, _array_index) {
 		var _surf = _data[0];
 		var _mask = _data[2];

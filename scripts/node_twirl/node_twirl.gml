@@ -68,13 +68,6 @@ function Node_Twirl(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		return w_hovering;
 	}
 	
-	static step = function() {
-		__step_mask_modifier();
-		
-		inputs[2].mappableStep();
-		inputs[3].mappableStep();
-	}
-	
 	static processData = function(_outSurf, _data, _array_index) { #region	
 		var sam    = getAttribute("oversample");
 		

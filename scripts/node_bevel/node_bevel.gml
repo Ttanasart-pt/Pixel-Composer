@@ -58,12 +58,6 @@ function Node_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		return w_hovering;
 	}
 	
-	static step = function() {
-		__step_mask_modifier();
-		
-		inputs[1].mappableStep();
-	}
-	
 	static processData = function(_outSurf, _data, _array_index) {
 		var _hei = _data[1];
 		var _shf = _data[2];

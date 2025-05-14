@@ -29,11 +29,7 @@ function Node_Palette_Shift(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	attribute_surface_depth();
 	
-	static step = function() { #region
-		__step_mask_modifier();
-	} #endregion
-	
-	static processData = function(_outSurf, _data, _array_index) { #region
+	static processData = function(_outSurf, _data, _array_index) {
 		var _pal = _data[1];
 		var _shf = _data[2];
 		
@@ -57,5 +53,5 @@ function Node_Palette_Shift(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		_outSurf = channel_apply(_data[0], _outSurf, _data[6]);
 		
 		return _outSurf;
-	} #endregion
+	}
 }

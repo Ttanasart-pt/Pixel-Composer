@@ -44,10 +44,6 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	temp_surface = array_create(4);
 	
-	static step = function() {
-		inputs[4].mappableStep();
-	}
-	
 	static processData = function(_outSurf, _data, _array_index) {
 		var _surf    = _data[ 0];
 		var _pal     = _data[ 1];

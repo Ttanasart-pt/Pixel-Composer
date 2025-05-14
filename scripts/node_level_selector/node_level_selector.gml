@@ -100,13 +100,6 @@ function Node_Level_Selector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		}
 	}
 	
-	static step = function() {
-		__step_mask_modifier();
-		
-		inputs[1].mappableStep();
-		inputs[2].mappableStep();
-	}
-	
 	static processData = function(_outSurf, _data, _array_index) {
 		
 		surface_set_shader(_outSurf, sh_level_selector);

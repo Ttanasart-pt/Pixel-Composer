@@ -46,11 +46,7 @@
 // 	attribute_surface_depth();
 // 	attribute_oversample();
 // 	surface_blur_init();
-	
-// 	static step = function() {
-// 		__step_mask_modifier();
-// 	}
-	
+
 // 	static processData = function(_outSurf, _data, _array_index) {		
 // 		var _surf  = _data[0];
 // 		var _size  = min(128, _data[1]);

@@ -31,11 +31,7 @@ function Node_Alpha_Cutoff(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	attribute_surface_depth();
 	
-	static step = function() { #region
-		__step_mask_modifier();
-	} #endregion
-	
-	static processData = function(_outSurf, _data, _array_index) { #region	
+	static processData = function(_outSurf, _data, _array_index) {
 		surface_set_target(_outSurf);
 		DRAW_CLEAR
 		BLEND_OVERRIDE
@@ -52,5 +48,5 @@ function Node_Alpha_Cutoff(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		_outSurf = mask_apply(_data[0], _outSurf, _data[2], _data[3]);
 		
 		return _outSurf;
-	} #endregion
+	}
 }

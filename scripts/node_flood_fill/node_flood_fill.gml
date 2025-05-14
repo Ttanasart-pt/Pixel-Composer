@@ -45,10 +45,6 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		return w_hovering;
 	}
 	
-	static step = function() { #region
-		__step_mask_modifier();
-	} #endregion
-	
 	static processData = function(_outSurf, _data, _array_index) {
 		var inSurf = _data[0];
 		if(!is_surface(inSurf)) return _outSurf;

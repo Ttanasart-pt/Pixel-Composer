@@ -52,13 +52,6 @@ function Node_Gabor_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y
 		["Noise",	false],	1, 12, 2, 8, 4, 9, 7, 11, 5, 10, 
 	];
 	
-	static step = function() {
-		inputs[2].mappableStep();
-		inputs[4].mappableStep();
-		inputs[5].mappableStep();
-		inputs[7].mappableStep();
-	}
-	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		

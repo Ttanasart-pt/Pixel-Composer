@@ -41,19 +41,14 @@ function Node_Interpret_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		return w_hovering;
 	}
 	
-	static step = function() {
-		var _mode = getInputData(1);
-		
-		inputs[3].setVisible(_mode == 1);
-		inputs[3].mappableStep();
-	}
-	
 	static processData = function(_outSurf, _data, _array_index) {
 		static BATCH_SIZE = 128;
 		
 		var _val = _data[0];
 		var _mod = _data[1];
 		var _ran = _data[2];
+		
+		inputs[3].setVisible(_mod == 1);
 		
 		if(is_array(_val) && array_empty(_val)) return _outSurf;
 		if(!is_array(_val)) _val = [ _val ];

@@ -420,6 +420,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		attributes.map_index  = _index;
 		mapped_vec4           = _vec4;
 		
+		array_push(node.inputMappable, self);
+		
 		if(arrayLength == arrayLengthSimple)
 			arrayLength = __arrayLength;
 		

@@ -10,12 +10,6 @@ function __init_mask_modifier(_mask_index, _ind = undefined) {
 	__mask_feather   = 0;
 }
 
-function __step_mask_modifier() {
-	var _msk = is_surface(getSingleValue(__mask_index));
-	inputs[__mask_mod_index + 0].setVisible(_msk);
-	inputs[__mask_mod_index + 1].setVisible(_msk);
-}
-
 function __process_mask_modifier(data) {
 	__mask_invert  = data[__mask_mod_index + 0];
 	__mask_feather = data[__mask_mod_index + 1];

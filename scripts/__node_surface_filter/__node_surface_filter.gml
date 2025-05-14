@@ -26,10 +26,6 @@ function Node_(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) construc
 	attribute_surface_depth();
 	attribute_oversample();
 	
-	static step = function() {
-		__step_mask_modifier();
-	}
-	
 	static processData = function(_outSurf, _data, _array_index) {
 		
 		var _rad = _data[7];

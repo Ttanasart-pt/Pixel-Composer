@@ -223,10 +223,6 @@ function Node_Liquefy(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		return w_hovering;
 	}
 	
-	static step = function() {
-		__step_mask_modifier();
-	}
-	
 	static applyLiquefy = function(_data, _i) {
 		var _ind  = input_fix_len + _i * data_length;
 		var _surf = _data[0];

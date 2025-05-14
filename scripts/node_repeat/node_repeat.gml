@@ -317,8 +317,6 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		inputs[26].setVisible( _pat == 0);
 		inputs[32].setVisible( _pat == 2);
 		inputs[38].setVisible( _pat == 0);
-		
-		inputs[14].mappableStep();
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {	

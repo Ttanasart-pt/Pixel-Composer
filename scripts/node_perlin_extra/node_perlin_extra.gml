@@ -77,7 +77,7 @@ function Node_Perlin_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 		return w_hovering;
 	}
 	
-	static step = function() { #region
+	static step = function() {
 		var _col = getInputData(6);
 		var _typ = getInputData(10);
 		
@@ -91,9 +91,5 @@ function Node_Perlin_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 		
 		inputs[11].setVisible(_typ > 0);
 		inputs[12].setVisible(false);
-		
-		inputs[ 2].mappableStep();
-		inputs[11].mappableStep();
-		inputs[12].mappableStep();
-	} #endregion
+	}
 }

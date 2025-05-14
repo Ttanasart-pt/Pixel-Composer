@@ -26,10 +26,6 @@ function Node_Curve_HSV(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	attribute_surface_depth();
 	
-	static step = function() {
-		__step_mask_modifier();
-	}
-	
 	static processData = function(_outSurf, _data, _array_index) {	
 		var _surf = _data[0];
 		var _hcur = _data[1];

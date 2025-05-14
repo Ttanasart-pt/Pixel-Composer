@@ -35,8 +35,6 @@ function Node_Convolution(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	attribute_surface_depth();
 	attribute_oversample();
 	
-	static step = function() { __step_mask_modifier(); }
-	
 	static processData = function(_outSurf, _data, _array_index) {
 		var _ker = _data[1];
 		var _nrm = _data[9];

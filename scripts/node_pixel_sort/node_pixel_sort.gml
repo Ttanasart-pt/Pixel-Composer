@@ -41,10 +41,6 @@ function Node_Pixel_Sort(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	temp_surface = [ noone, noone ];
 	
-	static step = function() {
-		__step_mask_modifier();
-	}
-	
 	static processData = function(_outSurf, _data, _array_index) {
 		var _surf = _data[0];
 		
