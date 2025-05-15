@@ -137,6 +137,7 @@ function blur_directional_args(_surface, _size, _angle) constructor {
 	angle   = _angle;
 	
 	singleDirect = false; static setSingleDirect = function(i) /*=>*/ { singleDirect = i; return self; }
+	fadeDistance = false; static setFadeDistance = function(i) /*=>*/ { fadeDistance = i; return self; }
 	gamma        = false; static setGamma        = function(i) /*=>*/ { gamma        = i; return self; }
 	sampleMode   = 2;     static setSampleMode   = function(i) /*=>*/ { sampleMode   = i; return self; }
 }
@@ -167,6 +168,7 @@ function surface_apply_blur_directional(outputSurf, args) {
 		shader_set_i("singleDirect",  args.singleDirect);
 		shader_set_i("gamma",         args.gamma);
 		shader_set_i("sampleMode",	  args.sampleMode);
+		shader_set_i("fadeDistance", args.fadeDistance);
 		
 		draw_surface_safe(args.surface);
 	surface_reset_shader();

@@ -21,6 +21,7 @@ varying vec4 v_vColour;
 
 uniform float     size;
 uniform int       singleDirect;
+uniform int       fadeDistance;
 
 uniform vec2      direction;
 uniform int       directionUseSurf;
@@ -39,22 +40,26 @@ vec4 dirBlur(vec2 angle) {
     
 	if(singleDirect == 0) {
 	    for(float i = -1.0; i <= 1.0; i += delta) {
-			vec4 col  = sampleTexture( gm_BaseTexture, v_vTexcoord - angle * i);
+	    	float dist = fadeDistance == 1? 1. - abs(i) : 1.;
+			vec4  col  = sampleTexture( gm_BaseTexture, v_vTexcoord - angle * i);
 			if(gamma == 1) col.rgb = pow(col.rgb, vec3(2.2));
 			
+			col.rgb *= dist;
 	        acc      += col;
-			weight   += col.a;
+			weight   += col.a * dist;
 	    }
 		
 		acc.rgb /= weight;
 		acc.a   /= size * 2.;
 	} else {
 		for(float i = 0.; i <= 1.0; i += delta) {
-			vec4 col  = sampleTexture( gm_BaseTexture, v_vTexcoord - angle * i);
+			float dist = fadeDistance == 1? 1. - abs(i) : 1.;
+			vec4  col  = sampleTexture( gm_BaseTexture, v_vTexcoord - angle * i);
 			if(gamma == 1) col.rgb = pow(col.rgb, vec3(2.2));
 			
-	        acc      += col  ;
-			weight   += col.a;
+			col.rgb *= dist;
+	        acc      += col;
+			weight   += col.a * dist;
 	    }
 		
 		acc.rgb /= weight;
