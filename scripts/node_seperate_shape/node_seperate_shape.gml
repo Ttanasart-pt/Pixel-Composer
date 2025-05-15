@@ -1,8 +1,8 @@
 #region
 	FN_NODE_CONTEXT_INVOKE {
-		addHotkey("Node_Seperate_Shape", "Ignore blank > Toggle", "I", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[4].setValue((_n.inputs[4].getValue() + 1) % 2); });
-		addHotkey("Node_Seperate_Shape", "Mode > Toggle",         "M", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[5].setValue((_n.inputs[5].getValue() + 1) % 2); });
-		addHotkey("Node_Seperate_Shape", "Crop > Toggle",         "C", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[6].setValue((_n.inputs[6].getValue() + 1) % 2); });
+		addHotkey("Node_Seperate_Shape", "Ignore blank > Toggle", "I", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[4].setValue((_n.inputs[4].getValue() + 1) % 2); });
+		addHotkey("Node_Seperate_Shape", "Mode > Toggle",         "M", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[5].setValue((_n.inputs[5].getValue() + 1) % 2); });
+		addHotkey("Node_Seperate_Shape", "Crop > Toggle",         "C", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[6].setValue((_n.inputs[6].getValue() + 1) % 2); });
 	});
 #endregion
 

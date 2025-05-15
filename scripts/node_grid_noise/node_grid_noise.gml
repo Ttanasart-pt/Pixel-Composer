@@ -1,7 +1,7 @@
 #region
 	FN_NODE_CONTEXT_INVOKE {
-		addHotkey("Node_Grid_Noise", "Color Mode > Toggle", "C", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[7].setValue((_n.inputs[7].getValue() + 1) % 3); });
-		addHotkey("Node_Grid_Noise", "Shift Axis > Toggle", "A", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[6].setValue((_n.inputs[6].getValue() + 1) % 2); });
+		addHotkey("Node_Grid_Noise", "Color Mode > Toggle", "C", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[7].setValue((_n.inputs[7].getValue() + 1) % 3); });
+		addHotkey("Node_Grid_Noise", "Shift Axis > Toggle", "A", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[6].setValue((_n.inputs[6].getValue() + 1) % 2); });
 	});
 #endregion
 

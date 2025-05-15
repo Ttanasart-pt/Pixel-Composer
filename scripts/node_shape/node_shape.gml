@@ -33,13 +33,15 @@
 	function __Node_Shape_Hotkeys_set_shape(_n, _key) { _n.inputs[2].setValue(array_find(_n.shape_types, _key)); }
 	
 	FN_NODE_CONTEXT_INVOKE {
-		addHotkey("Node_Shape", "Shape > Rectangle",       "R", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR __Node_Shape_Hotkeys_set_shape(_n, "Rectangle");       });
-		addHotkey("Node_Shape", "Shape > Ellipse",         "E", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR __Node_Shape_Hotkeys_set_shape(_n, "Ellipse");         });
-		addHotkey("Node_Shape", "Shape > Regular polygon", "P", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR __Node_Shape_Hotkeys_set_shape(_n, "Regular polygon"); });
-		addHotkey("Node_Shape", "Shape > Star",            "S", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR __Node_Shape_Hotkeys_set_shape(_n, "Star");            });
-		addHotkey("Node_Shape", "Anti-aliasing > Toggle",  "A", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[6].setValue(!_n.inputs[6].getValue());       });
-		addHotkey("Node_Shape", "Height Render > Toggle",  "H", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[12].setValue(!_n.inputs[12].getValue());     });
-		addHotkey("Node_Shape", "Background > Toggle",     "B", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[1].setValue(!_n.inputs[1].getValue());       });
+		addHotkey("Node_Shape", "Shape > Rectangle",       "R", 0, function() /*=>*/ { GRAPH_FOCUS __Node_Shape_Hotkeys_set_shape(_n, "Rectangle");       });
+		addHotkey("Node_Shape", "Shape > Ellipse",         "E", 0, function() /*=>*/ { GRAPH_FOCUS __Node_Shape_Hotkeys_set_shape(_n, "Ellipse");         });
+		addHotkey("Node_Shape", "Shape > Regular polygon", "P", 0, function() /*=>*/ { GRAPH_FOCUS __Node_Shape_Hotkeys_set_shape(_n, "Regular polygon"); });
+		addHotkey("Node_Shape", "Shape > Star",            "S", 0, function() /*=>*/ { GRAPH_FOCUS __Node_Shape_Hotkeys_set_shape(_n, "Star");            });
+		addHotkey("Node_Shape", "Anti-aliasing > Toggle",  "A", 0, function() /*=>*/ { GRAPH_FOCUS var i=_n.inputs[ 6]; i.setValue(!i.getValue());        });
+		addHotkey("Node_Shape", "Height Render > Toggle",  "H", 0, function() /*=>*/ { GRAPH_FOCUS var i=_n.inputs[12]; i.setValue(!i.getValue());        });
+		addHotkey("Node_Shape", "Background > Toggle",     "B", 0, function() /*=>*/ { GRAPH_FOCUS var i=_n.inputs[ 1]; i.setValue(!i.getValue());        });
+		addHotkey("Node_Shape", "Dimension > Half",        "-", 0, function() /*=>*/ { GRAPH_FOCUS var i=_n.inputs[ 0]; var v = i.getValue(); i.setValue([v[0]/2,v[1]/2]); });
+		addHotkey("Node_Shape", "Dimension > Double",      "=", 0, function() /*=>*/ { GRAPH_FOCUS var i=_n.inputs[ 0]; var v = i.getValue(); i.setValue([v[0]*2,v[1]*2]); });
 	});
 	
 #endregion

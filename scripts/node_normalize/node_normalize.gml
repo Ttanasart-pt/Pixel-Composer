@@ -1,7 +1,7 @@
 #region
 	FN_NODE_CONTEXT_INVOKE {
-		addHotkey("Node_Normalize", "Channels > Toggle", "C", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[1].setValue(!_n.inputs[1].getValue()); });
-		addHotkey("Node_Normalize", "Modes > Toggle",    "M", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[2].setValue(!_n.inputs[2].getValue()); });
+		addHotkey("Node_Normalize", "Channels > Toggle", "C", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[1].setValue(!_n.inputs[1].getValue()); });
+		addHotkey("Node_Normalize", "Modes > Toggle",    "M", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[2].setValue(!_n.inputs[2].getValue()); });
 	});
 #endregion
 

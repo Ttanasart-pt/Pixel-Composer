@@ -1754,8 +1754,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		array_push(_valueFrom.value_to, self);
 		
-		if(!LOADING && !APPENDING && _valueFrom.node.inline_context != noone && node.manual_ungroupable && (node.inline_input && _valueFrom.node.inline_output))
-			_valueFrom.node.inline_context.addNode(node);
+		if(NOT_LOAD && node.inline_context == noone) {
+			var _inCtx = _valueFrom.node.inline_context;
+			if(_inCtx != noone && _inCtx.junctionIsInside(_valueFrom))
+				_inCtx.addNode(node);
+		}
 		
 		node.valueUpdate(index, _o);
 		if(_update && connect_type == CONNECT_TYPE.input) {
@@ -1771,7 +1774,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		cache_array[0] = false;
 		cache_value[0] = false;
 		
-		if(!LOADING && !APPENDING && !CLONING) {
+		if(NOT_LOAD && !CLONING) {
 			draw_line_shift_x	= 0;
 			draw_line_shift_y	= 0;
 			PROJECT.modified	= true;

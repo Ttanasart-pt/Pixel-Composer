@@ -13,7 +13,7 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	group_hover_al = 0;
 	selectable     = false;
 	
-	input_node_type   = [];
+	input_node_types  = [];
 	output_node_types = [];
 	
 	add_point = false;
@@ -89,7 +89,7 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		
 		__temp_node = _node;
 		
-		var _nx0 = array_any(input_node_type,   function(n) /*=>*/ {return is(__temp_node, n)})? _node.x + _node.w / 2 : _node.x - 32 + _rad;
+		var _nx0 = array_any(input_node_types,   function(n) /*=>*/ {return is(__temp_node, n)})? _node.x + _node.w / 2 : _node.x - 32 + _rad;
 		var _ny0 = _node.y - 32 + _rad;
 		var _nx1 = array_any(output_node_types, function(n) /*=>*/ {return is(__temp_node, n)})? _node.x + _node.w / 2 : _node.x + _node.w + 32 - _rad;
 		var _ny1 = _node.y + _node.h + 32 - _rad;
@@ -359,13 +359,11 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	////- Actions
 	
 	static junctionIsInside = function(junc) {
+        if(!modifiable) return false;
 		
-        if(!modifiable)
-            return false;
-           
         __temp_node = junc.node;
-            
-        if(array_any(input_node_type,   function(n) /*=>*/ {return is(__temp_node, n)}) && junc.connect_type == CONNECT_TYPE.input)  return false;
+        
+        if(array_any(input_node_types,   function(n) /*=>*/ {return is(__temp_node, n)}) && junc.connect_type == CONNECT_TYPE.input)  return false;
         if(array_any(output_node_types, function(n) /*=>*/ {return is(__temp_node, n)}) && junc.connect_type == CONNECT_TYPE.output) return false;
 		
 		return true;

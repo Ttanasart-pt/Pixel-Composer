@@ -29,7 +29,7 @@
 	}
 	
 	FN_NODE_CONTEXT_INVOKE {
-		addHotkey("Node_Compare", "Type > Toggle", "T", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[0].setValue((_n.inputs[0].getValue() + 1) % 6); });
+		addHotkey("Node_Compare", "Type > Toggle", "T", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[0].setValue((_n.inputs[0].getValue() + 1) % 6); });
 	});
 #endregion
 

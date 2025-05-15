@@ -795,6 +795,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		junction_draw_hei_y = SHOW_PARAM?  32 : 16;
 		junction_draw_pad_y = SHOW_PARAM? 128 : 24;
 		
+		var surf_h = min(w, 128);
 		var _hi, _ho;
 		
 		if(SHOW_PARAM) {
@@ -846,7 +847,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			}
 		}
 		
-		h = max(previewable? con_h : name_height, _prev_surf * 128, _hi, _ho);
+		h = max(previewable? con_h : name_height, _prev_surf * surf_h, _hi, _ho);
 		if(attributes.node_height) h = max(h, attributes.node_height);
 	}
 	

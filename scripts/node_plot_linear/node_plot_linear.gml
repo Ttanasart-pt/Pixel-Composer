@@ -18,7 +18,7 @@
 	}
 	
 	FN_NODE_CONTEXT_INVOKE {
-		addHotkey("Node_Plot_Linear", "Type > Toggle", "T", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[11].setValue((_n.inputs[11].getValue() + 1) % 2); });
+		addHotkey("Node_Plot_Linear", "Type > Toggle", "T", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[11].setValue((_n.inputs[11].getValue() + 1) % 2); });
 	});
 
 #endregion

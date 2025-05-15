@@ -58,14 +58,14 @@
 	}
 
 	FN_NODE_CONTEXT_INVOKE {
-		addHotkey("Node_Math", "Type > Toggle",   "T", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[0].setValue((_n.inputs[0].getValue() + 1) % array_length(global.node_math_scroll)); });
-		addHotkey("Node_Math", "Type > Add",      "A", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[0].setValue(0); });
-		addHotkey("Node_Math", "Type > Subtract", "S", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[0].setValue(1); });
-		addHotkey("Node_Math", "Type > Multiply", "M", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[0].setValue(2); });
-		addHotkey("Node_Math", "Type > Divide",   "D", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[0].setValue(3); });
+		addHotkey("Node_Math", "Type > Toggle",   "T", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[0].setValue((_n.inputs[0].getValue() + 1) % array_length(global.node_math_scroll)); });
+		addHotkey("Node_Math", "Type > Add",      "A", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[0].setValue(0); });
+		addHotkey("Node_Math", "Type > Subtract", "S", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[0].setValue(1); });
+		addHotkey("Node_Math", "Type > Multiply", "M", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[0].setValue(2); });
+		addHotkey("Node_Math", "Type > Divide",   "D", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[0].setValue(3); });
 		
-		addHotkey("Node_Math", "Angle Unit > Toggle", "N", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[3].setValue(!_n.inputs[3].setValue()); });
-		addHotkey("Node_Math", "To Integer > Toggle", "I", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[4].setValue(!_n.inputs[4].setValue()); });
+		addHotkey("Node_Math", "Angle Unit > Toggle", "N", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[3].setValue(!_n.inputs[3].setValue()); });
+		addHotkey("Node_Math", "To Integer > Toggle", "I", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[4].setValue(!_n.inputs[4].setValue()); });
 	});
 #endregion
 

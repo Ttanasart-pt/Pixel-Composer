@@ -2,7 +2,7 @@
 	globalvar GRAPH_ADD_NODE_KEYS, GRAPH_ADD_NODE_MAPS;
 	
     #macro PANEL_GRAPH_PROJECT_CHECK if(PANEL_GRAPH.project == noone || !PANEL_GRAPH.project.active) return;
-	#macro PANEL_GRAPH_FOCUS_STR var _n = PANEL_GRAPH.getFocusStr(); if(_n == noone) return;
+	#macro GRAPH_FOCUS var _n = PANEL_GRAPH.getFocusStr(); if(_n == noone) return;
 	#macro FN_NODE_CONTEXT_INVOKE if(!variable_global_exists("__FN_NODE_CONTEXT") || variable_global_get("__FN_NODE_CONTEXT") == undefined) variable_global_set("__FN_NODE_CONTEXT", []); \
 	array_push(global.__FN_NODE_CONTEXT, function()
 	

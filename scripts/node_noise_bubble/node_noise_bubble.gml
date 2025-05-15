@@ -1,7 +1,7 @@
 #region
 	FN_NODE_CONTEXT_INVOKE {
-		addHotkey("Node_Noise_Bubble", "Mode > Toggle",       "M", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[5].setValue((_n.inputs[5].getValue() + 1) % 2); });
-		addHotkey("Node_Noise_Bubble", "Blend Mode > Toggle", "B", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[7].setValue((_n.inputs[7].getValue() + 1) % 2); });
+		addHotkey("Node_Noise_Bubble", "Mode > Toggle",       "M", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[5].setValue((_n.inputs[5].getValue() + 1) % 2); });
+		addHotkey("Node_Noise_Bubble", "Blend Mode > Toggle", "B", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[7].setValue((_n.inputs[7].getValue() + 1) % 2); });
 	});
 #endregion
 

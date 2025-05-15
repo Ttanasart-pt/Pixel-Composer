@@ -1,8 +1,8 @@
 #region
 	FN_NODE_CONTEXT_INVOKE {
-		addHotkey("Node_SDF", "Side > Toggle",       "S", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[2].setValue((_n.inputs[2].getValue() + 1) % 3); });
-		addHotkey("Node_SDF", "Keep Alpha > Toggle", "A", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[4].setValue(!_n.inputs[4].getValue()); });
-		addHotkey("Node_SDF", "Invert > Toggle",     "I", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[5].setValue(!_n.inputs[5].getValue()); });
+		addHotkey("Node_SDF", "Side > Toggle",       "S", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[2].setValue((_n.inputs[2].getValue() + 1) % 3); });
+		addHotkey("Node_SDF", "Keep Alpha > Toggle", "A", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[4].setValue(!_n.inputs[4].getValue()); });
+		addHotkey("Node_SDF", "Invert > Toggle",     "I", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[5].setValue(!_n.inputs[5].getValue()); });
 	});
 #endregion
 

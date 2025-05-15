@@ -1,7 +1,7 @@
 #region
 	FN_NODE_CONTEXT_INVOKE {
-		addHotkey("Node_Perlin_Extra", "Color Mode > Toggle", "C", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[ 6].setValue((_n.inputs[ 6].getValue() + 1) % 3); });
-		addHotkey("Node_Perlin_Extra", "Noise Type > Toggle", "T", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[10].setValue((_n.inputs[10].getValue() + 1) % 7); });
+		addHotkey("Node_Perlin_Extra", "Color Mode > Toggle", "C", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[ 6].setValue((_n.inputs[ 6].getValue() + 1) % 3); });
+		addHotkey("Node_Perlin_Extra", "Noise Type > Toggle", "T", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[10].setValue((_n.inputs[10].getValue() + 1) % 7); });
 	});
 #endregion
 

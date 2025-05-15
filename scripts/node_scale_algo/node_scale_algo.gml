@@ -14,7 +14,7 @@
 	}
 	
 	FN_NODE_CONTEXT_INVOKE {
-		addHotkey("Node_Scale_Algo", "Algorithm > Toggle", "A", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[1].setValue((_n.inputs[1].getValue() + 1) % 3); });
+		addHotkey("Node_Scale_Algo", "Algorithm > Toggle", "A", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[1].setValue((_n.inputs[1].getValue() + 1) % 3); });
 	});
 
 #endregion

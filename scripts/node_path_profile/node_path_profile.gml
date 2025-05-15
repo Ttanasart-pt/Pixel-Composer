@@ -1,9 +1,9 @@
 #region
 	FN_NODE_CONTEXT_INVOKE {
-		addHotkey("Node_Path_Profile", "Side > Toggle",          "S", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[3].setValue((_n.inputs[3].getValue() + 1) % 4); });
-		addHotkey("Node_Path_Profile", "Mirror > Toggle",        "M", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[4].setValue((_n.inputs[4].getValue() + 1) % 2); });
-		addHotkey("Node_Path_Profile", "Anti-aliasing > Toggle", "A", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[6].setValue((_n.inputs[6].getValue() + 1) % 2); });
-		addHotkey("Node_Path_Profile", "Fill > Toggle",          "F", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[9].setValue((_n.inputs[9].getValue() + 1) % 2); });
+		addHotkey("Node_Path_Profile", "Side > Toggle",          "S", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[3].setValue((_n.inputs[3].getValue() + 1) % 4); });
+		addHotkey("Node_Path_Profile", "Mirror > Toggle",        "M", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[4].setValue((_n.inputs[4].getValue() + 1) % 2); });
+		addHotkey("Node_Path_Profile", "Anti-aliasing > Toggle", "A", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[6].setValue((_n.inputs[6].getValue() + 1) % 2); });
+		addHotkey("Node_Path_Profile", "Fill > Toggle",          "F", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[9].setValue((_n.inputs[9].getValue() + 1) % 2); });
 	});
 #endregion
 

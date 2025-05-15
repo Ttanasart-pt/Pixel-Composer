@@ -1,11 +1,11 @@
 #region
 	FN_NODE_CONTEXT_INVOKE {
-		addHotkey("Node_Pixel_Math", "Operator > Add",      "A", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[7].setValue(array_find(global.node_math_names, "Add")); });
-		addHotkey("Node_Pixel_Math", "Operator > Subtract", "S", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[7].setValue(array_find(global.node_math_names, "Subtract")); });
-		addHotkey("Node_Pixel_Math", "Operator > Multiply", "M", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[7].setValue(array_find(global.node_math_names, "Multiply")); });
-		addHotkey("Node_Pixel_Math", "Operator > Divide",   "D", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[7].setValue(array_find(global.node_math_names, "Divide")); });
+		addHotkey("Node_Pixel_Math", "Operator > Add",      "A", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[7].setValue(array_find(global.node_math_names, "Add")); });
+		addHotkey("Node_Pixel_Math", "Operator > Subtract", "S", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[7].setValue(array_find(global.node_math_names, "Subtract")); });
+		addHotkey("Node_Pixel_Math", "Operator > Multiply", "M", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[7].setValue(array_find(global.node_math_names, "Multiply")); });
+		addHotkey("Node_Pixel_Math", "Operator > Divide",   "D", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[7].setValue(array_find(global.node_math_names, "Divide")); });
 		
-		addHotkey("Node_Pixel_Math", "Operand Type > Toggle", "O", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[10].setValue(!_n.inputs[10].getValue()); });
+		addHotkey("Node_Pixel_Math", "Operand Type > Toggle", "O", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[10].setValue(!_n.inputs[10].getValue()); });
 	});
 
 	function Node_create_Pixel_Math(_x, _y, _group = noone, _param = {}) {

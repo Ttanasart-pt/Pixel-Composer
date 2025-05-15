@@ -1,11 +1,11 @@
 #region
 	FN_NODE_CONTEXT_INVOKE {
-		addHotkey("Node_Displace", "Mode > Toggle",            "M", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[ 5].setValue((_n.inputs[ 5].getValue() + 1) % 4); });
-		addHotkey("Node_Displace", "Oversample Mode > Toggle", "O", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[ 7].setValue((_n.inputs[ 7].getValue() + 1) % 3); });
-		addHotkey("Node_Displace", "Blend Mode > Toggle",      "B", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[11].setValue((_n.inputs[11].getValue() + 1) % 3); });
+		addHotkey("Node_Displace", "Mode > Toggle",            "M", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[ 5].setValue((_n.inputs[ 5].getValue() + 1) % 4); });
+		addHotkey("Node_Displace", "Oversample Mode > Toggle", "O", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[ 7].setValue((_n.inputs[ 7].getValue() + 1) % 3); });
+		addHotkey("Node_Displace", "Blend Mode > Toggle",      "B", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[11].setValue((_n.inputs[11].getValue() + 1) % 3); });
 		
-		addHotkey("Node_Displace", "Iterate > Toggle",         "I", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[ 6].setValue((_n.inputs[ 6].getValue() + 1) % 2); });
-		addHotkey("Node_Displace", "Fade Distance > Toggle",   "F", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[19].setValue((_n.inputs[19].getValue() + 1) % 2); });
+		addHotkey("Node_Displace", "Iterate > Toggle",         "I", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[ 6].setValue((_n.inputs[ 6].getValue() + 1) % 2); });
+		addHotkey("Node_Displace", "Fade Distance > Toggle",   "F", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[19].setValue((_n.inputs[19].getValue() + 1) % 2); });
 	});
 #endregion
 

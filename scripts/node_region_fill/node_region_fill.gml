@@ -1,8 +1,8 @@
 #region
 	FN_NODE_CONTEXT_INVOKE {
-		addHotkey("Node_Region_Fill", "Fill > Toggle",       "F", MOD_KEY.ctrl, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[3].setValue((_n.inputs[3].getValue() + 1) % 2); });
-		addHotkey("Node_Region_Fill", "Fill Type > Toggle",  "F", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[8].setValue((_n.inputs[8].getValue() + 1) % 5); });
-		addHotkey("Node_Region_Fill", "Inner Only > Toggle", "N", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[6].setValue((_n.inputs[6].getValue() + 1) % 2); });
+		addHotkey("Node_Region_Fill", "Fill > Toggle",       "F", MOD_KEY.ctrl, function() /*=>*/ { GRAPH_FOCUS _n.inputs[3].setValue((_n.inputs[3].getValue() + 1) % 2); });
+		addHotkey("Node_Region_Fill", "Fill Type > Toggle",  "F", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[8].setValue((_n.inputs[8].getValue() + 1) % 5); });
+		addHotkey("Node_Region_Fill", "Inner Only > Toggle", "N", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[6].setValue((_n.inputs[6].getValue() + 1) % 2); });
 	});
 #endregion
 

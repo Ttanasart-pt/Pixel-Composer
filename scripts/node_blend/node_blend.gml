@@ -24,13 +24,13 @@
 	}
 	
 	FN_NODE_CONTEXT_INVOKE {
-		addHotkey("Node_Blend", "Blend mode > Multiply",  "M", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[2].setValue(array_find(BLEND_TYPES, "Multiply")); });
-        addHotkey("Node_Blend", "Blend mode > Add",       "A", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[2].setValue(array_find(BLEND_TYPES, "Add"));      });
-        addHotkey("Node_Blend", "Blend mode > Screen",    "C", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[2].setValue(array_find(BLEND_TYPES, "Screen"));   });
-        addHotkey("Node_Blend", "Blend mode > Subtract",  "S", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[2].setValue(array_find(BLEND_TYPES, "Subtract")); });
-        addHotkey("Node_Blend", "Preserve alpha > Toggle","P", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[9].setValue(!_n.inputs[9].getValue()); });
+		addHotkey("Node_Blend", "Blend mode > Multiply",  "M", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[2].setValue(array_find(BLEND_TYPES, "Multiply")); });
+        addHotkey("Node_Blend", "Blend mode > Add",       "A", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[2].setValue(array_find(BLEND_TYPES, "Add"));      });
+        addHotkey("Node_Blend", "Blend mode > Screen",    "C", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[2].setValue(array_find(BLEND_TYPES, "Screen"));   });
+        addHotkey("Node_Blend", "Blend mode > Subtract",  "S", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[2].setValue(array_find(BLEND_TYPES, "Subtract")); });
+        addHotkey("Node_Blend", "Preserve alpha > Toggle","P", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[9].setValue(!_n.inputs[9].getValue()); });
         
-        addHotkey("Node_Blend", "Inputs > Swap", "Q", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR 
+        addHotkey("Node_Blend", "Inputs > Swap", "Q", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS 
         	var _i0 = _n.inputs[0].value_from;
         	var _i1 = _n.inputs[1].value_from;
         	if(_i0 == _i1) return;

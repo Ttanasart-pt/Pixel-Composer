@@ -1,6 +1,6 @@
 #region
 	FN_NODE_CONTEXT_INVOKE {
-		addHotkey("Node_Color_Remove", "Invert > Toggle",  "I", MOD_KEY.none, function(val) /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[6].setValue(!_n.inputs[6].getValue()); });
+		addHotkey("Node_Color_Remove", "Invert > Toggle",  "I", MOD_KEY.none, function(val) /*=>*/ { GRAPH_FOCUS _n.inputs[6].setValue(!_n.inputs[6].getValue()); });
 	});
 #endregion
 

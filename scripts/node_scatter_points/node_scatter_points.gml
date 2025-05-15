@@ -1,8 +1,8 @@
 #region
 	FN_NODE_CONTEXT_INVOKE {
-		addHotkey("Node_Scatter_Points", "Distribution > Toggle", "D", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[1].setValue((_n.inputs[1].getValue() + 1) % 3); });
-		addHotkey("Node_Scatter_Points", "Scatter > Toggle",      "S", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[2].setValue((_n.inputs[2].getValue() + 1) % 2); });
-		addHotkey("Node_Scatter_Points", "3D > Toggle",           "3", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[9].setValue((_n.inputs[9].getValue() + 1) % 2); });
+		addHotkey("Node_Scatter_Points", "Distribution > Toggle", "D", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[1].setValue((_n.inputs[1].getValue() + 1) % 3); });
+		addHotkey("Node_Scatter_Points", "Scatter > Toggle",      "S", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[2].setValue((_n.inputs[2].getValue() + 1) % 2); });
+		addHotkey("Node_Scatter_Points", "3D > Toggle",           "3", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[9].setValue((_n.inputs[9].getValue() + 1) % 2); });
 	});
 #endregion
 

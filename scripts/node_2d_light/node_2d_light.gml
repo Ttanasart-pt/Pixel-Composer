@@ -1,12 +1,19 @@
-enum LIGHT_SHAPE_2D {
-	point,
-	ellipse,
-	line,
-	line_asym,
-	saber,
-	spot,
-	flame,
-}
+#region create
+	enum LIGHT_SHAPE_2D {
+		point,
+		ellipse,
+		line,
+		line_asym,
+		saber,
+		spot,
+		flame,
+	}
+	
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_2D_light", "Shape > Toggle", "S", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[1].setValue((_n.inputs[1].getValue() + 1) % 7); });
+	});
+	
+#endregion
 
 function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "2D Light";

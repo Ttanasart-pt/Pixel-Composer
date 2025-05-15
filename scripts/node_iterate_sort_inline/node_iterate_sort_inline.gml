@@ -10,7 +10,7 @@ function Node_Iterate_Sort_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 	
 	toSort = true;
 	
-	input_node_type  = [ Node_Iterator_Sort_Inline_Input ];
+	input_node_types  = [ Node_Iterator_Sort_Inline_Input ];
 	output_node_types = [ Node_Iterator_Sort_Inline_Output ];
 	iterated         = 0;
 	

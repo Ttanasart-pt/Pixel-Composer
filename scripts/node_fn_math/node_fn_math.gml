@@ -1,8 +1,8 @@
 #region
 	FN_NODE_CONTEXT_INVOKE {
-		addHotkey("Node_Fn_Math", "Operation > Add",      "A", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[_n.inl + 0].setValue(0); });
-		addHotkey("Node_Fn_Math", "Operation > Minus",    "S", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[_n.inl + 0].setValue(1); });
-		addHotkey("Node_Fn_Math", "Operation > Multiply", "M", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[_n.inl + 0].setValue(2); });
+		addHotkey("Node_Fn_Math", "Operation > Add",      "A", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[_n.inl + 0].setValue(0); });
+		addHotkey("Node_Fn_Math", "Operation > Minus",    "S", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[_n.inl + 0].setValue(1); });
+		addHotkey("Node_Fn_Math", "Operation > Multiply", "M", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[_n.inl + 0].setValue(2); });
 	});
 #endregion
 

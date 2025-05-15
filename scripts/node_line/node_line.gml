@@ -1,8 +1,8 @@
 #region
 	FN_NODE_CONTEXT_INVOKE {
-		addHotkey("Node_Line", "Data Type > Toggle",  "D", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[27].setValue((_n.inputs[27].getValue() + 1) % 4); });
-		addHotkey("Node_Line", "Fix Length > Toggle", "F", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[19].setValue((_n.inputs[19].getValue() + 1) % 2); });
-		addHotkey("Node_Line", "1px Mode > Toggle",   "1", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[17].setValue((_n.inputs[17].getValue() + 1) % 2); });
+		addHotkey("Node_Line", "Data Type > Toggle",  "D", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[27].setValue((_n.inputs[27].getValue() + 1) % 4); });
+		addHotkey("Node_Line", "Fix Length > Toggle", "F", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[19].setValue((_n.inputs[19].getValue() + 1) % 2); });
+		addHotkey("Node_Line", "1px Mode > Toggle",   "1", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[17].setValue((_n.inputs[17].getValue() + 1) % 2); });
 	});
 #endregion
 

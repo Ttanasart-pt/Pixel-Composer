@@ -1,8 +1,8 @@
 #region
 	FN_NODE_CONTEXT_INVOKE {
-		addHotkey("Node_Dither", "Pattern > Toggle", "P", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[2].setValue((_n.inputs[2].getValue() + 1) % 4); });
-		addHotkey("Node_Dither", "Mode > Toggle",    "M", MOD_KEY.none, function() /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[6].setValue(!_n.inputs[6].getValue()); });
-		addHotkey("Node_Dither", "Contrast > Set", KEY_GROUP.numeric, MOD_KEY.none, function(val) /*=>*/ { PANEL_GRAPH_FOCUS_STR _n.inputs[4].setValue(toNumber(chr(keyboard_key))); });
+		addHotkey("Node_Dither", "Pattern > Toggle", "P", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[2].setValue((_n.inputs[2].getValue() + 1) % 4); });
+		addHotkey("Node_Dither", "Mode > Toggle",    "M", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[6].setValue(!_n.inputs[6].getValue()); });
+		addHotkey("Node_Dither", "Contrast > Set", KEY_GROUP.numeric, MOD_KEY.none, function(val) /*=>*/ { GRAPH_FOCUS _n.inputs[4].setValue(toNumber(chr(keyboard_key))); });
 	});
 #endregion
 
