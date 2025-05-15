@@ -16,8 +16,12 @@
 		double
 	}	
 	
-	globalvar KEYBOARD_STRING, KEYBOARD_PRESSED;
+	globalvar KEYBOARD_STRING, KEYBOARD_NUMBER;
+	globalvar KEYBOARD_PRESSED_STRING, KEYBOARD_PRESSED;
 	globalvar CTRL, ALT, SHIFT;
+	
+	KEYBOARD_STRING = "";
+	KEYBOARD_NUMBER = undefined;
 	
 	WIDGET_ACTIVE = [];
 	KEYBOARD_PRESSED = vk_nokey;
@@ -74,6 +78,8 @@
 		
 		return false;
 	}
+	
+	#macro KEYBOARD_RESET keyboard_lastchar = ""; keyboard_lastkey = -1; KEYBOARD_PRESSED_STRING = ""; KEYBOARD_STRING = "";
 #endregion
 
 #region widget

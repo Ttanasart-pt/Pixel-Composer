@@ -46,6 +46,7 @@ if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 				if(_focus_ctx == "Graph") {
 					for( var i = 0, n = array_length(GRAPH_ADD_NODE_KEYS); i < n; i++ ) {
 		        		var h = GRAPH_ADD_NODE_KEYS[i];
+		        		
 		        		if(h.isPressing()) array_push(_toAct, h);
 		        	}
 				}

@@ -1,6 +1,6 @@
 #region
 	FN_NODE_CONTEXT_INVOKE {
-		addHotkey("Node_Zigzag", "Amount > Set", KEY_GROUP.numeric, MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[1].setValue(toNumber(chr(keyboard_key))); });
+		addHotkey("Node_Zigzag", "Amount > Set", KEY_GROUP.numeric, MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS_NUMBER _n.inputs[1].setValue(KEYBOARD_NUMBER); });
 		addHotkey("Node_Zigzag", "Type > Toggle",              "T", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[5].setValue((_n.inputs[5].getValue() + 1) % 3); });
 	});
 #endregion

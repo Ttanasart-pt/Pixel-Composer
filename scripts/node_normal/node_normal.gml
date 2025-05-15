@@ -1,7 +1,7 @@
 #region create
 
 	FN_NODE_CONTEXT_INVOKE {
-		addHotkey("Node_Normal", "Height > Set", KEY_GROUP.numeric, MOD_KEY.none, function(val) /*=>*/ { GRAPH_FOCUS _n.inputs[1].setValue(toNumber(chr(keyboard_key))); });
+		addHotkey("Node_Normal", "Height > Set", KEY_GROUP.numeric, MOD_KEY.none, function(val) /*=>*/ { GRAPH_FOCUS_NUMBER _n.inputs[1].setValue(KEYBOARD_NUMBER); });
 		addHotkey("Node_Normal", "Flip X > Toggle",    "F", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[5].setValue(!_n.inputs[5].getValue()); });
 		addHotkey("Node_Normal", "Normalize > Toggle", "N", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[4].setValue(!_n.inputs[4].getValue()); });
 	});

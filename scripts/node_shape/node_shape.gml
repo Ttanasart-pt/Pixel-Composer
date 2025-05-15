@@ -40,8 +40,7 @@
 		addHotkey("Node_Shape", "Anti-aliasing > Toggle",  "A", 0, function() /*=>*/ { GRAPH_FOCUS var i=_n.inputs[ 6]; i.setValue(!i.getValue());        });
 		addHotkey("Node_Shape", "Height Render > Toggle",  "H", 0, function() /*=>*/ { GRAPH_FOCUS var i=_n.inputs[12]; i.setValue(!i.getValue());        });
 		addHotkey("Node_Shape", "Background > Toggle",     "B", 0, function() /*=>*/ { GRAPH_FOCUS var i=_n.inputs[ 1]; i.setValue(!i.getValue());        });
-		addHotkey("Node_Shape", "Dimension > Half",        "-", 0, function() /*=>*/ { GRAPH_FOCUS var i=_n.inputs[ 0]; var v = i.getValue(); i.setValue([v[0]/2,v[1]/2]); });
-		addHotkey("Node_Shape", "Dimension > Double",      "=", 0, function() /*=>*/ { GRAPH_FOCUS var i=_n.inputs[ 0]; var v = i.getValue(); i.setValue([v[0]*2,v[1]*2]); });
+		addHotkey("Node_Shape", "Dimension > Set",         KEY_GROUP.numeric, 0, function() /*=>*/ { GRAPH_FOCUS_NUMBER _n.inputs[0].setValue([KEYBOARD_NUMBER,KEYBOARD_NUMBER]); });
 	});
 	
 #endregion

@@ -1,6 +1,6 @@
 #region
 	FN_NODE_CONTEXT_INVOKE {
-		addHotkey("Node_Blend_Edge", "Width > Set", KEY_GROUP.numeric, MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[1].setValue(toNumber(chr(keyboard_key)) / 10);  });
+		addHotkey("Node_Blend_Edge", "Width > Set", KEY_GROUP.numeric, MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS_NUMBER _n.inputs[1].setValue(KEYBOARD_NUMBER);  });
 		addHotkey("Node_Blend_Edge", "Types > Toggle",            "T", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[2].setValue((_n.inputs[2].getValue() + 1) % 3); });
 	});
 #endregion

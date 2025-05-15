@@ -1,6 +1,6 @@
 #region
 	FN_NODE_CONTEXT_INVOKE {
-		addHotkey("Node_High_Pass", "Radius > Set",  KEY_GROUP.numeric, MOD_KEY.none, function(val) /*=>*/ { GRAPH_FOCUS _n.inputs[7].setValue(toNumber(chr(keyboard_key))); });
+		addHotkey("Node_High_Pass", "Radius > Set",  KEY_GROUP.numeric, MOD_KEY.none, function(val) /*=>*/ { GRAPH_FOCUS_NUMBER _n.inputs[7].setValue(KEYBOARD_NUMBER); });
 	});
 #endregion
 

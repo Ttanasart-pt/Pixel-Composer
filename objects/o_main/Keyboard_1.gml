@@ -18,8 +18,8 @@ if(!trigger) exit;
 KEYBOARD_PRESSED = kb_hkey;
 
 if(!PREFERENCES.keyboard_capture_raw) {
-	if(keyboard_check(vk_backspace)) KEYBOARD_STRING  = string_copy(KEYBOARD_STRING, 1, string_length(KEYBOARD_STRING) - 1);
-	else                             KEYBOARD_STRING += keyboard_lastchar;
+	if(keyboard_check(vk_backspace)) KEYBOARD_PRESSED_STRING  = string_copy(KEYBOARD_PRESSED_STRING, 1, string_length(KEYBOARD_PRESSED_STRING) - 1);
+	else                             KEYBOARD_PRESSED_STRING += keyboard_lastchar;
 }
 
 if(WIDGET_CURRENT && is_instanceof(WIDGET_CURRENT, textInput))

@@ -157,7 +157,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			click_block   = 1;
 		}
 		
-		KEYBOARD_STRING  = "";
+		KEYBOARD_RESET
 		keyboard_lastkey = -1;
 		
 		ds_stack_clear(undo_stack);
@@ -297,7 +297,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				if(key_mod_press(CTRL) && keyboard_check_pressed(ord("V"))) {
 					var _ctxt = clipboard_get_text();
 					    _ctxt = string_replace_all(_ctxt, "\t", "    ");
-					KEYBOARD_STRING = _ctxt;
+					KEYBOARD_PRESSED_STRING = _ctxt;
 					modified        = true;
 				}
 				
@@ -353,8 +353,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					modified      = true;
 					cursor_select = -1;
 					
-				} else if(KEYBOARD_STRING != "") {
-					var ch = KEYBOARD_STRING;
+				} else if(KEYBOARD_PRESSED_STRING != "") {
+					var ch = KEYBOARD_PRESSED_STRING;
 					
 					if(cursor_select == -1) {
 						var str_before	= string_copy(_input_text, 1, cursor);
@@ -376,7 +376,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				}
 			}
 			
-			KEYBOARD_STRING  = "";
+			KEYBOARD_RESET
 			keyboard_lastkey = -1;
 		#endregion
 		

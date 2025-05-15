@@ -24,7 +24,7 @@ event_inherited();
 	ugc  = 0;
 	ugc_loading = false;
 	
-	KEYBOARD_STRING = "";
+	KEYBOARD_RESET
 	tb_name  = new textBox( TEXTBOX_INPUT.text, function(str) /*=>*/ { meta.name = filename_name_validate(str); });
 	t_desc   = new textArea(TEXTBOX_INPUT.text, function(str) /*=>*/ { meta.description = str; });
 	t_auth   = new textArea(TEXTBOX_INPUT.text, function(str) /*=>*/ { meta.author	    = str; });

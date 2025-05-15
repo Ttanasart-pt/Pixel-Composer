@@ -79,7 +79,7 @@ function Panel_Action_Create() : PanelContent() constructor {
 		
 		b_create.text = __txtx("new_action_create", "Create");
 		
-		KEYBOARD_STRING = "";
+		KEYBOARD_RESET
 	#endregion
 	
 	function onResize() { sc_node_content.resize(w - padding * 2 - ui(320) - ui(16), h - padding * 2 - ui(16)); }

@@ -179,7 +179,7 @@ function key_press(_key, _mod = MOD_KEY.none, _hold = false) {
 	var _keyPress = false;
 	
 	switch(_key) {
-		case KEY_GROUP.numeric : _keyPress = keyboard_key >= ord("0") && keyboard_key <= ord("9") break;
+		case KEY_GROUP.numeric : _keyPress = (keyboard_key >= ord("0") && keyboard_key <= ord("9")) || keyboard_key == ord(".") || keyboard_key == vk_backspace; break;
 		
 		case noone : _keyPress = true; break;
 		default :    _keyPress = _hold? keyboard_check(_key) : keyboard_check_pressed(_key); break;

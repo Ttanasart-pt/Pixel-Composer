@@ -25,5 +25,5 @@ event_inherited();
 	}
 	
 	WIDGET_CURRENT  = tb_name;
-	KEYBOARD_STRING = "";
+	KEYBOARD_RESET
 #endregion

@@ -1,6 +1,6 @@
 #region
 	FN_NODE_CONTEXT_INVOKE {
-		addHotkey("Node_Smear", "Strength > Set",         KEY_GROUP.numeric, MOD_KEY.none, function(val) /*=>*/ { GRAPH_FOCUS _n.inputs[1].setValue(toNumber(chr(keyboard_key)) / 10); });
+		addHotkey("Node_Smear", "Strength > Set",         KEY_GROUP.numeric, MOD_KEY.none, function(val) /*=>*/ { GRAPH_FOCUS_NUMBER _n.inputs[1].setValue(KEYBOARD_NUMBER); });
 		addHotkey("Node_Smear", "Direction > Rotate CCW", "R", MOD_KEY.none, function(val) /*=>*/ { GRAPH_FOCUS _n.inputs[2].setValue((_n.inputs[2].getValue() + 90) % 360); });
 		addHotkey("Node_Smear", "Mode > Toggle",          "M", MOD_KEY.none, function(val) /*=>*/ { GRAPH_FOCUS _n.inputs[11].setValue(!_n.inputs[11].getValue()); });
 		addHotkey("Node_Smear", "Blend Mode > Toggle",    "B", MOD_KEY.none, function(val) /*=>*/ { GRAPH_FOCUS _n.inputs[15].setValue(!_n.inputs[15].getValue()); });

@@ -33,7 +33,7 @@
 	CURSOR_LOCK_Y	   = 0;
 	TOOLTIP            = "";
 	DRAGGING           = noone;
-	KEYBOARD_STRING    = "";
+	KEYBOARD_RESET
 	
 	RENDER_QUEUE = new Queue();
 	RENDER_ORDER = [];

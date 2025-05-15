@@ -1,6 +1,6 @@
 #region
 	FN_NODE_CONTEXT_INVOKE {
-		addHotkey("Node_Pixel_Sort", "Iteration > Set", KEY_GROUP.numeric, MOD_KEY.none, function(val) /*=>*/ { GRAPH_FOCUS _n.inputs[1].setValue(toNumber(chr(keyboard_key))); });
+		addHotkey("Node_Pixel_Sort", "Iteration > Set", KEY_GROUP.numeric, MOD_KEY.none, function(val) /*=>*/ { GRAPH_FOCUS_NUMBER _n.inputs[1].setValue(KEYBOARD_NUMBER); });
 		addHotkey("Node_Pixel_Sort", "Direction > Rotate CCW", "R", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[3].setValue((_n.inputs[3].getValue() + 90) % 360);  });
 	});
 #endregion

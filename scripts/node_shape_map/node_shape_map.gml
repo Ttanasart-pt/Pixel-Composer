@@ -1,7 +1,7 @@
 #region
 	FN_NODE_CONTEXT_INVOKE {
 		addHotkey("Node_Shape_Map", "Shape > Toggle", "S", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[2].setValue((_n.inputs[2].getValue() + 1) % 2); });
-		addHotkey("Node_Shape_Map", "Sides > Set", KEY_GROUP.numeric, MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[5].setValue(toNumber(chr(keyboard_key))); });
+		addHotkey("Node_Shape_Map", "Sides > Set", KEY_GROUP.numeric, MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS_NUMBER _n.inputs[5].setValue(KEYBOARD_NUMBER); });
 	});
 #endregion
 

@@ -408,6 +408,7 @@ function nodeBuild(_name, _x, _y, _group = PANEL_GRAPH.getCurrentContext()) {
 	var _bnode = _node.build(_x, _y, _group, {}, _skipc);
 	if(_bnode) recordAction(ACTION_TYPE.node_added, _bnode).setRef(_bnode);
 	
+	KEYBOARD_RESET
 	return _bnode;
 }
 

@@ -92,7 +92,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	#region tool
 		tools = [
 			new NodeTool( "Edit Text", THEME.text_tools_edit ).setOnToggle(function() /*=>*/ { 
-				KEYBOARD_STRING = ""; 
+				KEYBOARD_RESET
 				var _currStr    = getSingleValue(0);
 				edit_cursor     = 0;
 				edit_cursor_sel = string_length(_currStr);
@@ -243,7 +243,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			if(mouse_press(mb_left, active)) {
 				edit_cursor     = _cr_hover;
 				edit_cursor_sel = noone;
-				KEYBOARD_STRING = "";
+				KEYBOARD_RESET
 				
 			} else if(_cr_hover != noone && mouse_click(mb_left, active)) {
 				if(_cr_hover != edit_cursor) edit_cursor_sel = _cr_hover;
@@ -268,7 +268,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					PANEL_PREVIEW.tool_current = noone;
 					edit_cursor_sel = noone;
 					
-				} else if(edit_cursor_sel != noone && (KEYBOARD_STRING != "" || KEYBOARD_PRESSED == vk_backspace || KEYBOARD_PRESSED == vk_delete)) {
+				} else if(edit_cursor_sel != noone && (KEYBOARD_PRESSED_STRING != "" || KEYBOARD_PRESSED == vk_backspace || KEYBOARD_PRESSED == vk_delete)) {
 					_currStr        = string_delete(_currStr, _crmin + 1, _crmax - _crmin);
 					_edit           = true;
 					edit_cursor     = _crmin;
@@ -288,14 +288,14 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					_edit       = true;
 					
 					edit_cursor    += 1;
-					KEYBOARD_STRING = "";
+					KEYBOARD_RESET
 					
-				} else if(KEYBOARD_STRING != "") {
-					_currStr    = string_insert(KEYBOARD_STRING, _currStr, edit_cursor + 1);
+				} else if(KEYBOARD_PRESSED_STRING != "") {
+					_currStr    = string_insert(KEYBOARD_PRESSED_STRING, _currStr, edit_cursor + 1);
 					_edit       = true;
 					
-					edit_cursor    += string_length(KEYBOARD_STRING);
-					KEYBOARD_STRING = "";
+					edit_cursor    += string_length(KEYBOARD_PRESSED_STRING);
+					KEYBOARD_RESET
 				}
 				
 				if(_edit) inputs[0].setValue(_currStr);

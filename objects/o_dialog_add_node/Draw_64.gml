@@ -206,9 +206,9 @@ if(DIALOG_SHOW_FOCUS) {
 #region hotkey
 	destroy_on_escape = hk_editing == noone;
 	if(hk_editing != noone) {
-		if(keyboard_check_pressed(vk_enter))  { hk_editing = noone; keyboard_string = ""; search_string = ""; KEYBOARD_STRING = ""; }
+		if(keyboard_check_pressed(vk_enter))  { hk_editing = noone; keyboard_string = ""; search_string = ""; KEYBOARD_PRESSED_STRING = ""; }
 		else hotkey_editing(hk_editing);
 			
-		if(keyboard_check_pressed(vk_escape)) { hk_editing = noone; keyboard_string = ""; search_string = ""; KEYBOARD_STRING = ""; }
+		if(keyboard_check_pressed(vk_escape)) { hk_editing = noone; keyboard_string = ""; search_string = ""; KEYBOARD_PRESSED_STRING = ""; }
 	}
 #endregion

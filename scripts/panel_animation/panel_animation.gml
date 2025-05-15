@@ -651,7 +651,7 @@ function Panel_Animation() : PanelContent() constructor {
     }
     
     function drawTimeline() { // Draw summary
-        var bar_x       = tool_width + ui(16);
+    	var bar_x       = tool_width + ui(16);
         var bar_y       = h - timeline_h - ui(10);
         var bar_w       = timeline_w;
         var bar_h       = timeline_h;
@@ -777,7 +777,9 @@ function Panel_Animation() : PanelContent() constructor {
 	                
 	            if(timeline_scubbing && timeline_stretch == 0) {
 	                var rfrm = (mx - bar_x - timeline_shift) / timeline_scale - 1;
-	                if(!key_mod_press(CTRL)) rfrm = clamp(rfrm, 0, TOTAL_FRAMES - 1);                 // clamp to animating region
+	                if(!key_mod_press(CTRL)) rfrm = clamp(rfrm, 0, TOTAL_FRAMES - 1);
+	                if(KEYBOARD_NUMBER != undefined) rfrm = KEYBOARD_NUMBER - 1;
+	                
 	                PROJECT.animator.setFrame(rfrm, !key_mod_press(ALT));
 	                
 	                timeline_show_time  = CURRENT_FRAME;
@@ -846,6 +848,7 @@ function Panel_Animation() : PanelContent() constructor {
                     timeline_scubbing = true;
                     timeline_scub_st  = CURRENT_FRAME;
                     _scrub_frame      = timeline_scub_st;
+                    KEYBOARD_RESET
                 }
                 
                 if(mouse_press(mb_right, pFOCUS)) {
@@ -863,7 +866,8 @@ function Panel_Animation() : PanelContent() constructor {
                 if(mx < bar_int_x && mouse_press(mb_left, pFOCUS) && timeline_draggable) {
                     timeline_scubbing = true;
                     timeline_scub_st  = CURRENT_FRAME;
-                    _scrub_frame = timeline_scub_st;
+                    _scrub_frame      = timeline_scub_st;
+                    KEYBOARD_RESET
                 }
             }
             
@@ -1690,7 +1694,7 @@ function Panel_Animation() : PanelContent() constructor {
         }
     }
 	    
-    function drawDopesheet_Label() {
+    function drawDopesheet_Label() { 
         surface_set_target(dope_sheet_name_surface);    
         draw_clear_alpha(COLORS.panel_bg_clear_inner, 0);
         var msx = mx - ui(8);
@@ -1810,7 +1814,7 @@ function Panel_Animation() : PanelContent() constructor {
         surface_reset_target();
     }
     
-    function drawDopesheet() {
+    function drawDopesheet() { 
         var bar_x = tool_width + ui(16);
         var bar_y = h - timeline_h - ui(10);
         var bar_w = timeline_w;
@@ -2462,9 +2466,11 @@ function Panel_Animation() : PanelContent() constructor {
             var stx = timeline_shift + bar_total_w;
             var sty = ui(10);
             
+            var len = round((mx - bar_x - timeline_shift) / timeline_scale);
+            if(KEYBOARD_NUMBER != undefined) len = KEYBOARD_NUMBER;
+                len = max(1, len);
+            
             if(timeline_stretch == 1) {
-                var len = round((mx - bar_x - timeline_shift) / timeline_scale);
-                    len = max(1, len);
                 TOOLTIP = __txtx("panel_animation_length", "Animation length") + $" {len}";
                 TOTAL_FRAMES = len;
                 
@@ -2475,8 +2481,6 @@ function Panel_Animation() : PanelContent() constructor {
         		draw_line_width(stx, sty - ui(10), stx, sty + ui(10), 2);
                 
             } else if(timeline_stretch == 2) {
-                var len  = round((mx - bar_x - timeline_shift) / timeline_scale);
-                    len  = max(1, len);
                 TOOLTIP  = __txtx("panel_animation_length", "Animation length") + $" {len}";
                 var _len = TOTAL_FRAMES;
                 TOTAL_FRAMES = len;

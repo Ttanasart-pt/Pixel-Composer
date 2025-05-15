@@ -23,7 +23,7 @@ event_inherited();
 	edit_block = 0;
 	
 	search_string	= "";
-	KEYBOARD_STRING	= "";
+	KEYBOARD_RESET
 	
 	tb_search = new textBox(TEXTBOX_INPUT.text, function(str) { 
 		search_string = string(str); 
@@ -221,7 +221,7 @@ event_inherited();
 			if(keyboard_check_pressed(vk_escape))
 				hk_editing = noone;
 				
-			KEYBOARD_STRING = "";
+			KEYBOARD_RESET
 				
 		} else if(sc_content.active) {
 			if(KEYBOARD_PRESSED == vk_up) {

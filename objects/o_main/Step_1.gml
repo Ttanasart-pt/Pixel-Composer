@@ -10,10 +10,18 @@ FILE_DROPPED      = _FILE_DROPPED;
 _FILE_DROPPED     = false;
 
 #region keybord captures
-	if(PREFERENCES.keyboard_capture_raw && keyboard_string != "") {
-		KEYBOARD_STRING = keyboard_string;
-		keyboard_string = "";
+	if(PREFERENCES.keyboard_capture_raw) {
+		if(keyboard_string != "") {
+			KEYBOARD_PRESSED_STRING = keyboard_string;
+			KEYBOARD_STRING += keyboard_string;
+			keyboard_string = "";
+		}
+		
+		if(keyboard_check_pressed(vk_backspace))
+			KEYBOARD_STRING = string_copy(KEYBOARD_STRING, 1, string_length(KEYBOARD_STRING) - 1);
 	}
+	
+	KEYBOARD_NUMBER = KEYBOARD_STRING != "" && string_digits(KEYBOARD_STRING) == KEYBOARD_STRING? real(KEYBOARD_STRING) : undefined;
 #endregion
 
 #region minimize

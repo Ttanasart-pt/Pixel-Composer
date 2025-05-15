@@ -74,7 +74,7 @@ event_inherited();
 
 #region search
 	search_string	= "";
-	KEYBOARD_STRING	= "";
+	KEYBOARD_RESET
 	tb_search = new textBox(TEXTBOX_INPUT.text, function(s) /*=>*/ { search_string = string(s); filterSearch(); })
 					.setFont(f_p2)
 					.setAutoUpdate()

@@ -96,7 +96,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			click_block   = 1;
 		}
 		
-		KEYBOARD_STRING = "";
+		KEYBOARD_RESET
 		keyboard_lastkey = -1;
 					
 		cut_line();
@@ -434,7 +434,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 				if(key_mod_press(CTRL) && keyboard_check_pressed(ord("V"))) {
 					var _ctxt = clipboard_get_text();
 					    _ctxt = string_replace_all(_ctxt, "\t", "    ");
-					KEYBOARD_STRING = _ctxt;
+					KEYBOARD_PRESSED_STRING = _ctxt;
 				}
 				
 				if(keyboard_check_pressed(vk_escape)) {
@@ -524,8 +524,8 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 					cursor_select = -1;
 					modified = true;
 					
-				} else if(KEYBOARD_STRING != "" && KEYBOARD_STRING != "\b" && KEYBOARD_STRING != "\r") {
-					var ch = KEYBOARD_STRING;
+				} else if(KEYBOARD_PRESSED_STRING != "" && KEYBOARD_PRESSED_STRING != "\b" && KEYBOARD_PRESSED_STRING != "\r") {
+					var ch = KEYBOARD_PRESSED_STRING;
 					
 					if(cursor_select == -1) {
 						var str_before	= string_copy(_input_text, 1, cursor);
@@ -554,7 +554,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 				}
 			}
 			
-			KEYBOARD_STRING = "";
+			KEYBOARD_RESET
 			keyboard_lastkey = -1;
 		#endregion
 		

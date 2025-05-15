@@ -9,7 +9,7 @@ function Panel_Addon() : PanelContent() constructor {
 		
 		search_string     = "";
 		keyboard_lastchar = "";
-		KEYBOARD_STRING   = "";
+		KEYBOARD_RESET
 		keyboard_lastkey  = -1;
 		
 		search_res = [];

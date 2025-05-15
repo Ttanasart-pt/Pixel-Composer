@@ -27,7 +27,7 @@ function Panel_Tunnels() : PanelContent() constructor {
 	search_string     = "";
 	keyboard_lastchar = "";
 	keyboard_lastkey  = -1;
-	KEYBOARD_STRING   = "";
+	KEYBOARD_RESET
 	
 	search_res = [];
 	tb_search  = new textBox(TEXTBOX_INPUT.text, function(s) /*=>*/ { search_string = string(s); searchNodes(); })
