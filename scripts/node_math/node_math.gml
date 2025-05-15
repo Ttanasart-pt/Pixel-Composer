@@ -74,33 +74,30 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	color		= COLORS.node_blend_number;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Enum_Scroll("Type", self, 0, global.node_math_scroll))
-		.rejectArray();
+	newInput(0, nodeValue_Enum_Scroll("Type", self, 0, global.node_math_scroll)).rejectArray();
 	
-	newInput(1, nodeValue_Float("a", self, 0))
-		.setVisible(true, true);
+	////- Values
+	
+	newInput(1, nodeValue_Float( "a",      self, 0)).setVisible(true, true);
+	newInput(2, nodeValue_Float( "b",      self, 0)).setVisible(true, true);
+	newInput(5, nodeValue_Float( "Amount", self, 0));
+	newInput(6, nodeValue_Vec2(  "From",   self, [ 0, 1 ]));
+	newInput(7, nodeValue_Vec2(  "To",     self, [ 0, 1 ]));
+	
+	////- Settings
 		
-	newInput(2, nodeValue_Float("b", self, 0))
-		.setVisible(true, true);
+	newInput(3, nodeValue_Bool( "Degree Angle",  self,  true));
+	newInput(4, nodeValue_Bool( "To integer",    self, false));
+	newInput(8, nodeValue_Bool( "Output Vector", self, false));
+	
+	// inputs 9
 		
-	newInput(3, nodeValue_Bool("Degree Angle", self, true));
-	
-	newInput(4, nodeValue_Bool("To integer", self, false));
-	
-	newInput(5, nodeValue_Float("Amount", self, 0));
-	
-	newInput(6, nodeValue_Vec2("From", self, [ 0, 1 ]));
-	
-	newInput(7, nodeValue_Vec2("To",   self, [ 0, 1 ]));
-	
-	newInput(8, nodeValue_Bool("Output Vector", self, false));
+	newOutput(0, nodeValue_Output("Result", self, VALUE_TYPE.float, 0));
 	
 	input_display_list = [ 0, 
 		["Values",   false], 1, 2, 5, 6, 7, 
 		["Settings", false], 3, 4, 8, 
 	];
-		
-	newOutput(0, nodeValue_Output("Result", self, VALUE_TYPE.float, 0));
 	
 	use_mod = 0;
 	use_deg = false;
@@ -143,7 +140,7 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		return 0;
 	}
 	
-	function evalArray(a, b, c, f, t) {
+	static evalArray = function(a, b, c, f, t) {
 		var _as = is_array(a);
 		var _bs = is_array(b);
 		var _cs = is_array(c);
@@ -185,11 +182,12 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var c   = inputs[5].getValue();
 		var f   = inputs[6].getValue();
 		var t   = inputs[7].getValue();
-		var vc  = inputs[8].getValue();
-		var val = evalArray(a, b, c, f, t);
 		
-		outputs[0].setValue(val);
-		outputs[0].setDisplay(vc? VALUE_DISPLAY.vector : VALUE_DISPLAY._default);
+		var vc = inputs[8].getValue();
+		var ty = vc? VALUE_DISPLAY.vector : VALUE_DISPLAY._default
+		if(outputs[0].display_type != ty) outputs[0].setDisplay(ty);
+		
+		outputs[0].setValue(evalArray(a, b, c, f, t));
 		
 		if(__mode == use_mod) return;
 		__mode = use_mod;

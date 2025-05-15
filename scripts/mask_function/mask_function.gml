@@ -29,7 +29,7 @@ function mask_modify(mask, invert = false, feather = 0) {
 	surface_reset_shader();
 	
 	if(feather > 0) {
-		if(!struct_has(self, "__blur_hori")) surface_blur_init();
+		surface_blur_init();
 		__temp_mask = surface_apply_gaussian(__temp_mask, feather, false, c_white, 1, noone);
 	}
 	
@@ -43,7 +43,7 @@ function mask_apply(original, edited, mask, mix = 1) {
 	var _s = surface_create_size(original, _f);
 	
 	if(is_surface(mask) && __mask_feather > 0) {
-		if(!struct_has(self, "__blur_hori")) surface_blur_init();
+		surface_blur_init();
 		mask = surface_apply_gaussian(mask, __mask_feather, false, c_white, 1, noone);
 	}
 	

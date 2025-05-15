@@ -105,8 +105,8 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var pass1blur;
 		
 		     if(_type == 0) pass1blur = surface_apply_gaussian( temp_surface[0], _size, true, c_black, 1, noone, false, _ratio, _angle);
-		else if(_type == 1) pass1blur = surface_apply_blur_zoom(temp_surface[0], _size, _zoom[0], _zoom[1], 2, 1, 64);
-		else if(_type == 2) pass1blur = surface_apply_blur_directional(temp_surface[0], _size, _angle, 64);
+		else if(_type == 1) pass1blur = surface_apply_blur_zoom(__blur_pass[0], new blur_zoom_args(temp_surface[0], _size, _zoom[0], _zoom[1], 2, 1));
+		else if(_type == 2) pass1blur = surface_apply_blur_directional(__blur_pass[0], new blur_directional_args(temp_surface[0], _size, _angle));
 		
 		surface_set_shader(temp_surface[0], sh_bloom_blend);
 			shader_set_c("blend",      _blnd);

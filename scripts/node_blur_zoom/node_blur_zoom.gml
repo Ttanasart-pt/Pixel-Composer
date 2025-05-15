@@ -45,6 +45,7 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	attribute_surface_depth();
 	attribute_oversample();
+	surface_blur_init();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var pos  = getInputData(2);
@@ -60,28 +61,30 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	static processData = function(_outSurf, _data, _array_index) {
 		var _sam = getAttribute("oversample");
 		
-		var _cen = array_clone(_data[2]);
-		_cen[0] /= surface_get_width_safe(_outSurf);
-		_cen[1] /= surface_get_height_safe(_outSurf);
+		var _surf = _data[0];
+		var _mask = _data[5];
 		
-		surface_set_shader(_outSurf, _data[15]? sh_blur_zoom_step : sh_blur_zoom);
-			shader_set_2("center",       _cen);
-			shader_set_f_map("strength", _data[1], _data[12], inputs[1]);
-			shader_set_i("blurMode",     _data[4]);
-			shader_set_i("sampleMode",   _sam);
-			shader_set_i("gamma",        _data[13]);
-			shader_set_i("samples",      _data[14]);
-			shader_set_i("fadeDistance", _data[16]);
+		var _orig = _data[ 4];
+		var _mode = _data[15];
+		var _strn = _data[ 1];
+		var _strmap = _data[12];
+		var _cent = _data[ 2];
+		
+		var _samp = _data[14];
+		var _gamm = _data[13];
+		var _fade = _data[16];
+		
+		var _args = new blur_zoom_args(_surf, [_strn, _strmap, inputs[1]], _cent[0], _cent[1], _orig, _sam, _samp)
+							.setMode(_mode)
+							.setFadeDistance(_fade)
+							.setGamma(_gamm)
+							.setMask(_mask);
 			
-			shader_set_i("useMask", is_surface(_data[5]));
-			shader_set_surface("mask", _data[5]);
-				
-			draw_surface_safe(_data[0]);
-		surface_reset_shader();
-		
+		_outSurf = surface_apply_blur_zoom(_outSurf, _args);
+			
 		__process_mask_modifier(_data);
-		_outSurf = mask_apply(_data[0], _outSurf, _data[6], _data[7]);
-		_outSurf = channel_apply(_data[0], _outSurf, _data[9]);
+		_outSurf = mask_apply(_surf, _outSurf, _data[6], _data[7]);
+		_outSurf = channel_apply(_surf, _outSurf, _data[9]);
 		
 		return _outSurf;
 	}

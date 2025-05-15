@@ -6,6 +6,7 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	group_adding   = false;
 	vertex_hash    = "";
 	modifiable     = true;
+	draggable      = false;
 	
 	managedRenderOrder = false;
 	group_hovering = false;

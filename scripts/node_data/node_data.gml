@@ -2907,6 +2907,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		for( var i = 0; i < array_length(inputs);  i++ ) { inputs[i].cleanUp();  delete inputs[i];  }
 		for( var i = 0; i < array_length(outputs); i++ ) { outputs[i].cleanUp(); delete outputs[i]; }
 		
+		if(struct_has(self, "__blur_pass")) {
+			surface_free_safe(__blur_pass[0]);
+			surface_free_safe(__blur_pass[1]);
+		}
+		
 		surface_array_free(temp_surface);
 		onCleanUp();
 	}

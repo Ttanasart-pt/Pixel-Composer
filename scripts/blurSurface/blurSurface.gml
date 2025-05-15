@@ -2,8 +2,7 @@ globalvar GAUSSIAN_COEFF;
 GAUSSIAN_COEFF = {};
 
 function surface_blur_init() {
-	__blur_hori = surface_create(1, 1);
-	__blur_vert = surface_create(1, 1);
+	__blur_pass = [ 0, 0 ];
 }
 
 function __gaussian_get_kernel(size) {
@@ -33,15 +32,15 @@ function surface_apply_gaussian(surface, size, bg = false, bg_c = c_white, sampl
 	var _sw    = surface_get_width_safe(surface);
 	var _sh    = surface_get_height_safe(surface);
 	
-	__blur_hori = surface_verify(__blur_hori, _sw, _sh, format);	
-	__blur_vert = surface_verify(__blur_vert, _sw, _sh, format);	
+	__blur_pass[0] = surface_verify(__blur_pass[0], _sw, _sh, format);	
+	__blur_pass[1] = surface_verify(__blur_pass[1], _sw, _sh, format);	
 	
 	size = min(size, 128);
 	var gau_array = __gaussian_get_kernel(size);
 	
 	BLEND_OVERRIDE
 	gpu_set_tex_filter(true);
-	surface_set_target(__blur_hori);
+	surface_set_target(__blur_pass[0]);
 		draw_clear_alpha(bg_c, bg);
 		
 		shader_set(sh_blur_gaussian);
@@ -61,7 +60,7 @@ function surface_apply_gaussian(surface, size, bg = false, bg_c = c_white, sampl
 		shader_reset();
 	surface_reset_target();
 	
-	surface_set_target(__blur_vert);
+	surface_set_target(__blur_pass[1]);
 		draw_clear_alpha(bg_c, bg);
 		var _size_v = round(size * ratio);
 			
@@ -70,57 +69,107 @@ function surface_apply_gaussian(surface, size, bg = false, bg_c = c_white, sampl
 		shader_set_i("size",       _size_v);
 		shader_set_i("horizontal", 0);
 			
-		draw_surface_safe(__blur_hori);
+		draw_surface_safe(__blur_pass[0]);
 		shader_reset();
 	surface_reset_target();
 	gpu_set_tex_filter(false);
 	BLEND_NORMAL
 	
-	return __blur_vert;
+	return __blur_pass[1];
 }
 
-function surface_apply_blur_zoom(surface, size, origin_x, origin_y, blurMode = 0, sampleMode = 0, samples = 64) {
-	var format = surface_get_format(surface);
-	var _sw    = surface_get_width_safe(surface);
-	var _sh    = surface_get_height_safe(surface);
+	////- Zoom blur
+
+function blur_zoom_args(_surface, _size, _origin_x, _origin_y, _blurMode = 0, _sampleMode = 0, _samples = 64) constructor {
+	surface    = _surface;
+	size       = _size;
+	origin_x   = _origin_x;
+	origin_y   = _origin_y;
+	blurMode   = _blurMode;
+	sampleMode = _sampleMode;
+	samples    = _samples;
 	
-	__blur_hori = surface_verify(__blur_hori, _sw, _sh, format);
-	size = min(size, 128) / 128;
+	mode         = 0;     static setMode         = function(i) /*=>*/ { mode = i;         return self; }
+	fadeDistance = true;  static setFadeDistance = function(i) /*=>*/ { fadeDistance = i; return self; }
+	gamma        = false; static setGamma        = function(i) /*=>*/ { gamma = i;        return self; }
 	
-	surface_set_shader(__blur_hori, sh_blur_zoom);
-		shader_set_f("center",       origin_x / _sw, origin_y / _sh);
-		shader_set_f_map("strength", size);
-		shader_set_i("blurMode",     blurMode);
-		shader_set_i("sampleMode",   sampleMode);
-		shader_set_i("gamma",        0);
-		shader_set_i("samples",      samples);
-		shader_set_i("fadeDistance", 1);
-		shader_set_i("useMask",      0);
-		
-		draw_surface_safe(surface);
-	surface_reset_shader();
-	
-	return __blur_hori;
+	useMask      = false; static setMask         = function(i) /*=>*/ { mask = i; useMask = is_surface(mask); return self; }
+	mask         = noone;
 }
 
-function surface_apply_blur_directional(surface, size, angle, samples = 64) {
-	var format = surface_get_format(surface);
-	var _sw    = surface_get_width_safe(surface);
-	var _sh    = surface_get_height_safe(surface);
+function surface_apply_blur_zoom(outputSurf, args) {
+	if(!is_surface(args.surface)) return outputSurf;
 	
-	__blur_hori = surface_verify(__blur_hori, _sw, _sh, format);
-	size = min(size, 128) / 128;
+	var format = surface_get_format(args.surface);
+	var _sw    = surface_get_width_safe(args.surface);
+	var _sh    = surface_get_height_safe(args.surface);
 	
-	surface_set_shader(__blur_hori, sh_blur_directional);
-		shader_set_f("size",          _sw, _sh);
-		shader_set_f_map("strength",  size);
-		shader_set_f_map("direction", angle);
-		shader_set_i("scale",         0);
-		shader_set_i("gamma",         0);
-		shader_set_i("sampleMode",	  0);
+	outputSurf = surface_verify(outputSurf, _sw, _sh, format);
+	
+	var _sizeArr   = is_array(args.size);
+	var _size      = min(_sizeArr? args.size[0] : args.size, 128) / 128;
+	var _sizeSurf  =  _sizeArr? args.size[1] : noone;
+	var _sizeJunc  =  _sizeArr? args.size[2] : noone;
+	
+	surface_set_shader(outputSurf, args.mode? sh_blur_zoom_step : sh_blur_zoom);
+		shader_set_f("center",       args.origin_x / _sw, args.origin_y / _sh);
+		shader_set_f_map("strength", _size,  _sizeSurf,  _sizeJunc);
+		shader_set_i("blurMode",     args.blurMode);
+		shader_set_i("sampleMode",   args.sampleMode);
+		shader_set_i("samples",      args.samples);
+		shader_set_i("gamma",        args.gamma);
+		shader_set_i("fadeDistance", args.fadeDistance);
 		
-		draw_surface_safe(surface);
+		shader_set_i("useMask",      args.useMask);
+		shader_set_surface("mask",   args.mask);
+		
+		draw_surface_safe(args.surface);
 	surface_reset_shader();
 	
-	return __blur_hori;
+	return outputSurf;
+}
+
+	////- Directional blur
+
+function blur_directional_args(_surface, _size, _angle) constructor {
+	surface = _surface;
+	size    = _size;
+	angle   = _angle;
+	
+	singleDirect = false; static setSingleDirect = function(i) /*=>*/ { singleDirect = i; return self; }
+	gamma        = false; static setGamma        = function(i) /*=>*/ { gamma        = i; return self; }
+	sampleMode   = 2;     static setSampleMode   = function(i) /*=>*/ { sampleMode   = i; return self; }
+}
+
+function surface_apply_blur_directional(outputSurf, args) {
+	if(!is_surface(args.surface)) return outputSurf;
+	
+	var format = surface_get_format(args.surface);
+	var _sw    = surface_get_width_safe(args.surface);
+	var _sh    = surface_get_height_safe(args.surface);
+	
+	outputSurf = surface_verify(outputSurf, _sw, _sh, format);
+	
+	var _sizeArr   = is_array(args.size);
+	var _size      = (_sizeArr? args.size[0] : args.size) / 128;
+	var _sizeSurf  =  _sizeArr? args.size[1] : noone;
+	var _sizeJunc  =  _sizeArr? args.size[2] : noone;
+	
+	var _angleArr  = is_array(args.angle);
+	var _angle     = _angleArr? args.angle[0] : args.angle;
+	var _angleSurf = _angleArr? args.angle[1] : noone;
+	var _angleJunc = _angleArr? args.angle[2] : noone;
+	
+	surface_set_shader(outputSurf, sh_blur_directional);
+		shader_set_f("size",          max(_sw, _sh));
+		shader_set_f_map("strength",  _size,  _sizeSurf,  _sizeJunc);
+		shader_set_f_map("direction", _angle, _angleSurf, _angleJunc);
+		shader_set_i("singleDirect",  args.singleDirect);
+		shader_set_i("gamma",         args.gamma);
+		shader_set_i("sampleMode",	  args.sampleMode);
+		
+		draw_surface_safe(args.surface);
+	surface_reset_shader();
+	
+	return outputSurf;
 }

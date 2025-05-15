@@ -19,8 +19,8 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform float size;
-uniform int scale;
+uniform float     size;
+uniform int       singleDirect;
 
 uniform vec2      direction;
 uniform int       directionUseSurf;
@@ -30,14 +30,14 @@ uniform vec2      strength;
 uniform int       strengthUseSurf;
 uniform sampler2D strengthSurf;
 
-uniform int	  gamma;
+uniform int	      gamma;
 
-vec4 dirBlur(vec2 angle) { #region
+vec4 dirBlur(vec2 angle) {
     vec4 acc     = vec4(0.);
     float delta  = 1. / size;
 	float weight = 0.;
     
-	if(scale == 0) {
+	if(singleDirect == 0) {
 	    for(float i = -1.0; i <= 1.0; i += delta) {
 			vec4 col  = sampleTexture( gm_BaseTexture, v_vTexcoord - angle * i);
 			if(gamma == 1) col.rgb = pow(col.rgb, vec3(2.2));
@@ -65,7 +65,7 @@ vec4 dirBlur(vec2 angle) { #region
 	
 	if(gamma == 1) acc.rgb = pow(acc.rgb, vec3(1. / 2.2));
     return acc;
-} #endregion
+}
 
 void main() {
 	float str = strength.x;

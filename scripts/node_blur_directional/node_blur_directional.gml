@@ -9,8 +9,7 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	
 	newInput(0, nodeValue_Surface("Surface In", self));
 	
-	newInput(1, nodeValue_Float("Strength", self, 0.2))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 0.5, 0.001] })
+	newInput(1, nodeValue_Float("Strength", self, 4))
 		.setMappable(9);
 	
 	newInput(2, nodeValue_Rotation("Direction", self, 0))
@@ -49,6 +48,7 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	
 	attribute_surface_depth();
 	attribute_oversample();
+	surface_blur_init();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _surf = outputs[0].getValue();
@@ -67,16 +67,12 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		
-		surface_set_shader(_outSurf, sh_blur_directional);
-			shader_set_f("size",          max(surface_get_width_safe(_data[0]), surface_get_height_safe( _data[0])));
-			shader_set_f_map("strength",  _data[ 1], _data[ 9], inputs[ 1]);
-			shader_set_f_map("direction", _data[ 2], _data[10], inputs[ 2]);
-			shader_set_i("scale",         _data[11]);
-			shader_set_i("gamma",         _data[12]);
-			shader_set_i("sampleMode",	  getAttribute("oversample"));
-			
-			draw_surface_safe(_data[0]);
-		surface_reset_shader();
+		var _args = new blur_directional_args(_data[0], [_data[1], _data[9], inputs[1]], [_data[2], _data[10], inputs[2]])
+						.setSingleDirect(_data[11])
+						.setGamma(_data[12])
+						.setSampleMode(getAttribute("oversample"))
+		
+		_outSurf  = surface_apply_blur_directional(_outSurf, _args);
 		
 		__process_mask_modifier(_data);
 		_outSurf = mask_apply(_data[0], _outSurf, _data[3], _data[4]);
