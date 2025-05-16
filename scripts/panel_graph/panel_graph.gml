@@ -2105,13 +2105,13 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             
             if(value_focus != value_dragging) {
             					
-                var ctx = is_instanceof(frame_hovering, Node_Collection_Inline)? frame_hovering : getCurrentContext();
+                var ctx   = is_instanceof(frame_hovering, Node_Collection_Inline)? frame_hovering : getCurrentContext();
+                var inCtx = value_dragging.node.inline_context;
                 
-                if(value_dragging.node.inline_context) {
+                if(inCtx && inCtx.junctionIsInside(value_dragging)) {
                 	addKeyOverlay("Connecting (inline)", [[ "Alt", "Connect to outside" ]]);
                 	
-					if(!key_mod_press(ALT))
-                    	ctx = value_dragging.node.inline_context;
+					if(!key_mod_press(ALT)) ctx = inCtx;
                 }
                 
                 with(dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8, { context: ctx })) {    
@@ -2895,10 +2895,19 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	    			
 	    			draw_set_color(CDEF.main_mdwhite);
     				draw_text_add(_ttxx, _ty, _sp[0]);
+    				_ttxx += string_width(_sp[0]) + ui(4);
     				
     			} else {
 	    			draw_set_color(COLORS._main_text);
 	    			draw_text_add(_ttxx, _ty, _title);
+	    			_ttxx += string_width(_title) + ui(4);
+    			}
+    			
+    			if(hotkey.key == KEY_GROUP.numeric) {
+    				var _curr_val = KEYBOARD_NUMBER == undefined? "[-]" : $"[{KEYBOARD_NUMBER}]";
+    				
+    				draw_set_color(CDEF.main_mdwhite);
+	    			draw_text_add(_ttxx, _ty, _curr_val);
     			}
 				
 				_ty -= line_get_height();

@@ -9,7 +9,7 @@ function string_variable_valid(str) {
 	return true;
 }
 
-function string_decimal(str) {
+function string_decimal(str, _strict = true) {
 	var neg = string_char_at(str, 1) == "-";
 	if(neg) str = string_copy(str, 2, string_length(str) - 1);
 	
@@ -19,7 +19,15 @@ function string_decimal(str) {
 	var pre = string_copy(str, 1, dec - 1);
 	var pos = string_copy(str, dec + 1, string_length(str) - dec);
 	
-	return (neg? "-" : "") + string_digits(pre) + "." + string_digits(pos);
+	var spre = string_digits(pre); 
+	var spos = string_digits(pos); 
+	
+	if(!_strict) {
+		if(spre == "") spre = "0";
+		if(spos == "") spos = "0";
+	}
+	
+	return $"{neg? "-" : ""}{spre}.{spos}";
 }
 
 function toNumber(str) {

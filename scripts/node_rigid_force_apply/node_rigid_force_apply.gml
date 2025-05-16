@@ -107,13 +107,9 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 				else            gmlBox2D_Object_Apply_Impulse_Local( _objId, fx, fy, px, py);
 				break;
 				
-			case 2 : 
-				gmlBox2D_Object_Apply_Torque(_objId, _torque); 
-				break;
+			case 2 : gmlBox2D_Object_Apply_Torque(_objId, _torque); break;
 			
-			case 3 : 
-				gmlBox2D_Object_Apply_Angular_Impulse( _objId, _torque); 
-				break;
+			case 3 : gmlBox2D_Object_Apply_Angular_Impulse( _objId, _torque); break;
 				
 			case 4 : 
 				var cx = gmlBox2D_Object_Get_WorldCOM_X(_objId);
@@ -127,7 +123,7 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 					var str = _strength * sqr(1 - dis / _radius);
 					var fx  = lengthdir_x(str, dir);
 					var fy  = lengthdir_y(str, dir);
-					gmlBox2D_Object_Apply_Impulse(_objId, px, py, fx, fy);
+					gmlBox2D_Object_Apply_Impulse(_objId, fx / worldScale, fy / worldScale, px, py);
 				}
 				break;
 		}

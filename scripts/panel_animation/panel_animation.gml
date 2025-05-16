@@ -175,12 +175,16 @@ function Panel_Animation() : PanelContent() constructor {
     #endregion
     
     #region ---- timeline ----
-        timeline_scubbing   = false;
-        timeline_scub_st    = 0;
-        timeline_scale      = 20;
-        timeline_separate   = 5;
-        timeline_sep_line   = 1;
-        _scrub_frame        = -1;
+        timeline_scubbing = false;
+        timeline_scub_st  = 0;
+        timeline_scale    = 20;
+        timeline_separate = 5;
+        timeline_sep_line = 1;
+        _scrub_frame      = -1;
+        
+        timeline_frame_active = false;
+        timeline_frame_box    = textBox_Number(function(f) /*=>*/ {return PROJECT.animator.setFrame(f)});
+        timeline_frame_box.onDeactivate = function() /*=>*/ { timeline_frame_active = false; }
     
         timeline_shift      = 0;
         timeline_shift_to   = 0;
@@ -736,13 +740,20 @@ function Panel_Animation() : PanelContent() constructor {
 	            
 	            var bar_line_x = (CURRENT_FRAME + 1) * timeline_scale + timeline_shift;
 	            var cc = PROJECT.animator.is_playing? COLORS._main_value_positive : COLORS._main_accent;
+	            
 	            draw_set_color(cc);
 	            draw_set_alpha((CURRENT_FRAME >= 0 && CURRENT_FRAME < TOTAL_FRAMES) * .5 + .5);
 	            draw_line(bar_line_x, ui(15), bar_line_x, bar_h - PANEL_PAD);
 	            draw_set_alpha(1);
 	            
 	            draw_set_text(f_p2, fa_center, fa_bottom, cc);
-	            draw_text_add(bar_line_x, ui(16), string(CURRENT_FRAME + 1));
+	            var cf = string(CURRENT_FRAME + 1);
+            	var tx = string_width(cf) + ui(4);
+            
+	            if(timeline_frame_active && timeline_stretch == 0)
+	            	draw_sprite_stretched_ext(THEME.box_r2, 1, bar_line_x - tx / 2, 0, tx, ui(16), cc, 1);
+	            
+	            draw_text_add(bar_line_x, ui(16), cf);
 	            
 	            if(inspecting) inspecting.drawAnimationTimeline(timeline_shift, bar_w, bar_h, timeline_scale);
 	        #endregion
@@ -772,34 +783,6 @@ function Panel_Animation() : PanelContent() constructor {
 	            }
 	        #endregion
 	            
-	        #region Pan Zoom
-	            timeline_shift = lerp_float(timeline_shift, timeline_shift_to, 4);
-	                
-	            if(timeline_scubbing && timeline_stretch == 0) {
-	                var rfrm = (mx - bar_x - timeline_shift) / timeline_scale - 1;
-	                if(!key_mod_press(CTRL)) rfrm = clamp(rfrm, 0, TOTAL_FRAMES - 1);
-	                if(KEYBOARD_NUMBER != undefined) rfrm = KEYBOARD_NUMBER - 1;
-	                
-	                PROJECT.animator.setFrame(rfrm, !key_mod_press(ALT));
-	                
-	                timeline_show_time  = CURRENT_FRAME;
-	                if(timeline_show_time != _scrub_frame)
-	                    _scrub_frame = timeline_show_time;
-	            }
-	            
-                if(mouse_release(mb_left))
-                    timeline_scubbing = false;
-	            
-	            if(timeline_dragging) {
-	                timeline_shift_to = timeline_drag_sx + mx - timeline_drag_mx;
-	                timeline_shift    = timeline_shift_to;
-	                dope_sheet_y_to   = clamp(timeline_drag_sy + my - timeline_drag_my, -dope_sheet_y_max, 0);
-	                    
-	                if(mouse_release(mb_middle))
-	                    timeline_dragging = false;
-	            }
-	        #endregion
-	        
 	        BLEND_SUBTRACT
 	        draw_surface_safe(timeline_mask);
 	        BLEND_NORMAL
@@ -811,67 +794,117 @@ function Panel_Animation() : PanelContent() constructor {
             var bar_line_w = TOTAL_FRAMES * timeline_scale + timeline_shift;
             var bar_int_x  = min(bar_x + bar_w, bar_x + bar_line_w);
             
-            if(pHOVER && point_in_rectangle(mx, my, bar_x, ui(16), bar_x + bar_w, bar_y - ui(8))) {
-                var sca = timeline_scale;
+            timeline_shift = lerp_float(timeline_shift, timeline_shift_to, 4);
+            
+            if(timeline_scubbing && timeline_draggable) {
+                var rfrm = (mx - bar_x - timeline_shift) / timeline_scale - 1;
+                if(!key_mod_press(CTRL)) rfrm = clamp(rfrm, 0, TOTAL_FRAMES - 1);
                 
-                if(MOUSE_WHEEL != 0) timeline_scale = clamp(timeline_scale + MOUSE_WHEEL, 1, 24);
+                PROJECT.animator.setFrame(rfrm, !key_mod_press(ALT));
                 
-                timeline_separate = 5;
-                timeline_sep_line = 1;
-                
-                     if(timeline_scale <=  1) { timeline_separate =  50; timeline_sep_line = 10; }
-                else if(timeline_scale <=  3) { timeline_separate =  20; timeline_sep_line =  5; }
-                else if(timeline_scale <= 10) { timeline_separate =  10; timeline_sep_line =  2; }
-                
-                if(sca != timeline_scale) {
-                    var mfb = (mx - bar_x - timeline_shift) / timeline_scale;
-                    var mfa = (mx - bar_x - timeline_shift) / sca;
-                    
-                    timeline_shift_to = timeline_shift_to - (mfa - mfb) * timeline_scale;
-                    timeline_shift    = timeline_shift_to;
-                }
-                
-                if(mouse_press(mb_middle, pFOCUS)) {
-                    timeline_dragging = true;
-                    
-                    timeline_drag_sx = timeline_shift;
-                    timeline_drag_sy = dope_sheet_y_to;
-                    timeline_drag_mx = mx;
-                    timeline_drag_my = my;
-                }
+                timeline_show_time  = CURRENT_FRAME;
+                if(timeline_show_time != _scrub_frame)
+                    _scrub_frame = timeline_show_time;
             }
             
-            if(pHOVER && point_in_rectangle(mx, my, bar_x, bar_y, bar_x + bar_w, bar_y + bar_h)) { //preview
-                if(MOUSE_WHEEL != 0) timeline_shift_to = clamp(timeline_shift_to + 64 * MOUSE_WHEEL, -max(bar_total_w - bar_w + 32, 0), 0);
-                
-                if(mx < bar_int_x && mouse_press(mb_left, pFOCUS) && timeline_stretch == 0) {
-                    timeline_scubbing = true;
-                    timeline_scub_st  = CURRENT_FRAME;
-                    _scrub_frame      = timeline_scub_st;
-                    KEYBOARD_RESET
-                }
-                
-                if(mouse_press(mb_right, pFOCUS)) {
-                    __selecting_frame = clamp(round((mx - bar_x - timeline_shift) / timeline_scale), 0, TOTAL_FRAMES - 1);
+            if(mouse_release(mb_left))
+                timeline_scubbing = false;
+            
+            if(timeline_dragging) {
+                timeline_shift_to = timeline_drag_sx + mx - timeline_drag_mx;
+                timeline_shift    = timeline_shift_to;
+                dope_sheet_y_to   = clamp(timeline_drag_sy + my - timeline_drag_my, -dope_sheet_y_max, 0);
                     
-                    menuCall("animation_summary_menu", [
-                        MENU_ITEMS.animation_set_range_start,
-                        MENU_ITEMS.animation_set_range_end,
-                        MENU_ITEMS.animation_reset_range,
-                    ]);
-                }
+                if(mouse_release(mb_middle))
+                    timeline_dragging = false;
             }
-                    
-            if(pHOVER && point_in_rectangle(mx, my, bar_x, ui(8), bar_x + bar_w, ui(8 + 16))) { //top bar
-                if(mx < bar_int_x && mouse_press(mb_left, pFOCUS) && timeline_draggable) {
-                    timeline_scubbing = true;
-                    timeline_scub_st  = CURRENT_FRAME;
-                    _scrub_frame      = timeline_scub_st;
-                    KEYBOARD_RESET
-                }
+	        
+	        if(timeline_frame_active) {
+	        	if(timeline_stretch == 0 && KEYBOARD_NUMBER != undefined) {
+	        		rfrm = KEYBOARD_NUMBER - 1;
+                	PROJECT.animator.setFrame(rfrm);
+	        	}
+	        	
+	        	if(keyboard_check_pressed(vk_enter) || keyboard_check_pressed(vk_escape) || mouse_lpress()) {
+	        		timeline_stretch      = 0; 
+	        		timeline_frame_active = false;
+	        	}
+	        	
+	        } else if(pHOVER) {
+	            if(point_in_rectangle(mx, my, bar_x, ui(16), bar_x + bar_w, bar_y - ui(8))) {
+	                var sca = timeline_scale;
+	                
+	                if(MOUSE_WHEEL != 0) timeline_scale = clamp(timeline_scale + MOUSE_WHEEL, 1, 24);
+	                
+	                timeline_separate = 5;
+	                timeline_sep_line = 1;
+	                
+	                     if(timeline_scale <=  1) { timeline_separate =  50; timeline_sep_line = 10; }
+	                else if(timeline_scale <=  3) { timeline_separate =  20; timeline_sep_line =  5; }
+	                else if(timeline_scale <= 10) { timeline_separate =  10; timeline_sep_line =  2; }
+	                
+	                if(sca != timeline_scale) {
+	                    var mfb = (mx - bar_x - timeline_shift) / timeline_scale;
+	                    var mfa = (mx - bar_x - timeline_shift) / sca;
+	                    
+	                    timeline_shift_to = timeline_shift_to - (mfa - mfb) * timeline_scale;
+	                    timeline_shift    = timeline_shift_to;
+	                }
+	                
+	                if(mouse_press(mb_middle, pFOCUS)) {
+	                    timeline_dragging = true;
+	                    
+	                    timeline_drag_sx = timeline_shift;
+	                    timeline_drag_sy = dope_sheet_y_to;
+	                    timeline_drag_mx = mx;
+	                    timeline_drag_my = my;
+	                }
+	            }
+	            
+	            if(point_in_rectangle(mx, my, bar_x, bar_y, bar_x + bar_w, bar_y + bar_h)) { //preview
+	                if(MOUSE_WHEEL != 0) timeline_shift_to = clamp(timeline_shift_to + 64 * MOUSE_WHEEL, -max(bar_total_w - bar_w + 32, 0), 0);
+	                
+	                if(mx < bar_int_x && timeline_draggable) {
+	                	if(DOUBLE_CLICK) {
+							timeline_frame_active = true;
+	                		KEYBOARD_RESET
+	                		
+	                	} else if(mouse_press(mb_left, pFOCUS)) {
+		                    timeline_scubbing = true;
+		                    timeline_scub_st  = CURRENT_FRAME;
+		                    _scrub_frame      = timeline_scub_st;
+		                    KEYBOARD_RESET
+	                	}
+	                }
+	                
+	                if(mouse_press(mb_right, pFOCUS)) {
+	                    __selecting_frame = clamp(round((mx - bar_x - timeline_shift) / timeline_scale), 0, TOTAL_FRAMES - 1);
+	                    
+	                    menuCall("animation_summary_menu", [
+	                        MENU_ITEMS.animation_set_range_start,
+	                        MENU_ITEMS.animation_set_range_end,
+	                        MENU_ITEMS.animation_reset_range,
+	                    ]);
+	                }
+	            }
+	                    
+	            if(point_in_rectangle(mx, my, bar_x, ui(8), bar_x + bar_w, ui(8 + 16))) { //top bar
+	                if(mx < bar_int_x && timeline_draggable) {
+	                	if(DOUBLE_CLICK) {
+							timeline_frame_active = true;
+	                		KEYBOARD_RESET
+	                		
+	                	} else if(mouse_press(mb_left, pFOCUS)) {
+		                    timeline_scubbing = true;
+		                    timeline_scub_st  = CURRENT_FRAME;
+		                    _scrub_frame      = timeline_scub_st;
+		                    KEYBOARD_RESET
+	                	}
+	                }
+	            }
             }
             
-            timeline_draggable    = true;
+            timeline_draggable = true;
         #endregion
     }
     
@@ -2455,27 +2488,51 @@ function Panel_Animation() : PanelContent() constructor {
             draw_set_font(f_p2);
             var cf = string(CURRENT_FRAME + 1);
             var tx = string_width(cf) + ui(4);
-            draw_sprite_stretched_ext(THEME.box_r2, 0, bar_line_x - tx / 2, 0, tx, hh + PANEL_PAD, cc, 1);
             
-            draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text_on_accent);
-            draw_text_add(bar_line_x, PANEL_PAD, cf);
+            if(timeline_frame_active && timeline_stretch == 0) {
+	            draw_sprite_stretched_ext(THEME.box_r2, 0, bar_line_x - tx / 2, 0, tx, hh + PANEL_PAD, CDEF.main_dkblack, 1);
+	            draw_sprite_stretched_ext(THEME.box_r2, 1, bar_line_x - tx / 2, 0, tx, hh + PANEL_PAD, cc, 1);
+	            
+	            draw_set_text(f_p2, fa_center, fa_top, cc);
+	            draw_text_add(bar_line_x, PANEL_PAD, cf);
+	            
+            } else {
+	            draw_sprite_stretched_ext(THEME.box_r2, 0, bar_line_x - tx / 2, 0, tx, hh + PANEL_PAD, cc, 1);
+	            
+	            draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text_on_accent);
+	            draw_text_add(bar_line_x, PANEL_PAD, cf);
+            }
             
+            if(timeline_frame_active && timeline_stretch) {
+            	var bar_end_x = TOTAL_FRAMES * timeline_scale + timeline_shift;
+            	var cc = COLORS._main_value_positive;
+            	var cf = string(TOTAL_FRAMES);
+            	var tx = string_width(cf) + ui(4);
+            	
+            	draw_sprite_stretched_ext(THEME.box_r2, 0, bar_end_x - tx / 2, 0, tx, hh + PANEL_PAD, CDEF.main_dkblack, 1);
+	            draw_sprite_stretched_ext(THEME.box_r2, 1, bar_end_x - tx / 2, 0, tx, hh + PANEL_PAD, cc, 1);
+	            
+	            draw_set_text(f_p2, fa_center, fa_top, cc);
+	            draw_text_add(bar_end_x, PANEL_PAD, cf);
+            }
         #endregion
         
         #region stretch
             var stx = timeline_shift + bar_total_w;
             var sty = ui(10);
+            var len;
             
-            var len = round((mx - bar_x - timeline_shift) / timeline_scale);
-            if(KEYBOARD_NUMBER != undefined) len = KEYBOARD_NUMBER;
-                len = max(1, len);
+            if(timeline_frame_active) len = KEYBOARD_NUMBER != undefined? KEYBOARD_NUMBER : timeline_stretch_sx;
+            else len = round((mx - bar_x - timeline_shift) / timeline_scale);
+            
+            len = max(1, len);
             
             if(timeline_stretch == 1) {
                 TOOLTIP = __txtx("panel_animation_length", "Animation length") + $" {len}";
                 TOTAL_FRAMES = len;
                 
-                if(mouse_release(mb_left))
-                    timeline_stretch = 0;
+                timeline_draggable = false;
+                if(mouse_release(mb_left) && !timeline_frame_active) timeline_stretch = 0;
                         
                 draw_set_color(COLORS._main_accent);
         		draw_line_width(stx, sty - ui(10), stx, sty + ui(10), 2);
@@ -2508,8 +2565,8 @@ function Panel_Animation() : PanelContent() constructor {
                     }
                 }
                 
-                if(mouse_release(mb_left))
-                    timeline_stretch = 0;
+                timeline_draggable = false;
+                if(mouse_release(mb_left) && !timeline_frame_active) timeline_stretch = 0;
                     
                 draw_set_color(COLORS._main_value_positive);
         		draw_line_width(stx, sty - ui(10), stx, sty + ui(10), 2);
@@ -2521,20 +2578,32 @@ function Panel_Animation() : PanelContent() constructor {
                 	
                 	if(key_mod_press(ALT)) {
                         draw_set_color(COLORS._main_value_positive);
-                		
                         TOOLTIP = __txtx("panel_animation_stretch", "Stretch animation");
-                        if(mouse_press(mb_left, pFOCUS)) {
-                            timeline_stretch = 2;
+                		
+                        if(DOUBLE_CLICK) {
+                        	timeline_stretch      = 2;
+                            timeline_stretch_sx   = TOTAL_FRAMES;
+                        	timeline_frame_active = true;
+                        	KEYBOARD_RESET
+                        	
+                        } else if(mouse_press(mb_left, pFOCUS)) {
+                            timeline_stretch    = 2;
                             timeline_stretch_mx = msx;
                             timeline_stretch_sx = TOTAL_FRAMES;
                         }
                         
                     } else if(key_mod_press(CTRL)) {
                         draw_set_color(COLORS._main_accent);
-                		
                         TOOLTIP = __txtx("panel_animation_adjust_length", "Adjust animation length");
-                        if(mouse_press(mb_left, pFOCUS)) {
-                            timeline_stretch = 1;
+                		
+                        if(DOUBLE_CLICK) {
+                        	timeline_stretch      = 1;
+                            timeline_stretch_sx   = TOTAL_FRAMES;
+                        	timeline_frame_active = true;
+                        	KEYBOARD_RESET
+                        	
+                        } else if(mouse_press(mb_left, pFOCUS)) {
+                            timeline_stretch    = 1;
                             timeline_stretch_mx = msx;
                             timeline_stretch_sx = TOTAL_FRAMES;
                         }

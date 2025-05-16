@@ -21,7 +21,7 @@
 	globalvar CTRL, ALT, SHIFT;
 	
 	KEYBOARD_STRING = "";
-	KEYBOARD_NUMBER = undefined;
+	KEYBOARD_NUMBER = 0;
 	
 	WIDGET_ACTIVE = [];
 	KEYBOARD_PRESSED = vk_nokey;

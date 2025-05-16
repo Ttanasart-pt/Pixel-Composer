@@ -11,7 +11,7 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	////- Simulation
 	
-	newInput(2, nodeValue_Float( "Timestep (ms)", self, 10));
+	newInput(2, nodeValue_Float( "Timestep (ms)", self, 20));
 	newInput(3, nodeValue_Int(   "Quality",       self,  8));
 	
 	////- Outputs

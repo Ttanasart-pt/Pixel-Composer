@@ -21,7 +21,8 @@ _FILE_DROPPED     = false;
 			KEYBOARD_STRING = string_copy(KEYBOARD_STRING, 1, string_length(KEYBOARD_STRING) - 1);
 	}
 	
-	KEYBOARD_NUMBER = KEYBOARD_STRING != "" && string_digits(KEYBOARD_STRING) == KEYBOARD_STRING? real(KEYBOARD_STRING) : undefined;
+	var s = string_decimal(KEYBOARD_STRING, false);
+	KEYBOARD_NUMBER = s == ""? undefined : toNumber(s);
 #endregion
 
 #region minimize

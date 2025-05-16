@@ -446,7 +446,7 @@ function __read_node_folder(dir) {
 	var _custom = _data[$ "custom"] ?? false;
 	
 	if(is_undefined(_base)) {
-		print($"NODE ERROR: baseNode not found in {_info}.");
+		if(_name != "Custom") print($"NODE ERROR: baseNode not found for {_name} in {_info}.");
 		return;
 	}
 	

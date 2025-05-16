@@ -16,7 +16,7 @@ function Node_Rigid_Fracture(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	////- Fracture
 	
 	newInput( 1, nodeValue_Surface( "Fracture Map",       self));
-	newInput( 2, nodeValue_Slider(  "Fracture Threshold", self, .2));
+	newInput( 2, nodeValue_Slider(  "Fracture Threshold", self, .1));
 	newInput( 3, nodeValue_Slider(  "Mesh Expansion",     self, 0, [ -2, 2, 0.1 ]));
 	
 	////- Physics

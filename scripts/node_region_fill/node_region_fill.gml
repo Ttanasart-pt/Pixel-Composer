@@ -27,7 +27,10 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(13, nodeValue_Slider(         "Threshold",       self, 0.1));
 	newInput( 8, nodeValue_Enum_Scroll(    "Fill Type",       self, 0, [ "Random", "Color map", "Texture map", "Texture Coord", "Texture Index" ]));
-	newInput( 2, nodeValue_Palette(        "Fill Colors",     self, array_clone(DEF_PALETTE)));
+	newInput(15, nodeValue_Enum_Button(    "Source",          self, 0, [ "Palette", "Gradient" ]));
+	newInput( 2, nodeValue_Palette(        "Fill Palette",    self, array_clone(DEF_PALETTE)));
+	newInput(16, nodeValue_Gradient(       "Fill Gradient",   self, new gradientObject([ ca_black, ca_white ])));
+	
 	newInput( 9, nodeValue_Surface(        "Color Map",       self));
 	newInput( 3, nodeValue_Bool(           "Fill",            self, true));
 	newInput(10, nodeValue_Surface(        "Texture Map",     self));
@@ -37,14 +40,14 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(7, nodeValue_Enum_Scroll("Draw Original", self,  0, [ "None", "Above", "Behind" ]));
 	
-	//// Inputs 15
+	//// Inputs 17
 	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 4, 
 		["Surfaces", false], 0, 1, 
 		["Filter",   false, 11], 5, 6, 14, 
-		["Fill",	 false], 13, 8, 2, 9, 10, 12, 
+		["Fill",	 false], 13, 8, 15, 2, 16, 9, 10, 12, 
 		["Render",	 false], 7, 
 	];
 	
@@ -63,14 +66,19 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		
 		var _thr  = _data[13];
 		var _filt = _data[8];
-		var _colr = _data[2];
+		var _fsrc = _data[15];
+		var _palt = _data[2];
+		var _grad = _data[16];
+		
 		var _cmap = _data[9];
 		var _tmap = _data[10];
 		var _trot = _data[12]; 
 		
 		var _rnbg = _data[7];
 		
-		inputs[ 2].setVisible(_filt == 0);
+		inputs[15].setVisible(_filt == 0);
+		inputs[ 2].setVisible(_filt == 0 && _fsrc == 0);
+		inputs[16].setVisible(_filt == 0 && _fsrc == 1);
 		inputs[ 9].setVisible(_filt == 1, _filt == 1);
 		inputs[10].setVisible(_filt == 2, _filt == 2);
 		inputs[12].setVisible(_filt == 2 || _filt == 3);
@@ -188,8 +196,11 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				case 0 :  // Random colors
 					
 					shader_set(sh_region_fill_color);
-						shader_set_palette(_colr, "colors", "colorAmount");
-						shader_set_f("seed",		_seed);
+						shader_set_palette(_palt, "colors", "colorAmount");
+						_grad.shader_submit();
+						
+						shader_set_i("type", _fsrc);
+						shader_set_f("seed", _seed);
 						
 						draw_surface_safe(cmap);
 					shader_reset();
