@@ -622,7 +622,9 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			_value_list[5] = _v.ease_out_type;
 			_value_list[6] = _v.ease_y_lock;
 			_value_list[7] = _v.drivers.type == DRIVER_TYPE.none? 0 : _v.drivers;
+			
 			if(_v.drivers.type != DRIVER_TYPE.none) _comp = false;
+			if(prop.type == VALUE_TYPE.trigger)     _comp = false;
 			
 			array_push(_data, _value_list);
 		}
