@@ -6,6 +6,8 @@ function Node_Random(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	inputs   = array_create(22);
 	distList = [ "Uniform", "Gaussian", "Bernoulli (True/False)", "Binomial", "Custom" ];
 	
+	////- Random
+	
 	newInput( 0, nodeValueSeed(self, VALUE_TYPE.integer));
 	newInput( 9, nodeValue_Enum_Scroll( "Distribution", self, 0, distList));
 	newInput(10, nodeValue_Curve( "Dist. Curve",        self, CURVE_DEF_11)).setAnimable(false);
@@ -15,9 +17,12 @@ function Node_Random(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(12, nodeValue_f( "Variance", self, 1));
 	newInput(13, nodeValue_s( "p",        self, .5));
 	newInput(14, nodeValue_f( "t",        self, 1));
+	newInput(22, nodeValue_b( "Deterministic", self, true));
+	
+	////- Shuffle
 	
 	newInput( 3, nodeValue_Bool(        "Shuffle",         self, false));
-	newInput( 4, nodeValue_Enum_Scroll( "Mode",            self, 0, [ "Per Frame", "Periordic", "Trigger", "Probabilistic", "Accumulative" ]));
+	newInput( 4, nodeValue_Enum_Scroll( "Mode",            self, 0, [ "Per Frame", "Periordic", "Trigger", "Probabilistic", "Accumulative", "Per Animation" ]));
 	newInput( 5, nodeValue_Int(         "Period",          self, 1));
 	newInput( 6, nodeValue_Int(         "Period Shift",    self, 0));
 	newInput( 7, nodeValue_Trigger(     "Trigger",         self)).setDisplay(VALUE_DISPLAY.button, { name: "Trigger" });
@@ -25,16 +30,20 @@ function Node_Random(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(20, nodeValue_Float(       "Average Period",  self, 4));
 	newInput(21, nodeValue_Float(       "Period Variance", self, 2));
 	
+	////- Smooth
+	
 	newInput(15, nodeValue_Enum_Scroll( "Smoothing",    self, 0, [ "None", "Moving Average", "Convolution", "Lerp" ]));
 	newInput(16, nodeValue_Int(         "Window Size",  self, 5));
 	newInput(17, nodeValue_Int(         "Kernel Span",  self, 3));
 	newInput(18, nodeValue_Curve(       "Kernel",       self, CURVE_DEF_11));
 	newInput(19, nodeValue_Slider(      "Lerp Ratio",   self, .5));
 	
+	// inputs 23
+	
 	newOutput(0, nodeValue_Output("Result", self, VALUE_TYPE.float, 0));
 	
 	input_display_list = [ 
-		["Random",  false   ], 0, 9, 10, 1, 2, 11, 12, 13, 14, 
+		["Random",  false   ], 0, 9, 10, 1, 2, 11, 12, 13, 14, 22, 
 		["Shuffle", false, 3], 4, 5, 6, 7, 8, 20, 21, 
 		["Smooth",  false   ], 15, 16, 17, 18, 19, 
 	];
@@ -75,6 +84,8 @@ function Node_Random(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _smtKer  = _data[18];
 		var _smtLrp  = _data[19];
 		
+		var _deter   = _data[22];
+		
 		update_on_frame = _shuffle;
 		
 		inputs[ 1].setVisible(_distTyp == 0 || _distTyp == 4);
@@ -98,10 +109,13 @@ function Node_Random(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		inputs[19].setVisible(_smtTyp == 3);
 		
 		if(CURRENT_FRAME == 0 || !_shuffle) {
-			seed[_array_index]       = _seed
+			if(!_deter) _seed += current_time % 100_000;
+			
+			seed[_array_index]       = _seed;
 			accPool[_array_index]    = 0;
 			moving_Avg[_array_index] = 0;
 		}
+		
 		random_set_seed(seed[_array_index]);
 		
 		if(_shuffle) {
