@@ -68,7 +68,7 @@
         registerFunction("", "Close all files",     "",     MOD_KEY.none,                                 global_project_close_all ).setMenu("close_all_files",)
         registerFunction("", "Close program",       vk_f4,  MOD_KEY.alt,                                  window_close             ).setMenu("close_software", )
         registerFunction("", "Close project",       "",     MOD_KEY.none,                                 closeProject             ).setMenu("close_project",  )
-            .setArg([ ARG("project", function() { return PROJECT; }, true) ])
+            .setArg([ ARG("project", function() /*=>*/ {return PROJECT}, true) ])
             
         registerFunction("", "Reload theme",        vk_f10, MOD_KEY.ctrl | MOD_KEY.shift,                 global_theme_reload      ).setMenu("reload_theme",   )
         

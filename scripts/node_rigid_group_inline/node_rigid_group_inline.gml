@@ -7,7 +7,7 @@ function Node_Rigid_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inlin
 	manual_ungroupable = false;
 	
 	input_node_types   = [ Node_Rigid_Object, Node_Rigid_Path_Collider, Node_Rigid_Fracture ];
-	output_node_types  = [ Node_Rigid_Render, Node_Rigid_Object_Get_Collision ];
+	output_node_types  = [ Node_Rigid_Render, Node_Rigid_Render_ID, Node_Rigid_Object_Get_Collision ];
 	
 	worldIndex = undefined;
 	worldScale = 100;

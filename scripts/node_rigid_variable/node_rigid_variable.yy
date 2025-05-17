@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_rigid_variable",
   "parent":{
-    "name":"rigidSim",
-    "path":"folders/nodes/data/simulation/rigidSim.yy",
+    "name":"data",
+    "path":"folders/nodes/data/simulation/rigidSim/data.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -18,8 +18,8 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	newInput(1, nodeValue_Enum_Scroll( "Force type",  self, 0, [ "Constant", "Impulse", "Torque", "Torque Impulse", "Explode" ]));
 	newInput(6, nodeValue_Enum_Button( "Scope",       self, 0, [ "Global", "Local" ]));
-	newInput(4, nodeValue_Int(         "Apply frame", self, 0, "Frame index to apply force."));
-	newInput(9, nodeValue_Trigger(     "Trigger",     self, false));
+	newInput(4, nodeValue_Bool(        "Apply",       self,  true));
+	newInput(9, nodeValue_Trigger(     "Trigger",     self)).setDisplay(VALUE_DISPLAY.button, { name: "Trigger" });
 	
 	////- Force
 	
@@ -153,7 +153,7 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			
 		__typ  = getInputData(1);
 		__sco  = getInputData(6);
-		__frm  = getInputData(4);
+		__aply = getInputData(4);
 		__trig = getInputData(9);
 		
 		__pos  = getInputData(2);
@@ -163,7 +163,7 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		__str  = getInputData(7);
 		
 		inputs[6].setVisible(__typ != 4);
-		inputs[4].setVisible(__typ == 1 || __typ == 3 || __typ == 4);
+		inputs[4].setVisible(__typ == 0 || __typ == 2);
 		inputs[9].setVisible(__typ == 1 || __typ == 3 || __typ == 4);
 		
 		inputs[3].setVisible(__typ == 2);
@@ -172,8 +172,8 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		
 		if(!is_array(_obj)) return;
 		
-		var doForce = __typ == 0 || __typ == 2;
-		var doImpul = CURRENT_FRAME == __frm || __trig;
+		var doForce = (__typ == 0 || __typ == 2)               && __aply;
+		var doImpul = (__typ == 1 || __typ == 3 || __typ == 4) && __trig;
 			
 		if(!doForce && !doImpul) return;
 		

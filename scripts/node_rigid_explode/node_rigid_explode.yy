@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_rigid_explode",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_rigid_explode",
+  "parent":{
+    "name":"modifiers",
+    "path":"folders/nodes/data/simulation/rigidSim/modifiers.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

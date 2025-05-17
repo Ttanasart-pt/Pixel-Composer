@@ -84,3 +84,19 @@ function gmlBox2D_Object_Get_Collision_Data(objectId) {
 	buffer_delete(b);
 	return _coll;
 }
+
+function gmlBox2D_Joint_Weld(worldIndex, objectAIndex, objectBIndex, anchorX, anchorY, _jstif, _jdamp, _jbrek) {
+	var b = buffer_pack_doubles(worldIndex, objectAIndex, objectBIndex, anchorX, anchorY, _jstif, _jdamp, _jbrek);
+	var j = gmlBox2D_Joint_Weld_Create(buffer_get_address(b));
+	buffer_delete_safe(b);
+	
+	return j;
+}
+
+function gmlBox2D_Joint_Motor(worldIndex, objectAIndex, objectBIndex, offsetX, offsetY, maxForce, maxTorque, breakForce) {
+	var b = buffer_pack_doubles(worldIndex, objectAIndex, objectBIndex, offsetX, offsetY, maxForce, maxTorque, breakForce);
+	var j = gmlBox2D_Joint_Motor_Create(buffer_get_address(b));
+	buffer_delete_safe(b);
+	
+	return j;
+}

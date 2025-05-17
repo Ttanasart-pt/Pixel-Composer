@@ -507,7 +507,7 @@ function Node_Rigid_Fracture(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			var _p1 = _points[_edge.p1].objId;
 			var _p2 = _points[_edge.p2].objId;
 			
-			gmlBox2D_Joint_Weld_Create(worldIndex, _p1, _p2, _jstif, _jdamp, _jbrek);
+			gmlBox2D_Joint_Weld(worldIndex, _p1, _p2, -9999, -9999, _jstif, _jdamp, _jbrek);
 		}
 		
 		return;

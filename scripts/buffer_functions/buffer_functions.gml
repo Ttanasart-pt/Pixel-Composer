@@ -1,3 +1,4 @@
+
 function buffer_verify(buffer, _size, buffer_kind = buffer_fixed) {
 	if(buffer <= 0)            return buffer_create(_size, buffer_kind, 1);
 	if(!buffer_exists(buffer)) return buffer_create(_size, buffer_kind, 1);
@@ -8,45 +9,7 @@ function buffer_verify(buffer, _size, buffer_kind = buffer_fixed) {
 	return buffer;
 }
 
-function buffer_get_color(buffer, _x, _y, w, h) {
-	buffer_seek(buffer, buffer_seek_start, (w * _y + _x) * 4);
-	var c = buffer_read(buffer, buffer_u32);
-	
-	return c;
-}
-
-function buffer_get_string(buffer, text = true, limit = 400, btype = buffer_u8) {
-	if(is_array(buffer)) return "[buffer array]";
-	if(!buffer_exists(buffer)) return "";
-
-	buffer_seek(buffer, buffer_seek_start, 0);
-	var len = min(limit, buffer_get_size(buffer) / buffer_sizeof(btype));
-    var ss  = ""; 
-    
-    for (var i = 0; i < len; i++) {
-		var _r = buffer_read(buffer, btype);
-		var _s = text? chr(_r) : dec_to_hex(_r, 2);
-        ss += _s;
-		if(!text && i % 2) ss += " ";
-	}
-    
-    return ss;
-}
-
-function buffer_to_string(buffer) {
-	if(!buffer_exists(buffer)) return "";
-
-	buffer_seek(buffer, buffer_seek_start, 0);
-	var len = buffer_get_size(buffer);
-    var ss  = "";
-    
-    repeat(len) {
-		var _r = buffer_read(buffer, buffer_u8);
-		ss += chr(_r);
-	}
-    
-    return ss;
-}
+	////- Set
 
 function buffer_from_string(str) {
 	var _b = buffer_create(string_length(str) * 1, buffer_fast, 1);
@@ -79,10 +42,15 @@ function buffer_from_file(path) {
 	return _b;
 }
 
-function buffer_read_at(buffer, position, type) {
-	INLINE
-	buffer_seek(buffer, buffer_seek_start, position);
-	return buffer_read(buffer, type);
+function buffer_pack_doubles(args) {
+	var c = argument_count;
+	var b = buffer_create(c * 8, buffer_fixed, 8);
+	
+	buffer_to_start(b);
+	for(var i = 0; i < c; i++)
+		buffer_write(b, buffer_f64, argument[i]);
+	
+	return b;
 }
 
 function buffer_write_at(buffer, position, type, data) {
@@ -90,6 +58,55 @@ function buffer_write_at(buffer, position, type, data) {
 	buffer_seek(buffer, buffer_seek_start, position);
 	return buffer_write(buffer, type, data);
 }
+
+function buffer_setPixel(buffer, _w, _h, _x, _y, _c) {
+	if(_x < 0 || _y < 0 || _x >= _w || _y >= _h) return 0;
+	
+	buffer_seek(buffer, buffer_seek_start, (_w * _y + _x) * 4);
+	buffer_write(buffer, buffer_u32, _c);
+}
+
+	////- Get
+
+function buffer_read_at(buffer, position, type) {
+	INLINE
+	buffer_seek(buffer, buffer_seek_start, position);
+	return buffer_read(buffer, type);
+}
+
+function buffer_get_color(buffer, _x, _y, w, h) {
+	buffer_seek(buffer, buffer_seek_start, (w * _y + _x) * 4);
+	var c = buffer_read(buffer, buffer_u32);
+	
+	return c;
+}
+
+function buffer_get_string(buffer, text = true, limit = 400, btype = buffer_u8) {
+	if(is_array(buffer)) return "[buffer array]";
+	if(!buffer_exists(buffer)) return "";
+
+	buffer_seek(buffer, buffer_seek_start, 0);
+	var len = min(limit, buffer_get_size(buffer) / buffer_sizeof(btype));
+    var ss  = ""; 
+    
+    for (var i = 0; i < len; i++) {
+		var _r = buffer_read(buffer, btype);
+		var _s = text? chr(_r) : dec_to_hex(_r, 2);
+        ss += _s;
+		if(!text && i % 2) ss += " ";
+	}
+    
+    return ss;
+}
+
+function buffer_getPixel(buffer, _w, _h, _x, _y) {
+	if(_x < 0 || _y < 0 || _x >= _w || _y >= _h) return 0;
+	
+	buffer_seek(buffer, buffer_seek_start, (_w * _y + _x) * 4);
+	return buffer_read(buffer, buffer_u32);
+}
+	
+	////- Serialize
 
 function buffer_serialize(buffer, compress = true) {
 	INLINE
@@ -105,20 +122,23 @@ function buffer_deserialize(buffer, compress = true) {
 	return buffer_decompress(buff);
 }
 	
-function buffer_getPixel(buffer, _w, _h, _x, _y) {
-	if(_x < 0 || _y < 0 || _x >= _w || _y >= _h) return 0;
+	////- Strings
 	
-	buffer_seek(buffer, buffer_seek_start, (_w * _y + _x) * 4);
-	return buffer_read(buffer, buffer_u32);
+function buffer_to_string(buffer) {
+	if(!buffer_exists(buffer)) return "";
+
+	buffer_seek(buffer, buffer_seek_start, 0);
+	var len = buffer_get_size(buffer);
+    var ss  = "";
+    
+    repeat(len) {
+		var _r = buffer_read(buffer, buffer_u8);
+		ss += chr(_r);
+	}
+    
+    return ss;
 }
-	
-function buffer_setPixel(buffer, _w, _h, _x, _y, _c) {
-	if(_x < 0 || _y < 0 || _x >= _w || _y >= _h) return 0;
-	
-	buffer_seek(buffer, buffer_seek_start, (_w * _y + _x) * 4);
-	buffer_write(buffer, buffer_u32, _c);
-}
-	
+
 function buffer_compress_string(str) {
 	var _len   = string_length(str);
 	var buffer = buffer_create(1, buffer_grow, 1);
@@ -132,6 +152,9 @@ function buffer_compress_all(buff) {
 	return buffer_base64_encode(comp, 0, buffer_get_size(comp));
 }
 
+	////- Actions
+	
 function buffer_to_start(buff) { INLINE buffer_seek(buff, buffer_seek_start, 0); }
 
 function buffer_delete_safe(buff) { INLINE if(buffer_exists(buff)) buffer_delete(buff); }
+

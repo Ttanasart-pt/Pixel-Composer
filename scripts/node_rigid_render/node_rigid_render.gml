@@ -11,30 +11,28 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	////- Simulation
 	
-	newInput(2, nodeValue_Float( "Timestep (ms)", self, 20));
-	newInput(3, nodeValue_Int(   "Quality",       self,  8));
+	newInput(3, nodeValue_Bool(  "Simulate",      self, true));
+	newInput(1, nodeValue_Float( "Timestep (ms)", self, 20));
+	newInput(2, nodeValue_Int(   "Quality",       self,  8));
 	
 	////- Outputs
 	
-	newInput(0, nodeValue_Vec2("Render Dimension", self, DEF_SURF));
-	newInput(1, nodeValue_Bool("Round Position",   self, false));
+	newInput(0, nodeValue_Bool("Round Position",   self, false));
 	
-	// inputs 4
+	// inputs 5
 	
 	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	
 	input_display_list = [ 
-		["Simulation", false], 2, 3, 
-		["Rendering",  false], 1,
+		["Simulation", false, 3], 1, 2, 
+		["Rendering",  false], 0,
 	];
 	
-	attributes.show_objects = true;	
 	attributes.show_debug   = false;
 	
 	array_push(attributeEditors, "Display");
-	array_push(attributeEditors, ["Show Objects", function() /*=>*/ {return attributes.show_objects}, new checkBox(function() /*=>*/ {return toggleAttribute("show_objects")})]);
 	array_push(attributeEditors, ["Debug",        function() /*=>*/ {return attributes.show_debug},   new checkBox(function() /*=>*/ {return toggleAttribute("show_debug")})]);
 	
 	static createNewInput = function(index = array_length(inputs)) {
@@ -82,16 +80,17 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(worldIndex == undefined) return;
 		
 		var _dim    = inline_context.dimension;
-		var _rnd    = getInputData(1);
-		var _timStp = getInputData(2);
-		var _subStp = getInputData(3);
+		var _rnd    = getInputData(0);
+		var _timStp = getInputData(1);
+		var _subStp = getInputData(2);
+		var _simula = getInputData(3);
 		
 		var _outSurf    = outputs[0].getValue();
 		    _outSurf    = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		preview_surface = surface_verify(preview_surface, _dim[0], _dim[1], attrDepth());
 		outputs[0].setValue(_outSurf);
 		
-		if(IS_PLAYING) {
+		if(_simula && IS_PLAYING) {
 			gmlBox2D_World_Step(worldIndex, _timStp / 1000, _subStp);
 			gmlBox2D_World_Step_Joint(worldIndex);
 		}
@@ -172,9 +171,6 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				}
 			}
 		}
-		
-		draw_set_color(c_white);
-		physics_draw_debug();
 		
 		surface_reset_target();
 	} 

@@ -1,0 +1,13 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_rigid_draw_color",
+  "name":"sh_rigid_draw_color",
+  "parent":{
+    "name":"render",
+    "path":"folders/nodes/data/simulation/rigidSim/render.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "tags":[],
+  "type":1,
+}

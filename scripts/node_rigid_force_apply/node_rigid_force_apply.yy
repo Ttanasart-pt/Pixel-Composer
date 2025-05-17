@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_rigid_force_apply",
   "parent":{
-    "name":"rigidSim",
-    "path":"folders/nodes/data/simulation/rigidSim.yy",
+    "name":"modifiers",
+    "path":"folders/nodes/data/simulation/rigidSim/modifiers.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

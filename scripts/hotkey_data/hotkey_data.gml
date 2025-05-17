@@ -45,7 +45,7 @@ function Hotkey(_context, _name, _key = "", _mod = MOD_KEY.none, _action = noone
 	
 	////- Serialize
 	
-	static serialize = function() /*=>*/ { return { context, name, key, modi } }
+	static serialize = function() /*=>*/ { return { context, name, key, modi, fname : getNameFull() } }
 	
 	static deserialize = function(l) /*=>*/ { 
 		if(!is_struct(l)) return self; 
@@ -203,7 +203,7 @@ function hotkey_deserialize() {
 	var map = json_load_struct(path);
 	if(!is_struct(map)) return;
 	
-	var fn = function(n) /*=>*/ { HOTKEYS_DATA[$ $"{n.context}_{n.name}"] = n; };
+	var fn = function(n) /*=>*/ { HOTKEYS_DATA[$ string_to_var(n.context == 0? $"global.{n.name}" : $"{n.context}.{n.name}")] = n; };
 	
 	if(struct_has(map, "context")) array_foreach(map.context, fn);
 	if(struct_has(map, "node"))    array_foreach(map.node,    fn);

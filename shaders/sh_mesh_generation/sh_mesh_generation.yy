@@ -3,8 +3,8 @@
   "%Name":"sh_mesh_generation",
   "name":"sh_mesh_generation",
   "parent":{
-    "name":"rigidSim",
-    "path":"folders/nodes/data/simulation/rigidSim.yy",
+    "name":"objects",
+    "path":"folders/nodes/data/simulation/rigidSim/objects.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

@@ -24,10 +24,9 @@
 #endregion
 
 #region creation
-	function _make_color_rgb(r, g, b) {    INLINE return make_color_rgb(r * 255, g * 255, b * 255); }
-	
+	function _make_color_rgb(r, g, b)    { INLINE return make_color_rgb(r * 255, g * 255, b * 255); }
+	function make_color_grey(g)          { INLINE return int64(round(g*255) + (round(g*255) << 8) + (round(g*255) << 16) + (255 << 24)); }
 	function make_color_rgba(r, g, b, a) { INLINE return int64(round(r) + (round(g) << 8) + (round(b) << 16) + (round(a) << 24)); }
-	
 	function make_color_hsva(h, s, v, a) { INLINE return _cola(make_color_hsv(h, s, v), a); }
 	
 	function make_color_oklab(ok, a = 1) {

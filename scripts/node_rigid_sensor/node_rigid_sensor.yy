@@ -5,10 +5,9 @@
   "isDnD":false,
   "name":"node_rigid_sensor",
   "parent":{
-    "name":"rigidSim",
-    "path":"folders/nodes/data/simulation/rigidSim.yy",
+    "name":"objects",
+    "path":"folders/nodes/data/simulation/rigidSim/objects.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
-  "tags":[],
 }

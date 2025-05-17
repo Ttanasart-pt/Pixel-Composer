@@ -139,8 +139,7 @@
             "Node_Group_Input",
             "Node_Group_Output",
             
-            { "label": "RigidSim" },
-            { "label": "/Objects" },
+            { "label": "Objects" },
             "Node_Rigid_Object",
             "Node_Rigid_Object_Spawner",
             "Node_Rigid_Wall",
@@ -149,12 +148,18 @@
             "Node_Rigid_Fracture",
             "Node_Rigid_Sensor",
             
-            { "label": "/Modifiers" },
+            { "label": "Modifiers" },
             "Node_Rigid_Force_Apply",
+            "Node_Rigid_Explode",
             "Node_Rigid_Activate",
             
-            { "label": "/Render" },
+            { "label": "Joints" },
+            "Node_Rigid_Joint_Fix",
+            "Node_Rigid_Joint_Rotate",
+            
+            { "label": "Render" },
             "Node_Rigid_Render",
+            "Node_Rigid_Render_ID",
             
             { "label": "Data" },
             "Node_Rigid_Variable",
