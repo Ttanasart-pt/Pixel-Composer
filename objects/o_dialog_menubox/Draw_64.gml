@@ -199,16 +199,18 @@ DIALOG_WINCLEAR1
 				
 			var _nodeKey = string_pos(">", _txt)? string_copy(_txt, 1, string_pos(">", _txt) - 1) : _txt;
 			var _node    = struct_try_get(ALL_NODES, _nodeKey, noone);
-			if(_node != noone) _spr = [ _node.spr, 0, .6, c_white ];
+			if(_node != noone) _spr = [ _node.spr, 0, .5, c_white ];
 				
 			if(_spr != noone) {
 				var spr = array_safe_get_fast(_spr, 0, _spr);
 				var ind = array_safe_get_fast(_spr, 1, 0);
-				var sca = array_safe_get_fast(_spr, 2, 0.8);
+				var sca = array_safe_get_fast(_spr, 2, .8);
 				var clr = array_safe_get_fast(_spr, 3, COLORS._main_icon);
 				
+				var sca = (_h - ui(10)) / sprite_get_height(spr);
+				
 				gpu_set_tex_filter(true);
-				draw_sprite_ui(spr, ind, dialog_x + ui(24), yy + hght / 2, sca, sca, 0, clr, _menuItem.active * 0.5 + 0.25);
+				draw_sprite_ext(spr, ind, dialog_x + ui(24), yy + hght / 2, sca, sca, 0, clr, _menuItem.active * 0.5 + 0.25);
 				gpu_set_tex_filter(false);
 			}
 			

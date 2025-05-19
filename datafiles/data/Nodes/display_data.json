@@ -166,7 +166,7 @@
             "Node_Rigid_Override",
             "Node_Rigid_Object_Get_Collision",
         ],
-        "context": ["Node_Rigid_Group", "Node_Rigid_Group_Inline"],
+        "context": ["Node_Rigid_Group_Inline"],
         "color": "node_blend_simulation"
     },
     {

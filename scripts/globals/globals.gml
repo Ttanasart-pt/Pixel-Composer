@@ -39,7 +39,7 @@
 	
 	globalvar VERSION, SAVE_VERSION, VERSION_STRING, BUILD_NUMBER, LATEST_VERSION, NIGHTLY, RELEASE_STRING;
 	
-	var night = true;
+	var night = true; // should never be false
 	
 	if(night) {
 		LATEST_VERSION	= 1_19_00_0;
