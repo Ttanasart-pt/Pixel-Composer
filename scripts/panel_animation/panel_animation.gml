@@ -561,11 +561,14 @@ function Panel_Animation() : PanelContent() constructor {
     ////- Interaction
     
     function focusTimeline() {
-    	var bar_w = timeline_w;
-    	var bar_line_x = (CURRENT_FRAME + 1) * timeline_scale;
+    	var bar_w       = timeline_w;
+    	var bar_line_x  = (CURRENT_FRAME + 1) * timeline_scale;
+    	var bar_line_sx = bar_line_x + timeline_shift;
     	
-    	if(bar_line_x < 0 || bar_line_x > bar_w)
+    	if(bar_line_sx < 0 || bar_line_sx > bar_w) {
     		timeline_shift_to = bar_w / 2 - bar_line_x;
+    		timeline_shift    = timeline_shift_to;
+    	}
     }
     
     function timelineScrub() {
@@ -649,12 +652,12 @@ function Panel_Animation() : PanelContent() constructor {
             if(point_in_rectangle(mx, my, bar_x, bar_y, bar_x + bar_w, bar_y + bar_h)) { //preview
                 if(MOUSE_WHEEL != 0) timeline_shift_to = clamp(timeline_shift_to + 64 * MOUSE_WHEEL, -max(bar_total_w - bar_w + 32, 0), 0);
                 
-                if(mx < bar_int_x && timeline_draggable) {
+                if(timeline_draggable) {
                 	if(DOUBLE_CLICK) {
 						timeline_frame_active = true;
                 		KEYBOARD_RESET
                 		
-                	} else if(mouse_press(mb_left, pFOCUS)) {
+                	} else if(mouse_press(mb_left, pFOCUS) && mx < bar_int_x) {
 	                    timeline_scubbing = true;
 	                    timeline_scub_st  = CURRENT_FRAME;
 	                    _scrub_frame      = timeline_scub_st;
@@ -673,23 +676,118 @@ function Panel_Animation() : PanelContent() constructor {
                 }
             }
                     
-            if(point_in_rectangle(mx, my, bar_x, ui(8), bar_x + bar_w, ui(8 + 16)) && !key_mod_press_any()) { //top bar
-                if(mx < bar_int_x && timeline_draggable) {
-                	if(DOUBLE_CLICK) {
-						timeline_frame_active = true;
-                		KEYBOARD_RESET
-                		
-                	} else if(mouse_press(mb_left, pFOCUS)) {
-	                    timeline_scubbing = true;
-	                    timeline_scub_st  = CURRENT_FRAME;
-	                    _scrub_frame      = timeline_scub_st;
-	                    KEYBOARD_RESET
-                	}
-                }
+            if(timeline_draggable && point_in_rectangle(mx, my, bar_x, ui(8), bar_x + bar_w, ui(8 + 16))) { //top bar
+            	if(DOUBLE_CLICK) {
+					timeline_frame_active = true;
+            		KEYBOARD_RESET
+            		
+            	} else if(mouse_press(mb_left, pFOCUS) && !key_mod_press_any() && mx < bar_int_x) {
+                    timeline_scubbing = true;
+                    timeline_scub_st  = CURRENT_FRAME;
+                    _scrub_frame      = timeline_scub_st;
+                    KEYBOARD_RESET
+            	}
             }
         }
         
         timeline_draggable = true;
+    }
+    
+    function timelineStretch() {
+    	var bar_x = tool_width + ui(16);
+        var bar_y = h - timeline_h - ui(10);
+        var bar_w = timeline_w;
+        var bar_h = timeline_h;
+        var bar_total_w = TOTAL_FRAMES * timeline_scale;
+        
+    	var stx = timeline_shift + bar_total_w;
+        var sty = ui(10);
+        
+        var msx = mx - bar_x;
+        var msy = my - ui(8);
+        
+        var len;
+        if(timeline_frame_active) len = KEYBOARD_NUMBER != undefined? KEYBOARD_NUMBER : timeline_stretch_sx;
+        else len = round((mx - bar_x - timeline_shift) / timeline_scale);
+        
+        len = max(1, len);
+        
+        if(timeline_stretch == 1) {
+            TOOLTIP = __txtx("panel_animation_length", "Animation length") + $" {len}";
+            TOTAL_FRAMES = len;
+            
+            timeline_draggable = false;
+            if(mouse_release(mb_left) && !timeline_frame_active) timeline_stretch = 0;
+            return;
+        } 
+        
+        if(timeline_stretch == 2) {
+            TOOLTIP  = __txtx("panel_animation_length", "Animation length") + $" {len}";
+            var _len = TOTAL_FRAMES;
+            TOTAL_FRAMES = len;
+            
+            if(_len != len) {
+                for (var m = 0, n = array_length(PROJECT.allNodes); m < n; m++) {
+                    var _node = PROJECT.allNodes[m];
+                    if(!_node || !_node.active) continue;
+                    
+                    for(var i = 0; i < array_length(_node.inputs); i++) {
+                        var in = _node.inputs[i];
+                        if(!in.is_anim) continue;
+                        
+                        for(var j = 0; j < array_length(in.animator.values); j++) {
+                            var t = in.animator.values[j];
+                            t.time = t.ratio * (len - 1);
+                        }
+                        
+                        for( var k = 0; k < array_length(in.animators); k++ )
+                        for(var j = 0; j < array_length(in.animators[k].values); j++) {
+                            var t = in.animators[k].values[j];
+                            t.time = t.ratio * (len - 1);
+                        }
+                    }
+                }
+            }
+            
+            timeline_draggable = false;
+            if(mouse_release(mb_left) && !timeline_frame_active) timeline_stretch = 0;
+            return;
+        } 
+        
+        if(!IS_PLAYING && pHOVER && point_in_circle(msx, msy, stx, sty, sty)) {
+        	TOOLTIP = tooltip_anim_end;
+        	
+        	if(key_mod_press(ALT)) {
+                TOOLTIP = __txtx("panel_animation_stretch", "Stretch animation");
+        		
+                if(DOUBLE_CLICK) {
+                	timeline_stretch      = 2;
+                    timeline_stretch_sx   = TOTAL_FRAMES;
+                	timeline_frame_active = true;
+                	KEYBOARD_RESET
+                	
+                } else if(mouse_press(mb_left, pFOCUS)) {
+                    timeline_stretch    = 2;
+                    timeline_stretch_mx = msx;
+                    timeline_stretch_sx = TOTAL_FRAMES;
+                }
+                
+            } else if(key_mod_press(CTRL)) {
+                TOOLTIP = __txtx("panel_animation_adjust_length", "Adjust animation length");
+        		
+                if(DOUBLE_CLICK) {
+                	timeline_stretch      = 1;
+                    timeline_stretch_sx   = TOTAL_FRAMES;
+                	timeline_frame_active = true;
+                	KEYBOARD_RESET
+                	
+                } else if(mouse_press(mb_left, pFOCUS)) {
+                    timeline_stretch    = 1;
+                    timeline_stretch_mx = msx;
+                    timeline_stretch_sx = TOTAL_FRAMES;
+                }
+            }
+        }
     }
     
     ////- Draw
@@ -1874,7 +1972,7 @@ function Panel_Animation() : PanelContent() constructor {
         
         surfaceVerify();
         
-        #region scroll
+        #region Scroll
             dope_sheet_y = lerp_float(dope_sheet_y, dope_sheet_y_to, 4);
                 
             if(pHOVER && point_in_rectangle(mx, my, ui(8), ui(8), bar_x, ui(8) + dope_sheet_h) && MOUSE_WHEEL != 0)
@@ -2033,7 +2131,7 @@ function Panel_Animation() : PanelContent() constructor {
         
         draw_set_text(f_p2, fa_left, fa_top);
         
-        #region draw graph, easing line
+        #region Draw Graph, Easing Line
             var key_hover = noone;
             _graph_key_hover       = noone;
             _graph_key_hover_index = noone;
@@ -2176,7 +2274,7 @@ function Panel_Animation() : PanelContent() constructor {
             if(mouse_release(mb_left)) keyframe_boxing = false;
         }
         
-        #region ======= draw keys =======
+        #region ======= Draw Keys =======
         	_keyframe_selecting_f = noone;
         	_keyframe_selecting_l = noone;
         
@@ -2387,7 +2485,7 @@ function Panel_Animation() : PanelContent() constructor {
             }
         }
         
-        #region overlay 
+        #region Overlay 
             var hh = ui(20);
             
             var bar_line_x = (CURRENT_FRAME + 1) * timeline_scale + timeline_shift;
@@ -2535,101 +2633,18 @@ function Panel_Animation() : PanelContent() constructor {
             }
         #endregion
         
-        #region stretch
-            var stx = timeline_shift + bar_total_w;
-            var sty = ui(10);
-            var len;
-            
-            if(timeline_frame_active) len = KEYBOARD_NUMBER != undefined? KEYBOARD_NUMBER : timeline_stretch_sx;
-            else len = round((mx - bar_x - timeline_shift) / timeline_scale);
-            
-            len = max(1, len);
-            
-            if(timeline_stretch == 1) {
-                TOOLTIP = __txtx("panel_animation_length", "Animation length") + $" {len}";
-                TOTAL_FRAMES = len;
-                
-                timeline_draggable = false;
-                if(mouse_release(mb_left) && !timeline_frame_active) timeline_stretch = 0;
-                        
-                draw_set_color(COLORS._main_accent);
-        		draw_line_width(stx, sty - ui(10), stx, sty + ui(10), 2);
-                
-            } else if(timeline_stretch == 2) {
-                TOOLTIP  = __txtx("panel_animation_length", "Animation length") + $" {len}";
-                var _len = TOTAL_FRAMES;
-                TOTAL_FRAMES = len;
-                
-                if(_len != len) {
-                    for (var m = 0, n = array_length(PROJECT.allNodes); m < n; m++) {
-                        var _node = PROJECT.allNodes[m];
-                        if(!_node || !_node.active) continue;
-                        
-                        for(var i = 0; i < array_length(_node.inputs); i++) {
-                            var in = _node.inputs[i];
-                            if(!in.is_anim) continue;
-                            
-                            for(var j = 0; j < array_length(in.animator.values); j++) {
-                                var t = in.animator.values[j];
-                                t.time = t.ratio * (len - 1);
-                            }
-                            
-                            for( var k = 0; k < array_length(in.animators); k++ )
-                            for(var j = 0; j < array_length(in.animators[k].values); j++) {
-                                var t = in.animators[k].values[j];
-                                t.time = t.ratio * (len - 1);
-                            }
-                        }
-                    }
-                }
-                
-                timeline_draggable = false;
-                if(mouse_release(mb_left) && !timeline_frame_active) timeline_stretch = 0;
-                    
-                draw_set_color(COLORS._main_value_positive);
-        		draw_line_width(stx, sty - ui(10), stx, sty + ui(10), 2);
-                
-            } else {
-                if(!IS_PLAYING && pHOVER && point_in_circle(msx, msy, stx, sty, sty)) {
-                	draw_set_color(COLORS._main_icon_light);
-                	TOOLTIP = tooltip_anim_end;
-                	
-                	if(key_mod_press(ALT)) {
-                        draw_set_color(COLORS._main_value_positive);
-                        TOOLTIP = __txtx("panel_animation_stretch", "Stretch animation");
-                		
-                        if(DOUBLE_CLICK) {
-                        	timeline_stretch      = 2;
-                            timeline_stretch_sx   = TOTAL_FRAMES;
-                        	timeline_frame_active = true;
-                        	KEYBOARD_RESET
-                        	
-                        } else if(mouse_press(mb_left, pFOCUS)) {
-                            timeline_stretch    = 2;
-                            timeline_stretch_mx = msx;
-                            timeline_stretch_sx = TOTAL_FRAMES;
-                        }
-                        
-                    } else if(key_mod_press(CTRL)) {
-                        draw_set_color(COLORS._main_accent);
-                        TOOLTIP = __txtx("panel_animation_adjust_length", "Adjust animation length");
-                		
-                        if(DOUBLE_CLICK) {
-                        	timeline_stretch      = 1;
-                            timeline_stretch_sx   = TOTAL_FRAMES;
-                        	timeline_frame_active = true;
-                        	KEYBOARD_RESET
-                        	
-                        } else if(mouse_press(mb_left, pFOCUS)) {
-                            timeline_stretch    = 1;
-                            timeline_stretch_mx = msx;
-                            timeline_stretch_sx = TOTAL_FRAMES;
-                        }
-                    }
-                    
-                    draw_line_width(stx, sty - ui(10), stx, sty + ui(10), 2);
-                }
-            }
+        #region End Line
+        	var stx = timeline_shift + bar_total_w;
+	        var sty = ui(10);
+	        var drw = timeline_stretch > 0;
+	        draw_set_color(timeline_stretch == 1? COLORS._main_accent : COLORS._main_value_positive);
+	        
+			if(!IS_PLAYING && timeline_stretch == 0 && pHOVER && point_in_circle(msx, msy, stx, sty, sty)) { 
+				draw_set_color(COLORS._main_icon_light); 
+				drw = true;
+			}
+	        
+            if(drw) draw_line_width(stx, sty - ui(10), stx, sty + ui(10), 2);
         #endregion
         
         BLEND_SUBTRACT
@@ -2824,6 +2839,7 @@ function Panel_Animation() : PanelContent() constructor {
             
             if(dope_sheet_h > 8) {
                 drawDopesheet();
+                timelineStretch();
                 
                 if(pHOVER && point_in_rectangle(mx, my, tool_width + ui(8), ui(8), tool_width + ui(12), ui(8) + dope_sheet_h)) {
                     CURSOR = cr_size_we;
