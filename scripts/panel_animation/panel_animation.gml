@@ -560,11 +560,19 @@ function Panel_Animation() : PanelContent() constructor {
     
     ////- Interaction
     
+    function focusTimeline() {
+    	var bar_w = timeline_w;
+    	var bar_line_x = (CURRENT_FRAME + 1) * timeline_scale;
+    	
+    	if(bar_line_x < 0 || bar_line_x > bar_w)
+    		timeline_shift_to = bar_w / 2 - bar_line_x;
+    }
+    
     function timelineScrub() {
-    	var bar_x       = tool_width + ui(16);
-        var bar_y       = h - timeline_h - ui(10);
-        var bar_w       = timeline_w;
-        var bar_h       = timeline_h;
+    	var bar_x = tool_width + ui(16);
+        var bar_y = h - timeline_h - ui(10);
+        var bar_w = timeline_w;
+        var bar_h = timeline_h;
         var bar_total_w = TOTAL_FRAMES * timeline_scale;
         
     	var bar_line_w = TOTAL_FRAMES * timeline_scale + timeline_shift;
@@ -597,8 +605,9 @@ function Panel_Animation() : PanelContent() constructor {
         
         if(timeline_frame_active) {
         	if(timeline_stretch == 0 && KEYBOARD_NUMBER != undefined) {
-        		rfrm = KEYBOARD_NUMBER - 1;
+        		var rfrm = KEYBOARD_NUMBER - 1;
             	PROJECT.animator.setFrame(rfrm);
+            	focusTimeline();
         	}
         	
         	if(keyboard_check_pressed(vk_enter) || keyboard_check_pressed(vk_escape) || mouse_lpress()) {
