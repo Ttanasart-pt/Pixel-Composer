@@ -21,16 +21,16 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		from   = noone;
 		name   = _name;
 		node   = _node;
-		tags   = VALUE_TAG.none;
+		tags   = VALUE_TAG.none; static setTags = function(t) /*=>*/ { tags = t; return self; }
 		
 		x	= node.x; rx  = node.x; 
 		y   = node.y; ry  = node.y;
 		
-		index     = array_length(_connect == CONNECT_TYPE.input? node.inputs : node.outputs);
-		lIndex    = index;
-		type      = _type;
-		forward   = true;
-		_initName = _name;
+		index       = array_length(_connect == CONNECT_TYPE.input? node.inputs : node.outputs);
+		lIndex      = index;
+		type        = _type;
+		forward     = true;
+		_initName   = _name;
 		name_custom = false;
 		
 		editWidget     = noone;
@@ -244,6 +244,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		static setIndex = function(_index) {
 			index  = _index;
 			lIndex = _index;
+			
+			if(_index < 0) {
+				setVisible(true, true);
+				return self;
+			}
 			
 			if(connect_type == CONNECT_TYPE.input) {
 				bypass_junc.setIndex(index);

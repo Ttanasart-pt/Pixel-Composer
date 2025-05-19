@@ -558,6 +558,131 @@ function Panel_Animation() : PanelContent() constructor {
         if(modified) UNDO_HOLDING = true;
     }
     
+    ////- Interaction
+    
+    function timelineScrub() {
+    	var bar_x       = tool_width + ui(16);
+        var bar_y       = h - timeline_h - ui(10);
+        var bar_w       = timeline_w;
+        var bar_h       = timeline_h;
+        var bar_total_w = TOTAL_FRAMES * timeline_scale;
+        
+    	var bar_line_w = TOTAL_FRAMES * timeline_scale + timeline_shift;
+        var bar_int_x  = min(bar_x + bar_w, bar_x + bar_line_w);
+        
+        timeline_shift = lerp_float(timeline_shift, timeline_shift_to, 4);
+        
+        if(timeline_scubbing && timeline_draggable) {
+            var rfrm = (mx - bar_x - timeline_shift) / timeline_scale - 1;
+            if(!key_mod_press(CTRL)) rfrm = clamp(rfrm, 0, TOTAL_FRAMES - 1);
+            
+            PROJECT.animator.setFrame(rfrm, !key_mod_press(ALT));
+            
+            timeline_show_time  = CURRENT_FRAME;
+            if(timeline_show_time != _scrub_frame)
+                _scrub_frame = timeline_show_time;
+        }
+        
+        if(mouse_release(mb_left))
+            timeline_scubbing = false;
+        
+        if(timeline_dragging) {
+            timeline_shift_to = timeline_drag_sx + mx - timeline_drag_mx;
+            timeline_shift    = timeline_shift_to;
+            dope_sheet_y_to   = clamp(timeline_drag_sy + my - timeline_drag_my, -dope_sheet_y_max, 0);
+                
+            if(mouse_release(mb_middle))
+                timeline_dragging = false;
+        }
+        
+        if(timeline_frame_active) {
+        	if(timeline_stretch == 0 && KEYBOARD_NUMBER != undefined) {
+        		rfrm = KEYBOARD_NUMBER - 1;
+            	PROJECT.animator.setFrame(rfrm);
+        	}
+        	
+        	if(keyboard_check_pressed(vk_enter) || keyboard_check_pressed(vk_escape) || mouse_lpress()) {
+        		timeline_stretch      = 0; 
+        		timeline_frame_active = false;
+        	}
+        	
+        } else if(pHOVER) {
+            if(point_in_rectangle(mx, my, bar_x, ui(16), bar_x + bar_w, bar_y - ui(8))) {
+                var sca = timeline_scale;
+                
+                if(MOUSE_WHEEL != 0) timeline_scale = clamp(timeline_scale + MOUSE_WHEEL, 1, 24);
+                
+                timeline_separate = 5;
+                timeline_sep_line = 1;
+                
+                     if(timeline_scale <=  1) { timeline_separate =  50; timeline_sep_line = 10; }
+                else if(timeline_scale <=  3) { timeline_separate =  20; timeline_sep_line =  5; }
+                else if(timeline_scale <= 10) { timeline_separate =  10; timeline_sep_line =  2; }
+                
+                if(sca != timeline_scale) {
+                    var mfb = (mx - bar_x - timeline_shift) / timeline_scale;
+                    var mfa = (mx - bar_x - timeline_shift) / sca;
+                    
+                    timeline_shift_to = timeline_shift_to - (mfa - mfb) * timeline_scale;
+                    timeline_shift    = timeline_shift_to;
+                }
+                
+                if(mouse_press(mb_middle, pFOCUS)) {
+                    timeline_dragging = true;
+                    
+                    timeline_drag_sx = timeline_shift;
+                    timeline_drag_sy = dope_sheet_y_to;
+                    timeline_drag_mx = mx;
+                    timeline_drag_my = my;
+                }
+            }
+            
+            if(point_in_rectangle(mx, my, bar_x, bar_y, bar_x + bar_w, bar_y + bar_h)) { //preview
+                if(MOUSE_WHEEL != 0) timeline_shift_to = clamp(timeline_shift_to + 64 * MOUSE_WHEEL, -max(bar_total_w - bar_w + 32, 0), 0);
+                
+                if(mx < bar_int_x && timeline_draggable) {
+                	if(DOUBLE_CLICK) {
+						timeline_frame_active = true;
+                		KEYBOARD_RESET
+                		
+                	} else if(mouse_press(mb_left, pFOCUS)) {
+	                    timeline_scubbing = true;
+	                    timeline_scub_st  = CURRENT_FRAME;
+	                    _scrub_frame      = timeline_scub_st;
+	                    KEYBOARD_RESET
+                	}
+                }
+                
+                if(mouse_press(mb_right, pFOCUS)) {
+                    __selecting_frame = clamp(round((mx - bar_x - timeline_shift) / timeline_scale), 0, TOTAL_FRAMES - 1);
+                    
+                    menuCall("animation_summary_menu", [
+                        MENU_ITEMS.animation_set_range_start,
+                        MENU_ITEMS.animation_set_range_end,
+                        MENU_ITEMS.animation_reset_range,
+                    ]);
+                }
+            }
+                    
+            if(point_in_rectangle(mx, my, bar_x, ui(8), bar_x + bar_w, ui(8 + 16)) && !key_mod_press_any()) { //top bar
+                if(mx < bar_int_x && timeline_draggable) {
+                	if(DOUBLE_CLICK) {
+						timeline_frame_active = true;
+                		KEYBOARD_RESET
+                		
+                	} else if(mouse_press(mb_left, pFOCUS)) {
+	                    timeline_scubbing = true;
+	                    timeline_scub_st  = CURRENT_FRAME;
+	                    _scrub_frame      = timeline_scub_st;
+	                    KEYBOARD_RESET
+                	}
+                }
+            }
+        }
+        
+        timeline_draggable = true;
+    }
+    
     ////- Draw
     
     function resetTimelineMask() {
@@ -790,122 +915,6 @@ function Panel_Animation() : PanelContent() constructor {
         
         draw_surface_safe(timeline_surface, bar_x, bar_y);
         
-        #region mouse interact
-            var bar_line_w = TOTAL_FRAMES * timeline_scale + timeline_shift;
-            var bar_int_x  = min(bar_x + bar_w, bar_x + bar_line_w);
-            
-            timeline_shift = lerp_float(timeline_shift, timeline_shift_to, 4);
-            
-            if(timeline_scubbing && timeline_draggable) {
-                var rfrm = (mx - bar_x - timeline_shift) / timeline_scale - 1;
-                if(!key_mod_press(CTRL)) rfrm = clamp(rfrm, 0, TOTAL_FRAMES - 1);
-                
-                PROJECT.animator.setFrame(rfrm, !key_mod_press(ALT));
-                
-                timeline_show_time  = CURRENT_FRAME;
-                if(timeline_show_time != _scrub_frame)
-                    _scrub_frame = timeline_show_time;
-            }
-            
-            if(mouse_release(mb_left))
-                timeline_scubbing = false;
-            
-            if(timeline_dragging) {
-                timeline_shift_to = timeline_drag_sx + mx - timeline_drag_mx;
-                timeline_shift    = timeline_shift_to;
-                dope_sheet_y_to   = clamp(timeline_drag_sy + my - timeline_drag_my, -dope_sheet_y_max, 0);
-                    
-                if(mouse_release(mb_middle))
-                    timeline_dragging = false;
-            }
-	        
-	        if(timeline_frame_active) {
-	        	if(timeline_stretch == 0 && KEYBOARD_NUMBER != undefined) {
-	        		rfrm = KEYBOARD_NUMBER - 1;
-                	PROJECT.animator.setFrame(rfrm);
-	        	}
-	        	
-	        	if(keyboard_check_pressed(vk_enter) || keyboard_check_pressed(vk_escape) || mouse_lpress()) {
-	        		timeline_stretch      = 0; 
-	        		timeline_frame_active = false;
-	        	}
-	        	
-	        } else if(pHOVER) {
-	            if(point_in_rectangle(mx, my, bar_x, ui(16), bar_x + bar_w, bar_y - ui(8))) {
-	                var sca = timeline_scale;
-	                
-	                if(MOUSE_WHEEL != 0) timeline_scale = clamp(timeline_scale + MOUSE_WHEEL, 1, 24);
-	                
-	                timeline_separate = 5;
-	                timeline_sep_line = 1;
-	                
-	                     if(timeline_scale <=  1) { timeline_separate =  50; timeline_sep_line = 10; }
-	                else if(timeline_scale <=  3) { timeline_separate =  20; timeline_sep_line =  5; }
-	                else if(timeline_scale <= 10) { timeline_separate =  10; timeline_sep_line =  2; }
-	                
-	                if(sca != timeline_scale) {
-	                    var mfb = (mx - bar_x - timeline_shift) / timeline_scale;
-	                    var mfa = (mx - bar_x - timeline_shift) / sca;
-	                    
-	                    timeline_shift_to = timeline_shift_to - (mfa - mfb) * timeline_scale;
-	                    timeline_shift    = timeline_shift_to;
-	                }
-	                
-	                if(mouse_press(mb_middle, pFOCUS)) {
-	                    timeline_dragging = true;
-	                    
-	                    timeline_drag_sx = timeline_shift;
-	                    timeline_drag_sy = dope_sheet_y_to;
-	                    timeline_drag_mx = mx;
-	                    timeline_drag_my = my;
-	                }
-	            }
-	            
-	            if(point_in_rectangle(mx, my, bar_x, bar_y, bar_x + bar_w, bar_y + bar_h)) { //preview
-	                if(MOUSE_WHEEL != 0) timeline_shift_to = clamp(timeline_shift_to + 64 * MOUSE_WHEEL, -max(bar_total_w - bar_w + 32, 0), 0);
-	                
-	                if(mx < bar_int_x && timeline_draggable) {
-	                	if(DOUBLE_CLICK) {
-							timeline_frame_active = true;
-	                		KEYBOARD_RESET
-	                		
-	                	} else if(mouse_press(mb_left, pFOCUS)) {
-		                    timeline_scubbing = true;
-		                    timeline_scub_st  = CURRENT_FRAME;
-		                    _scrub_frame      = timeline_scub_st;
-		                    KEYBOARD_RESET
-	                	}
-	                }
-	                
-	                if(mouse_press(mb_right, pFOCUS)) {
-	                    __selecting_frame = clamp(round((mx - bar_x - timeline_shift) / timeline_scale), 0, TOTAL_FRAMES - 1);
-	                    
-	                    menuCall("animation_summary_menu", [
-	                        MENU_ITEMS.animation_set_range_start,
-	                        MENU_ITEMS.animation_set_range_end,
-	                        MENU_ITEMS.animation_reset_range,
-	                    ]);
-	                }
-	            }
-	                    
-	            if(point_in_rectangle(mx, my, bar_x, ui(8), bar_x + bar_w, ui(8 + 16))) { //top bar
-	                if(mx < bar_int_x && timeline_draggable) {
-	                	if(DOUBLE_CLICK) {
-							timeline_frame_active = true;
-	                		KEYBOARD_RESET
-	                		
-	                	} else if(mouse_press(mb_left, pFOCUS)) {
-		                    timeline_scubbing = true;
-		                    timeline_scub_st  = CURRENT_FRAME;
-		                    _scrub_frame      = timeline_scub_st;
-		                    KEYBOARD_RESET
-	                	}
-	                }
-	            }
-            }
-            
-            timeline_draggable = true;
-        #endregion
     }
     
     function drawDopesheet_Graph_Line(animator, key_y, msx, msy, _gy_val_min = 999999, _gy_val_max = -999999) { 
@@ -2802,6 +2811,7 @@ function Panel_Animation() : PanelContent() constructor {
         getTimelineContent();
         if(w >= ui(348)) {
             drawTimeline();
+            timelineScrub();
             
             if(dope_sheet_h > 8) {
                 drawDopesheet();

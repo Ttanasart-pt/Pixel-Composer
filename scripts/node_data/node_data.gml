@@ -148,27 +148,18 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		inspector_display_list	= -1;
 		is_dynamic_output		= false;
 		
-		inspectInput1           = nodeValue("Toggle execution", self, CONNECT_TYPE.input, VALUE_TYPE.action, false).setVisible(true, true);
-		inspectInput1.index     = -1;
+		inspectInput1      = nodeValue("Toggle Execution", self, CONNECT_TYPE.input, VALUE_TYPE.action,  false).setIndex(-1);
+		inspectInput2      = nodeValue("Toggle Execution", self, CONNECT_TYPE.input, VALUE_TYPE.action,  false).setIndex(-1);
+		updatedInTrigger   = nodeValue("Update",           self, CONNECT_TYPE.input, VALUE_TYPE.trigger, false).setIndex(-1).setTags(VALUE_TAG.updateInTrigger);
+		updatedOutTrigger  = nodeValue_Output("Updated",   self, VALUE_TYPE.trigger, false).setIndex(-1).setTags(VALUE_TAG.updateOutTrigger);
 		
-		inspectInput2           = nodeValue("Toggle execution", self, CONNECT_TYPE.input, VALUE_TYPE.action, false).setVisible(true, true);
-		inspectInput2.index     = -1;
+		insp1UpdateActive  = true;
+		insp1UpdateTooltip = __txtx("panel_inspector_execute", "Execute node");
+		insp1UpdateIcon    = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
 		
-		updatedInTrigger        = nodeValue("Update",  self, CONNECT_TYPE.input,  VALUE_TYPE.trigger, false).setVisible(true, true);
-		updatedInTrigger.index  = -1;
-		updatedInTrigger.tags   = VALUE_TAG.updateInTrigger;
-		
-		updatedOutTrigger       = nodeValue_Output("Updated", self, VALUE_TYPE.trigger, false).setVisible(true, true);
-		updatedOutTrigger.index = -1;
-		updatedOutTrigger.tags  = VALUE_TAG.updateOutTrigger;
-		
-		insp1UpdateActive       = true;
-		insp1UpdateTooltip      = __txtx("panel_inspector_execute", "Execute node");
-		insp1UpdateIcon         = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
-		
-		insp2UpdateActive       = true;
-		insp2UpdateTooltip      = __txtx("panel_inspector_execute", "Execute node");
-		insp2UpdateIcon         = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
+		insp2UpdateActive  = true;
+		insp2UpdateTooltip = __txtx("panel_inspector_execute", "Execute node");
+		insp2UpdateIcon    = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
 		
 		is_dynamic_input  = false;
 		auto_input		  = false;
@@ -213,8 +204,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		junc_meta = [
 			nodeValue_Output("Name",     self, VALUE_TYPE.text,  ""),
-			nodeValue_Output("Position", self, VALUE_TYPE.float, [ 0, 0 ])
-				.setDisplay(VALUE_DISPLAY.vector),
+			nodeValue_Output("Position", self, VALUE_TYPE.float, [ 0, 0 ]).setDisplay(VALUE_DISPLAY.vector),
 		];
 		
 		for( var i = 0, n = array_length(junc_meta); i < n; i++ ) {
@@ -238,10 +228,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		attributeEditors = [
 			"Display",
-			["Annotation",   function() /*=>*/ {return attributes.annotation},       new textArea(TEXTBOX_INPUT.text,  function(val) /*=>*/ { setAttribute("annotation", val);          }) ],
-			["Node Width",   function() /*=>*/ {return attributes.node_width},       textBox_Number(function(val) /*=>*/ { setAttribute("node_width", val);       refreshNodeDisplay(); }) ],
-			["Node Height",  function() /*=>*/ {return attributes.node_height},      textBox_Number(function(val) /*=>*/ { setAttribute("node_height", val);      refreshNodeDisplay(); }) ],
-			["Params Width", function() /*=>*/ {return attributes.node_param_width}, textBox_Number(function(val) /*=>*/ { setAttribute("node_param_width", val); refreshNodeDisplay(); }) ],
+			["Annotation",   function() /*=>*/ {return attributes.annotation},       new textArea(TEXTBOX_INPUT.text,  function(v) /*=>*/ { setAttribute("annotation", v);          }) ],
+			["Node Width",   function() /*=>*/ {return attributes.node_width},       textBox_Number(function(v) /*=>*/ { setAttribute("node_width", v);       refreshNodeDisplay(); }) ],
+			["Node Height",  function() /*=>*/ {return attributes.node_height},      textBox_Number(function(v) /*=>*/ { setAttribute("node_height", v);      refreshNodeDisplay(); }) ],
+			["Params Width", function() /*=>*/ {return attributes.node_param_width}, textBox_Number(function(v) /*=>*/ { setAttribute("node_param_width", v); refreshNodeDisplay(); }) ],
 			
 			"Node",
 			["Auto update",     function() /*=>*/ {return attributes.update_graph},		  new checkBox(function() /*=>*/ { toggleAttribute("update_graph");           }) ],
@@ -470,7 +460,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(_active) {
 				if(sep && data_length > 1) array_push(_input_display_list, new Inspector_Spacer(20, true));
 				sep = true;
-			
+				
 				for( var j = 0; j < data_length; j++ ) {
 					var _ind = i + j;
 					
@@ -484,9 +474,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			}
 		}
 		
-		var _ina = array_length(_in);
-		for( var i = 0; i < _ina; i++ )
-			_in[i].index = i;
+		array_foreach(_in, function(inp, i) /*=>*/ { inp.index = i });
 		
 		if(dummy_input) dummy_input.index = _ina;
 		inputs = _in;
