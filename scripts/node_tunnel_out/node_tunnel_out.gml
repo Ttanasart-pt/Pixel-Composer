@@ -18,12 +18,21 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	__key = noone;
 	
 	newInput(0, nodeValue_Text("Name", self, LOADING || APPENDING? "" : ds_map_find_first(project.tunnels_in) ))
-		.setDisplay(VALUE_DISPLAY.text_tunnel)
 		.rejectArray();
 	
 	newOutput(0, nodeValue_Output("Value out", self, VALUE_TYPE.any, noone ));
 	
+	inputs[0].editWidget.autocomplete_server = tunnel_autocomplete_server;
+	inputs[0].editWidget.autocomplete_subt   = "Ctrl: Change connected";
 	inputs[0].is_modified = true;
+	inputs[0].onSetValue  = function(newKey) /*=>*/ {
+		if(!key_mod_press(CTRL)) return;
+		
+		var node = project.tunnels_in[? __key].node;
+		if(node.group != group || node.__key != __key) return;
+		
+		node.inputs[0].setValueDirect(newKey);
+	};
 	
 	////- Update
 	

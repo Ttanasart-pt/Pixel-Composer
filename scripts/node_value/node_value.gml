@@ -948,17 +948,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				switch(display_type) {
 					case VALUE_DISPLAY._default :
 						editWidget   = new textArea(TEXTBOX_INPUT.text, function(str) /*=>*/ {return setValueInspector(str)});
-						extract_node = "Node_String";
 						break;
 						
 					case VALUE_DISPLAY.text_box :
 						editWidget   = new textBox(TEXTBOX_INPUT.text, function(str) /*=>*/ {return setValueInspector(str)});
-						extract_node = "Node_String";
 						break;
 					
 					case VALUE_DISPLAY.codeLUA :
 						editWidget   = new textArea(TEXTBOX_INPUT.text, function(str) /*=>*/ {return setValueInspector(str)});
-						extract_node = "Node_String";
 						
 						editWidget.font      = f_code;
 						editWidget.format    = TEXT_AREA_FORMAT.codeLUA;
@@ -976,20 +973,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						editWidget.font      = f_code;
 						editWidget.format    = TEXT_AREA_FORMAT.codeHLSL;
 						editWidget.min_lines = 4;
-						extract_node = "Node_String";
 						break;
 						
-					case VALUE_DISPLAY.text_tunnel :
-						editWidget = new textArea(TEXTBOX_INPUT.text, function(str) /*=>*/ {return setValueInspector(str)});
-						editWidget.autocomplete_server = tunnel_autocomplete_server;
-						
-						extract_node = "Node_String";
-						break;
-					
 					case VALUE_DISPLAY.text_array :
 						editWidget = new textArrayBox(function() /*=>*/ {return animator.values[0].value}, display_data.data, function() /*=>*/ {return node.doUpdate()});
 						break;
 				}
+				
+				extract_node = "Node_String";
 				break;
 			
 			case VALUE_TYPE.font :
@@ -1529,9 +1520,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return self;
 	}
 	
+	static onSetValue = undefined;
 	static setValue = function(val = 0, record = true, time = CURRENT_FRAME, _update = true) { ////Set value
 		val = unit.invApply(val);
-		return setValueDirect(val, noone, record, time, _update);
+		var _set = setValueDirect(val, noone, record, time, _update);
+		if(onSetValue != undefined) onSetValue(val);
+		
+		return _set;
 	}
 	
 	static overrideValue = function(_val) {
@@ -1561,10 +1556,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			}
 		} else
 			res = setValueDirect(_val, _index, true, time);
+		if(onSetValue != undefined) onSetValue(_val);
 		
 		return res;
 	}
 	
+	static onSetValueDirect = undefined;
 	static setValueDirect = function(val = 0, _index = noone, record = true, time = CURRENT_FRAME, _update = true) {
 		is_modified = true;
 		var updated = false;

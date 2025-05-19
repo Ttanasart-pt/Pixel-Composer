@@ -18,6 +18,7 @@ function textInput(_input, _onModify) : widget() constructor {
 	autocomplete_server	 = noone;
 	autocomplete_object	 = noone;
 	autocomplete_context = {};
+	autocomplete_subt    = "";
 	
 	function_guide_server	   = noone;
 	

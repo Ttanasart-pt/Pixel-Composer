@@ -28,7 +28,19 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	newInput(1, nodeValue("Value in", self, CONNECT_TYPE.input, VALUE_TYPE.any, noone ))
 		.setVisible(true, true);
 	
+	inputs[0].editWidget.autocomplete_server = tunnel_autocomplete_server;
+	inputs[0].editWidget.autocomplete_subt   = "Ctrl: Change connected";
 	inputs[0].is_modified = true;
+	inputs[0].onSetValue  = function(newKey) /*=>*/ {
+		if(!key_mod_press(CTRL)) return;
+		
+		for( var i = 0, n = array_length(receivers); i < n; i++ ) {
+			var node = PROJECT.nodeMap[? receivers[i]];
+			if(!node) continue;
+			
+			node.inputs[0].setValueDirect(newKey);
+		}
+	};
 	
 	////- Update
 	

@@ -112,7 +112,6 @@ enum VALUE_DISPLAY {
 	codeHLSL,
 	text_array,
 	text_box,
-	text_tunnel,
 	
 	//path
 	path_save,

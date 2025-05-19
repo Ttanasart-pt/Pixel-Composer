@@ -147,7 +147,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		var data = autocomplete_server(pmt, _vars, autocomplete_context);
 		
 		o_dialog_textbox_autocomplete.data   = data;
-		if(array_length(data)) {
+		if(array_length(data) || autocomplete_subt != "") {
 			o_dialog_textbox_autocomplete.data   = data;
 			o_dialog_textbox_autocomplete.prompt = pmt;
 			autocomplete_modi = true;
@@ -193,7 +193,8 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		if(!keyboard_check_pressed(vk_enter)) 
 			return 0;
 		
-		if(use_autocomplete && o_dialog_textbox_autocomplete.active && o_dialog_textbox_autocomplete.textbox == self) 
+		var aut = o_dialog_textbox_autocomplete;
+		if(use_autocomplete && aut.active && aut.textbox == self && array_length(aut.data)) 
 			return 0;
 		
 		return 1 + ((shift_new_line && key_mod_press(SHIFT)) || (!shift_new_line && !key_mod_press(SHIFT)));
@@ -233,7 +234,8 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			} 
 		}
 		
-		var tbActive = o_dialog_textbox_autocomplete.active && o_dialog_textbox_autocomplete.textbox == self;
+		var aut = o_dialog_textbox_autocomplete;
+		var tbActive = aut.active && aut.textbox == self && array_length(aut.data);
 		
 		if(!(isCodeFormat() && tbActive)) {
 			if(key == vk_up) {
@@ -598,6 +600,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			autocomplete_delay = 0;
 			o_dialog_textbox_autocomplete.deactivate(self);
 			o_dialog_textbox_function_guide.deactivate(self);
+			
 		} else if(keyboard_check_pressed(vk_end)) {
 			if(key_mod_press(SHIFT)) {
 				if(cursor_select == -1)
@@ -613,10 +616,12 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			autocomplete_delay = 0;
 			o_dialog_textbox_autocomplete.deactivate(self);
 			o_dialog_textbox_function_guide.deactivate(self);
+			
 		} else if(keyboard_check_pressed(vk_escape) && o_dialog_textbox_autocomplete.textbox != self) {
 			_input_text = _last_value;
 			cut_line();
 			deactivate();
+			
 		} else if(keyboardEnter() == 1) {
 			deactivate();
 		}
