@@ -82,7 +82,7 @@ function Surface(_surf) constructor {
 		self.surface = _surf;
 		w = surface_get_width_safe(_surf);
 		h = surface_get_height_safe(_surf);
-		format = surface_get_format(_surf);
+		format = surface_get_format_safe(_surf);
 	}
 	
 	set(_surf);

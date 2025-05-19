@@ -1,5 +1,5 @@
 function Node_Padding_Data(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
-	name  = "Padding";
+	name  = "Padding Data";
 	color = COLORS.node_blend_number;
 	setDimension(96, 48);
 	

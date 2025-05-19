@@ -35,13 +35,13 @@ function Node_Rigid_Path_Collider(_x, _y, _group = noone) : Node(_x, _y, _group)
 		if(array_empty(paths)) return;
 		
 		var nx, ny;
-		var ox = paths[0][0];
-		var oy = paths[0][1];
+		var ox = _x + paths[0][0] * _s;
+		var oy = _y + paths[0][1] * _s;
 		
 		draw_set_color(COLORS._main_accent);
 		for( var i = 1, n = array_length(paths); i < n; i++ ) {
-			nx = paths[i][0];
-			ny = paths[i][1];
+			nx = _x + paths[i][0] * _s;
+			ny = _y + paths[i][1] * _s;
 			
 			draw_line(ox, oy, nx, ny);
 			
@@ -72,15 +72,15 @@ function Node_Rigid_Path_Collider(_x, _y, _group = noone) : Node(_x, _y, _group)
 		_p = _pth.getPointRatio(0, 0, _p);
 		ox = _p.x / worldScale;
 		oy = _p.y / worldScale;
-		paths[0] = [ox, oy];
+		paths[0] = [_p.x, _p.y];
 		
-		for( var i = 1; i < _smp; i++ ) {
+		for( var i = 1; i <= _smp; i++ ) {
 			var _t = clamp(i * _ismp, 0, 0.999);
 			_p = _pth.getPointRatio(_t, 0, _p);
 			
 			nx = _p.x / worldScale;
 			ny = _p.y / worldScale;
-			paths[i] = [nx, ny];
+			paths[i] = [_p.x, _p.y];
 			
 			gmlBox2D_Object_Create_Begin(worldIndex, 0, 0, false);
 			gmlBox2D_Object_Create_Shape_Segment(ox, oy, nx, ny);

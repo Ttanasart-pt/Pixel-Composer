@@ -30,7 +30,8 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		array_remove(attributes.cache_group, _node.node_id);
 		array_remove(cache_group_members, _node);
 		
-		_node.cache_group = noone;
+		_node.cache_group  = noone;
+		_node.renderActive = true;
 	}
 	
 	static addNode = function(_node) {
@@ -125,11 +126,11 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	}
 	
 	static refreshGroupBG = function(_force = false) {
-		var _hash = "";
+		var _hash = $"{x},{y},{w},{h}|";
 		
-		for( var i = -1, n = array_length(cache_group_members); i < n; i++ ) {
-			var n = i == -1? self : cache_group_members[i];
-			_hash += $"{n.x},{n.y},{n.w},{n.h}|";
+		for( var i = 0, n = array_length(cache_group_members); i < n; i++ ) {
+			var _node = cache_group_members[i];
+			_hash += $"{_node.x},{_node.y},{_node.w},{_node.h}|";
 		}
 		_hash = md5_string_utf8(_hash);
 		
@@ -140,10 +141,10 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		if(array_empty(cache_group_members)) return;
 		var _vtrx = array_create((array_length(cache_group_members) + 1) * 4 * 7);
 		
-		for( var i = -1, n = array_length(cache_group_members); i < n; i++ ) {
-			var _node = i == -1? self : cache_group_members[i];
-			getNodeBorder(i + 1, _vtrx, _node);
-		}
+		getNodeBorder(0, _vtrx, self);
+		
+		for( var i = 0, n = array_length(cache_group_members); i < n; i++ )
+			getNodeBorder(i + 1, _vtrx, cache_group_members[i]);
 		
 		__temp_minP = [ x, y ];
 		__temp_minI = 0;

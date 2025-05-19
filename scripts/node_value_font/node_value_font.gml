@@ -7,10 +7,12 @@ function __NodeValue_Font(_name, _node, _value = "", _tooltip = "") : NodeValue(
 	static valueProcess = function(value, nodeFrom = undefined, applyUnit = true, arrIndex = 0) {
 		if(!is_string(value)) return "";
 		
-		if(struct_has(FONT_MAP, value))
-			return FONT_MAP[$ value];
+		if(struct_has(FONT_MAP, value)) return FONT_MAP[$ value];
 		
-		return filepath_resolve(value); 
+		var _path = filepath_resolve(value); 
+		if(_path != "" && !file_exists(_path)) noti_warning($"Font data: Font path {_path} not exists.");
+		
+		return _path;
 	}
 	
 	static getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { //// Get value

@@ -178,6 +178,7 @@
 	function surface_get_format_safe(s, crop = true) {
 		INLINE
 	
+		if(!is_surface(s)) return surface_rgba8unorm;
 		if(is_struct(s)) {
 			if(is_instanceof(s, dynaSurf)) return s.getFormat();
 			else if(is_instanceof(s, SurfaceAtlas)) return surface_get_format(s.getSurface());

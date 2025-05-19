@@ -58,7 +58,7 @@ function Node_Rigid_Sensor(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    	var _rad = getInputData(4);
 	    	var _pr  = _rad * _s;
 	    	
-	    	draw_circle(_px, _py, _pr, true);
+	    	draw_circle_prec(_px, _py, _pr, true);
 			InputDrawOverlay(inputs[4].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny));
 		}
 		
