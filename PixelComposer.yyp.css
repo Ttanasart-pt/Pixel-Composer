@@ -157,7 +157,8 @@
 }
 
 #outline-view div.outline-item[outline-ctx="update"] > div:hover > span { -webkit-text-fill-color: inherit; }
-#outline-view div.outline-item[outline-ctx="update"] span {
+#outline-view div.outline-item[outline-ctx="processData"] > div:hover > span { -webkit-text-fill-color: inherit; }
+#outline-view div.outline-item[outline-ctx="update"] span, #outline-view div.outline-item[outline-ctx="processData"] span {
     font-weight: 800;
     
     background-image: linear-gradient( 90deg, #ff9166 0%, #ffe478 50%, #ff9166 100% );

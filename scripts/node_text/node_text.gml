@@ -15,13 +15,13 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newInput( 0, nodeValue_Text(         "Text",               self, "")).setVisible(true, true);
 	
-	////- Output
+	////- =Output
 	
 	newInput( 9, nodeValue_Enum_Scroll(  "Output Dimension",   self, 1, [ "Fixed", "Dynamic" ]));
 	newInput( 6, nodeValue_Vec2(         "Fixed Dimension",    self, DEF_SURF )).setVisible(true, false);
 	newInput(10, nodeValue_Padding(      "Padding",            self, [0, 0, 0, 0]));
 	
-	////- Alignment
+	////- =Alignment
 	
 	newInput(13, nodeValue_PathNode(     "Path",               self, noone)).setVisible(true, true);
 	newInput(14, nodeValue_Float(        "Path Shift",         self, 0));
@@ -30,7 +30,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(27, nodeValue_Int(          "Max Line Width",     self, 0));
 	newInput(30, nodeValue_Bool(         "Rotate Along Path",  self, true));
 	
-	////- Font
+	////- =Font
 	
 	newInput( 1, nodeValue_Font(         "Font",               self, "")).setVisible(true, false);
 	newInput( 4, nodeValue_Vec2(         "Character Range",    self, [ 32, 128 ]));
@@ -40,18 +40,18 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(11, nodeValue_Float(        "Letter Spacing",     self, 0));
 	newInput(12, nodeValue_Float(        "Line Height",        self, 0));
 	
-	////- Rendering
+	////- =Rendering
 	
 	newInput(28, nodeValue_Bool(         "Round Position",     self, true ));
 	newInput( 5, nodeValue_Color(        "Color",              self, ca_white));
 	newInput(29, nodeValue_Enum_Button(  "Blend Mode",         self, 1, [ "Normal", "Alpha" ]));
 	
-	////- Background
+	////- =Background
 	
 	newInput(16, nodeValue_Bool(         "Render Background",  self, false));
 	newInput(17, nodeValue_Color(        "BG Color",           self, ca_black));
 	
-	////- Wave
+	////- =Wave
 	
 	newInput(18, nodeValue_Bool(         "Wave",               self, false));
 	newInput(22, nodeValue_Slider(       "Wave Shape",         self, 0, [ 0, 3, 0.01 ]));
@@ -59,7 +59,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(20, nodeValue_Float(        "Wave Scale",         self, 30));
 	newInput(21, nodeValue_Rotation(     "Wave Phase",         self, 0));
 	
-	////- Trim
+	////- =Trim
 	
 	newInput(23, nodeValue_Bool(         "Typewriter",         self, false));
 	newInput(25, nodeValue_Enum_Button(  "Trim Type",          self, 0, [ "Character", "Word", "Line" ]));
@@ -105,6 +105,8 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		edit_typing     = false;
 	#endregion
 	
+	////- Nodes
+	
 	static generateFont = function(_path, _size, _aa) {
 		if(PROJECT.animator.is_playing) return;
 		if(font_exists(font) && _path == _font_current && _size == _size_current && _aa == _aa_current) return;
@@ -118,22 +120,6 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		if(font != f_p0 && font_exists(font)) font_delete(font);
 		font_add_enable_aa(_aa);
 		font = font_add(_path, _size, false, false, 0, 127);
-	}
-	
-	static step = function() {
-		var _font = getSingleValue(1);
-		var _dimt = getSingleValue(9);
-		var _path = getSingleValue(13);
-		
-		var _use_path = _path != noone && struct_has(_path, "getPointDistance");
-		
-		inputs[ 6].setVisible(_dimt == 0 || _use_path);
-		inputs[ 7].setVisible(_dimt == 0 || _use_path);
-		inputs[ 8].setVisible(_dimt == 0 || _use_path);
-		inputs[ 9].setVisible(!_use_path);
-		inputs[14].setVisible( _use_path);
-		inputs[15].setVisible(_dimt == 0 && !_use_path && _font != "");
-		
 	}
 	
 	static waveGet = function(_ind) {
@@ -303,6 +289,22 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		}
 		
 		return _hov;
+	}
+	
+	static step = function() {
+		var _font = getSingleValue(1);
+		var _dimt = getSingleValue(9);
+		var _path = getSingleValue(13);
+		
+		var _use_path = _path != noone && struct_has(_path, "getPointDistance");
+		
+		inputs[ 6].setVisible(_dimt == 0 || _use_path);
+		inputs[ 7].setVisible(_dimt == 0 || _use_path);
+		inputs[ 8].setVisible(_dimt == 0 || _use_path);
+		inputs[ 9].setVisible(!_use_path);
+		inputs[14].setVisible( _use_path);
+		inputs[15].setVisible(_dimt == 0 && !_use_path && _font != "");
+		
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {

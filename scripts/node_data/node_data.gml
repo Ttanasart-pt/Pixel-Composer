@@ -1528,7 +1528,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	} run_in(1, function() /*=>*/ { refreshNodeDisplay(); });
 	
 	__preDraw_data = { _x: undefined, _y: undefined, _w: undefined, _h: undefined, _s: undefined, _p: undefined, sp: undefined, force: false };
-	
 	static preDraw = function(_x, _y, _mx, _my, _s) {
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;

@@ -28,7 +28,13 @@ function tiler_brush_autoterrain(_type, _index) constructor {
     sc_type = new scrollBox(["Simple box (3x3)", "Corner box (5x5)", "Side platform (5x3)", "Godot tile (12x4)", "Gamemaker tileset (11x5)"], function(ind) /*=>*/ { setType(ind); }, false);
     sc_type.font = f_p3;
     
-    static indexMap48 = [ 8, 10, 11, 0, 1, 6, 5, 3, 2, 34, 12, 20, 33, 35, 12, 28, 30, 29, 31, 46, 21, 12, 44, 45, 47, 24, 16, 18, 17, 19, 9, 43, 40, 37, 38, 39, 36, 25, 42, 41, 27, 26, 7, 4, 13, 23, 32, 15, 14, 12 ];
+    static indexMap48 = [ 
+    	 8, 10, 11,  0, /**/  1,  6,  5,  3, /**/  2, 34, 22, 
+    	20, 33, 35, 12, /**/ 28, 30, 29, 31, /**/ 46, 21, 22, 
+    	44, 45, 47, 24, /**/ 16, 18, 17, 19, /**/  9, 43, 40, 
+    	37, 38, 39, 36, /**/ 25, 42, 41, 27, /**/ 26,  7,  4, 
+    	22, 22, 22, 22, /**/ 13, 23, 32, 15, /**/ 14, 22, 22 ];
+    
     static indexMapOld = [
     	[ 0,  1,  2, 
     	 11, 12, 13, 
