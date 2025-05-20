@@ -4,7 +4,7 @@ function Node_Rigid_Explode(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	icon  = THEME.rigidSim;
 	update_on_frame    = true;
 	manual_ungroupable = false;
-	setDimension(96, 96);
+	setDimension(96, 48);
 	
 	worldIndex = undefined;
 	worldScale = 100;

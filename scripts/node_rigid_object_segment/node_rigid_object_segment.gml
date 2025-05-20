@@ -2,7 +2,7 @@ function Node_Rigid_Object_Segment(_x, _y, _group = noone) : Node(_x, _y, _group
 	name  = "Segment";
 	color = COLORS.node_blend_simulation;
 	icon  = THEME.rigidSim;
-	setDimension(96, 96);
+	setDimension(96, 48);
 	
 	manual_ungroupable	 = false;
 	

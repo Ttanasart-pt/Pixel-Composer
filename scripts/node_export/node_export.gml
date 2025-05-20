@@ -47,14 +47,14 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	_format_still = { filter: "Portable Network Graphics (.png)|*.png|Joint Photographic Experts Group (.jpg)|*.jpg" };
 	_format_anim  = { filter: "Graphics Interchange Format (.gif)|*.gif|Animated WebP (.webp)|*.webp" };
 	
-	format_single    = ["Single image", "Image sequence", "Animation"];
-	format_array     = ["Multiple images", "Image sequences", "Animations"];
+	format_single    = [ "Single image",    "Image sequence",  "Animation"  ];
+	format_array     = [ "Multiple images", "Image sequences", "Animations" ];
 	format_image     = [ ".png", ".jpg",  ".webp", ".exr" ];
 	format_animation = [ ".gif", ".apng", ".webp", ".mp4" ];
 	
 	png_format       = [ "INDEX4", "INDEX8", "Default (PNG32)" ];
 	
-	////- Export
+	////- =Export
 	
 	newInput( 0, nodeValue_Surface( "Surface",         self));
 	newInput( 1, nodeValue_Path(    "Directory",       self, "")).setDisplay(VALUE_DISPLAY.path_save, { filter: "dir" }).setVisible(true);
@@ -65,7 +65,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	inputs[2].editWidget.auto_update = true;
 	newInput(16, nodeValue_Bool(    "Export on Save",  self, false)).setTooltip("Automatically export when saving project.");
 	
-	////- Format
+	////- =Format
 	
 	newInput( 3, nodeValue_Enum_Scroll( "Type",                     self, 0, { data: format_single, update_hover: false })).rejectArray();
 	newInput( 9, nodeValue_Enum_Scroll( "Format",                   self, 0, { data: format_image,  update_hover: false })).rejectArray();
@@ -76,16 +76,16 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	newInput(10, nodeValue_Slider(      "Quality",                  self, 23, [ 0, 100, 0.1 ])).rejectArray();
 	newInput(13, nodeValue_Enum_Scroll( "Subformat",                self, 2, { data: png_format, update_hover: false }));
 	
-	////- Post-Process
+	////- =Post-Process
 	
 	newInput(19, nodeValue_Float( "Scale", self, 1));
 	
-	////- Custom Range
+	////- =Custom Range
 	
 	newInput(15, nodeValue_Bool(         "Custom Range", self, false)).rejectArray();
 	newInput(12, nodeValue_Slider_Range( "Frame range",  self, [0, -1], { range: [0, TOTAL_FRAMES, 0.1] }));
 	
-	////- Animation
+	////- =Animation
 	
 	newInput( 8, nodeValue_Int(  "Framerate",      self, 30)).rejectArray();
 	newInput( 5, nodeValue_Bool( "Loop",           self, true)).setVisible(false).rejectArray();
@@ -610,13 +610,14 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var user = getInputData(15);
 		var scal = getInputData(19);
 		
-		if(form >= 1 && user) {
-			var rng_s  = rang[0];
-			var rng_e  = rang[1];
-			var rng_st = stps >= 1? (CURRENT_FRAME - rng_s) % stps : 0;
+		if(form >= 1) {
+			var rng_s  = rang[0] - 1;
+			var rng_e  = rang[1] - 1;
 			
-			if(CURRENT_FRAME < rng_s - 1) return;
-			if(CURRENT_FRAME > rng_e - 1) return;
+			if(user && CURRENT_FRAME < rng_s) return;
+			if(user && CURRENT_FRAME > rng_e) return;
+			
+			var rng_st = safe_mod(CURRENT_FRAME - rng_s, stps);
 			if(rng_st != 0) return;
 		}
 		

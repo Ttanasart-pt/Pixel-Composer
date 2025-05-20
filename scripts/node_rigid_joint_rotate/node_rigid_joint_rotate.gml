@@ -3,7 +3,7 @@ function Node_Rigid_Joint_Rotate(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	color = COLORS.node_blend_simulation;
 	icon  = THEME.rigidSim;
 	manual_ungroupable	 = false;
-	setDimension(96, 96);
+	setDimension(96, 48);
 	
 	worldIndex = undefined;
 	worldScale = 100;

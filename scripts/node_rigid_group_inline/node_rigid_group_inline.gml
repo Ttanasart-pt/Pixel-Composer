@@ -14,20 +14,20 @@ function Node_Rigid_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inlin
 	dimension  = [ 1, 1 ];
 	objects    = [];
 	
-	////- World
+	////- =World
 	
 	newInput(1, nodeValue_Dimension(self));
 	newInput(0, nodeValue_Vec2(     "Gravity",           self, [ 0, 10 ]));
 	newInput(3, nodeValue_Rotation( "Gravity Direction", self, -90));
 	newInput(4, nodeValue_Float(    "Gravity Strength",  self, 10));
 	
-	////- Simulation
+	////- =Simulation
 	
 	newInput(2, nodeValue_Float( "Simulation Scale", self, 50 ));
 	newInput(5, nodeValue_Bool(  "Sleepable",        self, true ));
 	newInput(6, nodeValue_Bool(  "Continuous",       self, true ));
 	
-	////- Wall
+	////- =Wall
 	
 	newInput( 7, nodeValue_Bool(   "Use Wall",        self, false));
 	newInput( 8, nodeValue_Toggle( "Walls",           self, 0b0010, { data : [ "T", "B", "L", "R" ] }));

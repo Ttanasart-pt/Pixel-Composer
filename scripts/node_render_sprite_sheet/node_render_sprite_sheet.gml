@@ -14,13 +14,13 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	name		= "Render Spritesheet";
 	anim_drawn	= array_create(TOTAL_FRAMES + 1, false);
 	
-	////- Surfaces
+	////- =Surfaces
 	
 	newInput(0, nodeValue_Surface(     "Sprites",    self));
 	newInput(1, nodeValue_Enum_Scroll( "Sprite set", self, 0, [ "Animation", "Sprite array" ])).rejectArray();
 	newInput(2, nodeValue_Int(         "Frame step", self, 1, "Number of frames until next sprite. Can be seen as (Step - 1) frame skip.")).rejectArray();
 	
-	////- Packing
+	////- =Packing
 	
 	newInput(3, nodeValue_Enum_Scroll( "Packing type", self, 0, __enum_array_gen(["Horizontal", "Vertical", "Grid"], s_node_alignment))).rejectArray();
 	newInput(4, nodeValue_Int(         "Grid column",  self, 4)).rejectArray();
@@ -29,11 +29,11 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	newInput(9, nodeValue_Vec2(        "Spacing",      self, [ 0, 0 ]));
 	newInput(7, nodeValue_Padding(     "Padding",      self, [ 0, 0, 0, 0 ]))
 	
-	////- Rendering
+	////- =Rendering
 	
 	newInput(10, nodeValue_Bool( "Overlappable", self, false));
 	
-	////- Range
+	////- =Range
 	
 	newInput(11, nodeValue_Bool(         "Custom Range", self, false));
 	newInput( 8, nodeValue_Slider_Range( "Range",        self, [ 0, 0 ])).setTooltip("Starting/ending frames, set end to 0 to default to last frame.")
@@ -56,6 +56,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	attribute_surface_depth();
 
 	setTrigger(1,,, function() /*=>*/ { initSurface(true); PROJECT.animator.render(); });
+	
+	////- Nodes
 	
 	static step = function() {
 		var inpt = getInputData(0);
@@ -114,7 +116,6 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		var padd = getInputData(7);
 		var rang = getInputData(8);
 		var spc2 = getInputData(9);
-		//var ovlp = getInputData(10);
 		
 		var cDep = attrDepth();
 		
@@ -362,8 +363,6 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			var amo = floor((_ed - _st) / skip);
 		#endregion
 		
-		var skip  = getInputData(2);
-		
 		var ww = 1, hh = 1;
 				
 		for(var i = 0; i < array_length(inpt); i++) { 
@@ -447,10 +446,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			var amo = floor((_ed - _st) / skip);
 		#endregion
 		
-		if(safe_mod(CURRENT_FRAME - _st, skip) != 0) {
-			printIf(log, $"   > Skip frame");
-			return;
-		}
+		if(safe_mod(CURRENT_FRAME - _st, skip) != 0) return;
 		
 		#region check overlap
 			if(array_length(anim_drawn) != TOTAL_FRAMES)
