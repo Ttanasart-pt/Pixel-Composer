@@ -9,7 +9,7 @@ function Node_GMRoom(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
     
     maxTileSize = [ 1, 1 ];
     
-    newOutput( 0, nodeValue_Surface("Room Preview", self, noone));
+    newOutput( 0, nodeValue_Surface("Room Preview"));
     
     layer_selecting = noone;
     tb_depth = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ { if(layer_selecting == noone) return; layer_selecting.raw.depth = round(v); })

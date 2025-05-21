@@ -144,6 +144,8 @@
     background-image: url(gmedit/treeview_hover.png?r4);
 }
 
+/* ------------------------------------------------------------------------------------------------------------------------------------------ */
+
 #outline-view div.outline-item[outline-ctx="step"] > div:hover > span { -webkit-text-fill-color: inherit; }
 #outline-view div.outline-item[outline-ctx="step"] span {
     font-weight: 800;
@@ -153,7 +155,7 @@
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: textclip 2s linear infinite;
+    animation: textclip 3s linear infinite;
 }
 
 #outline-view div.outline-item[outline-ctx="update"] > div:hover > span { -webkit-text-fill-color: inherit; }
@@ -166,7 +168,31 @@
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: textclip 2s linear infinite;
+    animation: textclip 3s linear infinite;
+}
+
+#outline-view div.outline-item[outline-ctx="drawOverlay"] > div:hover > span { -webkit-text-fill-color: inherit; }
+#outline-view div.outline-item[outline-ctx="drawOverlay"] span {
+    font-weight: 800;
+    
+    background-image: linear-gradient( 90deg, #8fde5d 0%, #27aae1 50%, #8fde5d 100% );
+    background-size: 200% auto;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: textclip 3s linear infinite;
+}
+
+#outline-view div.outline-item[outline-ctx="drawContent"] > div:hover > span { -webkit-text-fill-color: inherit; }
+#outline-view div.outline-item[outline-ctx="drawContent"] span {
+    font-weight: 800;
+    
+    background-image: linear-gradient( 90deg, #8fde5d 0%, #27aae1 50%, #8fde5d 100% );
+    background-size: 200% auto;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: textclip 3s linear infinite;
 }
 
 @keyframes textclip { to { background-position: -200% center; } }

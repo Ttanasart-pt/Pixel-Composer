@@ -1,11 +1,11 @@
 function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Path from Mask";
 	
-	newInput(0, nodeValue_Surface("Mask", self));
+	newInput(0, nodeValue_Surface("Mask"));
 	
-	newInput(1, nodeValue_Float("Smooth angle", self, 15));
+	newInput(1, nodeValue_Float("Smooth angle", 15));
 		
-	newOutput(0, nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self));
+	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, self));
 	
 	temp_surface = [ surface_create(1, 1) ];
 	

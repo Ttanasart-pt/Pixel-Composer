@@ -2,11 +2,11 @@ function Node_Gradient_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	name = "Gradient Data";
 	setDimension(96);
 	
-	newInput(0, nodeValue_Gradient("Gradient", self, new gradientObject(ca_white))).setVisible(true, true);
+	newInput(0, nodeValue_Gradient("Gradient", new gradientObject(ca_white))).setVisible(true, true);
 	
-	newOutput(0, nodeValue_Output( "Colors",    self, VALUE_TYPE.color, [] )).setDisplay(VALUE_DISPLAY.palette);
-	newOutput(1, nodeValue_Output( "Positions", self, VALUE_TYPE.float, [] )).setArrayDepth(1);
-	newOutput(2, nodeValue_Output( "Type",      self, VALUE_TYPE.integer, 0 ));
+	newOutput(0, nodeValue_Output( "Colors", VALUE_TYPE.color, [] )).setDisplay(VALUE_DISPLAY.palette);
+	newOutput(1, nodeValue_Output( "Positions", VALUE_TYPE.float, [] )).setArrayDepth(1);
+	newOutput(2, nodeValue_Output( "Type", VALUE_TYPE.integer, 0 ));
 	
 	static processData_prebatch = function() {
 		setDimension(96, process_length[0] * 32);

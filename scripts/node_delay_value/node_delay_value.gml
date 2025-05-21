@@ -12,13 +12,13 @@ function Node_Delay_Value(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(0, nodeValue("Value", self, CONNECT_TYPE.input, VALUE_TYPE.any, noone))
 	    .setVisible(true, true);
 	
-	newInput(1, nodeValue_Int("Frames", self, 1));
+	newInput(1, nodeValue_Int("Frames", 1));
 	
-	newInput(2, nodeValue_Enum_Scroll("Overflow", self, 0, [ "Hold", "Loop", "Value" ]));
+	newInput(2, nodeValue_Enum_Scroll("Overflow", 0, [ "Hold", "Loop", "Value" ]));
 	
 	newInput(3, nodeValue("Default", self, CONNECT_TYPE.input, VALUE_TYPE.any, noone));
 	
-	newOutput(0, nodeValue_Output("Value", self, VALUE_TYPE.any, noone));
+	newOutput(0, nodeValue_Output("Value", VALUE_TYPE.any, noone));
 	
 	input_display_list = [ 0, 
 		["Delay",  false], 1, 2, 3, 

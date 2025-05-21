@@ -1,18 +1,18 @@
 function Node_3D_Mesh_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Mesh Export";
 	
-	newInput(0, nodeValue_D3Mesh("Mesh", self, noone))
+	newInput(0, nodeValue_D3Mesh("Mesh", noone))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Path("Paths", self, ""))
+	newInput(1, nodeValue_Path("Paths"))
 		.setDisplay(VALUE_DISPLAY.path_save, { filter: "Obj (.obj)|*.obj" })
 		.setVisible(true);
 	
-	newInput(2, nodeValue_Bool("Export Texture", self, true));
+	newInput(2, nodeValue_Bool("Export Texture", true));
 	
-	newInput(3, nodeValue_Bool("Invert UV", self, false));
+	newInput(3, nodeValue_Bool("Invert UV", false));
 	
-	newInput(4, nodeValue_Bool("Apply Transform", self, true));
+	newInput(4, nodeValue_Bool("Apply Transform", true));
 	
 	input_display_list = [ 0, 
 		["Export", false], 1, 2, 

@@ -1,19 +1,19 @@
 function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Map Path";
 	
-	newInput(0, nodeValue_PathNode("Path", self, noone))
+	newInput(0, nodeValue_PathNode("Path"))
 		.setVisible(true, true)
 		.rejectArray();
 	
-	newInput(1, nodeValue_Dimension(self));
+	newInput(1, nodeValue_Dimension());
 	
-	newInput(2, nodeValue_Surface("Texture", self));
+	newInput(2, nodeValue_Surface("Texture"));
 	
-	newInput(3, nodeValue_Int("Subdivision", self, 16))
+	newInput(3, nodeValue_Int("Subdivision", 16))
 		.setValidator(VV_min(2))
 		.rejectArray();
 		
-	newOutput(0, nodeValue_Output("Rendered", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Rendered", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0, 
 		["Mapping", false], 1, 2, 3, 

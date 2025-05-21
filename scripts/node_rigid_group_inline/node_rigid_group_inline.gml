@@ -16,23 +16,23 @@ function Node_Rigid_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inlin
 	
 	////- =World
 	
-	newInput(1, nodeValue_Dimension(self));
-	newInput(0, nodeValue_Vec2(     "Gravity",           self, [ 0, 10 ]));
-	newInput(3, nodeValue_Rotation( "Gravity Direction", self, -90));
-	newInput(4, nodeValue_Float(    "Gravity Strength",  self, 10));
+	newInput(1, nodeValue_Dimension());
+	newInput(0, nodeValue_Vec2(     "Gravity", [ 0, 10 ]));
+	newInput(3, nodeValue_Rotation( "Gravity Direction", -90));
+	newInput(4, nodeValue_Float(    "Gravity Strength", 10));
 	
 	////- =Simulation
 	
-	newInput(2, nodeValue_Float( "Simulation Scale", self, 50 ));
-	newInput(5, nodeValue_Bool(  "Sleepable",        self, true ));
-	newInput(6, nodeValue_Bool(  "Continuous",       self, true ));
+	newInput(2, nodeValue_Float( "Simulation Scale", 50 ));
+	newInput(5, nodeValue_Bool(  "Sleepable", true ));
+	newInput(6, nodeValue_Bool(  "Continuous", true ));
 	
 	////- =Wall
 	
-	newInput( 7, nodeValue_Bool(   "Use Wall",        self, false));
-	newInput( 8, nodeValue_Toggle( "Walls",           self, 0b0010, { data : [ "T", "B", "L", "R" ] }));
-	newInput( 9, nodeValue_Float(  "Wall Friction",   self, 0.2));
-	newInput(10, nodeValue_Slider( "Wall Bounciness", self, 0.2));
+	newInput( 7, nodeValue_Bool(   "Use Wall", false));
+	newInput( 8, nodeValue_Toggle( "Walls", 0b0010, { data : [ "T", "B", "L", "R" ] }));
+	newInput( 9, nodeValue_Float(  "Wall Friction", 0.2));
+	newInput(10, nodeValue_Slider( "Wall Bounciness", 0.2));
 	
 	// inputs 11
 	

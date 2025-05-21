@@ -6,44 +6,44 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	manual_ungroupable = false;
 	
-	newInput(0, nodeValue_Fdomain("Domain", self, noone ))
+	newInput(0, nodeValue_Fdomain("Domain"))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Enum_Scroll("Spawn Shape", self,  0 , [ new scrollItem("Circle", s_node_shape_circle, 0), new scrollItem("Rectangle", s_node_shape_rectangle, 0), "Surface" ]));
+	newInput(1, nodeValue_Enum_Scroll("Spawn Shape",  0 , [ new scrollItem("Circle", s_node_shape_circle, 0), new scrollItem("Rectangle", s_node_shape_rectangle, 0), "Surface" ]));
 	
-	newInput(2, nodeValue_Vec2("Spawn Position", self, [ 0.5, 0.25 ] ))
+	newInput(2, nodeValue_Vec2("Spawn Position", [ 0.5, 0.25 ] ))
 		.setUnitRef(function(index) { return getDimension(); }, VALUE_UNIT.reference);
 	
-	newInput(3, nodeValue_Enum_Button("Spawn Type", self,  0 , [ "Stream", "Splash" ]));
+	newInput(3, nodeValue_Enum_Button("Spawn Type",  0 , [ "Stream", "Splash" ]));
 	
-	newInput(4, nodeValue_Int("Spawn Frame", self, 0 ));
+	newInput(4, nodeValue_Int("Spawn Frame", 0 ));
 	
-	newInput(5, nodeValue_Float("Spawn Amount", self, 8 ));
+	newInput(5, nodeValue_Float("Spawn Amount", 8 ));
 	
-	newInput(6, nodeValue_Range("Spawn Velocity", self, [ 0, 0 ] ));
+	newInput(6, nodeValue_Range("Spawn Velocity", [ 0, 0 ] ));
 	
-	newInput(7, nodeValue_Surface("Spawn Surface", self));
+	newInput(7, nodeValue_Surface("Spawn Surface"));
 	
-	newInput(8, nodeValue_Float("Spawn Radius", self, 2 ))
+	newInput(8, nodeValue_Float("Spawn Radius", 2 ))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
 	
 	newInput(9, nodeValueSeed(self));
 	
-	newInput(10, nodeValue_Rotation_Random("Spawn Direction", self, [ 0, 45, 135, 0, 0 ] ));
+	newInput(10, nodeValue_Rotation_Random("Spawn Direction", [ 0, 45, 135, 0, 0 ] ));
 		
-	newInput(11, nodeValue_Float("Inherit Velocity", self, 0 ))
+	newInput(11, nodeValue_Float("Inherit Velocity", 0 ))
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	newInput(12, nodeValue_Int("Spawn Duration", self, 1 ));
+	newInput(12, nodeValue_Int("Spawn Duration", 1 ));
 	
-	newInput(13, nodeValue_Vec2("Spawn Szie", self, [ 2, 2 ] ));
+	newInput(13, nodeValue_Vec2("Spawn Szie", [ 2, 2 ] ));
 	
 	input_display_list = [ 0, 9, 
 		["Spawner",	false], 1, 7, 8, 13, 2, 3, 4, 12, 5, 
 		["Physics", false], 10, 6, 11, 
 	]
 	
-	newOutput(0, nodeValue_Output("Domain", self, VALUE_TYPE.fdomain, noone ));
+	newOutput(0, nodeValue_Output("Domain", VALUE_TYPE.fdomain, noone ));
 	
 	spawn_amo     = 0;
 	prev_position = [ 0, 0 ];

@@ -8,31 +8,31 @@
 function Node_Grid_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Grid Noise";
 	
-	newInput(0, nodeValue_Dimension(self));
+	newInput(0, nodeValue_Dimension());
 	
-	newInput(1, nodeValue_Vec2("Position", self, [ 0, 0 ]))
+	newInput(1, nodeValue_Vec2("Position", [ 0, 0 ]))
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	newInput(2, nodeValue_Vec2("Scale", self, [ 8, 8 ]));
+	newInput(2, nodeValue_Vec2("Scale", [ 8, 8 ]));
 	
 	newInput(3, nodeValueSeed(self));
 	
-	newInput(4, nodeValue_Float("Shift", self, 0))
+	newInput(4, nodeValue_Float("Shift", 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-0.5, 0.5, 0.01] });
 		
-	newInput(5, nodeValue_Surface("Texture Sample", self));
+	newInput(5, nodeValue_Surface("Texture Sample"));
 	
-	newInput(6, nodeValue_Enum_Button("Shift Axis", self,  0, ["x", "y"]));
+	newInput(6, nodeValue_Enum_Button("Shift Axis",  0, ["x", "y"]));
 	
-	newInput(7, nodeValue_Enum_Button("Color Mode", self,  0, [ "Greyscale", "RGB", "HSV" ]));
+	newInput(7, nodeValue_Enum_Button("Color Mode",  0, [ "Greyscale", "RGB", "HSV" ]));
 	
-	newInput(8, nodeValue_Slider_Range("Color R Range", self, [ 0, 1 ]));
+	newInput(8, nodeValue_Slider_Range("Color R Range", [ 0, 1 ]));
 	
-	newInput(9, nodeValue_Slider_Range("Color G Range", self, [ 0, 1 ]));
+	newInput(9, nodeValue_Slider_Range("Color G Range", [ 0, 1 ]));
 	
-	newInput(10, nodeValue_Slider_Range("Color B Range", self, [ 0, 1 ]));
+	newInput(10, nodeValue_Slider_Range("Color B Range", [ 0, 1 ]));
 	
-	newInput(11, nodeValue_Surface("Mask", self));
+	newInput(11, nodeValue_Surface("Mask"));
 	
 	input_display_list = [
 		["Output",	false], 0, 11, 
@@ -40,7 +40,7 @@ function Node_Grid_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		["Render",	false], 5, 7, 8, 9, 10, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	

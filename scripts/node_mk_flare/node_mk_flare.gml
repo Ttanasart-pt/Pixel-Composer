@@ -24,19 +24,19 @@ function __FlarePart(_type = FLARE_TYPE.circle, _t = 0, _r = 4, _a = 0.5, _seg =
 function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "MK Lens Flare";
 	
-	newInput(0, nodeValue_Surface("Background", self));
+	newInput(0, nodeValue_Surface("Background"));
 	
-	newInput(1, nodeValue_Vec2("Origin", self, [ 0, 0 ]))
+	newInput(1, nodeValue_Vec2("Origin", [ 0, 0 ]))
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
-	newInput(2, nodeValue_Dimension(self));
+	newInput(2, nodeValue_Dimension());
 		
-	newInput(3, nodeValue_Float("Scale", self, 1))
+	newInput(3, nodeValue_Float("Scale", 1))
 		
-	newInput(4, nodeValue_Float("Alpha", self, 1))
+	newInput(4, nodeValue_Float("Alpha", 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(5, nodeValue_Struct("Flares", self, [
+	newInput(5, nodeValue_Struct("Flares", [
 		new __FlarePart( FLARE_TYPE.circle,   0,  8,   0.75, 16, false, , [ 0, 1 ] ),
 		new __FlarePart( FLARE_TYPE.circle,   0, 16,   0.5,  16, false, , [ 0, 1 ] ),
 		new __FlarePart( FLARE_TYPE.star,     0, 14,   0.3,   8, true,  , [ 0.2, 0.8 ], 2, 0.85 ),
@@ -54,12 +54,12 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		.setArrayDepth(1)
 		.setArrayDynamic();
 		
-	newInput(6, nodeValue_Vec2("Focus", self, [ 0.5, 0.5 ]))
+	newInput(6, nodeValue_Vec2("Focus", [ 0.5, 0.5 ]))
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 		
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 		
-	newOutput(1, nodeValue_Output("Light only", self, VALUE_TYPE.surface, noone));
+	newOutput(1, nodeValue_Output("Light only", VALUE_TYPE.surface, noone));
 	
 	static __frame = function(_x, _y, _w, _h, _m, _hover) {  
 		var _hv = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h) && _hover;

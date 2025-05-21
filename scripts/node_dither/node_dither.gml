@@ -24,42 +24,42 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	name = "Dither";
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Palette("Palette", self, array_clone(DEF_PALETTE)));
+	newInput(1, nodeValue_Palette("Palette", array_clone(DEF_PALETTE)));
 	
-	newInput(2, nodeValue_Enum_Scroll("Pattern", self,  0, [ "2 x 2 Bayer", "4 x 4 Bayer", "8 x 8 Bayer", "White Noise", "Custom" ]));
+	newInput(2, nodeValue_Enum_Scroll("Pattern",  0, [ "2 x 2 Bayer", "4 x 4 Bayer", "8 x 8 Bayer", "White Noise", "Custom" ]));
 	
-	newInput(3, nodeValue_Surface("Dither map", self))
+	newInput(3, nodeValue_Surface("Dither map"))
 		.setVisible(false);
 	
-	newInput(4, nodeValue_Float("Contrast", self, 1))
+	newInput(4, nodeValue_Float("Contrast", 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 5, 0.1] });
 	
-	newInput(5, nodeValue_Surface("Contrast map", self));
+	newInput(5, nodeValue_Surface("Contrast map"));
 	
-	newInput(6, nodeValue_Enum_Button("Mode", self, 0, [ "Color", "Alpha" ]));
+	newInput(6, nodeValue_Enum_Button("Mode", 0, [ "Color", "Alpha" ]));
 	
-	newInput(7, nodeValue_Surface("Mask", self));
+	newInput(7, nodeValue_Surface("Mask"));
 	
-	newInput(8, nodeValue_Float("Mix", self, 1))
+	newInput(8, nodeValue_Float("Mix", 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(9, nodeValue_Bool("Active", self, true));
+	newInput(9, nodeValue_Bool("Active", true));
 		active_index = 9;
 	
-	newInput(10, nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) }));
+	newInput(10, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	__init_mask_modifier(7); // inputs 11, 12, 
 	
 	newInput(13, nodeValueSeed(self));
 		
-	newInput(14, nodeValue_Bool("Use palette", self, true));
+	newInput(14, nodeValue_Bool("Use palette", true));
 	
-	newInput(15, nodeValue_Int("Steps", self, 4))
+	newInput(15, nodeValue_Int("Steps", 4))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [2, 16, 0.1] });
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [  9, 10, 13, 
 		["Surfaces", true], 0,  7,  8, 11, 12, 

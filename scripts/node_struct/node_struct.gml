@@ -20,14 +20,14 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	input_display_list = [ size_adjust_tool, ];
 	
-	newOutput(0, nodeValue_Output("Struct", self, VALUE_TYPE.struct, {}));
+	newOutput(0, nodeValue_Output("Struct", VALUE_TYPE.struct, {}));
 	
 	static createNewInput = function(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		var bDel  = button(function() /*=>*/ {return node.deleteInput(index)} )
 				.setIcon(THEME.minus_16, 0, COLORS._main_icon);
 		
-		inputs[index + 0] = nodeValue_Text("Key", self, "" )
+		inputs[index + 0] = nodeValue_Text("Key")
 			.setDisplay(VALUE_DISPLAY.text_box, { side_button : bDel })
 			.setAnimable(false);
 		bDel.setContext(inputs[index + 0]);

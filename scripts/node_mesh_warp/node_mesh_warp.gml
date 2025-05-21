@@ -223,28 +223,28 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	anchor_drag_mx  = -1;
 	anchor_drag_my  = -1;
 	
-	newActiveInput(5, nodeValue_Bool("Active", self, true));
+	newActiveInput(5, nodeValue_Bool("Active", true));
 	newInput(9, nodeValueSeed(self));
 	
 	////- Mesh
 	
-	newInput( 0, nodeValue_Surface(     "Surface In", self));
-	newInput( 8, nodeValue_Enum_Button( "Mesh Type",  self, 0, [ "Grid", "Custom" ] ));
-	newInput( 1, nodeValue_ISlider(     "Sample",     self, 8, [ 2, 32, 0.1 ])).setTooltip("Amount of grid subdivision. Higher number means more grid, detail.");
-	newInput( 7, nodeValue_Bool(        "Full Mesh",  self, false));
-	newInput(10, nodeValue_Slider(      "Randomness", self, 0.5));
-	newInput( 3, nodeValue_Trigger(     "Mesh",       self )).setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() /*=>*/ {return Mesh_build()} });
+	newInput( 0, nodeValue_Surface(     "Surface In"));
+	newInput( 8, nodeValue_Enum_Button( "Mesh Type", 0, [ "Grid", "Custom" ] ));
+	newInput( 1, nodeValue_ISlider(     "Sample", 8, [ 2, 32, 0.1 ])).setTooltip("Amount of grid subdivision. Higher number means more grid, detail.");
+	newInput( 7, nodeValue_Bool(        "Full Mesh", false));
+	newInput(10, nodeValue_Slider(      "Randomness", 0.5));
+	newInput( 3, nodeValue_Trigger(     "Mesh" )).setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() /*=>*/ {return Mesh_build()} });
 	
 	////- Link
 	
-	newInput(2, nodeValue_Slider( "Spring Force",  self, 0.5));
-	newInput(4, nodeValue_Bool(   "Diagonal Link", self, false)).setTooltip("Include diagonal link to prevent drastic grid deformation.");
-	newInput(6, nodeValue_Slider ("Link Strength", self, 0)).setTooltip("Link length preservation, setting it to 1 will prevent any stretching, contraction.");
+	newInput(2, nodeValue_Slider( "Spring Force", 0.5));
+	newInput(4, nodeValue_Bool(   "Diagonal Link", false)).setTooltip("Include diagonal link to prevent drastic grid deformation.");
+	newInput(6, nodeValue_Slider ("Link Strength", 0)).setTooltip("Link length preservation, setting it to 1 will prevent any stretching, contraction.");
 		
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newOutput(0, nodeValue_Output( "Surface Out", self, VALUE_TYPE.surface, noone));
-	newOutput(1, nodeValue_Output( "Mesh data",   self, VALUE_TYPE.mesh, new Mesh()));
+	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone));
+	newOutput(1, nodeValue_Output( "Mesh data", VALUE_TYPE.mesh, new Mesh()));
 	
 	input_display_list = [ 5, 9, 
 		["Mesh",			false],	0, 8, 1, 7, 10, 3, 
@@ -256,7 +256,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	function createControl() {
 		var index = array_length(inputs);
-		newInput(index, nodeValue_Float("Control point", self, [ PUPPET_FORCE_MODE.move, 16, 16, 8, 0, 8, 8 ]))
+		newInput(index, nodeValue_Float("Control point", [ PUPPET_FORCE_MODE.move, 16, 16, 8, 0, 8, 8 ]))
 			.setDisplay(VALUE_DISPLAY.puppet_control);
 		
 		array_push(input_display_list, index);

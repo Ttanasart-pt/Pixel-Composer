@@ -1,32 +1,32 @@
 function Node_Gradient_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Draw 4 Points Gradient";
 	
-	newInput(0, nodeValue_Dimension(self));
+	newInput(0, nodeValue_Dimension());
 	
-	newInput(1, nodeValue_Vec2("Center 1", self, [ 0, 0 ])).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput(2, nodeValue_Color("Color 1", self, ca_white ));
+	newInput(1, nodeValue_Vec2("Center 1", [ 0, 0 ])).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(2, nodeValue_Color("Color 1", ca_white ));
 	
-	newInput(3, nodeValue_Vec2("Center 2", self, [ 1, 0 ])).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput(4, nodeValue_Color("Color 2", self, ca_white ));
+	newInput(3, nodeValue_Vec2("Center 2", [ 1, 0 ])).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(4, nodeValue_Color("Color 2", ca_white ));
 	
-	newInput(5, nodeValue_Vec2("Center 3", self, [ 0, 1 ])).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput(6, nodeValue_Color("Color 3", self, ca_white ));
+	newInput(5, nodeValue_Vec2("Center 3", [ 0, 1 ])).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(6, nodeValue_Color("Color 3", ca_white ));
 	
-	newInput(7, nodeValue_Vec2("Center 4", self, [ 1, 1 ])).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput(8, nodeValue_Color("Color 4", self, ca_white ));
+	newInput(7, nodeValue_Vec2("Center 4", [ 1, 1 ])).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(8, nodeValue_Color("Color 4", ca_white ));
 	
-	newInput(9, nodeValue_Bool("Use palette", self, false ));
+	newInput(9, nodeValue_Bool("Use palette", false ));
 	
-	newInput(10, nodeValue_Palette("Palette", self, array_clone(DEF_PALETTE)));
+	newInput(10, nodeValue_Palette("Palette", array_clone(DEF_PALETTE)));
 	
-	newInput(11, nodeValue_Float("Falloff 1", self, 6 )).setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 32, 0.1 ] });
-	newInput(12, nodeValue_Float("Falloff 2", self, 6 )).setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 32, 0.1 ] });
-	newInput(13, nodeValue_Float("Falloff 3", self, 6 )).setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 32, 0.1 ] });
-	newInput(14, nodeValue_Float("Falloff 4", self, 6 )).setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 32, 0.1 ] });
+	newInput(11, nodeValue_Slider("Falloff 1", 6, [ 0, 32, 0.1 ] ));
+	newInput(12, nodeValue_Slider("Falloff 2", 6, [ 0, 32, 0.1 ] ));
+	newInput(13, nodeValue_Slider("Falloff 3", 6, [ 0, 32, 0.1 ] ));
+	newInput(14, nodeValue_Slider("Falloff 4", 6, [ 0, 32, 0.1 ] ));
 		
-	newInput(15, nodeValue_Bool("Normalize weight", self, false ))
+	newInput(15, nodeValue_Bool("Normalize weight", false ))
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
 		["Output",		 true],	0,

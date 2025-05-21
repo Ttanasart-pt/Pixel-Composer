@@ -3,9 +3,9 @@ function Node_Matrix(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	color = COLORS.node_blend_number;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_IVec2("Size", self, [ 3, 3 ]));
+	newInput(0, nodeValue_IVec2("Size", [ 3, 3 ]));
 	
-	newInput(1, nodeValue_Matrix("Data", self, new Matrix(3)));
+	newInput(1, nodeValue_Matrix("Data", new Matrix(3)));
 		
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	

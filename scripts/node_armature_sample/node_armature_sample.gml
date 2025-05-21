@@ -2,15 +2,15 @@ function Node_Armature_Sample(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	name = "Armature Sample";
 	setDimension(96, 72);
 	
-	newInput(0, nodeValue_Armature("Armature", self, noone))
+	newInput(0, nodeValue_Armature())
 		.setVisible(true, true)
 		.rejectArray();
 		
-	newInput(1, nodeValue_Text("Bone name", self, ""));
+	newInput(1, nodeValue_Text("Bone name"));
 		
-	newInput(2, nodeValue_Slider("Sample point", self, 0));
+	newInput(2, nodeValue_Slider("Sample point", 0));
 	
-	newOutput(0, nodeValue_Output("Position", self, VALUE_TYPE.integer, [ 0, 0 ]))
+	newOutput(0, nodeValue_Output("Position", VALUE_TYPE.integer, [ 0, 0 ]))
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	attributes.display_name = true;

@@ -9,21 +9,21 @@
 function Node_Checker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Checker";
 	
-	newInput(0, nodeValue_Dimension(self));
+	newInput(0, nodeValue_Dimension());
 	
-	newInput(1, nodeValue_Float("Amount", self, 2))
+	newInput(1, nodeValue_Float("Amount", 2))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] })
 		.setMappable(6);
 	
-	newInput(2, nodeValue_Rotation("Angle", self, 0))
+	newInput(2, nodeValue_Rotation("Angle", 0))
 		.setMappable(7);
 	
-	newInput(3, nodeValue_Vec2("Position", self, [0, 0] ))
+	newInput(3, nodeValue_Vec2("Position", [0, 0] ))
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	newInput(4, nodeValue_Color("Color 1", self, ca_white));
+	newInput(4, nodeValue_Color("Color 1", ca_white));
 	
-	newInput(5, nodeValue_Color("Color 2", self, ca_black));
+	newInput(5, nodeValue_Color("Color 2", ca_black));
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	
@@ -33,13 +33,13 @@ function Node_Checker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	
-	newInput(8, nodeValue_Enum_Button("Type", self,  0, [ "Solid", "Smooth", "AA" ]));
+	newInput(8, nodeValue_Enum_Button("Type",  0, [ "Solid", "Smooth", "AA" ]));
 	
-	newInput(9, nodeValue_Bool("Diagonal", self, false));
+	newInput(9, nodeValue_Bool("Diagonal", false));
 	
-	newInput(10, nodeValue_Surface("Mask", self));
+	newInput(10, nodeValue_Surface("Mask"));
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
 		["Output",	true],	0, 10, 

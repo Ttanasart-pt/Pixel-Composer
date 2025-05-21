@@ -8,24 +8,24 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	name = "Directional Blur";
 	
 	newActiveInput(5);
-	newInput(6, nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) }));
+	newInput(6, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- Surfaces
 	
-	newInput(0, nodeValue_Surface( "Surface In", self));
-	newInput(3, nodeValue_Surface( "Mask",       self));
-	newInput(4, nodeValue_Slider(  "Mix",        self, 1));
+	newInput(0, nodeValue_Surface( "Surface In"));
+	newInput(3, nodeValue_Surface( "Mask"));
+	newInput(4, nodeValue_Slider(  "Mix", 1));
 	__init_mask_modifier(3, 7); // inputs 7, 8
 	
 	////- Blur
 	
-	newInput( 1, nodeValue_Float(    "Strength",         self, 4)).setMappable(9);
+	newInput( 1, nodeValue_Float(    "Strength", 4)).setMappable(9);
 	newInput( 9, nodeValueMap(       "Strength map",     self));
-	newInput( 2, nodeValue_Rotation( "Direction",        self, 0)).setMappable(10);
+	newInput( 2, nodeValue_Rotation( "Direction", 0)).setMappable(10);
 	newInput(10, nodeValueMap(       "Direction map",    self));
-	newInput(11, nodeValue_Bool(     "Single Direction", self, false));
-	newInput(13, nodeValue_Bool(     "Fade Distance",    self, false));
-	newInput(12, nodeValue_Bool(     "Gamma Correction", self, false));
+	newInput(11, nodeValue_Bool(     "Single Direction", false));
+	newInput(13, nodeValue_Bool(     "Fade Distance", false));
+	newInput(12, nodeValue_Bool(     "Gamma Correction", false));
 	
 	// inputs 14
 	
@@ -34,7 +34,7 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		["Blur",	false], 1, 9, 2, 10, 11, 13, 12, 
 	]
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	attribute_oversample();

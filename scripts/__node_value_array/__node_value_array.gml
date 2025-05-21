@@ -1,7 +1,4 @@
-function nodeValue_Vector(_name, _node, _value, _data = {}) {
-	return new __NodeValue_Array(_name, _node, _value, "", -1);
-}
-
+function nodeValue_Vector(_name, _value = [], _data = {}) { return new __NodeValue_Array(_name, self, _value, "", -1); }
 function __NodeValue_Array(_name, _node, _value, _tooltip = "", _length = 2) : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.float, _value, _tooltip) constructor {
 	
 	type_array = 1;

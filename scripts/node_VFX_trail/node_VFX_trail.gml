@@ -10,14 +10,13 @@ function Node_VFX_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	lineLength = [];
 	lineData   = [];
 	
-	newInput(0, nodeValue_Particle("Particles", self, -1 ))
-		.setVisible(true, true);
+	newInput(0, nodeValue_Particle()).setVisible(true, true);
 	
-	newInput(1, nodeValue_Int("Life", self, 4 ));
+	newInput(1, nodeValue_Int("Life", 4 ));
 	
-	newInput(2, nodeValue_Bool("Color", self, false ));
+	newInput(2, nodeValue_Bool("Color", false ));
 	
-	newOutput(0, nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self));
+	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, self));
 	
 	input_display_list = [
 		0, 

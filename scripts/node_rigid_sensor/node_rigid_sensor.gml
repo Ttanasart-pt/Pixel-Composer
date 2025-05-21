@@ -16,18 +16,18 @@ function Node_Rigid_Sensor(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 	////- Segment
 		
-	newInput(1, nodeValue_Enum_Scroll( "Shape",    self, AREA_SHAPE.rectangle, [ 
+	newInput(1, nodeValue_Enum_Scroll( "Shape", AREA_SHAPE.rectangle, [ 
 		new scrollItem("Rectangle", s_node_shape_rectangle, 0), 
 		new scrollItem("Elipse",	s_node_shape_circle,	0) 
 	]));
 	
-	newInput(2, nodeValue_Vec2(  "Position", self, [ 0, 0 ]   ));
-	newInput(3, nodeValue_Vec2(  "Span",     self, [ 16, 16 ] ));
-	newInput(4, nodeValue_Float( "Radius",   self, 16 ));
+	newInput(2, nodeValue_Vec2(  "Position", [ 0, 0 ]   ));
+	newInput(3, nodeValue_Vec2(  "Span", [ 16, 16 ] ));
+	newInput(4, nodeValue_Float( "Radius", 16 ));
 	
 	// inputs 2
 		
-	newOutput(0, nodeValue_Output("Detected Objects", self, VALUE_TYPE.rigid, []));
+	newOutput(0, nodeValue_Output("Detected Objects", VALUE_TYPE.rigid, []));
 	
 	input_display_list = [ 0,
 		["Sensor", false], 1, 2, 3, 4, 

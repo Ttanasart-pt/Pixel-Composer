@@ -2,25 +2,25 @@ function Node_Path_Map_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	name = "Remap Path";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_PathNode("Path", self, noone))
+	newInput(0, nodeValue_PathNode("Path"))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Area("Area", self, DEF_AREA, { useShape : false }));
+	newInput(1, nodeValue_Area("Area", DEF_AREA, { useShape : false }));
 	inputs[1].editWidget.adjust_shape = false;
 	
-	newInput(2, nodeValue_Enum_Scroll("Map From", self, 0, [ "Path Boundary", "Fix Dimension", "BBOX" ]));
+	newInput(2, nodeValue_Enum_Scroll("Map From", 0, [ "Path Boundary", "Fix Dimension", "BBOX" ]));
 	
-	newInput(3, nodeValue_Vec2("Dimension From", self, [ 1, 1 ]))
+	newInput(3, nodeValue_Vec2("Dimension From", [ 1, 1 ]))
 	
-	newInput(4, nodeValue_Enum_Scroll("Map To", self, 0, [ "Area", "Fix Dimension", "BBOX" ]));
+	newInput(4, nodeValue_Enum_Scroll("Map To", 0, [ "Area", "Fix Dimension", "BBOX" ]));
 	
-	newInput(5, nodeValue_Vec2("Dimension To", self, [ 1, 1 ]))
+	newInput(5, nodeValue_Vec2("Dimension To", [ 1, 1 ]))
 	
-	newInput(6, nodeValue_Vec4("BBOX From", self, [ 0, 0, 1, 1 ]))
+	newInput(6, nodeValue_Vec4("BBOX From", [ 0, 0, 1, 1 ]))
 	
-	newInput(7, nodeValue_Vec4("BBOX To", self, [ 0, 0, 1, 1 ]))
+	newInput(7, nodeValue_Vec4("BBOX To", [ 0, 0, 1, 1 ]))
 	
-	newOutput(0, nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self));
+	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, self));
 	
 	input_display_list = [ 0, 
 		["From", false], 2, 3, 6, 

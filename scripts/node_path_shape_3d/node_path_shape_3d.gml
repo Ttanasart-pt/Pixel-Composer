@@ -4,9 +4,9 @@ function Node_Path_Shape_3D(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Vec3("Position", self, [ 0, 0, 0 ]));
+	newInput(0, nodeValue_Vec3("Position", [ 0, 0, 0 ]));
 	
-	newInput(1, nodeValue_Vec3("Half Size", self, [ .5, .5, .5 ]));
+	newInput(1, nodeValue_Vec3("Half Size", [ .5, .5, .5 ]));
 	
 	shapeScroll = [ 
 	    new scrollItem("Rectangle",       s_node_path_3d_shape,  0),
@@ -19,22 +19,22 @@ function Node_Path_Shape_3D(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	    new scrollItem("Spring Sphere",   s_node_path_3d_shape,  5),
 	    new scrollItem("Spiral",          s_node_path_3d_shape,  6),
     ];
-	newInput(2, nodeValue_Enum_Scroll("Shape", self, 0, { data: shapeScroll, horizontal: true, text_pad: ui(8) }));
+	newInput(2, nodeValue_Enum_Scroll("Shape", 0, { data: shapeScroll, horizontal: true, text_pad: ui(8) }));
 	
-	newInput(3, nodeValue_Enum_Button("Up Axis", self, 2, [ "X", "Y", "Z" ]));
+	newInput(3, nodeValue_Enum_Button("Up Axis", 2, [ "X", "Y", "Z" ]));
 	
-	newInput(4, nodeValue_Rotation("Rotation", self, 0));
+	newInput(4, nodeValue_Rotation("Rotation", 0));
 	
-	newInput(5, nodeValue_Int("Sides", self, 6));
+	newInput(5, nodeValue_Int("Sides", 6));
 	
-	newInput(6, nodeValue_Float("Revolution", self, 4));
+	newInput(6, nodeValue_Float("Revolution", 4));
 	
-	newInput(7, nodeValue_Float("Pitch", self, .2));
+	newInput(7, nodeValue_Float("Pitch", .2));
 	
-	newInput(8, nodeValue_Float("Inner Radius", self, .5))
+	newInput(8, nodeValue_Float("Inner Radius", .5))
 	    .setDisplay(VALUE_DISPLAY.slider);
 	
-	newOutput(0, nodeValue_Output("Path data", self, VALUE_TYPE.pathnode, self));
+	newOutput(0, nodeValue_Output("Path data", VALUE_TYPE.pathnode, self));
 	
 	input_display_list = [
 		["Transform", false], 0, 1, 3, 4, 

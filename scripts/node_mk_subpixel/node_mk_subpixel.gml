@@ -1,45 +1,45 @@
 function Node_MK_Subpixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "MK Subpixel";
 	
-	newInput(0, nodeValue_Dimension(self));
+	newInput(0, nodeValue_Dimension());
 	
-	newInput(1, nodeValue_Enum_Scroll("Type", self, 0, [ "Hex Disc", "Strip", "Linear Block", "Linear Block offset", "Chevron", "Square", "Square Non-Uniform" ]));
+	newInput(1, nodeValue_Enum_Scroll("Type", 0, [ "Hex Disc", "Strip", "Linear Block", "Linear Block offset", "Chevron", "Square", "Square Non-Uniform" ]));
 	
-	newInput(2, nodeValue_Int("Density", self, 8));
+	newInput(2, nodeValue_Int("Density", 8));
 	
-	newInput(3, nodeValue_Float("Size", self, .6))
+	newInput(3, nodeValue_Float("Size", .6))
 	    .setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(4, nodeValue_Float("Blur", self, .1))
+	newInput(4, nodeValue_Float("Blur", .1))
 	    .setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(5, nodeValue_Float("Noise", self, .1))
+	newInput(5, nodeValue_Float("Noise", .1))
 	    .setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(6, nodeValue_Float("Intensity", self, 1))
+	newInput(6, nodeValue_Float("Intensity", 1))
 	    .setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(7, nodeValue_Surface("Surface", self));
+	newInput(7, nodeValue_Surface("Surface"));
 	
 	newInput(8, nodeValueSeed(self));
 	
-	newInput(9, nodeValue_Float("Ridge amount", self, 8));
+	newInput(9, nodeValue_Float("Ridge amount", 8));
 	
-	newInput(10, nodeValue_Float("Ridge Intensity", self, 1))
+	newInput(10, nodeValue_Float("Ridge Intensity", 1))
 	    .setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(11, nodeValue_Bool("Ridge", self, false));
+	newInput(11, nodeValue_Bool("Ridge", false));
 	
-	newInput(12, nodeValue_Float("Scene Scale", self, 1));
+	newInput(12, nodeValue_Float("Scene Scale", 1));
 	
-	newInput(13, nodeValue_Bool("Flicker", self, false));
+	newInput(13, nodeValue_Bool("Flicker", false));
 	
-	newInput(14, nodeValue_Float("Flicker Intensity", self, .2))
+	newInput(14, nodeValue_Float("Flicker Intensity", .2))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(15, nodeValue_Float("Flicker Frequency", self, 4))
+	newInput(15, nodeValue_Float("Flicker Frequency", 4))
 	
-	newInput(16, nodeValue_Float("Flicker Cut", self, .5))
+	newInput(16, nodeValue_Float("Flicker Cut", .5))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 7, 
@@ -50,7 +50,7 @@ function Node_MK_Subpixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		["Flicker",  false, 13], 14, 15, 16, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		var _type = _data[1];

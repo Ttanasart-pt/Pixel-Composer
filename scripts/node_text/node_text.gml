@@ -13,72 +13,73 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	font = f_p0;
 	dimension_index = -1;
 	
-	newInput( 0, nodeValue_Text(         "Text",               self, "")).setVisible(true, true);
+	newInput( 0, nodeValue_Text(         "Text")).setVisible(true, true);
 	
 	////- =Output
 	
-	newInput( 9, nodeValue_Enum_Scroll(  "Output Dimension",   self, 1, [ "Fixed", "Dynamic" ]));
-	newInput( 6, nodeValue_Vec2(         "Fixed Dimension",    self, DEF_SURF )).setVisible(true, false);
-	newInput(10, nodeValue_Padding(      "Padding",            self, [0, 0, 0, 0]));
+	newInput( 9, nodeValue_Enum_Scroll(  "Output Dimension", 1, [ "Fixed", "Dynamic" ]));
+	newInput( 6, nodeValue_Vec2(         "Fixed Dimension", DEF_SURF )).setVisible(true, false);
+	newInput(10, nodeValue_Padding(      "Padding", [0, 0, 0, 0]));
 	
 	////- =Alignment
 	
-	newInput(13, nodeValue_PathNode(     "Path",               self, noone)).setVisible(true, true);
-	newInput(14, nodeValue_Float(        "Path Shift",         self, 0));
-	newInput( 7, nodeValue_Enum_Button(  "H Align",            self, 0, array_create(3, THEME.inspector_text_halign)));
-	newInput( 8, nodeValue_Enum_Button(  "V Align",            self, 0, array_create(3, THEME.inspector_text_valign)));
-	newInput(27, nodeValue_Int(          "Max Line Width",     self, 0));
-	newInput(30, nodeValue_Bool(         "Rotate Along Path",  self, true));
+	newInput(13, nodeValue_PathNode(     "Path")).setVisible(true, true);
+	newInput(14, nodeValue_Float(        "Path Shift", 0));
+	newInput( 7, nodeValue_Enum_Button(  "H Align", 0, array_create(3, THEME.inspector_text_halign)));
+	newInput( 8, nodeValue_Enum_Button(  "V Align", 0, array_create(3, THEME.inspector_text_valign)));
+	newInput(27, nodeValue_Int(          "Max Line Width", 0));
+	newInput(30, nodeValue_Bool(         "Rotate Along Path", true));
 	
 	////- =Font
 	
-	newInput( 1, nodeValue_Font(         "Font",               self, "")).setVisible(true, false);
-	newInput( 4, nodeValue_Vec2(         "Character Range",    self, [ 32, 128 ]));
-	newInput( 2, nodeValue_Int(          "Size",               self, 16));
-	newInput(15, nodeValue_Bool(         "Scale to Fit",       self, false));
-	newInput( 3, nodeValue_Bool(         "Anti-aliasing ",     self, false));
-	newInput(11, nodeValue_Float(        "Letter Spacing",     self, 0));
-	newInput(12, nodeValue_Float(        "Line Height",        self, 0));
+	newInput( 1, nodeValue_Font()).setVisible(true, false);
+	newInput( 4, nodeValue_Vec2(         "Character Range", [ 32, 128 ]));
+	newInput( 2, nodeValue_Int(          "Size", 16));
+	newInput(15, nodeValue_Bool(         "Scale to Fit", false));
+	newInput( 3, nodeValue_Bool(         "Anti-aliasing ", false));
+	newInput(11, nodeValue_Float(        "Letter Spacing", 0));
+	newInput(12, nodeValue_Float(        "Line Height", 0));
 	
 	////- =Rendering
 	
-	newInput(28, nodeValue_Bool(         "Round Position",     self, true ));
-	newInput( 5, nodeValue_Color(        "Color",              self, ca_white));
-	newInput(29, nodeValue_Enum_Button(  "Blend Mode",         self, 1, [ "Normal", "Alpha" ]));
+	newInput(28, nodeValue_Bool(         "Round Position", true ));
+	newInput( 5, nodeValue_Color(        "Color", ca_white));
+	newInput(29, nodeValue_Enum_Button(  "Blend Mode", 1, [ "Normal", "Alpha" ]));
+	newInput(31, nodeValue_Palette(      "Color by Letter", [ ca_white ]));
 	
 	////- =Background
 	
-	newInput(16, nodeValue_Bool(         "Render Background",  self, false));
-	newInput(17, nodeValue_Color(        "BG Color",           self, ca_black));
+	newInput(16, nodeValue_Bool(         "Render Background", false));
+	newInput(17, nodeValue_Color(        "BG Color", ca_black));
 	
 	////- =Wave
 	
-	newInput(18, nodeValue_Bool(         "Wave",               self, false));
-	newInput(22, nodeValue_Slider(       "Wave Shape",         self, 0, [ 0, 3, 0.01 ]));
-	newInput(19, nodeValue_Float(        "Wave Amplitude",     self, 4));
-	newInput(20, nodeValue_Float(        "Wave Scale",         self, 30));
-	newInput(21, nodeValue_Rotation(     "Wave Phase",         self, 0));
+	newInput(18, nodeValue_Bool(         "Wave", false));
+	newInput(22, nodeValue_Slider(       "Wave Shape", 0, [ 0, 3, 0.01 ]));
+	newInput(19, nodeValue_Float(        "Wave Amplitude", 4));
+	newInput(20, nodeValue_Float(        "Wave Scale", 30));
+	newInput(21, nodeValue_Rotation(     "Wave Phase", 0));
 	
 	////- =Trim
 	
-	newInput(23, nodeValue_Bool(         "Typewriter",         self, false));
-	newInput(25, nodeValue_Enum_Button(  "Trim Type",          self, 0, [ "Character", "Word", "Line" ]));
-	newInput(24, nodeValue_Slider_Range( "Range",              self, [ 0, 1 ]));
-	newInput(26, nodeValue_Bool(         "Use Full Text Size", self, true ));
+	newInput(23, nodeValue_Bool(         "Typewriter", false));
+	newInput(25, nodeValue_Enum_Button(  "Trim Type", 0, [ "Character", "Word", "Line" ]));
+	newInput(24, nodeValue_Slider_Range( "Range", [ 0, 1 ]));
+	newInput(26, nodeValue_Bool(         "Use Full Text Size", true ));
 		
-	// inputs 31
+	// inputs 32
 		
 	input_display_list = [ 0, 
 		["Output",		 true],	9,  6, 10,
 		["Alignment",	false], 13, 14, 7, 8, 27, 30, 
 		["Font",		false], 1,  2, 15, 3, 11, 12, 
-		["Rendering",	false], 5, 
+		["Rendering",	false], 5, 31, 
 		["Background",   true, 16], 17, 
 		["Wave",	     true, 18], 22, 19, 20, 21, 
 		["Trim",		 true, 23], 25, 24, 26, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	 
 	attribute_surface_depth();
 	
@@ -330,9 +331,8 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _trck  = _data[11];
 			var _line  = _data[12];
 			
-			__rnd_pos  = _data[28];
 			var _col   = _data[ 5];
-			var _bm    = _data[29];
+			var _colLt = _data[31];
 			
 			var _ubg   = _data[16];
 			var _bgc   = _data[17];
@@ -519,6 +519,10 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		__temp_ss   = _ss;
 		__temp_trck = _trck;
 		
+		__col       = _col;
+		__colLt     = _colLt;
+		__colLtLen  = array_length(_colLt);
+		
 		if(_use_path) {
 			var _pthl = _path.getLength(0), va;
 			
@@ -531,6 +535,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			for( var i = 0, n = array_length(_str_lines); i < n; i++ ) {
 				var _str_line   = _str_lines[i];
 				var _line_width = _line_widths[i];
+				
 				draw_set_text(__f, fa_left, va, _col);
 				draw_font_data[_array_index] = [__f, fa_left, va, _col];
 				
@@ -563,7 +568,9 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						_ty += lengthdir_y(_wd, _line_ang + 90);
 					}
 					
-					if(__rnd_pos) { _tx = round(_tx); _ty = round(_ty); }
+					var _clt = array_safe_get_fast(__colLt, __dwDataI % __colLtLen);
+					var _c   = colorMultiply(__col, _clt);
+					draw_set_color(_c);
 					
 					draw_text_transformed(_tx, _ty, _chr, 1, 1, _nor);
 					__dwData[__dwDataI++] = [_tx, _ty, _chr, 1, 1, _nor];
@@ -578,6 +585,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			for( var i = 0, n = array_length(_str_lines); i < n; i++ ) {
 				var _str_line   = _str_lines[i];
 				var _line_width = _line_widths[i];
+				
 				draw_set_text(__f, fa_left, fa_top, _col);
 				draw_font_data[_array_index] = [__f, fa_left, fa_top, _col];
 				
@@ -598,7 +606,10 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					var _ty = __temp_ty;
 					
 					if(__wave) _ty += waveGet(_ind);
-					if(__rnd_pos) { _tx = round(_tx); _ty = round(_ty); }
+					
+					var _clt = array_safe_get_fast(__colLt, __dwDataI % __colLtLen);
+					var _c   = colorMultiply(__col, _clt);
+					draw_set_color(_c);
 					
 					draw_text_transformed(_tx, _ty, _chr, __temp_ss, __temp_ss, 0);
 					__dwData[__dwDataI++] = [_tx, _ty, _chr, __temp_ss, __temp_ss, 0];

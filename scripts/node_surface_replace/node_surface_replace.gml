@@ -1,31 +1,31 @@
 function Node_Surface_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Replace Image";
 	
-	newInput(0, nodeValue_Surface("Base Image", self));
+	newInput(0, nodeValue_Surface("Base Image"));
 	
-	newInput(1, nodeValue_Surface("Target Image", self))
+	newInput(1, nodeValue_Surface("Target Image"))
 		.setArrayDepth(1);
 	
-	newInput(2, nodeValue_Surface("Replacement Image", self))
+	newInput(2, nodeValue_Surface("Replacement Image"))
 		.setArrayDepth(1);
 	
-	newInput(3, nodeValue_Float("Color Threshold", self, 0.1, "How similiar the color need to be in order to be count as matched." ))
+	newInput(3, nodeValue_Float("Color Threshold", 0.1, "How similiar the color need to be in order to be count as matched." ))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(4, nodeValue_Bool("Draw Base Image", self, true ));
+	newInput(4, nodeValue_Bool("Draw Base Image", true ));
 	
-	newInput(5, nodeValue_Bool("Fast Mode", self, true ));
+	newInput(5, nodeValue_Bool("Fast Mode", true ));
 	
-	newInput(6, nodeValue_Float("Pixel Threshold", self, 0.1, "How many pixel need to me matched to replace with replacement image." ))
+	newInput(6, nodeValue_Float("Pixel Threshold", 0.1, "How many pixel need to me matched to replace with replacement image." ))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(7, nodeValue_Enum_Scroll("Array mode", self,  0, { data: [ "Match index", "Randomized" ], update_hover: false }));
+	newInput(7, nodeValue_Enum_Scroll("Array mode",  0, { data: [ "Match index", "Randomized" ], update_hover: false }));
 	
 	newInput(8, nodeValueSeed(self));
 	
-	newInput(9, nodeValue_Bool("Replace Empty", self, false))
+	newInput(9, nodeValue_Bool("Replace Empty", false))
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
 		["Surfaces",	 true], 0, 1, 2, 7, 8, 

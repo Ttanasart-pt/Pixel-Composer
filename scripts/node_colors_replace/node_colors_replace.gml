@@ -1,21 +1,21 @@
 function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Replace Colors";
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
-	newInput(1, nodeValue_Palette("Palette from", self, []));
+	newInput(0, nodeValue_Surface("Surface In"));
+	newInput(1, nodeValue_Palette("Palette from", []));
 	
-	newInput(2, nodeValue_Palette("Palette to", self, []))
+	newInput(2, nodeValue_Palette("Palette to", []))
 		.setVisible(false, false);
 	
-	newInput(3, nodeValue_Float("Threshold", self, 0.1))
+	newInput(3, nodeValue_Float("Threshold", 0.1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(4, nodeValue_Surface("Mask", self));
+	newInput(4, nodeValue_Surface("Mask"));
 	
-	newInput(5, nodeValue_Float("Mix", self, 1))
+	newInput(5, nodeValue_Float("Mix", 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(6, nodeValue_Bool("Active", self, true));
+	newInput(6, nodeValue_Bool("Active", true));
 		active_index = 6;
 		
 	__init_mask_modifier(4); // inputs 7, 8, 
@@ -185,7 +185,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		//["Comparison",	false], 3, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	

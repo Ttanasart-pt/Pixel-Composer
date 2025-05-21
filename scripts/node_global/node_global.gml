@@ -213,7 +213,7 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 	
 	static createValue = function() {
 		var _key   = $"NewValue{array_length(inputs)}";
-		var _in    = nodeValue_Float(_key, self, 0);
+		var _in    = nodeValue_Float(_key, 0);
 		_in.editor = new variable_editor(_in);
 		array_push(inputs, _in);
 		

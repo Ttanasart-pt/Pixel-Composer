@@ -1,31 +1,31 @@
 function Node_Curve(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Curve";
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Curve("Brightness", self, CURVE_DEF_01));
+	newInput(1, nodeValue_Curve("Brightness", CURVE_DEF_01));
 	
-	newInput(2, nodeValue_Curve("Red", self, CURVE_DEF_01));
+	newInput(2, nodeValue_Curve("Red", CURVE_DEF_01));
 	
-	newInput(3, nodeValue_Curve("Green", self, CURVE_DEF_01));
+	newInput(3, nodeValue_Curve("Green", CURVE_DEF_01));
 	
-	newInput(4, nodeValue_Curve("Blue", self, CURVE_DEF_01));
+	newInput(4, nodeValue_Curve("Blue", CURVE_DEF_01));
 	
-	newInput(5, nodeValue_Surface("Mask", self));
+	newInput(5, nodeValue_Surface("Mask"));
 	
-	newInput(6, nodeValue_Float("Mix", self, 1))
+	newInput(6, nodeValue_Float("Mix", 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(7, nodeValue_Bool("Active", self, true));
+	newInput(7, nodeValue_Bool("Active", true));
 		active_index = 7;
 	
-	newInput(8, nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) }));
+	newInput(8, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	__init_mask_modifier(5); // inputs 9, 10
 	
-	newInput(11, nodeValue_Curve("Alpha", self, CURVE_DEF_01));
+	newInput(11, nodeValue_Curve("Alpha", CURVE_DEF_01));
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 7, 8, 
 		["Surfaces", true],	0, 5, 6, 9, 10, 

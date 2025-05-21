@@ -2,9 +2,9 @@ function Node_Shell(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Execute Shell";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Path("Path", self, ""));
+	newInput(0, nodeValue_Path("Path"));
 	
-	newInput(1, nodeValue_Text("Script", self, ""));
+	newInput(1, nodeValue_Text("Script"));
 	
 	setTrigger(1, "Run", [ THEME.sequence_control, 1, COLORS._main_value_positive ]);
 	

@@ -28,7 +28,7 @@ function Node_create_RM_Primitive(_x, _y, _group = noone, _param = {}) {
 function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) constructor {
 	name  = "RM Primitive";
 	
-	newInput(0, nodeValue_Dimension(self));
+	newInput(0, nodeValue_Dimension());
 	
 	shape_types = [ 
 		"Plane", "Box", "Box Frame", "Box Round", 
@@ -45,136 +45,136 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	for( var i = 0, n = array_length(shape_types); i < n; i++ )
 		shape_types_str[i] = shape_types[i] == -1? -1 : new scrollItem(shape_types[i], s_node_shape_3d, _ind++, COLORS._main_icon_light);
 	
-	newInput(1, nodeValue_Enum_Scroll("Shape", self,  1, { data: shape_types_str, horizontal: true, text_pad: ui(16) }));
+	newInput(1, nodeValue_Enum_Scroll("Shape",  1, { data: shape_types_str, horizontal: true, text_pad: ui(16) }));
 	
-	newInput(2, nodeValue_Vec3("Position", self, [ 0, 0, 0 ]));
+	newInput(2, nodeValue_Vec3("Position", [ 0, 0, 0 ]));
 	
-	newInput(3, nodeValue_Vec3("Rotation", self, [ 0, 0, 0 ]));
+	newInput(3, nodeValue_Vec3("Rotation", [ 0, 0, 0 ]));
 	
-	newInput(4, nodeValue_Float("Scale", self, 1))
+	newInput(4, nodeValue_Float("Scale", 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] });
 	
-	newInput(5, nodeValue_Float("FOV", self, 30))
+	newInput(5, nodeValue_Float("FOV", 30))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 90, 1 ] });
 	
-	newInput(6, nodeValue_Vec2("View Range", self, [ 3, 6 ]));
+	newInput(6, nodeValue_Vec2("View Range", [ 3, 6 ]));
 	
-	newInput(7, nodeValue_Float("Depth", self, 0))
+	newInput(7, nodeValue_Float("Depth", 0))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(8, nodeValue_Vec3("Light Position", self, [ -.4, -.5, 1 ]));
+	newInput(8, nodeValue_Vec3("Light Position", [ -.4, -.5, 1 ]));
 	
-	newInput(9, nodeValue_Color("Base Color", self, ca_white));
+	newInput(9, nodeValue_Color("Base Color", ca_white));
 	
-	newInput(10, nodeValue_Float("Ambient Level", self, 0.2))
+	newInput(10, nodeValue_Float("Ambient Level", 0.2))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(11, nodeValue_Vec3("Elongate", self, [ 0, 0, 0 ]));
+	newInput(11, nodeValue_Vec3("Elongate", [ 0, 0, 0 ]));
 	
-	newInput(12, nodeValue_Float("Rounded", self, 0.))
+	newInput(12, nodeValue_Float("Rounded", 0.))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(13, nodeValue_Enum_Button("Projection", self,  0, [ "Perspective", "Orthographic" ]));
+	newInput(13, nodeValue_Enum_Button("Projection",  0, [ "Perspective", "Orthographic" ]));
 	
-	newInput(14, nodeValue_Float("Ortho Scale", self, 1.))
+	newInput(14, nodeValue_Float("Ortho Scale", 1.))
 	
-	newInput(15, nodeValue_Vec3("Wave Amplitude", self, [ 4, 4, 4 ]));
+	newInput(15, nodeValue_Vec3("Wave Amplitude", [ 4, 4, 4 ]));
 	
-	newInput(16, nodeValue_Vec3("Wave Intensity", self, [ 0, 0, 0 ]));
+	newInput(16, nodeValue_Vec3("Wave Intensity", [ 0, 0, 0 ]));
 	
-	newInput(17, nodeValue_Vec3("Wave Phase", self, [ 0, 0, 0 ]));
+	newInput(17, nodeValue_Vec3("Wave Phase", [ 0, 0, 0 ]));
 	
-	newInput(18, nodeValue_Enum_Button("Twist Axis", self,  0, [ "X", "Y", "Z" ]));
+	newInput(18, nodeValue_Enum_Button("Twist Axis",  0, [ "X", "Y", "Z" ]));
 	
-	newInput(19, nodeValue_Float("Twist Amount", self, 0))
+	newInput(19, nodeValue_Float("Twist Amount", 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 8, 0.1 ] });
 	
-	newInput(20, nodeValue_Vec3("Tile Distance", self, [ 1, 1, 1 ]));
+	newInput(20, nodeValue_Vec3("Tile Distance", [ 1, 1, 1 ]));
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newInput(21, nodeValue_Vec3("Size", self, [ 1, 1, 1 ]));
+	newInput(21, nodeValue_Vec3("Size", [ 1, 1, 1 ]));
 	
-	newInput(22, nodeValue_Float("Radius", self, .7))
+	newInput(22, nodeValue_Float("Radius", .7))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(23, nodeValue_Float("Thickness", self, .2))
+	newInput(23, nodeValue_Float("Thickness", .2))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(24, nodeValue_Float("Crop", self, 0.))
+	newInput(24, nodeValue_Float("Crop", 0.))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
 	
-	newInput(25, nodeValue_Rotation("Angle", self, 30));
+	newInput(25, nodeValue_Rotation("Angle", 30));
 	
-	newInput(26, nodeValue_Float("Height", self, .5))
+	newInput(26, nodeValue_Float("Height", .5))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(27, nodeValue_Slider_Range("Radius Range", self, [ .7, .1 ]));
+	newInput(27, nodeValue_Slider_Range("Radius Range", [ .7, .1 ]));
 	
-	newInput(28, nodeValue_Float("Uniform Size", self, 1))
+	newInput(28, nodeValue_Float("Uniform Size", 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newInput(29, nodeValue_Vec3("Tile Amount", self, [ 1, 1, 1 ]));
+	newInput(29, nodeValue_Vec3("Tile Amount", [ 1, 1, 1 ]));
 	
-	newInput(30, nodeValue_Color("Background", self, ca_black));
+	newInput(30, nodeValue_Color("Background", ca_black));
 	
-	newInput(31, nodeValue_Bool("Draw BG", self, false));
+	newInput(31, nodeValue_Bool("Draw BG", false));
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newInput(32, nodeValue_Bool("Volumetric", self, false));
+	newInput(32, nodeValue_Bool("Volumetric", false));
 	
-	newInput(33, nodeValue_Float("Density", self, 0.3))
+	newInput(33, nodeValue_Float("Density", 0.3))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(34, nodeValue_Surface("Environment", self));
+	newInput(34, nodeValue_Surface("Environment"));
 	
-	newInput(35, nodeValue_Float("Reflective", self, 0.))
+	newInput(35, nodeValue_Float("Reflective", 0.))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(36, nodeValue_Surface("Texture", self));
+	newInput(36, nodeValue_Surface("Texture"));
 	
-	newInput(37, nodeValue_Float("Triplanar Smoothing", self, 1.))
+	newInput(37, nodeValue_Float("Triplanar Smoothing", 1.))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 10, 0.1 ] });
 	
-	newInput(38, nodeValue_Float("Texture Scale", self, 1.));
+	newInput(38, nodeValue_Float("Texture Scale", 1.));
 	
-	newInput(39, nodeValue_Vec4("Corner", self, [ 0.25, 0.25, 0.25, 0.25 ]));
+	newInput(39, nodeValue_Vec4("Corner", [ 0.25, 0.25, 0.25, 0.25 ]));
 	
-	newInput(40, nodeValue_Vec2("2D Size", self, [ 0.5, 0.5 ]));
+	newInput(40, nodeValue_Vec2("2D Size", [ 0.5, 0.5 ]));
 	
-	newInput(41, nodeValue_Int("Side", self, 3));
+	newInput(41, nodeValue_Int("Side", 3));
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
-	newInput(42, nodeValue_Vec3("Camera Rotation", self, [ 30, 45, 0 ]));
+	newInput(42, nodeValue_Vec3("Camera Rotation", [ 30, 45, 0 ]));
 	
-	newInput(43, nodeValue_Float("Camera Scale", self, 1))
+	newInput(43, nodeValue_Float("Camera Scale", 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] });
 	
-	newInput(44, nodeValue_Bool("Render", self, true));
+	newInput(44, nodeValue_Bool("Render", true));
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newInput(45, nodeValue_Bool("Tile", self, false));
+	newInput(45, nodeValue_Bool("Tile", false));
 		
-	newInput(46, nodeValue_Vec3("Tiled Shift", self, [ 0, 0, 0 ]));
+	newInput(46, nodeValue_Vec3("Tiled Shift", [ 0, 0, 0 ]));
 		
-	newInput(47, nodeValue_Vec3("Tiled Rotation", self, [ 0, 0, 0 ]));
+	newInput(47, nodeValue_Vec3("Tiled Rotation", [ 0, 0, 0 ]));
 		
-	newInput(48, nodeValue_Float("Tiled Scale", self, 0));
+	newInput(48, nodeValue_Float("Tiled Scale", 0));
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newInput(49, nodeValue_Bool("Env Interpolation", self, false));
+	newInput(49, nodeValue_Bool("Env Interpolation", false));
 	
-	newInput(50, nodeValue_Bool("Texture Interpolation", self, false));
+	newInput(50, nodeValue_Bool("Texture Interpolation", false));
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	newOutput(1, nodeValue_Output("Shape Data", self, VALUE_TYPE.sdf, noone));
+	newOutput(1, nodeValue_Output("Shape Data", VALUE_TYPE.sdf, noone));
 	
 	input_display_list = [ 0,
 		["Primitive",  false],  1, 21, 22, 23, 24, 25, 26, 27, 28, 39, 40, 41, 

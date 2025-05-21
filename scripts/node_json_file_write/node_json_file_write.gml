@@ -2,17 +2,17 @@ function Node_Json_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	name  = "JSON File Out";
 	color = COLORS.node_blend_input;
 	
-	newInput(0, nodeValue_Path("Path", self, ""))
+	newInput(0, nodeValue_Path("Path"))
 		.setDisplay(VALUE_DISPLAY.path_save, { filter: "json file|*.json" })
 		.rejectArray();
 		
-	newInput(1, nodeValue_Struct("Struct", self, {}))
+	newInput(1, nodeValue_Struct("Struct"))
 		.shortenDisplay()
 		.setVisible(true, true);
 	
-	newInput(2, nodeValue_Bool("Pretty print", self, false));
+	newInput(2, nodeValue_Bool("Pretty print", false));
 	
-	newInput(3, nodeValue_Bool("Serialize", self, true));
+	newInput(3, nodeValue_Bool("Serialize", true));
 	
 	input_display_list = [ 0, 1, 
 		["Formatting", false], 2, 3 

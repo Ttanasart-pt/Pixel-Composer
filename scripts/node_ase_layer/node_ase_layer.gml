@@ -6,15 +6,15 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		.setVisible(false, true)
 		.rejectArray();
 	
-	newInput(1, nodeValue_Bool("Crop Output", self, false))
+	newInput(1, nodeValue_Bool("Crop Output", false))
 		.rejectArray();
 	
-	newInput(2, nodeValue_Text("Layer name", self, ""))
+	newInput(2, nodeValue_Text("Layer name"))
 		.rejectArray();
 		
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	newOutput(1, nodeValue_Output("Layer name", self, VALUE_TYPE.text, ""));
+	newOutput(1, nodeValue_Output("Layer name", VALUE_TYPE.text, ""));
 	
 	layer_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		if(ase_data == noone) {

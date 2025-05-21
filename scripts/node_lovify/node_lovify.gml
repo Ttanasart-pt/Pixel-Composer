@@ -2,17 +2,17 @@ function Node_Lovify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	name  = "Lovify";
 	color = CDEF.red;
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(0, nodeValue_Surface("Surface In"));
 	
 	newInput(1, nodeValueSeed(self));
 	
-	newInput(2, nodeValue_Float("Density", self, 0.5 ))
+	newInput(2, nodeValue_Float("Density", 0.5 ))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(3, nodeValue_Float("Distribution", self, 0.1 ))
+	newInput(3, nodeValue_Float("Distribution", 0.1 ))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 1, 
 		["Surfaces", false], 0, 

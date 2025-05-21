@@ -1,15 +1,23 @@
-#macro nodeValue_es nodeValue_Enum_Scroll
-function nodeValue_Enum_Scroll(_name, _node, _value, _data) { return new __NodeValue_Enum_Scroll(_name, _node, _value, _data); }
+function nodeValue_Enum_Scroll(_name, _value, _data) { return new __NodeValue_Enum_Scroll(_name, self, _value, _data); }
 
 function __NodeValue_Enum_Scroll(_name, _node, _value, _data) : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.integer, _value, "") constructor {
 	setDisplay(VALUE_DISPLAY.enum_scroll, _data);
 	
-	clamp_range = true;
+	clamp_range   = true;
+	choicesAmount = undefined;
 	
 	/////============== SET =============
 	
-	static setUnclamp = function( ) /*=>*/ { clamp_range = false;   return self;  }
-	static setHistory = function(h) /*=>*/ { options_histories = h; return self;  }
+	static scrollValue = function(_d=1) /*=>*/ { 
+		choicesAmount = array_length(editWidget.data);
+		if(choicesAmount == undefined) return self;
+		
+		setValue((getValue() + _d + choicesAmount) % choicesAmount); 
+		return self;  
+	}
+		
+	static setUnclamp  = function( ) /*=>*/ { clamp_range = false;    return self;  }
+	static setHistory  = function(h) /*=>*/ { options_histories = h;  return self;  }
 	
 	/////============== GET =============
 	
@@ -20,7 +28,7 @@ function __NodeValue_Enum_Scroll(_name, _node, _value, _data) : NodeValue(_name,
 		
 		if(!clamp_range) return val;
 		
-		var choicesAmount = array_length(editWidget.data);
+		choicesAmount = array_length(editWidget.data);
 		if(choicesAmount == undefined) return val;
 		
 		if(is_real(val)) val = clamp(val, 0, choicesAmount - 1);

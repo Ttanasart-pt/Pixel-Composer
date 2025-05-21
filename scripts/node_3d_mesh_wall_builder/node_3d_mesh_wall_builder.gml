@@ -2,30 +2,30 @@ function Node_3D_Mesh_Wall_Builder(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 	name = "3D Wall";
 	object_class = __3dWall_builder;
 	
-	newInput(in_mesh + 0, nodeValue_PathNode("Path", self, noone))
+	newInput(in_mesh + 0, nodeValue_PathNode("Path"))
 		.setVisible(true, true);
 	
-	newInput(in_mesh + 1, nodeValue_Int("Segments", self, 16 ));
+	newInput(in_mesh + 1, nodeValue_Int("Segments", 16 ));
 	
-	newInput(in_mesh + 2, nodeValue_Float("Height", self, 1 ));
+	newInput(in_mesh + 2, nodeValue_Float("Height", 1 ));
 	
-	newInput(in_mesh + 3, nodeValue_Float("Thickness", self, 0.1 ))
+	newInput(in_mesh + 3, nodeValue_Float("Thickness", 0.1 ))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(in_mesh + 4, nodeValue_Bool("Material per side", self, false ));
+	newInput(in_mesh + 4, nodeValue_Bool("Material per side", false ));
 	
-	newInput(in_mesh + 5, nodeValue_D3Material("Side Material", self, new __d3dMaterial()))
+	newInput(in_mesh + 5, nodeValue_D3Material("Side Material", new __d3dMaterial()))
 		.setVisible(true, true);
 	
-	newInput(in_mesh + 6, nodeValue_Float("Path Scale", self, .01 ));
+	newInput(in_mesh + 6, nodeValue_Float("Path Scale", .01 ));
 	
-	newInput(in_mesh + 7, nodeValue_D3Material("Side Material 2", self, new __d3dMaterial()))
+	newInput(in_mesh + 7, nodeValue_D3Material("Side Material 2", new __d3dMaterial()))
 		.setVisible(true, true);
 	
-	newInput(in_mesh + 8, nodeValue_D3Material("Cap Material", self, new __d3dMaterial()))
+	newInput(in_mesh + 8, nodeValue_D3Material("Cap Material", new __d3dMaterial()))
 		.setVisible(true, true);
 	
-	newInput(in_mesh + 9, nodeValue_Bool("Loop", self, false ));
+	newInput(in_mesh + 9, nodeValue_Bool("Loop", false ));
 	
 	input_display_list = [
 		__d3d_input_list_mesh, in_mesh + 0, in_mesh + 6, in_mesh + 9, in_mesh + 1, in_mesh + 2, in_mesh + 3,  

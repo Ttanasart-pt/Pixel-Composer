@@ -1,13 +1,13 @@
 function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Splice Spritesheet";
 	
-	newInput(0, nodeValue_Surface( "Surface In",  self));
-	newInput(1, nodeValue_Vec2(    "Sprite size", self, [ 32, 32 ]));
-	newInput(6, nodeValue_Padding( "Padding",     self, [0, 0, 0, 0]));
-	newInput(2, nodeValue_Int(     "Row",         self, 1)); //unused
+	newInput(0, nodeValue_Surface( "Surface In"));
+	newInput(1, nodeValue_Vec2(    "Sprite size", [ 32, 32 ]));
+	newInput(6, nodeValue_Padding( "Padding", [0, 0, 0, 0]));
+	newInput(2, nodeValue_Int(     "Row", 1)); //unused
 	
-	newInput( 3, nodeValue_Vec2(        "Amount",    self, [ 1, 1 ]));
-	newInput(10, nodeValue_Trigger(     "Auto fill", self, "Automatically set amount based on sprite size."))
+	newInput( 3, nodeValue_Vec2(        "Amount", [ 1, 1 ]));
+	newInput(10, nodeValue_Trigger(     "Auto fill", "Automatically set amount based on sprite size."))
 		.setDisplay(VALUE_DISPLAY.button, { name: "Auto fill", UI : true, onClick: function() /*=>*/ {
 			var _sur = getInputData(0);
 			if(!is_surface(_sur) || _sur == DEF_SURFACE) return;
@@ -29,22 +29,22 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 			doUpdate();
 		} });
-	newInput( 9, nodeValue_Enum_Scroll( "Main Axis", self, 0, __enum_array_gen(["Horizontal", "Vertical"], s_node_alignment)));
-	newInput( 4, nodeValue_Vec2(        "Offset",    self, [ 0, 0 ]));
-	newInput( 5, nodeValue_Vec2(        "Spacing",   self, [ 0, 0 ]));
+	newInput( 9, nodeValue_Enum_Scroll( "Main Axis", 0, __enum_array_gen(["Horizontal", "Vertical"], s_node_alignment)));
+	newInput( 4, nodeValue_Vec2(        "Offset", [ 0, 0 ]));
+	newInput( 5, nodeValue_Vec2(        "Spacing", [ 0, 0 ]));
 	
-	newInput( 7, nodeValue_Enum_Scroll( "Output",          self, 1, [ "Animation", "Array" ]));
-	newInput( 8, nodeValue_Float(       "Animation speed", self, 1));
-	newInput(11, nodeValue_Trigger(     "Sync animation",  self ))
+	newInput( 7, nodeValue_Enum_Scroll( "Output", 1, [ "Animation", "Array" ]));
+	newInput( 8, nodeValue_Float(       "Animation speed", 1));
+	newInput(11, nodeValue_Trigger(     "Sync animation" ))
 		.setDisplay(VALUE_DISPLAY.button, { name: "Sync frames", UI : true, onClick: function() /*=>*/ { 
 			var _atl = outputs[1].getValue();
 			var _spd = getInputData(8);
 			TOTAL_FRAMES = max(1, _spd == 0? 1 : ceil(array_length(_atl) / _spd));
 		} });
 		
-	newInput(12, nodeValue_Bool(        "Filter empty output", self, false));
-	newInput(13, nodeValue_Enum_Scroll( "Filtered Pixel",      self, 0, [ "Transparent", "Color" ]));
-	newInput(14, nodeValue_Color(       "Filtered Color",      self, ca_black));
+	newInput(12, nodeValue_Bool(        "Filter empty output", false));
+	newInput(13, nodeValue_Enum_Scroll( "Filtered Pixel", 0, [ "Transparent", "Color" ]));
+	newInput(14, nodeValue_Color(       "Filtered Color", ca_black));
 	
 	input_display_list = [
 		["Sprite", false], 0, 1, 6, 
@@ -53,9 +53,9 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		["Filter Empty", true, 12], 13, 14, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	newOutput(1, nodeValue_Output("Atlas Data", self, VALUE_TYPE.atlas, []))
+	newOutput(1, nodeValue_Output("Atlas Data", VALUE_TYPE.atlas, []))
 		.setArrayDepth(1);
 	
 	attribute_surface_depth();

@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"panel_animation_dopesheet",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"panel_animation_dopesheet",
+  "parent":{
+    "name":"animation",
+    "path":"folders/panels/animation.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

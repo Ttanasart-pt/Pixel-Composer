@@ -3,10 +3,10 @@ function Node_Matrix_Math(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	color = COLORS.node_blend_number;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Matrix("Matrix 1", self, new Matrix(3)))
+	newInput(0, nodeValue_Matrix("Matrix 1", new Matrix(3)))
 		.setVisible(true, true);
 		
-	newInput(1, nodeValue_Matrix("Matrix 2", self, new Matrix(3)))
+	newInput(1, nodeValue_Matrix("Matrix 2", new Matrix(3)))
 		.setVisible(true, true);
 	
 	operation_scroll = [
@@ -18,9 +18,9 @@ function Node_Matrix_Math(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		new scrollItem("Multiply Matrix", s_node_math_operators, 2),
 	];
 	
-	newInput(2, nodeValue_Enum_Scroll("Operation", self, 0, operation_scroll));
+	newInput(2, nodeValue_Enum_Scroll("Operation", 0, operation_scroll));
 	
-	newInput(3, nodeValue_Float("Scala", self, 0));
+	newInput(3, nodeValue_Float("Scala", 0));
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	

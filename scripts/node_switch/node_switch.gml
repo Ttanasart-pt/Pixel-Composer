@@ -3,7 +3,7 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Text("Index", self, "" ))
+	newInput(0, nodeValue_Text("Index"))
 		.setVisible(true, true)
 		.rejectArray();
 	
@@ -25,7 +25,7 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		return _h;
 	});
 	
-	newOutput(0, nodeValue_Output("Result", self, VALUE_TYPE.any, 0));
+	newOutput(0, nodeValue_Output("Result", VALUE_TYPE.any, 0));
 	
 	input_display_list = [ 0, 1, 
 		["Cases",  false], size_adjust_tool
@@ -37,7 +37,7 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var bDel  = button(function() /*=>*/ {return node.deleteInput(index)})
 				.setIcon(THEME.minus_16, 0, COLORS._main_icon);
 			
-			inputs[index + 0] = nodeValue_Text("Case", self, "" )
+			inputs[index + 0] = nodeValue_Text("Case")
 				.setDisplay(VALUE_DISPLAY.text_box, { side_button : bDel })
 				.setAnimable(false);
 			bDel.setContext(inputs[index + 0]);

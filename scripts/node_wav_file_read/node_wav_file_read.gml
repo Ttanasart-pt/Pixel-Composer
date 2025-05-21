@@ -29,30 +29,30 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name  = "WAV File In";
 	color = COLORS.node_blend_input;
 	
-	newInput(0, nodeValue_Path("Path", self, ""))
+	newInput(0, nodeValue_Path("Path"))
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "audio|*.wav" })
 		.rejectArray();
 	
-	newInput(1, nodeValue_Trigger("Sync length", self ))
+	newInput(1, nodeValue_Trigger("Sync length" ))
 		.setDisplay(VALUE_DISPLAY.button, { name: "Sync", UI : true, onClick: function() { 
 			if(content == noone) return;
 			TOTAL_FRAMES = max(1, ceil(content.duration * PROJECT.animator.framerate));
 		} });
 		
-	newInput(2, nodeValue_Bool("Mono", self, false));
+	newInput(2, nodeValue_Bool("Mono", false));
 		
-	newOutput(0, nodeValue_Output("Data", self, VALUE_TYPE.audioBit, noone))
+	newOutput(0, nodeValue_Output("Data", VALUE_TYPE.audioBit, noone))
 		.setArrayDepth(1);
 	
-	newOutput(1, nodeValue_Output("Path", self, VALUE_TYPE.path, ""));
+	newOutput(1, nodeValue_Output("Path", VALUE_TYPE.path, ""));
 	
-	newOutput(2, nodeValue_Output("Sample rate", self, VALUE_TYPE.integer, 44100))
+	newOutput(2, nodeValue_Output("Sample rate", VALUE_TYPE.integer, 44100))
 		.setVisible(false);
 	
-	newOutput(3, nodeValue_Output("Channels", self, VALUE_TYPE.integer, 2))
+	newOutput(3, nodeValue_Output("Channels", VALUE_TYPE.integer, 2))
 		.setVisible(false);
 	
-	newOutput(4, nodeValue_Output("Duration", self, VALUE_TYPE.float, 0))
+	newOutput(4, nodeValue_Output("Duration", VALUE_TYPE.float, 0))
 		.setVisible(false);
 	
 	content      = noone;

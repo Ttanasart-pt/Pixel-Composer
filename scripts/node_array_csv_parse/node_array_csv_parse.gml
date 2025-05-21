@@ -2,25 +2,25 @@ function Node_Array_CSV_Parse(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	name = "CSV Parse";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Text("CSV string", self, ""))
+	newInput(0, nodeValue_Text("CSV string"))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Int("Skip line", self, 0));
+	newInput(1, nodeValue_Int("Skip line", 0));
 	
-	newInput(2, nodeValue_Bool("First Row Header", self, false));
+	newInput(2, nodeValue_Bool("First Row Header", false));
 	
-	newInput(3, nodeValue_Text("Sort", self, []))
+	newInput(3, nodeValue_Text("Sort", []))
 		.setDisplay(VALUE_DISPLAY.text_array, { data: [] });
 	
-	newInput(4, nodeValue_Bool("Output Struct", self, false));
+	newInput(4, nodeValue_Bool("Output Struct", false));
 	
-	newInput(5, nodeValue_Text("Columns", self, []))
+	newInput(5, nodeValue_Text("Columns", []))
 		.setDisplay(VALUE_DISPLAY.text_array, { data: [] });
 	
-	newInput(6, nodeValue_Text("Number Columns", self, []))
+	newInput(6, nodeValue_Text("Number Columns", []))
 		.setDisplay(VALUE_DISPLAY.text_array, { data: [] });
 	
-	newOutput(0, nodeValue_Output("Array", self, VALUE_TYPE.any, 0))
+	newOutput(0, nodeValue_Output("Array", VALUE_TYPE.any, 0))
 		.setArrayDepth(1);
 	
 	input_display_list = [

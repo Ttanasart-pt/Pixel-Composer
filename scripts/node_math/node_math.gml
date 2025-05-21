@@ -74,25 +74,25 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	color		= COLORS.node_blend_number;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Enum_Scroll("Type", self, 0, global.node_math_scroll)).rejectArray();
+	newInput(0, nodeValue_Enum_Scroll("Type", 0, global.node_math_scroll)).rejectArray();
 	
 	////- Values
 	
-	newInput(1, nodeValue_Float( "a",      self, 0)).setVisible(true, true);
-	newInput(2, nodeValue_Float( "b",      self, 0)).setVisible(true, true);
-	newInput(5, nodeValue_Float( "Amount", self, 0));
-	newInput(6, nodeValue_Vec2(  "From",   self, [ 0, 1 ]));
-	newInput(7, nodeValue_Vec2(  "To",     self, [ 0, 1 ]));
+	newInput(1, nodeValue_Float( "a", 0)).setVisible(true, true);
+	newInput(2, nodeValue_Float( "b", 0)).setVisible(true, true);
+	newInput(5, nodeValue_Float( "Amount", 0));
+	newInput(6, nodeValue_Vec2(  "From", [ 0, 1 ]));
+	newInput(7, nodeValue_Vec2(  "To", [ 0, 1 ]));
 	
 	////- Settings
 		
-	newInput(3, nodeValue_Bool( "Degree Angle",  self,  true));
-	newInput(4, nodeValue_Bool( "To integer",    self, false));
-	newInput(8, nodeValue_Bool( "Output Vector", self, false));
+	newInput(3, nodeValue_Bool( "Degree Angle",  true));
+	newInput(4, nodeValue_Bool( "To integer", false));
+	newInput(8, nodeValue_Bool( "Output Vector", false));
 	
 	// inputs 9
 		
-	newOutput(0, nodeValue_Output("Result", self, VALUE_TYPE.float, 0));
+	newOutput(0, nodeValue_Output("Result", VALUE_TYPE.float, 0));
 	
 	input_display_list = [ 0, 
 		["Values",   false], 1, 2, 5, 6, 7, 

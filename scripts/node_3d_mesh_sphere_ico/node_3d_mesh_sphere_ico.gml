@@ -3,13 +3,13 @@ function Node_3D_Mesh_Sphere_Ico(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 	
 	object_class = __3dICOSphere;
 	
-	newInput(in_mesh + 0, nodeValue_Int("Subdivision", self, 1 ))
+	newInput(in_mesh + 0, nodeValue_Int("Subdivision", 1 ))
 		.setValidator(VV_min(0));
 	
-	newInput(in_mesh + 1, nodeValue_D3Material("Material", self, new __d3dMaterial()))
+	newInput(in_mesh + 1, nodeValue_D3Material("Material", new __d3dMaterial()))
 		.setVisible(true, true);
 	
-	newInput(in_mesh + 2, nodeValue_Bool("Smooth Normal", self, false ));
+	newInput(in_mesh + 2, nodeValue_Bool("Smooth Normal", false ));
 	
 	input_display_list = [
 		__d3d_input_list_mesh, in_mesh + 0, 

@@ -3,13 +3,13 @@ function Node_PB_Dimension(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	color = COLORS.node_blend_feedback;
 	setDimension(96, 48);
 	
-	newOutput(0, nodeValue_Output("Dimension", self, VALUE_TYPE.float, [ 1, 1 ] ))
+	newOutput(0, nodeValue_Output("Dimension", VALUE_TYPE.float, [ 1, 1 ] ))
 	    .setDisplay(VALUE_DISPLAY.vector);
 	
-	newOutput(1, nodeValue_Output("Width", self, VALUE_TYPE.float, 1 ))
+	newOutput(1, nodeValue_Output("Width", VALUE_TYPE.float, 1 ))
 		.setVisible(false)
 	
-	newOutput(2, nodeValue_Output("Height", self, VALUE_TYPE.float, 1 ))
+	newOutput(2, nodeValue_Output("Height", VALUE_TYPE.float, 1 ))
 		.setVisible(false)
 	
 	static update = function() {

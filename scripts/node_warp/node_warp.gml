@@ -7,30 +7,30 @@
 function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Warp";
 	
-	newActiveInput(5, nodeValue_Bool("Active", self, true));
+	newActiveInput(5, nodeValue_Bool("Active", true));
 	
 	////- Surface
 	
-	newInput( 0, nodeValue_Surface(     "Surface In",     self));
-	newInput(10, nodeValue_Surface(     "Back Surface",   self));
-	newInput( 6, nodeValue_Enum_Scroll( "Dimension Type", self, 0, [ "Input", "Absolute", "Relative" ]));
-	newInput( 7, nodeValue_Dimension(self));
-	newInput( 9, nodeValue_Vec2("Relative Dimension",     self, [ 1, 1 ] ));
+	newInput( 0, nodeValue_Surface(     "Surface In"));
+	newInput(10, nodeValue_Surface(     "Back Surface"));
+	newInput( 6, nodeValue_Enum_Scroll( "Dimension Type", 0, [ "Input", "Absolute", "Relative" ]));
+	newInput( 7, nodeValue_Dimension());
+	newInput( 9, nodeValue_Vec2("Relative Dimension", [ 1, 1 ] ));
 	
 	////- Warp
 	
-	newInput(1, nodeValue_Vec2("Top Left",     self, [ 0, 0 ] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput(2, nodeValue_Vec2("Top Right",    self, [ 1, 0 ] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput(3, nodeValue_Vec2("Bottom Left",  self, [ 0, 1 ] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput(4, nodeValue_Vec2("Bottom Right", self, [ 1, 1 ] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(1, nodeValue_Vec2("Top Left", [ 0, 0 ] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(2, nodeValue_Vec2("Top Right", [ 1, 0 ] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(3, nodeValue_Vec2("Bottom Left", [ 0, 1 ] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(4, nodeValue_Vec2("Bottom Right", [ 1, 1 ] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	
 	////- Render
 	
-	newInput(8, nodeValue_Bool("Tile", self, false));
+	newInput(8, nodeValue_Bool("Tile", false));
 	
 	//// inputs 11
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 5,
 		["Surfaces", false], 0, 10, 6, 7, 9, 

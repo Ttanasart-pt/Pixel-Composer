@@ -8,18 +8,18 @@ function Node_Anim_Curve(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Curve("Curve",    self, CURVE_DEF_01));
-	newInput(1, nodeValue_Float("Progress", self, 0))
+	newInput(0, nodeValue_Curve("Curve", CURVE_DEF_01));
+	newInput(1, nodeValue_Float("Progress", 0))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(2, nodeValue_Float("Minimum", self, 0));
-	newInput(3, nodeValue_Float("Maximum", self, 1));
+	newInput(2, nodeValue_Float("Minimum", 0));
+	newInput(3, nodeValue_Float("Maximum", 1));
 	
-	newInput(4, nodeValue_Bool("Animated", self, false));
+	newInput(4, nodeValue_Bool("Animated", false));
 	
-	newInput(5, nodeValue_Enum_Scroll("Display Type", self, 0, { data: [ "Number", "Curve" ], update_hover: false }));
+	newInput(5, nodeValue_Enum_Scroll("Display Type", 0, { data: [ "Number", "Curve" ], update_hover: false }));
 	
-	newOutput(0, nodeValue_Output("Curve", self, VALUE_TYPE.float, []));
+	newOutput(0, nodeValue_Output("Curve", VALUE_TYPE.float, []));
 	
 	input_display_list = [ 0, 
 		["X Axis",  false], 4, 1, 

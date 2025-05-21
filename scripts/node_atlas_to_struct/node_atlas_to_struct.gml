@@ -2,10 +2,10 @@ function Node_Atlas_Struct(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	name = "Atlas to Struct";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Atlas("Atlas", self))
+	newInput(0, nodeValue_Atlas())
 		.setVisible(true, true);
 	
-	newOutput(0, nodeValue_Output("Struct", self, VALUE_TYPE.struct, []))
+	newOutput(0, nodeValue_Output("Struct", VALUE_TYPE.struct, []))
 		.setArrayDepth(1);
 		
 	static processData = function(_outData, _data, _array_index = 0) {

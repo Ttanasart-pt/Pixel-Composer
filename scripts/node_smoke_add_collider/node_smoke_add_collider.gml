@@ -8,16 +8,16 @@ function Node_Smoke_Add_Collider(_x, _y, _group = noone) : Node_Smoke(_x, _y, _g
 	newInput(0, nodeValue("Domain", self, CONNECT_TYPE.input, VALUE_TYPE.sdomain, noone))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Surface("Collider", self));
+	newInput(1, nodeValue_Surface("Collider"));
 	
-	newInput(2, nodeValue_Area("Area", self, DEF_AREA , { useShape : false }));
+	newInput(2, nodeValue_Area("Area", DEF_AREA , { useShape : false }));
 	
 	input_display_list = [ 
 		["Domain",		false], 0, 
 		["Collider",	false], 1, 2,
 	];
 	
-	newOutput(0, nodeValue_Output("Domain", self, VALUE_TYPE.sdomain, noone));
+	newOutput(0, nodeValue_Output("Domain", VALUE_TYPE.sdomain, noone));
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _mat = getInputData(1);

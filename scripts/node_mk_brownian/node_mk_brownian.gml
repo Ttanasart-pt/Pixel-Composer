@@ -2,35 +2,35 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	name = "MK Brownian";
 	update_on_frame = true;
 	
-	newInput(0, nodeValue_Surface("Background", self));
+	newInput(0, nodeValue_Surface("Background"));
 	
-	newInput(1, nodeValue_Surface("Sprite", self));
+	newInput(1, nodeValue_Surface("Sprite"));
 	
-	newInput(2, nodeValue_Int("Amount", self, 10));
+	newInput(2, nodeValue_Int("Amount", 10));
 	
-	newInput(3, nodeValue_Area("Area", self, DEF_AREA));
+	newInput(3, nodeValue_Area("Area", DEF_AREA));
 	
-	newInput(4, nodeValue_Rotation_Random("Direction", self, [ 0, 45, 135, 0, 0 ] ));
+	newInput(4, nodeValue_Rotation_Random("Direction", [ 0, 45, 135, 0, 0 ] ));
 	
-	newInput(5, nodeValue_Range("Speed", self, [ 1, 1 ]));
+	newInput(5, nodeValue_Range("Speed", [ 1, 1 ]));
 	
-	newInput(6, nodeValue_Gradient("Color", self, new gradientObject(ca_white)));
+	newInput(6, nodeValue_Gradient("Color", new gradientObject(ca_white)));
 	
-	newInput(7, nodeValue_Curve("Alpha", self, CURVE_DEF_11));
+	newInput(7, nodeValue_Curve("Alpha", CURVE_DEF_11));
 	
 	newInput(8, nodeValueSeed(self));
 	
-	newInput(9, nodeValue_Range("Angular speed", self, [ -45, 45 ]));
+	newInput(9, nodeValue_Range("Angular speed", [ -45, 45 ]));
 	
-	newInput(10, nodeValue_Range("Angular acceleration", self, [ -2, 2 ]));
+	newInput(10, nodeValue_Range("Angular acceleration", [ -2, 2 ]));
 		
-	newInput(11, nodeValue_Bool("Turn", self, false));
+	newInput(11, nodeValue_Bool("Turn", false));
 	
-	newInput(12, nodeValue_Dimension(self));
+	newInput(12, nodeValue_Dimension());
 		
-	newInput(13, nodeValue_Range("Size", self, [ 1, 1 ], { linked : true }));
+	newInput(13, nodeValue_Range("Size", [ 1, 1 ], { linked : true }));
 		
-	newOutput(0, nodeValue_Output("Output", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Output", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 8, 
 		["Dimension", false], 0, 12, 

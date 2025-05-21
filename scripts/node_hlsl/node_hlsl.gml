@@ -42,34 +42,34 @@ function Node_HLSL(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	name   = "HLSL";
 	shader = { vs: -1, fs: -1 };
 	
-	newInput(0, nodeValue_Text("Vertex", self, ""))
+	newInput(0, nodeValue_Text("Vertex"))
 		.setDisplay(VALUE_DISPLAY.codeHLSL)
 		.rejectArray();
 	
-	newInput(1, nodeValue_Text("Main", self, 
+	newInput(1, nodeValue_Text("Main", 
 @"float4 surfaceColor = gm_BaseTextureObject.Sample(gm_BaseTexture, input.uv);
 output.color = surfaceColor;"))
 		.setDisplay(VALUE_DISPLAY.codeHLSL)
 		.rejectArray();
 	
-	newInput(2, nodeValue_Surface("Base Texture", self));
+	newInput(2, nodeValue_Surface("Base Texture"));
 	
-	newInput(3, nodeValue_Text("Libraries", self, "" ))
+	newInput(3, nodeValue_Text("Libraries"))
 		.setDisplay(VALUE_DISPLAY.codeHLSL)
 		.rejectArray();
 	
-	newInput(4, nodeValue_Text("Global", self, ""))
+	newInput(4, nodeValue_Text("Global"))
 		.setDisplay(VALUE_DISPLAY.codeHLSL)
 		.rejectArray();
 	
-	newOutput(0, nodeValue_Output("Surface", self, VALUE_TYPE.surface, noone ));
+	newOutput(0, nodeValue_Output("Surface", VALUE_TYPE.surface, noone ));
 	
 	static createNewInput = function(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
-		newInput(index + 0, nodeValue_Text("Argument name", self, "" ));
+		newInput(index + 0, nodeValue_Text("Argument name"));
 		
-		newInput(index + 1, nodeValue_Enum_Scroll("Argument type", self,  0 , { data: [ "Float", "Int", "Vec2", "Vec3", "Vec4", "Mat3", "Mat4", "Sampler2D", "Color" ], update_hover: false }));
+		newInput(index + 1, nodeValue_Enum_Scroll("Argument type",  0 , { data: [ "Float", "Int", "Vec2", "Vec3", "Vec4", "Mat3", "Mat4", "Sampler2D", "Color" ], update_hover: false }));
 		inputs[index + 1].editWidget.interactable = false;
 		
 		newInput(index + 2, nodeValue("Argument value", self, CONNECT_TYPE.input, VALUE_TYPE.float, 0 ))

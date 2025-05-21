@@ -23,23 +23,23 @@ function Node_Scale_Algo(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	name = "Scale Algorithm";
 	manage_atlas = false;
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Enum_Scroll("Algorithm", self,  0, [ "Scale2x", "Scale3x", "CleanEdge" ]));
+	newInput(1, nodeValue_Enum_Scroll("Algorithm",  0, [ "Scale2x", "Scale3x", "CleanEdge" ]));
 		
-	newInput(2, nodeValue_Float("Tolerance", self, 0))
+	newInput(2, nodeValue_Float("Tolerance", 0))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(3, nodeValue_Bool("Active", self, true));
+	newInput(3, nodeValue_Bool("Active", true));
 		active_index = 3;
 		
-	newInput(4, nodeValue_Bool("Scale Atlas Position", self, true));
+	newInput(4, nodeValue_Bool("Scale Atlas Position", true));
 	
-	newInput(5, nodeValue_Float("Scale", self, 4));
+	newInput(5, nodeValue_Float("Scale", 4));
 		
-	newInput(6, nodeValue_Rotation("Rotation", self, 0));
+	newInput(6, nodeValue_Rotation("Rotation", 0));
 		
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 3,
 		["Surfaces", false], 0, 

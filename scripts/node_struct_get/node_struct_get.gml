@@ -3,12 +3,12 @@ function Node_Struct_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Struct("Struct", self, {}))
+	newInput(0, nodeValue_Struct("Struct"))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Text("Key", self, ""));
+	newInput(1, nodeValue_Text("Key"));
 	
-	newOutput(0, nodeValue_Output("Value", self, VALUE_TYPE.struct, {}));
+	newOutput(0, nodeValue_Output("Value", VALUE_TYPE.struct, {}));
 	
 	static getStructValue = function(str, keys) {
 		var _pnt = str, val = 0;

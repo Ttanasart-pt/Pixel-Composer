@@ -9,7 +9,7 @@ function Node_Array_Find(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		.setVisible(true, true)
 		.rejectArray();
 	
-	newOutput(0, nodeValue_Output("Index", self, VALUE_TYPE.integer, 0));
+	newOutput(0, nodeValue_Output("Index", VALUE_TYPE.integer, 0));
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var type = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;

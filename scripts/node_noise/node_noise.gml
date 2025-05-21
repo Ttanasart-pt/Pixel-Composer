@@ -7,19 +7,19 @@
 function Node_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Noise";
 	
-	newInput(0, nodeValue_Dimension(self));
+	newInput(0, nodeValue_Dimension());
 	
 	newInput(1, nodeValueSeed(self));
 	
-	newInput(2, nodeValue_Enum_Button("Color Mode", self,  0, [ "Greyscale", "RGB", "HSV" ]));
+	newInput(2, nodeValue_Enum_Button("Color Mode",  0, [ "Greyscale", "RGB", "HSV" ]));
 	
-	newInput(3, nodeValue_Slider_Range("Color R Range", self, [ 0, 1 ]));
+	newInput(3, nodeValue_Slider_Range("Color R Range", [ 0, 1 ]));
 	
-	newInput(4, nodeValue_Slider_Range("Color G Range", self, [ 0, 1 ]));
+	newInput(4, nodeValue_Slider_Range("Color G Range", [ 0, 1 ]));
 	
-	newInput(5, nodeValue_Slider_Range("Color B Range", self, [ 0, 1 ]));
+	newInput(5, nodeValue_Slider_Range("Color B Range", [ 0, 1 ]));
 	
-	newInput(6, nodeValue_Surface("Mask", self));
+	newInput(6, nodeValue_Surface("Mask"));
 	
 	input_display_list = [
 		["Output",	false], 0, 6, 
@@ -27,7 +27,7 @@ function Node_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		["Color",	false], 2, 3, 4, 5, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	

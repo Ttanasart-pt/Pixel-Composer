@@ -1,21 +1,21 @@
 function Node_PB_FX_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Bevel";
 	
-	newInput(0, nodeValue_Surface("Surface", self));
+	newInput(0, nodeValue_Surface("Surface"));
 	
-	newInput(1, nodeValue_i("Height", self, 2));
+	newInput(1, nodeValue_Int("Height", 2));
 	
-	newInput(2, nodeValue_Gradient("Color Over Height", self, new gradientObject( ca_white )))
-	newInput(3, nodeValue_Gradient("Color Over Angles", self, new gradientObject( [ ca_black, ca_white ] )))
-	newInput(4, nodeValue_r("Shift Angle", self, 0));
+	newInput(2, nodeValue_Gradient("Color Over Height", new gradientObject( ca_white )))
+	newInput(3, nodeValue_Gradient("Color Over Angles", new gradientObject( [ ca_black, ca_white ] )))
+	newInput(4, nodeValue_Rotation("Shift Angle", 0));
 	
-	newInput(5, nodeValue_b(  "Highlight",           self, false));
-	newInput(6, nodeValue_c(  "Highlight Color",     self, ca_white));
-	newInput(7, nodeValue_r(  "Highlight Direction", self, 0));
-	newInput(8, nodeValue_b(  "Highlight All",       self, false));
+	newInput(5, nodeValue_Bool(  "Highlight", false));
+	newInput(6, nodeValue_Color(  "Highlight Color", ca_white));
+	newInput(7, nodeValue_Rotation(  "Highlight Direction", 0));
+	newInput(8, nodeValue_Bool(  "Highlight All", false));
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
-	newOutput(1, nodeValue_Output("Inner Area", self, VALUE_TYPE.surface, noone)).setVisible(false);
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	newOutput(1, nodeValue_Output("Inner Area", VALUE_TYPE.surface, noone)).setVisible(false);
 	
 	input_display_list = [ 0,
 	    ["Bevel",  false], 1, 

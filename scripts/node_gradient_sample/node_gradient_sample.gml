@@ -2,15 +2,15 @@ function Node_Gradient_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	name = "Sample Gradient";
 	setDimension(96);
 	
-	newInput(0, nodeValue_Gradient("Gradient", self, new gradientObject([ca_black, ca_white])) )
+	newInput(0, nodeValue_Gradient("Gradient", new gradientObject([ca_black, ca_white])) )
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Int("Step", self, 16));
+	newInput(1, nodeValue_Int("Step", 16));
 	
-	newInput(2, nodeValue_Float("Shift", self, 0))
+	newInput(2, nodeValue_Float("Shift", 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
 	
-	newOutput(0, nodeValue_Output("Colors", self, VALUE_TYPE.color, [ c_black ]))
+	newOutput(0, nodeValue_Output("Colors", VALUE_TYPE.color, [ c_black ]))
 		.setDisplay(VALUE_DISPLAY.palette);
 	
 	_pal = -1;

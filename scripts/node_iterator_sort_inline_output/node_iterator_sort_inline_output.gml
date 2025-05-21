@@ -11,8 +11,8 @@ function Node_Iterator_Sort_Inline_Output(_x, _y, _group = noone) : Node(_x, _y,
 	inline_parent_object = "Node_Iterate_Sort_Inline";
 	manual_ungroupable	 = false;
 	
-	newInput(0, nodeValue_Bool("Swap", self, false ))
+	newInput(0, nodeValue_Bool("Swap", false ))
 		.setVisible(true, true);
 		
-	newOutput(0, nodeValue_Output("Array out", self, VALUE_TYPE.any, [] ));
+	newOutput(0, nodeValue_Output("Array out", VALUE_TYPE.any, [] ));
 }

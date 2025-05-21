@@ -14,14 +14,14 @@ function Node_Rigid_Variable(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	input_display_list = [ 0 ];
 	
-	newOutput(0, nodeValue_Output( "Positions",          self, VALUE_TYPE.float, [ 0, 0 ] )).setDisplay(VALUE_DISPLAY.vector);
-	newOutput(1, nodeValue_Output( "Scales",             self, VALUE_TYPE.float, [ 0, 0 ] )).setDisplay(VALUE_DISPLAY.vector);
-	newOutput(2, nodeValue_Output( "Rotations",          self, VALUE_TYPE.float, 0 ));
-	newOutput(3, nodeValue_Output( "Blends",             self, VALUE_TYPE.color, 0 ));
-	newOutput(4, nodeValue_Output( "Alpha",              self, VALUE_TYPE.float, 0 ));
-	newOutput(5, nodeValue_Output( "Velocity",           self, VALUE_TYPE.float, [ 0, 0 ] )).setDisplay(VALUE_DISPLAY.vector);
-	newOutput(6, nodeValue_Output( "Center of mass",     self, VALUE_TYPE.float, [ 0, 0 ] )).setDisplay(VALUE_DISPLAY.vector);
-	newOutput(7, nodeValue_Output( "Velocity magnitude", self, VALUE_TYPE.float, 0 )).setDisplay(VALUE_DISPLAY.vector);
+	newOutput(0, nodeValue_Output( "Positions", VALUE_TYPE.float, [ 0, 0 ] )).setDisplay(VALUE_DISPLAY.vector);
+	newOutput(1, nodeValue_Output( "Scales", VALUE_TYPE.float, [ 0, 0 ] )).setDisplay(VALUE_DISPLAY.vector);
+	newOutput(2, nodeValue_Output( "Rotations", VALUE_TYPE.float, 0 ));
+	newOutput(3, nodeValue_Output( "Blends", VALUE_TYPE.color, 0 ));
+	newOutput(4, nodeValue_Output( "Alpha", VALUE_TYPE.float, 0 ));
+	newOutput(5, nodeValue_Output( "Velocity", VALUE_TYPE.float, [ 0, 0 ] )).setDisplay(VALUE_DISPLAY.vector);
+	newOutput(6, nodeValue_Output( "Center of mass", VALUE_TYPE.float, [ 0, 0 ] )).setDisplay(VALUE_DISPLAY.vector);
+	newOutput(7, nodeValue_Output( "Velocity magnitude", VALUE_TYPE.float, 0 )).setDisplay(VALUE_DISPLAY.vector);
 	
 	array_foreach(outputs, function(i) /*=>*/ {return i.setVisible(false)});
 	

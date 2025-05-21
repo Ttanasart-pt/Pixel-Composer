@@ -7,17 +7,17 @@
 function Node_Solid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Solid";
 	
-	newInput(0, nodeValue_Dimension(self));
+	newInput(0, nodeValue_Dimension());
 	
-	newInput(1, nodeValue_Color("Color", self, ca_white));
+	newInput(1, nodeValue_Color("Color", ca_white));
 	
-	newInput(2, nodeValue_Bool("Empty", self, false));
+	newInput(2, nodeValue_Bool("Empty", false));
 	
-	newInput(3, nodeValue_Surface("Mask", self));
+	newInput(3, nodeValue_Surface("Mask"));
 	
-	newInput(4, nodeValue_Bool("Use mask dimension", self, true));
+	newInput(4, nodeValue_Bool("Use mask dimension", true));
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
 		["Surfaces",	false], 0, 3, 4,

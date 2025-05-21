@@ -14,25 +14,25 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	////- Base
 	
 	newInput(5, nodeValueSeed(self)).rejectArray();
-	newInput(6, nodeValue_Bool( "Fixed Position",      self, false, "Fix point position, and only select point in the area."));
-	newInput(7, nodeValue_Vec2( "Reference Dimension", self, DEF_SURF));
+	newInput(6, nodeValue_Bool( "Fixed Position", false, "Fix point position, and only select point in the area."));
+	newInput(7, nodeValue_Vec2( "Reference Dimension", DEF_SURF));
 	
 	////- Scatter
 	
 	onSurfaceSize = function() /*=>*/ {return DEF_SURF}; 
-	newInput( 0, nodeValue_Area(        "Point area",       self, DEF_AREA_REF, { onSurfaceSize } )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
-	newInput( 1, nodeValue_Enum_Button( "Distribution",     self, 0, [ "Area", "Border", "Map" ])).rejectArray();
-	newInput( 4, nodeValue_Surface(     "Distribution Map", self)).rejectArray();
-	newInput( 2, nodeValue_Enum_Button( "Scatter",          self, 1, [ "Uniform", "Random", "Poisson" ])).rejectArray();
-	newInput( 3, nodeValue_Int(         "Amount",           self, 2, "Amount of particle spawn in that frame.")).rejectArray();
-	newInput(12, nodeValue_Float(       "Distance",         self, 8)).setValidator(VV_min(0));
+	newInput( 0, nodeValue_Area(        "Point area", DEF_AREA_REF, { onSurfaceSize } )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
+	newInput( 1, nodeValue_Enum_Button( "Distribution", 0, [ "Area", "Border", "Map" ])).rejectArray();
+	newInput( 4, nodeValue_Surface(     "Distribution Map")).rejectArray();
+	newInput( 2, nodeValue_Enum_Button( "Scatter", 1, [ "Uniform", "Random", "Poisson" ])).rejectArray();
+	newInput( 3, nodeValue_Int(         "Amount", 2, "Amount of particle spawn in that frame.")).rejectArray();
+	newInput(12, nodeValue_Float(       "Distance", 8)).setValidator(VV_min(0));
 	
 	////- 3D
 	
-	newInput( 8, nodeValue_Surface(     "Reference Value", self));
-	newInput( 9, nodeValue_Bool(        "Output 3D",       self, false));
-	newInput(10, nodeValue_Enum_Button( "Normal",          self, 0, [ "X", "Y", "Z" ]));
-	newInput(11, nodeValue_Float(       "Plane Position",  self, 0));
+	newInput( 8, nodeValue_Surface(     "Reference Value"));
+	newInput( 9, nodeValue_Bool(        "Output 3D", false));
+	newInput(10, nodeValue_Enum_Button( "Normal", 0, [ "X", "Y", "Z" ]));
+	newInput(11, nodeValue_Float(       "Plane Position", 0));
 	
 	// inputs 13
 	
@@ -42,7 +42,7 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		["3D",		 true, 9], 10, 11
 	];
 	
-	newOutput(0, nodeValue_Output("Points", self, VALUE_TYPE.float, [ 0, 0 ]))
+	newOutput(0, nodeValue_Output("Points", VALUE_TYPE.float, [ 0, 0 ]))
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {

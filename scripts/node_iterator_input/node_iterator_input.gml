@@ -37,6 +37,6 @@ function Node_Iterator_Input(_x, _y, _group = noone) : Node_Group_Input(_x, _y, 
 		arr[@ 1] = inParent;
 	}
 	
-	newOutput(1, nodeValue_Output("Loop entrance", self, VALUE_TYPE.node, 0))
+	newOutput(1, nodeValue_Output("Loop entrance", VALUE_TYPE.node, 0))
 		.nonForward();
 }

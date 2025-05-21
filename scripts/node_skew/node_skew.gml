@@ -2,23 +2,23 @@ function Node_Skew(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	name = "Skew";
 	
 	newActiveInput(8);
-	newInput(9, nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) }));
+	newInput(9, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- Surfaces
 	
-	newInput(0, nodeValue_Surface( "Surface In", self));
-	newInput(6, nodeValue_Surface( "Mask",       self));
-	newInput(7, nodeValue_Slider(  "Mix",        self, 1));
+	newInput(0, nodeValue_Surface( "Surface In"));
+	newInput(6, nodeValue_Surface( "Mask"));
+	newInput(7, nodeValue_Slider(  "Mix", 1));
 	__init_mask_modifier(6, 10); // inputs 10, 11
 	
 	////- Skew
 	
-	newInput( 1, nodeValue_Enum_Button( "Axis",            self, 0, ["x", "y"]));
-	newInput( 2, nodeValue_Slider(      "Strength",        self, 0, [-1, 1, 0.01])).setMappable(12);
+	newInput( 1, nodeValue_Enum_Button( "Axis", 0, ["x", "y"]));
+	newInput( 2, nodeValue_Slider(      "Strength", 0, [-1, 1, 0.01])).setMappable(12);
 	newInput(12, nodeValueMap(          "Strength map",    self));
-	newInput( 4, nodeValue_Vec2(        "Center",          self, [.5, .5])).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput( 3, nodeValue_Bool(        "Wrap",            self, false));
-	newInput( 5, nodeValue_Enum_Scroll( "Oversample mode", self, 0, [ "Empty", "Clamp", "Repeat" ]));
+	newInput( 4, nodeValue_Vec2(        "Center", [.5, .5])).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput( 3, nodeValue_Bool(        "Wrap", false));
+	newInput( 5, nodeValue_Enum_Scroll( "Oversample mode", 0, [ "Empty", "Clamp", "Repeat" ]));
 	
 	// inputs 13
 	
@@ -27,7 +27,7 @@ function Node_Skew(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		["Skew",	false],	1, 2, 12, 4,
 	]
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	attribute_oversample();

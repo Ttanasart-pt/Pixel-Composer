@@ -81,34 +81,34 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	////- Visibility
 	
-	newInput(9, nodeValue_Enum_Scroll("Visible Condition", self,  0, [ "Always Show", "Always Hide", /* 2 */ new scrollItem("Equal",              s_node_condition_type, 0), 
+	newInput(9, nodeValue_Enum_Scroll("Visible Condition",  0, [ "Always Show", "Always Hide", /* 2 */ new scrollItem("Equal",              s_node_condition_type, 0), 
 												        		                                     /* 3 */ new scrollItem("Not equal",          s_node_condition_type, 1), 
 												        		                                     /* 4 */ new scrollItem("Greater ",           s_node_condition_type, 4), 
 												        		                                     /* 5 */ new scrollItem("Greater or equal",   s_node_condition_type, 5), 
 												        		                                     /* 6 */ new scrollItem("Lesser",             s_node_condition_type, 2), 
 												        		                                     /* 7 */ new scrollItem("Lesser or equal",    s_node_condition_type, 3), ]));
 	
-	newInput(10, nodeValue_Float(      "Visible Check",       self, 0));
-	newInput(11, nodeValue_Float(      "Visible Check To",    self, 0));
+	newInput(10, nodeValue_Float(      "Visible Check", 0));
+	newInput(11, nodeValue_Float(      "Visible Check To", 0));
 	
 	////- Data
 	
-	newInput(2, nodeValue_Enum_Scroll( "Input Type",          self, 11, { data: GROUP_IO_TYPE_NAME, update_hover: false })).setUnclamp();
-	newInput(0, nodeValue_Enum_Scroll( "Subtype",             self,  0, { data: GROUP_IO_DISPLAY[11], update_hover: false })).setUnclamp();
-	newInput(4, nodeValue_Enum_Button( "Vector size",         self,  0, [ "2", "3", "4" ]));
-	newInput(1, nodeValue_Range(       "Range",               self, [0,1]));
-	newInput(7, nodeValue_Float(       "Step",                self, 0.01));
-	newInput(3, nodeValue_Text(        "Enum Labels",         self, "", "Define enum choices, use comma to separate each choice."));
-	newInput(8, nodeValue_Text(        "Button Label",        self, "Trigger"));
-	newInput(5, nodeValue_Int(         "Order",               self, 0));
+	newInput(2, nodeValue_Enum_Scroll( "Input Type", 11, { data: GROUP_IO_TYPE_NAME, update_hover: false })).setUnclamp();
+	newInput(0, nodeValue_Enum_Scroll( "Subtype",  0, { data: GROUP_IO_DISPLAY[11], update_hover: false })).setUnclamp();
+	newInput(4, nodeValue_Enum_Button( "Vector size",  0, [ "2", "3", "4" ]));
+	newInput(1, nodeValue_Range(       "Range", [0,1]));
+	newInput(7, nodeValue_Float(       "Step", 0.01));
+	newInput(3, nodeValue_Text(        "Enum Labels")).setTooltip("Define enum choices, use comma to separate each choice.");
+	newInput(8, nodeValue_Text(        "Button Label", "Trigger"));
+	newInput(5, nodeValue_Int(         "Order", 0));
 	
 	////- Gizmo
 	
-	newInput( 6, nodeValue_Bool(     "Display preview gizmo", self, true));
-	newInput(12, nodeValue_Vec2(     "Gizmo Position",        self, [ 0, 0 ]));
-	newInput(13, nodeValue_Float(    "Gizmo Scale",           self, 1));
-	newInput(14, nodeValue_Rotation( "Gizmo Rotation",        self, 0));
-	newInput(15, nodeValue_Bool(     "Gizmo Label",           self, true));
+	newInput( 6, nodeValue_Bool(     "Display preview gizmo", true));
+	newInput(12, nodeValue_Vec2(     "Gizmo Position", [ 0, 0 ]));
+	newInput(13, nodeValue_Float(    "Gizmo Scale", 1));
+	newInput(14, nodeValue_Rotation( "Gizmo Rotation", 0));
+	newInput(15, nodeValue_Bool(     "Gizmo Label", true));
 	
 	inputs[10].setFrom_condition = function(v) {
 		if(is(v.node, Node_Group_Input)) return true;
@@ -125,7 +125,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		["Gizmo",      false, 6], 12, 13, 14, 15, 
 	];
 	
-	newOutput(0, nodeValue_Output("Value", self, VALUE_TYPE.any, 0))
+	newOutput(0, nodeValue_Output("Value", VALUE_TYPE.any, 0))
 		.uncache();
 	
 	attributes.inherit_name = true;

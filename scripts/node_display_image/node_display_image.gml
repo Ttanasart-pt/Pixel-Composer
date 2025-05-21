@@ -27,18 +27,18 @@ function Node_Display_Image(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name		= "Display Image";
 	auto_height	= false;
 	
-	newInput(0, nodeValue_Path("Path", self, ""))
+	newInput(0, nodeValue_Path("Path"))
 		.setVisible(false)
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "image|*.png;*.jpg" })
 		.rejectArray();
 	
-	newInput(1, nodeValue_Vec2("Position", self, [ x, y ]))
+	newInput(1, nodeValue_Vec2("Position", [ x, y ]))
 		.rejectArray();
 	
-	newInput(2, nodeValue_Vec2("Scale", self, [ 1, 1 ]))
+	newInput(2, nodeValue_Vec2("Scale", [ 1, 1 ]))
 		.rejectArray();
 	
-	newInput(3, nodeValue_Bool("Smooth transform", self, true))
+	newInput(3, nodeValue_Bool("Smooth transform", true))
 		.rejectArray();
 	
 	input_display_list = [ 0,

@@ -7,24 +7,24 @@
 function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Simplex Noise";
 	
-	newInput(0, nodeValue_Dimension(self));
+	newInput(0, nodeValue_Dimension());
 	
-	newInput(1, nodeValue_Vec3("Position", self, [ 0, 0, 0 ] ));
+	newInput(1, nodeValue_Vec3("Position", [ 0, 0, 0 ] ));
 	
-	newInput(2, nodeValue_Vec2("Scale", self, [ 1, 1 ] ))
+	newInput(2, nodeValue_Vec2("Scale", [ 1, 1 ] ))
 		.setMappable(8);
 	
-	newInput(3, nodeValue_Int("Iteration", self, 1 ))
+	newInput(3, nodeValue_Int("Iteration", 1 ))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] })
 		.setMappable(9);
 	
-	newInput(4, nodeValue_Enum_Button("Color Mode", self, 0, [ "Greyscale", "RGB", "HSV" ]));
+	newInput(4, nodeValue_Enum_Button("Color Mode", 0, [ "Greyscale", "RGB", "HSV" ]));
 	
-	newInput(5, nodeValue_Slider_Range("Color R Range", self, [ 0, 1 ]));
+	newInput(5, nodeValue_Slider_Range("Color R Range", [ 0, 1 ]));
 	
-	newInput(6, nodeValue_Slider_Range("Color G Range", self, [ 0, 1 ]));
+	newInput(6, nodeValue_Slider_Range("Color G Range", [ 0, 1 ]));
 	
-	newInput(7, nodeValue_Slider_Range("Color B Range", self, [ 0, 1 ]));
+	newInput(7, nodeValue_Slider_Range("Color B Range", [ 0, 1 ]));
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	
@@ -34,14 +34,14 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	//////////////////////////////////////////////////////////////////////////////////
 		
-	newInput(10, nodeValue_Rotation("Rotation", self, 0));
+	newInput(10, nodeValue_Rotation("Rotation", 0));
 		
-	newInput(11, nodeValue_Float("Scaling", self, 2.));
+	newInput(11, nodeValue_Float("Scaling", 2.));
 	
-	newInput(12, nodeValue_Float("Amplitude", self, .5))
+	newInput(12, nodeValue_Float("Amplitude", .5))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(13, nodeValue_Surface("Mask", self));
+	newInput(13, nodeValue_Surface("Mask"));
 	
 	input_display_list = [
 		["Output",   false], 0, 13, 
@@ -50,7 +50,7 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		["Render",   false], 4, 5, 6, 7, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	

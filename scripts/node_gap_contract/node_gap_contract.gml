@@ -5,19 +5,19 @@ function Node_Gap_Contract(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	////- Surfaces
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
-	newInput(2, nodeValue_Surface("Mask", self));
-	newInput(3, nodeValue_Slider("Mix", self, 1));
+	newInput(0, nodeValue_Surface("Surface In"));
+	newInput(2, nodeValue_Surface("Mask"));
+	newInput(3, nodeValue_Slider("Mix", 1));
 	__init_mask_modifier(2); // inputs 4, 5, 
-	newInput(7, nodeValue_Bool( "Invert", self, false));
+	newInput(7, nodeValue_Bool( "Invert", false));
 	
 	////- Gap
 	
-	newInput(6, nodeValue_Int(  "Max Width",  self, 8));
+	newInput(6, nodeValue_Int(  "Max Width", 8));
 	
 	/// inputs 8
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 1, 
 		["Surfaces", false], 0, 2, 3, 4, 5, 7, 

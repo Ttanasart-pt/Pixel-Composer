@@ -1,16 +1,16 @@
 function Node_Override_Channel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Override Channel";
 	
-	newInput(0, nodeValue_Surface("Surface", self));
+	newInput(0, nodeValue_Surface("Surface"));
 	
-	newInput(1, nodeValue_Surface("Red",   self));
-	newInput(2, nodeValue_Surface("Green", self));
-	newInput(3, nodeValue_Surface("Blue",  self));
-	newInput(4, nodeValue_Surface("Alpha", self));
+	newInput(1, nodeValue_Surface("Red"));
+	newInput(2, nodeValue_Surface("Green"));
+	newInput(3, nodeValue_Surface("Blue"));
+	newInput(4, nodeValue_Surface("Alpha"));
 	
-	newInput(5, nodeValue_Enum_Scroll("Sampling type", self,  0, ["Brightness", "Channel value"]));
+	newInput(5, nodeValue_Enum_Scroll("Sampling type",  0, ["Brightness", "Channel value"]));
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0, 
 		["Sampling",	false], 5, 

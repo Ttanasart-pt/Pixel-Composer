@@ -8,26 +8,26 @@ function Node_Honeycomb_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x
 	name   = "Honeycomb Noise";
 	shader = sh_noise_honey;
 	
-	newInput(1, nodeValue_Vec2("Position", self, [ 0, 0 ]))
+	newInput(1, nodeValue_Vec2("Position", [ 0, 0 ]))
 		.setUnitRef(function(index) { return getDimension(index); });
 		addShaderProp(SHADER_UNIFORM.float, "position");
 		
-	newInput(2, nodeValue_Vec2("Scale", self, [ 2, 2 ]));
+	newInput(2, nodeValue_Vec2("Scale", [ 2, 2 ]));
 		addShaderProp(SHADER_UNIFORM.float, "scale");
 				
-	newInput(3, nodeValue_Rotation("Rotation", self, 0));
+	newInput(3, nodeValue_Rotation("Rotation", 0));
 		addShaderProp(SHADER_UNIFORM.float, "rotation");
 		
-	newInput(4, nodeValue_Enum_Button("Mode", self,  0, [ "Hexagon", "Star" ]));
+	newInput(4, nodeValue_Enum_Button("Mode",  0, [ "Hexagon", "Star" ]));
 		addShaderProp(SHADER_UNIFORM.integer, "mode");
 	
 	newInput(5, nodeValueSeed(self));
 		addShaderProp(SHADER_UNIFORM.float, "seed");
 		
-	newInput(6, nodeValue_Int("Iteration", self, 1));
+	newInput(6, nodeValue_Int("Iteration", 1));
 		addShaderProp(SHADER_UNIFORM.integer, "iteration");
 	
-	newInput(7, nodeValue_Surface("Mask", self));
+	newInput(7, nodeValue_Surface("Mask"));
 	
 	input_display_list = [ 5, 
 		["Output", 	 true],	0, 7, 

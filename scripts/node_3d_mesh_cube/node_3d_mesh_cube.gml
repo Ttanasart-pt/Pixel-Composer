@@ -6,19 +6,19 @@ function Node_3D_Mesh_Cube(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 	
 	////- Mesh
 	
-	newInput(i+9, nodeValue_IVec3(       "Subdivision", self, [ 1, 1, 1 ]));
-	newInput(i+7, nodeValue_Slider(      "Taper",       self, 0, [ -1, 1, 0.01 ]));
-	newInput(i+8, nodeValue_Enum_Button( "Taper Axis",  self, 0, [ "X", "Y", "Z" ]));
+	newInput(i+9, nodeValue_IVec3(       "Subdivision", [ 1, 1, 1 ]));
+	newInput(i+7, nodeValue_Slider(      "Taper", 0, [ -1, 1, 0.01 ]));
+	newInput(i+8, nodeValue_Enum_Button( "Taper Axis", 0, [ "X", "Y", "Z" ]));
 	
 	////- Materials
 	
-	newInput(i+0, nodeValue_Bool("Material per side", self, false ));
-	newInput(i+1, nodeValue_D3Material("Material",        self)).setVisible(true, true);
-	newInput(i+2, nodeValue_D3Material("Material Bottom", self)).setVisible(true, true);
-	newInput(i+3, nodeValue_D3Material("Material Left",   self)).setVisible(true, true);
-	newInput(i+4, nodeValue_D3Material("Material Right",  self)).setVisible(true, true);
-	newInput(i+5, nodeValue_D3Material("Material Back",   self)).setVisible(true, true);
-	newInput(i+6, nodeValue_D3Material("Material Front",  self)).setVisible(true, true);
+	newInput(i+0, nodeValue_Bool("Material per side", false ));
+	newInput(i+1, nodeValue_D3Material("Material")).setVisible(true, true);
+	newInput(i+2, nodeValue_D3Material("Material Bottom")).setVisible(true, true);
+	newInput(i+3, nodeValue_D3Material("Material Left")).setVisible(true, true);
+	newInput(i+4, nodeValue_D3Material("Material Right")).setVisible(true, true);
+	newInput(i+5, nodeValue_D3Material("Material Back")).setVisible(true, true);
+	newInput(i+6, nodeValue_D3Material("Material Front")).setVisible(true, true);
 	
 	input_display_list = [
 		__d3d_input_list_mesh,      i+9, i+7, i+8, 

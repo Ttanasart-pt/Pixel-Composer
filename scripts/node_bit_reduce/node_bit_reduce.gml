@@ -16,22 +16,22 @@ function Node_Bit_Reduce(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	name = "Quantize Colors";
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Enum_Scroll("Color Space", self, 0, [ "RGB", "HSV", "OKLAB", "YIQ" ]));
+	newInput(1, nodeValue_Enum_Scroll("Color Space", 0, [ "RGB", "HSV", "OKLAB", "YIQ" ]));
 	
-	newInput(2, nodeValue_Vec3("Steps", self, [ 4, 4, 4 ]));
+	newInput(2, nodeValue_Vec3("Steps", [ 4, 4, 4 ]));
 	
-	newInput(3, nodeValue_Bool("Dithering", self, false));
+	newInput(3, nodeValue_Bool("Dithering", false));
 	
-	newInput(4, nodeValue_Enum_Scroll("Pattern", self,  0, [ "2 x 2 Bayer", "4 x 4 Bayer", "8 x 8 Bayer" ]));
+	newInput(4, nodeValue_Enum_Scroll("Pattern",  0, [ "2 x 2 Bayer", "4 x 4 Bayer", "8 x 8 Bayer" ]));
 	
-	newInput(5, nodeValue_Float("Contrast", self, 1))
+	newInput(5, nodeValue_Float("Contrast", 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 5, 0.1] });
 	
-	newInput(6, nodeValue_Float("Alpha Steps", self, 256));
+	newInput(6, nodeValue_Float("Alpha Steps", 256));
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [  
 		["Surfaces",   true], 0,  

@@ -9,7 +9,7 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 	newInput(0, nodeValue("Array", self, CONNECT_TYPE.input, VALUE_TYPE.any, [] ))
 		.setVisible(true, true);
 	
-	newOutput(0, nodeValue_Output("Array", self, VALUE_TYPE.any, noone ));
+	newOutput(0, nodeValue_Output("Array", VALUE_TYPE.any, noone ));
 	
 	topoList = [];
 	

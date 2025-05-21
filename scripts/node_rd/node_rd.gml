@@ -1,56 +1,56 @@
 function Node_RD(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Reaction Diffusion";
 	
-	newInput(0, nodeValue_Surface("Seed", self));
+	newInput(0, nodeValue_Surface("Seed"));
 	
-	newInput(1, nodeValue_Float("Kill rate", self, 0.058))
+	newInput(1, nodeValue_Float("Kill rate", 0.058))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 0.1, 0.001] })
 		.setMappable(8);
 	
-	newInput(2, nodeValue_Float("Feed rate", self, 0.043))
+	newInput(2, nodeValue_Float("Feed rate", 0.043))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 0.1, 0.001] })
 		.setMappable(9);
 	
-	newInput(3, nodeValue_Float("Timestep", self, 1))
+	newInput(3, nodeValue_Float("Timestep", 1))
 		.setMappable(10);
 	
-	newInput(4, nodeValue_Int("Iteration", self, 16));
+	newInput(4, nodeValue_Int("Iteration", 16));
 	
-	newInput(5, nodeValue_Float("Diffusion A", self, 1.))
+	newInput(5, nodeValue_Float("Diffusion A", 1.))
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(11);
 	
-	newInput(6, nodeValue_Float("Diffusion B", self, .2))
+	newInput(6, nodeValue_Float("Diffusion B", .2))
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(12);
 	
-	newInput(7, nodeValue_Surface("Add B", self));
+	newInput(7, nodeValue_Surface("Add B"));
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newInput(8, nodeValue_Surface("Kill map", self))
+	newInput(8, nodeValue_Surface("Kill map"))
 		.setVisible(false, false);
 	
-	newInput(9, nodeValue_Surface("Feed map", self))
+	newInput(9, nodeValue_Surface("Feed map"))
 		.setVisible(false, false);
 	
-	newInput(10, nodeValue_Surface("Time map", self))
+	newInput(10, nodeValue_Surface("Time map"))
 		.setVisible(false, false);
 	
-	newInput(11, nodeValue_Surface("DfA map", self))
+	newInput(11, nodeValue_Surface("DfA map"))
 		.setVisible(false, false);
 	
-	newInput(12, nodeValue_Surface("DfB map", self))
+	newInput(12, nodeValue_Surface("DfB map"))
 		.setVisible(false, false);
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newInput(13, nodeValue_Float("Diffusion", self, 1.))
+	newInput(13, nodeValue_Float("Diffusion", 1.))
 		.setDisplay(VALUE_DISPLAY.slider)
 		
-	newOutput(0, nodeValue_Output("Reacted", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Reacted", VALUE_TYPE.surface, noone));
 	
-	newOutput(1, nodeValue_Output("Rendered", self, VALUE_TYPE.surface, noone));
+	newOutput(1, nodeValue_Output("Rendered", VALUE_TYPE.surface, noone));
 	
 	preview_channel = 1;
 	

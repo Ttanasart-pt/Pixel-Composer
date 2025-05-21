@@ -8,39 +8,39 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 	newInput(0, nodeValue("Domain", self, CONNECT_TYPE.input, VALUE_TYPE.sdomain, noone))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Surface("Fluid brush", self));
+	newInput(1, nodeValue_Surface("Fluid brush"));
 	
-	newInput(2, nodeValue_Vec2("Position", self, [ 0, 0 ]));
+	newInput(2, nodeValue_Vec2("Position", [ 0, 0 ]));
 	
-	newInput(3, nodeValue_Bool("Active", self, true));
+	newInput(3, nodeValue_Bool("Active", true));
 	
-	newInput(4, nodeValue_Float("Inherit velocity", self, 0))
+	newInput(4, nodeValue_Float("Inherit velocity", 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
 	
-	newInput(5, nodeValue_Float("Density", self, 1))
+	newInput(5, nodeValue_Float("Density", 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(6, nodeValue_Int("Expand velocity mask", self, 1));
+	newInput(6, nodeValue_Int("Expand velocity mask", 1));
 	
-	newInput(7, nodeValue_Vec2("Velocity", self, [0, 0]));
+	newInput(7, nodeValue_Vec2("Velocity", [0, 0]));
 	
-	newInput(8, nodeValue_Enum_Button("Type", self, 0, [ "Shape", "Surface" ]));
+	newInput(8, nodeValue_Enum_Button("Type", 0, [ "Shape", "Surface" ]));
 	
-	newInput(9, nodeValue_Vec2("Scale", self, [ 8, 8 ]));
+	newInput(9, nodeValue_Vec2("Scale", [ 8, 8 ]));
 	
-	newInput(10, nodeValue_Float("Repulse", self, 0));
+	newInput(10, nodeValue_Float("Repulse", 0));
 	
-	newInput(11, nodeValue_Enum_Scroll("Shape", self, 0, [ "Disk", "Ring" ]));
+	newInput(11, nodeValue_Enum_Scroll("Shape", 0, [ "Disk", "Ring" ]));
 	
-	newInput(12, nodeValue_Slider_Range("Level", self, [ 0, 1 ]));
+	newInput(12, nodeValue_Slider_Range("Level", [ 0, 1 ]));
 	
-	newInput(13, nodeValue_Float("Spokes", self, 0));
+	newInput(13, nodeValue_Float("Spokes", 0));
 	
-	newInput(14, nodeValue_Rotation("Twist", self, 0));
+	newInput(14, nodeValue_Rotation("Twist", 0));
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newOutput(0, nodeValue_Output("Domain", self, VALUE_TYPE.sdomain, noone));
+	newOutput(0, nodeValue_Output("Domain", VALUE_TYPE.sdomain, noone));
 	
 	input_display_list = [ 3, 0, 
 		["Brush",	 false], 8, 1, 11, 12, 2, 9, 

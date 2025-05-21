@@ -32,24 +32,24 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Float("Path progress", self, 0, "Sample position from path."))
+	newInput(0, nodeValue_Float("Path progress", 0, "Sample position from path."))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(1, nodeValue_Bool("Loop", self, false))
+	newInput(1, nodeValue_Bool("Loop", false))
 		.rejectArray();
 	
-	newInput(2, nodeValue_Enum_Scroll("Progress mode", self,  0, ["Entire line", "Segment"]))
+	newInput(2, nodeValue_Enum_Scroll("Progress mode",  0, ["Entire line", "Segment"]))
 		.rejectArray();
 	
-	newInput(3, nodeValue_Bool("Round anchor", self, false))
+	newInput(3, nodeValue_Bool("Round anchor", false))
 		.rejectArray();
 		
-	newOutput(0, nodeValue_Output("Position out", self, VALUE_TYPE.float, [ 0, 0 ]))
+	newOutput(0, nodeValue_Output("Position out", VALUE_TYPE.float, [ 0, 0 ]))
 		.setDisplay(VALUE_DISPLAY.vector);
 		
-	newOutput(1, nodeValue_Output("Path data", self, VALUE_TYPE.pathnode, self));
+	newOutput(1, nodeValue_Output("Path data", VALUE_TYPE.pathnode, self));
 		
-	newOutput(2, nodeValue_Output("Anchors", self, VALUE_TYPE.float, []))
+	newOutput(2, nodeValue_Output("Anchors", VALUE_TYPE.float, []))
 		.setVisible(false)
 		.setArrayDepth(1);
 	
@@ -128,7 +128,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		
 		var inAmo = array_length(inputs);
 		
-		newInput(index, nodeValue_Path_Anchor_3D("Anchor", self, []))
+		newInput(index, nodeValue_Path_Anchor_3D("Anchor", []))
 			.setValue([ _x, _y, _z, _dxx, _dxy, _dxz, _dyx, _dyy, _dyz, false ]);
 		
 		if(!rec) return inputs[index];

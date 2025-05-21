@@ -3,10 +3,10 @@ function Node_String_Format(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Text("Text", self, ""))
+	newInput(0, nodeValue_Text("Text"))
 		.setVisible(true, true);
 	
-	newOutput(0, nodeValue_Output("Text", self, VALUE_TYPE.text, ""));
+	newOutput(0, nodeValue_Output("Text", VALUE_TYPE.text, ""));
 	
 	attributes.size = 0;
 	
@@ -72,9 +72,9 @@ function Node_String_Format(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	static createNewInput = function(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
-		newInput(index + 0, nodeValue_Text("Argument name", self, "" ));
+		newInput(index + 0, nodeValue_Text("Argument name"));
 		
-		newInput(index + 1, nodeValue_Text("Argument value", self, "" ))
+		newInput(index + 1, nodeValue_Text("Argument value"))
 			.setVisible(true, true);
 		
 		return inputs[index + 0];

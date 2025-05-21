@@ -1,13 +1,13 @@
 function Node_Random_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Draw Random Shape";
 	
-	newInput(0, nodeValue_Dimension(self));
+	newInput(0, nodeValue_Dimension());
 		
 	newInput(1, nodeValueSeed(self, VALUE_TYPE.integer));
 
-	newInput(2, nodeValue_Enum_Scroll("SSAA", self, 0, [ "None", "2x", "4x", "8x" ]));
+	newInput(2, nodeValue_Enum_Scroll("SSAA", 0, [ "None", "2x", "4x", "8x" ]));
 	
-	newOutput(0, nodeValue_Output("Surface Out",	self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 
 		["Output",	 false], 0,

@@ -1,7 +1,7 @@
 function Node_Iterate(_x, _y, _group = noone) : Node_Iterator(_x, _y, _group) constructor {
 	name  = "Loop";
 	
-	newInput(0, nodeValue_Int("Repeat", self, 1 ))
+	newInput(0, nodeValue_Int("Repeat", 1 ))
 		.uncache();
 	
 	custom_input_index = array_length(inputs);

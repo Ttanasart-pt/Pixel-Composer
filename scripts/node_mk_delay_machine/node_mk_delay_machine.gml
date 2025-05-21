@@ -4,27 +4,27 @@ function Node_MK_Delay_Machine(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	is_simulation = true;
 	
-	newInput(0, nodeValue_Surface("Surface", self));
+	newInput(0, nodeValue_Surface("Surface"));
 	
-	newInput(1, nodeValue_Int("Delay Amounts", self, 4));
+	newInput(1, nodeValue_Int("Delay Amounts", 4));
 	
-	newInput(2, nodeValue_Int("Delay Frames", self, 1));
+	newInput(2, nodeValue_Int("Delay Frames", 1));
 	
-	newInput(3, nodeValue_Palette("Blend over Delay", self, [ c_white ]));
+	newInput(3, nodeValue_Palette("Blend over Delay", [ c_white ]));
 	
-	newInput(4, nodeValue_Curve("Alpha over Delay", self, CURVE_DEF_11));
+	newInput(4, nodeValue_Curve("Alpha over Delay", CURVE_DEF_11));
 	
-	newInput(5, nodeValue_Enum_Scroll("Palette Select", self, 0, [ "Loop", "Pingpong", "Random" ]));
+	newInput(5, nodeValue_Enum_Scroll("Palette Select", 0, [ "Loop", "Pingpong", "Random" ]));
 	
 	newInput(6, nodeValueSeed(self));
 	
-	newInput(7, nodeValue_Enum_Scroll("Overflow", self, 0, [ "Empty", "Loop", "Hold" ]));
+	newInput(7, nodeValue_Enum_Scroll("Overflow", 0, [ "Empty", "Loop", "Hold" ]));
 	
-	newInput(8, nodeValue_Enum_Scroll("Blend Mode", self, 0, [ "Normal", "Alpha", "Additive", "Maximum" ]));
+	newInput(8, nodeValue_Enum_Scroll("Blend Mode", 0, [ "Normal", "Alpha", "Additive", "Maximum" ]));
 	
-	newInput(9, nodeValue_Bool("Invert", self, false));
+	newInput(9, nodeValue_Bool("Invert", false));
 	
-	newOutput(0, nodeValue_Output("Surface", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0,
 		["Delay",	false], 1, 2, 7, 

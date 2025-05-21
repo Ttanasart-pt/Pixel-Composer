@@ -8,19 +8,19 @@
 function Node_Normalize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Normalize";
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Enum_Button("Channels", self, 0, [ "BW", "RGB" ]));
+	newInput(1, nodeValue_Enum_Button("Channels", 0, [ "BW", "RGB" ]));
 	
-	newInput(2, nodeValue_Enum_Button("Modes", self, 0, [ "Global", "Local" ]));
+	newInput(2, nodeValue_Enum_Button("Modes", 0, [ "Global", "Local" ]));
 	
-	newInput(3, nodeValue_Int("Radius", self, 4));
+	newInput(3, nodeValue_Int("Radius", 4));
 	
 	input_display_list = [ 0, 1, 
 		["Normalize", false], 2, 3, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	

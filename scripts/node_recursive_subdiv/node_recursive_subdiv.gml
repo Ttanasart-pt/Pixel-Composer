@@ -5,32 +5,32 @@ function Node_Recursive_Subdiv(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	
 	////- Output
 	
-	newInput(1, nodeValue_Dimension(self));
+	newInput(1, nodeValue_Dimension());
 	
 	////- Pattern
 	
-	newInput( 2, nodeValue_Rotation(     "Phase",      self, 0));
-	newInput( 3, nodeValue_Int(          "Iteration",  self, 2));
-	newInput(13, nodeValue_Slider_Range( "SubD Range", self, [ .1, .9 ]));
+	newInput( 2, nodeValue_Rotation(     "Phase", 0));
+	newInput( 3, nodeValue_Int(          "Iteration", 2));
+	newInput(13, nodeValue_Slider_Range( "SubD Range", [ .1, .9 ]));
 	
 	////- Render
 	
-	newInput(4, nodeValue_Enum_Button(  "Color Source", self, 0, [ "Palette", "Random HSV" ]));
+	newInput(4, nodeValue_Enum_Button(  "Color Source", 0, [ "Palette", "Random HSV" ]));
 	newInput(9, nodeValueSeed(self, VALUE_TYPE.integer, "Color Seed"));
-	newInput(5, nodeValue_Palette(      "Palette",      self, array_clone(DEF_PALETTE)));
-	newInput(6, nodeValue_Slider_Range( "H Range",      self, [0, 255], [ 0, 255, 1 ]));
-	newInput(7, nodeValue_Slider_Range( "S Range",      self, [0, 255], [ 0, 255, 1 ]));
-	newInput(8, nodeValue_Slider_Range( "V Range",      self, [0, 255], [ 0, 255, 1 ]));
+	newInput(5, nodeValue_Palette(      "Palette", array_clone(DEF_PALETTE)));
+	newInput(6, nodeValue_Slider_Range( "H Range", [0, 255], [ 0, 255, 1 ]));
+	newInput(7, nodeValue_Slider_Range( "S Range", [0, 255], [ 0, 255, 1 ]));
+	newInput(8, nodeValue_Slider_Range( "V Range", [0, 255], [ 0, 255, 1 ]));
 	
 	////- Gap
 	
-	newInput(10, nodeValue_Bool(  "Render Gap",    self, true));
-	newInput(11, nodeValue_Color( "Gap Color",     self, ca_black));
-	newInput(12, nodeValue_Int(   "Gap Thickness", self, 1));
+	newInput(10, nodeValue_Bool(  "Render Gap", true));
+	newInput(11, nodeValue_Color( "Gap Color", ca_black));
+	newInput(12, nodeValue_Int(   "Gap Thickness", 1));
 	
 	/// inputs 14
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0, 
 		["Output",  false], 1, 

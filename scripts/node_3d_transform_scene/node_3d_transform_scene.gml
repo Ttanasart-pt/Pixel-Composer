@@ -1,25 +1,25 @@
 function Node_3D_Transform_Scene(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constructor {
 	name = "Transform Scene";
 	
-	newInput(0, nodeValue_D3Scene("Scene", self, noone))
+	newInput(0, nodeValue_D3Scene("Scene", noone))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Float("Position", self, []))
+	newInput(1, nodeValue_Float("Position", []))
 		.setArrayDepth(2);
 	
-	newInput(2, nodeValue_Float("Rotation", self, []))
+	newInput(2, nodeValue_Float("Rotation", []))
 		.setArrayDepth(2);
 	
-	newInput(3, nodeValue_Float("Scale", self, []))
+	newInput(3, nodeValue_Float("Scale", []))
 		.setArrayDepth(2);
 		
-	newInput(4, nodeValue_Enum_Scroll("Positioning type", self, 0, [ "Additive", "Override" ]));
+	newInput(4, nodeValue_Enum_Scroll("Positioning type", 0, [ "Additive", "Override" ]));
 		
-	newInput(5, nodeValue_Enum_Scroll("Rotating type", self, 0, [ "Additive", "Override" ]));
+	newInput(5, nodeValue_Enum_Scroll("Rotating type", 0, [ "Additive", "Override" ]));
 	
-	newInput(6, nodeValue_Enum_Scroll("Scaling type", self, 0, [ "Additive", "Multiplicative", "Override" ]));
+	newInput(6, nodeValue_Enum_Scroll("Scaling type", 0, [ "Additive", "Multiplicative", "Override" ]));
 	
-	newOutput(0, nodeValue_Output("Scene", self, VALUE_TYPE.d3Scene, noone));
+	newOutput(0, nodeValue_Output("Scene", VALUE_TYPE.d3Scene, noone));
 	
 	input_display_list = [ 0,
 		["Transform", false], 1, 2, 3,

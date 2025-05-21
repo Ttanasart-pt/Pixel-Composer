@@ -56,46 +56,46 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	////- =Export
 	
-	newInput( 0, nodeValue_Surface( "Surface",         self));
-	newInput( 1, nodeValue_Path(    "Directory",       self, "")).setDisplay(VALUE_DISPLAY.path_save, { filter: "dir" }).setVisible(true);
-	newInput(20, nodeValue_Text(    "File name",       self, ""));
-	newInput( 4, nodeValue_Int(     "Template guides", self, 0));
-	newInput( 2, nodeValue_Text(    "Template",        self, "%d%n")).rejectArray();
+	newInput( 0, nodeValue_Surface( "Surface"));
+	newInput( 1, nodeValue_Path(    "Directory")).setDisplay(VALUE_DISPLAY.path_save, { filter: "dir" }).setVisible(true);
+	newInput(20, nodeValue_Text(    "File name"));
+	newInput( 4, nodeValue_Int(     "Template guides", 0));
+	newInput( 2, nodeValue_Text(    "Template", "%d%n")).rejectArray();
 	inputs[2].editWidget.format		 = TEXT_AREA_FORMAT.path_template;
 	inputs[2].editWidget.auto_update = true;
-	newInput(16, nodeValue_Bool(    "Export on Save",  self, false)).setTooltip("Automatically export when saving project.");
+	newInput(16, nodeValue_Bool(    "Export on Save", false)).setTooltip("Automatically export when saving project.");
 	
 	////- =Format
 	
-	newInput( 3, nodeValue_Enum_Scroll( "Type",                     self, 0, { data: format_single, update_hover: false })).rejectArray();
-	newInput( 9, nodeValue_Enum_Scroll( "Format",                   self, 0, { data: format_image,  update_hover: false })).rejectArray();
-	newInput(17, nodeValue_Bool(        "Use Built-in gif encoder", self, false))
-	newInput(18, nodeValue_Int(         "Quality",                  self, 2, [ 0, 3, 1 ])).rejectArray();
-	newInput( 6, nodeValue_Bool(        "Frame optimization",       self, false)).setVisible(false).rejectArray();
-	newInput( 7, nodeValue_Slider(      "Color merge",              self, 0.02)).setVisible(false).rejectArray();
-	newInput(10, nodeValue_Slider(      "Quality",                  self, 23, [ 0, 100, 0.1 ])).rejectArray();
-	newInput(13, nodeValue_Enum_Scroll( "Subformat",                self, 2, { data: png_format, update_hover: false }));
+	newInput( 3, nodeValue_Enum_Scroll( "Type", 0, { data: format_single, update_hover: false })).rejectArray();
+	newInput( 9, nodeValue_Enum_Scroll( "Format", 0, { data: format_image,  update_hover: false })).rejectArray();
+	newInput(17, nodeValue_Bool(        "Use Built-in gif encoder", false))
+	newInput(18, nodeValue_Int(         "Quality", 2, [ 0, 3, 1 ])).rejectArray();
+	newInput( 6, nodeValue_Bool(        "Frame optimization", false)).setVisible(false).rejectArray();
+	newInput( 7, nodeValue_Slider(      "Color merge", 0.02)).setVisible(false).rejectArray();
+	newInput(10, nodeValue_Slider(      "Quality", 23, [ 0, 100, 0.1 ])).rejectArray();
+	newInput(13, nodeValue_Enum_Scroll( "Subformat", 2, { data: png_format, update_hover: false }));
 	
 	////- =Post-Process
 	
-	newInput(19, nodeValue_Float( "Scale", self, 1));
+	newInput(19, nodeValue_Float( "Scale", 1));
 	
 	////- =Custom Range
 	
-	newInput(15, nodeValue_Bool(         "Custom Range", self, false)).rejectArray();
-	newInput(12, nodeValue_Slider_Range( "Frame range",  self, [0, -1], { range: [0, TOTAL_FRAMES, 0.1] }));
+	newInput(15, nodeValue_Bool(         "Custom Range", false)).rejectArray();
+	newInput(12, nodeValue_Slider_Range( "Frame range", [0, -1], { range: [0, TOTAL_FRAMES, 0.1] }));
 	
 	////- =Animation
 	
-	newInput( 8, nodeValue_Int(  "Framerate",      self, 30)).rejectArray();
-	newInput( 5, nodeValue_Bool( "Loop",           self, true)).setVisible(false).rejectArray();
-	newInput(11, nodeValue_Int(  "Sequence begin", self, 0));
-	newInput(14, nodeValue_Int(  "Frame step",     self, 1));
-	newInput(21, nodeValue_Int(  "Batch gif",      self, 0)).setTooltip("Batch animations to reduce memory footprint. Set to zero to export all at once.");
+	newInput( 8, nodeValue_Int(  "Framerate", 30)).rejectArray();
+	newInput( 5, nodeValue_Bool( "Loop", true)).setVisible(false).rejectArray();
+	newInput(11, nodeValue_Int(  "Sequence begin", 0));
+	newInput(14, nodeValue_Int(  "Frame step", 1));
+	newInput(21, nodeValue_Int(  "Batch gif", 0)).setTooltip("Batch animations to reduce memory footprint. Set to zero to export all at once.");
 	
 	// inputs 22
 	
-	newOutput(0, nodeValue_Output("Preview", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Preview", VALUE_TYPE.surface, noone));
 	
 	template_guide = [
 		["%d",     "Directory"],

@@ -8,10 +8,10 @@ function Node_Array_Boolean_Opr(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	newInput(1, nodeValue("Array 2", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0))
 		.setVisible(true, true);
 		
-	newInput(2, nodeValue_Enum_Scroll("Operation", self, 0, [ "Union", "Subtract", "Intersect", "XOR" ]))
+	newInput(2, nodeValue_Enum_Scroll("Operation", 0, [ "Union", "Subtract", "Intersect", "XOR" ]))
 		.setVisible(true, true);
 	
-	newOutput(0, nodeValue_Output("Array out", self, VALUE_TYPE.any, []));
+	newOutput(0, nodeValue_Output("Array out", VALUE_TYPE.any, []));
 	
 	input_display_list = [ 2, 0, 1 ];
 	

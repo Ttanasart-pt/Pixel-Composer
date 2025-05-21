@@ -4,7 +4,7 @@ function Node_Terminal_Trigger(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	draw_padding = 8;
 	
-	newOutput(0, nodeValue_Output("Terminal", self, VALUE_TYPE.trigger, false ));
+	newOutput(0, nodeValue_Output("Terminal", VALUE_TYPE.trigger, false ));
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);

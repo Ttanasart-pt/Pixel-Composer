@@ -2,15 +2,15 @@ function Node_DLL(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "DLL";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Path("DLL File", self, ""))
+	newInput(0, nodeValue_Path("DLL File"))
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "Dynamic-link library (.dll)|*.dll" })
 		.setVisible(true, false);
 	
-	newInput(1, nodeValue_Text("Function name", self, ""));
+	newInput(1, nodeValue_Text("Function name"));
 	
-	newInput(2, nodeValue_Enum_Button("Return type", self,  0, [ "Number", "Buffer" ]));
+	newInput(2, nodeValue_Enum_Button("Return type",  0, [ "Number", "Buffer" ]));
 	
-	newOutput(0, nodeValue_Output("Return Value", self, VALUE_TYPE.float, 0));
+	newOutput(0, nodeValue_Output("Return Value", VALUE_TYPE.float, 0));
 	
 	ext_cache       = "";
 	ext_function    = -1;
@@ -45,9 +45,9 @@ function Node_DLL(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static createNewInput = function(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
-		newInput(index + 0, nodeValue_Enum_Button("Parameter type", self,  0, [ "Number", "Buffer" ]));
+		newInput(index + 0, nodeValue_Enum_Button("Parameter type",  0, [ "Number", "Buffer" ]));
 		
-		newInput(index + 1, nodeValue_Float("Parameter value", self, 0 ))
+		newInput(index + 1, nodeValue_Float("Parameter value", 0 ))
 			.setVisible(true, true);
 		
 		array_push(input_display_list, inAmo + 0, inAmo + 1);

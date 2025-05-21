@@ -1,34 +1,34 @@
 function Node_Diffuse(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Diffuse";
 	
-	newInput(0, nodeValue_Surface("Density field", self));
+	newInput(0, nodeValue_Surface("Density field"));
 	
-	newInput(1, nodeValue_Float("Dissipation", self, 0.05))
+	newInput(1, nodeValue_Float("Dissipation", 0.05))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -0.2, 0.2, 0.001] });
 	
-	newInput(2, nodeValue_Float("Scale", self, 1));
+	newInput(2, nodeValue_Float("Scale", 1));
 	
-	newInput(3, nodeValue_Float("Randomness", self, 1));
+	newInput(3, nodeValue_Float("Randomness", 1));
 	
-	newInput(4, nodeValue_Float("Flow rate", self, 0.5))
+	newInput(4, nodeValue_Float("Flow rate", 0.5))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 1, 0.01] });
 	
-	newInput(5, nodeValue_Slider_Range("Threshold", self, [ 0.5, 0.7 ]));
+	newInput(5, nodeValue_Slider_Range("Threshold", [ 0.5, 0.7 ]));
 		
 	newInput(6, nodeValueSeed(self));
 	
-	newInput(7, nodeValue_Surface("External", self));
+	newInput(7, nodeValue_Surface("External"));
 	
-	newInput(8, nodeValue_Float("External Strength", self, 0.1))
+	newInput(8, nodeValue_Float("External Strength", 0.1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -0.25, 0.25, 0.01] });
 	
-	newInput(9, nodeValue_Int("Detail", self, 1))
+	newInput(9, nodeValue_Int("Detail", 1))
 	
-	newInput(10, nodeValue_Enum_Scroll("External Type", self,  0, [ "Point", "Vector" ]));
+	newInput(10, nodeValue_Enum_Scroll("External Type",  0, [ "Point", "Vector" ]));
 		
-	newInput(11, nodeValue_Rotation("External Direction", self, 0));
+	newInput(11, nodeValue_Rotation("External Direction", 0));
 	
-	newOutput(0, nodeValue_Output("Result", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Result", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0, 6, 
 		["Diffuse",		false], 1, 

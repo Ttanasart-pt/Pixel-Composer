@@ -3,15 +3,15 @@ function Node_Vector_Dot(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	color = COLORS.node_blend_number;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Float("Point 1", self, [ 0, 0 ]))
+	newInput(0, nodeValue_Float("Point 1", [ 0, 0 ]))
 		.setArrayDepth(1)
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Float("Point 2", self, [ 0, 0 ]))
+	newInput(1, nodeValue_Float("Point 2", [ 0, 0 ]))
 		.setArrayDepth(1)
 		.setVisible(true, true);
 		
-	newOutput(0, nodeValue_Output("Result", self, VALUE_TYPE.float, 0 ));
+	newOutput(0, nodeValue_Output("Result", VALUE_TYPE.float, 0 ));
 	
 	static processData = function(_output, _data, _array_index = 0) {  
 		var _pnt1 = _data[0];

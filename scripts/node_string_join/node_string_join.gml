@@ -2,15 +2,15 @@ function Node_String_Join(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	name = "Join Text Array";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Text("Text array", self, []))
+	newInput(0, nodeValue_Text("Text array", []))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Text("Divider", self, ""))
+	newInput(1, nodeValue_Text("Divider"))
 		.rejectArray();
 		
 	inputs[1].editWidget.format = TEXT_AREA_FORMAT.delimiter;
 	
-	newOutput(0, nodeValue_Output("Text", self, VALUE_TYPE.text, ""));
+	newOutput(0, nodeValue_Output("Text", VALUE_TYPE.text, ""));
 	
 	static update = function() { 
 		var _arr = getInputData(0);

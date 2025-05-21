@@ -2,21 +2,22 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	name = "Lua Compute";
 	update_on_frame = true;
 	
-	newInput(0, nodeValue_Text("Function name", self, "render" + string(irandom_range(100000, 999999))));
+	newInput(0, nodeValue_Text("Function name", $"render{irandom_range(100000, 999999)}"));
 	
-	newInput(1, nodeValue_Enum_Scroll("Return type", self,  0, { data: [ "Number", "String", "Struct" ], update_hover: false }));
+	newInput(1, nodeValue_Enum_Scroll("Return type",  0, { data: [ "Number", "String", "Struct" ], update_hover: false }));
 	
-	newInput(2, nodeValue_Text("Lua code", self, "", function() /*=>*/ {return dialogPanelCall(new Panel_Lua_Reference())}))
+	newInput(2, nodeValue_Text("Lua code"))
+		.setTooltip(function() /*=>*/ {return dialogPanelCall(new Panel_Lua_Reference())})
 		.setDisplay(VALUE_DISPLAY.codeLUA);
 	
 	newInput(3, nodeValue("Execution thread", self, CONNECT_TYPE.input, VALUE_TYPE.node, noone))
 		.setVisible(false, true);
 	
-	newInput(4, nodeValue_Bool("Execute on frame", self, true))
+	newInput(4, nodeValue_Bool("Execute on frame", true))
 	
-	newOutput(0, nodeValue_Output("Execution thread", self, VALUE_TYPE.node, noone ));
+	newOutput(0, nodeValue_Output("Execution thread", VALUE_TYPE.node, noone ));
 	
-	newOutput(1, nodeValue_Output("Return value", self, VALUE_TYPE.any, noone));
+	newOutput(1, nodeValue_Output("Return value", VALUE_TYPE.any, noone));
 	
 	argumentRenderer(global.lua_arguments);
 	
@@ -38,9 +39,9 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static createNewInput = function(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
-		newInput(index + 0, nodeValue_Text("Argument name", self, "" ));
+		newInput(index + 0, nodeValue_Text("Argument name"));
 		
-		newInput(index + 1, nodeValue_Enum_Scroll("Argument type", self,  0 , { data: [ "Number", "String", "Surface", "Struct" ], update_hover: false }));
+		newInput(index + 1, nodeValue_Enum_Scroll("Argument type",  0 , { data: [ "Number", "String", "Surface", "Struct" ], update_hover: false }));
 		inputs[index + 1].editWidget.interactable = false;
 		
 		newInput(index + 2, nodeValue("Argument value", self, CONNECT_TYPE.input, VALUE_TYPE.float, 0 ))

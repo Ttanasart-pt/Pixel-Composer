@@ -8,20 +8,20 @@
 function Node_Cross_Section(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Draw Cross Section";
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Enum_Button("Axis", self,  0 , [ "X", "Y" ]));
+	newInput(1, nodeValue_Enum_Button("Axis",  0 , [ "X", "Y" ]));
 	
-	newInput(2, nodeValue_Float("Position", self, 0 ))
+	newInput(2, nodeValue_Float("Position", 0 ))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(3, nodeValue_Bool("Anti-aliasing", self, false ));
+	newInput(3, nodeValue_Bool("Anti-aliasing", false ));
 	
-	newInput(4, nodeValue_Enum_Button("Mode", self,  0 , [ "BW", "Colored" ]));
+	newInput(4, nodeValue_Enum_Button("Mode",  0 , [ "BW", "Colored" ]));
 	
-	newInput(5, nodeValue_Surface("Mask", self));
+	newInput(5, nodeValue_Surface("Mask"));
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone ));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [
 		["Surfaces", false], 0, 5, 

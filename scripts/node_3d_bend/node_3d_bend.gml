@@ -2,15 +2,15 @@ function Node_3D_Bend(_x, _y, _group = noone) : Node_3D_Modifier(_x, _y, _group)
 	name = "Bend Mesh";
 	
 	var i = in_mesh;
-	newInput(i+0, nodeValue_Enum_Button("Axis", self, 0, [ "X", "Y", "Z"]));
+	newInput(i+0, nodeValue_Enum_Button("Axis", 0, [ "X", "Y", "Z"]));
 	
-	newInput(i+1, nodeValue_Float("Radius", self, 1));
+	newInput(i+1, nodeValue_Float("Radius", 1));
 	
-	newInput(i+2, nodeValue_Float("Amount", self, 1));
+	newInput(i+2, nodeValue_Float("Amount", 1));
 	
-	newInput(i+3, nodeValue_Vec3("Origin", self, [ 0, 0, 0 ]));
+	newInput(i+3, nodeValue_Vec3("Origin", [ 0, 0, 0 ]));
 	
-	newInput(i+4, nodeValue_Bool("Recalculate normal", self, true));
+	newInput(i+4, nodeValue_Bool("Recalculate normal", true));
 	
 	input_display_list = [ 
 		["Mesh", false], 0, 

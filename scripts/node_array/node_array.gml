@@ -4,10 +4,10 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	attributes.spread_value = false;
 	
-	newInput(0, nodeValue_Enum_Scroll("Type", self, 0, { data: [ "Any", "Surface", "Number", "Color", "Text" ], update_hover: false }))
+	newInput(0, nodeValue_Enum_Scroll("Type", 0, { data: [ "Any", "Surface", "Number", "Color", "Text" ], update_hover: false }))
 		.rejectArray();
 	
-	newInput(1, nodeValue_Bool("Spread array", self, false, "Unpack array and push the contents into the output one by one." ))
+	newInput(1, nodeValue_Bool("Spread array", false, "Unpack array and push the contents into the output one by one." ))
 		.rejectArray();
 	
 	array_adjust_tool = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
@@ -33,7 +33,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	input_display_list = [ 0, 1, ["Contents", false], array_adjust_tool, ];
 	
-	newOutput(0, nodeValue_Output("Array", self, VALUE_TYPE.any, []));
+	newOutput(0, nodeValue_Output("Array", VALUE_TYPE.any, []));
 	
 	static createNewInput = function(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);

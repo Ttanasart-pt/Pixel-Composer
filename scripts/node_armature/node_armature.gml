@@ -239,7 +239,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		return bone;
 	} 
 	
-	newOutput(0, nodeValue_Output("Armature", self, VALUE_TYPE.armature, noone));
+	newOutput(0, nodeValue_Output("Armature", VALUE_TYPE.armature, noone));
 	
 	#region ++++ attributes ++++
 		bones         = new __Bone(,,,,, self);

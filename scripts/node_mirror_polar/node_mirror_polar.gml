@@ -9,31 +9,31 @@
 function Node_Mirror_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Polar Mirror";
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Vec2("Position", self, [ 0.5, 0.5 ]))
+	newInput(1, nodeValue_Vec2("Position", [ 0.5, 0.5 ]))
 		.setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	
-	newInput(2, nodeValue_Rotation("Angle", self, 0));
+	newInput(2, nodeValue_Rotation("Angle", 0));
 	
-	newInput(3, nodeValue_Bool("Active", self, true));
+	newInput(3, nodeValue_Bool("Active", true));
 		active_index = 3;
 	
-	newInput(4, nodeValue_Float("Spokes", self, 4));
+	newInput(4, nodeValue_Float("Spokes", 4));
 	
-	newInput(5, nodeValue_Bool("Reflective", self, false));
+	newInput(5, nodeValue_Bool("Reflective", false));
 	
-	newInput(6, nodeValue_Vec2("Scale", self, [ 1, 1 ]));
+	newInput(6, nodeValue_Vec2("Scale", [ 1, 1 ]));
 	
-	newInput(7, nodeValue_Enum_Scroll("Output Dimension", self, 0, [ "Same as input", "Relative", "Constant" ]));
+	newInput(7, nodeValue_Enum_Scroll("Output Dimension", 0, [ "Same as input", "Relative", "Constant" ]));
 	
-	newInput(8, nodeValue_Vec2("Relative Dimension", self, [ 1, 1 ]));
+	newInput(8, nodeValue_Vec2("Relative Dimension", [ 1, 1 ]));
 	
-	newInput(9, nodeValue_Vec2("Constant Dimension", self, DEF_SURF));
+	newInput(9, nodeValue_Vec2("Constant Dimension", DEF_SURF));
 	
-	newInput(10, nodeValue_Enum_Scroll("Radial Scale", self, 0, [ "Linear", "Exponential" ]));
+	newInput(10, nodeValue_Enum_Scroll("Radial Scale", 0, [ "Linear", "Exponential" ]));
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 3,
 		["Surfaces", false], 0, 7, 8, 9, 

@@ -1,18 +1,18 @@
 function Node_3D_Mesh_Stack_Slice(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Slice Stack";
 	
-	newInput(0, nodeValue_D3Mesh("Mesh", self, noone))
+	newInput(0, nodeValue_D3Mesh("Mesh", noone))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Vec2("Output Dimension", self, [ 16, 16 ]));
+	newInput(1, nodeValue_Vec2("Output Dimension", [ 16, 16 ]));
 	
-	newInput(2, nodeValue_Float("Scale", self, 1));
+	newInput(2, nodeValue_Float("Scale", 1));
 	
-	newInput(3, nodeValue_Int("Slices", self, 4));
+	newInput(3, nodeValue_Int("Slices", 4));
 	
-	newInput(4, nodeValue_Vec3("BBOX Padding", self, [ 0, 0, 0 ]));
+	newInput(4, nodeValue_Vec3("BBOX Padding", [ 0, 0, 0 ]));
 		
-	newOutput(0, nodeValue_Output("Outputs", self, VALUE_TYPE.surface, []))
+	newOutput(0, nodeValue_Output("Outputs", VALUE_TYPE.surface, []))
 		.setArrayDepth(1);
 	
 	mesh_data = new Inspector_Label("", f_code);

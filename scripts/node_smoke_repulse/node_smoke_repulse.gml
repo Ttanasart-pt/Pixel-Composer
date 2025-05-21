@@ -7,23 +7,23 @@ function Node_Smoke_Repulse(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group)
 	newInput(0, nodeValue("Domain", self, CONNECT_TYPE.input, VALUE_TYPE.sdomain, noone))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Vec2("Position", self, [0, 0]));
+	newInput(1, nodeValue_Vec2("Position", [0, 0]));
 	
-	newInput(2, nodeValue_Float("Radius", self, 8));
+	newInput(2, nodeValue_Float("Radius", 8));
 	
-	newInput(3, nodeValue_Float("Strength", self, 0.10))
+	newInput(3, nodeValue_Float("Strength", 0.10))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
 	
-	newInput(4, nodeValue_Float("Spokes", self, 0));
+	newInput(4, nodeValue_Float("Spokes", 0));
 	
-	newInput(5, nodeValue_Rotation("Twist", self, 0));
+	newInput(5, nodeValue_Rotation("Twist", 0));
 	
 	input_display_list = [ 
 		["Domain",	false], 0, 
 		["Repulse",	false], 1, 2, 3, 4, 5, 
 	];
 	
-	newOutput(0, nodeValue_Output("Domain", self, VALUE_TYPE.sdomain, noone));
+	newOutput(0, nodeValue_Output("Domain", VALUE_TYPE.sdomain, noone));
 	
 	temp_surface = [ noone ];
 	

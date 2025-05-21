@@ -9,32 +9,32 @@ function Node_VFX_Boids(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Particle("Particles",    self, -1 )).setVisible(true, true);
-	newInput(7, nodeValue_f("Speed amplification", self, 1   ));
+	newInput(0, nodeValue_Particle()).setVisible(true, true);
+	newInput(7, nodeValue_Float("Speed amplification", 1   ));
 	
 	////- Separation
 	
-	newInput(11, nodeValue_b( "Separate",          self, true));
-	newInput( 1, nodeValue_f( "Sep. radius",       self, 4   ));
-	newInput( 2, nodeValue_s( "Sep. influence",    self, 0.2 ));
+	newInput(11, nodeValue_Bool( "Separate", true));
+	newInput( 1, nodeValue_Float( "Sep. radius", 4   ));
+	newInput( 2, nodeValue_Slider( "Sep. influence", 0.2 ));
 	
 	////- Alignment
 		
-	newInput(12, nodeValue_b( "Align",             self, true));
-	newInput( 3, nodeValue_f( "Ali. radius",       self, 32  ));
-	newInput( 4, nodeValue_s( "Ali. influence",    self, 0.2 ));
+	newInput(12, nodeValue_Bool( "Align", true));
+	newInput( 3, nodeValue_Float( "Ali. radius", 32  ));
+	newInput( 4, nodeValue_Slider( "Ali. influence", 0.2 ));
 	
 	////- Grouping
 		
-	newInput(13, nodeValue_b( "Group",             self, true));
-	newInput( 5, nodeValue_f( "Grp. radius",       self, 32  ));
-	newInput( 6, nodeValue_s( "Grp. influence",    self, 0.2 ));
+	newInput(13, nodeValue_Bool( "Group", true));
+	newInput( 5, nodeValue_Float( "Grp. radius", 32  ));
+	newInput( 6, nodeValue_Slider( "Grp. influence", 0.2 ));
 	
 	////- Follow
 	
-	newInput( 8, nodeValue_b( "Follow point",      self, false    ));
-	newInput( 9, nodeValue_2( "Point",             self, [ 0, 0 ] )).setUnitRef(function() /*=>*/ {return inline_context.dimension}, VALUE_UNIT.reference);
-	newInput(10, nodeValue_s( "Fol. influence",    self, 0.1      ));
+	newInput( 8, nodeValue_Bool( "Follow point", false    ));
+	newInput( 9, nodeValue_Vec2( "Point", [ 0, 0 ] )).setUnitRef(function() /*=>*/ {return inline_context.dimension}, VALUE_UNIT.reference);
+	newInput(10, nodeValue_Slider( "Fol. influence", 0.1      ));
 	
 	input_display_list = [ 0, 7, 
 		["Separation",	 false, 11],  1,  2, 
@@ -43,7 +43,7 @@ function Node_VFX_Boids(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		["Follow point", false,  8],  9, 10, 
 	];
 	
-	newOutput(0, nodeValue_Output("Particles", self, VALUE_TYPE.particle, -1 ));
+	newOutput(0, nodeValue_Output("Particles", VALUE_TYPE.particle, noone ));
 	
 	UPDATE_PART_FORWARD
 	
@@ -58,7 +58,7 @@ function Node_VFX_Boids(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var parts = getInputData(0);
 		
 		outputs[0].setValue(parts);
-		if(parts == -1) return;
+		if(parts == noone) return;
 		
 		if(array_empty(parts)) return;
 		var _allparts = [];

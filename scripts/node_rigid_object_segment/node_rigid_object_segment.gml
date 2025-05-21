@@ -12,17 +12,17 @@ function Node_Rigid_Object_Segment(_x, _y, _group = noone) : Node(_x, _y, _group
 	
 	////- Segment
 		
-	newInput(0, nodeValue_Vec2( "Segment Start", self, [  0, 0 ]));
-	newInput(1, nodeValue_Vec2( "Segment End",   self, [ 16, 0 ]));
+	newInput(0, nodeValue_Vec2( "Segment Start", [  0, 0 ]));
+	newInput(1, nodeValue_Vec2( "Segment End", [ 16, 0 ]));
 		
 	////- Physics
 		
-	newInput(2, nodeValue_Float(  "Contact Friction", self, 0.2));
-	newInput(3, nodeValue_Slider( "Bounciness",       self, 0.2));
+	newInput(2, nodeValue_Float(  "Contact Friction", 0.2));
+	newInput(3, nodeValue_Slider( "Bounciness", 0.2));
 		
 	// inputs 4
 		
-	newOutput(0, nodeValue_Output("Object", self, VALUE_TYPE.rigid, objects));
+	newOutput(0, nodeValue_Output("Object", VALUE_TYPE.rigid, objects));
 	
 	input_display_list = [ 
 		["Segment", false], 0, 1, 

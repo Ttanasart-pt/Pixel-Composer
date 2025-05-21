@@ -7,13 +7,13 @@ function Node_Pixel_Builder(_x, _y, _group = noone) : Node_Collection(_x, _y, _g
 	attributes.pure_function = false;
 	layers = [];
 	
-	newInput(0, nodeValue_Dimension(self));
+	newInput(0, nodeValue_Dimension());
 	
-	newInput(1, nodeValue_b("Outline",   self, false));
-	newInput(2, nodeValue_i("Thickness", self, 0));
-	newInput(3, nodeValue_c("Color",     self, ca_white)).setInternalName("Outline Color");
+	newInput(1, nodeValue_Bool("Outline", false));
+	newInput(2, nodeValue_Int("Thickness", 0));
+	newInput(3, nodeValue_Color("Color", ca_white)).setInternalName("Outline Color");
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	layer_colors = [
 		CDEF.main_dark,

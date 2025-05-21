@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_mk_markov",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_mk_markov",
+  "parent":{
+    "name":"cellSim",
+    "path":"folders/nodes/data/simulation/cellSim.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

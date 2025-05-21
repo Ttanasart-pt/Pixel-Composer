@@ -8,39 +8,39 @@
 function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Threshold";
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Bool("Brightness", self, false));
+	newInput(1, nodeValue_Bool("Brightness", false));
 		
-	newInput(2, nodeValue_Float("Threshold", self, 0.5))
+	newInput(2, nodeValue_Float("Threshold", 0.5))
 		.setInternalName("Brightness Threshold")
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(13);
 		
-	newInput(3, nodeValue_Float("Smoothness", self, 0))
+	newInput(3, nodeValue_Float("Smoothness", 0))
 		.setInternalName("Brightness Smoothness")
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(4, nodeValue_Surface("Mask", self));
+	newInput(4, nodeValue_Surface("Mask"));
 	
-	newInput(5, nodeValue_Float("Mix", self, 1))
+	newInput(5, nodeValue_Float("Mix", 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(6, nodeValue_Bool("Active", self, true));
+	newInput(6, nodeValue_Bool("Active", true));
 		active_index = 6;
 	
-	newInput(7, nodeValue_Bool("Alpha", self, false));
+	newInput(7, nodeValue_Bool("Alpha", false));
 	
-	newInput(8, nodeValue_Float("Threshold", self, 0.5))
+	newInput(8, nodeValue_Float("Threshold", 0.5))
 		.setInternalName("Alpha Threshold")
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(14);
 		
-	newInput(9, nodeValue_Float("Smoothness", self, 0))
+	newInput(9, nodeValue_Float("Smoothness", 0))
 		.setInternalName("Alpha Smoothness")
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(10, nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) }));
+	newInput(10, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	__init_mask_modifier(4); // inputs 11, 12
 	
@@ -52,19 +52,19 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newInput(15, nodeValue_Enum_Scroll("Algorithm", self, 0, [ "Simple", "Adaptive mean" ]));
+	newInput(15, nodeValue_Enum_Scroll("Algorithm", 0, [ "Simple", "Adaptive mean" ]));
 	
-	newInput(16, nodeValue_Int("Adaptive Radius", self, 4))
+	newInput(16, nodeValue_Int("Adaptive Radius", 4))
 	
-	newInput(17, nodeValue_Bool("Invert", self, false))
+	newInput(17, nodeValue_Bool("Invert", false))
 		.setInternalName("Brightness Invert");
 	
-	newInput(18, nodeValue_Bool("Invert", self, false))
+	newInput(18, nodeValue_Bool("Invert", false))
 		.setInternalName("Alpha Invert");
 	
-	newInput(19, nodeValue_Bool("Apply to Alpha", self, false))
+	newInput(19, nodeValue_Bool("Apply to Alpha", false))
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 6, 10, 
 		["Surfaces",	 true], 0, 4, 5, 11, 12, 

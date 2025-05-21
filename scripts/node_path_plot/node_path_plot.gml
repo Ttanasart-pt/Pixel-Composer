@@ -3,35 +3,35 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	length = 0;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Vec2("Output scale", self, [ 8, 8 ]));
+	newInput(0, nodeValue_Vec2("Output scale", [ 8, 8 ]));
 	
-	newInput(1, nodeValue_Enum_Scroll("Coordinate", self,  0, [ new scrollItem("Cartesian", s_node_axis_type, 0), 
+	newInput(1, nodeValue_Enum_Scroll("Coordinate",  0, [ new scrollItem("Cartesian", s_node_axis_type, 0), 
 												                new scrollItem("Polar",     s_node_axis_type, 1),  ]));
 	
 	eq_type_car = [ "x function", "y function", "parametric" ];
 	eq_type_pol = [ "r function", "O function", "parametric" ];
-	newInput(2, nodeValue_Enum_Scroll("Equation type", self,  0, eq_type_car));
+	newInput(2, nodeValue_Enum_Scroll("Equation type",  0, eq_type_car));
 	
-	newInput(3, nodeValue_Text("0 function", self, ""));
-	newInput(4, nodeValue_Text("1 function", self, ""));
+	newInput(3, nodeValue_Text("0 function"));
+	newInput(4, nodeValue_Text("1 function"));
 	
-	newInput(5, nodeValue_Vec2("Origin", self, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ] ));
+	newInput(5, nodeValue_Vec2("Origin", [ DEF_SURF_W / 2, DEF_SURF_H / 2 ] ));
 		
-	newInput(6, nodeValue_Slider_Range("Range", self, [ 0, 1 ], { range: [ -1, 1, 0.01 ] }));
+	newInput(6, nodeValue_Slider_Range("Range", [ 0, 1 ], { range: [ -1, 1, 0.01 ] }));
 		
-	newInput(7, nodeValue_Vec2("Input Scale", self, [ 1, 1 ]));
+	newInput(7, nodeValue_Vec2("Input Scale", [ 1, 1 ]));
 	
-	newInput(8, nodeValue_Vec2("Input Shift", self, [ 0, 0 ]));
+	newInput(8, nodeValue_Vec2("Input Shift", [ 0, 0 ]));
 	
-	newInput(9, nodeValue_Bool("Use Weight", self, false));
+	newInput(9, nodeValue_Bool("Use Weight", false));
 	
-	newInput(10, nodeValue_Text("w(x)", self, ""));
+	newInput(10, nodeValue_Text("w(x)"));
 	
-	newInput(11, nodeValue_Text("z(x)", self, ""));
+	newInput(11, nodeValue_Text("z(x)"));
 	
-	newInput(12, nodeValue_Bool("3D", self, false));
+	newInput(12, nodeValue_Bool("3D", false));
 	
-	newOutput(0, nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self));
+	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, self));
 	
 	input_display_list = [
 		[ "Variable",  false],     5, 7, 8, 0, 

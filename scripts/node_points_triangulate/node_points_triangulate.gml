@@ -2,11 +2,11 @@ function Node_Points_Triangulate(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	name = "Triangulate Points";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Vec2("Points", self, [ 0, 0 ]))
+	newInput(0, nodeValue_Vec2("Points", [ 0, 0 ]))
 		.setVisible(true, true)
 		.setArrayDepth(1);
 		
-	newOutput(0, nodeValue_Output("Segments", self, VALUE_TYPE.float, [ 0, 0 ]))
+	newOutput(0, nodeValue_Output("Segments", VALUE_TYPE.float, [ 0, 0 ]))
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setArrayDepth(2);
 	

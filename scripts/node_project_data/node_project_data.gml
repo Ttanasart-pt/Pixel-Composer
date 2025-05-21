@@ -2,19 +2,19 @@ function Node_Project_Data(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	name = "Project Data";
 	setDimension(96, 48);
 	
-	newOutput(0, nodeValue_Output("Name", self, VALUE_TYPE.text, ""))
+	newOutput(0, nodeValue_Output("Name", VALUE_TYPE.text, ""))
 		.setVisible(false);
 	
-	newOutput(1, nodeValue_Output("Description", self, VALUE_TYPE.text, ""))
+	newOutput(1, nodeValue_Output("Description", VALUE_TYPE.text, ""))
 		.setVisible(false);
 	
-	newOutput(2, nodeValue_Output("Author", self, VALUE_TYPE.text, ""))
+	newOutput(2, nodeValue_Output("Author", VALUE_TYPE.text, ""))
 		.setVisible(false);
 	
-	newOutput(3, nodeValue_Output("Contact", self, VALUE_TYPE.text, ""))
+	newOutput(3, nodeValue_Output("Contact", VALUE_TYPE.text, ""))
 		.setVisible(false);
 	
-	newOutput(4, nodeValue_Output("Path", self, VALUE_TYPE.path, ""))
+	newOutput(4, nodeValue_Output("Path", VALUE_TYPE.path, ""))
 		.setVisible(false);
 	
 	static update = function() { 

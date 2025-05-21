@@ -1,26 +1,26 @@
 function Node_PB_FX_Shine(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Shine";
 	
-	newInput(0, nodeValue_Surface("Surface", self));
+	newInput(0, nodeValue_Surface("Surface"));
 	
-	newInput(1, nodeValue_Surface("Mask", self));
+	newInput(1, nodeValue_Surface("Mask"));
 	
-	newInput(2, nodeValue_c("Colors", self, ca_white));
+	newInput(2, nodeValue_Color("Colors", ca_white));
 	
-	newInput(3, nodeValue_b("Invert Direction", self, false));
+	newInput(3, nodeValue_Bool("Invert Direction", false));
 	
-	newInput(4, nodeValue_f("Shines", self, [ 2, 1, 1 ]))
+	newInput(4, nodeValue_Float("Shines", [ 2, 1, 1 ]))
 	    .setDisplay(VALUE_DISPLAY.number_array);
 	
-	newInput(5, nodeValue_s("Progress", self, 0.5));
+	newInput(5, nodeValue_Slider("Progress", 0.5));
 	
-	newInput(6, nodeValue_f("Slope", self, 1));
+	newInput(6, nodeValue_Float("Slope", 1));
 	
-	newInput(7, nodeValue_s("Intensity", self, 1));
+	newInput(7, nodeValue_Slider("Intensity", 1));
 	
-	newInput(8, nodeValue_eb( "Axis", self,  0, [ "X", "Y" ]));
+	newInput(8, nodeValue_Enum_Button( "Axis",  0, [ "X", "Y" ]));
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0, 1, 
 	    ["Shine",  false], 5, 4, 6, 3, 8, 

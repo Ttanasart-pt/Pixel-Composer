@@ -10,18 +10,18 @@ function Node_Time_Remap(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	use_cache = CACHE_USE.manual;
 	update_on_frame = true;
 	
-	newInput(0, nodeValue_Surface("Surface In", self))
+	newInput(0, nodeValue_Surface("Surface In"))
 		.rejectArray();
 	
-	newInput(1, nodeValue_Surface("Map", self))
+	newInput(1, nodeValue_Surface("Map"))
 		.rejectArray();
 	
-	newInput(2, nodeValue_Int("Max Life", self, 3))
+	newInput(2, nodeValue_Int("Max Life", 3))
 		.rejectArray();
 	
-	newInput(3, nodeValue_Bool("Loop", self, false))
+	newInput(3, nodeValue_Bool("Loop", false))
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 
 		["Surfaces", false], 0, 1, 

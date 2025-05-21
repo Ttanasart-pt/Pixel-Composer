@@ -1,15 +1,15 @@
 function Node_Offset(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Offset";
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Float("X Offset", self, 0.5))
+	newInput(1, nodeValue_Float("X Offset", 0.5))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(2, nodeValue_Float("Y Offset", self, 0.5))
+	newInput(2, nodeValue_Float("Y Offset", 0.5))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(3, nodeValue_Bool("Active", self, true));
+	newInput(3, nodeValue_Bool("Active", true));
 		active_index = 3;
 		
 	input_display_list = [ 3, 
@@ -17,7 +17,7 @@ function Node_Offset(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		["Offset",	false],	1, 2, 
 	]
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	

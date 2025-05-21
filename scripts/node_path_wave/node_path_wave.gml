@@ -8,30 +8,30 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	name = "Wave Path";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_PathNode("Path", self, noone))
+	newInput(0, nodeValue_PathNode("Path"))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Range("Frequency", self, [ 4, 4 ], { linked : true }));
+	newInput(1, nodeValue_Range("Frequency", [ 4, 4 ], { linked : true }));
 	
-	newInput(2, nodeValue_Range("Amplitude", self, [ 4, 4 ], { linked : true }));
+	newInput(2, nodeValue_Range("Amplitude", [ 4, 4 ], { linked : true }));
 	
-	newInput(3, nodeValue_Range("Shift", self, [ 0, 0 ], { linked : true }));
+	newInput(3, nodeValue_Range("Shift", [ 0, 0 ], { linked : true }));
 	
-	newInput(4, nodeValue_Enum_Button("Mode", self, 0, [ "Zigzag", "Sine", "Square" ]));
+	newInput(4, nodeValue_Enum_Button("Mode", 0, [ "Zigzag", "Sine", "Square" ]));
 	
 	newInput(5, nodeValueSeed(self));
 	
-	newInput(6, nodeValue_Bool("Wiggle", self, false));
+	newInput(6, nodeValue_Bool("Wiggle", false));
 	
-	newInput(7, nodeValue_Range("Wiggle Amplitude", self, [ -2, 2 ]));
+	newInput(7, nodeValue_Range("Wiggle Amplitude", [ -2, 2 ]));
 	
-	newInput(8, nodeValue_Float("Wiggle Frequency", self, 8));
+	newInput(8, nodeValue_Float("Wiggle Frequency", 8));
 	
-	newInput(9, nodeValue_Curve("Amplitude over length", self, CURVE_DEF_11));
+	newInput(9, nodeValue_Curve("Amplitude over length", CURVE_DEF_11));
 	
-	newInput(10, nodeValue_Enum_Button("Post Fn", self, 0, [ "None", "Absolute", "Clamp" ]));
+	newInput(10, nodeValue_Enum_Button("Post Fn", 0, [ "None", "Absolute", "Clamp" ]));
 	
-	newOutput(0, nodeValue_Output("Path", self, VALUE_TYPE.pathnode, noone));
+	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, noone));
 	
 	input_display_list = [ 5, 
 		["Path",	 true], 0,

@@ -31,49 +31,49 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	color	= COLORS.node_blend_canvas;
 	setAlwaysTimeline(new timelineItemNode_Canvas(self));
 	
-	newInput( 0, nodeValue_Dimension(self));
+	newInput( 0, nodeValue_Dimension());
 	
-	newInput( 1, nodeValue_Color("Color", self, ca_white ));
-	newInput( 2, nodeValue_Int("Brush Size", self, 1 ))
+	newInput( 1, nodeValue_Color("Color", ca_white ));
+	newInput( 2, nodeValue_Int("Brush Size", 1 ))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 32, 0.1] });
 	
-	newInput( 3, nodeValue_Float("Fill Threshold", self, 0.))
+	newInput( 3, nodeValue_Float("Fill Threshold", 0.))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput( 4, nodeValue_Enum_Scroll("Fill Type", self,  0, ["4 connect", "8 connect", "Entire canvas"]));
+	newInput( 4, nodeValue_Enum_Scroll("Fill Type",  0, ["4 connect", "8 connect", "Entire canvas"]));
 	
-	newInput( 5, nodeValue_Bool("Draw Preview Overlay", self, true));
+	newInput( 5, nodeValue_Bool("Draw Preview Overlay", true));
 	
-	newInput( 6, nodeValue_Surface("Brush", self))
+	newInput( 6, nodeValue_Surface("Brush"))
 		.setVisible(true, false);
 	
-	newInput( 7, nodeValue_Int("Surface Amount", self, 1));
+	newInput( 7, nodeValue_Int("Surface Amount", 1));
 	
-	newInput( 8, nodeValue_Surface("Background", self));
+	newInput( 8, nodeValue_Surface("Background"));
 	
-	newInput( 9, nodeValue_Float("Background Alpha", self, 1.))
+	newInput( 9, nodeValue_Float("Background Alpha", 1.))
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	newInput(10, nodeValue_Bool("Render Background", self, true));
+	newInput(10, nodeValue_Bool("Render Background", true));
 	
-	newInput(11, nodeValue_Float("Alpha", self, 1 ))
+	newInput(11, nodeValue_Float("Alpha", 1 ))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(12, nodeValue_Bool("Frames Animation", self, true ));
+	newInput(12, nodeValue_Bool("Frames Animation", true ));
 	
-	newInput(13, nodeValue_Float("Animation Speed", self, 1 ));
+	newInput(13, nodeValue_Float("Animation Speed", 1 ));
 	
-	newInput(14, nodeValue_Bool("Use Background Dimension", self, true ));
+	newInput(14, nodeValue_Bool("Use Background Dimension", true ));
 	
-	newInput(15, nodeValue_Range("Brush Distance", self, [ 1, 1 ] , { linked : true }));
+	newInput(15, nodeValue_Range("Brush Distance", [ 1, 1 ] , { linked : true }));
 	
-	newInput(16, nodeValue_Bool("Rotate Brush by Direction", self, false ));
+	newInput(16, nodeValue_Bool("Rotate Brush by Direction", false ));
 	
-	newInput(17, nodeValue_Rotation_Random("Random Direction", self, [ 0, 0, 0, 0, 0 ] ));
+	newInput(17, nodeValue_Rotation_Random("Random Direction", [ 0, 0, 0, 0, 0 ] ));
 	
-	newInput(18, nodeValue_Enum_Scroll("Animation Type", self,  0, [ "Loop", "Hold", "Clear" ]));
+	newInput(18, nodeValue_Enum_Scroll("Animation Type",  0, [ "Loop", "Hold", "Clear" ]));
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	frame_renderer_x     = 0;
 	frame_renderer_x_to  = 0;

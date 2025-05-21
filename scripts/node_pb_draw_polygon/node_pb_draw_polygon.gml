@@ -1,9 +1,9 @@
 function Node_PB_Draw_Polygon(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group) constructor {
 	name = "Polygon";
 	
-	newInput(pbi+0, nodeValue_i("Sides", self, 3));
+	newInput(pbi+0, nodeValue_Int("Sides", 3));
 	
-	newInput(pbi+1, nodeValue_r("Angle", self, 0));
+	newInput(pbi+1, nodeValue_Rotation("Angle", 0));
 	
 	array_insert_array(input_display_list, input_display_shape_index, [
 		["Shape", false], pbi+0, pbi+1, 

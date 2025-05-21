@@ -151,7 +151,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		inspectInput1      = nodeValue("Toggle Execution", self, CONNECT_TYPE.input, VALUE_TYPE.action,  false).setIndex(-1);
 		inspectInput2      = nodeValue("Toggle Execution", self, CONNECT_TYPE.input, VALUE_TYPE.action,  false).setIndex(-1);
 		updatedInTrigger   = nodeValue("Update",           self, CONNECT_TYPE.input, VALUE_TYPE.trigger, false).setIndex(-1).setTags(VALUE_TAG.updateInTrigger);
-		updatedOutTrigger  = nodeValue_Output("Updated",   self, VALUE_TYPE.trigger, false).setIndex(-1).setTags(VALUE_TAG.updateOutTrigger);
+		updatedOutTrigger  = nodeValue_Output("Updated", VALUE_TYPE.trigger, false).setIndex(-1).setTags(VALUE_TAG.updateOutTrigger);
 		
 		insp1UpdateActive  = true;
 		insp1UpdateTooltip = __txtx("panel_inspector_execute", "Execute node");
@@ -203,8 +203,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		});
 		
 		junc_meta = [
-			nodeValue_Output("Name",     self, VALUE_TYPE.text,  ""),
-			nodeValue_Output("Position", self, VALUE_TYPE.float, [ 0, 0 ]).setDisplay(VALUE_DISPLAY.vector),
+			nodeValue_Output("Name", VALUE_TYPE.text,  ""),
+			nodeValue_Output("Position", VALUE_TYPE.float, [ 0, 0 ]).setDisplay(VALUE_DISPLAY.vector),
 		];
 		
 		for( var i = 0, n = array_length(junc_meta); i < n; i++ ) {
@@ -714,7 +714,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	////- JUNCTIONS
 	
-	static newActiveInput = function(i) /*=>*/ { newInput(i, nodeValue_Bool("Active", self, true)); active_index = i; }
+	static newActiveInput = function(i) /*=>*/ { newInput(i, nodeValue_Bool("Active", true)); active_index = i; }
 	static newInput = function(i, j) /*=>*/ { 
 		inputs = array_verify_min(inputs, i);
 		
@@ -903,21 +903,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		outputDisplayList = [];
 		
-		for( var i = 0, n = array_length(outputs); i < n; i++ ) {
-			var jun = outputs[i];
-			if(jun.isVisible()) array_push(outputDisplayList, jun);
-		}
-			
-		for( var i = 0; i < array_length(inputs); i++ ) {
-			var jun = inputs[i].bypass_junc;
-			if(jun.isVisible()) array_push(outputDisplayList, jun);
-		}
+		array_foreach(outputs, function(jun) /*=>*/ { if(jun.isVisible())             array_push(outputDisplayList, jun);             });
+		array_foreach(inputs,  function(jun) /*=>*/ { if(jun.bypass_junc.isVisible()) array_push(outputDisplayList, jun.bypass_junc); });
+		if(attributes.outp_meta) array_foreach(junc_meta, function(jun) /*=>*/ { if(jun.isVisible()) array_push(outputDisplayList, jun); });
 		
-		if(attributes.outp_meta) 
-		for(var i = 0; i < array_length(junc_meta); i++) {
-			var jun = junc_meta[i];
-			if(jun.isVisible()) array_push(outputDisplayList, jun);
-		}
 	}
 	
 	static onValidate = function() {
@@ -925,11 +914,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		value_validation[VALIDATION.warning] = 0;
 		value_validation[VALIDATION.error]   = 0;
 		
-		for( var i = 0; i < array_length(inputs); i++ ) {
-			var jun = inputs[i];
-			if(is(jun, NodeValue) && jun.value_validation) 
-				value_validation[jun.value_validation]++;
-		}
+		array_foreach(inputs, function(jun) /*=>*/ { value_validation[jun.value_validation] += (is(jun, NodeValue) && jun.value_validation); });
 	}
 	
 	static onIOValidate = function() {

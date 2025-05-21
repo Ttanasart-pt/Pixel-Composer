@@ -9,38 +9,38 @@ function Node_Random(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	////- Random
 	
 	newInput( 0, nodeValueSeed(self, VALUE_TYPE.integer));
-	newInput( 9, nodeValue_Enum_Scroll( "Distribution", self, 0, distList));
-	newInput(10, nodeValue_Curve( "Dist. Curve",        self, CURVE_DEF_11)).setAnimable(false);
-	newInput( 1, nodeValue_f( "From",     self, 0));
-	newInput( 2, nodeValue_f( "To",       self, 1));
-	newInput(11, nodeValue_f( "Mean",     self, 0));
-	newInput(12, nodeValue_f( "Variance", self, 1));
-	newInput(13, nodeValue_s( "p",        self, .5));
-	newInput(14, nodeValue_f( "t",        self, 1));
-	newInput(22, nodeValue_b( "Deterministic", self, true));
+	newInput( 9, nodeValue_Enum_Scroll( "Distribution", 0, distList));
+	newInput(10, nodeValue_Curve( "Dist. Curve", CURVE_DEF_11)).setAnimable(false);
+	newInput( 1, nodeValue_Float( "From", 0));
+	newInput( 2, nodeValue_Float( "To", 1));
+	newInput(11, nodeValue_Float( "Mean", 0));
+	newInput(12, nodeValue_Float( "Variance", 1));
+	newInput(13, nodeValue_Slider( "p", .5));
+	newInput(14, nodeValue_Float( "t", 1));
+	newInput(22, nodeValue_Bool( "Deterministic", true));
 	
 	////- Shuffle
 	
-	newInput( 3, nodeValue_Bool(        "Shuffle",         self, false));
-	newInput( 4, nodeValue_Enum_Scroll( "Mode",            self, 0, [ "Per Frame", "Periordic", "Trigger", "Probabilistic", "Accumulative", "Per Animation" ]));
-	newInput( 5, nodeValue_Int(         "Period",          self, 1));
-	newInput( 6, nodeValue_Int(         "Period Shift",    self, 0));
-	newInput( 7, nodeValue_Trigger(     "Trigger",         self)).setDisplay(VALUE_DISPLAY.button, { name: "Trigger" });
-	newInput( 8, nodeValue_Slider(      "Probability",     self, 1));
-	newInput(20, nodeValue_Float(       "Average Period",  self, 4));
-	newInput(21, nodeValue_Float(       "Period Variance", self, 2));
+	newInput( 3, nodeValue_Bool(        "Shuffle", false));
+	newInput( 4, nodeValue_Enum_Scroll( "Mode", 0, [ "Per Frame", "Periordic", "Trigger", "Probabilistic", "Accumulative", "Per Animation" ]));
+	newInput( 5, nodeValue_Int(         "Period", 1));
+	newInput( 6, nodeValue_Int(         "Period Shift", 0));
+	newInput( 7, nodeValue_Trigger(     "Trigger")).setDisplay(VALUE_DISPLAY.button, { name: "Trigger" });
+	newInput( 8, nodeValue_Slider(      "Probability", 1));
+	newInput(20, nodeValue_Float(       "Average Period", 4));
+	newInput(21, nodeValue_Float(       "Period Variance", 2));
 	
 	////- Smooth
 	
-	newInput(15, nodeValue_Enum_Scroll( "Smoothing",    self, 0, [ "None", "Moving Average", "Convolution", "Lerp" ]));
-	newInput(16, nodeValue_Int(         "Window Size",  self, 5));
-	newInput(17, nodeValue_Int(         "Kernel Span",  self, 3));
-	newInput(18, nodeValue_Curve(       "Kernel",       self, CURVE_DEF_11));
-	newInput(19, nodeValue_Slider(      "Lerp Ratio",   self, .5));
+	newInput(15, nodeValue_Enum_Scroll( "Smoothing", 0, [ "None", "Moving Average", "Convolution", "Lerp" ]));
+	newInput(16, nodeValue_Int(         "Window Size", 5));
+	newInput(17, nodeValue_Int(         "Kernel Span", 3));
+	newInput(18, nodeValue_Curve(       "Kernel", CURVE_DEF_11));
+	newInput(19, nodeValue_Slider(      "Lerp Ratio", .5));
 	
 	// inputs 23
 	
-	newOutput(0, nodeValue_Output("Result", self, VALUE_TYPE.float, 0));
+	newOutput(0, nodeValue_Output("Result", VALUE_TYPE.float, 0));
 	
 	input_display_list = [ 
 		["Random",  false   ], 0, 9, 10, 1, 2, 11, 12, 13, 14, 22, 

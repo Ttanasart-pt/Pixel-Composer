@@ -1,18 +1,18 @@
 function Node_Noise_Blue(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Blue Noise";
 	
-	newInput(0, nodeValue_Dimension(self));
+	newInput(0, nodeValue_Dimension());
 	
 	newInput(1, nodeValueSeed(self));
 	
-	newInput(2, nodeValue_Surface("Mask", self));
+	newInput(2, nodeValue_Surface("Mask"));
 	
 	input_display_list = [
 		["Output",	false], 0, 2, 
 		["Noise",	false], 1, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	

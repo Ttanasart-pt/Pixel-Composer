@@ -30,40 +30,40 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	w    = 128;
 	update_on_frame = false;
 	
-	newInput(0, nodeValue_Path("Path", self, ""))
+	newInput(0, nodeValue_Path("Path"))
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "Aseprite file|*.ase;*.aseprite" });
 		
-	newInput(1, nodeValue_Trigger("Generate layers", self ))
+	newInput(1, nodeValue_Trigger("Generate layers" ))
 		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() /*=>*/ {return refreshLayers()} });
 	
-	newInput(2, nodeValue_Text("Current tag", self, ""));
+	newInput(2, nodeValue_Text("Current tag"));
 	
-	newInput(3, nodeValue_Bool("Use cel dimension", self, false));
+	newInput(3, nodeValue_Bool("Use cel dimension", false));
 	
 	/////////////////////////////////
 	
-	newOutput(0, nodeValue_Output("Output", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Output", VALUE_TYPE.surface, noone));
 	
-	newOutput(1, nodeValue_Output("Content", self, VALUE_TYPE.object, self))
+	newOutput(1, nodeValue_Output("Content", VALUE_TYPE.object, self))
 		.setIcon(THEME.junc_aseprite, c_white);
 	
-	newOutput(2, nodeValue_Output("Path", self, VALUE_TYPE.path, ""))
+	newOutput(2, nodeValue_Output("Path", VALUE_TYPE.path, ""))
 		.setVisible(false);
 	
-	newOutput(3, nodeValue_Output("Palette", self, VALUE_TYPE.color, []))
+	newOutput(3, nodeValue_Output("Palette", VALUE_TYPE.color, []))
 		.setDisplay(VALUE_DISPLAY.palette)
 		.setVisible(false);
 	
-	newOutput(4, nodeValue_Output("Layers", self, VALUE_TYPE.text, []))
+	newOutput(4, nodeValue_Output("Layers", VALUE_TYPE.text, []))
 		.setVisible(false);
 	
-	newOutput(5, nodeValue_Output("Tags", self, VALUE_TYPE.text, []))
+	newOutput(5, nodeValue_Output("Tags", VALUE_TYPE.text, []))
 		.setVisible(false);
 	
-	newOutput(6, nodeValue_Output("Raw data", self, VALUE_TYPE.struct, {}))
+	newOutput(6, nodeValue_Output("Raw data", VALUE_TYPE.struct, {}))
 		.setVisible(false);
 	
-	newOutput(7, nodeValue_Output("Frame Amount", self, VALUE_TYPE.integer, 1))
+	newOutput(7, nodeValue_Output("Frame Amount", VALUE_TYPE.integer, 1))
 		.setVisible(false);
 	
 	hold_visibility = true;

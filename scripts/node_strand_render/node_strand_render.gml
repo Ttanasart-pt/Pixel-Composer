@@ -7,32 +7,32 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	manual_ungroupable	 = false;
 	
 	newInput(6, nodeValueSeed(self));
-	newInput(8, nodeValue_Int("Update Step", self, 0));
+	newInput(8, nodeValue_Int("Update Step", 0));
 	
 	////- Output
 	
-	newInput(0, nodeValue_Dimension(self));
+	newInput(0, nodeValue_Dimension());
 	
 	////- Strand
 	
 	newInput(1, nodeValue(       "Strand",                self, CONNECT_TYPE.input, VALUE_TYPE.strands, noone)).setVisible(true, true);
-	newInput(2, nodeValue_Range( "Thickness",             self, [ 1, 1 ], { linked : true }));
-	newInput(3, nodeValue_Curve( "Thickness over length", self, CURVE_DEF_11));
+	newInput(2, nodeValue_Range( "Thickness", [ 1, 1 ], { linked : true }));
+	newInput(3, nodeValue_Curve( "Thickness over length", CURVE_DEF_11));
 	
 	////- Scatter
 	
-	newInput( 9, nodeValue_Bool(  "Use Scatter",          self, false));
-	newInput( 7, nodeValue_Float( "Children Count",       self, 0, "Render extra strands between the real strands."));
-	newInput(10, nodeValue_Float( "Scatter Range",        self, 2));
+	newInput( 9, nodeValue_Bool(  "Use Scatter", false));
+	newInput( 7, nodeValue_Float( "Children Count", 0, "Render extra strands between the real strands."));
+	newInput(10, nodeValue_Float( "Scatter Range", 2));
 	
 	////- Color
 	
-	newInput(4, nodeValue_Gradient( "Random color",       self, new gradientObject(ca_white)));
-	newInput(5, nodeValue_Gradient( "Color over length",  self, new gradientObject(ca_white)));
+	newInput(4, nodeValue_Gradient( "Random color", new gradientObject(ca_white)));
+	newInput(5, nodeValue_Gradient( "Color over length", new gradientObject(ca_white)));
 	
 	//// inputs 11
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 6, 8, 
 		["Output",   false   ], 0,

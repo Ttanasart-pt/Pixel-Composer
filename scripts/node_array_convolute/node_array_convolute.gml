@@ -2,18 +2,18 @@ function Node_Array_Convolute(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	name = "Array Convolute";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Float("Array", self, []))
+	newInput(0, nodeValue_Float("Array", []))
 		.setArrayDepth(1)
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Float("Kernel", self, []))
+	newInput(1, nodeValue_Float("Kernel", []))
 		.setArrayDepth(1)
 		.setVisible(true, true);
 	
-	newInput(2, nodeValue_Enum_Scroll("Boundary", self, 0, [ "Zero", "Wrap", "Skip" ]))
+	newInput(2, nodeValue_Enum_Scroll("Boundary", 0, [ "Zero", "Wrap", "Skip" ]))
 		.setArrayDepth(1);
 	
-	newOutput(0, nodeValue_Output("Array", self, VALUE_TYPE.float, 0))
+	newOutput(0, nodeValue_Output("Array", VALUE_TYPE.float, 0))
 		.setArrayDepth(1);
 		
 	static convolute = function(arr, ker) {

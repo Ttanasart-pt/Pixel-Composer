@@ -13,18 +13,18 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 	camObj  = new __3dCamera_object();
 	camera  = camera_create();
 	
-	newInput(in_mesh + 0, nodeValue_Surface("Surface", self))
+	newInput(in_mesh + 0, nodeValue_Surface("Surface"))
 		.setVisible(true, true);
 	
-	newInput(in_mesh + 1, nodeValue_Enum_Button("Projection", self, 0, [ "Orthographic", "Perspective" ]));
+	newInput(in_mesh + 1, nodeValue_Enum_Button("Projection", 0, [ "Orthographic", "Perspective" ]));
 	
-	newInput(in_mesh + 2, nodeValue_Float("FOV", self, 45));
+	newInput(in_mesh + 2, nodeValue_Float("FOV", 45));
 	
-	newInput(in_mesh + 3, nodeValue_Vec2("Texture Tiling", self, [ 1, 1 ]));
+	newInput(in_mesh + 3, nodeValue_Vec2("Texture Tiling", [ 1, 1 ]));
 	
-	newInput(in_mesh + 4, nodeValue_Vec2("View Range", self, [ 0.001, 10 ]));
+	newInput(in_mesh + 4, nodeValue_Vec2("View Range", [ 0.001, 10 ]));
 	
-	newInput(in_mesh + 5, nodeValue_Vec2("Depth Range", self, [ 0, 1 ]));
+	newInput(in_mesh + 5, nodeValue_Vec2("Depth Range", [ 0, 1 ]));
 	
 	input_display_list = [
 		["Material", false], in_mesh + 0, in_mesh + 3, 
@@ -35,9 +35,9 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 	
 	outputs[0].setVisible(false);
 	
-	newOutput(1, nodeValue_Output("Rendered", self, VALUE_TYPE.surface, noone));
+	newOutput(1, nodeValue_Output("Rendered", VALUE_TYPE.surface, noone));
 	
-	newOutput(2, nodeValue_Output("Depth", self, VALUE_TYPE.surface, noone));
+	newOutput(2, nodeValue_Output("Depth", VALUE_TYPE.surface, noone));
 	
 	output_display_list = [ 1, 2 ]
 	

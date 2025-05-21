@@ -3,21 +3,21 @@ function Node_3D_Mesh_Terrain(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 	
 	object_class = __3dTerrain;
 	
-	newInput(in_mesh + 0, nodeValue_D3Material("Material", self, new __d3dMaterial()))
+	newInput(in_mesh + 0, nodeValue_D3Material("Material", new __d3dMaterial()))
 		.setVisible(true, true);
 	
-	newInput(in_mesh + 1, nodeValue_Enum_Button("Input type", self,  0 , [ "Surface", "Array" ]));
+	newInput(in_mesh + 1, nodeValue_Enum_Button("Input type",  0 , [ "Surface", "Array" ]));
 	
-	newInput(in_mesh + 2, nodeValue_Surface("Height map", self));
+	newInput(in_mesh + 2, nodeValue_Surface("Height map"));
 	
-	newInput(in_mesh + 3, nodeValue_Int("Subdivision", self, 4 ));
+	newInput(in_mesh + 3, nodeValue_Int("Subdivision", 4 ));
 	
-	newInput(in_mesh + 4, nodeValue_Float("Height array", self, [] ))
+	newInput(in_mesh + 4, nodeValue_Float("Height array", [] ))
 		.setArrayDepth(2);
 		
-	newInput(in_mesh + 5, nodeValue_Bool("Smooth", self, false ));
+	newInput(in_mesh + 5, nodeValue_Bool("Smooth", false ));
 	
-	newInput(in_mesh + 6, nodeValue_Slider_Range("Front Height Level", self, [ 0, 1 ]));
+	newInput(in_mesh + 6, nodeValue_Slider_Range("Front Height Level", [ 0, 1 ]));
 	
 	input_display_list = [
 		__d3d_input_list_transform,

@@ -1,24 +1,24 @@
 function Node_Surface_data(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name	= "Surface data";
 	
-	newInput(0, nodeValue_Surface("Surface", self));
+	newInput(0, nodeValue_Surface("Surface"));
 	
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newOutput(0, nodeValue_Output("Dimension", self, VALUE_TYPE.integer, [ 1, 1 ]))
+	newOutput(0, nodeValue_Output("Dimension", VALUE_TYPE.integer, [ 1, 1 ]))
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	newOutput(1, nodeValue_Output("Width", self, VALUE_TYPE.integer, 1));
+	newOutput(1, nodeValue_Output("Width", VALUE_TYPE.integer, 1));
 	
-	newOutput(2, nodeValue_Output("Height", self, VALUE_TYPE.integer, 1));
+	newOutput(2, nodeValue_Output("Height", VALUE_TYPE.integer, 1));
 	
-	newOutput(3, nodeValue_Output("Format String", self, VALUE_TYPE.text, ""))
+	newOutput(3, nodeValue_Output("Format String", VALUE_TYPE.text, ""))
 		.setVisible(false);
 	
-	newOutput(4, nodeValue_Output("Bit Depth", self, VALUE_TYPE.integer, 8))
+	newOutput(4, nodeValue_Output("Bit Depth", VALUE_TYPE.integer, 8))
 		.setVisible(false);
 	
-	newOutput(5, nodeValue_Output("Channels", self, VALUE_TYPE.integer, 4))
+	newOutput(5, nodeValue_Output("Channels", VALUE_TYPE.integer, 4))
 		.setVisible(false);
 	
 	setDimension(96, 48);

@@ -1,8 +1,8 @@
 function __init_mask_modifier(_mask_index, _ind = undefined) {
 	_ind = _ind ?? array_length(inputs);
 	
-	newInput(_ind + 0, nodeValue_Bool("Invert mask", self, false));
-	newInput(_ind + 1, nodeValue_Slider("Mask feather", self, 0, [0, 32, 0.1]));
+	newInput(_ind + 0, nodeValue_Bool("Invert mask", false));
+	newInput(_ind + 1, nodeValue_Slider("Mask feather", 0, [0, 32, 0.1]));
 		
 	__mask_index     = _mask_index;
 	__mask_mod_index = _ind;

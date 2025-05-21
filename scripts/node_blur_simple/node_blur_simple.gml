@@ -7,42 +7,42 @@
 function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Non-Uniform Blur";
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
-	newInput(1, nodeValue_Float("Size", self, 3))
+	newInput(0, nodeValue_Surface("Surface In"));
+	newInput(1, nodeValue_Float("Size", 3))
 		.setValidator(VV_min(0))
 		.setUnitRef(function(index) /*=>*/ {return getDimension(index)});
 	
-	newInput(2, nodeValue_Enum_Scroll("Oversample mode", self,  0, [ "Empty", "Clamp", "Repeat" ]))
+	newInput(2, nodeValue_Enum_Scroll("Oversample mode",  0, [ "Empty", "Clamp", "Repeat" ]))
 		.setTooltip("How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.");
 	
-	newInput(3, nodeValue_Surface("Blur mask", self));
+	newInput(3, nodeValue_Surface("Blur mask"));
 	
-	newInput(4, nodeValue_Bool("Override color", self, false, "Replace all color while keeping the alpha. Used to\nfix grey outline when bluring transparent pixel."));
+	newInput(4, nodeValue_Bool("Override color", false, "Replace all color while keeping the alpha. Used to\nfix grey outline when bluring transparent pixel."));
 	
-	newInput(5, nodeValue_Color("Color", self, ca_black));
+	newInput(5, nodeValue_Color("Color", ca_black));
 	
-	newInput(6, nodeValue_Surface("Mask", self));
+	newInput(6, nodeValue_Surface("Mask"));
 	
-	newInput(7, nodeValue_Float("Mix", self, 1))
+	newInput(7, nodeValue_Float("Mix", 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(8, nodeValue_Bool("Active", self, true));
+	newInput(8, nodeValue_Bool("Active", true));
 		active_index = 8;
 	
-	newInput(9, nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) }));
+	newInput(9, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	__init_mask_modifier(6); // inputs 10, 11, 
 	
-	newInput(12, nodeValue_Gradient("Gradient", self, new gradientObject([ ca_black, ca_white ])))
+	newInput(12, nodeValue_Gradient("Gradient", new gradientObject([ ca_black, ca_white ])))
 		.setMappable(13);
 	
 	newInput(13, nodeValueMap("Gradient map", self));
 	
 	newInput(14, nodeValueGradientRange("Gradient map range", self, inputs[1]));
 	
-	newInput(15, nodeValue_Bool("Use Gradient", self, false));
+	newInput(15, nodeValue_Bool("Use Gradient", false));
 	
-	newInput(16, nodeValue_Bool("Gamma Correction", self, false));
+	newInput(16, nodeValue_Bool("Gamma Correction", false));
 	
 	input_display_list = [ 8, 9, 
 		["Surfaces", true],	0, 6, 7, 10, 11, 
@@ -50,7 +50,7 @@ function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		["Effects",	false, 15],	12, 13, 14, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	attribute_oversample();

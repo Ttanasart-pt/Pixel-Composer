@@ -14,11 +14,11 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	name = "Composite";
 	dimension_index = -1;
 	
-	newInput(0, nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ]));
+	newInput(0, nodeValue_Padding("Padding", [ 0, 0, 0, 0 ]));
 	
-	newInput(1, nodeValue_Enum_Scroll("Output dimension", self,  COMPOSE_OUTPUT_SCALING.first, [ "First surface", "Largest surface", "Constant" ]));
+	newInput(1, nodeValue_Enum_Scroll("Output dimension",  COMPOSE_OUTPUT_SCALING.first, [ "First surface", "Largest surface", "Constant" ]));
 	
-	newInput(2, nodeValue_Dimension(self))
+	newInput(2, nodeValue_Dimension())
 		.setVisible(false);
 	
 	attribute_surface_depth();
@@ -405,16 +405,16 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var inAmo = array_length(inputs);
 		var _s    = floor((index - input_fix_len) / data_length);
 		
-		newInput(index + 0, nodeValue_Surface(     $"Surface {_s}",  self, noone));
+		newInput(index + 0, nodeValue_Surface(     $"Surface {_s}"));
 		inputs[index + 0].hover_effect  = 0;
 		
-		newInput(index + 1, nodeValue_Vec2(        $"Position {_s}", self, [0,0] )).setUnitRef(function() /*=>*/ {return [ overlay_w, overlay_h ]});
-		newInput(index + 2, nodeValue_Rotation(    $"Rotation {_s}", self, 0));
+		newInput(index + 1, nodeValue_Vec2(        $"Position {_s}", [0,0] )).setUnitRef(function() /*=>*/ {return [ overlay_w, overlay_h ]});
+		newInput(index + 2, nodeValue_Rotation(    $"Rotation {_s}", 0));
 		inputs[index + 2].options_histories = [ BLEND_TYPES, { cond: function() /*=>*/ {return LOADING_VERSION < 1_18_00_0}, list: global.BLEND_TYPES_18 } ];
 		
-		newInput(index + 3, nodeValue_Vec2(        $"Scale {_s}",    self, [ 1, 1 ] ));
-		newInput(index + 4, nodeValue_Enum_Scroll( $"Blend {_s}",    self, 0, BLEND_TYPES ));
-		newInput(index + 5, nodeValue_Slider(      $"Opacity {_s}",  self, 1));
+		newInput(index + 3, nodeValue_Vec2(        $"Scale {_s}", [ 1, 1 ] ));
+		newInput(index + 4, nodeValue_Enum_Scroll( $"Blend {_s}", 0, BLEND_TYPES ));
+		newInput(index + 5, nodeValue_Slider(      $"Opacity {_s}", 1));
 		
 		while(_s >= array_length(attributes.layer_visible))    array_push(attributes.layer_visible,    true);
 		while(_s >= array_length(attributes.layer_selectable)) array_push(attributes.layer_selectable, true);
@@ -437,11 +437,11 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	setDynamicInput(6, true, VALUE_TYPE.surface);
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	newOutput(1, nodeValue_Output("Atlas data", self, VALUE_TYPE.atlas, []));
+	newOutput(1, nodeValue_Output("Atlas data", VALUE_TYPE.atlas, []));
 	
-	newOutput(2, nodeValue_Output("Dimension", self, VALUE_TYPE.integer, [1, 1]))
+	newOutput(2, nodeValue_Output("Dimension", VALUE_TYPE.integer, [1, 1]))
 		.setVisible(false)
 		.setDisplay(VALUE_DISPLAY.vector);
 	

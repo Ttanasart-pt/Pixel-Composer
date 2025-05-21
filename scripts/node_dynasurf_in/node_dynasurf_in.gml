@@ -8,7 +8,7 @@ function Node_DynaSurf_In(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	inParent = undefined;
 	
-	newOutput(0, nodeValue_Output("Value", self, VALUE_TYPE.PCXnode, noone));
+	newOutput(0, nodeValue_Output("Value", VALUE_TYPE.PCXnode, noone));
 	
 	static createInput = function() { #region
 		if(group == noone || !is_struct(group)) return noone;
@@ -16,7 +16,7 @@ function Node_DynaSurf_In(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		if(!is_undefined(inParent))
 			array_remove(group.inputs, inParent);
 		
-		inParent = nodeValue_Surface("Value", group)
+		inParent = new __NodeValue_Surface("Value", group)
 			.uncache()
 			.setVisible(true, true);
 		inParent.from = self;

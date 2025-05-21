@@ -14,31 +14,31 @@ function Node_Interlaced(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	use_cache          = CACHE_USE.manual;
 	clearCacheOnChange = false;
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Bool("Active", self, true));
+	newInput(1, nodeValue_Bool("Active", true));
 		active_index = 1;
 	
-	newInput(2, nodeValue_Surface("Mask", self));
+	newInput(2, nodeValue_Surface("Mask"));
 	
-	newInput(3, nodeValue_Float("Mix", self, 1))
+	newInput(3, nodeValue_Float("Mix", 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(4, nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) }));
+	newInput(4, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	__init_mask_modifier(2); // inputs 5, 6
 	
-	newInput(7, nodeValue_Enum_Button("Axis", self,  0, [ "X", "Y" ]));
+	newInput(7, nodeValue_Enum_Button("Axis",  0, [ "X", "Y" ]));
 	
-	newInput(8, nodeValue_Float("Size", self, 1));
+	newInput(8, nodeValue_Float("Size", 1));
 	
-	newInput(9, nodeValue_Bool("Invert", self, false));
+	newInput(9, nodeValue_Bool("Invert", false));
 	
-	newInput(10, nodeValue_Int("Delay", self, 1));
+	newInput(10, nodeValue_Int("Delay", 1));
 	
-	newInput(11, nodeValue_Bool("Loop", self, false));
+	newInput(11, nodeValue_Bool("Loop", false));
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 1, 
 		["Surface",   false], 0, 2, 3, 4, 

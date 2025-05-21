@@ -8,7 +8,7 @@ function Node_Timeline_Preview(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	PANEL_ANIMATION.timeline_preview = self;
 	
-	newInput(0, nodeValue_Surface("Surface", self));
+	newInput(0, nodeValue_Surface("Surface"));
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var _inSurf = getInputData(0);

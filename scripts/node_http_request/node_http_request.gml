@@ -2,13 +2,13 @@ function Node_HTTP_request(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	name = "HTTP";
 	setDimension(96, 72);
 	
-	newInput(0, nodeValue_Text("Address", self, ""));
+	newInput(0, nodeValue_Text("Address"));
 	
-	newInput(1, nodeValue_Enum_Scroll("Type", self,  0, [ "Get", "Post" ]));
+	newInput(1, nodeValue_Enum_Scroll("Type",  0, [ "Get", "Post" ]));
 	
-	newInput(2, nodeValue_Text("Content", self, ""))
+	newInput(2, nodeValue_Text("Content"))
 	
-	newOutput(0, nodeValue_Output("Result", self, VALUE_TYPE.text, ""));
+	newOutput(0, nodeValue_Output("Result", VALUE_TYPE.text, ""));
 	
 	address_domain  = "";
 	downloaded_size = 0;

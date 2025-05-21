@@ -1,9 +1,9 @@
 function Node_3D_Subdivide(_x, _y, _group = noone) : Node_3D_Modifier(_x, _y, _group) constructor {
 	name = "3D Subdivide";
 	
-	newInput(in_mesh + 0, nodeValue_Float("Subobjects", self, -1));
+	newInput(in_mesh + 0, nodeValue_Float("Subobjects", -1));
 	
-	newInput(in_mesh + 1, nodeValue_Int("Level", self, 1));
+	newInput(in_mesh + 1, nodeValue_Int("Level", 1));
 	
 	input_display_list = [ 
 		["Mesh",      false], 0, in_mesh + 0, 

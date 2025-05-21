@@ -3,11 +3,11 @@ function Node_Datetime_Get(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Text("Format", self, "%y-%m-%dT%h:%m:%s"));
+	newInput(0, nodeValue_Text("Format", "%y-%m-%dT%h:%m:%s"));
 	
-	newInput(1, nodeValue_Bool("Update", self, true));
+	newInput(1, nodeValue_Bool("Update", true));
 	
-	newOutput(0, nodeValue_Output("Data", self, VALUE_TYPE.text, ""));
+	newOutput(0, nodeValue_Output("Data", VALUE_TYPE.text, ""));
 	
 	template_guide = [
 		["%s", "Second",   function() /*=>*/ {return string_lead_zero(current_second,  2)} ],

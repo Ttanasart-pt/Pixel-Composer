@@ -1,23 +1,23 @@
 function Node_Perlin_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Smear noise";
 	
-	newInput(0, nodeValue_Dimension(self));
+	newInput(0, nodeValue_Dimension());
 	
-	newInput(1, nodeValue_Vec2("Position", self, [ 0, 0 ]))
+	newInput(1, nodeValue_Vec2("Position", [ 0, 0 ]))
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	newInput(2, nodeValue_Vec2("Scale", self, [ 4, 6 ]));
+	newInput(2, nodeValue_Vec2("Scale", [ 4, 6 ]));
 	
-	newInput(3, nodeValue_Int("Iteration", self, 3));
+	newInput(3, nodeValue_Int("Iteration", 3));
 	
-	newInput(4, nodeValue_Float("Brightness", self, 0.5))
+	newInput(4, nodeValue_Float("Brightness", 0.5))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(5, nodeValue_Rotation("Rotation", self, 0));
+	newInput(5, nodeValue_Rotation("Rotation", 0));
 		
-	newInput(6, nodeValue_Surface("Mask", self));
+	newInput(6, nodeValue_Surface("Mask"));
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
 		["Output",		false], 0, 6, 

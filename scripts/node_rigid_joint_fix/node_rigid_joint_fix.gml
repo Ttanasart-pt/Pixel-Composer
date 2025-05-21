@@ -13,13 +13,13 @@ function Node_Rigid_Joint_Fix(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	////- Joint
 	
-	newInput(2, nodeValue_Bool(   "Custom Anchor",  self, false)).setTooltip("Use custom anchor point. Off to use center of mass.");
-	newInput(3, nodeValue_Vec2(   "Anchor",         self, [ 0, 0 ])).setTooltip("Anchor point in world scope.");
-	newInput(4, nodeValue_Float(  "Stiffness",      self, 10 ));
-	newInput(5, nodeValue_Slider( "Damping",        self, .5 ));
-	newInput(6, nodeValue_Float(  "Breaking Force", self, 0 )).setTooltip("Amount of force to break the joint, zero for unbreakable.");
+	newInput(2, nodeValue_Bool(   "Custom Anchor", false)).setTooltip("Use custom anchor point. Off to use center of mass.");
+	newInput(3, nodeValue_Vec2(   "Anchor", [ 0, 0 ])).setTooltip("Anchor point in world scope.");
+	newInput(4, nodeValue_Float(  "Stiffness", 10 ));
+	newInput(5, nodeValue_Slider( "Damping", .5 ));
+	newInput(6, nodeValue_Float(  "Breaking Force", 0 )).setTooltip("Amount of force to break the joint, zero for unbreakable.");
 	
-	newOutput(0, nodeValue_Output("Object", self, VALUE_TYPE.rigid, noone));
+	newOutput(0, nodeValue_Output("Object", VALUE_TYPE.rigid, noone));
 	
 	input_display_list = [ 0, 1, 
 		["Joint", false], 2, 3, 4, 5, 6, 

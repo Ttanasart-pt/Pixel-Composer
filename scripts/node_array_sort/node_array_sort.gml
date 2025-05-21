@@ -5,12 +5,12 @@ function Node_Array_Sort(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	newInput(0, nodeValue("Array in", self, CONNECT_TYPE.input, VALUE_TYPE.any, []))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Enum_Button("Order", self,  0, [ "Ascending", "Descending" ]))
+	newInput(1, nodeValue_Enum_Button("Order",  0, [ "Ascending", "Descending" ]))
 		.rejectArray();
 	
-	newOutput(0, nodeValue_Output("Sorted array", self, VALUE_TYPE.any, []));
+	newOutput(0, nodeValue_Output("Sorted array", VALUE_TYPE.any, []));
 	
-	newOutput(1, nodeValue_Output("Sorted index", self, VALUE_TYPE.integer, []))
+	newOutput(1, nodeValue_Output("Sorted index", VALUE_TYPE.integer, []))
 		.setVisible(false);
 	
 	static sortAcs = function(v1, v2) { return v2.val - v1.val; }

@@ -3,12 +3,12 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	setDimension(96, 96);
 	draw_padding = 8;
 	
-	newInput(0, nodeValue_Armature("Armature", self, noone))
+	newInput(0, nodeValue_Armature())
 		.setVisible(true, true);
 	
 	input_display_list = [ 0 ]
 	
-	newOutput(0, nodeValue_Output("Armature", self, VALUE_TYPE.armature, noone));
+	newOutput(0, nodeValue_Output("Armature", VALUE_TYPE.armature, noone));
 	
 	boneHash  = "";
 	bonePose  = noone;

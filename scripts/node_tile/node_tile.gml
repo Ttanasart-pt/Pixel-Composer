@@ -1,15 +1,15 @@
 function Node_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Tile";
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Enum_Scroll("Scaling Type", self, 0, [ "Fix Dimension", "Relative To Input" ]));
+	newInput(1, nodeValue_Enum_Scroll("Scaling Type", 0, [ "Fix Dimension", "Relative To Input" ]));
 	
-	newInput(2, nodeValue_Dimension(self));
+	newInput(2, nodeValue_Dimension());
 	
-	newInput(3, nodeValue_Vec2("Amount", self, [ 2, 2 ]));
+	newInput(3, nodeValue_Vec2("Amount", [ 2, 2 ]));
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	 
 	input_display_list = [ 0,
 		["Tiling", false], 1, 2, 3, 

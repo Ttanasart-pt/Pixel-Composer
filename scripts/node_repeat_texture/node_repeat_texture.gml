@@ -8,15 +8,15 @@ function Node_Repeat_Texture(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	name = "Repeat Texture";
 	dimension_index = 1;
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Vec2("Target dimension", self, DEF_SURF));
+	newInput(1, nodeValue_Vec2("Target dimension", DEF_SURF));
 		
-	newInput(2, nodeValue_Enum_Scroll("Type", self,  1, [ "Tile", "Scatter", "Cell" ]));
+	newInput(2, nodeValue_Enum_Scroll("Type",  1, [ "Tile", "Scatter", "Cell" ]));
 	
 	newInput(3, nodeValueSeed(self));
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 3, 
 		["Surfaces",	false], 0, 

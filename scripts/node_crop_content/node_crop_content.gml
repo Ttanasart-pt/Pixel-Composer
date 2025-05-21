@@ -1,23 +1,23 @@
 function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Crop Content";
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Bool("Active", self, true));
+	newInput(1, nodeValue_Bool("Active", true));
 	
-	newInput(2, nodeValue_Enum_Scroll("Array Sizing", self,  1, [ "Largest, same size", "Independent" ]))
+	newInput(2, nodeValue_Enum_Scroll("Array Sizing",  1, [ "Largest, same size", "Independent" ]))
 		.setTooltip("Cropping mode for dealing with image array.");
 	
-	newInput(3, nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ], "Add padding back after crop."));
+	newInput(3, nodeValue_Padding("Padding", [ 0, 0, 0, 0 ], "Add padding back after crop."));
 	
-	newInput(4, nodeValue_Color("Background", self, cola(c_black, 0)));
+	newInput(4, nodeValue_Color("Background", cola(c_black, 0)));
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	newOutput(1, nodeValue_Output("Crop distance", self, VALUE_TYPE.integer, [ 0, 0, 0, 0 ]))
+	newOutput(1, nodeValue_Output("Crop distance", VALUE_TYPE.integer, [ 0, 0, 0, 0 ]))
 		.setDisplay(VALUE_DISPLAY.padding);
 	
-	newOutput(2, nodeValue_Output("Atlas", self, VALUE_TYPE.atlas, []));
+	newOutput(2, nodeValue_Output("Atlas", VALUE_TYPE.atlas, []));
 	
 	input_display_list = [ 1,
 		["Surfaces", false], 0, 2, 4, 

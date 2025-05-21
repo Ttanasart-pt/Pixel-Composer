@@ -1,24 +1,24 @@
 function Node_PB_FX_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Extrude";
 	
-	newInput(0, nodeValue_Surface("Surface", self));
+	newInput(0, nodeValue_Surface("Surface"));
 	
-	newInput(1, nodeValue_r(  "Angle",       self, 0));
-	newInput(2, nodeValue_i(  "Distance",    self, 1));
+	newInput(1, nodeValue_Rotation(  "Angle", 0));
+	newInput(2, nodeValue_Int(  "Distance", 1));
 	
-	newInput(3, nodeValue_c(  "Color",       self, ca_white));
-	newInput(4, nodeValue_b(  "Clone Color", self, false));
+	newInput(3, nodeValue_Color(  "Color", ca_white));
+	newInput(4, nodeValue_Bool(  "Clone Color", false));
 	
-	newInput(5, nodeValue_b(  "Highlight",           self, false));
-	newInput(6, nodeValue_c(  "Highlight Color",     self, ca_white));
-	newInput(7, nodeValue_r(  "Highlight Direction", self, 0));
+	newInput(5, nodeValue_Bool(  "Highlight", false));
+	newInput(6, nodeValue_Color(  "Highlight Color", ca_white));
+	newInput(7, nodeValue_Rotation(  "Highlight Direction", 0));
 	
-	newInput( 8, nodeValue_Pbbox("Shape PBBOX",   self, new __pbBox()));
-	newInput( 9, nodeValue_Pbbox("Target PBBOX",  self, new __pbBox()));
-	newInput(10, nodeValue_Bool("Use PBBOX",      self, true));
-	newInput(11, nodeValue_es("PBBOX Mode",       self, 0, [ "4 Directions", "Extends" ]));
+	newInput( 8, nodeValue_Pbbox("Shape PBBOX"));
+	newInput( 9, nodeValue_Pbbox("Target PBBOX"));
+	newInput(10, nodeValue_Bool("Use PBBOX", true));
+	newInput(11, nodeValue_Enum_Scroll("PBBOX Mode", 0, [ "4 Directions", "Extends" ]));
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
 	    ["PBBOX",       true, 10], 8, 9, 11, 

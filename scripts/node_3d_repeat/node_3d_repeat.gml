@@ -1,39 +1,39 @@
 function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constructor {
 	name  = "3D Repeat";
 		
-	newInput(0, nodeValue_D3Mesh("Objects", self, noone))
+	newInput(0, nodeValue_D3Mesh("Objects", noone))
 		.setArrayDepth(1)
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Enum_Button("Object Mode", self,  0 , [ "Duplicate", "Array" ] ))
+	newInput(1, nodeValue_Enum_Button("Object Mode",  0 , [ "Duplicate", "Array" ] ))
 		.rejectArray();
 	
-	newInput(2, nodeValue_Int("Amount", self, 1 ));
+	newInput(2, nodeValue_Int("Amount", 1 ));
 	
-	newInput(3, nodeValue_Vec3("Starting Position", self, [ 0, 0, 0 ] ));
+	newInput(3, nodeValue_Vec3("Starting Position", [ 0, 0, 0 ] ));
 	
-	newInput(4, nodeValue_Quaternion("Starting Rotation", self, [ 0, 0, 0, 1 ] ));
+	newInput(4, nodeValue_Quaternion("Starting Rotation", [ 0, 0, 0, 1 ] ));
 	
-	newInput(5, nodeValue_Vec3("Starting Scale", self, [ 1, 1, 1 ] ));
+	newInput(5, nodeValue_Vec3("Starting Scale", [ 1, 1, 1 ] ));
 	
-	newInput(6, nodeValue_Vec3("Shift Position", self, [ 0, 0, 0 ] ));
+	newInput(6, nodeValue_Vec3("Shift Position", [ 0, 0, 0 ] ));
 	
-	newInput(7, nodeValue_Quaternion("Shift Rotation", self, [ 0, 0, 0, 1 ] ));
+	newInput(7, nodeValue_Quaternion("Shift Rotation", [ 0, 0, 0, 1 ] ));
 	
-	newInput(8, nodeValue_Vec3("Shift Scale", self, [ 0, 0, 0 ] ));
+	newInput(8, nodeValue_Vec3("Shift Scale", [ 0, 0, 0 ] ));
 	
-	newInput(9, nodeValue_Float("Positions", self, [] ))
+	newInput(9, nodeValue_Float("Positions", [] ))
 		.setArrayDepth(2);
 	
-	newInput(10, nodeValue_Float("Rotations", self, [] ))
+	newInput(10, nodeValue_Float("Rotations", [] ))
 		.setArrayDepth(2);
 	
-	newInput(11, nodeValue_Float("Scales", self, [] ))
+	newInput(11, nodeValue_Float("Scales", [] ))
 		.setArrayDepth(2);
 	
-	newInput(12, nodeValue_Bool("Use Instance", self, true ))
+	newInput(12, nodeValue_Bool("Use Instance", true ))
 	
-	newOutput(0, nodeValue_Output("Scene", self, VALUE_TYPE.d3Scene, noone));
+	newOutput(0, nodeValue_Output("Scene", VALUE_TYPE.d3Scene, noone));
 	
 	input_display_list = [
 		["Objects",		false], 0, 3, 4, 5, 

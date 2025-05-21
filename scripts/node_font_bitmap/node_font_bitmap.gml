@@ -1,16 +1,16 @@
 function Node_Font_Bitmap(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Surfaces to Font";
 	
-	newInput(0, nodeValue_Surface("Font Surfaces", self, []))
+	newInput(0, nodeValue_Surface("Font Surfaces", []))
 	    .setArrayDepth(1);
 	
-	newInput(1, nodeValue_Text("String Map", self, "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz"));
+	newInput(1, nodeValue_Text("String Map", "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz"));
 	
-	newInput(2, nodeValue_Bool("Proportional", self, true));
+	newInput(2, nodeValue_Bool("Proportional", true));
 	
-	newInput(3, nodeValue_Float("Separation", self, 2));
+	newInput(3, nodeValue_Float("Separation", 2));
 	
-	newOutput(0, nodeValue_Output("Font", self, VALUE_TYPE.font, noone));
+	newOutput(0, nodeValue_Output("Font", VALUE_TYPE.font, noone));
 	
 	input_display_list = [ 0, 
 	    ["Settings", false], 1, 2, 3 

@@ -9,47 +9,47 @@ function Node_Rigid_Override(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	newInput(0, nodeValue("Object", self, CONNECT_TYPE.input, VALUE_TYPE.rigid, noone )).setVisible(true, true);
 	
-	newInput( 1, nodeValue_Bool(    "Set Surfaces", self, false ));
-	newInput( 2, nodeValue_Surface( "Surfaces",     self ));
+	newInput( 1, nodeValue_Bool(    "Set Surfaces", false ));
+	newInput( 2, nodeValue_Surface( "Surfaces" ));
 	
-	newInput( 3, nodeValue_Bool(  "Set Positions",  self, false ));
-	newInput( 4, nodeValue_eb(    "Mode",           self, 0, [ "Absolute", "Relative" ])).setInternalName("Position mode");
-	newInput( 5, nodeValue_Vec2(  "Positions",      self, [0, 0] ));
+	newInput( 3, nodeValue_Bool(  "Set Positions", false ));
+	newInput( 4, nodeValue_Enum_Button(    "Mode", 0, [ "Absolute", "Relative" ])).setInternalName("Position mode");
+	newInput( 5, nodeValue_Vec2(  "Positions", [0, 0] ));
 	
-	newInput( 6, nodeValue_Bool(  "Set Rotations",  self, false ));
-	newInput( 7, nodeValue_eb(    "Mode",           self, 0, [ "Absolute", "Relative" ])).setInternalName("Rotation mode");
-	newInput( 8, nodeValue_Float( "Rotations",      self, 0 ));
+	newInput( 6, nodeValue_Bool(  "Set Rotations", false ));
+	newInput( 7, nodeValue_Enum_Button(    "Mode", 0, [ "Absolute", "Relative" ])).setInternalName("Rotation mode");
+	newInput( 8, nodeValue_Float( "Rotations", 0 ));
 	
-	newInput( 9, nodeValue_Bool(  "Set Scales",     self, false ));
-	newInput(10, nodeValue_eb(    "Mode",           self, 0, [ "Absolute", "Relative Add", "Relative Muliply" ])).setInternalName("Scale mode");
-	newInput(11, nodeValue_Vec2(  "Scales",         self, [0, 0] ));
+	newInput( 9, nodeValue_Bool(  "Set Scales", false ));
+	newInput(10, nodeValue_Enum_Button(    "Mode", 0, [ "Absolute", "Relative Add", "Relative Muliply" ])).setInternalName("Scale mode");
+	newInput(11, nodeValue_Vec2(  "Scales", [0, 0] ));
 	
-	newInput(12, nodeValue_Bool(  "Set Blends",     self, false ));
-	newInput(13, nodeValue_Color( "Blends",         self, ca_white ));
+	newInput(12, nodeValue_Bool(  "Set Blends", false ));
+	newInput(13, nodeValue_Color( "Blends", ca_white ));
 	
-	newInput(14, nodeValue_Bool(  "Set Alpha",      self, false ));
-	newInput(15, nodeValue_eb(    "Mode",           self, 0, [ "Absolute", "Relative" ])).setInternalName("Alpha mode");
-	newInput(16, nodeValue_Float( "Alpha",          self, 0 ));
+	newInput(14, nodeValue_Bool(  "Set Alpha", false ));
+	newInput(15, nodeValue_Enum_Button(    "Mode", 0, [ "Absolute", "Relative" ])).setInternalName("Alpha mode");
+	newInput(16, nodeValue_Float( "Alpha", 0 ));
 	
-	newInput(17, nodeValue_Bool(  "Set Mass",       self, false ));
-	newInput(18, nodeValue_eb(    "Mode",           self, 0, [ "Absolute", "Relative Add", "Relative Muliply" ])).setInternalName("Mass mode");
-	newInput(19, nodeValue_Float( "Mass",           self, 1 ));
+	newInput(17, nodeValue_Bool(  "Set Mass", false ));
+	newInput(18, nodeValue_Enum_Button(    "Mode", 0, [ "Absolute", "Relative Add", "Relative Muliply" ])).setInternalName("Mass mode");
+	newInput(19, nodeValue_Float( "Mass", 1 ));
 	
-	newInput(20, nodeValue_Bool(  "Set Friction",   self, false ));
-	newInput(21, nodeValue_eb(    "Mode",           self, 0, [ "Absolute", "Relative Add", "Relative Muliply" ])).setInternalName("Friction mode");
-	newInput(22, nodeValue_Float( "Friction",       self, 1 ));
+	newInput(20, nodeValue_Bool(  "Set Friction", false ));
+	newInput(21, nodeValue_Enum_Button(    "Mode", 0, [ "Absolute", "Relative Add", "Relative Muliply" ])).setInternalName("Friction mode");
+	newInput(22, nodeValue_Float( "Friction", 1 ));
 	
-	newInput(23, nodeValue_Bool(  "Set Bounciness", self, false ));
-	newInput(24, nodeValue_eb(    "Mode",           self, 0, [ "Absolute", "Relative Add", "Relative Muliply" ])).setInternalName("Bounciness mode");
-	newInput(25, nodeValue_Float( "Bounciness",     self, 1 ));
+	newInput(23, nodeValue_Bool(  "Set Bounciness", false ));
+	newInput(24, nodeValue_Enum_Button(    "Mode", 0, [ "Absolute", "Relative Add", "Relative Muliply" ])).setInternalName("Bounciness mode");
+	newInput(25, nodeValue_Float( "Bounciness", 1 ));
 	
-	newInput(26, nodeValue_Bool(  "Set Gravity Scale", self, false ));
-	newInput(27, nodeValue_eb(    "Mode",              self, 0, [ "Absolute", "Relative Add", "Relative Muliply" ])).setInternalName("Gravity Scale mode");
-	newInput(28, nodeValue_Float( "Gravity Scale",     self, 1 ));
+	newInput(26, nodeValue_Bool(  "Set Gravity Scale", false ));
+	newInput(27, nodeValue_Enum_Button(    "Mode", 0, [ "Absolute", "Relative Add", "Relative Muliply" ])).setInternalName("Gravity Scale mode");
+	newInput(28, nodeValue_Float( "Gravity Scale", 1 ));
 	
 	// inputs 29
 		
-	newOutput(0, nodeValue_Output("Object", self, VALUE_TYPE.rigid, noone ));
+	newOutput(0, nodeValue_Output("Object", VALUE_TYPE.rigid, noone ));
 	
 	input_display_list = [ 0, 
 		["Surface",       false,  1], 2, 

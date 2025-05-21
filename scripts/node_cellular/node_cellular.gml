@@ -10,34 +10,34 @@
 function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Cellular Noise";
 	
-	newInput(0, nodeValue_Dimension(self));
+	newInput(0, nodeValue_Dimension());
 	
-	newInput(1, nodeValue_Vec2("Position", self, [ DEF_SURF_W / 2, DEF_SURF_H / 2]))
+	newInput(1, nodeValue_Vec2("Position", [ DEF_SURF_W / 2, DEF_SURF_H / 2]))
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	newInput(2, nodeValue_Float("Scale", self, 4))
+	newInput(2, nodeValue_Float("Scale", 4))
 		.setMappable(11);
 	
 	newInput(3, nodeValueSeed(self));
 	
-	newInput(4, nodeValue_Enum_Scroll("Type", self,  0, [ "Point", "Edge", "Cell", "Crystal" ]));
+	newInput(4, nodeValue_Enum_Scroll("Type",  0, [ "Point", "Edge", "Cell", "Crystal" ]));
 	
-	newInput(5, nodeValue_Float("Contrast", self, 1))
+	newInput(5, nodeValue_Float("Contrast", 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 4, 0.01] });
 	
-	newInput(6, nodeValue_Enum_Button("Pattern", self,  0, [ "Tiled", "Uniform", "Radial" ]));
+	newInput(6, nodeValue_Enum_Button("Pattern",  0, [ "Tiled", "Uniform", "Radial" ]));
 	
-	newInput(7, nodeValue_Float("Middle", self, 0.5))
+	newInput(7, nodeValue_Float("Middle", 0.5))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0., 1., 0.01] });
 	
-	newInput(8, nodeValue_Float("Radial scale", self, 2))
+	newInput(8, nodeValue_Float("Radial scale", 2))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1., 10., 0.01] });
 	
-	newInput(9, nodeValue_Float("Radial shatter", self, 0))
+	newInput(9, nodeValue_Float("Radial shatter", 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-10., 10., 0.01] })
 		.setVisible(false);
 	
-	newInput(10, nodeValue_Bool("Colored", self, false))
+	newInput(10, nodeValue_Bool("Colored", false))
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	
@@ -45,11 +45,11 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	
-	newInput(12, nodeValue_Rotation("Rotation", self, 0));
+	newInput(12, nodeValue_Rotation("Rotation", 0));
 		
-	newInput(13, nodeValue_Surface("Mask", self));
+	newInput(13, nodeValue_Surface("Mask"));
 	
-	newInput(14, nodeValue_Rotation("Phase", self, 0));
+	newInput(14, nodeValue_Rotation("Phase", 0));
 	
 	input_display_list = [
 		["Output",    false], 0, 13, 
@@ -59,7 +59,7 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		["Rendering", false], 5, 7, 10, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	

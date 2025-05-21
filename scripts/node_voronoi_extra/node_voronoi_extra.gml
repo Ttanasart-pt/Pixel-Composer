@@ -2,30 +2,30 @@ function Node_Voronoi_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, 
 	name   = "Extra Voronoi";
 	shader = sh_voronoi_extra;
 	
-	newInput(1, nodeValue_Vec2("Position", self, [ 0, 0 ]))
+	newInput(1, nodeValue_Vec2("Position", [ 0, 0 ]))
 		.setUnitRef(function(index) { return getDimension(index); });
 		addShaderProp(SHADER_UNIFORM.float, "position");
 		
-	newInput(2, nodeValue_Vec2("Scale", self, [ 4, 4 ]));
+	newInput(2, nodeValue_Vec2("Scale", [ 4, 4 ]));
 		addShaderProp(SHADER_UNIFORM.float, "scale");
 				
 	newInput(3, nodeValueSeed(self));
 		addShaderProp(SHADER_UNIFORM.float, "seed");
 				
-	newInput(4, nodeValue_Float("Progress", self, 0))
+	newInput(4, nodeValue_Float("Progress", 0))
 		addShaderProp(SHADER_UNIFORM.float, "progress");
 				
-	newInput(5, nodeValue_Enum_Scroll("Mode", self,  0, [ "Block", "Triangle" ]));
+	newInput(5, nodeValue_Enum_Scroll("Mode",  0, [ "Block", "Triangle" ]));
 		addShaderProp(SHADER_UNIFORM.integer, "mode");
 	
-	newInput(6, nodeValue_Float("Parameter A", self, 0))
+	newInput(6, nodeValue_Float("Parameter A", 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
 		addShaderProp(SHADER_UNIFORM.float, "paramA");
 		
-	newInput(7, nodeValue_Rotation("Rotation", self, 0));
+	newInput(7, nodeValue_Rotation("Rotation", 0));
 		addShaderProp(SHADER_UNIFORM.float, "rotation");
 			
-	newInput(8, nodeValue_Surface("Mask", self));
+	newInput(8, nodeValue_Surface("Mask"));
 	
 	input_display_list = [
 		["Output", 	 true],	0, 8, 

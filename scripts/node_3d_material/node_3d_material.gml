@@ -3,34 +3,34 @@ function Node_3D_Material(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 	is_3D = NODE_3D.none;
 	solid_surf = noone;
 	
-	newInput(0, nodeValue_Surface("Texture", self))
+	newInput(0, nodeValue_Surface("Texture"))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Float("Diffuse", self, 1 ))
+	newInput(1, nodeValue_Float("Diffuse", 1 ))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(2, nodeValue_Float("Specular", self, 0 ))
+	newInput(2, nodeValue_Float("Specular", 0 ))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(3, nodeValue_Float("Shininess", self, 1 ));
+	newInput(3, nodeValue_Float("Shininess", 1 ));
 	
-	newInput(4, nodeValue_Bool("Metalic", self, false ));
+	newInput(4, nodeValue_Bool("Metalic", false ));
 	
-	newInput(5, nodeValue_Surface("Normal Map", self));
+	newInput(5, nodeValue_Surface("Normal Map"));
 	
-	newInput(6, nodeValue_Float("Normal Strength", self, 1 ))
+	newInput(6, nodeValue_Float("Normal Strength", 1 ))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 2, 0.01 ] });
 		
-	newInput(7, nodeValue_Float("Roughness", self, 1 ))
+	newInput(7, nodeValue_Float("Roughness", 1 ))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(8, nodeValue_Bool("Anti aliasing", self, false ));
+	newInput(8, nodeValue_Bool("Anti aliasing", false ));
 	
-	newInput(9, nodeValue_Vec2("Scale", self, [ 1, 1 ] ));
+	newInput(9, nodeValue_Vec2("Scale", [ 1, 1 ] ));
 	
-	newInput(10, nodeValue_Vec2("Shift", self, [ 0, 0 ] ));
+	newInput(10, nodeValue_Vec2("Shift", [ 0, 0 ] ));
 	
-	newOutput(0, nodeValue_Output("Material", self, VALUE_TYPE.d3Material, noone));
+	newOutput(0, nodeValue_Output("Material", VALUE_TYPE.d3Material, noone));
 	
 	input_display_list = [ 
 		["Texture",		false], 0, 8, 9, 10, 

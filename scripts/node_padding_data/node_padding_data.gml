@@ -5,19 +5,19 @@ function Node_Padding_Data(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	////- Fractional
 	
-	newInput(4, nodeValue_Bool(    "Use Fractional",    self, false ));
-	newInput(5, nodeValue_Surface( "Reference Surface", self));
+	newInput(4, nodeValue_Bool(    "Use Fractional", false ));
+	newInput(5, nodeValue_Surface( "Reference Surface"));
 	
 	////- Padding
 	
-	newInput(0, nodeValue_Float( "Left",   self, 0 ));
-	newInput(1, nodeValue_Float( "Right",  self, 0 ));
-	newInput(2, nodeValue_Float( "Top",    self, 0 ));
-	newInput(3, nodeValue_Float( "Bottom", self, 0 ));
+	newInput(0, nodeValue_Float( "Left", 0 ));
+	newInput(1, nodeValue_Float( "Right", 0 ));
+	newInput(2, nodeValue_Float( "Top", 0 ));
+	newInput(3, nodeValue_Float( "Bottom", 0 ));
 	
 	// inputs 6
 	
-	newOutput(0, nodeValue_Output("Padding", self, VALUE_TYPE.float, [ 0, 0, 0, 0 ])).setDisplay(VALUE_DISPLAY.padding);
+	newOutput(0, nodeValue_Output("Padding", VALUE_TYPE.float, [ 0, 0, 0, 0 ])).setDisplay(VALUE_DISPLAY.padding);
 	
 	input_display_list = [ 
 		["Fractional", false, 4], 5, 

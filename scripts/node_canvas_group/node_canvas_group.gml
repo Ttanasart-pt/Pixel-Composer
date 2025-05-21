@@ -8,7 +8,7 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 	
 	modifiable = false;
 	
-	newInput( 0, nodeValue_Dimension(self));
+	newInput( 0, nodeValue_Dimension());
 	
 	custom_input_index = array_length(inputs);
 	

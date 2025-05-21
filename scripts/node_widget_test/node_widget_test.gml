@@ -9,7 +9,7 @@ function Node_Widget_Test(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput( 3, nodeValue("vectorRangeBox", self, CONNECT_TYPE.input, VALUE_TYPE.float, [0, 0, 0, 0])                    .setDisplay(VALUE_DISPLAY.vector_range))
 	newInput( 4, nodeValue("rotator", self, CONNECT_TYPE.input, VALUE_TYPE.float, 0)                                      .setDisplay(VALUE_DISPLAY.rotation))
 	newInput( 5, nodeValue("rotatorRange", self, CONNECT_TYPE.input, VALUE_TYPE.float, [0, 0])                            .setDisplay(VALUE_DISPLAY.rotation_range))
-	newInput( 6, nodeValue_Float("rotatorRandom", self, [0, 0, 0, 0, 0])                  .setDisplay(VALUE_DISPLAY.rotation_random))
+	newInput( 6, nodeValue_Float("rotatorRandom", [0, 0, 0, 0, 0])                  .setDisplay(VALUE_DISPLAY.rotation_random))
 	newInput( 7, nodeValue("slider", self, CONNECT_TYPE.input, VALUE_TYPE.float, 0)                                       .setDisplay(VALUE_DISPLAY.slider))
 	newInput( 8, nodeValue("sliderRange", self, CONNECT_TYPE.input, VALUE_TYPE.float, [ 0, 0 ])                           .setDisplay(VALUE_DISPLAY.slider_range))
 	newInput( 9, nodeValue("areaBox", self, CONNECT_TYPE.input, VALUE_TYPE.float, DEF_AREA)						        .setDisplay(VALUE_DISPLAY.area))
@@ -23,26 +23,26 @@ function Node_Widget_Test(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput(17, nodeValue("transformBox", self, CONNECT_TYPE.input, VALUE_TYPE.float, [ 0, 0, 0, 0, 0 ])                 .setDisplay(VALUE_DISPLAY.transform))
 	newInput(18, nodeValue("quarternionBox", self, CONNECT_TYPE.input, VALUE_TYPE.float, [ 0, 0, 0, 0 ])                  .setDisplay(VALUE_DISPLAY.d3quarternion))
 
-	newInput(19, nodeValue_Bool("checkBox", self, false)                               .setDisplay(VALUE_DISPLAY._default))
+	newInput(19, nodeValue_Bool("checkBox", false)                               .setDisplay(VALUE_DISPLAY._default))
 
-	newInput(20, nodeValue_Color("buttonColor", self, 0)                                  .setDisplay(VALUE_DISPLAY._default))
-	newInput(21, nodeValue_Palette("buttonPalette", self, array_clone(DEF_PALETTE))                     .setDisplay(VALUE_DISPLAY.palette))
-	newInput(22, nodeValue_Gradient("buttonGradient", self, new gradientObject(ca_white))  .setDisplay(VALUE_DISPLAY._default))
+	newInput(20, nodeValue_Color("buttonColor", 0)                                  .setDisplay(VALUE_DISPLAY._default))
+	newInput(21, nodeValue_Palette("buttonPalette", array_clone(DEF_PALETTE))                     .setDisplay(VALUE_DISPLAY.palette))
+	newInput(22, nodeValue_Gradient("buttonGradient", new gradientObject(ca_white))  .setDisplay(VALUE_DISPLAY._default))
 
 	newInput(23, nodeValue("pathArrayBox", self, CONNECT_TYPE.input, VALUE_TYPE.path, [])                                 .setDisplay(VALUE_DISPLAY.path_array, { filter: [ "image|*.png;*.jpg", "" ] }))
 	newInput(24, nodeValue("pathLoad",     self, CONNECT_TYPE.input, VALUE_TYPE.path, "")                                 .setDisplay(VALUE_DISPLAY.path_load))
 	newInput(25, nodeValue("pathSave",     self, CONNECT_TYPE.input, VALUE_TYPE.path, "")                                 .setDisplay(VALUE_DISPLAY.path_save))
 	newInput(26, nodeValue("font",         self, CONNECT_TYPE.input, VALUE_TYPE.font, ""));
 	
-	newInput(27, nodeValue_Curve("curveBox", self, CURVE_DEF_11)                          .setDisplay(VALUE_DISPLAY._default))
+	newInput(27, nodeValue_Curve("curveBox", CURVE_DEF_11)                          .setDisplay(VALUE_DISPLAY._default))
 
-	newInput(28, nodeValue_Text("textArea", self, "")                                     .setDisplay(VALUE_DISPLAY._default))
-	newInput(29, nodeValue_Text("textBox", self, "")                                      .setDisplay(VALUE_DISPLAY.text_box))
-	newInput(30, nodeValue_Text("textArea", self, "")                                     .setDisplay(VALUE_DISPLAY.codeLUA))
-	newInput(31, nodeValue_Text("textArea", self, "")                                     .setDisplay(VALUE_DISPLAY.codeHLSL))
-	newInput(32, nodeValue_Text("textArrayBox", self, [])                                 .setDisplay(VALUE_DISPLAY.text_array, { data: [ "Choice 1", "Choice 2" ] }))
+	newInput(28, nodeValue_Text("textArea")                                     .setDisplay(VALUE_DISPLAY._default))
+	newInput(29, nodeValue_Text("textBox")                                      .setDisplay(VALUE_DISPLAY.text_box))
+	newInput(30, nodeValue_Text("textArea")                                     .setDisplay(VALUE_DISPLAY.codeLUA))
+	newInput(31, nodeValue_Text("textArea")                                     .setDisplay(VALUE_DISPLAY.codeHLSL))
+	newInput(32, nodeValue_Text("textArrayBox", [])                                 .setDisplay(VALUE_DISPLAY.text_array, { data: [ "Choice 1", "Choice 2" ] }))
 
-	newInput(33, nodeValue_Surface("surfaceBox", self)                             .setDisplay(VALUE_DISPLAY._default))
+	newInput(33, nodeValue_Surface("surfaceBox")                             .setDisplay(VALUE_DISPLAY._default))
 	
 	input_display_list = [
 		["Number",  false], 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 18,

@@ -7,38 +7,38 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	manual_ungroupable = false;
 	update_on_frame    = true;
 	
-	newInput(0, nodeValue_Dimension(self));
+	newInput(0, nodeValue_Dimension());
 	
-	newInput(1, nodeValue_Int("Particle Size", self, 1));
+	newInput(1, nodeValue_Int("Particle Size", 1));
 	
-	newInput(2, nodeValue_Int("Particle Density", self, 10));
+	newInput(2, nodeValue_Int("Particle Density", 10));
 	
-	newInput(3, nodeValue_Float("FLIP Ratio", self, 0.8))
+	newInput(3, nodeValue_Float("FLIP Ratio", 0.8))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(4, nodeValue_Float("Resolve accelerator", self, 1.5));
+	newInput(4, nodeValue_Float("Resolve accelerator", 1.5));
 	
-	newInput(5, nodeValue_Int("Iteration", self, 8));
+	newInput(5, nodeValue_Int("Iteration", 8));
 	
-	newInput(6, nodeValue_Float("Damping", self, 0.8))
+	newInput(6, nodeValue_Float("Damping", 0.8))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(7, nodeValue_Float("Gravity", self, 5));
+	newInput(7, nodeValue_Float("Gravity", 5));
 	
-	newInput(8, nodeValue_Float("Time Step", self, 0.05));
+	newInput(8, nodeValue_Float("Time Step", 0.05));
 	
-	newInput(9, nodeValue_Toggle("Wall", self, 0b1111, { data:  [ "T", "B", "L", "R" ] }));
+	newInput(9, nodeValue_Toggle("Wall", 0b1111, { data:  [ "T", "B", "L", "R" ] }));
 	
-	newInput(10, nodeValue_Float("Viscosity", self, 0.))
+	newInput(10, nodeValue_Float("Viscosity", 0.))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
 	
-	newInput(11, nodeValue_Float("Friction", self, 0.))
+	newInput(11, nodeValue_Float("Friction", 0.))
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	newInput(12, nodeValue_Float("Wall Elasticity", self, 0.))
+	newInput(12, nodeValue_Float("Wall Elasticity", 0.))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 2, 0.01 ] });
 	
-	newInput(13, nodeValue_Rotation("Gravity Direction", self, -90));
+	newInput(13, nodeValue_Rotation("Gravity Direction", -90));
 	
 	input_display_list = [
 		["Domain",	false], 0, 1, 9, 12, 
@@ -46,7 +46,7 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		["Physics", false], 7, 13, 10, 11, 
 	]
 	
-	newOutput(0, nodeValue_Output("Domain", self, VALUE_TYPE.fdomain, noone));
+	newOutput(0, nodeValue_Output("Domain", VALUE_TYPE.fdomain, noone));
 	
 	#region attributes
 		attributes.max_particles       = 10000;

@@ -1,44 +1,44 @@
 function Node_RM_Terrain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "RM Terrain";
 	
-	newInput(0, nodeValue_Dimension(self));
+	newInput(0, nodeValue_Dimension());
 	
-	newInput(1, nodeValue_Surface("Surface", self));
+	newInput(1, nodeValue_Surface("Surface"));
 	
-	newInput(2, nodeValue_Vec3("Position", self, [ 0, 0, 0 ]));
+	newInput(2, nodeValue_Vec3("Position", [ 0, 0, 0 ]));
 	
-	newInput(3, nodeValue_Vec3("Rotation", self, [ 30, 45, 0 ]));
+	newInput(3, nodeValue_Vec3("Rotation", [ 30, 45, 0 ]));
 	
-	newInput(4, nodeValue_Float("Scale", self, 1))
+	newInput(4, nodeValue_Float("Scale", 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] });
 	
-	newInput(5, nodeValue_Float("FOV", self, 30))
+	newInput(5, nodeValue_Float("FOV", 30))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 90, 1 ] });
 	
-	newInput(6, nodeValue_Vec2("View Range", self, [ 0, 6 ]));
+	newInput(6, nodeValue_Vec2("View Range", [ 0, 6 ]));
 	
-	newInput(7, nodeValue_Float("BG Bleed", self, 1))
+	newInput(7, nodeValue_Float("BG Bleed", 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(8, nodeValue_Color("Ambient", self, ca_white));
+	newInput(8, nodeValue_Color("Ambient", ca_white));
 	
-	newInput(9, nodeValue_Float("Height", self, 1))
+	newInput(9, nodeValue_Float("Height", 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] });
 	
-	newInput(10, nodeValue_Bool("Tile", self, true))
+	newInput(10, nodeValue_Bool("Tile", true))
 	
-	newInput(11, nodeValue_Surface("Texture", self));
+	newInput(11, nodeValue_Surface("Texture"));
 	
-	newInput(12, nodeValue_Color("Background", self, ca_black));
+	newInput(12, nodeValue_Color("Background", ca_black));
 	
-	newInput(13, nodeValue_Surface("Reflection", self));
+	newInput(13, nodeValue_Surface("Reflection"));
 	
-	newInput(14, nodeValue_Vec3("Sun Position", self, [ .5, 1, .5 ]));
+	newInput(14, nodeValue_Vec3("Sun Position", [ .5, 1, .5 ]));
 	
-	newInput(15, nodeValue_Float("Shadow", self, 0.2))
+	newInput(15, nodeValue_Float("Shadow", 0.2))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0,
 		["Extrusion", false], 1, 9, 10,

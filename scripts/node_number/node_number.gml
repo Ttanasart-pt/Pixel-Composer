@@ -20,40 +20,40 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	rotator_m = 0;
 	rotate_dx = 0;
 	
-	newInput(0, nodeValue_Float("Value", self, 0))
+	newInput(0, nodeValue_Float("Value", 0))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Bool("Integer", self, false));
+	newInput(1, nodeValue_Bool("Integer", false));
 	
-	newInput(2, nodeValue_Enum_Scroll("Display Type", self, 0, { data: [ "Number", "Slider", "Rotator", "Increment" ], update_hover: false }));
+	newInput(2, nodeValue_Enum_Scroll("Display Type", 0, { data: [ "Number", "Slider", "Rotator", "Increment" ], update_hover: false }));
 	
-	newInput(3, nodeValue_Range("Range", self, [ 0, 1 ]));
+	newInput(3, nodeValue_Range("Range", [ 0, 1 ]));
 	
-	newInput(4, nodeValue_Float("Step", self, 0.01));
+	newInput(4, nodeValue_Float("Step", 0.01));
 	
-	newInput(5, nodeValue_Bool("Clamp to range", self, false));
+	newInput(5, nodeValue_Bool("Clamp to range", false));
 	
-	newInput(6, nodeValue_Enum_Button("Style", self, 0, { data: [ "Blob", "Flat" ] }));
+	newInput(6, nodeValue_Enum_Button("Style", 0, { data: [ "Blob", "Flat" ] }));
 	
-	newInput(7, nodeValue_Float("Rotate speed", self, 1));
+	newInput(7, nodeValue_Float("Rotate speed", 1));
 	
-	newInput(8, nodeValue_Bool("Show on global", self, false, "Whether to show overlay gizmo when not selecting any nodes."));
+	newInput(8, nodeValue_Bool("Show on global", false, "Whether to show overlay gizmo when not selecting any nodes."));
 	
-	newInput(9, nodeValue_Vec2("Gizmo offset", self, [ 0, 0 ]));
+	newInput(9, nodeValue_Vec2("Gizmo offset", [ 0, 0 ]));
 	
-	newInput(10, nodeValue_Float("Gizmo scale", self, 1));
+	newInput(10, nodeValue_Float("Gizmo scale", 1));
 	
-	newInput(11, nodeValue_Enum_Scroll("Gizmo style", self, 0, [ "Default", "Shapes", "Sprite" ]));
+	newInput(11, nodeValue_Enum_Scroll("Gizmo style", 0, [ "Default", "Shapes", "Sprite" ]));
 	
-	newInput(12, nodeValue_Enum_Scroll("Gizmo shape", self, 0, [ "Rectangle", "Ellipse", "Arrow" ]));
+	newInput(12, nodeValue_Enum_Scroll("Gizmo shape", 0, [ "Rectangle", "Ellipse", "Arrow" ]));
 	
-	newInput(13, nodeValue_Surface("Gizmo sprite", self, noone));
+	newInput(13, nodeValue_Surface("Gizmo sprite"));
 	
-	newInput(14, nodeValue_Vec2("Gizmo size", self, [ 32, 32 ]));
+	newInput(14, nodeValue_Vec2("Gizmo size", [ 32, 32 ]));
 	
-	newInput(15, nodeValue_Rotation_Range("Knob Range", self, [ 0, 360 ]));
+	newInput(15, nodeValue_Rotation_Range("Knob Range", [ 0, 360 ]));
 	
-	newOutput(0, nodeValue_Output("Number", self, VALUE_TYPE.float, 0));
+	newOutput(0, nodeValue_Output("Number", VALUE_TYPE.float, 0));
 	
 	input_display_list = [ 0, 1, 
 		["Display",  false], 2, 6, 15, 3, 5, 4, 7,

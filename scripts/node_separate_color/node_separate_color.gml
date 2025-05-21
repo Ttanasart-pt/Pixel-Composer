@@ -1,20 +1,20 @@
 function Node_Color_Separate(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Separate Color";
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Bool("All Colors", self, true));
+	newInput(1, nodeValue_Bool("All Colors", true));
 	
-	newInput(2, nodeValue_Palette("Colors", self, array_clone(DEF_PALETTE)));
+	newInput(2, nodeValue_Palette("Colors", array_clone(DEF_PALETTE)));
 	
-	newInput(3, nodeValue_Bool("Match All", self, true, "If false, only match pixels with the exact same color."));
+	newInput(3, nodeValue_Bool("Match All", true, "If false, only match pixels with the exact same color."));
 	
 	input_display_list = [ 
 		["Surfaces",  true], 0, 
 		["Colors",   false], 1, 2, 3, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	static extractAll = function(_surf) {
 		var ww = surface_get_width_safe(_surf);

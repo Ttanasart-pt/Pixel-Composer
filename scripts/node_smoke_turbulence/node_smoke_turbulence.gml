@@ -7,12 +7,12 @@ function Node_Smoke_Turbulence(_x, _y, _group = noone) : Node_Smoke(_x, _y, _gro
 	newInput(0, nodeValue("Domain", self, CONNECT_TYPE.input, VALUE_TYPE.sdomain, noone))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Area("Effect area", self, DEF_AREA, { useShape : false }));
+	newInput(1, nodeValue_Area("Effect area", DEF_AREA, { useShape : false }));
 	
-	newInput(2, nodeValue_Float("Strength", self, 0.10))
+	newInput(2, nodeValue_Float("Strength", 0.10))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
 	
-	newInput(3, nodeValue_Float("Scale", self, 4))
+	newInput(3, nodeValue_Float("Scale", 4))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.01] });
 	
 	newInput(4, nodeValueSeed(self));
@@ -22,7 +22,7 @@ function Node_Smoke_Turbulence(_x, _y, _group = noone) : Node_Smoke(_x, _y, _gro
 		["Turbulence",	false], 1, 2, 4, 3
 	];
 	
-	newOutput(0, nodeValue_Output("Domain", self, VALUE_TYPE.sdomain, noone));
+	newOutput(0, nodeValue_Output("Domain", VALUE_TYPE.sdomain, noone));
 	
 	temp_surface = [ noone ];
 	

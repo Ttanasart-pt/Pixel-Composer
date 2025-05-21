@@ -2,57 +2,57 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	name = "MK Fall";
 	update_on_frame = true;
 	
-	newInput(0, nodeValue_Surface("Background", self));
+	newInput(0, nodeValue_Surface("Background"));
 	
-	newInput(1, nodeValue_Dimension(self));
+	newInput(1, nodeValue_Dimension());
 		
 	newInput(2, nodeValueSeed(self));
 	
-	newInput(3, nodeValue_Area("Area", self, DEF_AREA));
+	newInput(3, nodeValue_Area("Area", DEF_AREA));
 	
-	newInput(4, nodeValue_Int("Amount", self, 10));
+	newInput(4, nodeValue_Int("Amount", 10));
 	
-	newInput(5, nodeValue_Float("Gravity", self, 0));
+	newInput(5, nodeValue_Float("Gravity", 0));
 	
-	newInput(6, nodeValue_Range("X Swing", self, [ 1, 1 ], { linked : true }));
+	newInput(6, nodeValue_Range("X Swing", [ 1, 1 ], { linked : true }));
 	
-	newInput(7, nodeValue_Range("Y Swing", self, [ 0.25, 0.25 ], { linked : true }));
+	newInput(7, nodeValue_Range("Y Swing", [ 0.25, 0.25 ], { linked : true }));
 	
-	newInput(8, nodeValue_Range("Swing frequency", self, [ 1, 1 ], { linked : true }));
+	newInput(8, nodeValue_Range("Swing frequency", [ 1, 1 ], { linked : true }));
 	
-	newInput(9, nodeValue_Vec2("Size", self, [ 4, 2 ]));
+	newInput(9, nodeValue_Vec2("Size", [ 4, 2 ]));
 	
-	newInput(10, nodeValue_Range("Speed", self, [ 1, 1 ], { linked : true }));
+	newInput(10, nodeValue_Range("Speed", [ 1, 1 ], { linked : true }));
 	
-	newInput(11, nodeValue_Range("X Momentum", self, [ 0, 0 ], { linked : true }));
+	newInput(11, nodeValue_Range("X Momentum", [ 0, 0 ], { linked : true }));
 	
-	newInput(12, nodeValue_Vec2("Wind", self, [ 0, 0 ]));
+	newInput(12, nodeValue_Vec2("Wind", [ 0, 0 ]));
 	
-	newInput(13, nodeValue_Gradient("Color", self, new gradientObject(ca_white)))
+	newInput(13, nodeValue_Gradient("Color", new gradientObject(ca_white)))
 	
-	newInput(14, nodeValue_Curve("Alpha", self, CURVE_DEF_11));
+	newInput(14, nodeValue_Curve("Alpha", CURVE_DEF_11));
 	
-	newInput(15, nodeValue_Bool("Ground", self, false));
+	newInput(15, nodeValue_Bool("Ground", false));
 	
-	newInput(16, nodeValue_Range("Ground levels", self, [ DEF_SURF_H / 2, DEF_SURF_H ]));
+	newInput(16, nodeValue_Range("Ground levels", [ DEF_SURF_H / 2, DEF_SURF_H ]));
 	
-	newInput(17, nodeValue_Range("Y Momentum", self, [ 0, 0 ], { linked : true }));
+	newInput(17, nodeValue_Range("Y Momentum", [ 0, 0 ], { linked : true }));
 		
-	newInput(18, nodeValue_Bool("Twist", self, false));
+	newInput(18, nodeValue_Bool("Twist", false));
 		
-	newInput(19, nodeValue_Float("Twist Rate", self, 0.1))
+	newInput(19, nodeValue_Float("Twist Rate", 0.1))
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	newInput(20, nodeValue_Range("Twist Speed", self, [ 5, 10 ]));
+	newInput(20, nodeValue_Range("Twist Speed", [ 5, 10 ]));
 		
-	newInput(21, nodeValue_Range("Scale", self, [ 1, 1 ], { linked : true }));
+	newInput(21, nodeValue_Range("Scale", [ 1, 1 ], { linked : true }));
 	
-	newInput(22, nodeValue_Enum_Scroll("Render Type", self,  0, [ new scrollItem("Leaf", s_node_shape_leaf, 0), new scrollItem("Circle", s_node_shape_circle, 0) ]));
+	newInput(22, nodeValue_Enum_Scroll("Render Type",  0, [ new scrollItem("Leaf", s_node_shape_leaf, 0), new scrollItem("Circle", s_node_shape_circle, 0) ]));
 	
-	newInput(23, nodeValue_Float("Twist Radius", self, 0.7))
+	newInput(23, nodeValue_Float("Twist Radius", 0.7))
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	newOutput(0, nodeValue_Output("Output", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Output", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 2, 
 		["Dimension", false], 0, 1, 

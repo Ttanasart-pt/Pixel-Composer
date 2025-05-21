@@ -2,15 +2,16 @@ function Node_Lua_Global(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	name = "Lua Global";
 	preview_channel = 1;
 	
-	newInput(0, nodeValue_Text("Lua code", self, "", function() /*=>*/ {return dialogPanelCall(new Panel_Lua_Reference())}))
+	newInput(0, nodeValue_Text("Lua code"))
+		.setTooltip(function() /*=>*/ {return dialogPanelCall(new Panel_Lua_Reference())})
 		.setDisplay(VALUE_DISPLAY.codeLUA);
 		
-	newInput(1, nodeValue_Enum_Scroll("Run order", self,  0, [ "On start", "Every frame" ]));
+	newInput(1, nodeValue_Enum_Scroll("Run order",  0, [ "On start", "Every frame" ]));
 	
 	newInput(2, nodeValue("Execution thread", self, CONNECT_TYPE.input, VALUE_TYPE.node, noone))
 		.setVisible(false, true);
 	
-	newOutput(0, nodeValue_Output("Execution thread", self, VALUE_TYPE.node, noone ));
+	newOutput(0, nodeValue_Output("Execution thread", VALUE_TYPE.node, noone ));
 	
 	input_display_list = [ 
 		["Main", false], 2, 1, 0,

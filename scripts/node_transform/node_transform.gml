@@ -17,44 +17,44 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	name = "Transform";
 	dimension_index = -1;
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Vec2("Output Dimension", self, [ 1, 1 ]))
+	newInput(1, nodeValue_Vec2("Output Dimension", [ 1, 1 ]))
 		.setVisible(false);
 	
-	newInput(2, nodeValue_Vec2("Position", self, [ 0.5, 0.5 ]))
+	newInput(2, nodeValue_Vec2("Position", [ 0.5, 0.5 ]))
 		.setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	
-	newInput(3, nodeValue_Anchor("Anchor", self));
+	newInput(3, nodeValue_Anchor());
 	
-	newInput(4, nodeValue_Bool("Relative Anchor", self, true));
+	newInput(4, nodeValue_Bool("Relative Anchor", true));
 	
-	newInput(5, nodeValue_Rotation("Rotation", self, 0));
+	newInput(5, nodeValue_Rotation("Rotation", 0));
 	
-	newInput(6, nodeValue_Vec2("Scale", self, [ 1, 1 ]));
+	newInput(6, nodeValue_Vec2("Scale", [ 1, 1 ]));
 	
-	newInput(7, nodeValue_Enum_Button("Render Mode", self, 0, [ "Normal", "Tile", "Wrap" ]));
+	newInput(7, nodeValue_Enum_Button("Render Mode", 0, [ "Normal", "Tile", "Wrap" ]));
 	
-	newInput(8, nodeValue_Float("Rotate by Velocity", self, 0, "Make the surface rotates to follow its movement."))
+	newInput(8, nodeValue_Float("Rotate by Velocity", 0, "Make the surface rotates to follow its movement."))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(9, nodeValue_Enum_Scroll("Output Dimension Type", self, OUTPUT_SCALING.same_as_input, [
+	newInput(9, nodeValue_Enum_Scroll("Output Dimension Type", OUTPUT_SCALING.same_as_input, [
 																		new scrollItem("Same as input"),
 																		new scrollItem("Constant"),
 																		new scrollItem("Relative to input").setTooltip("Set dimension as a multiple of input surface."),
 																		new scrollItem("Fit content").setTooltip("Automatically set dimension to fit content."),
 																	]));
 	
-	newInput(10, nodeValue_Bool("Round Position", self, false, "Round position to the nearest integer value to avoid jittering."));
+	newInput(10, nodeValue_Bool("Round Position", false, "Round position to the nearest integer value to avoid jittering."));
 	
-	newInput(11, nodeValue_Bool("Active", self, true));
+	newInput(11, nodeValue_Bool("Active", true));
 		active_index = 11;
 	
-	newInput(12, nodeValue_Bool("Echo", self, false));
+	newInput(12, nodeValue_Bool("Echo", false));
 	
-	newInput(13, nodeValue_Int("Echo Amount", self, 8));
+	newInput(13, nodeValue_Int("Echo Amount", 8));
 	
-	newInput(14, nodeValue_Float("Alpha", self, 1))
+	newInput(14, nodeValue_Float("Alpha", 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 		
 	input_display_list = [ 11, 0,  
@@ -66,9 +66,9 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		["Echo",		 true, 12], 13, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	newOutput(1, nodeValue_Output("Dimension", self, VALUE_TYPE.integer, [ 1, 1 ]))
+	newOutput(1, nodeValue_Output("Dimension", VALUE_TYPE.integer, [ 1, 1 ]))
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setVisible(false);
 	

@@ -1,14 +1,14 @@
 function Node_Tile_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
     name  = "Render Tilemap";
     
-    newInput( 0, nodeValue_Tileset("Tileset", self, noone))
+    newInput( 0, nodeValue_Tileset())
     	.setVisible(true, true);
     
-    newInput( 1, nodeValue_Surface("Tilemap", self, noone));
+    newInput( 1, nodeValue_Surface("Tilemap"));
     
-    newInput( 2, nodeValue_Bool("Animated", self, false));
+    newInput( 2, nodeValue_Bool("Animated", false));
     
-	newOutput(0, nodeValue_Output("Rendered", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Rendered", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 
 	    ["Tile data", false], 0, 1, 2, 

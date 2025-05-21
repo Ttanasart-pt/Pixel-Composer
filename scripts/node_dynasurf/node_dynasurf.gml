@@ -5,7 +5,7 @@ function Node_DynaSurf(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 	reset_all_child = true;
 	draw_input_overlay = false;
 	
-	newOutput(0, nodeValue_Output("dynaSurf", self, VALUE_TYPE.dynaSurface, noone));
+	newOutput(0, nodeValue_Output("dynaSurf", VALUE_TYPE.dynaSurface, noone));
 	
 	custom_input_index  = array_length(inputs);
 	custom_output_index = array_length(outputs);

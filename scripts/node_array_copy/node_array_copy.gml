@@ -6,11 +6,11 @@ function Node_Array_Copy(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		.setArrayDepth(1)
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Int("Starting Index", self, 0));
+	newInput(1, nodeValue_Int("Starting Index", 0));
 	
-	newInput(2, nodeValue_Int("Size", self, 1));
+	newInput(2, nodeValue_Int("Size", 1));
 	
-	newOutput(0, nodeValue_Output("Array", self, VALUE_TYPE.any, 0))
+	newOutput(0, nodeValue_Output("Array", VALUE_TYPE.any, 0))
 		.setArrayDepth(1);
 		
 	static update = function(frame = CURRENT_FRAME) {

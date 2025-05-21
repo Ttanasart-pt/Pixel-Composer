@@ -1,28 +1,28 @@
 function Node_MK_GridFlip(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "MK GridFlip";
 	
-	newInput(0, nodeValue_Surface("Surface front", self));
+	newInput(0, nodeValue_Surface("Surface front"));
 	
-	newInput(1, nodeValue_Dimension(self));
+	newInput(1, nodeValue_Dimension());
 	
-	newInput(2, nodeValue_Vec2("Amount", self, [ 4, 4 ]));
+	newInput(2, nodeValue_Vec2("Amount", [ 4, 4 ]));
 		
 	newInput(3, nodeValueSeed(self));
 	
-	newInput(4, nodeValue_Surface("Surface back", self));
+	newInput(4, nodeValue_Surface("Surface back"));
 	
-	newInput(5, nodeValue_Rotation("Rotation", self, 0));
+	newInput(5, nodeValue_Rotation("Rotation", 0));
 	
-	newInput(6, nodeValue_Enum_Button("Axis", self,  0, [ "X", "Y" ]));
+	newInput(6, nodeValue_Enum_Button("Axis",  0, [ "X", "Y" ]));
 	
-	newInput(7, nodeValue_Float("Sweep", self, 0));
+	newInput(7, nodeValue_Float("Sweep", 0));
 	
-	newInput(8, nodeValue_Rotation("Sweep direction", self, 0));
+	newInput(8, nodeValue_Rotation("Sweep direction", 0));
 		
-	newInput(9, nodeValue_Float("Sweep shift", self, 0))
+	newInput(9, nodeValue_Float("Sweep shift", 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
 	
-	newInput(10, nodeValue_Enum_Scroll("Flip limit", self,  0, [ new scrollItem("None", s_node_mk_grid_flip, 0), 
+	newInput(10, nodeValue_Enum_Scroll("Flip limit",  0, [ new scrollItem("None", s_node_mk_grid_flip, 0), 
 												                 new scrollItem("90",   s_node_mk_grid_flip, 1), 
 												                 new scrollItem("180",  s_node_mk_grid_flip, 2), ]));
 	
@@ -32,7 +32,7 @@ function Node_MK_GridFlip(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		["Flip",		false], 6, 10, 5, 7, 8, 9, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	

@@ -5,12 +5,12 @@ function Node_Rotation_Range_Data(_x, _y, _group = noone) : Node_Processor(_x, _
 	
 	////- Rotation
 	
-	newInput(0, nodeValue_Rotation( "Start", self,   0 )).setVisible(true, true);
-	newInput(1, nodeValue_Rotation( "End",   self, 360 )).setVisible(true, true);
+	newInput(0, nodeValue_Rotation( "Start",   0 )).setVisible(true, true);
+	newInput(1, nodeValue_Rotation( "End", 360 )).setVisible(true, true);
 	
 	// inputs 2
 	
-	newOutput(0, nodeValue_Output("Rotation Range", self, VALUE_TYPE.float, [ 0, 0 ])).setDisplay(VALUE_DISPLAY.rotation_range);
+	newOutput(0, nodeValue_Output("Rotation Range", VALUE_TYPE.float, [ 0, 0 ])).setDisplay(VALUE_DISPLAY.rotation_range);
 	
 	input_display_list = [ 
 		["Rotation", false], 0, 1, 

@@ -13,36 +13,36 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	////- Surfaces
 	
-	newInput(0, nodeValue_Surface( "Surface In", self));
-	newInput(1, nodeValue_Surface( "Mask",       self));
+	newInput(0, nodeValue_Surface( "Surface In"));
+	newInput(1, nodeValue_Surface( "Mask"));
 	
 	////- Filter
 	
-	newInput(11, nodeValue_Bool(  "Color Filter", self, false));
-	newInput( 5, nodeValue_Color( "Target Color", self, ca_white));
-	newInput( 6, nodeValue_Bool(  "Inner Only",   self, false)).setTooltip("Only fill regions with surrounding pixels.");
-	newInput(14, nodeValue_Bool(  "Expands",      self,  true)).setTooltip("Expands filled area to filtered pixels.");
+	newInput(11, nodeValue_Bool(  "Color Filter", false));
+	newInput( 5, nodeValue_Color( "Target Color", ca_white));
+	newInput( 6, nodeValue_Bool(  "Inner Only", false)).setTooltip("Only fill regions with surrounding pixels.");
+	newInput(14, nodeValue_Bool(  "Expands",  true)).setTooltip("Expands filled area to filtered pixels.");
 	
 	////- Fill
 	
-	newInput(13, nodeValue_Slider(         "Threshold",       self, 0.1));
-	newInput( 8, nodeValue_Enum_Scroll(    "Fill Type",       self, 0, [ "Random", "Color map", "Texture map", "Texture Coord", "Texture Index" ]));
-	newInput(15, nodeValue_Enum_Button(    "Source",          self, 0, [ "Palette", "Gradient" ]));
-	newInput( 2, nodeValue_Palette(        "Fill Palette",    self, array_clone(DEF_PALETTE)));
-	newInput(16, nodeValue_Gradient(       "Fill Gradient",   self, new gradientObject([ ca_black, ca_white ])));
+	newInput(13, nodeValue_Slider(         "Threshold", 0.1));
+	newInput( 8, nodeValue_Enum_Scroll(    "Fill Type", 0, [ "Random", "Color map", "Texture map", "Texture Coord", "Texture Index" ]));
+	newInput(15, nodeValue_Enum_Button(    "Source", 0, [ "Palette", "Gradient" ]));
+	newInput( 2, nodeValue_Palette(        "Fill Palette", array_clone(DEF_PALETTE)));
+	newInput(16, nodeValue_Gradient(       "Fill Gradient", new gradientObject([ ca_black, ca_white ])));
 	
-	newInput( 9, nodeValue_Surface(        "Color Map",       self));
-	newInput( 3, nodeValue_Bool(           "Fill",            self, true));
-	newInput(10, nodeValue_Surface(        "Texture Map",     self));
-	newInput(12, nodeValue_Rotation_Range( "Random Rotation", self, [ 0, 0 ]));
+	newInput( 9, nodeValue_Surface(        "Color Map"));
+	newInput( 3, nodeValue_Bool(           "Fill", true));
+	newInput(10, nodeValue_Surface(        "Texture Map"));
+	newInput(12, nodeValue_Rotation_Range( "Random Rotation", [ 0, 0 ]));
 	
 	////- Render
 	
-	newInput(7, nodeValue_Enum_Scroll("Draw Original", self,  0, [ "None", "Above", "Behind" ]));
+	newInput(7, nodeValue_Enum_Scroll("Draw Original",  0, [ "None", "Above", "Behind" ]));
 	
 	//// Inputs 17
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 4, 
 		["Surfaces", false], 0, 1, 

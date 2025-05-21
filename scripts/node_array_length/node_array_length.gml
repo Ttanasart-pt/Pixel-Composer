@@ -5,7 +5,7 @@ function Node_Array_Length(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(0, nodeValue("Array", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0))
 		.setVisible(true, true);
 	
-	newOutput(0, nodeValue_Output("Size", self, VALUE_TYPE.integer, 0));
+	newOutput(0, nodeValue_Output("Size", VALUE_TYPE.integer, 0));
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var type = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;

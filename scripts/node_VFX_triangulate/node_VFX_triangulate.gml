@@ -8,21 +8,20 @@ function Node_VFX_Triangulate(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	inputs = array_create(9);
 	
-	newInput( 0, nodeValue_Vec2("Output dimension",     self, DEF_SURF ));
-	newInput( 1, nodeValue_Particle("Particles",        self, -1       ))
-		.setVisible(true, true);
+	newInput( 0, nodeValue_Vec2("Output dimension", DEF_SURF ));
+	newInput( 1, nodeValue_Particle()).setVisible(true, true);
 		
-	newInput( 2, nodeValue_f(  "Thickness",             self, 1            ));
-	newInput( 4, nodeValue_b(  "Inherit Thickness",     self, false        ));
-	newInput( 7, nodeValue_cu( "Thickness over Length", self, CURVE_DEF_11 ));
+	newInput( 2, nodeValue_Float(  "Thickness", 1            ));
+	newInput( 4, nodeValue_Bool(  "Inherit Thickness", false        ));
+	newInput( 7, nodeValue_Curve( "Thickness over Length", CURVE_DEF_11 ));
 		
-	newInput( 3, nodeValue_c(  "Color",                 self, ca_white ));
-	newInput( 5, nodeValue_b(  "Inherit Color",         self, false         ));
-	newInput( 8, nodeValue_gr( "Color over Length",     self, new gradientObject(ca_white)));
+	newInput( 3, nodeValue_Color(  "Color", ca_white ));
+	newInput( 5, nodeValue_Bool(  "Inherit Color", false         ));
+	newInput( 8, nodeValue_Gradient( "Color over Length", new gradientObject(ca_white)));
 	
-	newInput( 6, nodeValue_i("Segments",                self, 1 ));
+	newInput( 6, nodeValue_Int("Segments", 1 ));
 		
-	newOutput(0, nodeValue_Output("Surface Out",   self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 1, 
 		[ "Geometry",  false], 6, 

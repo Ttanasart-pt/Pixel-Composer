@@ -1,19 +1,19 @@
 function Node_Pack_Sprites(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Pack Sprites";
 	
-	newInput(0, nodeValue_Surface("Sprites", self));
+	newInput(0, nodeValue_Surface("Sprites"));
 	
-	newInput(1, nodeValue_Enum_Scroll("Algorithm", self,  0, { data: [ "Skyline", "Shelf", "Top left", "Best fit" ], update_hover: false }));
+	newInput(1, nodeValue_Enum_Scroll("Algorithm",  0, { data: [ "Skyline", "Shelf", "Top left", "Best fit" ], update_hover: false }));
 	
-	newInput(2, nodeValue_Int("Max width", self, 128));
+	newInput(2, nodeValue_Int("Max width", 128));
 	
-	newInput(3, nodeValue_Int("Max height", self, 128));
+	newInput(3, nodeValue_Int("Max height", 128));
 	
-	newInput(4, nodeValue_Int("Spacing", self, 0));
+	newInput(4, nodeValue_Int("Spacing", 0));
 	
-	newOutput(0, nodeValue_Output("Packed image", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Packed image", VALUE_TYPE.surface, noone));
 	
-	newOutput(1, nodeValue_Output("Atlas data", self, VALUE_TYPE.atlas, []));
+	newOutput(1, nodeValue_Output("Atlas data", VALUE_TYPE.atlas, []));
 	
 	input_display_list = [ 0, 4, 1, 2, 3 ];
 	

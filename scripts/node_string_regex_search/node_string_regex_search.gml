@@ -3,12 +3,12 @@ function Node_String_Regex_Search(_x, _y, _group = noone) : Node_Processor(_x, _
 	
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Text("Text", self, ""))
+	newInput(0, nodeValue_Text("Text"))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Text("Regex", self, ""));
+	newInput(1, nodeValue_Text("Regex"));
 	
-	newOutput(0, nodeValue_Output("Results", self, VALUE_TYPE.text, []));
+	newOutput(0, nodeValue_Output("Results", VALUE_TYPE.text, []));
 	
 	input_display_list = [
 		0, 1, 

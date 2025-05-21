@@ -11,12 +11,12 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 	newInput(input_len + 0, nodeValue("Spawn trigger", self, CONNECT_TYPE.input, VALUE_TYPE.node, false))
 		.setVisible(true, true);
 	
-	newInput(input_len + 1, nodeValue_Int("Step interval", self, 1, "How often the 'on step' event is triggered.\nWith 1 being trigger every frame, 2 means triggered once every 2 frames."));
+	newInput(input_len + 1, nodeValue_Int("Step interval", 1, "How often the 'on step' event is triggered.\nWith 1 being trigger every frame, 2 means triggered once every 2 frames."));
 	
-	newOutput(0, nodeValue_Output("Particles",	self, VALUE_TYPE.particle, [] ));
-	newOutput(1, nodeValue_Output("On create",	self, VALUE_TYPE.node, noone ));
-	newOutput(2, nodeValue_Output("On step",	self, VALUE_TYPE.node, noone ));
-	newOutput(3, nodeValue_Output("On destroy",	self, VALUE_TYPE.node, noone ));
+	newOutput(0, nodeValue_Output("Particles", VALUE_TYPE.particle, [] ));
+	newOutput(1, nodeValue_Output("On create", VALUE_TYPE.node, noone ));
+	newOutput(2, nodeValue_Output("On step", VALUE_TYPE.node, noone ));
+	newOutput(3, nodeValue_Output("On destroy", VALUE_TYPE.node, noone ));
 	
 	array_foreach(inputs, function(i) /*=>*/ {return i.rejectArray()}, input_len);
 	

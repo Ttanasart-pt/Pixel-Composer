@@ -2,17 +2,17 @@ function Node_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	name = "Sampler";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Vec2("Position", self, [ 0, 0 ]))
+	newInput(1, nodeValue_Vec2("Position", [ 0, 0 ]))
 		.setUnitRef(function(index) { return getDimension(index); });
 		
-	newInput(2, nodeValue_Int("Sampling size", self, 1, "Size of square around the position to sample and average pixel color."))
+	newInput(2, nodeValue_Int("Sampling size", 1, "Size of square around the position to sample and average pixel color."))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 3, 0.1] });
 	
-	newInput(3, nodeValue_Bool("Alpha", self, false));
+	newInput(3, nodeValue_Bool("Alpha", false));
 	
-	newOutput(0, nodeValue_Output("Color", self, VALUE_TYPE.color, c_white));
+	newOutput(0, nodeValue_Output("Color", VALUE_TYPE.color, c_white));
 	
 	attribute_oversample(true);
 	

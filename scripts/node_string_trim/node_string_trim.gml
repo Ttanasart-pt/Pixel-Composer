@@ -3,19 +3,19 @@ function Node_String_Trim(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Text("Text", self, ""))
+	newInput(0, nodeValue_Text("Text"))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Int("Head", self, 0));
+	newInput(1, nodeValue_Int("Head", 0));
 	
-	newInput(2, nodeValue_Int("Tail", self, 0));
+	newInput(2, nodeValue_Int("Tail", 0));
 	
-	newInput(3, nodeValue_Enum_Scroll("Trim", self,  0, ["Character", "Word"]));
+	newInput(3, nodeValue_Enum_Scroll("Trim",  0, ["Character", "Word"]));
 	
-	newInput(4, nodeValue_Enum_Scroll("Mode", self,  0, ["Counter", "Progress"]))
+	newInput(4, nodeValue_Enum_Scroll("Mode",  0, ["Counter", "Progress"]))
 		.setTooltip("Set to progress to use ratio, where 0 means no change and 1 means the entire length of the text.");
 	
-	newOutput(0, nodeValue_Output("Text", self, VALUE_TYPE.text, ""));
+	newOutput(0, nodeValue_Output("Text", VALUE_TYPE.text, ""));
 	
 	input_display_list = [
 		["Text",	false], 0,

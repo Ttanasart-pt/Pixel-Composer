@@ -4,12 +4,12 @@ function Node_Byte_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	w = 128;
 	
-	newInput(0, nodeValue_Path("Path", self, ""))
+	newInput(0, nodeValue_Path("Path"))
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "any file|*" })
 		.rejectArray();
 	
-	newOutput(0, nodeValue_Output("Content", self, VALUE_TYPE.buffer, noone));
-	newOutput(1, nodeValue_Output("Path", self, VALUE_TYPE.path, ""))
+	newOutput(0, nodeValue_Output("Content", VALUE_TYPE.buffer, noone));
+	newOutput(1, nodeValue_Output("Path", VALUE_TYPE.path, ""))
 		.setVisible(true, true);
 	
 	content = noone;

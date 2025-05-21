@@ -2,14 +2,14 @@ function Node_Mesh_Create_Path(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	name = "Path to Mesh";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_PathNode("Path", self, noone))
+	newInput(0, nodeValue_PathNode("Path"))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Int("Sample", self, 8));
+	newInput(1, nodeValue_Int("Sample", 8));
 	
-	newInput(2, nodeValue_Enum_Scroll("Algorithm", self,  0, [ "Ear Clipping", "Convex Fan", "Delaunay" ]));
+	newInput(2, nodeValue_Enum_Scroll("Algorithm",  0, [ "Ear Clipping", "Convex Fan", "Delaunay" ]));
 	
-	newOutput(0, nodeValue_Output("Mesh", self, VALUE_TYPE.mesh, noone));
+	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.mesh, noone));
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 

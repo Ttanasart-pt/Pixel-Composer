@@ -9,14 +9,14 @@ function Node_Smoke_Update(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	newInput(0, nodeValue("Domain", self, CONNECT_TYPE.input, VALUE_TYPE.sdomain, noone))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Bool("Active", self, true));
+	newInput(1, nodeValue_Bool("Active", true));
 	
 	input_display_list = [
 		["Domain",	false], 0,
 		["Update",	false], 1,
 	]
 	
-	newOutput(0, nodeValue_Output("Domain", self, VALUE_TYPE.sdomain, noone));
+	newOutput(0, nodeValue_Output("Domain", VALUE_TYPE.sdomain, noone));
 	
 	static update = function(frame = CURRENT_FRAME) {
 		if(!PROJECT.animator.is_playing) return;

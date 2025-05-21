@@ -8,34 +8,34 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	name = "Zoom Blur";
 	
 	newActiveInput(8);
-	newInput(9, nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) }));
+	newInput(9, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- Surface
 	
-	newInput(0, nodeValue_Surface( "Surface In", self));
-	newInput(6, nodeValue_Surface( "Mask",       self));
-	newInput(7, nodeValue_Slider(  "Mix",        self, 1));
+	newInput(0, nodeValue_Surface( "Surface In"));
+	newInput(6, nodeValue_Surface( "Mask"));
+	newInput(7, nodeValue_Slider(  "Mix", 1));
 	__init_mask_modifier(6, 10);
-	newInput(5, nodeValue_Surface("Blur mask", self));
+	newInput(5, nodeValue_Surface("Blur mask"));
 	
 	////- Blur
 	
-	newInput( 4, nodeValue_Enum_Scroll( "Zoom origin",  self, 1, [ "Start", "Middle", "End" ]));
-	newInput(15, nodeValue_Enum_Button( "Mode",         self, 0, [ "Blur", "Step" ]));
-	newInput( 1, nodeValue_Float(       "Strength",     self, 0.2)).setMappable(12);
+	newInput( 4, nodeValue_Enum_Scroll( "Zoom origin", 1, [ "Start", "Middle", "End" ]));
+	newInput(15, nodeValue_Enum_Button( "Mode", 0, [ "Blur", "Step" ]));
+	newInput( 1, nodeValue_Float(       "Strength", 0.2)).setMappable(12);
 	newInput(12, nodeValueMap(          "Strength map", self));
-	newInput( 2, nodeValue_Vec2(        "Center",       self, [ 0.5, 0.5 ])).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput( 2, nodeValue_Vec2(        "Center", [ 0.5, 0.5 ])).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	
 	////- Render
 		
-	newInput( 3, nodeValue_es(   "Oversample mode",  self, 0, [ "Empty", "Clamp", "Repeat" ]));
-	newInput(14, nodeValue_Int(  "Samples",          self, 64));
-	newInput(13, nodeValue_Bool( "Gamma Correction", self, false));
-	newInput(16, nodeValue_Bool( "Fade",             self, false));
+	newInput( 3, nodeValue_Enum_Scroll(   "Oversample mode", 0, [ "Empty", "Clamp", "Repeat" ]));
+	newInput(14, nodeValue_Int(  "Samples", 64));
+	newInput(13, nodeValue_Bool( "Gamma Correction", false));
+	newInput(16, nodeValue_Bool( "Fade", false));
 	
 	// inputs 17
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 8, 9,
 		["Surfaces", true],	0, 6, 7, 10, 11, 5, 

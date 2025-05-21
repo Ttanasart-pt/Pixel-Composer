@@ -3,12 +3,12 @@ function Node_Matrix_Set(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	color = COLORS.node_blend_number;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Matrix("Matrix", self, new Matrix(3)))
+	newInput(0, nodeValue_Matrix("Matrix", new Matrix(3)))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_IVec2("Position", self, [ 0, 0 ]))
+	newInput(1, nodeValue_IVec2("Position", [ 0, 0 ]))
 	
-	newInput(2, nodeValue_Float("Value", self, 0))	;
+	newInput(2, nodeValue_Float("Value", 0))	;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	

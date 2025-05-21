@@ -3,22 +3,22 @@ function Node_Onion_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	use_cache   = CACHE_USE.manual;
 	clearCacheOnChange = false;
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Slider_Range("Range", self, [-1, 1], { range: [ -16, 16, 0.1 ] }));
+	newInput(1, nodeValue_Slider_Range("Range", [-1, 1], { range: [ -16, 16, 0.1 ] }));
 	
-	newInput(2, nodeValue_Float("Alpha", self, 0.5))
+	newInput(2, nodeValue_Float("Alpha", 0.5))
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	newInput(3, nodeValue_Color("Color pre", self, cola(c_red)))
+	newInput(3, nodeValue_Color("Color pre", cola(c_red)))
 	
-	newInput(4, nodeValue_Color("Color post", self, cola(c_blue)))
+	newInput(4, nodeValue_Color("Color post", cola(c_blue)))
 	
-	newInput(5, nodeValue_Int("Step", self, 1))
+	newInput(5, nodeValue_Int("Step", 1))
 	
-	newInput(6, nodeValue_Bool("On top", self, true, "Render current frame on top of all frames."))
+	newInput(6, nodeValue_Bool("On top", true, "Render current frame on top of all frames."))
 	
-	newOutput(0, nodeValue_Output("Output", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Output", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
 		["Surface", false], 0, 1, 5,  

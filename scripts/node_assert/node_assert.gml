@@ -4,7 +4,7 @@ function Node_Assert(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	draw_padding = 8;
 	
-	newInput(0, nodeValue_Text("Name", self, ""));
+	newInput(0, nodeValue_Text("Name"));
 	
 	newInput(1, nodeValue("Value", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0))
 		.setVisible(true, true);

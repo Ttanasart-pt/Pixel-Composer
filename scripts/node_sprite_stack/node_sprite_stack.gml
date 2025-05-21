@@ -2,45 +2,45 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	name = "Sprite Stack";
 	dimension_index = 1;
 	
-	newInput(0, nodeValue_Surface("Base shape", self));
+	newInput(0, nodeValue_Surface("Base shape"));
 	
-	newInput(1, nodeValue_Dimension(self));
+	newInput(1, nodeValue_Dimension());
 	
-	newInput(2, nodeValue_Int("Stack amount", self, 4));
+	newInput(2, nodeValue_Int("Stack amount", 4));
 	
-	newInput(3, nodeValue_Vec2("Stack shift", self, [ 0, 1 ] ));
+	newInput(3, nodeValue_Vec2("Stack shift", [ 0, 1 ] ));
 	
-	newInput(4, nodeValue_Vec2("Position", self, [ 0, 0 ] ))
+	newInput(4, nodeValue_Vec2("Position", [ 0, 0 ] ))
 		.setUnitRef(function(index) { return getDimension(index); });
 		
-	newInput(5, nodeValue_Rotation("Rotation", self, 0));
+	newInput(5, nodeValue_Rotation("Rotation", 0));
 	
-	newInput(6, nodeValue_Color("Stack blend", self, ca_white ));
+	newInput(6, nodeValue_Color("Stack blend", ca_white ));
 	
-	newInput(7, nodeValue_Float("Alpha end", self, 1, "Alpha value for the last copy." ))
+	newInput(7, nodeValue_Float("Alpha end", 1, "Alpha value for the last copy." ))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(8, nodeValue_Bool("Move base", self, false, "Make each copy move the original image." ));
+	newInput(8, nodeValue_Bool("Move base", false, "Make each copy move the original image." ));
 	
-	newInput(9, nodeValue_Enum_Scroll("Highlight", self,  0, [ "None", "Color", "Inner pixel" ]));
+	newInput(9, nodeValue_Enum_Scroll("Highlight",  0, [ "None", "Color", "Inner pixel" ]));
 	
-	newInput(10, nodeValue_Color("Highlight color", self, ca_white));
+	newInput(10, nodeValue_Color("Highlight color", ca_white));
 	
-	newInput(11, nodeValue_Float("Highlight alpha", self, 1))
+	newInput(11, nodeValue_Float("Highlight alpha", 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(12, nodeValue_Enum_Scroll("Array process", self, 1, [ "Individual", "Combined" ]));
+	newInput(12, nodeValue_Enum_Scroll("Array process", 1, [ "Individual", "Combined" ]));
 	
-	newInput(13, nodeValue_Enum_Scroll("Output dimension type", self, OUTPUT_SCALING.constant, [
+	newInput(13, nodeValue_Enum_Scroll("Output dimension type", OUTPUT_SCALING.constant, [
 																			new scrollItem("Same as input"),
 																			new scrollItem("Constant"),
 																			new scrollItem("Relative to input").setTooltip("Set dimension as a multiple of input surface."),
 																			new scrollItem("Fit content").setTooltip("Automatically set dimension to fit content."),
 																		]));
 	
-	newInput(14, nodeValue_Vec2("Relative dimension", self, [ 1, 1 ]));
+	newInput(14, nodeValue_Vec2("Relative dimension", [ 1, 1 ]));
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
 		["Surface",	false],	0, 13, 1, 14, 12, 

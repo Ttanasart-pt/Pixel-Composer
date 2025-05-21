@@ -8,26 +8,26 @@ function Node_Padding(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	name = "Padding";
 	dimension_index = -1;
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Padding("Padding", self, [0, 0, 0, 0])).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput(1, nodeValue_Padding("Padding", [0, 0, 0, 0])).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
 	
-	newInput(2, nodeValue_Enum_Scroll("Fill Method", self,  0, [ "Empty", "Solid" ]));
+	newInput(2, nodeValue_Enum_Scroll("Fill Method",  0, [ "Empty", "Solid" ]));
 	
-	newInput(3, nodeValue_Color("Fill Color", self, ca_black));
+	newInput(3, nodeValue_Color("Fill Color", ca_black));
 	
-	newInput(4, nodeValue_Bool("Active", self, true));
+	newInput(4, nodeValue_Bool("Active", true));
 		active_index = 4;
 		
-	newInput(5, nodeValue_Enum_Button("Pad Mode", self,  0, [ "Pad out", "Pad to size" ]));
+	newInput(5, nodeValue_Enum_Button("Pad Mode",  0, [ "Pad out", "Pad to size" ]));
 	
-	newInput(6, nodeValue_Vec2("Target Dimension", self, DEF_SURF))
+	newInput(6, nodeValue_Vec2("Target Dimension", DEF_SURF))
 	
-	newInput(7, nodeValue_Enum_Button("Horizontal Alignment", self,  0 , [ THEME.inspector_surface_halign, THEME.inspector_surface_halign, THEME.inspector_surface_halign]));
+	newInput(7, nodeValue_Enum_Button("Horizontal Alignment",  0 , [ THEME.inspector_surface_halign, THEME.inspector_surface_halign, THEME.inspector_surface_halign]));
 	
-	newInput(8, nodeValue_Enum_Button("Vertical Alignment", self,  0 , [ THEME.inspector_surface_valign, THEME.inspector_surface_valign, THEME.inspector_surface_valign ]));
+	newInput(8, nodeValue_Enum_Button("Vertical Alignment",  0 , [ THEME.inspector_surface_valign, THEME.inspector_surface_valign, THEME.inspector_surface_valign ]));
 		
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 4, 
 		["Surfaces", true], 0, 

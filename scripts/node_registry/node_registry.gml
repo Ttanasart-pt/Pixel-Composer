@@ -6,6 +6,7 @@
 	
 	globalvar NODE_PAGE_DEFAULT, NODE_PAGE_LAST;
 	globalvar NODE_ACTION_LIST;
+	globalvar NODE_ALIAS; NODE_ALIAS = {};
 	
 	global.PATREON_NODES = [
 		Node_Brush_Linear, 
@@ -44,7 +45,7 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 	createParam  = noone;
 	
 	sourceDir    = "";
-	tags         = [];
+	tags         = struct_try_get(NODE_ALIAS, nodeName, []);
 	tooltip      = _tooltip;
 	tooltip_spr  = undefined;
 	
@@ -76,10 +77,10 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		return self; 
 	}
 	
-	static setTags    = function(_tags) { tags        = _tags; return self; }
-	static setTooltip = function(_tool) { tooltip     = _tool; return self; }
-	static setParam   = function(_par)  { createParam = _par;  return self; }
-    static setBuild   = function(_fn)   { createFn    = method(self, _fn); usecreateFn = true; return self; }
+	static setTags    = function(_t) /*=>*/ { array_append(tags, _t); return self; }
+	static setTooltip = function(_t) /*=>*/ { tooltip     = _t;       return self; }
+	static setParam   = function(_p) /*=>*/ { createParam = _p;       return self; }
+    static setBuild   = function(_f) /*=>*/ { createFn    = method(self, _f); usecreateFn = true; return self; }
 	
 	static setIO = function(t) { 
 		for(var i = 0; i < argument_count; i++) { 

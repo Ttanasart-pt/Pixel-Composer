@@ -1,11 +1,11 @@
 function Node_PCX_var(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) constructor {
 	name = "Variable";
 	
-	newInput(0, nodeValue_Text("Name", self, ""));
+	newInput(0, nodeValue_Text("Name"));
 	
 	newInput(1, nodeValue("Value", self, CONNECT_TYPE.input, VALUE_TYPE.any, -1));
 	
-	newOutput(0, nodeValue_Output("PCX", self, VALUE_TYPE.PCXnode, noone));
+	newOutput(0, nodeValue_Output("PCX", VALUE_TYPE.PCXnode, noone));
 	
 	static update = function() {
 		var _name = getInputData(0);

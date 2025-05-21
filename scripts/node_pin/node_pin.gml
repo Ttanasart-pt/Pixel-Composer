@@ -16,7 +16,7 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	newInput(0, nodeValue("In", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0 ))
 		.setVisible(true, true);
 	
-	newOutput(0, nodeValue_Output("Out", self, VALUE_TYPE.any, 0));
+	newOutput(0, nodeValue_Output("Out", VALUE_TYPE.any, 0));
 	
 	inputs[0].setColor = function(_color) {
 		inputs[0].color = color_real(_color); outputs[0].color = color_real(_color);

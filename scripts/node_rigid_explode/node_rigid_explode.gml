@@ -16,14 +16,14 @@ function Node_Rigid_Explode(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	////- Explosion
 	
-	newInput(1, nodeValue_Trigger( "Trigger",  self)).setDisplay(VALUE_DISPLAY.button, { name: "Trigger" });
-	newInput(2, nodeValue_Vec2(    "Position", self, [ 0, 0 ]));
-	newInput(3, nodeValue_Float(   "Range",    self, 8));
-	newInput(4, nodeValue_Slider(  "Strength", self, 1., [0, 16, 0.01]));
+	newInput(1, nodeValue_Trigger( "Trigger")).setDisplay(VALUE_DISPLAY.button, { name: "Trigger" });
+	newInput(2, nodeValue_Vec2(    "Position", [ 0, 0 ]));
+	newInput(3, nodeValue_Float(   "Range", 8));
+	newInput(4, nodeValue_Slider(  "Strength", 1., [0, 16, 0.01]));
 	
 	// inputs 5
 	
-	newOutput(0, nodeValue_Output("Object", self, VALUE_TYPE.rigid, noone));
+	newOutput(0, nodeValue_Output("Object", VALUE_TYPE.rigid, noone));
 	
 	input_display_list = [ 0,
 		["Explosion",  false], 1, 2, 3, 4, 

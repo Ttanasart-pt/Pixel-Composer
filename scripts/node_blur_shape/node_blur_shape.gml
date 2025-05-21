@@ -1,33 +1,33 @@
 function Node_Blur_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Shape Blur";
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
-	newInput(1, nodeValue_Surface("Blur Shape", self));
+	newInput(0, nodeValue_Surface("Surface In"));
+	newInput(1, nodeValue_Surface("Blur Shape"));
 	
-	newInput(2, nodeValue_Surface("Blur mask", self));
+	newInput(2, nodeValue_Surface("Blur mask"));
 	
-	newInput(3, nodeValue_Surface("Mask", self));
+	newInput(3, nodeValue_Surface("Mask"));
 	
-	newInput(4, nodeValue_Float("Mix", self, 1))
+	newInput(4, nodeValue_Float("Mix", 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(5, nodeValue_Bool("Active", self, true));
+	newInput(5, nodeValue_Bool("Active", true));
 		active_index = 5;
 	
-	newInput(6, nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) }));
+	newInput(6, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
-	newInput(7, nodeValue_Enum_Button("Mode", self,  0, [ "Blur", "Max" ]));
+	newInput(7, nodeValue_Enum_Button("Mode",  0, [ "Blur", "Max" ]));
 	
 	__init_mask_modifier(3); // inputs 8, 9, 
 	
-	newInput(10, nodeValue_Bool("Gamma Correction", self, false));
+	newInput(10, nodeValue_Bool("Gamma Correction", false));
 	
 	input_display_list = [ 5, 6, 
 		["Surfaces", true],	0, 3, 4, 8, 9, 
 		["Blur",	false],	7, 1, 2, 10, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	attribute_oversample();

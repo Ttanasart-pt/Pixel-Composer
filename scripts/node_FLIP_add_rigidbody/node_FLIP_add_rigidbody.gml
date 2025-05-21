@@ -6,7 +6,7 @@ function Node_FLIP_Add_Rigidbody(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	
 	manual_ungroupable = false;
 	
-	newInput(0, nodeValue_Fdomain("Domain", self, noone ))
+	newInput(0, nodeValue_Fdomain("Domain"))
 		.setVisible(true, true);
 	
 	newInput(1, nodeValue("Objects", self, CONNECT_TYPE.input, VALUE_TYPE.rigid, [] ))
@@ -16,7 +16,7 @@ function Node_FLIP_Add_Rigidbody(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		["Collider",	false], 1, 
 	]
 	
-	newOutput(0, nodeValue_Output("Domain", self, VALUE_TYPE.fdomain, noone ));
+	newOutput(0, nodeValue_Output("Domain", VALUE_TYPE.fdomain, noone ));
 	
 	obstracle = new FLIP_Obstracle();
 	index     = 0;

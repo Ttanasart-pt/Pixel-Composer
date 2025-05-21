@@ -10,28 +10,28 @@
 function Node_Path_Profile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Draw Path Profile";
 	
-	newInput(0, nodeValue_Dimension(self));
+	newInput(0, nodeValue_Dimension());
 	
-	newInput(1, nodeValue_PathNode("Path", self, noone ))
+	newInput(1, nodeValue_PathNode("Path" ))
 		.setVisible(true, true);
 	
-	newInput(2, nodeValue_Int("Resolution", self, 64 ));
+	newInput(2, nodeValue_Int("Resolution", 64 ));
 	
-	newInput(3, nodeValue_Enum_Button("Side", self,  0 , [ "L", "R", "T", "D" ]));
+	newInput(3, nodeValue_Enum_Button("Side",  0 , [ "L", "R", "T", "D" ]));
 	
-	newInput(4, nodeValue_Bool("Mirror", self, false ));
+	newInput(4, nodeValue_Bool("Mirror", false ));
 	
-	newInput(5, nodeValue_Color("Color", self, ca_white ));
+	newInput(5, nodeValue_Color("Color", ca_white ));
 	
-	newInput(6, nodeValue_Bool("Anti-aliasing", self, false ));
+	newInput(6, nodeValue_Bool("Anti-aliasing", false ));
 	
-	newInput(7, nodeValue_Bool("Background", self, false ));
+	newInput(7, nodeValue_Bool("Background", false ));
 	
-	newInput(8, nodeValue_Color("BG Color", self, ca_black ));
+	newInput(8, nodeValue_Color("BG Color", ca_black ));
 	
-	newInput(9, nodeValue_Enum_Button("Fill", self, 0, [ "Odd", "All" ] ));
+	newInput(9, nodeValue_Enum_Button("Fill", 0, [ "Odd", "All" ] ));
 	
-	newOutput(0, nodeValue_Output("Output", self, VALUE_TYPE.surface, noone ));
+	newOutput(0, nodeValue_Output("Output", VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [ 0,
 		[ "Profile",    false ], 1, 2, 

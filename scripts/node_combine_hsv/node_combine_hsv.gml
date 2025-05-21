@@ -1,17 +1,17 @@
 function Node_Combine_HSV(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "HSV Combine";
 	
-	newInput(0, nodeValue_Surface("Hue",        self));
-	newInput(1, nodeValue_Surface("Saturation", self));
-	newInput(2, nodeValue_Surface("Value",      self));
-	newInput(3, nodeValue_Surface("Alpha",      self));
+	newInput(0, nodeValue_Surface("Hue"));
+	newInput(1, nodeValue_Surface("Saturation"));
+	newInput(2, nodeValue_Surface("Value"));
+	newInput(3, nodeValue_Surface("Alpha"));
 	
-	newInput(4, nodeValue_Bool("Array Input", self, false));
+	newInput(4, nodeValue_Bool("Array Input", false));
 	
-	newInput(5, nodeValue_Surface("HSV Array", self, []))
+	newInput(5, nodeValue_Surface("HSV Array", []))
 		.setArrayDepth(1);
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
 		["Surfaces",	 true], 4, 0, 1, 2, 3, 5, 

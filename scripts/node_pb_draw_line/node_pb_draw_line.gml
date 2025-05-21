@@ -1,13 +1,13 @@
 function Node_PB_Draw_Line(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group) constructor {
 	name = "Line";
 	
-	newInput(pbi+0, nodeValue_Enum_Button("Type", self, 0, array_create(6, THEME.inspector_pb_line)));
+	newInput(pbi+0, nodeValue_Enum_Button("Type", 0, array_create(6, THEME.inspector_pb_line)));
 	
-	newInput(pbi+1, nodeValue_Int("Thickness", self, 1));
+	newInput(pbi+1, nodeValue_Int("Thickness", 1));
 	
-	newInput(pbi+2, nodeValue_Bool("Overflow", self, false));
+	newInput(pbi+2, nodeValue_Bool("Overflow", false));
 	
-	newInput(pbi+3, nodeValue_Toggle("Corner", self, 0, [ "Start", "End" ]));
+	newInput(pbi+3, nodeValue_Toggle("Corner", 0, [ "Start", "End" ]));
 	
 	array_insert_array(input_display_list, input_display_shape_index, [
 		["Shape", false], pbi+0, pbi+1, pbi+3, pbi+2, 

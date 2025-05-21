@@ -2,11 +2,11 @@ function Node_Audio_Loudness(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	name = "Audio Loudness";
 	setDimension(96, 72);
 	
-	newInput(0, nodeValue_Float("Audio Data", self, []))
+	newInput(0, nodeValue_Float("Audio Data", []))
 		.setArrayDepth(1)
 		.setVisible(true, true);
 	
-	newOutput(0, nodeValue_Output("Loudness", self, VALUE_TYPE.float, 0));
+	newOutput(0, nodeValue_Output("Loudness", VALUE_TYPE.float, 0));
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		var _dat = _data[0];

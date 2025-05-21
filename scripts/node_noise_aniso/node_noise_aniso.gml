@@ -8,20 +8,20 @@
 function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Anisotropic Noise";
 	
-	newInput(0, nodeValue_Dimension(self));
+	newInput(0, nodeValue_Dimension());
 	
-	newInput(1, nodeValue_Float("X Amount", self, 2))
+	newInput(1, nodeValue_Float("X Amount", 2))
 		.setMappable(6);
 	
 	newInput(2, nodeValueSeed(self));
 	
-	newInput(3, nodeValue_Vec2("Position", self, [ 0, 0 ]))
+	newInput(3, nodeValue_Vec2("Position", [ 0, 0 ]))
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	newInput(4, nodeValue_Rotation("Rotation", self, 0))
+	newInput(4, nodeValue_Rotation("Rotation", 0))
 		.setMappable(8);
 	
-	newInput(5, nodeValue_Float("Y Amount", self, 16))
+	newInput(5, nodeValue_Float("Y Amount", 16))
 		.setMappable(7);
 		
 	//////////////////////////////////////////////////////////////////////////////////////////////////
@@ -34,11 +34,11 @@ function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newInput(9, nodeValue_Enum_Scroll("Render Mode", self,  0, [ "Blend", "Waterfall" ] ))
+	newInput(9, nodeValue_Enum_Scroll("Render Mode",  0, [ "Blend", "Waterfall" ] ))
 		
 	newInput(10, nodeValueSeed(self));
 	
-	newInput(11, nodeValue_Surface("Mask", self));
+	newInput(11, nodeValue_Surface("Mask"));
 	
 	input_display_list = [
 		["Output",	false], 0, 11, 
@@ -46,7 +46,7 @@ function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		["Render",	false], 9, 10, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	

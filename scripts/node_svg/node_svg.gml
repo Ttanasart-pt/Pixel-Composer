@@ -12,14 +12,14 @@ function Node_SVG(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "SVG";
 	color = COLORS.node_blend_input;
 	
-	newInput(0, nodeValue_Path("Path", self, ""))
+	newInput(0, nodeValue_Path("Path"))
 		.setDisplay(VALUE_DISPLAY.path_load, { filter: "Scalable Vector Graphics|*.svg" });
 		
-	newInput(1, nodeValue_Float("Scale", self, 1));
+	newInput(1, nodeValue_Float("Scale", 1));
 		
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	newOutput(1, nodeValue_Output("SVG Struct", self, VALUE_TYPE.struct, {}));
+	newOutput(1, nodeValue_Output("SVG Struct", VALUE_TYPE.struct, {}));
 	
 	attribute_surface_depth();
 	

@@ -7,39 +7,32 @@
 function Node_Blur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Blur";
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newActiveInput(7);
+	newInput(8, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
-	newInput(1, nodeValue_Int("Size", self, 3))
-		.setValidator(VV_min(0))
-		.setUnitRef(function(index) /*=>*/ {return getDimension(index)});
+	////- =Surfaces
 	
-	newInput(2, nodeValue_Enum_Scroll("Oversample mode", self,  0, [ "Empty", "Clamp", "Repeat" ]))
-		.setTooltip("How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.");
-		
-	newInput(3, nodeValue_Bool("Override color", self, false, "Replace all color while keeping the alpha. Used to\nfix grey outline when bluring transparent pixel."));
+	newInput(0, nodeValue_Surface( "Surface In"));
+	newInput(5, nodeValue_Surface( "Mask"));
+	newInput(6, nodeValue_Slider(  "Mix", 1));
+	__init_mask_modifier(5, 9); // inputs 9, 10
 	
-	newInput(4, nodeValue_Color("Color", self, ca_black));
+	////- =Blur
 	
-	newInput(5, nodeValue_Surface("Mask", self));
+	newInput( 1, nodeValue_Int("Size", 3)).setUnitRef(function(i) /*=>*/ {return getDimension(i)}).setValidator(VV_min(0))
+	newInput( 2, nodeValue_Enum_Scroll("Oversample mode",  0, [ "Empty", "Clamp", "Repeat" ]));
+	newInput( 3, nodeValue_Bool(  "Override color",        false)).setTooltip("Replace all color while keeping the alpha. Used to\nfix grey outline when bluring transparent pixel.");
+	newInput( 4, nodeValue_Color( "Color",                 ca_black));
+	newInput(11, nodeValue_Bool(  "Gamma Correction",      false));
 	
-	newInput(6, nodeValue_Float("Mix", self, 1))
-		.setDisplay(VALUE_DISPLAY.slider);
+	////- =Directional
 	
-	newInput(7, nodeValue_Bool("Active", self, true));
-		active_index = 7;
+	newInput(12, nodeValue_Slider(   "Aspect Ratio", 1));
+	newInput(13, nodeValue_Rotation( "Direction",    0));
 	
-	newInput(8, nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) }));
+	// inputs 14
 	
-	__init_mask_modifier(5); // inputs 9, 10
-	
-	newInput(11, nodeValue_Bool("Gamma Correction", self, false));
-	
-	newInput(12, nodeValue_Float("Aspect Ratio", self, 1))
-		.setDisplay(VALUE_DISPLAY.slider);
-	
-	newInput(13, nodeValue_Rotation("Direction", self, 0));
-	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 7, 8, 
 		["Surfaces",	 true],	0, 5, 6, 9, 10, 

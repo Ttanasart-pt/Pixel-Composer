@@ -2,16 +2,16 @@ function Node_3D_UV_Remap(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _grou
 	name  = "UV Remap";
 	gizmo = new __3dGizmoPlane();
 	
-	newInput(in_d3d + 0, nodeValue_D3Mesh("Mesh", self, noone))
+	newInput(in_d3d + 0, nodeValue_D3Mesh("Mesh", noone))
 		.setVisible(true, true);
 	
-	newInput(in_d3d + 1, nodeValue_Int("Target subobject", self, -1))
+	newInput(in_d3d + 1, nodeValue_Int("Target subobject", -1))
 		.setArrayDepth(1);
 	
-	newInput(in_d3d + 2, nodeValue_Int("Bake UV", self, 0))
+	newInput(in_d3d + 2, nodeValue_Int("Bake UV", 0))
 		.setDisplay(VALUE_DISPLAY.button, { name: "Bake", onClick: function() { attributes.bakedUV = !attributes.bakedUV; triggerRender(); } });
 	
-	newOutput(0, nodeValue_Output("Mesh", self, VALUE_TYPE.d3Mesh, noone));
+	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.d3Mesh, noone));
 	
 	input_display_list = [ 
 		["Transform", false], 0, 1, 2,

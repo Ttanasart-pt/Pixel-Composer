@@ -20,13 +20,13 @@ function Node_PB_Output(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	hover_scale_to = 0;
 	hover_alpha    = 0;
 	
-	newInput(0, nodeValue_Surface("Surface", self));
+	newInput(0, nodeValue_Surface("Surface"));
 	
-	newInput(1, nodeValue_Float("Layer", self, 1));
+	newInput(1, nodeValue_Float("Layer", 1));
 	
-	newInput(2, nodeValue_Enum_Button("Blend Mode", self, 0, [ "Normal", "Subtract" ]));
+	newInput(2, nodeValue_Enum_Button("Blend Mode", 0, [ "Normal", "Subtract" ]));
 	
-	newInput(3, nodeValue_Bool("Active", self, true));
+	newInput(3, nodeValue_Bool("Active", true));
 		active_index = 3;
 	
 	input_display_list = [ 3, 0, 

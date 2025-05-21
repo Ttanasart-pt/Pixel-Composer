@@ -8,26 +8,26 @@
 function Node_Shape_Map(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Shape Map";
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Bool("Active", self, true));
+	newInput(1, nodeValue_Bool("Active", true));
 		active_index = 1;
 	
-	newInput(2, nodeValue_Enum_Scroll("Shape", self,  0, [ new scrollItem("Circle",  s_node_shape_circle, 0), 
+	newInput(2, nodeValue_Enum_Scroll("Shape",  0, [ new scrollItem("Circle",  s_node_shape_circle, 0), 
 												           new scrollItem("Polygon", s_node_shape_misc,   1), ]));
 	
-	newInput(3, nodeValue_Vec2("Map Scale", self, [ 4, 1 ]));
+	newInput(3, nodeValue_Vec2("Map Scale", [ 4, 1 ]));
 	
-	newInput(4, nodeValue_Float("Radius", self, 0.5));
+	newInput(4, nodeValue_Float("Radius", 0.5));
 	
-	newInput(5, nodeValue_Int("Sides", self, 4));
+	newInput(5, nodeValue_Int("Sides", 4));
 	
-	newInput(6, nodeValue_Float("Scale", self, 1))
+	newInput(6, nodeValue_Float("Scale", 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 2, 0.01 ] });
 	
-	newInput(7, nodeValue_Rotation("Angle", self, 0));
+	newInput(7, nodeValue_Rotation("Angle", 0));
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 1, 
 		["Surfaces",  true], 0,

@@ -3,21 +3,21 @@ function Node_Anim_Loop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	is_simulation = true;
 	
-	newInput(0, nodeValue_Surface("Surface", self));
+	newInput(0, nodeValue_Surface("Surface"));
 	
-	newInput(1, nodeValue_Int("Loop Start", self, 1));
+	newInput(1, nodeValue_Int("Loop Start", 1));
 	
-	newInput(2, nodeValue_Int("Loop Range", self, 4));
+	newInput(2, nodeValue_Int("Loop Range", 4));
 	
-	newInput(3, nodeValue_Bool("Infinite", self, true));
+	newInput(3, nodeValue_Bool("Infinite", true));
 	
-	newInput(4, nodeValue_Int("Loop Amount", self, 1));
+	newInput(4, nodeValue_Int("Loop Amount", 1));
 	
-	newInput(5, nodeValue_Enum_Scroll("Pre Loop", self, 0, [ "Passthrough", "Empty" ]));
+	newInput(5, nodeValue_Enum_Scroll("Pre Loop", 0, [ "Passthrough", "Empty" ]));
 	
-	newInput(6, nodeValue_Enum_Scroll("Post Loop", self, 1, [ "Passthrough", "Empty" ]));
+	newInput(6, nodeValue_Enum_Scroll("Post Loop", 1, [ "Passthrough", "Empty" ]));
 	
-	newOutput(0, nodeValue_Output("Surface", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0, 
 		["Loop",     false], 1, 2, 3, 4, 

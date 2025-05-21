@@ -5,13 +5,13 @@ function Node_Array_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	newInput(0, nodeValue("Array", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Int("Index", self, 0))
+	newInput(1, nodeValue_Int("Index", 0))
 		.setVisible(true, true);
 	
-	newInput(2, nodeValue_Enum_Scroll("Overflow", self, 0, [ "Clamp", "Loop", "Ping Pong" ]))
+	newInput(2, nodeValue_Enum_Scroll("Overflow", 0, [ "Clamp", "Loop", "Ping Pong" ]))
 		.rejectArray();
 	
-	newOutput(0, nodeValue_Output("Value", self, VALUE_TYPE.any, 0));
+	newOutput(0, nodeValue_Output("Value", VALUE_TYPE.any, 0));
 	
 	static getArray = function(_arr, index, _ovf) {
 		if(!is_array(_arr)) return;

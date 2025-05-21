@@ -1,11 +1,11 @@
 function Node_HTTP_Request_File(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "HTTP Download";
 	
-	newInput(0, nodeValue_Text("Address", self, ""));
+	newInput(0, nodeValue_Text("Address"));
 	
-	newInput(1, nodeValue_Enum_Scroll("Format", self, 0, [ "Image" ]));
+	newInput(1, nodeValue_Enum_Scroll("Format", 0, [ "Image" ]));
 	
-	newOutput(0, nodeValue_Output("Result", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Result", VALUE_TYPE.surface, noone));
 	
 	attributes.temp_path = TEMPDIR + UUID_generate();
 	spr = noone;

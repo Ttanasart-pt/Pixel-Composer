@@ -11,17 +11,17 @@ function Node_Rigid_Render_ID(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	////- Simulation
 	
-	newInput(3, nodeValue_Bool(  "Simulate",      self, false));
-	newInput(1, nodeValue_Float( "Timestep (ms)", self, 20));
-	newInput(2, nodeValue_Int(   "Quality",       self,  8));
+	newInput(3, nodeValue_Bool(  "Simulate", false));
+	newInput(1, nodeValue_Float( "Timestep (ms)", 20));
+	newInput(2, nodeValue_Int(   "Quality",  8));
 	
 	////- Outputs
 	
-	newInput(0, nodeValue_Bool("Round Position",   self, false));
+	newInput(0, nodeValue_Bool("Round Position", false));
 	
 	// inputs 4
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	

@@ -10,21 +10,21 @@ function Node_Strand_Render_Texture(_x, _y, _group = noone) : Node(_x, _y, _grou
 	
 	////- Ouptut
 	
-	newInput(0, nodeValue_Dimension(self));
+	newInput(0, nodeValue_Dimension());
 	
 	////- Strand
 	
 	newInput(1, nodeValue("Strand", self, CONNECT_TYPE.input, VALUE_TYPE.strands, noone)).setVisible(true, true);
-	newInput(2, nodeValue_Range("Thickness", self, [ 8, 8 ], { linked : true }));
+	newInput(2, nodeValue_Range("Thickness", [ 8, 8 ], { linked : true }));
 	
 	////- Texture
 	
-	newInput(4, nodeValue_Surface("Texture", self));
-	newInput(3, nodeValue_Gradient("Random color", self, new gradientObject(ca_white)));
+	newInput(4, nodeValue_Surface("Texture"));
+	newInput(3, nodeValue_Gradient("Random color", new gradientObject(ca_white)));
 	
 	// inputs 6
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 5, 
 		["Output",  false], 0,

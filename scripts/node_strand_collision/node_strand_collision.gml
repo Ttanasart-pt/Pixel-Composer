@@ -12,7 +12,7 @@ function Node_Strand_Collision(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput(1, nodeValue("Collision mesh", self, CONNECT_TYPE.input, VALUE_TYPE.mesh, noone))
 		.setVisible(true, true);
 	
-	newOutput(0, nodeValue_Output("Strand", self, VALUE_TYPE.strands, noone));
+	newOutput(0, nodeValue_Output("Strand", VALUE_TYPE.strands, noone));
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _msh = getInputData(1);

@@ -4,9 +4,9 @@ function Node_PCX_Equation(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) co
 	setDimension(96, 48);
 	ast = noone;
 	
-	newInput(0, nodeValue_Text("Equation", self, ""));
+	newInput(0, nodeValue_Text("Equation"));
 	
-	newOutput(0, nodeValue_Output("Result", self, VALUE_TYPE.PCXnode, noone ));
+	newOutput(0, nodeValue_Output("Result", VALUE_TYPE.PCXnode, noone ));
 	
 	argument_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		argument_renderer.x = _x;
@@ -51,7 +51,7 @@ function Node_PCX_Equation(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) co
 	static createNewInput = function(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
-		newInput(index + 0, nodeValue_Text("Argument name", self, "" ))
+		newInput(index + 0, nodeValue_Text("Argument name"))
 			.setDisplay(VALUE_DISPLAY.text_box);
 		
 		newInput(index + 1, nodeValue("Argument value", self, CONNECT_TYPE.input, VALUE_TYPE.PCXnode, noone ))

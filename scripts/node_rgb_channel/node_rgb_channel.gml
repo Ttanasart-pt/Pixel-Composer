@@ -1,15 +1,15 @@
 function Node_RGB_Channel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "RGBA Extract";
 	
-	newInput(0, nodeValue_Surface(     "Surface In",   self));
-	newInput(1, nodeValue_Enum_Scroll( "Output Type",  self, 0, [ "Channel value", "Greyscale" ]));
-	newInput(2, nodeValue_Bool(        "Keep Alpha",   self, false));
-	newInput(3, nodeValue_Bool(        "Output Array", self, false));
+	newInput(0, nodeValue_Surface(     "Surface In"));
+	newInput(1, nodeValue_Enum_Scroll( "Output Type", 0, [ "Channel value", "Greyscale" ]));
+	newInput(2, nodeValue_Bool(        "Keep Alpha", false));
+	newInput(3, nodeValue_Bool(        "Output Array", false));
 	
-	newOutput(0, nodeValue_Output("Red",   self, VALUE_TYPE.surface, noone));
-	newOutput(1, nodeValue_Output("Green", self, VALUE_TYPE.surface, noone));
-	newOutput(2, nodeValue_Output("Blue",  self, VALUE_TYPE.surface, noone));
-	newOutput(3, nodeValue_Output("Alpha", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Red", VALUE_TYPE.surface, noone));
+	newOutput(1, nodeValue_Output("Green", VALUE_TYPE.surface, noone));
+	newOutput(2, nodeValue_Output("Blue", VALUE_TYPE.surface, noone));
+	newOutput(3, nodeValue_Output("Alpha", VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	

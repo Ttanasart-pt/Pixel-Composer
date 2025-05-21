@@ -50,30 +50,30 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	////- Surfaces
 	
-	newInput( 0, nodeValue_Surface(     "Background",         self));
-	newInput( 1, nodeValue_Surface(     "Foreground",         self));
-	newInput( 4, nodeValue_Surface(     "Mask",               self));
-	newInput(12, nodeValue_Bool(        "Invert mask",        self, false));
-	newInput(13, nodeValue_Slider(      "Mask feather",       self, 1, [1, 16, 0.1]));
-	newInput( 6, nodeValue_Enum_Scroll( "Output dimension",   self, 0, [ "Background", "Forground", "Mask", "Maximum", "Constant" ])).rejectArray();
-	newInput( 7, nodeValue_Vec2(        "Constant dimension", self, DEF_SURF));
+	newInput( 0, nodeValue_Surface(     "Background"));
+	newInput( 1, nodeValue_Surface(     "Foreground"));
+	newInput( 4, nodeValue_Surface(     "Mask"));
+	newInput(12, nodeValue_Bool(        "Invert mask", false));
+	newInput(13, nodeValue_Slider(      "Mask feather", 1, [1, 16, 0.1]));
+	newInput( 6, nodeValue_Enum_Scroll( "Output dimension", 0, [ "Background", "Forground", "Mask", "Maximum", "Constant" ])).rejectArray();
+	newInput( 7, nodeValue_Vec2(        "Constant dimension", DEF_SURF));
 	
 	////- Blend
 	
-	newInput(2, nodeValue_Enum_Scroll( "Blend mode",          self, 0, BLEND_TYPES ));
-	newInput(3, nodeValue_Slider(      "Opacity",             self, 1));
-	newInput(9, nodeValue_Bool(        "Preserve alpha",      self, false));
+	newInput(2, nodeValue_Enum_Scroll( "Blend mode", 0, BLEND_TYPES ));
+	newInput(3, nodeValue_Slider(      "Opacity", 1));
+	newInput(9, nodeValue_Bool(        "Preserve alpha", false));
 	
 	////- Transform
 	
-	newInput( 5, nodeValue_Enum_Scroll( "Fill mode",          self, 0, [ "None", "Stretch", "Tile" ]));
-	newInput(14, nodeValue_Vec2(        "Position",           self, [ 0.5, 0.5 ]));
-	newInput(10, nodeValue_Enum_Button( "Horizontal Align",   self, 0, array_create(3, THEME.inspector_surface_halign)));
-	newInput(11, nodeValue_Enum_Button( "Vertical Align",     self, 0, array_create(3, THEME.inspector_surface_valign)));
+	newInput( 5, nodeValue_Enum_Scroll( "Fill mode", 0, [ "None", "Stretch", "Tile" ]));
+	newInput(14, nodeValue_Vec2(        "Position", [ 0.5, 0.5 ]));
+	newInput(10, nodeValue_Enum_Button( "Horizontal Align", 0, array_create(3, THEME.inspector_surface_halign)));
+	newInput(11, nodeValue_Enum_Button( "Vertical Align", 0, array_create(3, THEME.inspector_surface_valign)));
 	
 	//- inputs 15
 		
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 8, 
 		["Surfaces",	 true],	0, 1, 4, 12, 13, 6, 7,

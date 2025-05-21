@@ -1,13 +1,13 @@
 function Node_PB_Filter_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "PB Mirror";
 	
-	newInput(0, nodeValue_Pbbox("PBBOX", self, new __pbBox()));
+	newInput(0, nodeValue_Pbbox());
 	
-	newInput(1, nodeValue_Surface("Surface", self, noone));
+	newInput(1, nodeValue_Surface("Surface"));
 	
-	newInput(2, nodeValue_Toggle("Axis", self, 0, { data: [ "X", "Y" ] }));
+	newInput(2, nodeValue_Toggle("Axis", 0, { data: [ "X", "Y" ] }));
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
 		["Layout", false], 0, 1, 

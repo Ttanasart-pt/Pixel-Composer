@@ -2,12 +2,12 @@ function Node_String_Change_Case(_x, _y, _group = noone) : Node_Processor(_x, _y
 	name = "Change Case";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Text("Text", self, ""))
+	newInput(0, nodeValue_Text("Text"))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Enum_Scroll("Target", self, 0, [ "Lowercase", "Uppercase", "Titlecase" ]))
+	newInput(1, nodeValue_Enum_Scroll("Target", 0, [ "Lowercase", "Uppercase", "Titlecase" ]))
 	
-	newOutput(0, nodeValue_Output("Text", self, VALUE_TYPE.text, ""));
+	newOutput(0, nodeValue_Output("Text", VALUE_TYPE.text, ""));
 	
 	static processData = function(_output, _data, _index = 0) { 
 	    switch(_data[1]) {

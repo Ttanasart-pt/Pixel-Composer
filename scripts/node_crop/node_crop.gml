@@ -10,26 +10,26 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	name = "Crop";
 	preview_alpha = 0.5;
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Padding("Crop", self, [ 0, 0, 0, 0 ]))
+	newInput(1, nodeValue_Padding("Crop", [ 0, 0, 0, 0 ]))
 		.setUnitRef(function(i) /*=>*/ {return getDimension(i)});
 	
-	newInput(2, nodeValue_Bool("Active", self, true));
+	newInput(2, nodeValue_Bool("Active", true));
 		active_index = 2;
 		
-	newInput(3, nodeValue_Enum_Scroll("Aspect Ratio", self,  0, [ "None", "Manual", "1:1", "3:2", "4:3", "16:9" ]));
+	newInput(3, nodeValue_Enum_Scroll("Aspect Ratio",  0, [ "None", "Manual", "1:1", "3:2", "4:3", "16:9" ]));
 		
-	newInput(4, nodeValue_Vec2("Ratio", self, [ 1, 1 ]));
+	newInput(4, nodeValue_Vec2("Ratio", [ 1, 1 ]));
 	
-	newInput(5, nodeValue_Vec2("Center", self, [ .5, .5 ]))
+	newInput(5, nodeValue_Vec2("Center", [ .5, .5 ]))
 		.setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 		
-	newInput(6, nodeValue_Float("Width", self, 8 ));
+	newInput(6, nodeValue_Float("Width", 8 ));
 		
-	newInput(7, nodeValue_Enum_Scroll("Fit Mode", self,  0, [ "Manual", "Width", "Height", "Minimum" ]));
+	newInput(7, nodeValue_Enum_Scroll("Fit Mode",  0, [ "Manual", "Width", "Height", "Minimum" ]));
 		
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 2,
 		["Surface", true], 0, 

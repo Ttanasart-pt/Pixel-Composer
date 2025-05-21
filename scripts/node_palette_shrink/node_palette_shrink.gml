@@ -2,19 +2,19 @@ function Node_Palette_Shrink(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	name = "Shrink Palette";	
 	setDimension(96);
 	
-	newInput(0, nodeValue_Palette("Palette in", self, array_clone(DEF_PALETTE)))
+	newInput(0, nodeValue_Palette("Palette in", array_clone(DEF_PALETTE)))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Enum_Button("Algorithm", self,  1, [ "Histogram", "K-mean" ]))
+	newInput(1, nodeValue_Enum_Button("Algorithm",  1, [ "Histogram", "K-mean" ]))
 		.rejectArray();
 	
-	newInput(2, nodeValue_Int("Amount", self, 4));
+	newInput(2, nodeValue_Int("Amount", 4));
 	
 	newInput(3, nodeValueSeed(self));
 	
-	newInput(4, nodeValue_Enum_Button("Color Space", self, 0, [ "RGB", "HSV" ]))
+	newInput(4, nodeValue_Enum_Button("Color Space", 0, [ "RGB", "HSV" ]))
 	
-	newOutput(0, nodeValue_Output("Palette", self, VALUE_TYPE.color, []))
+	newOutput(0, nodeValue_Output("Palette", VALUE_TYPE.color, []))
 		.setDisplay(VALUE_DISPLAY.palette);
 	
 	input_display_list = [

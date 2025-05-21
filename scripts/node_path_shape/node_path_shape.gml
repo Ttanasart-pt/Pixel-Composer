@@ -9,13 +9,13 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	name = "Path Shape";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Vec2("Position", self, [ .5, .5 ]))
+	newInput(0, nodeValue_Vec2("Position", [ .5, .5 ]))
 		.setUnitRef(function() /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
 	
-	newInput(1, nodeValue_Vec2("Half Size", self, [ .5, .5 ]))
+	newInput(1, nodeValue_Vec2("Half Size", [ .5, .5 ]))
 		.setUnitRef(function() /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
 	
-	newInput(2, nodeValue_Rotation("Rotation", self, 0));
+	newInput(2, nodeValue_Rotation("Rotation", 0));
 	
 	shapeScroll = [ 
 	    new scrollItem("Rectangle",     s_node_shape_type,  0), 
@@ -34,26 +34,26 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	    new scrollItem("Spiral",        s_node_path_3d_shape,  6),
 	    new scrollItem("Spiral Circle", s_node_path_3d_shape,  6),
     ];
-	newInput(3, nodeValue_Enum_Scroll("Shape", self, 0, { data: shapeScroll, horizontal: true, text_pad: ui(16) }));
+	newInput(3, nodeValue_Enum_Scroll("Shape", 0, { data: shapeScroll, horizontal: true, text_pad: ui(16) }));
 	
-	newInput(4, nodeValue_Float("Skew", self, .5))
+	newInput(4, nodeValue_Float("Skew", .5))
 	    .setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01] });
 	
-	newInput(5, nodeValue_Rotation_Range("Angle Range", self, [ 0, 90 ]));
+	newInput(5, nodeValue_Rotation_Range("Angle Range", [ 0, 90 ]));
 	
-	newInput(6, nodeValue_Float("Factor", self, 4));
+	newInput(6, nodeValue_Float("Factor", 4));
 	
-	newInput(7, nodeValue_Int("Sides", self, 4));
+	newInput(7, nodeValue_Int("Sides", 4));
 	
-	newInput(8, nodeValue_Float("Inner Radius", self, .5));
+	newInput(8, nodeValue_Float("Inner Radius", .5));
 	
-	newInput(9, nodeValue_Corner("Corner Radius", self, [ 0, 0, 0, 0 ]));
+	newInput(9, nodeValue_Corner("Corner Radius", [ 0, 0, 0, 0 ]));
 	
-	newInput(10, nodeValue_Float("Revolution", self, 4));
+	newInput(10, nodeValue_Float("Revolution", 4));
 	
-	newInput(11, nodeValue_Float("Pitch", self, .2));
+	newInput(11, nodeValue_Float("Pitch", .2));
 	
-	newOutput(0, nodeValue_Output("Path data", self, VALUE_TYPE.pathnode, self));
+	newOutput(0, nodeValue_Output("Path data", VALUE_TYPE.pathnode, self));
 		
 	input_display_list = [
 		["Transform", false], 0, 2, 1, 

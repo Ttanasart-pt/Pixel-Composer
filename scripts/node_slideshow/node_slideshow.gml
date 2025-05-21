@@ -6,13 +6,13 @@ function Node_Slideshow(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	setDimension(128, 32);
 	
-	newInput(0, nodeValue_Int("Order", self, 0));
+	newInput(0, nodeValue_Int("Order", 0));
 	
-	newInput(1, nodeValue_Text("Title", self, ""));
+	newInput(1, nodeValue_Text("Title"));
 	
-	newInput(2, nodeValue_Enum_Scroll("Anchor", self,  0, [ "Center", "Top left" ]));
+	newInput(2, nodeValue_Enum_Scroll("Anchor",  0, [ "Center", "Top left" ]));
 	
-	newInput(3, nodeValue_Float("Arrival Speed", self, 4));
+	newInput(3, nodeValue_Float("Arrival Speed", 4));
 	
 	slide_title  = "";
 	slide_anchor = 0;

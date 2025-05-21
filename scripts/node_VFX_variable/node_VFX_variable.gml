@@ -7,21 +7,20 @@ function Node_VFX_Variable(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Particle("Particles", self, -1 ))
-		.setVisible(true, true);
+	newInput(0, nodeValue_Particle()).setVisible(true, true);
 	
-	newOutput( 0, nodeValue_Output("Positions", self, VALUE_TYPE.float,   []    ));
-	newOutput( 1, nodeValue_Output("Scales",    self, VALUE_TYPE.float,   []    ));
-	newOutput( 2, nodeValue_Output("Rotations", self, VALUE_TYPE.float,   0     ));
-	newOutput( 3, nodeValue_Output("Blending",  self, VALUE_TYPE.color,   0     ));
-	newOutput( 4, nodeValue_Output("Alpha",     self, VALUE_TYPE.float,   0     ));
-	newOutput( 5, nodeValue_Output("Life",      self, VALUE_TYPE.float,   0     ));
-	newOutput( 6, nodeValue_Output("Max life",  self, VALUE_TYPE.float,   0     ));
-	newOutput( 7, nodeValue_Output("Surface",   self, VALUE_TYPE.surface, noone ));
-	newOutput( 8, nodeValue_Output("Velocity",  self, VALUE_TYPE.float,   []    ));
-	newOutput( 9, nodeValue_Output("Seed",      self, VALUE_TYPE.float,   0     ));
+	newOutput( 0, nodeValue_Output("Positions", VALUE_TYPE.float,   []    ));
+	newOutput( 1, nodeValue_Output("Scales", VALUE_TYPE.float,   []    ));
+	newOutput( 2, nodeValue_Output("Rotations", VALUE_TYPE.float,   0     ));
+	newOutput( 3, nodeValue_Output("Blending", VALUE_TYPE.color,   0     ));
+	newOutput( 4, nodeValue_Output("Alpha", VALUE_TYPE.float,   0     ));
+	newOutput( 5, nodeValue_Output("Life", VALUE_TYPE.float,   0     ));
+	newOutput( 6, nodeValue_Output("Max life", VALUE_TYPE.float,   0     ));
+	newOutput( 7, nodeValue_Output("Surface", VALUE_TYPE.surface, noone ));
+	newOutput( 8, nodeValue_Output("Velocity", VALUE_TYPE.float,   []    ));
+	newOutput( 9, nodeValue_Output("Seed", VALUE_TYPE.float,   0     ));
 	
-	newOutput(10, nodeValue_Output("Spawn Positions", self, VALUE_TYPE.float,   []    ));
+	newOutput(10, nodeValue_Output("Spawn Positions", VALUE_TYPE.float,   []    ));
 	
 	input_display_list  = [ 0 ];
 	output_display_list = [ 

@@ -2,12 +2,12 @@ function Node_String_Merge(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	name = "Combine Texts";
 	setDimension(96, 48);
 	
-	newOutput(0, nodeValue_Output("Text", self, VALUE_TYPE.text, ""));
+	newOutput(0, nodeValue_Output("Text", VALUE_TYPE.text, ""));
 	
 	static createNewInput = function(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
-		newInput(index, nodeValue_Text("Text", self, "" ))
+		newInput(index, nodeValue_Text("Text"))
 			.setVisible(true, true);
 		
 		return inputs[index];

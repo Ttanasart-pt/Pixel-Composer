@@ -24,67 +24,67 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	global.SKY_SPHERE = new __3dUVSphere(0.5, 16, 8, true);
 	var i = in_d3d;
 	
-	newInput(i+4, nodeValue_D3Scene("Scene", self, noone )).setVisible(true, true);
+	newInput(i+4, nodeValue_D3Scene("Scene", noone )).setVisible(true, true);
 	
 	////- Output
 	
-	newInput(i+2, nodeValue_Dimension(self));
+	newInput(i+2, nodeValue_Dimension());
 	
 	////- Transform
 	
-	newInput(i+ 9, nodeValue_Enum_Scroll( "Postioning Mode",     self, 2, [ "Position + Rotation", "Position + Lookat", "Lookat + Rotation" ] ));
-	newInput(i+10, nodeValue_Vec3(        "Lookat Position",     self, [ 0, 0, 0 ] ));
-	newInput(i+11, nodeValue_Rotation(    "Roll",                self, 0));
-	newInput(i+12, nodeValue_Rotation(    "Horizontal Angle",    self, 45 ));
-	newInput(i+13, nodeValue_Slider(      "Vertical Angle",      self, 30, [ 0, 90, 0.1 ] ))
-	newInput(i+14, nodeValue_Float(       "Distance",            self, 4 ));
+	newInput(i+ 9, nodeValue_Enum_Scroll( "Postioning Mode", 2, [ "Position + Rotation", "Position + Lookat", "Lookat + Rotation" ] ));
+	newInput(i+10, nodeValue_Vec3(        "Lookat Position", [ 0, 0, 0 ] ));
+	newInput(i+11, nodeValue_Rotation(    "Roll", 0));
+	newInput(i+12, nodeValue_Rotation(    "Horizontal Angle", 45 ));
+	newInput(i+13, nodeValue_Slider(      "Vertical Angle", 30, [ 0, 90, 0.1 ] ))
+	newInput(i+14, nodeValue_Float(       "Distance", 4 ));
 	
 	////- Camera
 	
-	newInput(i+3, nodeValue_Enum_Button(  "Projection",          self,  1 , [ "Perspective", "Orthographic" ]));
-	newInput(i+0, nodeValue_ISlider(      "FOV",                 self, 60, [ 10, 90, 0.1 ] ));
-	newInput(i+1, nodeValue_Vec2(         "Clipping Distance",   self, [ 1, 10 ] ));
-	newInput(i+8, nodeValue_Slider(       "Orthographic Scale",  self, 0.5, [ 0.01, 4, 0.01 ] ));
+	newInput(i+3, nodeValue_Enum_Button(  "Projection",  1 , [ "Perspective", "Orthographic" ]));
+	newInput(i+0, nodeValue_ISlider(      "FOV", 60, [ 10, 90, 0.1 ] ));
+	newInput(i+1, nodeValue_Vec2(         "Clipping Distance", [ 1, 10 ] ));
+	newInput(i+8, nodeValue_Slider(       "Orthographic Scale", 0.5, [ 0.01, 4, 0.01 ] ));
 	
 	////- Render
 	
-	newInput(i+ 5, nodeValue_Color(       "Ambient Light",       self, c_dkgrey ));
-	newInput(i+16, nodeValue_Surface(     "Environment Texture", self));
-	newInput(i+ 6, nodeValue_Bool(        "Show Background",     self, false ));
-	newInput(i+ 7, nodeValue_Enum_Button( "Backface Culling",    self,  2 , [ "None", "CW", "CCW" ]));
-	newInput(i+15, nodeValue_Bool(        "Gamma Adjust",        self, false ));
-	newInput(i+22, nodeValue_Enum_Button( "Blend mode",          self,  0 , [ "Normal", "Additive" ]));
+	newInput(i+ 5, nodeValue_Color(       "Ambient Light", c_dkgrey ));
+	newInput(i+16, nodeValue_Surface(     "Environment Texture"));
+	newInput(i+ 6, nodeValue_Bool(        "Show Background", false ));
+	newInput(i+ 7, nodeValue_Enum_Button( "Backface Culling",  2 , [ "None", "CW", "CCW" ]));
+	newInput(i+15, nodeValue_Bool(        "Gamma Adjust", false ));
+	newInput(i+22, nodeValue_Enum_Button( "Blend mode",  0 , [ "Normal", "Additive" ]));
 	
 	////- Wireframe
 	
-	newInput(i+23, nodeValue_Bool(        "Wireframe",           self, false));
-	newInput(i+24, nodeValue_Float(       "Wireframe Thickness", self, 1));
-	newInput(i+25, nodeValue_Color(       "Wireframe Color",     self, ca_black));
-	newInput(i+26, nodeValue_Bool(        "Wireframe antialias", self, false));
-	newInput(i+27, nodeValue_Bool(        "Wireframe shading",   self, false));
-	newInput(i+28, nodeValue_Bool(        "Wireframe only",      self, false));
+	newInput(i+23, nodeValue_Bool(        "Wireframe", false));
+	newInput(i+24, nodeValue_Float(       "Wireframe Thickness", 1));
+	newInput(i+25, nodeValue_Color(       "Wireframe Color", ca_black));
+	newInput(i+26, nodeValue_Bool(        "Wireframe antialias", false));
+	newInput(i+27, nodeValue_Bool(        "Wireframe shading", false));
+	newInput(i+28, nodeValue_Bool(        "Wireframe only", false));
 	
 	////- Ambient Occlusion
 	
-	newInput(i+17, nodeValue_Bool(        "Ambient Occlusion",   self, false ));
-	newInput(i+20, nodeValue_Slider(      "AO Strength",         self, 1., [ 0.01, 4, 0.01 ] ));
-	newInput(i+18, nodeValue_Float(       "AO Radius",           self, 0.25 ));
-	newInput(i+19, nodeValue_Float(       "AO Bias",             self, 0.05 ));
+	newInput(i+17, nodeValue_Bool(        "Ambient Occlusion", false ));
+	newInput(i+20, nodeValue_Slider(      "AO Strength", 1., [ 0.01, 4, 0.01 ] ));
+	newInput(i+18, nodeValue_Float(       "AO Radius", 0.25 ));
+	newInput(i+19, nodeValue_Float(       "AO Bias", 0.05 ));
 	
 	////- Effects
 	
-	newInput(i+21, nodeValue_Int(         "Round Normal",        self, 0 )).setWindows();
-	newInput(i+29, nodeValue_Color(       "Backface Blending",   self, ca_white ));
+	newInput(i+21, nodeValue_Int(         "Round Normal", 0 )).setWindows();
+	newInput(i+29, nodeValue_Color(       "Backface Blending", ca_white ));
 	
 	// inputs i+30
 	in_cam = array_length(inputs);
 	
-	newOutput(0, nodeValue_Output("Rendered",          self, VALUE_TYPE.surface, noone ));
-	newOutput(1, nodeValue_Output("Normal",            self, VALUE_TYPE.surface, noone )).setVisible(false);
-	newOutput(2, nodeValue_Output("Depth",             self, VALUE_TYPE.surface, noone )).setVisible(false);
-	newOutput(3, nodeValue_Output("Shadow",            self, VALUE_TYPE.surface, noone )).setVisible(false);
-	newOutput(4, nodeValue_Output("Ambient Occlusion", self, VALUE_TYPE.surface, noone )).setVisible(false);
-	newOutput(5, nodeValue_Output("Diffuse",           self, VALUE_TYPE.surface, noone )).setVisible(false);
+	newOutput(0, nodeValue_Output("Rendered", VALUE_TYPE.surface, noone ));
+	newOutput(1, nodeValue_Output("Normal", VALUE_TYPE.surface, noone )).setVisible(false);
+	newOutput(2, nodeValue_Output("Depth", VALUE_TYPE.surface, noone )).setVisible(false);
+	newOutput(3, nodeValue_Output("Shadow", VALUE_TYPE.surface, noone )).setVisible(false);
+	newOutput(4, nodeValue_Output("Ambient Occlusion", VALUE_TYPE.surface, noone )).setVisible(false);
+	newOutput(5, nodeValue_Output("Diffuse", VALUE_TYPE.surface, noone )).setVisible(false);
 	
 	input_display_list = [ i+4,
 		["Output",		     false],       i+ 2,

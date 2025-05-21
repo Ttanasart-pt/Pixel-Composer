@@ -10,22 +10,22 @@ function Node_Smoke_Render(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	newInput(0, nodeValue("Domain", self, CONNECT_TYPE.input, VALUE_TYPE.sdomain, noone))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Dimension(self));
+	newInput(1, nodeValue_Dimension());
 		
-	newInput(2, nodeValue_Bool("Interpolate", self, false));
+	newInput(2, nodeValue_Bool("Interpolate", false));
 		
-	newInput(3, nodeValue_Bool("Draw Domain", self, false));
+	newInput(3, nodeValue_Bool("Draw Domain", false));
 		
-	newInput(4, nodeValue_Bool("Auto Update", self, true));
+	newInput(4, nodeValue_Bool("Auto Update", true));
 	
 	input_display_list = [
 		["Domain",	false], 0, 
 		["Render",	false], 4, 2, 3,
 	];
 		
-	newOutput(0, nodeValue_Output("Smoke", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Smoke", VALUE_TYPE.surface, noone));
 	
-	newOutput(1, nodeValue_Output("Domain", self, VALUE_TYPE.surface, noone));
+	newOutput(1, nodeValue_Output("Domain", VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	

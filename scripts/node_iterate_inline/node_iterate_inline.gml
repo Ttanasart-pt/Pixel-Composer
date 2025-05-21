@@ -5,7 +5,7 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	icon_24 = THEME.loop_24;
 	is_root = false;
 	
-	newInput(0, nodeValue_Int("Repeat", self, 1 )).uncache();
+	newInput(0, nodeValue_Int("Repeat", 1 )).uncache();
 	
 	managedRenderOrder = true;
 	

@@ -1,17 +1,17 @@
 function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "MK Cable";
 	
-	newInput(0, nodeValue_Dimension(self));
+	newInput(0, nodeValue_Dimension());
 	
-	newInput(1, nodeValue_Vec2("Point 1", self, [ 0, 0 ]));
+	newInput(1, nodeValue_Vec2("Point 1", [ 0, 0 ]));
 	
-	newInput(2, nodeValue_Vec2("Point 2", self, [ 16, 16 ]));
+	newInput(2, nodeValue_Vec2("Point 2", [ 16, 16 ]));
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 0, 
 		["Saber",		false], 1, 2, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));

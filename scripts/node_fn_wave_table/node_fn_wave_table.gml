@@ -8,14 +8,14 @@ enum WAVETABLE_FN {
 function Node_Fn_WaveTable(_x, _y, _group = noone) : Node_Fn(_x, _y, _group) constructor {
 	name = "WaveTable";
 	
-	newInput(inl + 0, nodeValue_Float("Pattern", self, 0 ));
+	newInput(inl + 0, nodeValue_Float("Pattern", 0 ));
 		
-	newInput(inl + 1, nodeValue_Vec2("Range", self, [ 0, 1 ]));
+	newInput(inl + 1, nodeValue_Vec2("Range", [ 0, 1 ]));
 	
-	newInput(inl + 2, nodeValue_Float("Frequency", self, 2 ))
+	newInput(inl + 2, nodeValue_Float("Frequency", 2 ))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 8, 0.01] });
 	
-	newInput(inl + 3, nodeValue_Float("Phase", self, 0 ));
+	newInput(inl + 3, nodeValue_Float("Phase", 0 ));
 	
 	wavetable_apply = function(typ) {
 		if(wavetable_selecting == noone) return; 

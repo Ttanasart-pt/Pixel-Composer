@@ -7,9 +7,9 @@ function Node_Rigid_Activate(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	manual_ungroupable	 = false;
 	
 	newInput(0, nodeValue(      "Object",    self, CONNECT_TYPE.input, VALUE_TYPE.rigid, noone)).setVisible(true, true);
-	newInput(1, nodeValue_Bool( "Activated", self, true)).rejectArray();
+	newInput(1, nodeValue_Bool( "Activated", true)).rejectArray();
 	
-	newOutput(0, nodeValue_Output("Object", self, VALUE_TYPE.rigid, noone));
+	newOutput(0, nodeValue_Output("Object", VALUE_TYPE.rigid, noone));
 	
 	input_display_list = [ 0,
 		["Activate", false], 1,

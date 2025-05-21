@@ -2,31 +2,31 @@ function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 	name = "Surface Extrude";
 	object_class = __3dSurfaceExtrude;
 	
-	newInput(in_mesh + 0, nodeValue_D3Material("Front Surface", self, new __d3dMaterial()))
+	newInput(in_mesh + 0, nodeValue_D3Material("Front Surface", new __d3dMaterial()))
 		.setVisible(true, true);
 	
-	newInput(in_mesh + 1, nodeValue_Surface("Front Height", self));
+	newInput(in_mesh + 1, nodeValue_Surface("Front Height"));
 	
-	newInput(in_mesh + 2, nodeValue_Bool("Smooth", self, false))
+	newInput(in_mesh + 2, nodeValue_Bool("Smooth", false))
 	
-	newInput(in_mesh + 3, nodeValue_Bool("Always update", self, false));
+	newInput(in_mesh + 3, nodeValue_Bool("Always update", false));
 	
-	newInput(in_mesh + 4, nodeValue_Bool("Double Side", self, false));
+	newInput(in_mesh + 4, nodeValue_Bool("Double Side", false));
 	
-	newInput(in_mesh + 5, nodeValue_D3Material("Back Surface", self, new __d3dMaterial()))
+	newInput(in_mesh + 5, nodeValue_D3Material("Back Surface", new __d3dMaterial()))
 		.setVisible(true, true);
 	
-	newInput(in_mesh + 6, nodeValue_Surface("Back Height", self));
+	newInput(in_mesh + 6, nodeValue_Surface("Back Height"));
 	
-	newInput(in_mesh + 7, nodeValue_Slider_Range("Front Height Level", self, [ 0, 1 ]));
+	newInput(in_mesh + 7, nodeValue_Slider_Range("Front Height Level", [ 0, 1 ]));
 	
-	newInput(in_mesh + 8, nodeValue_Slider_Range("Back Height Level", self, [ 0, 1 ]));
+	newInput(in_mesh + 8, nodeValue_Slider_Range("Back Height Level", [ 0, 1 ]));
 	
-	newInput(in_mesh + 9, nodeValue_D3Material("Front Texture", self, new __d3dMaterial()));
+	newInput(in_mesh + 9, nodeValue_D3Material("Front Texture", new __d3dMaterial()));
 	
-	newInput(in_mesh + 10, nodeValue_D3Material("Back Texture", self, new __d3dMaterial()));
+	newInput(in_mesh + 10, nodeValue_D3Material("Back Texture", new __d3dMaterial()));
 	
-	newInput(in_mesh + 11, nodeValue_D3Material("Side Texture", self, new __d3dMaterial()));
+	newInput(in_mesh + 11, nodeValue_D3Material("Side Texture", new __d3dMaterial()));
 	
 	input_display_list = [ in_mesh + 3,
 		__d3d_input_list_mesh,

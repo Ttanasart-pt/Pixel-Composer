@@ -1,5 +1,5 @@
-function nodeValue_Anchor(_name, _node, _value = [ .5, .5 ]) { 
-    var _in = nodeValue_Vec2(_name, _node, _value);
-	_in.setDisplay(VALUE_DISPLAY.vector, { side_button : new buttonAnchor(_in) });
-	return _in;
+function nodeValue_Anchor(_name = "Anchor", _value = [ .5, .5 ]) { 
+    var _inp = nodeValue_Vec2(_name, _value);
+        _inp.setDisplay(VALUE_DISPLAY.vector, { side_button : new buttonAnchor(_inp) })
+    return _inp;
 }

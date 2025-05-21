@@ -1,10 +1,10 @@
 function Node_PB_Draw_Quadrilateral(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group) constructor {
 	name = "Quadrilateral";
 	
-	newInput(pbi+0, nodeValue_2("Top Left",     self, [ 0.0, 0.0 ]));
-	newInput(pbi+1, nodeValue_2("Top Right",    self, [ 1.0, 0.0 ]));
-	newInput(pbi+2, nodeValue_2("Bottom Left",  self, [ 0.0, 1.0 ]));
-	newInput(pbi+3, nodeValue_2("Bottom Right", self, [ 1.0, 1.0 ]));
+	newInput(pbi+0, nodeValue_Vec2("Top Left", [ 0.0, 0.0 ]));
+	newInput(pbi+1, nodeValue_Vec2("Top Right", [ 1.0, 0.0 ]));
+	newInput(pbi+2, nodeValue_Vec2("Bottom Left", [ 0.0, 1.0 ]));
+	newInput(pbi+3, nodeValue_Vec2("Bottom Right", [ 1.0, 1.0 ]));
 	
 	array_insert_array(input_display_list, input_display_shape_index, [
 		["Shape", false], pbi+0, pbi+1, pbi+2, pbi+3

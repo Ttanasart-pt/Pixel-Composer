@@ -6,11 +6,11 @@ function Node_Array_Shift(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		.setArrayDepth(99)
 		.setVisible(true, true);
 		
-	newInput(1, nodeValue_Int("Shift", self, 0));
+	newInput(1, nodeValue_Int("Shift", 0));
 	
-	newInput(2, nodeValue_Enum_Scroll("Overflow", self, 0, [ "Wrap", "Zero", "Ignore" ]));
+	newInput(2, nodeValue_Enum_Scroll("Overflow", 0, [ "Wrap", "Zero", "Ignore" ]));
 	
-	newOutput(0, nodeValue_Output("Array", self, VALUE_TYPE.any, 0));
+	newOutput(0, nodeValue_Output("Array", VALUE_TYPE.any, 0));
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		var type = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;

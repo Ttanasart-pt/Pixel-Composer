@@ -6,7 +6,7 @@ function Node_Mesh_To_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(0, nodeValue("Mesh", self, CONNECT_TYPE.input, VALUE_TYPE.mesh, noone))
 		.setVisible(true, true);
 	
-	newOutput(0, nodeValue_Output("Path", self, VALUE_TYPE.pathnode, noone));
+	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, noone));
 	
 	segments = [];
 	length   = 0;

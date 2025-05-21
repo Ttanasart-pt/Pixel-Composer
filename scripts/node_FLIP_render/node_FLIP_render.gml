@@ -6,34 +6,33 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	inline_output      = false;
 	manual_ungroupable = false;
 	
-	newInput(0, nodeValue_Fdomain("Domain", self, noone))
-		.setVisible(true, true);
+	newInput(0, nodeValue_Fdomain("Domain")).setVisible(true, true);
 	
-	newInput(1, nodeValue_Float("Merge threshold", self, 0.75))
+	newInput(1, nodeValue_Float("Merge threshold", 0.75))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(2, nodeValue_Range("Lifespan", self, [ 0, 0 ], { linked : true }));
+	newInput(2, nodeValue_Range("Lifespan", [ 0, 0 ], { linked : true }));
 	
-	newInput(3, nodeValue_Float("Particle expansion", self, 20));
+	newInput(3, nodeValue_Float("Particle expansion", 20));
 	
-	newInput(4, nodeValue_Bool("Draw obstracles", self, true));
+	newInput(4, nodeValue_Bool("Draw obstracles", true));
 	
-	newInput(5, nodeValue_Surface("Fluid particle", self));
+	newInput(5, nodeValue_Surface("Fluid particle"));
 	
-	newInput(6, nodeValue_Enum_Scroll("Render type", self,  0, [ new scrollItem("Particle", s_node_flip_render_type, 0), 
+	newInput(6, nodeValue_Enum_Scroll("Render type",  0, [ new scrollItem("Particle", s_node_flip_render_type, 0), 
 												                 new scrollItem("Line",     s_node_flip_render_type, 1), ] ));
 	
-	newInput(7, nodeValue_Bool("Threshold", self, true));
+	newInput(7, nodeValue_Bool("Threshold", true));
 	
-	newInput(8, nodeValue_Bool("Additive", self, true));
+	newInput(8, nodeValue_Bool("Additive", true));
 	
-	newInput(9, nodeValue_Slider_Range("Alpha", self, [ 1, 1 ]));
+	newInput(9, nodeValue_Slider_Range("Alpha", [ 1, 1 ]));
 	
-	newInput(10, nodeValue_Int("Segments", self, 1));
+	newInput(10, nodeValue_Int("Segments", 1));
 	
-	newInput(11, nodeValue_Gradient("Color Over Velocity", self, new gradientObject(ca_white)));
+	newInput(11, nodeValue_Gradient("Color Over Velocity", new gradientObject(ca_white)));
 	
-	newInput(12, nodeValue_Range("Velocity Map", self, [ 0, 10 ]));
+	newInput(12, nodeValue_Range("Velocity Map", [ 0, 10 ]));
 	
 	input_display_list = [ 0, 5, 
 		["Rendering", false], 6, 10, 3, 4, 9, 
@@ -41,7 +40,7 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		["Post Processing", false], 8, 7, 1, 
 	];
 	
-	newOutput(0, nodeValue_Output("Rendered", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Rendered", VALUE_TYPE.surface, noone));
 	
 	seed = irandom_range(100000, 999999);
 	temp_surface = [ noone ];

@@ -38,13 +38,13 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Enum_Scroll("Type", self,  0, [ "Sum", "Mean", "Median", "Max", "Min" ]))
+	newInput(0, nodeValue_Enum_Scroll("Type",  0, [ "Sum", "Mean", "Median", "Max", "Min" ]))
 		.rejectArray();
 	
 	static createNewInput = function(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
-		newInput(index, nodeValue_Float("Input", self, -1 ))
+		newInput(index, nodeValue_Float("Input", -1 ))
 			.setVisible(false, true);
 			
 		return inputs[index];
@@ -52,7 +52,7 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	setDynamicInput(1, true, VALUE_TYPE.float);
 	
-	newOutput(0, nodeValue_Output("Statistic", self, VALUE_TYPE.float, -1));
+	newOutput(0, nodeValue_Output("Statistic", VALUE_TYPE.float, -1));
 	
 	static onValueUpdate = function(index = 0) {
 		if(index != 0) return;

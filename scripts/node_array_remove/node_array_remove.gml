@@ -5,18 +5,18 @@ function Node_Array_Remove(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(0, nodeValue("Array", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Enum_Button("Type", self,  0, [ "Index", "Value" ]))
+	newInput(1, nodeValue_Enum_Button("Type",  0, [ "Index", "Value" ]))
 		.rejectArray();
 	
-	newInput(2, nodeValue_Int("Index", self, 0));
+	newInput(2, nodeValue_Int("Index", 0));
 	
 	newInput(3, nodeValue("Value", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0))
 		.setVisible(true, true);
 	
-	newInput(4, nodeValue_Bool("Spread array", self, false ))
+	newInput(4, nodeValue_Bool("Spread array", false ))
 		.rejectArray();
 		
-	newOutput(0, nodeValue_Output("Array", self, VALUE_TYPE.any, 0));
+	newOutput(0, nodeValue_Output("Array", VALUE_TYPE.any, 0));
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var type = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;

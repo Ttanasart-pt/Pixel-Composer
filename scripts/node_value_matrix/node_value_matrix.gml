@@ -1,5 +1,4 @@
-function nodeValue_Matrix(_name, _node, _value, _data = {}) { return new __NodeValue_Matrix(_name, _node, _value, _data); }
-
+function nodeValue_Matrix(_name, _value, _data = {}) { return new __NodeValue_Matrix(_name, self, _value, _data); }
 function __NodeValue_Matrix(_name, _node, _value, _data = {}) : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.float, _value, "") constructor {
 	setDisplay(VALUE_DISPLAY.matrix, _data);
 	

@@ -5,7 +5,7 @@ function Node_Array_Transpose(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	newInput(0, nodeValue("Array in", self, CONNECT_TYPE.input, VALUE_TYPE.any, []))
 		.setVisible(true, true);
 	
-	newOutput(0, nodeValue_Output("Transposed Array", self, VALUE_TYPE.any, []));
+	newOutput(0, nodeValue_Output("Transposed Array", VALUE_TYPE.any, []));
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var type = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;

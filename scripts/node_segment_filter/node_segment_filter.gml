@@ -3,17 +3,17 @@ function Node_Segment_Filter(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Vector("Segments", self, [[]]))
+	newInput(0, nodeValue_Vector("Segment"))
 		.setVisible(true, true)
 		.setArrayDepth(1);
 	
-	newInput(1, nodeValue_Rotation("Angle", self, 0));
+	newInput(1, nodeValue_Rotation("Angle", 0));
 	
-	newInput(2, nodeValue_Float("Spread", self, 15));
+	newInput(2, nodeValue_Float("Spread", 15));
 	
-	newInput(3, nodeValue_Bool("Both side", self, true));
+	newInput(3, nodeValue_Bool("Both side", true));
 		
-	newOutput(0, nodeValue_Output("Segments", self, VALUE_TYPE.float, [[]]))
+	newOutput(0, nodeValue_Output("Segments", VALUE_TYPE.float, [[]]))
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setArrayDepth(2);
 	

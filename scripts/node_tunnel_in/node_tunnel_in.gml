@@ -22,7 +22,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	__jfrom = noone;
 	__key   = noone;
 	
-	newInput(0, nodeValue_Text("Name", self, LOADING || APPENDING? "" : $"tunnel{ds_map_size(project.tunnels_in_map)}" ))
+	newInput(0, nodeValue_Text("Name", LOADING || APPENDING? "" : $"tunnel{ds_map_size(project.tunnels_in_map)}" ))
 		.rejectArray();
 		
 	newInput(1, nodeValue("Value in", self, CONNECT_TYPE.input, VALUE_TYPE.any, noone ))

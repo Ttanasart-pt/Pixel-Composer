@@ -10,18 +10,18 @@ function Node_Rigid_Wall(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	worldScale = 100;
 	objects    = [];
 	
-	newInput(2, nodeValue_Dimension(self));
-	newInput(3, nodeValue_Int("Collision Group", self, 1));
-	newInput(0, nodeValue_Toggle("Sides", self, 0b0010, { data : [ "T", "B", "L", "R" ] }));
+	newInput(2, nodeValue_Dimension());
+	newInput(3, nodeValue_Int("Collision Group", 1));
+	newInput(0, nodeValue_Toggle("Sides", 0b0010, { data : [ "T", "B", "L", "R" ] }));
 		
 	////- Physics
 		
-	newInput(1, nodeValue_Float(  "Contact Friction", self, 0.2));
-	newInput(4, nodeValue_Slider( "Bounciness",       self, 0.2));
+	newInput(1, nodeValue_Float(  "Contact Friction", 0.2));
+	newInput(4, nodeValue_Slider( "Bounciness", 0.2));
 		
 	// input 5
 	
-	newOutput(0, nodeValue_Output("Object", self, VALUE_TYPE.rigid, objects));
+	newOutput(0, nodeValue_Output("Object", VALUE_TYPE.rigid, objects));
 	
 	input_display_list = [ 0, 
 		["Physics",	false],	1, 4, 

@@ -13,16 +13,16 @@ function Node_Rotation_Random_Data(_x, _y, _group = noone) : Node_Processor(_x, 
 	
 	////- Rotation
 	
-	newInput(0, nodeValue_Enum_Scroll( "Type", self,   0, types ));
+	newInput(0, nodeValue_Enum_Scroll( "Type",   0, types ));
 	
-	newInput(1, nodeValue_Rotation( "Range Start",   self, 0 ));
-	newInput(2, nodeValue_Rotation( "Range End",     self, 360 ));
-	newInput(3, nodeValue_Rotation( "Range 2 Start", self, 0 ));
-	newInput(4, nodeValue_Rotation( "Range 2 End",   self, 360 ));
+	newInput(1, nodeValue_Rotation( "Range Start", 0 ));
+	newInput(2, nodeValue_Rotation( "Range End", 360 ));
+	newInput(3, nodeValue_Rotation( "Range 2 Start", 0 ));
+	newInput(4, nodeValue_Rotation( "Range 2 End", 360 ));
 	
 	// inputs 5
 	
-	newOutput(0, nodeValue_Output("Rotation Random", self, VALUE_TYPE.float, [ 0, 0, 360, 0, 0 ])).setDisplay(VALUE_DISPLAY.rotation_random);
+	newOutput(0, nodeValue_Output("Rotation Random", VALUE_TYPE.float, [ 0, 0, 360, 0, 0 ])).setDisplay(VALUE_DISPLAY.rotation_random);
 	
 	input_display_list = [ 0, 
 		["Rotation", false], 1, 2, 3, 4, 

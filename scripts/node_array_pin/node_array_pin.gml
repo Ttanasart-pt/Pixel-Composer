@@ -12,7 +12,7 @@ function Node_Array_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	bg_spr_add = 0;
 	
-	newOutput(0, nodeValue_Output("Array", self, VALUE_TYPE.any, []));
+	newOutput(0, nodeValue_Output("Array", VALUE_TYPE.any, []));
 	
 	static createNewInput = function(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);

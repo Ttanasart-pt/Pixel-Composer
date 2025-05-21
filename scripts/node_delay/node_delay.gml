@@ -9,13 +9,13 @@ function Node_Delay(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	is_simulation = true;
 	
-	newInput(0, nodeValue_Surface("Surface", self));
+	newInput(0, nodeValue_Surface("Surface"));
 	
-	newInput(1, nodeValue_Int("Frames", self, 1));
+	newInput(1, nodeValue_Int("Frames", 1));
 	
-	newInput(2, nodeValue_Enum_Scroll("Overflow", self, 0, [ "Hold", "Loop", "Clear" ]));
+	newInput(2, nodeValue_Enum_Scroll("Overflow", 0, [ "Hold", "Loop", "Clear" ]));
 	
-	newOutput(0, nodeValue_Output("Surface", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0, 
 		["Delay",  false], 1, 2, 

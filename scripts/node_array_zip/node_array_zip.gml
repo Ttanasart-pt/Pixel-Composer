@@ -2,9 +2,9 @@ function Node_Array_Zip(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	name = "Array Zip";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_b("Spread Content", self, false));
+	newInput(0, nodeValue_Bool("Spread Content", false));
 	
-	newOutput(0, nodeValue_Output("Output", self, VALUE_TYPE.integer, 0));
+	newOutput(0, nodeValue_Output("Output", VALUE_TYPE.integer, 0));
 	
 	static createNewInput = function(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);

@@ -17,30 +17,30 @@ function __armature_bind_data(_surface, _bone = noone, _tran = 0, _aang = 0, _pa
 function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Armature Bind";
 	
-	newInput(0, nodeValue_Dimension(self));
+	newInput(0, nodeValue_Dimension());
 	
-	newInput(1, nodeValue_Armature("Armature", self, noone))
+	newInput(1, nodeValue_Armature())
 		.setVisible(true, true)
 		.rejectArray();
 		
-	newInput(2, nodeValue_Struct("Bind data", self, noone))
+	newInput(2, nodeValue_Struct("Bind data", noone))
 		.setVisible(true, true)
 		.shortenDisplay()
 		.setArrayDepth(1); 
 		
-	newInput(3, nodeValue_Vec2("Bone transform", self, [ 0, 0 ]));
+	newInput(3, nodeValue_Vec2("Bone transform", [ 0, 0 ]));
 		
-	newInput(4, nodeValue_Float("Bone scale", self, 1))
+	newInput(4, nodeValue_Float("Bone scale", 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0.1, 2, 0.01 ] });
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	newOutput(1, nodeValue_Output("Atlas data", self, VALUE_TYPE.atlas, []))
+	newOutput(1, nodeValue_Output("Atlas data", VALUE_TYPE.atlas, []))
 		.rejectArrayProcess();
 	
-	newOutput(2, nodeValue_Output("Bind data", self, VALUE_TYPE.struct, []))
+	newOutput(2, nodeValue_Output("Bind data", VALUE_TYPE.struct, []))
 		.shortenDisplay()
 		.setArrayDepth(1);
 	
@@ -411,17 +411,17 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var _s    = floor((index - input_fix_len) / data_length);
 		if(!LOADING && !APPENDING) boneIDMap = array_verify(boneIDMap, max(array_length(boneIDMap), _s + 1));
 		
-		newInput(index + 0, nodeValue_Surface("Surface", self));
+		newInput(index + 0, nodeValue_Surface("Surface"));
 		inputs[index + 0].surface_index = index;
 		inputs[index + 0].hover_effect  = 0;
 		
-		newInput(index + 1, nodeValue_Float("Transform",          self, [ 0, 0, 0, 1, 1 ] ))
+		newInput(index + 1, nodeValue_Float("Transform", [ 0, 0, 0, 1, 1 ] ))
 			.setDisplay(VALUE_DISPLAY.transform);
-		newInput(index + 2, nodeValue_Bool("Inherit Rotation",    self, true ));
-		newInput(index + 3, nodeValue_Bool("Apply Bone Rotation", self, false ));
+		newInput(index + 2, nodeValue_Bool("Inherit Rotation", true ));
+		newInput(index + 3, nodeValue_Bool("Apply Bone Rotation", false ));
 		
-		newInput(index + 4, nodeValue_Bool("Inherit Scale",       self, false ));
-		newInput(index + 5, nodeValue_Bool("Apply Bone Scale",    self, false ));
+		newInput(index + 4, nodeValue_Bool("Inherit Scale", false ));
+		newInput(index + 5, nodeValue_Bool("Apply Bone Scale", false ));
 		
 		while(_s >= array_length(attributes.layer_visible))    array_push(attributes.layer_visible,    true);
 		while(_s >= array_length(attributes.layer_selectable)) array_push(attributes.layer_selectable, true);

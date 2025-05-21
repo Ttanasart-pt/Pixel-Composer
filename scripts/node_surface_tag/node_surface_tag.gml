@@ -24,9 +24,9 @@ function taggedSurf(_surf = noone) : dynaSurf() constructor {
 function Node_Surface_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Tag Surface";
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newOutput(0, nodeValue_Output("Tagged Surface", self, VALUE_TYPE.dynaSurface, noone));
+	newOutput(0, nodeValue_Output("Tagged Surface", VALUE_TYPE.dynaSurface, noone));
 	
 	array_adjust_tool = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		var _yy = _y + ui(8);
@@ -86,9 +86,9 @@ function Node_Surface_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	static createNewInput = function(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
-		newInput(index + 0, nodeValue_Text("Tag", self, "new tag"));
+		newInput(index + 0, nodeValue_Text("Tag", "new tag"));
 		
-		newInput(index + 1, nodeValue_Vec2("Position", self, [[ 0, 0 ]] ))
+		newInput(index + 1, nodeValue_Vec2("Position", [[ 0, 0 ]] ))
 			.setArrayDepth(1);
 		
 		array_push(input_display_list, inAmo + 1);

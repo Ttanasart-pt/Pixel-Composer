@@ -6,10 +6,10 @@ function Node_VFX_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 	is_root  = false;
 	topoList = [];
 	
-	newInput(0, nodeValue_Bool("Loop", self, true ))
+	newInput(0, nodeValue_Bool("Loop", true ))
 		.rejectArray();
 	
-	newInput(1, nodeValue_Dimension(self))
+	newInput(1, nodeValue_Dimension())
 		.rejectArray();
 	
 	output_node_types   = [ Node_VFX_Renderer ];

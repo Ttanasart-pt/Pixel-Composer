@@ -7,7 +7,7 @@ function Node_Vector_Magnitude(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		.setArrayDepth(1)
 		.setVisible(true, true);
 	
-	newOutput(0, nodeValue_Output("Magnitude", self, VALUE_TYPE.float, 0 ));
+	newOutput(0, nodeValue_Output("Magnitude", VALUE_TYPE.float, 0 ));
 	
 	static processData = function(_output, _data, _array_index = 0) {  
 		var _vec = _data[0];

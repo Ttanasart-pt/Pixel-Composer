@@ -10,20 +10,20 @@ function Node_Tile_Convert(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	attributes.colorMap  = {};
 	attributes.colorList = [];
 	
-    newInput( 0, nodeValue_Surface("Surface", self));
+    newInput( 0, nodeValue_Surface("Surface"));
     
-    newInput( 1, nodeValue_Tileset("Tileset", self, noone))
+    newInput( 1, nodeValue_Tileset())
     	.setVisible(true, true);
     
-    newInput( 2, nodeValue_Bool("Animated", self, false));
+    newInput( 2, nodeValue_Bool("Animated", false));
     
     newInput( 3, nodeValueSeed(self));
     
-	newOutput(0, nodeValue_Output("Rendered", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Rendered", VALUE_TYPE.surface, noone));
 	
-	newOutput(1, nodeValue_Output("Tilemap", self, VALUE_TYPE.surface, noone));
+	newOutput(1, nodeValue_Output("Tilemap", VALUE_TYPE.surface, noone));
 	
-	newOutput(2, nodeValue_Output("Tileset", self, VALUE_TYPE.tileset, noone));
+	newOutput(2, nodeValue_Output("Tileset", VALUE_TYPE.tileset, noone));
 	
 	tile_mapper = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus, _panel = noone) {
 	    var bx = _x;

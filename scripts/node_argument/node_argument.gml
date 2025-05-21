@@ -4,13 +4,13 @@ function Node_Argument(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	
 	draw_padding = 8;
 	
-	newInput(0, nodeValue_Text("Tag", self, ""));
+	newInput(0, nodeValue_Text("Tag"));
 	
-	newInput(1, nodeValue_Enum_Scroll("Type", self, 0, [ "String", "Number" ]));
+	newInput(1, nodeValue_Enum_Scroll("Type", 0, [ "String", "Number" ]));
 	
-	newInput(2, nodeValue_Text("Default value", self, ""));
+	newInput(2, nodeValue_Text("Default value"));
 	
-	newOutput(0, nodeValue_Output("Value", self, VALUE_TYPE.text, ""));
+	newOutput(0, nodeValue_Output("Value", VALUE_TYPE.text, ""));
 	
 	static step = function() { #region
 		var typ = getInputData(1);

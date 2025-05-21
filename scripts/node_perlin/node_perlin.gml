@@ -7,27 +7,27 @@
 function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Perlin Noise";
 	
-	newInput(0, nodeValue_Dimension(self));
+	newInput(0, nodeValue_Dimension());
 	
-	newInput(1, nodeValue_Vec2("Position", self, [ 0, 0 ]))
+	newInput(1, nodeValue_Vec2("Position", [ 0, 0 ]))
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	newInput(2, nodeValue_Vec2("Scale", self, [ 5, 5 ]))
+	newInput(2, nodeValue_Vec2("Scale", [ 5, 5 ]))
 		.setMappable(10);
 	
-	newInput(3, nodeValue_Int("Iteration", self, 4));
+	newInput(3, nodeValue_Int("Iteration", 4));
 	
-	newInput(4, nodeValue_Bool("Tile", self, true));
+	newInput(4, nodeValue_Bool("Tile", true));
 		
 	newInput(5, nodeValueSeed(self));
 		
-	newInput(6, nodeValue_Enum_Button("Color Mode", self,  0, [ "Greyscale", "RGB", "HSV" ]));
+	newInput(6, nodeValue_Enum_Button("Color Mode",  0, [ "Greyscale", "RGB", "HSV" ]));
 	
-	newInput(7, nodeValue_Slider_Range("Color R Range", self, [ 0, 1 ]));
+	newInput(7, nodeValue_Slider_Range("Color R Range", [ 0, 1 ]));
 	
-	newInput(8, nodeValue_Slider_Range("Color G Range", self, [ 0, 1 ]));
+	newInput(8, nodeValue_Slider_Range("Color G Range", [ 0, 1 ]));
 	
-	newInput(9, nodeValue_Slider_Range("Color B Range", self, [ 0, 1 ]));
+	newInput(9, nodeValue_Slider_Range("Color B Range", [ 0, 1 ]));
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	
@@ -35,11 +35,11 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	
-	newInput(11, nodeValue_Rotation("Rotation", self, 0));
+	newInput(11, nodeValue_Rotation("Rotation", 0));
 		
-	newInput(12, nodeValue_Surface("Mask", self));
+	newInput(12, nodeValue_Surface("Mask"));
 	
-	newInput(13, nodeValue_Rotation("Phase", self, 0));
+	newInput(13, nodeValue_Rotation("Phase", 0));
 	
 	input_display_list = [
 		["Output", 	   true], 0, 12, 
@@ -48,7 +48,7 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		["Render",	  false], 6, 7, 8, 9, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	

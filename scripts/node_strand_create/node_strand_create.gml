@@ -21,14 +21,14 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	////- Generation
 	
-	newInput( 0, nodeValue_Enum_Scroll( "Source",       self, 0, [ "Point", "Path", "Mesh" ]));
-	newInput( 1, nodeValue_Int(         "Density",      self, 8, "How many strands to generate."));
-	newInput( 5, nodeValue_PathNode(    "Path",         self, noone));
-	newInput( 6, nodeValue_Vec2(        "Position",     self, [ 0, 0 ]));
-	newInput( 7, nodeValue_Enum_Button( "Side",         self, 0, [ "Inner", "Outer", "Both" ]));
+	newInput( 0, nodeValue_Enum_Scroll( "Source", 0, [ "Point", "Path", "Mesh" ]));
+	newInput( 1, nodeValue_Int(         "Density", 8, "How many strands to generate."));
+	newInput( 5, nodeValue_PathNode(    "Path"));
+	newInput( 6, nodeValue_Vec2(        "Position", [ 0, 0 ]));
+	newInput( 7, nodeValue_Enum_Button( "Side", 0, [ "Inner", "Outer", "Both" ]));
 	newInput(13, nodeValue(             "Mesh",         self, CONNECT_TYPE.input, VALUE_TYPE.mesh, noone));
-	newInput(14, nodeValue_Enum_Scroll( "Distribution", self, 0, [ "Uniform", "Random" ]));
-	newInput(15, nodeValue_Trigger(     "Bake hair",    self, "Prevent strand reseting to apply manual modification. Unbaking will remove all changes."))
+	newInput(14, nodeValue_Enum_Scroll( "Distribution", 0, [ "Uniform", "Random" ]));
+	newInput(15, nodeValue_Trigger(     "Bake hair", "Prevent strand reseting to apply manual modification. Unbaking will remove all changes."))
 		.setDisplay(VALUE_DISPLAY.button, { name: "Bake", UI : true, onClick: function() /*=>*/ { 
 			attributes.use_groom = !attributes.use_groom; 
 			if(attributes.use_groom) groomed = strands.clone();
@@ -37,27 +37,27 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 	////- Strand
 	
-	newInput( 2, nodeValue_Vec2(            "Length",        self, [ 4, 4 ]));
-	newInput( 3, nodeValue_Int(             "Segment",       self, 4));
-	newInput(18, nodeValue_Rotation_Random( "Direction",     self, ROTATION_RANDOM_DEF_0_360));
-	newInput( 4, nodeValue_Slider(          "Elasticity",    self, 0.05)).setTooltip("Length preservation, the higher the value the easier it is to stretch each segment.");
-	newInput( 8, nodeValue_Slider(          "Spring",        self, 0.8 ));
-	newInput( 9, nodeValue_Slider(          "Structure",     self, 0.2 )).setTooltip("The ability to keep its original shape.");
-	newInput(17, nodeValue_Vec2(            "Root Strength", self, [-1, -1])).setTooltip("The force required to break strand from its root. Set to -1 to make strand infinitely strong.");
-	newInput(19, nodeValue_Float(           "Restitution",   self, .01)).setTooltip("Minimum speed before the strand stops moving completely.");
+	newInput( 2, nodeValue_Vec2(            "Length", [ 4, 4 ]));
+	newInput( 3, nodeValue_Int(             "Segment", 4));
+	newInput(18, nodeValue_Rotation_Random( "Direction", ROTATION_RANDOM_DEF_0_360));
+	newInput( 4, nodeValue_Slider(          "Elasticity", 0.05)).setTooltip("Length preservation, the higher the value the easier it is to stretch each segment.");
+	newInput( 8, nodeValue_Slider(          "Spring", 0.8 ));
+	newInput( 9, nodeValue_Slider(          "Structure", 0.2 )).setTooltip("The ability to keep its original shape.");
+	newInput(17, nodeValue_Vec2(            "Root Strength", [-1, -1])).setTooltip("The force required to break strand from its root. Set to -1 to make strand infinitely strong.");
+	newInput(19, nodeValue_Float(           "Restitution", .01)).setTooltip("Minimum speed before the strand stops moving completely.");
 	
 	////- Curl
 	
-	newInput(11, nodeValue_Float(  "Curl frequency", self, 0));
-	newInput(12, nodeValue_Slider( "Curliness",      self, 1));
+	newInput(11, nodeValue_Float(  "Curl frequency", 0));
+	newInput(12, nodeValue_Slider( "Curliness", 1));
 	
 	////- Preview
 	
-	newInput(16, nodeValue_Bool("View fix hair", self, false));
+	newInput(16, nodeValue_Bool("View fix hair", false));
 	
 	//// inputs 20
 	
-	newOutput(0, nodeValue_Output("Strand", self, VALUE_TYPE.strands, noone));
+	newOutput(0, nodeValue_Output("Strand", VALUE_TYPE.strands, noone));
 	
 	input_display_list = [ 10, 
 		["Generation",	false], 0, 1, 5, 6, 7, 13, 14, 15, 

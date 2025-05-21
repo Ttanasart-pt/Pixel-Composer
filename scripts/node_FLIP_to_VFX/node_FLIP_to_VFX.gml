@@ -6,10 +6,9 @@ function Node_FLIP_to_VFX(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	manual_ungroupable = false;
 	
-	newInput(0, nodeValue_Fdomain("Domain", self, noone))
-		.setVisible(true, true);
+	newInput(0, nodeValue_Fdomain("Domain")).setVisible(true, true);
 		
-	newOutput(0, nodeValue_Output("Particles",	self, VALUE_TYPE.particle, [] ));
+	newOutput(0, nodeValue_Output("Particles", VALUE_TYPE.particle, [] ));
 	
 	attributes.part_amount = 512;
 	array_push(attributeEditors, ["Maximum particles", function() /*=>*/ {return attributes.part_amount}, textBox_Number(function(v) /*=>*/ {return setAttribute("part_amount", val)}) ]);

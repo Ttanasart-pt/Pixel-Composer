@@ -3,19 +3,19 @@ function Node_Sequence_Anim(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	update_on_frame = true;
 	setAlwaysTimeline(new timelineItemNode_Sequence_Anim(self));
 	
-	newInput(0, nodeValue_Surface("Surface In", self, []))
+	newInput(0, nodeValue_Surface("Surface In", []))
 		.setArrayDepth(1);
 	
-	newInput(1, nodeValue_Float("Speed", self, 1))
+	newInput(1, nodeValue_Float("Speed", 1))
 		.rejectArray();
 		
-	newInput(2, nodeValue_Int("Sequence", self, []))
+	newInput(2, nodeValue_Int("Sequence", []))
 		.setVisible(true, true)
 		.setArrayDepth(1);
 		
-	newInput(3, nodeValue_Enum_Scroll("Overflow", self,  0, [ "Hold", "Loop", "Ping Pong", "Empty" ]));
+	newInput(3, nodeValue_Enum_Scroll("Overflow",  0, [ "Hold", "Loop", "Ping Pong", "Empty" ]));
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	sequence_surface = noone;
 	sequence_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {

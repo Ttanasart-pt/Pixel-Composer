@@ -3,21 +3,21 @@ function Node_PB_Box_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	color = COLORS.node_blend_feedback;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Pbbox("PBBOX", self, new __pbBox()));
+	newInput(0, nodeValue_Pbbox());
 	
-	newInput(1, nodeValue_Enum_Button("Axis", self, 0, [ "X", "Y" ]));
+	newInput(1, nodeValue_Enum_Button("Axis", 0, [ "X", "Y" ]));
 	
-	newInput(2, nodeValue_Enum_Button("Anchor", self, 0, [ "Start", "End" ]));
+	newInput(2, nodeValue_Enum_Button("Anchor", 0, [ "Start", "End" ]));
 	
-	newInput(3, nodeValue_Enum_Button("Unit", self, 0, [ "Ratio", "Pixel" ]));
+	newInput(3, nodeValue_Enum_Button("Unit", 0, [ "Ratio", "Pixel" ]));
 	
-	newInput(4, nodeValue_s("Ratio", self, .5));
+	newInput(4, nodeValue_Slider("Ratio", .5));
 	
-	newInput(5, nodeValue_i("Size", self, 4));
+	newInput(5, nodeValue_Int("Size", 4));
 	
-	newOutput(0, nodeValue_Output("PBBOX", self, VALUE_TYPE.pbBox, noone));
+	newOutput(0, nodeValue_Output("PBBOX", VALUE_TYPE.pbBox, noone));
 	
-	newOutput(1, nodeValue_Output("PBBOX", self, VALUE_TYPE.pbBox, noone));
+	newOutput(1, nodeValue_Output("PBBOX", VALUE_TYPE.pbBox, noone));
 	
 	input_display_list = [
 		["Layout", false], 0, 

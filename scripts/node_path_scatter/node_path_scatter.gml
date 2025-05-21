@@ -2,36 +2,36 @@ function Node_Path_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	name = "Scatter Path";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_PathNode("Base Path", self, noone))
+	newInput(0, nodeValue_PathNode("Base Path"))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_PathNode("Scatter Path", self, noone))
+	newInput(1, nodeValue_PathNode("Scatter Path"))
 		.setVisible(true, true);
 	
-	newInput(2, nodeValue_Slider_Range("Range", self, [ 0, 1 ]));
+	newInput(2, nodeValue_Slider_Range("Range", [ 0, 1 ]));
 	
-	newInput(3, nodeValue_Int("Amount", self, 4));
+	newInput(3, nodeValue_Int("Amount", 4));
 	
-	newInput(4, nodeValue_Slider_Range("Scale", self, [ 0.5, 1 ]));
+	newInput(4, nodeValue_Slider_Range("Scale", [ 0.5, 1 ]));
 	
 	newInput(5, nodeValueSeed(self));
 	
-	newInput(6, nodeValue_Curve("Scale over Length", self, CURVE_DEF_11));
+	newInput(6, nodeValue_Curve("Scale over Length", CURVE_DEF_11));
 	
-	newInput(7, nodeValue_Rotation_Random("Rotation", self, [ 0, 45, 135, 0, 0 ] ));
+	newInput(7, nodeValue_Rotation_Random("Rotation", [ 0, 45, 135, 0, 0 ] ));
 	
-	newInput(8, nodeValue_Enum_Scroll("Distribution", self,  0 , [ "Uniform", "Random" ]));
+	newInput(8, nodeValue_Enum_Scroll("Distribution",  0 , [ "Uniform", "Random" ]));
 	
-	newInput(9, nodeValue_Curve("Trim over Length", self, CURVE_DEF_11));
+	newInput(9, nodeValue_Curve("Trim over Length", CURVE_DEF_11));
 	
-	newInput(10, nodeValue_Float("Range", self, 1))
+	newInput(10, nodeValue_Float("Range", 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(11, nodeValue_Bool("Flip if Negative", self, false ));
+	newInput(11, nodeValue_Bool("Flip if Negative", false ));
 	
-	newInput(12, nodeValue_Enum_Scroll("Origin", self,  0 , [ "Individual", "First", "Zero" ]));
+	newInput(12, nodeValue_Enum_Scroll("Origin",  0 , [ "Individual", "First", "Zero" ]));
 	
-	newOutput(0, nodeValue_Output("Path", self, VALUE_TYPE.pathnode, noone));
+	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, noone));
 	
 	input_display_list = [ 5, 
 		["Paths",     false], 0, 1, 10, 9, 

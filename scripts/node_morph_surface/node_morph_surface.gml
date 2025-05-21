@@ -1,17 +1,17 @@
 function Node_Morph_Surface(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Morph Surface";
 	
-	newInput(0, nodeValue_Surface("Surface from", self));
+	newInput(0, nodeValue_Surface("Surface from"));
 	
-	newInput(1, nodeValue_Surface("Surface to", self));
+	newInput(1, nodeValue_Surface("Surface to"));
 	
-	newInput(2, nodeValue_Float("Morph amount", self, 0))
+	newInput(2, nodeValue_Float("Morph amount", 0))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(3, nodeValue_Float("Threshold", self, 0.5))
+	newInput(3, nodeValue_Float("Threshold", 0.5))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 
 		["Surfaces", true],	0, 1,

@@ -1,28 +1,28 @@
 function Node_De_Stray(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "De-Stray";
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Float("Tolerance", self, 0))
+	newInput(1, nodeValue_Float("Tolerance", 0))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(2, nodeValue_Bool("Active", self, true));
+	newInput(2, nodeValue_Bool("Active", true));
 		active_index = 2;
 	
-	newInput(3, nodeValue_Int("Iteration", self, 2))
+	newInput(3, nodeValue_Int("Iteration", 2))
 	
-	newInput(4, nodeValue_Enum_Button("Strictness", self,  0, [ "Low", "High", "Stray-only" ]));
+	newInput(4, nodeValue_Enum_Button("Strictness",  0, [ "Low", "High", "Stray-only" ]));
 	
-	newInput(5, nodeValue_Surface("Mask", self));
+	newInput(5, nodeValue_Surface("Mask"));
 	
-	newInput(6, nodeValue_Float("Mix", self, 1))
+	newInput(6, nodeValue_Float("Mix", 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	__init_mask_modifier(5); // inputs 7, 8, 
 	
-	newInput(9, nodeValue_Bool("Fill Empty", self, false));
+	newInput(9, nodeValue_Bool("Fill Empty", false));
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 2, 
 		["Surfaces",  true], 0, 5, 6, 7, 8, 

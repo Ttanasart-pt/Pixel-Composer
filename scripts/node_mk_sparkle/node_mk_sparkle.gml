@@ -6,41 +6,41 @@ function Node_MK_Sparkle(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	dimension_index = -1;
 	update_on_frame = true;
 	
-	newInput(0, nodeValue_Int("Size", self, 5));
+	newInput(0, nodeValue_Int("Size", 5));
 	
 	newInput(1, nodeValueSeed(self));
 	
-	newInput(2, nodeValue_Float("Speed", self, 1))
+	newInput(2, nodeValue_Float("Speed", 1))
 		.setDisplay(VALUE_DISPLAY.slider)
 	
-	newInput(3, nodeValue_Bool("Shade", self, false));
+	newInput(3, nodeValue_Bool("Shade", false));
 	
-	newInput(4, nodeValue_Float("Amount", self, 0.5))
+	newInput(4, nodeValue_Float("Amount", 0.5))
 		.setDisplay(VALUE_DISPLAY.slider)
 		
-	newInput(5, nodeValue_Float("Scatter", self, 0.5))
+	newInput(5, nodeValue_Float("Scatter", 0.5))
 		.setDisplay(VALUE_DISPLAY.slider)
 		
-	newInput(6, nodeValue_Palette("Colors", self, [ ca_black, ca_white ]))
+	newInput(6, nodeValue_Palette("Colors", [ ca_black, ca_white ]))
 		
-	newInput(7, nodeValue_Bool("Additive", self, false))
+	newInput(7, nodeValue_Bool("Additive", false))
 		
-	newInput(8, nodeValue_Float("Diagonal", self, 0.2))
+	newInput(8, nodeValue_Float("Diagonal", 0.2))
 		.setDisplay(VALUE_DISPLAY.slider)
 		
-	newInput(9, nodeValue_Enum_Scroll("Loop", self, false, [ "None", "Loop", "Ping-pong" ]));
+	newInput(9, nodeValue_Enum_Scroll("Loop", false, [ "None", "Loop", "Ping-pong" ]));
 	
-	newInput(10, nodeValue_Int("Loop Length", self, 4));
+	newInput(10, nodeValue_Int("Loop Length", 4));
 	
-	newInput(11, nodeValue_Int("Frame Shift", self, 0));
+	newInput(11, nodeValue_Int("Frame Shift", 0));
 	
-	newInput(12, nodeValue_Bool("Array", self, false));
+	newInput(12, nodeValue_Bool("Array", false));
 	
-	newInput(13, nodeValue_Int("Array Length", self, 1));
+	newInput(13, nodeValue_Int("Array Length", 1));
 	
 	/////////////////////////////////////////////////////////////////
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 1, 
 		["Output",    false], 0, 12, 13, 

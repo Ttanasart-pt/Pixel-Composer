@@ -21,34 +21,34 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	////- Origin
 	
-	newInput( 2, nodeValue_Vec2(     "Starting position", self, [ DEF_SURF_W / 2, DEF_SURF_H / 2 ]));
-	newInput(10, nodeValue_Vec3(     "Starting position", self, [ 0, 0, 0 ]));
-	newInput( 6, nodeValue_Rotation( "Starting Angle",    self, 90));
+	newInput( 2, nodeValue_Vec2(     "Starting position", [ DEF_SURF_W / 2, DEF_SURF_H / 2 ]));
+	newInput(10, nodeValue_Vec3(     "Starting position", [ 0, 0, 0 ]));
+	newInput( 6, nodeValue_Rotation( "Starting Angle", 90));
 	
 	////- Properties
 	
-	newInput(0, nodeValue_Float(     "Length", self,  8));
-	newInput(1, nodeValue_Rotation(  "Angle",  self, 45));
+	newInput(0, nodeValue_Float(     "Length",  8));
+	newInput(1, nodeValue_Rotation(  "Angle", 45));
 	newInput(7, nodeValueSeed(self));
 		
 	////- 3D
 	
-	newInput( 8, nodeValue_Bool(        "3D",       self, false));
-	newInput( 9, nodeValue_Enum_Button( "Forward",  self, 1, [ "X", "Y", "Z" ]));
-	newInput(11, nodeValue_Rotation(    "Subangle", self, 45));
+	newInput( 8, nodeValue_Bool(        "3D", false));
+	newInput( 9, nodeValue_Enum_Button( "Forward", 1, [ "X", "Y", "Z" ]));
+	newInput(11, nodeValue_Rotation(    "Subangle", 45));
 	
 	////- Rules
 	
-	newInput(3, nodeValue_Int(  "Iteration",       self, 4));
-	newInput(4, nodeValue_Text( "Starting rule",   self, ""));
-	newInput(5, nodeValue_Text( "End replacement", self, "", "Replace symbol of the last generated rule, for example a=F to replace all a with F. Use comma to separate different replacements."));
+	newInput(3, nodeValue_Int(  "Iteration", 4));
+	newInput(4, nodeValue_Text( "Starting rule"));
+	newInput(5, nodeValue_Text( "End replacement")).setTooltip("Replace symbol of the last generated rule, for example a=F to replace all a with F. Use comma to separate different replacements.");
 	
 	static createNewInput = function(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		var _idx  = index - input_fix_len;
 		
-		newInput(index + 0, nodeValue_Text($"Name {_idx}", self, "" ));
-		newInput(index + 1, nodeValue_Text($"Rule {_idx}", self, "" ));
+		newInput(index + 0, nodeValue_Text($"Name {_idx}"));
+		newInput(index + 1, nodeValue_Text($"Rule {_idx}"));
 		
 		return inputs[index + 0];
 	}
@@ -56,7 +56,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	setDynamicInput(2, false);
 	if(!LOADING && !APPENDING) createNewInput();
 	
-	newOutput(0, nodeValue_Output("Path", self, VALUE_TYPE.pathnode, noone));
+	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, noone));
 	
 	rule_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		rule_renderer.x = _x;

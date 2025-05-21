@@ -8,39 +8,39 @@
 function Node_Kuwahara(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Kuwahara";
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Bool("Active", self, true));
+	newInput(1, nodeValue_Bool("Active", true));
 		active_index = 1;
 	
-	newInput(2, nodeValue_Int("Radius", self, 2))
+	newInput(2, nodeValue_Int("Radius", 2))
 		.setValidator(VV_min(1));
 	
-	newInput(3, nodeValue_Surface("Mask", self));
+	newInput(3, nodeValue_Surface("Mask"));
 	
-	newInput(4, nodeValue_Float("Mix", self, 1))
+	newInput(4, nodeValue_Float("Mix", 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(5, nodeValue_Bool("Active", self, true));
+	newInput(5, nodeValue_Bool("Active", true));
 		active_index = 5;
 	
-	newInput(6, nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) }));
+	newInput(6, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	__init_mask_modifier(3); // inputs 7, 8
 	
-	newInput(9, nodeValue_Enum_Scroll("Types", self, 0, [ "Basic", "Anisotropics", "Generalized" ]));
+	newInput(9, nodeValue_Enum_Scroll("Types", 0, [ "Basic", "Anisotropics", "Generalized" ]));
 	
-	newInput(10, nodeValue_Float("Alpha", self, 1))
+	newInput(10, nodeValue_Float("Alpha", 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	newInput(11, nodeValue_Float("Zero crossing", self, 0.58))
+	newInput(11, nodeValue_Float("Zero crossing", 0.58))
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	newInput(12, nodeValue_Float("Hardness", self, 8))
+	newInput(12, nodeValue_Float("Hardness", 8))
 	
-	newInput(13, nodeValue_Float("Sharpness", self, 8))
+	newInput(13, nodeValue_Float("Sharpness", 8))
 		
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 1, 
 		["Surfaces",  true], 0, 3, 4, 7, 8, 

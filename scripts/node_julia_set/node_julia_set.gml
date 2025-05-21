@@ -1,24 +1,24 @@
 function Node_Julia_Set(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Julia";
 	
-	newInput(0, nodeValue_Dimension(self));
+	newInput(0, nodeValue_Dimension());
 	
-	newInput(1, nodeValue_Vec2("C", self, [ -1, 0 ]))
+	newInput(1, nodeValue_Vec2("C", [ -1, 0 ]))
 	    .setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	
-	newInput(2, nodeValue_Vec2("Position", self, [ 0, 0 ]))
+	newInput(2, nodeValue_Vec2("Position", [ 0, 0 ]))
 	
-	newInput(3, nodeValue_Vec2("Scale", self, [ 1, 1 ]));
+	newInput(3, nodeValue_Vec2("Scale", [ 1, 1 ]));
 	
-	newInput(4, nodeValue_Rotation("Rotation", self, 0));
+	newInput(4, nodeValue_Rotation("Rotation", 0));
 	
-	newInput(5, nodeValue_Int("Max Iteration", self, 128));
+	newInput(5, nodeValue_Int("Max Iteration", 128));
 	
-	newInput(6, nodeValue_Float("Diverge Threshold", self, 4));
+	newInput(6, nodeValue_Float("Diverge Threshold", 4));
 	
-	newInput(7, nodeValue_Surface("Mask", self));
+	newInput(7, nodeValue_Surface("Mask"));
 	
-	newOutput(0, nodeValue_Output("Surface", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0, 7, 
 	    ["Julia",     false], 1, 5, 6, 

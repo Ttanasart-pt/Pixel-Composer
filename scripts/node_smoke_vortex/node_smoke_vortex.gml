@@ -7,14 +7,14 @@ function Node_Smoke_Vortex(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	newInput(0, nodeValue("Domain", self, CONNECT_TYPE.input, VALUE_TYPE.sdomain, noone))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Vec2("Position", self, [0, 0]));
+	newInput(1, nodeValue_Vec2("Position", [0, 0]));
 	
-	newInput(2, nodeValue_Float("Radius", self, 8));
+	newInput(2, nodeValue_Float("Radius", 8));
 	
-	newInput(3, nodeValue_Float("Strength", self, 0.10))
+	newInput(3, nodeValue_Float("Strength", 0.10))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
 	
-	newInput(4, nodeValue_Float("Attraction", self, 0))
+	newInput(4, nodeValue_Float("Attraction", 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
 	
 	input_display_list = [ 
@@ -22,8 +22,8 @@ function Node_Smoke_Vortex(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 		["Vortex",	false], 1, 2, 3, 4
 	];
 	
-	newOutput(0, nodeValue_Output("Domain", self, VALUE_TYPE.sdomain, noone));
-	newOutput(1, nodeValue_Output("Domain", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Domain", VALUE_TYPE.sdomain, noone));
+	newOutput(1, nodeValue_Output("Domain", VALUE_TYPE.surface, noone));
 	
 	temp_surface = [ noone ];
 	

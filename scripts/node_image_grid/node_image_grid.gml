@@ -7,27 +7,27 @@
 function Node_Image_Grid(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Image Grid";
 	
-	newInput(0, nodeValue_Enum_Scroll("Main Axis", self,  0, [ new scrollItem("Horizontal", s_node_alignment, 0), 
+	newInput(0, nodeValue_Enum_Scroll("Main Axis",  0, [ new scrollItem("Horizontal", s_node_alignment, 0), 
 												               new scrollItem("Vertical",   s_node_alignment, 1) ]))
 		.rejectArray();
 	
-	newInput(1, nodeValue_Int("Column", self, 4))
+	newInput(1, nodeValue_Int("Column", 4))
 		.setValidator(VV_min(1))
 		.rejectArray();
 	
-	newInput(2, nodeValue_Vec2("Spacing", self, [ 0, 0 ]))
+	newInput(2, nodeValue_Vec2("Spacing", [ 0, 0 ]))
 		.rejectArray();
 	
-	newInput(3, nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ]))
+	newInput(3, nodeValue_Padding("Padding", [ 0, 0, 0, 0 ]))
 		.rejectArray();
 	
-	newInput(4, nodeValue_Text("Group", self, noone))
+	newInput(4, nodeValue_Text("Group", noone))
 		.setVisible(true, true)
 		.setArrayDepth(1);
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	newOutput(1, nodeValue_Output("Atlas data", self, VALUE_TYPE.atlas, []));
+	newOutput(1, nodeValue_Output("Atlas data", VALUE_TYPE.atlas, []));
 	
 	temp_surface = [ noone, noone ];
 	
@@ -40,7 +40,7 @@ function Node_Image_Grid(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static createNewInput = function(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
-		newInput(index, nodeValue_Surface("Input", self))
+		newInput(index, nodeValue_Surface("Input"))
 			.setVisible(true, true);
 			
 		array_push(input_display_list, inAmo);

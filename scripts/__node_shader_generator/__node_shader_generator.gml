@@ -1,7 +1,7 @@
 function Node_Shader_Generator(_x, _y, _group = noone) : Node_Shader(_x, _y, _group) constructor {
 	name = "";
 	
-	newInput(0, nodeValue_Dimension(self));
+	newInput(0, nodeValue_Dimension());
 		addShaderProp(SHADER_UNIFORM.float, "dimension");
 	
 	attribute_surface_depth();

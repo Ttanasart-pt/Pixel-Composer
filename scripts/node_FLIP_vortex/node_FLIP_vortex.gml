@@ -6,25 +6,25 @@ function Node_FLIP_Vortex(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	manual_ungroupable = false;
 	
-	newInput(0, nodeValue_Fdomain("Domain", self, noone ))
+	newInput(0, nodeValue_Fdomain("Domain"))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Vec2("Position", self, [ 0, 0 ] ))
+	newInput(1, nodeValue_Vec2("Position", [ 0, 0 ] ))
 		.setUnitRef(function(index) { return getDimension(); });
 	
-	newInput(2, nodeValue_Float("Radius", self, 4 ));
+	newInput(2, nodeValue_Float("Radius", 4 ));
 	
-	newInput(3, nodeValue_Float("Strength", self, 4 ))
+	newInput(3, nodeValue_Float("Strength", 4 ))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -8, 8, 0.01 ] });
 	
-	newInput(4, nodeValue_Float("Attraction", self, 0 ))
+	newInput(4, nodeValue_Float("Attraction", 0 ))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -8, 8, 0.01 ] });
 		
 	input_display_list = [ 0, 
 		["Vertex",	false], 1, 2, 3, 4, 
 	]
 	
-	newOutput(0, nodeValue_Output("Domain", self, VALUE_TYPE.fdomain, noone ));
+	newOutput(0, nodeValue_Output("Domain", VALUE_TYPE.fdomain, noone ));
 	
 	static getDimension = function() {
 		var domain = getInputData(0);

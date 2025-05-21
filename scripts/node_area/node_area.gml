@@ -3,17 +3,17 @@ function Node_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	color = COLORS.node_blend_number;
 	setDimension(96, 48);
 	
-	newInput(3, nodeValue_Enum_Scroll( "Type",     self, 0, [ "Center Span", "Two Point" ]));
-	newInput(0, nodeValue_Vec2(        "Position", self, [ 0, 0 ]   )).setVisible(true, true);
-	newInput(1, nodeValue_Vec2(        "Span",     self, [ 16, 16 ] )).setVisible(true, true);
-	newInput(2, nodeValue_Enum_Scroll( "Shape",    self, AREA_SHAPE.rectangle, [ 
+	newInput(3, nodeValue_Enum_Scroll( "Type", 0, [ "Center Span", "Two Point" ]));
+	newInput(0, nodeValue_Vec2(        "Position", [ 0, 0 ]   )).setVisible(true, true);
+	newInput(1, nodeValue_Vec2(        "Span", [ 16, 16 ] )).setVisible(true, true);
+	newInput(2, nodeValue_Enum_Scroll( "Shape", AREA_SHAPE.rectangle, [ 
 		new scrollItem("Rectangle", s_node_shape_rectangle, 0), 
 		new scrollItem("Elipse",	s_node_shape_circle,	0) 
 	]));
 	
 	// inputs 4
 	
-	newOutput(0, nodeValue_Output("Area", self, VALUE_TYPE.float, [ 0, 0, 0, 0, AREA_SHAPE.rectangle ]))
+	newOutput(0, nodeValue_Output("Area", VALUE_TYPE.float, [ 0, 0, 0, 0, AREA_SHAPE.rectangle ]))
 		.setDisplay(VALUE_DISPLAY.area);
 	
 	input_display_list = [ 3, 

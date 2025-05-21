@@ -7,39 +7,39 @@
 function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Grid";
 	
-	newInput(0, nodeValue_Dimension(self));
+	newInput(0, nodeValue_Dimension());
 	
-	newInput(1, nodeValue_Vec2("Position", self, [ 0, 0 ]))
+	newInput(1, nodeValue_Vec2("Position", [ 0, 0 ]))
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	newInput(2, nodeValue_Vec2("Grid Size", self, [ 8, 8 ]))
+	newInput(2, nodeValue_Vec2("Grid Size", [ 8, 8 ]))
 		.setMappable(13);
 	
-	newInput(3, nodeValue_Float("Gap", self, 0.2))
+	newInput(3, nodeValue_Float("Gap", 0.2))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 0.5, 0.001] })
 		.setMappable(14);
 	
-	newInput(4, nodeValue_Rotation("Angle", self, 0))
+	newInput(4, nodeValue_Rotation("Angle", 0))
 		.setMappable(15);
 		
-	newInput(5, nodeValue_Gradient("Tile Color", self, new gradientObject(ca_white)))
+	newInput(5, nodeValue_Gradient("Tile Color", new gradientObject(ca_white)))
 		.setMappable(20);
 		
-	newInput(6, nodeValue_Color("Gap Color",  self, ca_black));
+	newInput(6, nodeValue_Color("Gap Color", ca_black));
 	
-	newInput(7, nodeValue_Surface("Texture", self));
+	newInput(7, nodeValue_Surface("Texture"));
 	
-	newInput(8, nodeValue_Float("Shift", self, 0))
+	newInput(8, nodeValue_Float("Shift", 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-0.5, 0.5, 0.01] })
 		.setMappable(16);
 		
-	newInput(9, nodeValue_Enum_Button("Shift Axis", self,  0, ["X", "Y"]));
+	newInput(9, nodeValue_Enum_Button("Shift Axis",  0, ["X", "Y"]));
 		
-	newInput(10, nodeValue_Enum_Scroll("Render Type", self,  0, ["Colored tile", "Colored tile (Accurate)", "Height map", "Texture grid", "Texture sample"]));
+	newInput(10, nodeValue_Enum_Scroll("Render Type",  0, ["Colored tile", "Colored tile (Accurate)", "Height map", "Texture grid", "Texture sample"]));
 		
 	newInput(11, nodeValueSeed(self));
 	
-	newInput(12, nodeValue_Bool("Anti-aliasing", self, false));
+	newInput(12, nodeValue_Bool("Anti-aliasing", false));
 	
 		newInput(13, nodeValueMap("Scale Map", self));
 	
@@ -49,50 +49,50 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 		newInput(16, nodeValueMap("Shift Map", self));
 	
-	newInput(17, nodeValue_Bool("Truchet", self, false));
+	newInput(17, nodeValue_Bool("Truchet", false));
 	
-	newInput(18, nodeValue_Int("Truchet Seed", self, seed_random()));
+	newInput(18, nodeValue_Int("Truchet Seed", seed_random()));
 	
-	newInput(19, nodeValue_Float("Flip Horizontal", self, 0.5))
+	newInput(19, nodeValue_Float("Flip Horizontal", 0.5))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 		newInput(20, nodeValueMap("Gradient Map", self));
 	
 		newInput(21, nodeValueGradientRange("Gradient Map Range", self, inputs[5]));
 	
-	newInput(22, nodeValue_Float("Flip Vertical", self, 0.5))
+	newInput(22, nodeValue_Float("Flip Vertical", 0.5))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(23, nodeValue_Rotation_Range("Texture Angle", self, [ 0, 0 ]));
+	newInput(23, nodeValue_Rotation_Range("Texture Angle", [ 0, 0 ]));
 		
-	newInput(24, nodeValue_Slider_Range("Level", self, [ 0, 1 ]));
+	newInput(24, nodeValue_Slider_Range("Level", [ 0, 1 ]));
 	
-	newInput(25, nodeValue_Bool("Use Texture Dimension", self, false));
+	newInput(25, nodeValue_Bool("Use Texture Dimension", false));
 	
-	newInput(26, nodeValue_Float("Gap Width", self, 1));
+	newInput(26, nodeValue_Float("Gap Width", 1));
 	
-	newInput(27, nodeValue_Bool("Diagonal", self, false));
+	newInput(27, nodeValue_Bool("Diagonal", false));
 	
-	newInput(28, nodeValue_Bool("Uniform Gap", self, true));
+	newInput(28, nodeValue_Bool("Uniform Gap", true));
 	
-	newInput(29, nodeValue_Float("Secondary Scale", self, 0));
+	newInput(29, nodeValue_Float("Secondary Scale", 0));
 	
-	newInput(30, nodeValue_Float("Secondary Shift", self, 0))
+	newInput(30, nodeValue_Float("Secondary Shift", 0))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(31, nodeValue_Float("Random Shift", self, 0))
+	newInput(31, nodeValue_Float("Random Shift", 0))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(32, nodeValueSeed(self, VALUE_TYPE.float, "Shift Seed"));
 	
-	newInput(33, nodeValue_Float("Random Scale", self, 0))
+	newInput(33, nodeValue_Float("Random Scale", 0))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	newInput(34, nodeValueSeed(self, VALUE_TYPE.float, "Scale Seed"));
 	
-	newInput(35, nodeValue_Surface("Mask", self));
+	newInput(35, nodeValue_Surface("Mask"));
 	
-	newInput(36, nodeValue_Bool("Invert Size", self, false));
+	newInput(36, nodeValue_Bool("Invert Size", false));
 	
 	input_display_list = [
 		["Output",    false],  0, 35, 
@@ -103,7 +103,7 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		["Truchet",    true, 17], 18, 19, 22, 23, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	attribute_interpolation();

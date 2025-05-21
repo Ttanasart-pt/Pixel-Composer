@@ -1,24 +1,24 @@
 function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Grid Warp";
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Bool("Active", self, true));
+	newInput(1, nodeValue_Bool("Active", true));
 		active_index = 1;
 	
-	newInput(2, nodeValue_Int("Grid", self, 1, "Amount of grid subdivision. Higher number means more grid, detail."))
+	newInput(2, nodeValue_Int("Grid", 1, "Amount of grid subdivision. Higher number means more grid, detail."))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 1 ] })
 		.rejectArray();
 		
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	function createNewInput() {
 		var index = array_length(inputs);
 		var i = index - input_fix_len;
 		
-		newInput(index, nodeValue_Vec2($"Anchor {i}", self, [ 0, 0 ]))
+		newInput(index, nodeValue_Vec2($"Anchor {i}", [ 0, 0 ]))
 			.setUnitRef(function(index) /*=>*/ {return getDimension(index)}, VALUE_UNIT.reference);
 		
 		inputs[index].overlay_draw_text = false;

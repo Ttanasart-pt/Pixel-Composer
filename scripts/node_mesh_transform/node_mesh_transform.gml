@@ -5,15 +5,15 @@ function Node_Mesh_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(0, nodeValue("Mesh", self, CONNECT_TYPE.input, VALUE_TYPE.mesh, noone))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Vec2("Position", self, [ 0, 0 ]));
+	newInput(1, nodeValue_Vec2("Position", [ 0, 0 ]));
 	
-	newInput(2, nodeValue_Rotation("Rotation", self, 0));
+	newInput(2, nodeValue_Rotation("Rotation", 0));
 	
-	newInput(3, nodeValue_Vec2("Scale", self, [ 1, 1 ]));
+	newInput(3, nodeValue_Vec2("Scale", [ 1, 1 ]));
 	
-	newInput(4, nodeValue_Vec2("Anchor", self, [ 0, 0 ]));
+	newInput(4, nodeValue_Vec2("Anchor", [ 0, 0 ]));
 	
-	newOutput(0, nodeValue_Output("Mesh", self, VALUE_TYPE.mesh, noone));
+	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.mesh, noone));
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 

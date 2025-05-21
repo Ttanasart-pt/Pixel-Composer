@@ -1,5 +1,4 @@
-function nodeValue_Font(_name, _node, _value, _tooltip = "") { return new __NodeValue_Font(_name, _node, _value, _tooltip); }
-
+function nodeValue_Font(_name = "Font", _value = "", _tooltip = "") { return new __NodeValue_Font(_name, self, _value, _tooltip); }
 function __NodeValue_Font(_name, _node, _value = "", _tooltip = "") : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.font, _value, _tooltip) constructor {
 	
 	/////============== GET =============

@@ -1,9 +1,9 @@
 function Node_PB_Draw_Trapezoid(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group) constructor {
 	name = "Trapezoid";
 	
-	newInput(pbi+0, nodeValue_Enum_Button("Axis", self, 0, [ "+Y", "-Y", "+X", "-X" ]));
+	newInput(pbi+0, nodeValue_Enum_Button("Axis", 0, [ "+Y", "-Y", "+X", "-X" ]));
 	
-	newInput(pbi+1, nodeValue_Slider("Side", self, 0.5));
+	newInput(pbi+1, nodeValue_Slider("Side", 0.5));
 	
 	array_insert_array(input_display_list, input_display_shape_index, [
 		["Shape", false], pbi+0, pbi+1

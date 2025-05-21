@@ -5,12 +5,12 @@ function Node_Slider_Range_Data(_x, _y, _group = noone) : Node_Processor(_x, _y,
 	
 	////- Rotation
 	
-	newInput(0, nodeValue_Float( "Start", self, 0 ));
-	newInput(1, nodeValue_Float( "End",   self, 1 ));
+	newInput(0, nodeValue_Float( "Start", 0 ));
+	newInput(1, nodeValue_Float( "End", 1 ));
 	
 	// inputs 2
 	
-	newOutput(0, nodeValue_Output("Range", self, VALUE_TYPE.float, [ 0, 0 ])).setDisplay(VALUE_DISPLAY.slider_range);
+	newOutput(0, nodeValue_Output("Range", VALUE_TYPE.float, [ 0, 0 ])).setDisplay(VALUE_DISPLAY.slider_range);
 	
 	input_display_list = [ 
 		["Range", false], 0, 1, 

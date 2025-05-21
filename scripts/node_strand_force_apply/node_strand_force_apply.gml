@@ -6,16 +6,16 @@ function Node_Strand_Force_Apply(_x, _y, _group = noone) : _Node_Strand_Affector
 	
 	manual_ungroupable	 = false;
 	
-	newInput(input_fix_len + 0, nodeValue_Float("Strength", self, 1))
+	newInput(input_fix_len + 0, nodeValue_Float("Strength", 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 5, 0.01 ] });
 	
-	newInput(input_fix_len + 1, nodeValue_Float("Turbulence", self, 0));
+	newInput(input_fix_len + 1, nodeValue_Float("Turbulence", 0));
 		
 	newInput(input_fix_len + 2, nodeValueSeed(self));
 	
-	newInput(input_fix_len + 3, nodeValue_Float("Turbulence frequency", self, 0.5));
+	newInput(input_fix_len + 3, nodeValue_Float("Turbulence frequency", 0.5));
 	
-	newInput(input_fix_len + 4, nodeValue_Int("Turbulence detail", self, 2));
+	newInput(input_fix_len + 4, nodeValue_Int("Turbulence detail", 2));
 	
 	array_push(input_display_list, 
 		["Force",	false], input_fix_len + 0, input_fix_len + 2, input_fix_len + 1, input_fix_len + 3, input_fix_len + 4

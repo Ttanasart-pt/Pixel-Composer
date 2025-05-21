@@ -3,14 +3,14 @@ function Node_Path_Separate_Folder(_x, _y, _group = noone) : Node_Processor(_x, 
 	
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Path("Path", self, ""))
+	newInput(0, nodeValue_Path("Path"))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Bool("Keep extension", self, true));
+	newInput(1, nodeValue_Bool("Keep extension", true));
 	
-	newOutput(0, nodeValue_Output("Directory", self, VALUE_TYPE.path, ""));
+	newOutput(0, nodeValue_Output("Directory", VALUE_TYPE.path, ""));
 	
-	newOutput(1, nodeValue_Output("File Name", self, VALUE_TYPE.path, ""));
+	newOutput(1, nodeValue_Output("File Name", VALUE_TYPE.path, ""));
 	
 	static processData = function(_outData, _data, _index = 0) { 
 		var _path = _data[0];

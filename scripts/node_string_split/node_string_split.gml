@@ -2,17 +2,17 @@ function Node_String_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	name = "Split Text";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Text("Text", self, ""))
+	newInput(0, nodeValue_Text("Text"))
 		.setVisible(true, true);
 		
-	newInput(1, nodeValue_Text("Delimiter", self, " ", "Character that used to split text,\nleave blank to create character array."));
+	newInput(1, nodeValue_Text("Delimiter", " ")).setTooltip("Character that used to split text,\nleave blank to create character array.");
 	inputs[1].editWidget.format = TEXT_AREA_FORMAT.delimiter;
 	
-	newInput(2, nodeValue_Enum_Scroll("Mode", self, 0, [ "Delimiter", "Periodic" ]))
+	newInput(2, nodeValue_Enum_Scroll("Mode", 0, [ "Delimiter", "Periodic" ]))
 	
-	newInput(3, nodeValue_Int("Period", self, 1));
+	newInput(3, nodeValue_Int("Period", 1));
 	
-	newOutput(0, nodeValue_Output("Text", self, VALUE_TYPE.text, ""));
+	newOutput(0, nodeValue_Output("Text", VALUE_TYPE.text, ""));
 	
 	input_display_list = [ 0, 
 		2, 1, 3, 

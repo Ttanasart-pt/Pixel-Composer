@@ -3,17 +3,17 @@ function Node_PB_Box(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	color = COLORS.node_blend_feedback;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Pbbox("Base PBBOX", self, new __pbBox()));
-	newInput(1, nodeValue_Pbbox("PBBOX",      self, new __pbBox()));
+	newInput(0, nodeValue_Pbbox("Base PBBOX"));
+	newInput(1, nodeValue_Pbbox("PBBOX"));
 	
-	newInput(2, nodeValue_Float("PBBOX Left",   self, 0));
-	newInput(3, nodeValue_Float("PBBOX Top",    self, 0));
-	newInput(4, nodeValue_Float("PBBOX Right",  self, 0));
-	newInput(5, nodeValue_Float("PBBOX Bottom", self, 0));
-	newInput(6, nodeValue_Float("PBBOX Width",  self, 0));
-	newInput(7, nodeValue_Float("PBBOX Height", self, 0));
+	newInput(2, nodeValue_Float("PBBOX Left", 0));
+	newInput(3, nodeValue_Float("PBBOX Top", 0));
+	newInput(4, nodeValue_Float("PBBOX Right", 0));
+	newInput(5, nodeValue_Float("PBBOX Bottom", 0));
+	newInput(6, nodeValue_Float("PBBOX Width", 0));
+	newInput(7, nodeValue_Float("PBBOX Height", 0));
 	
-	newOutput(0, nodeValue_Output("PBBOX", self, VALUE_TYPE.pbBox, noone));
+	newOutput(0, nodeValue_Output("PBBOX", VALUE_TYPE.pbBox, noone));
 	
 	input_display_list = [
 		["Layout",         false], 0, 1, 

@@ -26,55 +26,55 @@
 function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Draw Bar / Graph";
 	
-	newInput(0, nodeValue_Dimension(self));
+	newInput(0, nodeValue_Dimension());
 	
 	////- Data
 	
-	newInput( 1, nodeValue_Float(        "Data",             self, [])).setArrayDepth(1).setVisible(true, true);
-	newInput(12, nodeValue_Float(        "Value Offset",     self, 0));
-	newInput(21, nodeValue_Bool(         "Flip Value",       self, false));
-	newInput(14, nodeValue_Enum_Scroll(  "Trim mode",        self, 0, [ "Range", "Window" ]));
-	newInput( 2, nodeValue_Slider_Range( "Range",            self, [ 0, 1 ]));
-	newInput( 3, nodeValue_Float(        "Sample frequency", self, 1));
-	newInput(15, nodeValue_Int(          "Window Size",      self, 8));
-	newInput(16, nodeValue_Float(        "Window Offset",    self, 0));
+	newInput( 1, nodeValue_Float(        "Data", [])).setArrayDepth(1).setVisible(true, true);
+	newInput(12, nodeValue_Float(        "Value Offset", 0));
+	newInput(21, nodeValue_Bool(         "Flip Value", false));
+	newInput(14, nodeValue_Enum_Scroll(  "Trim mode", 0, [ "Range", "Window" ]));
+	newInput( 2, nodeValue_Slider_Range( "Range", [ 0, 1 ]));
+	newInput( 3, nodeValue_Float(        "Sample frequency", 1));
+	newInput(15, nodeValue_Int(          "Window Size", 8));
+	newInput(16, nodeValue_Float(        "Window Offset", 0));
 	
 	////- Plot
 	
-	newInput(11, nodeValue_Enum_Scroll( "Type",      self, 0, __enum_array_gen([ "Bar chart", "Graph"], s_node_plot_linear_type)));
-	newInput( 4, nodeValue_Vec2(        "Origin",    self, [ 0, DEF_SURF_H / 2 ]));
-	newInput(10, nodeValue_Rotation(    "Direction", self, 0));
-	newInput(20, nodeValue_PathNode(    "Path",      self, noone)).setVisible(true, true);
-	newInput( 5, nodeValue_Float(       "Scale",     self, DEF_SURF_W / 2));
-	newInput(22, nodeValue_Bool(        "Loop",      self, false));
-	newInput(23, nodeValue_Slider(      "Smooth",    self, 0));
+	newInput(11, nodeValue_Enum_Scroll( "Type", 0, __enum_array_gen([ "Bar chart", "Graph"], s_node_plot_linear_type)));
+	newInput( 4, nodeValue_Vec2(        "Origin", [ 0, DEF_SURF_H / 2 ]));
+	newInput(10, nodeValue_Rotation(    "Direction", 0));
+	newInput(20, nodeValue_PathNode(    "Path")).setVisible(true, true);
+	newInput( 5, nodeValue_Float(       "Scale", DEF_SURF_W / 2));
+	newInput(22, nodeValue_Bool(        "Loop", false));
+	newInput(23, nodeValue_Slider(      "Smooth", 0));
 	
 	////- Render
 	
-	newInput( 6, nodeValue_Color(        "Base Color",                self, ca_white));
-	newInput(13, nodeValue_Gradient(     "Color Over Sample",         self, new gradientObject(ca_white))).setMappable(27);
+	newInput( 6, nodeValue_Color(        "Base Color", ca_white));
+	newInput(13, nodeValue_Gradient(     "Color Over Sample", new gradientObject(ca_white))).setMappable(27);
 	newInput(27, nodeValueMap(           "Sample Gradient map",       self));
 	newInput(28, nodeValueGradientRange( "Sample Gradient map range", self, inputs[13]));
 	
-	newInput(24, nodeValue_Gradient(     "Color Over Value",          self, new gradientObject(ca_white))).setMappable(29);
+	newInput(24, nodeValue_Gradient(     "Color Over Value", new gradientObject(ca_white))).setMappable(29);
 	newInput(29, nodeValueMap(           "Value Gradient map",        self));
 	newInput(30, nodeValueGradientRange( "Value Gradient map range",  self, inputs[24]));
 	
-	newInput(25, nodeValue_Range(        "Value range",               self, [ 0, 1 ] ));
-	newInput(26, nodeValue_Bool(         "Absolute",                  self, false));
-	newInput( 7, nodeValue_Float(        "Graph Thickness",           self, 1));
-	newInput(17, nodeValue_Float(        "Spacing",                   self, 1));
-	newInput(18, nodeValue_Float(        "Bar Width",                 self, 4));
-	newInput(19, nodeValue_Bool(         "Rounded Bar",               self, false));
+	newInput(25, nodeValue_Range(        "Value range", [ 0, 1 ] ));
+	newInput(26, nodeValue_Bool(         "Absolute", false));
+	newInput( 7, nodeValue_Float(        "Graph Thickness", 1));
+	newInput(17, nodeValue_Float(        "Spacing", 1));
+	newInput(18, nodeValue_Float(        "Bar Width", 4));
+	newInput(19, nodeValue_Bool(         "Rounded Bar", false));
 	
 	////- Background
 	
-	newInput(8, nodeValue_Bool(  "Background",       self, false));
-	newInput(9, nodeValue_Color( "Background color", self, ca_black));
+	newInput(8, nodeValue_Bool(  "Background", false));
+	newInput(9, nodeValue_Color( "Background color", ca_black));
 	
 	//// inputs 31
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0, 
 		["Data", 	    true],    1, 12, 21, 14, 2, 3, 15, 16, 

@@ -8,13 +8,13 @@
 function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Draw Shape Polygon";
 	
-	newInput(0, nodeValue_Dimension(self));
+	newInput(0, nodeValue_Dimension());
 	
-	newInput(1, nodeValue_Bool("Background", self, false));
+	newInput(1, nodeValue_Bool("Background", false));
 	
-	newInput(2, nodeValue_Color("Background color", self, ca_black));
+	newInput(2, nodeValue_Color("Background color", ca_black));
 	
-	newInput(3, nodeValue_Color("Shape color", self, ca_white));
+	newInput(3, nodeValue_Color("Shape color", ca_white));
 	
 	shapesArray = [ 
 		    "Rectangle", "Diamond", "Trapezoid", "Parallelogram", 
@@ -25,78 +25,78 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	];
 	__ind = 0; array_map_ext(shapesArray, function(v, i) /*=>*/ {return v == -1? -1 : new scrollItem(v, s_node_shape_poly_type, __ind++)});
 	
-	newInput(4, nodeValue_Enum_Scroll("Shape", self,  0, { data: shapesArray, horizontal: true, text_pad: ui(16) }))
+	newInput(4, nodeValue_Enum_Scroll("Shape",  0, { data: shapesArray, horizontal: true, text_pad: ui(16) }))
 		.setHistory([ shapesArray, { cond: function() /*=>*/ {return LOADING_VERSION < 1_18_09_0}, list: global.node_shape_polygon_keys_1809 } ]);
 	
-	newInput(5, nodeValue_Vec2("Position", self, [ 0.5, 0.5 ]))
+	newInput(5, nodeValue_Vec2("Position", [ 0.5, 0.5 ]))
 		.setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	
-	newInput(6, nodeValue_Rotation("Rotation", self, 0));
+	newInput(6, nodeValue_Rotation("Rotation", 0));
 	
-	newInput(7, nodeValue_Vec2("Scale", self, [ 0.5, 0.5 ]))
+	newInput(7, nodeValue_Vec2("Scale", [ 0.5, 0.5 ]))
 		.setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	
-	newInput(8, nodeValue_Int("Sides", self, 16))
+	newInput(8, nodeValue_Int("Sides", 16))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [2, 64, 0.1] });
 	
-	newInput(9, nodeValue_Float("Inner radius", self, 0.5))
+	newInput(9, nodeValue_Float("Inner radius", 0.5))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(10, nodeValue_Float("Radius", self, 0.5))
+	newInput(10, nodeValue_Float("Radius", 0.5))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(11, nodeValue_Int("Teeth", self, 6))
+	newInput(11, nodeValue_Int("Teeth", 6))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [3, 16, 0.1] });
 	
-	newInput(12, nodeValue_Float("Teeth height", self, 0.2))
+	newInput(12, nodeValue_Float("Teeth height", 0.2))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(13, nodeValue_Float("Teeth taper", self, 0))
+	newInput(13, nodeValue_Float("Teeth taper", 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-0.5, 0.5, 0.01] });
 	
-	newInput(14, nodeValue_Rotation_Range("Angle range", self, [ 0, 360 ]));
+	newInput(14, nodeValue_Rotation_Range("Angle range", [ 0, 360 ]));
 	
-	newInput(15, nodeValue_Bool("Round cap", self, false));
+	newInput(15, nodeValue_Bool("Round cap", false));
 	
 	newInput(16, nodeValue("Mesh", self, CONNECT_TYPE.input, VALUE_TYPE.mesh, noone))
 		.setVisible(true, true);
 		
-	newInput(17, nodeValue_Float("Explode", self, 0))
+	newInput(17, nodeValue_Float("Explode", 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
 	
-	newInput(18, nodeValue_Rotation("Piece Rotation", self, 0));
+	newInput(18, nodeValue_Rotation("Piece Rotation", 0));
 	
 	////////////
 	
-	newInput(19, nodeValue_Color("Vertex Color 1", self, ca_white));
+	newInput(19, nodeValue_Color("Vertex Color 1", ca_white));
 	
-	newInput(20, nodeValue_Color("Vertex Color 2", self, ca_white));
+	newInput(20, nodeValue_Color("Vertex Color 2", ca_white));
 	
-	newInput(21, nodeValue_Color("Vertex Color 3", self, ca_white));
+	newInput(21, nodeValue_Color("Vertex Color 3", ca_white));
 	
 	////////////
 	
-	newInput(22, nodeValue_Float("Piece Scale", self, 1));
+	newInput(22, nodeValue_Float("Piece Scale", 1));
 	
-	newInput(23, nodeValue_Palette("Shape Palette", self, [ ca_white ]));
+	newInput(23, nodeValue_Palette("Shape Palette", [ ca_white ]));
 	
-	newInput(24, nodeValue_Enum_Scroll("SSAA", self, 0, [ "None", "2x", "4x", "8x" ]));
+	newInput(24, nodeValue_Enum_Scroll("SSAA", 0, [ "None", "2x", "4x", "8x" ]));
 	
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newInput(25, nodeValue_Float("Trapezoid sides", self, 0.5))
+	newInput(25, nodeValue_Float("Trapezoid sides", 0.5))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(26, nodeValue_Float("Skew", self, 0.5))
+	newInput(26, nodeValue_Float("Skew", 0.5))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
 	
-	newInput(27, nodeValue_Float("Factor", self, 3));
+	newInput(27, nodeValue_Float("Factor", 3));
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 		
-	newOutput(1, nodeValue_Output("Mesh", self, VALUE_TYPE.mesh, noone));
+	newOutput(1, nodeValue_Output("Mesh", VALUE_TYPE.mesh, noone));
 		
-	newOutput(2, nodeValue_Output("Path", self, VALUE_TYPE.pathnode, noone));
+	newOutput(2, nodeValue_Output("Path", VALUE_TYPE.pathnode, noone));
 	
 	input_display_list = [ 16, 
 		["Output", 		false], 0, 

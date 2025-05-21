@@ -9,44 +9,44 @@ function Node_Perlin_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	name   = "Extra Perlins";
 	shader = sh_perlin_extra;
 	
-	newInput(1, nodeValue_Vec2("Position", self, [ 0, 0 ]))
+	newInput(1, nodeValue_Vec2("Position", [ 0, 0 ]))
 		.setUnitRef(function(index) { return getDimension(index); });
 		addShaderProp(SHADER_UNIFORM.float, "position");
 		
-	newInput(2, nodeValue_Vec2("Scale", self, [ 4, 4 ]))
+	newInput(2, nodeValue_Vec2("Scale", [ 4, 4 ]))
 		.setMappable(13);
 		addShaderProp(SHADER_UNIFORM.float, "scale");
 	
-	newInput(3, nodeValue_Int("Iteration", self, 2));
+	newInput(3, nodeValue_Int("Iteration", 2));
 		addShaderProp(SHADER_UNIFORM.integer, "iteration");
 	
-	newInput(4, nodeValue_Bool("Tile", self, true, "Tiling only works with integer scale, and some effect type doesn't support tiling."));
+	newInput(4, nodeValue_Bool("Tile", true, "Tiling only works with integer scale, and some effect type doesn't support tiling."));
 		addShaderProp(SHADER_UNIFORM.integer, "tile");
 			
 	newInput(5, nodeValueSeed(self));
 		addShaderProp(SHADER_UNIFORM.float, "seed");
 		
-	newInput(6, nodeValue_Enum_Button("Color Mode", self,  0, [ "Greyscale", "RGB", "HSV" ]));
+	newInput(6, nodeValue_Enum_Button("Color Mode",  0, [ "Greyscale", "RGB", "HSV" ]));
 		addShaderProp(SHADER_UNIFORM.integer, "colored");
 	
-	newInput(7, nodeValue_Slider_Range("Color R Range", self, [ 0, 1 ]));
+	newInput(7, nodeValue_Slider_Range("Color R Range", [ 0, 1 ]));
 		addShaderProp(SHADER_UNIFORM.float, "colorRanR");
 	
-	newInput(8, nodeValue_Slider_Range("Color G Range", self, [ 0, 1 ]));
+	newInput(8, nodeValue_Slider_Range("Color G Range", [ 0, 1 ]));
 		addShaderProp(SHADER_UNIFORM.float, "colorRanG");
 	
-	newInput(9, nodeValue_Slider_Range("Color B Range", self, [ 0, 1 ]));
+	newInput(9, nodeValue_Slider_Range("Color B Range", [ 0, 1 ]));
 		addShaderProp(SHADER_UNIFORM.float, "colorRanB");
 	
-	newInput(10, nodeValue_Enum_Scroll("Noise Type", self, 0, [ "Absolute worley", "Fluid", "Noisy", "Camo", "Blocky", "Max", "Vine" ]));
+	newInput(10, nodeValue_Enum_Scroll("Noise Type", 0, [ "Absolute worley", "Fluid", "Noisy", "Camo", "Blocky", "Max", "Vine" ]));
 		addShaderProp(SHADER_UNIFORM.integer, "type");
 		
-	newInput(11, nodeValue_Float("Parameter A", self, 0))
+	newInput(11, nodeValue_Float("Parameter A", 0))
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(14);
 		addShaderProp(SHADER_UNIFORM.float, "paramA");
 		
-	newInput(12, nodeValue_Float("Parameter B", self, 1))
+	newInput(12, nodeValue_Float("Parameter B", 1))
 		.setMappable(15);
 		addShaderProp(SHADER_UNIFORM.float, "paramB");
 		
@@ -60,10 +60,10 @@ function Node_Perlin_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	
-	newInput(16, nodeValue_Rotation("Rotation", self, 0));
+	newInput(16, nodeValue_Rotation("Rotation", 0));
 		addShaderProp(SHADER_UNIFORM.float, "rotation");
 			
-	newInput(17, nodeValue_Surface("Mask", self));
+	newInput(17, nodeValue_Surface("Mask"));
 	
 	input_display_list = [
 		["Output", 	 true],	0, 17, 5, 

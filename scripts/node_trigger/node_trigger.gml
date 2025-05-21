@@ -2,10 +2,10 @@ function Node_Trigger(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	name = "Trigger";
 	setDimension(96, 56);
 	
-	newInput(0, nodeValue_Trigger("Trigger", self ))
+	newInput(0, nodeValue_Trigger("Trigger" ))
 		.setDisplay(VALUE_DISPLAY.button, { name: "Trigger" });
 	
-	newOutput(0, nodeValue_Output("Trigger", self, VALUE_TYPE.trigger, false ));
+	newOutput(0, nodeValue_Output("Trigger", VALUE_TYPE.trigger, false ));
 	
 	setTrigger(2, "Trigger", [ THEME.sequence_control, 1, COLORS._main_value_positive ]);
 	

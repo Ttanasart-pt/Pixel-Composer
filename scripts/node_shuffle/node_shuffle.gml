@@ -8,20 +8,20 @@
 function Node_Shuffle(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Shuffle";
 	
-	newInput(0, nodeValue_Surface("Surface", self));
+	newInput(0, nodeValue_Surface("Surface"));
 	
-	newInput(1, nodeValue_Enum_Scroll("Type", self, 0, [ "Pixel", "Block" ]));
+	newInput(1, nodeValue_Enum_Scroll("Type", 0, [ "Pixel", "Block" ]));
 	
 	newInput(2, nodeValueSeed(self));
 	
-	newInput(3, nodeValue_Enum_Scroll("Axis", self, 2, [ "Horizontal", "Vertical", "Both" ]));
+	newInput(3, nodeValue_Enum_Scroll("Axis", 2, [ "Horizontal", "Vertical", "Both" ]));
 	
-	newInput(4, nodeValue_IVec2("Block count", self, [ 4, 4 ]));
+	newInput(4, nodeValue_IVec2("Block count", [ 4, 4 ]));
 	
-	newInput(5, nodeValue_Float("Randomness", self, 1))
+	newInput(5, nodeValue_Float("Randomness", 1))
 	    .setDisplay(VALUE_DISPLAY.slider);
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0, 2, 
 		["Shuffle", false], 1, 5, 3, 4, 

@@ -8,16 +8,16 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	name = "Smooth Path";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Bool("Loop", self, false))
+	newInput(0, nodeValue_Bool("Loop", false))
 		.rejectArray();
 	
-	newInput(1, nodeValue_Bool("Round anchor", self, false))
+	newInput(1, nodeValue_Bool("Round anchor", false))
 		.rejectArray();
 	
-	newInput(2, nodeValue_Float("Smoothness", self, 3))
+	newInput(2, nodeValue_Float("Smoothness", 3))
 		.setDisplay(VALUE_DISPLAY.slider, { range : [ 1, 5, 0.01 ] } );
 	
-	newOutput(0, nodeValue_Output("Path data", self, VALUE_TYPE.pathnode, self));
+	newOutput(0, nodeValue_Output("Path data", VALUE_TYPE.pathnode, self));
 	
 	input_display_list = [
 		["Path",	false], 0, 1, 2, 
@@ -66,7 +66,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static createNewInput = function(index = array_length(inputs), _x = 0, _y = 0) {
 		var inAmo = array_length(inputs);
 		
-		newInput(index, nodeValue_Vec2("Anchor",  self, [ _x, _y ]));
+		newInput(index, nodeValue_Vec2("Anchor", [ _x, _y ]));
 		
 		recordAction(ACTION_TYPE.array_insert, inputs, [ inputs[index], index, "add path anchor point" ]);
 		resetDisplayList();

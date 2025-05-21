@@ -16,22 +16,22 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	////- Type
 	
-	newInput(1, nodeValue_Enum_Scroll( "Force type",  self, 0, [ "Constant", "Impulse", "Torque", "Torque Impulse", "Explode" ]));
-	newInput(6, nodeValue_Enum_Button( "Scope",       self, 0, [ "Global", "Local" ]));
-	newInput(4, nodeValue_Bool(        "Apply",       self,  true));
-	newInput(9, nodeValue_Trigger(     "Trigger",     self)).setDisplay(VALUE_DISPLAY.button, { name: "Trigger" });
+	newInput(1, nodeValue_Enum_Scroll( "Force type", 0, [ "Constant", "Impulse", "Torque", "Torque Impulse", "Explode" ]));
+	newInput(6, nodeValue_Enum_Button( "Scope", 0, [ "Global", "Local" ]));
+	newInput(4, nodeValue_Bool(        "Apply",  true));
+	newInput(9, nodeValue_Trigger(     "Trigger")).setDisplay(VALUE_DISPLAY.button, { name: "Trigger" });
 	
 	////- Force
 	
-	newInput(2, nodeValue_Vec2(        "Position",    self, [ 0, 0 ]));
-	newInput(3, nodeValue_Float(       "Torque",      self, 0));
-	newInput(5, nodeValue_Vec2(        "Force",       self, [ 0.1, 0 ]));
-	newInput(8, nodeValue_Float(       "Range",       self, 8));
-	newInput(7, nodeValue_Slider(      "Strength",    self, 1., [0, 16, 0.01]));
+	newInput(2, nodeValue_Vec2(        "Position", [ 0, 0 ]));
+	newInput(3, nodeValue_Float(       "Torque", 0));
+	newInput(5, nodeValue_Vec2(        "Force", [ 0.1, 0 ]));
+	newInput(8, nodeValue_Float(       "Range", 8));
+	newInput(7, nodeValue_Slider(      "Strength", 1., [0, 16, 0.01]));
 	
 	// inputs 10
 	
-	newOutput(0, nodeValue_Output("Object", self, VALUE_TYPE.rigid, noone));
+	newOutput(0, nodeValue_Output("Object", VALUE_TYPE.rigid, noone));
 	
 	input_display_list = [ 0,
 		["Type",  false], 1, 6, 4, 9, 

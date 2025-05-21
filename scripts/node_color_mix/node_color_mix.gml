@@ -2,16 +2,16 @@ function Node_Color_Mix(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	name = "Mix Color";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Color("Color from", self, ca_white));
+	newInput(0, nodeValue_Color("Color from", ca_white));
 	
-	newInput(1, nodeValue_Color("Color to", self, ca_white));
+	newInput(1, nodeValue_Color("Color to", ca_white));
 	
-	newInput(2, nodeValue_Float("Mix", self, 0.5))
+	newInput(2, nodeValue_Float("Mix", 0.5))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(3, nodeValue_Enum_Button("Color space", self,  0, [ "RGB", "HSV", "OKLAB" ]));
+	newInput(3, nodeValue_Enum_Button("Color space",  0, [ "RGB", "HSV", "OKLAB" ]));
 	
-	newOutput(0, nodeValue_Output("Color", self, VALUE_TYPE.color, c_white));
+	newOutput(0, nodeValue_Output("Color", VALUE_TYPE.color, c_white));
 	
 	input_display_list = [ 3, 0, 1, 2 ];
 	

@@ -1,7 +1,7 @@
 function Node_PCX_fn_Math(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) constructor {
 	name = "Math";
 	
-	newInput(0, nodeValue_Enum_Scroll("Operator", self,  0, [ "Add",   "Subtract", "Multiply", "Divide", "Power",  "Modulo", "Absolute", -1, 
+	newInput(0, nodeValue_Enum_Scroll("Operator",  0, [ "Add",   "Subtract", "Multiply", "Divide", "Power",  "Modulo", "Absolute", -1, 
 												              "Round", "Floor",    "Ceil",      -1, 
 												              "Sin",   "Cos",      "Tan",      "Arcsin", "Arccos", "Arctan", -1, 
 												              "Min",   "Max",      "Clamp",    -1, 
@@ -13,7 +13,7 @@ function Node_PCX_fn_Math(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) con
 	
 	newInput(3, nodeValue("z", self, CONNECT_TYPE.input, VALUE_TYPE.PCXnode, noone));
 	
-	newOutput(0, nodeValue_Output("PCX", self, VALUE_TYPE.PCXnode, noone));
+	newOutput(0, nodeValue_Output("PCX", VALUE_TYPE.PCXnode, noone));
 	
 	static update = function() {
 		static syms = [ "+", "-", "*", "/", "$", "%", "abs", -1, "round", "floor", "ceil", 

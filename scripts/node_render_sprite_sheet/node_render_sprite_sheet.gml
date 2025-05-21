@@ -16,33 +16,33 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	
 	////- =Surfaces
 	
-	newInput(0, nodeValue_Surface(     "Sprites",    self));
-	newInput(1, nodeValue_Enum_Scroll( "Sprite set", self, 0, [ "Animation", "Sprite array" ])).rejectArray();
-	newInput(2, nodeValue_Int(         "Frame step", self, 1, "Number of frames until next sprite. Can be seen as (Step - 1) frame skip.")).rejectArray();
+	newInput(0, nodeValue_Surface(     "Sprites"));
+	newInput(1, nodeValue_Enum_Scroll( "Sprite set", 0, [ "Animation", "Sprite array" ])).rejectArray();
+	newInput(2, nodeValue_Int(         "Frame step", 1, "Number of frames until next sprite. Can be seen as (Step - 1) frame skip.")).rejectArray();
 	
 	////- =Packing
 	
-	newInput(3, nodeValue_Enum_Scroll( "Packing type", self, 0, __enum_array_gen(["Horizontal", "Vertical", "Grid"], s_node_alignment))).rejectArray();
-	newInput(4, nodeValue_Int(         "Grid column",  self, 4)).rejectArray();
-	newInput(5, nodeValue_Enum_Button( "Alignment",    self, 0, [ "First", "Middle", "Last" ])).rejectArray();
-	newInput(6, nodeValue_Int(         "Spacing",      self, 0));
-	newInput(9, nodeValue_Vec2(        "Spacing",      self, [ 0, 0 ]));
-	newInput(7, nodeValue_Padding(     "Padding",      self, [ 0, 0, 0, 0 ]))
+	newInput(3, nodeValue_Enum_Scroll( "Packing type", 0, __enum_array_gen(["Horizontal", "Vertical", "Grid"], s_node_alignment))).rejectArray();
+	newInput(4, nodeValue_Int(         "Grid column", 4)).rejectArray();
+	newInput(5, nodeValue_Enum_Button( "Alignment", 0, [ "First", "Middle", "Last" ])).rejectArray();
+	newInput(6, nodeValue_Int(         "Spacing", 0));
+	newInput(9, nodeValue_Vec2(        "Spacing", [ 0, 0 ]));
+	newInput(7, nodeValue_Padding(     "Padding", [ 0, 0, 0, 0 ]))
 	
 	////- =Rendering
 	
-	newInput(10, nodeValue_Bool( "Overlappable", self, false));
+	newInput(10, nodeValue_Bool( "Overlappable", false));
 	
 	////- =Range
 	
-	newInput(11, nodeValue_Bool(         "Custom Range", self, false));
-	newInput( 8, nodeValue_Slider_Range( "Range",        self, [ 0, 0 ])).setTooltip("Starting/ending frames, set end to 0 to default to last frame.")
+	newInput(11, nodeValue_Bool(         "Custom Range", false));
+	newInput( 8, nodeValue_Slider_Range( "Range", [ 0, 0 ])).setTooltip("Starting/ending frames, set end to 0 to default to last frame.")
 		
 	// inputs 12
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 		
-	newOutput(1, nodeValue_Output("Atlas Data", self, VALUE_TYPE.atlas, []));
+	newOutput(1, nodeValue_Output("Atlas Data", VALUE_TYPE.atlas, []));
 	
 	input_display_list = [
 		["Surfaces",  false], 0, 1, 2,

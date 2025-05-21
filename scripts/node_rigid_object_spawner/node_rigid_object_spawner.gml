@@ -13,23 +13,23 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 	
 	////- Spawn
 	
-	newInput(6, nodeValue_Bool( "Spawn",        self, true));
-	newInput(1, nodeValue_Area( "Spawn area",   self, DEF_AREA));
-	newInput(2, nodeValue_eb(   "Spawn type",   self, 0, [ "Stream", "Burst" ]));
-	newInput(3, nodeValue_Int(  "Spawn delay",  self, 4));
-	newInput(5, nodeValue_Int(  "Spawn frame",  self, 0));
-	newInput(4, nodeValue_Int(  "Spawn amount", self, 1));
+	newInput(6, nodeValue_Bool( "Spawn", true));
+	newInput(1, nodeValue_Area( "Spawn area", DEF_AREA));
+	newInput(2, nodeValue_Enum_Button(   "Spawn type", 0, [ "Stream", "Burst" ]));
+	newInput(3, nodeValue_Int(  "Spawn delay", 4));
+	newInput(5, nodeValue_Int(  "Spawn frame", 0));
+	newInput(4, nodeValue_Int(  "Spawn amount", 1));
 	
 	////- Color
 	
-	newInput(8, nodeValue_Gradient( "Random Color", self, new gradientObject(ca_white)));
-	newInput(9, nodeValue_Range(    "Alpha",        self, [ 1, 1 ], { linked : true }));
+	newInput(8, nodeValue_Gradient( "Random Color", new gradientObject(ca_white)));
+	newInput(9, nodeValue_Range(    "Alpha", [ 1, 1 ], { linked : true }));
 	
 	// inputs 10
 	
 	for( var i = 1, n = array_length(inputs); i < n; i++ ) inputs[i].rejectArray();
 	
-	newOutput(0, nodeValue_Output("Object", self, VALUE_TYPE.rigid, objects));
+	newOutput(0, nodeValue_Output("Object", VALUE_TYPE.rigid, objects));
 	
 	input_display_list = [ 0, 7, 
 		["Spawn", false], 6, 1, 2, 3, 5, 4,

@@ -1,28 +1,28 @@
 function Node_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Bevel";
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Int("Height", self, 4))
+	newInput(1, nodeValue_Int("Height", 4))
 		.setMappable(11);
 	
-	newInput(2, nodeValue_Vec2("Shift", self, [ 0, 0 ]));
+	newInput(2, nodeValue_Vec2("Shift", [ 0, 0 ]));
 	
-	newInput(3, nodeValue_Vec2("Scale", self, [ 1, 1 ] ));
+	newInput(3, nodeValue_Vec2("Scale", [ 1, 1 ] ));
 	
-	newInput(4, nodeValue_Enum_Scroll("Slope", self, 0, [ new scrollItem("Linear",   s_node_curve_type, 2), 
+	newInput(4, nodeValue_Enum_Scroll("Slope", 0, [ new scrollItem("Linear",   s_node_curve_type, 2), 
 												          new scrollItem("Smooth",   s_node_curve_type, 4), 
 												          new scrollItem("Circular", s_node_curve_type, 5), ]));
 	
-	newInput(5, nodeValue_Surface("Mask", self));
+	newInput(5, nodeValue_Surface("Mask"));
 	
-	newInput(6, nodeValue_Float("Mix", self, 1))
+	newInput(6, nodeValue_Float("Mix", 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(7, nodeValue_Bool("Active", self, true));
+	newInput(7, nodeValue_Bool("Active", true));
 		active_index = 7;
 		
-	newInput(8, nodeValue_Enum_Scroll("Oversample mode", self, 0, [ "Empty", "Clamp", "Repeat" ]))
+	newInput(8, nodeValue_Enum_Scroll("Oversample mode", 0, [ "Empty", "Clamp", "Repeat" ]))
 		.setTooltip("How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.");
 		
 	__init_mask_modifier(5); // inputs 9, 10
@@ -33,7 +33,7 @@ function Node_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 7, 
 		["Surfaces",	 true], 0, 5, 6, 9, 10, 

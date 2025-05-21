@@ -7,33 +7,33 @@
 function Node_Pytagorean_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Pytagorean Tile";
 	
-	newInput(0, nodeValue_Dimension(self));
+	newInput(0, nodeValue_Dimension());
 	
-	newInput(1, nodeValue_Vec2("Position", self, [ 0, 0 ]))
+	newInput(1, nodeValue_Vec2("Position", [ 0, 0 ]))
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	newInput(2, nodeValue_Vec2("Scale", self, [ 1, 1 ]))
+	newInput(2, nodeValue_Vec2("Scale", [ 1, 1 ]))
 		.setMappable(11);
 	
-	newInput(3, nodeValue_Rotation("Rotation", self, 0))
+	newInput(3, nodeValue_Rotation("Rotation", 0))
 		.setMappable(12);
 	
-	newInput(4, nodeValue_Float("Gap", self, 0.25))
+	newInput(4, nodeValue_Float("Gap", 0.25))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 0.5, 0.001] })
 		.setMappable(13);
 	
-	newInput(5, nodeValue_Gradient("Tile Color", self, new gradientObject(ca_white)))
+	newInput(5, nodeValue_Gradient("Tile Color", new gradientObject(ca_white)))
 		.setMappable(18);
 	
-	newInput(6, nodeValue_Color("Gap Color", self, ca_black));
+	newInput(6, nodeValue_Color("Gap Color", ca_black));
 	
-	newInput(7, nodeValue_Enum_Scroll("Render Type", self,  0, ["Colored tile", "Height map", "Texture grid"]));
+	newInput(7, nodeValue_Enum_Scroll("Render Type",  0, ["Colored tile", "Height map", "Texture grid"]));
 		
 	newInput(8, nodeValueSeed(self));
 		
-	newInput(9, nodeValue_Surface("Texture", self));
+	newInput(9, nodeValue_Surface("Texture"));
 	
-	newInput(10, nodeValue_Bool("Anti Aliasing", self, false));
+	newInput(10, nodeValue_Bool("Anti Aliasing", false));
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -45,14 +45,14 @@ function Node_Pytagorean_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newInput(14, nodeValue_Bool("Truchet", self, false));
+	newInput(14, nodeValue_Bool("Truchet", false));
 	
-	newInput(15, nodeValue_Int("Truchet Seed", self, seed_random()));
+	newInput(15, nodeValue_Int("Truchet Seed", seed_random()));
 	
-	newInput(16, nodeValue_Float("Truchet Threshold", self, 0.5))
+	newInput(16, nodeValue_Float("Truchet Threshold", 0.5))
 		.setDisplay(VALUE_DISPLAY.slider)
 		
-	newInput(17, nodeValue_Rotation("Phase", self, 90));
+	newInput(17, nodeValue_Rotation("Phase", 90));
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -62,11 +62,11 @@ function Node_Pytagorean_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newInput(20, nodeValue_Rotation_Range("Texture Angle", self, [ 0, 0 ]));
+	newInput(20, nodeValue_Rotation_Range("Texture Angle", [ 0, 0 ]));
 			
-	newInput(21, nodeValue_Slider_Range("Level", self, [ 0, 1 ]));
+	newInput(21, nodeValue_Slider_Range("Level", [ 0, 1 ]));
 	
-	newInput(22, nodeValue_Surface("Mask", self));
+	newInput(22, nodeValue_Surface("Mask"));
 	
 	input_display_list = [
 		["Output",  false], 0, 22, 
@@ -75,7 +75,7 @@ function Node_Pytagorean_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		["Truchet",  true, 14], 15, 16, 20, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	attribute_interpolation();

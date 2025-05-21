@@ -1,40 +1,40 @@
 function Node_MK_GridBalls(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "MK GridBalls";
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Dimension(self));
+	newInput(1, nodeValue_Dimension());
 	
-	newInput(2, nodeValue_Vec2("Amount", self, [ 4, 4 ]));
+	newInput(2, nodeValue_Vec2("Amount", [ 4, 4 ]));
 	
-	newInput(3, nodeValue_Rotation("Light", self, 0));
+	newInput(3, nodeValue_Rotation("Light", 0));
 	
-	newInput(4, nodeValue_Float("Scatter", self, 0));
+	newInput(4, nodeValue_Float("Scatter", 0));
 	
 	newInput(5, nodeValueSeed(self));
 		
-	newInput(6, nodeValue_Float("Shading", self, 0.5))
+	newInput(6, nodeValue_Float("Shading", 0.5))
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	newInput(7, nodeValue_Rotation("Scatter direction", self, 0));
+	newInput(7, nodeValue_Rotation("Scatter direction", 0));
 		
-	newInput(8, nodeValue_Vec2("Shift", self, [ 0, 0 ]));
+	newInput(8, nodeValue_Vec2("Shift", [ 0, 0 ]));
 	
-	newInput(9, nodeValue_Float("Stretch", self, 0));
+	newInput(9, nodeValue_Float("Stretch", 0));
 	
-	newInput(10, nodeValue_Rotation("Stretch direction", self, 0));
+	newInput(10, nodeValue_Rotation("Stretch direction", 0));
 		
-	newInput(11, nodeValue_Float("Stretch shift", self, 0))
+	newInput(11, nodeValue_Float("Stretch shift", 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
 	
-	newInput(12, nodeValue_Float("Roundness", self, 1))
+	newInput(12, nodeValue_Float("Roundness", 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(13, nodeValue_Float("Twist", self, 0));
+	newInput(13, nodeValue_Float("Twist", 0));
 	
-	newInput(14, nodeValue_Rotation("Twist axis", self, 0));
+	newInput(14, nodeValue_Rotation("Twist axis", 0));
 		
-	newInput(15, nodeValue_Float("Twist shift", self, 0))
+	newInput(15, nodeValue_Float("Twist shift", 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
 		
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 5, 1, 
@@ -44,7 +44,7 @@ function Node_MK_GridBalls(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		["Render",		false], 12, 3, 6, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	

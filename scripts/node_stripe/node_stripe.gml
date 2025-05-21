@@ -10,34 +10,34 @@
 function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Stripe";
 	
-	newInput(0, nodeValue_Dimension(self));
+	newInput(0, nodeValue_Dimension());
 	
-	newInput(1, nodeValue_Float("Amount", self, 1))
+	newInput(1, nodeValue_Float("Amount", 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] })
 		.setMappable(11);
 	
-	newInput(2, nodeValue_Rotation("Angle", self, 0))
+	newInput(2, nodeValue_Rotation("Angle", 0))
 		.setMappable(12);
 	
-	newInput(3, nodeValue_Enum_Button("Type", self,  0, [ "Solid", "Smooth", "AA" ]));
+	newInput(3, nodeValue_Enum_Button("Type",  0, [ "Solid", "Smooth", "AA" ]));
 	
-	newInput(4, nodeValue_Vec2("Position", self, [ 0, 0 ] ))
+	newInput(4, nodeValue_Vec2("Position", [ 0, 0 ] ))
 		.setUnitRef(function(index) { return getDimension(index); });
 		
-	newInput(5, nodeValue_Float("Random", self, 0))
+	newInput(5, nodeValue_Float("Random", 0))
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(13);
 		
-	newInput(6, nodeValue_Enum_Button("Coloring", self,  0, [ "Alternate", "Palette", "Random" ]));
+	newInput(6, nodeValue_Enum_Button("Coloring",  0, [ "Alternate", "Palette", "Random" ]));
 	
-	newInput(7, nodeValue_Gradient("Colors", self, new gradientObject(ca_white)))
+	newInput(7, nodeValue_Gradient("Colors", new gradientObject(ca_white)))
 		.setMappable(15);
 	
-	newInput(8, nodeValue_Color("Color 1", self, ca_white));
+	newInput(8, nodeValue_Color("Color 1", ca_white));
 	
-	newInput(9, nodeValue_Color("Color 2", self, ca_black));
+	newInput(9, nodeValue_Color("Color 2", ca_black));
 	
-	newInput(10, nodeValue_Float("Strip Ratio", self, 0.5))
+	newInput(10, nodeValue_Float("Strip Ratio", 0.5))
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(14);
 	
@@ -57,16 +57,16 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newInput(17, nodeValue_Float("Progress", self, 0.5))
+	newInput(17, nodeValue_Float("Progress", 0.5))
 		.setDisplay(VALUE_DISPLAY.slider);
 		
-	newInput(18, nodeValue_Palette("Colors", self, [ c_black, c_white ] ));
+	newInput(18, nodeValue_Palette("Colors", [ c_black, c_white ] ));
 		
 	newInput(19, nodeValueSeed(self));
 		
-	newInput(20, nodeValue_Surface("Mask", self));
+	newInput(20, nodeValue_Surface("Mask"));
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 19, 
 		["Output",	true],	0, 20, 

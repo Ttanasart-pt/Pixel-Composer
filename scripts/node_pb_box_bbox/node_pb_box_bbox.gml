@@ -3,21 +3,21 @@ function Node_PB_Box_BBOX(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	color = COLORS.node_blend_feedback;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Pbbox("PBBOX", self, new __pbBox()));
+	newInput(0, nodeValue_Pbbox());
 	
-	newOutput(0, nodeValue_Output("BBOX", self, VALUE_TYPE.float, [ 0, 0, 0, 0 ]))
+	newOutput(0, nodeValue_Output("BBOX", VALUE_TYPE.float, [ 0, 0, 0, 0 ]))
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	newOutput(1, nodeValue_Output("Area", self, VALUE_TYPE.float, [ 0, 0, 0, 0, 0 ]))
+	newOutput(1, nodeValue_Output("Area", VALUE_TYPE.float, [ 0, 0, 0, 0, 0 ]))
 		.setDisplay(VALUE_DISPLAY.area);
 	
-	newOutput(2, nodeValue_Output("Width", self, VALUE_TYPE.float, 0))
+	newOutput(2, nodeValue_Output("Width", VALUE_TYPE.float, 0))
 		.setVisible(false)
 	
-	newOutput(3, nodeValue_Output("Height", self, VALUE_TYPE.float, 0))
+	newOutput(3, nodeValue_Output("Height", VALUE_TYPE.float, 0))
 		.setVisible(false)
 	
-	newOutput(4, nodeValue_Output("Dimension", self, VALUE_TYPE.float, [ 0, 0 ]))
+	newOutput(4, nodeValue_Output("Dimension", VALUE_TYPE.float, [ 0, 0 ]))
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setVisible(false)
 	

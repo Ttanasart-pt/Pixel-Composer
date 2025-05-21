@@ -24,36 +24,36 @@
 function Node_Pixel_Math(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Pixel Math";
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Bool("Active", self, true));
+	newInput(1, nodeValue_Bool("Active", true));
 		active_index = 1;
 	
-	newInput(2, nodeValue_Surface("Mask", self));
+	newInput(2, nodeValue_Surface("Mask"));
 	
-	newInput(3, nodeValue_Float("Mix", self, 1))
+	newInput(3, nodeValue_Float("Mix", 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(4, nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) }));
+	newInput(4, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	__init_mask_modifier(2); // inputs 5, 6, 
 	
 	_scroll = array_clone(global.node_math_scroll, 1);
 	array_append(_scroll, ["Less than", "Less than equal", "Greater than", "Greater than equal"]);
-	newInput(7, nodeValue_Enum_Scroll("Operator", self, 0, _scroll));
+	newInput(7, nodeValue_Enum_Scroll("Operator", 0, _scroll));
 	
-	newInput(8, nodeValue_Vec4("Operand", self, [ 0, 0, 0, 0 ]));
+	newInput(8, nodeValue_Vec4("Operand", [ 0, 0, 0, 0 ]));
 	
-	newInput(9, nodeValue_Vec2("Range", self, [ 0, 0 ]));
+	newInput(9, nodeValue_Vec2("Range", [ 0, 0 ]));
 	
-	newInput(10, nodeValue_Enum_Button("Operand Type", self, 0, [ "Vec4", "Surface" ]));
+	newInput(10, nodeValue_Enum_Button("Operand Type", 0, [ "Vec4", "Surface" ]));
 	
-	newInput(11, nodeValue_Surface("Operand Surface", self));
+	newInput(11, nodeValue_Surface("Operand Surface"));
 	
-	newInput(12, nodeValue_Float("Mix", self, .5))
+	newInput(12, nodeValue_Float("Mix", .5))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 1, 4, 
 		["Surfaces",  false], 0, 2, 3, 5, 6, 

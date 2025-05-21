@@ -4,37 +4,37 @@ function Node_Atlas_Set(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	dimension_index = -1;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Atlas("Atlas", self))
+	newInput(0, nodeValue_Atlas())
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Bool("Set Surface", self, false));
-	newInput(2, nodeValue_Surface("Surface", self));
+	newInput(1, nodeValue_Bool("Set Surface", false));
+	newInput(2, nodeValue_Surface("Surface"));
 	
-	newInput(3, nodeValue_Bool("Set Position", self, false));
-	newInput(4, nodeValue_Enum_Button("Mode", self, 0, [ "Absolute", "Relative" ])).setInternalName("Position mode");
-	newInput(5, nodeValue_Vec2("Position", self, [ 0, 0 ]));
+	newInput(3, nodeValue_Bool("Set Position", false));
+	newInput(4, nodeValue_Enum_Button("Mode", 0, [ "Absolute", "Relative" ])).setInternalName("Position mode");
+	newInput(5, nodeValue_Vec2("Position", [ 0, 0 ]));
 	
-	newInput(6, nodeValue_Bool("Set Rotation", self, false));
-	newInput(7, nodeValue_Enum_Button("Mode", self, 0, [ "Absolute", "Relative" ])).setInternalName("Rotation mode");
-	newInput(8, nodeValue_Rotation("Rotation", self, 0));
-	newInput(9, nodeValue_Bool("Recalculate Position", self, true));
+	newInput(6, nodeValue_Bool("Set Rotation", false));
+	newInput(7, nodeValue_Enum_Button("Mode", 0, [ "Absolute", "Relative" ])).setInternalName("Rotation mode");
+	newInput(8, nodeValue_Rotation("Rotation", 0));
+	newInput(9, nodeValue_Bool("Recalculate Position", true));
 	
-	newInput(10, nodeValue_Bool("Set Scale", self, false));
-	newInput(11, nodeValue_Enum_Button("Mode", self, 0, [ "Absolute", "Additive", "Multiplicative" ])).setInternalName("Scale mode");
-	newInput(12, nodeValue_Vec2("Scale", self, [ 1, 1 ]));
+	newInput(10, nodeValue_Bool("Set Scale", false));
+	newInput(11, nodeValue_Enum_Button("Mode", 0, [ "Absolute", "Additive", "Multiplicative" ])).setInternalName("Scale mode");
+	newInput(12, nodeValue_Vec2("Scale", [ 1, 1 ]));
 		
-	newInput(13, nodeValue_Bool("Set Blending", self, false));
-	newInput(14, nodeValue_Enum_Button("Mode", self, 0, [ "Absolute", "Multiplicative" ])).setInternalName("Blend mode");
-	newInput(15, nodeValue_Color("Blend", self, ca_white));
+	newInput(13, nodeValue_Bool("Set Blending", false));
+	newInput(14, nodeValue_Enum_Button("Mode", 0, [ "Absolute", "Multiplicative" ])).setInternalName("Blend mode");
+	newInput(15, nodeValue_Color("Blend", ca_white));
 		
-	newInput(16, nodeValue_Bool("Set Alpha", self, false));
-	newInput(17, nodeValue_Enum_Button("Mode", self, 0, [ "Absolute", "Additive", "Multiplicative" ])).setInternalName("Alpha mode");
-	newInput(18, nodeValue_Float("Alpha", self, 1));
+	newInput(16, nodeValue_Bool("Set Alpha", false));
+	newInput(17, nodeValue_Enum_Button("Mode", 0, [ "Absolute", "Additive", "Multiplicative" ])).setInternalName("Alpha mode");
+	newInput(18, nodeValue_Float("Alpha", 1));
 	
-	newInput(19, nodeValue_Vec2("Anchor", self, [ 0.5, 0.5 ]));
+	newInput(19, nodeValue_Vec2("Anchor", [ 0.5, 0.5 ]));
 		inputs[19].setDisplay(VALUE_DISPLAY.vector, { side_button : new buttonAnchor(inputs[19]) });
 		
-	newOutput(0, nodeValue_Output("Atlas", self, VALUE_TYPE.atlas, noone));
+	newOutput(0, nodeValue_Output("Atlas", VALUE_TYPE.atlas, noone));
 	
 	input_display_list = [ 0, 
 		[ "Surface",  false,  1], 2, 

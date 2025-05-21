@@ -3,10 +3,10 @@ function Node_Matrix_Multiply_Vector(_x, _y, _group = noone) : Node_Processor(_x
 	color = COLORS.node_blend_number;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Matrix("Matrix", self, new Matrix(3)))
+	newInput(0, nodeValue_Matrix("Matrix", new Matrix(3)))
 		.setVisible(true, true);
 		
-	newInput(1, nodeValue_Vector("Vector", self, []))
+	newInput(1, nodeValue_Vector("Vector"))
 		.setVisible(true, true);
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////

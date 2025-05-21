@@ -2,15 +2,15 @@ function Node_Array_Composite(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	name = "Array Composite";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Float("Array", self, []))
+	newInput(0, nodeValue_Float("Array", []))
 		.setArrayDepth(1)
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Float("Compose", self, []))
+	newInput(1, nodeValue_Float("Compose", []))
 		.setArrayDepth(1)
 		.setVisible(true, true);
 	
-	newOutput(0, nodeValue_Output("Array", self, VALUE_TYPE.float, 0))
+	newOutput(0, nodeValue_Output("Array", VALUE_TYPE.float, 0))
 		.setArrayDepth(1);
 		
 	static composite = function(arr, com) {

@@ -2,13 +2,13 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 	name = "Chromatic Aberration";
 	
 	newActiveInput(3);
-	newInput(5, nodeValue_Enum_Button("Type",      self, 0, [ "RGB", "Continuous" ]));
-	newInput(0, nodeValue_Surface( "Surface In",   self));
-	newInput(1, nodeValue_Vec2(    "Center",       self, [ 0.5, 0.5 ])).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput(2, nodeValue_Slider(  "Strength",     self, 1, { range: [-16, 16, 0.01] })).setMappable(4);
+	newInput(5, nodeValue_Enum_Button("Type", 0, [ "RGB", "Continuous" ]));
+	newInput(0, nodeValue_Surface( "Surface In"));
+	newInput(1, nodeValue_Vec2(    "Center", [ 0.5, 0.5 ])).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(2, nodeValue_Slider(  "Strength", 1, { range: [-16, 16, 0.01] })).setMappable(4);
 	newInput(4, nodeValueMap(      "Strength map", self));
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 3, 
 		["Surface",  false], 0, 

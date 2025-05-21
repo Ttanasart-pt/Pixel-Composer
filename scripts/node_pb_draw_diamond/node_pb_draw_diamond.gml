@@ -1,7 +1,7 @@
 function Node_PB_Draw_Diamond(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group) constructor {
 	name = "Diamond";
 	
-	newInput(pbi+0, nodeValue_Enum_Scroll("Corner", self, 0, [ "Scale", "Minimum" ]));
+	newInput(pbi+0, nodeValue_Enum_Scroll("Corner", 0, [ "Scale", "Minimum" ]));
 	
 	array_insert_array(input_display_list, input_display_shape_index, [
 		["Shape", false], pbi+0, 

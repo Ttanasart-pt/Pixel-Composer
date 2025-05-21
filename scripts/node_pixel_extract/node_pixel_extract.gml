@@ -2,11 +2,11 @@ function Node_Pixel_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	name = "Pixel Extract";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Enum_Button("Skip", self, 0, [ "None", "Black", "Empty" ]));
+	newInput(1, nodeValue_Enum_Button("Skip", 0, [ "None", "Black", "Empty" ]));
 	
-	newOutput(0, nodeValue_Output("Colors", self, VALUE_TYPE.color, [ ]))
+	newOutput(0, nodeValue_Output("Colors", VALUE_TYPE.color, [ ]))
 		.setDisplay(VALUE_DISPLAY.palette);
 	
 	input_display_list = [

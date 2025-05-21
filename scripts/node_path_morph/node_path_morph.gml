@@ -2,27 +2,27 @@ function Node_Path_Morph(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	name = "Morph Path";
 	dimension_index = 2;
 	
-	newInput(0, nodeValue_PathNode("Path 1", self, noone))
+	newInput(0, nodeValue_PathNode("Path 1"))
 		.setVisible(true, true)
 		.rejectArray();
 	
-	newInput(1, nodeValue_PathNode("Path 2", self, noone))
+	newInput(1, nodeValue_PathNode("Path 2"))
 		.setVisible(true, true)
 		.rejectArray();
 		
-	newInput(2, nodeValue_Dimension(self));
+	newInput(2, nodeValue_Dimension());
 	
-	newInput(3, nodeValue_Int("Subdivision", self, 64))
+	newInput(3, nodeValue_Int("Subdivision", 64))
 		.setValidator(VV_min(2))
 		.rejectArray();
 		
-	newInput(4, nodeValue_Bool("Clip In-Out", self, false))
+	newInput(4, nodeValue_Bool("Clip In-Out", false))
 		
-	newInput(5, nodeValue_Curve("Curve", self, CURVE_DEF_01));
+	newInput(5, nodeValue_Curve("Curve", CURVE_DEF_01));
 	
-	newInput(6, nodeValue_Bool("Match index", self, false))
+	newInput(6, nodeValue_Bool("Match index", false))
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0, 1, 
 		["Morphing",  false], 2, 3, 6, 

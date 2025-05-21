@@ -2,22 +2,22 @@ function Node_Curve_HSV(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	name = "HSV Curve";
 	
 	newActiveInput(6);
-	newInput(7, nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) }));
+	newInput(7, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- Surfaces
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
-	newInput(4, nodeValue_Surface("Mask", self));
-	newInput(5, nodeValue_Slider("Mix", self, 1));
+	newInput(0, nodeValue_Surface("Surface In"));
+	newInput(4, nodeValue_Surface("Mask"));
+	newInput(5, nodeValue_Slider("Mix", 1));
 	__init_mask_modifier(4); // inputs 8, 9, 
 	
 	////- Curve
 	
-	newInput(1, nodeValue_Curve("Hue", self, CURVE_DEF_01));
-	newInput(2, nodeValue_Curve("Saturation", self, CURVE_DEF_01));
-	newInput(3, nodeValue_Curve("Value", self, CURVE_DEF_01));
+	newInput(1, nodeValue_Curve("Hue", CURVE_DEF_01));
+	newInput(2, nodeValue_Curve("Saturation", CURVE_DEF_01));
+	newInput(3, nodeValue_Curve("Value", CURVE_DEF_01));
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 6, 7, 
 		["Surfaces", true],	0, 4, 5, 8, 9, 

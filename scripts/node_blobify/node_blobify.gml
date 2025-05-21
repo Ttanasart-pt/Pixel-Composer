@@ -1,14 +1,14 @@
 function Node_Blobify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Blobify";
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Bool("Active", self, true));
+	newInput(1, nodeValue_Bool("Active", true));
 	
-	newInput(2, nodeValue_Int("Radius", self, 3))
+	newInput(2, nodeValue_Int("Radius", 3))
 		.setValidator(VV_min(0));
 	
-	newInput(3, nodeValue_Float("Threshold", self, 0.5))
+	newInput(3, nodeValue_Float("Threshold", 0.5))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	active_index = 1;
@@ -18,7 +18,7 @@ function Node_Blobify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		["Blobify", false], 2, 3, 
 	]
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	

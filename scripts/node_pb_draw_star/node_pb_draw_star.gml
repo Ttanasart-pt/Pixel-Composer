@@ -1,15 +1,15 @@
 function Node_PB_Draw_Star(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group) constructor {
 	name = "Star";
 	
-	newInput(pbi+0, nodeValue_i("Sides", self, 3));
+	newInput(pbi+0, nodeValue_Int("Sides", 3));
 	
-	newInput(pbi+1, nodeValue_r("Angle", self, 0));
+	newInput(pbi+1, nodeValue_Rotation("Angle", 0));
 	
-	newInput(pbi+2, nodeValue_s("Inner Radius", self, .5));
+	newInput(pbi+2, nodeValue_Slider("Inner Radius", .5));
 	
-	newInput(pbi+3, nodeValue_eb("Mode", self, 0, [ "Fill", "Lines" ]));
+	newInput(pbi+3, nodeValue_Enum_Button("Mode", 0, [ "Fill", "Lines" ]));
 	
-	newInput(pbi+4, nodeValue_f("Thickness", self, 1));
+	newInput(pbi+4, nodeValue_Float("Thickness", 1));
 	
 	array_insert_array(input_display_list, input_display_shape_index, [
 		["Shape",  false], pbi+3, pbi+0, pbi+1, pbi+2, pbi+4, 

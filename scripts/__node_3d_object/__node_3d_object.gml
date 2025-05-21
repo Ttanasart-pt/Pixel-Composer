@@ -16,13 +16,13 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	preview_channel = 0;
 	apply_anchor    = false;
 	
-	newInput(0, nodeValue_Vec3("Position", self, [ 0, 0, 0 ], { linkable: false }));
+	newInput(0, nodeValue_Vec3("Position", [ 0, 0, 0 ], { linkable: false }));
 	
-	newInput(1, nodeValue_Quaternion("Rotation", self, [ 0, 0, 0, 1 ]));
+	newInput(1, nodeValue_Quaternion("Rotation", [ 0, 0, 0, 1 ]));
 	
-	newInput(2, nodeValue_Vec3("Scale", self, [ 1, 1, 1 ]));
+	newInput(2, nodeValue_Vec3("Scale", [ 1, 1, 1 ]));
 	
-	newInput(3, nodeValue_Vec3("Anchor", self, [ 0, 0, 0 ], { 
+	newInput(3, nodeValue_Vec3("Anchor", [ 0, 0, 0 ], { 
 			linkable: false, 
 			side_button : button(function() { apply_anchor = !apply_anchor; triggerRender(); })
 				.setIcon(THEME.icon_3d_anchor, [ function() /*=>*/ {return apply_anchor} ], c_white)

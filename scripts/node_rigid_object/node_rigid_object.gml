@@ -28,50 +28,50 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	////- Spawn
 	
-	newInput( 8, nodeValue_Bool(  "Spawn",       self, true, "Make object spawn when start."));
-	newInput(20, nodeValue_Int(   "Spawn Frame", self, 0));
+	newInput( 8, nodeValue_Bool(  "Spawn", true, "Make object spawn when start."));
+	newInput(20, nodeValue_Int(   "Spawn Frame", 0));
 	
 	////- Physics
 	
-	newInput(12, nodeValue_Int(    "Collision Group",     self, 1));
-	newInput( 0, nodeValue_Bool(   "Affect by Force",     self, true));
-	newInput( 1, nodeValue_Float(  "Mass",                self, 10));
-	newInput( 2, nodeValue_Slider( "Friction",            self, 0.2));
-	newInput( 3, nodeValue_Slider( "Air Resistance",      self, 0.0));
-	newInput( 4, nodeValue_Slider( "Rotation Resistance", self, 0.1));
-	newInput(13, nodeValue_Slider( "Bounciness",          self, 0.2));
-	newInput(22, nodeValue_Float(  "Gravity Scale",       self, 1));
+	newInput(12, nodeValue_Int(    "Collision Group", 1));
+	newInput( 0, nodeValue_Bool(   "Affect by Force", true));
+	newInput( 1, nodeValue_Float(  "Mass", 10));
+	newInput( 2, nodeValue_Slider( "Friction", 0.2));
+	newInput( 3, nodeValue_Slider( "Air Resistance", 0.0));
+	newInput( 4, nodeValue_Slider( "Rotation Resistance", 0.1));
+	newInput(13, nodeValue_Slider( "Bounciness", 0.2));
+	newInput(22, nodeValue_Float(  "Gravity Scale", 1));
 	
 	////- Shape
 	
-	newInput( 6, nodeValue_Surface(     "Texture", self));
-	newInput( 5, nodeValue_Enum_Scroll( "Shape",   self,  0, [ new scrollItem("Box",    s_node_shape_rectangle, 0), 
+	newInput( 6, nodeValue_Surface(     "Texture"));
+	newInput( 5, nodeValue_Enum_Scroll( "Shape",  0, [ new scrollItem("Box",    s_node_shape_rectangle, 0), 
 	                                                           new scrollItem("Circle", s_node_shape_circle,    0), 
 	                                                           new scrollItem("Custom", s_node_shape_misc,      1) ]));
-	newInput( 9, nodeValue_Trigger(     "Generate Mesh",       self )).setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() /*=>*/ {return generateAllMesh()} });
-	newInput(10, nodeValue_Slider(      "Mesh Expansion",      self, 0, [ -2, 2, 0.1 ]));
-	newInput(11, nodeValue_Bool(        "Add Pixel for Empty", self, true));
+	newInput( 9, nodeValue_Trigger(     "Generate Mesh" )).setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() /*=>*/ {return generateAllMesh()} });
+	newInput(10, nodeValue_Slider(      "Mesh Expansion", 0, [ -2, 2, 0.1 ]));
+	newInput(11, nodeValue_Bool(        "Add Pixel for Empty", true));
 	
 	////- Transform
 	
-	newInput( 7, nodeValue_Vec2(     "Start Position", self, [ 16, 16 ]));
-	newInput(17, nodeValue_Rotation( "Start Rotation", self, 0));
+	newInput( 7, nodeValue_Vec2(     "Start Position", [ 16, 16 ]));
+	newInput(17, nodeValue_Rotation( "Start Rotation", 0));
 	
 	////- Initial Velocity
 	
-	newInput(18, nodeValue_Bool( "Use Initial Velocity", self, false));
-	newInput(19, nodeValue_Vec2( "Initial Velocity",     self, [ 0, 0 ]));
+	newInput(18, nodeValue_Bool( "Use Initial Velocity", false));
+	newInput(19, nodeValue_Vec2( "Initial Velocity", [ 0, 0 ]));
 	
 	////- Simulation
 	
-	newInput(14, nodeValue_Bool( "Continuous",        self, false));
-	newInput(15, nodeValue_Bool( "Fix Rotation",      self, false));
-	newInput(16, nodeValue_Bool( "Sleepable",         self,  true));
-	newInput(21, nodeValue_Bool( "Activate on Spawn", self,  true));
+	newInput(14, nodeValue_Bool( "Continuous", false));
+	newInput(15, nodeValue_Bool( "Fix Rotation", false));
+	newInput(16, nodeValue_Bool( "Sleepable",  true));
+	newInput(21, nodeValue_Bool( "Activate on Spawn",  true));
 	
 	// inputs 23
 	
-	newOutput(0, nodeValue_Output("Object", self, VALUE_TYPE.rigid, objects));
+	newOutput(0, nodeValue_Output("Object", VALUE_TYPE.rigid, objects));
 	
 	array_foreach(inputs, function(inp, ind) /*=>*/ { 
 		if(ind == 6) inp.setAnimable(false);

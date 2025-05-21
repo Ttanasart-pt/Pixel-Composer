@@ -12,34 +12,34 @@ function Node_Smoke_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _gro
 	
 	outputNode = noone;
 	
-	newInput(0, nodeValue_Dimension(self));
+	newInput(0, nodeValue_Dimension());
 	
-	newInput(1, nodeValue_Surface("Collision", self));
+	newInput(1, nodeValue_Surface("Collision"));
 	
-	newInput(2, nodeValue_Enum_Button("Material dissipation type", self,  1, [ "Multiply", "Subtract" ]));
+	newInput(2, nodeValue_Enum_Button("Material dissipation type",  1, [ "Multiply", "Subtract" ]));
 	
-	newInput(3, nodeValue_Float("Material dissipation", self, 0.02))
+	newInput(3, nodeValue_Float("Material dissipation", 0.02))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 0.1, 0.01 ] });
 	
-	newInput(4, nodeValue_Enum_Button("Velocity dissipation type", self,  1, [ "Multiply", "Subtract" ]));
+	newInput(4, nodeValue_Enum_Button("Velocity dissipation type",  1, [ "Multiply", "Subtract" ]));
 	
-	newInput(5, nodeValue_Float("Velocity dissipation", self, 0.00))
+	newInput(5, nodeValue_Float("Velocity dissipation", 0.00))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 0.1, 0.01 ] });
 	
-	newInput(6, nodeValue_Vec2("Acceleration", self, [ 0, 0 ]));
+	newInput(6, nodeValue_Vec2("Acceleration", [ 0, 0 ]));
 	
-	newInput(7, nodeValue_Vec2("Material intertia", self, [ 1, -0.2 ]));
+	newInput(7, nodeValue_Vec2("Material intertia", [ 1, -0.2 ]));
 	
-	newInput(8, nodeValue_Float("Initial pressure", self, 0.75))
+	newInput(8, nodeValue_Float("Initial pressure", 0.75))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(9, nodeValue_Float("Material Maccormack weight", self, 1))
+	newInput(9, nodeValue_Float("Material Maccormack weight", 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(10, nodeValue_Float("Velocity Maccormack weight", self, 0))
+	newInput(10, nodeValue_Float("Velocity Maccormack weight", 0))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(11, nodeValue_Bool("Wrap", self, false));
+	newInput(11, nodeValue_Bool("Wrap", false));
 	
 	input_display_list_def = [ 
 		["Domain",		false], 0, 11, 1,

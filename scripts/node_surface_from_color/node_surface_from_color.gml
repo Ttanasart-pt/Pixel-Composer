@@ -1,9 +1,9 @@
 function Node_Surface_From_Color(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name	= "Surface from Color";
 	
-	newInput(0, nodeValue_Palette("Color", self, array_clone(DEF_PALETTE)));
+	newInput(0, nodeValue_Palette("Color", array_clone(DEF_PALETTE)));
 	
-	newOutput(0, nodeValue_Output("Surface", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface", VALUE_TYPE.surface, noone));
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		var _col = _data[0];

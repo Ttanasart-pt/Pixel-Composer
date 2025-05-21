@@ -5,103 +5,103 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput(32, nodeValueSeed(self));
 	
 	////- Sprite
-	newInput( 0, nodeValue_Surface("Particle Sprite", self));
+	newInput( 0, nodeValue_Surface("Particle Sprite"));
 	
-	newInput(22, nodeValue_Enum_Scroll("Surface Array", self, 0, [ "Random", "Order", "Animation", "Scale" ]))
+	newInput(22, nodeValue_Enum_Scroll("Surface Array", 0, [ "Random", "Order", "Animation", "Scale" ]))
 		.setTooltip("Whether to select image from an array in order, at random, or treat array as animation.");
 	
-	newInput(23, nodeValue_Range(       "Animation Speed",   self, [ 1, 1 ], { linked : true }));
-	newInput(49, nodeValue_Bool(        "Stretch Animation", self, false ));
-	newInput(26, nodeValue_Enum_Button( "On Animation End",  self,  ANIM_END_ACTION.loop, [ "Loop", "Ping pong", "Destroy" ]));
+	newInput(23, nodeValue_Range(       "Animation Speed", [ 1, 1 ], { linked : true }));
+	newInput(49, nodeValue_Bool(        "Stretch Animation", false ));
+	newInput(26, nodeValue_Enum_Button( "On Animation End",  ANIM_END_ACTION.loop, [ "Loop", "Ping pong", "Destroy" ]));
 	
 	////- Spawn
-	newInput(27, nodeValue_Bool(        "Spawn",            self, true));
-	newInput(16, nodeValue_Enum_Button( "Spawn Type",       self, 0, [ "Stream", "Burst", "Trigger" ]));
-	newInput(44, nodeValue_Trigger(     "Spawn",            self )).setDisplay(VALUE_DISPLAY.button, { name: "Trigger" });
-	newInput( 1, nodeValue_Int(         "Spawn Delay",      self, 4, "Frames delay between each particle spawn." ));
-	newInput(51, nodeValue_Int(         "Burst Duration",   self, 1 ));
-	newInput( 2, nodeValue_Range(       "Spawn Amount",     self, [ 2, 2 ], { linked : true })).setTooltip("Amount of particle spawn in that frame.");
-	newInput( 4, nodeValue_Enum_Scroll( "Spawn Source",     self, 0, [ "Area Inside", "Area Border", "Map", "Path", "Direct Data" ] ));
-	newInput( 3, nodeValue_Area(        "Spawn Area",       self, DEF_AREA_REF )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
-	newInput(30, nodeValue_Surface(     "Distribution Map", self));
-	newInput(55, nodeValue_PathNode(    "Spawn Path",       self));
-	newInput(62, nodeValue_Vector(      "Spawn Data",       self, [])).setArrayDepth(1);
-	newInput(24, nodeValue_Enum_Button( "Distribution",     self, 1, [ "Uniform", "Random" ]));
-	newInput(52, nodeValue_Float(       "Uniform Period",   self, 4 ));
-	newInput( 5, nodeValue_Range(       "Lifespan",         self, [ 20, 30 ] ));
+	newInput(27, nodeValue_Bool(        "Spawn", true));
+	newInput(16, nodeValue_Enum_Button( "Spawn Type", 0, [ "Stream", "Burst", "Trigger" ]));
+	newInput(44, nodeValue_Trigger(     "Spawn" )).setDisplay(VALUE_DISPLAY.button, { name: "Trigger" });
+	newInput( 1, nodeValue_Int(         "Spawn Delay", 4, "Frames delay between each particle spawn." ));
+	newInput(51, nodeValue_Int(         "Burst Duration", 1 ));
+	newInput( 2, nodeValue_Range(       "Spawn Amount", [ 2, 2 ], { linked : true })).setTooltip("Amount of particle spawn in that frame.");
+	newInput( 4, nodeValue_Enum_Scroll( "Spawn Source", 0, [ "Area Inside", "Area Border", "Map", "Path", "Direct Data" ] ));
+	newInput( 3, nodeValue_Area(        "Spawn Area", DEF_AREA_REF )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
+	newInput(30, nodeValue_Surface(     "Distribution Map"));
+	newInput(55, nodeValue_PathNode(    "Spawn Path"));
+	newInput(62, nodeValue_Vector(      "Spawn Data")).setArrayDepth(1);
+	newInput(24, nodeValue_Enum_Button( "Distribution", 1, [ "Uniform", "Random" ]));
+	newInput(52, nodeValue_Float(       "Uniform Period", 4 ));
+	newInput( 5, nodeValue_Range(       "Lifespan", [ 20, 30 ] ));
 	
 	////- Movement
 	
-	newInput(29, nodeValue_Bool(            "Directed From Center", self, false, "Make particle move away from the spawn center."));
-	newInput(53, nodeValue_Rotation_Range(  "Angle Range",          self, [ 0, 360 ]));
-	newInput( 6, nodeValue_Rotation_Random( "Initial Direction",    self, [ 0, 45, 135, 0, 0 ] )); 
-	newInput(18, nodeValue_Range(           "Initial Speed",        self, [ 1, 2 ] ));
-	newInput(60, nodeValue_Curve(           "Base Speed Over Time", self, CURVE_DEF_11)).setTooltip("Speed may conflict with physics-based properties.");
+	newInput(29, nodeValue_Bool(            "Directed From Center", false, "Make particle move away from the spawn center."));
+	newInput(53, nodeValue_Rotation_Range(  "Angle Range", [ 0, 360 ]));
+	newInput( 6, nodeValue_Rotation_Random( "Initial Direction", [ 0, 45, 135, 0, 0 ] )); 
+	newInput(18, nodeValue_Range(           "Initial Speed", [ 1, 2 ] ));
+	newInput(60, nodeValue_Curve(           "Base Speed Over Time", CURVE_DEF_11)).setTooltip("Speed may conflict with physics-based properties.");
 	
 	////- Rotation
 	
-	newInput(15, nodeValue_Bool(            "Rotate by Direction",        self, false, "Make the particle rotates to follow its movement."));
-	newInput( 8, nodeValue_Rotation_Random( "Initial Rotation",           self, [ 0, 0, 0, 0, 0 ] ));
-	newInput( 9, nodeValue_Rotation_Random( "Rotational Speed",           self, [ 0, 0, 0, 0, 0 ] ));
-	newInput(59, nodeValue_Curve(           "Rotational Speed Over Time", self, CURVE_DEFN_11));
-	newInput(61, nodeValue_Float(           "Snap Rotation",              self, 0));
+	newInput(15, nodeValue_Bool(            "Rotate by Direction", false, "Make the particle rotates to follow its movement."));
+	newInput( 8, nodeValue_Rotation_Random( "Initial Rotation", [ 0, 0, 0, 0, 0 ] ));
+	newInput( 9, nodeValue_Rotation_Random( "Rotational Speed", [ 0, 0, 0, 0, 0 ] ));
+	newInput(59, nodeValue_Curve(           "Rotational Speed Over Time", CURVE_DEFN_11));
+	newInput(61, nodeValue_Float(           "Snap Rotation", 0));
 	
 	////- Scale
 	
-	newInput(10, nodeValue_Vec2_Range( "Initial Scale",   self, [ 1, 1, 1, 1 ], { linked : true }));
-	newInput(17, nodeValue_Range(      "Initial Size",    self, [ 1, 1 ],       { linked : true }));
-	newInput(11, nodeValue_Curve(      "Scale Over Time", self, CURVE_DEF_11));
+	newInput(10, nodeValue_Vec2_Range( "Initial Scale", [ 1, 1, 1, 1 ], { linked : true }));
+	newInput(17, nodeValue_Range(      "Initial Size", [ 1, 1 ],       { linked : true }));
+	newInput(11, nodeValue_Curve(      "Scale Over Time", CURVE_DEF_11));
 	
 	////- Color
 	
-	newInput(12, nodeValue_Gradient( "Color Over Lifetime", self, new gradientObject(ca_white)));
-	newInput(28, nodeValue_Gradient( "Random Blend",        self, new gradientObject(ca_white)));
-	newInput(50, nodeValue_Palette(  "Color by Index",      self, [ ca_white ] ));
-	newInput(13, nodeValue_Range(    "Alpha",               self, [ 1, 1 ], { linked : true }));
-	newInput(14, nodeValue_Curve(    "Alpha Over Time",     self, CURVE_DEF_11));
-	newInput(56, nodeValue_Surface(  "Sample Surface",      self, noone));
+	newInput(12, nodeValue_Gradient( "Color Over Lifetime", new gradientObject(ca_white)));
+	newInput(28, nodeValue_Gradient( "Random Blend", new gradientObject(ca_white)));
+	newInput(50, nodeValue_Palette(  "Color by Index", [ ca_white ] ));
+	newInput(13, nodeValue_Range(    "Alpha", [ 1, 1 ], { linked : true }));
+	newInput(14, nodeValue_Curve(    "Alpha Over Time", CURVE_DEF_11));
+	newInput(56, nodeValue_Surface(  "Sample Surface"));
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	////- Path
 	
-	newInput(45, nodeValue_Bool(     "Follow Path",    self, false ));
-	newInput(46, nodeValue_PathNode( "Path",           self, noone ));
-	newInput(47, nodeValue_Curve(    "Path Deviation", self, CURVE_DEF_11 ));
+	newInput(45, nodeValue_Bool(     "Follow Path", false ));
+	newInput(46, nodeValue_PathNode( "Path" ));
+	newInput(47, nodeValue_Curve(    "Path Deviation", CURVE_DEF_11 ));
 	
 	////- Physics
 	
-	newInput(57, nodeValue_b(  "Use Physics",           self, false ));
-	newInput(54, nodeValue_rn( "Friction",              self, [ 0, 0 ], { linked : true }));
-	newInput( 7, nodeValue_rn( "Acceleration",          self, [ 0, 0 ], { linked : true }));
-	newInput(19, nodeValue_rn( "Gravity",               self, [ 0, 0 ], { linked : true }));
-	newInput(33, nodeValue_r(  "Gravity Direction",     self, -90));
+	newInput(57, nodeValue_Bool(  "Use Physics", false ));
+	newInput(54, nodeValue_Range( "Friction", [ 0, 0 ], { linked : true }));
+	newInput( 7, nodeValue_Range( "Acceleration", [ 0, 0 ], { linked : true }));
+	newInput(19, nodeValue_Range( "Gravity", [ 0, 0 ], { linked : true }));
+	newInput(33, nodeValue_Rotation(  "Gravity Direction", -90));
 	
-	newInput(34, nodeValue_rn( "Turning",               self, [ 0, 0 ], { linked : true }));
-	newInput(35, nodeValue_b(  "Turn Both Directions",  self, false, "Apply randomized 1, -1 multiplier to the turning speed." ));
-	newInput(36, nodeValue_f(  "Turn Scale with Speed", self, false ));
+	newInput(34, nodeValue_Range( "Turning", [ 0, 0 ], { linked : true }));
+	newInput(35, nodeValue_Bool(  "Turn Both Directions", false, "Apply randomized 1, -1 multiplier to the turning speed." ));
+	newInput(36, nodeValue_Float(  "Turn Scale with Speed", false ));
 	
 	////- Ground
 	
-	newInput(37, nodeValue_b( "Collide Ground",  self, false ));
-	newInput(38, nodeValue_f( "Ground Offset",   self, 0     ));
-	newInput(39, nodeValue_s( "Bounce Amount",   self, 0.5   ));
-	newInput(40, nodeValue_s( "Bounce Friction", self, 0.1   )).setTooltip("Apply horizontal friction once particle stop bouncing.");
+	newInput(37, nodeValue_Bool( "Collide Ground", false ));
+	newInput(38, nodeValue_Float( "Ground Offset", 0     ));
+	newInput(39, nodeValue_Slider( "Bounce Amount", 0.5   ));
+	newInput(40, nodeValue_Slider( "Bounce Friction", 0.1   )).setTooltip("Apply horizontal friction once particle stop bouncing.");
 		
 	////- Wiggles
 	
-	newInput(58, nodeValue_b( "Use Wiggles",      self, false ));
-	newInput(20, nodeValue_2( "Direction Wiggle", self, [ 0, 0 ] , { label: [ "Amplitude", "Period" ], linkable: false, per_line: true }));
-	newInput(41, nodeValue_2( "Position Wiggle",  self, [ 0, 0 ] , { label: [ "Amplitude", "Period" ], linkable: false, per_line: true }));
-	newInput(42, nodeValue_2( "Rotation Wiggle",  self, [ 0, 0 ] , { label: [ "Amplitude", "Period" ], linkable: false, per_line: true }));
-	newInput(43, nodeValue_2( "Scale Wiggle",     self, [ 0, 0 ] , { label: [ "Amplitude", "Period" ], linkable: false, per_line: true }));
+	newInput(58, nodeValue_Bool( "Use Wiggles", false ));
+	newInput(20, nodeValue_Vec2( "Direction Wiggle", [ 0, 0 ] , { label: [ "Amplitude", "Period" ], linkable: false, per_line: true }));
+	newInput(41, nodeValue_Vec2( "Position Wiggle", [ 0, 0 ] , { label: [ "Amplitude", "Period" ], linkable: false, per_line: true }));
+	newInput(42, nodeValue_Vec2( "Rotation Wiggle", [ 0, 0 ] , { label: [ "Amplitude", "Period" ], linkable: false, per_line: true }));
+	newInput(43, nodeValue_Vec2( "Scale Wiggle", [ 0, 0 ] , { label: [ "Amplitude", "Period" ], linkable: false, per_line: true }));
 	
 	////- Unused
 	
-	newInput(21, nodeValue_Bool("Loop",          self, true ));
-	newInput(25, nodeValue_Int("Boundary Data",  self, [])).setArrayDepth(1).setVisible(false, true);
-	newInput(31, nodeValue_Surface("Atlas",      self, [])).setArrayDepth(1);
-	newInput(48, nodeValue_Trigger("Reset Seed", self )).setDisplay(VALUE_DISPLAY.button, { name: "Trigger" })
+	newInput(21, nodeValue_Bool("Loop", true ));
+	newInput(25, nodeValue_Int("Boundary Data", [])).setArrayDepth(1).setVisible(false, true);
+	newInput(31, nodeValue_Surface("Atlas", [])).setArrayDepth(1);
+	newInput(48, nodeValue_Trigger("Reset Seed" )).setDisplay(VALUE_DISPLAY.button, { name: "Trigger" })
 	
 	// inputs 63
 	

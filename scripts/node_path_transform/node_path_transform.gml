@@ -2,20 +2,20 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	name = "Transform Path";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_PathNode("Path", self, noone))
+	newInput(0, nodeValue_PathNode("Path"))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Vec2("Position", self, [ 0, 0 ]))
+	newInput(1, nodeValue_Vec2("Position", [ 0, 0 ]))
 		.setUnitRef(function() /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
 	
-	newInput(2, nodeValue_Rotation("Rotation", self, 0));
+	newInput(2, nodeValue_Rotation("Rotation", 0));
 	
-	newInput(3, nodeValue_Vec2("Scale", self, [ 1, 1 ]));
+	newInput(3, nodeValue_Vec2("Scale", [ 1, 1 ]));
 	
-	newInput(4, nodeValue_Vec2("Anchor", self, [ 0, 0 ]))
+	newInput(4, nodeValue_Vec2("Anchor", [ 0, 0 ]))
 		.setUnitRef(function() /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
 	
-	newOutput(0, nodeValue_Output("Path", self, VALUE_TYPE.pathnode, noone));
+	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, noone));
 	
 	function _transformedPath() constructor {
 		path       = noone;

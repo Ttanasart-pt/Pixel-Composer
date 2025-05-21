@@ -3,17 +3,17 @@ function Node_3DSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	cached_object = [];
 	object_class  = dynaSurf_3d;
 	
-	newInput(0, nodeValue_D3Scene("Scene", self, noone))
+	newInput(0, nodeValue_D3Scene("Scene", noone))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Vec2("Base Dimension", self, DEF_SURF));
+	newInput(1, nodeValue_Vec2("Base Dimension", DEF_SURF));
 	
-	newInput(2, nodeValue_Float("Vertical Angle", self, 45 ))
+	newInput(2, nodeValue_Float("Vertical Angle", 45 ))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 90, 0.1] });
 	
-	newInput(3, nodeValue_Float("Distance", self, 4 ));
+	newInput(3, nodeValue_Float("Distance", 4 ));
 	
-	newOutput(0, nodeValue_Output("3DSurf", self, VALUE_TYPE.dynaSurface, noone));
+	newOutput(0, nodeValue_Output("3DSurf", VALUE_TYPE.dynaSurface, noone));
 	
 	input_display_list = [ 0,
 		["Camera", false], 1, 2, 3, 

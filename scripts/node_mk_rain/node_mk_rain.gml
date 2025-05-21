@@ -2,44 +2,44 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	name = "MK Rain";
 	update_on_frame = true;
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Rotation("Direction", self, 45));
+	newInput(1, nodeValue_Rotation("Direction", 45));
 	
-	newInput(2, nodeValue_Float("Density", self, 5));
+	newInput(2, nodeValue_Float("Density", 5));
 	
-	newInput(3, nodeValue_Range("Raindrop width", self, [ 1, 1 ]));
+	newInput(3, nodeValue_Range("Raindrop width", [ 1, 1 ]));
 	
-	newInput(4, nodeValue_Range("Raindrop length", self, [ 5, 10 ]));
+	newInput(4, nodeValue_Range("Raindrop length", [ 5, 10 ]));
 	
-	newInput(5, nodeValue_Gradient("Color", self, new gradientObject(ca_white)));
+	newInput(5, nodeValue_Gradient("Color", new gradientObject(ca_white)));
 	
-	newInput(6, nodeValue_Slider_Range("Alpha", self, [ 0.5, 1 ]));
+	newInput(6, nodeValue_Slider_Range("Alpha", [ 0.5, 1 ]));
 		
-	newInput(7, nodeValue_Range("Velocity", self, [ 1, 2 ]));
+	newInput(7, nodeValue_Range("Velocity", [ 1, 2 ]));
 	
 	newInput(8, nodeValueSeed(self));
 	
-	newInput(9, nodeValue_Enum_Scroll("Shape", self,  0, [ new scrollItem("Rain",    s_node_mk_rain_type, 0),
+	newInput(9, nodeValue_Enum_Scroll("Shape",  0, [ new scrollItem("Rain",    s_node_mk_rain_type, 0),
 												           new scrollItem("Snow",    s_node_mk_rain_type, 1),
 												           new scrollItem("Texture", s_node_mk_rain_type, 2) ]));
 	
-	newInput(10, nodeValue_Range("Snow size", self, [ 3, 4 ]));
+	newInput(10, nodeValue_Range("Snow size", [ 3, 4 ]));
 	
-	newInput(11, nodeValue_Surface("Texture", self));
+	newInput(11, nodeValue_Surface("Texture"));
 	
-	newInput(12, nodeValue_Slider_Range("Track extension", self, [ 0, 0 ], { range: [ 0, 10, 0.01 ] }));
+	newInput(12, nodeValue_Slider_Range("Track extension", [ 0, 0 ], { range: [ 0, 10, 0.01 ] }));
 	
-	newInput(13, nodeValue_Curve("Size over lifetime", self, CURVE_DEF_11));
+	newInput(13, nodeValue_Curve("Size over lifetime", CURVE_DEF_11));
 	
-	newInput(14, nodeValue_Bool("Limited lifespan", self, false));
+	newInput(14, nodeValue_Bool("Limited lifespan", false));
 	
-	newInput(15, nodeValue_Slider_Range("Lifespan", self, [ 0, 1 ]))
+	newInput(15, nodeValue_Slider_Range("Lifespan", [ 0, 1 ]))
 		.setTooltip("Lifespan of a droplet as a ratio of the entire animation.");
 		
-	newInput(16, nodeValue_Curve("Alpha over lifetime", self, CURVE_DEF_11));
+	newInput(16, nodeValue_Curve("Alpha over lifetime", CURVE_DEF_11));
 		
-	newInput(17, nodeValue_Bool("Fade alpha", self, false));
+	newInput(17, nodeValue_Bool("Fade alpha", false));
 		
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 0, 8, 
 		["Shape",		false], 9, 3, 4, 10, 11, 
@@ -48,7 +48,7 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		["Render",		false], 5, 6, 17, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	static step = function() { #region
 		var _shap = getSingleValue(9);

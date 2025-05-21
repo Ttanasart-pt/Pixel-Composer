@@ -2,19 +2,19 @@ function Node_Graph_Preview(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name = "Graph Preview";
 	preview_draw = true;
 	
-	newInput(0, nodeValue_Surface("Surface", self))
+	newInput(0, nodeValue_Surface("Surface"))
 		.rejectArray();
 	
-	newInput(1, nodeValue_Vec2("Position", self, [ 0, 0 ]))
+	newInput(1, nodeValue_Vec2("Position", [ 0, 0 ]))
 		.rejectArray();
 	
-	newInput(2, nodeValue_Float("Scale", self, 1))
+	newInput(2, nodeValue_Float("Scale", 1))
 		.rejectArray();
 
-	newInput(3, nodeValue_Bool("Sticky", self, true))
+	newInput(3, nodeValue_Bool("Sticky", true))
 		.rejectArray();
 		
-	newInput(4, nodeValue_Float("Alpha", self, 0.5))
+	newInput(4, nodeValue_Float("Alpha", 0.5))
 		.setDisplay(VALUE_DISPLAY.slider)
 		.rejectArray();
 		

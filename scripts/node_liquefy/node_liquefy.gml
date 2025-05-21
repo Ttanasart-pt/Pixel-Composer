@@ -8,21 +8,21 @@ enum LIQUEFY_TYPE {
 function Node_Liquefy(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Liquefy";
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Bool("Active", self, true));
+	newInput(1, nodeValue_Bool("Active", true));
 	active_index = 1;
 	
-	newInput(2, nodeValue_Surface("Mask", self));
+	newInput(2, nodeValue_Surface("Mask"));
 	
-	newInput(3, nodeValue_Float("Mix", self, 1))
+	newInput(3, nodeValue_Float("Mix", 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(4, nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) }));
+	newInput(4, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	__init_mask_modifier(2); // inputs 5, 6, 
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -38,32 +38,32 @@ function Node_Liquefy(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var inAmo = array_length(inputs);
 		dynamic_input_inspecting = getInputAmount();
 		
-		newInput(index + 0, nodeValue_Enum_Scroll("Type", self, 0, typeList));
+		newInput(index + 0, nodeValue_Enum_Scroll("Type", 0, typeList));
 		
-		newInput(index + 1, nodeValue_Vec2("Position", self, [ 0, 0 ]))
+		newInput(index + 1, nodeValue_Vec2("Position", [ 0, 0 ]))
 			.setUnitRef(function(index) /*=>*/ {return getDimension(index)}, VALUE_UNIT.reference);
 		
-		newInput(index + 2, nodeValue_Vec2("Position 2", self, [ 1, 0 ])) // push
+		newInput(index + 2, nodeValue_Vec2("Position 2", [ 1, 0 ])) // push
 			.setUnitRef(function(index) /*=>*/ {return getDimension(index)}, VALUE_UNIT.reference);
 		
-		newInput(index + 3, nodeValue_Float("Radius", self, 8));
+		newInput(index + 3, nodeValue_Float("Radius", 8));
 		inputs[index + 3].overlay_text_valign = fa_bottom;
 		
-		newInput(index + 4, nodeValue_Float("Intensity", self, 0.1))
+		newInput(index + 4, nodeValue_Float("Intensity", 0.1))
 			.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01] });
 		
-		newInput(index + 5, nodeValue_Float("Falloff", self, 0));
+		newInput(index + 5, nodeValue_Float("Falloff", 0));
 		
-		newInput(index + 6, nodeValue_Curve("Falloff Curve", self, CURVE_DEF_10));
+		newInput(index + 6, nodeValue_Curve("Falloff Curve", CURVE_DEF_10));
 		
-		newInput(index + 7, nodeValue_Float("Push", self, 0.1))
+		newInput(index + 7, nodeValue_Float("Push", 0.1))
 			.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01] });
 		
-		newInput(index + 8, nodeValue_PathNode("Push path", self, noone))
+		newInput(index + 8, nodeValue_PathNode("Push path"))
 		
-		newInput(index + 9, nodeValue_Int("Push resolution", self, 16));
+		newInput(index + 9, nodeValue_Int("Push resolution", 16));
 		
-		newInput(index + 10, nodeValue_Float("Radius 2", self, 8));
+		newInput(index + 10, nodeValue_Float("Radius 2", 8));
 		inputs[index + 10].overlay_text_valign = fa_bottom;
 		
 		refreshDynamicDisplay();

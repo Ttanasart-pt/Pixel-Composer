@@ -10,34 +10,34 @@
 function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Glow";
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Float("Border", self, 0))
+	newInput(1, nodeValue_Float("Border", 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 4, 0.1] });
 	
-	newInput(2, nodeValue_Float("Size", self, 3))
+	newInput(2, nodeValue_Float("Size", 3))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
 	
-	newInput(3, nodeValue_Float("Strength", self, 1))
+	newInput(3, nodeValue_Float("Strength", 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ]});
 	
-	newInput(4, nodeValue_Color("Color",   self, ca_white));
+	newInput(4, nodeValue_Color("Color", ca_white));
 	
-	newInput(5, nodeValue_Surface("Mask", self));
+	newInput(5, nodeValue_Surface("Mask"));
 	
-	newInput(6, nodeValue_Float("Mix", self, 1))
+	newInput(6, nodeValue_Float("Mix", 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(7, nodeValue_Bool("Active", self, true));
+	newInput(7, nodeValue_Bool("Active", true));
 		active_index = 7;
 	
 	__init_mask_modifier(5); // inputs 8, 9, 
 	
-	newInput(10, nodeValue_Enum_Button("Mode", self,  0, [ "Greyscale", "Alpha" ]));
+	newInput(10, nodeValue_Enum_Button("Mode",  0, [ "Greyscale", "Alpha" ]));
 		
-	newInput(11, nodeValue_Bool("Draw Original", self, true));
+	newInput(11, nodeValue_Bool("Draw Original", true));
 	
-	newInput(12, nodeValue_Enum_Button("Side", self,  0, [ "Outer", "Inner" ]));
+	newInput(12, nodeValue_Enum_Button("Side",  0, [ "Outer", "Inner" ]));
 		
 	input_display_list = [ 7, 
 		["Surfaces", true], 0, 5, 6, 8, 9, 
@@ -45,7 +45,7 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		["Render",	false], 4, 11, 
 	]
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	

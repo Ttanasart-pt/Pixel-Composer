@@ -1,29 +1,29 @@
 function Node_Tile_Tilemap_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
     name  = "Export Tilemap";
     
-    newInput( 0, nodeValue_Surface("Tilemap", self, noone));
+    newInput( 0, nodeValue_Surface("Tilemap"));
     
-    newInput( 1, nodeValue_Path("Path", self, ""))
+    newInput( 1, nodeValue_Path("Path"))
 		.setDisplay(VALUE_DISPLAY.path_save, { filter: "" })
 		.setVisible(true);
     
     export_format = [ "CSV", "GameMaker" ];
-    newInput( 2, nodeValue_Enum_Scroll("Format", self, 0, export_format));
+    newInput( 2, nodeValue_Enum_Scroll("Format", 0, export_format));
     
-    newInput( 3, nodeValue_Enum_Scroll("GM Export Type", self, 0, [ "Room" ]));
+    newInput( 3, nodeValue_Enum_Scroll("GM Export Type", 0, [ "Room" ]));
     
-    newInput( 4, nodeValue_Path("GM Room", self, ""))
+    newInput( 4, nodeValue_Path("GM Room"))
     	.setDisplay(VALUE_DISPLAY.path_load, { filter: "GameMaker room|*.yy" })
     	.setVisible(false, false);
     
-    newInput( 5, nodeValue_Text("GM Room Name", self, "rmRoom"));
+    newInput( 5, nodeValue_Text("GM Room Name", "rmRoom"));
     
-    newInput( 6, nodeValue_Text("GM Layer Name", self, "Tiles_1"));
+    newInput( 6, nodeValue_Text("GM Layer Name", "Tiles_1"));
     
-    newInput( 7, nodeValue_Tileset("Tileset", self, noone))
+    newInput( 7, nodeValue_Tileset())
     	.setVisible(true, true);
     
-    newInput( 8, nodeValue_Path("GD Scene", self, ""))
+    newInput( 8, nodeValue_Path("GD Scene"))
     	.setDisplay(VALUE_DISPLAY.path_load, { filter: "Godot scene|*.tscn" })
     	.setVisible(false, false);
     

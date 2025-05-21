@@ -8,14 +8,14 @@ function Node_Boolean(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	wd_checkBox = new checkBox( function() { inputs[0].setValue(!getInputData(0)); } );
 	
-	newInput(0, nodeValue_Bool("Value", self, false))
+	newInput(0, nodeValue_Bool("Value", false))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Bool("Hide Background", self, false));
+	newInput(1, nodeValue_Bool("Hide Background", false));
 	
-	newInput(2, nodeValue_Enum_Button("Name location", self,  1, [ "Top", "Bottom" ]));
+	newInput(2, nodeValue_Enum_Button("Name location",  1, [ "Top", "Bottom" ]));
 	
-	newOutput(0, nodeValue_Output("Boolean", self, VALUE_TYPE.boolean, false));
+	newOutput(0, nodeValue_Output("Boolean", VALUE_TYPE.boolean, false));
 	
 	input_display_list = [ 0, 
 		["Display",	false], 1, 2, 

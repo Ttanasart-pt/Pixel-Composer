@@ -11,26 +11,26 @@
 function Node_Normal(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Normal";
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Float("Height", self, 1));
+	newInput(1, nodeValue_Float("Height", 1));
 	
-	newInput(2, nodeValue_Float("Smooth", self, 0, "Include diagonal pixel in normal calculation, which leads to smoother output."))
+	newInput(2, nodeValue_Float("Smooth", 0, "Include diagonal pixel in normal calculation, which leads to smoother output."))
 		.setDisplay(VALUE_DISPLAY.slider, { range : [ 0, 4, 0.1] });
 	
-	newInput(3, nodeValue_Bool("Active", self, true));
+	newInput(3, nodeValue_Bool("Active", true));
 		active_index = 3;
 	
-	newInput(4, nodeValue_Bool("Normalize", self, true));
+	newInput(4, nodeValue_Bool("Normalize", true));
 	
-	newInput(5, nodeValue_Bool("Flip X", self, true));
+	newInput(5, nodeValue_Bool("Flip X", true));
 		
 	input_display_list = [ 3,
 		["Surfaces", false], 0,
 		["Normal",	 false], 1, 2, 5, 4, 
 	]
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	

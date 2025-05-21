@@ -7,7 +7,7 @@ function Node_Array_Split(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput(0, nodeValue("Array", self, CONNECT_TYPE.input, VALUE_TYPE.any, []))
 		.setVisible(true, true);
 	
-	newOutput(0, nodeValue_Output("val 0", self, VALUE_TYPE.any, 0));
+	newOutput(0, nodeValue_Output("val 0", VALUE_TYPE.any, 0));
 	
 	attributes.output_amount = 1;
 	
@@ -28,7 +28,7 @@ function Node_Array_Split(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		for (var i = 0; i < amo; i++) {
 			if(i >= array_length(outputs)) {
 				var _pl = array_safe_get(io_pool, i, 0);
-				if(_pl == 0) _pl = nodeValue_Output($"val {i}", self, type, 0);
+				if(_pl == 0) _pl = nodeValue_Output($"val {i}", type, 0);
 				
 				newOutput(i, _pl);
 				io_pool[i] = _pl;
@@ -64,7 +64,7 @@ function Node_Array_Split(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _ind = 0;
 		
 		repeat(_amo) {
-			var _pl = nodeValue_Output($"val {_ind}", self, VALUE_TYPE.any, 0);
+			var _pl = nodeValue_Output($"val {_ind}", VALUE_TYPE.any, 0);
 			newOutput(_ind, _pl);
 			io_pool[_ind] = _pl;
 			_ind++;

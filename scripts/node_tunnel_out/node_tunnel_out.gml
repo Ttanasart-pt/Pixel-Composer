@@ -17,10 +17,10 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	__key = noone;
 	
-	newInput(0, nodeValue_Text("Name", self, LOADING || APPENDING? "" : ds_map_find_first(project.tunnels_in) ))
+	newInput(0, nodeValue_Text("Name", LOADING || APPENDING? "" : ds_map_find_first(project.tunnels_in) ))
 		.rejectArray();
 	
-	newOutput(0, nodeValue_Output("Value out", self, VALUE_TYPE.any, noone ));
+	newOutput(0, nodeValue_Output("Value out", VALUE_TYPE.any, noone ));
 	
 	inputs[0].editWidget.autocomplete_server = tunnel_autocomplete_server;
 	inputs[0].editWidget.autocomplete_subt   = "Ctrl: Change connected";

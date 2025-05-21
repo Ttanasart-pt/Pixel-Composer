@@ -3,27 +3,27 @@ function Node_Vector3(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	color = COLORS.node_blend_number;
 	setDimension(96, 32 + 24 * 3);
 	
-	newInput(0, nodeValue_Float("x", self, 0))
+	newInput(0, nodeValue_Float("x", 0))
 		.setVisible(true, true);
 		
-	newInput(1, nodeValue_Float("y", self, 0))
+	newInput(1, nodeValue_Float("y", 0))
 		.setVisible(true, true);
 		
-	newInput(2, nodeValue_Float("z", self, 0))
+	newInput(2, nodeValue_Float("z", 0))
 		.setVisible(true, true);
 	
-	newInput(3, nodeValue_Bool("Integer", self, false));
+	newInput(3, nodeValue_Bool("Integer", false));
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newOutput(0, nodeValue_Output("Vector", self, VALUE_TYPE.float, [ 0, 0, 0 ]))
+	newOutput(0, nodeValue_Output("Vector", VALUE_TYPE.float, [ 0, 0, 0 ]))
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	newOutput(1, nodeValue_Output("x", self, VALUE_TYPE.float, 0))
+	newOutput(1, nodeValue_Output("x", VALUE_TYPE.float, 0))
 		
-	newOutput(2, nodeValue_Output("y", self, VALUE_TYPE.float, 0))
+	newOutput(2, nodeValue_Output("y", VALUE_TYPE.float, 0))
 	
-	newOutput(3, nodeValue_Output("z", self, VALUE_TYPE.float, 0))
+	newOutput(3, nodeValue_Output("z", VALUE_TYPE.float, 0))
 		
 	input_display_list = [ 0, 1, 2, 3, 
 	];

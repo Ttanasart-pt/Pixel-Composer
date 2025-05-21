@@ -1,26 +1,26 @@
 function Node_Active_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Active Canvas";
 	
-	newInput(0, nodeValue_Dimension(self));
+	newInput(0, nodeValue_Dimension());
 	
-	newInput(1, nodeValue_Surface("Texture", self));
+	newInput(1, nodeValue_Surface("Texture"));
 	
-	newInput(2, nodeValue_Vec2("Position", self, [ 0, 0 ] ));
+	newInput(2, nodeValue_Vec2("Position", [ 0, 0 ] ));
 	
-	newInput(3, nodeValue_Rotation("Rotation", self, 0));
+	newInput(3, nodeValue_Rotation("Rotation", 0));
 	
-	newInput(4, nodeValue_Vec2("Scale", self, [ 1, 1 ] ));
+	newInput(4, nodeValue_Vec2("Scale", [ 1, 1 ] ));
 	
-	newInput(5, nodeValue_Color("Color", self, ca_white ));
+	newInput(5, nodeValue_Color("Color", ca_white ));
 	
-	newInput(6, nodeValue_Float("Alpha", self, 1 ))
+	newInput(6, nodeValue_Float("Alpha", 1 ))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(7, nodeValue_Bool("Active", self, true ));
+	newInput(7, nodeValue_Bool("Active", true ));
 	
-	newInput(8, nodeValue_Range("Distance", self, [ 1, 1 ] , { linked : true }));
+	newInput(8, nodeValue_Range("Distance", [ 1, 1 ] , { linked : true }));
 	
-	newOutput(0, nodeValue_Output("Output", self, VALUE_TYPE.surface, noone ));
+	newOutput(0, nodeValue_Output("Output", VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [ 0,
 		[ "Brush transform",  false ], 7, 2, 3, 4,

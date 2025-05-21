@@ -21,20 +21,20 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	setDimension(96, 96);
 	draw_padding = 8;
 	
-	newInput(0, nodeValue_Armature("Armature", self, noone))
+	newInput(0, nodeValue_Armature())
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Mesh("Mesh", self, noone))
+	newInput(1, nodeValue_Mesh("Mesh", noone))
 		.setVisible(true, true);
 	
-	newInput(2, nodeValue_Trigger("Autoweight", self ))
+	newInput(2, nodeValue_Trigger("Autoweight" ))
 		.setDisplay(VALUE_DISPLAY.button, { name: "Auto weight", UI : true, onClick: function() /*=>*/ {return AutoWeightPaint()} });
 		
-	newInput(3, nodeValue_Float("Auto Weight Radius", self, 8))
+	newInput(3, nodeValue_Float("Auto Weight Radius", 8))
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newOutput(0, nodeValue_Output("Rigged Surface", self, VALUE_TYPE.dynaSurface, noone));
+	newOutput(0, nodeValue_Output("Rigged Surface", VALUE_TYPE.dynaSurface, noone));
 	
 	bone_posed       = noone;
 	bone_array       = [];

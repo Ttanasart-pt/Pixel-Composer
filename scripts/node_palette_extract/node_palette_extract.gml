@@ -9,27 +9,27 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	name = "Palette Extract";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Int("Max colors", self, 5, "Amount of color in a palette."))
+	newInput(1, nodeValue_Int("Max colors", 5, "Amount of color in a palette."))
 		.rejectArray();
 	
 	newInput(2, nodeValueSeed(self))
 		.rejectArray();
 	
-	newInput(3, nodeValue_Enum_Scroll("Algorithm", self,  0, { data: [ "K-mean", "Frequency", "All Colors" ], update_hover: false }))
+	newInput(3, nodeValue_Enum_Scroll("Algorithm",  0, { data: [ "K-mean", "Frequency", "All Colors" ], update_hover: false }))
 		.rejectArray();
 	
-	newInput(4, nodeValue_Enum_Scroll("Color Space", self,  1, { data: [ "RGB", "HSV" ], update_hover: false }))
+	newInput(4, nodeValue_Enum_Scroll("Color Space",  1, { data: [ "RGB", "HSV" ], update_hover: false }))
 		.rejectArray();
 	
-	newInput(5, nodeValue_Surface("Mask", self));
+	newInput(5, nodeValue_Surface("Mask"));
 	
-	newInput(6, nodeValue_Float("Radius", self, .25))
+	newInput(6, nodeValue_Float("Radius", .25))
 		.setDisplay(VALUE_DISPLAY.slider)
 		.rejectArray();
 		
-	newOutput(0, nodeValue_Output("Palette", self, VALUE_TYPE.color, [ ]))
+	newOutput(0, nodeValue_Output("Palette", VALUE_TYPE.color, [ ]))
 		.setDisplay(VALUE_DISPLAY.palette);
 	
 	static getPreviewValues = function() { return getInputData(0); }

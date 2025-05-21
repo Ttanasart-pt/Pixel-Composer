@@ -1,13 +1,13 @@
 function Node_PB_Draw_Triangle(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group) constructor {
 	name = "Triangle";
 	
-	newInput(pbi+0, nodeValue_Enum_Button("Base", self, 0, array_create(4, s_node_pb_draw_tri_base)));
+	newInput(pbi+0, nodeValue_Enum_Button("Base", 0, array_create(4, s_node_pb_draw_tri_base)));
 	
-	newInput(pbi+1, nodeValue_Slider("Apex Ratio", self, 0.5));
+	newInput(pbi+1, nodeValue_Slider("Apex Ratio", 0.5));
 	
-	newInput(pbi+2, nodeValue_Enum_Button("Mode", self, 0, array_create(2, s_node_pb_draw_tri_apex)));
+	newInput(pbi+2, nodeValue_Enum_Button("Mode", 0, array_create(2, s_node_pb_draw_tri_apex)));
 	
-	newInput(pbi+3, nodeValue_Enum_Button("Apex Corner", self, 0, array_create(4, s_node_pb_draw_tri_apexc)));
+	newInput(pbi+3, nodeValue_Enum_Button("Apex Corner", 0, array_create(4, s_node_pb_draw_tri_apexc)));
 	
 	array_insert_array(input_display_list, input_display_shape_index, [
 		["Shape", false], pbi+2, pbi+0, pbi+3, pbi+1, 

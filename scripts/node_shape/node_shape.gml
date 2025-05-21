@@ -53,17 +53,17 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	////- Output
 	
-	newInput(0, nodeValue_Dimension(self));
-	newInput(6, nodeValue_Bool("Anti-aliasing", self, false));
+	newInput(0, nodeValue_Dimension());
+	newInput(6, nodeValue_Bool("Anti-aliasing", false));
 	
 	////- Transform
 	
-	newInput(15, nodeValue_Enum_Scroll( "Positioning Mode", self,  2, [ "Area", "Center + Scale", "Full Image" ]))
-	newInput( 3, nodeValue_Area(        "Position",         self, DEF_AREA_REF, { onSurfaceSize, useShape : false })).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
-	newInput(16, nodeValue_Vec2(        "Center",           self, [ .5, .5 ] )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
-	newInput(17, nodeValue_Vec2(        "Half Size",        self, [ .5, .5 ] )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
-	newInput(19, nodeValue_Rotation(    "Shape rotation",   self, 0));
-	newInput(28, nodeValue_Slider(      "Shape Scale",      self, 1));
+	newInput(15, nodeValue_Enum_Scroll( "Positioning Mode",  2, [ "Area", "Center + Scale", "Full Image" ]))
+	newInput( 3, nodeValue_Area(        "Position", DEF_AREA_REF, { onSurfaceSize, useShape : false })).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
+	newInput(16, nodeValue_Vec2(        "Center", [ .5, .5 ] )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
+	newInput(17, nodeValue_Vec2(        "Half Size", [ .5, .5 ] )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
+	newInput(19, nodeValue_Rotation(    "Shape rotation", 0));
+	newInput(28, nodeValue_Slider(      "Shape Scale", 1));
 	
 	////- Shape
 	
@@ -76,52 +76,52 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	];
 	__ind = 0; shape_types_str = array_map(shape_types, function(v, i) /*=>*/ {return v == -1? -1 : new scrollItem(v, s_node_shape_type, __ind++)});
 	
-	newInput( 2, nodeValue_Enum_Scroll(    "Shape", self,  0, { data: shape_types_str, horizontal: true, text_pad: ui(16) }))
+	newInput( 2, nodeValue_Enum_Scroll(    "Shape",  0, { data: shape_types_str, horizontal: true, text_pad: ui(16) }))
 		.setHistory([ shape_types, { cond: function() /*=>*/ {return LOADING_VERSION < 1_18_00_0}, list: global.node_shape_keys_18 } ]);
-	newInput(32, nodeValue_Vec2(   "Point 1",   self, [ 0, 0 ])).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
-	newInput(33, nodeValue_Vec2(   "Point 2",   self, [ 1, 1 ])).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
-	newInput(35, nodeValue_Vec2(   "Point 3",   self, [ 1, 0 ])).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
-	newInput(34, nodeValue_Slider( "Thickness", self, 0.1));
+	newInput(32, nodeValue_Vec2(   "Point 1", [ 0, 0 ])).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
+	newInput(33, nodeValue_Vec2(   "Point 2", [ 1, 1 ])).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
+	newInput(35, nodeValue_Vec2(   "Point 3", [ 1, 0 ])).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
+	newInput(34, nodeValue_Slider( "Thickness", 0.1));
 	
-	newInput( 9, nodeValue_Slider(         "Corner radius",  self, 0, { range: [0, 0.5, 0.001] })).setValidator(VV_clamp(0, .5));
+	newInput( 9, nodeValue_Slider(         "Corner radius", 0, { range: [0, 0.5, 0.001] })).setValidator(VV_clamp(0, .5));
 	inputs[9].overlay_draw_text = false;
-	newInput( 4, nodeValue_Int(            "Sides",          self, 3)).setVisible(false);
-	newInput(13, nodeValue_Slider(         "Start radius",   self, 0.1)).setVisible(false);
-	newInput( 5, nodeValue_Slider(         "Inner radius",   self, 0.5)).setVisible(false);
-	newInput( 7, nodeValue_Rotation(       "Rotation",       self, 0));
-	newInput( 8, nodeValue_Rotation_Range( "Angle range",    self, [ 0, 180 ]));
-	newInput(14, nodeValue_PathNode(       "Shape path",     self, noone));
-	newInput(21, nodeValue_Slider_Range(   "Angles",         self, [ 0.5, 1.0 ]));
-	newInput(22, nodeValue_Slider(         "Skew",           self, 0.5 ));
-	newInput(23, nodeValue_Float(          "Arrow Sizes",    self, 0.3 ));
-	newInput(24, nodeValue_Float(          "Arrow Head",     self, 1 ));
-	newInput(25, nodeValue_Int(            "Teeth Amount",   self, 6 ));
-	newInput(26, nodeValue_Vec2(           "Teeth Size",     self, [ 0.2, 0.2 ] , { slideSpeed : 0.01 }));
-	newInput(27, nodeValue_Rotation(       "Teeth Rotation", self, 0));
-	newInput(30, nodeValue_Bool(           "Caps",           self, false));
-	newInput(31, nodeValue_Float(          "Factor",         self, 2.5));
-	newInput(36, nodeValue_Enum_Button(    "Corner Shape",   self, 0, [ "Round", "Cut" ]))
+	newInput( 4, nodeValue_Int(            "Sides", 3)).setVisible(false);
+	newInput(13, nodeValue_Slider(         "Start radius", 0.1)).setVisible(false);
+	newInput( 5, nodeValue_Slider(         "Inner radius", 0.5)).setVisible(false);
+	newInput( 7, nodeValue_Rotation(       "Rotation", 0));
+	newInput( 8, nodeValue_Rotation_Range( "Angle range", [ 0, 180 ]));
+	newInput(14, nodeValue_PathNode(       "Shape path"));
+	newInput(21, nodeValue_Slider_Range(   "Angles", [ 0.5, 1.0 ]));
+	newInput(22, nodeValue_Slider(         "Skew", 0.5 ));
+	newInput(23, nodeValue_Float(          "Arrow Sizes", 0.3 ));
+	newInput(24, nodeValue_Float(          "Arrow Head", 1 ));
+	newInput(25, nodeValue_Int(            "Teeth Amount", 6 ));
+	newInput(26, nodeValue_Vec2(           "Teeth Size", [ 0.2, 0.2 ] , { slideSpeed : 0.01 }));
+	newInput(27, nodeValue_Rotation(       "Teeth Rotation", 0));
+	newInput(30, nodeValue_Bool(           "Caps", false));
+	newInput(31, nodeValue_Float(          "Factor", 2.5));
+	newInput(36, nodeValue_Enum_Button(    "Corner Shape", 0, [ "Round", "Cut" ]))
 	
 	////- Render
 		
-	newInput(10, nodeValue_Color( "Shape color", self, ca_white));
-	newInput(18, nodeValue_Bool(  "Tile",        self, false));
+	newInput(10, nodeValue_Color( "Shape color", ca_white));
+	newInput(18, nodeValue_Bool(  "Tile", false));
 	
 	////- Height
 	
-	newInput(12, nodeValue_Bool(         "Height",  self, false));
-	newInput(29, nodeValue_Curve(        "Curve",   self, CURVE_DEF_01));
-	newInput(20, nodeValue_Slider_Range( "Level",   self, [ 0, 1 ]));
-	newInput(37, nodeValue_Bool(         "Opacity", self, false));
+	newInput(12, nodeValue_Bool(         "Height", false));
+	newInput(29, nodeValue_Curve(        "Curve", CURVE_DEF_01));
+	newInput(20, nodeValue_Slider_Range( "Level", [ 0, 1 ]));
+	newInput(37, nodeValue_Bool(         "Opacity", false));
 	
 	////- Background
 	
-	newInput( 1, nodeValue_Bool(  "Background",       self, false));
-	newInput(11, nodeValue_Color( "Background color", self, ca_black));
+	newInput( 1, nodeValue_Bool(  "Background", false));
+	newInput(11, nodeValue_Color( "Background color", ca_black));
 	
 	/////////////////////////////////////////////
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
 		["Output",     false],      0,  6, 

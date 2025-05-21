@@ -20,11 +20,11 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
     tileAmount = [ 1, 1 ];
 	rules      = new Tileset_Rule(self);
     
-    newInput( 0, nodeValue_Surface("Texture", self, noone));
+    newInput( 0, nodeValue_Surface("Texture"));
     
-    newInput( 1, nodeValue_Vec2("Tile size", self, [ 16, 16 ]));
+    newInput( 1, nodeValue_Vec2("Tile size", [ 16, 16 ]));
     
-	newOutput(0, nodeValue_Output("Tileset", self, VALUE_TYPE.tileset, self));
+	newOutput(0, nodeValue_Output("Tileset", VALUE_TYPE.tileset, self));
 	
 	function drawTile(index, _x, _y, _w, _h) {
 		if(index < -1) { // animated

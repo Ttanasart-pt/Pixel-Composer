@@ -9,7 +9,7 @@ function Node_Array_Shuffle(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	newInput(1, nodeValueSeed(self))
 		.rejectArray();
 	
-	newOutput(0, nodeValue_Output("Shuffled array", self, VALUE_TYPE.any, []));
+	newOutput(0, nodeValue_Output("Shuffled array", VALUE_TYPE.any, []));
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var type = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;

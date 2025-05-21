@@ -2,20 +2,20 @@ function Node_Path_Weight_Adjust(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	name = "Weight Adjust";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_PathNode("Path", self, noone))
+	newInput(0, nodeValue_PathNode("Path"))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Enum_Scroll("Mode", self, 0, [ "Additive", "Multiplicative" ]));
+	newInput(1, nodeValue_Enum_Scroll("Mode", 0, [ "Additive", "Multiplicative" ]));
 	
-	newInput(2, nodeValue_Float("Value", self, 0));
+	newInput(2, nodeValue_Float("Value", 0));
 	
-	newInput(3, nodeValue_Curve("Curve", self, CURVE_DEF_11));
+	newInput(3, nodeValue_Curve("Curve", CURVE_DEF_11));
 	
-	newInput(4, nodeValue_Enum_Scroll("Type", self, 0, [ "Constant", "Curve" ]));
+	newInput(4, nodeValue_Enum_Scroll("Type", 0, [ "Constant", "Curve" ]));
 	
-	newInput(5, nodeValue_Vec2("Curve Range", self, [ 0, 1 ]));
+	newInput(5, nodeValue_Vec2("Curve Range", [ 0, 1 ]));
 	
-	newOutput(0, nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self));
+	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, self));
 	
 	input_display_list = [ 0, 
 	    ["Adjustment", false], 1, 4, 2, 3, 5, 

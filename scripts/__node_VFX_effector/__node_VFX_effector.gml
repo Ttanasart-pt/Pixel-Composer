@@ -19,28 +19,28 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Particle("Particles", self, -1 ))
+	newInput(0, nodeValue_Particle())
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Area("Area", self, DEF_AREA))
+	newInput(1, nodeValue_Area("Area", DEF_AREA))
 		.rejectArray();
 	
-	newInput(2, nodeValue_Curve("Falloff", self, CURVE_DEF_01 ))
+	newInput(2, nodeValue_Curve("Falloff", CURVE_DEF_01 ))
 		.rejectArray();
 	
-	newInput(3, nodeValue_Float("Falloff distance", self, 4 ))
+	newInput(3, nodeValue_Float("Falloff distance", 4 ))
 		.rejectArray();
 	
-	newInput(4, nodeValue_Vec2("Effect Vector", self, [ -1, 0 ] ))
+	newInput(4, nodeValue_Vec2("Effect Vector", [ -1, 0 ] ))
 		.rejectArray();
 	
-	newInput(5, nodeValue_Float("Strength", self, 1 ))
+	newInput(5, nodeValue_Float("Strength", 1 ))
 		.rejectArray();
 	
-	newInput(6, nodeValue_Rotation_Range("Rotate particle", self, [ 0, 0 ] ))
+	newInput(6, nodeValue_Rotation_Range("Rotate particle", [ 0, 0 ] ))
 		.rejectArray();
 	
-	newInput(7, nodeValue_Vec2_Range("Scale particle", self, [ 0, 0, 0, 0 ], { linked : true }))
+	newInput(7, nodeValue_Vec2_Range("Scale particle", [ 0, 0, 0, 0 ], { linked : true }))
 		.rejectArray();
 	
 	newInput(8, nodeValueSeed(self))
@@ -53,7 +53,7 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		["Effect",	false], 8, 4, 5, 6, 7,
 	];
 	
-	newOutput(0, nodeValue_Output("Particles", self, VALUE_TYPE.particle, -1 ));
+	newOutput(0, nodeValue_Output("Particles", VALUE_TYPE.particle, -1 ));
 	
 	UPDATE_PART_FORWARD
 	
@@ -168,7 +168,7 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var val = getInputData(0);
 		outputs[0].setValue(val);
 		
-		if(val == -1) return;
+		if(val == noone) return;
 		
 		var _area = getInputData(1);
 		falloff   = getInputData(2);

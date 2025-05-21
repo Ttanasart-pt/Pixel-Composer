@@ -7,31 +7,31 @@
 function Node_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Round Corner";
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Int("Radius", self, 2))
+	newInput(1, nodeValue_Int("Radius", 2))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
 	
-	newInput(2, nodeValue_Surface("Mask", self));
+	newInput(2, nodeValue_Surface("Mask"));
 	
-	newInput(3, nodeValue_Float("Mix", self, 1))
+	newInput(3, nodeValue_Float("Mix", 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(4, nodeValue_Bool("Active", self, true));
+	newInput(4, nodeValue_Bool("Active", true));
 		active_index = 4;
 	
-	newInput(5, nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) }));
+	newInput(5, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	__init_mask_modifier(2); // inputs 6, 7
 	
-	newInput(8, nodeValue_Slider("Thershold", self, .5));
+	newInput(8, nodeValue_Slider("Thershold", .5));
 	
 	input_display_list = [ 4, 5, 
 		["Surfaces", true], 0, 2, 3, 6, 7, 
 		["Corner",	false], 1, 8, 
 	]
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	attribute_oversample();

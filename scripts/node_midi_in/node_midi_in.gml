@@ -14,14 +14,14 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	for( var i = 0; i < inps; i++ ) 
 		_miniNames[i] = rtmidi_name_in(i);
 	
-	newInput(0, nodeValue_Enum_Scroll("Input", self,  0, { data: _miniNames, update_hover: false }))
+	newInput(0, nodeValue_Enum_Scroll("Input",  0, { data: _miniNames, update_hover: false }))
 		.rejectArray();
 		
-	newOutput(0, nodeValue_Output("Raw Message", self, VALUE_TYPE.float, []));
+	newOutput(0, nodeValue_Output("Raw Message", VALUE_TYPE.float, []));
 	
-	newOutput(1, nodeValue_Output("Pressing notes", self, VALUE_TYPE.float, []));
+	newOutput(1, nodeValue_Output("Pressing notes", VALUE_TYPE.float, []));
 	
-	newOutput(2, nodeValue_Output("Direct values", self, VALUE_TYPE.struct, {}));
+	newOutput(2, nodeValue_Output("Direct values", VALUE_TYPE.struct, {}));
 	
 	watcher_controllers = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		var _h = ui(48);
@@ -97,11 +97,11 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	static createNewInput = function(index = array_length(inputs)) {
 		index_watching = index;
 		
-		newInput(index + 0, nodeValue_Int(  "Index",     self, -1    ));
-		newInput(index + 1, nodeValue_Bool( "Normalize", self, false ));
+		newInput(index + 0, nodeValue_Int(  "Index", -1    ));
+		newInput(index + 1, nodeValue_Bool( "Normalize", false ));
 		inputs[index].editWidget.slidable = false;
 		
-		var _out = nodeValue_Output("Value", self, VALUE_TYPE.float, -1 );
+		var _out = nodeValue_Output("Value", VALUE_TYPE.float, -1 );
 		array_push(outputs, _out);
 		
 		return inputs[index];

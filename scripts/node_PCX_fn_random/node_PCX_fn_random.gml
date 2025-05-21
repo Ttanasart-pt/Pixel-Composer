@@ -5,9 +5,9 @@ function Node_PCX_fn_Random(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) c
 	
 	newInput(1, nodeValue("Max", self, CONNECT_TYPE.input, VALUE_TYPE.PCXnode, noone));
 	
-	newInput(2, nodeValue_Bool("Integer", self, false));
+	newInput(2, nodeValue_Bool("Integer", false));
 	
-	newOutput(0, nodeValue_Output("PCX", self, VALUE_TYPE.PCXnode, noone));
+	newOutput(0, nodeValue_Output("PCX", VALUE_TYPE.PCXnode, noone));
 	
 	input_display_list = [ 2, 0, 1 ];
 	

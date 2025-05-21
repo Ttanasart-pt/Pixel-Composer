@@ -2,21 +2,21 @@ function Node_Find_Pixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	name = "Find pixel";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Color("Search color", self, ca_black));
+	newInput(1, nodeValue_Color("Search color", ca_black));
 	
-	newInput(2, nodeValue_Float("Tolerance", self, 0))
+	newInput(2, nodeValue_Float("Tolerance", 0))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(3, nodeValue_Bool("Find all", self, false));
+	newInput(3, nodeValue_Bool("Find all", false));
 	
-	newInput(4, nodeValue_Bool("Include alpha", self, false));
+	newInput(4, nodeValue_Bool("Include alpha", false));
 	
-	newInput(5, nodeValue_Float("Alpha tolerance", self, 0.2))
+	newInput(5, nodeValue_Float("Alpha tolerance", 0.2))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newOutput(0, nodeValue_Output("Position", self, VALUE_TYPE.integer, [ 0, 0 ]))
+	newOutput(0, nodeValue_Output("Position", VALUE_TYPE.integer, [ 0, 0 ]))
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	input_display_list = [ 0, 

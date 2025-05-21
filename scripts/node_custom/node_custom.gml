@@ -22,19 +22,19 @@ function Node_Custom(_x, _y, _group = noone, _param = {}) : Node_Processor(_x, _
 			var _n = noone;
 			
 			switch(_type) {
-				case "surface" : _n = nodeValue_Surface( _name, self, _valu); break;
-				case "float"   : _n = nodeValue_Float(   _name, self, _valu); break;
-				case "int"     : _n = nodeValue_Int(     _name, self, _valu); break;
-				case "color"   : _n = nodeValue_Color(   _name, self, _valu); break;
+				case "surface" : _n = nodeValue_Surface( _name, _valu); break;
+				case "float"   : _n = nodeValue_Float(   _name, _valu); break;
+				case "int"     : _n = nodeValue_Int(     _name, _valu); break;
+				case "color"   : _n = nodeValue_Color(   _name, _valu); break;
 				
-				case "dimension" :  _n = nodeValue_Dimension(self);              break;
-				case "vec2"      :  _n = nodeValue_Vec2(    _name, self, _valu); break;
-				case "vec3"      :  _n = nodeValue_Vec3(    _name, self, _valu); break;
-				case "vec4"      :  _n = nodeValue_Vec4(    _name, self, _valu); break;
+				case "dimension" :  _n = nodeValue_Dimension();              break;
+				case "vec2"      :  _n = nodeValue_Vec2(    _name, _valu); break;
+				case "vec3"      :  _n = nodeValue_Vec3(    _name, _valu); break;
+				case "vec4"      :  _n = nodeValue_Vec4(    _name, _valu); break;
 				
-				case "mat2"   :  _n = nodeValue_Float(   _name, self, _valu).setDisplay(VALUE_DISPLAY.matrix, { size: 2 }); break;
-				case "mat3"   :  _n = nodeValue_Float(   _name, self, _valu).setDisplay(VALUE_DISPLAY.matrix, { size: 3 }); break;
-				case "mat4"   :  _n = nodeValue_Float(   _name, self, _valu).setDisplay(VALUE_DISPLAY.matrix, { size: 4 }); break;
+				case "mat2"   :  _n = nodeValue_Float(   _name, _valu).setDisplay(VALUE_DISPLAY.matrix, { size: 2 }); break;
+				case "mat3"   :  _n = nodeValue_Float(   _name, _valu).setDisplay(VALUE_DISPLAY.matrix, { size: 3 }); break;
+				case "mat4"   :  _n = nodeValue_Float(   _name, _valu).setDisplay(VALUE_DISPLAY.matrix, { size: 4 }); break;
 			}
 			
 			var _disp = _input[$ "display"];
@@ -63,7 +63,7 @@ function Node_Custom(_x, _y, _group = noone, _param = {}) : Node_Processor(_x, _
 			var _valu     = _output.value;
 			var _showGra  = _output[$ "show_in_graph"] ?? true;
 			
-			newOutput(i, nodeValue_Output(_name, self, value_type_from_string(_type), _valu)).setVisible(_showGra);
+			newOutput(i, nodeValue_Output(_name, value_type_from_string(_type), _valu)).setVisible(_showGra);
 		}
 		
 	    if(struct_has(node_info, "input_display"))  input_display_list  = node_info.input_display;

@@ -10,11 +10,11 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Float("Check value", self, 0 ))
+	newInput(0, nodeValue_Float("Check value", 0 ))
 		.setVisible(true, true)
 		.rejectArray();
 		
-	newInput(1, nodeValue_Enum_Scroll("Condition", self,  0 , [ new scrollItem("Equal",             s_node_condition_type, 0), 
+	newInput(1, nodeValue_Enum_Scroll("Condition",  0 , [ new scrollItem("Equal",             s_node_condition_type, 0), 
 												                new scrollItem("Not equal",         s_node_condition_type, 1), 
 												                new scrollItem("Less ",             s_node_condition_type, 2), 
 												                new scrollItem("Less or equal ",	s_node_condition_type, 3), 
@@ -22,7 +22,7 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 												                new scrollItem("Greater or equal",  s_node_condition_type, 5), ]))
 		.rejectArray();
 		
-	newInput(2, nodeValue_Float("Compare to", self, 0 ))
+	newInput(2, nodeValue_Float("Compare to", 0 ))
 		.rejectArray();
 	
 	newInput(3, nodeValue("True", self, CONNECT_TYPE.input, VALUE_TYPE.any, -1 ))
@@ -31,24 +31,24 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	newInput(4, nodeValue("False", self, CONNECT_TYPE.input, VALUE_TYPE.any, -1 ))
 		.setVisible(true, true);
 	
-	newInput(5, nodeValue_Enum_Scroll("Eval Mode", self,  0 , ["Boolean", "Number compare", "Text compare" ]))
+	newInput(5, nodeValue_Enum_Scroll("Eval Mode",  0 , ["Boolean", "Number compare", "Text compare" ]))
 		.rejectArray();
 	
-	newInput(6, nodeValue_Bool("Boolean", self, false ))
+	newInput(6, nodeValue_Bool("Boolean", false ))
 		.setVisible(true, true)
 		.rejectArray();
 	
-	newInput(7, nodeValue_Text("Text 1", self, "" ));
+	newInput(7, nodeValue_Text("Text 1"));
 	
-	newInput(8, nodeValue_Text("Text 2", self, "" ));
+	newInput(8, nodeValue_Text("Text 2"));
 		
 	input_display_list = [ 5,
 		["Condition", false], 0, 1, 2, 6, 7, 8, 
 		["Result",	  true], 3, 4
 	]
 	
-	newOutput(0, nodeValue_Output("Result", self, VALUE_TYPE.any, []));
-	newOutput(1, nodeValue_Output("Bool", self, VALUE_TYPE.boolean, false));
+	newOutput(0, nodeValue_Output("Result", VALUE_TYPE.any, []));
+	newOutput(1, nodeValue_Output("Bool", VALUE_TYPE.boolean, false));
 	
 	doUpdate = doUpdateLite;
 	static update = function(frame = CURRENT_FRAME) {

@@ -7,11 +7,11 @@ function Node_ASE_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		.setVisible(false, true)
 		.rejectArray();
 	
-	newInput(1, nodeValue_Text("Tag", self, ""));
+	newInput(1, nodeValue_Text("Tag"));
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	newOutput(1, nodeValue_Output("Frame Range", self, VALUE_TYPE.integer, [ 0, 0 ]))
+	newOutput(1, nodeValue_Output("Frame Range", VALUE_TYPE.integer, [ 0, 0 ]))
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	tag_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {

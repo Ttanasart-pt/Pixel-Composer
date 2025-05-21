@@ -3,12 +3,12 @@ function Node_Vector_Polar_To_Cart(_x, _y, _group = noone) : Node_Processor(_x, 
 	color = COLORS.node_blend_number;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Vec2("Polar Coord", self, [ 0, 0 ]))
+	newInput(0, nodeValue_Vec2("Polar Coord", [ 0, 0 ]))
 		.setVisible(true, true);
 		
-	newInput(1, nodeValue_Enum_Button("Angle Unit", self, 0, [ "Degrees", "Radians" ]))
+	newInput(1, nodeValue_Enum_Button("Angle Unit", 0, [ "Degrees", "Radians" ]))
 	
-	newOutput(0, nodeValue_Output("Cartesian Coord", self, VALUE_TYPE.float, [ 0, 0 ] ))
+	newOutput(0, nodeValue_Output("Cartesian Coord", VALUE_TYPE.float, [ 0, 0 ] ))
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	static processData = function(_output, _data, _array_index = 0) {  

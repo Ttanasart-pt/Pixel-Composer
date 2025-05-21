@@ -3,19 +3,19 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	setDimension(96, 48);
 	length = 0;
 	
-	newInput(0, nodeValue_PathNode("Path 1", self, noone))
+	newInput(0, nodeValue_PathNode("Path 1"))
 		.setVisible(true, true)
 		.rejectArray();
 	
-	newInput(1, nodeValue_PathNode("Path 2", self, noone))
+	newInput(1, nodeValue_PathNode("Path 2"))
 		.setVisible(true, true)
 		.rejectArray();
 	
-	newInput(2, nodeValue_Float("Ratio", self, 0))
+	newInput(2, nodeValue_Float("Ratio", 0))
 		.setDisplay(VALUE_DISPLAY.slider)
 		.rejectArray();
 	
-	newOutput(0, nodeValue_Output("Path", self, VALUE_TYPE.pathnode, noone));
+	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, noone));
 	
 	function _blendedPath() constructor {
 		cached_pos = {};

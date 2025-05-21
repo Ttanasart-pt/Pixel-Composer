@@ -2,17 +2,17 @@ function Node_Gradient_Replace_Color(_x, _y, _group = noone) : Node_Processor(_x
 	name = "Gradient Replace";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Gradient("Gradient", self, new gradientObject(ca_white)))
+	newInput(0, nodeValue_Gradient("Gradient", new gradientObject(ca_white)))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Palette("Color from", self, array_clone(DEF_PALETTE)));
+	newInput(1, nodeValue_Palette("Color from", array_clone(DEF_PALETTE)));
 	
-	newInput(2, nodeValue_Palette("Color to", self, array_clone(DEF_PALETTE)));
+	newInput(2, nodeValue_Palette("Color to", array_clone(DEF_PALETTE)));
 	
-	newInput(3, nodeValue_Float("Threshold", self, 0.1))
+	newInput(3, nodeValue_Float("Threshold", 0.1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newOutput(0, nodeValue_Output("Gradient", self, VALUE_TYPE.gradient, new gradientObject(ca_white) ));
+	newOutput(0, nodeValue_Output("Gradient", VALUE_TYPE.gradient, new gradientObject(ca_white) ));
 	
 	static processData_prebatch = function() {
 		setDimension(96, process_length[0] * 32);

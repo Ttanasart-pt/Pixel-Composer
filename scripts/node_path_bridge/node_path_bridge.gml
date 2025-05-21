@@ -2,17 +2,17 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	name = "Bridge Path";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_PathNode("Path", self, noone))
+	newInput(0, nodeValue_PathNode("Path"))
 		.setVisible(true, true)
 		.rejectArray();
 	
-	newInput(1, nodeValue_Int("Amount", self, 4))
+	newInput(1, nodeValue_Int("Amount", 4))
 		.rejectArray();
 	
-	newInput(2, nodeValue_Bool("Smooth", self, false))
+	newInput(2, nodeValue_Bool("Smooth", false))
 		.rejectArray();
 	
-	newOutput(0, nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self));
+	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, self));
 	
 	input_display_list = [ 0, 
 		["Bridge",  false], 1, 2, 

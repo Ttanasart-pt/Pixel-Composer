@@ -1,4 +1,4 @@
-function nodeValue_Dimension(_node, value = DEF_SURF) { return new __NodeValue_Dimension(_node, value); }
+function nodeValue_Dimension(value = DEF_SURF) { return new __NodeValue_Dimension(self, value); }
 
 function __NodeValue_Dimension(_node, value) : NodeValue("Dimension", _node, CONNECT_TYPE.input, VALUE_TYPE.integer, value, "") constructor {
 	setDisplay(VALUE_DISPLAY.vector);

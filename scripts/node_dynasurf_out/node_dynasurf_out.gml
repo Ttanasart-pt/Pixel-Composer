@@ -21,7 +21,7 @@ function Node_DynaSurf_Out(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) co
 	
 	newInput(7, nodeValue("alpha", self, CONNECT_TYPE.input, VALUE_TYPE.PCXnode, noone));
 	 
-	newOutput(0, nodeValue_Output("PCX", self, VALUE_TYPE.PCXnode, noone))
+	newOutput(0, nodeValue_Output("PCX", VALUE_TYPE.PCXnode, noone))
 		.setVisible(false);
 	
 	input_display_list = [ 0, 

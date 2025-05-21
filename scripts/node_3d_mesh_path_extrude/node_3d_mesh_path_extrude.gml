@@ -3,37 +3,37 @@ function Node_3D_Mesh_Path_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 	
 	object_class = __3dPathExtrude;
 	
-	newInput(in_mesh + 0, nodeValue_PathNode("Path", self, noone ))
+	newInput(in_mesh + 0, nodeValue_PathNode("Path" ))
 		.setVisible(true, true);
 	
-	newInput(in_mesh + 1, nodeValue_Int("Side", self, 8 ))
+	newInput(in_mesh + 1, nodeValue_Int("Side", 8 ))
 		.setValidator(VV_min(2));
 	
-	newInput(in_mesh + 2, nodeValue_D3Material("Material Side", self, new __d3dMaterial()))
+	newInput(in_mesh + 2, nodeValue_D3Material("Material Side", new __d3dMaterial()))
 		.setVisible(true, true);
 	
-	newInput(in_mesh + 3, nodeValue_D3Material("Material Cap", self, new __d3dMaterial()))
+	newInput(in_mesh + 3, nodeValue_D3Material("Material Cap", new __d3dMaterial()))
 		.setVisible(true, true);
 	
-	newInput(in_mesh + 4, nodeValue_Bool("Smooth", self, false ));
+	newInput(in_mesh + 4, nodeValue_Bool("Smooth", false ));
 	
-	newInput(in_mesh + 5, nodeValue_Bool("End caps", self, true ));
+	newInput(in_mesh + 5, nodeValue_Bool("End caps", true ));
 	
-	newInput(in_mesh + 6, nodeValue_Int("Subdivision", self, 8 ))
+	newInput(in_mesh + 6, nodeValue_Int("Subdivision", 8 ))
 		.setValidator(VV_min(2));
 	
-	newInput(in_mesh + 7, nodeValue_Float("Radius", self, 0.25 ))
+	newInput(in_mesh + 7, nodeValue_Float("Radius", 0.25 ))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(in_mesh + 8, nodeValue_Curve("Radius Over Path", self, CURVE_DEF_11 ));
+	newInput(in_mesh + 8, nodeValue_Curve("Radius Over Path", CURVE_DEF_11 ));
 	
-	newInput(in_mesh + 9, nodeValue_Vec2("Texture Scale", self, [ 1, 1 ] ));
+	newInput(in_mesh + 9, nodeValue_Vec2("Texture Scale", [ 1, 1 ] ));
 	
-	newInput(in_mesh + 10, nodeValue_Bool("Loop", self, false ));
+	newInput(in_mesh + 10, nodeValue_Bool("Loop", false ));
 	
-	newInput(in_mesh + 11, nodeValue_Bool("Inverted", self, false ));
+	newInput(in_mesh + 11, nodeValue_Bool("Inverted", false ));
 	
-	newInput(in_mesh + 12, nodeValue_Rotation("Profile Angle", self, 0 ));
+	newInput(in_mesh + 12, nodeValue_Rotation("Profile Angle", 0 ));
 	
 	input_display_list = [
 		["Path",		false], 	in_mesh + 0, in_mesh + 10,

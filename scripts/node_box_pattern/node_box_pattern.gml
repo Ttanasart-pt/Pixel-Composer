@@ -8,21 +8,21 @@
 function Node_Box_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Box Pattern";
 	
-	newInput(0, nodeValue_Dimension(self));
+	newInput(0, nodeValue_Dimension());
 	
-	newInput(1, nodeValue_Float("Scale", self, 2))
+	newInput(1, nodeValue_Float("Scale", 2))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] })
 		.setMappable(6);
 	
-	newInput(2, nodeValue_Rotation("Angle", self, 0))
+	newInput(2, nodeValue_Rotation("Angle", 0))
 		.setMappable(7);
 	
-	newInput(3, nodeValue_Vec2("Position", self, [0, 0] ))
+	newInput(3, nodeValue_Vec2("Position", [0, 0] ))
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	newInput(4, nodeValue_Color("Color 1", self, ca_white));
+	newInput(4, nodeValue_Color("Color 1", ca_white));
 	
-	newInput(5, nodeValue_Color("Color 2", self, ca_black));
+	newInput(5, nodeValue_Color("Color 2", ca_black));
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	
@@ -32,21 +32,21 @@ function Node_Box_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	//////////////////////////////////////////////////////////////////////////////////
 	
-	newInput(8, nodeValue_Enum_Button("Render Type", self,  0, [ "Solid", "Smooth", "AA" ]));
+	newInput(8, nodeValue_Enum_Button("Render Type",  0, [ "Solid", "Smooth", "AA" ]));
 	
-	newInput(9, nodeValue_Float("Width", self, 0.25))
+	newInput(9, nodeValue_Float("Width", 0.25))
 		.setDisplay(VALUE_DISPLAY.slider)
 		.setMappable(10);
 	
 	newInput(10, nodeValueMap("Width Map", self));
 	
-	newInput(11, nodeValue_Enum_Button("Pattern", self,  0, [ "Cross", "Xor" ]));
+	newInput(11, nodeValue_Enum_Button("Pattern",  0, [ "Cross", "Xor" ]));
 	
-	newInput(12, nodeValue_Int("Iteration", self, 4))
+	newInput(12, nodeValue_Int("Iteration", 4))
 	
-	newInput(13, nodeValue_Surface("Mask", self));
+	newInput(13, nodeValue_Surface("Mask"));
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
 		["Output",	true],	0, 13, 

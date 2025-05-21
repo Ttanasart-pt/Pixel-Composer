@@ -2,19 +2,19 @@ function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	name = "Sample Path";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_PathNode("Path", self, noone))
+	newInput(0, nodeValue_PathNode("Path"))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Float("Ratio", self, 0));
+	newInput(1, nodeValue_Float("Ratio", 0));
 	
-	newInput(2, nodeValue_Enum_Scroll("Type", self,  0, [ "Loop", "Ping pong" ]));
+	newInput(2, nodeValue_Enum_Scroll("Type",  0, [ "Loop", "Ping pong" ]));
 	
-	newOutput(0, nodeValue_Output("Position", self, VALUE_TYPE.float, [ 0, 0 ]))
+	newOutput(0, nodeValue_Output("Position", VALUE_TYPE.float, [ 0, 0 ]))
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	newOutput(1, nodeValue_Output("Direction", self, VALUE_TYPE.float, 0));
+	newOutput(1, nodeValue_Output("Direction", VALUE_TYPE.float, 0));
 	
-	newOutput(2, nodeValue_Output("Weight", self, VALUE_TYPE.float, 0));
+	newOutput(2, nodeValue_Output("Weight", VALUE_TYPE.float, 0));
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _path = getInputData(0);

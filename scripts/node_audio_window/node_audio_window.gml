@@ -1,12 +1,12 @@
 function Node_Audio_Window(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Audio Window";
 	
-	newInput(0, nodeValue_AudioBit("Audio data", self, noone))
+	newInput(0, nodeValue_AudioBit("Audio data", noone))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Int("Width", self, 4096, "Amount of bits to extract."));
+	newInput(1, nodeValue_Int("Width", 4096, "Amount of bits to extract."));
 	
-	newInput(2, nodeValue_Float("Location", self, 0))
+	newInput(2, nodeValue_Float("Location", 0))
 		.setDisplay(VALUE_DISPLAY._default, { side_button: button(function() /*=>*/ { 
 					inputs[2].attributes.unit = (inputs[2].attributes.unit + 1) % 3; 
 					update();
@@ -16,13 +16,13 @@ function Node_Audio_Window(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		);
 	inputs[2].attributes.unit = 0;
 		
-	newInput(3, nodeValue_Enum_Button("Cursor location", self,  1, [ "Start", "Middle", "End" ]));
+	newInput(3, nodeValue_Enum_Button("Cursor location",  1, [ "Start", "Middle", "End" ]));
 	
-	newInput(4, nodeValue_Int("Step", self, 16));
+	newInput(4, nodeValue_Int("Step", 16));
 	
-	newInput(5, nodeValue_Bool("Match timeline", self, true, "Set window cursor to match animation timeline."));
+	newInput(5, nodeValue_Bool("Match timeline", true, "Set window cursor to match animation timeline."));
 	
-	newOutput(0, nodeValue_Output("Bit Array", self, VALUE_TYPE.float, []))
+	newOutput(0, nodeValue_Output("Bit Array", VALUE_TYPE.float, []))
 		.setArrayDepth(1);
 		
 	input_display_list = [ 0, 

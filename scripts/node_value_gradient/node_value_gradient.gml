@@ -1,6 +1,4 @@
-#macro nodeValue_gr nodeValue_Gradient
-function nodeValue_Gradient(_name, _node, _value, _tooltip = "") { return new __NodeValue_Gradient(_name, _node, _value, _tooltip); }
-
+function nodeValue_Gradient(_name, _value, _tooltip = "") { return new __NodeValue_Gradient(_name, self, _value, _tooltip); }
 function __NodeValue_Gradient(_name, _node, _value, _tooltip = "") : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.gradient, _value, _tooltip) constructor {
 	
 	/////============== GET =============

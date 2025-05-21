@@ -2,37 +2,37 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	name = "MK Flag";
 	update_on_frame = true;
 	
-	newInput(0, nodeValue_Dimension(self));
+	newInput(0, nodeValue_Dimension());
 	
-	newInput(1, nodeValue_Surface("Texture", self));
+	newInput(1, nodeValue_Surface("Texture"));
 	
-	newInput(2, nodeValue_Vec2("Position", self, [ 0, 0 ]));
+	newInput(2, nodeValue_Vec2("Position", [ 0, 0 ]));
 	
-	newInput(3, nodeValue_Enum_Button("Pin side", self,  0, [ "Left", "Right", "Up", "Down" ]));
+	newInput(3, nodeValue_Enum_Button("Pin side",  0, [ "Left", "Right", "Up", "Down" ]));
 	
-	newInput(4, nodeValue_Int("Subdivision", self, 8));
+	newInput(4, nodeValue_Int("Subdivision", 8));
 	
-	newInput(5, nodeValue_Float("Wind speed", self, 2));
+	newInput(5, nodeValue_Float("Wind speed", 2));
 	
-	newInput(6, nodeValue_Float("Wave width", self, 1))
+	newInput(6, nodeValue_Float("Wave width", 1))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 4, 0.1] });
 	
-	newInput(7, nodeValue_Float("Wave size", self, 0.2))
+	newInput(7, nodeValue_Float("Wave size", 0.2))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(8, nodeValue_Float("Phase", self, 0.1))
+	newInput(8, nodeValue_Float("Phase", 0.1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(9, nodeValue_Float("Clip", self, 0.2))
+	newInput(9, nodeValue_Float("Clip", 0.2))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(10, nodeValue_Float("Shadow", self, 0.2))
+	newInput(10, nodeValue_Float("Shadow", 0.2))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(11, nodeValue_Float("Shadow threshold", self, 0))
+	newInput(11, nodeValue_Float("Shadow threshold", 0))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [-0.1, 0.1, 0.001] });
 	
-	newInput(12, nodeValue_Bool("Invert shadow", self, 0));
+	newInput(12, nodeValue_Bool("Invert shadow", 0));
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 0, 
 		["Flag",	    false], 4, 1, 2, 3, 
@@ -40,7 +40,7 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		["Rendering",	false], 10, 11, 12, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	attributes.iteration = 4;
 	array_push(attributeEditors, "Verlet solver");

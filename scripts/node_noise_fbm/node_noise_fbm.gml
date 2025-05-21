@@ -8,25 +8,25 @@
 function Node_Noise_FBM(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "FBM Noise";
 	
-	newInput(0, nodeValue_Dimension(self));
+	newInput(0, nodeValue_Dimension());
 	
 	newInput(1, nodeValueSeed(self));
 	
-	newInput(2, nodeValue_Vec2("Position", self, [ 0, 0 ]));
+	newInput(2, nodeValue_Vec2("Position", [ 0, 0 ]));
 	
-	newInput(3, nodeValue_Vec2("Scale", self, [ 4, 4 ]));
+	newInput(3, nodeValue_Vec2("Scale", [ 4, 4 ]));
 	
-	newInput(4, nodeValue_Int("Iteration", self, 4));
+	newInput(4, nodeValue_Int("Iteration", 4));
 	
-	newInput(5, nodeValue_Enum_Button("Color Mode", self,  0, [ "Greyscale", "RGB", "HSV" ]));
+	newInput(5, nodeValue_Enum_Button("Color Mode",  0, [ "Greyscale", "RGB", "HSV" ]));
 	
-	newInput(6, nodeValue_Slider_Range("Color R Range", self, [ 0, 1 ]));
+	newInput(6, nodeValue_Slider_Range("Color R Range", [ 0, 1 ]));
 	
-	newInput(7, nodeValue_Slider_Range("Color G Range", self, [ 0, 1 ]));
+	newInput(7, nodeValue_Slider_Range("Color G Range", [ 0, 1 ]));
 	
-	newInput(8, nodeValue_Slider_Range("Color B Range", self, [ 0, 1 ]));
+	newInput(8, nodeValue_Slider_Range("Color B Range", [ 0, 1 ]));
 	
-	newInput(9, nodeValue_Surface("Mask", self));
+	newInput(9, nodeValue_Surface("Mask"));
 	
 	input_display_list = [
 		["Output",	false], 0, 9, 
@@ -34,7 +34,7 @@ function Node_Noise_FBM(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		["Color",	false], 5, 6, 7, 8, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	

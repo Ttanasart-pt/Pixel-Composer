@@ -24,40 +24,40 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	////- Surfaces
 	
-	newInput( 0, nodeValue_Surface( "Surface In", self));
-	newInput( 9, nodeValue_Surface( "Mask",       self));
-	newInput(10, nodeValue_Slider(  "Mix",        self, 1));
+	newInput( 0, nodeValue_Surface( "Surface In"));
+	newInput( 9, nodeValue_Surface( "Mask"));
+	newInput(10, nodeValue_Slider(  "Mix", 1));
 	__init_mask_modifier(9, 13);
 	
 	////- Outline
 	
-	newInput(18, nodeValue_Enum_Scroll( "Profile",     self, 0, [ "Circle", "Square", "Diamond" ]));
-	newInput( 1, nodeValue_Int(         "Width",       self, 0)).setDisplay(VALUE_DISPLAY._default, { front_button : filter_button }).setValidator(VV_min(0)).setMappable(15);
+	newInput(18, nodeValue_Enum_Scroll( "Profile", 0, [ "Circle", "Square", "Diamond" ]));
+	newInput( 1, nodeValue_Int(         "Width", 0)).setDisplay(VALUE_DISPLAY._default, { front_button : filter_button }).setValidator(VV_min(0)).setMappable(15);
 	newInput(15, nodeValueMap(          "Width map",   self));
-	newInput( 5, nodeValue_Enum_Button( "Position",    self, 1, ["Inside", "Outside"]));
-	newInput( 8, nodeValue_Int(         "Start",       self, 0, "Shift outline inside, outside the shape.")).setMappable(17);
+	newInput( 5, nodeValue_Enum_Button( "Position", 1, ["Inside", "Outside"]));
+	newInput( 8, nodeValue_Int(         "Start", 0, "Shift outline inside, outside the shape.")).setMappable(17);
 	newInput(17, nodeValueMap(          "Start map",   self));
-	newInput(12, nodeValue_Bool(        "Crop border", self, false));
-	newInput(19, nodeValue_Slider(      "Threshold",   self, .5));
+	newInput(12, nodeValue_Bool(        "Crop border", false));
+	newInput(19, nodeValue_Slider(      "Threshold", .5));
 	
 	////- Render
 	
-	newInput(2, nodeValue_Color( "Color",         self, ca_white));
-	newInput(6, nodeValue_Bool(  "Anti-aliasing", self, 0));
+	newInput(2, nodeValue_Color( "Color", ca_white));
+	newInput(6, nodeValue_Bool(  "Anti-aliasing", 0));
 	
 	////- Blend
 	
-	newInput( 3, nodeValue_Bool(        "Blend",           self, false, "Blend outline color with the original color."));
-	newInput( 4, nodeValue_Slider(      "Blend alpha",     self, 1)).setMappable(16);
+	newInput( 3, nodeValue_Bool(        "Blend", false, "Blend outline color with the original color."));
+	newInput( 4, nodeValue_Slider(      "Blend alpha", 1)).setMappable(16);
 	newInput(16, nodeValueMap(          "Blend alpha map", self));
-	newInput( 7, nodeValue_Enum_Scroll( "Oversample mode", self, 0, [ "Empty", "Clamp", "Repeat" ]))
+	newInput( 7, nodeValue_Enum_Scroll( "Oversample mode", 0, [ "Empty", "Clamp", "Repeat" ]))
 		.setTooltip("How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.");
 	
 	//// inputs 20
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	newOutput(1, nodeValue_Output("Outline", self, VALUE_TYPE.surface, noone));
+	newOutput(1, nodeValue_Output("Outline", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 11, 
 		["Surfaces", true],    0, 9, 10, 13, 14, 

@@ -7,32 +7,32 @@ function Node_VFX_Override(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	manual_ungroupable = false;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Particle("Particles", self, -1 ))
+	newInput(0, nodeValue_Particle())
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_b(  "Set Positions", self, false ));
-	newInput(2, nodeValue_eb( "Mode",          self, 0, [ "Absolute", "Relative" ])).setInternalName("Position mode");
-	newInput(3, nodeValue_2(  "Positions",     self, [0, 0] ));
+	newInput(1, nodeValue_Bool(  "Set Positions", false ));
+	newInput(2, nodeValue_Enum_Button( "Mode", 0, [ "Absolute", "Relative" ])).setInternalName("Position mode");
+	newInput(3, nodeValue_Vec2(  "Positions", [0, 0] ));
 	
-	newInput(4, nodeValue_b(  "Set Rotations", self, false ));
-	newInput(5, nodeValue_eb( "Mode",          self, 0, [ "Absolute", "Relative" ])).setInternalName("Rotation mode");
-	newInput(6, nodeValue_f(  "Rotations",     self, 0 ));
+	newInput(4, nodeValue_Bool(  "Set Rotations", false ));
+	newInput(5, nodeValue_Enum_Button( "Mode", 0, [ "Absolute", "Relative" ])).setInternalName("Rotation mode");
+	newInput(6, nodeValue_Float(  "Rotations", 0 ));
 	
-	newInput(7, nodeValue_b(  "Set Scales",    self, false ));
-	newInput(8, nodeValue_eb( "Mode",          self, 0, [ "Absolute", "Relative Add", "Relative Muliply" ])).setInternalName("Scale mode");
-	newInput(9, nodeValue_2(  "Scales",        self, [1, 1] ));
+	newInput(7, nodeValue_Bool(  "Set Scales", false ));
+	newInput(8, nodeValue_Enum_Button( "Mode", 0, [ "Absolute", "Relative Add", "Relative Muliply" ])).setInternalName("Scale mode");
+	newInput(9, nodeValue_Vec2(  "Scales", [1, 1] ));
 	
-	newInput(10, nodeValue_b( "Set Blend",     self, false ));
-	newInput(11, nodeValue_c( "Blend",         self, ca_black ));
+	newInput(10, nodeValue_Bool( "Set Blend", false ));
+	newInput(11, nodeValue_Color( "Blend", ca_black ));
 	
-	newInput(12, nodeValue_b(  "Set Alpha",    self, false ));
-	newInput(13, nodeValue_eb( "Mode",         self, 0, [ "Absolute", "Relative" ])).setInternalName("Alpha mode");
-	newInput(14, nodeValue_f(  "Alpha",        self, 0 ));
+	newInput(12, nodeValue_Bool(  "Set Alpha", false ));
+	newInput(13, nodeValue_Enum_Button( "Mode", 0, [ "Absolute", "Relative" ])).setInternalName("Alpha mode");
+	newInput(14, nodeValue_Float(  "Alpha", 0 ));
 	
-	newInput(15, nodeValue_b( "Set Surface",   self, false ));
-	newInput(16, nodeValue_Surface( "Surface", self)).setVisible(true, false);
+	newInput(15, nodeValue_Bool( "Set Surface", false ));
+	newInput(16, nodeValue_Surface( "Surface")).setVisible(true, false);
 	
-	newOutput(0, nodeValue_Output("Particles", self, VALUE_TYPE.particle, -1 ));
+	newOutput(0, nodeValue_Output("Particles", VALUE_TYPE.particle, noone ));
 	
 	input_display_list = [ 0, 
 		["Surface",  false, 15], 16, 

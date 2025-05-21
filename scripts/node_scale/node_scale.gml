@@ -15,19 +15,19 @@ function Node_Scale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	////- Surfaces
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(0, nodeValue_Surface("Surface In"));
 	
 	////- Scale
 	
-	newInput(2, nodeValue_Enum_Button( "Mode",                 self, 0, [ "Upscale", "Scale to fit" ]));
-	newInput(6, nodeValue_Enum_Button( "Fit Mode",             self, 0, [ "Stretch", "Minimum", "Maximum" ]));
-	newInput(1, nodeValue_Float(       "Scale",                self, 1));
-	newInput(3, nodeValue_Vec2(        "Target Dimension",     self, DEF_SURF));
-	newInput(5, nodeValue_Bool(        "Scale Atlas Position", self, true));
+	newInput(2, nodeValue_Enum_Button( "Mode", 0, [ "Upscale", "Scale to fit" ]));
+	newInput(6, nodeValue_Enum_Button( "Fit Mode", 0, [ "Stretch", "Minimum", "Maximum" ]));
+	newInput(1, nodeValue_Float(       "Scale", 1));
+	newInput(3, nodeValue_Vec2(        "Target Dimension", DEF_SURF));
+	newInput(5, nodeValue_Bool(        "Scale Atlas Position", true));
 	
 	// inputs 6
 		
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 4, 
 		["Surfaces", true], 0,

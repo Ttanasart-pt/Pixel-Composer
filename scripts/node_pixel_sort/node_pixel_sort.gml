@@ -8,25 +8,25 @@
 function Node_Pixel_Sort(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Pixel Sort";
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Int("Iteration", self, 2));
+	newInput(1, nodeValue_Int("Iteration", 2));
 	
-	newInput(2, nodeValue_Float("Threshold", self, 0.1))
+	newInput(2, nodeValue_Float("Threshold", 0.1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(3, nodeValue_Int("Direction", self, 0))
+	newInput(3, nodeValue_Int("Direction", 0))
 		.setDisplay(VALUE_DISPLAY.rotation, { step: 90 });
 	
-	newInput(4, nodeValue_Surface("Mask", self));
+	newInput(4, nodeValue_Surface("Mask"));
 	
-	newInput(5, nodeValue_Float("Mix", self, 1))
+	newInput(5, nodeValue_Float("Mix", 1))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(6, nodeValue_Bool("Active", self, true));
+	newInput(6, nodeValue_Bool("Active", true));
 		active_index = 6;
 	
-	newInput(7, nodeValue_Toggle("Channel", self, 0b1111, { data: array_create(4, THEME.inspector_channel) }));
+	newInput(7, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	__init_mask_modifier(4); // inputs 8, 9
 	
@@ -35,7 +35,7 @@ function Node_Pixel_Sort(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		["Pixel sort",	false], 1, 2, 3, 
 	]
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
 	

@@ -16,12 +16,12 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
     name        = "Tile Drawer";
     bypass_grid = true;
     
-    newInput( 0, nodeValue_Tileset("Tileset", self, noone))
+    newInput( 0, nodeValue_Tileset())
     	.setVisible(true, true);
     
-    newInput( 1, nodeValue_IVec2("Map size", self, [ 16, 16 ]));
+    newInput( 1, nodeValue_IVec2("Map size", [ 16, 16 ]));
     
-    newInput( 2, nodeValue_Bool("Animated", self, false));
+    newInput( 2, nodeValue_Bool("Animated", false));
     
     newInput( 3, nodeValueSeed(self));
     
@@ -32,13 +32,13 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	input_display_list_animated     = ["Animated tiles",true,     2, noone];
 	input_display_list_rule         = ["Rules",         true, noone, noone];
 	
-	newOutput(0, nodeValue_Output("Rendered", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Rendered", VALUE_TYPE.surface, noone));
 	
-	newOutput(1, nodeValue_Output("Tilemap", self, VALUE_TYPE.surface, noone));
+	newOutput(1, nodeValue_Output("Tilemap", VALUE_TYPE.surface, noone));
 	
-	newOutput(2, nodeValue_Output("Tileset", self, VALUE_TYPE.tileset, noone));
+	newOutput(2, nodeValue_Output("Tileset", VALUE_TYPE.tileset, noone));
 	
-	newOutput(3, nodeValue_Output("Tile Data", self, VALUE_TYPE.struct, {}));
+	newOutput(3, nodeValue_Output("Tile Data", VALUE_TYPE.struct, {}));
 	outputs[3].editWidget.shorted = true;
 	
 	output_display_list = [ 2, 1, 0, 3 ];

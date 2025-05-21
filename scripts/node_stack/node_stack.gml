@@ -8,26 +8,26 @@
 function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Stack";
 	
-	newInput(0, nodeValue_Enum_Scroll("Axis", self,  0, [ new scrollItem("Horizontal", s_node_alignment, 0), 
+	newInput(0, nodeValue_Enum_Scroll("Axis",  0, [ new scrollItem("Horizontal", s_node_alignment, 0), 
 												          new scrollItem("Vertical",   s_node_alignment, 1), 
 												          new scrollItem("On top",     s_node_alignment, 3), ]))
 		.rejectArray();
 	
-	newInput(1, nodeValue_Enum_Button("Align", self,  1, [ "Start", "Middle", "End"]))
+	newInput(1, nodeValue_Enum_Button("Align",  1, [ "Start", "Middle", "End"]))
 		.rejectArray();
 	
-	newInput(2, nodeValue_Int("Spacing", self, 0))
+	newInput(2, nodeValue_Int("Spacing", 0))
 		.rejectArray();
 	
-	newInput(3, nodeValue_Padding("Padding", self, [ 0, 0, 0, 0 ]))
+	newInput(3, nodeValue_Padding("Padding", [ 0, 0, 0, 0 ]))
 		.rejectArray();
 	
-	newInput(4, nodeValue_Enum_Scroll("Blend Mode", self,  0, BLEND_TYPES))
+	newInput(4, nodeValue_Enum_Scroll("Blend Mode",  0, BLEND_TYPES))
 		.rejectArray();
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	newOutput(1, nodeValue_Output("Atlas data", self, VALUE_TYPE.atlas, []));
+	newOutput(1, nodeValue_Output("Atlas data", VALUE_TYPE.atlas, []));
 	
 	input_display_list = [
 		["Stack",    false], 0, 1, 2, 3, 
@@ -40,7 +40,7 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static createNewInput = function(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
-		newInput(index, nodeValue_Surface("Input", self))
+		newInput(index, nodeValue_Surface("Input"))
 			.setVisible(true, true);
 		
 		array_push(input_display_list, inAmo);

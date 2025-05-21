@@ -2,21 +2,20 @@ function Node_PB_Draw_Surface(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	name  = "PB Draw Surface";
 	color = COLORS.node_blend_feedback;
 	
-	newInput(0, nodeValue_Pbbox("Base PBBOX", self, new __pbBox()));
+	newInput(0, nodeValue_Pbbox("Base PBBOX"));
+	newInput(1, nodeValue_Pbbox("PBBOX"));
 	inputs[0].editWidget = noone;
 	
-	newInput(1, nodeValue_Pbbox("PBBOX", self, new __pbBox()));
+	newInput(2, nodeValue_Float("PBBOX Left", 0));
+	newInput(3, nodeValue_Float("PBBOX Top", 0));
+	newInput(4, nodeValue_Float("PBBOX Right", 0));
+	newInput(5, nodeValue_Float("PBBOX Bottom", 0));
+	newInput(6, nodeValue_Float("PBBOX Width", 0));
+	newInput(7, nodeValue_Float("PBBOX Height", 0));
 	
-	newInput(2, nodeValue_Float("PBBOX Left",   self, 0));
-	newInput(3, nodeValue_Float("PBBOX Top",    self, 0));
-	newInput(4, nodeValue_Float("PBBOX Right",  self, 0));
-	newInput(5, nodeValue_Float("PBBOX Bottom", self, 0));
-	newInput(6, nodeValue_Float("PBBOX Width",  self, 0));
-	newInput(7, nodeValue_Float("PBBOX Height", self, 0));
+	newInput(8, nodeValue_Surface("Surface"));
 	
-	newInput(8, nodeValue_Surface("Surface", self, noone));
-	
-	newOutput(0, nodeValue_Output("Surface", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
 		["Layout",         false], 0, 1, 

@@ -17,13 +17,13 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		lines = [];
 	#endregion
 	
-	newInput(0, nodeValue_Float("Point array", self, []))
+	newInput(0, nodeValue_Float("Point array", []))
 		.setVisible(true, true)
 		.setArrayDepth(2);
 	
-	newInput(1, nodeValue_Bool("Loop", self, false));
+	newInput(1, nodeValue_Bool("Loop", false));
 	
-	newOutput(0, nodeValue_Output("Path", self, VALUE_TYPE.pathnode, self));
+	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, self));
 	
 	cached_pos = ds_map_create();
 	

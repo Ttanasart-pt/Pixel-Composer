@@ -16,7 +16,7 @@ function Node_Shader(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	shader = noone;
 	shader_data = [];
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	static setShader = function(_data) { #region
 		for( var i = 0, n = array_length(shader_data); i < n; i++ ) {

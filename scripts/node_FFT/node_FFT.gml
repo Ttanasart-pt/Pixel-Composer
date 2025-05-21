@@ -2,13 +2,13 @@ function Node_FFT(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	name = "FFT";
 	setDimension(96, 72);
 	
-	newInput(0, nodeValue_Float("Data", self, []))
+	newInput(0, nodeValue_Float("Data", []))
 		.setArrayDepth(1)
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Enum_Scroll("Preprocess Function", self,  0, [ "None", "Hann" ]));
+	newInput(1, nodeValue_Enum_Scroll("Preprocess Function",  0, [ "None", "Hann" ]));
 		
-	newOutput(0, nodeValue_Output("Array", self, VALUE_TYPE.float, []))
+	newOutput(0, nodeValue_Output("Array", VALUE_TYPE.float, []))
 		.setArrayDepth(1);
 	
 	static processData = function(_outSurf, _data, _array_index) {

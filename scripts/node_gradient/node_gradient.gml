@@ -21,37 +21,37 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	////- Output
 	
-	newInput(0, nodeValue_Dimension(self));
-	newInput(8, nodeValue_Surface("Mask", self));
+	newInput(0, nodeValue_Dimension());
+	newInput(8, nodeValue_Surface("Mask"));
 	
 	////- Gradient
 	
-	newInput( 1, nodeValue_Gradient(    "Gradient",           self, new gradientObject([ ca_black, ca_white ]))).setMappable(15);
+	newInput( 1, nodeValue_Gradient(    "Gradient", new gradientObject([ ca_black, ca_white ]))).setMappable(15);
 	newInput(15, nodeValueMap(          "Gradient map",       self));
 	newInput(16, nodeValueGradientRange("Gradient map range", self, inputs[1]));
 	
-	newInput( 5, nodeValue_Slider(      "Shift",              self, 0, [-2, 2, 0.01])).setMappable(12);
+	newInput( 5, nodeValue_Slider(      "Shift", 0, [-2, 2, 0.01])).setMappable(12);
 	newInput(12, nodeValueMap(          "Shift map",          self));
 	
-	newInput( 9, nodeValue_Slider(      "Scale",              self, 1, [0, 5, 0.01])).setMappable(13);
+	newInput( 9, nodeValue_Slider(      "Scale", 1, [0, 5, 0.01])).setMappable(13);
 	newInput(13, nodeValueMap(          "Scale map",          self));
-	newInput( 7, nodeValue_Enum_Button( "Loop",               self,  0, [ "None", "Loop", "Pingpong" ]));
+	newInput( 7, nodeValue_Enum_Button( "Loop",  0, [ "None", "Loop", "Pingpong" ]));
 	
 	////- Shape
 	
 	var _gradTypes = array_map(["Linear", "Circular", "Radial", "Diamond"], function(v,i) /*=>*/ {return new scrollItem(v, s_node_gradient_type, i)});
-	newInput( 2, nodeValue_Enum_Scroll("Type",          self, 0, _gradTypes));
-	newInput( 3, nodeValue_Rotation(   "Angle",         self, 0)).setMappable(10);
+	newInput( 2, nodeValue_Enum_Scroll("Type", 0, _gradTypes));
+	newInput( 3, nodeValue_Rotation(   "Angle", 0)).setMappable(10);
 	newInput(10, nodeValueMap(         "Angle map",     self));
-	newInput( 4, nodeValue_Float(      "Radius",        self, .5)).setMappable(11);
+	newInput( 4, nodeValue_Float(      "Radius", .5)).setMappable(11);
 	newInput(11, nodeValueMap(         "Radius map",    self));
-	newInput( 6, nodeValue_Vec2(       "Center",        self, [ .5, .5 ])).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput(17, nodeValue_Vec2(       "Shape",         self, [ 1, 1 ]))
-	newInput(14, nodeValue_Bool(       "Uniform ratio", self, true));
+	newInput( 6, nodeValue_Vec2(       "Center", [ .5, .5 ])).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(17, nodeValue_Vec2(       "Shape", [ 1, 1 ]))
+	newInput(14, nodeValue_Bool(       "Uniform ratio", true));
 	
 	////// inpputs 18
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
 		["Output",		true],	0, 8, 

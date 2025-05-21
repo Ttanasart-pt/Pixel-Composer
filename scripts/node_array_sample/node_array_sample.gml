@@ -5,21 +5,21 @@ function Node_Array_Sample(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(0, nodeValue("Array", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Float("Step", self, 1));
+	newInput(1, nodeValue_Float("Step", 1));
 	
-	newInput(2, nodeValue_Enum_Scroll("Mode", self, 0, [ "Uniform", "Random" ]))
+	newInput(2, nodeValue_Enum_Scroll("Mode", 0, [ "Uniform", "Random" ]))
 	
-	newInput(3, nodeValue_Int("Shift", self, 0))
+	newInput(3, nodeValue_Int("Shift", 0))
 	
 	newInput(4, nodeValueSeed(self));
 	
-	newInput(5, nodeValue_Int("Amount", self, 4))
+	newInput(5, nodeValue_Int("Amount", 4))
 	
-	newInput(6, nodeValue_Int("Dimension", self, 0))
+	newInput(6, nodeValue_Int("Dimension", 0))
 	
-	newInput(7, nodeValue_Enum_Scroll("Amount Type", self, 0, [ "Input Range", "Custom" ]))
+	newInput(7, nodeValue_Enum_Scroll("Amount Type", 0, [ "Input Range", "Custom" ]))
 	
-	newOutput(0, nodeValue_Output("Array", self, VALUE_TYPE.any, 0))
+	newOutput(0, nodeValue_Output("Array", VALUE_TYPE.any, 0))
 		.setArrayDepth(1);
 		
 	input_display_list = [ 0, 4, 

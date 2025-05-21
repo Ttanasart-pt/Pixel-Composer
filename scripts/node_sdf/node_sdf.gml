@@ -13,22 +13,22 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	
 	////- Surface
 	
-	newInput(0, nodeValue_Surface("Surface In", self));
+	newInput(0, nodeValue_Surface("Surface In"));
 	
 	////- SDF
 	
-	newInput(2, nodeValue_Enum_Button( "Side",         self, 2, [ "Inside", "Outside", "Both" ]));
-	newInput(3, nodeValue_Slider(      "Max distance", self, 1, [ 0, 2, 0.01 ]));
-	newInput(6, nodeValue_Bool(        "Angle",        self, false));
+	newInput(2, nodeValue_Enum_Button( "Side", 2, [ "Inside", "Outside", "Both" ]));
+	newInput(3, nodeValue_Slider(      "Max distance", 1, [ 0, 2, 0.01 ]));
+	newInput(6, nodeValue_Bool(        "Angle", false));
 	
 	////- Render
 	
-	newInput(4, nodeValue_Bool( "Keep Alpha", self, false));
-	newInput(5, nodeValue_Bool( "Invert",     self, false));
+	newInput(4, nodeValue_Bool( "Keep Alpha", false));
+	newInput(5, nodeValue_Bool( "Invert", false));
 	
 	//// input 6
 	
-	newOutput(0, nodeValue_Output("Surface Out", self, VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 1,
 		["Surfaces", false], 0, 

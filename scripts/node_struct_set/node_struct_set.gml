@@ -3,15 +3,15 @@ function Node_Struct_Set(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Struct("Struct", self, {}))
+	newInput(0, nodeValue_Struct("Struct"))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Text("Key", self, ""));
+	newInput(1, nodeValue_Text("Key"));
 	
 	newInput(2, nodeValue("Value", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0))
 		.setVisible(true, true);
 	
-	newOutput(0, nodeValue_Output("Struct", self, VALUE_TYPE.struct, {}));
+	newOutput(0, nodeValue_Output("Struct", VALUE_TYPE.struct, {}));
 	
 	static update = function() { 
 		var str = getInputData(0);

@@ -3,10 +3,10 @@ function Node_Array_Trim(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue(     "Array",      self, CONNECT_TYPE.input, VALUE_TYPE.any, 0)).setArrayDepth(1).setVisible(true, true);
-	newInput(1, nodeValue_Int( "Trim Start", self, 0));
-	newInput(2, nodeValue_Int( "Trim End",   self, 0));
+	newInput(1, nodeValue_Int( "Trim Start", 0));
+	newInput(2, nodeValue_Int( "Trim End", 0));
 	
-	newOutput(0, nodeValue_Output("Array", self, VALUE_TYPE.any, 0))
+	newOutput(0, nodeValue_Output("Array", VALUE_TYPE.any, 0))
 		.setArrayDepth(1);
 		
 	static update = function(frame = CURRENT_FRAME) {
