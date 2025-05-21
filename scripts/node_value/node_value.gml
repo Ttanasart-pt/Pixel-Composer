@@ -182,7 +182,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	#region ---- timeline ----
 		show_graph	= false;
 		show_graphs = array_create(array_safe_length(_value));
-		graph_h		= ui(96);
+		graph_h		= 96;
 	#endregion
 	
 	#region ---- inspector ----
@@ -850,7 +850,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				switch(display_type) {
 					case VALUE_DISPLAY._default :
 						editWidget   = new buttonColor(function(_color) /*=>*/ {return setValueInspector(_color)});
-						graph_h		 = ui(16);
 						extract_node = "Node_Color";
 						break;
 						
@@ -2277,6 +2276,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(visible)             _map.v              = real(visible);
 		if(visible_manual != 0) _map.visible_manual = visible_manual;
 		if(color != -1)         _map.color          = color;
+		if(graph_h != 96)       _map.graph_h        = graph_h;
 		
 		if(connect_type == CONNECT_TYPE.output) return _map;
 		
@@ -2336,6 +2336,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			visible 	   = _map[$ LOADING_VERSION >= 1_18_04_0 || CLONING? "v" : "visible"] ?? 0;
 			visible_manual = _map[$ "visible_manual"] ?? 0;
 			color   	   = _map[$ "color"] ?? -1;
+			graph_h   	   = _map[$ "graph_h"] ?? 96;
 		}
 		
 		if(connect_type == CONNECT_TYPE.output) return;

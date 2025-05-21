@@ -436,9 +436,9 @@ function Panel_Animation() : PanelContent() constructor {
 	            for(var i = _st; i <= _fr; i++) {
 	                var bar_frame  = i * timeline_separate;
 	                var bar_line_x = bar_frame * timeline_scale + timeline_shift;
+	                var ln_a = (bar_frame < 0 || bar_frame > TOTAL_FRAMES)? .5 : 1;
 	                
-	                if(i > TOTAL_FRAMES) draw_set_alpha(0.5);
-	                
+	                draw_set_alpha(ln_a);
 	                draw_set_color(COLORS.panel_animation_frame_divider);
 	                draw_line(bar_line_x, ui(12), bar_line_x, bar_h - PANEL_PAD);
 	                    
@@ -448,15 +448,22 @@ function Panel_Animation() : PanelContent() constructor {
 	            
 	            draw_set_alpha(1);
 	            
-	            draw_set_color(COLORS.panel_animation_end_line);
-	            draw_set_alpha(0.5);
-	            
-	                var bar_line_x = TOTAL_FRAMES * timeline_scale + timeline_shift;
-	                draw_line_width(bar_line_x, 0, bar_line_x, bar_h, 2);
-	                
-	                var bar_line_x = 1 * timeline_scale + timeline_shift;
-	                draw_line_width(bar_line_x, 0, bar_line_x, bar_h, 2);
-	            
+                var bar_line_x = TOTAL_FRAMES * timeline_scale + timeline_shift;
+                
+                draw_set_text(f_p2, fa_center, fa_bottom, CDEF.main_mdwhite);
+                draw_text_add(bar_line_x, ui(16), TOTAL_FRAMES);
+                
+	            draw_set_color_alpha(COLORS.panel_animation_end_line, .5);
+                draw_line_width(bar_line_x, ui(12), bar_line_x, bar_h, 2);
+                
+                var bar_line_x = 0 * timeline_scale + timeline_shift;
+                
+                draw_set_text(f_p2, fa_center, fa_bottom, CDEF.main_mdwhite);
+                draw_text_add(bar_line_x, ui(16), 0);
+                
+                draw_set_color_alpha(COLORS.panel_animation_end_line, .5);
+                draw_line_width(bar_line_x, ui(12), bar_line_x, bar_h, 2);
+	            	
 	            draw_set_alpha(1);
 	            
 	            if(FRAME_RANGE != noone) {
