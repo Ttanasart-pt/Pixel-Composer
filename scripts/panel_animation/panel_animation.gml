@@ -7,8 +7,10 @@
     
     function panel_animation_first_frame()             { CALL("first_frame");          if(IS_RENDERING) return; PROJECT.animator.firstFrame();                                                           }
     function panel_animation_last_frame()              { CALL("last_frame");           if(IS_RENDERING) return; PROJECT.animator.lastFrame();                                                            }
-    function panel_animation_next_frame()              { CALL("next_frame");           if(IS_RENDERING) return; PROJECT.animator.setFrame(min(PROJECT.animator.real_frame + 1, TOTAL_FRAMES - 1));       }
     function panel_animation_prev_frame()              { CALL("previous_frame");       if(IS_RENDERING) return; PROJECT.animator.setFrame(max(PROJECT.animator.real_frame - 1, 0));                      }
+    function panel_animation_next_frame()              { CALL("next_frame");           if(IS_RENDERING) return; PROJECT.animator.setFrame(min(PROJECT.animator.real_frame + 1, TOTAL_FRAMES - 1));       }
+    function panel_animation_prev_keyframe()           { CALL("previous_keyframe");    if(IS_RENDERING) return; PANEL_ANIMATION.toPrevKeyframe(); }
+    function panel_animation_next_keyframe()           { CALL("next_keyframe");        if(IS_RENDERING) return; PANEL_ANIMATION.toNextKeyframe(); }
     
     function panel_animation_collapseToggle()          { CALL("animation_collapse_toggle");         PANEL_ANIMATION.collapseToggle();                                                                    }
     function panel_animation_delete_key()              { CALL("animation_delete_key");              PANEL_ANIMATION.deleteKeys();                                                                        }
@@ -51,8 +53,10 @@
                                 
         registerFunction("",          "First Frame",        vk_home,    MOD_KEY.none,                 panel_animation_first_frame           ).setMenu("first_frame",                   )
         registerFunction("",          "Last Frame",         vk_end,     MOD_KEY.none,                 panel_animation_last_frame            ).setMenu("last_frame",                    )
-        registerFunction("",          "Next Frame",         vk_right,   MOD_KEY.none,                 panel_animation_next_frame            ).setMenu("next_frame",                    )
         registerFunction("",          "Previous Frame",     vk_left,    MOD_KEY.none,                 panel_animation_prev_frame            ).setMenu("previous_frame",                )
+        registerFunction("",          "Next Frame",         vk_right,   MOD_KEY.none,                 panel_animation_next_frame            ).setMenu("next_frame",                    )
+        registerFunction("",          "Previous Keyframe",  vk_pageup,  MOD_KEY.none,                 panel_animation_prev_keyframe         ).setMenu("previous_keyframe",             )
+        registerFunction("",          "Next Keyframe",      vk_pagedown,MOD_KEY.none,                 panel_animation_next_keyframe         ).setMenu("next_keyframe",                 )
     
         registerFunction("Animation", "Delete keys",        vk_delete,  MOD_KEY.none,                 panel_animation_delete_key            ).setMenu("animation_delete_keys",         )
         registerFunction("Animation", "Duplicate",          "D",        MOD_KEY.ctrl,                 panel_animation_duplicate             ).setMenu("animation_duplicate",           THEME.duplicate)

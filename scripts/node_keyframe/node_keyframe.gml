@@ -31,9 +31,9 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 		};
 	#endregion
 	
-	static setTime = function(time) {
-		self.time = time;	
-		ratio = time / (TOTAL_FRAMES - 1);
+	static setTime = function(_time) {
+		time  = _time;
+		ratio = _time / (TOTAL_FRAMES - 1);
 	}
 	
 	static clone = function(target = noone) {
