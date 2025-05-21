@@ -23,6 +23,11 @@
     function panel_animation_edit_keyframe_stagger()   { CALL("animation_stagger");                 PANEL_ANIMATION.edit_keyframe_stagger(); }
     function panel_animation_keyframe_driver()         { CALL("animation_driver");                  PANEL_ANIMATION.edit_keyframe_driver();  }
     
+    function panel_animation_keyframe_align_left()     { CALL("animation_align_left");              PANEL_ANIMATION.alignKeys(fa_left);      }
+    function panel_animation_keyframe_align_center()   { CALL("animation_align_center");            PANEL_ANIMATION.alignKeys(fa_center);    }
+    function panel_animation_keyframe_align_right()    { CALL("animation_align_right");             PANEL_ANIMATION.alignKeys(fa_right);     }
+    function panel_animation_keyframe_repeat()         { CALL("animation_repeat");                  PANEL_ANIMATION.repeatKeys();            }
+    
     function panel_animation_dopesheet_folder()        { CALL("animation_new_folder");              PANEL_ANIMATION.dopesheet_new_folder();        }
     function panel_animation_dopesheet_folder_select() { CALL("animation_new_folder_select");       PANEL_ANIMATION.dopesheet_new_folder_select(); }
     function panel_animation_dopesheet_expand()        { CALL("animation_dopesheet_expand");        PANEL_ANIMATION.dopesheet_expand();            }
@@ -59,10 +64,15 @@
         registerFunction("Animation", "Settings",           "S",        MOD_KEY.ctrl | MOD_KEY.shift, panel_animation_settings_call         ).setMenu("animation_settings", THEME.animation_setting )
         registerFunction("Animation", "Scaler",             "",         MOD_KEY.none,                 panel_animation_scale_call            ).setMenu("animation_scaler",   THEME.animation_timing  )
         
-        registerFunction("Animation", "Edit Keyframe Value","", MOD_KEY.none, panel_animation_edit_keyframe_value   ).setMenu("animation_edit_keyframe_value", )
-        registerFunction("Animation", "Lock Keyframe Y",    "", MOD_KEY.none, panel_animation_edit_keyframe_lock_y  ).setMenu("animation_lock_keyframe_y",     )
-        registerFunction("Animation", "Stagger",            "", MOD_KEY.none, panel_animation_edit_keyframe_stagger ).setMenu("animation_stagger",             )
-        registerFunction("Animation", "Driver",             "", MOD_KEY.none, panel_animation_keyframe_driver       ).setMenu("animation_driver",              )
+        registerFunction("Animation", "Edit Keyframe Value","", MOD_KEY.none, panel_animation_edit_keyframe_value   ).setMenu("animation_edit_keyframe_value",  )
+        registerFunction("Animation", "Toggle Keyframe Y",  "", MOD_KEY.none, panel_animation_edit_keyframe_lock_y  ).setMenu("animation_lock_keyframe_y",      )
+        registerFunction("Animation", "Stagger",            "", MOD_KEY.none, panel_animation_edit_keyframe_stagger ).setMenu("animation_stagger",              )
+        registerFunction("Animation", "Driver",             "", MOD_KEY.none, panel_animation_keyframe_driver       ).setMenu("animation_driver",               )
+        
+        registerFunction("Animation", "Align Left",                "A", MOD_KEY.none, panel_animation_keyframe_align_left    ).setMenu("animation_align_left"   )
+        registerFunction("Animation", "Align Center",              "",  MOD_KEY.none, panel_animation_keyframe_align_center  ).setMenu("animation_align_center" )
+        registerFunction("Animation", "Align Right",               "",  MOD_KEY.none, panel_animation_keyframe_align_right   ).setMenu("animation_align_right"  )
+        registerFunction("Animation", "Repeat Keys",               "R", MOD_KEY.none, panel_animation_keyframe_repeat        ).setMenu("animation_repeat"       )
         
         registerFunction("Animation", "New Folder",                "", MOD_KEY.none, panel_animation_dopesheet_folder        ).setMenu("animation_new_folder",          THEME.folder)
         registerFunction("Animation", "New Folder From Selection", "", MOD_KEY.none, panel_animation_dopesheet_folder_select ).setMenu("animation_new_folder_select",   THEME.folder)

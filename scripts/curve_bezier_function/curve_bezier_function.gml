@@ -272,18 +272,16 @@ function eval_curve_x(_bz, _x, _tolr = 0.00001) {
 }
 
 function eval_curve_segment_x(_bz, _x, _tolr = 0.00001) {
-	var st = 0;
-	var ed = 1;
-	
-	var _xt = _x;
-	var _binRep = 8;
+	static _binRep = 8;
 	
 	if(_x <= 0) return _bz[0];
 	if(_x >= 1) return _bz[5];
 	if(_bz[0] == _bz[2] && _bz[0] == _bz[4] && _bz[0] == _bz[5]) return _bz[0];
-	// if(_bz[1] == 0 && _bz[2] == 0 && _bz[3] == 0 && _bz[4] == 0)
-	// 	return lerp(_bz[0], _bz[5], _x);
-		
+	
+	var  st = 0;
+	var  ed = 1;
+	var _xt = _x;
+	
 	repeat(_binRep) {
 		var _1xt = 1 - _xt;
 		

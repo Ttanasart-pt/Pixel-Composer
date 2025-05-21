@@ -1,5 +1,5 @@
 function taggedSurf(_surf = noone) : dynaSurf() constructor {
-	surfaces = [ _surf ];
+	surfaces = is(_surf, dynaSurf)? array_clone(_surf.surfaces) : [_surf];
 	tags     = {};
 	
 	static draw = function(_x = 0, _y = 0, _xs = 1, _ys = 1, _rot = 0, _col = c_white, _alp = 1) {
@@ -106,6 +106,28 @@ function Node_Surface_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	tag_dragging_my = 0;
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) {
+		var _tagged_surfaces = outputs[0].getValue();
+		var _tagged_surface  = is_array(_tagged_surfaces)? array_safe_get_fast(_tagged_surfaces, preview_index) : _tagged_surfaces;
+		
+		if(is(_tagged_surface, taggedSurf)) {
+			var _tags = _tagged_surface.tags;
+			var _taga = struct_get_names(_tags);
+			
+			for( var i = 0, n = array_length(_taga); i < n; i++ ) {
+				var _t = _taga[i];
+				var _p = _tags[$ _t];
+				
+				var _px = _x + _p[0] * _s;
+				var _py = _y + _p[1] * _s;
+				
+				draw_set_color(c_white);
+	        	draw_rectangle(_px, _py, _px + _s - 1, _py + _s - 1, true);
+	        	
+	        	draw_set_color(c_black);
+	        	draw_rectangle(_px + 1, _py + 1, _px + _s - 2, _py + _s - 2, true);
+			}
+		}
+		
 	    var _amo = getInputAmount();
 	    
 	    var _tag_hov = noone;
@@ -142,7 +164,6 @@ function Node_Surface_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
     	}
     	
     	if(tag_dragging != noone) {
-    	    
     	    var _tx = round(tag_dragging_sx + (_mx - tag_dragging_mx) / _s);
     	    var _ty = round(tag_dragging_sy + (_my - tag_dragging_my) / _s);
     	    tag_dragging_sv[preview_index] = [ _tx, _ty ];
@@ -171,8 +192,6 @@ function Node_Surface_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
     	}
 	}
 	
-	static step = function() {}
-	
 	static processData_prebatch  = function() {
 		var _amo  = getInputAmount();
 	    for( var i = 0; i < _amo; i++ ) {
@@ -186,6 +205,9 @@ function Node_Surface_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	    var _surf = _data[0];
 	    var _srf  = new taggedSurf(_surf);
 	    
+	    if(is(_surf, taggedSurf))
+	    	_srf.tags = variable_clone(_surf.tags);
+    	
 	    var _amo  = getInputAmount();
 	    for( var i = 0; i < _amo; i++ ) {
 	        var _ind = input_fix_len + i * data_length;

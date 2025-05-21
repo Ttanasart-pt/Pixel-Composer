@@ -180,7 +180,7 @@ function Panel_Animation_Dopesheet() {
 	    
 	    keyframe_menu = [
 	        MENU_ITEMS.animation_edit_keyframe_value,
-	        MENU_ITEMS.animation_lock_keyframe_y,
+	        // MENU_ITEMS.animation_lock_keyframe_y,
 	                
 	        MENU_ITEMS.animation_group_ease_in,
 	        MENU_ITEMS.animation_group_ease_out,
@@ -444,6 +444,82 @@ function Panel_Animation_Dopesheet() {
         }
         
         array_foreach(keyframe_selecting, function(k) /*=>*/ { k.anim.setKeyTime(k, __tt,, true) });
+    }
+    
+    function repeatKeys_anim(_anim) {
+    	__anim = _anim;
+    	var _keys = array_filter(keyframe_selecting, function(k) /*=>*/ {return k.anim == __anim});
+        if(array_length(_keys) < 2) return;
+        
+    	var _tLast   = array_reduce(_anim.values,       function(v, k) /*=>*/ {return max(v, k.time)}, -infinity);
+    	var _kFirst  = array_reduce(_keys, function(v, k) /*=>*/ {return min(v, k.time)},  infinity);
+    	var _kLast   = array_reduce(_keys, function(v, k) /*=>*/ {return max(v, k.time)}, -infinity);
+    	var _kLength = _kLast - _kFirst;
+    	var _kEnds_last = -infinity;
+    	
+    	var _kEnds = [];
+    	for( var i = array_length(_anim.values) - 1; i >= 0; i-- ) {
+    		var _k = _anim.values[i];
+    		if(_k.time <= _kLast) continue;
+    		
+    		array_push(_kEnds, _k);
+    		array_delete(_anim.values, i, 1);
+    	}
+    	
+    	if(!array_empty(_kEnds)) {
+    		var _kEnds_first = array_reduce(_kEnds, function(v, k) /*=>*/ {return min(v, k.time)},  infinity);
+    		var _kDelay      = _kEnds_first - _kLast;
+    	}
+    	
+        if(array_length(_keys) == 2) {
+        	for( var i = 0, n = array_length(_keys); i < n; i++ ) {
+	    		var _k = _keys[i];
+	    		var _nt = _kLast + _kLength + (_k.time - _kFirst);
+	    		var _nk = _k.clone(_anim);
+	    		
+	    		_nk.value = variable_clone(_k.value);
+	    		_nk.time  = _nt;
+	    		_kEnds_last = max(_kEnds_last, _nt);
+	    		
+	    		array_push(_anim.values, _nk);
+	    	}
+        	
+        } else {
+	    	for( var i = 0, n = array_length(_keys); i < n; i++ ) {
+	    		var _k = _keys[i];
+	    		if(_k.time == _kFirst) continue;
+	    		
+	    		var _nt = _kLast + (_k.time - _kFirst);
+	    		var _nk = _k.clone(_anim);
+	    		
+	    		_nk.value = variable_clone(_k.value);
+	    		_nk.time  = _nt;
+	    		_kEnds_last = max(_kEnds_last, _nt);
+	    		
+	    		array_push(_anim.values, _nk);
+	    	}
+        }
+        
+    	if(!array_empty(_kEnds)) {
+    		for( var i = 0, n = array_length(_kEnds); i < n; i++ ) {
+    			_kEnds[i].time = _kEnds_last + _kDelay;
+    			array_push(_anim.values, _kEnds[i]);
+    		}
+    	}
+    	
+    	array_sort(_anim.values, function(a,b) /*=>*/ {return a.time - b.time});
+    	
+    	_anim.updateKeyMap();
+    	_anim.prop.node.triggerRender();
+    }
+    
+    function repeatKeys() {
+        if(array_empty(keyframe_selecting)) return;
+        
+        var _anims = array_create_ext(array_length(keyframe_selecting), function(i) /*=>*/ {return keyframe_selecting[i].anim});
+            _anims = array_unique(_anims);
+        
+        array_foreach(_anims, function(a) /*=>*/ {return repeatKeys_anim(a)});
     }
     
     function arrangeKeys() {}
@@ -994,44 +1070,41 @@ function Panel_Animation_Dopesheet() {
                     k.anim.setKeyTime(k, k.time, true, true);
                 
             } else {
-                var _dir = point_direction(graph_key_sx, graph_key_sy, msx, msy);
-                var _dis = point_distance( graph_key_sx, graph_key_sy, msx, msy);
-                
-                var _dx = lengthdir_x(_dis, _dir) / timeline_scale / 2;
-                var _dy = lengthdir_y(_dis, _dir) / 32;
-                if(_dx < 0) _dy = -_dy;
-                
-                _dx = clamp(abs(_dx), 0, 1);
-                if(_dx > 0.1) keyframe_dragout = true;
-                else { _dx = 0; _dy = 0; }
-                
+                var _dx = (graph_key_sx - msx) / timeline_scale / 2;
+                var _dy = (graph_key_sy - msy) / ui(128);
                 var _in = k.ease_in;
                 var _ot = k.ease_out;
             
                 switch(graph_key_drag_index) {
                     case KEYFRAME_DRAG_TYPE.ease_in :
-                        k.ease_in_type = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.linear;
+                    	_dx = clamp(_dx, 0, 1);
+                    	
+                        k.ease_in_type = _dx > 0? CURVE_TYPE.bezier : CURVE_TYPE.linear;
                         k.ease_in[0]   = _dx;
                         break;
                         
                     case KEYFRAME_DRAG_TYPE.ease_out :
-                        k.ease_out_type = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.linear;
+                    	_dx = clamp(-_dx, 0, 1);
+                        
+                        k.ease_out_type = _dx > 0? CURVE_TYPE.bezier : CURVE_TYPE.linear;
                         k.ease_out[0]   = _dx;
                         break;
                         
                     case KEYFRAME_DRAG_TYPE.ease_both :
+                    	_dx = clamp(abs(_dx), 0, 1);
+                        if(_dx < .1) _dx = 0;
                         
-                        k.ease_in_type  = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.linear;
-                        k.ease_out_type = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.linear;
+                        k.ease_in_type  = _dx > 0? CURVE_TYPE.bezier : CURVE_TYPE.linear;
+                        k.ease_in[0]    = _dx;
                     
-                        k.ease_in[0]  = _dx;
-                        k.ease_out[0] = _dx;
+                        k.ease_out_type = _dx > 0? CURVE_TYPE.bezier : CURVE_TYPE.linear;
+                        k.ease_out[0]   = _dx;
                         break;
                 }
                             
                 if(mouse_release(mb_left)) {
-                    recordAction(ACTION_TYPE.var_modify, k, [_in, "ease_in"]);
-                    recordAction(ACTION_TYPE.var_modify, k, [_ot, "ease_out"]);
+                    recordAction(ACTION_TYPE.var_modify, k, [ _in, "ease_in"  ]);
+                    recordAction(ACTION_TYPE.var_modify, k, [ _ot, "ease_out" ]);
                 }
             }
             
@@ -1041,6 +1114,7 @@ function Panel_Animation_Dopesheet() {
             }
             
         } else if(graph_key_hover != noone) {
+            key_hover = graph_key_hover;
             
             if(DOUBLE_CLICK) {
                 graph_key_drag       = _graph_key_hover;
@@ -1212,7 +1286,7 @@ function Panel_Animation_Dopesheet() {
                     } else if(mouse_press(mb_left)) {
                         if(key_mod_press(CTRL)) {
                             editKeyFrame(keyframe);
-                        
+                        	
                         } else {
                             keyframe_dragging  = keyframe;
                             keyframe_drag_type = _scaling? KEYFRAME_DRAG_TYPE.scale : KEYFRAME_DRAG_TYPE.move;
@@ -1395,7 +1469,7 @@ function Panel_Animation_Dopesheet() {
             } else
                 draw_sprite_ui_uniform(THEME.timeline_graph, 1, tx, ty, 1, _graph_show? COLORS._main_accent : COLORS._main_icon, _graph_show? 1 : _tool_a);
                 
-        	if(prop.show_graph) {
+        	if(prop.show_graph && prop.type != VALUE_TYPE.color) {
         		var _gh = ui(prop.graph_h);
         		var _gx = tx;
         		var _gy = ty + ui(8);
@@ -1422,7 +1496,6 @@ function Panel_Animation_Dopesheet() {
         		
         		if(graph_height_dragging == prop) {
         			prop.graph_h = max(16, graph_height_drag_sy + (msy - graph_height_drag_my) / UI_SCALE);
-        			
         			if(mouse_release(mb_left)) graph_height_dragging = noone;
         		}
         	}
@@ -1930,12 +2003,7 @@ function Panel_Animation_Dopesheet() {
 	                }
 	                
 	            } else {
-	                var dx = abs((keyframe_dragging.time + 1) - (mx - bar_x - timeline_shift) / timeline_scale) / 2;
-	                dx = clamp(dx, 0, 1);
-	                if(dx > 0.2) keyframe_dragout = true;
-	            
-	                var dy = -(my - keyframe_drag_my) / 32;
-	            
+	                var _dx = ((keyframe_dragging.time + 1) - (mx - bar_x - timeline_shift) / timeline_scale) / 2;
 	                var _in = keyframe_dragging.ease_in;
 	                var _ot = keyframe_dragging.ease_out;
 	            
@@ -1943,34 +2011,37 @@ function Panel_Animation_Dopesheet() {
 	                    case KEYFRAME_DRAG_TYPE.ease_in :
 	                        for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
 	                            var k = keyframe_selecting[i];
-	                            k.ease_in_type  = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.linear;
 	                            
-	                            k.ease_in[0] = dx;
-	                            if(!k.ease_y_lock) k.ease_in[1] = dy;
+	                            _dx = clamp(_dx, 0, 1);
+	                            
+	                            k.ease_in_type = _dx > 0? CURVE_TYPE.bezier : CURVE_TYPE.linear;
+	                            k.ease_in[0]   = _dx;
 	                        }
 	                    
 	                        break;
 	                    case KEYFRAME_DRAG_TYPE.ease_out :
 	                        for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
 	                            var k = keyframe_selecting[i];
-	                            k.ease_out_type = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.linear;
 	                            
-	                            k.ease_out[0] =  dx;
-	                            if(!k.ease_y_lock) k.ease_out[1] =  dy;
+	                            _dx = clamp(-_dx, 0, 1);
+	                            
+	                            k.ease_out_type = _dx > 0? CURVE_TYPE.bezier : CURVE_TYPE.linear;
+	                            k.ease_out[0]   = _dx;
 	                        }
 	                        break;
 	                        
 	                    case KEYFRAME_DRAG_TYPE.ease_both :
 	                        for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
 	                            var k  = keyframe_selecting[i];
-	                            k.ease_in_type  = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.linear;
-	                            k.ease_out_type = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.linear;
-	                        
-	                            k.ease_in[0] = dx;
-	                            if(!k.ease_y_lock) k.ease_in[1] = dy;
 	                            
-	                            k.ease_out[0] = dx;
-	                            if(!k.ease_y_lock) k.ease_out[1] = dy;
+	                            _dx = clamp(abs(_dx), 0, 1);
+                        		if(_dx < .1) _dx = 0;
+                        
+	                            k.ease_in_type  = _dx > 0? CURVE_TYPE.bezier : CURVE_TYPE.linear;
+	                            k.ease_in[0]    = _dx;
+	                        
+	                            k.ease_out_type = _dx > 0? CURVE_TYPE.bezier : CURVE_TYPE.linear;
+	                            k.ease_out[0]   = _dx;
 	                        }
 	                        break;
 	                }

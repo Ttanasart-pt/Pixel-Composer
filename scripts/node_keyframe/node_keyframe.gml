@@ -38,8 +38,8 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 	
 	static clone = function(target = noone) {
 		var key = new valueKey(time, value, target);
-		key.ease_in			= ease_in;
-		key.ease_out		= ease_out;
+		key.ease_in			= [ ease_in[0],  ease_in[1] ];
+		key.ease_out		= [ ease_out[0], ease_out[1] ];
 		key.ease_in_type	= ease_in_type;
 		key.ease_out_type	= ease_out_type;
 		
@@ -176,39 +176,34 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		array_fill(key_map, _keyIndex, _len, 999_999);
 	}
 	
+	__interpolate_curve = [ 0, 0, 0, 0, 0, 1 ];
 	static interpolate = function(from, to, rat) {
-		if(prop.type == VALUE_TYPE.boolean)
-			return 0;
-			
-		if(to.ease_in_type == CURVE_TYPE.linear && from.ease_out_type == CURVE_TYPE.linear) 
-			return rat;
-			
-		if(to.ease_in_type == CURVE_TYPE.cut) 
-			return 0;
-			
-		if(from.ease_out_type == CURVE_TYPE.cut) 
-			return 1;
-			
-		if(rat == 0 || rat == 1) 
-			return rat;
+		if(to.ease_in_type == CURVE_TYPE.linear && from.ease_out_type == CURVE_TYPE.linear) return rat;
+		if(rat == 0 || rat == 1) return rat;
 		
 		var eox = clamp(from.ease_out[0], 0, 0.9);
 		var eix = clamp(to.ease_in[0],    0, 0.9);
 		var eoy = from.ease_out[1];
 		var eiy = to.ease_in[1];
 		
-		var bz = [0, eox, eoy, 1. - eix, eiy, 1];
-		return eval_curve_segment_x(bz, rat);
+		__interpolate_curve[1] = eox;
+		__interpolate_curve[2] = eoy;
+		__interpolate_curve[3] = 1-eix;
+		__interpolate_curve[4] = eiy;
+		
+		return eval_curve_segment_x(__interpolate_curve, rat);
 	}
 	
-	static lerpValue = function(from, to, _lrp) {
-		var _f = from.value;
-		var _t = to.value;
+	static lerpValue = function(from, to, rat) {
+		if(prop.type          == VALUE_TYPE.boolean) return processType(from.value);
+		if(to.ease_in_type    == CURVE_TYPE.cut)     return processType(from.value);
+		if(from.ease_out_type == CURVE_TYPE.cut)     return processType(to.value);
 		
-		if(is_struct(_f)) {
-			if(!struct_has(_f, "lerpTo")) return _f;
-			return _f.lerpTo(_t, _lrp);
-		}
+		var _lrp = interpolate(from, to, rat);
+		var _f   = from.value;
+		var _t   = to.value;
+		
+		if(is_struct(_f)) return struct_has(_f, "lerpTo")? _f.lerpTo(_t, _lrp) : _f;
 		
 		if(prop.display_type == VALUE_DISPLAY.d3quarternion && prop.attributes.angle_display == QUARTERNION_DISPLAY.quarterion)
 			return quarternionArraySlerp(_f, _t, _lrp);
@@ -219,10 +214,10 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				var res  = array_create(_len);
 				
 				for( var i = 0; i < _len; i++ ) {
-					var rat = i / (_len - 1);
+					var _rat = i / (_len - 1);
 			
-					var rf = rat * (array_length(_f) - 1);
-					var rt = rat * (array_length(_t) - 1);
+					var rf = _rat * (array_length(_f) - 1);
+					var rt = _rat * (array_length(_t) - 1);
 					
 					var cf = array_get_decimal(_f, rf, true);
 					var ct = array_get_decimal(_t, rt, true);
@@ -236,22 +231,17 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			return processType(merge_color(_f, _t, _lrp));
 		}
 		
+		if(prop.type == VALUE_TYPE.text) return processType(_f);
+		
 		if(is_array(_f) || is_array(_t)) {
 			var _len = max(array_safe_length(_f), array_safe_length(_t));
 			var _vec = array_create(_len);
 			
 			for(var i = 0; i < _len; i++) 
-				_vec[i] = processType(
-					lerp(
-						is_array(_f)? array_safe_get_fast(_f, i, 0) : _f, 
-						is_array(_t)? array_safe_get_fast(_t, i, 0) : _t, 
-					_lrp)
-				);
+				_vec[i] = processType(lerp( is_array(_f)? array_safe_get_fast(_f, i, 0) : _f, 
+						                    is_array(_t)? array_safe_get_fast(_t, i, 0) : _t, _lrp));
 			return _vec;
 		}
-			
-		if(prop.type == VALUE_TYPE.text)
-			return processType(_f);
 		
 		return processType(lerp(_f, _t, _lrp));
 	}
@@ -328,10 +318,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				var prog = TOTAL_FRAMES - fTime + _time;
 				var totl = TOTAL_FRAMES - fTime + tTime;
 				
-				var rat  = prog / totl;
-				var _lrp = interpolate(from, to, rat);
-				
-				return lerpValue(from, to, _lrp);
+				return lerpValue(from, to, prog / totl);
 			}
 			
 			return processType(values[0].value); //First frame
@@ -351,10 +338,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				var prog = _time - from.time;
 				var totl = TOTAL_FRAMES - from.time + to.time;
 				
-				var rat  = prog / totl;
-				var _lrp = interpolate(from, to, rat);
-				
-				return lerpValue(from, to, _lrp);
+				return lerpValue(from, to, prog / totl);
 			}
 			
 			return processType(_lstKey.value); //Last frame
@@ -364,14 +348,12 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		
 		var from = values[_keyIndex];
 		var to   = values[_keyIndex + 1];
-			
 		var rat  = (_time - from.time) / (to.time - from.time);
-		var _lrp = interpolate(from, to, rat);
-			
+		
 		if(from.drivers.type)
-			return processDriver(_time, from, lerpValue(from, to, _lrp), rat);
+			return processDriver(_time, from, lerpValue(from, to, rat), rat);
 			
-		return lerpValue(from, to, _lrp);
+		return lerpValue(from, to, rat);
 		
 	}
 	
