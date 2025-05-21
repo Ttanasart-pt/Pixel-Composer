@@ -548,7 +548,7 @@ function typeIncompatible(from, to) {
 function isGraphable(prop) {
 	INLINE
 	
-	if(prop.type == VALUE_TYPE.integer || prop.type == VALUE_TYPE.float || prop.type == VALUE_TYPE.boolean) {
+	if(prop.type == VALUE_TYPE.integer || prop.type == VALUE_TYPE.float) {
 		if(prop.display_type == VALUE_DISPLAY.puppet_control)
 			return false;
 		return true;

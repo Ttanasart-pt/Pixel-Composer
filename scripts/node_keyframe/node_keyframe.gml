@@ -109,72 +109,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			array_push(values, new valueKey(0, _val, self));
 	#endregion
 	
-	static refreshAnimation = function() {
-		animate_frames = array_verify(animate_frames, TOTAL_FRAMES);
-		
-		var _anim = false;
-		var _fr   = noone;
-		
-		for( var i = 0, n = array_length(values); i < n; i++ ) {
-			var _key = values[i];
-			
-			if(_fr == noone)
-				array_fill(animate_frames, 0, _key.time, 0);
-			
-			else {
-				var frInd = array_equals(_fr.ease_out, [0, 0]) && array_equals(_fr.ease_in, [0, 1]) && isEqual(_fr.value, _key.value);
-				array_fill(animate_frames, _fr.time, _key.time, !frInd);
-				
-				// if(frInd) array_fill(animate_frames, _fr.time, _key.time, 0);
-				// else      array_fill(animate_frames, _fr.time, _key.time, 1);
-			}
-			
-			_fr = _key;
-		}
-		
-		if(_fr) array_fill(animate_frames, _fr.time, TOTAL_FRAMES, 0);
-	}
-	
-	static updateKeyMap = function() {
-		length = array_length(values);
-		
-		if(!prop.is_anim && !LOADING && !APPENDING) return;
-		
-		if(array_empty(values)) { 
-			array_resize(key_map, TOTAL_FRAMES); 
-			return; 
-		}
-		
-		var _len = max(TOTAL_FRAMES, array_last(values).time);
-		key_map_mode = prop.on_end;
-		
-		if(array_length(key_map) != _len)
-			array_resize(key_map, _len);
-		
-		if(prop.type == VALUE_TYPE.trigger) {
-			array_fill(key_map, 0, _len, 0);
-			for( var i = 0, n = array_length(values); i < n; i++ )
-				key_map[values[i].time] = true;
-			return;
-		} 
-		
-		if(array_length(values) < 2) {
-			array_fill(key_map, 0, _len, 0);
-			return;
-		}
-		
-		var _firstKey = values[0].time;
-		array_fill(key_map, 0, _firstKey, -1);
-		var _keyIndex = _firstKey;
-		
-		for( var i = 1, n = array_length(values); i < n; i++ ) {
-			var _k1 = values[i].time;
-			array_fill(key_map, _keyIndex, _k1, i - 1);
-			_keyIndex = _k1;
-		}
-		
-		array_fill(key_map, _keyIndex, _len, 999_999);
-	}
+	////- Getters
 	
 	__interpolate_curve = [ 0, 0, 0, 0, 0, 1 ];
 	static interpolate = function(from, to, rat) {
@@ -195,55 +130,56 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	}
 	
 	static lerpValue = function(from, to, rat) {
-		if(prop.type          == VALUE_TYPE.boolean) return processType(from.value);
-		if(to.ease_in_type    == CURVE_TYPE.cut)     return processType(from.value);
-		if(from.ease_out_type == CURVE_TYPE.cut)     return processType(to.value);
+		var _f = from.value;
+		var _t = to.value;
 		
-		var _lrp = interpolate(from, to, rat);
-		var _f   = from.value;
-		var _t   = to.value;
+		if(to.ease_in_type    == CURVE_TYPE.cut) return processType(_f);
+		if(from.ease_out_type == CURVE_TYPE.cut) return processType(_t);
+		if(struct_has(_f, "lerpTo")) return _f.lerpTo(_t, interpolate(from, to, rat))
 		
-		if(is_struct(_f)) return struct_has(_f, "lerpTo")? _f.lerpTo(_t, _lrp) : _f;
-		
-		if(prop.display_type == VALUE_DISPLAY.d3quarternion && prop.attributes.angle_display == QUARTERNION_DISPLAY.quarterion)
-			return quarternionArraySlerp(_f, _t, _lrp);
-			
-		if(prop.type == VALUE_TYPE.color) {
-			if(is_array(_f) && is_array(_t)) {
-				var _len = ceil(lerp(array_length(_f), array_length(_t), _lrp));
-				var res  = array_create(_len);
+		switch(prop.type) {
+			case VALUE_TYPE.float : 
+			case VALUE_TYPE.integer : 
+				var _lrp = interpolate(from, to, rat);
 				
-				for( var i = 0; i < _len; i++ ) {
-					var _rat = i / (_len - 1);
-			
-					var rf = _rat * (array_length(_f) - 1);
-					var rt = _rat * (array_length(_t) - 1);
+				if(prop.display_type == VALUE_DISPLAY.d3quarternion && prop.attributes.angle_display == QUARTERNION_DISPLAY.quarterion)
+					return quarternionArraySlerp(_f, _t, _lrp);
 					
-					var cf = array_get_decimal(_f, rf, true);
-					var ct = array_get_decimal(_t, rt, true);
+				if(is_array(_f) || is_array(_t)) {
+					var _len = max(array_safe_length(_f), array_safe_length(_t));
+					var _vec = array_create(_len);
 					
-					res[i] = merge_color(cf, ct, _lrp);
+					for(var i = 0; i < _len; i++) 
+						_vec[i] = processType(lerp( is_array(_f)? array_safe_get_fast(_f, i, 0) : _f, 
+								                    is_array(_t)? array_safe_get_fast(_t, i, 0) : _t, _lrp));
+					return _vec;
 				}
+				return processType(lerp(_f, _t, _lrp));
 				
-				return res;
-			}
-			
-			return processType(merge_color(_f, _t, _lrp));
+			case VALUE_TYPE.color : 
+				var _lrp = interpolate(from, to, rat);
+				
+				if(is_array(_f) && is_array(_t)) {
+					var _len = ceil(lerp(array_length(_f), array_length(_t), _lrp));
+					var res  = array_create(_len);
+					
+					for( var i = 0; i < _len; i++ ) {
+						var _rat = i / (_len - 1);
+				
+						var rf = _rat * (array_length(_f) - 1);
+						var rt = _rat * (array_length(_t) - 1);
+						
+						var cf = array_get_decimal(_f, rf, true);
+						var ct = array_get_decimal(_t, rt, true);
+						
+						res[i] = merge_color(cf, ct, _lrp);
+					}
+					return res;
+				}
+				return processType(merge_color(_f, _t, _lrp));
 		}
 		
-		if(prop.type == VALUE_TYPE.text) return processType(_f);
-		
-		if(is_array(_f) || is_array(_t)) {
-			var _len = max(array_safe_length(_f), array_safe_length(_t));
-			var _vec = array_create(_len);
-			
-			for(var i = 0; i < _len; i++) 
-				_vec[i] = processType(lerp( is_array(_f)? array_safe_get_fast(_f, i, 0) : _f, 
-						                    is_array(_t)? array_safe_get_fast(_t, i, 0) : _t, _lrp));
-			return _vec;
-		}
-		
-		return processType(lerp(_f, _t, _lrp));
+		return processType(_f);
 	}
 	
 	static getName = function() { return prop.name + suffix; }
@@ -429,9 +365,9 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		return _val;
 	}
 	
-	static insertKey = function(_key, _index) { array_insert(values, _index, _key); }
-	
 	function onUndo() { updateKeyMap(); prop.triggerSetFrom(); }
+	
+	////- Setters
 	
 	static setKeyTime = function(_key, _time, _replace = true, record = false) {
 		if(!array_exists(values, _key))	    return 0;
@@ -562,11 +498,84 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		return true;
 	}
 	
+	////- Modify Keys
+	
+	static refreshAnimation = function() {
+		animate_frames = array_verify(animate_frames, TOTAL_FRAMES);
+		
+		var _anim = false;
+		var _fr   = noone;
+		
+		for( var i = 0, n = array_length(values); i < n; i++ ) {
+			var _key = values[i];
+			
+			if(_fr == noone)
+				array_fill(animate_frames, 0, _key.time, 0);
+			
+			else {
+				var frInd = array_equals(_fr.ease_out, [0, 0]) && array_equals(_fr.ease_in, [0, 1]) && isEqual(_fr.value, _key.value);
+				array_fill(animate_frames, _fr.time, _key.time, !frInd);
+				
+				// if(frInd) array_fill(animate_frames, _fr.time, _key.time, 0);
+				// else      array_fill(animate_frames, _fr.time, _key.time, 1);
+			}
+			
+			_fr = _key;
+		}
+		
+		if(_fr) array_fill(animate_frames, _fr.time, TOTAL_FRAMES, 0);
+	}
+	
+	static updateKeyMap = function() {
+		length = array_length(values);
+		
+		if(!prop.is_anim && !LOADING && !APPENDING) return;
+		
+		if(array_empty(values)) { 
+			array_resize(key_map, TOTAL_FRAMES); 
+			return; 
+		}
+		
+		var _len = max(TOTAL_FRAMES, array_last(values).time);
+		key_map_mode = prop.on_end;
+		
+		if(array_length(key_map) != _len)
+			array_resize(key_map, _len);
+		
+		if(prop.type == VALUE_TYPE.trigger) {
+			array_fill(key_map, 0, _len, 0);
+			for( var i = 0, n = array_length(values); i < n; i++ )
+				key_map[values[i].time] = true;
+			return;
+		} 
+		
+		if(array_length(values) < 2) {
+			array_fill(key_map, 0, _len, 0);
+			return;
+		}
+		
+		var _firstKey = values[0].time;
+		array_fill(key_map, 0, _firstKey, -1);
+		var _keyIndex = _firstKey;
+		
+		for( var i = 1, n = array_length(values); i < n; i++ ) {
+			var _k1 = values[i].time;
+			array_fill(key_map, _keyIndex, _k1, i - 1);
+			_keyIndex = _k1;
+		}
+		
+		array_fill(key_map, _keyIndex, _len, 999_999);
+	}
+	
+	static insertKey = function(_key, _index) { array_insert(values, _index, _key); }
+	
 	static removeKey = function(key, upd = true) {
 		if(array_length(values) > 1) array_remove(values, key);
 		else						 prop.is_anim = false;
 		if(upd) updateKeyMap();
 	}
+	
+	////- Serialize
 	
 	static serialize = function(scale = false) {
 		var _data = [];
@@ -731,6 +740,8 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		
 		updateKeyMap();
 	}
+	
+	////- Actions
 	
 	static cleanUp = function() {}
 }

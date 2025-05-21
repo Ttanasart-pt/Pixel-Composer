@@ -16,7 +16,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static DISPLAY_DATA_KEYS = [ "atlas_crop" ];
 	
-	#region ---- main ----
+	#region ---- Main ----
 		active = true;
 		from   = noone;
 		name   = _name;
@@ -51,7 +51,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		dummy_redo     = -1;
 	#endregion
 	
-	#region ---- tooltip ----
+	#region ---- Tooltip ----
 		tooltip     = _tooltip;
 		tooltipData = {};
 		
@@ -67,7 +67,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 	#endregion
 	
-	#region ---- connection ----
+	#region ---- Connection ----
 		connect_type      = _connect;
 		value_from        = noone;
 		value_from_loop   = noone;
@@ -84,7 +84,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		onSetTo   = noone;
 	#endregion
 	
-	#region ---- animation ----
+	#region ---- Animation ----
 		key_inter   = CURVE_TYPE.linear;
 		
 		is_anim		= false;
@@ -94,7 +94,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		loop_range  = -1;
 	#endregion
 	
-	#region ---- value ----
+	#region ---- Value ----
 		static setDefValue = function(_value) {
 			sepable		= is_array(_value) && array_length(_value) > 1;
 			animator	= new valueAnimator(_value, self, false);
@@ -135,7 +135,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		bypass_junc    = connect_type == CONNECT_TYPE.input? new __NodeValue_Input_Bypass(self, name, node, type) : noone;
 	#endregion
 	
-	#region ---- draw ----
+	#region ---- Draw ----
 		draw_line_shift_x = 0;
 		draw_line_shift_y = 0;
 		draw_line_shift_e = -1;
@@ -179,13 +179,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		custom_color = noone;
 	#endregion
 	
-	#region ---- timeline ----
-		show_graph	= false;
-		show_graphs = array_create(array_safe_length(_value));
-		graph_h		= 96;
-	#endregion
-	
-	#region ---- inspector ----
+	#region ---- Inspector ----
 		visible = _connect == CONNECT_TYPE.output || _type == VALUE_TYPE.surface || _type == VALUE_TYPE.path || _type == VALUE_TYPE.PCXnode;
 		visible_manual    = 0;
 		show_in_inspector = true;
@@ -202,14 +196,19 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		type_array   = typeArray(self);
 	#endregion
 	
-	#region ---- graph ----
+	#region ---- Graph ----
+		show_graph	= false;
+		show_graphs = array_create(array_safe_length(_value));
+		graph_h		= 96;
+		graph_range = [ 0, 1 ];
+		
 		value_validation   = VALIDATION.pass;
 		error_notification = noone;
 		
 		extract_node = "";
 	#endregion
 	
-	#region ---- expression ----
+	#region ---- Expression ----
 		expUse     = false;
 		expression = "";
 		expTree    = noone;
@@ -234,13 +233,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		express_edit.align    = fa_left;
 	#endregion
 	
-	#region ---- serialization ----
+	#region ---- Serialization ----
 		con_node  = -1;
 		con_index = -1;
 		con_tag   =  0;
 	#endregion
 	
-	#region ---- Init Fn ---
+	#region ---- Init Fn ----
 		static setIndex = function(_index) {
 			index  = _index;
 			lIndex = _index;
@@ -2276,7 +2275,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(visible)             _map.v              = real(visible);
 		if(visible_manual != 0) _map.visible_manual = visible_manual;
 		if(color != -1)         _map.color          = color;
+		
 		if(graph_h != 96)       _map.graph_h        = graph_h;
+		_map.graph_sh  = show_graph;
+		_map.graph_shs = array_clone(show_graphs);
 		
 		if(connect_type == CONNECT_TYPE.output) return _map;
 		
@@ -2336,7 +2338,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			visible 	   = _map[$ LOADING_VERSION >= 1_18_04_0 || CLONING? "v" : "visible"] ?? 0;
 			visible_manual = _map[$ "visible_manual"] ?? 0;
 			color   	   = _map[$ "color"] ?? -1;
-			graph_h   	   = _map[$ "graph_h"] ?? 96;
+			
+			graph_h   	   = _map[$ "graph_h"]  ?? 96;
+			show_graph     = _map[$ "graph_sh"] ?? show_graph;
+			show_graphs    = array_clone(_map[$ "graph_shs"] ?? show_graphs);
 		}
 		
 		if(connect_type == CONNECT_TYPE.output) return;
