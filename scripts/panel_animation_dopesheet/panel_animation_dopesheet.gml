@@ -508,11 +508,9 @@ function Panel_Animation_Dopesheet() {
     	}
     	
     	array_sort(_anim.values, function(a,b) /*=>*/ {return a.time - b.time});
-    	
     	_anim.updateKeyMap();
     	_anim.prop.node.triggerRender();
     }
-    
     function repeatKeys() {
         if(array_empty(keyframe_selecting)) return;
         
@@ -520,6 +518,35 @@ function Panel_Animation_Dopesheet() {
             _anims = array_unique(_anims);
         
         array_foreach(_anims, function(a) /*=>*/ {return repeatKeys_anim(a)});
+    }
+    
+    function distributeKeys_anim(_anim) {
+    	__anim = _anim;
+    	var _keys = array_filter(keyframe_selecting, function(k) /*=>*/ {return k.anim == __anim});
+        if(array_length(_keys) <= 2) return;
+        
+    	var _kFirst = array_reduce(_keys, function(v, k) /*=>*/ {return min(v, k.time)},  infinity);
+    	var _kLast  = array_reduce(_keys, function(v, k) /*=>*/ {return max(v, k.time)}, -infinity);
+    	
+    	array_sort(_keys, function(a,b) /*=>*/ {return a.time - b.time});
+    	for( var i = 0, n = array_length(_keys); i < n; i++ ) {
+    		var _k = _keys[i];
+    		var _t = lerp(_kFirst, _kLast, i / (n - 1));
+    		
+    		_k.time = _t;
+    	}
+    	
+    	array_sort(_anim.values, function(a,b) /*=>*/ {return a.time - b.time});
+    	_anim.updateKeyMap();
+    	_anim.prop.node.triggerRender();
+    }
+    function distributeKeys() {
+        if(array_empty(keyframe_selecting)) return;
+        
+        var _anims = array_create_ext(array_length(keyframe_selecting), function(i) /*=>*/ {return keyframe_selecting[i].anim});
+            _anims = array_unique(_anims);
+        
+        array_foreach(_anims, function(a) /*=>*/ {return distributeKeys_anim(a)});
     }
     
     function arrangeKeys() {}
@@ -1116,24 +1143,19 @@ function Panel_Animation_Dopesheet() {
         } else if(graph_key_hover != noone) {
             key_hover = graph_key_hover;
             
-            if(DOUBLE_CLICK) {
-                graph_key_drag       = _graph_key_hover;
-                graph_key_drag_index = KEYFRAME_DRAG_TYPE.ease_both;
-                graph_key_mx         = msx;
-                graph_key_my         = msy;
-                graph_key_sx         = _graph_key_hover_x;
-                graph_key_sy         = _graph_key_hover_y;
-                keyframe_dragout     = false;
-                
-            } else if(mouse_press(mb_left)) {
+            if(mouse_press(mb_left)) {
                 graph_key_drag       = _graph_key_hover;
                 graph_key_drag_index = _graph_key_hover_index;
                 graph_key_mx         = msx;
                 graph_key_my         = msy;
                 graph_key_sx         = _graph_key_hover_x;
                 graph_key_sy         = _graph_key_hover_y;
+                
+                if(DOUBLE_CLICK) {
+	                graph_key_drag_index = KEYFRAME_DRAG_TYPE.ease_both;
+	                keyframe_dragout     = false;
+	            }
             }
-            
         }
         
         return key_hover;
