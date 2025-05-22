@@ -1,4 +1,4 @@
-function angle_random_eval(range, seed = random_get_seed()) {
+function rotation_random_eval(range, seed = random_get_seed()) {
 	if(is_real(range)) return range;
 	
 	if(array_empty(range)) return 0;
@@ -24,7 +24,7 @@ function angle_random_eval(range, seed = random_get_seed()) {
 	return array_safe_get_fast(range, 0);
 }
 
-function angle_random_eval_fast(range, seed = random_get_seed()) {
+function rotation_random_eval_fast(range, seed = random_get_seed()) {
 	
 	switch(range[0]) {
 		case 0 : return        random_range_seed(range[1], range[2], seed);
@@ -37,7 +37,7 @@ function angle_random_eval_fast(range, seed = random_get_seed()) {
 	return 0;
 }
 
-function angle_random_eval_fast_fract(range, seedFrac) {
+function rotation_random_eval_fast_fract(range, seedFrac) {
 	
 	switch(range[0]) {
 		case 0 : return        lerp(range[1],            range[2],            lerp(random(1), random(1), seedFrac));

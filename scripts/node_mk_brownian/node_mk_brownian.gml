@@ -54,7 +54,7 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _py = irandom_range(_area[1] - _area[3], _area[1] + _area[3]);
 		
 		var spd = random_range(_sped[0], _sped[1]);
-		var dir = angle_random_eval(_dire);
+		var dir = rotation_random_eval(_dire);
 		var dis = random_range(_dirs[0], _dirs[1]);
 		var dia = random_range(_dira[0], _dira[1]);
 		

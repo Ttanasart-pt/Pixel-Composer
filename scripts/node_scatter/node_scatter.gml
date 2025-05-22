@@ -572,7 +572,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					_scy *= vSca;
 				}
 				
-				var _r = (_pint? point_direction(_area[0], _area[1], _x, _y) : 0) + angle_random_eval_fast(_rota, _csed++);
+				var _r = (_pint? point_direction(_area[0], _area[1], _x, _y) : 0) + rotation_random_eval_fast(_rota, _csed++);
 				
 				if(iRot > 1 && _v != noone)
 					_r += array_safe_get_fast(_v, iRot, 0);

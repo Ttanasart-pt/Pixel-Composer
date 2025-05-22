@@ -1,56 +1,67 @@
+enum MKFALL_LEAF_SHAPE {
+	leaf, 
+	circle,
+	surface
+}
+
 function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "MK Fall";
 	update_on_frame = true;
 	
-	newInput(0, nodeValue_Surface("Background"));
-	
-	newInput(1, nodeValue_Dimension());
-		
 	newInput(2, nodeValueSeed(self));
 	
-	newInput(3, nodeValue_Area("Area", DEF_AREA));
+	////- =Dimension
 	
-	newInput(4, nodeValue_Int("Amount", 10));
+	newInput(0, nodeValue_Surface("Background"));
+	newInput(1, nodeValue_Dimension());
 	
-	newInput(5, nodeValue_Float("Gravity", 0));
-	
-	newInput(6, nodeValue_Range("X Swing", [ 1, 1 ], { linked : true }));
-	
-	newInput(7, nodeValue_Range("Y Swing", [ 0.25, 0.25 ], { linked : true }));
-	
-	newInput(8, nodeValue_Range("Swing frequency", [ 1, 1 ], { linked : true }));
-	
-	newInput(9, nodeValue_Vec2("Size", [ 4, 2 ]));
-	
-	newInput(10, nodeValue_Range("Speed", [ 1, 1 ], { linked : true }));
-	
-	newInput(11, nodeValue_Range("X Momentum", [ 0, 0 ], { linked : true }));
-	
-	newInput(12, nodeValue_Vec2("Wind", [ 0, 0 ]));
-	
-	newInput(13, nodeValue_Gradient("Color", new gradientObject(ca_white)))
-	
-	newInput(14, nodeValue_Curve("Alpha", CURVE_DEF_11));
-	
-	newInput(15, nodeValue_Bool("Ground", false));
-	
-	newInput(16, nodeValue_Range("Ground levels", [ DEF_SURF_H / 2, DEF_SURF_H ]));
-	
-	newInput(17, nodeValue_Range("Y Momentum", [ 0, 0 ], { linked : true }));
+	////- =Spawn
 		
-	newInput(18, nodeValue_Bool("Twist", false));
-		
-	newInput(19, nodeValue_Float("Twist Rate", 0.1))
-		.setDisplay(VALUE_DISPLAY.slider);
-		
-	newInput(20, nodeValue_Range("Twist Speed", [ 5, 10 ]));
-		
-	newInput(21, nodeValue_Range("Scale", [ 1, 1 ], { linked : true }));
+	newInput(3, nodeValue_Area( "Area" ));
+	newInput(4, nodeValue_Int(  "Amount", 10));
 	
-	newInput(22, nodeValue_Enum_Scroll("Render Type",  0, [ new scrollItem("Leaf", s_node_shape_leaf, 0), new scrollItem("Circle", s_node_shape_circle, 0) ]));
+	////- =Physics
 	
-	newInput(23, nodeValue_Float("Twist Radius", 0.7))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(10, nodeValue_Range( "Speed",   [1,1], { linked : true }));
+	newInput( 5, nodeValue_Float( "Gravity", 0));
+	newInput(12, nodeValue_Vec2(  "Wind",    [0,0]));
+	
+	////- =Swing
+	
+	newInput( 8, nodeValue_Range( "Swing frequency", [1,1],       { linked : true }));
+	newInput( 6, nodeValue_Range( "X Swing",         [1,1],       { linked : true }));
+	newInput( 7, nodeValue_Range( "Y Swing",         [0.25,0.25], { linked : true }));
+	newInput(11, nodeValue_Range( "X Momentum",      [0,0],       { linked : true }));
+	newInput(17, nodeValue_Range( "Y Momentum",      [0,0],       { linked : true }));
+	
+	////- =Leaf
+	
+	newInput(22, nodeValue_Enum_Scroll(    "Shape",   0, [ new scrollItem("Leaf",   s_node_shape_leaf,   0), 
+	                                                       new scrollItem("Circle", s_node_shape_circle, 0),
+	                                                       "Surface"]));
+	newInput( 9, nodeValue_Vec2(           "Size",    [4,2]));
+	newInput(24, nodeValue_Surface(        "Leaf Surface"));
+	newInput(25, nodeValue_Rotation_Random( "Rotation", [ 0, 0, 0, 0, 0 ]));
+	newInput(21, nodeValue_Range(          "Scale",     [1,1], { linked : true }));
+	
+	////- =Render
+	
+	newInput(13, nodeValue_Gradient( "Color", new gradientObject(ca_white)))
+	newInput(14, nodeValue_Curve(    "Alpha", CURVE_DEF_11));
+	
+	////- =Ground
+	
+	newInput(15, nodeValue_Bool(  "Ground",        false));
+	newInput(16, nodeValue_Range( "Ground levels", [ DEF_SURF_H / 2, DEF_SURF_H ]));
+	
+	////- =Twist
+	
+	newInput(18, nodeValue_Bool(   "Twist",        false));
+	newInput(19, nodeValue_Slider( "Twist Rate",   0.1));
+	newInput(20, nodeValue_Range(  "Twist Speed",  [5,10]));
+	newInput(23, nodeValue_Slider( "Twist Radius", 0.7));
+	
+	// inputs 26
 		
 	newOutput(0, nodeValue_Output("Output", VALUE_TYPE.surface, noone));
 	
@@ -59,27 +70,33 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		["Spawn",     false], 3, 4, 
 		["Physics",   false], 10, 5, 12,  
 		["Swing",     false], 8, 6, 7, 11, 17, 
-		["Render",    false], 22, 9, 21, 13, 14, 
+		["Leaf",      false], 22, 9, 24, 25, 21, 
+		["Render",    false], 13, 14, 
 		["Ground",     true, 15], 16, 
 		["Twist",      true, 18], 19, 20, 23, 
 	];
 	
-	_gravity = 0;
-	_speed   = [ 0, 0 ];
-	_xswing  = [ 0, 0 ];
-	_xswinn  = [ 0, 0 ];
-	_yswing  = [ 0, 0 ];
-	_yswinn  = [ 0, 0 ];
-	_fswing  = [ 0, 0 ];
-	_wind    = [ 0, 0 ];
-	_twist   = false;
-	_twistr  = 0.01;
-	_twists  = [ 0, 0 ];
-	_ground  = noone;
-	_scale   = [ 0, 0 ];
+	#region local data 
+		_gravity = 0;
+		_speed   = [ 0, 0 ];
+		_xswing  = [ 0, 0 ];
+		_xswinn  = [ 0, 0 ];
+		_yswing  = [ 0, 0 ];
+		_yswinn  = [ 0, 0 ];
+		_fswing  = [ 0, 0 ];
+		_wind    = [ 0, 0 ];
+		_twist   = false;
+		_twistr  = 0.01;
+		_twists  = [ 0, 0 ];
+		_ground  = noone;
+		_scale   = [ 0, 0 ];
+		
+		__p  = [0,0];
+		traj = [];
+		traj_index = 0;
+	#endregion
 	
-	traj = [];
-	traj_index = 0;
+	////- Nodes
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		draw_set_color(COLORS._main_accent);
@@ -117,7 +134,7 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		return w_hovering;
 	}
 	
-	static getPosition = function(ind, t, _area) { #region
+	static getPosition = function(ind, t, _area) {
 		random_set_seed(ind);
 		
 		var _px = _area[0], _py = _area[1];
@@ -243,48 +260,60 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		if(traj_index < 16) traj[traj_index] = poss;
 		
 		return [ _p0, _p1, [ _px, _py ] ];
-	} #endregion
+	}
 	
-	static step = function() { #region
-		var _typ = getInputData(22);
+	static update = function() {
+		var _seed = getInputData(2); var _sed = _seed;
 		
-		inputs[9].setVisible(_typ == 0);
-	} #endregion
-	
-	static update = function() { #region
 		var _surf = getInputData(0);
 		var _dim  = getInputData(1);
-		var _seed = getInputData(2);
+		
 		var _area = getInputData(3);
 		var _amou = getInputData(4);
-		_gravity  = getInputData(5);
-		_xswing   = getInputData(6);
-		_yswing   = getInputData(7);
-		_fswing   = getInputData(8);
-		var _size = getInputData(9);
+		
 		_speed    = getInputData(10);
-		_xswinn   = getInputData(11);
+		_gravity  = getInputData( 5);
 		_wind     = getInputData(12);
+		
+		_fswing   = getInputData( 8);
+		_xswing   = getInputData( 6);
+		_yswing   = getInputData( 7);
+		_xswinn   = getInputData(11);
+		_yswinn   = getInputData(17);
+		
+		var _rtyp = getInputData(22);
+		var _size = getInputData( 9);
+		var _lsrf = getInputData(24);
+		var _lrot = getInputData(25);
+		_scale    = getInputData(21);
+		
 		var _colr = getInputData(13);
 		var _alph = getInputData(14);
+		
 		_ground   = getInputData(15)? getInputData(16) : noone;
-		_yswinn   = getInputData(17);
+		
 		_twist    = getInputData(18);
-		_twistr   = getInputData(19);
+		_twistr   = getInputData(19); _twistr = power(_twistr, 3);
 		_twists   = getInputData(20);
-		_scale    = getInputData(21);
-		var _rtyp = getInputData(22);
 		_twistd   = getInputData(23); _twistd = power(_twistd, 0.2);
 		
-		_twistr = _twistr * _twistr * _twistr;
-		
-		var _sed = _seed;
+		inputs[ 9].setVisible(_rtyp == MKFALL_LEAF_SHAPE.leaf);
+		inputs[25].setVisible(_rtyp == MKFALL_LEAF_SHAPE.surface);
+		inputs[24].setVisible(_rtyp == MKFALL_LEAF_SHAPE.surface, _rtyp == MKFALL_LEAF_SHAPE.surface);
 		
 		if(is_surface(_surf)) _dim = surface_get_dimension(_surf);
 		
 		var _outSurf = outputs[0].getValue();
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		outputs[0].setValue(_outSurf);
+		
+		if(_rtyp == MKFALL_LEAF_SHAPE.surface) {
+			var _refS = is_array(_lsrf)? _lsrf[0] : _lsrf;
+			if(!is_surface(_refS)) return;
+			
+			var _lsw = surface_get_width_safe(_refS);
+			var _lsh = surface_get_height_safe(_refS);
+		}
 		
 		surface_set_target(_outSurf);
 			DRAW_CLEAR
@@ -296,7 +325,8 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 				traj_index = 0;
 				traj = array_create(min(16, _amou));
 				
-				shader_set(sh_draw_divide);
+				if(_rtyp != MKFALL_LEAF_SHAPE.surface) shader_set(sh_draw_divide);
+				
 				for( var i = 0; i < _amou; i++ ) {
 					_sed += 100;
 					
@@ -319,27 +349,36 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 					draw_set_color(_cc);
 					draw_set_alpha(_aa);
 					
-					if(_rtyp == 0) {
-						var _dr0 = point_direction(_p1[0], _p1[1], _p0[0], _p0[1]);
-						var _dr2 = point_direction(_p1[0], _p1[1], _p2[0], _p2[1]);
-					
-						var _p11 = [ _p1[0] + lengthdir_x(_sy, _dr0 + 90), 
-						             _p1[1] + lengthdir_y(_sy, _dr0 + 90) ];
-						var _p12 = [ _p1[0] + lengthdir_x(_sy, _dr0 - 90), 
-						             _p1[1] + lengthdir_y(_sy, _dr0 - 90) ];
-						var _p00 = [ _p1[0] + lengthdir_x(_sx, _dr0), 
-						             _p1[1] + lengthdir_y(_sx, _dr0) ];
-						var _p22 = [ _p1[0] + lengthdir_x(_sx, _dr2), 
-						             _p1[1] + lengthdir_y(_sx, _dr2) ];
-						
-						draw_primitive_begin(pr_trianglestrip);
-							draw_vertex(_p00[0], _p00[1]);
-							draw_vertex(_p11[0], _p11[1]);
-							draw_vertex(_p12[0], _p12[1]);
-							draw_vertex(_p22[0], _p22[1]);
-						draw_primitive_end();
-					} else if(_rtyp == 1) {
-						draw_circle_prec(_p0[0], _p0[1], _sc, false, 16);
+					switch(_rtyp) {
+						case MKFALL_LEAF_SHAPE.leaf : 
+							var _dr0 = point_direction(_p1[0], _p1[1], _p0[0], _p0[1]);
+							var _dr2 = point_direction(_p1[0], _p1[1], _p2[0], _p2[1]);
+							
+							draw_primitive_begin(pr_trianglestrip);
+								draw_vertex(_p1[0] + lengthdir_x(_sx, _dr0),      _p1[1] + lengthdir_y(_sx, _dr0));
+								draw_vertex(_p1[0] + lengthdir_x(_sy, _dr0 + 90), _p1[1] + lengthdir_y(_sy, _dr0 + 90));
+								draw_vertex(_p1[0] + lengthdir_x(_sy, _dr0 - 90), _p1[1] + lengthdir_y(_sy, _dr0 - 90));
+								draw_vertex(_p1[0] + lengthdir_x(_sx, _dr2),      _p1[1] + lengthdir_y(_sx, _dr2));
+							draw_primitive_end();
+							break;
+							
+						case MKFALL_LEAF_SHAPE.circle :
+							draw_circle_prec(_p0[0], _p0[1], _sc, false, 16);
+							break;
+							
+						case MKFALL_LEAF_SHAPE.surface :
+							var _dr0 = point_direction(_p1[0], _p1[1], _p0[0], _p0[1]);
+							var _dr2 = point_direction(_p1[0], _p1[1], _p2[0], _p2[1]);
+							var _rot = rotation_random_eval_fast(_lrot);
+							
+							var __r = _dr2 + _rot;
+							
+							__p = point_rotate_origin(-_lsw/2 * _sc, -_lsh/2 * _sc, __r, __p);
+							var _sdx = _p0[0] + __p[0];
+							var _sdy = _p0[1] + __p[1];
+							
+							draw_surface_ext_safe(_lsrf, _sdx, _sdy, _sc, _sc, __r, _cc, _aa);
+							break;
 					}
 					
 					draw_set_alpha(1);
@@ -350,5 +389,5 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 				
 			BLEND_NORMAL
 		surface_reset_target();
-	} #endregion
+	}
 }

@@ -156,7 +156,7 @@ function Node_Path_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			_sca  = random_range(_scale[0], _scale[1]);
 			_sca *= eval_curve_x(_sca_wid, _prog_raw);
 			
-			_rot = angle_random_eval(_rotation);
+			_rot = rotation_random_eval(_rotation);
 			
 			_trm  = _trim_rng;
 			_trm *= eval_curve_x(_trim, _prog_raw);

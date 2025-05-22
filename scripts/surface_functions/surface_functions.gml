@@ -36,7 +36,7 @@
 
 	function draw_surface_ext_safe(surface, _x = 0, _y = 0, _xs = 1, _ys = 1, _rot = 0, _col = c_white, _alpha = 1) {
 		INLINE
-	
+		
 		if(is_struct(surface)) {
 			if(is_instanceof(surface, dynaSurf)) {
 				surface.draw(_x, _y, _xs, _ys, _rot, _col, _alpha);

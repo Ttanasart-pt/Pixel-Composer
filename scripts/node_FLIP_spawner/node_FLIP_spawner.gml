@@ -184,7 +184,7 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			buffer_write(_buffP, buffer_f64, clamp(_y, 0, domain.height));
 			
 			var _vdis = random_range(_vel[0], _vel[1]);
-			var _vdir = angle_random_eval(_dirr);
+			var _vdir = rotation_random_eval(_dirr);
 			
 			var _vx = lengthdir_x(_vdis, _vdir) + (frame? (_posit[0] - prev_position[0]) * _ivel : 0);
 			var _vy = lengthdir_y(_vdis, _vdir) + (frame? (_posit[1] - prev_position[1]) * _ivel : 0);

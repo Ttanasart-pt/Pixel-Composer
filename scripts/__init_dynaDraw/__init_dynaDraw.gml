@@ -20,6 +20,8 @@ function __init_dynaDraw() {
     _d(new dynaDraw_polygon_fill());
     _d(new dynaDraw_polygon_fill_gradient());
     _d(new dynaDraw_polygon_outline());
+    
+    _d(new dynaDraw_leaf_fill());
 }
 
 function dynaDraw() : dynaSurf() constructor {

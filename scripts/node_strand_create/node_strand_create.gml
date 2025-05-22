@@ -505,7 +505,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				case 0 :
 					sx  = _pos[0];
 					sy  = _pos[1];
-					dir = _rnd? angle_random_eval_fast(_direct, _sed++) : 360 * prog;
+					dir = _rnd? rotation_random_eval_fast(_direct, _sed++) : 360 * prog;
 					break;
 					
 				case 1 : 
@@ -528,7 +528,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 					var _p = strands.mesh.getRandomPoint(_sed); _sed += 5;
 					sx  = _pos[0] + _p.x;
 					sy  = _pos[1] + _p.y;
-					dir = angle_random_eval_fast(_direct, _sed++);
+					dir = rotation_random_eval_fast(_direct, _sed++);
 					break;
 			}
 			
