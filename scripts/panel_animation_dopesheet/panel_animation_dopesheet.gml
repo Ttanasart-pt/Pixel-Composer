@@ -10,6 +10,7 @@
 	
 	enum KEYFRAME_MODULATE {
 		envelope,
+		randomize,
 	}
 #endregion
 
@@ -210,9 +211,10 @@ function Panel_Animation_Dopesheet() {
 	        
 	        -1,
 	        MENU_ITEMS.animation_group_align,
+	        MENU_ITEMS.animation_driver,
 	        MENU_ITEMS.animation_stagger,
 	        MENU_ITEMS.animation_envelope,
-	        MENU_ITEMS.animation_driver,
+	        // MENU_ITEMS.animation_randomize,
 	        -1,
 	        MENU_ITEMS.animation_delete_keys,
 	        MENU_ITEMS.animation_duplicate,
@@ -297,10 +299,8 @@ function Panel_Animation_Dopesheet() {
             
 		    	for(var k = 0; k < array_length(animator.values); k++) {
 		            var _key = animator.values[k];
-		            if(_key.time <= CURRENT_FRAME) continue;
-		            
-		            _t = min(_t, _key.time);
-	            	break;
+		            if(_key.time > CURRENT_FRAME)
+		            	_t = min(_t, _key.time);
 		        }
     		}
     	}
@@ -680,9 +680,7 @@ function Panel_Animation_Dopesheet() {
     
     ////- Draw Graph
     
-    function drawDopesheet_Graph_Line_Modulate(mmx, mmy, _gy0, _gy1) {
-    	keyframe_boxable = false;
-        	
+    function drawDopesheet_Graph_Line_Modulate_Envelope(mmx, mmy, _gy0, _gy1) {
     	var _mod_st = modulate_range[0];
     	var _mod_ed = modulate_range[1];
     	
@@ -779,6 +777,32 @@ function Panel_Animation_Dopesheet() {
     			
     		} else if(!_hov) modulate_animator = noone;
     	}
+    }
+    
+    function drawDopesheet_Graph_Line_Modulate_Randomize(mmx, mmy, _gy0, _gy1) {
+    	var _mod_st = modulate_range[0];
+    	var _mod_ed = modulate_range[1];
+    	
+    	var _mod_x0 = timeline_shift + (_mod_st + 1) * timeline_scale;
+    	var _mod_x1 = timeline_shift + (_mod_ed + 1) * timeline_scale;
+    	var _gyc    = (_gy0 + _gy1) / 2;
+    	var _hov    = point_in_rectangle(mmx, mmy, _mod_x0, _gy0, _mod_x1, _gy1);
+    	
+    	draw_sprite_stretched_points_clamp(THEME.ui_selection, 0, _mod_x0, _gy0, _mod_x1, _gy1, COLORS._main_icon, .5);
+    	
+    	if(mouse_lpress()) {
+    		if(!_hov) modulate_animator = noone;
+    	}
+    }
+    
+    function drawDopesheet_Graph_Line_Modulate(mmx, mmy, _gy0, _gy1) {
+    	keyframe_boxable = false;
+    	
+    	switch(modulate_type) {
+    		case KEYFRAME_MODULATE.envelope  : return drawDopesheet_Graph_Line_Modulate_Envelope(mmx, mmy, _gy0, _gy1);
+    		case KEYFRAME_MODULATE.randomize : return drawDopesheet_Graph_Line_Modulate_Randomize(mmx, mmy, _gy0, _gy1);
+    	}
+    	
     }
     
     function drawDopesheet_Graph_Line(animator, key_y, msx, msy, _gy_val_min = infinity, _gy_val_max = -infinity) { 
