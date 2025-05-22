@@ -25,7 +25,7 @@
 function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	INIT_BASE_CLASS
 	
-	#region ---- main & active ----
+	#region ---- Main & Active ----
 		project      = PROJECT;
 		itype        = noone;
 		active       = true;
@@ -72,7 +72,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		RENDER_PARTIAL_REORDER
 	}
 	
-	#region ---- display ----
+	#region ---- Display ----
 		color          = c_white;
 		icon           = noone;
 		icon_24        = noone;
@@ -131,7 +131,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		branch_drawing      = false;
 	#endregion
 	
-	#region ---- junctions ----
+	#region ---- Junctions ----
 		inputs           = [];
 		outputs          = [];
 		input_bypass     = [];
@@ -148,6 +148,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		inspector_display_list	= -1;
 		is_dynamic_output		= false;
 		
+		frameInput         = nodeValue("Render Frame",     self, CONNECT_TYPE.input, VALUE_TYPE.float,       0).setIndex(-1);
 		inspectInput1      = nodeValue("Toggle Execution", self, CONNECT_TYPE.input, VALUE_TYPE.action,  false).setIndex(-1);
 		inspectInput2      = nodeValue("Toggle Execution", self, CONNECT_TYPE.input, VALUE_TYPE.action,  false).setIndex(-1);
 		updatedInTrigger   = nodeValue("Update",           self, CONNECT_TYPE.input, VALUE_TYPE.trigger, false).setIndex(-1).setTags(VALUE_TAG.updateInTrigger);
@@ -213,15 +214,16 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 	#endregion
 	
-	#region ---- attributes ----
+	#region ---- Attributes ----
 		attributes.node_param_width = PREFERENCES.node_param_width;
-		attributes.node_width  = 0;
-		attributes.node_height = 0;
-		attributes.outp_meta   = false;
+		attributes.node_width        = 0;
+		attributes.node_height       = 0;
+		attributes.outp_meta         = false;
+		attributes.show_render_frame = false;
 		
-		attributes.annotation       = "";
-		attributes.annotation_size  = .4;
-		attributes.annotation_color = COLORS._main_text_sub;
+		attributes.annotation        = "";
+		attributes.annotation_size   = .4;
+		attributes.annotation_color  = COLORS._main_text_sub;
 		
 		setAttribute = function(k, v, r = false) /*=>*/ { attributes[$ k] = v;                if(r) triggerRender(); PROJECT.modified = true; }
 		toggleAttribute = function(k, r = false) /*=>*/ { attributes[$ k] = !attributes[$ k]; if(r) triggerRender(); PROJECT.modified = true; }
@@ -234,13 +236,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			["Params Width", function() /*=>*/ {return attributes.node_param_width}, textBox_Number(function(v) /*=>*/ { setAttribute("node_param_width", v); refreshNodeDisplay(); }) ],
 			
 			"Node",
-			["Auto update",     function() /*=>*/ {return attributes.update_graph},		  new checkBox(function() /*=>*/ { toggleAttribute("update_graph");           }) ],
-			["Update trigger",  function() /*=>*/ {return attributes.show_update_trigger}, new checkBox(function() /*=>*/ { toggleAttribute("show_update_trigger");    }) ],
-			["Output metadata", function() /*=>*/ {return attributes.outp_meta},           new checkBox(function() /*=>*/ { toggleAttribute("outp_meta"); setHeight(); }) ],
+			["Auto Update",      function() /*=>*/ {return attributes.update_graph},        new checkBox(function() /*=>*/ { toggleAttribute("update_graph");                            }) ],
+			["Frame Input",      function() /*=>*/ {return attributes.show_render_frame},   new checkBox(function() /*=>*/ { toggleAttribute("show_render_frame"); refreshNodeDisplay(); }) ],
+			["Update Trigger",   function() /*=>*/ {return attributes.show_update_trigger}, new checkBox(function() /*=>*/ { toggleAttribute("show_update_trigger");                     }) ],
+			["Output Metadata",  function() /*=>*/ {return attributes.outp_meta},           new checkBox(function() /*=>*/ { toggleAttribute("outp_meta"); setHeight();                  }) ],
 		];
 	#endregion
 	
-	#region ---- preview ----
+	#region ---- Preview ----
 		show_parameter = PREFERENCES.node_param_show;
 		
 		show_input_name  = false;
@@ -275,7 +278,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		w_active    = false;
 	#endregion
 	
-	#region ---- rendering ----
+	#region ---- Rendering ----
 		rendered         = false;
 		update_on_frame  = false;
 		render_timer     = 0;
@@ -294,18 +297,18 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		loopable         = true;
 	#endregion
 	
-	#region ---- timeline ----
+	#region ---- Timeline ----
 		timeline_item    = new timelineItemNode(self);
 		anim_priority    = array_length(project.allNodes);
 		is_anim_timeline = false;
 	#endregion
 	
-	#region ---- notification ----
+	#region ---- Notification ----
 		value_validation = array_create(3);
 		manual_updated   = false;
 	#endregion
 	
-	#region ---- tools ----
+	#region ---- Tools ----
 		tools			= -1;
 		rightTools		= -1;
 		isTool			= false;
@@ -314,11 +317,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		tool_attribute	= {};
 	#endregion
 	
-	#region ---- 3d ----
+	#region ---- 3D ----
 		is_3D = NODE_3D.none;
 	#endregion
 	
-	#region ---- cache ----
+	#region ---- Cache ----
 		use_cache		= CACHE_USE.none;
 		cached_manual	= false;
 		cached_output	= [];
@@ -328,7 +331,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		clearCacheOnChange	= true;
 	#endregion
 	
-	#region ---- log ----
+	#region ---- Log ----
 		messages     = [];
 		messages_bub = false;
 		messages_dbg = [];
@@ -352,7 +355,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 	#endregion
 	
-	#region ---- serialization ----
+	#region ---- Serialization ----
 		load_scale = false;
 		load_map   = -1;
 		load_group = noone;
@@ -901,6 +904,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			else array_insert(inputDisplayList, _dummy_start + dummy_add_index, dummy_input);
 		}
 		
+		if(attributes.show_render_frame) array_insert(inputDisplayList, 0, frameInput);
+		
 		outputDisplayList = [];
 		
 		array_foreach(outputs, function(jun) /*=>*/ { if(jun.isVisible())             array_push(outputDisplayList, jun);             });
@@ -1086,8 +1091,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static postUpdate = function(frame = CURRENT_FRAME) {}
 	
 	static doUpdateLite = function(frame = CURRENT_FRAME) {
+		
 		render_timer = get_timer();
 		setRenderStatus(true);
+		
+		if(frameInput.value_from != noone) frame = frameInput.getValue() - 1;
 		
 		if(attributes.update_graph) {
 			getInputs(frame);
@@ -1100,12 +1108,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static doUpdateFull = function(frame = CURRENT_FRAME) {
-		
 		if(project.safeMode) return;
 		
-		render_timer  = get_timer();
+		render_timer = get_timer();
 		var _updateRender = !is(self, Node_Collection) || !managedRenderOrder;
 		if(_updateRender) setRenderStatus(true);
+		
+		if(frameInput.value_from != noone) frame = frameInput.getValue() - 1;
 		
 		getInputs(frame);
 		
@@ -1295,6 +1304,15 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				array_push(prev, _n);
 				prMp[$ _n.node_id] = 1;
 			}
+		}
+		
+		if(frameInput.value_from != noone) {
+			_n = frameInput.value_from.node;
+			if(!struct_has(prMp, _n.node_id)) {
+				array_push(prev, _n);
+				prMp[$ _n.node_id] = 1;
+			}
+			
 		}
 		
 		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
@@ -1998,6 +2016,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var drawLineIndex = 1;
 		__draw_inputs_len = 0;
 		
+		if(attributes.show_render_frame && frameInput.value_from != noone)
+			__draw_inputs[__draw_inputs_len++] = frameInput;
+		
 		for(var i = 0, n = array_length(inputs); i < n; i++) {
 			_jun = inputs[i];
 			
@@ -2627,10 +2648,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		_map.outputs = _outputs;
 		
 		var _trigger = [];
-		array_push(_trigger, inspectInput1.serialize(scale, preset));
-		array_push(_trigger, inspectInput2.serialize(scale, preset));
-		array_push(_trigger, updatedInTrigger.serialize(scale, preset));
-		array_push(_trigger, updatedOutTrigger.serialize(scale, preset));
+		_trigger[0] = inspectInput1.serialize(scale, preset);
+		_trigger[1] = inspectInput2.serialize(scale, preset);
+		_trigger[2] = updatedInTrigger.serialize(scale, preset);
+		_trigger[3] = updatedOutTrigger.serialize(scale, preset);
+		_trigger[4] = frameInput.serialize(scale, preset);
 		
 		var _outMeta = [];
 		for(var i = 0; i < array_length(junc_meta); i++)
@@ -2808,6 +2830,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			if(array_length(insInp) > 2) updatedInTrigger.applyDeserialize(insInp[2], load_scale, preset);
 			if(array_length(insInp) > 3) updatedOutTrigger.applyDeserialize(insInp[3], load_scale, preset);
+			if(array_length(insInp) > 4) frameInput.applyDeserialize(insInp[4], load_scale, preset);
 		}
 		
 		if(struct_has(load_map, "outputMeta")) {
@@ -2860,6 +2883,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		inspectInput1.connect(    log, _nodeGroup );
 		inspectInput2.connect(    log, _nodeGroup );
 		updatedInTrigger.connect( log, _nodeGroup );
+		frameInput.connect(       log, _nodeGroup );
 		
 		if(!connected) {
 			// if(log) log_warning("LOAD", $"[Connect] Connection failed {name}", self);

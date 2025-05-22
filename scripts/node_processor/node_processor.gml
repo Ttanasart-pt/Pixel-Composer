@@ -78,10 +78,11 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	////- Process
 	
 	static preGetInputs  = undefined;
-	static getInputs     = function() {
+	static getInputs     = function(frame = CURRENT_FRAME) {
 		if(preGetInputs != undefined) preGetInputs();
 		
 		var _len = array_length(inputs);
+		__frame  = frame;
 		
 		process_amount	= 1;
 		inputs_data		= array_verify(inputs_data,		_len);
@@ -91,7 +92,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		process_running = array_verify(process_running,	_len);
 		
 		array_foreach(inputs, function(_in, i) /*=>*/ {
-			var raw = _in.getValue();
+			var raw = _in.getValue(__frame);
 			var amo = _in.arrayLength(raw);
 			var val = raw;
 			
