@@ -174,8 +174,6 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				if(_af == -1 && _at == -1) return interpolateValue(__fr, __to, __f, __t, __r);
 				if(_af == _at)             return array_create_ext(_af, function(i) /*=>*/ {return interpolateValue(__fr, __to, __f[i], __t[i], __r)});
 				
-				__lrp = interpolate(from, to, rat);
-				
 				if(_af == -1 && _at != -1) return array_create_ext(_at, function(i) /*=>*/ {return interpolateValue(__fr, __to, __f, __t[i], __r)});
 				if(_af != -1 && _at == -1) return array_create_ext(_af, function(i) /*=>*/ {return interpolateValue(__fr, __to, __f[i], __t, __r)});
 				
@@ -190,8 +188,6 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				if(_af ==  0 || _at ==  0) return 0;
 				if(_af == -1 && _at == -1) return round(interpolateValue(from, to, __f, __t, rat));
 				if(_af == _at)             return array_create_ext(_af, function(i) /*=>*/ {return round(interpolateValue(__fr, __to, __f[i], __t[i], __r))});
-				
-				__lrp = interpolate(from, to, rat);
 				
 				if(_af == -1 && _at != -1) return array_create_ext(_at, function(i) /*=>*/ {return round(interpolateValue(__fr, __to, __f, __t[i], __r))});
 				if(_af != -1 && _at == -1) return array_create_ext(_af, function(i) /*=>*/ {return round(interpolateValue(__fr, __to, __f[i], __t, __r))});

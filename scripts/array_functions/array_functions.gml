@@ -266,8 +266,8 @@
 
 	function array_min(arr) {
 		INLINE
-		
-		if(!is_array(arr) || array_length(arr) == 0) return 0;
+		if(!is_array(arr))         return arr;
+		if(array_length(arr) == 0) return 0;
 		
 		var mn = arr[0];
 		for( var i = 0, n = array_length(arr); i < n; i++ )
@@ -277,8 +277,8 @@
 	
 	function array_max(arr) {
 		INLINE
-		
-		if(!is_array(arr) || array_length(arr) == 0) return 0;
+		if(!is_array(arr))         return arr;
+		if(array_length(arr) == 0) return 0;
 		
 		var mx = arr[0];
 		for( var i = 0, n = array_length(arr); i < n; i++ )
