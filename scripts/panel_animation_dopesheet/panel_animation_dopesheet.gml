@@ -211,7 +211,7 @@ function Panel_Animation_Dopesheet() {
 	        -1,
 	        MENU_ITEMS.animation_group_align,
 	        MENU_ITEMS.animation_stagger,
-	        MENU_ITEMS.animation_modulate,
+	        MENU_ITEMS.animation_envelope,
 	        MENU_ITEMS.animation_driver,
 	        -1,
 	        MENU_ITEMS.animation_delete_keys,
@@ -706,7 +706,7 @@ function Panel_Animation_Dopesheet() {
 		draw_set_color(_hovSt? COLORS._main_value_positive : COLORS._main_icon); draw_line_round(_mod_f0,   _gyc - ui(6), _mod_f0,   _gyc + ui(8), ui(3));
 		draw_set_color(_hovEd? COLORS._main_value_positive : COLORS._main_icon); draw_line_round(_mod_f1-1, _gyc - ui(6), _mod_f1-1, _gyc + ui(8), ui(3));
 		
-    	draw_set_color(COLORS._main_icon_light);
+    	draw_set_color(COLORS._main_icon);
     	if(_mod_fade_st > 0) draw_line(_mod_x0, lerp(_gy1, _gy0, modulate_fade_anchor[0]), _mod_f0, _gy0);
     	if(_mod_fade_ed > 0) draw_line(_mod_f1, _gy0, _mod_x1, lerp(_gy1, _gy0, modulate_fade_anchor[1]));
     	
@@ -734,16 +734,35 @@ function Panel_Animation_Dopesheet() {
     		var _ori = _modulate_keys[1];
     		var _val = _ori.value;
     		
-    		if(_mod_fade_st > 0) {
-    			_inf = clamp((_key.time - _mod_st) / _mod_fade_st, 0, 1);
-    			_anc = lerp(modulate_value_range[0], modulate_value_range[1], modulate_fade_anchor[0]);
-    			_val = lerp(_anc, _val, _inf);
-    		}
-    		
-    		if(_mod_fade_ed > 0) {
-    			_inf = clamp((_mod_ed - _key.time) / _mod_fade_ed, 0, 1);
-    			_anc = lerp(modulate_value_range[0], modulate_value_range[1], modulate_fade_anchor[1]);
-    			_val = lerp(_anc, _val, _inf);
+    		if(is_numeric(_val)) {
+	    		if(_mod_fade_st > 0) {
+	    			_inf = clamp((_key.time - _mod_st) / _mod_fade_st, 0, 1);
+	    			_anc = lerp(modulate_value_range[0], modulate_value_range[1], modulate_fade_anchor[0]);
+	    			_val = lerp(_anc, _val, _inf);
+	    		}
+	    		
+	    		if(_mod_fade_ed > 0) {
+	    			_inf = clamp((_mod_ed - _key.time) / _mod_fade_ed, 0, 1);
+	    			_anc = lerp(modulate_value_range[0], modulate_value_range[1], modulate_fade_anchor[1]);
+	    			_val = lerp(_anc, _val, _inf);
+	    		}
+	    		
+    		} else if(is_array(_val)) {
+    			_val = array_clone(_ori.value);
+    			
+    			for( var j = 0, m = array_length(_val); j < m; j++ ) {
+    				if(_mod_fade_st > 0) {
+		    			_inf = clamp((_key.time - _mod_st) / _mod_fade_st, 0, 1);
+		    			_anc = lerp(modulate_value_range[0], modulate_value_range[1], modulate_fade_anchor[0]);
+		    			_val[j] = lerp(_anc, _val[j], _inf);
+		    		}
+		    		
+		    		if(_mod_fade_ed > 0) {
+		    			_inf = clamp((_mod_ed - _key.time) / _mod_fade_ed, 0, 1);
+		    			_anc = lerp(modulate_value_range[0], modulate_value_range[1], modulate_fade_anchor[1]);
+		    			_val[j] = lerp(_anc, _val[j], _inf);
+		    		}
+    			}
     		}
     		
     		_key.value = _val;
@@ -1296,14 +1315,14 @@ function Panel_Animation_Dopesheet() {
                                             
                 if(pHOVER && point_in_circle(msx, msy, _tx, prop_dope_y, ui(6))) {
                     key_hover = key;
-                    draw_sprite_ui_uniform(THEME.timeline_key_ease, 0, _tx, prop_dope_y, 1, COLORS.panel_animation_keyframe_selected);
+                    draw_sprite_ui_uniform(THEME.timeline_key_ease, 0, _tx, prop_dope_y, 1, CDEF.main_grey);
                     if(mouse_press(mb_left, pFOCUS) && !key_mod_press(SHIFT)) {
                         keyframe_dragging  = animator.values[k];
                         keyframe_drag_type = KEYFRAME_DRAG_TYPE.ease_in;
                     }
                     
                 } else 
-                    draw_sprite_ui_uniform(THEME.timeline_key_ease, 0, _tx, prop_dope_y, 1, COLORS.panel_animation_keyframe_unselected);
+                    draw_sprite_ui_uniform(THEME.timeline_key_ease, 0, _tx, prop_dope_y, 1, CDEF.main_dkgrey);
             } 
                         
             if(key.ease_out_type == CURVE_TYPE.bezier) {
@@ -1313,13 +1332,13 @@ function Panel_Animation_Dopesheet() {
                                         
                 if(pHOVER && point_in_circle(msx, msy, _tx, prop_dope_y, ui(6))) {
                     key_hover = key;
-                    draw_sprite_ui_uniform(THEME.timeline_key_ease, 1, _tx, prop_dope_y, 1, COLORS.panel_animation_keyframe_selected);
+                    draw_sprite_ui_uniform(THEME.timeline_key_ease, 1, _tx, prop_dope_y, 1, CDEF.main_grey);
                     if(mouse_press(mb_left, pFOCUS) && !key_mod_press(SHIFT)) {
                         keyframe_dragging  = animator.values[k];
                         keyframe_drag_type = KEYFRAME_DRAG_TYPE.ease_out;
                     }
                 } else
-                    draw_sprite_ui_uniform(THEME.timeline_key_ease, 1, _tx, prop_dope_y, 1, COLORS.panel_animation_keyframe_unselected);
+                    draw_sprite_ui_uniform(THEME.timeline_key_ease, 1, _tx, prop_dope_y, 1, CDEF.main_dkgrey);
             }
         }
         
