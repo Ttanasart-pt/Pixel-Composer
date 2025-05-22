@@ -72,12 +72,14 @@ function Panel_Animation_Dopesheet() {
         graph_key_hover        = noone;
         graph_key_hover_index  = noone;
         graph_key_hover_array  = noone;
+        graph_key_hover_range  = noone;
         
         graph_key_drag         = noone;
         graph_key_drag_index   = noone;
         graph_key_drag_array   = noone;
         graph_key_drag_range   = [0,1];
         graph_key_drag_value   = 0;
+        graph_key_drag_yrange  = 1;
         
         graph_key_mx = 0;
         graph_key_my = 0;
@@ -723,6 +725,8 @@ function Panel_Animation_Dopesheet() {
             
             animator.prop.graph_draw_y[0] = _gy0 + (key_y + ui(8));
             animator.prop.graph_draw_y[1] = _gy1 + (key_y + ui(8));
+            
+            var val_rng = (_gy_val_max - _gy_val_min) / (_gy1 - _gy0);
         #endregion
         
         var valArray = is_array(animator.values[0].value);
@@ -730,8 +734,6 @@ function Panel_Animation_Dopesheet() {
         var nx  = 0;
         var ny  = noone;
         
-        var oly = 0;
-        var nly = 0;
         var _kv, _kn, sy;
         
         var _oy  = animator.values[0].value;
@@ -752,10 +754,9 @@ function Panel_Animation_Dopesheet() {
                 nx = (key.time + 1) * timeline_scale + timeline_shift;
                     
                 for( var _time = key.time; _time <= key_next.time; _time++ ) {
-                    var rat  = (_time - key.time) / (key_next.time - key.time);
-                    var _lrp = animator.interpolate(key, key_next, rat);
+                    var rat = (_time - key.time) / (key_next.time - key.time);
                     
-                    _kv = animator.processDriver(_time, key, animator.lerpValue(key, key_next, _lrp), rat);
+                    _kv = animator.processDriver(_time, key, animator.lerpValue(key, key_next, rat), rat);
                     
                     if(!valArray) _kv = [ _kv ];
                         
@@ -819,7 +820,6 @@ function Panel_Animation_Dopesheet() {
                 var _step = 1 / dx;
                 for( var _r = 0; _r <= 1; _r += _step ) {
                     nx  = t + _r * dx * timeline_scale;
-                    nly = animator.interpolate(key, key_next, _r);
                     
                     _kv = key.value;
                     _kn = key_next.value;
@@ -828,7 +828,7 @@ function Panel_Animation_Dopesheet() {
                         _kv = [ _kv ];
                         _kn = [ _kn ];
                     }
-                
+                	
                     for( var ki = 0; ki < array_length(_kv); ki++ ) {
                         var cc = COLORS.panel_animation_graph_line;
                         if(valArray)                    cc = array_safe_get(COLORS.axis, ki, cc);
@@ -838,7 +838,7 @@ function Panel_Animation_Dopesheet() {
                         draw_set_color(cc);
                         draw_set_alpha(aa);
                         
-                        ny[ki] = value_map(lerp(_kv[ki], _kn[ki], nly), _gy_val_min, _gy_val_max, _gy1, _gy0);
+                        ny[ki] = value_map(animator.interpolateValue(key, key_next, _kv[ki], _kn[ki], _r), _gy_val_min, _gy_val_max, _gy1, _gy0);
                         
                         if(array_length(oy) > ki) draw_line(ox, oy[ki], nx, ny[ki]);
                             
@@ -846,7 +846,6 @@ function Panel_Animation_Dopesheet() {
                     }
                     
                     ox = nx;
-                    oly = nly;
                     draw_set_alpha(1);
                 }
             }
@@ -944,8 +943,8 @@ function Panel_Animation_Dopesheet() {
             
             for (var j = 0, m = array_length(v); j < m; j++) {
                 var py = value_map(v[j], _gy_val_min, _gy_val_max, _gy1, _gy0);
-                var iy = py + (1 - ei[1]) * timeline_scale * 2;
-                var oy = py - (    eo[1]) * timeline_scale * 2;
+                var iy = py + (1 - ei[1]) / val_rng;
+                var oy = py - (    eo[1]) / val_rng;
                 
                 var cc = COLORS.panel_animation_graph_line;
                 if(valArray)                    cc = array_safe_get(COLORS.axis, j, cc);
@@ -965,7 +964,8 @@ function Panel_Animation_Dopesheet() {
                         _graph_key_hover_index = KEYFRAME_DRAG_TYPE.ease_in;
                         
                         _graph_key_hover_x = px;
-                        _graph_key_hover_y = py;
+                        _graph_key_hover_y = py + (key_y + ui(8));
+                        graph_key_hover_range = val_rng;
                     }
                 }
                 
@@ -983,7 +983,8 @@ function Panel_Animation_Dopesheet() {
                         _graph_key_hover_index = KEYFRAME_DRAG_TYPE.ease_out;
                         
                         _graph_key_hover_x = px;
-                        _graph_key_hover_y = py;
+                        _graph_key_hover_y = py + (key_y + ui(8));
+                        graph_key_hover_range = val_rng;
                     }
                 }
                 
@@ -1002,7 +1003,8 @@ function Panel_Animation_Dopesheet() {
                     _graph_key_hover_array = j;
                     
                     _graph_key_hover_x = px;
-                    _graph_key_hover_y = py;
+                    _graph_key_hover_y = py + (key_y + ui(8));
+                    graph_key_hover_range = val_rng;
                 }
             }
         } // draw key
@@ -1120,6 +1122,7 @@ function Panel_Animation_Dopesheet() {
         _graph_key_hover_array = noone;
         _graph_key_hover_x     = 0;
         _graph_key_hover_y     = 0;
+        graph_key_hover_range  = 1;
         
         for( var i = 0, n = array_length(timeline_contents); i < n; i++ ) {
             var _cont = timeline_contents[i];
@@ -1193,17 +1196,21 @@ function Panel_Animation_Dopesheet() {
                 if(mouse_release(mb_left)) k.anim.setKeyTime(k, k.time, true, true);
                 
             } else {
-                var _dx = (graph_key_sx - msx) / timeline_scale / 2;
-                var _dy = (graph_key_sy - msy) / ui(128);
+            	var _dyy = graph_key_drag_range[1] - graph_key_drag_range[0];
+                var _dx =  (graph_key_sx - msx) / timeline_scale / 2;
+                var _dy = -(graph_key_sy - msy) * graph_key_drag_yrange;
                 var _in = k.ease_in;
                 var _ot = k.ease_out;
-            
+                
+            	if(_dx < 0) _dy = -_dy;
+            	
                 switch(graph_key_drag_index) {
                     case KEYFRAME_DRAG_TYPE.ease_in :
                     	_dx = clamp(_dx, 0, 1);
                     	
                         k.ease_in_type = _dx > 0? CURVE_TYPE.bezier : CURVE_TYPE.linear;
                         k.ease_in[0]   = _dx;
+                        k.ease_in[1]   = 1 - _dy;
                         break;
                          
                     case KEYFRAME_DRAG_TYPE.ease_out :
@@ -1211,17 +1218,20 @@ function Panel_Animation_Dopesheet() {
                         
                         k.ease_out_type = _dx > 0? CURVE_TYPE.bezier : CURVE_TYPE.linear;
                         k.ease_out[0]   = _dx;
+                        k.ease_out[1]   = _dy;
                         break;
                         
                     case KEYFRAME_DRAG_TYPE.ease_both :
-                    	_dx = clamp(abs(_dx), 0, 1);
+                        _dx = clamp(abs(_dx), 0, 1);
                         if(_dx < .1) _dx = 0;
                         
                         k.ease_in_type  = _dx > 0? CURVE_TYPE.bezier : CURVE_TYPE.linear;
                         k.ease_in[0]    = _dx;
+                        k.ease_in[1]    = 1 - _dy;
                     	
                         k.ease_out_type = _dx > 0? CURVE_TYPE.bezier : CURVE_TYPE.linear;
                         k.ease_out[0]   = _dx;
+                        k.ease_out[1]   = _dy;
                         break;
                 }
                             
@@ -1252,6 +1262,7 @@ function Panel_Animation_Dopesheet() {
                 graph_key_drag_range[0] = _prop.graph_range[0];
         		graph_key_drag_range[1] = _prop.graph_range[1];
                 graph_key_drag_value    = graph_key_drag.value;
+                graph_key_drag_yrange   = graph_key_hover_range;
                 
                 if(DOUBLE_CLICK) {
 	                graph_key_drag_index = KEYFRAME_DRAG_TYPE.ease_both;
@@ -2147,6 +2158,7 @@ function Panel_Animation_Dopesheet() {
 	                            
 	                            k.ease_in_type = _dx > 0? CURVE_TYPE.bezier : CURVE_TYPE.linear;
 	                            k.ease_in[0]   = _dx;
+	                            k.ease_in[1]   = 1;
 	                        }
 	                    
 	                        break;
@@ -2158,6 +2170,7 @@ function Panel_Animation_Dopesheet() {
 	                            
 	                            k.ease_out_type = _dx > 0? CURVE_TYPE.bezier : CURVE_TYPE.linear;
 	                            k.ease_out[0]   = _dx;
+	                            k.ease_out[1]   = 0;
 	                        }
 	                        break;
 	                        
@@ -2170,9 +2183,11 @@ function Panel_Animation_Dopesheet() {
                         
 	                            k.ease_in_type  = _dx > 0? CURVE_TYPE.bezier : CURVE_TYPE.linear;
 	                            k.ease_in[0]    = _dx;
+	                            k.ease_in[1]    = 1;
 	                        
 	                            k.ease_out_type = _dx > 0? CURVE_TYPE.bezier : CURVE_TYPE.linear;
 	                            k.ease_out[0]   = _dx;
+	                            k.ease_out[1]   = 0;
 	                        }
 	                        break;
 	                }
