@@ -130,56 +130,71 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	}
 	
 	static lerpValue = function(from, to, rat) {
-		var _f = from.value;
-		var _t = to.value;
+		__f = from.value;
+		__t = to.value;
 		
-		if(to.ease_in_type    == CURVE_TYPE.cut) return processType(_f);
-		if(from.ease_out_type == CURVE_TYPE.cut) return processType(_t);
-		if(struct_has(_f, "lerpTo")) return _f.lerpTo(_t, interpolate(from, to, rat))
+		if(to.ease_in_type    == CURVE_TYPE.cut) return processType(__f);
+		if(from.ease_out_type == CURVE_TYPE.cut) return processType(__t);
+		if(struct_has(__f, "lerpTo")) return __f.lerpTo(__t, interpolate(from, to, rat))
 		
 		switch(prop.type) {
 			case VALUE_TYPE.float : 
-			case VALUE_TYPE.integer : 
-				var _lrp = interpolate(from, to, rat);
+				__lrp = interpolate(from, to, rat);
 				
 				if(prop.display_type == VALUE_DISPLAY.d3quarternion && prop.attributes.angle_display == QUARTERNION_DISPLAY.quarterion)
-					return quarternionArraySlerp(_f, _t, _lrp);
-					
-				if(is_array(_f) || is_array(_t)) {
-					var _len = max(array_safe_length(_f), array_safe_length(_t));
-					var _vec = array_create(_len);
-					
-					for(var i = 0; i < _len; i++) 
-						_vec[i] = processType(lerp( is_array(_f)? array_safe_get_fast(_f, i, 0) : _f, 
-								                    is_array(_t)? array_safe_get_fast(_t, i, 0) : _t, _lrp));
-					return _vec;
-				}
-				return processType(lerp(_f, _t, _lrp));
+					return quarternionArraySlerp(__f, __t, __lrp);
+				
+				var _af = array_safe_length(__f, -1);
+				var _at = array_safe_length(__t, -1);
+				
+				if(_af ==  0 || _at ==  0) return 0;
+				if(_af == -1 && _at == -1) return lerp(__f, __t, __lrp);
+				if(_af == -1 && _at != -1) return array_create_ext(_at, function(i) /*=>*/ {return lerp( __f, __t[i], __lrp)});
+				if(_af != -1 && _at == -1) return array_create_ext(_af, function(i) /*=>*/ {return lerp( __f[i], __t, __lrp)});
+				if(_af == _at)             return array_create_ext(_af, function(i) /*=>*/ {return lerp( __f[i], __t[i], __lrp)});
+				
+				return array_create_ext(max(_af, _at), function(i) /*=>*/ {return lerp( is_array(__f)? array_safe_get_fast(__f, i, 0) : __f, 
+							                                        is_array(__t)? array_safe_get_fast(__t, i, 0) : __t, __lrp)});
+				
+			case VALUE_TYPE.integer : 
+				__lrp = interpolate(from, to, rat);
+				
+				var _af = array_safe_length(__f, -1);
+				var _at = array_safe_length(__t, -1);
+				
+				if(_af ==  0 || _at ==  0) return 0;
+				if(_af == -1 && _at == -1) return round(lerp(__f, __t, __lrp));
+				if(_af == -1 && _at != -1) return array_create_ext(_at, function(i) /*=>*/ {return round(lerp( __f, __t[i], __lrp))});
+				if(_af != -1 && _at == -1) return array_create_ext(_af, function(i) /*=>*/ {return round(lerp( __f[i], __t, __lrp))});
+				if(_af == _at)             return array_create_ext(_af, function(i) /*=>*/ {return round(lerp( __f[i], __t[i], __lrp))});
+				
+				return array_create_ext(max(_af, _at), function(i) /*=>*/ {return round(lerp( is_array(__f)? array_safe_get_fast(__f, i, 0) : __f, 
+							                                              is_array(__t)? array_safe_get_fast(__t, i, 0) : __t, __lrp))});
 				
 			case VALUE_TYPE.color : 
-				var _lrp = interpolate(from, to, rat);
+				__lrp = interpolate(from, to, rat);
 				
-				if(is_array(_f) && is_array(_t)) {
-					var _len = ceil(lerp(array_length(_f), array_length(_t), _lrp));
+				if(is_array(__f) && is_array(__t)) {
+					var _len = ceil(lerp(array_length(__f), array_length(__t), __lrp));
 					var res  = array_create(_len);
 					
 					for( var i = 0; i < _len; i++ ) {
 						var _rat = i / (_len - 1);
 				
-						var rf = _rat * (array_length(_f) - 1);
-						var rt = _rat * (array_length(_t) - 1);
+						var rf = _rat * (array_length(__f) - 1);
+						var rt = _rat * (array_length(__t) - 1);
 						
-						var cf = array_get_decimal(_f, rf, true);
-						var ct = array_get_decimal(_t, rt, true);
+						var cf = array_get_decimal(__f, rf, true);
+						var ct = array_get_decimal(__t, rt, true);
 						
-						res[i] = merge_color(cf, ct, _lrp);
+						res[i] = merge_color(cf, ct, __lrp);
 					}
 					return res;
 				}
-				return processType(merge_color(_f, _t, _lrp));
+				return processType(merge_color(__f, __t, __lrp));
 		}
 		
-		return processType(_f);
+		return processType(__f);
 	}
 	
 	static getName = function() { return prop.name + suffix; }
@@ -226,6 +241,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				case KEYFRAME_END.loop : 
 					_time = _time_first + safe_mod(_time - _time_last, _time_dura + 1);
 					break;
+					
 				case KEYFRAME_END.ping :
 					var time_in_loop = safe_mod(_time - _time_first, _time_dura * 2);
 					if(time_in_loop < _time_dura) 
@@ -237,9 +253,9 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		}
 		
 		var _keyIndex;
-		if(_time >= _len)		_keyIndex = 999_999;
-		else if(_time <= 0)		_keyIndex = -1;
-		else					_keyIndex = array_safe_get_fast(key_map, _time);
+		     if(_time >= _len) _keyIndex = infinity;
+		else if(_time <= 0)	   _keyIndex = -1;
+		else                   _keyIndex = array_safe_get_fast(key_map, _time);
 		
 		//////////////////////////////////////////////////////////// BEFORE FIRST //////////////////////////////////////////////////////////////
 		
@@ -262,7 +278,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		
 		///////////////////////////////////////////////////////////// AFTER LAST ///////////////////////////////////////////////////////////////
 		
-		if(_keyIndex == 999_999) {
+		if(_keyIndex == infinity) {
 			var _lstKey = values[length - 1];
 			
 			if(_lstKey.drivers.type)
@@ -337,12 +353,12 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		INLINE
 		
 		if(PROJECT.attributes.strict) return processValue(_val);
+		__val    = _val;
 		var _res = _val;
 		
-		if(!sep_axis && typeArray(prop) && is_array(_val)) {
-			for(var i = 0; i < array_length(_val); i++) 
-				_res[i] = processValue(_val[i]);
-		} else 
+		if(!sep_axis && typeArray(prop) && is_array(_val))
+			_res = array_create_ext(array_length(__val), function(i) /*=>*/ {return processValue(__val[i])});
+		else 
 			_res = processValue(_val);
 		
 		return _res;
@@ -564,7 +580,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			_keyIndex = _k1;
 		}
 		
-		array_fill(key_map, _keyIndex, _len, 999_999);
+		array_fill(key_map, _keyIndex, _len, infinity);
 	}
 	
 	static insertKey = function(_key, _index) { array_insert(values, _index, _key); }

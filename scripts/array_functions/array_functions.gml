@@ -145,9 +145,9 @@
 		return color? merge_color(v0, v1, frac(index)) : lerp(v0, v1, frac(index));
 	}
 	
-	function array_safe_length(arr) {
+	function array_safe_length(arr,def=0) {
 		INLINE
-		return is_array(arr)? array_length(arr) : 0;
+		return is_array(arr)? array_length(arr) : def;
 	}
 
 	function array_get_dimension(arr) {

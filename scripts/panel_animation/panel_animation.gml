@@ -30,6 +30,7 @@
     function panel_animation_keyframe_align_right()    { CALL("animation_align_right");             PANEL_ANIMATION.alignKeys(fa_right);     }
     function panel_animation_keyframe_repeat()         { CALL("animation_repeat");                  PANEL_ANIMATION.repeatKeys();            }
     function panel_animation_keyframe_distribute()     { CALL("animation_distribute");              PANEL_ANIMATION.distributeKeys();        }
+    function panel_animation_keyframe_modulate()       { CALL("animation_modulate");                PANEL_ANIMATION.modulateKeys();          }
     
     function panel_animation_dopesheet_folder()        { CALL("animation_new_folder");              PANEL_ANIMATION.dopesheet_new_folder();        }
     function panel_animation_dopesheet_folder_select() { CALL("animation_new_folder_select");       PANEL_ANIMATION.dopesheet_new_folder_select(); }
@@ -79,6 +80,7 @@
         registerFunction("Animation", "Align Right",               "",  MOD_KEY.none, panel_animation_keyframe_align_right   ).setMenu("animation_align_right"  )
         registerFunction("Animation", "Repeat Keys",               "R", MOD_KEY.none, panel_animation_keyframe_repeat        ).setMenu("animation_repeat"       )
         registerFunction("Animation", "Distribute Keys",           "D", MOD_KEY.none, panel_animation_keyframe_distribute    ).setMenu("animation_distribute"   )
+        registerFunction("Animation", "Modulate Keys",             "",  MOD_KEY.none, panel_animation_keyframe_modulate      ).setMenu("animation_modulate"     )
         
         registerFunction("Animation", "New Folder",                "", MOD_KEY.none, panel_animation_dopesheet_folder        ).setMenu("animation_new_folder",          THEME.folder)
         registerFunction("Animation", "New Folder From Selection", "", MOD_KEY.none, panel_animation_dopesheet_folder_select ).setMenu("animation_new_folder_select",   THEME.folder)
