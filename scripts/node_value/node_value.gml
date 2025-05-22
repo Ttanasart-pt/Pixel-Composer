@@ -84,30 +84,22 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		onSetTo   = noone;
 	#endregion
 	
-	#region ---- Animation ----
-		key_inter   = CURVE_TYPE.linear;
+	#region ---- Value ----
+		static setDefValue = function(_value) {
+			def_val    = array_clone(_value);
+			
+			sepable    = is_array(_value) && array_length(_value) > 1;
+			animVector = array_safe_length(_value, -1);
+			animator   = new valueAnimator(_value, self, false);
+			animators  = animVector? array_create_ext(animVector, function(i) /*=>*/ {return new valueAnimator(def_val[i], self, true).setIndex(i)}) : [];
+		}
 		
 		is_anim		= false;
 		sep_axis	= false;
 		animable    = true;
+		key_inter   = CURVE_TYPE.linear;
 		on_end		= KEYFRAME_END.hold;
 		loop_range  = -1;
-	#endregion
-	
-	#region ---- Value ----
-		static setDefValue = function(_value) {
-			sepable		= is_array(_value) && array_length(_value) > 1;
-			animator	= new valueAnimator(_value, self, false);
-			animators	= [];
-			
-			if(is_array(_value))
-			for( var i = 0, n = array_length(_value); i < n; i++ ) {
-				animators[i] = new valueAnimator(_value[i], self, true);
-				animators[i].index = i;
-			}
-			
-			def_val	= array_clone(_value);
-		}
 		
 		setDefValue(_value);
 		def_length    = is_array(def_val)? array_length(def_val) : 0;

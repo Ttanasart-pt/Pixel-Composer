@@ -97,7 +97,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		length   = 1;
 		sep_axis = _sep_axis;
 		
-		index   = 0;
+		index   = 0;      static setIndex = function(i) /*=>*/ { index = i; return self; }
 		prop    = _prop;
 		y       = 0;
 		key_map = array_create(TOTAL_FRAMES);
@@ -105,8 +105,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		
 		animate_frames = [];
 		
-		if(_prop.type != VALUE_TYPE.trigger)
-			array_push(values, new valueKey(0, _val, self));
+		if(_prop.type != VALUE_TYPE.trigger) array_push(values, new valueKey(0, _val, self));
 	#endregion
 	
 	////- Getters
