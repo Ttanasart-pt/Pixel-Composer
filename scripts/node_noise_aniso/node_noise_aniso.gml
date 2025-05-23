@@ -13,7 +13,7 @@ function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(1, nodeValue_Float("X Amount", 2))
 		.setMappable(6);
 	
-	newInput(2, nodeValueSeed(self));
+	newInput(2, nodeValueSeed());
 	
 	newInput(3, nodeValue_Vec2("Position", [ 0, 0 ]))
 		.setUnitRef(function(index) { return getDimension(index); });
@@ -36,7 +36,7 @@ function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(9, nodeValue_Enum_Scroll("Render Mode",  0, [ "Blend", "Waterfall" ] ))
 		
-	newInput(10, nodeValueSeed(self));
+	newInput(10, nodeValueSeed());
 	
 	newInput(11, nodeValue_Surface("Mask"));
 	

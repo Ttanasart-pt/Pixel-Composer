@@ -16,7 +16,7 @@ function Node_MK_Delay_Machine(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	newInput(5, nodeValue_Enum_Scroll("Palette Select", 0, [ "Loop", "Pingpong", "Random" ]));
 	
-	newInput(6, nodeValueSeed(self));
+	newInput(6, nodeValueSeed());
 	
 	newInput(7, nodeValue_Enum_Scroll("Overflow", 0, [ "Empty", "Loop", "Hold" ]));
 	

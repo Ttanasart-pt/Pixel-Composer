@@ -13,7 +13,7 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	////- Base
 	
-	newInput(5, nodeValueSeed(self)).rejectArray();
+	newInput(5, nodeValueSeed()).rejectArray();
 	newInput(6, nodeValue_Bool( "Fixed Position", false, "Fix point position, and only select point in the area."));
 	newInput(7, nodeValue_Vec2( "Reference Dimension", DEF_SURF));
 	

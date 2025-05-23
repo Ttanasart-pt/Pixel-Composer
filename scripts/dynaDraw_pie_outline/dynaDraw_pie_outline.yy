@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"dynaDraw_pie_outline",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"dynaDraw_pie_outline",
+  "parent":{
+    "name":"circle",
+    "path":"folders/functions/surface/dynaDraw/circle.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -9,7 +9,7 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 	update_on_frame    = true;
 	
 	newInput(0, nodeValue("Object", self, CONNECT_TYPE.input, VALUE_TYPE.rigid, noone)).setVisible(true, true);
-	newInput(7, nodeValueSeed(self));
+	newInput(7, nodeValueSeed());
 	
 	////- Spawn
 	

@@ -18,7 +18,7 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 	newInput(7, nodeValue_Range("Velocity", [ 1, 2 ]));
 	
-	newInput(8, nodeValueSeed(self));
+	newInput(8, nodeValueSeed());
 	
 	newInput(9, nodeValue_Enum_Scroll("Shape",  0, [ new scrollItem("Rain",    s_node_mk_rain_type, 0),
 												           new scrollItem("Snow",    s_node_mk_rain_type, 1),

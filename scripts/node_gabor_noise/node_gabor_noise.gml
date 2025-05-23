@@ -10,7 +10,7 @@ function Node_Gabor_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y
 		.setMappable(8);
 		addShaderProp(SHADER_UNIFORM.float, "scale");
 				
-	newInput(3, nodeValueSeed(self));
+	newInput(3, nodeValueSeed());
 		addShaderProp(SHADER_UNIFORM.float, "seed");
 				
 	newInput(4, nodeValue_Float("Density", 2))

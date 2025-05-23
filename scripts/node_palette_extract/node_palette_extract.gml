@@ -14,7 +14,7 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	newInput(1, nodeValue_Int("Max colors", 5, "Amount of color in a palette."))
 		.rejectArray();
 	
-	newInput(2, nodeValueSeed(self))
+	newInput(2, nodeValueSeed())
 		.rejectArray();
 	
 	newInput(3, nodeValue_Enum_Scroll("Algorithm",  0, { data: [ "K-mean", "Frequency", "All Colors" ], update_hover: false }))

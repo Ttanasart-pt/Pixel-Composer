@@ -18,7 +18,7 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(2, nodeValue_Float("Scale", 4))
 		.setMappable(11);
 	
-	newInput(3, nodeValueSeed(self));
+	newInput(3, nodeValueSeed());
 	
 	newInput(4, nodeValue_Enum_Scroll("Type",  0, [ "Point", "Edge", "Cell", "Crystal" ]));
 	

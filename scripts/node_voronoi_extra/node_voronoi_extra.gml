@@ -9,7 +9,7 @@ function Node_Voronoi_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, 
 	newInput(2, nodeValue_Vec2("Scale", [ 4, 4 ]));
 		addShaderProp(SHADER_UNIFORM.float, "scale");
 				
-	newInput(3, nodeValueSeed(self));
+	newInput(3, nodeValueSeed());
 		addShaderProp(SHADER_UNIFORM.float, "seed");
 				
 	newInput(4, nodeValue_Float("Progress", 0))

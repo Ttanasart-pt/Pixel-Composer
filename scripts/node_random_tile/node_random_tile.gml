@@ -29,7 +29,7 @@ function Node_Random_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(7, nodeValue_Enum_Scroll("Render Type",  0, ["Colored tile", "Height map", "Texture grid"]));
 		
-	newInput(8, nodeValueSeed(self));
+	newInput(8, nodeValueSeed());
 		
 	newInput(9, nodeValue_Surface("Texture"));
 	

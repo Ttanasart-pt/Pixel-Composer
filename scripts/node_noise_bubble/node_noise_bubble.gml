@@ -13,7 +13,7 @@ function Node_Noise_Bubble(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 		.setDisplay(VALUE_DISPLAY.slider);
 		addShaderProp(SHADER_UNIFORM.float, "density");
 		
-	newInput(2, nodeValueSeed(self));
+	newInput(2, nodeValueSeed());
 		addShaderProp(SHADER_UNIFORM.float, "seed");
 				
 	newInput(3, nodeValue_Slider_Range("Scale", [ 0.5, 0.8 ] ));

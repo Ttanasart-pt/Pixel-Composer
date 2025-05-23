@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"dynaDraw_line",
   "parent":{
-    "name":"dynaDraw",
-    "path":"folders/functions/surface/dynaDraw.yy",
+    "name":"shapes",
+    "path":"folders/functions/surface/dynaDraw/shapes.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

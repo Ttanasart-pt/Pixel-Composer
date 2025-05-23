@@ -52,6 +52,9 @@ uniform float albedo;
 uniform float turbidity;
 uniform vec2  sunPosition;
 
+uniform vec2  position;
+uniform vec2  scale;
+
 float kHosekCoeffsX[54];
 float kHosekCoeffsY[54];
 float kHosekCoeffsZ[54];
@@ -381,8 +384,8 @@ vec3 tonemap(vec3 color, float exposure) {
 void main() {
     init();
     
-    vec2 uv  = v_vTexcoord;
-    vec2 sun = sunPosition / dimension;
+    vec2 uv  = (v_vTexcoord - position / dimension) * scale;
+    vec2 sun = (sunPosition - position) * scale / dimension;
     
     uv.y  = 1. - uv.y;
     sun.y = 1. - sun.y;

@@ -14,7 +14,7 @@ function Node_Path_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newInput(4, nodeValue_Slider_Range("Scale", [ 0.5, 1 ]));
 	
-	newInput(5, nodeValueSeed(self));
+	newInput(5, nodeValueSeed());
 	
 	newInput(6, nodeValue_Curve("Scale over Length", CURVE_DEF_11));
 	

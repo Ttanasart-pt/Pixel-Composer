@@ -654,6 +654,7 @@
             "Node_MK_GridBalls",
             "Node_MK_GridFlip",
             "Node_MK_Saber",
+            "Node_MK_Cable",
             "Node_MK_Tile",
             "Node_MK_Flag",
             "Node_MK_Brownian",

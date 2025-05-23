@@ -16,8 +16,10 @@ function dynaDraw_leaf_fill() : dynaDraw() constructor {
 			return;
 		}
 		
+		var _wd = params[$ "width"] ?? width; params[$ "width"] = width;
+		
 		var _lw = _sx / 2;
-		var _lh = _sy / 2 * width;
+		var _lh = _sy / 2 * _wd;
 		 
 		draw_primitive_begin(pr_trianglestrip);
 			draw_vertex(_x + lengthdir_x(_lw, _ang),      _y + lengthdir_y(_lw, _ang));

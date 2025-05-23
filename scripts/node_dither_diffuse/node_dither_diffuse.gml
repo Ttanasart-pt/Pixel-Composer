@@ -65,7 +65,7 @@ function Node_Dither_Diffuse(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	
 	newInput(7, nodeValue_Enum_Scroll("Type", 0, { data: [ "Floyd-Steinberg", "Jarvis, Judice, and Ninke", "Atkinson", "Linear" ], update_hover: false }));
 	
-	newInput(8, nodeValueSeed(self));
+	newInput(8, nodeValueSeed());
 	
 	newInput(9, nodeValue_Bool("Greyscale", false));
 	

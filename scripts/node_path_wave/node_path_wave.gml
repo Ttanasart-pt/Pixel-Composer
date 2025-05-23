@@ -19,7 +19,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(4, nodeValue_Enum_Button("Mode", 0, [ "Zigzag", "Sine", "Square" ]));
 	
-	newInput(5, nodeValueSeed(self));
+	newInput(5, nodeValueSeed());
 	
 	newInput(6, nodeValue_Bool("Wiggle", false));
 	

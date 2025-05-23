@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"dynaDraw_circle_fill",
   "parent":{
-    "name":"dynaDraw",
-    "path":"folders/functions/surface/dynaDraw.yy",
+    "name":"circle",
+    "path":"folders/functions/surface/dynaDraw/circle.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

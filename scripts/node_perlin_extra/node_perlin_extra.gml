@@ -23,7 +23,7 @@ function Node_Perlin_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	newInput(4, nodeValue_Bool("Tile", true, "Tiling only works with integer scale, and some effect type doesn't support tiling."));
 		addShaderProp(SHADER_UNIFORM.integer, "tile");
 			
-	newInput(5, nodeValueSeed(self));
+	newInput(5, nodeValueSeed());
 		addShaderProp(SHADER_UNIFORM.float, "seed");
 		
 	newInput(6, nodeValue_Enum_Button("Color Mode",  0, [ "Greyscale", "RGB", "HSV" ]));

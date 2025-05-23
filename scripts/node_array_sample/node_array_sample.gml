@@ -11,7 +11,7 @@ function Node_Array_Sample(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	newInput(3, nodeValue_Int("Shift", 0))
 	
-	newInput(4, nodeValueSeed(self));
+	newInput(4, nodeValueSeed());
 	
 	newInput(5, nodeValue_Int("Amount", 4))
 	

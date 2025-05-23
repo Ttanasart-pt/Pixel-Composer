@@ -5,10 +5,9 @@
   "isDnD":false,
   "name":"dynaDraw_cube_outline",
   "parent":{
-    "name":"dynaDraw",
-    "path":"folders/functions/surface/dynaDraw.yy",
+    "name":"polygon",
+    "path":"folders/functions/surface/dynaDraw/polygon.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
-  "tags":[],
 }

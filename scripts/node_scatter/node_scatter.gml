@@ -20,7 +20,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	name = "Scatter";
 	dimension_index = 1;
 	
-	newInput(10, nodeValueSeed(self));
+	newInput(10, nodeValueSeed());
 	
 	////- Surfaces
 	

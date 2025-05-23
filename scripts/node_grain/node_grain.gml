@@ -21,7 +21,7 @@ function Node_Grain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	newInput(8, nodeValueMap("Brightness map", self));
 	
-	newInput(9, nodeValueSeed(self));
+	newInput(9, nodeValueSeed());
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	

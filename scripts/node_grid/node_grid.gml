@@ -37,7 +37,7 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 	newInput(10, nodeValue_Enum_Scroll("Render Type",  0, ["Colored tile", "Colored tile (Accurate)", "Height map", "Texture grid", "Texture sample"]));
 		
-	newInput(11, nodeValueSeed(self));
+	newInput(11, nodeValueSeed());
 	
 	newInput(12, nodeValue_Bool("Anti-aliasing", false));
 	
@@ -83,12 +83,12 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(31, nodeValue_Float("Random Shift", 0))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(32, nodeValueSeed(self, VALUE_TYPE.float, "Shift Seed"));
+	newInput(32, nodeValueSeed(VALUE_TYPE.float, "Shift Seed"));
 	
 	newInput(33, nodeValue_Float("Random Scale", 0))
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	newInput(34, nodeValueSeed(self, VALUE_TYPE.float, "Scale Seed"));
+	newInput(34, nodeValueSeed(VALUE_TYPE.float, "Scale Seed"));
 	
 	newInput(35, nodeValue_Surface("Mask"));
 	

@@ -9,7 +9,7 @@
 function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Region Fill";
 	
-	newInput(4, nodeValueSeed(self));
+	newInput(4, nodeValueSeed());
 	
 	////- Surfaces
 	

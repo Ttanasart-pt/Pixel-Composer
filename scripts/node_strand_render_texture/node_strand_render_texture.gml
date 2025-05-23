@@ -6,7 +6,7 @@ function Node_Strand_Render_Texture(_x, _y, _group = noone) : Node(_x, _y, _grou
 	
 	manual_ungroupable	 = false;
 	
-	newInput(5, nodeValueSeed(self));
+	newInput(5, nodeValueSeed());
 	
 	////- Ouptut
 	

@@ -3,8 +3,8 @@ function nodeValueMap(_name, _node, _junc = noone)						 { return new NodeValue(
 function nodeValueGradientRange(_name, _node, _junc = noone)			 { return new NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.float, [ 0, 0, 1, 0 ])
 																						.setDisplay(VALUE_DISPLAY.gradient_range).setVisible(false, false).setMapped(_junc); }
 
-function nodeValueSeed(_node, _type = VALUE_TYPE.float, _name = "Seed") { 
-	var _val  = new NodeValue(_name, _node, CONNECT_TYPE.input, _type, seed_random(6), "");
+function nodeValueSeed(_type = VALUE_TYPE.float, _name = "Seed") { 
+	var _val  = new NodeValue(_name, self, CONNECT_TYPE.input, _type, seed_random(6), "");
 	var _rFun = function() /*=>*/ { randomize(); setValue(seed_random(6)); };
 	    _rFun = method(_val, _rFun);
 	

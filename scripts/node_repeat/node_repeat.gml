@@ -72,7 +72,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(16, nodeValue_Enum_Button("Array select", 0, [ "Order", "Random", "Spread" ]))
 		.setTooltip("Whether to select image from an array in order, at random, or spread each image to its own output.");
 	
-	newInput(17, nodeValueSeed(self));
+	newInput(17, nodeValueSeed());
 	
 	newInput(18, nodeValue_Int("Column", 4));
 	

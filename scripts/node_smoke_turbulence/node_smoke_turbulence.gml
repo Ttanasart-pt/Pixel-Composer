@@ -15,7 +15,7 @@ function Node_Smoke_Turbulence(_x, _y, _group = noone) : Node_Smoke(_x, _y, _gro
 	newInput(3, nodeValue_Float("Scale", 4))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.01] });
 	
-	newInput(4, nodeValueSeed(self));
+	newInput(4, nodeValueSeed());
 	
 	input_display_list = [ 
 		["Domain",		false], 0, 

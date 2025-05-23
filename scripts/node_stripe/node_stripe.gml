@@ -62,7 +62,7 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 	newInput(18, nodeValue_Palette("Colors", [ c_black, c_white ] ));
 		
-	newInput(19, nodeValueSeed(self));
+	newInput(19, nodeValueSeed());
 		
 	newInput(20, nodeValue_Surface("Mask"));
 	

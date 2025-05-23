@@ -9,7 +9,7 @@ function Node_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	newInput(0, nodeValue_Dimension());
 	
-	newInput(1, nodeValueSeed(self));
+	newInput(1, nodeValueSeed());
 	
 	newInput(2, nodeValue_Enum_Button("Color Mode",  0, [ "Greyscale", "RGB", "HSV" ]));
 	

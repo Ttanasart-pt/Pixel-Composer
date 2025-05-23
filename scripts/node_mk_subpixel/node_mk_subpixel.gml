@@ -21,7 +21,7 @@ function Node_MK_Subpixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(7, nodeValue_Surface("Surface"));
 	
-	newInput(8, nodeValueSeed(self));
+	newInput(8, nodeValueSeed());
 	
 	newInput(9, nodeValue_Float("Ridge amount", 8));
 	

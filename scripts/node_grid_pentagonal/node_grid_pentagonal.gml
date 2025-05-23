@@ -31,7 +31,7 @@ function Node_Grid_Pentagonal(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	
 	newInput(8, nodeValue_Enum_Scroll("Render Type",  0, ["Colored tile", "Height map", "Texture grid"]));
 		
-	newInput(9, nodeValueSeed(self));
+	newInput(9, nodeValueSeed());
 	
 	newInput(10, nodeValue_Bool("Anti-aliasing", false));
 	

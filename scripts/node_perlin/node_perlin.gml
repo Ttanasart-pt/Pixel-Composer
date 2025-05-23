@@ -19,7 +19,7 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	newInput(4, nodeValue_Bool("Tile", true));
 		
-	newInput(5, nodeValueSeed(self));
+	newInput(5, nodeValueSeed());
 		
 	newInput(6, nodeValue_Enum_Button("Color Mode",  0, [ "Greyscale", "RGB", "HSV" ]));
 	

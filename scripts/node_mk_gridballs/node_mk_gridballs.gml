@@ -11,7 +11,7 @@ function Node_MK_GridBalls(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newInput(4, nodeValue_Float("Scatter", 0));
 	
-	newInput(5, nodeValueSeed(self));
+	newInput(5, nodeValueSeed());
 		
 	newInput(6, nodeValue_Float("Shading", 0.5))
 		.setDisplay(VALUE_DISPLAY.slider);

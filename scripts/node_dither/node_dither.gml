@@ -52,7 +52,7 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	__init_mask_modifier(7); // inputs 11, 12, 
 	
-	newInput(13, nodeValueSeed(self));
+	newInput(13, nodeValueSeed());
 		
 	newInput(14, nodeValue_Bool("Use palette", true));
 	

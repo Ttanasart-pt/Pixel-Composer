@@ -43,7 +43,7 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(7, nodeValue_Vec2_Range("Scale particle", [ 0, 0, 0, 0 ], { linked : true }))
 		.rejectArray();
 	
-	newInput(8, nodeValueSeed(self))
+	newInput(8, nodeValueSeed())
 		.rejectArray();
 		
 	effector_input_length = array_length(inputs);

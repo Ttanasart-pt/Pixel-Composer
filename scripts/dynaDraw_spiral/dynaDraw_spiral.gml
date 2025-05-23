@@ -1,13 +1,13 @@
 function dynaDraw_spiral() : dynaDraw() constructor {
 	
 	parameters = [ "sides", "thickness", "gap" ];
-	sides      = 8;
-	thickness  = 2;
-	gap        = 4;
+	sides      = 6;
+	thickness  = 4;
+	gap        = 2;
 	editors    = [
-		[ "Sides",     textBox_Number(function(n) /*=>*/ { sides     = n; updateNode(); }), function() /*=>*/ {return sides} ],
+		[ "Sides",     textBox_Number(function(n) /*=>*/ { sides     = n; updateNode(); }), function() /*=>*/ {return sides}     ],
 		[ "Thickness", textBox_Number(function(n) /*=>*/ { thickness = n; updateNode(); }), function() /*=>*/ {return thickness} ],
-		[ "Gap",       textBox_Number(function(n) /*=>*/ { gap       = n; updateNode(); }), function() /*=>*/ {return gap} ],
+		[ "Gap",       textBox_Number(function(n) /*=>*/ { gap       = n; updateNode(); }), function() /*=>*/ {return gap}       ],
 	];
 	
 	static draw = function(_x = 0, _y = 0, _sx = 1, _sy = 1, _ang = 0, _col = c_white, _alp = 1) {

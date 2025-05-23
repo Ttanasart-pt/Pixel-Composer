@@ -17,7 +17,7 @@ function Node_Noise_Strand(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 		.setDisplay(VALUE_DISPLAY.slider);
 		addShaderProp(SHADER_UNIFORM.float, "density");
 		
-	newInput(3, nodeValueSeed(self));
+	newInput(3, nodeValueSeed());
 		addShaderProp(SHADER_UNIFORM.float, "seed");
 				
 	newInput(4, nodeValue_Float("Slope", 0.5 ))

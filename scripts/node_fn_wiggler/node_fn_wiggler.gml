@@ -6,7 +6,7 @@ function Node_Wiggler(_x, _y, _group = noone) : Node_Fn(_x, _y, _group) construc
 	newInput(inl + 1, nodeValue_Int("Frequency", 4 ))
 		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 32, 0.1] });
 	
-	newInput(inl + 2, nodeValueSeed(self));
+	newInput(inl + 2, nodeValueSeed());
 	
 	newInput(inl + 3, nodeValue_Toggle("Clip", 0b11 , { data : [ "Start", "End" ] }));
 	

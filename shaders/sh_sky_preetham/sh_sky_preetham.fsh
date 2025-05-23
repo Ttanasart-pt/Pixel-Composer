@@ -13,6 +13,9 @@ uniform int   mapping;
 uniform float turbidity;
 uniform vec2  sunPosition;
 
+uniform vec2  position;
+uniform vec2  scale;
+
 float saturatedDot( in vec3 a, in vec3 b ) {
 	return max( dot( a, b ), 0.0 );   
 }
@@ -105,28 +108,11 @@ vec3 calculateSkyLuminanceRGB( in vec3 s, in vec3 e, in float t ) {
 }
 
 void main() {
-    vec2 uv = v_vTexcoord;
-    vec2 sun = sunPosition / dimension;
+    vec2 uv  = (v_vTexcoord - position / dimension) * scale;
+    vec2 sun = (sunPosition - position) * scale / dimension;
     
-    // if(mapping == 0) {
-	    uv.y  = 1. - uv.y;
-	    sun.y = 1. - sun.y;
-	    
-  //  } else if(mapping == 1) {
-  //  	float sun_angle    = atan(sun.x, sun.y);
-		// float sun_distance = clamp(length(sun) * PI, 0.0, PI / 2.0 - 0.1);
-	
-		// float uv_angle    = atan(uv.x,uv.y);
-		// float uv_distance = length(uv) * PI;
-	
-		// if (uv_distance > PI / 2.0) {
-		// 	gl_FragColor = vec4(vec3(0.0), 1.0);
-		// 	return;
-		// }
-		
-		// uv  = vec2(uv_angle, uv_distance);
-		// sun = vec2(sun_angle, sun_distance);
-  //  }
+    uv.y  = 1. - uv.y;
+    sun.y = 1. - sun.y;
     
     float azimuth       = PI + 2. * PI * sun.x;
     float inclination   = PI - sun.y * PI;

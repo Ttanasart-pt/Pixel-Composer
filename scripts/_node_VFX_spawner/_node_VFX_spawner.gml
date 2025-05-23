@@ -2,7 +2,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	name = "Spawner";
 	update_on_frame = true;
 	
-	newInput(32, nodeValueSeed(self));
+	newInput(32, nodeValueSeed());
 	
 	////- Sprite
 	newInput( 0, nodeValue_Surface("Particle Sprite"));

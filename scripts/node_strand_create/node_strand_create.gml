@@ -17,7 +17,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	update_on_frame      = true;
 	manual_ungroupable	 = false;
 	
-	newInput(10, nodeValueSeed(self));
+	newInput(10, nodeValueSeed());
 	
 	////- Generation
 	

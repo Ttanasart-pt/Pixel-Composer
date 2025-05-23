@@ -9,7 +9,7 @@ function Node_Brush_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput(2, nodeValue_Int("Iteration", 10))
 		.setValidator(VV_min(1));
 	
-	newInput(3, nodeValueSeed(self));
+	newInput(3, nodeValueSeed());
 	
 	newInput(4, nodeValue_Float("Length", 10));
 	

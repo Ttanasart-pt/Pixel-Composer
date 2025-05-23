@@ -15,7 +15,7 @@ function Node_Diffuse(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	
 	newInput(5, nodeValue_Slider_Range("Threshold", [ 0.5, 0.7 ]));
 		
-	newInput(6, nodeValueSeed(self));
+	newInput(6, nodeValueSeed());
 	
 	newInput(7, nodeValue_Surface("External"));
 	

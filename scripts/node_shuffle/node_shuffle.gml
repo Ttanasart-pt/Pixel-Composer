@@ -12,7 +12,7 @@ function Node_Shuffle(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput(1, nodeValue_Enum_Scroll("Type", 0, [ "Pixel", "Block" ]));
 	
-	newInput(2, nodeValueSeed(self));
+	newInput(2, nodeValueSeed());
 	
 	newInput(3, nodeValue_Enum_Scroll("Axis", 2, [ "Horizontal", "Vertical", "Both" ]));
 	

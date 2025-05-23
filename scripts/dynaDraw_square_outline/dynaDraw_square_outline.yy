@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"dynaDraw_square_outline",
   "parent":{
-    "name":"dynaDraw",
-    "path":"folders/functions/surface/dynaDraw.yy",
+    "name":"rectangle",
+    "path":"folders/functions/surface/dynaDraw/rectangle.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

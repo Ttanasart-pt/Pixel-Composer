@@ -5,10 +5,9 @@
   "isDnD":false,
   "name":"dynaDraw_star_fill",
   "parent":{
-    "name":"dynaDraw",
-    "path":"folders/functions/surface/dynaDraw.yy",
+    "name":"polygon",
+    "path":"folders/functions/surface/dynaDraw/polygon.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
-  "tags":[],
 }

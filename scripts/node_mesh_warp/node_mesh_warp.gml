@@ -224,7 +224,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	anchor_drag_my  = -1;
 	
 	newActiveInput(5, nodeValue_Bool("Active", true));
-	newInput(9, nodeValueSeed(self));
+	newInput(9, nodeValueSeed());
 	
 	////- Mesh
 	

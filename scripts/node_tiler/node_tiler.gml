@@ -23,7 +23,7 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
     
     newInput( 2, nodeValue_Bool("Animated", false));
     
-    newInput( 3, nodeValueSeed(self));
+    newInput( 3, nodeValueSeed());
     
 	input_display_list = [ 3, 1, 0 ];
 	input_display_list_tileset      = ["Tileset",      false, noone, noone];

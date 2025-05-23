@@ -19,6 +19,9 @@ uniform vec2  sunPosition;
 uniform float sunRadius;
 uniform float sunRadiance;
 
+uniform vec2  position;
+uniform vec2  scale;
+
 /*uniform*/ float mieG;
 /*uniform*/ float mieHeight;
 /*uniform*/ float rayleighHeight;
@@ -213,8 +216,8 @@ float noise(vec2 uv) {
 }
 
 void main() {
-	vec2 uv  = v_vTexcoord;
-    vec2 sun = sunPosition / dimension;
+	vec2 uv  = (v_vTexcoord - position / dimension) * scale;
+    vec2 sun = (sunPosition - position) * scale / dimension;
     
     uv.y  = 1. - uv.y;
     sun.y = 1. - sun.y;

@@ -18,7 +18,7 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	newInput(7, nodeValue_Curve("Alpha", CURVE_DEF_11));
 	
-	newInput(8, nodeValueSeed(self));
+	newInput(8, nodeValueSeed());
 	
 	newInput(9, nodeValue_Range("Angular speed", [ -45, 45 ]));
 	
