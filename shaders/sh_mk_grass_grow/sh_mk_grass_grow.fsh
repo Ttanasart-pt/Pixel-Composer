@@ -178,6 +178,7 @@ void main() {
 			vec4 baseC = gradientEval(grassRatio + colrModify);
 			     if(renderType == 0) gl_FragColor = baseC;
 			else if(renderType == 1) gl_FragColor = baseC * texture2D(gm_BaseTexture, samPos);
+			else if(renderType == 2) gl_FragColor = baseC + texture2D(gm_BaseTexture, samPos);
 			break;
 		}
 	}

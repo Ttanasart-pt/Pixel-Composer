@@ -154,6 +154,7 @@ void checkGrass(in vec2 pos) {
 	vec4 baseC = gradientEval(random(pos + vec2(16.2681)));
 	     if(renderType == 0) gl_FragColor = baseC;
 	else if(renderType == 1) gl_FragColor = baseC * texture2D(gm_BaseTexture, pos);
+	else if(renderType == 2) gl_FragColor = baseC + texture2D(gm_BaseTexture, pos);
 }
 
 void main() {
