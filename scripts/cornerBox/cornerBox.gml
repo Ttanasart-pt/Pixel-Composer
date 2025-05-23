@@ -24,9 +24,9 @@ function cornerBox(_onModify, _unit = noone) : widget() constructor {
 	for(var i = 0; i < 4; i++) {
 		tb[i] = new textBox(TEXTBOX_INPUT.number, onModifySingle[i]);
 		
-		tb[i].labelSpr       = THEME.inspector_corner;
-		tb[i].labelSprIndex  = i;
-		tb[i].labelColor     = COLORS._main_icon;
+		// tb[i].labelSpr       = THEME.inspector_corner;
+		// tb[i].labelSprIndex  = i;
+		// tb[i].labelColor     = COLORS._main_icon;
 		tb[i].slidable       = true;
 		tb[i].hide           = true;
 	}

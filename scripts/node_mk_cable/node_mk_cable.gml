@@ -13,9 +13,10 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	////- =Cable
 	
-	newInput(4, nodeValue_Range( "Tension",  [ 1, 1 ], { linked : true } ));
-	newInput(8, nodeValue_Int(   "Segments", 16 ));
-	newInput(5, nodeValue_Int(   "Amount",    1 ));
+	newInput( 5, nodeValue_Int(      "Amount",   1  ));
+	newInput(14, nodeValue_Rotation( "Gravity", -90 ));
+	newInput( 4, nodeValue_Range(    "Tension",  [ 1, 1 ], { linked : true } ));
+	newInput( 8, nodeValue_Int(      "Segments", 16 ));
 	
 	////- =Swing
 	
@@ -28,11 +29,11 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(6, nodeValue_Range(    "Thickness", [ 1, 1 ], { linked : true } ));
 	newInput(7, nodeValue_Gradient( "Colors", new gradientObject(ca_white)));
 	
-	// input 14
+	// input 15
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 3, 0, 
 		["Anchors", false    ], 1, 2, 9, 10, 
-		["Cable",   false    ], 4, 8, 5, 
+		["Cable",   false    ], 5, 14, 4, 8, 
 		["Swing",   false, 11], 12, 13, 
 		["Render",  false    ], 6, 7, 
 	];
@@ -74,9 +75,10 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var _rad1 = _data[ 9];
 		var _rad2 = _data[10];
 		
-		var _tens = _data[4];
-		var _segs = _data[8];
-		var _amo  = _data[5];
+		var _amo  = _data[ 5];
+		var _grav = _data[14];
+		var _tens = _data[ 4];
+		var _segs = _data[ 8];
 		
 		var _thks = _data[6];
 		var _colr = _data[7];
@@ -91,6 +93,11 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		var _isg   = 1/_segs;
 		var _swphs = array_create_ext(_amo, function(i) /*=>*/ {return random(1)});
+		
+		var _gx  = lengthdir_x(1, _grav);
+		var _gy  = lengthdir_y(1, _grav);
+		var _gsx = lengthdir_x(1, _grav + 90);
+		var _gsy = lengthdir_y(1, _grav + 90);
 		
 		surface_set_target(_outSurf);
 			DRAW_CLEAR
@@ -129,14 +136,15 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			        var t = i  * _isg;
 			        var _drop = a * sin(t * pi);
 			        
-			        nx = x0 + dx * t;
-			        ny = y0 + dy * t + _drop;
+			        nx = x0 + dx * t + _drop * _gx;
+			        ny = y0 + dy * t + _drop * _gy;
 			        
 			        if(_swng) {
 			        	var _phs   = _swphs[c] + (CURRENT_FRAME / TOTAL_FRAMES) * _sfrq;
 			        	var _swamo = cos(_phs * 2 * pi) * _samp;
 			        	
-			        	nx += _swamo * _drop;
+			        	nx += _swamo * _drop * _gsx;
+			        	ny += _swamo * _drop * _gsy;
 			        }
 			        
 			        if (i) draw_line_round(ox, oy, nx, ny, _thk);

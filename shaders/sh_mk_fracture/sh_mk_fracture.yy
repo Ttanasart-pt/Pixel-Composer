@@ -3,8 +3,8 @@
   "%Name":"sh_mk_fracture",
   "name":"sh_mk_fracture",
   "parent":{
-    "name":"Fracture",
-    "path":"folders/nodes/data/MKFX/Fracture.yy",
+    "name":"mk fracture",
+    "path":"folders/nodes/data/MKFX/mk fracture.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

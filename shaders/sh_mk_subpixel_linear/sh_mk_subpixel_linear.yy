@@ -3,8 +3,8 @@
   "%Name":"sh_mk_subpixel_linear",
   "name":"sh_mk_subpixel_linear",
   "parent":{
-    "name":"Subpixel",
-    "path":"folders/nodes/data/MKFX/Subpixel.yy",
+    "name":"mk subpixel",
+    "path":"folders/nodes/data/MKFX/mk subpixel.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

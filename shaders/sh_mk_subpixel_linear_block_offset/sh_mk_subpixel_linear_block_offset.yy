@@ -3,8 +3,8 @@
   "%Name":"sh_mk_subpixel_linear_block_offset",
   "name":"sh_mk_subpixel_linear_block_offset",
   "parent":{
-    "name":"Subpixel",
-    "path":"folders/nodes/data/MKFX/Subpixel.yy",
+    "name":"mk subpixel",
+    "path":"folders/nodes/data/MKFX/mk subpixel.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",
