@@ -89,11 +89,8 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		update_on_frame = _swng;
 		
-		var _isg = 1/_segs;
-		
-		if(_swng) {
-			var _sphases = array_create_ext(_amo, function(i) /*=>*/ {return random(1)});
-		}
+		var _isg   = 1/_segs;
+		var _swphs = array_create_ext(_amo, function(i) /*=>*/ {return random(1)});
 		
 		surface_set_target(_outSurf);
 			DRAW_CLEAR
@@ -125,6 +122,9 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				
 				draw_set_color(_colr.eval(random(1)));
 				
+				var _samp = random_range(_swng_amp[0], _swng_amp[1]) * .1;
+	        	var _sfrq = round(random_range(_swng_frq[0], _swng_frq[1]));
+			        	
 			    for (var i = 0; i <= _segs; i++) {
 			        var t = i  * _isg;
 			        var _drop = a * sin(t * pi);
@@ -133,10 +133,7 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			        ny = y0 + dy * t + _drop;
 			        
 			        if(_swng) {
-			        	var _samp = random_range(_swng_amp[0], _swng_amp[1]) * .1;
-			        	var _sfrq = round(random_range(_swng_frq[0], _swng_frq[1]));
-			        	
-			        	var _phs   = _sphases[c] + (CURRENT_FRAME / TOTAL_FRAMES) * _sfrq;
+			        	var _phs   = _swphs[c] + (CURRENT_FRAME / TOTAL_FRAMES) * _sfrq;
 			        	var _swamo = cos(_phs * 2 * pi) * _samp;
 			        	
 			        	nx += _swamo * _drop;
