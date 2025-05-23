@@ -40,8 +40,7 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static createNewInput = function(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
-		newInput(index, nodeValue_Surface("Input"))
-			.setVisible(true, true);
+		newInput(index, nodeValue_Surface("Input")).setVisible(true, true);
 		
 		array_push(input_display_list, inAmo);
 		return inputs[index];
@@ -51,19 +50,15 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	attribute_surface_depth();
 	
-	static step = function() {
-		var _axis = getInputData(0);
-		
-		inputs[1].setVisible(_axis != 2);
-		inputs[2].setVisible(_axis != 2);
-	}
-	
 	static update = function(frame = CURRENT_FRAME) {
 		var _axis = getInputData(0);
 		var _alig = getInputData(1);
 		var _spac = getInputData(2);
 		var _padd = getInputData(3);
 		var _blnd = getInputData(4);
+		
+		inputs[1].setVisible(_axis != 2);
+		inputs[2].setVisible(_axis != 2);
 		
 		var ww = 0;
 		var hh = 0;

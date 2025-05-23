@@ -665,7 +665,8 @@
             "Node_MK_Fracture",
             "Node_MK_Sparkle",
             "Node_MK_Grass",
-            "Node_MK_Subpixel"
+            "Node_MK_Subpixel",
+            "Node_MK_Parallax"
         ]
     },
     {

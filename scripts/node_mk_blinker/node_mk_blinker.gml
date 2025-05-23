@@ -3,12 +3,12 @@ function Node_MK_Blinker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	newActiveInput(6);
 	
-	////- Surfaces
+	////- =Surfaces
 	
 	newInput(0, nodeValue_Surface( "Surface In"));
 	newInput(1, nodeValue_Surface( "Mask"));
 	
-	////- Blink
+	////- =Blink
 	
 	newInput(2, nodeValueSeed());
 	newInput(3, nodeValue_Slider(  "Amount", 0.5));
@@ -16,7 +16,7 @@ function Node_MK_Blinker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput(5, nodeValue_Palette( "Light Colors", [ ca_white ] ));
 	newInput(7, nodeValue_Slider(  "Tolerance", 0.1 ));
 	
-	////- Glow
+	////- =Glow
 	
 	newInput( 8, nodeValue_Bool(   "Glow", false));
 	newInput( 9, nodeValue_Slider( "Size", 4, [ 1, 8, 0.1 ] ));

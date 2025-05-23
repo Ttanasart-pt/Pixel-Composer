@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_sample_tile",
+  "name":"sh_sample_tile",
+  "parent":{
+    "name":"_helper",
+    "path":"folders/shader/_helper.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

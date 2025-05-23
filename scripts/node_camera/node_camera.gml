@@ -244,12 +244,8 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		return inputs[index + 0];
 	} 
 	
-	input_display_dynamic = [ 
-		["Surface",   false], 0, 3, 
-		["Transform", false], 1, 2, 4, 5, 
-	];
-	
-	input_display_dynamic_full = function(j) /*=>*/ { return [ [ $"Surface {j}", false], 0, 3, __inspc(ui(4), true, true, ui(4)), 1, 2, 4, 5 ]; }
+	input_display_dynamic      =                 [ ["Surface",       false], 0, 3, ["Transform", false],     1, 2, 4, 5 ];
+	input_display_dynamic_full = function(j) /*=>*/ { return [ [ $"Surface {j}", false], 0, 3, __inspc(ui(4),1,1,ui(4)), 1, 2, 4, 5 ]; }
 	
 	input_display_list = [
 		["Camera",        false   ], 6, 0, 1, 
