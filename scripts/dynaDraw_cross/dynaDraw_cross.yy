@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"dynaDraw_cross",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"dynaDraw_cross",
+  "parent":{
+    "name":"dynaDraw",
+    "path":"folders/functions/surface/dynaDraw.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

@@ -33,3 +33,23 @@ function convertBase(str, fromBase, toBase) {
 function saturate(_x) { return clamp(_x, 0, 1); }
 
 function smoothstep(t) { return t * t * (3.0 - 2.0 * t); }
+
+function min_index() {
+	var _min = infinity;
+	var _ind = 0;
+	
+	for( var i = 0; i < argument_count; i++ )
+		if(argument[i] < _min) { _min = argument[i]; _ind = i; }
+	
+	return _ind;
+}
+
+function max_index() {
+	var _max = -infinity;
+	var _ind = 0;
+	
+	for( var i = 0; i < argument_count; i++ )
+		if(argument[i] > _max) { _max = argument[i]; _ind = i; }
+	
+	return _ind;
+}

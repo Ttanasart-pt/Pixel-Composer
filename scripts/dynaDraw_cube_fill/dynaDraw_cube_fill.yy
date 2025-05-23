@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"dynaDraw_cube_fill",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"dynaDraw_cube_fill",
+  "parent":{
+    "name":"dynaDraw",
+    "path":"folders/functions/surface/dynaDraw.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

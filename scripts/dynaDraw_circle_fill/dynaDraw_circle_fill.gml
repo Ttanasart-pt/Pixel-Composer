@@ -34,6 +34,9 @@ function dynaDraw_circle_fill() : dynaDraw() constructor {
 				
 			default : 
 				draw_circle(_x, _y, _sx / 2 - 1, false);
+				
+				// draw_set_color(c_black);
+				// draw_circle_border(_x + 1, _y + 1, _sx / 2 - 1, 2);
 				break;
 		}
 		

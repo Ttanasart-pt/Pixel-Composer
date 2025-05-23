@@ -10,13 +10,13 @@ function dynaDraw_square_outline() : dynaDraw() constructor {
 		draw_set_color(_col);
 		draw_set_alpha(_alp);
 		
-		var _th = params[$ "thickness"] ?? thickness; params[$ "thickness"] = thickness;
-		
 		if(round(_sx) <= 1 && round(_sy) <= 0) {
 			draw_point(_x, _y);
 			draw_set_alpha(1);
 			return;
 		}
+		
+		var _th = params[$ "thickness"] ?? thickness; params[$ "thickness"] = thickness;
 		
 		if(_ang == 0) {
 			var x0 = _x - _sx / 2;
