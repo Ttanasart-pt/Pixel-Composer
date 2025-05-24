@@ -16,9 +16,10 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	////- =Shape
 	
-	newInput( 7, nodeValue_Enum_Scroll( "Shape",   0, [ "Dense Bush", "V" ]));
+	newInput( 7, nodeValue_Enum_Scroll( "Shape",   0, [ "Dense Bush", "V", "Hash" ]));
 	newInput( 8, nodeValue_Range(       "Size",   [4,4], { linked: true }));
 	newInput(17, nodeValue_Slider(      "Spread", .0));
+	newInput(20, nodeValue_Float(       "Extra",  .0));
 	
 	////- =Scatter
 	
@@ -39,11 +40,11 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(18, nodeValue_Bool(  "Fill Ground", false));
 	newInput(19, nodeValue_Color( "Ground",      ca_black));
 	
-	// input 20
+	// input 21
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 1, 0, 
 		["Source",  false], 2, 3, 4, 5, 6, 
-		["Shape",   false], 7, 8, 17, 
+		["Shape",   false], 7, 8, 17, 20, 
 		["Scatter", false], 9, 11, 14, 15,
 		["Render",  false], 12, 13, 16, 
 		["Ground",  false, 18], 19, 
@@ -85,6 +86,7 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var _shape    = _data[ 7];
 		var _size     = _data[ 8];
 		var _spread   = _data[17];
+		var _expand   = _data[20];
 		
 		var _dens     = _data[9];
 		var _noi_lev  = _data[10];
@@ -101,6 +103,7 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		inputs[ 8].setVisible(_shape == 0 || _shape == 2);
 		inputs[17].setVisible(_shape == 0);
 		inputs[16].setVisible(_shape == 0);
+		inputs[20].setVisible(_shape == 0);
 		
 		inputs[3].setVisible(_src == 0);
 		inputs[4].setVisible(_src == 1, _src == 1);
@@ -191,6 +194,7 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		switch(_shape) {
 			case 0 : surface_set_shader(_outSurf, sh_mk_grass_grow);        break;
 			case 1 : surface_set_shader(_outSurf, sh_mk_grass_grow_v);      break;
+			case 2 : surface_set_shader(_outSurf, sh_mk_grass_grow_hash);   break;
 			default: return _outSurf;
 		}
 		
@@ -200,6 +204,7 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		shader_set_2("grassSize",     _size);
 		shader_set_f("colorVariance", _color_vr);
 		shader_set_f("density",       _dens);
+		shader_set_f("expand",        _expand);
 		
 		shader_set_i("renderType",    _rtype);
 		shader_set_i("groundFill",    _gnd_fil);
