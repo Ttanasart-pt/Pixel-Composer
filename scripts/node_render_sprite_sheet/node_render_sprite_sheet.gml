@@ -16,9 +16,10 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	
 	////- =Surfaces
 	
-	newInput(0, nodeValue_Surface(     "Sprites"));
-	newInput(1, nodeValue_Enum_Scroll( "Sprite set", 0, [ "Animation", "Sprite array" ])).rejectArray();
-	newInput(2, nodeValue_Int(         "Frame step", 1, "Number of frames until next sprite. Can be seen as (Step - 1) frame skip.")).rejectArray();
+	newInput( 0, nodeValue_Surface(     "Sprites"));
+	newInput( 1, nodeValue_Enum_Scroll( "Sprite set", 0, [ "Animation", "Sprite array" ])).rejectArray();
+	newInput( 2, nodeValue_Int(         "Frame step", 1, "Number of frames until next sprite. Can be seen as (Step - 1) frame skip.")).rejectArray();
+	newInput(12, nodeValue_Bool(        "Exclude Empty", false));
 	
 	////- =Packing
 	
@@ -31,13 +32,13 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	
 	////- =Rendering
 	
-	newInput(10, nodeValue_Bool( "Overlappable", false));
+	/*UNUSED*/ newInput(10, nodeValue_Bool( "Overlappable", false));
 	
 	////- =Range
 	
 	newInput(11, nodeValue_Bool(         "Custom Range", false));
 	newInput( 8, nodeValue_Slider_Range( "Range", [ 0, 0 ])).setTooltip("Starting/ending frames, set end to 0 to default to last frame.")
-		
+	
 	// inputs 12
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -45,13 +46,14 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	newOutput(1, nodeValue_Output("Atlas Data", VALUE_TYPE.atlas, []));
 	
 	input_display_list = [
-		["Surfaces",  false], 0, 1, 2,
+		["Surfaces",  false], 0, 1, 2, 12, 
 		["Packing",	  false], 3, 4, 5, 6, 9, 7, 
 		//["Rendering", false], 10, 
 		["Custom Range", true, 11], 8, 
 	]
 	
 	atlases = [];
+	noti_dimension_txt = "Spritesheet node does not support different surfaces size. Use Stack, Image grid, or Pack sprite node.";
 	
 	attribute_surface_depth();
 
@@ -88,7 +90,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		if(IS_FIRST_FRAME) initSurface();
+		if(IS_FIRST_FRAME) initSurface(false);
 		
 		var grup = getInputData(1);
 		var anim = grup == SPRITE_ANIM_GROUP.animation;
@@ -116,6 +118,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		var padd = getInputData(7);
 		var rang = getInputData(8);
 		var spc2 = getInputData(9);
+		var exemp = getInputData(12);
 		
 		var cDep = attrDepth();
 		
@@ -165,12 +168,19 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		var hh   = 0;
 		atlases  = [];
 		
+		if(exemp) {
+			var _is_empty = array_create(_ed);
+			for(var i = _st; i < _ed; i++) 
+				_is_empty[i] = surface_is_empty(array_safe_get(inpt, i));
+		}
+		
 		#region surface generate
 			switch(pack) { 
 				case SPRITE_STACK.horizontal :
-					for(var i = _st; i <= _ed; i++) {
+					for(var i = _st; i < _ed; i++) {
 						var _surf = array_safe_get(inpt, i);
-						if(!is_surface(_surf)) continue;
+						if(!is_surface(_surf))    continue;
+						if(exemp && _is_empty[i]) continue; 
 						
 						ww += surface_get_width_safe(_surf);
 						if(i > _st) ww += spac;
@@ -179,9 +189,10 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 					break;
 					
 				case SPRITE_STACK.vertical :
-					for(var i = _st; i <= _ed; i++) {
+					for(var i = _st; i < _ed; i++) {
 						var _surf = array_safe_get(inpt, i);
-						if(!is_surface(_surf)) continue;
+						if(!is_surface(_surf))    continue;
+						if(exemp && _is_empty[i]) continue;
 						
 						ww  = max(ww, surface_get_width_safe(_surf));
 						hh += surface_get_height_safe(_surf);
@@ -199,10 +210,11 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 							
 						for(var j = 0; j < col; j++) {
 							var index = _st + i * col + j;
-							if(index > _ed) break;
+							if(index >= _ed) break;
 							
 							var _surf = array_safe_get(inpt, index);
-							if(!is_surface(_surf)) continue;
+							if(!is_surface(_surf))        continue;
+							if(exemp && _is_empty[index]) continue;
 							
 							row_w += surface_get_width_safe(_surf);
 							if(j) row_w += spc2[0];
@@ -231,15 +243,16 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 				case SPRITE_STACK.horizontal :
 					var px = padd[2];
 					var py = padd[1];
-					for(var i = _st; i <= _ed; i++) {
+					for(var i = _st; i < _ed; i++) {
+						if(exemp && _is_empty[i]) continue;
+						
 						var _w  = surface_get_width_safe(inpt[i]);
 						var _h  = surface_get_height_safe(inpt[i]);
 						var _sx = px;
 						var _sy = py;
 						
 						curr_w = curr_w == -1? _w : curr_w; curr_h = curr_h == -1? _h : curr_h;
-						if(curr_w != _w || curr_h != _h)
-							noti_warning("Spritesheet node does not support different surfaces size. Use Stack, Image grid, or pack sprite.", noone, self);
+						if(curr_w != _w || curr_h != _h) noti_warning(noti_dimension_txt, noone, self);
 						
 						switch(alig) {
 							case 1 : _sy = py + (hh - _h) / 2;	break;
@@ -255,15 +268,16 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 				case SPRITE_STACK.vertical :
 					var px = padd[2];
 					var py = padd[1];
-					for(var i = _st; i <= _ed; i++) {
+					for(var i = _st; i < _ed; i++) {
+						if(exemp && _is_empty[i]) continue;
+						
 						var _w = surface_get_width_safe(inpt[i]);
 						var _h = surface_get_height_safe(inpt[i]);
 						var _sx = px;
 						var _sy = py;
 							
 						curr_w = curr_w == -1? _w : curr_w; curr_h = curr_h == -1? _h : curr_h;
-						if(curr_w != _w || curr_h != _h)
-							noti_warning("Spritesheet node does not support different surfaces size. Use Stack, Image grid, or pack sprite.", noone, self);
+						if(curr_w != _w || curr_h != _h) noti_warning(noti_dimension_txt, noone, self);
 						
 						switch(alig) {
 							case 1 : _sx = px + (ww - _w) / 2;	break;
@@ -293,14 +307,14 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 								
 						for(var j = 0; j < col; j++) {
 							var index = _st + i * col + j;
-							if(index > _ed) break;
+							if(index >= _ed) break;
+							if(exemp && _is_empty[index]) continue;
 								
 							var _w = surface_get_width_safe(inpt[index]);
 							var _h = surface_get_height_safe(inpt[index]);
 							
 							curr_w = curr_w == -1? _w : curr_w; curr_h = curr_h == -1? _h : curr_h;
-							if(curr_w != _w || curr_h != _h)
-								noti_warning("Spritesheet node does not support different surfaces size. Use Stack, Image grid, or pack sprite.", noone, self);
+							if(curr_w != _w || curr_h != _h) noti_warning(noti_dimension_txt, noone, self);
 							
 							array_push(atlases, new SurfaceAtlas(inpt[index], px, py));
 							draw_surface_safe(inpt[index], px, py);
@@ -320,8 +334,11 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		outputs[1].setValue(array_spread(atlases));
 	}
 	
-	anim_curr_w = -1;
-	anim_curr_h = -1;
+	anim_curr_w        = -1;
+	anim_curr_h        = -1;
+	anim_frames        = [];
+	anim_array_length  = 0;
+	anim_surface_cache = [];
 	
 	static animationInit = function(clear = false) {
 		var inpt = getInputData(0);
@@ -333,8 +350,9 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		var padd = getInputData(7);
 		var rang = getInputData(8);
 		var spc2 = getInputData(9);
-		//var ovlp = getInputData(10);
-		var user = getInputData(11);
+		
+		var user  = getInputData(11);
+		var exemp = getInputData(12);
 		
 		var _out = outputs[0].getValue();
 		var cDep = attrDepth();
@@ -343,9 +361,12 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		
 		var arr = is_array(inpt);
 		if(arr && array_length(inpt) == 0) return;
+		
+		anim_array_length = array_safe_length(inpt);
 		if(!arr) inpt = [ inpt ];
 		
 		if(!is_array(_out)) _out = [ _out ];
+		anim_frames = array_create(array_safe_length(inpt,1), 0);
 		
 		#region frame
 			var _st = FIRST_FRAME;
@@ -364,12 +385,12 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		#endregion
 		
 		var ww = 1, hh = 1;
-				
+		
 		for(var i = 0; i < array_length(inpt); i++) { 
 			var _surfi = inpt[i];
 			if(!is_surface(_surfi)) continue;
 					
-			atlases[i]    = [];
+			atlases[i] = [];
 					
 			var sw = surface_get_width_safe(_surfi);
 			var sh = surface_get_height_safe(_surfi);
@@ -380,15 +401,12 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			anim_curr_h = sh;
 				
 			switch(pack) {
-				case SPRITE_STACK.horizontal :						
-					ww = sw * amo + spac * (amo - 1);
-					break;
-				case SPRITE_STACK.vertical :
-					hh = sh * amo + spac * (amo - 1);
-					break;
+				case SPRITE_STACK.horizontal : ww = sw * amo + spac * (amo - 1); break;
+				case SPRITE_STACK.vertical :   hh = sh * amo + spac * (amo - 1); break;
+					
 				case SPRITE_STACK.grid :
 					var row = ceil(amo / grid);
-						
+					
 					ww = sw * grid + spc2[0] * (grid - 1);
 					hh = sh * row  + spc2[1] * (row - 1);
 					break;
@@ -405,7 +423,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		if(!arr) _out = array_safe_get_fast(_out, 0);
 		outputs[0].setValue(_out);
 		outputs[1].setValue(array_spread(atlases));
-				
+		
 		printIf(log, $"Surface generated [{ww}, {hh}]");
 	}
 	
@@ -419,15 +437,17 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		var padd = getInputData(7);
 		var rang = getInputData(8);
 		var spc2 = getInputData(9);
-		//var ovlp = getInputData(10);
-		var user = getInputData(11);
+		
+		var user  = getInputData(11);
+		var exemp = getInputData(12);
 		
 		var cDep = attrDepth();
 		
-		printIf(log, $"Rendering animation {name}/{CURRENT_FRAME}");
+		printIf(log, $"Rendering animation {name}/{CURRENT_FRAME} [{anim_array_length}]");
 		
 		var arr = is_array(inpt);
-		if(arr && array_length(inpt) == 0) return;
+		if((anim_array_length == 0 && is_array(inpt)) || (anim_array_length != array_length(inpt))) return;
+		
 		if(!arr) inpt = [ inpt ];
 		
 		#region frame
@@ -458,89 +478,71 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			}
 		#endregion
 		
+		var _atli;
 		var oupt   = outputs[0].getValue();
-		var _frame = floor((CURRENT_FRAME - _st) / skip);
 		var drawn  = false;
-		var px = padd[2];
-		var py = padd[1];
 		
-		for(var i = 0; i < array_length(inpt); i++) {
+		var _px = padd[2];
+		var _py = padd[1];
+		var _sx = 0;
+		var _sy = 0;
+			
+		for(var i = 0, n = array_length(inpt); i < n; i++) {
 			var _surfi = inpt[i];
+			var _out   = is_array(oupt)? oupt[i] : oupt;
 			
-			if(!is_surface(_surfi)) {
-				printIf(log, $"   > Skip input not surface");
-				atlases[i] = noone;
-				break;
-			} 
+			if(!is_surface(_out))                 { printIf(log, $"   > Skip output not surface");                    break; }
+			if(!is_surface(_surfi))               { printIf(log, $"   > Skip input not surface"); atlases[i] = noone; continue; } 
+			if(exemp && surface_is_empty(_surfi)) { printIf(log, $"   > Skip input empty");                           continue; } 
 			
-			if(!is_array(array_safe_get_fast(atlases, i)))
-				atlases[i] = [];
-			var _atli = atlases[i];
+			var _frame = anim_frames[i]; 
+			var ww = surface_get_width(_out);
+			var hh = surface_get_height(_out);
+			var sw = surface_get_width(_surfi);
+			var sh = surface_get_height(_surfi);
 			
-			var oo = noone;
-			if(!is_array(oupt))	oo = oupt;
-			else				oo = oupt[i];
-			
-			if(!is_surface(oo)) {
-				printIf(log, $"   > Skip output not surface");
-				break;
-			}
-			
-			var ww = surface_get_width_safe(oo);
-			var hh = surface_get_height_safe(oo);
-			
-			var _w = surface_get_width_safe(_surfi);
-			var _h = surface_get_height_safe(_surfi);
-			
-			if(anim_curr_w != _w || anim_curr_h != _h)
-				noti_warning("Spritesheet node does not support different surfaces size. Use Stack, Image grid, or pack sprite.", noone, self);
-			
-			var px;
-			var _sx = 0;
-			var _sy = 0;
+			if(anim_curr_w != sw || anim_curr_h != sh) noti_warning(noti_dimension_txt, noone, self);
 			
 			switch(pack) {
 				case SPRITE_STACK.horizontal :
-					px  = padd[2] + _frame * _w + max(0, _frame) * spac;
-					_sx = px;
-					_sy = py;
+					_px = padd[2] + _frame * sw + max(0, _frame) * spac;
+					_sx = _px;
 					
 					switch(alig) {
-						case 1 : _sy = py + (hh - _h) / 2;	break;
-						case 2 : _sy = py + (hh - _h);		break;
+						case 0 : _sy = _py;                 break;
+						case 1 : _sy = _py + (hh - sh) / 2; break;
+						case 2 : _sy = _py + (hh - sh);     break;
 					}
 					break;
 					
 				case SPRITE_STACK.vertical :
-					py = padd[1] + _frame * _h + max(0, _frame) * spac;
-					_sx = px;
-					_sy = py;
+					_py = padd[1] + _frame * sh + max(0, _frame) * spac;
+					_sy = _py;
 					
 					switch(alig) {
-						case 1 : _sx = px + (ww - _w) / 2;	break;
-						case 2 : _sx = px + (ww - _w);		break;
+						case 0 : _sx = _px;                 break;
+						case 1 : _sx = _px + (ww - sw) / 2; break;
+						case 2 : _sx = _px + (ww - sw);     break;
 					}
 					break;
 					
 				case SPRITE_STACK.grid :
-					var col  = getInputData(4);
-					var _row = floor(_frame / col);
-					var _col = safe_mod(_frame, col);
+					var _row = floor(_frame / grid);
+					var _col = safe_mod(_frame, grid);
 					
-					_sx = px + _col * _w + max(0, _col) * spc2[0];
-					_sy = py + _row * _h + max(0, _row) * spc2[1];
+					_sx = _px + _col * sw + max(0, _col) * spc2[0];
+					_sy = _py + _row * sh + max(0, _row) * spc2[1];
 					break;
 			}
 				
-			surface_set_shader(oo, noone, false, BLEND.over);
-				
-				printIf(log, $"   > Drawing frame ({CURRENT_FRAME}) {_surfi} at {_sx}, {_sy}");
-				
-				_atli[i] = new SurfaceAtlas(_surfi, _sx, _sy);
+			_atli    = atlases[i];
+			_atli[i] = new SurfaceAtlas(_surfi, _sx, _sy);
+			
+			surface_set_shader(_out, noone, false, BLEND.over);
 				draw_surface(_surfi, _sx, _sy);
-				
 			surface_reset_shader();
 			
+			anim_frames[i]++;
 			drawn = true;
 		}
 		

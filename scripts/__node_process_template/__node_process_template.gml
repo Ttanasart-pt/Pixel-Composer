@@ -7,6 +7,8 @@ function Node_Process_Template(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	
 	input_display_list = [ 0 ];
 	
+	////- Nodes
+	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
 	
 	static step = function() {}

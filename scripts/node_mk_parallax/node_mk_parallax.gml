@@ -17,9 +17,13 @@ function Node_MK_Parallax(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		newInput(index + 1, nodeValue_Vec2(    $"Position {_s}", [0,0])).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
 		newInput(index + 2, nodeValue_Vec2(    $"Parallax {_s}", [0,0]));
 		
+		var stat_label = new Inspector_Label("");
+		inputs[index].stat = stat_label;
+		
 		array_push(input_display_list, index + 0);
 		array_push(input_display_list, index + 1);
 		array_push(input_display_list, index + 2);
+		array_push(input_display_list, stat_label);
 		return inputs[index + 0];
 	} 
 	
@@ -59,6 +63,11 @@ function Node_MK_Parallax(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			
 			var _ssw = surface_get_width_safe(_srf)  * _pal[0] / TOTAL_FRAMES;
 			var _ssh = surface_get_height_safe(_srf) * _pal[1] / TOTAL_FRAMES;
+			
+			var stat_label = inputs[_ind].stat;
+			stat_label.text = "";
+			if((frac(_ssw) != 0 && frac(1/_ssw)) || (frac(_ssh) != 0 && frac(1/_ssh) != 0)) 
+				stat_label.text = "Inconsistent speed detected. This may cause stutters. Consider adjusting the parallax speed or animation length.";
 			
 			var _sx = _pos[0] + _ssw * CURRENT_FRAME;
 			var _sy = _pos[1] + _ssh * CURRENT_FRAME;

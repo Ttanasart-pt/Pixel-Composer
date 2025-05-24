@@ -1,10 +1,14 @@
 function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Splice Spritesheet";
 	
+	////- =Sprite
+	
 	newInput(0, nodeValue_Surface( "Surface In"));
 	newInput(1, nodeValue_Vec2(    "Sprite size", [ 32, 32 ]));
 	newInput(6, nodeValue_Padding( "Padding", [0, 0, 0, 0]));
 	newInput(2, nodeValue_Int(     "Row", 1)); //unused
+	
+	////- =Sheet
 	
 	newInput( 3, nodeValue_Vec2(        "Amount", [ 1, 1 ]));
 	newInput(10, nodeValue_Trigger(     "Auto fill", "Automatically set amount based on sprite size."))
@@ -33,6 +37,8 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput( 4, nodeValue_Vec2(        "Offset", [ 0, 0 ]));
 	newInput( 5, nodeValue_Vec2(        "Spacing", [ 0, 0 ]));
 	
+	////- =Output
+	
 	newInput( 7, nodeValue_Enum_Scroll( "Output", 1, [ "Animation", "Array" ]));
 	newInput( 8, nodeValue_Float(       "Animation speed", 1));
 	newInput(11, nodeValue_Trigger(     "Sync animation" ))
@@ -42,6 +48,8 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			TOTAL_FRAMES = max(1, _spd == 0? 1 : ceil(array_length(_atl) / _spd));
 		} });
 		
+	////- =Filter
+	
 	newInput(12, nodeValue_Bool(        "Filter empty output", false));
 	newInput(13, nodeValue_Enum_Scroll( "Filtered Pixel", 0, [ "Transparent", "Color" ]));
 	newInput(14, nodeValue_Color(       "Filtered Color", ca_black));
@@ -57,6 +65,8 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	newOutput(1, nodeValue_Output("Atlas Data", VALUE_TYPE.atlas, []))
 		.setArrayDepth(1);
+	
+	////- Nodes
 	
 	attribute_surface_depth();
 	

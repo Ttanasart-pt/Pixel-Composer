@@ -145,6 +145,29 @@
 		return _sw == w && _sh == h && _f == format;
 	}
 
+	global.__surface_is_empty_buffer = buffer_create(1, buffer_grow, 1);
+	function surface_is_empty(surf) {
+		if(!is_surface(surf)) return true;
+		
+		var _size = surface_get_byte_size(surf);
+		buffer_resize(global.__surface_is_empty_buffer, _size);
+		buffer_get_surface(global.__surface_is_empty_buffer, surf, 0);
+		buffer_to_start(global.__surface_is_empty_buffer);
+		
+		// repeat(_size/4) {
+		// 	var r = buffer_read(global.__surface_is_empty_buffer, buffer_u8);
+		// 	var g = buffer_read(global.__surface_is_empty_buffer, buffer_u8);
+		// 	var b = buffer_read(global.__surface_is_empty_buffer, buffer_u8);
+		// 	var a = buffer_read(global.__surface_is_empty_buffer, buffer_u8);
+			
+		// 	if(a > 0) return false;
+		// }
+		
+		return surface_is_empty_ext(buffer_get_address(global.__surface_is_empty_buffer), _size/4, 0);
+		
+		return true;
+	}
+
 #endregion ==================================== CHECK ====================================
 
 #region ==================================== GET =====================================
@@ -231,6 +254,15 @@
 	
 		if(is_numeric(px)) return int64(px);
 		return round(px[0] * (255 * power(256, 0))) + round(px[1] * (255 * power(256, 1))) + round(px[2] * (255 * power(256, 2))) + round(px[3] * (255 * power(256, 3)));
+	}
+
+	function surface_get_byte_size(surface) {
+		INLINE
+	
+		var sw = surface_get_width_safe(surface);
+		var sh = surface_get_height_safe(surface);
+		var sz = sw * sh * surface_format_get_bytes(surface_get_format(surface));
+		return sz;
 	}
 
 #endregion ==================================== GET ====================================
@@ -455,6 +487,32 @@
 		return _surf;
 	}
 
+	function surface_cvt_8unorm(target, surface) {
+		if(!is_surface(surface)) return target;
+		
+		target = surface_verify(target, surface_get_width_safe(surface), surface_get_height_safe(surface));
+		var _typ = surface_get_format(surface);
+		
+		switch(_typ) {
+			case surface_rgba4unorm  :
+			case surface_rgba8unorm	 :
+			case surface_rgba16float :
+			case surface_rgba32float :
+				surface_set_shader(target, sh_draw_normal);
+				break;
+			case surface_r8unorm	 :	
+			case surface_r16float	 :	
+			case surface_r32float	 :	
+				surface_set_shader(target, sh_draw_single_channel);
+				break;
+		}
+				
+		draw_surface_safe(surface);
+		surface_reset_shader();
+		
+		return target;
+	}
+
 #endregion ==================================== MODIFY ====================================
 
 #region =================================== OTHERS ===================================
@@ -574,15 +632,6 @@
 		return "undefined";
 	}
 
-	function surface_get_size(surface) {
-		INLINE
-	
-		var sw = surface_get_width_safe(surface);
-		var sh = surface_get_height_safe(surface);
-		var sz = sw * sh * surface_format_get_bytes(surface_get_format(surface));
-		return sz;
-	}
-
 	function surface_texture(surface) {
 		INLINE
 	
@@ -599,6 +648,10 @@
 		if(!surface_exists(surface)) return;
 		__surface_free(surface);
 	}
+
+#endregion =================================== OTHERS ===================================
+
+#region ================================= SERIALIZE ==================================
 
 	function surface_save_safe(surface, path) {
 		if(!is_surface(surface)) return;
@@ -645,36 +698,6 @@
 		surface_free(s);
 		return;
 	}
-
-	function surface_cvt_8unorm(target, surface) {
-		if(!is_surface(surface)) return target;
-		
-		target = surface_verify(target, surface_get_width_safe(surface), surface_get_height_safe(surface));
-		var _typ = surface_get_format(surface);
-		
-		switch(_typ) {
-			case surface_rgba4unorm  :
-			case surface_rgba8unorm	 :
-			case surface_rgba16float :
-			case surface_rgba32float :
-				surface_set_shader(target, sh_draw_normal);
-				break;
-			case surface_r8unorm	 :	
-			case surface_r16float	 :	
-			case surface_r32float	 :	
-				surface_set_shader(target, sh_draw_single_channel);
-				break;
-		}
-				
-		draw_surface_safe(surface);
-		surface_reset_shader();
-		
-		return target;
-	}
-
-#endregion =================================== OTHERS ===================================
-
-#region ================================= SERIALIZE ==================================
 
 	function   surface_array_serialize(arr) { return json_stringify(__surface_array_serialize(arr)); }
 	function __surface_array_serialize(arr) {

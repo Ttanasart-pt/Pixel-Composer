@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_surface_is_empty",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_surface_is_empty",
+  "parent":{
+    "name":"surface",
+    "path":"folders/nodes/data/value/surface.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}
