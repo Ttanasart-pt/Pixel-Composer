@@ -154,18 +154,7 @@
 		buffer_get_surface(global.__surface_is_empty_buffer, surf, 0);
 		buffer_to_start(global.__surface_is_empty_buffer);
 		
-		// repeat(_size/4) {
-		// 	var r = buffer_read(global.__surface_is_empty_buffer, buffer_u8);
-		// 	var g = buffer_read(global.__surface_is_empty_buffer, buffer_u8);
-		// 	var b = buffer_read(global.__surface_is_empty_buffer, buffer_u8);
-		// 	var a = buffer_read(global.__surface_is_empty_buffer, buffer_u8);
-			
-		// 	if(a > 0) return false;
-		// }
-		
 		return surface_is_empty_ext(buffer_get_address(global.__surface_is_empty_buffer), _size/4, 0);
-		
-		return true;
 	}
 
 #endregion ==================================== CHECK ====================================

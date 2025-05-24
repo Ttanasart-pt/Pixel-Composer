@@ -19,7 +19,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	newInput( 0, nodeValue_Surface(     "Sprites"));
 	newInput( 1, nodeValue_Enum_Scroll( "Sprite set", 0, [ "Animation", "Sprite array" ])).rejectArray();
 	newInput( 2, nodeValue_Int(         "Frame step", 1, "Number of frames until next sprite. Can be seen as (Step - 1) frame skip.")).rejectArray();
-	newInput(12, nodeValue_Bool(        "Exclude Empty", false));
+	newInput(12, nodeValue_Bool(        "Skip Empty", false));
 	
 	////- =Packing
 	
@@ -57,7 +57,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	
 	attribute_surface_depth();
 
-	setTrigger(1,,, function() /*=>*/ { initSurface(true); PROJECT.animator.render(); });
+	setTrigger(1,,, function() /*=>*/ { initSurface(true); PROJECT.animator.render(); anim_rendering = false; });
+	setTrigger(2, "Clear Result", [ THEME.cache, 0, COLORS._main_icon ]);
 	
 	////- Nodes
 	
@@ -92,11 +93,13 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	static update = function(frame = CURRENT_FRAME) {
 		if(IS_FIRST_FRAME) initSurface(false);
 		
-		var grup = getInputData(1);
-		var anim = grup == SPRITE_ANIM_GROUP.animation;
+		var sprSet = getInputData(1);
+		var anim = sprSet == SPRITE_ANIM_GROUP.animation;
 		
 		if(anim) animationRender();
 		else     arrayRender();
+		
+		anim_rendering = PROJECT.animator.is_rendering;
 	}
 	
 	static initSurface = function(clear = false) {
@@ -338,9 +341,12 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	anim_curr_h        = -1;
 	anim_frames        = [];
 	anim_array_length  = 0;
-	anim_surface_cache = [];
+	anim_surface_cache = noone;
+	anim_rendering     = false;
 	
 	static animationInit = function(clear = false) {
+		if(anim_rendering) return;
+		
 		var inpt = getInputData(0);
 		var skip = getInputData(2);
 		var pack = getInputData(3);
@@ -428,6 +434,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	}
 	
 	static animationRender = function() {
+		if(IS_FIRST_FRAME && anim_rendering) return;
+		
 		var inpt = getInputData(0);
 		var skip = getInputData(2);
 		var pack = getInputData(3);
@@ -527,26 +535,66 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 					break;
 					
 				case SPRITE_STACK.grid :
-					var _row = floor(_frame / grid);
 					var _col = safe_mod(_frame, grid);
+					var _row = floor(_frame / grid);
 					
 					_sx = _px + _col * sw + max(0, _col) * spc2[0];
 					_sy = _py + _row * sh + max(0, _row) * spc2[1];
 					break;
 			}
-				
+			
 			_atli    = atlases[i];
 			_atli[i] = new SurfaceAtlas(_surfi, _sx, _sy);
 			
-			surface_set_shader(_out, noone, false, BLEND.over);
-				draw_surface(_surfi, _sx, _sy);
-			surface_reset_shader();
+			if(exemp) {
+				var _new_w, _new_h;
+				anim_surface_cache = surface_verify(anim_surface_cache, surface_get_width(_out), surface_get_height(_out));
+				surface_set_shader(anim_surface_cache);
+					draw_surface(_out,0,0);
+				surface_reset_shader();
+				
+				switch(pack) {
+					case SPRITE_STACK.horizontal : 
+						_new_w = _sx + sw + padd[0];
+						_new_h = sh + padd[1] + padd[3];
+						break;
+					
+					case SPRITE_STACK.vertical : 
+						_new_w = sw + padd[0] + padd[2];
+						_new_h = _sy + sh + padd[3];
+						break;
+					
+					case SPRITE_STACK.grid : 
+						var _col = safe_mod(_frame, grid);
+						var _row = floor(_frame / grid);
+						
+						_new_w = _col * sw + max(0, _col) * spc2[0] + padd[0] + padd[2];
+						_new_h = _row * sh + max(0, _row) * spc2[1] + padd[1] + padd[3];
+						break;
+				}
+				
+				surface_resize(_out, _new_w, _new_h);
+				surface_set_shader(_out);
+					draw_surface(anim_surface_cache,0,0);
+					draw_surface(_surfi, _sx, _sy);
+				surface_reset_shader();
+				
+				if(is_array(oupt)) oupt[i] = _out;
+				else oupt = _out;
+				
+			} else {
+				surface_set_shader(_out, noone, false, BLEND.over);
+					draw_surface(_surfi, _sx, _sy);
+				surface_reset_shader();
+				
+			}
 			
 			anim_frames[i]++;
 			drawn = true;
 		}
 		
 		if(drawn) array_safe_set(anim_drawn, CURRENT_FRAME, true);
+		outputs[0].setValue(oupt);
 		outputs[1].setValue(array_spread(atlases));
 	}
 
