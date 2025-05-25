@@ -11,16 +11,8 @@ function __Panel_Linear_Setting_Item(name, editWidget, data = noone, onEdit = no
 	self.key        = "";
 	self.is_patreon = false;
 	
-	static setKey  = function(_key) { self.key = _key; return self; }
-	static patreon = function() { is_patreon = true; return self; }
-}
-
-function __Panel_Linear_Setting_Item_Preference(name, key, editWidget, _data = noone) : __Panel_Linear_Setting_Item(name, editWidget, _data) constructor {
-	self.key = key;
-	
-	data       = function( ) /*=>*/ {return getPreference(key)};
-	onEdit     = function(v) /*=>*/ {return setPreference(key, v)};
-	getDefault = function( ) /*=>*/ {return getPreference(key, PREFERENCES_DEF)};
+	static setKey  = function(k) /*=>*/ { key = k;           return self; }
+	static patreon = function( ) /*=>*/ { is_patreon = true; return self; }
 }
 
 function __Panel_Linear_Setting_Label(name, sprite, _index = 0, _color = c_white) constructor {

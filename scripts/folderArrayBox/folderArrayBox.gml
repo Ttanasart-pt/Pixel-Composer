@@ -3,16 +3,18 @@ function folderArrayBox(_arr, _onApply) : widget() constructor {
 	array   = _arr;
 	editing = noone;
 	tb_edit = new textBox(TEXTBOX_INPUT.text, function(str) /*=>*/ { 
-		array[editing] = str;
+		if(editing == noone) return false;
 		
 		if(str == "") {
 			array_delete(array, editing, 1);
 			editing = noone;
-		}
+		} else 
+			array[editing] = str;
 		
 		onApply();
 		return true; 
-	});
+	}).setSlide(false);
+	
 	tb_edit.setEmpty();
 	tb_edit.onDeactivate = function() /*=>*/ { editing = noone; }
 	
@@ -71,12 +73,12 @@ function folderArrayBox(_arr, _onApply) : widget() constructor {
 				if(mouse_click(mb_left, active))
 					draw_sprite_stretched(THEME.textbox, 2, _tx, _ty, _w, _h);
 					
-			} else 
-				draw_sprite_stretched_ext(THEME.textbox, 0, _tx, _ty, _w, _h, boxColor);
+			} //else 
+				// draw_sprite_stretched_ext(THEME.textbox, 0, _tx, _ty, _w, _h, boxColor);
 				
 			if(i < n) {
 				draw_set_text(font, fa_left, fa_center, COLORS._main_text);
-				draw_text_cut(_tx + ui(8), _ty + _h / 2, array[i], _w - ui(16));
+				draw_text_cut(_tx + ui(8), round(_ty + _h / 2), array[i], _w - ui(16));
 			}
 		}
 			
