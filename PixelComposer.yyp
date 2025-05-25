@@ -1453,6 +1453,7 @@
     {"id":{"name":"libfilesystem","path":"extensions/libfilesystem/libfilesystem.yy",},},
     {"id":{"name":"libxprocess","path":"extensions/libxprocess/libxprocess.yy",},},
     {"id":{"name":"macMinimize","path":"extensions/macMinimize/macMinimize.yy",},},
+    {"id":{"name":"path_from_mask","path":"extensions/path_from_mask/path_from_mask.yy",},},
     {"id":{"name":"patreon_key","path":"extensions/patreon_key/patreon_key.yy",},},
     {"id":{"name":"poissonC","path":"extensions/poissonC/poissonC.yy",},},
     {"id":{"name":"Regex","path":"extensions/Regex/Regex.yy",},},
