@@ -11,7 +11,6 @@ function fontScrollBox(_onModify) : widget() constructor {
 						.setIcon(THEME.folder_content, 0, COLORS._main_icon);
 						
 	static trigger = function() {
-		refreshFontFolder();
 		open = true;
 		
 		with(dialogCall(o_dialog_fontscrollbox, x + open_rx, y + open_ry)) {

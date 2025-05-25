@@ -137,7 +137,7 @@ function __initNodeActions(_update = false) {
 	var root = $"{DIRECTORY}Nodes/Actions";
 	directory_verify(root);
 	
-	var _acts = directory_get_files_ext(root, ".json");
+	var _acts = directory_get_files_ext(root, [".json"]);
 	
 	for( var i = 0, n = array_length(_acts); i < n; i++ ) {
 		var _f = _acts[i];

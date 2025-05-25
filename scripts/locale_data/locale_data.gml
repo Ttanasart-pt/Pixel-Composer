@@ -42,7 +42,7 @@ function loadLocaleNotes() {
 	var _noteD = $"{DIRECTORY}Locale/{PREFERENCES.local}/notes"
 	if(!directory_exists(_noteD)) _noteD = $"{DIRECTORY}Locale/en/notes";
 	
-	var _notes = directory_get_files_ext(_noteD, ".md");
+	var _notes = directory_get_files_ext(_noteD, [".md"]);
 	for( var i = 0, n = array_length(_notes); i < n; i++ ) {
 		var _n = _notes[i];
 		var _p = $"{_noteD}/{_n}";

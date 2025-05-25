@@ -5,8 +5,7 @@ function folderArrayBox(_arr, _onApply) : widget() constructor {
 	
 	editing = noone;
 	tb_edit = new textBox(TEXTBOX_INPUT.text, function(str) /*=>*/ { 
-		adding = false;
-		if(editing == noone) return false;
+		if(editing == noone) { adding = false; return false; }
 		
 		array[editing] = str;
 		if(str == "") {
@@ -14,6 +13,7 @@ function folderArrayBox(_arr, _onApply) : widget() constructor {
 			editing = noone;
 		}
 		
+		adding = false;
 		onApply();
 		return true; 
 	}).setSlide(false).setEmpty();

@@ -19,15 +19,18 @@
 			global.ASSETS.name = "Assets";
 			
 			ds_list_add(global.ASSETS.subDir, __initAssetsFolder(root));
-			for( var i = 0, n = array_length(PREFERENCES.path_assets); i < n; i++ ) 
-				ds_list_add(global.ASSETS.subDir, __initAssetsFolder(PREFERENCES.path_assets[i]));
+			for( var i = 0, n = array_length(PREFERENCES.path_assets); i < n; i++ ) {
+				var _path = PREFERENCES.path_assets[i];
+				if(_path == "" || !directory_exists(_path)) continue;
+				
+				ds_list_add(global.ASSETS.subDir, __initAssetsFolder(_path));
+			}
 		}
 		
 		__init_dynaDraw();
 	}
 	
 	function __initAssetsFolder(_dir) {
-	
 		var _folder = new DirectoryObject(_dir);
 		    _folder.scan([".png"]);
 		    _folder.open = true;

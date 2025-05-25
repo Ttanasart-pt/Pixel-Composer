@@ -1867,7 +1867,6 @@
     {"id":{"name":"folderArrayBox","path":"scripts/folderArrayBox/folderArrayBox.yy",},},
     {"id":{"name":"font_data","path":"scripts/font_data/font_data.yy",},},
     {"id":{"name":"font_loader","path":"scripts/font_loader/font_loader.yy",},},
-    {"id":{"name":"font_sprite_loader","path":"scripts/font_sprite_loader/font_sprite_loader.yy",},},
     {"id":{"name":"fontScrollBox","path":"scripts/fontScrollBox/fontScrollBox.yy",},},
     {"id":{"name":"FriebaseREST_Firestore_urlUpdateMask","path":"scripts/FriebaseREST_Firestore_urlUpdateMask/FriebaseREST_Firestore_urlUpdateMask.yy",},},
     {"id":{"name":"function_register","path":"scripts/function_register/function_register.yy",},},

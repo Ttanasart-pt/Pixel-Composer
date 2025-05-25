@@ -20,6 +20,7 @@ event_inherited();
 		var data = curr_data;
 		var _h   = array_length(data) * hght;
 		var _dw  = sc_content.surface_w;
+		var _dh  = sc_content.surface_h;
 		
 		sc_content.hover_content = true;
 		
@@ -39,20 +40,24 @@ event_inherited();
 				}
 			}
 					
+			if(_ly + hght < 0 || _ly > _dh) continue;
+					
 			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
 			draw_text_cut(ui(8), _ly + hght / 2, filename_name_only(data[i]), _dw);
 			
-			if(ds_map_exists(FONT_SPRITES, fullpath)) {
-				var spr = FONT_SPRITES[? fullpath];
-				var sw  = sprite_get_width(spr);
-				var sh  = sprite_get_height(spr);
-				var ss  = (hght - ui(8)) / sh;
-				
-				sw *= ss;
-				sh *= ss;
-				
-				draw_sprite_ext(spr, 0, _dw - ui(8) - sw, _ly + hght / 2 - sh / 2, ss, ss, 0, c_white, 1);
-			}
+			if(!ds_map_exists(FONT_SPRITES, fullpath)) loadFontSprite(fullpath);
+			
+			var spr = FONT_SPRITES[? fullpath];
+			if(!sprite_exists(spr)) continue;
+			
+			var sw  = sprite_get_width(spr);
+			var sh  = sprite_get_height(spr);
+			var ss  = (hght - ui(8)) / sh;
+			
+			sw *= ss;
+			sh *= ss;
+			
+			draw_sprite_ext(spr, 0, _dw - ui(8) - sw, _ly + hght / 2 - sh / 2, ss, ss, 0, c_white, 1);
 		}
 		
 		if(sFOCUS) {

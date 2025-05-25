@@ -665,7 +665,6 @@
     {"name":"FirebaseREST_HTTP_Success_Firestore","order":19,"path":"scripts/FirebaseREST_HTTP_Success_Firestore/FirebaseREST_HTTP_Success_Firestore.yy",},
     {"name":"folderArrayBox","order":18,"path":"scripts/folderArrayBox/folderArrayBox.yy",},
     {"name":"font_data","order":10,"path":"scripts/font_data/font_data.yy",},
-    {"name":"font_sprite_loader","order":1,"path":"scripts/font_sprite_loader/font_sprite_loader.yy",},
     {"name":"fontScrollBox","order":14,"path":"scripts/fontScrollBox/fontScrollBox.yy",},
     {"name":"FriebaseREST_Firestore_urlUpdateMask","order":20,"path":"scripts/FriebaseREST_Firestore_urlUpdateMask/FriebaseREST_Firestore_urlUpdateMask.yy",},
     {"name":"function_register","order":2,"path":"scripts/function_register/function_register.yy",},
