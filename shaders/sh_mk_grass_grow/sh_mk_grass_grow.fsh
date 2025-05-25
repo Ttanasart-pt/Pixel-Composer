@@ -157,10 +157,9 @@ float maxx = floor(max(grassSize.x, grassSize.y));
 bool checkGrass(in vec2 coord, in float lengthAdj) {
 	for(float i = maxx; i >= 0.; i--) {
 		float spd = grassSpread * i / (maxx - 1.);
-		float ang = -TAU/4. + (random(coord, seed) * spd * 2. - spd);
 		
-		vec2  samPos      = coord       - vec2(cos(ang) * tx.x, sin(ang) * tx.y) * i;
-		vec2  curPos      = v_vTexcoord - vec2(cos(ang) * tx.x, sin(ang) * tx.y) * i;
+		vec2  samPos      = coord       + vec2(0., tx.y) * i;
+		vec2  curPos      = v_vTexcoord + vec2(0., tx.y) * i;
 		vec4  grassData   = texture2D(grassMask, samPos);
 		if(grassData.a == 0.) continue;
 		

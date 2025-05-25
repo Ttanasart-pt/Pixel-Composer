@@ -22,7 +22,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput(10, nodeValueSeed());
 	
-	////- Surfaces
+	////- =Surfaces
 	
 	newInput( 0, nodeValue_Surface(     "Surface In"));
 	newInput( 1, nodeValue_Dimension());
@@ -35,7 +35,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(26, nodeValue_Range(       "Animated Array", [ 0, 0 ], { linked : true }));
 	newInput(27, nodeValue_Enum_Scroll( "Animated Array End",  0, [ "Loop", "Ping Pong", "Hide" ]));
 	
-	////- Scatter
+	////- =Scatter
 	
 	onSurfaceSize = function() /*=>*/ {return getInputData(1, DEF_SURF)}; 
 	
@@ -52,7 +52,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(35, nodeValue_Rotation_Range( "Angle Range", [ 0, 360 ]));
 	newInput(44, nodeValue_Float(          "Distance", 8)).setValidator(VV_min(0));
 	
-	////- Path
+	////- =Path
 	
 	newInput(19, nodeValue_PathNode(    "Path"));
 	newInput(38, nodeValue_Enum_Button( "Spacing", 0, [ "After", "Between", "Around" ]));
@@ -60,7 +60,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(21, nodeValue_Slider(      "Path Shift", 0));
 	newInput(22, nodeValue_Float(       "Scatter Distance", 0));
 	
-	////- Position
+	////- =Position
 	
 	newInput(40, nodeValue_Anchor());
 	newInput(33, nodeValue_Vec2_Range( "Random Position", [ 0, 0, 0, 0 ]));
@@ -68,20 +68,20 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(37, nodeValue_Bool(       "Exact",  false))
 	newInput(39, nodeValue_Range(      "Shift Radial", [ 0, 0 ]));
 	
-	////- Rotation
+	////- =Rotation
 	
 	newInput( 7, nodeValue_Bool(            "Point at Center", false, "Rotate each copy to face the spawn center."));
 	newInput( 4, nodeValue_Rotation_Random( "Angle", [ 0, 0, 0, 0, 0 ] ));
 	newInput(32, nodeValue_Rotation(        "Rotate per Radius", 0));
 	
-	////- Scale
+	////- =Scale
 	
 	newInput( 3, nodeValue_Vec2_Range( "Scale", [ 1, 1, 1, 1 ] , { linked : true }));
 	newInput( 8, nodeValue_Bool(       "Uniform Scaling", true));
 	newInput(34, nodeValue_Vec2(       "Scale per Radius", [ 0, 0 ]));
 	newInput(43, nodeValue_Surface(    "Scale Surface"));
 	
-	////- Color
+	////- =Color
 	
 	newInput(11, nodeValue_Gradient(     "Random Blend", new gradientObject(ca_white))).setMappable(28);
 	newInput(28, nodeValueMap(           "Gradient Map",       self));
@@ -91,7 +91,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(41, nodeValue_Surface(      "Sample Surface"));
 	newInput(42, nodeValue_Vec2_Range(   "Sample Wiggle", [ 0, 0, 0, 0 ]));
 	
-	////- Render
+	////- =Render
 	
 	newInput(18, nodeValue_Enum_Scroll( "Blend Mode",  0, [ "Normal", "Add", "Max" ]));
 	newInput(23, nodeValue_Bool(        "Sort Y", false));
@@ -134,6 +134,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	surfSamp = new Surface_sampler();
 	scalSamp = new Surface_sampler();
 	
+	////- Nodes
+	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		PROCESSOR_OVERLAY_CHECK
 		
@@ -161,7 +163,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		}
 	}
 	
-	////=========== PROCESS ===========
+	////- PROCESS
 	
 	static processData = function(_outData, _data, _array_index) {
 		#region data

@@ -35,8 +35,6 @@ function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			out.x = _p.x;
 			out.y = _p.y;
 			out.weight = _p.weight;
-			
-			// print($"Getting cache {_cKey} : {_dist} > {out}");
 			return out;
 		}
 		
