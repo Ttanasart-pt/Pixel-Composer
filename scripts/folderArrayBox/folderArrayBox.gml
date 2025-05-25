@@ -53,17 +53,22 @@ function folderArrayBox(_arr, _onApply) : widget() constructor {
 			editing = noone;
 		}
 		
+		var _tw  = _w - ui(28);
+		var _del = noone;
+		
 		for( var i = 0, n = array_length(_arr); i < n; i++ ) {
 			_ty = y + i * (_h + ui(4));
-			draw_sprite_stretched_ext(THEME.textbox, 3, _tx, _ty, _w, _h, boxColor);
+			draw_sprite_stretched_ext(THEME.textbox, 3, _tx, _ty, _tw, _h, boxColor);
 			
-			if(hover && point_in_rectangle(_m[0], _m[1], _tx, _ty, _tx + _w, _ty + _h)) 
-				hovering = true;
-				
-			if(editing == i) continue;
+			hovering = hovering || (hover && point_in_rectangle(_m[0], _m[1], _tx, _ty, _tx + _w, _ty + _h));
+			if(editing == i) {
+				tb_edit.setFocusHover(active, hover);
+				tb_edit.draw(_tx, _ty, _tw, _h, array[editing], _m);
+				continue;
+			}
 			
-			if(hover && point_in_rectangle(_m[0], _m[1], _tx, _ty, _tx + _w, _ty + _h)) {
-				draw_sprite_stretched_ext(THEME.textbox, 1, _tx, _ty, _w, _h, boxColor);
+			if(hover && point_in_rectangle(_m[0], _m[1], _tx, _ty, _tx + _tw, _ty + _h)) {
+				draw_sprite_stretched_ext(THEME.textbox, 1, _tx, _ty, _tw, _h, boxColor);
 				
 				if(editing != i && mouse_press(mb_left, active)) {
 					editing = i;
@@ -73,29 +78,29 @@ function folderArrayBox(_arr, _onApply) : widget() constructor {
 				}
 				
 				if(mouse_click(mb_left, active))
-					draw_sprite_stretched(THEME.textbox, 2, _tx, _ty, _w, _h);
+					draw_sprite_stretched(THEME.textbox, 2, _tx, _ty, _tw, _h);
 				
 			} else 
-				draw_sprite_stretched_ext(THEME.textbox, 0, _tx, _ty, _w, _h, boxColor);
+				draw_sprite_stretched_ext(THEME.textbox, 0, _tx, _ty, _tw, _h, boxColor);
 				
 			draw_set_text(font, fa_left, fa_center, COLORS._main_text);
-			draw_text_cut(_tx + ui(8), round(_ty + _h / 2), array[i], _w - ui(16));
-		}
-		
-		if(editing != noone) {
-			_ty = y + editing * (_h + ui(4));
-			tb_edit.setFocusHover(active, hover);
-			tb_edit.draw(_tx, _ty, _w, _h, array[editing], _m);
+			draw_text_cut(_tx + ui(8), round(_ty + _h / 2), array[i], _tw - ui(16));
+			
+			var _bs = ui(24);
+			var _bx = _x + _w - _bs;
+			var _by = _ty + _h / 2 - _bs / 2;
+			var _b  = buttonInstant(noone, _bx, _by, _bs, _bs, _m, hover, active, "", THEME.minus_16, 0, [COLORS._main_icon, COLORS._main_value_negative]);
+			if(_b == 2) _del = i;
 		}
 		
 		if(!adding) { // Add value
 			_ty = y + array_length(_arr) * (_h + ui(4));
-			var _hv = hover && point_in_rectangle(_m[0], _m[1], _tx, _ty, _tx + _w, _ty + _h);
-			draw_sprite_stretched_ext(THEME.textbox, 3, _tx, _ty, _w, _h, boxColor, .5);
+			var _hv = hover && point_in_rectangle(_m[0], _m[1], _tx, _ty, _tx + _tw, _ty + _h);
+			draw_sprite_stretched_ext(THEME.textbox, 3, _tx, _ty, _tw, _h, boxColor, .5);
 			draw_set_text(font, fa_left, fa_center, _hv? COLORS._main_text : COLORS._main_text_sub);
 			draw_text(_tx + ui(8), round(_ty + _h / 2), "Add value...");
 			
-			if(mouse_click(mb_left, _hv && active)) {
+			if(mouse_press(mb_left, _hv && active)) {
 				editing = array_length(_arr);
 				adding  = true;
 				array_push(_arr, "");
@@ -104,6 +109,12 @@ function folderArrayBox(_arr, _onApply) : widget() constructor {
 				tb_edit.activate();
 			}
 		}
+		
+		if(_del != noone) {
+			editing = noone;
+			array_delete(_arr, _del, 1);
+			onApply();
+		} 
 		
 		hovering = _hovering;
 		
