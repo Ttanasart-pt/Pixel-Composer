@@ -2849,7 +2849,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static preApplyDeserialize  = function() /*=>*/ {}
 	static postApplyDeserialize = function() /*=>*/ {}
 	
-	static loadGroup = function(ctx = noone) { 
+	static onLoadGroup = function() /*=>*/ {}
+	static loadGroup   = function(ctx = noone) { 
 		if(load_group == noone) {
 			if(ctx) ctx.add(self);
 			else    array_push(project.nodes, self);
@@ -2872,8 +2873,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		onLoadGroup();
 	}
-	
-	static onLoadGroup = function() {}
 	
 	static connect = function(log = false, _nodeGroup = undefined) {
 		var connected = true;

@@ -37,19 +37,29 @@
 
 function registerFunction(_context, _name, _key, _mod, _action, _param = noone) { return new functionObject(_context, _name, _key, _mod, _action, _param); }
 function functionObject(_context, _name, _key, _mod, _action, _param = noone) constructor {
-	hotkey   = addHotkey(_context == ""? 0 : _context, _name, _key, _mod, _action, _param);
-	context  = _context;
-	name     = _name;
-	action   = method(undefined, _action);
-	params   = _param;
-	hide     = false;
+	hotkey  = addHotkey(_context == ""? 0 : _context, _name, _key, _mod, _action, _param);
+	context = _context;
+	name    = _name;
+	fn      = method(undefined, _action);
+	params  = _param;
+	hide    = false;
 	
-	fnName   = string_to_var2(_context, _name);
-	menu     = noone;
-	spr      = noone;
+	fnName  = string_to_var2(_context, _name);
+	menu    = noone;
+	spr     = noone;
 	
 	FUNCTIONS[$ fnName]     = self;
 	CMD_FUNCTIONS[$ fnName] = { action: _action, args: [] };
+	
+	function action() {
+		fn();
+		
+		if(key)
+		switch(context) {
+			case "Graph":   PANEL_GRAPH.setActionTooltip(name);   break;
+			case "Preview": PANEL_PREVIEW.setActionTooltip(name); break;
+		}
+	}
 	
 	static setSpr = function(_spr)       { spr = _spr; if(menu) menu.spr = _spr;              return self; }
 	static setArg = function(_args = []) { CMD_FUNCTIONS[$ fnName] = { action, args: _args }; return self; }

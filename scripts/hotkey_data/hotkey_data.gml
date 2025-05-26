@@ -29,6 +29,12 @@ function Hotkey(_context, _name, _key = "", _mod = MOD_KEY.none, _action = noone
 	static action = function() {
 		if(param == noone) rawAction();
 		else rawAction(param);
+		
+		if(key)
+		switch(context) {
+			case "Graph":   PANEL_GRAPH.setActionTooltip(name);   break;
+			case "Preview": PANEL_PREVIEW.setActionTooltip(name); break;
+		}
 	}
 	
 	static getName     = function() /*=>*/ {return key_get_name(key, modi)};

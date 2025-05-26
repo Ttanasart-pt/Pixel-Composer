@@ -251,6 +251,9 @@ function Panel_Preview() : PanelContent() constructor {
         tb_zoom_level.font   = f_p2;
         
 	    tb_framerate = new textBox(TEXTBOX_INPUT.number, function(val) { preview_rate = real(val); });
+	    
+	    tooltip_action      = "";
+        tooltip_action_time = 0;
     #endregion
     
     #region ---- tool ----
@@ -2534,121 +2537,27 @@ function Panel_Preview() : PanelContent() constructor {
         }
     }
     
-    function drawContent(panel) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> MAIN DRAW <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-    	mouse_on_preview = pHOVER && point_in_rectangle(mx, my, 0, topbar_height, w, h - toolbar_height);
-        
-        if(do_fullView) run_in(1, fullView);
-        do_fullView = false;
-        
-        var _prev_node = getNodePreview();
-        d3_active = _prev_node == noone? NODE_3D.none : _prev_node.is_3D;
-        bg_color  = lerp_color(bg_color, d3_active? COLORS.panel_3d_bg : COLORS.panel_bg_clear, 0.3);
-        
-        draw_clear(canvas_bg == -1? bg_color : canvas_bg);
-        if(canvas_bg == -1 && canvas_s >= 0.1) 
-        	draw_sprite_tiled_ext(s_transparent, 0, canvas_x, canvas_y, canvas_s, canvas_s, COLORS.panel_preview_transparent, 1);
-        
-        draw_set_color(COLORS._main_icon_dark);
-        draw_line_width(canvas_x, 0, canvas_x, h, 1);
-        draw_line_width(0, canvas_y, w, canvas_y, 1);
-        
-        title = __txt("Preview");
-        getPreviewData();
-        
-        if(_prev_node) {
-            if(d3_active) {
-                dragCanvas3D();
-                draw3D();
-            } else {
-                dragCanvas();
-                drawNodePreview();
-            }
-            
-        } else {
-        	dragCanvas();
-        	
-        	draw_set_color_alpha(COLORS.panel_preview_surface_outline, .75);
-            draw_rectangle(canvas_x, canvas_y, canvas_x + DEF_SURF_W * canvas_s - 1, canvas_y + DEF_SURF_H * canvas_s - 1, true);
-            draw_set_alpha(1);
-        }
-        
-        drawPreviewOverlay();
-        
-        var inspect_node = PANEL_INSPECTOR.getInspecting();
-        var toolNode = noone;
-        
-        drawViewController();
-        
-        tool_side_draw_l = false;
-        tool_side_draw_r = false;
-        
-        canvas_mx = (mx - canvas_x) / canvas_s;
-        canvas_my = (my - canvas_y) / canvas_s;
-        
-        if(PANEL_PREVIEW == self) { //only draw overlay once
-            if(inspect_node) {
-                toolNode = inspect_node.getTool();
-                if(toolNode) drawNodeActions(pFOCUS, toolNode);
-                
-            } else {
-            	if(tool_current != noone) {
-	                var _tobj = tool_current.getToolObject();
-	        		if(struct_has(_tobj, "disable")) _tobj.disable();
-	                tool_current = noone;
-            	}
-	        	
-                drawAllNodeGizmo(pFOCUS);
-            }
-        }
-        
-        if(d3_active == NODE_3D.none) drawSplitView();
-        
-        drawToolBar(toolNode);
-        drawMinimap();
-        
-        ////////////////////////////////// Actions //////////////////////////////////
-        
-        if(mouse_on_preview && mouse_press(mb_right, pFOCUS) && !key_mod_press(SHIFT)) {
-            menuCall("preview_context_menu", [ 
-                MENU_ITEMS.preview_new_preview_window, 
-                -1,
-                MENU_ITEMS.preview_save_current_frame, 
-                MENU_ITEMS.preview_save_all_current_frames, 
-                MENU_ITEMS.preview_save_to_project, 
-                -1,
-                MENU_ITEMS.preview_copy_current_frame, 
-                MENU_ITEMS.preview_copy_color, 
-                MENU_ITEMS.preview_copy_color_hex, 
-                -1,
-                MENU_ITEMS.preview_group_preview_bg,
-            ], 0, 0, fa_left, getNodePreview());
-        }
-        
-        if(pFOCUS && keyboard_check_pressed(vk_escape))
-        	clearTool(true);
-        
-        ////////////////////////////////// File drop //////////////////////////////////
-        
-        if(pHOVER) {
-            var _node = getNodePreview();
-            
-            if(_node && _node.dropPath != noone) {
-                
-                if(DRAGGING && DRAGGING.type == "Asset") {
-                    draw_sprite_stretched_ext(THEME.ui_panel_selection, 0, 8, 8, w - 16, h - 16, COLORS._main_value_positive, 1);
-                    
-                    if(mouse_release(mb_left))
-                        _node.dropPath(DRAGGING.data.path);
-                }
-                
-                if(FILE_IS_DROPPING) 
-                    draw_sprite_stretched_ext(THEME.ui_panel_selection, 0, 8, 8, w - 16, h - 16, COLORS._main_value_positive, 1);
-                    
-                if(FILE_DROPPED && !array_empty(FILE_DROPPING)) 
-                    _node.dropPath(FILE_DROPPING[0]);
-            }
-        }
-        
+    function setActionTooltip(txt, time = 1) { tooltip_action = txt; tooltip_action_time = time; return self; }
+    function drawActionTooltip() {
+    	if(tooltip_action_time <= 0) return;
+    	
+    	tooltip_action_time -= DELTA_TIME;
+    	var aa = clamp(tooltip_action_time * 2, 0, 1);
+    	
+    	draw_set_text(f_p3, fa_right, fa_bottom, COLORS._main_text_sub);
+    	var txt = tooltip_action;
+    	var tw  = string_width(txt)  + ui(6 * 2);
+    	var th  = string_height(txt) + ui(3 * 2);
+    	
+    	var tx1 = w - ui(6 + 2);
+    	var ty1 = h - toolbar_height - ui(3);
+    	var tx0 = tx1 - tw;
+		var ty0 = ty1 - th;
+		
+		draw_sprite_stretched_ext(THEME.textbox, 3, tx0, ty0, tw, th, c_white, aa);
+		draw_set_alpha(aa);
+		draw_text(tx1 - ui(6), ty1 - ui(3), txt);
+		draw_set_alpha(1);
     }
     
     function drawMinimap() { //
@@ -2769,6 +2678,126 @@ function Panel_Preview() : PanelContent() constructor {
         } else 
             draw_sprite_ui(THEME.node_resize, 0, mx0 + ui(4), my0 + ui(4), 0.5, 0.5, 180, c_white, 0.3);
     } 
+    
+    ////- DRAW MAIN
+    
+    function drawContent(panel) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> MAIN DRAW <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    	mouse_on_preview = pHOVER && point_in_rectangle(mx, my, 0, topbar_height, w, h - toolbar_height);
+        
+        if(do_fullView) run_in(1, fullView);
+        do_fullView = false;
+        
+        var _prev_node = getNodePreview();
+        d3_active = _prev_node == noone? NODE_3D.none : _prev_node.is_3D;
+        bg_color  = lerp_color(bg_color, d3_active? COLORS.panel_3d_bg : COLORS.panel_bg_clear, 0.3);
+        
+        draw_clear(canvas_bg == -1? bg_color : canvas_bg);
+        if(canvas_bg == -1 && canvas_s >= 0.1) 
+        	draw_sprite_tiled_ext(s_transparent, 0, canvas_x, canvas_y, canvas_s, canvas_s, COLORS.panel_preview_transparent, 1);
+        
+        draw_set_color(COLORS._main_icon_dark);
+        draw_line_width(canvas_x, 0, canvas_x, h, 1);
+        draw_line_width(0, canvas_y, w, canvas_y, 1);
+        
+        title = __txt("Preview");
+        getPreviewData();
+        
+        if(_prev_node) {
+            if(d3_active) {
+                dragCanvas3D();
+                draw3D();
+            } else {
+                dragCanvas();
+                drawNodePreview();
+            }
+            
+        } else {
+        	dragCanvas();
+        	
+        	draw_set_color_alpha(COLORS.panel_preview_surface_outline, .75);
+            draw_rectangle(canvas_x, canvas_y, canvas_x + DEF_SURF_W * canvas_s - 1, canvas_y + DEF_SURF_H * canvas_s - 1, true);
+            draw_set_alpha(1);
+        }
+        
+        drawPreviewOverlay();
+        
+        var inspect_node = PANEL_INSPECTOR.getInspecting();
+        var toolNode = noone;
+        
+        drawViewController();
+        
+        tool_side_draw_l = false;
+        tool_side_draw_r = false;
+        
+        canvas_mx = (mx - canvas_x) / canvas_s;
+        canvas_my = (my - canvas_y) / canvas_s;
+        
+        if(PANEL_PREVIEW == self) { //only draw overlay once
+            if(inspect_node) {
+                toolNode = inspect_node.getTool();
+                if(toolNode) drawNodeActions(pFOCUS, toolNode);
+                
+            } else {
+            	if(tool_current != noone) {
+	                var _tobj = tool_current.getToolObject();
+	        		if(struct_has(_tobj, "disable")) _tobj.disable();
+	                tool_current = noone;
+            	}
+	        	
+                drawAllNodeGizmo(pFOCUS);
+            }
+        }
+        
+        if(d3_active == NODE_3D.none) drawSplitView();
+        
+        drawToolBar(toolNode);
+        drawMinimap();
+        drawActionTooltip();
+        
+        ////////////////////////////////// Actions //////////////////////////////////
+        
+        if(mouse_on_preview && mouse_press(mb_right, pFOCUS) && !key_mod_press(SHIFT)) {
+            menuCall("preview_context_menu", [ 
+                MENU_ITEMS.preview_new_preview_window, 
+                -1,
+                MENU_ITEMS.preview_save_current_frame, 
+                MENU_ITEMS.preview_save_all_current_frames, 
+                MENU_ITEMS.preview_save_to_project, 
+                -1,
+                MENU_ITEMS.preview_copy_current_frame, 
+                MENU_ITEMS.preview_copy_color, 
+                MENU_ITEMS.preview_copy_color_hex, 
+                -1,
+                MENU_ITEMS.preview_group_preview_bg,
+            ], 0, 0, fa_left, getNodePreview());
+        }
+        
+        if(pFOCUS && keyboard_check_pressed(vk_escape))
+        	clearTool(true);
+        
+        ////////////////////////////////// File drop //////////////////////////////////
+        
+        if(pHOVER) {
+            var _node = getNodePreview();
+            
+            if(_node && _node.dropPath != noone) {
+                
+                if(DRAGGING && DRAGGING.type == "Asset") {
+                    draw_sprite_stretched_ext(THEME.ui_panel_selection, 0, 8, 8, w - 16, h - 16, COLORS._main_value_positive, 1);
+                    
+                    if(mouse_release(mb_left))
+                        _node.dropPath(DRAGGING.data.path);
+                }
+                
+                if(FILE_IS_DROPPING) 
+                    draw_sprite_stretched_ext(THEME.ui_panel_selection, 0, 8, 8, w - 16, h - 16, COLORS._main_value_positive, 1);
+                    
+                if(FILE_DROPPED && !array_empty(FILE_DROPPING)) 
+                    _node.dropPath(FILE_DROPPING[0]);
+            }
+        }
+        
+    }
     
     ////- ACTION
     

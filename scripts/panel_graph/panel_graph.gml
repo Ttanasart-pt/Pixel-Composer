@@ -340,6 +340,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             
         }).setColor(c_white).setAlign(fa_right).setHide(3).setFont(f_p2);
         
+        tooltip_action      = "";
+        tooltip_action_time = 0;
     #endregion
     
     #region // ---- position ----
@@ -2925,6 +2927,29 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         tooltip_overlay = {};
     }
     
+    function setActionTooltip(txt, time = 1) { tooltip_action = txt; tooltip_action_time = time; return self; }
+    function drawActionTooltip() {
+    	if(tooltip_action_time <= 0) return;
+    	
+    	tooltip_action_time -= DELTA_TIME;
+    	var aa = clamp(tooltip_action_time * 2, 0, 1);
+    	
+    	draw_set_text(f_p3, fa_right, fa_bottom, COLORS._main_text_sub);
+    	var txt = tooltip_action;
+    	var tw  = string_width(txt)  + ui(6 * 2);
+    	var th  = string_height(txt) + ui(3 * 2);
+    	
+    	var tx1 = w - ui(6 + 2);
+    	var ty1 = h - toolbar_height - ui(3);
+    	var tx0 = tx1 - tw;
+		var ty0 = ty1 - th;
+		
+		draw_sprite_stretched_ext(THEME.textbox, 3, tx0, ty0, tw, th, c_white, aa);
+		draw_set_alpha(aa);
+		draw_text(tx1 - ui(6), ty1 - ui(3), txt);
+		draw_set_alpha(1);
+    }
+    
     ////- Main Draw
     
     function drawContent(panel) { 
@@ -3005,6 +3030,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         }
         
         drawSlideShow();
+        drawActionTooltip();
         
         ///////////////////////////////////// File drop /////////////////////////////////////
         
