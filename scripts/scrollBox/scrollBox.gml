@@ -10,9 +10,10 @@ function scrollItem(_name, _spr = noone, _spr_ind = 0, _spr_blend = COLORS._main
 	active  = true;
 	tooltip = "";
 	
-	static setSpriteScale = function() /*=>*/ { spr_scale  = false; return self; }
-	static setActive      = function(_ac) /*=>*/ { active  = _ac;   return self; }
-	static setTooltip     = function(_tt) /*=>*/ { tooltip = _tt;   return self; }
+	static setSpriteScale = function( ) /*=>*/ { spr_scale = false; return self; }
+	static setBlend       = function(c) /*=>*/ { spr_blend = c;     return self; }
+	static setActive      = function(a) /*=>*/ { active    = a;     return self; }
+	static setTooltip     = function(t) /*=>*/ { tooltip   = t;     return self; }
 }
 
 function scrollBox(_data, _onModify, _update_hover = true) : widget() constructor {
@@ -58,7 +59,15 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 		open    = true;
 		
 		FOCUS_BEFORE = FOCUS;
-		with(dialogCall(horizontal? o_dialog_scrollbox_horizontal : o_dialog_scrollbox, x + open_rx, y + open_ry)) {
+		var _object;
+		
+		switch(horizontal) {
+			case 0 : _object = o_dialog_scrollbox;            break;
+			case 1 : _object = o_dialog_scrollbox_horizontal; break;
+			case 2 : _object = o_dialog_scrollbox_grid;       break;
+		}
+		
+		with(dialogCall(_object, x + open_rx, y + open_ry)) {
 			initVal      = ind;
 			font         = other.font;
 			align        = other.align;
@@ -184,8 +193,8 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 		}
 		
 		if(_spr) {
-			var _ss = 28 / sprite_get_height(_selVal.spr);
-			draw_sprite_uniform(_selVal.spr, _selVal.spr_ind, _x + ui(16) * _sps, _yc, _sps, _selVal.spr_blend);
+			var _ss = (_h - ui(4)) / sprite_get_height(_selVal.spr);
+			draw_sprite_uniform(_selVal.spr, _selVal.spr_ind, _x + ui(8) + _h / 2, _yc, _ss, _selVal.spr_blend);
 		}
 		
 		if(type == 0) draw_sprite_ui_uniform(arrow_spr, arrow_ind, _x1 + _arw / 2, _yc, _ars, COLORS._main_icon, 0.5 + 0.5 * interactable);

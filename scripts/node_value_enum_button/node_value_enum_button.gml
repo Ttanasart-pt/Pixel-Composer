@@ -26,4 +26,9 @@ function __NodeValue_Enum_Button(_name, _node, _value, _data) : NodeValue(_name,
 	static arrayLength = arrayLengthSimple;
 }
 
-function __enum_array_gen(arr, spr) { __spr = spr; return array_map(arr, function(v,i) /*=>*/ {return new scrollItem(v, __spr, i)}); }
+function __enum_array_gen(arr, spr, col = COLORS._main_icon) { 
+	__spr = spr;
+	__c   = col;
+	
+	return array_map(arr, function(v,i) /*=>*/ {return new scrollItem(v, __spr, i).setBlend(__c)}); 
+}

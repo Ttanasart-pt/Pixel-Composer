@@ -16,7 +16,8 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	////- =Shape
 	
-	newInput( 7, nodeValue_Enum_Scroll( "Shape",   0, [ "Dense Bush", "V", "Hash" ]));
+	shape_types = __enum_array_gen([ "Dense Bush", "V", "Hash" ], s_node_mk_grass_type, c_white);
+	newInput( 7, nodeValue_Enum_Scroll( "Shape",   0, { data: shape_types, horizontal: 2, text_pad: ui(16) } ));
 	newInput( 8, nodeValue_Range(       "Size",   [4,4], { linked: true }));
 	newInput(17, nodeValue_Slider(      "Spread", .0));
 	newInput(20, nodeValue_Float(       "Extra",  .0));
