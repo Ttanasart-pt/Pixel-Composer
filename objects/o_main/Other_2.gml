@@ -73,32 +73,32 @@
 	var _lua = PROGRAM_ARGUMENTS._lua;
 	
 				  __initKeys()
-				  __initPatreon();              printDebug($"> init Patreon       | complete in {get_timer() - t}");    t = get_timer();
-	if(!IS_CMD) { __initTheme();                printDebug($"> init Theme         | complete in {get_timer() - t}");    t = get_timer(); }
-	if(!IS_CMD) { loadFonts();                  printDebug($"> init Font          | complete in {get_timer() - t}");    t = get_timer(); }
-	if(!IS_CMD) { __initProject();              printDebug($"> init Project       | complete in {get_timer() - t}");    t = get_timer(); }
+				  __initPatreon();        printDebug($"> init Patreon       | complete in {get_timer() - t}");    t = get_timer();
+	if(!IS_CMD) { __initTheme();          printDebug($"> init Theme         | complete in {get_timer() - t}");    t = get_timer(); }
+	if(!IS_CMD) { loadFonts();            printDebug($"> init Font          | complete in {get_timer() - t}");    t = get_timer(); }
+	if(!IS_CMD) { __initProject();        printDebug($"> init Project       | complete in {get_timer() - t}");    t = get_timer(); }
 	              __fnInit();
 	
-	if(!IS_CMD) { __initAction();               printDebug($"> init Action        | complete in {get_timer() - t}");    t = get_timer(); }
-				  __initSurfaceFormat();        printDebug($"> init SurfaceFormat | complete in {get_timer() - t}");    t = get_timer();
-	if(!IS_CMD) { __initCollection();           printDebug($"> init Collection    | complete in {get_timer() - t}");    t = get_timer(); }
-	if(!IS_CMD) { __initAssets();               printDebug($"> init Assets        | complete in {get_timer() - t}");    t = get_timer(); }
-	if(!IS_CMD) { __initPresets();              printDebug($"> init Presets       | complete in {get_timer() - t}");    t = get_timer(); }
-	if(!IS_CMD) { __initFontFolder();           printDebug($"> init FontFolder    | complete in {get_timer() - t}");    t = get_timer(); }
-	if(_lua)    { __initLua();                  printDebug($"> init Lua           | complete in {get_timer() - t}");    t = get_timer(); }
-	if(!IS_CMD) { __initNodeData();             printDebug($"> init NodeData      | complete in {get_timer() - t}");    t = get_timer(); }
-				  __initNodes();                printDebug($"> init Nodes         | complete in {get_timer() - t}");    t = get_timer();
-	if(!IS_CMD) { __initSteamUGC();             printDebug($"> init SteamUGC      | complete in {get_timer() - t}");    t = get_timer(); }
-	if(!IS_CMD) { __initAddon();                printDebug($"> init Addon         | complete in {get_timer() - t}");    t = get_timer(); }
-	if(!IS_CMD) { __initPalette();              printDebug($"> init Palette       | complete in {get_timer() - t}");    t = get_timer(); }
-	if(!IS_CMD) { __initGradient();             printDebug($"> init Gradient      | complete in {get_timer() - t}");    t = get_timer(); }
-	if(!IS_CMD) { __initPen();					printDebug($"> init Pen           | complete in {get_timer() - t}");    t = get_timer(); }
+	if(!IS_CMD) { __initAction();         printDebug($"> init Action        | complete in {get_timer() - t}");    t = get_timer(); }
+				  __initSurfaceFormat();  printDebug($"> init SurfaceFormat | complete in {get_timer() - t}");    t = get_timer();
+	if(!IS_CMD) { __initCollection();     printDebug($"> init Collection    | complete in {get_timer() - t}");    t = get_timer(); }
+	if(!IS_CMD) { __initAssets();         printDebug($"> init Assets        | complete in {get_timer() - t}");    t = get_timer(); }
+	if(!IS_CMD) { __initPresets();        printDebug($"> init Presets       | complete in {get_timer() - t}");    t = get_timer(); }
+	if(!IS_CMD) { __initFontFolder();     printDebug($"> init FontFolder    | complete in {get_timer() - t}");    t = get_timer(); }
+	if(_lua)    { __initLua();            printDebug($"> init Lua           | complete in {get_timer() - t}");    t = get_timer(); }
+	if(!IS_CMD) { __initNodeData();       printDebug($"> init NodeData      | complete in {get_timer() - t}");    t = get_timer(); }
+				  __initNodes();          printDebug($"> init Nodes         | complete in {get_timer() - t}");    t = get_timer();
+	if(!IS_CMD) { __initSteamUGC();       printDebug($"> init SteamUGC      | complete in {get_timer() - t}");    t = get_timer(); }
+	if(!IS_CMD) { __initAddon();          printDebug($"> init Addon         | complete in {get_timer() - t}");    t = get_timer(); }
+	if(!IS_CMD) { __initPalette();        printDebug($"> init Palette       | complete in {get_timer() - t}");    t = get_timer(); }
+	if(!IS_CMD) { __initGradient();       printDebug($"> init Gradient      | complete in {get_timer() - t}");    t = get_timer(); }
+	if(!IS_CMD) { __initPen();            printDebug($"> init Pen           | complete in {get_timer() - t}");    t = get_timer(); }
 	
-	if(!IS_CMD) { loadAddon();                  printDebug($"> init Addons        | complete in {get_timer() - t}");    t = get_timer(); }
+	if(!IS_CMD) { loadAddon();            printDebug($"> init Addons        | complete in {get_timer() - t}");    t = get_timer(); }
 	
-	if(!IS_CMD) { LOAD_SAMPLE();                printDebug($"> init sample        | complete in {get_timer() - t}");    t = get_timer(); }
-	if(!IS_CMD) { INIT_FOLDERS();               printDebug($"> init folders       | complete in {get_timer() - t}");    t = get_timer(); }
-	if(!IS_CMD) { RECENT_LOAD();                printDebug($"> init recents       | complete in {get_timer() - t}");    t = get_timer(); }
+	if(!IS_CMD) { LOAD_SAMPLE();          printDebug($"> init sample        | complete in {get_timer() - t}");    t = get_timer(); }
+	if(!IS_CMD) { INIT_FOLDERS();         printDebug($"> init folders       | complete in {get_timer() - t}");    t = get_timer(); }
+	if(!IS_CMD) { RECENT_LOAD();          printDebug($"> init recents       | complete in {get_timer() - t}");    t = get_timer(); }
 	
 	printDebug($">> Initialization complete in {get_timer() - t0}");
 	

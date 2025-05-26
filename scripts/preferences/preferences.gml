@@ -445,7 +445,7 @@
 #region get set
 	function getPreference(_k, _pref = PREFERENCES) {
 		var _sep = string_splice(_k, ".");
-		var _pnt = PREFERENCES;
+		var _pnt = _pref;
 		
 		for( var i = 0, n = array_length(_sep); i < n; i++ ) {
 			var _s = _sep[i];

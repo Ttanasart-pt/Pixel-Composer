@@ -634,7 +634,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		
 		var hoverRect = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h);
 	
-		if(sliding > 0) { #region slide
+		if(sliding > 0) { 
 			slide_delta += PEN_USE? PEN_X_DELTA : window_mouse_get_delta_x();
 			slide_delta += PEN_USE? PEN_Y_DELTA : window_mouse_get_delta_y();
 			
@@ -663,7 +663,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					slider_object.text = self;
 				}
 			}
-	
+			
 			var _mdx = slidePen? PEN_X_DELTA : window_mouse_get_delta_x();
 			var _mdy = slidePen? PEN_Y_DELTA : window_mouse_get_delta_y();
 			
@@ -701,16 +701,11 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					
 				} else {
 					MOUSE_BLOCK = true;
-					var _s = slide_speed;
-					// print($"{_s} : {slide_range} | {_w} / {_s * _w} - {slider_cur_del}");
+					var _sc = power(10, slider_mulp + PREFERENCES.slider_lock_mouse && slide_int);
+					var _s  = slide_speed * _sc;
+					
 					if(!PREFERENCES.slider_lock_mouse)
-						_s = slide_range != noone? (slide_range[1] - slide_range[0]) / _w * 2 : 1 / 100;
-					
-					var _sc = power(10, slider_mulp + slide_int);
-					    _s *= _sc;
-					
-					if(key_mod_press(CTRL) && !slide_snap) _s *= 10;
-					if(key_mod_press(ALT))                 _s /= 10;
+						_s = slide_range != noone? (slide_range[1] - slide_range[0]) / _w * _sc : slide_speed / _w * _sc;
 					
 					if(abs(_mdx) > abs(_mdy)) {
 						slider_dx      += _mdx / w;

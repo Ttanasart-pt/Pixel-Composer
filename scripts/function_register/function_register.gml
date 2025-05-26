@@ -54,7 +54,6 @@ function functionObject(_context, _name, _key, _mod, _action, _param = noone) co
 	function action() {
 		fn();
 		
-		if(key)
 		switch(context) {
 			case "Graph":   PANEL_GRAPH.setActionTooltip(name);   break;
 			case "Preview": PANEL_PREVIEW.setActionTooltip(name); break;
