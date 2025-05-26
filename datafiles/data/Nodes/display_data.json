@@ -457,6 +457,7 @@
             { "label": "/Lights" },
             "Node_2D_light",
             "Node_Shadow_Cast",
+            "Node_2D_Extrude",
             { "label": "/Animations" },
             "Node_Interlaced",
             "Node_Trail",

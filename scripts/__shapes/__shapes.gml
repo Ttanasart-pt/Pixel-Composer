@@ -6,10 +6,11 @@ enum SHAPE_TYPE {
 	rectangle
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	////- Rectangular
 
-function SHAPE_rectangle(_sca, data = {}) {
-	var w = _sca[0], h = _sca[1];
+function SHAPE_rectangle(data) {
+	var w = data.scale[0];
+	var h = data.scale[1];
 	
 	var triangles = [ [ new __vec2(-w, -h), new __vec2(-w,  h), new __vec2( w, -h), c_white ],
 					  [ new __vec2( w, -h), new __vec2(-w,  h), new __vec2( w,  h), c_white ], ];
@@ -18,8 +19,9 @@ function SHAPE_rectangle(_sca, data = {}) {
 	return [ [ { type: SHAPE_TYPE.rectangle, triangles: triangles } ], segment ];
 }
 
-function SHAPE_diamond(_sca, data = {}) {
-	var w = _sca[0], h = _sca[1];
+function SHAPE_diamond(data) {
+	var w = data.scale[0];
+	var h = data.scale[1];
 	
 	var triangles = [ [ new __vec2( 0,  0), new __vec2( w,  0), new __vec2( 0, -h), c_white ],
 	                  [ new __vec2( 0,  0), new __vec2( 0, -h), new __vec2(-w,  0), c_white ],
@@ -30,8 +32,9 @@ function SHAPE_diamond(_sca, data = {}) {
 	return [ [ { type: SHAPE_TYPE.rectangle, triangles: triangles } ], segment ];
 }
 
-function SHAPE_trapezoid(_sca, data = {}) {
-	var w = _sca[0], h = _sca[1];
+function SHAPE_trapezoid(data) {
+	var w = data.scale[0];
+	var h = data.scale[1];
 	var v = w * data.trep;
 	
 	var triangles = [ [ new __vec2(-v, -h), new __vec2(-w,  h), new __vec2( v, -h), c_white ],
@@ -41,8 +44,9 @@ function SHAPE_trapezoid(_sca, data = {}) {
 	return [ [ { type: SHAPE_TYPE.rectangle, triangles: triangles } ], segment ];
 }
 
-function SHAPE_parallelogram(_sca, data = {}) {
-	var w = _sca[0], h = _sca[1];
+function SHAPE_parallelogram(data) {
+	var w = data.scale[0];
+	var h = data.scale[1];
 	var a = data.palAng;
 	
 	var x0 = -w, x1 = w;
@@ -63,9 +67,12 @@ function SHAPE_parallelogram(_sca, data = {}) {
 	return [ [ { type: SHAPE_TYPE.rectangle, triangles: triangles } ], segment ];
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	////- Round
 
-function SHAPE_circle(_sca, data = {}) {
+function SHAPE_circle(data) {
+	var w = data.scale[0];
+	var h = data.scale[1];
+	
 	var prec	  = max(3, data.side);
 	var ang		  = 360 / prec;
 	var triangles = array_create(prec);
@@ -77,13 +84,13 @@ function SHAPE_circle(_sca, data = {}) {
 		var d5 = (i + .5) * ang;
 		var d1 = (i + 1.) * ang;
 		
-		var dx = lengthdir_x(explode * _sca[0], d5);
-		var dy = lengthdir_y(explode * _sca[1], d5);
+		var dx = lengthdir_x(explode * w, d5);
+		var dy = lengthdir_y(explode * h, d5);
 		
-		var x0 = lengthdir_x(_sca[0], d0) + dx;
-		var y0 = lengthdir_y(_sca[1], d0) + dy;
-		var x1 = lengthdir_x(_sca[0], d1) + dx;
-		var y1 = lengthdir_y(_sca[1], d1) + dy;
+		var x0 = lengthdir_x(w, d0) + dx;
+		var y0 = lengthdir_y(h, d0) + dy;
+		var x1 = lengthdir_x(w, d1) + dx;
+		var y1 = lengthdir_y(h, d1) + dy;
 		
 		triangles[i] = [ new __vec2(dx, dy), new __vec2(x0, y0), new __vec2(x1, y1), c_white ];
 		
@@ -94,8 +101,10 @@ function SHAPE_circle(_sca, data = {}) {
 	return [ [{ type: SHAPE_TYPE.triangles, triangles: triangles }], segment ];
 }
 
-function SHAPE_ring(_sca, data = {}) {
-	var w  = _sca[0], h = _sca[1];
+function SHAPE_ring(data) {
+	var w = data.scale[0];
+	var h = data.scale[1];
+	
 	var s  = max(3, data.side);
 	var ow = w;
 	var oh = h;
@@ -130,7 +139,10 @@ function SHAPE_ring(_sca, data = {}) {
 	return [ [{ type: SHAPE_TYPE.rectangle, triangles: triangles }], segment ];
 }
 
-function SHAPE_arc(_sca, data = {}) {
+function SHAPE_arc(data) {
+	var w = data.scale[0];
+	var h = data.scale[1];
+	
 	var prec   = max(3, data.side);
 	var inner  = data.inner;
 	var radRan = data.radRan;
@@ -144,18 +156,18 @@ function SHAPE_arc(_sca, data = {}) {
 	for( var i = 0; i <= prec; i++ ) {
 		na = lerp(radRan[0], radRan[1], i / prec);
 		
-		var ix1 = lengthdir_x(0.5 * inner, na) * _sca[0] * 2;
-		var iy1 = lengthdir_y(0.5 * inner, na) * _sca[1] * 2;
+		var ix1 = lengthdir_x(0.5 * inner, na) * w * 2;
+		var iy1 = lengthdir_y(0.5 * inner, na) * h * 2;
 		
-		var nx1 = lengthdir_x(0.5, na) * _sca[0] * 2;
-		var ny1 = lengthdir_y(0.5, na) * _sca[1] * 2;
+		var nx1 = lengthdir_x(0.5, na) * w * 2;
+		var ny1 = lengthdir_y(0.5, na) * h * 2;
 			
 		if(i) {
-			var ix0 = lengthdir_x(0.5 * inner, oa) * _sca[0] * 2;
-			var iy0 = lengthdir_y(0.5 * inner, oa) * _sca[1] * 2;
+			var ix0 = lengthdir_x(0.5 * inner, oa) * w * 2;
+			var iy0 = lengthdir_y(0.5 * inner, oa) * h * 2;
 		
-			var nx0 = lengthdir_x(0.5, oa) * _sca[0] * 2;
-			var ny0 = lengthdir_y(0.5, oa) * _sca[1] * 2;
+			var nx0 = lengthdir_x(0.5, oa) * w * 2;
+			var ny0 = lengthdir_y(0.5, oa) * h * 2;
 		
 			array_push(triangles, [ new __vec2(ix0, iy0), new __vec2(nx0, ny0), new __vec2(nx1, ny1), c_white ]);
 			array_push(triangles, [ new __vec2(ix0, iy0), new __vec2(nx1, ny1), new __vec2(ix1, iy1), c_white ]);
@@ -168,16 +180,16 @@ function SHAPE_arc(_sca, data = {}) {
 	}
 	
 	if(cap) { 
-		var cx = lengthdir_x(0.5 * (inner + 1) / 2, radRan[0]) * _sca[0] * 2;
-		var cy = lengthdir_y(0.5 * (inner + 1) / 2, radRan[0]) * _sca[1] * 2;
+		var cx = lengthdir_x(0.5 * (inner + 1) / 2, radRan[0]) * w * 2;
+		var cy = lengthdir_y(0.5 * (inner + 1) / 2, radRan[0]) * h * 2;
 		var ox, oy, nx, ny, oa, na;
 		var sgCapI = [], sgCapO = [];
 		prec = max(ceil(prec / 2), 2);
 		
 		for( var i = 0; i <= prec; i++ ) {
 			na = radRan[0] - 180 * i / prec;
-			nx = cx + lengthdir_x((1 - inner) / 2, na) * _sca[0];
-			ny = cy + lengthdir_y((1 - inner) / 2, na) * _sca[1];
+			nx = cx + lengthdir_x((1 - inner) / 2, na) * w;
+			ny = cy + lengthdir_y((1 - inner) / 2, na) * h;
 		
 			if(i) array_push(triangles, [ new __vec2(cx, cy), new __vec2(ox, oy), new __vec2(nx, ny), c_white ]);
 			
@@ -188,14 +200,14 @@ function SHAPE_arc(_sca, data = {}) {
 			oy = ny;
 		}
 		
-		var cx = lengthdir_x(0.5 * (inner + 1) / 2, radRan[1]) * _sca[0] * 2;
-		var cy = lengthdir_y(0.5 * (inner + 1) / 2, radRan[1]) * _sca[1] * 2;
+		var cx = lengthdir_x(0.5 * (inner + 1) / 2, radRan[1]) * w * 2;
+		var cy = lengthdir_y(0.5 * (inner + 1) / 2, radRan[1]) * h * 2;
 		var ox, oy, nx, ny, oa, na;
 		
 		for( var i = 0; i <= prec; i++ ) {
 			na = radRan[1] + 180 * i / prec;
-			nx = cx + lengthdir_x((1 - inner) / 2, na) * _sca[0];
-			ny = cy + lengthdir_y((1 - inner) / 2, na) * _sca[1];
+			nx = cx + lengthdir_x((1 - inner) / 2, na) * w;
+			ny = cy + lengthdir_y((1 - inner) / 2, na) * h;
 			
 			if(i) array_push(triangles, [ new __vec2(cx, cy), new __vec2(ox, oy), new __vec2(nx, ny), c_white ]);
 			
@@ -220,8 +232,10 @@ function SHAPE_arc(_sca, data = {}) {
 	return [ [{ type: SHAPE_TYPE.rectangle, triangles: triangles }], segment ];
 }
 
-function SHAPE_crescent(_sca, data = {}) {
-	var w  = _sca[0], h = _sca[1];
+function SHAPE_crescent(data) {
+	var w = data.scale[0];
+	var h = data.scale[1];
+	
 	var s  = max(3, data.side);
 	var ow = w;
 	var oh = h;
@@ -258,8 +272,10 @@ function SHAPE_crescent(_sca, data = {}) {
 	return [ [{ type: SHAPE_TYPE.triangles, triangles: triangles }], segment ];
 }
 
-function SHAPE_pie(_sca, data = {}) {
-	var w = _sca[0], h = _sca[1];
+function SHAPE_pie(data) {
+	var w = data.scale[0];
+	var h = data.scale[1];
+	
 	var p = max(3, data.side);
 	var a = 1 / p;
 	var r = data.radRan;
@@ -285,8 +301,10 @@ function SHAPE_pie(_sca, data = {}) {
 	return [ [{ type: SHAPE_TYPE.triangles, triangles: triangles }], segment ];
 }
 
-function SHAPE_squircle(_sca, data = {}) {
-	var w = _sca[0], h = _sca[1];
+function SHAPE_squircle(data) {
+	var w = data.scale[0];
+	var h = data.scale[1];
+	
 	var s = max(3, data.side);
 	var a = 360 / s;
 	var f = max(.001, data.factor);
@@ -315,10 +333,12 @@ function SHAPE_squircle(_sca, data = {}) {
 	return [ [{ type: SHAPE_TYPE.triangles, triangles: triangles }], segment ];
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	////- Polygon
 
-function SHAPE_reg_poly(_sca, data = {}) {
-	var w = _sca[0], h = _sca[1];
+function SHAPE_reg_poly(data) {
+	var w = data.scale[0];
+	var h = data.scale[1];
+	
 	var p = max(3, data.side);
 	var a = 360 / p;
 	
@@ -343,24 +363,27 @@ function SHAPE_reg_poly(_sca, data = {}) {
 	return [ [{ type: SHAPE_TYPE.triangles, triangles: triangles }], segment ];
 }
 
-function SHAPE_star(_sca, data = {}) {
+function SHAPE_star(data) {
+	var w = data.scale[0];
+	var h = data.scale[1];
+	
 	var prec  = max(3, data.side);
 	var inner = data.inner;
 	var triangles = [];
 	var segment   = [];
 	
 	for( var i = 0; i < prec; i++ ) {
-		var otx = lengthdir_x(0.5, i / prec * 360) * _sca[0] * 2;
-		var oty = lengthdir_y(0.5, i / prec * 360) * _sca[1] * 2;
+		var otx = lengthdir_x(0.5, i / prec * 360) * w * 2;
+		var oty = lengthdir_y(0.5, i / prec * 360) * h * 2;
 		
-		var inx = lengthdir_x(inner / 2, (i + 0.5) / prec * 360) * _sca[0] * 2;
-		var iny = lengthdir_y(inner / 2, (i + 0.5) / prec * 360) * _sca[1] * 2;
+		var inx = lengthdir_x(inner / 2, (i + 0.5) / prec * 360) * w * 2;
+		var iny = lengthdir_y(inner / 2, (i + 0.5) / prec * 360) * h * 2;
 		array_push(triangles, [ new __vec2(0, 0), new __vec2(otx, oty), new __vec2(inx, iny), c_white ]);
 		
 		var pi0 = new __vec2(inx, iny);
 		
-		var inx = lengthdir_x(inner / 2, (i - 0.5) / prec * 360) * _sca[0] * 2;
-		var iny = lengthdir_y(inner / 2, (i - 0.5) / prec * 360) * _sca[1] * 2;
+		var inx = lengthdir_x(inner / 2, (i - 0.5) / prec * 360) * w * 2;
+		var iny = lengthdir_y(inner / 2, (i - 0.5) / prec * 360) * h * 2;
 		array_push(triangles, [ new __vec2(0, 0), new __vec2(inx, iny), new __vec2(otx, oty), c_white ]);
 		
 		array_push(segment, new __vec2(inx, iny));
@@ -371,11 +394,14 @@ function SHAPE_star(_sca, data = {}) {
 	return [ [{ type: SHAPE_TYPE.triangles, triangles: triangles }], segment ];
 }
 
-function SHAPE_cross(_sca, data = {}) {
+function SHAPE_cross(data) {
+	var w = data.scale[0];
+	var h = data.scale[1];
+	
 	var inner     = data.inner;
 	var triangles = [];
 	var segment   = [];
-	var side      = min(_sca[0], _sca[1]) * inner;
+	var side      = min(w, h) * inner;
 	
 	array_push(triangles,
 		[ new __vec2(-side, -side), new __vec2(-side, side), new __vec2( side, -side), c_white ],
@@ -383,61 +409,70 @@ function SHAPE_cross(_sca, data = {}) {
 	);
 	
 	array_push(triangles, //top
-		[ new __vec2(-side, -side), new __vec2( side,    -side), new __vec2(-side, -_sca[1]), c_white ],
-		[ new __vec2( side, -side), new __vec2( side, -_sca[1]), new __vec2(-side, -_sca[1]), c_white ],
+		[ new __vec2(-side, -side), new __vec2( side,    -side), new __vec2(-side, -h), c_white ],
+		[ new __vec2( side, -side), new __vec2( side, -h), new __vec2(-side, -h), c_white ],
 	);
 	
 	array_push(triangles, //bottom
-		[ new __vec2(-side, _sca[1]), new __vec2( side, _sca[1]), new __vec2(-side, side), c_white ],
-		[ new __vec2( side, _sca[1]), new __vec2( side, side), new __vec2(-side,    side), c_white ],
+		[ new __vec2(-side, h), new __vec2( side, h), new __vec2(-side, side), c_white ],
+		[ new __vec2( side, h), new __vec2( side, side), new __vec2(-side,    side), c_white ],
 	);
 	
 	array_push(triangles, //left
-		[ new __vec2(   -side, -side), new __vec2(-_sca[0], -side), new __vec2(-side,    side), c_white ],
-		[ new __vec2(-_sca[0], -side), new __vec2(-_sca[0], side), new __vec2(-side,     side), c_white ],
+		[ new __vec2(   -side, -side), new __vec2(-w, -side), new __vec2(-side,    side), c_white ],
+		[ new __vec2(-w, -side), new __vec2(-w, side), new __vec2(-side,     side), c_white ],
 	);
 	
 	array_push(triangles, //right
-		[ new __vec2(_sca[0], -side), new __vec2( side,   -side), new __vec2(_sca[0], side), c_white ],
-		[ new __vec2(   side, -side), new __vec2(   side, side), new __vec2(_sca[0],  side), c_white ],
+		[ new __vec2(w, -side), new __vec2( side,   -side), new __vec2(w, side), c_white ],
+		[ new __vec2(   side, -side), new __vec2(   side, side), new __vec2(w,  side), c_white ],
 	);
 	
-	array_push(segment, new __vec2(-side,    -side),   new __vec2(-side,    -_sca[1]), new __vec2( side, -_sca[1]), new __vec2(side, -side) );
-	array_push(segment, new __vec2( _sca[0], -side),   new __vec2( _sca[0],  side),    new __vec2( side,  side));
-	array_push(segment, new __vec2( side,    _sca[1]), new __vec2(-side,     _sca[1]), new __vec2(-side,  side));
-	array_push(segment, new __vec2(-_sca[0],  side),   new __vec2(-_sca[0], -side),    new __vec2(-side, -side));
+	array_push(segment, new __vec2(-side,    -side),   new __vec2(-side,    -h), new __vec2( side, -h), new __vec2(side, -side) );
+	array_push(segment, new __vec2( w, -side),   new __vec2( w,  side),    new __vec2( side,  side));
+	array_push(segment, new __vec2( side,    h), new __vec2(-side,     h), new __vec2(-side,  side));
+	array_push(segment, new __vec2(-w,  side),   new __vec2(-w, -side),    new __vec2(-side, -side));
 	
 	return [ [{ type: SHAPE_TYPE.rectangle, triangles: triangles }], segment ];
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	////- Line
 
-function SHAPE_capsule(_sca, data = {}) {
+function SHAPE_line(data) {
+	var w = data.scale[0];
+	var h = data.scale[1];
+	
+	
+}
+
+function SHAPE_capsule(data) {
+	var w = data.scale[0];
+	var h = data.scale[1];
+	
 	var rad		= data.radius;
 	var prec    = max(2, data.side);
-	var hh		= _sca[1] * rad;
+	var hh		= h * rad;
 	var shapes  = [];
 	var segment = [];
-	array_push(segment, new __vec2(-_sca[0] + _sca[1], _sca[1]), new __vec2( _sca[0] - hh, hh));
+	array_push(segment, new __vec2(-w + h, h), new __vec2( w - hh, hh));
 	
-	var triangles = [
-		[ new __vec2(-_sca[0] + _sca[1], -_sca[1]), new __vec2(-_sca[0] + _sca[1], _sca[1]), new __vec2(_sca[0] - hh, -hh), c_white ],
-		[ new __vec2(_sca[0] - hh, -hh), new __vec2(-_sca[0] + _sca[1], _sca[1]), new __vec2(_sca[0] - hh, hh),             c_white ],
-	];
+	var triangles = [[ new __vec2(-w + h, -h), new __vec2(-w + h, h), new __vec2(w - hh, -hh), c_white ],
+		             [ new __vec2( w - hh, -hh),           new __vec2(-w + h, h), new __vec2(w - hh,  hh), c_white ]];
 	shapes[0] = { type: SHAPE_TYPE.rectangle, triangles: triangles };
 	
 	var triangles = [];
-	var cx = -_sca[0] + _sca[1];
+	var cx = -w + h;
 	var cy = 0;
 	var ox, oy, nx, ny, oa, na;
+	
 	for( var i = 0; i <= prec; i++ ) {
 		na = lerp(270, 90, i / prec);
-		nx = cx + lengthdir_x(_sca[1], na);
-		ny = cy + lengthdir_y(_sca[1], na);
+		nx = cx + lengthdir_x(h, na);
+		ny = cy + lengthdir_y(h, na);
 		
 		if(i) {
 			array_push(triangles, [ new __vec2(cx, cy), new __vec2(nx, ny), new __vec2(ox, oy), c_white ]);
-			array_push(segment, new __vec2(ox, oy));
+			array_push(segment,     new __vec2(ox, oy));
 		}
 		array_push(segment, new __vec2(nx, ny));
 		
@@ -446,14 +481,15 @@ function SHAPE_capsule(_sca, data = {}) {
 		oy = ny;
 	}
 	
-	array_push(segment, new __vec2(-_sca[0] + _sca[1], -_sca[1]), new __vec2( _sca[0] - hh, -hh));
+	array_push(segment, new __vec2(-w + h, -h), new __vec2( w - hh, -hh));
 	shapes[1] = { type: SHAPE_TYPE.triangles, triangles: triangles };
 	
 	var triangles = [];
-	var cx = _sca[0] - hh;
-	var cy = 0;
+	var cx   = w - hh;
+	var cy   = 0;
 	var _seg = [];
 	var ox, oy, nx, ny, oa, na;
+	
 	for( var i = 0; i <= prec; i++ ) {
 		na = lerp(-90, 90, i / prec);
 		nx = cx + lengthdir_x(hh, na);
@@ -461,7 +497,7 @@ function SHAPE_capsule(_sca, data = {}) {
 		
 		if(i) {
 			array_push(triangles, [ new __vec2(cx, cy), new __vec2(ox, oy), new __vec2(nx, ny), c_white ]);
-			array_push(_seg, new __vec2(ox, oy));
+			array_push(_seg,        new __vec2(ox, oy));
 		}
 		array_push(_seg, new __vec2(nx, ny));
 		
@@ -478,10 +514,12 @@ function SHAPE_capsule(_sca, data = {}) {
 	return [ shapes, segment ];
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	////- Shapes
 
-function SHAPE_leaf(_sca, data = {}) {
-	var w = _sca[0], h = _sca[1];
+function SHAPE_leaf(data) {
+	var w = data.scale[0];
+	var h = data.scale[1];
+	
 	var p = max(3, data.side);
 	var a = 180 / (p - 1);
 	
@@ -516,7 +554,10 @@ function SHAPE_leaf(_sca, data = {}) {
 	return [ [{ type: SHAPE_TYPE.rectangle, triangles: triangles }], segment ];
 }
 
-function SHAPE_gear(_sca, data = {}) {
+function SHAPE_gear(data) {
+	var w = data.scale[0];
+	var h = data.scale[1];
+	
 	var teeth  = max(3, data.teeth);
 	var teethH = data.teethH;
 	var teethT = data.teethT;
@@ -528,17 +569,17 @@ function SHAPE_gear(_sca, data = {}) {
 	var segment   = [];
 	
 	for( var i = 0; i < prec; i++ ) {
-		var ix0 = lengthdir_x(body * inner, i / prec * 360) * _sca[0] * 2;
-		var iy0 = lengthdir_y(body * inner, i / prec * 360) * _sca[1] * 2;
+		var ix0 = lengthdir_x(body * inner, i / prec * 360) * w * 2;
+		var iy0 = lengthdir_y(body * inner, i / prec * 360) * h * 2;
 		
-		var nx0 = lengthdir_x(body, i / prec * 360) * _sca[0] * 2;
-		var ny0 = lengthdir_y(body, i / prec * 360) * _sca[1] * 2;
+		var nx0 = lengthdir_x(body, i / prec * 360) * w * 2;
+		var ny0 = lengthdir_y(body, i / prec * 360) * h * 2;
 		
-		var ix1 = lengthdir_x(body * inner, (i + 1) / prec * 360) * _sca[0] * 2;
-		var iy1 = lengthdir_y(body * inner, (i + 1) / prec * 360) * _sca[1] * 2;
+		var ix1 = lengthdir_x(body * inner, (i + 1) / prec * 360) * w * 2;
+		var iy1 = lengthdir_y(body * inner, (i + 1) / prec * 360) * h * 2;
 		
-		var nx1 = lengthdir_x(body, (i + 1) / prec * 360) * _sca[0] * 2;
-		var ny1 = lengthdir_y(body, (i + 1) / prec * 360) * _sca[1] * 2;
+		var nx1 = lengthdir_x(body, (i + 1) / prec * 360) * w * 2;
+		var ny1 = lengthdir_y(body, (i + 1) / prec * 360) * h * 2;
 		
 		array_push(triangles, [ new __vec2(ix0, iy0), new __vec2(nx0, ny0), new __vec2(nx1, ny1), c_white ]);
 		array_push(triangles, [ new __vec2(ix0, iy0), new __vec2(nx1, ny1), new __vec2(ix1, iy1), c_white ]);
@@ -547,11 +588,11 @@ function SHAPE_gear(_sca, data = {}) {
 			array_push(segment, new __vec2(nx0, ny0));
 		
 		if(i % 2) {
-			var tx0 = nx0 + lengthdir_x(teth, (i + 0.5 - teethT) / prec * 360) * _sca[0] * 2;
-			var ty0 = ny0 + lengthdir_y(teth, (i + 0.5 - teethT) / prec * 360) * _sca[1] * 2;
+			var tx0 = nx0 + lengthdir_x(teth, (i + 0.5 - teethT) / prec * 360) * w * 2;
+			var ty0 = ny0 + lengthdir_y(teth, (i + 0.5 - teethT) / prec * 360) * h * 2;
 		
-			var tx1 = nx1 + lengthdir_x(teth, (i + 0.5 + teethT) / prec * 360) * _sca[0] * 2;
-			var ty1 = ny1 + lengthdir_y(teth, (i + 0.5 + teethT) / prec * 360) * _sca[1] * 2;
+			var tx1 = nx1 + lengthdir_x(teth, (i + 0.5 + teethT) / prec * 360) * w * 2;
+			var ty1 = ny1 + lengthdir_y(teth, (i + 0.5 + teethT) / prec * 360) * h * 2;
 			
 			array_push(triangles, [ new __vec2(tx0, ty0), new __vec2(nx1, ny1), new __vec2(nx0, ny0), c_white ]);
 			array_push(triangles, [ new __vec2(tx0, ty0), new __vec2(tx1, ty1), new __vec2(nx1, ny1), c_white ]);

@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_2d_extrude",
+  "name":"sh_2d_extrude",
+  "parent":{
+    "name":"2d_extrude",
+    "path":"folders/nodes/data/filter/effects/2d_extrude.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

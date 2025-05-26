@@ -85,7 +85,7 @@ function draw_sprite_colored(spr, ind, _x, _y, scale = 1, rot = 0, color = COLOR
 	if(num % 2 == 0) draw_sprite_ui(spr, num / 2 + ind, _x, _y, scale, scale, rot, color);
 }
 	
-function draw_anchor(_index, _x, _y, _r, _type = 0) {
+function draw_anchor(_index, _x, _y, _r = ui(10), _type = 0) {
 	shader_set(sh_node_widget_scalar);
 		shader_set_color("color", COLORS._main_accent);
 		shader_set_f("index",     _index);

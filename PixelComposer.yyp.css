@@ -105,9 +105,10 @@
     background-blend-mode: normal !important;
 }
 
-.treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-kind="script"] + div.item[data-kind="shader"], 
-.treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-ident^="node_3d"] + div.item[data-ident^="d3d"], 
-.treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-kind="script"] + div.dir {
+/* Put put shader or folder that comes after node in the same line as the node itself */
+.treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-kind="script"] + div.item[data-kind="shader"][draggable="true"], 
+.treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-ident^="node_3d"] + div.item[data-ident^="d3d"][draggable="true"], 
+.treeview .dir[data-rel-path="folders/nodes/data/"] div.item[data-kind="script"] + div.dir:not(.is-empty) {
     padding-top: 0px;
     margin-left: 208px;
     margin-top: -20px;

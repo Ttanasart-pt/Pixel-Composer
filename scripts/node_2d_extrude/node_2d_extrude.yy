@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_2d_extrude",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_2d_extrude",
+  "parent":{
+    "name":"effects",
+    "path":"folders/nodes/data/filter/effects.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

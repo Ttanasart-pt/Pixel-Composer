@@ -1,22 +1,34 @@
 function Node_PB_FX_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Extrude";
 	
-	newInput(0, nodeValue_Surface("Surface"));
+	////- =PBBOX
 	
-	newInput(1, nodeValue_Rotation(  "Angle", 0));
-	newInput(2, nodeValue_Int(  "Distance", 1));
+	newInput(10, nodeValue_Bool(        "Use PBBOX", true));
+	newInput( 8, nodeValue_Pbbox(       "Shape PBBOX" ));
+	newInput( 9, nodeValue_Pbbox(       "Target PBBOX" ));
+	newInput(11, nodeValue_Enum_Scroll( "PBBOX Mode", 0, [ "4 Directions", "Extends" ]));
 	
-	newInput(3, nodeValue_Color(  "Color", ca_white));
+	////- =Surface
+	
+	newInput(0, nodeValue_Surface( "Surface" ));
+	
+	////- =Extrude
+	
+	newInput(1, nodeValue_Rotation( "Angle",    0));
+	newInput(2, nodeValue_Int(      "Distance", 1));
+	
+	////- =Render
+	
+	newInput(3, nodeValue_Color( "Color",       ca_white));
 	newInput(4, nodeValue_Bool(  "Clone Color", false));
 	
-	newInput(5, nodeValue_Bool(  "Highlight", false));
-	newInput(6, nodeValue_Color(  "Highlight Color", ca_white));
+	////- =Highlight
+	
+	newInput(5, nodeValue_Bool(      "Highlight",           false));
+	newInput(6, nodeValue_Color(     "Highlight Color",     ca_white));
 	newInput(7, nodeValue_Rotation(  "Highlight Direction", 0));
 	
-	newInput( 8, nodeValue_Pbbox("Shape PBBOX"));
-	newInput( 9, nodeValue_Pbbox("Target PBBOX"));
-	newInput(10, nodeValue_Bool("Use PBBOX", true));
-	newInput(11, nodeValue_Enum_Scroll("PBBOX Mode", 0, [ "4 Directions", "Extends" ]));
+	// input 12
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -27,6 +39,8 @@ function Node_PB_FX_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	    ["Render",     false    ], 3, 4, 
 	    ["Highlight",  false,  5], 7, 6, 
     ];
+    
+    ////- Nodes
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _pbbox = getSingleValue(8);

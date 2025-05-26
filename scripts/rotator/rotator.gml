@@ -81,7 +81,7 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 					onModify(drag_sv);
 					instance_destroy(dragging);
 					dragging     = noone;
-					UNDO_HOLDING = false;	
+					UNDO_HOLDING = false;
 				
 				} else if(mouse_release(mb_left)) {
 					instance_destroy(dragging);

@@ -141,10 +141,11 @@ function DirectoryObject(_path) constructor {
 	triggered = false;
 	scanned   = false;
 	
-	static destroy = function() { ds_list_destroy(subDir); }
-	static getName = function() { return name; }
+	static getName = function() /*=>*/ {return name};
 	
 	static scan = function(file_type) {
+		if(path == "") return;
+		
 		scanned = true;
 		
 		var _temp_name = [];
@@ -265,6 +266,8 @@ function DirectoryObject(_path) constructor {
 		
 		return hh;
 	}
+	
+	static destroy = function() /*=>*/ { ds_list_destroy(subDir); }
 }
 
 function readFolder(path, arr = []) {
