@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_ribbon",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_ribbon",
+  "parent":{
+    "name":"drawer",
+    "path":"folders/nodes/data/generator/drawer.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

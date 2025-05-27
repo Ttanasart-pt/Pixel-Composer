@@ -8,11 +8,11 @@ function Node_Path_Spiral(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	////- =Spiral
 	
-	newInput( 1, nodeValue_Float(    "Frequency",  4));
-	newInput( 2, nodeValue_Float(    "Amplitude",  4));
+	newInput( 1, nodeValue_Float( "Frequency",  4));
+	newInput( 2, nodeValue_Float( "Amplitude",  4));
 	newInput( 5, nodeValue_Curve( "Amplitude Over Length",  CURVE_DEF_11));
 	
-	newInput( 3, nodeValue_Slider(   "Spiral",    .75, [0,2,.01]));
+	newInput( 3, nodeValue_Slider(   "Spiral",    .75, [-2,2,.01]));
 	newInput( 4, nodeValue_Rotation( "Phase",      0));
 	
 	// input 6
@@ -23,6 +23,8 @@ function Node_Path_Spiral(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		["Path",    true], 0,
 		["Spiral", false], 1, 2, 5, 3, 4, 
 	];
+	
+	////- Nodes
 	
 	function _spiralPath() constructor {
 		freq      = 0; 
@@ -127,15 +129,18 @@ function Node_Path_Spiral(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			var px = p.x;
 			var py = p.y;
 			
-			px += lengthdir_x(sin(prg) * _amp, dir + 90);
-			py += lengthdir_y(sin(prg) * _amp, dir + 90);
+			var prg0 = sin(prg) * _amp;
+			var prg1 = cos(prg) * _amp * _spi;
 			
-			px += lengthdir_x(cos(prg) * _amp * _spi, dir);
-			py += lengthdir_y(cos(prg) * _amp * _spi, dir);
+			px += lengthdir_x(prg0, dir + 90);
+			py += lengthdir_y(prg0, dir + 90);
+			
+			px += lengthdir_x(prg1, dir);
+			py += lengthdir_y(prg1, dir);
 			
 			out.x = px;
 			out.y = py;
-			out.weight = p.weight;
+			out.weight = p.weight * (.5 + cos(prg) * .5);
 			
 			cached_pos[$ _cKey] = new __vec2P(out.x, out.y, out.weight);
 			

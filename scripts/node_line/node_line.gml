@@ -11,73 +11,73 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newInput(39, nodeValueSeed());
 	
-	////- Output
+	////- =Output
 	
 	newInput( 0, nodeValue_Dimension());
-	newInput( 1, nodeValue_Bool(    "Background", false));
-	newInput(30, nodeValue_Bool(    "Use Path Bounding Box", false ));
-	newInput(31, nodeValue_Padding( "Padding", [ 0, 0, 0, 0 ]))
-	newInput(16, nodeValue_Bool(    "Width Pass", false));
+	newInput( 1, nodeValue_Bool(    "Background",            false    ));
+	newInput(30, nodeValue_Bool(    "Use Path Bounding Box", false    ));
+	newInput(31, nodeValue_Padding( "Padding",              [0,0,0,0] ))
+	newInput(16, nodeValue_Bool(    "Width Pass",            false    ));
 	
-	////- Line data
+	////- =Line data
 	
 	newInput(27, nodeValue_Enum_Scroll( "Data Type", 1, [ "None", "Path", "Segments", "Two points" ]));
-	newInput( 6, nodeValue_Rotation(    "Rotation", 0));
-	newInput( 7, nodeValue_PathNode(    "Path")).setVisible(true, true);
-	newInput(28, nodeValue_Vector(      "Segment")).setArrayDepth(2);
-	newInput(32, nodeValue_Vec2(        "Start Point", [ 0, 0.5 ])).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput(33, nodeValue_Vec2(        "End Point", [ 1, 0.5 ])).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput(35, nodeValue_Bool(        "Force Loop", false));
-	newInput(19, nodeValue_Bool(        "Fix Length", false, "Fix length of each segment instead of segment count."));
-	newInput( 2, nodeValue_ISlider(     "Segment", 1, [1, 32, 0.1]));
-	newInput(20, nodeValue_Float(       "Segment Length", 4));
+	newInput( 6, nodeValue_Rotation(    "Rotation",  0 ));
+	newInput( 7, nodeValue_PathNode(    "Path"    )).setVisible(true, true);
+	newInput(28, nodeValue_Vector(      "Segment" )).setArrayDepth(2);
+	newInput(32, nodeValue_Vec2(        "Start Point",   [0,.5] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(33, nodeValue_Vec2(        "End Point",     [1,.5] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(35, nodeValue_Bool(        "Force Loop",     false ));
+	newInput(19, nodeValue_Bool(        "Fix Length",     false, "Fix length of each segment instead of segment count."));
+	newInput( 2, nodeValue_ISlider(     "Segment",        1, [1, 32, 0.1] ));
+	newInput(20, nodeValue_Float(       "Segment Length", 4 ));
 	
-	////- Width
+	////- =Width
 	
-	newInput(17, nodeValue_Bool(  "1px Mode", false, "Render pixel perfect 1px line."));
-	newInput( 3, nodeValue_Vec2(  "Width", [ 2, 2 ]));
-	newInput(11, nodeValue_Curve( "Width over Length", CURVE_DEF_11));
+	newInput(17, nodeValue_Bool(  "1px Mode",             false, "Render pixel perfect 1px line."));
+	newInput( 3, nodeValue_Vec2(  "Width",               [2,2] ));
+	newInput(11, nodeValue_Curve( "Width over Length",    CURVE_DEF_11 ));
 	newInput(12, nodeValue_Bool(  "Span Width over Path", false, "Apply the full 'width over length' to the trimmed path."));
-	newInput(36, nodeValue_Bool(  "Apply Weight", true));
+	newInput(36, nodeValue_Bool(  "Apply Weight",         true ));
 	
-	////- Line settings
+	////- =Line settings
 	
-	newInput( 8, nodeValue_Slider_Range( "Range", [0, 1])).setTooltip("Range of the path to draw.");
-	newInput(25, nodeValue_Bool(         "Invert", false ));
-	newInput( 9, nodeValue_Float(        "Shift", 0));
-	newInput(26, nodeValue_Bool(         "Clamp Range", false ));
-	newInput(13, nodeValue_Enum_Button(  "End Cap", 0, __enum_array_gen([ "None", "Round", "Tri" ], s_node_line_cap)));
-	newInput(14, nodeValue_ISlider(      "Round Segment", 8, [2, 32, 0.1]));
+	newInput( 8, nodeValue_Slider_Range( "Range",        [0,1]  )).setTooltip("Range of the path to draw.");
+	newInput(25, nodeValue_Bool(         "Invert",        false ));
+	newInput( 9, nodeValue_Float(        "Shift",         0     ));
+	newInput(26, nodeValue_Bool(         "Clamp Range",   false ));
+	newInput(13, nodeValue_Enum_Button(  "End Cap",       0, __enum_array_gen([ "None", "Round", "Tri" ], s_node_line_cap)));
+	newInput(14, nodeValue_ISlider(      "Round Segment", 8, [2, 32, 0.1] ));
 	
-	////- Wiggle
+	////- =Wiggle
 	
-	newInput(4, nodeValue_Slider( "Wiggle", 0, [0, 16, 0.01]));
-	newInput(5, nodeValue_Float(  "Random Seed", 0));
+	newInput(4, nodeValue_Slider( "Wiggle",      0, [0, 16, 0.01] ));
+	newInput(5, nodeValue_Float(  "Random Seed", 0 ));
 	
-	////- Color
+	////- =Color
 	
-	newInput(10, nodeValue_Gradient( "Color over Length", new gradientObject(ca_white)));
-	newInput(24, nodeValue_Gradient( "Random Blend", new gradientObject(ca_white)));
-	newInput(15, nodeValue_Bool(     "Span Color over Path", false, "Apply the full 'color over length' to the trimmed path."));
-	newInput(37, nodeValue_Gradient( "Color Weight", new gradientObject(ca_white)));
-	newInput(38, nodeValue_Vec2(     "Color Range", [ 0, 1 ]));
+	newInput(10, nodeValue_Gradient( "Color over Length",    new gradientObject(ca_white) ));
+	newInput(24, nodeValue_Gradient( "Random Blend",         new gradientObject(ca_white) ));
+	newInput(15, nodeValue_Bool(     "Span Color over Path", false )).setTooltip("Apply the full 'color over length' to the trimmed path.");
+	newInput(37, nodeValue_Gradient( "Color Weight",         new gradientObject(ca_white) ));
+	newInput(38, nodeValue_Vec2(     "Color Range",         [0,1] ));
 	
-	////- Texture
+	////- =Texture
 	
 	newInput(18, nodeValue_Surface(  "Texture"));
-	newInput(21, nodeValue_Vec2(     "Texture Position", [ 0, 0 ]));
-	newInput(22, nodeValue_Rotation( "Texture Rotation", 0));
-	newInput(23, nodeValue_Vec2(     "Texture Scale", [ 1, 1 ]));
+	newInput(21, nodeValue_Vec2(     "Texture Position",       [0,0] ));
+	newInput(22, nodeValue_Rotation( "Texture Rotation",        0    ));
+	newInput(23, nodeValue_Vec2(     "Texture Scale",          [1,1] ));
 	newInput(29, nodeValue_Bool(     "Scale Texture to Length", true ));
 	
-	////- Render
+	////- =Render
 
-	newInput(34, nodeValue_Enum_Scroll( "SSAA", 0, [ "None", "2x", "4x", "8x" ]));
-	newInput(40, nodeValue_Surface(     "Start Cap"));
-	newInput(41, nodeValue_Surface(     "End Cap"));
-	newInput(42, nodeValue_Bool(        "Rotate Cap", true  ));
+	newInput(34, nodeValue_Enum_Scroll( "SSAA", 0, [ "None", "2x", "4x", "8x" ] ));
+	newInput(40, nodeValue_Surface(     "Start Cap" ));
+	newInput(41, nodeValue_Surface(     "End Cap"   ));
+	newInput(42, nodeValue_Bool(        "Rotate Cap", true ));
 	
-	//// Inputs 43
+	// Inputs 43
 	
 	input_display_list = [ 39, 
 		["Output",         true], 0, 1, 30, 31, 16, 
@@ -93,6 +93,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone));
 	newOutput(1, nodeValue_Output( "Width Pass", VALUE_TYPE.surface, noone));
 	
+	////- Nodes
+	
 	lines        = [];
 	line_data    = [];
 	temp_surface = [ noone ];
@@ -102,8 +104,6 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	attribute_interpolation();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-
-		
 		draw_set_color(COLORS._main_accent);
 		for( var i = 0, n = array_length(lines); i < n; i++ ) {
 			var points = lines[i];

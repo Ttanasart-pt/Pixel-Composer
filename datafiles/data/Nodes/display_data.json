@@ -582,6 +582,7 @@
             "Node_Random_Shape",
             "Node_Plot_Linear",
             "Node_Path_Profile",
+            "Node_Ribbon",
             "Node_Cross_Section",
             "Node_Interpret_Number",
             "Node_Pixel_Builder",
