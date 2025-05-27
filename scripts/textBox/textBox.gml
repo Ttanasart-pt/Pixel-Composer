@@ -701,12 +701,10 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					
 				} else {
 					MOUSE_BLOCK = true;
-					var _sc = power(10, slider_mulp + PREFERENCES.slider_lock_mouse && slide_int);
+					var _sc = power(10, slider_mulp + (PREFERENCES.slider_lock_mouse && slide_int));
 					var _s  = slide_speed * _sc;
 					
-					if(!PREFERENCES.slider_lock_mouse) {
-						if(slide_range != noone) _s = (slide_range[1] - slide_range[0]) / _w * _sc;
-					}
+					if(!PREFERENCES.slider_lock_mouse && slide_range != noone) _s = (slide_range[1] - slide_range[0]) / _w * _sc;
 					
 					if(abs(_mdx) > abs(_mdy)) {
 						slider_dx      += _mdx / w;

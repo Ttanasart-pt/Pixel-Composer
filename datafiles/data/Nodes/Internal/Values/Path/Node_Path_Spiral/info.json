@@ -1,0 +1,6 @@
+{
+    "name":          "Spiral Path",
+    "spr":           "s_node_path_spiral",
+    "baseNode":      "Node_Path_Spiral",
+    "pxc_version":    119010,
+}
