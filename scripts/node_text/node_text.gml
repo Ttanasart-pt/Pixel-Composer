@@ -18,54 +18,54 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	////- =Output
 	
 	newInput( 9, nodeValue_Enum_Scroll(  "Output Dimension", 1, [ "Fixed", "Dynamic" ]));
-	newInput( 6, nodeValue_Vec2(         "Fixed Dimension", DEF_SURF )).setVisible(true, false);
-	newInput(10, nodeValue_Padding(      "Padding", [0, 0, 0, 0]));
+	newInput( 6, nodeValue_Vec2(         "Fixed Dimension",  DEF_SURF  )).setVisible(true, false);
+	newInput(10, nodeValue_Padding(      "Padding",          [0,0,0,0] ));
 	
 	////- =Alignment
 	
 	newInput(13, nodeValue_PathNode(     "Path")).setVisible(true, true);
-	newInput(14, nodeValue_Float(        "Path Shift", 0));
-	newInput( 7, nodeValue_Enum_Button(  "H Align", 0, array_create(3, THEME.inspector_text_halign)));
-	newInput( 8, nodeValue_Enum_Button(  "V Align", 0, array_create(3, THEME.inspector_text_valign)));
-	newInput(27, nodeValue_Int(          "Max Line Width", 0));
-	newInput(30, nodeValue_Bool(         "Rotate Along Path", true));
+	newInput(14, nodeValue_Float(        "Path Shift",        0 ));
+	newInput( 7, nodeValue_Enum_Button(  "H Align",           0, array_create(3, THEME.inspector_text_halign)));
+	newInput( 8, nodeValue_Enum_Button(  "V Align",           0, array_create(3, THEME.inspector_text_valign)));
+	newInput(27, nodeValue_Int(          "Max Line Width",    0 ));
+	newInput(30, nodeValue_Bool(         "Rotate Along Path", true ));
 	
 	////- =Font
 	
 	newInput( 1, nodeValue_Font()).setVisible(true, false);
-	newInput( 4, nodeValue_Vec2(         "Character Range", [ 32, 128 ]));
-	newInput( 2, nodeValue_Int(          "Size", 16));
-	newInput(15, nodeValue_Bool(         "Scale to Fit", false));
-	newInput( 3, nodeValue_Bool(         "Anti-aliasing ", false));
-	newInput(11, nodeValue_Float(        "Letter Spacing", 0));
-	newInput(12, nodeValue_Float(        "Line Height", 0));
+	newInput( 4, nodeValue_Vec2(         "Character Range", [32,128]));
+	newInput( 2, nodeValue_Int(          "Size",             16));
+	newInput(15, nodeValue_Bool(         "Scale to Fit",     false));
+	newInput( 3, nodeValue_Bool(         "Anti-aliasing ",   false));
+	newInput(11, nodeValue_Float(        "Letter Spacing",   0));
+	newInput(12, nodeValue_Float(        "Line Height",      0));
 	
 	////- =Rendering
 	
-	newInput(28, nodeValue_Bool(         "Round Position", true ));
-	newInput( 5, nodeValue_Color(        "Color", ca_white));
-	newInput(29, nodeValue_Enum_Button(  "Blend Mode", 1, [ "Normal", "Alpha" ]));
-	newInput(31, nodeValue_Palette(      "Color by Letter", [ ca_white ]));
+	newInput(28, nodeValue_Bool(         "Round Position",   true ));
+	newInput( 5, nodeValue_Color(        "Color",            ca_white));
+	newInput(29, nodeValue_Enum_Button(  "Blend Mode",       1, [ "Normal", "Alpha" ]));
+	newInput(31, nodeValue_Palette(      "Color by Letter", [ca_white]));
 	
 	////- =Background
 	
 	newInput(16, nodeValue_Bool(         "Render Background", false));
-	newInput(17, nodeValue_Color(        "BG Color", ca_black));
+	newInput(17, nodeValue_Color(        "BG Color",          ca_black));
 	
 	////- =Wave
 	
-	newInput(18, nodeValue_Bool(         "Wave", false));
-	newInput(22, nodeValue_Slider(       "Wave Shape", 0, [ 0, 3, 0.01 ]));
+	newInput(18, nodeValue_Bool(         "Wave",           false));
+	newInput(22, nodeValue_Slider(       "Wave Shape",     0, [ 0, 3, 0.01 ]));
 	newInput(19, nodeValue_Float(        "Wave Amplitude", 4));
-	newInput(20, nodeValue_Float(        "Wave Scale", 30));
-	newInput(21, nodeValue_Rotation(     "Wave Phase", 0));
+	newInput(20, nodeValue_Float(        "Wave Scale",     30));
+	newInput(21, nodeValue_Rotation(     "Wave Phase",     0));
 	
 	////- =Trim
 	
-	newInput(23, nodeValue_Bool(         "Typewriter", false));
-	newInput(25, nodeValue_Enum_Button(  "Trim Type", 0, [ "Character", "Word", "Line" ]));
-	newInput(24, nodeValue_Slider_Range( "Range", [ 0, 1 ]));
-	newInput(26, nodeValue_Bool(         "Use Full Text Size", true ));
+	newInput(23, nodeValue_Bool(         "Trim",               false));
+	newInput(25, nodeValue_Enum_Button(  "Trim Type",          0, [ "Character", "Word", "Line" ]));
+	newInput(24, nodeValue_Slider_Range( "Range",             [0,1]));
+	newInput(26, nodeValue_Bool(         "Use Full Text Size", false ));
 		
 	// inputs 32
 		
@@ -292,26 +292,9 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		return _hov;
 	}
 	
-	static step = function() {
-		var _font = getSingleValue(1);
-		var _dimt = getSingleValue(9);
-		var _path = getSingleValue(13);
-		
-		var _use_path = _path != noone && struct_has(_path, "getPointDistance");
-		
-		inputs[ 6].setVisible(_dimt == 0 || _use_path);
-		inputs[ 7].setVisible(_dimt == 0 || _use_path);
-		inputs[ 8].setVisible(_dimt == 0 || _use_path);
-		inputs[ 9].setVisible(!_use_path);
-		inputs[14].setVisible( _use_path);
-		inputs[15].setVisible(_dimt == 0 && !_use_path && _font != "");
-		
-	}
-	
 	static processData = function(_outSurf, _data, _array_index) {
 		#region data
-			var str    = _data[ 0];
-			var strRaw = str;
+			var str    = _data[ 0], rawStr = str;
 			
 			var _dimt  = _data[ 9];
 			var _dim   = _data[ 6];
@@ -344,9 +327,18 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _waveP = _data[21];
 			
 			var _type  = _data[23];
-			var _typeC = _data[25];
-			var _typeR = _data[24];
-			var _typeF = _data[26];
+			var _trimC = _data[25];
+			var _trimR = _data[24];
+			var _trimF = _data[26];
+			
+			var _use_path = _path != noone && struct_has(_path, "getPointDistance");
+			
+			inputs[ 6].setVisible(_dimt == 0 || _use_path);
+			inputs[ 7].setVisible(_dimt == 0 || _use_path);
+			inputs[ 8].setVisible(_dimt == 0 || _use_path);
+			inputs[ 9].setVisible(!_use_path);
+			inputs[14].setVisible( _use_path);
+			inputs[15].setVisible(_dimt == 0 && !_use_path && _font != "");
 		#endregion
 			
 		#region font
@@ -371,12 +363,12 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			draw_set_font(__f);
 		#endregion
 		
-		#region typewritter
+		#region trim
 			if(_type) {
 				var _typAmo = 0;
 				var _typSpa = [];
 				
-				switch(_typeC) {
+				switch(_trimC) {
 					case 0 : _typAmo = string_length(str); 
 							 break;
 							 
@@ -389,24 +381,22 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							 break;
 				}
 				
-				var _typS = round(_typeR[0] * _typAmo);
-				var _typE = round(_typeR[1] * _typAmo);
+				var _typS = round(_trimR[0] * _typAmo);
+				var _typE = round(_trimR[1] * _typAmo);
 				var _typStr = "";
 				
-				switch(_typeC) {
-					case 0 : _typStr = string_copy(          str, _typS, _typE - _typS); break;
-					case 1 : _typStr = string_concat_ext(_typSpa, _typS, _typE - _typS); break;
-					case 2 : _typStr = string_concat_ext(_typSpa, _typS, _typE - _typS); break;
+				switch(_trimC) {
+					case 0 : _typStr = string_copy(          str, _typS+1, _typE - _typS); break;
+					case 1 : _typStr = string_concat_ext(_typSpa, _typS,   _typE - _typS); break;
+					case 2 : _typStr = string_concat_ext(_typSpa, _typS,   _typE - _typS); break;
 				}
 				
 				str = _typStr;
-				if(_typeF == false) strRaw = str;
 			}
 		#endregion
 		
 		#region cut string
-			var _cut_lines = string_splice(str, "\n");
-			
+			var _cut_lines   = string_splice(str, "\n");
 			var _str_lines   = [];
 			var _line_widths = [];
 			var _ind = 0;
@@ -418,6 +408,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					_str_lines[_ind]   = _str_line;
 					_line_widths[_ind] = string_width(_str_line) + _trck * (string_length(_str_line) - 1);
 					_ind++;
+					
 				} else {
 					var _lw  = 0;
 					var _lne = "";
@@ -450,23 +441,34 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _max_ww = 0;
 			var _max_hh = 0;
 			
-			for( var i = 0, n = array_length(_str_lines); i < n; i++ ) {
-				_max_ww  = max(_max_ww, _line_widths[i]);
-				_max_hh += string_height(_str_lines[i]);
-				if(i) _max_hh += _line
+			if(_trimF == false) {
+				for( var i = 0, n = array_length(_str_lines); i < n; i++ ) {
+					_max_ww  = max(_max_ww, _line_widths[i]);
+					_max_hh += string_height(_str_lines[i]);
+					if(i) _max_hh += _line
+				}
+			} else {
+				if(_lineW == 0) {
+					_max_ww = string_width(  rawStr );
+					_max_hh = string_height( rawStr );
+					
+				} else {
+					_max_ww = string_width_ext(  rawStr, -1, _lineW );
+					_max_hh = string_height_ext( rawStr, -1, _lineW );
+				}
 			}
 		#endregion
 		
 		#region dimension
-			var ww = 0, _sw = 0;
-			var hh = 0, _sh = 0;
-		
-			ww = _max_ww;
-			hh = _max_hh;
-		
+			var ww = _max_ww;
+			var hh = _max_hh;
+			
+			var _sw = 0;
+			var _sh = 0;
+			
 			var _use_path = _path != noone && struct_has(_path, "getPointDistance");
 			var _ss = 1;
-		
+			
 			if(_use_path) {
 				_sw = _dim[0];
 				_sh = _dim[1];

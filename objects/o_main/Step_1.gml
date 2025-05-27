@@ -266,6 +266,7 @@ _FILE_DROPPED     = false;
 		if(mouse_mx < _pad) {
 			window_mouse_set(window_get_width() - _pad, mouse_my);
 			MOUSE_WRAPPING = 2;
+			
 		} else if(mouse_mx > window_get_width() - _pad) {
 			window_mouse_set(_pad, mouse_my);
 			MOUSE_WRAPPING = 2;
@@ -274,11 +275,13 @@ _FILE_DROPPED     = false;
 		if(mouse_my < _pad) {
 			window_mouse_set(mouse_mx, window_get_height() - _pad);
 			MOUSE_WRAPPING = 2;
+			
 		} else if(mouse_my > window_get_height() - _pad) {
 			window_mouse_set(mouse_mx, _pad);
 			MOUSE_WRAPPING = 2;
 		}
 	}
+	
 	MOUSE_WRAP = false;
 #endregion
 

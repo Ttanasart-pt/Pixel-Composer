@@ -31,10 +31,7 @@
 	
 	#macro MOUSE_MOVED (window_mouse_get_delta_x() != 0 || window_mouse_get_delta_y() != 0)
 	
-	function setMouseWrap() {
-		INLINE
-		MOUSE_WRAP = true;
-	}
+	function setMouseWrap() { INLINE MOUSE_WRAP = true; }
 #endregion
 
 function global_mouse_pool_init() {

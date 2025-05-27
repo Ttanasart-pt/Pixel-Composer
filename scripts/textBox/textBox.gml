@@ -704,8 +704,14 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					var _sc = power(10, slider_mulp + PREFERENCES.slider_lock_mouse && slide_int);
 					var _s  = slide_speed * _sc;
 					
-					if(!PREFERENCES.slider_lock_mouse)
-						_s = slide_range != noone? (slide_range[1] - slide_range[0]) / _w * _sc : slide_speed / _w * _sc;
+					if(!PREFERENCES.slider_lock_mouse) {
+						if(slide_range != noone) {
+							if(!MOUSE_WRAPPING) _s = (slide_range[1] - slide_range[0]) / _w * _sc;
+							else _s = 0;
+						}
+						
+						setMouseWrap();
+					}
 					
 					if(abs(_mdx) > abs(_mdy)) {
 						slider_dx      += _mdx / w;
