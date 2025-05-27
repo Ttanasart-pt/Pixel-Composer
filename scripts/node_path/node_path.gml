@@ -32,26 +32,21 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	setDimension(96, 48);
 	
-	////- Path
+	////- =Path
 	
 	newInput(1, nodeValue_Bool( "Loop", false)).rejectArray();
 	newInput(3, nodeValue_Bool( "Round anchor", false)).rejectArray();
 	
-	////- Sampling
+	////- =Sampling
 	
 	newInput(0, nodeValue_Slider(      "Path progress", 0)).setTooltip("Sample position from path.");
 	newInput(2, nodeValue_Enum_Scroll( "Progress mode", 0, ["Entire line", "Segment"])).rejectArray();
 	
-	//// Inputs 4
+	// Inputs 4
 	
-	newOutput(0, nodeValue_Output("Position out", VALUE_TYPE.float, [ 0, 0 ]))
-		.setDisplay(VALUE_DISPLAY.vector);
-		
-	newOutput(1, nodeValue_Output("Path data", VALUE_TYPE.pathnode, self));
-		
-	newOutput(2, nodeValue_Output("Anchors", VALUE_TYPE.float, []))
-		.setVisible(false)
-		.setArrayDepth(1);
+	newOutput(0, nodeValue_Output( "Position out", VALUE_TYPE.float,   [0,0])).setDisplay(VALUE_DISPLAY.vector);
+	newOutput(1, nodeValue_Output( "Path data",    VALUE_TYPE.pathnode, self));
+	newOutput(2, nodeValue_Output( "Anchors",      VALUE_TYPE.float,    [])).setVisible(false).setArrayDepth(1);
 	
 	input_display_list = [
 		["Path",     false], 1, 3, 
@@ -60,6 +55,9 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	];
 	
 	output_display_list   = [ 1, 0, 2 ];
+	
+	////- Nodes
+	
 	_path_preview_surface = noone;
 	path_preview_surface  = noone;
 	
@@ -121,6 +119,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		weight_drag_my = 0;
 	#endregion
 	
+	////- Anchor
+	
 	static resetDisplayList = function() {
 		recordAction(ACTION_TYPE.var_modify,  self, [ array_clone(input_display_list), "input_display_list" ]);
 		
@@ -148,12 +148,16 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		return inputs[index];
 	}
 	
+	////- Values
+	
 	static onValueUpdate = function(index = 0) {
 		if(index != 2) return;
 		
 		var type = getInputData(2);	
 		inputs[0].setDisplay(type == 0? VALUE_DISPLAY.slider : VALUE_DISPLAY._default);
 	}
+	
+	////- Draw
 	
 	static drawPreview = function(_x, _y, _s) {}
  
@@ -542,10 +546,10 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					}
 					
 					if(drag_type == 3) {
-						edited = edited || inputs[input_fix_len + 0].setValue(newAnchor(minx, miny));
-						edited = edited || inputs[input_fix_len + 1].setValue(newAnchor(maxx, miny));
-						edited = edited || inputs[input_fix_len + 2].setValue(newAnchor(maxx, maxy));
-						edited = edited || inputs[input_fix_len + 3].setValue(newAnchor(minx, maxy));
+						edited = inputs[input_fix_len + 0].setValue(newAnchor(minx, miny)) || edited;
+						edited = inputs[input_fix_len + 1].setValue(newAnchor(maxx, miny)) || edited;
+						edited = inputs[input_fix_len + 2].setValue(newAnchor(maxx, maxy)) || edited;
+						edited = inputs[input_fix_len + 3].setValue(newAnchor(minx, maxy)) || edited;
 						
 					} else if(drag_type == 4) {
 							
@@ -554,10 +558,10 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 						var _ccx = (maxx - minx) * 0.27614;
 						var _ccy = (maxy - miny) * 0.27614;
 						
-						edited = edited || inputs[input_fix_len + 0].setValue(newAnchor( _cnx, miny, -_ccx,     0,  _ccx,     0));
-						edited = edited || inputs[input_fix_len + 1].setValue(newAnchor( maxx, _cny,     0, -_ccy,     0,  _ccy));
-						edited = edited || inputs[input_fix_len + 2].setValue(newAnchor( _cnx, maxy,  _ccx,     0, -_ccx,     0));
-						edited = edited || inputs[input_fix_len + 3].setValue(newAnchor( minx, _cny,     0,  _ccy,     0, -_ccy));
+						edited = inputs[input_fix_len + 0].setValue(newAnchor( _cnx, miny, -_ccx,     0,  _ccx,     0)) || edited;
+						edited = inputs[input_fix_len + 1].setValue(newAnchor( maxx, _cny,     0, -_ccy,     0,  _ccy)) || edited;
+						edited = inputs[input_fix_len + 2].setValue(newAnchor( _cnx, maxy,  _ccx,     0, -_ccx,     0)) || edited;
+						edited = inputs[input_fix_len + 3].setValue(newAnchor( minx, _cny,     0,  _ccy,     0, -_ccy)) || edited;
 						
 					}
 					break;
@@ -951,8 +955,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					drag_point_my = _my;
 					inputs[1].setValue(true);
 					
-					repeat(4)
-						createNewInput(, value_snap((_mx - _x) / _s, _snx), value_snap((_my - _y) / _s, _sny));
+					repeat(4) createNewInput(, value_snap((_mx - _x) / _s, _snx), value_snap((_my - _y) / _s, _sny));
 				}
 				break;
 				
@@ -1211,6 +1214,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		surface_reset_shader();
 	}
 	
+	////- Path
+	
 	static getLineCount		= function() { return 1; }
 	static getSegmentCount	= function() { return array_length(lengths); }
 	static getBoundary		= function() { return boundary; }
@@ -1308,6 +1313,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		return new __vec2P(px, py);
 	}
 	
+	////- Update
+	
 	static update = function(frame = CURRENT_FRAME) {
 		ds_map_clear(cached_pos);
 		
@@ -1370,6 +1377,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	}
 	
 	static getPreviewBoundingBox = function() { return BBOX().fromBoundingBox(boundary); }
+	
+	////- Serialize
 	
 	static onCleanUp = function() {
 		surface_free(_path_preview_surface);

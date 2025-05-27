@@ -1,30 +1,29 @@
 function Node_Active_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name		= "Active Canvas";
+	name = "Active Canvas";
 	
 	newInput(0, nodeValue_Dimension());
 	
-	newInput(1, nodeValue_Surface("Texture"));
+	////- =Brush Transform
 	
-	newInput(2, nodeValue_Vec2("Position", [ 0, 0 ] ));
+	newInput(7, nodeValue_Bool(     "Active",   true  ));
+	newInput(2, nodeValue_Vec2(     "Position", [0,0] ));
+	newInput(3, nodeValue_Rotation( "Rotation",  0    ));
+	newInput(4, nodeValue_Vec2(     "Scale",    [1,1] ));
 	
-	newInput(3, nodeValue_Rotation("Rotation", 0));
+	////- =Brush Properties
 	
-	newInput(4, nodeValue_Vec2("Scale", [ 1, 1 ] ));
+	newInput(1, nodeValue_Surface( "Texture"));
+	newInput(5, nodeValue_Color(   "Color",     ca_white ));
+	newInput(6, nodeValue_Slider(  "Alpha",     1 ))
+	newInput(8, nodeValue_Range(   "Distance", [1,1], { linked : true }));
 	
-	newInput(5, nodeValue_Color("Color", ca_white ));
-	
-	newInput(6, nodeValue_Float("Alpha", 1 ))
-		.setDisplay(VALUE_DISPLAY.slider);
-	
-	newInput(7, nodeValue_Bool("Active", true ));
-	
-	newInput(8, nodeValue_Range("Distance", [ 1, 1 ] , { linked : true }));
+	// input 9
 	
 	newOutput(0, nodeValue_Output("Output", VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [ 0,
-		[ "Brush transform",  false ], 7, 2, 3, 4,
-		[ "Brush properties", false ], 1, 5, 8, 
+		[ "Brush Transform",  false ], 7, 2, 3, 4,
+		[ "Brush Properties", false ], 1, 5, 8, 
 	];
 	
 	brush_prev = noone;
@@ -44,31 +43,33 @@ function Node_Active_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	}
 	
 	static update = function() {
-		var _surf = outputs[0].getValue();
+		#region data
+			var _surf  = outputs[0].getValue();
+			
+			var _dim   = getInputData(0);
+			
+			var _bact  = getInputData(7);
+			var _bpos  = getInputData(2);
+			var _brot  = getInputData(3);
+			var _bsca  = getInputData(4);
+			
+			var _bsurf = getInputData(1);
+			var _bcol  = getInputData(5);
+			var _balp  = _color_get_alpha(_bcol);
+			var _bdst  = getInputData(8);
+		#endregion
 		
-		var _dim   = getInputData(0);
-		var _bsurf = getInputData(1);
-		var _bpos  = getInputData(2);
-		var _brot  = getInputData(3);
-		var _bsca  = getInputData(4);
-		var _bcol  = getInputData(5);
-		var _balp  = _color_get_alpha(_bcol);
-		var _bact  = getInputData(7);
-		var _bdst  = getInputData(8);
-		
-		_surf           = surface_verify(_surf, _dim[0], _dim[1]);
+		_surf = surface_verify(_surf, _dim[0], _dim[1]);
 		for( var i = 0, n = array_length(temp_surface); i < n; i++ )
 			temp_surface[i] = surface_verify(temp_surface[i], _dim[0], _dim[1]);
-		
 		blend_temp_surface = temp_surface[2];
+		outputs[0].setValue(_surf);
+		
+		if(!_bact) { brush_prev = noone; return; }
 		
 		var _bdense = _bdst[0] == _bdst[1] && _bdst[0] == 1;
 		_bdst[0] = max(0.01, _bdst[0]);
 		_bdst[1] = max(0.01, _bdst[1]);
-		
-		outputs[0].setValue(_surf);
-		if(!_bact) return;
-		
 		var bg = 0;
 		
 		surface_set_shader(temp_surface[bg], noone, true, BLEND.over);
@@ -144,7 +145,6 @@ function Node_Active_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			
 		}
 		
-		for( var i = 0, n = array_length(inputs_data); i < n; i++ )
-			brush_prev[i] = variable_clone(inputs_data[i], 1);
+		brush_prev = variable_clone(inputs_data, 2);
 	}
 }
