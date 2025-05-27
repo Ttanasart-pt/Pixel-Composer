@@ -657,8 +657,8 @@ function Panel_Animation_Dopesheet() {
     	dopesheet_w = timeline_w;
         dopesheet_h = h - timeline_h - ui(24);
         
-        dopesheet_mask    = surface_verify(dopesheet_mask,    dopesheet_w, dopesheet_h);
-        dopesheet_surface = surface_verify(dopesheet_surface, dopesheet_w, dopesheet_h);
+        dopesheet_mask         = surface_verify(dopesheet_mask,    dopesheet_w, dopesheet_h);
+        dopesheet_surface      = surface_verify(dopesheet_surface, dopesheet_w, dopesheet_h);
         
         dopesheet_name_mask    = surface_verify(dopesheet_name_mask,    tool_width, dopesheet_h);
         dopesheet_name_surface = surface_verify(dopesheet_name_surface, tool_width, dopesheet_h);
@@ -1956,9 +1956,7 @@ function Panel_Animation_Dopesheet() {
     ////- Draw
     
     function drawDopesheet() { 
-    	drawDopesheet_ResetTimelineMask();
-    	
-        if(tool_width_drag) {
+    	if(tool_width_drag) {
             CURSOR = cr_size_we;
             
             tool_width = tool_width_start + (mx - tool_width_mx);

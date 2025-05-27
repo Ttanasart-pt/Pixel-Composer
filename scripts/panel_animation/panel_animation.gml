@@ -690,6 +690,8 @@ function Panel_Animation() : PanelContent() constructor {
         if(!PROJECT.active) return;
         
         resetTimelineMask();
+        drawDopesheet_ResetTimelineMask();
+        
         getTimelineContent();
         
         if(w >= ui(348)) {

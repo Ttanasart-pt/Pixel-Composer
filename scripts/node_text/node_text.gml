@@ -445,7 +445,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				for( var i = 0, n = array_length(_str_lines); i < n; i++ ) {
 					_max_ww  = max(_max_ww, _line_widths[i]);
 					_max_hh += string_height(_str_lines[i]);
-					if(i) _max_hh += _line
+					if(i) _max_hh += _line;
 				}
 			} else {
 				if(_lineW == 0) {
