@@ -10,8 +10,9 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	////- =Path
 	
-	newInput(2, nodeValue_PathNode( "Path" )).setVisible(true, true);
-	newInput(3, nodeValue_Int(      "Sample", 64 ));
+	newInput( 2, nodeValue_PathNode( "Path" )).setVisible(true, true);
+	newInput( 3, nodeValue_Int(      "Sample", 64 ));
+	newInput(10, nodeValue_Bool(     "Invert", false ));
 	
 	////- =Ribbon
 	
@@ -25,13 +26,13 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(7, nodeValue_Gradient( "Color Weight",      new gradientObject(ca_white) ));
 	newInput(9, nodeValue_Bool(     "Shade Side",        false ));
 	
-	// input 10
+	// input 11
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0, 
 		["Output", false], 1, 
-		["Path",   false], 2, 3, 
+		["Path",   false], 2, 3, 10, 
 		["Ribbon", false], 4, 8, 5, 
 		["Color",  false], 6, 7, 9, 
 	];
@@ -48,8 +49,9 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _seed    = _data[0];
 			var _dim     = _data[1];
 			
-			var _path    = _data[2];
-			var _samp    = _data[3]; _samp = max(2, _samp);
+			var _path    = _data[ 2];
+			var _samp    = _data[ 3]; _samp = max(2, _samp);
+			var _invp    = _data[10];
 			
 			var _size    = _data[4];
 			var _sizeLen = _data[8]; var _sizeLenMap = new curveMap(_sizeLen, 128);
@@ -74,6 +76,8 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			
 			for( var i = 0; i < _samp; i++ ) {
 				prg = i * t;
+				if(_invp) prg = 1 - prg;
+				
 				p   = _path.getPointRatio(clamp(prg, 0, .99), 0, p);
 				
 				nx = p.x;

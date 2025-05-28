@@ -71,7 +71,7 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	////- Render
 	
 	static resetRender = function(_clearCache = false) {
-		LOG_LINE_IF(global.FLAG.render == 1, $"Reset Render for {INAME}");
+		LOG_LINE_IF(global.FLAG.render == 1, $"Reset Render for {getInternalName()}");
 		
 		setRenderStatus(false);
 		if(_clearCache) clearInputCache();

@@ -165,7 +165,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var k     = ds_map_find_first(project.tunnels_out);
 		
 		LOG_BLOCK_START();
-		LOG_IF(global.FLAG.render == 1, $"→→→→→ Call get next node from: {INAME}");
+		LOG_IF(global.FLAG.render == 1, $"→→→→→ Call get next node from: {getInternalName()}");
 		
 		repeat(amo) {
 			if(project.tunnels_out[? k] == _key)

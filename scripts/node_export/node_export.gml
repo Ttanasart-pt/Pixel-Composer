@@ -794,8 +794,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(IS_RENDERING) return;
 		if(_fromValue) { export(); return; }
 		
-		if(isInLoop())	RENDER_ALL
-		else			doInspectorAction();
+		doInspectorAction();
 	});
 	
 	setTrigger(2, "Export All", [ THEME.play_all, 0, COLORS._main_value_positive ], function() /*=>*/ { if(IS_RENDERING) return; exportAll(); });
@@ -956,10 +955,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	static update = function(frame = CURRENT_FRAME) {
 		var anim = getInputData(3);
 		
-		if(anim == NODE_EXPORT_FORMAT.single) {
-			if(isInLoop()) export(false);
+		if(anim == NODE_EXPORT_FORMAT.single)
 			return;
-		}
 		
 		if(!PROJECT.animator.is_playing) {
 			playing = false;

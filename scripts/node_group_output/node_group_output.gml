@@ -20,7 +20,7 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static setRenderStatus = function(result) {
 		if(rendered == result) return;
-		LOG_LINE_IF(global.FLAG.render == 1, $"Set render status for {INAME} : {result}");
+		LOG_LINE_IF(global.FLAG.render == 1, $"Set render status for {getInternalName()} : {result}");
 		
 		rendered = result;
 		if(group) group.setRenderStatus(result);

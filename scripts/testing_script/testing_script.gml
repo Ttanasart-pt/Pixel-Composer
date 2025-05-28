@@ -68,8 +68,9 @@ function __test_load_current_collections(dir = COLLECTIONS) {
 		var _st = ds_stack_pop(st);
 		for( var i = 0; i < ds_list_size(_st.content); i++ ) {
 			var _node = _st.content[| i];
+			if(_node.path == "") continue;
 			
-			print("  > Building " + _node.path);
+			print($"  > Building |{_node.path}|");
 			var coll = APPEND(_node.path);
 			if(coll == noone) continue;
 			
@@ -135,9 +136,10 @@ function __test_load_all_nodes() {
 		if(index > indst) {
 			var node = ALL_NODES[$ k];
 			
-			if(!node.testable) continue;
+			if(!node.testable)      continue;
+			if(node.nodeName == "") continue;
 			
-			print($"> Building {node.nodeName}");
+			print($"> Building |{node.nodeName}|");
 			
 			var b = node.build(xx, yy);
 			

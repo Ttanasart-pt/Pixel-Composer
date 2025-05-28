@@ -164,9 +164,9 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		}
 		
 		var _node = noone;
-		if(usecreateFn) _node = createFn(_x, _y, _group, _param);
-		else            _node = new node(_x, _y, _group, _param);
-		if(_node == noone) return _node;
+		     if(usecreateFn)       _node = createFn(_x, _y, _group, _param);
+		else if(is_callable(node)) _node = new node(_x, _y, _group, _param);
+		if(_node == noone)  return _node;
 		
 		_node.name = name;
 		_node.postBuild();

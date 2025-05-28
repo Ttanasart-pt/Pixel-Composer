@@ -1,24 +1,12 @@
 #region global
-	global.loop_nodes = [ "Node_Iterate", "Node_Iterate_Each" ];
-	
-	#macro INAME internalName == ""? name : internalName
 	#macro SHOW_PARAM (show_parameter && previewable)
 	
-	enum CACHE_USE {
-		none,
-		manual,
-		auto
-	}
+	enum CACHE_USE { none, manual, auto }
+	enum NODE_3D   { none, polygon, sdf }
 	
 	enum DYNA_INPUT_COND {
 		connection = 1 << 0,
 		zero       = 1 << 1,
-	}
-	
-	enum NODE_3D {
-		none,
-		polygon,
-		sdf,
 	}
 #endregion
 
@@ -278,7 +266,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		w_active    = false;
 	#endregion
 	
-	#region ---- Rendering ----
+	#region ---- Rendering ------
 		rendered         = false;
 		update_on_frame  = false;
 		render_timer     = 0;
@@ -297,7 +285,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		loopable         = true;
 	#endregion
 	
-	#region ---- Timeline ----
+	#region ---- Timeline ------
 		timeline_item    = new timelineItemNode(self);
 		anim_priority    = array_length(project.allNodes);
 		is_anim_timeline = false;
@@ -363,6 +351,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	////- NAME
 	
+	static getFullName       = function() /*=>*/ {return renamed? $"[{name}] " + display_name : name};
+	static getDisplayName    = function() /*=>*/ {return renamed? display_name                : name};
+	static getInternalName   = function() /*=>*/ {return internalName != ""? internalName     : name};
+	
 	static resetInternalName = function() {
 		var _str = string_replace_all(name, " ", "_");
 			_str = string_replace_all(_str,  "/", "");
@@ -373,8 +365,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		project.nodeNameMap[? internalName] = self;
 	}
 	
-	static setDisplayName = function(_name, _rec = true) {
-		if(NOT_LOAD && _rec && display_name != _name) recordAction(ACTION_TYPE.custom, function(data) { 
+	static setDisplayName    = function(_name, _rec = true) {
+		if(NOT_LOAD && _rec && display_name != _name) 
+			recordAction(ACTION_TYPE.custom, function(data) /*=>*/ { 
 			var _name = data.name;
 			data.name = display_name;
 			setDisplayName(_name, false);
@@ -388,9 +381,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(onSetDisplayName != noone) onSetDisplayName();
 		return self;
 	}
-	
-	static getFullName    = function() { return renamed? $"[{name}] " + display_name : name; }
-	static getDisplayName = function() { return renamed? display_name : name; }
 	
 	////- DYNAMIC IO
 	
@@ -1125,7 +1115,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			render_cached = false;
 			
 			LOG_BLOCK_START();
-			LOG_IF(global.FLAG.render == 1, $">>>>>>>>>> DoUpdate called from {INAME} <<<<<<<<<<");
+			LOG_IF(global.FLAG.render == 1, $">>>>>>>>>> DoUpdate called from {getInternalName()} <<<<<<<<<<");
 			
 			var sBase = surface_get_target();	
 			
@@ -3066,10 +3056,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	////- MISC
 	
 	static postBuild = function() {}
-	
-	static isInLoop = function() {
-		return array_exists(global.loop_nodes, instanceof(group));
-	}
 	
 	static isTerminal = function() {
 		for( var i = 0; i < array_length(outputs); i++ ) {

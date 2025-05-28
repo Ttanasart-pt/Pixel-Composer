@@ -20,7 +20,7 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	newInput(0, nodeValue_Surface("Surface In"));
 	
-	typeListc   = __enum_array_gen([ "Point", "Ellipse", "Line", "Line asymmetric", "Saber", "Spot", "Flame" ], s_node_2d_light_shape);
+	typeList    = __enum_array_gen([ "Point", "Ellipse", "Line", "Line asymmetric", "Saber", "Spot", "Flame" ], s_node_2d_light_shape);
 	typeListStr = array_create_ext(array_length(typeList), function(i) /*=>*/ {return typeList[i].name});
 	
 	static createNewInput = function(index = array_length(inputs)) {
@@ -29,65 +29,31 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		dynamic_input_inspecting = getInputAmount();
 		
 		var _val = nodeValue_Enum_Scroll("Light shape", 0, typeList);
-			_val.options_histories = [ typeListStr,
-				{
-					cond: function() /*=>*/ {return LOADING_VERSION < 1_18_00_0 && !CLONING},
-					list: [ "Point", "Line", "Line asymmetric", "Spot" ]
-				}
-			];	 
-		newInput(index + 0, _val);
-		
-		newInput(index + 1, nodeValue_Vec2("Center", [ 16, 16 ]))
-			.setUnitRef(function(i) /*=>*/ {return getDimension(i)});
-		
-		newInput(index + 2, nodeValue_Float("Range", 16));
-		
-		newInput(index + 3, nodeValue_Float("Intensity", 1))
-			.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ]});
-		
-		newInput(index + 4, nodeValue_Color("Color", ca_white));
-		
-		newInput(index + 5, nodeValue_Vec2("Start", [ 16, 16 ]));
-		
-		newInput(index + 6, nodeValue_Vec2("Finish", [ 32, 16 ]));
-		
-		newInput(index + 7, nodeValue_Int("Sweep", 15))
-			.setDisplay(VALUE_DISPLAY.slider, { range: [-80, 80, 0.1] });
-		
-		newInput(index + 8, nodeValue_Int("Sweep end", 0))
-			.setDisplay(VALUE_DISPLAY.slider, { range: [-80, 80, 0.1] });
-		
-		newInput(index + 9, nodeValue_Int("Banding", 0))
-			.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 0.1] });
-		
-		newInput(index + 10, nodeValue_Enum_Scroll("Attenuation", 0, [	new scrollItem("Quadratic",			s_node_curve_type, 0),
-																				new scrollItem("Invert quadratic",	s_node_curve_type, 1),
-																				new scrollItem("Linear",			s_node_curve_type, 2), ]))
+			_val.options_histories = [ typeListStr, { cond: function() /*=>*/ {return LOADING_VERSION < 1_18_00_0 && !CLONING}, list: [ "Point", "Line", "Line asymmetric", "Spot" ] } ];
+		newInput(index +  0, _val);
+		newInput(index +  1, nodeValue_Vec2(    "Center",            [16,16])).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+		newInput(index +  2, nodeValue_Float(   "Range",              16));
+		newInput(index +  3, nodeValue_Slider(  "Intensity",          1, [ 0, 4, 0.01 ]));
+		newInput(index +  4, nodeValue_Color(   "Color",              ca_white));
+		newInput(index +  5, nodeValue_Vec2(    "Start",             [16,16]));
+		newInput(index +  6, nodeValue_Vec2(    "Finish",            [32,16]));
+		newInput(index +  7, nodeValue_ISlider( "Sweep",              15, [-80, 80, 0.1]));
+		newInput(index +  8, nodeValue_ISlider( "Sweep end",          0,  [-80, 80, 0.1]));
+		newInput(index +  9, nodeValue_ISlider( "Banding",            0,  [  0, 16, 0.1]));
+		newInput(index + 10, nodeValue_Enum_Scroll("Attenuation",     0, __enum_array_gen([ "Quadratic", "Invert quadratic", "Linear" ], s_node_curve_type)))
 			 .setTooltip("Control how light fade out over distance.");
-		
-		newInput(index + 11, nodeValue_Int("Radial banding", 0))
-			.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 0.1] });
-		
-		newInput(index + 12, nodeValue_Rotation("Radial start", 0));
-		
-		newInput(index + 13, nodeValue_Float("Radial band ratio", 0.5))
-			.setDisplay(VALUE_DISPLAY.slider);
-		
-		newInput(index + 14, nodeValue_Bool("Active", true));
-			
-		newInput(index + 15, nodeValue_Float("Radius x", 16));
-		
-		newInput(index + 16, nodeValue_Float("Radius y", 16));
-		
-		newInput(index + 17, nodeValue_Rotation("Rotation", 0));
-		
-		newInput(index + 18, nodeValue_Float("Exponent", 2));
-			
-		newInput(index + 19, nodeValue_Bool("Anti aliasing", false));
-			
-		newInput(index + 20, nodeValue_Bool("Two sides", false));
-		
-		newInput(index + 21, nodeValue_Float("Thickness", 2));
+			 
+		newInput(index + 11, nodeValue_ISlider(  "Radial banding",    0, [0, 16, 0.1]));
+		newInput(index + 12, nodeValue_Rotation( "Radial start",      0));
+		newInput(index + 13, nodeValue_Slider(   "Radial band ratio", 0.5));
+		newInput(index + 14, nodeValue_Bool(     "Active",            true));
+		newInput(index + 15, nodeValue_Float(    "Radius x",          16));
+		newInput(index + 16, nodeValue_Float(    "Radius y",          16));
+		newInput(index + 17, nodeValue_Rotation( "Rotation",          0));
+		newInput(index + 18, nodeValue_Float(    "Exponent",          2));
+		newInput(index + 19, nodeValue_Bool(     "Anti aliasing",     false));
+		newInput(index + 20, nodeValue_Bool(     "Two sides",         false));
+		newInput(index + 21, nodeValue_Float(    "Thickness",         2));
 		
 		refreshDynamicDisplay();
 		return inputs[index];

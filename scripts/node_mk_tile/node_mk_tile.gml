@@ -1,43 +1,69 @@
+#region data
+	enum MK_TILE_EDGE_TYPE {
+		uniform,
+		individual
+	}
+
+	enum MK_TILE_EDGE_SPRITE {
+		single,
+		side_center,
+		left_center_right,
+	}
+	
+	enum MK_TILE_EDGE_TRANSFORM {
+		flip,
+		rotate
+	}
+#endregion
+
 function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "MK Tile";
 	dimension_index = -1;
 	
+	////- =Surfaces
+	
 	newInput(0, nodeValue_Surface("Texture"));
+	newInput(1, nodeValue_Surface("Background Texture"));
 	
-	newInput(1, nodeValue_Surface("Background texture"));
+	////- =Tileset
 	
-	newInput(2, nodeValue_Enum_Button("Type",  0, [ "GMS Corner (18 sprites)", "GMS Corner + Side (55 sprites)", "Godot Blob (48 sprites)" ] ));
+	newInput(2, nodeValue_Enum_Button( "Type",  0, [ "GMS Corner (18 sprites)", "GMS Corner + Side (55 sprites)", "Godot Blob (48 sprites)" ] ));
+	newInput(4, nodeValue_Padding(     "Crop", [8,8,8,8]));
 	
-	newInput(3, nodeValue_Enum_Button("Output type",  0, [ "Sheet", "Array" ] ));
+	////- =Edge
 	
-	newInput(4, nodeValue_Padding("Crop", [ 8, 8, 8, 8 ]));
+	newInput( 5, nodeValue_Enum_Button( "Edge Type",       0, [ "Uniform", "Individual" ] ));
+	newInput(12, nodeValue_Enum_Scroll( "Edge Sprite",     0, [ "Single", "Side + Center", "Left + Center + Right" ] ));
+	newInput(13, nodeValue_Enum_Button( "Edge Transform",  0, [ "Flip", "Rotate" ] ));
+	newInput(10, nodeValue_Padding(     "Edge Shift",     [0,0,0,0] ));
+	newInput(11, nodeValue_Toggle(      "Full Edge",       0, { data: [ "T", "B", "L", "R" ] }));
+	newInput(15, nodeValue_Toggle(      "Inner Edge",      0, { data: [ "T", "B", "L", "R" ] }));
 	
-	newInput(5, nodeValue_Enum_Button("Edge type",  0, [ "Uniform", "Individual" ] ));
+	////- =Edge Texture
 	
-	newInput(6, nodeValue_Surface("Edge"));
-	newInput(7, nodeValue_Surface("Edge bottom"));
-	newInput(8, nodeValue_Surface("Edge left"));
-	newInput(9, nodeValue_Surface("Edge right"));
+	newInput(6, nodeValue_Surface( "Edge"        ));
+	newInput(7, nodeValue_Surface( "Edge Bottom" ));
+	newInput(8, nodeValue_Surface( "Edge Left"   ));
+	newInput(9, nodeValue_Surface( "Edge Right"  ));
 	
-	newInput(10, nodeValue_Padding("Edge shift", [ 0, 0, 0, 0 ]));
-		
-	newInput(11, nodeValue_Toggle("Full edge", 0, { data: [ "T", "B", "L", "R" ] }));
+	////- =Output
 	
-	newInput(12, nodeValue_Enum_Scroll("Edge sprite",  0, [ "Single", "Side + Center", "Side + Center + Side" ] ));
+	newInput( 3, nodeValue_Enum_Button( "Output type",       0, [ "Sheet", "Array" ] ));
+	newInput(14, nodeValue_Bool(        "Sort Array by Bit", true))
 	
-	newInput(13, nodeValue_Enum_Button("Edge transform",  0, [ "Flip", "Rotate" ] ));
-		
-	newInput(14, nodeValue_Bool("Sort array by bit", true))
+	// input 16
 		
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 
-		["Surfaces",	  true], 0, 1, 
-		["Tile set",	 false], 2, 4, 
-		["Edge",		 false], 5, 12, 13, 10, 11,
+		["Surfaces",      true], 0, 1, 
+		["Tileset",      false], 2, 4, 
+		["Edge",         false], 5, 12, 13, 10, 11, 15,
 		["Edge Textures", true], 6, 7, 8, 9, 
-		["Output",		 false], 3, 14, 
+		["Output",       false], 3, 14, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	
+	////- Nodes
 	
 	temp_surface = array_create(55);
 	for( var i = 0, n = array_length(temp_surface); i < n; i++ ) 
@@ -52,14 +78,12 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	array_push(attributeEditors, "Display");
 	array_push(attributeEditors, ["Show index", function() /*=>*/ {return attributes.show_tile_index}, new checkBox(function() /*=>*/ {return toggleAttribute("show_tile_index")}) ]);
 	
-	#region overlay
-		tile_overlay_select = noone;
-	#endregion
+	tile_overlay_select = noone;
 	
-	#region index
-		index_18 = [ 0, /**/  8, 12,  4, /**/  7, 11, 
-					 0, /**/ 10, 15,  5, /**/ 13, 14, 
-					 0, /**/  2,  3,  1, /**/  9,  6];
+	#region index 18
+		index_18    = [ 0, /**/  8, 12,  4, /**/  7, 11, 
+                        0, /**/ 10, 15,  5, /**/ 13, 14, 
+                        0, /**/  2,  3,  1, /**/  9,  6];
 		
 		index_18_et = [ 0, /**/ 0, 1, 2, /**/ 0, 0, 
 					    0, /**/ 0, 0, 0, /**/ 3, 4, 
@@ -76,14 +100,14 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		index_18_er = [ 0, /**/ 0, 0, 0, /**/ 3, 0, 
 					    0, /**/ 0, 0, 1, /**/ 4, 0, 
 					    0, /**/ 0, 0, 2, /**/ 4, 3];
-		
-		/////////////////////////////////////////////////////////////////////
-		
-		index_55 = [208, 224, 104, /**/  64, /**/  80, 120, 216,  72, /**/  88, 219,  -1, 
-					148, 255,  41, /**/  66, /**/  86, 127, 223,  75, /**/  95, 126,  -1, 
-					 22,   7,  11, /**/   2, /**/ 210, 251, 254, 106, /**/ 250, 218, 122, 
-					 16,  24,   8, /**/   0, /**/  18,  27,  30,  10, /**/  26,  94,  91, 
-					 -1,  -1,  -1, /**/  -1, /**/  82, 123, 222,  74, /**/  90,  -1,  -1];
+	#endregion
+	
+	#region index 55
+		index_55    = [ 208, 224, 104, /**/  64, /**/  80, 120, 216,  72, /**/  88, 219,  -1, 
+                        148, 255,  41, /**/  66, /**/  86, 127, 223,  75, /**/  95, 126,  -1, 
+                         22,   7,  11, /**/   2, /**/ 210, 251, 254, 106, /**/ 250, 218, 122, 
+                         16,  24,   8, /**/   0, /**/  18,  27,  30,  10, /**/  26,  94,  91, 
+                         -1,  -1,  -1, /**/  -1, /**/  82, 123, 222,  74, /**/  90,  -1,  -1 ];
 		
 		index_55_et = [ 0, 1, 2, /**/ 5, /**/ 0, 1, 1, 2, /**/ 1, 3, 0,  
 					    0, 0, 0, /**/ 0, /**/ 0, 0, 0, 0, /**/ 0, 4, 0,  
@@ -108,47 +132,129 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					    0, 0, 2, /**/ 2, /**/ 4, 4, 0, 1, /**/ 4, 4, 6, 
 						0, 0, 5, /**/ 5, /**/ 4, 4, 0, 2, /**/ 4, 3, 6,  
 					    0, 0, 0, /**/ 0, /**/ 6, 6, 0, 1, /**/ 6, 0, 0, ];
-						
-		/////////////////////////////////////////////////////////////////////
+	#endregion
+	
+	#region index 48
+		index_48    = [ 64,  80,  88, 72, /**/  91, 216, 120,  94, /**/ 208, 250, 224, 104, 
+                        66,  82,  90, 74, /**/ 210, 254, 251, 106, /**/ 148, 126,  -1, 123, 
+                         2,  18,  26, 10, /**/  86, 223, 127,  75, /**/ 222, 255, 219,  41, 
+                         0,  16,  24,  8, /**/ 122,  30,  27, 218, /**/  22,   7,  95,  11, ];
 		
-		index_48 = [ 64,  80,  88, 72, /**/  91, 216, 120,  94, /**/ 208, 250, 224, 104, 
-					 66,  82,  90, 74, /**/ 210, 254, 251, 106, /**/ 148, 126,  -1, 123, 
-					  2,  18,  26, 10, /**/  86, 223, 127,  75, /**/ 222, 255, 219,  41, 
-					  0,  16,  24,  8, /**/ 122,  30,  27, 218, /**/  22,   7,  95,  11, ];
-		
-		index_48_et = [ 5, 0, 1, 2, 4, 1, 1, 3, 0, 6, 1, 2, 
-		                0, 3, 6, 4, 3, 4, 3, 4, 0, 4, 0, 3, 
-						0, 3, 6, 4, 0, 0, 0, 0, 4, 0, 3, 0, 
-						5, 0, 1, 2, 6, 4, 3, 6, 0, 0, 0, 0, ];
+		index_48_et = [ 5, 0, 1, 2, /**/ 4, 1, 1, 3, /**/ 0, 6, 1, 2, 
+		                0, 3, 6, 4, /**/ 3, 4, 3, 4, /**/ 0, 4, 0, 3, 
+						0, 3, 6, 4, /**/ 0, 0, 0, 0, /**/ 4, 0, 3, 0, 
+						5, 0, 1, 2, /**/ 6, 4, 3, 6, /**/ 0, 0, 0, 0, ];
 																   
-		index_48_eb = [ 0, 3, 6, 4, 6, 4, 3, 6, 0, 0, 0, 0, 
-						0, 3, 6, 4, 0, 0, 0, 0, 0, 3, 0, 3, 
-						5, 0, 1, 2, 3, 4, 3, 4, 4, 0, 4, 0, 
-						5, 0, 1, 2, 3, 1, 1, 4, 0, 1, 6, 2, ];
+		index_48_eb = [ 0, 3, 6, 4, /**/ 6, 4, 3, 6, /**/ 0, 0, 0, 0, 
+						0, 3, 6, 4, /**/ 0, 0, 0, 0, /**/ 0, 3, 0, 3, 
+						5, 0, 1, 2, /**/ 3, 4, 3, 4, /**/ 4, 0, 4, 0, 
+						5, 0, 1, 2, /**/ 3, 1, 1, 4, /**/ 0, 1, 6, 2, ];
 																   
-		index_48_el = [ 0, 0, 4, 3, 3, 3, 0, 6, 0, 4, 0, 0, 
-						1, 1, 6, 6, 1, 4, 0, 4, 1, 4, 0, 0, 
-						2, 2, 4, 4, 1, 3, 0, 3, 6, 0, 3, 0, 
-						5, 5, 0, 0, 4, 4, 0, 6, 2, 0, 4, 0, ];
+		index_48_el = [ 0, 0, 4, 3, /**/ 3, 3, 0, 6, /**/ 0, 4, 0, 0, 
+						1, 1, 6, 6, /**/ 1, 4, 0, 4, /**/ 1, 4, 0, 0, 
+						2, 2, 4, 4, /**/ 1, 3, 0, 3, /**/ 6, 0, 3, 0, 
+						5, 5, 0, 0, /**/ 4, 4, 0, 6, /**/ 2, 0, 4, 0, ];
 																   
-		index_48_er = [ 0, 3, 3, 0, 6, 0, 3, 3, 0, 4, 0, 0, 
-						1, 6, 6, 1, 4, 0, 4, 1, 0, 3, 0, 6, 
-						2, 4, 4, 2, 3, 0, 3, 1, 0, 0, 4, 1, 
-						5, 0, 0, 5, 6, 0, 4, 4, 0, 0, 3, 2, ];
+		index_48_er = [ 0, 3, 3, 0, /**/ 6, 0, 3, 3, /**/ 0, 4, 0, 0, 
+						1, 6, 6, 1, /**/ 4, 0, 4, 1, /**/ 0, 3, 0, 6, 
+						2, 4, 4, 2, /**/ 3, 0, 3, 1, /**/ 0, 0, 4, 1, 
+						5, 0, 0, 5, /**/ 6, 0, 4, 4, /**/ 0, 0, 3, 2, ];
 						
 	#endregion
 	
-	static step = function() {
-		var _outType = getSingleValue( 3);
-		var _edgType = getSingleValue( 5);
-		var _edgFull = getSingleValue(11);
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		var sx = ui(24);
+		var sy = ui(24);
 		
-		inputs[ 6].name = _edgType == 1? "Edge top" : "Edge"
-		inputs[ 7].setVisible(_edgType == 1, _edgType == 1);
-		inputs[ 8].setVisible(_edgType == 1, _edgType == 1);
-		inputs[ 9].setVisible(_edgType == 1, _edgType == 1);
-		inputs[13].setVisible(_edgType == 0);
-		inputs[14].setVisible(_outType == 1);
+		// for( var i = 0, n = array_length(edge_surface); i < n; i++ ) {
+		// 	var _es = edge_surface[i];
+			
+		// 	for( var j = 0, m = array_length(_es); j < m; j++ ) {
+		// 		var _ww = surface_get_width_safe(_es[j]);
+		// 		var _hh = surface_get_height_safe(_es[j]);
+				
+		// 		draw_surface_ext_safe(_es[j], sx, sy + j * 24, 4, 4);
+		// 	}
+		// }
+		
+		if(!attributes.show_tile_index) return;
+		
+		var _tex = getSingleValue(0);
+		var _typ = getSingleValue(2);
+		var _out = getSingleValue(0,, true);
+		
+		if(!is_surface(_tex)) return;
+		if(!is_surface(_out)) return;
+		
+		var _dim = surface_get_dimension(_tex);
+		var _oim = surface_get_dimension(_out);
+		var _til = [ _oim[0] / _dim[0], _oim[1] / _dim[1] ];
+		var _tw  = _dim[0] * _s;
+		var _th  = _dim[1] * _s;
+		
+		////////////////////////////////////////////////////////////////////////////////////////
+		
+		draw_set_color(COLORS._main_icon_light);
+		draw_set_alpha(0.5);
+			for(var i = 1; i < _til[0]; i++) {
+				var _lx = _x + i * _tw;
+				draw_line(_lx, _y, _lx, _y + _oim[1] * _s);
+			}
+			
+			for(var i = 1; i < _til[1]; i++) {
+				var _ly = _y + i * _th;
+				draw_line(_x, _ly, _x + _oim[0] * _s, _ly);
+			}
+		draw_set_alpha(1);
+		
+		////////////////////////////////////////////////////////////////////////////////////////
+		
+		var _bitmask_draw = false;
+		var _bitmask_x    = 0;
+		var _bitmask_y    = 0;
+		
+		for(var i = 0; i < _til[1]; i++) {
+			var _ly = _y + i * _th;
+			
+			for(var j = _typ? 0 : 1; j < _til[0]; j++) {
+				var _lx = _x + j * _tw;
+				var _id = _typ? i * _til[0] + j : i * (_til[0] - 1) + j - 1;
+				
+				if(hover && point_in_rectangle(_mx, _my, _lx, _ly, _lx + _tw, _ly + _th)) {
+					draw_set_color(COLORS._main_icon_light)
+					draw_rectangle(_lx, _ly, _lx + _tw - 1, _ly + _th - 1, true);
+					
+					if(mouse_press(mb_left))
+						tile_overlay_select = tile_overlay_select == _id? noone : _id;
+				}
+				
+				draw_set_text(f_p0, fa_left, fa_left, _id == tile_overlay_select? COLORS._main_icon_light : COLORS._main_icon);
+				draw_text(_lx + 4, _ly + 4, _id);
+				
+				if(_id == tile_overlay_select) {
+					_bitmask_draw = true;
+					_bitmask_x    = _lx;
+					_bitmask_y    = _ly;
+				}
+			}
+		}
+		
+		if(_bitmask_draw) {
+			draw_set_color(COLORS._main_accent);
+			
+			for(var i = 0; i < 3; i++)
+			for(var j = 0; j < 3; j++) {
+				var _id = i * 3 + j;
+				
+				var _lx = _bitmask_x + (j - 1) * _tw;
+				var _ly = _bitmask_y + (i - 1) * _th;
+				
+				draw_set_text(f_p0b, fa_center, fa_center, COLORS._main_accent);
+				draw_text(_lx + _tw / 2, _ly + _th / 2, _id);
+				
+				draw_rectangle(_lx, _ly, _lx + _tw - 1, _ly + _th - 1, true);
+			}
+		}
 	}
 	
 	static generateFull = function(_data, _tex0, _tex1, _edge, _crop, indMain, indEdge_et, indEdge_eb, indEdge_el, indEdge_er) {
@@ -269,13 +375,13 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		var _edgeShf = _data[10];
 		var _edgFull = _data[11];
+		var _index;
 		
 		for( var i = 0; i < 18; i++ ) {
-			var _index = indMain[i];
-			if(_index < 0) {
-				_sprs[i] = noone;
-				continue;
-			}
+			_sprs[i] = noone;
+			_index   = indMain[i];
+			if(_index < 0) continue;
+			
 			var _s = surface_verify(temp_surface[i], _sw, _sh);
 			
 			surface_set_target(_s);
@@ -353,24 +459,37 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		return _sprs;
 	}
 	
-	static generate18 = function(_data, _tex0, _tex1, _edge, _crop) { INLINE return generateSimple(_data, _tex0, _tex1, _edge, _crop, index_18, index_18_et, index_18_eb, index_18_el, index_18_er); }
-	static generate55 = function(_data, _tex0, _tex1, _edge, _crop) { INLINE return generateFull(  _data, _tex0, _tex1, _edge, _crop, index_55, index_55_et, index_55_eb, index_55_el, index_55_er); }
-	static generate48 = function(_data, _tex0, _tex1, _edge, _crop) { INLINE return generateFull(  _data, _tex0, _tex1, _edge, _crop, index_48, index_48_et, index_48_eb, index_48_el, index_48_er); }
+	static generate18 = function(_d,_t0,_t1,_e,_c) /*=>*/ {return generateSimple( _d,_t0,_t1,_e,_c, index_18, index_18_et, index_18_eb, index_18_el, index_18_er)};
+	static generate55 = function(_d,_t0,_t1,_e,_c) /*=>*/ {return generateFull(   _d,_t0,_t1,_e,_c, index_55, index_55_et, index_55_eb, index_55_el, index_55_er)};
+	static generate48 = function(_d,_t0,_t1,_e,_c) /*=>*/ {return generateFull(   _d,_t0,_t1,_e,_c, index_48, index_48_et, index_48_eb, index_48_el, index_48_er)};
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _tex0 = _data[0];
-		var _tex1 = _data[1];
-		var _type = _data[2];
-		var _outp = _data[3];
-		var _crop = _data[4];
-		
-		var _edgType = _data[5];
-		var _edgeShf = _data[10];
-		var _edgFull = _data[11];
-		var _edgSprt = _data[12];
-		var _edgTran = _data[13];
-		var _edges   = _edgType == 0? [ _data[6], _data[6], _data[6], _data[6] ] : [ _data[6], _data[7], _data[8], _data[9] ];
-		var _edge;
+		#region data
+			var _tex0    = _data[0];
+			var _tex1    = _data[1];
+			
+			var _type    = _data[2];
+			var _crop    = _data[4];
+			
+			var _edgType = _data[ 5];
+			var _edgSprt = _data[12];
+			var _edgTran = _data[13];
+			var _edgeShf = _data[10];
+			var _edgFull = _data[11];
+			var _edgInnr = _data[15];
+			
+			var _outp    = _data[3];
+			
+			var _edges   = _edgType == MK_TILE_EDGE_TYPE.uniform? [ _data[6], _data[6], _data[6], _data[6] ] : [ _data[6], _data[7], _data[8], _data[9] ];
+			
+			inputs[ 6].name = _edgType == 1? "Edge top" : "Edge"
+			inputs[ 7].setVisible(_edgType == 1, _edgType == 1);
+			inputs[ 8].setVisible(_edgType == 1, _edgType == 1);
+			inputs[ 9].setVisible(_edgType == 1, _edgType == 1);
+			inputs[13].setVisible(_edgType == 0);
+			inputs[14].setVisible(_outp == 1);
+			
+		#endregion
 		
 		var _shi = [ 1, 3, 2, 0 ];
 		
@@ -381,7 +500,7 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		for( var i = 0, n = array_length(__edge_buffer); i < n; i++ )
 			__edge_buffer[i] = surface_verify(__edge_buffer[i], _sw, _sh);
 		
-		if(_edgType == 0 && is_surface(_data[6])) {
+		if(_edgType == MK_TILE_EDGE_TYPE.uniform && is_surface(_data[6])) {
 			var _esw = surface_get_width_safe(_data[6]);
 			var _esh = surface_get_height_safe(_data[6]);
 			
@@ -412,6 +531,7 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		for( var i = 0; i < 4; i++ ) { //edges
 			var _ed    = _edges[i];
 			var _edShf = _edgeShf[_shi[i]];
+			if(i == 1 || i == 3) _edShf = -_edShf;
 			
 			edge_surface[i] = array_create(7, noone);
 			if(!is_surface(_ed)) continue;
@@ -432,24 +552,24 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					DRAW_CLEAR
 					BLEND_OVERRIDE
 					
-					if(_edgSprt == 0) { 
-						draw_surface_safe(_ed); 
-					} else if(_edgSprt == 1) { // flip side
-						switch(j) {
-							case 0 : draw_surface(_ed, -_esw * 0, -_esh * 0); break;
-							case 1 : draw_surface(_ed, -_esw * 1, -_esh * 1); break;
-							case 2 : draw_surface(_ed, -_esw * 0, -_esh * 0); break;
-							case 3 : 
-							case 4 : 
-							case 5 : 
-							case 6 : draw_surface(_ed, -_esw * 0, -_esh * 0); break;
-						}
-					} else if(_edgSprt == 2) { // indiviual sides
-						switch(j) {
-							case 0 : draw_surface(_ed, -_esw * 0, -_esh * 0); break;
-							case 1 : draw_surface(_ed, -_esw * 1, -_esh * 1); break;
-							case 2 : draw_surface(_ed, -_esw * 2, -_esh * 2); break;
-						}
+					switch(_edgSprt) {
+						case MK_TILE_EDGE_SPRITE.single : draw_surface_safe(_ed); break;
+						
+						case MK_TILE_EDGE_SPRITE.side_center : 
+							if(j==1) draw_surface(_ed, -_esw * 1, -_esh * 1);
+							else     draw_surface(_ed, -_esw * 0, -_esh * 0);
+							break;
+							
+						case MK_TILE_EDGE_SPRITE.left_center_right :	
+							switch(j) {
+								case 0 : draw_surface(_ed, -_esw * 0, -_esh * 0); break;
+								case 1 : draw_surface(_ed, -_esw * 1, -_esh * 1); break;
+								case 2 : draw_surface(_ed, -_esw * 2, -_esh * 2); break;
+								
+								case 3 : if(_edgInnr & (1 << i)) draw_surface(_ed, -_esw * 0, -_esh * 0); break;
+								case 4 : if(_edgInnr & (1 << i)) draw_surface(_ed, -_esw * 2, -_esh * 2); break;
+							}
+							break;
 					}
 					
 					BLEND_NORMAL
@@ -457,7 +577,7 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					
 				_edBuf = __edge_buffer[0];
 				
-				if(_edgType == 0 && _edgTran == 1) { // rotate surface for uniform edge type
+				if(_edgType == MK_TILE_EDGE_TYPE.uniform && _edgTran == MK_TILE_EDGE_TRANSFORM.rotate) {
 					surface_set_target(__edge_buffer[1]);
 						DRAW_CLEAR
 						BLEND_ALPHA_MULP
@@ -474,7 +594,7 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					_edBuf = __edge_buffer[1];
 				} 
 				
-				if(_edgSprt == 1 && j >= 2) {
+				if(_edgSprt == MK_TILE_EDGE_SPRITE.side_center && j >= 2) {
 					surface_set_target(__edge_buffer[2]);
 						DRAW_CLEAR
 						BLEND_ALPHA_MULP
@@ -482,12 +602,15 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 						if(j == 2) { // flip surface
 							if(i == 0 || i == 1) draw_surface_ext(_edBuf, _sw, 0, -1, 1, 0, c_white, 1); // flip x
 							if(i == 2 || i == 3) draw_surface_ext(_edBuf, 0, _sh, 1, -1, 0, c_white, 1); // flip y
+							
 						} else if(j == 3) {
 							if(i == 0 || i == 1) draw_surface_part_ext(_edBuf, 0, 0, _sw / 2, _sh, _sw / 2, 0,  1, 1, c_white, 1);
 							if(i == 2 || i == 3) draw_surface_part_ext(_edBuf, 0, 0, _sw, _sh / 2, 0, _sh / 2,  1, 1, c_white, 1);
+							
 						} else if(j == 4) {
 							if(i == 0 || i == 1) draw_surface_part_ext(_edBuf, 0, 0, _sw / 2, _sh, _sw / 2, 0, -1, 1, c_white, 1);
 							if(i == 2 || i == 3) draw_surface_part_ext(_edBuf, 0, 0, _sw, _sh / 2, 0, _sh / 2, 1, -1, c_white, 1);
+							
 						} else if(j == 5) {
 							if(i == 0 || i == 1) {
 								draw_surface_part_ext(_edBuf, 0, 0, _sw / 2, _sh,   0, 0,  1, 1, c_white, 1);
@@ -498,6 +621,7 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 								draw_surface_part_ext(_edBuf, 0, 0, _sw, _sh / 2, 0,   0, 1,  1, c_white, 1);
 								draw_surface_part_ext(_edBuf, 0, 0, _sw, _sh / 2, 0, _sh, 1, -1, c_white, 1);
 							}
+							
 						} else if(j == 6) {
 							if(i == 0 || i == 1) {
 								draw_surface_part_ext(_edBuf, 0, 0, _sw / 2, _sh, _sw / 2, 0,  1, 1, c_white, 1);
@@ -538,8 +662,6 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				edge_surface[i][j] = __edge_surface[_sIndx];
 			}
 		}
-			
-		_edge = edge_surface;
 		
 		if(!is_surface(_tex0)) return _outSurf;
 		
@@ -548,23 +670,9 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _row   = 1;
 		
 		switch(_type) {
-			case 0 : 
-				_surfs = generate18(_data, _tex0, _tex1, _edge, _crop); 
-				_col   = 6;
-				_row   = 3;
-				break;
-				
-			case 1 : 
-				_surfs = generate55(_data, _tex0, _tex1, _edge, _crop); 
-				_col   = 11;
-				_row   = 5;
-				break;
-				
-			case 2 : 
-				_surfs = generate48(_data, _tex0, _tex1, _edge, _crop); 
-				_col   = 12;
-				_row   = 4;
-				break;
+			case 0 : _surfs = generate18(_data, _tex0, _tex1, edge_surface, _crop); _col =  6; _row = 3; break;
+			case 1 : _surfs = generate55(_data, _tex0, _tex1, edge_surface, _crop); _col = 11; _row = 5; break;
+			case 2 : _surfs = generate48(_data, _tex0, _tex1, edge_surface, _crop); _col = 12; _row = 4; break;
 		}
 		
 		if(_outp == 1) return _surfs;
@@ -599,84 +707,4 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		return _outSurf;
 	}
 
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		if(!attributes.show_tile_index) return;
-		
-		var _tex = getSingleValue(0);
-		var _typ = getSingleValue(2);
-		var _out = getSingleValue(0,, true);
-		
-		if(!is_surface(_tex)) return;
-		if(!is_surface(_out)) return;
-		
-		var _dim = surface_get_dimension(_tex);
-		var _oim = surface_get_dimension(_out);
-		var _til = [ _oim[0] / _dim[0], _oim[1] / _dim[1] ];
-		var _tw  = _dim[0] * _s;
-		var _th  = _dim[1] * _s;
-		
-		////////////////////////////////////////////////////////////////////////////////////////
-		
-		draw_set_color(COLORS._main_icon_light);
-		draw_set_alpha(0.5);
-			for(var i = 1; i < _til[0]; i++) {
-				var _lx = _x + i * _tw;
-				draw_line(_lx, _y, _lx, _y + _oim[1] * _s);
-			}
-			
-			for(var i = 1; i < _til[1]; i++) {
-				var _ly = _y + i * _th;
-				draw_line(_x, _ly, _x + _oim[0] * _s, _ly);
-			}
-		draw_set_alpha(1);
-		
-		////////////////////////////////////////////////////////////////////////////////////////
-		
-		var _bitmask_draw = false;
-		var _bitmask_x    = 0;
-		var _bitmask_y    = 0;
-		
-		for(var i = 0; i < _til[1]; i++) {
-			var _ly = _y + i * _th;
-			
-			for(var j = _typ? 0 : 1; j < _til[0]; j++) {
-				var _lx = _x + j * _tw;
-				var _id = _typ? i * _til[0] + j : i * (_til[0] - 1) + j - 1;
-				
-				if(hover && point_in_rectangle(_mx, _my, _lx, _ly, _lx + _tw, _ly + _th)) {
-					draw_set_color(COLORS._main_icon_light)
-					draw_rectangle(_lx, _ly, _lx + _tw - 1, _ly + _th - 1, true);
-					
-					if(mouse_press(mb_left))
-						tile_overlay_select = tile_overlay_select == _id? noone : _id;
-				}
-				
-				draw_set_text(f_p0, fa_left, fa_left, _id == tile_overlay_select? COLORS._main_icon_light : COLORS._main_icon);
-				draw_text(_lx + 4, _ly + 4, _id);
-				
-				if(_id == tile_overlay_select) {
-					_bitmask_draw = true;
-					_bitmask_x    = _lx;
-					_bitmask_y    = _ly;
-				}
-			}
-		}
-		
-		if(_bitmask_draw) {
-			draw_set_color(COLORS._main_accent);
-			
-			for(var i = 0; i < 3; i++)
-			for(var j = 0; j < 3; j++) {
-				var _id = i * 3 + j;
-				
-				var _lx = _bitmask_x + (j - 1) * _tw;
-				var _ly = _bitmask_y + (i - 1) * _th;
-				
-				draw_set_text(f_p0b, fa_center, fa_center, COLORS._main_accent);
-				draw_text(_lx + _tw / 2, _ly + _th / 2, _id);
-				
-				draw_rectangle(_lx, _ly, _lx + _tw - 1, _ly + _th - 1, true);
-			}
-		}
-	}
 }

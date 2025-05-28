@@ -446,7 +446,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static getNextNodesInternal = function() { //get node inside the group
 		LOG_BLOCK_START();
-		LOG_IF(global.FLAG.render == 1, $"→→→→→ Call get next node from group: {INAME}");
+		LOG_IF(global.FLAG.render == 1, $"→→→→→ Call get next node from group: {getInternalName()}");
 		
 		var _nodes = [];
 		if(isRenderActive()) {
@@ -470,7 +470,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static getNextNodesExternal = function() { //get node connected to the parent object
-		LOG_IF(global.FLAG.render == 1, $"Checking next node external for {INAME}");
+		LOG_IF(global.FLAG.render == 1, $"Checking next node external for {getInternalName()}");
 		LOG_BLOCK_START();
 		
 		var nextNodes = [];
@@ -497,7 +497,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static setRenderStatus = function(result) {
 		LOG_BLOCK_START();
-		LOG_IF(global.FLAG.render == 1, $"Set render status for {INAME} : {result}");
+		LOG_IF(global.FLAG.render == 1, $"Set render status for {getInternalName()} : {result}");
 		rendered = result;
 		if(rendered == result) {
 			LOG_BLOCK_END();
@@ -532,7 +532,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static resetRender = function(_clearCache = false) {
-		LOG_LINE_IF(global.FLAG.render == 1, $"Reset Render for group {INAME}");
+		LOG_LINE_IF(global.FLAG.render == 1, $"Reset Render for group {getInternalName()}");
 		
 		setRenderStatus(false);
 		if(_clearCache) clearInputCache();
