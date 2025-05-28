@@ -17,14 +17,14 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	
 	////- SDF
 	
-	newInput(2, nodeValue_Enum_Button( "Side", 2, [ "Inside", "Outside", "Both" ]));
+	newInput(2, nodeValue_Enum_Button( "Side",         2, [ "Inside", "Outside", "Both" ]));
 	newInput(3, nodeValue_Slider(      "Max distance", 1, [ 0, 2, 0.01 ]));
-	newInput(6, nodeValue_Bool(        "Angle", false));
+	newInput(6, nodeValue_Bool(        "Angle",        false));
 	
 	////- Render
 	
 	newInput(4, nodeValue_Bool( "Keep Alpha", false));
-	newInput(5, nodeValue_Bool( "Invert", false));
+	newInput(5, nodeValue_Bool( "Invert",     false));
 	
 	//// input 6
 	
@@ -37,6 +37,7 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	]
 	
 	attribute_surface_depth();
+	attribute_oversample();
 	
 	temp_surface = [ surface_create(1, 1), surface_create(1, 1) ];
 	
@@ -70,6 +71,7 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 			bg = !bg;
 			
 			surface_set_shader(temp_surface[bg], sh_sdf);
+				shader_set_i("sampleMode", getAttribute("oversample"));
 				shader_set_f("dimension", _n, _n);
 				shader_set_f("stepSize",  stepSize);
 				shader_set_i("side",     _side);

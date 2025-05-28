@@ -35,6 +35,19 @@ event_inherited();
 		scrollbox	= scroll;
 		dialog_w	= max(ui(200), scroll.w);
 		data		= scroll.data;
+		
+		grid_width  = ui(80);
+		grid_height = ui(88);
+		draw_set_font(f_p4);
+		
+		for( var i = 0, n = array_length(data); i < n; i++ ) {
+			var _val = data[i];
+			var _txt = _val.name;
+			
+			var _tw = string_width(_txt);
+			grid_width = max(grid_width, _tw + ui(24));
+		}
+		
 		setSize();
 	}
 	
@@ -138,7 +151,10 @@ event_inherited();
 				var _sh = sprite_get_height(_spr);
 				var _ss = min((gw - ui(16)) / _sw, (gh - ui(24)) / _sh);
             	
-				draw_sprite_ext(_spr, _val.spr_ind, _xx + gw / 2, _yy + ui(4) + _sh * _ss / 2, _ss, _ss, 0, _val.spr_blend);
+            	var _sx = _xx + gw / 2;
+            	var _sy = _yy + ui(4) + (gh - ui(24)) / 2;
+            	
+				draw_sprite_ext(_spr, _val.spr_ind, _sx, _sy, _ss, _ss, 0, _val.spr_blend);
 			}
 			
 			draw_set_text(f_p4, fa_center, fa_bottom, _act? COLORS._main_text : COLORS._main_text_sub);

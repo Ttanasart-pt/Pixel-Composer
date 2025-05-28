@@ -1,6 +1,21 @@
-//
-// Simple passthrough fragment shader
-//
+#pragma use(sampler_simple)
+
+#region -- sampler_simple -- [1729740692.1417658]
+    uniform int  sampleMode;
+    
+    vec4 sampleTexture( sampler2D texture, vec2 pos) {
+        if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
+            return texture2D(texture, pos);
+        
+             if(sampleMode <= 1) return vec4(0.);
+        else if(sampleMode == 2) return texture2D(texture, clamp(pos, 0., 1.));
+        else if(sampleMode == 3) return texture2D(texture, fract(pos));
+        else if(sampleMode == 4) return vec4(vec3(0.), 1.);
+        
+        return vec4(0.);
+    }
+#endregion -- sampler_simple --
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -9,9 +24,9 @@ uniform float stepSize;
 uniform int side;
 
 void main() {
-	float c = texture2D( gm_BaseTexture, v_vTexcoord ).z;
+	float c = sampleTexture( gm_BaseTexture, v_vTexcoord ).z;
 	if((side == 0 && c == 0.) || (side == 1 && c == 1.)) {
-		gl_FragColor = texture2D( gm_BaseTexture, v_vTexcoord );
+		gl_FragColor = sampleTexture( gm_BaseTexture, v_vTexcoord );
 		return;
 	}
 	
@@ -34,9 +49,8 @@ void main() {
 	float closetDistance = 9999.;
 	
 	for( int i = 0 ; i < 9; i++ ) {
-		if( loc[i].x < 0. || loc[i].y < 0. || loc[i].x > 1. || loc[i].y > 1. ) continue;
+		vec4 sam = sampleTexture( gm_BaseTexture, loc[i] );
 		
-		vec4 sam = texture2D( gm_BaseTexture, loc[i] );
 		if(sam.z != c) {
 			float dist = distance(v_vTexcoord, loc[i]);
 			if(dist < closetDistance) {

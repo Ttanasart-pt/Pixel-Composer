@@ -29,8 +29,8 @@
   "nineSlice":null,
   "origin":4,
   "parent":{
-    "name":"src",
-    "path":"folders/nodes/data/MKFX/src.yy",
+    "name":"MKFX",
+    "path":"folders/sprites/enum icons/MKFX.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

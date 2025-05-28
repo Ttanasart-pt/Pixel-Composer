@@ -35,7 +35,9 @@ void main() {
 	} else {
 		bool draw = false;
 		
-		if(edge == 80 || edge == 120 || edge == 86 || edge == 127 || edge == 82 || edge == 123 || edge == 88 || edge == 95 || edge == 126 || edge == 122 || edge == 94 || edge == 91 || edge == 90) {
+		if(edge == 80 || edge == 120 || edge == 86 || edge == 127 || edge == 82 || edge == 123 || edge == 88 || edge == 95 || edge == 126 || edge == 122 || 
+		   edge == 94 || edge == 91 || edge == 90) {
+		   	
 			if(fullEdge == 0 && tx.x + crop[2] >= tx.y + crop[1]) 
 				draw = true;
 				
@@ -45,8 +47,10 @@ void main() {
 				draw = true;
 		} 
 		
-		if(edge == 216 || edge == 72 || edge == 223 || edge == 75 || edge == 222 || edge == 74 || edge == 88 || edge == 219 || edge == 95 || edge == 218 || edge == 94 || edge == 91 || edge == 90) {
-			if(fullEdge == 0 && tx.x - crop[0] < h - tx.y - crop[3]) 
+		if(edge == 216 || edge == 72 || edge == 223 || edge == 75 || edge == 222 || edge == 74 || edge == 88 || edge == 219 || edge == 95 || edge == 218 || 
+		   edge == 94 || edge == 91 || edge == 90) {
+		   	
+			if(fullEdge == 0 && tx.x - crop[0] <= h - tx.y - crop[3]) 
 				draw = true;
 				
 			//if(fullEdge == 1 && (extendEdge == 1 || tx.x < crop[2]))

@@ -46,7 +46,7 @@ void main() {
 		} 
 		
 		if(edge == 210 || edge == 251 || edge == 18 || edge == 27 || edge == 82 || edge == 123 || edge == 219 || edge == 250 || edge == 218 || edge == 122 || edge == 26 || edge == 91 || edge == 90) {
-			if(fullEdge == 0 && tx.x - crop[0] < h - tx.y - crop[3])
+			if(fullEdge == 0 && tx.x - crop[0] <= h - tx.y - crop[3])
 				draw = true;
 				
 			//if(fullEdge == 1 && (extendEdge == 1 || tx.y < crop[1]))

@@ -756,6 +756,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						if(struct_has(display_data, "horizontal"))   editWidget.horizontal   = display_data.horizontal;
 						if(struct_has(display_data, "item_pad"))     editWidget.item_pad     = display_data.item_pad;
 						if(struct_has(display_data, "text_pad"))     editWidget.text_pad     = display_data.text_pad;
+						if(struct_has(display_data, "show_icon"))    editWidget.show_icon    = display_data.show_icon;
 						
 						rejectConnect();
 						key_inter    = CURVE_TYPE.cut;

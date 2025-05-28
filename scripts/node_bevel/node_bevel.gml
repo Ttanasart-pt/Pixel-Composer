@@ -63,7 +63,6 @@ function Node_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _shf = _data[2];
 		var _sca = _data[3];
 		var _slp = _data[4];
-		var _sam = getAttribute("oversample");
 		var _dim = surface_get_dimension(_data[0]);
 		
 		surface_set_shader(_outSurf, max(_dim[0], _dim[1]) < 256? sh_bevel : sh_bevel_highp);
@@ -72,7 +71,7 @@ function Node_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			shader_set_2("shift",      _shf);
 			shader_set_2("scale",      _sca);
 			shader_set_i("slope",      _slp);
-			shader_set_i("sampleMode", _sam);
+			shader_set_i("sampleMode", getAttribute("oversample"));
 			
 			draw_surface_safe(_data[0]);
 		surface_reset_shader();

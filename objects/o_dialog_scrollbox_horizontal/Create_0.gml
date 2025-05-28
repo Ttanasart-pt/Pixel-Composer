@@ -280,7 +280,10 @@ event_inherited();
 			
 			if(_spr) {
 				var _ss = 28 / sprite_get_height(_val.spr);
+				
+				gpu_set_tex_filter(true);
 				draw_sprite_uniform(_val.spr, _val.spr_ind, _lx + ui(8) + hght / 2, _ly + hght / 2, _ss, _val.spr_blend);
+				gpu_set_tex_filter(false);
 			}
 			
 			_ly += hght;
