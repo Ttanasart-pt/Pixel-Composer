@@ -1,48 +1,41 @@
 function Node_Dotted(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Dotted";
 	
-	newInput(0, nodeValue_Dimension());
-	
-	newInput(1, nodeValue_Surface("Mask"));
-	
-	newInput(2, nodeValue_Float("Size", 4));
-		
-	newInput(3, nodeValueMap("Scale Map", self));
-	
-	newInput(4, nodeValue_Rotation("Angle", 0))
-		.setMappable(5);
-	newInput(5, nodeValueMap("Angle Map", self));
-	
-	newInput(6, nodeValue_Enum_Button("Render Mode",  0, [ "Step", "AA", "Smooth" ]));
-	
-	newInput(7, nodeValue_Color("BG Color", ca_black));
-	
-	newInput(8, nodeValue_Color("Dot Color", ca_white));
-	
-	newInput(9, nodeValue_Slider("Dot Size", .5))
-		.setMappable(10);
-	newInput(10, nodeValueMap("Dot Size Map", self));
-	
-	newInput(11, nodeValue_Slider("Intensity", 1))
-	
-	newInput(12, nodeValue_Slider("Smoothness", .1))
-	
-	newInput(13, nodeValue_Enum_Button("Pattern",  0, [ "Grid", "Hexagonal" ]));
-	
-	newInput(14, nodeValue_Vec2("Position", [ 0, 0 ]))
-		.setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	
-	newInput(15, nodeValue_Vec2("Spacing", [ 1, 1 ]));
-	
-	newInput(16, nodeValue_Enum_Button("Dot Color Mode",  0, [ "Solid", "Palette", "Random", "Texture" ]));
-	
-	newInput(17, nodeValue_Palette("Palette", array_clone(DEF_PALETTE)));
-	
-	newInput(18, nodeValue_Gradient("Gradient", new gradientObject([ca_black, ca_white])) );
-	
-	newInput(19, nodeValue_Surface("Texture"));
-	
 	newInput(20, nodeValueSeed());
+	
+	////- =Output
+	
+	newInput(0, nodeValue_Dimension());
+	newInput(1, nodeValue_Surface( "Mask" ));
+	
+	////- =Transform
+	
+	newInput(14, nodeValue_Vec2(     "Position", [0,0] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput( 4, nodeValue_Rotation( "Angle",     0    )).setMappable(5);
+	newInput( 5, nodeValueMap(       "Angle Map", self ));
+	
+	////- =Pattern
+	
+	newInput(13, nodeValue_Enum_Button( "Pattern",       0, [ "Grid", "Hexagonal" ]));
+	newInput( 2, nodeValue_Float(       "Size",          4    ));
+	newInput( 3, nodeValueMap(          "Scale Map",     self ));
+	newInput(15, nodeValue_Vec2(        "Spacing",      [1,1] ));
+	newInput( 9, nodeValue_Slider(      "Dot Size",     .5    )).setMappable(10);
+	newInput(10, nodeValueMap(          "Dot Size Map",  self ));
+	
+	////- =Render
+	
+	newInput( 7, nodeValue_Color(       "BG Color",        ca_black ));
+	newInput( 6, nodeValue_Enum_Button( "Render Mode",     0, [ "Step", "AA", "Smooth" ] ));
+	newInput(16, nodeValue_Enum_Button( "Dot Color Mode",  0, [ "Solid", "Palette", "Random", "Texture" ] ));
+	newInput( 8, nodeValue_Color(       "Dot Color",       ca_white ));
+	newInput(17, nodeValue_Palette(     "Palette",         array_clone(DEF_PALETTE) ));
+	newInput(18, nodeValue_Gradient(    "Gradient",        new gradientObject([ca_black, ca_white]) ));
+	newInput(19, nodeValue_Surface(     "Texture" ));
+	newInput(12, nodeValue_Slider(      "Smoothness",     .1))
+	newInput(11, nodeValue_Slider(      "Intensity",       1))
+	
+	// input 21
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -54,6 +47,8 @@ function Node_Dotted(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	];
 	
 	attribute_surface_depth();
+	
+	////- Nodes
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		PROCESSOR_OVERLAY_CHECK

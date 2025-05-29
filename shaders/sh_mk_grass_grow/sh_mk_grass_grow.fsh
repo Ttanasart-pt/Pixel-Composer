@@ -8,6 +8,7 @@ uniform float seed;
 uniform vec2  grassSize;
 uniform float colorVariance;
 uniform float grassSpread;
+uniform float distribution;
 
 uniform int  groundFill;
 uniform vec4 groundColor;
@@ -162,6 +163,10 @@ bool checkGrass(in vec2 coord, in float lengthAdj) {
 		vec2  curPos      = v_vTexcoord + vec2(0., tx.y) * i;
 		vec4  grassData   = texture2D(grassMask, samPos);
 		if(grassData.a == 0.) continue;
+		
+		vec2  samPx = floor(samPos * dimension);
+		float rr    = (mod(samPx.x + samPx.y, 2.) + random(samPx, seed)) * .5;
+		if(rr > distribution) continue;
 		
 		float grassHeight = mix(grassSize.x, grassSize.y, grassData.r);
 		grassHeight *= grassData.g;

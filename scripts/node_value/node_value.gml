@@ -1101,6 +1101,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	////- GET
 	
+	static getEditWidget = function() /*=>*/ {return editWidget};
+	
 	static valueProcess = function(value, nodeFrom = undefined, applyUnit = true, arrIndex = 0) {
 		var typeFrom = nodeFrom == undefined? VALUE_TYPE.any : nodeFrom.type;
 		

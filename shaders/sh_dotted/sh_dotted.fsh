@@ -241,7 +241,7 @@ void main() {
 		amoVec = vec2(amount) / spacing;
 	#endregion
 	
-	vec2  pos  = v_vTexcoord;
+	vec2  pos  = v_vTexcoord * vec2(dimension.x / dimension.y, 1.);
 	      pos -= position / dimension;
 	      pos *= mat2(cos(ang), -sin(ang), sin(ang), cos(ang));
 	      
@@ -290,10 +290,8 @@ void main() {
 		
 	}
 	
-	if(colorMode == 0) {
+	if(colorMode == 0)
 		gl_FragColor = mix(cbg, color1, dott.a);
-		
-	} else {
+	else
 		gl_FragColor = cbg + dott;
-	}
 }

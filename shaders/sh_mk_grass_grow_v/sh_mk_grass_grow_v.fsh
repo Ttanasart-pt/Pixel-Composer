@@ -8,6 +8,7 @@ uniform float seed;
 uniform vec2  grassSize;
 uniform float colorVariance;
 uniform float density;
+uniform float distribution;
 
 uniform int  groundFill;
 uniform vec4 groundColor;
@@ -151,6 +152,10 @@ void checkGrass(in vec2 pos) {
 	if(texture2D(grassMask, pos).r == 0.) return;
 	if(pow(random(pos), .2) >= density)   return;
 	
+	vec2  samPx = floor(pos * dimension);
+	float rr = (mod(samPx.x + samPx.y, 2.) + random(samPx)) * .5;
+	if(rr > distribution) return;
+		
 	vec4 baseC = gradientEval(random(pos + vec2(16.2681)));
 	     if(renderType == 0) gl_FragColor = baseC;
 	else if(renderType == 1) gl_FragColor = baseC * texture2D(gm_BaseTexture, pos);

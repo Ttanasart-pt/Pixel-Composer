@@ -17,12 +17,12 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	////- =Shape
 	
 	shape_types = __enum_array_gen([ "Dense Bush", "V", "Hash", "Line", "W" ], s_node_mk_grass_type, c_white);
-	newInput( 7, nodeValue_Enum_Scroll( "Shape",   0, { data: shape_types, horizontal: 2, text_pad: ui(16) } ));
-	newInput(22, nodeValue_Slider( "Distribution", .5));
-	newInput( 8, nodeValue_Range(       "Size",   [4,4], { linked: true }));
-	newInput(17, nodeValue_Slider(      "Spread", .0));
-	newInput(20, nodeValue_Float(       "Extra",  .0));
-	newInput(21, nodeValue_Range(       "Sway X", [-4,4]));
+	newInput( 7, nodeValue_Enum_Scroll( "Shape",    0, { data: shape_types, horizontal: 2, text_pad: ui(16) } )).getEditWidget().setFilter(false);
+	newInput(22, nodeValue_Slider(      "Ratio",   .5));
+	newInput( 8, nodeValue_Range(       "Size",    [4,4], { linked: true }));
+	newInput(17, nodeValue_Slider(      "Spread",   0));
+	newInput(20, nodeValue_Float(       "Extra",    0));
+	newInput(21, nodeValue_Range(       "Sway X",  [-4,4]));
 	
 	////- =Scatter
 	
@@ -46,10 +46,10 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	// input 23
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 1, 0, 
-		["Source",  false], 2, 3, 4, 5, 6, 
-		["Shape",   false], 7, 22, 8, 17, 20, 21, 
-		["Scatter", false], 9, 11, 14, 15,
-		["Render",  false], 12, 13, 16, 
+		["Source",  false    ],  2,  3,  4,  5,  6, 
+		["Shape",   false    ],  7, 22,  8, 17, 20, 21, 
+		["Scatter", false    ],  9, 11, 14, 15,
+		["Render",  false    ], 12, 13, 16, 
 		["Ground",  false, 18], 19, 
 	];
 	
@@ -107,7 +107,7 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var _gnd_clr  = _data[19];
 			
 			inputs[ 8].setVisible(_shape == 0 || _shape == 2 || _shape == 3 || _shape == 4);
-			inputs[22].setVisible(_shape == 3 || _shape == 4 || _shape == 5);
+			inputs[22].setVisible(_shape != 2);
 			inputs[17].setVisible(_shape == 0);
 			inputs[16].setVisible(_shape == 0);
 			inputs[20].setVisible(_shape == 0);
@@ -218,6 +218,7 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				shader_set_2("grassSize",     _size);
 				shader_set_f("colorVariance", _color_vr);
 				shader_set_f("density",       _dens);
+				shader_set_f("distribution",  _dist);
 				shader_set_f("expand",        _expand);
 				
 				shader_set_i("renderType",    _rtype);

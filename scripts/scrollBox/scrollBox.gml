@@ -30,6 +30,7 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 	open    = false;
 	open_rx = 0;
 	open_ry = 0;
+	filter  = true;
 	
 	align          = fa_center;
 	horizontal     = false;
@@ -49,6 +50,7 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 	static setTextColor     = function(_l) /*=>*/ { text_color     = _l; return self; }
 	static setUpdateHover   = function(_l) /*=>*/ { update_hover   = _l; return self; }
 	static setMinWidth      = function(_l) /*=>*/ { minWidth       = _l; return self; }
+	static setFilter        = function(_l) /*=>*/ { filter         = _l; return self; }
 	static setPadding       = function(_l) /*=>*/ { padding        = _l; return self; }
 	static setPaddingItem   = function(_l) /*=>*/ { item_pad       = _l; return self; }
 	static setPaddingScroll = function(_l) /*=>*/ { padding_scroll = _l; return self; }
@@ -181,7 +183,7 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 			if(_spr) {
 				var _ss = (h - ui(32)) / sprite_get_height(_selVal.spr);
 				
-				gpu_set_tex_filter(true);
+				gpu_set_tex_filter(filter);
 				draw_sprite_uniform(_selVal.spr, _selVal.spr_ind, _xc, _y + ui(4) + (h - ui(32)) / 2, _ss, _selVal.spr_blend);
 				gpu_set_tex_filter(false);
 			}
@@ -206,7 +208,7 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 			if(show_icon && _spr) {
 				var _ss = (h - ui(4)) / sprite_get_height(_selVal.spr);
 				
-				gpu_set_tex_filter(true);
+				gpu_set_tex_filter(filter);
 				draw_sprite_uniform(_selVal.spr, _selVal.spr_ind, _x + ui(8) + h / 2, _yc, _ss, _selVal.spr_blend);
 				gpu_set_tex_filter(false);
 			}
