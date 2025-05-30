@@ -70,12 +70,15 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(23, nodeValue_Vec2(     "Texture Scale",          [1,1] ));
 	newInput(29, nodeValue_Bool(     "Scale Texture to Length", true ));
 	
+	////- =Line Cap
+	
+	newInput(40, nodeValue_Surface( "Start Cap" ));
+	newInput(41, nodeValue_Surface( "End Cap"   ));
+	newInput(42, nodeValue_Bool(    "Rotate Cap", true ));
+	
 	////- =Render
-
+	
 	newInput(34, nodeValue_Enum_Scroll( "SSAA", 0, [ "None", "2x", "4x", "8x" ] ));
-	newInput(40, nodeValue_Surface(     "Start Cap" ));
-	newInput(41, nodeValue_Surface(     "End Cap"   ));
-	newInput(42, nodeValue_Bool(        "Rotate Cap", true ));
 	
 	// Inputs 43
 	
@@ -87,7 +90,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		["Wiggle",        false], 4, 5, 
 		["Color",         false], 10, 24, 15, 37, 38, 
 		["Texture",       false], 18, 21, 22, 23, 29, 
-		["Render",        false], 34, 40, 41, 42, 
+		["Line Cap",      false], 40, 41, 42, 
+		["Render",        false], 34, 
 	];
 	
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone));
@@ -148,62 +152,58 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	static processData = function(_outData, _data, _array_index) {
 		#region data
-			var _dim      = _data[0];
-			var _bg       = _data[1];
-			var _seg      = _data[2];
-			var _wid      = _data[3];
-			var _wig      = _data[4];
-			var _sed      = _data[5];
-			var _ang      = _data[6];
-			var _pat      = _data[7]; 
-			var _ratio    = _data[8];
-			var _shift    = _data[9];
-		
-			var _color    = _data[10];
+			var _seed     = _data[39];
+			
+			var _dim      = _data[ 0];
+			var _bg       = _data[ 1];
+			var _pbbox    = _data[30];
+			var _ppadd    = _data[31];
+			var _colW     = _data[16];
+			
+			var _dtype    = _data[27];
+			var _ang      = _data[ 6];
+			var _pat      = _data[ 7]; 
+			var _segs     = _data[28];
+			var _pnt0     = _data[32];
+			var _pnt1     = _data[33];
+			var _loop     = _data[35];
+			var _fixL     = _data[19];
+			var _seg      = _data[ 2];
+			var _segL     = _data[20];
+			
+			var _1px      = _data[17];
+			var _wid      = _data[ 3];
 			var _widc     = _data[11];
 			var _widap    = _data[12];
+			var _wg2wid   = _data[36];
 			
+			var _ratio    = _data[ 8];
+			var _ratInv   = _data[25];
+			var _shift    = _data[ 9];
+			var _clamp    = _data[26];
 			var _cap      = _data[13];
 			var _capP     = _data[14];
-			var _colP     = _data[15];
-			var _colW     = _data[16];
-			var _1px      = _data[17];
-			var _text     = _data[18];
 			
-			var _fixL     = _data[19];
-			var _segL     = _data[20];
-		
+			var _wig      = _data[ 4];
+			var _sed      = _data[ 5];
+			
+			var _color    = _data[10];
+			var _colb     = _data[24];
+			var _colP     = _data[15];
+			var _wg2clr   = _data[37];
+			var _wg2clrR  = _data[38];
+			
 			var _tex      = _data[18];
 			var _texPos   = _data[21];
 			var _texRot   = _data[22];
 			var _texSca   = _data[23];
-		
-			var _colb     = _data[24];
-			var _ratInv   = _data[25];
-			var _clamp    = _data[26];
-			
-			var _dtype    = _data[27];
-			var _segs     = _data[28];
 			var _scaleTex = _data[29];
-			
-			var _pbbox    = _data[30];
-			var _ppadd    = _data[31];
-			
-			var _pnt0     = _data[32];
-			var _pnt1     = _data[33];
-			var _aa       = power(2, _data[34]);
-			
-			var _loop     = _data[35];
-			var _wg2wid   = _data[36];
-			
-			var _wg2clr   = _data[37];
-			var _wg2clrR  = _data[38];
-			
-			var _seed     = _data[39];
 			
 			var _cap_st   = _data[40];
 			var _cap_ed   = _data[41];
 			var _cap_rt   = _data[42];
+			
+			var _aa       = power(2, _data[34]);
 		#endregion
 		
 		#region visible
@@ -255,7 +255,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _rtStr = min(_rangeMin, _rangeMax);
 			var _rtMax = max(_rangeMin, _rangeMax);
 			
-			var _useTex = !_1px && is_surface(_text);
+			var _useTex = !_1px && is_surface(_tex);
 			if(_useTex) { _cap = false; _1px = false; }
 			
 			random_set_seed(_sed);
@@ -722,21 +722,29 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					var _pp = [ 0, 0 ];
 					
 					if(is_surface(_cap_st)) {
+						var _cap_st_s = _aa;
 						var _cap_st_w = surface_get_width_safe(_cap_st);
 						var _cap_st_h = surface_get_height_safe(_cap_st);
 						var _rr = _cap_rt? _sta : 0;
-						
 						_pp = point_rotate_origin(-_cap_st_w / 2, -_cap_st_h / 2, _rr, _pp);
-						draw_surface_ext(_cap_st, _stx + _pp[0], _sty + _pp[1], 1, 1, _rr, c_white, 1);
+						
+						var _cap_st_x = (_stx + _pp[0]) * _aa;
+						var _cap_st_y = (_sty + _pp[1]) * _aa;
+						
+						draw_surface_ext(_cap_st, _cap_st_x, _cap_st_y, _cap_st_s, _cap_st_s, _rr, c_white, 1);
 					}
 					
 					if(is_surface(_cap_ed)) {
+						var _cap_ed_s = _aa;
 						var _cap_ed_w = surface_get_width_safe(_cap_ed);
 						var _cap_ed_h = surface_get_height_safe(_cap_ed);
 						var _rr = _cap_rt? _eda : 0;
+						_pp = point_rotate_origin(-_cap_ed_w / 2, -_cap_ed_h / 2, _rr, _pp);
 						
-						_pp = point_rotate_origin(-_cap_st_w / 2, -_cap_st_h / 2, _rr, _pp);
-						draw_surface_ext(_cap_ed, _edx + _pp[0], _edy + _pp[1], 1, 1, _rr, c_white, 1);
+						var _cap_ed_x = (_edx + _pp[0]) * _aa;
+						var _cap_ed_y = (_edy + _pp[1]) * _aa;
+						
+						draw_surface_ext(_cap_ed, _cap_ed_x, _cap_ed_y, _cap_ed_s, _cap_ed_s, _rr, c_white, 1);
 					}
 				}
 				
@@ -751,7 +759,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			draw_surface(_cPassAA, 0, 0);
 		surface_reset_shader();
 		
-		if(_colW && !_1px) {
+		if(_colW && !_1px) { // width pass
 			surface_set_target(_widthPass);
 				if(_bg) draw_clear_alpha(0, 1);
 				else	DRAW_CLEAR
