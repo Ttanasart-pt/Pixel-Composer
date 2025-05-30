@@ -472,6 +472,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 	}
 	
+	static setShaderProp = function(key) { node.shaderProp[$ key] = self; return self; }
+	
 	////- ANIMATION
 	
 	static setAnimable = function(_anim) { animable = _anim; return self; }

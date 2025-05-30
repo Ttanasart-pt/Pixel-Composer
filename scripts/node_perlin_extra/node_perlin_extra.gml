@@ -9,77 +9,56 @@ function Node_Perlin_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	name   = "Extra Perlins";
 	shader = sh_perlin_extra;
 	
-	newInput(1, nodeValue_Vec2("Position", [ 0, 0 ]))
-		.setUnitRef(function(index) { return getDimension(index); });
-		addShaderProp(SHADER_UNIFORM.float, "position");
-		
-	newInput(2, nodeValue_Vec2("Scale", [ 4, 4 ]))
-		.setMappable(13);
-		addShaderProp(SHADER_UNIFORM.float, "scale");
+	////- =Output
 	
-	newInput(3, nodeValue_Int("Iteration", 2));
-		addShaderProp(SHADER_UNIFORM.integer, "iteration");
-	
-	newInput(4, nodeValue_Bool("Tile", true, "Tiling only works with integer scale, and some effect type doesn't support tiling."));
-		addShaderProp(SHADER_UNIFORM.integer, "tile");
-			
-	newInput(5, nodeValueSeed());
-		addShaderProp(SHADER_UNIFORM.float, "seed");
-		
-	newInput(6, nodeValue_Enum_Button("Color Mode",  0, [ "Greyscale", "RGB", "HSV" ]));
-		addShaderProp(SHADER_UNIFORM.integer, "colored");
-	
-	newInput(7, nodeValue_Slider_Range("Color R Range", [ 0, 1 ]));
-		addShaderProp(SHADER_UNIFORM.float, "colorRanR");
-	
-	newInput(8, nodeValue_Slider_Range("Color G Range", [ 0, 1 ]));
-		addShaderProp(SHADER_UNIFORM.float, "colorRanG");
-	
-	newInput(9, nodeValue_Slider_Range("Color B Range", [ 0, 1 ]));
-		addShaderProp(SHADER_UNIFORM.float, "colorRanB");
-	
-	newInput(10, nodeValue_Enum_Scroll("Noise Type", 0, [ "Absolute worley", "Fluid", "Noisy", "Camo", "Blocky", "Max", "Vine" ]));
-		addShaderProp(SHADER_UNIFORM.integer, "type");
-		
-	newInput(11, nodeValue_Float("Parameter A", 0))
-		.setDisplay(VALUE_DISPLAY.slider)
-		.setMappable(14);
-		addShaderProp(SHADER_UNIFORM.float, "paramA");
-		
-	newInput(12, nodeValue_Float("Parameter B", 1))
-		.setMappable(15);
-		addShaderProp(SHADER_UNIFORM.float, "paramB");
-		
-	//////////////////////////////////////////////////////////////////////////////////
-	
-	newInput(13, nodeValueMap("Scale map", self));			addShaderProp();
-	
-	newInput(14, nodeValueMap("Parameter A map", self));	addShaderProp();
-	
-	newInput(15, nodeValueMap("Parameter B map", self));	addShaderProp();
-	
-	//////////////////////////////////////////////////////////////////////////////////
-	
-	newInput(16, nodeValue_Rotation("Rotation", 0));
-		addShaderProp(SHADER_UNIFORM.float, "rotation");
-			
 	newInput(17, nodeValue_Surface("Mask"));
 	
+	////- =Noise
+	
+	newInput( 5, nodeValueSeed()).setShaderProp("seed");
+	newInput(10, nodeValue_Enum_Scroll( "Noise Type",       0, [ "Absolute worley", "Fluid", "Noisy", "Camo", "Blocky", "Max", "Vine" ])).setShaderProp("type");
+	newInput( 3, nodeValue_Int(         "Iteration",        2    )).setShaderProp("iteration");
+	newInput( 4, nodeValue_Bool(        "Tile",             true )).setShaderProp("tile");
+	newInput(11, nodeValue_Slider(      "Parameter A",      0    )).setShaderProp("paramA").setMappable(14);
+	newInput(14, nodeValueMap(          "Parameter A map"));
+	newInput(12, nodeValue_Float(       "Parameter B",      1    )).setShaderProp("paramB").setMappable(15);
+	newInput(15, nodeValueMap(          "Parameter B map"));
+	
+	////- =Transform
+	
+	newInput( 1, nodeValue_Vec2(     "Position",    [0,0] )).setShaderProp("position").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput(16, nodeValue_Rotation( "Rotation",    0    )).setShaderProp("rotation");
+	newInput( 2, nodeValue_Vec2(     "Scale",       [4,4] )).setShaderProp("scale").setMappable(13);
+	newInput(13, nodeValueMap(       "Scale map"));
+	
+	////- =Render
+	
+	newInput( 6, nodeValue_Enum_Button(  "Color Mode",     0, [ "Greyscale", "RGB", "HSV" ])).setShaderProp("colored");
+	newInput( 7, nodeValue_Slider_Range( "Color R Range", [0,1])).setShaderProp("colorRanR");
+	newInput( 8, nodeValue_Slider_Range( "Color G Range", [0,1])).setShaderProp("colorRanG");
+	newInput( 9, nodeValue_Slider_Range( "Color B Range", [0,1])).setShaderProp("colorRanB");
+	
 	input_display_list = [
-		["Output", 	 true],	0, 17, 5, 
-		["Noise",	false],	10, 1, 16, 2, 13, 3, 4, 11, 14, 12, 15,
-		["Render",	false], 6, 7, 8, 9, 
+		["Output",     true], 0, 17, 
+		["Noise",     false], 5, 10, 3, 4, 11, 14, 12, 15,
+		["Transform", false], 1, 16, 2, 13, 
+		["Render",    false], 6, 7, 8, 9, 
 	];
+	
+	////- Nodes
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
-		
 		return w_hovering;
 	}
 	
 	static step = function() {
-		var _col = getInputData(6);
 		var _typ = getInputData(10);
+		var _til = getInputData( 4);
+		var _col = getInputData( 6);
+		
+		inputs[16].setVisible(!_til);
+		inputs[ 2].type = _til? VALUE_TYPE.integer : VALUE_TYPE.float;
 		
 		inputs[7].setVisible(_col != 0);
 		inputs[8].setVisible(_col != 0);

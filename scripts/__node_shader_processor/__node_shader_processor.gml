@@ -2,11 +2,10 @@ function Node_Shader_Processor(_x, _y, _group = noone) : Node_Shader(_x, _y, _gr
 	name = "";
 	
 	newInput(0, nodeValue_Surface("Surface In"));
-		addShaderProp();
 	
 	attribute_surface_depth();
 	
-	static processShader = function(_outSurf, _data) { #region
+	static processShader = function(_outSurf, _data) {
 		var _surf = _data[0];
 		if(!is_surface(_surf)) return _outSurf;
 		
@@ -23,9 +22,9 @@ function Node_Shader_Processor(_x, _y, _group = noone) : Node_Shader(_x, _y, _gr
 		surface_reset_shader();
 		
 		return _outSurf;
-	} #endregion
+	}
 	
-	static processData = function(_outSurf, _data, _array_index) { #region
+	static processData = function(_outSurf, _data, _array_index) {
 		return processShader(_outSurf, _data);
-	} #endregion
+	}
 }

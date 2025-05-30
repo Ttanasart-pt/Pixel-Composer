@@ -2,44 +2,29 @@ function Node_Wavelet_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, 
 	name   = "Wavelet Noise";
 	shader = sh_noise_wavelet;
 	
-	newInput(1, nodeValue_Vec2("Position", [ 0, 0 ]))
-		.setUnitRef(function(index) { return getDimension(index); });
-		addShaderProp(SHADER_UNIFORM.float, "position");
-		
-	newInput(2, nodeValue_Vec2("Scale", [ 4, 4 ]))
-		.setMappable(6);
-		addShaderProp(SHADER_UNIFORM.float, "scale");
-				
-	newInput(3, nodeValueSeed());
-		addShaderProp(SHADER_UNIFORM.float, "seed");
-				
-	newInput(4, nodeValue_Float("Progress", 0))
-		.setMappable(7)
-		addShaderProp(SHADER_UNIFORM.float, "progress");
-				
-	newInput(5, nodeValue_Float("Detail", 1.24))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 2, 0.01 ] })
-		.setMappable(8);
-		addShaderProp(SHADER_UNIFORM.float, "detail");
-			
-	//////////////////////////////////////////////////////////////////////////////////
+	////- =Output
 	
-	newInput( 6, nodeValueMap("Scale map", self));		addShaderProp();
-	
-	newInput( 7, nodeValueMap("Progress map", self));	addShaderProp();
-	
-	newInput( 8, nodeValueMap("Detail map", self));	addShaderProp();
-		
-	//////////////////////////////////////////////////////////////////////////////////
-	
-	newInput(9, nodeValue_Rotation("Rotation", 0));
-		addShaderProp(SHADER_UNIFORM.float, "rotation");
-		
 	newInput(10, nodeValue_Surface("Mask"));
 	
+	////- =Noise
+	
+	newInput( 3, nodeValueSeed()).setShaderProp("seed");
+	newInput( 4, nodeValue_Float(  "Progress", 0  )).setShaderProp("progress").setMappable(7);
+	newInput( 7, nodeValueMap(     "Progress map" ));
+	newInput( 5, nodeValue_Slider( "Detail", 1.24, [ 0, 2, 0.01 ])).setShaderProp("detail").setMappable(8);
+	newInput( 8, nodeValueMap(     "Detail map"   ));
+	
+	////- =Transform
+	
+	newInput( 1, nodeValue_Vec2("Position",      [0,0] )).setShaderProp("position").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput( 9, nodeValue_Rotation("Rotation",   0    )).setShaderProp("rotation");
+	newInput( 2, nodeValue_Vec2("Scale",         [4,4] )).setShaderProp("scale").setMappable(6);
+	newInput( 6, nodeValueMap("Scale map"));
+	
 	input_display_list = [
-		["Output", 	 true],	0, 10, 3, 
-		["Noise",	false],	1, 9, 2, 6, 4, 7, 5, 8, 
+		["Output",      true], 0, 10, 
+		["Noise",      false], 3, 4, 7, 5, 8, 
+		["Transform",  false], 1, 9, 2, 6, 
 	];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {

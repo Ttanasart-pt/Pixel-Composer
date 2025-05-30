@@ -5,12 +5,6 @@ enum SHADER_UNIFORM {
 	texture,
 }
 
-function addShaderProp(_type = undefined, _key = undefined) {
-	INLINE
-	var _ind = array_length(inputs) - 1;
-	shader_data[_ind] = _type == undefined? undefined : { type: _type, key: _key };
-}
-
 function Node_Shader(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name   = "";
 	shader = noone;
@@ -18,30 +12,44 @@ function Node_Shader(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	static setShader = function(_data) { #region
-		for( var i = 0, n = array_length(shader_data); i < n; i++ ) {
-			var _dat = shader_data[i];
-			if(_dat == undefined) continue;
+	static setShader = function(_data) {
+		var _keys = struct_get_names(shaderProp);
+		for( var i = 0, n = array_length(_keys); i < n; i++ ) {
+			var _key = _keys[i];
+			var _inp = shaderProp[$ _key];
+			var _ind = _inp.index;
+			var _val = _data[_ind];
 			
-			var _inp = inputs[i];
-			
-			switch(_dat.type) {
-				case SHADER_UNIFORM.integer : shader_set_i(_dat.key, _data[i]); break;
-				
-				case SHADER_UNIFORM.float   : 
-					if(struct_has(_inp.attributes, "mapped") && _inp.attributes.mapped)
-						shader_set_f_map(_dat.key, _data[i], _data[_inp.attributes.map_index], _inp);
-					else 
-						shader_set_f(_dat.key, _data[i]);     
-					break;
-					
-				case SHADER_UNIFORM.color   : shader_set_color(_dat.key, _data[i]); break;
-				
-				case SHADER_UNIFORM.texture : shader_set_surface(_dat.key, _data[i]); break;
+			if(struct_has(_inp.attributes, "mapped") && _inp.attributes.mapped) {
+				shader_set_f_map(_key, _val, _data[_inp.attributes.map_index], _inp);
+				continue;
 			}
 			
+			switch(instanceof(_inp)) {
+				case "__NodeValue_Float": 
+				case "__NodeValue_Slider": 
+				case "__NodeValue_Rotation":     shader_set_f(_key, _val); break;
+				
+				case "__NodeValue_Int":
+				case "__NodeValue_ISlider":
+				case "__NodeValue_Bool":
+				case "__NodeValue_Enum_Button":
+				case "__NodeValue_Enum_Scroll":  shader_set_i(_key, _val); break;
+				
+				case "__NodeValue_Vec2":
+				case "__NodeValue_IVec2":
+				case "__NodeValue_Range":
+				case "__NodeValue_Dimension":
+				case "__NodeValue_Slider_Range": shader_set_2(_key, _val); break;
+				
+				case "__NodeValue_Vec3":         shader_set_3(_key, _val); break;
+				case "__NodeValue_Vec4":         shader_set_4(_key, _val); break;
+				
+				case "__NodeValue_Color":        shader_set_c(_key, _val); break;
+				case "__NodeValue_Surface":      shader_set_surface(_key, _val); break;
+			}
 		}
-	} #endregion
+	}
 	
 	static processData = function(_outSurf, _data, _array_index) { return _outSurf; }
 }

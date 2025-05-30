@@ -32,22 +32,22 @@ uniform vec2 colorRanR;
 uniform vec2 colorRanG;
 uniform vec2 colorRanB;
 
-vec3 hsv2rgb(vec3 c) { #region
+vec3 hsv2rgb(vec3 c) {
     vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
     vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
     return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
-} #endregion
+}
 
 float random (in vec2 st, float seed) { return fract(sin(dot(st.xy + vec2(21.4564, 46.8564), vec2(12.9898, 78.233))) * (43758.5453123 + seed)); }
-float randomFloat (in vec2 st, float seed) { #region
+float randomFloat (in vec2 st, float seed) {
 	float sedSt = floor(seed);
 	float sedFr = fract(seed);
 	//sedFr = sedFr * sedFr * (3.0 - 2.0 * sedFr);
 	
 	return mix(random(st, sedSt), random(st, sedSt + 1.), sedFr);
-} #endregion
+}
 
-float smooth(in float n, in float itr) { #region
+float smooth(in float n, in float itr) {
 	float _fr  = fract(itr);
 	float _itr = floor(itr);
 	
@@ -55,11 +55,11 @@ float smooth(in float n, in float itr) { #region
 		n = n * n * (3.0 - 2.0 * n);
 	float _n1 = n * n * (3.0 - 2.0 * n);
 	return mix(n, _n1, _fr);
-} #endregion
+}
 
 vec2 random2 (in vec2 st, float seed) { return vec2(randomFloat(st, seed), randomFloat(st, seed + 1.864354564)); }
 
-float noise (in vec2 st, in vec2 scale) { #region
+float noise (in vec2 st, in vec2 scale) {
     vec2 cellMin = floor(st);
     vec2 cellMax = floor(st) + vec2(1., 1.);
 	
@@ -96,9 +96,9 @@ float noise (in vec2 st, in vec2 scale) { #region
 	}
 	
 	return 0.;
-} #endregion
+}
 
-float _perlin(in vec2 st) { #region
+float _perlin(in vec2 st) {
 	float amp = pow(2., float(iteration) - 1.)  / (pow(2., float(iteration)) - 1.);
 	if(type == 0) amp = pow(2., float(iteration) + 1.)  / (pow(2., float(iteration)) - 1.);
 	if(type == 3) amp *= 1.25;
@@ -127,12 +127,15 @@ float _perlin(in vec2 st) { #region
 				amp *= .75;
 				pos *= 1.5;
 			}
+			
 		} else if(type == 4) {
 			n += smooth(_n, 1. + A * 5. * i / it) * amp;
+			
 		} else if(type == 5) {
 			n = max(n, _n);
 			sc  *= 1. + A * 0.1;
 			pos *= 1. + A * 0.1;
+			
 		} else 
 			n += _n * amp;
 		
@@ -142,11 +145,13 @@ float _perlin(in vec2 st) { #region
 			sc  *= 2.;
 			amp *= .5;
 			pos *= 1. + _n + A;
+			
 		} else if(type == 2) {
 			sc  *= 2.;
 			amp *= .5;
 			pos += random2(vec2(n), seed) / sc;
 			pos *= (2. + A);
+			
 		} else if(type == 3) {
 		} else if(type == 5) {
 		} else {
@@ -158,9 +163,9 @@ float _perlin(in vec2 st) { #region
 	}
 	
 	return n;
-} #endregion
+}
 
-float perlin(in vec2 st) { #region
+float perlin(in vec2 st) {
 	if(type == 6) {
 		float p1 = _perlin(st - vec2( 1.,  0.) / sca * (1. + A));
 	    float p2 = _perlin(st - vec2( 0.,  1.) / sca * (1. + A));
@@ -170,9 +175,9 @@ float perlin(in vec2 st) { #region
 	}
 	
 	return _perlin(st);
-} #endregion
+}
 
-void main() { #region
+void main() {
 	#region params
 		sca = scale;
 		if(scaleUseSurf == 1) {
@@ -214,4 +219,4 @@ void main() { #region
 		
 		gl_FragColor = vec4(hsv2rgb(vec3(randH, randS, randV)), 1.0);
 	}
-} #endregion
+}

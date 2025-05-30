@@ -14,12 +14,16 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	////- =Noise
 	
-	newInput( 1, nodeValue_Vec3(     "Position",   [0,0,0] ));
+	newInput(14, nodeValueSeed());
+	newInput( 3, nodeValue_ISlider(  "Iteration",   1, [1, 16, 0.1] )).setMappable(9);
+	newInput( 9, nodeValueMap(       "Iteration map"));
+	
+	////- =Transform
+	
+	newInput( 1, nodeValue_Vec2(     "Position",   [0,0] ));
 	newInput(10, nodeValue_Rotation( "Rotation",    0));
 	newInput( 2, nodeValue_Vec2(     "Scale",      [1,1] )).setMappable(8);
 	newInput( 8, nodeValueMap(       "Scale map"));
-	newInput( 3, nodeValue_ISlider(  "Iteration",   1, [1, 16, 0.1] )).setMappable(9);
-	newInput( 9, nodeValueMap(       "Iteration map"));
 	
 	////- =Iteration
 	
@@ -33,13 +37,14 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput( 6, nodeValue_Slider_Range( "Color G Range", [0,1] ));
 	newInput( 7, nodeValue_Slider_Range( "Color B Range", [0,1] ));
 	
-	// input 14
+	// input 15
 	
 	input_display_list = [
-		["Output",   false], 0, 13, 
-		["Noise",    false], 1, 10, 2, 8, 3, 9, 
-		["Iteration", true], 11, 12, 
-		["Render",   false], 4, 5, 6, 7, 
+		["Output",      true], 0, 13, 
+		["Noise",      false], 14, 3, 9, 
+		["Transform",  false], 1, 10, 2, 8, 
+		["Iteration",   true], 11, 12, 
+		["Render",     false], 4, 5, 6, 7, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -69,6 +74,7 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var _clg = _data[6];
 		var _clb = _data[7];
 		var _ang = _data[10];
+		var _sed = _data[14];
 		
 		var _adv_scale  = _data[11];
 		var _adv_amplit = _data[12];
@@ -76,8 +82,9 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
 		surface_set_shader(_outSurf, sh_simplex);
+			shader_set_f("seed",      _sed);
 			shader_set_f("dimension", _dim);
-			shader_set_3("position",  _pos);
+			shader_set_2("position",  _pos);
 			shader_set_f("rotation",  degtorad(_ang));
 			shader_set_f_map("scale",     _data[2], _data[8], inputs[2]);
 			shader_set_f_map("iteration", _data[3], _data[9], inputs[3]);

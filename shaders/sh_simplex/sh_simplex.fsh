@@ -14,8 +14,9 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform vec2  dimension;
-uniform vec3  position;
+uniform vec2  position;
 uniform float rotation;
+uniform float seed;
 
 uniform vec2      scale;
 uniform int       scaleUseSurf;
@@ -35,6 +36,8 @@ uniform vec2 colorRanB;
 
 uniform float phase;
 
+#define TAU 6.283185307179586
+
 vec2 sca;
 float itrMax, itr;
 
@@ -49,7 +52,7 @@ vec3 hsv2rgb(vec3 c) {
     return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
 }
 
-float snoise(vec3 vec) {
+float ian_noise(vec3 vec) {
 	vec3 v  = vec * 4.;
 	
 	const vec2 C = vec2(1.0 / 6.0, 1.0 / 3.0);
@@ -70,8 +73,8 @@ float snoise(vec3 vec) {
 	//   x2 = x0 - i2  + 2.0 * C.xxx;
 	//   x3 = x0 - 1.0 + 3.0 * C.xxx;
 	vec3 x1 = x0 - i1 + C.xxx;
-	vec3 x2 = x0 - i2 + C.yyy; // 2.0*C.x = 1/3 = C.y
-	vec3 x3 = x0 - D.yyy;      // -1.0+3.0*C.x = -0.5 = -D.y
+	vec3 x2 = x0 - i2 + C.yyy; //  2.0 * C.x       =  1/3 =  C.y
+	vec3 x3 = x0 - D.yyy;      // -1.0 + 3.0 * C.x = -0.5 = -D.y
 
 	// Permutations
 	i = mod289(i);
@@ -104,21 +107,14 @@ float snoise(vec3 vec) {
 	vec4 s1 = floor(b1) * 2.0 + 1.0;
 	vec4 sh = -step(h, vec4(0.0));
 	
-	vec4 a0 = b0.xzyw + s0.xzyw * sh.xxyy ;
-	vec4 a1 = b1.xzyw + s1.xzyw * sh.zzww ;
+	vec4 a0 = b0.xzyw + s0.xzyw * sh.xxyy;
+	vec4 a1 = b1.xzyw + s1.xzyw * sh.zzww;
 	
-	vec3 p0 = vec3(a0.xy, h.x);
-	vec3 p1 = vec3(a0.zw, h.y);
-	vec3 p2 = vec3(a1.xy, h.z);
-	vec3 p3 = vec3(a1.zw, h.w);
-
-	//Normalise gradients
-	vec4 norm = taylorInvSqrt(vec4(dot(p0, p0), dot(p1, p1), dot(p2, p2), dot(p3, p3)));
-	p0 *= norm.x;
-	p1 *= norm.y;
-	p2 *= norm.z;
-	p3 *= norm.w;
-
+	vec3 p0 = normalize(vec3(a0.xy, h.x));
+	vec3 p1 = normalize(vec3(a0.zw, h.y));
+	vec3 p2 = normalize(vec3(a1.xy, h.z));
+	vec3 p3 = normalize(vec3(a1.zw, h.w));
+	
 	// Mix final noise value
 	vec4 m = max(0.5 - vec4(dot(x0, x0), dot(x1, x1), dot(x2, x2), dot(x3, x3)), 0.0);
 	m = m * m;
@@ -128,11 +124,30 @@ float snoise(vec3 vec) {
 	return n;
 }
 
+vec2 iq_hash( vec2 p ) {
+	p = vec2( dot(p,vec2(127.1,311.7)), dot(p,vec2(269.5,183.3)) );
+	return -1.0 + 2.0 * fract(sin(p) * (seed / 100.));
+}
+
+float iq_noise( in vec2 p ) {
+    const float K1 = 0.366025404; // (sqrt(3)-1)/2;
+    const float K2 = 0.211324865; // (3-sqrt(3))/6;
+	
+	vec2  i = floor( p + (p.x + p.y) * K1 );
+	vec2  a = p - i + (i.x + i.y) * K2;
+    float m = step(a.y, a.x); 
+    vec2  o = vec2(m, 1.0 - m);
+    vec2  b = a - o + K2;
+	vec2  c = a - 1.0 + 2.0 * K2;
+	
+    vec3  h = max( 0.5 - vec3(dot(a, a), dot(b, b), dot(c, c) ), 0.0 );
+	vec3  n = h * h * h * h * vec3( dot(a, iq_hash(i + 0.0)), dot(b, iq_hash(i + o)), dot(c, iq_hash(i + 1.0)));
+    return dot( n, vec3(70.0) ) * .75 + .65;
+}
+
 float simplex(in vec2 st) {
-    vec2 p   = st;
-	float _z = 1. + position.z;
-    vec3 xyz = vec3(p, _z);
-    
+    vec2 p = st / 2.;
+	
     float inAmp = 1. / itrAmplitude;
 	float amp   = pow(inAmp, float(itr) - 1.)  / (pow(inAmp, float(itr)) - 1.);
     float n     = 0.;
@@ -140,9 +155,10 @@ float simplex(in vec2 st) {
 	for(float i = 0.; i < itrMax; i++) {
 		if(i >= itr) break;
 		
-		n   += snoise(xyz) * amp;
+		n += iq_noise(p) * amp;
+		p *= itrScaling;
+		
 		amp *= itrAmplitude;
-		xyz *= itrScaling;
 	}
 	
 	return n;
@@ -164,9 +180,9 @@ void main() {
 		itr = mix(iteration.x, iteration.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 	}
 	
-	vec2 pos  = position.xy / dimension;
+	vec2  pos = position / dimension;
 	float ang = rotation;
-	vec2 st   = (ntx - pos) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca;
+	vec2  st  = (ntx - pos) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca;
 	
 	if(colored == 0) {
 		gl_FragColor = vec4(vec3(simplex(st)), 1.0);
