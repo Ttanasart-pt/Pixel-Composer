@@ -39,27 +39,13 @@
 	
 	globalvar VERSION, SAVE_VERSION, VERSION_STRING, BUILD_NUMBER, LATEST_VERSION, NIGHTLY, RELEASE_STRING;
 	
-	var night = true; // should never be false
-	
-	if(night) {
-		LATEST_VERSION	= 1_19_00_0;
-		VERSION			= 1_19_01_0;
-		SAVE_VERSION	= 1_18_09_1;
-		VERSION_STRING  = MAC? "1.18.003m" : "1.19.2.010";
-		RELEASE_STRING  = "1.19.1";
-		BUILD_NUMBER	= 119010.010;
-		PREF_VERSION    = 1_17_1;
-		
-	} else {
-		// 1.19 stable settings
-		LATEST_VERSION	= 1_18_00_0;
-		VERSION			= 1_19_00_0;
-		SAVE_VERSION	= 1_18_09_1;
-		VERSION_STRING  = MAC? "1.18.003m" : "1.19.0.10";
-		RELEASE_STRING  = "1.19.0";
-		BUILD_NUMBER	= 119009.1;
-		PREF_VERSION    = 1_17_1;
-	}
+	LATEST_VERSION	= 1_19_00_0;
+	VERSION			= 1_19_02_0;
+	SAVE_VERSION	= 1_18_09_1;
+	VERSION_STRING  = MAC? "1.18.003m" : "1.19.3.001";
+	RELEASE_STRING  = "1.19.2";
+	BUILD_NUMBER	= 119020.001;
+	PREF_VERSION    = 1_17_1;
 	
 	var _lsp = array_last(string_split(VERSION_STRING, "."));
 	NIGHTLY  = string_length(_lsp) == 3;

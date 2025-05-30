@@ -688,10 +688,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 						
 					case VALUE_DISPLAY.slider :		
-						var _range = struct_try_get(display_data, "range", [ 0, 1 ]);
+						var _range = struct_try_get(display_data, "range", [0,1,.01]);
+						var _rstep = array_safe_get(_range, 2, .01);
 						
 						editWidget = new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ {return setValueInspector(toNumber(val))})
-										.setSlideRange(_range[0], _range[1]);
+										.setSlideRange( _range[0], _range[1] )
+										.setSlideStep(  _rstep );
 						
 						if(struct_has(display_data, "update_stat"))
 							editWidget.update_stat = display_data.update_stat;
@@ -700,9 +702,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 						
 					case VALUE_DISPLAY.slider_range :
-						var _range = struct_try_get(display_data, "range", [ 0, 1, 0.01 ]);
+						var _range = struct_try_get(display_data, "range", [0,1,.01]);
+						var _rstep = array_safe_get(_range, 2, .01);
 						
-						editWidget = new sliderRange(_range[2], type == VALUE_TYPE.integer, [ _range[0], _range[1] ], function(val, i) /*=>*/ {return setValueInspector(val, i)});
+						editWidget = new sliderRange(_rstep, type == VALUE_TYPE.integer, [ _range[0], _range[1] ], function(val, i) /*=>*/ {return setValueInspector(val, i)});
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
 							animators[i].suffix = $" {array_safe_get_fast(global.displaySuffix_Range, i)}";

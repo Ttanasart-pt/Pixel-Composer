@@ -716,8 +716,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 						
 						var _val = value_snap(slider_cur_val, _sc / 100);
 						
-						if(key_mod_press(CTRL) && slide_snap) _val = value_snap(slider_cur_val, slide_snap);
-						if(slide_int)  _val = round(_val);
+						if(slide_snap > 0) _val = value_snap(slider_cur_val, slide_snap);
+						if(slide_int)      _val = round(_val);
 	
 						_input_text  = string_real(_val);
 					}

@@ -352,8 +352,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	////- NAME
 	
 	static getFullName       = function() /*=>*/ {return renamed? $"[{name}] " + display_name : name};
-	static getDisplayName    = function() /*=>*/ {return renamed? display_name                : name};
-	static getInternalName   = function() /*=>*/ {return internalName != ""? internalName     : name};
+	static getDisplayName    = function() /*=>*/ {return renamed?                display_name : name};
+	static getInternalName   = function() /*=>*/ {return internalName != ""?     internalName : name};
 	
 	static resetInternalName = function() {
 		var _str = string_replace_all(name, " ", "_");
