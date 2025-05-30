@@ -7,70 +7,79 @@
 function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Perlin Noise";
 	
-	newInput(0, nodeValue_Dimension());
+	////- =Output
 	
-	newInput(1, nodeValue_Vec2("Position", [ 0, 0 ]))
-		.setUnitRef(function(index) { return getDimension(index); });
+	newInput( 0, nodeValue_Dimension());
+	newInput(12, nodeValue_Surface( "Mask" ));
 	
-	newInput(2, nodeValue_Vec2("Scale", [ 5, 5 ]))
-		.setMappable(10);
+	////- =Noise
 	
-	newInput(3, nodeValue_Int("Iteration", 4));
+	newInput( 5, nodeValueSeed());
+	newInput(13, nodeValue_Rotation( "Phase",     0));
+	newInput( 3, nodeValue_Int(      "Iteration", 4));
+	newInput( 4, nodeValue_Bool(     "Tile",      true));
 	
-	newInput(4, nodeValue_Bool("Tile", true));
-		
-	newInput(5, nodeValueSeed());
-		
-	newInput(6, nodeValue_Enum_Button("Color Mode",  0, [ "Greyscale", "RGB", "HSV" ]));
+	////- =Transform
 	
-	newInput(7, nodeValue_Slider_Range("Color R Range", [ 0, 1 ]));
+	newInput( 1, nodeValue_Vec2(     "Position",  [0,0])).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput(11, nodeValue_Rotation( "Rotation",    0));
+	newInput( 2, nodeValue_Vec2(     "Scale",     [5,5])).setMappable(10);
+	newInput(10, nodeValueMap(       "Scale map" ));
 	
-	newInput(8, nodeValue_Slider_Range("Color G Range", [ 0, 1 ]));
+	////- =Iteration
 	
-	newInput(9, nodeValue_Slider_Range("Color B Range", [ 0, 1 ]));
+	newInput(14, nodeValue_Float(  "Scaling",    2));
+	newInput(15, nodeValue_Slider( "Amplitude", .5));
 	
-	//////////////////////////////////////////////////////////////////////////////////
+	////- =Render
 	
-	newInput(10, nodeValueMap("Scale map", self));
+	newInput( 6, nodeValue_Enum_Button(  "Color Mode",     0, [ "Greyscale", "RGB", "HSV" ]));
+	newInput( 7, nodeValue_Slider_Range( "Color R Range", [0,1] ));
+	newInput( 8, nodeValue_Slider_Range( "Color G Range", [0,1] ));
+	newInput( 9, nodeValue_Slider_Range( "Color B Range", [0,1] ));
 	
-	//////////////////////////////////////////////////////////////////////////////////
-	
-	newInput(11, nodeValue_Rotation("Rotation", 0));
-		
-	newInput(12, nodeValue_Surface("Mask"));
-	
-	newInput(13, nodeValue_Rotation("Phase", 0));
+	// input 16
 	
 	input_display_list = [
 		["Output", 	   true], 0, 12, 
 		["Noise",	  false], 5, 13, 3, 4, 
 		["Transform", false], 1, 11, 2, 10, 
+		["Iteration",  true], 14, 15, 
 		["Render",	  false], 6, 7, 8, 9, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
+	////- Nodes
+	
 	attribute_surface_depth();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
-		
 		return w_hovering;
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _dim = _data[0];
-		var _pos = _data[1];
-		var _ite = _data[3];
-		var _til = _data[4];
-		var _sed = _data[5];
+		var _dim = _data[ 0];
+		
+		var _sed = _data[ 5];
+		var _phs = _data[13];
+		var _ite = _data[ 3];
+		var _til = _data[ 4];
+		
+		var _pos = _data[ 1];
+		var _rot = _data[11];
+		
+		var _adv_scale  = _data[14];
+		var _adv_amplit = _data[15];
 		
 		var _col = _data[ 6];
 		var _clr = _data[ 7];
 		var _clg = _data[ 8];
 		var _clb = _data[ 9];
-		var _rot = _data[11];
-		var _phs = _data[13];
+		
+		inputs[2].type = _til? VALUE_TYPE.integer : VALUE_TYPE.float;
+		inputs[11].setVisible(!_til);
 		
 		inputs[7].setVisible(_col != 0);
 		inputs[8].setVisible(_col != 0);
@@ -91,6 +100,9 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			shader_set_f("phase",      _phs / 360);
 			shader_set_i("tile",       _til);
 			shader_set_i("iteration",  _ite);
+		
+			shader_set_f("itrAmplitude", _adv_amplit);
+			shader_set_f("itrScaling",   _adv_scale);
 		
 			shader_set_i("colored",   _col);
 			shader_set_2("colorRanR", _clr);

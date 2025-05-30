@@ -7,50 +7,44 @@
 function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Simplex Noise";
 	
-	newInput(0, nodeValue_Dimension());
+	////- =Output
 	
-	newInput(1, nodeValue_Vec3("Position", [ 0, 0, 0 ] ));
+	newInput( 0, nodeValue_Dimension());
+	newInput(13, nodeValue_Surface( "Mask" ));
 	
-	newInput(2, nodeValue_Vec2("Scale", [ 1, 1 ] ))
-		.setMappable(8);
+	////- =Noise
 	
-	newInput(3, nodeValue_Int("Iteration", 1 ))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] })
-		.setMappable(9);
+	newInput( 1, nodeValue_Vec3(     "Position",   [0,0,0] ));
+	newInput(10, nodeValue_Rotation( "Rotation",    0));
+	newInput( 2, nodeValue_Vec2(     "Scale",      [1,1] )).setMappable(8);
+	newInput( 8, nodeValueMap(       "Scale map"));
+	newInput( 3, nodeValue_ISlider(  "Iteration",   1, [1, 16, 0.1] )).setMappable(9);
+	newInput( 9, nodeValueMap(       "Iteration map"));
 	
-	newInput(4, nodeValue_Enum_Button("Color Mode", 0, [ "Greyscale", "RGB", "HSV" ]));
+	////- =Iteration
 	
-	newInput(5, nodeValue_Slider_Range("Color R Range", [ 0, 1 ]));
+	newInput(11, nodeValue_Float(  "Scaling",    2));
+	newInput(12, nodeValue_Slider( "Amplitude", .5));
 	
-	newInput(6, nodeValue_Slider_Range("Color G Range", [ 0, 1 ]));
+	////- =Render
 	
-	newInput(7, nodeValue_Slider_Range("Color B Range", [ 0, 1 ]));
+	newInput( 4, nodeValue_Enum_Button(  "Color Mode",     0, [ "Greyscale", "RGB", "HSV" ]));
+	newInput( 5, nodeValue_Slider_Range( "Color R Range", [0,1] ));
+	newInput( 6, nodeValue_Slider_Range( "Color G Range", [0,1] ));
+	newInput( 7, nodeValue_Slider_Range( "Color B Range", [0,1] ));
 	
-	//////////////////////////////////////////////////////////////////////////////////
-	
-	newInput(8, nodeValueMap("Scale map", self));
-	
-	newInput(9, nodeValueMap("Iteration map", self));
-	
-	//////////////////////////////////////////////////////////////////////////////////
-		
-	newInput(10, nodeValue_Rotation("Rotation", 0));
-		
-	newInput(11, nodeValue_Float("Scaling", 2.));
-	
-	newInput(12, nodeValue_Float("Amplitude", .5))
-		.setDisplay(VALUE_DISPLAY.slider);
-	
-	newInput(13, nodeValue_Surface("Mask"));
+	// input 14
 	
 	input_display_list = [
 		["Output",   false], 0, 13, 
 		["Noise",    false], 1, 10, 2, 8, 3, 9, 
-		["Advances",  true], 11, 12, 
+		["Iteration", true], 11, 12, 
 		["Render",   false], 4, 5, 6, 7, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	
+	////- Nodes
 	
 	attribute_surface_depth();
 	
@@ -88,14 +82,14 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			shader_set_f_map("scale",     _data[2], _data[8], inputs[2]);
 			shader_set_f_map("iteration", _data[3], _data[9], inputs[3]);
 			
+			shader_set_f("itrAmplitude", _adv_amplit);
+			shader_set_f("itrScaling",   _adv_scale);
+		
 			shader_set_i("colored",   _col);
 			shader_set_2("colorRanR", _clr);
 			shader_set_2("colorRanG", _clg);
 			shader_set_2("colorRanB", _clb);
 			
-			shader_set_f("itrAmplitude", _adv_amplit);
-			shader_set_f("itrScaling",   _adv_scale);
-		
 			draw_empty();
 		surface_reset_shader();
 		

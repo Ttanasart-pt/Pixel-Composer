@@ -14,6 +14,9 @@ uniform float seed;
 uniform float phase;
 uniform int   tile;
 
+uniform float itrScaling;
+uniform float itrAmplitude;
+
 uniform int  colored;
 uniform vec2 colorRanR;
 uniform vec2 colorRanG;
@@ -30,7 +33,7 @@ vec3 hsv2rgb(vec3 c) {
 float random  (in vec2 st) { return smoothstep(0., 1., abs(fract(sin(dot(st.xy + vec2(21.456, 46.856), vec2(12.989, 78.233))) * (43758.545 + seed)) * 2. - 1.)); }
 vec2  random2 (in vec2 st) { float a = fract(random(st) + phase) * 6.28319; return vec2(cos(a), sin(a)); }
 
-float noise (in vec2 st, in vec2 scale) { #region
+float noise (in vec2 st, in vec2 scale) {
     vec2 cellMin = floor(st);
     vec2 cellMax = floor(st) + vec2(1., 1.);
 	
@@ -61,10 +64,11 @@ float noise (in vec2 st, in vec2 scale) { #region
 	float l2 = mix(dot(ci, c2), dot(di, d2), u.x);
 	
     return mix(l1, l2, u.y) + 0.5;
-} #endregion
+}
 
-float perlin(in vec2 st) { #region
-	float amp = pow(2., float(iteration) - 1.)  / (pow(2., float(iteration)) - 1.);
+float perlin(in vec2 st) {
+	float inAmp = 1. / itrAmplitude;
+	float amp = pow(inAmp, float(iteration) - 1.)  / (pow(inAmp, float(iteration)) - 1.);
     float n   = 0.;
 	vec2  pos = st;
 	vec2  sc  = sca;
@@ -72,15 +76,15 @@ float perlin(in vec2 st) { #region
 	for(int i = 0; i < iteration; i++) {
 		n += noise(pos, sc) * amp;
 		
-		sc  *= 2.;
-		amp *= .5;
-		pos *= 2.;
+		sc  *= itrScaling;
+		amp *= itrAmplitude;
+		pos *= itrScaling;
 	}
 	
 	return n;
-} #endregion
+}
 
-void main() { #region
+void main() {
 	#region params
 		sca = scale;
 		if(scaleUseSurf == 1) {
@@ -89,9 +93,16 @@ void main() { #region
 		}
 	#endregion
 	
-	vec2 pos  = position / dimension;
-	float ang = rotation;
-	vec2 st   = (v_vTexcoord - pos) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca;
+	vec2 st;
+	vec2 pos = position / dimension;
+	
+	if(tile == 1) {
+		sca = floor(sca);
+		st  = fract(v_vTexcoord - pos) * sca;
+		
+	} else {
+		st  = (v_vTexcoord - pos) * mat2(cos(rotation), -sin(rotation), sin(rotation), cos(rotation)) * sca;
+	}
 	
 	if(colored == 0) {
 		gl_FragColor = vec4(vec3(perlin(st)), 1.0);
@@ -110,4 +121,4 @@ void main() { #region
 		
 		gl_FragColor = vec4(hsv2rgb(vec3(randH, randS, randV)), 1.0);
 	}
-} #endregion
+}

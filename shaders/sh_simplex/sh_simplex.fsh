@@ -25,13 +25,13 @@ uniform vec2      iteration;
 uniform int       iterationUseSurf;
 uniform sampler2D iterationSurf;
 
+uniform float itrScaling;
+uniform float itrAmplitude;
+
 uniform int  colored;
 uniform vec2 colorRanR;
 uniform vec2 colorRanG;
 uniform vec2 colorRanB;
-
-uniform float itrScaling;
-uniform float itrAmplitude;
 
 uniform float phase;
 
@@ -133,8 +133,9 @@ float simplex(in vec2 st) {
 	float _z = 1. + position.z;
     vec3 xyz = vec3(p, _z);
     
-	float amp = pow(2., float(itr) - 1.)  / (pow(2., float(itr)) - 1.);
-    float n = 0.;
+    float inAmp = 1. / itrAmplitude;
+	float amp   = pow(inAmp, float(itr) - 1.)  / (pow(inAmp, float(itr)) - 1.);
+    float n     = 0.;
     
 	for(float i = 0.; i < itrMax; i++) {
 		if(i >= itr) break;

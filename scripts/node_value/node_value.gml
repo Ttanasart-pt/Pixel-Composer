@@ -1,6 +1,6 @@
 function nodeValue(_name, _node, _connect, _type, _value, _tooltip = "") { return new NodeValue(_name, _node, _connect, _type, _value, _tooltip); }
-function nodeValueMap(_name, _node, _junc = noone)						 { return new NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.surface, noone).setVisible(false, false).setMapped(_junc); }
-function nodeValueGradientRange(_name, _node, _junc = noone)			 { return new NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.float, [ 0, 0, 1, 0 ])
+function nodeValueMap(_name, _node = self, _junc = noone)                { return new NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.surface, noone).setVisible(false, false).setMapped(_junc); }
+function nodeValueGradientRange(_name, _node = self, _junc = noone)      { return new NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.float, [ 0, 0, 1, 0 ])
 																						.setDisplay(VALUE_DISPLAY.gradient_range).setVisible(false, false).setMapped(_junc); }
 
 function nodeValueSeed(_type = VALUE_TYPE.float, _name = "Seed") { 
