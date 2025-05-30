@@ -289,6 +289,50 @@
 #endregion
 
 #region modify
+			
+	function array_append(arr, arr0) {
+		INLINE
+		
+		if(is_undefined(arr0)) return arr;
+		if(!is_array(arr))     return arr;
+		if(!is_array(arr0))  { array_push(arr, arr0); return arr; }
+		
+		for( var i = 0, n = array_length(arr0); i < n; i++ )
+			array_push(arr, arr0[i]);
+		return arr;
+	}
+	
+	function array_append_unique(arr, arr0) {
+		INLINE
+		
+		if(is_undefined(arr0)) return arr;
+		if(!is_array(arr))     return arr;
+		if(!is_array(arr0))  { array_push(arr, arr0); return arr; }
+		
+		for( var i = 0, n = array_length(arr0); i < n; i++ )
+			array_push_unique(arr, arr0[i]);
+		return arr;
+	}
+
+	function array_merge() {
+		INLINE
+		
+		var arr = [];
+		for( var i = 0; i < argument_count; i++ )
+			array_append(arr, argument[i]);
+		
+		return arr;
+	}
+	
+	function array_merge_array(arrs) {
+		INLINE
+		
+		var arr = [];
+		for( var i = 0, n = array_length(arrs); i < n; i++ )
+			array_append(arr, arrs[i]);
+		
+		return arr;
+	}
 
 	function array_resize_fill(arr, size, fill = 0) {
 		if(size < array_length(arr)) {
@@ -408,51 +452,6 @@
 		self.__temp_arr = 0;
 		return _a;
 	}
-			
-	function array_append(arr, arr0) {
-		INLINE
-		
-		if(is_undefined(arr0)) return arr;
-		if(!is_array(arr))     return arr;
-		if(!is_array(arr0))  { array_push(arr, arr0); return arr; }
-		
-		for( var i = 0, n = array_length(arr0); i < n; i++ )
-			array_push(arr, arr0[i]);
-		return arr;
-	}
-	
-	function array_append_unique(arr, arr0) {
-		INLINE
-		
-		if(is_undefined(arr0)) return arr;
-		if(!is_array(arr))     return arr;
-		if(!is_array(arr0))  { array_push(arr, arr0); return arr; }
-		
-		for( var i = 0, n = array_length(arr0); i < n; i++ )
-			array_push_unique(arr, arr0[i]);
-		return arr;
-	}
-
-	function array_merge() {
-		INLINE
-		
-		var arr = [];
-		for( var i = 0; i < argument_count; i++ )
-			array_append(arr, argument[i]);
-		
-		return arr;
-	}
-	
-	function array_merge_array(arrs) {
-		INLINE
-		
-		var arr = [];
-		for( var i = 0, n = array_length(arrs); i < n; i++ )
-			array_append(arr, arrs[i]);
-		
-		return arr;
-	}
-
 
 	#macro array_equals array_equals_overwrite
 	#macro __array_equals array_equals
