@@ -164,10 +164,7 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					
 					draw_set_color(_awa? c_red : c_blue);
 					draw_point(xx, yy);
-					draw_rectangle(aabb[0], aabb[1], aabb[2]-1, aabb[3]-1, true);
-					
-					// draw_set_text(_f_debug_s, fa_center, fa_center, c_grey);
-					// draw_text(xx, yy, _rr);
+					draw_rectangle(aabb[0], aabb[1], aabb[2] - 1, aabb[3] - 1, true);
 				}
 			}
 		}

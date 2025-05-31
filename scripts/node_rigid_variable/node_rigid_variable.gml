@@ -14,14 +14,14 @@ function Node_Rigid_Variable(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	input_display_list = [ 0 ];
 	
-	newOutput(0, nodeValue_Output( "Positions", VALUE_TYPE.float, [ 0, 0 ] )).setDisplay(VALUE_DISPLAY.vector);
-	newOutput(1, nodeValue_Output( "Scales", VALUE_TYPE.float, [ 0, 0 ] )).setDisplay(VALUE_DISPLAY.vector);
-	newOutput(2, nodeValue_Output( "Rotations", VALUE_TYPE.float, 0 ));
-	newOutput(3, nodeValue_Output( "Blends", VALUE_TYPE.color, 0 ));
-	newOutput(4, nodeValue_Output( "Alpha", VALUE_TYPE.float, 0 ));
-	newOutput(5, nodeValue_Output( "Velocity", VALUE_TYPE.float, [ 0, 0 ] )).setDisplay(VALUE_DISPLAY.vector);
-	newOutput(6, nodeValue_Output( "Center of mass", VALUE_TYPE.float, [ 0, 0 ] )).setDisplay(VALUE_DISPLAY.vector);
-	newOutput(7, nodeValue_Output( "Velocity magnitude", VALUE_TYPE.float, 0 )).setDisplay(VALUE_DISPLAY.vector);
+	newOutput(0, nodeValue_Output( "Positions",          VALUE_TYPE.float, [0,0] )).setDisplay(VALUE_DISPLAY.vector);
+	newOutput(1, nodeValue_Output( "Scales",             VALUE_TYPE.float, [0,0] )).setDisplay(VALUE_DISPLAY.vector);
+	newOutput(2, nodeValue_Output( "Rotations",          VALUE_TYPE.float,  0    ));
+	newOutput(3, nodeValue_Output( "Blends",             VALUE_TYPE.color,  0    ));
+	newOutput(4, nodeValue_Output( "Alpha",              VALUE_TYPE.float,  0    ));
+	newOutput(5, nodeValue_Output( "Velocity",           VALUE_TYPE.float, [0,0] )).setDisplay(VALUE_DISPLAY.vector);
+	newOutput(6, nodeValue_Output( "Center of Mass",     VALUE_TYPE.float, [0,0] )).setDisplay(VALUE_DISPLAY.vector);
+	newOutput(7, nodeValue_Output( "Velocity Magnitude", VALUE_TYPE.float,  0    )).setDisplay(VALUE_DISPLAY.vector);
 	
 	array_foreach(outputs, function(i) /*=>*/ {return i.setVisible(false)});
 	
@@ -35,7 +35,7 @@ function Node_Rigid_Variable(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var _get = [];
 		var _val = [];
 		
-		for( var i = 0; i < array_length(outputs); i++ ) {
+		for( var i = 0, n = array_length(outputs); i < n; i++ ) {
 			_get[i] = outputs[i].isVisible();
 			_val[i] = _get[i]? array_create(array_length(objs)) : [];
 		}
@@ -48,7 +48,7 @@ function Node_Rigid_Variable(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			
 			if(_get[0]) _val[0][i] = [ gmlBox2D_Object_Get_X(_objId) * worldScale, gmlBox2D_Object_Get_Y(_objId) * worldScale ];
 			if(_get[1]) _val[1][i] = [ obj.xscale, obj.yscale ];
-			if(_get[2]) _val[2][i] = gmlBox2D_Object_Get_Rotation(_objId);
+			if(_get[2]) _val[2][i] = -radtodeg(gmlBox2D_Object_Get_Rotation(_objId));
 			if(_get[3]) _val[3][i] = obj.blend;
 			if(_get[4]) _val[4][i] = obj.alpha;
 			if(_get[5]) _val[5][i] = [ gmlBox2D_Object_Get_Velocity_X(_objId), gmlBox2D_Object_Get_Velocity_Y(_objId) ];
