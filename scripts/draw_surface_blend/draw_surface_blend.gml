@@ -109,7 +109,7 @@ function draw_surface_blend(background, foreground, blend = BLEND_MODE.normal, a
 }
 
 function draw_surface_blend_ext(bg, fg, _x, _y, _sx = 1, _sy = 1, _rot = 0, _col = c_white, _alpha = 1, _blend = BLEND_MODE.normal, _pre_alp = false, _tile = 0) {
-	surface_set_shader(blend_temp_surface);
+	surface_set_shader(blend_temp_surface, sh_sample, true, BLEND.over);
 		shader_set_interpolation(fg);
 		if(_tile) draw_surface_tiled_ext_safe(fg, _x, _y, _sx, _sy, _rot, _col, 1);
 		else      draw_surface_ext_safe(fg, _x, _y, _sx, _sy, _rot, _col, 1);

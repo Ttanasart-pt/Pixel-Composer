@@ -14,12 +14,9 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	name = "Composite";
 	dimension_index = -1;
 	
-	newInput(0, nodeValue_Padding("Padding", [ 0, 0, 0, 0 ]));
-	
-	newInput(1, nodeValue_Enum_Scroll("Output dimension",  COMPOSE_OUTPUT_SCALING.first, [ "First surface", "Largest surface", "Constant" ]));
-	
-	newInput(2, nodeValue_Dimension())
-		.setVisible(false);
+	newInput(0, nodeValue_Padding(     "Padding", [0,0,0,0] ));
+	newInput(1, nodeValue_Enum_Scroll( "Output dimension", COMPOSE_OUTPUT_SCALING.first, [ "First surface", "Largest surface", "Constant" ]));
+	newInput(2, nodeValue_Dimension()).setVisible(false);
 	
 	attribute_surface_depth();
 	attribute_interpolation();
@@ -408,13 +405,13 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		newInput(index + 0, nodeValue_Surface(     $"Surface {_s}"));
 		inputs[index + 0].hover_effect  = 0;
 		
-		newInput(index + 1, nodeValue_Vec2(        $"Position {_s}", [0,0] )).setUnitRef(function() /*=>*/ {return [ overlay_w, overlay_h ]});
-		newInput(index + 2, nodeValue_Rotation(    $"Rotation {_s}", 0));
+		newInput(index + 1, nodeValue_Vec2(        $"Position {_s}", [.5,.5] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+		newInput(index + 2, nodeValue_Rotation(    $"Rotation {_s}",  0));
 		inputs[index + 2].options_histories = [ BLEND_TYPES, { cond: function() /*=>*/ {return LOADING_VERSION < 1_18_00_0}, list: global.BLEND_TYPES_18 } ];
 		
-		newInput(index + 3, nodeValue_Vec2(        $"Scale {_s}", [ 1, 1 ] ));
-		newInput(index + 4, nodeValue_Enum_Scroll( $"Blend {_s}", 0, BLEND_TYPES ));
-		newInput(index + 5, nodeValue_Slider(      $"Opacity {_s}", 1));
+		newInput(index + 3, nodeValue_Vec2(        $"Scale {_s}",    [1,1] ));
+		newInput(index + 4, nodeValue_Enum_Scroll( $"Blend {_s}",     0, BLEND_TYPES ));
+		newInput(index + 5, nodeValue_Slider(      $"Opacity {_s}",   1));
 		
 		while(_s >= array_length(attributes.layer_visible))    array_push(attributes.layer_visible,    true);
 		while(_s >= array_length(attributes.layer_selectable)) array_push(attributes.layer_selectable, true);
@@ -459,9 +456,6 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	rot_anc_x = 0;
 	rot_anc_y = 0;
 	
-	overlay_w = 0;
-	overlay_h = 0;
-	
 	draw_transforms   = [];
 	selection_surf    = noone;
 	selection_sampler = new Surface_sampler();
@@ -481,13 +475,14 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		PROCESSOR_OVERLAY_CHECK
 		
-		var pad = current_data[0];
-		var ww  = overlay_w;
-		var hh  = overlay_h;
+		var pad  = current_data[0];
+		var outs = getSingleValue(0, preview_index, true);
+		var ww   = surface_get_width_safe(outs);
+		var hh   = surface_get_height_safe(outs);
 		
-		var x0  = _x + pad[2] * _s;
+		var x0  = _x +       pad[2]  * _s;
 		var x1  = _x + (ww - pad[0]) * _s;
-		var y0  = _y + pad[1] * _s;
+		var y0  = _y +       pad[1]  * _s;
 		var y1  = _y + (hh - pad[3]) * _s;
 		
 		if(input_dragging > -1) {
@@ -622,8 +617,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _sw = _ww * _sca[0];
 			var _sh = _hh * _sca[1];
 			
-			var _cx = _pos[0] + _ww / 2;
-			var _cy = _pos[1] + _hh / 2;
+			var _cx = _pos[0];
+			var _cy = _pos[1];
 			
 			var _d0 = point_rotate(_cx - _sw / 2, _cy - _sh / 2, _cx, _cy, _rot, __d0);
 			var _d1 = point_rotate(_cx - _sw / 2, _cy + _sh / 2, _cx, _cy, _rot, __d1);
@@ -795,6 +790,42 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		inputs[2].setVisible(_dim_type == COMPOSE_OUTPUT_SCALING.constant);
 	}
 	
+	static getDimension = function(arr = 0) { 
+		if(getInputAmount() == 0) return [1,1];
+		
+		var _pad  = getSingleValue(0, arr);
+		var _dimt = getSingleValue(1, arr);
+		var _dim  = getSingleValue(2, arr);
+		var base  = getSingleValue(3, arr);
+		
+		var ww = 0, hh = 0;
+		
+		switch(_dimt) {
+			case COMPOSE_OUTPUT_SCALING.first :
+				ww = surface_get_width_safe(base);
+				hh = surface_get_height_safe(base);
+				break;
+				
+			case COMPOSE_OUTPUT_SCALING.largest :
+				for(var i = input_fix_len; i < array_length(_data) - data_length; i += data_length) {
+					var _s = getSingleValue(i, arr);
+					ww = max(ww, surface_get_width_safe(_s));
+					hh = max(hh, surface_get_height_safe(_s));
+				}
+				break;
+				
+			case COMPOSE_OUTPUT_SCALING.constant :	
+				ww = _dim[0];
+				hh = _dim[1];
+				break;
+		}
+		
+		ww += _pad[0] + _pad[2];
+		hh += _pad[1] + _pad[3];
+	
+		return [ ww, hh ];
+	} 
+	
 	static processData = function(_outData, _data, _array_index) {
 		draw_transforms[_array_index] = noone;
 		
@@ -809,34 +840,9 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		if(!is_surface(base)) return _outData;
 		
-		#region dimension 
-			var ww = 0, hh = 0;
-		
-			switch(_dim_type) {
-				case COMPOSE_OUTPUT_SCALING.first :
-					ww = surface_get_width_safe(base);
-					hh = surface_get_height_safe(base);
-					break;
-					
-				case COMPOSE_OUTPUT_SCALING.largest :
-					for(var i = input_fix_len; i < array_length(_data) - data_length; i += data_length) {
-						var _s = _data[i];
-						ww = max(ww, surface_get_width_safe(_s));
-						hh = max(hh, surface_get_height_safe(_s));
-					}
-					break;
-					
-				case COMPOSE_OUTPUT_SCALING.constant :	
-					ww = _dim[0];
-					hh = _dim[1];
-					break;
-			}
-			ww += _pad[0] + _pad[2];
-			hh += _pad[1] + _pad[3];
-		
-			overlay_w = ww;
-			overlay_h = hh;
-		#endregion
+		var _odim = getDimension(_array_index);
+		var  ww   = _odim[0];
+		var  hh   = _odim[1];
 		
 		for(var i = 0; i < 3; i++) {
 			temp_surface[i] = surface_verify(temp_surface[i], ww, hh, cDep);
@@ -876,8 +882,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _sw = _ww * _sca[0];
 			var _sh = _hh * _sca[1];
 			
-			var cx = _pos[0] + _ww / 2;
-			var cy = _pos[1] + _hh / 2;
+			var cx = _pos[0];
+			var cy = _pos[1];
 			
 			var _d0 = point_rotate(cx - _sw / 2, cy - _sh / 2, cx, cy, _rot);
 			
@@ -912,6 +918,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		return _outData;
 	}
+	
+	////- Serialize
 	
 	static attributeSerialize = function() {
 		var att = {};

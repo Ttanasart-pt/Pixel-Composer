@@ -109,16 +109,10 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		if(struct_has(_display_data, "side_button")) side_button = _display_data.side_button;
 		tooltip.index = linked;
 		
-		if(!is_array(_data))   return _h;
-		if(array_empty(_data)) return _h;
-		if(is_array(_data[0])) return _h;
-		
-		current_value = _data;
-		
-		var sz  = min(size, array_length(_data));
 		var _bs = min(_h, ui(32));
+		var _sz = min(size, array_length(_data));
 		
-		if((_w - _bs) / sz > ui(48)) {
+		if((_w - _bs) / _sz > ui(48)) {
 			if(side_button) {
 				if(is(side_button, buttonAnchor))
 					side_button.index = round(array_safe_get(_data, 0) * 2 + array_safe_get(_data, 1) * 6);
@@ -132,7 +126,15 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 				unit.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m);
 				_w -= _bs + ui(4);
 			}
-			
+		}
+		
+		if(!is_array(_data))   return _h;
+		if(array_empty(_data)) return _h;
+		if(is_array(_data[0])) return _h;
+		
+		current_value = _data;
+		
+		if((_w - _bs) / _sz > ui(48)) {
 			if(linkable) {
 				var _icon_blend = linked? COLORS._main_accent : (link_inactive_color == noone? COLORS._main_icon : link_inactive_color);
 				var bx = _x;
@@ -148,7 +150,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 					_display_data.linked =  linked;
 				
 					if(linked) 
-					for( var i = 0; i < sz; i++ )
+					for( var i = 0; i < _sz; i++ )
 						onModify(_data[0], i);
 				}
 				
@@ -157,14 +159,14 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 			}
 		}
 		
-		var ww = per_line? _w : _w / sz;
+		var ww = per_line? _w : _w / _sz;
 		
 		if(!per_line) {
 			draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor, 1);
 			draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor, 0.5 + 0.5 * interactable);	
 		}
 			
-		for(var i = 0; i < sz; i++) {
+		for(var i = 0; i < _sz; i++) {
 			
 			var bx = per_line? _x : _x + ww * i;
 			var by = per_line? _y + (_h + ui(4)) * i : _y;
