@@ -5,11 +5,9 @@ function Node_Morph_Surface(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	newInput(1, nodeValue_Surface("Surface to"));
 	
-	newInput(2, nodeValue_Float("Morph amount", 0))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(2, nodeValue_Slider("Morph amount", 0));
 	
-	newInput(3, nodeValue_Float("Threshold", 0.5))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(3, nodeValue_Slider("Threshold", 0.5));
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	

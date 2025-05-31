@@ -11,8 +11,7 @@ function Node_Smoke_Repulse(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group)
 	
 	newInput(2, nodeValue_Float("Radius", 8));
 	
-	newInput(3, nodeValue_Float("Strength", 0.10))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
+	newInput(3, nodeValue_Slider("Strength", 0.10, [-1, 1, 0.01] ));
 	
 	newInput(4, nodeValue_Float("Spokes", 0));
 	

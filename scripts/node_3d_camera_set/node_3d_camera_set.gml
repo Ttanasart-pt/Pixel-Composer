@@ -8,30 +8,26 @@ function Node_3D_Camera_Set(_x, _y, _group = noone) : Node_3D_Camera(_x, _y, _gr
 	newInput(in_cam + 0, nodeValue_Rotation("L1 H angle", 30))
 		.setName("Horizontal angle");
 	
-	newInput(in_cam + 1, nodeValue_Float("L1 V angle", 45 ))
-		.setName("Vertical angle")
-		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 90, 0.1] });
+	newInput(in_cam + 1, nodeValue_Slider("L1 V angle", 45, [0, 90, 0.1] ))
+		.setName("Vertical angle");
 	
 	newInput(in_cam + 2, nodeValue_Color("L1 Color", ca_white ))
 		.setName("Color")
 	
-	newInput(in_cam + 3, nodeValue_Float("L1 Intensity", 1 ))
-		.setName("Intensity")
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(in_cam + 3, nodeValue_Slider("L1 Intensity", 1 ))
+		.setName("Intensity");
 	
 	newInput(in_cam + 4, nodeValue_Rotation("L2 H angle", -45))
 		.setName("Horizontal angle");
 	
-	newInput(in_cam + 5, nodeValue_Float("L2 V angle", 45 ))
-		.setName("Vertical angle")
-		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 90, 0.1] });
+	newInput(in_cam + 5, nodeValue_Slider("L2 V angle", 45, [0, 90, 0.1] ))
+		.setName("Vertical angle");
 	
 	newInput(in_cam + 6, nodeValue_Color("L2 Color", ca_white ))
 		.setName("Color")
 	
-	newInput(in_cam + 7, nodeValue_Float("L2 Intensity", 0.25 ))
-		.setName("Intensity")
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(in_cam + 7, nodeValue_Slider("L2 Intensity", 0.25 ))
+		.setName("Intensity");
 	
 	array_append(input_display_list, [
 		["Key light",  false], in_cam + 0, in_cam + 1, in_cam + 2, in_cam + 3, 

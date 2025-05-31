@@ -8,31 +8,21 @@
 function Node_Blend_Edge(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Blend Edge";
 	
-	newInput(0, nodeValue_Surface("Surface In"));
+	newActiveInput(3);
+	newInput(4, nodeValue_Toggle( "Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
-	newInput(1, nodeValue_Float("Width", 0.1))
-		.setDisplay(VALUE_DISPLAY.slider)
-		.setMappable(5);
+	////- =Surfaces
 	
-	newInput(2, nodeValue_Enum_Button("Types", 0, [ "Both", "Horizontal", "Vertical" ]));
+	newInput(0, nodeValue_Surface( "Surface In" ));
 	
-	newInput(3, nodeValue_Bool("Active", true));
-		active_index = 3;
+	////- =Blend
 	
-	newInput(4, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
+	newInput(2, nodeValue_Enum_Button( "Types",       0, [ "Both", "Horizontal", "Vertical" ]));
+	newInput(1, nodeValue_Slider(      "Width",      .1 )).setMappable(5);
+	newInput(6, nodeValue_Slider(      "Blending",    1 ));
+	newInput(7, nodeValue_Slider(      "Smoothness",  0 ));
 	
-	/////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	newInput(5, nodeValue_Surface("Width map"))
-		.setVisible(false, false);
-	
-	/////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	newInput(6, nodeValue_Float("Blending", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
-		
-	newInput(7, nodeValue_Float("Smoothness", 0))
-		.setDisplay(VALUE_DISPLAY.slider);
+	// input 8
 		
 	input_display_list = [ 3, 4, 
 		["Surfaces", true], 0, 

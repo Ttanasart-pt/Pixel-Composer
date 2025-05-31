@@ -16,8 +16,7 @@ function Node_Mirror_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newInput(2, nodeValue_Rotation("Angle", 0));
 	
-	newInput(3, nodeValue_Bool("Active", true));
-		active_index = 3;
+	newActiveInput(3);
 	
 	newInput(4, nodeValue_Float("Spokes", 4));
 	

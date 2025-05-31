@@ -32,8 +32,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Float("Path progress", 0, "Sample position from path."))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(0, nodeValue_Slider("Path progress", 0)).setTooltip("Sample position from path.");
 	
 	newInput(1, nodeValue_Bool("Loop", false))
 		.rejectArray();

@@ -18,16 +18,14 @@ function Node_Path_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _g
 	
 	setDimension(96, 48);
 	
-	newInput(i+0, nodeValue_Int("FOV", 60 ))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 10, 90, 0.1 ] });
+	newInput(i+0, nodeValue_ISlider("FOV", 60, [ 10, 90, 0.1 ] ));
 	
 	newInput(i+1, nodeValue_Enum_Button("Projection",  1 , [ "Perspective", "Orthographic" ]));
 	
 	newInput(i+2, nodeValue_PathNode("Path" ))
 		.setVisible(true, true);
 	
-	newInput(i+3, nodeValue_Float("Orthographic Scale", 0.5 ))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0.01, 4, 0.01 ] });
+	newInput(i+3, nodeValue_Slider("Orthographic Scale", 0.5, [ 0.01, 4, 0.01 ] ));
 	
 	newInput(i+4, nodeValue_Enum_Scroll("Postioning Mode", 2, [ "Position + Rotation", "Position + Lookat", "Lookat + Rotation" ] ));
 	
@@ -37,8 +35,7 @@ function Node_Path_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _g
 	
 	newInput(i+7, nodeValue_Rotation("Horizontal Angle", 45 ));
 	
-	newInput(i+8, nodeValue_Float("Vertical Angle", 30 ))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 90, 0.1] });
+	newInput(i+8, nodeValue_Slider("Vertical Angle", 30, [0, 90, 0.1] ));
 	
 	newInput(i+9, nodeValue_Float("Distance", 4 ));
 	

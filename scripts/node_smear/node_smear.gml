@@ -19,24 +19,22 @@ function Node_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(0, nodeValue_Surface( "Surface In"));
 	newInput(3, nodeValue_Surface( "Mask"));
 	newInput(4, nodeValue_Slider(  "Mix", 1));
-	__init_mask_modifier(3); // inputs 7, 8
+	__init_mask_modifier(3, 7); // inputs 7, 8
 	
 	////- Smear
 	
-	newInput(11, nodeValue_Enum_Button( "Mode", 0, [ "Greyscale", "Alpha" ]));
-	newInput(14, nodeValue_Bool(        "Invert", false));
-	newInput( 1, nodeValue_Slider(      "Strength", 0.2, [0, 0.5, 0.001])).setMappable(9);
-	newInput( 9, nodeValueMap(          "Strength map",      self));
-	newInput( 2, nodeValue_Rotation(    "Direction", 0)).setMappable(10);
-	newInput(10, nodeValueMap(          "Direction map",     self));
-	newInput(13, nodeValue_Slider(      "Spread", 0, [ 0, 30, 1 ]));
+	newInput(11, nodeValue_Enum_Button( "Mode",       0, [ "Greyscale", "Alpha" ] ));
+	newInput(14, nodeValue_Bool(        "Invert",     false ));
+	newInput( 1, nodeValue_Slider(      "Strength",  .2, [0, 0.5, 0.001] )).setMappable(9);
+	newInput( 2, nodeValue_Rotation(    "Direction",  0 )).setMappable(10);
+	newInput(13, nodeValue_Slider(      "Spread",     0, [ 0, 30, 1 ] ));
 	newInput(12, nodeValue_Enum_Button( "Modulate strength", 0, [ "Distance", "Color", "None" ]));
 	
 	////- Render
 	
 	newInput(16, nodeValue_Enum_Scroll( "Render Mode", 0, [ "Distance", "Distance Normalized", "Base Color" ] ));
-	newInput(15, nodeValue_Enum_Scroll( "Blend Mode", 0, [ "Maximum", "Additive" ]));
-	newInput(17, nodeValue_Color(       "Blend Side", ca_white));
+	newInput(15, nodeValue_Enum_Scroll( "Blend Mode",  0, [ "Maximum", "Additive" ]));
+	newInput(17, nodeValue_Color(       "Blend Side",  ca_white));
 	
 	//// Inputs 18
 	

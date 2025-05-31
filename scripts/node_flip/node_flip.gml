@@ -11,8 +11,7 @@ function Node_Flip(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newInput(1, nodeValue_Enum_Button("Axis",  0, [ "x", "y" ]));
 	
-	newInput(2, nodeValue_Bool("Active", true));
-		active_index = 2;
+	newActiveInput(2);
 		
 	input_display_list = [ 2, 
 		["Surfaces", true],	0, 

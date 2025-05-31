@@ -11,11 +11,9 @@ function Node_Smoke_Vortex(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	
 	newInput(2, nodeValue_Float("Radius", 8));
 	
-	newInput(3, nodeValue_Float("Strength", 0.10))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
+	newInput(3, nodeValue_Slider("Strength", 0.10, [-1, 1, 0.01] ));
 	
-	newInput(4, nodeValue_Float("Attraction", 0))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
+	newInput(4, nodeValue_Slider("Attraction", 0, [-1, 1, 0.01] ));
 	
 	input_display_list = [ 
 		["Domain",	false], 0, 

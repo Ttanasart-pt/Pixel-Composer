@@ -7,41 +7,28 @@
 function Node_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Polar";
 	
-	newInput(0, nodeValue_Surface("Surface In"));
-	
-	newInput(1, nodeValue_Surface("Mask"));
-	
-	newInput(2, nodeValue_Float("Mix", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
-	
-	newInput(3, nodeValue_Bool("Active", true));
-		active_index = 3;
-		
+	newActiveInput(3);
 	newInput(4, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
-	newInput(5, nodeValue_Bool("Invert", false))
+	////- =Surfaces
 	
-	newInput(6, nodeValue_Float("Blend", 1))
-		.setDisplay(VALUE_DISPLAY.slider)
-		.setMappable(11);
-	
-	__init_mask_modifier(1); // inputs 7, 8, 
-	
-	newInput(9, nodeValue_Enum_Scroll("Radius Mode",  0, [ new scrollItem("Linear",         s_node_curve_type, 2), 
-												                 new scrollItem("Inverse Square", s_node_curve_type, 1), 
-												                 new scrollItem("Logarithm",      s_node_curve_type, 3), ]));
-	
-	newInput(10, nodeValue_Bool("Swap", false));
-	
-	//////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	newInput(11, nodeValueMap("Blend Map", self));
-	
-	//////////////////////////////////////////////////////////////////////////////////////////////////
-	
+	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput(1, nodeValue_Surface( "Mask"       ));
+	newInput(2, nodeValue_Slider(  "Mix", 1     ));
+	__init_mask_modifier(1, 7); // inputs 7, 8, 
 	newInput(12, nodeValue_Vec2("Tile", [ 1, 1 ] ));
 	
-	newInput(13, nodeValue_Rotation_Range("Range", [ 0, 360 ]));
+	////- =Effect
+	
+	newInput(5, nodeValue_Bool(        "Invert",       false))
+	newInput(6, nodeValue_Slider(      "Blend",        1)).setMappable(11);
+	newInput(9, nodeValue_Enum_Scroll( "Radius Mode",  0, [ new scrollItem("Linear",         s_node_curve_type, 2), 
+                                                            new scrollItem("Inverse Square", s_node_curve_type, 1), 
+                                                            new scrollItem("Logarithm",      s_node_curve_type, 3), ]));
+	newInput(10, nodeValue_Bool( "Swap", false));
+	newInput(13, nodeValue_Rotation_Range( "Range", [ 0, 360 ]));
+	
+	// input 14
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	

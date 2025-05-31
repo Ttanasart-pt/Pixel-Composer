@@ -14,11 +14,9 @@ function Node_FLIP_Vortex(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	newInput(2, nodeValue_Float("Radius", 4 ));
 	
-	newInput(3, nodeValue_Float("Strength", 4 ))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ -8, 8, 0.01 ] });
+	newInput(3, nodeValue_Slider("Strength", 4, [ -8, 8, 0.01 ] ));
 	
-	newInput(4, nodeValue_Float("Attraction", 0 ))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ -8, 8, 0.01 ] });
+	newInput(4, nodeValue_Slider("Attraction", 0, [ -8, 8, 0.01 ] ));
 		
 	input_display_list = [ 0, 
 		["Vertex",	false], 1, 2, 3, 4, 

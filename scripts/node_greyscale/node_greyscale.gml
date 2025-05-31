@@ -1,33 +1,22 @@
 function Node_Greyscale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Greyscale";
 	
-	newInput(0, nodeValue_Surface("Surface In"));
+	newActiveInput(5);
+	newInput(6, nodeValue_Toggle( "Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
-	newInput(1, nodeValue_Float("Brightness", 0))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01] })
-		.setMappable(9);
+	////- =Surfaces
 	
-	newInput(2, nodeValue_Float("Contrast", 1))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 4, 0.01] })
-		.setMappable(10);
+	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput(3, nodeValue_Surface( "Mask"       ));
+	newInput(4, nodeValue_Slider(  "Mix", 1     ));
+	__init_mask_modifier(3, 7); // inputs 7, 8
 	
-	newInput(3, nodeValue_Surface("Mask"));
+	////- =Greyscale
 	
-	newInput(4, nodeValue_Float("Mix", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(1, nodeValue_Slider( "Brightness", 0, [ -1, 1, 0.01] )).setMappable(9);
+	newInput(2, nodeValue_Slider( "Contrast",   1, [ -1, 4, 0.01] )).setMappable(10);
 	
-	newInput(5, nodeValue_Bool("Active", true));
-		active_index = 5;
-	
-	newInput(6, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
-		
-	__init_mask_modifier(3); // inputs 7, 8
-	
-	newInput(9, nodeValue_Surface("Brightness map"))
-		.setVisible(false, false);
-	
-	newInput(10, nodeValue_Surface("Contrast map"))
-		.setVisible(false, false);
+	// input 11
 	
 	input_display_list = [ 5, 6, 
 		["Surfaces",	 true], 0, 3, 4, 7, 8, 

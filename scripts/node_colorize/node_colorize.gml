@@ -1,40 +1,24 @@
 function Node_Colorize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Colorize";
 	
-	newInput(0, nodeValue_Surface("Surface In"));
-	
-	newInput(1, nodeValue_Gradient("Gradient", new gradientObject([ ca_black, ca_white ])))
-		.setMappable(11);
-		
-	newInput(2, nodeValue_Float("Gradient Shift", 0))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, .01 ] })
-		.setMappable(10);
-	
-	newInput(3, nodeValue_Surface("Mask"));
-	
-	newInput(4, nodeValue_Float("Mix", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
-	
-	newInput(5, nodeValue_Bool("Active", true));
-		active_index = 5;
-	
-	newInput(6, nodeValue_Bool("Multiply Alpha", true));
-	
+	newActiveInput(5);
 	newInput(7, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
-	__init_mask_modifier(3); // inputs 8, 9, 
+	////- =Surfaces
 	
-	//////////////////////////////////////////////////////////////////////////////////////////////////
+	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput(3, nodeValue_Surface( "Mask"       ));
+	newInput(4, nodeValue_Slider(  "Mix", 1     ));
+	__init_mask_modifier(3, 8); // inputs 8, 9
 	
-	newInput(10, nodeValueMap("Gradient shift map", self));
+	////- =Coloize
 	
-	newInput(11, nodeValueMap("Gradient map", self));
+	newInput( 1, nodeValue_Gradient( "Gradient", new gradientObject([ ca_black, ca_white ]))).setMappable(11);
+	newInput( 2, nodeValue_Slider(   "Gradient Shift", 0, [ -1, 1, .01 ] )).setMappable(10);
+	newInput( 6, nodeValue_Bool(     "Multiply Alpha", true ));
+	newInput(13, nodeValue_Bool(     "Keep Alpha",     true ));
 	
-	newInput(12, nodeValueGradientRange("Gradient map range", self, inputs[1]));
-	
-	//////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	newInput(13, nodeValue_Bool("Keep Alpha", true));
+	// input 14
 	
 	input_display_list = [ 5, 7, 
 		["Surfaces",	 true], 0, 3, 4, 8, 9, 

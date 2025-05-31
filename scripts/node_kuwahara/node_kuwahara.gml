@@ -10,31 +10,26 @@ function Node_Kuwahara(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Bool("Active", true));
-		active_index = 1;
+	newActiveInput(1);
 	
 	newInput(2, nodeValue_Int("Radius", 2))
 		.setValidator(VV_min(1));
 	
 	newInput(3, nodeValue_Surface("Mask"));
 	
-	newInput(4, nodeValue_Float("Mix", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(4, nodeValue_Slider("Mix", 1));
 	
-	newInput(5, nodeValue_Bool("Active", true));
-		active_index = 5;
+	newActiveInput(5);
 	
 	newInput(6, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
-	__init_mask_modifier(3); // inputs 7, 8
+	__init_mask_modifier(3, 7); // inputs 7, 8
 	
 	newInput(9, nodeValue_Enum_Scroll("Types", 0, [ "Basic", "Anisotropics", "Generalized" ]));
 	
-	newInput(10, nodeValue_Float("Alpha", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(10, nodeValue_Slider("Alpha", 1));
 		
-	newInput(11, nodeValue_Float("Zero crossing", 0.58))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(11, nodeValue_Slider("Zero crossing", 0.58));
 		
 	newInput(12, nodeValue_Float("Hardness", 8))
 	

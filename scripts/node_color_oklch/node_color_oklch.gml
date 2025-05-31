@@ -2,20 +2,17 @@ function Node_Color_OKLCH(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	name = "OKLCH Color";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Float("Lightness", .5))
-		.setDisplay(VALUE_DISPLAY.slider)
+	newInput(0, nodeValue_Slider("Lightness", .5))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Float("Chroma", .2))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, .37, .01] })
+	newInput(1, nodeValue_Slider("Chroma", .2, [ 0, .37, .01] ))
 		.setVisible(true, true);
 	
 	newInput(2, nodeValue_Float("Hue", 0))
 		.setDisplay(VALUE_DISPLAY.rotation)
 		.setVisible(true, true);
 	
-	newInput(3, nodeValue_Float("Alpha", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(3, nodeValue_Slider("Alpha", 1));
 	
 	newInput(4, nodeValue_Enum_Scroll("Gamut clipping", 0, [ "Chroma", "50% grey", "Adaptive grey", "RGB (Naive)" ]))
 	

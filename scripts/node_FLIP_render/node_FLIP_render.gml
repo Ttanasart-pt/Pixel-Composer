@@ -8,8 +8,7 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	newInput(0, nodeValue_Fdomain("Domain")).setVisible(true, true);
 	
-	newInput(1, nodeValue_Float("Merge threshold", 0.75))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(1, nodeValue_Slider("Merge threshold", 0.75));
 	
 	newInput(2, nodeValue_Range("Lifespan", [ 0, 0 ], { linked : true }));
 	

@@ -9,15 +9,13 @@ function Node_Surface_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	newInput(2, nodeValue_Surface("Replacement Image"))
 		.setArrayDepth(1);
 	
-	newInput(3, nodeValue_Float("Color Threshold", 0.1, "How similiar the color need to be in order to be count as matched." ))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(3, nodeValue_Slider("Color Threshold", 0.1)).setTooltip("How similiar the color need to be in order to be count as matched." );
 	
 	newInput(4, nodeValue_Bool("Draw Base Image", true ));
 	
 	newInput(5, nodeValue_Bool("Fast Mode", true ));
 	
-	newInput(6, nodeValue_Float("Pixel Threshold", 0.1, "How many pixel need to me matched to replace with replacement image." ))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(6, nodeValue_Slider("Pixel Threshold", 0.1)).setTooltip("How many pixel need to me matched to replace with replacement image." );
 	
 	newInput(7, nodeValue_Enum_Scroll("Array mode",  0, { data: [ "Match index", "Randomized" ], update_hover: false }));
 	

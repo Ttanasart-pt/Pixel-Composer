@@ -3,42 +3,34 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newActiveInput(11);
 	newInput(12, nodeValue_Enum_Button( "Input Type", 0, [ "Surface", "Color" ]));
-	newInput(15, nodeValue_Toggle(      "Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
-	newInput( 9, nodeValue_Slider(      "Alpha", 1)).setMappable(24);
-	newInput(24, nodeValue_Surface(     "Alpha map")).setVisible(false, false);
+	newInput(15, nodeValue_Toggle(      "Channel",    0b1111, { data: array_create(4, THEME.inspector_channel) }));
+	newInput( 9, nodeValue_Slider(      "Alpha",      1 )).setMappable(24);
 	
 	////- Input
 	
-	newInput( 0, nodeValue_Surface( "Surface In"));
-	newInput( 8, nodeValue_Surface( "Mask"));
-	newInput(16, nodeValue_Bool(    "Invert mask", false));
-	newInput(13, nodeValue_Palette( "Color", array_clone(DEF_PALETTE))).setVisible(true, true);
+	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput( 8, nodeValue_Surface( "Mask" ));
+	newInput(16, nodeValue_Bool(    "Invert mask",  false ));
+	newInput(13, nodeValue_Palette( "Color",        array_clone(DEF_PALETTE))).setVisible(true, true);
 	newInput(17, nodeValue_Slider(  "Mask feather", 1, [ 1, 16, 0.1 ]));
 	
 	////- Brightness
 	
-	newInput( 1, nodeValue_Slider(  "Brightness", 0, [ -1, 1, 0.01 ])).setMappable(18);
-	newInput(18, nodeValue_Surface( "Brightness map")).setVisible(false, false);
-	newInput( 2, nodeValue_Slider(  "Contrast", 0.5)).setMappable(19);
-	newInput(19, nodeValue_Surface( "Contrast map")).setVisible(false, false);
-	newInput(10, nodeValue_Slider(  "Exposure", 1, [ 0, 4, 0.01 ])).setMappable(25);
-	newInput(25, nodeValue_Surface( "Exposure map")).setVisible(false, false);
+	newInput( 1, nodeValue_Slider(  "Brightness",  0, [ -1, 1, 0.01 ])).setMappable(18);
+	newInput( 2, nodeValue_Slider(  "Contrast",   .5 )).setMappable(19);
+	newInput(10, nodeValue_Slider(  "Exposure",    1, [ 0, 4, 0.01 ])).setMappable(25);
 	
 	////- HSV
 	
-	newInput( 3, nodeValue_Slider(  "Hue", 0, [ -1, 1, 0.01 ])).setMappable(20);
-	newInput(20, nodeValue_Surface( "Hue map")).setVisible(false, false);
+	newInput( 3, nodeValue_Slider(  "Hue",        0, [ -1, 1, 0.01 ])).setMappable(20);
 	newInput( 4, nodeValue_Slider(  "Saturation", 0, [ -1, 1, 0.01 ])).setMappable(21);
-	newInput(21, nodeValue_Surface( "Saturation map")).setVisible(false, false);
-	newInput( 5, nodeValue_Slider(  "Value", 0, [ -1, 1, 0.01 ])).setMappable(22);
-	newInput(22, nodeValue_Surface( "Value map")).setVisible(false, false);
+	newInput( 5, nodeValue_Slider(  "Value",      0, [ -1, 1, 0.01 ])).setMappable(22);
 	
 	////- Color
 	
-	newInput( 6, nodeValue_Color(       "Blend", ca_white));
-	newInput(14, nodeValue_Enum_Scroll( "Blend mode", 0, BLEND_TYPES));
+	newInput( 6, nodeValue_Color(       "Blend",        ca_white ));
+	newInput(14, nodeValue_Enum_Scroll( "Blend mode",   0, BLEND_TYPES ));
 	newInput( 7, nodeValue_Slider(      "Blend amount", 0)).setMappable(23);
-	newInput(23, nodeValue_Surface(     "Blend map")).setVisible(false, false);
 	
 	// inputs 26
 	

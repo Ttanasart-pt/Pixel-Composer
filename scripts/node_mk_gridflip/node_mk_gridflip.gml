@@ -19,8 +19,7 @@ function Node_MK_GridFlip(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(8, nodeValue_Rotation("Sweep direction", 0));
 		
-	newInput(9, nodeValue_Float("Sweep shift", 0))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
+	newInput(9, nodeValue_Slider("Sweep shift", 0, [ -1, 1, 0.01 ] ));
 	
 	newInput(10, nodeValue_Enum_Scroll("Flip limit",  0, [ new scrollItem("None", s_node_mk_grid_flip, 0), 
 												                 new scrollItem("90",   s_node_mk_grid_flip, 1), 

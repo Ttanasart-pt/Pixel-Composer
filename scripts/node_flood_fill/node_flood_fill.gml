@@ -5,22 +5,19 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		
 	newInput(1, nodeValue_Surface("Mask"));
 	
-	newInput(2, nodeValue_Float("Mix", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(2, nodeValue_Slider("Mix", 1));
 	
-	newInput(3, nodeValue_Bool("Active", true));
-		active_index = 3;
+	newActiveInput(3);
 		
 	newInput(4, nodeValue_Vec2("Position", [ 1, 1 ]));
 		
 	newInput(5, nodeValue_Color("Colors", ca_black ));
 	
-	newInput(6, nodeValue_Float("Threshold", 0.1))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(6, nodeValue_Slider("Threshold", 0.1));
 	
 	newInput(7, nodeValue_Bool("Diagonal", false));
 	
-	__init_mask_modifier(1); // inputs 8, 9
+	__init_mask_modifier(1, 8); // inputs 8, 9
 	
 	newInput(10, nodeValue_Enum_Scroll("Blend",  0, [ "Override", "Multiply" ]));
 	

@@ -7,36 +7,24 @@
 function Node_Blur_Slope(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Slope Blur";
 	
-	newInput(0, nodeValue_Surface("Surface In"));
+	newActiveInput(5);
+	newInput(6, nodeValue_Toggle( "Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
-	newInput(1, nodeValue_Float("Strength", 4))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 1, 32, 0.1 ] })
-		.setMappable(9);
+	////- =Surfaces
 	
-	newInput(2, nodeValue_Surface("Slope Map"));
+	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput(3, nodeValue_Surface( "Mask"       ));
+	newInput(4, nodeValue_Slider(  "Mix", 1     ));
+	__init_mask_modifier(3, 7); // inputs 7, 8
 	
-	newInput(3, nodeValue_Surface("Mask"));
+	////- =Blur
 	
-	newInput(4, nodeValue_Float("Mix", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput( 2, nodeValue_Surface( "Slope Map" ));
+	newInput( 1, nodeValue_Slider(  "Strength",   4, [1, 32, 0.1 ] )).setMappable(9);
+	newInput(10, nodeValue_Slider(  "Step",      .1, [0,  1, 0.01] ));
+	newInput(11, nodeValue_Bool(    "Gamma Correction", false ));
 	
-	newInput(5, nodeValue_Bool("Active", true));
-		active_index = 5;
-	
-	newInput(6, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
-	
-	__init_mask_modifier(3); // inputs 7, 8
-	
-	//////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	newInput( 9, nodeValueMap("Strength map", self));
-	
-	//////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	newInput(10, nodeValue_Float("Step", 0.1))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 1, 0.01] });
-		
-	newInput(11, nodeValue_Bool("Gamma Correction", false));
+	// input 12
 	
 	input_display_list = [ 5, 6, 
 		["Surfaces", true], 0, 3, 4, 7, 8, 

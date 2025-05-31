@@ -3,11 +3,9 @@ function Node_De_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Bool("Active", true));
-		active_index = 1;
+	newActiveInput(1);
 	
-	newInput(2, nodeValue_Float("Tolerance", 0))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(2, nodeValue_Slider("Tolerance", 0));
 	
 	newInput(3, nodeValue_Int("Iteration", 2))
 	
@@ -15,10 +13,9 @@ function Node_De_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(5, nodeValue_Surface("Mask"));
 	
-	newInput(6, nodeValue_Float("Mix", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(6, nodeValue_Slider("Mix", 1));
 	
-	__init_mask_modifier(5); // inputs 7, 8, 
+	__init_mask_modifier(5, 7); // inputs 7, 8, 
 	
 	newInput(9, nodeValue_Toggle("Include", 0b11, { data: [ "Inner", "Side" ] }));
 	

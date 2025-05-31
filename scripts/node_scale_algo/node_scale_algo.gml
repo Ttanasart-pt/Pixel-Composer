@@ -27,11 +27,9 @@ function Node_Scale_Algo(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	newInput(1, nodeValue_Enum_Scroll("Algorithm",  0, [ "Scale2x", "Scale3x", "CleanEdge" ]));
 		
-	newInput(2, nodeValue_Float("Tolerance", 0))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(2, nodeValue_Slider("Tolerance", 0));
 	
-	newInput(3, nodeValue_Bool("Active", true));
-		active_index = 3;
+	newActiveInput(3);
 		
 	newInput(4, nodeValue_Bool("Scale Atlas Position", true));
 	

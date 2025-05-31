@@ -51,28 +51,23 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	
 	newInput(3, nodeValue_Vec3("Rotation", [ 0, 0, 0 ]));
 	
-	newInput(4, nodeValue_Float("Scale", 1))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] });
+	newInput(4, nodeValue_Slider("Scale", 1, [ 0, 4, 0.01 ] ));
 	
-	newInput(5, nodeValue_Float("FOV", 30))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 90, 1 ] });
+	newInput(5, nodeValue_Slider("FOV", 30, [ 0, 90, 1 ] ));
 	
 	newInput(6, nodeValue_Vec2("View Range", [ 3, 6 ]));
 	
-	newInput(7, nodeValue_Float("Depth", 0))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(7, nodeValue_Slider("Depth", 0));
 	
 	newInput(8, nodeValue_Vec3("Light Position", [ -.4, -.5, 1 ]));
 	
 	newInput(9, nodeValue_Color("Base Color", ca_white));
 	
-	newInput(10, nodeValue_Float("Ambient Level", 0.2))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(10, nodeValue_Slider("Ambient Level", 0.2));
 	
 	newInput(11, nodeValue_Vec3("Elongate", [ 0, 0, 0 ]));
 	
-	newInput(12, nodeValue_Float("Rounded", 0.))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(12, nodeValue_Slider("Rounded", 0.));
 	
 	newInput(13, nodeValue_Enum_Button("Projection",  0, [ "Perspective", "Orthographic" ]));
 	
@@ -86,8 +81,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	
 	newInput(18, nodeValue_Enum_Button("Twist Axis",  0, [ "X", "Y", "Z" ]));
 	
-	newInput(19, nodeValue_Float("Twist Amount", 0))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 8, 0.1 ] });
+	newInput(19, nodeValue_Slider("Twist Amount", 0, [ 0, 8, 0.1 ] ));
 	
 	newInput(20, nodeValue_Vec3("Tile Distance", [ 1, 1, 1 ]));
 	
@@ -95,24 +89,19 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	
 	newInput(21, nodeValue_Vec3("Size", [ 1, 1, 1 ]));
 	
-	newInput(22, nodeValue_Float("Radius", .7))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(22, nodeValue_Slider("Radius", .7));
 	
-	newInput(23, nodeValue_Float("Thickness", .2))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(23, nodeValue_Slider("Thickness", .2));
 	
-	newInput(24, nodeValue_Float("Crop", 0.))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
+	newInput(24, nodeValue_Slider("Crop", 0., [ -1, 1, 0.01 ] ));
 	
 	newInput(25, nodeValue_Rotation("Angle", 30));
 	
-	newInput(26, nodeValue_Float("Height", .5))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(26, nodeValue_Slider("Height", .5));
 	
 	newInput(27, nodeValue_Slider_Range("Radius Range", [ .7, .1 ]));
 	
-	newInput(28, nodeValue_Float("Uniform Size", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(28, nodeValue_Slider("Uniform Size", 1));
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -126,18 +115,15 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	
 	newInput(32, nodeValue_Bool("Volumetric", false));
 	
-	newInput(33, nodeValue_Float("Density", 0.3))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(33, nodeValue_Slider("Density", 0.3));
 	
 	newInput(34, nodeValue_Surface("Environment"));
 	
-	newInput(35, nodeValue_Float("Reflective", 0.))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(35, nodeValue_Slider("Reflective", 0.));
 	
 	newInput(36, nodeValue_Surface("Texture"));
 	
-	newInput(37, nodeValue_Float("Triplanar Smoothing", 1.))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 10, 0.1 ] });
+	newInput(37, nodeValue_Slider("Triplanar Smoothing", 1., [ 0, 10, 0.1 ] ));
 	
 	newInput(38, nodeValue_Float("Texture Scale", 1.));
 	
@@ -151,8 +137,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 		
 	newInput(42, nodeValue_Vec3("Camera Rotation", [ 30, 45, 0 ]));
 	
-	newInput(43, nodeValue_Float("Camera Scale", 1))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] });
+	newInput(43, nodeValue_Slider("Camera Scale", 1, [ 0, 4, 0.01 ] ));
 	
 	newInput(44, nodeValue_Bool("Render", true));
 	

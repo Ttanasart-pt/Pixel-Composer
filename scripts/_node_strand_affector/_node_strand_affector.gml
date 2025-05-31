@@ -51,8 +51,7 @@ function _Node_Strand_Affector(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	newInput(4, nodeValue_Rotation("Direction", 0));
 	
-	newInput(5, nodeValue_Float("Falloff", 0.2))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(5, nodeValue_Slider("Falloff", 0.2));
 	
 	newOutput(0, nodeValue_Output("Strand", VALUE_TYPE.strands, noone));
 	

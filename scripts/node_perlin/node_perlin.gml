@@ -15,21 +15,20 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	////- =Noise
 	
 	newInput( 5, nodeValueSeed());
-	newInput(13, nodeValue_Rotation( "Phase",     0));
-	newInput( 3, nodeValue_Int(      "Iteration", 4));
-	newInput( 4, nodeValue_Bool(     "Tile",      true));
+	newInput(13, nodeValue_Rotation( "Phase",     0    ));
+	newInput( 3, nodeValue_Int(      "Iteration", 4    ));
+	newInput( 4, nodeValue_Bool(     "Tile",      true ));
 	
 	////- =Transform
 	
-	newInput( 1, nodeValue_Vec2(     "Position",  [0,0])).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
-	newInput(11, nodeValue_Rotation( "Rotation",    0));
-	newInput( 2, nodeValue_Vec2(     "Scale",     [5,5])).setMappable(10);
-	newInput(10, nodeValueMap(       "Scale map" ));
+	newInput( 1, nodeValue_Vec2(     "Position",  [0,0] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput(11, nodeValue_Rotation( "Rotation",   0    ));
+	newInput( 2, nodeValue_Vec2(     "Scale",     [5,5] )).setMappable(10);
 	
 	////- =Iteration
 	
-	newInput(14, nodeValue_Float(  "Scaling",    2));
-	newInput(15, nodeValue_Slider( "Amplitude", .5));
+	newInput(14, nodeValue_Float(  "Scaling",    2 ));
+	newInput(15, nodeValue_Slider( "Amplitude", .5 ));
 	
 	////- =Render
 	

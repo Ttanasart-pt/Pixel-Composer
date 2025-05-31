@@ -3,15 +3,13 @@ function Node_Diffuse(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	
 	newInput(0, nodeValue_Surface("Density field"));
 	
-	newInput(1, nodeValue_Float("Dissipation", 0.05))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ -0.2, 0.2, 0.001] });
+	newInput(1, nodeValue_Slider("Dissipation", 0.05, [ -0.2, 0.2, 0.001] ));
 	
 	newInput(2, nodeValue_Float("Scale", 1));
 	
 	newInput(3, nodeValue_Float("Randomness", 1));
 	
-	newInput(4, nodeValue_Float("Flow rate", 0.5))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 1, 0.01] });
+	newInput(4, nodeValue_Slider("Flow rate", 0.5, [ 0, 1, 0.01] ));
 	
 	newInput(5, nodeValue_Slider_Range("Threshold", [ 0.5, 0.7 ]));
 		
@@ -19,8 +17,7 @@ function Node_Diffuse(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	
 	newInput(7, nodeValue_Surface("External"));
 	
-	newInput(8, nodeValue_Float("External Strength", 0.1))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ -0.25, 0.25, 0.01] });
+	newInput(8, nodeValue_Slider("External Strength", 0.1, [ -0.25, 0.25, 0.01] ));
 	
 	newInput(9, nodeValue_Int("Detail", 1))
 	

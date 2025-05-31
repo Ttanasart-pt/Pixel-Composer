@@ -33,8 +33,7 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(3, nodeValue_Surface("Dither map"))
 		.setVisible(false);
 	
-	newInput(4, nodeValue_Float("Contrast", 1))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 5, 0.1] });
+	newInput(4, nodeValue_Slider("Contrast", 1, [1, 5, 0.1] ));
 	
 	newInput(5, nodeValue_Surface("Contrast map"));
 	
@@ -42,22 +41,19 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	newInput(7, nodeValue_Surface("Mask"));
 	
-	newInput(8, nodeValue_Float("Mix", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(8, nodeValue_Slider("Mix", 1));
 	
-	newInput(9, nodeValue_Bool("Active", true));
-		active_index = 9;
+	newActiveInput(9);
 	
 	newInput(10, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
-	__init_mask_modifier(7); // inputs 11, 12, 
+	__init_mask_modifier(7, 11); // inputs 11, 12, 
 	
 	newInput(13, nodeValueSeed());
 		
 	newInput(14, nodeValue_Bool("Use palette", true));
 	
-	newInput(15, nodeValue_Int("Steps", 4))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [2, 16, 0.1] });
+	newInput(15, nodeValue_ISlider("Steps", 4, [2, 16, 0.1] ));
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	

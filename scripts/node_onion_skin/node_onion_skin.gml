@@ -7,8 +7,7 @@ function Node_Onion_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	newInput(1, nodeValue_Slider_Range("Range", [-1, 1], { range: [ -16, 16, 0.1 ] }));
 	
-	newInput(2, nodeValue_Float("Alpha", 0.5))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(2, nodeValue_Slider("Alpha", 0.5));
 		
 	newInput(3, nodeValue_Color("Color pre", cola(c_red)))
 	

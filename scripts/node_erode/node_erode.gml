@@ -9,34 +9,23 @@
 function Node_Erode(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Erode";
 	
-	newInput(0, nodeValue_Surface("Surface In"));
+	newActiveInput(6);
+	newInput(7, nodeValue_Toggle( "Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
-	newInput(1, nodeValue_Int("Width", 1))
-		.setValidator(VV_min(0))
-		.setMappable(10);
+	////- =Surfaces
 	
-	newInput(2, nodeValue_Bool("Preserve Border", false));
+	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput(4, nodeValue_Surface( "Mask"       ));
+	newInput(5, nodeValue_Slider(  "Mix", 1     ));
+	__init_mask_modifier(4, 8); // inputs 8, 9, 
 	
-	newInput(3, nodeValue_Bool("Use Alpha", true));
+	////- =Erode
 	
-	newInput(4, nodeValue_Surface("Mask"));
+	newInput(1, nodeValue_Int(  "Width", 1)).setValidator(VV_min(0)).setMappable(10);
+	newInput(2, nodeValue_Bool( "Preserve Border", false ));
+	newInput(3, nodeValue_Bool( "Use Alpha",        true ));
 	
-	newInput(5, nodeValue_Float("Mix", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
-	
-	newInput(6, nodeValue_Bool("Active", true));
-		active_index = 6;
-	
-	newInput(7, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
-	
-	__init_mask_modifier(4); // inputs 8, 9, 
-	
-	/////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	newInput(10, nodeValue_Surface("Width map"))
-		.setVisible(false, false);
-	
-	/////////////////////////////////////////////////////////////////////////////////////////////////////
+	// input 11
 	
 	input_display_list = [ 6, 7,
 		["Surfaces", true], 0, 4, 5, 8, 9, 

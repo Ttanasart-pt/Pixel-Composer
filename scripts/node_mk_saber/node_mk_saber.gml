@@ -17,8 +17,7 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	newInput(7, nodeValue_Int("Gradient step", 1));
 	
-	newInput(8, nodeValue_Float("Glow intensity", 0))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(8, nodeValue_Slider("Glow intensity", 0));
 	
 	newInput(9, nodeValue_Int("Glow radius", 0));
 	

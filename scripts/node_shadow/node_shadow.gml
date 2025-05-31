@@ -4,27 +4,22 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(0, nodeValue_Surface("Surface In"));
 	newInput(1, nodeValue_Color("Color", ca_black));
 	
-	newInput(2, nodeValue_Float("Strength", .5))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 2, 0.01] });
+	newInput(2, nodeValue_Slider("Strength", .5, [ 0, 2, 0.01] ));
 	
 	newInput(3, nodeValue_Vec2("Shift", [ 4, 4 ]))
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	newInput(4, nodeValue_Float("Grow", 3))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 0.1] });
+	newInput(4, nodeValue_Slider("Grow", 3, [0, 16, 0.1] ));
 	
-	newInput(5, nodeValue_Float("Blur", 3))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
+	newInput(5, nodeValue_Slider("Blur", 3, [1, 16, 0.1] ));
 	
 	newInput(6, nodeValue_Surface("Mask"));
 	
-	newInput(7, nodeValue_Float("Mix", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(7, nodeValue_Slider("Mix", 1));
 	
-	newInput(8, nodeValue_Bool("Active", true));
-		active_index = 8;
+	newActiveInput(8);
 	
-	__init_mask_modifier(6); // inputs 9, 10
+	__init_mask_modifier(6, 9); // inputs 9, 10
 	
 	newInput(11, nodeValue_Enum_Scroll("Positioning",  0, [ "Shift", "Light" ]));
 	

@@ -84,8 +84,6 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	////- =Color
 	
 	newInput(11, nodeValue_Gradient(     "Random Blend", new gradientObject(ca_white))).setMappable(28);
-	newInput(28, nodeValueMap(           "Gradient Map",       self));
-	newInput(29, nodeValueGradientRange( "Gradient Map Range", self, inputs[11]));
 	newInput(12, nodeValue_Slider_Range( "Alpha", [ 1, 1 ]));
 	newInput(16, nodeValue_Bool(         "Multiply Alpha", true));
 	newInput(41, nodeValue_Surface(      "Sample Surface"));

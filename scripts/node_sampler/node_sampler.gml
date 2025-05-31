@@ -7,8 +7,7 @@ function Node_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(1, nodeValue_Vec2("Position", [ 0, 0 ]))
 		.setUnitRef(function(index) { return getDimension(index); });
 		
-	newInput(2, nodeValue_Int("Sampling size", 1, "Size of square around the position to sample and average pixel color."))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 3, 0.1] });
+	newInput(2, nodeValue_ISlider("Sampling size", 1, [1, 3, .1] )).setTooltip("Size of square around the position to sample and average pixel color.");
 	
 	newInput(3, nodeValue_Bool("Alpha", false));
 	

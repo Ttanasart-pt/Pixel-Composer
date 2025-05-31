@@ -28,8 +28,7 @@ function Node_FLIP_Apply_Force(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput(1, nodeValue_Vec2("Position", [ 0, 0 ] ))
 		.setUnitRef(function(index) { return getDimension(); });
 	
-	newInput(2, nodeValue_Float("Radius", 4 ))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
+	newInput(2, nodeValue_Slider("Radius", 4, [1, 16, 0.1] ));
 	
 	newInput(3, nodeValue_Enum_Scroll("Shape",  0 , [ new scrollItem("Circle", s_node_shape_circle, 0), new scrollItem("Rectangle", s_node_shape_rectangle, 0), ]));
 		

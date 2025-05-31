@@ -3,11 +3,9 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Bool("Active", true));
-		active_index = 1;
+	newActiveInput(1);
 	
-	newInput(2, nodeValue_Int("Grid", 1, "Amount of grid subdivision. Higher number means more grid, detail."))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 1 ] })
+	newInput(2, nodeValue_ISlider("Grid", 1, [ 0, 4, 1 ])).setTooltip("Amount of grid subdivision. Higher number means more grid, detail.")
 		.rejectArray();
 		
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

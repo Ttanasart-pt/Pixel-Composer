@@ -9,20 +9,17 @@ function Node_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Int("Radius", 2))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
+	newInput(1, nodeValue_ISlider("Radius", 2, [1, 16, 0.1] ));
 	
 	newInput(2, nodeValue_Surface("Mask"));
 	
-	newInput(3, nodeValue_Float("Mix", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(3, nodeValue_Slider("Mix", 1));
 	
-	newInput(4, nodeValue_Bool("Active", true));
-		active_index = 4;
+	newActiveInput(4);
 	
 	newInput(5, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
-	__init_mask_modifier(2); // inputs 6, 7
+	__init_mask_modifier(2, 6); // inputs 6, 7
 	
 	newInput(8, nodeValue_Slider("Thershold", .5));
 	

@@ -434,13 +434,9 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	setDynamicInput(6, true, VALUE_TYPE.surface);
 	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
-	
-	newOutput(1, nodeValue_Output("Atlas data", VALUE_TYPE.atlas, []));
-	
-	newOutput(2, nodeValue_Output("Dimension", VALUE_TYPE.integer, [1, 1]))
-		.setVisible(false)
-		.setDisplay(VALUE_DISPLAY.vector);
+	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone  ));
+	newOutput(1, nodeValue_Output( "Atlas data",  VALUE_TYPE.atlas,   []     ));
+	newOutput(2, nodeValue_Output( "Dimension",   VALUE_TYPE.integer, [1, 1] )).setVisible(false).setDisplay(VALUE_DISPLAY.vector);
 	
 	temp_surface = [ surface_create(1, 1), surface_create(1, 1), surface_create(1, 1) ];
 	blend_temp_surface = temp_surface[2];

@@ -16,14 +16,12 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	newInput(14, nodeValueSeed());
 	newInput( 3, nodeValue_ISlider(  "Iteration",   1, [1, 16, 0.1] )).setMappable(9);
-	newInput( 9, nodeValueMap(       "Iteration map"));
 	
 	////- =Transform
 	
 	newInput( 1, nodeValue_Vec2(     "Position",   [0,0] ));
 	newInput(10, nodeValue_Rotation( "Rotation",    0));
-	newInput( 2, nodeValue_Vec2(     "Scale",      [1,1] )).setMappable(8);
-	newInput( 8, nodeValueMap(       "Scale map"));
+	newInput( 2, nodeValue_Vec2(     "Scale",      [4,4] )).setMappable(8);
 	
 	////- =Iteration
 	

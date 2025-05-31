@@ -24,8 +24,7 @@ function Node_Path_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newInput(9, nodeValue_Curve("Trim over Length", CURVE_DEF_11));
 	
-	newInput(10, nodeValue_Float("Range", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(10, nodeValue_Slider("Range", 1));
 	
 	newInput(11, nodeValue_Bool("Flip if Negative", false ));
 	

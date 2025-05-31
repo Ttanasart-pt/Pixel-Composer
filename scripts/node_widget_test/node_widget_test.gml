@@ -10,7 +10,7 @@ function Node_Widget_Test(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput( 4, nodeValue("rotator", self, CONNECT_TYPE.input, VALUE_TYPE.float, 0)                                      .setDisplay(VALUE_DISPLAY.rotation))
 	newInput( 5, nodeValue("rotatorRange", self, CONNECT_TYPE.input, VALUE_TYPE.float, [0, 0])                            .setDisplay(VALUE_DISPLAY.rotation_range))
 	newInput( 6, nodeValue_Float("rotatorRandom", [0, 0, 0, 0, 0])                  .setDisplay(VALUE_DISPLAY.rotation_random))
-	newInput( 7, nodeValue("slider", self, CONNECT_TYPE.input, VALUE_TYPE.float, 0)                                       .setDisplay(VALUE_DISPLAY.slider))
+	newInput( 7, nodeValue_Slider("slider", 0));
 	newInput( 8, nodeValue("sliderRange", self, CONNECT_TYPE.input, VALUE_TYPE.float, [ 0, 0 ])                           .setDisplay(VALUE_DISPLAY.slider_range))
 	newInput( 9, nodeValue("areaBox", self, CONNECT_TYPE.input, VALUE_TYPE.float, DEF_AREA)						        .setDisplay(VALUE_DISPLAY.area))
 	newInput(10, nodeValue("paddingBox", self, CONNECT_TYPE.input, VALUE_TYPE.float, [ 0, 0, 0, 0 ])                      .setDisplay(VALUE_DISPLAY.padding))

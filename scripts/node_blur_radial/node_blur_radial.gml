@@ -7,36 +7,24 @@
 function Node_Blur_Radial(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Radial Blur";
 	
-	newInput(0, nodeValue_Surface("Surface In"));
-	
-	newInput(1, nodeValue_Rotation("Strength", 45))
-		.setMappable(10);
-	
-	newInput(2, nodeValue_Vec2("Center", [ 0.5, 0.5 ]))
-		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
-		
-	newInput(3, nodeValue_Enum_Scroll("Oversample mode", 0, [ "Empty", "Clamp", "Repeat" ]))
-		.setTooltip("How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.");
-		
-	newInput(4, nodeValue_Surface("Mask"));
-	
-	newInput(5, nodeValue_Float("Mix", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
-	
-	newInput(6, nodeValue_Bool("Active", true));
-		active_index = 6;
-	
+	newActiveInput(6);
 	newInput(7, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
-	__init_mask_modifier(4); // inputs 8, 9, 
+	////- =Surfaces
 	
-	//////////////////////////////////////////////////////////////////////////////////////////////////
+	newInput(3, nodeValue_Enum_Scroll("Oversample mode", 0, [ "Empty", "Clamp", "Repeat" ]));
+	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput(4, nodeValue_Surface( "Mask"       ));
+	newInput(5, nodeValue_Slider(  "Mix", 1     ));
+	__init_mask_modifier(4, 8); // inputs 8, 9
 	
-	newInput(10, nodeValueMap("Strength map", self));
+	////- =Blur
 	
-	//////////////////////////////////////////////////////////////////////////////////////////////////
+	newInput( 1, nodeValue_Rotation( "Strength",          45     )).setMappable(10);
+	newInput( 2, nodeValue_Vec2(     "Center",           [.5,.5] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(11, nodeValue_Bool(     "Gamma Correction",  false  ));
 	
-	newInput(11, nodeValue_Bool("Gamma Correction", false));
+	// input 12
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	

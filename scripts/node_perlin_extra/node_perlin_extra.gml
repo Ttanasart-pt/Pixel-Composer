@@ -20,23 +20,20 @@ function Node_Perlin_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	newInput( 3, nodeValue_Int(         "Iteration",        2    )).setShaderProp("iteration");
 	newInput( 4, nodeValue_Bool(        "Tile",             true )).setShaderProp("tile");
 	newInput(11, nodeValue_Slider(      "Parameter A",      0    )).setShaderProp("paramA").setMappable(14);
-	newInput(14, nodeValueMap(          "Parameter A map"));
 	newInput(12, nodeValue_Float(       "Parameter B",      1    )).setShaderProp("paramB").setMappable(15);
-	newInput(15, nodeValueMap(          "Parameter B map"));
 	
 	////- =Transform
 	
 	newInput( 1, nodeValue_Vec2(     "Position",    [0,0] )).setShaderProp("position").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
-	newInput(16, nodeValue_Rotation( "Rotation",    0    )).setShaderProp("rotation");
+	newInput(16, nodeValue_Rotation( "Rotation",     0    )).setShaderProp("rotation");
 	newInput( 2, nodeValue_Vec2(     "Scale",       [4,4] )).setShaderProp("scale").setMappable(13);
-	newInput(13, nodeValueMap(       "Scale map"));
 	
 	////- =Render
 	
-	newInput( 6, nodeValue_Enum_Button(  "Color Mode",     0, [ "Greyscale", "RGB", "HSV" ])).setShaderProp("colored");
-	newInput( 7, nodeValue_Slider_Range( "Color R Range", [0,1])).setShaderProp("colorRanR");
-	newInput( 8, nodeValue_Slider_Range( "Color G Range", [0,1])).setShaderProp("colorRanG");
-	newInput( 9, nodeValue_Slider_Range( "Color B Range", [0,1])).setShaderProp("colorRanB");
+	newInput( 6, nodeValue_Enum_Button(  "Color Mode",     0, [ "Greyscale", "RGB", "HSV" ] )).setShaderProp("colored");
+	newInput( 7, nodeValue_Slider_Range( "Color R Range", [0,1] )).setShaderProp("colorRanR");
+	newInput( 8, nodeValue_Slider_Range( "Color G Range", [0,1] )).setShaderProp("colorRanG");
+	newInput( 9, nodeValue_Slider_Range( "Color B Range", [0,1] )).setShaderProp("colorRanB");
 	
 	input_display_list = [
 		["Output",     true], 0, 17, 

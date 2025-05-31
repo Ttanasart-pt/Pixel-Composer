@@ -3,19 +3,15 @@ function Node_Vignette(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Bool("Active", true));
-		active_index = 1;
+	newActiveInput(1);
 	
 	newInput(2, nodeValue_Float("Exposure", 15));
 	
-	newInput(3, nodeValue_Float("Strength", 1))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 2, 0.01 ] });
+	newInput(3, nodeValue_Slider("Strength", 1, [ 0, 2, 0.01 ] ));
 	
-	newInput(4, nodeValue_Float("Exponent", 0.25))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(4, nodeValue_Slider("Exponent", 0.25));
 	
-	newInput(5, nodeValue_Float("Roundness", 0))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(5, nodeValue_Slider("Roundness", 0));
 	
 	newInput(6, nodeValue_Bool("Lighten", false))
 	

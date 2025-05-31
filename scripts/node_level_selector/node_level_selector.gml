@@ -1,40 +1,27 @@
 function Node_Level_Selector(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Level Selector";
 	
-	newInput(0, nodeValue_Surface("Surface In"));
-	
-	newInput(1, nodeValue_Float("Midpoint", 0))
-		.setDisplay(VALUE_DISPLAY.slider)
-		.setMappable(9);
-	
-	newInput(2, nodeValue_Float("Range", 0.1))
-		.setDisplay(VALUE_DISPLAY.slider)
-		.setMappable(10);
-	
-	newInput(3, nodeValue_Surface("Mask"));
-	
-	newInput(4, nodeValue_Float("Mix", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
-	
-	newInput(5, nodeValue_Bool("Active", true));
-		active_index = 5;
-	
+	newActiveInput(5);
 	newInput(6, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
-	__init_mask_modifier(3); // inputs 7, 8, 
+	////- =Surfaces
 	
-	//////////////////////////////////////////////////////////////////////////////////////////////////
+	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput(3, nodeValue_Surface( "Mask"       ));
+	newInput(4, nodeValue_Slider(  "Mix", 1     ));
+	__init_mask_modifier(3, 7); // inputs 7, 8, 
 	
-	newInput( 9, nodeValueMap("Midpoint map", self));
+	////- =Level
 	
-	newInput(10, nodeValueMap("Range map", self));
+	newInput( 1, nodeValue_Slider( "Midpoint",    0 )).setMappable(9);
+	newInput( 2, nodeValue_Slider( "Range",      .1 )).setMappable(10);
+	newInput(12, nodeValue_Slider( "Smoothness",  0 ));
 	
-	//////////////////////////////////////////////////////////////////////////////////////////////////
+	////- =Output
 	
-	newInput(11, nodeValue_Bool("Keep Original", false));
+	newInput(11, nodeValue_Bool( "Keep Original", false ));
 	
-	newInput(12, nodeValue_Float("Smoothness", 0))
-		.setDisplay(VALUE_DISPLAY.slider);
+	// input 13
 		
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	

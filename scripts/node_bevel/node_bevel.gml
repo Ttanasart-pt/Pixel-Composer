@@ -1,37 +1,29 @@
 function Node_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Bevel";
 	
-	newInput(0, nodeValue_Surface("Surface In"));
+	newActiveInput(7);
 	
-	newInput(1, nodeValue_Int("Height", 4))
-		.setMappable(11);
+	////- =Surfaces
 	
-	newInput(2, nodeValue_Vec2("Shift", [ 0, 0 ]));
+	newInput(8, nodeValue_Enum_Scroll("Oversample mode", 0, [ "Empty", "Clamp", "Repeat" ]));
+	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput(5, nodeValue_Surface( "Mask"       ));
+	newInput(6, nodeValue_Slider(  "Mix", 1     ));
+	__init_mask_modifier(5, 9); // inputs 9, 10
 	
-	newInput(3, nodeValue_Vec2("Scale", [ 1, 1 ] ));
+	////- =Bevel
 	
-	newInput(4, nodeValue_Enum_Scroll("Slope", 0, [ new scrollItem("Linear",   s_node_curve_type, 2), 
-												          new scrollItem("Smooth",   s_node_curve_type, 4), 
-												          new scrollItem("Circular", s_node_curve_type, 5), ]));
+	newInput(4, nodeValue_Enum_Scroll( "Slope", 0, [ new scrollItem("Linear",   s_node_curve_type, 2), 
+                                                     new scrollItem("Smooth",   s_node_curve_type, 4), 
+                                                     new scrollItem("Circular", s_node_curve_type, 5), ]));
+	newInput(1, nodeValue_Int( "Height", 4 )).setMappable(11);
 	
-	newInput(5, nodeValue_Surface("Mask"));
+	////- =Transform
 	
-	newInput(6, nodeValue_Float("Mix", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(2, nodeValue_Vec2( "Shift", [ 0, 0 ]));
+	newInput(3, nodeValue_Vec2( "Scale", [ 1, 1 ] ));
 	
-	newInput(7, nodeValue_Bool("Active", true));
-		active_index = 7;
-		
-	newInput(8, nodeValue_Enum_Scroll("Oversample mode", 0, [ "Empty", "Clamp", "Repeat" ]))
-		.setTooltip("How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.");
-		
-	__init_mask_modifier(5); // inputs 9, 10
-	
-	//////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	newInput(11, nodeValueMap("Height map", self));
-	
-	//////////////////////////////////////////////////////////////////////////////////////////////////
+	// input 12
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	

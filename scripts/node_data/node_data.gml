@@ -900,7 +900,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		outputDisplayList = [];
 		
-		array_foreach(outputs, function(jun) /*=>*/ { if(jun.isVisible())             array_push(outputDisplayList, jun);             });
+		array_foreach(outputs, function(jun) /*=>*/ { if(jun.isVisible()) array_push(outputDisplayList, jun); });
 		array_foreach(inputs,  function(jun) /*=>*/ { if(jun.bypass_junc.isVisible()) array_push(outputDisplayList, jun.bypass_junc); });
 		if(attributes.outp_meta) array_foreach(junc_meta, function(jun) /*=>*/ { if(jun.isVisible()) array_push(outputDisplayList, jun); });
 		

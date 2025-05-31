@@ -13,8 +13,7 @@ function Node_Local_Analyze(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	newInput(1, nodeValue_Enum_Scroll("Algorithm",  0, [ "Average (Blur)", "Maximum", "Minimum" ]));
 	
-	newInput(2, nodeValue_Float("Size", 1))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 1, 16, 0.1] });
+	newInput(2, nodeValue_Slider("Size", 1, [ 1, 16, 0.1] ));
 	
 	newInput(3, nodeValue_Enum_Scroll("Oversample mode",  0, [ "Empty", "Clamp", "Repeat" ]))
 		.setTooltip("How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.");
@@ -25,15 +24,13 @@ function Node_Local_Analyze(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 	newInput(5, nodeValue_Surface("Mask"));
 	
-	newInput(6, nodeValue_Float("Mix", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(6, nodeValue_Slider("Mix", 1));
 	
-	newInput(7, nodeValue_Bool("Active", true));
-		active_index = 7;
+	newActiveInput(7);
 	
 	newInput(8, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 		
-	__init_mask_modifier(5); // inputs 9, 10
+	__init_mask_modifier(5, 9); // inputs 9, 10
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	

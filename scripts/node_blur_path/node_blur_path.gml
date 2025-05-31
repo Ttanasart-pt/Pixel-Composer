@@ -9,15 +9,13 @@ function Node_Blur_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(3, nodeValue_Surface("Mask"));
 	
-	newInput(4, nodeValue_Float("Mix", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(4, nodeValue_Slider("Mix", 1));
 	
-	newInput(5, nodeValue_Bool("Active", true));
-		active_index = 5;
+	newActiveInput(5);
 	
 	newInput(6, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
-	__init_mask_modifier(3); // inputs 7, 8
+	__init_mask_modifier(3, 7); // inputs 7, 8
 	
 	newInput(9, nodeValue_Float("Intensity", 1));
 	
@@ -25,8 +23,7 @@ function Node_Blur_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(11, nodeValue_Slider_Range("Range", [ 0, 1 ]));
 	
-	newInput(12, nodeValue_Float("Path Origin", 0))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(12, nodeValue_Slider("Path Origin", 0));
 	
 	input_display_list = [ 5, 6, 
 		["Surfaces", true],	0, 3, 4, 7, 8, 

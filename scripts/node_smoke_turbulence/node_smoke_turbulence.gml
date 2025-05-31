@@ -9,11 +9,9 @@ function Node_Smoke_Turbulence(_x, _y, _group = noone) : Node_Smoke(_x, _y, _gro
 	
 	newInput(1, nodeValue_Area("Effect area", DEF_AREA, { useShape : false }));
 	
-	newInput(2, nodeValue_Float("Strength", 0.10))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
+	newInput(2, nodeValue_Slider("Strength", 0.10, [-1, 1, 0.01] ));
 	
-	newInput(3, nodeValue_Float("Scale", 4))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.01] });
+	newInput(3, nodeValue_Slider("Scale", 4, [1, 16, 0.01] ));
 	
 	newInput(4, nodeValueSeed());
 	

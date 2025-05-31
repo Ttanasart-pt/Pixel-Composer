@@ -31,8 +31,7 @@ function Node_Path_Shape_3D(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	newInput(7, nodeValue_Float("Pitch", .2));
 	
-	newInput(8, nodeValue_Float("Inner Radius", .5))
-	    .setDisplay(VALUE_DISPLAY.slider);
+	newInput(8, nodeValue_Slider("Inner Radius", .5));
 	
 	newOutput(0, nodeValue_Output("Path data", VALUE_TYPE.pathnode, self));
 	

@@ -36,8 +36,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
     ];
 	newInput(3, nodeValue_Enum_Scroll("Shape", 0, { data: shapeScroll, horizontal: true, text_pad: ui(16) }));
 	
-	newInput(4, nodeValue_Float("Skew", .5))
-	    .setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01] });
+	newInput(4, nodeValue_Slider("Skew", .5, [ -1, 1, 0.01] ));
 	
 	newInput(5, nodeValue_Rotation_Range("Angle Range", [ 0, 90 ]));
 	

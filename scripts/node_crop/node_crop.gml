@@ -15,8 +15,7 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(1, nodeValue_Padding("Crop", [ 0, 0, 0, 0 ]))
 		.setUnitRef(function(i) /*=>*/ {return getDimension(i)});
 	
-	newInput(2, nodeValue_Bool("Active", true));
-		active_index = 2;
+	newActiveInput(2);
 		
 	newInput(3, nodeValue_Enum_Scroll("Aspect Ratio",  0, [ "None", "Manual", "1:1", "3:2", "4:3", "16:9" ]));
 		

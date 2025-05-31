@@ -7,17 +7,13 @@ function Node_MK_Subpixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(2, nodeValue_Int("Density", 8));
 	
-	newInput(3, nodeValue_Float("Size", .6))
-	    .setDisplay(VALUE_DISPLAY.slider);
+	newInput(3, nodeValue_Slider("Size", .6));
 	
-	newInput(4, nodeValue_Float("Blur", .1))
-	    .setDisplay(VALUE_DISPLAY.slider);
+	newInput(4, nodeValue_Slider("Blur", .1));
 	
-	newInput(5, nodeValue_Float("Noise", .1))
-	    .setDisplay(VALUE_DISPLAY.slider);
+	newInput(5, nodeValue_Slider("Noise", .1));
 	
-	newInput(6, nodeValue_Float("Intensity", 1))
-	    .setDisplay(VALUE_DISPLAY.slider);
+	newInput(6, nodeValue_Slider("Intensity", 1));
 	
 	newInput(7, nodeValue_Surface("Surface"));
 	
@@ -25,8 +21,7 @@ function Node_MK_Subpixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(9, nodeValue_Float("Ridge amount", 8));
 	
-	newInput(10, nodeValue_Float("Ridge Intensity", 1))
-	    .setDisplay(VALUE_DISPLAY.slider);
+	newInput(10, nodeValue_Slider("Ridge Intensity", 1));
 	
 	newInput(11, nodeValue_Bool("Ridge", false));
 	
@@ -34,13 +29,11 @@ function Node_MK_Subpixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(13, nodeValue_Bool("Flicker", false));
 	
-	newInput(14, nodeValue_Float("Flicker Intensity", .2))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(14, nodeValue_Slider("Flicker Intensity", .2));
 	
 	newInput(15, nodeValue_Float("Flicker Frequency", 4))
 	
-	newInput(16, nodeValue_Float("Flicker Cut", .5))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(16, nodeValue_Slider("Flicker Cut", .5));
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 7, 
 		["Subpixel", false],      1,  2, 12, 

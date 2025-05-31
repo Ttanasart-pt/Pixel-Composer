@@ -30,8 +30,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 	newInput(3, nodeValue_Vec2("Bone transform", [ 0, 0 ]));
 		
-	newInput(4, nodeValue_Float("Bone scale", 1))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0.1, 2, 0.01 ] });
+	newInput(4, nodeValue_Slider("Bone scale", 1, [ 0.1, 2, 0.01 ] ));
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	

@@ -15,15 +15,13 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	newInput(6, nodeValue_Surface("Mask"));
 	
-	newInput(7, nodeValue_Float("Mix", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(7, nodeValue_Slider("Mix", 1));
 	
-	newInput(8, nodeValue_Bool("Active", true));
-		active_index = 8;
+	newActiveInput(8);
 	
 	newInput(9, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 		
-	__init_mask_modifier(6); // inputs 10, 11
+	__init_mask_modifier(6, 10); // inputs 10, 11
 	
 	newInput(12, nodeValue_Slider_Range("White out", [0, 1]));
 	

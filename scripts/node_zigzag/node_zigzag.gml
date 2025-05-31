@@ -8,35 +8,25 @@
 function Node_Zigzag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Zigzag";
 	
-	newInput(0, nodeValue_Dimension());
+	////- =Output
 	
-	newInput(1, nodeValue_Float("Amount", 1))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] })
-		.setMappable(6);
-		
-	newInput(2, nodeValue_Vec2("Position", [0, 0] ))
-		.setUnitRef(function(index) { return getDimension(index); });
+	newInput( 0, nodeValue_Dimension());
+	newInput( 9, nodeValue_Surface( "Mask" ));
 	
-	newInput(3, nodeValue_Color("Color 1", ca_white));
+	////- =Pattern
 	
-	newInput(4, nodeValue_Color("Color 2", ca_black));
+	newInput( 1, nodeValue_Slider(   "Amount",      1, [1, 16, 0.1] )).setMappable(6);
+	newInput( 2, nodeValue_Vec2(     "Position",   [0,0] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput( 8, nodeValue_Rotation( "Angle",       0    )).setMappable(7);
+	newInput(10, nodeValue_Slider(   "Threshold",  .5    ));
 	
-	newInput(5, nodeValue_Enum_Button("Type",  0, [ "Solid", "Smooth", "AA" ]));
+	////- =Render
 	
-	//////////////////////////////////////////////////////////////////////////////////
+	newInput( 5, nodeValue_Enum_Button( "Type",    0, [ "Solid", "Smooth", "AA" ]));
+	newInput( 3, nodeValue_Color(       "Color 1", ca_white));
+	newInput( 4, nodeValue_Color(       "Color 2", ca_black));
 	
-	newInput(6, nodeValueMap("Amount map", self));
-	
-	newInput(7, nodeValueMap("Angle map", self));
-	
-	//////////////////////////////////////////////////////////////////////////////////
-	
-	newInput(8, nodeValue_Rotation("Angle", 0))
-		.setMappable(7);
-		
-	newInput(9, nodeValue_Surface("Mask"));
-		
-	newInput(10, nodeValue_Slider("Threshold", .5));
+	// input 11
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -47,6 +37,8 @@ function Node_Zigzag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	];
 	
 	attribute_surface_depth();
+	
+	////- Node
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		PROCESSOR_OVERLAY_CHECK

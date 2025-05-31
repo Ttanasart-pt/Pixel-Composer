@@ -34,11 +34,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	newInput( 0, nodeValue_Dimension());
 	
 	newInput( 1, nodeValue_Color("Color", ca_white ));
-	newInput( 2, nodeValue_Int("Brush Size", 1 ))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 32, 0.1] });
+	newInput( 2, nodeValue_ISlider("Brush Size", 1, [1, 32, 0.1] ));
 	
-	newInput( 3, nodeValue_Float("Fill Threshold", 0.))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput( 3, nodeValue_Slider("Fill Threshold", 0.));
 	
 	newInput( 4, nodeValue_Enum_Scroll("Fill Type",  0, ["4 connect", "8 connect", "Entire canvas"]));
 	
@@ -51,13 +49,11 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	newInput( 8, nodeValue_Surface("Background"));
 	
-	newInput( 9, nodeValue_Float("Background Alpha", 1.))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput( 9, nodeValue_Slider("Background Alpha", 1.));
 		
 	newInput(10, nodeValue_Bool("Render Background", true));
 	
-	newInput(11, nodeValue_Float("Alpha", 1 ))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(11, nodeValue_Slider("Alpha", 1 ));
 	
 	newInput(12, nodeValue_Bool("Frames Animation", true ));
 	

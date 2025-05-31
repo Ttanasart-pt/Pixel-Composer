@@ -9,18 +9,15 @@ function Node_Alpha_Cutoff(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Float("Minimum", 0.2, "Any pixel with less alpha (more transparent) than this will be removed."))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(1, nodeValue_Slider("Minimum", 0.2)).setTooltip("Any pixel with less alpha (more transparent) than this will be removed.");
 	
 	newInput(2, nodeValue_Surface("Mask"));
 	
-	newInput(3, nodeValue_Float("Mix", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(3, nodeValue_Slider("Mix", 1));
 	
-	newInput(4, nodeValue_Bool("Active", true));
-		active_index = 4;
+	newActiveInput(4);
 	
-	__init_mask_modifier(2); // inputs 5, 6, 
+	__init_mask_modifier(2, 5); // inputs 5, 6, 
 	
 	input_display_list = [ 4, 
 		["Surfaces", true], 0, 2, 3, 5, 6, 

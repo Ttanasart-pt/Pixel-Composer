@@ -14,8 +14,7 @@ function Node_FLIP_Repel(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	newInput(2, nodeValue_Float("Radius", 4 ));
 	
-	newInput(3, nodeValue_Float("Strength", 4 ))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 16, 0.1 ] });
+	newInput(3, nodeValue_Slider("Strength", 4, [ 0, 16, 0.1 ] ));
 		
 	input_display_list = [ 0, 
 		["Repel",	false], 1, 2, 3, 

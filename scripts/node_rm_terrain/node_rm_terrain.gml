@@ -9,21 +9,17 @@ function Node_RM_Terrain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	newInput(3, nodeValue_Vec3("Rotation", [ 30, 45, 0 ]));
 	
-	newInput(4, nodeValue_Float("Scale", 1))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] });
+	newInput(4, nodeValue_Slider("Scale", 1, [ 0, 4, 0.01 ] ));
 	
-	newInput(5, nodeValue_Float("FOV", 30))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 90, 1 ] });
+	newInput(5, nodeValue_Slider("FOV", 30, [ 0, 90, 1 ] ));
 	
 	newInput(6, nodeValue_Vec2("View Range", [ 0, 6 ]));
 	
-	newInput(7, nodeValue_Float("BG Bleed", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(7, nodeValue_Slider("BG Bleed", 1));
 	
 	newInput(8, nodeValue_Color("Ambient", ca_white));
 	
-	newInput(9, nodeValue_Float("Height", 1))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] });
+	newInput(9, nodeValue_Slider("Height", 1, [ 0, 4, 0.01 ] ));
 	
 	newInput(10, nodeValue_Bool("Tile", true))
 	
@@ -35,8 +31,7 @@ function Node_RM_Terrain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	newInput(14, nodeValue_Vec3("Sun Position", [ .5, 1, .5 ]));
 	
-	newInput(15, nodeValue_Float("Shadow", 0.2))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(15, nodeValue_Slider("Shadow", 0.2));
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	

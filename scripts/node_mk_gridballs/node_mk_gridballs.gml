@@ -13,8 +13,7 @@ function Node_MK_GridBalls(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newInput(5, nodeValueSeed());
 		
-	newInput(6, nodeValue_Float("Shading", 0.5))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(6, nodeValue_Slider("Shading", 0.5));
 		
 	newInput(7, nodeValue_Rotation("Scatter direction", 0));
 		
@@ -24,18 +23,15 @@ function Node_MK_GridBalls(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newInput(10, nodeValue_Rotation("Stretch direction", 0));
 		
-	newInput(11, nodeValue_Float("Stretch shift", 0))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
+	newInput(11, nodeValue_Slider("Stretch shift", 0, [ -1, 1, 0.01 ] ));
 	
-	newInput(12, nodeValue_Float("Roundness", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(12, nodeValue_Slider("Roundness", 1));
 	
 	newInput(13, nodeValue_Float("Twist", 0));
 	
 	newInput(14, nodeValue_Rotation("Twist axis", 0));
 		
-	newInput(15, nodeValue_Float("Twist shift", 0))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
+	newInput(15, nodeValue_Slider("Twist shift", 0, [ -1, 1, 0.01 ] ));
 		
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 5, 1, 
 		["Surface",		 true], 0,

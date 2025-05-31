@@ -7,53 +7,28 @@
 function Node_Grid_Pentagonal(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Pentagonal Grid";
 	
-	newInput(0, nodeValue_Dimension());
+	////- =Output
 	
-	newInput(1, nodeValue_Vec2("Position", [ 0, 0 ]))
-		.setUnitRef(function(index) { return getDimension(index); });
+	newInput( 0, nodeValue_Dimension());
+	newInput(18, nodeValue_Surface( "Mask" ));
 	
-	newInput(2, nodeValue_Vec2("Scale", [ 4, 4 ]))
-		.setMappable(11);
+	////- =Pattern
 	
-	newInput(3, nodeValue_Float("Gap", 0.1))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 0.5, 0.001] })
-		.setMappable(12);
+	newInput( 1, nodeValue_Vec2(     "Position", [0,0] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput( 4, nodeValue_Rotation( "Angle",     0    )).setMappable(13);
+	newInput( 2, nodeValue_Vec2(     "Scale",    [4,4] )).setMappable(11);
+	newInput( 3, nodeValue_Slider(   "Gap",       .1, [0, 0.5, 0.001] )).setMappable(12);
 	
-	newInput(4, nodeValue_Rotation("Angle", 0))
-		.setMappable(13);
-		
-	newInput(5, nodeValue_Gradient("Tile Color", new gradientObject(ca_white)))
-		.setMappable(14);
-		
-	newInput(6, nodeValue_Color("Gap Color", ca_black));
+	////- =Render
 	
-	newInput(7, nodeValue_Surface("Texture"));
-	
-	newInput(8, nodeValue_Enum_Scroll("Render Type",  0, ["Colored tile", "Height map", "Texture grid"]));
-		
-	newInput(9, nodeValueSeed());
-	
-	newInput(10, nodeValue_Bool("Anti-aliasing", false));
-	
-	/////////////////////////////////////////////////////////////////////
-	
-		newInput(11, nodeValueMap("Scale Map", self));
-	
-		newInput(12, nodeValueMap("Gap Map", self));
-	
-		newInput(13, nodeValueMap("Angle Map", self));
-	
-		newInput(14, nodeValueMap("Gradient Map", self));
-	
-		newInput(15, nodeValueGradientRange("Gradient Map Range", self, inputs[5]));
-	
-	/////////////////////////////////////////////////////////////////////
-	
-	newInput(16, nodeValue_Slider_Range("Level", [ 0, 1 ]));
-	
-	newInput(17, nodeValue_Bool("Use Texture Dimension", false));
-	
-	newInput(18, nodeValue_Surface("Mask"));
+	newInput( 8, nodeValue_Enum_Scroll( "Render Type",  0, ["Colored tile", "Height map", "Texture grid"] ));
+	newInput( 9, nodeValueSeed());
+	newInput( 5, nodeValue_Gradient(     "Tile Color", new gradientObject(ca_white) )).setMappable(14);
+	newInput( 6, nodeValue_Color(        "Gap Color",  ca_black ));
+	newInput( 7, nodeValue_Surface(      "Texture" ));
+	newInput(17, nodeValue_Bool(         "Use Texture Dimension", false ));
+	newInput(10, nodeValue_Bool(         "Anti-aliasing",         false ));
+	newInput(16, nodeValue_Slider_Range( "Level",                 [0,1] ));
 	
 	input_display_list = [
 		["Output",  false], 0, 18, 

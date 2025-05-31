@@ -20,11 +20,10 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	////- Blur
 	
-	newInput( 4, nodeValue_Enum_Scroll( "Zoom origin", 1, [ "Start", "Middle", "End" ]));
-	newInput(15, nodeValue_Enum_Button( "Mode", 0, [ "Blur", "Step" ]));
-	newInput( 1, nodeValue_Float(       "Strength", 0.2)).setMappable(12);
-	newInput(12, nodeValueMap(          "Strength map", self));
-	newInput( 2, nodeValue_Vec2(        "Center", [ 0.5, 0.5 ])).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput( 4, nodeValue_Enum_Scroll( "Zoom origin",  1, [ "Start", "Middle", "End" ]));
+	newInput(15, nodeValue_Enum_Button( "Mode",         0, [ "Blur", "Step" ]));
+	newInput( 1, nodeValue_Float(       "Strength",    .2     )).setMappable(12);
+	newInput( 2, nodeValue_Vec2(        "Center",     [.5,.5] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	
 	////- Render
 		

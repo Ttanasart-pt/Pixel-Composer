@@ -17,8 +17,7 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newInput(6, nodeValue_Color("Stack blend", ca_white ));
 	
-	newInput(7, nodeValue_Float("Alpha end", 1, "Alpha value for the last copy." ))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(7, nodeValue_Slider("Alpha end", 1)).setTooltip("Alpha value for the last copy." );
 	
 	newInput(8, nodeValue_Bool("Move base", false, "Make each copy move the original image." ));
 	
@@ -26,8 +25,7 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newInput(10, nodeValue_Color("Highlight color", ca_white));
 	
-	newInput(11, nodeValue_Float("Highlight alpha", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(11, nodeValue_Slider("Highlight alpha", 1));
 	
 	newInput(12, nodeValue_Enum_Scroll("Array process", 1, [ "Individual", "Combined" ]));
 	

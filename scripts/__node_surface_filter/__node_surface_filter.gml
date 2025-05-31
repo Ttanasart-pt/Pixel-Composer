@@ -4,17 +4,15 @@ function Node_(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) construc
 	
 	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Bool("Active", true));
-	active_index = 1;
+	newActiveInput(1);
 	
 	newInput(2, nodeValue_Surface("Mask"));
 	
-	newInput(3, nodeValue_Float("Mix", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(3, nodeValue_Slider("Mix", 1));
 	
 	newInput(4, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
-	__init_mask_modifier(2); // inputs 5, 6, 
+	__init_mask_modifier(2, 5); // inputs 5, 6, 
 	
 	input_display_list = [ 1, 4, 
 		["Surfaces",  true], 0, 2, 3, 5, 6, 

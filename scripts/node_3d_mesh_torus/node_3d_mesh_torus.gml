@@ -11,8 +11,7 @@ function Node_3D_Mesh_Torus(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _grou
 	
 	newInput(in_mesh + 2, nodeValue_Float("Toroidal Radius", 1 ));
 	
-	newInput(in_mesh + 3, nodeValue_Float("Poloidal Radius", .2 ))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(in_mesh + 3, nodeValue_Slider("Poloidal Radius", .2 ));
 	
 	newInput(in_mesh + 4, nodeValue_D3Material("Material", new __d3dMaterial()))
 		.setVisible(true, true);

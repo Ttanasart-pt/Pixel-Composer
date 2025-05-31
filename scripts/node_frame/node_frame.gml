@@ -40,16 +40,13 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	newInput(1, nodeValue_Color("Color", ca_white ))
 		.rejectArray();
 	
-	newInput(2, nodeValue_Float("Alpha", 0.75 ))
-		.setDisplay(VALUE_DISPLAY.slider)
+	newInput(2, nodeValue_Slider("Alpha", 0.75 ))
 		.rejectArray();
 	
-	newInput(3, nodeValue_Float("Label size", global.__FRAME_LABEL_SCALE ))
-		.setDisplay(VALUE_DISPLAY.slider)
+	newInput(3, nodeValue_Slider("Label size", global.__FRAME_LABEL_SCALE ))
 		.rejectArray();
 		
-	newInput(4, nodeValue_Float("Blend label", 0 ))
-		.setDisplay(VALUE_DISPLAY.slider)
+	newInput(4, nodeValue_Slider("Blend label", 0 ))
 		.rejectArray();
 	
 	input_display_list = [ 0, 1, 3, 4 ];

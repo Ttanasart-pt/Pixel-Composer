@@ -25,8 +25,7 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	
 	newInput(5, nodeValue_Surface("Mask"));
 	
-	newInput(6, nodeValue_Float("Radius", .25))
-		.setDisplay(VALUE_DISPLAY.slider)
+	newInput(6, nodeValue_Slider("Radius", .25))
 		.rejectArray();
 		
 	newOutput(0, nodeValue_Output("Palette", VALUE_TYPE.color, [ ]))

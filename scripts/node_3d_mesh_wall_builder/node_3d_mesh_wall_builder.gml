@@ -9,8 +9,7 @@ function Node_3D_Mesh_Wall_Builder(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 	
 	newInput(in_mesh + 2, nodeValue_Float("Height", 1 ));
 	
-	newInput(in_mesh + 3, nodeValue_Float("Thickness", 0.1 ))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(in_mesh + 3, nodeValue_Slider("Thickness", 0.1 ));
 	
 	newInput(in_mesh + 4, nodeValue_Bool("Material per side", false ));
 	

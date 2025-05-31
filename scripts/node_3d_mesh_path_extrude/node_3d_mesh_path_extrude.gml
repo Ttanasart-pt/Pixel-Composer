@@ -22,8 +22,7 @@ function Node_3D_Mesh_Path_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 	newInput(in_mesh + 6, nodeValue_Int("Subdivision", 8 ))
 		.setValidator(VV_min(2));
 	
-	newInput(in_mesh + 7, nodeValue_Float("Radius", 0.25 ))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(in_mesh + 7, nodeValue_Slider("Radius", 0.25 ));
 	
 	newInput(in_mesh + 8, nodeValue_Curve("Radius Over Path", CURVE_DEF_11 ));
 	

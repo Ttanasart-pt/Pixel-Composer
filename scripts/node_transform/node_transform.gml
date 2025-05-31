@@ -35,8 +35,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(7, nodeValue_Enum_Button("Render Mode", 0, [ "Normal", "Tile", "Wrap" ]));
 	
-	newInput(8, nodeValue_Float("Rotate by Velocity", 0, "Make the surface rotates to follow its movement."))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(8, nodeValue_Slider("Rotate by Velocity", 0)).setTooltip("Make the surface rotates to follow its movement.");
 	
 	newInput(9, nodeValue_Enum_Scroll("Output Dimension Type", OUTPUT_SCALING.same_as_input, [
 																		new scrollItem("Same as input"),
@@ -47,15 +46,13 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(10, nodeValue_Bool("Round Position", false, "Round position to the nearest integer value to avoid jittering."));
 	
-	newInput(11, nodeValue_Bool("Active", true));
-		active_index = 11;
+	newActiveInput(11);
 	
 	newInput(12, nodeValue_Bool("Echo", false));
 	
 	newInput(13, nodeValue_Int("Echo Amount", 8));
 	
-	newInput(14, nodeValue_Float("Alpha", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(14, nodeValue_Slider("Alpha", 1));
 		
 	input_display_list = [ 11, 0,  
 		["Output",		 true],	9, 1, 7,

@@ -7,66 +7,37 @@
 function Node_Grid_Tri(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Triangle Grid";
 	
-	newInput(0, nodeValue_Dimension());
+	////- =Output
 	
-	newInput(1, nodeValue_Vec2("Position", [ 0, 0 ]))
-		.setUnitRef(function(index) { return getDimension(index); });
+	newInput( 0, nodeValue_Dimension());
+	newInput(22, nodeValue_Surface( "Mask" ));
 	
-	newInput(2, nodeValue_Vec2("Scale", [ 2, 2 ]))
-		.setMappable(11);
+	////- =Pattern
 	
-	newInput(3, nodeValue_Float("Gap", 0.1))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 0.5, 0.001] })
-		.setMappable(12);
+	newInput( 1, nodeValue_Vec2(     "Position", [0,0] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput( 4, nodeValue_Rotation( "Angle",     0    )).setMappable(13);
+	newInput( 2, nodeValue_Vec2(     "Scale",    [2,2] )).setMappable(11);
+	newInput( 3, nodeValue_Slider(   "Gap",      .1, [0, 0.5, 0.001] )).setMappable(12);
 	
-	newInput(4, nodeValue_Rotation("Angle", 0))
-		.setMappable(13);
-		
-	newInput(5, nodeValue_Gradient("Tile Color", new gradientObject(ca_white)))
-		.setMappable(17);
-		
-	newInput(6, nodeValue_Color("Gap Color", ca_black));
+	////- =Render
 	
-	newInput(7, nodeValue_Surface("Texture"));
+	newInput( 8, nodeValue_Enum_Scroll( "Render Type",  0, ["Colored tile", "Height map", "Texture grid", "Texture sample"]));
+	newInput( 9, nodeValueSeed());
+	newInput( 5, nodeValue_Gradient(     "Tile Color", new gradientObject(ca_white) )).setMappable(17);
+	newInput( 6, nodeValue_Color(        "Gap Color",  ca_black ));
+	newInput( 7, nodeValue_Surface(      "Texture" ));
+	newInput(21, nodeValue_Bool(         "Use Texture Dimension", false ));
+	newInput(10, nodeValue_Bool(         "Anti-aliasing",         false ));
+	newInput(20, nodeValue_Slider_Range( "Level",                 [0,1] ));
 	
-	newInput(8, nodeValue_Enum_Scroll("Render Type",  0, ["Colored tile", "Height map", "Texture grid", "Texture sample"]));
-		
-	newInput(9, nodeValueSeed());
+	////- =Truchet
 	
-	newInput(10, nodeValue_Bool("Anti-aliasing", false));
+	newInput(14, nodeValue_Bool(           "Truchet",           false         ));
+	newInput(15, nodeValue_Int(            "Truchet Seed",      seed_random() ));
+	newInput(16, nodeValue_Slider(         "Truchet Threshold", .5            ));
+	newInput(19, nodeValue_Rotation_Range( "Texture Angle",     [0,0]         ));
 	
-	//////////////////////////////////////////////////////////////////////////////////
-	
-	newInput(11, nodeValueMap("Scale Map", self));
-	
-	newInput(12, nodeValueMap("Gap Map", self));
-	
-	newInput(13, nodeValueMap("Angle Map", self));
-	
-	//////////////////////////////////////////////////////////////////////////////////
-	
-	newInput(14, nodeValue_Bool("Truchet", false));
-	
-	newInput(15, nodeValue_Int("Truchet Seed", seed_random()));
-	
-	newInput(16, nodeValue_Float("Truchet Threshold", 0.5))
-		.setDisplay(VALUE_DISPLAY.slider)
-		
-	//////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	newInput(17, nodeValueMap("Gradient Map", self));
-	
-	newInput(18, nodeValueGradientRange("Gradient Map Range", self, inputs[5]));
-	
-	//////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	newInput(19, nodeValue_Rotation_Range("Texture Angle", [ 0, 0 ]));
-		
-	newInput(20, nodeValue_Slider_Range("Level", [ 0, 1 ]));
-	
-	newInput(21, nodeValue_Bool("Use Texture Dimension", false));
-	
-	newInput(22, nodeValue_Surface("Mask"));
+	// input 23
 	
 	input_display_list = [
 		["Output",  false], 0, 22, 

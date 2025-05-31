@@ -7,8 +7,7 @@ function Node_Grey_Alpha(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	newInput(2, nodeValue_Color("Color", ca_white));
 	
-	newInput(3, nodeValue_Bool("Active", true));
-		active_index = 3;
+	newActiveInput(3);
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	

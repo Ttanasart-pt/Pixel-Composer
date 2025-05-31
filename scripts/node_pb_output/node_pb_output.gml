@@ -26,8 +26,7 @@ function Node_PB_Output(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	newInput(2, nodeValue_Enum_Button("Blend Mode", 0, [ "Normal", "Subtract" ]));
 	
-	newInput(3, nodeValue_Bool("Active", true));
-		active_index = 3;
+	newActiveInput(3);
 	
 	input_display_list = [ 3, 0, 
 		["Rendering", false], 1, 2 

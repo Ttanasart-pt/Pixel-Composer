@@ -5,8 +5,7 @@ function Node_Texture_Remap(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	newInput(1, nodeValue_Surface("RG Map")).setTooltip("Displacement map where red retermine the X position, and green determine the Y position.");
 	
-	newInput(2, nodeValue_Bool("Active", true));
-		active_index = 2;
+	newActiveInput(2);
 	
 	newInput(3, nodeValue_Enum_Button("Dimension Source",  0, [ "Surface", "RG Map" ]));
 	

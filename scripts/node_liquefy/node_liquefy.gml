@@ -10,17 +10,15 @@ function Node_Liquefy(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Bool("Active", true));
-	active_index = 1;
+	newActiveInput(1);
 	
 	newInput(2, nodeValue_Surface("Mask"));
 	
-	newInput(3, nodeValue_Float("Mix", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(3, nodeValue_Slider("Mix", 1));
 	
 	newInput(4, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
-	__init_mask_modifier(2); // inputs 5, 6, 
+	__init_mask_modifier(2, 5); // inputs 5, 6, 
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -49,15 +47,13 @@ function Node_Liquefy(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		newInput(index + 3, nodeValue_Float("Radius", 8));
 		inputs[index + 3].overlay_text_valign = fa_bottom;
 		
-		newInput(index + 4, nodeValue_Float("Intensity", 0.1))
-			.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01] });
+		newInput(index + 4, nodeValue_Slider("Intensity", 0.1, [ 0, 4, 0.01] ));
 		
 		newInput(index + 5, nodeValue_Float("Falloff", 0));
 		
 		newInput(index + 6, nodeValue_Curve("Falloff Curve", CURVE_DEF_10));
 		
-		newInput(index + 7, nodeValue_Float("Push", 0.1))
-			.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01] });
+		newInput(index + 7, nodeValue_Slider("Push", 0.1, [ 0, 4, 0.01] ));
 		
 		newInput(index + 8, nodeValue_PathNode("Push path"))
 		

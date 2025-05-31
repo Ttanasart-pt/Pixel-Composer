@@ -16,20 +16,17 @@
 	
 // 	newInput(5, nodeValue_Surface("Mask"));
 	
-// 	newInput(6, nodeValue_Float("Mix", 1))
-// 		.setDisplay(VALUE_DISPLAY.slider);
+// 	newInput(6, nodeValue_Slider("Mix", 1));
 	
-// 	newInput(7, nodeValue_Bool("Active", true));
-// 		active_index = 7;
+// 	newActiveInput(7);
 	
 // 	newInput(8, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
-// 	__init_mask_modifier(5); // inputs 9, 10
+// 	__init_mask_modifier(5, 9); // inputs 9, 10
 	
 // 	newInput(11, nodeValue_Bool("Gamma Correction", false));
 	
-// 	newInput(12, nodeValue_Float("Aspect Ratio", 1))
-// 		.setDisplay(VALUE_DISPLAY.slider);
+// 	newInput(12, nodeValue_Slider("Aspect Ratio", 1));
 	
 // 	newInput(13, nodeValue_Rotation("Direction", 0));
 	

@@ -9,13 +9,13 @@ function Node_Rigid_Render_ID(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	worldIndex = undefined;
 	worldScale = 100;
 	
-	////- Simulation
+	////- =Simulation
 	
-	newInput(3, nodeValue_Bool(  "Simulate", false));
-	newInput(1, nodeValue_Float( "Timestep (ms)", 20));
-	newInput(2, nodeValue_Int(   "Quality",  8));
+	newInput(3, nodeValue_Bool(  "Simulate",      false ));
+	newInput(1, nodeValue_Float( "Timestep (ms)", 20    ));
+	newInput(2, nodeValue_Int(   "Quality",       8     ));
 	
-	////- Outputs
+	////- =Outputs
 	
 	newInput(0, nodeValue_Bool("Round Position", false));
 	
@@ -40,6 +40,8 @@ function Node_Rigid_Render_ID(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	} 
 	
 	setDynamicInput(1, true, VALUE_TYPE.rigid);
+	
+	////- Nodes
 	
 	static update = function(frame = CURRENT_FRAME) { 
 		worldIndex = struct_try_get(inline_context, "worldIndex", undefined);

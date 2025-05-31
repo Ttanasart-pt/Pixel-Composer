@@ -9,35 +9,25 @@
 function Node_Checker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Checker";
 	
-	newInput(0, nodeValue_Dimension());
+	////- =Output
 	
-	newInput(1, nodeValue_Float("Amount", 2))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] })
-		.setMappable(6);
+	newInput( 0, nodeValue_Dimension());
+	newInput(10, nodeValue_Surface( "Mask" ));
 	
-	newInput(2, nodeValue_Rotation("Angle", 0))
-		.setMappable(7);
+	////- =Pattern
 	
-	newInput(3, nodeValue_Vec2("Position", [0, 0] ))
-		.setUnitRef(function(index) { return getDimension(index); });
+	newInput(9, nodeValue_Bool(     "Diagonal",  false ));
+	newInput(1, nodeValue_Slider(   "Amount",    2, [1, 16, 0.1] )).setMappable(6);
+	newInput(2, nodeValue_Rotation( "Angle",     0     )).setMappable(7);
+	newInput(3, nodeValue_Vec2(     "Position", [0,0]  )).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
 	
-	newInput(4, nodeValue_Color("Color 1", ca_white));
+	////- =Render
 	
-	newInput(5, nodeValue_Color("Color 2", ca_black));
+	newInput(8, nodeValue_Enum_Button( "Type",    0, [ "Solid", "Smooth", "AA" ]));
+	newInput(4, nodeValue_Color(       "Color 1", ca_white ));
+	newInput(5, nodeValue_Color(       "Color 2", ca_black ));
 	
-	//////////////////////////////////////////////////////////////////////////////////
-	
-	newInput(6, nodeValueMap("Amount map", self));
-	
-	newInput(7, nodeValueMap("Angle map", self));
-	
-	//////////////////////////////////////////////////////////////////////////////////
-	
-	newInput(8, nodeValue_Enum_Button("Type",  0, [ "Solid", "Smooth", "AA" ]));
-	
-	newInput(9, nodeValue_Bool("Diagonal", false));
-	
-	newInput(10, nodeValue_Surface("Mask"));
+	// input 11
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	

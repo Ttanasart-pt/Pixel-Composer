@@ -1,75 +1,37 @@
 function Node_Grain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Grain";
 	
-	newInput(0, nodeValue_Surface("Surface In"));
-	
-	newInput(1, nodeValue_Surface("Mask"));
-	
-	newInput(2, nodeValue_Float("Mix", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
-	
-	newInput(3, nodeValue_Bool("Active", true));
-		active_index = 3;
-	
-	newInput(4, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
-	
-	__init_mask_modifier(1); // inputs 5, 6
-	
-	newInput(7, nodeValue_Float("Brightness", 0))
-		.setDisplay(VALUE_DISPLAY.slider)
-		.setMappable(8);
-	
-	newInput(8, nodeValueMap("Brightness map", self));
-	
+	newActiveInput(3);
+	newInput(4, nodeValue_Toggle( "Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	newInput(9, nodeValueSeed());
 	
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	////- =Surfaces
 	
-	newInput(10, nodeValue_Float("Red", 0))
-		.setDisplay(VALUE_DISPLAY.slider)
-		.setMappable(11);
+	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput(1, nodeValue_Surface( "Mask"       ));
+	newInput(2, nodeValue_Slider(  "Mix", 1     ));
+	__init_mask_modifier(1, 5); // inputs 5, 6
 	
-	newInput(11, nodeValueMap("Red map", self));
+	////- =Brightness
+	
+	newInput(22, nodeValue_Enum_Scroll( "Blend mode", 0, [ "Additive", "Multiply", "Screen", "Overlay" ]))
+	newInput( 7, nodeValue_Slider(      "Brightness", 0 )).setMappable(8);
+	
+	////- =RGB
+	
+	newInput(23, nodeValue_Enum_Scroll( "Blend mode", 0, [ "Additive", "Multiply", "Screen" ]))
+	newInput(10, nodeValue_Slider(      "Red",        0 )).setMappable(11);
+	newInput(12, nodeValue_Slider(      "Green",      0 )).setMappable(13);
+	newInput(14, nodeValue_Slider(      "Blue",       0 )).setMappable(15);
+	
+	////- =HSV
+	
+	newInput(24, nodeValue_Enum_Scroll( "Blend mode", 0, [ "Additive", "Multiply", "Screen" ]))
+	newInput(16, nodeValue_Slider(      "Hue",        0 )).setMappable(17);
+	newInput(18, nodeValue_Slider(      "Saturation", 0 )).setMappable(19);
+	newInput(20, nodeValue_Slider(      "Value",      0 )).setMappable(21);
 		
-	newInput(12, nodeValue_Float("Green", 0))
-		.setDisplay(VALUE_DISPLAY.slider)
-		.setMappable(13);
-	
-	newInput(13, nodeValueMap("Green map", self));
-		
-	newInput(14, nodeValue_Float("Blue", 0))
-		.setDisplay(VALUE_DISPLAY.slider)
-		.setMappable(15);
-	
-	newInput(15, nodeValueMap("Blue map", self));
-		
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	newInput(16, nodeValue_Float("Hue", 0))
-		.setDisplay(VALUE_DISPLAY.slider)
-		.setMappable(17);
-	
-	newInput(17, nodeValueMap("Hue map", self));
-		
-	newInput(18, nodeValue_Float("Saturation", 0))
-		.setDisplay(VALUE_DISPLAY.slider)
-		.setMappable(19);
-	
-	newInput(19, nodeValueMap("Saturation map", self));
-		
-	newInput(20, nodeValue_Float("Value", 0))
-		.setDisplay(VALUE_DISPLAY.slider)
-		.setMappable(21);
-	
-	newInput(21, nodeValueMap("Value map", self));
-	
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	newInput(22, nodeValue_Enum_Scroll("Blend mode",  0, [ "Additive", "Multiply", "Screen", "Overlay" ]))
-		
-	newInput(23, nodeValue_Enum_Scroll("Blend mode",  0, [ "Additive", "Multiply", "Screen" ]))
-		
-	newInput(24, nodeValue_Enum_Scroll("Blend mode",  0, [ "Additive", "Multiply", "Screen" ]))
+	// input 25
 		
 	input_display_list = [ 3, 4, 9, 
 		["Surfaces",	 true], 0, 1, 2, 5, 6, 

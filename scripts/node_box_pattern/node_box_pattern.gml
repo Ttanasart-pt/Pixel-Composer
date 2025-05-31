@@ -8,43 +8,27 @@
 function Node_Box_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Box Pattern";
 	
-	newInput(0, nodeValue_Dimension());
+	////- =Output
 	
-	newInput(1, nodeValue_Float("Scale", 2))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] })
-		.setMappable(6);
+	newInput( 0, nodeValue_Dimension());
+	newInput(13, nodeValue_Surface( "Mask" ));
 	
-	newInput(2, nodeValue_Rotation("Angle", 0))
-		.setMappable(7);
+	////- =Pattern
 	
-	newInput(3, nodeValue_Vec2("Position", [0, 0] ))
-		.setUnitRef(function(index) { return getDimension(index); });
+	newInput(11, nodeValue_Enum_Button( "Pattern",    0, [ "Cross", "Xor" ]));
+	newInput( 1, nodeValue_Slider(      "Scale",      2, [1, 16, 0.1] )).setMappable(6);
+	newInput( 2, nodeValue_Rotation(    "Angle",      0    )).setMappable(7);
+	newInput( 3, nodeValue_Vec2(        "Position",  [0,0] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput( 9, nodeValue_Slider(      "Width",      0.25 )).setMappable(10);
+	newInput(12, nodeValue_Int(         "Iteration",  4    ))
 	
-	newInput(4, nodeValue_Color("Color 1", ca_white));
+	////- =Render
 	
-	newInput(5, nodeValue_Color("Color 2", ca_black));
+	newInput( 8, nodeValue_Enum_Button( "Render Type", 0, [ "Solid", "Smooth", "AA" ] ));
+	newInput( 4, nodeValue_Color(       "Color 1", ca_white ));
+	newInput( 5, nodeValue_Color(       "Color 2", ca_black ));
 	
-	//////////////////////////////////////////////////////////////////////////////////
-	
-	newInput(6, nodeValueMap("Amount Map", self));
-	
-	newInput(7, nodeValueMap("Angle Map", self));
-	
-	//////////////////////////////////////////////////////////////////////////////////
-	
-	newInput(8, nodeValue_Enum_Button("Render Type",  0, [ "Solid", "Smooth", "AA" ]));
-	
-	newInput(9, nodeValue_Float("Width", 0.25))
-		.setDisplay(VALUE_DISPLAY.slider)
-		.setMappable(10);
-	
-	newInput(10, nodeValueMap("Width Map", self));
-	
-	newInput(11, nodeValue_Enum_Button("Pattern",  0, [ "Cross", "Xor" ]));
-	
-	newInput(12, nodeValue_Int("Iteration", 4))
-	
-	newInput(13, nodeValue_Surface("Mask"));
+	// input 14
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	

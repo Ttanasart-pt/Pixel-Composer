@@ -13,15 +13,13 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	newInput(2, nodeValue_Int("Particle Density", 10));
 	
-	newInput(3, nodeValue_Float("FLIP Ratio", 0.8))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(3, nodeValue_Slider("FLIP Ratio", 0.8));
 	
 	newInput(4, nodeValue_Float("Resolve accelerator", 1.5));
 	
 	newInput(5, nodeValue_Int("Iteration", 8));
 	
-	newInput(6, nodeValue_Float("Damping", 0.8))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(6, nodeValue_Slider("Damping", 0.8));
 	
 	newInput(7, nodeValue_Float("Gravity", 5));
 	
@@ -29,14 +27,11 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	newInput(9, nodeValue_Toggle("Wall", 0b1111, { data:  [ "T", "B", "L", "R" ] }));
 	
-	newInput(10, nodeValue_Float("Viscosity", 0.))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
+	newInput(10, nodeValue_Slider("Viscosity", 0., [ -1, 1, 0.01 ] ));
 	
-	newInput(11, nodeValue_Float("Friction", 0.))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(11, nodeValue_Slider("Friction", 0.));
 		
-	newInput(12, nodeValue_Float("Wall Elasticity", 0.))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 2, 0.01 ] });
+	newInput(12, nodeValue_Slider("Wall Elasticity", 0., [ 0, 2, 0.01 ] ));
 	
 	newInput(13, nodeValue_Rotation("Gravity Direction", -90));
 	

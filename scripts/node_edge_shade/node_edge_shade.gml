@@ -1,21 +1,17 @@
 function Node_Edge_Shade(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Edge Shade";
 	
+	newActiveInput(1);
+	
+	////- =Surfaces
+	
 	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Bool("Active", true));
-		active_index = 1;
+	////- =Effect
 	
-	newInput(2, nodeValue_Gradient("Colors", new gradientObject( [ ca_black, ca_white ] )))
-		.setMappable(3);
+	newInput(2, nodeValue_Gradient("Colors", new gradientObject( [ ca_black, ca_white ] ))).setMappable(3);
 	
-	//////////////////////////////////////////////////////////////////////////////////
-	
-	newInput(3, nodeValueMap("Gradient map", self));
-	
-	newInput(4, nodeValueGradientRange("Gradient map range", self, inputs[2]));
-	
-	//////////////////////////////////////////////////////////////////////////////////
+	// input 5
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	

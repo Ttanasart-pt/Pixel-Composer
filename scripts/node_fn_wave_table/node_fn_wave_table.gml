@@ -12,8 +12,7 @@ function Node_Fn_WaveTable(_x, _y, _group = noone) : Node_Fn(_x, _y, _group) con
 		
 	newInput(inl + 1, nodeValue_Vec2("Range", [ 0, 1 ]));
 	
-	newInput(inl + 2, nodeValue_Float("Frequency", 2 ))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 8, 0.01] });
+	newInput(inl + 2, nodeValue_Slider("Frequency", 2, [1, 8, 0.01] ));
 	
 	newInput(inl + 3, nodeValue_Float("Phase", 0 ));
 	

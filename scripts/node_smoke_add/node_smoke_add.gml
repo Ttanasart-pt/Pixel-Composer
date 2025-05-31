@@ -14,11 +14,9 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 	
 	newInput(3, nodeValue_Bool("Active", true));
 	
-	newInput(4, nodeValue_Float("Inherit velocity", 0))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
+	newInput(4, nodeValue_Slider("Inherit velocity", 0, [ -1, 1, 0.01 ] ));
 	
-	newInput(5, nodeValue_Float("Density", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(5, nodeValue_Slider("Density", 1));
 	
 	newInput(6, nodeValue_Int("Expand velocity mask", 1));
 	

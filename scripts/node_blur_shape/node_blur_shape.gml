@@ -8,17 +8,15 @@ function Node_Blur_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	newInput(3, nodeValue_Surface("Mask"));
 	
-	newInput(4, nodeValue_Float("Mix", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(4, nodeValue_Slider("Mix", 1));
 	
-	newInput(5, nodeValue_Bool("Active", true));
-		active_index = 5;
+	newActiveInput(5);
 	
 	newInput(6, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	newInput(7, nodeValue_Enum_Button("Mode",  0, [ "Blur", "Max" ]));
 	
-	__init_mask_modifier(3); // inputs 8, 9, 
+	__init_mask_modifier(3, 8); // inputs 8, 9, 
 	
 	newInput(10, nodeValue_Bool("Gamma Correction", false));
 	

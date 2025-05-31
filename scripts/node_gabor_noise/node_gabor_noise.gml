@@ -7,20 +7,18 @@ function Node_Gabor_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y
 	
 	////- =Noise
 	
-	newInput( 4, nodeValue_Slider(   "Density",       2, [ 0, 4, 0.01 ] )).setShaderProp("alignment").setMappable(9);
-	newInput( 9, nodeValueMap(       "Density map"));
-	newInput( 7, nodeValue_Rotation( "Phase",         0                 )).setShaderProp("rotation").setMappable(11);
-	newInput(11, nodeValueMap(       "Phase map"));
-	newInput( 5, nodeValue_Slider(   "Sharpness",     4, [ 0, 5, 0.01 ] )).setShaderProp("sharpness").setMappable(10);
-	newInput(10, nodeValueMap(       "Sharpness map"));
-	newInput( 6, nodeValue_Vec2(     "Augment",      [11,31]            )).setShaderProp("augment");
+	newInput( 4, nodeValue_Slider(   "Density",    2, [ 0, 4, 0.01 ] )).setShaderProp("alignment").setMappable(9);
+	newInput( 7, nodeValue_Rotation( "Phase",      0                 )).setShaderProp("rotation").setMappable(11);
+	newInput( 5, nodeValue_Slider(   "Sharpness",  4, [ 0, 5, 0.01 ] )).setShaderProp("sharpness").setMappable(10);
+	newInput( 6, nodeValue_Vec2(     "Augment",   [11,31]            )).setShaderProp("augment");
 	
 	////- =Transform
 	
-	newInput( 1, nodeValue_Vec2(     "Position",     [0,0] )).setShaderProp("position").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
-	newInput(12, nodeValue_Rotation( "Rotation",      0    )).setShaderProp("trRotation");
-	newInput( 2, nodeValue_Vec2(     "Scale",        [4,4] )).setShaderProp("scale").setMappable(8);
-	newInput( 8, nodeValueMap(       "Scale map"));
+	newInput( 1, nodeValue_Vec2(     "Position",  [0,0] )).setShaderProp("position").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput(12, nodeValue_Rotation( "Rotation",   0    )).setShaderProp("trRotation");
+	newInput( 2, nodeValue_Vec2(     "Scale",     [4,4] )).setShaderProp("scale").setMappable(8);
+	
+	// input 14
 	
 	input_display_list = [
 		["Output",     true], 0, 13, 3, 

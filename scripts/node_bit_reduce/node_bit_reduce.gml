@@ -26,8 +26,7 @@ function Node_Bit_Reduce(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	newInput(4, nodeValue_Enum_Scroll("Pattern",  0, [ "2 x 2 Bayer", "4 x 4 Bayer", "8 x 8 Bayer" ]));
 	
-	newInput(5, nodeValue_Float("Contrast", 1))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 5, 0.1] });
+	newInput(5, nodeValue_Slider("Contrast", 1, [1, 5, 0.1] ));
 	
 	newInput(6, nodeValue_Float("Alpha Steps", 256));
 	

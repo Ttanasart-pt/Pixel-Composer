@@ -33,8 +33,7 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 	newInput(3, nodeValue_Float("Scale", 1))
 		
-	newInput(4, nodeValue_Float("Alpha", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(4, nodeValue_Slider("Alpha", 1));
 	
 	newInput(5, nodeValue_Struct("Flares", [
 		new __FlarePart( FLARE_TYPE.circle,   0,  8,   0.75, 16, false, , [ 0, 1 ] ),

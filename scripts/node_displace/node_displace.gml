@@ -20,7 +20,7 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(0, nodeValue_Surface( "Surface In"));
 	newInput(8, nodeValue_Surface( "Mask"));
 	newInput(9, nodeValue_Slider(  "Mix", 1));
-	__init_mask_modifier(8); // inputs 13, 14
+	__init_mask_modifier(8, 13); // inputs 13, 14
 	newInput(7, nodeValue_Enum_Scroll("Oversample Mode",  0, [ "Empty", "Clamp", "Repeat" ]));
 	
 	////- Strength
@@ -28,7 +28,6 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 1, nodeValue_Surface( "Displace map"));
 	newInput(17, nodeValue_Surface( "Displace map 2"));
 	newInput( 3, nodeValue_Float(   "Strength", 1)).setMappable(15);
-	newInput(15, nodeValue_Surface( "Strength map")).setVisible(false, false);
 	newInput( 4, nodeValue_Slider(  "Mid value", 0)).setTooltip("Brightness value to be use as a basis for 'no displacement'.");
 	
 	////- Displacement

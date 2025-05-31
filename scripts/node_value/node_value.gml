@@ -1,7 +1,4 @@
 function nodeValue(_name, _node, _connect, _type, _value, _tooltip = "") { return new NodeValue(_name, _node, _connect, _type, _value, _tooltip); }
-function nodeValueMap(_name, _node = self, _junc = noone)                { return new NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.surface, noone).setVisible(false, false).setMapped(_junc); }
-function nodeValueGradientRange(_name, _node = self, _junc = noone)      { return new NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.float, [ 0, 0, 1, 0 ])
-																						.setDisplay(VALUE_DISPLAY.gradient_range).setVisible(false, false).setMapped(_junc); }
 
 function nodeValueSeed(_type = VALUE_TYPE.float, _name = "Seed") { 
 	var _val  = new NodeValue(_name, self, CONNECT_TYPE.input, _type, seed_random(6), "");
@@ -412,14 +409,28 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	mapped_vec4 = false;
 	
 	static setMappable = function(_index, _vec4 = false) {
+		with(node) {
+			var vmap = new NodeValue($"{other.name} Map", self, CONNECT_TYPE.input, VALUE_TYPE.surface, noone)
+				.setVisible(false, false)
+				.setMapped(other);
+			newInput(_index + 0, vmap);
+			
+			if(other.type != VALUE_TYPE.gradient) break;
+			
+			var vmap = new NodeValue($"{other.name} Map Range", self, CONNECT_TYPE.input, VALUE_TYPE.float, [ 0, 0, 1, 0 ])
+				.setDisplay(VALUE_DISPLAY.gradient_range)
+				.setVisible(false, false)
+				.setMapped(other);
+			newInput(_index + 1, vmap);
+		}
+		
 		attributes.mapped     = false;
 		attributes.map_index  = _index;
 		mapped_vec4           = _vec4;
 		
 		array_push(node.inputMappable, self);
 		
-		if(arrayLength == arrayLengthSimple)
-			arrayLength = __arrayLength;
+		if(arrayLength == arrayLengthSimple) arrayLength = __arrayLength;
 		
 		mapButton = button(function() { 
 						attributes.mapped = !attributes.mapped;
@@ -435,20 +446,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				.setIcon( THEME.mappable_parameter, [ function() /*=>*/ {return attributes.mapped} ], COLORS._main_icon )
 				.setTooltip("Toggle map");
 		
-		switch(type) {
-			case VALUE_TYPE.gradient :
-				mapWidget = noone;
-				break;
-				
-			default : 
-				mapWidget = _vec4? 
-					new vectorRangeBox(4, TEXTBOX_INPUT.number, function(v,i) /*=>*/ {return setValueDirect(v,i)}) : 
-					new rangeBox(function(v,i) /*=>*/ {return setValueDirect(v,i)});
-				mapWidget.side_button = mapButton;
-				break;
+		if(type != VALUE_TYPE.gradient) {
+			mapWidget = _vec4? new vectorRangeBox(4, TEXTBOX_INPUT.number, function(v,i) /*=>*/ {return setValueDirect(v,i)}).setSideButton(mapButton) : 
+			                   new rangeBox(function(v,i) /*=>*/ {return setValueDirect(v,i)}).setSideButton(mapButton);
 		}
 		
-		editWidget.side_button = mapButton;
+		editWidget.setSideButton(mapButton);
 		
 		return self;
 	}

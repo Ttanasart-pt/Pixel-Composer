@@ -53,15 +53,13 @@ function Node_Dither_Diffuse(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	
 	newInput(1, nodeValue_Surface("Mask"));
 	
-	newInput(2, nodeValue_Float("Mix", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(2, nodeValue_Slider("Mix", 1));
 	
-	newInput(3, nodeValue_Bool("Active", true));
-		active_index = 3;
+	newActiveInput(3);
 	
 	newInput(4, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
-	__init_mask_modifier(1); // inputs 5, 6, 
+	__init_mask_modifier(1, 5); // inputs 5, 6, 
 	
 	newInput(7, nodeValue_Enum_Scroll("Type", 0, { data: [ "Floyd-Steinberg", "Jarvis, Judice, and Ninke", "Atkinson", "Linear" ], update_hover: false }));
 	

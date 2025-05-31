@@ -7,22 +7,19 @@ function Node_RM_Combine(_x, _y, _group = noone) : Node_RM(_x, _y, _group) const
 	
 	newInput(1, nodeValue_Enum_Button("Projection",  0, [ "Perspective", "Orthographic" ]));
 	
-	newInput(2, nodeValue_Float("FOV", 30))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 90, 1 ] });
+	newInput(2, nodeValue_Slider("FOV", 30, [ 0, 90, 1 ] ));
 	
 	newInput(3, nodeValue_Float("Ortho Scale", 5.))
 	
 	newInput(4, nodeValue_Vec2("View Range", [ 3, 6 ]));
 	
-	newInput(5, nodeValue_Float("Depth", 0))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(5, nodeValue_Slider("Depth", 0));
 	
 	newInput(6, nodeValue_Bool("Draw BG", false));
 	
 	newInput(7, nodeValue_Color("Background", ca_black));
 	
-	newInput(8, nodeValue_Float("Ambient Level", 0.2))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(8, nodeValue_Slider("Ambient Level", 0.2));
 	
 	newInput(9, nodeValue_Vec3("Light Position", [ -.4, -.5, 1 ]));
 	
@@ -30,8 +27,7 @@ function Node_RM_Combine(_x, _y, _group = noone) : Node_RM(_x, _y, _group) const
 	
 	newInput(11, nodeValue_Vec3("Camera Rotation", [ 30, 45, 0 ]));
 	
-	newInput(12, nodeValue_Float("Camera Scale", 1))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] });
+	newInput(12, nodeValue_Slider("Camera Scale", 1, [ 0, 4, 0.01 ] ));
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -45,8 +41,7 @@ function Node_RM_Combine(_x, _y, _group = noone) : Node_RM(_x, _y, _group) const
 	
 	newInput(15, nodeValue_Enum_Scroll("Type",  0, [ "Place", "Union", "Subtract", "Intersect" ]));
 	
-	newInput(16, nodeValue_Float("Merge", 0.1))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(16, nodeValue_Slider("Merge", 0.1));
 	
 	newInput(17, nodeValue_Bool("Render", true));
 	

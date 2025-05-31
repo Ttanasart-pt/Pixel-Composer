@@ -10,61 +10,32 @@
 function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Stripe";
 	
-	newInput(0, nodeValue_Dimension());
-	
-	newInput(1, nodeValue_Float("Amount", 1))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] })
-		.setMappable(11);
-	
-	newInput(2, nodeValue_Rotation("Angle", 0))
-		.setMappable(12);
-	
-	newInput(3, nodeValue_Enum_Button("Type",  0, [ "Solid", "Smooth", "AA" ]));
-	
-	newInput(4, nodeValue_Vec2("Position", [ 0, 0 ] ))
-		.setUnitRef(function(index) { return getDimension(index); });
-		
-	newInput(5, nodeValue_Float("Random", 0))
-		.setDisplay(VALUE_DISPLAY.slider)
-		.setMappable(13);
-		
-	newInput(6, nodeValue_Enum_Button("Coloring",  0, [ "Alternate", "Palette", "Random" ]));
-	
-	newInput(7, nodeValue_Gradient("Colors", new gradientObject(ca_white)))
-		.setMappable(15);
-	
-	newInput(8, nodeValue_Color("Color 1", ca_white));
-	
-	newInput(9, nodeValue_Color("Color 2", ca_black));
-	
-	newInput(10, nodeValue_Float("Strip Ratio", 0.5))
-		.setDisplay(VALUE_DISPLAY.slider)
-		.setMappable(14);
-	
-	//////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	newInput(11, nodeValueMap("Amount Map", self));
-	
-	newInput(12, nodeValueMap("Angle Map", self));
-	
-	newInput(13, nodeValueMap("Random Map", self));
-	
-	newInput(14, nodeValueMap("Ratio Map", self));
-	
-	newInput(15, nodeValueMap("Gradient Map", self));
-	
-	newInput(16, nodeValueGradientRange("Gradient Map Range", self, inputs[7]));
-	
-	//////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	newInput(17, nodeValue_Float("Progress", 0.5))
-		.setDisplay(VALUE_DISPLAY.slider);
-		
-	newInput(18, nodeValue_Palette("Colors", [ c_black, c_white ] ));
-		
 	newInput(19, nodeValueSeed());
-		
-	newInput(20, nodeValue_Surface("Mask"));
+	
+	////- =Output
+	
+	newInput( 0, nodeValue_Dimension());
+	newInput(20, nodeValue_Surface( "Mask" ));
+	
+	////- =Pattern
+	
+	newInput( 1, nodeValue_Slider(   "Amount",         1, [1, 16, 0.1] )).setMappable(11);
+	newInput(10, nodeValue_Slider(   "Strip Ratio",   .5    )).setMappable(14);
+	newInput( 2, nodeValue_Rotation( "Angle",          0    )).setMappable(12);
+	newInput( 4, nodeValue_Vec2(     "Position",      [0,0] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput( 5, nodeValue_Slider(   "Random",         0    )).setMappable(13);
+	newInput(17, nodeValue_Slider(   "Progress",      .5    ));
+	
+	////- =Render
+	
+	newInput( 3, nodeValue_Enum_Button( "Type",      0, [ "Solid", "Smooth", "AA" ] ));
+	newInput( 6, nodeValue_Enum_Button( "Coloring",  0, [ "Alternate", "Palette", "Random" ] ));
+	newInput( 7, nodeValue_Gradient(    "Colors",    new gradientObject(ca_white) )).setMappable(15);
+	newInput( 8, nodeValue_Color(       "Color 1",   ca_white ));
+	newInput( 9, nodeValue_Color(       "Color 2",   ca_black ));
+	newInput(18, nodeValue_Palette(     "Colors",  [ c_black, c_white ] ));
+	
+	// input 21
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	

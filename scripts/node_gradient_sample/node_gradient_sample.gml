@@ -7,8 +7,7 @@ function Node_Gradient_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	
 	newInput(1, nodeValue_Int("Step", 16));
 	
-	newInput(2, nodeValue_Float("Shift", 0))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
+	newInput(2, nodeValue_Slider("Shift", 0, [-1, 1, 0.01] ));
 	
 	newOutput(0, nodeValue_Output("Colors", VALUE_TYPE.color, [ c_black ]))
 		.setDisplay(VALUE_DISPLAY.palette);

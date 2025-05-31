@@ -14,13 +14,11 @@ function Node_FLIP_Destroy(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	newInput(2, nodeValue_Enum_Scroll("Shape",  0 , [ new scrollItem("Circle", s_node_shape_circle, 0), new scrollItem("Rectangle", s_node_shape_rectangle, 0), ]));
 		
-	newInput(3, nodeValue_Float("Radius", 4 ))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
+	newInput(3, nodeValue_Slider("Radius", 4, [1, 16, 0.1] ));
 		
 	newInput(4, nodeValue_Vec2("Size", [ 4, 4 ] ));
 		
-	newInput(5, nodeValue_Float("Ratio", 1 ))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(5, nodeValue_Slider("Ratio", 1 ));
 	
 	newOutput(0, nodeValue_Output("Domain", VALUE_TYPE.fdomain, noone ));
 	

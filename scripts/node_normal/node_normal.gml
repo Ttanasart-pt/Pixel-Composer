@@ -15,11 +15,9 @@ function Node_Normal(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	newInput(1, nodeValue_Float("Height", 1));
 	
-	newInput(2, nodeValue_Float("Smooth", 0, "Include diagonal pixel in normal calculation, which leads to smoother output."))
-		.setDisplay(VALUE_DISPLAY.slider, { range : [ 0, 4, 0.1] });
+	newInput(2, nodeValue_Slider("Smooth", 0, [ 0, 4, .1 ])).setTooltip("Include diagonal pixel in normal calculation, which leads to smoother output.");
 	
-	newInput(3, nodeValue_Bool("Active", true));
-		active_index = 3;
+	newActiveInput(3);
 	
 	newInput(4, nodeValue_Bool("Normalize", true));
 	

@@ -6,8 +6,7 @@ function Node_Color_Mix(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(1, nodeValue_Color("Color to", ca_white));
 	
-	newInput(2, nodeValue_Float("Mix", 0.5))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(2, nodeValue_Slider("Mix", 0.5));
 	
 	newInput(3, nodeValue_Enum_Button("Color space",  0, [ "RGB", "HSV", "OKLAB" ]));
 	

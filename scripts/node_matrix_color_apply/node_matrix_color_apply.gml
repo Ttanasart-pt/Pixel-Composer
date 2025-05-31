@@ -6,20 +6,17 @@ function Node_Matrix_Color_Apply(_x, _y, _group = noone) : Node_Processor(_x, _y
 	newInput(1, nodeValue_Matrix("Matrix", new Matrix(3)))
 		.setVisible(true, true);
 	
-	newInput(2, nodeValue_Float("Intensity", 1))
-	    .setDisplay(VALUE_DISPLAY.slider);
+	newInput(2, nodeValue_Slider("Intensity", 1));
 	
 	newInput(3, nodeValue_Surface("Mask"));
 	
-	newInput(4, nodeValue_Float("Mix", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(4, nodeValue_Slider("Mix", 1));
 	
-	newInput(5, nodeValue_Bool("Active", true));
-		active_index = 5;
+	newActiveInput(5);
 	
 	newInput(6, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
-	__init_mask_modifier(3); // inputs 7, 8 
+	__init_mask_modifier(3, 7); // inputs 7, 8 
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	

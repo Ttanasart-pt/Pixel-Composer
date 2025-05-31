@@ -12,20 +12,18 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	
 	////- Surfaces
 	
-	newInput(0, nodeValue_Surface( "Surface In"));
-	newInput(3, nodeValue_Surface( "Mask"));
-	newInput(4, nodeValue_Slider(  "Mix", 1));
+	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput(3, nodeValue_Surface( "Mask"       ));
+	newInput(4, nodeValue_Slider(  "Mix", 1     ));
 	__init_mask_modifier(3, 7); // inputs 7, 8
 	
 	////- Blur
 	
-	newInput( 1, nodeValue_Float(    "Strength", 4)).setMappable(9);
-	newInput( 9, nodeValueMap(       "Strength map",     self));
-	newInput( 2, nodeValue_Rotation( "Direction", 0)).setMappable(10);
-	newInput(10, nodeValueMap(       "Direction map",    self));
-	newInput(11, nodeValue_Bool(     "Single Direction", false));
-	newInput(13, nodeValue_Bool(     "Fade Distance", false));
-	newInput(12, nodeValue_Bool(     "Gamma Correction", false));
+	newInput( 1, nodeValue_Float(    "Strength",         4 )).setMappable(9);
+	newInput( 2, nodeValue_Rotation( "Direction",        0 )).setMappable(10);
+	newInput(11, nodeValue_Bool(     "Single Direction", false ));
+	newInput(13, nodeValue_Bool(     "Fade Distance",    false ));
+	newInput(12, nodeValue_Bool(     "Gamma Correction", false ));
 	
 	// inputs 14
 	

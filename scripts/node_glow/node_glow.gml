@@ -12,26 +12,21 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Float("Border", 0))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 4, 0.1] });
+	newInput(1, nodeValue_Slider("Border", 0, [0, 4, 0.1] ));
 	
-	newInput(2, nodeValue_Float("Size", 3))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
+	newInput(2, nodeValue_Slider("Size", 3, [1, 16, 0.1] ));
 	
-	newInput(3, nodeValue_Float("Strength", 1))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ]});
+	newInput(3, nodeValue_Slider("Strength", 1, [ 0, 4, 0.01 ] ));
 	
 	newInput(4, nodeValue_Color("Color", ca_white));
 	
 	newInput(5, nodeValue_Surface("Mask"));
 	
-	newInput(6, nodeValue_Float("Mix", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(6, nodeValue_Slider("Mix", 1));
 	
-	newInput(7, nodeValue_Bool("Active", true));
-		active_index = 7;
+	newActiveInput(7);
 	
-	__init_mask_modifier(5); // inputs 8, 9, 
+	__init_mask_modifier(5, 8); // inputs 8, 9, 
 	
 	newInput(10, nodeValue_Enum_Button("Mode",  0, [ "Greyscale", "Alpha" ]));
 		

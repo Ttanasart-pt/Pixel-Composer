@@ -8,8 +8,7 @@ function Node_3DSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	newInput(1, nodeValue_Vec2("Base Dimension", DEF_SURF));
 	
-	newInput(2, nodeValue_Float("Vertical Angle", 45 ))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 90, 0.1] });
+	newInput(2, nodeValue_Slider("Vertical Angle", 45, [0, 90, 0.1] ));
 	
 	newInput(3, nodeValue_Float("Distance", 4 ));
 	

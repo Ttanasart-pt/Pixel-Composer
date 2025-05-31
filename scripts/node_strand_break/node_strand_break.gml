@@ -6,8 +6,7 @@ function Node_Strand_Break(_x, _y, _group = noone) : _Node_Strand_Affector(_x, _
 	
 	manual_ungroupable	 = false;
 	
-	newInput(input_fix_len + 0, nodeValue_Float("Chance", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(input_fix_len + 0, nodeValue_Slider("Chance", 1));
 	
 	newInput(input_fix_len + 1, nodeValueSeed());
 	

@@ -7,26 +7,21 @@ function Node_RM_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	newInput(2, nodeValue_Vec3("Rotation", [ 0, 0, 0 ]));
 	
-	newInput(3, nodeValue_Float("Scale", 1))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 4, 0.01 ] });
+	newInput(3, nodeValue_Slider("Scale", 1, [ 0, 4, 0.01 ] ));
 	
-	newInput(4, nodeValue_Float("FOV", 30))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 90, 1 ] });
+	newInput(4, nodeValue_Slider("FOV", 30, [ 0, 90, 1 ] ));
 	
 	newInput(5, nodeValue_Vec2("View Range", [ 0, 6 ]));
 	
-	newInput(6, nodeValue_Float("Density", 0.5))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(6, nodeValue_Slider("Density", 0.5));
 	
 	newInput(7, nodeValue_Int("Detail", 8));
 	
-	newInput(8, nodeValue_Float("Threshold", 0.4))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(8, nodeValue_Slider("Threshold", 0.4));
 	
 	newInput(9, nodeValue_Float("Detail Scaling", 2.));
 	
-	newInput(10, nodeValue_Float("Detail Attenuation", 0.5))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(10, nodeValue_Slider("Detail Attenuation", 0.5));
 	
 	newInput(11, nodeValue_Enum_Scroll("Shape",  0, [ "Volume", "Plane" ]));
 	

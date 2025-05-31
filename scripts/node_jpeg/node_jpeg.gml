@@ -3,8 +3,7 @@ function Node_JPEG(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Bool("Active", true));
-		active_index = 1;
+	newActiveInput(1);
 		
 	newInput(2, nodeValue_Int("Patch Size", 8))
 		.setValidator(VV_min(1));
@@ -16,12 +15,11 @@ function Node_JPEG(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newInput(5, nodeValue_Surface("Mask"));
 	
-	newInput(6, nodeValue_Float("Mix", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(6, nodeValue_Slider("Mix", 1));
 	
 	newInput(7, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
-	__init_mask_modifier(5); // inputs 8, 9
+	__init_mask_modifier(5, 8); // inputs 8, 9
 	
 	newInput(10, nodeValue_Enum_Scroll("Transformation",  0, [ "Cosine", "Zigzag", "Smooth Zigzag", "Step" ]));
 	

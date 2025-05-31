@@ -14,8 +14,7 @@ function Node_Graph_Preview(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	newInput(3, nodeValue_Bool("Sticky", true))
 		.rejectArray();
 		
-	newInput(4, nodeValue_Float("Alpha", 0.5))
-		.setDisplay(VALUE_DISPLAY.slider)
+	newInput(4, nodeValue_Slider("Alpha", 0.5))
 		.rejectArray();
 		
 	input_display_list = [ 0,

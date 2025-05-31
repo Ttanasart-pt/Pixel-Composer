@@ -6,8 +6,7 @@ function Node_Strand_Force_Apply(_x, _y, _group = noone) : _Node_Strand_Affector
 	
 	manual_ungroupable	 = false;
 	
-	newInput(input_fix_len + 0, nodeValue_Float("Strength", 1))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 5, 0.01 ] });
+	newInput(input_fix_len + 0, nodeValue_Slider("Strength", 1, [ 0, 5, 0.01 ] ));
 	
 	newInput(input_fix_len + 1, nodeValue_Float("Turbulence", 0));
 		

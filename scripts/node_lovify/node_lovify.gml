@@ -6,11 +6,9 @@ function Node_Lovify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	newInput(1, nodeValueSeed());
 	
-	newInput(2, nodeValue_Float("Density", 0.5 ))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(2, nodeValue_Slider("Density", 0.5 ));
 	
-	newInput(3, nodeValue_Float("Distribution", 0.1 ))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(3, nodeValue_Slider("Distribution", 0.1 ));
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	

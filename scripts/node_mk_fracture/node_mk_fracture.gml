@@ -1,41 +1,28 @@
 function Node_MK_Fracture(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "MK Fracture";
 	
-	newInput(0, nodeValue_Surface("Surface In"));
+	newInput( 0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Vec2("Subdivision", [ 4, 4 ]));
+	////- =Fracture
 	
-	newInput(2, nodeValue_Float("Progress", 0.5))
-		.setDisplay(VALUE_DISPLAY.slider)
-		.setMappable(3);
+	newInput( 1, nodeValue_Vec2(        "Subdivision", [4,4] ));
+	newInput( 2, nodeValue_Slider(      "Progress",    .5 )).setMappable(3);
+	newInput(13, nodeValue_Enum_Button( "Brick Axis",   0, [ "X", "Y" ] ));
+	newInput(11, nodeValue_Slider(      "Brick Shift",  0 ));
+	newInput(12, nodeValue_Slider(      "Skew",         0, [ -1, 1, 0.01 ] ));
 	
-	newInput(3, nodeValueMap("Progress map", self));
+	////- =Physics
 	
-	newInput(4, nodeValue_Vec2("Movement", [ 0, 0 ]))
-		.setMappable(9, true);
+	newInput( 4, nodeValue_Vec2(     "Movement",  [0,0] )).setMappable(9, true);
+	newInput( 5, nodeValue_Rotation( "Rotation",   180  )).setMappable(10);
+	newInput( 6, nodeValue_Slider(   "Scale",      0    ));
+	newInput( 8, nodeValue_Float(    "Gravity",    0    ));
 	
-	newInput(5, nodeValue_Rotation("Rotation", 180))
-		.setMappable(10);
+	////- =Render
 	
-	newInput(6, nodeValue_Float("Scale", 0.))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput( 7, nodeValue_Slider( "Alpha", 1 ));
 	
-	newInput(7, nodeValue_Float("Alpha", 1.))
-		.setDisplay(VALUE_DISPLAY.slider);
-	
-	newInput(8, nodeValue_Float("Gravity", 0.));
-	
-	newInput(9, nodeValueMap("Movement map", self));
-	
-	newInput(10, nodeValueMap("Rotation map", self));
-	
-	newInput(11, nodeValue_Float("Brick Shift", 0.))
-		.setDisplay(VALUE_DISPLAY.slider);
-	
-	newInput(12, nodeValue_Float("Skew", 0.))
-		.setDisplay(VALUE_DISPLAY.slider, { range : [ -1, 1, 0.01 ] });
-	
-	newInput(13, nodeValue_Enum_Button("Brick Axis",  0, [ "X", "Y" ]));
+	// input 14
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 0, 
 		["Fracture",	false], 1, 2, 13, 11, 12, 

@@ -1,26 +1,23 @@
 function Node_Pixel_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Pixel Sampler";
 	
-	newInput(0, nodeValue_Surface("Base Texture"));
+	////- =Texture
 	
-	newInput(1, nodeValue_Enum_Button("Sample Mode",  0 , [ "Keep Size", "Expand" ]));
+	newInput(0, nodeValue_Surface(     "Base Texture" ));
+	newInput(1, nodeValue_Enum_Button( "Sample Mode",  0, [ "Keep Size", "Expand" ] ));
+	newInput(2, nodeValue_Enum_Button( "Match Mode",   0, [ "Brightness", "RGB", "Hue" ] ));
 	
-	newInput(2, nodeValue_Enum_Button("Match Mode",  0 , [ "Brightness", "RGB", "Hue" ]));
-		
-	newInput(3, nodeValue_Surface("Surfaces", []))
-		.setArrayDepth(1);
+	////- =Surface
 	
-	newInput(4, nodeValue_Gradient("Gradient", new gradientObject([ ca_black, ca_white ])))
-		.setMappable(5);
-		
-	newInput(5, nodeValueMap("Gradient map", self));
+	newInput(3, nodeValue_Surface(  "Surfaces", [])).setArrayDepth(1);
+	newInput(4, nodeValue_Gradient( "Gradient", new gradientObject([ ca_black, ca_white ]))).setMappable(5);
 	
-	newInput(6, nodeValueGradientRange("Gradient map range", self, inputs[4]));
+	////- =Render
 	
-	newInput(7, nodeValue_Enum_Scroll("Color Blending",  0 , [ "None", "Multiply" ]));
+	newInput(7, nodeValue_Enum_Scroll( "Color Blending",     0, [ "None", "Multiply" ]));
+	newInput(8, nodeValue_Slider(      "Blending Intensity", 1 ));
 	
-	newInput(8, nodeValue_Float("Blending Intensity", 1 ))
-		.setDisplay(VALUE_DISPLAY.slider);
+	// input 9
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	

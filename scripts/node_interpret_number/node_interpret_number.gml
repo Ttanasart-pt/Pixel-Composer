@@ -8,24 +8,15 @@ function Node_Interpret_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	name = "Interpret Number";
 	dimension_index = -1;
 	
-	newInput(0, nodeValue_Float("Number", [] ))
-		.setVisible(true, true)
-		.setArrayDepth(1);
+	newInput(0, nodeValue_Float( "Number", [] )).setVisible(true, true).setArrayDepth(1);
 	
-	newInput(1, nodeValue_Enum_Button("Mode",  0, [ "Greyscale", "Gradient" ]));
+	////- =Interpret
 	
-	newInput(2, nodeValue_Range("Range", [ 0, 1 ] ));
+	newInput(1, nodeValue_Enum_Button( "Mode",      0, [ "Greyscale", "Gradient" ]));
+	newInput(2, nodeValue_Range(       "Range",    [0,1] ));
+	newInput(3, nodeValue_Gradient(    "Gradient", new gradientObject(ca_white))).setMappable(4);
 	
-	newInput(3, nodeValue_Gradient("Gradient", new gradientObject(ca_white)))
-		.setMappable(4);
-	
-	//////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	newInput(4, nodeValueMap("Gradient map", self));
-	
-	newInput(5, nodeValueGradientRange("Gradient map range", self, inputs[3]));
-	
-	//////////////////////////////////////////////////////////////////////////////////////////////////
+	// input 6
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	

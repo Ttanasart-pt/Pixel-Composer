@@ -14,23 +14,17 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newInput(5, nodeValue_Float("Wind speed", 2));
 	
-	newInput(6, nodeValue_Float("Wave width", 1))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 4, 0.1] });
+	newInput(6, nodeValue_Slider("Wave width", 1, [0, 4, 0.1] ));
 	
-	newInput(7, nodeValue_Float("Wave size", 0.2))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(7, nodeValue_Slider("Wave size", 0.2));
 	
-	newInput(8, nodeValue_Float("Phase", 0.1))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(8, nodeValue_Slider("Phase", 0.1));
 	
-	newInput(9, nodeValue_Float("Clip", 0.2))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(9, nodeValue_Slider("Clip", 0.2));
 	
-	newInput(10, nodeValue_Float("Shadow", 0.2))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(10, nodeValue_Slider("Shadow", 0.2));
 	
-	newInput(11, nodeValue_Float("Shadow threshold", 0))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [-0.1, 0.1, 0.001] });
+	newInput(11, nodeValue_Slider("Shadow threshold", 0, [-0.1, 0.1, 0.001] ));
 	
 	newInput(12, nodeValue_Bool("Invert shadow", 0));
 	

@@ -11,26 +11,21 @@ function Node_Smoke_Domain(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	
 	newInput(2, nodeValue_Enum_Button("Material dissipation type",  1, [ "Multiply", "Subtract" ]));
 	
-	newInput(3, nodeValue_Float("Material dissipation", 0.02))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 0.1, 0.01 ] });
+	newInput(3, nodeValue_Slider("Material dissipation", 0.02, [ 0, 0.1, 0.01 ] ));
 	
 	newInput(4, nodeValue_Enum_Button("Velocity dissipation type",  1, [ "Multiply", "Subtract" ]));
 	
-	newInput(5, nodeValue_Float("Velocity dissipation", 0.00))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 0.1, 0.01 ] });
+	newInput(5, nodeValue_Slider("Velocity dissipation", 0.00, [ 0, 0.1, 0.01 ] ));
 	
 	newInput(6, nodeValue_Vec2("Acceleration", [ 0, 0 ]));
 	
 	newInput(7, nodeValue_Vec2("Material intertia", [ 1, -0.2 ]));
 	
-	newInput(8, nodeValue_Float("Initial pressure", 0.75))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(8, nodeValue_Slider("Initial pressure", 0.75));
 	
-	newInput(9, nodeValue_Float("Material Maccormack weight", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(9, nodeValue_Slider("Material Maccormack weight", 1));
 	
-	newInput(10, nodeValue_Float("Velocity Maccormack weight", 0))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(10, nodeValue_Slider("Velocity Maccormack weight", 0));
 	
 	newInput(11, nodeValue_Enum_Scroll("Boundary", 0, [ "Free", "Wall", "Wrap" ]));
 	

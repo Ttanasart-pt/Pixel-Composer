@@ -8,8 +8,7 @@ function Node_3D_Light(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group) 
 	
 	newInput(in_d3d + 1, nodeValue_Color("Color", ca_white));
 	
-	newInput(in_d3d + 2, nodeValue_Float("Intensity", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(in_d3d + 2, nodeValue_Slider("Intensity", 1));
 	
 	in_light = array_length(inputs);
 	

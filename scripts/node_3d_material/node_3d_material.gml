@@ -6,11 +6,9 @@ function Node_3D_Material(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 	newInput(0, nodeValue_Surface("Texture"))
 		.setVisible(true, true);
 	
-	newInput(1, nodeValue_Float("Diffuse", 1 ))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(1, nodeValue_Slider("Diffuse", 1 ));
 	
-	newInput(2, nodeValue_Float("Specular", 0 ))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(2, nodeValue_Slider("Specular", 0 ));
 	
 	newInput(3, nodeValue_Float("Shininess", 1 ));
 	
@@ -18,11 +16,9 @@ function Node_3D_Material(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 	
 	newInput(5, nodeValue_Surface("Normal Map"));
 	
-	newInput(6, nodeValue_Float("Normal Strength", 1 ))
-		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 2, 0.01 ] });
+	newInput(6, nodeValue_Slider("Normal Strength", 1, [ 0, 2, 0.01 ] ));
 		
-	newInput(7, nodeValue_Float("Roughness", 1 ))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(7, nodeValue_Slider("Roughness", 1 ));
 	
 	newInput(8, nodeValue_Bool("Anti aliasing", false ));
 	

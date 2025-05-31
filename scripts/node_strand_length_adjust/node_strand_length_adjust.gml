@@ -8,8 +8,7 @@ function Node_Strand_Length_Adjust(_x, _y, _group = noone) : _Node_Strand_Affect
 	
 	newInput(input_fix_len + 0, nodeValue_Enum_Button("Type",  0, [ "Increase", "Decrease" ]));
 	
-	newInput(input_fix_len + 1, nodeValue_Float("Strength", 0.1))
-		.setDisplay(VALUE_DISPLAY.slider);
+	newInput(input_fix_len + 1, nodeValue_Slider("Strength", 0.1));
 		
 	array_push(input_display_list, 
 		["Length adjust",	false], input_fix_len + 0, input_fix_len + 1,

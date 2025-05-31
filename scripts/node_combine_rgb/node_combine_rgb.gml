@@ -2,27 +2,21 @@ function Node_Combine_RGB(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	name = "RGB Combine";
 	dimension_index = -1;
 	
-	newInput(0, nodeValue_Surface("Red"));
-	newInput(1, nodeValue_Surface("Green"));
-	newInput(2, nodeValue_Surface("Blue"));
-	newInput(3, nodeValue_Surface("Alpha"));
+	////- =Sampling
 	
-	newInput(4, nodeValue_Enum_Scroll("Sampling type",  0, ["Channel value", "Greyscale"]));
+	newInput(4, nodeValue_Enum_Scroll( "Sampling type",  0, ["Channel value", "Greyscale"]));
+	newInput(5, nodeValue_Slider(      "Base value",     0 )).setTooltip("Set value to the unconnected color channels.").setMappable(6);
 	
-	newInput(5, nodeValue_Float("Base value", 0, "Set value to the unconnected color channels."))
-		.setDisplay(VALUE_DISPLAY.slider)
-		.setMappable(6);
+	////- =Surfaces
 	
-	//////////////////////////////////////////////////////////////////////////////////////////////////
+	newInput(7, nodeValue_Bool(    "Array Input", false ));
+	newInput(0, nodeValue_Surface( "Red"   ));
+	newInput(1, nodeValue_Surface( "Green" ));
+	newInput(2, nodeValue_Surface( "Blue"  ));
+	newInput(3, nodeValue_Surface( "Alpha" ));
+	newInput(8, nodeValue_Surface( "RGBA Array", [])).setArrayDepth(1);
 	
-	newInput(6, nodeValueMap("Base value", self));
-	
-	//////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	newInput(7, nodeValue_Bool("Array Input", false));
-	
-	newInput(8, nodeValue_Surface("RGBA Array", []))
-		.setArrayDepth(1);
+	// input 9
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	

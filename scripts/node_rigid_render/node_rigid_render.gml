@@ -9,17 +9,17 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	worldIndex = undefined;
 	worldScale = 100;
 	
-	////- Simulation
+	////- =Simulation
 	
-	newInput(3, nodeValue_Bool(  "Simulate", true));
-	newInput(1, nodeValue_Float( "Timestep (ms)", 20));
-	newInput(2, nodeValue_Int(   "Quality",  8));
+	newInput(3, nodeValue_Bool(  "Simulate",      true ));
+	newInput(1, nodeValue_Float( "Timestep (ms)", 20   ));
+	newInput(2, nodeValue_Int(   "Quality",       8    ));
 	
-	////- Outputs
+	////- =Outputs
 	
 	newInput(0, nodeValue_Bool("Round Position", false));
 	
-	// inputs 5
+	// inputs 4
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -45,6 +45,8 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	} 
 	
 	setDynamicInput(1, true, VALUE_TYPE.rigid);
+	
+	////- Nodes
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(worldIndex == undefined) return;

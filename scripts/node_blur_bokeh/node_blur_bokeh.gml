@@ -7,28 +7,21 @@
 function Node_Blur_Bokeh(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Lens Blur";
 	
-	newInput(0, nodeValue_Surface("Surface In"));
-	
-	newInput(1, nodeValue_Float("Strength", 0.2))
-		.setMappable(8);
-	
-	newInput(2, nodeValue_Surface("Mask"));
-	
-	newInput(3, nodeValue_Float("Mix", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
-	
-	newInput(4, nodeValue_Bool("Active", true));
-		active_index = 4;
-	
+	newActiveInput(4);
 	newInput(5, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
-	__init_mask_modifier(2); // inputs 6, 7
+	////- =Surfaces
 	
-	//////////////////////////////////////////////////////////////////////////////////////////////////
+	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput(2, nodeValue_Surface( "Mask"       ));
+	newInput(3, nodeValue_Slider(  "Mix", 1     ));
+	__init_mask_modifier(2, 6); // inputs 6, 7
 	
-	newInput(8, nodeValueMap("Strength map", self));
+	////- =Blur
 	
-	//////////////////////////////////////////////////////////////////////////////////////////////////
+	newInput(1, nodeValue_Float( "Strength", .2 )).setMappable(8);
+	
+	// input 9
 	
 	input_display_list = [ 4, 5, 
 		["Surfaces", true], 0, 2, 3, 6, 7, 

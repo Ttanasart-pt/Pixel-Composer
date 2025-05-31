@@ -15,7 +15,7 @@ function Node_High_Pass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(0, nodeValue_Surface( "Surface In"));
 	newInput(2, nodeValue_Surface( "Mask"));
 	newInput(3, nodeValue_Slider(  "Mix", 1));
-	__init_mask_modifier(2); // inputs 5, 6, 
+	__init_mask_modifier(2, 5); // inputs 5, 6, 
 	
 	////- Effect
 	
