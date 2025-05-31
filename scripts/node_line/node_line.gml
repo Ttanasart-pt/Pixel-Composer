@@ -574,17 +574,6 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			if(_bg) draw_clear_alpha(0, 1);
 			else	DRAW_CLEAR
 			
-			if(_useTex) {
-				var tex = surface_get_texture(_tex);
-				
-				shader_set(sh_draw_mapping);
-				shader_set_2("position", _texPos);
-				shader_set_f("rotation", degtorad(_texRot));
-				shader_set_2("scale",    _texSca);
-				
-				shader_set_interpolation(_tex);
-			}
-			
 			for( var i = 0, n = array_length(lines); i < n; i++ ) {
 				var points = lines[i];
 				if(array_length(points) < 2) continue;
@@ -595,9 +584,20 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				var pxs    = [];
 				var dat    = array_safe_get_fast(_pathData, i, noone);
 				
-				if(_useTex && _scaleTex) shader_set_2("scale", [ _texSca[0] * _len, _texSca[1] ]);
-				if(_useTex) draw_primitive_begin_texture(pr_trianglestrip, tex);
-				else        draw_primitive_begin(pr_trianglestrip);
+				if(_useTex) {
+					var tex = surface_get_texture(_tex);
+				
+					shader_set(sh_draw_mapping);
+					shader_set_2("position", _texPos);
+					shader_set_f("rotation", degtorad(_texRot));
+					shader_set_2("scale",    _texSca);
+					
+					shader_set_interpolation(_tex);
+					if(_scaleTex) shader_set_2("scale", [ _texSca[0] * _len, _texSca[1] ]);
+					draw_primitive_begin_texture(pr_trianglestrip, tex);
+					
+				} else 
+					draw_primitive_begin(pr_trianglestrip);
 				
 				var _col_base = dat == noone? _colb.eval(random(1)) : dat.color;
 				_ow = 1;
@@ -717,6 +717,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				}
 				
 				draw_primitive_end();
+				if(_useTex) shader_reset();
 				
 				if(!array_empty(points)) {
 					var _pp = [ 0, 0 ];
@@ -750,7 +751,6 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				
 			}
 			
-			if(_useTex) shader_reset();
 		surface_reset_target();
 		
 		surface_set_shader(_colorPass, sh_downsample, true, BLEND.over);

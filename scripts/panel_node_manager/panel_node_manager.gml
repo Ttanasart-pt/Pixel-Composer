@@ -17,22 +17,17 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 	}
 	setRootDir("D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/data/Nodes/Internal");
 	
-	tb_root  = new textBox(TEXTBOX_INPUT.text, function(t) /*=>*/ { setRootDir(t); }).setFont(f_p2).setColor(COLORS._main_text_sub);
+	parseArray = function(t) /*=>*/ {return (t != "" && !string_pos(",", t))? [ t ] : json_try_parse(t, [])};
 	
-	tb_inode = new textBox(TEXTBOX_INPUT.text,   function(t) /*=>*/ { selectNode.info[$ "baseNode"]     = t; selectNode.updateInfo(); }).setFont(f_p2);
-	tb_name  = new textBox(TEXTBOX_INPUT.text,   function(t) /*=>*/ { selectNode.info[$ "name"]         = t; selectNode.updateInfo(); }).setFont(f_p2);
-	tb_tips  = new textArea(TEXTBOX_INPUT.text,  function(t) /*=>*/ { selectNode.info[$ "tooltip"]      = t; selectNode.updateInfo(); }).setFont(f_p2);
-	tb_spr   = new textBox(TEXTBOX_INPUT.text,   function(t) /*=>*/ { selectNode.info[$ "spr"]          = t; selectNode.updateInfo(); }).setFont(f_p2);
-	tb_vers  = new textBox(TEXTBOX_INPUT.number, function(t) /*=>*/ { selectNode.info[$ "pxc_version"]  = t; selectNode.updateInfo(); }).setFont(f_p2);
-	tb_io    = new textBox(TEXTBOX_INPUT.text,   function(t) /*=>*/ { 
-		var _ios = [];
-		if(t != "" && !string_pos(",", t))
-			 _ios = [ t ];
-		else _ios = json_try_parse(t, []); 
-		
-		selectNode.info[$ "io"] = _ios;
-		selectNode.updateInfo(); 
-	}).setFont(f_p2);
+	tb_root  = textBox_Text(function(t) /*=>*/ { setRootDir(t); }).setFont(f_p2).setColor(COLORS._main_text_sub);
+	
+	tb_inode = textBox_Text(   function(t) /*=>*/ { selectNode.info[$ "baseNode"]         = t;  selectNode.updateInfo(); });
+	tb_name  = textBox_Text(   function(t) /*=>*/ { selectNode.info[$ "name"]             = t;  selectNode.updateInfo(); });
+	tb_tips  = textArea_Text(  function(t) /*=>*/ { selectNode.info[$ "tooltip"]          = t;  selectNode.updateInfo(); });
+	tb_spr   = textBox_Text(   function(t) /*=>*/ { selectNode.info[$ "spr"]              = t;  selectNode.updateInfo(); });
+	tb_vers  = textBox_Number( function(t) /*=>*/ { selectNode.info[$ "pxc_version"]      = t;  selectNode.updateInfo(); });
+	tb_io    = textBox_Text(   function(t) /*=>*/ { selectNode.info[$ "io"]    = parseArray(t); selectNode.updateInfo(); });
+	tb_alias = textBox_Text(   function(t) /*=>*/ { selectNode.info[$ "alias"] = parseArray(t); selectNode.updateInfo(); });
 	
 	tb_show_recent = new checkBox(function(t) /*=>*/ { selectNode.info[$ "show_in_recent"] = !(selectNode.info[$ "show_in_recent"] ?? true); selectNode.updateInfo(); });
 	
@@ -42,9 +37,12 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 		[ "tips",    tb_tips,        function() /*=>*/ {return selectNode.info[$ "tooltip"]        ?? ""}    ], 
 		[ "spr",     tb_spr,         function() /*=>*/ {return selectNode.info[$ "spr"]            ?? ""}    ], 
 		[ "version", tb_vers,        function() /*=>*/ {return selectNode.info[$ "pxc_version"]    ?? 0}     ], 
-		[ "io",      tb_io,          function() /*=>*/ {return selectNode.info[$ "io"]             ?? []}    ], 
 		[ "recent",  tb_show_recent, function() /*=>*/ {return selectNode.info[$ "show_in_recent"] ?? true}  ], 
+		[ "io",      tb_io,          function() /*=>*/ {return selectNode.info[$ "io"]             ?? []}    ], 
+		[ "alias",   tb_alias,       function() /*=>*/ {return selectNode.info[$ "alias"]          ?? []}    ], 
 	];
+	
+	array_foreach(editWidgets, function(e) /*=>*/ {return e[1].setFont(f_p2)});
 	
 	sc_folder = new scrollPane(ui(8), h, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);

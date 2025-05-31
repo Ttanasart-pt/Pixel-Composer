@@ -7,6 +7,9 @@ enum TEXT_AREA_FORMAT {
 	node_title,
 }
 
+function textArea_Text(_onModify)   { return new textArea(TEXTBOX_INPUT.text,   _onModify); }
+function textArea_Number(_onModify) { return new textArea(TEXTBOX_INPUT.number, _onModify); }
+
 function textArea(_input, _onModify) : textInput(_input, _onModify) constructor {
 	hide     = false;
 	color    = COLORS._main_text;
