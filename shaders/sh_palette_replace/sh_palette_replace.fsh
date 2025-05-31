@@ -1,6 +1,3 @@
-//
-// Simple passthrough fragment shader
-//
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -72,8 +69,8 @@ uniform vec4	replaceColor;
 
 #endregion
 
-float random(in float st) { return fract(sin(st * 12.9898) * (seed + 43758.5453123)); }
-float round(float val)    { return fract(val) >= 0.5? ceil(val) : floor(val); }
+float random( in float st  ) { return fract(sin(st * 12.9898 + 53.4856) * (seed + 43758.5453123)); }
+float round(  in float val ) { return fract(val) >= 0.5? ceil(val) : floor(val); }
 
 void main() {
     vec4 col = texture2D( gm_BaseTexture, v_vTexcoord );

@@ -19,7 +19,7 @@
 	randomize();
 #endregion
 
-#region ======================================================================= MAIN =======================================================================
+#region // MAIN
 	globalvar OS, DEBUG, RUN_IDE;
 	globalvar CMD, CMDIN, CMDPRG;
 	globalvar FPS_REAL;

@@ -1,47 +1,48 @@
 function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Replace Palette";
 	
-	newInput(0, nodeValue_Surface("Surface In"));
-	newInput(1, nodeValue_Palette("From", array_clone(DEF_PALETTE)));
+	newActiveInput(9);
+	newInput(10, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
-	newInput(2, nodeValue_Palette("To", array_clone(DEF_PALETTE)));
+	////- =Surfaces
+		
+	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput(7, nodeValue_Surface( "Mask"       ));
+	newInput(8, nodeValue_Slider(  "Mix", 1     ));
+	__init_mask_modifier(7, 11);
 	
-	newInput(3, nodeValue_Float("Threshold", 0.1))
-		.setDisplay(VALUE_DISPLAY.slider);
+	////- =Palettes
+		
+	newInput(1, nodeValue_Palette( "From", array_clone(DEF_PALETTE) ));
+	newInput(2, nodeValue_Palette( "To",   array_clone(DEF_PALETTE) ));
 	
-	newInput(4, nodeValue_Bool("Replace Other Colors", false));
+	////- =Comparison
+		
+	newInput(13, nodeValue_Enum_Scroll( "Mode", 0, [ "Closest", "Random" ] ));
+	newInput(14, nodeValueSeed());
+	newInput( 3, nodeValue_Slider( "Threshold",      .1   ));
+	newInput( 5, nodeValue_Bool(   "Multiply alpha", true ));
 	
-	newInput(5, nodeValue_Bool("Multiply alpha", true));
+	////- =Replace Others
+		
+	newInput( 4, nodeValue_Bool(  "Replace Other Colors", false    ));
+	newInput(15, nodeValue_Color( "Target Color",         ca_black ));
 	
+	////- =Render
+		
 	newInput(6, nodeValue_Bool("Hard replace", true, "Completely override pixel with new color instead of blending between it."));
 	
-	newInput(7, nodeValue_Surface("Mask"));
-	
-	newInput(8, nodeValue_Float("Mix", 1))
-		.setDisplay(VALUE_DISPLAY.slider);
-	
-	newInput(9, nodeValue_Bool("Active", true));
-		active_index = 9;
-	
-	newInput(10, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
-		
-	__init_mask_modifier(7); // inputs 11, 12
-	
-	newInput(13, nodeValue_Enum_Scroll("Mode",  0, [ "Closest", "Random" ]));
-	
-	newInput(14, nodeValueSeed());
-	
-	newInput(15, nodeValue_Color("Target Color", ca_black));
-	
 	input_display_list = [ 9, 10, 
-		["Surfaces",	 true], 0, 7, 8, 11, 12, 
-		["Palettes",	false], 1, 2, 
-		["Comparison",	false], 13, 14, 3, 5, 
+		["Surfaces",        true   ], 0, 7, 8, 11, 12, 
+		["Palettes",       false   ], 1, 2, 
+		["Comparison",     false   ], 13, 14, 3, 5, 
 		["Replace Others", false, 4], 15, 
-		["Render",		false],  6
+		["Render",         false   ],  6
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	
+	////- Nodes
 	
 	attribute_surface_depth();
 	
