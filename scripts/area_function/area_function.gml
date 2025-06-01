@@ -250,34 +250,41 @@ function area_get_random_point_poisson(_area, _distance, _seed) {
 }
 
 function area_get_random_point_poisson_c(_area, _distance, _seed) {
+	static MAX_POINT = 4096;
 	var _sed = _seed ?? random_get_seed();
-	var _areaBuffer   = buffer_create(8 * 5,    buffer_fixed, 8); 
-	var _resultBuffer = buffer_create(8 * 4096, buffer_fixed, 8); 
 	
-	buffer_to_start(_areaBuffer);
-	buffer_write(_areaBuffer, buffer_f64, array_safe_get_fast(_area, 0));
-	buffer_write(_areaBuffer, buffer_f64, array_safe_get_fast(_area, 1));
-	buffer_write(_areaBuffer, buffer_f64, array_safe_get_fast(_area, 2));
-	buffer_write(_areaBuffer, buffer_f64, array_safe_get_fast(_area, 3));
-	buffer_write(_areaBuffer, buffer_f64, array_safe_get_fast(_area, 4));
+	var _sbuf = buffer_create(8 * 2 * MAX_POINT, buffer_fixed, 8); 
+	var _args = buffer_create(1, buffer_grow, 1); 
 	
-	var _pointAmount = poisson_get_points_ext(buffer_get_address(_areaBuffer), _distance, _seed, buffer_get_address(_resultBuffer));
+	buffer_to_start(_args);
+	buffer_write(_args, buffer_u64, buffer_get_address(_sbuf));
+	
+	buffer_write(_args, buffer_f64, array_safe_get_fast(_area, 0));
+	buffer_write(_args, buffer_f64, array_safe_get_fast(_area, 1));
+	buffer_write(_args, buffer_f64, array_safe_get_fast(_area, 2));
+	buffer_write(_args, buffer_f64, array_safe_get_fast(_area, 3));
+	buffer_write(_args, buffer_f64, array_safe_get_fast(_area, 4));
+	
+	buffer_write(_args, buffer_f64, max(_distance, 2));
+	buffer_write(_args, buffer_f64, _seed);
+	buffer_write(_args, buffer_f64, MAX_POINT);
+	
+	var _pointAmount = poisson_get_points_ext(buffer_get_address(_args));
+	if(_pointAmount >= MAX_POINT) noti_warning($"Scatter amount higher than max points ({MAX_POINT}) results may not be correct.");
 	var _points      = array_create(_pointAmount);
 	var i = 0;
 	
-	buffer_to_start(_resultBuffer);
+	
+	buffer_to_start(_sbuf);
 	repeat(_pointAmount) {
-		var p1 = buffer_read(_resultBuffer, buffer_f64);
-		var p2 = buffer_read(_resultBuffer, buffer_f64);
+		var p1 = buffer_read(_sbuf, buffer_f64);
+		var p2 = buffer_read(_sbuf, buffer_f64);
 		
-		_points[i++] = [
-			p1,
-			p2,
-		];
+		_points[i++] = [ p1, p2 ];
 	}
 	
-	buffer_delete(_areaBuffer);
-	buffer_delete(_resultBuffer);
+	buffer_delete(_args);
+	buffer_delete(_sbuf);
 	
 	return _points;
 }
