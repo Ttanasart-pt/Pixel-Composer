@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_flow_path",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_flow_path",
+  "parent":{
+    "name":"warps",
+    "path":"folders/nodes/data/filter/warps.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

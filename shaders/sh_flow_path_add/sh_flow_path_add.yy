@@ -1,0 +1,13 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_flow_path_add",
+  "name":"sh_flow_path_add",
+  "parent":{
+    "name":"flow_path",
+    "path":"folders/nodes/data/filter/warps/flow_path.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "tags":[],
+  "type":1,
+}

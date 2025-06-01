@@ -1,14 +1,9 @@
 function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Switch";
-	
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Text("Index"))
-		.setVisible(true, true)
-		.rejectArray();
-	
-	newInput(1, nodeValue("Default value", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0 ))
-		.setVisible(false, true);
+	newInput(0, nodeValue_Text( "Index" )).setVisible(true, true).rejectArray();
+	newInput(1, nodeValue( "Default value", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0 )).setVisible(false, true);
 	
 	size_adjust_tool = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		var _h = ui(48);

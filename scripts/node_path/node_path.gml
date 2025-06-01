@@ -8,6 +8,8 @@
 		hotkeyTool("Node_Path", "Circle path",         "M");
 		hotkeyTool("Node_Path", "Weight edit",         "W");
 	});
+
+	function is_path(p) { return struct_has(p, "getPointRatio"); }
 #endregion
 
 enum _ANCHOR {
