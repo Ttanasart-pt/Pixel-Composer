@@ -202,11 +202,19 @@ function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		_iso.offsety = array_create(_amo);
 		
 		for( var i = 0; i < _amo; i++ ) {
-			_iso.surfaces[i] = array_safe_get_fast(_surf, i, noone);
+			var _s = array_safe_get_fast(_surf, i, noone);
+			_iso.surfaces[i] = _s;
 			
 			var _off = array_safe_get_fast(_offset, i);
-			_iso.offsetx[i] = array_safe_get_fast(_off, 0);
-			_iso.offsety[i] = array_safe_get_fast(_off, 1);
+			if(is_array(_off)) {
+				_iso.offsetx[i] = array_safe_get_fast(_off, 0);
+				_iso.offsety[i] = array_safe_get_fast(_off, 1);
+				
+			} else {
+				_iso.offsetx[i] = surface_get_width_safe(_s)  / 2;
+				_iso.offsety[i] = surface_get_height_safe(_s) / 2;
+				
+			}
 		}
 		
 		_iso.angles      = _angle;
