@@ -38,14 +38,15 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Enum_Scroll("Type",  0, [ "Sum", "Mean", "Median", "Max", "Min" ]))
-		.rejectArray();
+	_type_arr      = [ "Sum", "Mean", "Median", "Max", "Min" ];
+	_type_disp_arr = [ "Sum", "Avg",  "Med",    "Max", "Min" ];
+	
+	newInput(0, nodeValue_Enum_Scroll("Type", 0, _type_arr )).rejectArray();
 	
 	static createNewInput = function(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
-		newInput(index, nodeValue_Float("Input", -1 ))
-			.setVisible(false, true);
+		newInput(index, nodeValue_Float("Input", -1 )).setVisible(false, true);
 			
 		return inputs[index];
 	} 
@@ -54,131 +55,56 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	newOutput(0, nodeValue_Output("Statistic", VALUE_TYPE.float, -1));
 	
+	////- Nodes
+	
 	static onValueUpdate = function(index = 0) {
 		if(index != 0) return;
 		
 		var _type = inputs[0].getValue();
-		
-		switch(_type) {
-			case STAT_OPERATOR._sum :		setDisplayName("Sum", false)        break;
-			case STAT_OPERATOR._average :	setDisplayName("Average", false);	 break;
-			case STAT_OPERATOR._median :	setDisplayName("Median", false);	 break;
-			case STAT_OPERATOR._max :		setDisplayName("Max", false);       break;
-			case STAT_OPERATOR._min :		setDisplayName("Min", false);       break;
-		}
+		setDisplayName(array_safe_get(_type_arr, _type), false);
 	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		var type = getInputData(0);
-		var res = 0;
+		var res  = 0;
+		
+		var _val = [];
+		for( var i = input_fix_len; i < array_length(inputs); i++ ) 
+			_val = array_append(_val, getInputData(i));
+		var  amo = array_length(_val);
 		
 		switch(type) {
-			case STAT_OPERATOR._sum : 
-				for( var i = input_fix_len; i < array_length(inputs); i++ ) {
-					var val = getInputData(i);
-					if(is_array(val)) {
-						for( var j = 0; j < array_length(val); j++ )
-							res += val[j];
-					} else
-						res += val;
-				}
-				break;
+			case STAT_OPERATOR._sum : res = array_sum(_val); break;
+			case STAT_OPERATOR._min : res = array_min(_val); break;
+			case STAT_OPERATOR._max : res = array_max(_val); break;
+				
 			case STAT_OPERATOR._average : 
-				if(array_length(inputs) <= input_fix_len + 1) {
-					res = 0;
-					break;
-				}
-				
-				var amo = 0;
-				for( var i = input_fix_len; i < array_length(inputs); i++ ) {
-					var val = getInputData(i);
-					if(is_array(val)) {
-						for( var j = 0; j < array_length(val); j++ ) {
-							res += val[j];
-							amo++;
-						}
-					} else {
-						res += val;
-						amo++;
-					}
-				}
-				res /= amo;
+				var sum = array_sum(_val); 
+				res = amo == 0? 0 : sum / amo;
 				break;
+				
 			case STAT_OPERATOR._median : 
-				if(array_length(inputs) - input_fix_len == 0) {
-					res = 0;
-					break;
-				}
+				if(amo == 0) { res = 0;       break; }
+				if(amo == 1) { res = _val[0]; break; }
 				
-				var vals = [];
-				var amo = 0;
-				for( var i = input_fix_len; i < array_length(inputs); i++ ) {
-					var val = getInputData(i);
-					if(is_array(val)) {
-						for( var j = 0; j < array_length(val); j++ ) {
-							array_push(vals, val[j]);
-							amo++;
-						}
-					} else {
-						array_push(vals, val);
-						amo++;
-					}
-				}
+				array_sort(_val, true);
+				var i = (amo - 1) / 2;
 				
-				if(amo == 1) {
-					res = vals[0];
-					break;
-				}
-				
-				array_sort(vals, true);
-				if(amo % 2 == 0)
-					res = (vals[amo / 2 - 1] + vals[amo / 2]) / 2;
-				else
-					res = vals[(amo - 1) / 2];
+				if(frac(i) == 0) res = _val[i];
+				else res = (_val[floor(i)] + _val[floor(i) + 1]) / 2;
 				break;
-			case STAT_OPERATOR._min : 
-				var _min = 9999999999;
-				for( var i = input_fix_len; i < array_length(inputs); i++ ) {
-					var val = getInputData(i);
-					if(is_array(val)) {
-						for( var j = 0; j < array_length(val); j++ )
-							_min = min(_min, val[j]);
-					} else
-						_min = min(_min, val);
-				}
-				res = _min;
-				break;
-			case STAT_OPERATOR._max : 
-				var _max = -9999999999;
 				
-				for( var i = input_fix_len; i < array_length(inputs); i++ ) {
-					var val = getInputData(i);
-					if(is_array(val)) {
-						for( var j = 0; j < array_length(val); j++ )
-							_max = max(_max, val[j]);
-					} else
-						_max = max(_max, val);
-				}
-				res = _max;
-				break;
 		}
 		
 		outputs[0].setValue(res);
-	} #endregion
+	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
-		var str = "";
-		switch(getInputData(0)) {
-			case STAT_OPERATOR._average : str = "Avg"; break;
-			case STAT_OPERATOR._sum : str = "Sum"; break;
-			case STAT_OPERATOR._median : str = "Med"; break;
-			case STAT_OPERATOR._min : str = "Min"; break;
-			case STAT_OPERATOR._max : str = "Max"; break;
-		}
+		var str = array_safe_get(_type_disp_arr, getInputData(0));
 		
 		var bbox = drawGetBbox(xx, yy, _s);
 		var ss	= string_scale(str, bbox.w, bbox.h);
 		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
-	} #endregion
+	}
 }
