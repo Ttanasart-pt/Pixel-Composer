@@ -36,6 +36,7 @@ function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	static getPointDistance = function(_dist, _ind = 0, out = undefined) {
 		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
+		if(array_empty(anchors)) return out;
 		
 		var _cKey = $"{string_format(_dist, 0, 6)},{_ind}";
 		if(ds_map_exists(cached_pos, _cKey)) {
@@ -71,16 +72,12 @@ function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		out.x = lerp(_a0[0], _a1[0], _rat);
 		out.y = lerp(_a0[1], _a1[1], _rat);
 		
-		// print($"Getting position {_cKey} : {_dist} - {i} > {out}");
-		
 		cached_pos[? _cKey] = new __vec2P(out.x, out.y, out.weight);
 		
 		return out;
 	}
 	
-	static getPointRatio    = function(_rat, _ind = 0, out = undefined) {
-		return getPointDistance(frac(_rat) * lengthTotal, _ind, out);
-	}
+	static getPointRatio = function(_rat, _ind = 0, out = undefined) { return getPointDistance(frac(_rat) * lengthTotal, _ind, out); }
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		
@@ -121,8 +118,6 @@ function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			shader_set_f("dimension", _dim);
 			draw_surface_stretched(_surf, 0, 0, _dim[0], _dim[1]);
 		surface_reset_shader();
-		
-		// printSurface("mask", temp_surface[0]);
 		
 		var _amo  = attributes.maximum_points;
 		var _sbuf = buffer_from_surface(temp_surface[0], false);
