@@ -14,6 +14,9 @@ function Panel_Action_Create() : PanelContent() constructor {
 		location = [];
 		spr      = noone;
 		
+		inputNode   = noone;
+		outputNode  = noone;
+		
 		rawNodes    = [];
 		nodes       = [];
 		connections = [];
@@ -47,9 +50,9 @@ function Panel_Action_Create() : PanelContent() constructor {
 			array_push(cat_value, noone);
 		}
 		
-		tb_name 	= new textBox( TEXTBOX_INPUT.text, function(s) /*=>*/ { name    = s; }).setAutoUpdate().setFont(f_p2);
-		tb_tooltip  = new textArea(TEXTBOX_INPUT.text, function(s) /*=>*/ { tooltip = s; }).setAutoUpdate().setFont(f_p2);
-		tb_alias    = new textArea(TEXTBOX_INPUT.text, function(s) /*=>*/ { tags    = s; }).setAutoUpdate().setFont(f_p2);
+		tb_name 	= new textBox( TEXTBOX_INPUT.text, function(s) /*=>*/ { name      = s; }).setAutoUpdate().setFont(f_p2);
+		tb_tooltip  = new textArea(TEXTBOX_INPUT.text, function(s) /*=>*/ { tooltip   = s; }).setAutoUpdate().setFont(f_p2);
+		tb_alias    = new textArea(TEXTBOX_INPUT.text, function(s) /*=>*/ { tags      = s; }).setAutoUpdate().setFont(f_p2);
 		tb_location = new scrollBox(node_categories,   function(v) /*=>*/ { cat_index = v; })
 		                     .setAlign(fa_left)
 		                     .setHorizontal(true)
@@ -67,6 +70,8 @@ function Panel_Action_Create() : PanelContent() constructor {
 				location : cat_value[cat_index],
 				nodes,
 				connections,
+				inputNode,
+				outputNode,
 			};
 			
 			json_save_struct(_path, _map);
@@ -83,118 +88,131 @@ function Panel_Action_Create() : PanelContent() constructor {
 	#endregion
 	
 	function onResize() { sc_node_content.resize(w - padding * 2 - ui(320) - ui(16), h - padding * 2 - ui(16)); }
-	
-	#region content
-		sc_node_content = new scrollPane(w - padding * 2 - ui(320) - ui(16), h - padding * 2 - ui(16), function(_y, _m) {
-			draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
-			var _w  = sc_node_content.surface_w;
-			var _h  = ui(16);
-			var yy  = _y;
-			var _lh = line_get_height(f_p2);
+
+	sc_node_content = new scrollPane(w - padding * 2 - ui(320) - ui(16), h - padding * 2 - ui(16), function(_y, _m) {
+		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
+		var _w  = sc_node_content.surface_w;
+		var _h  = ui(16);
+		var yy  = _y;
+		var _lh = line_get_height(f_p2);
+		
+		for (var i = 0, n = array_length(rawNodes); i < n; i++) {
+			var _r    = rawNodes[i];
+			var _n    = _r.node;
+			var _name = _n.getFullName();
+			var _nd   = nodes[i];
 			
-			for (var i = 0, n = array_length(rawNodes); i < n; i++) {
-				var _r    = rawNodes[i];
-				var _n    = _r.node;
-				var _name = _n.getFullName();
-				var _nd   = nodes[i];
+			var _bw = _w;
+			var _bh = _lh + ui(4);
+			
+			var _hv = pHOVER && point_in_rectangle(_m[0], _m[1], _bw - ui(24), yy, _bw, yy + _bh);
+			if(_hv) sc_node_content.hover_content = true;
+			var _cc = _hv? COLORS.panel_inspector_group_hover : COLORS.panel_inspector_group_bg;
+			draw_sprite_stretched_ext(THEME.box_r5_clr, _hv, _bw - ui(24), yy, ui(24), _bh, _cc);
+			draw_sprite_ui(THEME.arrow, 1, _bw - ui(12), yy + _bh / 2, 1, 1, 0, outputNode == i? COLORS._main_value_negative : COLORS._main_icon_dark)
+			if(mouse_press(mb_left, _hv)) outputNode = outputNode == i? noone : i;
+			_bw -= ui(28);
+			
+			var _hv = pHOVER && point_in_rectangle(_m[0], _m[1], _bw - ui(24), yy, _bw, yy + _bh);
+			if(_hv) sc_node_content.hover_content = true;
+			var _cc = _hv? COLORS.panel_inspector_group_hover : COLORS.panel_inspector_group_bg;
+			draw_sprite_stretched_ext(THEME.box_r5_clr, _hv, _bw - ui(24), yy, ui(24), _bh, _cc);
+			draw_sprite_ui(THEME.arrow, 3, _bw - ui(12), yy + _bh / 2, 1, 1, 0, inputNode == i? COLORS._main_value_positive : COLORS._main_icon_dark)
+			if(mouse_press(mb_left, _hv)) inputNode = inputNode == i? noone : i;
+			_bw -= ui(28);
+			
+			var _hv = pHOVER && point_in_rectangle(_m[0], _m[1], 0, yy, _bw, yy + _bh);
+			if(_hv) sc_node_content.hover_content = true;
+			var _cc = _hv? COLORS.panel_inspector_group_hover : COLORS.panel_inspector_group_bg;
+			draw_sprite_stretched_ext(THEME.box_r5_clr, _hv, 0, yy, _bw, _bh, _cc);
+			
+			draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text);
+			draw_text_add(ui(8), yy + ui(2), _name);
+			
+			if(mouse_press(mb_left, _hv)) _r.expanded = !_r.expanded;
+			
+			yy += _bh;
+			_h += _bh;
+			
+			if(_r.expanded) {
+				var _val = _nd.setValues;
 				
-				var _hv = pHOVER && point_in_rectangle(_m[0], _m[1], 0, yy, _w, yy + _lh + ui(4));
-				
-				if(_hv) sc_node_content.hover_content = true;
-				draw_sprite_stretched_ext(THEME.box_r5_clr, _hv, 0, yy, _w, _lh + ui(4), CDEF.main_grey);
-				
-				draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text);
-				draw_text_add(ui(8), yy + ui(2), _name);
-				
-				if(mouse_press(mb_left, _hv)) 
-					_r.expanded = !_r.expanded;
-				
-				yy += _lh + ui(4);
-				_h += _lh + ui(4);
-				
-				if(_r.expanded) {
-					var _val = _nd.setValues;
+				for(var j = 0; j < array_length(_n.inputs); j++) {
+					var _in   = _n.inputs[j];
+					if(!value_type_direct_settable(_in.type)) continue;
 					
-					for(var j = 0; j < array_length(_n.inputs); j++) {
-						var _in   = _n.inputs[j];
-						if(!value_type_direct_settable(_in.type)) continue;
-						
-						var _vali = _val[$ j];
-						var _ttg  = false;
-						
-						var _bx = ui(8 + 12);
-						var _by = yy + _lh / 2;
-						var _tg = struct_has(_vali, "value"); _ttg = _ttg || _tg;
+					var _vali = _val[$ j];
+					var _ttg  = false;
+					
+					var _bx = ui(8 + 12);
+					var _by = yy + _lh / 2;
+					var _tg = struct_has(_vali, "value"); _ttg = _ttg || _tg;
+					var _hv = pHOVER && point_in_circle(_m[0], _m[1], _bx, _by, ui(8));
+					if(_hv) {
+						TOOLTIP = "Save value";
+						sc_node_content.hover_content = true;
+					}
+					
+					draw_sprite_ui(THEME.circle_toggle_8, _tg, _bx, _by, 1, 1, 0, _tg? c_white : COLORS._main_icon, .5 + .5 * (_hv || _tg));
+					if(mouse_press(mb_left, _hv)) {
+						if(_tg) struct_remove(_vali, "value");
+						else    _vali[$ "value"] = _in.getValue();
+					}
+					_bx += ui(12);
+					
+					if(_in.expUse) {
+						var _tg = struct_has(_vali, "expression"); _ttg = _ttg || _tg;
 						var _hv = pHOVER && point_in_circle(_m[0], _m[1], _bx, _by, ui(8));
 						if(_hv) {
-							TOOLTIP = "Save value";
+							TOOLTIP = "Save expression";
 							sc_node_content.hover_content = true;
 						}
 						
 						draw_sprite_ui(THEME.circle_toggle_8, _tg, _bx, _by, 1, 1, 0, _tg? c_white : COLORS._main_icon, .5 + .5 * (_hv || _tg));
 						if(mouse_press(mb_left, _hv)) {
-							if(_tg) struct_remove(_vali, "value");
-							else    _vali[$ "value"] = _in.getValue();
+							if(_tg) struct_remove(_vali, "expression");
+							else    _vali[$ "expression"] = _in.expression;
 						}
-						_bx += ui(12);
-						
-						if(_in.expUse) {
-							var _tg = struct_has(_vali, "expression"); _ttg = _ttg || _tg;
-							var _hv = pHOVER && point_in_circle(_m[0], _m[1], _bx, _by, ui(8));
-							if(_hv) {
-								TOOLTIP = "Save expression";
-								sc_node_content.hover_content = true;
-							}
-							
-							draw_sprite_ui(THEME.circle_toggle_8, _tg, _bx, _by, 1, 1, 0, _tg? c_white : COLORS._main_icon, .5 + .5 * (_hv || _tg));
-							if(mouse_press(mb_left, _hv)) {
-								if(_tg) struct_remove(_vali, "expression");
-								else    _vali[$ "expression"] = _in.expression;
-							}
-						}
-						_bx += ui(12);
-						
-						if(_in.unit.reference != noone) {
-							var _tg = struct_has(_vali, "unit"); _ttg = _ttg || _tg;
-							var _hv = pHOVER && point_in_circle(_m[0], _m[1], _bx, _by, ui(8));
-							if(_hv) {
-								TOOLTIP = "Save unit";
-								sc_node_content.hover_content = true;
-							}
-							
-							draw_sprite_ui(THEME.circle_toggle_8, _tg, _bx, _by, 1, 1, 0, _tg? c_white : COLORS._main_icon, .5 + .5 * (_hv || _tg));
-							if(mouse_press(mb_left, _hv)) {
-								if(_tg) struct_remove(_vali, "unit");
-								else    _vali[$ "unit"] = _in.unit.mode;
-							}
-						}
-						_bx += ui(12);
-						
-						draw_set_text(f_p2, fa_left, fa_top, _ttg? c_white : COLORS._main_text_sub);
-						draw_text_add(_bx, yy, _in.name);
-						
-						yy += _lh;
-						_h += _lh;
 					}
+					_bx += ui(12);
+					
+					if(_in.unit.reference != noone) {
+						var _tg = struct_has(_vali, "unit"); _ttg = _ttg || _tg;
+						var _hv = pHOVER && point_in_circle(_m[0], _m[1], _bx, _by, ui(8));
+						if(_hv) {
+							TOOLTIP = "Save unit";
+							sc_node_content.hover_content = true;
+						}
+						
+						draw_sprite_ui(THEME.circle_toggle_8, _tg, _bx, _by, 1, 1, 0, _tg? c_white : COLORS._main_icon, .5 + .5 * (_hv || _tg));
+						if(mouse_press(mb_left, _hv)) {
+							if(_tg) struct_remove(_vali, "unit");
+							else    _vali[$ "unit"] = _in.unit.mode;
+						}
+					}
+					_bx += ui(12);
+					
+					draw_set_text(f_p2, fa_left, fa_top, _ttg? c_white : COLORS._main_text_sub);
+					draw_text_add(_bx, yy, _in.name);
+					
+					yy += _lh;
+					_h += _lh;
 				}
-				
-				yy += ui(4);
-				_h += ui(4);
 			}
 			
-			return _h;
-		})
-	#endregion
-	
+			yy += ui(4);
+			_h += ui(4);
+		}
+		
+		return _h;
+	});
+
 	function setNodes(_nodes) { 
 		rawNodes    = [];
 		nodes       = [];
 		connections = [];
 		
-		if(array_empty(_nodes)) {
-			close();
-			return;
-		}
+		if(array_empty(_nodes)) { close(); return; }
 		
 		var _nmap = {};
 		var _minx = _nodes[0].x;
