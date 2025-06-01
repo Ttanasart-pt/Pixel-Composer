@@ -24,16 +24,17 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	////- =Surfaces
 	
-	newInput( 0, nodeValue_Surface(     "Surface In"));
+	newInput( 0, nodeValue_Surface(     "Surface In" ));
 	newInput( 1, nodeValue_Dimension());
 	newInput(15, nodeValue_Int(         "Array", 0, @"What to do when input array of surface.
 - Spread: Create Array of output each scattering single surface.
 - Mixed: Create single output scattering multiple images."))
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Spread output", "Index", "Random", "Data", "Texture" ]);
-	newInput(24, nodeValue_Int(         "Array Indices", [])).setArrayDepth(1);
-	newInput(25, nodeValue_Surface(     "Array Texture"));
-	newInput(26, nodeValue_Range(       "Animated Array", [ 0, 0 ], { linked : true }));
-	newInput(27, nodeValue_Enum_Scroll( "Animated Array End",  0, [ "Loop", "Ping Pong", "Hide" ]));
+		
+	newInput(24, nodeValue_Int(         "Array Indices", [] )).setArrayDepth(1);
+	newInput(25, nodeValue_Surface(     "Array Texture" ));
+	newInput(26, nodeValue_Range(       "Animated Array",    [0,0], { linked : true } ));
+	newInput(27, nodeValue_Enum_Scroll( "Animated Array End", 0, [ "Loop", "Ping Pong", "Hide" ] ));
 	
 	////- =Scatter
 	
