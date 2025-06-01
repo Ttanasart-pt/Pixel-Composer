@@ -136,9 +136,9 @@ draggable = true;
 		
 	#endregion
 	
-	var pl_x = content_x + ui(60);
-	var pl_y = dialog_y + ui(54);
-	var pl_w = content_w - ui(154);
+	var pl_x = content_x + ui(92);
+	var pl_y = dialog_y  + ui(54);
+	var pl_w = content_w - ui(92 + 94);
 	var hh   = ui(24);
 	
 	var pd   = ui(0);
@@ -362,10 +362,12 @@ draggable = true;
 	
 	var bx   = content_x + content_w - ui(50);
 	var by   = pl_y - ui(2);
+	var bs   = ui(28);
+	var mm   = mouse_ui;
 	var _foc = interactable && sFOCUS;
 	
 	if(array_length(palette) > 1) {
-		if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, _foc, "", THEME.minus_16) == 2) {
+		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mm, sHOVER, _foc, "", THEME.minus_16) == 2) {
 			array_delete(palette, index_selecting[0], index_selecting[1]);
 			if(array_empty(palette)) palette = [ ca_black ];
 			index_selecting = [ 0, 0 ];
@@ -377,7 +379,7 @@ draggable = true;
 		draw_sprite_ui_uniform(THEME.minus, 0, bx + ui(14), by + ui(14), 1, COLORS._main_icon, 0.5);
 	
 	bx -= ui(32);
-	if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, _foc, "", THEME.add_16) == 2) {
+	if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mm, sHOVER, _foc, "", THEME.add_16) == 2) {
 		index_selecting = [ array_length(palette), 1 ];
 		palette[array_length(palette)] = ca_black;
 		
@@ -386,7 +388,8 @@ draggable = true;
 	}
 	
 	bx = content_x + ui(18);
-	if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, _foc, __txtx("palette_editor_load", "Load palette file") + " (.hex)", THEME.file) == 2) {
+	var _txt = __txtx("palette_editor_load", "Load Palette File") + " (.hex)";
+	if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mm, sHOVER, _foc, _txt, THEME.file_load) == 2) {
 		var path = get_open_filename_pxc("HEX palette|*.hex", "");
 		key_release();
 		
@@ -397,7 +400,22 @@ draggable = true;
 			onApply(palette);
 		}
 	}
-	draw_sprite_ui_uniform(THEME.file, 0, bx + ui(14), by + ui(14), 1, COLORS._main_icon);
+	
+	bx += bs + ui(4);
+	var _txt = __txtx("palette_editor_save", "Save Palette File") + " (.hex)";
+	if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mm, sHOVER, _foc, _txt, THEME.file_save) == 2) {
+		var path = get_save_filename_pxc("HEX palette|*.hex", "");
+		key_release();
+		
+		if(path != "") {
+			path = filename_ext_verify(path, ".hex");
+			var file = file_text_open_write(path);
+			for(var i = 0; i < array_length(palette); i++)
+				file_text_write_string(file,  $"{color_get_hex(palette[i])}\n");
+			file_text_close(file);
+		}
+	}
+	
 #endregion
 
 #region selector
