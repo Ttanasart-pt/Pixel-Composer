@@ -60,6 +60,7 @@ function Panel_Collection() : PanelContent() constructor {
 	PANEL_COLLECTION = self;
 	
 	#region ++++++++++++ Actions ++++++++++++
+		
 		function replace() { 
 			if(_menu_node == noone) return;
 			
@@ -244,7 +245,7 @@ function Panel_Collection() : PanelContent() constructor {
 						
 						if(is_string(_node))				      continue;
 						if(ds_map_exists(search_map, _node))      continue;
-						if(!is_instanceof(_node, NodeObject))     continue;
+						if(!is(_node, NodeObject))     continue;
 						if(_node.patreon && !IS_PATREON)          continue;
 						if(_node.deprecated)					  continue;
 						
@@ -425,7 +426,12 @@ function Panel_Collection() : PanelContent() constructor {
 					
 					if(PREFERENCES.collection_label) {
 						draw_set_text(f_p3, fa_center, fa_top, COLORS._main_text_inner);
-						var _txtH = draw_text_ext_add(_boxx + grid_size / 2, yy + grid_size + ui(4), _node.name, -1, grid_width + ui(16), 1, true);
+						
+						var _tx = _boxx + grid_size / 2;
+						var _ty = yy + grid_size + ui(4);
+						var _tw = grid_width + ui(16);
+						
+						var _txtH = draw_text_ext_add(_tx, _ty, _node.name, -1, _tw, 1, PREFERENCES.collection_name_force_cut);
 						name_height = max(name_height, _txtH + 8);
 						
 					} else 
@@ -550,7 +556,7 @@ function Panel_Collection() : PanelContent() constructor {
 	}
 	
 	function rightClickNode(node) {
-		if(!is_instanceof(node, NodeObject)) return;
+		if(!is(node, NodeObject)) return;
 		
 		node_menu_selecting = node;
 		var fav  = struct_exists(global.FAV_NODES, node.node);
@@ -650,7 +656,7 @@ function Panel_Collection() : PanelContent() constructor {
 		for(var index = 0; index < node_count; index++) {
 			var _node = _list[| index];
 			
-			if(!is_instanceof(_node, NodeObject)) continue;
+			if(!is(_node, NodeObject)) continue;
 			if(_node.patreon && !IS_PATREON)      continue;
 			if(_node.deprecated)                  continue;
 			

@@ -10,9 +10,15 @@ function Panel_Collections_Setting() : Panel_Linear_Setting() constructor {
 		),
 		
 		new __Panel_Linear_Setting_Item_Preference(
-			__txt("Show label"),
+			__txt("Show Label"),
 			"collection_label",
 			new checkBox(function() /*=>*/ { PREFERENCES.collection_label = !PREFERENCES.collection_label; PREF_SAVE(); }),
+		),
+		
+		new __Panel_Linear_Setting_Item_Preference(
+			__txt("Force Cut"),
+			"collection_name_force_cut",
+			new checkBox(function() /*=>*/ { PREFERENCES.collection_name_force_cut = !PREFERENCES.collection_name_force_cut; PREF_SAVE(); }),
 		),
 		
 		new __Panel_Linear_Setting_Item_Preference(

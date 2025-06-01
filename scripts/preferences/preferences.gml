@@ -107,6 +107,7 @@
 		
 		PREFERENCES.collection_animated				= true;
 		PREFERENCES.collection_label				= true;
+		PREFERENCES.collection_name_force_cut       = true;
 		PREFERENCES.collection_preview_speed		= 60;
 		PREFERENCES.collection_scale				= 1;
 		
