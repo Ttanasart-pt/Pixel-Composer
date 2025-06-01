@@ -5,15 +5,10 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	onSurfaceSize = function() /*=>*/ {return getInputData(input_len, DEF_SURF)};
 	
 	newInput(input_len + 0, nodeValue_Dimension());
-		
 	newInput(input_len + 1, nodeValue_Bool("Round position", true, "Round position to the closest integer value to avoid jittering."));
-	
 	newInput(input_len + 2, nodeValue_Enum_Scroll("Blend mode",  0 , [ "Normal", "Alpha", "Additive", "Maximum" ]));
-	
 	newInput(input_len + 3, nodeValue_Surface("Background"));
-	
 	newInput(input_len + 4, nodeValue_Enum_Button("Render Type",  PARTICLE_RENDER_TYPE.surface , [ "Surface", "Line" ]));
-	
 	newInput(input_len + 5, nodeValue_Int("Line life", 4 ));
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));

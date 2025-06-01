@@ -443,10 +443,7 @@ function __part(_node) : __particleObject() constructor {
 					break;
 					
 				case ANIM_END_ACTION.destroy:
-					if(ind >= anim_len) {
-						kill();
-						return;
-					}
+					if(ind >= anim_len) { kill(); return; }
 					
 					ss = surf[ind];
 					break;

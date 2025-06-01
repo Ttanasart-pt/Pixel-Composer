@@ -1,21 +1,11 @@
 function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
-	name	= "IsoSurf";
+	name = "IsoSurf";
 	
-	newInput(0, nodeValue_Int("Direction", 4))
-		.setValidator(VV_min(1));
-	
-	newInput(1, nodeValue_Surface("Surfaces"))
-		.setVisible(true, true)
-		.setArrayDepth(1);
-	
-	newInput(2, nodeValue_Rotation("Angle Shift", 0));
-	
-	newInput(3, nodeValue_Float("Angle Split", [ 0 * 90, 1 * 90, 2 * 90, 3 * 90 ]))
-		.setArrayDynamic()
-		.setArrayDepth(1);
-	
-	newInput(4, nodeValue_Vector("Offsets"))
-		.setArrayDepth(1);
+	newInput(0, nodeValue_Int(      "Direction", 4 )).setValidator(VV_min(1));
+	newInput(1, nodeValue_Surface(  "Surfaces" )).setVisible(true, true).setArrayDepth(1);
+	newInput(2, nodeValue_Rotation( "Angle Shift", 0 ));
+	newInput(3, nodeValue_Float(    "Angle Split", [ 0 * 90, 1 * 90, 2 * 90, 3 * 90 ])).setArrayDynamic().setArrayDepth(1);
+	newInput(4, nodeValue_Vector(   "Offsets" )).setArrayDepth(1);
 	
 	newOutput(0, nodeValue_Output("IsoSurf", VALUE_TYPE.dynaSurface, noone));
 	
@@ -25,7 +15,7 @@ function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	drag_sv = 0;
 	drag_sa = 0;
 	
-	angle_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
+	angle_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		var hh     = ui(240);
 		var _surfs = getInputData(1);
 		var _angle = getInputData(3);
@@ -34,18 +24,20 @@ function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _ky = _y + hh / 2;
 		
 		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, hh, COLORS.node_composite_bg_blend, 1);
-		// draw_sprite(THEME.rotator_bg, 0, _kx, _ky);
+		draw_circle_ui(_kx, _ky, ui(24), .05, COLORS._main_icon, .5);
 		
 		var _khover = noone;
 		
 		for( var i = 0, n = array_length(_angle); i < n; i++ ) {
 			var _ang = _angle[i];
 			
-			var _knx = _kx + lengthdir_x(ui(28), _ang);
-			var _kny = _ky + lengthdir_y(ui(28), _ang);
+			var _knx = _kx + lengthdir_x(ui(22), _ang);
+			var _kny = _ky + lengthdir_y(ui(22), _ang);
 			var _ind = (knob_dragging == noone && i == knob_hover) || knob_dragging == i;
-			var _cc  = knob_dragging == i? COLORS._main_accent : c_white;
-			// draw_sprite_ext(THEME.rotator_knob, _ind, _knx, _kny, 1, 1, 0, _cc, 1);
+			var _cc  = knob_dragging == i? COLORS._main_accent : COLORS._main_icon;
+			
+			draw_circle_ui(_knx, _kny, ui(4), 1, _cc);
+			
 			if(point_in_circle(_m[0], _m[1], _knx, _kny, ui(10)))
 				_khover = i;
 			
@@ -99,20 +91,20 @@ function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		}
 		
 		return hh;
-	}); #endregion
+	});
 	
-	offsetRenderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
-		var hh = ui(160);
+	offsetRenderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		var _surfs = getInputData(1);
 		var _offs  = getInputData(4);
 		
-		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, hh, COLORS.node_composite_bg_blend, 1);
-		
-		if(!is_array(_surfs) || !is_array(_offs)) return hh;
-		if(knob_select == noone) return hh;
+		if(!is_array(_surfs) || !is_array(_offs)) return 0;
+		if(knob_select == noone) return 0;
 		
 		var surf = array_safe_get(_surfs, knob_select);
-		if(!is_surface(surf)) return hh;
+		if(!is_surface(surf)) return 0;
+		
+		var hh = ui(160);
+		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, hh, COLORS.node_composite_bg_blend, 1);
 		
 		var amo  = array_length(_surfs);
 		var _off = array_safe_get(_offs, knob_select);
@@ -163,11 +155,11 @@ function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		draw_line_width(_ox, _oy - 4, _ox, _oy + 4, 2);
 		
 		return hh;
-	}); #endregion
+	});
 	
 	input_display_list = [
-		["Iso",		false], 0, 2, angle_renderer, offsetRenderer, 
-		["Data",	false], 1, 4, 
+		["Iso",  false], 0, 2, angle_renderer, offsetRenderer, 
+		["Data", false], 1, 4, 
 	];
 	
 	static resetOffset = function() {

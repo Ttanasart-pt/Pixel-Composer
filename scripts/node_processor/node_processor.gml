@@ -188,7 +188,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				data = processData(_out, inputs_data, 0);
 				if(data == noone) return;
 				
-				for(var i = 0; i < _os; i++) outputs[i].setValue(data[i]);
+				for(var i = 0; i < min(_os, array_length(data)); i++) outputs[i].setValue(data[i]);
 			}
 			
 			return;
