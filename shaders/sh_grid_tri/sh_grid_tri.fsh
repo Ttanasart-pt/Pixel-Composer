@@ -230,8 +230,8 @@ void main() { #region
 	_pos.x = pos.x * ratio * cos(ang) - pos.y * sin(ang);
 	_pos.y = pos.x * ratio * sin(ang) + pos.y * cos(ang);
 	
-	vec3  tri   = triGrid(_pos);
-	float dist  = max(0., tri.z);
+	vec3  tri  = triGrid(_pos);
+	float dist = max(0., tri.z);
 	vec4 colr;
 	
 	if(mode == 1) {
@@ -241,7 +241,8 @@ void main() { #region
 	}
 	
 	if(mode == 0) {
-		vec2 uv = fract(tri.xy / sca);
+		vec2 uv = tri.xy / sca / vec2(dimension.x / dimension.y, c30);
+		     uv = fract(fract(uv) + 1.);
 		colr = gradientEval(random(uv));
 		
 	} else if(mode == 2) {

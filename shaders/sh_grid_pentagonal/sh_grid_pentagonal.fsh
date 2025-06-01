@@ -211,34 +211,34 @@ vec2 pentacoords(vec2 uv){
         vec2 ruv = mat2(-r3, -1., 1., -r3) * (uv - r3 / 2.0) * 0.25; //change of basis to "windmill" basis
         cuv *= r3;
 		
-        if (ruv.x < 0.0 && ruv.y < 0.0){
+        if (ruv.x < 0.0 && ruv.y < 0.0)
             return cuv + vec2(r3, (3.0 * r3 - 3.0) / 2.0); //right
 			
-        } else if (ruv.x > 0.0 && ruv.y < 0.0){
+        else if (ruv.x > 0.0 && ruv.y < 0.0)
             return cuv + vec2((3.0 - r3) / 2.0, r3); //up
 			
-        } else if (ruv.x < 0.0 && ruv.y > 0.0){
+        else if (ruv.x < 0.0 && ruv.y > 0.0)
             return cuv + vec2((3.0 * r3 - 3.0) / 2.0, 0.); //down
 			
-        } else {
+        else
             return cuv + vec2(0., (3.0 - r3) / 2.0); //left
-        }
+        
     } else {
         cuv *= r3;
         vec2 ruv = mat2(r3, 1., 1., -r3) * (uv - r3 / 2.0) * 0.25; //change of basis to "anti-windmill" basis
 		
-        if (ruv.x < 0.0 && ruv.y < 0.0) {
+        if (ruv.x < 0.0 && ruv.y < 0.0)
             return cuv + vec2(r3, (3.0 * r3 - 3.0) / 2.0) - vec2(r3, 0.); //up
 			
-        } else if (ruv.x > 0.0 && ruv.y < 0.0) {
+        else if (ruv.x > 0.0 && ruv.y < 0.0)
             return cuv + vec2((3.0 * r3 - 3.0) / 2.0, 0.) + vec2(0., r3); //left
 			
-        } else if (ruv.x < 0.0 && ruv.y > 0.0) {
-            return cuv + vec2((3.0 - r3) / 2.0, r3) - vec2(0. , r3); //right
+        else if (ruv.x < 0.0 && ruv.y > 0.0)
+            return cuv + vec2((3.0 - r3) / 2.0, r3) - vec2(0., r3); //right
 			
-        } else {
+        else
             return cuv + vec2(0., (3.0 - r3) / 2.0) + vec2(r3, 0); //down
-        }
+        
     }
 }
 
@@ -266,9 +266,8 @@ void main() {
 		wid -= 0.05;
 	#endregion
 	
-	vec2  pos   = (v_vTexcoord - position) * sca;
+	vec2  pos   = (v_vTexcoord - position) * sca, _pos;
 	float ratio = dimension.x / dimension.y;
-	vec2 _pos;
 	_pos.x = pos.x * ratio * cos(ang) - pos.y * sin(ang);
 	_pos.y = pos.x * ratio * sin(ang) + pos.y * cos(ang);
 	
@@ -277,14 +276,15 @@ void main() {
 	vec4 colr;
 	
 	if(mode == 0) {
-		colr = gradientEval(random(coord));
+		vec2 coordw = fract(fract(coord / sca) + 1.);
+		colr = gradientEval(random(coordw));
 		
 	} else if(mode == 1) {
 		dist = (dist - level.x) / (level.y - level.x);
 		colr = vec4(vec3(dist), 1.);
 		
 	} else if(mode == 2) {
-		vec2 uv = fract(coord / sca);
+		vec2 uv = fract(fract(coord / sca) + 1.);
 		colr = texture2D( gm_BaseTexture, uv );
 		
 	}

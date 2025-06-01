@@ -248,9 +248,8 @@ void main() {
 	}
 	
 	if(mode == 0) {
-		vec2 uv = abs(hc.zw) / sca;
-		uv.x = fract(uv.x);
-		uv.y = clamp(uv.y, 0., 1.);
+		vec2 uv = hc.zw / sca;
+		     uv = fract(fract(uv) + 1.);
 		
 		float tileY = floor(sca.y * 4. / 3.);
 		uv.y = mod(floor(uv.y * (tileY + 1.)), tileY) / tileY;
