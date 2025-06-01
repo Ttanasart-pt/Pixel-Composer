@@ -18,9 +18,10 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 	show_scroll   = true;
 	scroll_resize = true;
 	
-	scroll_y		= 0;
-	scroll_y_raw	= 0;
-	scroll_y_to		= 0;
+	scroll_y	 = 0;
+	scroll_y_raw = 0;
+	scroll_y_to	 = 0;
+	scroll_wait  = 0;
 	
 	scroll_step = 64;
 	scroll_lock = false;
@@ -87,9 +88,13 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		
 		/// Scrolling
 		
-		scroll_y_to  = clamp(scroll_y_to, -content_h, 0);
-		scroll_y_raw = scroll_inertia > 0? lerp_float(scroll_y_raw, scroll_y_to, scroll_inertia) : scroll_y_to;
-		scroll_y	 = round(scroll_y_raw);
+		if(scroll_wait) scroll_wait--;
+		else {
+			scroll_y_to  = clamp(scroll_y_to, -content_h, 0);
+			scroll_y_raw = scroll_inertia > 0? lerp_float(scroll_y_raw, scroll_y_to, scroll_inertia) : scroll_y_to;
+			scroll_y	 = round(scroll_y_raw);
+		}
+		
 		draw_surface_safe(surface, x, y);
 		
 		if(hover && !scroll_lock && !key_mod_press(SHIFT) && !key_mod_press(CTRL) && MOUSE_WHEEL != 0) 

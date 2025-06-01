@@ -264,6 +264,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		w_hovering  = false;
 		w_hoverable = false;
 		w_active    = false;
+		
+		inspector_scroll   = 0;
+		inspector_collapse = {};
 	#endregion
 	
 	#region ---- Rendering ------
@@ -2596,6 +2599,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(!renderActive)  _map.render         = renderActive;
 			if(!previewable)   _map.previewable    = previewable;
 			if(show_parameter) _map.show_parameter = show_parameter;
+			
+			_map.insp_scr = inspector_scroll;
+			_map.insp_col = variable_clone(inspector_collapse);
 		}
 		
 		var _attr = attributeSerialize();
@@ -2693,6 +2699,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			isTool         = load_map[$ "tool"]           ?? false;
 			show_parameter = load_map[$ "show_parameter"] ?? false;
 			ictx           = load_map[$ "ictx"]           ?? "";
+			
+			inspector_scroll = load_map[$ "insp_scr"] ?? inspector_scroll;
+			if(struct_has(load_map, "insp_col")) inspector_collapse = variable_clone(load_map[$ "insp_col"]);
+			
 		}
 		
 		if(struct_has(load_map, "attri")) {

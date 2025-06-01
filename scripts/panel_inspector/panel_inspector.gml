@@ -266,20 +266,28 @@ function Panel_Inspector() : PanelContent() constructor {
         static nodeExpandAll = function(node) {
             if(node.input_display_list == -1) return;
             
-            var dlist = node.input_display_list;
+            var  dlist  = node.input_display_list;
+            var _colMap = node.inspector_collapse;
+            
             for( var i = 0, n = array_length(dlist); i < n; i++ ) {
                 if(!is_array(dlist[i])) continue;
+                
                 dlist[i][@ 1] = false;
+                _colMap[$ dlist[i][@ 0]] = false;
             }
         }
         
         static nodeCollapseAll = function(node) {
             if(node.input_display_list == -1) return;
             
-            var dlist = node.input_display_list;
+            var  dlist  = node.input_display_list;
+            var _colMap = node.inspector_collapse;
+            
             for( var i = 0, n = array_length(dlist); i < n; i++ ) {
                 if(!is_array(dlist[i])) continue;
+                
                 dlist[i][@ 1] = true;
+                _colMap[$ dlist[i][@ 0]] = true;
             }
         }
         
@@ -346,13 +354,19 @@ function Panel_Inspector() : PanelContent() constructor {
         if(locked) return;
         
         inspecting = _inspecting;
-        locked    = locked || _lock;
+        locked     = locked || _lock;
         focusable  = _focus;
         
-        if(inspecting != noone)
-            inspecting.onInspect();
-        contentPane.scroll_y    = 0;
-        contentPane.scroll_y_to = 0;
+        if(inspecting != noone) {
+        	inspecting.onInspect();
+        	contentPane.scroll_y_to = inspecting.inspector_scroll;
+        	
+        } else 
+        	contentPane.scroll_y_to = 0;
+        
+        contentPane.scroll_y     = contentPane.scroll_y_to;
+        contentPane.scroll_y_raw = contentPane.scroll_y_to;
+        contentPane.scroll_wait  = 2;
             
         picker_index = 0;
     }
@@ -763,7 +777,8 @@ function Panel_Inspector() : PanelContent() constructor {
         var con_w  = contentPane.surface_w - ui(4); 
         var _hover = pHOVER && contentPane.hover;
         
-        _inspecting.inspecting = true;
+        _inspecting.inspecting       = true;
+        _inspecting.inspector_scroll = contentPane.scroll_y_to;
         
         //tb_prop_filter.register(contentPane);
         //tb_prop_filter.setFocusHover(pHOVER, pFOCUS);
@@ -884,9 +899,10 @@ function Panel_Inspector() : PanelContent() constructor {
         var amo     = inspectGroup == 0? amoIn + 1 + amoOut + amoMeta : amoIn;
         
         var color_picker_index = 0;
-        var pickers            = [];
-        var _colsp             = false;
-        var _cAll = 0;
+        var pickers = [];
+        var _colsp  = false;
+        var _colMap = _inspecting.inspector_collapse;
+        var _cAll   = 0;
         
         for(var i = 0; i < amo; i++) {
             var yy = hh + _y;
@@ -983,16 +999,13 @@ function Panel_Inspector() : PanelContent() constructor {
                 if(!is_undefined(_wdh)) hh += _wdh + ui(4);
                 continue;
                 
-            } else if(is_array(jun)) {                                    // LABEL
+            } else if(is_array(jun)) { // Section
                 var pad = i && _colsp == false? ui(4) : 0
                 _colsp  = false;
                 yy += pad;
                 
-                // draw_set_color(COLORS.panel_bg_clear_inner); // clear content below before drawing, animated section collapse, maybe?
-                // draw_rectangle(0, yy, w, h, false);
-                
                 var txt  = __txt(jun[0]);
-                var coll = jun[1] && filter_text == "";
+                var coll = _colMap[$ jun[0]] ?? jun[1];
                 
                 var lbx = 0;
                 var lbh = viewMode? ui(32) : ui(26);
@@ -1009,8 +1022,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 }
                 
                 var righ = array_safe_get_fast(jun, 3, noone);
-                if(righ != noone)
-                    lbw -= ui(32);
+                if(righ != noone) lbw -= ui(32);
                 
                 if(_hover && point_in_rectangle(_m[0], _m[1], lbx, yy, lbx + lbw, yy + lbh)) {
                     contentPane.hover_content = true;
@@ -1018,12 +1030,14 @@ function Panel_Inspector() : PanelContent() constructor {
                 	
                 	if(pFOCUS) {
 	                		if(DOUBLE_CLICK) _cAll = jun[@ 1]? -1 : 1;
-                       else if(mouse_press(mb_left)) jun[@ 1] = !coll;
+                       else if(mouse_press(mb_left)) { jun[@ 1] = !coll; coll = !coll; }
 		               else if(mouse_press(mb_right, pFOCUS)) menuCall("inspector_group_menu", group_menu, 0, 0, fa_left);
                 	}
                 } else
                     draw_sprite_stretched_ext(THEME.box_r5_clr, 0, lbx, yy, con_w - lbx, lbh, COLORS.panel_inspector_group_bg, 1);
             
+                _colMap[$ jun[0]] = coll;
+                
                 if(righ != noone) {
                     var _bx = lbx + lbw;
                     var _by = yy;
@@ -1089,7 +1103,6 @@ function Panel_Inspector() : PanelContent() constructor {
                 }
                 
                 continue;
-                
             }
         
             if(!is(jun, NodeValue)) continue;
@@ -1182,8 +1195,8 @@ function Panel_Inspector() : PanelContent() constructor {
             } 
         }
         
-        	 if(_cAll ==  1) { section_expand_all();   }
-		else if(_cAll == -1) { section_collapse_all(); }
+        	 if(_cAll ==  1) section_expand_all();  
+		else if(_cAll == -1) section_collapse_all();
 		
         
         if(MESSAGE != noone && MESSAGE.type == "Color") {
