@@ -9,22 +9,21 @@ function Node_Path_Reverse(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	function _reversePath() constructor {
 		curr_path  = noone;
-		is_path    = false;
 		
 		static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 			if(curr_path && struct_has(curr_path, "drawOverlay")) 
 				curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		}
 		
-		static getLineCount    = function(       ) /*=>*/ {return is_path? curr_path.getLineCount()                    : 1};
-		static getSegmentCount = function(ind = 0) /*=>*/ {return is_path? curr_path.getSegmentCount(ind)              : 0};
-		static getLength       = function(ind = 0) /*=>*/ {return is_path? curr_path.getLength(ind)                    : 0};
-		static getAccuLength   = function(ind = 0) /*=>*/ {return is_path? array_reverse(curr_path.getAccuLength(ind)) : []};
-		static getBoundary     = function(ind = 0) /*=>*/ {return is_path? curr_path.getBoundary(ind)                  : new BoundingBox(0, 0, 1, 1)};
+		static getLineCount    = function(       ) /*=>*/ {return is_path(curr_path)? curr_path.getLineCount()                    : 1};
+		static getSegmentCount = function(ind = 0) /*=>*/ {return is_path(curr_path)? curr_path.getSegmentCount(ind)              : 0};
+		static getLength       = function(ind = 0) /*=>*/ {return is_path(curr_path)? curr_path.getLength(ind)                    : 0};
+		static getAccuLength   = function(ind = 0) /*=>*/ {return is_path(curr_path)? array_reverse(curr_path.getAccuLength(ind)) : []};
+		static getBoundary     = function(ind = 0) /*=>*/ {return is_path(curr_path)? curr_path.getBoundary(ind)                  : new BoundingBox(0, 0, 1, 1)};
 			
 		static getPointRatio = function(_rat, ind = 0, out = undefined) {
 			if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
-			if(!is_path) return out;
+			if(!is_path(curr_path)) return out;
 			
 			return curr_path.getPointRatio(1 - _rat, ind, out);
 		}
@@ -43,8 +42,6 @@ function Node_Path_Reverse(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			_outData = new _reversePath();
 		
 		_outData.curr_path  = _data[0];
-		_outData.is_path    = _outData.curr_path != noone && struct_has(_outData.curr_path, "getPointRatio");
-		
 		return _outData;
 	}
 	

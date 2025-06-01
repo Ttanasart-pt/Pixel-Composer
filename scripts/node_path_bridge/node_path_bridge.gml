@@ -20,7 +20,6 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	cached_pos = {};
 	curr_path  = noone;
-	is_path    = false;
 	
 	curr_amount  = noone;
 	curr_smooth  = noone;
@@ -156,8 +155,7 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		curr_amount = getInputData(1);
 		curr_smooth = getInputData(2);
 		
-		is_path = curr_path != noone && struct_has(curr_path, "getPointRatio");
-		if(!is_path) return;
+		if(!is_path(curr_path)) return;
 		
 		#region bridge
 			var _lines = curr_path.getLineCount();

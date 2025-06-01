@@ -39,7 +39,6 @@ function Node_Path_Spiral(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		
 		cached_pos = {};
 		curr_path  = noone;
-		is_path    = false;
 		
 		static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 			if(curr_path && struct_has(curr_path, "drawOverlay")) 
@@ -66,12 +65,12 @@ function Node_Path_Spiral(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			}
 		}
 		
-		static getLineCount    = function(   ) /*=>*/ {return is_path? curr_path.getLineCount()     : 1};
-		static getSegmentCount = function(i=0) /*=>*/ {return is_path? curr_path.getSegmentCount(i) : 0};
-		static getBoundary     = function(i=0) /*=>*/ {return is_path? curr_path.getBoundary(i)     : new BoundingBox( 0, 0, 1, 1 )};
+		static getLineCount    = function(   ) /*=>*/ {return is_path(curr_path)? curr_path.getLineCount()     : 1};
+		static getSegmentCount = function(i=0) /*=>*/ {return is_path(curr_path)? curr_path.getSegmentCount(i) : 0};
+		static getBoundary     = function(i=0) /*=>*/ {return is_path(curr_path)? curr_path.getBoundary(i)     : new BoundingBox( 0, 0, 1, 1 )};
 		
 		static getLength = function(ind = 0) {
-			if(!is_path) return 0;
+			if(!is_path(curr_path)) return 0;
 			
 			var _fre = freq;
 			var _amp = amplitude;
@@ -88,7 +87,7 @@ function Node_Path_Spiral(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			var _amp = amplitude;
 			
 			    _fre = max(1, abs(_fre));
-			var _len = is_path? curr_path.getAccuLength(ind) : [];
+			var _len = is_path(curr_path)? curr_path.getAccuLength(ind) : [];
 			var _mul = _fre * sqrt(abs(_amp) + 1 / _fre);
 			var _lln = array_create(array_length(_len));
 			
@@ -101,7 +100,7 @@ function Node_Path_Spiral(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		static getPointRatio = function(_rat, ind = 0, out = undefined) {
 			if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
 			
-			if(!is_path) return out;
+			if(!is_path(curr_path)) return out;
 			var _cKey = $"{string_format(_rat, 0, 6)},{ind}";
 			if(struct_has(cached_pos, _cKey)) {
 				var _p     = cached_pos[$ _cKey];
@@ -162,7 +161,6 @@ function Node_Path_Spiral(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		
 		_outData.cached_pos = {};
 		_outData.curr_path  = _data[0];
-		_outData.is_path    = struct_has(_outData.curr_path, "getPointRatio");
 		
 		_outData.freq      = _data[1];
 		_outData.amplitude = _data[2];

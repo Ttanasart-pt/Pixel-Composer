@@ -155,8 +155,8 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		_outData.curr_path2 = _data[1];
 		_outData.curr_lerp  = _data[2];
 		
-		_outData.is_path1 = struct_has(_outData.curr_path1, "getPointRatio");
-		_outData.is_path2 = struct_has(_outData.curr_path2, "getPointRatio");
+		_outData.is_path1 = is_path(_outData.curr_path1, "getPointRatio");
+		_outData.is_path2 = is_path(_outData.curr_path2, "getPointRatio");
 		
 		return _outData;
 		

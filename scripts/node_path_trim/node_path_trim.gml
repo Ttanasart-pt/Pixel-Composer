@@ -13,7 +13,6 @@ function Node_Path_Trim(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	function _trimmedPath() constructor {
 		curr_path  = noone;
 		curr_range = noone;
-		is_path    = false;
 		
 		static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 			if(curr_path && struct_has(curr_path, "drawOverlay")) 
@@ -41,14 +40,14 @@ function Node_Path_Trim(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			}
 		}
 		
-		static getLineCount    = function(   ) /*=>*/ {return is_path? curr_path.getLineCount()     : 1};
-		static getSegmentCount = function(i=0) /*=>*/ {return is_path? curr_path.getSegmentCount(i) : 0};
-		static getLength       = function(i=0) /*=>*/ {return is_path? curr_path.getLength(i)       : 0};
-		static getAccuLength   = function(i=0) /*=>*/ {return is_path? curr_path.getAccuLength(i)   : []};
-		static getBoundary     = function(i=0) /*=>*/ {return is_path? curr_path.getBoundary(i)     : new BoundingBox( 0, 0, 1, 1 )};
+		static getLineCount    = function(   ) /*=>*/ {return is_path(curr_path)? curr_path.getLineCount()     : 1};
+		static getSegmentCount = function(i=0) /*=>*/ {return is_path(curr_path)? curr_path.getSegmentCount(i) : 0};
+		static getLength       = function(i=0) /*=>*/ {return is_path(curr_path)? curr_path.getLength(i)       : 0};
+		static getAccuLength   = function(i=0) /*=>*/ {return is_path(curr_path)? curr_path.getAccuLength(i)   : []};
+		static getBoundary     = function(i=0) /*=>*/ {return is_path(curr_path)? curr_path.getBoundary(i)     : new BoundingBox( 0, 0, 1, 1 )};
 			
 		static getPointRatio = function(_rat, ind = 0, out = undefined) {
-			if(!is_path) return out;
+			if(!is_path(curr_path)) return out;
 			
 			_rat = lerp(curr_range[0], curr_range[1], _rat);
 			return curr_path.getPointRatio(_rat, ind, out);
@@ -76,7 +75,6 @@ function Node_Path_Trim(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		_outData.cached_pos = {};
 		_outData.curr_path  = _path;
 		_outData.curr_range = _rang;
-		_outData.is_path    = struct_has(_outData.curr_path, "getPointRatio");
 		
 		return _outData;
 	}

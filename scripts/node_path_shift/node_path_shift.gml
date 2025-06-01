@@ -12,8 +12,6 @@ function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	cached_pos = ds_map_create();
 	
 	curr_path  = noone;
-	is_path    = false;
-	
 	curr_shift = noone;
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
@@ -43,11 +41,11 @@ function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		}
 	}
 	
-	static getLineCount    = function(       ) /*=>*/ {return is_path? curr_path.getLineCount()       : 1};
-	static getSegmentCount = function(ind = 0) /*=>*/ {return is_path? curr_path.getSegmentCount(ind) : 0};
-	static getLength       = function(ind = 0) /*=>*/ {return is_path? curr_path.getLength(ind)       : 0};
-	static getAccuLength   = function(ind = 0) /*=>*/ {return is_path? curr_path.getAccuLength(ind)   : []};
-	static getBoundary     = function(ind = 0) /*=>*/ {return is_path? curr_path.getBoundary(ind)     : new BoundingBox( 0, 0, 1, 1 )};
+	static getLineCount    = function(       ) /*=>*/ {return is_path(curr_path)? curr_path.getLineCount()       : 1};
+	static getSegmentCount = function(ind = 0) /*=>*/ {return is_path(curr_path)? curr_path.getSegmentCount(ind) : 0};
+	static getLength       = function(ind = 0) /*=>*/ {return is_path(curr_path)? curr_path.getLength(ind)       : 0};
+	static getAccuLength   = function(ind = 0) /*=>*/ {return is_path(curr_path)? curr_path.getAccuLength(ind)   : []};
+	static getBoundary     = function(ind = 0) /*=>*/ {return is_path(curr_path)? curr_path.getBoundary(ind)     : new BoundingBox( 0, 0, 1, 1 )};
 	
 	static getPointRatio = function(_rat, ind = 0, out = undefined) {
 		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
@@ -61,7 +59,7 @@ function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			return out;
 		}
 		
-		if(!is_path) return out;
+		if(!is_path(curr_path)) return out;
 		
 		var _p0 = curr_path.getPointRatio(clamp(_rat - 0.001, 0, 0.999999), ind);
 		var _p  = curr_path.getPointRatio(_rat, ind);
@@ -82,8 +80,6 @@ function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static update = function() {
 		curr_path  = getInputData(0);
-		is_path    = curr_path != noone && struct_has(curr_path, "getPointRatio");
-		
 		curr_shift = getInputData(1);
 		
 		ds_map_clear(cached_pos);

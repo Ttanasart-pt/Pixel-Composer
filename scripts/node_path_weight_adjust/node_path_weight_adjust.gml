@@ -22,7 +22,6 @@ function Node_Path_Weight_Adjust(_x, _y, _group = noone) : Node(_x, _y, _group) 
     ];
 	
 	curr_path  = noone;
-	is_path    = false;
 	curr_mode  = 0;
 	curr_type  = 0;
 	curr_value = 0;
@@ -36,15 +35,15 @@ function Node_Path_Weight_Adjust(_x, _y, _group = noone) : Node(_x, _y, _group) 
 			curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
-	static getLineCount    = function(       ) /*=>*/ {return is_path? curr_path.getLineCount()       : 1};
-	static getSegmentCount = function(ind = 0) /*=>*/ {return is_path? curr_path.getSegmentCount(ind) : 0};
-	static getLength       = function(ind = 0) /*=>*/ {return is_path? curr_path.getLength(ind)       : 0};
-	static getAccuLength   = function(ind = 0) /*=>*/ {return is_path? curr_path.getAccuLength(ind)   : []};
-	static getBoundary     = function(ind = 0) /*=>*/ {return is_path? curr_path.getBoundary(ind)     : new BoundingBox( 0, 0, 1, 1 )};
+	static getLineCount    = function(       ) /*=>*/ {return is_path(curr_path)? curr_path.getLineCount()       : 1};
+	static getSegmentCount = function(ind = 0) /*=>*/ {return is_path(curr_path)? curr_path.getSegmentCount(ind) : 0};
+	static getLength       = function(ind = 0) /*=>*/ {return is_path(curr_path)? curr_path.getLength(ind)       : 0};
+	static getAccuLength   = function(ind = 0) /*=>*/ {return is_path(curr_path)? curr_path.getAccuLength(ind)   : []};
+	static getBoundary     = function(ind = 0) /*=>*/ {return is_path(curr_path)? curr_path.getBoundary(ind)     : new BoundingBox( 0, 0, 1, 1 )};
 	
 	static getPointRatio = function(_rat, ind = 0, out = undefined) {
 		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
-		if(!is_path) return out;
+		if(!is_path(curr_path)) return out;
 		
 		temp_p = curr_path.getPointRatio(_rat, ind, temp_p);
 		out.x  = temp_p.x;
@@ -82,8 +81,6 @@ function Node_Path_Weight_Adjust(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	    curr_curve       = new curveMap(_curve, TOTAL_FRAMES);
 	    curr_type        = _type;
 	    curr_curve_range = _curve_range;
-		
-		is_path = curr_path != noone && struct_has(curr_path, "getPointRatio");
 		
 		outputs[0].setValue(self);
 	}

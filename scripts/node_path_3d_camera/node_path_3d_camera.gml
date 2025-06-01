@@ -60,8 +60,6 @@ function Node_Path_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _g
 	#region current data
 		cached_pos = ds_map_create();
 	
-		is_path   = false;
-		
 		curr_pos  = noone;
 		curr_rot  = noone;
 		
@@ -90,7 +88,7 @@ function Node_Path_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _g
 	static getToolSettings = function() { return curr_posm == 0? tool_settings : []; }
 	
 	static drawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) {
-		if(is_path) {
+		if(is_path(curr_path)) {
 			var _nodeFrom = inputs[in_d3d + 2].value_from.node;
 			if(struct_has(_nodeFrom, "drawOverlay3D"))
 				_nodeFrom.drawOverlay3D(active, params, _mx, _my, _snx, _sny, _panel);
@@ -120,11 +118,11 @@ function Node_Path_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _g
 	
 	////- Path
 	
-	static getLineCount    = function(   ) /*=>*/ {return is_path? curr_path.getLineCount()     : 1};
-	static getSegmentCount = function(i=0) /*=>*/ {return is_path? curr_path.getSegmentCount(i) : 0};
-	static getLength       = function(i=0) /*=>*/ {return is_path? curr_path.getLength(i)       : 0};
-	static getAccuLength   = function(i=0) /*=>*/ {return is_path? curr_path.getAccuLength(i)   : []};
-	static getBoundary     = function(i=0) /*=>*/ {return is_path? curr_path.getBoundary(i)     : new BoundingBox( 0, 0, 1, 1 )};
+	static getLineCount    = function(   ) /*=>*/ {return is_path(curr_path)? curr_path.getLineCount()     : 1};
+	static getSegmentCount = function(i=0) /*=>*/ {return is_path(curr_path)? curr_path.getSegmentCount(i) : 0};
+	static getLength       = function(i=0) /*=>*/ {return is_path(curr_path)? curr_path.getLength(i)       : 0};
+	static getAccuLength   = function(i=0) /*=>*/ {return is_path(curr_path)? curr_path.getAccuLength(i)   : []};
+	static getBoundary     = function(i=0) /*=>*/ {return is_path(curr_path)? curr_path.getBoundary(i)     : new BoundingBox( 0, 0, 1, 1 )};
 	
 	static getPointRatio = function(_rat, ind = 0, out = undefined) {
 		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
@@ -138,7 +136,7 @@ function Node_Path_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _g
 			return out;
 		}
 		
-		if(!is_path) return out;
+		if(!is_path(curr_path)) return out;
 		
 		var _p = curr_path.getPointRatio(_rat, ind);
 		var _w = _p.weight;
@@ -266,7 +264,6 @@ function Node_Path_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _g
 			camera.setMatrix();
 		#endregion
 		
-		is_path = curr_path != noone && struct_has(curr_path, "getPointRatio");
 		ds_map_clear(cached_pos);
 		return self;
 	}
