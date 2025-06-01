@@ -79,22 +79,27 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		
 		random_set_seed(_seed);
 		
-		// if(_fix) {
-		// 	var ref = surface_verify(_data[8], _fixRef[0], _fixRef[1]);
-		// 	inputs[8].setValue(ref);
-		// }
-			
 		var aBox = area_get_bbox(_area);
 		var pos  = [];
 			
+		var _fixArea = [ _fixRef[0] / 2, _fixRef[1] / 2, 
+	                     _fixRef[0] / 2, _fixRef[1] / 2, 0 ];
+	                 
 		if(_dist != 2) {
 			if(_scat == 2) {
-				pos = area_get_random_point_poisson_c(_area, poisDist, _seed);
+				if(_fix) {
+					var pnts = area_get_random_point_poisson_c(_fixArea, poisDist, _seed);
+					
+					for( var i = 0, n = array_length(pnts); i < n; i++ ) {
+						var p = pnts[i];
+						if(point_in_rectangle(p[0], p[1], aBox[0], aBox[1], aBox[2], aBox[3]))
+							array_push(pos, p);
+					} 
+					
+				} else 
+					pos = area_get_random_point_poisson_c(_area, poisDist, _seed);
 				
 			} else {
-				var _fixArea = [ _fixRef[0] / 2, _fixRef[1] / 2, 
-				                 _fixRef[0] / 2, _fixRef[1] / 2, 0 ];
-				
 				if(_fix) {
 					for( var i = 0; i < _amo; i++ ) {
 						var p = area_get_random_point(_fixArea, _dist, _scat, i, _amo, _seed + i * pi);
