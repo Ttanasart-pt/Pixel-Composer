@@ -13,7 +13,10 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	font = f_p0;
 	dimension_index = -1;
 	
-	newInput( 0, nodeValue_Text(         "Text")).setVisible(true, true);
+	////- =Text
+	
+	newInput( 0, nodeValue_Text(         "Text" )).setVisible(true, true);
+	newInput(32, nodeValue_Enum_Scroll(  "Change Case", 0, [ "None", "Lowercase", "Uppercase", "Titlecase" ] ));
 	
 	////- =Output
 	
@@ -67,13 +70,14 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(24, nodeValue_Slider_Range( "Range",             [0,1]));
 	newInput(26, nodeValue_Bool(         "Use Full Text Size", false ));
 		
-	// inputs 32
+	// inputs 33
 		
-	input_display_list = [ 0, 
-		["Output",		 true],	9,  6, 10,
-		["Alignment",	false], 13, 14, 7, 8, 27, 30, 
-		["Font",		false], 1,  2, 15, 3, 11, 12, 
-		["Rendering",	false], 5, 31, 
+	input_display_list = [ 
+		["Text",	    false    ],  0, 32, 
+		["Output",		 true    ],	 9,  6, 10,
+		["Alignment",	false    ], 13, 14,  7,  8, 27, 30, 
+		["Font",		false    ],  1,  2, 15,  3, 11, 12, 
+		["Rendering",	false    ],  5, 31, 
 		["Background",   true, 16], 17, 
 		["Wave",	     true, 18], 22, 19, 20, 21, 
 		["Trim",		 true, 23], 25, 24, 26, 
@@ -294,7 +298,8 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		#region data
-			var str    = _data[ 0], rawStr = str;
+			var str    = _data[ 0]; 
+			var _case  = _data[32];
 			
 			var _dimt  = _data[ 9];
 			var _dim   = _data[ 6];
@@ -339,6 +344,16 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			inputs[ 9].setVisible(!_use_path);
 			inputs[14].setVisible( _use_path);
 			inputs[15].setVisible(_dimt == 0 && !_use_path && _font != "");
+		#endregion
+			
+		#region modify text
+			switch(_case) {
+		        case 1 : str = string_lower(str);     break;
+		        case 2 : str = string_upper(str);     break;
+		        case 3 : str = string_titlecase(str); break;
+		    }
+		    
+			var rawStr = str;
 		#endregion
 			
 		#region font
