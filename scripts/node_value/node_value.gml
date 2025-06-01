@@ -2372,9 +2372,16 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(struct_has(_map, "linked")) 
 			display_data.linked = _map.linked;
 			
-		name_custom = _map[$ "name_custom"]   ?? false;
-		if(name_custom) name = _map[$ "name"] ?? name;
-		
+		if(struct_has(_map, "global_name")) {
+			name_custom = true;
+			name = _map[$ "global_name"];
+			
+		} else {
+			name_custom = _map[$ "name_custom"]   ?? false;
+			if(name_custom) name = _map[$ "name"] ?? name;
+			
+		}
+			
 		if(struct_has(_map, "raw_value")) 
 			animator.deserialize(_map[$ "raw_value"], scale);
 			

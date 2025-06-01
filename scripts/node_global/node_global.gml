@@ -250,6 +250,8 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 		}
 	}
 	
+	////- Serialize
+	
 	static serialize = function() {
 		var _map = {};
 		
