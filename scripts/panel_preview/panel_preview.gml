@@ -839,18 +839,19 @@ function Panel_Preview() : PanelContent() constructor {
         canvas_hover = point_in_rectangle(mx, my, 0, toolbar_height, w, h - toolbar_height);
     }
     
-    function fullView(scale = 0) {
+    function fullView(scale = 0, gizmo = false) {
         var bbox = noone;
         
         var node = getNodePreview();
-        if(node != noone) bbox = node.getPreviewBoundingBox();
+        if(node != noone) bbox = gizmo? node.getPreviewBoundingBoxExpanded() : node.getPreviewBoundingBox();
         if(bbox == noone) bbox = BBOX().fromWH(0, 0, PROJECT.attributes.surface_dimension[0], PROJECT.attributes.surface_dimension[1]);
         
         var _x = bbox.x0, _y = bbox.y0;
         var _w = bbox.w,  _h = bbox.h;
         
-        if(_w == 0 || _h == 0) {
-            _x = 0; _y = 0;
+        if(_w == 0 || _h == 0) { 
+            _x = 0; 
+            _y = 0;
             _w = DEF_SURF_W;
             _h = DEF_SURF_H;
         }

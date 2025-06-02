@@ -1869,10 +1869,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		color_display = type == VALUE_TYPE.action? #8fde5d : draw_fg;
 	} updateColor();
 	
+	__preview_bbox = noone;
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(expUse) return -1;
 		
 		var argc = 9;
+		__preview_bbox = node.__preview_bbox;
 		
 		switch(type) {
 			case VALUE_TYPE.integer :

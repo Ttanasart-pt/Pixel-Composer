@@ -212,6 +212,9 @@ function Panel_Action_Create() : PanelContent() constructor {
 		nodes       = [];
 		connections = [];
 		
+		inputNode   = noone;
+		outputNode  = noone;
+		
 		if(array_empty(_nodes)) { close(); return; }
 		
 		var _nmap = {};
@@ -234,24 +237,36 @@ function Panel_Action_Create() : PanelContent() constructor {
 			
 			for(var j = 0; j < array_length(_n.inputs); j++) {
 				var _in = _n.inputs[j];
+				var _vf = _in.value_from;
 				_vals[$ j] = {};
 				
-				if(_in.value_from == noone || !struct_has(_nmap, _in.value_from.node.node_id)) {
+				if(_vf != noone && !struct_has(_nmap, _vf.node.node_id))
+					inputNode = i;
+				
+				if(_vf == noone || !struct_has(_nmap, _vf.node.node_id)) {
 					var _vl = _in.getValue(, false);
 					if(!isEqual(_vl, _in.def_val))
 						_vals[$ j].value = _vl;
 					continue;
 				}
 				
-				var _idF = _nmap[$ _in.value_from.node.node_id];
+				var _idF = _nmap[$ _vf.node.node_id];
 				
 				array_push(connections, {
 					from: _idF,
-					fromIndex: _in.value_from.index,
+					fromIndex: _vf.index,
 					
 					to: _idT,
 					toIndex: j,
 				});
+			}
+			
+			for(var j = 0; j < array_length(_n.outputs); j++) {
+				var _ou = _n.outputs[j];
+				var _vt = _ou.getJunctionTo();
+				
+				for( var k = 0, m = array_length(_vt); k < m; k++ )
+					if(!struct_has(_nmap, _vt[k].node.node_id)) outputNode = i;
 			}
 			
 			nodes[i] = {

@@ -406,6 +406,7 @@ function preview_overlay_area(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _
 	
 	var mode = editWidget.mode;
 	
+	__preview_bbox.addArea(_val);
 	__overlay_hover = array_verify(__overlay_hover, 5);
 	
 	switch(mode) {

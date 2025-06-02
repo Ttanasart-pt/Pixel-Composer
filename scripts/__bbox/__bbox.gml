@@ -66,7 +66,7 @@ function BoundingBox3D(minx = noone, miny = noone, minz = noone, maxx = noone, m
 	static clone = function() { return new BoundingBox3D(minx, miny, minz, maxx, maxy, maxz); }
 }
 
-function BBOX() { return new __BBOX(); }
+function   BBOX() { return new __BBOX(); }
 function __BBOX() constructor {
 	x0 = 0; x1 = 0; 
 	y0 = 0; y1 = 0; 
@@ -74,31 +74,25 @@ function __BBOX() constructor {
 	xc = 0; yc = 0;
 	w  = 0; h  = 0;
 	
-	static fromPoints = function(x0, y0, x1, y1) {
-		self.x0 = x0; 
-		self.x1 = x1; 
-		self.y0 = y0; 
-		self.y1 = y1; 
+	////- Create
 	
-		xc = (x0 + x1) / 2; 
-		yc = (y0 + y1) / 2;
-		w  = max(0, abs(x1 - x0));
-		h  = max(0, abs(y1 - y0));
+	static fromPoints = function(_x0, _y0, _x1, _y1) {
+		x0 = _x0; 
+		x1 = _x1; 
+		y0 = _y0; 
+		y1 = _y1; 
 		
+		setValue();
 		return self;
 	}
 	
-	static fromWH = function(x0, y0, w, h) {
-		self.x0 = x0; 
-		self.x1 = x0 + w; 
-		self.y0 = y0; 
-		self.y1 = y0 + h; 
-	
-		self.xc = (x0 + x1) / 2; 
-		self.yc = (y0 + y1) / 2;
-		self.w  = w; 
-		self.h  = h;
+	static fromWH = function(_x0, _y0, _w, _h) {
+		x0 = _x0; 
+		x1 = _x0 + _w; 
+		y0 = _y0; 
+		y1 = _y0 + _h; 
 		
+		setValue();
 		return self;
 	}
 	
@@ -107,14 +101,21 @@ function __BBOX() constructor {
 		self.x1 = box.maxx; 
 		self.y0 = box.miny; 
 		self.y1 = box.maxy; 
+		
+		setValue();
+		return self;
+	}
 	
-		self.xc = (x0 + x1) / 2; 
-		self.yc = (y0 + y1) / 2;
-		self.w  = x1 - x0;
-		self.h  = y1 - y0;
+	static setValue = function() {
+		xc = (x0 + x1) / 2; 
+		yc = (y0 + y1) / 2;
+		w  = abs(x1 - x0);
+		h  = abs(y1 - y0);
 		
 		return self;
 	}
+	
+	////- Actions
 	
 	static toSquare = function() {
 		var _span = min(w, h) / 2;
@@ -124,6 +125,7 @@ function __BBOX() constructor {
 		y0 = yc - _span;
 		y1 = yc + _span;
 		
+		setValue();
 		return self;
 	}
 	
@@ -132,6 +134,31 @@ function __BBOX() constructor {
 		x1 -= padding;
 		y0 += padding;
 		y1 -= padding;
+		
+		setValue();
+		return self;
+	}
+	
+	static addPoint = function(_x, _y) {
+		x0 = min(x0, _x);
+		x1 = max(x1, _x);
+		y0 = min(y0, _y);
+		y1 = max(y1, _y);
+		
+		setValue();
+		return self;
+	}
+	
+	static addArea = function(_area) {
+		var _x0   = _area[0] - _area[2];
+		var _y0   = _area[1] - _area[3];
+		var _x1   = _area[0] + _area[2];
+		var _y1   = _area[1] + _area[3];
+		
+		addPoint(_x0, _y0);
+		addPoint(_x0, _y1);
+		addPoint(_x1, _y0);
+		addPoint(_x1, _y1);
 		
 		return self;
 	}

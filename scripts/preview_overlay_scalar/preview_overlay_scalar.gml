@@ -8,6 +8,8 @@ function preview_overlay_scalar(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 	var __ay  = lengthdir_y(_val * _scale, _angle);
 	var _r    = ui(10);
 	
+	__preview_bbox.addPoint(__ax, __ay);
+	
 	var _ax = _x + __ax * _s;
 	var _ay = _y + __ay * _s;
 						

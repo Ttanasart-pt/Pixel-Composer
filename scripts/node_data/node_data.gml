@@ -2329,9 +2329,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static doDrawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params = {}) { 
-		w_hovering  = false; 
-		w_hoverable = hover;
-		w_active    = active;
+		w_hovering     = false; 
+		w_hoverable    = hover;
+		w_active       = active;
+		__preview_bbox = getPreviewBoundingBox()
 		
 		try {
 			return drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params);
@@ -2381,14 +2382,19 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return val;
 	}
 	
+	__preview_bbox = BBOX();
 	static getPreviewBoundingBox = function() {
 		var _surf = getPreviewValues();
 		if(is_array(_surf)) 
 			_surf = array_safe_get_fast(_surf, preview_index, noone);
-		if(!is_surface(_surf)) return noone;
 		
+		if(!is_surface(_surf)) 
+			return BBOX().fromWH(0, 0, PROJECT.attributes.surface_dimension[0], PROJECT.attributes.surface_dimension[1]);
+			
 		return BBOX().fromWH(preview_x, preview_y, surface_get_width_safe(_surf), surface_get_height_safe(_surf));
 	}
+	
+	static getPreviewBoundingBoxExpanded = function() /*=>*/ {return __preview_bbox};
 	
 	static getGraphPreviewSurface = function() { 
 		var _node = array_safe_get(outputs, preview_channel);
