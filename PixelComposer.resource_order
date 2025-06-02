@@ -1621,6 +1621,7 @@
     {"name":"sh_blur_simple","order":20,"path":"shaders/sh_blur_simple/sh_blur_simple.yy",},
     {"name":"sh_blur_slope","order":21,"path":"shaders/sh_blur_slope/sh_blur_slope.yy",},
     {"name":"sh_blur_zoom_step","order":1,"path":"shaders/sh_blur_zoom_step/sh_blur_zoom_step.yy",},
+    {"name":"sh_flow_path_blur","order":3,"path":"shaders/sh_flow_path_blur/sh_flow_path_blur.yy",},
     {"name":"sh_box_pattern","order":23,"path":"shaders/sh_box_pattern/sh_box_pattern.yy",},
     {"name":"sh_brush_linear","order":49,"path":"shaders/sh_brush_linear/sh_brush_linear.yy",},
     {"name":"sh_brush_outline","order":7,"path":"shaders/sh_brush_outline/sh_brush_outline.yy",},

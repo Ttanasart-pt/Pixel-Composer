@@ -14,7 +14,7 @@ function Node_Flow_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	////- Path
 	
-	newInput( 7, nodeValue_PathNode( "Path" ));
+	newInput( 7, nodeValue_PathNode( "Path" )).setVisible(true, true);
 	newInput(10, nodeValue_Int(      "Sample",       16    ));
 	newInput(13, nodeValue_Bool(     "Invert",       false ));
 	newInput( 8, nodeValue_Float(    "Radius",       4     ));
@@ -22,10 +22,15 @@ function Node_Flow_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	////- Flow
 	
-	newInput( 9, nodeValue_Slider( "Flow Rate",  1 ));
-	newInput(12, nodeValue_Int(    "Flow Speed", 1 ));
+	newInput( 9, nodeValue_Slider( "Flow Rate",  1     ));
+	newInput(12, nodeValue_Int(    "Flow Speed", 1     ));
 	
-	// input 14
+	////- Flowmap
+	
+	newInput(14, nodeValue_Bool(   "Tile",       false ));
+	newInput(15, nodeValue_Int(    "Blur",       1     ));
+	
+	// input 16
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -33,6 +38,7 @@ function Node_Flow_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		["Surface", false], 0, 1, 2, 3, 4, 
 		["Path",    false], 7, 10, 13, 8, 11, 
 		["Flow",    false], 9, 12, 
+		["Flowmap", false], 14, 15, 
 	];
 	
 	////- Nodes
@@ -49,6 +55,84 @@ function Node_Flow_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	static step = function() {}
 	
+	static draw_circle_tile = function(_tile, _x, _y, _r, _dim) {
+		draw_circle_color(_x, _y, _r, c_white, c_black, false);
+		if(!_tile) return;
+		
+		var _sw = _dim[0];
+		var _sh = _dim[1];
+		
+		if(_y - _r < 0) {
+			if(_x - _r < 0)   draw_circle_color(_x + _sw, _y + _sh, _r, c_white, c_black, false);
+	                          draw_circle_color(_x,       _y + _sh, _r, c_white, c_black, false);
+			if(_x + _r > _sw) draw_circle_color(_x - _sw, _y + _sh, _r, c_white, c_black, false);
+		}
+			
+			if(_x - _r < 0)   draw_circle_color(_x + _sw, _y, _r, c_white, c_black, false);
+			if(_x + _r > _sw) draw_circle_color(_x - _sw, _y, _r, c_white, c_black, false);
+			
+		if(_y + _r > _sh) {
+			if(_x - _r < 0)   draw_circle_color(_x + _sw, _y - _sh, _r, c_white, c_black, false);
+	                          draw_circle_color(_x,       _y - _sh, _r, c_white, c_black, false);
+			if(_x + _r > _sw) draw_circle_color(_x - _sw, _y - _sh, _r, c_white, c_black, false);
+		}
+	}
+	
+	static draw_quad_tile = function(_tile, _x0, _y0, _x1, _y1, _x2, _y2, _x3, _y3, _dim) {
+		draw_triangle_color(_x2, _y2, _x1, _y1, _x3, _y3, c_black, c_white, c_black, false);
+		draw_triangle_color(_x0, _y0, _x1, _y1, _x2, _y2, c_white, c_white, c_black, false);
+		if(!_tile) return; 
+		
+		var _sw = _dim[0];
+		var _sh = _dim[1];
+		
+		var _minx = min(_x0, _x1, _x2, _x3);
+		var _miny = min(_y0, _y1, _y2, _y3);
+		var _maxx = max(_x0, _x1, _x2, _x3);
+		var _maxy = max(_y0, _y1, _y2, _y3);
+		
+		if(_miny < 0) {
+			if(_minx < 0) {
+				draw_triangle_color(_x2 + _sw, _y2 + _sh, _x1 + _sw, _y1 + _sh, _x3 + _sw, _y3 + _sh, c_black, c_white, c_black, false);
+				draw_triangle_color(_x0 + _sw, _y0 + _sh, _x1 + _sw, _y1 + _sh, _x2 + _sw, _y2 + _sh, c_white, c_white, c_black, false);
+			}
+			
+				draw_triangle_color(_x2,       _y2 + _sh, _x1,       _y1 + _sh, _x3,       _y3 + _sh, c_black, c_white, c_black, false);
+				draw_triangle_color(_x0,       _y0 + _sh, _x1,       _y1 + _sh, _x2,       _y2 + _sh, c_white, c_white, c_black, false);
+		
+			if(_maxx > _sw) {
+				draw_triangle_color(_x2 - _sw, _y2 + _sh, _x1 - _sw, _y1 + _sh, _x3 - _sw, _y3 + _sh, c_black, c_white, c_black, false);
+				draw_triangle_color(_x0 - _sw, _y0 + _sh, _x1 - _sw, _y1 + _sh, _x2 - _sw, _y2 + _sh, c_white, c_white, c_black, false);
+			}
+		}
+			
+			if(_minx < 0) {
+				draw_triangle_color(_x2 + _sw, _y2, _x1 + _sw, _y1, _x3 + _sw, _y3, c_black, c_white, c_black, false);
+				draw_triangle_color(_x0 + _sw, _y0, _x1 + _sw, _y1, _x2 + _sw, _y2, c_white, c_white, c_black, false);
+			}
+			
+			if(_maxx > _sw) {
+				draw_triangle_color(_x2 - _sw, _y2, _x1 - _sw, _y1, _x3 - _sw, _y3, c_black, c_white, c_black, false);
+				draw_triangle_color(_x0 - _sw, _y0, _x1 - _sw, _y1, _x2 - _sw, _y2, c_white, c_white, c_black, false);
+			}
+		
+		if(_maxy > _sh) {
+			if(_minx < 0) {
+				draw_triangle_color(_x2 + _sw, _y2 - _sh, _x1 + _sw, _y1 - _sh, _x3 + _sw, _y3 - _sh, c_black, c_white, c_black, false);
+				draw_triangle_color(_x0 + _sw, _y0 - _sh, _x1 + _sw, _y1 - _sh, _x2 + _sw, _y2 - _sh, c_white, c_white, c_black, false);
+			}
+			
+				draw_triangle_color(_x2,       _y2 - _sh, _x1,       _y1 - _sh, _x3,       _y3 - _sh, c_black, c_white, c_black, false);
+				draw_triangle_color(_x0,       _y0 - _sh, _x1,       _y1 - _sh, _x2,       _y2 - _sh, c_white, c_white, c_black, false);
+		
+			if(_maxx > _sw) {
+				draw_triangle_color(_x2 - _sw, _y2 - _sh, _x1 - _sw, _y1 - _sh, _x3 - _sw, _y3 - _sh, c_black, c_white, c_black, false);
+				draw_triangle_color(_x0 - _sw, _y0 - _sh, _x1 - _sw, _y1 - _sh, _x2 - _sw, _y2 - _sh, c_white, c_white, c_black, false);
+			}
+		}
+			
+	}
+	
 	static processData = function(_outSurf, _data, _array_index = 0) {
 		var _surf = _data[0];
 		var _mask = _data[1];
@@ -63,6 +147,9 @@ function Node_Flow_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _rate = _data[ 9];
 		var _spd  = _data[12];
 		
+		var _tile = _data[14];
+		var _blur = _data[15];
+		
 		if(!is_path(_path)) return _outSurf; 
 		
 		var _dim = surface_get_dimension(_surf);
@@ -74,56 +161,68 @@ function Node_Flow_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _t = 1 / _psam, _prg;
 		var _p = new __vec2P();
 		
-		var ox, oy, nx, ny;
+		var ox, oy, ow;
+		var nx, ny, nw;
 		
 		surface_set_shader(temp_surface[0], sh_flow_path_add, true, BLEND.add);
-		
-		for( var i = 0; i <= _psam; i++ ) {
-			_prg = i * _t;
-			if(_pinv) _prg = 1 - _prg;
-			_prg = clamp(_prg, 0, .99);
-			
-			_p = _path.getPointRatio(_prg, 0, _p);
-			
-			nx = _p.x;
-			ny = _p.y;
-			
-			if(i) {
-				var rr = _rad;
-				if(_weig) rr *= _p.weight;
+			for( var i = 0; i <= _psam; i++ ) {
+				_prg = i * _t;
+				if(_pinv) _prg = 1 - _prg;
+				_prg = clamp(_prg, 0, .99);
 				
-				var _dir = point_direction(ox, oy, nx, ny);
-				var _dx  = lengthdir_x(rr, _dir + 90);
-				var _dy  = lengthdir_y(rr, _dir + 90);
+				_p = _path.getPointRatio(_prg, 0, _p);
 				
-				var ox0 = ox + _dx, oy0 = oy + _dy;
-				var nx0 = nx + _dx, ny0 = ny + _dy;
+				nx = _p.x;
+				ny = _p.y;
+				nw = _weig? _rad * _p.weight : _rad; 
 				
-				var ox1 = ox - _dx, oy1 = oy - _dy;
-				var nx1 = nx - _dx, ny1 = ny - _dy;
-				
-				shader_set_2("direction", [(nx - ox) / _psam, (ny - oy) / _psam]);
-				shader_set_f("flowTime",   CURRENT_FRAME / TOTAL_FRAMES);
-				
-				draw_triangle_color(ox,  oy,  nx, ny, ox0, oy0, c_white, c_white, c_black, false);
-				draw_triangle_color(ox0, oy0, nx, ny, nx0, ny0, c_black, c_white, c_black, false);
-				
-				draw_triangle_color(ox,  oy,  nx, ny, ox1, oy1, c_white, c_white, c_black, false);
-				draw_triangle_color(ox1, oy1, nx, ny, nx1, ny1, c_black, c_white, c_black, false);
-				
-				draw_circle_color(ox, oy, rr, c_white, c_black, false);
-				draw_circle_color(nx, ny, rr, c_white, c_black, false);
+				if(i) {
+					
+					var _dir = point_direction(ox, oy, nx, ny);
+					var _dx  = lengthdir_x(ow, _dir + 90);
+					var _dy  = lengthdir_y(ow, _dir + 90);
+					
+					var ox0 = ox + _dx, oy0 = oy + _dy;
+					var ox1 = ox - _dx, oy1 = oy - _dy;
+					
+					var _dx  = lengthdir_x(nw, _dir - 90);
+					var _dy  = lengthdir_y(nw, _dir - 90);
+					
+					var nx0 = nx + _dx, ny0 = ny + _dy;
+					var nx1 = nx - _dx, ny1 = ny - _dy;
+					
+					shader_set_2("direction", [(nx - ox) / _psam, (ny - oy) / _psam]);
+					shader_set_f("flowTime",   CURRENT_FRAME / TOTAL_FRAMES);
+					
+					draw_quad_tile(_tile, ox, oy, nx, ny, ox0, oy0, nx0, ny0, _dim);
+					draw_quad_tile(_tile, ox, oy, nx, ny, ox1, oy1, nx1, ny1, _dim);
+					
+					draw_circle_tile(_tile, ox, oy, ow, _dim);
+					draw_circle_tile(_tile, nx, ny, nw, _dim);
+					
+				}
+	 			
+				ox = nx;
+				oy = ny;
+				ow = nw;
 			}
- 			
-			ox = nx;
-			oy = ny;
-		}
-		
 		surface_reset_shader();
+		
+		var bg = 0;
+		
+		repeat(_blur) {
+			bg = !bg;
+			surface_set_shader(temp_surface[bg], sh_flow_path_blur, true, BLEND.over);
+				shader_set_2("dimension", _dim);
+				shader_set_i("tile",      _tile);
+				
+				draw_surface(temp_surface[!bg], 0, 0);
+			surface_reset_shader();
+		}
 		
 		surface_set_shader(_outSurf, sh_flow_path_apply);
 			shader_set_interpolation(_surf);			
-			shader_set_surface("flowMask", temp_surface[0]);
+			shader_set_surface("flowMask", temp_surface[bg]);
 			
 			shader_set_2("dimension",   _dim);
 			shader_set_f("flowTime",    CURRENT_FRAME / TOTAL_FRAMES);
@@ -133,8 +232,6 @@ function Node_Flow_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			draw_surface(_surf, 0, 0);
 		surface_reset_shader();
-		
-		//
 		
 		__process_mask_modifier(_data);
 		_outSurf = mask_apply(_data[0], _outSurf, _mask, _mix);
