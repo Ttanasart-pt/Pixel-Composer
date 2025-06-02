@@ -26,19 +26,18 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		["Cases",  false], size_adjust_tool
 	]
 	
-	#region //////////////////////////////// Dynamic IO ////////////////////////////////
+	////- Nodes
+	
+	#region Dynamic IO
 		
 		static createNewInput = function(index = array_length(inputs)) {
-			var bDel  = button(function() /*=>*/ {return node.deleteInput(index)})
-				.setIcon(THEME.minus_16, 0, COLORS._main_icon);
+			var bDel = button(function() /*=>*/ {return node.deleteInput(index)})
+			            .setIcon(THEME.minus_16, 0, COLORS._main_icon);
 			
-			inputs[index + 0] = nodeValue_Text("Case")
-				.setDisplay(VALUE_DISPLAY.text_box, { side_button : bDel })
-				.setAnimable(false);
+			inputs[index + 0] = nodeValue_Text("Case").setDisplay(VALUE_DISPLAY.text_box, { side_button : bDel }).setAnimable(false);
 			bDel.setContext(inputs[index + 0]);
 			
-			inputs[index + 1] = nodeValue("value", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0 )
-				.setVisible(false, false);
+			inputs[index + 1] = nodeValue("Value", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0 ).setVisible(false, false);
 			
 			return inputs[index + 0];
 		} 
@@ -104,7 +103,7 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			getJunctionList();
 		}
 	
-	#endregion //////////////////////////////// Dynamic IO ////////////////////////////////
+	#endregion 
 		
 	static onValueFromUpdate = function(index) {
 		if(LOADING || APPENDING) return;
@@ -132,19 +131,19 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	static step = function() {
+		var _inp = inputs[1];
+		if(_inp.value_from != noone) _inp.setType(_inp.value_from.type);
+			
 		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
 			var _inp = inputs[i + 1];
-			if(_inp.value_from == noone) continue;
-			
-			_inp.setType(_inp.value_from.type);
+			if(_inp.value_from != noone) _inp.setType(_inp.value_from.type);
 		}
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var sele = getInputData(0);
 		var _res = getInputData(1);
-		
-		outputs[0].setType(inputs[1].value_from? inputs[1].value_from.type : VALUE_TYPE.any);
+		var _typ = inputs[1].value_from? inputs[1].value_from.type : VALUE_TYPE.any;
 		
 		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
 			var _cas = getInputData(i + 0);
@@ -152,11 +151,11 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			if(sele == _cas) {
 				_res = _val;
-				var _typ = inputs[i + 1].value_from? inputs[i + 1].value_from.type : inputs[i + 1].type;
-				outputs[0].setType(_typ);
+				_typ = inputs[i + 1].value_from? inputs[i + 1].value_from.type : inputs[i + 1].type;
 			}
 		}
 		
+		outputs[0].setType(_typ);
 		outputs[0].setValue(_res);
 	}
 	
@@ -181,26 +180,43 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		draw_set_text(f_sdf, fa_left, fa_center);
 		var bbox = drawGetBbox(xx, yy, _s);
 		
-		if(inputs[1].visible) {
-			var str = string("default");
-			var ss	= min(_s * 0.4 / UI_SCALE, string_scale(str, bbox.w - 16 * _s, 999));
-			
-			draw_set_color(value_color(inputs[1].type));
-			draw_text_transformed(bbox.x0 + 8 * _s, inputs[1].y, str, ss, ss, 0);
-		}
+		var _sw = bbox.w - 16 * _s;
+		var _sh = junction_draw_hei_y * _s;
+		var selAble = inputs[0].value_from == noone;
 		
-		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
-			if(!inputs[i + 1].visible) continue;
-			
-			var str = string(getInputData(i, ""));
+		for( var i = 1; i < array_length(inputs); i += data_length ) {
+			var val = i == 1? "" : getInputData(i - 1);
+			var str = i == 1? "default" : string(getInputData(i - 1, ""));
 			if(str == "") continue;
 			
-			var ss	= min(_s * 0.4 / UI_SCALE, string_scale(str, bbox.w - 16 * _s, 999));
+			var ss = min(_s * 0.4 / UI_SCALE, string_scale(str, _sw, _sh));
+			var sw = string_width(str) * ss;
+			var sh = string_height(str) * ss;
 			
-			draw_set_color(value_color(inputs[i + 1].type));
-			draw_text_transformed(bbox.x0 + 8 * _s, inputs[i + 1].y, str, ss, ss, 0);
+			if(selAble) {
+				var sx = bbox.x0 + 8 * _s;
+				var sy = inputs[i].y;
+				
+				var lw = bbox.w - 8 * _s;
+				var lh = sh;
+				
+				var lx = sx - 4 * _s;
+				var ly = sy - lh/2;
+				
+				var hv = _hover && point_in_rectangle(_mx, _my, lx, ly, lx + lw, ly + lh);
+				
+				if(hv) {
+					draw_sprite_stretched_ext(THEME.box_r5_clr, 0, lx, ly, lw, lh, COLORS._main_icon, 1);
+					if(mouse_lpress(_focus)) inputs[0].setValue(val);
+				}
+			}
+			
+			draw_set_color(value_color(inputs[i].type));
+			draw_text_transformed(sx, sy, str, ss, ss, 0);
 		}
 	}
+	
+	////- Serialize
 	
 	static postApplyDeserialize = function() { refreshDynamicInput(); }
 }

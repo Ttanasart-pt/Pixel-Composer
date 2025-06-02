@@ -23,6 +23,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput( 9, nodeValue_Enum_Scroll(  "Output Dimension", 1, [ "Fixed", "Dynamic" ]));
 	newInput( 6, nodeValue_Vec2(         "Fixed Dimension",  DEF_SURF  )).setVisible(true, false);
 	newInput(10, nodeValue_Padding(      "Padding",          [0,0,0,0] ));
+	newInput(33, nodeValue_Bool(         "Draw Data",        false     ));
 	
 	////- =Alignment
 	
@@ -70,11 +71,11 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(24, nodeValue_Slider_Range( "Range",             [0,1]));
 	newInput(26, nodeValue_Bool(         "Use Full Text Size", false ));
 		
-	// inputs 33
+	// inputs 34
 		
 	input_display_list = [ 
 		["Text",	    false    ],  0, 32, 
-		["Output",		 true    ],	 9,  6, 10,
+		["Output",		 true    ],	 9,  6, 10, 33, 
 		["Alignment",	false    ], 13, 14,  7,  8, 27, 30, 
 		["Font",		false    ],  1,  2, 15,  3, 11, 12, 
 		["Rendering",	false    ],  5, 31, 
@@ -83,7 +84,8 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		["Trim",		 true, 23], 25, 24, 26, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
+	newOutput(1, nodeValue_Output( "Draw Data",   VALUE_TYPE.struct,  []    )).setArrayDepth(1);
 	 
 	attribute_surface_depth();
 	
@@ -296,7 +298,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		return _hov;
 	}
 	
-	static processData = function(_outSurf, _data, _array_index) {
+	static processData = function(_outData, _data, _array_index) {
 		#region data
 			var str    = _data[ 0]; 
 			var _case  = _data[32];
@@ -304,6 +306,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _dimt  = _data[ 9];
 			var _dim   = _data[ 6];
 			var _padd  = _data[10];
+			var _atls  = _data[33];
 			
 			var _path  = _data[13];
 			var _pthS  = _data[14];
@@ -344,6 +347,8 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			inputs[ 9].setVisible(!_use_path);
 			inputs[14].setVisible( _use_path);
 			inputs[15].setVisible(_dimt == 0 && !_use_path && _font != "");
+			
+			outputs[1].setVisible(_atls, _atls);
 		#endregion
 			
 		#region modify text
@@ -502,6 +507,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			_sw += _padd[PADDING.left] + _padd[PADDING.right];
 			_sh += _padd[PADDING.top] + _padd[PADDING.bottom];
 			
+			_outSurf = _outData[0];
 			_outSurf = surface_verify(_outSurf, _sw, _sh, attrDepth());
 		#endregion
 		
@@ -539,6 +545,8 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		__col       = _col;
 		__colLt     = _colLt;
 		__colLtLen  = array_length(_colLt);
+		__outAtlas  = _atls;
+		__atlas     = [];
 		
 		if(_use_path) {
 			var _pthl = _path.getLength(0), va;
@@ -592,6 +600,15 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					draw_text_transformed(_tx, _ty, _chr, 1, 1, _nor);
 					__dwData[__dwDataI++] = [_tx, _ty, _chr, 1, 1, _nor];
 					
+					if(__outAtlas) array_push(__atlas, { 
+						char : _chr, 
+						x    : _tx, 
+						y    : _ty, 
+						rot  : _nor,
+						sx   : 1, 
+						sy   : 1, 
+					});
+					
 					__temp_tx += string_width(_chr) + __temp_trck;
 				});
 				
@@ -631,6 +648,15 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					draw_text_transformed(_tx, _ty, _chr, __temp_ss, __temp_ss, 0);
 					__dwData[__dwDataI++] = [_tx, _ty, _chr, __temp_ss, __temp_ss, 0];
 					
+					if(__outAtlas) array_push(__atlas, { 
+						char : _chr, 
+						x    : _tx, 
+						y    : _ty, 
+						rot  : 0,
+						sx   : __temp_ss, 
+						sy   : __temp_ss, 
+					});
+					
 					__temp_tx += (string_width(_chr) + __temp_trck) * __temp_ss;
 				});
 			
@@ -642,6 +668,9 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		array_resize(__dwData, __dwDataI);
 		draw_data[_array_index] = __dwData;
 		
-		return _outSurf;
+		_outData[0] = _outSurf;
+		_outData[1] = __atlas;
+		
+		return _outData;
 	}
 }
