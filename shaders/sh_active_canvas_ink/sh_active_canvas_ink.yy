@@ -3,8 +3,8 @@
   "%Name":"sh_active_canvas_ink",
   "name":"sh_active_canvas_ink",
   "parent":{
-    "name":"drawer",
-    "path":"folders/nodes/data/generator/drawer.yy",
+    "name":"active_canvas",
+    "path":"folders/nodes/data/generator/drawer/active_canvas.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

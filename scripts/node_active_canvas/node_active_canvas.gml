@@ -45,6 +45,8 @@ function Node_Active_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		[ "Brush Properties", false ], 1,  5, 15, 
 	];
 	
+	////- Nodes
+		
 	brush_prev = {
 		active : false,
 		pos    : [0,0],
@@ -65,8 +67,8 @@ function Node_Active_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var _bx = _x + _bpos[0] * _s;
 		var _by = _y + _bpos[1] * _s;
 		
-		var _rx = lengthdir_x(ui(16), _brot);
-		var _ry = lengthdir_y(ui(16), _brot);
+		var _rx = lengthdir_x(ui(20), _brot);
+		var _ry = lengthdir_y(ui(20), _brot);
 		
 		draw_set_color(COLORS._main_accent);
 		draw_line(_bx - _rx, _by - _ry, _bx + _rx, _by + _ry);

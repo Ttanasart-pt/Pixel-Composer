@@ -31,51 +31,53 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	color	= COLORS.node_blend_canvas;
 	setAlwaysTimeline(new timelineItemNode_Canvas(self));
 	
+	////- =Frames
+	
 	newInput( 0, nodeValue_Dimension());
 	
-	newInput( 1, nodeValue_Color("Color", ca_white ));
-	newInput( 2, nodeValue_ISlider("Brush Size", 1, [1, 32, 0.1] ));
+	////- =Animation
 	
-	newInput( 3, nodeValue_Slider("Fill Threshold", 0.));
+	newInput(12, nodeValue_Bool(        "Frames Animation", true ));
+	newInput(18, nodeValue_Enum_Scroll( "Animation Type",   0, [ "Loop", "Hold", "Clear" ]));
+	newInput(13, nodeValue_Float(       "Animation Speed",  1 ));
 	
-	newInput( 4, nodeValue_Enum_Scroll("Fill Type",  0, ["4 connect", "8 connect", "Entire canvas"]));
+	////- =Brush
 	
-	newInput( 5, nodeValue_Bool("Draw Preview Overlay", true));
+	newInput( 6, nodeValue_Surface(         "Brush" )).setVisible(true, false);
+	newInput(15, nodeValue_Range(           "Brush Distance",            [1,1], { linked : true }));
+	newInput(17, nodeValue_Rotation_Random( "Random Direction",          [0,0,0,0,0] ));
+	newInput(16, nodeValue_Bool(            "Rotate Brush by Direction", false       ));
 	
-	newInput( 6, nodeValue_Surface("Brush"))
-		.setVisible(true, false);
+	/* deprecated */ newInput( 1, nodeValue_Color(       "Color",                ca_white ));
+	/* deprecated */ newInput( 2, nodeValue_ISlider(     "Brush Size",           1, [1, 32, 0.1] ));
+	/* deprecated */ newInput( 3, nodeValue_Slider(      "Fill Threshold",       0 ));
+	/* deprecated */ newInput( 4, nodeValue_Enum_Scroll( "Fill Type",            0, ["4 connect", "8 connect", "Entire canvas"]));
+	/* deprecated */ newInput( 5, nodeValue_Bool(        "Draw Preview Overlay", true ));
+	/* deprecated */ newInput( 7, nodeValue_Int(         "Surface Amount",       1 ));
+	/* deprecated */ newInput(11, nodeValue_Slider(      "Alpha",                1 ));
 	
-	newInput( 7, nodeValue_Int("Surface Amount", 1));
+	////- =Background
 	
-	newInput( 8, nodeValue_Surface("Background"));
+	newInput(10, nodeValue_Bool(    "Render Background", true ));
+	newInput( 8, nodeValue_Surface( "Background" ));
+	newInput(14, nodeValue_Bool(    "Use Background Dimension", true ));
+	newInput( 9, nodeValue_Slider(  "Background Alpha", 1 ));
 	
-	newInput( 9, nodeValue_Slider("Background Alpha", 1.));
-		
-	newInput(10, nodeValue_Bool("Render Background", true));
+	////- =Data Transfer
 	
-	newInput(11, nodeValue_Slider("Alpha", 1 ));
+	newInput(19, nodeValue_Surface( "Data Source" ));
+	newInput(20, nodeValue_Bool(    "Transfer Dimension", true ));
 	
-	newInput(12, nodeValue_Bool("Frames Animation", true ));
-	
-	newInput(13, nodeValue_Float("Animation Speed", 1 ));
-	
-	newInput(14, nodeValue_Bool("Use Background Dimension", true ));
-	
-	newInput(15, nodeValue_Range("Brush Distance", [ 1, 1 ] , { linked : true }));
-	
-	newInput(16, nodeValue_Bool("Rotate Brush by Direction", false ));
-	
-	newInput(17, nodeValue_Rotation_Random("Random Direction", [ 0, 0, 0, 0, 0 ] ));
-	
-	newInput(18, nodeValue_Enum_Scroll("Animation Type",  0, [ "Loop", "Hold", "Clear" ]));
+	// input 21
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	
+	////- Nodes
 	
 	frame_renderer_x     = 0;
 	frame_renderer_x_to  = 0;
 	frame_renderer_x_max = 0;
 	frame_dragging       = noone;
-	
 	frame_selecting      = noone;
 	
 	menu_frame = [
@@ -242,17 +244,18 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 	}).setNode(self);
 	
+	input_display_list = [ 
+		["Frames",       false    ],  0, frame_renderer, 
+		["Animation",    false, 12], 18, 13, 
+		["Brush",         true    ],  6, 15, 17, 16, 
+		["Background",    true, 10],  8, 14,  9, 
+		["Data Transfer", true],     19, 20, button(function() /*=>*/ {return transferData()}).setText("Transfer Data"), 
+	];
+	
 	temp_surface = array_create(2);
 	
 	live_edit   = false;
 	live_target = "";
-	
-	input_display_list = [ 
-		["Frames",    false    ],  0, frame_renderer, 
-		["Animation", false, 12], 18, 13, 
-		["Brush",      true    ],  6, 15, 17, 16, 
-		["Background", true, 10],  8, 14,  9, 
-	];
 	
 	#region ++++ data ++++
 		attributes.frames = 1;
@@ -808,11 +811,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	function setCanvasSurface(surface, index = preview_index) { INLINE canvas_surface[index] = surface; }
 	
-	static apply_surfaces = function() {
-		for( var i = 0; i < attributes.frames; i++ )
-			apply_surface(i);
-	}
-	
+	static   apply_surfaces = function() { for( var i = 0; i < attributes.frames; i++ ) apply_surface(i); }
 	function apply_surface(index = preview_index) {
 		var _dim = attributes.dimension;
 		var cDep = attrDepth();
@@ -842,12 +841,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		surface_clear(drawing_surface);
 	}
 	
-	static surface_store_buffers = function(index = preview_index) {
-		for( var i = 0; i < attributes.frames; i++ )
-			surface_store_buffer(i);
-	}
-	
-	static surface_store_buffer = function(index = preview_index) {
+	static surface_store_buffers = function(index = preview_index) { for( var i = 0; i < attributes.frames; i++ ) surface_store_buffer(i); }
+	static surface_store_buffer  = function(index = preview_index) {
 		if(index >= attributes.frames) return;
 		
 		buffer_delete_safe(canvas_buffer[index]);
@@ -1572,6 +1567,30 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		tool_selection.createSelectionFromSurface(surf);
 		surface_free(surf);
+	}
+
+	static transferData = function() {
+		var _dat = inputs[19].getValue();
+		var _dim = inputs[20].getValue();
+		if(!is_surface(_dat)) return;
+		
+		var _canSurf = getCanvasSurface();
+		var _sw = surface_get_width_safe(_dat);
+		var _sh = surface_get_height_safe(_dat);
+		
+		if(_dim) {
+			attributes.dimension = [_sw, _sh];
+			inputs[0].setValue([_sw, _sh]);
+			
+			_canSurf = surface_verify(_canSurf, _sw, _sh);
+		}
+		
+		surface_set_shader(_canSurf);
+			draw_surface(_dat, 0, 0);
+		surface_reset_shader();
+		
+		setCanvasSurface(_canSurf);
+		surface_store_buffer();
 	}
 }
 
