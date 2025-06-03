@@ -48,7 +48,7 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	newActiveInput(8);
 	
-	////- Surfaces
+	////- =Surfaces
 	
 	newInput( 0, nodeValue_Surface(     "Background" ));
 	newInput( 1, nodeValue_Surface(     "Foreground" ));
@@ -58,13 +58,15 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput( 6, nodeValue_Enum_Scroll( "Output dimension",   0, [ "Background", "Forground", "Mask", "Maximum", "Constant" ])).rejectArray();
 	newInput( 7, nodeValue_Vec2(        "Constant dimension", DEF_SURF ));
 	
-	////- Blend
+	////- =Blend
 	
-	newInput(2, nodeValue_Enum_Scroll( "Blend mode",     0, BLEND_TYPES ));
+	newInput(2, nodeValue_Enum_Scroll( "Blend mode",     0, BLEND_TYPES ))
+		.setHistory([ BLEND_TYPES, { cond: function() /*=>*/ {return LOADING_VERSION < 1_18_00_0}, list: global.BLEND_TYPES_18 } ]);
+	
 	newInput(3, nodeValue_Slider(      "Opacity",        1 ));
 	newInput(9, nodeValue_Bool(        "Preserve alpha", false));
 	
-	////- Transform
+	////- =Transform
 	
 	newInput( 5, nodeValue_Enum_Scroll( "Fill mode",         0, [ "None", "Stretch", "Tile" ]));
 	newInput(14, nodeValue_Vec2(        "Position",        [.5,.5] ));
@@ -80,6 +82,8 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		["Blend",		false], 2, 3, 9,
 		["Transform",	false], 5, 14, 
 	]
+	
+	////- Nodes
 	
 	attribute_surface_depth();
 	
@@ -313,9 +317,4 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		return _outSurf;
 	}
 
-	///////////////////////
-	
-	inputs[2].options_histories = [ BLEND_TYPES,
-		{ cond: function() /*=>*/ {return LOADING_VERSION < 1_18_00_0}, list: global.BLEND_TYPES_18 }
-	];
 }

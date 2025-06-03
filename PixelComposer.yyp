@@ -1386,7 +1386,11 @@
     {"$GMIncludedFile":"","%Name":"Canvas.png","CopyToMask":-1,"filePath":"datafiles/data/Welcome files/Templates","name":"Canvas.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Canvas.pxc","CopyToMask":-1,"filePath":"datafiles/data/Welcome files/Templates","name":"Canvas.pxc","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Welcome files.zip","CopyToMask":-1,"filePath":"datafiles/data/Welcome files","name":"Welcome files.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"dllcredits.txt","ConfigValues":{"Itch":{"CopyToMask":"0",},},"CopyToMask":0,"filePath":"datafiles","name":"dllcredits.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"dllcredits.txt","ConfigValues":{
+        "Itch":{
+          "CopyToMask":"0",
+        },
+      },"CopyToMask":0,"filePath":"datafiles","name":"dllcredits.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"dlltest1.dll","CopyToMask":-1,"filePath":"datafiles","name":"dlltest1.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"ffmpeg.exe","CopyToMask":-1,"filePath":"datafiles/ffmpeg/bin","name":"ffmpeg.exe","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"LICENSE","CopyToMask":-1,"filePath":"datafiles/ffmpeg","name":"LICENSE","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
@@ -1406,7 +1410,11 @@
     {"$GMIncludedFile":"","%Name":"mf.dll","CopyToMask":-1,"filePath":"datafiles","name":"mf.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"mfcore.dll","CopyToMask":-1,"filePath":"datafiles","name":"mfcore.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"mfplat.dll","CopyToMask":-1,"filePath":"datafiles","name":"mfplat.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"PixelComposer_profile-2.provisionprofile","ConfigValues":{"Itch":{"CopyToMask":"2",},},"CopyToMask":-1,"filePath":"datafiles","name":"PixelComposer_profile-2.provisionprofile","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"PixelComposer_profile-2.provisionprofile","ConfigValues":{
+        "Itch":{
+          "CopyToMask":"2",
+        },
+      },"CopyToMask":-1,"filePath":"datafiles","name":"PixelComposer_profile-2.provisionprofile","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"data.win","CopyToMask":-1,"filePath":"datafiles/report","name":"data.win","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"execute_shell_simple_ext_x64.dll","CopyToMask":-1,"filePath":"datafiles/report","name":"execute_shell_simple_ext_x64.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"options.ini","CopyToMask":-1,"filePath":"datafiles/report","name":"options.ini","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
@@ -1570,6 +1578,7 @@
     {"id":{"name":"__3d_mesh_helper","path":"scripts/__3d_mesh_helper/__3d_mesh_helper.yy",},},
     {"id":{"name":"__3d_particle","path":"scripts/__3d_particle/__3d_particle.yy",},},
     {"id":{"name":"__3D","path":"scripts/__3D/__3D.yy",},},
+    {"id":{"name":"__active_canvas_brush","path":"scripts/__active_canvas_brush/__active_canvas_brush.yy",},},
     {"id":{"name":"__add_node_item","path":"scripts/__add_node_item/__add_node_item.yy",},},
     {"id":{"name":"__bbox","path":"scripts/__bbox/__bbox.yy",},},
     {"id":{"name":"__bone_constain_look_at","path":"scripts/__bone_constain_look_at/__bone_constain_look_at.yy",},},
@@ -3061,7 +3070,6 @@
     {"id":{"name":"sh_fd_pressure_srj","path":"shaders/sh_fd_pressure_srj/sh_fd_pressure_srj.yy",},},
     {"id":{"name":"sh_fd_repulse","path":"shaders/sh_fd_repulse/sh_fd_repulse.yy",},},
     {"id":{"name":"sh_fd_subtract_pressure_gradient","path":"shaders/sh_fd_subtract_pressure_gradient/sh_fd_subtract_pressure_gradient.yy",},},
-    {"id":{"name":"__active_canvas_brush","path":"scripts/__active_canvas_brush/__active_canvas_brush.yy",},},
     {"id":{"name":"sh_fd_turbulence","path":"shaders/sh_fd_turbulence/sh_fd_turbulence.yy",},},
     {"id":{"name":"sh_fd_velocity_divergence","path":"shaders/sh_fd_velocity_divergence/sh_fd_velocity_divergence.yy",},},
     {"id":{"name":"sh_fd_visualize","path":"shaders/sh_fd_visualize/sh_fd_visualize.yy",},},

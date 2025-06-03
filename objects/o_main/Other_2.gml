@@ -58,9 +58,9 @@
 	var t = get_timer();
 	
 	printDebug($"> Setup");
-	              PREF_LOAD();                  printDebug($"> init Preferences   | complete in {get_timer() - t}");    t = get_timer();
-	if(!IS_CMD) { __initLocale();               printDebug($"> init Locale        | complete in {get_timer() - t}");    t = get_timer(); }
-	if(!IS_CMD) { __initHotKey();               printDebug($"> init Hotkeys       | complete in {get_timer() - t}");    t = get_timer(); }
+	              PREF_LOAD();            printDebug($"> init Preferences   | complete in {get_timer() - t}");    t = get_timer();
+	if(!IS_CMD) { __initLocale();         printDebug($"> init Locale        | complete in {get_timer() - t}");    t = get_timer(); }
+	if(!IS_CMD) { __initHotKey();         printDebug($"> init Hotkeys       | complete in {get_timer() - t}");    t = get_timer(); }
 	
 	log_clear();
 	log_newline();

@@ -537,6 +537,9 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _esw = _ew > _eh? _ew / _am : 0;
 			var _esh = _ew > _eh? 0 : _eh / _am;
 			
+			var _ehw = _ew > _eh? _esw / 2 : _ew;
+			var _ehh = _ew > _eh? _eh : _esh / 2;
+			
 			if(i == 1) { _edShf -= _sh-_eh; }
 			if(i == 3) { _edShf -= _sw-_ew; }
 			
@@ -579,7 +582,7 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 							
 							break;
 							
-						case MK_TILE_EDGE_SPRITE.left_center_right :	
+						case MK_TILE_EDGE_SPRITE.left_center_right :
 							switch(j) {
 								case 0 : draw_surface(_ed, -_esw * 0, -_esh * 0); break;
 								case 1 : draw_surface(_ed, -_esw * 1, -_esh * 1); break;
@@ -589,7 +592,25 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 								case 4 : if(_edgInnr & (1 << i)) draw_surface(_ed, -_esw * 2, -_esh * 2); break;
 								
 								case 5 : 
-								case 6 : if(_edgInnr & (1 << i)) draw_surface(_ed, -_esw * 1, -_esh * 1); break;
+									if(_edgInnr & (1 << i) == 0) break;
+									
+									draw_surface_part(_ed, 0, 0, _ehw, _ehh, 0, 0); 
+									if(_ew > _eh) draw_surface_part(_ed, _ew - _ehw, 0, _ehw, _ehh, _ehw, 0); 
+									else          draw_surface_part(_ed, 0, _eh - _ehh, _ehw, _ehh, 0, _ehh); 
+									break;
+									
+								case 6 : 
+									if(_edgInnr & (1 << i) == 0) break;
+									
+									if(_ew > _eh) {
+										draw_surface_part(_ed, _ew - _ehw, 0, _ehw, _ehh,    0, 0); 
+										draw_surface_part(_ed,          0, 0, _ehw, _ehh, _ehw, 0); 
+									} else {
+										draw_surface_part(_ed, 0, _eh - _ehh, _ehw, _ehh, 0,    0); 
+										draw_surface_part(_ed, 0,          0, _ehw, _ehh, 0, _ehh); 
+									}
+									
+									break;
 							}
 							break;
 					}
