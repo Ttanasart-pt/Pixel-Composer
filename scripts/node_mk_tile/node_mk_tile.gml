@@ -1,6 +1,6 @@
 #region data
 	enum MK_TILE_EDGE_TYPE      { uniform, individual }
-	enum MK_TILE_EDGE_SPRITE    { single,  side_center, left_center_right }
+	enum MK_TILE_EDGE_SPRITE    { single,  left_center_right }
 	enum MK_TILE_EDGE_TRANSFORM { flip,    rotate }
 #endregion
 
@@ -22,18 +22,19 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	];
 	
 	newInput(2, nodeValue_Enum_Scroll( "Type",  0, { data: _tile_sprite_types, horizontal: 2, text_pad: ui(16) }));
-	newInput(4, nodeValue_Padding(     "Crop", [8,8,8,8]));
+	newInput(4, nodeValue_Padding(     "Crop", [8,8,8,8])).setType(VALUE_TYPE.integer);
 	
 	////- =Edge
 	
-	var _edge_sprite_types = __enum_array_gen([ "Single", "Side + Center", "Left + Center + Right" ], mk_tile_edge_sprite, c_white);
+	var _edge_sprite_types = __enum_array_gen([ "Single", "Left + Center + Right" ], mk_tile_edge_sprite, c_white);
 	
 	newInput( 5, nodeValue_Enum_Scroll( "Edge Type",         0, __enum_array_gen([ "Uniform", "Individual" ], s_mk_tile_edge_type, c_white) ));
 	newInput(12, nodeValue_Enum_Scroll( "Edge Sprite",       0, { data: _edge_sprite_types, horizontal: 0, text_pad: ui(16) }));
 	newInput(13, nodeValue_Enum_Scroll( "Edge Transform",    0, __enum_array_gen([ "Flip", "Rotate" ], s_mk_tile_edge_transform, c_white) ));
-	newInput(10, nodeValue_Padding(     "Edge Shift",       [0,0,0,0] ));
+	newInput(10, nodeValue_Padding(     "Edge Shift",       [0,0,0,0] )).setType(VALUE_TYPE.integer);
 	newInput(11, nodeValue_Toggle(      "Full Edge",         0,      { data: ["T","B","L","R"] }));
 	newInput(15, nodeValue_Toggle(      "Inner Edge",        0b1111, { data: ["T","B","L","R"] }));
+	newInput(16, nodeValue_Padding(     "Inner Edge Shift", [0,0,0,0] )).setType(VALUE_TYPE.integer);
 	
 	////- =Edge Texture
 	
@@ -47,12 +48,12 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput( 3, nodeValue_Enum_Button( "Output type",       0, [ "Sheet", "Array" ] ));
 	newInput(14, nodeValue_Bool(        "Sort Array by Bit", true))
 	
-	// input 16
+	// input 17
 		
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 
 		["Surfaces",      true], 0, 1, 
 		["Tileset",      false], 2, 4, 
-		["Edge",         false], 5, 12, 13, 10, 11, new Inspector_Spacer(ui(4), true, true, ui(6)), 15, 
+		["Edge",         false], 5, 12, 13, 10, 11, new Inspector_Spacer(ui(4), true, true, ui(6)), 15, 16, 
 		["Edge Textures", true], 6, 7, 8, 9, 
 		["Output",       false], 3, 14, 
 	];
@@ -117,8 +118,8 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 						0, 1, 2, /**/ 5, /**/ 0, 1, 1, 2, /**/ 1, 6, 6, 
 					    0, 0, 0, /**/ 0, /**/ 3, 3, 4, 4, /**/ 6, 0, 0, ];
 		
-		index_55_el = [ 0, 0, 0, /**/ 0, /**/ 0, 0, 3, 3, /**/ 4, 3, 0,  
-					    1, 0, 0, /**/ 1, /**/ 1, 0, 3, 3, /**/ 4, 4, 0,  
+		index_55_el = [ 0, 0, 0, /**/ 0, /**/ 0, 0, 3, 3, /**/ 3, 3, 0,  
+					    1, 0, 0, /**/ 1, /**/ 1, 0, 3, 3, /**/ 3, 4, 0,  
 					    2, 0, 0, /**/ 2, /**/ 1, 0, 4, 4, /**/ 4, 6, 4, 
 						5, 0, 0, /**/ 5, /**/ 2, 0, 4, 4, /**/ 4, 6, 3,  
 					    0, 0, 0, /**/ 0, /**/ 1, 0, 6, 6, /**/ 6, 0, 0, ];
@@ -472,7 +473,9 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _edgTran = _data[13];
 			var _edgeShf = _data[10];
 			var _edgFull = _data[11];
+			
 			var _edgInnr = _data[15];
+			var _edgInsh = _data[16];
 			
 			var _outp    = _data[3];
 			
@@ -527,6 +530,7 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		for( var i = 0; i < 4; i++ ) { //edges
 			var _ed    = _edges[i];
 			var _edShf = _edgeShf[_shi[i]];
+			var _inShf = _edgInsh[_shi[i]];
 			
 			edge_surface[i] = array_create(7, noone);
 			if(!is_surface(_ed)) continue;
@@ -539,6 +543,9 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			
 			var _ehw = _ew > _eh? _esw / 2 : _ew;
 			var _ehh = _ew > _eh? _eh : _esh / 2;
+			
+			var _inShx = i < 2? _inShf : 0;
+			var _inShy = i < 2? 0 : _inShf;
 			
 			if(i == 1) { _edShf -= _sh-_eh; }
 			if(i == 3) { _edShf -= _sw-_ew; }
@@ -567,29 +574,14 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 							}
 							break;
 						
-						case MK_TILE_EDGE_SPRITE.side_center : 
-							switch(j) {
-								case 1 : draw_surface(_ed, -_esw * 1, -_esh * 1); break;
-								
-								case 0 : 
-								case 2 : draw_surface(_ed, -_esw * 0, -_esh * 0); break;
-								
-								case 3 :
-								case 4 : 
-								case 5 : 
-								case 6 : if(_edgInnr & (1 << i)) draw_surface(_ed, -_esw * 0, -_esh * 0); break;
-							}
-							
-							break;
-							
-						case MK_TILE_EDGE_SPRITE.left_center_right :
+						case MK_TILE_EDGE_SPRITE.left_center_right : 
 							switch(j) {
 								case 0 : draw_surface(_ed, -_esw * 0, -_esh * 0); break;
 								case 1 : draw_surface(_ed, -_esw * 1, -_esh * 1); break;
 								case 2 : draw_surface(_ed, -_esw * 2, -_esh * 2); break;
 								
-								case 3 : if(_edgInnr & (1 << i)) draw_surface(_ed, -_esw * 0, -_esh * 0); break;
-								case 4 : if(_edgInnr & (1 << i)) draw_surface(_ed, -_esw * 2, -_esh * 2); break;
+								case 3 : if(_edgInnr & (1 << i)) draw_surface(_ed, -_esw * 0 + _inShx, -_esh * 0 + _inShy); break;
+								case 4 : if(_edgInnr & (1 << i)) draw_surface(_ed, -_esw * 2 - _inShx, -_esh * 2 - _inShy); break;
 								
 								case 5 : 
 									if(_edgInnr & (1 << i) == 0) break;
@@ -603,11 +595,11 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 									if(_edgInnr & (1 << i) == 0) break;
 									
 									if(_ew > _eh) {
-										draw_surface_part(_ed, _ew - _ehw, 0, _ehw, _ehh,    0, 0); 
-										draw_surface_part(_ed,          0, 0, _ehw, _ehh, _ehw, 0); 
+										draw_surface_part(_ed, _ew - _ehw, 0, _ehw, _ehh,    0 - max(0, _inShx - _esw / 2), 0); 
+										draw_surface_part(_ed,          0, 0, _ehw, _ehh, _ehw + max(0, _inShx - _esw / 2), 0); 
 									} else {
-										draw_surface_part(_ed, 0, _eh - _ehh, _ehw, _ehh, 0,    0); 
-										draw_surface_part(_ed, 0,          0, _ehw, _ehh, 0, _ehh); 
+										draw_surface_part(_ed, 0, _eh - _ehh, _ehw, _ehh, 0,    0 - max(0, _inShy - _esh / 2)); 
+										draw_surface_part(_ed, 0,          0, _ehw, _ehh, 0, _ehh + max(0, _inShy - _esh / 2)); 
 									}
 									
 									break;
@@ -636,52 +628,6 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 						
 					_edBuf = __edge_buffer[1];
 				} 
-				
-				if(_edgSprt == MK_TILE_EDGE_SPRITE.side_center && j >= 2) {
-					surface_set_target(__edge_buffer[2]);
-						DRAW_CLEAR
-						BLEND_ALPHA_MULP
-							
-						if(j == 2) { // flip surface
-							if(i == 0 || i == 1) draw_surface_ext(_edBuf, _sw, 0, -1, 1, 0, c_white, 1); // flip x
-							if(i == 2 || i == 3) draw_surface_ext(_edBuf, 0, _sh, 1, -1, 0, c_white, 1); // flip y
-							
-						} else if(j == 3) {
-							if(i == 0 || i == 1) draw_surface_part_ext(_edBuf, 0, 0, _sw / 2, _sh, _sw / 2, 0,  1, 1, c_white, 1);
-							if(i == 2 || i == 3) draw_surface_part_ext(_edBuf, 0, 0, _sw, _sh / 2, 0, _sh / 2,  1, 1, c_white, 1);
-							
-						} else if(j == 4) {
-							if(i == 0 || i == 1) draw_surface_part_ext(_edBuf, 0, 0, _sw / 2, _sh, _sw / 2, 0, -1, 1, c_white, 1);
-							if(i == 2 || i == 3) draw_surface_part_ext(_edBuf, 0, 0, _sw, _sh / 2, 0, _sh / 2, 1, -1, c_white, 1);
-							
-						} else if(j == 5) {
-							if(i == 0 || i == 1) {
-								draw_surface_part_ext(_edBuf, 0, 0, _sw / 2, _sh,   0, 0,  1, 1, c_white, 1);
-								draw_surface_part_ext(_edBuf, 0, 0, _sw / 2, _sh, _sw, 0, -1, 1, c_white, 1);
-							}
-								
-							if(i == 2 || i == 3) {
-								draw_surface_part_ext(_edBuf, 0, 0, _sw, _sh / 2, 0,   0, 1,  1, c_white, 1);
-								draw_surface_part_ext(_edBuf, 0, 0, _sw, _sh / 2, 0, _sh, 1, -1, c_white, 1);
-							}
-							
-						} else if(j == 6) {
-							if(i == 0 || i == 1) {
-								draw_surface_part_ext(_edBuf, 0, 0, _sw / 2, _sh, _sw / 2, 0,  1, 1, c_white, 1);
-								draw_surface_part_ext(_edBuf, 0, 0, _sw / 2, _sh, _sw / 2, 0, -1, 1, c_white, 1);
-							}
-								
-							if(i == 2 || i == 3) {
-								draw_surface_part_ext(_edBuf, 0, 0, _sw, _sh / 2, 0, _sh / 2, 1,  1, c_white, 1);
-								draw_surface_part_ext(_edBuf, 0, 0, _sw, _sh / 2, 0, _sh / 2, 1, -1, c_white, 1);
-							}
-						}
-							
-						BLEND_NORMAL
-					surface_reset_target();
-						
-					_edBuf = __edge_buffer[2];
-				}
 				
 				surface_set_target(__edge_surface[_sIndx]);
 					DRAW_CLEAR
