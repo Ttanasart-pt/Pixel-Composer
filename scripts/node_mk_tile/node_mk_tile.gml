@@ -137,7 +137,7 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
                          2,  18,  26, 10, /**/  86, 223, 127,  75, /**/ 222, 255, 219,  41, 
                          0,  16,  24,  8, /**/ 122,  30,  27, 218, /**/  22,   7,  95,  11, ];
 		
-		index_48_et = [ 5, 0, 1, 2, /**/ 4, 1, 1, 3, /**/ 0, 6, 1, 2, 
+		index_48_et = [ 5, 0, 1, 2, /**/ 3, 1, 1, 4, /**/ 0, 6, 1, 2, 
 		                0, 3, 6, 4, /**/ 3, 4, 3, 4, /**/ 0, 4, 0, 3, 
 						0, 3, 6, 4, /**/ 0, 0, 0, 0, /**/ 4, 0, 3, 0, 
 						5, 0, 1, 2, /**/ 6, 4, 3, 6, /**/ 0, 0, 0, 0, ];
@@ -150,7 +150,7 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		index_48_el = [ 0, 0, 3, 3, /**/ 3, 3, 0, 6, /**/ 0, 4, 0, 0, 
 						1, 1, 6, 6, /**/ 1, 4, 0, 4, /**/ 1, 4, 0, 0, 
 						2, 2, 4, 4, /**/ 1, 3, 0, 3, /**/ 6, 0, 3, 0, 
-						5, 5, 0, 0, /**/ 4, 4, 0, 6, /**/ 2, 0, 4, 0, ];
+						5, 5, 0, 0, /**/ 4, 4, 0, 6, /**/ 2, 0, 3, 0, ];
 																   
 		index_48_er = [ 0, 3, 3, 0, /**/ 6, 0, 3, 3, /**/ 0, 4, 0, 0, 
 						1, 6, 6, 1, /**/ 4, 0, 4, 1, /**/ 0, 3, 0, 6, 
@@ -537,15 +537,6 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			
 			var _ew  = surface_get_width_safe(_ed);
 			var _eh  = surface_get_height_safe(_ed);
-			var _am  = _edgSprt + 1;
-			var _esw = _ew > _eh? _ew / _am : 0;
-			var _esh = _ew > _eh? 0 : _eh / _am;
-			
-			var _ehw = _ew > _eh? _esw / 2 : _ew;
-			var _ehh = _ew > _eh? _eh : _esh / 2;
-			
-			var _inShx = i < 2? _inShf : 0;
-			var _inShy = i < 2? 0 : _inShf;
 			
 			if(i == 1) { _edShf -= _sh-_eh; }
 			if(i == 3) { _edShf -= _sw-_ew; }
@@ -575,6 +566,15 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 							break;
 						
 						case MK_TILE_EDGE_SPRITE.left_center_right : 
+							var _esw = _ew > _eh? _ew / 3 : 0;
+							var _esh = _ew > _eh? 0 : _eh / 3;
+							
+							var _ehw = _ew > _eh? _esw / 2 : _ew;
+							var _ehh = _ew > _eh? _eh : _esh / 2;
+						
+							var _inShx = i < 2? _inShf : 0;
+							var _inShy = i < 2? 0 : _inShf;
+					
 							switch(j) {
 								case 0 : draw_surface(_ed, -_esw * 0, -_esh * 0); break;
 								case 1 : draw_surface(_ed, -_esw * 1, -_esh * 1); break;
