@@ -163,17 +163,6 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var sx = ui(24);
 		var sy = ui(24);
 		
-		// for( var i = 0, n = array_length(edge_surface); i < n; i++ ) {
-		// 	var _es = edge_surface[i];
-			
-		// 	for( var j = 0, m = array_length(_es); j < m; j++ ) {
-		// 		var _ww = surface_get_width_safe(_es[j]);
-		// 		var _hh = surface_get_height_safe(_es[j]);
-				
-		// 		draw_surface_ext_safe(_es[j], sx, sy + j * 24, 4, 4);
-		// 	}
-		// }
-		
 		if(!attributes.show_tile_index) return;
 		
 		var _tex = getSingleValue(0);

@@ -49,6 +49,8 @@ void main() {
 	
 	float yy = floor(pos.y * nsy);
 	float xx = (pos.x + random(vec2(1., yy), seed)) * nsx;
+      
+	xx = fract(fract(xx / 2.) + 1.) * 2.;
 	
 	float x0   = floor(xx);
 	float x1   = floor(xx) + 1.;
