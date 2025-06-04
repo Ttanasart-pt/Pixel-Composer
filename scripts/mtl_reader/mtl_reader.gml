@@ -35,6 +35,7 @@ function readMtl(path) {
 				cur_mat = new MTLmaterial(str_strip_nr(sep[1]));
 				array_push(mat, cur_mat);
 				break;
+				
 			case "Ka" :		cur_mat.refc = colorFromRGBArray([sep[1], sep[2], sep[3]]); break;
 			case "Kd" :		cur_mat.diff = colorFromRGBArray([sep[1], sep[2], sep[3]]); break;
 			case "Ks" :		cur_mat.spec = colorFromRGBArray([sep[1], sep[2], sep[3]]); break;

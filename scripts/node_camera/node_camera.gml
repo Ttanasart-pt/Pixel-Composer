@@ -2,20 +2,20 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	name = "Camera";
 	preview_alpha = 0.5;
 	
-	////- Camera
+	////- =Camera
 	
 	newInput(6, nodeValue_Dimension());
-	newInput(0, nodeValue_Vec2(   "Focus Center", [ .5, .5 ])).setUnitRef(function() /*=>*/ {return getInputData(6)}, VALUE_UNIT.reference);
-	newInput(1, nodeValue_Slider( "Zoom", 1, [ 0.01, 4, 0.01 ]));
+	newInput(0, nodeValue_Vec2(   "Focus Center", [.5,.5] )).setUnitRef(function() /*=>*/ {return getInputData(6)}, VALUE_UNIT.reference);
+	newInput(1, nodeValue_Slider( "Zoom",         1, [.01,4,.01] ));
 	
-	////- FOV
+	////- =FOV
 	
-	newInput(2, nodeValue_Bool(  "Depth of Field", false));
-	newInput(3, nodeValue_Float( "Focal distance", 0));
-	newInput(5, nodeValue_Float( "Focal range", 0));
-	newInput(4, nodeValue_Float( "Defocus", 1));
+	newInput(2, nodeValue_Bool(  "Depth of Field", false ));
+	newInput(3, nodeValue_Float( "Focal distance", 0     ));
+	newInput(5, nodeValue_Float( "Focal range",    0     ));
+	newInput(4, nodeValue_Float( "Defocus",        1     ));
 	
-	//// inputs 7
+	// inputs 7
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -25,6 +25,8 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	hold_visibility = true;
 	hold_select		= true;
+	
+	////- Layer
 	
 	layer_dragging	= noone;
 	layer_remove	= -1;
@@ -225,17 +227,19 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		doUpdate();
 	}
 	
+	////- Inputs
+	
 	static createNewInput = function(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		var _s    = floor((index - input_fix_len) / data_length);
 		if(_s) array_push(input_display_list, new Inspector_Spacer(20, true));
 		
-		newInput(index + 0, nodeValue_Surface(     $"Element {_s}"));
+		newInput(index + 0, nodeValue_Surface(     $"Element {_s}" ));
 		newInput(index + 1, nodeValue_Enum_Button( $"Positioning {_s}", false, [ "Space", "Camera" ]));
-		newInput(index + 2, nodeValue_Vec2(        $"Position {_s}", [0,0])).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
-		newInput(index + 3, nodeValue_Enum_Scroll( $"Oversample {_s}", 0, __enum_array_gen(["Empty ", "Repeat ", "Repeat X", "Repeat Y"], s_node_camera_repeat)));
-		newInput(index + 4, nodeValue_Vec2(        $"Parallax {_s}", [0,0]));
-		newInput(index + 5, nodeValue_Float(       $"Depth {_s}", 0));
+		newInput(index + 2, nodeValue_Vec2(        $"Position {_s}",    [0,0] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+		newInput(index + 3, nodeValue_Enum_Scroll( $"Oversample {_s}",   0, __enum_array_gen(["Empty ", "Repeat ", "Repeat X", "Repeat Y"], s_node_camera_repeat)));
+		newInput(index + 4, nodeValue_Vec2(        $"Parallax {_s}",    [0,0] ));
+		newInput(index + 5, nodeValue_Float(       $"Depth {_s}",        0    ));
 		
 		while(_s >= array_length(attributes.layer_visible))    array_push(attributes.layer_visible,    true);
 		while(_s >= array_length(attributes.layer_selectable)) array_push(attributes.layer_selectable, true);
@@ -259,6 +263,8 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	temp_surface = [ noone, noone ];
 	
 	static getPreviewValues = function() { return getInputData(input_fix_len); }
+	
+	////- Process
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) {
 		PROCESSOR_OVERLAY_CHECK

@@ -1,20 +1,3 @@
-#pragma use(sampler_simple)
-
-#region -- sampler_simple -- [1729740692.1417658]
-    uniform int  sampleMode;
-    
-    vec4 sampleTexture( sampler2D texture, vec2 pos) {
-        if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
-            return texture2D(texture, pos);
-        
-             if(sampleMode <= 1) return vec4(0.);
-        else if(sampleMode == 2) return texture2D(texture, clamp(pos, 0., 1.));
-        else if(sampleMode == 3) return texture2D(texture, fract(pos));
-        else if(sampleMode == 4) return vec4(vec3(0.), 1.);
-        
-        return vec4(0.);
-    }
-#endregion -- sampler_simple --
 
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
@@ -28,6 +11,8 @@ uniform vec2  position;
 uniform float zoom;
 uniform float bokehStrength;
 
+uniform int  sampleMode;
+
 const float GoldenAngle = 2.39996323;
 const float Iterations = 400.0;
 
@@ -35,7 +20,19 @@ const float ContrastAmount = 150.0;
 const vec3  ContrastFactor = vec3(9.0);
 const float Smooth = 2.0;
 
-vec4 bokeh(sampler2D tex, vec2 uv, float radius) { #region ref. sh_blur_bokeh
+vec4 sampleTexture( sampler2D texture, vec2 pos) {
+    if(pos.x >= 0. && pos.x <= 1. && pos.y >= 0. && pos.y <= 1.)
+        return texture2D(texture, pos);
+    
+         if(sampleMode == 0) return vec4(0.);
+    else if(sampleMode == 1) return texture2D(texture, fract(pos));
+    else if(sampleMode == 2 && pos.y >= 0. && pos.y <= 1.) return texture2D(texture, fract(pos));
+    else if(sampleMode == 3 && pos.x >= 0. && pos.x <= 1.) return texture2D(texture, fract(pos));
+    
+    return vec4(0.);
+}
+
+vec4 bokeh(sampler2D tex, vec2 uv, float radius) { // ref. sh_blur_bokeh
 	vec3  num, weight;
 	float alpha = 0.;
     float rec   = 1.0; // reciprocal 
@@ -66,9 +63,9 @@ vec4 bokeh(sampler2D tex, vec2 uv, float radius) { #region ref. sh_blur_bokeh
 	
 	float _a = alpha / ((weight.r + weight.g + weight.b) / 3.);
 	return vec4(num / weight, pow(_a, 3.));
-} #endregion
+} 
 
-void main() { #region
+void main() {
 	vec2 pos = position + (v_vTexcoord - vec2(.5)) * (camDimension / scnDimension) * zoom;
 	
 	vec4 _col0 = sampleTexture( backg, v_vTexcoord );
@@ -80,4 +77,4 @@ void main() { #region
 	res.a  = al;
 	
     gl_FragColor = res;
-} #endregion
+}
