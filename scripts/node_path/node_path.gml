@@ -79,6 +79,11 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		new NodeTool( "Weight edit",         THEME.path_tools_weight_edit ),
 	];
 	
+	attributes.display_name = true;
+	
+	array_push(attributeEditors, "Display");
+	array_push(attributeEditors, ["Display name", function() /*=>*/ {return attributes.display_name}, new checkBox(function() /*=>*/ {return toggleAttribute("display_name")})]);
+		
 	#region ---- path ----
 		path_loop    = false;
 		anchors		 = [];
@@ -791,28 +796,35 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					draw_circle_ui(_ax1, _ay1, 4, 0, COLORS._main_accent);
 				}
 				
-				draw_sprite_colored(THEME.anchor_selector, 0, xx, yy);
-				draw_set_text(f_p1, fa_left, fa_bottom, COLORS._main_accent);
-				draw_text(xx + ui(4), yy - ui(4), inputs[input_fix_len + i].name);
+				var _anHov = 0;
+				
+				if(attributes.display_name) {
+					draw_set_text(f_p1, fa_left, fa_bottom, COLORS._main_accent);
+					draw_text(xx + ui(4), yy - ui(4), inputs[input_fix_len + i].name);
+				}
 				
 				if(drag_point == i) {
 					draw_sprite_colored(THEME.anchor_selector, 1, xx, yy);
+					_anHov = 1;
 					
 				} else if(hover && point_in_circle(_mx, _my, xx, yy, 8)) {
 					draw_sprite_colored(THEME.anchor_selector, 1, xx, yy);
+					_anHov       = 1;
 					anchor_hover = i;
 					hover_type   = 0;
 					
 				} else if(cont && hover && point_in_circle(_mx, _my, _ax0, _ay0, 8)) {
-					draw_circle_ui(_ax0, _ay0, 6, 0, COLORS._main_accent);
+					draw_circle_ui(_ax0, _ay0, ui(6), 0, COLORS._main_accent);
 					anchor_hover = i;
 					hover_type   = 1;
 					
 				} else if(cont && hover && point_in_circle(_mx, _my, _ax1, _ay1, 8)) {
-					draw_circle_ui(_ax1, _ay1, 6, 0, COLORS._main_accent);
+					draw_circle_ui(_ax1, _ay1, ui(6), 0, COLORS._main_accent);
 					anchor_hover =  i;
 					hover_type   = -1;
 				}
+				
+				draw_anchor(_anHov, xx, yy);
 			}
 			
 			if(_tooln == "Weight edit") {

@@ -32,7 +32,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Spread output", "Index", "Random", "Data", "Texture" ]);
 		
 	newInput(24, nodeValue_Int(         "Array Indices", [] )).setArrayDepth(1);
-	newInput(25, nodeValue_Surface(     "Array Texture" ));
+	newInput(25, nodeValue_Surface(     "Array Texture"     ));
 	newInput(26, nodeValue_Range(       "Animated Array",    [0,0], { linked : true } ));
 	newInput(27, nodeValue_Enum_Scroll( "Animated Array End", 0, [ "Loop", "Ping Pong", "Hide" ] ));
 	
@@ -40,62 +40,65 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	onSurfaceSize = function() /*=>*/ {return getInputData(1, DEF_SURF)}; 
 	
-	newInput( 6, nodeValue_Enum_Scroll(    "Distribution",  5, [ "Area", "Border", "Map", "Direct Data", "Path", "Full image + Tile" ]));
-	newInput( 5, nodeValue_Area(           "Area", DEF_AREA_REF, { onSurfaceSize })).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
-	newInput(13, nodeValue_Surface(        "Distribution Map"));
-	newInput(14, nodeValue_Vector(         "Distribution Data", [])).setArrayDepth(1);
-	newInput(17, nodeValue_Text(           "Extra Value", [], "Apply the third and later values in each data point (if exist) on given properties."))
+	newInput( 6, nodeValue_Enum_Scroll(    "Distribution",  5, [ "Area", "Border", "Map", "Direct Data", "Path", "Full image + Tile" ] ));
+	newInput( 5, nodeValue_Area(           "Area",          DEF_AREA_REF, { onSurfaceSize } )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
+	newInput(13, nodeValue_Surface(        "Distribution Map"      ));
+	newInput(14, nodeValue_Vector(         "Distribution Data", [] )).setArrayDepth(1);
+	newInput(17, nodeValue_Text(           "Extra Value",       [] ))
+		.setTooltip("Apply the third and later values in each data point (if exist) on given properties.")
 		.setDisplay(VALUE_DISPLAY.text_array, { data: [ "Scale", "Rotation", "Color", "Alpha", "Array Index" ] });
-	newInput( 9, nodeValue_Enum_Button(    "Scatter",  1, [ "Uniform", "Random", "Poisson" ]));
-	newInput(31, nodeValue_Bool(           "Auto Amount", false));
-	newInput( 2, nodeValue_Int(            "Amount", 8)).setValidator(VV_min(0));
-	newInput(30, nodeValue_Vec2(           "Uniform Amount", [ 4, 4 ]));
-	newInput(35, nodeValue_Rotation_Range( "Angle Range", [ 0, 360 ]));
-	newInput(44, nodeValue_Float(          "Distance", 8)).setValidator(VV_min(0));
+		
+	newInput( 9, nodeValue_Enum_Button(    "Scatter",         1, [ "Uniform", "Random", "Poisson" ] ));
+	newInput(31, nodeValue_Bool(           "Auto Amount",     false  ));
+	newInput( 2, nodeValue_Int(            "Amount",          8      )).setValidator(VV_min(0));
+	newInput(30, nodeValue_Vec2(           "Uniform Amount", [4,4]   ));
+	newInput(35, nodeValue_Rotation_Range( "Angle Range",    [0,360] ));
+	newInput(44, nodeValue_Float(          "Distance",        8      )).setValidator(VV_min(0));
 	
 	////- =Path
 	
-	newInput(19, nodeValue_PathNode(    "Path"));
-	newInput(38, nodeValue_Enum_Button( "Spacing", 0, [ "After", "Between", "Around" ]));
-	newInput(20, nodeValue_Bool(        "Rotate Along Path", true));
-	newInput(21, nodeValue_Slider(      "Path Shift", 0));
-	newInput(22, nodeValue_Float(       "Scatter Distance", 0));
+	newInput(19, nodeValue_PathNode(    "Path" ));
+	newInput(38, nodeValue_Enum_Button( "Spacing",           0, [ "After", "Between", "Around" ] ));
+	newInput(20, nodeValue_Bool(        "Rotate Along Path", true ));
+	newInput(45, nodeValue_Range(       "Path Range",       [0,1] ));
+	newInput(21, nodeValue_Slider(      "Path Shift",        0    ));
+	newInput(22, nodeValue_Float(       "Scatter Distance",  0    ));
 	
 	////- =Position
 	
 	newInput(40, nodeValue_Anchor());
-	newInput(33, nodeValue_Vec2_Range( "Random Position", [ 0, 0, 0, 0 ]));
-	newInput(36, nodeValue_Vec2(       "Shift Position", [ 0, 0 ]));
-	newInput(37, nodeValue_Bool(       "Exact",  false))
-	newInput(39, nodeValue_Range(      "Shift Radial", [ 0, 0 ]));
+	newInput(33, nodeValue_Vec2_Range( "Random Position", [0,0,0,0] ));
+	newInput(36, nodeValue_Vec2(       "Shift Position",  [0,0]     ));
+	newInput(37, nodeValue_Bool(       "Exact",           false     ))
+	newInput(39, nodeValue_Range(      "Shift Radial",    [0,0]     ));
 	
 	////- =Rotation
 	
-	newInput( 7, nodeValue_Bool(            "Point at Center", false, "Rotate each copy to face the spawn center."));
-	newInput( 4, nodeValue_Rotation_Random( "Angle", [ 0, 0, 0, 0, 0 ] ));
-	newInput(32, nodeValue_Rotation(        "Rotate per Radius", 0));
+	newInput( 7, nodeValue_Bool(            "Point at Center",    false, "Rotate each copy to face the spawn center."));
+	newInput( 4, nodeValue_Rotation_Random( "Angle",             [0,0,0,0,0] ));
+	newInput(32, nodeValue_Rotation(        "Rotate per Radius",  0          ));
 	
 	////- =Scale
 	
-	newInput( 3, nodeValue_Vec2_Range( "Scale", [ 1, 1, 1, 1 ] , { linked : true }));
-	newInput( 8, nodeValue_Bool(       "Uniform Scaling", true));
-	newInput(34, nodeValue_Vec2(       "Scale per Radius", [ 0, 0 ]));
-	newInput(43, nodeValue_Surface(    "Scale Surface"));
+	newInput( 3, nodeValue_Vec2_Range( "Scale",             [1,1,1,1] , { linked : true }));
+	newInput( 8, nodeValue_Bool(       "Uniform Scaling",    true ));
+	newInput(34, nodeValue_Vec2(       "Scale per Radius",  [0,0] ));
+	newInput(43, nodeValue_Surface(    "Scale Surface" ));
 	
 	////- =Color
 	
-	newInput(11, nodeValue_Gradient(     "Random Blend", new gradientObject(ca_white))).setMappable(28);
-	newInput(12, nodeValue_Slider_Range( "Alpha", [ 1, 1 ]));
-	newInput(16, nodeValue_Bool(         "Multiply Alpha", true));
-	newInput(41, nodeValue_Surface(      "Sample Surface"));
-	newInput(42, nodeValue_Vec2_Range(   "Sample Wiggle", [ 0, 0, 0, 0 ]));
+	newInput(11, nodeValue_Gradient(     "Random Blend",    new gradientObject(ca_white) )).setMappable(28);
+	newInput(12, nodeValue_Slider_Range( "Alpha",             [1,1] ));
+	newInput(16, nodeValue_Bool(         "Multiply Alpha",     true ));
+	newInput(41, nodeValue_Surface(      "Sample Surface" ));
+	newInput(42, nodeValue_Vec2_Range(   "Sample Wiggle",     [0,0,0,0] ));
 	
 	////- =Render
 	
-	newInput(18, nodeValue_Enum_Scroll( "Blend Mode",  0, [ "Normal", "Add", "Max" ]));
-	newInput(23, nodeValue_Bool(        "Sort Y", false));
+	newInput(18, nodeValue_Enum_Scroll( "Blend Mode", 0, [ "Normal", "Add", "Max" ] ));
+	newInput(23, nodeValue_Bool(        "Sort Y",     false ));
 	
-	// inputs: 45
+	// inputs: 46
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -108,7 +111,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	input_display_list = [ 10, 
 		["Surfaces",  true],  0,  1, 15, 24, 25, 26, 27, 
 		["Scatter",  false],  6,  5, 13, 14, 17,  9, 31,  2, 30, 35, 44, 
-		["Path",     false], 19, 38, 20, 21, 22, 
+		["Path",     false], 19, 38, 20, 45, 21, 22, 
 		["Position", false], 40, 33, 36, 37, 39, 
 		["Rotation", false],  7,  4, 32, 
 		["Scale",    false],  3,  8, 34, 43, 
@@ -191,6 +194,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var path       = _data[19];
 			var pthSpac    = _data[38];
 			var pathRot    = _data[20];
+			var pathRng    = _data[45];
 			var pathShf    = _data[21];
 			var pathDis    = _data[22];
 			
@@ -232,9 +236,11 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			inputs[ 9].setVisible(_dist != 2 && _dist != 3);
 			inputs[19].setVisible(_dist == 4,   _dist == 4);
 			inputs[20].setVisible(_dist == 4);
+			inputs[45].setVisible(_dist == 4);
 			inputs[21].setVisible(_dist == 4 && pthSpac == 0);
 			inputs[22].setVisible(_dist == 4);
 			inputs[38].setVisible(_dist == 4 && _scat == 0);
+			
 			inputs[24].setVisible(_arr == 3,    _arr  == 3);
 			inputs[25].setVisible(_arr == 4,    _arr  == 4);
 			inputs[26].setVisible(_arr);
@@ -523,6 +529,11 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 						} else {
 							_pathProgress = random_seed(1, _sed++);
 							_pathProgress = frac(_pathProgress + pathShf);
+						}
+						
+						if(_pathProgress < pathRng[0] || _pathProgress > pathRng[1]) {
+							_scx = 0;
+							_scy = 0;
 						}
 						
 						var pp = path.getPointRatio(_pathProgress, path_line_index);
