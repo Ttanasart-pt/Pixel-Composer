@@ -75,6 +75,27 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		var _atlas = inputs[0].getValue();
+		
+		for( var i = 0, n = array_length(_atlas); i < n; i++ ) {
+			var _a = _atlas[i];
+			if(!is(_a, Atlas)) continue;
+			
+			var _ax = _x + _a.x * _s;
+			var _ay = _y + _a.y * _s;
+			var _aw = _a.w * _a.sx * _s;
+			var _ah = _a.h * _a.sy * _s;
+			var _xc = _ax + _aw / 2;
+			var _yc = _ay + _ah / 2;
+			
+			draw_set_color(COLORS._main_icon);
+			draw_rectangle(_ax, _ay, _ax + _aw, _ay + _ah, true);
+			
+			draw_set_color(COLORS._main_accent);
+			draw_line(_xc - 8, _yc, _xc + 8, _yc);
+			draw_line(_xc, _yc - 8, _xc, _yc + 8);
+		}
+		
 		var _inf_shp  = getSingleValue(1);
 		var _inf_fall = getSingleValue(5) * _s;
 		
@@ -151,7 +172,7 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		var _inf_wrot = _data[4];
 		var _inf_map  = _data[6];
 		
-		var _fall_dis = _data[ 5];
+		var _fall_dis = _data[ 5] * 2;
 		var _fall_cur = _data[24];
 		
 		inputs[2].setVisible(_inf_shp == 0);
@@ -213,10 +234,8 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 					}
 						
 					var str = bool(_in);
-					if(_dst <= _fall_dis) {
-						var inf = _in? 0.5 + _dst / _fall_dis : 0.5 - _dst / _fall_dis;
-						str = eval_curve_x(_fall_cur, clamp(inf, 0., 1.));
-					}	
+					var inf = _in? 0.5 + _dst / _fall_dis : 0.5 - _dst / _fall_dis;
+					str = eval_curve_x(_fall_cur, clamp(inf, 0., 1.));
 					
 					_inf = str;
 					break;
@@ -227,13 +246,11 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 					var _ang = angle_difference(_dir, _inf_wrot);
 					
 					var _in  = _ang < 0;
-					var _dst = abs(_dis * dsin(_ang)) / 2;
+					var _dst = abs(_dis * dsin(_ang));
 					
 					var str = bool(_in);
-					if(_dst <= _fall_dis) {
-						var inf = _in? 0.5 + _dst / _fall_dis : 0.5 - _dst / _fall_dis;
-						str = eval_curve_x(_fall_cur, clamp(inf, 0., 1.));
-					}	
+					var inf = _in? 0.5 + _dst / _fall_dis : 0.5 - _dst / _fall_dis;
+					str = eval_curve_x(_fall_cur, clamp(inf, 0., 1.));
 					
 					_inf = str;
 					break;

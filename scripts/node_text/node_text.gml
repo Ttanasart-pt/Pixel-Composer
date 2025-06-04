@@ -23,7 +23,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput( 9, nodeValue_Enum_Scroll(  "Output Dimension", 1, [ "Fixed", "Dynamic" ]));
 	newInput( 6, nodeValue_Vec2(         "Fixed Dimension",  DEF_SURF  )).setVisible(true, false);
 	newInput(10, nodeValue_Padding(      "Padding",          [0,0,0,0] ));
-	newInput(33, nodeValue_Bool(         "Draw Data",        false     ));
+	newInput(33, nodeValue_Bool(         "Atlas",            false     ));
 	
 	////- =Alignment
 	
@@ -85,7 +85,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	];
 	
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
-	newOutput(1, nodeValue_Output( "Draw Data",   VALUE_TYPE.struct,  []    )).setArrayDepth(1);
+	newOutput(1, nodeValue_Output( "Draw Data",   VALUE_TYPE.atlas,   []    )).setArrayDepth(1);
 	 
 	attribute_surface_depth();
 	
@@ -677,7 +677,36 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		draw_data[_array_index] = __dwData;
 		
 		_outData[0] = _outSurf;
-		_outData[1] = __atlas;
+		
+		if(__outAtlas) {
+			var _currAtl = _outData[1];
+			for( var i = 0, n = array_length(_currAtl); i < n; i++ )
+				_currAtl[i].free();
+			
+			var _atlas = array_create(array_length(__atlas));
+			draw_set_text(__f, fa_left, fa_top);
+			
+			for( var i = 0, n = array_length(__atlas); i < n; i++ ) {
+				var _a = __atlas[i];
+				
+				var _ch = _a.char;
+				var _sx = _a.sx;
+				var _sy = _a.sy;
+				
+				var _ww = string_width(_ch)  * _sx;
+				var _hh = string_height(_ch) * _sy;
+				
+				var _ss = surface_create(_ww, _hh);
+				surface_set_shader(_ss);
+					draw_set_color(_a.blend);
+					draw_text_transformed(0, 0, _ch, _sx, _sy, _a.rot);
+				surface_reset_shader();
+				
+				_atlas[i] = new SurfaceAtlas(_ss, _a.x, _a.y).setOriginalSurface(_outSurf);
+			}
+			
+			_outData[1] = _atlas;
+		}
 		
 		return _outData;
 	}

@@ -2358,7 +2358,8 @@ function Panel_Preview() : PanelContent() constructor {
         var tby = ty + toolbar_height / 2;
         var _m  = [ mx, my ];
         
-        var _toolbars = toolbars;
+        var toolbar_left = 0;
+        var _toolbars    = toolbars;
         
         switch(d3_active) {
             case NODE_3D.none :     _toolbars = toolbars;        break;
@@ -2416,8 +2417,12 @@ function Panel_Preview() : PanelContent() constructor {
             tbx += ui(32);
         }
         
+        toolbar_left = tbx;
         tbx = w - toolbar_height / 2;
+        
         for( var i = 0, n = array_length(actions); i < n; i++ ) {
+        	if(tbx - ui(8) <= toolbar_left) break;
+        	
             var tb        = actions[i];
             var tbSpr     = tb.sprite;
             var tbInd     = tb.index();

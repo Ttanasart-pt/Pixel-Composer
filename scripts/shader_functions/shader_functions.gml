@@ -189,8 +189,8 @@ function shader_set_palette(pal, pal_uni = "palette", amo_uni = "paletteAmount",
 	}
 	
 	function shader_set_interpolation(surface, _dim = noone) {
-		
-		var intp   = getAttribute("interpolate");
+		if(is(surface, Atlas)) surface = surface.getSurface();
+		var intp = getAttribute("interpolate");
 		
 		gpu_set_tex_filter(intp > 1);
 		shader_set_i("interpolation",	intp);

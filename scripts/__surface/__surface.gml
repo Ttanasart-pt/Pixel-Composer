@@ -35,6 +35,7 @@ function Atlas(_surface, _x = 0, _y = 0, _rot = 0, _sx = 1, _sy = 1, _blend = c_
 	}
 	
 	static clone = function() /*=>*/ {return variable_clone(self)};
+	static free  = function() /*=>*/ {}
 	
 }
 
@@ -61,7 +62,7 @@ function SurfaceAtlas(    _surface, _x = 0, _y = 0, _rot = 0, _sx = 1, _sy = 1, 
 		return self;
 	}
 	
-	static setOrginalSurface = function(_surface) {
+	static setOriginalSurface = function(_surface) {
 		oriSurf   = _surface;
 		oriSurf_w = surface_get_width_safe(_surface);
 		oriSurf_h = surface_get_height_safe(_surface);
@@ -77,7 +78,16 @@ function SurfaceAtlas(    _surface, _x = 0, _y = 0, _rot = 0, _sx = 1, _sy = 1, 
 	static clone = function(_cloneSurf = false) {
 		var _surf = getSurface();
 		if(_cloneSurf) _surf = surface_clone(_surf);
-		return new SurfaceAtlas(_surf, x, y, rotation, sx, sy, blend, alpha);
+		
+		var _n = new SurfaceAtlas(_surf, x, y, rotation, sx, sy, blend, alpha)
+						.setOriginalSurface(oriSurf);
+		
+		return _n;
+	}
+	
+	static free = function() {
+		surface.destroy();
+		return self;
 	}
 }
 

@@ -366,7 +366,7 @@ function Node_Rigid_Fracture(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 					draw_surface_safe(temp_surface[res_index], -min_x, -min_y);
 				surface_reset_shader();
 				
-				_atlas[_ind++] = new SurfaceAtlas(_outSurf, min_x, min_y).setOrginalSurface(_fracSurf);
+				_atlas[_ind++] = new SurfaceAtlas(_outSurf, min_x, min_y).setOriginalSurface(_fracSurf);
 			}
 			
 			array_resize(_atlas, _ind);

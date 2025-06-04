@@ -317,6 +317,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         slider_width      = 0;
         tooltip_overlay   = {};
         toolbar_height    = ui(40);
+        toolbar_left      = 0;
         
         function addKeyOverlay(_title, _keys) {
         	if(struct_has(tooltip_overlay, _title)) {
@@ -2436,6 +2437,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                 var tb = tbs[j];
                 
                 if(is(tb, panel_toolbar_icon)) {
+                	if(tbx - ui(8) < cont_x) break;
+                	
 		            var tbSpr     = tb.sprite;
 		            var tbInd     = tb.index();
 		            var tbTooltip = is_method(tb.tooltip)? tb.tooltip() : tb.tooltip;

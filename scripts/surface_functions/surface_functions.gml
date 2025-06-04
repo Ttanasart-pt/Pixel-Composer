@@ -4,10 +4,10 @@
 		INLINE
 	
 		if(is_struct(surface)) {
-			if(is_instanceof(surface, dynaSurf)) {
+			if(is(surface, dynaSurf)) {
 				surface.draw(_x, _y);
 				return;
-			} else if(is_instanceof(surface, SurfaceAtlas))
+			} else if(is(surface, SurfaceAtlas))
 				surface = surface.getSurface();
 		}
 		if(is_array(surface) || !surface_exists(surface)) return;
@@ -21,10 +21,10 @@
 		INLINE
 	
 		if(is_struct(surface)) {
-			if(is_instanceof(surface, dynaSurf)) {
+			if(is(surface, dynaSurf)) {
 				surface.drawStretch(_x, _y, _w, _h);
 				return;
-			} else if(is_instanceof(surface, SurfaceAtlas))
+			} else if(is(surface, SurfaceAtlas))
 				surface = surface.getSurface();
 		}
 		if(is_array(surface) || !surface_exists(surface)) return;
@@ -38,11 +38,8 @@
 		INLINE
 		
 		if(is_struct(surface)) {
-			if(is_instanceof(surface, dynaSurf)) {
-				surface.draw(_x, _y, _xs, _ys, _rot, _col, _alpha);
-				return;
-			} else if(is_instanceof(surface, SurfaceAtlas))
-				surface = surface.getSurface();
+			if(is(surface, dynaSurf))      { surface.draw(_x, _y, _xs, _ys, _rot, _col, _alpha); return; } 
+			if(is(surface, SurfaceAtlas))  { surface.draw(_x, _y); return; }
 		}
 	
 		if(is_array(surface) || !surface_exists(surface)) return;
@@ -56,10 +53,10 @@
 		INLINE
 	
 		if(is_struct(surface)) {
-			if(is_instanceof(surface, dynaSurf)) {
+			if(is(surface, dynaSurf)) {
 				surface.drawTile(_x, _y);
 				return;
-			} else if(is_instanceof(surface, SurfaceAtlas))
+			} else if(is(surface, SurfaceAtlas))
 				surface = surface.getSurface();
 		}
 		if(is_array(surface) || !surface_exists(surface)) return;
@@ -73,10 +70,10 @@
 		INLINE
 	
 		if(is_struct(surface)) {
-			if(is_instanceof(surface, dynaSurf)) {
+			if(is(surface, dynaSurf)) {
 				surface.drawTile(_x, _y, _xs, _ys, _col, _alpha);
 				return;
-			} else if(is_instanceof(surface, SurfaceAtlas))
+			} else if(is(surface, SurfaceAtlas))
 				surface = surface.getSurface();
 		}
 		if(is_array(surface) || !surface_exists(surface)) return;
@@ -99,10 +96,10 @@
 		INLINE
 		
 		if(is_struct(surface)) {
-			if(is_instanceof(surface, dynaSurf)) {
+			if(is(surface, dynaSurf)) {
 				surface.drawPart(_l, _t, _w, _h, _x, _y, _xs, _ys, _rot, _col, _alpha);
 				return;
-			} else if(is_instanceof(surface, SurfaceAtlas))
+			} else if(is(surface, SurfaceAtlas))
 				surface = surface.getSurface();
 		}
 		if(is_array(surface) || !surface_exists(surface)) return;
@@ -120,8 +117,8 @@
 		INLINE
 		
 		return !is_array(s) && (
-			is_instanceof(s, dynaSurf) || 
-			is_instanceof(s, SurfaceAtlas) || 
+			is(s, dynaSurf) || 
+			is(s, SurfaceAtlas) || 
 			(is_numeric(s) && s > 0 && surface_exists(s))
 		);
 		
@@ -166,8 +163,8 @@
 	
 		if(!is_surface(s)) return 1;
 		if(is_struct(s)) {
-			if(is_instanceof(s, dynaSurf)) return s.getWidth();
-			else if(is_instanceof(s, SurfaceAtlas)) return crop? surface_get_width(s.getSurface()) : s.oriSurf_w;
+			if(is(s, dynaSurf)) return s.getWidth();
+			else if(is(s, SurfaceAtlas)) return crop? surface_get_width(s.getSurface()) : s.oriSurf_w;
 			else return 1;
 		}
 	
@@ -179,8 +176,8 @@
 	
 		if(!is_surface(s)) return 1;
 		if(is_struct(s)) {
-			if(is_instanceof(s, dynaSurf)) return s.getHeight();
-			else if(is_instanceof(s, SurfaceAtlas)) return crop? surface_get_height(s.getSurface()) : s.oriSurf_h;
+			if(is(s, dynaSurf)) return s.getHeight();
+			else if(is(s, SurfaceAtlas)) return crop? surface_get_height(s.getSurface()) : s.oriSurf_h;
 			else return 1;
 		}
 	
@@ -192,8 +189,8 @@
 	
 		if(!is_surface(s)) return surface_rgba8unorm;
 		if(is_struct(s)) {
-			if(is_instanceof(s, dynaSurf)) return s.getFormat();
-			else if(is_instanceof(s, SurfaceAtlas)) return surface_get_format(s.getSurface());
+			if(is(s, dynaSurf)) return s.getFormat();
+			else if(is(s, SurfaceAtlas)) return surface_get_format(s.getSurface());
 			else return surface_rgba8unorm;
 		}
 	
@@ -237,7 +234,7 @@
 	function surface_get_pixel_ext(surface, _x, _y) {
 		INLINE
 		
-		if(is_instanceof(surface, SurfaceAtlas)) surface = surface.surface.get();
+		if(is(surface, SurfaceAtlas)) surface = surface.surface.get();
 		if(is_array(surface) || !surface_exists(surface)) return 0;
 		var px = surface_getpixel_ext(surface, _x, _y);
 	
@@ -425,7 +422,7 @@
 	function surface_clone(surface, destination = noone, format = noone) {
 		INLINE
 	
-		if(is_struct(surface) && is_instanceof(surface, dynaSurf)) 
+		if(is_struct(surface) && is(surface, dynaSurf)) 
 			return surface.clone();
 		if(!is_surface(surface)) return noone;
 	
@@ -672,9 +669,9 @@
 	function surface_save_safe(surface, path) {
 		if(!is_surface(surface)) return;
 		
-		     if(is_instanceof(surface, SurfaceAtlas))     surface = surface.surface.get();
-		else if(is_instanceof(surface, SurfaceAtlasFast)) surface = surface.surface;
-		else if(is_instanceof(surface, dynaSurf))		  surface = array_safe_get(surface.surfaces, 0);
+		     if(is(surface, SurfaceAtlas))     surface = surface.surface.get();
+		else if(is(surface, SurfaceAtlasFast)) surface = surface.surface;
+		else if(is(surface, dynaSurf))		  surface = array_safe_get(surface.surfaces, 0);
 		
 		if(is_array(surface) || !surface_exists(surface)) return;
 		
@@ -754,7 +751,7 @@
 	}
 
 	function surface_encode(surface, stringify = true) {
-		if(is_instanceof(surface, SurfaceAtlas)) surface = surface.surface.get();
+		if(is(surface, SurfaceAtlas)) surface = surface.surface.get();
 		if(is_array(surface) || !surface_exists(surface)) return "";
 	
 		var _sw  = surface_get_width_safe(surface); 
