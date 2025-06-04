@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_project_output",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_project_output",
+  "parent":{
+    "name":"misc",
+    "path":"folders/nodes/data/misc.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

@@ -896,6 +896,7 @@
             "Node_Atlas_Get",
             "Node_Atlas_Set",
             "Node_Atlas_Struct",
+            "Node_Atlas_Affector", 
             
             { "label": "Surface" },
             "Node_Surface_data",

@@ -97,12 +97,12 @@ function Node_MK_GridFlip(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				var _cdist = point_distance(_cx, _cy, _flxc, _flyc);
 				var _fRot  = _flip;
 				
-				if(_swp != 0) { #region
+				if(_swp != 0) {
 					var _cdirr  = _swp_dir + 90 - point_direction(_cx, _cy, _flxc, _flyc);
 					var _st_prg = _cdist * dsin(_cdirr) + _swp_shf;
 					
 					_fRot += max(0, _st_prg * _swp);
-				} #endregion
+				}
 				
 				     if(_limt == 1) _fRot = clamp(_fRot,  -90,  90);
 				else if(_limt == 2) _fRot = clamp(_fRot, -180, 180);

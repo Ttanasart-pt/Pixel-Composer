@@ -6,11 +6,9 @@ function Node_VFX_Oscillate(_x, _y, _group = noone) : Node_VFX_effector(_x, _y, 
 	inputs[6].setVisible(false, false);
 	inputs[7].setVisible(false, false);
 	
-	newInput(effector_input_length + 0, nodeValue_Float("Amplitude", 2 ));
-	
-	newInput(effector_input_length + 1, nodeValue_Float("Frequency", 0.2 ));
-	
-	newInput(effector_input_length + 2, nodeValue_Bool("Multiply by speed", false ));
+	newInput(effector_input_length + 0, nodeValue_Float( "Amplitude",  2 ));
+	newInput(effector_input_length + 1, nodeValue_Float( "Frequency", .2 ));
+	newInput(effector_input_length + 2, nodeValue_Bool(  "Multiply by speed", false ));
 	
 	array_push(input_display_list, effector_input_length + 0, effector_input_length + 1, effector_input_length + 2);
 	

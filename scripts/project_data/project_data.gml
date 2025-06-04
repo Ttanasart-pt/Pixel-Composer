@@ -35,6 +35,7 @@ function Project() constructor {
 	composer       = noone;
 	animator	   = new AnimationManager();
 	globalNode	   = new Node_Global();
+	outputNode     = noone;
 	nodeController = new __Node_Controller(self);
 	
 	load_layout    = false;

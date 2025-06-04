@@ -16,17 +16,18 @@ function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	////- =Noise
 	
 	newInput( 2, nodeValueSeed());
-	newInput( 1, nodeValue_Float(    "X Amount",  2    )).setMappable(6);
-	newInput( 5, nodeValue_Float(    "Y Amount",  16   )).setMappable(7);
-	newInput( 3, nodeValue_Vec2(     "Position", [0,0] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
-	newInput( 4, nodeValue_Rotation( "Rotation",  0    )).setMappable(8);
+	newInput( 1, nodeValue_Float(    "X Amount",  2     )).setMappable(6);
+	newInput( 5, nodeValue_Float(    "Y Amount",  16    )).setMappable(7);
+	newInput( 3, nodeValue_Vec2(     "Position", [0,0]  )).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput( 4, nodeValue_Rotation( "Rotation",  0     )).setMappable(8);
+	newInput(12, nodeValue_Bool(     "Tile",      false ));
 	
 	////- =Render
 	
 	newInput( 9, nodeValue_Enum_Scroll( "Render Mode", 0, [ "Blend", "Waterfall" ] ));
 	newInput(10, nodeValueSeed());
 	
-	// input 12
+	// input 13
 	
 	input_display_list = [
 		["Output",	false], 0, 11, 
@@ -58,6 +59,7 @@ function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			shader_set_f("position",	_pos[0] / _dim[0], _pos[1] / _dim[1]);
 			shader_set_f("seed",		_data[2]);
 			shader_set_f("colrSeed",	_data[10]);
+			shader_set_i("tile",	    _data[12]);
 			
 			shader_set_f_map("noiseX",  _data[1], _data[6], inputs[1]);
 			shader_set_f_map("noiseY",  _data[5], _data[7], inputs[5]);

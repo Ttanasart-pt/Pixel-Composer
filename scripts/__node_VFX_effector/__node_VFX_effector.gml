@@ -9,7 +9,7 @@ enum FORCE_TYPE {
 }
 
 function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name   = "Effector";
+	name   = "Affector";
 	color  = COLORS.node_blend_vfx;
 	icon   = THEME.vfx;
 	reloop = true;
@@ -19,32 +19,25 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Particle())
-		.setVisible(true, true);
+	newInput(0, nodeValue_Particle()).setVisible(true, true);
 	
-	newInput(1, nodeValue_Area("Area", DEF_AREA))
-		.rejectArray();
+	////- =Area
 	
-	newInput(2, nodeValue_Curve("Falloff", CURVE_DEF_01 ))
-		.rejectArray();
+	newInput(1, nodeValue_Area(  "Area",    DEF_AREA));
+	newInput(2, nodeValue_Curve( "Falloff", CURVE_DEF_01 ));
+	newInput(3, nodeValue_Float( "Falloff distance", 4 ));
 	
-	newInput(3, nodeValue_Float("Falloff distance", 4 ))
-		.rejectArray();
+	////- =Effect
 	
-	newInput(4, nodeValue_Vec2("Effect Vector", [ -1, 0 ] ))
-		.rejectArray();
+	newInput(8, nodeValueSeed());
+	newInput(4, nodeValue_Vec2(           "Effect Vector",    [-1,0] ));
+	newInput(5, nodeValue_Float(          "Strength",           1    ));
+	newInput(6, nodeValue_Rotation_Range( "Rotate particle",   [0,0] ));
+	newInput(7, nodeValue_Vec2_Range(     "Scale particle",    [0,0,0,0], { linked : true } ));
 	
-	newInput(5, nodeValue_Float("Strength", 1 ))
-		.rejectArray();
+	// input 9
 	
-	newInput(6, nodeValue_Rotation_Range("Rotate particle", [ 0, 0 ] ))
-		.rejectArray();
-	
-	newInput(7, nodeValue_Vec2_Range("Scale particle", [ 0, 0, 0, 0 ], { linked : true }))
-		.rejectArray();
-	
-	newInput(8, nodeValueSeed())
-		.rejectArray();
+	array_foreach(inputs, function(i) /*=>*/ {return i.rejectArray()}, 1);
 		
 	effector_input_length = array_length(inputs);
 		
@@ -82,7 +75,7 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		seed      = 1;
 	
-	//////////////////////////////////////////////////
+	////- Nodes
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));

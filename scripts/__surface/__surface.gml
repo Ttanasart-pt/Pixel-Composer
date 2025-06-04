@@ -11,6 +11,8 @@ function Atlas(_surface, _x = 0, _y = 0, _rot = 0, _sx = 1, _sy = 1, _blend = c_
 	w = 1;
 	h = 1;
 	
+	oriSurf = noone;
+	
 	static getSurface = function() /*=>*/ {return surface};
 	
 	static set = function(_surface, _x = 0, _y = 0, _rot = 0, _sx = 1, _sy = 1, _blend = c_white, _alpha = 1, setDim = true) {
@@ -31,6 +33,8 @@ function Atlas(_surface, _x = 0, _y = 0, _rot = 0, _sx = 1, _sy = 1, _blend = c_
 		draw_surface_ext_safe(_surf, _x + x * _s, _y + y * _s, sx * _s, sy * _s, rotation, blend, alpha);
 		return self;
 	}
+	
+	static clone = function() /*=>*/ {return variable_clone(self)};
 	
 }
 

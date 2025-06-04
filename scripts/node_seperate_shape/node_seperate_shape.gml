@@ -11,9 +11,9 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	////- Shape
 	
-	newInput(0, nodeValue_Surface(     "Surface In")).rejectArray();
-	newInput(5, nodeValue_Enum_Button( "Mode", 0, [ "Greyscale", "Alpha" ] ))
-	newInput(1, nodeValue_Slider(      "Tolerance", 0.2, { range: [ 0, 1, 0.01 ], update_stat: SLIDER_UPDATE.release })).rejectArray();
+	newInput(0, nodeValue_Surface(     "Surface In" )).rejectArray();
+	newInput(5, nodeValue_Enum_Button( "Mode",          0, [ "Greyscale", "Alpha" ] ))
+	newInput(1, nodeValue_Slider(      "Tolerance",    .2, { range: [ 0, 1, 0.01 ], update_stat: SLIDER_UPDATE.release })).rejectArray();
 	newInput(4, nodeValue_Bool(        "Ignore blank", true, "Skip empty shapes.")).rejectArray();
 	
 	////- Output

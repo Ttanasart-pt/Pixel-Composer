@@ -1,23 +1,17 @@
 function Node_3D_Point_Affector(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group) constructor {
-	name		= "Point Affector";
+	name = "Point Affector";
 	
 	gizmo_sphere = [ new __3dGizmoSphere(,, 0.75), new __3dGizmoSphere(,, 0.5) ];
 	gizmo_plane  = [ new __3dGizmoPlaneFalloff(,, 0.75) ];
 	gizmo_object = noone;
 	
-	newInput(in_d3d + 0, nodeValue_Vec3("Points", [ 0, 0, 0 ]))
-		.setVisible(true, true);
-	
-	newInput(in_d3d + 1, nodeValue_Vec3("Initial value", [ 0, 0, 0 ]));
-	
-	newInput(in_d3d + 2, nodeValue_Vec3("Final value", [ 0, 0, 0 ]));
-	
-	newInput(in_d3d + 3, nodeValue_Float("Falloff distance", 0.5));
-	
-	newInput(in_d3d + 4, nodeValue_Curve("Falloff curve", CURVE_DEF_01));
-	
-	newInput(in_d3d + 5, nodeValue_Enum_Scroll("Shape", 0, [ new scrollItem("Sphere", s_node_3d_affector_shape, 0), 
-																   new scrollItem("Plane",  s_node_3d_affector_shape, 1), ]));
+	newInput(in_d3d + 0, nodeValue_Vec3(  "Points",            [0,0,0] )).setVisible(true, true);
+	newInput(in_d3d + 1, nodeValue_Vec3(  "Initial value",     [0,0,0] ));
+	newInput(in_d3d + 2, nodeValue_Vec3(  "Final value",       [0,0,0] ));
+	newInput(in_d3d + 3, nodeValue_Float( "Falloff distance",   0.5    ));
+	newInput(in_d3d + 4, nodeValue_Curve( "Falloff curve",      CURVE_DEF_01 ));
+	newInput(in_d3d + 5, nodeValue_Enum_Scroll( "Shape", 0, [ new scrollItem("Sphere", s_node_3d_affector_shape, 0), 
+	                                                          new scrollItem("Plane",  s_node_3d_affector_shape, 1), ]));
 	
 	newOutput(0, nodeValue_Output("Output", VALUE_TYPE.float, [ 0, 0, 0 ]))
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -32,7 +26,7 @@ function Node_3D_Point_Affector(_x, _y, _group = noone) : Node_3D_Object(_x, _y,
 	
 	static step = function() {}
 	
-	static processData = function(_outSurf, _data, _array_index = 0) { #region
+	static processData = function(_outSurf, _data, _array_index = 0) {
 		var _pos  = _data[0];
 		var _rot  = _data[1];
 		var _sca  = _data[2];
@@ -95,7 +89,7 @@ function Node_3D_Point_Affector(_x, _y, _group = noone) : Node_3D_Object(_x, _y,
 		}
 		
 		return _res;
-	} #endregion
+	}
 	
 	static getPreviewObject = function() { return noone; }
 	

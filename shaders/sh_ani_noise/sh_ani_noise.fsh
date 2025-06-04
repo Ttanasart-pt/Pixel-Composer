@@ -6,6 +6,7 @@ uniform float seed;
 uniform float colrSeed;
 uniform vec2  position;
 uniform int   mode;
+uniform int   tile;
 
 uniform vec2      noiseX;
 uniform int       noiseXUseSurf;
@@ -20,7 +21,7 @@ uniform int       angleUseSurf;
 uniform sampler2D angleSurf;
 
 float random1D (in vec2 st, float _seed) { return fract(sin(dot(st.xy, vec2(12.9898, 78.233)) * mod(_seed + 453.456, 100.) * 12.588) * 43758.5453123); }
-float random (in vec2 st, float _seed) { return mix(random1D(st, floor(_seed)), random1D(st, floor(_seed) + 1.), fract(_seed)); }
+float random   (in vec2 st, float _seed) { return mix(random1D(st, floor(_seed)), random1D(st, floor(_seed) + 1.), fract(_seed)); }
 
 void main() {
 	#region params
@@ -49,8 +50,8 @@ void main() {
 	
 	float yy = floor(pos.y * nsy);
 	float xx = (pos.x + random(vec2(1., yy), seed)) * nsx;
-      
-	xx = fract(fract(xx / 2.) + 1.) * 2.;
+    
+    if(tile == 1) xx = fract(fract(xx / 2.) + 1.) * 2.;
 	
 	float x0   = floor(xx);
 	float x1   = floor(xx) + 1.;

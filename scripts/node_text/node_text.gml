@@ -549,7 +549,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		__atlas     = [];
 		
 		if(_use_path) {
-			var _pthl = _path.getLength(0), va;
+			var _pthl = _path.getLength(0);
 			
 			switch(_vali) {
 				case 0 : va = fa_top;    ty = 0;                                    break;
@@ -607,6 +607,10 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						rot  : _nor,
 						sx   : 1, 
 						sy   : 1, 
+						
+						blend : _c,
+						halign: fa_left,
+						valign: va, 
 					});
 					
 					__temp_tx += string_width(_chr) + __temp_trck;
@@ -655,6 +659,10 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						rot  : 0,
 						sx   : __temp_ss, 
 						sy   : __temp_ss, 
+						
+						blend : _c,
+						halign: fa_left,
+						valign: fa_top, 
 					});
 					
 					__temp_tx += (string_width(_chr) + __temp_trck) * __temp_ss;
