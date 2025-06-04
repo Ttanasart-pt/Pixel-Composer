@@ -46,6 +46,8 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 	
 	setDynamicInput(1, false);
 	
+	////- Nodes
+	
 	object_data  = noone;
 	object_class = __3dObject;
 	
@@ -65,6 +67,8 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 	setTrigger(1, __txt("Refresh"), [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() /*=>*/ { current_path = ""; outputs[0].setValue(noone); });
 	
 	function setPath(path) { inputs[in_mesh + 0].setValue(path); }
+	
+	////- Obj loader
 	
 	static createNewInput = function(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
@@ -180,6 +184,8 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		
 		triggerRender();
 	}
+	
+	////- Update
 	
 	static step = function() {
 		if(obj_reading) {

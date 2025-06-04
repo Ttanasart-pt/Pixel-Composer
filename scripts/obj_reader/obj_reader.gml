@@ -248,6 +248,11 @@ function readObj_buff() {
 					_pft[k] = vt[_ft[k]];
 				}
 				
+				if(_vlen > 4) {
+					noti_warning("Ngon is not supported. Please triangulate the faces before importing.")
+					continue;
+				}
+				
 				var _pf0  = _pf[0],  _pf1  = _pf[1],  _pf2  = _pf[2];
 				var _pfn0 = _pfn[0], _pfn1 = _pfn[1], _pfn2 = _pfn[2];
 				var _pft0 = _pft[0], _pft1 = _pft[1], _pft2 = _pft[2];
@@ -260,7 +265,7 @@ function readObj_buff() {
 				array_push(_v, new __vertex(_pf2[0], _pf2[1], _pf2[2]).setNormal(_pfn2[0], _pfn2[1]).setUV(_pft2[0], _pft2[1]));
 				array_push(_v, new __vertex(_pf1[0], _pf1[1], _pf1[2]).setNormal(_pfn1[0], _pfn1[1]).setUV(_pft1[0], _pft1[1]));
 				
-				if(_vlen >= 4) {
+				if(_vlen == 4) {
 					var _pf3  = _pf[3];
 					var _pfn3 = _pfn[3];
 					var _pft3 = _pft[3];
@@ -272,7 +277,8 @@ function readObj_buff() {
 					array_push(_v, new __vertex(_pf0[0], _pf0[1], _pf0[2]).setNormal(_pfn0[0], _pfn0[1]).setUV(_pft0[0], _pft0[1]));
 					array_push(_v, new __vertex(_pf3[0], _pf3[1], _pf3[2]).setNormal(_pfn3[0], _pfn3[1]).setUV(_pft3[0], _pft3[1]));
 					array_push(_v, new __vertex(_pf2[0], _pf2[1], _pf2[2]).setNormal(_pfn2[0], _pfn2[1]).setUV(_pft2[0], _pft2[1]));
-				}
+				} 
+				
 			}
 			
 			vertex_end(VB);
