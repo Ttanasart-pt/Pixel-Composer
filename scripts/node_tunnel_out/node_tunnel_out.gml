@@ -6,21 +6,22 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	setDimension(32, 32);
 	
-	isHovering     = false;
-	hover_scale    = 0;
-	hover_scale_to = 0;
-	hover_alpha    = 0;
+	newInput(0, nodeValue_Text("Name", LOADING || APPENDING? "" : ds_map_find_first(project.tunnels_in) )).rejectArray();
 	
-	preview_connecting = false;
-	preview_scale      = 1;
-	junction_hover     = false;
+	////- =Display
 	
-	__key = noone;
+	newInput(1, nodeValue_Enum_Button( "Label Position", 0, [ "T", "B", "L", "R" ] ));
+	newInput(2, nodeValue_Float(       "Label Scale",    1 ));
+	newInput(3, nodeValue_Color(       "Label Color",    cola(COLORS._main_text) ));
+	newInput(4, nodeValue_Slider(      "Label Alpha",    1 ));
 	
-	newInput(0, nodeValue_Text("Name", LOADING || APPENDING? "" : ds_map_find_first(project.tunnels_in) ))
-		.rejectArray();
+	// input 5
 	
 	newOutput(0, nodeValue_Output("Value out", VALUE_TYPE.any, noone ));
+	
+	input_display_list = [ 0, 
+		["Display", false], 1, 2, 3, 4, 
+	];
 	
 	inputs[0].editWidget.autocomplete_server = tunnel_autocomplete_server;
 	inputs[0].editWidget.autocomplete_subt   = "Ctrl: Change connected";
@@ -33,6 +34,22 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		node.inputs[0].setValueDirect(newKey);
 	};
+	
+	isHovering     = false;
+	hover_scale    = 0;
+	hover_scale_to = 0;
+	hover_alpha    = 0;
+	
+	preview_connecting = false;
+	preview_scale      = 1;
+	junction_hover     = false;
+	
+	label_ori   = 0;
+	label_scale = 1;
+	label_color = ca_white;
+	label_alpha = 1;
+	
+	__key = noone;
 	
 	////- Update
 	
@@ -55,6 +72,12 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
+		
+		label_ori   = getInputData(1);
+		label_scale = getInputData(2);
+		label_color = getInputData(3);
+		label_alpha = getInputData(4);
+		
 		__key = inputs[0].getValue();
 		
 		if(ds_map_exists(project.tunnels_in, __key)) {
@@ -200,8 +223,33 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		hover_scale    = lerp_float(hover_scale, hover_scale_to && !junction_hover, 3);
 		hover_scale_to = 0;
 		
-		draw_set_text(f_sdf, fa_center, fa_bottom, COLORS._main_text);
-		draw_text_transformed(xx, yy - 12 * _s, string(inputs[0].getValue()), _s * .3, _s * .3, 0);
+		var aa = label_alpha * _color_get_alpha(label_color);
+		var ss = _s * .3 * label_scale;
+		var tt = string(inputs[0].getValue());
+		
+		switch(label_ori) {
+			case 0 : 
+				draw_set_text(f_sdf, fa_center, fa_bottom, label_color, aa);
+				draw_text_transformed(xx, yy - 12 * _s, tt, ss, ss, 0);
+				break;
+				
+			case 1 : 
+				draw_set_text(f_sdf, fa_center, fa_top, label_color, aa);
+				draw_text_transformed(xx, yy + 12 * _s, tt, ss, ss, 0);
+				break;
+				
+			case 2 : 
+				draw_set_text(f_sdf, fa_right, fa_center, label_color, aa);
+				draw_text_transformed(xx - 12 * _s, yy, tt, ss, ss, 0);
+				break;
+				
+			case 3 : 
+				draw_set_text(f_sdf, fa_left, fa_center, label_color, aa);
+				draw_text_transformed(xx + 12 * _s, yy, tt, ss, ss, 0);
+				break;
+		}
+		
+		draw_set_alpha(1);
 		
 		return drawJunctions(_draw, _x, _y, _mx, _my, _s);
 	}

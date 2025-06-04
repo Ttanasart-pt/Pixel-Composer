@@ -34,22 +34,15 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	draw_x1 = 0;
 	draw_y1 = 0;
 	
-	newInput(0, nodeValue_Vec2("Size", [ 240, 160 ] ))
-		.rejectArray();
-	
-	newInput(1, nodeValue_Color("Color", ca_white ))
-		.rejectArray();
-	
-	newInput(2, nodeValue_Slider("Alpha", 0.75 ))
-		.rejectArray();
-	
-	newInput(3, nodeValue_Slider("Label size", global.__FRAME_LABEL_SCALE ))
-		.rejectArray();
-		
-	newInput(4, nodeValue_Slider("Blend label", 0 ))
-		.rejectArray();
+	newInput(0, nodeValue_Vec2(   "Size",       [ 240, 160 ] ));
+	newInput(1, nodeValue_Color(  "Color",       ca_white    ));
+	newInput(2, nodeValue_Slider( "Alpha",       0.75        ));
+	newInput(3, nodeValue_Slider( "Label size",  global.__FRAME_LABEL_SCALE ));
+	newInput(4, nodeValue_Slider( "Blend label", 0 ));
 	
 	input_display_list = [ 0, 1, 3, 4 ];
+	
+	array_foreach(inputs, function(i) /*=>*/ {return i.rejectArray()});
 	
 	static move = function(_x, _y) {
 		if(moved) return;
