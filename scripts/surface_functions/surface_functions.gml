@@ -402,10 +402,11 @@
 	}
 
 	function surface_clear(surface, color = 0, alpha = 0) {
-		if(!is_surface(surface)) return;
+		if(!is_surface(surface)) return surface;
 		surface_set_target(surface);
 			draw_clear_alpha(color, alpha);
 		surface_reset_target();
+		return surface;
 	}
 
 	function surface_copy_from(dst, src, format = noone) {
