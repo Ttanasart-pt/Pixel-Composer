@@ -24,18 +24,15 @@ function Node_create_3D_Obj_path(_x, _y, path) {
 function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group) constructor {
 	name = "3D Obj";
 	
-	newInput(in_mesh + 0, nodeValue_Path("File Path"))
-		.setDisplay(VALUE_DISPLAY.path_load, { filter: "3d object|*.obj" })
-		.rejectArray();
+	////- =Object
 	
-	newInput(in_mesh + 1, nodeValue_Bool("Flip UV", true, "Flip UV axis, can be use to fix some texture mapping error."))
-		.rejectArray();
+	newInput(in_mesh + 0, nodeValue_Path(        "File Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "3d object|*.obj" });
+	newInput(in_mesh + 2, nodeValue_Float(       "Import Scale", 1 ));
+	newInput(in_mesh + 3, nodeValue_Enum_Scroll( "Axis",         0, [ "XYZ", "XZ-Y", "X-ZY" ]));
 	
-	newInput(in_mesh + 2, nodeValue_Float("Import Scale", 1))
-		.rejectArray();
-		
-	newInput(in_mesh + 3, nodeValue_Enum_Scroll("Axis", 0, [ "XYZ", "XZ-Y", "X-ZY" ]))
-		.rejectArray();
+	////- =Material
+	
+	newInput(in_mesh + 1, nodeValue_Bool( "Flip UV", true, "Flip UV axis, can be use to fix some texture mapping error."));
 		
 	input_display_list = [
 		__d3d_input_list_mesh,
@@ -43,6 +40,16 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		["Object",	 false], in_mesh + 0, in_mesh + 2, in_mesh + 3,  
 		["Material", false], in_mesh + 1, 
 	]
+	
+	array_foreach(inputs, function(i) /*=>*/ {return i.rejectArray()}, in_mesh);
+	
+	static createNewInput = function(index = array_length(inputs)) {
+		var inAmo = array_length(inputs);
+		newInput(index, nodeValue_D3Material("Material", new __d3dMaterial())).setVisible(true, true);
+		
+		array_push(input_display_list, inAmo);
+		return inputs[index];
+	}
 	
 	setDynamicInput(1, false);
 	
@@ -69,16 +76,6 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 	function setPath(path) { inputs[in_mesh + 0].setValue(path); }
 	
 	////- Obj loader
-	
-	static createNewInput = function(index = array_length(inputs)) {
-		var inAmo = array_length(inputs);
-		
-		newInput(index, nodeValue_D3Material("Material", new __d3dMaterial()))
-							.setVisible(true, true);
-							
-		array_push(input_display_list, inAmo);
-		return inputs[index];
-	}
 	
 	static createMaterial = function(m_index) {
 		var index = input_fix_len + m_index;

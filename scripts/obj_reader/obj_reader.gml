@@ -238,6 +238,11 @@ function readObj_buff() {
 				var _fn  = facen[j];
 			
 				var _vlen = array_length(_f);
+				if(_vlen > 4) {
+					noti_warning("N-gon is not supported. Please triangulate faces before importing.")
+					continue;
+				}
+				
 				var _pf   = array_create(_vlen);
 				var _pft  = array_create(_vlen);
 				var _pfn  = array_create(_vlen);
@@ -248,18 +253,13 @@ function readObj_buff() {
 					_pft[k] = vt[_ft[k]];
 				}
 				
-				if(_vlen > 4) {
-					noti_warning("Ngon is not supported. Please triangulate the faces before importing.")
-					continue;
-				}
-				
 				var _pf0  = _pf[0],  _pf1  = _pf[1],  _pf2  = _pf[2];
 				var _pfn0 = _pfn[0], _pfn1 = _pfn[1], _pfn2 = _pfn[2];
 				var _pft0 = _pft[0], _pft1 = _pft[1], _pft2 = _pft[2];
 				
-				vertex_add_pntc(VB, _pf0, _pfn0, _pft0); vertex_float3(VB, 255, 0, 0);
-				vertex_add_pntc(VB, _pf2, _pfn2, _pft2); vertex_float3(VB, 0, 255, 0);
-				vertex_add_pntc(VB, _pf1, _pfn1, _pft1); vertex_float3(VB, 0, 0, 255);
+				vertex_add_pntcb(VB, _pf0, _pfn0, _pft0, c_white, 1, 255, 0, 0);
+				vertex_add_pntcb(VB, _pf2, _pfn2, _pft2, c_white, 1, 0, 255, 0);
+				vertex_add_pntcb(VB, _pf1, _pfn1, _pft1, c_white, 1, 0, 0, 255);
 				
 				array_push(_v, new __vertex(_pf0[0], _pf0[1], _pf0[2]).setNormal(_pfn0[0], _pfn0[1]).setUV(_pft0[0], _pft0[1]));
 				array_push(_v, new __vertex(_pf2[0], _pf2[1], _pf2[2]).setNormal(_pfn2[0], _pfn2[1]).setUV(_pft2[0], _pft2[1]));
@@ -270,9 +270,9 @@ function readObj_buff() {
 					var _pfn3 = _pfn[3];
 					var _pft3 = _pft[3];
 					
-					vertex_add_pntc(VB, _pf0, _pfn0, _pft0); vertex_float3(VB, 255, 0, 0);
-					vertex_add_pntc(VB, _pf3, _pfn3, _pft3); vertex_float3(VB, 0, 255, 0);
-					vertex_add_pntc(VB, _pf2, _pfn2, _pft2); vertex_float3(VB, 0, 0, 255);
+					vertex_add_pntcb(VB, _pf0, _pfn0, _pft0, c_white, 1, 255, 0, 0);
+					vertex_add_pntcb(VB, _pf3, _pfn3, _pft3, c_white, 1, 0, 255, 0);
+					vertex_add_pntcb(VB, _pf2, _pfn2, _pft2, c_white, 1, 0, 0, 255);
 					
 					array_push(_v, new __vertex(_pf0[0], _pf0[1], _pf0[2]).setNormal(_pfn0[0], _pfn0[1]).setUV(_pft0[0], _pft0[1]));
 					array_push(_v, new __vertex(_pf3[0], _pf3[1], _pf3[2]).setNormal(_pfn3[0], _pfn3[1]).setUV(_pft3[0], _pft3[1]));

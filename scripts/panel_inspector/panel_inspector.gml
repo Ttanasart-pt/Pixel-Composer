@@ -146,7 +146,7 @@ function Inspector_Spacer(_h, _line = false, _coll = true, _shf = ui(2)) constru
 }
 
 function Panel_Inspector() : PanelContent() constructor {
-    #region ---- main ----
+    #region ---- Main ----
         context_str = "Inspector";
         title       = __txt("Inspector");
         icon        = THEME.panel_inspector_icon;
@@ -172,7 +172,7 @@ function Panel_Inspector() : PanelContent() constructor {
         view_mode_tooltip = new tooltipSelector("View", [ "Compact", "Spacious" ])
     #endregion
     
-    #region ---- properties ----
+    #region ---- Properties ----
         prop_hover          = noone;
         prop_selecting      = noone;
         
@@ -192,7 +192,7 @@ function Panel_Inspector() : PanelContent() constructor {
     
     drawWidgetInit();
     
-    #region ---- header labels ----
+    #region ---- Header labels ----
         tb_node_name = new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { if(inspecting) inspecting.setDisplayName(txt); })
                              .setFont(f_h5)
                              .setHide(1)
@@ -220,7 +220,7 @@ function Panel_Inspector() : PanelContent() constructor {
         					.setFont(f_p2, COLORS._main_text_sub)
     #endregion
     
-    #region ---- metadata ----
+    #region ---- Metadata ----
         current_meta = -1;
         meta_tb[0] = new textArea(TEXTBOX_INPUT.text, function(s) /*=>*/ { current_meta.description = s; });
         meta_tb[1] = new textArea(TEXTBOX_INPUT.text, function(s) /*=>*/ { current_meta.author      = s; });
@@ -258,11 +258,17 @@ function Panel_Inspector() : PanelContent() constructor {
         metadata_buttons = [ metadata_default_button ];
     #endregion
     
-    #region ---- workshop ----
+    #region ---- Workshop ----
         workshop_uploading = false;
     #endregion
     
-    #region ++++ menus ++++
+    #region ---- History ----
+    	inspect_history_undo = [];
+    	inspect_history_redo = [];
+    	
+    #endregion
+    
+    #region ++++ Menus ++++
         static nodeExpandAll = function(node) {
             if(node.input_display_list == -1) return;
             
@@ -350,8 +356,13 @@ function Panel_Inspector() : PanelContent() constructor {
         menu_junc_color = MENU_ITEMS.inspector_group_set_color;
     #endregion
     
-    function setInspecting(_inspecting, _lock = false, _focus = true) {
+    function setInspecting(_inspecting, _lock = false, _focus = true, _record = true) {
         if(locked) return;
+        
+        if(_record) {
+	        array_push(inspect_history_undo, inspecting);
+	        inspect_history_redo = [];
+        }
         
         inspecting = _inspecting;
         locked     = locked || _lock;
@@ -455,323 +466,6 @@ function Panel_Inspector() : PanelContent() constructor {
         	return drawContentMeta(_y, _m);
         return drawContentNode(_y, _m);
     });
-    
-    static drawContentGM = function(_y, _m) {
-    	var ww = contentPane.surface_w;
-    	var hh = ui(40);
-        var yy = _y + hh;
-        var rx = x + ui(16);
-        var ry = y + top_bar_h;
-        
-        var _hover = pHOVER && contentPane.hover;
-        var  spac  = viewMode == INSP_VIEW_MODE.spacious;
-    	var _font  = spac? f_p1 : f_p2;
-        
-        #region properties
-	        var _wdx = 0;
-	        var _wdy = yy;
-	        var _wdw = ww;
-	        var _wdh = TEXTBOX_HEIGHT;
-	        
-	        var _data  = PROJECT.attributes.bind_gamemaker_path;
-	    	var _param = new widgetParam(_wdx, _wdy, _wdw, _wdh, _data, {}, _m, rx, ry)
-	    					.setFont(_font)
-	    					.setFocusHover(pFOCUS, _hover)
-	    					.setScrollpane(contentPane);
-            
-	        var wh = PROJECT.gamemaker_editWidget.drawParam(_param);
-	    	
-	    	var _wdhh = wh + ui(8);
-        	yy += _wdhh; 
-        	hh += _wdhh;
-		#endregion
-		
-		var gmBinder = PROJECT.bind_gamemaker;
-		if(gmBinder == noone) return hh;
-		
-		var _wdh = GM_Explore_draw(gmBinder, 0, yy, contentPane.surface_w, contentPane.surface_h, _m, _hover, pFOCUS);
-		hh += _wdh;
-		
-		return hh;
-    }
-    
-    static drawContentMeta = function(_y, _m) {
-        proj_prop_page_b.setFocusHover(pFOCUS, pHOVER);
-        proj_prop_page_b.draw(ui(32), _y + ui(4), contentPane.w - ui(76), ui(24), proj_prop_page, _m, x + contentPane.x, y + contentPane.y);
-        
-        if(proj_prop_page == 1) return drawContentGM(_y, _m);
-        
-        var context = PANEL_GRAPH.getCurrentContext();
-        var meta    = context == noone? PROJECT.meta : context.metadata;
-        if(meta == noone) return 0;
-        current_meta = meta;
-        
-        var  con_w = contentPane.surface_w - ui(4);
-        var _hover = pHOVER && contentPane.hover;
-        var  spac  = viewMode == INSP_VIEW_MODE.spacious;
-        
-        var hh  = ui(40);
-        var yy  = _y + hh;
-        var rx  = x + ui(16);
-        var ry  = y + top_bar_h;
-        var lbh = viewMode? ui(32) : ui(26);
-        var _cAll = 0;
-        var _font = spac? f_p1 : f_p2;
-        
-        attribute_hovering = noone;
-        
-        for( var i = 0, n = array_length(meta_display); i < n; i++ ) {
-            if(i == 3 && PANEL_GRAPH.getCurrentContext() == noone) continue;
-            
-            var _meta  = meta_display[i];
-            var _txt   = array_safe_get_fast(_meta, 0);
-            var _tag   = array_safe_get_fast(_meta, 2);
-            var _butts = noone;
-            
-            switch(_tag) { // header
-            	case "metadata"  : _butts = metadata_buttons; break;
-                case "globalvar" : _butts = global_drawer.editing? global_buttons_editing : global_buttons; break;
-            }
-            
-            var _x1 = con_w;
-            var _y1 = yy + ui(2);
-                
-            if(is_array(_butts)) {
-            	var _bw = ui(28);
-                var _bh = lbh - ui(4);
-                
-                var _amo = array_length(_butts);
-                var _tw  = (_bw + ui(4)) * _amo;
-                draw_sprite_stretched_ext(THEME.box_r5_clr, 0, con_w - _tw, yy, _tw, lbh, COLORS.panel_inspector_group_bg, 1);
-                
-                global_button_edit.icon       = global_drawer.editing? THEME.accept_16 : THEME.gear_16;
-                global_button_edit.icon_blend = global_drawer.editing? COLORS._main_value_positive : COLORS._main_icon_light;
-                
-                for (var j = 0, m = array_length(_butts); j < m; j++) {
-                    _x1 -= _bw + ui(4);
-                    
-                    var _b = _butts[j];
-                        _b.setFocusHover(pFOCUS, _hover);
-                        _b.draw(_x1 + ui(2), _y1, _bw, _bh, _m, THEME.button_hide_fill);
-                    if(_b.inBBOX(_m)) contentPane.hover_content = true;
-                }
-                
-                _x1 -= ui(4);
-            }
-            
-            var cc = COLORS.panel_inspector_group_bg;
-            
-            if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, _x1, yy + lbh)) {
-            	cc = COLORS.panel_inspector_group_hover;
-                
-                if(pFOCUS) {
-                    	 if(DOUBLE_CLICK) _cAll = _meta[1]? -1 : 1;
-                    else if(mouse_press(mb_left)) _meta[1] = !_meta[1];
-                }
-            }
-            
-            draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, yy, _x1, lbh, cc, 1);
-            
-            draw_sprite_ui(THEME.arrow, _meta[1]? 0 : 3, ui(16), yy + lbh / 2, 1, 1, 0, COLORS.panel_inspector_group_bg, 1);    
-            
-            draw_set_text(viewMode? f_p0 : f_p1, fa_left, fa_center, COLORS._main_text_inner);
-            draw_text_add(ui(32), yy + lbh / 2, _txt);
-            
-            yy += lbh + ui(viewMode? 8 : 6);
-            hh += lbh + ui(viewMode? 8 : 6);
-            
-            if(_meta[1]) continue;
-            
-            switch(_tag) {
-                case "settings" :
-                    var _edt = PROJECT.attributeEditor;
-                    var _lh, wh;
-                    
-                    for( var j = 0; j < array_length(_edt); j++ ) {
-                        var title = array_safe_get(_edt[j], 0, noone);
-                        var param = array_safe_get(_edt[j], 1, noone);
-                        var editW = array_safe_get(_edt[j], 2, noone);
-                        var drpFn = array_safe_get(_edt[j], 3, noone);
-                        
-                        var widx = ui(8);
-                        var widy = yy;
-                        
-                        draw_set_text(_font, fa_left, fa_top, COLORS._main_text_inner);
-                        draw_text_add(ui(16), spac? yy : yy + ui(3), __txt(title));
-                        
-                        if(spac) {
-                            _lh = line_get_height();
-                            yy += _lh + ui(6);
-                            hh += _lh + ui(6);
-                            
-                        } else if(viewMode == INSP_VIEW_MODE.compact) {
-                            _lh = line_get_height() + ui(6);
-                        }
-                        
-                        var wh = 0;
-                        var _data = PROJECT.attributes[$ param];
-                        var _wdx  = spac? ui(16) : ui(140);
-                        var _wdy  = yy;
-                        var _wdw  = w - ui(48) - _wdx;
-                        var _wdh  = spac? TEXTBOX_HEIGHT  : _lh;
-                        
-                        var _param = new widgetParam(_wdx, _wdy, _wdw, _wdh, _data, {}, _m, rx, ry)
-                        					.setFont(_font)
-					    					.setScrollpane(contentPane);
-					    					
-                        editW.setFocusHover(pFOCUS, _hover);
-                        wh = editW.drawParam(_param);
-                        
-                        var jun  = PANEL_GRAPH.value_dragging;
-                        var widw = con_w - ui(16);
-                        var widh = spac? _lh + ui(6) + wh + ui(4) : max(wh, _lh);
-                        
-                        if(jun != noone && drpFn != noone && _hover && point_in_rectangle(_m[0], _m[1], widx, widy, widx + widw, widy + widh)) {
-                            draw_sprite_stretched_ext(THEME.ui_panel, 1, widx, widy, widw, widh, COLORS._main_value_positive, 1);
-                            attribute_hovering = drpFn;
-                        }
-                        
-				    	var _wdhh = spac? wh + ui(8) : max(wh, _lh) + ui(6);
-			        	yy += _wdhh; 
-			        	hh += _wdhh;
-                    }
-                    
-                    break;
-                    
-                case "metadata" :
-                    var _wdx = spac? ui(16) : ui(140);
-                    var _wdw = w - ui(48) - _wdx;
-                    var _whh = line_get_height(_font);
-                    var _edt = PROJECT.meta.steam == FILE_STEAM_TYPE.local || PROJECT.meta.author_steam_id == STEAM_USER_ID;
-                        
-                    for( var j = 0; j < array_length(meta.displays); j++ ) {
-                        var display = meta.displays[j];
-                        var _wdgt   = meta_tb[j];
-                        
-                        draw_set_text(_font, fa_left, fa_top, COLORS._main_text_inner);
-                        draw_text_add(ui(16), spac? yy : yy + ui(3), __txt(display[0]));
-                        
-                        if(spac) {
-                            _lh = line_get_height();
-                            yy += _lh + ui(6);
-                            hh += _lh + ui(6);
-                            
-                        } else if(viewMode == INSP_VIEW_MODE.compact) {
-                            _lh = line_get_height() + ui(6);
-                        }
-                        
-                        var _dataFunc = display[1];
-                        var _data = _dataFunc(meta);
-                        var _wdy  = yy;
-                        var _wdh  = _whh * display[2];
-                        
-                        var _param = new widgetParam(_wdx, _wdy, _wdw, _wdh, _data, {}, _m, rx, ry)
-                        					.setFont(_font)
-					    					.setFocusHover(pFOCUS, _hover, _edt)
-					    					.setScrollpane(contentPane);
-                        
-                        if(is(_wdgt, textArrayBox)) _wdgt.arraySet = current_meta.tags;
-                        wh = _wdgt.drawParam(_param);
-                        
-				    	var _wdhh = spac? wh + ui(8) : max(wh, _lh) + ui(6);
-			        	yy += _wdhh; 
-			        	hh += _wdhh;
-                    }
-                    
-                    if(STEAM_ENABLED && _edt) {
-                        draw_set_text(_font, fa_left, fa_top, COLORS._main_text_inner);
-                        draw_text_over(ui(16), spac? yy : yy + ui(3), __txt("Show Avatar"));
-                        
-                        if(spac) {
-                            _lh = line_get_height();
-                            yy += _lh + ui(6);
-                            hh += _lh + ui(6);
-                        }
-                        
-                        var _param = new widgetParam(_wdx, yy, _wdw, TEXTBOX_HEIGHT, STEAM_UGC_ITEM_AVATAR, {}, _m, rx, ry)
-                        					.setFont(_font)
-					    					.setFocusHover(pFOCUS, _hover)
-					    					.setScrollpane(contentPane);
-                        
-                        wh = meta_steam_avatar.drawParam(_param);
-                        
-				    	var _wdhh = spac? wh + ui(8) : wh + ui(6);
-			        	yy += _wdhh; 
-			        	hh += _wdhh;
-                    }
-                    
-                    break;
-                    
-                case "globalvar" : 
-                    // if(findPanel("Panel_Globalvar")) { yy += ui(4); hh += ui(4); continue; }
-                    if(_m[1] > yy) contentPane.hover_content = true;
-                    
-                    global_drawer.viewMode = viewMode;
-                    var glPar = global_drawer.draw(ui(16), yy, contentPane.surface_w - ui(24), _m, pFOCUS, _hover, contentPane, ui(16) + x, top_bar_h + y);
-                    var gvh   = glPar[0];
-                    
-                    yy += gvh + ui(8);
-                    hh += gvh + ui(8);
-                    break;
-                    
-                case "group prop" :
-                    var context = PANEL_GRAPH.getCurrentContext();
-                    var _h = drawNodeProperties(yy, _m, context);
-                    
-                    yy += _h;
-                    hh += _h;
-                    break;
-            }
-            
-            yy += ui(viewMode? 4 : 2);
-            hh += ui(viewMode? 4 : 2);
-        }
-        
-        	 if(_cAll ==  1) { for( var i = 0, n = array_length(meta_display); i < n; i++ ) meta_display[i][1] = false; }
-		else if(_cAll == -1) { for( var i = 0, n = array_length(meta_display); i < n; i++ ) meta_display[i][1] =  true; }
-		
-        return hh;
-    }
-    
-    static drawContentNode = function(_y, _m) {
-        var con_w  = contentPane.surface_w - ui(4);
-        if(point_in_rectangle(_m[0], _m[1], 0, 0, con_w, content_h) && mouse_press(mb_left, pFOCUS))
-            prop_selecting = noone;
-        
-        prop_page_b.data[2] = inspecting.messages_bub? THEME.message_16_grey_bubble : THEME.message_16_grey;
-        prop_page_b.setFocusHover(pFOCUS, pHOVER);
-        prop_page_b.draw(ui(32), _y + ui(4), contentPane.w - ui(76), ui(24), prop_page, _m, x + contentPane.x, y + contentPane.y);
-        
-        var _hh = ui(40);
-        _y += _hh;
-        
-        if(inspectGroup >= 0)           return _hh + drawNodeProperties(_y, _m, inspecting);
-        if(is(inspecting, Node_Frame))  return _hh + drawNodeProperties(_y, _m, inspecting);
-        
-        for( var i = 0, n = min(10, array_length(inspectings)); i < n; i++ ) {
-            if(i) {
-                _y  += ui(8);
-                _hh += ui(8);
-            }
-            
-            if(n > 1) {
-                draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, _y, con_w, ui(32), COLORS.panel_inspector_output_label, 0.9);
-                draw_set_text(f_p0b, fa_center, fa_center, COLORS._main_text_sub);
-                
-                var _tx = inspectings[i].getFullName();
-                draw_text_add(con_w / 2, _y + ui(16), _tx);
-                
-                _y  += ui(32 + 8);
-                _hh += ui(32 + 8);
-            }
-            
-            var _h = drawNodeProperties(_y, _m, inspectings[i]);
-            _y  += _h;
-            _hh += _h;
-        }
-        
-        return _hh + ui(64);
-    }
     
     static drawNodeProperties = function(_y, _m, _inspecting = inspecting) {
         var con_w  = contentPane.surface_w - ui(4); 
@@ -1228,7 +922,337 @@ function Panel_Inspector() : PanelContent() constructor {
         return hh;
     }
     
-    static drawInspectingNode = function() {
+    static drawContentMeta_GM = function(_y, _m) {
+    	var ww = contentPane.surface_w;
+    	var hh = ui(40);
+        var yy = _y + hh;
+        var rx = x + ui(16);
+        var ry = y + top_bar_h;
+        
+        var _hover = pHOVER && contentPane.hover;
+        var  spac  = viewMode == INSP_VIEW_MODE.spacious;
+    	var _font  = spac? f_p1 : f_p2;
+        
+        #region properties
+	        var _wdx = 0;
+	        var _wdy = yy;
+	        var _wdw = ww;
+	        var _wdh = TEXTBOX_HEIGHT;
+	        
+	        var _data  = PROJECT.attributes.bind_gamemaker_path;
+	    	var _param = new widgetParam(_wdx, _wdy, _wdw, _wdh, _data, {}, _m, rx, ry)
+	    					.setFont(_font)
+	    					.setFocusHover(pFOCUS, _hover)
+	    					.setScrollpane(contentPane);
+            
+	        var wh = PROJECT.gamemaker_editWidget.drawParam(_param);
+	    	
+	    	var _wdhh = wh + ui(8);
+        	yy += _wdhh; 
+        	hh += _wdhh;
+		#endregion
+		
+		var gmBinder = PROJECT.bind_gamemaker;
+		if(gmBinder == noone) return hh;
+		
+		var _wdh = GM_Explore_draw(gmBinder, 0, yy, contentPane.surface_w, contentPane.surface_h, _m, _hover, pFOCUS);
+		hh += _wdh;
+		
+		return hh;
+    }
+    
+    static drawContentMeta_PXC = function(_y, _m) {
+    	
+        var context = PANEL_GRAPH.getCurrentContext();
+        var meta    = context == noone? PROJECT.meta : context.metadata;
+        if(meta == noone) return 0;
+        current_meta = meta;
+        
+        var  con_w = contentPane.surface_w - ui(4);
+        var _hover = pHOVER && contentPane.hover;
+        var  spac  = viewMode == INSP_VIEW_MODE.spacious;
+        
+        var hh  = ui(40);
+        var yy  = _y + hh;
+        var rx  = x + ui(16);
+        var ry  = y + top_bar_h;
+        var lbh = viewMode? ui(32) : ui(26);
+        var _cAll = 0;
+        var _font = spac? f_p1 : f_p2;
+        
+        attribute_hovering = noone;
+        
+        for( var i = 0, n = array_length(meta_display); i < n; i++ ) {
+            if(i == 3 && PANEL_GRAPH.getCurrentContext() == noone) continue;
+            
+            var _meta  = meta_display[i];
+            var _txt   = array_safe_get_fast(_meta, 0);
+            var _tag   = array_safe_get_fast(_meta, 2);
+            var _butts = noone;
+            
+            switch(_tag) { // header
+            	case "metadata"  : _butts = metadata_buttons; break;
+                case "globalvar" : _butts = global_drawer.editing? global_buttons_editing : global_buttons; break;
+            }
+            
+            var _x1 = con_w;
+            var _y1 = yy + ui(2);
+                
+            if(is_array(_butts)) {
+            	var _bw = ui(28);
+                var _bh = lbh - ui(4);
+                
+                var _amo = array_length(_butts);
+                var _tw  = (_bw + ui(4)) * _amo;
+                draw_sprite_stretched_ext(THEME.box_r5_clr, 0, con_w - _tw, yy, _tw, lbh, COLORS.panel_inspector_group_bg, 1);
+                
+                global_button_edit.icon       = global_drawer.editing? THEME.accept_16 : THEME.gear_16;
+                global_button_edit.icon_blend = global_drawer.editing? COLORS._main_value_positive : COLORS._main_icon_light;
+                
+                for (var j = 0, m = array_length(_butts); j < m; j++) {
+                    _x1 -= _bw + ui(4);
+                    
+                    var _b = _butts[j];
+                        _b.setFocusHover(pFOCUS, _hover);
+                        _b.draw(_x1 + ui(2), _y1, _bw, _bh, _m, THEME.button_hide_fill);
+                    if(_b.inBBOX(_m)) contentPane.hover_content = true;
+                }
+                
+                _x1 -= ui(4);
+            }
+            
+            var cc = COLORS.panel_inspector_group_bg;
+            
+            if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, _x1, yy + lbh)) {
+            	cc = COLORS.panel_inspector_group_hover;
+                
+                if(pFOCUS) {
+                    	 if(DOUBLE_CLICK) _cAll = _meta[1]? -1 : 1;
+                    else if(mouse_press(mb_left)) _meta[1] = !_meta[1];
+                }
+            }
+            
+            draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, yy, _x1, lbh, cc, 1);
+            
+            draw_sprite_ui(THEME.arrow, _meta[1]? 0 : 3, ui(16), yy + lbh / 2, 1, 1, 0, COLORS.panel_inspector_group_bg, 1);    
+            
+            draw_set_text(viewMode? f_p0 : f_p1, fa_left, fa_center, COLORS._main_text_inner);
+            draw_text_add(ui(32), yy + lbh / 2, _txt);
+            
+            yy += lbh + ui(viewMode? 8 : 6);
+            hh += lbh + ui(viewMode? 8 : 6);
+            
+            if(_meta[1]) continue;
+            
+            switch(_tag) {
+                case "settings" :
+                    var _edt = PROJECT.attributeEditor;
+                    var _lh, wh;
+                    
+                    for( var j = 0; j < array_length(_edt); j++ ) {
+                        var title = array_safe_get(_edt[j], 0, noone);
+                        var param = array_safe_get(_edt[j], 1, noone);
+                        var editW = array_safe_get(_edt[j], 2, noone);
+                        var drpFn = array_safe_get(_edt[j], 3, noone);
+                        
+                        var widx = ui(8);
+                        var widy = yy;
+                        
+                        draw_set_text(_font, fa_left, fa_top, COLORS._main_text_inner);
+                        draw_text_add(ui(16), spac? yy : yy + ui(3), __txt(title));
+                        
+                        if(spac) {
+                            _lh = line_get_height();
+                            yy += _lh + ui(6);
+                            hh += _lh + ui(6);
+                            
+                        } else if(viewMode == INSP_VIEW_MODE.compact) {
+                            _lh = line_get_height() + ui(6);
+                        }
+                        
+                        var wh = 0;
+                        var _data = PROJECT.attributes[$ param];
+                        var _wdx  = spac? ui(16) : ui(140);
+                        var _wdy  = yy;
+                        var _wdw  = w - ui(48) - _wdx;
+                        var _wdh  = spac? TEXTBOX_HEIGHT  : _lh;
+                        
+                        var _param = new widgetParam(_wdx, _wdy, _wdw, _wdh, _data, {}, _m, rx, ry)
+                        					.setFont(_font)
+					    					.setScrollpane(contentPane);
+					    					
+                        editW.setFocusHover(pFOCUS, _hover);
+                        wh = editW.drawParam(_param);
+                        
+                        var jun  = PANEL_GRAPH.value_dragging;
+                        var widw = con_w - ui(16);
+                        var widh = spac? _lh + ui(6) + wh + ui(4) : max(wh, _lh);
+                        
+                        if(jun != noone && drpFn != noone && _hover && point_in_rectangle(_m[0], _m[1], widx, widy, widx + widw, widy + widh)) {
+                            draw_sprite_stretched_ext(THEME.ui_panel, 1, widx, widy, widw, widh, COLORS._main_value_positive, 1);
+                            attribute_hovering = drpFn;
+                        }
+                        
+				    	var _wdhh = spac? wh + ui(8) : max(wh, _lh) + ui(6);
+			        	yy += _wdhh; 
+			        	hh += _wdhh;
+                    }
+                    
+                    break;
+                    
+                case "metadata" :
+                    var _wdx = spac? ui(16) : ui(140);
+                    var _wdw = w - ui(48) - _wdx;
+                    var _whh = line_get_height(_font);
+                    var _edt = PROJECT.meta.steam == FILE_STEAM_TYPE.local || PROJECT.meta.author_steam_id == STEAM_USER_ID;
+                        
+                    for( var j = 0; j < array_length(meta.displays); j++ ) {
+                        var display = meta.displays[j];
+                        var _wdgt   = meta_tb[j];
+                        
+                        draw_set_text(_font, fa_left, fa_top, COLORS._main_text_inner);
+                        draw_text_add(ui(16), spac? yy : yy + ui(3), __txt(display[0]));
+                        
+                        if(spac) {
+                            _lh = line_get_height();
+                            yy += _lh + ui(6);
+                            hh += _lh + ui(6);
+                            
+                        } else if(viewMode == INSP_VIEW_MODE.compact) {
+                            _lh = line_get_height() + ui(6);
+                        }
+                        
+                        var _dataFunc = display[1];
+                        var _data = _dataFunc(meta);
+                        var _wdy  = yy;
+                        var _wdh  = _whh * display[2];
+                        
+                        var _param = new widgetParam(_wdx, _wdy, _wdw, _wdh, _data, {}, _m, rx, ry)
+                        					.setFont(_font)
+					    					.setFocusHover(pFOCUS, _hover, _edt)
+					    					.setScrollpane(contentPane);
+                        
+                        if(is(_wdgt, textArrayBox)) _wdgt.arraySet = current_meta.tags;
+                        wh = _wdgt.drawParam(_param);
+                        
+				    	var _wdhh = spac? wh + ui(8) : max(wh, _lh) + ui(6);
+			        	yy += _wdhh; 
+			        	hh += _wdhh;
+                    }
+                    
+                    if(STEAM_ENABLED && _edt) {
+                        draw_set_text(_font, fa_left, fa_top, COLORS._main_text_inner);
+                        draw_text_over(ui(16), spac? yy : yy + ui(3), __txt("Show Avatar"));
+                        
+                        if(spac) {
+                            _lh = line_get_height();
+                            yy += _lh + ui(6);
+                            hh += _lh + ui(6);
+                        }
+                        
+                        var _param = new widgetParam(_wdx, yy, _wdw, TEXTBOX_HEIGHT, STEAM_UGC_ITEM_AVATAR, {}, _m, rx, ry)
+                        					.setFont(_font)
+					    					.setFocusHover(pFOCUS, _hover)
+					    					.setScrollpane(contentPane);
+                        
+                        wh = meta_steam_avatar.drawParam(_param);
+                        
+				    	var _wdhh = spac? wh + ui(8) : wh + ui(6);
+			        	yy += _wdhh; 
+			        	hh += _wdhh;
+                    }
+                    
+                    break;
+                    
+                case "globalvar" : 
+                    // if(findPanel("Panel_Globalvar")) { yy += ui(4); hh += ui(4); continue; }
+                    if(_m[1] > yy) contentPane.hover_content = true;
+                    
+                    global_drawer.viewMode = viewMode;
+                    var glPar = global_drawer.draw(ui(16), yy, contentPane.surface_w - ui(24), _m, pFOCUS, _hover, contentPane, ui(16) + x, top_bar_h + y);
+                    var gvh   = glPar[0];
+                    
+                    yy += gvh + ui(8);
+                    hh += gvh + ui(8);
+                    break;
+                    
+                case "group prop" :
+                    var context = PANEL_GRAPH.getCurrentContext();
+                    var _h = drawNodeProperties(yy, _m, context);
+                    
+                    yy += _h;
+                    hh += _h;
+                    break;
+            }
+            
+            yy += ui(viewMode? 4 : 2);
+            hh += ui(viewMode? 4 : 2);
+        }
+        
+        	 if(_cAll ==  1) { for( var i = 0, n = array_length(meta_display); i < n; i++ ) meta_display[i][1] = false; }
+		else if(_cAll == -1) { for( var i = 0, n = array_length(meta_display); i < n; i++ ) meta_display[i][1] =  true; }
+		
+        return hh;
+    }
+    
+    static drawContentMeta = function(_y, _m) {
+    	var _tab_width = min(contentPane.w - ui(32), ui(280));
+    	var _tab_x     = (contentPane.w - ui(12)) / 2 - _tab_width / 2;
+    	
+        proj_prop_page_b.setFocusHover(pFOCUS, pHOVER);
+        proj_prop_page_b.draw(_tab_x, _y + ui(4), _tab_width, ui(24), proj_prop_page, _m, x + contentPane.x, y + contentPane.y);
+        
+        switch(proj_prop_page) {
+        	case 0 : return drawContentMeta_PXC(_y, _m);
+        	case 1 : return drawContentMeta_GM(_y, _m);
+        }
+        
+        return 0;
+    }
+    
+    static drawContentNode = function(_y, _m) {
+        var con_w  = contentPane.surface_w - ui(4);
+        if(point_in_rectangle(_m[0], _m[1], 0, 0, con_w, content_h) && mouse_press(mb_left, pFOCUS))
+            prop_selecting = noone;
+        
+        var _tab_width = min(contentPane.w - ui(32), ui(280));
+    	var _tab_x     = (contentPane.w - ui(12)) / 2 - _tab_width / 2;
+    	
+        prop_page_b.data[2] = inspecting.messages_bub? THEME.message_16_grey_bubble : THEME.message_16_grey;
+        prop_page_b.setFocusHover(pFOCUS, pHOVER);
+        prop_page_b.draw(_tab_x, _y + ui(4), _tab_width, ui(24), prop_page, _m, x + contentPane.x, y + contentPane.y);
+        
+        var _hh = ui(40);
+        _y += _hh;
+        
+        if(inspectGroup >= 0 || is(inspecting, Node_Frame)) return _hh + drawNodeProperties(_y, _m, inspecting);
+        
+        for( var i = 0, n = min(10, array_length(inspectings)); i < n; i++ ) {
+            if(i) {
+                _y  += ui(8);
+                _hh += ui(8);
+            }
+            
+            if(n > 1) {
+                draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, _y, con_w, ui(32), COLORS.panel_inspector_output_label, 0.9);
+                draw_set_text(f_p0b, fa_center, fa_center, COLORS._main_text_sub);
+                
+                var _tx = inspectings[i].getFullName();
+                draw_text_add(con_w / 2, _y + ui(16), _tx);
+                
+                _y  += ui(32 + 8);
+                _hh += ui(32 + 8);
+            }
+            
+            var _h = drawNodeProperties(_y, _m, inspectings[i]);
+            _y  += _h;
+            _hh += _h;
+        }
+        
+        return _hh + ui(64);
+    }
+    
+    static drawHeader_Node = function() {
         
         var txt = inspecting.renamed? inspecting.display_name : inspecting.name;
              if(inspectGroup ==  1) txt = $"[{array_length(PANEL_GRAPH.nodes_selecting)}] {txt}"; 
@@ -1250,6 +1274,39 @@ function Panel_Inspector() : PanelContent() constructor {
             draw_set_alpha(0.65);
             draw_text_add(w / 2, ui(76), inspecting.internalName);
             draw_set_alpha(1);
+            
+            var _txt_w = string_width(inspecting.internalName);
+            
+	        var his_x = w / 2 - _txt_w / 2 - ui(16);
+	        var his_y = ui(68);
+	        var cc = COLORS._main_text_sub;
+	        
+	        var targ = array_empty(inspect_history_undo)? noone : array_last(inspect_history_undo);
+	        var targName = targ == noone? "Project" : targ.getDisplayName();
+	        
+	        if(buttonInstant(noone, his_x, his_y, ui(16), ui(16), [mx, my], pHOVER, pFOCUS, targName, THEME.arrow_wire_16, 2, cc, .65) == 2) {
+	        	array_pop(inspect_history_undo);
+	        	array_push(inspect_history_redo, inspecting);
+	        	
+	        	setInspecting(targ, false, true, false);
+	        	PANEL_GRAPH.nodes_selecting = [];
+	        }
+	        
+	        var his_x = w / 2 + _txt_w / 2;
+	        
+	        if(!array_empty(inspect_history_redo)) {
+	        	var targ = array_last(inspect_history_redo);
+	        	var targName = targ == noone? "Project" : targ.getDisplayName();
+	        	
+		        if(buttonInstant(noone, his_x, his_y, ui(16), ui(16), [mx, my], pHOVER, pFOCUS, targName, THEME.arrow_wire_16, 0, cc, .65) == 2) {
+		        	array_pop(inspect_history_redo);
+		        	
+		        	setInspecting(targ, false, true);
+		        	PANEL_GRAPH.nodes_selecting = [];
+		        }
+	        }
+	        
+	        if(inspecting == noone) return;
         }
         
         var bx = ui(8);
@@ -1336,7 +1393,7 @@ function Panel_Inspector() : PanelContent() constructor {
             
             title = inspecting.getDisplayName();
             inspecting.inspectorStep();
-            drawInspectingNode();
+            drawHeader_Node();
             
         } else {
             title = __txt("Inspector");
@@ -1406,6 +1463,7 @@ function Panel_Inspector() : PanelContent() constructor {
         contentPane.setFocusHover(pFOCUS, pHOVER);
         contentPane.draw(ui(16), top_bar_h, mx - ui(16), my - top_bar_h);
         
+        /// focus 
         var _foc = PANEL_GRAPH.getFocusingNode();
         if(!locked && _foc && inspecting != _foc) setInspecting(_foc);
     }

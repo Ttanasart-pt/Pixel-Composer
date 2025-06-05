@@ -27,6 +27,14 @@ function vertex_add_pntc(buffer, position, normal, texture, color = c_white, alp
 	vertex_color(buffer, color, alpha);
 }
 
+function vertex_add_pntcb(buffer, position, normal, texture, color = c_white, alpha = 1, bx = 1, by = 0, bz = 0) {
+	vertex_position_3d(buffer, position[0], position[1], position[2]);
+	vertex_normal(buffer, normal[0], normal[1], normal[2]);
+	vertex_texcoord(buffer, texture[0], texture[1]);
+	vertex_color(buffer, color, alpha);
+	vertex_float3(buffer, bx, by, bz);
+}
+
 function __vertex_add_pntc(buffer, _px, _py, _pz, _nx, _ny, _nz, _u, _v, color = c_white, alpha = 1, bx = 1, by = 0, bz = 0) {
 	vertex_position_3d(buffer, _px, _py, _pz);
 	vertex_normal(buffer, _nx, _ny, _nz);
