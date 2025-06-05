@@ -1284,7 +1284,7 @@ function Panel_Inspector() : PanelContent() constructor {
 	        var targ = array_empty(inspect_history_undo)? noone : array_last(inspect_history_undo);
 	        var targName = targ == noone? "Project" : targ.getDisplayName();
 	        
-	        if(buttonInstant(noone, his_x, his_y, ui(16), ui(16), [mx, my], pHOVER, pFOCUS, targName, THEME.arrow_wire_16, 2, cc, .65) == 2) {
+	        if(buttonInstant(noone, his_x, his_y, ui(16), ui(16), [mx, my], pHOVER, pFOCUS, targName, THEME.arrow_wire_16, 2, cc, .75) == 2) {
 	        	array_pop(inspect_history_undo);
 	        	array_push(inspect_history_redo, inspecting);
 	        	
@@ -1298,7 +1298,7 @@ function Panel_Inspector() : PanelContent() constructor {
 	        	var targ = array_last(inspect_history_redo);
 	        	var targName = targ == noone? "Project" : targ.getDisplayName();
 	        	
-		        if(buttonInstant(noone, his_x, his_y, ui(16), ui(16), [mx, my], pHOVER, pFOCUS, targName, THEME.arrow_wire_16, 0, cc, .65) == 2) {
+		        if(buttonInstant(noone, his_x, his_y, ui(16), ui(16), [mx, my], pHOVER, pFOCUS, targName, THEME.arrow_wire_16, 0, cc, .75) == 2) {
 		        	array_pop(inspect_history_redo);
 		        	
 		        	setInspecting(targ, false, true);

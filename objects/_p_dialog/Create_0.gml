@@ -18,6 +18,8 @@
 	
 	ds_list_add(DIALOGS, self);
 	
+	prefocus  = FOCUS;
+	
 	active    = true;
 	dialog_w  = 320;
 	dialog_h  = 320;

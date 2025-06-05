@@ -32,7 +32,6 @@
     function panel_preview_set_split_vertical()         { CALL("preview_set_split_vertical");        PANEL_PREVIEW.set_split_vertical();                                      }
     function panel_preview_toggle_split_view()          { CALL("preview_toggle_split_view");         PANEL_PREVIEW.toggle_split_view();                                       }
     
-    function panel_preview_new_canvas()                 { CALL("preview_new_canvas");                PANEL_PREVIEW.new_canvas();                                      }
     function panel_preview_new_preview_window()         { CALL("preview_new_preview_window");        PANEL_PREVIEW.new_preview_window();                                      }
     function panel_preview_saveCurrentFrame()           { CALL("preview_saveCurrentFrame");          PANEL_PREVIEW.saveCurrentFrame();                                        }
     function panel_preview_saveAllCurrentFrames()       { CALL("preview_saveAllCurrentFrames");      PANEL_PREVIEW.saveAllCurrentFrames();                                    }
@@ -62,7 +61,7 @@
     	var a = MOD_KEY.alt;
     	var cs = MOD_KEY.ctrl | MOD_KEY.shift;
     	
-        registerFunction(p, "Clear Tool",               "A", n, panel_preview_clear_tool               )
+        registerFunction(p, "Clear Tool",               vk_escape, n, panel_preview_clear_tool         )
         
         registerFunction(p, "Focus Content",            "F", n, panel_preview_focus_content            ).setMenu("preview_focus_content", THEME.icon_center_canvas)
         registerFunction(p, "Save Current Frame",       "S", s, panel_preview_save_current_frame       ).setMenu("preview_save_current_frame")
@@ -112,7 +111,6 @@
         registerFunction(p, "Set Reset View On",        "", n, panel_preview_set_reset_view_on         ).setMenu("preview_set_reset_view_on")
         registerFunction(p, "Toggle Reset View",        "", n, panel_preview_toggle_reset_view         ).setMenu("preview_toggle_reset_view")
         
-        registerFunction(p, "New Canvas",               "", n, panel_preview_new_canvas                ).setMenu("preview_new_canvas")
         registerFunction(p, "New Preview Window",       "", n, panel_preview_new_preview_window        ).setMenu("preview_new_preview_window")
         registerFunction(p, "Save Current Frame",       "", n, panel_preview_saveCurrentFrame          ).setMenu("preview_save_current_frame")
         registerFunction(p, "Save All Current Frames",  "", n, panel_preview_saveAllCurrentFrames      ).setMenu("preview_save_all_current_frames")
@@ -2766,6 +2764,7 @@ function Panel_Preview() : PanelContent() constructor {
         
         if(mouse_on_preview && mouse_press(mb_right, pFOCUS) && !key_mod_press(SHIFT)) {
             menuCall("preview_context_menu", [ 
+                MENU_ITEMS.graph_add_node, 
                 MENU_ITEMS.preview_new_preview_window, 
                 -1,
                 MENU_ITEMS.preview_save_current_frame, 
@@ -2777,8 +2776,6 @@ function Panel_Preview() : PanelContent() constructor {
                 MENU_ITEMS.preview_copy_color_hex, 
                 -1,
                 MENU_ITEMS.preview_group_preview_bg,
-                -1,
-                MENU_ITEMS.preview_new_canvas, 
             ], 0, 0, fa_left, getNodePreview());
         }
         
@@ -2810,15 +2807,6 @@ function Panel_Preview() : PanelContent() constructor {
     }
     
     ////- ACTION
-    
-    function new_canvas() { 
-    	var _canvas = nodeBuild("Node_Canvas", 0, 0, PANEL_GRAPH.getCurrentContext()).skipDefault(); 
-    	
-    	setNodePreview(_canvas);
-    	PANEL_INSPECTOR.setInspecting(_canvas);
-    	
-    	do_fullView = true;
-    }
     
     function copyCurrentFrame() {
         var prevS = getNodePreviewSurface();

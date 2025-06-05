@@ -65,7 +65,7 @@
     function panel_graph_transferConnection()      { CALL("graph_transferConnection");  PANEL_GRAPH.transferConnection();                       }
 				                                                                           
     function __fnInit_Graph() {
-    	registerFunction("Graph", "Add Node",              "A", MOD_KEY.none,                    panel_graph_add_node            ).setMenu("graph_add_node")
+    	registerFunction("",      "Add Node",              "A", MOD_KEY.none,                    panel_graph_add_node            ).setMenu("graph_add_node")
         registerFunction("Graph", "Replace Node",          "R", MOD_KEY.ctrl,                    panel_graph_replace_node        ).setMenu("graph_replace_node")
         registerFunction("Graph", "Focus Content",         "F", MOD_KEY.none,                    panel_graph_focus_content       ).setMenu("graph_focus_content")
         registerFunction("Graph", "Preview Focusing Node", "P", MOD_KEY.none,                    panel_graph_preview_focus       ).setMenu("graph_preview_focusing_node")
