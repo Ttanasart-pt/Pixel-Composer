@@ -263,15 +263,6 @@ event_inherited();
 			for( var i = 0, n = array_length(_new_node.outputs); i < n; i++ ) 
 				array_push(_outputs, _new_node.outputs[i]);
 			
-			if(PANEL_INSPECTOR) PANEL_INSPECTOR.setInspecting(_new_node);
-			
-			if(PANEL_GRAPH) {
-				if(PREFERENCES.node_add_select && node_replace == noone) 
-					PANEL_GRAPH.selectDragNode(_new_node, junction_called == noone);
-				var _ins = instanceof(_new_node);
-				if(struct_has(HOTKEYS, _ins)) FOCUS_STR = _ins;
-			}
-			
 		} else if(is(_node, NodeAction)) {  // NOT IMPLEMENTED
 			var _dat = _node.build(node_target_x, node_target_y,, _param);
 			if(_dat == noone) return;
@@ -321,6 +312,19 @@ event_inherited();
 					if(array_empty(_ot[j].value_to))
 						array_push(_outputs, _ot[j]);
 				}
+			}
+			
+			_new_node = array_safe_get_fast(_new_list, 0, noone);
+		}
+		
+		if(_new_node) { // Select
+			if(PANEL_INSPECTOR) PANEL_INSPECTOR.setInspecting(_new_node);
+			
+			if(PANEL_GRAPH) {
+				if(PREFERENCES.node_add_select && node_replace == noone) 
+					PANEL_GRAPH.selectDragNode(_new_node, junction_called == noone);
+				var _ins = instanceof(_new_node);
+				if(struct_has(HOTKEYS, _ins)) FOCUS_STR = _ins;
 			}
 		}
 		
