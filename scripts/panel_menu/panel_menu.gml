@@ -637,7 +637,7 @@ function Panel_Menu() : PanelContent() constructor {
                         draw_sprite_stretched_ext(THEME.button_hide_fill, 1, _x0, _y0, _x1 - _x0, _y1 - _y0, sc, 1);
                         
                         if(mouse_press(mb_left, pFOCUS))
-                            dialogCall(o_dialog_release_note); 
+                            dialogPanelCall(new Panel_Release_Note()); 
                             
                         if(mouse_press(mb_right, pFOCUS)) {
                             clipboard_set_text(VERSION_STRING);

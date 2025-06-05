@@ -1,8 +1,10 @@
-#macro CHECK_PANEL_WORKSPACE if(!is_instanceof(FOCUS_CONTENT, Panel_Workspace)) return;
-
-function panel_workspace_apply()	{ CHECK_PANEL_WORKSPACE CALL("panel_workspace_apply");		FOCUS_CONTENT.apply_space();   }
-function panel_workspace_replace()	{ CHECK_PANEL_WORKSPACE CALL("panel_workspace_replace");	FOCUS_CONTENT.replace_space(); }
-function panel_workspace_delete()	{ CHECK_PANEL_WORKSPACE CALL("panel_workspace_delete");		FOCUS_CONTENT.delete_space();  }
+#region function
+	#macro CHECK_PANEL_WORKSPACE if(!is_instanceof(FOCUS_CONTENT, Panel_Workspace)) return;
+	
+	function panel_workspace_apply()	{ CHECK_PANEL_WORKSPACE CALL("panel_workspace_apply");		FOCUS_CONTENT.apply_space();   }
+	function panel_workspace_replace()	{ CHECK_PANEL_WORKSPACE CALL("panel_workspace_replace");	FOCUS_CONTENT.replace_space(); }
+	function panel_workspace_delete()	{ CHECK_PANEL_WORKSPACE CALL("panel_workspace_delete");		FOCUS_CONTENT.delete_space();  }
+#endregion
 
 function Panel_Workspace() : PanelContent() constructor {
 	title      = "Workspace";
@@ -13,13 +15,12 @@ function Panel_Workspace() : PanelContent() constructor {
 	scroll     = 0;
 	scroll_to  = 0;
 	scroll_max = 0;
-	hori       = false;
 	
 	layout_selecting = "";
 	
-	registerFunction("Workspace", "Apply",	 "", MOD_KEY.none, panel_workspace_apply);
-	registerFunction("Workspace", "Replace", "", MOD_KEY.none, panel_workspace_replace);
-	registerFunction("Workspace", "Delete",	 "", MOD_KEY.none, panel_workspace_delete);
+	registerFunction( "Workspace", "Apply",   "", MOD_KEY.none, panel_workspace_apply   );
+	registerFunction( "Workspace", "Replace", "", MOD_KEY.none, panel_workspace_replace );
+	registerFunction( "Workspace", "Delete",  "", MOD_KEY.none, panel_workspace_delete  );
 	
 	function apply_space() {
 		if(layout_selecting == "") return;
@@ -57,33 +58,35 @@ function Panel_Workspace() : PanelContent() constructor {
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		
-		var _hori = hori;
-		hori = w > h;
-		
-		if(hori != _hori) scroll_to = 0;
-		
-		var x0 = ui(8) + scroll, x1;
+		var x0 = scroll, x1;
 		var y0, y1;
-		var cx = w / 2;
-		var cy = h / 2;
+		
+		var cx = w / 2, _tx;
+		var cy = h / 2, _ty;
 		
 		var ww = 0;
 		var hh = 0;
 		var amo = array_length(workspaces);
 		
-		draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_sub);
+		draw_set_font(f_p1);
+		var currW = string_width(PREFERENCES.panel_layout_file) + ui(24)
+		x0 += currW;
+		ww += currW;
+		
+		draw_set_text(f_p1, fa_center, fa_center);
 		
 		for( var i = 0; i <= amo; i++ ) {
 			var str = i == amo? "+" : workspaces[i];
 			var tw  = string_width(str)  + ui(16);
 			var th  = string_height(str) + ui(8);
+			var sel = PREFERENCES.panel_layout_file == str;
 			
 			x1 = x0 + tw;
 			
 			y0 = cy - th / 2;
 			y1 = y0 + th;
 			
-			if(pHOVER && point_in_rectangle(mx, my, x0, y0, x1, y1)) {
+			if(mx > currW && pHOVER && point_in_rectangle(mx, my, x0, y0, x1, y1)) {
 				draw_sprite_stretched(THEME.button_hide_fill, 1, x0, y0, tw, th);
 				
 				if(mouse_press(mb_left, pFOCUS)) {
@@ -103,7 +106,7 @@ function Panel_Workspace() : PanelContent() constructor {
 						PREF_SAVE();
 						setPanel();
 					}
-				} 
+				}
 				
 				if(mouse_press(mb_right, pFOCUS)) {
 					layout_selecting = str;
@@ -115,29 +118,29 @@ function Panel_Workspace() : PanelContent() constructor {
 				}
 			}
 			
-			if(PREFERENCES.panel_layout_file == str) draw_set_color(COLORS._main_text);    
-			else                                     draw_set_color(COLORS._main_text_sub);
+			_tx = x0 + tw / 2;
+			_ty = cy;
 			
-			var _tx = x0 + tw / 2;
-			var _ty = cy;
-			
+			draw_set_color(sel? CDEF.main_mdwhite : CDEF.main_grey);
 			draw_text_add(_tx, _ty, str);
 			
 			x0 += tw + ui(4);
 			ww += tw + ui(4);
 		}
 		
-		scroll = lerp_float(scroll, scroll_to, 5);
+		draw_set_color(COLORS.panel_bg_clear);
+		draw_rectangle(0, 0, currW, h, false);
 		
-		if(hori) {
-			scroll_max = max(ww - w + ui(16), 0);
-			if(pHOVER && MOUSE_WHEEL != 0)
-				scroll_to = clamp(scroll_to + ui(128) * MOUSE_WHEEL, -scroll_max, 0);
+		draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
+		draw_text_add(ui(12), cy, PREFERENCES.panel_layout_file);
+		
+		draw_set_color(COLORS._main_icon_dark);
+		draw_line_round(currW - ui(4), ui(8), currW - ui(4), h - ui(8), 3);
+		
+		scroll     = lerp_float(scroll, scroll_to, 5);
+		scroll_max = max(ww - w + ui(16), 0);
+		if(pHOVER && MOUSE_WHEEL != 0)
+			scroll_to = clamp(scroll_to + ui(128) * MOUSE_WHEEL, -scroll_max, 0);
 			
-		} else {
-			scroll_max = max(hh - h + ui(16), 0);
-			if(pHOVER && MOUSE_WHEEL != 0)
-				scroll_to = clamp(scroll_to + ui(32) * MOUSE_WHEEL, -scroll_max, 0);
-		}
 	}
 }

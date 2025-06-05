@@ -977,6 +977,8 @@ function PanelContent() constructor {
 	
 	static onClose = function() {}
 	
+	static asyncCallback = function(async_load) {}
+	
 	static serialize   = function()     { return { name: instanceof(self) }; }
 	static deserialize = function(data) { return self; }
 }
