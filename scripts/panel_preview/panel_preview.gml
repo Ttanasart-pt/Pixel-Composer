@@ -1354,7 +1354,10 @@ function Panel_Preview() : PanelContent() constructor {
         var ssx = 0, ssy = 0;
         var ssw = 0, ssh = 0;
         
-        if(is_surface(preview_surfaces[0])) {
+		var _ps0 = is_surface(preview_surfaces[0]);
+        var _ps1 = is_surface(preview_surfaces[1]);
+    	
+        if(_ps0) {
             psx = canvas_x + preview_node[0].preview_x * ss;
             psy = canvas_y + preview_node[0].preview_y * ss;
             
@@ -1367,7 +1370,7 @@ function Panel_Preview() : PanelContent() constructor {
             psy1 = psy + preview_surface_height;    
         }
         
-        if(is_surface(preview_surfaces[1])) {
+        if(_ps1) {
             var ssx = canvas_x + preview_node[1].preview_x * ss;
             var ssy = canvas_y + preview_node[1].preview_y * ss;
             
@@ -1379,9 +1382,14 @@ function Panel_Preview() : PanelContent() constructor {
         if(_node) title = _node.renamed? _node.display_name : _node.name;
         
 		#region >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Draw Surfaces <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-			var _ps0 = is_surface(preview_surfaces[0]);
-	        var _ps1 = is_surface(preview_surfaces[1]);
-        
+			
+	        if(!_ps0 && !_ps1) {
+	        	draw_surface_ext_safe(PROJECT.getOutputSurface(), canvas_x, canvas_y, canvas_s, canvas_s); 
+	        	draw_set_color_alpha(COLORS.panel_preview_surface_outline, .75);
+	            draw_rectangle(canvas_x, canvas_y, canvas_x + DEF_SURF_W * canvas_s - 1, canvas_y + DEF_SURF_H * canvas_s - 1, true);
+	            draw_set_alpha(1);
+	        }
+	        
             if(splitView == 0 && _ps0) {
                 preview_node[0].previewing = 1;
                 
@@ -1498,7 +1506,7 @@ function Panel_Preview() : PanelContent() constructor {
             }
         }
         
-        if(is_surface(preview_surfaces[0])) { // outline
+        if(_ps0) { // outline
             if(PROJECT.previewGrid.pixel && canvas_s >= 16) {
                 
                 var gw = preview_surface_width  / canvas_s;
@@ -1525,6 +1533,7 @@ function Panel_Preview() : PanelContent() constructor {
             
             draw_set_color(COLORS.panel_preview_surface_outline);
             draw_rectangle(psx, psy, psx + preview_surface_width - 1, psy + preview_surface_height - 1, true);
+            
         } else {
         	draw_set_color_alpha(COLORS.panel_preview_surface_outline, .75);
             draw_rectangle(canvas_x, canvas_y, canvas_x + DEF_SURF_W * canvas_s - 1, canvas_y + DEF_SURF_H * canvas_s - 1, true);
@@ -2687,7 +2696,6 @@ function Panel_Preview() : PanelContent() constructor {
         	dragCanvas();
         	
         	draw_surface_ext_safe(PROJECT.getOutputSurface(), canvas_x, canvas_y, canvas_s, canvas_s); 
-        	
         	draw_set_color_alpha(COLORS.panel_preview_surface_outline, .75);
             draw_rectangle(canvas_x, canvas_y, canvas_x + DEF_SURF_W * canvas_s - 1, canvas_y + DEF_SURF_H * canvas_s - 1, true);
             draw_set_alpha(1);

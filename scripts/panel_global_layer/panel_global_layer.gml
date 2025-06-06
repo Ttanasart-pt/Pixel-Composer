@@ -79,9 +79,8 @@ function Panel_Global_Layer_Drawer() constructor {
 		var bx = _x + _w - bs;
 		var cc = PROJECT.attributes.auto_organize? c_white : COLORS._main_icon;
 		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, "Auto Organize", THEME.obj_auto_organize, 0, COLORS._main_icon, 1, .75) == 2) {
-			// PROJECT.attributes.auto_organize = !PROJECT.attributes.auto_organize;
-			// if(PROJECT.attributes.auto_organize) 
-			node_auto_organize(PROJECT.nodes);
+			PROJECT.attributes.auto_organize = !PROJECT.attributes.auto_organize;
+			if(PROJECT.attributes.auto_organize) node_auto_organize(PROJECT.nodes);
 		}
 		
 		bx -= bs + ui(4);

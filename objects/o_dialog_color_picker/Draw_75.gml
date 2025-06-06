@@ -8,7 +8,7 @@ if(mouse_check_button_pressed(mb_right) || keyboard_check_released(ALT)) {
 	instance_destroy();
 }
 
-if(mouse_check_button_pressed(mb_left)) {
+if(mouse_check_button(mb_left)) {
 	onApply(cur_c);
 	instance_destroy();
 }

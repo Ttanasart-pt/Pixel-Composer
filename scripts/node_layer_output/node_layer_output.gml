@@ -7,7 +7,11 @@ function Node_Layer_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	array_push(project.globalLayer_output, self);
 	
+	static isActiveDynamic = function() /*=>*/ {return false};
+	
 	static update = function() {
+		project.globalLayer_compose();
+		
 		var _outSurf = outputs[0].getValue();
 		var _surf    = project.globalLayer_surface;
 		

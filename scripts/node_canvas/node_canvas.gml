@@ -317,6 +317,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	#region ++++ tools ++++
 		palette_picking = false;
+		color_picking   = false;
 		
 		tool_attribute.channel       = [ true, true, true, true ];
 		tool_attribute.mirror        = [ false, false, false ];
@@ -743,6 +744,31 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	static getToolSettings = function() { return []; }
 	
+	static pickColor = function(_x, _y, _s, _mx, _my) {
+		var mx = round((_mx - _x) / _s - 0.5);
+		var my = round((_my - _y) / _s - 0.5);
+				
+		var _surf = getOutputSurface();
+		var _sw   = surface_get_width_safe(_surf);
+		var _sh   = surface_get_height_safe(_surf);
+		
+		if(mx >= 0 && my >= 0 && mx < _sw && my < _sh && mouse_check_button(mb_left)) {
+			var c = surface_getpixel(_surf, mx, my);
+			setToolColor(c);
+		}
+		
+		var x0 = _x + mx * _s, x1 = x0 + _s;
+		var y0 = _y + my * _s, y1 = y0 + _s;
+		
+		draw_set_color(c_white);
+		draw_rectangle(x0, y0, x1, y1, true);
+		
+		draw_set_color(c_black);
+		draw_rectangle(x0+1, y0+1, x1-1, y1-1, true);
+		
+		if(keyboard_check_released(vk_alt)) color_picking = false;
+	}
+	
 	////- Apply node
 	
 	nodes = [];
@@ -963,7 +989,10 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	////- Nodes
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, params) { 
-		if(instance_exists(o_dialog_color_picker)) return;
+		if(!tool_selection.is_selected && active && key_mod_press(ALT)) 
+			color_picking = true;
+		
+		if(color_picking) return pickColor(_x, _y, _s, _mx, _my);
 		
 		var _panel = params.panel;
 		if(palette_picking) {
@@ -976,12 +1005,6 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		brush.step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
 		tool_size_edit.setInteract(!is_surface(brush.brush_surface));
-		
-		if(!tool_selection.is_selected && active && key_mod_press(ALT)) { // color selector
-			var dialog     = instance_create(0, 0, o_dialog_color_picker);
-			dialog.onApply = setToolColor;
-			dialog.def_c   = CURRENT_COLOR;
-		}
 		
 		var _canvas_surface = getCanvasSurface();
 		if(!surface_exists(_canvas_surface)) return;
@@ -1449,6 +1472,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			surface_reset_shader();
 			bg = !bg;
 		}
+		
+		if(color_picking) return preview_draw_final[!bg];
 		
 		surface_set_shader(preview_draw_final[bg], isUsingTool("Eraser")? sh_blend_subtract_alpha : sh_blend_normal, true, BLEND.over);
 			shader_set_surface("fore",    preview_draw_surface);

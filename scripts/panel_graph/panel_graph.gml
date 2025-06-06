@@ -65,7 +65,7 @@
     function panel_graph_transferConnection()      { CALL("graph_transferConnection");  PANEL_GRAPH.transferConnection();                       }
 				                                                                           
     function __fnInit_Graph() {
-    	registerFunction("",      "Add Node",              "A", MOD_KEY.none,                    panel_graph_add_node            ).setMenu("graph_add_node")
+    	registerFunction("",      "Add Node",              "A", MOD_KEY.shift,                   panel_graph_add_node            ).setMenu("graph_add_node")
         registerFunction("Graph", "Replace Node",          "R", MOD_KEY.ctrl,                    panel_graph_replace_node        ).setMenu("graph_replace_node")
         registerFunction("Graph", "Focus Content",         "F", MOD_KEY.none,                    panel_graph_focus_content       ).setMenu("graph_focus_content")
         registerFunction("Graph", "Preview Focusing Node", "P", MOD_KEY.none,                    panel_graph_preview_focus       ).setMenu("graph_preview_focusing_node")
@@ -507,7 +507,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         tb_search.auto_update = true;
     #endregion
     
-    function toCenterNode(_arr = nodes_list) {
+    function toCenterNode(_arr = nodes_list, _zoom = true) {
         if(!project.active) return; 
         
         graph_s    = 1;
@@ -550,6 +550,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         
         var sc = min(_w / ww, _h / hh);
             sc = clamp(sc, array_first(scale), array_last(scale));
+        if(!_zoom) sc = 1;
         
         graph_s    = sc;
         graph_s_to = sc;
@@ -902,7 +903,11 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         fullView();
     } 
     
-    function fullView() { INLINE toCenterNode(array_empty(nodes_selecting)? nodes_list : nodes_selecting); }
+    fullView_zoom = false;
+    function fullView() { 
+    	toCenterNode(array_empty(nodes_selecting)? nodes_list : nodes_selecting, fullView_zoom); 
+    	fullView_zoom = !fullView_zoom;
+    }
     
     function dragGraph() {
         if(graph_autopan) {
@@ -1001,8 +1006,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         if(mouse_on_graph && pHOVER && graph_draggable) {
             var _s = graph_s;
             if((!key_mod_press_any() || key_mod_press(CTRL)) && MOUSE_WHEEL != 0) {
-            	print(MOUSE_WHEEL, scale)
-            	
 	            if(MOUSE_WHEEL == -1) {
 	            	if(graph_s_to > array_last(scale)) graph_s_to = array_last(scale);
 	            	
@@ -1619,7 +1622,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                         	var _ctx = getCurrentContext();
                         	
                         	if(!PANEL_INSPECTOR.locked) PANEL_INSPECTOR.inspecting = _ctx; 
-                        	PANEL_PREVIEW.setNodePreview(_ctx);
+                        	if(_ctx || !array_empty(PROJECT.globalLayer_nodes)) PANEL_PREVIEW.setNodePreview(_ctx);
                         }
                     
                     } else if(cache_group_edit != noone) {
