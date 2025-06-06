@@ -39,7 +39,7 @@ function Panel_Globalvar() : PanelContent() constructor {
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
 		
 		contentPane.setFocusHover(pFOCUS, pHOVER);
-		contentPane.draw(px, py, mx - px, my - py);
+		contentPane.drawOffset(px, py, mx, my);
 		
 		var _add_h = ui(24);
 		var _bx    = sp;

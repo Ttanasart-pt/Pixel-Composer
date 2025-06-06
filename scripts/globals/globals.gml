@@ -42,9 +42,9 @@
 	LATEST_VERSION	= 1_19_00_0;
 	VERSION			= 1_19_02_0;
 	SAVE_VERSION	= 1_18_09_1;
-	VERSION_STRING  = MAC? "1.18.003m" : "1.19.3.005";
+	VERSION_STRING  = MAC? "1.18.003m" : "1.19.3.006";
 	RELEASE_STRING  = "1.19.2";
-	BUILD_NUMBER	= 119020.005;
+	BUILD_NUMBER	= 119020.006;
 	PREF_VERSION    = 1_17_1;
 	
 	var _lsp = array_last(string_split(VERSION_STRING, "."));
@@ -63,17 +63,16 @@
 
 #region input
 	globalvar FOCUS, FOCUS_STR, FOCUS_CONTENT, FOCUS_STACK, HOVER, HOVERING_ELEMENT, _HOVERING_ELEMENT;
-	globalvar DOUBLE_CLICK, DOUBLE_CLICK_POS;
+	globalvar DOUBLE_CLICK;
 	globalvar DIALOG_CLICK;
 	globalvar TOOLTIP_WINDOW;
-	
-	DOUBLE_CLICK_POS  = [ 0, 0 ];
-	DOUBLE_CLICK      = false;
 	
 	FOCUS	          = noone;
 	FOCUS_CONTENT     = noone;
 	FOCUS_STR	      = "";
 	FOCUS_STACK       = ds_stack_create();
+	
+	DOUBLE_CLICK      = false;
 	
 	HOVER             = noone;
 	HOVERING_ELEMENT  = noone;

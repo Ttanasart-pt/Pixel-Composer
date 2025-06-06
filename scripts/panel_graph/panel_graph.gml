@@ -519,10 +519,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             return;
         }
         
-        var minx =  99999;
-        var maxx = -99999;
-        var miny =  99999;
-        var maxy = -99999;
+        var minx =  infinity;
+        var miny =  infinity;
+        var maxx = -infinity;
+        var maxy = -infinity;
         
         for(var i = 0; i < array_length(_arr); i++) {
             var _node = _arr[i];
@@ -542,13 +542,21 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         var cx = (minx + maxx) / 2;
         var cy = (miny + maxy) / 2;
         
-        graph_x = (w                 ) / 2 - cx;
-        graph_y = (h - toolbar_height) / 2 - cy;
+        var ww = maxx - minx;
+        var hh = maxy - miny;
         
-        graph_x = round(graph_x * graph_s);
-        graph_y = round(graph_y * graph_s);
+        var _w = w;
+        var _h = h - toolbar_height;
         
-        // print($"{cx}, {cy} / {graph_x}, {graph_y}");
+        var sc = min(_w / ww, _h / hh);
+            sc = clamp(sc, array_first(scale), array_last(scale));
+        
+        graph_s    = sc;
+        graph_s_to = sc;
+        
+        graph_x = (_w / 2) / graph_s - cx;
+        graph_y = (_h / 2) / graph_s - cy;
+        
     }
     
     function initSize() { toCenterNode(); }
@@ -993,15 +1001,22 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         if(mouse_on_graph && pHOVER && graph_draggable) {
             var _s = graph_s;
             if((!key_mod_press_any() || key_mod_press(CTRL)) && MOUSE_WHEEL != 0) {
+            	print(MOUSE_WHEEL, scale)
+            	
 	            if(MOUSE_WHEEL == -1) {
+	            	if(graph_s_to > array_last(scale)) graph_s_to = array_last(scale);
+	            	
 	                for( var i = 1, n = array_length(scale); i < n; i++ ) {
 	                    if(scale[i - 1] < graph_s_to && graph_s_to <= scale[i]) {
 	                        graph_s_to = scale[i - 1];
 	                        break;
 	                    }
 	                }
+	                
 	            } else if(MOUSE_WHEEL == 1) { 
-	                for( var i = 1, n = array_length(scale); i < n; i++ ) {
+	                if(graph_s_to < array_first(scale)) graph_s_to = array_first(scale);
+	            	
+	            	for( var i = 1, n = array_length(scale); i < n; i++ ) {
 	                    if(scale[i - 1] <= graph_s_to && graph_s_to < scale[i]) {
 	                        graph_s_to = scale[i];
 	                        break;
@@ -1604,7 +1619,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                         	var _ctx = getCurrentContext();
                         	
                         	if(!PANEL_INSPECTOR.locked) PANEL_INSPECTOR.inspecting = _ctx; 
-                        	if(_ctx) PANEL_PREVIEW.setNodePreview(_ctx);
+                        	PANEL_PREVIEW.setNodePreview(_ctx);
                         }
                     
                     } else if(cache_group_edit != noone) {
@@ -2328,6 +2343,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     function callAddDialog(ctx = getCurrentContext()) { //
         var _dia = dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8, { context: ctx });
         
+        if(pFOCUS) 
         with(_dia) {    
             node_target_x     = other.mouse_grid_x;
             node_target_y     = other.mouse_grid_y;

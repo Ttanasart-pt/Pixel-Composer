@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"global_layer_data",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"global_layer_data",
+  "parent":{
+    "name":"components",
+    "path":"folders/main/components.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

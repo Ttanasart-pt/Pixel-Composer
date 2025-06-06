@@ -51,6 +51,8 @@
 	kd_shift = 0;
 	kd_alt   = 0;
 	
+	dclick   = [0,0];
+	
 	fpss = array_create(10);
 	fpsr = 0;
 	

@@ -150,8 +150,7 @@ _FILE_DROPPED     = false;
 	if(!LOADING) {
 		if(!PROJECT.safeMode) array_foreach(PROJECT.allNodes, function(_node) /*=>*/ { if(!_node.active) return; _node.stepBegin(); });
 	
-		if(LIVE_UPDATE)
-			Render();
+		if(LIVE_UPDATE) Render();
 		else if(!PROJECT.safeMode) {
 			UPDATE_RENDER_ORDER = false;
 			
@@ -206,12 +205,13 @@ _FILE_DROPPED     = false;
 	DOUBLE_CLICK = false;
 	if(mouse_press(mb_left)) {
 		if(dc_check > 0) {
-			if(point_distance(mouse_mx, mouse_my, DOUBLE_CLICK_POS[0], DOUBLE_CLICK_POS[1]) < 8)
+			if(point_distance(mouse_mx, mouse_my, dclick[0], dclick[1]) < 8)
 				DOUBLE_CLICK = true;
 			dc_check = 0;
+			
 		} else {
 			dc_check = PREFERENCES.double_click_delay;
-			DOUBLE_CLICK_POS = [ mouse_mx, mouse_my ];
+			dclick = [ mouse_mx, mouse_my ];
 		}
 	}
 	

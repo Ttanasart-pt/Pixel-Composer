@@ -32,15 +32,13 @@ function Project() constructor {
 	
 	pathInputs  = [];
 	
-	composer       = noone;
-	animator	   = new AnimationManager();
-	globalNode	   = new Node_Global();
-	outputNode     = noone;
-	nodeController = new __Node_Controller(self);
+	composer        = noone;
+	animator	    = new AnimationManager();
+	globalNode	    = new Node_Global();
 	
-	load_layout    = false;
-	previewNode    = "";
-	inspectingNode = "";
+	load_layout     = false;
+	previewNode     = "";
+	inspectingNode  = "";
 	
 	previewGrid     = variable_clone(PREFERENCES.project_previewGrid);
 	previewSetting  = variable_clone(PREFERENCES.project_previewSetting);
@@ -65,6 +63,107 @@ function Project() constructor {
 	tunnels_in_map = ds_map_create();
 	tunnels_out    = ds_map_create();
 	
+	#region ===================== GLOBAL LAYER ====================
+		globalLayer_surface   = noone;
+		globalLayer_nodes     = [];
+		globalLayer_node_disp = [];
+		globalLayer_output    = [];
+		
+		temp_surface       = array_create(3,noone);
+		blend_temp_surface = noone;
+		outputNode         = noone;
+		
+		static getAttribute = function() /*=>*/ {return 0};
+		
+		static globalLayer_compose = function() /*=>*/ {
+			var _dim = attributes.surface_dimension;
+			
+			globalLayer_surface = surface_verify(globalLayer_surface, _dim[0], _dim[1]);
+			for( var i = 0, n = array_length(temp_surface); i < n; i++ ) temp_surface[i] = surface_verify(temp_surface[i], _dim[0], _dim[1]);
+			
+			blend_temp_surface = temp_surface[2];
+			
+			var _drawData = [];
+			
+			for( var i = 0, n = array_length(globalLayer_nodes); i < n; i++ ) {
+				var _node = globalLayer_nodes[i];
+				if(!_node.active)       continue;
+				if(!_node.renderActive) continue;
+				
+				var _depth = _node.inputs[1].getValue();
+				
+				var _surf = _node.layer_surf;
+				var _pos  = _node.layer_pos;
+				var _anc  = _node.layer_anc;
+				var _rot  = _node.layer_rot;
+				var _sca  = _node.layer_sca;
+				
+				array_push(_drawData, {
+					depth :   _depth,
+					surface : _surf,
+					
+					pos : _pos,
+					anc : _anc,
+					rot : _rot,
+					sca : _sca,
+					
+					node : _node,
+				});
+			}
+			
+			array_sort(_drawData, function(a,b) /*=>*/ {return b.depth - a.depth});
+			globalLayer_node_disp = [];
+			
+			var _len = array_length(_drawData);
+			for( var i = 0; i < _len; i++ ) globalLayer_node_disp[i] = _drawData[_len - i - 1].node;
+			
+			var _bg = 0;
+			
+			for( var i = 0, n = array_length(_drawData); i < n; i++ ) {
+				var _data = _drawData[i];
+				
+				var _s   = _data.surface;
+				var _pos = _data.pos;
+				var _anc = _data.anc;
+				var _rot = _data.rot;
+				var _sca = _data.sca;
+				
+				if(!is_surface(_s)) continue;
+				var _ww = surface_get_width_safe(_s);
+				var _hh = surface_get_height_safe(_s);
+				var _sw = _ww * _sca[0];
+				var _sh = _hh * _sca[1];
+				
+				var _ax = _anc[0] * _sw;
+				var _ay = _anc[1] * _sh;
+				
+				var _cx = _pos[0];
+				var _cy = _pos[1];
+				
+				var _d0 = point_rotate(_cx - _ax, _cy - _ay, _cx, _cy, _rot);
+				
+				surface_set_shader(temp_surface[_bg], sh_sample, true, BLEND.over);
+					try { draw_surface_blend_ext(temp_surface[!_bg], _s, _d0[0], _d0[1], _sca[0], _sca[1], _rot); }
+					catch(e) { noti_warning(e); }
+				surface_reset_shader();
+				
+				_bg = !_bg;
+			}
+			
+			surface_set_shader(globalLayer_surface);
+				draw_surface_safe(temp_surface[!_bg]);
+			surface_reset_shader();
+		};
+		
+		static getOutputSurface = function() {
+			if(outputNode == noone)       return globalLayer_surface;
+			if(!outputNode.active)        return globalLayer_surface;
+			if(!outputNode.renderActive)  return globalLayer_surface;
+			
+			return outputNode.outputSurface;
+		}
+	#endregion
+	
 	#region ===================== BINDERS ====================
 		bind_gamemaker = noone;
 		bind_godot     = noone;
@@ -76,6 +175,8 @@ function Project() constructor {
 		attributes = variable_clone(PROJECT_ATTRIBUTES);
 		attributes.bind_gamemaker_path = "";
 		attributes.bind_godot_path     = "";
+			
+		attributes.auto_organize       = false;
 			
 		attributeEditor = [
 			[ "Default Surface", "surface_dimension", new vectorBox(2, 
@@ -124,6 +225,7 @@ function Project() constructor {
 					setPalette(junc.getValue());
 				} 
 			],
+			
 		];
 		
 		static setPalette = function(pal = noone) { 
@@ -144,6 +246,8 @@ function Project() constructor {
 	
 	notes = [];
 	
+	////- Step
+
 	static step = function() {
 		slideShowPreStep();
 		
@@ -153,6 +257,15 @@ function Project() constructor {
 	
 	static postStep = function() { slideShowPostStep(); }
 	
+	////- Render
+	
+	static postRender = function() {
+		globalLayer_compose();
+		if(attributes.auto_organize) node_auto_organize(nodes);
+	}
+
+	////- Slideshow
+
 	useSlideShow      = false;
 	slideShow         = {};
 	slideShow_keys    = [];
@@ -177,6 +290,8 @@ function Project() constructor {
 		return slideShow_current;
 	}
 	
+	////- Action
+
 	static cleanup = function() {
 		array_foreach(allNodes, function(_n) /*=>*/ { 
 			_n.active = false; 
@@ -193,6 +308,8 @@ function Project() constructor {
 	}
 		
 	static toString = function() { return $"ProjectObject [{path}]"; }
+
+	////- Serialize
 
 	static serialize = function() {
 		var _map = {};
@@ -263,7 +380,7 @@ function Project() constructor {
 		if(struct_has(_map, "previewGrid"))     struct_override(previewGrid,     _map.previewGrid);
 		if(struct_has(_map, "graphGrid"))	    struct_override(graphGrid,	     _map.graphGrid);
 		if(struct_has(_map, "graphConnection"))	struct_override(graphConnection, _map.graphConnection);
-		if(struct_has(_map, "attributes"))	    struct_override(attributes,  _map.attributes);
+		if(struct_has(_map, "attributes"))	    struct_override(attributes,      _map.attributes);
 		if(struct_has(_map, "metadata"))	meta.deserialize(_map.metadata);
 		if(struct_has(_map, "composer"))	composer = _map.composer;
 		if(struct_has(_map, "freeze"))	    freeze   = _map.freeze;
@@ -271,8 +388,8 @@ function Project() constructor {
 		
 		if(struct_has(_map, "graph_display_parameter"))	struct_override(graphDisplay,  _map.graph_display_parameter);
 		
-		is_nightly	= struct_try_get(_map, "is_nightly",  is_nightly);
-		load_layout	= struct_try_get(_map, "load_layout", load_layout);
+		is_nightly	= _map[$ "is_nightly"]  ?? is_nightly;
+		load_layout	= _map[$ "load_layout"] ?? load_layout;
 		
 		setPalette();
 		

@@ -192,7 +192,7 @@ function Panel_Inspector() : PanelContent() constructor {
     
     drawWidgetInit();
     
-    #region ---- Header labels ----
+    #region ---- Header Tabs ----
         tb_node_name = new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { if(inspecting) inspecting.setDisplayName(txt); })
                              .setFont(f_h5)
                              .setHide(1)
@@ -232,8 +232,9 @@ function Panel_Inspector() : PanelContent() constructor {
         
         meta_display = [ 
             [ __txt("Project Settings"),    false, "settings"   ], 
+            [ __txt("Global Layer"),        true,  "layers"     ], 
             [ __txt("Metadata"),            true , "metadata"   ], 
-            [ __txt("Global variables"),    false, "globalvar"  ], 
+            [ __txt("Global Variables"),    false, "globalvar"  ], 
             [ __txt("Group Properties"),    false, "group prop" ], 
         ];
         
@@ -251,11 +252,14 @@ function Panel_Inspector() : PanelContent() constructor {
         
         GM_Explore_draw_init();
         
-        metadata_default_button = button(function() /*=>*/ { json_save_struct(DIRECTORY + "meta.json", PROJECT.meta.serialize()); })
+        metadata_buttons = [ button(function() /*=>*/ { json_save_struct(DIRECTORY + "meta.json", PROJECT.meta.serialize()); })
         	.setIcon(THEME.save,  0, COLORS._main_icon_light, .75)
-        	.setTooltip(__txtx("panel_inspector_set_default", "Set as default"));
-        	
-        metadata_buttons = [ metadata_default_button ];
+        	.setTooltip(__txtx("panel_inspector_set_default", "Set as default")) ];
+        
+        global_layer_drawer = new Panel_Global_Layer_Drawer();
+        globallayer_buttons = [ button(function() /*=>*/ {return dialogPanelCall(new Panel_Global_Layer())} )
+        	.setIcon(THEME.arrow, 1, COLORS._main_icon_light, .75)
+        	.setTooltip(__txt("Pop-up")) ];
     #endregion
     
     #region ---- Workshop ----
@@ -358,6 +362,7 @@ function Panel_Inspector() : PanelContent() constructor {
     
     function setInspecting(_inspecting, _lock = false, _focus = true, _record = true) {
         if(locked) return;
+        if(inspecting == _inspecting) return;
         
         if(_record) {
 	        array_push(inspect_history_undo, inspecting);
@@ -983,21 +988,24 @@ function Panel_Inspector() : PanelContent() constructor {
         attribute_hovering = noone;
         
         for( var i = 0, n = array_length(meta_display); i < n; i++ ) {
-            if(i == 3 && PANEL_GRAPH.getCurrentContext() == noone) continue;
-            
             var _meta  = meta_display[i];
             var _txt   = array_safe_get_fast(_meta, 0);
             var _tag   = array_safe_get_fast(_meta, 2);
-            var _butts = noone;
             
-            switch(_tag) { // header
-            	case "metadata"  : _butts = metadata_buttons; break;
+            if(_tag == "group prop" && PANEL_GRAPH.getCurrentContext() == noone) continue;
+            
+            var _x1    = con_w;
+            var _y1    = yy + ui(2);
+            
+            /// Buttons
+            
+            var _butts = noone;
+            switch(_tag) { // buttons
+            	case "layers"    : _butts = globallayer_buttons; break;
+            	case "metadata"  : _butts = metadata_buttons;    break;
                 case "globalvar" : _butts = global_drawer.editing? global_buttons_editing : global_buttons; break;
             }
             
-            var _x1 = con_w;
-            var _y1 = yy + ui(2);
-                
             if(is_array(_butts)) {
             	var _bw = ui(28);
                 var _bh = lbh - ui(4);
@@ -1021,8 +1029,9 @@ function Panel_Inspector() : PanelContent() constructor {
                 _x1 -= ui(4);
             }
             
-            var cc = COLORS.panel_inspector_group_bg;
+            /// Section
             
+            var cc = COLORS.panel_inspector_group_bg;
             if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, _x1, yy + lbh)) {
             	cc = COLORS.panel_inspector_group_hover;
                 
@@ -1033,11 +1042,11 @@ function Panel_Inspector() : PanelContent() constructor {
             }
             
             draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, yy, _x1, lbh, cc, 1);
-            
             draw_sprite_ui(THEME.arrow, _meta[1]? 0 : 3, ui(16), yy + lbh / 2, 1, 1, 0, COLORS.panel_inspector_group_bg, 1);    
-            
             draw_set_text(viewMode? f_p0 : f_p1, fa_left, fa_center, COLORS._main_text_inner);
             draw_text_add(ui(32), yy + lbh / 2, _txt);
+            
+            /// Content
             
             yy += lbh + ui(viewMode? 8 : 6);
             hh += lbh + ui(viewMode? 8 : 6);
@@ -1078,6 +1087,7 @@ function Panel_Inspector() : PanelContent() constructor {
                         var _wdh  = spac? TEXTBOX_HEIGHT  : _lh;
                         
                         var _param = new widgetParam(_wdx, _wdy, _wdw, _wdh, _data, {}, _m, rx, ry)
+                        					.setHalign(fa_center)
                         					.setFont(_font)
 					    					.setScrollpane(contentPane);
 					    					
@@ -1100,6 +1110,18 @@ function Panel_Inspector() : PanelContent() constructor {
                     
                     break;
                     
+                case "layers" : 
+                	var _h = global_layer_drawer.drawHeader(ui(8), yy, con_w - ui(16), _m, _hover, pFOCUS);
+                	
+                	yy += _h; 
+		        	hh += _h;
+		        	
+                	var _h = global_layer_drawer.draw(ui(8), yy, con_w - ui(16), 0, _m, _hover, pFOCUS);
+                	
+                	yy += _h + ui(8); 
+		        	hh += _h + ui(8);
+                	break;
+                	
                 case "metadata" :
                     var _wdx = spac? ui(16) : ui(140);
                     var _wdw = w - ui(48) - _wdx;
@@ -1279,30 +1301,41 @@ function Panel_Inspector() : PanelContent() constructor {
             
 	        var his_x = w / 2 - _txt_w / 2 - ui(16);
 	        var his_y = ui(68);
-	        var cc = COLORS._main_text_sub;
 	        
-	        var targ = array_empty(inspect_history_undo)? noone : array_last(inspect_history_undo);
+	        var targ     = array_empty(inspect_history_undo)? noone : array_last(inspect_history_undo);
 	        var targName = targ == noone? "Project" : targ.getDisplayName();
+	        var _hov     = pHOVER && point_in_rectangle(mx, my, his_x, his_y, w / 2, his_y + ui(16));
 	        
-	        if(buttonInstant(noone, his_x, his_y, ui(16), ui(16), [mx, my], pHOVER, pFOCUS, targName, THEME.arrow_wire_16, 2, cc, .75) == 2) {
+	        var cc = _hov? c_white : COLORS._main_text_sub;
+	        var aa = _hov? 1 : .75;
+	        draw_sprite_ui_uniform(THEME.arrow_wire_16, 2, his_x + ui(8), his_y + ui(8), 1, cc, aa);
+	        
+	        if(_hov && mouse_lpress(pFOCUS)) {
 	        	array_pop(inspect_history_undo);
 	        	array_push(inspect_history_redo, inspecting);
 	        	
 	        	setInspecting(targ, false, true, false);
 	        	PANEL_GRAPH.nodes_selecting = [];
+	        	PANEL_PREVIEW.setNodePreview(targ);
 	        }
 	        
 	        var his_x = w / 2 + _txt_w / 2;
 	        
 	        if(!array_empty(inspect_history_redo)) {
-	        	var targ = array_last(inspect_history_redo);
+	        	var targ     = array_last(inspect_history_redo);
 	        	var targName = targ == noone? "Project" : targ.getDisplayName();
+	        	var _hov     = pHOVER && point_in_rectangle(mx, my, his_x, his_y, w, his_y + ui(16));
 	        	
-		        if(buttonInstant(noone, his_x, his_y, ui(16), ui(16), [mx, my], pHOVER, pFOCUS, targName, THEME.arrow_wire_16, 0, cc, .75) == 2) {
+		        var cc = _hov? c_white : COLORS._main_text_sub;
+		        var aa = _hov? 1 : .75;
+		        draw_sprite_ui_uniform(THEME.arrow_wire_16, 0, his_x + ui(8), his_y + ui(8), 1, cc, aa);
+		        
+		        if(_hov && mouse_lpress(pFOCUS)) {
 		        	array_pop(inspect_history_redo);
 		        	
 		        	setInspecting(targ, false, true);
 		        	PANEL_GRAPH.nodes_selecting = [];
+		        	PANEL_PREVIEW.setNodePreview(targ);
 		        }
 	        }
 	        

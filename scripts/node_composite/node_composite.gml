@@ -36,7 +36,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	renaming        = noone;
 	rename_text     = "";
 	renaming_index  = noone;
-	tb_rename       = new textBox(TEXTBOX_INPUT.text, function(_n) { 
+	tb_rename       = textBox_Text(function(_n) /*=>*/ { 
 		if(renaming == noone) return;
 		
 		     if(is_real(renaming))  inputs[renaming].setName(_n);
@@ -44,9 +44,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		renaming       = noone;
 		renaming_index = noone;
-	});
-	tb_rename.font  = f_p1;
-	tb_rename.hide  = true;
+	}).setHide(1).setFont(f_p1);
 	
 	hold_visibility = true;
 	hold_select		= true;
@@ -605,7 +603,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var amo     = getInputAmount();
 		var anchors = array_create(array_length(inputs));
 		
-		if(amo == 0) dynamic_input_inspecting = noone;
+		if(amo == 0) { dynamic_input_inspecting = noone; return; }
 		dynamic_input_inspecting = min(dynamic_input_inspecting, amo - 1);
 		
 		for(var i = 0; i < amo; i++) {

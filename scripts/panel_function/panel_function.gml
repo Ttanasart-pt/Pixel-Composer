@@ -425,9 +425,15 @@
 		
 		return cont;
 	}
+	
+	function panelFocusNode(_node = noone) {
+		PANEL_GRAPH.nodes_selecting = _node == noone? [] : [ _node ];
+		PANEL_PREVIEW.setNodePreview(_node);
+		PANEL_INSPECTOR.setInspecting(_node);
+	}
 #endregion
 
-#region fullscreen
+#region Actions
 	function set_focus_fullscreen() {
 		if(FULL_SCREEN_PANEL == noone) {
 			var panel = PREFERENCES.expand_hover? HOVER : FOCUS;
@@ -458,9 +464,7 @@
 			FULL_SCREEN_CONTENT = noone;
 		}
 	}
-#endregion
 
-#region focus hover
 	function panelHover(content) {
 		if(!HOVER) return false;
 		if(instanceof(HOVER) != "Panel") return false;

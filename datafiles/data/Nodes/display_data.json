@@ -1025,6 +1025,9 @@
             
             { "label": "Project" },
             "Node_Project_Data",
+            "Node_Project_Layer",
+            "Node_Layer_Output", 
+            "Node_Project_Output",
             
             { "label": "System" },
             "Node_Argument",

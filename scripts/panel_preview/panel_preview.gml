@@ -202,7 +202,6 @@ function Panel_Preview() : PanelContent() constructor {
         locked              = false;
         preview_node        = [ noone, noone ];
         preview_surfaces    = [ 0, 0 ];
-        preview_surface     = [ 0, 0 ];
         preview_junction    = noone;
         tile_surface        = surface_create(1, 1);
         
@@ -610,16 +609,14 @@ function Panel_Preview() : PanelContent() constructor {
             var node = preview_node[i];
             
             if(node == noone) continue;
-            if(!node.active) {
-                resetNodePreview();
-                return;
-            }
+            if(!node.active)  { resetNodePreview(); continue; }
             
             var value = node.getPreviewValues();
             
             if(is_array(value)) {
                 preview_sequence[i] = value;
                 canvas_a = array_length(value);
+                
             } else {
                 preview_surfaces[i] = value;
                 canvas_a = 0;
@@ -1381,71 +1378,39 @@ function Panel_Preview() : PanelContent() constructor {
         var _node = getNodePreview();
         if(_node) title = _node.renamed? _node.display_name : _node.name;
         
-        #region >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Draw Content <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-            var _ps0 = is_surface(preview_surfaces[0]);
-            var _ps1 = is_surface(preview_surfaces[1]);
-            
-            if(_ps0) {
-                var _sw = surface_get_width_safe(preview_surfaces[0]);
-                var _sh = surface_get_height_safe(preview_surfaces[0]);
-                
-                preview_surface[0] = surface_verify(preview_surface[0], _sw, _sh);
-                
-                surface_set_shader(preview_surface[0], PROJECT.attributes.palette_fix? sh_posterize_palette : sh_sample);
-                    shader_set_f("palette", PROJECT.palettes);
-                    shader_set_i("keys",    array_length(PROJECT.attributes.palette));
-                    shader_set_i("alpha",   1);
-                    
-                    draw_surface_safe(preview_surfaces[0]);
-                surface_reset_shader();
-            }
-                
-            if(_ps1) {
-                var _sw = surface_get_width_safe(preview_surfaces[1]);
-                var _sh = surface_get_height_safe(preview_surfaces[1]);
-                
-                preview_surface[1] = surface_verify(preview_surface[1], _sw, _sh);
-                
-                surface_set_shader(preview_surface[1], PROJECT.attributes.palette_fix? sh_posterize_palette : sh_sample);
-                    shader_set_f("palette", PROJECT.palettes);
-                    shader_set_i("keys",    array_length(PROJECT.attributes.palette));
-                    shader_set_i("alpha",   1);
-                    
-                    draw_surface_safe(preview_surfaces[1]);
-                surface_reset_shader();
-            }
-        #endregion
-            
 		#region >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Draw Surfaces <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+			var _ps0 = is_surface(preview_surfaces[0]);
+	        var _ps1 = is_surface(preview_surfaces[1]);
+        
             if(splitView == 0 && _ps0) {
                 preview_node[0].previewing = 1;
                 
                 switch(tileMode) {
                     case 0 :
                         if(PROJECT.onion_skin.enabled) drawOnionSkin(_node, psx, psy, ss); 
-                        else                           draw_surface_ext(preview_surface[0], psx, psy, ss, ss, 0, c_white, preview_node[0].preview_alpha); 
+                        else                           draw_surface_ext(preview_surfaces[0], psx, psy, ss, ss, 0, c_white, preview_node[0].preview_alpha); 
                         break;
                         
                     case 1 : 
-                        tile_surface = surface_verify(tile_surface, w, surface_get_height_safe(preview_surface[0]) * ss);
+                        tile_surface = surface_verify(tile_surface, w, surface_get_height_safe(preview_surfaces[0]) * ss);
                         surface_set_target(tile_surface);
                             DRAW_CLEAR
-                            draw_surface_tiled_ext_safe(preview_surface[0], psx, 0, ss, ss, 0, c_white, 1); 
+                            draw_surface_tiled_ext_safe(preview_surfaces[0], psx, 0, ss, ss, 0, c_white, 1); 
                         surface_reset_target();
                         draw_surface_safe(tile_surface, 0, psy);
                         break;
                         
                     case 2 : 
-                        tile_surface = surface_verify(tile_surface, surface_get_width_safe(preview_surface[0]) * ss, h);
+                        tile_surface = surface_verify(tile_surface, surface_get_width_safe(preview_surfaces[0]) * ss, h);
                         surface_set_target(tile_surface);
                             DRAW_CLEAR
-                            draw_surface_tiled_ext_safe(preview_surface[0], 0, psy, ss, ss, 0, c_white, 1); 
+                            draw_surface_tiled_ext_safe(preview_surfaces[0], 0, psy, ss, ss, 0, c_white, 1); 
                         surface_reset_target();
                         draw_surface_safe(tile_surface, psx, 0);
                         break;
                         
                     case 3 : 
-                        draw_surface_tiled_ext_safe(preview_surface[0], psx, psy, ss, ss, 0, c_white, 1); break;
+                        draw_surface_tiled_ext_safe(preview_surfaces[0], psx, psy, ss, ss, 0, c_white, 1); break;
                 }
             }
             
@@ -1459,7 +1424,7 @@ function Panel_Preview() : PanelContent() constructor {
                         var sW   = min(psw, (maxX - psx) / ss);
                     
                         if(sW > 0)
-                            draw_surface_part_ext_safe(preview_surface[0], 0, 0, sW, psh, psx, psy, ss, ss, 0, c_white, 1);
+                            draw_surface_part_ext_safe(preview_surfaces[0], 0, 0, sW, psh, psx, psy, ss, ss, 0, c_white, 1);
                     }
                 	
                     if(_ps1) {
@@ -1469,7 +1434,7 @@ function Panel_Preview() : PanelContent() constructor {
                         var spx  = max(sp, ssx);
                     
                         if(sX >= 0 && sX < ssw)
-                            draw_surface_part_ext_safe(preview_surface[1], sX, 0, ssw - sX, ssh, spx, ssy, ss, ss, 0, c_white, 1);
+                            draw_surface_part_ext_safe(preview_surfaces[1], sX, 0, ssw - sX, ssh, spx, ssy, ss, ss, 0, c_white, 1);
                     }
                     break;
                     
@@ -1482,7 +1447,7 @@ function Panel_Preview() : PanelContent() constructor {
                         var sH   = min(psh, (maxY - psy) / ss);
                     
                         if(sH > 0)
-                            draw_surface_part_ext_safe(preview_surface[0], 0, 0, psw, sH, psx, psy, ss, ss, 0, c_white, 1);
+                            draw_surface_part_ext_safe(preview_surfaces[0], 0, 0, psw, sH, psx, psy, ss, ss, 0, c_white, 1);
                     }
                 	
                     if(_ps1) {
@@ -1492,7 +1457,7 @@ function Panel_Preview() : PanelContent() constructor {
                         var spy  = max(sp, ssy);
                     
                         if(sY >= 0 && sY < ssh) 
-                            draw_surface_part_ext_safe(preview_surface[1], 0, sY, ssw, ssh - sY, ssx, spy, ss, ss, 0, c_white, 1);
+                            draw_surface_part_ext_safe(preview_surfaces[1], 0, sY, ssw, ssh - sY, ssx, spy, ss, ss, 0, c_white, 1);
                     }
                     break;
             } 
@@ -2712,6 +2677,7 @@ function Panel_Preview() : PanelContent() constructor {
             if(d3_active) {
                 dragCanvas3D();
                 draw3D();
+                
             } else {
                 dragCanvas();
                 drawNodePreview();
@@ -2719,6 +2685,8 @@ function Panel_Preview() : PanelContent() constructor {
             
         } else {
         	dragCanvas();
+        	
+        	draw_surface_ext_safe(PROJECT.getOutputSurface(), canvas_x, canvas_y, canvas_s, canvas_s); 
         	
         	draw_set_color_alpha(COLORS.panel_preview_surface_outline, .75);
             draw_rectangle(canvas_x, canvas_y, canvas_x + DEF_SURF_W * canvas_s - 1, canvas_y + DEF_SURF_H * canvas_s - 1, true);

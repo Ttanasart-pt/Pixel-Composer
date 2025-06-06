@@ -414,6 +414,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	////- Renderers
 	
+	static getSurface = function() { return inputs[0].value_from == noone? PROJECT.getOutputSurface() : getInputData(0); }
+	
 	static renderWebp = function(temp_path, target_path) {
 		var _path  = file_find_first(temp_path + "*.png", 0);
 		var frames = [];
@@ -600,7 +602,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		randomize();
 		exportLog = log;
 		
-		var surf = getInputData( 0);
+		var surf = getSurface();
 		var path = getInputData( 1);
 		var fnam = getInputData(20);
 		
@@ -722,7 +724,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			if(!_build_in_gif) return;
 			
 			use_gif_encoder = true;
-			var surf = getInputData(0);
+			var surf = getSurface();
 			if(!is_array(surf)) surf = [ surf ];
 			
 			for( var i = 0, n = array_length(surf); i < n; i++ ) {
@@ -736,7 +738,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	static renderCompleted = function() {
-		var surf = getInputData( 0);
+		var surf = getSurface();
 		var path = getInputData( 1);
 		var fnam = getInputData(20);
 		var extd = getInputData( 9);
@@ -832,7 +834,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		insp1UpdateActive  = !IS_RENDERING;
 		insp2UpdateActive  = !IS_RENDERING;
 		
-		var surf = getInputData( 0);
+		var surf = getSurface();
 		var pngf = getInputData(13);
 		var expo = getInputData(16);
 		

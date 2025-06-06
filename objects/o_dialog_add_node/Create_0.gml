@@ -320,11 +320,16 @@ event_inherited();
 		if(_new_node) { // Select
 			if(PANEL_INSPECTOR) PANEL_INSPECTOR.setInspecting(_new_node);
 			
-			if(PANEL_GRAPH) {
+			if(PANEL_GRAPH && PANEL_GRAPH.panel == prefocus) {
 				if(PREFERENCES.node_add_select && node_replace == noone) 
 					PANEL_GRAPH.selectDragNode(_new_node, junction_called == noone);
 				var _ins = instanceof(_new_node);
 				if(struct_has(HOTKEYS, _ins)) FOCUS_STR = _ins;
+			}
+			
+			if(PANEL_PREVIEW && PANEL_PREVIEW.panel == prefocus) {
+				PANEL_PREVIEW.setNodePreview(_new_node);
+				
 			}
 		}
 		

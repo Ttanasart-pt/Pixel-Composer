@@ -84,9 +84,5 @@ function checkBox(_onClick) : widget() constructor {
 		return h;
 	}
 	
-	static clone = function() { #region
-		var cln = new checkBox(onClick);
-		
-		return cln;
-	} #endregion
+	static clone = function() { return new checkBox(onClick); }
 }

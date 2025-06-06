@@ -29,7 +29,6 @@ function ResetAllNodesRender() {
 			_node.inputs[i].resetCache();
 		return;
 	});
-	
 }
 
 function NodeTopoSort() {
@@ -270,6 +269,8 @@ function Render(partial = false, runAction = false) {
 	
 	// print("\n============== render stat ==============");
 	// print($"Get value hit: {global.getvalue_hit}");
+	
+	PROJECT.postRender();
 	
 	LOG_END();
 	
