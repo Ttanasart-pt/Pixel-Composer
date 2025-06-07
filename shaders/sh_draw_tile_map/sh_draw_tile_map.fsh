@@ -15,8 +15,6 @@ uniform float animatedTilesIndex[128];
 uniform float animatedTilesLength[128];
 uniform float frame;
 
-int mod(int a, int b) { return a - (a / b) * b; }
-
 void main() {
     gl_FragColor = vec4(0.);
     

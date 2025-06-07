@@ -1,4 +1,6 @@
-#extension GL_OES_standard_derivatives : enable
+#ifdef _YY_HLSL11_
+	#extension GL_OES_standard_derivatives : enable
+#endif
 
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;

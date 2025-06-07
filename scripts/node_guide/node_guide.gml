@@ -146,7 +146,7 @@ function __initNodeData() {
 	directory_verify(dir);
 	
 	if(check_version($"{dir}version")) {
-		var _relFrom = $"data/Nodes/related_node.json";
+		var _relFrom = $"{working_directory}data/nodes/related_node.json";
 		var _relTo   = $"{dir}default.json";
 		
 		file_copy_override(_relFrom, _relTo);

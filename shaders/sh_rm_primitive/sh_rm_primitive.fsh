@@ -1,6 +1,3 @@
-//Inigo Quilez 
-//Oh where would I be without you.
-
 #ifdef _YY_HLSL11_
 	#extension GL_OES_standard_derivatives : enable
 #endif

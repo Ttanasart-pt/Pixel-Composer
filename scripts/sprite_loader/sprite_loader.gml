@@ -13,7 +13,7 @@ function __initTheme() {
 	directory_verify(root);
 	
 	if(check_version($"{root}/version")) {
-		zip_unzip("data/Theme.zip", root);	printDebug($"     > Unzip theme  | complete in {get_timer() - t}");    t = get_timer();
+		zip_unzip($"{working_directory}data/theme.zip", root);	printDebug($"     > Unzip theme  | complete in {get_timer() - t}");    t = get_timer();
 	}
 	
 	loadColor(PREFERENCES.theme);			printDebug($"     > Load color   | complete in {get_timer() - t}");    t = get_timer();
@@ -28,17 +28,12 @@ function _sprite_load_from_struct(str, theme, key) {
 	var sx   = struct_try_get(str, "x", 0) * THEME_SCALE;
 	var sy   = struct_try_get(str, "y", 0) * THEME_SCALE;
 	
-	if(!file_exists_empty(path)) { 
-		log_message("THEME", $"Load sprite {path} failed: Path not exists."); 
-		return 0; 
-	}
+	var _path = filename_os(path);
 	
-	var s = sprite_add(path, numb, false, true, sx, sy);
+	if(!file_exists_empty(_path)) { log_message("THEME", $"Load sprite {_path} failed: Path not exists."); return 0; }
 	
-	if(s < 0) { 
-		log_message("THEME", $"Load sprite {path} failed: Cannot read file."); 
-		return 0; 
-	}
+	var s = sprite_add(_path, numb, false, true, sx, sy);
+	if( s < 0) { log_message("THEME", $"Load sprite {_path} failed: Cannot read file."); return 0; }
 	
 	if(!struct_has(str, "slice")) return s;
 	
@@ -100,4 +95,5 @@ function loadGraphic(theme = "default") {
 		draw_sprite_ui_uniform(THEME.path_open, 0, _x, _y, scale, color, alpha);
 		draw_sprite_ui_uniform(THEME.path_open, 1, _x, _y, scale, c_white, alpha);
 	});
+	
 }

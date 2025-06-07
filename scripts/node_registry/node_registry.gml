@@ -425,7 +425,7 @@ function __read_node_directory(dir) {
 	
 	while(_f != "") {
 		 f = _f;
-		 p = dir + "/" + f;
+		 p = $"{dir}/{f}";
 		_f = file_find_next();
 		
 		if(!directory_exists(p)) continue;
@@ -524,7 +524,7 @@ function __read_node_display(_list) {
 					array_push(_l, _node);
 					
 				} else {
-					var _txt = $"Missing node data [{_n}]: Check if node folder exists in {DIRECTORY}Nodes\Internal";
+					var _txt = $"Missing node data [{_n}]: Check if node folder exists in {DIRECTORY}Nodes/Internal";
 					noti_warning(_txt);
 				}
 			}
@@ -562,7 +562,9 @@ function __read_node_display_folder(dir) {
 	
 	while(_f != "") {
 		if(_f == "display_data.json") {
-			var _data = json_load_struct(dir + "/" + _f);
+			var _dpth = dir + "/" + _f;
+			var _data = json_load_struct(_dpth);
+			
 			__read_node_display(_data);
 		}
 		
@@ -594,8 +596,10 @@ function __initNodes(unzip = true) {
 	
 	if(unzip) {
 		directory_verify($"{DIRECTORY}Nodes");
+		
+		var zpath = $"{working_directory}data/nodes/internal.zip";
 		if(check_version($"{DIRECTORY}Nodes/version", "internal")) 
-			zip_unzip("data/Nodes/Internal.zip", $"{DIRECTORY}Nodes");
+			zip_unzip(zpath, $"{DIRECTORY}Nodes");
 	}
 	
 	__read_node_directory($"{DIRECTORY}Nodes");
@@ -605,7 +609,7 @@ function __initNodes(unzip = true) {
 	////- DISPLAY
 	
 	if(unzip) {
-		var _relFrom = $"data/Nodes/display_data.json";
+		var _relFrom = $"{working_directory}data/nodes/display_data.json";
 		var _relTo   = $"{DIRECTORY}Nodes/display_data.json";
 		file_copy_override(_relFrom, _relTo);
 	}

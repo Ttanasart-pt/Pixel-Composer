@@ -9,7 +9,7 @@
 		directory_verify(root);
 		
 		if(check_version($"{root}/version"))
-			zip_unzip("data/Assets.zip", root);
+			zip_unzip($"{working_directory}data/assets.zip", root);
 		
 		if(array_empty(PREFERENCES.path_assets)) {
 			global.ASSETS = __initAssetsFolder(root);

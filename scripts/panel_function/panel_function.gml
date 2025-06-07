@@ -173,7 +173,7 @@
 		directory_verify($"{DIRECTORY}layouts");
 		
 		if(check_version($"{DIRECTORY}layouts/version"))
-			zip_unzip("data/Layouts.zip", DIRECTORY);
+			zip_unzip($"{working_directory}data/layouts.zip", DIRECTORY);
 		
 		setPanel();
 		panelDisplayInit();

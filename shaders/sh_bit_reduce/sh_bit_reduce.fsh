@@ -66,8 +66,8 @@ uniform float dither[64];
 
 float ditherVal;
 
-float min(float a, float b, float c) { return min(min(a,b), min(a,c)); }
-float max(float a, float b, float c) { return max(max(a,b), max(a,c)); }
+float min3(float a, float b, float c) { return min(min(a,b), min(a,c)); }
+float max3(float a, float b, float c) { return max(max(a,b), max(a,c)); }
 
 float quant(float n, float q) {
 	if(q <= 1.) return floor(n + .5);
@@ -86,7 +86,7 @@ float quant(float n, float q) {
 	dt0 *= q * 2.;
 	dt1 *= q * 2.;
 	
-	float rat = min(abs(dt), abs(dt0), abs(dt1));
+	float rat = min3(abs(dt), abs(dt0), abs(dt1));
 	      rat = 1. - rat * ditherContrast;
 	
 	if(sign(dt) == 1.) return rat * .5 >= ditherVal? qz - iq : qz;

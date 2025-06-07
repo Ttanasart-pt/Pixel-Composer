@@ -19,7 +19,7 @@ PEN_RIGHT_PRESS   = false;
 PEN_RIGHT_RELEASE = false;
 
 function __initPen() {
-	if(OS == os_macosx) return;
+	if(os_type != os_windows) return;
 	
 	var c = tabletstuff_get_init_error_code();
 	if (c != tabletstuff_error_none)

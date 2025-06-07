@@ -137,3 +137,55 @@ function file_copy_override(src, dest) {
 }
 
 function file_delete_safe(path) { if(!file_exists_empty(path)) return; file_delete(path); }
+
+
+	////- Overrides
+
+function filename_os(_p) {
+    if(os_type == os_windows) return _p;
+    // _p = string_lower(_p);
+    _p = string_replace_all(_p, "\\", "/");
+    return _p;
+}
+
+#macro __file_delete file_delete
+#macro file_delete file_delete_os
+function file_delete_os(_p) { return __file_delete(filename_os(_p)); }
+
+#macro __file_exists file_exists
+#macro file_exists file_exists_os
+function file_exists_os(_p) { return __file_exists(filename_os(_p)); }
+
+#macro __file_copy file_copy
+#macro file_copy file_copy_os
+function file_copy_os(_p0, _p1) { return __file_copy(filename_os(_p0), filename_os(_p1)); }
+
+#macro __file_find_first file_find_first
+#macro file_find_first file_find_first_os
+function file_find_first_os(_p, attr) { return __file_find_first(filename_os(_p), attr); }
+
+ // TEXT
+
+#macro __file_text_open_read file_text_open_read
+#macro file_text_open_read file_text_open_read_os
+function file_text_open_read_os(_p) { return __file_text_open_read(filename_os(_p)); }
+
+#macro __file_text_open_write file_text_open_write
+#macro file_text_open_write file_text_open_write_os
+function file_text_open_write_os(_p) { return __file_text_open_write(filename_os(_p)); }
+
+ // DIR
+
+#macro __directory_exists directory_exists
+#macro directory_exists directory_exists_os
+function directory_exists_os(_p) { return __directory_exists(filename_os(_p)); }
+
+#macro __directory_create directory_create
+#macro directory_create directory_create_os
+function directory_create_os(_p) { return __directory_create(filename_os(_p)); }
+
+ // ZIP
+ 
+#macro __zip_unzip zip_unzip
+#macro zip_unzip zip_unzip_os
+function zip_unzip_os(p0, p1) { return __zip_unzip(filename_os(p0), filename_os(p1)); }

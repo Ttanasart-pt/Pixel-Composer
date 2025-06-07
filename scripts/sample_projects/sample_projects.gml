@@ -32,7 +32,9 @@ function LOAD_FOLDER(list, path) {
 
 function LOAD_SAMPLE() {
 	ds_list_clear(SAMPLE_PROJECTS);
-	var zzip = "data/Welcome files/Welcome files.zip";
+	var zzip = $"{working_directory}data/Welcome files/Welcome files.zip";
+	if(os_type != os_windows) zzip = $"{working_directory}data/welcome_files/Welcome files.zip";
+	
 	var targ = $"{DIRECTORY}Welcome files";
 	
 	directory_verify(targ);

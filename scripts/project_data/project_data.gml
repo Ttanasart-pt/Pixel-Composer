@@ -177,7 +177,7 @@ function Project() constructor {
 		attributes.bind_godot_path     = "";
 			
 		attributes.auto_organize       = false;
-			
+		
 		attributeEditor = [
 			[ "Default Surface", "surface_dimension", new vectorBox(2, 
 				function(val, index) { 

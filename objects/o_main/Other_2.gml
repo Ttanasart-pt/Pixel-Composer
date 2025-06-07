@@ -6,53 +6,68 @@
 	DIRECTORY = "";
 	PRESIST_PREF = { path: "" };
 	
-	APP_DIRECTORY = env_user();
-	APP_DIRECTORY = string_replace_all(APP_DIRECTORY, "\\", "/");
-	show_debug_message($"App directory: {APP_DIRECTORY}");
-	
-	directory_verify(APP_DIRECTORY);
-	
-	var perstPath = APP_DIRECTORY + "persistPreference.json"; 
-	if(file_exists_empty(perstPath)) {
-		struct_override(PRESIST_PREF, json_load_struct(perstPath));
-		DIRECTORY = struct_has(PRESIST_PREF, "path")? PRESIST_PREF.path : "";
+	if(OS == os_linux) {
+		APP_DIRECTORY = working_directory;
+		DIRECTORY     = program_directory;
+	    APP_LOCATION  = program_directory;
+	        
+		PREFERENCES_DIR = $"{DIRECTORY}Preferences/{PREF_VERSION}/";
+		directory_verify($"{DIRECTORY}Cache");
+		directory_verify($"{DIRECTORY}log");
+		
+	} else {
+		APP_DIRECTORY = env_user();
+		APP_DIRECTORY = string_replace_all(APP_DIRECTORY, "\\", "/");
+		show_debug_message($"App directory: {APP_DIRECTORY}");
+		
+		directory_verify(APP_DIRECTORY);
+		
+		var perstPath = APP_DIRECTORY + "persistPreference.json"; 
+		if(file_exists_empty(perstPath)) {
+			struct_override(PRESIST_PREF, json_load_struct(perstPath));
+			DIRECTORY = struct_has(PRESIST_PREF, "path")? PRESIST_PREF.path : "";
+		}
+		
+		show_debug_message($"Persisted directory: {perstPath}");
+		
+		if(DIRECTORY != "") {
+			var _ch = string_char_last(DIRECTORY);
+			if(_ch != "\\" && _ch != "/") DIRECTORY += "/";
+		
+			show_debug_message($"Env directory: {DIRECTORY}");
+			var dir_valid = DIRECTORY != "" && directory_exists(DIRECTORY);
+			var tmp = file_text_open_write(DIRECTORY + "val_check.txt");
+			
+			if(tmp == -1) {
+				dir_valid = false;
+				show_message($"WARNING: Inaccessible main directory ({DIRECTORY}) this may be caused by non existing folder, or Pixel Composer has no permission to open the folder.");
+			} else {
+				file_text_close(tmp);
+				file_delete($"{DIRECTORY}val_check.txt");
+			}
+			
+			if(!dir_valid) {
+				show_debug_message("Invalid directory revert back to default %APPDATA%");
+				DIRECTORY = APP_DIRECTORY;
+			}
+		} else 
+			DIRECTORY = APP_DIRECTORY;
+		
+		PREFERENCES_DIR = $"{DIRECTORY}Preferences/{PREF_VERSION}/";
+		directory_verify(DIRECTORY);
+		directory_verify($"{DIRECTORY}Cache");
+		directory_verify($"{DIRECTORY}log");
+		
+		APP_LOCATION = program_directory;
+		if(OS == os_macosx) APP_LOCATION = string_replace(APP_LOCATION, "/Contents/MacOS/", "/Contents/Resources/");
+		if(RUN_IDE)         APP_LOCATION = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/";
+		
 	}
 	
-	show_debug_message($"Persisted directory: {perstPath}");
-	
-	if(DIRECTORY != "") {
-		var _ch = string_char_last(DIRECTORY);
-		if(_ch != "\\" && _ch != "/") DIRECTORY += "/";
-	
-		show_debug_message($"Env directory: {DIRECTORY}");
-		var dir_valid = DIRECTORY != "" && directory_exists(DIRECTORY);
-		var tmp = file_text_open_write(DIRECTORY + "val_check.txt");
-		
-		if(tmp == -1) {
-			dir_valid = false;
-			show_message($"WARNING: Inaccessible main directory ({DIRECTORY}) this may be caused by non existing folder, or Pixel Composer has no permission to open the folder.");
-		} else {
-			file_text_close(tmp);
-			file_delete($"{DIRECTORY}val_check.txt");
-		}
-		
-		if(!dir_valid) {
-			show_debug_message("Invalid directory revert back to default %APPDATA%");
-			DIRECTORY = APP_DIRECTORY;
-		}
-	} else 
-		DIRECTORY = APP_DIRECTORY;
-	
-	PREFERENCES_DIR = $"{DIRECTORY}Preferences/{PREF_VERSION}/";
-	directory_verify(DIRECTORY);
-	directory_verify($"{DIRECTORY}Cache");
-	directory_verify($"{DIRECTORY}log");
-	
-	APP_LOCATION = program_directory;
-	if(OS == os_macosx) APP_LOCATION = string_replace(APP_LOCATION, "/Contents/MacOS/", "/Contents/Resources/");
-	if(RUN_IDE)         APP_LOCATION = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/";
-		
-	printDebug($"===================== WORKING DIRECTORIES =====================\n\t{working_directory}\n\t{DIRECTORY}");
+	printDebug($"===================== WORKING DIRECTORIES =====================\n");
+    show_debug_message($"APP_DIRECTORY: {APP_DIRECTORY}");
+    show_debug_message($"DIRECTORY: {DIRECTORY}");
+    show_debug_message($"working_directory: {working_directory}");
 #endregion
 	
 	var t = get_timer();

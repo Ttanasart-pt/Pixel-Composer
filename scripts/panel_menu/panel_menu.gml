@@ -143,8 +143,8 @@ function Panel_Menu() : PanelContent() constructor {
         menuItem(__txtx("panel_menu_local_directory", "Open local directory"),             function() /*=>*/ {return shellOpenExplorer(DIRECTORY)},               THEME.folder),
         menuItem(__txtx("panel_menu_autosave_directory", "Open autosave directory"),       function() /*=>*/ {return shellOpenExplorer(DIRECTORY + "autosave/")}, THEME.folder),
         menuItem(__txtx("panel_menu_reset_default", "Reset default collection, assets"),   function() /*=>*/ {
-            zip_unzip("data/Collections.zip", DIRECTORY + "Collections");
-            zip_unzip("data/Assets.zip", DIRECTORY + "Assets");
+            zip_unzip($"{working_directory}data/collections.zip", DIRECTORY + "Collections");
+            zip_unzip($"{working_directory}data/assets.zip", DIRECTORY + "Assets");
         }),
         -1,
         menuItem(__txtx("panel_menu_connect_patreon", "Connect to Patreon"),               function() /*=>*/ {return dialogCall(o_dialog_patreon)},         THEME.patreon),

@@ -5,7 +5,7 @@ function __initPresets() {
 	ds_map_clear(global.PRESETS_MAP);
 	ds_map_clear(global.PRESETS_MAP_NODE);
 	
-	var _preset_path = "data/Preset.zip";
+	var _preset_path = $"{working_directory}data/Preset.zip";
 	var root = DIRECTORY + "Presets";
 	
 	directory_verify(root);
