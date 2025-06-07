@@ -905,7 +905,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     
     fullView_zoom = false;
     function fullView() { 
-    	toCenterNode(array_empty(nodes_selecting)? nodes_list : nodes_selecting, fullView_zoom); 
+    	toCenterNode(array_empty(nodes_selecting)? nodes_list : nodes_selecting); 
     	fullView_zoom = !fullView_zoom;
     }
     

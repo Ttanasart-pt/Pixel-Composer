@@ -754,7 +754,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		if(mx >= 0 && my >= 0 && mx < _sw && my < _sh && mouse_check_button(mb_left)) {
 			var c = surface_getpixel(_surf, mx, my);
-			setToolColor(c);
+			setToolColor(cola(c));
 		}
 		
 		var x0 = _x + mx * _s, x1 = x0 + _s;
@@ -989,6 +989,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	////- Nodes
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, params) { 
+		
 		if(!tool_selection.is_selected && active && key_mod_press(ALT)) 
 			color_picking = true;
 		
@@ -1179,7 +1180,6 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var _pcc = isUsingTool("Eraser")? c_red : c_white;
 			var _paa = isUsingTool("Eraser")? .2 : _alp;
 			
-			if(!key_mod_press(ALT))
 			switch(_panel.tileMode) {
 				
 				case 1 : 
@@ -1200,9 +1200,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
                     draw_surface_safe(preview_draw_tile, _x, 0);
                     break;
                     
-                case 3 : 
-                	draw_surface_tiled_ext_safe(preview_draw_surface, _x, _y, _s, _s, 0, _pcc, _paa); 
-                	break;
+                case 3 : draw_surface_tiled_ext_safe(preview_draw_surface, _x, _y, _s, _s, 0, _pcc, _paa); break;
 			}
 			
 			surface_set_target(preview_draw_mask);
