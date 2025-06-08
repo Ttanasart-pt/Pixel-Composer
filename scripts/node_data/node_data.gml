@@ -1052,9 +1052,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static addInput = function(junctionFrom, shift = input_fix_len) {
 		var targ = getInput(y, junctionFrom, shift);
-		if(targ == noone) return;
+		if(targ == noone) return noone;
 		
-		targ.setFrom(junctionFrom);
+		return targ.setFrom(junctionFrom);
 	}
 	
 	static getInputDataFull  = function(index, def = 0) { return array_safe_get_fast(inputs_data, index, def); }

@@ -293,11 +293,11 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		tool_selection      = new canvas_tool_selection().setNode(self);
 		
-		tool_brush          = new canvas_tool_brush(brush, false);
-		tool_eraser         = new canvas_tool_brush(brush, true);
-		tool_rectangle      = new canvas_tool_shape(brush, CANVAS_TOOL_SHAPE.rectangle);
-		tool_ellipse        = new canvas_tool_shape(brush, CANVAS_TOOL_SHAPE.ellipse);
-		tool_iso_cube       = new canvas_tool_shape_iso(brush, CANVAS_TOOL_SHAPE_ISO.cube, tool_attribute);
+		tool_brush          = new canvas_tool_brush(brush, false).setNode(self);
+		tool_eraser         = new canvas_tool_brush(brush, true).setNode(self);
+		tool_rectangle      = new canvas_tool_shape(brush, CANVAS_TOOL_SHAPE.rectangle).setNode(self);
+		tool_ellipse        = new canvas_tool_shape(brush, CANVAS_TOOL_SHAPE.ellipse).setNode(self);
+		tool_iso_cube       = new canvas_tool_shape_iso(brush, CANVAS_TOOL_SHAPE_ISO.cube, tool_attribute).setNode(self);
 		
 		tool_fill           = new canvas_tool_fill(tool_attribute);
 		tool_fill_grad      = new canvas_tool_fill_gradient(tool_attribute);
@@ -510,7 +510,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		];
 	#endregion
 	
-	#region ++++ nodeTool ++++
+	#region ++++ node tool ++++
 		__action_add_node = method(self, function(c) /*=>*/ { with(dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8, { context: c })) canvas = true; });
 		
 		tool_node_buttons = new buttonGroup( array_create(2, THEME.toolbar_check), function(v) /*=>*/ { if(v == 0) nodeTool.apply(); else nodeTool.destroy(); })
@@ -520,6 +520,57 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		nodeToolPreview = new NodeTool( "Apply Node", THEME.canvas_tools_node, self )
 								.setSettings(tool_settings)
 								.setToolFn(__action_add_node)
+								.setContext(self);
+								
+		
+		selectionExtract = function() /*=>*/ {
+			var _s  = tool_selection.is_selected;
+			var _sx = _s? tool_selection.selection_position[0] : 0;
+			var _sy = _s? tool_selection.selection_position[1] : 0;
+			var _sw = _s? tool_selection.selection_size[0] : attributes.dimension[0];
+			var _sh = _s? tool_selection.selection_size[1] : attributes.dimension[1];
+			
+			var _nc = nodeBuild("Node_Canvas", x, y + h + 16).skipDefault();
+			_nc.inputs[0].setValue([_sw, _sh]);
+			
+			var _comp = noone; 
+			var _o = outputs[0].getJunctionTo();
+			for( var i = 0, n = array_length(_o); i < n; i++ ) {
+				if(is(_o[i].node, Node_Composite)) _comp = _o[i].node;
+			}
+			
+			if(_comp == noone) {
+				_comp = nodeBuild("Node_Composite", x + w + 32, y).skipDefault();
+				_comp.addInput(outputs[0]);
+				
+			} else {
+				var _yy = y + h + 16;
+				for( var i = 0, n = array_length(_comp.inputs); i < n; i++ ) {
+					var _in = _comp.inputs[i].value_from;
+					if(_in == noone) continue;
+					_yy = max(_yy, _in.node.y + _in.node.h + 16);
+				}
+					
+				_nc.move(x, _yy);
+			}
+			
+			var _j = _comp.addInput(_nc.outputs[0]);
+			var _o = _nc.outputs[0].getJunctionTo();
+			var _i = _o[0].index;
+			
+			_comp.inputs[_i+1].unit.mode = VALUE_UNIT.constant;
+			_comp.inputs[_i+1].setValue([_sx,_sy]);
+			_comp.inputs[_i+6].setValue([0,0]);
+			
+			PANEL_PREVIEW.setNodePreview(_comp, false, false);
+			PANEL_INSPECTOR.setInspecting(_nc);
+			PANEL_GRAPH.nodes_selecting = [ _nc ];
+			
+			if(_s) tool_selection.apply();
+		}
+		
+		selectionExtractButton = new NodeTool( "Extract Selection", THEME.canvas_tools_extract, self )
+								.setToolFn(selectionExtract)
 								.setContext(self);
 		
 		static addNodeTool = function(_node) {
@@ -572,6 +623,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		rightTools_general = [ 
 			nodeToolPreview,
+			selectionExtractButton, 
 			-1,
 			
 			new NodeTool( "Resize Canvas",	  THEME.canvas_resize )
@@ -1099,7 +1151,6 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				_tool.drawPostOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 				return;
 			}
-		
 		#endregion
 		
 		var _alp = _color_get_alpha(CURRENT_COLOR);
@@ -1181,6 +1232,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var _paa = isUsingTool("Eraser")? .2 : _alp;
 			
 			switch(_panel.tileMode) {
+				case 0 : draw_surface_ext_safe(getPreviewValues(), _x, _y, _s, _s, 0, _pcc, _paa); break;
 				
 				case 1 : 
                     preview_draw_tile = surface_verify(preview_draw_tile, _panel.w, _dim[1] * _s);

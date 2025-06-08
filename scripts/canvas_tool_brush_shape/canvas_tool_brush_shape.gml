@@ -21,6 +21,14 @@ function canvas_tool_shape(brush, shape) : canvas_tool() constructor {
 	temp_surf = noone;
 	mixx_surf = noone;
 	
+	function init() {
+		mouse_holding = false;
+		surface_free_safe(temp_surf); 
+		surface_free_safe(mixx_surf); 
+		
+		surface_clear(node.drawing_surface);
+	}
+	
 	function draw_point_wrap(_draw = true) {
 		var _oxn = mouse_cur_tx - brush.brush_range < 0;
 		var _oxp = mouse_cur_tx + brush.brush_range > draw_w;
@@ -108,7 +116,6 @@ function canvas_tool_shape(brush, shape) : canvas_tool() constructor {
 	}
 	
 	function step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		
 		mouse_cur_x = round((_mx - _x) / _s - 0.5);
 		mouse_cur_y = round((_my - _y) / _s - 0.5);
 		

@@ -552,10 +552,10 @@ function Panel_Preview() : PanelContent() constructor {
     
     ////- DATA
     
-    function setNodePreview(_node, _lock = locked) {
+    function setNodePreview(_node, _lock = locked, _view = true) {
         if(locked) return self;
         
-        if(resetViewOnDoubleClick)
+        if(_view && resetViewOnDoubleClick)
             do_fullView = true;
         
         preview_node[splitView? splitSelection : 0] = _node;

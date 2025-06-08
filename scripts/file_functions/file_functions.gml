@@ -38,8 +38,11 @@ function file_get_modify_s(path) {
 
 function get_open_filenames_compat(ext, sel, caption = "Open") {
 	INLINE
+	var pat, w = OS == os_windows;
 	
-	var pat = OS == os_windows? get_open_filenames_ext(ext, sel, PREFERENCES.dialog_path, caption) : get_open_filename_pxc(ext, sel, caption);
+	if(w) pat = get_open_filenames_ext(ext, sel, PREFERENCES.dialog_path, caption);
+	else  pat = get_open_filename_pxc(ext, sel, caption);
+	
 	key_release();
 	
 	return pat;

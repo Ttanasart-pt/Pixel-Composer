@@ -31,6 +31,16 @@ function canvas_tool_brush(brush, eraser = false) : canvas_tool() constructor {
 	temp_surf = noone;
 	mixx_surf = noone;
 	
+	function init() {
+		mouse_holding      = false;
+		mouse_line_drawing = false;
+		
+		surface_free_safe(temp_surf); 
+		surface_free_safe(mixx_surf); 
+		
+		surface_clear(node.drawing_surface);
+	}
+	
 	function onDisable() { 
 		surface_free_safe(temp_surf); 
 		surface_free_safe(mixx_surf); 
@@ -86,7 +96,6 @@ function canvas_tool_brush(brush, eraser = false) : canvas_tool() constructor {
 	}
 	
 	function step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		
 		mouse_cur_x = round((_mx - _x) / _s - 0.5);
 		mouse_cur_y = round((_my - _y) / _s - 0.5);
 		mouse_line_drawing = false;

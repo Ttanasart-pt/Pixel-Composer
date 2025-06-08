@@ -426,11 +426,6 @@
 		return cont;
 	}
 	
-	function panelFocusNode(_node = noone) {
-		PANEL_GRAPH.nodes_selecting = _node == noone? [] : [ _node ];
-		PANEL_PREVIEW.setNodePreview(_node);
-		PANEL_INSPECTOR.setInspecting(_node);
-	}
 #endregion
 
 #region Actions
