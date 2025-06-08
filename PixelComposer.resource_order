@@ -304,6 +304,7 @@
     {"name":"rotator","order":1,"path":"folders/widgets/rotator.yy",},
     {"name":"sliders","order":2,"path":"folders/widgets/sliders.yy",},
     {"name":"text","order":3,"path":"folders/widgets/text.yy",},
+    {"name":"transform_iso","order":31,"path":"folders/nodes/data/transform/transform_iso.yy",},
   ],
   "ResourceOrderSettings":[
     {"name":"ac_disappear","order":2,"path":"animcurves/ac_disappear/ac_disappear.yy",},
@@ -1394,6 +1395,7 @@
     {"name":"node_zigzag","order":10,"path":"scripts/node_zigzag/node_zigzag.yy",},
     {"name":"nodeValue_drawer","order":1,"path":"scripts/nodeValue_drawer/nodeValue_drawer.yy",},
     {"name":"note_data","order":19,"path":"scripts/note_data/note_data.yy",},
+    {"name":"node_transform_iso","order":30,"path":"scripts/node_transform_iso/node_transform_iso.yy",},
     {"name":"notification_system","order":7,"path":"scripts/notification_system/notification_system.yy",},
     {"name":"number_function","order":11,"path":"scripts/number_function/number_function.yy",},
     {"name":"numberArrayBox","order":17,"path":"scripts/numberArrayBox/numberArrayBox.yy",},
@@ -2508,6 +2510,7 @@
     {"name":"s_node_rotation_random_data","order":16,"path":"sprites/s_node_rotation_random_data/s_node_rotation_random_data.yy",},
     {"name":"s_node_rotation_range_data","order":17,"path":"sprites/s_node_rotation_range_data/s_node_rotation_range_data.yy",},
     {"name":"s_node_sampler","order":11,"path":"sprites/s_node_sampler/s_node_sampler.yy",},
+    {"name":"sh_transform_iso_top","order":0,"path":"shaders/sh_transform_iso_top/sh_transform_iso_top.yy",},
     {"name":"s_node_scale_algo","order":7,"path":"sprites/s_node_scale_algo/s_node_scale_algo.yy",},
     {"name":"s_node_scale","order":6,"path":"sprites/s_node_scale/s_node_scale.yy",},
     {"name":"s_node_scatter_points","order":3,"path":"sprites/s_node_scatter_points/s_node_scatter_points.yy",},

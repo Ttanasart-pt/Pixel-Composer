@@ -1,0 +1,13 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_transform_iso_top",
+  "name":"sh_transform_iso_top",
+  "parent":{
+    "name":"transform_iso",
+    "path":"folders/nodes/data/transform/transform_iso.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "tags":[],
+  "type":1,
+}

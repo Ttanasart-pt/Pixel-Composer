@@ -98,7 +98,10 @@ function Panel_Global_Layer_Drawer() constructor {
 			
 		bx -= bs + ui(4);
 		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, "Add Output", THEME.add_16, 0, COLORS._main_value_negative, .75) == 2) {
-			var _lnode = nodeBuild("Node_Layer_Output", 0, 0).skipDefault();
+			var _lout = nodeBuild("Node_Layer_Output",     0, 0).skipDefault();
+			var _proj = nodeBuild("Node_Project_Output", 160, 0).skipDefault();
+			
+			_proj.inputs[0].setFrom(_lout.outputs[0]);
 		}
 		
 		return ui(28)

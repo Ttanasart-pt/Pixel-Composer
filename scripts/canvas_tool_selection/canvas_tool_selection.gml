@@ -20,6 +20,10 @@ function canvas_tool_selection(_selector) : canvas_tool() constructor {
 	mouse_pre_x = 0;
 	mouse_pre_y = 0;
 	
+	function init() {
+		is_select_drag = false;
+	}
+	
 	function createSelection(_mask, sel_x0, sel_y0, sel_w, sel_h) {
 		if(is_selected)
 			apply();

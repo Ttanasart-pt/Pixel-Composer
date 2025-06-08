@@ -230,7 +230,11 @@ void main() {
 		}
 	#endregion
 	
-	vec2 ntx = v_vTexcoord * vec2(1., dimension.y / dimension.x);
+	vec2  ntx = v_vTexcoord;
+	float rrr = dimension.x / dimension.y;
+	
+	sca.x *= rrr;
+	ntx.x *= rrr;
 	
 	if(mode == 1) {
 		vec2 px = floor((ntx - position) * dimension);
@@ -267,10 +271,10 @@ void main() {
 	
 	sca = dimension / sca;
 	
-	vec2 pos = ntx - position, _pos;
-	float ratio = dimension.x / dimension.y;
-	_pos.x = pos.x * ratio * cos(ang) - pos.y * sin(ang);
-	_pos.y = pos.x * ratio * sin(ang) + pos.y * cos(ang);
+	vec2  pos = ntx - position, _pos;
+	
+	_pos.x = pos.x * cos(ang) - pos.y * sin(ang);
+	_pos.y = pos.x * sin(ang) + pos.y * cos(ang);
 	
 	shf /= sca[shiftAxis];
 	int antiAxis = shiftAxis == 0? 1 : 0;

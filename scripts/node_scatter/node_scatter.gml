@@ -232,7 +232,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			
 			inputs[13].setVisible(_dist == 2,   _dist == 2);
 			inputs[14].setVisible(_dist == 3,   _dist == 3);
-			inputs[17].setVisible(_dist == 3);
+			inputs[17].setVisible(_dist == 3 || _dist == 4);
 			inputs[ 9].setVisible(_dist != 2 && _dist != 3);
 			inputs[19].setVisible(_dist == 4,   _dist == 4);
 			inputs[20].setVisible(_dist == 4);
@@ -416,6 +416,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _ha = _hh / uniAmoY;
 			
 			var sp, _x, _y, _v;
+			var pp = new __vec2P();
 			
 			repeat(_amount) {
 				i++;
@@ -536,9 +537,11 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 							_scy = 0;
 						}
 						
-						var pp = path.getPointRatio(_pathProgress, path_line_index);
+						pp = path.getPointRatio(_pathProgress, path_line_index, pp);
 						_x = pp.x + random_range_seed(-pathDis, pathDis, _csed++);
 						_y = pp.y + random_range_seed(-pathDis, pathDis, _csed++);
+						_v = [0, 0, pp.weight];
+						
 						break;
 						
 					case NODE_SCATTER_DIST.tile : 

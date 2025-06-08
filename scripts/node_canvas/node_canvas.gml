@@ -566,7 +566,10 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			PANEL_INSPECTOR.setInspecting(_nc);
 			PANEL_GRAPH.nodes_selecting = [ _nc ];
 			
-			if(_s) tool_selection.apply();
+			if(_s) {
+				tool_selection.apply();
+				PANEL_PREVIEW.clearTool();
+			}
 		}
 		
 		selectionExtractButton = new NodeTool( "Extract Selection", THEME.canvas_tools_extract, self )
