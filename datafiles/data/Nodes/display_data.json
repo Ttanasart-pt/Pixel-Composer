@@ -855,6 +855,7 @@
             "Node_Path_Array",
             "Node_Path_Reverse",
             "Node_Path_Weight_Adjust",
+            "Node_Path_Offset",
             { "label": "/Combine" },
             "Node_Path_Repeat",
             "Node_Path_Scatter",

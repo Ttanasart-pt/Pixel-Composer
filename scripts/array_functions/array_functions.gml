@@ -128,8 +128,7 @@
 				index = _plen - index;
 		}
 		
-		if(index < 0) return def;
-		if(index >= len) return def;
+		if(index < 0 || index >= len) return def;
 		return arr[index] == undefined? def : arr[index];
 	}
 	

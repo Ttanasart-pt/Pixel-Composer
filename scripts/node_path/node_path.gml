@@ -592,6 +592,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			attributes.weight[weight_drag][1] = _dis;
 			if(path_loop && weight_drag == 0) array_last(attributes.weight)[1] = _dis;
 			
+			TOOLTIP = $"Weight: {_dis}"
 			updateLength();
 			
 			if(mouse_release(mb_left)) {
@@ -599,7 +600,6 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				triggerRender();
 				UNDO_HOLDING = false;
 			}
-			
 		}
 		
 		/////////////////////////////////////////////////////// DRAW PATH ///////////////////////////////////////////////////////
@@ -850,6 +850,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					draw_circle(_wx, _wy, _sel? 5 : 3, false);
 					
 				}
+				
 			}
 		}
 		

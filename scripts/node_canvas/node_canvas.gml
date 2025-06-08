@@ -244,12 +244,14 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 	}).setNode(self);
 	
+	b_transferData = button(function() /*=>*/ {return transferData()}).setIcon(THEME.arrow, 0, COLORS._main_value_positive);
+	
 	input_display_list = [ 
 		["Frames",       false    ],  0, frame_renderer, 
 		["Animation",    false, 12], 18, 13, 
 		["Brush",         true    ],  6, 15, 17, 16, 
 		["Background",    true, 10],  8, 14,  9, 
-		["Data Transfer", true],     19, 20, button(function() /*=>*/ {return transferData()}).setText("Transfer Data"), 
+		["Data Transfer", true, noone, b_transferData], 19, 20, button(function() /*=>*/ {return transferData()}).setText("Transfer Data"), 
 	];
 	
 	temp_surface = array_create(2);
