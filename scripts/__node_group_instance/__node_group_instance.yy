@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"__node_group_instance",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__node_group_instance",
+  "parent":{
+    "name":"group",
+    "path":"folders/nodes/data/group.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

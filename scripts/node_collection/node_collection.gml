@@ -1,174 +1,3 @@
-enum COLLECTION_TAG {
-	group = 1,
-	loop = 2
-}
-
-function groupNodes(nodeArray, _group = noone, record = true, check_connect = true) {
-	#region check inline
-		var _ctx_nodes = [];
-	
-		for(var i = 0; i < array_length(nodeArray); i++) { 
-			var node = nodeArray[i];
-			var ctx  = node.inline_context;
-		
-			if(ctx == noone) continue;
-			array_push_unique(_ctx_nodes, ctx);
-			
-			for( var k = 0, n = array_length(ctx.nodes); k < n; k++ ) {
-				if(array_exists(nodeArray, ctx.nodes[k])) continue;
-				
-				noti_warning("Grouping incomplete inline group is not allowed.", noone, self);
-				return;
-			}
-		} 
-	#endregion
-	
-	UNDO_HOLDING = true;
-	
-	if(_group == noone) {
-		var cx = 0;
-		var cy = 0;
-		for(var i = 0; i < array_length(nodeArray); i++) {
-			var _node = nodeArray[i];
-			cx += _node.x;
-			cy += _node.y;
-		}
-		
-		cx = value_snap(cx / array_length(nodeArray), 32);
-		cy = value_snap(cy / array_length(nodeArray), 32);
-		
-		_group = new Node_Group(cx, cy, PANEL_GRAPH.getCurrentContext());
-	}
-	
-	var _content = [];
-	
-	for(var i = 0; i < array_length(nodeArray); i++) {
-		_group.add(nodeArray[i]);
-		_content[i] = nodeArray[i];
-	}
-	
-	for( var i = 0, n = array_length(_ctx_nodes); i < n; i++ ) {
-		_group.add(_ctx_nodes[i]);
-		_content[i] = _ctx_nodes[i];
-	}
-	
-	if(check_connect) { // IO creation
-		var _io = { inputs: {}, outputs: {}, map: {} };
-		
-		for(var i = 0; i < array_length(nodeArray); i++)
-			nodeArray[i].checkConnectGroup(_io);
-		
-		var _in    = _io.inputs;
-		var _inKey = struct_get_names(_in);
-		var _x, _y, m;
-			
-		for( var i = 0, n = array_length(_inKey); i < n; i++ ) {
-			var _frm = _io.map[$ _inKey[i]];
-			var _tos = _in[$ _inKey[i]];
-			
-			_x = 0
-			_y = 0;
-			 m = array_length(_tos);
-			
-			for( var j = 0; j < m; j++ ) {
-				var _to = _tos[j];
-				
-				_x  = min(_x, _to.node.x);
-				_y += _to.node.y;
-			}
-			
-			_x = value_snap(_x - 64 - 128, 32);
-			_y = value_snap(_y / m, 32);
-			
-			var _n  = new Node_Group_Input(_x, _y, _group);
-			var _ti = array_find(GROUP_IO_TYPE_MAP, _frm.type);
-			if(_ti >= 0) _n.inputs[2].setValue(_ti);
-			
-			_n.onValueUpdate(0);
-			_n.inParent.setFrom(_frm);
-				
-			for( var j = 0; j < m; j++ ) {
-				var _to = _tos[j];
-				_to.setFrom(_n.outputs[0]);
-			}
-		}
-		
-		var _ot    = _io.outputs;
-		var _otKey = struct_get_names(_ot);
-			
-		for( var i = 0, n = array_length(_otKey); i < n; i++ ) {
-			var _frm = _io.map[$ _otKey[i]];
-			var _tos = _ot[$ _otKey[i]];
-			
-			_x = value_snap(_frm.node.x + _frm.node.w + 64, 32);
-			_y = value_snap(_frm.node.y, 32);
-			 m = array_length(_tos);
-			
-			var _n = new Node_Group_Output(_x, _y, _group);
-			_n.inputs[0].setFrom(_frm);
-			
-			for( var j = 0; j < m; j++ ) {
-				var _to = _tos[j];
-				_to.setFrom(_n.outParent);
-			}
-		}
-	}
-	
-	UNDO_HOLDING = false;	
-	if(record) recordAction(ACTION_TYPE.group, _group, { content: _content });
-	
-	return _group;
-}
-
-function upgroupNode(collection, record = true) {
-	UNDO_HOLDING  = true;
-	var _content  = [], _deleted = [];
-	var _node_arr = collection.getNodeList();
-	var _conn_to  = collection.getJunctionTos();
-	
-	var _cx = 0, _cy = 0;
-	var _nn = 0;
-	
-	for (var i = 0, n = array_length(_node_arr); i < n; i++) {
-		var _node = _node_arr[i];
-		if(!_node.selectable) continue;
-		
-		_cx += _node.x;
-		_cy += _node.y;
-		_nn++;
-	}
-	
-	if(_nn) {
-		_cx = collection.x - _cx / _nn;
-		_cy = collection.y - _cy / _nn;
-	}
-	
-	for (var i = array_length(_node_arr) - 1; i >= 0; i--) {
-		var remNode    = _node_arr[i];
-			remNode.x += _cx;
-			remNode.y += _cy;
-		
-		if(remNode.destroy_when_upgroup) {
-			var _vto = remNode.getJunctionTos();
-			array_push(_deleted, { node: remNode, value_to : _vto });
-		} else
-			array_push(_content, remNode);
-			
-		collection.remove(remNode);
-	}
-	
-	collection.destroy();
-	UNDO_HOLDING = false;
-	
-	if(!record) return;
-	
-	recordAction(ACTION_TYPE.ungroup, collection, { 
-		content :   _content,
-		deleted :   _deleted,
-		connectTo : _conn_to,
-	});
-}
-
 function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) constructor { 
 	nodes       = [];
 	node_length = 0;
@@ -185,9 +14,9 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	isPure   = false;
 	nodeTopo = [];
 	
-	reset_all_child 	= false;
-	isInstancer			= false;
-	instanceBase		= noone;
+	reset_all_child = false;
+	isInstancer		= false;
+	instanceBase	= noone;
 	
 	input_display_list_def = [];
 	custom_input_index     = 0;
@@ -823,12 +652,12 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static panelSetContext = function(panel) {
-		__temp_panel = panel;
+		var _target = instanceBase == noone? self : instanceBase;
 		
 		if(PREFERENCES.graph_open_group_in_tab) 
-			run_in(1, function() /*=>*/ { __temp_panel.open_group_tab(self) });
+			run_in(1, function(panel) /*=>*/ { panel.open_group_tab(_target) }, [panel]);
 		else
-			panel.addContext(self);
+			panel.addContext(_target);
 	}
 	
 	static ononDoubleClick = noone;
@@ -844,3 +673,174 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 }
+
+#region Actions
+	
+	function groupNodes(nodeArray, _group = noone, record = true, check_connect = true) {
+		#region check inline
+			var _ctx_nodes = [];
+		
+			for(var i = 0; i < array_length(nodeArray); i++) { 
+				var node = nodeArray[i];
+				var ctx  = node.inline_context;
+			
+				if(ctx == noone) continue;
+				array_push_unique(_ctx_nodes, ctx);
+				
+				for( var k = 0, n = array_length(ctx.nodes); k < n; k++ ) {
+					if(array_exists(nodeArray, ctx.nodes[k])) continue;
+					
+					noti_warning("Grouping incomplete inline group is not allowed.", noone, self);
+					return;
+				}
+			} 
+		#endregion
+		
+		UNDO_HOLDING = true;
+		
+		if(_group == noone) {
+			var cx = 0;
+			var cy = 0;
+			for(var i = 0; i < array_length(nodeArray); i++) {
+				var _node = nodeArray[i];
+				cx += _node.x;
+				cy += _node.y;
+			}
+			
+			var _grd = PROJECT.graphGrid.size;
+			cx = value_snap(cx / array_length(nodeArray), _grd);
+			cy = value_snap(cy / array_length(nodeArray), _grd);
+			
+			_group = new Node_Group(cx, cy, PANEL_GRAPH.getCurrentContext());
+		}
+		
+		var _content = [];
+		
+		for(var i = 0; i < array_length(nodeArray); i++) {
+			_group.add(nodeArray[i]);
+			_content[i] = nodeArray[i];
+		}
+		
+		for( var i = 0, n = array_length(_ctx_nodes); i < n; i++ ) {
+			_group.add(_ctx_nodes[i]);
+			_content[i] = _ctx_nodes[i];
+		}
+		
+		if(check_connect) { // IO creation
+			var _io = { inputs: {}, outputs: {}, map: {} };
+			
+			for(var i = 0; i < array_length(nodeArray); i++)
+				nodeArray[i].checkConnectGroup(_io);
+			
+			var _in    = _io.inputs;
+			var _inKey = struct_get_names(_in);
+			var _x, _y, m;
+				
+			for( var i = 0, n = array_length(_inKey); i < n; i++ ) {
+				var _frm = _io.map[$ _inKey[i]];
+				var _tos = _in[$ _inKey[i]];
+				
+				_x = 0
+				_y = 0;
+				 m = array_length(_tos);
+				
+				for( var j = 0; j < m; j++ ) {
+					var _to = _tos[j];
+					
+					_x  = min(_x, _to.node.x);
+					_y += _to.node.y;
+				}
+				
+				_x = value_snap(_x - 64 - 128, 32);
+				_y = value_snap(_y / m, 32);
+				
+				var _n  = new Node_Group_Input(_x, _y, _group);
+				var _ti = array_find(GROUP_IO_TYPE_MAP, _frm.type);
+				if(_ti >= 0) _n.inputs[2].setValue(_ti);
+				
+				_n.onValueUpdate(0);
+				_n.inParent.setFrom(_frm);
+					
+				for( var j = 0; j < m; j++ ) {
+					var _to = _tos[j];
+					_to.setFrom(_n.outputs[0]);
+				}
+			}
+			
+			var _ot    = _io.outputs;
+			var _otKey = struct_get_names(_ot);
+				
+			for( var i = 0, n = array_length(_otKey); i < n; i++ ) {
+				var _frm = _io.map[$ _otKey[i]];
+				var _tos = _ot[$ _otKey[i]];
+				
+				_x = value_snap(_frm.node.x + _frm.node.w + 64, 32);
+				_y = value_snap(_frm.node.y, 32);
+				 m = array_length(_tos);
+				
+				var _n = new Node_Group_Output(_x, _y, _group);
+				_n.inputs[0].setFrom(_frm);
+				
+				for( var j = 0; j < m; j++ ) {
+					var _to = _tos[j];
+					_to.setFrom(_n.outParent);
+				}
+			}
+		}
+		
+		UNDO_HOLDING = false;	
+		if(record) recordAction(ACTION_TYPE.group, _group, { content: _content });
+		
+		return _group;
+	}
+	
+	function upgroupNode(collection, record = true) {
+		UNDO_HOLDING  = true;
+		var _content  = [], _deleted = [];
+		var _node_arr = collection.getNodeList();
+		var _conn_to  = collection.getJunctionTos();
+		
+		var _cx = 0, _cy = 0;
+		var _nn = 0;
+		
+		for (var i = 0, n = array_length(_node_arr); i < n; i++) {
+			var _node = _node_arr[i];
+			if(!_node.selectable) continue;
+			
+			_cx += _node.x;
+			_cy += _node.y;
+			_nn++;
+		}
+		
+		if(_nn) {
+			_cx = collection.x - _cx / _nn;
+			_cy = collection.y - _cy / _nn;
+		}
+		
+		for (var i = array_length(_node_arr) - 1; i >= 0; i--) {
+			var remNode    = _node_arr[i];
+				remNode.x += _cx;
+				remNode.y += _cy;
+			
+			if(remNode.destroy_when_upgroup) {
+				var _vto = remNode.getJunctionTos();
+				array_push(_deleted, { node: remNode, value_to : _vto });
+			} else
+				array_push(_content, remNode);
+				
+			collection.remove(remNode);
+		}
+		
+		collection.destroy();
+		UNDO_HOLDING = false;
+		
+		if(!record) return;
+		
+		recordAction(ACTION_TYPE.ungroup, collection, { 
+			content :   _content,
+			deleted :   _deleted,
+			connectTo : _conn_to,
+		});
+	}
+
+#endregion

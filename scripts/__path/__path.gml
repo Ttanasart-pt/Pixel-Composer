@@ -1,9 +1,15 @@
-function Path() constructor {
+function Path(_node) constructor {
+	node = _node;
+	
 	lengthTotal = 0;
 	lengths     = [];
 	lengthAccs  = [];
 	boundary    = new BoundingBox();
 	loop		= false;
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		node.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+	}
 	
 	static getBoundary		= function() /*=>*/ {return boundary};
 	static getAccuLength	= function() /*=>*/ {return lengthAccs};

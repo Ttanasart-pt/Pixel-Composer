@@ -1090,7 +1090,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	////- Path
 	
-	function _pathObject() : Path() constructor {
+	function _pathObject(_node) : Path(_node) constructor {
 		loop = false;
 		
 		anchors		= [];
@@ -1333,7 +1333,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var _rnd = getInputData(3);
 		
 		var _pth = outputs[0].getValue();
-		if(!is(_pth, _pathObject)) _pth = new _pathObject();
+		if(!is(_pth, _pathObject)) _pth = new _pathObject(self);
 		
 		var _a = [];
 		for(var i = input_fix_len; i < array_length(inputs); i++) {
