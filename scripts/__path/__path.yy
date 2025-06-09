@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"__path",
   "parent":{
-    "name":"geometry",
-    "path":"folders/functions/geometry.yy",
+    "name":"path",
+    "path":"folders/nodes/data/value/path.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

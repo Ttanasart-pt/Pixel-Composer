@@ -5,15 +5,15 @@ function Path() constructor {
 	boundary    = new BoundingBox();
 	loop		= false;
 	
-	static getBoundary		= function() { return boundary; }
-	static getAccuLength	= function() { return lengthAccs; }
-	static getLength		= function() { return lengthTotal; }
-	static getSegmentCount  = function() { return 1; }
-	static getLineCount     = function() { return 1; }
-	
-	static getTangentRatio  = function(_rat) { return 0; }
+	static getBoundary		= function() /*=>*/ {return boundary};
+	static getAccuLength	= function() /*=>*/ {return lengthAccs};
+	static getLength		= function() /*=>*/ {return lengthTotal};
+	static getSegmentCount  = function() /*=>*/ {return 1};
+	static getLineCount     = function() /*=>*/ {return 1};
+	static getTangentRatio  = function(_rat) /*=>*/ {return 0};
 	
 	static getPointDistance = function(_seg, _ind = 0, out = undefined) { return new __vec2P(0, 0); }
+	
 	static getPointRatio    = function(_rat, _ind = 0, out = undefined) { 
 		var pix = frac(_rat) * lengthTotal;
 		return getPointDistance(pix, _ind, out);

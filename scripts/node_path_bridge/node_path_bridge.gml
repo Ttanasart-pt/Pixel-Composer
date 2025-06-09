@@ -2,27 +2,32 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	name = "Bridge Path";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_PathNode("Path"))
-		.setVisible(true, true)
-		.rejectArray();
+	newInput(0, nodeValue_PathNode( "Path" )).setVisible(true, true);
+	newInput(4, nodeValueSeed());
 	
-	newInput(1, nodeValue_Int("Amount", 4))
-		.rejectArray();
+	////- =Bridge
 	
-	newInput(2, nodeValue_Bool("Smooth", false))
-		.rejectArray();
+	newInput(3, nodeValue_Enum_Scroll( "Distribution", 0, [ "Uniform", "Random" ] ));
+	newInput(1, nodeValue_Int(  "Amount", 4     ));
+	newInput(2, nodeValue_Bool( "Smooth", false ));
+	
+	// inputs 5
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, self));
 	
-	input_display_list = [ 0, 
-		["Bridge",  false], 1, 2, 
+	array_foreach(inputs, function(i) /*=>*/ {return i.rejectArray()});
+	
+	input_display_list = [ 0, 4, 
+		["Bridge",  false], 3, 1, 2, 
 	]
 	
-	cached_pos = {};
-	curr_path  = noone;
+	////- Nodes
 	
-	curr_amount  = noone;
-	curr_smooth  = noone;
+	cached_pos  = {};
+	curr_path   = noone;
+	curr_amount = noone;
+	curr_smooth = noone;
+	curr_type   = 0;
 	
 	#region ---- path ----
 		anchors		= [];
@@ -31,7 +36,6 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		lengthAccs	= [];
 		boundary    = [];
 		lengthTotal	= [];
-		
 	#endregion
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
@@ -74,11 +78,11 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		}
 	}
 	
-	static getLineCount    = function(       ) /*=>*/ {return getInputData(1)};
-	static getSegmentCount = function(ind = 0) /*=>*/ {return array_safe_length(array_safe_get_fast(anchors, ind))}; 
-	static getLength       = function(ind = 0) /*=>*/ {return array_safe_get_fast(lengths, ind)};
-	static getAccuLength   = function(ind = 0) /*=>*/ {return array_safe_get_fast(lengthAccs, ind)};
-	static getBoundary     = function(ind = 0) /*=>*/ {return array_safe_get_fast(boundary, ind)};
+	static getLineCount    = function(   ) /*=>*/ {return getInputData(1)};
+	static getSegmentCount = function(i=0) /*=>*/ {return array_safe_length(array_safe_get_fast(anchors, i))}; 
+	static getLength       = function(i=0) /*=>*/ {return array_safe_get_fast( lengths,    i )};
+	static getAccuLength   = function(i=0) /*=>*/ {return array_safe_get_fast( lengthAccs, i )};
+	static getBoundary     = function(i=0) /*=>*/ {return array_safe_get_fast( boundary,   i )};
 	
 	static getPointRatio = function(_rat, ind = 0, out = undefined) { return getPointDistance(clamp(_rat, 0, 1) * getLength(ind), ind, out); }
 	
@@ -145,6 +149,9 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static update = function() {
 		cached_pos  = {};
 		curr_path   = getInputData(0);
+		var seed    = getInputData(4);
+		
+		curr_type   = getInputData(3);
 		curr_amount = getInputData(1);
 		curr_smooth = getInputData(2);
 		
@@ -158,10 +165,17 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		lengths    = array_create(curr_amount);
 		lengthAccs = array_create(curr_amount);
 				
+		random_set_seed(seed);
+				
 		for( var i = 0; i < curr_amount; i++ ) {
 			_a   = array_create(_lines);
-			_rat = curr_amount == 1? 0.5 : i / (curr_amount - 1);
-		
+			
+			switch(curr_type) {
+				case 0  : _rat = curr_amount == 1? 0.5 : i / (curr_amount - 1); break;
+				case 1  : _rat = random(1); break;
+				default : _rat = 0;
+			}
+			
 			for( var j = 0; j < _lines; j++ ) {
 				_p    = curr_path.getPointRatio(clamp(_rat, 0, 0.999), j, _p);
 				_a[j] = [ _p.x, _p.y, _p.weight ];
@@ -257,6 +271,6 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
-		draw_sprite_fit(s_node_path_bridge, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
+		draw_sprite_bbox_uniform(s_node_path_bridge, 0, bbox);
 	}
 } 

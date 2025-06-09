@@ -32,36 +32,49 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Slider("Path progress", 0)).setTooltip("Sample position from path.");
+	newInput(1, nodeValue_Bool( "Loop",         false )).rejectArray();
+	newInput(3, nodeValue_Bool( "Round anchor", false )).rejectArray();
 	
-	newInput(1, nodeValue_Bool("Loop", false))
-		.rejectArray();
+	newInput(0, nodeValue_Slider(      "Path progress", 0 )).setTooltip("Sample position from path.");
+	newInput(2, nodeValue_Enum_Scroll( "Progress mode", 0, ["Entire line", "Segment"])).rejectArray();
 	
-	newInput(2, nodeValue_Enum_Scroll("Progress mode",  0, ["Entire line", "Segment"]))
-		.rejectArray();
-	
-	newInput(3, nodeValue_Bool("Round anchor", false))
-		.rejectArray();
+	// input 4 
 		
-	newOutput(0, nodeValue_Output("Position out", VALUE_TYPE.float, [ 0, 0 ]))
-		.setDisplay(VALUE_DISPLAY.vector);
-		
-	newOutput(1, nodeValue_Output("Path data", VALUE_TYPE.pathnode, self));
-		
-	newOutput(2, nodeValue_Output("Anchors", VALUE_TYPE.float, []))
-		.setVisible(false)
-		.setArrayDepth(1);
+	newOutput(0, nodeValue_Output( "Position out", VALUE_TYPE.float,    [0,0] )).setDisplay(VALUE_DISPLAY.vector);
+	newOutput(1, nodeValue_Output( "Path data",    VALUE_TYPE.pathnode, self  ));
+	newOutput(2, nodeValue_Output( "Anchors",      VALUE_TYPE.float,    []    )).setVisible(false).setArrayDepth(1);
 	
 	input_display_list = [
-		["Path",		false], 1, 3, 
-		["Sampling",	false], 0, 2, 
-		["Anchors",		false], 
+		["Path",     false], 1, 3, 
+		["Sampling", false], 0, 2, 
+		["Anchors",  false], 
 	];
 	
 	output_display_list  = [ 1, 0, 2 ];
-	path_preview_surface = noone;
+	
+	static createNewInput = function(index = array_length(inputs),
+	                                   _x = 0,   _y = 0,   _z = 0, 
+									 _dxx = 0, _dxy = 0, _dxz = 0, 
+									 _dyx = 0, _dyy = 0, _dyz = 0, rec = true) {
+		
+		var inAmo = array_length(inputs);
+		
+		newInput(index, nodeValue_Path_Anchor_3D("Anchor", []))
+			.setValue([ _x, _y, _z, _dxx, _dxy, _dxz, _dyx, _dyy, _dyz, false ]);
+		
+		if(!rec) return inputs[index];
+		
+		recordAction(ACTION_TYPE.array_insert, inputs, [ inputs[index], index, $"add path anchor point {index}" ]);
+		resetDisplayList();
+		
+		return inputs[index];
+	}
 	
 	setDynamicInput(1, false);
+	
+	////- Nodes
+	
+	path_preview_surface = noone;
 	
 	tools = [
 		new NodeTool( "Transform", THEME.path_tools_transform ),
@@ -118,24 +131,6 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			array_push(input_display_list, i);
 			inputs[i].name = $"Anchor {i - input_fix_len}";
 		}
-	}
-	
-	static createNewInput = function(index = array_length(inputs),
-	                                   _x = 0,   _y = 0,   _z = 0, 
-									 _dxx = 0, _dxy = 0, _dxz = 0, 
-									 _dyx = 0, _dyy = 0, _dyz = 0, rec = true) {
-		
-		var inAmo = array_length(inputs);
-		
-		newInput(index, nodeValue_Path_Anchor_3D("Anchor", []))
-			.setValue([ _x, _y, _z, _dxx, _dxy, _dxz, _dyx, _dyy, _dyz, false ]);
-		
-		if(!rec) return inputs[index];
-		
-		recordAction(ACTION_TYPE.array_insert, inputs, [ inputs[index], index, $"add path anchor point {index}" ]);
-		resetDisplayList();
-		
-		return inputs[index];
 	}
 	
 	static onValueUpdate = function(index = 0) {
@@ -688,6 +683,8 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		return new __vec3P(px, py, pz);
 	}
 	
+	////- Updates
+	
 	static update = function(frame = CURRENT_FRAME) {
 		ds_map_clear(cached_pos);
 		
@@ -736,6 +733,8 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			outputs[0].setValue(_out.toArray());
 		}
 	}
+	
+	////- Preview
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);

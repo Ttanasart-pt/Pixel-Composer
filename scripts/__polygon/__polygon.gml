@@ -189,7 +189,7 @@ function polygon_triangulate(points, tolerance = 4) { // ear clipping
 				// for (var i = 0, n = array_length(pointInd); i < n; i++)
 				// 	print(points[pointInd[i]]);
 				
-				noti_warning("Mesh error");
+				// noti_warning("Mesh error");
 				break;
 			}
 		}

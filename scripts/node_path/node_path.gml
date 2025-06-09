@@ -36,19 +36,19 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	////- =Path
 	
-	newInput(1, nodeValue_Bool( "Loop", false)).rejectArray();
-	newInput(3, nodeValue_Bool( "Round anchor", false)).rejectArray();
+	newInput(1, nodeValue_Bool( "Loop",         false )).rejectArray();
+	newInput(3, nodeValue_Bool( "Round anchor", false )).rejectArray();
 	
 	////- =Sampling
 	
-	newInput(0, nodeValue_Slider(      "Path progress", 0)).setTooltip("Sample position from path.");
+	newInput(0, nodeValue_Slider(      "Path progress", 0 )).setTooltip("Sample position from path.");
 	newInput(2, nodeValue_Enum_Scroll( "Progress mode", 0, ["Entire line", "Segment"])).rejectArray();
 	
 	// Inputs 4
 	
-	newOutput(0, nodeValue_Output( "Position out", VALUE_TYPE.float,   [0,0])).setDisplay(VALUE_DISPLAY.vector);
-	newOutput(1, nodeValue_Output( "Path data",    VALUE_TYPE.pathnode, self));
-	newOutput(2, nodeValue_Output( "Anchors",      VALUE_TYPE.float,    [])).setVisible(false).setArrayDepth(1);
+	newOutput(0, nodeValue_Output( "Position out", VALUE_TYPE.float,    [0,0] )).setDisplay(VALUE_DISPLAY.vector);
+	newOutput(1, nodeValue_Output( "Path data",    VALUE_TYPE.pathnode, noone ));
+	newOutput(2, nodeValue_Output( "Anchors",      VALUE_TYPE.float,    []    )).setVisible(false).setArrayDepth(1);
 	
 	input_display_list = [
 		["Path",     false], 1, 3, 
@@ -80,30 +80,15 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	];
 	
 	attributes.display_name = true;
+	attributes.weight       = [ [ 0, 1 ], [ 100, 1 ] ];
 	
 	array_push(attributeEditors, "Display");
 	array_push(attributeEditors, ["Display name", function() /*=>*/ {return attributes.display_name}, new checkBox(function() /*=>*/ {return toggleAttribute("display_name")})]);
 		
-	#region ---- path ----
-		path_loop    = false;
-		anchors		 = [];
-		segments     = [];
-		lengths		 = [];
-		lengthAccs	 = [];
-		lengthRatio  = [];
-		lengthTotal	 = 0;
-		weightRatio  = array_create(100 + 1);
-		boundary     = new BoundingBox();
-		
-		cached_pos = ds_map_create();
-		
-		attributes.weight = [ [ 0, 1 ], [ 100, 1 ] ];
-	#endregion
-	
 	#region ---- editor ----
 		line_hover   = -1;
 		weight_hover = -1;
-	
+		
 		drag_point    = -1;
 		drag_points   = [];
 		drag_type     = 0;
@@ -169,6 +154,9 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static drawPreview = function(_x, _y, _s) {}
  
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		var _pth  = outputs[1].getValue();
+		if(!is(_pth, _pathObject)) return;
+		
 		var ansize = array_length(inputs) - input_fix_len;
 		var edited = false;
 		var _tooln = getUsingToolName();
@@ -590,7 +578,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 			var _dis = point_distance(weight_drag_sx, weight_drag_sy, _mmx, _mmy) / _s;
 			attributes.weight[weight_drag][1] = _dis;
-			if(path_loop && weight_drag == 0) array_last(attributes.weight)[1] = _dis;
+			if(_pth.loop && weight_drag == 0) array_last(attributes.weight)[1] = _dis;
 			
 			TOOLTIP = $"Weight: {_dis}"
 			updateLength();
@@ -675,7 +663,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 		}
 				
-		if(!array_empty(anchors)) {
+		if(!array_empty(_pth.anchors)) {
 			draw_set_color(_tooln == "Transform"? COLORS._main_icon : COLORS._main_accent);
 			
 			var draw_w = _tooln == "Weight edit";
@@ -685,13 +673,13 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			var _ow1x = 0, _ow1y = 0, _ow2x = 0, _ow2y = 0;
 			var _nw1x = 0, _nw1y = 0, _nw2x = 0, _nw2y = 0;
 			
-			for( var i = 0, n = array_length(segments); i < n; i++ ) { // draw path
-				var _seg = segments[i];
+			for( var i = 0, n = array_length(_pth.segments); i < n; i++ ) { // draw path
+				var _seg = _pth.segments[i];
 				var  p  = 0;
 				
 				var _amo   = array_length(_seg);
-				var _rat_s = lengthRatio[i];
-				var _rat_e = lengthRatio[i + 1];
+				var _rat_s = _pth.lengthRatio[i];
+				var _rat_e = _pth.lengthRatio[i + 1];
 				var _wdir  = point_direction(_seg[0], _seg[1], _seg[2], _seg[3]);
 				
 				for( var j = 0; j < _amo; j += 2 ) {
@@ -704,7 +692,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					var _rat = round(lerp(_rat_s, _rat_e, j / _amo) * 100);
 					
 					if(draw_w) {
-						_nw = array_safe_get_fast(weightRatio, _rat);
+						_nw = array_safe_get_fast(_pth.weightRatio, _rat);
 						
 						if(j) _wdir = point_direction(_ox, _oy, _nx, _ny);
 						_nw1x = _nx + lengthdir_x(_nw, _wdir + 90);
@@ -772,7 +760,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 			if(_showAnchor)
 			for(var i = 0; i < ansize; i++) { // draw anchor
-				var _a   = anchors[i];
+				var _a   = _pth.anchors[i];
 				var xx   = _x + _a[0] * _s;
 				var yy   = _y + _a[1] * _s;
 				var cont = false;
@@ -834,7 +822,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				for( var i = 0, n = array_length(_w); i < n; i++ ) {
 					var _wg   = _w[i];
 					var _wrat = _wg[0];
-					var _wp   = getPointDistance(_wrat / 100 * lengthTotal);
+					var _wp   = getPointDistance(_wrat / 100 * _pth.lengthTotal);
 					
 					var _wx = _x + _wp.x * _s;
 					var _wy = _y + _wp.y * _s;
@@ -1100,243 +1088,252 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		return true;
 	}
 	
-	static updateLength = function() {
-		boundary     = new BoundingBox();
-		segments     = [];
-		lengths      = [];
-		lengthAccs   = [];
-		lengthTotal  = 0;
-		
-		var _index  = 0;
-		var sample  = PREFERENCES.path_resolution;
-		var ansize  = array_length(inputs) - input_fix_len;
-		if(ansize < 2) return;
-		
-		var con = path_loop? ansize : ansize - 1;
-		
-		for(var i = 0; i < con; i++) {
-			var _a0 = anchors[(i + 0) % ansize];
-			var _a1 = anchors[(i + 1) % ansize];
-			
-			var l = 0, _ox = 0, _oy = 0, _nx = 0, _ny = 0, p = 0;
-			var sg = array_create((sample + 1) * 2);
-			
-			for(var j = 0; j <= sample; j++) {
-				
-				if(_a0[4] == 0 && _a0[5] == 0 && _a1[2] == 0 && _a1[3] == 0) {
-					_nx = lerp(_a0[0], _a1[0], j / sample);
-					_ny = lerp(_a0[1], _a1[1], j / sample);
-					
-				} else {
-					_nx = eval_bezier_x(j / sample, _a0[0],  _a0[1], _a1[0],  _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
-					_ny = eval_bezier_y(j / sample, _a0[0],  _a0[1], _a1[0],  _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
-				}
-				
-				sg[j * 2 + 0] = _nx;
-				sg[j * 2 + 1] = _ny;
-				
-				boundary.addPoint(_nx, _ny);
-				if(j) l += point_distance(_nx, _ny, _ox, _oy);	
-				
-				_ox = _nx;
-				_oy = _ny;
-			}
-			
-			segments[i]   = sg;
-			lengths[i]    = l;
-			lengthTotal  += l;
-			lengthAccs[i] = lengthTotal;
-		}
-		
-		lengthRatio    = array_create(ansize + 1);
-		lengthRatio[0] = 0;
-		for( var i = 0; i < con; i++ )
-			lengthRatio[i + 1] = lengthAccs[i] / lengthTotal;
-		
-		var _w = attributes.weight;
-		
-		     if(array_empty(_w))       weightRatio = array_map(weightRatio, function(i) /*=>*/ {return 1});
-		else if(array_length(_w) == 1) weightRatio = array_map(weightRatio, function(i) /*=>*/ {return attributes.weight[0][1]});
-		else {
-			var _wi   = 0;
-			var _wamo = array_length(_w);
-			var _amo  = 100;
-			
-			var _wf = _w[_wi + 0];
-			var _wt = _w[_wi + 1];
-			
-			for( var i = 0; i <= _amo; i++ ) {
-				if(i < _amo && i == _wt[0]) {
-					_wi++;
-					_wf = _w[(_wi + 0) % _wamo];
-					_wt = _w[(_wi + 1) % _wamo];
-				}
-				
-				weightRatio[i] = lerp(_wf[1], _wt[1], lerp_smooth((i - _wf[0]) / (_wt[0] - _wf[0])));
-			}
-		}
-		
-		// Surface generate
-		
-		var pad  = min(8, abs(boundary.maxx - boundary.minx) * 0.1, abs(boundary.maxy - boundary.miny) * 0.1);
-		var minx = boundary.minx - pad, maxx = boundary.maxx + pad;
-		var cx   = (minx + maxx) / 2;
-		
-		var miny = boundary.miny - pad, maxy = boundary.maxy + pad;
-		var cy   = (miny + maxy) / 2;
-		
-		var rng  = max(maxx - minx, maxy - miny);
-		
-		var x0 = cx - rng / 2, x1 = cx + rng / 2;
-		var y0 = cy - rng / 2, y1 = cy + rng / 2;
-		
-		var prev_s = 128;
-		
-		_path_preview_surface = surface_verify(_path_preview_surface, prev_s, prev_s);
-		surface_set_target(_path_preview_surface);
-			DRAW_CLEAR
-			
-			var ox, oy, nx, ny;
-			draw_set_color(c_white);
-			for (var i = 0, n = array_length(segments); i < n; i++) {
-				var segment = segments[i];
-				
-				for (var j = 0, m = array_length(segment); j < m; j += 2) {
-					nx = (segment[j + 0] - x0) / rng * prev_s;
-					ny = (segment[j + 1] - y0) / rng * prev_s;
-					
-					if(j) draw_line_round(ox, oy, nx, ny, 4);
-					
-					ox = nx;
-					oy = ny;
-				}
-			}
-			
-			draw_set_color(COLORS._main_accent);
-			for (var i = 0, n = array_length(anchors); i < n; i++) {
-				var _a0 = anchors[i];
-				draw_circle((_a0[0] - x0) / rng * prev_s, (_a0[1] - y0) / rng * prev_s, 8, false);
-			}
-		surface_reset_target();
-		
-		path_preview_surface = surface_verify(path_preview_surface, prev_s, prev_s);
-		surface_set_shader(path_preview_surface, sh_FXAA);
-			shader_set_f("dimension",  prev_s, prev_s);
-			shader_set_f("cornerDis",  0.5);
-			shader_set_f("mixAmo",     1);
-			
-			draw_surface_safe(_path_preview_surface);
-		surface_reset_shader();
-	}
-	
 	////- Path
 	
-	static getLineCount		= function() { return 1; }
-	static getSegmentCount	= function() { return array_length(lengths); }
-	static getBoundary		= function() { return boundary; }
-	
-	static getLength		= function() { return lengthTotal; }
-	static getAccuLength	= function() { return lengthAccs; }
-	
-	static getPointDistance = function(_dist, _ind = 0, out = undefined) {
-		if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
-		if(array_empty(lengths)) return out;
+	function _pathObject() : Path() constructor {
+		loop = false;
 		
-		out.weight = 1;
-		var _cKey  = _dist;
+		anchors		= [];
+		lengths     = [];
+		lengthAccs  = [];
+		lengthTotal = 0;
+		boundary    = new BoundingBox();
+		weights     = [];
 		
-		if(ds_map_exists(cached_pos, _cKey)) {
-			var _cachep = cached_pos[? _cKey];
-			out.x = _cachep.x;
-			out.y = _cachep.y;
-			out.weight = _cachep.weight;
-			return out;
-		}
+		cached_pos  = {};
 		
-		var loop = getInputData(1);
-		if(loop) _dist = safe_mod(_dist, lengthTotal, MOD_NEG.wrap);
+		static getLineCount		= function() /*=>*/ {return 1};
+		static getSegmentCount	= function() /*=>*/ {return array_length(lengths)};
+		static getBoundary		= function() /*=>*/ {return boundary};
 		
-		var ansize = array_length(inputs) - input_fix_len;
-		if(ansize == 0) return out;
-		
-		var _a0, _a1;
-		
-		for(var i = 0; i < ansize; i++) {
-			_a0 = anchors[(i + 0) % ansize];
-			_a1 = anchors[(i + 1) % ansize];
+		static getLength		= function() /*=>*/ {return lengthTotal};
+		static getAccuLength	= function() /*=>*/ {return lengthAccs};
 			
-			var _l = array_safe_get(lengths, i, 0, ARRAY_OVERFLOW.clamp);
-			if(_dist > _l) {
-				_dist -= _l;
-				continue;
+		static updateLength     = function() {
+			boundary     = new BoundingBox();
+			segments     = [];
+			lengths      = [];
+			lengthAccs   = [];
+			lengthTotal  = 0;
+			
+			var _index  = 0;
+			var sample  = PREFERENCES.path_resolution;
+			var ansize  = array_length(anchors);
+			if(ansize < 2) return;
+			
+			var con = loop? ansize : ansize - 1;
+			
+			for(var i = 0; i < con; i++) {
+				var _a0 = anchors[(i + 0) % ansize];
+				var _a1 = anchors[(i + 1) % ansize];
+				
+				var l = 0, _ox = 0, _oy = 0, _nx = 0, _ny = 0, p = 0;
+				var sg = array_create((sample + 1) * 2);
+				
+				for(var j = 0; j <= sample; j++) {
+					
+					if(_a0[4] == 0 && _a0[5] == 0 && _a1[2] == 0 && _a1[3] == 0) {
+						_nx = lerp(_a0[0], _a1[0], j / sample);
+						_ny = lerp(_a0[1], _a1[1], j / sample);
+						
+					} else {
+						_nx = eval_bezier_x(j / sample, _a0[0],  _a0[1], _a1[0],  _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
+						_ny = eval_bezier_y(j / sample, _a0[0],  _a0[1], _a1[0],  _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
+					}
+					
+					sg[j * 2 + 0] = _nx;
+					sg[j * 2 + 1] = _ny;
+					
+					boundary.addPoint(_nx, _ny);
+					if(j) l += point_distance(_nx, _ny, _ox, _oy);	
+					
+					_ox = _nx;
+					_oy = _ny;
+				}
+				
+				segments[i]   = sg;
+				lengths[i]    = l;
+				lengthTotal  += l;
+				lengthAccs[i] = lengthTotal;
 			}
 			
-			var _t   = _l == 0? 0 : _dist / _l;
-			var _rat = lerp(lengthRatio[i], lengthRatio[i + 1], _t) * 100;
-			var _nw  = array_get_decimal(weightRatio, _rat);
+			lengthRatio    = array_create(ansize + 1);
+			lengthRatio[0] = 0;
+			for( var i = 0; i < con; i++ )
+				lengthRatio[i + 1] = lengthAccs[i] / lengthTotal;
+			
+			     if(array_empty(weights))       weightRatio = array_map(weightRatio, function(i) /*=>*/ {return 1});
+			else if(array_length(weights) == 1) weightRatio = array_map(weightRatio, function(i) /*=>*/ {return weights[0][1]});
+			else {
+				var _wi   = 0;
+				var _wamo = array_length(weights);
+				var _amo  = 100;
+				
+				var _wf = weights[_wi + 0];
+				var _wt = weights[_wi + 1];
+				
+				for( var i = 0; i <= _amo; i++ ) {
+					if(i < _amo && i == _wt[0]) {
+						_wi++;
+						_wf = weights[(_wi + 0) % _wamo];
+						_wt = weights[(_wi + 1) % _wamo];
+					}
+					
+					weightRatio[i] = lerp(_wf[1], _wt[1], lerp_smooth((i - _wf[0]) / (_wt[0] - _wf[0])));
+				}
+			}
+			
+		}
+		
+		static updateThumbnail = function(_surf, surf) {
+			var pad  = min(8, abs(boundary.maxx - boundary.minx) * 0.1, abs(boundary.maxy - boundary.miny) * 0.1);
+			var minx = boundary.minx - pad, maxx = boundary.maxx + pad;
+			var cx   = (minx + maxx) / 2;
+			
+			var miny = boundary.miny - pad, maxy = boundary.maxy + pad;
+			var cy   = (miny + maxy) / 2;
+			
+			var rng  = max(maxx - minx, maxy - miny);
+			
+			var x0 = cx - rng / 2, x1 = cx + rng / 2;
+			var y0 = cy - rng / 2, y1 = cy + rng / 2;
+			
+			var prev_s = 128;
+			
+			_surf = surface_verify(_surf, prev_s, prev_s);
+			surface_set_target(_surf);
+				DRAW_CLEAR
+				
+				var ox, oy, nx, ny;
+				draw_set_color(c_white);
+				for (var i = 0, n = array_length(segments); i < n; i++) {
+					var segment = segments[i];
+					
+					for (var j = 0, m = array_length(segment); j < m; j += 2) {
+						nx = (segment[j + 0] - x0) / rng * prev_s;
+						ny = (segment[j + 1] - y0) / rng * prev_s;
+						
+						if(j) draw_line_round(ox, oy, nx, ny, 4);
+						
+						ox = nx;
+						oy = ny;
+					}
+				}
+				
+				draw_set_color(COLORS._main_accent);
+				for (var i = 0, n = array_length(anchors); i < n; i++) {
+					var _a0 = anchors[i];
+					draw_circle((_a0[0] - x0) / rng * prev_s, (_a0[1] - y0) / rng * prev_s, 8, false);
+				}
+			surface_reset_target();
+			
+			surf = surface_verify(surf, prev_s, prev_s);
+			surface_set_shader(surf, sh_FXAA);
+				shader_set_f("dimension",  prev_s, prev_s);
+				shader_set_f("cornerDis",  0.5);
+				shader_set_f("mixAmo",     1);
+				
+				draw_surface_safe(_surf);
+			surface_reset_shader();
+		}
+		
+		static getPointDistance = function(_dist, _ind = 0, out = undefined) {
+			if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
+			if(array_empty(lengths)) return out;
+			
+			out.weight = 1;
+			var _cKey  = _dist;
+			
+			if(struct_has(cached_pos, _cKey)) {
+				var _cachep = cached_pos[$ _cKey];
+				out.x = _cachep.x;
+				out.y = _cachep.y;
+				out.weight = _cachep.weight;
+				return out;
+			}
+			
+			if(loop) _dist = safe_mod(_dist, lengthTotal, MOD_NEG.wrap);
+			
+			var ansize = array_length(anchors);
+			if(ansize == 0) return out;
+			
+			var _a0, _a1;
+			
+			for(var i = 0; i < ansize; i++) {
+				_a0 = anchors[(i + 0) % ansize];
+				_a1 = anchors[(i + 1) % ansize];
+				
+				var _l = array_safe_get(lengths, i, 0, ARRAY_OVERFLOW.clamp);
+				if(_dist > _l) {
+					_dist -= _l;
+					continue;
+				}
+				
+				var _t   = _l == 0? 0 : _dist / _l;
+				var _rat = lerp(lengthRatio[i], lengthRatio[i + 1], _t) * 100;
+				var _nw  = array_get_decimal(weightRatio, _rat);
+				
+				if(_a0[4] == 0 && _a0[5] == 0 && _a1[2] == 0 && _a1[3] == 0) {
+					out.x = lerp(_a0[0], _a1[0], _t);
+					out.y = lerp(_a0[1], _a1[1], _t);
+					
+				} else {
+					out.x = eval_bezier_x(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
+					out.y = eval_bezier_y(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
+				}
+				
+				out.weight = _nw;
+				
+				cached_pos[$ _cKey] = new __vec2P(out.x, out.y, _nw);
+				return out;
+			}
+			
+			return out;
+		}
+		static getPointRatio    = function(_rat, _ind = 0, out = undefined) {
+			var pix = (loop? frac(_rat) : clamp(_rat, 0, 0.99)) * lengthTotal;
+			return getPointDistance(pix, _ind, out);
+		}
+		static getPointSegment  = function(_rat) {
+			if(array_empty(lengths)) return new __vec2P();
+			
+			var ansize = array_length(anchors);
+			
+			if(_rat < 0) return new __vec2P(anchors[0][0], anchors[0][1]);
+			
+			_rat = safe_mod(_rat, ansize);
+			var _i0 = clamp(floor(_rat), 0, ansize - 1);
+			var _i1 = (_i0 + 1) % ansize;
+			var _t  = frac(_rat);
+			
+			if(_i1 >= ansize && !loop) return new __vec2P(anchors[ansize - 1][0], anchors[ansize - 1][1]);
+			
+			var _a0 = anchors[_i0];
+			var _a1 = anchors[_i1];
+			var px, py;
 			
 			if(_a0[4] == 0 && _a0[5] == 0 && _a1[2] == 0 && _a1[3] == 0) {
-				out.x = lerp(_a0[0], _a1[0], _t);
-				out.y = lerp(_a0[1], _a1[1], _t);
-				
+				px = lerp(_a0[0], _a1[0], _t);
+				py = lerp(_a0[1], _a1[1], _t);
 			} else {
-				out.x = eval_bezier_x(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
-				out.y = eval_bezier_y(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
+				px = eval_bezier_x(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
+				py = eval_bezier_y(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
 			}
-			
-			out.weight = _nw;
-			
-			cached_pos[? _cKey] = new __vec2P(out.x, out.y, _nw);
-			return out;
+				
+			return new __vec2P(px, py);
 		}
-		
-		return out;
-	}
-	
-	static getPointRatio = function(_rat, _ind = 0, out = undefined) {
-		var pix = (path_loop? frac(_rat) : clamp(_rat, 0, 0.99)) * lengthTotal;
-		return getPointDistance(pix, _ind, out);
-	}
-	
-	static getPointSegment = function(_rat) {
-		if(array_empty(lengths)) return new __vec2P();
-		
-		var loop   = getInputData(1);
-		var ansize = array_length(inputs) - input_fix_len;
-		
-		if(_rat < 0) return new __vec2P(anchors[0][0], anchors[0][1]);
-		
-		_rat = safe_mod(_rat, ansize);
-		var _i0 = clamp(floor(_rat), 0, ansize - 1);
-		var _i1 = (_i0 + 1) % ansize;
-		var _t  = frac(_rat);
-		
-		if(_i1 >= ansize && !loop) return new __vec2P(anchors[ansize - 1][0], anchors[ansize - 1][1]);
-		
-		var _a0 = anchors[_i0];
-		var _a1 = anchors[_i1];
-		var px, py;
-		
-		if(_a0[4] == 0 && _a0[5] == 0 && _a1[2] == 0 && _a1[3] == 0) {
-			px = lerp(_a0[0], _a1[0], _t);
-			py = lerp(_a0[1], _a1[1], _t);
-		} else {
-			px = eval_bezier_x(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
-			py = eval_bezier_y(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
-		}
-			
-		return new __vec2P(px, py);
 	}
 	
 	////- Update
 	
 	static update = function(frame = CURRENT_FRAME) {
-		ds_map_clear(cached_pos);
+		var _rat = getInputData(0);
+		var _lop = getInputData(1);
+		var _typ = getInputData(2);
+		var _rnd = getInputData(3);
 		
-		var _rat  = getInputData(0);
-		path_loop = getInputData(1);
-		var _typ  = getInputData(2);
-		var _rnd  = getInputData(3);
+		var _pth = outputs[0].getValue();
+		if(!is(_pth, _pathObject)) _pth = new _pathObject();
 		
 		var _a = [];
 		for(var i = input_fix_len; i < array_length(inputs); i++) {
@@ -1354,25 +1351,30 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			array_push(_a, _anc);
 		}
 		
-		anchors = _a;
-		outputs[2].setValue(_a);
+		_pth.loop    = _lop;
+		_pth.anchors = _a;
+		_pth.weights = attributes.weight;
 		
-		updateLength();
+		_pth.updateLength();
+		_pth.updateThumbnail(_path_preview_surface, path_preview_surface);
+		
+		outputs[2].setValue(_a);
+		outputs[1].setValue(_pth);
 		
 		if(is_array(_rat)) {
 			var _out = array_create(array_length(_rat));
 			
 			for( var i = 0, n = array_length(_rat); i < n; i++ ) {
-				if(_typ == 0)		_out[i] = getPointRatio(_rat[i]);
-				else if(_typ == 1)	_out[i] = getPointSegment(_rat[i]);
+				if(_typ == 0)		_out[i] = _pth.getPointRatio(_rat[i]);
+				else if(_typ == 1)	_out[i] = _pth.getPointSegment(_rat[i]);
 			}
 			
 			outputs[0].setValue(_out);
 		} else {
 			var _out = [0, 0];
 			
-			if(_typ == 0)		_out = getPointRatio(_rat);
-			else if(_typ == 1)	_out = getPointSegment(_rat);
+			if(_typ == 0)		_out = _pth.getPointRatio(_rat);
+			else if(_typ == 1)	_out = _pth.getPointSegment(_rat);
 			
 			outputs[0].setValue(_out.toArray());
 		}
@@ -1380,8 +1382,9 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
+		var _pth = outputs[0].getValue();
 		
-		if(array_empty(segments)) {
+		if(!is(_pth, _pathObject) || array_empty(_pth.segments)) {
 			draw_sprite_fit(s_node_path, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 			
 		} else {
@@ -1391,7 +1394,10 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		}
 	}
 	
-	static getPreviewBoundingBox = function() { return BBOX().fromBoundingBox(boundary); }
+	static getPreviewBoundingBox = function() { 
+		var _pth = outputs[0].getValue();
+		return is(_pth, _pathObject)? BBOX().fromBoundingBox(boundary) : BBOX(); 
+	}
 	
 	////- Serialize
 	
