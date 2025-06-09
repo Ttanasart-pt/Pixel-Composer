@@ -8,8 +8,8 @@ function rotatorRange(_onModify) : widget() constructor {
 	
 	knob_hovering = noone;
 	
-	tb_min = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ {return onModify(v, 0)}).setSlideStep(15); tb_min.hide = true;
-	tb_max = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ {return onModify(v, 1)}).setSlideStep(15); tb_max.hide = true;
+	tb_min = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ {return onModify(v, 0)}); tb_min.hide = true;
+	tb_max = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ {return onModify(v, 1)}); tb_max.hide = true;
 	
 	static setInteract = function(i = noone) {
 		interactable = i;

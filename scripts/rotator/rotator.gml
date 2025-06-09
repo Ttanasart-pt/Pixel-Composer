@@ -8,7 +8,7 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 	real_val = 0;
 	side_button = noone;
 	
-	tb_value = new textBox(TEXTBOX_INPUT.number, onModify).setSlideStep(15);
+	tb_value = new textBox(TEXTBOX_INPUT.number, onModify);
 	tb_value.hide = true;
 	
 	halign = fa_center;

@@ -29,6 +29,7 @@
     function panel_graph_delete_break()            { CALL("graph_delete_break");        PANEL_GRAPH.doDelete(false);          }
     function panel_graph_delete_merge()            { CALL("graph_delete_merge");        PANEL_GRAPH.doDelete(true);           }
     function panel_graph_duplicate()               { CALL("graph_duplicate");           PANEL_GRAPH.doDuplicate();            }
+    function panel_graph_instance()                { CALL("graph_instance");            PANEL_GRAPH.doInstance();             }
     function panel_graph_copy()                    { CALL("graph_copy");                PANEL_GRAPH.doCopy();                 }
     function panel_graph_paste()                   { CALL("graph_paste");               PANEL_GRAPH.doPaste();                }
     
@@ -86,6 +87,7 @@
         registerFunction("Graph", "Delete (merge)",        vk_delete, MOD_KEY.none,              panel_graph_delete_merge        ).setMenu("graph_delete_merge",    THEME.cross)
     
         registerFunction("Graph", "Duplicate",             "D", MOD_KEY.ctrl,                    panel_graph_duplicate           ).setMenu("graph_duplicate",       THEME.duplicate)
+        // registerFunction("Graph", "Instance",              "D", MOD_KEY.alt,                     panel_graph_instance            ).setMenu("graph_instance",        THEME.duplicate)
         registerFunction("Graph", "Copy",                  "C", MOD_KEY.ctrl,                    panel_graph_copy                ).setMenu("graph_copy",            THEME.copy)
         registerFunction("Graph", "Paste",                 "V", MOD_KEY.ctrl,                    panel_graph_paste               ).setMenu("graph_paste",           THEME.paste)
         
@@ -3498,7 +3500,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             _inline_ctx.addNode(project.nodeMap[? _cloned]);
         }
         
-        var x0 = 99999999, y0 = 99999999;
+        var x0 = infinity, y0 = infinity;
         for(var i = 0; i < array_length(APPEND_LIST); i++) {
             var _node = APPEND_LIST[i];
             
@@ -3516,25 +3518,16 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 
     function doInstance() {
         var node = getFocusingNode();
-        if(node == noone) return;
-    
-        if(node.instanceBase == noone) {
-            node.isInstancer = true;
-        
-            CLONING = true;
-            var _type = instanceof(node);
-            var _node = nodeBuild(_type, x, y).skipDefault();
-            CLONING = false;
-            
-            _node.setInstance(node);
-        }
-    
-        var _nodeNew  = _node.clone();
-    
+        if(!is(node, Node_Group)) return;
+    	
+        var _nodeNew  = new Node_Group(0, 0, PANEL_GRAPH.getCurrentContext()).setInstance(node);
+    	
+        nodes_selecting = [_nodeNew];
         node_dragging = _nodeNew;
         node_drag_mx  = _nodeNew.x; node_drag_my  = _nodeNew.y;
         node_drag_sx  = _nodeNew.x; node_drag_sy  = _nodeNew.y;
         node_drag_ox  = _nodeNew.x; node_drag_oy  = _nodeNew.y;
+        
     }
 
     function doCopy() {

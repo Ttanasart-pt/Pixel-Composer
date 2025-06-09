@@ -46,6 +46,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		dummy_get      = noone;
 		dummy_undo     = -1;
 		dummy_redo     = -1;
+		
+		instanceBase   = noone;
 	#endregion
 	
 	#region ---- Tooltip ----
@@ -90,6 +92,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			animator   = new valueAnimator(_value, self, false);
 			animators  = animVector? array_create_ext(animVector, function(i) /*=>*/ {return new valueAnimator(def_val[i], self, true).setIndex(i)}) : [];
 		}
+		
+		instanceBase = noone;
 		
 		is_anim		= false;
 		sep_axis	= false;
@@ -482,6 +486,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static setAnimable = function(_anim) { animable = _anim; return self; }
 	
 	static isAnimable = function() {
+		if(instanceBase != noone) return instanceBase.isAnimable();
+		
 		if(type == VALUE_TYPE.PCXnode)				 return false;
 		if(display_type == VALUE_DISPLAY.text_array) return false;
 		return animable;
@@ -1053,6 +1059,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static isActiveDynamic = function() {
+		if(instanceBase != noone) return instanceBase.isActiveDynamic();
+		
 		INLINE
 		
 		if(value_from_loop)     return true;
@@ -1076,6 +1084,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	__value_from   = noone;
 	
 	static isDynamic = function() {
+		if(instanceBase != noone) return instanceBase.isDynamic();
 		
 		if(__init_dynamic)             { __init_dynamic = false;      return true; }
 		if(value_from != __value_from) { __value_from   = value_from; return true; }
@@ -1364,28 +1373,30 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static __getAnimValue = function(_time = CURRENT_FRAME) {
+		var _anim  = animator;
+		var _anims = animators;
 		
 		if(!is_anim) {
 			if(sep_axis) {
-				var val = array_create(array_length(animators));
-				for( var i = 0, n = array_length(animators); i < n; i++ )
-					val[i] = animators[i].processType(animators[i].values[0].value);
+				var val = array_create(array_length(_anims));
+				for( var i = 0, n = array_length(_anims); i < n; i++ )
+					val[i] = _anims[i].processType(_anims[i].values[0].value);
 				return val;
 			}
 			
-			if(array_empty(animator.values)) return 0;
+			if(array_empty(_anim.values)) return 0;
 			
-			return animator.processType(animator.values[0].value);
+			return _anim.processType(_anim.values[0].value);
 		}
 		
 		if(sep_axis) {
 			var val = [];
-			for( var i = 0, n = array_length(animators); i < n; i++ )
-				val[i] = animators[i].getValue(_time);
+			for( var i = 0, n = array_length(_anims); i < n; i++ )
+				val[i] = _anims[i].getValue(_time);
 			return val;
 		} 
 		
-		return animator.getValue(_time);
+		return _anim.getValue(_time);
 	}
 	
 	static isTimelineVisible = function() { INLINE return is_anim && value_from == noone; }
@@ -2584,6 +2595,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 		
 	static toString = function() { return (connect_type == CONNECT_TYPE.input? "Input" : "Output") + $" junction {index} of [{name}]: {node}"; }
+	
+	static clone = function(_node) {
+		var _n = new NodeValue(name, _node, connect, type, def_val, tooltip);
+		    _n.setDisplay(display_type, display_data);
+		
+		return _n;
+	}
 	
 }
 

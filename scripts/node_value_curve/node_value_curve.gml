@@ -11,8 +11,11 @@ function __NodeValue_Curve(_name, _node, _value) : NodeValue(_name, _node, CONNE
 	}
 	
 	static __getAnimValue = function(_time = CURRENT_FRAME) {
-		if(is_anim) return animator.getValue(_time);
-		return array_empty(animator.values)? 0 : animator.values[0].value;
+		var _anim  = animator;
+		var _anims = animators;
+		
+		if(is_anim) return _anim.getValue(_time);
+		return array_empty(_anim.values)? 0 : _anim.values[0].value;
 	}
 	
 }

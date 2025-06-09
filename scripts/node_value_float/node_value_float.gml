@@ -52,8 +52,11 @@ function __NodeValue_Float(_name, _node, _value, _tooltip = "") : NodeValue(_nam
 	}
 	
 	static __getAnimValue = function(_time = CURRENT_FRAME) {
-		if(is_anim) return animator.getValue(_time);
-		return array_empty(animator.values)? 0 : animator.values[0].value;
+		var _anim  = animator;
+		var _anims = animators;
+		
+		if(is_anim) return _anim.getValue(_time);
+		return array_empty(_anim.values)? 0 : _anim.values[0].value;
 	}
 	
 	static arrayLength = arrayLengthSimple;
@@ -70,8 +73,11 @@ function __NodeValue_Float_Simple(_name, _node, _value, _tooltip = "") : NodeVal
 	}
 	
 	static __getAnimValue = function(_time = CURRENT_FRAME) {
-		if(is_anim) return animator.getValue(_time);
-		return array_empty(animator.values)? 0 : animator.values[0].value;
+		var _anim  = animator;
+		var _anims = animators;
+		
+		if(is_anim) return _anim.getValue(_time);
+		return array_empty(_anim.values)? 0 : _anim.values[0].value;
 	}
 	
 	static arrayLength = arrayLengthSimple;

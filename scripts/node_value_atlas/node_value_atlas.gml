@@ -13,7 +13,12 @@ function __NodeValue_Atlas(_name, _node, _value, _tooltip = "") : NodeValue(_nam
 		return val;
 	}
 	
-	static __getAnimValue = function(_time = CURRENT_FRAME) { return array_empty(animator.values)? noone : animator.processValue(animator.values[0].value); }
+	static __getAnimValue = function(_time = CURRENT_FRAME) { 
+		var _anim  = animator;
+		var _anims = animators;
+		
+		return array_empty(_anim.values)? noone : _anim.processValue(_anim.values[0].value); 
+	}
 	
 	static arrayLength = arrayLengthSimple;
 }

@@ -43,6 +43,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		search_match  = -9999;
 		onDoubleClick = -1;
 		is_controller = false;
+		
+		instanceBase  = noone;
 	#endregion
 	
 	if(!LOADING && !APPENDING) {
@@ -1078,6 +1080,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	////- UPDATE
 	
+	static preUpdate = function() /*=>*/ {}
+	static update    = function() /*=>*/ {}
+	
 	static forceUpdate = function() {
 		input_hash = "";
 		doUpdate();
@@ -1095,7 +1100,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(attributes.update_graph) {
 			getInputs(frame);
 			
-			try      { update(frame); } 
+			try      { preUpdate(frame); update(frame); } 
 			catch(e) { log_warning("RENDER", exception_print(e), self); }
 		}
 		
@@ -1125,8 +1130,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var sBase = surface_get_target();	
 			
 			try {
-				if(attributes.update_graph) update(frame);
-				
+				if(attributes.update_graph) {
+					preUpdate(frame); 
+					update(frame);
+				}
 			} catch(exception) {
 				var sCurr = surface_get_target();
 				while(surface_get_target() != sBase)
@@ -1192,8 +1199,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static isActiveDynamic = function(frame = CURRENT_FRAME) {
-		if(update_on_frame) return true;
-		if(!rendered)       return true;
+		if(update_on_frame)       return true;
+		if(!rendered)             return true;
+		if(instanceBase != noone) return true;
 		
 		force_requeue = false;
 		__temp_frame  = frame;
@@ -3045,12 +3053,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static clone = function(target = PANEL_GRAPH.getCurrentContext()) {
 		CLONING = true;
 		var _type = instanceof(self);
-		var _node = nodeBuild(_type, x, y, target);
+		var _node = nodeBuild(_type, x, y, target).skipDefault();
 		CLONING = false;
 		
 		LOADING_VERSION = SAVE_VERSION;
 		
-		if(!_node) return;
+		if(!_node) return undefined;
 		
 		CLONING = true;
 		var _nid = _node.node_id;
@@ -3087,6 +3095,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static resetAnimation = function() {}
 	
 	static getAttribute = function(_key) {
+		if(instanceBase != noone) return instanceBase.getAttribute(_key);
+		
 		var _val = struct_try_get(attributes, _key, 0);
 		
 		switch(_key) {
@@ -3100,6 +3110,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static attrDepth = function() {
+		if(instanceBase != noone) return instanceBase.attrDepth();
+		
 		var form = -1;
 		
 		if(struct_has(attributes, "color_depth")) {

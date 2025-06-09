@@ -17,10 +17,10 @@ function rotatorRandom(_onModify) : widget() constructor {
 	knob_hovering = noone;
 	
 	mode = 0;
-	tb_min_0 = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ {return onModify(v, 1)}).setSlideStep(15); tb_min_0.hide = true;
-	tb_max_0 = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ {return onModify(v, 2)}).setSlideStep(15); tb_max_0.hide = true;
-	tb_min_1 = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ {return onModify(v, 3)}).setSlideStep(15); tb_min_1.hide = true;
-	tb_max_1 = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ {return onModify(v, 4)}).setSlideStep(15); tb_max_1.hide = true;
+	tb_min_0 = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ {return onModify(v, 1)}); tb_min_0.hide = true;
+	tb_max_0 = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ {return onModify(v, 2)}); tb_max_0.hide = true;
+	tb_min_1 = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ {return onModify(v, 3)}); tb_min_1.hide = true;
+	tb_max_1 = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ {return onModify(v, 4)}); tb_max_1.hide = true;
 	
 	tooltip  = new tooltipSelector("Mode", [
 		__txtx("widget_rotator_random_range",        "Range"), 
