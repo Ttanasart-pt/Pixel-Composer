@@ -84,7 +84,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		array_foreach(NodeListSort(nodes), function(n) /*=>*/ { if(n.hasInspector2Update()) n.inspector2Update(); }); 
 	});
 	
-	static hasInspector1Update = function() /*=>*/ {return hasInsp1};
+	static hasInspector1Update = function() /*=>*/ {return hasInsp1 || instanceBase != noone};
 	static hasInspector2Update = function() /*=>*/ {return hasInsp2};
 	
 	////- GROUP
@@ -491,15 +491,18 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	// static getNodeBase = () => self;
 	
 	static resetInstance = function( ) /*=>*/ { instanceBase = noone; return self; }
-	static setInstance   = function(n) /*=>*/ { 
+	static setInstance   = function(n,up=true) /*=>*/ { 
 		var _targins = n.instanceBase == noone? n : n.instanceBase;
 		instanceBase = _targins;
-		updateInstance();
+		if(up) updateInstance();
+		
+		setTrigger(1, __txt("Update Link"), [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() /*=>*/ { updateInstance(); });
+		
 		return self; 
 	}
 	
 	static updateInstance = function() {
-		if(instanceBase == noone) return;
+		if(!is(instanceBase, Node)) return;
 		
 		icon     = THEME.group_linked_s;
 		nodeTopo = NodeListSort(nodes);
@@ -570,15 +573,15 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			var _bas_inp = array_safe_get(inputs, i, noone);
 			var _inp     = noone;
 			
-			if(_bas_inp == noone) {
+			if(_bas_inp == noone)
 				_inp = nodeBuild("Node_Group_Input", _inp_nod.x, _inp_nod.y, self).skipDefault();
-				run_in(1, function(_inp) /*=>*/ { _inp.refreshWidget(); }, [_inp]);
-				
-			} else 
+			else 
 				_inp = _bas_inp.from;
 			
 			_insMap[$ _inp_nod.node_id] = _inp;
 			_curMap[$ _inp.node_id] = _inp_nod;
+			
+			run_in(1, function(_inp) /*=>*/ { _inp.refreshWidget(); }, [_inp]);
 		}
 		
 		for( var i = 0, n = array_length(instanceBase.outputs); i < n; i++ ) {
@@ -626,14 +629,14 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 					default : 
 						if(_con_ind >= 0) {
 							var _set = _cin.setFrom(_con_nod.outputs[_con_ind], false, true);
-							if(!_set) print($"Connection failed {_con_nod}");
+							// if(!_set) print($"Connection failed {_con_nod}");
 						} 
 						
 						if(_con_ind >= 1000) { //connect bypass
 							var _inp = array_safe_get_fast(_con_nod.inputs, _con_ind - 1000, noone);
 							if(_inp != noone) {
 								var _set = _cin.setFrom(_inp.bypass_junc, false, true);
-								if(!_set) print($"Connection failed {_con_nod}");
+								// if(!_set) print($"Connection failed {_con_nod}");
 							}
 						}
 				}
@@ -755,6 +758,15 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static processSerialize = function(_map) {
 		_map.instance_base	= instanceBase? instanceBase.node_id : noone;
+	}
+	
+	static postLoad = function() /*=>*/ {
+		var _instanceID = load_map[$ "instance_base"] ?? "";
+		if(_instanceID != "" && ds_map_exists(PROJECT.nodeMap, _instanceID)) {
+			var _instance = PROJECT.nodeMap[? _instanceID];
+			run_in(1, function(_i) /*=>*/ {return setInstance(_i)}, [_instance]);
+		}
+		
 	}
 	
 	////- ACTION

@@ -68,7 +68,7 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 		var _anim  = animator;
 		var _anims = animators;
 		
-		if(!is_anim) {
+		if(!getAnim()) {
 			if(sep_axis) return array_create_ext(2, function(i) /*=>*/ {return _anims[i].processType(_anims[i].values[0].value)});
 			return array_empty(_anim.values)? 0 : _anim.processType(_anim.values[0].value);
 		}
@@ -86,7 +86,7 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _typ = 0, _sca = [ 1, 1 ]) {
 		if(expUse || value_from != noone) return -1;
 		
-		if(is_anim) {
+		if(getAnim()) {
 			var ox, oy, nx, ny;
 			draw_set_color(COLORS._main_accent);
 			

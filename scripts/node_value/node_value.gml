@@ -532,6 +532,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		node.refreshTimeline();
 		if(NOT_LOAD && node.group) node.group.checkPureFunction();
 	}
+	
+	static getAnim = function() { return instanceBase != noone? instanceBase.is_anim : is_anim; }
 		
 	////- DISPLAY
 	

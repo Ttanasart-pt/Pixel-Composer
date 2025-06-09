@@ -40,7 +40,7 @@ function __NodeValue_Enum_Scroll(_name, _node, _value, _data) : NodeValue(_name,
 		var _anim  = animator;
 		var _anims = animators;
 		
-		if(is_anim) return _anim.getValue(_time);
+		if(getAnim()) return _anim.getValue(_time);
 		return array_empty(_anim.values)? 0 : _anim.values[0].value;
 	}
 	
@@ -51,7 +51,7 @@ function __NodeValue_Enum_Scroll(_name, _node, _value, _data) : NodeValue(_name,
 	options_histories = [];
 	
 	static postApplyDeserialize = function() {
-		if(is_anim) return;
+		if(getAnim()) return;
 		if(CLONING) return;
 		if(array_empty(options_histories)) return;
 		if(array_empty(animator.values))   return;

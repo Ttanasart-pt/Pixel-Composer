@@ -75,7 +75,7 @@ function __NodeValue_Dimension(_node, value) : NodeValue("Dimension", _node, CON
 		if(attributes.use_project_dimension) 
 			return PROJECT.attributes.surface_dimension;
 		
-		if(!is_anim) {
+		if(!getAnim()) {
 			if(sep_axis) return array_create_ext(2, function(i) /*=>*/ {return _anims[i].processType(_anims[i].values[0].value)});
 			return array_empty(_anim.values)? 0 : _anim.processType(_anim.values[0].value);
 		}

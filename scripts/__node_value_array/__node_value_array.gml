@@ -25,7 +25,7 @@ function __NodeValue_Array(_name, _node, _value, _tooltip = "", _length = 2) : N
 		var _anim  = animator;
 		var _anims = animators;
 		
-		if(!is_anim) {
+		if(!getAnim()) {
 			if(sep_axis) return array_create_ext(def_length, function(i) /*=>*/ {return _anims[i].processType(_anims[i].values[0].value)});
 			return array_empty(_anim.values)? 0 : _anim.processType(_anim.values[0].value);
 		}

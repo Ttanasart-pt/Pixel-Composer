@@ -1195,7 +1195,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static isAnimated = function(frame = CURRENT_FRAME) {
 		if(update_on_frame) return true;
-		return array_any(inputs, function(inp) /*=>*/ {return inp.is_anim});
+		return array_any(inputs, function(inp) /*=>*/ {return inp.getAnim()});
 	}
 	
 	static isActiveDynamic = function(frame = CURRENT_FRAME) {

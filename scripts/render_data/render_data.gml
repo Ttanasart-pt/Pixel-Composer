@@ -41,6 +41,7 @@ function NodeTopoSort() {
 	
 	PROJECT.nodeTopo   = [];
 	__topoSort(PROJECT.nodeTopo, PROJECT.nodes);
+	
 	array_foreach(PROJECT.allNodes, function(n) /*=>*/ { if(is(n, Node_Collection)) n.updateInstance(); });
 	// print("Topo sort");
 	

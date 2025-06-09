@@ -36,7 +36,7 @@ function __NodeValue_Padding(_name, _node, _value, _tooltip = "") : NodeValue(_n
 		var _anim  = animator;
 		var _anims = animators;
 		
-		if(!is_anim) {
+		if(!getAnim()) {
 			if(sep_axis) return array_create_ext(4, function(i) /*=>*/ {return _anims[i].processType(_anims[i].values[0].value)});
 			return array_empty(_anim.values)? 0 : _anim.processType(_anim.values[0].value);
 		}

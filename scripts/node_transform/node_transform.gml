@@ -190,8 +190,8 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		var cDep = attrDepth();
 		
-		var ww  = surface_get_width_safe(ins);
-		var hh  = surface_get_height_safe(ins);
+		var  ww = surface_get_width_safe(ins);
+		var  hh = surface_get_height_safe(ins);
 		var _ww = ww;
 		var _hh = hh;
 		

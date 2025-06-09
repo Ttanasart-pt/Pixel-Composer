@@ -14,7 +14,7 @@ function __NodeValue_Curve(_name, _node, _value) : NodeValue(_name, _node, CONNE
 		var _anim  = animator;
 		var _anims = animators;
 		
-		if(is_anim) return _anim.getValue(_time);
+		if(getAnim()) return _anim.getValue(_time);
 		return array_empty(_anim.values)? 0 : _anim.values[0].value;
 	}
 	

@@ -87,7 +87,7 @@
         registerFunction("Graph", "Delete (merge)",        vk_delete, MOD_KEY.none,              panel_graph_delete_merge        ).setMenu("graph_delete_merge",    THEME.cross)
     
         registerFunction("Graph", "Duplicate",             "D", MOD_KEY.ctrl,                    panel_graph_duplicate           ).setMenu("graph_duplicate",       THEME.duplicate)
-        // registerFunction("Graph", "Instance",              "D", MOD_KEY.alt,                     panel_graph_instance            ).setMenu("graph_instance",        THEME.duplicate)
+        registerFunction("Graph", "Instance",              "D", MOD_KEY.alt,                     panel_graph_instance            ).setMenu("graph_instance",        THEME.duplicate)
         registerFunction("Graph", "Copy",                  "C", MOD_KEY.ctrl,                    panel_graph_copy                ).setMenu("graph_copy",            THEME.copy)
         registerFunction("Graph", "Paste",                 "V", MOD_KEY.ctrl,                    panel_graph_paste               ).setMenu("graph_paste",           THEME.paste)
         
