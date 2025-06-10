@@ -1,7 +1,10 @@
 #region preference
 	globalvar PREFERENCES, PREFERENCES_DEF, PREFERENCES_DIR;
+	globalvar PREFERENCES_MENUITEMS;
+	
 	PREFERENCES  = {};
 	HOTKEYS_DATA = {};
+	PREFERENCES_MENUITEMS = {};
 	
 	#region GENERAL UI
 												
@@ -361,6 +364,7 @@
 		PREFERENCES.window_monitor  = window_monitor;
 		
 		json_save_struct(PREFERENCES_DIR + "keys.json",             PREFERENCES);
+		json_save_struct(PREFERENCES_DIR + "menu_items.json",       PREFERENCES_MENUITEMS);
 		json_save_struct(PREFERENCES_DIR + "default_project.json",  PROJECT_ATTRIBUTES);
 		json_save_struct(DIRECTORY + "Nodes/fav.json",              variable_struct_get_names(global.FAV_NODES));
 		json_save_struct(DIRECTORY + "Nodes/recent.json",           global.RECENT_NODES);
@@ -400,6 +404,12 @@
 		hotkey_deserialize();
 		
 		TESTING = struct_try_get(PREFERENCES, "test_mode", false);
+		
+		var path = PREFERENCES_DIR + "menu_items.json";
+		if(file_exists(path)) {
+			var _map = json_load_struct(path);
+			PREFERENCES_MENUITEMS = _map;
+		}
 	}
 	
 	function PREF_APPLY() {

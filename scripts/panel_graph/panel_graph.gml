@@ -195,7 +195,7 @@
                 [ [THEME.obj_distribute_h, 0],         function() /*=>*/ {return node_hdistribute(PANEL_GRAPH.nodes_selecting)}       ],
                 [ [THEME.obj_distribute_v, 0],         function() /*=>*/ {return node_vdistribute(PANEL_GRAPH.nodes_selecting)}       ],
         ], ["Graph", "Align Nodes"]);
-        registerFunction("Graph", "Align Nodes",           "",  MOD_KEY.none,                    function() /*=>*/ { menuCall("", [ MENU_ITEMS.graph_group_align ]); });
+        registerFunction("Graph", "Align Nodes", "",  MOD_KEY.none, function() /*=>*/ { menuCall("", [ MENU_ITEMS.graph_group_align ]); });
         
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         
@@ -212,7 +212,7 @@
         array_push(_item, [ [ THEME.timeline_color, 2 ], function() /*=>*/ { colorSelectorCall(PANEL_GRAPH.node_hover? PANEL_GRAPH.node_hover.attributes.color : c_white, PANEL_GRAPH.setSelectingNodeColor); } ]);
         
         MENU_ITEMS.graph_group_node_color = menuItemGroup(__txt("Node Color"), _item, ["Graph", "Set Node Color"]).setSpacing(ui(24));
-        registerFunction("Graph", "Set Node Color",        "",  MOD_KEY.none,                    function() /*=>*/ { menuCall("", [ MENU_ITEMS.graph_group_node_color ]); });
+        registerFunction("Graph", "Set Node Color", "",  MOD_KEY.none, function() /*=>*/ { menuCall("", [ MENU_ITEMS.graph_group_node_color ]); });
         
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         
@@ -229,7 +229,7 @@
         array_push(_item, [ [ THEME.timeline_color, 2 ], function() /*=>*/ { colorSelectorCall(PANEL_GRAPH.__junction_hovering? PANEL_GRAPH.__junction_hovering.color : c_white, PANEL_GRAPH.setSelectingJuncColor); } ]);
         
         MENU_ITEMS.graph_group_junction_color = menuItemGroup(__txt("Connection Color"), _item, ["Graph", "Set Junction Color"]).setSpacing(ui(24));
-        registerFunction("Graph", "Set Junction Color",    "",  MOD_KEY.none,                    function() /*=>*/ { menuCall("", [ MENU_ITEMS.graph_group_junction_color ]); });
+        registerFunction("Graph", "Set Junction Color", "",  MOD_KEY.none, function() /*=>*/ { menuCall("", [ MENU_ITEMS.graph_group_junction_color ]); });
         
     }
 #endregion
@@ -780,7 +780,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     
     ////- Menus
     
-    #region ++++++++++++ Actions ++++++++++++
+    #region ++++++++++++++++ Actions +++++++++++++++
         function send_to_preview()    { setCurrentPreview(node_hover); }
         
         function inspector_panel()    {
@@ -814,49 +814,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         }
     #endregion
     
-    #region ++++++++++++ Menus ++++++++++++
-	    menu_sent_to_preview    = MENU_ITEMS.graph_preview_hovering_node;
-	    menu_send_to_window     = MENU_ITEMS.graph_preview_window;
-	    menu_sent_to_inspector  = MENU_ITEMS.graph_inspect;
-	    menu_send_export        = MENU_ITEMS.graph_export_hover;
-	    menu_toggle_preview     = MENU_ITEMS.graph_toggle_preview;
-	    menu_toggle_render      = MENU_ITEMS.graph_toggle_render;
-	    menu_toggle_param       = MENU_ITEMS.graph_toggle_parameters;
-	    menu_hide_disconnect    = MENU_ITEMS.graph_hide_disconnected;
-	    
-	    menu_open_group         = MENU_ITEMS.graph_enter_group;
-	    menu_open_group_tab     = MENU_ITEMS.graph_open_in_new_tab;
-	    menu_group_group        = MENU_ITEMS.graph_group;
-	    menu_group_ungroup      = MENU_ITEMS.graph_ungroup;
-	    menu_group_tool         = MENU_ITEMS.graph_set_as_tool;
-	                
-	    menu_node_delete_cut    = MENU_ITEMS.graph_delete_break;
-	    menu_node_delete_merge  = MENU_ITEMS.graph_delete_merge;
-	    menu_node_duplicate     = MENU_ITEMS.graph_duplicate;
-	    menu_node_copy          = MENU_ITEMS.graph_copy;
-	    
-	    menu_nodes_align        = MENU_ITEMS.graph_group_align;
-	    
-	    menu_node_replace       = MENU_ITEMS.graph_replace_node;
-	    menu_nodes_group        = MENU_ITEMS.graph_group;
-	    menu_node_canvas        = MENU_ITEMS.graph_canvas;
-	    
-	    menu_node_transform     = MENU_ITEMS.graph_add_Node_Transform;
-	    menu_nodes_frame        = MENU_ITEMS.graph_add_Node_Frame;
-	    menu_nodes_blend        = MENU_ITEMS.graph_add_Node_Blend;
-	    menu_nodes_compose      = MENU_ITEMS.graph_add_Node_Composite;
-	    menu_nodes_array        = MENU_ITEMS.graph_add_Node_Array;
-	    
-	    menu_node_copy_prop     = MENU_ITEMS.graph_copy_value;
-	    menu_node_paste_prop    = MENU_ITEMS.graph_paste_value;
-	    
-	    menu_connection_tunnel  = MENU_ITEMS.graph_create_tunnel;
-   #endregion
-    
-    #region colors setters
+    #region ++++++++++++ Colors Setters ++++++++++++
     	__junction_hovering = noone;
-        menu_node_color     = MENU_ITEMS.graph_group_node_color;
-        menu_junc_color     = MENU_ITEMS.graph_group_junction_color;
         
         function setSelectingNodeColor(color) { 
             __temp_color = color;
@@ -873,6 +832,58 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             	__junction_hovering.value_from.setColor(color);
         }
     #endregion
+    
+    #region ++++++++++++++++ Menus +++++++++++++++++
+	    MENUITEM_CONDITIONS[$ "graph_select_group"]    = function() /*=>*/ {return is(PANEL_GRAPH.node_hover, Node_Collection)};
+    	MENUITEM_CONDITIONS[$ "graph_select_in_group"] = function() /*=>*/ {return PANEL_GRAPH.node_hover.group != noone};
+    	MENUITEM_CONDITIONS[$ "graph_select_multiple"] = function() /*=>*/ {return array_length(PANEL_GRAPH.nodes_selecting) > 1};
+    	
+	    global.menuItems_graph_node_select = [
+	    	"graph_group_node_color", 
+	    	-1, 
+	    	"graph_preview_hovering_node", 
+	    	"graph_preview_window", 
+	    	"graph_inspect",
+	    	"graph_export_hover",
+	    	-1, 
+	    	"graph_toggle_preview", 
+	    	"graph_toggle_render", 
+	    	"graph_toggle_parameters", 
+	    	"graph_hide_disconnected",
+	    	{ cond  : "graph_select_group",    items : [ -1, "graph_enter_group", "graph_open_in_new_tab", "graph_group" ] },
+	    	{ cond  : "graph_select_in_group", items : [ "graph_set_as_tool" ] },
+	    	{ cond  : "graph_select_multiple", items : [ -1, "graph_group", "graph_add_Node_Frame" ] },
+	    	-1, 
+	    	"graph_delete_merge", 
+	    	"graph_delete_break", 
+	    	"graph_duplicate", 
+	    	"graph_copy",
+	    	-1, 
+	    	"graph_replace_node", 
+	    	"graph_add_Node_Transform", 
+	    	"graph_canvas",
+	    	{ cond  : "graph_select_multiple",   
+	          items : [ -1, "graph_group_align", "graph_add_Node_Blend", "graph_add_Node_Composite", "graph_add_Node_Array" ] },
+    	];
+    	
+	    global.menuItems_graph_junction_select = [
+	    	"graph_group_junction_color",
+    	];
+    	
+	    global.menuItems_graph_connection_select = [
+	    	"graph_group_junction_color",
+	    	"graph_create_tunnel",
+	    	-1,
+	    	"graph_copy", 
+			"graph_paste", 
+    	];
+    	
+	    global.menuItems_graph_empty = [
+	    	"graph_copy", 
+			"graph_paste", 
+    	];
+    	
+	#endregion
     
     ////- Project
     
@@ -1713,7 +1724,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                     
                     __junction_hovering = value_focus;
                     
-                    var menu = [ menu_junc_color ];
+                    var menu = menuItems_gen("graph_junction_select");
                     
                     if(value_focus.connect_type == CONNECT_TYPE.output) {
                         var sep = false;
@@ -1753,71 +1764,47 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                         }
                     }
                     
-                    menuCall("graph_node_selected_menu", menu);
+                    menuCall("graph_junction_select", menu);
                     
                 } else if(node_hover && node_hover.draggable) {
-                    // print($"Right click node hover {node_hover}");
+                    menuCall("graph_node_select", menuItems_gen("graph_node_select"));
                     
-                    var menu = [];
-                    array_push(menu, menu_node_color, -1, menu_sent_to_preview, menu_send_to_window, menu_sent_to_inspector);
-                    if(!DEMO) 
-                        array_push(menu, menu_send_export);
-                    array_push(menu, -1, menu_toggle_preview, menu_toggle_render, menu_toggle_param, menu_hide_disconnect);
-                    
-                    if(is_instanceof(node_hover, Node_Collection))
-                        array_push(menu, -1, menu_open_group, menu_open_group_tab, menu_group_ungroup);
-					
-					if(node_hover.group != noone)
-                    	array_push(menu, menu_group_tool);
-                    
-                    if(array_length(nodes_selecting) >= 2) 
-                        array_push(menu, -1, menu_nodes_group, menu_nodes_frame);
-                        
-                    array_push(menu, -1, menu_node_delete_merge, menu_node_delete_cut, menu_node_duplicate, menu_node_copy);
-                    if(array_empty(nodes_selecting)) array_push(menu, menu_node_copy_prop, menu_node_paste_prop);
-                    
-                    array_push(menu, -1, menu_node_replace, menu_node_transform, menu_node_canvas);
-                    
-                    if(array_length(nodes_selecting) >= 2) 
-                        array_push(menu, -1, menu_nodes_align, menu_nodes_blend, menu_nodes_compose, menu_nodes_array);
-                
-                    menuCall("graph_node_selected_multiple_menu", menu );
-                    
-                } else if(node_hover == noone) {
-                    // print($"Right click not node hover");
-                    
-                    var menu = [];
-                    
-                    __junction_hovering = junction_hovering;
-                    if(junction_hovering != noone) 
-                        array_push(menu, menu_junc_color, menu_connection_tunnel, -1);
-                    
-                    array_push(menu, MENU_ITEMS.graph_copy.setActive(array_length(nodes_selecting)));
-                    array_push(menu, MENU_ITEMS.graph_paste.setActive(clipboard_get_text() != ""));
-                    
-                    if(junction_hovering != noone) {
-                        array_push(menu, -1);
-                        
-                        if(is_instanceof(junction_hovering, Node_Feedback_Inline)) {
-                            var _jun = junction_hovering.junc_out;
-                            array_push(menu, menuItem($"[{_jun.node.display_name}] {_jun.getName()}", function(data) /*=>*/ { __junction_hovering.destroy(); }, THEME.feedback));
-                            
-                        } else {
-                            var _jun = junction_hovering.value_from;
-                            array_push(menu, menuItem($"[{_jun.node.display_name}] {_jun.getName()}", function(data) /*=>*/ { __junction_hovering.removeFrom(); }, THEME.cross));
-                        }
-                    }
-                    
+                } else if(node_hover == noone && junction_hovering == noone) {
+                	var menu = menuItems_gen("graph_empty");
+	                    
                     var ctx     = is_instanceof(frame_hovering, Node_Collection_Inline)? frame_hovering : getCurrentContext();
                     var _diaAdd = callAddDialog(ctx);
                     
-                    var _dia = menuCall("graph_node_selected_menu", menu, o_dialog_add_node.dialog_x - ui(8), o_dialog_add_node.dialog_y + ui(4), fa_right );
+                    var _dia = menuCall("graph_empty", menu, o_dialog_add_node.dialog_x - ui(8), o_dialog_add_node.dialog_y + ui(4), fa_right );
+                    _dia.passthrough = true;
+                    setFocus(_diaAdd, "Dialog");
+                    
+                } else if(node_hover == noone) {
+                    __junction_hovering = junction_hovering;
+                    
+                    var menu = menuItems_gen("graph_connection_select");
+                    
+                    if(is(junction_hovering, Node_Feedback_Inline)) {
+                        var _jun = junction_hovering.junc_out;
+                        array_push(menu, menuItem($"[{_jun.node.display_name}] {_jun.getName()}", 
+                        	function(j) /*=>*/ { j.destroy(); }, THEME.feedback).setParam(__junction_hovering));
+                        
+                    } else {
+                        var _jun = junction_hovering.value_from;
+                        array_push(menu, menuItem($"[{_jun.node.display_name}] {_jun.getName()}", 
+                        	function(j) /*=>*/ { j.removeFrom(); }, THEME.cross).setParam(__junction_hovering));
+                    }
+                    
+                    var ctx     = is(frame_hovering, Node_Collection_Inline)? frame_hovering : getCurrentContext();
+                    var _diaAdd = callAddDialog(ctx);
+                    
+                    var _dia = menuCall("graph_connection_select", menu, o_dialog_add_node.dialog_x - ui(8), o_dialog_add_node.dialog_y + ui(4), fa_right );
                     _dia.passthrough = true;
                     setFocus(_diaAdd, "Dialog");
                 }
             } 
                 
-            if(is_instanceof(frame_hovering, Node_Collection_Inline) && DOUBLE_CLICK && array_empty(nodes_selecting)) { //
+            if(is(frame_hovering, Node_Collection_Inline) && DOUBLE_CLICK && array_empty(nodes_selecting)) { //
                 nodes_selecting = [ frame_hovering ];
                 
                 if(frame_hovering.onDoubleClick != -1) frame_hovering.onDoubleClick(self)

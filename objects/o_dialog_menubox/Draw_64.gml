@@ -43,7 +43,7 @@ DIALOG_WINCLEAR1
 		
 		var label = _menuItem.name;
 		var _h    = is(_menuItem, MenuItemGroup)? hght * 2 : hght;
-		var cc    = struct_try_get(_menuItem, "color", c_white);
+		var cc    = _menuItem[$ "color"] ?? c_white;
 		var _key  = _menuItem.hoykeyObject;
 		
 		if(_key == noone && _menuItem.hotkey != noone) {
@@ -61,7 +61,7 @@ DIALOG_WINCLEAR1
 			if(_menuItem.active && cc == c_white) cc = COLORS.dialog_menubox_highlight;
 			
 			if(_hovering_ch) {
-				if(is(_menuItem, MenuItem) && _menuItem.active && _lclick) {
+				if(_lclick && is(_menuItem, MenuItem) && _menuItem.active) {
 					
 					if(_menuItem.isShelf) {
 						FOCUS_CONTENT = context;
@@ -99,7 +99,7 @@ DIALOG_WINCLEAR1
 					}
 				}
 				
-				if((is(_menuItem, MenuItem) || is(_menuItem, MenuItemGroup)) && (_key && _rclick)) {
+				if(_rclick && (is(_menuItem, MenuItem) || is(_menuItem, MenuItemGroup))) {
 					var _dat = {
 						_x:      mouse_mx + ui(4),
 						x:       mouse_mx + ui(4),
@@ -111,18 +111,34 @@ DIALOG_WINCLEAR1
 						params:  _menuItem.params,
 					};
 					
+					_dat.panel     = self;
 					selecting_menu = _menuItem;
 					
 					with(o_dialog_menubox) { if(!remove_parents) instance_destroy(); }
-					var context_menu_settings = [
-						_key.getNameFull(),
-						menuItem(__txt("Edit Hotkey"), function() /*=>*/ { hk_editing = selecting_menu; keyboard_lastchar = hk_editing.hoykeyObject.key; }),
-						menuItem(__txt("Reset Hotkey"), function() /*=>*/ {return selecting_menu.hoykeyObject.reset(true)}, THEME.refresh_20).setActive(_key.isModified()),
-					];
 					
-					item_sel_submenu = submenuCall(_dat, context_menu_settings);
-					item_sel_submenu.remove_parents = false;
+					var context_menu_settings = [];
 					
+					if(_key) {
+						array_push(context_menu_settings, 
+							_key.getNameFull(),
+							menuItem(__txt("Edit Hotkey"),  function() /*=>*/ { hk_editing = selecting_menu; keyboard_lastchar = hk_editing.hoykeyObject.key; }),
+							menuItem(__txt("Reset Hotkey"), function() /*=>*/ {return selecting_menu.hoykeyObject.reset(true)}, THEME.refresh_20).setActive(_key.isModified())
+						);
+					}
+					
+					if(menu_id != "" && !array_empty(menuItems_get(menu_id))) {
+						if(!array_empty(context_menu_settings)) array_push(context_menu_settings, -1);
+						
+						array_push(context_menu_settings, menuItem(__txt("Edit Items..."), function(_mid) /*=>*/ { 
+							dialogPanelCall(new Panel_MenuItems_Editor(_mid));
+							instance_destroy(o_dialog_menubox);
+						}).setParam(menu_id));
+					}
+					
+					if(!array_empty(context_menu_settings)) {
+						item_sel_submenu = submenuCall(_dat, context_menu_settings);
+						item_sel_submenu.remove_parents = false;
+					}
 				}
 			}
 		} 
@@ -147,8 +163,11 @@ DIALOG_WINCLEAR1
 				var _submenu = _submenus[j];
 				var _bx	  = _sx + j * (_menuItem.spacing + ui(4));
 				var _by	  = yy + hght + hght / 2 - ui(4);
-				var _spr  = noone, _ind = 0;
+				
+				var _spr  = noone;
 				var _sprs = _submenu[0];
+				var _ind  = 0;
+				
 				var _tlp  = array_safe_get_fast(_submenu, 2, "");
 				var _dat  = array_safe_get_fast(_submenu, 3, {});
 				var _clr  = c_white;

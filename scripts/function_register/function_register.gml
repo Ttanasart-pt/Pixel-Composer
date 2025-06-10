@@ -52,7 +52,8 @@ function functionObject(_context, _name, _key, _mod, _action, _param = noone) co
 	CMD_FUNCTIONS[$ fnName] = { action: _action, args: [] };
 	
 	function action() {
-		fn();
+		if(params == noone) fn();
+		else fn(params);
 		
 		switch(context) {
 			case "Graph":   PANEL_GRAPH.setActionTooltip(name);   break;

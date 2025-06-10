@@ -144,7 +144,7 @@
             [ s_preview_white,       function() /*=>*/ { PANEL_PREVIEW.canvas_bg = c_white; } ],
             [ s_preview_black,       function() /*=>*/ { PANEL_PREVIEW.canvas_bg = c_black; } ],
         ], ["Preview", "Background"]);
-        registerFunction("Preview", "Background",               "",  MOD_KEY.none,                   function() /*=>*/ { menuCall("", [ MENU_ITEMS.menu_group_preview_bg ]); });
+        registerFunction("Preview", "Background", "",  MOD_KEY.none, function() /*=>*/ { menuCall("", [ MENU_ITEMS.menu_group_preview_bg ]); });
         
     }
 #endregion
@@ -373,7 +373,7 @@ function Panel_Preview() : PanelContent() constructor {
         minimap_drag_my  = 0;
     #endregion
     
-    #region ++++ toolbars & actions ++++
+    #region ++++ Toolbars & Actions ++++
         static set_tile_off        = function() /*=>*/ { tileMode = 0; }
         static set_tile_horizontal = function() /*=>*/ { tileMode = 1; }
         static set_tile_vertical   = function() /*=>*/ { tileMode = 2; }
@@ -548,6 +548,25 @@ function Panel_Preview() : PanelContent() constructor {
         static d3_view_action_left   = function() /*=>*/ { d3_camLerp = 1; d3_camLerp_x = -90; d3_camLerp_y =   0; }
         static d3_view_action_bottom = function() /*=>*/ { d3_camLerp = 1; d3_camLerp_x =   0; d3_camLerp_y = -89; }
         static d3_view_action_top    = function() /*=>*/ { d3_camLerp = 1; d3_camLerp_x =   0; d3_camLerp_y =  89; }
+    #endregion
+    
+    #region +++++++++++ Menus ++++++++++
+    	
+        global.menuItems_preview_context_menu = [
+        	"graph_add_node", 
+            "preview_new_preview_window", 
+            -1,
+            "preview_save_current_frame", 
+            "preview_save_all_current_frames", 
+            "preview_save_to_project", 
+            -1,
+            "preview_copy_current_frame", 
+            "preview_copy_color", 
+            "preview_copy_color_hex", 
+            -1,
+            "preview_group_preview_bg",
+    	];
+        
     #endregion
     
     ////- DATA
@@ -2738,22 +2757,8 @@ function Panel_Preview() : PanelContent() constructor {
         
         ////////////////////////////////// Actions //////////////////////////////////
         
-        if(mouse_on_preview && mouse_press(mb_right, pFOCUS) && !key_mod_press(SHIFT)) {
-            menuCall("preview_context_menu", [ 
-                MENU_ITEMS.graph_add_node, 
-                MENU_ITEMS.preview_new_preview_window, 
-                -1,
-                MENU_ITEMS.preview_save_current_frame, 
-                MENU_ITEMS.preview_save_all_current_frames, 
-                MENU_ITEMS.preview_save_to_project, 
-                -1,
-                MENU_ITEMS.preview_copy_current_frame, 
-                MENU_ITEMS.preview_copy_color, 
-                MENU_ITEMS.preview_copy_color_hex, 
-                -1,
-                MENU_ITEMS.preview_group_preview_bg,
-            ], 0, 0, fa_left, getNodePreview());
-        }
+        if(mouse_on_preview && mouse_press(mb_right, pFOCUS) && !key_mod_press(SHIFT))
+            menuCall("preview_context_menu", menuItems_gen("preview_context_menu"), 0, 0, fa_left, getNodePreview());
         
         if(pFOCUS && keyboard_check_pressed(vk_escape))
         	clearTool(true);

@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"panel_menuitems_editor",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"panel_menuitems_editor",
+  "parent":{
+    "name":"context_menu",
+    "path":"folders/panels/context_menu.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}
