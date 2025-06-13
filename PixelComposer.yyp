@@ -1392,7 +1392,11 @@
     {"$GMIncludedFile":"","%Name":"Canvas.png","CopyToMask":-1,"filePath":"datafiles/data/Welcome files/Templates","name":"Canvas.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Canvas.pxc","CopyToMask":-1,"filePath":"datafiles/data/Welcome files/Templates","name":"Canvas.pxc","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Welcome files.zip","CopyToMask":-1,"filePath":"datafiles/data/Welcome files","name":"Welcome files.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"dllcredits.txt","ConfigValues":{"Itch":{"CopyToMask":"0",},},"CopyToMask":0,"filePath":"datafiles","name":"dllcredits.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"dllcredits.txt","ConfigValues":{
+        "Itch":{
+          "CopyToMask":"0",
+        },
+      },"CopyToMask":0,"filePath":"datafiles","name":"dllcredits.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"dlltest1.dll","CopyToMask":-1,"filePath":"datafiles","name":"dlltest1.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"ffmpeg.exe","CopyToMask":-1,"filePath":"datafiles/ffmpeg/bin","name":"ffmpeg.exe","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"LICENSE","CopyToMask":-1,"filePath":"datafiles/ffmpeg","name":"LICENSE","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
@@ -1412,7 +1416,11 @@
     {"$GMIncludedFile":"","%Name":"mf.dll","CopyToMask":-1,"filePath":"datafiles","name":"mf.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"mfcore.dll","CopyToMask":-1,"filePath":"datafiles","name":"mfcore.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"mfplat.dll","CopyToMask":-1,"filePath":"datafiles","name":"mfplat.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"PixelComposer_profile-2.provisionprofile","ConfigValues":{"Itch":{"CopyToMask":"2",},},"CopyToMask":-1,"filePath":"datafiles","name":"PixelComposer_profile-2.provisionprofile","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"PixelComposer_profile-2.provisionprofile","ConfigValues":{
+        "Itch":{
+          "CopyToMask":"2",
+        },
+      },"CopyToMask":-1,"filePath":"datafiles","name":"PixelComposer_profile-2.provisionprofile","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"data.win","CopyToMask":-1,"filePath":"datafiles/report","name":"data.win","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"execute_shell_simple_ext_x64.dll","CopyToMask":-1,"filePath":"datafiles/report","name":"execute_shell_simple_ext_x64.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"options.ini","CopyToMask":-1,"filePath":"datafiles/report","name":"options.ini","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
@@ -2731,6 +2739,7 @@
     {"id":{"name":"panel_keyframe_driver","path":"scripts/panel_keyframe_driver/panel_keyframe_driver.yy",},},
     {"id":{"name":"panel_lua_reference","path":"scripts/panel_lua_reference/panel_lua_reference.yy",},},
     {"id":{"name":"panel_menu","path":"scripts/panel_menu/panel_menu.yy",},},
+    {"id":{"name":"panel_menuitems_editor","path":"scripts/panel_menuitems_editor/panel_menuitems_editor.yy",},},
     {"id":{"name":"panel_node_align","path":"scripts/panel_node_align/panel_node_align.yy",},},
     {"id":{"name":"panel_node_canvas_pressure","path":"scripts/panel_node_canvas_pressure/panel_node_canvas_pressure.yy",},},
     {"id":{"name":"panel_node_credit","path":"scripts/panel_node_credit/panel_node_credit.yy",},},
@@ -2769,7 +2778,6 @@
     {"id":{"name":"path_reader","path":"scripts/path_reader/path_reader.yy",},},
     {"id":{"name":"pathAnchorBox","path":"scripts/pathAnchorBox/pathAnchorBox.yy",},},
     {"id":{"name":"pathArrayBox","path":"scripts/pathArrayBox/pathArrayBox.yy",},},
-    {"id":{"name":"panel_menuitems_editor","path":"scripts/panel_menuitems_editor/panel_menuitems_editor.yy",},},
     {"id":{"name":"pathnodeBox","path":"scripts/pathnodeBox/pathnodeBox.yy",},},
     {"id":{"name":"patreon_email_check","path":"scripts/patreon_email_check/patreon_email_check.yy",},},
     {"id":{"name":"pbBoxBox","path":"scripts/pbBoxBox/pbBoxBox.yy",},},

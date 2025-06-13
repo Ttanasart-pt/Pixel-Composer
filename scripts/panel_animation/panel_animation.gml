@@ -40,6 +40,7 @@
     
     function panel_animation_group_rename()            { CALL("animation_rename_group");            PANEL_ANIMATION.group_rename();          }
     function panel_animation_group_remove()            { CALL("animation_remove_group");            PANEL_ANIMATION.group_remove();          }
+    function panel_animation_toggle_axis()             { CALL("animation_toggle_axis");             PANEL_ANIMATION.toggle_axis();           }
     function panel_animation_separate_axis()           { CALL("animation_separate_axis");           PANEL_ANIMATION.separate_axis();         }
     function panel_animation_combine_axis()            { CALL("animation_combine_axis");            PANEL_ANIMATION.combine_axis();          }
     
@@ -92,6 +93,7 @@
         
         registerFunction("Animation", "Rename Group",       "", MOD_KEY.none, panel_animation_group_rename          ).setMenu("animation_rename_group",        )
         registerFunction("Animation", "Remove Group",       "", MOD_KEY.none, panel_animation_group_remove          ).setMenu("animation_remove_group",        THEME.cross)
+        registerFunction("Animation", "Toggle Axis",        "", MOD_KEY.none, panel_animation_toggle_axis           ).setMenu("animation_toggle_axis",         )
         registerFunction("Animation", "Separate Axis",      "", MOD_KEY.none, panel_animation_separate_axis         ).setMenu("animation_separate_axis",       )
         registerFunction("Animation", "Combine Axis",       "", MOD_KEY.none, panel_animation_combine_axis          ).setMenu("animation_combine_axis",        )
         
@@ -238,6 +240,15 @@ function Panel_Animation() : PanelContent() constructor {
         ];
     #endregion
     
+    #region ++++ Menu ++++
+    	global.menuItems_animation_summary = [
+    		"animation_set_range_start",
+			"animation_set_range_end",
+			"animation_reset_range",
+		]
+    
+    #endregion
+    
     function onFocusBegin() { PANEL_ANIMATION = self; }
     
     ////- Interaction
@@ -323,12 +334,7 @@ function Panel_Animation() : PanelContent() constructor {
             
             if(mouse_press(mb_right, pFOCUS)) {
                 __selecting_frame = clamp(round((mx - bar_x - timeline_shift) / timeline_scale), 0, TOTAL_FRAMES - 1);
-                
-                menuCall("animation_summary_menu", [
-                    MENU_ITEMS.animation_set_range_start,
-                    MENU_ITEMS.animation_set_range_end,
-                    MENU_ITEMS.animation_reset_range,
-                ]);
+                menuCall("animation_summary", menuItems_gen("animation_summary"));
             }
         }
         
@@ -372,6 +378,7 @@ function Panel_Animation() : PanelContent() constructor {
             if(is(_cont, timelineItemNode)) {
                 var _node = _cont.node;
                 if(!is_struct(_node)) continue;
+                if(_node.instanceBase != noone) continue;
                 
                 var _anim = [];
                 var _prop = [];
@@ -410,6 +417,7 @@ function Panel_Animation() : PanelContent() constructor {
             
             if(item_dragging == noone || item_dragging.item != _cont) _ind++;
         }
+        
     }
     
     function getTimelineContent() {

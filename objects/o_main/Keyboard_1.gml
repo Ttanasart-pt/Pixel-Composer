@@ -22,5 +22,5 @@ if(!PREFERENCES.keyboard_capture_raw) {
 	else                             KEYBOARD_PRESSED_STRING += keyboard_lastchar;
 }
 
-if(WIDGET_CURRENT && is_instanceof(WIDGET_CURRENT, textInput))
+if(WIDGET_CURRENT && is(WIDGET_CURRENT, textInput))
 	WIDGET_CURRENT.onKey(KEYBOARD_PRESSED);

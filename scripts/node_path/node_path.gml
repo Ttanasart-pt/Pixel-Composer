@@ -581,7 +581,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			if(_pth.loop && weight_drag == 0) array_last(attributes.weight)[1] = _dis;
 			
 			TOOLTIP = $"Weight: {_dis}"
-			updateLength();
+			_pth.updateLength();
 			
 			if(mouse_release(mb_left)) {
 				weight_drag = noone;
@@ -822,7 +822,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				for( var i = 0, n = array_length(_w); i < n; i++ ) {
 					var _wg   = _w[i];
 					var _wrat = _wg[0];
-					var _wp   = getPointDistance(_wrat / 100 * _pth.lengthTotal);
+					var _wp   = _pth.getPointDistance(_wrat / 100 * _pth.lengthTotal);
 					
 					var _wx = _x + _wp.x * _s;
 					var _wy = _y + _wp.y * _s;
@@ -1185,7 +1185,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 		}
 		
-		static updateThumbnail = function(_surf, surf) {
+		static updateThumbnail  = function(_surf, surf) {
 			var pad  = min(8, abs(boundary.maxx - boundary.minx) * 0.1, abs(boundary.maxy - boundary.miny) * 0.1);
 			var minx = boundary.minx - pad, maxx = boundary.maxx + pad;
 			var cx   = (minx + maxx) / 2;

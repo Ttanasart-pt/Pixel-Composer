@@ -928,6 +928,19 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	////- Serialize
 	
+	static postDeserialize = function() {
+		if(CLONING) return;
+		
+		if(LOADING_VERSION < 1_19_04_0) {
+			var _ins = load_map.inputs;
+			
+			for( var i = input_fix_len, n = array_length(_ins); i < n; i += data_length ) {
+				if(!is_struct(_ins[i+6]) || !struct_has(_ins[i+6], "raw_value")) 
+					_ins[i+6] = { raw_value: { d: [0,0] }};
+			}
+		}
+	}
+	
 	static attributeSerialize = function() {
 		var att = {};
 		att.layer_visible    = attributes.layer_visible;

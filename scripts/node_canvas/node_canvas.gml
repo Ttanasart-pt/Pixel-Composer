@@ -1237,7 +1237,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var _paa = isUsingTool("Eraser")? .2 : _alp;
 			
 			switch(_panel.tileMode) {
-				case 0 : draw_surface_ext_safe(getPreviewValues(), _x, _y, _s, _s, 0, _pcc, _paa); break;
+				case 0 : draw_surface_ext_safe(getPreviewValues(), _x, _y, _s, _s, 0, c_white, 1); break;
 				
 				case 1 : 
                     preview_draw_tile = surface_verify(preview_draw_tile, _panel.w, _dim[1] * _s);

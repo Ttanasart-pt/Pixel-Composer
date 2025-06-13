@@ -44,7 +44,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		onDoubleClick = -1;
 		is_controller = false;
 		
-		instanceBase  = noone;
+		is_instancer = false;
+		instanceBase = noone;
 	#endregion
 	
 	if(!LOADING && !APPENDING) {
@@ -63,6 +64,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	#region ---- Display ----
+		visible        = true;
 		color          = c_white;
 		icon           = noone;
 		icon_24        = noone;
@@ -388,6 +390,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(onSetDisplayName != noone) onSetDisplayName();
 		return self;
 	}
+	
+	static getNodeBase = function() /*=>*/ {return instanceBase == noone?  self : instanceBase};
 	
 	////- DYNAMIC IO
 	
@@ -1271,7 +1275,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return true;
 	}
 	
-	static isRenderActive = function() { return renderActive || (PREFERENCES.render_all_export && IS_RENDERING); }
+	static isRenderActive = function() { return !is_instancer && (renderActive || (PREFERENCES.render_all_export && IS_RENDERING)); }
 	
 	static isRenderable = function(log = false) { //Check if every input is ready (updated)
 		if(!active || !isRenderActive()) return false;
@@ -1496,6 +1500,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		previewable = prev;
 		y += previewable? -16 : 16;
 	}
+	
+	static setVisible = function(vis) { visible = vis; return self; }
 	
 	static onInspect = function() {}
 	
@@ -2590,6 +2596,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static drawTools = noone;
 	
+	////- INSTANCE
+	
+	static setInstance = function(n) /*=>*/ { 
+		instanceBase = n.instanceBase == noone? n : n.instanceBase;
+		return self; 
+	}
+	
+	
 	////- SERIALIZE
 	
 	static serialize = function(scale = false, preset = false) {
@@ -2617,6 +2631,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			_map.insp_scr = inspector_scroll;
 			_map.insp_col = variable_clone(inspector_collapse);
 		}
+		
+		_map.visible      = visible;
+		_map.is_instancer = is_instancer;
 		
 		var _attr = attributeSerialize();
 		var attri = struct_append(variable_clone(attributes), _attr); 
@@ -2674,6 +2691,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(!array_empty(_outMeta)) _map.outputMeta = _outMeta;
 		if(renamed)                _map.renamed    = renamed;
 		
+		_map.instanceBase = instanceBase? instanceBase.node_id : noone;
+		
 		doSerialize(_map);
 		processSerialize(_map);
 		return _map;
@@ -2718,6 +2737,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(struct_has(load_map, "insp_col")) inspector_collapse = variable_clone(load_map[$ "insp_col"]);
 			
 		}
+		
+		visible      = load_map[$ "visible"] ?? true;
+		is_instancer = load_map[$ "is_instancer"] ?? false;
 		
 		if(struct_has(load_map, "attri")) {
 			var _lattr = load_map.attri;
@@ -2874,18 +2896,22 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			return;
 		}
 		
-		if(APPENDING) load_group = GetAppendID(load_group);
+		var load_instance = struct_try_get(load_map, "instanceBase", noone);
+		
+		if(APPENDING) {
+			load_group    = GetAppendID(load_group);
+			load_instance = GetAppendID(load_instance);
+		}
 		
 		if(ds_map_exists(project.nodeMap, load_group)) {
 			var _grp = project.nodeMap[? load_group];
 			
-			if(struct_has(_grp, "add"))
-				_grp.add(self);
-			else
-				throw($"Group load failed. Node ID {load_group} is not a group.");
+			if(struct_has(_grp, "add")) _grp.add(self);
+			else throw($"Group load failed. Node ID {load_group} is not a group.");
 			
-		} else 
-			throw($"Group load failed. Can't find node ID {load_group}");
+		} else throw($"Group load failed. Can't find node ID {load_group}");
+		
+		instanceBase = ds_map_exists(project.nodeMap, load_instance)? project.nodeMap[? load_instance] : noone;
 		
 		onLoadGroup();
 	}
@@ -3071,6 +3097,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		project.nodeMap[? _nid] = _node;
 		CLONING = false;
 		refreshTimeline();
+		
+		if(instanceBase != noone) _node.setInstance(instanceBase);
 		
 		onClone(_node, target);
 		

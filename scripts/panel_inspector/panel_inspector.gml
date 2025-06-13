@@ -1,25 +1,22 @@
 #region funtion calls
     
-    function panel_inspector_copy_prop()                 { CALL("inspector_copy_property");          PANEL_INSPECTOR.propSelectCopy();                                                           }
-    function panel_inspector_paste_prop()                { CALL("inspector_paste_property");         PANEL_INSPECTOR.propSelectPaste();                                                          }
-    function panel_inspector_toggle_animation()          { CALL("inspector_toggle_animation");       PANEL_INSPECTOR.anim_toggling = true;                                                       }
+    function panel_inspector_copy_prop()                 { CALL("inspector_copy_property");          PANEL_INSPECTOR.propSelectCopy();                 }
+    function panel_inspector_paste_prop()                { CALL("inspector_paste_property");         PANEL_INSPECTOR.propSelectPaste();                }
+    function panel_inspector_toggle_animation()          { CALL("inspector_toggle_animation");       PANEL_INSPECTOR.anim_toggling = true;             }
     
-    function panel_inspector_color_pick()                { CALL("color_picker");                     if(!PREFERENCES.alt_picker&& !MOUSE_BLOCK) return; PANEL_INSPECTOR.color_picking = true;    }
+    function panel_inspector_color_pick()                { CALL("color_picker"); if(!PREFERENCES.alt_picker&& !MOUSE_BLOCK) return; PANEL_INSPECTOR.color_picking = true; }
     
-    function panel_inspector_section_expand_all()        { CALL("inspector_section_expand_all");     PANEL_INSPECTOR.section_expand_all();                                                       }
-    function panel_inspector_section_collapse_all()      { CALL("inspector_section_collapse_all");   PANEL_INSPECTOR.section_collapse_all();                                                     }
+    function panel_inspector_section_expand_all()        { CALL("inspector_section_expand_all");     PANEL_INSPECTOR.section_expand_all();             }
+    function panel_inspector_section_collapse_all()      { CALL("inspector_section_collapse_all");   PANEL_INSPECTOR.section_collapse_all();           }
     
-    function panel_inspector_reset()                     { CALL("inspector_reset");                  PANEL_INSPECTOR.junction_reset();                                                           }
-    function panel_inspector_add()                       { CALL("inspector_add");                    PANEL_INSPECTOR.junction_add();                                                             }
-    function panel_inspector_remove()                    { CALL("inspector_remove");                 PANEL_INSPECTOR.junction_remove();                                                          }
-    function panel_inspector_axis_combine()              { CALL("inspector_axis_combine");           PANEL_INSPECTOR.junction_axis_combine();                                                    }
-    function panel_inspector_axis_separate()             { CALL("inspector_axis_separate");          PANEL_INSPECTOR.junction_axis_separate();                                                   }
-    function panel_inspector_use_expression()            { CALL("inspector_use_expression");         PANEL_INSPECTOR.junction_use_expression();                                                  }
-    function panel_inspector_disable_expression()        { CALL("inspector_disable_expression");     PANEL_INSPECTOR.junction_disable_expression();                                              }
-    function panel_inspector_extract_global()            { CALL("inspector_extract_global");         PANEL_INSPECTOR.junction_extract_global();                                                  }
-    function panel_inspector_extract_single()            { CALL("inspector_extract_single");         PANEL_INSPECTOR.junction_extract_single();                                                  }
-    function panel_inspector_junction_bypass_toggle()    { CALL("inspector_junc_bypass");            PANEL_INSPECTOR.junction_bypass_toggle();                                                   }
-    function panel_inspector_visible_bypass_toggle()     { CALL("inspector_junc_visible");           PANEL_INSPECTOR.junction_visible_toggle();                                                  }
+    function panel_inspector_reset()                     { CALL("inspector_reset");                  PANEL_INSPECTOR.junction_reset();                 }
+    function panel_inspector_animation_toggle()          { CALL("inspector_animation_toggle");       PANEL_INSPECTOR.junction_animation_toggle();      }
+    function panel_inspector_axis_toggle()               { CALL("inspector_axis_toggle");            PANEL_INSPECTOR.junction_axis_toggle();           }
+    function panel_inspector_expression_toggle()         { CALL("inspector_expression_toggle");      PANEL_INSPECTOR.junction_expression_toggle();     }
+    function panel_inspector_extract_global()            { CALL("inspector_extract_global");         PANEL_INSPECTOR.junction_extract_global();        }
+    function panel_inspector_extract_single()            { CALL("inspector_extract_single");         PANEL_INSPECTOR.junction_extract_single();        }
+    function panel_inspector_junction_bypass_toggle()    { CALL("inspector_junc_bypass");            PANEL_INSPECTOR.junction_bypass_toggle();         }
+    function panel_inspector_visible_bypass_toggle()     { CALL("inspector_junc_visible");           PANEL_INSPECTOR.junction_visible_toggle();        }
     
     function __fnInit_Inspector() {
     	var i = "Inspector";
@@ -34,12 +31,9 @@
         registerFunction(i, "Collapse All Sections", "",    MOD_KEY.none,    panel_inspector_section_collapse_all   ).setMenu("inspector_collapse_all_sections")
         
         registerFunction(i, "Reset",                 "",    MOD_KEY.none,    panel_inspector_reset                  ).setMenu("inspector_reset")
-        registerFunction(i, "Toggle Animation",      "",    MOD_KEY.none,    panel_inspector_add                    ).setMenu("inspector_animate")
-        registerFunction(i, "Reset Animation",       "",    MOD_KEY.none,    panel_inspector_remove                 ).setMenu("inspector_remove_animate")
-        registerFunction(i, "Combine Axis",          "",    MOD_KEY.none,    panel_inspector_axis_combine           ).setMenu("inspector_combine_axis")
-        registerFunction(i, "Separate Axis",         "",    MOD_KEY.none,    panel_inspector_axis_separate          ).setMenu("inspector_separate_axis")
-        registerFunction(i, "Use Expression",        "",    MOD_KEY.none,    panel_inspector_use_expression         ).setMenu("inspector_use_expression")
-        registerFunction(i, "Disable Expression",    "",    MOD_KEY.none,    panel_inspector_disable_expression     ).setMenu("inspector_disable_expression")
+        registerFunction(i, "Toggle Animation",      "",    MOD_KEY.none,    panel_inspector_animation_toggle       ).setMenu("inspector_animate_toggle")
+        registerFunction(i, "Toggle Axis",           "",    MOD_KEY.none,    panel_inspector_axis_toggle            ).setMenu("inspector_axis_toggle")
+        registerFunction(i, "Toggle Expression",     "",    MOD_KEY.none,    panel_inspector_expression_toggle      ).setMenu("inspector_expression_toggle")
         registerFunction(i, "Extract to Globalvar",  "",    MOD_KEY.none,    panel_inspector_extract_global         ).setMenu("inspector_extract_global")
         registerFunction(i, "Extract Value",         "",    MOD_KEY.none,    panel_inspector_extract_single         ).setMenu("inspector_extract_value")
         registerFunction(i, "Toggle Bypass",         "",    MOD_KEY.none,    panel_inspector_junction_bypass_toggle ).setMenu("inspector_bypass_toggle")
@@ -313,40 +307,17 @@ function Panel_Inspector() : PanelContent() constructor {
                 nodeCollapseAll(inspectings[i]);
         }
         
-        function junction_reset()              { if(__dialog_junction == noone) return; __dialog_junction.resetValue();         }
-        function junction_add()                { if(__dialog_junction == noone) return; __dialog_junction.setAnim(true, true);  }
-        function junction_remove()             { if(__dialog_junction == noone) return; __dialog_junction.setAnim(false, true); }
-        function junction_axis_combine()       { if(__dialog_junction == noone) return; __dialog_junction.sep_axis = false;     }
-        function junction_axis_separate()      { if(__dialog_junction == noone) return; __dialog_junction.sep_axis = true;      }
-        function junction_use_expression()     { if(__dialog_junction == noone) return; __dialog_junction.expUse   = true;      }
-        function junction_disable_expression() { if(__dialog_junction == noone) return; __dialog_junction.expUse   = false;     }
-        function junction_extract_global()     { if(__dialog_junction == noone) return; __dialog_junction.extractGlobal();      }
-        function junction_extract_single()     { if(__dialog_junction == noone) return; __dialog_junction.extractNode();        }
+        function junction_reset()              { if(__dialog_junction == noone) return; __dialog_junction.resetValue();                                        }
+        function junction_animation_toggle()   { if(__dialog_junction == noone) return; __dialog_junction.setAnim(!__dialog_junction.is_anim, true);           }
+        function junction_axis_toggle()        { if(__dialog_junction == noone) return; __dialog_junction.sep_axis = !__dialog_junction.sep_axis;              }
+        function junction_expression_toggle()  { if(__dialog_junction == noone) return; __dialog_junction.expUse   = !__dialog_junction.expUse;                }
+        function junction_extract_global()     { if(__dialog_junction == noone) return; __dialog_junction.extractGlobal();                                     }
+        function junction_extract_single()     { if(__dialog_junction == noone) return; __dialog_junction.extractNode();                                       }
         function junction_visible_toggle()     { if(__dialog_junction == noone) return; __dialog_junction.setVisibleManual(!__dialog_junction.visible_manual); }
         function junction_bypass_toggle()      { if(__dialog_junction == noone || __dialog_junction.bypass_junc == noone) return; 
             var b = __dialog_junction.bypass_junc; b.visible = !b.visible; __dialog_junction.node.refreshNodeDisplay(); }
         
-        group_menu = [
-            MENU_ITEMS.inspector_expand_all_sections,
-            MENU_ITEMS.inspector_collapse_all_sections,
-        ]
-        
         __dialog_junction = noone;
-        menu_junc_reset_value      = MENU_ITEMS.inspector_reset;
-        menu_junc_add_anim         = MENU_ITEMS.inspector_animate;
-        menu_junc_rem_anim         = MENU_ITEMS.inspector_remove_animate;
-        menu_junc_combine_axis     = MENU_ITEMS.inspector_combine_axis;
-        menu_junc_separate_axis    = MENU_ITEMS.inspector_separate_axis;
-        menu_junc_expression_ena   = MENU_ITEMS.inspector_use_expression;
-        menu_junc_expression_dis   = MENU_ITEMS.inspector_disable_expression;
-        menu_junc_extract_global   = MENU_ITEMS.inspector_extract_global;
-        menu_junc_extract          = MENU_ITEMS.inspector_extract_value;
-        menu_junc_bypass_toggle    = MENU_ITEMS.inspector_bypass_toggle;
-        menu_junc_visible_toggle   = MENU_ITEMS.inspector_visible_toggle;
-        
-        menu_junc_copy             = MENU_ITEMS.inspector_copy_property;
-        menu_junc_paste            = MENU_ITEMS.inspector_paste_property;
-        
         function setSelectingItemColor(color) { 
             if(__dialog_junction == noone) return; 
             
@@ -357,7 +328,33 @@ function Panel_Inspector() : PanelContent() constructor {
                 _val_to[i].setColor(color);
         }
         
-        menu_junc_color = MENU_ITEMS.inspector_group_set_color;
+        group_menu = [
+            MENU_ITEMS.inspector_expand_all_sections,
+            MENU_ITEMS.inspector_collapse_all_sections,
+        ]
+        
+        MENUITEM_CONDITIONS[$ "inspector_value_separable"] = function() /*=>*/ {return prop_selecting && prop_selecting.sepable};
+        
+        global.menuItems_inspector_value_input = [
+        	"inspector_group_set_color", 
+        	-1, 
+        	"inspector_animate_toggle",
+        	{ cond  : "inspector_value_separable", items : [ "inspector_axis_toggle" ] },
+        	"inspector_visible_toggle",
+        	"inspector_bypass_toggle",
+        	"inspector_expression_toggle", 
+        	-1,
+        	"inspector_reset", 
+        	"inspector_copy_property", 
+        	"inspector_paste_property", 
+        	-1,
+        	
+    	];
+        global.menuItems_inspector_value_output = [
+        	"inspector_group_set_color", 
+        	-1, 
+        	"inspector_copy_property", 
+    	];
     #endregion
     
     function setInspecting(_inspecting, _lock = false, _focus = true, _record = true) {
@@ -417,33 +414,25 @@ function Panel_Inspector() : PanelContent() constructor {
           prop_selecting  = jun;
         __dialog_junction = jun;
         
-        var _menuItem = [ menu_junc_color, -1 ];
-        var _inp = jun.connect_type == CONNECT_TYPE.input;
+        if(jun.connect_type == CONNECT_TYPE.output) return menuCall("inspector_value_output", menuItems_gen("inspector_value_output"));
         
-        if(_inp) {
-            array_push(_menuItem, jun.is_anim? menu_junc_rem_anim : menu_junc_add_anim);
-            if(jun.sepable) array_push(_menuItem, jun.sep_axis? menu_junc_combine_axis : menu_junc_separate_axis);
-            array_push(_menuItem, menu_junc_visible_toggle, menu_junc_bypass_toggle);
-	        array_push(_menuItem, jun.expUse? menu_junc_expression_dis : menu_junc_expression_ena);
-	        	
-	        if(jun.globalExtractable()) {
-	    		array_push(_menuItem, menuItemShelf(__txtx("panel_inspector_use_global", "Use Globalvar"), function(_dat) /*=>*/ { 
-	    			var arr = [];
-	                for( var i = 0, n = array_length(PROJECT.globalNode.inputs); i < n; i++ ) {
-	            		var _glInp = PROJECT.globalNode.inputs[i];
-	            		if(!typeCompatible(_glInp.type, __dialog_junction.type)) continue;
-	            		array_push(arr, menuItem(_glInp.name, function(d) /*=>*/ { __dialog_junction.setExpression(d.name); }, noone, noone, noone, { name : _glInp.name }));
-	            	}
-	                return submenuCall(_dat, arr);
-	            }));
-	        	
-	        	array_push(_menuItem, menu_junc_extract_global);
-	        }
+        var _menuItem = menuItems_gen("inspector_value_input");
+        
+        if(jun.globalExtractable()) {
+    		array_push(_menuItem, menuItemShelf(__txtx("panel_inspector_use_global", "Use Globalvar"), function(_dat) /*=>*/ { 
+    			var arr = [];
+                for( var i = 0, n = array_length(PROJECT.globalNode.inputs); i < n; i++ ) {
+            		var _glInp = PROJECT.globalNode.inputs[i];
+            		if(!typeCompatible(_glInp.type, __dialog_junction.type)) continue;
+            		array_push(arr, menuItem(_glInp.name, function(d) /*=>*/ { __dialog_junction.setExpression(d.name); }, noone, noone, noone, { name : _glInp.name }));
+            	}
+                return submenuCall(_dat, arr);
+            }));
+        	
+        	array_push(_menuItem, MENU_ITEMS.inspector_extract_global);
         }
         
-        array_push(_menuItem, -1, menu_junc_reset_value, menu_junc_copy, menu_junc_paste.setActive(_inp));
-        
-        if(_inp && jun.extract_node != "") {
+        if(jun.extract_node != "") {
             if(is_array(jun.extract_node)) {
                 array_push(_menuItem, menuItemShelf(__txtx("panel_inspector_extract_multiple", "Extract to..."), function(_dat) /*=>*/ { 
                     var arr = [];
@@ -456,10 +445,10 @@ function Panel_Inspector() : PanelContent() constructor {
                     return submenuCall(_dat, arr);
                 }));
                 
-            } else array_push(_menuItem, menu_junc_extract);
+            } else array_push(_menuItem, MENU_ITEMS.inspector_extract_value);
         }
         
-        return menuCall("inspector_value_menu", _menuItem);
+        return menuCall("inspector_value_input", _menuItem);
     }
     
     ////- DRAW

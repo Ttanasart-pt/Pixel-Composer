@@ -42,8 +42,7 @@ function NodeTopoSort() {
 	PROJECT.nodeTopo   = [];
 	__topoSort(PROJECT.nodeTopo, PROJECT.nodes);
 	
-	array_foreach(PROJECT.allNodes, function(n) /*=>*/ { if(is(n, Node_Collection)) n.updateInstance(); });
-	// print("Topo sort");
+	array_foreach(PROJECT.allNodes, function(n) /*=>*/ { if(is(n, Node_Group)) n.updateInstance(); });
 	
 	PROJECT.nodeTopoID = UUID_generate();
 	LOG_IF(global.FLAG.render == 1, $"+++++++ Topo Sort Completed: {array_length(PROJECT.nodeTopo)}/{amo} nodes sorted in {(get_timer() - _t) / 1000} ms +++++++");

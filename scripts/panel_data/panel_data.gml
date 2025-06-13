@@ -912,48 +912,54 @@ function PanelContent() constructor {
 	
 	title_actions = [];
 	
-	function refresh() {
+	////- Size
+	
+	static refresh = function() {
 		setPanelSize(panel);
 		onResize();
 	}
 	
-	function onResize() {}
-	
-	function onFocusBegin() {}
-	function onFocusEnd() {}
-	
-	static initSize = function() {}
-	
-	function setPanelSize(panel) {
-		x = panel.tx;
-		y = panel.ty;
-		w = panel.tw;
-		h = panel.th;
+	static onResize     = function() {}
+	static setPanelSize = function(_panel) {
+		x = _panel.tx;
+		y = _panel.ty;
+		w = _panel.tw;
+		h = _panel.th;
 	}
 	
-	function onSetPanel(panel) {
-		self.panel = panel;
-		setPanelSize(panel);
+	////- Focus
+	
+	static onFocusBegin = function() {}
+	static onFocusEnd   = function() {}
+	static initSize     = function() {}
+	
+	////- Panel
+	
+	static onSetPanel     = function(_panel) {
+		panel = _panel;
+		setPanelSize(_panel);
 		initSize();
 		onResize();
 	}
-	
-	function panelStepBegin(panel) {
-		setPanelSize(panel);
+	static panelStepBegin = function(_panel) {
+		setPanelSize(_panel);
 		onStepBegin();
 	}
 	
-	function onStepBegin() {
+	////- Step
+	
+	static onStepBegin = function() {
 		mx = mouse_mx - x;
 		my = mouse_my - y;
 		
 		stepBegin();
 	}
+	static stepBegin    = function() {}
 	
-	function stepBegin() {}
+	////- Draw
 	
-	static draw = function(panel) {
-		self.panel = panel;
+	static draw = function(_panel) {
+		panel = _panel;
 		
 		if(o_main.panel_dragging == noone) {
 			pFOCUS = FOCUS == panel/* && panel.mouse_active*/;
@@ -964,23 +970,23 @@ function PanelContent() constructor {
 		drawContent(panel);
 	}
 	
-	function drawContent(panel) {}
+	static drawContent   = function(_panel) {}
+	static preDraw       = function() {}
+	static drawGUI       = function() {}
+	static onFullScreen  = function() {}
 	
-	function preDraw() {}
-	function drawGUI() {}
-	
-	static onFullScreen = function() {}
-	
-	function close() { panel.remove(self); }
+	////- Actions
 	
 	static checkClosable = function() { return true; }
-	
-	static onClose = function() {}
+	static close         = function() { panel.remove(self); }
+	static onClose       = function() {}
 	
 	static asyncCallback = function(async_load) {}
 	
-	static serialize   = function()     { return { name: instanceof(self) }; }
-	static deserialize = function(data) { return self; }
+	////- Serialize
+	
+	static serialize     = function()     { return { name: instanceof(self) }; }
+	static deserialize   = function(data) { return self; }
 }
 
 function setFocus(target, fstring = noone) {

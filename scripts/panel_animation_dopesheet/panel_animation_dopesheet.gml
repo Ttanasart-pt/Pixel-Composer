@@ -195,71 +195,64 @@ function Panel_Animation_Dopesheet() {
 	        function group_rename()          { context_selecting_item.item.rename();  }
 	        function group_remove()          { context_selecting_item.item.destroy(); }
 	        
+	        function toggle_axis()           { context_selecting_prop.sep_axis = !context_selecting_prop.sep_axis;  }
 	        function separate_axis()         { context_selecting_prop.sep_axis = true;  }
 	        function combine_axis()          { context_selecting_prop.sep_axis = false; }
 	        
 	        function range_set_start()       { if(FRAME_RANGE == noone) FRAME_RANGE = [ __selecting_frame, TOTAL_FRAMES ]; else FRAME_RANGE[0] = __selecting_frame; }
 	        function range_set_end()         { if(FRAME_RANGE == noone) FRAME_RANGE = [ 0, __selecting_frame ];            else FRAME_RANGE[1] = __selecting_frame; }
 	        function range_reset()           { FRAME_RANGE = noone; }
+	        
+		    context_selecting_item = noone;
+		    context_selecting_prop = noone;
+		    
+		    function setSelectingItemColor(color) { if(context_selecting_item == noone) return; context_selecting_item.item.setColor(color); }
+	    
 	    #endregion
 	    
-	    keyframe_menu = [
-	        MENU_ITEMS.animation_edit_keyframe_value,
-	                
-	        MENU_ITEMS.animation_group_ease_in,
-	        MENU_ITEMS.animation_group_ease_out,
-	        
+	    global.menuItems_animation_keyframe = [
+	        "animation_edit_keyframe_value",
+	        "animation_group_ease_in",
+	        "animation_group_ease_out",
 	        -1,
-	        MENU_ITEMS.animation_group_align,
-	        MENU_ITEMS.animation_driver,
-	        MENU_ITEMS.animation_stagger,
-	        MENU_ITEMS.animation_envelope,
-	        // MENU_ITEMS.animation_randomize,
+	        "animation_group_align",
+	        "animation_driver",
+	        "animation_stagger",
+	        "animation_envelope",
 	        -1,
-	        MENU_ITEMS.animation_delete_keys,
-	        MENU_ITEMS.animation_duplicate,
-	        MENU_ITEMS.animation_copy,
-	        MENU_ITEMS.animation_paste,
+	        "animation_delete_keys",
+	        "animation_duplicate",
+	        "animation_copy",
+	        "animation_paste",
 	    ];
 	    
-	    keyframe_menu_empty = [
-	        MENU_ITEMS.animation_paste,
+	    global.menuItems_animation_keyframe_empty = [
+	        "animation_paste",
 	    ];
 	    
-	    name_menu_empty = [
-	        MENU_ITEMS.animation_new_folder,
-	        MENU_ITEMS.animation_new_folder_select,
+	    global.menuItems_animation_name_empty = [
+	        "animation_new_folder",
+	        "animation_new_folder_select",
 	    ];
 	    
-	    context_selecting_item = noone;
-	    context_selecting_prop = noone;
-	    
-	    function setSelectingItemColor(color) { if(context_selecting_item == noone) return; context_selecting_item.item.setColor(color); }
-	    
-	    var clr = MENU_ITEMS.animation_group_label_color;
-	    
-	    name_menu_item = [
-	        clr,
+	    global.menuItems_animation_name_item = [
+	        "animation_group_label_color",
 	        -1,
-	        MENU_ITEMS.animation_new_folder,
-	        MENU_ITEMS.animation_new_folder_select,
+	        "animation_new_folder",
+	        "animation_new_folder_select",
 	    ];
 	    
-	    name_menu_group = [
-	        clr,
-	        MENU_ITEMS.animation_rename_group,
-	        MENU_ITEMS.animation_remove_group,
+	    global.menuItems_animation_name_group = [
+	        "animation_group_label_color",
+	        "animation_rename_group",
+	        "animation_remove_group",
 	        -1,
-	        MENU_ITEMS.animation_new_folder,
-	        MENU_ITEMS.animation_new_folder_select,
+	        "animation_new_folder",
+	        "animation_new_folder_select",
 	    ];
 	    
-	    name_menu_prop_sep = [
-	        MENU_ITEMS.animation_separate_axis,
-	    ];
-	    
-	    name_menu_prop_join = [
-	        MENU_ITEMS.animation_combine_axis,
+	    global.menuItems_animation_name_prop_axis = [
+	        "animation_toggle_axis",
 	    ];
 	    
     #endregion ++++ context menu ++++
@@ -2510,26 +2503,18 @@ function Panel_Animation_Dopesheet() {
         if(keyframe_boxable && mouse_press(mb_right, pFOCUS)) { // context menu
             if(point_in_rectangle(mx, my, bar_x, ui(8), bar_x + dopesheet_w, ui(8) + dopesheet_h)) {
                 
-                if(array_empty(keyframe_selecting)) menuCall("animation_keyframe_empty_menu", keyframe_menu_empty);
-                else                                menuCall("animation_keyframe_menu", keyframe_menu);
+                if(array_empty(keyframe_selecting)) menuCall("animation_keyframe_empty", menuItems_gen("animation_keyframe_empty"));
+                else                                menuCall("animation_keyframe",       menuItems_gen("animation_keyframe"));
                 
             } else if(point_in_rectangle(mx, my, ui(8), ui(8), ui(8) + tool_width, ui(8) + dopesheet_h)) {
                 
                 if(context_selecting_prop != noone) {
-                    if(context_selecting_prop.sepable) 
-                        menuCall("animation_name_empty_menu", context_selecting_prop.sep_axis? name_menu_prop_join : name_menu_prop_sep);
-                    else 
-                        menuCall("animation_name_empty_menu", name_menu_empty);
+                    if(context_selecting_prop.sepable) menuCall("animation_name_prop_axis", menuItems_gen("animation_name_prop_axis"));
+                    else                               menuCall("animation_name_empty",     menuItems_gen("animation_name_empty"));
                 }
-                
-                else if(context_selecting_item == noone)
-                    menuCall("animation_name_empty_menu", name_menu_empty);
-                    
-                else if(is(context_selecting_item.item, timelineItemNode))
-                    menuCall("animation_name_empty_menu", name_menu_item);
-                    
-                else if(is(context_selecting_item.item, timelineItemGroup))
-                    menuCall("animation_name_empty_menu", name_menu_group);
+                else if(context_selecting_item == noone)                    menuCall("animation_name_empty", menuItems_gen("animation_name_empty"));
+                else if(is(context_selecting_item.item, timelineItemNode))  menuCall("animation_name_item",  menuItems_gen("animation_name_item"));
+                else if(is(context_selecting_item.item, timelineItemGroup)) menuCall("animation_name_group", menuItems_gen("animation_name_group"));
             }
         }
             

@@ -12,37 +12,89 @@ function Panel_MenuItems_Editor(_menuId) : PanelContent() constructor {
 	dragging  = "";
 	drag_type = 0;
 	
-	#region all list
-		all_menu = struct_get_names(MENU_ITEMS);
-		array_sort(all_menu, true);
+	#region categories
+		category_page = 0;
+		categories = [
+			"All",
+			"Global", 
+			"Panel",
+			-1,
+			"Animation",
+			"Collection",
+			"Graph",
+			"Inspector", 
+			"Node",
+			"Preset",
+			"Preview",
+		];
 		
+		cat_contents = {};
+		
+		var _menus = struct_get_names(MENU_ITEMS);
+		cat_contents[$ "All"] = _menus;
+		
+		for( var i = 4, n = array_length(categories); i < n; i++ ) {
+			var _cat = categories[i];
+			if(_cat == -1) continue;
+			
+			__cat = string_lower(_cat) + "_";
+			cat_contents[$ _cat] = array_filter(_menus, function(v) /*=>*/ {return string_starts_with(v, __cat)});
+		}
+		
+		cat_contents[$ "Graph"]  = array_filter(_menus, function(v) /*=>*/ {return string_starts_with(v, "graph_") && !string_starts_with(v, "graph_add_")});
+		cat_contents[$ "Node"]   = array_filter(_menus, function(v) /*=>*/ {return string_starts_with(v, "graph_add_")});
+		cat_contents[$ "Panel"]  = array_filter(_menus, function(v) /*=>*/ {return string_ends_with(v, "_panel")});
+		cat_contents[$ "Global"] = array_filter(_menus, function(v) /*=>*/ { return !string_starts_with(v, "animation")  && 
+			                                                            !string_starts_with(v, "collection") &&
+			                                                            !string_starts_with(v, "graph")      &&
+			                                                            !string_starts_with(v, "inspector")  &&
+			                                                            !string_starts_with(v, "preset")     &&
+			                                                            !string_starts_with(v, "preview") 
+		                                                       } );
+		
+		sc_types = new scrollBox(categories, function(i) /*=>*/ { category_page = i; setSearch(); }).setFont(f_p3);
+	#endregion
+	
+	#region all list
 		search_string = "";
 		tb_search = textBox_Text(function(s) /*=>*/ { setSearch(s); }).setFont(f_p3).setEmpty().setAutoupdate();
 		
 		show_type = 0;
 		
-		static setSearch = function(s) {
+		static setSearch = function(s = search_string) {
 			search_string = s;
 			
-			all_menu = show_type? struct_get_names(MENUITEM_CONDITIONS) : struct_get_names(MENU_ITEMS);
+			if(show_type == 0) {
+				var _cat = categories[category_page];
+				all_menu = cat_contents[$ _cat];
+				
+			} else 
+				all_menu = struct_get_names(MENUITEM_CONDITIONS);
+				
 			if(s == "") { array_sort(all_menu, true); return; }
 			
 			var _filt = [];
-			var _s = string_lower(s);
+			var _inv = string_starts_with(s, "-");
+			var _s   = string_trim_start(string_lower(s), ["-"]);
 			
 			for( var i = 0, n = array_length(all_menu); i < n; i++ ) {
 				var _a = all_menu[i];
-				if(string_pos(_s, string_lower(_a))) array_push(_filt, _a);
+				var _match = bool(string_pos(_s, string_lower(_a)));
+				if(_inv) _match = !_match;
+				
+				if(_match) array_push(_filt, _a);
 			}
 			
 			array_sort(_filt, true);
 			all_menu = _filt;
-		}
+			
+		} setSearch();
 		
 		static setShowType = function(_type) {
 			show_type = _type;
 			setSearch(search_string);
 		}
+		
 	#endregion
 	
 	function drawCondition(hover, focus, _menu, xx, yy, ww, hh, _m) {
@@ -335,10 +387,10 @@ function Panel_MenuItems_Editor(_menuId) : PanelContent() constructor {
 		sp_current_list.setFocusHover(pFOCUS, pHOVER);
 		sp_current_list.drawOffset(px, py, mx, my);
 		
-		list_h -= ui(32);
+		list_h -= ui(28);
 		
 		var px = padding + list_w + padding + ui(8);
-		var py = padding + ui(32);
+		var py = padding + ui(28);
 		var pw = list_w;
 		var ph = list_h;
 		
@@ -350,7 +402,7 @@ function Panel_MenuItems_Editor(_menuId) : PanelContent() constructor {
 		var tx = px - ui(8);
 		var ty = padding - ui(8);
 		var tw = pw + ui(16);
-		var th = ui(28);
+		var th = ui(24);
 		
 		if(buttonInstant(THEME.button_hide, tx, ty, th, th, [mx,my], pHOVER, pFOCUS, "Separator", THEME.minus_16) == 2) {
 			dragging  = -1;
@@ -368,6 +420,13 @@ function Panel_MenuItems_Editor(_menuId) : PanelContent() constructor {
 		if(buttonInstant(THEME.button_hide, bx, ty, th, th, [mx,my], pHOVER, pFOCUS, "Reset", THEME.refresh_16, 0, bc) == 2) 
 			resetDefault()
 		tw -= th + ui(4);
+		
+		if(show_type == 0) {
+			var sw = ui(104);
+			sc_types.setFocusHover(pFOCUS, pHOVER);
+			sc_types.draw(tx, ty, sw, th, category_page, [mx,my], x, y);
+			tx += sw + ui(4); tw -= sw + ui(4);
+		}
 		
 		tb_search.setFocusHover(pFOCUS, pHOVER);
 		tb_search.draw(tx, ty, tw, th, search_string, [mx,my]);

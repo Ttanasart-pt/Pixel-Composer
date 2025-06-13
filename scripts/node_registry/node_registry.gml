@@ -393,33 +393,6 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 	}
 }
 
-function nodeBuild(_name, _x, _y, _group = PANEL_GRAPH.getCurrentContext()) {
-	if(!struct_has(ALL_NODES, _name)) {
-		log_warning("LOAD", $"Node type {_name} not found");
-		return noone;
-	}
-	
-	var _skipc = false;
-	
-	if(is(_group, Node_Collection_Inline)) {
-		_skipc = true;
-		_group = _group.group;
-	}
-	
-	var _node  = ALL_NODES[$ _name];
-	var _bnode = _node.build(_x, _y, _group, {}, _skipc);
-	if(_bnode) recordAction(ACTION_TYPE.node_added, _bnode).setRef(_bnode);
-	
-	KEYBOARD_RESET
-	return _bnode;
-}
-
-function panelFocusNode(_node = noone) {
-	PANEL_GRAPH.nodes_selecting = _node == noone? [] : [ _node ];
-	PANEL_PREVIEW.setNodePreview(_node);
-	PANEL_INSPECTOR.setInspecting(_node);
-}
-
 	////- Nodes
 
 function __read_node_directory(dir) {
@@ -687,4 +660,74 @@ function __generateNodeData() {
 			json_save_struct($"{_dir}/pcx_{_lnme}/{_vnme}/info.json", _str, true);
 		}
 	}
+}
+
+	////- Actions
+
+function nodeBuild(_name, _x, _y, _group = PANEL_GRAPH.getCurrentContext()) {
+	if(!struct_has(ALL_NODES, _name)) {
+		log_warning("LOAD", $"Node type {_name} not found");
+		return noone;
+	}
+	
+	var _skipc = false;
+	
+	if(is(_group, Node_Collection_Inline)) {
+		_skipc = true;
+		_group = _group.group;
+	}
+	
+	var _node  = ALL_NODES[$ _name];
+	var _bnode = _node.build(_x, _y, _group, {}, _skipc);
+	if(_bnode) recordAction(ACTION_TYPE.node_added, _bnode).setRef(_bnode);
+	
+	KEYBOARD_RESET
+	return _bnode;
+}
+
+function panelFocusNode(_node = noone) {
+	PANEL_GRAPH.nodes_selecting = _node == noone? [] : [ _node ];
+	PANEL_PREVIEW.setNodePreview(_node);
+	PANEL_INSPECTOR.setInspecting(_node);
+}
+
+function nodeClone(_nodes, _ctx = PANEL_GRAPH.getCurrentContext()) {
+	if(array_empty(_nodes)) return;
+	
+    var _map  = {};
+    var _pmap = {};
+    var _node = [];
+    
+    for( var i = 0, n = array_length(_nodes); i < n; i++ ) {
+        var _n = _nodes[i];
+        
+        if(_n.inline_parent_object != "")
+            _pmap[$ _n.inline_context.node_id] = _n.inline_parent_object;
+            
+        SAVE_NODE(_node, _n, 0, 0, false, _ctx);
+    }
+    
+    _map.nodes = _node;
+    
+    ds_map_clear(APPEND_MAP);
+    APPEND_LIST = [];
+    LOADING_VERSION = SAVE_VERSION;
+    
+    CLONING    = true;
+        var _pmap_keys = variable_struct_get_names(_pmap);
+        for( var i = 0, n = array_length(_pmap_keys); i < n; i++ ) {
+            var _pkey     = _pmap_keys[i];
+            var _original = PROJECT.nodeMap[? _pkey];
+            var _nodeS    = _pmap[$ _pkey];
+            
+            CLONING_GROUP = _original;
+            var _newGroup = nodeBuild(_nodeS, _original.x, _original.y).skipDefault();
+            APPEND_MAP[? _pkey] = _newGroup;
+        }
+        
+        APPEND_LIST = __APPEND_MAP(_map, _ctx, APPEND_LIST, false);
+        recordAction(ACTION_TYPE.collection_loaded, array_clone(APPEND_LIST));
+    CLONING    = false;
+    
+    return APPEND_LIST;
 }

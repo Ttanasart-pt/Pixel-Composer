@@ -93,8 +93,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			animators  = animVector? array_create_ext(animVector, function(i) /*=>*/ {return new valueAnimator(def_val[i], self, true).setIndex(i)}) : [];
 		}
 		
-		instanceBase = noone;
-		
 		is_anim		= false;
 		sep_axis	= false;
 		animable    = true;
@@ -1061,12 +1059,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static isActiveDynamic = function() {
-		if(instanceBase != noone) return instanceBase.isActiveDynamic();
-		
 		INLINE
 		
-		if(value_from_loop)     return true;
-		if(value_from != noone) return false;
+		if(value_from_loop)       return true;
+		if(value_from != noone)   return false;
+		if(instanceBase != noone) return instanceBase.isActiveDynamic();
 		
 		if(expUse) {
 			if(!is_struct(expTree)) return false;
@@ -1086,14 +1083,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	__value_from   = noone;
 	
 	static isDynamic = function() {
-		if(instanceBase != noone) return instanceBase.isDynamic();
-		
 		if(__init_dynamic)             { __init_dynamic = false;      return true; }
 		if(value_from != __value_from) { __value_from   = value_from; return true; }
 		
-		if(!IS_PLAYING)         return true;
-		if(value_from_loop)     return true;
-		if(value_from != noone) return true;
+		if(!IS_PLAYING)           return true;
+		if(value_from_loop)       return true;
+		if(value_from != noone)   return true;
+		if(instanceBase != noone) return instanceBase.isDynamic();
 		
 		if(expUse) {
 			if(!is_struct(expTree)) return false;

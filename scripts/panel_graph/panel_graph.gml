@@ -22,6 +22,7 @@
     
     function panel_graph_group()                   { CALL("graph_group");               PANEL_GRAPH.doGroup();                 }
     function panel_graph_ungroup()                 { CALL("graph_ungroup");             PANEL_GRAPH.doUngroup();               }
+    function panel_graph_uninstance()              { CALL("graph_uninstance");          PANEL_GRAPH.doGroupRemoveInstance();   }
                                                                                                                             
     function panel_graph_canvas_copy()             { CALL("graph_canvas_copy");         PANEL_GRAPH.setCurrentCanvas();       }
     function panel_graph_canvas_blend()            { CALL("graph_canvas_blend");        PANEL_GRAPH.setCurrentCanvasBlend();  }
@@ -112,6 +113,7 @@
         registerFunction("Graph", "Open Group In New Tab", "",  MOD_KEY.none,                    panel_graph_open_group_tab      ).setMenu("graph_open_in_new_tab", THEME.group)
         registerFunction("Graph", "Group",                 "G", MOD_KEY.ctrl,                    panel_graph_group               ).setMenu("graph_group",           THEME.group)
         registerFunction("Graph", "Ungroup",               "G", MOD_KEY.ctrl | MOD_KEY.shift,    panel_graph_ungroup             ).setMenu("graph_ungroup",         THEME.group)
+        registerFunction("Graph", "Uninstance",            "",  MOD_KEY.none,                    panel_graph_uninstance          ).setMenu("graph_uninstance")
         registerFunction("Graph", "Set As Group Tool",     "",  MOD_KEY.none,                    panel_graph_set_as_tool         ).setMenu("graph_set_as_tool")
         
         registerFunction("Graph", "Copy Value",            "",  MOD_KEY.none,                    panel_graph_doCopyProp          ).setMenu("graph_copy_value")
@@ -835,6 +837,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     
     #region ++++++++++++++++ Menus +++++++++++++++++
 	    MENUITEM_CONDITIONS[$ "graph_select_group"]    = function() /*=>*/ {return is(PANEL_GRAPH.node_hover, Node_Collection)};
+	    MENUITEM_CONDITIONS[$ "graph_select_instance"] = function() /*=>*/ {return is(PANEL_GRAPH.node_hover, Node_Collection) && PANEL_GRAPH.node_hover.instanceBase != noone};
     	MENUITEM_CONDITIONS[$ "graph_select_in_group"] = function() /*=>*/ {return PANEL_GRAPH.node_hover.group != noone};
     	MENUITEM_CONDITIONS[$ "graph_select_multiple"] = function() /*=>*/ {return array_length(PANEL_GRAPH.nodes_selecting) > 1};
     	
@@ -850,9 +853,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	    	"graph_toggle_render", 
 	    	"graph_toggle_parameters", 
 	    	"graph_hide_disconnected",
-	    	{ cond  : "graph_select_group",    items : [ -1, "graph_enter_group", "graph_open_in_new_tab", "graph_group" ] },
-	    	{ cond  : "graph_select_in_group", items : [ "graph_set_as_tool" ] },
-	    	{ cond  : "graph_select_multiple", items : [ -1, "graph_group", "graph_add_Node_Frame" ] },
+	    	{ cond : "graph_select_group",    items : [ -1, "graph_enter_group", "graph_open_in_new_tab", "graph_group" ] },
+	    	{ cond : "graph_select_instance", items : [     "graph_uninstance" ]                                          },
+	    	{ cond : "graph_select_in_group", items : [     "graph_set_as_tool" ]                                         },
+	    	{ cond : "graph_select_multiple", items : [ -1, "graph_group", "graph_add_Node_Frame" ]                       },
 	    	-1, 
 	    	"graph_delete_merge", 
 	    	"graph_delete_break", 
@@ -862,8 +866,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	    	"graph_replace_node", 
 	    	"graph_add_Node_Transform", 
 	    	"graph_canvas",
-	    	{ cond  : "graph_select_multiple",   
-	          items : [ -1, "graph_group_align", "graph_add_Node_Blend", "graph_add_Node_Composite", "graph_add_Node_Array" ] },
+	    	{ cond : "graph_select_multiple", items : [ -1, "graph_group_align", "graph_add_Node_Blend", "graph_add_Node_Composite", "graph_add_Node_Array" ] },
     	];
     	
 	    global.menuItems_graph_junction_select = [
@@ -1132,9 +1135,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         toCenterNode();
     }
     
-    function addContext(node) {
-        var _node = node.getNodeBase();
-        
+    function addContext(_node) {
         nodes_list = _node.nodes;
         array_push(node_context, _node);
         
@@ -1568,8 +1569,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         var _node_active = nodes_list;
         
         array_foreach(_node_active, function(_n) /*=>*/ { _n.is_selecting = false; });
-        if(display_parameter.show_control) _node_active = array_filter(nodes_list, function(_n) /*=>*/ {return _n.active});
-        else                               _node_active = array_filter(nodes_list, function(_n) /*=>*/ {return _n.active && !_n.is_controller});
+        if(display_parameter.show_control) _node_active = array_filter(nodes_list, function(_n) /*=>*/ {return _n.active && _n.visible});
+        else                               _node_active = array_filter(nodes_list, function(_n) /*=>*/ {return _n.active && _n.visible && !_n.is_controller});
         
         var _node_draw = array_filter( _node_active, function(_n) /*=>*/ {
         	_n.preDraw(__gr_x, __gr_y, __mx, __my, __gr_s);
@@ -3437,40 +3438,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     function doDuplicate() {
         if(array_empty(nodes_selecting)) return;
         
-        var _map  = {};
-        var _pmap = {};
-        var _node = [];
-        
-        for(var i = 0; i < array_length(nodes_selecting); i++) {
-            var _n = nodes_selecting[i];
-            
-            if(_n.inline_parent_object != "")
-                _pmap[$ _n.inline_context.node_id] = _n.inline_parent_object;
-                
-            SAVE_NODE(_node, _n,,,, getCurrentContext());
-        }
-        
-        _map.nodes = _node;
-        
-        ds_map_clear(APPEND_MAP);
-        APPEND_LIST = [];
-        LOADING_VERSION = SAVE_VERSION;
-        
-        CLONING    = true;
-            var _pmap_keys = variable_struct_get_names(_pmap);
-            for( var i = 0, n = array_length(_pmap_keys); i < n; i++ ) {
-                var _pkey     = _pmap_keys[i];
-                var _original = PROJECT.nodeMap[? _pkey];
-                var _nodeS    = _pmap[$ _pkey];
-                
-                CLONING_GROUP = _original;
-                var _newGroup = nodeBuild(_nodeS, _original.x, _original.y).skipDefault();
-                APPEND_MAP[? _pkey] = _newGroup;
-            }
-            
-            APPEND_LIST = __APPEND_MAP(_map, getCurrentContext(), APPEND_LIST, true);
-            recordAction(ACTION_TYPE.collection_loaded, array_clone(APPEND_LIST));
-        CLONING    = false;
+        var _c = nodeClone(nodes_selecting);
         
         if(array_empty(APPEND_LIST)) return;
         
@@ -3629,11 +3597,17 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     function doUngroup() { //
         var _node = getFocusingNode();
         if(_node == noone) return;
-        if(!is_instanceof(_node, Node_Collection) || !_node.ungroupable) return;
+        if(!is(_node, Node_Collection) || !_node.ungroupable) return;
     
         upgroupNode(_node);
     } 
-
+	
+	function doGroupRemoveInstance() {
+		var _node = getFocusingNode();
+        if(_node == noone) return;
+        if(is(_node, Node_Collection)) _node.resetInstance();
+	}
+	
     function doDelete(_merge = false) { //
         __temp_merge = _merge;
         

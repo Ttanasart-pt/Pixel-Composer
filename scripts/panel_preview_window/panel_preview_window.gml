@@ -62,11 +62,11 @@ function Panel_Preview_Window() : PanelContent() constructor {
 	content_surface = noone;
 	surfaceCheck();
 	
-	menu = [
-		MENU_ITEMS.preview_window_reset_view,
+	global.menuItems_preview_window = [
+		"preview_window_reset_view",
 		-1,
-		MENU_ITEMS.preview_window_inspect,
-		MENU_ITEMS.preview_window_preview,
+		"preview_window_inspect",
+		"preview_window_preview",
 		-1,
 	]
 
@@ -161,7 +161,7 @@ function Panel_Preview_Window() : PanelContent() constructor {
 		}
 	
 		if(mouse_click(mb_right, pFOCUS)) {
-			var _menu = array_clone(menu);
+			var _menu = menuItems_gen("preview_window");
 			var _chan = 0;
 			
 			for( var i = 0; i < array_length(node_target.outputs); i++ ) {
@@ -172,7 +172,7 @@ function Panel_Preview_Window() : PanelContent() constructor {
 				_chan++;
 			}
 			
-			menuCall("preview_window_menu", _menu, 0, 0, fa_left);
+			menuCall("preview_window", _menu, 0, 0, fa_left);
 		}
 	}
 }
