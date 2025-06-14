@@ -38,10 +38,10 @@
             registerFunction("", "Recent Files",    "R",    MOD_KEY.ctrl | MOD_KEY.shift,
                 function(_dat) { 
                     var arr = [];
-                    var dat = [];
-                    for(var fi = 0; fi < min(10, ds_list_size(RECENT_FILES)); fi++)  {
-                        var _rec = RECENT_FILES[| fi];
-                        array_push(arr, menuItem(_rec, function(_dat) { LOAD_PATH(_dat.path); }, noone, noone, noone, { path: _rec }));
+                    
+                    for(var i = 0; i < min(10, ds_list_size(RECENT_FILES)); i++)  {
+                        var _rec = RECENT_FILES[| i];
+                        array_push(arr, menuItem(_rec, function(_d) /*=>*/ {return LOAD_PATH(_d)}, noone, noone, noone, _rec));
                     }
                     
                     return submenuCall(_dat, arr, "recent_files");

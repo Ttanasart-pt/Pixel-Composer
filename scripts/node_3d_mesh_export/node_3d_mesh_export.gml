@@ -21,9 +21,13 @@ function Node_3D_Mesh_Export(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	setTrigger(1, "Export", [ THEME.sequence_control, 1, COLORS._main_value_positive ], function() /*=>*/ {return export()});
 	
+	__mat_index   = 0;
+	__mat_texture = {};
+	
 	static serializeMesh = function(_mesh, _transform = noone) {
 		if(!is(_mesh, __3dObject)) return [ "", "" ];
 		
+		var _path  = getInputData(1);
 		var _mat   = getInputData(2);
 		var _invv  = getInputData(3);
 		var _appl  = getInputData(4);
@@ -47,18 +51,34 @@ function Node_3D_Mesh_Export(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			_obj += $"o shape{i}\n";
 			
 			if(_mat) {
-				var _matName  = $"mat.{i}";
+				var _matName  = $"mat.{--__mat_index}";
 				var _material = array_safe_get_fast(_mesh.materials, i, 0);
 				
 				if(_material) {
 					_mtl += $"newmtl {_matName}\n";
-					_obj += $"usemtl {_matName}\n";
+					_mtl += $"Kd 1.00 1.00 1.00\n";
+					_mtl += $"Ks 0.00 0.00 0.00\n";
+					_mtl += $"Ns 0.00\n";
+					_mtl += $"Ni 1.00\n";
+					_mtl += $"d 1.00\n";
+					_mtl += $"illum 0\n";
 					
-					if(is_surface(_material.surface)) {
-						var _surfPath = $"{filename_dir(_path)}/{filename_name_only(_path)}_texture{i}.png";
-						surface_save(_material.surface, _surfPath);
+					var _surf = _material.surface;
+					var _surfPath;
+					
+					if(is_surface(_surf)) {
+						if(struct_has(__mat_texture, _surf)) {
+							_surfPath = __mat_texture[$ _surf];
+						} else {
+							_surfPath = $"{filename_dir(_path)}/{filename_name_only(_path)}_texture{__mat_index}.png";
+							surface_save(_surf, _surfPath);
+							__mat_texture[$ _surf] = _surfPath;
+						}
+						
 						_mtl += $"map_Kd {_surfPath}\n";
 					}
+					
+					_obj += $"usemtl {_matName}\n";
 				}
 			}
 			
@@ -182,7 +202,7 @@ function Node_3D_Mesh_Export(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 		for( var i = 0, n = array_length(_object.objects); i < n; i++ ) {
 			var _meshStr = serializeObject(_object.objects[i], _trans);
-			_mtl += _meshStr[0];
+			_mtl += _meshStr[0] + "\n";
 			_obj += _meshStr[1];
 		}
 		
@@ -201,6 +221,9 @@ function Node_3D_Mesh_Export(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var _mtl       =  "# Pixel Composer\n";
 		var _obj       =  "# Pixel Composer\n";
 		if(_mat) _obj += $"mtllib {_mtlName}\n";
+		
+		__mat_index   = 0;
+		__mat_texture = {};
 		
 		_map_v  = ds_map_create();
 		_map_vn = ds_map_create();
