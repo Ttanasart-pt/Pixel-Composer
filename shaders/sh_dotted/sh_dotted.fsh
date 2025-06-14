@@ -8,11 +8,14 @@ uniform vec2  dimension;
 uniform vec2  position;
 
 uniform vec2  spacing;
-uniform float amount;
 uniform float intensity;
 uniform float aa;
 
 uniform int   pattern;
+
+uniform vec2      amount;
+uniform int       amountUseSurf;
+uniform sampler2D amountSurf;
 
 uniform vec2      angle;
 uniform int       angleUseSurf;
@@ -238,7 +241,13 @@ void main() {
 		}
 		ang = radians(ang);
 		
-		amoVec = vec2(amount) / spacing;
+		float amo = amount.x;
+		if(amountUseSurf == 1) {
+			vec4 _vMap = texture2D( amountSurf, v_vTexcoord );
+			amo = mix(amount.x, amount.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+		
+		amoVec = vec2(amo) / spacing;
 	#endregion
 	
 	vec2  pos  = v_vTexcoord * vec2(dimension.x / dimension.y, 1.);

@@ -39,7 +39,7 @@ function Node_Dotted(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	input_display_list = [ 20, 
 		["Output",     true], 0, 1, 
 		["Transform", false], 14, 4, 5, 
-		["Pattern",   false], 13, 2, 15, 9, 10, 
+		["Pattern",   false], 13, 2, 3, 15, 9, 10, 
 		["Render",    false], 7, 6, 16, 8, 17, 18, 19, 12, 11, 
 	];
 	
@@ -93,8 +93,8 @@ function Node_Dotted(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			shader_set_2("dimension", _dim);
 			shader_set_2("position",  _pposi);
 			
-			shader_set_f("amount",    _data[ 2]);
 			shader_set_2("spacing",   _space);
+			shader_set_f_map("amount",_data[ 2], _data[ 3], inputs[ 2]);
 			shader_set_f_map("angle", _data[ 4], _data[ 5], inputs[ 4]);
 			shader_set_f_map("dothr", _data[ 9], _data[10], inputs[ 9]);
 			
