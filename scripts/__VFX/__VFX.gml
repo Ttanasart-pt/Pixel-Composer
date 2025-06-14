@@ -158,6 +158,8 @@ function __part(_node) : __particleObject() constructor {
 	wig_scy = noone;
 	wig_dir = noone;
 	
+	////- Create
+	
 	static reset = function() {
 		INLINE
 		
@@ -232,11 +234,11 @@ function __part(_node) : __particleObject() constructor {
 		wig_dir = wiggle_maps.wig_dir;
 	}
 	
-	static setGround = function(_ground, _ground_offset, _ground_bounce, _ground_frict) {
+	static setGround = function(_ground, _ground_offtyp, _ground_offset, _ground_bounce, _ground_frict) {
 		INLINE
 		
 		ground			= _ground;
-		ground_y		= y + _ground_offset;
+		ground_y		= _ground_offtyp == 1? _ground_offset : y + _ground_offset;
 		ground_bounce	= _ground_bounce;
 		ground_friction	= clamp(1 - _ground_frict, 0, 1);
 	}
@@ -272,6 +274,8 @@ function __part(_node) : __particleObject() constructor {
 		path    = _path;
 		pathDiv = _pathDiv;
 	}
+	
+	////- Actions
 	
 	static kill = function(callDestroy = true) {
 		INLINE
@@ -399,6 +403,8 @@ function __part(_node) : __particleObject() constructor {
 			currColor = cola(cc, alp_draw);
 		#endregion
 	}
+	
+	////- Draw
 	
 	static setDrawParameter = function() {
 		drawx   = x;
@@ -565,6 +571,8 @@ function __part(_node) : __particleObject() constructor {
 		return [x, y];
 	}
 		
+	////- Actions
+	
 	static clone = function() {
 		var _p = new __part(node);
 		struct_override(_p, self);

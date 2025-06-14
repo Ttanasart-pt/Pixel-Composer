@@ -1,31 +1,41 @@
 function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _group) constructor {
 	name = "Particle";
 	use_cache = CACHE_USE.auto;
-
+	
 	onSurfaceSize = function() /*=>*/ {return getInputData(input_len, DEF_SURF)};
 	
-	newInput(input_len + 0, nodeValue_Dimension());
-	newInput(input_len + 1, nodeValue_Bool("Round position", true, "Round position to the closest integer value to avoid jittering."));
-	newInput(input_len + 2, nodeValue_Enum_Scroll("Blend mode",  0 , [ "Normal", "Alpha", "Additive", "Maximum" ]));
-	newInput(input_len + 3, nodeValue_Surface("Background"));
-	newInput(input_len + 4, nodeValue_Enum_Button("Render Type",  PARTICLE_RENDER_TYPE.surface , [ "Surface", "Line" ]));
-	newInput(input_len + 5, nodeValue_Int("Line life", 4 ));
+	////- =Output
+	
+	var i = input_len;
+	newInput(i+3, nodeValue_Surface( "Background" ));
+	newInput(i+0, nodeValue_Dimension());
+	
+	////- =Render
+	
+	newInput(i+4, nodeValue_Enum_Button( "Render Type",    PARTICLE_RENDER_TYPE.surface , [ "Surface", "Line" ]));
+	newInput(i+5, nodeValue_Int(         "Line life",      4 ));
+	newInput(i+1, nodeValue_Bool(        "Round position", true, "Round position to the closest integer value to avoid jittering."));
+	newInput(i+2, nodeValue_Enum_Scroll( "Blend mode",     0, [ "Normal", "Alpha", "Additive", "Maximum" ]));
+	
+	//input i+6
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	array_foreach(inputs, function(i) /*=>*/ {return i.rejectArray()}, input_len);
+	array_foreach(inputs, function(i) /*=>*/ {return i.rejectArray()}, i);
+	
+	array_insert( input_display_list, 0, ["Output", true], i+3, i+0);
+	array_append( input_display_list, [
+		__inspc(ui(6), true, false, ui(3)), 
+		["Render", true], i+4, i+5, 21, i+1, i+2
+	]);
+	
+	////- Nodes
 	
 	attribute_surface_depth();
 	attribute_interpolation();
 	
-	array_insert( input_display_list, 0, ["Output", true], input_len + 3, input_len + 0);
-	array_append( input_display_list,   [
-		__inspc(ui(6), true, false, ui(3)), 
-		["Render", true], input_len + 4, input_len + 5, 21, input_len + 1, input_len + 2
-	]);
-	
 	attributes.cache = true;
-	array_push(attributeEditors, "Cache");
+	array_push(attributeEditors,   "Cache" );
 	array_push(attributeEditors, [ "Cache Data", function() /*=>*/ {return attributes.cache}, new checkBox(function() /*=>*/ {return toggleAttribute("cache")}) ]);
 	
 	def_surface    = -1;
