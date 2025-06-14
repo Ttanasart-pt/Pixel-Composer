@@ -1,22 +1,24 @@
 function Node_3D_Mesh_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Mesh Export";
 	
-	newInput(0, nodeValue_D3Mesh("Mesh", noone))
-		.setVisible(true, true);
+	newInput(0, nodeValue_D3Mesh( "Mesh", noone)).setVisible(true, true);
 	
-	newInput(1, nodeValue_Path("Paths"))
-		.setDisplay(VALUE_DISPLAY.path_save, { filter: "Obj (.obj)|*.obj" })
-		.setVisible(true);
+	////- =Export
 	
-	newInput(2, nodeValue_Bool("Export Texture", true));
+	newInput(1, nodeValue_Path( "Paths" )).setDisplay(VALUE_DISPLAY.path_save, { filter: "Obj (.obj)|*.obj" }).setVisible(true);
+	newInput(2, nodeValue_Bool( "Export Texture", true ));
 	
-	newInput(3, nodeValue_Bool("Invert UV", false));
+	////- =Mesh
 	
-	newInput(4, nodeValue_Bool("Apply Transform", true));
+	newInput(3, nodeValue_Bool( "Invert UV",       false ));
+	newInput(4, nodeValue_Bool( "Apply Transform", true  ));
+	newInput(5, nodeValue_Bool( "Invert YZ Axis",  false ));
+	
+	// input 6
 	
 	input_display_list = [ 0, 
 		["Export", false], 1, 2, 
-		["Mesh",   false], 3, 4, 
+		["Mesh",   false], 3, 4, 5, 
 	];
 	
 	setTrigger(1, "Export", [ THEME.sequence_control, 1, COLORS._main_value_positive ], function() /*=>*/ {return export()});
@@ -27,10 +29,11 @@ function Node_3D_Mesh_Export(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	static serializeMesh = function(_mesh, _transform = noone) {
 		if(!is(_mesh, __3dObject)) return [ "", "" ];
 		
-		var _path  = getInputData(1);
-		var _mat   = getInputData(2);
-		var _invv  = getInputData(3);
-		var _appl  = getInputData(4);
+		var _path = getInputData(1);
+		var _mat  = getInputData(2);
+		var _invv = getInputData(3);
+		var _appl = getInputData(4);
+		var _inv  = getInputData(5);
 		
 		var _trans = _mesh.transform;
 		if(_transform != noone) 
@@ -51,7 +54,7 @@ function Node_3D_Mesh_Export(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			_obj += $"o shape{i}\n";
 			
 			if(_mat) {
-				var _matName  = $"mat.{--__mat_index}";
+				var _matName  = $"mat.{++__mat_index}";
 				var _material = array_safe_get_fast(_mesh.materials, i, 0);
 				
 				if(_material) {
@@ -132,6 +135,19 @@ function Node_3D_Mesh_Export(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 							_nz = _n.z;
 						}
 						
+						var __px = _px, __py = _py, __pz = _pz;
+						var __nx = _nx, __ny = _ny, __nz = _nz;
+						
+						if(_inv) {
+							_px = __px;
+							_py = __pz;
+							_pz = __py;
+							
+							_nx = __nx;
+							_ny = __nz;
+							_nz = __ny;
+						}
+						
 						var __v  = $"v {string_format(_px, -1, 5)} {string_format(_py, -1, 5)} {string_format(_pz, -1, 5)}";
 						var __vn = $"vn {string_format(_nx, -1, 5)} {string_format(_ny, -1, 5)} {string_format(_nz, -1, 5)}";
 						var __vt = $"vt {string_format(_u, -1, 5)} {string_format(_v, -1, 5)}";
@@ -140,6 +156,7 @@ function Node_3D_Mesh_Export(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 						
 						if(ds_map_exists(_map_v, __v)) {
 							_id_v = _map_v[? __v];
+							
 						} else {
 							_id_v = ds_map_size(_map_v) + 1;
 							_map_v[? __v] = _id_v;
@@ -148,6 +165,7 @@ function Node_3D_Mesh_Export(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 						
 						if(ds_map_exists(_map_vn, __vn)) {
 							_id_vn = _map_vn[? __vn];
+							
 						} else {
 							_id_vn = ds_map_size(_map_vn) + 1;
 							_map_vn[? __vn] = _id_vn;
@@ -156,6 +174,7 @@ function Node_3D_Mesh_Export(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 						
 						if(ds_map_exists(_map_vt, __vt)) {
 							_id_vt = _map_vt[? __vt];
+							
 						} else {
 							_id_vt = ds_map_size(_map_vt) + 1;
 							_map_vt[? __vt] = _id_vt;
