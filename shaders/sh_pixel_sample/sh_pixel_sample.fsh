@@ -1,9 +1,3 @@
-#ifdef _YY_HLSL11_ 
-	#define PALETTE_LIMIT 1024 
-#else 
-	#define PALETTE_LIMIT 256 
-#endif
-
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -18,6 +12,12 @@ uniform int   matchMode;
 
 uniform int   blendMode;
 uniform float blendIntensity;
+
+#ifdef _YY_HLSL11_ 
+	#define PALETTE_LIMIT 1024 
+#else 
+	#define PALETTE_LIMIT 256 
+#endif
 
 #region //////////////////////////////////// GRADIENT ////////////////////////////////////
 	#define GRADIENT_LIMIT 128
