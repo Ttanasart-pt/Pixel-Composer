@@ -2440,13 +2440,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static cacheArrayCheck = function() {
-		cached_output = array_verify(cached_output, TOTAL_FRAMES);
-		cache_result  = array_verify(cache_result,  TOTAL_FRAMES);
+		cached_output = array_verify(cached_output, TOTAL_FRAMES + 1);
+		cache_result  = array_verify(cache_result,  TOTAL_FRAMES + 1);
 	}
 	
 	static cacheCurrentFrame = function(_surface) {
 		cacheArrayCheck();
 		var _frame = CURRENT_FRAME;
+		
 		if(_frame < 0) return;
 		if(_frame >= array_length(cached_output)) return;
 		

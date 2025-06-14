@@ -1,13 +1,3 @@
-enum FORCE_TYPE {
-	Wind,
-	Accelerate,
-	Attract,
-	Repel,
-	Vortex,
-	Turbulence,
-	Destroy
-}
-
 function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name   = "Affector";
 	color  = COLORS.node_blend_vfx;
@@ -23,9 +13,9 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	////- =Area
 	
-	newInput(1, nodeValue_Area(  "Area",    DEF_AREA));
-	newInput(2, nodeValue_Curve( "Falloff", CURVE_DEF_01 ));
-	newInput(3, nodeValue_Float( "Falloff distance", 4 ));
+	newInput(1, nodeValue_Area(  "Area",             DEF_AREA_REF )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
+	newInput(2, nodeValue_Curve( "Falloff",          CURVE_DEF_01 ));
+	newInput(3, nodeValue_Float( "Falloff distance", 4            ));
 	
 	////- =Effect
 	
@@ -48,36 +38,36 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	newOutput(0, nodeValue_Output("Particles", VALUE_TYPE.particle, -1 ));
 	
-	UPDATE_PART_FORWARD
-	
-	//////////////////////////////////////////////////
-		
-		falloff  = CURVE_DEF_01;
-		fallDist = 0;
-		
-		area_x   = 0; area_y   = 0;
-		area_w   = 0; area_h   = 0;
-		area_t   = 0;
-		
-		area_x0  = 0; area_x1  = 0;
-		area_y0  = 0; area_y1  = 0;
-		
-		strength  = 0;
-		effectVec = [ 0, 0 ];
-		effectVx  = 0; effectVy  = 0;
-		
-		rotate  = [ 0, 0 ];
-		rotateX = 0; rotateY = 0;
-		
-		scale   = [ 0, 0, 0, 0 ];
-		scaleX0 = 0; scaleX1 = 0;
-		scaleY0 = 0; scaleY1 = 0;
-		
-		seed      = 1;
-	
 	////- Nodes
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	UPDATE_PART_FORWARD
+	
+	falloff   = CURVE_DEF_01;
+	fallDist  = 0;
+	
+	area_x    = 0; area_y   = 0;
+	area_w    = 0; area_h   = 0;
+	area_t    = 0;
+	
+	area_x0   = 0; area_x1  = 0;
+	area_y0   = 0; area_y1  = 0;
+	
+	strength  = 0;
+	effectVec = [ 0, 0 ];
+	effectVx  = 0; effectVy = 0;
+	
+	rotate    = [ 0, 0 ];
+	rotateX   = 0; rotateY  = 0;
+	
+	scale     = [ 0, 0, 0, 0 ];
+	scaleX0   = 0; scaleX1  = 0;
+	scaleY0   = 0; scaleY1  = 0;
+	
+	seed      = 1;
+	
+	static getDimension = function() { return is(inline_context, Node_VFX_Group_Inline)? inline_context.dimension : DEF_SURF; }
+	
+	static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		
 		var area = getInputData(1);
@@ -119,12 +109,11 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		}
 	}
 	
-	function reset() { resetSeed(); }
+	static reset        = function() { resetSeed(); }
+	static resetSeed    = function() { seed = getInputData(8); }
 	
-	static resetSeed = function() { seed = getInputData(8); }
-	
-	function onAffect(part, str) {}
-	function affect(part) {
+	static onAffect     = function(part, str) {}
+	static affect       = function(part) {
 		if(!part.active) return;
 		
 		var _in, _dst;
@@ -157,7 +146,7 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		onAffect(part, str);
 	}
 	
-	static update = function(frame = CURRENT_FRAME) {
+	static update       = function(frame = CURRENT_FRAME) {
 		var val = getInputData(0);
 		outputs[0].setValue(val);
 		
@@ -198,17 +187,11 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		for( var i = 0, n = array_length(val); i < n; i++ )
 		for( var j = 0; j < array_length(val[i]); j++ )
 			affect(val[i][j]);
-		
-		var jun = outputs[0];
-		for(var j = 0; j < array_length(jun.value_to); j++) {
-			if(jun.value_to[j].value_from == jun)
-				jun.value_to[j].node.doUpdate();
-		}
 	}
 	
-	static onVFXUpdate = function(frame = CURRENT_FRAME) {}
+	static onVFXUpdate  = function(frame = CURRENT_FRAME) {}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode   = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		draw_sprite_fit(node_draw_icon, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}

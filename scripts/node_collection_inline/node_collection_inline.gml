@@ -1,21 +1,22 @@
 function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) constructor { 	
-	attributes.members  = [];
-	nodes          = [];
-	group_vertex   = [];
-	group_dragging = false;
-	group_adding   = false;
-	vertex_hash    = "";
-	modifiable     = true;
-	draggable      = false;
-	manual_deletable = false;
+	attributes.members = [];
+	nodes              = [];
+	group_vertex       = [];
+	group_dragging     = false;
+	group_adding       = false;
+	vertex_hash        = "";
+	modifiable         = true;
+	draggable          = false;
+	manual_deletable   = false;
+	bbox               = [ 0, 0, 0, 0 ];
 	
 	managedRenderOrder = false;
-	group_hovering = false;
-	group_hover_al = 0;
-	selectable     = false;
+	group_hovering     = false;
+	group_hover_al     = 0;
+	selectable         = false;
 	
-	input_node_types  = [];
-	output_node_types = [];
+	input_node_types   = [];
+	output_node_types  = [];
 	
 	add_point = false;
 	point_x   = 0;
@@ -25,8 +26,6 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	junction_y = 0;
 	
 	is_root = true;
-	
-	bbox = [ 0, 0, 0, 0 ];
 	
 	static topoSortable = function() { return false; }
 	

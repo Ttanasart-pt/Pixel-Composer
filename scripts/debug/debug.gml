@@ -19,10 +19,7 @@ function print(str) {
 }
 
 function printSurface(name, surface) { 
-	if(!is_surface(surface)) {
-		noti_status($"{name}|Error: Not a valid surface {surface}"); 
-		return;
-	}
+	if(!is_surface(surface)) { noti_status($"{name}|Error: Not a valid surface {surface}"); return; }
 	
 	var _p = $"D:/Project/MakhamDev/LTS-PixelComposer/MISC/temp/{UUID_generate()}.png";
 	surface_save_safe(surface, _p);

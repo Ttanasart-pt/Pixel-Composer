@@ -169,6 +169,7 @@ function __nodeIsRenderLeaf(_node) {
 
 function Render(partial = false, runAction = false) {
 	// node_auto_organize(PROJECT.nodes);
+	// print($"======================== RENDER {CURRENT_FRAME} ========================")
 	
 	LOG_END();
 
@@ -229,6 +230,8 @@ function Render(partial = false, runAction = false) {
 			
 			if(renderable) {
 				var render_pt = get_timer();
+				
+				// print($" >>> Rendering: {rendering.name}");
 				rendering.doUpdate(); 
 				_render_time += get_timer() - render_pt;
 				

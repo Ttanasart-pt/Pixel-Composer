@@ -7,27 +7,17 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	inline_output      = false;
 	manual_ungroupable = false;
 	
-	newInput(0, nodeValue_Vec2("Output dimension", DEF_SURF ));
+	newInput(0, nodeValue_Vec2( "Output dimension", DEF_SURF ));
 		
-	newInput(1, nodeValue_Bool("Round position", true, "Round position to the closest integer value to avoid jittering."))
-		.rejectArray();
-	
-	newInput(2, nodeValue_Enum_Button("Render Type",  PARTICLE_RENDER_TYPE.surface , [ "Surface", "Line" ]))
-		.rejectArray();
-	
-	newInput(3, nodeValue_Int("Line life", 4 ))
-		.rejectArray();
+	////- =Rendering
 		
+	newInput(1, nodeValue_Bool(        "Round position", true, "Round position to the closest integer value to avoid jittering.")).rejectArray();
+	newInput(2, nodeValue_Enum_Button( "Render Type",    PARTICLE_RENDER_TYPE.surface , [ "Surface", "Line" ])).rejectArray();
+	newInput(3, nodeValue_Int(         "Line life",      4 )).rejectArray();
+	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	input_display_list = [ 
-		["Rendering", false], 1, 2, 3, 
-	];
-	
-	temp_surface = [ noone ];
-	
-	attribute_surface_depth();
-	attribute_interpolation();
+	input_display_list = [ ["Rendering", false], 1, 2, 3 ];
 	
 	static createNewInput = function(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
@@ -44,6 +34,13 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	setDynamicInput(2, true, VALUE_TYPE.particle);
 	dyna_input_check_shift = 1;
+	
+	////- Nodes
+	
+	temp_surface = [ noone ];
+	
+	attribute_surface_depth();
+	attribute_interpolation();
 	
 	attributes.cache = true;
 	array_push(attributeEditors, "Cache");
@@ -111,7 +108,7 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			BLEND_NORMAL
 		surface_reset_shader();
 		
-		cacheCurrentFrame(_outSurf);
+		if(IS_PLAYING) cacheCurrentFrame(_outSurf);
 	}
 
 	static getPreviewValues = function() {

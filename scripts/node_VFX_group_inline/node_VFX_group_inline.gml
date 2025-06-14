@@ -6,14 +6,13 @@ function Node_VFX_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 	is_root  = false;
 	topoList = [];
 	
-	newInput(0, nodeValue_Bool("Loop", true ))
-		.rejectArray();
-	
-	newInput(1, nodeValue_Dimension())
-		.rejectArray();
+	newInput(0, nodeValue_Bool( "Loop", true )).rejectArray();
+	newInput(1, nodeValue_Dimension()).rejectArray();
 	
 	output_node_types   = [ Node_VFX_Renderer ];
 	input_display_list = [ 1, 0 ]
+	
+	////- Nodes
 	
 	is_simulation      = true;
 	update_on_frame    = true;
@@ -56,24 +55,21 @@ function Node_VFX_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 			}
 		}
 		
-		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
-			var node = nodes[i];
-			if(!struct_has(node, "resetSeed")) continue;
-			node.resetSeed();
-		}
+		array_foreach(nodes, function(n) /*=>*/ { if(struct_has(n, "resetSeed")) n.resetSeed(); });
+		
 	}
 	
 	static update = function() {
 		dimension = inputs[1].getValue();
 		
-		if(!IS_FIRST_FRAME) return;
-		
-		topoList = NodeListSort(nodes);
-		reset();
+		if(IS_FIRST_FRAME) {
+			topoList = NodeListSort(nodes);
+			reset();
+		}
 	}
 	
 	static getPreviewingNode = function() {
-		for( var i = 0, n = array_length(nodes); i < n; i++ )
+		for( var i = 0, n = array_length(nodes); i < n; i++ ) 
 			if(is(nodes[i], Node_VFX_Renderer)) return nodes[i];
 		return self;
 	}

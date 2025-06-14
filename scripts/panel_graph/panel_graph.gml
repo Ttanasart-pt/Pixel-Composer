@@ -531,10 +531,20 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         for(var i = 0; i < array_length(_arr); i++) {
             var _node = _arr[i];
             
-            if(!is_instanceof(_node, Node))                   continue;
-            if(is_instanceof(_node, Node_Collection_Inline))  continue;
-            if(is_instanceof(_node, Node_Feedback_Inline))    continue;
-            if(!_node.active)                                 continue;
+            if(!is(_node, Node)) continue;
+            if(!_node.active)    continue;
+            
+            if(is(_node, Node_Feedback_Inline))    continue;
+            
+            if(is(_node, Node_Collection_Inline)) {
+            	var _bbox = _node.bbox;
+            	minx = min(minx, _bbox[0] - 32);
+	            maxx = max(maxx, _bbox[2] + 32);
+	                
+	            miny = min(miny, _bbox[1] - 32);
+	            maxy = max(maxy, _bbox[3] + 32);
+            	continue;
+            }
             
             minx = min(minx, _node.x - 32);
             maxx = max(maxx, _node.x + _node.w + 32);
