@@ -27,9 +27,9 @@ function MenuItem(_name, _func, _spr = noone, _hotkey = noone, _toggle = noone, 
 	
 	static toggleFunction = function(_dat = undefined) /*=>*/ {
 		if(!is_undefined(_dat)) return func(_dat);
-		
-		if(params == noone) func();
-		else                func(params);
+		if(params != noone)     return func(params);
+			
+		return func(params);
 	}
 	
     static deactivate   = function() /*=>*/ { active = false; return self; }
@@ -153,8 +153,8 @@ function pieMenuCall(menu_id = "", _x = mouse_mx, _y = mouse_my, menu = []) {
 	return dia;
 }
 
-function submenuCall(_data = undefined, menu = []) {
-	if(is_undefined(_data)) return menuCall("", menu);
+function submenuCall(_data = undefined, menu = [], menu_id = "") {
+	if(is_undefined(_data)) return menuCall(menu_id, menu);
 	
 	var _xx = _data.x - 1;
 	var dia = instance_create_depth(_xx, _data.y, _data.depth - 1, o_dialog_menubox);

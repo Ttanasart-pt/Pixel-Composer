@@ -1,7 +1,11 @@
-function nodeValue_Enum_Button(_name, _value, _data) { return new __NodeValue_Enum_Button(_name, self, _value, _data); }
+function nodeValue_Enum_Button(_name, _value, _data = noone) { return new __NodeValue_Enum_Button(_name, self, _value, _data); }
 
 function __NodeValue_Enum_Button(_name, _node, _value, _data) : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.integer, _value, "") constructor {
-	setDisplay(VALUE_DISPLAY.enum_button, _data);
+	if(_data != noone) setDisplay(VALUE_DISPLAY.enum_button, _data);
+	
+	/////============== Display =============
+	
+	static setChoices = function(_ch) { setDisplay(VALUE_DISPLAY.enum_button, _ch); return self; }
 	
 	/////============== GET =============
 	

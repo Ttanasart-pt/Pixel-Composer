@@ -17,13 +17,13 @@ DIALOG_WINCLEAR1
 	draw_sprite_stretched(THEME.box_r2_clr, 0, dialog_x, dialog_y, dialog_w, dialog_h);
 	
 	var to_del = noone;
-	for( var i = 0, n = array_length(menu); i < n; i++ ) {
+	
+	for( var i = 0; i < array_length(menu); i++ ) {
 		var _menuItem = menu[i];
 		
 		if(is_string(_menuItem)) {
 			draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text_sub);
 			draw_text(dialog_x + ui(8), yy + ui(4), _menuItem);
-			
 			yy += string_height(_menuItem) + ui(8);
 			continue;
 		}
@@ -37,7 +37,6 @@ DIALOG_WINCLEAR1
 			draw_set_color(CDEF.main_mdblack);
 			draw_line_width(bx, yy + ui(3), bx + bw, yy + ui(3), 2);
 			yy += ui(8);
-			
 			continue;
 		}
 		
@@ -68,7 +67,7 @@ DIALOG_WINCLEAR1
 						
 						if(instance_exists(submenu)) {
 							instance_destroy(submenu);
-							submenu   = noone;
+							submenu = noone;
 						}
 						
 						if(submenuIt == _menuItem) {

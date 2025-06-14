@@ -1,12 +1,14 @@
-function nodeValue_Enum_Scroll(_name, _value, _data) { return new __NodeValue_Enum_Scroll(_name, self, _value, _data); }
+function nodeValue_Enum_Scroll(_name, _value, _data = noone) { return new __NodeValue_Enum_Scroll(_name, self, _value, _data); }
 
 function __NodeValue_Enum_Scroll(_name, _node, _value, _data) : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.integer, _value, "") constructor {
-	setDisplay(VALUE_DISPLAY.enum_scroll, _data);
+	if(_data != noone) setDisplay(VALUE_DISPLAY.enum_scroll, _data);
 	
 	clamp_range   = true;
 	choicesAmount = undefined;
 	
 	/////============== SET =============
+	
+	static setChoices = function(_ch) { setDisplay(VALUE_DISPLAY.enum_button, _ch); return self; }
 	
 	static scrollValue = function(_d=1) /*=>*/ { 
 		choicesAmount = array_length(editWidget.data);

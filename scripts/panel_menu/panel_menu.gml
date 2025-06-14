@@ -39,12 +39,12 @@
                 function(_dat) { 
                     var arr = [];
                     var dat = [];
-                    for(var i = 0; i < min(10, ds_list_size(RECENT_FILES)); i++)  {
-                        var _rec = RECENT_FILES[| i];
+                    for(var fi = 0; fi < min(10, ds_list_size(RECENT_FILES)); fi++)  {
+                        var _rec = RECENT_FILES[| fi];
                         array_push(arr, menuItem(_rec, function(_dat) { LOAD_PATH(_dat.path); }, noone, noone, noone, { path: _rec }));
                     }
                     
-                    return submenuCall(_dat, arr);
+                    return submenuCall(_dat, arr, "recent_files");
                 }).setMenu("recent_files",, true);
                 
             registerFunction("", "Import .zip",     "",     MOD_KEY.none,                                 __IMPORT_ZIP             ).setMenu("import_zip",     )

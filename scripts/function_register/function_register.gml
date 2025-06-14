@@ -51,14 +51,19 @@ function functionObject(_context, _name, _key, _mod, _action, _param = noone) co
 	FUNCTIONS[$ fnName]     = self;
 	CMD_FUNCTIONS[$ fnName] = { action: _action, args: [] };
 	
-	function action() {
-		if(params == noone) fn();
-		else fn(params);
+	function action(_dat = undefined) {
+		var _res;
+		
+		if(!is_undefined(_dat))  _res = fn(_dat);
+		else if(params != noone) _res = fn(params);
+		else                     _res = fn();
 		
 		switch(context) {
 			case "Graph":   PANEL_GRAPH.setActionTooltip(name);   break;
 			case "Preview": PANEL_PREVIEW.setActionTooltip(name); break;
 		}
+		
+		return _res;
 	}
 	
 	static setSpr = function(_spr)       { spr = _spr; if(menu) menu.spr = _spr;              return self; }
