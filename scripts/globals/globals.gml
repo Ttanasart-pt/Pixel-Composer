@@ -31,6 +31,8 @@
 	CMDIN    = [];
 	CMDPRG   = noone;
 	
+	window_set_showborder(OS != os_windows);
+	
 	FPS_REAL = 0;
 	RUN_IDE  = GM_build_type == "run";
 	

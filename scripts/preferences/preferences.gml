@@ -93,7 +93,7 @@
 		// PREFERENCES.panel_preview_tran_colors		= [  ];
 	
 		PREFERENCES.panel_menu_resource_monitor		= false;
-		PREFERENCES.panel_menu_right_control		= os_type == os_windows;
+		PREFERENCES.panel_menu_right_control		= os_type != os_macosx;
 	
 		PREFERENCES.panel_menu_palette_node_size    = 20;
 	

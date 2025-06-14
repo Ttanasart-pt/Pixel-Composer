@@ -16,6 +16,9 @@
 	globalvar window_min_w;				window_min_w = 960;
 	globalvar window_min_h;				window_min_h = 600;
 	
+	globalvar window_curr_w;            window_curr_w = undefined;
+	globalvar window_curr_h;            window_curr_h = undefined;
+	
 	globalvar window_preminimize_rect;  window_preminimize_rect = [ 0, 0, 1, 1 ];
 	globalvar __winman_to_ref;          __winman_to_ref = false;
 	
@@ -140,6 +143,15 @@ function winManStep() {
 		}
 	}
 	
+	if(OS == os_linux) {
+		if(window_curr_w != undefined && window_curr_h != undefined && (window_curr_w != WIN_W || window_curr_h != WIN_H)) {
+			DISPLAY_REFRESH;
+		}
+		
+		window_curr_w = WIN_W;
+		window_curr_h = WIN_H;
+	}
+	
 	window_monitor = 0;
 	var _monitors = display_measure_all();
 	var _x = window_get_x() + WIN_W / 2;
@@ -169,7 +181,7 @@ function winManStep() {
 	var sw = _sw;
 	var sh = _sh;
 	
-	if(window_drag_status & 0b10000) {
+	if(window_drag_status & 0b1_0000) {
 		if(window_drag_hold == 0 && window_is_maximized) {
 			if(point_distance(mx, my, _mx, _my) > 8)
 				window_drag_hold = 1;
@@ -200,28 +212,38 @@ function winManStep() {
 		}
 			
 	} else {
-		if(window_drag_status & 0b0001) {
-			sw = _sw + (mx - _mx);
-		}
-	
-		if(window_drag_status & 0b0010) {
-			sh = max(window_min_h, _sh - (my - _my));
-			sy = _sy + (_sh - sh);
-		}
-	
-		if(window_drag_status & 0b0100) {
-			sw = max(window_min_w, _sw - (mx - _mx));
-			sx = _sx + (_sw - sw);
-		}
-	
-		if(window_drag_status & 0b1000) {
-			sh = _sh + (my - _my);
+		if(OS == os_linux) {
+			if(window_drag_status & 0b0_0001) sw = max(window_min_w, _sw + (mx - _mx));
+			if(window_drag_status & 0b0_0100) sw = max(window_min_w, _sw - (mx - _mx));
+			
+			if(window_drag_status & 0b0_0010) sh = max(window_min_h, _sh - (my - _my));
+			if(window_drag_status & 0b0_1000) sh = max(window_min_h, _sh + (my - _my));
+				
+			window_set_size(sw, sh);
+			
+		} else {
+			if(window_drag_status & 0b0_0001) {
+				sw = max(window_min_w, _sw + (mx - _mx));
+			}
+		
+			if(window_drag_status & 0b0_0010) {
+				sh = max(window_min_h, _sh - (my - _my));
+				sy = _sy + (_sh - sh);
+			}
+		
+			if(window_drag_status & 0b0_0100) {
+				sw = max(window_min_w, _sw - (mx - _mx));
+				sx = _sx + (_sw - sw);
+			}
+		
+			if(window_drag_status & 0b0_1000) {
+				sh = max(window_min_h, _sh + (my - _my));
+			}
+			
+			winMan_setRect(sx, sy, sw, sh);
 		}
 		
-		winMan_setRect(sx, sy, sw, sh);
-		
-		if(mouse_release(mb_left))
-			DISPLAY_REFRESH
+		if(mouse_release(mb_left)) { DISPLAY_REFRESH }
 	}
 	
 	if(mouse_release(mb_left)) {
@@ -241,45 +263,15 @@ function winManDraw() {
 	var u = mouse_mx > 0 && mouse_mx < WIN_W && mouse_my > 0 && mouse_my < pd;
 	var d = mouse_mx > 0 && mouse_mx < WIN_W && mouse_my > WIN_H - pd && mouse_my < WIN_H;
 	
-	if(r) {
-		CURSOR = cr_size_we;
-		hv = 0b0001;
-	}
+	if(r) { CURSOR = cr_size_we; hv = 0b0_0001; }
+	if(u) { CURSOR = cr_size_ns; hv = 0b0_0010; }
+	if(l) { CURSOR = cr_size_we; hv = 0b0_0100; }
+	if(d) { CURSOR = cr_size_ns; hv = 0b0_1000; }
 	
-	if(u) {
-		CURSOR = cr_size_ns;
-		hv = 0b0010;
-	}
-	
-	if(l) {
-		CURSOR = cr_size_we;
-		hv = 0b0100;
-	}
-		
-	if(d) {
-		CURSOR = cr_size_ns;
-		hv = 0b1000;
-	}
-	
-	if(l && u) {
-		CURSOR = MAC? cr_size_all : cr_size_nwse;
-		hv = 0b0110;
-	}
-		
-	if(r && d) {
-		CURSOR = MAC? cr_size_all : cr_size_nwse;
-		hv = 0b1001;
-	}
-	
-	if(l && d) {
-		CURSOR = MAC? cr_size_all : cr_size_nesw;
-		hv = 0b1100;
-	}
-		
-	if(r && u) {
-		CURSOR = MAC? cr_size_all : cr_size_nesw;
-		hv = 0b0011;
-	}
+	if(l && u) { CURSOR = MAC? cr_size_all : cr_size_nwse; hv = 0b0_0110; }
+	if(r && d) { CURSOR = MAC? cr_size_all : cr_size_nwse; hv = 0b0_1001; }
+	if(l && d) { CURSOR = MAC? cr_size_all : cr_size_nesw; hv = 0b0_1100; }
+	if(r && u) { CURSOR = MAC? cr_size_all : cr_size_nesw; hv = 0b0_0011; }
 	
 	if(hv > -1 && mouse_press(mb_left))
 		winMan_initDrag(hv);

@@ -313,7 +313,7 @@ function Panel_Menu() : PanelContent() constructor {
     
     function drawContent(panel) {
         var _right     = PREFERENCES.panel_menu_right_control// || OS != os_windows;
-        var _action    = false//OS == os_windows;
+        var _action    = true//OS == os_windows;
         var _draggable = pFOCUS;
         
         draw_clear_alpha(COLORS.panel_bg_clear, 1);
@@ -856,7 +856,7 @@ function Panel_Menu() : PanelContent() constructor {
                     DISPLAY_REFRESH
                 }
                 
-                if(mouse_press(mb_left)) winMan_initDrag(0b10000);
+                if(mouse_press(mb_left) && OS == os_windows) winMan_initDrag(0b10000);
             }
         #endregion
     }

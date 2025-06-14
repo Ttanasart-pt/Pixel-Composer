@@ -931,7 +931,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	static postDeserialize = function() {
 		if(CLONING) return;
 		
-		if(LOADING_VERSION < 1_19_04_0) {
+		if(LOADING_VERSION < 1_19_03_1) {
 			var _ins = load_map.inputs;
 			
 			for( var i = input_fix_len, n = array_length(_ins); i < n; i += data_length ) {

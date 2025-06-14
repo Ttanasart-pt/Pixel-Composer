@@ -954,7 +954,7 @@ function PanelContent() constructor {
 		
 		stepBegin();
 	}
-	static stepBegin    = function() {}
+	static stepBegin   = function() {}
 	
 	////- Draw
 	

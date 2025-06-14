@@ -217,6 +217,7 @@ function Panel_Animation_Dopesheet() {
 	        -1,
 	        "animation_group_align",
 	        "animation_driver",
+	        "animation_reverse",
 	        "animation_stagger",
 	        "animation_envelope",
 	        -1,
@@ -489,149 +490,6 @@ function Panel_Animation_Dopesheet() {
     function deleteKeys() {
     	array_foreach(keyframe_selecting, function(k) /*=>*/ { k.anim.removeKey(k); });
         keyframe_selecting = [];
-    }
-    
-    function alignKeys(halign = fa_left) {
-        if(array_empty(keyframe_selecting)) return;
-        
-        __tt = 0;
-        
-        switch(halign) {
-            case fa_left  : __tt = array_reduce(keyframe_selecting, function(v, k) /*=>*/ {return min(v, k.time)},  infinity); break;
-            case fa_right : __tt = array_reduce(keyframe_selecting, function(v, k) /*=>*/ {return max(v, k.time)}, -infinity); break;
-                
-            case fa_center :    
-            	__tt = array_reduce(keyframe_selecting, function(v, k) /*=>*/ {return v + k.time}, 0);
-                __tt = round(__tt / array_length(keyframe_selecting));
-                break;
-        }
-        
-        array_foreach(keyframe_selecting, function(k) /*=>*/ { k.anim.setKeyTime(k, __tt,, true) });
-    }
-    
-    function repeatKeys_anim(_anim) {
-    	__anim = _anim;
-    	var _keys = array_filter(keyframe_selecting, function(k) /*=>*/ {return k.anim == __anim});
-        if(array_length(_keys) < 2) return;
-        
-    	var _tLast   = array_reduce(_anim.values,       function(v, k) /*=>*/ {return max(v, k.time)}, -infinity);
-    	var _kFirst  = array_reduce(_keys, function(v, k) /*=>*/ {return min(v, k.time)},  infinity);
-    	var _kLast   = array_reduce(_keys, function(v, k) /*=>*/ {return max(v, k.time)}, -infinity);
-    	var _kLength = _kLast - _kFirst;
-    	var _kEnds_last = -infinity;
-    	
-        if(array_length(_keys) == 2) {
-        	for( var i = 0, n = array_length(_keys); i < n; i++ ) {
-	    		var _k = _keys[i];
-	    		var _nt = _tLast + _kLength + (_k.time - _kFirst);
-	    		var _nk = _k.clone(_anim);
-	    		
-	    		_nk.value = variable_clone(_k.value);
-	    		_nk.time  = _nt;
-	    		_kEnds_last = max(_kEnds_last, _nt);
-	    		
-	    		array_push(_anim.values, _nk);
-	    	}
-        	
-        } else {
-	    	for( var i = 0, n = array_length(_keys); i < n; i++ ) {
-	    		var _k = _keys[i];
-	    		if(_k.time == _kFirst) continue;
-	    		
-	    		var _nt = _tLast + (_k.time - _kFirst);
-	    		var _nk = _k.clone(_anim);
-	    		
-	    		_nk.value = variable_clone(_k.value);
-	    		_nk.time  = _nt;
-	    		_kEnds_last = max(_kEnds_last, _nt);
-	    		
-	    		array_push(_anim.values, _nk);
-	    	}
-        }
-        
-    	array_sort(_anim.values, function(a,b) /*=>*/ {return a.time - b.time});
-    	_anim.updateKeyMap();
-    	_anim.prop.node.triggerRender();
-    }
-    function repeatKeys() {
-        if(array_empty(keyframe_selecting)) return;
-        
-        var _anims = array_create_ext(array_length(keyframe_selecting), function(i) /*=>*/ {return keyframe_selecting[i].anim});
-            _anims = array_unique(_anims);
-        
-        array_foreach(_anims, function(a) /*=>*/ {return repeatKeys_anim(a)});
-    }
-    
-    function distributeKeys_anim(_anim, _fr, _to) {
-    	__anim = _anim;
-    	var _keys = array_filter(keyframe_selecting, function(k) /*=>*/ {return k.anim == __anim});
-        if(array_length(_keys) <= 2) return;
-        
-    	array_sort(_keys, function(a,b) /*=>*/ {return a.time - b.time});
-    	for( var i = 0, n = array_length(_keys); i < n; i++ ) {
-    		var _k = _keys[i];
-    		var _t = lerp(_fr, _to, i / (n - 1));
-    		
-    		_k.time = _t;
-    	}
-    	
-    	array_sort(_anim.values, function(a,b) /*=>*/ {return a.time - b.time});
-    	_anim.updateKeyMap();
-    	_anim.prop.node.triggerRender();
-    }
-    function distributeKeys() {
-        if(array_empty(keyframe_selecting)) return;
-        
-        var _anims = array_create_ext(array_length(keyframe_selecting), function(i) /*=>*/ {return keyframe_selecting[i].anim});
-            _anims = array_unique(_anims);
-        
-    	__kFirst = array_reduce(keyframe_selecting, function(v, k) /*=>*/ {return min(v, k.time)},  infinity);
-    	__kLast  = array_reduce(keyframe_selecting, function(v, k) /*=>*/ {return max(v, k.time)}, -infinity);
-    	
-        array_foreach(_anims, function(a) /*=>*/ {return distributeKeys_anim(a, __kFirst, __kLast)});
-    }
-    
-    function arrangeKeys() {}
-    
-    function staggerKeys(_index, _stag) {
-        var modified = false;
-        var t = keyframe_selecting[_index].time;
-        
-        for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
-            var k = keyframe_selecting[i];
-            var _t = t + abs(i -  _index) * _stag;
-            
-            modified = k.anim.setKeyTime(k, _t) || modified;
-        }
-        
-        if(modified) UNDO_HOLDING = true;
-    }
-    
-    function modulateKeys(_type = KEYFRAME_MODULATE.envelope) {
-    	if(array_empty(keyframe_selecting)) return;
-        
-        __anim = keyframe_selecting[0].anim;
-        __prop = __anim.prop; 
-        __keys = array_filter(keyframe_selecting, function(k) /*=>*/ {return k.anim == __anim});
-        
-	    if(!isGraphable(__prop) || __prop.type == VALUE_TYPE.color) return;
-        if(array_length(__keys) < 2) return;
-        
-	    __prop.show_graph = true;
-    	modulate_animator = __anim;
-	    modulate_keys     = array_create_ext(array_length(__keys), function(v) /*=>*/ {return [__keys[v], __keys[v].clone()]});
-	    
-	    var _kFirst = array_reduce(__keys, function(v, k) /*=>*/ {return min(v, k.time)},  infinity);
-    	var _kLast  = array_reduce(__keys, function(v, k) /*=>*/ {return max(v, k.time)}, -infinity);
-    	var _vFirst = array_reduce(__keys, function(v, k) /*=>*/ {return min(v, array_min(k.value))},  infinity);
-    	var _vLast  = array_reduce(__keys, function(v, k) /*=>*/ {return max(v, array_max(k.value))}, -infinity);
-    	
-	    modulate_range       = [ _kFirst, _kLast ];
-	    modulate_value_range = [ _vFirst, _vLast ];
-	    
-	    modulate_curve  = CURVE_DEF_01;
-	    modulate_amount = [ 0, 0 ];
-	    modulate_type   = _type;
     }
     
     ////- Draw Functions
@@ -2598,14 +2456,185 @@ function Panel_Animation_Dopesheet() {
                 copy_clipboard[| i].cloneAnimator(shf, (multiVal || val == noone)? noone : val.animator);
         }
     }
-
+	
 	function doQuantize() {
 		for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
 			var k = keyframe_selecting[i];
 			k.time = round(k.time);
 		}
 	}
-
+	
+    function repeatKeys_anim(_anim) {
+    	__anim = _anim;
+    	var _keys = array_filter(keyframe_selecting, function(k) /*=>*/ {return k.anim == __anim});
+        if(array_length(_keys) < 2) return;
+        
+    	var _tLast   = array_reduce(_anim.values,       function(v, k) /*=>*/ {return max(v, k.time)}, -infinity);
+    	var _kFirst  = array_reduce(_keys, function(v, k) /*=>*/ {return min(v, k.time)},  infinity);
+    	var _kLast   = array_reduce(_keys, function(v, k) /*=>*/ {return max(v, k.time)}, -infinity);
+    	var _kLength = _kLast - _kFirst;
+    	var _kEnds_last = -infinity;
+    	
+        if(array_length(_keys) == 2) {
+        	for( var i = 0, n = array_length(_keys); i < n; i++ ) {
+	    		var _k = _keys[i];
+	    		var _nt = _tLast + _kLength + (_k.time - _kFirst);
+	    		var _nk = _k.clone(_anim);
+	    		
+	    		_nk.value = variable_clone(_k.value);
+	    		_nk.time  = _nt;
+	    		_kEnds_last = max(_kEnds_last, _nt);
+	    		
+	    		array_push(_anim.values, _nk);
+	    	}
+        	
+        } else {
+	    	for( var i = 0, n = array_length(_keys); i < n; i++ ) {
+	    		var _k = _keys[i];
+	    		if(_k.time == _kFirst) continue;
+	    		
+	    		var _nt = _tLast + (_k.time - _kFirst);
+	    		var _nk = _k.clone(_anim);
+	    		
+	    		_nk.value = variable_clone(_k.value);
+	    		_nk.time  = _nt;
+	    		_kEnds_last = max(_kEnds_last, _nt);
+	    		
+	    		array_push(_anim.values, _nk);
+	    	}
+        }
+        
+    	array_sort(_anim.values, function(a,b) /*=>*/ {return a.time - b.time});
+    	_anim.updateKeyMap();
+    	_anim.prop.node.triggerRender();
+    }
+    function repeatKeys() {
+        if(array_empty(keyframe_selecting)) return;
+        
+        var _anims = array_create_ext(array_length(keyframe_selecting), function(i) /*=>*/ {return keyframe_selecting[i].anim});
+            _anims = array_unique(_anims);
+        
+        array_foreach(_anims, function(a) /*=>*/ {return repeatKeys_anim(a)});
+    }
+    
+    function distributeKeys_anim(_anim, _fr, _to) {
+    	__anim = _anim;
+    	var _keys = array_filter(keyframe_selecting, function(k) /*=>*/ {return k.anim == __anim});
+        if(array_length(_keys) <= 2) return;
+        
+    	array_sort(_keys, function(a,b) /*=>*/ {return a.time - b.time});
+    	for( var i = 0, n = array_length(_keys); i < n; i++ ) {
+    		var _k = _keys[i];
+    		var _t = lerp(_fr, _to, i / (n - 1));
+    		
+    		_k.time = _t;
+    	}
+    	
+    	array_sort(_anim.values, function(a,b) /*=>*/ {return a.time - b.time});
+    	_anim.updateKeyMap();
+    	_anim.prop.node.triggerRender();
+    }
+    function distributeKeys() {
+        if(array_empty(keyframe_selecting)) return;
+        
+        var _anims = array_create_ext(array_length(keyframe_selecting), function(i) /*=>*/ {return keyframe_selecting[i].anim});
+            _anims = array_unique(_anims);
+        
+    	__kFirst = array_reduce(keyframe_selecting, function(v, k) /*=>*/ {return min(v, k.time)},  infinity);
+    	__kLast  = array_reduce(keyframe_selecting, function(v, k) /*=>*/ {return max(v, k.time)}, -infinity);
+    	
+        array_foreach(_anims, function(a) /*=>*/ {return distributeKeys_anim(a, __kFirst, __kLast)});
+    }
+    
+    function alignKeys(halign = fa_left) {
+        if(array_empty(keyframe_selecting)) return;
+        
+        __tt = 0;
+        
+        switch(halign) {
+            case fa_left  : __tt = array_reduce(keyframe_selecting, function(v, k) /*=>*/ {return min(v, k.time)},  infinity); break;
+            case fa_right : __tt = array_reduce(keyframe_selecting, function(v, k) /*=>*/ {return max(v, k.time)}, -infinity); break;
+                
+            case fa_center :    
+            	__tt = array_reduce(keyframe_selecting, function(v, k) /*=>*/ {return v + k.time}, 0);
+                __tt = round(__tt / array_length(keyframe_selecting));
+                break;
+        }
+        
+        array_foreach(keyframe_selecting, function(k) /*=>*/ { k.anim.setKeyTime(k, __tt,, true) });
+    }
+    
+    function arrangeKeys() {}
+    
+    function staggerKeys(_index, _stag) {
+        var modified = false;
+        var t = keyframe_selecting[_index].time;
+        
+        for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
+            var k = keyframe_selecting[i];
+            var _t = t + abs(i -  _index) * _stag;
+            
+            modified = k.anim.setKeyTime(k, _t) || modified;
+        }
+        
+        if(modified) UNDO_HOLDING = true;
+    }
+    
+    function modulateKeys(_type = KEYFRAME_MODULATE.envelope) {
+    	if(array_empty(keyframe_selecting)) return;
+        
+        __anim = keyframe_selecting[0].anim;
+        __prop = __anim.prop; 
+        __keys = array_filter(keyframe_selecting, function(k) /*=>*/ {return k.anim == __anim});
+        
+	    if(!isGraphable(__prop) || __prop.type == VALUE_TYPE.color) return;
+        if(array_length(__keys) < 2) return;
+        
+	    __prop.show_graph = true;
+    	modulate_animator = __anim;
+	    modulate_keys     = array_create_ext(array_length(__keys), function(v) /*=>*/ {return [__keys[v], __keys[v].clone()]});
+	    
+	    var _kFirst = array_reduce(__keys, function(v, k) /*=>*/ {return min(v, k.time)},  infinity);
+    	var _kLast  = array_reduce(__keys, function(v, k) /*=>*/ {return max(v, k.time)}, -infinity);
+    	var _vFirst = array_reduce(__keys, function(v, k) /*=>*/ {return min(v, array_min(k.value))},  infinity);
+    	var _vLast  = array_reduce(__keys, function(v, k) /*=>*/ {return max(v, array_max(k.value))}, -infinity);
+    	
+	    modulate_range       = [ _kFirst, _kLast ];
+	    modulate_value_range = [ _vFirst, _vLast ];
+	    
+	    modulate_curve  = CURVE_DEF_01;
+	    modulate_amount = [ 0, 0 ];
+	    modulate_type   = _type;
+    }
+    
+	function reverseKeys_anim(_anim, _fr, _to) {
+		__anim = _anim;
+    	var _keys = array_filter(keyframe_selecting, function(k) /*=>*/ {return k.anim == __anim});
+        if(array_length(_keys) < 2) return;
+        
+    	for( var i = 0, n = array_length(_keys); i < n; i++ ) {
+    		var _k = _keys[i];
+    		var _t = _to - (_k.time - _fr);
+    		_k.time = _t;
+    	}
+    	
+    	array_sort(_anim.values, function(a,b) /*=>*/ {return a.time - b.time});
+    	_anim.updateKeyMap();
+    	_anim.prop.node.triggerRender();
+	}
+	function reverseKeys() {
+		if(array_length(keyframe_selecting) < 2) return;
+		
+		var _anims = array_create_ext(array_length(keyframe_selecting), function(i) /*=>*/ {return keyframe_selecting[i].anim});
+            _anims = array_unique(_anims);
+        
+    	__kFirst = array_reduce(keyframe_selecting, function(v, k) /*=>*/ {return min(v, k.time)},  infinity);
+    	__kLast  = array_reduce(keyframe_selecting, function(v, k) /*=>*/ {return max(v, k.time)}, -infinity);
+    	
+        array_foreach(_anims, function(a) /*=>*/ {return reverseKeys_anim(a, __kFirst, __kLast)});
+        
+	}
+	
 }
 
 function tooltipAnimEnd() constructor {

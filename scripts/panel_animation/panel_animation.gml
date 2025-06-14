@@ -1,4 +1,5 @@
 #region funtion calls
+	#region
     function panel_animation_settings_call()           { var dia = dialogPanelCall(new Panel_Animation_Setting()); dia.anchor = ANCHOR.none;                                                             }
     function panel_animation_scale_call()              { dialogPanelCall(new Panel_Animation_Scaler());                                                                                                  }
     
@@ -30,6 +31,7 @@
     function panel_animation_keyframe_align_right()    { CALL("animation_align_right");             PANEL_ANIMATION.alignKeys(fa_right);  }
     function panel_animation_keyframe_repeat()         { CALL("animation_repeat");                  PANEL_ANIMATION.repeatKeys();         }
     function panel_animation_keyframe_distribute()     { CALL("animation_distribute");              PANEL_ANIMATION.distributeKeys();     }
+    function panel_animation_keyframe_reverse()        { CALL("animation_reverse");                 PANEL_ANIMATION.reverseKeys();        }
     function panel_animation_keyframe_envelope()       { CALL("animation_envelope");                PANEL_ANIMATION.modulateKeys(KEYFRAME_MODULATE.envelope);  }
     function panel_animation_keyframe_randomize()      { CALL("animation_randomize");               PANEL_ANIMATION.modulateKeys(KEYFRAME_MODULATE.randomize); }
     
@@ -50,7 +52,7 @@
     
     function panel_animation_reset_view()              { CALL("animation_view_reset");             PANEL_ANIMATION.resetView();              }
     
-     function __fnInit_Animation() {
+	function __fnInit_Animation() {
         registerFunction("",          "Play/Pause",         vk_space,   MOD_KEY.none,                 panel_animation_play_pause            ).setMenu("play_pause",                    )
         registerFunction("",          "Resume/Pause",       vk_space,   MOD_KEY.shift,                panel_animation_resume                ).setMenu("resume_pause",                  )
                                 
@@ -83,6 +85,7 @@
         registerFunction("Animation", "Stagger Keys",       "",  MOD_KEY.none, panel_animation_edit_keyframe_stagger  ).setMenu("animation_stagger",     )
         registerFunction("Animation", "Repeat Keys",        "R", MOD_KEY.none, panel_animation_keyframe_repeat        ).setMenu("animation_repeat"       )
         registerFunction("Animation", "Distribute Keys",    "D", MOD_KEY.none, panel_animation_keyframe_distribute    ).setMenu("animation_distribute"   )
+        registerFunction("Animation", "Reverse Keys",       "I", MOD_KEY.none, panel_animation_keyframe_reverse       ).setMenu("animation_reverse"      )
         registerFunction("Animation", "Envelope Keys",      "",  MOD_KEY.none, panel_animation_keyframe_envelope      ).setMenu("animation_envelope"     )
         registerFunction("Animation", "Randomize Keys",     "",  MOD_KEY.none, panel_animation_keyframe_randomize     ).setMenu("animation_randomize"    )
         
@@ -148,6 +151,7 @@
         MENU_ITEMS.animation_group_label_color = menuItemGroup(__txt("Color"), _item, ["Animation", "Label Color"]).setSpacing(ui(24));
         registerFunction("Animation", "Label Color", "", MOD_KEY.none, function() /*=>*/ { menuCall("", [ MENU_ITEMS.animation_group_label_color ]); });
     }
+	#endregion
 #endregion
 
 function Panel_Animation() : PanelContent() constructor {
