@@ -40,17 +40,21 @@ function _sprite_load_from_struct(str, theme, key) {
 	var slice = sprite_nineslice_create();	
 	slice.enabled = true;
 	
+	var _sw = sprite_get_width(s);
+	var _sh = sprite_get_height(s);
+	
 	if(is_array(str.slice)) {
-		slice.left    = str.slice[0];
-		slice.right   = str.slice[1];
-		slice.top     = str.slice[2];
-		slice.bottom  = str.slice[3];
+		slice.left    = str.slice[0] > 0? str.slice[0] : _sw / 2 + str.slice[0];
+		slice.right   = str.slice[1] > 0? str.slice[1] : _sw / 2 + str.slice[1];
+		slice.top     = str.slice[2] > 0? str.slice[2] : _sh / 2 + str.slice[2];
+		slice.bottom  = str.slice[3] > 0? str.slice[3] : _sh / 2 + str.slice[3];
 		
 	} else if(is_real(str.slice)) {
-		slice.left    = str.slice;
-		slice.right   = str.slice;
-		slice.top     = str.slice;
-		slice.bottom  = str.slice;
+		var _sl = str.slice > 0? str.slice : _sw / 2 + str.slice;
+		slice.left    = _sl;
+		slice.right   = _sl;
+		slice.top     = _sl;
+		slice.bottom  = _sl;
 		
 	}
 	

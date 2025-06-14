@@ -8,7 +8,7 @@ event_inherited();
 	title_height         = ui(24);
 	dialog_resizable     = true;
 	destroy_on_click_out = true;
-	destroy_on_escape    = false;
+	destroy_on_escape    = true;
 	
 	panel        = surface_create(dialog_w, dialog_h);
 	mask_surface = noone;
@@ -29,7 +29,10 @@ event_inherited();
 		content.panel     = self;
 		content.in_dialog = true;
 		
-		if(content.auto_pin) destroy_on_click_out = false;
+		if(content.auto_pin) {
+			destroy_on_click_out = false;
+			destroy_on_escape    = false;
+		}
 	}
 	
 	function contentResize() {

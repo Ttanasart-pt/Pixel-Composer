@@ -87,7 +87,7 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			ind -= lc;
 		}
 		
-		return 0;
+		return new BoundingBox();
 	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {

@@ -342,6 +342,8 @@ function draw_tooltip_path(_path) {
 	
 	draw_set_color(COLORS._main_accent);
 	var _bbox = _path.getBoundary();
+	if(!is_struct(_bbox)) return;
+	
 	var _x0 = _bbox.minx, _x1 = _bbox.maxx, _cx = (_x0 + _x1) / 2;
 	var _y0 = _bbox.miny, _y1 = _bbox.maxy, _cy = (_y0 + _y1) / 2;
 	var _ss = max(_bbox.width, _bbox.height);

@@ -1386,13 +1386,14 @@ function Panel_Animation_Dopesheet() {
     ////- Draw Animator
     
     function drawDopesheet_AnimatorKeys(_cont, animator, msx, msy) {
-        var _node     = _cont.node;
-        var prop_y    = animator.y;
-        var node_y    = _cont.y;
-        var anim_set  = true;
-        var key_hover = noone;
+        var _node      = _cont.node;
+        var prop_y     = animator.y;
+        var node_y     = _cont.y;
+        var anim_set   = true;
+        var key_hover  = noone;
         
-        var _scaling  = key_mod_press(ALT) && array_length(keyframe_selecting) > 1;
+        var show_value = false;//key_mod_press(ALT);
+        var _scaling   = key_mod_press(ALT) && array_length(keyframe_selecting) > 1;
         
         for(var k = 0; k < array_length(animator.values); k++) {
             var keyframe = animator.values[k];
@@ -1462,7 +1463,20 @@ function Panel_Animation_Dopesheet() {
                 cc = key_hover == keyframe? COLORS.panel_animation_keyframe_selected : COLORS._main_accent;
             
             var ind = keyframe.getDrawIndex();
-            draw_sprite_ui_uniform(THEME.timeline_keyframe, ind, t, prop_y, 1, cc);
+            if(show_value) {
+            	draw_set_text(f_p4, fa_center, fa_center, COLORS._main_text_on_accent);
+            	
+            	var _val = string(keyframe.value);
+            	var _kw = max(ui(14), string_width(_val) + ui(8));
+            	var _kh = ui(14);
+            	var _kx = t;
+            	var _ky = prop_y;
+            	
+            	draw_sprite_stretched_ext(THEME.box_r2, 0, _kx - _kw/2, _ky - _kh/2, _kw, _kh, cc);
+            	draw_text(_kx, _ky, _val);
+            	
+            } else 
+            	draw_sprite_ui_uniform(THEME.timeline_keyframe, ind, t, prop_y, 1, cc);
             
             if(_select) {
             	if(_keyframe_selecting_f == noone) _keyframe_selecting_f = keyframe;
