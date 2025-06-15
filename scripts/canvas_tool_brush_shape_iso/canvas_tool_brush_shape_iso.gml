@@ -16,7 +16,8 @@ function canvas_tool_shape_iso(brush, shape, toolAttr) : canvas_tool() construct
 	mouse_points = [ [ 0, 0 ], [ 0, 0 ], 0 ];
 	
 	function init() {
-		mouse_points = [ [ 0, 0 ], [ 0, 0 ], 0 ];
+		mouse_points  = [ [ 0, 0 ], [ 0, 0 ], 0 ];
+		mouse_holding = 0;
 	}
 	
 	function step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {

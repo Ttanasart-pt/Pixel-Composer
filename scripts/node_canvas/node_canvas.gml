@@ -44,24 +44,24 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	////- =Brush
 	
 	newInput( 6, nodeValue_Surface(         "Brush" )).setVisible(true, false);
-	newInput(15, nodeValue_Range(           "Brush Distance",            [1,1], { linked : true }));
-	newInput(17, nodeValue_Rotation_Random( "Random Direction",          [0,0,0,0,0] ));
-	newInput(16, nodeValue_Bool(            "Rotate Brush by Direction", false       ));
+	newInput(15, nodeValue_Range(           "Brush Distance",                    [1,1], { linked : true } ));
+	newInput(17, nodeValue_Rotation_Random( "Random Direction",                  [0,0,0,0,0]  ));
+	newInput(16, nodeValue_Bool(            "Rotate Brush by Direction",         false        ));
 	
-	/* deprecated */ newInput( 1, nodeValue_Color(       "Color",                ca_white ));
-	/* deprecated */ newInput( 2, nodeValue_ISlider(     "Brush Size",           1, [1, 32, 0.1] ));
-	/* deprecated */ newInput( 3, nodeValue_Slider(      "Fill Threshold",       0 ));
-	/* deprecated */ newInput( 4, nodeValue_Enum_Scroll( "Fill Type",            0, ["4 connect", "8 connect", "Entire canvas"]));
-	/* deprecated */ newInput( 5, nodeValue_Bool(        "Draw Preview Overlay", true ));
-	/* deprecated */ newInput( 7, nodeValue_Int(         "Surface Amount",       1 ));
-	/* deprecated */ newInput(11, nodeValue_Slider(      "Alpha",                1 ));
+	/* deprecated */ newInput( 1, nodeValue_Color(       "Color",                ca_white     ));
+	/* deprecated */ newInput( 2, nodeValue_ISlider(     "Brush Size",           1, [1,32,.1] ));
+	/* deprecated */ newInput( 3, nodeValue_Slider(      "Fill Threshold",       0            ));
+	/* deprecated */ newInput( 4, nodeValue_Enum_Scroll( "Fill Type",            0, ["4 connect", "8 connect", "Entire canvas"] ));
+	/* deprecated */ newInput( 5, nodeValue_Bool(        "Draw Preview Overlay", true         ));
+	/* deprecated */ newInput( 7, nodeValue_Int(         "Surface Amount",       1            ));
+	/* deprecated */ newInput(11, nodeValue_Slider(      "Alpha",                1            ));
 	
 	////- =Background
 	
-	newInput(10, nodeValue_Bool(    "Render Background", true ));
-	newInput( 8, nodeValue_Surface( "Background" ));
+	newInput(10, nodeValue_Bool(    "Render Background",        true ));
+	newInput( 8, nodeValue_Surface( "Background"                     ));
 	newInput(14, nodeValue_Bool(    "Use Background Dimension", true ));
-	newInput( 9, nodeValue_Slider(  "Background Alpha", 1 ));
+	newInput( 9, nodeValue_Slider(  "Background Alpha",         1    ));
 	
 	////- =Data Transfer
 	
