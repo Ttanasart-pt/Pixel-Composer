@@ -35,6 +35,8 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		node.inputs[0].setValueDirect(newKey);
 	};
 	
+	static getDisplayName = function() /*=>*/ {return string(inputs[0].getValue())};
+	
 	isHovering     = false;
 	hover_scale    = 0;
 	hover_scale_to = 0;

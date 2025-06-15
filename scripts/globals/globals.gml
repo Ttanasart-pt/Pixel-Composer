@@ -46,7 +46,7 @@
 	SAVE_VERSION	= 1_19_03_1;
 	VERSION_STRING  = MAC? "1.18.003m" : "1.19.4.001";
 	RELEASE_STRING  = "1.19.4";
-	BUILD_NUMBER	= 119040.001;
+	BUILD_NUMBER	= 1_19_04_0.001;
 	PREF_VERSION    = 1_17_1;
 	
 	var _lsp = array_last(string_split(VERSION_STRING, "."));

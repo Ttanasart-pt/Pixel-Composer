@@ -19,8 +19,14 @@
 .treeview .dir[data-rel-path="folders/game engines/gamemaker/"] > .header:before { background: url("file:///D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/default/graphics/_unused/s_gamemaker.png") center/contain no-repeat;  }
 .treeview .dir[data-rel-path="datafiles/"]                      > .header:before { background: url("file:///C:/Users/Makham/AppData/Roaming/AceGM/GMEdit/themes/dracula/tree_empty.png") center/contain no-repeat;  }
 
-.treeview .dir[data-rel-path="folders/main/"]      { --data-color: #408655 !important; }
-.treeview .dir[data-rel-path="folders/functions/"] { --data-color: #347c6f !important; }
+.treeview .dir[data-rel-path="folders/main/"]      { 
+    --data-color: #408655 !important; 
+    background-image: linear-gradient(var(--data-color), var(--data-color)), linear-gradient(var(--treeview-background-color), var(--treeview-background-color));
+}
+.treeview .dir[data-rel-path="folders/functions/"] { 
+    --data-color: #347c6f !important; 
+    background-image: linear-gradient(var(--data-color), var(--data-color)), linear-gradient(var(--treeview-background-color), var(--treeview-background-color));
+}
 .treeview .dir[data-rel-path="folders/nodes/"]     { 
     --data-color: #2b5c73 !important; 
     background-image: linear-gradient(var(--data-color), var(--data-color)), linear-gradient(var(--treeview-background-color), var(--treeview-background-color));

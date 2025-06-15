@@ -46,6 +46,8 @@ function NodeTopoSort() {
 	
 	PROJECT.nodeTopoID = UUID_generate();
 	LOG_IF(global.FLAG.render == 1, $"+++++++ Topo Sort Completed: {array_length(PROJECT.nodeTopo)}/{amo} nodes sorted in {(get_timer() - _t) / 1000} ms +++++++");
+	
+	NodeTreeSort();
 }
 
 function NodeListSort(_nodeList) {
@@ -352,4 +354,68 @@ function RenderList(arr) {
 	LOG_END();
 	
 	ds_queue_destroy(queue);
+}
+
+ ////- Tree
+ 
+function NodeTreeItem(_node = noone) constructor {
+	x = 0;
+	y = 0;
+	
+	node     = _node;
+	children = [];
+	height   = 1;
+	
+	expanded = true;
+	
+	if(node != noone) {
+		var _fr = node.getNodeFrom();
+		for( var i = 0, n = array_length(_fr); i < n; i++ )
+			children[i] = new NodeTreeItem(_fr[i]);
+	}
+	
+	static pokeHeight = function() { return array_length(children) == 1? children[0] : noone; }
+	
+	static setHeight = function() {
+		var _len = array_length(children);
+		if(_len == 0) return;
+		
+		if(_len == 1) {
+			var hh = 0;
+			var lh, ch = self;
+			
+			do {
+				lh = ch;
+				ch = ch.pokeHeight();
+				hh++;
+			} until(ch == noone);
+			
+			height = hh;
+			
+			for( var i = 0, n = array_length(lh.children); i < n; i++ ) 
+				lh.children[i].setHeight();
+			
+		} else {
+			for( var i = 0, n = array_length(children); i < n; i++ ) 
+				children[i].setHeight();
+		}
+	}
+}
+
+function NodeTreeSort() {
+	var roots = [];
+	var tree  = [];
+	
+	for( var i = 0, n = array_length(PROJECT.nodes); i < n; i++ ) {
+		var _node = PROJECT.nodes[i];
+		if(is(_node, Node_Frame)) continue;
+		
+		if(array_empty(_node.getNodeTo())) 
+			array_push(tree, new NodeTreeItem(_node));
+	}
+	
+	array_foreach(tree, function(t) /*=>*/ {return t.setHeight()});
+	
+	PROJECT.nodeTree = new NodeTreeItem();
+	PROJECT.nodeTree.children = tree;
 }

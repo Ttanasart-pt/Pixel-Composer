@@ -1,24 +1,124 @@
 function Panel_Nodes() : PanelContent() constructor {
-	title   = __txt("Nodes");
-	w       = ui(320);
-	h       = ui(480);
+	title    = __txt("Nodes");
+	w        = ui(320);
+	h        = ui(480);
+	auto_pin = true;
 	
 	search_string = "";
 	
-	tb_search             = new textBox(TEXTBOX_INPUT.text, function(str) /*=>*/ { search_string = string(str); });
-	tb_search.align		  = fa_left;
-	tb_search.auto_update = true;
-	tb_search.boxColor	  = COLORS._main_icon_light;
+	tb_search = textBox_Text(function(str) /*=>*/ { search_string = string(str); })
+					.setFont(f_p3)
+					.setAlign(fa_left)
+					.setAutoupdate()
+					.setBoxColor(COLORS._main_icon_light);
 	
-	node_collapse = ds_map_create();
-
-	function onResize() { sc_nodes.resize(w - padding * 2, h - padding * 2 + ui(40)); }
+	function drawNodeTree(_item, _x0, _x1, _y, _m, _bg = true) {
+		var sw    = sc_nodes.surface_w;
+		var sh    = sc_nodes.surface_h;
+		
+		var hover = sc_nodes.hover;
+		var focus = sc_nodes.active;
+		
+		var hg = ui(20);
+		var _h = 0;
+		var _w = _x1 - _x0;
+		
+		var node = _item.node;
+		var name = node.getDisplayName();
+		
+		var heig = _item.expanded? _item.height : 1;
+		var bhg  = heig * hg + ui(2) * max(0, heig - 1);
+			
+		_item.x = _x0;
+		_item.y = _y;
+			
+		if(_bg) draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _x0, _y, _w, bhg, COLORS.panel_inspector_group_bg, 1);
+		
+		if(hover && point_in_rectangle(_m[0], _m[1], _x0, _y, _x1, _y + hg)) {
+			sc_nodes.hover_content = true;
+			draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _x0, _y, _w, hg, COLORS.panel_inspector_group_hover, 1);
+			
+			if(focus) {
+				if(_m[0] < _x0 + hg + ui(4)) {
+					if(mouse_lpress()) _item.expanded = !_item.expanded;
+					
+				} else if(_m[0] < _x1 - ui(32)) {
+					if(DOUBLE_CLICK)
+						PANEL_PREVIEW.setNodePreview(node);
+					else if(mouse_lpress()) {
+						PANEL_INSPECTOR.setInspecting(node);
+						PANEL_GRAPH.nodes_selecting = [ node ];
+					} 
+				}
+			}
+		}
+		
+		var bw = ui(24);
+		var bh = hg;
+		var bx = _x1 - bw;
+		var by = _y;
+		var bt = __txtx("panel_node_goto", "Go to node");
+		
+		if(buttonInstant(noone, bx, by, bw, bh, _m, hover, focus, bt, THEME.animate_prop_go, 0, COLORS._main_icon, 0.75) == 2)
+			graphFocusNode(node);
+		bx -= ui(32);
+		
+		var _n  = ALL_NODES[$ instanceof(node)];
+		var spr = _n.spr;
+		var _ss = (hg - ui(8)) / sprite_get_height(spr);
+		gpu_set_tex_filter(true);
+		draw_sprite_ext(spr, 1, _x0 + ui(4) + hg / 2, _y + hg / 2, _ss, _ss, 0, c_white, _item.expanded? 1 : .5);
+		gpu_set_tex_filter(false);
+		
+		var tc = PANEL_INSPECTOR.inspecting == node? COLORS._main_text_accent : COLORS._main_text;
+		draw_set_text(f_p4, fa_left, fa_center, tc);
+		draw_text_add(_x0 + hg + ui(8), _y + hg / 2, name);
+		
+		var _y0  = _y;
+		_y += hg + ui(2);
+		_h += hg + ui(2);
+		
+		if(_item.expanded) {
+			var _len = array_length(_item.children);
+			var _stk = _len == 1;
+			var _xx0 = _stk? _x0 : _x0 + ui(8);
+			
+			for( var i = 0; i < _len; i++ ) {
+				var _hhg = drawNodeTree(_item.children[i], _xx0, _x1, _y, _m, !_stk);
+				
+				_y += _hhg;
+				_h += _hhg;
+			}
+			
+			if(_len > 1) {
+				var cc = merge_color(COLORS._main_icon, COLORS._main_icon_dark, .5);
+				
+				for( var i = 0; i < _len; i++ ) {
+					var _chd = _item.children[i];
+					var _cx0 = _x0 + ui(4);
+					var _cy0 = _y0 + bhg;
+					var _cx1 = _chd.x;
+					var _cy1 = _chd.y + hg / 2;
+					
+					draw_sprite_stretched_ext(THEME.corner_r4, 0, _cx0, _cy0, _cx1 - _cx0, _cy1 - _cy0, cc);
+				}
+				
+			}
+		}
+		
+		return _h;
+	}
 	
 	function drawNodeList(_arr, _x0, _x1, _y, _m) {
-		var _hh = sc_nodes.surface_h;
-		var hg  = ui(28);
+		var sw = sc_nodes.surface_w;
+		var sh = sc_nodes.surface_h;
 		
-		var _h  = 0;
+		var hover = sc_nodes.hover;
+		var focus = sc_nodes.active;
+		
+		var hg = ui(20);
+		var _h = 0;
+		var _w = _x1 - _x0;
 		
 		for( var i = 0; i < array_length(_arr); i++ ) {
 			var node = _arr[i];
@@ -27,78 +127,69 @@ function Panel_Nodes() : PanelContent() constructor {
 			if(string_lower(search_string) != "" && string_pos(string_lower(search_string), string_lower(name)) == 0)
 				continue;
 			
-			var isGroup = struct_has(node, "nodes");
-			if(isGroup && !ds_map_exists(node_collapse, node.node_id)) 
-				node_collapse[? node.node_id] = false;
-			
-			var _cull = _y + hg < 0 || _y > _hh;
+			var _cull = _y + hg < 0 || _y > sh;
 			if(_cull) {
 				_y += hg + ui(2);
 				_h += hg + ui(2);
-				
-				if(isGroup && !node_collapse[? node.node_id]) {
-					var hh = drawNodeList(node.nodes, _x0 + ui(16), _x1, _y, _m);
-					_y += hh + ui(2);
-					_h += hh + ui(2);
-				}
-				
 				continue;
 			}
 			
-			if(pHOVER && point_in_rectangle(_m[0], _m[1], _x0, _y, _x1 - _x0 - ui(32), _y + hg)) {
+			if(hover && point_in_rectangle(_m[0], _m[1], _x0, _y, _x1 - _x0 - ui(32), _y + hg)) {
 				sc_nodes.hover_content = true;
+				draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _x0, _y, _w, hg, COLORS.panel_inspector_group_hover, 1);
 				
-				var cc = merge_color(COLORS._main_icon_light, COLORS._main_icon, 0.75);
-				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _x0, _y, _x1 - _x0, hg, cc, 1);
-				
-				if(sc_nodes.active) {
+				if(focus) {
 					if(DOUBLE_CLICK)
 						PANEL_PREVIEW.setNodePreview(node);
 					else if(mouse_press(mb_left)) {
-						if(isGroup)
-							node_collapse[? node.node_id] = !node_collapse[? node.node_id];
 						PANEL_INSPECTOR.setInspecting(node);
 						PANEL_GRAPH.nodes_selecting = [ node ];
 					} 
 				}
 			} else 
-				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _x0, _y, _x1 - _x0, hg, COLORS._main_icon, 1);
-			draw_sprite_stretched_add(THEME.ui_panel, 1, _x0, _y, _x1 - _x0, hg, COLORS._main_icon, .2);
+				draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _x0, _y, _w, hg, COLORS.panel_inspector_group_bg, 1);
 			
 			var bw = ui(24);
 			var bh = ui(24);
 			var bx = _x1 - ui(4) - bw;
 			var by = _y + (hg - bh) / 2;
+			var bt = __txtx("panel_node_goto", "Go to node");
 			
-			if(buttonInstant(THEME.button_hide_fill, bx, by, bw, bh, _m, sc_nodes.hover, sc_nodes.active, __txtx("panel_node_goto", "Go to node"), THEME.node_goto,, COLORS._main_icon, 0.75, 0.75) == 2)
+			if(buttonInstant(noone, bx, by, bw, bh, _m, hover, focus, bt, THEME.animate_prop_go, 0, COLORS._main_icon, 0.75) == 2)
 				graphFocusNode(node);
 			bx -= ui(32);
 			
 			var _n  = ALL_NODES[$ instanceof(node)];
 			var spr = _n.spr;
-			draw_sprite_ui(spr, 1, _x0 + ui(4 + 16), _y + hg / 2, 0.25, 0.25, 0, c_white, 1);
+			var _ss = (hg - ui(8)) / sprite_get_height(spr);
+			gpu_set_tex_filter(true);
+			draw_sprite_ext(spr, 1, _x0 + ui(4) + hg / 2, _y + hg / 2, _ss, _ss);
+			gpu_set_tex_filter(false);
 			
-			draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-			draw_text_add(_x0 + hg + ui(8) + (isGroup * ui(20)), _y + hg / 2, name);
-			if(isGroup) draw_sprite_ui(THEME.arrow, (!node_collapse[? node.node_id]) * 3, _x0 + hg + ui(16), _y + hg / 2,,,,, 0.75);
+			draw_set_text(f_p4, fa_left, fa_center, COLORS._main_text);
+			draw_text_add(_x0 + hg + ui(8), _y + hg / 2, name);
 			
 			_y += hg + ui(2);
 			_h += hg + ui(2);
-			
-			if(isGroup && !node_collapse[? node.node_id]) {
-				var hh = drawNodeList(node.nodes, _x0 + ui(16), _x1, _y, _m);
-				_y += hh + ui(2);
-				_h += hh + ui(2);
-			}
 		}
 		
-		return _h;
+		return _h + ui(16);
 	}
 	
 	sc_nodes = new scrollPane(w - padding * 2, h - padding * 2 + ui(40), function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
-		var _h = drawNodeList(PROJECT.nodes, 0, sc_nodes.surface_w, _y, _m);
-		return _h;
+		
+		var _ch = PROJECT.nodeTree.children;
+		var _h  = 0;
+		
+		for( var i = 0, n = array_length(_ch); i < n; i++ ) {
+			var _hhg = drawNodeTree(_ch[i], 0, sc_nodes.surface_w, _y, _m);
+			
+			_h += _hhg;
+			_y += _hhg;
+		}
+		
+		return _h + ui(16);
 	});
 
 	function drawContent(panel) {
@@ -109,11 +200,14 @@ function Panel_Nodes() : PanelContent() constructor {
 		var pw = w - padding * 2;
 		var ph = h - padding * 2;
 		
-		draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
-		tb_search.setFocusHover(pFOCUS, pHOVER);
-		tb_search.draw(px, py, pw, ui(32), search_string, [mx, my]);
+		var th = ui(-8)//ui(24);
 		
+		draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
+		// tb_search.setFocusHover(pFOCUS, pHOVER);
+		// tb_search.draw(px, py, pw, th, search_string, [mx, my]);
+		
+		sc_nodes.verify(pw, ph - (th + ui(8)));
 		sc_nodes.setFocusHover(pFOCUS, pHOVER);
-		sc_nodes.draw(px, py + ui(40), mx - px, my - (py + ui(40)));
+		sc_nodes.drawOffset(px, py + (th + ui(8)), mx, my);
 	}
 }

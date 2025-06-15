@@ -26,6 +26,7 @@ function Project() constructor {
 	allNodes    = [];
 	nodes	    = [];
 	nodeTopo    = [];
+	nodeTree    = new NodeTreeItem();
 	nodeMap	    = ds_map_create();
 	nodeNameMap = ds_map_create();
 	nodeTopoID  = "";
