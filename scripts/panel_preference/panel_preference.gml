@@ -517,6 +517,12 @@ function Panel_Preference() : PanelContent() constructor {
     			function() /*=>*/ {return PREFERENCES.pan_mouse_key - 3},
     		).setKey("panning_key"));
     		
+			ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
+				__txtx("pref_node_add_select", "Select node on add"),
+				"node_add_select",
+				new checkBox(function() /*=>*/ {return prefToggle("node_add_select")})
+			));
+		
     	ds_list_add(pref_appr, __txt("Preview")); // Preview
     	
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
@@ -602,15 +608,7 @@ function Panel_Preference() : PanelContent() constructor {
 				"node_param_width",
 				textBox_Number(function(val) /*=>*/ {return prefSet("node_param_width", val)})
 			));
-			
-		ds_list_add(pref_node, __txt("Add node"));
-		
-			ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
-				__txtx("pref_node_add_select", "Select node on add"),
-				"node_add_select",
-				new checkBox(function() /*=>*/ {return prefToggle("node_add_select")})
-			));
-			
+				
 		ds_list_add(pref_node, __txt("Display"));
 		
 			ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(

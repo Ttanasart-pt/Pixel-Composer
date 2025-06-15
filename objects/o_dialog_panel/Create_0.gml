@@ -16,6 +16,7 @@ event_inherited();
 	
 	function setContent(content) {
 		self.content = content;
+		context_str  = content.context_str;
 		
 		if(struct_has(content, "title_height"))
 			title_height = content.title_height;

@@ -14,12 +14,12 @@ event_inherited();
 	node_target_x_raw = 0;
 	node_target_y_raw = 0;
 	
-	junction_called = noone;
-	node_replace    = noone;
+	junction_called   = noone;
+	node_replace      = noone;
 	
-	node_list       = [];
-	node_selecting  =  0;
-	node_focusing   = -1;
+	node_list         = [];
+	node_selecting    =  0;
+	node_focusing     = -1;
 	
 	node_show_connectable = false;
 	node_tooltip   = noone;
@@ -321,16 +321,15 @@ event_inherited();
 			if(PANEL_INSPECTOR) PANEL_INSPECTOR.setInspecting(_new_node);
 			
 			if(PANEL_GRAPH && PANEL_GRAPH.panel == prefocus) {
-				if(PREFERENCES.node_add_select && node_replace == noone) 
+				if(PREFERENCES.node_add_select && node_replace == noone) {
 					PANEL_GRAPH.selectDragNode(_new_node, junction_called == noone);
-				var _ins = instanceof(_new_node);
-				if(struct_has(HOTKEYS, _ins)) FOCUS_STR = _ins;
+					var _ins = instanceof(_new_node);
+					if(struct_has(HOTKEYS, _ins)) FOCUS_STR = _ins;
+				}
 			}
 			
-			if(PANEL_PREVIEW && PANEL_PREVIEW.panel == prefocus) {
+			if(PANEL_PREVIEW && PANEL_PREVIEW.panel == prefocus)
 				PANEL_PREVIEW.setNodePreview(_new_node);
-				
-			}
 		}
 		
 		if(node_replace != noone) { // Replace Nodes

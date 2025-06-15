@@ -34,7 +34,7 @@ function dialogPanelCall(_panel, _x = noone, _y = noone, params = {}) {
 	dia.resetPosition();
 	
 	if(struct_try_get(params, "focus", true))
-		setFocus(dia.id, "Dialog");
+		setFocus(dia.id, _panel.context_str);
 	return dia;
 }
 

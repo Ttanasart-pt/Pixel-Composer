@@ -7,6 +7,9 @@ varying vec4 v_vColour;
 	#define PALETTE_LIMIT 256 
 #endif
 
+uniform int    useMask;
+uniform sampler2D mask;
+
 uniform int   type;
 uniform float seed;
 
@@ -152,16 +155,24 @@ float random (in vec2 st) { return fract(sin(dot(st.xy + seed / 100., vec2(12.98
 
 void main() {
     vec4 c = texture2D( gm_BaseTexture, v_vTexcoord );
+    vec2 p = (c.xy + c.zw) / 2.;
+    
 	gl_FragColor = c;
 	
 	if(c.rgb == vec3(0.)) return;
 	
+	if(useMask == 1) {
+		vec4  m   = texture2D( mask, p );
+		float sel = (m.r + m.g + m.b) / 3. * m.a;
+		if(sel == 0.) { gl_FragColor = vec4(0.); return; }
+	}
+	
 	if(type == 0) {
-		int ind = int(floor(random(gl_FragColor.xy) * float(colorAmount)));
+		int ind = int(floor(random(c.xy) * float(colorAmount)));
 		gl_FragColor = colors[ind];
 		
 	} else if(type == 1) {
-		vec4 colr = gradientEval(random(gl_FragColor.xy));
+		vec4 colr = gradientEval(random(c.xy));
 		gl_FragColor = colr;
 		
 	}

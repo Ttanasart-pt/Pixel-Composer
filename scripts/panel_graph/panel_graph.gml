@@ -3008,7 +3008,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         drawContextFrame();
         mouse_on_graph = true;
         
-        #region draw metadata
         if(!CAPTURING) {
 	        draw_set_text(f_p2, fa_right, fa_top, COLORS._main_text_sub);
 	        
@@ -3032,7 +3031,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	        if(!tb_zoom_level.selecting && !tb_zoom_level.sliding)
 		    	draw_text(_zmx - _zmw + ui(14), ovy + ui(1), "x");
         }
-    	#endregion
     	
         drawToolBar();
         drawMinimap();

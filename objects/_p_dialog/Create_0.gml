@@ -29,7 +29,8 @@
 	dialog_y  = 0;
 	anchor    = ANCHOR.none;
 	
-	title  = "dialog";
+	title          = "dialog";
+	context_str    = "Dialog";
 	window_drawing = false;
 	
 	title_height = 64;
@@ -220,7 +221,7 @@
 		
 		
 		if(mouse_press(mb_any, true, true)) {
-			setFocus(self.id, "Dialog");
+			setFocus(self.id, context_str);
 			
 			with(_p_dialog) other.depth = min(other.depth, depth - 1);
 		}

@@ -31,19 +31,20 @@ if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 			
 			repeat(ds_stack_size(FOCUS_STACK)) {
 				var _focus_ctx = ds_stack_pop(FOCUS_STACK);
-				if(!struct_has(HOTKEYS, _focus_ctx)) continue;
 				
-				var list = HOTKEYS[$ _focus_ctx];
-				for( var i = 0, n = array_length(list); i < n; i++ ) {
-					var h = list[i];
-					
-					if(h.isPressing()) {
-						if(h.key == noone) h.action();
-						else array_push(_toAct, h);
+				if(struct_has(HOTKEYS, _focus_ctx)) {
+					var list = HOTKEYS[$ _focus_ctx];
+					for( var i = 0, n = array_length(list); i < n; i++ ) {
+						var h = list[i];
+						
+						if(h.isPressing()) {
+							if(h.key == noone) h.action();
+							else array_push(_toAct, h);
+						}
 					}
 				}
 				
-				if(_focus_ctx == "Graph") {
+				if(_focus_ctx == "Graph" || _focus_ctx == "Nodes") {
 					for( var i = 0, n = array_length(GRAPH_ADD_NODE_KEYS); i < n; i++ ) {
 		        		var h = GRAPH_ADD_NODE_KEYS[i];
 		        		
