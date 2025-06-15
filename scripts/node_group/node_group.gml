@@ -40,7 +40,7 @@ function Node_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) co
 			return;
 		}
 		
-		nodeTopo = NodeListSort(nodes);
+		// nodeTopo = NodeListSort(nodes);
 		
 		var instTopo = instanceBase.nodeTopo;
 		var currTopo = nodeTopo;
@@ -109,7 +109,7 @@ function Node_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) co
 			var _bas_inp = array_safe_get(inputs, i, noone);
 			var _inp     = noone;
 			
-			if(_bas_inp == noone)
+			if(_bas_inp == noone) 
 				_inp = nodeBuild("Node_Group_Input", _inp_nod.x, _inp_nod.y, self).skipDefault();
 			else 
 				_inp = _bas_inp.from;
