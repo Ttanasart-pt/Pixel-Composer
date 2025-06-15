@@ -1,41 +1,50 @@
 function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Level";
 	
-	newInput(0, nodeValue_Surface("Surface In"));
-	
-	newInput(1, nodeValue_Slider_Range("White in", [0, 1]));
-	
-	newInput(2, nodeValue_Slider_Range("Red in", [0, 1]));
-	
-	newInput(3, nodeValue_Slider_Range("Green in", [0, 1]));
-	
-	newInput(4, nodeValue_Slider_Range("Blue in", [0, 1]));
-	
-	newInput(5, nodeValue_Slider_Range("Alpha in", [0, 1]));
-	
-	newInput(6, nodeValue_Surface("Mask"));
-	
-	newInput(7, nodeValue_Slider("Mix", 1));
-	
 	newActiveInput(8);
-	
 	newInput(9, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
-		
+	
+	////- =Surfaces
+	
+	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput(6, nodeValue_Surface( "Mask"       ));
+	newInput(7, nodeValue_Slider(  "Mix",     1 ));
 	__init_mask_modifier(6, 10); // inputs 10, 11
 	
-	newInput(12, nodeValue_Slider_Range("White out", [0, 1]));
+	////- =Brightness
 	
-	newInput(13, nodeValue_Slider_Range("Red out", [0, 1]));
+	newInput( 1, nodeValue_Slider_Range( "White in",  [0,1] ));
+	newInput(12, nodeValue_Slider_Range( "White out", [0,1] ));
 	
-	newInput(14, nodeValue_Slider_Range("Green out", [0, 1]));
+	////- =Red
 	
-	newInput(15, nodeValue_Slider_Range("Blue out", [0, 1]));
+	newInput( 2, nodeValue_Slider_Range( "Red in",    [0,1] ));
+	newInput(13, nodeValue_Slider_Range( "Red out",   [0,1] ));
 	
-	newInput(16, nodeValue_Slider_Range("Alpha out", [0, 1]));
+	////- =Green
+	
+	newInput( 3, nodeValue_Slider_Range( "Green in",  [0,1] ));
+	newInput(14, nodeValue_Slider_Range( "Green out", [0,1] ));
+	
+	////- =Blue
+	
+	newInput( 4, nodeValue_Slider_Range( "Blue in",   [0,1] ));
+	newInput(15, nodeValue_Slider_Range( "Blue out",  [0,1] ));
+	
+	////- =Alpha
+	
+	newInput( 5, nodeValue_Slider_Range( "Alpha in",  [0,1] ));
+	newInput(16, nodeValue_Slider_Range( "Alpha out", [0,1] ));
+		
+	// inputs 17
 		
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
+	
+	level_dragging = noone;
+	level_drag_sx  = 0;
+	level_drag_mx  = 0;
 	
 	level_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		var _h = 128;
@@ -58,6 +67,7 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			
 			if(buttonInstant(THEME.button_hide_fill, _bx, _by, 20, 20, _m, _hover, _focus) == 2) 
 				histShow[i] = !histShow[i];
+				
 			draw_sprite_ui_uniform(THEME.circle, 0, _bx + 10, _by + 10, 1, COLORS.histogram[i], 0.5 + histShow[i] * 0.5);
 		}
 		
@@ -67,19 +77,60 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		draw_set_color(COLORS.node_level_outline);
 		draw_rectangle(x0, y0, x1, y1, true);
 		
+		var _x0 = x0 + _wh[0] * _w;
+		var _x1 = x0 + _wh[1] * _w;
+		
+		var _hv = noone;
+		if(_hover && abs(_m[0] - _x0) < ui(4)) _hv = 0;
+		if(_hover && abs(_m[0] - _x1) < ui(4)) _hv = 1;
+		
+		if(level_dragging != noone) {
+			var _v   = [_wh[0], _wh[1]];
+			var _val = level_drag_sx + (_m[0] - level_drag_mx) / _w;
+			
+			_v[level_dragging] = _val;
+			if(inputs[1].setValue(_v)) UNDO_HOLDING = true;
+			
+			if(mouse_release(mb_left)) {
+				level_dragging = noone;
+				UNDO_HOLDING   = false;
+			}
+			
+			draw_set_color(COLORS._main_accent);
+			if(level_dragging == 0) draw_line_width(_x0, y0, _x0, y1, 2);
+			if(level_dragging == 1) draw_line_width(_x1, y0, _x1, y1, 2);
+			
+		} else {
+			draw_set_color(COLORS._main_icon);
+			if(_hv == 0) draw_line_width(_x0, y0, _x0, y1, 2);
+			if(_hv == 1) draw_line_width(_x1, y0, _x1, y1, 2);
+		}
+		
+		if(_hv != noone) {
+			if(mouse_lpress(_focus)) {
+				level_dragging = _hv;
+				level_drag_sx  = _wh[_hv];
+				level_drag_mx  = _m[0];
+				
+			}
+		}
+		
 		return _h;
 	});
 	
 	input_display_list = [ 8, 9, 
 		level_renderer,
-		["Surfaces", true],	0, 6, 7, 10, 11,
-		["Brightness",	false],	1, 12, 
-		["Red",			false],	2, 13, 
-		["Green",		false],	3, 14,  
-		["Blue",		false],	4, 15, 
-		["Alpha",		false],	5, 16, 
+		["Surfaces",    true ], 0, 6, 7, 10, 11,
+		["Brightness", false ], 1, 12, 
+		["Red",        false ], 2, 13, 
+		["Green",      false ], 3, 14,  
+		["Blue",       false ], 4, 15, 
+		["Alpha",      false ], 5, 16, 
 	];
+	
 	histogramInit();
+	
+	////- Nodes
 	
 	static onInspect = function() {
 		if(array_length(current_data) > 0)
