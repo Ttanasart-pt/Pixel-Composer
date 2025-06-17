@@ -4,7 +4,7 @@ function __NodeValue_Font(_name, _node, _value = "", _tooltip = "") : NodeValue(
 	/////============== GET =============
 	
 	static valueProcess = function(value, nodeFrom = undefined, applyUnit = true, arrIndex = 0) {
-		if(!is_string(value)) return "";
+		if(!is_string(value)) return value;
 		
 		if(struct_has(FONT_MAP, value)) return FONT_MAP[$ value];
 		

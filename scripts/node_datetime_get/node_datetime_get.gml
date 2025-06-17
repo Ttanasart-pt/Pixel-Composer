@@ -3,7 +3,7 @@ function Node_Datetime_Get(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Text("Format", "%y-%m-%dT%h:%m:%s"));
+	newInput(0, nodeValue_Text("Format", "%y-%m-%dT%h:%n:%s"));
 	
 	newInput(1, nodeValue_Bool("Update", true));
 	

@@ -379,7 +379,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			} else if(font_exists(_font)) { 
 				__f = _font; 
 			}
-				
+			
 			draw_set_font(__f);
 		#endregion
 		

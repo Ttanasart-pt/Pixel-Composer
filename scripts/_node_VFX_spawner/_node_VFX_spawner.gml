@@ -643,7 +643,8 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 					custom_parameter_curves_view[$ _n] = cbox;
 				}
 			}
-		}
+		} else 
+			custom_parameter_names = [];
 		
 		var _resetSeed = getInputData(48);
 		if(_resetSeed) resetSeed();
