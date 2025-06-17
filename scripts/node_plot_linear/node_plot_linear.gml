@@ -28,45 +28,45 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(0, nodeValue_Dimension());
 	
-	////- Data
+	////- =Data
 	
-	newInput( 1, nodeValue_Float(        "Data", [])).setArrayDepth(1).setVisible(true, true);
-	newInput(12, nodeValue_Float(        "Value Offset", 0));
-	newInput(21, nodeValue_Bool(         "Flip Value", false));
-	newInput(14, nodeValue_Enum_Scroll(  "Trim mode", 0, [ "Range", "Window" ]));
-	newInput( 2, nodeValue_Slider_Range( "Range", [ 0, 1 ]));
-	newInput( 3, nodeValue_Float(        "Sample frequency", 1));
-	newInput(15, nodeValue_Int(          "Window Size", 8));
-	newInput(16, nodeValue_Float(        "Window Offset", 0));
+	newInput( 1, nodeValue_Float(        "Data",              []                       )).setArrayDepth(1).setVisible(true, true);
+	newInput(12, nodeValue_Float(        "Value Offset",      0                        ));
+	newInput(21, nodeValue_Bool(         "Flip Value",        false                    ));
+	newInput(14, nodeValue_Enum_Scroll(  "Trim mode",         0, [ "Range", "Window" ] ));
+	newInput( 2, nodeValue_Slider_Range( "Range",             [0,1]                    ));
+	newInput( 3, nodeValue_Float(        "Sample frequency",  1                        ));
+	newInput(15, nodeValue_Int(          "Window Size",       8                        ));
+	newInput(16, nodeValue_Float(        "Window Offset",     0                        ));
 	
-	////- Plot
+	////- =Plot
 	
-	newInput(11, nodeValue_Enum_Scroll( "Type", 0, __enum_array_gen([ "Bar chart", "Graph"], s_node_plot_linear_type)));
-	newInput( 4, nodeValue_Vec2(        "Origin", [ 0, DEF_SURF_H / 2 ]));
-	newInput(10, nodeValue_Rotation(    "Direction", 0));
+	newInput(11, nodeValue_Enum_Scroll( "Type",               0, __enum_array_gen([ "Bar chart", "Graph"], s_node_plot_linear_type)));
+	newInput( 4, nodeValue_Vec2(        "Origin",           [ 0, DEF_SURF_H / 2 ]      ));
+	newInput(10, nodeValue_Rotation(    "Direction",          0                        ));
 	newInput(20, nodeValue_PathNode(    "Path")).setVisible(true, true);
-	newInput( 5, nodeValue_Float(       "Scale", DEF_SURF_W / 2));
-	newInput(22, nodeValue_Bool(        "Loop", false));
-	newInput(23, nodeValue_Slider(      "Smooth", 0));
+	newInput( 5, nodeValue_Float(       "Scale",              DEF_SURF_W / 2           ));
+	newInput(22, nodeValue_Bool(        "Loop",               false                    ));
+	newInput(23, nodeValue_Slider(      "Smooth",             0                        ));
 	
-	////- Render
+	////- =Render
 	
-	newInput( 6, nodeValue_Color(        "Base Color", ca_white));
-	newInput(13, nodeValue_Gradient(     "Color Over Sample", new gradientObject(ca_white))).setMappable(27);
-	newInput(24, nodeValue_Gradient(     "Color Over Value", new gradientObject(ca_white))).setMappable(29);
-	newInput(25, nodeValue_Range(        "Value range", [ 0, 1 ] ));
-	newInput(26, nodeValue_Bool(         "Absolute", false));
-	newInput( 7, nodeValue_Float(        "Graph Thickness", 1));
-	newInput(17, nodeValue_Float(        "Spacing", 1));
-	newInput(18, nodeValue_Float(        "Bar Width", 4));
-	newInput(19, nodeValue_Bool(         "Rounded Bar", false));
+	newInput( 6, nodeValue_Color(        "Base Color",         ca_white                ));
+	newInput(13, nodeValue_Gradient(     "Color Over Sample",  new gradientObject(ca_white))).setMappable(27);
+	newInput(24, nodeValue_Gradient(     "Color Over Value",   new gradientObject(ca_white))).setMappable(29);
+	newInput(25, nodeValue_Range(        "Value range",       [0,1]                    ));
+	newInput(26, nodeValue_Bool(         "Absolute",           false                   ));
+	newInput( 7, nodeValue_Float(        "Graph Thickness",    1                       ));
+	newInput(17, nodeValue_Float(        "Spacing",            1                       ));
+	newInput(18, nodeValue_Float(        "Bar Width",          4                       ));
+	newInput(19, nodeValue_Bool(         "Rounded Bar",        false                   ));
 	
-	////- Background
+	////- =Background
 	
-	newInput(8, nodeValue_Bool(  "Background", false));
-	newInput(9, nodeValue_Color( "Background color", ca_black));
+	newInput(8, nodeValue_Bool(  "Background",       false    ));
+	newInput(9, nodeValue_Color( "Background color", ca_black ));
 	
-	//// inputs 31
+	// inputs 31
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -76,6 +76,8 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		["Render",	   false],    6, 13, 27, 24, 29, 25, 26, 7, 17, 18, 19, 
 		["Background",	true, 8], 9, 
 	];
+	
+	////- Nodes
 	
 	attribute_surface_depth();
 	
@@ -120,7 +122,7 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	static getTool = function() { 
 		var _path = getInputData(20);
-		return is_instanceof(_path, Node)? _path : self; 
+		return is(_path, Node)? _path : self; 
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {

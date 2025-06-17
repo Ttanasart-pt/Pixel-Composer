@@ -41,8 +41,6 @@
 	globalvar AUTO_SAVE_TIMER;
 	AUTO_SAVE_TIMER = 0;
 	
-	_cursor	 = CURSOR;
-	dc_check = 0;
 	kb_time  = 0;
 	kb_hold  = false;
 	kb_hkey  = 0;
@@ -51,6 +49,8 @@
 	kd_shift = 0;
 	kd_alt   = 0;
 	
+	_cursor	 = CURSOR;
+	dc_check = 0;
 	dclick   = [0,0];
 	
 	fpss = array_create(10);
@@ -272,41 +272,33 @@
 		
 		if(string_starts_with(param, "-")) {
 			switch(param) {
-				case "-c" : 
-				case "--crashed" : 
+				case "-c" : case "--crashed" : 
 					if(PREFERENCES.show_crash_dialog) 
 						run_in(1, function() { dialogCall(o_dialog_crashed); });
 					break;
 				
-				case "-h" : 
-				case "--headless" : 
+				case "-h" : case "--headless" : 
 					PROGRAM_ARGUMENTS._cmd = true; 
 					break;
 					
-				case "-p" : 
-				case "--persist" : 
+				case "-p" : case "--persist" : 
 					PROGRAM_ARGUMENTS._persist = true; 
 					break;
 					
-				case "-t" : 
-				case "--trusted" : 
+				case "-t" : case "--trusted" : 
 					PROGRAM_ARGUMENTS._trusted = true; 
 					break;
 					
-				case "-s" : 
-				case "--server" : 
+				case "-s" : case "--server" : 
 					PROGRAM_ARGUMENTS._persist = true; 
 					useTCP = true;
 					break;
 					
-				case "-sl" : 
-				case "--skiplua" : 
+				case "-sl" : case "--skiplua" : 
 					PROGRAM_ARGUMENTS._lua = false; 
 					break;
 					
-				default :
-					paramType = string_trim(param, ["-"]);
-					break;
+				default : paramType = string_trim(param, ["-"]); break;
 			}
 			
 		} else if(paramType == "_path") {

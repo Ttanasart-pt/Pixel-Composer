@@ -1,7 +1,7 @@
 function Node_create_WAV_File_Read(_x, _y, _group = noone) {
 	var path = "";
 	if(NODE_NEW_MANUAL) {
-		path = get_open_filename_pxc("audio|*.wav", "");
+		path = get_open_filename_compat("audio|*.wav", "");
 		key_release();
 		if(path == "") return noone;
 	}

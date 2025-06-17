@@ -9,16 +9,16 @@ function Node_Shuffle(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	name = "Shuffle";
 	
 	newInput(0, nodeValue_Surface("Surface"));
-	
-	newInput(1, nodeValue_Enum_Scroll("Type", 0, [ "Pixel", "Block" ]));
-	
 	newInput(2, nodeValueSeed());
 	
-	newInput(3, nodeValue_Enum_Scroll("Axis", 2, [ "Horizontal", "Vertical", "Both" ]));
+	////- =Shuffle
 	
-	newInput(4, nodeValue_IVec2("Block count", [ 4, 4 ]));
+	newInput(1, nodeValue_Enum_Scroll( "Type",         0, [ "Pixel", "Block" ]                 ));
+	newInput(5, nodeValue_Slider(      "Randomness",   1                                       ));
+	newInput(3, nodeValue_Enum_Scroll( "Axis",         2, [ "Horizontal", "Vertical", "Both" ] ));
+	newInput(4, nodeValue_IVec2(       "Block count", [4,4]                                    ));
 	
-	newInput(5, nodeValue_Slider("Randomness", 1));
+	// input 6
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -123,7 +123,8 @@ function Node_Shuffle(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
             		
 		    case 1 :
 		        var _indx = genShuffled(min(1024, _blok[0] * _blok[1]), _rand);
-		        var _rep  = ceil(4);
+		        var _rep  = max(1, ceil(_blok[0] * _blok[1] / 1024));
+		        var _rep  = 4;
 		        
 		        surface_set_shader(temp_surface[1]);
         		    draw_surface_safe(_surf);
@@ -131,13 +132,16 @@ function Node_Shuffle(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
         			    
     		    var _bg = 0, _arr;
                 repeat(_rep) {
-    		        surface_set_shader(temp_surface[_bg], sh_mk_shuffle_block);
-    		            shader_set_2("dimension", _dim);
-    		            shader_set_2("block", _blok);
-    		            shader_set_i("index", _indx);
+    		        surface_set_shader(temp_surface[_bg], sh_mk_shuffle_block_slide);
+    		            shader_set_2("dimension", _dim   );
+    		            shader_set_2("block",     _blok  );
+    		            shader_set_f("seed",      seed_random(6) );
+    		            shader_set_f("amount",    _rand  );
+    		            shader_set_i("axis",      _bg    );
     		            
     		            draw_surface_safe(temp_surface[!_bg]);
     		        surface_reset_shader();
+    		        
     		        _bg = !_bg;
                 }
 		        

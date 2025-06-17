@@ -1,7 +1,7 @@
 function Node_create_Export(_x, _y, _group = noone) {
 	var path = "";
 	if(NODE_NEW_MANUAL) {
-		path = get_save_filename_pxc(@"Portable Network Graphics (.png)|*.png|
+		path = get_save_filename_compat(@"Portable Network Graphics (.png)|*.png|
 Joint Photographic Experts Group (.jpg)|*.jpg|
 Graphics Interchange Format (.gif)|*.gif|
 Animated WebP (.webp)|*.webp|

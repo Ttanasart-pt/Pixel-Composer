@@ -36,36 +36,110 @@ function file_get_modify_s(path) {
 
 	////- Open Dialog
 
-function get_open_filenames_compat(ext, sel, caption = "Open") {
-	INLINE
-	var pat, w = OS == os_windows;
+function get_open_filenames_compat(ext, fname, caption = "Open") {
+	var _native = PREFERENCES.use_native_file_browser;
+	if(_native) {
+		var pat, w = OS == os_windows;
+		
+		if(w) pat = get_open_filenames_ext(ext, fname, PREFERENCES.dialog_path, caption);
+		else  pat = get_open_filename_compat(ext, fname, caption);
+		
+		key_release();
+		
+		return pat;
+	} 
 	
-	if(w) pat = get_open_filenames_ext(ext, sel, PREFERENCES.dialog_path, caption);
-	else  pat = get_open_filename_pxc(ext, sel, caption);
+	var _resPath = filepath_resolve(PREFERENCES.temp_path) + "fs_selected.txt"
+	if(file_exists(_resPath)) file_delete(_resPath);
 	
-	key_release();
+	var _arg = {};
+	_arg[$ "--out"]   = _resPath;
+	_arg[$ "--book"]  = $"{DIRECTORY}Preferences\\fs.json";
+	_arg[$ "--mode"]  = "load";
+	_arg[$ "--multi"] = "true";
+	_arg[$ "--dir"]   = "D:\\Resources\\Pixel arts\\cyberpunk-street-files\\";
+	_arg[$ "--file"]  = "newname.png";
+	_arg[$ "-x"]      = WIN_X + WIN_W / 2;
+	_arg[$ "-y"]      = WIN_Y + WIN_H / 2;
+	   
+	var rep  = $"{APP_LOCATION}fs/PixelComposerFS.exe";
+	var args = shellCommandBuilder(_arg);
+	shell_execute_output(rep, args);
 	
-	return pat;
+	var _res = json_load_struct(_resPath);
+	if(!is_array(_res) || array_empty(_res)) return "";
+	
+	var _paths = [];
+	for( var i = 0, n = array_length(_res); i < n; i++ )
+		_paths[i] = _res[i].path;
+	
+	return _paths;
 }
 	
-function get_save_filename_pxc(filter, name, caption = "Save as") {
-	INLINE
+function get_open_filename_compat(filter, name, caption = "Open") {
+	var _native = PREFERENCES.use_native_file_browser;
+	if(_native) {
+		var path = get_open_filename_ext(filter, name, PREFERENCES.dialog_path, caption);
+		    path = string(path);
+		if(path != "") PREFERENCES.dialog_path = filename_dir(path);
+		
+		return path;
+	}
 	
-	var path = get_save_filename_ext(filter, name, PREFERENCES.dialog_path, caption);
-	    path = string(path);
-	    
-	if(path != "") PREFERENCES.dialog_path = filename_dir(path);
-	return path;
+	var _resPath = filepath_resolve(PREFERENCES.temp_path) + "fs_selected.txt"
+	if(file_exists(_resPath)) file_delete(_resPath);
+	
+	var _arg = {};
+	_arg[$ "--out"]   = _resPath;
+	_arg[$ "--book"]  = $"{DIRECTORY}Preferences\\fs.json";
+	_arg[$ "--mode"]  = "load";
+	_arg[$ "--multi"] = "false";
+	_arg[$ "--dir"]   = "D:\\Resources\\Pixel arts\\cyberpunk-street-files\\";
+	_arg[$ "--file"]  = "newname.png";
+	_arg[$ "-x"]      = WIN_X + WIN_W / 2;
+	_arg[$ "-y"]      = WIN_Y + WIN_H / 2;
+	   
+	var rep  = $"{APP_LOCATION}fs/PixelComposerFS.exe";
+	var args = shellCommandBuilder(_arg);
+	shell_execute_output(rep, args);
+	
+	var _res = json_load_struct(_resPath);
+	if(!is_array(_res) || array_empty(_res)) return "";
+	
+	return _res[0].path;
 }
 
-function get_open_filename_pxc(filter, name, caption = "Open") {
-	INLINE
+function get_save_filename_compat(filter, name, caption = "Save as") {
+	var _native = PREFERENCES.use_native_file_browser;
+	if(_native) {
+		var path = get_save_filename_ext(filter, name, PREFERENCES.dialog_path, caption);
+		    path = string(path);
+		    
+		if(path != "") PREFERENCES.dialog_path = filename_dir(path);
+		return path;
+	}
 	
-	var path = get_open_filename_ext(filter, name, PREFERENCES.dialog_path, caption);
-	    path = string(path);
-	if(path != "") PREFERENCES.dialog_path = filename_dir(path);
+	var _resPath = filepath_resolve(PREFERENCES.temp_path) + "fs_selected.txt"
+	if(file_exists(_resPath)) file_delete(_resPath);
 	
-	return path;
+	var _arg = {};
+	_arg[$ "--out"]   = _resPath;
+	_arg[$ "--book"]  = $"{DIRECTORY}Preferences\\fs.json";
+	_arg[$ "--mode"]  = "save";
+	_arg[$ "--multi"] = "false";
+	_arg[$ "--dir"]   = "D:\\Resources\\Pixel arts\\cyberpunk-street-files\\";
+	_arg[$ "--file"]  = "newname.png";
+	_arg[$ "-x"]      = WIN_X + WIN_W / 2;
+	_arg[$ "-y"]      = WIN_Y + WIN_H / 2;
+	   
+	var rep  = $"{APP_LOCATION}fs/PixelComposerFS.exe";
+	var args = shellCommandBuilder(_arg);
+	shell_execute_output(rep, args);
+	
+	var _res = json_load_struct(_resPath);
+	if(!is_array(_res) || array_empty(_res)) return "";
+	
+	return _res[0].path;
 }
 
 	////- Directory

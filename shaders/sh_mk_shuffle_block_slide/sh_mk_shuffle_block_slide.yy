@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_mk_shuffle_block_slide",
+  "name":"sh_mk_shuffle_block_slide",
+  "parent":{
+    "name":"shuffle",
+    "path":"folders/nodes/data/filter/effects/shuffle.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

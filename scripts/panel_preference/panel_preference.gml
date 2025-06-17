@@ -434,7 +434,7 @@ function Panel_Preference() : PanelContent() constructor {
     			__txtx("pref_ui_font", "Overwrite UI font") + "*",
     			"font_overwrite",
     			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ {return prefSet("font_overwrite", txt, true)})
-    				.setSideButton(button(function() /*=>*/ { PREFERENCES.font_overwrite = get_open_filename_pxc("Font files (.ttf, .otf)|*.ttf;*.otf", ""); PREF_SAVE(); }, THEME.button_path_icon))
+    				.setSideButton(button(function() /*=>*/ { PREFERENCES.font_overwrite = get_open_filename_compat("Font files (.ttf, .otf)|*.ttf;*.otf", ""); PREF_SAVE(); }, THEME.button_path_icon))
     				.setFont(f_p2).setEmpty()
     		));
     		
@@ -460,6 +460,12 @@ function Panel_Preference() : PanelContent() constructor {
     			__txtx("pref_ui_fix_height", "Fix height"),
     			"window_fix_height",
     			textBox_Number(function(str) /*=>*/ {return prefSet("window_fix_height", max(1, round(real(str))))})
+    		));
+    		
+    		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
+    			__txtx("pref_ui_native_file_selector", "Use native file selector"),
+    			"use_native_file_browser",
+    			new checkBox(function() /*=>*/ {return prefToggle("use_native_file_browser")})
     		));
     		
     		if(TESTING) {

@@ -78,6 +78,7 @@
 		PREFERENCES.add_node_remember				= true;
 		
 		PREFERENCES.file_explorer_view				= FILE_EXPLORER_VIEW.list;
+		PREFERENCES.use_native_file_browser			= true;
 	
 	#endregion
 	

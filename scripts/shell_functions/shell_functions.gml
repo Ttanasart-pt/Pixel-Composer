@@ -53,3 +53,18 @@ function env_user() {
 	if(OS == os_macosx)  return string(environment_get_variable("HOME")) + "/PixelComposer/";
 	return "";
 }
+
+function shellCommandBuilder(args) {
+	var _keys = struct_get_names(args);
+	var _arg = "";
+	
+	for( var i = 0, n = array_length(_keys); i < n; i++ ) {
+		var _k = _keys[i];
+		var _v = args[$ _k];
+		
+		if(string_pos(" ", _v)) _arg += $"{_k} \"{_v}\" ";
+		else                    _arg += $"{_k} {_v} ";
+	}
+	
+	return _arg;
+}

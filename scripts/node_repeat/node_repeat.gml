@@ -1,4 +1,4 @@
-#region
+#region functions
 	global.node_repeat_keys = [ "repeat polar", "repeat circular" ];
 	
 	function Node_create_Repeat(_x, _y, _group = noone, _param = {}) {
@@ -47,103 +47,90 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	////- =Pattern
 	
 	newInput( 3, nodeValue_Enum_Scroll(    "Pattern",          0, __enum_array_gen([ "Linear", "Grid", "Circular"], s_node_repeat_axis) ));
-	newInput( 9, nodeValue_Vec2(           "Start position",  [0,0] )).setUnitRef(function() /*=>*/ {return getInputData(1)}, VALUE_UNIT.reference);
-	newInput(32, nodeValue_Rotation(       "Start rotation",   0));
-	newInput( 2, nodeValue_Int(            "Amount",           2)).rejectArray();
-	newInput(18, nodeValue_Int(            "Column",           4));
-	newInput( 7, nodeValue_Rotation_Range( "Angle range",     [0,360]));
-	newInput( 8, nodeValue_Float(          "Radius",           1));
+	newInput( 9, nodeValue_Vec2(           "Start position",  [0,0]   )).setUnitRef(function() /*=>*/ {return getInputData(1)}, VALUE_UNIT.reference);
+	newInput(32, nodeValue_Rotation(       "Start rotation",   0      ));
+	newInput( 2, nodeValue_Int(            "Amount",           2      )).rejectArray();
+	newInput(18, nodeValue_Int(            "Column",           4      ));
+	newInput( 7, nodeValue_Rotation_Range( "Angle range",     [0,360] ));
+	newInput( 8, nodeValue_Float(          "Radius",           1      ));
 	
 	////- =Path
 	
-	newInput(11, nodeValue_PathNode(       "Path",        noone, "Make each copy follow along path." )).setVisible(true, true);
-	newInput(12, nodeValue_Slider_Range(   "Path range", [0,1] )).setTooltip("Range of the path to follow.");
-	newInput(13, nodeValue_Float(          "Path shift",  0    ));
+	newInput(11, nodeValue_PathNode(       "Path",        noone )).setTooltip("Make each copy follow along path.").setVisible(true, true);
+	newInput(12, nodeValue_Slider_Range(   "Path range",  [0,1] )).setTooltip("Range of the path to follow.");
+	newInput(13, nodeValue_Float(          "Path shift",  0     ));
 	
 	////- =Position
 	
-	newInput( 4, nodeValue_Vec2(           "Shift position",  [.5,0] )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
-	newInput(26, nodeValue_Enum_Button(    "Stack",             0, [ "None", "X", "Y" ] )).setTooltip("Place each copy next to each other, taking surface dimension into account.");
+	newInput( 4, nodeValue_Vec2(           "Shift position",  [.5,0]       )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
+	newInput(26, nodeValue_Enum_Button(    "Stack",             0,         )).setChoices([ "None", "X", "Y" ]).setTooltip("Place each copy next to each other, taking surface dimension into account.");
 	newInput(19, nodeValue_Vec2(           "Column shift",     [0,.5]      )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
 	newInput(38, nodeValue_Curve(          "Shift per copy",  CURVE_DEF_11 ));
 	
 	////- =Rotation
 	
-	newInput(33, nodeValue_Rotation(       "Base rotation",    0    ));
-	newInput( 5, nodeValue_Rotation_Range( "Repeat rotation", [0,0] ));
+	newInput(33, nodeValue_Rotation(       "Base rotation",     0          ));
+	newInput( 5, nodeValue_Rotation_Range( "Repeat rotation",  [0,0]       ));
 	
 	////- =Scale
 	
-	newInput( 6, nodeValue_Float( "Scale multiply",  1 ));
-	newInput(10, nodeValue_Curve( "Scale over copy", CURVE_DEF_11 ));
+	newInput( 6, nodeValue_Float(          "Scale multiply",    1          ));
+	newInput(10, nodeValue_Curve(          "Scale over copy", CURVE_DEF_11 ));
 	
 	////- =Render
 	
-	newInput(34, nodeValue_Enum_Scroll( "Blend Mode",      0, [ "Normal", "Additive", "Maximum" ] ));
-	newInput(14, nodeValue_Gradient(    "Color over copy", new gradientObject(ca_white) )).setMappable(30);
+	newInput(34, nodeValue_Enum_Scroll(    "Blend Mode",        0, [ "Normal", "Additive", "Maximum" ] ));
+	newInput(14, nodeValue_Gradient(       "Color over copy",   new gradientObject(ca_white)           )).setMappable(30);
 	
 	////- =Deprecated
 	
-	/* deprecated */ newInput(15, nodeValue_Curve("Alpha over copy", CURVE_DEF_11 ));
-	/* deprecated */ newInput(20, nodeValue_Slider("Animator midpoint", 0.5, [-1, 2, 0.01] ));
-	/* deprecated */ newInput(21, nodeValue_Slider("Animator range", 0.1));
-	/* deprecated */ newInput(22, nodeValue_Vec2("Animator position", [ 0, 0 ]));                                     
-	/* deprecated */ newInput(23, nodeValue_Rotation("Animator rotation", 0));                                        
-	/* deprecated */ newInput(24, nodeValue_Vec2("Animator scale", [ 0, 0 ]));                                        
-	/* deprecated */ newInput(25, nodeValue_Curve("Animator falloff", CURVE_DEF_10)); 
-	/* deprecated */ newInput(27, nodeValue_Color("Animator blend", ca_white));                                  
-	/* deprecated */ newInput(28, nodeValue_Slider("Animator alpha", 1));
-	/* deprecated */ newInput(29, nodeValue_Bool("Animator", false))                                                  
+	/* deprecated */ newInput(15, nodeValue_Curve(    "Alpha over copy",    CURVE_DEF_11      ));
+	/* deprecated */ newInput(20, nodeValue_Slider(   "Animator midpoint",  .5, [-1, 2, 0.01] ));
+	/* deprecated */ newInput(21, nodeValue_Slider(   "Animator range",     .1                ));
+	/* deprecated */ newInput(22, nodeValue_Vec2(     "Animator position",  [0,0]             ));
+	/* deprecated */ newInput(23, nodeValue_Rotation( "Animator rotation",   0                ));
+	/* deprecated */ newInput(24, nodeValue_Vec2(     "Animator scale",     [0,0]             ));
+	/* deprecated */ newInput(25, nodeValue_Curve(    "Animator falloff",   CURVE_DEF_10      ));
+	/* deprecated */ newInput(27, nodeValue_Color(    "Animator blend",     ca_white          ));
+	/* deprecated */ newInput(28, nodeValue_Slider(   "Animator alpha",     1                 ));
+	/* deprecated */ newInput(29, nodeValue_Bool(     "Animator",           false             ))
 	
 	// input 39
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	typeList = [ "Linear Transform", "Blending" ];
+	enum_select_mode = __enum_array_gen(["Index", "Area", "Surface"], s_node_repeat_selection_types);
 	
-	static createNewInput = function(index = array_length(inputs)) {
+	static createNewInput = function(i = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
 		dynamic_input_inspecting = getInputAmount();
 		
-		newInput(index + 0, nodeValue_Enum_Scroll("Animator type", 0, typeList));
+		////- =Selection
 		
-		newInput(index + 1, nodeValue_Enum_Scroll("Select mode", 0, [ new scrollItem("Index",   s_node_repeat_selection_types, 0), 
-																	  new scrollItem("Area",    s_node_repeat_selection_types, 1),
-																	  new scrollItem("Surface", s_node_repeat_selection_types, 2),]));
+		newInput(i+ 1, nodeValue_Enum_Scroll( "Select mode",             0, enum_select_mode ));
+		newInput(i+ 9, nodeValue_Area(        "Selection area",          DEF_AREA_REF        )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
+		newInput(i+10, nodeValue_Float(       "Selection i",         0                   ));
+		newInput(i+11, nodeValue_Float(       "Selection range",         2                   ));
+		newInput(i+12, nodeValue_Float(       "Selection falloff",       0                   ));
+		newInput(i+13, nodeValue_Curve(       "Selection falloff curve", CURVE_DEF_10        ));
+		newInput(i+14, nodeValue_Surface(     "Selection surface" ));
 		
-		newInput(index + 2, nodeValue_Vec2("Position", [ 0, 0 ]));
+		////- =Effects
 		
-		newInput(index + 3, nodeValue_Rotation("Rotation", 0));
-		
-		newInput(index + 4, nodeValue_Vec2("Scale", [ 0, 0 ]));
-		
-		newInput(index + 5, nodeValue_Enum_Button("Anchor type", 1, [ "Global", "Local" ]));
-		
-		newInput(index + 6, nodeValue_Vec2("Anchor Position", [ 0.5, 0.5 ]))
-			.setTooltip("Anchor point for transformation, absolute value for global type, relative for local.");
-		
-		newInput(index + 7, nodeValue_Color("Color", ca_white));
-		
-		newInput(index + 8, nodeValue_Slider("Alpha", 0, [ -1, 1, 0.01 ] ));
-		
-		newInput(index + 9, nodeValue_Area("Selection area", DEF_AREA_REF))
-			.setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
-		
-		newInput(index + 10, nodeValue_Float("Selection index", 0));
-		
-		newInput(index + 11, nodeValue_Float("Selection range", 2));
-		
-		newInput(index + 12, nodeValue_Float("Selection falloff", 0));
-		
-		newInput(index + 13, nodeValue_Curve("Selection falloff curve", CURVE_DEF_10));
-		
-		newInput(index + 14, nodeValue_Surface("Selection surface"));
-		
-		newInput(index + 15, nodeValue_Slider("Strength", 0, [ -1, 1, 0.01 ] ));
+		newInput(i+ 0, nodeValue_Enum_Scroll( "Animator type",     0, typeList               ));
+		newInput(i+ 2, nodeValue_Vec2(        "Position",         [0,0]                      ));
+		newInput(i+ 3, nodeValue_Rotation(    "Rotation",          0                         ));
+		newInput(i+ 4, nodeValue_Vec2(        "Scale",            [0,0]                      ));
+		newInput(i+ 5, nodeValue_Enum_Button( "Anchor type",       1, [ "Global", "Local" ]  ));
+		newInput(i+ 6, nodeValue_Vec2(        "Anchor Position", [.5,.5])).setTooltip("Anchor point for transformation, absolute value for global type, relative for local.");
+		newInput(i+ 7, nodeValue_Color(       "Color",             ca_white                  ));
+		newInput(i+ 8, nodeValue_Slider(      "Alpha",             0, [ -1, 1, 0.01 ]        ));
+		newInput(i+15, nodeValue_Slider(      "Strength",          0, [ -1, 1, 0.01 ]        ));
 		
 		refreshDynamicDisplay();
-		return inputs[index];
+		return inputs[i];
 	} 
 	
 	animator_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
@@ -166,6 +153,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		var del_animator = -1;
 		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, yy, _w, _h, COLORS.node_composite_bg_blend, 1);
+		if(array_length(current_data) != array_length(inputs)) return _h + ui(32);
 		
 		for(var i = 0; i < amo; i++) {
 			var _x0 = _x + ui(24);
@@ -203,7 +191,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		if(del_animator > -1) 
 			deleteDynamicInput(del_animator);
 		
-		return ui(32) + _h;
+		return _h + ui(32);
 	});
 	
 	input_display_dynamic = [ 
@@ -456,6 +444,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				surface : _surf, 
 				x       : posx, 
 				y       : posy, 
+				cx      : posx + sw / 2, 
+				cy      : posy + sh / 2, 
 				sx      : scax, 
 				sy      : scay, 
 				rot     : rot, 
@@ -473,8 +463,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _a    = atlases[i];
 			var _surf = _a.surface;
 			
-			var _x = _a.x;
-			var _y = _a.y;
+			var _x = _a.cx;
+			var _y = _a.cy;
 			
 			var _sw = surface_get_width_safe(_surf);
 			var _sh = surface_get_height_safe(_surf);

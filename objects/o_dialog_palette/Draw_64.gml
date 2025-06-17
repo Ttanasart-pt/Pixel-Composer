@@ -390,7 +390,7 @@ draggable = true;
 	bx = content_x + ui(18);
 	var _txt = __txtx("palette_editor_load", "Load Palette File") + " (.hex)";
 	if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mm, sHOVER, _foc, _txt, THEME.file_load) == 2) {
-		var path = get_open_filename_pxc("HEX palette|*.hex", "");
+		var path = get_open_filename_compat("HEX palette|*.hex", "");
 		key_release();
 		
 		if(isPaletteFile(path)) {
@@ -404,7 +404,7 @@ draggable = true;
 	bx += bs + ui(4);
 	var _txt = __txtx("palette_editor_save", "Save Palette File") + " (.hex)";
 	if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mm, sHOVER, _foc, _txt, THEME.file_save) == 2) {
-		var path = get_save_filename_pxc("HEX palette|*.hex", "");
+		var path = get_save_filename_compat("HEX palette|*.hex", "");
 		key_release();
 		
 		if(path != "") {

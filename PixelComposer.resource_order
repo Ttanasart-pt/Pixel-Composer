@@ -1820,6 +1820,7 @@
     {"name":"sh_mk_grass_grow","order":3,"path":"shaders/sh_mk_grass_grow/sh_mk_grass_grow.yy",},
     {"name":"sh_mk_grass_noise","order":2,"path":"shaders/sh_mk_grass_noise/sh_mk_grass_noise.yy",},
     {"name":"sh_mk_saber_glow","order":7,"path":"shaders/sh_mk_saber_glow/sh_mk_saber_glow.yy",},
+    {"name":"sh_mk_shuffle_block_slide","order":2,"path":"shaders/sh_mk_shuffle_block_slide/sh_mk_shuffle_block_slide.yy",},
     {"name":"sh_mk_shuffle_block","order":1,"path":"shaders/sh_mk_shuffle_block/sh_mk_shuffle_block.yy",},
     {"name":"sh_mk_subpixel_chevron","order":4,"path":"shaders/sh_mk_subpixel_chevron/sh_mk_subpixel_chevron.yy",},
     {"name":"sh_mk_subpixel_diagonal","order":7,"path":"shaders/sh_mk_subpixel_diagonal/sh_mk_subpixel_diagonal.yy",},

@@ -190,7 +190,7 @@ draggable = true;
 	
 	var hover = noone;
 	
-	for(var i = 0; i < array_length(gradient.keys); i++) {
+	for( var i = 0, n = array_length(gradient.keys); i < n; i++ ) {
 		var _k  = gradient.keys[i];
 		var _c  = _k.value;
 		var _kx = gr_x + _k.time * gr_w; 
@@ -200,8 +200,8 @@ draggable = true;
 		    _hov = _hov || key_dragging == _k;
 		_k._hover = lerp_float(_k._hover, _hov || key_selecting == _k, 5);
 		
-		var _kw = ui(12);
-		var _kh = lerp(ui(12), ui(32), _k._hover);
+		var _kw = ui(10);
+		var _kh = lerp(ui(10), ui(32), _k._hover);
 		
 		var _kdx = _kx - _kw / 2;
 		var _kdy = _ky - _kh / 2;

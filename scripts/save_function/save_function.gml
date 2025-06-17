@@ -43,6 +43,7 @@ function SAVE_ALL() {
 
 function SAVE(project = PROJECT) {
 	if(DEMO) return false;
+	if(!is(project, Project)) return false;
 	
 	if(project.path == "" || project.freeze || project.readonly || path_is_backup(project.path))
 		return SAVE_AS(project);
@@ -53,7 +54,7 @@ function SAVE(project = PROJECT) {
 function SAVE_AS(project = PROJECT) {
 	if(DEMO) return false;
 	
-	var path = get_save_filename_pxc("Pixel Composer project (.pxc)|*.pxc|Compressed Pixel Composer project (.cpxc)|*.cpxc", "");
+	var path = get_save_filename_compat("Pixel Composer project (.pxc)|*.pxc|Compressed Pixel Composer project (.cpxc)|*.cpxc", "");
 	key_release();
 	if(path == "") return false;
 	

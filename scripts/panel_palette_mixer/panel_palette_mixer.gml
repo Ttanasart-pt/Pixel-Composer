@@ -232,7 +232,7 @@ function Panel_Palette_Mixer(_selector = noone) : PanelContent() constructor {
 				if(_b == 2) {
 					menuCall("", [
 						menuItem("Save palette as...", function() {
-							var _path = get_save_filename_pxc("Hex paleete|*.hex", "Palette");
+							var _path = get_save_filename_compat("Hex paleete|*.hex", "Palette");
 							if(_path != "") {
 								var _str = palette_string_hex(palette, false);
 								file_text_write_all(_path, _str);
@@ -518,11 +518,11 @@ function Panel_Palette_Mixer(_selector = noone) : PanelContent() constructor {
 							menuItem("Center view", function() { centerView(); } ),
 							-1,
 							menuItem("Save mixed...", function() { 
-								var _path = get_save_filename_pxc("JSON|*.json", "New mixed");
+								var _path = get_save_filename_compat("JSON|*.json", "New mixed");
 								if(_path != "") save_palette_mixer(palette_data, _path);
 							}, THEME.save),
 							menuItem("Load mixed...", function() { 
-								var _path = get_open_filename_pxc("JSON|*.json", "");
+								var _path = get_open_filename_compat("JSON|*.json", "");
 								if(_path != "") palette_data = load_palette_mixer(_path);
 							}, THEME.noti_icon_file_load),
 							-1,

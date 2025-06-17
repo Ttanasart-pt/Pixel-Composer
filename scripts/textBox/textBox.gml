@@ -573,7 +573,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		var tx = _x;
 		switch(align) {
 			case fa_left   : tx = _x + padding;      break;
-			case fa_center : tx = _x + _w / 2;     break;
+			case fa_center : tx = _x + _w / 2;       break;
 			case fa_right  : tx = _x + _w - padding; break;
 		}
 		
@@ -898,7 +898,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			if(drawText) {
 				draw_set_text(font, fa_left, fa_center);
 				var _display_text = _raw_text;
-			
+				
 				if(input == TEXTBOX_INPUT.number) {
 					var dig       = floor(_w / string_width("0")) - 3;
 					_display_text = string_real(_display_text, dig, precision);
