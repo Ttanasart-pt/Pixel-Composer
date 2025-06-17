@@ -22,6 +22,8 @@ function Node_Composite_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	setDynamicInput(1, true, VALUE_TYPE.dynaSurface);
 	
+	////- Nodes
+	
 	draw_transforms = [];
 	static drawOverlayTransform = function(_node) { 
 		var _df = array_safe_get(draw_transforms, preview_index, noone);
@@ -45,6 +47,8 @@ function Node_Composite_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	    
 	    for( var i = 0; i < _amo; i++ ) {
 	        var _surf   = _data[input_fix_len + i];
+	        if(!is(_surf, taggedSurf)) continue;
+	        
 	        var _tags   = _surf.tags;
 	        var _tagArr = struct_get_names(_tags);
 	        
@@ -63,6 +67,8 @@ function Node_Composite_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	    
 	    for( var i = 0; i < _amo; i++ ) {
 	        var _surf    = _data[input_fix_len + i];
+	        if(!is(_surf, taggedSurf)) continue;
+	        
 	        var _surface = _surf.surfaces[0];
 	        var _tags    = _surf.tags;
 	        var _tagArr  = struct_get_names(_tags);
@@ -99,6 +105,8 @@ function Node_Composite_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
         surface_set_shader(_outSurf);
             for( var i = 0; i < _amo; i++ ) {
                 var _surf    = _data[input_fix_len + i];
+                if(!is(_surf, taggedSurf)) continue;
+	        
                 var _surface = _surf.surfaces[0];
                 var _tags    = _surf.tags;
                 var _tagArr  = struct_get_names(_tags);
