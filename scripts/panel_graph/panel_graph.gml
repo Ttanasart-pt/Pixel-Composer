@@ -2196,18 +2196,19 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         addKeyOverlay("Connecting", [[ "Ctrl", "Disable auto connect" ], [ "Shift", "Select multiple" ], [ "Double Shift", "Select all of same type" ]]);
 								
         if(key_mod_double(SHIFT)) {
-            var _n = value_dragging.node;
-            var _l = value_dragging.connect_type == CONNECT_TYPE.input? _n.inputs : _n.outputs;
-            var _i = value_dragging.connect_type == CONNECT_TYPE.input? _n.inputs_index : _n.outputs_index;
+            var _n    = value_dragging.node;
+        	var _type = value_dragging.type;
+        	var _conn = value_dragging.connect_type;
+        	
+        	var _list = _conn == CONNECT_TYPE.input? _n.inputDisplayList : _n.outputDisplayList;
             
             array_push_unique(value_draggings, value_dragging);
             
-            for (var i = 0, n = array_length(_i); i < n; i++) {
-                var _j = _l[_i[i]];
-                if(_j.type == value_dragging.type)
-                    array_push_unique(value_draggings, _j);
+            for (var i = 0, n = array_length(_list); i < n; i++) {
+                var _j = _list[i];
+                if(_j.type == _type) array_push_unique(value_draggings, _j);
             }
-            
+        	
         } else if(key_mod_press(SHIFT)) {
             array_push_unique(value_draggings, value_dragging);
             

@@ -170,8 +170,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		outputDisplayList = [];
 		
-		outputs_index  = [];
-		out_cache_len  = 0;
+		inputs_draw_index   = [];
+		outputs_draw_index  = [];
+		out_cache_len       = 0;
 		
 		input_buttons       = [];
 		input_button_length = 0;
@@ -758,19 +759,22 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		for( var i = 0, n = array_length(inputs); i < n; i++ )
 			if(is(inputs[i], NodeValue)) inputs[i].visible_in_list = false;
 		
-		inputs_amount = getInputJunctionAmount();
+		inputs_amount     = getInputJunctionAmount();
+		inputs_draw_index = [];
 		
 		for( var i = 0; i < inputs_amount; i++ ) {
 			var _input = getInputJunctionIndex(i);
 			if(_input == noone) continue;
 			
 			var _inp = array_safe_get(inputs, _input);
-			if(!is_struct(_inp) || !is(_inp, NodeValue)) continue;
+			if(!is(_inp, NodeValue)) continue;
 			
 			_inp.visible_in_list = true;
+			
+			if(_inp.index && _inp.isVisible()) array_push(inputs_draw_index, _inp.index);
 		}
 		
-		outputs_index  = array_create_ext(getOutputJunctionAmount(), function(index) { return getOutputJunctionIndex(index); });
+		outputs_draw_index  = array_create_ext(getOutputJunctionAmount(), function(i) /*=>*/ {return getOutputJunctionIndex(i)});
 	}
 	
 	static setHeight = function() {
@@ -1681,7 +1685,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			_iy  += junction_draw_hei_y * __s;
 		});
 		
-		array_foreach(outputs_index,    function(jun) /*=>*/ { 
+		array_foreach(outputs_draw_index, function(jun) /*=>*/ { 
 			jun = outputs[jun]; 
 			jun.x = _ox; jun.rx = _rox; 
 			jun.y = _oy; jun.ry = _roy; 
