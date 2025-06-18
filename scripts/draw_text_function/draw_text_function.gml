@@ -12,6 +12,13 @@ function draw_text_add(_x, _y, _text, scale = 1) {
 	BLEND_NORMAL
 }
 
+function draw_text_transform_add(_x, _y, _text, scale = 1, _rot = 0) {
+	INLINE
+	BLEND_ALPHA_MULP
+	draw_text_transformed(round(_x), round(_y), _text, scale, scale, _rot);
+	BLEND_NORMAL
+}
+
 function draw_text_alpha(_x, _y, _text, scale = 1) {
 	INLINE
 	BLEND_ALPHA

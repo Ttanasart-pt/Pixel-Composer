@@ -89,9 +89,11 @@
 	
 	function loadPanelStruct(panel, str) {
 		var cont = str.content;
+		var taba = str[$ "tab_align"] ?? 0;
 		
-		if(variable_struct_exists(str, "split")) {
+		panel.tab_align = taba;
 			
+		if(variable_struct_exists(str, "split")) {
 			var pan = panel;
 			     if(str.split == "v") pan = panel.split_v(ui(str.width));
 			else if(str.split == "h") pan = panel.split_h(ui(str.width));
@@ -100,8 +102,8 @@
 				loadPanelStruct(pan[0], cont[0]);
 				loadPanelStruct(pan[1], cont[1]);
 			}
-		} else {
 			
+		} else {
 			if(!is_array(cont)) cont = [ cont ];
 			
 			for( var i = 0, n = array_length(cont); i < n; i++ ) {
@@ -381,9 +383,10 @@
 	
 	function _panelSerialize(_panel, _content = false) {
 		var cont = {};
-		var ind = 0;
+		cont.content   = [];
+		cont.tab_align = _panel.tab_align;
 		
-		cont.content = [];
+		var ind = 0;
 		if(_panel.split != "" && array_length(_panel.childs) == 2) {
 			cont.split = _panel.split;
 			if(_panel.split == "h") {
