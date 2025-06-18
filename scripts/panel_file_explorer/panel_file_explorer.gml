@@ -170,10 +170,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 	
 	item_height  = ui(20);
 	grid_size    = ui(64);
-	
-	cntPad       = ui(4);
-	top_bar      = ui(44);
-	tb_root      = new textBox(TEXTBOX_INPUT.text, function(v) /*=>*/ {return setRoot(v)});
+	tb_root      = textBox_Text(function(v) /*=>*/ {return setRoot(v)});
 	
 	current_ext  = {};
 	filter_ext   = [];
@@ -509,7 +506,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 		return _h;
 	}
 	
-	contentPane = new scrollPane(w - padding * 2 - cntPad * 2, h - padding - top_bar - cntPad * 2, function(_y, _m, _r) {
+	contentPane = new scrollPane(1, 1, function(_y, _m, _r) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		
 		if(frame_dragging) file_selectings = [];
@@ -647,32 +644,32 @@ function Panel_File_Explorer() : PanelContent() constructor {
 	
 	function onResize() {
 		initSize();
-		contentPane.resize(w - padding * 2 - cntPad * 2, h - padding - top_bar - cntPad * 2);
 	}
 	
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		
-		var m     = [mx,my];
-		var pad   = padding;
-		var cnt_x = pad;
-		var cnt_y = top_bar;
-		var cnt_w = w - pad - cnt_x;
-		var cnt_h = h - pad - cnt_y;
-		var bspr  = THEME.button_hide_fill;
-		draw_sprite_stretched(THEME.ui_panel_bg, 1, cnt_x, cnt_y, cnt_w, cnt_h);
+		var m    = [mx,my];
+		var px   = padding;
+		var py   = ui(44);
+		var pw   = w - padding - px;
+		var ph   = h - padding - py;
+		var bspr = THEME.button_hide_fill;
+		draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
 		
 		#region Topbar
-			var bs = top_bar - pad - ui(8);
-			var bx = pad;
+			var bs = ui(28);
+			var bx = padding - ui(8);
+			var by = padding - ui(8);
+			
 			var bc = root != ""? COLORS._main_icon : COLORS._main_icon_dark;
-			if(buttonInstant(bspr, bx, pad, bs, bs, m, pHOVER, pFOCUS, "Go up", THEME.arrow, 1, bc) == 2)
+			if(buttonInstant(bspr, bx, by, bs, bs, m, pHOVER, pFOCUS, "Go up", THEME.arrow, 1, bc) == 2)
 				if(root != "") setRoot(filename_dir(root));
 			bx += bs + ui(4);
 			
 			if(PROJECT.path == "")
-				draw_sprite_ext(s_icon_16_white, 0, bx + bs / 2, pad + bs / 2, UI_SCALE, UI_SCALE, 0, COLORS._main_icon, .5);
-			else if(buttonInstant(bspr, bx, pad, bs, bs, m, pHOVER, pFOCUS, "Go to current project", s_icon_16_white, 0, COLORS._main_icon, 1, UI_SCALE) == 2) {
+				draw_sprite_ext(s_icon_16_white, 0, bx + bs / 2, by + bs / 2, UI_SCALE, UI_SCALE, 0, COLORS._main_icon, .5);
+			else if(buttonInstant(bspr, bx, by, bs, bs, m, pHOVER, pFOCUS, "Go to current project", s_icon_16_white, 0, COLORS._main_icon, 1, UI_SCALE) == 2) {
 				var _pth = PROJECT.path;
 				if(_pth == "") return;
 				setRoot(filename_dir(_pth));
@@ -681,8 +678,8 @@ function Panel_File_Explorer() : PanelContent() constructor {
 			
 			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			
-			var bx1 = w - pad;
-			var b = buttonInstant(bspr, bx1 - bs, pad, bs, bs, m, pHOVER, pFOCUS, view_mode_tooltip, THEME.view_mode, !view_mode, COLORS._main_icon, 1, .8);
+			var bx1 = w - padding + ui(8);
+			var b = buttonInstant(bspr, bx1 - bs, by, bs, bs, m, pHOVER, pFOCUS, view_mode_tooltip, THEME.view_mode, !view_mode, COLORS._main_icon, 1, .8);
 			if(b == 2 || (b == 1 && key_mod_press(SHIFT) && MOUSE_WHEEL != 0)) { 
 				view_mode = !view_mode; 
 				PREFERENCES.file_explorer_view = view_mode; 
@@ -691,8 +688,8 @@ function Panel_File_Explorer() : PanelContent() constructor {
 			bx1 -= bs + ui(4);
 			
 			bc = array_empty(filter_ext)? COLORS._main_icon : COLORS._main_accent;
-			if(buttonInstant(bspr, bx1 - bs, pad, bs, bs, m, pHOVER, pFOCUS, "Filter...", THEME.filter, 1, bc, 1, .8) == 2) {
-				with(dialogCall(o_dialog_arrayBox, x + bx1 - bs, y + pad)) {
+			if(buttonInstant(bspr, bx1 - bs, by, bs, bs, m, pHOVER, pFOCUS, "Filter...", THEME.filter, 1, bc, 1, .8) == 2) {
+				with(dialogCall(o_dialog_arrayBox, x + bx1 - bs, y + by)) {
 					arrayBox = other.tba_filter;	
 					dialog_w = ui(160);
 					font     = f_p3;
@@ -704,17 +701,18 @@ function Panel_File_Explorer() : PanelContent() constructor {
 			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			
 			var tb_x = bx;
-			var tb_y = pad;
+			var tb_y = by;
 			var tb_w = bx1 - bx;
-			var tb_h = top_bar - pad - ui(8);
+			var tb_h = bs;
 			
 			tb_root.setFocusHover(pFOCUS, pHOVER);
 			tb_root.font = f_p3;
 			tb_root.draw(tb_x, tb_y, tb_w, tb_h, root, m);
 		#endregion
-			
+		
 		contentPane.setFocusHover(pFOCUS, pHOVER);
-		contentPane.draw(cnt_x + cntPad, cnt_y + cntPad, mx - cnt_x - cntPad, my - cnt_y - cntPad);
+		contentPane.verify(pw, ph);
+		contentPane.drawOffset(px, py, mx, my);
 	}
 	
 	function drawGUI() {

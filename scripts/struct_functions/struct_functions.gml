@@ -59,6 +59,7 @@ function struct_append(original, append) {
 }
 
 function struct_try_get(struct, key, def = 0) {
+	if(!is_struct(struct)) return def;
 	if(struct[$ key] != undefined) return struct[$ key];
 	
 	key = string_replace_all(key, "_", " ");

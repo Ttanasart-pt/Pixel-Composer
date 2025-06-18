@@ -115,7 +115,7 @@ function Panel_Capture_Project() : PanelContent() constructor {
 		var by = h - _pd - bh;
 		
 		if(buttonInstant(THEME.button_def, bx, by, bw, bh, [ mx, my ], pHOVER, pFOCUS) == 2) {
-			var _p = get_save_filename("GIF|*.gif", string_replace(PROJECT.path, ".pxc", ""));
+			var _p = get_save_filename_compat("GIF|*.gif", string_replace(PROJECT.path, ".pxc", ""));
 			if(!CAPTURING && _p != "") {
 				cap_path  = _p;
 				cap_name  = filename_name_only(_p); 

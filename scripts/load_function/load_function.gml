@@ -123,21 +123,34 @@ function LOAD_AT(path, params = new __loadParams()) {
 	
 	printIf(log, $" > Create temp : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
 	
-	var _ext = filename_ext_raw(path);
-	var s;
-	
-	var bf = buffer_load(path);
-	var bc = buffer_decompress(bf);
-	
-	if(bc == -1) {
-		s = buffer_read(bf, buffer_string);
+	#region read 
+		var _ext = filename_ext_raw(path), s;
+		var rawBuff = buffer_load(path);
+		var offset   = 0;
+		buffer_to_start(rawBuff);
 		
-	} else {
-		s = buffer_read(bc, buffer_string);
-		buffer_delete(bc);
-	}
-	
-	buffer_delete(bf);
+		var _id = buffer_read_text(rawBuff, 4);
+		var contBuff = rawBuff;
+		
+		if(_id == "PXCX") {
+			offset   = buffer_read(rawBuff, buffer_u32);
+			contBuff = buffer_create(1, buffer_grow, 1);
+			buffer_copy(rawBuff, offset, buffer_get_size(rawBuff) - offset, contBuff, 0);
+		}
+		
+		// print(_id, offset);
+		
+		var compBuff = buffer_decompress(contBuff);
+		if(compBuff == -1) {
+			s = buffer_read(contBuff, buffer_string);
+		} else {
+			s = buffer_read(compBuff, buffer_string);
+			buffer_delete(compBuff);
+		}
+		
+		buffer_delete_safe(rawBuff);
+		buffer_delete_safe(contBuff);
+	#endregion
 	
 	var content = json_try_parse(s);
 	printIf(log, $" > Load struct : {(get_timer() - t1) / 1000} ms");

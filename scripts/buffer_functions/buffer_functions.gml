@@ -74,10 +74,17 @@ function buffer_read_at(buffer, position, type) {
 	return buffer_read(buffer, type);
 }
 
+function buffer_read_text(buffer, len) {
+	INLINE
+	var _s = "";
+	repeat(len) _s += chr(buffer_read(buffer, buffer_u8));
+	return _s;
+}
+
 function buffer_get_color(buffer, _x, _y, w, h) {
+	INLINE
 	buffer_seek(buffer, buffer_seek_start, (w * _y + _x) * 4);
 	var c = buffer_read(buffer, buffer_u32);
-	
 	return c;
 }
 

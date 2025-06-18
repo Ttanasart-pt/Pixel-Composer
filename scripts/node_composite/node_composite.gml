@@ -129,8 +129,6 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				} else 
 					draw_sprite_ui_uniform(THEME.icon_delete, 3, _bx, _cy + lh / 2, 1, COLORS._main_icon);
 				
-				if(!is_surface(_surf)) continue;
-				
 				var _bx = _x + ui(16 + 24);
 				if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, ui(12))) {
 					draw_sprite_ui_uniform(THEME.junc_visible, vis, _bx, _cy + lh / 2, 1, c_white);
@@ -166,10 +164,12 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				var _sy0 = _cy + ui(3);
 				var _sy1 = _sy0 + ssh;
 				
-				var _ssw = surface_get_width_safe(_surf);
-				var _ssh = surface_get_height_safe(_surf);
-				var _sss = min(ssh / _ssw, ssh / _ssh);
-				draw_surface_ext_safe(_surf, _sx0, _sy0, _sss, _sss, 0, c_white, 1);
+				if(is_surface(_surf)) {
+					var _ssw = surface_get_width_safe(_surf);
+					var _ssh = surface_get_height_safe(_surf);
+					var _sss = min(ssh / _ssw, ssh / _ssh);
+					draw_surface_ext_safe(_surf, _sx0, _sy0, _sss, _sss, 0, c_white, 1);
+				}
 				
 				if(dynamic_input_inspecting == ind) draw_sprite_stretched_add(THEME.box_r2, 1, _sx0, _sy0, ssh, ssh, COLORS._main_accent, 1);
 				else                                draw_sprite_stretched_add(THEME.box_r2, 1, _sx0, _sy0, ssh, ssh, COLORS._main_icon, 0.3);
@@ -722,54 +722,58 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		if(dynamic_input_inspecting != noone) {
 			var _ss = input_fix_len + dynamic_input_inspecting * data_length;
-			var   a = anchors[_ss];
+			var   a = array_safe_get_fast(anchors, _ss);
 			
-			draw_set_color(COLORS._main_accent);
-			draw_line(a.d0[0], a.d0[1], a.d1[0], a.d1[1]);
-			draw_line(a.d0[0], a.d0[1], a.d2[0], a.d2[1]);
-			draw_line(a.d3[0], a.d3[1], a.d1[0], a.d1[1]);
-			draw_line(a.d3[0], a.d3[1], a.d2[0], a.d2[1]);
-		}
-		
-		if(hovering != noone) {
-			var hi = input_fix_len + hovering * data_length;
-			var a  = anchors[hi];
-			
-			if(dynamic_input_inspecting == noone) {
-				draw_set_color(COLORS.node_composite_overlay_border);
+			if(is_struct(a)) {
+				draw_set_color(COLORS._main_accent);
 				draw_line(a.d0[0], a.d0[1], a.d1[0], a.d1[1]);
 				draw_line(a.d0[0], a.d0[1], a.d2[0], a.d2[1]);
 				draw_line(a.d3[0], a.d3[1], a.d1[0], a.d1[1]);
 				draw_line(a.d3[0], a.d3[1], a.d2[0], a.d2[1]);
 			}
+		}
+		
+		if(hovering != noone) {
+			var hi = input_fix_len + hovering * data_length;
+			var a  = array_safe_get_fast(anchors, hi);
 			
-			if(mouse_press(mb_left, active)) {
-				if(hovering_type == NODE_COMPOSE_DRAG.move) {
-					surf_dragging	= hi;
-					input_dragging	= hi + 1;
-					drag_type		= hovering_type;
-					dragging_sx		= current_data[hi + 1][0];
-					dragging_sy		= current_data[hi + 1][1];
-					dragging_mx		= _mx;
-					dragging_my		= _my;
-					
-				} else if(hovering_type == NODE_COMPOSE_DRAG.rotate) { //rot
-					surf_dragging	= hi;
-					input_dragging	= hi + 2;
-					drag_type		= hovering_type;
-					dragging_sx		= current_data[hi + 2];
-					rot_anc_x		= overlay_x(a.cx, _x, _s);
-					rot_anc_y		= overlay_y(a.cy, _y, _s);
-					dragging_mx		= point_direction(rot_anc_x, rot_anc_y, _mx, _my);
-					
-				} else if(hovering_type == NODE_COMPOSE_DRAG.scale) { //sca
-					surf_dragging	= hi;
-					input_dragging	= hi + 3;
-					drag_type		= hovering_type;
-					dragging_sx		= _sca[0];
-					dragging_sy		= _sca[1];
-					dragging_mx		= (a.d0[0] + a.d3[0]) / 2;
-					dragging_my		= (a.d0[1] + a.d3[1]) / 2;
+			if(is_struct(a)) {
+				if(dynamic_input_inspecting == noone) {
+					draw_set_color(COLORS.node_composite_overlay_border);
+					draw_line(a.d0[0], a.d0[1], a.d1[0], a.d1[1]);
+					draw_line(a.d0[0], a.d0[1], a.d2[0], a.d2[1]);
+					draw_line(a.d3[0], a.d3[1], a.d1[0], a.d1[1]);
+					draw_line(a.d3[0], a.d3[1], a.d2[0], a.d2[1]);
+				}
+				
+				if(mouse_press(mb_left, active)) {
+					if(hovering_type == NODE_COMPOSE_DRAG.move) {
+						surf_dragging	= hi;
+						input_dragging	= hi + 1;
+						drag_type		= hovering_type;
+						dragging_sx		= current_data[hi + 1][0];
+						dragging_sy		= current_data[hi + 1][1];
+						dragging_mx		= _mx;
+						dragging_my		= _my;
+						
+					} else if(hovering_type == NODE_COMPOSE_DRAG.rotate) { //rot
+						surf_dragging	= hi;
+						input_dragging	= hi + 2;
+						drag_type		= hovering_type;
+						dragging_sx		= current_data[hi + 2];
+						rot_anc_x		= overlay_x(a.cx, _x, _s);
+						rot_anc_y		= overlay_y(a.cy, _y, _s);
+						dragging_mx		= point_direction(rot_anc_x, rot_anc_y, _mx, _my);
+						
+					} else if(hovering_type == NODE_COMPOSE_DRAG.scale) { //sca
+						surf_dragging	= hi;
+						input_dragging	= hi + 3;
+						drag_type		= hovering_type;
+						dragging_sx		= _sca[0];
+						dragging_sy		= _sca[1];
+						dragging_mx		= (a.d0[0] + a.d3[0]) / 2;
+						dragging_my		= (a.d0[1] + a.d3[1]) / 2;
+					}
 				}
 			}
 		}

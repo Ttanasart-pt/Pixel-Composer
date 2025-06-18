@@ -411,6 +411,11 @@
 			var _map = json_load_struct(path);
 			PREFERENCES_MENUITEMS = _map;
 		}
+		
+		var fsPath = $"{DIRECTORY}Preferences\\fs.json";
+		var fsPref = json_load_struct(fsPath);
+		fsPref.ui_scale = UI_SCALE;
+		json_save_struct(fsPath, fsPref);
 	}
 	
 	function PREF_APPLY() {

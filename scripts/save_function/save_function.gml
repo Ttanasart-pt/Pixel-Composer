@@ -55,11 +55,12 @@ function SAVE_AS(project = PROJECT) {
 	if(DEMO) return false;
 	
 	var path = get_save_filename_compat("Pixel Composer project (.pxc)|*.pxc|Compressed Pixel Composer project (.cpxc)|*.cpxc", "");
+	
 	key_release();
 	if(path == "") return false;
 	
 	if(!path_is_project(path, false))
-		path = filename_name_only(path) + ".pxc";
+		path = filename_ext_verify(path, ".pxc");
 	
 	if(file_exists_empty(path))
 		log_warning("SAVE", "Overrided file : " + path);
@@ -89,10 +90,55 @@ function SAVE_AT(project = PROJECT, path = "", log = "save at ", _thum = true) {
 	if(file_exists_empty(path)) file_delete(path);
 	var _ext = filename_ext_raw(path);
 	var _prj = SERIALIZE_PROJECT(project);
-	var _cmp = PREFERENCES.save_compress;
+	var _raw = buffer_compress_string(_prj);
+	var _buf = buffer_create(1, buffer_grow, 1);
 	
-    if(_cmp) buffer_save(buffer_compress_string(_prj), path);
-	else     file_text_write_all(path, _prj);
+	#region thumbnail
+		var _thumbSurf = PANEL_PREVIEW.getNodePreviewSurface();
+		var _thumbSize = 64;
+		var _thumbLeng = 0;
+		var _thumbData = 0;
+		var _thumb     = _thum && PREFERENCES.save_thumbnail && is_surface(_thumbSurf);
+		
+		if(_thumb) {
+			var _thumbDrawSurf = surface_create(_thumbSize, _thumbSize);
+			surface_set_target(_thumbDrawSurf);
+				DRAW_CLEAR
+				BLEND_OVERRIDE
+				draw_surface_stretch_fit(_thumbSurf, _thumbSize / 2, _thumbSize / 2, _thumbSize, _thumbSize);
+				BLEND_NORMAL
+			surface_reset_target();
+			
+			_thumbData = buffer_from_surface(_thumbDrawSurf, false);
+			_thumbData = buffer_compress(_thumbData, 0, buffer_get_size(_thumbData));
+			_thumbLeng = buffer_get_size(_thumbData);
+			
+			surface_free(_thumbDrawSurf);
+		}
+	#endregion
+	
+	#region write header
+		var _headerSize = 4 + 4 + _thumb * (4 + 4 + _thumbLeng);
+		buffer_to_start(_buf);
+		buffer_write(_buf, buffer_text, "PXCX");
+		buffer_write(_buf, buffer_u32,  _headerSize);
+		
+		if(_thumb) {
+			buffer_write(_buf, buffer_text, "THMB");
+			buffer_write(_buf, buffer_u32,  _thumbLeng);
+			buffer_copy(_thumbData, 0, _thumbLeng, _buf, buffer_tell(_buf));
+			
+			buffer_seek(_buf, buffer_seek_relative, _thumbLeng);
+		}
+		
+		// print(_headerSize, buffer_tell(_buf));
+		
+		buffer_copy(_raw, 0, buffer_get_size(_raw), _buf, _headerSize);
+	    buffer_save(_buf, path);
+		
+		buffer_delete(_raw);
+		buffer_delete(_buf);
+	#endregion
 	
 	SAVING = false;
 	project.readonly  = false;
@@ -100,8 +146,6 @@ function SAVE_AT(project = PROJECT, path = "", log = "save at ", _thum = true) {
 	
 	log_message("FILE", log + path, THEME.noti_icon_file_save);
 	PANEL_MENU.setNotiIcon(THEME.noti_icon_file_save);
-	
-	if(_thum && PREFERENCES.save_thumbnail) PANEL_PREVIEW.saveCurrentFrameProject(128, path);
 	
 	return true;
 }

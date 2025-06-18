@@ -181,16 +181,15 @@
 	
 	steam_avatar_id   = "";
 	
-	STEAM_UGC_UPDATE_HANDLE 	= 0;
-	STEAM_UGC_ITEM_ID			= 0;
-	STEAM_UGC_PUBLISH_ID		= 0;
-	STEAM_UGC_SUBMIT_ID 		= 0;
-	STEAM_UGC_ITEM_UPLOADING	= false;
-	STEAM_ENABLED				= steam_initialised();
-	STEAM_UGC_UPDATE			= false;
-	STEAM_UGC_UPDATE_MAP		= ds_map_create();
-	
-	STEAM_UGC_ITEM_AVATAR  = true;
+	STEAM_UGC_UPDATE_HANDLE  = 0;
+	STEAM_UGC_ITEM_ID        = 0;
+	STEAM_UGC_PUBLISH_ID     = 0;
+	STEAM_UGC_SUBMIT_ID      = 0;
+	STEAM_UGC_ITEM_UPLOADING = false;
+	STEAM_ENABLED            = steam_initialised();
+	STEAM_UGC_UPDATE         = false;
+	STEAM_UGC_UPDATE_MAP     = ds_map_create();
+	STEAM_UGC_ITEM_AVATAR    = true;
 	
 	if(STEAM_ENABLED) {
 		STEAM_APP_ID    = steam_get_app_id();

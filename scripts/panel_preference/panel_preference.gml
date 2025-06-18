@@ -189,12 +189,6 @@ function Panel_Preference() : PanelContent() constructor {
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_save_file_compress", "Compress save file"),
-    			"save_compress",
-    			new checkBox(function() /*=>*/ {return prefToggle("save_compress")})
-    		));
-    		
-    		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_save_backups", "Backup save(s) amount"),
     			"save_backup",
     			textBox_Number(function(val) /*=>*/ {return prefSet("save_backup", max(0, val))})

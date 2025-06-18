@@ -277,13 +277,11 @@ function Panel_Collection() : PanelContent() constructor {
 		}
 	}
 	
-	tb_search = new textBox(TEXTBOX_INPUT.text, function(str) /*=>*/ { search_string = string(str); doSearch(); });
-	tb_search.auto_update = true;
+	tb_search     = textBox_Text(function(str) /*=>*/ { search_string = string(str); doSearch(); }).setAutoupdate();
+	grid_size     = ui(56);
+	grid_size_to  = grid_size;
 	
-	grid_size    = ui(56);
-	grid_size_to = grid_size;
-	
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	contentView = 0;
 	contentPane = new scrollPane(content_w - ui(8), content_h - ui(4), function(_y, _m) {
@@ -425,11 +423,11 @@ function Panel_Collection() : PanelContent() constructor {
 					}
 					
 					if(PREFERENCES.collection_label) {
-						draw_set_text(f_p3, fa_center, fa_top, COLORS._main_text_inner);
+						draw_set_text(f_p4, fa_center, fa_top, COLORS._main_text_inner);
 						
 						var _tx = _boxx + grid_size / 2;
 						var _ty = yy + grid_size + ui(4);
-						var _tw = grid_width + ui(16);
+						var _tw = grid_width + grid_space;
 						
 						var _txtH = draw_text_ext_add(_tx, _ty, _node.name, -1, _tw, 1, PREFERENCES.collection_name_force_cut);
 						name_height = max(name_height, _txtH + 8);
@@ -539,7 +537,7 @@ function Panel_Collection() : PanelContent() constructor {
 		return hh + ui(28);
 	});
 	
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	nodeListPane_page   = 0;
 	node_temp_list      = ds_list_create();

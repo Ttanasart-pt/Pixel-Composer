@@ -30,13 +30,13 @@ function json_save(path, map) {
 	file_text_close(f);
 }
 
-function json_load_struct(path) {
+function json_load_struct(path, def = {}) {
 	gml_pragma("forceinline");
 	
 	if(!file_exists_empty(path)) return noone;
 	
 	var s  = file_read_all(path);
-	var js = json_try_parse(s);
+	var js = json_try_parse(s, def);
 	return js;
 }
 

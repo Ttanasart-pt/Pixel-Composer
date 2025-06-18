@@ -17,12 +17,11 @@ function shell_execute_output(path, command, ref = noone, _log = true) { return 
 function shell_execute(path, command, ref = noone, _log = true) {
 	INLINE
 	
-	// if(OS == os_macosx) {
 	path    = string_replace_all(path,    "\\", "/");
 	command = string_replace_all(command, "\\", "/");
-	// }
 	
 	var cmd = $"{path} {command}";
+	
 	var res = ProcessExecute(cmd);
 	if(_log) print($"Execute {path} {command} | {res}");
 	
@@ -60,10 +59,12 @@ function shellCommandBuilder(args) {
 	
 	for( var i = 0, n = array_length(_keys); i < n; i++ ) {
 		var _k = _keys[i];
-		var _v = args[$ _k];
+		var _v = string(args[$ _k]);
+		if(_v == "") continue;
 		
-		if(string_pos(" ", _v)) _arg += $"{_k} \"{_v}\" ";
-		else                    _arg += $"{_k} {_v} ";
+		if(string_pos(" ", _v)) 
+		     _arg += $"{_k} \"{_v}\" ";
+		else _arg += $"{_k} {_v} ";
 	}
 	
 	return _arg;

@@ -17,7 +17,7 @@ function Panel_Palette() : PanelContent() constructor {
 	menu_add     = menuItemShelf(__txt("Add"), function(_dat) /*=>*/ {
 		return submenuCall(_dat, [
 			menuItem(__txt("File..."), function() /*=>*/ {
-				var _p = get_open_filename("hex|*.hex|gpl|*.gpl|Image|.png", "palette");
+				var _p = get_open_filename_compat("hex|*.hex|gpl|*.gpl|Image|.png", "palette");
 				if(!file_exists_empty(_p)) return;
 				
 				file_copy(_p, $"{DIRECTORY}Palettes/{filename_name(_p)}");

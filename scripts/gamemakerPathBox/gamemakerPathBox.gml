@@ -16,7 +16,7 @@ function gamemakerPathBox(project) : widget() constructor {
 		
 		if(project.bind_gamemaker == noone) {
     		if(buttonInstant(THEME.button_def, _x, _y, _w, _h, _m, hover, active) == 2) {
-    		    var path = get_open_filename("GameMaker project|*.yyp", ""); key_release();
+    		    var path = get_open_filename_compat("GameMaker project|*.yyp", ""); key_release();
 				if(path == "") return noone;
 				
 				project.attributes.bind_gamemaker_path = path;
