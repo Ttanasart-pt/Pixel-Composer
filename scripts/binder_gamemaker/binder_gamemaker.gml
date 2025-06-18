@@ -126,6 +126,8 @@ function GMTileset(_gm, _rpth, _rawData) : GMAsset(_gm, _rpth, _rawData) constru
 	sprite = struct_try_get(raw.spriteId, "path", "");
     spriteObject = noone;
     
+    static getThumbnail = function() { return spriteObject == noone? noone : spriteObject.getThumbnail(); }
+    
     static link = function() {
         spriteObject = gmBinder.getResourceFromPath(sprite);
     }
@@ -134,6 +136,8 @@ function GMTileset(_gm, _rpth, _rawData) : GMAsset(_gm, _rpth, _rawData) constru
 function GMObject(_gm, _rpth, _rawData) : GMAsset(_gm, _rpth, _rawData) constructor {
     sprite = struct_try_get(raw.spriteId, "path", "");
     spriteObject = noone;
+    
+    static getThumbnail = function() { return spriteObject == noone? noone : spriteObject.getThumbnail(); }
     
     static link = function() {
         spriteObject = gmBinder.getResourceFromPath(sprite);
@@ -152,14 +156,14 @@ function __Binder_Gamemaker(_path) constructor {
     resourceList = [];
     
     resources    = [
-        { name: "sprites", data : [], closed : false, },
-        { name: "objects", data : [], closed : false, },
-        { name: "tileset", data : [], closed : false, },
-        { name: "rooms",   data : [], closed : false, },
+        { name: "Sprites", data : [], closed : false, view: 0 },
+        { name: "Objects", data : [], closed : false, view: 0 },
+        { name: "Tileset", data : [], closed : false, view: 0 },
+        { name: "Rooms",   data : [], closed : false, view: 0 },
     ];
     
     nodeMap   = {};
-    batchSize = 20;
+    batchSize = 10;
     
     refreshing = false;
     
@@ -221,10 +225,8 @@ function __Binder_Gamemaker(_path) constructor {
         resourcesCur = {};
         resourceList = [];
         
-        resources[0].data = [];
-        resources[1].data = [];
-        resources[2].data = [];
-        resources[3].data = [];
+        for( var i = 0, n = array_length(resources); i < n; i++ ) 
+        	resources[i].data = [];
         
         var _batAmo = ceil(array_length(resourcesRaw) / batchSize);
         refreshing  = true;
@@ -242,7 +244,10 @@ function __Binder_Gamemaker(_path) constructor {
 	        resourcesMap = resourcesCur;
 	        for( var i = 0, n = array_length(resourceList); i < n; i++ )
 	            resourceList[i].link();
-	            
+	       
+			for( var i = 0, n = array_length(resources); i < n; i++ ) 
+				resources[i].closed = resources[i].closed || array_empty(resources[i].data);
+        	
             refreshing  = false;
         });
         
