@@ -69,9 +69,9 @@ draggable = true;
 	draggable = draggable && !b;
 	bx -= ui(32);
 	
-	var b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txtx("color_selector_open_palette", "Open palette folder..."), THEME.path_open_20);
+	var bt = __txtx("color_selector_open_palette", "Open palette folder...");
+	var b  = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, bt, THEME.dPath_open_20);
 	if(b == 2) shellOpenExplorer(DIRECTORY + "Palettes")
-	draw_sprite_ui_uniform(THEME.path_open_20, 1, bx + bs / 2, by + bs / 2, 1, c_white);
 	draggable = draggable && !b;
 	bx -= ui(32);
 #endregion
@@ -389,7 +389,7 @@ draggable = true;
 	
 	bx = content_x + ui(18);
 	var _txt = __txtx("palette_editor_load", "Load Palette File") + " (.hex)";
-	if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mm, sHOVER, _foc, _txt, THEME.file_load) == 2) {
+	if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mm, sHOVER, _foc, _txt, THEME.dFile_load) == 2) {
 		var path = get_open_filename_compat("HEX palette|*.hex", "");
 		key_release();
 		
@@ -403,7 +403,7 @@ draggable = true;
 	
 	bx += bs + ui(4);
 	var _txt = __txtx("palette_editor_save", "Save Palette File") + " (.hex)";
-	if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mm, sHOVER, _foc, _txt, THEME.file_save) == 2) {
+	if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mm, sHOVER, _foc, _txt, THEME.dFile_save) == 2) {
 		var path = get_save_filename_compat("HEX palette|*.hex", "");
 		key_release();
 		

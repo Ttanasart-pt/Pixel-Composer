@@ -28,17 +28,17 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(32, nodeValue_Vec2(        "Start Point",   [0,.5] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	newInput(33, nodeValue_Vec2(        "End Point",     [1,.5] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	newInput(35, nodeValue_Bool(        "Force Loop",     false ));
-	newInput(19, nodeValue_Bool(        "Fix Length",     false, "Fix length of each segment instead of segment count."));
+	newInput(19, nodeValue_Bool(        "Fix Length",     false )).setTooltip("Fix length of each segment instead of segment count.");
 	newInput( 2, nodeValue_ISlider(     "Segment",        1, [1, 32, 0.1] ));
 	newInput(20, nodeValue_Float(       "Segment Length", 4 ));
 	
 	////- =Width
 	
-	newInput(17, nodeValue_Bool(  "1px Mode",             false, "Render pixel perfect 1px line."));
-	newInput( 3, nodeValue_Vec2(  "Width",               [2,2] ));
+	newInput(17, nodeValue_Bool(  "1px Mode",             false        )).setTooltip("Render pixel perfect 1px line.");
+	newInput( 3, nodeValue_Vec2(  "Width",               [2,2]         ));
 	newInput(11, nodeValue_Curve( "Width over Length",    CURVE_DEF_11 ));
-	newInput(12, nodeValue_Bool(  "Span Width over Path", false, "Apply the full 'width over length' to the trimmed path."));
-	newInput(36, nodeValue_Bool(  "Apply Weight",         true ));
+	newInput(12, nodeValue_Bool(  "Span Width over Path", false        )).setTooltip("Apply the full 'width over length' to the trimmed path.");
+	newInput(36, nodeValue_Bool(  "Apply Weight",         true         ));
 	
 	////- =Line settings
 	
@@ -60,7 +60,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(24, nodeValue_Gradient( "Random Blend",         new gradientObject(ca_white) ));
 	newInput(15, nodeValue_Bool(     "Span Color over Path", false )).setTooltip("Apply the full 'color over length' to the trimmed path.");
 	newInput(37, nodeValue_Gradient( "Color Weight",         new gradientObject(ca_white) ));
-	newInput(38, nodeValue_Vec2(     "Color Range",         [0,1] ));
+	newInput(38, nodeValue_Vec2(     "Color Range",          [0,1] ));
 	
 	////- =Texture
 	
@@ -347,18 +347,17 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						var _pathStr = _rtStr;
 						var _pathEnd = _rtMax;
 							
-						var _stepLen = min(_pathEnd, 1 / _seg); 				// Distance to move per step
+						var _stepLen = min(_pathEnd, 1 / _seg);               // Distance to move per step
 						if(_stepLen <= 0.00001) continue;
 							
-						var _total		= _pathEnd;								// Length remaining
-						var _total_prev = _total;								// Use to prevent infinite loop
-						var _freeze		= 0;									// Use to prevent infinite loop
+						var _total		= _pathEnd;                           // Length remaining
+						var _total_prev = _total;                             // Use to prevent infinite loop
+						var _freeze		= 0;                                  // Use to prevent infinite loop
 							
 						var _sh         = _shift;
-						var _prog_curr	= _clamp? _sh : frac(_sh);		        // Pointer to the current position
+						var _prog_curr	= _clamp? _sh : frac(frac(_sh) + 1);  // Pointer to the current position
 						var _prog_next  = 0;
-						var _prog		= _prog_curr + 1;						// Record previous position to delete from _total
-						var _prog_total	= 0;									// Record the distance the pointer has moved so far
+						var _prog_total	= 0;                                  // Record the distance the pointer has moved so far
 						var points		= [];
 						var pointAmo    = 0;
 						var wght;
@@ -389,7 +388,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							}
 						}
 						
-						// print($"===== {_prog_curr} / {_segLength} : {_segIndex} - {_pathLength} =====");
+						// print($"===== {_prog_curr} [{_pathStr},{_pathEnd}] / {_segLength} : {_segIndex} - {_pathLength} =====");
 						
 						while(true) {
 							var _pp = 0;
@@ -399,10 +398,13 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							if(_useDistance) {
 								var segmentLength = array_safe_get_fast(_segLength, _segIndex, _pathLength);
 								
-								_prog_next = min(_prog_curr + _stepLen, _pathLength, segmentLength);
+								var _next_step = _prog_curr + _stepLen;
+								if(_next_step > _pathLength)   _next_step = _next_step - _pathLength;
+								
+								_prog_next = min(_next_step, segmentLength);
 								_pathPng   = _ratInv? _pathLength - _prog_curr : _prog_curr;
 								
-								//print($"{segmentLength}/{_pathLength} = {_prog_next}");
+								// print($"{segmentLength}/{_pathLength} = {_prog_next}");
 								if(_prog_next == segmentLength) _segIndex++;
 								
 								_pp = _clamp? clamp(_pathPng, 0, _pathLength) : _pathPng;
@@ -412,7 +414,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 								wght = p[$ "weight"] ?? 1;
 									
 							} else {
-								_prog_next = min(_prog_curr + _stepLen, 1); //Move forward _stepLen or _total (if less) stop at 1
+								_prog_next = min(_prog_curr + _stepLen, 1); // Move forward _stepLen or _total (if less) stop at 1
 								_pathPng   = _ratInv? 1 - _prog_curr : _prog_curr;
 								
 								_pp = _clamp? clamp(_pathPng, 0, 1) : _pathPng
@@ -427,13 +429,13 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							_wmin = min(_wmin, wght);
 							_wmax = max(_wmax, wght);
 							
-							if(_total < _pathEnd) { //Do not wiggle the last point.
+							if(_total < _pathEnd) { // Do not wiggle the last point.
 								var _d = point_direction(_ox, _oy, _nx, _ny);
 								_nx   += lengthdir_x(random1D(_sed + _sedIndex, -_wig, _wig), _d + 90); _sedIndex++;
 								_ny   += lengthdir_y(random1D(_sed + _sedIndex, -_wig, _wig), _d + 90); _sedIndex++;
 							}
 								
-							if(_prog_total >= _pathStr) { //Do not add point before range start. Do this instead of starting at _rtStr to prevent wiggle. 
+							if(_prog_total >= _pathStr) { // Do not add point before range start. Do this instead of starting at _rtStr to prevent wiggle. 
 								points[pointAmo++] = { 
 									x:        _nx, 
 									y:        _ny, 
@@ -450,7 +452,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							
 							if(_total <= 0) break;
 							
-							if(_prog_next == _prog_curr && _segIndexPrev == _segIndex) { /*print("Terminate line not moving");*/ break; }
+							if(_prog_next == _prog_curr && _segIndexPrev == _segIndex) break;
 							else if(_prog_next > _prog_curr) {
 								_prog_total += _prog_next - _prog_curr;
 								_total      -= _prog_next - _prog_curr;
@@ -461,10 +463,10 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							_ox		   = _nx;
 							_oy		   = _ny;
 								
-							if(_total_prev == _total && _segIndexPrev == _segIndex && ++_freeze > 16) { /*print("Terminate line not moving");*/ break; }
+							if(_total_prev == _total && _segIndexPrev == _segIndex && ++_freeze > 16) break;
 							_total_prev = _total;
 							
-							if(_segIndex >= _segLengthAmo) { /*print("Terminate line finish last segment");*/ break; }
+							if(_segIndex >= _segLengthAmo) break;
 						}
 						
 						array_resize(points, pointAmo);

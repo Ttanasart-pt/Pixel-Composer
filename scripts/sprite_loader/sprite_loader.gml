@@ -1,9 +1,17 @@
 globalvar THEME_DEF; THEME_DEF = true;
 globalvar THEME; 
 
-function sprite_drawer(_draw) constructor {
+function sprite_drawer() constructor {
 	static draw = function(_x, _y, scale, color, alpha) {}
-	draw = _draw;
+}
+
+function sprite_drawer_white(_spr) : sprite_drawer() constructor {
+	spr = _spr;
+	
+	static draw = function(_x, _y, scale, color, alpha) {
+		draw_sprite_ui_uniform(spr, 0, _x, _y, scale, color, alpha);
+		draw_sprite_ui_uniform(spr, 1, _x, _y, scale, c_white, alpha);
+	}
 }
 
 function __initTheme() {
@@ -95,9 +103,14 @@ function loadGraphic(theme = "default") {
 		THEME[$ key] = _sprite_load_from_struct(str, theme, key);
 	}
 	
-	THEME.dPath_open = new sprite_drawer(function(_x, _y, scale, color, alpha) /*=>*/ {
-		draw_sprite_ui_uniform(THEME.path_open, 0, _x, _y, scale, color, alpha);
-		draw_sprite_ui_uniform(THEME.path_open, 1, _x, _y, scale, c_white, alpha);
-	});
+	THEME.dPath_open    = new sprite_drawer_white(THEME.path_open);
+	THEME.dPath_open_20 = new sprite_drawer_white(THEME.path_open_20);
+	
+	THEME.dFile_save    = new sprite_drawer_white(THEME.file_save);
+	THEME.dFile_load    = new sprite_drawer_white(THEME.file_load);
+	
+	THEME.dGradient_keys_blend      = new sprite_drawer_white(THEME.gradient_keys_blend);
+	THEME.dGradient_keys_distribute = new sprite_drawer_white(THEME.gradient_keys_distribute);
+	THEME.dGradient_keys_reverse    = new sprite_drawer_white(THEME.gradient_keys_reverse);
 	
 }

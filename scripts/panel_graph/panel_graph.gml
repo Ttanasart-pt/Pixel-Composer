@@ -3338,7 +3338,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     } 
 
     function doFrame() { //
-        var x0 = 999999, y0 = 999999, x1 = -999999, y1 = -999999;
+        var x0 = infinity, y0 = infinity, x1 = -infinity, y1 = -infinity;
         
         for( var i = 0; i < array_length(nodes_selecting); i++ )  {
             var _node = nodes_selecting[i];

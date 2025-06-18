@@ -140,7 +140,7 @@ draggable = true;
 		var by = dialog_y + ui(16);
 		
 		var t = __txtx("gradient_editor_key_blend", "Key blending");
-		var b = buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, _hov, _foc, t, THEME.gradient_keys_blend);
+		var b = buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, _hov, _foc, t, THEME.dGradient_keys_blend);
 		draggable = draggable && !b;
 		
 		if(b == 2) {
@@ -154,7 +154,7 @@ draggable = true;
 		bx -= ui(32);
 		
 		var t = __txtx("gradient_editor_reverse", "Reverse");
-		var b = buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, _hov, _foc, t, THEME.gradient_keys_reverse);
+		var b = buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, _hov, _foc, t, THEME.dGradient_keys_reverse);
 		draggable = draggable && !b;
 		
 		if(b == 2) {
@@ -166,7 +166,7 @@ draggable = true;
 		bx -= ui(32);
 		
 		var t = __txt("Distribute");
-		var b = buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, _hov, _foc, t, THEME.gradient_keys_distribute);
+		var b = buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, _hov, _foc, t, THEME.dGradient_keys_distribute);
 		draggable = draggable && !b;
 		
 		if(b == 2) {
