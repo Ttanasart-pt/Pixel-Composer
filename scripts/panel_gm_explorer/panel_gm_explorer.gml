@@ -1,8 +1,8 @@
-function Panel_GM_Explore(gmBinder) : PanelContent() constructor {
-    self.gmBinder = gmBinder;
-    title = $"{gmBinder.projectName}.yyc";
-    
+function Panel_GM_Explore(_gmBinder) : PanelContent() constructor {
+    gmBinder = _gmBinder;
+    title    = $"{gmBinder.projectName}.yyc";
     auto_pin = true;
+    
 	w = ui(400);
 	h = ui(480);
 	
@@ -14,19 +14,15 @@ function Panel_GM_Explore(gmBinder) : PanelContent() constructor {
 	keyboard_lastkey  = -1;
 	
 	search_res = [];
-	tb_search  = new textBox(TEXTBOX_INPUT.text, function(str) /*=>*/ { search_string = string(str); searchResource(); });
-	tb_search.align			= fa_left;
-	tb_search.auto_update	= true;
-	tb_search.boxColor		= COLORS._main_icon_light;
-	WIDGET_CURRENT			= tb_search;
+	tb_search  = textBox_Text(function(str) /*=>*/ { search_string = string(str); searchResource(); })
+					.setAutoupdate().setAlign(fa_left).setBoxColor(COLORS._main_icon_light);
+	WIDGET_CURRENT = tb_search;
 	
 	function searchResource() {
 		search_res = [];
 	}
 	
-	function onResize() { sc_content.resize(w - padding * 2, h - padding * 2 + ui(40)); }
-	
-	sc_content = new scrollPane(w - padding * 2, h - padding * 2 + ui(40), function(_y, _m) {
+	sc_content = new scrollPane(1, 1, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		return GM_Explore_draw(gmBinder, 0, _y, sc_content.surface_w, sc_content.surface_h, _m, sc_content.hover, sc_content.active);
 	});
@@ -51,17 +47,21 @@ function Panel_GM_Explore(gmBinder) : PanelContent() constructor {
 		var _bx = px + pw - _bs;
 		var _by = py;
 		
-		if(buttonInstant(THEME.button_hide_fill, _bx, _by, _bs, _bs, [ mx, my ], pHOVER, pFOCUS, "", THEME.refresh_16) == 2)
+		if(gmBinder.refreshing) {
+			draw_sprite_ui_uniform(THEME.refresh_16, 0, _bx + _bs / 2, _by + _bs / 2, 1, COLORS._main_value_positive, 1, current_time / 90);
+			
+		} else if(buttonInstant(THEME.button_hide_fill, _bx, _by, _bs, _bs, [ mx, my ], pHOVER, pFOCUS, "", THEME.refresh_16) == 2)
 			gmBinder.refreshResources();
 		
 		sc_content.setFocusHover(pFOCUS, pHOVER);
-		sc_content.draw(px, py + ui(40), mx - px, my - (py + ui(40)));
+		sc_content.verify(pw, ph - ui(40));
+		sc_content.drawOffset(px, py + ui(40), mx, my);
 		
 	}
 }
 
 function GM_Explore_draw_init() {
-	grid_size    = ui(64);
+	grid_size    = ui(48);
 	grid_size_to = grid_size;
 }
 
@@ -75,18 +75,22 @@ function GM_Explore_draw(gmBinder, _x, _y, _w, _h, _m, _hover, _focus) {
 	var _ths = grid_size;
 	var _pad = ui(8);
 	var _lnh = line_get_height(f_p3, 8);
-	var _col = floor((_ww - _pad) / (_ths + _pad));
+	var _col = max(1, floor((_ww - _pad) / (_ths * 1.5 + _pad)));
+	
+	var grid_w = (_ww - _pad) / _col;
+	var grid_h = _ths + _lnh;
+	
+	var _sciss = gpu_get_scissor();
 	
 	for( var i = 0, n = array_length(_res); i < n; i++ ) {
 	    var _name = _res[i].name;
+	    var _hov  = _hover && point_in_rectangle(_m[0], _m[1], 0, _yy, _ww, _yy + lbh);
 	    
-	    if(_hover && point_in_rectangle(_m[0], _m[1], 0, _yy, _ww, _yy + lbh)) {
+	    draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, _yy, _ww, lbh, COLORS.panel_inspector_group_bg, 1);
+	    if(_hov) {
             draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, _yy, _ww, lbh, COLORS.panel_inspector_group_hover, 1);
             if(mouse_press(mb_left, _focus)) _res[i].closed = !_res[i].closed;
-            
-        } else
-            draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, _yy, _ww, lbh, COLORS.panel_inspector_group_bg, 1);
-        
+        }
         
         draw_sprite_ui(THEME.arrow, _res[i].closed? 0 : 3, ui(16), _yy + lbh / 2, 1, 1, 0, COLORS.panel_inspector_group_bg, 1);    
         
@@ -105,8 +109,19 @@ function GM_Explore_draw(gmBinder, _x, _y, _w, _h, _m, _hover, _focus) {
             var _cc = j % _col;
             var _rr = floor(j / _col);
             
-            var _asx = _xx + _cc * (_ths + _pad);
-            var _asy = _yy + _rr * (_ths + _pad + _lnh);
+            var _asx = _xx + _cc * grid_w;
+            var _asy = _yy + _rr * grid_h;
+            
+            var _draw = _asy + grid_h > 0 && _asy - grid_h < _h;
+            if(!_draw) continue;
+            
+            var _x0 = _asx;
+            var _x1 = _x0 + grid_w;
+            var _xc = _x0 + grid_w / 2;
+            var _y0 = _asy;
+            var _y1 = _y0 + grid_h;
+            
+            var _hov = _hover && point_in_rectangle(_m[0], _m[1], _x0, _y0, _x1, _y1 - 1);
             
             var _ass = _data[j];
             var _raw = _ass.raw;
@@ -114,22 +129,39 @@ function GM_Explore_draw(gmBinder, _x, _y, _w, _h, _m, _hover, _focus) {
             var _nod = struct_try_get(gmBinder.nodeMap, _ass.key, noone);
             
             switch(_ass.type) {
-            	case "GMSprite" : _thm = _ass.thumbnail; break;
-            	case "GMRoom"   : _thm = s_gmroom;       break;
+            	case "GMSprite" : _thm = _ass.getThumbnail(); break;
+            	case "GMRoom"   : _thm = s_gmroom;            break;
             	
             	case "GMTileSet" : 
             		var _spm = struct_try_get(gmBinder.resourcesMap, _ass.sprite, noone);
-                    _thm = _spm == noone? noone : _spm.thumbnail;
+            		if(_spm != noone) _thm = _spm.getThumbnail();
                     break;
             }
             
-            if(sprite_exists(_thm)) draw_sprite_bbox_uniform(_thm, 0, BBOX().fromWH(_asx + ui(2), _asy + ui(2), _ths - ui(4), _ths - ui(4)));
+            if(sprite_exists(_thm)) {
+            	var _sw = sprite_get_width(_thm);
+            	var _sh = sprite_get_height(_thm);
+            	var _ox = sprite_get_xoffset(_thm);
+            	var _oy = sprite_get_yoffset(_thm);
+            	
+            	var _ss = min(grid_w - ui(4), _ths - ui(4)) / max(_sw, _sh);
+            	var _sx = _xc                    - _sw/2*_ss + _ox*_ss;
+            	var _sy = _y0 + ui(2) + _ths / 2 - _sh/2*_ss + _oy*_ss;
+            	
+            	draw_sprite_ext(_thm, 0, _sx, _sy, _ss, _ss);
+            }
             
-            draw_set_text(f_p3, fa_center, fa_top, COLORS._main_text);
-            draw_text_add(_asx + _ths / 2, _asy + _ths + ui(4), _raw.name);
+            draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text);
+            var _tw = string_width(_raw.name);
+            var _tx = max(_xc - _tw / 2, _x0 + ui(2));
+            var _ty = _y0 + _ths + ui(2);
             
-            if(_hover && point_in_rectangle(_m[0], _m[1], _asx, _asy, _asx + _ths, _asy + _ths)) {
-                draw_sprite_stretched_ext(THEME.ui_panel, 1, _asx, _asy, _ths, _ths, COLORS._main_icon);
+            gpu_set_scissor(_x0 + ui(2), _y0, grid_w - ui(4), grid_h);
+            draw_text_add(_tx, _ty, _raw.name);
+            gpu_set_scissor(_sciss);
+            
+            if(_hov) {
+                draw_sprite_stretched_ext(THEME.ui_panel, 1, _x0, _y0, grid_w, grid_h, COLORS._main_icon);
                 if(_thm && _ass.type != "GMRoom") TOOLTIP = [ _thm, "sprite" ];
                 
                 if(_nod == noone) {
@@ -141,8 +173,8 @@ function GM_Explore_draw(gmBinder, _x, _y, _w, _h, _m, _hover, _focus) {
         }
         
         var _rrow = ceil(array_length(_data) / _col);
-        _yy += (_ths + _pad + _lnh) * _rrow + ui(6);
-        _hh += (_ths + _pad + _lnh) * _rrow + ui(6);
+        _yy += grid_h * _rrow + ui(6);
+        _hh += grid_h * _rrow + ui(6);
         
 	}
 	

@@ -73,7 +73,7 @@ function get_open_filenames_compat(ext, fname, caption = "Open") {
 		return pat;
 	} 
 	
-	var _res = __file_selector("load", PREFERENCES.dialog_path, "", ext, true);
+	var _res = __file_selector("load", PREFERENCES.dialog_path, fname, ext, true);
 	if(!is_struct(_res)) return "";
 	
 	var path = _res.path;
@@ -86,17 +86,17 @@ function get_open_filenames_compat(ext, fname, caption = "Open") {
 	return _paths;
 }
 
-function get_open_filename_compat(ext, name, caption = "Open") {
+function get_open_filename_compat(ext, fname, caption = "Open") {
 	var _native = PREFERENCES.use_native_file_browser;
 	if(_native) {
-		var path = get_open_filename_ext(ext, name, PREFERENCES.dialog_path, caption);
+		var path = get_open_filename_ext(ext, fname, PREFERENCES.dialog_path, caption);
 		    path = string(path);
 		if(path != "") PREFERENCES.dialog_path = filename_dir(path);
 		
 		return path;
 	}
 	
-	var _res = __file_selector("load", PREFERENCES.dialog_path, "", ext, false);
+	var _res = __file_selector("load", PREFERENCES.dialog_path, fname, ext, false);
 	if(!is_struct(_res)) return "";
 	
 	var path = array_empty(_res.selected)? "" : _res.selected[0].path;
@@ -104,21 +104,22 @@ function get_open_filename_compat(ext, name, caption = "Open") {
 	return path;
 }
 
-function get_save_filename_compat(ext, name, caption = "Save as") {
+function get_save_filename_compat(ext, fname, caption = "Save as") {
 	var _native = PREFERENCES.use_native_file_browser;
 	if(_native) {
-		var path = get_save_filename_ext(ext, name, PREFERENCES.dialog_path, caption);
+		var path = get_save_filename_ext(ext, fname, PREFERENCES.dialog_path, caption);
 		    path = string(path);
 		    
 		if(path != "") PREFERENCES.dialog_path = filename_dir(path);
 		return path;
 	}
 	
-	var _res = __file_selector("save", PREFERENCES.dialog_path, "", ext, false);
+	var _res = __file_selector("save", PREFERENCES.dialog_path, fname, ext, false);
 	if(!is_struct(_res)) return "";
 	
 	var path = _res.path;
 	if(path != "") PREFERENCES.dialog_path = filename_dir(path);
+	
 	return path;
 }
 
@@ -175,16 +176,10 @@ function filename_name_validate(name) {
 	return name;
 }
 
-function filename_name_only(name) {
-	name = filename_name(name);
-	return string_replace(name, filename_ext(name), "")
-}
+function filename_name_only(name) { name = filename_name(name); return string_replace(name, filename_ext(name), ""); }
 
-function filename_ext_verify(_path, _ext) {
-	var _pext = filename_ext(_path);
-	if(_pext == _ext) return _path;
-	return filename_dir(_path) + "/" + filename_name_only(_path) + _ext;
-}
+function filename_ext_verify(_path, _ext)     { return filename_ext(_path) == _ext? _path : $"{filename_dir(_path)}/{filename_name_only(_path)}{_ext}"; }
+function filename_ext_verify_add(_path, _ext) { return filename_ext(_path) == _ext? _path : $"{_path}{_ext}"; }
 
 	////- Actions
 

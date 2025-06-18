@@ -23,6 +23,8 @@ function GMAsset(_gm, _rpth, _rawData) constructor {
     type      = raw.resourceType;
     thumbnail = noone;
     
+    static getThumbnail = function() { return thumbnail; }
+    
     static formatPrimitive = function(key, val) {
         if(is_undefined(val)) return "null";
         if(is_string(val))    return $"\"{val}\"";
@@ -110,8 +112,14 @@ function GMSprite(_gm, _rpth, _rawData) : GMAsset(_gm, _rpth, _rawData) construc
     if(array_empty(_frame) || array_empty(_layers)) return;
     
     thumbnailPath = $"{_dirr}/layers/{_frame[0].name}/{_layers[0].name}.png";
-    if(file_exists(thumbnailPath))
-        thumbnail = sprite_add(thumbnailPath, 0, 0, 0, 0, 0);
+    thumbnail = undefined;
+    
+    static getThumbnail = function() { 
+    	if(thumbnail != undefined) return thumbnail; 
+    	thumbnail = file_exists(thumbnailPath)? sprite_add(thumbnailPath, 0, 0, 0, 0, 0) : noone;
+    	return thumbnail; 
+    }
+    
 }
 
 function GMTileset(_gm, _rpth, _rawData) : GMAsset(_gm, _rpth, _rawData) constructor {
@@ -132,72 +140,61 @@ function GMObject(_gm, _rpth, _rawData) : GMAsset(_gm, _rpth, _rawData) construc
     }
 }
 
-function __Binder_Gamemaker(path) constructor {
-    self.path   = path;
-    name        = filename_name_only(path);
-    dir         = filename_dir(path);
-    projectName = "";
+function __Binder_Gamemaker(_path) constructor {
+    path = _path;
+    name = filename_name_only(path);
+    dir  = filename_dir(path);
     
+    projectName  = "";
     resourcesRaw = [];
     resourcesMap = {};
+    resourcesCur = {};
     resourceList = [];
     
     resources    = [
         { name: "sprites", data : [], closed : false, },
+        { name: "objects", data : [], closed : false, },
         { name: "tileset", data : [], closed : false, },
         { name: "rooms",   data : [], closed : false, },
     ];
     
-    nodeMap = {};
+    nodeMap   = {};
+    batchSize = 20;
     
-    static getResourceFromPath = function(path) { return struct_try_get(resourcesMap, path, noone); }
+    refreshing = false;
     
-    static getNodeFromPath = function(path, _x, _y) {
-        if(struct_has(nodeMap, path)) return nodeMap[$ path];
+    static getResourceFromPath = function(p) /*=>*/ {return resourcesMap[$ p] ?? noone};
+    
+    static getNodeFromPath = function(p, _x, _y) {
+        if(struct_has(nodeMap, p)) return nodeMap[$ p];
         
         var _n = nodeBuild("Node_Tile_Tileset", _x, _y).skipDefault();
-	    nodeMap[$ path] = _n;
+	    nodeMap[$ p] = _n;
 	    
 	    return _n;
     }
     
-    static readYY = function(path) {
-        var _res = file_read_all(path);
+    static readYY = function(p) {
+        var _res = file_read_all(p);
         var _map = json_try_parse(_res, noone);
         return _map;
     }
     
-    static refreshResources = function() {
-        if(!file_exists(path)) return;
-        
-        var _resMap = readYY(path);
-        if(_resMap == noone) return;
-        
-        projectName  = _resMap.name;
-        resourcesRaw = _resMap.resources;
-        
-        var resMap   = {};
-        resourceList = [];
-        
-        var sprites = [];
-        var objects = [];
-        var tileset = [];
-        var rooms   = [];
-        var _asst;
-        
-        for( var i = 0, n = array_length(resourcesRaw); i < n; i++ ) {
+    static readLoop = function(i, size) {
+    	for(; i < size; i++ ) {
             var _res  = resourcesRaw[i].id;
             var _name = _res.name;
             var _rpth = _res.path;
+            var _asst;
             
             var _rawData = readYY($"{dir}/{_rpth}");
             if(_rawData == noone) continue;
             
             switch(_rawData.resourceType) {
-                case "GMSprite":  _asst = new GMSprite( self, _rpth, _rawData); array_push(sprites, _asst); break;
-                case "GMObject":  _asst = new GMObject( self, _rpth, _rawData); array_push(objects, _asst); break;
-                case "GMTileSet": _asst = new GMTileset(self, _rpth, _rawData); array_push(tileset, _asst); break;
-                case "GMRoom":    _asst = new GMRoom(   self, _rpth, _rawData); array_push(rooms,   _asst); break;
+                case "GMSprite":  _asst = new GMSprite( self, _rpth, _rawData); array_push(resources[0].data, _asst); break;
+                case "GMObject":  _asst = new GMObject( self, _rpth, _rawData); array_push(resources[1].data, _asst); break;
+                case "GMTileSet": _asst = new GMTileset(self, _rpth, _rawData); array_push(resources[2].data, _asst); break;
+                case "GMRoom":    _asst = new GMRoom(   self, _rpth, _rawData); array_push(resources[3].data, _asst); break;
                 default :         _asst = noone;
             }
             
@@ -208,17 +205,47 @@ function __Binder_Gamemaker(path) constructor {
             	_asst = resourcesMap[$ _rpth];
             }
             
-            resMap[$ _rpth] = _asst;
+            resourcesCur[$ _rpth] = _asst;
             array_push(resourceList, _asst);
         }
+    }
+    
+    static refreshResources = function() {
+        if(!file_exists(path)) return;
         
-        resourcesMap = resMap;
-        for( var i = 0, n = array_length(resourceList); i < n; i++ )
-            resourceList[i].link();
+        var _resMap = readYY(path);
+        if(_resMap == noone) return;
         
-        resources[0].data = sprites;
-        resources[1].data = tileset;
-        resources[2].data = rooms;
+        projectName  = _resMap.name;
+        resourcesRaw = _resMap.resources;
+        resourcesCur = {};
+        resourceList = [];
+        
+        resources[0].data = [];
+        resources[1].data = [];
+        resources[2].data = [];
+        resources[3].data = [];
+        
+        var _batAmo = ceil(array_length(resourcesRaw) / batchSize);
+        refreshing  = true;
+        
+        for( var i = 0; i < _batAmo; i++ ) {
+        	run_in(i, function(i) /*=>*/ {
+        		var _i = i * batchSize;
+        		readLoop(_i, min(_i + batchSize, array_length(resourcesRaw)));
+        	}, [i]);
+        }
+        
+        // readLoop(0, array_length(resourcesRaw));
+        
+        run_in(_batAmo, function() /*=>*/ {
+	        resourcesMap = resourcesCur;
+	        for( var i = 0, n = array_length(resourceList); i < n; i++ )
+	            resourceList[i].link();
+	            
+            refreshing  = false;
+        });
+        
     }
     
     refreshResources();

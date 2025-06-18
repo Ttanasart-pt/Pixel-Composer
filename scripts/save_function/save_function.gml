@@ -60,7 +60,7 @@ function SAVE_AS(project = PROJECT) {
 	if(path == "") return false;
 	
 	if(!path_is_project(path, false))
-		path = filename_ext_verify(path, ".pxc");
+		path = filename_ext_verify_add(path, ".pxc");
 	
 	if(file_exists_empty(path))
 		log_warning("SAVE", "Overrided file : " + path);
