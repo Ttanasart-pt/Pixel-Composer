@@ -21,13 +21,9 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	scale  = 1;
 	lcolor = false;
 	
-	tb_name	= new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { setDisplayName(txt); });
-	tb_name.font   = f_p2;
-	tb_name.hide   = true;
-	tb_name.align  = fa_center;
-	
-	name_height  = 18;
-	__nodes      = [];
+	tb_name     = textBox_Text(function(txt) /*=>*/ { setDisplayName(txt); }).setFont(f_p2).setHide(true).setAlign(fa_center);
+	name_height = 18;
+	__nodes     = [];
 	
 	draw_x0 = 0;
 	draw_y0 = 0;

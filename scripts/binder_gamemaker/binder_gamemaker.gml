@@ -245,8 +245,10 @@ function __Binder_Gamemaker(_path) constructor {
 	        for( var i = 0, n = array_length(resourceList); i < n; i++ )
 	            resourceList[i].link();
 	       
-			for( var i = 0, n = array_length(resources); i < n; i++ ) 
+			for( var i = 0, n = array_length(resources); i < n; i++ ) {
 				resources[i].closed = resources[i].closed || array_empty(resources[i].data);
+				array_sort(resources[i].data, function(a,b) /*=>*/ {return string_compare(a.name, b.name)});
+			}
         	
             refreshing  = false;
         });

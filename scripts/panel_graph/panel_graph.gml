@@ -3355,6 +3355,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     
         var _frame = nodeBuild("Node_Frame", x0, y0, getCurrentContext()).skipDefault();
         _frame.inputs[0].setValue([x1 - x0, y1 - y0]);
+        _frame.tb_name.activate("Frame");
         
         return _frame;
     } 

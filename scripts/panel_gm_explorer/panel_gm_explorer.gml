@@ -158,7 +158,7 @@ function GM_Explore_draw(gmBinder, _x, _y, _w, _h, _m, _hover, _focus) {
             	var _ox = sprite_get_xoffset(_thm);
             	var _oy = sprite_get_yoffset(_thm);
             	
-            	var _ss = _grid? min(grid_w - ui(4), grid_size - ui(4)) / max(_sw, _sh) : (grid_h - ui(6)) / _sh;
+            	var _ss = _grid? min(grid_w - ui(4), grid_size - ui(4)) / max(_sw, _sh) : (grid_h - ui(6)) / max(_sw, _sh);
             	var _sx = _grid? _xc                                                    : _x0 + grid_h / 2;
             	var _sy = _grid? _y0 + ui(2) + grid_size / 2                            : _y0 + grid_h / 2;
             	
