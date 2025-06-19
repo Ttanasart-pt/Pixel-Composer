@@ -521,7 +521,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		var tab_h   = tab_height + ui(4);
 		
 		var tsx     = x + padding - 2;
-		var tsy     = _top? y + ui(2) : y + h - tab_h;
+		var tsy     = _top? y + ui(2) : y + h - tab_h - ui(1);
 		var msx     = mouse_x - tsx;
 		var msy     = mouse_y - tsy;
 		
@@ -559,7 +559,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				var _tbx = cont.tab_x;
 				var _tby = tby;
 				var _tbw = tbw;
-				var _tbh = tbh + THEME_VALUE.panel_tab_extend;
+				var _tbh = tbh + THEME_VALUE.panel_tab_extend - !_top;
 				
 				var _hov = point_in_rectangle(msx, msy, _tbx, _tby, _tbx + _tbw, tab_height);
 				
@@ -749,7 +749,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 					}
 					
 					draw_sprite_stretched_ext(THEME.ui_panel_tab, 1 + foc, _tbx, _tby, _tbw, _tbh, cc, 1);
-					if(!foc) tab_cover = _left? BBOX().fromWH(tsx + _tbx + _tbw - ui(3), tsy + _tby + 1, THEME_VALUE.panel_tab_extend, _tbh - 2) : 
+					if(!foc) tab_cover = _left? BBOX().fromWH(tsx + _tbx + _tbw - ui(4), tsy + _tby + 1, THEME_VALUE.panel_tab_extend, _tbh - 2) : 
 					                            BBOX().fromWH(tsx + ui(2), tsy + _tby + 1, THEME_VALUE.panel_tab_extend, _tbh - 2);
 					
 				} else {

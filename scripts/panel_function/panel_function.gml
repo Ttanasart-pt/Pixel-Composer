@@ -1,5 +1,5 @@
 #region data
-	globalvar PANEL_MAIN, PANEL_MENU, PANEL_PREVIEW, PANEL_INSPECTOR, PANEL_GRAPH, PANEL_ANIMATION, PANEL_COLLECTION, PANEL_FILE;
+	globalvar PANEL_MAIN, PANEL_MENU, PANEL_PREVIEW, PANEL_INSPECTOR, PANEL_GRAPH, PANEL_ANIMATION, PANEL_COLLECTION, PANEL_FILE, PANEL_NODES;
 	globalvar FULL_SCREEN_PANEL, FULL_SCREEN_CONTENT, FULL_SCREEN_PARENT;
 	
 	PANEL_MAIN = 0;
@@ -46,7 +46,8 @@
 		PANEL_GRAPH      = {};
 		PANEL_COLLECTION = {};
 		
-		PANEL_FILE       = 0;
+		PANEL_FILE  = 0;
+		PANEL_NODES = noone;
 	}
 	
 	function getPanelFromName(name, create = false, focus = true) {
@@ -89,9 +90,9 @@
 	
 	function loadPanelStruct(panel, str) {
 		var cont = str.content;
-		var taba = str[$ "tab_align"] ?? 0;
 		
-		panel.tab_align = taba;
+		panel.tab_align     = str[$ "tab_align"]     ?? 0;
+		panel.content_index = str[$ "content_index"] ?? 0;
 			
 		if(variable_struct_exists(str, "split")) {
 			var pan = panel;
@@ -383,8 +384,9 @@
 	
 	function _panelSerialize(_panel, _content = false) {
 		var cont = {};
-		cont.content   = [];
-		cont.tab_align = _panel.tab_align;
+		cont.content       = [];
+		cont.tab_align     = _panel.tab_align;
+		cont.content_index = _panel.content_index;
 		
 		var ind = 0;
 		if(_panel.split != "" && array_length(_panel.childs) == 2) {

@@ -56,3 +56,16 @@ function project_get_thumbnail(_path) {
 	
 	return _spr;
 }
+
+function project_get_thumbnail_surface(_path) {
+	var _spr = project_get_thumbnail(_path);
+	if(!sprite_exists(_spr)) return undefined;
+	
+	var _sw = sprite_get_width(_spr);
+	var _sh = sprite_get_height(_spr);
+	var _surf = surface_create(_sw, _sh);
+	surface_set_shader(_surf);
+		draw_sprite(_spr, 0, _sw / 2, _sh / 2);
+	surface_reset_shader();
+	return _surf;
+}

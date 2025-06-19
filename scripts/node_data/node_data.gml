@@ -534,12 +534,15 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var _dy   = 9999;
 		
 		for( var i = 0; i < array_length(outputs); i++ ) {
-			if(!outputs[i].isVisible()) continue;
-			if(junc != noone && !junc.isConnectable(outputs[i], true)) continue;
+			var _outp = outputs[i];
 			
-			var _ddy = abs(outputs[i].y - _y);
+			if(!is(_outp, NodeValue)) continue;
+			if(!_outp.isVisible())    continue;
+			if(junc != noone && !junc.isConnectable(_outp, true)) continue;
+			
+			var _ddy = abs(_outp.y - _y);
 			if(_ddy < _dy) {
-				_targ = outputs[i];
+				_targ = _outp;
 				_dy   = _ddy;
 			}
 		}
@@ -977,8 +980,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		for(var i = 0, n = array_length(inputDisplayList); i < n; i++) { //inputs
 			var jun = inputDisplayList[i];
-			var _fr = jun.value_from;
-			if(_fr != noone && _fr.node.active) array_push(_nodes, _fr.node);
+			var _fr = jun.getNodeFrom();
+			if(_fr != noone) array_push(_nodes, _fr);
 		}
 		
 		return array_unique(_nodes);

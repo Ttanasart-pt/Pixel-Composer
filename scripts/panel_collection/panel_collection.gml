@@ -31,11 +31,8 @@ function Panel_Collection() : PanelContent() constructor {
 	group_w_sx       = false;
 	group_w_mx       = false;
 	
-	static initSize = function() {
-		content_w = w - ui( 8) - group_w;
-		content_h = h - ui(56);
-	}
-	initSize();
+	content_w        = w - ui( 8) - group_w;
+	content_h        = h - ui(56);
 	
 	min_w = group_w + ui(40);
 	min_h = ui(40);
@@ -523,7 +520,7 @@ function Panel_Collection() : PanelContent() constructor {
 		}
 		
 		draw_set_alpha(0.25 + (context == root) * 0.5);
-		draw_set_text(f_p2, fa_center, fa_top, context == root? COLORS._main_text_accent : COLORS._main_text_inner);
+		draw_set_text(f_p3, fa_center, fa_top, context == root? COLORS._main_text_accent : COLORS._main_text_inner);
 		draw_text(group_w / 2, _y, __txt("uncategorized"));
 		draw_set_alpha(1);
 		_y += ui(24);
@@ -735,13 +732,9 @@ function Panel_Collection() : PanelContent() constructor {
 		title   = roots[i][0];
 		root    = roots[i][1];
 		context = root;
-		
-		onResize();
 	}
 	
 	function onFocusBegin() { PANEL_COLLECTION = self; }
-	
-	function onResize() { initSize(); } 
 	
 	function setContext(cont) { 
 		context = cont;
@@ -758,6 +751,9 @@ function Panel_Collection() : PanelContent() constructor {
 	
 	function drawContent(panel) { 
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
+		
+		content_w = w - ui( 8) - group_w;
+		content_h = h - ui(56);
 		
 		var content_y = ui(48);
 		var ppd       = ui(2);
@@ -795,8 +791,6 @@ function Panel_Collection() : PanelContent() constructor {
 					CURSOR  = cr_size_we;
 					group_w = max(ui(128), group_w_sx + (mx - group_w_mx));
 					
-					onResize();
-				
 					if(mouse_release(mb_left))
 						group_w_dragging = false;
 				}
@@ -909,17 +903,20 @@ function Panel_Collection() : PanelContent() constructor {
 	////- Serialize
 		
     static serialize = function() { 
-        _map = { 
-        	name: instanceof(self), 
-            page, 
-        }; 
+        _map = { }; 
+        
+        _map.name    = instanceof(self);
+        _map.page    = page;
+        _map.group_w = group_w / UI_SCALE;
         
         return _map;
     }
     
     static deserialize = function(data) { 
-        var p = struct_try_get(data, "page", 0);
+        var p = data[$ "page"] ?? 0;
         setPage(p);
+        
+        _map.group_w = struct_has(data, "group_w")? ui(data.group_w) : _map.group_w;
         
         return self; 
     }

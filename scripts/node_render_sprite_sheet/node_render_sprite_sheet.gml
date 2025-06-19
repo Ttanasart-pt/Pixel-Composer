@@ -437,6 +437,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	
 	static animationRender = function() {
 		if(IS_FIRST_FRAME && anim_rendering) return;
+		if(!IS_PLAYING) return;
 		
 		var inpt = getInputData(0);
 		var skip = getInputData(2);

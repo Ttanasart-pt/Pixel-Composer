@@ -364,14 +364,19 @@ function NodeTreeItem(_node = noone) constructor {
 	
 	node     = _node;
 	children = [];
+	parent   = noone;
 	height   = 1;
 	
+	hovering = false;
+	selected = false;
 	expanded = true;
 	
 	if(node != noone) {
 		var _fr = node.getNodeFrom();
-		for( var i = 0, n = array_length(_fr); i < n; i++ )
+		for( var i = 0, n = array_length(_fr); i < n; i++ ) {
 			children[i] = new NodeTreeItem(_fr[i]);
+			children[i].parent = self;
+		}
 	}
 	
 	static pokeHeight = function() { return array_length(children) == 1? children[0] : noone; }
@@ -400,15 +405,28 @@ function NodeTreeItem(_node = noone) constructor {
 				children[i].setHeight();
 		}
 	}
+
+	static toggleExpand = function() {
+		var _len = array_length(children);
+		if(_len > 1) {
+			expanded = !expanded;
+			return;
+		} 
+		
+		if(_len == 1) children[0].toggleExpand();
+	}
 }
 
-function NodeTreeSort() {
+function NodeTreeSort(_nlist = PROJECT.nodes) {
 	var roots = [];
 	var tree  = [];
 	
-	for( var i = 0, n = array_length(PROJECT.nodes); i < n; i++ ) {
-		var _node = PROJECT.nodes[i];
+	for( var i = 0, n = array_length(_nlist); i < n; i++ ) {
+		var _node = _nlist[i];
 		if(is(_node, Node_Frame)) continue;
+		
+		if(is(_node, Node_Collection)) 
+			_node.nodeTree = NodeTreeSort(_node.nodes);
 		
 		if(array_empty(_node.getNodeTo())) 
 			array_push(tree, new NodeTreeItem(_node));
@@ -416,6 +434,11 @@ function NodeTreeSort() {
 	
 	array_foreach(tree, function(t) /*=>*/ {return t.setHeight()});
 	
-	PROJECT.nodeTree = new NodeTreeItem();
-	PROJECT.nodeTree.children = tree;
+	var _tree = new NodeTreeItem();
+	    _tree.children = tree;
+	   
+	if(_nlist == PROJECT.nodes)
+		PROJECT.nodeTree = _tree;
+		
+	return _tree;
 }

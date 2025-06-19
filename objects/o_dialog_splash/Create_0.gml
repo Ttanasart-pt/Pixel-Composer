@@ -12,7 +12,6 @@ event_inherited();
 	project_page = 1;
 	
 	thumbnail_retriever = 0;
-	recent_thumbnail	= false;
 	show_autosaves		= false;
 	
 	recent_width = PREFERENCES.splash_expand_recent? ui(576) : ui(288);
@@ -35,13 +34,15 @@ event_inherited();
 		var hgt	= ui(14) + line_get_height(f_p0b) + line_get_height(f_p2);
 		_y += pad;
 		
+		var _thumb = PREFERENCES.splash_show_thumbnail;
 		var col = expand? 2 : 1;
 		var row = ceil(ds_list_size(RECENT_FILES) / col);
-		var hg  = recent_thumbnail? ui(100) : hgt;
+		var hg  = _thumb? ui(100) : hgt;
 		
 		for(var i = 0; i < row; i++) {
+			var _drw = _y > -(hg + pad) && _y < sp_recent.surface_h;
 			
-			if(_y > -(hg + pad) && _y < sp_recent.surface_h)
+			if(_drw)
 			for(var j = 0; j < col; j++) {
 				var ind  = i * col + j;
 				if(ind >= ds_list_size(RECENT_FILES)) break;
@@ -50,11 +51,13 @@ event_inherited();
 				var _dat = RECENT_FILE_DATA[| ind];
 				if(!file_exists_empty(_rec)) continue;
 			
-				var thmb = recent_thumbnail? _dat.getThumbnail() : noone;
+				var thmb = _thumb? _dat.getThumbnail() : noone;
 				var fx   = j * (ww + ui(8));
-			
+				
+				var _hov = sp_recent.hover && point_in_rectangle(_m[0], _m[1], fx, _y, fx + ww, _y + hg);
+				
 				draw_sprite_stretched(THEME.ui_panel_bg, 1, fx, _y, ww, hg);
-				if(thmb && _y + hg > 0 && _y < sp_recent.h) {
+				if(thmb) {
 					var sw = surface_get_width_safe(thmb);
 					var sh = surface_get_height_safe(thmb);
 					
@@ -65,9 +68,10 @@ event_inherited();
 					draw_sprite_stretched_ext(s_fade_up, 0, fx + ui(4), _y + hg - ui(64), ww - ui(8), ui(64), COLORS._main_icon_dark, 1);
 				}
 			
-				if(sHOVER && sp_recent.hover && point_in_rectangle(_m[0], _m[1], fx, _y, fx + ww, _y + hg)) {
+				if(_hov) {
 					sp_recent.hover_content = true;
-					TOOLTIP = new tooltipRecentFile(_rec, sp_recent.rx + fx, sp_recent.ry + _y, ww, hg);
+					if(!_thumb) TOOLTIP = new tooltipRecentFile(_rec, sp_recent.rx + fx, sp_recent.ry + _y + hg - hgt, ww, hg);
+					else        TOOLTIP = _dat.path;
 					
 					draw_sprite_stretched_ext(THEME.ui_panel, 1, fx, _y, ww, hg, COLORS._main_accent, 1);
 				
@@ -77,7 +81,7 @@ event_inherited();
 					}
 				}
 			
-				var ly = recent_thumbnail? _y + hg - (line_get_height(f_p0b) + line_get_height(f_p2)) - ui(8) : _y + ui(6);
+				var ly = _thumb? _y + hg - (line_get_height(f_p0b) + line_get_height(f_p2)) - ui(8) : _y + ui(6);
 				draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text_inner);
 				draw_text(fx + ui(12), ly, filename_name_only(_rec));
 			

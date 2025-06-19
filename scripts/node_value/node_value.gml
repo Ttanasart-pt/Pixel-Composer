@@ -1800,7 +1800,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return true;
 	}
 	
-	static getNodeFrom = function() { return value_from != noone? value_from.node : noone; }
+	static getNodeFrom = function() { 
+		if(value_from == noone)  return noone;
+		
+		var _node = value_from.node;
+		if(!_node.active)        return noone;
+		if(!is(_node, Node_Pin)) return _node;
+		return _node.inputs[0].getNodeFrom(); 
+	}
 	
 	static removeFrom = function(_remove_list = true) {
 		run_in(2, function() /*=>*/ { updateColor(getValue()); });

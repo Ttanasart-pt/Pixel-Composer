@@ -105,7 +105,12 @@ function SAVE_AT(project = PROJECT, path = "", log = "save at ", _thum = true) {
 			surface_set_target(_thumbDrawSurf);
 				DRAW_CLEAR
 				BLEND_OVERRIDE
-				draw_surface_stretch_fit(_thumbSurf, _thumbSize / 2, _thumbSize / 2, _thumbSize, _thumbSize);
+				var _sw = surface_get_width(_thumbSurf);
+				var _sh = surface_get_height(_thumbSurf);
+				var _ss = _thumbSize / min(_sw, _sh);
+				var h = _thumbSize / 2;
+				
+				draw_surface_ext(_thumbSurf, h - _sw * _ss / 2, h - _sh * _ss / 2, _ss, _ss, 0, c_white, 1);
 				BLEND_NORMAL
 			surface_reset_target();
 			
@@ -118,10 +123,9 @@ function SAVE_AT(project = PROJECT, path = "", log = "save at ", _thum = true) {
 	#endregion
 	
 	#region write header
-		var _headerSize = 4 + 4 + _thumb * (4 + 4 + _thumbLeng);
 		buffer_to_start(_buf);
 		buffer_write(_buf, buffer_text, "PXCX");
-		buffer_write(_buf, buffer_u32,  _headerSize);
+		buffer_write(_buf, buffer_u32,  0);
 		
 		if(_thumb) {
 			buffer_write(_buf, buffer_text, "THMB");
@@ -131,7 +135,17 @@ function SAVE_AT(project = PROJECT, path = "", log = "save at ", _thum = true) {
 			buffer_seek(_buf, buffer_seek_relative, _thumbLeng);
 		}
 		
-		// print(_headerSize, buffer_tell(_buf));
+		buffer_write(_buf, buffer_text,   "META");
+		var _metaPos = buffer_tell(_buf);
+		buffer_write(_buf, buffer_u32,    0);
+		buffer_write(_buf, buffer_u32,    SAVE_VERSION);
+		buffer_write(_buf, buffer_string, VERSION_STRING);
+		var _metaCon = buffer_tell(_buf);
+		buffer_write_at(_buf, _metaPos, buffer_u32, _metaCon - _metaPos - 4);
+		buffer_seek(_buf, buffer_seek_start, _metaCon);
+		
+		var _headerSize = buffer_tell(_buf);
+		buffer_write_at(_buf, 4, buffer_u32, _headerSize);
 		
 		buffer_copy(_raw, 0, buffer_get_size(_raw), _buf, _headerSize);
 	    buffer_save(_buf, path);

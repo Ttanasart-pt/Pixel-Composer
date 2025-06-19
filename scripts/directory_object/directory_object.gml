@@ -43,6 +43,12 @@ function FileObject(_path) constructor {
 	
 	static getThumbnail = function() {
 		if(thumbnail != noone && is_surface(thumbnail)) return thumbnail;	// Thumbnail loaded
+		if(thumbnail == undefined) return thumbnail;
+		
+		if(type == FILE_TYPE.project) {
+			thumbnail = project_get_thumbnail_surface(path);
+			return thumbnail;
+		}
 		
 		if(size > 100000) return noone;										// File too large
 		if(!retrive_data) getMetadata();									// Metadata not loaded
@@ -206,7 +212,7 @@ function DirectoryObject(_path) constructor {
 	}
 	
 	static draw = function(parent, _x, _y, _m, _w, _hover, _focus, _homedir, _params = {}) {
-		var font = struct_try_get(_params, "font", f_p1);
+		var font = struct_try_get(_params, "font", f_p3);
 		var hg   = line_get_height(font, 5);
 		var hh   = 0;
 		

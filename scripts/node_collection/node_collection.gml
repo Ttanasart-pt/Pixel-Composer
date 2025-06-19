@@ -13,6 +13,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	isPure   = false;
 	nodeTopo = [];
+	nodeTree = noone;
 	
 	reset_all_child = false;
 	isInstancer		= false;

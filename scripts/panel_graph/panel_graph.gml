@@ -34,6 +34,7 @@
     function panel_graph_copy()                    { CALL("graph_copy");                PANEL_GRAPH.doCopy();                 }
     function panel_graph_paste()                   { CALL("graph_paste");               PANEL_GRAPH.doPaste();                }
     
+    function panel_graph_auto_organize_all()       { CALL("graph_auto_organize_al");    node_auto_organize(PROJECT.nodes);                                                              }
     function panel_graph_auto_organize()           { CALL("graph_auto_organize");       node_auto_organize(PANEL_GRAPH.nodes_selecting);                                                }
     function panel_graph_auto_align()              { CALL("graph_auto_align");          node_auto_align(PANEL_GRAPH.nodes_selecting);                                                   }
     function panel_graph_snap_nodes()              { CALL("graph_snap_nodes");          node_snap_grid(PANEL_GRAPH.nodes_selecting, PANEL_GRAPH.project.graphGrid.size);                }
@@ -67,7 +68,7 @@
     function panel_graph_transferConnection()      { CALL("graph_transferConnection");  PANEL_GRAPH.transferConnection();                       }
 				                                                                           
     function __fnInit_Graph() {
-    	registerFunction("",      "Add Node",              "A", MOD_KEY.shift,                   panel_graph_add_node            ).setMenu("graph_add_node")
+    	registerFunction("",      "Add Node",              "A", MOD_KEY.shift,                   panel_graph_add_node            ).setMenu("graph_add_node", THEME.add_20)
         registerFunction("Graph", "Replace Node",          "R", MOD_KEY.ctrl,                    panel_graph_replace_node        ).setMenu("graph_replace_node")
         registerFunction("Graph", "Focus Content",         "F", MOD_KEY.none,                    panel_graph_focus_content       ).setMenu("graph_focus_content")
         registerFunction("Graph", "Preview Focusing Node", "P", MOD_KEY.none,                    panel_graph_preview_focus       ).setMenu("graph_preview_focusing_node")
@@ -96,7 +97,8 @@
         registerFunction("Graph", "Zoom",                  "", MOD_KEY.alt | MOD_KEY.ctrl,       panel_graph_zoom                ).setMenu("graph_zoom")
         
         registerFunction("Graph", "Auto Align",            "L", MOD_KEY.none,                    panel_graph_auto_align          ).setMenu("graph_auto_align")
-        registerFunction("Graph", "Auto Organize",         "L", MOD_KEY.ctrl, function() /*=>*/ { dialogPanelCall(new Panel_Graph_Auto_Organize(PANEL_GRAPH.nodes_selecting)) } ).setMenu("graph_auto_organize")
+        registerFunction("Graph", "Auto Organize",         "L", MOD_KEY.ctrl, function() /*=>*/ { dialogPanelCall(new Panel_Graph_Auto_Organize(PANEL_GRAPH.nodes_selecting)) } ).setMenu("graph_auto_organize", THEME.obj_auto_organize)
+        registerFunction("Graph", "Auto Organize All",     "",  MOD_KEY.none,                    panel_graph_auto_organize_all   ).setMenu("graph_auto_organize_all", THEME.obj_auto_organize)
         registerFunction("Graph", "Snap Nodes",            "",  MOD_KEY.none,                    panel_graph_snap_nodes          ).setMenu("graph_snap_nodes")
         registerFunction("Graph", "Search",                "F", MOD_KEY.ctrl,                    panel_graph_search              ).setMenu("graph_search")
         registerFunction("Graph", "Toggle Minimap",        "M", MOD_KEY.ctrl,                    panel_graph_toggle_minimap      ).setMenu("graph_toggle_minimap")
