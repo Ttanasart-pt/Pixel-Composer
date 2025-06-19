@@ -47,28 +47,27 @@
                     return submenuCall(_dat, arr, "recent_files");
                 }).setMenu("recent_files",, true);
                 
-            registerFunction("", "Import .zip",     "",     MOD_KEY.none,                                 __IMPORT_ZIP             ).setMenu("import_zip",     )
-            registerFunction("", "Export .zip",     "",     MOD_KEY.none,                                 __EXPORT_ZIP             ).setMenu("export_zip",     )
+            registerFunction("", "Import .zip",     "",     MOD_KEY.none, __IMPORT_ZIP             ).setMenu("import_zip")
+            registerFunction("", "Export .zip",     "",     MOD_KEY.none, __EXPORT_ZIP             ).setMenu("export_zip")
             
-            registerFunction("", "Import",          "",     MOD_KEY.none, function(_dat) /*=>*/ {return submenuCall(_dat, [ MENU_ITEMS.import_zip ])}   ).setMenu("import_menu",, true);
-            registerFunction("", "Export",          "",     MOD_KEY.none, function(_dat) /*=>*/ {return submenuCall(_dat, [ MENU_ITEMS.export_zip ])}   ).setMenu("export_menu",, true);
+            registerFunction("", "Import",          "",     MOD_KEY.none, function(_dat) /*=>*/ {return submenuCall(_dat, [ MENU_ITEMS.import_zip ])} ).setMenu("import_menu",, true);
+            registerFunction("", "Export",          "",     MOD_KEY.none, function(_dat) /*=>*/ {return submenuCall(_dat, [ MENU_ITEMS.export_zip ])} ).setMenu("export_menu",, true);
         }
         
-        registerFunction("", "Undo",                "Z",    MOD_KEY.ctrl,                                 UNDO                     ).setMenu("undo",           )
-        registerFunction("", "Redo",                "Z",    MOD_KEY.ctrl | MOD_KEY.shift,                 REDO                     ).setMenu("redo",           )
+        registerFunction("", "Undo",                "Z",    MOD_KEY.ctrl,                 UNDO     ).setMenu("undo"            )
+        registerFunction("", "Redo",                "Z",    MOD_KEY.ctrl | MOD_KEY.shift, REDO     ).setMenu("redo"            )
         
-        registerFunction("", "Full panel",          "`",    MOD_KEY.none,                                 set_focus_fullscreen     ).setMenu("full_panel",     )
-        registerFunction("", "Reset layout",        vk_f10, MOD_KEY.ctrl,                                 resetPanel               ).setMenu("reset_layout",   )
+        registerFunction("", "Full panel",          "`",    MOD_KEY.none, set_focus_fullscreen     ).setMenu("full_panel"      )
+        registerFunction("", "Reset layout",        vk_f10, MOD_KEY.ctrl, resetPanel               ).setMenu("reset_layout"    )
         
-        registerFunction("", "Fullscreen",          vk_f11, MOD_KEY.none,                                 global_fullscreen        ).setMenu("fullscreen",     )
-        registerFunction("", "Render all",          vk_f5,  MOD_KEY.none,                                 global_render_all        ).setMenu("render_all",     [ THEME.sequence_control, 1 ])
-        registerFunction("", "Export all",          "",     MOD_KEY.none,                                 global_export_all        ).setMenu("export_all",     )
+        registerFunction("", "Fullscreen",          vk_f11, MOD_KEY.none, global_fullscreen        ).setMenu("fullscreen"      )
+        registerFunction("", "Render all",          vk_f5,  MOD_KEY.none, global_render_all        ).setMenu("render_all", [ THEME.sequence_control, 1 ])
+        registerFunction("", "Export all",          "",     MOD_KEY.none, global_export_all        ).setMenu("export_all"      )
         
-        registerFunction("", "Close file",          "Q",    MOD_KEY.ctrl,                                 global_project_close     ).setMenu("close_file",     )
-        registerFunction("", "Close all files",     "",     MOD_KEY.none,                                 global_project_close_all ).setMenu("close_all_files",)
-        registerFunction("", "Close program",       vk_f4,  MOD_KEY.alt,                                  window_close             ).setMenu("close_software", )
-        registerFunction("", "Close project",       "",     MOD_KEY.none,                                 closeProject             ).setMenu("close_project",  )
-            .setArg([ ARG("project", function() /*=>*/ {return PROJECT}, true) ])
+        registerFunction("", "Close file",          "Q",    MOD_KEY.ctrl, global_project_close     ).setMenu("close_file"      )
+        registerFunction("", "Close all files",     "",     MOD_KEY.none, global_project_close_all ).setMenu("close_all_files" )
+        registerFunction("", "Close program",       vk_f4,  MOD_KEY.alt,  window_close             ).setMenu("close_software"  )
+        registerFunction("", "Close project",       "",     MOD_KEY.none, closeProject             ).setMenu("close_project"   ).setArg([ ARG("project", function() /*=>*/ {return PROJECT}, true) ])
             
         registerFunction("", "Reload theme",        vk_f10, MOD_KEY.ctrl | MOD_KEY.shift,                 global_theme_reload      ).setMenu("reload_theme",   )
         

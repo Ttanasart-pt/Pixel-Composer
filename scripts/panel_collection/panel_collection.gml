@@ -520,7 +520,7 @@ function Panel_Collection() : PanelContent() constructor {
 		}
 		
 		draw_set_alpha(0.25 + (context == root) * 0.5);
-		draw_set_text(f_p3, fa_center, fa_top, context == root? COLORS._main_text_accent : COLORS._main_text_inner);
+		draw_set_text(f_p2, fa_center, fa_top, context == root? COLORS._main_text_accent : COLORS._main_text_inner);
 		draw_text(group_w / 2, _y, __txt("uncategorized"));
 		draw_set_alpha(1);
 		_y += ui(24);

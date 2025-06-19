@@ -17,7 +17,7 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	////- =Outputs
 	
-	newInput(0, nodeValue_Bool("Round Position", false));
+	newInput(0, nodeValue_Bool("Round Position", false ));
 	
 	// inputs 4
 	
@@ -178,4 +178,17 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _surf = outputs[0].getValue();
 		return is_surface(_surf)? _surf : preview_surface;
 	} 
+
+	
+	static postDeserialize = function() {
+		if(CLONING) return;
+		
+		if(LOADING_VERSION <= 1_18_09_1) {
+			load_map.inputs[0] = 0;
+			load_map.inputs[1] = 0;
+			load_map.inputs[2] = 0;
+			load_map.inputs[3] = 0;
+		}
+	}
+	
 }

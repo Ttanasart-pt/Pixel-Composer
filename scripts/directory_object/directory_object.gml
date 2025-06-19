@@ -212,7 +212,7 @@ function DirectoryObject(_path) constructor {
 	}
 	
 	static draw = function(parent, _x, _y, _m, _w, _hover, _focus, _homedir, _params = {}) {
-		var font = struct_try_get(_params, "font", f_p3);
+		var font = struct_try_get(_params, "font", f_p2);
 		var hg   = line_get_height(font, 5);
 		var hh   = 0;
 		

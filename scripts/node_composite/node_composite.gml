@@ -939,7 +939,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _ins  = load_map.inputs;
 			var _dlen = load_map.data_length;
 			
-			if(_dlen == 6)
+			if(_dlen == 7)
 			for( var i = input_fix_len, n = array_length(_ins); i < n; i += data_length ) {
 				if(!is_struct(_ins[i+6]) || !struct_has(_ins[i+6], "raw_value")) 
 					_ins[i+6] = { raw_value: { d: [0,0] }};

@@ -25,6 +25,8 @@ function Panel_Nodes() : PanelContent() constructor {
 	w        = ui(320);
 	h        = ui(480);
 	
+	NodeTreeSort();
+	
 	search_string = "";
 	tb_search     = textBox_Text(function(str) /*=>*/ { search_string = string(str); })
 					.setFont(f_p3).setAlign(fa_left).setAutoupdate()

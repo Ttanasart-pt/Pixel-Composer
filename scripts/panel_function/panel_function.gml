@@ -5,6 +5,9 @@
 	PANEL_MAIN = 0;
 	PANEL_MENU = 0;
 	
+	PANEL_FILE  = noone;
+	PANEL_NODES = noone;
+		
 	FULL_SCREEN_PANEL   = noone;
 	FULL_SCREEN_CONTENT = noone;
 	FULL_SCREEN_PARENT  = noone;
@@ -46,7 +49,7 @@
 		PANEL_GRAPH      = {};
 		PANEL_COLLECTION = {};
 		
-		PANEL_FILE  = 0;
+		PANEL_FILE  = noone;
 		PANEL_NODES = noone;
 	}
 	
