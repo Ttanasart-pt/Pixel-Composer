@@ -8,17 +8,24 @@ function Panel_Nodes() : PanelContent() constructor {
 	search_string = "";
 	
 	tb_search = textBox_Text(function(str) /*=>*/ { search_string = string(str); })
-					.setFont(f_p3)
-					.setAlign(fa_left)
-					.setAutoupdate()
+					.setFont(f_p3).setAlign(fa_left).setAutoupdate()
 					.setBoxColor(COLORS._main_icon_light);
 	
-	node_hovering = noone;
+	node_hovering   = noone;
+	side_scroll     = 0;
+	side_scroll_to  = 0;
+	side_scroll_max = 0;
 	
     global.menuItems_node_context_menu = [
     	"graph_add_node", 
 	];
-    
+	
+	global.menuItems_node_side_menu = [
+		"graph_add_Node_Shape",
+    	"graph_add_Node_Text",
+    	"graph_add_Node_Path",
+    	"graph_add_Node_Line", 
+	];
 	
 	////- Draw
 	
@@ -147,20 +154,47 @@ function Panel_Nodes() : PanelContent() constructor {
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
+		var _side_m = menuItems_gen("node_side_menu");
+		var _mus = ui(24);
+		var _mux = w - _mus - ui(8);
+		var _muy = side_scroll + ui(8);
+		
+		for( var i = 0, n = array_length(_side_m); i < n; i++ ) {
+			var _menu = _side_m[i];
+			if(_menu == -1) {
+				
+				continue;
+			} 
+			
+			var _name = _menu.name;
+			var _spr  = _menu.getSpr();
+			var _scal = ui_raw(.5);
+			
+			if(buttonInstant(THEME.button_hide, _mux, _muy, _mus, _mus, [mx, my], pHOVER, pFOCUS, _name, _spr, 0, COLORS._main_icon, 1, .5) == 2)
+				_menu.toggleFunction();
+			
+			_muy += _mus + ui(2);
+		}
+		
+		var _hh = array_length(_side_m) * (_mus + ui(2)) + ui(16);
+		side_scroll_max = max(_hh - h, 0);
+		
+		if(pHOVER && point_in_rectangle(mx, my, _mux, 0, w, h)) {
+			side_scroll_to = side_scroll_to + MOUSE_WHEEL * (_mus + ui(2));
+			side_scroll_to = clamp(side_scroll_to, -side_scroll_max, 0);
+		}
+		side_scroll = lerp_float(side_scroll, side_scroll_to, 5);
+		
 		var px = padding;
 		var py = padding;
-		var pw = w - padding * 2;
+		var pw = w - padding * 2 - (_mus + ui(10));
 		var ph = h - padding * 2;
 		
-		var th = ui(-8)//ui(24);
-		
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
-		// tb_search.setFocusHover(pFOCUS, pHOVER);
-		// tb_search.draw(px, py, pw, th, search_string, [mx, my]);
 		
-		sc_nodes.verify(pw, ph - (th + ui(8)));
+		sc_nodes.verify(pw, ph);
 		sc_nodes.setFocusHover(pFOCUS, pHOVER);
-		sc_nodes.drawOffset(px, py + (th + ui(8)), mx, my);
+		sc_nodes.drawOffset(px, py, mx, my);
 		
 		if(mouse_rclick(pFOCUS)) menuCall("node_context_menu", menuItems_gen("node_context_menu"));
 	}

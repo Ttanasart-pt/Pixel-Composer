@@ -19,31 +19,30 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	newInput( 0, nodeValue_Surface(     "Sprites"));
 	newInput( 1, nodeValue_Enum_Scroll( "Sprite set", 0, [ "Animation", "Sprite array" ])).rejectArray();
 	newInput( 2, nodeValue_Int(         "Frame step", 1, "Number of frames until next sprite. Can be seen as (Step - 1) frame skip.")).rejectArray();
-	newInput(12, nodeValue_Bool(        "Skip Empty", false));
+	newInput(12, nodeValue_Bool(        "Skip Empty", false ));
 	
 	////- =Packing
 	
 	newInput(3, nodeValue_Enum_Scroll( "Packing type", 0, __enum_array_gen(["Horizontal", "Vertical", "Grid"], s_node_alignment))).rejectArray();
-	newInput(4, nodeValue_Int(         "Grid column", 4)).rejectArray();
-	newInput(5, nodeValue_Enum_Button( "Alignment", 0, [ "First", "Middle", "Last" ])).rejectArray();
-	newInput(6, nodeValue_Int(         "Spacing", 0));
-	newInput(9, nodeValue_Vec2(        "Spacing", [ 0, 0 ]));
-	newInput(7, nodeValue_Padding(     "Padding", [ 0, 0, 0, 0 ]))
+	newInput(4, nodeValue_Int(         "Grid column",  4        )).rejectArray();
+	newInput(5, nodeValue_Enum_Button( "Alignment",    0, [ "First", "Middle", "Last" ])).rejectArray();
+	newInput(6, nodeValue_Int(         "Spacing",      0        ));
+	newInput(9, nodeValue_Vec2(        "Spacing",     [0,0]     ));
+	newInput(7, nodeValue_Padding(     "Padding",     [0,0,0,0] ));
 	
 	////- =Rendering
 	
-	/*UNUSED*/ newInput(10, nodeValue_Bool( "Overlappable", false));
+	/*UNUSED*/ newInput(10, nodeValue_Bool( "Overlappable", false ));
 	
 	////- =Range
 	
-	newInput(11, nodeValue_Bool(         "Custom Range", false));
-	newInput( 8, nodeValue_Slider_Range( "Range", [ 0, 0 ])).setTooltip("Starting/ending frames, set end to 0 to default to last frame.")
+	newInput(11, nodeValue_Bool(         "Custom Range", false ));
+	newInput( 8, nodeValue_Slider_Range( "Range",        [0,0] )).setTooltip("Starting/ending frames, set end to 0 to default to last frame.");
 	
 	// inputs 12
 	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
-		
-	newOutput(1, nodeValue_Output("Atlas Data", VALUE_TYPE.atlas, []));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone ));
+	newOutput(1, nodeValue_Output("Atlas Data",  VALUE_TYPE.atlas,   []    ));
 	
 	input_display_list = [
 		["Surfaces",  false], 0, 1, 2, 12, 
@@ -81,6 +80,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			inputs[8].editWidget.slide_range[0] = FIRST_FRAME + 1;
 			inputs[8].editWidget.slide_range[1] = LAST_FRAME + 1;
 			if(!user) inputs[8].setValueDirect([ FIRST_FRAME + 1, LAST_FRAME + 1], noone, false, 0, false);
+			
 		} else {
 			inputs[8].editWidget.slide_range[0] = 0;
 			inputs[8].editWidget.slide_range[1] = array_length(inpt) - 1;
@@ -379,11 +379,13 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			var _ed = LAST_FRAME  + 1;
 			
 			if(user) {
-				if(rang[0] < 0)  _st = LAST_FRAME + rang[0] - 1;
-				else             _st = rang[0] - 1;
+				     if(rang[0] <  0) _st = LAST_FRAME + rang[0] - 1;
+				else if(rang[0] == 0) _st = FIRST_FRAME;
+				else                  _st = rang[0] - 1;
 			
-				if(rang[1] < 0)  _ed = LAST_FRAME + rang[1];
-				else             _ed = rang[1];
+				     if(rang[1] <  0) _ed = LAST_FRAME + rang[1];
+				else if(rang[1] == 0) _ed = LAST_FRAME + 1;
+				else                  _ed = rang[1];
 			}
 			
 			if(_ed <= _st) return;

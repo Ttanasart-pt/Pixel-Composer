@@ -140,9 +140,9 @@
     
     function __fnGroupInit_Preview() {
         MENU_ITEMS.preview_group_preview_bg = menuItemGroup(__txtx("panel_menu_preview_background", "Preview background"), [
-            [ s_preview_transparent, function() /*=>*/ { PANEL_PREVIEW.canvas_bg = -1;      } ],
-            [ s_preview_white,       function() /*=>*/ { PANEL_PREVIEW.canvas_bg = c_white; } ],
-            [ s_preview_black,       function() /*=>*/ { PANEL_PREVIEW.canvas_bg = c_black; } ],
+            [ THEME.preview_bg_transparent, function() /*=>*/ { PANEL_PREVIEW.canvas_bg = -1;      } ],
+            [ THEME.preview_bg_white,       function() /*=>*/ { PANEL_PREVIEW.canvas_bg = c_white; } ],
+            [ THEME.preview_bg_black,       function() /*=>*/ { PANEL_PREVIEW.canvas_bg = c_black; } ],
         ], ["Preview", "Background"]);
         registerFunction("Preview", "Background", "",  MOD_KEY.none, function() /*=>*/ { menuCall("", [ MENU_ITEMS.menu_group_preview_bg ]); });
         

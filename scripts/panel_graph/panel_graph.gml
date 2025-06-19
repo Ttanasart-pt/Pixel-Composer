@@ -3160,7 +3160,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         
         if(_select) {
         	nodes_selecting = [node];
-        	FOCUS_STR = instanceof(node);
+        	if(pFOCUS) FOCUS_STR = instanceof(node);
         }
     }
     
@@ -3384,13 +3384,19 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
     }
 	
 	function doNewNode(_nodeType) {
-		if(mouse_create_x == undefined || mouse_create_sx != mouse_grid_x || mouse_create_sy != mouse_grid_y) {
-            mouse_create_sx = mouse_grid_x;
-            mouse_create_sy = mouse_grid_y;
-            
-            mouse_create_x = mouse_grid_x;
-            mouse_create_y = mouse_grid_y;
-        } 
+		
+		if(pFOCUS) {
+			if(mouse_create_x == undefined || mouse_create_sx != mouse_grid_x || mouse_create_sy != mouse_grid_y) {
+	            mouse_create_sx = mouse_grid_x;
+	            mouse_create_sy = mouse_grid_y;
+	            
+	            mouse_create_x = mouse_grid_x;
+	            mouse_create_y = mouse_grid_y;
+	        } 
+		} else {
+			mouse_create_x = graph_cx;
+			mouse_create_y = graph_cy;
+		}
         
         var _mx = mouse_create_x;
         var _my = mouse_create_y;

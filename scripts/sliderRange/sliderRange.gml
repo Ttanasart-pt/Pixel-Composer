@@ -6,11 +6,8 @@ function sliderRange(_step, _int, _range, _onModify) : widget() constructor {
 	
 	onModify = _onModify;
 	
-	tb_value_min = new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ {return onModify(val, 0)})
-		.setSlideType(_int).setSlideStep(_step).setSlideRange(_range[0], _range[1]);
-		
-	tb_value_max = new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ {return onModify(val, 1)})
-		.setSlideType(_int).setSlideStep(_step).setSlideRange(_range[0], _range[1]);
+	tb_value_min = textBox_Number(function(val) /*=>*/ {return onModify(val, 0)}).setSlideType(_int).setSlideStep(_step).setSlideRange(_range[0], _range[1]);
+	tb_value_max = textBox_Number(function(val) /*=>*/ {return onModify(val, 1)}).setSlideType(_int).setSlideStep(_step).setSlideRange(_range[0], _range[1]);
 	
 	tb_value_min.hide = true;
 	tb_value_max.hide = true;
@@ -57,10 +54,12 @@ function sliderRange(_step, _int, _range, _onModify) : widget() constructor {
 			curr_range[1] = (_currMax <= _maxx)? _maxx : _maxx + ceil(abs(_currMax - _maxx) / _rang) * _rang;
 		}
 			
-		var lx = _w * ((_currMin           ) - curr_range[0]) / (curr_range[1] - curr_range[0]);
-		var lw = _w * ((_currMax - _currMin) - curr_range[0]) / (curr_range[1] - curr_range[0]);
+		var lx = _w * ((_currMin               ) - curr_range[0]) / (curr_range[1] - curr_range[0]);
+		var lw = _w * ((_currMax - _currMin + 1) - curr_range[0]) / (curr_range[1] - curr_range[0]);
 		
-		draw_sprite_stretched_ext(THEME.textbox, 4, _x + lx, _y, lw, _h, boxColor, 1);
+		var _lxx = clamp(_x + lx, _x, _x + _w);
+		var _lww = clamp(_lxx + lw, _x, _x + _w) - _lxx;
+		draw_sprite_stretched_ext(THEME.textbox, 4, _lxx, _y, _lww, _h, boxColor, 1);
 		
 		var tb_w = _w / 2;
 		

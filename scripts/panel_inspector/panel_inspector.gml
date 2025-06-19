@@ -226,8 +226,8 @@ function Panel_Inspector() : PanelContent() constructor {
         
         meta_display = [ 
             [ __txt("Project Settings"),    false, "settings"   ], 
-            [ __txt("Global Layer"),        true,  "layers"     ], 
             [ __txt("Metadata"),            true , "metadata"   ], 
+            [ __txt("Global Layer"),        true,  "layers"     ], 
             [ __txt("Global Variables"),    false, "globalvar"  ], 
             [ __txt("Group Properties"),    false, "group prop" ], 
         ];
@@ -252,7 +252,7 @@ function Panel_Inspector() : PanelContent() constructor {
         
         global_layer_drawer = new Panel_Global_Layer_Drawer();
         globallayer_buttons = [ button(function() /*=>*/ {return dialogPanelCall(new Panel_Global_Layer())} )
-        	.setIcon(THEME.arrow, 1, COLORS._main_icon_light, .75)
+        	.setIcon(THEME.text_popup, 1, COLORS._main_icon_light, .75)
         	.setTooltip(__txt("Pop-up")) ];
     #endregion
     

@@ -164,7 +164,7 @@ function Panel_Animation() : PanelContent() constructor {
 	    min_h = ui(48);
 	    
 	    tool_width = ui(224);
-	    timeline_w = w - tool_width - ui(80);
+	    timeline_w = w - tool_width - ui(68);
 	    timeline_h = ui(28);
 	#endregion
 
@@ -347,7 +347,7 @@ function Panel_Animation() : PanelContent() constructor {
     ////- Draw
     
     function resetTimelineMask() {
-    	timeline_w = w - tool_width - ui(80);
+    	timeline_w = w - tool_width - ui(68);
 	    timeline_h = ui(28);
 	    
         timeline_mask    = surface_verify(timeline_mask, timeline_w, timeline_h);
@@ -571,6 +571,62 @@ function Panel_Animation() : PanelContent() constructor {
         
     }
     
+    function drawAnimationSettings() {
+    	var by = h - ui(40);
+        var bx = w - ui(40);
+        
+        var b = buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(32), [mx, my], pHOVER, pFOCUS, __txtx("panel_animation_animation_settings", "Animation settings"), THEME.gear, 2);
+        if(b == 2) dialogPanelCall(new Panel_Animation_Setting(), x + bx + ui(32), y + by - ui(8), { anchor: ANCHOR.right | ANCHOR.bottom }); 
+        
+        by -= ui(40); if(by < 8) return;
+        var b = buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(32), [mx, my], pHOVER, pFOCUS, __txt("Animation Tools"), THEME.animation_timing, 2);
+        if(b == 2) {
+        	var _dx = x + bx + ui(32);
+        	var _dy = y + by - ui(8);
+        	
+        	menuCall("animation_tools", [
+        		menuItem(__txtx("panel_animation_scale_animation", "Scaler"),  function(d) /*=>*/ { dialogPanelCall(new Panel_Animation_Scaler(),  d.x, d.y, 
+        			{ anchor: ANCHOR.right | ANCHOR.bottom }); }, noone, noone, noone, { x : _dx, y : _dy }),
+        			
+        		menuItem(__txtx("panel_animation_clean_animation", "Cleaner"), function(d) /*=>*/ { dialogPanelCall(new Panel_Animation_Cleaner(), d.x, d.y, 
+        			{ anchor: ANCHOR.right | ANCHOR.bottom }); }, noone, noone, noone, { x : _dx, y : _dy }),
+        			
+    		], _dx, _dy);
+        
+        }
+        
+        var max_y = by - ui(28);
+        if(by < ui(28)) return;
+        by = ui(8);
+        
+        var txt = __txt("New folder");
+        if(buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(28), [mx, my], pHOVER, pFOCUS, txt, THEME.folder) == 2) {
+            var _dir = new timelineItemGroup();
+            PROJECT.timelines.addItem(_dir);
+        }
+        
+        by += ui(32); if(by > max_y) return;
+        node_name_tooltip.index = node_name_type;
+        var b = buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(28), [mx, my], pHOVER, pFOCUS, node_name_tooltip, THEME.node_name_type, node_name_type);
+        if(b == 1 && MOUSE_WHEEL != 0 && key_mod_press(SHIFT))
+        	node_name_type = (node_name_type + sign(MOUSE_WHEEL) + 3) % 3;
+        if(b == 2) mod_inc_mf0 node_name_type mod_inc_mf1 node_name_type mod_inc_mf2  3 mod_inc_mf3;
+        
+        by += ui(32); if(by > max_y) return;
+        if(buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(28), [mx, my], pHOVER, pFOCUS, tooltip_toggle_nodes, THEME.icon_visibility, show_nodes) == 2)
+            show_nodes = !show_nodes;
+        
+        by += ui(32); if(by > max_y) return;
+        txt = __txtx("panel_animation_keyframe_override", "Override Keyframe");
+        if(buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(28), [mx, my], pHOVER, pFOCUS, txt, THEME.keyframe_override, global.FLAG.keyframe_override) == 2)
+            global.FLAG.keyframe_override = !global.FLAG.keyframe_override;
+        
+        by += ui(32); if(by > max_y) return;
+        txt = __txt("Onion skin");
+        if(buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(28), [mx, my], pHOVER, pFOCUS, txt, THEME.onion_skin,, PROJECT.onion_skin.enabled? c_white : COLORS._main_icon) == 2)
+            PROJECT.onion_skin.enabled = !PROJECT.onion_skin.enabled;
+    }
+    
     function drawAnimationControl() {
         var mini = w < ui(348);
         
@@ -640,61 +696,7 @@ function Panel_Animation() : PanelContent() constructor {
                 draw_set_text(f_h5, fa_center, fa_center, PROJECT.animator.is_playing? COLORS._main_accent : COLORS._main_text_sub);
                 draw_text_add(w / 2, cy + ui(6), txt);
             }
-            return;
         }
-        
-        by += ui(36);
-        bx = w - ui(44);
-        var b = buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(32), [mx, my], pHOVER, pFOCUS, __txtx("panel_animation_animation_settings", "Animation settings"), THEME.gear, 2);
-        if(b == 2) dialogPanelCall(new Panel_Animation_Setting(), x + bx + ui(32), y + by - ui(8), { anchor: ANCHOR.right | ANCHOR.bottom }); 
-        
-        by -= ui(40); if(by < 8) return;
-        var b = buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(32), [mx, my], pHOVER, pFOCUS, __txt("Animation Tools"), THEME.animation_timing, 2);
-        if(b == 2) {
-        	var _dx = x + bx + ui(32);
-        	var _dy = y + by - ui(8);
-        	
-        	menuCall("animation_tools", [
-        		menuItem(__txtx("panel_animation_scale_animation", "Scaler"),  function(d) /*=>*/ { dialogPanelCall(new Panel_Animation_Scaler(),  d.x, d.y, 
-        			{ anchor: ANCHOR.right | ANCHOR.bottom }); }, noone, noone, noone, { x : _dx, y : _dy }),
-        			
-        		menuItem(__txtx("panel_animation_clean_animation", "Cleaner"), function(d) /*=>*/ { dialogPanelCall(new Panel_Animation_Cleaner(), d.x, d.y, 
-        			{ anchor: ANCHOR.right | ANCHOR.bottom }); }, noone, noone, noone, { x : _dx, y : _dy }),
-        			
-    		], _dx, _dy);
-        
-        }
-        
-        var max_y = by - ui(28);
-        if(by < ui(28)) return;
-        by = ui(8);
-        
-        var txt = __txt("New folder");
-        if(buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(28), [mx, my], pHOVER, pFOCUS, txt, THEME.folder) == 2) {
-            var _dir = new timelineItemGroup();
-            PROJECT.timelines.addItem(_dir);
-        }
-        
-        by += ui(32); if(by > max_y) return;
-        node_name_tooltip.index = node_name_type;
-        var b = buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(28), [mx, my], pHOVER, pFOCUS, node_name_tooltip, THEME.node_name_type, node_name_type);
-        if(b == 1 && MOUSE_WHEEL != 0 && key_mod_press(SHIFT))
-        	node_name_type = (node_name_type + sign(MOUSE_WHEEL) + 3) % 3;
-        if(b == 2) mod_inc_mf0 node_name_type mod_inc_mf1 node_name_type mod_inc_mf2  3 mod_inc_mf3;
-        
-        by += ui(32); if(by > max_y) return;
-        if(buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(28), [mx, my], pHOVER, pFOCUS, tooltip_toggle_nodes, THEME.icon_visibility, show_nodes) == 2)
-            show_nodes = !show_nodes;
-        
-        by += ui(32); if(by > max_y) return;
-        txt = __txtx("panel_animation_keyframe_override", "Override Keyframe");
-        if(buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(28), [mx, my], pHOVER, pFOCUS, txt, THEME.keyframe_override, global.FLAG.keyframe_override) == 2)
-            global.FLAG.keyframe_override = !global.FLAG.keyframe_override;
-        
-        by += ui(32); if(by > max_y) return;
-        txt = __txt("Onion skin");
-        if(buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(28), [mx, my], pHOVER, pFOCUS, txt, THEME.onion_skin,, PROJECT.onion_skin.enabled? c_white : COLORS._main_icon) == 2)
-            PROJECT.onion_skin.enabled = !PROJECT.onion_skin.enabled;
     }
     
     function drawContent(panel) {
@@ -711,6 +713,7 @@ function Panel_Animation() : PanelContent() constructor {
             timelineScrub();
             
             if(dopesheet_h > ui(8)) drawDopesheet();
+        	drawAnimationSettings();
         }
         
         drawAnimationControl();

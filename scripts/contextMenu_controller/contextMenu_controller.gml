@@ -55,10 +55,7 @@ function MenuItemGroup(_name, _group, _hotkey = noone) constructor {
 	hoykeyObject = noone;
 	spacing = ui(36);
 	
-	static setSpacing = function(_spacing) {
-		spacing = _spacing;
-		return self;
-	}
+	static setSpacing = function(_spacing) { spacing = _spacing; return self; }
 }
 
 function menuButton(_spr, _onClick, _tooltip = "", _step = noone) constructor {
