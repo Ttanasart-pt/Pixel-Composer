@@ -63,8 +63,9 @@
     	
         registerFunction(p, "Clear Tool",               vk_escape, n, panel_preview_clear_tool         )
         
-        registerFunction(p, "Focus Content",            "F", n, panel_preview_focus_content            ).setMenu("preview_focus_content", THEME.icon_center_canvas)
-        registerFunction(p, "Save Current Frame",       "S", s, panel_preview_save_current_frame       ).setMenu("preview_save_current_frame")
+        registerFunction(p, "Focus Content",            "F", n, panel_preview_focus_content            ).setMenu("preview_focus_content",      THEME.icon_center_canvas)
+        registerFunction(p, "Save Current Frame",       "S", s, panel_preview_save_current_frame       ).setMenu("preview_save_current_frame", THEME.icon_preview_export)
+        registerFunction(p, "Save All Current Frames",  "",  n, panel_preview_saveAllCurrentFrames     ).setMenu("preview_save_all_current_frames")
         registerFunction(p, "Save to Focused File",     "",  n, panel_preview_saveCurrentFrameToFocus  ).setMenu("preview_save_to_focused_file")
         registerFunction(p, "Save to Project",          "",  n, panel_preview_saveCurrentFrameProject  ).setMenu("preview_save_to_project")
         registerFunction(p, "Save all Current Frames",  "",  n, panel_preview_save_all_current_frame   ).setMenu("preview_save_all_current_frame")
@@ -112,8 +113,6 @@
         registerFunction(p, "Toggle Reset View",        "", n, panel_preview_toggle_reset_view         ).setMenu("preview_toggle_reset_view")
         
         registerFunction(p, "New Preview Window",       "", n, panel_preview_new_preview_window        ).setMenu("preview_new_preview_window")
-        registerFunction(p, "Save Current Frame",       "", n, panel_preview_saveCurrentFrame          ).setMenu("preview_save_current_frame")
-        registerFunction(p, "Save All Current Frames",  "", n, panel_preview_saveAllCurrentFrames      ).setMenu("preview_save_all_current_frames")
         registerFunction(p, "Copy Current Frame",       "", n, panel_preview_copyCurrentFrame          ).setMenu("preview_copy_current_frame", THEME.copy)
         registerFunction(p, "Copy Color",               "", n, panel_preview_copy_color                ).setMenu("preview_copy_color")
         registerFunction(p, "Copy Color Hex",           "", n, panel_preview_copy_color_hex            ).setMenu("preview_copy_color_hex")
@@ -124,16 +123,16 @@
         
         registerFunction(p, "Toggle Onion Skin",        "", n, panel_preview_onion_enabled             ).setMenu("preview_onion_enabled")
         registerFunction(p, "Toggle Onion Skin view",   "", n, panel_preview_onion_on_top              ).setMenu("preview_onion_on_top")
-        registerFunction(p, "Toggle Lock",              "", n, panel_preview_toggle_lock               ).setMenu("preview_toggle_lock")
-        registerFunction(p, "Toggle Minimap",           "", n, panel_preview_toggle_mini               ).setMenu("preview_toggle_mini")
+        registerFunction(p, "Toggle Lock",              "", n, panel_preview_toggle_lock               ).setMenu("preview_toggle_lock",  THEME.lock)
+        registerFunction(p, "Toggle Minimap",           "", n, panel_preview_toggle_mini               ).setMenu("preview_toggle_mini",  THEME.icon_minimap)
         
-        registerFunction(p, "Popup",            		"", n, function() /*=>*/ { create_preview_window(PANEL_PREVIEW.getNodePreview());           }).setMenu("preview_popup")
+        registerFunction(p, "Popup",            		"", n, function() /*=>*/ { create_preview_window(PANEL_PREVIEW.getNodePreview());           }).setMenu("preview_popup",          THEME.node_goto_thin)
         registerFunction(p, "Grid Settings",            "", n, function() /*=>*/ { dialogPanelCall(new Panel_Preview_Grid_Setting())                }).setMenu("preview_grid_settings")
         registerFunction(p, "Onion Skin Settings",      "", n, function() /*=>*/ { dialogPanelCall(new Panel_Preview_Onion_Setting())               }).setMenu("preview_onion_settings")
         registerFunction(p, "3D View Settings",         "", n, function() /*=>*/ { dialogPanelCall(new Panel_Preview_3D_Setting(PANEL_PREVIEW))     }).setMenu("preview_3D_settings")
         registerFunction(p, "3D SDF View Settings",     "", n, function() /*=>*/ { dialogPanelCall(new Panel_Preview_3D_SDF_Setting(PANEL_PREVIEW)) }).setMenu("preview_3D_SDF_settings")
         registerFunction(p, "3D Snap Settings",         "", n, function() /*=>*/ { dialogPanelCall(new Panel_Preview_Snap_Setting(PANEL_PREVIEW))   }).setMenu("preview_snap_settings")
-        registerFunction(p, "View Settings",            "", n, function() /*=>*/ { dialogPanelCall(new Panel_Preview_View_Setting(PANEL_PREVIEW))   }).setMenu("preview_view_settings")
+        registerFunction(p, "View Settings",            "", n, function() /*=>*/ { dialogPanelCall(new Panel_Preview_View_Setting(PANEL_PREVIEW))   }).setMenu("preview_view_settings",  THEME.icon_visibility)
         
         __fnGroupInit_Preview();
     }
@@ -286,11 +285,11 @@ function Panel_Preview() : PanelContent() constructor {
         
         hk_editing          = noone;
         
-        sbChannel = new scrollBox([], function(index) {
+        sbChannel = new scrollBox([], function(i) /*=>*/ {
             var node = __getNodePreview();
             if(node == noone) return;
             
-            var _ind = array_safe_get(sbChannelIndex, index, -1);
+            var _ind = array_safe_get(sbChanneli, index, -1);
             if(_ind == -1) return;
             
             node.preview_channel = _ind; 
@@ -298,7 +297,7 @@ function Panel_Preview() : PanelContent() constructor {
         });
         
         sbChannelIndex  = [];
-        sbChannel.font  = f_p1;
+        sbChannel.font  = f_p2;
         sbChannel.align = fa_left;
     #endregion
     
@@ -496,6 +495,15 @@ function Panel_Preview() : PanelContent() constructor {
                 									x - ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.left }); }, 
             ).setHotkey("Preview", "3D Snap Settings"),
         ];
+        
+        global.menuItems_preview_actions = [
+        	"preview_save_current_frame",
+        	"preview_toggle_lock",
+        	"preview_focus_content",
+        	"preview_toggle_mini",
+        	"preview_view_settings",
+        	"preview_popup", 
+    	];
         
         actions = [
             new panel_toolbar_icon("Export Canvas",
@@ -1655,7 +1663,7 @@ function Panel_Preview() : PanelContent() constructor {
             }
         #endregion
         
-        d3_surface           = surface_verify(d3_surface, w, h);
+        d3_surface         = surface_verify(d3_surface, w, h);
         d3_surface_normal  = surface_verify(d3_surface_normal, w, h);
         d3_surface_depth   = surface_verify(d3_surface_depth, w, h);
         d3_surface_outline = surface_verify(d3_surface_outline, w, h);
@@ -2347,9 +2355,20 @@ function Panel_Preview() : PanelContent() constructor {
         
         sample_data = noone;
         
-        var tbx = toolbar_height / 2;
+        var toolbar_right = w - ui(6);
+        var scs = gpu_get_scissor();
+        var tbx = w - ui(6);
         var tby = ty + toolbar_height / 2;
         var _m  = [ mx, my ];
+        
+        var _nodeRaw = __getNodePreview();
+        if(_nodeRaw) tbx -= drawNodeChannel(_nodeRaw, tbx, tby);
+        toolbar_right = tbx;
+        
+        if(toolbar_right < ui(6)) return;
+        
+        var tbx = ui(6);
+        var bs  = ui(28);
         
         var toolbar_left = 0;
         var _toolbars    = toolbars;
@@ -2359,6 +2378,9 @@ function Panel_Preview() : PanelContent() constructor {
             case NODE_3D.polygon :  _toolbars = toolbars_3d;     break;
             case NODE_3D.sdf :      _toolbars = toolbars_3d_sdf; break;
         }
+    	
+    	gpu_set_scissor(toolbar_left, ty, toolbar_right - ui(4), toolbar_height);
+    	var hov = pHOVER && point_in_rectangle(mx, my, 0, ty, toolbar_right - ui(4), h);
     	
         for( var i = 0, n = array_length(_toolbars); i < n; i++ ) {
             var tb = _toolbars[i];
@@ -2377,12 +2399,10 @@ function Panel_Preview() : PanelContent() constructor {
                 tbTooltip.index = tbInd;
             
             var tooltip = instance_exists(o_dialog_menubox)? "" : tbTooltip;
-            var _bx = tbx - ui(14);
-            var _by = tby - ui(14);
-            var _bw = ui(28);
-            var _bh = ui(28);
+            var _bx = tbx;
+            var _by = tby - bs / 2;
             
-            var b = buttonInstant(THEME.button_hide_fill, _bx, _by, _bw, _bh, _m, pHOVER, pFOCUS, tooltip, tbSpr, tbInd);
+            var b = buttonInstant(THEME.button_hide_fill, _bx, _by, bs, bs, _m, hov, pFOCUS, tooltip, tbSpr, tbInd);
             switch(b) { 
             	case 1 : 
             		if(onWUp   != 0 && key_mod_press(SHIFT) && MOUSE_WHEEL > 0) onWUp();
@@ -2405,17 +2425,21 @@ function Panel_Preview() : PanelContent() constructor {
             }
             
             if(hKey != noone && hKey == hk_editing)
-            	draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, _bw, _bh, COLORS._main_text_accent);
+            	draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, bs, bs, COLORS._main_text_accent);
             
-            tbx += ui(32);
+            tbx += bs + ui(4);
         }
         
-        toolbar_left = tbx;
-        tbx = w - toolbar_height / 2;
+        toolbar_left = tbx + ui(4);
+        gpu_set_scissor(scs);
+        
+        if(toolbar_right < toolbar_left) return;
+        
+        tbx = toolbar_right - ui(2) - bs;
+        gpu_set_scissor(toolbar_left, ty, w - toolbar_left, toolbar_height);
+        var hov = pHOVER && point_in_rectangle(mx, my, toolbar_left, ty, w, h);
         
         for( var i = 0, n = array_length(actions); i < n; i++ ) {
-        	if(tbx - ui(8) <= toolbar_left) break;
-        	
             var tb        = actions[i];
             var tbSpr     = tb.sprite;
             var tbInd     = tb.index();
@@ -2426,13 +2450,11 @@ function Panel_Preview() : PanelContent() constructor {
             var onWDown   = tb.onWDown;
         	var hKey      = tb.hotkey;
             
-            var tbData    = { x: x + tbx - ui(14), y: y + tby - ui(14) };
-            var _bx = tbx - ui(14);
-            var _by = tby - ui(14);
-            var _bw = ui(28);
-            var _bh = ui(28);
+            var tbData = { x: x + tbx - ui(14), y: y + tby - ui(14) };
+            var _bx    = tbx;
+            var _by    = tby - bs / 2;
             
-            var b = buttonInstant(THEME.button_hide_fill, _bx, _by, _bw, _bh, _m, pHOVER, pFOCUS, tbTooltip, tbSpr, tbInd);
+            var b = buttonInstant(THEME.button_hide_fill, _bx, _by, bs, bs, _m, hov, pFOCUS, tbTooltip, tbSpr, tbInd);
             switch(b) { 
             	case 1 : 
             		if(onWUp   != 0 && key_mod_press(SHIFT) && MOUSE_WHEEL > 0) onWUp();
@@ -2455,23 +2477,19 @@ function Panel_Preview() : PanelContent() constructor {
             }
             
             if(hKey != noone && hKey == hk_editing)
-            	draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, _bw, _bh, COLORS._main_text_accent);
+            	draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, bs, bs, COLORS._main_text_accent);
             
-            tbx -= ui(32);
+            tbx -= bs + ui(4);
         }
         
+        gpu_set_scissor(scs);
+        
+        var _lx = max(toolbar_left - ui(4), tbx + bs - ui(2));
+        var _ly = tby;
+        var _lh = toolbar_height / 2 - ui(8);
+        
         draw_set_color(COLORS.panel_toolbar_separator);
-        draw_line_width(tbx + ui(12), tby - toolbar_height / 2 + ui(8), tbx + ui(12), tby + toolbar_height / 2 - ui(8), 2);
-        
-        var _nodeRaw = __getNodePreview();
-        if(_nodeRaw) tbx -= drawNodeChannel(_nodeRaw, tbx, tby);
-        
-        if(hk_editing != noone) { 
-			if(key_press(vk_enter)) hk_editing = noone;
-			else hotkey_editing(hk_editing);
-			
-			if(key_press(vk_escape)) hk_editing = noone;
-		}
+        draw_line_width(_lx, _ly - _lh, _lx, _ly + _lh, 2);
     }
     
     function drawSplitView() {
@@ -2752,6 +2770,13 @@ function Panel_Preview() : PanelContent() constructor {
         if(d3_active == NODE_3D.none) drawSplitView();
         
         drawToolBar(toolNode);
+        
+        if(hk_editing != noone) { 
+			if(key_press(vk_enter)) hk_editing = noone;
+			else hotkey_editing(hk_editing);
+			if(key_press(vk_escape)) hk_editing = noone;
+		}
+		
         drawMinimap();
         drawActionTooltip();
         

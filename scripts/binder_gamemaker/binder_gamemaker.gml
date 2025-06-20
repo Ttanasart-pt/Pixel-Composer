@@ -152,8 +152,8 @@ function __Binder_Gamemaker(_path) constructor {
     projectName  = "";
     resourcesRaw = [];
     resourcesMap = {};
-    resourcesCur = {};
     resourceList = [];
+    resListInd   = 0;
     
     resources    = [
         { name: "Sprites", data : [], closed : false, view: 0 },
@@ -204,13 +204,8 @@ function __Binder_Gamemaker(_path) constructor {
             
             if(_asst == noone) continue;
             
-            if(struct_has(resourcesMap, _rpth)) {
-            	struct_override(resourcesMap[$ _rpth], _asst);
-            	_asst = resourcesMap[$ _rpth];
-            }
-            
-            resourcesCur[$ _rpth] = _asst;
-            array_push(resourceList, _asst);
+            resourcesMap[$ _rpth]      = _asst;
+            resourceList[resListInd++] = _asst;
         }
     }
     
@@ -222,8 +217,8 @@ function __Binder_Gamemaker(_path) constructor {
         
         projectName  = _resMap.name;
         resourcesRaw = _resMap.resources;
-        resourcesCur = {};
-        resourceList = [];
+        resourceList = array_create(array_length(resourcesRaw));
+        resListInd   = 0;
         
         for( var i = 0, n = array_length(resources); i < n; i++ ) 
         	resources[i].data = [];
@@ -238,10 +233,9 @@ function __Binder_Gamemaker(_path) constructor {
         	}, [i]);
         }
         
-        // readLoop(0, array_length(resourcesRaw));
-        
         run_in(_batAmo, function() /*=>*/ {
-	        resourcesMap = resourcesCur;
+        	array_resize(resourceList, resListInd);
+        	
 	        for( var i = 0, n = array_length(resourceList); i < n; i++ )
 	            resourceList[i].link();
 	       

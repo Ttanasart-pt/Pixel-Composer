@@ -308,7 +308,6 @@ function Panel_Nodes() : PanelContent() constructor {
 				
 				var _name = _menu.name;
 				var _spr  = _menu.getSpr();
-				var _scal = ui_raw(.5);
 				var _cc   = i == 0? COLORS._main_value_positive : COLORS._main_icon;
 				var _sca  = _mus / sprite_get_height(_spr);
 				

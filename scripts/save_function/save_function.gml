@@ -95,6 +95,8 @@ function SAVE_AT(project = PROJECT, path = "", log = "save at ", _thum = true) {
 	
 	#region thumbnail
 		var _thumbSurf = PANEL_PREVIEW.getNodePreviewSurface();
+		if(!is_surface(_thumbSurf)) _thumbSurf = PANEL_PREVIEW.panel.content_surface;
+		
 		var _thumbSize = 64;
 		var _thumbLeng = 0;
 		var _thumbData = 0;

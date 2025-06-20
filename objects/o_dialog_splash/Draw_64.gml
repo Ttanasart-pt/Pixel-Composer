@@ -63,7 +63,7 @@ if !ready exit;
 	
 	bx -= ui(28 + 1);
 	txt = __txtx("splash_show_thumbnail", "Toggle thumbnail");
-	if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, sFOCUS, txt, THEME.image_20, 0, COLORS._main_icon, 1, .8) == 2) {
+	if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, sFOCUS, txt, THEME.image_20, PREFERENCES.splash_show_thumbnail, COLORS._main_icon, 1, .8) == 2) {
 		PREFERENCES.splash_show_thumbnail = !PREFERENCES.splash_show_thumbnail;
 		PREF_SAVE();
 	}

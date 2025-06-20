@@ -69,7 +69,7 @@ function Node_RM_Combine(_x, _y, _group = noone) : Node_RM(_x, _y, _group) const
 		
 		inputs[16].setVisible(_type > 0);
 		
-		outputs[0].setVisible(_ren, _ren);
+		outputs[0].setVisible(_ren);
 		
 	}
 	static processData = function(_outData, _data, _array_index = 0) {

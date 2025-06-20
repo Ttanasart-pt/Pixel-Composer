@@ -1426,14 +1426,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		for(var i = 0; i < array_length(outputs); i++) {
 			var _ot = outputs[i];
-			if(is(_ot, NodeValue) && !_ot.forward) continue;
-			if(_ot.type == VALUE_TYPE.node) continue;
+			if(!is(_ot, NodeValue)) continue;
+			if(!_ot.forward || _ot.type == VALUE_TYPE.node) continue;
 			
 			for( var j = 0, n = array_length(_ot.value_to_loop); j < n; j++ ) {
 				var _to = _ot.value_to_loop[j];
-				if(!_to.active) continue; 
-				if(!_to.bypassNextNode()) continue;
-			
+				if(!_to.active || !_to.bypassNextNode()) continue;
+				
 				return _to.getNextNodes();
 			}
 		
@@ -1444,7 +1443,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		for(var i = 0; i < array_length(inputs); i++) {
 			var _in = inputs[i];
-			// if(_in.bypass_junc == noone) continue;
+			if(!is(_in, NodeValue)) continue;
 			
 			var _tos = _in.bypass_junc.getJunctionTo();
 			for( var j = 0; j < array_length(_tos); j++ )
@@ -2620,6 +2619,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var _map = {};
 		//print(" > Serializing: " + name);
 		
+		_map.visible      = visible;
+		_map.is_instancer = is_instancer;
+		_map.version      = SAVE_VERSION;
+		
 		if(!preset) {
 			_map.id	     = node_id;
 			_map.name	 = display_name;
@@ -2639,9 +2642,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			_map.insp_scr = inspector_scroll;
 			_map.insp_col = variable_clone(inspector_collapse);
 		}
-		
-		_map.visible      = visible;
-		_map.is_instancer = is_instancer;
 		
 		var _attr = attributeSerialize();
 		var attri = struct_append(variable_clone(attributes), _attr); 
@@ -2713,6 +2713,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	////- DESERIALIZE
 	
 	static deserialize = function(_map, scale = false, preset = false) {
+		if(preset) LOADING_VERSION = _map[$ "version"] ?? SAVE_VERSION;
 		
 		load_map   = _map;
 		load_scale = scale;

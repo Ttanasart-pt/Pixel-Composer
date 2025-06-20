@@ -122,7 +122,9 @@ if(DIALOG_SHOW_FOCUS) {
 		var _bgy = _sy - _sh / 2;
 		
 		draw_sprite_stretched(THEME.node_junction_name_bg, 0, _bgx - ui(10), _bgy - ui(10), _sw + ui(20), _sh + ui(20));
+		gpu_set_tex_filter(true);
 		draw_sprite_stretched(node_icon, 0, _bgx, _bgy, _sw, _sh);
+		gpu_set_tex_filter(false);
 	}
 	node_icon = noone;
 	

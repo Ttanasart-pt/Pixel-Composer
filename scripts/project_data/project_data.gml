@@ -369,6 +369,8 @@ function Project() constructor {
 	}
 	
 	static deserialize = function(_map) {
+		if(!is_struct(_map)) return;
+		
 		if(struct_has(_map, "animator")) {
 			var _anim_map = _map.animator;
 			animator.frames_total	= struct_try_get(_anim_map, "frames_total",   30);

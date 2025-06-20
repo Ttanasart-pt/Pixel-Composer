@@ -415,7 +415,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 		inputs[40].setVisible(false);
 		inputs[41].setVisible(false);
 		
-		outputs[0].setVisible(_ren, _ren);
+		outputs[0].setVisible(_ren);
 		
 		var _shape = shape_types[_shp];
 		switch(_shape) { // Size

@@ -30,41 +30,23 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	w    = 128;
 	update_on_frame = false;
 	
-	newInput(0, nodeValue_Path("Path"))
-		.setDisplay(VALUE_DISPLAY.path_load, { filter: "Aseprite file|*.ase;*.aseprite" });
-		
-	newInput(1, nodeValue_Trigger("Generate layers" ))
-		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() /*=>*/ {return refreshLayers()} });
-	
-	newInput(2, nodeValue_Text("Current tag"));
-	
-	newInput(3, nodeValue_Bool("Use cel dimension", false));
+	newInput(0, nodeValue_Path(    "Path"            )).setDisplay(VALUE_DISPLAY.path_load, { filter: "Aseprite file|*.ase;*.aseprite" });
+	newInput(1, nodeValue_Trigger( "Generate layers" )).setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() /*=>*/ {return refreshLayers()} });
+	newInput(2, nodeValue_Text(    "Current tag"     ));
+	newInput(3, nodeValue_Bool(    "Use cel dimension", false ));
 	
 	/////////////////////////////////
 	
-	newOutput(0, nodeValue_Output("Output", VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output( "Output",       VALUE_TYPE.surface, noone ));
+	newOutput(1, nodeValue_Output( "Content",      VALUE_TYPE.object,  self  )).setIcon(THEME.junc_aseprite, c_white);
+	newOutput(2, nodeValue_Output( "Path",         VALUE_TYPE.path,    ""    )).setVisible(false);
+	newOutput(3, nodeValue_Output( "Palette",      VALUE_TYPE.color,   []    )).setDisplay(VALUE_DISPLAY.palette).setVisible(false);
+	newOutput(4, nodeValue_Output( "Layers",       VALUE_TYPE.text,    []    )).setVisible(false);
+	newOutput(5, nodeValue_Output( "Tags",         VALUE_TYPE.text,    []    )).setVisible(false);
+	newOutput(6, nodeValue_Output( "Raw data",     VALUE_TYPE.struct,  {}    )).setVisible(false);
+	newOutput(7, nodeValue_Output( "Frame Amount", VALUE_TYPE.integer, 1     )).setVisible(false);
 	
-	newOutput(1, nodeValue_Output("Content", VALUE_TYPE.object, self))
-		.setIcon(THEME.junc_aseprite, c_white);
-	
-	newOutput(2, nodeValue_Output("Path", VALUE_TYPE.path, ""))
-		.setVisible(false);
-	
-	newOutput(3, nodeValue_Output("Palette", VALUE_TYPE.color, []))
-		.setDisplay(VALUE_DISPLAY.palette)
-		.setVisible(false);
-	
-	newOutput(4, nodeValue_Output("Layers", VALUE_TYPE.text, []))
-		.setVisible(false);
-	
-	newOutput(5, nodeValue_Output("Tags", VALUE_TYPE.text, []))
-		.setVisible(false);
-	
-	newOutput(6, nodeValue_Output("Raw data", VALUE_TYPE.struct, {}))
-		.setVisible(false);
-	
-	newOutput(7, nodeValue_Output("Frame Amount", VALUE_TYPE.integer, 1))
-		.setVisible(false);
+	////- Nodes
 	
 	hold_visibility = true;
 	layer_renderer  = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { 
@@ -238,7 +220,9 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	} 
 	
 	function updatePaths(path = path_current) { 
+		if(!active)    return false;
 		if(path == -1) return false;
+		
 		if(!file_exists_empty(path)) {
 			noti_warning("File not exist.", noone, self);
 			return false;
@@ -258,7 +242,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var vis    = attributes.layer_visible;
 		var frames = content[$ "Frames"];
 		if(array_empty(frames)) return false;
-		
+				
 		for( var i = 0, n = array_length(frames); i < n; i++ ) {
 			var frame  = frames[i];
 			var chunks = frame[$ "Chunks"];

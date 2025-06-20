@@ -348,7 +348,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			inputs[14].setVisible( _use_path);
 			inputs[15].setVisible(_dimt == 0 && !_use_path && _font != "");
 			
-			outputs[1].setVisible(_atls, _atls);
+			outputs[1].setVisible(_atls);
 		#endregion
 			
 		#region modify text

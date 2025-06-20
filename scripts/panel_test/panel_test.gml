@@ -13,9 +13,10 @@ function Panel_Test() : PanelContent() constructor {
 	content_w   = ui(320);
 	
 	test_dir    = "";
-	tb_test_dir = new textBox(TEXTBOX_INPUT.text,   function(txt) /*=>*/ { setTestDir(txt);   });
-	tb_index    = new textBox(TEXTBOX_INPUT.number, function(txt) /*=>*/ { start_index = txt; });
-	tb_amount   = new textBox(TEXTBOX_INPUT.number, function(txt) /*=>*/ { test_amount = txt; });
+	tb_test_dir = textBox_Text(   function(t) /*=>*/ { setTestDir(t);            });
+	tb_index    = textBox_Number( function(t) /*=>*/ { start_index = t;          });
+	tb_amount   = textBox_Number( function(t) /*=>*/ { test_amount = t;          });
+	cb_save     = new checkBox(   function( ) /*=>*/ { save_file   = !save_file; });
 	
 	testing     = false;
 	test_files  = [];
@@ -25,6 +26,16 @@ function Panel_Test() : PanelContent() constructor {
 	test_index  = start_index;
 	test_step   = 0;
 	test_result = [];
+	project_loaded = false;
+	
+	save_file   = false;
+	
+	wait_step   = 5;
+	waiting     = 0;
+	load_param  = new __loadParams(true);
+	
+	test_data_path   = "test_data.json";
+	test_data_persis = { start_index, test_amount, save_file };
 	
 	test_result_total = {
 		projects:       0,
@@ -34,10 +45,7 @@ function Panel_Test() : PanelContent() constructor {
 		assertion_pass: 0,
 	}
 	
-	wait_step   = 5;
-	waiting     = 0;
-	
-	load_param  = new __loadParams(true);
+	////- Panels
 	
 	function onResize() { sc_content.resize(content_w, h - padding * 2 - ui(8 * 2) - ui(24)); }
 	
@@ -165,6 +173,8 @@ function Panel_Test() : PanelContent() constructor {
 		return _h;
 	});
 	
+	////- Test
+	
 	function setTestDir(dir) {
 		test_dir   = dir;
 		test_files = [];
@@ -262,6 +272,8 @@ function Panel_Test() : PanelContent() constructor {
 					break;
 					
 				case 4 : 
+					if(save_file && PROJECT.path != "") SAVE_AT(PROJECT, PROJECT.path);
+					
 					closeProject(PROJECT);
 					test_result[test_index] = [ ASSERT_AMOUNT, ASSERT_PASSED ];
 					
@@ -273,6 +285,11 @@ function Panel_Test() : PanelContent() constructor {
 					ASSERT_AMOUNT = 0;
 					ASSERT_PASSED = 0;
 					test_step++;
+					
+					test_data_persis.start_index = test_index;
+					test_data_persis.end_index   = end_index;
+					test_data_persis.save_file   = save_file;
+					json_save_struct(test_data_path, test_data_persis);
 					break;
 			}
 			
@@ -302,6 +319,8 @@ function Panel_Test() : PanelContent() constructor {
 		array_append(ASSERT_LOG, { type: 1, text: _summ, });
 	}
 	
+	////- Draw
+	
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		
@@ -316,7 +335,7 @@ function Panel_Test() : PanelContent() constructor {
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, ndx, ndy, ndw, ndh);
 		
 		draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
-		draw_text_add(ndx + ui(8), ui(4), $"{test_amount} / {array_length(test_files)} Files");
+		draw_text_add(ndx + ui(8), ui(8), $"{test_amount} / {array_length(test_files)} Files");
 		
 		sc_content.setFocusHover(pFOCUS, pHOVER);
 		sc_content.draw(ndx + ui(8), ndy + ui(8), mx - ndx - ui(8), my - ndy - ui(8));
@@ -328,27 +347,31 @@ function Panel_Test() : PanelContent() constructor {
 		var lw = ui(100);
 		var dw = w - lx - lw - _pd;
 		var hh = TEXTBOX_HEIGHT;
+		var mm = [mx,my];
 		
 		tb_test_dir.setFocusHover(pFOCUS, pHOVER);
 		tb_index.setFocusHover(pFOCUS, pHOVER);
 		tb_amount.setFocusHover(pFOCUS, pHOVER);
+		cb_save.setFocusHover(pFOCUS, pHOVER);
 		
 		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text_sub);
 		draw_text_add(lx + ui(8), yy + hh / 2, "Directory");
 		
-		tb_test_dir.draw(lx + lw, yy, dw, hh, test_dir, [ mx, my ]);
+		tb_test_dir.draw(lx + lw, yy, dw, hh, test_dir, mm);
 		yy += hh + ui(8);
 		
 		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text_sub);
 		draw_text_add(lx + ui(8), yy + hh / 2, "Start");
 		
-		tb_index.draw(lx + lw, yy, dw, hh, start_index, [ mx, my ]);
+		var dhw = dw / 2 - ui(4);
+		tb_index.draw(  lx + lw,               yy, dhw, hh, start_index, mm);
+		tb_amount.draw( lx + lw + dhw + ui(8), yy, dhw, hh, test_amount, mm);
 		yy += hh + ui(8);
 		
 		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text_sub);
-		draw_text_add(lx + ui(8), yy + hh / 2, "Amount");
+		draw_text_add(lx + ui(8), yy + hh / 2, "Save");
 		
-		tb_amount.draw(lx + lw, yy, dw, hh, test_amount, [ mx, my ]);
+		cb_save.draw( lx + lw, yy, save_file, mm);
 		yy += hh + ui(8);
 		
 		// Log
@@ -387,7 +410,7 @@ function Panel_Test() : PanelContent() constructor {
 			doTesting();
 			
 		} else {
-			if(buttonInstant(THEME.button_def, bx, by, bw, bh, [ mx, my ], pHOVER, pFOCUS) == 2)
+			if(buttonInstant(THEME.button_def, bx, by, bw, bh, mm, pHOVER, pFOCUS) == 2)
 				startTesting();
 				
 			draw_set_text(f_p2, fa_center, fa_center, COLORS._main_text);
@@ -396,4 +419,15 @@ function Panel_Test() : PanelContent() constructor {
 	}
 	
 	setTestDir("D:/Project/MakhamDev/LTS-PixelComposer/TEST/Others");
+	
+	////- Actions
+	
+	if(file_exists(test_data_path)) {
+		var _j = json_load_struct(test_data_path);
+		
+		start_index = _j[$ "start_index"] ?? start_index;
+		test_amount = _j[$ "test_amount"] ?? test_amount;
+		save_file   = _j[$ "save_file"]   ?? save_file;
+	}
+	
 }

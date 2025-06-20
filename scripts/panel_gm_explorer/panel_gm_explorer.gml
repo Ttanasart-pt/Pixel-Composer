@@ -77,6 +77,7 @@ function GM_Explore_draw(gmBinder, _x, _y, _w, _h, _m, _hover, _focus) {
 	
 	for( var i = 0, n = array_length(_res); i < n; i++ ) {
 	    var _name = _res[i].name;
+	    var _data = _res[i].data;
 	    var _panw = _ww - ui(32);
 	    var _hov  = _hover && point_in_rectangle(_m[0], _m[1], 0, _yy, _panw, _yy + lbh);
 	    
@@ -90,7 +91,7 @@ function GM_Explore_draw(gmBinder, _x, _y, _w, _h, _m, _hover, _focus) {
         draw_sprite_ui(THEME.arrow, _res[i].closed? 0 : 3, ui(16), _yy + lbh / 2, 1, 1, 0, COLORS.panel_inspector_group_bg, 1);    
         
         draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text_inner);
-        draw_text_add(ui(32), _yy + lbh / 2, _name);
+        draw_text_add(ui(32), _yy + lbh / 2, $"{_name} ({array_length(_data)})");
         
 	    var _rx = _panw + ui(4);
 	    var _ry = _yy;
@@ -114,8 +115,6 @@ function GM_Explore_draw(gmBinder, _x, _y, _w, _h, _m, _hover, _focus) {
 		    
 		var grid_w = (_ww - _padx) / _col;
 		var grid_h = _grid? grid_size + _lnh : grid_size * .5;
-			
-        var _data  = _res[i].data;
         var _xx    = _padx;
         
         for( var j = 0, m = array_length(_data); j < m; j++ ) {
@@ -159,8 +158,8 @@ function GM_Explore_draw(gmBinder, _x, _y, _w, _h, _m, _hover, _focus) {
             	var _oy = sprite_get_yoffset(_thm);
             	
             	var _ss = _grid? min(grid_w - ui(4), grid_size - ui(4)) / max(_sw, _sh) : (grid_h - ui(6)) / max(_sw, _sh);
-            	var _sx = _grid? _xc                                                    : _x0 + grid_h / 2;
-            	var _sy = _grid? _y0 + ui(2) + grid_size / 2                            : _y0 + grid_h / 2;
+            	var _sx = _grid? _xc                          : _x0 + grid_h / 2;
+            	var _sy = _grid? _y0 + ui(2) + grid_size / 2  : _y0 + grid_h / 2;
             	
             	_sx = _sx - _sw / 2 * _ss + _ox * _ss
             	_sy = _sy - _sh / 2 * _ss + _oy * _ss

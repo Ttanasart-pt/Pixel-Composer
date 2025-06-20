@@ -25,9 +25,9 @@ function Node_HSV_Channel(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		outputs[0].name = _arr? "HSV" : "Hue";
 		outputs[0].setArrayDepth(_arr);
 		
-		outputs[1].setVisible(!_arr, !_arr);
-		outputs[2].setVisible(!_arr, !_arr);
-		outputs[3].setVisible(!_arr, !_arr);
+		outputs[1].setVisible(!_arr);
+		outputs[2].setVisible(!_arr);
+		outputs[3].setVisible(!_arr);
 		
 		var _sw = surface_get_width_safe(_surf);
 		var _sh = surface_get_height_safe(_surf);

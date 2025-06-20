@@ -41,6 +41,7 @@ function MenuItem(_name, _func, _spr = noone, _hotkey = noone, _toggle = noone, 
     static setParam     = function(_param)     /*=>*/ { params    = _param;     return self; }
 	
 	static getSpr       = function() /*=>*/ {return spr};
+	static getSprInd    = function() /*=>*/ {return 0};
 }
 
 function menuItemGroup(_name, _group, _hotkey = noone) { return new MenuItemGroup(_name, _group, _hotkey); }

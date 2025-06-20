@@ -622,7 +622,6 @@ function Panel_Inspector() : PanelContent() constructor {
                 
             } else { // metadata
                 jun = _inspecting.junc_meta[i - (amoIn + 1 + amoOut)];
-                
             }
             
             if(is(jun, Inspector_Spacer)) {                    // SPACER

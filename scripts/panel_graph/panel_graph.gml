@@ -1469,11 +1469,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             var _mgy = mouse_graph_y;
             var _grd = project.graphGrid.size;
             
-            if(array_length(nodes_selecting) == 1) {
-            	var _node = nodes_selecting[0];
-            	if(_node.custom_grid) _grd = _node.custom_grid;
-            }
-            
             var nx = node_drag_sx + (_mgx - node_drag_mx);
             var ny = node_drag_sy + (_mgy - node_drag_my);
             
@@ -2448,9 +2443,14 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
         draw_sprite_stretched(THEME.toolbar, 0, 0, ty, w, h);
         var cont_x = drawContext();
         
-        var tbx = w - ui(6);
+        var bs  = ui(28);
+        var tbx = w - ui(6) - bs;
         var tby = ty + toolbar_height / 2;
         var _m  = [ mx, my ];
+        
+        var scs = gpu_get_scissor();
+        gpu_set_scissor(cont_x, ty, w - cont_x, toolbar_height);
+        var hov = pHOVER && point_in_rectangle(mx, my, cont_x, ty, w, h);
         
         for( var i = 0, n = array_length(toolbars); i < n; i++ ) {
             var tbs   = toolbars[i];
@@ -2459,8 +2459,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                 var tb = tbs[j];
                 
                 if(is(tb, panel_toolbar_icon)) {
-                	if(tbx - ui(8) < cont_x) break;
-                	
 		            var tbSpr     = tb.sprite;
 		            var tbInd     = tb.index();
 		            var tbTooltip = is_method(tb.tooltip)? tb.tooltip() : tb.tooltip;
@@ -2472,16 +2470,14 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		            
 		            var tbData  = { x: x + tbx - ui(14), y: y + tby - ui(14) };
 		            
-		            if(is_instanceof(tbTooltip, tooltipSelector))
+		            if(is(tbTooltip, tooltipSelector))
 		                tbTooltip.index = tbInd;
 		            
 		            var tooltip = instance_exists(o_dialog_menubox)? "" : tbTooltip;
-		            var _bw = ui(28);
-		            var _bh = ui(28);
-		            var _bx = tbx - _bw;
-		            var _by = tby - _bh / 2;
+		            var _bx = tbx;
+		            var _by = tby - bs / 2;
 		            
-		            var b = buttonInstant(THEME.button_hide_fill, _bx, _by, _bw, _bh, _m, pHOVER, pFOCUS, tooltip, tbSpr, tbInd);
+		            var b = buttonInstant(THEME.button_hide_fill, _bx, _by, bs, bs, _m, hov, pFOCUS, tooltip, tbSpr, tbInd);
 		            switch(b) { 
 		            	case 1 : 
 		            		if(onWUp   != 0 && key_mod_press(SHIFT) && MOUSE_WHEEL > 0) onWUp();
@@ -2504,13 +2500,13 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		            }
 		            
 		            if(hKey != noone && hKey == hk_editing)
-		            	draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, _bw, _bh, COLORS._main_text_accent);
+		            	draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, bs, bs, COLORS._main_text_accent);
 		            
-		            tbx -= _bw + ui(4);
+		            tbx -= bs + ui(4);
                 	
                 } else if(is_array(tb) && is(tb[0], widget)) {
                 	var tbObj = tb[0];
-                    tbObj.setFocusHover(pFOCUS, pHOVER);
+                    tbObj.setFocusHover(pFOCUS, hov);
                     
                     var _wdw = ui(32);
                     var _wdx = tbx - _wdw;
@@ -2527,11 +2523,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
                 } else {
                     var tbInd     = tb[1]();
                     var tbTooltip = tb[2]();
-                    
-                    var bs = ui(28);
                     if(tbx - (bs + ui(4)) < cont_x) break;
                     
-                    var b = buttonInstant(THEME.button_hide_fill, tbx - bs, tby - bs / 2, bs, bs, _m, pHOVER, pFOCUS, tbTooltip, tbObj, tbInd);
+                    var b = buttonInstant(THEME.button_hide_fill, tbx - bs, tby - bs / 2, bs, bs, _m, hov, pFOCUS, tbTooltip, tbObj, tbInd);
                     if(b == 2) tb[3]( { x: x + tbx - bs, y: y + tby - bs / 2 } );
                     tbx -= bs + ui(4);
                 }
@@ -2539,13 +2533,18 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
             }
             
             tbx -= ui(2);
-            
+	            
+	        var _lx = max(cont_x - ui(4), tbx + bs - ui(2));
+	        var _ly = tby;
+	        var _lh = toolbar_height / 2 - ui(8);
+        
             draw_set_color(COLORS.panel_toolbar_separator);
-            draw_line_round(tbx, tby - toolbar_height / 2 + ui(8), tbx, tby + toolbar_height / 2 - ui(8), 2);
+            draw_line_width(_lx, _ly - _lh, _lx, _ly + _lh, 2);
             
-            if(tbx < cont_x) break;
             tbx -= ui(6);
         }
+        
+        gpu_set_scissor(scs);
         
         if(hk_editing != noone) { 
 			if(key_press(vk_enter)) hk_editing = noone;

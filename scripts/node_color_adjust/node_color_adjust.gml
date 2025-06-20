@@ -57,8 +57,8 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		inputs[13].setVisible(_type == 1, _type == 1);
 		inputs[14].setVisible(_type == 0);
 		
-		outputs[0].setVisible(_type == 0, _type == 0);
-		outputs[1].setVisible(_type == 1, _type == 1);
+		outputs[0].setVisible(_type == 0);
+		outputs[1].setVisible(_type == 1);
 		
 		inputs[16].setVisible(_type == 0);
 		inputs[17].setVisible(_type == 0);

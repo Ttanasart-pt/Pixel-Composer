@@ -10,8 +10,6 @@
 	function Node_create_Shape(_x, _y, _group = noone, _param = {}) {
 		var query = struct_try_get(_param, "query", "");
 		var node  = new Node_Shape(_x, _y, _group);
-		node.skipDefault();
-		
 		var ind   = -1;
 		
 		switch(query) {
@@ -58,12 +56,12 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	////- Transform
 	
-	newInput(15, nodeValue_Enum_Scroll( "Positioning Mode",  2, [ "Area", "Center + Scale", "Full Image" ]))
-	newInput( 3, nodeValue_Area(        "Position", DEF_AREA_REF, { onSurfaceSize, useShape : false })).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
-	newInput(16, nodeValue_Vec2(        "Center", [ .5, .5 ] )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
-	newInput(17, nodeValue_Vec2(        "Half Size", [ .5, .5 ] )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
-	newInput(19, nodeValue_Rotation(    "Shape rotation", 0));
-	newInput(28, nodeValue_Slider(      "Shape Scale", 1));
+	newInput(15, nodeValue_Enum_Scroll( "Positioning Mode",    2, [ "Area", "Center + Scale", "Full Image" ]))
+	newInput( 3, nodeValue_Area(        "Position",          DEF_AREA_REF, { onSurfaceSize, useShape : false })).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
+	newInput(16, nodeValue_Vec2(        "Center",            [.5,.5] )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
+	newInput(17, nodeValue_Vec2(        "Half Size",         [.5,.5] )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
+	newInput(19, nodeValue_Rotation(    "Shape rotation",      0     ));
+	newInput(28, nodeValue_Slider(      "Shape Scale",         1     ));
 	
 	////- Shape
 	
@@ -78,41 +76,42 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	newInput( 2, nodeValue_Enum_Scroll(    "Shape",  0, { data: shape_types_str, horizontal: true, text_pad: ui(16) }))
 		.setHistory([ shape_types, { cond: function() /*=>*/ {return LOADING_VERSION < 1_18_00_0}, list: global.node_shape_keys_18 } ]);
-	newInput(32, nodeValue_Vec2(   "Point 1", [ 0, 0 ])).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
-	newInput(33, nodeValue_Vec2(   "Point 2", [ 1, 1 ])).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
-	newInput(35, nodeValue_Vec2(   "Point 3", [ 1, 0 ])).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
-	newInput(34, nodeValue_Slider( "Thickness", 0.1));
+		
+	newInput(32, nodeValue_Vec2(   "Point 1",   [0,0] )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
+	newInput(33, nodeValue_Vec2(   "Point 2",   [1,1] )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
+	newInput(35, nodeValue_Vec2(   "Point 3",   [1,0] )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
+	newInput(34, nodeValue_Slider( "Thickness",  0.1  ));
 	
-	newInput( 9, nodeValue_Slider(         "Corner radius", 0, { range: [0, 0.5, 0.001] })).setValidator(VV_clamp(0, .5));
+	newInput( 9, nodeValue_Slider(         "Corner radius",  0, { range: [0, 0.5, 0.001] })).setValidator(VV_clamp(0, .5));
 	inputs[9].overlay_draw_text = false;
-	newInput( 4, nodeValue_Int(            "Sides", 3)).setVisible(false);
-	newInput(13, nodeValue_Slider(         "Start radius", 0.1)).setVisible(false);
-	newInput( 5, nodeValue_Slider(         "Inner radius", 0.5)).setVisible(false);
-	newInput( 7, nodeValue_Rotation(       "Rotation", 0));
-	newInput( 8, nodeValue_Rotation_Range( "Angle range", [ 0, 180 ]));
-	newInput(14, nodeValue_PathNode(       "Shape path"));
-	newInput(21, nodeValue_Slider_Range(   "Angles", [ 0.5, 1.0 ]));
-	newInput(22, nodeValue_Slider(         "Skew", 0.5 ));
-	newInput(23, nodeValue_Float(          "Arrow Sizes", 0.3 ));
-	newInput(24, nodeValue_Float(          "Arrow Head", 1 ));
-	newInput(25, nodeValue_Int(            "Teeth Amount", 6 ));
-	newInput(26, nodeValue_Vec2(           "Teeth Size", [ 0.2, 0.2 ] , { slideSpeed : 0.01 }));
-	newInput(27, nodeValue_Rotation(       "Teeth Rotation", 0));
-	newInput(30, nodeValue_Bool(           "Caps", false));
-	newInput(31, nodeValue_Float(          "Factor", 2.5));
-	newInput(36, nodeValue_Enum_Button(    "Corner Shape", 0, [ "Round", "Cut" ]))
+	newInput( 4, nodeValue_Int(            "Sides",          3       )).setVisible(false);
+	newInput(13, nodeValue_Slider(         "Start radius",  .1       )).setVisible(false);
+	newInput( 5, nodeValue_Slider(         "Inner radius",  .5       )).setVisible(false);
+	newInput( 7, nodeValue_Rotation(       "Rotation",       0       ));
+	newInput( 8, nodeValue_Rotation_Range( "Angle range",   [0,180]  ));
+	newInput(14, nodeValue_PathNode(       "Shape path" ));
+	newInput(21, nodeValue_Slider_Range(   "Angles",        [.5, 1.] ));
+	newInput(22, nodeValue_Slider(         "Skew",           .5      ));
+	newInput(23, nodeValue_Float(          "Arrow Sizes",    .3      ));
+	newInput(24, nodeValue_Float(          "Arrow Head",      1      ));
+	newInput(25, nodeValue_Int(            "Teeth Amount",    6      ));
+	newInput(26, nodeValue_Vec2(           "Teeth Size",    [.2,.2] , { slideSpeed : 0.01 }));
+	newInput(27, nodeValue_Rotation(       "Teeth Rotation",  0      ));
+	newInput(30, nodeValue_Bool(           "Caps",            false  ));
+	newInput(31, nodeValue_Float(          "Factor",          2.5    ));
+	newInput(36, nodeValue_Enum_Button(    "Corner Shape",    0, [ "Round", "Cut" ]))
 	
 	////- Render
 		
-	newInput(10, nodeValue_Color( "Shape color", ca_white));
-	newInput(18, nodeValue_Bool(  "Tile", false));
+	newInput(10, nodeValue_Color( "Shape color", ca_white ));
+	newInput(18, nodeValue_Bool(  "Tile",        false    ));
 	
 	////- Height
 	
-	newInput(12, nodeValue_Bool(         "Height", false));
-	newInput(29, nodeValue_Curve(        "Curve", CURVE_DEF_01));
-	newInput(20, nodeValue_Slider_Range( "Level", [ 0, 1 ]));
-	newInput(37, nodeValue_Bool(         "Opacity", false));
+	newInput(12, nodeValue_Bool(         "Height",  false        ));
+	newInput(29, nodeValue_Curve(        "Curve",   CURVE_DEF_01 ));
+	newInput(20, nodeValue_Slider_Range( "Level",   [0,1]        ));
+	newInput(37, nodeValue_Bool(         "Opacity", false        ));
 	
 	////- Background
 	
@@ -559,7 +558,6 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		if(CLONING) return;
 		
 		if(LOADING_VERSION < 1_18_00_0) {
-			
 			if(array_length(load_map.inputs) <= 15)
 				load_map.inputs[15] = { raw_value : { d : 0 } };
 			
