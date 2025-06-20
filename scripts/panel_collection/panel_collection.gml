@@ -37,16 +37,13 @@ function Panel_Collection() : PanelContent() constructor {
 	min_w = group_w + ui(40);
 	min_h = ui(40);
 	
-	roots = [ ["Collections", COLLECTIONS], ["Assets", global.ASSETS], ["Projects", STEAM_PROJECTS], ["Nodes", ALL_NODES] ];
-	
+	roots    = [ ["Collections", COLLECTIONS], ["Assets", global.ASSETS], ["Projects", STEAM_PROJECTS], ["Nodes", ALL_NODES] ];
 	pageStr  = array_create_ext(array_length(roots), function(i) /*=>*/ {return roots[i][0]});
-	sc_pages = new scrollBox(pageStr, function(i) /*=>*/ { setPage(i); });
-	sc_pages.align = fa_left;
-	sc_pages.type  = 1;
+	sc_pages = new scrollBox(pageStr, function(i) /*=>*/ { setPage(i); }).setType(1).setAlign(fa_left);
 	
-	page    = 0;
-	root    = roots[page][1];
-	context = root;
+	page     = 0;
+	root     = roots[page][1];
+	context  = root;
 	
 	file_dragging = noone;
 	_menu_node    = noone;
@@ -313,15 +310,13 @@ function Panel_Collection() : PanelContent() constructor {
 		var frame	   = PREFERENCES.collection_animated? current_time * PREFERENCES.collection_preview_speed / 3000 : 0;
 		var _cw		   = contentPane.surface_w;
 		var _hover	   = pHOVER && contentPane.hover;
+		var hh         = 0;
 		
 		updated_prog   = lerp_linear(updated_prog, 0, 0.01);
-		var hh = 0;
 		
 		if(contentView == 0) {
 			var grid_width = PREFERENCES.collection_label? round(grid_size * 1.25) : grid_size;
-			if(grid_width > ui(80)) grid_width = grid_size;
-			
-			var grid_space = round(grid_size * 0.1875);
+			var grid_space = ui(6);
 			
 			var col = max(1, floor(_cw / (grid_width + grid_space)));
 			var row = ceil(node_count / col);
@@ -329,7 +324,7 @@ function Panel_Collection() : PanelContent() constructor {
 			var name_height = 0;
 				
 			grid_width = round(contentPane.surface_w - grid_space) / col - grid_space;
-				
+			
 			hh += grid_space;
 			
 			for(var i = 0; i < row; i++) {
@@ -349,7 +344,7 @@ function Panel_Collection() : PanelContent() constructor {
 					
 					if(yy + grid_size >= 0 && yy <= contentPane.surface_h) {
 						BLEND_OVERRIDE
-						draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size);
+						draw_sprite_stretched(THEME.node_bg, 0, _nx, yy, grid_width, grid_size);
 						BLEND_NORMAL
 						
 						var meta = noone;
@@ -358,7 +353,7 @@ function Panel_Collection() : PanelContent() constructor {
 						
 						if(_hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
 							contentPane.hover_content = true;
-							draw_sprite_stretched_ext(THEME.node_bg, 1, _boxx, yy, grid_size, grid_size, COLORS._main_accent, 1);
+							draw_sprite_stretched_ext(THEME.node_bg, 1, _nx, yy, grid_width, grid_size, COLORS._main_accent, 1);
 							
 							if(mouse_press(mb_left, pFOCUS)) {
 								var _typ = "";
@@ -382,7 +377,7 @@ function Panel_Collection() : PanelContent() constructor {
 						}
 						
 						if(_node.path == updated_path && updated_prog > 0) 
-							draw_sprite_stretched_ext(THEME.node_bg, 1, _boxx, yy, grid_size, grid_size, COLORS._main_value_positive, updated_prog * 2);
+							draw_sprite_stretched_ext(THEME.node_bg, 1, _nx, yy, grid_width, grid_size, COLORS._main_value_positive, updated_prog * 2);
 						
 						if(variable_struct_exists(_node, "getSpr")) _node.getSpr();
 						
@@ -393,8 +388,9 @@ function Panel_Collection() : PanelContent() constructor {
 							
 							var xo = (sprite_get_xoffset(_node.spr) - sw / 2) * ss;
 							var yo = (sprite_get_yoffset(_node.spr) - sh / 2) * ss;
+							
 							var sx = _boxx + grid_size / 2 + xo;
-							var sy = yy + grid_size / 2 + yo;
+							var sy =    yy + grid_size / 2 + yo;
 							
 							if(ss < 1) gpu_set_tex_filter(true);
 							BLEND_ALPHA_MULP
@@ -407,14 +403,14 @@ function Panel_Collection() : PanelContent() constructor {
 					
 						if(meta != noone && page == 0) {
 							if(struct_try_get(meta, "steam")) {
-								draw_sprite_ui_uniform(THEME.steam, 0, _boxx + ui(12), yy + ui(12), 1, COLORS._main_icon_dark, 1);
+								draw_sprite_ui_uniform(THEME.steam, 0, _nx + ui(12), yy + ui(12), 1, COLORS._main_icon_dark, 1);
 								if(meta.author_steam_id == STEAM_USER_ID)
-									draw_sprite_ui_uniform(THEME.steam_creator, 0, _boxx + grid_size - ui(8), yy + ui(12), 1, COLORS._main_icon_dark, 1);
+									draw_sprite_ui_uniform(THEME.steam_creator, 0, _nx + grid_width - ui(8), yy + ui(12), 1, COLORS._main_icon_dark, 1);
 							}
 						
 							if(floor(meta.version) != floor(SAVE_VERSION)) {
 								draw_set_color(COLORS._main_accent);
-								draw_circle_prec(_boxx + grid_size - ui(8), yy + grid_size - ui(8), 3, false);
+								draw_circle_prec(_nx + grid_width - ui(8), yy + grid_size - ui(8), 3, false);
 							}
 						}
 					}
@@ -426,14 +422,15 @@ function Panel_Collection() : PanelContent() constructor {
 						var _ty = yy + grid_size + ui(4);
 						var _tw = grid_width + grid_space;
 						
-						var _txtH = draw_text_ext_add(_tx, _ty, _node.name, -1, _tw, 1, PREFERENCES.collection_name_force_cut);
-						name_height = max(name_height, _txtH + 8);
+						var _txtH   = draw_text_ext_add(_tx, _ty, _node.name, -1, _tw, 1, PREFERENCES.collection_name_force_cut);
+						name_height = max(name_height, _txtH + ui(8));
 						
-					} else 
-						name_height = 0;
+						// draw_set_color(c_blue); draw_rectangle(_nx, _ty, _nx + grid_width, _ty + name_height, true);
+						// draw_set_color(c_red);  draw_rectangle(_nx, _ty, _nx + grid_width, _ty + _txtH, true);
+					}
 				}
 				
-				var hght = grid_size + name_height + ui(8);
+				var hght = grid_size + name_height + ui(4);
 				hh += hght;
 				yy += hght;
 			}

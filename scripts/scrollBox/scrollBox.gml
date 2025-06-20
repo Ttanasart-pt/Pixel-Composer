@@ -45,6 +45,7 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 	type = 0;
 	hide = 0;
 	
+	static setType          = function(_l) /*=>*/ { type           = _l; return self; }
 	static setHorizontal    = function(_l) /*=>*/ { horizontal     = _l; return self; }
 	static setAlign         = function(_l) /*=>*/ { align          = _l; return self; }
 	static setTextColor     = function(_l) /*=>*/ { text_color     = _l; return self; }
