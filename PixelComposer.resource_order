@@ -1533,6 +1533,7 @@
     {"name":"surface_get_palette","order":5,"path":"scripts/surface_get_palette/surface_get_palette.yy",},
     {"name":"surface_sampler","order":10,"path":"scripts/surface_sampler/surface_sampler.yy",},
     {"name":"surfaceBox","order":9,"path":"scripts/surfaceBox/surfaceBox.yy",},
+    {"name":"sh_d3d_render_view_normal","order":17,"path":"shaders/sh_d3d_render_view_normal/sh_d3d_render_view_normal.yy",},
     {"name":"surfaceDynaBox","order":17,"path":"scripts/surfaceDynaBox/surfaceDynaBox.yy",},
     {"name":"svg_objects","order":1,"path":"scripts/svg_objects/svg_objects.yy",},
     {"name":"text_file","order":5,"path":"scripts/text_file/text_file.yy",},

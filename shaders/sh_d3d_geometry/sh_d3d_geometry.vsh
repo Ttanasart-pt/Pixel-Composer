@@ -8,6 +8,7 @@ varying vec2 v_vTexcoord;
 varying vec4 v_worldPosition;
 varying vec3 v_viewPosition;
 varying vec3 v_vNormal;
+varying vec3 v_viewNormal;
 
 uniform float planeNear;
 uniform float planeFar;
@@ -26,4 +27,6 @@ void main() {
 	 
 	vec3 worldNormal = normalize(gm_Matrices[MATRIX_WORLD] * vec4(in_Normal, 0.)).xyz;
 	v_vNormal = worldNormal;
+
+	v_viewNormal = normalize(gm_Matrices[MATRIX_WORLD_VIEW] * vec4(in_Normal, 0.)).xyz;
 }

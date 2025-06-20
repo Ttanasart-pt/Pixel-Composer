@@ -289,7 +289,7 @@ function Panel_Preview() : PanelContent() constructor {
             var node = __getNodePreview();
             if(node == noone) return;
             
-            var _ind = array_safe_get(sbChanneli, index, -1);
+            var _ind = array_safe_get(sbChannelIndex, i, -1);
             if(_ind == -1) return;
             
             node.preview_channel = _ind; 

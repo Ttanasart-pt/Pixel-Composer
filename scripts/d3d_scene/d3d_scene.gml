@@ -69,10 +69,10 @@ function __3dScene(_camera, _name = "New scene") constructor {
 	backface_blending   = ca_white;
 	
 	static reset = function() {
-		lightDir_count     = 0;
-		lightDir_direction = [];
-		lightDir_color     = [];
-		lightDir_intensity = [];
+		lightDir_count        = 0;
+		lightDir_direction    = [];
+		lightDir_color        = [];
+		lightDir_intensity    = [];
 		
 		lightDir_shadow_count = 0;
 		lightDir_shadow       = [];
@@ -81,11 +81,11 @@ function __3dScene(_camera, _name = "New scene") constructor {
 		lightDir_projMat      = [];
 		lightDir_shadowBias   = [];
 		
-		lightPnt_count     = 0;
-		lightPnt_position  = [];
-		lightPnt_color     = [];
-		lightPnt_intensity = [];
-		lightPnt_radius    = [];
+		lightPnt_count        = 0;
+		lightPnt_position     = [];
+		lightPnt_color        = [];
+		lightPnt_intensity    = [];
+		lightPnt_radius       = [];
 		
 		lightPnt_shadow_count = 0;
 		lightPnt_shadow       = [];
@@ -93,6 +93,7 @@ function __3dScene(_camera, _name = "New scene") constructor {
 		lightPnt_viewMat      = [];
 		lightPnt_projMat      = [];
 		lightPnt_shadowBias   = [];
+		
 	} reset();
 	
 	////- Submit
@@ -107,8 +108,8 @@ function __3dScene(_camera, _name = "New scene") constructor {
 	static deferPass = function(object, w, h, deferData = noone) {
 		if(deferData == noone) {
 			deferData = {
-				geometry_data: [ noone, noone, noone ],
-				ssao : noone,
+				geometry_data: array_create(4, noone),
+				ssao: noone,
 			}
 		}
 		
@@ -142,13 +143,10 @@ function __3dScene(_camera, _name = "New scene") constructor {
 	}
 	
 	static geometryPass = function(deferData, object, w = 512, h = 512) {
-		deferData.geometry_data[0] = surface_verify(deferData.geometry_data[0], w, h, surface_rgba32float);
-		deferData.geometry_data[1] = surface_verify(deferData.geometry_data[1], w, h, surface_rgba32float);
-		deferData.geometry_data[2] = surface_verify(deferData.geometry_data[2], w, h, surface_rgba32float);
-		
-		surface_set_target_ext(0, deferData.geometry_data[0]);
-		surface_set_target_ext(1, deferData.geometry_data[1]);
-		surface_set_target_ext(2, deferData.geometry_data[2]);
+		for( var i = 0; i < 4; i++ ) {
+			deferData.geometry_data[i] = surface_verify(deferData.geometry_data[i], w, h, surface_rgba32float);
+			surface_set_target_ext(i, deferData.geometry_data[i]);
+		}
 			
 			gpu_set_zwriteenable(true);
 			
@@ -177,8 +175,8 @@ function __3dScene(_camera, _name = "New scene") constructor {
 		if(defer_normal_radius) {
 			var _normal_blurred = surface_create_size(deferData.geometry_data[2], surface_rgba32float);
 			surface_set_shader(_normal_blurred, sh_d3d_normal_blur);
-				shader_set_f("radius", defer_normal_radius);
-				shader_set_i("use_8bit",  OS == os_macosx);
+				shader_set_f("radius",      defer_normal_radius);
+				shader_set_i("use_8bit",    OS == os_macosx);
 				shader_set_dim("dimension", deferData.geometry_data[2]);
 				
 				draw_surface(deferData.geometry_data[2], 0, 0);

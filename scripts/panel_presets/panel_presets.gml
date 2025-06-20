@@ -1,14 +1,16 @@
 #region functions
 	#macro CHECK_PANEL_PRESETS if(!is_instanceof(FOCUS_CONTENT, Panel_Presets)) return;
 	
-	function panel_preset_replace()	{ CHECK_PANEL_PRESETS CALL("panel_preset_replace");	FOCUS_CONTENT.replacePreset(FOCUS_CONTENT.selecting_preset.path);					}
-	function panel_preset_delete()	{ CHECK_PANEL_PRESETS CALL("panel_preset_delete");	file_delete(FOCUS_CONTENT.selecting_preset.path); __initPresets();	}
-	function panel_preset_reset()	{ CHECK_PANEL_PRESETS CALL("panel_preset_reset");	FOCUS_CONTENT.newPresetFromNode("_default");										}
+	function panel_preset_replace()     { CHECK_PANEL_PRESETS CALL("panel_preset_replace");     FOCUS_CONTENT.replacePreset(FOCUS_CONTENT.selecting_preset.path); }
+	function panel_preset_replace_def() { CHECK_PANEL_PRESETS CALL("panel_preset_replace_def"); FOCUS_CONTENT.newPresetFromNode("_default"); }
+	function panel_preset_delete()      { CHECK_PANEL_PRESETS CALL("panel_preset_delete");      file_delete(FOCUS_CONTENT.selecting_preset.path); __initPresets(); }
+	function panel_preset_reset()       { CHECK_PANEL_PRESETS CALL("panel_preset_reset");       FOCUS_CONTENT.newPresetFromNode("_default"); }
 	
 	function __fnInit_Presets() {
-		registerFunction("Presets", "Replace",			"",	   MOD_KEY.none,	panel_preset_replace).setMenu("preset_replace").hidePalette();
-		registerFunction("Presets", "Delete",			"",	   MOD_KEY.none,	panel_preset_delete	).setMenu("preset_delete", THEME.cross).hidePalette();
-		registerFunction("Presets", "Reset To Default",	"",	   MOD_KEY.none,	panel_preset_reset	).setMenu("preset_reset")
+		registerFunction("Presets", "Replace",			"", MOD_KEY.none, panel_preset_replace).setMenu("preset_replace").hidePalette();
+		registerFunction("Presets", "Replace Default",	"", MOD_KEY.none, panel_preset_replace_def).setMenu("preset_replace_def").hidePalette();
+		registerFunction("Presets", "Delete",			"", MOD_KEY.none, panel_preset_delete).setMenu("preset_delete", THEME.cross).hidePalette();
+		registerFunction("Presets", "Reset To Default",	"", MOD_KEY.none, panel_preset_reset).setMenu("preset_reset")
 	}
 #endregion
 
@@ -54,6 +56,7 @@ function Panel_Presets(_node) : PanelContent() constructor {
 	];
 	
 	context_def = [
+		MENU_ITEMS.preset_replace_def,
 		MENU_ITEMS.preset_reset,
 	];
 	
@@ -79,6 +82,7 @@ function Panel_Presets(_node) : PanelContent() constructor {
 		var thm = node.getPreviewValues();
 		if(is_surface(thm)) map.thumbnail = surface_encode(thm, false);
 		
+		if(file_exists_empty(pth)) file_delete(pth);
 		json_save_struct(pth, map);
 		__initPresets();
 		
@@ -299,4 +303,4 @@ function Panel_Presets(_node) : PanelContent() constructor {
 				
 		}
 	}
-}
+} 

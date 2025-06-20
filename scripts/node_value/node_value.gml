@@ -550,7 +550,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			visible = argument_count > 1? argument[1] : visible;
 			
 		} else {
-			show_in_inspector = inspector;
 			visible = inspector;
 		}
 		
