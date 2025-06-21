@@ -43,10 +43,10 @@
 	
 	LATEST_VERSION	= 1_19_00_0;
 	VERSION			= 1_19_03_0;
-	SAVE_VERSION	= 1_19_03_1;
-	VERSION_STRING  = MAC? "1.18.003m" : "1.19.4.005";
+	SAVE_VERSION	= 1_19_04_0;
+	VERSION_STRING  = MAC? "1.18.003m" : "1.19.4.006";
 	RELEASE_STRING  = "1.19.4";
-	BUILD_NUMBER	= 1_19_04_0.005;
+	BUILD_NUMBER	= 1_19_04_0.006;
 	PREF_VERSION    = 1_17_1;
 	
 	var _lsp = array_last(string_split(VERSION_STRING, "."));
@@ -59,7 +59,7 @@
 	globalvar TOOLTIP, DRAGGING, DIALOG_DEPTH_HOVER;
 	global.KEYS = { download_links: "" };
 	
-	globalvar CURRENT_COLOR;
+	globalvar CURRENT_COLOR; 
 	CURRENT_COLOR = ca_white;
 #endregion
 

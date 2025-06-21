@@ -315,6 +315,7 @@ function Project() constructor {
 	static serialize = function() {
 		var _map = {};
 		_map.version    = SAVE_VERSION;
+		_map.versions   = VERSION_STRING;
 		_map.is_nightly = NIGHTLY;
 		_map.freeze     = freeze;
 		

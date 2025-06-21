@@ -2744,7 +2744,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			inspector_scroll = load_map[$ "insp_scr"] ?? inspector_scroll;
 			if(struct_has(load_map, "insp_col")) inspector_collapse = variable_clone(load_map[$ "insp_col"]);
-			
 		}
 		
 		visible      = load_map[$ "visible"] ?? true;

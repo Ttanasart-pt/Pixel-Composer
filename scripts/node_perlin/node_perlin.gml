@@ -88,7 +88,10 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		inputs[8].name = _col == 1? "Color G Range" : "Color S Range";
 		inputs[9].name = _col == 1? "Color B Range" : "Color V Range";
 		
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
+		var _sw = toNumber(_dim[0]);
+		var _sh = toNumber(_dim[1]);
+		
+		_outSurf = surface_verify(_outSurf, _sw, _sh, attrDepth());
 		
 		surface_set_shader(_outSurf, sh_perlin_tiled);
 			shader_set_2("dimension",  _dim);
@@ -108,7 +111,7 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			shader_set_2("colorRanG", _clg);
 			shader_set_2("colorRanB", _clb);
 			
-			draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
+			draw_empty();
 		surface_reset_shader();
 		
 		_outSurf = mask_apply_empty(_outSurf, _data[input_mask_index]);

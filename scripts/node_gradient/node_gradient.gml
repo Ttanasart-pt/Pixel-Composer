@@ -89,7 +89,10 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		inputs[14].setVisible(_typ);
 		inputs[17].setVisible(_typ == 1);
 		
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
+		var _sw = toNumber(_dim[0]);
+		var _sh = toNumber(_dim[1]);
+		
+		_outSurf = surface_verify(_outSurf, _sw, _sh, attrDepth());
 		
 		surface_set_shader(_outSurf, sh_gradient);
 			shader_set_gradient(_data[1], _data[15], _data[16], inputs[1]);
@@ -97,7 +100,7 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			shader_set_2("dimension",  _dim);
 			
 			shader_set_i("gradient_loop",  _lop);
-			shader_set_f("center",   _cnt[0] / _dim[0], _cnt[1] / _dim[1]);
+			shader_set_2("center",   _cnt);
 			shader_set_i("type",     _typ);
 			shader_set_i("uniAsp",   _uni);
 			shader_set_2("cirScale", _csca);
@@ -107,8 +110,8 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			shader_set_f_map("shift",  _data[5], _data[12], inputs[5]);
 			shader_set_f_map("scale",  _data[9], _data[13], inputs[9]);
 			
-			if(is_surface(_msk)) draw_surface_stretched_ext(_msk, 0, 0, _dim[0], _dim[1], c_white, 1);
-			else                 draw_sprite_stretched_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], c_white, 1);
+			if(is_surface(_msk)) draw_surface_stretched_ext(_msk, 0, 0, _sw, _sh, c_white, 1);
+			else                 draw_empty();
 		surface_reset_shader();
 		
 		return _outSurf;

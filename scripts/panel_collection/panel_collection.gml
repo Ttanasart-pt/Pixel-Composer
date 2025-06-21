@@ -384,7 +384,7 @@ function Panel_Collection() : PanelContent() constructor {
 						if(sprite_exists(_node.spr)) {
 							var sw = sprite_get_width(_node.spr);
 							var sh = sprite_get_height(_node.spr);
-							var ss = (grid_size * .8) * PREFERENCES.collection_scale / max(sw, sh);
+							var ss = (grid_size - ui(4)) * PREFERENCES.collection_scale / max(sw, sh);
 							
 							var xo = (sprite_get_xoffset(_node.spr) - sw / 2) * ss;
 							var yo = (sprite_get_yoffset(_node.spr) - sh / 2) * ss;
@@ -419,11 +419,11 @@ function Panel_Collection() : PanelContent() constructor {
 						draw_set_text(f_p4, fa_center, fa_top, COLORS._main_text_inner);
 						
 						var _tx = _boxx + grid_size / 2;
-						var _ty = yy + grid_size + ui(4);
+						var _ty = yy + grid_size + ui(2);
 						var _tw = grid_width + grid_space;
 						
 						var _txtH   = draw_text_ext_add(_tx, _ty, _node.name, -1, _tw, 1, PREFERENCES.collection_name_force_cut);
-						name_height = max(name_height, _txtH + ui(8));
+						name_height = max(name_height, _txtH + ui(4));
 						
 						// draw_set_color(c_blue); draw_rectangle(_nx, _ty, _nx + grid_width, _ty + name_height, true);
 						// draw_set_color(c_red);  draw_rectangle(_nx, _ty, _nx + grid_width, _ty + _txtH, true);
