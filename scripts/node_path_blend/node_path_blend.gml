@@ -3,13 +3,9 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	setDimension(96, 48);
 	length = 0;
 	
-	newInput(0, nodeValue_PathNode("Path 1"))
-		.setVisible(true, true)
-		.rejectArray();
+	newInput(0, nodeValue_PathNode("Path 1")).rejectArray();
 	
-	newInput(1, nodeValue_PathNode("Path 2"))
-		.setVisible(true, true)
-		.rejectArray();
+	newInput(1, nodeValue_PathNode("Path 2")).rejectArray();
 	
 	newInput(2, nodeValue_Slider("Ratio", 0))
 		.rejectArray();

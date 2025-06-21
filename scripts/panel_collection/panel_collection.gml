@@ -913,7 +913,7 @@ function Panel_Collection() : PanelContent() constructor {
         var p = data[$ "page"] ?? 0;
         setPage(p);
         
-        _map.group_w = struct_has(data, "group_w")? ui(data.group_w) : _map.group_w;
+        group_w = struct_has(data, "group_w")? ui(data.group_w) : group_w;
         
         return self; 
     }

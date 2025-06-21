@@ -2,8 +2,7 @@ function Node_Path_Weight_Adjust(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	name = "Weight Adjust";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_PathNode("Path"))
-		.setVisible(true, true);
+	newInput(0, nodeValue_PathNode("Path"));
 	
 	newInput(1, nodeValue_Enum_Scroll("Mode", 0, [ "Additive", "Multiplicative" ]));
 	

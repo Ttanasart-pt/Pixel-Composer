@@ -2,15 +2,11 @@ function Node_Path_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	name = "Path to SDF";
 	dimension_index = 1;
 	
-	newInput(0, nodeValue_PathNode("Path"))
-		.setVisible(true, true)
-		.rejectArray();
+	newInput(0, nodeValue_PathNode("Path")).rejectArray();
 		
 	newInput(1, nodeValue_Dimension());
 	
-	newInput(2, nodeValue_Int("Subdivision", 64))
-		.setValidator(VV_min(2))
-		.rejectArray();
+	newInput(2, nodeValue_Int("Subdivision", 64)).setValidator(VV_min(2)).rejectArray();
 		
 	newInput(3, nodeValue_Float("Max Distance", 16));
 		

@@ -2,7 +2,7 @@ function Node_Path_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	name = "Repeat Path";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_PathNode( "Path" )).setVisible(true, true);
+	newInput(0, nodeValue_PathNode( "Path" ));
 	
 	////- =Repeat
 	

@@ -4,7 +4,7 @@ function Node_Path_Spiral(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	////- =Path
 	
-	newInput(0, nodeValue_PathNode("Path")).setVisible(true, true);
+	newInput(0, nodeValue_PathNode("Path"));
 	
 	////- =Spiral
 	

@@ -27,7 +27,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	////- =Alignment
 	
-	newInput(13, nodeValue_PathNode(     "Path")).setVisible(true, true);
+	newInput(13, nodeValue_PathNode(     "Path"));
 	newInput(14, nodeValue_Float(        "Path Shift",        0 ));
 	newInput( 7, nodeValue_Enum_Button(  "H Align",           0, array_create(3, THEME.inspector_text_halign)));
 	newInput( 8, nodeValue_Enum_Button(  "V Align",           0, array_create(3, THEME.inspector_text_valign)));

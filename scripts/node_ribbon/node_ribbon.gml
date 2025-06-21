@@ -10,7 +10,7 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	////- =Path
 	
-	newInput( 2, nodeValue_PathNode( "Path" )).setVisible(true, true);
+	newInput( 2, nodeValue_PathNode( "Path" ));
 	newInput( 3, nodeValue_Int(      "Sample", 64 ));
 	newInput(10, nodeValue_Bool(     "Invert", false ));
 	

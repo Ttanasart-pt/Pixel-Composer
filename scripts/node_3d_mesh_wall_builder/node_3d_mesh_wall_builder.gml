@@ -2,8 +2,7 @@ function Node_3D_Mesh_Wall_Builder(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 	name = "3D Wall";
 	object_class = __3dWall_builder;
 	
-	newInput(in_mesh + 0, nodeValue_PathNode("Path"))
-		.setVisible(true, true);
+	newInput(in_mesh + 0, nodeValue_PathNode("Path"));
 	
 	newInput(in_mesh + 1, nodeValue_Int("Segments", 16 ));
 	

@@ -2,11 +2,9 @@ function Node_Path_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	name = "Scatter Path";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_PathNode("Base Path"))
-		.setVisible(true, true);
+	newInput(0, nodeValue_PathNode("Base Path"));
 	
-	newInput(1, nodeValue_PathNode("Scatter Path"))
-		.setVisible(true, true);
+	newInput(1, nodeValue_PathNode("Scatter Path"));
 	
 	newInput(2, nodeValue_Slider_Range("Range", [ 0, 1 ]));
 	

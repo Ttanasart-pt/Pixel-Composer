@@ -1,30 +1,23 @@
-#region
+#region functions
 	FN_NODE_TOOL_INVOKE {
 		hotkeyTool("Node_Path_3D", "Transform",           "T");
 		hotkeyTool("Node_Path_3D", "Anchor add / remove", "A");
 		hotkeyTool("Node_Path_3D", "Edit Control point",  "C");
 	});
-#endregion
 
-enum _ANCHOR3 {
-	x,
-	y,
-	z,
-	c1x,
-	c1y,
-	c1z,
-	c2x,
-	c2y,
-	c2z,
+	enum _ANCHOR3 {
+		  x,   y,   z,
+		c1x, c1y, c1z,
+		c2x, c2y, c2z,
+		
+		ind, amount
+	}
 	
-	ind,
-	amount
-}
-
-function __vec3P(_x = 0, _y = _x, _z = _x, _w = 1) : __vec3(_x, _y, _z) constructor {
-	weight = _w;
-	static clone = function() /*=>*/ {return new __vec3P(x, y, z, weight)};
-}
+	function __vec3P(_x = 0, _y = _x, _z = _x, _w = 1) : __vec3(_x, _y, _z) constructor {
+		weight = _w;
+		static clone = function() /*=>*/ {return new __vec3P(x, y, z, weight)};
+	}
+#endregion
 
 function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "3D Path";
@@ -32,12 +25,15 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	
 	setDimension(96, 48);
 	
+	////- =Path
+	
 	newInput(1, nodeValue_Bool( "Loop",         false )).rejectArray();
 	newInput(3, nodeValue_Bool( "Round anchor", false )).rejectArray();
 	
+	////- =Sampling
+	
 	newInput(0, nodeValue_Slider(      "Path progress", 0 )).setTooltip("Sample position from path.");
 	newInput(2, nodeValue_Enum_Scroll( "Progress mode", 0, ["Entire line", "Segment"])).rejectArray();
-	
 	// input 4 
 		
 	newOutput(0, nodeValue_Output( "Position out", VALUE_TYPE.float,    [0,0] )).setDisplay(VALUE_DISPLAY.vector);

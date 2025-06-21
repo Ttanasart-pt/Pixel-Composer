@@ -56,7 +56,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	////- =Path
 	
-	newInput(11, nodeValue_PathNode(       "Path",        noone )).setTooltip("Make each copy follow along path.").setVisible(true, true);
+	newInput(11, nodeValue_PathNode(       "Path",        noone )).setTooltip("Make each copy follow along path.");
 	newInput(12, nodeValue_Slider_Range(   "Path range",  [0,1] )).setTooltip("Range of the path to follow.");
 	newInput(13, nodeValue_Float(          "Path shift",  0     ));
 	

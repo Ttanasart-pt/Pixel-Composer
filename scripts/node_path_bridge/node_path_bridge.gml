@@ -2,7 +2,7 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	name = "Bridge Path";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_PathNode( "Path" )).setVisible(true, true);
+	newInput(0, nodeValue_PathNode( "Path" ));
 	newInput(4, nodeValueSeed());
 	
 	////- =Bridge

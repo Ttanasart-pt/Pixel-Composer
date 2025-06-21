@@ -12,7 +12,7 @@ function Node_Rigid_Path_Collider(_x, _y, _group = noone) : Node(_x, _y, _group)
 	
 	////- Path
 		
-	newInput(0, nodeValue_PathNode( "Path")).setVisible(true, true);
+	newInput(0, nodeValue_PathNode( "Path"));
 	newInput(3, nodeValue_Int(      "Samples", 8));
 		
 	////- Physics

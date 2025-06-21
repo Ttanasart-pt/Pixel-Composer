@@ -104,8 +104,7 @@ _FILE_DROPPED     = false;
 	
 	HOVER = noone;
 	with(_p_dialog) checkMouse();
-	
-	if(PANEL_MAIN != 0) PANEL_MAIN.stepBegin();
+		if(PANEL_MAIN != 0) PANEL_MAIN.stepBegin();
 	
 	DIALOG_DEPTH_HOVER = 0;
 	

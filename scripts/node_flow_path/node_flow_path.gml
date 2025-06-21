@@ -14,7 +14,7 @@ function Node_Flow_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	////- =Path
 	
-	newInput( 7, nodeValue_PathNode( "Path" )).setVisible(true, true);
+	newInput( 7, nodeValue_PathNode( "Path" ));
 	newInput(10, nodeValue_Int(      "Sample",       16    ));
 	newInput(13, nodeValue_Bool(     "Invert",       false ));
 	newInput( 8, nodeValue_Float(    "Radius",       4     ));

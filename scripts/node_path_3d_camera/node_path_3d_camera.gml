@@ -22,8 +22,7 @@ function Node_Path_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _g
 	
 	newInput(i+1, nodeValue_Enum_Button("Projection",  1 , [ "Perspective", "Orthographic" ]));
 	
-	newInput(i+2, nodeValue_PathNode("Path" ))
-		.setVisible(true, true);
+	newInput(i+2, nodeValue_PathNode("Path" ));
 	
 	newInput(i+3, nodeValue_Slider("Orthographic Scale", 0.5, [ 0.01, 4, 0.01 ] ));
 	

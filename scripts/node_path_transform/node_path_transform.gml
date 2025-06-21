@@ -2,8 +2,7 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	name = "Transform Path";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_PathNode("Path"))
-		.setVisible(true, true);
+	newInput(0, nodeValue_PathNode("Path"));
 	
 	newInput(1, nodeValue_Vec2("Position", [ 0, 0 ]))
 		.setUnitRef(function() /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);

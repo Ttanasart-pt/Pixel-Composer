@@ -44,7 +44,7 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(11, nodeValue_Enum_Scroll( "Type",               0, __enum_array_gen([ "Bar chart", "Graph"], s_node_plot_linear_type)));
 	newInput( 4, nodeValue_Vec2(        "Origin",           [ 0, DEF_SURF_H / 2 ]      ));
 	newInput(10, nodeValue_Rotation(    "Direction",          0                        ));
-	newInput(20, nodeValue_PathNode(    "Path")).setVisible(true, true);
+	newInput(20, nodeValue_PathNode(    "Path"));
 	newInput( 5, nodeValue_Float(       "Scale",              DEF_SURF_W / 2           ));
 	newInput(22, nodeValue_Bool(        "Loop",               false                    ));
 	newInput(23, nodeValue_Slider(      "Smooth",             0                        ));

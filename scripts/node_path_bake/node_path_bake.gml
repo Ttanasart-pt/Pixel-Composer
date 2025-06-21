@@ -2,8 +2,7 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	name = "Bake Path";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_PathNode("Path"))
-		.setVisible(true, true);
+	newInput(0, nodeValue_PathNode("Path"));
 	
 	newInput(1, nodeValue_Float("Segment length", 1));
 	

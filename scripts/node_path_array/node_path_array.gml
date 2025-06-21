@@ -11,7 +11,7 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static createNewInput = function(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
-		newInput(index, nodeValue_PathNode("Path" )).setVisible(true, true);
+		newInput(index, nodeValue_PathNode("Path" ));
 		
 		return inputs[index];
 	} setDynamicInput(1, true, VALUE_TYPE.pathnode);

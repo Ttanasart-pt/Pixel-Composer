@@ -3,8 +3,7 @@ function Node_3D_Mesh_Path_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 	
 	object_class = __3dPathExtrude;
 	
-	newInput(in_mesh + 0, nodeValue_PathNode("Path" ))
-		.setVisible(true, true);
+	newInput(in_mesh + 0, nodeValue_PathNode("Path" ));
 	
 	newInput(in_mesh + 1, nodeValue_Int("Side", 8 ))
 		.setValidator(VV_min(2));

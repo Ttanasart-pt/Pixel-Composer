@@ -14,6 +14,8 @@ function NEW() {
 }
 
 function SERIALIZE_PROJECT(project = PROJECT) {
+	if(!is(project, Project)) return "";
+	
 	var _map = project.serialize();
 	return PREFERENCES.save_file_minify? json_stringify_minify(_map) : json_stringify(_map, true);
 }
