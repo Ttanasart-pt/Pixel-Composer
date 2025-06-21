@@ -78,9 +78,9 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 8, 
-		["Surfaces",	 true],	0, 1, 4, 12, 13, 6, 7,
-		["Blend",		false], 2, 3, 9,
-		["Transform",	false], 5, 14, 
+		["Surfaces",   true], 0, 1, 4, 12, 13, 6, 7,
+		["Blend",     false], 2, 3, 9,
+		["Transform", false], 5, 14, 
 	]
 	
 	////- Nodes

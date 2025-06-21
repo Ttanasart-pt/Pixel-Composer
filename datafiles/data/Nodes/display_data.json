@@ -684,6 +684,7 @@
             "Node_Camera",
             "Node_Surface_Tag",
             "Node_Composite_Tag",
+            "Node_Blend_Height",
             
             { "label": "Armature" },
             { "label": "/Basics" },

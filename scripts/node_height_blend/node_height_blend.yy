@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_height_blend",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_height_blend",
+  "parent":{
+    "name":"compose",
+    "path":"folders/nodes/data/compose.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}
