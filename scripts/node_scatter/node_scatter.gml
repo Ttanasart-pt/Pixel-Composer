@@ -46,7 +46,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(14, nodeValue_Vector(         "Distribution Data", [] )).setArrayDepth(1);
 	newInput(17, nodeValue_Text(           "Extra Value",       [] ))
 		.setTooltip("Apply the third and later values in each data point (if exist) on given properties.")
-		.setDisplay(VALUE_DISPLAY.text_array, { data: [ "Scale", "Rotation", "Color", "Alpha", "Array Index" ] });
+		.setDisplay(VALUE_DISPLAY.text_array, { data: [ "Scale", "Rotation", "Color", "Alpha", "Array Index", "Depth" ] });
 		
 	newInput( 9, nodeValue_Enum_Button(    "Scatter",         1, [ "Uniform", "Random", "Poisson" ] ));
 	newInput(31, nodeValue_Bool(           "Auto Amount",     false  ));
@@ -281,6 +281,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var iCol = 2 + array_get_index(useV, "Color");
 		var iAlp = 2 + array_get_index(useV, "Alpha");
 		var iArr = 2 + array_get_index(useV, "Array Index");
+		var iDef = 2 + array_get_index(useV, "Depth");
 		
 		var _dyna     = false;
 		var surfArray = is_array(_inSurf);
@@ -696,10 +697,18 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				
 				if(_dist == NODE_SCATTER_DIST.path)
 					path_line_index = floor(i / _pre_amount);
+					
+				
+				_atl.depth = _atl.y;
+				if(iDef > 1 && _v != noone) {
+					var vDep   = array_safe_get_fast(_v, iSca, 1);
+					_atl.depth = vDep;
+				}
+				
 			}
 			
 			array_resize(_sct, _sct_len);
-			if(sortY) array_sort(_sct, function(a1, a2) /*=>*/ {return a1.y - a2.y});
+			if(sortY) array_sort(_sct, function(a1, a2) /*=>*/ {return a1.depth - a2.depth});
 			
 			var i = 0;
 			

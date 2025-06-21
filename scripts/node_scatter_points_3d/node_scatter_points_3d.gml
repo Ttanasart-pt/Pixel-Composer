@@ -53,6 +53,7 @@ function Node_Scatter_Points_3D(_x, _y, _group = noone) : Node_Processor(_x, _y,
 		
 		for( var i = 0, n = array_length(_points); i < n; i++ ) {
 			var _p = _points[i];
+			if(!is_array(_p)) continue;
 			
 			_v3.x = _p[0];
 			_v3.y = _p[1];

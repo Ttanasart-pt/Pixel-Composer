@@ -730,6 +730,7 @@
             "Node_Scatter_Points_3D",
             "Node_Move_Point",
             "Node_Point_In_Area",
+            "Node_Point_3D_Camera",
             { "label": "/Surfaces" },
             "Node_Interpret_Number",
             

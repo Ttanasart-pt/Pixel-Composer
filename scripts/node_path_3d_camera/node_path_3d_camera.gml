@@ -18,31 +18,30 @@ function Node_Path_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _g
 	
 	setDimension(96, 48);
 	
-	newInput(i+0, nodeValue_ISlider("FOV", 60, [ 10, 90, 0.1 ] ));
-	
-	newInput(i+1, nodeValue_Enum_Button("Projection",  1 , [ "Perspective", "Orthographic" ]));
-	
-	newInput(i+2, nodeValue_PathNode("Path" ));
-	
-	newInput(i+3, nodeValue_Slider("Orthographic Scale", 0.5, [ 0.01, 4, 0.01 ] ));
-	
-	newInput(i+4, nodeValue_Enum_Scroll("Postioning Mode", 2, [ "Position + Rotation", "Position + Lookat", "Lookat + Rotation" ] ));
-	
-	newInput(i+5, nodeValue_Vec3("Lookat Position", [ 0, 0, 0 ] ));
-	
-	newInput(i+6, nodeValue_Rotation("Roll", 0));
-	
-	newInput(i+7, nodeValue_Rotation("Horizontal Angle", 45 ));
-	
-	newInput(i+8, nodeValue_Slider("Vertical Angle", 30, [0, 90, 0.1] ));
-	
-	newInput(i+9, nodeValue_Float("Distance", 4 ));
-	
+	newInput(i+ 2, nodeValue_PathNode( "Path" ));
 	newInput(i+10, nodeValue_Dimension());
 	
-	newInput(i+11, nodeValue_Bool("Apply depth to weight", false));
+	////- =Transform
 	
-	newInput(i+12, nodeValue_Vec2("Depth range", [ 0.1, 100 ]));
+	newInput(i+ 4, nodeValue_Enum_Scroll( "Postioning Mode",  2, [ "Position + Rotation", "Position + Lookat", "Lookat + Rotation" ] ));
+	newInput(i+ 5, nodeValue_Vec3(        "Lookat Position", [0,0,0]           ));
+	newInput(i+ 6, nodeValue_Rotation(    "Roll",             0                ));
+	newInput(i+ 7, nodeValue_Rotation(    "Horizontal Angle", 45               ));
+	newInput(i+ 8, nodeValue_Slider(      "Vertical Angle",   30, [0, 90, 0.1] ));
+	newInput(i+ 9, nodeValue_Float(       "Distance",         4                ));
+	
+	////- =Camera
+	
+	newInput(i+ 1, nodeValue_Enum_Button( "Projection",          1 , [ "Perspective", "Orthographic" ]));
+	newInput(i+ 0, nodeValue_ISlider(     "FOV",                 60, [  10, 90, .1  ] ));
+	newInput(i+ 3, nodeValue_Slider(      "Orthographic Scale", .5,  [ .01,  4, .01 ] ));
+	
+	////- =Output
+	
+	newInput(i+11, nodeValue_Bool( "Apply depth to weight", false    ));
+	newInput(i+12, nodeValue_Vec2( "Depth range",           [.1,100] ));
+	
+	// input i+13
 	
 	in_cam = array_length(inputs);
 	
@@ -50,7 +49,7 @@ function Node_Path_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _g
 	
 	input_display_list = [ i+2, i+10,
 		["Transform", false], i+4, 0, 1, i+5, i+6, i+7, i+8, i+9, 
-		["Camera",    false], i+1, i+0,  i+3, 
+		["Camera",    false], i+1, i+0, i+3, 
 		["Output",    false], i+11, i+12,
 	];
 	

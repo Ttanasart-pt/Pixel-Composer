@@ -2138,6 +2138,7 @@
     {"name":"s_node_bloom","order":20,"path":"sprites/s_node_bloom/s_node_bloom.yy",},
     {"name":"s_node_blur_bokeh","order":7,"path":"sprites/s_node_blur_bokeh/s_node_blur_bokeh.yy",},
     {"name":"s_node_blur_box","order":12,"path":"sprites/s_node_blur_box/s_node_blur_box.yy",},
+    {"name":"node_points_3d_camera","order":7,"path":"scripts/node_points_3d_camera/node_points_3d_camera.yy",},
     {"name":"s_node_blur_contrast","order":3,"path":"sprites/s_node_blur_contrast/s_node_blur_contrast.yy",},
     {"name":"s_node_blur_directional","order":4,"path":"sprites/s_node_blur_directional/s_node_blur_directional.yy",},
     {"name":"s_node_blur_path","order":10,"path":"sprites/s_node_blur_path/s_node_blur_path.yy",},

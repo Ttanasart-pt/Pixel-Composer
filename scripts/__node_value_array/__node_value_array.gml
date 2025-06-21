@@ -9,6 +9,7 @@ function __NodeValue_Array(_name, _node, _value, _tooltip = "", _length = 2) : N
 	static getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { //// Get value
 		getValueRecursive(self.__curr_get_val, _time);
 		var val = __curr_get_val[0];
+		if(array_depth != 0) return val;
 		
 		var _d = array_get_depth(val);
 		
