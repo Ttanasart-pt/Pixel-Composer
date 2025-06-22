@@ -347,7 +347,7 @@ function Panel_Animation() : PanelContent() constructor {
     ////- Draw
     
     function resetTimelineMask() {
-    	timeline_w = w - tool_width - ui(68);
+    	timeline_w = w - tool_width - ui(64);
 	    timeline_h = ui(28);
 	    
         timeline_mask    = surface_verify(timeline_mask, timeline_w, timeline_h);
@@ -572,14 +572,23 @@ function Panel_Animation() : PanelContent() constructor {
     }
     
     function drawAnimationSettings() {
-    	var by = h - ui(40);
-        var bx = w - ui(40);
+    	var bSpr = THEME.button_hide_fill;
+    	
+        var bs = ui(28);
+    	var by = h - (bs + ui(8));
+        var bx = w - (bs + ui(8));
+        var bc = COLORS._main_icon;
+        var m  = [mx, my];
         
-        var b = buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(32), [mx, my], pHOVER, pFOCUS, __txtx("panel_animation_animation_settings", "Animation settings"), THEME.gear, 2);
-        if(b == 2) dialogPanelCall(new Panel_Animation_Setting(), x + bx + ui(32), y + by - ui(8), { anchor: ANCHOR.right | ANCHOR.bottom }); 
+		var foc = pFOCUS;
+		var hov = pHOVER;
         
-        by -= ui(40); if(by < 8) return;
-        var b = buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(32), [mx, my], pHOVER, pFOCUS, __txt("Animation Tools"), THEME.animation_timing, 2);
+        var bt = __txtx("panel_animation_animation_settings", "Animation settings");
+        var b  = buttonInstant(bSpr, bx, by, bs, bs, m, hov, foc, bt, THEME.gear, 2, bc, 1, .9);
+        if(b == 2) dialogPanelCall(new Panel_Animation_Setting(), x + bx + bs, y + by - ui(8), { anchor: ANCHOR.right | ANCHOR.bottom }); 
+        
+        by -= bs + ui(4); if(by < 8) return;
+        var b = buttonInstant(bSpr, bx, by, bs, bs, m, hov, foc, __txt("Animation Tools"), THEME.animation_timing, 2, bc, 1, .9);
         if(b == 2) {
         	var _dx = x + bx + ui(32);
         	var _dy = y + by - ui(8);
@@ -595,36 +604,43 @@ function Panel_Animation() : PanelContent() constructor {
         
         }
         
-        var max_y = by - ui(28);
-        if(by < ui(28)) return;
-        by = ui(8);
+        var max_y = by - ui(4);
+        if(by < bs) return;
+        
+        var scis = gpu_get_scissor();
+        gpu_set_scissor(bx, 0, bs + ui(8), max_y);
+        hov = hov && point_in_rectangle(mx, my, bx, 0, w, max_y);
+        by  = ui(8);
         
         var txt = __txt("New folder");
-        if(buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(28), [mx, my], pHOVER, pFOCUS, txt, THEME.folder) == 2) {
+        if(buttonInstant(bSpr, bx, by, bs, bs, m, hov, foc, txt, THEME.folder, 0, bc, 1, .9) == 2) {
             var _dir = new timelineItemGroup();
             PROJECT.timelines.addItem(_dir);
         }
         
-        by += ui(32); if(by > max_y) return;
+        by += bs + ui(2);
         node_name_tooltip.index = node_name_type;
-        var b = buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(28), [mx, my], pHOVER, pFOCUS, node_name_tooltip, THEME.node_name_type, node_name_type);
+        var b = buttonInstant(bSpr, bx, by, bs, bs, m, hov, foc, node_name_tooltip, THEME.node_name_type, node_name_type, bc, 1, .9);
         if(b == 1 && MOUSE_WHEEL != 0 && key_mod_press(SHIFT))
         	node_name_type = (node_name_type + sign(MOUSE_WHEEL) + 3) % 3;
         if(b == 2) mod_inc_mf0 node_name_type mod_inc_mf1 node_name_type mod_inc_mf2  3 mod_inc_mf3;
         
-        by += ui(32); if(by > max_y) return;
-        if(buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(28), [mx, my], pHOVER, pFOCUS, tooltip_toggle_nodes, THEME.icon_visibility, show_nodes) == 2)
+        by += bs + ui(2);
+        if(buttonInstant(bSpr, bx, by, bs, bs, m, hov, foc, tooltip_toggle_nodes, THEME.icon_visibility, show_nodes, bc, 1, .9) == 2)
             show_nodes = !show_nodes;
         
-        by += ui(32); if(by > max_y) return;
+        by += bs + ui(2);
         txt = __txtx("panel_animation_keyframe_override", "Override Keyframe");
-        if(buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(28), [mx, my], pHOVER, pFOCUS, txt, THEME.keyframe_override, global.FLAG.keyframe_override) == 2)
+        if(buttonInstant(bSpr, bx, by, bs, bs, m, hov, foc, txt, THEME.keyframe_override, global.FLAG.keyframe_override, bc, 1, .9) == 2)
             global.FLAG.keyframe_override = !global.FLAG.keyframe_override;
         
-        by += ui(32); if(by > max_y) return;
+        by += bs + ui(2);
         txt = __txt("Onion skin");
-        if(buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(28), [mx, my], pHOVER, pFOCUS, txt, THEME.onion_skin,, PROJECT.onion_skin.enabled? c_white : COLORS._main_icon) == 2)
+        var cc = PROJECT.onion_skin.enabled? c_white : COLORS._main_icon;
+        if(buttonInstant(bSpr, bx, by, bs, bs, m, hov, foc, txt, THEME.onion_skin, 0, cc, 1, .9) == 2)
             PROJECT.onion_skin.enabled = !PROJECT.onion_skin.enabled;
+            
+		gpu_set_scissor(scis);
     }
     
     function drawAnimationControl() {

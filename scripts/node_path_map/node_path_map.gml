@@ -3,11 +3,12 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	
 	newInput(0, nodeValue_PathNode("Path")).rejectArray();
 	
+	////- =Mapping
+	
 	newInput(1, nodeValue_Dimension());
-	
-	newInput(2, nodeValue_Surface("Texture"));
-	
-	newInput(3, nodeValue_Int("Subdivision", 16)).setValidator(VV_min(2)).rejectArray();
+	newInput(2, nodeValue_Surface( "Texture" ));
+	newInput(3, nodeValue_Int(     "Subdivision", 16)).setValidator(VV_min(2)).rejectArray();
+	// input 4
 		
 	newOutput(0, nodeValue_Output("Rendered", VALUE_TYPE.surface, noone));
 	
@@ -31,14 +32,13 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		var _sub  = getInputData(3);
 		
 		var _amo  = _path.getLineCount();
-		
 		if(_amo < 2) return;
 		
 		if(!is_surface(_surf)) {
 			temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1]);
 			
 			surface_set_shader(temp_surface[0], sh_coord);
-				draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1]);
+				draw_empty();
 			surface_reset_shader()
 			
 			_surf = temp_surface[0];
@@ -69,8 +69,8 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			draw_set_color(c_white);
 			
 			draw_primitive_begin_texture(pr_trianglelist, surface_get_texture(_surf));
-				for( var i = 0; i < _amo - 1; i++ ) 
-				for( var j = 0; j < _sub - 1; j++ ) {
+				for( var j = 0; j < _sub - 1; j++ )
+				for( var i = 0; i < _amo - 1; i++ ) {
 					var p0 = _pnt[i + 0][j + 0];
 					var p1 = _pnt[i + 1][j + 0];
 					var p2 = _pnt[i + 0][j + 1];

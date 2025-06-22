@@ -5,12 +5,13 @@ function sprite_drawer() constructor {
 	static draw = function(_x, _y, scale, color, alpha) {}
 }
 
-function sprite_drawer_white(_spr) : sprite_drawer() constructor {
+function sprite_drawer_white(_spr, _col = c_white) : sprite_drawer() constructor {
 	spr = _spr;
+	col = _col;
 	
 	static draw = function(_x, _y, scale, color, alpha) {
 		draw_sprite_ui_uniform(spr, 0, _x, _y, scale, color, alpha);
-		draw_sprite_ui_uniform(spr, 1, _x, _y, scale, c_white, alpha);
+		draw_sprite_ui_uniform(spr, 1, _x, _y, scale, col, alpha);
 	}
 }
 
@@ -113,4 +114,5 @@ function loadGraphic(theme = "default") {
 	THEME.dGradient_keys_distribute = new sprite_drawer_white(THEME.gradient_keys_distribute);
 	THEME.dGradient_keys_reverse    = new sprite_drawer_white(THEME.gradient_keys_reverse);
 	
+	THEME.dFolder_add    = new sprite_drawer_white(THEME.folder_add, COLORS._main_value_positive);
 }

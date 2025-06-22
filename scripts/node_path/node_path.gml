@@ -899,13 +899,21 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 						var anc = createNewInput(, value_snap((_mx - _x) / _s, _snx), value_snap((_my - _y) / _s, _sny), 0, 0, 0, 0, false);
 						
 						if(_line_hover == -1) {
-							drag_point = array_length(inputs) - input_fix_len - 1;
+							if(key_mod_check(MOD_KEY.alt)) {
+								array_remove(inputs, anc);
+								array_insert(inputs, input_fix_len, anc);
+								drag_point = 0;
+								ind        = input_fix_len;
+								
+							} else 
+								drag_point = array_length(inputs) - input_fix_len - 1;
 							
 						} else {
 							array_remove(inputs, anc);
 							array_insert(inputs, input_fix_len + _line_hover + 1, anc);
+							
 							drag_point = _line_hover + 1;
-							ind = input_fix_len + _line_hover + 1;
+							ind        = input_fix_len + _line_hover + 1;
 						}
 						
 						recordAction(ACTION_TYPE.array_insert, inputs, [ inputs[ind], ind, $"add path anchor point {ind}" ]);

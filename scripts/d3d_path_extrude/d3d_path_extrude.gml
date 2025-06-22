@@ -1,19 +1,19 @@
-function __3dPathExtrude(radius = 0.5, sides = 8, smooth = false) : __3dObject() constructor {
+function __3dPathExtrude(_radius = 0.5, _sides = 8, _smooth = false) : __3dObject() constructor {
 	VF = global.VF_POS_NORM_TEX_COL;
-	render_type = pr_trianglelist;
+	render_type   = pr_trianglelist;
 	object_counts = 3;
 	
-	self.radius = radius;
-	self.sides  = sides;
-	self.smooth = smooth;
+	radius  = _radius;
+	sides   = _sides;
+	smooth  = _smooth;
 	
-	invert = false;
-	loop   = false;
-	endCap = true;
-	points = [];
-	uvProg = [];
-	radiusOverPath = [];
+	invert  = false;
+	loop    = false;
+	endCap  = true;
+	points  = [];
+	uvProg  = [];
 	uvScale = [ 1, 1 ];
+	radiusOverPath = [];
 	
 	yaw = 0;
 	

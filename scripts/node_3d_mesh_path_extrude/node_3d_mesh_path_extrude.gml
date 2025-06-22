@@ -1,37 +1,30 @@
 function Node_3D_Mesh_Path_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group) constructor {
-	name     = "Path Extrude";
-	
+	name = "Path Extrude";
 	object_class = __3dPathExtrude;
 	
-	newInput(in_mesh + 0, nodeValue_PathNode("Path" ));
+	////- =Path
 	
-	newInput(in_mesh + 1, nodeValue_Int("Side", 8 ))
-		.setValidator(VV_min(2));
+	newInput(in_mesh +  0, nodeValue_PathNode(   "Path" ));
+	newInput(in_mesh + 10, nodeValue_Bool(       "Loop",              false               ));
 	
-	newInput(in_mesh + 2, nodeValue_D3Material("Material Side", new __d3dMaterial()))
-		.setVisible(true, true);
+	////- =Mesh
 	
-	newInput(in_mesh + 3, nodeValue_D3Material("Material Cap", new __d3dMaterial()))
-		.setVisible(true, true);
+	newInput(in_mesh +  6, nodeValue_Int(        "Subdivision",       8                   )).setValidator(VV_min(2));
+	newInput(in_mesh +  1, nodeValue_Int(        "Side",              8                   )).setValidator(VV_min(2));
+	newInput(in_mesh + 12, nodeValue_Rotation(   "Profile Angle",     0                   ));
+	newInput(in_mesh +  7, nodeValue_Slider(     "Radius",           .25                  ));
+	newInput(in_mesh +  8, nodeValue_Curve(      "Radius Over Path",  CURVE_DEF_11        ));
+	newInput(in_mesh +  5, nodeValue_Bool(       "End caps",          true                ));
+	newInput(in_mesh + 11, nodeValue_Bool(       "Inverted",          false               ));
 	
-	newInput(in_mesh + 4, nodeValue_Bool("Smooth", false ));
+	////- =Material
 	
-	newInput(in_mesh + 5, nodeValue_Bool("End caps", true ));
+	newInput(in_mesh +  4, nodeValue_Bool(       "Smooth",            false               ));
+	newInput(in_mesh +  2, nodeValue_D3Material( "Material Side",     new __d3dMaterial() ));
+	newInput(in_mesh +  3, nodeValue_D3Material( "Material Cap",      new __d3dMaterial() ));
+	newInput(in_mesh +  9, nodeValue_Vec2(       "Texture Scale",    [1,1]                ));
 	
-	newInput(in_mesh + 6, nodeValue_Int("Subdivision", 8 ))
-		.setValidator(VV_min(2));
-	
-	newInput(in_mesh + 7, nodeValue_Slider("Radius", 0.25 ));
-	
-	newInput(in_mesh + 8, nodeValue_Curve("Radius Over Path", CURVE_DEF_11 ));
-	
-	newInput(in_mesh + 9, nodeValue_Vec2("Texture Scale", [ 1, 1 ] ));
-	
-	newInput(in_mesh + 10, nodeValue_Bool("Loop", false ));
-	
-	newInput(in_mesh + 11, nodeValue_Bool("Inverted", false ));
-	
-	newInput(in_mesh + 12, nodeValue_Rotation("Profile Angle", 0 ));
+	// input in_mesh + 13
 	
 	input_display_list = [
 		["Path",		false], 	in_mesh + 0, in_mesh + 10,
@@ -40,11 +33,7 @@ function Node_3D_Mesh_Path_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 		["Material",	false], 	in_mesh + 4, in_mesh + 2, in_mesh + 3, in_mesh + 9, 
 	]
 	
-	static step = function() {
-		var _caps = getInputData(in_mesh + 5);
-		
-		inputs[in_mesh + 3].setVisible(_caps, _caps);
-	}
+	////- Nodes
 	
 	static processData = function(_output, _data, _array_index = 0) {
 		var _path    = _data[in_mesh +  0];
@@ -61,15 +50,16 @@ function Node_3D_Mesh_Path_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 		var _invert  = _data[in_mesh + 11];
 		var _pfrot   = _data[in_mesh + 12];
 		
+		inputs[in_mesh + 3].setVisible(_caps, _caps);
 		if(_path == noone) return noone;
 		
 		var _points  = array_create(_samp * 3);
 		var _radPath = array_create(_samp);
 		var _uvProg  = array_create(_samp);
 		
-		var _stp = 1 / (_samp - 1);
-		var _p = new __vec3();
 		var _distTotal = 0;
+		var _stp = 1 / (_samp - 1);
+		var _p   = new __vec3();
 		
 		for(var i = 0; i < _samp; i++) {
 			var _prg = _stp * i;

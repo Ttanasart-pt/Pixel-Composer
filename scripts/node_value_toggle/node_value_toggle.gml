@@ -1,7 +1,7 @@
 function nodeValue_Toggle(_name, _value, _data = {}) { return new __NodeValue_Toggle(_name, self, _value, is_array(_data)? { data : _data } : _data); }
 
 function __NodeValue_Toggle(_name, _node, _value, _data = {}) : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.integer, _value, "") constructor {
-	
+	if(!is_struct(_data)) _data = { data: _data };
 	setDisplay(VALUE_DISPLAY.toggle, _data);
 	
 	/////============== GET =============
