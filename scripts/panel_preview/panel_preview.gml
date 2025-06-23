@@ -53,6 +53,10 @@
     function panel_preview_toggle_lock()                { CALL("preview_toggle_lock");               PANEL_PREVIEW.toggle_lock();                                             }
     function panel_preview_toggle_mini()                { CALL("preview_toggle_mini");               PANEL_PREVIEW.toggle_mini();                                             }
     
+	function panel_preview_view_control_toggle()        { PANEL_PREVIEW.view_control_toggle(); }
+	function panel_preview_view_control_show()          { PANEL_PREVIEW.view_control_show();   }
+	function panel_preview_view_control_hide()          { PANEL_PREVIEW.view_control_hide();   }
+	                                                         
     function __fnInit_Preview() {
     	var p = "Preview";
     	var n = MOD_KEY.none;
@@ -134,6 +138,10 @@
         registerFunction(p, "3D Snap Settings",         "", n, function() /*=>*/ { dialogPanelCall(new Panel_Preview_Snap_Setting(PANEL_PREVIEW))   }).setMenu("preview_snap_settings")
         registerFunction(p, "View Settings",            "", n, function() /*=>*/ { dialogPanelCall(new Panel_Preview_View_Setting(PANEL_PREVIEW))   }).setMenu("preview_view_settings",  THEME.icon_visibility)
         
+		registerFunction(p, "Toggle View Control",      "", n, panel_preview_view_control_toggle  ).setMenu("preview_view_control_toggle", noone, false, function() /*=>*/ {return PROJECT.previewSetting.show_view_control});
+		registerFunction(p, "Show View Control",        "", n, panel_preview_view_control_show    ).setMenu("preview_view_control_show");
+		registerFunction(p, "Hide View Control",        "", n, panel_preview_view_control_hide    ).setMenu("preview_view_control_hide");
+		
         __fnGroupInit_Preview();
     }
     
@@ -556,6 +564,11 @@ function Panel_Preview() : PanelContent() constructor {
         static d3_view_action_left   = function() /*=>*/ { d3_camLerp = 1; d3_camLerp_x = -90; d3_camLerp_y =   0; }
         static d3_view_action_bottom = function() /*=>*/ { d3_camLerp = 1; d3_camLerp_x =   0; d3_camLerp_y = -89; }
         static d3_view_action_top    = function() /*=>*/ { d3_camLerp = 1; d3_camLerp_x =   0; d3_camLerp_y =  89; }
+        
+		function view_control_toggle() { PROJECT.previewSetting.show_view_control = !PROJECT.previewSetting.show_view_control; }
+		function view_control_show()   { PROJECT.previewSetting.show_view_control =  true; }
+		function view_control_hide()   { PROJECT.previewSetting.show_view_control = false; }
+		
     #endregion
     
     #region +++++++++++ Menus ++++++++++
@@ -563,6 +576,8 @@ function Panel_Preview() : PanelContent() constructor {
         global.menuItems_preview_context_menu = [
         	"graph_add_node", 
             "preview_new_preview_window", 
+            -1,
+            "preview_focus_content",
             -1,
             "preview_save_current_frame", 
             "preview_save_all_current_frames", 

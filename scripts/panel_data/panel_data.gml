@@ -1221,3 +1221,13 @@ function setFocus(target, fstring = noone) {
 		FOCUS.onFocusBegin();
 		
 }
+
+function getFocusContent() {
+	if(is(FOCUS, Panel)) 
+		return FOCUS.getContent(); 
+		
+	if(instance_exists(FOCUS) && FOCUS.object_index == o_dialog_panel) 
+		return FOCUS.content;
+	
+	return FOCUS;
+}

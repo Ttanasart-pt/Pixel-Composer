@@ -5,11 +5,11 @@ function Node_Counter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue_Float("Start", 1));
-	
 	newInput(1, nodeValue_Float("Speed", 1));
-	
-	newInput(2, nodeValue_Int("Mode", 0, @"Counting mode\n- Frame count: Count value up/down per frame.\n- Animation progress: Count from 0 (first frame) to 1 (last frame). ")
-		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Frame count", "Animation progress"]))
+	newInput(2, nodeValue_Enum_Scroll("Mode", 0, ["Frame count", "Animation progress"]))
+		.setTooltip(@"Counting mode
+- Frame count: Count value up/down per frame.
+- Animation progress: Count from 0 (first frame) to 1 (last frame).")
 		.rejectArray();
 	
 	newOutput(0, nodeValue_Output("Value", VALUE_TYPE.float, 0));

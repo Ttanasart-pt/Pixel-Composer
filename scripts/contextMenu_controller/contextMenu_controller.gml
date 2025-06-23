@@ -26,6 +26,7 @@ function MenuItem(_name, _func, _spr = noone, _hotkey = noone, _toggle = noone, 
 	hoykeyObject = noone;
 	
 	static toggleFunction = function(_dat = undefined) /*=>*/ {
+
 		if(!is_undefined(_dat)) return func(_dat);
 		if(params != noone)     return func(params);
 			
@@ -39,6 +40,7 @@ function MenuItem(_name, _func, _spr = noone, _hotkey = noone, _toggle = noone, 
     static setColor     = function(_color)     /*=>*/ { color     = _color;     return self; }
     static setShiftMenu = function(_shiftMenu) /*=>*/ { shiftMenu = _shiftMenu; return self; }
     static setParam     = function(_param)     /*=>*/ { params    = _param;     return self; }
+    static setToggle    = function(_toggle)    /*=>*/ { toggle    = _toggle;    return self; }
 	
 	static getSpr       = function() /*=>*/ {return spr};
 	static getSprInd    = function() /*=>*/ {return 0};

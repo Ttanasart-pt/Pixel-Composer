@@ -68,7 +68,7 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 	author  = "";
 	license = "";
 	
-	buildFn = registerFunction("Add node", name, "", 0, function(n) /*=>*/ { PANEL_GRAPH.createNodeHotkey(n); }, nodeName)
+	buildFn = registerFunction("Add node", name, "", 0, function(n) /*=>*/ {return PANEL_GRAPH.createNodeHotkey(n)}, nodeName)
 				.setMenu($"graph_add_{nodeName}", spr);
 	buildFn.nodeName = nodeName;
 	

@@ -3,8 +3,8 @@
 	function panel_nodes_delete_selected() { if(PANEL_NODES == noone) return; PANEL_NODES.delete_selected(); }
 	function panel_nodes_delete_hovering() { if(PANEL_NODES == noone) return; PANEL_NODES.delete_hovering(); }
 	
-	function panel_nodes_toggle_sidebar()  { if(PANEL_NODES == noone) return; PANEL_NODES.toggle_sidebar();   }
-	function panel_nodes_toggle_preview()  { if(PANEL_NODES == noone) return; PANEL_NODES.toggle_preview();   }
+	function panel_nodes_toggle_sidebar()  { if(PANEL_NODES == noone) return; PANEL_NODES.toggle_sidebar();  }
+	function panel_nodes_toggle_preview()  { if(PANEL_NODES == noone) return; PANEL_NODES.toggle_preview();  }
 	function panel_nodes_edit_sidebar()    { if(PANEL_NODES == noone) return; PANEL_NODES.edit_sidebar();    }
 	
 	function __fnInit_Nodes() {
@@ -20,10 +20,10 @@
 
 function Panel_Nodes() : PanelContent() constructor {
 	context_str = "Nodes";
-	auto_pin = true;
-	title    = __txt("Nodes");
-	w        = ui(320);
-	h        = ui(480);
+	auto_pin    = true;
+	title       = __txt("Nodes");
+	w           = ui(320);
+	h           = ui(480);
 	
 	NodeTreeSort();
 	
@@ -383,6 +383,7 @@ function Panel_Nodes() : PanelContent() constructor {
 	}
 	
 	function toggle_sidebar() { side_show    = !side_show; }
-	function toggle_preview() { show_preview = !show_preview; }
 	function edit_sidebar()   { dialogPanelCall(new Panel_MenuItems_Editor("node_side_menu")); }
+	
+	function toggle_preview() { show_preview = !show_preview; }
 }

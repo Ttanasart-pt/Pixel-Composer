@@ -80,10 +80,13 @@ function functionObject(_context, _name, _key, _mod, _action, _param = noone) co
 		return self;
 	}
 	
-	static setMenu = function(_id, _spr = noone, shelf = false) { 
+	static setMenu = function(_id, _spr = noone, shelf = false, toggle = undefined) { 
 		menu = menuItem(__txt(name), action, _spr, [ context, name ], noone, params);
 		menu.hoykeyObject = hotkey;
+		
 		if(shelf) menu.setIsShelf();
+		if(toggle != undefined) menu.setToggle(toggle);
+		
 		MENU_ITEMS[$ _id] = menu;
 		
 		return self;

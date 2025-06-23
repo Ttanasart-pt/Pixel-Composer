@@ -107,36 +107,131 @@ function Panel_Menu() : PanelContent() constructor {
     
     #region ++++++++ Menu Items ++++++++
         menu_file_nondemo = [
-            MENU_ITEMS.new_file,
-            MENU_ITEMS.open,
+            "new_file",
+            "open",
                 
-            MENU_ITEMS.save,
-            MENU_ITEMS.save_as,
-            MENU_ITEMS.save_all,
-            MENU_ITEMS.recent_files,
+            "save",
+            "save_as",
+            "save_all",
+            "recent_files",
             
-            MENU_ITEMS.autosave_folder,
-            MENU_ITEMS.import_menu,
-            MENU_ITEMS.export_menu,
+            "autosave_folder",
+            "import_menu",
+            "export_menu",
             -1,
         ];
         
-        menu_file = [
-            MENU_ITEMS.preference,
-            MENU_ITEMS.splash_screen,
-            MENU_ITEMS.command_palette,
+        menu_file_content = [
+            "preference",
+            "splash_screen",
+            "command_palette",
             -1,
-            MENU_ITEMS.addon_menu,
+            "addon_menu",
             -1,
-            MENU_ITEMS.fullscreen,
-            MENU_ITEMS.close_file,
-            MENU_ITEMS.close_all_files,
-            MENU_ITEMS.close_software,
+            "fullscreen",
+            "close_file",
+            "close_all_files",
+            "close_software",
         ]; 
         
-        if(!DEMO) menu_file = array_append(menu_file_nondemo, menu_file);
+        global.menuItems_main_file = menu_file_content;
+        if(!DEMO) global.menuItems_main_file = array_append(menu_file_nondemo, menu_file_content);
+        menu_file = [ __txt("File"), "main_file" ];
         
-        menu_help = [ 
+        global.menuItems_main_edit = [
+            "undo",
+            "redo",
+            "history",
+        ]; menu_edit = [ __txt("Edit"), "main_edit" ];
+        
+        global.menuItems_main_preview = [
+            "preview_focus_content", 
+            "preview_save_current_frame", 
+            -1,
+            "preview_view_control_toggle",
+            "preview_group_preview_bg",
+        ]; menu_preview = [ __txt("Preview"), "main_preview" ];
+        
+        global.menuItems_main_graph = [
+            "graph_topbar_toggle",
+            "graph_view_control_toggle",
+        ]; menu_graph = [ __txt("Graph"), "main_graph" ];
+        
+        global.menuItems_main_animation = [
+            "animation_settings",
+            "animation_scaler",
+        ]; menu_animation = [ __txt("Animation"), "main_animation"];
+        
+        global.menuItems_main_rendering = [
+            "render_all",
+            "export_all",
+        ]; menu_rendering = [ __txt("Rendering"), "main_rendering"];
+        
+        menu_panels = [ __txt("Panels"), [
+            menuItemShelf(__txt("Workspace"), function(_dat) { 
+                var arr = [];
+                var lay = [];
+                
+                var f   = file_find_first(DIRECTORY + "layouts/*", 0);
+                while(f != "") {
+                    array_push(lay, filename_name_only(f));
+                    f = file_find_next();
+                }
+                
+                array_push(arr, menuItem(__txtx("panel_menu_save_layout", "Save layout"), function() {
+                    var dia = dialogCall(o_dialog_file_name, mouse_mx + ui(8), mouse_my + ui(8));
+                    dia.name = PREFERENCES.panel_layout_file;
+                    dia.onModify = function(name) { 
+                        var cont = panelSerialize();
+                        json_save_struct(DIRECTORY + "layouts/" + name + ".json", cont);
+                    };
+                }));
+                
+                array_push(arr, MENU_ITEMS.reset_layout);
+                array_push(arr, -1);
+                
+                for(var i = 0; i < array_length(lay); i++)  {
+                    array_push(arr, menuItem(lay[i], 
+                        function(_dat) /*=>*/ { PREFERENCES.panel_layout_file = _dat.path; PREF_SAVE(); setPanel(); }, noone, noone, 
+                        function(item) /*=>*/ {return item.name == PREFERENCES.panel_layout_file},
+                        { path: lay[i] }));
+                }
+                
+                return submenuCall(_dat, arr);
+            }),
+            -1,
+            
+            MENU_ITEMS.collections_panel,
+            MENU_ITEMS.graph_panel,
+            MENU_ITEMS.preview_panel,
+            MENU_ITEMS.inspector_panel,
+            MENU_ITEMS.workspace_panel,
+            MENU_ITEMS.animation_panel,
+            MENU_ITEMS.notification_panel,
+            MENU_ITEMS.globalvar_panel,
+            MENU_ITEMS.file_explorer_panel,
+            
+            menuItemShelf(__txt("Nodes"), function(_dat) { 
+                return submenuCall(_dat, [
+                    MENU_ITEMS.align_panel,
+                    MENU_ITEMS.nodes_panel,
+                    MENU_ITEMS.tunnels_panel,
+                ]);
+            }),
+            
+            menuItemShelf(__txt("Color"), function(_dat) { 
+                return submenuCall(_dat, [
+                    MENU_ITEMS.color_panel,
+                    MENU_ITEMS.palettes_panel,
+                    MENU_ITEMS.palettes_mixer_panel,
+                    MENU_ITEMS.gradients_panel,
+                ]);
+            }),
+            
+            MENU_ITEMS.preview_histogram,
+        ]];
+        
+        menu_help = [ __txt("Help"), [
             menuItem(__txtx("panel_menu_help_video", "Tutorial videos"),                       function() /*=>*/ {return url_open("https://www.youtube.com/@makhamdev")}, THEME.youtube),
             menuItem(__txtx("panel_menu_help_wiki", "Community Wiki"),                         function() /*=>*/ {return url_open("https://pixel-composer.fandom.com/wiki/Pixel_Composer_Wiki")}, THEME.wiki),
             -1, 
@@ -149,136 +244,49 @@ function Panel_Menu() : PanelContent() constructor {
             -1,
             menuItem(__txtx("panel_menu_connect_patreon", "Connect to Patreon"),               function() /*=>*/ {return dialogCall(o_dialog_patreon)},         THEME.patreon),
             menuItem(__txtx("panel_menu_connect_patreon", "Connect to Patreon (legacy)"),      function() /*=>*/ {return dialogPanelCall(new Panel_Patreon())}, THEME.patreon),
-        ];
+        ]];
         
-        menuItem_undo = MENU_ITEMS.undo;
-        menuItem_redo = MENU_ITEMS.redo;
+        if(steam_initialised()) array_push(menu_help[1], -1, menuItem(__txtx("panel_menu_steam_workshop", "Steam Workshop"), function() /*=>*/ {return steam_activate_overlay_browser("https://steamcommunity.com/app/2299510/workshop/")}, THEME.steam) );
+        
+        menu_test = [ __txt("Dev"), [
+            MENU_ITEMS.console_panel,
+            menuItem(__txt("Debug overlay"),   function() /*=>*/ { show_debug_overlay(true);                      }),
+            menuItem(__txt("Render Profiler"), function() /*=>*/ { dialogPanelCall(new Panel_Profile_Render());   }),
+            menuItem(__txt("Capture"),         function() /*=>*/ { dialogPanelCall(new Panel_Capture_Project());  }),
+            -1,
+            menuItem(__txt("Save frozen"),     function() /*=>*/ { PROJECT.freeze = true; SAVE();     }),
+            menuItem(__txt("Tester"),          function() /*=>*/ { dialogPanelCall(new Panel_Test()); }),
+            -1,
+            menuItem(__txt("Collection Manager"),                                 function() /*=>*/ {return dialogPanelCall(new Panel_Collection_Manager())}),
+            menuItem(__txt("Nodes Manager"),                                      function() /*=>*/ {return dialogPanelCall(new Panel_Nodes_Manager())}),
+            menuItem(__txtx("panel_menu_test_gen_guide", "Generate Node Locale"), function() /*=>*/ {return dialogPanelCall(new Panel_Node_Data_Gen())}),
+            -1,
+            menuItem(__txtx("panel_menu_test_warning", "Display Warning"),        function() /*=>*/ {return noti_warning("Error message")}),
+            menuItem(__txtx("panel_menu_test_error", "Display Error"),            function() /*=>*/ {return noti_error("Error message")}),
+            menuItem(__txtx("panel_menu_test_crash", "Force crash"),              function() /*=>*/ {return print(1 + "a")}),
+            -1,
+            menuItemShelf(__txt("Misc."), function(_dat) { 
+                return submenuCall(_dat, [ 
+                    menuItem("Node credit dialog", function() /*=>*/ { dialogPanelCall(new Panel_Node_Cost()); }), 
+                    // menuItem("RogueTD",            () => { dialogPanelCall(new Panel_RogueTD());   }), 
+                ]);
+            }),
+        ]];
         
         menus = [
-            [ __txt("File"), menu_file ],
+            menu_file,
+            menu_edit,
             
-            [ __txt("Edit"), [
-                menuItem_undo,
-                menuItem_redo,
-                MENU_ITEMS.history,
-            ]],
+            menu_preview,
+            menu_graph,
+            menu_animation,
             
-            [ __txt("Preview"), [
-                MENU_ITEMS.preview_focus_content, 
-                MENU_ITEMS.preview_save_current_frame, 
-                MENU_ITEMS.preview_group_preview_bg,
-            ]], 
-            
-            [ __txt("Animation"), [
-                MENU_ITEMS.animation_settings,
-                MENU_ITEMS.animation_scaler,
-            ]],
-            
-            [ __txt("Rendering"), [
-                MENU_ITEMS.render_all,
-                MENU_ITEMS.export_all,
-                menuItem(__txtx("panel_menu_export_render_all", "Render disabled node when export"), 
-                    function() { PREFERENCES.render_all_export = !PREFERENCES.render_all_export; },,, 
-                    function() { return PREFERENCES.render_all_export; }),
-            ]],
-            
-            [ __txt("Panels"), [
-                menuItemShelf(__txt("Workspace"), function(_dat) { 
-                    var arr = [];
-                    var lay = [];
-                    
-                    var f   = file_find_first(DIRECTORY + "layouts/*", 0);
-                    while(f != "") {
-                        array_push(lay, filename_name_only(f));
-                        f = file_find_next();
-                    }
-                    
-                    array_push(arr, menuItem(__txtx("panel_menu_save_layout", "Save layout"), function() {
-                        var dia = dialogCall(o_dialog_file_name, mouse_mx + ui(8), mouse_my + ui(8));
-                        dia.name = PREFERENCES.panel_layout_file;
-                        dia.onModify = function(name) { 
-                            var cont = panelSerialize();
-                            json_save_struct(DIRECTORY + "layouts/" + name + ".json", cont);
-                        };
-                    }));
-                    
-                    array_push(arr, MENU_ITEMS.reset_layout);
-                    array_push(arr, -1);
-                    
-                    for(var i = 0; i < array_length(lay); i++)  {
-                        array_push(arr, menuItem(lay[i], 
-                            function(_dat) /*=>*/ { PREFERENCES.panel_layout_file = _dat.path; PREF_SAVE(); setPanel(); }, noone, noone, 
-                            function(item) /*=>*/ {return item.name == PREFERENCES.panel_layout_file},
-                            { path: lay[i] }));
-                    }
-                    
-                    return submenuCall(_dat, arr);
-                }),
-                -1,
-                
-                MENU_ITEMS.collections_panel,
-                MENU_ITEMS.graph_panel,
-                MENU_ITEMS.preview_panel,
-                MENU_ITEMS.inspector_panel,
-                MENU_ITEMS.workspace_panel,
-                MENU_ITEMS.animation_panel,
-                MENU_ITEMS.notification_panel,
-                MENU_ITEMS.globalvar_panel,
-                MENU_ITEMS.file_explorer_panel,
-                
-                menuItemShelf(__txt("Nodes"), function(_dat) { 
-                    return submenuCall(_dat, [
-                        MENU_ITEMS.align_panel,
-                        MENU_ITEMS.nodes_panel,
-                        MENU_ITEMS.tunnels_panel,
-                    ]);
-                }),
-                
-                menuItemShelf(__txt("Color"), function(_dat) { 
-                    return submenuCall(_dat, [
-                        MENU_ITEMS.color_panel,
-                        MENU_ITEMS.palettes_panel,
-                        MENU_ITEMS.palettes_mixer_panel,
-                        MENU_ITEMS.gradients_panel,
-                    ]);
-                }),
-                
-                MENU_ITEMS.preview_histogram,
-            ]],
-            
-            [ __txt("Help"), menu_help ],
+            menu_rendering,
+            menu_panels,
+            menu_help,
         ]; 
         
-        if(TESTING) {
-            array_push(menus, [ __txt("Dev"), [
-                MENU_ITEMS.console_panel,
-                menuItem(__txt("Debug overlay"),   function() /*=>*/ { show_debug_overlay(true);                      }),
-                menuItem(__txt("Render Profiler"), function() /*=>*/ { dialogPanelCall(new Panel_Profile_Render());   }),
-                menuItem(__txt("Capture"),         function() /*=>*/ { dialogPanelCall(new Panel_Capture_Project());  }),
-                -1,
-                menuItem(__txt("Save frozen"),     function() /*=>*/ { PROJECT.freeze = true; SAVE();     }),
-                menuItem(__txt("Tester"),          function() /*=>*/ { dialogPanelCall(new Panel_Test()); }),
-                -1,
-                menuItem(__txt("Collection Manager"),                                 function() /*=>*/ {return dialogPanelCall(new Panel_Collection_Manager())}),
-                menuItem(__txt("Nodes Manager"),                                      function() /*=>*/ {return dialogPanelCall(new Panel_Nodes_Manager())}),
-                menuItem(__txtx("panel_menu_test_gen_guide", "Generate Node Locale"), function() /*=>*/ {return dialogPanelCall(new Panel_Node_Data_Gen())}),
-                -1,
-                menuItem(__txtx("panel_menu_test_warning", "Display Warning"),        function() /*=>*/ {return noti_warning("Error message")}),
-                menuItem(__txtx("panel_menu_test_error", "Display Error"),            function() /*=>*/ {return noti_error("Error message")}),
-                menuItem(__txtx("panel_menu_test_crash", "Force crash"),              function() /*=>*/ {return print(1 + "a")}),
-                -1,
-                menuItemShelf(__txt("Misc."), function(_dat) { 
-                    return submenuCall(_dat, [ 
-                        menuItem("Node credit dialog", function() /*=>*/ { dialogPanelCall(new Panel_Node_Cost()); }), 
-                        // menuItem("RogueTD",            () => { dialogPanelCall(new Panel_RogueTD());   }), 
-                    ]);
-                }),
-            ]]);
-        }
-        
-        menu_help_steam = array_clone(menu_help);
-        array_push(menu_help_steam, -1, 
-            menuItem(__txtx("panel_menu_steam_workshop", "Steam Workshop"), function() /*=>*/ {return steam_activate_overlay_browser("https://steamcommunity.com/app/2299510/workshop/")}, THEME.steam) );
+        if(TESTING) array_push(menus, menu_test);
     #endregion
         
     function onFocusBegin() { PANEL_MENU = self; }
@@ -296,8 +304,8 @@ function Panel_Menu() : PanelContent() constructor {
             else                      txt = $"{__txt("Undo")} {act[0]}";
         }
         
-        menuItem_undo.active = !ds_stack_empty(UNDO_STACK);
-        menuItem_undo.name = txt;
+        MENU_ITEMS.undo.active = !ds_stack_empty(UNDO_STACK);
+        MENU_ITEMS.undo.name = txt;
         
         txt = __txt("Redo");
         if(!ds_stack_empty(REDO_STACK)) {
@@ -306,8 +314,8 @@ function Panel_Menu() : PanelContent() constructor {
             else                      txt = $"{__txt("Redo")} {act[0]}";
         }
         
-        menuItem_redo.active = !ds_stack_empty(REDO_STACK);
-        menuItem_redo.name = txt;
+        MENU_ITEMS.redo.active = !ds_stack_empty(REDO_STACK);
+        MENU_ITEMS.redo.name = txt;
     }
     
     function drawContent(panel) {
@@ -316,7 +324,6 @@ function Panel_Menu() : PanelContent() constructor {
         var _draggable = pFOCUS;
         
         draw_clear_alpha(COLORS.panel_bg_clear, 1);
-        menus[6][1] = STEAM_ENABLED? menu_help_steam : menu_help;
         var hori = w > h;
         var font = f_p2;
         var xx   = ui(40);
@@ -362,6 +369,14 @@ function Panel_Menu() : PanelContent() constructor {
                 yy = w < vertical_break? ui(72) : ui(40);
             }
             
+            var _menus = menus;
+            // var _menus = array_clone(menus, 1);
+            
+            // var _fcon = getFocusContent();
+            // if(_fcon == PANEL_GRAPH)     array_push(_menus, menu_graph);
+            // if(_fcon == PANEL_PREVIEW)   array_push(_menus, menu_preview);
+            // if(_fcon == PANEL_ANIMATION) array_push(_menus, menu_animation);
+            
             var xc, x0, x1, yc, y0, y1;
             var  sx = xx;
             var _mx = xx;
@@ -371,8 +386,8 @@ function Panel_Menu() : PanelContent() constructor {
             
             draw_set_text(font, fa_center, fa_center, COLORS._main_text);
             
-            for(var i = 0; i < array_length(menus) - 1; i++) {
-                 ww = string_width(menus[i][0]) + ui(16 + 8);
+            for(var i = 0; i < array_length(_menus) - 1; i++) {
+                 ww = string_width(_menus[i][0]) + ui(16 + 8);
                 _ww += ww;
                 
                 if(_ww > w * 0.4 - sx) {
@@ -386,14 +401,16 @@ function Panel_Menu() : PanelContent() constructor {
             var _rowH   = (h - ui(12)) / row;
             var _ww     = 0;
         
-            for(var i = 0; i < array_length(menus); i++) {
-                var _menu = menus[i];
-                var _name = _menu[0];
+            for(var i = 0; i < array_length(_menus); i++) {
+                var _menu  = _menus[i];
+                var _name  = _menu[0];
+                var _cont  = _menu[1];
+                var _colr  = array_safe_get_fast(_menu, 2, noone);
+                var _mname = is_string(_cont)? _cont : $"menu_{_name}";
                 
                 draw_set_text(font, fa_center, fa_center, COLORS._main_text);
                 var ww = string_width(_name) + ui(16);
                 var hh = line_get_height() + ui(8);
-            
                 if(hori) {
                     xc = xx + ww / 2;
                     x0 = xx;
@@ -413,15 +430,19 @@ function Panel_Menu() : PanelContent() constructor {
                     y0 = yy;
                     y1 = yy + hh;
                 }
-            
+                
+                if(_colr != noone) draw_sprite_stretched_ext(THEME.box_r2_clr, 0, x0, y0, x1 - x0, y1 - y0, _colr);
+                
                 if(pHOVER && point_in_rectangle(mx, my, x0, y0, x1, y1)) {
                     _draggable = false;
                     draw_sprite_stretched(THEME.box_r2_clr, 0, x0, y0, x1 - x0, y1 - y0);
                     
-                    if((mouse_press(mb_left, pFOCUS)) || instance_exists(o_dialog_menubox)) {
-                        var _mnx = hori? x + x0 : x + x1;
-                        var _mny = hori? y + y1 : y + y0;
-                        menuCall($"menu_{_name}", _menu[1], _mnx, _mny);
+                    if((mouse_press(mb_left, pFOCUS)) || (instance_exists(o_dialog_menubox) && o_dialog_menubox.menu_id != _mname)) {
+                        var _mnx   = hori? x + x0 : x + x1;
+                        var _mny   = hori? y + y1 : y + y0;
+                        var _mcont = is_string(_cont)? menuItems_gen(_cont) : _cont;
+                        
+                        menuCall(_mname, _mcont, _mnx, _mny);
                     }
                 }
             

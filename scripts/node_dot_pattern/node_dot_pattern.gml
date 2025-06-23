@@ -16,9 +16,9 @@ function Node_Dotted(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	////- =Pattern
 	
 	newInput(13, nodeValue_Enum_Button( "Pattern",   0, [ "Grid", "Hexagonal" ]));
-	newInput( 2, nodeValue_Float(       "Size",      4    )).setMappable(3);
-	newInput(15, nodeValue_Vec2(        "Spacing",  [1,1] ));
-	newInput( 9, nodeValue_Slider(      "Dot Size", .5    )).setMappable(10);
+	newInput( 2, nodeValue_Float(       "Size",      4            )).setMappable(3);
+	newInput(15, nodeValue_Vec2(        "Spacing",  [1,1]         ));
+	newInput( 9, nodeValue_Slider(      "Dot Size", .5, [0,2,.01] )).setMappable(10);
 	
 	////- =Render
 	

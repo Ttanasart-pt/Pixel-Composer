@@ -227,6 +227,7 @@
 			
 			show_control    : false,
 			show_tooltip    : true,
+			show_topbar     : true, 
 		}
 		
 		PREFERENCES.project_graphConnection = {
@@ -382,11 +383,9 @@
 		if(file_exists(path)) {
 			should_restart = true;
 			var _map = json_load_struct(path);
+			var _prf = struct_has(_map, "preferences")? _map.preferences : _map;
 			
-			if(struct_has(_map, "preferences")) 
-				struct_override(PREFERENCES, _map.preferences, true);
-			else 
-				struct_override(PREFERENCES, _map, true);
+			struct_override(PREFERENCES, _prf);
 		}
 		
 		if(!directory_exists($"{DIRECTORY}Themes/{PREFERENCES.theme}"))

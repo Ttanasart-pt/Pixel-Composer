@@ -71,8 +71,8 @@
         registerFunction("Animation", "Toggle Nodes",       "H",        MOD_KEY.none,                 panel_animation_show_nodes            ).setMenu("animation_toggle_nodes",        )
         registerFunction("Animation", "Quantize",           "Q",        MOD_KEY.none,                 panel_animation_quantize              ).setMenu("animation_quantize",            )
         
-        registerFunction("Animation", "Settings",           "S",        MOD_KEY.ctrl | MOD_KEY.shift, panel_animation_settings_call         ).setMenu("animation_settings", THEME.animation_setting )
-        registerFunction("Animation", "Scaler",             "",         MOD_KEY.none,                 panel_animation_scale_call            ).setMenu("animation_scaler",   THEME.animation_timing  )
+        registerFunction("Animation", "Animation Settings", "S",        MOD_KEY.ctrl | MOD_KEY.shift, panel_animation_settings_call         ).setMenu("animation_settings", THEME.animation_setting )
+        registerFunction("Animation", "Animation Scaler",   "",         MOD_KEY.none,                 panel_animation_scale_call            ).setMenu("animation_scaler",   THEME.animation_timing  )
         
         registerFunction("Animation", "Edit Keyframe Value","",  MOD_KEY.none, panel_animation_edit_keyframe_value    ).setMenu("animation_edit_keyframe_value", )
         registerFunction("Animation", "Toggle Keyframe Y",  "",  MOD_KEY.none, panel_animation_edit_keyframe_lock_y   ).setMenu("animation_lock_keyframe_y",     )
