@@ -3035,6 +3035,7 @@
     {"id":{"name":"sh_color_replace","path":"shaders/sh_color_replace/sh_color_replace.yy",},},
     {"id":{"name":"sh_color_select_content","path":"shaders/sh_color_select_content/sh_color_select_content.yy",},},
     {"id":{"name":"sh_color_select_side","path":"shaders/sh_color_select_side/sh_color_select_side.yy",},},
+    {"id":{"name":"sh_color_selector_mix","path":"shaders/sh_color_selector_mix/sh_color_selector_mix.yy",},},
     {"id":{"name":"sh_colorize","path":"shaders/sh_colorize/sh_colorize.yy",},},
     {"id":{"name":"sh_colours_replace","path":"shaders/sh_colours_replace/sh_colours_replace.yy",},},
     {"id":{"name":"sh_combine_hsv","path":"shaders/sh_combine_hsv/sh_combine_hsv.yy",},},

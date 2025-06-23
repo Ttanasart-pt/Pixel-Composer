@@ -194,6 +194,7 @@ event_inherited();
 	} initPalette();
 	
 	palette_selecting = -1;
+	preset_expands    = {};
 	preset_show_name  = true;
 	
 	sp_palette_w    = ui(240) - pal_padding * 2 - ui(8);
@@ -223,9 +224,10 @@ event_inherited();
 				path    : ""
 			} : paletePresets[i];
 			
-			pre_amo = array_length(pal.palette);
-			row     = ceil(pre_amo / col);
-			_height = palette_selecting == i? nh + row * _gs + pd : _bh;
+			var _exp = preset_expands[$ i];
+			pre_amo  = array_length(pal.palette);
+			row      = ceil(pre_amo / col);
+			_height  = palette_selecting == i? nh + row * _gs + pd : _bh;
 			
 			var isHover = _hover && point_in_rectangle(_m[0], _m[1], 0, yy, ww, yy + _height);
 			
@@ -243,38 +245,55 @@ event_inherited();
 				if(i == -1) { draw_set_color(cc); draw_circle_prec(ww - ui(10), yy + ui(10), ui(4), false); }
 			}
 			
-			if(palette_selecting == i) 
+			var _hoverColor = noone;
+			if(_exp || row == 1) {
 				_palRes = drawPaletteGrid(pal.palette, pd, yy + nh, _ww, _gs, { mx : _m[0], my : _m[1] });
-			else
+				_hoverColor = _palRes.hoverIndex > noone? _palRes.hoverColor : noone;
+			} else
 				drawPalette(pal.palette, pd, yy + nh, _ww, _gs);
 			
-			if(!click_block && mouse_click(mb_left, interactable && sFOCUS)) {
-				if(palette_selecting == i && _hover && _palRes.hoverIndex > noone) {
-					var c = _palRes.hoverColor;
-					if(is_real(c)) c = cola(c);
-					
-					selector.setColor(c);
-					selector.setHSV();
-					
-				} else if(isHover) {
-					palette_selecting = i;
-					click_block = true;
-				}
-			}	
+			if(_hoverColor != noone) {
+				var _box = _palRes.hoverBBOX;
+				draw_sprite_stretched_ext(THEME.box_r2, 1, _box[0], _box[1], _box[2], _box[3], c_white);
+			}
 			
-			if(isHover && mouse_press(mb_right, interactable && sFOCUS)) {
-				hovering = pal;
-				
-				menuCall("palette_window_preset_menu", [
-					menuItem(__txtx("gradient_set_palette", "Convert to Gradient"), function() { 
-						var _p = hovering.palette;
-						if(array_length(_p) < 2) return;
+			if(!click_block && interactable && sFOCUS) {
+				if(mouse_click(mb_left)) {
+					if(_hoverColor != noone) {
+						var c = _hoverColor;
+						if(is_real(c)) c = cola(c);
 						
-						gradient.keys = [];
-						for( var i = 0, n = array_length(_p); i < n; i++ )
-							gradient.keys[i] = new gradientKey(i / (n - 1), cola(_p[i]));
-					}),
-				]);
+						selector.setColor(c);
+						selector.setHSV();
+						
+					} else if(isHover) {
+						preset_expands[$ i] = !_exp;
+						palette_selecting    = i;
+						click_block         = true;
+					}
+				}
+				
+				if(mouse_click(mb_right)) {
+					if(_hoverColor != noone) {
+						menuCall("palette_window_preset_menu", [
+							menuItem(__txtx("palette_mix_color", "Mix Color"), function(c) /*=>*/ { selector.setMixColor(c); }).setParam(_hoverColor),
+						]);
+						
+					} else if(isHover && i >= 0) {
+						hovering = pal;
+				
+						menuCall("palette_window_preset_menu", [
+							menuItem(__txtx("gradient_set_palette", "Convert to Gradient"), function() { 
+								var _p = hovering.palette;
+								if(array_length(_p) < 2) return;
+								
+								gradient.keys = [];
+								for( var i = 0, n = array_length(_p); i < n; i++ )
+									gradient.keys[i] = new gradientKey(i / (n - 1), cola(_p[i]));
+							}),
+						]);
+					}
+				}
 			}
 			
 			yy += _height + ui(4);

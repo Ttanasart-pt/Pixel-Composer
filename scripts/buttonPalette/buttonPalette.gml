@@ -259,6 +259,8 @@ function drawPaletteGrid(_pal, _x, _y, _w, _gs = 24, params = {}) {
 		var _y0 = _y + _rr * _gs;
 		var _i  = 0;
 		
+		var _clr = _pal[i];
+		
 		if(amo == 1) {
 			_i = 1;
 		} else {
@@ -278,10 +280,12 @@ function drawPaletteGrid(_pal, _x, _y, _w, _gs = 24, params = {}) {
 			}
 		}
 		
-		draw_sprite_stretched_ext(THEME.palette_mask, _i, _x0, _y0, _cc == col - 1? _gw : ceil(_gw), _gs, _pal[i], 1);
+		var _same = (c_color & 0x00FFFFFF) == (_clr & 0x00FFFFFF);
+		
+		draw_sprite_stretched_ext(THEME.palette_mask, _i, _x0, _y0, _cc == col - 1? _gw : ceil(_gw), _gs, _clr, 1);
 		if(point_in_rectangle(_mx, _my, _x0, _y0, _x0 + _gw, _y0 + _gs)) {
 			_hov = i;
-			_hcc = _pal[i];
+			_hcc = _clr;
 			
 			hvx = _x0;
 			hvy = _y0;
@@ -289,7 +293,6 @@ function drawPaletteGrid(_pal, _x, _y, _w, _gs = 24, params = {}) {
 			hvh = _gs;
 		}
 		
-		var _same = (c_color & 0x00FFFFFF) == (_pal[i] & 0x00FFFFFF);
 		if(c_color >= 0 && _same) {
 			cx = _x0;
 			cy = _y0;
@@ -297,7 +300,7 @@ function drawPaletteGrid(_pal, _x, _y, _w, _gs = 24, params = {}) {
 	}
 	
 	if(cx != -1) {
-		var _pd = ui(5);
+		var _pd = 5;
 		draw_sprite_stretched_ext(THEME.palette_selecting, 0, cx - _pd, cy - _pd, _gw + _pd * 2, _gs + _pd * 2);
 	}
 	

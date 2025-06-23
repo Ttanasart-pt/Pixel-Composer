@@ -67,10 +67,9 @@ if !ready exit;
 
 #region selector
 	var col_x = content_x + ui(20);
-	var col_y = dialog_y + ui(52);
+	var col_y = dialog_y  + ui(52);
 	
-	if(preset_selecting > -1)
-		selector.palette = paletePresets[preset_selecting].palette;
+	if(preset_selecting > -1) selector.palette = paletePresets[preset_selecting].palette;
 	selector.draw(col_x, col_y, sFOCUS, sHOVER);
 #endregion
 

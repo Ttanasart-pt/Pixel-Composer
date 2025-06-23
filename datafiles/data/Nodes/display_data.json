@@ -558,6 +558,9 @@
             "Node_3D_UV_Remap",
             
             { "label": "Points" },
+            "Node_Scatter_Points_3D",
+            "Node_Scatter_Point_Lattice_3D",
+            "Node_Point_3D_Camera",
             "Node_3D_Point_Affector",
             
             { "label": "Ray Marching" },

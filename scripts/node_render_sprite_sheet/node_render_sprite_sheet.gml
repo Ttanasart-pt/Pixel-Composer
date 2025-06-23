@@ -10,7 +10,7 @@ enum SPRITE_ANIM_GROUP {
 }
 
 function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	static log = false;
+	static log  = false;
 	name		= "Render Spritesheet";
 	anim_drawn	= array_create(TOTAL_FRAMES + 1, false);
 	
@@ -347,18 +347,19 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	static animationInit = function(clear = false) {
 		if(anim_rendering) return;
 		
-		var inpt = getInputData(0);
-		var skip = getInputData(2);
-		var pack = getInputData(3);
-		var grid = getInputData(4);
-		var alig = getInputData(5);
-		var spac = getInputData(6);
-		var padd = getInputData(7);
-		var rang = getInputData(8);
-		var spc2 = getInputData(9);
+		var inpt  = getInputData( 0);
+		var skip  = getInputData( 2);
+		var exemp = getInputData(12);
+		
+		var pack  = getInputData( 3);
+		var grid  = getInputData( 4);
+		var alig  = getInputData( 5);
+		var spac  = getInputData( 6);
+		var spc2  = getInputData( 9);
+		var padd  = getInputData( 7);
 		
 		var user  = getInputData(11);
-		var exemp = getInputData(12);
+		var rang  = getInputData( 8);
 		
 		var _out = outputs[0].getValue();
 		var cDep = attrDepth();
@@ -439,20 +440,21 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		if(IS_FIRST_FRAME && anim_rendering) return;
 		if(!IS_PLAYING) return;
 		
-		var inpt = getInputData(0);
-		var skip = getInputData(2);
-		var pack = getInputData(3);
-		var grid = getInputData(4);
-		var alig = getInputData(5);
-		var spac = getInputData(6);
-		var padd = getInputData(7);
-		var rang = getInputData(8);
-		var spc2 = getInputData(9);
-		
-		var user  = getInputData(11);
+		var inpt  = getInputData( 0);
+		var skip  = getInputData( 2);
 		var exemp = getInputData(12);
 		
-		var cDep = attrDepth();
+		var pack  = getInputData( 3);
+		var grid  = getInputData( 4);
+		var alig  = getInputData( 5);
+		var spac  = getInputData( 6);
+		var spc2  = getInputData( 9);
+		var padd  = getInputData( 7);
+		
+		var user  = getInputData(11);
+		var rang  = getInputData( 8);
+		
+		var cDep  = attrDepth();
 		
 		printIf(log, $"Rendering animation {name}/{CURRENT_FRAME} [{anim_array_length}]");
 		
@@ -477,7 +479,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			var amo = floor((_ed - _st) / skip);
 		#endregion
 		
-		if(safe_mod(CURRENT_FRAME - _st, skip) != 0) return;
+		if(CURRENT_FRAME < _st || CURRENT_FRAME > _ed) return;
+		if(safe_mod(CURRENT_FRAME - _st, skip) != 0)   return;
 		
 		#region check overlap
 			if(array_length(anim_drawn) != TOTAL_FRAMES)

@@ -30,6 +30,7 @@ event_inherited();
 	} initPalette();
 	
 	preset_selecting = -1;
+	preset_expands   = {};
 	
 	pal_padding    = ui(9);
 	sp_preset_w    = ui(240) - pal_padding * 2 - ui(8);
@@ -54,15 +55,16 @@ event_inherited();
 		var col = max(1, floor(_ww / _gs)), row;
 		
 		for(var i = -1; i < array_length(paletePresets); i++) {
-			var pal = i == -1? {
+			var  pal = i == -1? {
 				name    : "project",
 				palette : PROJECT.attributes.palette,
 				path    : ""
 			} : paletePresets[i];
 			
-			pre_amo = array_length(pal.palette);
-			row     = ceil(pre_amo / col);
-			_height = preset_selecting == i? nh + row * _gs + pd : _bh;
+			var _exp = preset_expands[$ i];
+			pre_amo  = array_length(pal.palette);
+			row      = ceil(pre_amo / col);
+			_height  = _exp? nh + row * _gs + pd : _bh;
 			
 			var isHover = _hover && point_in_rectangle(_m[0], _m[1], 0, yy, ww, yy + _height);
 			
@@ -78,29 +80,44 @@ event_inherited();
 			
 			if(i == -1) { draw_set_color(cc); draw_circle_prec(ww - ui(10), yy + ui(10), ui(4), false); }
 			
-			if(preset_selecting == i) 
-				_palRes = drawPaletteGrid(pal.palette, pd, yy + nh, _ww, _gs, { color : selector.current_color, mx : _m[0], my : _m[1] });
-			else
-				drawPalette(pal.palette, pd, yy + nh, _ww, _gs);
+			var _hoverColor = noone;
+			if(_exp || row == 1) {
+				_palRes     = drawPaletteGrid(pal.palette, pd, yy + nh, _ww, _gs, { color : selector.current_color, mx : _m[0], my : _m[1] });
+				_hoverColor = _palRes.hoverIndex > noone? _palRes.hoverColor : noone;
+			} else drawPalette(pal.palette, pd, yy + nh, _ww, _gs);
 			
-			if(!click_block && mouse_click(mb_left, interactable && sFOCUS)) {
-				if(preset_selecting == i && _hover && _palRes.hoverIndex > noone) {
-					selector.setColor(_palRes.hoverColor);
-					selector.setHSV();
-					
-				} else if(isHover) {
-					preset_selecting = i;
-					click_block = true;
-				}
+			if(_hoverColor != noone) {
+				var _box = _palRes.hoverBBOX;
+				draw_sprite_stretched_ext(THEME.box_r2, 1, _box[0], _box[1], _box[2], _box[3], c_white);
 			}
 			
-			if(isHover && i >= 0 && mouse_press(mb_right, interactable && sFOCUS)) {
-				hovering = pal;
+			if(!click_block && interactable && sFOCUS) {
+				if(mouse_click(mb_left)) {
+					if(_hoverColor != noone) {
+						selector.setColor(_hoverColor);
+						
+					} else if(isHover) {
+						preset_expands[$ i] = !_exp;
+						preset_selecting = i;
+						click_block = true;
+					}
+				}
 				
-				menuCall("palette_window_preset_menu", [
-					menuItem(__txtx("palette_editor_set_default", "Set as default"), function() { PROJECT.setPalette(array_clone(hovering.palette)); }),
-					menuItem(__txtx("palette_editor_delete",      "Delete palette"), function() { file_delete(hovering.path); __initPalette(); }),
-				]);
+				if(mouse_click(mb_right)) {
+					if(_hoverColor != noone) {
+						menuCall("palette_window_preset_menu", [
+							menuItem(__txtx("palette_mix_color", "Mix Color"), function(c) /*=>*/ { selector.setMixColor(c); }).setParam(_hoverColor),
+						]);
+						
+					} else if(isHover && i >= 0) {
+						hovering = pal;
+				
+						menuCall("palette_window_preset_menu", [
+							menuItem(__txtx("palette_editor_set_default", "Set as default"), function() /*=>*/ { PROJECT.setPalette(array_clone(hovering.palette)); }),
+							menuItem(__txtx("palette_editor_delete",      "Delete palette"), function() /*=>*/ { file_delete(hovering.path); __initPalette(); }),
+						]);
+					}
+				}
 			}
 			
 			yy += _height + ui(4);
