@@ -20,9 +20,9 @@
     function panel_graph_toggle_control()          { CALL("graph_toggle_control");      PANEL_GRAPH.project.graphDisplay.show_control   = !PANEL_GRAPH.project.graphDisplay.show_control;     }
     function panel_graph_toggle_avoid_label()      { CALL("graph_toggle_avoid_label");  PANEL_GRAPH.project.graphDisplay.avoid_label    = !PANEL_GRAPH.project.graphDisplay.avoid_label;      }
     
-    function panel_graph_group()                   { CALL("graph_group");               PANEL_GRAPH.doGroup();                 }
-    function panel_graph_ungroup()                 { CALL("graph_ungroup");             PANEL_GRAPH.doUngroup();               }
-    function panel_graph_uninstance()              { CALL("graph_uninstance");          PANEL_GRAPH.doGroupRemoveInstance();   }
+    function panel_graph_group()                   { CALL("graph_group");               PANEL_GRAPH.doGroup();                }
+    function panel_graph_ungroup()                 { CALL("graph_ungroup");             PANEL_GRAPH.doUngroup();              }
+    function panel_graph_uninstance()              { CALL("graph_uninstance");          PANEL_GRAPH.doGroupRemoveInstance();  }
                                                                                                                             
     function panel_graph_canvas_copy()             { CALL("graph_canvas_copy");         PANEL_GRAPH.setCurrentCanvas();       }
     function panel_graph_canvas_blend()            { CALL("graph_canvas_blend");        PANEL_GRAPH.setCurrentCanvasBlend();  }
@@ -34,9 +34,9 @@
     function panel_graph_copy()                    { CALL("graph_copy");                PANEL_GRAPH.doCopy();                 }
     function panel_graph_paste()                   { CALL("graph_paste");               PANEL_GRAPH.doPaste();                }
     
-    function panel_graph_auto_organize_all()       { CALL("graph_auto_organize_al");    node_auto_organize(PROJECT.nodes);                                                              }
-    function panel_graph_auto_organize()           { CALL("graph_auto_organize");       node_auto_organize(PANEL_GRAPH.nodes_selecting);                                                }
-    function panel_graph_auto_align()              { CALL("graph_auto_align");          node_auto_align(PANEL_GRAPH.nodes_selecting);                                                   }
+    function panel_graph_auto_organize_all()       { CALL("graph_auto_organize_al");    node_auto_organize(PANEL_GRAPH.nodes_list);      }
+    function panel_graph_auto_organize()           { CALL("graph_auto_organize");       node_auto_organize(PANEL_GRAPH.nodes_selecting); }
+    function panel_graph_auto_align()              { CALL("graph_auto_align");          node_auto_align(PANEL_GRAPH.nodes_selecting);    }
     function panel_graph_snap_nodes()              { CALL("graph_snap_nodes");          node_snap_grid(PANEL_GRAPH.nodes_selecting, PANEL_GRAPH.project.graphGrid.size);                }
     function panel_graph_search()                  { CALL("graph_search");              PANEL_GRAPH.toggleSearch();                                                                     }
     function panel_graph_toggle_minimap()          { CALL("graph_toggle_minimap");      PANEL_GRAPH.minimap_show = !PANEL_GRAPH.minimap_show;                                           }
@@ -106,7 +106,7 @@
         registerFunction("Graph", "Zoom",                  "", MOD_KEY.alt | MOD_KEY.ctrl,       panel_graph_zoom                ).setMenu("graph_zoom")
         
         registerFunction("Graph", "Auto Align",            "L", MOD_KEY.none,                    panel_graph_auto_align          ).setMenu("graph_auto_align")
-        registerFunction("Graph", "Auto Organize",         "L", MOD_KEY.ctrl, function() /*=>*/ { dialogPanelCall(new Panel_Graph_Auto_Organize(PANEL_GRAPH.nodes_selecting)) } ).setMenu("graph_auto_organize", THEME.obj_auto_organize)
+        registerFunction("Graph", "Auto Organize...",      "L", MOD_KEY.ctrl, function() /*=>*/ { dialogPanelCall(new Panel_Graph_Auto_Organize(PANEL_GRAPH.nodes_selecting)) } ).setMenu("graph_auto_organize", THEME.obj_auto_organize)
         registerFunction("Graph", "Auto Organize All",     "",  MOD_KEY.none,                    panel_graph_auto_organize_all   ).setMenu("graph_auto_organize_all", THEME.obj_auto_organize)
         registerFunction("Graph", "Snap Nodes",            "",  MOD_KEY.none,                    panel_graph_snap_nodes          ).setMenu("graph_snap_nodes")
         registerFunction("Graph", "Search",                "F", MOD_KEY.ctrl,                    panel_graph_search              ).setMenu("graph_search")
@@ -142,10 +142,10 @@
             registerFunction("Graph", "Export Hovering Node",   "",  MOD_KEY.none,               panel_graph_send_to_export      ).setMenu("graph_export_hover")
         }
         
-        registerFunction("Graph", "Export As Image",     "",  MOD_KEY.none,    function() /*=>*/ { dialogPanelCall(new Panel_Graph_Export_Image(PANEL_GRAPH)) }).setMenu("graph_export_image")
-        registerFunction("Graph", "Connection Settings", "",  MOD_KEY.none,    function() /*=>*/ { dialogPanelCall(new Panel_Graph_Connection_Setting())      }).setMenu("graph_connection_settings")
-        registerFunction("Graph", "Grid Settings",       "",  MOD_KEY.none,    function() /*=>*/ { dialogPanelCall(new Panel_Graph_Grid_Setting())            }).setMenu("graph_grid_settings")
-        registerFunction("Graph", "View Settings",       "",  MOD_KEY.none,    function() /*=>*/ { dialogPanelCall(new Panel_Graph_View_Setting(PANEL_GRAPH, PROJECT.graphDisplay)) }).setMenu("graph_view_settings")
+        registerFunction("Graph", "Export As Image...",     "",  MOD_KEY.none,    function() /*=>*/ { dialogPanelCall(new Panel_Graph_Export_Image(PANEL_GRAPH)) }).setMenu("graph_export_image")
+        registerFunction("Graph", "Connection Settings...", "",  MOD_KEY.none,    function() /*=>*/ { dialogPanelCall(new Panel_Graph_Connection_Setting())      }).setMenu("graph_connection_settings")
+        registerFunction("Graph", "Grid Settings...",       "",  MOD_KEY.none,    function() /*=>*/ { dialogPanelCall(new Panel_Graph_Grid_Setting())            }).setMenu("graph_grid_settings")
+        registerFunction("Graph", "View Settings...",       "",  MOD_KEY.none,    function() /*=>*/ { dialogPanelCall(new Panel_Graph_View_Setting(PANEL_GRAPH, PROJECT.graphDisplay)) }).setMenu("graph_view_settings")
         
 		registerFunction("Graph", "Toggle Topbar",       "", MOD_KEY.none, panel_graph_topbar_toggle  ).setMenu("graph_topbar_toggle", noone, false, function() /*=>*/ {return PROJECT.graphDisplay.show_topbar});
 		registerFunction("Graph", "Show Topbar",         "", MOD_KEY.none, panel_graph_topbar_show    ).setMenu("graph_topbar_show");
@@ -326,7 +326,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         bg_color          = c_black;
         slider_width      = 0;
         tooltip_overlay   = {};
-        toolbar_height    = ui(40);
+        toolbar_height    = ui(36);
         toolbar_left      = 0;
         
         topbar_height  = ui(32);
@@ -2419,7 +2419,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     }
     
     function drawContext() { //
-        draw_set_text(f_p0, fa_left, fa_center);
+        draw_set_text(f_p2, fa_left, fa_center);
         var xx  = ui(16), tt, tw, th;
         var bh  = toolbar_height - ui(12);
         var tbh = h - toolbar_height / 2;
@@ -2458,15 +2458,15 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                     break;
                 }
                 
-                draw_sprite_ui_uniform(THEME.arrow, 0, xx + tw + ui(16), tbh, 1, COLORS._main_icon);
+                draw_sprite_ui_uniform(THEME.arrow, 0, xx + tw + ui(12), tbh + ui(1), .75, COLORS._main_icon);
             }
             
-            draw_set_color(COLORS._main_text);
-            draw_set_alpha(i < array_length(node_context) - 1? 0.33 : 1);
+            var _aa = i < array_length(node_context) - 1? 0.33 : 1;
+            draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text, _aa);
             draw_text_add(xx, tbh, tt);
             draw_set_alpha(1);
             
-            xx += tw + ui(32);
+            xx += tw + ui(24);
         }
         
         return xx;
@@ -2484,7 +2484,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         draw_sprite_stretched(THEME.toolbar, 0, tx, ty, tw, th);
         var cont_x = drawContext();
         
-        var bs  = ui(28);
+        var bs  = toolbar_height - ui(8);
+        var bsc = 1;
         var tbx = w - ui(6) - bs;
         var tby = ty + th / 2;
         var _m  = [ mx, my ];
@@ -2517,8 +2518,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		            var tooltip = instance_exists(o_dialog_menubox)? "" : tbTooltip;
 		            var _bx = tbx;
 		            var _by = tby - bs / 2;
+            		var _bc = COLORS._main_icon;
+		            var  b  = buttonInstant(THEME.button_hide_fill, _bx, _by, bs, bs, _m, hov, pFOCUS, tooltip, tbSpr, tbInd, _bc, bsc);
 		            
-		            var b = buttonInstant(THEME.button_hide_fill, _bx, _by, bs, bs, _m, hov, pFOCUS, tooltip, tbSpr, tbInd);
 		            switch(b) { 
 		            	case 1 : 
 		            		if(onWUp   != 0 && key_mod_press(SHIFT) && MOUSE_WHEEL > 0) onWUp();

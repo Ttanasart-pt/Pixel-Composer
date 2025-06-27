@@ -34,8 +34,8 @@ function __test_update_current_collections(dir = COLLECTIONS) {
 function __test_update_sample_projects() {
 	print("---------- PROJECT UPDATING STARTED ----------");
 	
-	for( var i = 0; i < ds_list_size(SAMPLE_PROJECTS); i++ ) {
-		var _proj = SAMPLE_PROJECTS[| i];
+	for( var i = 0; i < array_length(SAMPLE_PROJECTS); i++ ) {
+		var _proj = SAMPLE_PROJECTS[i];
 			
 		print("  > Updating " + _proj.meta_path);
 		var _map = json_load_struct(_proj.meta_path);

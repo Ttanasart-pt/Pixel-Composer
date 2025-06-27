@@ -67,5 +67,7 @@ function project_get_thumbnail_surface(_path) {
 	surface_set_shader(_surf);
 		draw_sprite(_spr, 0, _sw / 2, _sh / 2);
 	surface_reset_shader();
+	
+	sprite_delete(_spr);
 	return _surf;
 }

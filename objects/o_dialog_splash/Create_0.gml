@@ -167,7 +167,7 @@ event_inherited();
 		var grid_space = grid_width / 8;
 		var grid_line  = ui(4);
 		
-		var node_count = ds_list_size(list);
+		var node_count = array_length(list);
 		var col = floor(ww / (grid_width + grid_space));
 		var row = ceil(node_count / col);
 		var xx  = grid_space;
@@ -181,7 +181,7 @@ event_inherited();
 		var _meta;
 		
 		for(var i = 0; i < node_count; i++) {
-			var _project = list[| i];
+			var _project = list[i];
 			
 			if(_group_label) {
 				if(_curr_tag != _project.tag) {
@@ -220,7 +220,7 @@ event_inherited();
 			_boxx = _nx;
 			
 			if(yy > -grid_heigh && yy < sp_sample.surface_h) {
-				var spr = _project.getSpr();
+				var spr   = _project.getSpr();
 				var gridX = _boxx;
 				var gridY = yy;
 				var gridW = grid_width;

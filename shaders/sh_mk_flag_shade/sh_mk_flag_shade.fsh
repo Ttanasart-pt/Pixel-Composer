@@ -1,6 +1,3 @@
-//
-// Simple passthrough fragment shader
-//
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -23,6 +20,7 @@ void main() {
 	if(side == 0) {
 		if(shadowInv == 0) shade = oriPos.y - shadowThres < texPos.y? shadow : 1.;
 		else               shade = oriPos.y - shadowThres > texPos.y? shadow : 1.;
+		
 	} else {
 		if(shadowInv == 0) shade = oriPos.x - shadowThres < texPos.x? shadow : 1.;
 		else               shade = oriPos.x - shadowThres > texPos.x? shadow : 1.;

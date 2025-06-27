@@ -8,10 +8,9 @@ enum GRADIENT_INTER {
 
 global.gradient_sort_list = ds_priority_create();
 
-function gradientKey(time, value) constructor {
-	self.time  = time;
-	self.value = value;
-	
+function gradientKey(_time, _value) constructor {
+	time   = _time;
+	value  = _value;
 	_hover = 0;
 	
 	static clone     = function() { return new gradientKey(time, value); }
@@ -258,7 +257,8 @@ function gradientObject(color = ca_black) constructor {
 	}
 	
 	static serialize = function() {
-		var s  = { type, keys: [] };
+		var s = { type, keys: [] };
+		
 		for( var i = 0, n = array_length(keys); i < n; i++ )
 			s.keys[i] = keys[i].serialize();
 		

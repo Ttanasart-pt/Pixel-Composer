@@ -23,7 +23,7 @@
             registerFunction("", "Save",            "S",    MOD_KEY.ctrl,                                 SAVE                     ).setMenu("save",           THEME.save)
             registerFunction("", "Save as",         "S",    MOD_KEY.ctrl | MOD_KEY.shift,                 SAVE_AS                  ).setMenu("save_as",        THEME.save)
             registerFunction("", "Save at",         "",     MOD_KEY.none,                                 SAVE_AT                  ).setMenu("save_at",        THEME.save)
-                .setArg([ ARG("project", function() { return PROJECT; }, true), ARG("path", ""), ARG("log", "save at ") ])
+                .setArg([ ARG("project", function() /*=>*/ {return PROJECT}, true), ARG("path", ""), ARG("log", "save at ") ])
             
             registerFunction("", "Save all",        "S",    MOD_KEY.ctrl | MOD_KEY.alt,                   SAVE_ALL                 ).setMenu("save_all",       THEME.icon_save_all)
             registerFunction("", "Open",            "O",    MOD_KEY.ctrl,                                 LOAD                     ).setMenu("open",           THEME.noti_icon_file_load)
@@ -33,7 +33,7 @@
                 .setArg([ ARG("path", ""), ARG("readonly", false), ARG("override", false) ])
             
             registerFunction("", "Append",          "",     MOD_KEY.none,                                 APPEND                   ).setMenu("append",         )
-                .setArg([ ARG("path", ""), ARG("context", function() { return PANEL_GRAPH.getCurrentContext() }, true) ])
+                .setArg([ ARG("path", ""), ARG("context", function() /*=>*/ {return PANEL_GRAPH.getCurrentContext()}, true) ])
             
             registerFunction("", "Recent Files",    "R",    MOD_KEY.ctrl | MOD_KEY.shift,
                 function(_dat) { 
@@ -69,7 +69,7 @@
         registerFunction("", "Close program",       vk_f4,  MOD_KEY.alt,  window_close             ).setMenu("close_software"  )
         registerFunction("", "Close project",       "",     MOD_KEY.none, closeProject             ).setMenu("close_project"   ).setArg([ ARG("project", function() /*=>*/ {return PROJECT}, true) ])
             
-        registerFunction("", "Reload theme",        vk_f10, MOD_KEY.ctrl | MOD_KEY.shift,                 global_theme_reload      ).setMenu("reload_theme",   )
+        registerFunction("", "Reload theme",        vk_f10, MOD_KEY.ctrl | MOD_KEY.shift,           global_theme_reload        ).setMenu("reload_theme")
         
         registerFunction("", "Addons",              "",     MOD_KEY.none, function(_dat) /*=>*/ {
             var arr = [
@@ -138,36 +138,87 @@ function Panel_Menu() : PanelContent() constructor {
         if(!DEMO) global.menuItems_main_file = array_append(menu_file_nondemo, menu_file_content);
         menu_file = [ __txt("File"), "main_file" ];
         
-        global.menuItems_main_edit = [
+        global.menuItems_main_edit      = [
             "undo",
             "redo",
             "history",
-        ]; menu_edit = [ __txt("Edit"), "main_edit" ];
-        
-        global.menuItems_main_preview = [
+        ]; menu_edit      = [ __txt("Edit"),      "main_edit"      ];
+        global.menuItems_main_preview   = [
             "preview_focus_content", 
-            "preview_save_current_frame", 
-            -1,
+            "preview_toggle_reset_view",
             "preview_view_control_toggle",
+            -1,
+            "preview_tiling_settings",
+            "preview_split_view_settings",
             "preview_group_preview_bg",
-        ]; menu_preview = [ __txt("Preview"), "main_preview" ];
-        
-        global.menuItems_main_graph = [
-            "graph_topbar_toggle",
+            -1,
+            "preview_copy_current_frame",
+            "preview_save_current_frame", 
+            "preview_save_all_current_frames", 
+            -1,
+            "preview_view_settings",
+            "preview_grid_settings",
+            "preview_snap_settings",
+            "preview_3D_settings",
+            "preview_3D_SDF_settings", 
+            "preview_onion_settings",
+        ]; menu_preview   = [ __txt("Preview"),   "main_preview"   ];
+        global.menuItems_main_graph     = [
+            "graph_add_node",
+            "graph_replace_node",
+            -1,
+            "graph_duplicate",
+            "graph_instance",
+            "graph_copy",
+            "graph_paste",
+            -1,
+            "graph_snap_nodes",
+            "graph_auto_align",
+            "graph_auto_organize_all",
+            "graph_auto_organize",
+            -1,
+            "graph_focus_content",
             "graph_view_control_toggle",
-        ]; menu_graph = [ __txt("Graph"), "main_graph" ];
-        
+            "graph_topbar_toggle",
+            -1,
+            "graph_export_image",
+            -1,
+            "graph_view_settings",
+            "graph_grid_settings",
+            "graph_connection_settings",
+        ]; menu_graph     = [ __txt("Graph"),     "main_graph"     ];
         global.menuItems_main_animation = [
+            "play_pause",
+            "resume_pause",
+            "first_frame",
+            "last_frame",
+            "previous_frame",
+            "next_frame",
+            "previous_keyframe",
+            "next_keyframe",
+            -1,
+            "animation_quantize",
+            "animation_stagger",
+            "animation_repeat",
+            "animation_distribute",
+            "animation_reverse",
+            "animation_envelope",
+            -1,
+            "animation_set_range_start",
+            "animation_set_range_end",
+            "animation_reset_range",
+            -1,
             "animation_settings",
             "animation_scaler",
-        ]; menu_animation = [ __txt("Animation"), "main_animation"];
-        
+        ]; menu_animation = [ __txt("Animation"), "main_animation" ];
         global.menuItems_main_rendering = [
             "render_all",
             "export_all",
-        ]; menu_rendering = [ __txt("Rendering"), "main_rendering"];
+        ]; menu_rendering = [ __txt("Rendering"), "main_rendering" ];
         
         menu_panels = [ __txt("Panels"), [
+            MENU_ITEMS.full_panel,
+            MENU_ITEMS.reset_layout,
             menuItemShelf(__txt("Workspace"), function(_dat) { 
                 var arr = [];
                 var lay = [];
@@ -264,6 +315,8 @@ function Panel_Menu() : PanelContent() constructor {
             menuItem(__txtx("panel_menu_test_warning", "Display Warning"),        function() /*=>*/ {return noti_warning("Error message")}),
             menuItem(__txtx("panel_menu_test_error", "Display Error"),            function() /*=>*/ {return noti_error("Error message")}),
             menuItem(__txtx("panel_menu_test_crash", "Force crash"),              function() /*=>*/ {return print(1 + "a")}),
+            -1,
+            MENU_ITEMS.reload_theme,
             -1,
             menuItemShelf(__txt("Misc."), function(_dat) { 
                 return submenuCall(_dat, [ 

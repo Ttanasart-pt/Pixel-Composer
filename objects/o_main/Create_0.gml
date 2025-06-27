@@ -179,7 +179,7 @@
 	STEAM_USERNAME = "";
 	STEAM_AVATAR   = 0;
 	
-	steam_avatar_id   = "";
+	steam_avatar_id = "";
 	
 	STEAM_UGC_UPDATE_HANDLE  = 0;
 	STEAM_UGC_ITEM_ID        = 0;

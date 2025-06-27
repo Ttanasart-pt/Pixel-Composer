@@ -141,10 +141,10 @@ function Panel_Collection() : PanelContent() constructor {
 			var meta   = _menu_node.getMetadata();
 			var del_id = meta.file_id;
 			
-			for( var i = 0; i < ds_list_size(STEAM_COLLECTION); i++ ) {
-				if(STEAM_COLLECTION[| i].getMetadata().file_id != del_id) continue;
+			for( var i = 0; i < array_length(STEAM_COLLECTION); i++ ) {
+				if(STEAM_COLLECTION[i].getMetadata().file_id != del_id) continue;
 				
-				ds_list_delete(STEAM_COLLECTION, i);
+				array_delete(STEAM_COLLECTION, i, 1);
 				break;
 			}
 			
@@ -191,11 +191,11 @@ function Panel_Collection() : PanelContent() constructor {
 	
 	searching     = false;
 	search_string = "";
-	search_list   = ds_list_create();
+	search_list   = [];
 	
 	function doSearch() {
 		var search_lower = string_lower(search_string);
-		ds_list_clear(search_list);
+		search_list = [];
 		
 		switch(pageStr[page]) {
 			case "Collections" :
@@ -207,8 +207,8 @@ function Panel_Collection() : PanelContent() constructor {
 				var st = ds_stack_create();
 				var ll = ds_priority_create();
 				
-				for( var i = 0, n = ds_list_size(STEAM_PROJECTS); i < n; i++ ) {
-					var _nd = STEAM_PROJECTS[| i];
+				for( var i = 0, n = array_length(STEAM_PROJECTS); i < n; i++ ) {
+					var _nd = STEAM_PROJECTS[i];
 						
 					var match = string_partial_match(string_lower(_nd.name), search_lower);
 					if(match == -9999) continue;
@@ -217,7 +217,7 @@ function Panel_Collection() : PanelContent() constructor {
 				}
 				
 				repeat(ds_priority_size(ll))
-					ds_list_add(search_list, ds_priority_delete_max(ll));
+					array_push(search_list, ds_priority_delete_max(ll));
 				
 				ds_priority_destroy(ll);
 				ds_stack_destroy(st);
@@ -264,7 +264,7 @@ function Panel_Collection() : PanelContent() constructor {
 				ds_map_destroy(search_map);
 				
 				repeat(ds_priority_size(pr_list))
-					ds_list_add(search_list, ds_priority_delete_max(pr_list));
+					array_push(search_list, ds_priority_delete_max(pr_list));
 				
 				ds_priority_destroy(pr_list);
 				break;
@@ -272,7 +272,7 @@ function Panel_Collection() : PanelContent() constructor {
 	}
 	
 	tb_search     = textBox_Text(function(str) /*=>*/ { search_string = string(str); doSearch(); }).setAutoupdate();
-	grid_size     = ui(56);
+	grid_size     = ui(52);
 	grid_size_to  = grid_size;
 	
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -292,10 +292,10 @@ function Panel_Collection() : PanelContent() constructor {
     			if(context == root) content = STEAM_COLLECTION;
     			else				content = context.content;
     			
-    			for( var i = 0; i < ds_list_size(STEAM_COLLECTION); i++ ) {
-    				var meta = STEAM_COLLECTION[| i].meta;	
+    			for( var i = 0; i < array_length(STEAM_COLLECTION); i++ ) {
+    				var meta = STEAM_COLLECTION[i].meta;	
     				if(array_exists(meta.tags, context.name))
-    					array_push(steamNode, STEAM_COLLECTION[| i]);	
+    					array_push(steamNode, STEAM_COLLECTION[i]);	
     			}
 		        break;
 		       
@@ -305,7 +305,7 @@ function Panel_Collection() : PanelContent() constructor {
 		
 		if(searching) content = search_list;
 		
-		var node_list  = ds_list_size(content);
+		var node_list  = array_length(content);
 		var node_count = node_list + array_length(steamNode);
 		var frame	   = PREFERENCES.collection_animated? current_time * PREFERENCES.collection_preview_speed / 3000 : 0;
 		var _cw		   = contentPane.surface_w;
@@ -334,7 +334,7 @@ function Panel_Collection() : PanelContent() constructor {
 					var index = i * col + j;
 					if(index >= node_count) break;
 					
-					var _node = index < node_list? content[| index] : steamNode[index - node_list];
+					var _node = index < node_list? content[index] : steamNode[index - node_list];
 					var _nx   = grid_space + (grid_width + grid_space) * j;
 					var _boxx = _nx + (grid_width - grid_size) / 2;
 					_boxx = round(_boxx);
@@ -432,9 +432,8 @@ function Panel_Collection() : PanelContent() constructor {
 				yy += hght;
 			}
 			
-			if(pHOVER && key_mod_press(CTRL) && MOUSE_WHEEL != 0 && point_in_rectangle(_m[0], _m[1], 0, 0, contentPane.surface_w, contentPane.surface_h))
-				grid_size_to = clamp(grid_size_to + ui(4) * MOUSE_WHEEL, ui(32), ui(160));
-			
+			var hov = pHOVER && point_in_rectangle(_m[0], _m[1], 0, 0, contentPane.surface_w, contentPane.surface_h);
+			if(hov && key_mod_press(CTRL)) grid_size_to = clamp(grid_size_to + ui(4) * MOUSE_WHEEL, ui(32), ui(160));
 			grid_size = lerp_float(grid_size, grid_size_to, 5);
 			
 		} else {
@@ -444,7 +443,7 @@ function Panel_Collection() : PanelContent() constructor {
 			hh += list_height;
 		
 			for(var i = 0; i < node_count; i++) {
-				var _node = i < node_list? content[| i] : steamNode[i - node_list];
+				var _node = i < node_list? content[i] : steamNode[i - node_list];
 				if(!_node) continue;
 				
 				if(yy + list_height >= 0 && yy <= contentPane.surface_h) {
@@ -573,7 +572,7 @@ function Panel_Collection() : PanelContent() constructor {
 		nodeListPane.hover_content = true;
 		
 		var  ww  = nodeListPane.surface_w;
-		var _hg  = line_get_height(f_p1, 4);
+		var _hg  = line_get_height(f_p2, 4);
 		var _hov = pHOVER && nodeListPane.hover;
 		var _foc = pFOCUS;
 		
@@ -589,11 +588,11 @@ function Panel_Collection() : PanelContent() constructor {
 			if(_hov && point_in_rectangle(_m[0], _m[1], 0, _y0, ww, _y1)) {
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, ui(16), _y0, ww - ui(20), _hg, CDEF.main_white, 1);
 				
-				if(mouse_press(mb_left, _foc))
+				if(mouse_click(mb_left, _foc))
 					nodeListPane_page = i;
 			}
 			
-			draw_set_text(f_p1, fa_left, fa_center, nodeListPane_page == i? COLORS._main_text_accent : COLORS._main_text_inner);
+			draw_set_text(f_p2, fa_left, fa_center, nodeListPane_page == i? COLORS._main_text_accent : COLORS._main_text_inner);
 			draw_text_add(ui(24), _y + _hg / 2, _nam);
 			
 			_y += _hg;
@@ -635,11 +634,11 @@ function Panel_Collection() : PanelContent() constructor {
 			_list = node_temp_list;
 		}
 		
-		var grid_width = PREFERENCES.collection_label? max(ui(40), round(grid_size * 1.25)) : grid_size;
-		var node_count = ds_list_size(_list);
-		var grid_space = round(grid_size * 0.1875);
-		
+		var grid_width  = PREFERENCES.collection_label? max(ui(40), round(grid_size * 1.25)) : grid_size;
+		var node_count  = ds_list_size(_list);
+		var grid_space  = ui(6);
 		var name_height = 0;
+		
 		var _cw    = nodecontentPane.surface_w;
 		var col    = max(1, floor(_cw / (grid_width + grid_space)));
 		var row    = ceil(node_count / col);
@@ -647,7 +646,7 @@ function Panel_Collection() : PanelContent() constructor {
 		var _hover = pHOVER && nodecontentPane.hover;
 		
 		var i, j, ii = 0;
-		var font   = f_p3;
+		var font   = f_p4;
 		grid_width = round(nodecontentPane.surface_w - grid_space) / col - grid_space;
 			
 		hh += grid_space;
@@ -672,13 +671,13 @@ function Panel_Collection() : PanelContent() constructor {
 			
 			if(yy + grid_size >= 0 && yy <= nodecontentPane.surface_h) {
 				BLEND_OVERRIDE
-				draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size);
+				draw_sprite_stretched(THEME.node_bg, 0, _nx, yy, grid_width, grid_size);
 				BLEND_NORMAL
 				
 				if(_hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
 					TOOLTIP = _node.name;
 					nodecontentPane.hover_content = true;
-					draw_sprite_stretched_ext(THEME.node_bg, 1, _boxx, yy, grid_size, grid_size, COLORS._main_accent, 1);
+					draw_sprite_stretched_ext(THEME.node_bg, 1, _nx, yy, grid_width, grid_size, COLORS._main_accent, 1);
 					
 					if(pFOCUS) {
 						if(mouse_press(mb_left))  DRAGGING = { type : "Node", data : _node };
@@ -703,13 +702,17 @@ function Panel_Collection() : PanelContent() constructor {
 			
 			if(PREFERENCES.collection_label) {
 				draw_set_text(font, fa_center, fa_top, COLORS._main_text_inner);
-				var _txtH = draw_text_ext_add(_boxx + grid_size / 2, yy + grid_size + ui(4), _node.name, -1, grid_width);
-				name_height = max(name_height, _txtH + 8);
-			} else 
-				name_height = 0;
+				
+				var _tx = _nx + grid_width / 2;
+				var _ty =  yy + grid_size + ui(2);
+				var _tw = round(grid_width + grid_space);
+				
+				var _txtH = draw_text_ext_add(_tx, _ty, _node.name, -1, _tw);
+				name_height = max(name_height, _txtH + ui(4));
+			}
 			
 			if(j == col - 1) {
-				var hght = grid_size + name_height + ui(8);
+				var hght = grid_size + name_height + ui(4);
 				hh += hght;
 				yy += hght;
 				
@@ -717,13 +720,12 @@ function Panel_Collection() : PanelContent() constructor {
 			}
 		}
 		
-		var hght = grid_size + name_height + ui(8);
+		var hght = grid_size + name_height + ui(4);
 		hh += hght;
 		yy += hght;
 		
-		if(pHOVER && key_mod_press(CTRL) && MOUSE_WHEEL != 0 && point_in_rectangle(_m[0], _m[1], 0, 0, nodecontentPane.surface_w, nodecontentPane.surface_h))
-			grid_size_to = clamp(grid_size_to + ui(4) && MOUSE_WHEEL, ui(32), ui(160));
-		
+		var hov = pHOVER && point_in_rectangle(_m[0], _m[1], 0, 0, nodecontentPane.surface_w, nodecontentPane.surface_h);
+		if(hov && key_mod_press(CTRL)) grid_size_to = clamp(grid_size_to + ui(4) * MOUSE_WHEEL, ui(32), ui(160));
 		grid_size = lerp_float(grid_size, grid_size_to, 5);
 		
 		return hh + ui(16);

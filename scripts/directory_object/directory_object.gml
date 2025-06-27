@@ -64,15 +64,22 @@ function FileObject(_path) constructor {
 		if(spr != -1 && sprite_exists(spr))	return spr;
 		if(sprFetchID != noone) return -1;
 		
+		if(type == FILE_TYPE.project) {
+			
+			var s = project_get_thumbnail(path);
+			if(sprite_exists(s)) { spr = s; return spr; }
+		}
+		
 		if(array_empty(spr_path)) {
 			var _spath = filename_ext_verify(path, ".png");
 			
 			if(loadThumbnailAsync) {
 				sprFetchID = sprite_add_ext(_spath, 0, 0, 0, true);
-				IMAGE_FETCH_MAP[? sprFetchID] = function(load_result) {
-					spr = load_result[? "id"];
+				IMAGE_FETCH_MAP[? sprFetchID] = function(_res) /*=>*/ {
+					spr = _res[? "id"];
 					if(spr) sprite_set_offset(spr, sprite_get_width(spr) / 2, sprite_get_height(spr) / 2);
-				};
+				}
+				
 			} else {
 				spr = sprite_add(_spath, 0, 0, 0, 0, 0);
 				if(spr) sprite_set_offset(spr, sprite_get_width(spr) / 2, sprite_get_height(spr) / 2);

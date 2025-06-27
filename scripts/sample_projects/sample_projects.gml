@@ -1,6 +1,5 @@
-#region samples
-	globalvar SAMPLE_PROJECTS;
-	SAMPLE_PROJECTS = ds_list_create();
+#region globals
+	globalvar SAMPLE_PROJECTS; SAMPLE_PROJECTS = [];
 #endregion
 
 function LOAD_FOLDER(list, path) {
@@ -13,16 +12,9 @@ function LOAD_FOLDER(list, path) {
 		var fPath = files[i];
 		if(!path_is_project(fPath)) continue;
 		
-		var fObj  = new FileObject(fPath);
-		var iPath = filename_ext_verify(fPath, ".png");
-			
-		if(file_exists_empty(iPath)) {
-			fObj.spr = sprite_add(iPath, 0, false, false, 0, 0);
-			sprite_set_offset(fObj.spr, sprite_get_width(fObj.spr) / 2, sprite_get_height(fObj.spr) / 2);
-		}
-		
+		var fObj = new FileObject(fPath);
 		fObj.tag = folder;
-		ds_list_add(list, fObj);
+		array_push(list, fObj);
 	}
 	
 	var _dir = directory_listdir(path, fa_directory);
@@ -31,7 +23,8 @@ function LOAD_FOLDER(list, path) {
 }
 
 function LOAD_SAMPLE() {
-	ds_list_clear(SAMPLE_PROJECTS);
+	SAMPLE_PROJECTS = [];
+	
 	var zzip = $"{working_directory}data/Welcome files/Welcome files.zip";
 	if(os_type != os_windows) zzip = $"{working_directory}data/welcome_files/Welcome files.zip";
 	

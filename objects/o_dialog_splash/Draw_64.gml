@@ -97,7 +97,7 @@ if !ready exit;
 		
 		switch(txt) {
 			case "Workshop" :
-				amo = ds_list_size(STEAM_PROJECTS);  
+				amo = array_length(STEAM_PROJECTS);  
 				break;
 				
 			case "Contests" :

@@ -14,8 +14,8 @@ event_inherited();
 	menu      = 1;
 	tooltips  = [];
 	show_icon = false;
-	font      = f_p2;
-	hght      = line_get_height(font, 10);
+	font      = f_p3;
+	hght      = line_get_height(font, 8);
 	
 	submenu   = noone;
 	submenuIt = noone;

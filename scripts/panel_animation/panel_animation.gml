@@ -53,35 +53,35 @@
     function panel_animation_reset_view()              { CALL("animation_view_reset");             PANEL_ANIMATION.resetView();              }
     
 	function __fnInit_Animation() {
-        registerFunction("",          "Play/Pause",         vk_space,   MOD_KEY.none,                 panel_animation_play_pause            ).setMenu("play_pause",                    )
-        registerFunction("",          "Resume/Pause",       vk_space,   MOD_KEY.shift,                panel_animation_resume                ).setMenu("resume_pause",                  )
+        registerFunction("",          "Play/Pause",         vk_space,   MOD_KEY.none,  panel_animation_play_pause     ).setMenu("play_pause")
+        registerFunction("",          "Resume/Pause",       vk_space,   MOD_KEY.shift, panel_animation_resume         ).setMenu("resume_pause")
                                 
-        registerFunction("",          "First Frame",        vk_home,    MOD_KEY.none,                 panel_animation_first_frame           ).setMenu("first_frame",                   )
-        registerFunction("",          "Last Frame",         vk_end,     MOD_KEY.none,                 panel_animation_last_frame            ).setMenu("last_frame",                    )
-        registerFunction("",          "Previous Frame",     vk_left,    MOD_KEY.none,                 panel_animation_prev_frame            ).setMenu("previous_frame",                )
-        registerFunction("",          "Next Frame",         vk_right,   MOD_KEY.none,                 panel_animation_next_frame            ).setMenu("next_frame",                    )
-        registerFunction("",          "Previous Keyframe",  vk_pageup,  MOD_KEY.none,                 panel_animation_prev_keyframe         ).setMenu("previous_keyframe",             )
-        registerFunction("",          "Next Keyframe",      vk_pagedown,MOD_KEY.none,                 panel_animation_next_keyframe         ).setMenu("next_keyframe",                 )
+        registerFunction("",          "First Frame",        vk_home,    MOD_KEY.none,  panel_animation_first_frame    ).setMenu("first_frame")
+        registerFunction("",          "Last Frame",         vk_end,     MOD_KEY.none,  panel_animation_last_frame     ).setMenu("last_frame")
+        registerFunction("",          "Previous Frame",     vk_left,    MOD_KEY.none,  panel_animation_prev_frame     ).setMenu("previous_frame")
+        registerFunction("",          "Next Frame",         vk_right,   MOD_KEY.none,  panel_animation_next_frame     ).setMenu("next_frame")
+        registerFunction("",          "Previous Keyframe",  vk_pageup,  MOD_KEY.none,  panel_animation_prev_keyframe  ).setMenu("previous_keyframe")
+        registerFunction("",          "Next Keyframe",      vk_pagedown,MOD_KEY.none,  panel_animation_next_keyframe  ).setMenu("next_keyframe")
     
-        registerFunction("Animation", "Delete keys",        vk_delete,  MOD_KEY.none,                 panel_animation_delete_key            ).setMenu("animation_delete_keys",         )
-        registerFunction("Animation", "Duplicate",          "D",        MOD_KEY.ctrl,                 panel_animation_duplicate             ).setMenu("animation_duplicate",           THEME.duplicate)
-        registerFunction("Animation", "Copy",               "C",        MOD_KEY.ctrl,                 panel_animation_copy                  ).setMenu("animation_copy",                THEME.copy)
-        registerFunction("Animation", "Paste",              "V",        MOD_KEY.ctrl,                 panel_animation_paste                 ).setMenu("animation_paste",               THEME.paste)
-        registerFunction("Animation", "Collapse Toggle",    "C",        MOD_KEY.none,                 panel_animation_collapseToggle        ).setMenu("animation_collapse_toggle",     )
-        registerFunction("Animation", "Toggle Nodes",       "H",        MOD_KEY.none,                 panel_animation_show_nodes            ).setMenu("animation_toggle_nodes",        )
-        registerFunction("Animation", "Quantize",           "Q",        MOD_KEY.none,                 panel_animation_quantize              ).setMenu("animation_quantize",            )
+        registerFunction("Animation", "Delete keys",        vk_delete,  MOD_KEY.none,  panel_animation_delete_key     ).setMenu("animation_delete_keys")
+        registerFunction("Animation", "Duplicate",          "D",        MOD_KEY.ctrl,  panel_animation_duplicate      ).setMenu("animation_duplicate", THEME.duplicate)
+        registerFunction("Animation", "Copy",               "C",        MOD_KEY.ctrl,  panel_animation_copy           ).setMenu("animation_copy",      THEME.copy)
+        registerFunction("Animation", "Paste",              "V",        MOD_KEY.ctrl,  panel_animation_paste          ).setMenu("animation_paste",     THEME.paste)
+        registerFunction("Animation", "Collapse Toggle",    "C",        MOD_KEY.none,  panel_animation_collapseToggle ).setMenu("animation_collapse_toggle")
+        registerFunction("Animation", "Toggle Nodes",       "H",        MOD_KEY.none,  panel_animation_show_nodes     ).setMenu("animation_toggle_nodes")
         
-        registerFunction("Animation", "Animation Settings", "S",        MOD_KEY.ctrl | MOD_KEY.shift, panel_animation_settings_call         ).setMenu("animation_settings", THEME.animation_setting )
-        registerFunction("Animation", "Animation Scaler",   "",         MOD_KEY.none,                 panel_animation_scale_call            ).setMenu("animation_scaler",   THEME.animation_timing  )
+        registerFunction("Animation", "Animation Settings...", "S",    MOD_KEY.ctrl | MOD_KEY.shift, panel_animation_settings_call ).setMenu("animation_settings", THEME.animation_setting )
+        registerFunction("Animation", "Animation Scaler...",   "",     MOD_KEY.none,                 panel_animation_scale_call    ).setMenu("animation_scaler",   THEME.animation_timing  )
         
         registerFunction("Animation", "Edit Keyframe Value","",  MOD_KEY.none, panel_animation_edit_keyframe_value    ).setMenu("animation_edit_keyframe_value", )
         registerFunction("Animation", "Toggle Keyframe Y",  "",  MOD_KEY.none, panel_animation_edit_keyframe_lock_y   ).setMenu("animation_lock_keyframe_y",     )
-        registerFunction("Animation", "Driver",             "",  MOD_KEY.none, panel_animation_keyframe_driver        ).setMenu("animation_driver",              )
+        registerFunction("Animation", "Driver...",          "",  MOD_KEY.none, panel_animation_keyframe_driver        ).setMenu("animation_driver",              )
         
         registerFunction("Animation", "Align Left",         "A", MOD_KEY.none, panel_animation_keyframe_align_left    ).setMenu("animation_align_left"   )
         registerFunction("Animation", "Align Center",       "",  MOD_KEY.none, panel_animation_keyframe_align_center  ).setMenu("animation_align_center" )
         registerFunction("Animation", "Align Right",        "",  MOD_KEY.none, panel_animation_keyframe_align_right   ).setMenu("animation_align_right"  )
         
+        registerFunction("Animation", "Quantize Keys",      "Q", MOD_KEY.none, panel_animation_quantize               ).setMenu("animation_quantize")
         registerFunction("Animation", "Stagger Keys",       "",  MOD_KEY.none, panel_animation_edit_keyframe_stagger  ).setMenu("animation_stagger",     )
         registerFunction("Animation", "Repeat Keys",        "R", MOD_KEY.none, panel_animation_keyframe_repeat        ).setMenu("animation_repeat"       )
         registerFunction("Animation", "Distribute Keys",    "D", MOD_KEY.none, panel_animation_keyframe_distribute    ).setMenu("animation_distribute"   )

@@ -2,31 +2,29 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	name = "MK Flag";
 	update_on_frame = true;
 	
-	newInput(0, nodeValue_Dimension());
+	newInput( 0, nodeValue_Dimension());
 	
-	newInput(1, nodeValue_Surface("Texture"));
+	////- =Flag
 	
-	newInput(2, nodeValue_Vec2("Position", [ 0, 0 ]));
+	newInput( 4, nodeValue_Int(         "Subdivision",  16   ));
+	newInput( 1, nodeValue_Surface(     "Texture"            ));
+	newInput( 2, nodeValue_Vec2(        "Position",    [0,0] ));
+	newInput( 3, nodeValue_Enum_Button( "Pin side",     0    )).setChoices([ "Left", "Right", "Up", "Down" ]);
 	
-	newInput(3, nodeValue_Enum_Button("Pin side",  0, [ "Left", "Right", "Up", "Down" ]));
+	////- =Wave
 	
-	newInput(4, nodeValue_Int("Subdivision", 8));
+	newInput( 6, nodeValue_Slider( "Wave width",        1, [0, 4, 0.1]     ));
+	newInput( 7, nodeValue_Slider( "Wave size",        .2                  ));
+	newInput( 5, nodeValue_Int(    "Wind speed",        2                  ));
+	newInput( 8, nodeValue_Slider( "Phase",            .1                  ));
+	newInput( 9, nodeValue_Slider( "Clip",             .2                  ));
 	
-	newInput(5, nodeValue_Float("Wind speed", 2));
+	////- =Rendering
 	
-	newInput(6, nodeValue_Slider("Wave width", 1, [0, 4, 0.1] ));
-	
-	newInput(7, nodeValue_Slider("Wave size", 0.2));
-	
-	newInput(8, nodeValue_Slider("Phase", 0.1));
-	
-	newInput(9, nodeValue_Slider("Clip", 0.2));
-	
-	newInput(10, nodeValue_Slider("Shadow", 0.2));
-	
-	newInput(11, nodeValue_Slider("Shadow threshold", 0, [-0.1, 0.1, 0.001] ));
-	
-	newInput(12, nodeValue_Bool("Invert shadow", 0));
+	newInput(10, nodeValue_Slider( "Shadow",           .2                  ));
+	newInput(11, nodeValue_Slider( "Shadow threshold",  0, [-.1, .1, .001] ));
+	newInput(12, nodeValue_Bool(   "Invert shadow",     0                  ));
+	// input 13
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 0, 
 		["Flag",	    false], 4, 1, 2, 3, 
@@ -42,7 +40,9 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	temp_surface = [ surface_create(1, 1), surface_create(1, 1) ];
 	
-	function fPoints(_x, _y, _u, _v) constructor { #region
+	////- Data
+	
+	function fPoints(_x, _y, _u, _v) constructor {
 		x   = _x;
 		y   = _y;
 		sx  = _x;
@@ -50,31 +50,33 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		u   = _u;
 		v   = _v;
 		pin = false;
-	} #endregion
+	}
 	
-	function fLink(_p0, _p1) constructor { #region
+	function fLink(_p0, _p1) constructor {
 		p0 = _p0;
 		p1 = _p1;
 		dist = point_distance(_p0.x, _p0.y, _p1.x, _p1.y);
-	} #endregion
+	}
 	
-	function fMesh(_p0, _p1, _p2) constructor { #region
+	function fMesh(_p0, _p1, _p2) constructor {
 		p0 = _p0;
 		p1 = _p1;
 		p2 = _p2;
-	} #endregion
+	}
 	
 	points = [];
 	links  = [];
 	meshes = [];
 	
-	static onValueUpdate = function(index = 0) { #region
-		if(index == 3) setGeometry();
-	} #endregion
+	////- Flag
 	
-	static setGeometry = function() { #region
-		var _pinn  = getSingleValue(3);
-		var _subd  = getSingleValue(4);
+	static onValueUpdate = function(index = 0) {
+		if(index == 3 || index == 4) setGeometry();
+	}
+	
+	static setGeometry = function() {
+		var _pinn = getSingleValue(3);
+		var _subd = getSingleValue(4); _subd = max(2, _subd);
 		
 		points = array_create((_subd + 1) * (_subd + 1));
 		links  = array_create(2 * _subd * (_subd + 1));
@@ -123,9 +125,9 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			
 			meshes[_ind++] = new fMesh(points[i0], points[i1], points[i2]);
 		}
-	} #endregion
+	}
 	
-	static stepFlag = function() { #region
+	static stepFlag = function() {
 		var _pinn  = getSingleValue(3);
 		var _wspd  = getSingleValue(5);
 		var _wave  = getSingleValue(6);
@@ -166,20 +168,21 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					break;
 			}
 		}
-	} #endregion
+	}
+	
+	////- Render
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
-		
 		return w_hovering;
 	}
 	
-	static processData_prebatch  = function() { #region
+	static processData_prebatch  = function() {
 		if(IS_FIRST_FRAME) setGeometry();
 		stepFlag();
-	} #endregion
+	}
 	
-	static processData = function(_outSurf, _data, _array_index) { #region
+	static processData = function(_outSurf, _data, _array_index) {
 		var _dim   = _data[0];
 		var _tex   = _data[1];
 		var _start = _data[2];
@@ -197,22 +200,10 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _sh = surface_get_height_safe(_tex);
 		
 		switch(_pinn) {
-			case 0 :
-				_sx = _start[0];
-				_sy = _start[1];
-				break;
-			case 1 :
-				_sx = _start[0] - _sw;
-				_sy = _start[1];
-				break;
-			case 2 :
-				_sx = _start[0];
-				_sy = _start[1];
-				break;
-			case 3 :
-				_sx = _start[0];
-				_sy = _start[1] - _sh;
-				break;
+			case 0 : _sx = _start[0];       _sy = _start[1];       break;
+			case 1 : _sx = _start[0] - _sw; _sy = _start[1];       break;
+			case 2 : _sx = _start[0];       _sy = _start[1];       break;
+			case 3 : _sx = _start[0];       _sy = _start[1] - _sh; break;
 		}
 		
 		for( var i = 0, n = array_length(temp_surface); i < n; i++ ) 
@@ -222,23 +213,26 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		surface_set_target_ext(1, temp_surface[1]);
 		shader_set(sh_mk_flag_mrt);
 			DRAW_CLEAR
-			
 			draw_set_color(c_white);
-			draw_primitive_begin_texture(pr_trianglelist, surface_get_texture(_tex));
 			
-			for( var i = 0, n = array_length(meshes); i < n; i++ ) {
-				var m = meshes[i];
-				
-				var p0 = m.p0;
-				var p1 = m.p1;
-				var p2 = m.p2;
-				
-				draw_vertex_texture(_sx + p0.x * _sw, _sy + p0.y * _sh, p0.u, p0.v);
-				draw_vertex_texture(_sx + p1.x * _sw, _sy + p1.y * _sh, p1.u, p1.v);
-				draw_vertex_texture(_sx + p2.x * _sw, _sy + p2.y * _sh, p2.u, p2.v);
+			var _bat = 64;
+			var _amo = array_length(meshes);
+			
+			for( var i = 0; i < _amo; i += _bat ) {
+				draw_primitive_begin_texture(pr_trianglelist, surface_get_texture(_tex));
+				for( var j = i; j < min(i + _bat, _amo); j++ ) {
+					var m  = meshes[j];
+					var p0 = m.p0;
+					var p1 = m.p1;
+					var p2 = m.p2;
+					
+					draw_vertex_texture(_sx + p0.x * _sw, _sy + p0.y * _sh, p0.u, p0.v);
+					draw_vertex_texture(_sx + p1.x * _sw, _sy + p1.y * _sh, p1.u, p1.v);
+					draw_vertex_texture(_sx + p2.x * _sw, _sy + p2.y * _sh, p2.u, p2.v);
+				}
+				draw_primitive_end();
 			}
 			
-			draw_primitive_end();
 		shader_reset();
 		surface_reset_target();
 		
@@ -247,7 +241,7 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			shader_set_f("dimension",   _dim);
 			shader_set_f("oriPosition", _start);
 			shader_set_f("oriScale",    _sw, _sh);
-			shader_set_f("shadow",      1 - _shadow);
+			shader_set_f("shadow",      1-_shadow);
 			shader_set_f("shadowThres", _shdThr);
 			shader_set_i("shadowInv",   _shdInv);
 			shader_set_i("side",        _pinn > 1);
@@ -256,5 +250,5 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		surface_reset_shader();
 		
 		return _outSurf;
-	} #endregion
+	}
 }

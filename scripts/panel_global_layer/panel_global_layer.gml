@@ -39,7 +39,6 @@ function Panel_Global_Layer() : PanelContent() constructor {
 }
 
 function Panel_Global_Layer_Drawer() constructor {
-	
 	renaming    = noone;
 	rename_text = "";
 	tb_rename   = textBox_Text(function(_t) /*=>*/ { 

@@ -23,7 +23,7 @@ DIALOG_WINCLEAR1
 		
 		if(is_string(_menuItem)) {
 			draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text_sub);
-			draw_text(dialog_x + ui(8), yy + ui(4), _menuItem);
+			draw_text_add(dialog_x + ui(8), yy + ui(4), _menuItem);
 			yy += string_height(_menuItem) + ui(8);
 			continue;
 		}
@@ -151,7 +151,7 @@ DIALOG_WINCLEAR1
 			var _submenus = _menuItem.group;
 			draw_set_text(font, fa_center, fa_center, COLORS._main_text_sub);
 			draw_set_alpha(_menuItem.active * 0.75 + 0.25);
-			draw_text(dialog_x + dialog_w / 2, yy + hght / 2, label);
+			draw_text_add(dialog_x + dialog_w / 2, yy + hght / 2, label);
 			draw_set_alpha(1);
 			
 			var amo = array_length(_submenus);
@@ -208,7 +208,7 @@ DIALOG_WINCLEAR1
 				}
 				
 				if(_spr != noone) draw_sprite_ui_uniform(_spr, _ind, _bx, _by, 1, _clr);
-				if(_str != "")    draw_text(_bx, _by, _str);
+				if(_str != "")    draw_text_add(_bx, _by, _str);
 			}
 			
 		} else {
@@ -245,15 +245,15 @@ DIALOG_WINCLEAR1
 				if(struct_has(ALL_NODES, _txt)) _txt = ALL_NODES[$ _txt].name;
 				
 				draw_set_text(font, fa_left, fa_center, COLORS._main_text_sub, ta);
-    			draw_text(tx, ty, _txt);
+    			draw_text_add(tx, ty, _txt);
     			tx += string_width(_txt) + ui(8);
     			
     			draw_set_text(font, fa_left, fa_center, COLORS._main_text, ta);
-				draw_text(tx, ty, _sp[1]);
+				draw_text_add(tx, ty, _sp[1]);
 				
 			} else {
     			draw_set_text(font, fa_left, fa_center, COLORS._main_text, ta);
-				draw_text(tx, ty, _node == noone? _txt : _node.name);
+				draw_text_add(tx, ty, _node == noone? _txt : _node.name);
 			}
 			
 			draw_set_alpha(1);
@@ -288,7 +288,7 @@ DIALOG_WINCLEAR1
 				draw_set_color(COLORS._main_text_sub);
 			}
 			
-			draw_text(_hx, _hy - ui(2), _ktxt);
+			draw_text_add(_hx, _hy - ui(2), _ktxt);
 		}
 		
 		yy += _h;
@@ -331,7 +331,7 @@ DIALOG_WINCLEAR1
 		draw_rectangle_border(dialog_x, dialog_y, dialog_x + dialog_w, dialog_y + dialog_h, 2);
 		
 		draw_set_text(f_p0, fa_left, fa_bottom);
-		draw_text(dialog_x, dialog_y - ui(2), menu_id);
+		draw_text_add(dialog_x, dialog_y - ui(2), menu_id);
 	}
 #endregion
 

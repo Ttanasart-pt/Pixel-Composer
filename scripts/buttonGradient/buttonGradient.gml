@@ -20,6 +20,7 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 	
 	static trigger = function() {
 		var dialog = dialogCall(o_dialog_gradient, WIN_W / 2, WIN_H / 2);
+		
 		dialog.setDefault(current_gradient.clone());
 		dialog.onApply      = apply;
 		dialog.interactable = interactable;
