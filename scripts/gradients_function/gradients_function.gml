@@ -29,6 +29,8 @@ function gradientObject(color = ca_black) constructor {
 	caches    = array_create(cacheRes);
 	keyLength = 0;
 	
+	////- Actions
+	
 	static refresh = function() { 
 		
 		ds_priority_clear(global.gradient_sort_list);
@@ -73,6 +75,53 @@ function gradientObject(color = ca_black) constructor {
 		array_push(keys, _addkey);
 	}
 	
+	static toArray = function() {
+		var _grad_color = [], _grad_time = []; 
+		
+		for(var i = 0; i < array_length(keys); i++) {
+			var _val = keys[i].value;
+			if(is_undefined(_val)) continue;
+			
+			_grad_color[i * 4 + 0] = _color_get_red(_val);
+			_grad_color[i * 4 + 1] = _color_get_green(_val);
+			_grad_color[i * 4 + 2] = _color_get_blue(_val);
+			_grad_color[i * 4 + 3] = _color_get_alpha(_val);
+			_grad_time[i] = keys[i].time;
+		}
+	
+		return [ _grad_color, _grad_time ];
+	}
+	
+	static lerpTo = function(target, amount) {
+		var grad = new gradientObject();
+		grad.keys = [];
+		grad.type = type;
+		
+		var key_count = ceil(lerp(array_length(keys), array_length(target.keys), amount));
+		
+		if(key_count == 0) return grad;
+		if(key_count == 1) {
+			grad.keys[0] = new gradientKey(0, merge_color(eval(0), target.eval(0), amount));
+			return grad;
+		}
+		
+		for( var i = 0; i < key_count; i++ ) {
+			var rat = i / (key_count - 1);
+			
+			var kf = keys[rat * (array_length(keys) - 1)];
+			var kt = target.keys[rat * (array_length(target.keys) - 1)];
+			
+			var time  = lerp(kf.time, kt.time, amount);
+			var value = merge_color(eval(time), target.eval(time), amount);
+			
+			grad.keys[i] = new gradientKey(time, value);
+		}
+		
+		return grad;
+	}
+	
+	////- Eval
+	
 	static eval = function(position) {
 		var _len = array_length(keys);
 		if(_len == 0) return c_black;
@@ -111,6 +160,8 @@ function gradientObject(color = ca_black) constructor {
 		var _ind = round(position * cacheRes);
 		return caches[_ind];
 	}
+	
+	////- Draw
 	
 	static draw = function(_x, _y, _w, _h, _a = 1) {
 		var uniform_grad_blend	= shader_get_uniform(sh_gradient_display, "gradient_blend");
@@ -189,51 +240,6 @@ function gradientObject(color = ca_black) constructor {
 			caches[i] = eval(i / cacheRes);
 	}
 	
-	static toArray = function() {
-		var _grad_color = [], _grad_time = []; 
-		
-		for(var i = 0; i < array_length(keys); i++) {
-			var _val = keys[i].value;
-			if(is_undefined(_val)) continue;
-			
-			_grad_color[i * 4 + 0] = _color_get_red(_val);
-			_grad_color[i * 4 + 1] = _color_get_green(_val);
-			_grad_color[i * 4 + 2] = _color_get_blue(_val);
-			_grad_color[i * 4 + 3] = _color_get_alpha(_val);
-			_grad_time[i] = keys[i].time;
-		}
-	
-		return [ _grad_color, _grad_time ];
-	}
-	
-	static lerpTo = function(target, amount) {
-		var grad = new gradientObject();
-		grad.keys = [];
-		grad.type = type;
-		
-		var key_count = ceil(lerp(array_length(keys), array_length(target.keys), amount));
-		
-		if(key_count == 0) return grad;
-		if(key_count == 1) {
-			grad.keys[0] = new gradientKey(0, merge_color(eval(0), target.eval(0), amount));
-			return grad;
-		}
-		
-		for( var i = 0; i < key_count; i++ ) {
-			var rat = i / (key_count - 1);
-			
-			var kf = keys[rat * (array_length(keys) - 1)];
-			var kt = target.keys[rat * (array_length(target.keys) - 1)];
-			
-			var time  = lerp(kf.time, kt.time, amount);
-			var value = merge_color(eval(time), target.eval(time), amount);
-			
-			grad.keys[i] = new gradientKey(time, value);
-		}
-		
-		return grad;
-	}
-	
 	static shader_submit = function(_key = "gradient") {
 		var _grad = toArray();
 		var _grad_color = _grad[0];
@@ -244,6 +250,8 @@ function gradientObject(color = ca_black) constructor {
 		shader_set_f($"{_key}_time",  _grad_time);
 		shader_set_i($"{_key}_keys",  array_length(keys));
 	}
+	
+	////- Serialize
 	
 	static clone = function() {
 		var g = new gradientObject();

@@ -8,13 +8,22 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	size_adjust_tool = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		var _h = ui(48);
 		
+		var bx = _x;
+		var by = _y + ui(8);
 		var bw = _w / 2 - ui(4);
 		var bh = ui(36);
-		if(buttonTextIconInstant(true, THEME.button_hide_fill, _x, _y + ui(8), bw, bh, _m, _focus, _hover, "", THEME.add, __txt("Add"), COLORS._main_value_positive) == 2)
+		var bc = COLORS._main_value_positive;
+		
+		if(buttonTextIconInstant(true, THEME.button_hide_fill, bx, by, bw, bh, _m, _focus, _hover, "", THEME.add, __txt("Add"), bc) == 2)
 			addInput();
 		
+		var bx = _x + _w - bw;
+		var by = _y + ui(8);
+		var bc = COLORS._main_value_negative;
 		var amo = attributes.size;
-		if(buttonTextIconInstant(attributes.size > 0, THEME.button_hide_fill, _x + _w - bw, _y + ui(8), bw, bh, _m, _focus, _hover, "", THEME.minus, __txt("Remove"), COLORS._main_value_negative) == 2)
+		var act = attributes.size > 0;
+		
+		if(buttonTextIconInstant(act, THEME.button_hide_fill, bx, by, bw, bh, _m, _focus, _hover, "", THEME.minus, __txt("Remove"), bc) == 2)
 			deleteInput(array_length(inputs) - data_length);
 		
 		return _h;
@@ -26,85 +35,85 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		["Cases",  false], size_adjust_tool
 	]
 	
+	input_selecting = noone;
+	
+	////- Dynamic IO
+
+	static createNewInput = function(index = array_length(inputs)) {
+		var bDel = button(function() /*=>*/ {return node.deleteInput(index)})
+		            .setIcon(THEME.minus_16, 0, COLORS._main_icon);
+		
+		inputs[index + 0] = nodeValue_Text("Case").setDisplay(VALUE_DISPLAY.text_box, { side_button : bDel }).setAnimable(false);
+		bDel.setContext(inputs[index + 0]);
+		
+		inputs[index + 1] = nodeValue("Value", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0 ).setVisible(false, false);
+		
+		return inputs[index + 0];
+	} 
+	
+	setDynamicInput(2, false);
+	
+	static addInput = function() {
+		var index = array_length(inputs);
+		
+		attributes.size++;
+		createNewInput();
+		
+		if(!UNDO_HOLDING) {
+			var _inputs = array_create(data_length);
+			for(var i = 0; i < data_length; i++)
+				_inputs[i] = inputs[index + i];
+			
+			recordAction(ACTION_TYPE.custom, function(data, undo) {
+				if(undo) deleteInput(data.index);
+				else     insertInput(data.index, data.inputs);
+			}, { index, inputs : _inputs });
+		}
+		
+		onInputResize();
+	}
+	
+	static deleteInput = function(index) {
+		if(!UNDO_HOLDING) {
+			var _inputs = array_create(data_length);
+			for(var i = 0; i < data_length; i++)
+				_inputs[i] = inputs[index + i];
+			
+			recordAction(ACTION_TYPE.custom, function(data, undo) {
+				if(undo) insertInput(data.index, data.inputs);
+				else     deleteInput(data.index);
+			}, { index, inputs : _inputs });
+		}
+		
+		attributes.size--;
+		for(var i = data_length - 1; i >= 0; i--)
+			array_delete(inputs, index + i, 1);
+		
+		onInputResize();
+	}
+	
+	static insertInput = function(index, _inputs) {
+		attributes.size++;
+		
+		for(var i = 0; i < data_length; i++)
+			array_insert(inputs, index + i, _inputs[i]);
+		
+		onInputResize();
+	}
+	
+	static refreshDynamicInput = function() {
+		input_display_list = array_clone(input_display_list_raw);
+		
+		for( var i = input_fix_len; i < array_length(inputs); i++ ) {
+			inputs[i].index = i;
+			array_push(input_display_list, i);
+		}
+		
+		getJunctionList();
+	}
+	
 	////- Nodes
 	
-	#region Dynamic IO
-		
-		static createNewInput = function(index = array_length(inputs)) {
-			var bDel = button(function() /*=>*/ {return node.deleteInput(index)})
-			            .setIcon(THEME.minus_16, 0, COLORS._main_icon);
-			
-			inputs[index + 0] = nodeValue_Text("Case").setDisplay(VALUE_DISPLAY.text_box, { side_button : bDel }).setAnimable(false);
-			bDel.setContext(inputs[index + 0]);
-			
-			inputs[index + 1] = nodeValue("Value", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0 ).setVisible(false, false);
-			
-			return inputs[index + 0];
-		} 
-		
-		setDynamicInput(2, false);
-		
-		static addInput = function() {
-			var index = array_length(inputs);
-			
-			attributes.size++;
-			createNewInput();
-			
-			if(!UNDO_HOLDING) {
-				var _inputs = array_create(data_length);
-				for(var i = 0; i < data_length; i++)
-					_inputs[i] = inputs[index + i];
-				
-				recordAction(ACTION_TYPE.custom, function(data, undo) {
-					if(undo) deleteInput(data.index);
-					else     insertInput(data.index, data.inputs);
-				}, { index, inputs : _inputs });
-			}
-			
-			onInputResize();
-		}
-		
-		static deleteInput = function(index) {
-			if(!UNDO_HOLDING) {
-				var _inputs = array_create(data_length);
-				for(var i = 0; i < data_length; i++)
-					_inputs[i] = inputs[index + i];
-				
-				recordAction(ACTION_TYPE.custom, function(data, undo) {
-					if(undo) insertInput(data.index, data.inputs);
-					else     deleteInput(data.index);
-				}, { index, inputs : _inputs });
-			}
-			
-			attributes.size--;
-			for(var i = data_length - 1; i >= 0; i--)
-				array_delete(inputs, index + i, 1);
-			
-			onInputResize();
-		}
-		
-		static insertInput = function(index, _inputs) {
-			attributes.size++;
-			
-			for(var i = 0; i < data_length; i++)
-				array_insert(inputs, index + i, _inputs[i]);
-			
-			onInputResize();
-		}
-		
-		static refreshDynamicInput = function() {
-			input_display_list = array_clone(input_display_list_raw);
-			
-			for( var i = input_fix_len; i < array_length(inputs); i++ ) {
-				inputs[i].index = i;
-				array_push(input_display_list, i);
-			}
-			
-			getJunctionList();
-		}
-	
-	#endregion 
-		
 	static onValueFromUpdate = function(index) {
 		if(LOADING || APPENDING) return;
 		if(index < 0) return;
@@ -141,15 +150,19 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var sele = getInputData(0);
+		var _sel = getInputData(0);
 		var _res = getInputData(1);
 		var _typ = inputs[1].value_from? inputs[1].value_from.type : VALUE_TYPE.any;
+		
+		input_selecting = inputs[1];
 		
 		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
 			var _cas = getInputData(i + 0);
 			var _val = getInputData(i + 1);
 			
-			if(sele == _cas) {
+			if(_cas == "") continue;
+			if(_sel == _cas) {
+				input_selecting = inputs[i + 1];
 				_res = _val;
 				_typ = inputs[i + 1].value_from? inputs[i + 1].value_from.type : inputs[i + 1].type;
 			}
@@ -160,21 +173,17 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var frm = inputs[1];
-		var sele = getInputData(0);
+		
+		var _sel = getInputData(0);
 		var _res = getInputData(1);
+		var _frm = input_selecting;
 		
-		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
-			var _cas = getInputData(i + 0);
-			if(sele == _cas) frm = inputs[i + 1]; 
-		}
-		
-		var to  = outputs[0];
-		var c0 = value_color(frm.type);
+		var to = outputs[0];
+		var c0 = value_color(_frm.type);
 		
 		draw_set_color(c0);
 		draw_set_alpha(0.5);
-		draw_line_width(frm.x, frm.y, to.x, to.y, _s * 4);
+		draw_line_width(_frm.x, _frm.y, to.x, to.y, _s * 4);
 		draw_set_alpha(1);
 		
 		draw_set_text(f_sdf, fa_left, fa_center);
