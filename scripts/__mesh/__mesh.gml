@@ -180,6 +180,7 @@ function Mesh() constructor {
 		var msh = new Mesh();
 		
 		msh.triangles = array_clone(triangles);
+		msh.edges     = array_clone(edges);
 		msh.points    = array_create_ext(array_length(points), function(i) /*=>*/ {return points[i].clone()});
 		msh.center    = [ center[0], center[1] ];
 		

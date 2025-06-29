@@ -53,6 +53,7 @@ function loadColor(theme = "default") {
 	};
 	
 	_loadColor(theme);
+	_loadThemeParameter(theme);
 }
 
 function _loadColorStringParse(str) {
@@ -86,7 +87,7 @@ function _loadColorString(str) {
 function _loadColor(theme = "default") {
 	var t = get_timer();
 		
-	var dirr  = DIRECTORY + "Themes/" + theme;
+	var dirr  = $"{DIRECTORY}Themes/{theme}";
 	var path  = $"{dirr}/values.json";
 	var pathO = $"{dirr}/{PREFERENCES.theme_override}.json";
 	
@@ -104,12 +105,6 @@ function _loadColor(theme = "default") {
 	if(!struct_has(clrs, "values")) { print("Load color error"); return; }
 	
 	COLORS_KEYS = clrs;
-	
-	////- Value (parameters)
-	
-	var valkeys = variable_struct_get_names(clrs.values);
-	struct_override(THEME_VALUE, clrs.values);
-	THEME_SCALE = THEME_VALUE.icon_scale;
 	
 	////- Colors
 	
@@ -166,6 +161,16 @@ function _loadColor(theme = "default") {
 		
 		COLORS[$ key] = c;
 	}
+}
+
+function _loadThemeParameter(theme = "default") {
+	var dirr  = $"{DIRECTORY}Themes/{theme}";
+	var path  = $"{dirr}/parameters.json";
+	if(!file_exists_empty(path)) { noti_status($"Parameters not defined at {path}, rollback to default param."); return; }
+	
+	var vals = json_load_struct(path);
+	struct_override(THEME_VALUE, vals);
+	THEME_SCALE = THEME_VALUE.icon_scale;
 }
 
 function refreshThemePalette() {

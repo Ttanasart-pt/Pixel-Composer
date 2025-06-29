@@ -178,7 +178,8 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _surf = outputs[0].getValue();
 		return is_surface(_surf)? _surf : preview_surface;
 	} 
-
+	
+	////- Serialize
 	
 	static postDeserialize = function() {
 		if(CLONING) return;

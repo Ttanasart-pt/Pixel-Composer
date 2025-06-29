@@ -13,13 +13,12 @@ function Node_Mesh_Create_Lattice(_x, _y, _group = noone) : Node(_x, _y, _group)
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var mesh = outputs[0].getValue();
-		if(mesh == noone) {
-			InputDrawOverlay(inputs[0].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
-			return w_hovering;
+		
+		if(mesh != noone) {
+			draw_set_color(COLORS._main_icon);
+			mesh.draw(_x, _y, _s);
 		}
 		
-		draw_set_color(COLORS._main_icon);
-		mesh.draw(_x, _y, _s);
 		InputDrawOverlay(inputs[0].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		
 		return w_hovering;
@@ -43,6 +42,7 @@ function Node_Mesh_Create_Lattice(_x, _y, _group = noone) : Node(_x, _y, _group)
 		var _i = 0;
 		var points    = array_create((gw + 1) * (gh + 1));
 		var triangles = [];
+		var edges     = [];
 		
 		for( var j = 0; j <= gh; j++ )
 		for( var i = 0; i <= gw; i++ ) {
@@ -63,7 +63,23 @@ function Node_Mesh_Create_Lattice(_x, _y, _group = noone) : Node(_x, _y, _group)
 			triangles[_i++] = [ p2, p1, p3 ];
 		}
 		
+		 _i = 0;
+		for( var j = 0; j <  gh; j++ )
+		for( var i = 0; i <= gw; i++ ) {
+			var p0 = (j    ) * (gw+1) + (i);
+			var p1 = (j + 1) * (gw+1) + (i);
+			edges[_i++] = [ p0, p1 ];
+		}
+		
+		for( var j = 0; j <= gh; j++ )
+ 		for( var i = 0; i <  gw; i++ ) {
+			var p0 = (j) * (gw+1) + (i);
+			var p1 = (j) * (gw+1) + (i + 1);
+			edges[_i++] = [ p0, p1 ];
+		}
+		
 		mesh.points    = points;
+		mesh.edges     = edges;
 		mesh.triangles = triangles;
 		mesh.calcCoM();
 		outputs[0].setValue(mesh);

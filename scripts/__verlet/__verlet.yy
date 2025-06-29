@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"__verlet",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__verlet",
+  "parent":{
+    "name":"verletSim",
+    "path":"folders/nodes/data/simulation/verletSim.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

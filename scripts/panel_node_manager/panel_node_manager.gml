@@ -59,7 +59,7 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 		ds_stack_clear(stack);
 		
 		var _list = internalDir.subDir;
-	    for( var i = 0, n = ds_list_size(_list); i < n; i++ ) 
+	    for( var i = ds_list_size(_list) - 1; i >= 0; i-- ) 
 	        ds_stack_push(stack, [ _list[| i], 0]);
         
 		while(!ds_stack_empty(stack)) {

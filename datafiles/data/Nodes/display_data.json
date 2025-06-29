@@ -239,6 +239,18 @@
         "color": "node_blend_strand"
     },
     {
+        "name": "VerletSim", "nodes": [
+            { "label": "VerletSim" },
+            { "label": "/Mesh" },
+            "Node_VerletSim_Mesh",
+            "Node_VerletSim_Mesh_Pin",
+            { "label": "/Render" },
+            "Node_VerletSim_Render",
+        ],
+        "context": ["", "Node_VerletSim_Inline"],
+        "color": "node_blend_strand"
+    },
+    {
         "name": "Pixel Builder", "nodes": [
             { "label": "Group" },
             "Node_Group_Input",
@@ -648,6 +660,7 @@
             "Node_FLIP_Group_Inline",
             "Node_Smoke_Group_Inline",
             "Node_Strand_Group_Inline",
+            "Node_VerletSim_Inline",
             "Node_Diffuse",
             "Node_RD",
             
