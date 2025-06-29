@@ -2,22 +2,18 @@ function Node_Mesh_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	name = "Mesh Transform";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue("Mesh", self, CONNECT_TYPE.input, VALUE_TYPE.mesh, noone))
-		.setVisible(true, true);
+	newInput(0, nodeValue_Mesh( "Mesh" )).setVisible(true, true);
 	
-	newInput(1, nodeValue_Vec2("Position", [ 0, 0 ]));
-	
-	newInput(2, nodeValue_Rotation("Rotation", 0));
-	
-	newInput(3, nodeValue_Vec2("Scale", [ 1, 1 ]));
-	
-	newInput(4, nodeValue_Vec2("Anchor", [ 0, 0 ]));
+	newInput(1, nodeValue_Vec2(     "Position", [0,0] ));
+	newInput(2, nodeValue_Rotation( "Rotation",  0    ));
+	newInput(3, nodeValue_Vec2(     "Scale",    [1,1] ));
+	newInput(4, nodeValue_Vec2(     "Anchor",   [0,0] ));
 	
 	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.mesh, noone));
 	
+	__pp = [ 0, 0 ];
+	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-
-		
 		var imesh = getInputData(0);
 		var omesh = outputs[0].getValue();
 		if(imesh == noone) return w_hovering;
@@ -34,7 +30,7 @@ function Node_Mesh_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, ax, ay, _s, _mx, _my, _snx, _sny));
 		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
 		
-		draw_set_color(COLORS._main_accent);
+		draw_set_color(COLORS._main_icon);
 		omesh.draw(_x, _y, _s);
 		
 		return w_hovering;
@@ -44,10 +40,9 @@ function Node_Mesh_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		p.x = _anc[0] + (p.x - _anc[0]) * _sca[0];
 		p.y = _anc[1] + (p.y - _anc[1]) * _sca[1];
 			
-		var _pp = point_rotate(p.x, p.y, _anc[0], _anc[1], _rot);
-			
-		p.x = _pp[0] + _pos[0];
-		p.y = _pp[1] + _pos[1];
+		point_rotate(p.x, p.y, _anc[0], _anc[1], _rot, __pp);
+		p.x = __pp[0] + _pos[0];
+		p.y = __pp[1] + _pos[1];
 	}
 	
 	static update = function() {  
@@ -63,13 +58,8 @@ function Node_Mesh_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 		_anc = [ _cm[0] + _anc[0], _cm[1] + _anc[1] ];
 		
-		for( var i = 0, n = array_length(mesh.triangles); i < n; i++ ) {
-			var t = mesh.triangles[i];
-			
-			pointTransform(t[0], _pos, _rot, _sca, _anc);
-			pointTransform(t[1], _pos, _rot, _sca, _anc);
-			pointTransform(t[2], _pos, _rot, _sca, _anc);
-		}
+		for( var i = 0, n = array_length(mesh.points); i < n; i++ )
+			pointTransform(mesh.points[i], _pos, _rot, _sca, _anc);
 		
 		mesh.calcCoM();
 		
@@ -78,6 +68,6 @@ function Node_Mesh_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
-		draw_sprite_fit(s_node_mesh_create_path, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
+		draw_sprite_fit(s_node_mesh_transform, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

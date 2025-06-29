@@ -202,10 +202,10 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var sw = string_width(str) * ss;
 			var sh = string_height(str) * ss;
 			
+			var sx = bbox.x0 + 8 * _s;
+			var sy = inputs[i].y;
+			
 			if(selAble) {
-				var sx = bbox.x0 + 8 * _s;
-				var sy = inputs[i].y;
-				
 				var lw = bbox.w - 8 * _s;
 				var lh = sh;
 				
@@ -218,10 +218,12 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					draw_sprite_stretched_ext(THEME.box_r5_clr, 0, lx, ly, lw, lh, COLORS._main_icon, 1);
 					if(mouse_lpress(_focus)) inputs[0].setValue(val);
 				}
+				
 			}
 			
 			draw_set_color(value_color(inputs[i].type));
 			draw_text_transformed(sx, sy, str, ss, ss, 0);
+			
 		}
 	}
 	

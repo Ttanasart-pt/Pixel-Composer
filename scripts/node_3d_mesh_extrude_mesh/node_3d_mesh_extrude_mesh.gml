@@ -2,23 +2,14 @@ function Node_3D_Mesh_Extrude_Mesh(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 	name = "Mesh Extrude";
 	object_class = __3dMeshExtrude;
 	
-	newInput(in_mesh + 0, nodeValue("Mesh", self, CONNECT_TYPE.input, VALUE_TYPE.mesh, noone))
-		.setVisible(true, true);
+	newInput(in_mesh + 0, nodeValue_Mesh(  "Mesh" )).setVisible(true, true);
+	newInput(in_mesh + 1, nodeValue_Float( "Thickness",     1     ));
+	newInput(in_mesh + 2, nodeValue_Bool(  "Smooth",        false ))
+	newInput(in_mesh + 3, nodeValue_Bool(  "Always update", false ));
 	
-	newInput(in_mesh + 1, nodeValue_Float("Thickness", 1));
-	
-	newInput(in_mesh + 2, nodeValue_Bool("Smooth", false))
-	
-	newInput(in_mesh + 3, nodeValue_Bool("Always update", false));
-	
-	newInput(in_mesh + 4, nodeValue_D3Material("Face Texture", new __d3dMaterial()))
-		.setVisible(true, true);
-	
-	newInput(in_mesh + 5, nodeValue_D3Material("Side Texture", new __d3dMaterial()))
-		.setVisible(true, true);
-		
-	newInput(in_mesh + 6, nodeValue_D3Material("Back Texture", new __d3dMaterial()))
-		.setVisible(true, true);
+	newInput(in_mesh + 4, nodeValue_D3Material( "Face Texture", new __d3dMaterial())).setVisible(true, true);
+	newInput(in_mesh + 5, nodeValue_D3Material( "Side Texture", new __d3dMaterial())).setVisible(true, true);
+	newInput(in_mesh + 6, nodeValue_D3Material( "Back Texture", new __d3dMaterial())).setVisible(true, true);
 	
 	input_display_list = [ in_mesh + 3,
 		__d3d_input_list_mesh,

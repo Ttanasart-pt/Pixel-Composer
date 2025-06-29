@@ -10,6 +10,7 @@ function __3dMeshExtrude() : __3dObject() constructor {
 	static initModel = function() { 
 	    if(mesh == noone) return;
 	    
+	    var _pnts = mesh.points;
 	    var _tris = mesh.triangles;
 	    var _bbox = mesh.bbox;
 	    var _minx = _bbox[0], _miny = _bbox[1];
@@ -28,9 +29,9 @@ function __3dMeshExtrude() : __3dObject() constructor {
 		
 		for( var i = 0; i < _tria; i++ ) { // caps
 			var tr = _tris[i];
-			var p0 = tr[0];
-    		var p1 = tr[1];
-    		var p2 = tr[2];
+			var p0 = _pnts[tr[0]];
+    		var p1 = _pnts[tr[1]];
+    		var p2 = _pnts[tr[2]];
     		
     		var p0u  = (p0.x - _minx) / _boxw;
     		var p0v  = (p0.y - _miny) / _boxh;

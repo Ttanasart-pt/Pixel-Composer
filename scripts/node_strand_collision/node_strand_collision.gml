@@ -28,9 +28,9 @@ function Node_Strand_Collision(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		if(_str == noone) return;
 		var __str = _str;
-		if(!is_array(_str)) __str = [ _str ];
 		
-		if(instanceof(_msh) != "Mesh") return;
+		if(!is_array(_str)) __str = [ _str ];
+		if(!is(_msh, Mesh)) return;
 		
 		for( var k = 0; k < array_length(__str); k++ ) 
 		for( var i = 0, n = array_length(__str[k].hairs); i < n; i++ ) {

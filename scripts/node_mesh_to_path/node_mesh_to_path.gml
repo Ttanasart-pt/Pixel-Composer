@@ -19,7 +19,7 @@ function Node_Mesh_To_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		draw_set_color(c_grey);
 		mesh.draw(_x, _y, _s);
 		
-		draw_set_color(COLORS._main_accent);
+		draw_set_color(COLORS._main_icon);
 		var op, np;
 		
 		for( var i = 0, n = array_length(segments); i < n; i += 1 ) {

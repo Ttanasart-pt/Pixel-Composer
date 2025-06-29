@@ -9,7 +9,6 @@
 
 function MeshedSurface() : Mesh() constructor {
 	surface   = noone;
-	points    = [];
 	tris      = [];
 	links     = [];
 	controls  = [];
@@ -19,18 +18,11 @@ function MeshedSurface() : Mesh() constructor {
 		msh.surface  = surface;
 		msh.controls = controls;
 		
-		p = array_create_ext(array_length(points), function(i) /*=>*/ { return is(points[i], MeshedPoint)? points[i].clone() : points[i]; });
+		p = array_create_ext(array_length(points), function(i) /*=>*/ { return is(points[i], __vec2)? points[i].clone() : points[i]; });
 		msh.points = p;
 		msh.links  = array_create_ext(array_length(links), function(i) /*=>*/ {return links[i].clone(p)});
 		msh.tris   = array_create_ext(array_length(tris),  function(i) /*=>*/ {return tris[i].clone(p)});
-		
-		for( var i = 0, n = array_length(triangles); i < n; i++ ) {
-			msh.triangles[i] = [
-				triangles[i][0].clone(),
-				triangles[i][1].clone(),
-				triangles[i][2].clone(),
-			];
-		}
+		msh.triangles = array_clone(triangles);
 		
 		msh.center = [ center[0], center[1] ];
 		
@@ -38,13 +30,11 @@ function MeshedSurface() : Mesh() constructor {
 	}
 }
 
-function MeshedPoint(index, _x, _y) constructor {
-	self.index = index;
+function MeshedPoint(_i, _x, _y) : __vec2(_x, _y) constructor {
+	index = _i;
 	
-	x  = _x;
-	y  = _y;
-	xp = x;
-	yp = y;
+	xp  = x;
+	yp  = y;
 	
 	ndx = 0;
 	ndy = 0;
@@ -53,8 +43,8 @@ function MeshedPoint(index, _x, _y) constructor {
 	sy  = y;
 	pin = false;
 	
-	u = 0;
-	v = 0;
+	u   = 0;
+	v   = 0;
 	
 	drx = 0;
 	dry = 0;
@@ -119,7 +109,7 @@ function MeshedLink(_p0, _p1, _k = 1) constructor {
 	p0 = _p0;
 	p1 = _p1;
 	k  = _k;
-
+	
 	len = point_distance(p0.x, p0.y, p1.x, p1.y);
 	
 	static resolve = function(strength = 1) {
@@ -817,7 +807,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		for(var i = 0; i < _tris; i++) {
 			_t = mesh_data.tris[i];
-			mesh_data.triangles[i] = [ _t.p0, _t.p1, _t.p2 ];
+			mesh_data.triangles[i] = [ _t.p0.index, _t.p1.index, _t.p2.index ];
 		}
 		
 		return [ _outSurf, mesh_data ];

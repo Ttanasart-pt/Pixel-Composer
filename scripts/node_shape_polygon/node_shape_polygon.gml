@@ -17,7 +17,7 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	];
 	__ind = 0; array_map_ext(shapesArray, function(v, i) /*=>*/ {return v == -1? -1 : new scrollItem(v, s_node_shape_poly_type, __ind++)});
 	
-	newInput(16, nodeValue("Mesh", self, CONNECT_TYPE.input, VALUE_TYPE.mesh, noone)).setVisible(true, true);
+	newInput(16, nodeValue_Mesh( "Mesh" )).setVisible(true, true);
 	
 	////- =Output
 	
@@ -129,6 +129,8 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var _pall = _data[23];
 		var _aa   = power(2, _data[24]);
 		
+		outputs[2].setVisible(!is(_mesh, Mesh));
+		
 		var data = {
 			scale:    _data[ 7],
 			side:	  _data[ 8],
@@ -193,14 +195,14 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 		draw_primitive_begin(pr_trianglelist);
 		
-		outputs[2].setVisible(_mesh == noone);
 		
-		if(_mesh != noone) {
+		if(is(_mesh, Mesh)) {
+			
 			for( var j = 0; j < array_length(_mesh.triangles); j++ ) {
 				var tri = _mesh.triangles[j];
-				var p0 = tri[0];
-				var p1 = tri[1];
-				var p2 = tri[2];
+				var p0  = _mesh.points[tri[0]];
+				var p1  = _mesh.points[tri[1]];
+				var p2  = _mesh.points[tri[2]];
 				
 				draw_vertex(p0.x * _aa, p0.y * _aa);
 				draw_vertex(p1.x * _aa, p1.y * _aa);
@@ -208,7 +210,6 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			}
 			
 		} else {
-			
 			if(_shapeFn == noone) {
 				draw_primitive_end();
 				draw_set_alpha(1);
@@ -218,14 +219,12 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			}
 			
 			shapeData = _shapeFn(data);
-			points    = shapeData[0];
+			objects   = shapeData[0];
 			segment   = shapeData[1];
 			
 			if(_prot != 0 || _psca != 1)
-			for( var i = 0, n = array_length(points); i < n; i++ ) {
-				if(points[i].type == SHAPE_TYPE.points) continue;
-				
-				var _tri = points[i].triangles;
+			for( var i = 0, n = array_length(objects); i < n; i++ ) {
+				var _tri = objects[i].triangles;
 				for( var j = 0; j < array_length(_tri); j++ ) {
 					var tri = _tri[j];
 					var t0  = tri[0];
@@ -258,13 +257,15 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			}
 			path.setSegment(segment);
 			
-			var shapes = array_create_ext(array_length(points), function(i) /*=>*/ {return points[i].type == SHAPE_TYPE.points? polygon_triangulate(points[i].points)[0] : points[i].triangles});
+			var shapes = array_create_ext(array_length(objects), function(i) /*=>*/ {return objects[i].triangles});
 			var _plen  = array_length(_pall);
-			mesh.triangles = [];
+			
+			var mpoints    = [];
+			var mtriangles = [];
 			
 			for( var i = 0, n = array_length(shapes); i < n; i++ ) {
 				var triangles = shapes[i];
-				var shapetyp  = points[i].type;
+				var shapetyp  = objects[i].type;
 				
 				for( var j = 0; j < array_length(triangles); j++ ) {
 					var tri = triangles[j];
@@ -276,10 +277,16 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 					vertex_apply(tri[1], _pos, _rot, colorMultiply(trc, tri1), 1, _aa);
 					vertex_apply(tri[2], _pos, _rot, colorMultiply(trc, tri2), 1, _aa);
 					
-					array_push(mesh.triangles, tri);
+					var p0 = array_length(mpoints); array_push(mpoints, tri[0]);
+					var p1 = array_length(mpoints); array_push(mpoints, tri[1]);
+					var p2 = array_length(mpoints); array_push(mpoints, tri[2]);
+					
+					array_push( mtriangles, [p0, p1, p2] );
 				}
 			}
 			
+			mesh.points    = mpoints;
+			mesh.triangles = mtriangles;
 			mesh.calcCoM();
 		}
 		draw_primitive_end();

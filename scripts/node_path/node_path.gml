@@ -1,4 +1,13 @@
 #region
+	enum _ANCHOR {
+		  x,   y,
+		c1x, c1y,
+		c2x, c2y,
+		
+		ind,
+		amount
+	}
+
 	FN_NODE_TOOL_INVOKE {
 		hotkeyTool("Node_Path", "Transform",           "T");
 		hotkeyTool("Node_Path", "Anchor add / remove", "A");
@@ -11,15 +20,6 @@
 
 	function is_path(p) { return struct_has(p, "getPointRatio"); }
 #endregion
-
-enum _ANCHOR {
-	  x,   y,
-	c1x, c1y,
-	c2x, c2y,
-	
-	ind,
-	amount
-}
 
 function __vec2P(_x = 0, _y = _x, _w = 1) : __vec2(_x, _y) constructor {
 	weight = _w;

@@ -77,23 +77,28 @@ function polygon_points_classify(points) {
 	return [ convexs, reflects, _side ];
 }
 
-function polygon_triangulate_convex(points) {
+function polygon_triangulate_convex(points, index = false) {
 	var triangles = [];
 	
 	var len = array_length(points);
-	var c0 = points[0];
 	
-	for( var i = 0; i < len - 2; i++ ) {
-		var c1 = points[safe_mod(i + 1, len)];
-		var c2 = points[safe_mod(i + 2, len)];
+	if(index) {
+		for( var i = 0; i < len - 2; i++ )
+			array_push(triangles, [0, safe_mod(i + 1, len), safe_mod(i + 2, len)]);
 		
-		array_push(triangles, [c0, c1, c2]);
+	} else {
+		var c0  = points[0];
+		for( var i = 0; i < len - 2; i++ ) {
+			var c1 = points[safe_mod(i + 1, len)];
+			var c2 = points[safe_mod(i + 2, len)];
+			array_push(triangles, [c0, c1, c2]);
+		}
 	}
 	
 	return triangles;
 }
 
-function polygon_triangulate(points, tolerance = 4) { // ear clipping
+function polygon_triangulate(points, tolerance = 4, index = false) { // ear clipping
 	if(array_length(points) < 3) return [ [], points, 1 ];
 	
 	if(tolerance > 0) points = polygon_simplify(points, tolerance);
@@ -105,7 +110,7 @@ function polygon_triangulate(points, tolerance = 4) { // ear clipping
 	var checkSide = classes[2];
 	
 	if(array_length(reflected) == 0) 
-		return [ polygon_triangulate_convex(points), points, checkSide ];
+		return [ polygon_triangulate_convex(points, index), points, checkSide ];
 	
 	var pointInd  = array_create_ext(array_length(points), function(i) /*=>*/ { return i; });
 	var triangles = [];
@@ -143,7 +148,7 @@ function polygon_triangulate(points, tolerance = 4) { // ear clipping
 			array_remove(convexes, c0);
 			array_remove(pointInd, c0);
 			
-			array_push(triangles, [p0, p1, p2]);
+			array_push(triangles, index? [c0, c1, c2] : [p0, p1, p2]);
 			len--;
 			
 			if(array_exists(reflected, c1)) {
@@ -177,31 +182,23 @@ function polygon_triangulate(points, tolerance = 4) { // ear clipping
 			}
 			
 			repeated = 0;
+			
 		} else {
 			array_remove(convexes, c0);
 			array_push(convexes, c0);
 			
-			if(repeated++ > len) {
-				// print($"point: {points}");
-				// print($"index: {pointInd}");
-				// print($"convx: {convexes}");
-				
-				// for (var i = 0, n = array_length(pointInd); i < n; i++)
-				// 	print(points[pointInd[i]]);
-				
-				// noti_warning("Mesh error");
-				break;
-			}
+			if(repeated++ > len) break;
 		}
 	}
 	
 	if(array_length(pointInd) == 3) 
-		array_push(triangles, [ points[pointInd[0]], points[pointInd[1]], points[pointInd[2]] ]);
+		array_push(triangles, index? [ pointInd[0], pointInd[1], pointInd[2] ] : 
+		                             [ points[pointInd[0]], points[pointInd[1]], points[pointInd[2]] ]);
 	
 	return [ triangles, points, checkSide ];
 }
 
-function polygon_triangulate_convex_fan(points) {
+function polygon_triangulate_convex_fan(points, index = false) {
 	var triangles = [];
 	
 	var amo = array_length(points);
@@ -216,8 +213,11 @@ function polygon_triangulate_convex_fan(points) {
 	cy /= amo;
 	
 	var pc = new __vec2(cx, cy);
+	var ic = array_length(points);
+	if(index) array_push(points, pc);
+	
 	for( var i = 0; i < amo; i++ )
-		array_push(triangles, [ points[i], points[(i + 1) % amo], pc ]);
+		array_push(triangles, index? [i, (i+1) % amo, ic ] : [ points[i], points[(i+1) % amo], pc ]);
 	
 	return triangles;
 }

@@ -1,16 +1,21 @@
 function Mesh() constructor {
+	points    = [];
+	edges     = [];
 	triangles = [];
+	
 	center    = [ 0, 0 ];
 	bbox      = [ 0, 0, 1, 1 ];
+	
+	////- Functions
 	
 	static getRandomPoint = function(seed) {
 		random_set_seed(seed);
 		if(array_length(triangles) == 0) return new __vec2();
 		
 		var tri = triangles[irandom(array_length(triangles) - 1)];
-		var p0  = tri[0];
-		var p1  = tri[1];
-		var p2  = tri[2];
+		var p0  = points[tri[0]];
+		var p1  = points[tri[1]];
+		var p2  = points[tri[2]];
 		
 		var a1  = random1D(seed); seed++;
 		var a2  = random1D(seed); seed++;
@@ -21,21 +26,14 @@ function Mesh() constructor {
 		return new __vec2( _x, _y );
 	}
 	
-	static draw = function(_x, _y, _s) {
-		for( var i = 0, n = array_length(triangles); i < n; i++ ) {
-			var t = triangles[i];
-			
-			draw_line(_x + t[0].x * _s, _y + t[0].y * _s, _x + t[1].x * _s, _y + t[1].y * _s);
-			draw_line(_x + t[1].x * _s, _y + t[1].y * _s, _x + t[2].x * _s, _y + t[2].y * _s);
-			draw_line(_x + t[0].x * _s, _y + t[0].y * _s, _x + t[2].x * _s, _y + t[2].y * _s);
-		}
-	}
-	
 	static pointIn = function(_x, _y) {
 		for( var i = 0, n = array_length(triangles); i < n; i++ ) {
-			var t = triangles[i];
+			var t  = triangles[i];
+			var p0 = points[t[0]];
+			var p1 = points[t[1]];
+			var p2 = points[t[2]];
 			
-			if(point_in_triangle(_x, _y, t[0].x, t[0].y, t[1].x, t[1].y, t[2].x, t[2].y))
+			if(point_in_triangle(_x, _y, p0.x, p0.y, p1.x, p1.y, p2.x, p2.y))
 				return true;
 		}
 		
@@ -52,8 +50,8 @@ function Mesh() constructor {
 			var t = triangles[i];
 			
 			for( var j = 0; j < 3; j++ ) {
-				var p0 = t[(j + 0) % 3];
-				var p1 = t[(j + 1) % 3];
+				var p0 = points[t[(j + 0) % 3]];
+				var p1 = points[t[(j + 1) % 3]];
 				
 				var overlap = false;
 				var ind = -1;
@@ -109,22 +107,6 @@ function Mesh() constructor {
 		return path;
 	}
 	
-	static clone = function() {
-		var msh = new Mesh();
-		
-		for( var i = 0, n = array_length(triangles); i < n; i++ ) {
-			msh.triangles[i] = [
-				triangles[i][0].clone(),
-				triangles[i][1].clone(),
-				triangles[i][2].clone(),
-			];
-		}
-		
-		msh.center = [ center[0], center[1] ];
-		
-		return msh;
-	}
-	
 	static calcCoM = function() {
 		var _ax   = 0;
 		var _ay   = 0;
@@ -138,13 +120,15 @@ function Mesh() constructor {
 			var _tr = triangles[i];
 			
 			for( var j = 0; j < 3; j++ ) {
-				_ax += _tr[j].x; 
-				_ay += _tr[j].y;
+				var p = points[_tr[j]];
 				
-				_minx = min(_minx, _tr[j].x);
-				_miny = min(_miny, _tr[j].y);
-				_maxx = max(_maxx, _tr[j].x);
-				_maxy = max(_maxy, _tr[j].y);
+				_ax += p.x; 
+				_ay += p.y;
+				
+				_minx = min(_minx, p.x);
+				_miny = min(_miny, p.y);
+				_maxx = max(_maxx, p.x);
+				_maxy = max(_maxy, p.y);
 				_p++;
 			}
 		}
@@ -156,8 +140,52 @@ function Mesh() constructor {
 		bbox   = [ _minx, _miny, _maxx, _maxy ];
 	}
 	
+	////- Draw
+	
+	static draw = function(_x, _y, _s) {
+		draw_primitive_begin(pr_linelist);
+		var _vtx = 0;
+		
+		for( var i = 0, n = array_length(triangles); i < n; i++ ) {
+			var t  = triangles[i];
+			var p0 = points[t[0]];
+			var p1 = points[t[1]];
+			var p2 = points[t[2]];
+			
+			var x0 = _x + p0.x * _s, y0 = _y + p0.y * _s;
+			var x1 = _x + p1.x * _s, y1 = _y + p1.y * _s;
+			var x2 = _x + p2.x * _s, y2 = _y + p2.y * _s;
+			
+			draw_vertex(x0, y0); draw_vertex(x1, y1);
+			draw_vertex(x1, y1); draw_vertex(x2, y2);
+			draw_vertex(x0, y0); draw_vertex(x2, y2);
+			
+			if(++_vtx > 16) {
+				draw_primitive_end();
+				draw_primitive_begin(pr_linelist);
+			}
+		}
+		
+		draw_primitive_end();
+	}
+	
+	////- Serialize
+	
 	static serialize   = function()  { return ""; }
 	static deserialize = function(s) { return self; }
+	
+	////- Actions
+	
+	static clone = function() {
+		var msh = new Mesh();
+		
+		msh.triangles = array_clone(triangles);
+		msh.points    = array_create_ext(array_length(points), function(i) /*=>*/ {return points[i].clone()});
+		msh.center    = [ center[0], center[1] ];
+		
+		return msh;
+	}
+	
 }
 
 function connect_index_pairs(index_pairs) {

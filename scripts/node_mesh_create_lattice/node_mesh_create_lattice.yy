@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_mesh_create_lattice",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_mesh_create_lattice",
+  "parent":{
+    "name":"mesh",
+    "path":"folders/nodes/data/value/mesh.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -46,7 +46,7 @@ function delaunay_triangulation(points, polygons = noone) {
     return triangles;
 }
 
-function delaunay_triangulation_c(points, polygons = noone) {
+function delaunay_triangulation_c(points, polygons = noone, index = false) {
 	var _pointAmount  = array_length(points);
 	var _pointBuffer  = buffer_create(_pointAmount * 8 * 2, buffer_fixed, 8); 
 	var _resultBuffer = buffer_create(_pointAmount * 8 * 6, buffer_fixed, 4); 
@@ -68,11 +68,7 @@ function delaunay_triangulation_c(points, polygons = noone) {
 		var p2 = buffer_read(_resultBuffer, buffer_s32);
 		var p3 = buffer_read(_resultBuffer, buffer_s32);
 		
-		_triangles[i++] = [
-			points[p1],
-			points[p2],
-			points[p3],
-		];
+		_triangles[i++] = [ p1, p2, p3 ];
 	}
 	
 	buffer_delete(_pointBuffer);
@@ -81,8 +77,16 @@ function delaunay_triangulation_c(points, polygons = noone) {
 	if(polygons != noone) {
 		for (var i = array_length(_triangles) - 1; i >= 0; i--) {
 	        var _triangle = _triangles[i];
-	        if (!delaunay_triangle_in_polygon(polygons, _triangle)) array_delete(_triangles, i, 1);
+	        if (!delaunay_triangle_in_polygon(polygons, [ points[_triangle[0]], points[_triangle[1]], points[_triangle[2]] ])) 
+	        	array_delete(_triangles, i, 1);
 	    }
+	}
+	
+	if(!index) {
+		for( var i = 0, n = array_length(_triangles); i < n; i++ ) {
+			var _triangle = _triangles[i];
+			_triangles[i] = [ points[_triangle[0]], points[_triangle[1]], points[_triangle[2]] ];
+		}
 	}
 	
 	return _triangles;
