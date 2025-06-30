@@ -7,15 +7,18 @@ function Node_VerletSim_Render(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	////- =Output
 	newInput(1, nodeValue_Dimension());
 	
-	////- =Texture
-	newInput(2, nodeValue_Surface( "Texture" )).setVisible(true, true);
-	// input 3
+	////- =Render
+	newInput(4, nodeValue_Bool(        "Step", true ));
+	newInput(3, nodeValue_Enum_Button( "Type", 0, [ "Textured", "Wireframe" ] ));
+	newInput(2, nodeValue_Surface(     "Texture" )).setVisible(true, true);
+	newInput(5, nodeValue_Color(       "Color", ca_white ));
+	// input 6
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0, 
-		[ "Output",  false ], 1, 
-		[ "Texture", false ], 2, 
+		[ "Output", false ], 1, 
+		[ "Render", false ], 4, 3, 2, 5, 
 	];
 	
 	////- Nodes
@@ -31,19 +34,26 @@ function Node_VerletSim_Render(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		return w_hovering;
 	}
 	
-	static step = function() {}
-	
 	static update = function() {
 		if(!is(inline_context, Node_VerletSim_Inline)) return;
+		if(!IS_PLAYING) return;
 		
 		var _msh = getInputData(0);
 		var _dim = getInputData(1);
-		var _srf = getInputData(2); 
 		
+		var _step = getInputData(4); 
+		var _type = getInputData(3); 
+		var _srf  = getInputData(2); 
+		var _clr  = getInputData(5); 
+		
+		inputs[2].setVisible(_type == 0, _type == 0);
+		inputs[5].setVisible(_type == 1);
 		var _tex = is_surface(_srf)? surface_get_texture(_srf) : -1;
 		
 		if(!is(_msh, __verlet_Mesh)) return;
-		inline_context.verletStep(_msh);
+		if(_type == 0 && !is_surface(_srf)) return;
+		
+		if(_step) inline_context.verletStep(_msh);
 		
 		var _outSurf = outputs[0].getValue();
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
@@ -54,29 +64,59 @@ function Node_VerletSim_Render(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			
 			var _i = 0;
 			
-			if(is_surface(_srf)) draw_primitive_begin_texture(pr_trianglelist, _tex);
-			else draw_primitive_begin(pr_trianglelist); 
-			draw_set_color(c_white);
-			
-			for( var i = 0, n = array_length(_msh.triangles); i < n; i++ ) {
-				var t = _msh.triangles[i];
+			if(_type == 0) {
+				draw_primitive_begin_texture(pr_trianglelist, _tex);
+				draw_set_color(c_white);
 				
-				var p0 = _msh.points[t[0]];
-				var p1 = _msh.points[t[1]];
-				var p2 = _msh.points[t[2]];
-				
-				draw_vertex_texture(p0.x, p0.y, p0.u, p0.v);
-				draw_vertex_texture(p1.x, p1.y, p1.u, p1.v);
-				draw_vertex_texture(p2.x, p2.y, p2.u, p2.v);
-				
-				if(++_i >= 32) {
-					_i = 0;
-					draw_primitive_end();
-					if(is_surface(_srf)) draw_primitive_begin_texture(pr_trianglelist, _tex);
-					else draw_primitive_begin(pr_trianglelist); 
+				if(_msh.vquads == undefined) {
+					for( var i = 0, n = array_length(_msh.vtriangles); i < n; i++ ) {
+						_msh.vtriangles[i].submitVertex();
+						
+						if(++_i >= 32) {
+							_i = 0;
+							
+							draw_primitive_end();
+							draw_primitive_begin_texture(pr_trianglelist, _tex);
+						}
+					}
+				} else {
+					for( var i = 0, n = array_length(_msh.vquads); i < n; i++ ) {
+						_msh.vquads[i].submitVertex();
+						
+						if(++_i >= 32) {
+							_i = 0;
+							
+							draw_primitive_end();
+							draw_primitive_begin_texture(pr_trianglelist, _tex);
+						}
+					}
 				}
+					
+				draw_primitive_end();
+			
+			} else if(_type == 1) {
+				draw_primitive_begin(pr_linelist); 
+				draw_set_color(_clr);
+				
+				for( var i = 0, n = array_length(_msh.vedges); i < n; i++ ) {
+					var e = _msh.vedges[i];
+					if(!e.active) continue;
+					
+					var p0 = e.p0;
+					var p1 = e.p1;
+					
+					draw_vertex(p0.x, p0.y);
+					draw_vertex(p1.x, p1.y);
+					
+					if(++_i >= 32) {
+						_i = 0;
+						
+						draw_primitive_end();
+						draw_primitive_begin(pr_linelist);
+					}
+				}
+				draw_primitive_end();
 			}
-			draw_primitive_end();
 			
 		surface_reset_target();
 		

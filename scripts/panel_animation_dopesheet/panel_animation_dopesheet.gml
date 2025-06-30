@@ -1154,23 +1154,41 @@ function Panel_Animation_Dopesheet() {
             draw_set_alpha(1);
         }
         
-        if(animator.prop.type == VALUE_TYPE.boolean) { //draw boolean true region
-        	var _ox = timeline_shift, _nx;
-        	var _ov, _nv;
+        if(is(animator.prop, __NodeValue_Active)) { //draw active region
+	        var _ox = timeline_shift, _nx;
         	var _y1 = timeline_shift + TOTAL_FRAMES * timeline_scale;
+        	var _ov, _nv;
         	
-        	draw_set_color_alpha(COLORS._main_value_positive, .3);
+        	draw_set_color_alpha(COLORS._main_value_positive, .4);
         	
-        	for( var k = 0, n = array_length(key_list); k < n; k++ ) { //draw easing
+        	for( var k = 0, n = array_length(key_list); k < n; k++ ) {
 	            var key = key_list[k];
 	            _nx = key.dopesheet_x;
 	            _nv = key.value;
 	            
-	            if(k == 0 && _nv || k && _ov)
-	            	draw_line_width(_ox, _cy, _nx, _cy, 2);
-	            	
-	            if(k == n - 1 && _nv)
-	            	draw_line_width(_nx, _cy, _y1, _cy, 2);
+	            if(k && _ov)          draw_line_width(_ox, _cy, _nx, _cy, ui(8));
+	            if(k == n - 1 && _nv) draw_line_width(_nx, _cy, _y1, _cy, ui(8));
+	            
+	            _ox = _nx;
+	            _ov = _nv;
+        	}
+        	
+        	draw_set_alpha(1);
+        	
+        } else if(animator.prop.type == VALUE_TYPE.boolean) { //draw boolean true region
+        	var _ox = timeline_shift, _nx;
+        	var _y1 = timeline_shift + TOTAL_FRAMES * timeline_scale;
+        	var _ov, _nv;
+        	
+        	draw_set_color_alpha(COLORS._main_value_positive, .3);
+        	
+        	for( var k = 0, n = array_length(key_list); k < n; k++ ) {
+	            var key = key_list[k];
+	            _nx = key.dopesheet_x;
+	            _nv = key.value;
+	            
+	            if(k == 0 && _nv || k && _ov) draw_line_width(_ox, _cy, _nx, _cy, 2);
+	            if(k == n - 1 && _nv)         draw_line_width(_nx, _cy, _y1, _cy, 2);
 	            
 	            _ox = _nx;
 	            _ov = _nv;

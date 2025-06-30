@@ -1,7 +1,10 @@
 function Mesh() constructor {
 	points    = [];
 	edges     = [];
+	
+	useShape  = false;
 	triangles = [];
+	quads     = undefined;
 	
 	center    = [ 0, 0 ];
 	bbox      = [ 0, 0, 1, 1 ];

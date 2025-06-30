@@ -491,6 +491,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return animable;
 	}
 	
+	static onSetAnim = undefined;
 	static setAnim = function(anim, record = false) {
 		if(is_anim == anim) return;
 		is_modified = true;
@@ -529,6 +530,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		node.refreshTimeline();
 		if(NOT_LOAD && node.group) node.group.checkPureFunction();
+		
+		if(onSetAnim != undefined) onSetAnim();
 	}
 	
 	static getAnim = function() { return instanceBase != noone? instanceBase.is_anim : is_anim; }

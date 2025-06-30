@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_verletSim_mesh_cache_lerp",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_verletSim_mesh_cache_lerp",
+  "parent":{
+    "name":"verletSim",
+    "path":"folders/nodes/data/simulation/verletSim.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

@@ -300,6 +300,7 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		draw_primitive_end();
 		
 		draw_set_alpha(_sel? 1 : lerp(0.4, 0.65, group_hover_al));
+		BLEND_ADD
 		draw_primitive_begin(pr_linestrip);
 			for( var i = 0, n = array_length(group_vertex); i < n; i++ ) {
 				var a = group_vertex[i];
@@ -309,6 +310,7 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			a = group_vertex[0];
 			draw_vertex(_x + a[0] * _s, _y + a[1] * _s);
 		draw_primitive_end();
+		BLEND_NORMAL
 		
 		draw_set_alpha(1);
 		

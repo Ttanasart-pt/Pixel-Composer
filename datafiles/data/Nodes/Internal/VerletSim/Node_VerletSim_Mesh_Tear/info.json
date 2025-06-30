@@ -1,0 +1,6 @@
+{
+    "name":          "Tear Mesh",
+    "spr":           "s_node_verletsim_mesh_tear",
+    "baseNode":      "Node_VerletSim_Mesh_Tear",
+    "pxc_version":    119041,
+}

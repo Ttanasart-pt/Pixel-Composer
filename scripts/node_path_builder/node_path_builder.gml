@@ -2,6 +2,14 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	name = "Path Builder";
 	setDimension(96, 48);
 	
+	newInput(0, nodeValue_Float("Point array", []))
+		.setVisible(true, true)
+		.setArrayDepth(2);
+	
+	newInput(1, nodeValue_Bool("Loop", false));
+	
+	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, self));
+	
 	#region ---- path ----
 		path_loop    = false;
 		path_amount  = 0;
@@ -15,17 +23,8 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		cached_pos = ds_map_create();
 		
 		lines = [];
+		cached_pos = ds_map_create();
 	#endregion
-	
-	newInput(0, nodeValue_Float("Point array", []))
-		.setVisible(true, true)
-		.setArrayDepth(2);
-	
-	newInput(1, nodeValue_Bool("Loop", false));
-	
-	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, self));
-	
-	cached_pos = ds_map_create();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(path_amount == 0) return;

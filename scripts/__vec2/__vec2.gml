@@ -217,4 +217,6 @@ function __vec2(_x = 0, _y = _x) constructor {
 	static toBBMOD = function() { return new BBMOD_Vec2(x, y); }
 	
 	static toArray = function() { return [ x, y ]; }
+	
+	static lessThan = function(p) { return y < p.y? true : (x < p.x); }
 }

@@ -2,13 +2,18 @@ function Node_Mesh_Create_Lattice(_x, _y, _group = noone) : Node(_x, _y, _group)
 	name = "Lattice Mesh";
 	setDimension(96, 48);
 	
+	////- =Area
 	newInput( 0, nodeValue_Area(  "Area", DEF_AREA_REF, { useShape : false } )).setUnitRef(function(i) /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
-	newInput( 1, nodeValue_IVec2( "Sample", [ 8, 8 ] ));
+	
+	////- =Mesh
+	newInput( 1, nodeValue_IVec2( "Sample", [8,8] ));
+	newInput( 2, nodeValue_Bool(  "Quad",   false ));
 	
 	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.mesh, noone ));
 	
 	input_display_list = [
-		0, 1, 
+		["Area", false], 0, 
+		["Mesh", false], 1, 2, 
 	];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
@@ -27,6 +32,7 @@ function Node_Mesh_Create_Lattice(_x, _y, _group = noone) : Node(_x, _y, _group)
 	static update = function() {  
 		var _area = getInputData(0);
 		var _samp = getInputData(1);
+		var _quad = getInputData(2);
 		var  mesh = new Mesh();
 		
 		var x0 = _area[0] - _area[2];
@@ -76,6 +82,16 @@ function Node_Mesh_Create_Lattice(_x, _y, _group = noone) : Node(_x, _y, _group)
 			var p0 = (j) * (gw+1) + (i);
 			var p1 = (j) * (gw+1) + (i + 1);
 			edges[_i++] = [ p0, p1 ];
+		}
+		
+		if(_quad) {
+			var _qamo = gw * gh;
+			var _q = array_create(_qamo);
+			
+			for( var i = 0; i < _qamo; i++ )
+				_q[i] = [i*2, i*2+1];
+			
+			mesh.quads = _q;
 		}
 		
 		mesh.points    = points;

@@ -52,6 +52,8 @@ function Node_Anim_Loop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _loop_a = _loop_infin? infinity : _loop_amoun;
 		loop_amount = _loop_a;
 		
+		if(_loop_range == 0) _loop_range = TOTAL_FRAMES - _loop_start;
+		
 		loop_start = _loop_start - 1;
         loop_range = _loop_range - 1;
         

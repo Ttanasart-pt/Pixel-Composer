@@ -35,11 +35,12 @@ function Node_VerletSim_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 	function verletPropagate(_mesh, _substep) {
 		var _points = _mesh.points;
 		
-		var grav_x = verlet_gravity[0] / _substep;
-		var grav_y = verlet_gravity[1] / _substep;
-		
+		var grav_x = verlet_gravity[0] / _substep / 10;
+		var grav_y = verlet_gravity[1] / _substep / 10;
+	 	
 		for( var i = 0, n = array_length(_points); i < n; i++ ) {
 			var p = _points[i];
+			if(!is(p, __vec2)) continue;
 			
 			var _vx = p.x - p.px;
 			var _vy = p.y - p.py;
@@ -53,7 +54,11 @@ function Node_VerletSim_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 			if(!p.pin) {
 				p.x += _vx;
 				p.y += _vy;
+				
+				p.x = lerp(p.px, p.x, 1 - power(p.drag, 4));
+				p.y = lerp(p.py, p.y, 1 - power(p.drag, 4));
 			}
+			
 		}
 		
 	}
@@ -64,6 +69,8 @@ function Node_VerletSim_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 		
 		for( var i = 0, n = array_length(_edges); i < n; i++ ) {
 			var e = _edges[i];
+			if(!e.active) continue;
+			
 			var p0 = e.p0;
 			var p1 = e.p1;
 			
@@ -123,3 +130,4 @@ function Node_VerletSim_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 	
 	
 }
+

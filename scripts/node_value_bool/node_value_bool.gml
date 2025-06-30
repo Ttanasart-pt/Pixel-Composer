@@ -1,4 +1,4 @@
-function nodeValue_Bool(_name, _value, _tooltip = "") { return new __NodeValue_Bool(_name, self, _value, _tooltip); }
+function   nodeValue_Bool(_name, _value, _tooltip = "") { return new __NodeValue_Bool(_name, self, _value, _tooltip); }
 function __NodeValue_Bool(_name, _node, _value, _tooltip = "") : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.boolean, _value, _tooltip) constructor {
 	
 	/////============== GET =============
@@ -22,8 +22,7 @@ function __NodeValue_Bool(_name, _node, _value, _tooltip = "") : NodeValue(_name
 	static arrayLength = arrayLengthSimple;
 }
 
-function nodeValue_Bool_single(_name, _node, _value, _tooltip = "") { return new __NodeValue_Bool_single(_name, _node, _value, _tooltip); }
-
+function   nodeValue_Bool_single(_name, _value, _tooltip = "") { return new __NodeValue_Bool_single(_name, self, _value, _tooltip); }
 function __NodeValue_Bool_single(_name, _node, _value, _tooltip = "") : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.boolean, _value, _tooltip) constructor {
 	rejectArray();
 	
@@ -43,4 +42,29 @@ function __NodeValue_Bool_single(_name, _node, _value, _tooltip = "") : NodeValu
 	}
 	
 	static arrayLength = arrayLengthSimple;
+}
+
+function   nodeValue_Active() { return new __NodeValue_Active(self); }
+function __NodeValue_Active(_node) : __NodeValue_Bool_single("Active", _node, true) constructor {
+	
+	static setAnim = function(anim, record = false) {
+		if(is_anim == anim) return;
+		is_modified = true;
+		
+		if(record) recordAction_variable_change(self, "is_anim", is_anim, $"{name} animation status").setRef(node);
+		is_anim = anim;
+		
+		if(is_anim) {
+			animator.values = [ new valueKey(0, true, animator), new valueKey(TOTAL_FRAMES - 1, false, animator) ];
+			
+		} else {
+			var _val = animator.getValue();
+			animator.values = [ new valueKey(0, _val, animator) ];
+		}
+		
+		animator.updateKeyMap();
+		node.refreshTimeline();
+		if(NOT_LOAD && node.group) node.group.checkPureFunction();
+		
+	}
 }

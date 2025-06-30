@@ -285,6 +285,8 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		//////////////////////////////////////////////////////////// BEFORE FIRST //////////////////////////////////////////////////////////////
 		
 		if(_keyIndex == -1) {
+			if(is(prop, __NodeValue_Active)) return false;
+			
 			if(prop.on_end == KEYFRAME_END.wrap) {
 				var from = values[length - 1];
 				var to   = values[0];

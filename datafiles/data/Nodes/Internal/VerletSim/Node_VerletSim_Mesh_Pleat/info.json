@@ -1,0 +1,6 @@
+{
+    "name":          "Pleat Mesh",
+    "spr":           "s_node_verletsim_mesh_pleat",
+    "baseNode":      "Node_VerletSim_Mesh_Pleat",
+    "pxc_version":    119041,
+}

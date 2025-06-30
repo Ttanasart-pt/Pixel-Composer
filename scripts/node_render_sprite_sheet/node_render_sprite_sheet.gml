@@ -62,10 +62,9 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	////- Nodes
 	
 	static step = function() {
-		var inpt = getInputData(0);
-		var grup = getInputData(1);
-		var pack = getInputData(3);
-		var user = getInputData(11);
+		var inpt = getInputData( 0);
+		var grup = getInputData( 1);
+		var pack = getInputData( 3);
 		
 		if(pack == 0)	inputs[5].editWidget.data = [ "Top", "Center", "Bottom" ];
 		else			inputs[5].editWidget.data = [ "Left", "Center", "Right" ];
@@ -79,12 +78,10 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		if(grup == SPRITE_ANIM_GROUP.animation) {
 			inputs[8].editWidget.slide_range[0] = FIRST_FRAME + 1;
 			inputs[8].editWidget.slide_range[1] = LAST_FRAME + 1;
-			if(!user) inputs[8].setValueDirect([ FIRST_FRAME + 1, LAST_FRAME + 1], noone, false, 0, false);
 			
 		} else {
 			inputs[8].editWidget.slide_range[0] = 0;
-			inputs[8].editWidget.slide_range[1] = array_length(inpt) - 1;
-			if(!user) inputs[8].setValueDirect([ 0, array_length(inpt) - 1], noone, false, 0, false);
+			inputs[8].editWidget.slide_range[1] = array_length(inpt);
 		}
 		
 		update_on_frame = grup == 0;
@@ -93,8 +90,16 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	static update = function(frame = CURRENT_FRAME) {
 		if(IS_FIRST_FRAME) initSurface(false);
 		
-		var sprSet = getInputData(1);
-		var anim = sprSet == SPRITE_ANIM_GROUP.animation;
+		var inpt   = getInputData( 0);
+		var sprSet = getInputData( 1);
+		var user   = getInputData(11);
+		var anim   = sprSet == SPRITE_ANIM_GROUP.animation;
+		
+		if(!user) {
+			if(sprSet == SPRITE_ANIM_GROUP.animation) 
+				 inputs[8].setValueDirect([ FIRST_FRAME + 1, LAST_FRAME + 1], noone, false, 0, false);
+			else inputs[8].setValueDirect([ 0, array_length(inpt)], noone, false, 0, false);
+		}
 		
 		if(anim) animationRender();
 		else     arrayRender();

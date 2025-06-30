@@ -186,6 +186,17 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		var _atlas_res = array_create(array_length(_atlas));
 		var _fall_samp = new Surface_sampler(_inf_map);
 		
+		var area_x = _inf_are[0];
+		var area_y = _inf_are[1];
+		var area_w = _inf_are[2];
+		var area_h = _inf_are[3];
+		var area_t = _inf_are[4];
+		
+		var area_x0   = area_x - area_w;
+		var area_x1   = area_x + area_w;
+		var area_y0   = area_y - area_h;
+		var area_y1   = area_y + area_h;
+		
 		for( var i = 0, n = array_length(_atlas); i < n; i++ ) {
 			var _a = _atlas[i];
 			if(!is(_a, Atlas)) continue;
@@ -203,17 +214,6 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			
 			switch(_inf_shp) {
 				case 0 :
-					var area_x = _inf_are[0];
-					var area_y = _inf_are[1];
-					var area_w = _inf_are[2];
-					var area_h = _inf_are[3];
-					var area_t = _inf_are[4];
-							
-					var area_x0   = area_x - area_w;
-					var area_x1   = area_x + area_w;
-					var area_y0   = area_y - area_h;
-					var area_y1   = area_y + area_h;
-					
 					var _in  = false;
 					var _dst = 0;
 					

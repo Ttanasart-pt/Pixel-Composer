@@ -100,6 +100,7 @@ function ThemeColor() constructor {
     node_blend_smoke                    = CDEF.smoke;
     node_blend_canvas                   = merge_color(CDEF.white, CDEF.orange, 0.5);
     node_blend_strand                   = CDEF.orange;
+    node_blend_verlet                   = CDEF.purple;
     node_blend_vct                      = CDEF.white;
     node_blend_dynaSurf                 = CDEF.red;
     node_path_overlay_control_line      = CDEF.main_grey;
