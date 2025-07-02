@@ -20,13 +20,29 @@ function Panel_Release_Note() : PanelContent() constructor {
 		note     = "";
 		noteMd   = [];
 		
+		note_issues_get = 0;
+		note_issues     = "";
+		note_issuesMd   = [];
+		
+		// if(OS == os_linux) 
+			note_issues_get = http_get(note_dir + "Linux Known issues.md");
+		
 		sp_note = new scrollPane(content_w, content_h, function(_y, _m) {
 			draw_clear_alpha(COLORS.dialog_splash_badge, 1);
 			
 			var xx = ui(8);
 			var yy = ui(8) + _y;
 			var ww = sp_note.surface_w - ui(16);
-			var hh = markdown_draw(noteMd, xx, yy, ww);
+			var hh = 0;
+			
+			if(OS == os_linux) {
+				var _h = markdown_draw(note_issuesMd, xx, yy, ww);
+				hh += _h + ui(16);
+				yy += _h + ui(16);
+			}
+			
+			var _h = markdown_draw(noteMd, xx, yy, ww);
+			hh += _h;
 			
 			return hh + ui(64);
 		})
@@ -215,6 +231,13 @@ function Panel_Release_Note() : PanelContent() constructor {
 		    if (_status == 0) {
 		        note   = ds_map_find_value(async_load, "result");
 		        noteMd = markdown_parse(note);
+				alarm[0] = 1;
+			}
+			
+		} else if (_id == note_issues_get) {
+		    if (_status == 0) {
+		        note_issues   = ds_map_find_value(async_load, "result");
+		        note_issuesMd = markdown_parse(note_issues);
 				alarm[0] = 1;
 			}
 			
