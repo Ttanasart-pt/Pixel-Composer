@@ -328,6 +328,7 @@
     {"name":"libborderless","order":1,"path":"extensions/libborderless/libborderless.yy",},
     {"name":"libdlgmodule","order":2,"path":"extensions/libdlgmodule/libdlgmodule.yy",},
     {"name":"libfilesystem","order":1,"path":"extensions/libfilesystem/libfilesystem.yy",},
+    {"name":"libsysinfo","order":3,"path":"extensions/libsysinfo/libsysinfo.yy",},
     {"name":"macMinimize","order":2,"path":"extensions/macMinimize/macMinimize.yy",},
     {"name":"mk_grass_ext","order":10,"path":"extensions/mk_grass_ext/mk_grass_ext.yy",},
     {"name":"path_from_mask","order":9,"path":"extensions/path_from_mask/path_from_mask.yy",},

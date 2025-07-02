@@ -6,7 +6,7 @@ function __init_dynaDraw() {
     DYNADRAW_FOLDER.icon       = THEME.dynadraw;
     DYNADRAW_FOLDER.icon_blend = c_white;
     
-    var _d = function(a) /*=>*/ {return ds_list_add(DYNADRAW_FOLDER.content, a)};
+    var _d = function(a) /*=>*/ {return array_push(DYNADRAW_FOLDER.content, a)};
     _d(new dynaDraw_line());
     
     _d(new dynaDraw_circle_fill());

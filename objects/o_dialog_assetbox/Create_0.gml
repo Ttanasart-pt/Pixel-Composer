@@ -24,8 +24,8 @@ event_inherited();
 	context = global.ASSETS;
 	
 	function gotoDir(dirName) {
-		for(var i = 0; i < ds_list_size(global.ASSETS.subDir); i++) {
-			var d = global.ASSETS.subDir[| i];
+		for(var i = 0; i < array_length(global.ASSETS.subDir); i++) {
+			var d = global.ASSETS.subDir[i];
 			if(d.name != dirName) continue;
 			
 			d.open = true;
@@ -67,8 +67,8 @@ event_inherited();
 		hh += hg;
 		_y += hg;
 		
-		for(var i = 0; i < ds_list_size(global.ASSETS.subDir); i++) {
-			hg = global.ASSETS.subDir[| i].draw(self, ui(8), _y + ui(8), _m, ww, sHOVER, sFOCUS, global.ASSETS);
+		for(var i = 0; i < array_length(global.ASSETS.subDir); i++) {
+			hg = global.ASSETS.subDir[i].draw(self, ui(8), _y + ui(8), _m, ww, sHOVER, sFOCUS, global.ASSETS);
 			hh += hg;
 			_y += hg;
 		}
@@ -82,7 +82,7 @@ event_inherited();
 		draw_clear_alpha(c_white, 0);
 		
 		var contents = context.content;
-		var amo   = ds_list_size(contents);
+		var amo   = array_length(contents);
 		var hh    = 0;
 		var surfh = contentPane.surface_h + 4;
 		var frame = current_time * PREFERENCES.collection_preview_speed / 8000;
@@ -109,7 +109,7 @@ event_inherited();
 				var index = i * col + j;
 				if(index >= amo) break;
 				
-				var content = contents[| index];
+				var content = contents[index];
 				var xx = grid_space + (grid_size + grid_space) * j;
 				
 				BLEND_OVERRIDE

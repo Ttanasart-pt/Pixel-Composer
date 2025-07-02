@@ -148,8 +148,8 @@ function DirectoryObject(_path) constructor {
 	icon = THEME.folder_content;
 	icon_blend = undefined
 	
-	subDir    = ds_list_create();
-	content   = ds_list_create();
+	subDir    = [];
+	content   = [];
 	open      = false;
 	triggered = false;
 	scanned   = false;
@@ -169,8 +169,8 @@ function DirectoryObject(_path) constructor {
 		}
 		file_find_close();
 		
-		ds_list_clear(subDir);
-		ds_list_clear(content);
+		subDir  = [];
+		content = [];
 		
 		array_sort(_temp_name, true);
 		for( var i = 0; i < array_length(_temp_name); i++ ) {
@@ -179,15 +179,15 @@ function DirectoryObject(_path) constructor {
 			
 			if(array_exists(file_type, "NodeObject") && __Node_IsFileObject(_path)) {
 				var _ndir = new NodeFileObject(_path);
-				ds_list_add(content, _ndir);
+				array_push(content, _ndir);
 				
 			} else if(directory_exists(_path)) {
 				var fol = new DirectoryObject(_path).scan(file_type);
-				ds_list_add(subDir, fol);
+				array_push(subDir, fol);
 				
 			} else if(array_exists(file_type, filename_ext(file))) {
 				var f = new FileObject(_path);
-				ds_list_add(content, f);
+				array_push(content, f);
 				
 				if(string_lower(filename_ext(file)) == ".png") {
 					var icon_path = _path;
@@ -223,7 +223,7 @@ function DirectoryObject(_path) constructor {
 		var hg   = line_get_height(font, 5);
 		var hh   = 0;
 		
-		if(!ds_list_empty(subDir) && _hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + ui(32), _y + hg - 1)) {
+		if(!array_empty(subDir) && _hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + ui(32), _y + hg - 1)) {
 			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _x, _y, ui(32), hg, CDEF.main_white, 1);
 			if(mouse_press(mb_left, _focus)) {
 				open = !open;
@@ -237,7 +237,7 @@ function DirectoryObject(_path) constructor {
 		if(_hover && point_in_rectangle(_m[0], _m[1], _bx, _y, _bx + _bw, _y + hg - 1)) {
 			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _bx - ui(4), _y, _bw + ui(4), hg, CDEF.main_white, 1);
 			if(!triggered && mouse_press(mb_left, _focus)) {
-				if(!ds_list_empty(subDir) && !open) {
+				if(!array_empty(subDir) && !open) {
 					open = true;
 					MOUSE_BLOCK = true;
 				}
@@ -252,8 +252,8 @@ function DirectoryObject(_path) constructor {
 			triggered = false;
 		
 		gpu_set_texfilter(true);
-		var _spr_ind = ds_list_empty(subDir)? parent.context == self : open;
-		var _spr_bld = ds_list_empty(subDir)? COLORS.collection_folder_empty : COLORS.collection_folder_nonempty;
+		var _spr_ind = array_empty(subDir)? parent.context == self : open;
+		var _spr_bld = array_empty(subDir)? COLORS.collection_folder_empty : COLORS.collection_folder_nonempty;
 		if(icon_blend != undefined) _spr_bld = icon_blend;
 		
 		var _spr_sca = (hg - ui(5)) / ui(24);
@@ -265,10 +265,10 @@ function DirectoryObject(_path) constructor {
 		hh += hg;
 		_y += hg;
 		
-		if(open && !ds_list_empty(subDir)) {
+		if(open && !array_empty(subDir)) {
 			var l_y = _y;
-			for(var i = 0; i < ds_list_size(subDir); i++) {
-				var _hg = subDir[| i].draw(parent, _x + ui(16), _y, _m, _w - ui(16), _hover, _focus, _homedir, _params);
+			for(var i = 0; i < array_length(subDir); i++) {
+				var _hg = subDir[i].draw(parent, _x + ui(16), _y, _m, _w - ui(16), _hover, _focus, _homedir, _params);
 				
 				hh += _hg;
 				_y += _hg;
@@ -280,7 +280,7 @@ function DirectoryObject(_path) constructor {
 		return hh;
 	}
 	
-	static destroy = function() /*=>*/ { ds_list_destroy(subDir); }
+	static destroy = function() /*=>*/ {  }
 }
 
 function readFolder(path, arr = []) {

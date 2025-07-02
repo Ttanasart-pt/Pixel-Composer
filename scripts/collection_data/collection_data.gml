@@ -31,16 +31,16 @@ function searchCollection(_list, _search_str, _toList = true) {
 		
 	while(!ds_stack_empty(st)) {
 		var _st = ds_stack_pop(st);
-		for( var i = 0; i < ds_list_size(_st.content); i++ ) {
-			var _nd   = _st.content[| i];
+		for( var i = 0; i < array_length(_st.content); i++ ) {
+			var _nd   = _st.content[i];
 			var match = string_partial_match(string_lower(_nd.name), search_lower);
 			if(match == -9999) continue;
 			
 			ds_priority_add(ll, _nd, match);
 		}
 			
-		for( var i = 0; i < ds_list_size(_st.subDir); i++ )
-			ds_stack_push(st, _st.subDir[| i]);
+		for( var i = 0; i < array_length(_st.subDir); i++ )
+			ds_stack_push(st, _st.subDir[i]);
 	}
 	
 	if(_toList) {
@@ -80,8 +80,8 @@ function clearDefaultCollection() {
 		
 	while(!ds_stack_empty(st)) {
 		var _st = ds_stack_pop(st);
-		for( var i = 0; i < ds_list_size(_st.content); i++ ) {
-			var _file = _st.content[| i];
+		for( var i = 0; i < array_length(_st.content); i++ ) {
+			var _file = _st.content[i];
 			if(_file.type != FILE_TYPE.collection) continue;
 			
 			var _meta = _file.getMetadata();
@@ -96,8 +96,8 @@ function clearDefaultCollection() {
 			file_delete_safe(_mpth);
 		}
 		
-		for( var i = 0; i < ds_list_size(_st.subDir); i++ )
-			ds_stack_push(st, _st.subDir[| i]);
+		for( var i = 0; i < array_length(_st.subDir); i++ )
+			ds_stack_push(st, _st.subDir[i]);
 	}
 	
 	ds_stack_destroy(st);

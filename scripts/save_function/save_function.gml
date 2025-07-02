@@ -45,7 +45,9 @@ function SAVE_ALL() {
 
 function SAVE(project = PROJECT) {
 	if(DEMO) return false;
-	if(!is(project, Project)) return false;
+	
+	if(!is(project, Project)) project = PROJECT;
+	if(!is(project, Project)) { noti_warning($"Invalid save project: {project}"); return false; }
 	
 	if(project.path == "" || project.freeze || project.readonly || path_is_backup(project.path))
 		return SAVE_AS(project);

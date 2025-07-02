@@ -23,9 +23,10 @@ function shell_execute(path, command, ref = noone, _log = true) {
 	var cmd = $"{path} {command}";
 	
 	var res = ProcessExecute(cmd);
-	if(_log) print($"Execute {path} {command} | {res}");
+	var out = ExecutedProcessReadFromStandardOutput(res);
+	if(_log) show_debug_message($"Execute {path} {command} [{res}] > {out}");
 	
-	return res;
+	return out;
 }
 
 function shell_execute_async(path, command, ref = noone, _log = true) {
@@ -62,7 +63,7 @@ function shellCommandBuilder(args) {
 		var _v = string(args[$ _k]);
 		if(_v == "") continue;
 		
-		if(string_pos(" ", _v)) 
+		if(is_string(_v)) 
 		     _arg += $"{_k} \"{_v}\" ";
 		else _arg += $"{_k} {_v} ";
 	}

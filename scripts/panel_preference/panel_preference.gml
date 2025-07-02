@@ -676,13 +676,14 @@ function Panel_Preference() : PanelContent() constructor {
     		var thm = dat.file;
     		if(PREFERENCES.theme == thm) return;
     		
-    		themeCurrent = dat;
+    		themeCurrent      = dat;
     		PREFERENCES.theme = thm;
+    		should_restart    = true;
     		PREF_SAVE();
     		
-    		loadGraphic(thm);
-    		loadColor(thm);
-    		loadFonts();
+    		// loadGraphic(thm);
+    		// loadColor(thm);
+    		// loadFonts();
     	}, false);
     	sb_theme.font  = f_p2;
     	sb_theme.align = fa_left;

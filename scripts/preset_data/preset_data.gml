@@ -15,13 +15,13 @@ function __initPresets() {
 	global.PRESETS = new DirectoryObject(root);
 	global.PRESETS.scan([".json"]);
 	
-	for( var i = 0; i < ds_list_size(global.PRESETS.subDir); i++ ) {
+	for( var i = 0; i < array_length(global.PRESETS.subDir); i++ ) {
 		var l   = [];
-		var grp = global.PRESETS.subDir[| i];
+		var grp = global.PRESETS.subDir[i];
 		global.PRESETS_MAP[? grp.name] = l;
 		
-		for( var j = 0; j < ds_list_size(grp.content); j++ ) {
-			var pth = grp.content[| j].path;
+		for( var j = 0; j < array_length(grp.content); j++ ) {
+			var pth = grp.content[j].path;
 			var f   = new FileObject(pth);
 			array_push(l, f);
 			

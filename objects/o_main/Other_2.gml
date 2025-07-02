@@ -8,12 +8,18 @@
 	
 	if(OS == os_linux) {
 		APP_DIRECTORY = working_directory;
-		DIRECTORY     = program_directory;
+		DIRECTORY     = working_directory;
 	    APP_LOCATION  = program_directory;
 	        
 		PREFERENCES_DIR = $"{DIRECTORY}Preferences/{PREF_VERSION}/";
 		directory_verify($"{DIRECTORY}Cache");
 		directory_verify($"{DIRECTORY}log");
+		
+		show_debug_message($"working: {working_directory}")
+		show_debug_message($"project: {program_directory}")
+		
+		var fsPath = $"{APP_LOCATION}assets/fs/fs.appimage";
+		ProcessExecute($"chmod +x {fsPath}");
 		
 	} else {
 		APP_DIRECTORY = env_user();

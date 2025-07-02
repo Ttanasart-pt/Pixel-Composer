@@ -22,9 +22,11 @@ function __initTheme() {
 	directory_verify(root);
 	
 	if(check_version($"{root}/version")) {
-		zip_unzip($"{working_directory}data/theme.zip", root);	printDebug($"     > Unzip theme  | complete in {get_timer() - t}");    t = get_timer();
+		zip_unzip($"{working_directory}data/theme.zip", root);	
+		printDebug($"     > Unzip theme  | complete in {get_timer() - t}");    t = get_timer();
 	}
 	
+	PREFERENCES.theme = "default HQ";
 	loadColor(PREFERENCES.theme);			printDebug($"     > Load color   | complete in {get_timer() - t}");    t = get_timer();
 	loadGraphic(PREFERENCES.theme);			printDebug($"     > Load graphic | complete in {get_timer() - t}");    t = get_timer();
 }
@@ -83,11 +85,11 @@ function loadGraphic(theme = "default") {
 	var _metaP = $"{DIRECTORY}Themes/{theme}/meta.json";
 	
 	if(!file_exists_empty(_metaP))
-		noti_warning("Loading theme made for older version.");
+		noti_warning("Init Theme: meta.json not found");
 	else {
 		var _meta = json_load_struct(_metaP);
 		if(_meta[$ "version"] < VERSION)
-			noti_warning("Loading theme made for older version.");
+			noti_warning("Init Theme: Loading theme made for older version.");
 	}
 	
 	printDebug($"Loading theme {theme}");

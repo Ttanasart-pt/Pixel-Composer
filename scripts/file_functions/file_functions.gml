@@ -38,7 +38,7 @@ function file_get_modify_s(path) {
 
 function __file_selector(_mode = "save", _dir = PREFERENCES.dialog_path, _fname = "", _ftype = "", _multi = false) {
 	var _resPath = filepath_resolve(PREFERENCES.temp_path) + "fs_selected.txt"
-	if(file_exists(_resPath)) file_delete(_resPath);
+	file_delete_safe(_resPath);
 	
 	var _arg = {};
 	_arg[$ "--out"]   = _resPath;
@@ -52,16 +52,32 @@ function __file_selector(_mode = "save", _dir = PREFERENCES.dialog_path, _fname 
 	_arg[$ "-y"]      = WIN_Y + WIN_H / 2;
 	
 	var rep  = $"{APP_LOCATION}fs/fs.exe";
+	if(OS == os_linux) rep = $"{APP_LOCATION}assets/fs/fs.appimage";
+	
 	var args = shellCommandBuilder(_arg);
+	var _out = shell_execute(rep, args);
+	var _res = undefined;
 	
-	shell_execute(rep, args);
+	if(true) {
+		var _lines = string_split(_out, "\n");
+		for( var i = 0, n = array_length(_lines); i < n; i++ ) {
+			var _l = _lines[i];
+			if(!string_starts_with(_l, "result:")) continue;
+			
+			var _ll = string_split(_l, "|");
+			var _rs = array_safe_get(_ll, 1);
+			
+			_res = json_try_parse(_rs, undefined);
+		}
+		
+	} else
+		_res = json_load_struct(_resPath, undefined);
 	
-	var _res = json_load_struct(_resPath, undefined);
 	return _res;
 }
 
 function get_open_filenames_compat(ext, fname, caption = "Open") {
-	var _native = PREFERENCES.use_native_file_browser;
+	var _native = PREFERENCES.use_native_file_browser && OS == os_windows;
 	if(_native) {
 		var pat, w = OS == os_windows;
 		
@@ -87,7 +103,7 @@ function get_open_filenames_compat(ext, fname, caption = "Open") {
 }
 
 function get_open_filename_compat(ext, fname, caption = "Open") {
-	var _native = PREFERENCES.use_native_file_browser;
+	var _native = PREFERENCES.use_native_file_browser && OS == os_windows;
 	if(_native) {
 		var path = get_open_filename_ext(ext, fname, PREFERENCES.dialog_path, caption);
 		    path = string(path);
@@ -105,7 +121,7 @@ function get_open_filename_compat(ext, fname, caption = "Open") {
 }
 
 function get_save_filename_compat(ext, fname, caption = "Save as") {
-	var _native = PREFERENCES.use_native_file_browser;
+	var _native = PREFERENCES.use_native_file_browser && OS == os_windows;
 	if(_native) {
 		var path = get_save_filename_ext(ext, fname, PREFERENCES.dialog_path, caption);
 		    path = string(path);

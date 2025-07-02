@@ -2631,7 +2631,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	draw_sprite_stretched(THEME.toolbar, 1, tx, ty, tw, th);
     	
     	var _side_m = menuItems_gen("graph_topbar_menu");
-    	var _pad = ui(6);
+    	var _pad = ui(4);
 		var _mus = th - _pad * 2;
 		var _mux = top_scroll + _pad;
 		var _muy = ty + _pad;
@@ -2644,24 +2644,24 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 			var _menu = _side_m[i];
 			if(_menu == -1) {
 				draw_set_color(CDEF.main_mdblack);
-				draw_line_width(_mux + ui(3), _muy, _mux + ui(3), _muy + _mus, 2);
+				draw_line_width(_mux + ui(1), _muy, _mux + ui(1), _muy + _mus, 2);
 				
-				_mux += ui(8);
-				_ww  += ui(8);
+				_mux += ui(6);
+				_ww  += ui(6);
 				continue;
 			} 
 			
 			var _name = _menu.name;
 			var _spr  = _menu.getSpr();
-			var _sca  = _mus / sprite_get_height(_spr);
+			var _sca  = (_mus - ui(6)) / sprite_get_height(_spr) * (THEME_SCALE / UI_SCALE);
 			
 			if(buttonInstant(THEME.button_hide_fill, _mux, _muy, _mus, _mus, _m, pHOVER, pFOCUS, _name, _spr, 0, _cc, 1, _sca) == 2) {
 				var _res = _menu.toggleFunction();
 				if(is(_res, Node)) selectDragNode(_res, true);
 			}
 			
-			_mux += _mus + ui(4);
-			_ww  += _mus + ui(4);
+			_mux += _mus + ui(2);
+			_ww  += _mus + ui(2);
 		}
 		
 		top_scroll_max = max(_ww - tw + ui(16), 0);

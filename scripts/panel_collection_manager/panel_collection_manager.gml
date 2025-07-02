@@ -27,8 +27,8 @@ function Panel_Collection_Manager() : PanelContent() constructor {
 		    var dp = tp[1];
 		    
 		    var _list = st.subDir;
-		    for( var i = 0, n = ds_list_size(_list); i < n; i++ ) 
-		        ds_stack_push(stack, [_list[| n - 1 - i], dp + 1]);
+		    for( var i = 0, n = array_length(_list); i < n; i++ ) 
+		        ds_stack_push(stack, [_list[n - 1 - i], dp + 1]);
 		        
 		    draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_sub);
     		draw_text_add(ui(dp * 8 + 8), yy + hg / 2, st.name);
@@ -57,8 +57,8 @@ function Panel_Collection_Manager() : PanelContent() constructor {
 		    yy += hg;
 		    
 		    var _list = st.content;
-    		for( var i = 0, n = ds_list_size(_list); i < n; i++ ) {
-    		    var _con = _list[| i];
+    		for( var i = 0, n = array_length(_list); i < n; i++ ) {
+    		    var _con = _list[i];
     		    
     		    draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text);
     		    draw_text_add(ui(dp * 8 + 16), yy + hg / 2, _con.name);

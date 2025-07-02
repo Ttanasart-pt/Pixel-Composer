@@ -290,13 +290,16 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					modified = true;
 				}
 			} else if(key_mod_press(CTRL) && (keyboard_check_pressed(ord("C")) || keyboard_check_pressed(ord("X")))) {
-				if(cursor_select != -1)
-					clipboard_set_text(string_copy(_input_text, minc + 1, maxc - minc));
+				if(cursor_select != -1) {
+					var _selecting = string_copy(_input_text, minc + 1, maxc - minc);
+					clipboard_set_text(_selecting);
+				}
 			
 			} else {
 				if(key_mod_press(CTRL) && keyboard_check_pressed(ord("V"))) {
 					var _ctxt = clipboard_get_text();
 					    _ctxt = string_replace_all(_ctxt, "\t", "    ");
+					    
 					KEYBOARD_PRESSED_STRING = _ctxt;
 					modified        = true;
 				}

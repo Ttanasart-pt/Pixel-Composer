@@ -39,16 +39,31 @@ function Panel_Release_Note() : PanelContent() constructor {
 		dl_selecting = noone;
 		
 		function toggleDownload(dl) {
-			var  vers = dl.version;
-			var _path = get_save_filename_ext("Compressed zip (.zip)| *.zip", $"PixelComposer {vers}.zip", "", "Download location");
+			var verObj = dl;
+			var link   = "";
+			var fname  = "";
+			
+			if(is_array(dl)) {
+				verObj = dl[0];
+				link   = dl[1];
+				fname  = dl[2];
+				
+			} else {
+				verObj = dl;
+				link   = dl.link;
+				fname  = $"PixelComposer {vers}.zip";
+			}
+			
+			var  vers = verObj.version;
+			var _path = get_save_filename_ext("Any", fname, "", "Download location");
 			var _dir  = filename_dir(_path);
 			
 			if(_dir != "") {
-				dl.status        = 1;
-				dl.download_path = _path;
+				verObj.status        = 1;
+				verObj.download_path = _path;
 				
-				var _get = http_get_file(dl.link, _path);
-				downloading[$ _get] = dl;
+				var _get = http_get_file(link, _path);
+				downloading[$ _get] = verObj;
 			}
 		}
 		
@@ -67,6 +82,7 @@ function Panel_Release_Note() : PanelContent() constructor {
 				var type = dl.type;
 				var hh   = dl.status == 0? ui(28) : ui(48);
 				var hov  = pHOVER && point_in_rectangle(_m[0], _m[1], xx, yy, xx + ww, yy + hh);
+				var oss  = struct_has(dl, "links");
 				
 				draw_sprite_stretched(THEME.ui_panel_bg, 0, xx, yy, ww, hh);
 				draw_sprite_stretched_ext(THEME.ui_panel, 1, xx, yy, ww, hh, COLORS.node_display_text_frame_outline, 1);
@@ -74,15 +90,17 @@ function Panel_Release_Note() : PanelContent() constructor {
 				if(dl.status == 0) {
 					if(hov) {
 						draw_sprite_stretched_ext(THEME.ui_panel, 1, xx, yy, ww, hh, COLORS._main_accent, 1);
-						if(mouse_press(mb_left, pFOCUS)) 
-							toggleDownload(dl);
+						if(mouse_press(mb_left, pFOCUS)) {
+							
+							if(oss) menuCall("", dl.dMenu);
+							else    toggleDownload(dl);
+						}
 						
 						if(mouse_press(mb_right, pFOCUS)) {
-							dl_selecting = dl;
-							menuCall("", [
-								menuItem("Download", function() /*=>*/ {return toggleDownload(dl_selecting)}),
-								menuItem("Open URL", function() /*=>*/ {return url_open(dl_selecting.link)}),
-							]);
+							var _menu = array_clone(dl.dMenu);
+							
+							array_push(_menu, -1, menuItem("Open URL", function(p) /*=>*/ {return url_open(p).setParam(dl.link)}));
+							menuCall("", _menu);
 						}
 					}
 					
@@ -93,22 +111,18 @@ function Panel_Release_Note() : PanelContent() constructor {
 					
 					if(mouse_press(mb_right, pFOCUS)) {
 						dl_selecting = dl;
-						menuCall("", [
-							menuItem("Open",   function() /*=>*/ {return shellOpenExplorer(filename_dir(dl_selecting.download_path))}),
+						var _menu = [
+							menuItem("Open Folder", function() /*=>*/ {return shellOpenExplorer(filename_dir(dl_selecting.download_path))}),
 							menuItem("Delete", function() /*=>*/ {
 								file_delete(dl_selecting.download_path);
 								dl_selecting.download_path = "";
 								dl_selecting.status = 0;
 							}),
-							menuItem("Re-Download", function() /*=>*/ {
-								file_delete(dl_selecting.download_path);
-								var _path = dl_selecting.download_path;
-								dl_selecting.status = 1;
-								
-								var _get = http_get_file(dl_selecting.link, _path);
-								downloading[$ _get] = dl_selecting;
-							}),
-						]);
+							-1,
+						];
+						
+						array_append(_menu, dl.dMenu);
+						menuCall("", _menu);
 					}
 					
 				} else if(dl.status == -1 && hov) {
@@ -119,7 +133,6 @@ function Panel_Release_Note() : PanelContent() constructor {
 				}
 				
 				var tx = xx + ui(8);
-				
 				switch(type) {
 					case "stable" : 
 						draw_set_text(f_p1b, fa_left, fa_top, COLORS._main_text_accent); 
@@ -140,6 +153,27 @@ function Panel_Release_Note() : PanelContent() constructor {
 				draw_set_alpha(dl.status == 2? 1 : .5);
 				draw_text(tx, yy + ui(4), vers);
 				draw_set_alpha(1);
+				
+				tx += string_width(vers) + ui(8);
+				var ty = yy + ui(4) + string_height(vers) / 2;
+				
+				tx += ui(16);
+				draw_sprite_ui_uniform(THEME.icon_os_windows, 0, tx, ty, .65, COLORS._main_icon, .75);
+				tx += ui(24);
+					
+				if(oss) {
+					var _ls = dl.links;
+					
+					if(struct_has(_ls, "linux")) {
+						draw_sprite_ui_uniform(THEME.icon_os_linux, 0, tx, ty, .65, COLORS._main_icon, .75);
+						tx += ui(24);
+					}
+					
+					if(struct_has(_ls, "mac")) {
+						draw_sprite_ui_uniform(THEME.icon_os_mac, 0, tx, ty, .65, COLORS._main_icon, .75);
+						tx += ui(24);
+					}
+				}
 				
 				if(dl.status == 1) {
 					var _bw  = ww - ui(16);
@@ -190,23 +224,42 @@ function Panel_Release_Note() : PanelContent() constructor {
 				dls = json_try_parse(res, []);
 				
 				for( var i = 0, n = array_length(dls); i < n; i++ ) {
-					var _v = dls[i].version;
+					var  d = dls[i];
+					var _v = d.version;
 					
-					dls[i].status            = 0;
-					dls[i].download_path     = "";
+					d.status            = 0;
+					d.download_path     = "";
 					
-					dls[i].size_total      = 0;
-					dls[i].size_downloaded = 0;
+					d.size_total      = 0;
+					d.size_downloaded = 0;
 					
 					if(struct_has(PREFERENCES.versions, _v)) {
 						var _path =  PREFERENCES.versions[$ _v];
 						
 						if(file_exists(_path)) {
-							dls[i].status          = 2;
-							dls[i].download_path   = _path;
-							dls[i].size_total      = file_size(_path);
+							d.status          = 2;
+							d.download_path   = _path;
+							d.size_total      = file_size(_path);
 						}
 					}
+					
+					var oss  = struct_has(d, "links");
+					if(oss) {
+						var _ls = d.links;
+						_menu = [ menuItem("Download for Windows", function(p) /*=>*/ {return toggleDownload(p)}).setParam([d, _ls.windows]) ];
+						if(struct_has(_ls, "linux")) 
+							array_push(_menu, menuItem("Download for Linux",  function(p) /*=>*/ {return toggleDownload(p)})
+								.setParam([d, _ls.linux, $"PixelComposer {_v}.AppImage"]));
+							
+						if(struct_has(_ls, "mac"))   
+							array_push(_menu, menuItem("Download for Mac OS", function(p) /*=>*/ {return toggleDownload(p)})
+								.setParam([d, _ls.mac, $""]));
+						
+					} else
+						_menu = [ menuItem("Download", function(p) /*=>*/ {return toggleDownload(p).setParam(d)}) ];
+						
+					d.dMenu = _menu;
+							
 				}
 			}
 			

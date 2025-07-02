@@ -9,8 +9,8 @@ function __test_update_current_collections(dir = COLLECTIONS) {
 	
 	while(!ds_stack_empty(st)) {
 		var _st = ds_stack_pop(st);
-		for( var i = 0; i < ds_list_size(_st.content); i++ ) {
-			var _node = _st.content[| i];
+		for( var i = 0; i < array_length(_st.content); i++ ) {
+			var _node = _st.content[i];
 			
 			print("  > Updating " + _node.meta_path);
 			var _map = json_load_struct(_node.meta_path);
@@ -22,8 +22,8 @@ function __test_update_current_collections(dir = COLLECTIONS) {
 			json_save_struct(_node.path, _map);
 		}
 		
-		for( var i = 0; i < ds_list_size(_st.subDir); i++ )
-			ds_stack_push(st, _st.subDir[| i]);
+		for( var i = 0; i < array_length(_st.subDir); i++ )
+			ds_stack_push(st, _st.subDir[i]);
 	}
 	
 	ds_stack_destroy(st);
@@ -66,8 +66,8 @@ function __test_load_current_collections(dir = COLLECTIONS) {
 			
 	while(!ds_stack_empty(st)) {
 		var _st = ds_stack_pop(st);
-		for( var i = 0; i < ds_list_size(_st.content); i++ ) {
-			var _node = _st.content[| i];
+		for( var i = 0; i < array_length(_st.content); i++ ) {
+			var _node = _st.content[i];
 			if(_node.path == "") continue;
 			
 			print($"  > Building |{_node.path}|");
@@ -106,8 +106,8 @@ function __test_load_current_collections(dir = COLLECTIONS) {
 				xx += 160;
 		}
 			
-		for( var i = 0; i < ds_list_size(_st.subDir); i++ )
-			ds_stack_push(st, _st.subDir[| i]);
+		for( var i = 0; i < array_length(_st.subDir); i++ )
+			ds_stack_push(st, _st.subDir[i]);
 	}
 	
 	ds_stack_destroy(st);
@@ -178,8 +178,8 @@ function __test_metadata_current_collections(dir = COLLECTIONS) {
 	
 	while(!ds_stack_empty(st)) {
 		var _st = ds_stack_pop(st);
-		for( var i = 0; i < ds_list_size(_st.content); i++ ) {
-			var _node = _st.content[| i];
+		for( var i = 0; i < array_length(_st.content); i++ ) {
+			var _node = _st.content[i];
 			
 			print("  > Updating " + _node.path);
 			var _currMeta = json_load_struct(_node.meta_path);
@@ -189,8 +189,8 @@ function __test_metadata_current_collections(dir = COLLECTIONS) {
 			json_save_struct(_node.meta_path, _currMeta, true);
 		}
 		
-		for( var i = 0; i < ds_list_size(_st.subDir); i++ )
-			ds_stack_push(st, _st.subDir[| i]);
+		for( var i = 0; i < array_length(_st.subDir); i++ )
+			ds_stack_push(st, _st.subDir[i]);
 	}
 	
 	ds_stack_destroy(st);

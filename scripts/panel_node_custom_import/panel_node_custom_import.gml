@@ -78,11 +78,11 @@ function Panel_Node_Custom_Import(_dirs) : PanelContent() constructor {
             
             if(is(_d, DirectoryObject)) {
                 
-                for( var i = 0, n = ds_list_size(_d.subDir); i < n; i++ )
-                    ds_stack_push(_dir, _d.subDir[| i]);
+                for( var i = 0, n = array_length(_d.subDir); i < n; i++ )
+                    ds_stack_push(_dir, _d.subDir[i]);
                 
-                for( var i = 0, n = ds_list_size(_d.content); i < n; i++ )
-                    ds_stack_push(_dir, _d.content[| i]);
+                for( var i = 0, n = array_length(_d.content); i < n; i++ )
+                    ds_stack_push(_dir, _d.content[i]);
                 
                 var cc = CDEF.main_ltgrey;
                 

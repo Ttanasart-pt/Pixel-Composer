@@ -59,8 +59,8 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 		ds_stack_clear(stack);
 		
 		var _list = internalDir.subDir;
-	    for( var i = ds_list_size(_list) - 1; i >= 0; i-- ) 
-	        ds_stack_push(stack, [ _list[| i], 0]);
+	    for( var i = array_length(_list) - 1; i >= 0; i-- ) 
+	        ds_stack_push(stack, [ _list[i], 0]);
         
 		while(!ds_stack_empty(stack)) {
 		    var _stack = ds_stack_pop(stack);
@@ -68,8 +68,8 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 		    var ly = _stack[1]; 
 		    
 		    var _list = st.subDir;
-		    for( var i = 0, n = ds_list_size(_list); i < n; i++ ) 
-		        ds_stack_push(stack, [ _list[| i], ly + 1]);
+		    for( var i = 0, n = array_length(_list); i < n; i++ ) 
+		        ds_stack_push(stack, [ _list[i], ly + 1]);
 		        
 	        var cc = COLORS._main_text_sub;
 	        if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, ww, yy + hg - 1)) {
@@ -110,8 +110,8 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 		
 		var _list = selectDir.content;
 		
-		for( var i = 0, n = ds_list_size(_list); i < n; i++ ) {
-		    var _con = _list[| i];
+		for( var i = 0, n = array_length(_list); i < n; i++ ) {
+		    var _con = _list[i];
 		    
 		    var cc = COLORS._main_text_sub;
 		    if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, ww, yy + hg - 1)) {

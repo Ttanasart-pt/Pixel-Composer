@@ -49,7 +49,7 @@
 		PREFERENCES.mouse_wheel_speed				= 1.00;
 		
 		PREFERENCES.pen_pool_delay					= 1;
-		PREFERENCES.slider_lock_mouse				= true;
+		PREFERENCES.slider_lock_mouse				= os_type == os_windows;
 		
 		PREFERENCES.keyboard_repeat_start			= 0.50;
 		PREFERENCES.keyboard_repeat_speed			= 0.10;
@@ -79,7 +79,7 @@
 		PREFERENCES.add_node_remember				= true;
 		
 		PREFERENCES.file_explorer_view				= FILE_EXPLORER_VIEW.list;
-		PREFERENCES.use_native_file_browser			= true;
+		PREFERENCES.use_native_file_browser			= os_type == os_windows;
 	
 	#endregion
 	
@@ -386,7 +386,9 @@
 			var _prf = struct_has(_map, "preferences")? _map.preferences : _map;
 			
 			struct_override(PREFERENCES, _prf);
-		}
+			print($"Loaded theme: {PREFERENCES.theme}")
+		} else 
+			print($"Pref key not found.")
 		
 		if(!directory_exists($"{DIRECTORY}Themes/{PREFERENCES.theme}"))
 			PREFERENCES.theme = "default";
@@ -412,10 +414,12 @@
 			PREFERENCES_MENUITEMS = _map;
 		}
 		
-		var fsPath = $"{DIRECTORY}Preferences\\fs.json";
-		var fsPref = json_load_struct(fsPath);
-		fsPref.ui_scale = UI_SCALE;
-		json_save_struct(fsPath, fsPref);
+		var fsPath = PREFERENCES_DIR +$"fs.json";
+		if(file_exists(fsPath)) {
+			var fsPref = json_load_struct(fsPath);
+			fsPref.ui_scale = UI_SCALE;
+			json_save_struct(fsPath, fsPref);
+		}
 	}
 	
 	function PREF_APPLY() {

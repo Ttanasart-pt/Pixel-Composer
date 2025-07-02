@@ -528,8 +528,8 @@ function Panel_Collection() : PanelContent() constructor {
 			font: f_p3, 
 		};
 		
-		for(var i = 0; i < ds_list_size(root.subDir); i++) {
-			var hg = root.subDir[| i].draw(self, _x, _y, _m, ww, hov, foc, root, _params);
+		for(var i = 0; i < array_length(root.subDir); i++) {
+			var hg = root.subDir[i].draw(self, _x, _y, _m, ww, hov, foc, root, _params);
 			hh += hg;
 			_y += hg;
 		}

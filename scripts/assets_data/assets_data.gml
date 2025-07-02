@@ -18,12 +18,12 @@
 			global.ASSETS = new DirectoryObject("");
 			global.ASSETS.name = "Assets";
 			
-			ds_list_add(global.ASSETS.subDir, __initAssetsFolder(root));
+			array_push(global.ASSETS.subDir, __initAssetsFolder(root));
 			for( var i = 0, n = array_length(PREFERENCES.path_assets); i < n; i++ ) {
 				var _path = PREFERENCES.path_assets[i];
 				if(_path == "" || !directory_exists(_path)) continue;
 				
-				ds_list_add(global.ASSETS.subDir, __initAssetsFolder(_path));
+				array_push(global.ASSETS.subDir, __initAssetsFolder(_path));
 			}
 		}
 		
@@ -41,13 +41,13 @@
 		while(!ds_stack_empty(st)) {
 			var _st = ds_stack_pop(st);
 			
-			for( var i = 0; i < ds_list_size(_st.content); i++ ) {
-				var _f = _st.content[| i];
+			for( var i = 0; i < array_length(_st.content); i++ ) {
+				var _f = _st.content[i];
 				global.ASSET_MAP[? _f.path] = _f;
 			}
 			
-			for( var i = 0; i < ds_list_size(_st.subDir); i++ ) {
-				ds_stack_push(st, _st.subDir[| i]);
+			for( var i = 0; i < array_length(_st.subDir); i++ ) {
+				ds_stack_push(st, _st.subDir[i]);
 			}
 		}
 		
