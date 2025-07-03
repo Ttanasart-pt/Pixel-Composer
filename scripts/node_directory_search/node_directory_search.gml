@@ -1,7 +1,7 @@
 function Node_create_Directory_Search(_x, _y, _group = noone) {
 	var path = "";
 	if(NODE_NEW_MANUAL) {
-		path = get_directory("");
+		path = get_open_directory_compat("");
 		key_release();
 		if(path == "") return noone;
 	}

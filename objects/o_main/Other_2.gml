@@ -9,16 +9,13 @@
 	if(OS == os_linux) {
 		APP_DIRECTORY = working_directory;
 		DIRECTORY     = working_directory;
-	    APP_LOCATION  = program_directory;
-	        
+	    APP_LOCATION  = working_directory;
+	    
 		PREFERENCES_DIR = $"{DIRECTORY}Preferences/{PREF_VERSION}/";
 		directory_verify($"{DIRECTORY}Cache");
 		directory_verify($"{DIRECTORY}log");
 		
-		show_debug_message($"working: {working_directory}")
-		show_debug_message($"project: {program_directory}")
-		
-		var fsPath = $"{APP_LOCATION}assets/fs/fs.appimage";
+		var fsPath = $"{APP_LOCATION}fs/fs.appimage";
 		ProcessExecute($"chmod +x {fsPath}");
 		
 	} else {
@@ -147,6 +144,9 @@
 	
 	directory_set_current_working(DIRECTORY);
 
+	print($"working: {working_directory}");
+	print($"project: {program_directory}");
+	
 #region lua
 	// lua_error_handler = _lua_error;
 #endregion

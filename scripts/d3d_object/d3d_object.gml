@@ -4,9 +4,10 @@
 	global.VF_POS = vertex_format_end();
 	
 	vertex_format_begin();
-	vertex_format_add_position_3d();
-	vertex_format_add_color();
+	vertex_format_add_position_3d();    // x y z    // 12
+	vertex_format_add_color();          // r g b a  // 4
 	global.VF_POS_COL = vertex_format_end();
+	global.VF_POS_COL_size = 16;
 	
 	vertex_format_begin();
 	vertex_format_add_position_3d();	// x y z    // 12

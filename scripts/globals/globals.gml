@@ -1,3 +1,6 @@
+gml_release_mode(true);
+gml_pragma("UnityBuild", "true");
+
 #region save
 	globalvar LOADING, CLONING, CLONING_GROUP;
 	globalvar CONNECTION_CONFLICT, LOADING_VERSION;
@@ -42,11 +45,11 @@
 	globalvar VERSION, SAVE_VERSION, VERSION_STRING, BUILD_NUMBER, LATEST_VERSION, NIGHTLY, RELEASE_STRING;
 	
 	LATEST_VERSION	= 1_19_00_0;
-	VERSION			= 1_19_04_2;
+	VERSION			= 1_19_04_3;
 	SAVE_VERSION	= 1_19_04_0;
-	VERSION_STRING  = MAC? "1.18.003m" : "1.19.4.2";
-	RELEASE_STRING  = "1.19.4.2";
-	BUILD_NUMBER	= 1_19_04_2;
+	VERSION_STRING  = MAC? "1.18.003m" : "1.19.4.3";
+	RELEASE_STRING  = "1.19.4";
+	BUILD_NUMBER	= 1_19_04_3;
 	PREF_VERSION    = 1_17_1;
 	
 	var _lsp = array_last(string_split(VERSION_STRING, "."));

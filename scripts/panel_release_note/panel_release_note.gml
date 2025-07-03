@@ -24,7 +24,7 @@ function Panel_Release_Note() : PanelContent() constructor {
 		note_issues     = "";
 		note_issuesMd   = [];
 		
-		// if(OS == os_linux) 
+		if(OS == os_linux) 
 			note_issues_get = http_get(note_dir + "Linux Known issues.md");
 		
 		sp_note = new scrollPane(content_w, content_h, function(_y, _m) {
@@ -35,7 +35,7 @@ function Panel_Release_Note() : PanelContent() constructor {
 			var ww = sp_note.surface_w - ui(16);
 			var hh = 0;
 			
-			if(OS == os_linux) {
+			if(note_issues != "") {
 				var _h = markdown_draw(note_issuesMd, xx, yy, ww);
 				hh += _h + ui(16);
 				yy += _h + ui(16);
@@ -67,10 +67,9 @@ function Panel_Release_Note() : PanelContent() constructor {
 			} else {
 				verObj = dl;
 				link   = dl.link;
-				fname  = $"PixelComposer {vers}.zip";
+				fname  = $"PixelComposer {verObj.version}.zip";
 			}
 			
-			var  vers = verObj.version;
 			var _path = get_save_filename_ext("Any", fname, "", "Download location");
 			var _dir  = filename_dir(_path);
 			
@@ -100,16 +99,70 @@ function Panel_Release_Note() : PanelContent() constructor {
 				var hov  = pHOVER && point_in_rectangle(_m[0], _m[1], xx, yy, xx + ww, yy + hh);
 				var oss  = struct_has(dl, "links");
 				
+				var osL  = oss && struct_has(dl.links, "linux");
+				var osM  = oss && struct_has(dl.links, "mac");
+				
 				draw_sprite_stretched(THEME.ui_panel_bg, 0, xx, yy, ww, hh);
 				draw_sprite_stretched_ext(THEME.ui_panel, 1, xx, yy, ww, hh, COLORS.node_display_text_frame_outline, 1);
+				
+				var hv_os = 0;
+				switch(OS) {
+					case os_windows : hv_os = 0; break;
+					case os_linux :   if(osL) hv_os = 1; break;
+					case os_macosx :  if(osM) hv_os = 2; break;
+				}
+				
+				var tx = xx + ui(8);
+				var ty = yy + ui(4);
+				
+				switch(type) {
+					case "stable" : draw_set_text(f_p1b, fa_left, fa_top, COLORS._main_text_accent); tx = xx + ui(8);  break;
+					case "beta"   : draw_set_text(f_p2,  fa_left, fa_top, COLORS._main_text);        tx = xx + ui(20); break;
+					case "alpha"  : draw_set_text(f_p3,  fa_left, fa_top, COLORS._main_text);        tx = xx + ui(20); break;
+				}
+				
+				draw_set_alpha(dl.status == 2? 1 : .5);
+				draw_text(tx, yy + ui(4), vers);
+				draw_set_alpha(1);
+				
+				tx += string_width(vers) + ui(8);
+				tx += ui(16);
+				ty += string_height(vers) / 2;
+				
+				if(       hov && point_in_circle(_m[0], _m[1], tx,              ty, ui(12))) { hv_os = 0; TOOLTIP = "Download for Windows"; }
+				if(osL && hov && point_in_circle(_m[0], _m[1], tx + ui(24 * 1), ty, ui(12))) { hv_os = 1; TOOLTIP = "Download for Linux";   }
+				if(osM && hov && point_in_circle(_m[0], _m[1], tx + ui(24 * 2), ty, ui(12))) { hv_os = 2; TOOLTIP = "Download for Mac OS";  }
+				
+				var _cc = (hov && hv_os == 0)? COLORS._main_icon_light : COLORS._main_icon;
+				draw_sprite_ui_uniform(THEME.icon_os_windows, 0, tx, ty, .6, _cc, .75 + (hov && hv_os == 0) * .25);
+				tx += ui(24);
+					
+				if(oss) {
+					
+					if(struct_has(dl.links, "linux")) {
+						var _cc = (hov && hv_os == 1)? COLORS._main_icon_light : COLORS._main_icon;
+						draw_sprite_ui_uniform(THEME.icon_os_linux, 0, tx, ty, .6, _cc, .75 + (hov && hv_os == 1) * .25);
+						tx += ui(24);
+					}
+					
+					if(struct_has(dl.links, "mac")) {
+						var _cc = (hov && hv_os == 2)? COLORS._main_icon_light : COLORS._main_icon;
+						draw_sprite_ui_uniform(THEME.icon_os_mac, 0, tx, ty, .6, _cc, .75 + (hov && hv_os == 2) * .25);
+						tx += ui(24);
+					}
+				}
 				
 				if(dl.status == 0) {
 					if(hov) {
 						draw_sprite_stretched_ext(THEME.ui_panel, 1, xx, yy, ww, hh, COLORS._main_accent, 1);
+						
 						if(mouse_press(mb_left, pFOCUS)) {
+							switch(hv_os) {
+								case  1 : toggleDownload([dl, dl.links.linux, $"PixelComposer {vers}.AppImage"]); break;
+								case  2 : toggleDownload([dl, dl.links.mac,   $""]);   break;
+								default : toggleDownload(dl);
+							}
 							
-							if(oss) menuCall("", dl.dMenu);
-							else    toggleDownload(dl);
 						}
 						
 						if(mouse_press(mb_right, pFOCUS)) {
@@ -146,49 +199,6 @@ function Panel_Release_Note() : PanelContent() constructor {
 					if(mouse_press(mb_left, pFOCUS)) 
 						url_open(dl.link);
 					
-				}
-				
-				var tx = xx + ui(8);
-				switch(type) {
-					case "stable" : 
-						draw_set_text(f_p1b, fa_left, fa_top, COLORS._main_text_accent); 
-						tx = xx + ui(8);
-						break;
-						
-					case "beta"   : 
-						draw_set_text(f_p2,  fa_left, fa_top, COLORS._main_text);        
-						tx = xx + ui(20);
-						break;
-						
-					case "alpha"  : 
-						draw_set_text(f_p3,  fa_left, fa_top, COLORS._main_text);        
-						tx = xx + ui(20);
-						break;
-				}
-				
-				draw_set_alpha(dl.status == 2? 1 : .5);
-				draw_text(tx, yy + ui(4), vers);
-				draw_set_alpha(1);
-				
-				tx += string_width(vers) + ui(8);
-				var ty = yy + ui(4) + string_height(vers) / 2;
-				
-				tx += ui(16);
-				draw_sprite_ui_uniform(THEME.icon_os_windows, 0, tx, ty, .65, COLORS._main_icon, .75);
-				tx += ui(24);
-					
-				if(oss) {
-					var _ls = dl.links;
-					
-					if(struct_has(_ls, "linux")) {
-						draw_sprite_ui_uniform(THEME.icon_os_linux, 0, tx, ty, .65, COLORS._main_icon, .75);
-						tx += ui(24);
-					}
-					
-					if(struct_has(_ls, "mac")) {
-						draw_sprite_ui_uniform(THEME.icon_os_mac, 0, tx, ty, .65, COLORS._main_icon, .75);
-						tx += ui(24);
-					}
 				}
 				
 				if(dl.status == 1) {
@@ -230,6 +240,7 @@ function Panel_Release_Note() : PanelContent() constructor {
 		if (_id == note_get) {
 		    if (_status == 0) {
 		        note   = ds_map_find_value(async_load, "result");
+		        print($"raw: {note}");
 		        noteMd = markdown_parse(note);
 				alarm[0] = 1;
 			}
@@ -237,6 +248,7 @@ function Panel_Release_Note() : PanelContent() constructor {
 		} else if (_id == note_issues_get) {
 		    if (_status == 0) {
 		        note_issues   = ds_map_find_value(async_load, "result");
+		        print($"raw: {note_issues}");
 		        note_issuesMd = markdown_parse(note_issues);
 				alarm[0] = 1;
 			}

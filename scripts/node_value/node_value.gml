@@ -887,7 +887,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						if(!is(node, Node_Global)) array_append(node.project.pathInputs, self);
 						
 						editWidget.side_button = button(function() /*=>*/ { 
-							var path = display_data.filter == "dir"? get_directory(PREFERENCES.dialog_path) : get_open_filename_compat(display_data.filter, "");
+							var path = display_data.filter == "dir"? get_open_directory_compat(PREFERENCES.dialog_path) : get_open_filename_compat(display_data.filter, "");
 							key_release();
 							if(path == "") return noone;
 							
@@ -918,7 +918,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 						editWidget.align = fa_left;
 						editWidget.side_button = button(function() { 
-							var path = display_data.filter == "dir"? get_directory(PREFERENCES.dialog_path) : get_save_filename_compat(display_data.filter, "");
+							var path = display_data.filter == "dir"? get_open_directory_compat(PREFERENCES.dialog_path) : get_save_filename_compat(display_data.filter, "");
 							key_release();
 							
 							if(path == "") return noone;

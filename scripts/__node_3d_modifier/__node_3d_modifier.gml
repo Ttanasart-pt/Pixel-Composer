@@ -1,8 +1,7 @@
 function Node_3D_Modifier(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constructor {
 	name = "3D Mesh Modifier";
 	
-	newInput(0, nodeValue_D3Mesh("Mesh", noone))
-		.setVisible(true, true);
+	newInput(0, nodeValue_D3Mesh("Mesh", noone)).setVisible(true, true);
 	
 	in_mesh = array_length(inputs);
 	

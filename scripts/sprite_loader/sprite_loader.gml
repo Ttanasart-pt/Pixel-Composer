@@ -26,7 +26,6 @@ function __initTheme() {
 		printDebug($"     > Unzip theme  | complete in {get_timer() - t}");    t = get_timer();
 	}
 	
-	PREFERENCES.theme = "default HQ";
 	loadColor(PREFERENCES.theme);			printDebug($"     > Load color   | complete in {get_timer() - t}");    t = get_timer();
 	loadGraphic(PREFERENCES.theme);			printDebug($"     > Load graphic | complete in {get_timer() - t}");    t = get_timer();
 }

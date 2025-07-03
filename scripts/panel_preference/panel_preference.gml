@@ -234,7 +234,7 @@ function Panel_Preference() : PanelContent() constructor {
     			__txtx("pref_directory", "Main directory path*"),
     			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { PRESIST_PREF.path = txt; json_save_struct(APP_DIRECTORY + "persistPreference.json", PRESIST_PREF); })
     				.setSideButton(button(function() /*=>*/ { 
-    					PRESIST_PREF.path = get_directory(struct_try_get(PRESIST_PREF, "path", ""));
+    					PRESIST_PREF.path = get_open_directory_compat(struct_try_get(PRESIST_PREF, "path", ""));
     					json_save_struct(APP_DIRECTORY + "persistPreference.json", PRESIST_PREF);
     				}, THEME.button_path_icon)).setFont(f_p2).setEmpty(),
     			
@@ -247,7 +247,7 @@ function Panel_Preference() : PanelContent() constructor {
     			__txtx("pref_directory_temp", "Temp directory path*"),
     			"temp_path",
     			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ {return prefSet("temp_path", txt)})
-    				.setSideButton(button(function() /*=>*/ { PREFERENCES.temp_path = get_directory(PREFERENCES.temp_path); PREF_SAVE(); }, THEME.button_path_icon))
+    				.setSideButton(button(function() /*=>*/ { PREFERENCES.temp_path = get_open_directory_compat(PREFERENCES.temp_path); PREF_SAVE(); }, THEME.button_path_icon))
     				.setFont(f_p2).setEmpty(),
     		));
     	
@@ -275,7 +275,7 @@ function Panel_Preference() : PanelContent() constructor {
     			__txtx("pref_directory_ImageMagick", "ImageMagick path*"),
     			"ImageMagick_path",
     			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ {return prefSet("ImageMagick_path", txt)})
-    				.setSideButton(button(function() /*=>*/ { PREFERENCES.ImageMagick_path = get_directory(PREFERENCES.ImageMagick_path); PREF_SAVE(); }, THEME.button_path_icon))
+    				.setSideButton(button(function() /*=>*/ { PREFERENCES.ImageMagick_path = get_open_directory_compat(PREFERENCES.ImageMagick_path); PREF_SAVE(); }, THEME.button_path_icon))
     				.setFont(f_p2).setEmpty(),
     		));
     		
@@ -283,7 +283,7 @@ function Panel_Preference() : PanelContent() constructor {
     			__txtx("pref_directory_webp", "Webp path*"),
     			"webp_path",
     			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ {return prefSet("webp_path")})
-    				.setSideButton(button(function() /*=>*/ { PREFERENCES.webp_path = get_directory(PREFERENCES.webp_path); PREF_SAVE(); }, THEME.button_path_icon))
+    				.setSideButton(button(function() /*=>*/ { PREFERENCES.webp_path = get_open_directory_compat(PREFERENCES.webp_path); PREF_SAVE(); }, THEME.button_path_icon))
     				.setFont(f_p2).setEmpty(),
     		));
     		
@@ -291,7 +291,7 @@ function Panel_Preference() : PanelContent() constructor {
     			__txtx("pref_directory_gifski", "Gifski path*"),
     			"gifski_path",
     			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ {return prefSet("gifski_path")})
-    				.setSideButton(button(function() /*=>*/ { PREFERENCES.gifski_path = get_directory(PREFERENCES.gifski_path); PREF_SAVE(); }, THEME.button_path_icon))
+    				.setSideButton(button(function() /*=>*/ { PREFERENCES.gifski_path = get_open_directory_compat(PREFERENCES.gifski_path); PREF_SAVE(); }, THEME.button_path_icon))
     				.setFont(f_p2).setEmpty(),
     		));
     		
@@ -299,7 +299,7 @@ function Panel_Preference() : PanelContent() constructor {
     			__txtx("pref_directory_FFmpeg", "FFmpeg path*"),
     			"ffmpeg_path",
     			new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ {return prefSet("gifski_path")})
-    				.setSideButton(button(function() /*=>*/ { PREFERENCES.ffmpeg_path = get_directory(PREFERENCES.ffmpeg_path); PREF_SAVE(); }, THEME.button_path_icon))
+    				.setSideButton(button(function() /*=>*/ { PREFERENCES.ffmpeg_path = get_open_directory_compat(PREFERENCES.ffmpeg_path); PREF_SAVE(); }, THEME.button_path_icon))
     				.setFont(f_p2).setEmpty(),
     		));
     	
@@ -432,8 +432,9 @@ function Panel_Preference() : PanelContent() constructor {
     				.setFont(f_p2).setEmpty()
     		));
     		
+    		if(OS == os_windows) 
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_windows_control", "Use Windows style window control."),
+    			__txtx("pref_windows_control", "Right align window controls."),
     			"panel_menu_right_control",
     			new checkBox(function() /*=>*/ {return prefToggle("panel_menu_right_control")})
     		));
@@ -456,6 +457,7 @@ function Panel_Preference() : PanelContent() constructor {
     			textBox_Number(function(str) /*=>*/ {return prefSet("window_fix_height", max(1, round(real(str))))})
     		));
     		
+    		if(OS == os_windows) 
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_ui_native_file_selector", "Use native file selector"),
     			"use_native_file_browser",
@@ -680,10 +682,6 @@ function Panel_Preference() : PanelContent() constructor {
     		PREFERENCES.theme = thm;
     		should_restart    = true;
     		PREF_SAVE();
-    		
-    		// loadGraphic(thm);
-    		// loadColor(thm);
-    		// loadFonts();
     	}, false);
     	sb_theme.font  = f_p2;
     	sb_theme.align = fa_left;

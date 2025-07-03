@@ -94,16 +94,17 @@ function _loadColor(theme = "default") {
 	COLOR_KEY_ARRAY = variable_struct_get_names(COLORS);
 	array_sort(COLOR_KEY_ARRAY, true);
 		
-	if(theme == "default" && !file_exists_empty(pathO)) {
-		COLORS_KEYS = json_load_struct(path);
+	if(theme == "default" && !file_exists_empty(pathO)) { 
+		COLORS_KEYS = json_load_struct(path); 
+		return;  
+	}
+	
+	if(!file_exists_empty(path)) { 
+		noti_status($"Colors not defined at {path}, rollback to default color."); 
 		return; 
 	}
 	
-	if(!file_exists_empty(path)) { noti_status($"Colors not defined at {path}, rollback to default color."); return; }
-	
 	var clrs = json_load_struct(path);
-	if(!struct_has(clrs, "values")) { print("Load color error"); return; }
-	
 	COLORS_KEYS = clrs;
 	
 	////- Colors

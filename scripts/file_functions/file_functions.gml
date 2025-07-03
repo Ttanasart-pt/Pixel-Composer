@@ -52,7 +52,7 @@ function __file_selector(_mode = "save", _dir = PREFERENCES.dialog_path, _fname 
 	_arg[$ "-y"]      = WIN_Y + WIN_H / 2;
 	
 	var rep  = $"{APP_LOCATION}fs/fs.exe";
-	if(OS == os_linux) rep = $"{APP_LOCATION}assets/fs/fs.appimage";
+	if(OS == os_linux) rep = $"{APP_LOCATION}fs/fs.appimage";
 	
 	var args = shellCommandBuilder(_arg);
 	var _out = shell_execute(rep, args);
@@ -113,6 +113,18 @@ function get_open_filename_compat(ext, fname, caption = "Open") {
 	}
 	
 	var _res = __file_selector("load", PREFERENCES.dialog_path, fname, ext, false);
+	if(!is_struct(_res)) return "";
+	
+	var path = array_empty(_res.selected)? "" : _res.selected[0].path;
+	if(path != "") PREFERENCES.dialog_path = filename_dir(path);
+	return path;
+}
+
+function get_open_directory_compat(fname) {
+	var _native = PREFERENCES.use_native_file_browser && OS == os_windows;
+	if(_native) return get_directory(fname);
+	
+	var _res = __file_selector("load", PREFERENCES.dialog_path, fname, "folder", false);
 	if(!is_struct(_res)) return "";
 	
 	var path = array_empty(_res.selected)? "" : _res.selected[0].path;

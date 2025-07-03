@@ -24,7 +24,7 @@ function shell_execute(path, command, ref = noone, _log = true) {
 	
 	var res = ProcessExecute(cmd);
 	var out = ExecutedProcessReadFromStandardOutput(res);
-	if(_log) show_debug_message($"Execute {path} {command} [{res}] > {out}");
+	if(_log) print($"Execute {path} {command} [{res}] > {out}");
 	
 	return out;
 }

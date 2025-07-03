@@ -14,7 +14,7 @@ function Node_Scatter_Point_Lattice_3D(_x, _y, _group = noone) : Node_Processor(
 	
 	newInput(0, nodeValueSeed()).rejectArray();
 	
-	////- =Scatter
+	////- =Lattice
 	
 	onSurfaceSize = function() /*=>*/ {return DEF_SURF}; 
 	newInput( 1, nodeValue_Vec3(  "Center",      [0,0,0] ));
