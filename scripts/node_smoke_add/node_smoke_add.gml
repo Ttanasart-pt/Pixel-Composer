@@ -5,36 +5,30 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 	
 	manual_ungroupable	 = false;
 	
-	newInput(0, nodeValue("Domain", self, CONNECT_TYPE.input, VALUE_TYPE.sdomain, noone))
-		.setVisible(true, true);
+	newInput( 3, nodeValue_Bool( "Active", true));
+	newInput( 0, nodeValue(      "Domain", self, CONNECT_TYPE.input, VALUE_TYPE.sdomain, noone)).setVisible(true, true);
 	
-	newInput(1, nodeValue_Surface("Fluid brush"));
+	////- =Brush
+	newInput( 8, nodeValue_Enum_Button(  "Type",        0, [ "Shape", "Surface" ]));
+	newInput( 1, nodeValue_Surface(      "Fluid brush" ));
+	newInput(11, nodeValue_Enum_Scroll(  "Shape",       0, [ "Disk", "Ring" ]));
+	newInput(12, nodeValue_Slider_Range( "Level",      [0,1] ));
+	newInput( 2, nodeValue_Vec2(         "Position",   [0,0] ));
+	newInput( 9, nodeValue_Vec2(         "Scale",      [8,8] ));
 	
-	newInput(2, nodeValue_Vec2("Position", [ 0, 0 ]));
+	////- =Smoke
+	newInput( 5, nodeValue_Slider( "Density", 1 ));
 	
-	newInput(3, nodeValue_Bool("Active", true));
+	////- =Push
+	newInput( 6, nodeValue_Int(    "Expand velocity mask", 1    ));
+	newInput( 7, nodeValue_Vec2(   "Velocity",            [0,0] ));
+	newInput( 4, nodeValue_Slider( "Inherit velocity",     0, [ -1, 1, 0.01 ] ));
 	
-	newInput(4, nodeValue_Slider("Inherit velocity", 0, [ -1, 1, 0.01 ] ));
-	
-	newInput(5, nodeValue_Slider("Density", 1));
-	
-	newInput(6, nodeValue_Int("Expand velocity mask", 1));
-	
-	newInput(7, nodeValue_Vec2("Velocity", [0, 0]));
-	
-	newInput(8, nodeValue_Enum_Button("Type", 0, [ "Shape", "Surface" ]));
-	
-	newInput(9, nodeValue_Vec2("Scale", [ 8, 8 ]));
-	
-	newInput(10, nodeValue_Float("Repulse", 0));
-	
-	newInput(11, nodeValue_Enum_Scroll("Shape", 0, [ "Disk", "Ring" ]));
-	
-	newInput(12, nodeValue_Slider_Range("Level", [ 0, 1 ]));
-	
-	newInput(13, nodeValue_Float("Spokes", 0));
-	
-	newInput(14, nodeValue_Rotation("Twist", 0));
+	////- =Repulse
+	newInput(10, nodeValue_Float(    "Repulse", 0 ));
+	newInput(13, nodeValue_Float(    "Spokes",  0 ));
+	newInput(14, nodeValue_Rotation( "Twist",   0 ));
+	// input 15
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -42,7 +36,7 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 	
 	input_display_list = [ 3, 0, 
 		["Brush",	 false], 8, 1, 11, 12, 2, 9, 
-		["Fluid",	 false], 5, 
+		["Smoke",	 false], 5, 
 		["Push",	 false], 6, 7, 4, 
 		["Repulse",  false], 10, 13, 14, 
 	];
@@ -66,6 +60,7 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 			
 			draw_set_color(c_white);
 			draw_set_alpha(.5);
+			draw_set_circle_precision(32);
 			draw_ellipse(_px - sw, _py - sh, _px + sw, _py + sh, false);
 			draw_set_alpha(1);
 			
@@ -136,6 +131,7 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 			temp_surface[0] = surface_verify(temp_surface[0], sw, sh);
 			surface_set_shader(temp_surface[0], sh_draw_grey_alpha);
 				shader_set_f("smooth", _lev);
+				draw_set_circle_precision(32);
 				
 				switch(_shp) {
 					case 0 : draw_ellipse_color(0, 0, sw - 1, sh - 1, c_white, c_white, false); break;

@@ -84,6 +84,7 @@ function Panel_Nodes() : PanelContent() constructor {
 	
     function onFocusBegin() {
         PANEL_NODES = self; 
+        NodeTreeSort();
     } 
     
 	////- Draw

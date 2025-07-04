@@ -485,6 +485,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         _frame_hovering  = noone;
         
         cache_group_edit = noone;
+        connect_related  = noone;
     #endregion
     
     #region // ---- minimap ----
@@ -2359,6 +2360,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     
     function callAddDialog(ctx = getCurrentContext(), conn = junction_hovering) { //
         var _dia = dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8, { context: ctx });
+        connect_related = noone;
         
         if(pFOCUS) {
 	        with(_dia) {    
@@ -2374,6 +2376,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        
 	        if(is(conn, NodeValue)) {
 	        	var _rel = nodeReleatedQuery("connectFrom", conn.type);
+	        	connect_related = conn;
 	        	
 	        	var menu = [];
 	        	for( var i = 0, n = array_length(_rel); i < n; i++ ) {
@@ -3287,6 +3290,16 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         	if(pFOCUS) FOCUS_STR = instanceof(node);
         }
         
+        if(connect_related != noone) {
+        	for( var i = 0, n = array_length(node.inputs); i < n; i++ ) {
+        		var _in = node.inputs[i];
+        		if(_in.setFrom(connect_related)) break;
+        	}
+        	
+        	selectDragNode(node, true);
+        }
+        
+        connect_related = noone;
         return node;
     }
     
