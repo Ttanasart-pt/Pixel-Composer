@@ -1493,6 +1493,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return _arr;
 	}
 	
+	static onAnimationStart = function() {
+		if(use_cache == CACHE_USE.auto && !isAllCached()) clearCache();
+	}
+	
 	////- DRAW
 	
 	static setShowParameter = function(showParam) {
@@ -2432,6 +2436,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	////- CACHE
 	
+	static isAllCached = function() {
+		for( var i = 0; i < TOTAL_FRAMES; i++ )
+			if(!cacheExist(i)) return false;
+		return true;
+	}
+	
 	static cacheCheck = function() {
 		INLINE
 		
@@ -2482,7 +2492,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(frame < 0) return false;
 		
 		if(frame >= array_length(cached_output)) return false;
-		if(frame >= array_length(cache_result)) return false;
+		if(frame >= array_length(cache_result))  return false;
 		if(!array_safe_get_fast(cache_result, frame, false)) return false;
 		
 		var s = array_safe_get_fast(cached_output, frame);
@@ -3128,8 +3138,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		return true;
 	}
-	
-	static resetAnimation = function() {}
 	
 	static getAttribute = function(_key) {
 		if(instanceBase != noone) return instanceBase.getAttribute(_key);

@@ -12,29 +12,19 @@ function Node_Smoke_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _gro
 	
 	outputNode = noone;
 	
-	newInput(0, nodeValue_Dimension());
-	
-	newInput(1, nodeValue_Surface("Collision"));
-	
-	newInput(2, nodeValue_Enum_Button("Material dissipation type",  1, [ "Multiply", "Subtract" ]));
-	
-	newInput(3, nodeValue_Slider("Material dissipation", 0.02, [ 0, 0.1, 0.01 ] ));
-	
-	newInput(4, nodeValue_Enum_Button("Velocity dissipation type",  1, [ "Multiply", "Subtract" ]));
-	
-	newInput(5, nodeValue_Slider("Velocity dissipation", 0.00, [ 0, 0.1, 0.01 ] ));
-	
-	newInput(6, nodeValue_Vec2("Acceleration", [ 0, 0 ]));
-	
-	newInput(7, nodeValue_Vec2("Material intertia", [ 1, -0.2 ]));
-	
-	newInput(8, nodeValue_Slider("Initial pressure", 0.75));
-	
-	newInput(9, nodeValue_Slider("Material Maccormack weight", 1));
-	
+	newInput( 0, nodeValue_Dimension());
+	newInput( 1, nodeValue_Surface("Collision"));
+	newInput( 2, nodeValue_Enum_Button("Material dissipation type",  1, [ "Multiply", "Subtract" ]));
+	newInput( 3, nodeValue_Slider("Material dissipation", 0.02, [ 0, 0.1, 0.01 ] ));
+	newInput( 4, nodeValue_Enum_Button("Velocity dissipation type",  1, [ "Multiply", "Subtract" ]));
+	newInput( 5, nodeValue_Slider("Velocity dissipation", 0.00, [ 0, 0.1, 0.01 ] ));
+	newInput( 6, nodeValue_Vec2("Acceleration", [ 0, 0 ]));
+	newInput( 7, nodeValue_Vec2("Material intertia", [ 1, -0.2 ]));
+	newInput( 8, nodeValue_Slider("Initial pressure", 0.75));
+	newInput( 9, nodeValue_Slider("Material Maccormack weight", 1));
 	newInput(10, nodeValue_Slider("Velocity Maccormack weight", 0));
-	
 	newInput(11, nodeValue_Bool("Wrap", false));
+	// input 12
 	
 	input_display_list_def = [ 
 		["Domain",		false], 0, 11, 1,

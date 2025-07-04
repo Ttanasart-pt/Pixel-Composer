@@ -5,41 +5,33 @@ function Node_Smoke_Domain(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	
 	manual_ungroupable	 = false;
 	
-	newInput(0, nodeValue_Dimension());
+	////- =Domain
+	newInput( 0, nodeValue_Dimension());
+	newInput( 1, nodeValue_Surface(     "Collision"    ));
+	newInput(11, nodeValue_Enum_Scroll( "Boundary",  0, [ "Free", "Wall", "Wrap" ]));
+	newInput(12, nodeValue_Float(       "Timestep",  1 ));
 	
-	newInput(1, nodeValue_Surface("Collision"));
+	////- =Properties
+	newInput( 8, nodeValue_Slider( "Initial pressure",   .75     ));
+	newInput( 6, nodeValue_Vec2(   "Acceleration",       [0,0]   ));
+	newInput( 7, nodeValue_Vec2(   "Material intertia",  [1,-.2] ));
 	
-	newInput(2, nodeValue_Enum_Button("Material dissipation type",  1, [ "Multiply", "Subtract" ]));
+	////- =Dissipation
+	newInput( 3, nodeValue_Slider( "Material dissipation", 0.02, [ 0, 0.1, 0.01 ] ));
+	newInput( 5, nodeValue_Slider( "Velocity dissipation", 0.00, [ 0, 0.1, 0.01 ] ));
 	
-	newInput(3, nodeValue_Slider("Material dissipation", 0.02, [ 0, 0.1, 0.01 ] ));
-	
-	newInput(4, nodeValue_Enum_Button("Velocity dissipation type",  1, [ "Multiply", "Subtract" ]));
-	
-	newInput(5, nodeValue_Slider("Velocity dissipation", 0.00, [ 0, 0.1, 0.01 ] ));
-	
-	newInput(6, nodeValue_Vec2("Acceleration", [ 0, 0 ]));
-	
-	newInput(7, nodeValue_Vec2("Material intertia", [ 1, -0.2 ]));
-	
-	newInput(8, nodeValue_Slider("Initial pressure", 0.75));
-	
-	newInput(9, nodeValue_Slider("Material Maccormack weight", 1));
-	
-	newInput(10, nodeValue_Slider("Velocity Maccormack weight", 0));
-	
-	newInput(11, nodeValue_Enum_Scroll("Boundary", 0, [ "Free", "Wall", "Wrap" ]));
-	
-	newInput(12, nodeValue_Float("Timestep", 1));
+	////- =Advance
+	newInput( 2, nodeValue_Enum_Button( "Material dissipation type",  1, [ "Multiply", "Subtract" ] ));
+	newInput( 4, nodeValue_Enum_Button( "Velocity dissipation type",  1, [ "Multiply", "Subtract" ] ));
+	newInput( 9, nodeValue_Slider(      "Material Maccormack weight", 1 ));
+	newInput(10, nodeValue_Slider(      "Velocity Maccormack weight", 0 ));
+	// input 13 
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newOutput(0, nodeValue_Output("Domain", VALUE_TYPE.sdomain, noone));
-	
-	newOutput(1, nodeValue_Output("Velocity", VALUE_TYPE.surface, noone))
-		.setVisible(false);
-	
-	newOutput(2, nodeValue_Output("Pressure", VALUE_TYPE.surface, noone))
-		.setVisible(false);
+	newOutput(0, nodeValue_Output( "Domain",   VALUE_TYPE.sdomain, noone ));
+	newOutput(1, nodeValue_Output( "Velocity", VALUE_TYPE.surface, noone )).setVisible(false);
+	newOutput(2, nodeValue_Output( "Pressure", VALUE_TYPE.surface, noone )).setVisible(false);
 	
 	input_display_list = [ 
 		["Domain",			false], 0, 1, 11, 12, 

@@ -63,8 +63,8 @@
 		static isFirstFrame = function() { return current_frame == getFirstFrame(); }
 		static isLastFrame  = function() { return current_frame == getLastFrame();  }
 		
-		static resetAnimation = function() {
-			array_foreach(PROJECT.allNodes, function(node) { node.resetAnimation(); });
+		static animationStart = function() {
+			array_foreach(PROJECT.allNodes, function(node) { node.onAnimationStart(); });
 		}
 		
 		static toggle = function() {
@@ -83,6 +83,7 @@
 			if(is_simulating)	setFrame(0);
 			else				firstFrame();
 			
+			animationStart();
 			is_playing			  = true;
 			frame_progress		  = true;
 			time_since_last_frame = 0;

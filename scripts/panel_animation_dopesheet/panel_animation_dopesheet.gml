@@ -1263,7 +1263,7 @@ function Panel_Animation_Dopesheet() {
 	                var x0 = (j + 0) * timeline_scale + timeline_shift;
 	                var x1 = (j + 1) * timeline_scale + timeline_shift;
 	                
-	                draw_set_color(_node.getAnimationCacheExist(i)? c_lime : c_red);
+	                draw_set_color(_node.getAnimationCacheExist(j)? c_lime : c_red);
 	                draw_rectangle(x0, _cont.y + ui(10) - ui(4), x1 - 1, _cont.y + ui(10) + ui(4), false);
 	            }
                 draw_set_alpha(1);
