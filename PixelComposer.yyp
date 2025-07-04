@@ -1430,7 +1430,6 @@
     {"$GMIncludedFile":"","%Name":"README.txt","CopyToMask":-1,"filePath":"datafiles/ffmpeg","name":"README.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"data.win","CopyToMask":-1,"filePath":"datafiles/fs","name":"data.win","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"fs.appimage","CopyToMask":-1,"filePath":"datafiles/fs","name":"fs.appimage","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"fs.AppImage","CopyToMask":-1,"filePath":"datafiles/fs","name":"fs.AppImage","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"fs.exe","CopyToMask":-1,"filePath":"datafiles/fs","name":"fs.exe","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"libfilesystem.dll","CopyToMask":-1,"filePath":"datafiles/fs","name":"libfilesystem.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"libxprocess.dll","CopyToMask":-1,"filePath":"datafiles/fs","name":"libxprocess.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},

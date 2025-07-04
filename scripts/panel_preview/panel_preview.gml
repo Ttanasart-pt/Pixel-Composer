@@ -2221,6 +2221,7 @@ function Panel_Preview() : PanelContent() constructor {
         overHover = overHover && tool_hovering == noone && !overlay_hovering;
         overHover = overHover && !canvas_dragging && !canvas_zooming;
         overHover = overHover && point_in_rectangle(mx, my, 0, toolbar_height, w, h - toolbar_height);
+        overHover = overHover && !key_mod_press(CTRL);
         
         var overActive = active && overHover;
         var params = { w, h, toolbar_height };
@@ -2257,10 +2258,11 @@ function Panel_Preview() : PanelContent() constructor {
         if(_node.tools != -1 && point_in_rectangle(_mx, _my, 0, 0, toolbar_width, h))
             overHover = false;
         
-        overhover = overHover && !view_hovering;
-        overhover = overHover && tool_hovering == noone && !overlay_hovering;
-        overhover = overHover && !canvas_dragging && !canvas_zooming;
-        overhover = overHover && point_in_rectangle(mx, my, (_node.tools != -1) * toolbar_width, toolbar_height, w, h - toolbar_height);
+        overHover = overHover && !view_hovering;
+        overHover = overHover && tool_hovering == noone && !overlay_hovering;
+        overHover = overHover && !canvas_dragging && !canvas_zooming;
+        overHover = overHover && point_in_rectangle(mx, my, (_node.tools != -1) * toolbar_width, toolbar_height, w, h - toolbar_height);
+        overHover = overHover && !key_mod_press(CTRL);
         
         var overActive = active && overHover;
         var params = { w, h, toolbar_height };

@@ -2088,7 +2088,7 @@
     {"name":"s_node_3d_mesh_stack_slice","order":33,"path":"sprites/s_node_3d_mesh_stack_slice/s_node_3d_mesh_stack_slice.yy",},
     {"name":"s_node_3d_mesh_terrain","order":12,"path":"sprites/s_node_3d_mesh_terrain/s_node_3d_mesh_terrain.yy",},
     {"name":"s_node_3d_mesh_torus","order":36,"path":"sprites/s_node_3d_mesh_torus/s_node_3d_mesh_torus.yy",},
-    {"name":"s_node_3d_mesh_vertex_points","order":8,"path":"sprites/s_node_3d_mesh_vertex_points/s_node_3d_mesh_vertex_points.yy",},
+    {"name":"s_node_3d_mesh_vertex_points","order":10,"path":"sprites/s_node_3d_mesh_vertex_points/s_node_3d_mesh_vertex_points.yy",},
     {"name":"s_node_3d_mesh_wall_builder","order":37,"path":"sprites/s_node_3d_mesh_wall_builder/s_node_3d_mesh_wall_builder.yy",},
     {"name":"s_node_3d_obj_combine","order":5,"path":"sprites/s_node_3d_obj_combine/s_node_3d_obj_combine.yy",},
     {"name":"s_node_3d_point_affector","order":22,"path":"sprites/s_node_3d_point_affector/s_node_3d_point_affector.yy",},

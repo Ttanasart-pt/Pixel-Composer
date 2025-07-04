@@ -2,29 +2,24 @@
   "$GMSprite":"",
   "%Name":"s_node_3d_mesh_vertex_points",
   "bboxMode":0,
-  "bbox_bottom":62,
-  "bbox_left":4,
-  "bbox_right":59,
-  "bbox_top":1,
+  "bbox_bottom":63,
+  "bbox_left":3,
+  "bbox_right":60,
+  "bbox_top":0,
   "collisionKind":1,
   "collisionTolerance":0,
-  "ConfigValues":{
-    "Itch":{
-      "textureGroupId":"{ \"name\":\"Default\", \"path\":\"texturegroups/Default\" }",
-    },
-  },
   "DynamicTexturePage":false,
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"","%Name":"091742c2-0974-42b6-b9e3-e330a6786e71","name":"091742c2-0974-42b6-b9e3-e330a6786e71","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"","%Name":"2cd26b7e-34e8-4385-a8fb-e538bb8ee0b6","name":"2cd26b7e-34e8-4385-a8fb-e538bb8ee0b6","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
   "height":64,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"07c5e95c-71b1-4f19-b6f7-47aace86b066","blendMode":0,"displayName":"default","isLocked":false,"name":"07c5e95c-71b1-4f19-b6f7-47aace86b066","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
+    {"$GMImageLayer":"","%Name":"18b4122b-d028-4ac8-a092-37435b7e165e","blendMode":0,"displayName":"default","isLocked":false,"name":"18b4122b-d028-4ac8-a092-37435b7e165e","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
   ],
   "name":"s_node_3d_mesh_vertex_points",
   "nineSlice":null,
@@ -74,8 +69,8 @@
     "tracks":[
       {"$GMSpriteFramesTrack":"","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"$KeyframeStore<SpriteFrameKeyframe>":"","Keyframes":[
             {"$Keyframe<SpriteFrameKeyframe>":"","Channels":{
-                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"091742c2-0974-42b6-b9e3-e330a6786e71","path":"sprites/s_node_3d_mesh_vertex_points/s_node_3d_mesh_vertex_points.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
-              },"Disabled":false,"id":"f744c4ab-b5e6-4f7d-80f5-683e70a325a8","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
+                "0":{"$SpriteFrameKeyframe":"","Id":{"name":"2cd26b7e-34e8-4385-a8fb-e538bb8ee0b6","path":"sprites/s_node_3d_mesh_vertex_points/s_node_3d_mesh_vertex_points.yy",},"resourceType":"SpriteFrameKeyframe","resourceVersion":"2.0",},
+              },"Disabled":false,"id":"d548a46e-314d-424d-92f3-bfb349517616","IsCreationKey":false,"Key":0.0,"Length":1.0,"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"2.0","Stretch":false,},
           ],"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"2.0",},"modifiers":[],"name":"frames","resourceType":"GMSpriteFramesTrack","resourceVersion":"2.0","spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange":null,

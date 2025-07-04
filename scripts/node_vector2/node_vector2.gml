@@ -4,37 +4,28 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	setDimension(96, 32 + 24 * 2);
 	
-	newInput(0, nodeValue_Float("x", 0))
-		.setVisible(true, true);
-		
-	newInput(1, nodeValue_Float("y", 0))
-		.setVisible(true, true);
+	newInput( 0, nodeValue_Float( "x", 0 )).setVisible(true, true);
+	newInput( 1, nodeValue_Float( "y", 0 )).setVisible(true, true);
+	newInput( 2, nodeValue_Bool(  "Integer", false ));
 	
-	newInput(2, nodeValue_Bool("Integer", false));
+	////- =Display
+	newInput( 3, nodeValue_Enum_Scroll( "Display Type",  0, [ "Number", "Coordinate" ]));
 	
-	newInput(3, nodeValue_Enum_Scroll("Display Type",  0, [ "Number", "Coordinate" ]));
+	////- =Gizmo
+	newInput( 4, nodeValue_Bool(        "Show on global",  false, "Whether to show overlay gizmo when not selecting any nodes."));
+	newInput( 5, nodeValue_Vec2(        "Gizmo offset",   [0,0] ));
+	newInput( 6, nodeValue_Float(       "Gizmo scale",     1    ));
+	newInput( 7, nodeValue_Enum_Scroll( "Gizmo style",     0, [ "Default", "Shapes", "Sprite" ]));
+	newInput( 8, nodeValue_Enum_Scroll( "Gizmo shape",     0, [ "Rectangle", "Ellipse" ]));
+	newInput( 9, nodeValue_Surface(     "Gizmo sprite"));
+	newInput(10, nodeValue_Vec2(        "Gizmo size",    [32,32]));
 	
-	newInput(4, nodeValue_Bool("Show on global", false, "Whether to show overlay gizmo when not selecting any nodes."));
-	
-	newInput(5, nodeValue_Vec2("Gizmo offset", [ 0, 0 ]));
-	
-	newInput(6, nodeValue_Float("Gizmo scale", 1));
-	
-	newInput(7, nodeValue_Enum_Scroll("Gizmo style", 0, [ "Default", "Shapes", "Sprite" ]));
-	
-	newInput(8, nodeValue_Enum_Scroll("Gizmo shape", 0, [ "Rectangle", "Ellipse" ]));
-	
-	newInput(9, nodeValue_Surface("Gizmo sprite"));
-	
-	newInput(10, nodeValue_Vec2("Gizmo size", [ 32, 32 ]));
+	// input 11
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newOutput(0, nodeValue_Output("Vector", VALUE_TYPE.float, [ 0, 0 ]))
-		.setDisplay(VALUE_DISPLAY.vector);
-	
+	newOutput(0, nodeValue_Output("Vector", VALUE_TYPE.float, [ 0, 0 ])).setDisplay(VALUE_DISPLAY.vector);
 	newOutput(1, nodeValue_Output("x", VALUE_TYPE.float, 0))
-		
 	newOutput(2, nodeValue_Output("y", VALUE_TYPE.float, 0))
 		
 	input_display_list = [ 0, 1, 2, 
@@ -145,6 +136,8 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			gz_drag_sx  = current_data[0];
 			gz_drag_sy  = current_data[1];
 		}
+		
+		return _hov;
 	} 
 	
 	static step = function() { 

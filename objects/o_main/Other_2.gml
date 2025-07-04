@@ -17,6 +17,15 @@
 		
 		var fsPath = $"{APP_LOCATION}fs/fs.appimage";
 		ProcessExecute($"chmod +x {fsPath}");
+	
+	} else if(OS == os_macosx) {
+		APP_DIRECTORY = working_directory;
+		DIRECTORY     = working_directory;
+	    APP_LOCATION  = working_directory;
+	    
+		PREFERENCES_DIR = $"{DIRECTORY}Preferences/{PREF_VERSION}/";
+		directory_verify($"{DIRECTORY}Cache");
+		directory_verify($"{DIRECTORY}log");
 		
 	} else {
 		APP_DIRECTORY = env_user();
@@ -62,7 +71,6 @@
 		directory_verify($"{DIRECTORY}log");
 		
 		APP_LOCATION = program_directory;
-		if(OS == os_macosx) APP_LOCATION = string_replace(APP_LOCATION, "/Contents/MacOS/", "/Contents/Resources/");
 		if(RUN_IDE)         APP_LOCATION = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/";
 		
 	}

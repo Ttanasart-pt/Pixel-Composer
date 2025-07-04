@@ -90,7 +90,7 @@
 
 function Panel_Menu() : PanelContent() constructor {
     title     = __txt("Menu");
-    auto_pin = true;
+    auto_pin  = true;
     
     noti_flash        = 0;
     noti_flash_color  = COLORS._main_accent;
@@ -373,7 +373,7 @@ function Panel_Menu() : PanelContent() constructor {
     
     function drawContent(panel) {
         var _right     = PREFERENCES.panel_menu_right_control// || OS != os_windows;
-        var _action    = OS == os_windows;
+        var _action    = true//OS == os_windows;
         var _draggable = pFOCUS;
         
         draw_clear_alpha(COLORS.panel_bg_clear, 1);
