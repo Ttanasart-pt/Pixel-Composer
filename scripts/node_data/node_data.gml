@@ -229,10 +229,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			["Params Width", function() /*=>*/ {return attributes.node_param_width}, textBox_Number(function(v) /*=>*/ { setAttribute("node_param_width", v); refreshNodeDisplay(); }) ],
 			
 			"Node",
-			["Auto Update",       function() /*=>*/ {return attributes.update_graph},        new checkBox(function() /*=>*/ { toggleAttribute("update_graph");                            }) ],
+			["Auto Update",       function() /*=>*/ {return attributes.update_graph},        new checkBox(function() /*=>*/ { toggleAttribute("update_graph");            }) ],
 			["Render Frame Input",function() /*=>*/ {return attributes.show_render_frame},   new checkBox(function() /*=>*/ { toggleAttribute("show_render_frame"); refreshNodeDisplay(); }) ],
-			["Update Trigger",    function() /*=>*/ {return attributes.show_update_trigger}, new checkBox(function() /*=>*/ { toggleAttribute("show_update_trigger");                     }) ],
-			["Output Metadata",   function() /*=>*/ {return attributes.outp_meta},           new checkBox(function() /*=>*/ { toggleAttribute("outp_meta"); setHeight();                  }) ],
+			["Update Trigger",    function() /*=>*/ {return attributes.show_update_trigger}, new checkBox(function() /*=>*/ { toggleAttribute("show_update_trigger");     }) ],
+			["Output Metadata",   function() /*=>*/ {return attributes.outp_meta},           new checkBox(function() /*=>*/ { toggleAttribute("outp_meta"); setHeight();  }) ],
+			["Always Show on Timeline", function() /*=>*/ {return attributes.show_timeline}, new checkBox(function() /*=>*/ { toggleAttribute("show_timeline"); refreshTimeline(); }) ],
 		];
 	#endregion
 	

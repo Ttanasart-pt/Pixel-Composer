@@ -16,8 +16,9 @@ function __Node_Base(x, y) constructor {
 	
 	#region --- attributes ----
 		attributes = {
-			update_graph: true,
+			update_graph:        true,
 			show_update_trigger: false,
+			show_timeline:       false,
 			color: -1,
 		};
 	#endregion
@@ -30,8 +31,8 @@ function __Node_Base(x, y) constructor {
 		
 		static refreshTimeline = function() {
 			var _pre_anim = is_anim_timeline;
-			var _cur_anim = anim_timeline;
-		
+			var _cur_anim = anim_timeline || attributes.show_timeline;
+			
 			for( var i = 0, n = array_length(inputs); i < n; i++ ) {
 				var _inp = inputs[i];
 				if(_inp.is_anim && _inp.value_from == noone) {
@@ -39,6 +40,7 @@ function __Node_Base(x, y) constructor {
 					break;
 				}
 			}
+			
 			is_anim_timeline = _cur_anim;
 			if(_pre_anim == _cur_anim) return;
 			

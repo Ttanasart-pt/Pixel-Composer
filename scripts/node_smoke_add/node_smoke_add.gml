@@ -5,7 +5,7 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 	
 	manual_ungroupable	 = false;
 	
-	newInput( 3, nodeValue_Bool( "Active", true));
+	newInput( 3, nodeValue_Active());
 	newInput( 0, nodeValue(      "Domain", self, CONNECT_TYPE.input, VALUE_TYPE.sdomain, noone)).setVisible(true, true);
 	
 	////- =Brush
