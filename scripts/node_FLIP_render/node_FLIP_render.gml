@@ -2,36 +2,33 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	name  = "Render";
 	color = COLORS.node_blend_fluid;
 	icon  = THEME.fluid_sim;
+	use_cache = CACHE_USE.auto;
 	
 	inline_output      = false;
 	manual_ungroupable = false;
 	
-	newInput(0, nodeValue_Fdomain("Domain")).setVisible(true, true);
+	newInput( 0, nodeValue_Fdomain( "Domain" )).setVisible(true, true);
+	newInput( 5, nodeValue_Surface( "Fluid particle" ));
 	
-	newInput(1, nodeValue_Slider("Merge threshold", 0.75));
+	////- =Rendering
+	newInput( 6, nodeValue_Enum_Scroll(  "Render type",  0, __enum_array_gen(["Particle", "Line"], s_node_flip_render_type) ));
+	newInput(10, nodeValue_Int(          "Segments",            1     ));
+	newInput( 3, nodeValue_Float(        "Particle expansion",  20    ));
+	newInput( 4, nodeValue_Bool(         "Draw obstracles",     true  ));
+	newInput( 9, nodeValue_Slider_Range( "Alpha",               [1,1] ));
 	
-	newInput(2, nodeValue_Range("Lifespan", [ 0, 0 ], { linked : true }));
+	////- =Effect
+	newInput(11, nodeValue_Gradient( "Color Over Velocity", new gradientObject(ca_white)));
+	newInput(12, nodeValue_Range(    "Velocity Map",        [0,10] ));
+	newInput( 2, nodeValue_Range(    "Lifespan",            [0, 0], { linked : true } ));
 	
-	newInput(3, nodeValue_Float("Particle expansion", 20));
+	////- =Post Processing
+	newInput( 8, nodeValue_Bool(   "Additive",        true ));
+	newInput( 7, nodeValue_Bool(   "Threshold",       true ));
+	newInput( 1, nodeValue_Slider( "Merge threshold", 0.75 ));
+	// input 13
 	
-	newInput(4, nodeValue_Bool("Draw obstracles", true));
-	
-	newInput(5, nodeValue_Surface("Fluid particle"));
-	
-	newInput(6, nodeValue_Enum_Scroll("Render type",  0, [ new scrollItem("Particle", s_node_flip_render_type, 0), 
-												                 new scrollItem("Line",     s_node_flip_render_type, 1), ] ));
-	
-	newInput(7, nodeValue_Bool("Threshold", true));
-	
-	newInput(8, nodeValue_Bool("Additive", true));
-	
-	newInput(9, nodeValue_Slider_Range("Alpha", [ 1, 1 ]));
-	
-	newInput(10, nodeValue_Int("Segments", 1));
-	
-	newInput(11, nodeValue_Gradient("Color Over Velocity", new gradientObject(ca_white)));
-	
-	newInput(12, nodeValue_Range("Velocity Map", [ 0, 10 ]));
+	newOutput(0, nodeValue_Output("Rendered", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0, 5, 
 		["Rendering", false], 6, 10, 3, 4, 9, 
@@ -39,7 +36,7 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		["Post Processing", false], 8, 7, 1, 
 	];
 	
-	newOutput(0, nodeValue_Output("Rendered", VALUE_TYPE.surface, noone));
+	////- Nodes
 	
 	seed = irandom_range(100000, 999999);
 	temp_surface = [ noone ];
@@ -52,7 +49,7 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	array_push(attributeEditors, ["Update domain",        function() /*=>*/ {return attributes.update},    new checkBox(function() /*=>*/ {return toggleAttribute("update", true)})]);
 	array_push(attributeEditors, ["Draw Fluid Particles", function() /*=>*/ {return attributes.debugDraw}, new checkBox(function() /*=>*/ {return toggleAttribute("debugDraw")})]);
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var domain = getInputData(0);
 		if(!instance_exists(domain)) return;
 		if(domain.domain == noone)   return;
@@ -69,24 +66,12 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				draw_circle(_x + _px * _s, _y + _py * _s, 1, false);
 			}
 		}
-	} #endregion
-	
-	static step = function() {
-		var _typ = getInputData(6);
-		var _thr = getInputData(7);
-		
-		inputs[ 1].setVisible(_typ == 0 && _thr);
-		inputs[ 3].setVisible(_typ == 0);
-		inputs[ 5].setVisible(_typ == 0, _typ == 0);
-		inputs[10].setVisible(_typ == 1);
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var domain = getInputData(0);
 		if(!instance_exists(domain)) return;
 		if(domain.domain == noone)   return;
-		
-		if(attributes.update && IS_PLAYING) domain.step();
 		
 		var _bln = getInputData(1);
 		var _vap = getInputData(2);
@@ -100,6 +85,14 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _seg = getInputData(10);
 		var _cvl = getInputData(11);
 		var _vlr = getInputData(12);
+		
+		inputs[ 1].setVisible(_typ == 0 && _thr);
+		inputs[ 3].setVisible(_typ == 0);
+		inputs[ 5].setVisible(_typ == 0, _typ == 0);
+		inputs[10].setVisible(_typ == 1);
+		
+		if(!PROJECT.animator.is_playing && recoverCache()) return;
+		if(attributes.update && IS_PLAYING) domain.step();
 		
 		var _outSurf = outputs[0].getValue();
 		var _maxpart = domain.maxParticles;
@@ -240,6 +233,8 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			for( var i = 0, n = array_length(domain.obstracles); i < n; i++ )
 				domain.obstracles[i].draw();
 		surface_reset_target();
+		
+		cacheCurrentFrame(_outSurf);
 	}
 	
 }

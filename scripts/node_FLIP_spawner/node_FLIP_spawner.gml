@@ -2,46 +2,36 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	name  = "Spawner";
 	color = COLORS.node_blend_fluid;
 	icon  = THEME.fluid_sim;
-	setDimension(96, 96);
 	
 	manual_ungroupable = false;
 	
-	newInput(0, nodeValue_Fdomain("Domain"))
-		.setVisible(true, true);
+	newInput( 9, nodeValueSeed());
+	newInput( 0, nodeValue_Fdomain( "Domain" )).setVisible(true, true);
 	
-	newInput(1, nodeValue_Enum_Scroll("Spawn Shape",  0 , [ new scrollItem("Circle", s_node_shape_circle, 0), new scrollItem("Rectangle", s_node_shape_rectangle, 0), "Surface" ]));
+	////- =Spawner
+	spawner_shapes = [ new scrollItem("Circle", s_node_shape_circle, 0), new scrollItem("Rectangle", s_node_shape_rectangle, 0), "Surface" ];
+	newInput( 1, nodeValue_Enum_Scroll( "Spawn Shape",  0 , spawner_shapes));
+	newInput( 7, nodeValue_Surface(     "Spawn Surface" ));
+	newInput( 8, nodeValue_Slider(      "Spawn Radius",    2, [1, 16, 0.1] ));
+	newInput(13, nodeValue_Vec2(        "Spawn Size",     [2,2]    ));
+	newInput( 2, nodeValue_Vec2(        "Spawn Position", [.5,.25] )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
+	newInput( 3, nodeValue_Enum_Button( "Spawn Type",      0, [ "Stream", "Splash" ]));
+	newInput( 4, nodeValue_Int(         "Spawn Frame",     0 ));
+	newInput(12, nodeValue_Int(         "Spawn Duration",  1 ));
+	newInput( 5, nodeValue_Float(       "Spawn Amount",    8 ));
 	
-	newInput(2, nodeValue_Vec2("Spawn Position", [ 0.5, 0.25 ] ))
-		.setUnitRef(function(index) { return getDimension(); }, VALUE_UNIT.reference);
+	////- =Physics
+	newInput(10, nodeValue_Rotation_Random( "Spawn Direction",  [0,45,135,0,0 ] ));
+	newInput( 6, nodeValue_Range(           "Spawn Velocity",   [0,0] ));
+	newInput(11, nodeValue_Slider(          "Inherit Velocity",  0    ));
+	// input 14
 	
-	newInput(3, nodeValue_Enum_Button("Spawn Type",  0 , [ "Stream", "Splash" ]));
-	
-	newInput(4, nodeValue_Int("Spawn Frame", 0 ));
-	
-	newInput(5, nodeValue_Float("Spawn Amount", 8 ));
-	
-	newInput(6, nodeValue_Range("Spawn Velocity", [ 0, 0 ] ));
-	
-	newInput(7, nodeValue_Surface("Spawn Surface"));
-	
-	newInput(8, nodeValue_Slider("Spawn Radius", 2, [1, 16, 0.1] ));
-	
-	newInput(9, nodeValueSeed());
-	
-	newInput(10, nodeValue_Rotation_Random("Spawn Direction", [ 0, 45, 135, 0, 0 ] ));
-		
-	newInput(11, nodeValue_Slider("Inherit Velocity", 0 ));
-		
-	newInput(12, nodeValue_Int("Spawn Duration", 1 ));
-	
-	newInput(13, nodeValue_Vec2("Spawn Szie", [ 2, 2 ] ));
+	newOutput(0, nodeValue_Output("Domain", VALUE_TYPE.fdomain, noone ));
 	
 	input_display_list = [ 0, 9, 
 		["Spawner",	false], 1, 7, 8, 13, 2, 3, 4, 12, 5, 
 		["Physics", false], 10, 6, 11, 
 	]
-	
-	newOutput(0, nodeValue_Output("Domain", VALUE_TYPE.fdomain, noone ));
 	
 	spawn_amo     = 0;
 	prev_position = [ 0, 0 ];
@@ -88,22 +78,8 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		return [ domain.width, domain.height ];
 	}
 	
-	static step = function() {
-		var _shp = getInputData(1);
-		var _typ = getInputData(3);
-		
-		inputs[ 4].setVisible(_typ == 1);
-		inputs[12].setVisible(_typ == 1);
-		
-		inputs[ 7].setVisible(_shp == 2, _shp == 2);
-		inputs[ 8].setVisible(_shp == 0);
-		inputs[13].setVisible(_shp == 1);
-	}
-	
 	static update = function(frame = CURRENT_FRAME) {
 		var domain = getInputData(0);
-		if(!instance_exists(domain)) return;
-		
 		outputs[0].setValue(domain);
 		
 		var _shape = getInputData(1);
@@ -120,6 +96,15 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _ivel  = getInputData(11);
 		var _sdur  = getInputData(12);
 		var _siz   = getInputData(13);
+		
+		inputs[ 4].setVisible(_type == 1);
+		inputs[12].setVisible(_type == 1);
+		
+		inputs[ 7].setVisible(_shape == 2, _shape == 2);
+		inputs[ 8].setVisible(_shape == 0);
+		inputs[13].setVisible(_shape == 1);
+		
+		if(!instance_exists(domain)) return;
 		
 		if(IS_FIRST_FRAME || toReset) spawn_amo = 0;
 		toReset = false;
@@ -203,9 +188,22 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = drawGetBbox(xx, yy, _s);
-		draw_sprite_fit(s_node_flip_spawner, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
+		var bbox   = drawGetBbox(xx, yy, _s, false);
+		var _shape = getInputData(1);
+		var _surf  = getInputData(7);
+		
+		var ss = max(0, min(bbox.w, bbox.h) / 2 - 16 * _s);
+		draw_set_color(c_white);
+		switch(_shape) {
+			case 0 : draw_circle_prec(bbox.xc, bbox.yc, ss, false); break;
+			case 1 : draw_rectangle(bbox.xc - ss, bbox.yc - ss, bbox.xc + ss, bbox.yc + ss, false); break;
+			case 2 : draw_surface_bbox(_surf, bbox); break;
+		}
 	}
 	
-	static getPreviewValues = function() { var domain = getInputData(0); return instance_exists(domain)? domain.domain_preview : noone; }
+	static getPreviewValues = function() { 
+		var domain = getInputData(0); 
+		return instance_exists(domain)? domain.domain_preview : noone; 
+	}
+	
 }

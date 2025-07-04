@@ -673,15 +673,11 @@
 		     if(is(surface, SurfaceAtlas))     surface = surface.surface.get();
 		else if(is(surface, SurfaceAtlasFast)) surface = surface.surface;
 		else if(is(surface, dynaSurf))		  surface = array_safe_get(surface.surfaces, 0);
-		
 		if(is_array(surface) || !surface_exists(surface)) return;
 		
 		var f = surface_get_format(surface);
-	
-		if(f == surface_rgba8unorm) {
-			surface_save(surface, path);
-			return;
-		}
+		
+		if(f == surface_rgba8unorm) { surface_save(surface, path); return; }
 	
 		var w = surface_get_width_safe(surface);
 		var h = surface_get_height_safe(surface);
@@ -703,11 +699,11 @@
 			case surface_r32float	 : s = surface_create(w, h, surface_rgba32float);	break;
 			default: return;
 		}
-	
+		
 		surface_set_shader(s, sh_draw_single_channel);
 			draw_surface_safe(surface);
 		surface_reset_shader();
-	
+		
 		surface_save(s, path);
 		surface_free(s);
 		return;

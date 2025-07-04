@@ -49,7 +49,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	format_single    = [ "Single image",    "Image sequence",  "Animation"  ];
 	format_array     = [ "Multiple images", "Image sequences", "Animations" ];
-	format_image     = [ ".png", ".jpg",  ".webp", ".exr" ];
+	format_image     = [ ".png", ".jpg",  ".webp", ".exr", ".bmp" ];
 	format_animation = [ ".gif", ".apng", ".webp", ".mp4" ];
 	
 	png_format       = [ "INDEX4", "INDEX8", "Default (PNG32)" ];
@@ -589,6 +589,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				break;
 				
 			case ".exr": surface_exr_encode(_surf, _pathOut); break;
+			case ".bmp": surface_bmp_encode(_surf, _pathOut); break;
 		}
 		
 		return _pathOut;
@@ -898,7 +899,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			inputs[18].setVisible(false);
 			inputs[ 8].setVisible(false);
 		
-			inputs[ 9].display_data.data	  = format_image;
+			inputs[ 9].display_data.data	= format_image;
 			inputs[ 9].editWidget.data_list = format_image;
 			
 			inputs[13].setVisible(_fmt == ".png");

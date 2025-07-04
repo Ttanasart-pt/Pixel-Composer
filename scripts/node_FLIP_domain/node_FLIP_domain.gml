@@ -2,7 +2,6 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	name  = "Domain";
 	color = COLORS.node_blend_fluid;
 	icon  = THEME.fluid_sim;
-	setDimension(96, 96);
 	
 	manual_ungroupable = false;
 	update_on_frame    = true;

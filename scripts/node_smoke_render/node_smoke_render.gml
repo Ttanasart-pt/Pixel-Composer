@@ -7,11 +7,13 @@ function Node_Smoke_Render(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	inline_output      = false;
 	manual_ungroupable = false;
 	
+	////- =Domain
 	newInput(0, nodeValue(      "Domain", self, CONNECT_TYPE.input, VALUE_TYPE.sdomain, noone)).setVisible(true, true);
 	newInput(4, nodeValue_Bool( "Auto Update", true ));
 	newInput(5, nodeValue_Int(  "Update Step", 1    ));
 	newInput(1, nodeValue_Dimension());
 	
+	////- =Render
 	newInput(2, nodeValue_Bool( "Interpolate", false ));
 	newInput(3, nodeValue_Bool( "Draw Domain", false ));
 	// input 6

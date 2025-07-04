@@ -507,7 +507,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 _att_wid.font = font;
                 _att_wid.setFocusHover(pFOCUS, pHOVER);
                 
-                if(instanceof(_att_wid) == "buttonClass") {
+                if(is(_att_wid, buttonClass)) {
                     _att_wid.text = _att_name;
                     _att_wid.draw(ui(8), yy, con_w - ui(16), _att_h, _m); 
                     
@@ -524,6 +524,8 @@ function Panel_Inspector() : PanelContent() constructor {
                     _param.s    = _att_h;
                     _param.font = font;
                     
+                if(is(_att_wid, checkBox)) _param.halign = fa_center;
+                
                 var _wh = _att_wid.drawParam(_param);
                 
                 if(_att_wid.inBBOX(_m)) contentPane.hover_content = true;

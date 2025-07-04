@@ -2390,7 +2390,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        	var _dx  = o_dialog_add_node.dialog_x - ui(8);
 	        	var _dy  = o_dialog_add_node.dialog_y + ui(4);
 	        	var _dme = menuCall("graph_connection_releated", menu, _dx, _dy, fa_right );
-	                _dme.passthrough = true;
+	        	if(_dme) _dme.passthrough = true;
 	            
 	            setFocus(_dia, "Dialog");
 	        }
