@@ -6,7 +6,7 @@ function Node_Active_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	////- =Brush
 	
-	newInput(7, nodeValue_Bool(     "Active",   true  ));
+	newActiveInput(7);
 	
 	////- =Brush Position
 	

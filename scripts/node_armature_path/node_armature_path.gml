@@ -1,6 +1,6 @@
 function Node_Armature_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Armature Path";
-	setDimension(96, 72);
+	setDimension(96, 96);
 	
 	newInput(0, nodeValue_Armature())
 		.setVisible(true, true)
@@ -11,7 +11,8 @@ function Node_Armature_Path(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	lines = [];
 	
 	current_length  = 0;
-	boundary = new BoundingBox();
+	boundary  = new BoundingBox();
+	bone_bbox = [0, 0, 1, 1, 1, 1];
 	
 	__node_bone_attributes();
 	
@@ -79,11 +80,31 @@ function Node_Armature_Path(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		ds_stack_destroy(_bst);
 		
+		bone_bbox = _bone.bbox();
 		outputs[0].setValue(self);
 	}
 	
+	////- Draw
+		
+	static getPreviewBoundingBox = function() /*=>*/ {return BBOX().fromPoints(bone_bbox[0], bone_bbox[1], bone_bbox[2], bone_bbox[3])};
+	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = drawGetBbox(xx, yy, _s);
-		draw_sprite_fit(s_node_armature_path, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
+		var  bbox = drawGetBbox(xx, yy, _s);
+		var _bone = getInputData(0);
+		
+		if(is(_bone, __Bone))  {
+			var _ss = _s * .5;
+			gpu_set_tex_filter(1);
+			draw_sprite_ext(s_node_armature_pose_stagger, 0, bbox.x0 + 24 * _ss, bbox.y1 - 24 * _ss, _ss, _ss, 0, c_white, 0.5);
+			gpu_set_tex_filter(0);
+			
+			_bone.drawThumbnail(_s, bbox, bone_bbox);
+			
+		} else {
+			gpu_set_tex_filter(1);
+			draw_sprite_bbox_uniform(s_node_armature_pose_stagger, 0, bbox);
+			gpu_set_tex_filter(0);
+		}
 	}
+	
 }

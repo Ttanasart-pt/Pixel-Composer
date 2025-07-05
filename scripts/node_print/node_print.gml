@@ -4,7 +4,7 @@ function Node_Print(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	draw_padding = 8;
 	
-	newInput(0, nodeValue_Bool("Active", true));
+	newActiveInput(0);
 	
 	newInput(1, nodeValue_Text("Text"));
 	

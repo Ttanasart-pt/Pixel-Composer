@@ -7,7 +7,7 @@
 function Node_Twirl(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Twirl";
 	
-	newActiveInput(7, nodeValue_Bool("Active", true));
+	newActiveInput(7);
 	newInput(8, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surfaces

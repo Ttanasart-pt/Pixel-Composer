@@ -4,7 +4,7 @@ function Node_3D_Light(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group) 
 	if(!LOADING && !APPENDING)
 		inputs[0].setValue([ 0, 0, 1 ]);
 	
-	newInput(in_d3d + 0, nodeValue_Bool("Active", true));
+	newActiveInput(in_d3d + 0);
 	
 	newInput(in_d3d + 1, nodeValue_Color("Color", ca_white));
 	

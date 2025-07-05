@@ -274,12 +274,13 @@ event_inherited();
 				}
 				
 				if(mouse_click(mb_right)) {
+					
 					if(_hoverColor != noone) {
 						menuCall("palette_window_preset_menu", [
 							menuItem(__txtx("palette_mix_color", "Mix Color"), function(c) /*=>*/ { selector.setMixColor(c); }).setParam(_hoverColor),
 						]);
 						
-					} else if(isHover && i >= 0) {
+					} else if(isHover) {
 						hovering = pal;
 				
 						menuCall("palette_window_preset_menu", [

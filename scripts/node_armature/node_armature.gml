@@ -236,11 +236,13 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			.setName("Create bone")
 			.setRef(self);
 		
+		var amoo  = bones.childCount();
 		var bone  = new __Bone(parent, distance, direction, 0, 0, self);
+		bone.name = $"Bone {amoo}";
+		
 		parent.addChild(bone);
 		
-		if(parent == bones)
-			bone.parent_anchor = false;
+		if(parent == bones) bone.parent_anchor = false;
 		
 		bone.distance      = distance;
 		bone.direction     = direction;
@@ -887,8 +889,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	static update = function(frame = CURRENT_FRAME) { 
 		array_foreach(bones.constrains, function(c) /*=>*/ { c.bone = bones; c.init(); });
 		
-		bones.resetPose()
-		     .setPosition();
+		bones.resetPose().setPosition();
 		bone_bbox = bones.bbox();
 		
 		outputs[0].setValue(bones);

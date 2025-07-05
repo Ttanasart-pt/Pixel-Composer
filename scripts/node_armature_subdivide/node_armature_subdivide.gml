@@ -1,0 +1,116 @@
+function Node_Armature_Subdivide(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
+	name = "Armature Subdivide";
+	setDimension(96, 96);
+	draw_padding = 8;
+	
+	newInput(0, nodeValue_Armature()).setVisible(true, true);
+	
+	////- =Target
+	bTarget = button(function() /*=>*/ {return toggleBoneTarget()}).setIcon(THEME.bone, 1, COLORS._main_icon).setTooltip("Select Bone");
+	newInput(1, nodeValue_Text( "Target", "" )).setDisplay(VALUE_DISPLAY.text_box).setSideButton(bTarget);
+	
+	////- =Subdivide
+	newInput(2, nodeValue_Int(  "Subdivision", 4  ));
+	
+	newOutput(0, nodeValue_Output("Armature", VALUE_TYPE.armature, noone));
+	
+	input_display_list = [ 0, 
+		["Target",    false], 1,
+		["Subdivide", false], 2, 
+	];
+	
+	__node_bone_attributes();
+	
+	bone      = new __Bone();
+	bone_bbox = [0, 0, 1, 1, 1, 1];
+	
+	bone_target = "";
+	bone_subdiv = 1;
+	anchor_selecting = noone;
+	bone_targeting   = false;
+	
+	////- Preview
+	
+	static toggleBoneTarget = function() /*=>*/ { bone_targeting = !bone_targeting; }
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		if(!is(bone, __Bone)) return;
+		
+		bTarget.icon_blend = bone_targeting? COLORS._main_value_positive : COLORS._main_icon;
+		if(!bone_targeting) {
+			var _tar = getInputData(1);
+			bone.draw(attributes, false, _x, _y, _s, _mx, _my, noone, _tar);
+			return;
+		}
+		
+		var _b = getInputData(0);
+		if(!is(_b, __Bone)) return;
+		
+		var _hv = _b.draw(attributes, hover * 0b100, _x, _y, _s, _mx, _my, anchor_selecting);
+		anchor_selecting = _hv;
+		
+		if(mouse_press(mb_left, active)) {
+			if(_hv != noone) inputs[1].setValue(_hv[0].name);
+			bone_targeting = false;
+		}
+	}
+	
+	////- Update
+	
+	static bone_subdivide = function(_bone, _newBone) {
+		var _sub = _bone.name == bone_target? bone_subdiv : 1;
+		var bAng = _bone.angle;
+		var bLen = _bone.length;
+		var sLen =  bLen / _sub;
+		var _par = _newBone;
+		
+		if(!_bone.is_main)
+		for( var i = 0; i < _sub; i++ ) {
+			var _b = new __Bone(_par, 0, 0, bAng, sLen, self);
+			_b.name = $"{_b.name}.{i}";
+			if(i == 0) {
+				_b.distance      = _bone.distance;
+				_b.direction     = _bone.direction;
+				_b.parent_anchor = _bone.parent_anchor;
+			}
+			
+			_b.apply_scale    = _bone.apply_scale;
+			_b.apply_rotation = _bone.apply_rotation;
+			
+ 			_par.addChild(_b);
+			_par = _b;
+		}
+		
+		for( var i = 0, n = array_length(_bone.childs); i < n; i++ ) {
+			var _child = _bone.childs[i];
+			bone_subdivide(_child, _par);
+		}
+	}
+	
+	static update = function(frame = CURRENT_FRAME) {
+		var _b      = getInputData(0);
+		bone_target = getInputData(1);
+		bone_subdiv = getInputData(2);
+		if(!is(_b, __Bone)) return;
+		
+		bone = new __Bone(noone, 0, 0, 0, 0, self);
+		bone.is_main = true;
+		bone_subdivide(_b, bone);
+		
+		bone.resetPose().setPosition();
+		bone_bbox = bone.bbox();
+		outputs[0].setValue(bone);
+	}
+	
+	
+	////- Draw
+	
+	static getPreviewBoundingBox = function() /*=>*/ {return BBOX().fromPoints(bone_bbox[0], bone_bbox[1], bone_bbox[2], bone_bbox[3])};
+	
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+		var bbox = drawGetBbox(xx, yy, _s);
+		
+		if(!is(bone, __Bone)) return;
+		bone.drawThumbnail(_s, bbox, bone_bbox);
+	}
+}

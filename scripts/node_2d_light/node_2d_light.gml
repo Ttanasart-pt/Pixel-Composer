@@ -46,7 +46,7 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		newInput(index + 11, nodeValue_ISlider(  "Radial banding",    0, [0, 16, 0.1]));
 		newInput(index + 12, nodeValue_Rotation( "Radial start",      0));
 		newInput(index + 13, nodeValue_Slider(   "Radial band ratio", 0.5));
-		newInput(index + 14, nodeValue_Bool(     "Active",            true));
+		newInput(index + 14, nodeValue_Active());
 		newInput(index + 15, nodeValue_Float(    "Radius x",          16));
 		newInput(index + 16, nodeValue_Float(    "Radius y",          16));
 		newInput(index + 17, nodeValue_Rotation( "Rotation",          0));

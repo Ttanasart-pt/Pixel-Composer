@@ -3,7 +3,7 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Bool("Active", true));
+	newActiveInput(1);
 	
 	newInput(2, nodeValue_Enum_Scroll("Array Sizing",  1, [ "Largest, same size", "Independent" ]))
 		.setTooltip("Cropping mode for dealing with image array.");

@@ -13,7 +13,7 @@ function Node_Smoke_Apply_Velocity(_x, _y, _group = noone) : Node_Smoke(_x, _y, 
 	
 	newInput(3, nodeValue_Vec2("Velocity", [ 1, 0 ]));
 	
-	newInput(4, nodeValue_Bool("Active", true));
+	newActiveInput(4);
 	
 	newInput(5, nodeValue_Enum_Button("Type", 0, [ "Shape", "Surface" ]));
 	

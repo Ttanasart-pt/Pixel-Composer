@@ -1,5 +1,6 @@
 function Node_Armature_Pose_Stagger(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Armature Stagger";
+	update_on_frame = true;
 	setDimension(96, 96);
 	draw_padding = 8;
 	
@@ -9,21 +10,22 @@ function Node_Armature_Pose_Stagger(_x, _y, _group = noone) : Node(_x, _y, _grou
 	bTarget = button(function() /*=>*/ {return toggleBoneTarget()}).setIcon(THEME.bone, 1, COLORS._main_icon).setTooltip("Select Bone");
 	newInput(1, nodeValue_Text( "Target",   "" )).setDisplay(VALUE_DISPLAY.text_box).setSideButton(bTarget);
 	newInput(2, nodeValue_Int(  "Amount",   3  ));
+	newInput(6, nodeValue_Int(  "Frame",    1  ));
 	
 	////- =Rotation
-	newInput(3, nodeValue_Rotation(    "Rotation",            0  ));
-	newInput(6, nodeValue_Enum_Button( "Rotation Shift Mode", 0, [ "Add", "Multiply" ] ));
-	newInput(5, nodeValue_Float(       "Rotation Shift",      0  ));
+	newInput(3, nodeValue_Rotation( "Rotation",  0 ));
+	newInput(5, nodeValue_Slider(   "Stiffness", 0 ));
+	newInput(7, nodeValue_Slider(   "Intertia",  1 ));
 	
 	////- =Scale
 	newInput(4, nodeValue_Float( "Scale", 1 ));
-	// inputs 7
+	// inputs 8
 	
 	newOutput(0, nodeValue_Output("Armature", VALUE_TYPE.armature, noone));
 	
 	input_display_list = [ 0,
-		[ "Stagger",  false ], 1, 2, 
-		[ "Rotation", false ], 3, 6, 5, 
+		[ "Stagger",  false ], 1, 2, 6, 
+		[ "Rotation", false ], 3, 5, 7, 
 		[ "Scale",    false ], 4, 
 	]
 	
@@ -34,6 +36,10 @@ function Node_Armature_Pose_Stagger(_x, _y, _group = noone) : Node(_x, _y, _grou
 	bone_bbox = [0, 0, 1, 1, 1, 1];
 	boneArray = [];
 	anchor_selecting = noone;
+	bone_targeting   = false;
+	
+	rotation_prev = 0;
+	rotation_dh   = [];
 	
 	static setBone = function() {
 		var _b = getInputData(0);
@@ -45,11 +51,7 @@ function Node_Armature_Pose_Stagger(_x, _y, _group = noone) : Node(_x, _y, _grou
 	
 	////- Preview
 	
-	bone_targeting = false;
-	
-	static toggleBoneTarget = function() {
-		bone_targeting = true;
-	}
+	static toggleBoneTarget = function() /*=>*/ { bone_targeting = !bone_targeting; }
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _b = inputs[0].getValue();
@@ -77,10 +79,11 @@ function Node_Armature_Pose_Stagger(_x, _y, _group = noone) : Node(_x, _y, _grou
 		var _b   = getInputData(0);
 		var _tar = getInputData(1);
 		var _amo = getInputData(2);
+		var _frm = getInputData(6);
 		
 		var _rot  = getInputData(3);
-		var _rotM = getInputData(6);
-		var _rotS = getInputData(5);
+		var _rotS = getInputData(5); _rotS = 1 - _rotS;
+		var _iner = getInputData(7);
 		
 		var _sca  = getInputData(4);
 		
@@ -90,8 +93,9 @@ function Node_Armature_Pose_Stagger(_x, _y, _group = noone) : Node(_x, _y, _grou
 		var _h = _b.getHash();
 		if(boneHash != _h) { boneHash = _h; setBone(); }
 		
-		bonePose.resetPose().setPosition();
+		if(IS_FIRST_FRAME) bonePose.resetPose().setPosition();
 		bonePose.constrains = _b.constrains;
+		rotation_dh = array_verify(rotation_dh, TOTAL_FRAMES);
 		
 		//////
 		
@@ -111,36 +115,69 @@ function Node_Armature_Pose_Stagger(_x, _y, _group = noone) : Node(_x, _y, _grou
 			bPose.direction     = bRaw.direction;
 			bPose.distance      = bRaw.distance;
 			
-			bPose.pose_posit[0] = bRaw.pose_posit[0];
-			bPose.pose_posit[1] = bRaw.pose_posit[1];
-			bPose.pose_rotate   = bRaw.pose_rotate;
+			if(IS_FIRST_FRAME) {
+				bPose.pose_posit[0] = bRaw.pose_posit[0];
+				bPose.pose_posit[1] = bRaw.pose_posit[1];
+				bPose.pose_rotate   = bRaw.pose_rotate;
+			}
+			
 			bPose.pose_scale    = bRaw.pose_scale;
 		}
 		
 		var _bArr = [ bTarg ];
-		var _rr = _rot;
-		var _sx = _sca;
-		
-		repeat(_amo) {
-			var _cArr = [];
+		if(IS_FIRST_FRAME) {
+			var _rr = _rot;
+			var _sx = _sca;
 			
-			for( var i = 0, n = array_length(_bArr); i < n; i++ ) {
-				var b = _bArr[i];
-				b.pose_rotate += _rr;
-				b.pose_scale  *= _sx;
+			repeat(_amo) {
+				var _cArr = [];
 				
-				array_append(_cArr, b.childs);
+				for( var i = 0, n = array_length(_bArr); i < n; i++ ) {
+					var b = _bArr[i];
+					b.pose_rotate += _rr;
+					b.pose_scale  *= _sx;
+					
+					array_append(_cArr, b.childs);
+				}
+				
+				if(array_empty(_cArr)) break;
+				_bArr = _cArr;
+				
+				_rr *= _rotS;
+				_sx *= _sca;
 			}
 			
-			if(array_empty(_cArr)) break;
-			_bArr = _cArr;
+		} else {
+			var _sx  = _sca;
+			var _dr  = _rot - rotation_prev;
+			var _inf = 1;
+			var _itr = 0;
+			array_safe_set(rotation_dh, CURRENT_FRAME, _dr);
 			
-			     if(_rotM == 0) _rot += _rotS;
-			else if(_rotM == 1) _rot *= _rotS;
+			repeat(_amo) {
+				var _cArr = [];
+				
+				for( var i = 0, n = array_length(_bArr); i < n; i++ ) {
+					var b  = _bArr[i];
+					var rr = array_safe_get(rotation_dh, CURRENT_FRAME - _itr * _frm, 0);
+					var targRot = b.pose_rotate + rr * _inf;
+					b.pose_rotate = lerp(b.pose_rotate, targRot, _iner);
+					b.pose_scale  *= _sx;
+					
+					array_append(_cArr, b.childs);
+				}
+				
+				if(array_empty(_cArr)) break;
+				_bArr = _cArr;
+				_inf *= _rotS;
+				_sx  *= _sca;
+				
+				_itr++;
+			}
 			
-			_rr += _rot;
-			_sx  *= _sca;
 		}
+		
+		rotation_prev = _rot;
 		
 		//////
 		
@@ -175,5 +212,6 @@ function Node_Armature_Pose_Stagger(_x, _y, _group = noone) : Node(_x, _y, _grou
 			gpu_set_tex_filter(0);
 		}
 	}
+
 }
 

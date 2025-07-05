@@ -3,7 +3,7 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		
 	newInput(0, nodeValue_Int("Port", 22400));
 	
-	newInput(1, nodeValue_Bool("Active", true));
+	newActiveInput(1);
 	
 	newInput(2, nodeValue_Enum_Button("Mode",  1, [ "Client", "Server" ]));
 	
