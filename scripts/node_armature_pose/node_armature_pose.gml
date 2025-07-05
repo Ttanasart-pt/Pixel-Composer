@@ -3,25 +3,19 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	setDimension(96, 96);
 	draw_padding = 8;
 	
-	newInput(0, nodeValue_Armature())
-		.setVisible(true, true);
-	
-	input_display_list = [ 0 ]
+	newInput(0, nodeValue_Armature()).setVisible(true, true);
 	
 	newOutput(0, nodeValue_Output("Armature", VALUE_TYPE.armature, noone));
 	
+	input_display_list = [ 0 ]
+	
 	boneHash  = "";
 	bonePose  = noone;
-	bone_bbox = undefined;
+	bone_bbox = [0, 0, 1, 1, 1, 1];
 	boneArray = [];
 	boneMap   = {};
 	
-	attributes.display_name = true;
-	attributes.display_bone = 0;
-	
-	array_push(attributeEditors, "Display");
-	array_push(attributeEditors, ["Display name", function() /*=>*/ {return attributes.display_name}, new checkBox(function() /*=>*/ {return toggleAttribute("display_name")})]);
-	array_push(attributeEditors, ["Display bone", function() /*=>*/ {return attributes.display_bone}, new scrollBox(__txts(["Octahedral", "Stick"]), function(i) /*=>*/ {return setAttribute("display_bone", i)})]);
+	__node_bone_attributes();
 	
 	static createNewInput = function(index = array_length(inputs), bone = noone) {
 		var inAmo = array_length(inputs);
@@ -39,10 +33,8 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	setDynamicInput(1, false);
 	
 	static setBone = function() {
-		// print("Setting dem bones...");
-		
 		var _b = getInputData(0);
-		if(_b == noone) return;
+		if(!is(_b, __Bone)) return;
 		
 		bonePose    = _b.clone().connect();
 		boneArray   = bonePose.toArray();
@@ -59,6 +51,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			if(struct_exists(boneMap, bone.ID)) {
 				_inp = boneMap[$ bone.ID];
 				_inp.index = _idx;
+				
 			} else
 				_inp = createNewInput(, bone);
 			
@@ -86,8 +79,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _b = inputs[0].getValue();
-		
-		if(_b == noone || bonePose == noone) return;
+		if(!is(_b, __Bone) || !is(bonePose, __Bone)) return;
 		
 		var _hov  = noone;
 		var _bhov = anchor_selecting;
@@ -352,38 +344,36 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var _b = getInputData(0);
-		if(_b == noone) { boneHash = ""; return; }
+		if(!is(_b, __Bone)) { boneHash = ""; return; }
 		
 		var _h = _b.getHash();
 		if(boneHash != _h) { boneHash = _h; setBone(); }
 		
-		bonePose.resetPose()
-			    .setPosition();
+		bonePose.resetPose().setPosition();
 		bonePose.constrains = _b.constrains;
 		
-		var _bArr = _b.toArray();
-		var  bArr = bonePose.toArray();
+		var bArrRaw = _b.toArray();
+		var bArrPos = bonePose.toArray();
 		
-		for( var i = 0, n = array_length(bArr); i < n; i++ ) {
-			var _bone = _bArr[i];
-			var  bone =  bArr[i];
-			var _id   = bone.ID;
-			
+		for( var i = 0, n = array_length(bArrPos); i < n; i++ ) {
+			var bRaw  = bArrRaw[i];
+			var bPose = bArrPos[i];
+			var _id   = bPose.ID;
 			if(!struct_exists(boneMap, _id)) continue;
 			
 			var _inp  = boneMap[$ _id];
-			_inp.updateName(bone.name);
-			
 			var _trn  = _inp.getValue();
+			_inp.updateName(bonePose.name);
 			
-			bone.angle       = _bone.angle;
-			bone.length      = _bone.length;
-			bone.direction   = _bone.direction;
-			bone.distance    = _bone.distance;
+			bPose.angle         = bRaw.angle;
+			bPose.length        = bRaw.length;
+			bPose.direction     = bRaw.direction;
+			bPose.distance      = bRaw.distance;
 			
-			bone.pose_posit  = [ _trn[TRANSFORM.pos_x], _trn[TRANSFORM.pos_y] ];
-			bone.pose_rotate =   _trn[TRANSFORM.rot];
-			bone.pose_scale  =   _trn[TRANSFORM.sca_x];
+			bPose.pose_posit[0] = bRaw.pose_posit[0] + _trn[TRANSFORM.pos_x];
+			bPose.pose_posit[1] = bRaw.pose_posit[1] + _trn[TRANSFORM.pos_y];
+			bPose.pose_rotate   = bRaw.pose_rotate   + _trn[TRANSFORM.rot];
+			bPose.pose_scale    = bRaw.pose_scale    * _trn[TRANSFORM.sca_x];
 		}
 		
 		bonePose.setPose();
@@ -394,43 +384,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	////- Draw
 	
-	static getPreviewBoundingBox = function() {
-		var minx =  9999999;
-		var miny =  9999999;
-		var maxx = -9999999;
-		var maxy = -9999999;
-		
-		var _b = outputs[0].getValue();
-		if(_b == noone) return BBOX().fromPoints(0, 0, 1, 1);
-		
-		var _bst = ds_stack_create();
-		ds_stack_push(_bst, _b);
-		
-		while(!ds_stack_empty(_bst)) {
-			var __b = ds_stack_pop(_bst);
-			
-			for( var i = 0, n = array_length(__b.childs); i < n; i++ ) {
-				var p0 = __b.childs[i].getHead();
-				var p1 = __b.childs[i].getTail();
-				
-				minx = min(minx, p0.x); miny = min(miny, p0.y);
-				maxx = max(maxx, p0.x); maxy = max(maxy, p0.y);
-				
-				minx = min(minx, p1.x); miny = min(miny, p1.y);
-				maxx = max(maxx, p1.x); maxy = max(maxy, p1.y);
-				
-				ds_stack_push(_bst, __b.childs[i]);
-			}
-		}
-		
-		ds_stack_destroy(_bst);
-		
-		if(minx == 9999999) return noone;
-		if(abs(maxx - minx) < 1) maxx = minx + 1;
-		if(abs(maxy - miny) < 1) maxy = miny + 1;
-		
-		return BBOX().fromPoints(minx, miny, maxx, maxy);
-	}
+	static getPreviewBoundingBox = function() /*=>*/ {return BBOX().fromPoints(bone_bbox[0], bone_bbox[1], bone_bbox[2], bone_bbox[3])};
 	
 	static postApplyDeserialize = function() {
 		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
@@ -447,7 +401,8 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
-		if(bonePose != noone) {
+		
+		if(is(bonePose, __Bone)) {
 			var _ss = _s * .5;
 			gpu_set_tex_filter(1);
 			draw_sprite_ext(s_node_armature_pose, 0, bbox.x0 + 24 * _ss, bbox.y1 - 24 * _ss, _ss, _ss, 0, c_white, 0.5);

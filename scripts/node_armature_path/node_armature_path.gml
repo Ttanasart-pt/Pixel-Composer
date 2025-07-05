@@ -13,16 +13,11 @@ function Node_Armature_Path(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	current_length  = 0;
 	boundary = new BoundingBox();
 	
-	attributes.display_name = true;
-	attributes.display_bone = 0;
-	
-	array_push(attributeEditors, "Display");
-	array_push(attributeEditors, ["Display name", function() /*=>*/ {return attributes.display_name}, new checkBox(function() /*=>*/ {return toggleAttribute("display_name")})]);
-	array_push(attributeEditors, ["Display bone", function() /*=>*/ {return attributes.display_bone}, new scrollBox(__txts(["Octahedral", "Stick"]), function(i) /*=>*/ {return setAttribute("display_bone", i)})]);
+	__node_bone_attributes();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _b = getInputData(0);
-		if(_b == noone) return;
+		if(!is(_b, __Bone)) return;
 		
 		_b.draw(attributes, false, _x, _y, _s, _mx, _my);
 	}
@@ -52,7 +47,7 @@ function Node_Armature_Path(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	static update = function() {
 		var _bone = getInputData(0);
-		if(_bone == noone) return;
+		if(!is(_bone, __Bone)) return;
 		
 		lines = [];
 		current_length = 0;

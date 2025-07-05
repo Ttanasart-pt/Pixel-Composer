@@ -131,8 +131,12 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		var p0y = _y + bone_head_pose.y * _s;
 		var p1x = _x + bone_tail_pose.x * _s;
 		var p1y = _y + bone_tail_pose.y * _s;
+		var _selecting = false;
 		
-		if(_select && _select.ID == self.ID) {
+		if(is(_select, __Bone))     _selecting = _select.ID == self.ID; 
+		else if(is_string(_select)) _selecting = _select    == name; 
+		
+		if(_selecting) {
 			draw_set_color(COLORS._main_value_positive);
 			draw_set_alpha(0.75 * _alpha);
 			

@@ -1047,6 +1047,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		setDropKey();
 	} 
 	
+	static setSideButton = function(b, s = false) { if(is(editWidget, widget)) editWidget.setSideButton(b, s); return self; } 
+	
 	resetDisplay();
 	
 	////- RENDER

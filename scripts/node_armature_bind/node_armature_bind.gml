@@ -51,12 +51,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	attributes.layer_visible	= [];
 	attributes.layer_selectable = [];
 	
-	attributes.display_name = true;
-	attributes.display_bone = 0;
-	
-	array_push(attributeEditors, "Display");
-	array_push(attributeEditors, ["Display name", function() /*=>*/ {return attributes.display_name}, new checkBox(function() /*=>*/ {return toggleAttribute("display_name")})]);
-	array_push(attributeEditors, ["Display bone", function() /*=>*/ {return attributes.display_bone}, new scrollBox(__txts(["Octahedral", "Stick"]), function(i) /*=>*/ {return setAttribute("display_bone", i)})]);
+	__node_bone_attributes();
 	
 	tools = [
 		new NodeTool( "Pose", THEME.bone_tool_pose )
@@ -93,7 +88,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		}
 		
 		#region draw bones
-			if(bone == noone) return 0;
+			if(!is(bone, __Bone)) return 0;
 			
 			var _b  = bone;
 			var amo = _b.childCount();
@@ -481,7 +476,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 		var _b = getInputData(1);
 		bone = _b;
-		if(bone == noone) return;
+		if(!is(_b, __Bone)) return;
 		
 		var _bst = ds_stack_create();
 		ds_stack_push(_bst, bone);
@@ -523,7 +518,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var _dpos = getInputData(3);
 		var _dsca = getInputData(4);
 		
-		if(bone == noone) return;
+		if(!is(bone, __Bone)) return;
 		
 		bone.draw(attributes, false, _x + _dpos[0] * _s, _y + _dpos[1] * _s, _s * _dsca, _mx, _my, anchor_selecting);
 		InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
@@ -534,8 +529,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var smx = value_snap(mx, _snx);
 		var smy = value_snap(my, _sny);
 		
-		if(_bind != noone)
-			return;
+		if(_bind != noone) return;
 			
 		var ww  = dim[0];
 		var hh  = dim[1];

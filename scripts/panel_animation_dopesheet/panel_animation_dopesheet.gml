@@ -789,7 +789,8 @@ function Panel_Animation_Dopesheet() {
                     _kn = [ _kn ];
                 }
                 
-                for( var ki = 0; ki < array_length(_kv); ki++ ) {
+                var kn = min(array_length(_kv), array_length(_kn));
+                for( var ki = 0; ki < kn; ki++ ) {
                     var cc = COLORS.panel_animation_graph_line;
                     if(valArray)                    cc = array_safe_get(COLORS.axis, ki, cc);
                     else if(animator.prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
@@ -824,7 +825,8 @@ function Panel_Animation_Dopesheet() {
                         _kn = [ _kn ];
                     }
                 	
-                    for( var ki = 0; ki < array_length(_kv); ki++ ) {
+                	var kn = min(array_length(_kv), array_length(_kn));
+                    for( var ki = 0; ki < kn; ki++ ) {
                         var cc = COLORS.panel_animation_graph_line;
                         if(valArray)                    cc = array_safe_get(COLORS.axis, ki, cc);
                         else if(animator.prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
@@ -852,8 +854,8 @@ function Panel_Animation_Dopesheet() {
             
             _kv = key_first.value;
             if(!valArray) _kv = [ _kv ];
-                
-            for( var ki = 0; ki < array_length(_kv); ki++ ) {
+            
+            for( var ki = 0, kn = array_length(_kv); ki < kn; ki++ ) {
                 var cc = COLORS.panel_animation_graph_line;
                 if(valArray)                    cc = array_safe_get(COLORS.axis, ki, cc);
                 else if(animator.prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
@@ -881,7 +883,7 @@ function Panel_Animation_Dopesheet() {
                         _kv = animator.processDriver(_time, key_last);
                         if(!valArray) _kv = [ _kv ];
                         
-                        for( var ki = 0; ki < array_length(_kv); ki++ ) {
+                        for( var ki = 0, kn = array_length(_kv); ki < kn; ki++ ) {
                             var cc = COLORS.panel_animation_graph_line;
                             if(valArray)                    cc = array_safe_get(COLORS.axis, ki, cc);
                             else if(animator.prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
@@ -906,7 +908,7 @@ function Panel_Animation_Dopesheet() {
                     _kv = key_last.value;
                     if(!valArray) _kv = [ _kv ];
                     
-                    for( var ki = 0; ki < array_length(_kv); ki++ ) {
+                    for( var ki = 0, kn = array_length(_kv); ki < kn; ki++ ) {
                         var cc = COLORS.panel_animation_graph_line;
                         if(valArray)                    cc = array_safe_get(COLORS.axis, ki, cc);
                         else if(animator.prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);

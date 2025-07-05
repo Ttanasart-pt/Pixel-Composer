@@ -721,6 +721,7 @@
             { "label": "/Basics" },
             "Node_Armature",
             "Node_Armature_Pose",
+            "Node_Armature_Pose_Stagger",
             "Node_Armature_Bind",
             "Node_Armature_Mesh_Rig",
             { "label": "/Convertors" },

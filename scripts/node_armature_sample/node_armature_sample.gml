@@ -13,17 +13,12 @@ function Node_Armature_Sample(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	newOutput(0, nodeValue_Output("Position", VALUE_TYPE.integer, [ 0, 0 ]))
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	attributes.display_name = true;
-	attributes.display_bone = 0;
-	
-	array_push(attributeEditors, "Display");
-	array_push(attributeEditors, ["Display name", function() /*=>*/ {return attributes.display_name}, new checkBox(function() /*=>*/ {return toggleAttribute("display_name")})]);
-	array_push(attributeEditors, ["Display bone", function() /*=>*/ {return attributes.display_bone}, new scrollBox(__txts(["Octahedral", "Stick"]), function(i) /*=>*/ {return setAttribute("display_bone", i)})]);
+	__node_bone_attributes();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _b = getInputData(0);
+		if(!is(_b, __Bone)) return;
 		
-		if(_b == noone) return;
 		_b.draw(attributes, false, _x, _y, _s, _mx, _my);
 	}
 	
@@ -32,7 +27,7 @@ function Node_Armature_Sample(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		var _name = getInputData(1);
 		var _prog = getInputData(2);
 		
-		if(_bone == noone) return;
+		if(!is(_bone, __Bone)) return;
 		
 		_name = string_trim(_name);
 		

@@ -44,8 +44,6 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	attributes.baked        = false;
 	attributes.bakeData     = 0;
 	
-	attributes.display_name = true;
-	attributes.display_bone = 0;
 	attributes.display_mesh_size = 2;
 	
 	tool_attribute.size = 48;
@@ -56,9 +54,7 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	tool_weight_edit      = new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { tool_attribute.weight = clamp(val, 0, 1); }).setFont(f_p3)
 	tool_weight           = [ "Weight", tool_weight_edit, "weight", tool_attribute ];
 	
-	array_push(attributeEditors, "Display");
-	array_push(attributeEditors, ["Display name", function() /*=>*/ {return attributes.display_name},      new checkBox(function() /*=>*/ {return toggleAttribute("display_name")})]);
-	array_push(attributeEditors, ["Display bone", function() /*=>*/ {return attributes.display_bone},      new scrollBox(__txts(["Octahedral", "Stick"]), function(i) /*=>*/ {return setAttribute("display_bone", i)})]);
+	__node_bone_attributes();
 	array_push(attributeEditors, ["Vertex size",  function() /*=>*/ {return attributes.display_mesh_size}, textBox_Number(function(i) /*=>*/ {return setAttribute("display_mesh_size", i)})]);
 	
 	tools_dynamic = [
@@ -623,7 +619,7 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		
-		if(bone_posed != noone) {
+		if(is(bone_posed, __Bone)) {
 			var _ss = _s * .5;
 			gpu_set_tex_filter(1);
 			draw_sprite_ext(s_node_armature_mesh_rig, 0, bbox.x0 + 24 * _ss, bbox.y1 - 24 * _ss, _ss, _ss, 0, c_white, 0.5);

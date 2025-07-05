@@ -10,6 +10,15 @@
 	});
 #endregion
 
+function __node_bone_attributes() {
+	attributes.display_name = true;
+	attributes.display_bone = 0;
+	
+	array_push(attributeEditors,  "Display" );
+	array_push(attributeEditors, ["Display name", function() /*=>*/ {return attributes.display_name}, new checkBox(function() /*=>*/ {return toggleAttribute("display_name")})]);
+	array_push(attributeEditors, ["Display bone", function() /*=>*/ {return attributes.display_bone}, new scrollBox(__txts(["Octahedral", "Stick"]), function(i) /*=>*/ {return setAttribute("display_bone", i)})]);
+}
+
 function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Armature Create";
 	setDimension(96, 96);
@@ -247,12 +256,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		bones.is_main = true;
 		bones.node    = self;
 		
-		attributes.display_name = true;
-		attributes.display_bone = 0;
-		
-		array_push(attributeEditors, "Display");
-		array_push(attributeEditors, ["Display name", function() /*=>*/ {return attributes.display_name}, new checkBox(function() /*=>*/ {return toggleAttribute("display_name")})]);
-		array_push(attributeEditors, ["Display bone", function() /*=>*/ {return attributes.display_bone}, new scrollBox(__txts(["Octahedral", "Stick"]), function(i) /*=>*/ {return setAttribute("display_bone", i)})]);
+		__node_bone_attributes();
 	#endregion
 	
 	tools = [
