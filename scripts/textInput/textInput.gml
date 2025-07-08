@@ -5,7 +5,8 @@ function textInput(_input, _onModify) : widget() constructor {
 	selecting     = false;
 	auto_update   = false;
 	
-	typing = false;
+	boxColor = c_white;
+	typing   = false;
 	
 	select_on_click = true;
 	parser_server   = noone;
@@ -21,6 +22,8 @@ function textInput(_input, _onModify) : widget() constructor {
 	autocomplete_subt    = "";
 	
 	function_guide_server	   = noone;
+	
+	static setBoxColor   = function(_v) /*=>*/ { boxColor    = _v;    return self; }
 	
 	static _resetFocus = function() { resetFocus();	}
 	

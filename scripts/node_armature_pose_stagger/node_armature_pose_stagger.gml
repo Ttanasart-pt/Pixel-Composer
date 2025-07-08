@@ -7,8 +7,7 @@ function Node_Armature_Pose_Stagger(_x, _y, _group = noone) : Node(_x, _y, _grou
 	newInput(0, nodeValue_Armature()).setVisible(true, true);
 	
 	////- =Stagger
-	bTarget = button(function() /*=>*/ {return toggleBoneTarget()}).setIcon(THEME.bone, 1, COLORS._main_icon).setTooltip("Select Bone");
-	newInput(1, nodeValue_Text( "Target",   "" )).setDisplay(VALUE_DISPLAY.text_box).setSideButton(bTarget);
+	newInput(1, nodeValue_Bone( "Bone", function() /*=>*/ {return toggleBoneTarget()} ));
 	newInput(2, nodeValue_Int(  "Amount",   3  ));
 	newInput(6, nodeValue_Int(  "Frame",    1  ));
 	
@@ -34,7 +33,8 @@ function Node_Armature_Pose_Stagger(_x, _y, _group = noone) : Node(_x, _y, _grou
 	boneHash  = "";
 	bonePose  = new __Bone();
 	bone_bbox = [0, 0, 1, 1, 1, 1];
-	boneArray = [];
+	bone_arr  = [];
+	
 	anchor_selecting = noone;
 	bone_targeting   = false;
 	
@@ -46,7 +46,6 @@ function Node_Armature_Pose_Stagger(_x, _y, _group = noone) : Node(_x, _y, _grou
 		if(!is(_b, __Bone)) return;
 		
 		bonePose  = _b.clone().connect();
-		boneArray = bonePose.toArray();
 	}
 	
 	////- Preview
@@ -54,10 +53,11 @@ function Node_Armature_Pose_Stagger(_x, _y, _group = noone) : Node(_x, _y, _grou
 	static toggleBoneTarget = function() /*=>*/ { bone_targeting = !bone_targeting; }
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		inputs[1].setSelecting(bone_targeting);
+		
 		var _b = inputs[0].getValue();
 		if(!is(bonePose, __Bone)) return;
 		
-		bTarget.icon_blend = bone_targeting? COLORS._main_value_positive : COLORS._main_icon;
 		if(!bone_targeting) {
 			var _tar = getInputData(1);
 			bonePose.draw(attributes, false, _x, _y, _s, _mx, _my, noone, _tar);
@@ -92,14 +92,16 @@ function Node_Armature_Pose_Stagger(_x, _y, _group = noone) : Node(_x, _y, _grou
 		
 		bone_bbox = [ 0, 0, DEF_SURF_W, DEF_SURF_H, DEF_SURF_W, DEF_SURF_H ];
 		if(!is(_b, __Bone)) return;
-		if(_tar == "") return;
 		
 		var _h = _b.getHash();
 		if(boneHash != _h) { boneHash = _h; setBone(); }
 		
 		if(IS_FIRST_FRAME) bonePose.resetPose().setPosition();
 		bonePose.constrains = _b.constrains;
+		bone_arr            = _b.toArray();
+		
 		rotation_dh = array_verify(rotation_dh, TOTAL_FRAMES);
+		outputs[0].setValue(bonePose);
 		
 		//////
 		
@@ -188,8 +190,6 @@ function Node_Armature_Pose_Stagger(_x, _y, _group = noone) : Node(_x, _y, _grou
 		
 		bonePose.setPose();
 		bone_bbox = bonePose.bbox();
-		
-		outputs[0].setValue(bonePose);
 	}
 	
 	////- Draw

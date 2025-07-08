@@ -19,9 +19,9 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	static createNewInput = function(index = array_length(inputs), bone = noone) {
 		var inAmo = array_length(inputs);
+		var _name = bone != noone? bone.name : "bone";
 		
-		newInput(index, nodeValue(bone != noone? bone.name : "bone", self, CONNECT_TYPE.input, VALUE_TYPE.float, [ 0, 0, 0, 1 ] ))
-			.setDisplay(VALUE_DISPLAY.transform);
+		newInput(index, nodeValue(_name, self, CONNECT_TYPE.input, VALUE_TYPE.float, [ 0, 0, 0, 1 ] )).setDisplay(VALUE_DISPLAY.transform);
 		inputs[index].attributes.bone_id = bone != noone? bone.ID : noone;
 		
 		if(bone != noone) boneMap[$ bone.ID] = inputs[index];
@@ -262,16 +262,11 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				var _sx = _x + _s * orig.x;
 				var _sy = _y + _s * orig.y;
 				
-				if(point_in_circle(_mx, _my, _sx, _sy, 12)) {
-					draw_sprite_ui(THEME.bone_scale,  0, _sx, _sy, 1, 1, _bne.pose_angle, COLORS._main_accent, 1);
-					draw_sprite_ui(THEME.bone_rotate, 0, _rx, _ry, 1, 1, _bne.pose_angle, c_white, 1);
-					_typ = 3;
-					
-				} else {
-					draw_sprite_ui(THEME.bone_scale,  0, _sx, _sy, 1, 1, _bne.pose_angle, c_white, 1);
-					draw_sprite_ui(THEME.bone_rotate, 0, _rx, _ry, 1, 1, _bne.pose_angle, COLORS._main_accent, 1);
-					_typ = 2;
-				}
+				_typ = 2;
+				if(point_in_circle(_mx, _my, _sx, _sy, 12)) _typ = 2;
+				
+				draw_sprite_ui(THEME.bone_scale,  0, _sx, _sy, 1, 1, _bne.pose_angle, _typ == 2? COLORS._main_accent : COLORS._main_icon, 1);
+				draw_sprite_ui(THEME.bone_rotate, 0, _rx, _ry, 1, 1, _bne.pose_angle, _typ == 3? COLORS._main_accent : COLORS._main_icon, 1);
 			}
 			
 			if(_lck) {

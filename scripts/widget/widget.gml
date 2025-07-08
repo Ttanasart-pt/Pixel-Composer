@@ -65,7 +65,6 @@ function widget() constructor {
 		ry   = params.ry;
 		
 		sep_axis = params.sep_axis;
-		boxColor = params.color;
 		
 		if(!is_undefined(params.interact))
 			setInteract(params.interact);

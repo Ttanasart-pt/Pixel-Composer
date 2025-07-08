@@ -13,7 +13,6 @@ function textArea_Number(_onModify) { return new textArea(TEXTBOX_INPUT.number, 
 function textArea(_input, _onModify) : textInput(_input, _onModify) constructor {
 	hide     = false;
 	color    = COLORS._main_text;
-	boxColor = c_white;
 	
 	_input_text_line       = [];
 	_input_text_line_index = [];
@@ -238,9 +237,9 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		}
 		
 		var aut = o_dialog_textbox_autocomplete;
-		var tbActive = aut.active && aut.textbox == self && array_length(aut.data);
+		var autoCompleteActive = aut.active && aut.textbox == self && array_length(aut.data);
 		
-		if(!(isCodeFormat() && tbActive)) {
+		if(!autoCompleteActive) {
 			if(key == vk_up) {
 				var _target;
 				

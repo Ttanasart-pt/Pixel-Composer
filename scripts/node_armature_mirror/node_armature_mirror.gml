@@ -7,16 +7,12 @@ function Node_Armature_Mirror(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	////- =IK
 	newInput(3, nodeValue_Text( "Suffix", "" )).setDisplay(VALUE_DISPLAY.text_box);
-	
-	bOrigin = button(function() /*=>*/ {return toggleBoneTarget(1)}).setIcon(THEME.bone, 1, COLORS._main_icon).setTooltip("Select Bone");
-	newInput(1, nodeValue_Text( "Origin", "" )).setDisplay(VALUE_DISPLAY.text_box).setSideButton(bOrigin);
+	newInput(1, nodeValue_Bone( "Origin", function() /*=>*/ {return toggleBoneTarget(1)} ));
 	
 	////- =Axis
-	newInput(4, nodeValue_Enum_Button( "Angle Mode", 0, [ "Bone", "Custom" ] ));
-	
-	bTarget = button(function() /*=>*/ {return toggleBoneTarget(2)}).setIcon(THEME.bone, 1, COLORS._main_icon).setTooltip("Select Bone");
-	newInput(2, nodeValue_Text(     "Axis", "" )).setDisplay(VALUE_DISPLAY.text_box).setSideButton(bTarget);
-	newInput(5, nodeValue_Rotation( "Angle", 0 ));
+	newInput(4, nodeValue_Enum_Button( "Angle Mode", 0, [ "Bone", "Custom" ]   ));
+	newInput(2, nodeValue_Bone(        "Axis",       function() /*=>*/ {return toggleBoneTarget(2)} ));
+	newInput(5, nodeValue_Rotation(    "Angle",      0 ));
 	// input 6
 	
 	newOutput(0, nodeValue_Output("Armature", VALUE_TYPE.armature, noone));
@@ -30,6 +26,7 @@ function Node_Armature_Mirror(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	bone      = new __Bone();
 	bone_bbox = [0, 0, 1, 1, 1, 1];
+	bone_arr  = [];
 	
 	bone_target = "";
 	bone_subdiv = 1;
@@ -41,10 +38,10 @@ function Node_Armature_Mirror(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	static toggleBoneTarget = function(i) /*=>*/ { bone_targeting = bone_targeting == i? 0 : i; }
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		if(!is(bone, __Bone)) return;
+		inputs[1].setSelecting(bone_targeting == 1);
+		inputs[2].setSelecting(bone_targeting == 2);
 		
-		bOrigin.icon_blend = bone_targeting == 1? COLORS._main_value_positive : COLORS._main_icon;
-		bTarget.icon_blend = bone_targeting == 2? COLORS._main_value_positive : COLORS._main_icon;
+		if(!is(bone, __Bone)) return;
 		
 		if(bone_targeting == 0) {
 			var _tar = getInputData(1);
@@ -82,8 +79,11 @@ function Node_Armature_Mirror(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		bone_bbox = [ 0, 0, DEF_SURF_W, DEF_SURF_H, DEF_SURF_W, DEF_SURF_H ];
 		if(!is(_b, __Bone)) return;
 		
-		bone = _b.clone();
+		bone      = _b.clone();
+		bone_arr  = bone.toArray();
+		
 		bone.resetPose().setPosition();
+		outputs[0].setValue(bone);
 		
 		var _orig = bone.findBoneByName(_b_origin);
 		var _axis = bone.findBoneByName(_b_axis);
@@ -113,7 +113,7 @@ function Node_Armature_Mirror(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		
 		bone.resetPose().setPosition();
 		bone_bbox = bone.bbox();
-		outputs[0].setValue(bone);
+		
 	}
 	
 	

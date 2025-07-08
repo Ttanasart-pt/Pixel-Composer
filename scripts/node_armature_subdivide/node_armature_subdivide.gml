@@ -6,11 +6,11 @@ function Node_Armature_Subdivide(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	newInput(0, nodeValue_Armature()).setVisible(true, true);
 	
 	////- =Target
-	bTarget = button(function() /*=>*/ {return toggleBoneTarget()}).setIcon(THEME.bone, 1, COLORS._main_icon).setTooltip("Select Bone");
-	newInput(1, nodeValue_Text( "Target", "" )).setDisplay(VALUE_DISPLAY.text_box).setSideButton(bTarget);
+	newInput(1, nodeValue_Bone( "Bone", function() /*=>*/ {return toggleBoneTarget()} ));
 	
 	////- =Subdivide
 	newInput(2, nodeValue_Int(  "Subdivision", 4  ));
+	// inputs 3
 	
 	newOutput(0, nodeValue_Output("Armature", VALUE_TYPE.armature, noone));
 	
@@ -23,6 +23,7 @@ function Node_Armature_Subdivide(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	
 	bone      = new __Bone();
 	bone_bbox = [0, 0, 1, 1, 1, 1];
+	bone_arr  = [];
 	
 	bone_target = "";
 	bone_subdiv = 1;
@@ -34,9 +35,9 @@ function Node_Armature_Subdivide(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	static toggleBoneTarget = function() /*=>*/ { bone_targeting = !bone_targeting; }
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		if(!is(bone, __Bone)) return;
+		inputs[1].setSelecting(bone_targeting);
 		
-		bTarget.icon_blend = bone_targeting? COLORS._main_value_positive : COLORS._main_icon;
+		if(!is(bone, __Bone)) return;
 		if(!bone_targeting) {
 			var _tar = getInputData(1);
 			bone.draw(attributes, false, _x, _y, _s, _mx, _my, noone, _tar);
@@ -74,6 +75,7 @@ function Node_Armature_Subdivide(_x, _y, _group = noone) : Node(_x, _y, _group) 
 				_b.parent_anchor = _bone.parent_anchor;
 			}
 			
+			_b.name           = _bone.name;
 			_b.apply_scale    = _bone.apply_scale;
 			_b.apply_rotation = _bone.apply_rotation;
 			
@@ -101,6 +103,8 @@ function Node_Armature_Subdivide(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		
 		bone.resetPose().setPosition();
 		bone_bbox = bone.bbox();
+		bone_arr  = bone.toArray();
+		
 		outputs[0].setValue(bone);
 	}
 	

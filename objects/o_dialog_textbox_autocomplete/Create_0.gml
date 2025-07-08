@@ -108,10 +108,12 @@ event_inherited();
 		textbox.cursor += _repAmo - _prmAmo;
 		textbox.cut_line();
 		textbox.autocomplete_delay = 0;
-		textbox = noone;
+		if(!textbox.isCodeFormat())
+			textbox.deactivate();
 		
-		prompt = "";
-		data   = [];
+		textbox = noone;
+		prompt  = "";
+		data    = [];
 	}	
 #endregion
 

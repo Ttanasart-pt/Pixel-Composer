@@ -9,11 +9,8 @@ function Node_Armature_IK(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	newInput(3, nodeValue_Text( "Name", "IK handle" )).setDisplay(VALUE_DISPLAY.text_box);
 	
-	bOrigin = button(function() /*=>*/ {return toggleBoneTarget(1)}).setIcon(THEME.bone, 1, COLORS._main_icon).setTooltip("Select Bone");
-	newInput(1, nodeValue_Text( "Origin", "" )).setDisplay(VALUE_DISPLAY.text_box).setSideButton(bOrigin);
-	
-	bTarget = button(function() /*=>*/ {return toggleBoneTarget(2)}).setIcon(THEME.bone, 1, COLORS._main_icon).setTooltip("Select Bone");
-	newInput(2, nodeValue_Text( "Target", "" )).setDisplay(VALUE_DISPLAY.text_box).setSideButton(bTarget);
+	newInput(1, nodeValue_Bone( "Origin", function() /*=>*/ {return toggleBoneTarget(1)} ));
+	newInput(2, nodeValue_Bone( "Target", function() /*=>*/ {return toggleBoneTarget(2)} ));
 	
 	newOutput(0, nodeValue_Output("Armature", VALUE_TYPE.armature, noone));
 	
@@ -25,9 +22,8 @@ function Node_Armature_IK(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	bone      = new __Bone();
 	bone_bbox = [0, 0, 1, 1, 1, 1];
+	bone_arr  = [];
 	
-	bone_target = "";
-	bone_subdiv = 1;
 	anchor_selecting = noone;
 	bone_targeting   = 0;
 	
@@ -36,10 +32,10 @@ function Node_Armature_IK(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static toggleBoneTarget = function(i) /*=>*/ { bone_targeting = bone_targeting == i? 0 : i; }
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		if(!is(bone, __Bone)) return;
+		inputs[1].setSelecting(bone_targeting == 1);
+		inputs[2].setSelecting(bone_targeting == 2);
 		
-		bOrigin.icon_blend = bone_targeting == 1? COLORS._main_value_positive : COLORS._main_icon;
-		bTarget.icon_blend = bone_targeting == 2? COLORS._main_value_positive : COLORS._main_icon;
+		if(!is(bone, __Bone)) return;
 		
 		if(bone_targeting == 0) {
 			var _tar = getInputData(1);
@@ -109,9 +105,10 @@ function Node_Armature_IK(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		bone.resetPose().setPosition();
 		bone_bbox = bone.bbox();
+		bone_arr  = bone.toArray();
+		
 		outputs[0].setValue(bone);
 	}
-	
 	
 	////- Draw
 	

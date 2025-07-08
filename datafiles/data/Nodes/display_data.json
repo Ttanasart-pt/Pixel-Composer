@@ -725,6 +725,7 @@
             "Node_Armature_Mirror",
             { "label": "/Pose" },
             "Node_Armature_Pose",
+            "Node_Armature_Pose_Bone",
             "Node_Armature_Pose_Stagger",
             { "label": "/Bind" },
             "Node_Armature_Bind",
