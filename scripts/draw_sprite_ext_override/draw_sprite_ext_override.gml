@@ -5,6 +5,12 @@ function draw_sprite_ext_override(spr, ind, _x, _y, xscale = 1, yscale = 1, rot 
 	__draw_sprite_ext(spr, ind, round(_x), round(_y), xscale, yscale, rot, color, alpha);
 }
 
+function draw_sprite_ext_filter(spr, ind, _x, _y, xscale = 1, yscale = 1, rot = 0, color = c_white, alpha = 1) {
+	gpu_set_tex_filter(1);
+	draw_sprite_ext(spr, ind, _x, _y, xscale, yscale, rot, color, alpha);
+	gpu_set_tex_filter(0);
+}
+
 #macro draw_sprite_stretched_ext draw_sprite_stretched_ext_override
 #macro __draw_sprite_stretched_ext draw_sprite_stretched_ext
 
@@ -52,7 +58,7 @@ function draw_sprite_bbox(spr, ind, _bbox) {
 	__draw_sprite_stretched(spr, ind, _bbox.x0, _bbox.y0, _bbox.w, _bbox.h);
 }
 
-function draw_sprite_bbox_uniform(spr, ind, _bbox, _col = c_white, _alp = 1) {
+function draw_sprite_bbox_uniform(spr, ind, _bbox, _col = c_white, _alp = 1, filter = false) {
 	if(_bbox == noone) return;
 	var _sw = sprite_get_width(spr);
     var _sh = sprite_get_height(spr);
@@ -61,7 +67,9 @@ function draw_sprite_bbox_uniform(spr, ind, _bbox, _col = c_white, _alp = 1) {
     
 	var _minS = min(_bbox.w / _sw, _bbox.h / _sh);
 	
+	gpu_set_tex_filter(filter);
 	__draw_sprite_ext(spr, ind, _bbox.xc - _sw * _minS / 2 + _ox * _minS, _bbox.yc - _sh * _minS / 2 + _oy * _minS, _minS, _minS, 0, _col, _alp);
+	gpu_set_tex_filter(0);
 }
 
 function draw_sprite_uniform(spr, ind, _x, _y, scale, color = c_white, alpha = 1) {

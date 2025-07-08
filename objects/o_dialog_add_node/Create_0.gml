@@ -796,16 +796,21 @@ event_inherited();
 			for(var i = 0; i < node_count; i++) {
 				var _node = _list[i];
 				if(is_undefined(_node)) continue;
-				if(is(_node, NodeObject)) {
-					if(_node.patreon && !IS_PATREON) continue;
-					if(is_global && !_node.show_in_global) continue;
-				}
-				
-				if(is(_node, NodeAction_create) && array_empty(PANEL_GRAPH.nodes_selecting)) continue;
 				
 				if(is_string(_node)) {
 					if(PREFERENCES.dialog_add_node_grouping == 0) continue;
-					if(PREFERENCES.dialog_add_node_grouping == 1 && string_starts_with(_node, "/")) continue;
+					if(PREFERENCES.dialog_add_node_grouping == 1 && string_starts_with(_node, "/")) {
+						// var _txt = string_trim_start(__txt(_node), ["/"]);
+						// var _shg = ui(16);
+						
+						// draw_set_text(f_p4, fa_left, fa_center, COLORS._main_text_sub, .5);
+						// draw_text_add(pd + ui(32), yy + _shg / 2, _txt)
+						// draw_set_alpha(1);
+						
+						// hh += _shg;
+						// yy += _shg;
+						continue;
+					}
 					
 					hh += sec_pd * bool(i);
 					yy += sec_pd * bool(i);
@@ -830,6 +835,13 @@ event_inherited();
 					}
 					continue;
 				}
+				
+				if(is(_node, NodeObject)) {
+					if(_node.patreon && !IS_PATREON) continue;
+					if(is_global && !_node.show_in_global) continue;
+				}
+				
+				if(is(_node, NodeAction_create) && array_empty(PANEL_GRAPH.nodes_selecting)) continue;
 				
 				if(++bg_ind % 2) draw_sprite_stretched_add(THEME.node_bg, 0, pd, yy, list_width - pd * 2, list_height, c_white, 0.1);
 				

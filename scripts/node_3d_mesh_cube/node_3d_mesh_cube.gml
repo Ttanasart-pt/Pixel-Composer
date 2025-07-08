@@ -12,13 +12,13 @@ function Node_3D_Mesh_Cube(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 	
 	////- Materials
 	
-	newInput(i+0, nodeValue_Bool("Material per side", false ));
-	newInput(i+1, nodeValue_D3Material("Material")).setVisible(true, true);
-	newInput(i+2, nodeValue_D3Material("Material Bottom")).setVisible(true, true);
-	newInput(i+3, nodeValue_D3Material("Material Left")).setVisible(true, true);
-	newInput(i+4, nodeValue_D3Material("Material Right")).setVisible(true, true);
-	newInput(i+5, nodeValue_D3Material("Material Back")).setVisible(true, true);
-	newInput(i+6, nodeValue_D3Material("Material Front")).setVisible(true, true);
+	newInput(i+0, nodeValue_Bool(       "Material per side", false ));
+	newInput(i+1, nodeValue_D3Material( "Material"        )).setVisible(true, true);
+	newInput(i+2, nodeValue_D3Material( "Material Bottom" )).setVisible(true, true);
+	newInput(i+3, nodeValue_D3Material( "Material Left"   )).setVisible(true, true);
+	newInput(i+4, nodeValue_D3Material( "Material Right"  )).setVisible(true, true);
+	newInput(i+5, nodeValue_D3Material( "Material Back"   )).setVisible(true, true);
+	newInput(i+6, nodeValue_D3Material( "Material Front"  )).setVisible(true, true);
 	
 	input_display_list = [
 		__d3d_input_list_mesh,      i+9, i+7, i+8, 

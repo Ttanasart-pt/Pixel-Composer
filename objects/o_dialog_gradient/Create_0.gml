@@ -193,7 +193,7 @@ event_inherited();
 		return self; 
 	} initPalette();
 	
-	palette_selecting = -1;
+	palette_selecting = noone;
 	preset_expands    = {};
 	preset_show_name  = true;
 	

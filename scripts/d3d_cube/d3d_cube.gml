@@ -48,13 +48,19 @@ function __3dCube() : __3dObject() constructor {
 			var _f1 = array_create(_subx * _suby * 6);
 			
 		} else {
-			var _ff = array_create(_subx * _suby * 6 * 6);
-			var _f0 = _ff;
-			var _f1 = _ff;
+			var _ff = array_create(_subx * _suby * 6 * 2 + 
+			                       _suby * _subz * 6 * 2 + 
+			                       _subz * _subx * 6 * 2);
+			
 			var _f2 = _ff;
 			var _f3 = _ff;
+			
 			var _f4 = _ff;
 			var _f5 = _ff;
+			
+			var _f0 = _ff;
+			var _f1 = _ff;
+			
 		}
 		
 		var _i = 0;
@@ -266,7 +272,7 @@ function __3dCube() : __3dObject() constructor {
 	
 	static initModel = function() {
 		
-		vertex = __default_cube();
+		vertex        = __default_cube();
 		object_counts = array_length(vertex);
 		
 		VB = build();

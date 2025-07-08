@@ -91,6 +91,8 @@ function Node_Armature_Subdivide(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		var _b      = getInputData(0);
 		bone_target = getInputData(1);
 		bone_subdiv = getInputData(2);
+		
+		bone_bbox = [ 0, 0, DEF_SURF_W, DEF_SURF_H, DEF_SURF_W, DEF_SURF_H ];
 		if(!is(_b, __Bone)) return;
 		
 		bone = new __Bone(noone, 0, 0, 0, 0, self);
@@ -110,7 +112,11 @@ function Node_Armature_Subdivide(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		
-		if(!is(bone, __Bone)) return;
+		if(!is(bone, __Bone)) { draw_sprite_bbox_uniform(s_node_armature_subdivide, 0, bbox, c_white, 1, true); return; }
+		
+		var _ss = _s * .5;
+		draw_sprite_ext_filter(s_node_armature_subdivide, 0, bbox.x0 + 24 * _ss, bbox.y1 - 24 * _ss, _ss, _ss, 0, c_white, 0.5);
 		bone.drawThumbnail(_s, bbox, bone_bbox);
+			
 	}
 }

@@ -404,17 +404,11 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		if(is(bonePose, __Bone)) {
 			var _ss = _s * .5;
-			gpu_set_tex_filter(1);
-			draw_sprite_ext(s_node_armature_pose, 0, bbox.x0 + 24 * _ss, bbox.y1 - 24 * _ss, _ss, _ss, 0, c_white, 0.5);
-			gpu_set_tex_filter(0);
-			
+			draw_sprite_ext_filter(s_node_armature_pose, 0, bbox.x0 + 24 * _ss, bbox.y1 - 24 * _ss, _ss, _ss, 0, c_white, 0.5);
 			bonePose.drawThumbnail(_s, bbox, bone_bbox);
 			
-		} else {
-			gpu_set_tex_filter(1);
-			draw_sprite_fit(s_node_armature_pose, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-			gpu_set_tex_filter(0);
-		}
+		} else
+			draw_sprite_bbox_uniform(s_node_armature_pose, 0, bbox, c_white, 1, true);
 	}
 }
 

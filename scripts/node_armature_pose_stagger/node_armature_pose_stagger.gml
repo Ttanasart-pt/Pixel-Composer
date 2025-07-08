@@ -32,7 +32,7 @@ function Node_Armature_Pose_Stagger(_x, _y, _group = noone) : Node(_x, _y, _grou
 	__node_bone_attributes();
 	
 	boneHash  = "";
-	bonePose  = noone;
+	bonePose  = new __Bone();
 	bone_bbox = [0, 0, 1, 1, 1, 1];
 	boneArray = [];
 	anchor_selecting = noone;
@@ -64,7 +64,10 @@ function Node_Armature_Pose_Stagger(_x, _y, _group = noone) : Node(_x, _y, _grou
 			return;
 		}
 		
-		var _hv = bonePose.draw(attributes, hover * 0b100, _x, _y, _s, _mx, _my, anchor_selecting);
+		var _b = getInputData(0);
+		if(!is(_b, __Bone)) return;
+		
+		var _hv = _b.draw(attributes, hover * 0b100, _x, _y, _s, _mx, _my, anchor_selecting);
 		anchor_selecting = _hv;
 		
 		if(mouse_press(mb_left, active)) {
@@ -82,11 +85,12 @@ function Node_Armature_Pose_Stagger(_x, _y, _group = noone) : Node(_x, _y, _grou
 		var _frm = getInputData(6);
 		
 		var _rot  = getInputData(3);
-		var _rotS = getInputData(5); _rotS = 1 - _rotS;
+		var _stif = getInputData(5); _stif = 1 - _stif;
 		var _iner = getInputData(7);
 		
 		var _sca  = getInputData(4);
 		
+		bone_bbox = [ 0, 0, DEF_SURF_W, DEF_SURF_H, DEF_SURF_W, DEF_SURF_H ];
 		if(!is(_b, __Bone)) return;
 		if(_tar == "") return;
 		
@@ -115,11 +119,11 @@ function Node_Armature_Pose_Stagger(_x, _y, _group = noone) : Node(_x, _y, _grou
 			bPose.direction     = bRaw.direction;
 			bPose.distance      = bRaw.distance;
 			
-			if(IS_FIRST_FRAME) {
+			// if(IS_FIRST_FRAME) {
 				bPose.pose_posit[0] = bRaw.pose_posit[0];
 				bPose.pose_posit[1] = bRaw.pose_posit[1];
 				bPose.pose_rotate   = bRaw.pose_rotate;
-			}
+			// }
 			
 			bPose.pose_scale    = bRaw.pose_scale;
 		}
@@ -143,13 +147,13 @@ function Node_Armature_Pose_Stagger(_x, _y, _group = noone) : Node(_x, _y, _grou
 				if(array_empty(_cArr)) break;
 				_bArr = _cArr;
 				
-				_rr *= _rotS;
+				_rr *= _stif;
 				_sx *= _sca;
-			}
+			} 
 			
 		} else {
 			var _sx  = _sca;
-			var _dr  = _rot - rotation_prev;
+			var _dr  = _rot;
 			var _inf = 1;
 			var _itr = 0;
 			array_safe_set(rotation_dh, CURRENT_FRAME, _dr);
@@ -161,6 +165,7 @@ function Node_Armature_Pose_Stagger(_x, _y, _group = noone) : Node(_x, _y, _grou
 					var b  = _bArr[i];
 					var rr = array_safe_get(rotation_dh, CURRENT_FRAME - _itr * _frm, 0);
 					var targRot = b.pose_rotate + rr * _inf;
+					
 					b.pose_rotate = lerp(b.pose_rotate, targRot, _iner);
 					b.pose_scale  *= _sx;
 					
@@ -169,7 +174,7 @@ function Node_Armature_Pose_Stagger(_x, _y, _group = noone) : Node(_x, _y, _grou
 				
 				if(array_empty(_cArr)) break;
 				_bArr = _cArr;
-				_inf *= _rotS;
+				_inf *= _stif;
 				_sx  *= _sca;
 				
 				_itr++;

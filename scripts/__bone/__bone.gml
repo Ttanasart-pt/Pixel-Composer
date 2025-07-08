@@ -408,6 +408,7 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 				bn = bn.parent;
 			}
 			
+			if(bn == noone) return;
 			_p = bn.getTail();
 			points[0] = { x: _p.x, y: _p.y };
 			
