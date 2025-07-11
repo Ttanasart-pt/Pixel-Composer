@@ -578,7 +578,6 @@ function Panel_Inspector() : PanelContent() constructor {
         var amoIn   = is_array(_inspecting.input_display_list)?  array_length(_inspecting.input_display_list)  : array_length(_inspecting.inputs);
         var amoOut  = is_array(_inspecting.output_display_list)? array_length(_inspecting.output_display_list) : array_length(_inspecting.outputs);
         var amoMeta = _inspecting.attributes.outp_meta? array_length(_inspecting.junc_meta) : 0;
-        
         var amo     = inspectGroup == 0? amoIn + 1 + amoOut + amoMeta : amoIn;
         
         var color_picker_index = 0;
@@ -675,6 +674,8 @@ function Panel_Inspector() : PanelContent() constructor {
                 continue;
                 
             } else if(is(jun, widget)) {
+            	if(!jun.visible) continue;
+            	
                 jun.setFocusHover(pFOCUS, pHOVER);
                 var param = new widgetParam(ui(6), yy, con_w - ui(12), TEXTBOX_HEIGHT, noone, {}, _m, x, y);
                 var _wdh = jun.drawParam(param);

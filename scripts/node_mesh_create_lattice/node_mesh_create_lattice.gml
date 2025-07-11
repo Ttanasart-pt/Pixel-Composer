@@ -52,10 +52,13 @@ function Node_Mesh_Create_Lattice(_x, _y, _group = noone) : Node(_x, _y, _group)
 		
 		for( var j = 0; j <= gh; j++ )
 		for( var i = 0; i <= gw; i++ ) {
-			var _x0 = lerp(x0, x1, i * sx);
-			var _y0 = lerp(y0, y1, j * sy);
+			var _u  = i * sx;
+			var _v  = j * sy;
 			
-			points[j*(gw+1)+i] = new __vec2(_x0, _y0);
+			var _x0 = lerp(x0, x1, _u);
+			var _y0 = lerp(y0, y1, _v);
+			
+			points[j*(gw+1)+i] = new __vec2UV(_x0, _y0, _u, _v);
 		}
 		
 		for( var j = 0; j < gh; j++ )

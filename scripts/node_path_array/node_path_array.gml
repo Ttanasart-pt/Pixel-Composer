@@ -8,7 +8,7 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	curr_path     = [];
 	curr_path_amo = 0;
 	
-	static createNewInput = function(index = array_length(inputs)) {
+	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
 		newInput(index, nodeValue_PathNode("Path" ));

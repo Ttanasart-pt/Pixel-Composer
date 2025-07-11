@@ -43,7 +43,7 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	newInput(0, nodeValue_Enum_Scroll("Type", 0, _type_arr )).rejectArray();
 	
-	static createNewInput = function(index = array_length(inputs)) {
+	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
 		newInput(index, nodeValue_Float("Input", -1 )).setVisible(false, true);

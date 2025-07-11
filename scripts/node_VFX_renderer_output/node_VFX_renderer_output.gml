@@ -30,7 +30,7 @@ function Node_VFX_Renderer_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 	
 	static onInspector2Update = function() { clearCache(); }
 	
-	static createNewInput = function(index = array_length(inputs)) {
+	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
 		newInput(index + 0, nodeValue_Enum_Scroll("Blend mode",  0 , [ "Normal", "Alpha", "Additive" ]))

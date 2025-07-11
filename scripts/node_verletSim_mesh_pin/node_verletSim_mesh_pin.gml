@@ -1,5 +1,7 @@
 function Node_VerletSim_Mesh_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name = "Pin Mesh";
+	name  = "Pin Mesh";
+	color = COLORS.node_blend_verlet;
+	icon  = THEME.verletSim;
 	setDimension(96, 48);
 	
 	newActiveInput(5);
@@ -33,6 +35,9 @@ function Node_VerletSim_Mesh_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) 
 			draw_set_color(COLORS._main_icon);
 			_msh.draw(_x, _y, _s);
 		}
+		
+		if(is(_msh, __verlet_Mesh)) 
+			_msh.drawVertex(_x, _y, _s);
 		
 		if(_typ == 0) 
 			InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));

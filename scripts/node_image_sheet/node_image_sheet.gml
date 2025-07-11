@@ -11,28 +11,28 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	////- =Sheet
 	
 	newInput( 3, nodeValue_Vec2(        "Amount", [1,1]  ));
-	newInput(10, nodeValue_Trigger(     "Auto fill", "Automatically set amount based on sprite size."))
-		.setDisplay(VALUE_DISPLAY.button, { name: "Auto fill", UI : true, onClick: function() /*=>*/ {
-			var _sur = getInputData(0);
-			if(!is_surface(_sur) || _sur == DEF_SURFACE) return;
-			
-			var ww = surface_get_width(_sur);
-			var hh = surface_get_height(_sur);
-			
-			var _size = getInputData(1);
-			var _offs = getInputData(4);
-			var _spac = getInputData(5);
-			
-			var sh_w = _size[0] + _spac[0];
-			var sh_h = _size[1] + _spac[1];
+	newInput(10, nodeValue_Trigger(     "Auto fill", "Automatically set amount based on sprite size."));
+	b_auto_fill = button(function() /*=>*/ {
+		var _sur = getInputData(0);
+		if(!is_surface(_sur) || _sur == DEF_SURFACE) return;
 		
-			var fill_w = floor((ww - _offs[0]) / sh_w);
-			var fill_h = floor((hh - _offs[1]) / sh_h);
-			
-			inputs[3].setValue([ fill_w, fill_h ]);
+		var ww = surface_get_width(_sur);
+		var hh = surface_get_height(_sur);
 		
-			doUpdate();
-		} });
+		var _size = getInputData(1);
+		var _offs = getInputData(4);
+		var _spac = getInputData(5);
+		
+		var sh_w = _size[0] + _spac[0];
+		var sh_h = _size[1] + _spac[1];
+	
+		var fill_w = floor((ww - _offs[0]) / sh_w);
+		var fill_h = floor((hh - _offs[1]) / sh_h);
+		
+		inputs[3].setValue([ fill_w, fill_h ]);
+	
+		doUpdate();
+	}).setText("Auto Fill");
 	newInput( 9, nodeValue_Enum_Scroll( "Main Axis", 0, __enum_array_gen(["Horizontal", "Vertical"], s_node_alignment)));
 	newInput( 4, nodeValue_Vec2(        "Offset",   [0,0] ));
 	newInput( 5, nodeValue_Vec2(        "Spacing",  [0,0] ));
@@ -41,12 +41,12 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	newInput( 7, nodeValue_Enum_Scroll( "Output",          1, [ "Animation", "Array" ]));
 	newInput( 8, nodeValue_Float(       "Animation speed", 1 ));
-	newInput(11, nodeValue_Trigger(     "Sync animation"     ))
-		.setDisplay(VALUE_DISPLAY.button, { name: "Sync frames", UI : true, onClick: function() /*=>*/ { 
-			var _atl = outputs[1].getValue();
-			var _spd = getInputData(8);
-			TOTAL_FRAMES = max(1, _spd == 0? 1 : ceil(array_length(_atl) / _spd));
-		} });
+	newInput(11, nodeValue_Trigger(     "Sync animation"     ));
+	b_sync_frame = button(function() /*=>*/ { 
+		var _atl = outputs[1].getValue();
+		var _spd = getInputData(8);
+		TOTAL_FRAMES = max(1, _spd == 0? 1 : ceil(array_length(_atl) / _spd));
+	}).setText("Sync Frames");
 		
 	////- =Filter
 	
@@ -55,16 +55,14 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput(14, nodeValue_Color(       "Filtered Color",      ca_black ));
 	
 	input_display_list = [
-		["Sprite", false], 0, 1, 6, 
-		["Sheet",  false], 3, 10, 9, 4, 5, 
-		["Output", false], 7, 8, 11,
-		["Filter Empty", true, 12], 13, 14, 
+		[ "Sprite",      false     ], 0, 1, 6, 
+		[ "Sheet",       false     ], 3, b_auto_fill, 9, 4, 5, 
+		[ "Output",      false     ], 7, 8, b_sync_frame,
+		[ "Filter Empty", true, 12 ], 13, 14, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
-	
-	newOutput(1, nodeValue_Output("Atlas Data", VALUE_TYPE.atlas, []))
-		.setArrayDepth(1);
+	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
+	newOutput(1, nodeValue_Output( "Atlas Data",  VALUE_TYPE.atlas,   []    )).setArrayDepth(1);
 	
 	////- Nodes
 	
@@ -299,6 +297,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _out  = getInputData(7);
 		var _flty = getInputData(13);
 		
+		b_sync_frame.setVisible(!_out);
 		inputs[11].setVisible(!_out);
 		inputs[ 8].setVisible(!_out);
 		inputs[14].setVisible(_flty);

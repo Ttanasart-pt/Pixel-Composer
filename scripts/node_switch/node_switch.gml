@@ -39,7 +39,7 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	////- Dynamic IO
 
-	static createNewInput = function(index = array_length(inputs)) {
+	function createNewInput(index = array_length(inputs)) {
 		var bDel = button(function() /*=>*/ {return node.deleteInput(index)})
 		            .setIcon(THEME.minus_16, 0, COLORS._main_icon);
 		

@@ -34,8 +34,8 @@ function Node_create_Equation(_x, _y, _group = noone, _param = {}) {
 function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name		= "Equation";
 	color		= COLORS.node_blend_number;
-	
 	draw_pad_w  = 10;
+	
 	setDimension(96, 48);
 	ast = [];
 	
@@ -104,7 +104,7 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		["Inputs",		 true], 
 	]
 	
-	static createNewInput = function(index = array_length(inputs)) {
+	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
 		newInput(index + 0, nodeValue_Text("Argument name"))

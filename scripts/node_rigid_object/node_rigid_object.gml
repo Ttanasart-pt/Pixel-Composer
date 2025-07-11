@@ -48,7 +48,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput( 5, nodeValue_Enum_Scroll( "Shape",  0, [ new scrollItem("Box",    s_node_shape_rectangle, 0), 
 	                                                           new scrollItem("Circle", s_node_shape_circle,    0), 
 	                                                           new scrollItem("Custom", s_node_shape_misc,      1) ]));
-	newInput( 9, nodeValue_Trigger(     "Generate Mesh" )).setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() /*=>*/ {return generateAllMesh()} });
+	newInput( 9, nodeValue_Trigger(     "Generate Mesh" ));
+	b_gen_mesh = button(function() /*=>*/ {return generateAllMesh()}).setText("Generate Mesh");
 	newInput(10, nodeValue_Slider(      "Mesh Expansion", 0, [ -2, 2, 0.1 ]));
 	newInput(11, nodeValue_Bool(        "Add Pixel for Empty", true));
 	
@@ -81,7 +82,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	input_display_list = [ 
 		["Spawn",	   false, 8], 20, 
 		["Physics",	   false], 0, 1, 2, 3, 4, 13, 
-		["Shape",	   false], 6, 5, 9, 10, 11, 
+		["Shape",	   false], 6, 5, b_gen_mesh, 10, 11, 
 		["Transform",  false], 7, 17, 
 		["Initial Velocity", false, 18], 19, 
 		["Simulation",  true], 14, 15, 16, 21, 

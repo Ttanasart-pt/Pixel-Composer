@@ -33,7 +33,7 @@ function Node_Armature_Pose_Stagger(_x, _y, _group = noone) : Node(_x, _y, _grou
 	boneHash  = "";
 	bonePose  = new __Bone();
 	bone_bbox = [0, 0, 1, 1, 1, 1];
-	bone_arr  = [];
+	boneArray  = [];
 	
 	anchor_selecting = noone;
 	bone_targeting   = false;
@@ -43,9 +43,15 @@ function Node_Armature_Pose_Stagger(_x, _y, _group = noone) : Node(_x, _y, _grou
 	
 	static setBone = function() {
 		var _b = getInputData(0);
-		if(!is(_b, __Bone)) return;
+		if(!is(_b, __Bone)) { boneHash = ""; return; }
 		
+		var _h = _b.getHash();
+		if(boneHash == _h) return;
+		
+		boneHash  = _h;
 		bonePose  = _b.clone().connect();
+		boneArray = bonePose.toArray();
+		bonePose.constrains = _b.constrains;
 	}
 	
 	////- Preview
@@ -79,6 +85,8 @@ function Node_Armature_Pose_Stagger(_x, _y, _group = noone) : Node(_x, _y, _grou
 	////- Update
 	
 	static update = function(frame = CURRENT_FRAME) {
+		setBone();
+		
 		var _b   = getInputData(0);
 		var _tar = getInputData(1);
 		var _amo = getInputData(2);
@@ -93,12 +101,7 @@ function Node_Armature_Pose_Stagger(_x, _y, _group = noone) : Node(_x, _y, _grou
 		bone_bbox = [ 0, 0, DEF_SURF_W, DEF_SURF_H, DEF_SURF_W, DEF_SURF_H ];
 		if(!is(_b, __Bone)) return;
 		
-		var _h = _b.getHash();
-		if(boneHash != _h) { boneHash = _h; setBone(); }
-		
 		if(IS_FIRST_FRAME) bonePose.resetPose().setPosition();
-		bonePose.constrains = _b.constrains;
-		bone_arr            = _b.toArray();
 		
 		rotation_dh = array_verify(rotation_dh, TOTAL_FRAMES);
 		outputs[0].setValue(bonePose);

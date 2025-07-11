@@ -1,5 +1,7 @@
 function Node_VerletSim_Mesh_Cache_Lerp(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name = "Mesh Mix Cache";
+	name  = "Mesh Mix Cache";
+	color = COLORS.node_blend_verlet;
+	icon  = THEME.verletSim;
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue_Mesh(   "Mesh"       )).setVisible(true, true);

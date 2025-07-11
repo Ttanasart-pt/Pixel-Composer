@@ -1,4 +1,4 @@
-#region attribute
+#region data
 	global.SURFACE_INTERPOLATION = [
 		new scrollItem("Group").setTooltip("Inherit from parent group.").setActive(false),
 		new scrollItem("Pixel"),
@@ -58,7 +58,9 @@
 			}
 		}
 	}
+#endregion
 	
+#region attribute
 	function __attribute_set(node, key, value) {
 		node.attributes[$ key] = value;
 		node.triggerRender();
@@ -76,33 +78,44 @@
 	}
 	
 	function attribute_surface_depth(label = true) {
-		attr_depth_array = variable_clone(global.SURFACE_FORMAT_NAME);
-		attr_depth_array[0].setActive(!array_empty(inputs) && inputs[0].type == VALUE_TYPE.surface);
 		attributes.color_depth = PREFERENCES.node_default_depth;
 		
+		attr_depth_array = variable_clone(global.SURFACE_FORMAT_NAME);
+		attr_depth_array[0].setActive(!array_empty(inputs) && inputs[0].type == VALUE_TYPE.surface);
+		
+		color_depth_selector = new scrollBox(attr_depth_array, function(val) /*=>*/ { attribute_set("color_depth", val); }, false);
+		color_depth_editor   = [ "Color depth", function() /*=>*/ {return attributes.color_depth}, color_depth_selector, "color_depth" ];
+		
 		if(label) array_push(attributeEditors, "Surface");
-		array_push(attributeEditors, ["Color depth", function() /*=>*/ {return attributes.color_depth}, 
-			new scrollBox(attr_depth_array, function(val) /*=>*/ { attribute_set("color_depth", val); }, false), "color_depth"]);
+		array_push(attributeEditors, color_depth_editor);
+		checkGroupAttribute(color_depth_editor);
 	}
 	
 	function attribute_interpolation(label = false) {
-		attr_interpolate_array = variable_clone(global.SURFACE_INTERPOLATION);
 		attributes.interpolate = PREFERENCES.node_default_interpolation;
 		attributes.oversample  = PREFERENCES.node_default_oversample;
 		
+		attr_interpolate_array = variable_clone(global.SURFACE_INTERPOLATION);
+		
+		interpolate_selector   = new scrollBox(attr_interpolate_array, function(val) /*=>*/ { attribute_set("interpolate", val); }, false);
+		interpolate_editor     = [ "Texture interpolation", function() /*=>*/ {return attributes.interpolate}, interpolate_selector, "interpolate" ];
+		
 		if(label) array_push(attributeEditors, "Surface");
-		array_push(attributeEditors, ["Texture interpolation", function() /*=>*/ {return attributes.interpolate}, 
-			new scrollBox(attr_interpolate_array, function(val) /*=>*/ { attribute_set("interpolate", val); }, false), "interpolate"]);
+		array_push(attributeEditors, interpolate_editor);
+		checkGroupAttribute(interpolate_editor);
 	}
 	
 	function attribute_oversample(label = false) {
-		attr_oversample_array = variable_clone(global.SURFACE_OVERSAMPLE);
 		attributes.interpolate = PREFERENCES.node_default_interpolation;
 		attributes.oversample  = PREFERENCES.node_default_oversample;
 		
+		attr_oversample_array  = variable_clone(global.SURFACE_OVERSAMPLE);
+		oversample_selector    = new scrollBox(attr_oversample_array, function(val) /*=>*/ { attribute_set("oversample", val); }, false);
+		oversample_editor      = [ "Oversample", function() /*=>*/ {return attributes.oversample}, oversample_selector, "oversample" ];
+		
 		if(label) array_push(attributeEditors, "Surface");
-		array_push(attributeEditors, ["Oversample", function() /*=>*/ {return attributes.oversample}, 
-			new scrollBox(attr_oversample_array, function(val) /*=>*/ { attribute_set("oversample", val); }, false), "oversample"]);
+		array_push(attributeEditors, oversample_editor);
+		checkGroupAttribute(oversample_editor);
 	}
 	
 	function attribute_auto_execute(label = false) {

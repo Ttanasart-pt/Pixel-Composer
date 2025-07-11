@@ -19,31 +19,29 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	name = "L System";
 	setDimension(96, 48);
 	
-	////- Origin
+	////- =Origin
+	newInput( 2, nodeValue_Vec2(     "Starting position", [DEF_SURF_W/2,DEF_SURF_H/2] ));
+	newInput(10, nodeValue_Vec3(     "Starting position", [0,0,0] ));
+	newInput( 6, nodeValue_Rotation( "Starting Angle",     90     ));
 	
-	newInput( 2, nodeValue_Vec2(     "Starting position", [ DEF_SURF_W / 2, DEF_SURF_H / 2 ]));
-	newInput(10, nodeValue_Vec3(     "Starting position", [ 0, 0, 0 ]));
-	newInput( 6, nodeValue_Rotation( "Starting Angle", 90));
-	
-	////- Properties
-	
-	newInput(0, nodeValue_Float(     "Length",  8));
-	newInput(1, nodeValue_Rotation(  "Angle", 45));
+	////- =Properties
+	newInput(0, nodeValue_Float(     "Length",  8  ));
+	newInput(1, nodeValue_Rotation(  "Angle",   45 ));
 	newInput(7, nodeValueSeed());
 		
-	////- 3D
+	////- =3D
+	newInput( 8, nodeValue_Bool(        "3D",       false ));
+	newInput( 9, nodeValue_Enum_Button( "Forward",  1, [ "X", "Y", "Z" ] ));
+	newInput(11, nodeValue_Rotation(    "Subangle", 45    ));
 	
-	newInput( 8, nodeValue_Bool(        "3D", false));
-	newInput( 9, nodeValue_Enum_Button( "Forward", 1, [ "X", "Y", "Z" ]));
-	newInput(11, nodeValue_Rotation(    "Subangle", 45));
+	////- =Rules
+	newInput(3, nodeValue_Int(  "Iteration",    4 ));
+	newInput(4, nodeValue_Text( "Starting rule"   ));
+	newInput(5, nodeValue_Text( "End replacement" )).setTooltip("Replace symbol of the last generated rule, for example a=F to replace all a with F. Use comma to separate different replacements.");
 	
-	////- Rules
+	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, noone));
 	
-	newInput(3, nodeValue_Int(  "Iteration", 4));
-	newInput(4, nodeValue_Text( "Starting rule"));
-	newInput(5, nodeValue_Text( "End replacement")).setTooltip("Replace symbol of the last generated rule, for example a=F to replace all a with F. Use comma to separate different replacements.");
-	
-	static createNewInput = function(index = array_length(inputs)) {
+	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		var _idx  = index - input_fix_len;
 		
@@ -53,12 +51,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		return inputs[index + 0];
 	}
 	
-	setDynamicInput(2, false);
-	if(!LOADING && !APPENDING) createNewInput();
-	
-	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, noone));
-	
-	rule_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
+	rule_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus, _panel) /*=>*/ {
 		rule_renderer.x = _x;
 		rule_renderer.y = _y;
 		rule_renderer.w = _w;
@@ -67,38 +60,46 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var tx = _x + ui(32);
 		var ty = _y + hh;
 		
-		var _tw = ui(64);
-		var _th = TEXTBOX_HEIGHT + ui(4);
+		var tw = ui(64);
+		var th = TEXTBOX_HEIGHT;
 		
-		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
-			var _name = inputs[i + 0];
-			var _rule = inputs[i + 1];
+		var rx = tx + tw + ui(32);
+		var rw = _w - (tw + ui(8 + 24 + 32));
+		
+		var _name, _rule;
+		var wh, dh;
+		
+		for( var i = input_fix_len, n = array_length(inputs); i < n; i += data_length ) {
+			_name = inputs[i + 0];
+			_rule = inputs[i + 1];
+			wh    = th;
 			
 			draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);
 			draw_text_add(_x + ui(8), ty + ui(8), string((i - input_fix_len) / data_length));
 			
 			_name.editWidget.setFocusHover(_focus, _hover);
-			_name.editWidget.draw(tx, ty, _tw, _th, _name.showValue(), _m, _name.display_type);
+			dh = _name.editWidget.draw(tx, ty, tw, th, _name.showValue(), _m, _name.display_type);
+			wh = max(wh, dh);
 			
-			draw_sprite_ui(THEME.arrow, 0, tx + _tw + ui(16), ty + _th / 2,,,, COLORS._main_icon);
+			draw_sprite_ui(THEME.arrow, 0, tx + tw + ui(16), ty + dh / 2, 1, 1, 0, COLORS._main_icon);
 			
 			_rule.editWidget.setFocusHover(_focus, _hover);
-			var wh = max(_th, _rule.editWidget.draw(tx + _tw + ui(32), ty, _w - (_tw + ui(8 + 24 + 32)), _th, _rule.showValue(), _m, _rule.display_type));
+			dh = _rule.editWidget.draw(rx, ty, rw, th, _rule.showValue(), _m, _rule.display_type);
+			wh = max(wh, dh);
 			
 			ty += wh + ui(6);
 			hh += wh + ui(6);
 		}
 		
 		return hh;
-	}, 
-	
-	function(parent = noone) {
-		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
+		
+	}, function(p = noone) /*=>*/ {
+		for( var i = input_fix_len, n = array_length(inputs); i < n; i += data_length ) {
 			var _name = inputs[i + 0];
 			var _rule = inputs[i + 1];
 			
-			_name.editWidget.register(parent);
-			_rule.editWidget.register(parent);
+			_name.editWidget.register(p);
+			_rule.editWidget.register(p);
 		}
 	});
 	
@@ -109,9 +110,12 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		["Rules",		false],    3, 4, rule_renderer, 5, 
 	];
 	
+	setDynamicInput(2, false);
+	if(NOT_LOAD) createNewInput();
+	
 	attributes.rule_length_limit = 10000;
-	array_push(attributeEditors, "L System");
-	array_push(attributeEditors, [ "Rule length limit", function() /*=>*/ {return attributes.rule_length_limit}, textBox_Number(function(v) /*=>*/ { setAttribute("rule_length_limit", v, true); cache_data.start = ""; }) ]);
+	array_push(attributeEditors, "L System" );
+	array_push(attributeEditors, [ "Rule length limit", function() /*=>*/ {return attributes.rule_length_limit}, textBox_Number(function(v) /*=>*/ { setAttribute("rule_length_limit", v, true); cache_data.start = ""; }) ] );
 	
 	path_3d = false;
 	cache_data = {
@@ -129,10 +133,11 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		for( var i = 0; i < input_fix_len; i++ )
 			_l[i] = inputs[i];
 		
-		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
+		for( var i = input_fix_len, n = array_length(inputs); i < n; i += data_length ) {
 			if(getInputData(i) != "") {
 				array_push(_l, inputs[i + 0]);
 				array_push(_l, inputs[i + 1]);
+				
 			} else {
 				delete inputs[i + 0];	
 				delete inputs[i + 1];	
@@ -142,9 +147,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		for( var i = 0; i < array_length(_l); i++ )
 			_l[i].index = i;
 		
-
 		inputs = _l;
-		
 		createNewInput();
 	}
 	
@@ -224,11 +227,10 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		boundary       = new BoundingBox();
 		path_3d        = false;
 		
-		static getLineCount		= function() { return array_length(lines); }
-		static getSegmentCount	= function() { return 1; }
-		
-		static getLength		= function() { return current_length; }
-		static getAccuLength	= function() { return [ 0, current_length ]; }
+		static getLineCount		= function() /*=>*/ {return array_length(lines)};
+		static getSegmentCount	= function() /*=>*/ {return 1};
+		static getLength		= function() /*=>*/ {return current_length};
+		static getAccuLength	= function() /*=>*/ {return [ 0, current_length ]};
 		
 		static getPointRatio = function(_rat, _ind = 0, out = undefined) {
 			if(out == undefined) out = path_3d? new __vec3() : new __vec2P(); 
@@ -334,19 +336,19 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 		if(array_length(inputs) < input_fix_len + 2) return __curr_path;
 		
-		var rules = {};
+		var _rules = {};
 		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
 			var _name = _data[i + 0];
 			var _rule = _data[i + 1];
 			if(_name == "") continue;
 			
-			if(!struct_has(rules, _name))
-				rules[$ _name] = [ _rule ];
+			if(!struct_has(_rules, _name))
+				_rules[$ _name] = [ _rule ];
 			else
-				array_push(rules[$ _name], _rule);
+				array_push(_rules[$ _name], _rule);
 		}
 		
-		l_system(_sta, rules, _end, _itr, _sad);
+		l_system(_sta, _rules, _end, _itr, _sad);
 		itr    = _itr;
 		ang    = _ang;
 		vang   = _vang;

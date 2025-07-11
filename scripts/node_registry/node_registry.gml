@@ -671,7 +671,6 @@ function nodeBuild(_name, _x, _y, _group = PANEL_GRAPH.getCurrentContext()) {
 	}
 	
 	var _skipc = false;
-	
 	if(is(_group, Node_Collection_Inline)) {
 		_skipc = true;
 		_group = _group.group;
@@ -679,7 +678,10 @@ function nodeBuild(_name, _x, _y, _group = PANEL_GRAPH.getCurrentContext()) {
 	
 	var _node  = ALL_NODES[$ _name];
 	var _bnode = _node.build(_x, _y, _group, {}, _skipc);
-	if(_bnode) recordAction(ACTION_TYPE.node_added, _bnode).setRef(_bnode);
+	if(_bnode) {
+		if(!APPENDING && !LOADING && _bnode.set_default) _bnode.resetDefault()
+		recordAction(ACTION_TYPE.node_added, _bnode).setRef(_bnode);
+	}
 	
 	KEYBOARD_RESET
 	return _bnode;

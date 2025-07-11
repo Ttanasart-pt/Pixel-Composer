@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"node_mk_tree",
+  "%Name":"__node_cache",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"node_mk_tree",
+  "name":"__node_cache",
   "parent":{
-    "name":"MKFX",
-    "path":"folders/nodes/data/MKFX.yy",
+    "name":"__base__",
+    "path":"folders/nodes/__base__.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

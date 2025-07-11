@@ -31,39 +31,37 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	update_on_frame = true;
 	setAlwaysTimeline(new timelineItemNode_Image_gif(self));
 	
-	newInput(0, nodeValue_Path("Path"))
-		.setDisplay(VALUE_DISPLAY.path_load, { filter: "Animated gif|*.gif" });
-		
-	newInput(1, nodeValue_Trigger("Set animation length to gif" ))
-		.setDisplay(VALUE_DISPLAY.button, { name: "Match length", UI : true, onClick: function() /*=>*/ { 
-				if(!spr || !sprite_exists(spr)) return;
-				TOTAL_FRAMES = sprite_get_number(spr);
-				PROJECT.animator.framerate = 12;
-			} });
-	
-	newInput(2, nodeValue_Bool("Output as array", false));
-	
-	newInput(3, nodeValue_Enum_Scroll("Loop modes",  0, ["Loop", "Ping pong", "Hold last frame", "Hide"]))
-		.rejectArray();
-	
-	newInput(4, nodeValue_Int("Start frame", 0));
-	
-	newInput(5, nodeValue_Bool("Custom frame order", false));
-	
-	newInput(6, nodeValue_Int("Frame", 0));
-	
-	newInput(7, nodeValue_Float("Animation speed", 1));
-	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
-	newOutput(1, nodeValue_Output("Path", VALUE_TYPE.path, ""))
-		.setVisible(true, true);
-	
+	////- =Image
+	newInput(0, nodeValue_Path("Path")).setDisplay(VALUE_DISPLAY.path_load, { filter: "Animated gif|*.gif" });
 	detail = new Inspector_Label("Gif file");
+	
+	////- =Output
+	newInput(2, nodeValue_Bool(        "Output as array",    false ));
+	
+	////- =Anhimation
+	newInput(1, nodeValue_Trigger("Set animation length to gif" ));
+	b_match_len = button(function() /*=>*/ { 
+		if(!spr || !sprite_exists(spr)) return;
+		TOTAL_FRAMES = sprite_get_number(spr);
+		PROJECT.animator.framerate = 12;
+	}).setText("Match Length");
+	
+	newInput(3, nodeValue_Enum_Scroll( "Loop modes",  0, ["Loop", "Ping pong", "Hold last frame", "Hide"])).rejectArray();
+	newInput(4, nodeValue_Int(         "Start frame",        0     ));
+	newInput(7, nodeValue_Float(       "Animation speed",    1     ));
+	
+	////- =Custom Order
+	newInput(5, nodeValue_Bool(        "Custom frame order", false ));
+	newInput(6, nodeValue_Int(         "Frame",              0     ));
+	// input 8
+	
+	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
+	newOutput(1, nodeValue_Output( "Path",        VALUE_TYPE.path,    ""    )).setVisible(true, true);
 	
 	input_display_list = [ 
 		["Image",	  false], 0, detail, 
 		["Output",	  false], 2, 
-		["Animation", false], 1, 3, 4, 7, 
+		["Animation", false], b_match_len, 3, 4, 7, 
 		["Custom Frame Order", false, 5], 6,
 	];
 	

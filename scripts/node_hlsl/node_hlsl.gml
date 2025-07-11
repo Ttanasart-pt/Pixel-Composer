@@ -64,7 +64,7 @@ output.color = surfaceColor;"))
 	
 	newOutput(0, nodeValue_Output("Surface", VALUE_TYPE.surface, noone ));
 	
-	static createNewInput = function(index = array_length(inputs)) {
+	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
 		newInput(index + 0, nodeValue_Text("Argument name"));

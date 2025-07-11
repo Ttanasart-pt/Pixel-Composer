@@ -9,21 +9,31 @@ function Node_Armature_Pose_Bone(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	newInput(1, nodeValue_Bone( "Bone", function() /*=>*/ {return toggleBoneTarget()} ));
 	
 	////- =Pose
-	newInput(2, nodeValue( "Pose", self, CONNECT_TYPE.input, VALUE_TYPE.float, [ 0, 0, 0, 1 ] )).setDisplay(VALUE_DISPLAY.transform);
-	// inputs 3
+	newInput(5, nodeValue_Enum_Button( "Position Mode", 1, [ "Absolute", "Relative" ] ));
+	newInput(2, nodeValue_Vec2(        "Position",     [0,0] ));
+	
+	newInput(6, nodeValue_Enum_Button( "Position Mode", 1, [ "Absolute", "Relative" ] ));
+	newInput(3, nodeValue_Rotation(    "Rotation",      0 ));
+	
+	newInput(7, nodeValue_Enum_Button( "Position Mode", 1, [ "Absolute", "Relative" ] ));
+	newInput(4, nodeValue_Float(        "Scale",        1 ));
+	// inputs 8
 	
 	newOutput(0, nodeValue_Output("Armature", VALUE_TYPE.armature, noone));
 	
 	input_display_list = [ 0, 
-		["Target", false], 1,
-		["Pose",   false], 2, 
+		[ "Target",   false ], 1,
+		[ "Position", false ], 5, 2, 
+		[ "Rotation", false ], 6, 3, 
+		[ "Scale",    false ], 7, 4,  
 	];
 	
 	__node_bone_attributes();
 	
-	bone      = new __Bone();
+	boneHash  = "";
+	bonePose  = new __Bone();
+	boneArray = [];
 	bone_bbox = [0, 0, 1, 1, 1, 1];
-	bone_arr  = [];
 	
 	anchor_selecting = noone;
 	bone_targeting   = false;
@@ -54,40 +64,68 @@ function Node_Armature_Pose_Bone(_x, _y, _group = noone) : Node(_x, _y, _group) 
 			return;
 		}
 		
-		if(!is(bone, __Bone)) return;
+		if(!is(bonePose, __Bone)) return;
 		var _tar  = getInputData(1);
-		var bPose = bone.findBoneByName(_tar);
-		bone.draw(attributes, false, _x, _y, _s, _mx, _my, noone, _tar);
-		
+		var bPose = bonePose.findBoneByName(_tar);
+		bonePose.draw(attributes, false, _x, _y, _s, _mx, _my, noone, _tar);
 	}
 	
 	////- Update
 	
+	static setBone = function() {
+		var _b = getInputData(0);
+		if(!is(_b, __Bone)) { boneHash = ""; return; }
+		
+		var _h = _b.getHash();
+		if(boneHash == _h) return;
+		
+		boneHash  = _h;
+		bonePose  = _b.clone().connect();
+		boneArray = bonePose.toArray();
+		bonePose.constrains = _b.constrains;
+	}
+	
 	static update = function(frame = CURRENT_FRAME) {
-		var _b        = getInputData(0);
-		var _b_target = getInputData(1);
-		var _pose     = getInputData(2);
+		setBone();
+		
+		var _b         = getInputData(0);
+		var _b_target  = getInputData(1);
+		
+		var _posi_mode = getInputData(5);
+		var _posi      = getInputData(2);
+		
+		var _rota_mode = getInputData(6);
+		var _rota      = getInputData(3);
+		
+		var _scal_mode = getInputData(7);
+		var _scal      = getInputData(4);
 		
 		bone_bbox = [ 0, 0, DEF_SURF_W, DEF_SURF_H, DEF_SURF_W, DEF_SURF_H ];
 		if(!is(_b, __Bone)) return;
 		
-		bone     = _b.clone();
-		bone_arr = bone.toArray();
-		
-		bone.resetPose().setPosition();
-		outputs[0].setValue(bone);
+		bonePose.resetPose().setPosition();
+		outputs[0].setValue(bonePose);
 		
 		var bRaw  = _b.findBoneByName(_b_target);
-		var bPose = bone.findBoneByName(_b_target);
+		var bPose = bonePose.findBoneByName(_b_target);
 		if(bPose == noone) return;
 		
-		bPose.pose_posit[0] = bRaw.pose_posit[0] + _pose[TRANSFORM.pos_x];
-		bPose.pose_posit[1] = bRaw.pose_posit[1] + _pose[TRANSFORM.pos_y];
-		bPose.pose_rotate   = bRaw.pose_rotate   + _pose[TRANSFORM.rot];
-		bPose.pose_scale    = bRaw.pose_scale    * _pose[TRANSFORM.sca_x];
+		if(_posi_mode == 0) {
+			var _h = bPose.getHead();
+			bPose.pose_posit[0] = _posi[0] - _h.x;
+			bPose.pose_posit[1] = _posi[1] - _h.y;
+			
+		} else {
+			bPose.pose_posit[0] = bRaw.pose_posit[0] + _posi[0];
+			bPose.pose_posit[1] = bRaw.pose_posit[1] + _posi[1];
+			
+		}
 		
-		bone.setPose();
-		bone_bbox = bone.bbox();
+		bPose.pose_rotate   = _rota_mode? bRaw.pose_rotate   + _rota    : _rota;
+		bPose.pose_scale    = _scal_mode? bRaw.pose_scale    * _scal    : _scal;
+		
+		bonePose.setPose();
+		bone_bbox = bonePose.bbox();
 	}
 	
 	////- Draw
@@ -96,11 +134,11 @@ function Node_Armature_Pose_Bone(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
-		if(!is(bone, __Bone)) { draw_sprite_bbox_uniform(s_node_armature_pose_bone, 0, bbox, c_white, 1, true); return; }
+		if(!is(bonePose, __Bone)) { draw_sprite_bbox_uniform(s_node_armature_pose_bone, 0, bbox, c_white, 1, true); return; }
 		
 		var _ss = _s * .5;
 		draw_sprite_ext_filter(s_node_armature_pose_bone, 0, bbox.x0 + 24 * _ss, bbox.y1 - 24 * _ss, _ss, _ss, 0, c_white, 0.5);
-		bone.drawThumbnail(_s, bbox, bone_bbox);
+		bonePose.drawThumbnail(_s, bbox, bone_bbox);
 		
 	}
 }

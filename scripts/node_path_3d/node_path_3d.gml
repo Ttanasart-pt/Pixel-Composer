@@ -48,7 +48,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	
 	output_display_list  = [ 1, 0, 2 ];
 	
-	static createNewInput = function(index = array_length(inputs),
+	function createNewInput(index = array_length(inputs),
 	                                   _x = 0,   _y = 0,   _z = 0, 
 									 _dxx = 0, _dxy = 0, _dxz = 0, 
 									 _dyx = 0, _dyy = 0, _dyz = 0, rec = true) {

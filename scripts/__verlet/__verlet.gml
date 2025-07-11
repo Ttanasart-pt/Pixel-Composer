@@ -137,5 +137,19 @@ function __verlet_Mesh() : Mesh() constructor {
 		draw_primitive_end();
 	}
 	
+	static drawVertex = function(_x, _y, _s) {
+		draw_set_circle_precision(4);
+		var ds = min(1 * _s, ui(4));
+		
+		for( var i = 0, n = array_length(points); i < n; i++ ) {
+			var p = points[i];
+			
+			var px = _x + p.x * _s - 1;
+			var py = _y + p.y * _s - 1;
+			
+			draw_set_color(p.pin? COLORS._main_accent : COLORS._main_icon);
+			draw_circle(px, py, ds, false);
+		}
+	}
 	
 }

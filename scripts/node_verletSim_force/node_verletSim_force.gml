@@ -1,5 +1,7 @@
 function Node_VerletSim_Force(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name = "Push Mesh";
+	name  = "Push Mesh";
+	color = COLORS.node_blend_verlet;
+	icon  = THEME.verletSim;
 	update_on_frame = true;
 	setDimension(96, 48);
 	

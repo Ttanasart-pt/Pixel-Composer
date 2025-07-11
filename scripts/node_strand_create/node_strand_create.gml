@@ -28,12 +28,13 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	newInput( 7, nodeValue_Enum_Button( "Side", 0, [ "Inner", "Outer", "Both" ]));
 	newInput(13, nodeValue(             "Mesh",         self, CONNECT_TYPE.input, VALUE_TYPE.mesh, noone));
 	newInput(14, nodeValue_Enum_Scroll( "Distribution", 0, [ "Uniform", "Random" ]));
-	newInput(15, nodeValue_Trigger(     "Bake hair", "Prevent strand reseting to apply manual modification. Unbaking will remove all changes."))
-		.setDisplay(VALUE_DISPLAY.button, { name: "Bake", UI : true, onClick: function() /*=>*/ { 
-			attributes.use_groom = !attributes.use_groom; 
-			if(attributes.use_groom) groomed = strands.clone();
-			strandUpdate(true);
-		} });
+	newInput(15, nodeValue_Trigger(     "Bake hair", "Prevent strand reseting to apply manual modification. Unbaking will remove all changes."));
+	
+	b_bake = button(function() /*=>*/ { 
+		attributes.use_groom = !attributes.use_groom; 
+		if(attributes.use_groom) groomed = strands.clone();
+		strandUpdate(true);
+	}).setText("Bake Strand");
 		
 	////- Strand
 	
@@ -60,7 +61,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	newOutput(0, nodeValue_Output("Strand", VALUE_TYPE.strands, noone));
 	
 	input_display_list = [ 10, 
-		["Generation",	false], 0, 1, 5, 6, 7, 13, 14, 15, 
+		["Generation",	false], 0, 1, 5, 6, 7, 13, 14, b_bake, 
 		["Strand",		false], 2, 3, 18, 4, 8, 9, 17, 19, 
 		["Curl",		false], 11, 12, 
 		["Preview",		 true], 16, 

@@ -1,7 +1,6 @@
 #region global
 	#macro SHOW_PARAM (show_parameter && previewable)
 	
-	enum CACHE_USE { none, manual, auto }
 	enum NODE_3D   { none, polygon, sdf }
 	
 	enum DYNA_INPUT_COND {
@@ -23,6 +22,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		y = _y;
 		
 		node_id              = UUID_generate();
+		internalSeed         = seed_random(5);
 		group                = _group;
 		manual_deletable	 = true;
 		manual_ungroupable	 = true;
@@ -48,7 +48,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		instanceBase = noone;
 	#endregion
 	
-	if(!LOADING && !APPENDING) {
+	if(NOT_LOAD) {
 		project.nodeMap[? node_id] = self;
 		project.modified = true;
 		
@@ -174,27 +174,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		outputs_draw_index  = [];
 		out_cache_len       = 0;
 		
-		input_buttons       = [];
-		input_button_length = 0;
-		
 		toRefreshNodeDisplay = false;
 		input_mask_index     = -1;
 		__mask_index         = undefined;
 		__mask_mod_index     = undefined;
-		
-		run_in(1, function() /*=>*/ {
-			input_buttons   = [];
-			
-			for( var i = 0; i < array_length(inputs); i++ ) {
-				var _in = inputs[i];
-				if(!is(_in, NodeValue)) continue;
-				if(_in.type != VALUE_TYPE.trigger) continue;
-				
-				if(_in.runInUI) array_push(input_buttons, _in);
-			}
-			
-			input_button_length = array_length(input_buttons);
-		});
 		
 		junc_meta = [
 			nodeValue_Output("Name", VALUE_TYPE.text,  ""),
@@ -320,16 +303,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		is_3D = NODE_3D.none;
 	#endregion
 	
-	#region ---- Cache ----
-		use_cache		= CACHE_USE.none;
-		cached_manual	= false;
-		cached_output	= [];
-		cache_result	= [];
-		cache_group     = noone;
-		
-		clearCacheOnChange	= true;
-	#endregion
-	
 	#region ---- Log ----
 		messages     = [];
 		messages_bub = false;
@@ -372,7 +345,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			_str = string_replace_all(_str,  "-", "");
 		
 		ds_map_delete(project.nodeNameMap, internalName);
-		internalName = $"{_str}{seed_random(5)}";
+		internalName = $"{_str}{internalSeed}";
 		project.nodeNameMap[? internalName] = self;
 	}
 	
@@ -393,7 +366,107 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return self;
 	}
 	
-	static getNodeBase = function() /*=>*/ {return instanceBase == noone?  self : instanceBase};
+	static getNodeBase = function() /*=>*/ {return instanceBase == noone? self : instanceBase};
+	
+	////- INSPECTOR
+	
+	static onInspector1Update  = noone;
+	static inspector1Update    = function() /*=>*/ { onInspector1Update(); }
+	static hasInspector1Update = function() /*=>*/ { return onInspector1Update != noone; }
+	
+	static onInspector2Update  = noone;
+	static inspector2Update    = function() /*=>*/ { onInspector2Update(); }
+	static hasInspector2Update = function() /*=>*/ { return onInspector2Update != noone; }
+	
+	////- STEP
+	
+	static stepBegin = function() {
+		moved = false;
+		
+		if(use_cache) cacheArrayCheck();
+		
+		if(attributes.show_update_trigger) {
+			if(updatedInTrigger.getValue()) { 
+				
+				getInputs();
+				update();
+				
+				updatedInTrigger.setValue(false);
+			}
+			updatedOutTrigger.setValue(false);
+		}
+		
+		if(is_3D == NODE_3D.polygon) USE_DEPTH = true;
+		if(is_simulation) project.animator.is_simulating = true;
+		
+		if(attributes.outp_meta) {
+			junc_meta[0].setValue(getDisplayName());
+			junc_meta[1].setValue([ x, y ]);
+		}
+		
+		if(toRefreshNodeDisplay) {
+			refreshNodeDisplay();
+			toRefreshNodeDisplay = false;
+		}
+	}
+	
+	static setTrigger = function(index, 
+	                             _tooltip  = __txtx("panel_inspector_execute", "Execute"), 
+	                             _icon     = [ THEME.sequence_control, 1, COLORS._main_value_positive ], 
+	                             _function = undefined) {
+	                             	
+		use_trigger         = true;
+		
+		if(index == 1) {
+			insp1UpdateTooltip  = _tooltip;
+			insp1UpdateIcon     = _icon;
+			if(!is_undefined(_function)) onInspector1Update  = _function;
+			
+		} else if(index == 2) {
+			insp2UpdateTooltip  = _tooltip;
+			insp2UpdateIcon     = _icon;
+			if(!is_undefined(_function)) onInspector2Update  = _function;
+		} 
+	}
+	
+	static triggerCheck = function() {
+		if(!use_trigger) return;
+		
+		if(hasInspector1Update()) {
+			inspectInput1.name = insp1UpdateTooltip;
+			
+			if(inspectInput1.getStaticValue()) {
+				onInspector1Update();
+				inspectInput1.setValue(false);
+			}
+		}
+		
+		if(hasInspector2Update()) {
+			inspectInput2.name = insp2UpdateTooltip;
+			
+			if(inspectInput2.getStaticValue()) {
+				onInspector2Update();
+				inspectInput2.setValue(false);
+			}
+		}
+	}
+	
+	static doStep = function() {
+		if(__mask_index != undefined) {
+			var _msk = is_surface(getSingleValue(__mask_index));
+			inputs[__mask_mod_index + 0].setVisible(_msk);
+			inputs[__mask_mod_index + 1].setVisible(_msk);
+		}
+		
+		for( var i = 0, n = array_length(inputMappable); i < n; i++ )
+			inputMappable[i].mappableStep();
+		
+		step();
+	}
+	
+	static step          = function() /*=>*/ {}
+	static focusStep     = function() /*=>*/ {}
+	static inspectorStep = function() /*=>*/ {}
 	
 	////- DYNAMIC IO
 	
@@ -408,7 +481,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	input_display_dynamic      = -1;
 	input_display_dynamic_full = undefined;
 	dynamic_input_inspecting   =  0;
-	static createNewInput      = -1;
+	
+	createNewInput      = -1;
+	dynamic_visibility  = -1;
 	
     static setDynamicInput = function(_data_length = 1, _auto_input = true, _dummy_type = VALUE_TYPE.any, _dynamic_input_cond = DYNA_INPUT_COND.connection) {
 		is_dynamic_input	= true;						
@@ -489,7 +564,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(input_display_dynamic == -1) input_display_list = _input_display_list;
 	}
 
-	static dynamic_visibility = -1;
 	static refreshDynamicDisplay = function() {
 		if(input_display_dynamic == -1) return;
 		array_resize(input_display_list, array_length(input_display_list_raw));
@@ -528,7 +602,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static getInputAmount = function() { return (array_length(inputs) - input_fix_len) / data_length; }
 	
-	function onInputResize() { refreshDynamicInput(); triggerRender(); }
+	static onInputResize = function() { refreshDynamicInput(); triggerRender(); }
 	
 	static getOutput = function(_y = 0, junc = noone) {
 		var _targ = noone;
@@ -604,122 +678,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		refreshDynamicDisplay();
 		triggerRender();
 	}
-		
-	////- INSPECTOR
-	
-	static onInspector1Update  = noone;
-	static inspector1Update    = function() /*=>*/ { onInspector1Update(); }
-	static hasInspector1Update = function() /*=>*/ { return onInspector1Update != noone; }
-	
-	static onInspector2Update  = noone;
-	static inspector2Update    = function() /*=>*/ { onInspector2Update(); }
-	static hasInspector2Update = function() /*=>*/ { return onInspector2Update != noone; }
-	
-	////- STEP
-	
-	static stepBegin = function() {
-		moved = false;
-		
-		if(use_cache) cacheArrayCheck();
-		
-		doStepBegin();
-		
-		if(attributes.show_update_trigger) {
-			if(updatedInTrigger.getValue()) { 
-				
-				getInputs();
-				update();
-				
-				updatedInTrigger.setValue(false);
-			}
-			updatedOutTrigger.setValue(false);
-		}
-		
-		if(is_3D == NODE_3D.polygon) USE_DEPTH = true;
-		if(is_simulation) project.animator.is_simulating = true;
-		
-		if(attributes.outp_meta) {
-			junc_meta[0].setValue(getDisplayName());
-			junc_meta[1].setValue([ x, y ]);
-		}
-		
-		if(toRefreshNodeDisplay) {
-			refreshNodeDisplay();
-			toRefreshNodeDisplay = false;
-		}
-	}
-	
-	static doStepBegin = function() {}
-	
-	static setTrigger = function(index, 
-	                             _tooltip  = __txtx("panel_inspector_execute", "Execute"), 
-	                             _icon     = [ THEME.sequence_control, 1, COLORS._main_value_positive ], 
-	                             _function = undefined) {
-	                             	
-		use_trigger         = true;
-		
-		if(index == 1) {
-			insp1UpdateTooltip  = _tooltip;
-			insp1UpdateIcon     = _icon;
-			if(!is_undefined(_function)) onInspector1Update  = _function;
-			
-		} else if(index == 2) {
-			insp2UpdateTooltip  = _tooltip;
-			insp2UpdateIcon     = _icon;
-			if(!is_undefined(_function)) onInspector2Update  = _function;
-		} 
-	}
-	
-	static triggerCheck = function() {
-		if(input_button_length) {
-			var i = 0;
-			repeat( input_button_length ) {
-				var _in = input_buttons[i++];
-				
-				if(_in.getStaticValue()) {
-					_in.editWidget.onClick();
-					_in.setValue(false);
-				}
-			}
-		}
-		
-		if(!use_trigger) return;
-		
-		if(hasInspector1Update()) {
-			inspectInput1.name = insp1UpdateTooltip;
-			
-			if(inspectInput1.getStaticValue()) {
-				onInspector1Update();
-				inspectInput1.setValue(false);
-			}
-		}
-		
-		if(hasInspector2Update()) {
-			inspectInput2.name = insp2UpdateTooltip;
-			
-			if(inspectInput2.getStaticValue()) {
-				onInspector2Update();
-				inspectInput2.setValue(false);
-			}
-		}
-	}
-	
-	static doStep = function() {
-		if(__mask_index != undefined) {
-			var _msk = is_surface(getSingleValue(__mask_index));
-			inputs[__mask_mod_index + 0].setVisible(_msk);
-			inputs[__mask_mod_index + 1].setVisible(_msk);
-		}
-		
-		for( var i = 0, n = array_length(inputMappable); i < n; i++ )
-			inputMappable[i].mappableStep();
-		
-		step();
-	}
-	
-	static step          = function() /*=>*/ {}
-	static focusStep     = function() /*=>*/ {}
-	static inspectorStep = function() /*=>*/ {}
 	
 	////- JUNCTIONS
 	
@@ -1047,9 +1005,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static resetDefault = function() {
 		var _defPreset = setPreset("_default");
-		if(!_defPreset) array_foreach(inputs, function(i) /*=>*/ {return i.resetValue()});
+		if(_defPreset) return;
 		
-	} if(!APPENDING && !LOADING) run_in(1, function() /*=>*/ { if(set_default) resetDefault() });
+		array_foreach(inputs, function(i) /*=>*/ {return i.resetValue()});
+	} 
 	
 	static setPreset = function(pName) {
 		var _fName = $"{instanceof(self)}>{pName}";
@@ -1539,7 +1498,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static refreshNodeDisplay = function() {
-		
 		updateIO();
 		setHeight();
 		getJunctionList();
@@ -1547,8 +1505,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		PANEL_GRAPH.draw_refresh = true;
 		__preDraw_data.force     = true;
-		
-	} run_in(1, function() /*=>*/ { refreshNodeDisplay(); });
+	} 
 	
 	__preDraw_data = { _x: undefined, _y: undefined, _w: undefined, _h: undefined, _s: undefined, _p: undefined, sp: undefined, force: false };
 	static preDraw = function(_x, _y, _mx, _my, _s) {
@@ -1789,9 +1746,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				
 		if(icon) {
 			var _icS = _si * .75;
-			
 			tx += _icS * 8;
+			
 			draw_sprite_ui_uniform(icon, 0, round(tx), round(yy + nh / 2), _icS, nodeC, .75);
+			
 			tx += _icS *  16;
 			tw -= _icS * (16 + 6);
 		}
@@ -2434,7 +2392,72 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return noone;
 	}
 	
+	////- TOOLS
+	
+	static isUsingTool = function(index = undefined, subtool = noone) {
+		if(tools == -1) 
+			return false;
+		
+		var _tool = PANEL_PREVIEW.tool_current;
+		if(_tool == noone) //not using any tool
+			return false;
+		
+		if(index == undefined) //using any tool
+			return true;
+		
+		if(is_real(index) && _tool != tools[index])
+			return false;
+			
+		if(is_string(index) && _tool.getName(_tool.selecting) != index)
+			return false;
+			
+		if(subtool == noone)
+			return true;
+			
+		return _tool.selecting == subtool;
+	}
+	
+	static getUsingToolName = function() { 
+		var _tool  = PANEL_PREVIEW.tool_current;
+		return _tool == noone? "" : _tool.getName(_tool.selecting);
+	}
+	
+	static isNotUsingTool = function() { return PANEL_PREVIEW.tool_current == noone; }
+	
+	static getTool = function() { return self; }
+	
+	static getToolSettings = function() { return tool_settings; }
+	
+	static setTool = function(tool) {
+		if(!tool) {
+			isTool = false;
+			return;
+		}
+		
+		for( var i = 0; i < array_length(group.nodes); i++ )
+			group.nodes[i].isTool = false;
+		
+		isTool = true;
+	}
+	
+	static drawTools = noone;
+	
+	////- INSTANCE
+	
+	static setInstance = function(n) /*=>*/ { 
+		instanceBase = n.instanceBase == noone? n : n.instanceBase;
+		return self; 
+	}
+	
 	////- CACHE
+	
+	use_cache		= CACHE_USE.none;
+	cached_manual	= false;
+	cached_output	= [];
+	cache_result	= [];
+	cache_group     = noone;
+	
+	clearCacheOnChange	= true;
 	
 	static isAllCached = function() {
 		for( var i = 0; i < TOTAL_FRAMES; i++ )
@@ -2562,63 +2585,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(!is(inputs[i], NodeValue)) continue;
 			inputs[i].resetCache();
 		}
-	}
-	
-	////- TOOLS
-	
-	static isUsingTool = function(index = undefined, subtool = noone) {
-		if(tools == -1) 
-			return false;
-		
-		var _tool = PANEL_PREVIEW.tool_current;
-		if(_tool == noone) //not using any tool
-			return false;
-		
-		if(index == undefined) //using any tool
-			return true;
-		
-		if(is_real(index) && _tool != tools[index])
-			return false;
-			
-		if(is_string(index) && _tool.getName(_tool.selecting) != index)
-			return false;
-			
-		if(subtool == noone)
-			return true;
-			
-		return _tool.selecting == subtool;
-	}
-	
-	static getUsingToolName = function() { 
-		var _tool  = PANEL_PREVIEW.tool_current;
-		return _tool == noone? "" : _tool.getName(_tool.selecting);
-	}
-	
-	static isNotUsingTool = function() { return PANEL_PREVIEW.tool_current == noone; }
-	
-	static getTool = function() { return self; }
-	
-	static getToolSettings = function() { return tool_settings; }
-	
-	static setTool = function(tool) {
-		if(!tool) {
-			isTool = false;
-			return;
-		}
-		
-		for( var i = 0; i < array_length(group.nodes); i++ )
-			group.nodes[i].isTool = false;
-		
-		isTool = true;
-	}
-	
-	static drawTools = noone;
-	
-	////- INSTANCE
-	
-	static setInstance = function(n) /*=>*/ { 
-		instanceBase = n.instanceBase == noone? n : n.instanceBase;
-		return self; 
 	}
 	
 	
@@ -3176,30 +3142,27 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return surface_rgba8unorm;
 	}
 	
-	static checkGroup = function() {
+	static checkGroup = function() /*=>*/ { array_foreach(attributeEditors, function(_attr) /*=>*/ {return checkGroupAttribute(_attr)}); } 
+	static checkGroupAttribute = function(_attr) {
+		if(!is_array(_attr) || array_length(_attr) <= 3) return;
 		
-		for( var i = 0, n = array_length(attributeEditors); i < n; i++ ) {
-			var _att = attributeEditors[i];
-			if(!is_array(_att)) continue;
+		var _grp = group != noone;
+		var _wid = _attr[2];
+		var _key = _attr[3];
+		
+		if(!is(_wid, scrollBox)) return;
+		var _l   = _wid.data_list;
+		
+		for( var i = 0, n = array_length(_l); i < n; i++ ) {
+			var _scl = _l[i];
 			
-			var _wid = _att[2];
-			if(!is(_wid, scrollBox)) continue;
-			
-			var _key = array_safe_get(_att, 3, "");
-			var _l   = _wid.data_list;
-			
-			for( var j = 0, m = array_length(_l); j < m; j++ ) {
-				var _scl = _l[j];
-				if(!is(_scl, scrollItem)) continue;
-				if(_scl.name != "Group")  continue;
-				
-				_scl.active = group != noone;
-				if(!_scl.active && attributes[$ _key] == j) attributes[$ _key] = _att[0] == "Color depth"? 3 : 1;
-				break;
+			if(is(_scl, scrollItem) && _scl.name == "Group") {
+				_scl.active = _grp;
+				if(!_grp && attributes[$ _key] == i) // Reset value if select "group" while not in any group
+					attributes[$ _key] = _attr[0] == "Color depth"? 3 : 1;
 			}
 		}
-		
-	} run_in(1, function() /*=>*/ { checkGroup(); });
+	}
 	
 	nextn = [];
 	static generateNodeRenderReport = function() {

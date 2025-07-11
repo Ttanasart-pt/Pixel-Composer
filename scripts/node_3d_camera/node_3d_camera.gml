@@ -415,15 +415,17 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 			surface_reset_target();
 			surface_free(_render);
 			
-			surface_set_shader(_outData[4], noone, true, BLEND.over);
-				draw_surface_safe(deferData.ssao)
-			surface_reset_shader();	
-			
-			surface_set_shader(_outData[6], sh_d3d_render_view_normal, true, BLEND.over);
-				shader_set_i("swapX", _nswapX);
+			if(deferData) {
+				surface_set_shader(_outData[4], noone, true, BLEND.over);
+					draw_surface_safe(deferData.ssao)
+				surface_reset_shader();	
 				
-				draw_surface_safe(deferData.geometry_data[3]);
-			surface_reset_shader();	
+				surface_set_shader(_outData[6], sh_d3d_render_view_normal, true, BLEND.over);
+					shader_set_i("swapX", _nswapX);
+					
+					draw_surface_safe(deferData.geometry_data[3]);
+				surface_reset_shader();	
+			}
 		#endregion
 		
 		surface_depth_disable(true);

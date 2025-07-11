@@ -22,7 +22,7 @@ function Node_Armature_IK(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	bone      = new __Bone();
 	bone_bbox = [0, 0, 1, 1, 1, 1];
-	bone_arr  = [];
+	boneArray  = [];
 	
 	anchor_selecting = noone;
 	bone_targeting   = 0;
@@ -105,7 +105,7 @@ function Node_Armature_IK(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		bone.resetPose().setPosition();
 		bone_bbox = bone.bbox();
-		bone_arr  = bone.toArray();
+		boneArray  = bone.toArray();
 		
 		outputs[0].setValue(bone);
 	}

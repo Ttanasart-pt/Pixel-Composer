@@ -1,7 +1,7 @@
 function Node_VerletSim_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x, _y, _group) constructor {
 	name  = "VerletSim";
 	color = COLORS.node_blend_verlet;
-	icon  = THEME.rigidSim;
+	icon  = THEME.verletSim;
 	
 	is_simulation      = true;
 	input_node_types   = [ Node_VerletSim_Mesh   ];
@@ -127,7 +127,6 @@ function Node_VerletSim_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 		verlet_substep = inputs[0].getValue();
 		verlet_gravity = inputs[1].getValue();
 	}
-	
 	
 }
 

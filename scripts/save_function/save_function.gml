@@ -105,8 +105,8 @@ function SAVE_AT(project = PROJECT, path = "", log = "save at ", _thum = true) {
 			if(is(_pan, Panel))
 				_thumbSurf = _pan.content_surface;
 				
-			if(instance_exists(_pan) && _pan.object_index == o_dialog_panel)
-				_thumbSurf = _pan.panel;
+			// if(instance_exists(_pan) && _pan.object_index == o_dialog_panel)
+			// 	_thumbSurf = _pan.panel;
 		}
 		
 		var _thumbSize = 64;

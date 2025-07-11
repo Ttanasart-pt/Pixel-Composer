@@ -48,7 +48,7 @@ function Node_Logic(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	newOutput(0, nodeValue_Output("Result", VALUE_TYPE.boolean, false));
 	
-	static createNewInput = function(index = array_length(inputs)) {
+	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
 		var jname = chr(ord("a") + index - 1);

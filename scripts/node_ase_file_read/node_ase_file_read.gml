@@ -31,7 +31,10 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	update_on_frame = false;
 	
 	newInput(0, nodeValue_Path(    "Path"            )).setDisplay(VALUE_DISPLAY.path_load, { filter: "Aseprite file|*.ase;*.aseprite" });
-	newInput(1, nodeValue_Trigger( "Generate layers" )).setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() /*=>*/ {return refreshLayers()} });
+	
+	newInput(1, nodeValue_Trigger( "Generate layers" ));
+	b_gen_layer = button(function() /*=>*/ {return refreshLayers()}).setText("Generate Layers");
+	
 	newInput(2, nodeValue_Text(    "Current tag"     ));
 	newInput(3, nodeValue_Bool(    "Use cel dimension", false ));
 	
@@ -158,7 +161,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	blend_temp_surface = noone;
 	
 	input_display_list = [ 0, 
-		["Layers",	false], 1, 3, layer_renderer, 
+		["Layers",	false], b_gen_layer, 3, layer_renderer, 
 		["Tags",	false], 2, tag_renderer,
 	];
 	

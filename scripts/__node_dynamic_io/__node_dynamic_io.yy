@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"__node_dynamic_io",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__node_dynamic_io",
+  "parent":{
+    "name":"__base__",
+    "path":"folders/nodes/__base__.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

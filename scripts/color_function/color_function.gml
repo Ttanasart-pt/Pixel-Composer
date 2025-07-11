@@ -69,10 +69,13 @@
 	function paletteToArray(_pal) {
 		var _colors = array_create(array_length(_pal) * 4);
 		for(var i = 0; i < array_length(_pal); i++) {
-			_colors[i * 4 + 0] = _color_get_red(_pal[i]);
-			_colors[i * 4 + 1] = _color_get_green(_pal[i]);
-			_colors[i * 4 + 2] = _color_get_blue(_pal[i]);
-			_colors[i * 4 + 3] = _color_get_alpha(_pal[i]);
+			var _c = _pal[i];
+			if(!is_real(_c)) continue;
+			
+			_colors[i * 4 + 0] = _color_get_red(_c);
+			_colors[i * 4 + 1] = _color_get_green(_c);
+			_colors[i * 4 + 2] = _color_get_blue(_c);
+			_colors[i * 4 + 3] = _color_get_alpha(_c);
 		}
 	
 		return _colors;

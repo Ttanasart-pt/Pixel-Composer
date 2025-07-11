@@ -29,31 +29,24 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name  = "WAV File In";
 	color = COLORS.node_blend_input;
 	
-	newInput(0, nodeValue_Path("Path"))
-		.setDisplay(VALUE_DISPLAY.path_load, { filter: "audio|*.wav" })
-		.rejectArray();
-	
-	newInput(1, nodeValue_Trigger("Sync length" ))
-		.setDisplay(VALUE_DISPLAY.button, { name: "Sync", UI : true, onClick: function() { 
-			if(content == noone) return;
-			TOTAL_FRAMES = max(1, ceil(content.duration * PROJECT.animator.framerate));
-		} });
+	newInput(0, nodeValue_Path(    "Path"        )).setDisplay(VALUE_DISPLAY.path_load, { filter: "audio|*.wav" }).rejectArray();
+	newInput(1, nodeValue_Trigger( "Sync length" ));
+	newInput(2, nodeValue_Bool(    "Mono", false ));
+	// input 3
 		
-	newInput(2, nodeValue_Bool("Mono", false));
-		
-	newOutput(0, nodeValue_Output("Data", VALUE_TYPE.audioBit, noone))
-		.setArrayDepth(1);
+	newOutput(0, nodeValue_Output( "Data",        VALUE_TYPE.audioBit, noone )).setArrayDepth(1);
+	newOutput(1, nodeValue_Output( "Path",        VALUE_TYPE.path,     ""    ));
+	newOutput(2, nodeValue_Output( "Sample rate", VALUE_TYPE.integer,  44100 )).setVisible(false);
+	newOutput(3, nodeValue_Output( "Channels",    VALUE_TYPE.integer,  2     )).setVisible(false);
+	newOutput(4, nodeValue_Output( "Duration",    VALUE_TYPE.float,    0     )).setVisible(false);
 	
-	newOutput(1, nodeValue_Output("Path", VALUE_TYPE.path, ""));
+	b_sync = button(function() /*=>*/ {
+		if(content == noone) return;
+		TOTAL_FRAMES = max(1, ceil(content.duration * PROJECT.animator.framerate));
+	}).setText("Sync");
 	
-	newOutput(2, nodeValue_Output("Sample rate", VALUE_TYPE.integer, 44100))
-		.setVisible(false);
-	
-	newOutput(3, nodeValue_Output("Channels", VALUE_TYPE.integer, 2))
-		.setVisible(false);
-	
-	newOutput(4, nodeValue_Output("Duration", VALUE_TYPE.float, 0))
-		.setVisible(false);
+	input_display_list  = [ 0, b_sync, 2 ];
+	output_display_list = [ 0, 1, 2, 3, 4 ];
 	
 	content      = noone;
 	path_current = "";
@@ -62,12 +55,9 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	attributes.file_checker = true;
 	array_push(attributeEditors, [ "File Watcher", function() /*=>*/ {return attributes.file_checker}, new checkBox(function() /*=>*/ {return toggleAttribute("file_checker")}) ]);
 	
-	first_update = false;
-	
-	input_display_list  = [ 0, 1, 2 ];
-	output_display_list = [ 0, 1, 2, 3, 4 ];
+	first_update  = false;
 	preview_audio = -1;
-	preview_id = noone;
+	preview_id    = noone;
 	
 	wav_file_reading = false;
 	wav_file_prg = 0;

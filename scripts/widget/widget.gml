@@ -8,6 +8,7 @@ function widget() constructor {
 	
 	temp_hovering = false;
 	
+	visible  = true;
 	parent   = noone;
 	keyframe = noone;
 	interactable = true;
@@ -22,7 +23,7 @@ function widget() constructor {
 	
 	hide = false;
 	
-	lua_thread = noone;
+	lua_thread     = noone;
 	lua_thread_key = "";
 	
 	font     = f_p1;
@@ -47,16 +48,17 @@ function widget() constructor {
 		onModify = method(self, _lua_func);
 	}
 	static setSideButton = function(b,s=false) /*=>*/ { side_button = b; always_side_button = s; return self; } 
-	static setFont       = function(f) /*=>*/ { font     = f; return self; }
-	static setMinWidth   = function(w) /*=>*/ { minWidth = w; return self; }
+	static setFont       = function(_f) /*=>*/ { font     = _f; return self; }
+	static setMinWidth   = function(_w) /*=>*/ { minWidth = _w; return self; }
+	static setVisible    = function(_v) /*=>*/ { visible  = _v; return self; }
 	
 	static setInteract = function(_i = noone) /*=>*/ { interactable = _i; return self; }
 	
-	static register = function(parent = noone) {
+	static register = function(_p = noone) {
 		if(!interactable) return;
 		
 		array_push(WIDGET_ACTIVE, self); 
-		self.parent = parent;
+		parent = _p;
 	}
 	
 	static setParam = function(params) {
@@ -105,11 +107,11 @@ function widget() constructor {
 		WIDGET_CURRENT_SCROLL = undefined;
 	}
 	
-	static setFocusHover = function(active = false, hover = false) {
-		self.active  = interactable && active;
-		self.hover   = interactable && hover;
-		self.iactive = active;
-		self.ihover  = hover;
+	static setFocusHover = function(_active = false, _hover = false) {
+		active  = interactable && _active;
+		hover   = interactable && _hover;
+		iactive = _active;
+		ihover  = _hover;
 	}
 	
 	static resetFocus = function() {

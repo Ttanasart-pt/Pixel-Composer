@@ -1,5 +1,7 @@
 function Node_VerletSim_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name = "Render";
+	name  = "Render";
+	color = COLORS.node_blend_verlet;
+	icon  = THEME.verletSim;
 	update_on_frame = true;
 	
 	newInput(0, nodeValue_Mesh( "Mesh" )).setVisible(true, true);
@@ -36,7 +38,6 @@ function Node_VerletSim_Render(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	static update = function() {
 		if(!is(inline_context, Node_VerletSim_Inline)) return;
-		if(!IS_PLAYING) return;
 		
 		var _msh = getInputData(0);
 		var _dim = getInputData(1);
@@ -48,6 +49,9 @@ function Node_VerletSim_Render(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		inputs[2].setVisible(_type == 0, _type == 0);
 		inputs[5].setVisible(_type == 1);
+		
+		if(!IS_PLAYING) return;
+		
 		var _tex = is_surface(_srf)? surface_get_texture(_srf) : -1;
 		
 		if(!is(_msh, __verlet_Mesh)) return;

@@ -3126,8 +3126,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         drawGrid();
         
         var ovy = ui(8);
-        if(project.graphDisplay.show_view_control == 2)    ovy += ui(36);
-        // if(is_searching)            ovy += line_get_height(f_p2, 20);
+        if(project.graphDisplay.show_view_control == 2) ovy += ui(36);
+        if(project.graphDisplay.show_topbar)            ovy += topbar_height;
         
         drawNodes();
         

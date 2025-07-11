@@ -1,5 +1,7 @@
 function Node_VerletSim_to_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name = "Mesh to Path";
+	name  = "Mesh to Path";
+	color = COLORS.node_blend_verlet;
+	icon  = THEME.verletSim;
 	setDimension(96, 48);
 	
 	////- =Mesh

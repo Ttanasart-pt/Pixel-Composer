@@ -97,19 +97,24 @@ event_inherited();
 	sc_content.scroll_inertia = 0;
 	
 	function applyAutoComplete(rep) {
-		var _totAmo = string_length(textbox._input_text);
-		var _prmAmo = string_length(prompt);
-		var _repAmo = string_length(rep);
-		
-		var _sPreC = string_copy(textbox._input_text, 1, textbox.cursor - _prmAmo);
-		var _sPosC = string_copy(textbox._input_text, textbox.cursor + 1, _totAmo - textbox.cursor);
-		
-		textbox._input_text = $"{_sPreC}{rep}{_sPosC}";
-		textbox.cursor += _repAmo - _prmAmo;
-		textbox.cut_line();
-		textbox.autocomplete_delay = 0;
-		if(!textbox.isCodeFormat())
+		if(textbox.isCodeFormat()) {
+			var _totAmo = string_length(textbox._input_text);
+			var _prmAmo = string_length(prompt);
+			var _repAmo = string_length(rep);
+			
+			var _sPreC = string_copy(textbox._input_text, 1, textbox.cursor - _prmAmo);
+			var _sPosC = string_copy(textbox._input_text, textbox.cursor + 1, _totAmo - textbox.cursor);
+			
+			textbox._input_text = $"{_sPreC}{rep}{_sPosC}";
+			textbox.cursor += _repAmo - _prmAmo;
+			textbox.cut_line();
+			textbox.autocomplete_delay = 0;
+			
+		} else {
+			textbox._input_text   = rep;
+			textbox._current_text = rep;
 			textbox.deactivate();
+		}
 		
 		textbox = noone;
 		prompt  = "";

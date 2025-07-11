@@ -23,7 +23,7 @@ function Node_Armature_Subdivide(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	
 	bone      = new __Bone();
 	bone_bbox = [0, 0, 1, 1, 1, 1];
-	bone_arr  = [];
+	boneArray  = [];
 	
 	bone_target = "";
 	bone_subdiv = 1;
@@ -68,14 +68,14 @@ function Node_Armature_Subdivide(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		if(!_bone.is_main)
 		for( var i = 0; i < _sub; i++ ) {
 			var _b = new __Bone(_par, 0, 0, bAng, sLen, self);
-			_b.name = $"{_b.name}.{i}";
+			
 			if(i == 0) {
 				_b.distance      = _bone.distance;
 				_b.direction     = _bone.direction;
 				_b.parent_anchor = _bone.parent_anchor;
 			}
 			
-			_b.name           = _bone.name;
+			_b.name           = $"{_bone.name}.{i}";
 			_b.apply_scale    = _bone.apply_scale;
 			_b.apply_rotation = _bone.apply_rotation;
 			
@@ -103,11 +103,10 @@ function Node_Armature_Subdivide(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		
 		bone.resetPose().setPosition();
 		bone_bbox = bone.bbox();
-		bone_arr  = bone.toArray();
+		boneArray  = bone.toArray();
 		
 		outputs[0].setValue(bone);
 	}
-	
 	
 	////- Draw
 	

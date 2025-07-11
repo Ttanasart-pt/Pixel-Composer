@@ -24,8 +24,7 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	newInput(0, nodeValue_Armature()).setVisible(true, true);
 	newInput(1, nodeValue_Mesh(    "Mesh", noone )).setVisible(true, true);
 	
-	newInput(2, nodeValue_Trigger( "Autoweight"  ))
-		.setDisplay(VALUE_DISPLAY.button, { name: "Auto weight", UI : true, onClick: function() /*=>*/ {return AutoWeightPaint()} });
+	newInput(2, nodeValue_Trigger( "Autoweight" ));
 	newInput(3, nodeValue_Float("Auto Weight Radius", 8))
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////

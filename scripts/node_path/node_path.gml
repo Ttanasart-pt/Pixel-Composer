@@ -21,13 +21,6 @@
 	function is_path(p) { return struct_has(p, "getPointRatio"); }
 #endregion
 
-function __vec2P(_x = 0, _y = _x, _w = 1) : __vec2(_x, _y) constructor {
-	weight = _w;
-	
-	static clone    = function() /*=>*/ {return new __vec2P(x, y, weight)};
-	static toString = function() /*=>*/ {return $"[__vec2P] ({x}, {y} | {weight})"};
-}
-
 function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Path";
 	preview_channel = 1;
@@ -126,7 +119,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	static newAnchor = function(_x = 0, _y = 0, _dxx = 0, _dxy = 0, _dyx = 0, _dyy = 0) { return [ _x, _y, _dxx, _dxy, _dyx, _dyy, 0 ]; }
 	
-	static createNewInput = function(index = array_length(inputs), _x = 0, _y = 0, _dxx = 0, _dxy = 0, _dyx = 0, _dyy = 0, rec = true) {
+	function createNewInput(index = array_length(inputs), _x = 0, _y = 0, _dxx = 0, _dxy = 0, _dyx = 0, _dyy = 0, rec = true) {
 		var inAmo = array_length(inputs);
 		
 		newInput(index, nodeValue_Path_Anchor("Anchor", []))

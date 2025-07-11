@@ -2,21 +2,18 @@ function Node_3D_UV_Remap(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _grou
 	name  = "UV Remap";
 	gizmo = new __3dGizmoPlane();
 	
-	newInput(in_d3d + 0, nodeValue_D3Mesh("Mesh", noone))
-		.setVisible(true, true);
+	newInput(in_d3d + 0, nodeValue_D3Mesh("Mesh", noone)).setVisible(true, true);
+	newInput(in_d3d + 1, nodeValue_Int("Target subobject", -1)).setArrayDepth(1);
 	
-	newInput(in_d3d + 1, nodeValue_Int("Target subobject", -1))
-		.setArrayDepth(1);
-	
-	newInput(in_d3d + 2, nodeValue_Int("Bake UV", 0))
-		.setDisplay(VALUE_DISPLAY.button, { name: "Bake", onClick: function() { attributes.bakedUV = !attributes.bakedUV; triggerRender(); } });
+	newInput(in_d3d + 2, nodeValue_Int("Bake UV", 0));
+	b_bake_uv = button(function() /*=>*/ { attributes.bakedUV = !attributes.bakedUV; triggerRender(); }).setText("Bake UV");
 	
 	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.d3Mesh, noone));
 	
 	input_display_list = [ 
 		["Transform", false], 0, 1, 2,
 		["UV",		  false], in_d3d + 0, in_d3d + 1,
-		["Bake",	  false], in_d3d + 2,
+		["Bake",	  false], b_bake_uv,
 	];
 	
 	remap_position = [ 0, 0, 0 ];
@@ -30,11 +27,7 @@ function Node_3D_UV_Remap(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _grou
 	
 	modify_object_index = 0;
 	
-	static step = function() { #region
-		inputs[in_d3d + 2].editWidget.text = attributes.bakedUV? "Unbake" : "Bake";
-	} #endregion
-	
-	static modify_object = function(_object, _data, _matrix) { #region
+	static modify_object = function(_object, _data, _matrix) {
 		if(_object.VF != global.VF_POS_NORM_TEX_COL) return _object;
 		
 		var _obj = _object.clone(false, false);
@@ -104,9 +97,9 @@ function Node_3D_UV_Remap(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _grou
 		
 		modify_object_index++;
 		return _obj;
-	} #endregion
+	}
 	
-	static modify_group = function(_group, _data, _matrix) { #region
+	static modify_group = function(_group, _data, _matrix) {
 		var _gr = new __3dGroup();
 		
 		_gr.transform = _group.transform.clone();
@@ -118,16 +111,17 @@ function Node_3D_UV_Remap(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _grou
 			_gr.objects[i] = modify(_group.objects[i], _data, _matrix);
 		
 		return _gr;
-	} #endregion
+	}
 	
-	static modify = function(_object, _data, _matrix = new BBMOD_Matrix()) { #region
+	static modify = function(_object, _data, _matrix = new BBMOD_Matrix()) {
 		if(is_instanceof(_object, __3dObject)) return modify_object(_object, _data, _matrix);
 		if(is_instanceof(_object, __3dGroup))  return modify_group(_object, _data, _matrix);
 		
 		return noone;
-	} #endregion
+	}
 	
-	static processData = function(_output, _data, _array_index = 0) { #region
+	static processData = function(_output, _data, _array_index = 0) {
+		b_bake_uv.text = attributes.bakedUV? "Unbake UV" : "Bake UV";
 		setTransform(gizmo, _data);
 		
 		var _rot     = _data[1];
@@ -141,7 +135,7 @@ function Node_3D_UV_Remap(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _grou
 		
 		modify_object_index = 0;
 		return modify(_data[in_d3d + 0], _data);
-	} #endregion
+	}
 	
 	static getPreviewObjects       = function() { return [ getPreviewObject(), gizmo ]; } 
 	static getPreviewObjectOutline = function() { return [ gizmo ]; } 

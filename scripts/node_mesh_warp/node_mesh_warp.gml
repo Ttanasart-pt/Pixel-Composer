@@ -223,7 +223,8 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput( 1, nodeValue_ISlider(     "Sample", 8, [ 2, 32, 0.1 ])).setTooltip("Amount of grid subdivision. Higher number means more grid, detail.");
 	newInput( 7, nodeValue_Bool(        "Full Mesh", false));
 	newInput(10, nodeValue_Slider(      "Randomness", 0.5));
-	newInput( 3, nodeValue_Trigger(     "Mesh" )).setDisplay(VALUE_DISPLAY.button, { name: "Generate", UI : true, onClick: function() /*=>*/ {return Mesh_build()} });
+	newInput( 3, nodeValue_Trigger(     "Mesh" ));
+	b_gen_mesh = button(function() /*=>*/ {return Mesh_build()}).setText("Generate Mesh");
 	
 	////- Link
 	
@@ -237,7 +238,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newOutput(1, nodeValue_Output( "Mesh data", VALUE_TYPE.mesh, new Mesh()));
 	
 	input_display_list = [ 5, 9, 
-		["Mesh",			false],	0, 8, 1, 7, 10, 3, 
+		["Mesh",			false],	0, 8, 1, 7, 10, b_gen_mesh, 
 		["Link",			false],	4, 6,
 		["Control points",	false], 
 	];

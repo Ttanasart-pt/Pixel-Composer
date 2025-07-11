@@ -19,7 +19,7 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	input_display_list = [ ["Rendering", false], 1, 2, 3 ];
 	
-	static createNewInput = function(index = array_length(inputs)) {
+	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
 		newInput(index + 0, nodeValue_Enum_Scroll("Blend mode",  0 , [ "Normal", "Alpha", "Additive" ]))

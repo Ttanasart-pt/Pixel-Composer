@@ -115,7 +115,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		process_array = true;
 		dynamic_array = false;
 		validateValue = true;
-		runInUI       = false;
 		
 		fullUpdate    = false;
 		attributes    = {};
@@ -604,7 +603,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				var _onClick = struct_has(display_data, "onClick")? method(node, display_data.onClick) : function() /*=>*/ { setAnim(true, true); setValueDirect(true); };
 				
 				editWidget   = button(_onClick).setText(struct_try_get(display_data, "name", "Trigger"));
-				runInUI      = struct_try_get(display_data, "UI", false);
 				
 				visible = false;
 				rejectArray();

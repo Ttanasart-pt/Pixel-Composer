@@ -94,7 +94,7 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		["Watchers", false], watcher_controllers, 
 	];
 	
-	static createNewInput = function(index = array_length(inputs)) {
+	function createNewInput(index = array_length(inputs)) {
 		index_watching = index;
 		
 		newInput(index + 0, nodeValue_Int(  "Index", -1    ));

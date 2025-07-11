@@ -35,7 +35,7 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	array_push(attributeEditors, "Display");
 	array_push(attributeEditors, ["Debug",        function() /*=>*/ {return attributes.show_debug},   new checkBox(function() /*=>*/ {return toggleAttribute("show_debug")})]);
 	
-	static createNewInput = function(index = array_length(inputs)) {
+	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
 		newInput(index, nodeValue("Object", self, CONNECT_TYPE.input, VALUE_TYPE.rigid, noone )).setVisible(true, true);

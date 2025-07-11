@@ -22,7 +22,7 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	newOutput(0, nodeValue_Output("Struct", VALUE_TYPE.struct, {}));
 	
-	static createNewInput = function(index = array_length(inputs)) {
+	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		var bDel  = button(function() /*=>*/ {return node.deleteInput(index)} )
 				.setIcon(THEME.minus_16, 0, COLORS._main_icon);

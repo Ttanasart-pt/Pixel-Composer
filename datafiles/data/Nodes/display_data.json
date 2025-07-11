@@ -251,6 +251,7 @@
             { "label": "Simulation" },
             { "label": "/Force" },
             "Node_VerletSim_Force",
+            "Node_VerletSim_Drag",
             "Node_VerletSim_Wind",
             { "label": "/Render" },
             "Node_VerletSim_Step",
@@ -731,6 +732,7 @@
             "Node_Armature_Bind",
             "Node_Armature_Mesh_Rig",
             { "label": "/Convertors" },
+            "Node_Armature_From_Path", 
             "Node_Armature_Path",
             "Node_Armature_Sample",
             

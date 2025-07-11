@@ -14,7 +14,7 @@ function Node_Module_Test(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	setDynamicInput(1);
 	
-	static createNewInput = function(index = array_length(inputs)) {
+	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
 		inputs[index] = new Node_Module_SubModule(self);

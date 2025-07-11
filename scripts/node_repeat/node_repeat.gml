@@ -102,7 +102,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	typeList = [ "Linear Transform", "Blending" ];
 	enum_select_mode = __enum_array_gen(["Index", "Area", "Surface"], s_node_repeat_selection_types);
 	
-	static createNewInput = function(i = array_length(inputs)) {
+	function createNewInput(i = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
 		dynamic_input_inspecting = getInputAmount();

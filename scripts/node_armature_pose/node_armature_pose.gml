@@ -17,7 +17,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	__node_bone_attributes();
 	
-	static createNewInput = function(index = array_length(inputs), bone = noone) {
+	function createNewInput(index = array_length(inputs), bone = noone) {
 		var inAmo = array_length(inputs);
 		var _name = bone != noone? bone.name : "bone";
 		
@@ -34,10 +34,16 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	static setBone = function() {
 		var _b = getInputData(0);
-		if(!is(_b, __Bone)) return;
+		if(!is(_b, __Bone)) { boneHash = ""; return; }
 		
-		bonePose    = _b.clone().connect();
-		boneArray   = bonePose.toArray();
+		var _h = _b.getHash();
+		if(boneHash == _h) return;
+		
+		boneHash  = _h;
+		bonePose  = _b.clone().connect();
+		boneArray = bonePose.toArray();
+		bonePose.constrains = _b.constrains;
+		
 		var _inputs = [ inputs[0] ];
 		var _input_display_list = array_clone(input_display_list_raw, 1);
 		
@@ -338,14 +344,11 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	////- Update
 	
 	static update = function(frame = CURRENT_FRAME) {
+		setBone();
 		var _b = getInputData(0);
-		if(!is(_b, __Bone)) { boneHash = ""; return; }
-		
-		var _h = _b.getHash();
-		if(boneHash != _h) { boneHash = _h; setBone(); }
 		
 		bonePose.resetPose().setPosition();
-		bonePose.constrains = _b.constrains;
+		outputs[0].setValue(bonePose);
 		
 		var bArrRaw = _b.toArray();
 		var bArrPos = bonePose.toArray();
@@ -358,7 +361,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			
 			var _inp  = boneMap[$ _id];
 			var _trn  = _inp.getValue();
-			_inp.updateName(bonePose.name);
+			_inp.updateName(bPose.name);
 			
 			bPose.angle         = bRaw.angle;
 			bPose.length        = bRaw.length;
@@ -374,7 +377,6 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		bonePose.setPose();
 		bone_bbox = bonePose.bbox();
 		
-		outputs[0].setValue(bonePose);
 	}
 	
 	////- Draw

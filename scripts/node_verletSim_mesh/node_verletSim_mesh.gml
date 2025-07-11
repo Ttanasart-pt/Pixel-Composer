@@ -1,5 +1,8 @@
 function Node_VerletSim_Mesh(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name = "Verlet Mesh";
+	name  = "Mesh";
+	color = COLORS.node_blend_verlet;
+	icon  = THEME.verletSim;
+	
 	setDimension(96, 48);
 	
 	////- =Mesh
@@ -63,14 +66,16 @@ function Node_VerletSim_Mesh(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			
 			for( var i = 0, n = array_length(_msh.points); i < n; i++ ) {
 				var p = _msh.points[i];
-				if(!is(p, __vec2)) {
-					mesh.points[i] = undefined;
-					continue;
-				}
+				if(!is(p, __vec2)) { mesh.points[i] = undefined; continue; }
 				
 				var _p = new __verlet_vec2().set2(p);
 				mesh.points[i] = _p;
 				_p.drag = _drag;
+				
+				if(is(p, __vec2UV)) { 
+					_p.u = p.u;
+					_p.v = p.v;
+				}
 				
 				if(_uv) {
 					_p.u = (_p.x - x0) / ww;

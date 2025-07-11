@@ -41,37 +41,30 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	update_on_frame = true;
 	
-	newInput(0, nodeValue_Path("Path", []))
-		.setDisplay(VALUE_DISPLAY.path_array, { filter: ["image|*.png;*.jpg", ""] });
+	////- =Image
+	newInput(0, nodeValue_Path(        "Path",        []        )).setDisplay(VALUE_DISPLAY.path_array, { filter: ["image|*.png;*.jpg", ""] });
+	newInput(1, nodeValue_Padding(     "Padding",     [0,0,0,0] )).rejectArray();
+	newInput(8, nodeValue_Enum_Scroll( "Canvas size", 2, [ "First", "Minimum", "Maximum" ])).rejectArray();
 	
-	newInput(1, nodeValue_Padding("Padding", [0, 0, 0, 0]))
-		.rejectArray();
-		
-	newInput(2, nodeValue_Bool("Stretch frame", false, "Stretch animation speed to match project length."))
-		.rejectArray();
+	////- =Animation
+	newInput(5, nodeValue_Trigger("Set animation length to match" ));
+	b_match_len = button(function() /*=>*/ { if(array_empty(spr)) return; TOTAL_FRAMES = array_length(spr); }).setText("Match Length");
 	
-	newInput(3, nodeValue_Float("Animation speed", 1))
-		.rejectArray();
+	newInput(4, nodeValue_Enum_Scroll( "Loop modes",  0, ["Loop", "Ping pong", "Hold last frame", "Hide"])).rejectArray();
+	newInput(2, nodeValue_Bool(  "Stretch frame",     false, "Stretch animation speed to match project length.")).rejectArray();
+	newInput(3, nodeValue_Float( "Animation speed",   1 )).rejectArray();
 		
-	newInput(4, nodeValue_Enum_Scroll("Loop modes",  0, ["Loop", "Ping pong", "Hold last frame", "Hide"]))
-		.rejectArray();
-		
-	newInput(5, nodeValue_Trigger("Set animation length to match" ))
-		.setDisplay(VALUE_DISPLAY.button, { name: "Match length", UI : true, onClick: function() /*=>*/ { if(array_empty(spr)) return; TOTAL_FRAMES = array_length(spr); } });
+	////- =Custom Order
+	newInput(6, nodeValue_Bool( "Custom frame order", false ));
+	newInput(7, nodeValue_Int(  "Frame", 0 ));
+	// input 9	
 	
-	newInput(6, nodeValue_Bool("Custom frame order", false));
-	
-	newInput(7, nodeValue_Int("Frame", 0));
-
-	newInput(8, nodeValue_Enum_Scroll("Canvas size",  2, [ "First", "Minimum", "Maximum" ]))
-		.rejectArray();
-		
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
-		["Image", false],		0, 1, 8, 
-		["Animation", false],	5, 4, 2, 3, 
-		["Custom Frame Order", false, 6], 7, 
+		[ "Image",     false ], 0, 1, 8, 
+		[ "Animation", false ], b_match_len, 4, 2, 3, 
+		[ "Custom Frame Order", false, 6 ], 7, 
 	];
 	
 	attribute_surface_depth();

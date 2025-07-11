@@ -10,7 +10,8 @@ if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 		if(PANEL_MAIN != 0) PANEL_MAIN.step();
 		array_foreach(PROJECT.allNodes, function(_node) /*=>*/ { 
 			if(!_node.active) return; 
-			if(_node.input_button_length || _node.use_trigger) _node.triggerCheck(); 
+			
+			_node.triggerCheck(); 
 			_node.doStep(); 
 		});
 	} catch(e) {

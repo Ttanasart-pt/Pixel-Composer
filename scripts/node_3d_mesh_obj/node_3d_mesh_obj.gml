@@ -43,7 +43,7 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 	
 	array_foreach(inputs, function(i) /*=>*/ {return i.rejectArray()}, in_mesh);
 	
-	static createNewInput = function(index = array_length(inputs)) {
+	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		newInput(index, nodeValue_D3Material("Material", new __d3dMaterial())).setVisible(true, true);
 		

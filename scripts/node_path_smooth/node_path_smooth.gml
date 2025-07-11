@@ -62,7 +62,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		}
 	}
 	
-	static createNewInput = function(index = array_length(inputs), _x = 0, _y = 0) {
+	function createNewInput(index = array_length(inputs), _x = 0, _y = 0) {
 		var inAmo = array_length(inputs);
 		
 		newInput(index, nodeValue_Vec2("Anchor", [ _x, _y ]));
