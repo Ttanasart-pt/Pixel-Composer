@@ -80,14 +80,11 @@ function surface_bmp_encode(surface, path, param = {}) {
     	}
     	
     	bitmap_size += bitmap_row;
+    	
+        var pad = (4 - (bitmap_size % 4)) % 4;
+		repeat(pad) { buffer_write(b, buffer_u8, 0); bitmap_size++; }
     }
     
-	var pad = 4 - (bitmap_size % 4);
-	repeat(pad) {
-		buffer_write(b, buffer_u8, 0);
-		bitmap_size++;
-	}
-	
     var total_size = buffer_tell(b);
     buffer_write_at(b,  2, buffer_u32, total_size);
     buffer_write_at(b, 34, buffer_u32, bitmap_size);

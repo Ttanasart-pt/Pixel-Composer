@@ -4,6 +4,7 @@
 	enum NODE_3D   { none, polygon, sdf }
 	
 	enum DYNA_INPUT_COND {
+		none       = 0, 
 		connection = 1 << 0,
 		zero       = 1 << 1,
 	}
@@ -517,6 +518,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static refreshDynamicInput = function() {
 		if(LOADING || APPENDING) return;
+		if(dynamic_input_cond == DYNA_INPUT_COND.none) return;
 		
 		var _in = [];
 		

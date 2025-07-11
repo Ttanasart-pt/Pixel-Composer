@@ -42,6 +42,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	cursor_select  = -1;
 	click_block    = 0;
 	
+	padding_v       = ui(7);
 	code_line_width = 48;
 	
 	shift_new_line   = true;
@@ -79,48 +80,14 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		menuItem("Paste", function() /*=>*/ { var _text = clipboard_get_text(); if(onModify) onModify(_text); }, THEME.paste),
 	];
 	
-	static setMaxHeight = function(h) { max_height = h; return self; }
+	////- Get Set
 	
-	static activate = function() {
-		WIDGET_CURRENT = self;
-		WIDGET_CURRENT_SCROLL = parent;
-		parentFocus();
-		
-		_input_text = _current_text;
-		_last_value = _current_text;
-		
-		cursor_pos_x = 0;
-		cursor_pos_y = 0;
-		
-		if(select_on_click) {
-			cursor        = string_length(_current_text);
-			cursor_select = 0;
-			click_block   = 1;
-		}
-		
-		KEYBOARD_RESET
-		keyboard_lastkey = -1;
-					
-		cut_line();
-		
-		ds_stack_clear(undo_stack);
-		ds_stack_clear(redo_stack);
-		ds_stack_push(undo_stack, [_input_text, cursor, cursor_select]);
-				
-		if(PEN_USE) keyboard_virtual_show(kbv_type_default, kbv_returnkey_default, kbv_autocapitalize_none, true);
-	}
-	
-	static deactivate = function() { 
-		if(WIDGET_CURRENT != self) return;
-		
-		apply();
-		WIDGET_CURRENT = undefined;
-		UNDO_HOLDING   = false;
-		
-		if(PEN_USE) keyboard_virtual_hide();
-	}
+	static setVAlign    = function(_v) /*=>*/ { padding_v  = _v; return self; }
+	static setMaxHeight = function(_h) /*=>*/ { max_height = _h; return self; }
 	
 	static isCodeFormat = function() { INLINE return format == TEXT_AREA_FORMAT.codeLUA || format == TEXT_AREA_FORMAT.codeHLSL; }
+	
+	////- Edit
 	
 	static breakCharacter = function(ch) {
 		if(isCodeFormat()) 
@@ -309,11 +276,6 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 				onModified();
 			}
 		}
-	}
-	
-	static apply = function() {
-		if(onModify) onModify(_input_text);
-		UNDO_HOLDING = true;
 	}
 	
 	static move_cursor = function(delta) {
@@ -629,6 +591,8 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		}
 	}
 	
+	////- Draw
+	
 	static display_text = function(_x, _y, _text, _mx = -1, _my = -1, _hover = false) {
 		_text = string_real(_text);
 		if(line_width != _prev_width) {
@@ -819,7 +783,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		var c_h        = line_get_height();
 		var line_count = max(min_lines, array_length(_input_text_line));
 		
-		hh = max(_h, ui(14) + c_h * line_count);
+		hh = max(_h, padding_v * 2 + c_h * line_count);
 		if(max_height) hh = min(hh, max_height);
 		
 		var _hw = _w;
@@ -846,7 +810,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 				var lx = ui(code_line_width - 8);
 				
 				for( var i = 0; i < array_length(_input_text_line_index); i++ ) {
-					var ly = text_y + ui(7) + i * c_h;
+					var ly = text_y + padding_v + i * c_h;
 					draw_text_add(lx, ly, _input_text_line_index[i]);
 				}
 			}
@@ -875,7 +839,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 					var _l, _str;
 				
 					var ch_x       = tx;
-					var ch_y       = text_y + ui(7);
+					var ch_y       = text_y + padding_v;
 					var ch_sel_min = -1;
 					var ch_sel_max = -1;
 					var char_line  = 0;
@@ -951,7 +915,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 					cursor_pos_y = cursor_pos_y == 0? cursor_pos_y_to : lerp_float(cursor_pos_y, cursor_pos_y_to, 1);
 				#endregion
 				
-				display_text(tx, text_y + ui(7), _input_text, msx, msy, hover && hoverRect);
+				display_text(tx, text_y + padding_v, _input_text, msx, msy, hover && hoverRect);
 				
 				if(cursor_pos_y != 0 && cursor_pos_x != 0) {
 					draw_set_color(COLORS._main_text_accent);
@@ -990,7 +954,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 				
 		} else {
 			surface_set_shader(text_surface, noone, false, BLEND.add);
-				display_text(tx, text_y + ui(7), _text);
+				display_text(tx, text_y + padding_v, _text);
 			surface_reset_shader();
 			
 			BLEND_ALPHA
@@ -1066,6 +1030,52 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		resetFocus();
 		
 		return hh;
+	}
+	
+	////- Actions
+	
+	static activate = function() {
+		WIDGET_CURRENT = self;
+		WIDGET_CURRENT_SCROLL = parent;
+		parentFocus();
+		
+		_input_text = _current_text;
+		_last_value = _current_text;
+		
+		cursor_pos_x = 0;
+		cursor_pos_y = 0;
+		
+		if(select_on_click) {
+			cursor        = string_length(_current_text);
+			cursor_select = 0;
+			click_block   = 1;
+		}
+		
+		KEYBOARD_RESET
+		keyboard_lastkey = -1;
+					
+		cut_line();
+		
+		ds_stack_clear(undo_stack);
+		ds_stack_clear(redo_stack);
+		ds_stack_push(undo_stack, [_input_text, cursor, cursor_select]);
+				
+		if(PEN_USE) keyboard_virtual_show(kbv_type_default, kbv_returnkey_default, kbv_autocapitalize_none, true);
+	}
+	
+	static deactivate = function() { 
+		if(WIDGET_CURRENT != self) return;
+		
+		apply();
+		WIDGET_CURRENT = undefined;
+		UNDO_HOLDING   = false;
+		
+		if(PEN_USE) keyboard_virtual_hide();
+	}
+	
+	static apply = function() {
+		if(onModify) onModify(_input_text);
+		UNDO_HOLDING = true;
 	}
 	
 	static clone = function() { return new textArea(input, onModify); }

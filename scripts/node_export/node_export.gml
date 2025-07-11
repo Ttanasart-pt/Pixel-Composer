@@ -551,7 +551,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		switch(ext) {
 			case ".png": 
 				switch(indx) {
-					case 0 : 	
+					case 0 : 
 						surface_save_safe(_surf, _pathTemp);
 					
 						var shell_cmd = $"convert {string_quote(_pathTemp)} {string_quote(_pathOut)}";

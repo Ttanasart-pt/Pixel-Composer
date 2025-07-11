@@ -56,40 +56,64 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		rule_renderer.y = _y;
 		rule_renderer.w = _w;
 		
-		var hh = ui(8);
+		var ff = f_p3;
+		var hh = ui(4);
 		var tx = _x + ui(32);
 		var ty = _y + hh;
 		
+		var pv = ui(5);
 		var tw = ui(64);
-		var th = TEXTBOX_HEIGHT;
+		var th = line_get_height(ff) + pv * 2;
 		
-		var rx = tx + tw + ui(32);
-		var rw = _w - (tw + ui(8 + 24 + 32));
-		
-		var _name, _rule;
+		var rx = tx + tw + ui(24);
+		var rw = _w - tw - ui(24 + 32) - th - ui(8);
 		var wh, dh;
 		
-		for( var i = input_fix_len, n = array_length(inputs); i < n; i += data_length ) {
-			_name = inputs[i + 0];
-			_rule = inputs[i + 1];
-			wh    = th;
+		var len = array_length(inputs);
+		var amo = (len - input_fix_len) / data_length;
+		var del = -1;
+		
+		for( var i = input_fix_len; i < len; i += data_length ) {
+			var _name  = inputs[i + 0];
+			var _rule  = inputs[i + 1];
+			var _nameW = _name.editWidget;
+			var _ruleW = _rule.editWidget;
 			
-			draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);
-			draw_text_add(_x + ui(8), ty + ui(8), string((i - input_fix_len) / data_length));
+			var _ind   = (i - input_fix_len) / data_length;
+			var  wh    = th;
+			var _last  = _ind == amo - 1;
 			
-			_name.editWidget.setFocusHover(_focus, _hover);
-			dh = _name.editWidget.draw(tx, ty, tw, th, _name.showValue(), _m, _name.display_type);
+			_nameW.setVAlign(pv);
+			_ruleW.setVAlign(pv);
+			
+			var _par = new widgetParam(tx, ty, tw, th, _name.showValue(), {}, _m)
+							.setFont(ff).setFocusHover(_focus, _hover);
+			dh = _nameW.drawParam(_par);
 			wh = max(wh, dh);
 			
-			draw_sprite_ui(THEME.arrow, 0, tx + tw + ui(16), ty + dh / 2, 1, 1, 0, COLORS._main_icon);
+			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text_sub);
+			draw_text_add(_x + ui(8), ty + dh / 2, _ind);
+			draw_sprite_ui(THEME.arrow, 0, tx + tw + ui(12), ty + dh / 2, 1, 1, 0, COLORS._main_icon);
 			
-			_rule.editWidget.setFocusHover(_focus, _hover);
-			dh = _rule.editWidget.draw(rx, ty, rw, th, _rule.showValue(), _m, _rule.display_type);
+			var _nam = _name.showValue();
+			var _par = new widgetParam(rx, ty, rw, th, _rule.showValue(), {}, _m)
+							.setFont(ff).setFocusHover(_focus, _hover, _nam != "");
+			dh = _ruleW.drawParam(_par);
 			wh = max(wh, dh);
+			
+			var bs = th;
+			var bx = _x + _w - bs;
+			var by = ty;
+			
+			     if(_last) draw_sprite_ui_uniform(THEME.minus, 0, bx + bs / 2, by + bs / 2, 1, CDEF.main_dkblack);
+			else if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _focus, _hover, "", THEME.minus, 0, COLORS._main_value_negative) == 2)
+				del = i;
 			
 			ty += wh + ui(6);
 			hh += wh + ui(6);
 		}
+		
+		if(del != -1) deleteRule(del);
 		
 		return hh;
 		
@@ -97,9 +121,11 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		for( var i = input_fix_len, n = array_length(inputs); i < n; i += data_length ) {
 			var _name = inputs[i + 0];
 			var _rule = inputs[i + 1];
+			var _nameW = _name.editWidget;
+			var _ruleW = _rule.editWidget;
 			
-			_name.editWidget.register(p);
-			_rule.editWidget.register(p);
+			_nameW.register(p);
+			_ruleW.register(p);
 		}
 	});
 	
@@ -117,7 +143,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	array_push(attributeEditors, "L System" );
 	array_push(attributeEditors, [ "Rule length limit", function() /*=>*/ {return attributes.rule_length_limit}, textBox_Number(function(v) /*=>*/ { setAttribute("rule_length_limit", v, true); cache_data.start = ""; }) ] );
 	
-	path_3d = false;
+	path_3d    = false;
 	cache_data = {
 		start     : "",
 		rules     : {},
@@ -125,6 +151,11 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		iteration : 0,
 		seed      : 0,
 		result    : "",
+	}
+	
+	static deleteRule = function(ind) {
+		array_delete(inputs, ind, 2);
+		array_foreach(inputs, function(inp, i) /*=>*/ {return inp.index = i});
 	}
 	
 	static refreshDynamicInput = function() {
@@ -137,17 +168,11 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			if(getInputData(i) != "") {
 				array_push(_l, inputs[i + 0]);
 				array_push(_l, inputs[i + 1]);
-				
-			} else {
-				delete inputs[i + 0];	
-				delete inputs[i + 1];	
 			}
 		}
 		
-		for( var i = 0; i < array_length(_l); i++ )
-			_l[i].index = i;
-		
 		inputs = _l;
+		array_foreach(inputs, function(inp, i) /*=>*/ {return inp.index = i});
 		createNewInput();
 	}
 	
@@ -477,11 +502,11 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
-		draw_sprite_fit(s_node_path_l_system, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
+		draw_sprite_bbox_uniform(s_node_path_l_system, 0, bbox, c_white, 1, true);
 	}
 	
-	static getPreviewObject 		= function() { return noone; }
-	static getPreviewObjects		= function() { return []; }
-	static getPreviewObjectOutline  = function() { return []; }
+	static getPreviewObject 		= function() /*=>*/ {return noone};
+	static getPreviewObjects		= function() /*=>*/ {return []};
+	static getPreviewObjectOutline  = function() /*=>*/ {return []};
 	
 }
