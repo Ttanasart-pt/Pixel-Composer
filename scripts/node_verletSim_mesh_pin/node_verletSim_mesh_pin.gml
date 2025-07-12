@@ -47,16 +47,17 @@ function Node_VerletSim_Mesh_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	static update = function() {
 		var _active = getInputData(5);
 		var _mesh   = getInputData(0);
-		outputs[0].setValue(_mesh);
 		
-		var _mode = getInputData(2);
+		var _mode   = getInputData(2);
 		
-		var _type = getInputData(3);
-		var _area = getInputData(1);
-		var _surf = getInputData(4);
+		var _type   = getInputData(3);
+		var _area   = getInputData(1);
+		var _surf   = getInputData(4);
 		
 		inputs[3].setVisible(_type == 0);
 		inputs[4].setVisible(_type == 1, _type == 1);
+		
+		outputs[0].setValue(_mesh);
 		
 		if(!_active) return;
 		if(!is(_mesh, __verlet_Mesh)) return;

@@ -1,3 +1,11 @@
+#region
+	enum BONE_EDIT {
+		head = 0b001,
+		tail = 0b010,
+		body = 0b100,
+	}
+#endregion
+
 function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _length = 0, _node = noone) constructor {
 	ID      = UUID_generate();
 	name    = "New bone";
@@ -14,9 +22,9 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 	angle     = _angle;     pose_angle       = _angle;
 	length    = _length;    pose_length      = _length;
 	
-	pose_posit  = [ 0, 0 ];  pose_local_posit  = [ 0, 0 ];  pose_apply_posit  = [ 0, 0 ];
-	pose_rotate = 0;         pose_local_rotate = 0;         pose_apply_rotate = 0;
-	pose_scale  = 1;         pose_local_scale  = 1;         pose_apply_scale  = 1;
+	pose_posit  = [0,0]; pose_local_posit  = [0,0]; pose_apply_posit  = [0,0];
+	pose_rotate = 0;     pose_local_rotate = 0;     pose_apply_rotate = 0;
+	pose_scale  = 1;     pose_local_scale  = 1;     pose_apply_scale  = 1;
 	
 	bone_head_init = new __vec2(); bone_head_pose = new __vec2();
 	bone_tail_init = new __vec2(); bone_tail_pose = new __vec2();
@@ -103,7 +111,7 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 	
 	////- Draw
 	
-	static draw = function(attributes, edit = false, _x = 0, _y = 0, _s = 1, _mx = 0, _my = 0, _hover = noone, _select = noone, _blend = c_white, _alpha = 1) {
+	static draw = function(attributes, edit=false, _x=0, _y=0, _s=1, _mx=0, _my=0, _hover=noone, _select=noone, _blend=c_white, _alpha=1) {
 		setControl(_x, _y, _s);
 		
 		var hover = noone, h;
@@ -124,7 +132,7 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		return hover;
 	}
 	
-	static drawBone = function(attributes, edit = false, _x = 0, _y = 0, _s = 1, _mx = 0, _my = 0, _hover = noone, _select = noone, _blend = c_white, _alpha = 1) {
+	static drawBone = function(attributes, edit=false, _x=0, _y=0, _s=1, _mx=0, _my=0, _hover=noone, _select=noone, _blend=c_white, _alpha=1) {
 		var hover = noone;
 		
 		var p0x = _x + bone_head_pose.x * _s;
@@ -138,15 +146,15 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		
 		if(_selecting) {
 			draw_set_color(COLORS._main_value_positive);
-			draw_set_alpha(0.75 * _alpha);
+			draw_set_alpha(1 * _alpha);
 			
 		} else if(_hover != noone && _hover[0].ID == self.ID && _hover[1] == 2) {
 			draw_set_color(c_white);
-			draw_set_alpha(0.75 * _alpha);
+			draw_set_alpha(1 * _alpha);
 			
 		} else {
 			draw_set_color(COLORS._main_accent);
-			draw_set_alpha(0.75 * _alpha);
+			draw_set_alpha(.75 * _alpha);
 		}
 		
 		if(IKlength == 0) {
@@ -189,17 +197,18 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 					draw_vertex(_ppx - _prx, _ppy - _pry);
 				draw_primitive_end();
 				
-				if((edit & 0b100) && distance_to_line(_mx, _my, p0x, p0y, p1x, p1y) <= 12) //drag bone
+				if((edit & BONE_EDIT.body) && distance_to_line(_mx, _my, p0x, p0y, p1x, p1y) <= 12) //drag bone
 					hover = [ self, 2, bone_head_pose ];
 					
 			} else if(attributes.display_bone == 1) {
 				draw_line_width(p0x, p0y, p1x, p1y, 3);
 				
-				if((edit & 0b100) && distance_to_line(_mx, _my, p0x, p0y, p1x, p1y) <= 6) //drag bone
+				if((edit & BONE_EDIT.body) && distance_to_line(_mx, _my, p0x, p0y, p1x, p1y) <= 6) //drag bone
 					hover = [ self, 2, bone_head_pose ];
 			} 
 			
 		} else {
+			var cc = draw_get_color();
 			draw_set_color(c_white);
 			if(!parent_anchor && parent.parent != noone) {
 				var _p  = parent.getTail();
@@ -208,9 +217,9 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 				draw_line_dashed(_px, _py, p0x, p0y, 1);
 			}
 			
-			draw_sprite_ui(THEME.preview_bone_IK, 0, p0x, p0y,,,, COLORS._main_accent, draw_get_alpha());
+			draw_sprite_ui(THEME.preview_bone_IK, 0, p0x, p0y,,,, cc, draw_get_alpha());
 			
-			if((edit & 0b100) && point_in_circle(_mx, _my, p0x, p0y, 24))
+			if((edit & BONE_EDIT.body) && point_in_circle(_mx, _my, p0x, p0y, 24))
 				hover = [ self, 2, bone_head_pose ];
 		}
 		draw_set_alpha(1);
@@ -230,13 +239,13 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 			if(!parent_anchor) {
 				control_i0 = (_hover != noone && _hover[0] == self && _hover[1] == 0)? 1 : 0;
 				
-				if((edit & 0b001) && point_in_circle(_mx, _my, p0x, p0y, ui(16))) //drag head
+				if((edit & BONE_EDIT.head) && point_in_circle(_mx, _my, p0x, p0y, ui(16))) //drag head
 					hover = [ self, 0, bone_head_pose ];
 			}
 		
 			control_i1 = (_hover != noone && _hover[0] == self && _hover[1] == 1)? 1 : 0;
 			
-			if((edit & 0b010) && point_in_circle(_mx, _my, p1x, p1y, ui(16))) //drag tail
+			if((edit & BONE_EDIT.tail) && point_in_circle(_mx, _my, p1x, p1y, ui(16))) //drag tail
 				hover = [ self, 1, bone_tail_pose ];
 		}
 		

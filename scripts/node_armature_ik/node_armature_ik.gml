@@ -6,7 +6,6 @@ function Node_Armature_IK(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput(0, nodeValue_Armature()).setVisible(true, true);
 	
 	////- =IK
-	
 	newInput(3, nodeValue_Text( "Name", "IK handle" )).setDisplay(VALUE_DISPLAY.text_box);
 	
 	newInput(1, nodeValue_Bone( "Origin", function() /*=>*/ {return toggleBoneTarget(1)} ));
@@ -105,7 +104,7 @@ function Node_Armature_IK(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		bone.resetPose().setPosition();
 		bone_bbox = bone.bbox();
-		boneArray  = bone.toArray();
+		boneArray = bone.toArray();
 		
 		outputs[0].setValue(bone);
 	}
