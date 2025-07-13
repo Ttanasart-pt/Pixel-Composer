@@ -151,6 +151,15 @@
 	            ((c1       & 0xFF) * (c2       & 0xFF) / 255);
 	}
 
+	function colorScreen(c1, c2) {
+		INLINE 
+		
+		return ((255 - ((255 - (c1 >> 24 & 0xFF)) * (255 - (c2 >> 24 & 0xFF)) / 255)) << 24) |
+			   ((255 - ((255 - (c1 >> 16 & 0xFF)) * (255 - (c2 >> 16 & 0xFF)) / 255)) << 16) |
+			   ((255 - ((255 - (c1 >>  8 & 0xFF)) * (255 - (c2 >>  8 & 0xFF)) / 255)) <<  8) |
+				(255 - ((255 - (c1       & 0xFF)) * (255 - (c2       & 0xFF)) / 255));
+	}
+
 	function colorAdd(c1, c2) {
 		if(c1 == 0) return c2;
 		if(c2 == 0) return c1;

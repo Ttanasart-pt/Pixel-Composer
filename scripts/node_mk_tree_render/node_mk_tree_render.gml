@@ -1,17 +1,17 @@
 function Node_MK_Tree_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name  = "MK Tree Render";
-	color = CDEF.lime;
+	name  = "Tree Render";
+	color = COLORS.node_blend_mktree;
 	icon  = THEME.mkTree;
 	
-	newInput(0, nodeValue_Struct("Tree", noone));
+	newInput(0, nodeValue_Struct("Tree", noone)).setVisible(true, true).setIcon(THEME.node_junction_mktree, COLORS.node_blend_mktree);
 	
-	////- =Leaf
-	newInput(0, nodeValue_Vec2(  "Position", [0,0] )).setUnitRef(function(i) /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
+	////- =Output
+	newInput(1, nodeValue_Dimension());
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	input_display_list = [ new Inspector_Sprite(s_MKFX), 
-		[ "", false ], 
+	input_display_list = [ new Inspector_Sprite(s_MKFX), 0, 
+		[ "Output", false ], 1, 
 	];
 	
 	////- Nodes
@@ -23,10 +23,30 @@ function Node_MK_Tree_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	static update = function() {
 		if(!is(inline_context, Node_MK_Tree_Inline)) return;
 		
-		var _seed = inline_context.seed;
-		// var _tree = new __MK_Tree();
+		var _tree = getInputData(0);
+		var _dim  = getInputData(1);
 		
+		var _outSurf = outputs[0].getValue();
 		
+		for( var i = 0, n = array_length(_tree); i < n; i++ ) _tree[i].root.drawn = false;
+		
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+		surface_set_target(_outSurf);
+			DRAW_CLEAR
+			
+			draw_set_color(c_white);
+			draw_set_alpha(1);
+			
+			for( var i = 0, n = array_length(_tree); i < n; i++ ) {
+				var _t = _tree[i];
+				if(_t.root.drawn) continue;
+				
+				_t.root.drawn = true;
+				_t.root.draw();
+			}
+		surface_reset_target();
+		
+		outputs[0].setValue(_outSurf);
 	}
 	
 	

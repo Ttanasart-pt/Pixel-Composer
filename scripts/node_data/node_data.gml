@@ -276,6 +276,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		use_trigger      = false;
 		loopable         = true;
+		renderAll        = false;
 		
 		shaderProp       = {};
 	#endregion
@@ -1186,7 +1187,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		LOG_IF(global.FLAG.render == 1, $"Trigger render for {getFullName()}");
 		
 		if(resetSelf) resetRender(false);
-		RENDER_PARTIAL
+		if(renderAll) RENDER_ALL
+		else          RENDER_PARTIAL
 		
 		if(!IS_PLAYING) {
 			if(is(group, Node_Collection)) group.triggerRender();

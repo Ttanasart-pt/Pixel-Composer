@@ -3606,7 +3606,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             var _inline_ctx = _orignal.inline_context;
             if(_inline_ctx == noone) continue;
             
-            _inline_ctx = ds_map_try_get(APPEND_MAP, _inline_ctx.node_id, _inline_ctx);
+            _inline_ctx = ds_map_try_get(APPEND_MAP, _inline_ctx.node_id, _inline_ctx.node_id);
+            _inline_ctx = project.nodeMap[? _inline_ctx]
             _inline_ctx.addNode(project.nodeMap[? _cloned]);
         }
         

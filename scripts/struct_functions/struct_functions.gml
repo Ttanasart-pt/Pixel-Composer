@@ -1,4 +1,5 @@
 #macro struct_key variable_struct_get_names
+#macro has struct_has
 
 function struct_create() { return {}; }
 

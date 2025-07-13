@@ -408,6 +408,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	mapWidget   = noone;
 	mappedJunc  = noone;
 	mapped_vec4 = false;
+	mapped_type = 0;
 	
 	static setMappable = function(_index, _vec4 = false) {
 		with(node) {
@@ -427,25 +428,24 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		attributes.mapped     = false;
 		attributes.map_index  = _index;
-		mapped_vec4           = _vec4;
-		
+		mapped_vec4 = _vec4;
+		mapped_type = 1;
 		array_push(node.inputMappable, self);
 		
 		if(arrayLength == arrayLengthSimple) arrayLength = __arrayLength;
 		
 		mapButton = button(function() { 
-						attributes.mapped = !attributes.mapped;
-						
-						if(type == VALUE_TYPE.integer || type == VALUE_TYPE.float) {
-							if(attributes.mapped) setValue(mapped_vec4? [ 0, 0, 0, 0 ] : [ 0, 0 ]);
-							else                  setValue(def_val);
-							setArrayDepth(attributes.mapped);
-						}
-						
-						node.triggerRender(); 
-					})
-				.setIcon( THEME.mappable_parameter, [ function() /*=>*/ {return attributes.mapped} ], COLORS._main_icon )
-				.setTooltip("Toggle map");
+			attributes.mapped = !attributes.mapped;
+			
+			if(type == VALUE_TYPE.integer || type == VALUE_TYPE.float) {
+				if(attributes.mapped) setValue(mapped_vec4? [ 0, 0, 0, 0 ] : [ 0, 0 ]);
+				else                  setValue(def_val);
+				setArrayDepth(attributes.mapped);
+			}
+			
+			node.triggerRender(); 
+		}).setIcon( THEME.mappable_parameter, [ function() /*=>*/ {return attributes.mapped} ], COLORS._main_icon )
+		  .setTooltip("Toggle Map");
 		
 		if(type != VALUE_TYPE.gradient) {
 			mapWidget = _vec4? new vectorRangeBox(4, TEXTBOX_INPUT.number, function(v,i) /*=>*/ {return setValueDirect(v,i)}).setSideButton(mapButton) : 
@@ -463,16 +463,53 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return self;
 	}
 	
+	static setCurvable = function(_index, _val = CURVE_DEF_11, _suf = "Curve") {
+		attributes.curved    = false;
+		attributes.map_index = _index;
+		mapped_type = 2;
+		array_push(node.inputMappable, self);
+		
+		with(node) { newInput(_index, nodeValue_Curve( $"{other.name} {_suf}", _val )).setVisible(false, false); }
+		
+		curveButton = button(function() /*=>*/ { attributes.curved = !attributes.curved; node.triggerRender(); })
+			.setIcon( THEME.curvable, [ function() /*=>*/ {return attributes.curved} ], COLORS._main_icon )
+			.setTooltip("Toggle Curve");
+		
+		editWidget.setSideButton(curveButton);
+		
+		return self;
+	}
+	
 	static mappableStep = function() {
-		editWidget = mapWidget && attributes.mapped? mapWidget : editWidgetRaw;
-		setArrayDepth(attributes.mapped);
-		
-		var inp = node.inputs[attributes.map_index];
-		var vis = attributes.mapped && show_in_inspector;
-		
-		if(inp.visible != vis) {
-			inp.visible = vis;
-			node.refreshNodeDisplay();
+		switch(mapped_type) {
+			case 1 : 
+				editWidget = (mapWidget && attributes.mapped)? mapWidget : editWidgetRaw;
+				mapButton.icon_blend = attributes.mapped? c_white : COLORS._main_icon;
+				
+				setArrayDepth(attributes.mapped);
+				
+				var inp = node.inputs[attributes.map_index];
+				var vis = attributes.mapped && show_in_inspector;
+				
+				if(inp.visible != vis) {
+					inp.visible = vis;
+					node.refreshNodeDisplay();
+				}
+				
+				break;
+			
+			case 2 : 
+				curveButton.icon_blend = attributes.curved? c_white : COLORS._main_icon;
+				
+				var inp = node.inputs[attributes.map_index];
+				var vis = attributes.curved && show_in_inspector;
+				
+				if(inp.show_in_inspector != vis) {
+					inp.show_in_inspector = vis;
+					node.refreshNodeDisplay();
+				}
+				break;
+			
 		}
 	}
 	
