@@ -161,12 +161,6 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					ix0 = xx  * _imp;
 					ix1 = ix0 + _imp;
 					
-					// iy0 = iy0 * iy0;
-					// iy1 = iy1 * iy1;
-					
-					// ix0 = ix0 * ix0;
-					// ix1 = ix1 * ix1;
-					
 					var _aa0x = lerp(lerp(_a0x, _a1x, ix0), lerp(_a2x, _a3x, ix0), iy0);
 					var _aa0y = lerp(lerp(_a0y, _a2y, iy0), lerp(_a1y, _a3y, iy0), ix0);
 					
