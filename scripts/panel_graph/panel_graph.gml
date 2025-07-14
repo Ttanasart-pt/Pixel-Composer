@@ -27,6 +27,7 @@
     function panel_graph_canvas_copy()             { CALL("graph_canvas_copy");         PANEL_GRAPH.setCurrentCanvas();       }
     function panel_graph_canvas_blend()            { CALL("graph_canvas_blend");        PANEL_GRAPH.setCurrentCanvasBlend();  }
                                                                                                                             
+    function panel_graph_rename()                  { CALL("graph_rename");              PANEL_GRAPH.doRename();               }
     function panel_graph_delete_break()            { CALL("graph_delete_break");        PANEL_GRAPH.doDelete(false);          }
     function panel_graph_delete_merge()            { CALL("graph_delete_merge");        PANEL_GRAPH.doDelete(true);           }
     function panel_graph_duplicate()               { CALL("graph_duplicate");           PANEL_GRAPH.doDuplicate();            }
@@ -94,6 +95,7 @@
         registerFunction("Graph", "Canvas",                "",  MOD_KEY.none,                    
         	function(d) /*=>*/ {return submenuCall(d, [ MENU_ITEMS.graph_canvas_copy, MENU_ITEMS.graph_canvas_blend ])}).setMenu("graph_canvas", noone, true)
 		
+        registerFunction("Graph", "Rename",                vk_f2, MOD_KEY.none,                  panel_graph_rename              ).setMenu("graph_rename")
         registerFunction("Graph", "Delete (break)",        vk_delete, MOD_KEY.shift,             panel_graph_delete_break        ).setMenu("graph_delete_break",    THEME.cross)
         registerFunction("Graph", "Delete (merge)",        vk_delete, MOD_KEY.none,              panel_graph_delete_merge        ).setMenu("graph_delete_merge",    THEME.cross)
     
@@ -913,6 +915,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	    	{ cond : "graph_select_in_group", items : [     "graph_set_as_tool" ]                                         },
 	    	{ cond : "graph_select_multiple", items : [ -1, "graph_group", "graph_add_Node_Frame" ]                       },
 	    	-1, 
+	    	"graph_rename", 
 	    	"graph_delete_merge", 
 	    	"graph_delete_break", 
 	    	"graph_duplicate", 
@@ -3804,6 +3807,13 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         node_hover.clearInputCache();
         RENDER_PARTIAL
     } 
+    
+    function doRename() {
+    	if(array_empty(nodes_selecting)) return;
+    	
+    	__renaming_node = nodes_selecting[0];
+    	textboxCall(__renaming_node.getDisplayName(), function(txt) /*=>*/ {return __renaming_node.setDisplayName(txt)});
+    }
     
     function dropFile(path) { //
         if(node_hovering && is_callable(node_hovering.on_drop_file))

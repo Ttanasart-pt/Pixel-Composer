@@ -23,14 +23,18 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 	surface   = noone;
 	color     = c_white;
 	colorE    = c_white;
+	colorU    = undefined;
 	
 	growShift = 0;
+	growSpeed = 1;
 	
 	static drawOverlay = function(_x, _y, _s) { draw_circle(_x + x * _s, _y + y * _s, 3, false); }
 	
 	static draw = function() {
 		if(scale <= 0) return;
-		draw_set_color(color);
+		
+		var x0 = x;
+		var y0 = y;
 		
 		var x1 = x + dx * scale;
 		var y1 = y + dy * scale;
@@ -40,27 +44,43 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 		
 		switch(shape) {
 			case 0 : 
+				var _sg   = -sign(dsy);
+				var _cTop = colorU? colorU : colorE;
+				var _cBot = colorE;
+				var _scsg = scale * _sg;
+				
 				draw_primitive_begin(pr_trianglelist);
-					draw_vertex_color(x,  y,  color,  1);
-					draw_vertex_color(x1, y1, colorE, 1);
-					draw_vertex_color(x2 + dsx * scale, y2 + dsy * scale, colorE, 1);
+					draw_vertex_color(x0, y0, color, 1);
+					draw_vertex_color(x1, y1, _cTop, 1);
+					draw_vertex_color(x2 + dsx * _scsg, y2 + dsy * _scsg, _cTop, 1);
 					
-					draw_vertex_color(x,  y,  color,  1);
-					draw_vertex_color(x1, y1, colorE, 1);
-					draw_vertex_color(x2 - dsx * scale, y2 - dsy * scale, colorE, 1);
+					draw_vertex_color(x0, y0, color, 1);
+					draw_vertex_color(x1, y1, _cBot, 1);
+					draw_vertex_color(x2 - dsx * _scsg, y2 - dsy * _scsg, _cBot, 1);
 				draw_primitive_end();
+				
 				break;
 				
-			case 1 :
+			case 1 : 
 				draw_set_circle_precision(16)
 				draw_circle_color(x2, y2, sx * scale, color, colorE, false);
 				break;
 				
-			case 2 :
-				draw_surface_ext_safe(surface, x, y, sx * scale, sy * scale, dir, color);
+			case 2 : 
+				draw_surface_ext_safe(surface, x, y, sx * scale, sy * scale, dir, color); 
 				break;
 			
 		}
+	}
+	
+	static copy = function(_l) {
+		surface = _l.surface;
+		color   = _l.color;
+		colorE  = _l.colorE;
+		colorU  = _l.colorU;
+		
+		growShift = _l.growShift;
+		return self;
 	}
 }
 
@@ -83,10 +103,13 @@ function __MK_Tree() constructor {
 	segmentRatio   = [];
 	totalLength    = 0;
 	
-	children = [];
-	leaves   = [];
-	color    = c_white;
-	colorOut = c_white;
+	children  = [];
+	leaves    = [];
+	color     = c_white;
+	colorOut  = c_white;
+	
+	growShift = 0;
+	growSpeed = 1;
 	
 	////- Get
 	
@@ -169,7 +192,22 @@ function __MK_Tree() constructor {
 		}
 	}
 	
-	static grow = function(_length, _angle, _angleW, _grav, _gravC, _thick, _thickC) {
+	static grow = function(_param) {
+		var _length = _param.length;
+		var _angle  = _param.angle;
+		var _angleW = _param.angleW;
+		var _grav   = _param.grav;
+		var _gravC  = _param.gravC;
+		var _thick  = _param.thick;
+		var _thickC = _param.thickC;
+		
+		var _spirS  = _param.spirS;
+		var _spirP  = _param.spirP;
+		var _wave   = _param.wave;
+		var _waveC  = _param.waveC;
+		var _curl   = _param.curl;
+		var _curlC  = _param.curlC;
+		
 		segments       = array_create(amount + 1);
 		segmentLengths = array_create(amount + 1);
 		segmentRatio   = array_create(amount + 1);
@@ -193,6 +231,21 @@ function __MK_Tree() constructor {
 			
 			ox += dx;
 			oy += dy;
+			
+			var _wav = _wave * (_waveC? _waveC.get(p) : 1);
+			if(_wav != 0) {
+				var _wLen = cos(_spirP + p * pi * _spirS) * _wav;
+				ox += lengthdir_x(_wLen, aa + 90);
+				oy += lengthdir_y(_wLen, aa + 90);
+			}
+			
+			
+			var _crl = _curl * (_curlC? _curlC.get(p) : 1);
+			if(_crl != 0) {
+				var _cLen = sin(_spirP + p * pi * _spirS) * _crl;
+				ox += lengthdir_x(_cLen, aa);
+				oy += lengthdir_y(_cLen, aa);
+			}
 			
 			segments[i] = new __MK_Tree_Segment(ox, oy, t);
 			segmentLengths[i] = ll;

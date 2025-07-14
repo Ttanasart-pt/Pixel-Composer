@@ -1,0 +1,6 @@
+{
+    "name":          "Trim Branch",
+    "spr":           "s_node_mk_tree_branch_trim",
+    "baseNode":      "Node_MK_Tree_Branch_Trim",
+    "pxc_version":    119051,
+}

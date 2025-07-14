@@ -227,7 +227,7 @@ event_inherited();
 			var _exp = preset_expands[$ i];
 			pre_amo  = array_length(pal.palette);
 			row      = ceil(pre_amo / col);
-			_height  = palette_selecting == i? nh + row * _gs + pd : _bh;
+			_height  = _exp? nh + row * _gs + pd : _bh;
 			
 			var isHover = _hover && point_in_rectangle(_m[0], _m[1], 0, yy, ww, yy + _height);
 			

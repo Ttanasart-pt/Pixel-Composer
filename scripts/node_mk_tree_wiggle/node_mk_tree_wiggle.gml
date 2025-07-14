@@ -10,8 +10,8 @@ function Node_MK_Tree_Wiggle(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput( 0, nodeValue_Struct("Tree", noone)).setVisible(true, true).setIcon(THEME.node_junction_mktree, COLORS.node_blend_mktree);
 	
 	////- =Wiggle
-	newInput( 4, nodeValue_Range( "Speed",     [1,1], { linked: true } ));
-	newInput( 2, nodeValue_Range( "Strength",  [4,4], { linked: true } ));
+	newInput( 4, nodeValue_Range( "Speed",     [1,1], true ));
+	newInput( 2, nodeValue_Range( "Strength",  [4,4], true ));
 	newInput( 3, nodeValue_Rotation_Random( "Direction", [0,0,360,0,0] ));
 	// input 
 	

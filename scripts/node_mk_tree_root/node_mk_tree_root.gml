@@ -9,27 +9,33 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput( 0, nodeValue_Struct("Tree", noone)).setVisible(true, true).setIcon(THEME.node_junction_mktree, COLORS.node_blend_mktree);
 	
 	////- =Origin
-	newInput( 5, nodeValue_Range(        "Amount",          [1,1], { linked: true } ));
-	newInput( 8, nodeValue_Slider_Range( "Origin Ratio",    [.5,1]    ));
-	newInput( 1, nodeValue_Vec2(         "Origin Position", [.5,1]    )).setUnitRef(function(i) /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
-	newInput( 2, nodeValue_Vec2_Range(   "Origin Wiggle",   [0,0,0,0] )).setUnitRef(function(i) /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
+	newInput( 5, nodeValue_Range(        "Amount",          [1,1], true ));
+	newInput( 8, nodeValue_Slider_Range( "Origin Ratio",    [.5,1]      ));
+	newInput( 1, nodeValue_Vec2(         "Origin Position", [.5,1]      )).setUnitRef(function(i) /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
+	newInput( 2, nodeValue_Vec2_Range(   "Origin Wiggle",   [0,0,0,0]   )).setUnitRef(function(i) /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
 	
 	////- =Segment
-	newInput( 7, nodeValue_Range(  "Segments",           [4,8]        ));
-	newInput( 3, nodeValue_Range(  "Length",             [16,32]      ));
-	/* UNUSED */ newInput(13, nodeValue_Curve(  "Length Curve",       CURVE_DEF_11 ));
+	newInput( 7, nodeValue_Range(  "Segments", [4,8]       ));
+	newInput( 3, nodeValue_Range(  "Length",   [16,32]     ));
+	/* UNUSED */ newInput(13, nodeValue_Curve(  "Length Curve", CURVE_DEF_11 ));
 	
 	////- =Direction
 	newInput( 4, nodeValue_Rotation_Random( "Direction", [0,80,100,0,0] ));
-	newInput(10, nodeValue_Range(  "Direction Wiggle",   [0,0], { linked: true } ));
+	newInput(10, nodeValue_Range(  "Direction Wiggle",   [0,0], true    ));
 	newInput( 9, nodeValue_Range(  "Gravity",            [0,0] )).setCurvable(15, CURVE_DEF_11);
+	
+	////- =Spiral
+	newInput(22, nodeValue_Range(  "Frequency", [4,4], true ));
+	newInput(23, nodeValue_Range(  "Phase",     [0,0], true ));
+	newInput(18, nodeValue_Range(  "Wave",      [0,0], true )).setCurvable(19, CURVE_DEF_11);
+	newInput(20, nodeValue_Range(  "Curl",      [0,0], true )).setCurvable(21, CURVE_DEF_11);
 	
 	////- =Rendering
 	newInput( 6, nodeValue_Range(       "Thickness",        [4,4] )).setCurvable(11, CURVE_DEF_11);
 	newInput(12, nodeValue_Gradient(    "Base Color",       new gradientObject(ca_white) ));
 	newInput(16, nodeValue_Enum_Button( "Render Edge",      0, [ "None", "Override", "Multiply", "Screen" ] ));
 	newInput(17, nodeValue_Gradient(    "Outer Color",      new gradientObject(ca_white) ));
-	// input 18
+	// input 23
 	
 	newOutput(0, nodeValue_Output("Trunk", VALUE_TYPE.struct, noone)).setIcon(THEME.node_junction_mktree, COLORS.node_blend_mktree);
 	
@@ -37,13 +43,13 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		[ "Origin",    false ], 5, 1, 2, 
 		[ "Segment",   false ], 7, 3, 
 		[ "Direction", false ], 4, 10, 9, 15, 
+		[ "Spiral",    false ], 22, 23, 18, 19, 20, 21, 
 		[ "Render",    false ], 6, 11, 12, 16, 17, 
 	];
 	
 	////- Nodes
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		
 		var _resT = outputs[0].getValue();
 		if(is_array(_resT)) 
 		for( var i = 0, n = array_length(_resT); i < n; i++ ) {
@@ -66,13 +72,21 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _segs = getInputData( 7);
 		var _len  = getInputData( 3);
 		
+		var _sprS = getInputData(22);
+		var _sprP = getInputData(23);
+		var _wav  = getInputData(18);
+		var _wavC = getInputData(19),     curve_wave  = inputs[18].attributes.curved? new curveMap(_wavC)  : undefined;
+		
+		var _cur  = getInputData(20);
+		var _curC = getInputData(21),     curve_curl  = inputs[20].attributes.curved? new curveMap(_curC)  : undefined;
+		
 		var _ang  = getInputData( 4);
 		var _angW = getInputData(10);
 		var _grv  = getInputData( 9);
 		var _grvC = getInputData(15),     curve_grav  = inputs[ 9].attributes.curved? new curveMap(_grvC)  : undefined;
 		
-		var _thck     = getInputData( 6);
-		var _thckC    = getInputData(11), curve_thick = inputs[ 6].attributes.curved? new curveMap(_thckC) : undefined;
+		var _thk      = getInputData( 6);
+		var _thkC     = getInputData(11), curve_thick = inputs[ 6].attributes.curved? new curveMap(_thkC) : undefined;
 		var _baseGrad = getInputData(12);
 		var _edge     = getInputData(16);
 		var _edgeGrad = getInputData(17);
@@ -98,9 +112,25 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _angle  = rotation_random_eval(_ang);
 			
 			var _grav   = random_range(_grv[0], _grv[1]);
-			var _thick  = random_range(_thck[0], _thck[1]);
+			var _thick  = random_range(_thk[0], _thk[1]);
 			
-			_t.grow(_length, _angle, _angW, _grav, curve_grav, _thick, curve_thick);
+			var _spirS  = random_range(_sprS[0], _sprS[1]);
+			var _spirP  = random_range(_sprP[0], _sprP[1]);
+			var _wave   = random_range(_wav[0], _wav[1]);
+			var _curl   = random_range(_cur[0], _cur[1]);
+			
+			var _growParam = {
+				length : _length,
+				angle  : _angle,   angleW : _angW,
+				grav   : _grav,    gravC  : curve_grav,
+				thick  : _thick,   thickC : curve_thick,
+				
+				spirS  : _spirS,   spirP  : _spirP,
+				wave   : _wave,    waveC  : curve_wave, 
+				curl   : _curl,    curlC  : curve_curl,
+			}
+			
+			_t.grow(_growParam);
 			_t.color    = _baseGrad.eval(random(1));
 			
 			switch(_edge) {

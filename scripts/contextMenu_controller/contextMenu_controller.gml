@@ -174,3 +174,11 @@ function fileNameCall(path, onModify, _x = mouse_mx + 8, _y = mouse_my + 8) {
 	
 	return dia;
 }
+
+function textboxCall(initText, onModify, _x = mouse_mx + 8, _y = mouse_my + 8) {
+	var dia = dialogCall(o_dialog_textbox, _x, _y);
+	dia.onModify = onModify;
+	dia.activate(initText);
+	
+	return dia;
+}

@@ -159,7 +159,6 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 			if(is_array(data_list) && key_mod_press(SHIFT)) {
 				var len = array_length(data_list);
 				var ind = safe_mod(_val + sign(MOUSE_WHEEL) + len, len);
-				
 				if(len && MOUSE_WHEEL != 0) onModify(ind);
 				
 			}

@@ -9,12 +9,13 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(0, nodeValue_Struct("Branches", noone)).setVisible(true, true).setIcon(THEME.node_junction_mktree, COLORS.node_blend_mktree);
 	
 	////- =Leaf
-	newInput( 1, nodeValue_Slider_Range( "Branch Position", [.5,1]     ));
+	newInput( 1, nodeValue_Slider_Range( "Branch Position", [.5,1] ));
 	newInput(19, nodeValue_Enum_Button(  "Distribution",     0, [ "Random", "Uniform" ] ));
-	newInput( 2, nodeValue_Range( "Amount",  [8,16]                    ));
-	newInput( 7, nodeValue_Range( "Spread",  [90,90], { linked: true } )).setCurvable(16, CURVE_DEF_11, "Over Branch");
-	newInput(10, nodeValue_Range( "Offset",  [0,0],   { linked: true } )).setCurvable(17, CURVE_DEF_11, "Over Branch");
-	newInput(15, nodeValue_Bool(  "Pair",    false                     ));
+	
+	newInput( 2, nodeValue_Range( "Amount",  [8,16]        ));
+	newInput( 7, nodeValue_Range( "Spread",  [90,90], true )).setCurvable(16, CURVE_DEF_11, "Over Branch");
+	newInput(10, nodeValue_Range( "Offset",  [0,0],   true )).setCurvable(17, CURVE_DEF_11, "Over Branch");
+	newInput(15, nodeValue_Bool(  "Pair",    false         ));
 	
 	////- =Shape
 	newInput( 8, nodeValue_Enum_Button( "Shape",      0, [ "Leaf", "Circle", "Surface" ] ));
@@ -26,20 +27,24 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput( 4, nodeValue_Gradient(    "Color Per Branch",  new gradientObject(ca_white) )).setMappable(12);
 	newInput(20, nodeValue_Gradient(    "Color Over Branch", new gradientObject(ca_white) ));
 	newInput( 6, nodeValue_Gradient(    "Color Per Leaf",    new gradientObject(ca_white) )).setMappable(13);
-	newInput(14, nodeValue_Enum_Button( "Render Edge",       0, [ "None", "Override", "Multiply", "Screen" ] ));
-	newInput(11, nodeValue_Gradient(    "Edge Color",        new gradientObject(ca_white) ));
 	
-	////- =Grow
-	newInput(22, nodeValue_Range( "Grow Delay", [0,0], { linked: true } ));
-	// input 23
+	////- =Edge
+	newInput(14, nodeValue_Enum_Button( "Render Edge",       0, [ "None", "Override", "Multiply", "Screen" ] ));
+	newInput(11, nodeValue_Gradient(    "Edge Color",        new gradientObject(ca_white) )).setMappable(25);
+	newInput(23, nodeValue_Enum_Button( "Render Top Edge",   0, [ "None", "Override", "Multiply", "Screen" ] ));
+	newInput(24, nodeValue_Gradient(    "Top Edge Color",    new gradientObject(ca_white) )).setMappable(26);
+	
+	////- =Growth
+	newInput(22, nodeValue_Range( "Grow Delay", [0,0], true ));
+	// input 27
 	
 	newOutput(0, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setIcon(THEME.node_junction_mktree, COLORS.node_blend_mktree);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 5, 0, 
 		[ "Leaf",   false ], 1, 19, 2, 7, 16, 10, 17, 15, 
 		[ "Shape",  false ], 8, 3, 18, 9, 21, 
-		[ "Color",  false ], 4, 20, 12, 6, 13, 14, 11, 
-		[ "Grow",   false ], 22, 
+		[ "Color",  false ], 4, 20, 12, 6, 13, new Inspector_Spacer(ui(4), true, true, ui(6)), 14, 11, 25, 23, 24, 26, 
+		[ "Growth", false ], 22, 
 	];
 	
 	////- Nodes
@@ -78,28 +83,38 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _tex  = getInputData( 9);
 			var _lspn = getInputData(21);
 			
-			var _cBra    = getInputData( 4);
-			var _cBraMap = getInputData(12);
-			var _cBraM   = inputs[4].attributes.mapped && is_surface(_cBraMap);
+			var _cBra     = getInputData( 4);
+			var _cBraMap  = getInputData(12);
+			var _cBraM    = inputs[4].attributes.mapped && is_surface(_cBraMap);
+			var _cBraSamp = _cBraM? new Surface_sampler(_cBraMap) : undefined;
 			
-			var _cOvrBra = getInputData(20);
+			var _cOvrBra  = getInputData(20);
 			
-			var _cLef    = getInputData( 6);
-			var _cLefMap = getInputData(13);
-			var _cLefM   = inputs[6].attributes.mapped && is_surface(_cLefMap);
+			var _cLef     = getInputData( 6);
+			var _cLefMap  = getInputData(13);
+			var _cLefM    = inputs[6].attributes.mapped && is_surface(_cLefMap);
+			var _cLefSamp = _cLefM? new Surface_sampler(_cLefMap) : undefined;
 			
-			var _edge = getInputData(14);
-			var _cedg = getInputData(11);
+			var _edg      = getInputData(14);
+			var _edgC     = getInputData(11);
+			var _cEdgMap  = getInputData(25);
+			var _cEdgM    = inputs[11].attributes.mapped && is_surface(_cEdgMap);
+			var _cEdgSamp = _cEdgM? new Surface_sampler(_cEdgMap) : undefined;
+			
+			var _edt      = getInputData(23);
+			var _edtC     = getInputData(24);
+			var _cEdtMap  = getInputData(26);
+			var _cEdtM    = inputs[24].attributes.mapped && is_surface(_cEdtMap);
+			var _cEdtSamp = _cEdtM? new Surface_sampler(_cEdtMap) : undefined;
 			
 			var _grow = getInputData(22);
 			
 			inputs[ 9].setVisible(_shap == 2, _shap == 2);
 			inputs[21].setVisible(_shap == 0);
-			inputs[11].setVisible(_shap != 2 && _edge, _shap != 2 && _edge);
+			inputs[11].setVisible(_shap != 2 && _edg);
+			inputs[23].setVisible(_shap == 0);
+			inputs[24].setVisible(_shap == 0 && _edt);
 		#endregion
-		
-		if(_cBraM) var _cBraSamp = new Surface_sampler(_cBraMap);
-		if(_cLefM) var _cLefSamp = new Surface_sampler(_cLefMap);
 		
 		var ox, oy, nx, ny;
 		var _pst = min(_pos[0], _pos[1]);
@@ -147,11 +162,11 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					var amoSeg = _amf + (random(1) < _aml);
 					
 				} else if(_dist == 1) {
-					var amoSeg = 9999;
+					var amoSeg = ceil(rng / _uniSpace) + 1;
 					if(_uniRun > _r1) { ox = nx; oy = ny; continue; }
 				}
 				
-				var dr = point_direction(ox, oy, nx, ny);
+				var brnDir = point_direction(ox, oy, nx, ny);
 				
 				repeat(amoSeg) {
 					if(_dist == 0) {
@@ -170,11 +185,11 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					var _ly = lerp(oy, ny, _rr); 
 					
 					var _spra = _sprdB * choose(-1, 1) * (curve_spread? curve_spread.get(_rBrns) : 1);
-					var _dr   = dr + _spra;
+					var _dr   = brnDir + _spra;
 					
 					var _sh = random_range(_offs[0], _offs[1]) * (curve_offset? curve_offset.get(_rBrns) : 1);
-					_lx += lengthdir_x(_sh, dr + 90);
-					_ly += lengthdir_y(_sh, dr + 90);
+					_lx += lengthdir_x(_sh, brnDir + 90);
+					_ly += lengthdir_y(_sh, brnDir + 90);
 					
 					var lss = curve_size? curve_size.get(_rBrns) : 1;
 					var lsx = random_range(_siz[0], _siz[1]) * lss;
@@ -187,24 +202,37 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					    _l.color     = colorMultiply(cc, lc);
 					    _l.growShift = random_range(_grow[0], _grow[1]);
 					
-					switch(_edge) {
-						case 0 : _l.colorE = _l.color;              break;
-						case 1 : _l.colorE = _cedg.eval(random(1)); break;
-						case 2 : _l.colorE = colorMultiply( _cedg.eval(random(1)), _l.color); break;
-						case 3 : _l.colorE = colorScreen(   _cedg.eval(random(1)), _l.color); break;
+					if(_edg == 0) {
+						_l.colorE = _l.color;
+						
+					} else {
+						var _edgCol = _cEdgM? _cEdgSamp.getPixel(round(_lx), round(_ly)) : _edgC.eval(random(1));
+						
+						switch(_edg) {
+							case 1 : _l.colorE = _edgCol;  break;
+							case 2 : _l.colorE = colorMultiply( _edgCol, _l.color); break;
+							case 3 : _l.colorE = colorScreen(   _edgCol, _l.color); break;
+						}
+					}
+					
+					if(_edt == 0) {
+						_l.colorU = undefined;
+						
+					} else {
+						var _edtCol = _cEdtM? _cEdtSamp.getPixel(round(_lx), round(_ly)) : _edtC.eval(random(1));
+						
+						switch(_edt) {
+							case 1 : _l.colorU = _edtCol; break;
+							case 2 : _l.colorU = colorMultiply( _edtCol, _l.color); break;
+							case 3 : _l.colorU = colorScreen(   _edtCol, _l.color); break;
+						}
 					}
 					
 					array_push(_br.leaves, _l);
 					
 					if(_doub) {
-						var _d2 = dr - _spra;
-						var _l2 = new __MK_Tree_Leaf(_rBrn, _shap, _lx, _ly, _d2, lsx, lsy, _lspn);
-						
-						_l2.surface   = _l.surface;
-						_l2.color     = _l.color;
-						_l2.colorE    = _l.colorE;
-						_l2.growShift = random_range(_grow[0], _grow[1]);
-
+						var _d2 = brnDir - _spra;
+						var _l2 = new __MK_Tree_Leaf(_rBrn, _shap, _lx, _ly, _d2, lsx, lsy, _lspn).copy(_l);
 						array_push(_br.leaves, _l2);
 					}
 					

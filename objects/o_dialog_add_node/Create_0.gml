@@ -1016,9 +1016,7 @@ event_inherited();
 	search_list   = [];
 	KEYBOARD_RESET
 	
-	tb_search = new textBox(TEXTBOX_INPUT.text, function(str) /*=>*/ { search_string = string(str); searchNodes(); })
-                 .setAlign(fa_left)
-                 .setAutoupdate();
+	tb_search = textBox_Text(function(str) /*=>*/ { search_string = string(str); searchNodes(); }).setAlign(fa_left).setAutoupdate();
 	WIDGET_CURRENT = tb_search;
 	
 	function searchNodes() { 
@@ -1272,19 +1270,20 @@ event_inherited();
 			
 			for(var i = 0; i < amo; i++) {
 				var s_res  = search_list[i];
-				var  yy    = sy + list_height * ind;
-				var _node  = noone;
-				var _param = {};
+				var yy     = sy + list_height * ind;
+				var yc     = yy + list_height / 2;
+				
+				var _node  = s_res;
 				var _query = "";
 				var _mrng  = noone;
+				var _param = {};
 				
 				if(is_array(s_res)) {
-					_node        = s_res[0];
-					_query       = s_res[1];
-					_mrng        = s_res[2][1];
-				} else
-					_node = s_res;
-					
+					_node  = s_res[0];
+					_query = s_res[1];
+					_mrng  = s_res[2][1];
+				} 
+				
 				if(!checkValid(_node, false)) continue;
 				ind++;
 				
@@ -1302,7 +1301,7 @@ event_inherited();
 					search_pane.hover_content = true;
 					node_icon   = _node.spr;
 					node_icon_x = search_pane.x + pd + list_height / 2 + ui(32);
-					node_icon_y = search_pane.y + yy + list_height / 2;
+					node_icon_y = search_pane.y + yc;
 				}
 				
 				if(_minput && _mouseOn) {
@@ -1329,7 +1328,7 @@ event_inherited();
 					var _hotkey = GRAPH_ADD_NODE_MAPS[$ _node.nodeName];
 					if(_hotkey != undefined) {
 						draw_set_text(f_p2, fa_right, fa_center, COLORS._main_text_sub);
-						draw_text_add(ww - ui(16), yy + list_height / 2, _hotkey.getName());
+						draw_text_add(ww - ui(16), yc, _hotkey.getName());
 					}
 					
 				} else {
@@ -1344,7 +1343,7 @@ event_inherited();
 						var _soy = sprite_get_yoffset(_node.spr);
 					
 						var _sx = pd + list_height / 2 + ui(32);
-						var _sy = yy + list_height / 2;
+						var _sy = yc;
 						_sx += _sw * _ss / 2 - _sox * _ss;
 						_sy += _sh * _ss / 2 - _soy * _ss;
 				
@@ -1355,9 +1354,19 @@ event_inherited();
 					}
 					
 					tx = pd + list_height + ui(32 + 4);
+					
+					if(is(_node, NodeAction)) {
+						draw_sprite_ui_uniform(THEME.arrow, 0, tx + ui(10), yc, 1, COLORS._main_icon);
+						tx += ui(20);
+						
+					} else if(is(_node, FileObject)) {
+						draw_sprite_ui_uniform(THEME.folder_16, 0, tx + ui(8), yc, 1, COLORS._main_icon);
+						tx += ui(20);
+					}
+					
 					draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-					if(highlight) draw_text_match(tx, yy + list_height / 2, _node.getName(), search_string);
-					else          draw_text(      tx, yy + list_height / 2, _node.getName());
+					if(highlight) draw_text_match(tx, yc, _node.getName(), search_string);
+					else          draw_text(      tx, yc, _node.getName());
 					
 					tx += string_width(_node.getName());
 				}
@@ -1366,16 +1375,16 @@ event_inherited();
 					node_selecting = noone;
 					
 					gpu_set_tex_filter(true); BLEND_ADD
-					draw_sprite_ui_uniform(THEME.star, 0, pd + ui(16), yy + list_height / 2, .8, c_white, .5);
+					draw_sprite_ui_uniform(THEME.star, 0, pd + ui(16), yc, .8, c_white, .5);
 					gpu_set_tex_filter(false); BLEND_NORMAL
 					
 					if(mouse_press(mb_left, sFOCUS)) struct_toggle(global.FAV_NODES, _node.nodeName);
 				}
 				
-				var _hinfo = _hover && point_in_circle(_m[0], _m[1], tx + ui(12), yy + list_height / 2, list_height / 2);
+				var _hinfo = _hover && point_in_circle(_m[0], _m[1], tx + ui(12), yc, list_height / 2);
 				if((struct_has(_node, "getTooltip") && _node.getTooltip() != "") || (struct_has(_node, "getTooltipSpr") && _node.getTooltipSpr() != noone)) {
 					gpu_set_tex_filter(true);
-					draw_sprite_ui_uniform(THEME.info, 0, tx + ui(12), yy + list_height / 2, 0.7, COLORS._main_icon, .5 + _hinfo * .25);
+					draw_sprite_ui_uniform(THEME.info, 0, tx + ui(12), yc, 0.7, COLORS._main_icon, .5 + _hinfo * .25);
 					gpu_set_tex_filter(false);
 					
 					if(_hinfo) {

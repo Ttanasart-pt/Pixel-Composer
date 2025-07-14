@@ -274,6 +274,7 @@
             "Node_MK_Tree_Leaf",
             "Node_MK_Tree_Add_Branch",
             { "label": "/Modify" },
+            "Node_MK_Tree_Branch_Trim",
             "Node_MK_Tree_Attract",
             "Node_MK_Tree_Repulse",
             "Node_MK_Tree_Wiggle",

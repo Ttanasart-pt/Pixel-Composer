@@ -11,12 +11,12 @@ function Node_MK_Tree_Grow(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	////- =Grow
 	newInput( 2, nodeValue_Slider( "Progress",         1.5, [-1, 4, .001] ));
-	newInput( 5, nodeValue_Range(  "Branch Speed",     [1,1], { linked : true } ));
-	newInput( 3, nodeValue_Range(  "Thickness Effect", [0,0], { linked : true } ));
+	newInput( 5, nodeValue_Range(  "Branch Speed",     [1,1], true ));
+	newInput( 3, nodeValue_Range(  "Thickness Effect", [0,0], true ));
 	
 	////- =Leaf
-	newInput( 6, nodeValue_Range(  "Leaf Delay",     [0,0], { linked : true } ));
-	newInput( 4, nodeValue_Range(  "Leaf Falloff",   [4,4], { linked : true } ));
+	newInput( 6, nodeValue_Range(  "Leaf Delay",       [0,0], true ));
+	newInput( 4, nodeValue_Range(  "Leaf Falloff",     [4,4], true ));
 	// input 7
 	
 	newOutput(0, nodeValue_Output("Tree", VALUE_TYPE.struct, noone)).setIcon(THEME.node_junction_mktree, COLORS.node_blend_mktree);
@@ -62,7 +62,12 @@ function Node_MK_Tree_Grow(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _lens = _tr.segmentLengths;
 			var _tlen = _tr.totalLength;
 			
-			var _tgro  = max(0, _grow - _tr.rootPosition * random_range(_rtSc[0], _rtSc[1]));
+			var _baseSpeed = random_range(_rtSc[0], _rtSc[1]);
+			var _growShift = _tr.growShift;
+			
+			var _tgro  = _grow - _tr.rootPosition * _baseSpeed + _growShift;
+			    _tgro  = max(0, _tgro);
+			
 			var _tfalB = random_range(_falB[0], _falB[1]);
 			var _tfalL = random_range(_falL[0], _falL[1]);
 			var _tdelL = random_range(_delL[0], _delL[1]);
