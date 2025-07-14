@@ -137,59 +137,65 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			for( var i = 0; i < _gridH; i++ )
 			for( var j = 0; j < _gridW; j++ ) {
-				var _a0 = _data[input_fix_len + (i    ) * (_gridW + 1) + (j    )];
-				var _a1 = _data[input_fix_len + (i    ) * (_gridW + 1) + (j + 1)];
-				var _a2 = _data[input_fix_len + (i + 1) * (_gridW + 1) + (j    )];
-				var _a3 = _data[input_fix_len + (i + 1) * (_gridW + 1) + (j + 1)];
+				var _a0 = _data[input_fix_len + (i  ) * (_gridW+1) + (j  )];
+				var _a1 = _data[input_fix_len + (i  ) * (_gridW+1) + (j+1)];
+				var _a2 = _data[input_fix_len + (i+1) * (_gridW+1) + (j  )];
+				var _a3 = _data[input_fix_len + (i+1) * (_gridW+1) + (j+1)];
 				
 				var _a0x = _a0[0], _a0y = _a0[1];
 				var _a1x = _a1[0], _a1y = _a1[1];
 				var _a2x = _a2[0], _a2y = _a2[1];
 				var _a3x = _a3[0], _a3y = _a3[1];
 
-				var _u0 = _stW * (j    );
-				var _u1 = _stW * (j + 1);
-				var _v0 = _stH * (i    );
-				var _v1 = _stH * (i + 1);
+				var _u0 =   j * _stW;
+				var _u1 = _u0 + _stW;
+				var _v0 =   i * _stH;
+				var _v1 = _v0 + _stH;
 				
-				for( var yy = 0; yy < _subd; yy++ )
-				for( var xx = 0; xx < _subd; xx++ ) {
-					
-					iy0 = yy  * _imp;
-					iy1 = iy0 + _imp;
-					
-					ix0 = xx  * _imp;
-					ix1 = ix0 + _imp;
-					
-					var _aa0x = lerp(lerp(_a0x, _a1x, ix0), lerp(_a2x, _a3x, ix0), iy0);
-					var _aa0y = lerp(lerp(_a0y, _a2y, iy0), lerp(_a1y, _a3y, iy0), ix0);
-					
-					var _aa1x = lerp(lerp(_a0x, _a1x, ix1), lerp(_a2x, _a3x, ix1), iy0);
-					var _aa1y = lerp(lerp(_a0y, _a2y, iy0), lerp(_a1y, _a3y, iy0), ix1);
-					
-					var _aa2x = lerp(lerp(_a0x, _a1x, ix0), lerp(_a2x, _a3x, ix0), iy1);
-					var _aa2y = lerp(lerp(_a0y, _a2y, iy1), lerp(_a1y, _a3y, iy1), ix0);
-					
-					var _aa3x = lerp(lerp(_a0x, _a1x, ix1), lerp(_a2x, _a3x, ix1), iy1);
-					var _aa3y = lerp(lerp(_a0y, _a2y, iy1), lerp(_a1y, _a3y, iy1), ix1);
-					
-					var _uu0  = lerp(_u0, _u1, ix0);
-					var _uu1  = lerp(_u0, _u1, ix1);
-					var _vv0  = lerp(_v0, _v1, iy0);
-					var _vv1  = lerp(_v0, _v1, iy1);
-					
-					draw_vertex_texture(_aa0x, _aa0y, _uu0, _vv0);
-					draw_vertex_texture(_aa1x, _aa1y, _uu1, _vv0);
-					draw_vertex_texture(_aa2x, _aa2y, _uu0, _vv1);
-					
-					draw_vertex_texture(_aa1x, _aa1y, _uu1, _vv0);
-					draw_vertex_texture(_aa2x, _aa2y, _uu0, _vv1);
-					draw_vertex_texture(_aa3x, _aa3y, _uu1, _vv1);
-					
-					if(++_itr > 32) {
-						draw_primitive_end();
-						draw_primitive_begin_texture(pr_trianglelist, surface_get_texture(_surf));
+				var xx = 0, yy = 0;
+				
+				repeat( _subd ) {
+					xx = 0;
+					repeat( _subd ) {
+						
+						iy0 = yy  * _imp;
+						iy1 = iy0 + _imp;
+						
+						ix0 = xx  * _imp;
+						ix1 = ix0 + _imp;
+						
+						var _aa0x = lerp(lerp(_a0x, _a1x, ix0), lerp(_a2x, _a3x, ix0), iy0);
+						var _aa0y = lerp(lerp(_a0y, _a2y, iy0), lerp(_a1y, _a3y, iy0), ix0);
+						
+						var _aa1x = lerp(lerp(_a0x, _a1x, ix1), lerp(_a2x, _a3x, ix1), iy0);
+						var _aa1y = lerp(lerp(_a0y, _a2y, iy0), lerp(_a1y, _a3y, iy0), ix1);
+						
+						var _aa2x = lerp(lerp(_a0x, _a1x, ix0), lerp(_a2x, _a3x, ix0), iy1);
+						var _aa2y = lerp(lerp(_a0y, _a2y, iy1), lerp(_a1y, _a3y, iy1), ix0);
+						
+						var _aa3x = lerp(lerp(_a0x, _a1x, ix1), lerp(_a2x, _a3x, ix1), iy1);
+						var _aa3y = lerp(lerp(_a0y, _a2y, iy1), lerp(_a1y, _a3y, iy1), ix1);
+						
+						var _uu0  = lerp(_u0, _u1, ix0);
+						var _uu1  = lerp(_u0, _u1, ix1);
+						var _vv0  = lerp(_v0, _v1, iy0);
+						var _vv1  = lerp(_v0, _v1, iy1);
+						
+						draw_vertex_texture(_aa0x, _aa0y, _uu0, _vv0);
+						draw_vertex_texture(_aa1x, _aa1y, _uu1, _vv0);
+						draw_vertex_texture(_aa2x, _aa2y, _uu0, _vv1);
+						
+						draw_vertex_texture(_aa1x, _aa1y, _uu1, _vv0);
+						draw_vertex_texture(_aa2x, _aa2y, _uu0, _vv1);
+						draw_vertex_texture(_aa3x, _aa3y, _uu1, _vv1);
+						
+						if(++_itr > 32) {
+							draw_primitive_end();
+							draw_primitive_begin_texture(pr_trianglelist, surface_get_texture(_surf));
+						}
+						xx++;
 					}
+					yy++;
 				}
 				
 			}

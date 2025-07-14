@@ -1,0 +1,13 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_point_sdf",
+  "name":"sh_point_sdf",
+  "parent":{
+    "name":"point",
+    "path":"folders/nodes/data/value/point.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "tags":[],
+  "type":1,
+}

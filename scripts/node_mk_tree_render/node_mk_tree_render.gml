@@ -16,10 +16,6 @@ function Node_MK_Tree_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	////- Nodes
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		
-	}
-	
 	static update = function() {
 		if(!is(inline_context, Node_MK_Tree_Inline)) return;
 		

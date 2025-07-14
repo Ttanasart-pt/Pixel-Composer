@@ -823,6 +823,7 @@
             "Node_Scatter_Points",
             "Node_Move_Point",
             "Node_Point_In_Area",
+            "Node_Point_SDF",
             
             {"label": "Matrix"},
             {"label": "/Creators"},

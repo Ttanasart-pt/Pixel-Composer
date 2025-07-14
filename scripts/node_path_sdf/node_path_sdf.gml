@@ -2,20 +2,21 @@ function Node_Path_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	name = "Path to SDF";
 	dimension_index = 1;
 	
-	newInput(0, nodeValue_PathNode("Path")).rejectArray();
-		
 	newInput(1, nodeValue_Dimension());
 	
-	newInput(2, nodeValue_Int("Subdivision", 64)).setValidator(VV_min(2)).rejectArray();
-		
-	newInput(3, nodeValue_Float("Max Distance", 16));
-		
-	newInput(4, nodeValue_Bool("Inverted", false));
+	////- =Path
+	newInput(0, nodeValue_PathNode( "Path" )).rejectArray();
+	newInput(2, nodeValue_Int( "Subdivision", 64 )).setValidator(VV_min(2)).rejectArray();
+	
+	////- =Render
+	newInput(3, nodeValue_Float( "Max Distance", 16    ));
+	newInput(4, nodeValue_Bool(  "Inverted",     false ));
+	// input 5
 		
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	input_display_list = [ 0, 
-		["Path",   false], 1, 2,
+	input_display_list = [ 1,
+		["Path",   false], 0, 2,
 		["Render", false], 3, 4, 
 	]
 	
