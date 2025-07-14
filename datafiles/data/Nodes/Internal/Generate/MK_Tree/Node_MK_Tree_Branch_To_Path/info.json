@@ -1,0 +1,6 @@
+{
+    "name":          "Branch to Path",
+    "spr":           "s_node_mk_tree_branch_to_path",
+    "baseNode":      "Node_MK_Tree_Branch_To_Path",
+    "pxc_version":    119051.00,
+}

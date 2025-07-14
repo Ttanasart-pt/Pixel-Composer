@@ -4,8 +4,8 @@ function Node_MK_Tree_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	icon  = THEME.mkTree;
 	is_simulation = true;
 	
-	input_node_types   = [ Node_MK_Tree_Root   ];
-	output_node_types  = [ Node_MK_Tree_Render ];
+	input_node_types   = [ Node_MK_Tree_Root, Node_MK_Tree_Path_Root   ];
+	output_node_types  = [ Node_MK_Tree_Render, Node_MK_Tree_Branch_To_Path ];
 	
 	if(NODE_NEW_MANUAL) {
 		var _branch = nodeBuild("Node_MK_Tree_Root",   x,       y, self);

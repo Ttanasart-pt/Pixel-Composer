@@ -1,21 +1,18 @@
 function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Replace Colors";
 	
-	newInput(0, nodeValue_Surface("Surface In"));
-	newInput(1, nodeValue_Palette("Palette from", []));
-	
-	newInput(2, nodeValue_Palette("Palette to", []))
-		.setVisible(false, false);
-	
-	newInput(3, nodeValue_Slider("Threshold", 0.1));
-	
-	newInput(4, nodeValue_Surface("Mask"));
-	
-	newInput(5, nodeValue_Slider("Mix", 1));
-	
 	newActiveInput(6);
-		
+	
+	////- =Surface
+	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput(4, nodeValue_Surface( "Mask"       ));
+	newInput(5, nodeValue_Slider(  "Mix",     1 ));
 	__init_mask_modifier(4, 7); // inputs 7, 8, 
+	
+	////- =Reaplce
+	newInput(1, nodeValue_Palette( "Palette from", [] ));
+	newInput(2, nodeValue_Palette( "Palette to",   [] )).setVisible(false, false);
+	newInput(3, nodeValue_Slider(  "Threshold",    .1 ));
 	
 	palette_selecting = noone;
 	palette_select    = [ -1, -1 ];

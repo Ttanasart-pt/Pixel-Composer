@@ -5,31 +5,26 @@ function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput(10, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surfaces
-		
 	newInput(0, nodeValue_Surface( "Surface In" ));
 	newInput(7, nodeValue_Surface( "Mask"       ));
 	newInput(8, nodeValue_Slider(  "Mix", 1     ));
 	__init_mask_modifier(7, 11);
 	
 	////- =Palettes
-		
 	newInput(1, nodeValue_Palette( "From", array_clone(DEF_PALETTE) ));
 	newInput(2, nodeValue_Palette( "To",   array_clone(DEF_PALETTE) ));
 	
 	////- =Comparison
-		
 	newInput(13, nodeValue_Enum_Scroll( "Mode", 0, [ "Closest", "Random" ] ));
 	newInput(14, nodeValueSeed());
 	newInput( 3, nodeValue_Slider( "Threshold",      .1   ));
 	newInput( 5, nodeValue_Bool(   "Multiply alpha", true ));
 	
 	////- =Replace Others
-		
 	newInput( 4, nodeValue_Bool(  "Replace Other Colors", false    ));
 	newInput(15, nodeValue_Color( "Target Color",         ca_black ));
 	
 	////- =Render
-		
 	newInput(6, nodeValue_Bool("Hard replace", true, "Completely override pixel with new color instead of blending between it."));
 	
 	input_display_list = [ 9, 10, 

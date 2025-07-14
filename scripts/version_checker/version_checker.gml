@@ -1,6 +1,6 @@
 function check_version(path, key = "version") {
 	if(!file_exists_empty(path)) {
-		var str = {};
+		var str = {}; 
 		str[$ key] = BUILD_NUMBER;
 		json_save_struct(path, str);
 		return true;

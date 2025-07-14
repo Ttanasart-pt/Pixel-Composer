@@ -70,12 +70,12 @@
 		var _colors = array_create(array_length(_pal) * 4);
 		for(var i = 0; i < array_length(_pal); i++) {
 			var _c = _pal[i];
-			if(!is_real(_c)) continue;
+			if(!is_numeric(_c)) continue;
 			
-			_colors[i * 4 + 0] = _color_get_red(_c);
-			_colors[i * 4 + 1] = _color_get_green(_c);
-			_colors[i * 4 + 2] = _color_get_blue(_c);
-			_colors[i * 4 + 3] = _color_get_alpha(_c);
+			_colors[i * 4 + 0] = ((_c & 0x000000FF) >>  0) / 255;
+			_colors[i * 4 + 1] = ((_c & 0x0000FF00) >>  8) / 255;
+			_colors[i * 4 + 2] = ((_c & 0x00FF0000) >> 16) / 255;
+			_colors[i * 4 + 3] = ((_c & 0xFF000000) >> 24) / 255;
 		}
 	
 		return _colors;

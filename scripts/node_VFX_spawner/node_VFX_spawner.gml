@@ -17,13 +17,14 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 	newOutput(3, nodeValue_Output( "On destroy", VALUE_TYPE.node, noone  ));
 	
 	array_foreach(inputs, function(i) /*=>*/ {return i.rejectArray()}, input_len);
-	
 	array_insert(input_display_list, 0, ["Trigger", true], input_len + 0, input_len + 1);
 	
 	UPDATE_PART_FORWARD
 	junction_tos = array_create(array_length(outputs));
 	
-	static getDimension = function() /*=>*/ {return inline_context.dimension};
+	static getDimension = function() /*=>*/ {return is(inline_context, Node_VFX_Group_Inline)? inline_context.dimension : [1,1]};
+	
+	////- Trigger
 	
 	static onUpdate = function(frame = CURRENT_FRAME) {
 		
@@ -60,27 +61,33 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 	
 	static onPartCreate = function(part) {
 		var jn = junction_tos[1];
-		var pv = part.getPivot();
+		
+		__frame = part.frame;
+		__pivot = part.getPivot();
 		
 		for( var i = 0, n = array_length(jn); i < n; i++ )
-			jn[i].node.spawn(part.frame, pv);
+		array_foreach(jn, function(j) /*=>*/ {return j.node.spawn(__frame, __pivot)});
 	}
 	
 	static onPartStep = function(part) {
 		var jn = junction_tos[2];
-		var pv = part.getPivot();
 		
-		for( var i = 0, n = array_length(jn); i < n; i++ )
-			jn[i].node.spawn(part.frame, pv);
+		__frame = part.frame;
+		__pivot = part.getPivot();
+		
+		array_foreach(jn, function(j) /*=>*/ {return j.node.spawn(__frame, __pivot)});
 	}
 	
 	static onPartDestroy = function(part) {
 		var jn = junction_tos[3];
-		var pv = part.getPivot();
 		
-		for( var i = 0, n = array_length(jn); i < n; i++ )
-			jn[i].node.spawn(part.frame, pv);
+		__frame = part.frame;
+		__pivot = part.getPivot();
+		
+		array_foreach(jn, function(j) /*=>*/ {return j.node.spawn(__frame, __pivot)});
 	}
+	
+	////- Preview
 	
 	static getGraphPreviewSurface = function() /*=>*/ {return getInputData(0)};
 	static getPreviewingNode      = function() /*=>*/ {return is(inline_context, Node_VFX_Group_Inline)? inline_context.getPreviewingNode() : self};

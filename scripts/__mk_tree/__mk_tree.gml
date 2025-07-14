@@ -1,10 +1,18 @@
-function __MK_Tree_Leaf(_shp, _x, _y, _dir, _sx, _sy, _span) constructor {
-	shape = _shp;
+function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
+	rootPosition = _pos;
+	shape        = _shp;
 	
-	sx = _sx;
-	sy = _sy;
+	x  = _x;
+	y  = _y;
 	
+	startx = _x;
+	starty = _y;
+	
+	scale = 1;
+	sx  = _sx;
+	sy  = _sy;
 	dir = _dir;
+	sp  = _span;
 	
 	dx = lengthdir_x(sx, dir);
 	dy = lengthdir_y(sx, dir);
@@ -12,44 +20,44 @@ function __MK_Tree_Leaf(_shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 	dsx = lengthdir_x(sy, dir + 90);
 	dsy = lengthdir_y(sy, dir + 90);
 	
-	x = _x;
-	y = _y;
+	surface   = noone;
+	color     = c_white;
+	colorE    = c_white;
 	
-	x1 = x + dx;
-	y1 = y + dy;
-	
-	x2 = x + dx * _span;
-	y2 = y + dy * _span;
-	
-	surface = noone;
-	color   = c_white;
-	colorE  = c_white;
+	growShift = 0;
 	
 	static drawOverlay = function(_x, _y, _s) { draw_circle(_x + x * _s, _y + y * _s, 3, false); }
 	
 	static draw = function() {
+		if(scale <= 0) return;
 		draw_set_color(color);
+		
+		var x1 = x + dx * scale;
+		var y1 = y + dy * scale;
+		
+		var x2 = x + dx * sp * scale;
+		var y2 = y + dy * sp * scale;
 		
 		switch(shape) {
 			case 0 : 
 				draw_primitive_begin(pr_trianglelist);
-					draw_vertex_color(x,        y,        color, 1);
-					draw_vertex_color(x1,       y1,       colorE, 1);
-					draw_vertex_color(x2 + dsx, y2 + dsy, colorE, 1);
+					draw_vertex_color(x,  y,  color,  1);
+					draw_vertex_color(x1, y1, colorE, 1);
+					draw_vertex_color(x2 + dsx * scale, y2 + dsy * scale, colorE, 1);
 					
-					draw_vertex_color(x,        y,        color, 1);
-					draw_vertex_color(x1,       y1,       colorE, 1);
-					draw_vertex_color(x2 - dsx, y2 - dsy, colorE, 1);
+					draw_vertex_color(x,  y,  color,  1);
+					draw_vertex_color(x1, y1, colorE, 1);
+					draw_vertex_color(x2 - dsx * scale, y2 - dsy * scale, colorE, 1);
 				draw_primitive_end();
 				break;
 				
 			case 1 :
 				draw_set_circle_precision(16)
-				draw_circle_color(x2, y2, sx, color, colorE, false);
+				draw_circle_color(x2, y2, sx * scale, color, colorE, false);
 				break;
 				
 			case 2 :
-				draw_surface_ext_safe(surface, x, y, sx, sy, dir, color);
+				draw_surface_ext_safe(surface, x, y, sx * scale, sy * scale, dir, color);
 				break;
 			
 		}
@@ -83,28 +91,47 @@ function __MK_Tree() constructor {
 	////- Get
 	
 	static getPosition = function(rat, res) {
+		if(array_empty(segments)) {
+			res[0] = x;
+			res[1] = y;
+			return res;
+		}
+		
 		rat = clamp(rat, 0, 1);
 		
-		var ox, oy, nx, ny;
-		var ox = segments[0].x;
-		var oy = segments[0].y;
-			
-		for( var i = 1, n = array_length(segmentRatio); i < n; i++ ) {
-			nx = segments[i].x;
-			ny = segments[i].y;
-			
-			if(segmentRatio[i] >= rat) {
-				var _rr = (rat - segmentRatio[i - 1]) / (segmentRatio[i] - segmentRatio[i - 1]);
-				
-				res[0] = lerp(ox, nx, _rr);
-				res[1] = lerp(oy, ny, _rr);
-				res[2] = point_direction(ox, oy, nx, ny);
-				return res;
-			}
-			
-			ox = nx;
-			oy = ny;
+		var amo  = array_length(segmentRatio);
+		var low  = 0;
+		var high = amo - 1;
+		
+		while(low < high) {
+			var mid = (low + high) >> 1;
+			if(segmentRatio[mid] < rat)
+				low = mid + 1;
+			else
+				high = mid;
 		}
+		
+		if(low == 0) {
+			res[0] = segments[0].x;
+			res[1] = segments[0].y;
+			res[2] = point_direction(segments[0].x, segments[0].y, segments[1].x, segments[1].y);
+			return res;
+
+		} else if(low >= amo) {
+			res[0] = segments[amo - 1].x;
+			res[1] = segments[amo - 1].y;
+			res[2] = point_direction(segments[amo - 2].x, segments[amo - 2].y, segments[amo - 1].x, segments[amo - 1].y);
+			return res;
+		}
+		
+		var ox = segments[low - 1];
+		var nx = segments[low];
+		
+		var _rr = (rat - segmentRatio[low - 1]) / (segmentRatio[low] - segmentRatio[low - 1]);
+		
+		res[0] = lerp(ox.x, nx.x, _rr);
+		res[1] = lerp(ox.y, nx.y, _rr);
+		res[2] = point_direction(ox.x, ox.y, nx.x, nx.y);
 		
 		return res;
 	}
@@ -235,11 +262,7 @@ function __MK_Tree() constructor {
 			na = ang[i];
 			if(i > 0 && i < len - 1) na = lerp_angle_direct(ang[i], ang[i + 1], .5);
 			
-			if(i) {
-				draw_line_width2_angle_width(ox, oy, nx, ny, ot, nt, oa, na, color, color, colorOut, colorOut);
-				
-				// draw_line_width2(ox, oy, nx, ny, ot, nt, true, color, color);
-			}
+			if(i) draw_line_width2_angle_width(ox, oy, nx, ny, ot, nt, oa, na, color, color, colorOut, colorOut);
 			
 			oa = na;
 			ox = nx;
@@ -250,12 +273,13 @@ function __MK_Tree() constructor {
 				draw_primitive_end();
 				draw_primitive_begin(pr_trianglestrip);
 			}
+			
 		}
 		
 		draw_primitive_end();
 		
-		array_foreach(leaves,   function(l) /*=>*/ {return l.draw()});
-		array_foreach(children, function(c) /*=>*/ {return c.draw()});
+		array_foreach(leaves,   function(l) /*=>*/ { if(is(l, __MK_Tree_Leaf)) l.draw(); });
+		array_foreach(children, function(c) /*=>*/ { if(is(c, __MK_Tree))      c.draw(); });
 		
 	}
 	

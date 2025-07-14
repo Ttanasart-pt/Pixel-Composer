@@ -28,14 +28,18 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput( 6, nodeValue_Gradient(    "Color Per Leaf",    new gradientObject(ca_white) )).setMappable(13);
 	newInput(14, nodeValue_Enum_Button( "Render Edge",       0, [ "None", "Override", "Multiply", "Screen" ] ));
 	newInput(11, nodeValue_Gradient(    "Edge Color",        new gradientObject(ca_white) ));
-	// input 22
 	
-	newOutput(0, nodeValue_Output("Tree", VALUE_TYPE.struct, noone)).setIcon(THEME.node_junction_mktree, COLORS.node_blend_mktree);
+	////- =Grow
+	newInput(22, nodeValue_Range( "Grow Delay", [0,0], { linked: true } ));
+	// input 23
+	
+	newOutput(0, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setIcon(THEME.node_junction_mktree, COLORS.node_blend_mktree);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 5, 0, 
 		[ "Leaf",   false ], 1, 19, 2, 7, 16, 10, 17, 15, 
 		[ "Shape",  false ], 8, 3, 18, 9, 21, 
 		[ "Color",  false ], 4, 20, 12, 6, 13, 14, 11, 
+		[ "Grow",   false ], 22, 
 	];
 	
 	////- Nodes
@@ -53,42 +57,46 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	static update = function() {
 		if(!is(inline_context, Node_MK_Tree_Inline)) return;
 		
-		var _seed = inline_context.seed + getInputData(5);
-		random_set_seed(_seed);
-		
-		var _tree = getInputData(0);
-		
-		var _pos  = getInputData( 1);
-		var _dist = getInputData(19);
-		var _amou = getInputData( 2);
-		var _sprd = getInputData( 7);
-		var _sprC = getInputData(16),     curve_spread = inputs[ 7].attributes.curved? new curveMap(_sprC)  : undefined;
-		var _offs = getInputData(10);
-		var _offC = getInputData(17),     curve_offset = inputs[10].attributes.curved? new curveMap(_offC)  : undefined;
-		var _doub = getInputData(15);
-		
-		var _shap = getInputData( 8);
-		var _siz  = getInputData( 3);
-		var _sizC = getInputData(18),     curve_size   = inputs[ 3].attributes.curved? new curveMap(_sizC)  : undefined;
-		var _tex  = getInputData( 9);
-		var _lspn = getInputData(21);
-		
-		var _cBra    = getInputData( 4);
-		var _cBraMap = getInputData(12);
-		var _cBraM   = inputs[4].attributes.mapped && is_surface(_cBraMap);
-		
-		var _cOvrBra = getInputData(20);
-		
-		var _cLef    = getInputData( 6);
-		var _cLefMap = getInputData(13);
-		var _cLefM   = inputs[6].attributes.mapped && is_surface(_cLefMap);
-		
-		var _edge = getInputData(14);
-		var _cedg = getInputData(11);
-		
-		inputs[ 9].setVisible(_shap == 2, _shap == 2);
-		inputs[21].setVisible(_shap == 0, _shap == 0);
-		inputs[11].setVisible(_shap != 2 && _edge, _shap != 2 && _edge);
+		#region data
+			var _seed = inline_context.seed + getInputData(5);
+			random_set_seed(_seed);
+			
+			var _tree = getInputData(0);
+			
+			var _pos  = getInputData( 1);
+			var _dist = getInputData(19);
+			var _amou = getInputData( 2);
+			var _sprd = getInputData( 7);
+			var _sprC = getInputData(16), curve_spread = inputs[ 7].attributes.curved? new curveMap(_sprC)  : undefined;
+			var _offs = getInputData(10);
+			var _offC = getInputData(17), curve_offset = inputs[10].attributes.curved? new curveMap(_offC)  : undefined;
+			var _doub = getInputData(15);
+			
+			var _shap = getInputData( 8);
+			var _siz  = getInputData( 3);
+			var _sizC = getInputData(18), curve_size   = inputs[ 3].attributes.curved? new curveMap(_sizC)  : undefined;
+			var _tex  = getInputData( 9);
+			var _lspn = getInputData(21);
+			
+			var _cBra    = getInputData( 4);
+			var _cBraMap = getInputData(12);
+			var _cBraM   = inputs[4].attributes.mapped && is_surface(_cBraMap);
+			
+			var _cOvrBra = getInputData(20);
+			
+			var _cLef    = getInputData( 6);
+			var _cLefMap = getInputData(13);
+			var _cLefM   = inputs[6].attributes.mapped && is_surface(_cLefMap);
+			
+			var _edge = getInputData(14);
+			var _cedg = getInputData(11);
+			
+			var _grow = getInputData(22);
+			
+			inputs[ 9].setVisible(_shap == 2, _shap == 2);
+			inputs[21].setVisible(_shap == 0);
+			inputs[11].setVisible(_shap != 2 && _edge, _shap != 2 && _edge);
+		#endregion
 		
 		if(_cBraM) var _cBraSamp = new Surface_sampler(_cBraMap);
 		if(_cLefM) var _cLefSamp = new Surface_sampler(_cLefMap);
@@ -101,6 +109,8 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		_tree = variable_clone(_tree);
 		
 		for( var i = 0, n = array_length(_tree); i < n; i++ ) {
+			random_set_seed(_seed + i * 100);
+			
 			var _br = _tree[i];
 			var _sg = _br.segments;
 			var _sn = array_length(_sg);
@@ -172,9 +182,10 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					var lc  = _cLefM? _cLefSamp.getPixel(round(_lx), round(_ly)) : _cLef.eval(random(1));
 					    lc  = colorMultiply(lc, _cOvrBra.eval(_rBrns));
 					
-					var _l = new __MK_Tree_Leaf(_shap, _lx, _ly, _dr, lsx, lsy, _lspn);
-					    _l.surface = _tex;
-					    _l.color   = colorMultiply(cc, lc);
+					var _l = new __MK_Tree_Leaf(_rBrn, _shap, _lx, _ly, _dr, lsx, lsy, _lspn);
+					    _l.surface   = _tex;
+					    _l.color     = colorMultiply(cc, lc);
+					    _l.growShift = random_range(_grow[0], _grow[1]);
 					
 					switch(_edge) {
 						case 0 : _l.colorE = _l.color;              break;
@@ -187,11 +198,12 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					
 					if(_doub) {
 						var _d2 = dr - _spra;
-						var _l2 = new __MK_Tree_Leaf(_shap, _lx, _ly, _d2, lsx, lsy, _lspn);
+						var _l2 = new __MK_Tree_Leaf(_rBrn, _shap, _lx, _ly, _d2, lsx, lsy, _lspn);
 						
-						_l2.surface = _l.surface;
-						_l2.color   = _l.color;
-						_l2.colorE  = _l.colorE;
+						_l2.surface   = _l.surface;
+						_l2.color     = _l.color;
+						_l2.colorE    = _l.colorE;
+						_l2.growShift = random_range(_grow[0], _grow[1]);
 
 						array_push(_br.leaves, _l2);
 					}

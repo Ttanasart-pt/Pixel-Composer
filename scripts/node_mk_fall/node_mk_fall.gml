@@ -11,55 +11,47 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	newInput(2, nodeValueSeed());
 	
 	////- =Dimension
-	
 	newInput(0, nodeValue_Surface("Background"));
 	newInput(1, nodeValue_Dimension());
 	
 	////- =Spawn
-		
-	newInput(3, nodeValue_Area( "Area" ));
-	newInput(4, nodeValue_Int(  "Amount", 10));
+	newInput(3, nodeValue_Area( "Area"       ));
+	newInput(4, nodeValue_Int(  "Amount", 10 ));
 	
 	////- =Physics
-	
-	newInput(10, nodeValue_Range( "Speed",   [1,1], { linked : true }));
-	newInput( 5, nodeValue_Float( "Gravity", 0));
-	newInput(12, nodeValue_Vec2(  "Wind",    [0,0]));
+	newInput(10, nodeValue_Range( "Speed",   [1,1], { linked : true } ));
+	newInput( 5, nodeValue_Float( "Gravity",  0    ));
+	newInput(12, nodeValue_Vec2(  "Wind",    [0,0] ));
 	
 	////- =Swing
-	
-	newInput( 8, nodeValue_Range( "Swing frequency", [1,1],       { linked : true }));
-	newInput( 6, nodeValue_Range( "X Swing",         [1,1],       { linked : true }));
-	newInput( 7, nodeValue_Range( "Y Swing",         [0.25,0.25], { linked : true }));
-	newInput(11, nodeValue_Range( "X Momentum",      [0,0],       { linked : true }));
-	newInput(17, nodeValue_Range( "Y Momentum",      [0,0],       { linked : true }));
+	newInput( 8, nodeValue_Range( "Swing frequency", [1,1],       { linked : true } ));
+	newInput( 6, nodeValue_Range( "X Swing",         [1,1],       { linked : true } ));
+	newInput( 7, nodeValue_Range( "Y Swing",         [0.25,0.25], { linked : true } ));
+	newInput(11, nodeValue_Range( "X Momentum",      [0,0],       { linked : true } ));
+	newInput(17, nodeValue_Range( "Y Momentum",      [0,0],       { linked : true } ));
 	
 	////- =Leaf
-	
 	newInput(22, nodeValue_Enum_Scroll(    "Shape",   0, [ new scrollItem("Leaf",   s_node_shape_leaf,   0), 
 	                                                       new scrollItem("Circle", s_node_shape_circle, 0),
-	                                                       "Surface"]));
-	newInput( 9, nodeValue_Vec2(           "Size",    [4,2]));
-	newInput(24, nodeValue_Surface(        "Leaf Surface"));
-	newInput(25, nodeValue_Rotation_Random( "Rotation", [ 0, 0, 0, 0, 0 ]));
-	newInput(21, nodeValue_Range(          "Scale",     [1,1], { linked : true }));
+	                                                       "Surface"] ));
+	newInput( 9, nodeValue_Vec2(           "Size",    [4,2] ));
+	newInput(24, nodeValue_Surface(        "Leaf Surface"   ));
+	newInput(25, nodeValue_Rotation_Random( "Rotation", [ 0, 0, 0, 0, 0 ]        ));
+	newInput(21, nodeValue_Range(          "Scale",     [1,1], { linked : true } ));
 	
 	////- =Render
-	
-	newInput(13, nodeValue_Gradient( "Color", new gradientObject(ca_white)))
-	newInput(14, nodeValue_Curve(    "Alpha", CURVE_DEF_11));
+	newInput(13, nodeValue_Gradient( "Color", new gradientObject(ca_white) ))
+	newInput(14, nodeValue_Curve(    "Alpha", CURVE_DEF_11 ));
 	
 	////- =Ground
-	
-	newInput(15, nodeValue_Bool(  "Ground",        false));
-	newInput(16, nodeValue_Range( "Ground levels", [ DEF_SURF_H / 2, DEF_SURF_H ]));
+	newInput(15, nodeValue_Bool(  "Ground",        false ));
+	newInput(16, nodeValue_Range( "Ground levels", [ DEF_SURF_H / 2, DEF_SURF_H ] ));
 	
 	////- =Twist
-	
-	newInput(18, nodeValue_Bool(   "Twist",        false));
-	newInput(19, nodeValue_Slider( "Twist Rate",   0.1));
-	newInput(20, nodeValue_Range(  "Twist Speed",  [5,10]));
-	newInput(23, nodeValue_Slider( "Twist Radius", 0.7));
+	newInput(18, nodeValue_Bool(   "Twist",        false  ));
+	newInput(19, nodeValue_Slider( "Twist Rate",   0.1    ));
+	newInput(20, nodeValue_Range(  "Twist Speed",  [5,10] ));
+	newInput(23, nodeValue_Slider( "Twist Radius", 0.7    ));
 	
 	// inputs 26
 		
@@ -142,6 +134,7 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		if(_area[4] == 0) {
 			_px = irandom_range(_area[0] - _area[2], _area[0] + _area[2]);
 			_py = irandom_range(_area[1] - _area[3], _area[1] + _area[3]);
+			
 		} else if(_area[4] == 1) {
 			var _dir = random(360);
 			_px = _area[0] + lengthdir_x(_area[2], _dir);

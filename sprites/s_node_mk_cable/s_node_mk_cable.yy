@@ -25,8 +25,8 @@
   "nineSlice":null,
   "origin":4,
   "parent":{
-    "name":"MK effects",
-    "path":"folders/nodes/icons/MK effects.yy",
+    "name":"MKFX",
+    "path":"folders/nodes/icons/MKFX.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
