@@ -416,6 +416,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         node_bg_hovering = false;
         
         file_drop_tooltip = new Panel_Graph_Drop_tooltip(self);
+        
+        mouse_glow_rad    = 0;
+        mouse_glow_rad_to = 0;
     #endregion
     
     #region // ---- nodes ----
@@ -1316,7 +1319,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	
     	var gls = project.graphGrid.size;
         while(gls * graph_s < 8) gls *= 5;
-        var aa  = graph_s < 0.25? .3 : .5;
         
         shader_set(sh_panel_graph_grid);	
         	shader_set_2("dimension", surface_get_dimension(surface_get_target()));
@@ -1324,54 +1326,23 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         	
         	shader_set_i("gridShow",      project.graphDisplay.show_grid);
         	shader_set_f("gridSize",      gls);
-        	shader_set_f("gridScale",     gls * graph_s);
         	shader_set_c("gridColor",     project.graphGrid.color);
-        	shader_set_f("gridAlpha",     project.graphGrid.opacity * aa);
+        	shader_set_f("gridAlpha",     project.graphGrid.opacity);
         	shader_set_i("gridOrigin",    project.graphGrid.show_origin);
         	shader_set_f("gridHighlight", project.graphGrid.highlight);
         	
         	shader_set_2("graphPos",   [graph_x, graph_y]);
         	shader_set_f("graphScale", graph_s);
         	
+        	shader_set_i("glowShow", mouse_glow_rad > 0);
+        	shader_set_2("glowPos",  [ mouse_graph_x, mouse_graph_y ]);
+        	shader_set_f("glowRad",  mouse_glow_rad / graph_s);
+        	
         	draw_empty();
         shader_reset();
         
-        return;
-        
-        var gls = project.graphGrid.size;
-        while(gls * graph_s < 8) gls *= 5;
-        
-        var gr_x  = graph_x * graph_s;
-        var gr_y  = graph_y * graph_s;
-        var gr_ls = gls * graph_s;
-        var xx = -gr_ls - 1, xs = safe_mod(gr_x, gr_ls);
-        var yy = -gr_ls - 1, ys = safe_mod(gr_y, gr_ls);
-        
-        draw_set_color(project.graphGrid.color);
-        var oa  = project.graphGrid.opacity * aa;
-        var ori = project.graphGrid.show_origin;
-        var hig = project.graphGrid.highlight;
-        
-        while(xx < w + gr_ls) { 
-            draw_set_alpha( oa * (1 + (round((xx + xs - gr_x) / gr_ls) % hig == 0) * 2) );
-            draw_line(xx + xs, 0, xx + xs, h);
-            xx += gr_ls;
-        }
-        
-        while(yy < h + gr_ls) {
-            draw_set_alpha( oa * (1 + (round((yy + ys - gr_y) / gr_ls) % hig == 0) * 2) );
-            draw_line(0, yy + ys, w, yy + ys);
-            yy += gr_ls;
-        }
-        
-        draw_set_alpha(.2);
-        if(ori) {
-        	draw_line(gr_x, 0, gr_x, h);
-        	draw_line(0, gr_y, w, gr_y);
-        }
-        
-        draw_set_alpha(1);
-        
+        mouse_glow_rad    = lerp_float(mouse_glow_rad, mouse_glow_rad_to, 5);
+        mouse_glow_rad_to = 0;
     } 
     
     function drawViewController() { //
@@ -3238,6 +3209,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             	addKeyOverlay("Droping file(s)", [[ "Shift", "Options..." ]]);
                 
             if(DRAGGING) { // file dropping
+            	mouse_glow_rad_to = 80;
+            	
                 if(_node_hover && _node_hover.droppable(DRAGGING)) {
                     _node_hover.draw_droppable = true;
                     _tip = "Drop on node";

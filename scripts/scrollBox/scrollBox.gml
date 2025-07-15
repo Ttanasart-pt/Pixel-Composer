@@ -34,7 +34,6 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 	
 	align          = fa_center;
 	horizontal     = false;
-	extra_button   = noone;
 	padding        = ui(8);
 	padding_scroll = ui(8);
 	item_pad       = ui(8);
@@ -128,9 +127,9 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 		
 		var _bs = min(h, ui(32));
 		
-		if(extra_button != noone) {
-			extra_button.setFocusHover(active, hover);
-			extra_button.draw(_x + _w - _bs, _y + h / 2 - ui(32 / 2), _bs, _bs, _m, THEME.button_hide_fill);
+		if(side_button != noone) {
+			side_button.setFocusHover(active, hover);
+			side_button.draw(_x + _w - _bs, _y + h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
 			w -= _bs + ui(4);
 		}
 		

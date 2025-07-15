@@ -6,7 +6,6 @@ uniform vec4  bgColor;
 
 uniform int   gridShow;
 uniform float gridSize;
-uniform float gridScale;
 uniform vec4  gridColor;
 uniform float gridAlpha;
 uniform int   gridOrigin;
@@ -14,6 +13,10 @@ uniform float gridHighlight;
 
 uniform vec2  graphPos;
 uniform float graphScale;
+
+uniform int   glowShow;
+uniform vec2  glowPos;
+uniform float glowRad;
 
 void main() {
 	vec2 px  = (v_vTexcoord * dimension) / graphScale - graphPos;
@@ -26,7 +29,7 @@ void main() {
 	gl_FragColor = res;
 	if(gridShow == 0) return;
 	
-	float alpha = gridAlpha * 3.;
+	float alpha = gridAlpha;
 	
 	vec2 dGrid  = mod(px,  gridSize) * graphScale;
 	vec2 dGrid0 = mod(px0, gridSize) * graphScale;
@@ -43,6 +46,13 @@ void main() {
 	if(gridOrigin == 1) {
 		if(infx && gridIndx.x == 0.) alpha *= 2.;
 		if(infy && gridIndx.y == 0.) alpha *= 2.;
+	}
+	
+	if(glowShow == 1) {
+		float dist = distance(px, glowPos);
+		float glow = clamp((glowRad - dist) / glowRad, 0., 1.);
+		
+		alpha += glow * .5;
 	}
 	
 	if(infx || infy) res.rgb = mix(bgColor.rgb, gridColor.rgb, alpha);

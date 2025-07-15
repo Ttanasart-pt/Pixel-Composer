@@ -6,7 +6,7 @@ function fontScrollBox(_onModify) : widget() constructor {
 	open_ry = 0;
 	
 	align = fa_center;
-	extra_button = button(function() /*=>*/ {return shellOpenExplorer(DIRECTORY + "Fonts")})
+	side_button = button(function() /*=>*/ {return shellOpenExplorer(DIRECTORY + "Fonts")})
 						.setTooltip(__txtx("widget_font_open_folder", "Open font folder"))
 						.setIcon(THEME.folder_content, 0, COLORS._main_icon);
 						
@@ -21,7 +21,7 @@ function fontScrollBox(_onModify) : widget() constructor {
 	
 	static setInteract = function(i = noone) { 
 		interactable = i;
-		extra_button.interactable = i;
+		side_button.interactable = i;
 	}
 	
 	static drawParam = function(params) {
@@ -39,9 +39,9 @@ function fontScrollBox(_onModify) : widget() constructor {
 		
 		var _bs = min(_h, ui(32));
 		
-		if(_w - _bs > ui(100) && extra_button != noone) {
-			extra_button.setFocusHover(active, hover);
-			extra_button.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
+		if(_w - _bs > ui(100) && side_button != noone) {
+			side_button.setFocusHover(active, hover);
+			side_button.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
 			w -= _bs + ui(4);
 		}
 		

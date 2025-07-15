@@ -30,58 +30,51 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	dimension_index = 1;
 	
 	////- =Surfaces
-	
 	newInput( 0, nodeValue_Surface(     "Surface In" ));
-	newInput(35, nodeValue_Enum_Scroll( "Output dimension type", OUTPUT_SCALING.constant, [
+	newInput(35, nodeValue_Enum_Scroll( "Output Dimension Type", OUTPUT_SCALING.constant, [
         new scrollItem("Same as input"),
         new scrollItem("Constant"),
         new scrollItem("Relative to input").setTooltip("Set dimension as a multiple of input surface."),
         new scrollItem("Fit content").setTooltip("Automatically set dimension to fit content."),
     ]));
-	newInput(36, nodeValue_Vec2(    "Relative dimension", [1,1]     ));
+	newInput(36, nodeValue_Vec2(    "Relative Dimension", [1,1]     ));
 	newInput(37, nodeValue_Padding( "Padding",            [0,0,0,0] ));
 	newInput( 1, nodeValue_Dimension());
-	newInput(16, nodeValue_Enum_Button("Array select",     0 )).setChoices([ "Order", "Random", "Spread" ])
+	newInput(16, nodeValue_Enum_Button("Array Select",     0 )).setChoices([ "Order", "Random", "Spread" ])
 		.setTooltip("Whether to select image from an array in order, at random, or spread each image to its own output.");
 	newInput(17, nodeValueSeed());
 	
 	////- =Pattern
-	
 	newInput( 3, nodeValue_Enum_Scroll(    "Pattern",          0, __enum_array_gen([ "Linear", "Grid", "Circular"], s_node_repeat_axis) ));
-	newInput( 9, nodeValue_Vec2(           "Start position",  [0,0]   )).setUnitRef(function() /*=>*/ {return getInputData(1)}, VALUE_UNIT.reference);
-	newInput(32, nodeValue_Rotation(       "Start rotation",   0      ));
+	newInput( 9, nodeValue_Vec2(           "Start Position",  [0,0]   )).setUnitRef(function() /*=>*/ {return getInputData(1)}, VALUE_UNIT.reference);
+	newInput(32, nodeValue_Rotation(       "Start Rotation",   0      ));
 	newInput( 2, nodeValue_Int(            "Amount",           2      )).rejectArray();
 	newInput(18, nodeValue_Int(            "Column",           4      ));
-	newInput( 7, nodeValue_Rotation_Range( "Angle range",     [0,360] ));
+	newInput( 7, nodeValue_Rotation_Range( "Angle Range",     [0,360] ));
 	newInput( 8, nodeValue_Float(          "Radius",           1      ));
 	
 	////- =Path
-	
 	newInput(11, nodeValue_PathNode(       "Path",            noone   )).setTooltip("Make each copy follow along path.");
-	newInput(12, nodeValue_Slider_Range(   "Path range",      [0,1]   )).setTooltip("Range of the path to follow.");
-	newInput(13, nodeValue_Float(          "Path shift",       0      ));
+	newInput(12, nodeValue_Slider_Range(   "Path Range",      [0,1]   )).setTooltip("Range of the path to follow.");
+	newInput(13, nodeValue_Float(          "Path Shift",       0      ));
 	
 	////- =Position
-	
-	newInput( 4, nodeValue_Vec2(           "Shift position",  [.5,0]       )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
+	newInput( 4, nodeValue_Vec2(           "Shift Position",  [.5,0]       )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
 	newInput(26, nodeValue_Enum_Button(    "Stack",             0,         )).setChoices([ "None", "X", "Y" ]).setTooltip("Place each copy next to each other, taking surface dimension into account.");
-	newInput(19, nodeValue_Vec2(           "Column shift",     [0,.5]      )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
-	newInput(38, nodeValue_Curve(          "Shift per copy",  CURVE_DEF_11 ));
+	newInput(19, nodeValue_Vec2(           "Shift Column",     [0,.5]      )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
+	newInput(38, nodeValue_Curve(          "Shift per Copy",  CURVE_DEF_11 ));
 	
 	////- =Rotation
-	
-	newInput(33, nodeValue_Rotation(       "Base rotation",     0          ));
-	newInput( 5, nodeValue_Rotation_Range( "Repeat rotation",  [0,0]       ));
+	newInput(33, nodeValue_Rotation(       "Base Rotation",     0          ));
+	newInput( 5, nodeValue_Rotation_Range( "Repeat Rotation",  [0,0]       ));
 	
 	////- =Scale
-	
-	newInput( 6, nodeValue_Float(          "Scale multiply",    1          ));
-	newInput(10, nodeValue_Curve(          "Scale over copy", CURVE_DEF_11 ));
+	newInput( 6, nodeValue_Float(          "Scale Multiply",    1          ));
+	newInput(10, nodeValue_Curve(          "Scale Over Copy", CURVE_DEF_11 ));
 	
 	////- =Render
-	
 	newInput(34, nodeValue_Enum_Scroll(    "Blend Mode",        0, [ "Normal", "Additive", "Maximum" ] ));
-	newInput(14, nodeValue_Gradient(       "Color over copy",   new gradientObject(ca_white)           )).setMappable(30);
+	newInput(14, nodeValue_Gradient(       "Color Over Copy",   new gradientObject(ca_white)           )).setMappable(30);
 	
 	////- =Deprecated
 	
@@ -200,14 +193,16 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		["Effects",   false], 0, 2, 3, 4, 5, 6, 7, 8, 15, 
 	];
 	
+	b_gridFill = button(function() /*=>*/ {return gridFill()}).setIcon(THEME.fill, 0, COLORS._main_icon).setTooltip("Fill");
+	
 	input_display_list = [
-		["Surfaces",	 true],	0, 35, 36, 37, 1, 16, 17,
-		["Pattern",		false],	3, 9, 32, 2, 18, 7, 8, 
-		["Path",		 true],	11, 12, 13, 
-		["Position",	false],	4, 26, 19, 38, 
-		["Rotation",	false],	33, 5, 
-		["Scale",		false],	6, 10, 
-		["Render",		false],	34, 14, 30, 
+		["Surfaces",  true],  0, 35, 36, 37,  1, 16, 17,
+		["Pattern",	 false],  3, 9, 32,  2, 18,  7,  8, 
+		["Path",	  true], 11, 12, 13, 
+		["Position", false],  4, 26, 19, 38, 
+		["Rotation", false], 33,  5, 
+		["Scale",	 false],  6, 10, 
+		["Render",	 false], 34, 14, 30, 
 		new Inspector_Spacer(8, true),
 		new Inspector_Spacer(2, false, false),
 		animator_renderer, 
@@ -215,8 +210,39 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	setDynamicInput(16, false);
 	
+	////- Nodes
+	
+	output_dimension = [];
+	
 	attribute_surface_depth();
 	attribute_interpolation();
+	
+	static gridFill = function(index = preview_index) {
+		var _iSrf = getInputData(0);
+		
+		var _dim  = array_safe_get(output_dimension, index, [1,1]);
+		var _sdim = [ 1, 1 ];
+		
+		if(is_array(_iSrf)) {
+			for( var i = 0, n = array_length(_iSrf); i < n; i++ ) {
+				var _ddim = surface_get_dimension(_iSrf[i]);
+				_sdim[0] = max(_sdim[0], _ddim[0]);
+				_sdim[1] = max(_sdim[1], _ddim[1]);
+			}
+			
+		} else if(is_surface(_iSrf))
+			_sdim = surface_get_dimension(_iSrf);
+		
+		var _amox = floor(_dim[0] / _sdim[0]);
+		var _amoy = floor(_dim[1] / _sdim[1]);
+		
+		inputs[ 9].setValue([0,0]);
+		inputs[ 2].setValue(_amox * _amoy);
+		inputs[18].setValue(_amox);
+		
+		inputs[ 4].setValue([_sdim[0], 0]);
+		inputs[19].setValue([0, _sdim[1]]);
+	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		PROCESSOR_OVERLAY_CHECK
@@ -275,72 +301,77 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	static processData = function(_outSurf, _data, _array_index) {	
 		
-		var _iSrf = _data[ 0];
-		
-		var _dimt = _data[35];
-		var _dimc = _data[ 1];
-		var _dims = _data[36];
-		var _padd = _data[37];
-		
-		var _amo  = _data[ 2];
-		var _pat  = _data[ 3];
-							  
-		var _spos = _data[ 9];
-		var _srot = _data[32];
-		
-		var _rpos = _data[ 4];
-		var _cpos = _data[38];
-		
-		var _rsta = _data[26];
-		var _rrot = _data[ 5];
-		var _rots = _data[33];
-		var _rsca = _data[ 6];
-		var _msca = _data[10];
-		
-		var _aran = _data[ 7];
-		var _arad = _data[ 8];
-		
-		var _path = _data[11];
-		var _prng = _data[12];
-		var _prsh = _data[13];
-		
-		var _grad       = _data[14];
-		var _grad_map   = _data[30];
-		var _grad_range = _data[31];
-		
-		var _arr    = _data[16];
-		var _sed    = _data[17];
-		
-		var _col    = _data[18];
-		var _cls    = _data[19];
-		var _bld_md = _data[34];
-		
-		var _ani_amo = getInputAmount();
-		
-		if(_ani_amo > 0) { // animator visibility
-			dynamic_input_inspecting = clamp(dynamic_input_inspecting, 0, getInputAmount() - 1);
-			var _ind = input_fix_len + dynamic_input_inspecting * data_length;
+		#region data
+			var _iSrf = _data[ 0];
 			
-			var _prop = _data[_ind + 0];
-			var _selc = _data[_ind + 1];
+			var _dimt = _data[35];
+			var _dimc = _data[ 1];
+			var _dims = _data[36];
+			var _padd = _data[37];
 			
-			inputs[_ind +  2].setVisible(_prop == 0);
-			inputs[_ind +  3].setVisible(_prop == 0);
-			inputs[_ind +  4].setVisible(_prop == 0);
-			inputs[_ind +  5].setVisible(_prop == 0);
-			inputs[_ind +  6].setVisible(_prop == 0);
-			inputs[_ind +  7].setVisible(_prop == 1);
-			inputs[_ind +  8].setVisible(_prop == 1);
-			// inputs[_ind + 15].setVisible(_prop == 2);
+			var _amo  = _data[ 2];
+			var _pat  = _data[ 3];
+								  
+			var _spos = _data[ 9];
+			var _srot = _data[32];
 			
-			inputs[_ind +  9].setVisible(_selc == 1);
-			inputs[_ind + 10].setVisible(_selc == 0);
-			inputs[_ind + 11].setVisible(_selc == 0);
-			inputs[_ind + 12].setVisible(_selc != 2);
-			inputs[_ind + 13].setVisible(_selc != 2);
-			inputs[_ind + 14].setVisible(_selc == 2, _selc == 2);
-		}
+			var _rpos = _data[ 4];
+			var _cpos = _data[38];
+			
+			var _rsta = _data[26];
+			var _rrot = _data[ 5];
+			var _rots = _data[33];
+			var _rsca = _data[ 6];
+			var _msca = _data[10];
+			
+			var _aran = _data[ 7];
+			var _arad = _data[ 8];
+			
+			var _path = _data[11];
+			var _prng = _data[12];
+			var _prsh = _data[13];
+			
+			var _grad       = _data[14];
+			var _grad_map   = _data[30];
+			var _grad_range = _data[31];
+			
+			var _arr    = _data[16];
+			var _sed    = _data[17];
+			
+			var _col    = _data[18];
+			var _cls    = _data[19];
+			var _bld_md = _data[34];
+			
+			var _ani_amo = getInputAmount();
+			
+			inputs[3].editWidget.side_button = _pat == 1? b_gridFill : noone;
 		
+			if(_ani_amo > 0) { // animator visibility
+				dynamic_input_inspecting = clamp(dynamic_input_inspecting, 0, getInputAmount() - 1);
+				var _ind = input_fix_len + dynamic_input_inspecting * data_length;
+				
+				var _prop = _data[_ind + 0];
+				var _selc = _data[_ind + 1];
+				
+				inputs[_ind +  2].setVisible(_prop == 0);
+				inputs[_ind +  3].setVisible(_prop == 0);
+				inputs[_ind +  4].setVisible(_prop == 0);
+				inputs[_ind +  5].setVisible(_prop == 0);
+				inputs[_ind +  6].setVisible(_prop == 0);
+				inputs[_ind +  7].setVisible(_prop == 1);
+				inputs[_ind +  8].setVisible(_prop == 1);
+				// inputs[_ind + 15].setVisible(_prop == 2);
+				
+				inputs[_ind +  9].setVisible(_selc == 1);
+				inputs[_ind + 10].setVisible(_selc == 0);
+				inputs[_ind + 11].setVisible(_selc == 0);
+				inputs[_ind + 12].setVisible(_selc != 2);
+				inputs[_ind + 13].setVisible(_selc != 2);
+				inputs[_ind + 14].setVisible(_selc == 2, _selc == 2);
+			}
+			
+		#endregion
+			
 		var _surf, posx, posy, scax, scay, rot;
 		var _dim, _sdim = [ 1, 1 ];
 		var _surf = _iSrf;
@@ -616,6 +647,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				
 		}
 		
+		output_dimension[_array_index] = [_dim[0], _dim[1]];
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		var _x, _y;
 		

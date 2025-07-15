@@ -679,7 +679,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 jun.setFocusHover(pFOCUS, pHOVER);
                 var param = new widgetParam(ui(6), yy, con_w - ui(12), TEXTBOX_HEIGHT, noone, {}, _m, x, y);
                 var _wdh = jun.drawParam(param);
-                if(!is_undefined(_wdh)) hh += _wdh + ui(4);
+                if(!is_undefined(_wdh)) hh += _wdh + ui(8);
                 continue;
                 
             } else if(is_array(jun)) { // Section
