@@ -41,7 +41,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(36, nodeValue_Vec2(    "Relative dimension", [1,1]     ));
 	newInput(37, nodeValue_Padding( "Padding",            [0,0,0,0] ));
 	newInput( 1, nodeValue_Dimension());
-	newInput(16, nodeValue_Enum_Button("Array select", 0, [ "Order", "Random", "Spread" ])).setTooltip("Whether to select image from an array in order, at random, or spread each image to its own output.");
+	newInput(16, nodeValue_Enum_Button("Array select",     0 )).setChoices([ "Order", "Random", "Spread" ])
+		.setTooltip("Whether to select image from an array in order, at random, or spread each image to its own output.");
 	newInput(17, nodeValueSeed());
 	
 	////- =Pattern
@@ -56,9 +57,9 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	////- =Path
 	
-	newInput(11, nodeValue_PathNode(       "Path",        noone )).setTooltip("Make each copy follow along path.");
-	newInput(12, nodeValue_Slider_Range(   "Path range",  [0,1] )).setTooltip("Range of the path to follow.");
-	newInput(13, nodeValue_Float(          "Path shift",  0     ));
+	newInput(11, nodeValue_PathNode(       "Path",            noone   )).setTooltip("Make each copy follow along path.");
+	newInput(12, nodeValue_Slider_Range(   "Path range",      [0,1]   )).setTooltip("Range of the path to follow.");
+	newInput(13, nodeValue_Float(          "Path shift",       0      ));
 	
 	////- =Position
 	

@@ -1,10 +1,8 @@
 {
-  "name":"Differential",
-  "baseNode":"Node_Differential",
-  "tooltip":"Calculate how much the input value has changed since the last frame.",
-  "spr":"s_node_differential",
-  "pxc_version":118069,
-  "io":[
-    "float"
-  ],
+    "name":          "Differential",
+    "tooltip":       "Calculate how much the input value has changed since the last frame.",
+    "spr":           "s_node_differential",
+    "baseNode":      "Node_Differential",
+    "pxc_version":    118069,
+    "io":             ["float"],
 }

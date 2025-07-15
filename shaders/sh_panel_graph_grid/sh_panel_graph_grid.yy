@@ -1,0 +1,13 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_panel_graph_grid",
+  "name":"sh_panel_graph_grid",
+  "parent":{
+    "name":"draw",
+    "path":"folders/shader/draw.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "tags":[],
+  "type":1,
+}

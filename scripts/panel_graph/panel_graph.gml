@@ -1311,8 +1311,33 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     
     ////- Draw
     
-    function drawGrid() { //
-        if(!project.graphDisplay.show_grid) return;
+    function drawBGBase() { //
+    	draw_clear(bg_color);
+    	
+    	var gls = project.graphGrid.size;
+        while(gls * graph_s < 8) gls *= 5;
+        var aa  = graph_s < 0.25? .3 : .5;
+        
+        shader_set(sh_panel_graph_grid);	
+        	shader_set_2("dimension", surface_get_dimension(surface_get_target()));
+        	shader_set_c("bgColor",   bg_color);
+        	
+        	shader_set_i("gridShow",      project.graphDisplay.show_grid);
+        	shader_set_f("gridSize",      gls);
+        	shader_set_f("gridScale",     gls * graph_s);
+        	shader_set_c("gridColor",     project.graphGrid.color);
+        	shader_set_f("gridAlpha",     project.graphGrid.opacity * aa);
+        	shader_set_i("gridOrigin",    project.graphGrid.show_origin);
+        	shader_set_f("gridHighlight", project.graphGrid.highlight);
+        	
+        	shader_set_2("graphPos",   [graph_x, graph_y]);
+        	shader_set_f("graphScale", graph_s);
+        	
+        	draw_empty();
+        shader_reset();
+        
+        return;
+        
         var gls = project.graphGrid.size;
         while(gls * graph_s < 8) gls *= 5;
         
@@ -1323,19 +1348,18 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         var yy = -gr_ls - 1, ys = safe_mod(gr_y, gr_ls);
         
         draw_set_color(project.graphGrid.color);
-        var aa  = graph_s < 0.25? .3 : .5;
-        var oa  = project.graphGrid.opacity;
+        var oa  = project.graphGrid.opacity * aa;
         var ori = project.graphGrid.show_origin;
         var hig = project.graphGrid.highlight;
         
         while(xx < w + gr_ls) { 
-            draw_set_alpha( oa * aa * (1 + (round((xx + xs - gr_x) / gr_ls) % hig == 0) * 2) );
+            draw_set_alpha( oa * (1 + (round((xx + xs - gr_x) / gr_ls) % hig == 0) * 2) );
             draw_line(xx + xs, 0, xx + xs, h);
             xx += gr_ls;
         }
         
         while(yy < h + gr_ls) {
-            draw_set_alpha( oa * aa * (1 + (round((yy + ys - gr_y) / gr_ls) % hig == 0) * 2) );
+            draw_set_alpha( oa * (1 + (round((yy + ys - gr_y) / gr_ls) % hig == 0) * 2) );
             draw_line(0, yy + ys, w, yy + ys);
             yy += gr_ls;
         }
@@ -1347,6 +1371,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         }
         
         draw_set_alpha(1);
+        
     } 
     
     function drawViewController() { //
@@ -1426,7 +1451,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         var gr_y = graph_y * graph_s;
         var _hov = false;
         
-        for(var i = 0; i < array_length(nodes_list); i++) {
+        for( var i = 0, n = array_length(nodes_list); i < n; i++ ) {
+        	if(nodes_list[i].drawPreviewBackground == undefined) continue;
             var h = nodes_list[i].drawPreviewBackground(gr_x, gr_y, mx, my, graph_s);
             _hov = _hov || h;
         }
@@ -3124,9 +3150,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         if(context != noone) title_raw += " > " + (context.renamed? context.display_name : context.name);
         
         bg_color = context == noone? COLORS.panel_bg_clear : merge_color(COLORS.panel_bg_clear, context.getColor(), 0.05);
-        draw_clear(bg_color);
+        drawBGBase();
+        
         node_bg_hovering = drawBasePreview();
-        drawGrid();
         
         var ovy = ui(8);
         if(project.graphDisplay.show_view_control == 2) ovy += ui(36);

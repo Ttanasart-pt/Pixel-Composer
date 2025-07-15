@@ -2262,7 +2262,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static onDrawHover = function(_x, _y, _mx, _my, _s) {}
 	
-	static drawPreviewBackground = function(_x, _y, _mx, _my, _s) { return false; }
+	static drawPreviewBackground = undefined;
 	
 	static drawBadge = function(_x, _y, _s) {
 		badgePreview = lerp_float(badgePreview, !!previewing, 2);

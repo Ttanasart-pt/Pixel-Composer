@@ -285,6 +285,7 @@ _FILE_DROPPED     = false;
 #endregion
 
 #region depth
+
 	if(_use_depth != USE_DEPTH) {
 		_use_depth = USE_DEPTH;
 		surface_depth_disable(!USE_DEPTH);
