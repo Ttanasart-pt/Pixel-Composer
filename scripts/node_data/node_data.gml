@@ -2118,7 +2118,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(!previewable)      return;
 		if(CAPTURING)         return;
 		
-		draw_set_text(f_p3, fa_center, fa_top, COLORS.panel_graph_node_dimension);
+		draw_set_text(f_p4, fa_center, fa_top, COLORS.panel_graph_node_dimension);
 		var tx = xx + w * _s / 2;
 		var ty = yy + (h + 4) * _s - 2;
 		

@@ -14,19 +14,16 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	dimension_index = -1;
 	
 	////- =Text
-	
 	newInput( 0, nodeValue_Text(         "Text" )).setVisible(true, true);
 	newInput(32, nodeValue_Enum_Scroll(  "Change Case", 0, [ "None", "Lowercase", "Uppercase", "Titlecase" ] ));
 	
 	////- =Output
-	
 	newInput( 9, nodeValue_Enum_Scroll(  "Output Dimension", 1, [ "Fixed", "Dynamic" ]));
 	newInput( 6, nodeValue_Vec2(         "Fixed Dimension",  DEF_SURF  )).setVisible(true, false);
 	newInput(10, nodeValue_Padding(      "Padding",          [0,0,0,0] ));
 	newInput(33, nodeValue_Bool(         "Atlas",            false     ));
 	
 	////- =Alignment
-	
 	newInput(13, nodeValue_PathNode(     "Path"));
 	newInput(14, nodeValue_Float(        "Path Shift",        0 ));
 	newInput( 7, nodeValue_Enum_Button(  "H Align",           0, array_create(3, THEME.inspector_text_halign)));
@@ -35,7 +32,6 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(30, nodeValue_Bool(         "Rotate Along Path", true ));
 	
 	////- =Font
-	
 	newInput( 1, nodeValue_Font()).setVisible(true, false);
 	newInput( 4, nodeValue_Vec2(         "Character Range", [32,128]));
 	newInput( 2, nodeValue_Int(          "Size",             16));
@@ -45,19 +41,16 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(12, nodeValue_Float(        "Line Height",      0));
 	
 	////- =Rendering
-	
 	newInput(28, nodeValue_Bool(         "Round Position",   true ));
 	newInput( 5, nodeValue_Color(        "Color",            ca_white));
 	newInput(29, nodeValue_Enum_Button(  "Blend Mode",       1, [ "Normal", "Alpha" ]));
 	newInput(31, nodeValue_Palette(      "Color by Letter", [ca_white]));
 	
 	////- =Background
-	
 	newInput(16, nodeValue_Bool(         "Render Background", false));
 	newInput(17, nodeValue_Color(        "BG Color",          ca_black));
 	
 	////- =Wave
-	
 	newInput(18, nodeValue_Bool(         "Wave",           false));
 	newInput(22, nodeValue_Slider(       "Wave Shape",     0, [ 0, 3, 0.01 ]));
 	newInput(19, nodeValue_Float(        "Wave Amplitude", 4));
@@ -65,7 +58,6 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(21, nodeValue_Rotation(     "Wave Phase",     0));
 	
 	////- =Trim
-	
 	newInput(23, nodeValue_Bool(         "Trim",               false));
 	newInput(25, nodeValue_Enum_Button(  "Trim Type",          0, [ "Character", "Word", "Line" ]));
 	newInput(24, nodeValue_Slider_Range( "Range",             [0,1]));
