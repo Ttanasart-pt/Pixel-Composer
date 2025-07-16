@@ -266,14 +266,13 @@
     },
     {
         "name": "MK Tree", "nodes": [
-            { "label": "Tree" },
-            { "label": "/Builder" },
+            { "label": "Builder" },
             "Node_MK_Tree_Root",
             "Node_MK_Tree_Path_Root",
             "Node_MK_Tree_Branch",
             "Node_MK_Tree_Leaf",
             "Node_MK_Tree_Add_Branch",
-            { "label": "/Modify" },
+            { "label": "Modify" },
             "Node_MK_Tree_Branch_Trim",
             "Node_MK_Tree_Attract",
             "Node_MK_Tree_Repulse",

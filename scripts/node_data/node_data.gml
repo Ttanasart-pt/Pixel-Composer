@@ -1,5 +1,5 @@
 #region global
-	#macro SHOW_PARAM (show_parameter && previewable)
+	#macro SHOW_PARAM (previewable && show_parameter)
 	
 	enum NODE_3D   { none, polygon, sdf }
 	
@@ -86,7 +86,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		moved       = false;
 		min_w       = w;
-		con_h       = 128;
 		h_param     = h;
 		name_height = 16;
 		custom_grid = 0;
@@ -197,6 +196,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		attributes.node_height       = 0;
 		attributes.outp_meta         = false;
 		attributes.show_render_frame = false;
+		attributes.preview_size      = 128;
 		
 		attributes.annotation        = "";
 		attributes.annotation_size   = .4;
@@ -206,11 +206,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		toggleAttribute = function(k, r = false) /*=>*/ { attributes[$ k] = !attributes[$ k]; if(r) triggerRender(); PROJECT.modified = true; }
 		
 		attributeEditors = [
-			"Display",
-			["Annotation",   function() /*=>*/ {return attributes.annotation},       new textArea(TEXTBOX_INPUT.text,  function(v) /*=>*/ { setAttribute("annotation", v);          }) ],
-			["Node Width",   function() /*=>*/ {return attributes.node_width},       textBox_Number(function(v) /*=>*/ { setAttribute("node_width", v);       refreshNodeDisplay(); }) ],
-			["Node Height",  function() /*=>*/ {return attributes.node_height},      textBox_Number(function(v) /*=>*/ { setAttribute("node_height", v);      refreshNodeDisplay(); }) ],
-			["Params Width", function() /*=>*/ {return attributes.node_param_width}, textBox_Number(function(v) /*=>*/ { setAttribute("node_param_width", v); refreshNodeDisplay(); }) ],
+			"Display",  
+			["Annotation",     function() /*=>*/ {return attributes.annotation},       new textArea(TEXTBOX_INPUT.text,  function(v) /*=>*/ { setAttribute("annotation", v);          }) ],
+			["Node Width",     function() /*=>*/ {return attributes.node_width},       textBox_Number(function(v) /*=>*/ { setAttribute("node_width", v);       refreshNodeDisplay(); }) ],
+			["Node Height",    function() /*=>*/ {return attributes.node_height},      textBox_Number(function(v) /*=>*/ { setAttribute("node_height", v);      refreshNodeDisplay(); }) ],
+			["Preview Height", function() /*=>*/ {return attributes.preview_size},     textBox_Number(function(v) /*=>*/ { setAttribute("preview_size", max(32, v)); refreshNodeDisplay(); }) ],
+			["Params Width",   function() /*=>*/ {return attributes.node_param_width}, textBox_Number(function(v) /*=>*/ { setAttribute("node_param_width", v); refreshNodeDisplay(); }) ],
 			
 			"Node",
 			["Auto Update",       function() /*=>*/ {return attributes.update_graph},        new checkBox(function() /*=>*/ { toggleAttribute("update_graph");            }) ],
@@ -740,76 +741,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		outputs_draw_index  = array_create_ext(getOutputJunctionAmount(), function(i) /*=>*/ {return getOutputJunctionIndex(i)});
-	}
-	
-	static setHeight = function() {
-		w = attributes.node_width? attributes.node_width : min_w;
-		if(SHOW_PARAM) w = attributes.node_param_width;
-		
-		if(!auto_height) return;
-		
-		var _ps = is_surface(getGraphPreviewSurface()) || preserve_height_for_preview;
-		var _oo = array_safe_get(outputs, preview_channel, noone)
-		var _ou = _oo != noone && _oo.type == VALUE_TYPE.surface;
-		var _prev_surf = previewable && preview_draw && (_ps || _ou);
-		
-		junction_draw_hei_y = SHOW_PARAM?  32 : 16;
-		junction_draw_pad_y = SHOW_PARAM? 128 : 24;
-		
-		var surf_h = min(w, 128);
-		var _hi, _ho;
-		
-		if(SHOW_PARAM) {
-			_hi = con_h;
-			_ho = 24;
-			
-		} else if(previewable) {
-			_hi = junction_draw_pad_y;
-			_ho = junction_draw_pad_y;
-			
-		} else {
-			junction_draw_hei_y = 16;
-			junction_draw_pad_y = name_height / 2;
-			
-			_hi = name_height;
-			_ho = name_height;
-		}
-		
-		var _p = previewable;
-		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
-			var _inp = inputs[i];
-			if(is(_inp, NodeValue) && _inp.isVisible()) {
-				if(_p) _hi += junction_draw_hei_y;
-				_p = true;
-			}
-		}
-		
-		if(auto_input && dummy_input) _hi += junction_draw_hei_y;
-		var _p = previewable;
-		
-		for( var i = 0, n = array_length(outputs); i < n; i++ ) {
-			if(!outputs[i].isVisible()) continue;
-			if(_p) _ho += junction_draw_hei_y;
-			_p = true;
-		}
-		
-		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
-			var _inp = inputs[i];
-			if(!is(_inp, NodeValue)) continue;
-			
-			var _byp = _inp.bypass_junc;
-			_ho += junction_outp_hei_y * _byp.visible;
-		}
-		
-		if(attributes.outp_meta) {
-			for( var i = 0, n = array_length(junc_meta); i < n; i++ ) {
-				if(!junc_meta[i].isVisible()) continue;
-				_ho += junction_draw_hei_y;
-			}
-		}
-		
-		h = max(previewable? con_h : name_height, _prev_surf * surf_h, _hi, _ho);
-		if(attributes.node_height) h = max(h, attributes.node_height);
 	}
 	
 	static getJunctionList = function() {
@@ -1462,6 +1393,76 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	////- DRAW
 	
+	static setHeight = function() {
+		w = attributes.node_width? attributes.node_width : min_w;
+		if(SHOW_PARAM) w = attributes.node_param_width;
+		
+		if(!auto_height) return;
+		
+		var _ps = is_surface(getGraphPreviewSurface()) || preserve_height_for_preview;
+		var _oo = array_safe_get(outputs, preview_channel, noone)
+		var _ou = _oo != noone && _oo.type == VALUE_TYPE.surface;
+		var _prev_surf = previewable && preview_draw && (_ps || _ou);
+		
+		junction_draw_hei_y = SHOW_PARAM? 32 : 16;
+		junction_draw_pad_y = SHOW_PARAM? attributes.preview_size : 24;
+		
+		var surf_h = min(w, attributes.preview_size);
+		var _hi, _ho;
+		
+		if(SHOW_PARAM) {
+			_hi = attributes.preview_size;
+			_ho = 24;
+			
+		} else if(previewable) {
+			_hi = junction_draw_pad_y;
+			_ho = junction_draw_pad_y;
+			
+		} else {
+			junction_draw_hei_y = 16;
+			junction_draw_pad_y = name_height / 2;
+			
+			_hi = name_height;
+			_ho = name_height;
+		}
+		
+		var _p = previewable;
+		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
+			var _inp = inputs[i];
+			if(is(_inp, NodeValue) && _inp.isVisible()) {
+				if(_p) _hi += junction_draw_hei_y;
+				_p = true;
+			}
+		}
+		
+		if(auto_input && dummy_input) _hi += junction_draw_hei_y;
+		var _p = previewable;
+		
+		for( var i = 0, n = array_length(outputs); i < n; i++ ) {
+			if(!outputs[i].isVisible()) continue;
+			if(_p) _ho += junction_draw_hei_y;
+			_p = true;
+		}
+		
+		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
+			var _inp = inputs[i];
+			if(!is(_inp, NodeValue)) continue;
+			
+			var _byp = _inp.bypass_junc;
+			_ho += junction_outp_hei_y * _byp.visible;
+		}
+		
+		if(attributes.outp_meta) {
+			for( var i = 0, n = array_length(junc_meta); i < n; i++ ) {
+				if(!junc_meta[i].isVisible()) continue;
+				_ho += junction_draw_hei_y;
+			}
+		}
+		
+		h = max(previewable? attributes.preview_size : name_height, _prev_surf * surf_h, _hi, _ho);
+		if(attributes.node_height) h = max(h, attributes.node_height);
+	}
+	
 	static setShowParameter = function(showParam) {
 		show_parameter = showParam;
 		refreshNodeDisplay();
@@ -1576,7 +1577,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		if(SHOW_PARAM) {
-			var _junRy = con_h + junction_draw_hei_y / 2;
+			var _junRy = attributes.preview_size + junction_draw_hei_y / 2;
 			var _junSy = yy + _junRy * _s;
 			
 			_ix = xx;           _rix = x;
@@ -1697,7 +1698,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var y1 = yy + h * _s;
 		
 		if(pad_label)  y0 += name_height * _s;
-		if(SHOW_PARAM) y1  = yy + con_h  * _s;
+		if(SHOW_PARAM) y1  = yy + attributes.preview_size  * _s;
 		
 		x0 += max(draw_padding, draw_pad_w) * _s; 
 		x1 -= max(draw_padding, draw_pad_w) * _s;
@@ -1786,7 +1787,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var wx = _x + w * _s - ww - 8;
 		var lx = _x + 12 * _s;
 		
-		var jy = _y + con_h * _s + wh / 2;
+		var jy = _y + attributes.preview_size * _s + wh / 2;
 		
 		var rx = _panel.x;
 		var ry = _panel.y;
@@ -1849,7 +1850,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			outY += junction_outp_hei_y * outputs[i].isVisible();
 		
 		extY += bool(extY) * 4;
-		h = max(outY, con_h + extY);
+		h = max(outY, attributes.preview_size + extY);
 		h_param = h;
 	}
 	
@@ -2197,15 +2198,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		drawNodeBase(xx, yy, _s);
 		draggable = true;
 		
+		var _hover = _panel.node_hovering     == self;
+		var _focus = _panel.getFocusingNode() == self;
+				
 		if(previewable && _panel != noone) {
 			if(preview_draw) drawPreview(xx, yy, _s);
 			
-			try { 
-				var _hover = _panel.node_hovering == self;
-				var _focus = _panel.getFocusingNode() == self;
-				
-				onDrawNode(xx, yy, _mx, _my, _s, _hover, _focus); 
-			}
+			try { onDrawNode(xx, yy, _mx, _my, _s, _hover, _focus); }
 			catch(e) { log_warning("NODE onDrawNode", exception_print(e)); }
 		} 
 		
@@ -2949,9 +2948,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static setDimension = function(_w = 128, _h = 128, _apply = true) {
 		INLINE
 		
-		var _oh = con_h;
+		var _oh = min_h;
 		min_w = _w; 
-		con_h = _h;
+		min_h = _h;
 		
 		if(!_apply) return;
 		

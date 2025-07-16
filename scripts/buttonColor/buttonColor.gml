@@ -4,31 +4,28 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 	current_value = 0;
 	triggered     = false;
 	
-	hover_hex = 0;
-	hover_wid = ui(24);
+	hover_hex     = 0;
+	hover_wid     = ui(24);
 	
-	onColorPick = function() {
-		var dialog = dialogCall(o_dialog_color_selector)
-			.setApply(onApply);
-			
-		dialog.selector.dropper_active = true;
-		dialog.selector.dropper_close  = true;
-		dialog.drop_target = self;
+	onColorPick   = function() /*=>*/ {
+		with(dialogCall(o_dialog_color_selector)) {
+			setApply(other.onApply);
+			selector.dropper_active = true;
+			selector.dropper_close  = true;
+			drop_target = other;
+		}
 	}
 	
 	is_picking    = false;
 	current_color = c_black;
-	b_picker      = button(onColorPick);
-	b_picker.icon = THEME.color_picker_dropper;
-	
-	b_quick_pick = button(function() /*=>*/ {
+	b_picker      = button(onColorPick).setIcon(THEME.color_picker_dropper);
+	b_quick_pick  = button(function() /*=>*/ {
 		var pick = instance_create(mouse_mx, mouse_my, o_dialog_color_quick_pick);
 		array_insert(pick.palette, 0, current_color);
 		pick.onApply = onApply;
-	});
+	}).setIcon(THEME.color_wheel);
 	
 	b_quick_pick.activate_on_press = true;
-	b_quick_pick.icon              = THEME.color_wheel;
 	
 	function apply(value) {
 		if(!interactable) return;
@@ -134,7 +131,8 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 			var _hvb  = ihover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _cw, _y + _h);
 			hover_hex = lerp_float(hover_hex, _hvb, 4);
 			
-			var _bcx = _bx + _bw - ui(12);
+			var _bs  = min(_bh, ui(24));
+			var _bcx = _bx + _bw - _bs - ui(4);
 			var _bcy = _by + _bh / 2;
 			
 			var _baa = 0.5;
@@ -159,11 +157,14 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 						_bcc = COLORS._main_icon_light;
 				}
 				
+				var _scis = gpu_get_scissor();
 				draw_set_text(f_p1, fa_right, fa_center, COLORS._main_text_sub);
-				draw_text_add(_bx + _bw - ui(28), _y + _h / 2 + ui(1), color_get_hex(current_color));
+				gpu_set_scissor(_bx, _by, _bw, _bh);
+				draw_text_add(_bcx - ui(4), _y + _h / 2 + ui(1), color_get_hex(current_color));
+				gpu_set_scissor(_scis);
 				
-				var _ss = (_bh - ui(8)) / 20;
-				draw_sprite_ui(interactable && key_mod_press(SHIFT)? THEME.paste_20 : THEME.copy_20, 0, _bcx, _bcy, _ss, _ss, 0, _bcc, _baa);
+				var _spr = interactable && key_mod_press(SHIFT)? THEME.paste_20 : THEME.copy_20;
+				draw_sprite_stretched_ext(_spr, 0, _bcx, _bcy - _bs / 2, _bs, _bs, _bcc, _baa);
 			}
 			
 			hover_wid = lerp_float(hover_wid, _htg, 5);

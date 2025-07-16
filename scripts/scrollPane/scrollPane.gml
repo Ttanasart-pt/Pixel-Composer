@@ -116,7 +116,9 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		}
 		
 		if(scroll_drag) {
-			scroll_y_to  = scroll_drag_sy + (_my - scroll_drag_my);
+			scroll_y_to   += _my - scroll_drag_my;
+			scroll_drag_my = _my;
+			
 			scroll_y_to  = clamp(scroll_y_to, -content_h, 0);
 			scroll_y_raw = scroll_y_to;
 			scroll_y	 = scroll_y_to;
