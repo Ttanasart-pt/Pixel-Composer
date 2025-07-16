@@ -605,8 +605,8 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			inputs[53].setVisible(_direct);
 			
 			inputs[1].setVisible(_spwTyp < 2);
-			     if(_spwTyp == 0) inputs[1].name = "Spawn delay";
-			else if(_spwTyp == 1) inputs[1].name = "Spawn frame";
+			     if(_spwTyp == 0) inputs[1].name = "Spawn Delay";
+			else if(_spwTyp == 1) inputs[1].name = "Spawn Frame";
 			
 			inputs[44].setVisible(_spwTyp == 2);
 			

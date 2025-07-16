@@ -85,7 +85,6 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 	
 	static drawParam = function(params) {
 		setParam(params);
-		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m, params.rx, params.ry);
 	}
 	

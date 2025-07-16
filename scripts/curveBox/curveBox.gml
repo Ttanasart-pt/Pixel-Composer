@@ -236,7 +236,9 @@ function curveBox(_onModify) : widget() constructor {
 		var msx = _m[0] - _x;
 		var msy = _m[1] - _y;
 		
-		right_click_block = !point_in_rectangle(_m[0], _m[1], _x, _y, _x + w, _y + h);
+		var _hover = point_in_rectangle(_m[0], _m[1], _x, _y, _x + w, _y + h);
+		if(_hover && is(parent, scrollPane)) parent.scroll_dragable = false;
+		right_click_block = !_hover;
 		
 		#region ==== draw curve ====
 			surface_set_target(curve_surface);

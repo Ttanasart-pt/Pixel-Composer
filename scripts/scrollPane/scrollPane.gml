@@ -23,6 +23,11 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 	scroll_y_to	 = 0;
 	scroll_wait  = 0;
 	
+	scroll_dragable = false;
+	scroll_drag     = false;
+	scroll_drag_sy  = false;
+	scroll_drag_my  = false;
+	
 	scroll_step = 64;
 	scroll_lock = false;
 	
@@ -45,10 +50,7 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 	scroll_color_bar_active = COLORS.scrollbar_active;
 	scroll_color_bar_alpha  = 1;
 	
-	static verify = function(_w, _h) {
-		if(w == _w && h == _h) return;
-		resize(_w, _h);
-	}
+	static verify = function(_w,_h) /*=>*/ { if(w == _w && h == _h) return; resize(_w, _h); }
 	
 	static resize = function(_w, _h) {
 		w = _w;
@@ -59,17 +61,20 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 	
 	static setScroll = function(_scroll_y) { INLINE scroll_y_to  = _scroll_y; }
 	
-	static drawOffset = function(x, y, mx = mouse_mx, my = mouse_my) { return draw(x, y, mx - x, my - y); }
+	static drawOffset = function(_x, _y, _mx = mouse_mx, _my = mouse_my) { return draw(_x, _y, _mx - _x, _my - _y); }
 	
-	static draw = function(x, y, mx = mouse_mx - x, my = mouse_my - y) {
-		self.x = x;
-		self.y = y;
+	static draw = function(_x, _y, _mx = mouse_mx - _x, _my = mouse_my - _y) {
+		x = _x;
+		y = _y;
+		
+		var mx = _mx;
+		var my = _my;
 		
 		whover  = hover;
 		wactive = active;
 		
-		hover = hover && point_in_rectangle( mx, my, 0, 0, surface_w, surface_h);
-		hover = hover && pen_scrolling != 2;
+		hover   = hover && point_in_rectangle( mx, my, 0, 0, surface_w, surface_h);
+		hover   = hover && pen_scrolling != 2;
 		surface = surface_verify(surface, surface_w, surface_h);
 		hover_content = false;
 		
@@ -97,8 +102,37 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		
 		draw_surface_safe(surface, x, y);
 		
-		if(hover && !scroll_lock && !key_mod_press(SHIFT) && !key_mod_press(CTRL) && MOUSE_WHEEL != 0) 
-			scroll_y_to += scroll_step * MOUSE_WHEEL;
+		if(hover && !scroll_lock) {
+			if(!key_mod_press(SHIFT) && !key_mod_press(CTRL) && MOUSE_WHEEL != 0)
+				scroll_y_to += scroll_step * MOUSE_WHEEL;
+				
+			if(scroll_dragable && mouse_press(mb_middle)) {
+				scroll_drag    = true;
+				scroll_drag_sy = scroll_y;
+				scroll_drag_my = _my;
+			}
+			
+			scroll_dragable = true;
+		}
+		
+		if(scroll_drag) {
+			scroll_y_to  = scroll_drag_sy + (_my - scroll_drag_my);
+			scroll_y_to  = clamp(scroll_y_to, -content_h, 0);
+			scroll_y_raw = scroll_y_to;
+			scroll_y	 = scroll_y_to;
+			
+			if(mouse_release(mb_middle))
+				scroll_drag = false;
+		}
+		
+		if(show_scroll && (abs(content_h) > 0 || (always_scroll && scroll_resize))) {
+			var _p   = PEN_USE && (is_scrolling || point_in_rectangle(x + mx, y + my, x + w - scroll_w - 2, y, x + w, y + surface_h));
+			scroll_w = lerp_float(scroll_w, _p? 12 : scroll_s, 5);
+			
+			draw_scroll(x + w - scroll_w, y + ui(6), true, surface_h - ui(12), -scroll_y / content_h, surface_h / (surface_h + content_h), x + mx, y + my, scroll_w);
+		}
+		
+		scroll_lock = false;
 		
 		/// Pen scroll
 		
@@ -128,14 +162,6 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 			scroll_y_to += pen_scroll_py;
 		}
 		
-		if(show_scroll && (abs(content_h) > 0 || (always_scroll && scroll_resize))) {
-			var _p   = PEN_USE && (is_scrolling || point_in_rectangle(x + mx, y + my, x + w - scroll_w - 2, y, x + w, y + surface_h));
-			scroll_w = lerp_float(scroll_w, _p? 12 : scroll_s, 5);
-			
-			draw_scroll(x + w - scroll_w, y + ui(6), true, surface_h - ui(12), -scroll_y / content_h, surface_h / (surface_h + content_h), x + mx, y + my, scroll_w);
-		}
-		
-		scroll_lock     = false;
 	}
 	
 	static draw_scroll = function(scr_x, scr_y, is_vert, scr_s, scr_prog, scr_ratio, mx, my, bar_spr_w) {

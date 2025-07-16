@@ -20,7 +20,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		var xc	      = xx + ww / 2;
 		var _font     = viewMode == INSP_VIEW_MODE.spacious? f_p2 : f_p3;
 		var breakLine = viewMode == INSP_VIEW_MODE.spacious || jun.expUse;
-		var lb_h      = line_get_height(_font, 6);
+		var lb_h      = line_get_height(_font, 4 + viewMode * 2);
 		var lb_y      = yy + lb_h / 2;
 		
 		var _name     = jun.getName();
@@ -43,6 +43,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			case "controlPointBox" : 
 			case "transformBox"    : 
 			case "pbBoxBox"        : 
+			case "curveBox"        : 
 				breakLine = true;
 				break;
 				
@@ -331,17 +332,14 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	#endregion
 	
 	#region draw widget
-		var _hsy       = yy + lb_h + ui(4);
-		var padd       = ui(8);
 		var labelWidth = max(lb_w, min(ww * 0.4, ui(200)));
-		var widExtend  = breakLine || jun.type == VALUE_TYPE.curve;
 		
-		var editBoxX   = xx	+ !widExtend * labelWidth;
-		var editBoxY   = widExtend? _hsy : yy;
+		var editBoxX   = xx	+ !breakLine * labelWidth;
+		var editBoxY   = breakLine? yy + lb_h + ui(4) : yy;
 		var editBoxW   = (xx + ww) - editBoxX;
-		var editBoxH   = widExtend? TEXTBOX_HEIGHT : lb_h;
+		var editBoxH   = breakLine? TEXTBOX_HEIGHT : lb_h;
 		
-		var widH	   = widExtend? editBoxH : 0;
+		var widH	   = breakLine? editBoxH : 0;
 		var mbRight	   = true;
 		
 		if(jun.expUse) {
@@ -354,7 +352,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			if(_focus) jun.express_edit.register(_scrollPane);
 				
 			var wd_h = jun.express_edit.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.expression, _m);
-			widH  = wd_h - (TEXTBOX_HEIGHT * !widExtend);
+			widH  = wd_h - (TEXTBOX_HEIGHT * !breakLine);
 			cHov = cHov || jun.express_edit.inBBOX(_m);
 			
 			var un = jun.unit;
@@ -382,7 +380,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			
 			var _show = jun.showValue();
 			var param = new widgetParam(editBoxX, editBoxY, editBoxW, editBoxH, _show, jun.display_data, _m, rx, ry);
-			    param.font = viewMode == INSP_VIEW_MODE.spacious? f_p1 : f_p2;
+			    param.font = viewMode == INSP_VIEW_MODE.spacious? f_p2 : f_p3;
 			    param.sep_axis = jun.sep_axis;
 			
 			switch(jun.type) {
@@ -399,10 +397,10 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				case VALUE_TYPE.boolean : 
 					if(is_instanceof(wid, checkBoxActive)) break;
 					
-					param.halign = widExtend? fa_left : fa_center;
+					param.halign = breakLine? fa_left : fa_center;
 					param.s      = editBoxH;
 					
-					if(!widExtend) {
+					if(!breakLine) {
 						param.w = ww - min(ui(80) + ww * 0.2, ui(200));
 						param.x = editBoxX + editBoxW - param.w;
 					}
@@ -411,18 +409,22 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				case VALUE_TYPE.surface : 
 				case VALUE_TYPE.d3Material : 
 				case VALUE_TYPE.dynaSurface : 
-					param.h = widExtend? ui(96) : ui(48);
+					param.h = breakLine? ui(96) : ui(48);
 					break;
 				
 			}
 			
 			var _widH = wid.drawParam(param) ?? 0;
-			widH  = max(0, _widH - (TEXTBOX_HEIGHT * !widExtend));
-			cHov = cHov || wid.inBBOX(_m);
+			if(breakLine) _widH += ui(4);
+			else          _widH -= lb_h;
+			
+			_widH = max(0, _widH);
+			
+			cHov  = cHov || wid.inBBOX(_m);
 			
 			mbRight = mbRight && wid.right_click_block;
 		}
 	#endregion
 	
-	return [ widH, mbRight, cHov ];
+	return [ _widH, mbRight, cHov ];
 }	
