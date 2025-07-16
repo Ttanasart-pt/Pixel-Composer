@@ -2945,17 +2945,16 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	////- ACTION
 	
-	static setDimension = function(_w = 128, _h = 128, _apply = true) {
+	static setDimension = function(_w = 128, _h = undefined, _apply = undefined) {
 		INLINE
 		
-		var _oh = min_h;
-		min_w = _w; 
-		min_h = _h;
+		min_w = _w;
+		w     = max(w, min_w);
 		
-		if(!_apply) return;
+		if(_h != undefined && (NODE_NEW_MANUAL || LOADING_VERSION < 1_19_05_0)) attributes.preview_size = _h;
+		if(_apply == undefined) return;
 		
-		w = max(w, min_w);
-		if(_oh != _h) refreshNodeDisplay();
+		refreshNodeDisplay();
 	}
 	
 	static move = function(_x, _y) {

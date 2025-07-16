@@ -47,7 +47,7 @@ function NodeTopoSort() {
 	PROJECT.nodeTopoID = UUID_generate();
 	LOG_IF(global.FLAG.render == 1, $"+++++++ Topo Sort Completed: {array_length(PROJECT.nodeTopo)}/{amo} nodes sorted in {(get_timer() - _t) / 1000} ms +++++++");
 	
-	if(PANEL_NODES != noone) NodeTreeSort();
+	NodeTreeSort();
 }
 
 function NodeListSort(_nodeList) {
@@ -406,12 +406,10 @@ function NodeTreeItem(_node = noone) constructor {
 		}
 	}
 
-	static toggleExpand = function() {
+	static toggleExpand = function(_exp) {
+		
 		var _len = array_length(children);
-		if(_len > 1) {
-			expanded = !expanded;
-			return;
-		} 
+		if(_len > 1) { expanded = _exp; return; } 
 		
 		if(_len == 1) children[0].toggleExpand();
 	}

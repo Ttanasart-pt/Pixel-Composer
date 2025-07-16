@@ -46,7 +46,7 @@ gml_pragma("UnityBuild", "true");
 	
 	LATEST_VERSION	= 1_19_00_0;
 	VERSION			= 1_19_05_1;
-	SAVE_VERSION	= 1_19_04_0;
+	SAVE_VERSION	= 1_19_05_0;
 	VERSION_STRING  = MAC? "1.18.003m" : "1.19.6.004";
 	RELEASE_STRING  = "1.19.5";
 	BUILD_NUMBER	= 1_19_05_1.004;

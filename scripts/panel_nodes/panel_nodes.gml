@@ -84,7 +84,6 @@ function Panel_Nodes() : PanelContent() constructor {
 	
     function onFocusBegin() {
         PANEL_NODES = self; 
-        NodeTreeSort();
     } 
     
 	////- Draw
@@ -118,7 +117,6 @@ function Panel_Nodes() : PanelContent() constructor {
 		_item.x = _x0;
 		_item.y = _y;
 		
-		
 		if(_bg) draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _x0, _y, _w, bhg, COLORS.panel_inspector_group_bg, 1);
 		
 		if(hov) {
@@ -130,7 +128,8 @@ function Panel_Nodes() : PanelContent() constructor {
 			
 			if(focus) {
 				if(hovEx) {
-					if(mouse_lpress()) _item.toggleExpand();
+					if(mouse_lpress()) 
+						_item.toggleExpand(!_item.expanded);
 					
 				} else if(_m[0] < _x1 - ui(32)) {
 					if(DOUBLE_CLICK)

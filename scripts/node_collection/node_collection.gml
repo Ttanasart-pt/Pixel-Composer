@@ -9,8 +9,6 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	previewable         = true;
 	thumbnail_node      = noone;
 	
-	setDimension(w, 16);
-	
 	isPure   = false;
 	nodeTopo = [];
 	nodeTree = noone;
