@@ -40,7 +40,52 @@ function Surface_sampler(s = noone) constructor {
     
     getPixel = getPixelU32;
     
-    static free = function() {
-        buffer_delete_safe(buffer);
+    static free = function() /*=>*/ { buffer_delete_safe(buffer); }
+}
+
+function Surface_Sampler_Grey(s = noone, _rng = [0,1]) constructor {
+    active = false;
+    buffer = noone;
+    range  = _rng;
+    
+    sw = 1;
+    sh = 1;
+        
+    static setSurface = function(s) {
+        if(buffer != noone) buffer_delete(buffer);
+        
+        buffer  = noone;
+        active  = is_surface(s);
+        if(!active) return;
+        
+        sw = surface_get_width(s);
+        sh = surface_get_height(s);
+        var _surf = surface_create(sw, sh, surface_r16float);
+        
+        surface_set_shader(_surf, sh_greyscale);
+            shader_set_2("brightness",        [0,0]);
+            shader_set_i("brightnessUseSurf",  0);
+            
+            shader_set_2("contrast",          [1,1]);
+            shader_set_i("contrastUseSurf",    0);
+            
+            draw_surface(s,0,0);
+        surface_reset_shader();
+        
+        buffer = buffer_create(sw * sh * 2, buffer_fixed, 1);
+        buffer_get_surface(buffer, _surf, 0);
+        
+        surface_free(_surf);
     }
+    
+    setSurface(s);
+    
+    static getPixel = function(_u,_v) /*=>*/ {
+        if(!active) return range[0];
+        var _x = round(clamp(_u, 0, 1) * sw);
+        var _y = round(clamp(_v, 0, 1) * sh);
+        return lerp(range[0], range[1], buffer_read_at(buffer, _y * sw + _x * 2, buffer_f16));
+    }
+    
+    static free = function() /*=>*/ { buffer_delete_safe(buffer); }
 }

@@ -692,12 +692,8 @@
 					draw_surface_safe(surface);
 				surface_reset_shader();
 				surface_save(s, path);
+				surface_free(s);
 				return;
-				
-			case surface_r8unorm	 : s = surface_create(w, h, surface_rgba8unorm);	break;
-			case surface_r16float	 : s = surface_create(w, h, surface_rgba16float);	break;
-			case surface_r32float	 : s = surface_create(w, h, surface_rgba32float);	break;
-			default: return;
 		}
 		
 		surface_set_shader(s, sh_draw_single_channel);

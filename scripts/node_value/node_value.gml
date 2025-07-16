@@ -412,17 +412,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static setMappable = function(_index, _vec4 = false) {
 		with(node) {
-			var vmap = new NodeValue($"{other.name} Map", self, CONNECT_TYPE.input, VALUE_TYPE.surface, noone)
-				.setVisible(false, false)
-				.setMapped(other);
+			var vmap = nodeValue_Surface($"{other.name} Map").setVisible(false, false).setMapped(other);
 			newInput(_index + 0, vmap);
 			
 			if(other.type != VALUE_TYPE.gradient) break;
 			
 			var vmap = new NodeValue($"{other.name} Map Range", self, CONNECT_TYPE.input, VALUE_TYPE.float, [ 0, 0, 1, 0 ])
-				.setDisplay(VALUE_DISPLAY.gradient_range)
-				.setVisible(false, false)
-				.setMapped(other);
+				.setDisplay(VALUE_DISPLAY.gradient_range).setVisible(false, false).setMapped(other);
 			newInput(_index + 1, vmap);
 		}
 		
@@ -434,7 +430,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(arrayLength == arrayLengthSimple) arrayLength = __arrayLength;
 		
-		mapButton = button(function() { 
+		mapButton = button(function() /*=>*/ { 
 			attributes.mapped = !attributes.mapped;
 			
 			if(type == VALUE_TYPE.integer || type == VALUE_TYPE.float) {
@@ -444,8 +440,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			}
 			
 			node.triggerRender(); 
-		}).setIcon( THEME.mappable_parameter, [ function() /*=>*/ {return attributes.mapped} ], COLORS._main_icon )
-		  .setTooltip("Toggle Map");
+		}).setIcon( THEME.mappable_parameter, [ function() /*=>*/ {return attributes.mapped} ], COLORS._main_icon ).setTooltip("Toggle Map");
 		
 		if(type != VALUE_TYPE.gradient) {
 			mapWidget = _vec4? new vectorRangeBox(4, TEXTBOX_INPUT.number, function(v,i) /*=>*/ {return setValueDirect(v,i)}).setSideButton(mapButton) : 
@@ -472,10 +467,25 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		with(node) { newInput(_index, nodeValue_Curve( $"{other.name} {_suf}", _val )).setVisible(false, false); }
 		
 		curveButton = button(function() /*=>*/ { attributes.curved = !attributes.curved; node.triggerRender(); })
-			.setIcon( THEME.curvable, [ function() /*=>*/ {return attributes.curved} ], COLORS._main_icon )
-			.setTooltip("Toggle Curve");
+			.setIcon( THEME.curvable, [ function() /*=>*/ {return attributes.curved} ], COLORS._main_icon ).setTooltip("Toggle Curve");
 		
 		editWidget.setSideButton(curveButton);
+		
+		return self;
+	}
+	
+	static setMappableConst = function(_index, _suf = "Map") {
+		attributes.mapped    = false;
+		attributes.map_index = _index;
+		mapped_type = 3;
+		array_push(node.inputMappable, self);
+		
+		with(node) { newInput(_index, nodeValue_Surface( $"{other.name} {_suf}" )).setVisible(false, false); }
+		
+		mapButton = button(function() /*=>*/ { attributes.mapped = !attributes.mapped; node.triggerRender(); })
+			.setIcon( THEME.mappable_parameter, [ function() /*=>*/ {return attributes.curved} ], COLORS._main_icon ).setTooltip("Toggle Map");
+		
+		editWidget.setSideButton(mapButton);
 		
 		return self;
 	}
@@ -503,6 +513,18 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				
 				var inp = node.inputs[attributes.map_index];
 				var vis = attributes.curved && show_in_inspector;
+				
+				if(inp.show_in_inspector != vis) {
+					inp.show_in_inspector = vis;
+					node.refreshNodeDisplay();
+				}
+				break;
+			
+			case 3 : 
+				curveButton.icon_blend = attributes.mapped? c_white : COLORS._main_icon;
+				
+				var inp = node.inputs[attributes.map_index];
+				var vis = attributes.mapped && show_in_inspector;
 				
 				if(inp.show_in_inspector != vis) {
 					inp.show_in_inspector = vis;
@@ -2335,6 +2357,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		resetCache();
 		node.triggerRender();
 	}
+	
+	////- ATTRIBUTES
+	
+	static isMapped = function() /*=>*/ {return attributes.mapped};
 	
 	////- SERIALIZE
 	
