@@ -35,7 +35,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	////- =Width
 	
 	newInput(17, nodeValue_Bool(  "1px Mode",             false        )).setTooltip("Render pixel perfect 1px line.");
-	newInput( 3, nodeValue_Vec2(  "Width",               [2,2]         ));
+	newInput( 3, nodeValue_Range( "Width",               [2,2]         ));
 	newInput(11, nodeValue_Curve( "Width over Length",    CURVE_DEF_11 ));
 	newInput(12, nodeValue_Bool(  "Span Width over Path", false        )).setTooltip("Apply the full 'width over length' to the trimmed path.");
 	newInput(36, nodeValue_Bool(  "Apply Weight",         true         ));
@@ -267,6 +267,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			var _ox, _nx, _nx1, _oy, _ny, _ny1;
 			var _ow, _nw, _oa, _na, _oc, _nc, _owg, _nwg;
+			var _op, _np;
 			var _wmin = 0, _wmax = 1;
 			
 			switch(_dtype) {
@@ -343,7 +344,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						var _useDistance = _fixL && struct_has(_pat, "getLength");
 						var _pathLength  = _useDistance? _pat.getLength(i) : 1;
 						if(_pathLength == 0) continue;
-							
+						
 						var _pathStr = _rtStr;
 						var _pathEnd = _rtMax;
 							
@@ -382,10 +383,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						if(_segLengthAmo)
 						while(_prog_curr > _segLength[_segIndex]) {
 							_segIndex++;
-							if(_segIndex == _segLengthAmo) {
-								_segIndex = 0;
-								break;
-							}
+							if(_segIndex == _segLengthAmo) { _segIndex = 0; break; }
 						}
 						
 						// print($"===== {_prog_curr} [{_pathStr},{_pathEnd}] / {_segLength} : {_segIndex} - {_pathLength} =====");
@@ -408,10 +406,10 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 								if(_prog_next == segmentLength) _segIndex++;
 								
 								_pp = _clamp? clamp(_pathPng, 0, _pathLength) : _pathPng;
-								// print($"_pp = {_pp}, total = {_total}");
 								
 								p = _pat.getPointDistance(_pp, i, p);
 								wght = p[$ "weight"] ?? 1;
+								// print($"_pp = {_pp}, total = {_total}, p = {p}");
 									
 							} else {
 								_prog_next = min(_prog_curr + _stepLen, 1); // Move forward _stepLen or _total (if less) stop at 1
@@ -484,6 +482,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					if(_wmax == _wmin) { _wmin = 0; _wmax = 1; }
 					
 					if(_pbbox) _surfDim = [ max(1, maxx - minx + _ppadd[0] + _ppadd[2]), max(1, maxy - miny + _ppadd[1] + _ppadd[3]) ];
+					
 					break;
 					
 				case 2 :
@@ -630,8 +629,9 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					var _ww = lerp_invert(p0.weight, _wmin, _wmax);
 					if(_wg2wid) _nw *= _ww / 2;
 					
+					_np = _colP? prog : prgc;
 					_nc = _col_base;
-					_nc = colorMultiply(_nc, _color.eval(_colP? prog : prgc));
+					_nc = colorMultiply(_nc, _color.eval(_np));
 					_nc = colorMultiply(_nc, _wg2clr.eval((_ww - _wg2clrR[0]) / _wg2clrRng));
 					
 					if(_cap) {
@@ -693,10 +693,15 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 								var nx1 = _nx + lengthdir_x(_nw / 2, _nd + 90 + 180);
 								var ny1 = _ny + lengthdir_y(_nw / 2, _nd + 90 + 180);
 								
-								draw_vertex_texture_color(ox0 * _aa, oy0 * _aa, 0, (j - 1) / _len, _oc, 1);
-								draw_vertex_texture_color(ox1 * _aa, oy1 * _aa, 1, (j - 1) / _len, _oc, 1);
-								draw_vertex_texture_color(nx0 * _aa, ny0 * _aa, 0, (j - 0) / _len, _nc, 1);
-								draw_vertex_texture_color(nx1 * _aa, ny1 * _aa, 1, (j - 0) / _len, _nc, 1);
+								var _u0 = 0;
+								var _u1 = 1;
+								var _v0 = _op;
+								var _v1 = _np;
+								
+								draw_vertex_texture_color(ox0 * _aa, oy0 * _aa, _u0, _v0, _oc, 1);
+								draw_vertex_texture_color(ox1 * _aa, oy1 * _aa, _u1, _v0, _oc, 1);
+								draw_vertex_texture_color(nx0 * _aa, ny0 * _aa, _u0, _v1, _nc, 1);
+								draw_vertex_texture_color(nx1 * _aa, ny1 * _aa, _u1, _v1, _nc, 1);
 								
 							} else
 								draw_line_width2_angle(_ox * _aa, _oy * _aa, _nx * _aa, _ny * _aa, _ow * _aa, _nw * _aa, _od + 90, _nd + 90, _oc, _nc);
@@ -710,6 +715,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						_od = _nd;
 						_ow = _nw;
 						_oc = _nc;
+						_op = _np;
 					}
 					
 					if(j % 120 == 0) {

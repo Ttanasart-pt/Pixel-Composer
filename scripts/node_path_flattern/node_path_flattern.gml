@@ -30,10 +30,12 @@ function Node_Path_Flattern(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			for( var i = 0; i < _lines; i++ ) {
 				var _len = curr_path.getLength();
 				
-				lengths[i]   = _len;
-				lengthTotal += _len;
+				lengths[i]    = _len;
+				lengthTotal  += _len;
 				lengthAccs[i] = lengthTotal;
+				segments     += curr_path.getSegmentCount();
 			}
+			
 		#endregion
 		
 		static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
@@ -62,21 +64,21 @@ function Node_Path_Flattern(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				return out;
 			}
 			
-			var _ind = _dist;
+			var _dst = _dist;
 			var _rev = reverse;
 			var _res = false;
 			
 			for( var i = 0, n = array_length(lengths); i < n; i++ ) {
 				var _l = lengths[i];
-				if(_l >= _ind) {
-					if(_rev) _ind = _l - _ind;
+				if(_l >= _dst) {
+					if(_rev) _dst = _l - _dst;
 					
-					curr_path.getPointDistance(_ind, i, out);
+					curr_path.getPointDistance(_dst, i, out);
 					_res = true;
 					break;
 				}
 				
-				_ind -= _l;
+				_dst -= _l;
 				if(pingpong) _rev  = !_rev;
 			}
 			

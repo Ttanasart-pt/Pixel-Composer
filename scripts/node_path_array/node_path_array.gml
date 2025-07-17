@@ -57,22 +57,22 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		return 0;
 	}
 	
-	static getPointRatio = function(_rat, ind = 0) {
+	static getPointRatio = function(_rat, ind = 0, out = undefined) {
 		for( var i = 0; i < curr_path_amo; i++ ) {
 			var lc = curr_path[i].getLineCount(); 
 			
-			if(ind < lc) return curr_path[i].getPointRatio(_rat, ind);
+			if(ind < lc) return curr_path[i].getPointRatio(_rat, ind, out);
 			ind -= lc;
 		}
 		
 		return new __vec2P();
 	}
 	
-	static getPointDistance = function(_dist, ind = 0) {
+	static getPointDistance = function(_dist, ind = 0, out = undefined) {
 		for( var i = 0; i < curr_path_amo; i++ ) {
 			var lc = curr_path[i].getLineCount(); 
 			
-			if(ind < lc) return curr_path[i].getPointDistance(_dist, ind);
+			if(ind < lc) return curr_path[i].getPointDistance(_dist, ind, out);
 			ind -= lc;
 		}
 		
