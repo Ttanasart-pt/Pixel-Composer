@@ -1,10 +1,8 @@
 function cornerBox(_onModify, _unit = noone) : widget() constructor {
 	onModify = _onModify;
 	unit     = _unit;
-	
-	linked      = false;
-	b_link      = button(function() /*=>*/ { linked = !linked; });
-	b_link.icon = THEME.value_link;
+	linked   = false;
+	b_link   = button(function() /*=>*/ { linked = !linked; }).setIcon(THEME.value_link).iconPad();
 	
 	onModifyIndex = function(val, index) { 
 		if(linked) {
@@ -22,11 +20,7 @@ function cornerBox(_onModify, _unit = noone) : widget() constructor {
 	onModifySingle[3] = function(v) /*=>*/ {return onModifyIndex(v, 3)};
 	
 	for(var i = 0; i < 4; i++) {
-		tb[i] = new textBox(TEXTBOX_INPUT.number, onModifySingle[i]);
-		
-		// tb[i].labelSpr       = THEME.inspector_corner;
-		// tb[i].labelSprIndex  = i;
-		// tb[i].labelColor     = COLORS._main_icon;
+		tb[i] = textBox_Number(onModifySingle[i]);
 		tb[i].slidable       = true;
 		tb[i].hide           = true;
 	}

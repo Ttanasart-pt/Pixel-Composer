@@ -24,15 +24,11 @@ event_inherited();
 	data		  = [];
 	initVal		  = 0;
 	update_hover  = true;
+	search_string = "";
 	
-	search_string	= "";
 	KEYBOARD_RESET
-	tb_search = new textBox(TEXTBOX_INPUT.text, function(s) /*=>*/ { search_string = string(s); filterSearch(); })
-					.setFont(f_p2)
-					.setAutoUpdate();
-					
-	tb_search.align	= fa_left;
-	WIDGET_CURRENT	= tb_search;
+	tb_search = textBox_Text(function(s) /*=>*/ { search_string = string(s); filterSearch(); }).setFont(f_p2).setAutoUpdate().setAlign(fa_left);
+	WIDGET_CURRENT = tb_search;
 	
 	anchor = ANCHOR.top | ANCHOR.left;
 	

@@ -9,14 +9,6 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	name = "Path Shape";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Vec2("Position", [ .5, .5 ]))
-		.setUnitRef(function() /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
-	
-	newInput(1, nodeValue_Vec2("Half Size", [ .5, .5 ]))
-		.setUnitRef(function() /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
-	
-	newInput(2, nodeValue_Rotation("Rotation", 0));
-	
 	shapeScroll = [ 
 	    new scrollItem("Rectangle",     s_node_shape_type,  0), 
 	    new scrollItem("Trapezoid",     s_node_shape_type,  2), 
@@ -34,30 +26,33 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	    new scrollItem("Spiral",        s_node_path_3d_shape,  6),
 	    new scrollItem("Spiral Circle", s_node_path_3d_shape,  6),
     ];
-	newInput(3, nodeValue_Enum_Scroll("Shape", 0, { data: shapeScroll, horizontal: true, text_pad: ui(16) }));
+    
+    ////- =Transform
+	newInput( 0, nodeValue_Vec2(     "Position",  [.5,.5] )).setUnitRef(function() /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
+	newInput( 2, nodeValue_Rotation( "Rotation",    0     ));
+	newInput( 1, nodeValue_Vec2(     "Half Size", [.5,.5] )).setUnitRef(function() /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
 	
-	newInput(4, nodeValue_Slider("Skew", .5, [ -1, 1, 0.01] ));
-	
-	newInput(5, nodeValue_Rotation_Range("Angle Range", [ 0, 90 ]));
-	
-	newInput(6, nodeValue_Float("Factor", 4));
-	
-	newInput(7, nodeValue_Int("Sides", 4));
-	
-	newInput(8, nodeValue_Float("Inner Radius", .5));
-	
-	newInput(9, nodeValue_Corner("Corner Radius", [ 0, 0, 0, 0 ]));
-	
-	newInput(10, nodeValue_Float("Revolution", 4));
-	
-	newInput(11, nodeValue_Float("Pitch", .2));
+    ////- =Shape
+	newInput( 3, nodeValue_Enum_Scroll(    "Shape",          0, { data: shapeScroll, horizontal: true, text_pad: ui(16) } ));
+	newInput( 4, nodeValue_Slider(         "Skew",          .5, [-1,1,.01] ));
+	newInput( 5, nodeValue_Rotation_Range( "Angle Range",   [0,90]         ));
+	newInput( 6, nodeValue_Float(          "Factor",         4             ));
+	newInput( 7, nodeValue_Int(            "Sides",          4             ));
+	newInput( 8, nodeValue_Float(          "Inner Radius",  .5             ));
+	newInput( 9, nodeValue_Corner(         "Corner Radius", [0,0,0,0]      ));
+	newInput(12, nodeValue_Rotation(       "Angle",          0             ));
+	newInput(10, nodeValue_Float(          "Revolution",     4             ));
+	newInput(11, nodeValue_Float(          "Pitch",         .2             ));
+	// input 13
 	
 	newOutput(0, nodeValue_Output("Path data", VALUE_TYPE.pathnode, self));
 		
 	input_display_list = [
 		["Transform", false], 0, 2, 1, 
-		["Shape",     false], 3, 4, 5, 6, 7, 8, 9, 10, 11, 
+		["Shape",     false], 3, 4, 5, 6, 7, 8, 9, 12, 10, 11, 
 	];
+	
+	////- Path
 	
 	points      = [];
 	lengths		= [];
@@ -140,6 +135,8 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
         return out;
 	}
 	
+	////- Nodes
+	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 	    if(array_empty(points)) return w_hovering;
 	    
@@ -171,22 +168,33 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-        var _pos  = inputs[0].getValue();
-        var _rot  = inputs[2].getValue();
-        var _sca  = inputs[1].getValue();
-        var _pa1  = inputs[4].getValue();
-        var _aran = inputs[5].getValue();
-        var _pa3  = inputs[6].getValue();
-        var _sid  = inputs[7].getValue();
-        var _inn  = inputs[8].getValue();
-        var _c    = inputs[9].getValue();
-        
-	    shape = inputs[3].getValue();
-	    posx  = _pos[0];
-        posy  = _pos[1];
+		#region data
+	        var _pos  = getInputData(0);
+	        var _rot  = getInputData(2);
+	        var _sca  = getInputData(1);
+	        
+		    shape     = getInputData(3);
+	        var _pa1  = getInputData(4);
+	        var _aran = getInputData(5);
+	        var _pa3  = getInputData(6);
+	        var _sid  = getInputData(7);
+	        var _inn  = getInputData(8);
+	        var _c    = getInputData(9);
+	        
+	        inputs[ 4].setVisible(false);
+	        inputs[ 5].setVisible(false);
+	        inputs[ 6].setVisible(false);
+	        inputs[ 7].setVisible(false);
+	        inputs[ 8].setVisible(false);
+	        inputs[ 9].setVisible(false);
+	        inputs[10].setVisible(false);
+	        inputs[11].setVisible(false);
+	        inputs[12].setVisible(false);
+		#endregion
+    	
+    	posx  = _pos[0]; posy  = _pos[1];
+        scax  = _sca[0]; scay  = _sca[1];
         rot   = _rot;
-        scax  = _sca[0];
-        scay  = _sca[1];
         
         pa1   = _pa1;
         pa2x  = _aran[0];
@@ -196,16 +204,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
         corners   = _c;
         
         var ox, oy, nx, ny, x0, y0;
-        
-        inputs[ 4].setVisible(false);
-        inputs[ 5].setVisible(false);
-        inputs[ 6].setVisible(false);
-        inputs[ 7].setVisible(false);
-        inputs[ 8].setVisible(false);
-        inputs[ 9].setVisible(false);
-        inputs[10].setVisible(false);
-        inputs[11].setVisible(false);
-                
+          
         switch(shapeScroll[shape].name) {
             case "Rectangle" : 
             	loop = true;
@@ -250,16 +249,16 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
                 inputs[4].setVisible(true);
             	inputs[9].setVisible(true);
                 
-            	var x0 = posx - scax * saturate(1 - _pa1);
+            	var x0 = posx - scax * clamp(1 - _pa1, 0, 1);
             	var y0 = posy - scay;
             	
-            	var x1 = posx + scax * saturate(1 - _pa1);
+            	var x1 = posx + scax * clamp(1 - _pa1, 0, 1);
             	var y1 = posy - scay;
             	
-            	var x2 = posx + scax * saturate(1 + _pa1);
+            	var x2 = posx + scax * clamp(1 + _pa1, 0, 1);
             	var y2 = posy + scay;
             	
-            	var x3 = posx - scax * saturate(1 + _pa1);
+            	var x3 = posx - scax * clamp(1 + _pa1, 0, 1);
             	var y3 = posy + scay;
             	
             	var p  = [
@@ -295,16 +294,16 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
                 inputs[4].setVisible(true);
             	inputs[9].setVisible(true);
                 
-            	var x0 = posx - scax * saturate(1 - _pa1);
+            	var x0 = posx - scax * clamp(1 - _pa1, 0, 1);
             	var y0 = posy - scay;
             	
-            	var x1 = posx + scax * saturate(1 + _pa1);
+            	var x1 = posx + scax * clamp(1 + _pa1, 0, 1);
             	var y1 = posy - scay;
             	
-            	var x2 = posx + scax * saturate(1 - _pa1);
+            	var x2 = posx + scax * clamp(1 - _pa1, 0, 1);
             	var y2 = posy + scay;
             	
-            	var x3 = posx - scax * saturate(1 + _pa1);
+            	var x3 = posx - scax * clamp(1 + _pa1, 0, 1);
             	var y3 = posy + scay;
             	
             	var p  = [
@@ -370,11 +369,12 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
                 
                 var _st = 64;
                 var _as = 360 / _st;
+                var _fc = max(pa3, 0);
                 points  = array_create(_st);
                 
                 for( var i = 0; i < _st; i++ ) {
                     var a = _as * i;
-                    var r = 1 / power(power(dcos(a % 90), pa3) + power(dsin(a % 90), pa3), 1 / pa3);
+                    var r = 1 / power(power(dcos(a % 90), _fc) + power(dsin(a % 90), _fc), 1 / _fc);
                     
                     nx = posx + lengthdir_x(scax * r, a);
                     ny = posy + lengthdir_y(scay * r, a);
@@ -447,8 +447,11 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
         	case "Spiral" : 
                 inputs[10].setVisible(true);
                 inputs[11].setVisible(true);
+                inputs[12].setVisible(true);
+                
                 var _rev = getInputData(10);
                 var _pit = getInputData(11);
+                var _ang = getInputData(12);
                 
                 loop = false;
                 var _st = 64 * _rev;
@@ -457,8 +460,8 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
                 points  = array_create(_st);
                 
                 for( var i = 0; i < _st; i++ ) {
-                    nx = posx + lengthdir_x(scax * i * _pp, _as * i);
-                    ny = posy + lengthdir_y(scay * i * _pp, _as * i);
+                    nx = posx + lengthdir_x(scax * i * _pp, _ang + _as * i);
+                    ny = posy + lengthdir_y(scay * i * _pp, _ang + _as * i);
                     
                     points[i] = [ nx, ny ];
                 }
@@ -467,7 +470,10 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
                 
             case "Spiral Circle" : 
                 inputs[10].setVisible(true);
+                inputs[12].setVisible(true);
+                
                 var _rev = getInputData(10);
+                var _ang = getInputData(12);
                 
                 loop = false;
                 var _st = 64 * _rev;
@@ -479,8 +485,8 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
                 	var prg = i * _pp;
                 	    prg = sqrt(1 - prg * prg);
                 	
-                    nx = posx + lengthdir_x(scax * prg, _as * i);
-                    ny = posy + lengthdir_y(scay * prg, _as * i);
+                    nx = posx + lengthdir_x(scax * prg, _ang + _as * i);
+                    ny = posy + lengthdir_y(scay * prg, _ang + _as * i);
                     
                     points[i] = [ nx, ny ];
                 }

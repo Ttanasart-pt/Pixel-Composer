@@ -16,6 +16,8 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		return inputs[index];
 	} setDynamicInput(1, true, VALUE_TYPE.pathnode);
 	
+	////- Path
+	
 	static getLineCount = function() {
 		var l = 0;
 		for( var i = 0; i < curr_path_amo; i++ )
@@ -90,14 +92,6 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		return new BoundingBox();
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		for( var i = 0; i < curr_path_amo; i++ ) {
-			if(!struct_has(curr_path[i], "drawOverlay")) continue;
-			
-			curr_path[i].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-		}
-	}
-	
 	static pathSpread = function(arr, p) {
 		if(struct_has(p, "getPointRatio")) {
 			array_push(arr, p);
@@ -107,6 +101,16 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		if(is_array(p)) {
 			for( var i = 0, n = array_length(p); i < n; i++ ) 
 				pathSpread(arr, p[i]);
+		}
+	}
+	
+	////- Nodes
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		for( var i = 0; i < curr_path_amo; i++ ) {
+			if(!struct_has(curr_path[i], "drawOverlay")) continue;
+			
+			curr_path[i].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		}
 	}
 	
@@ -123,4 +127,10 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		curr_path_amo = array_length(curr_path);
 	}
+	
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+		var bbox = drawGetBbox(xx, yy, _s);
+		draw_sprite_bbox_uniform(s_node_path_array, 0, bbox);
+	}
+
 }
