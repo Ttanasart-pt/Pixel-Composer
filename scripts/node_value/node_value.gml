@@ -5,7 +5,7 @@ function nodeValueSeed(_type = VALUE_TYPE.float, _name = "Seed") {
 	var _rFun = function() /*=>*/ { randomize(); setValue(seed_random(6)); };
 	    _rFun = method(_val, _rFun);
 	
-	_val.setDisplay(VALUE_DISPLAY._default, { side_button : button(_rFun).setIcon(THEME.icon_random, 0, COLORS._main_icon) });
+	_val.setDisplay(VALUE_DISPLAY._default, { side_button : button(_rFun).setIcon(THEME.icon_random, 0, COLORS._main_icon).iconPad() });
 	return _val; 
 }
 
@@ -440,7 +440,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			}
 			
 			node.triggerRender(); 
-		}).setIcon( THEME.mappable_parameter, [ function() /*=>*/ {return attributes.mapped} ], COLORS._main_icon ).setTooltip("Toggle Map");
+		}).setIcon( THEME.mappable_parameter, [ function() /*=>*/ {return attributes.mapped} ], COLORS._main_icon ).iconPad().setTooltip("Toggle Map");
 		
 		if(type != VALUE_TYPE.gradient) {
 			mapWidget = _vec4? new vectorRangeBox(4, TEXTBOX_INPUT.number, function(v,i) /*=>*/ {return setValueDirect(v,i)}).setSideButton(mapButton) : 
@@ -467,7 +467,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		with(node) { newInput(_index, nodeValue_Curve( $"{other.name} {_suf}", _val )).setVisible(false, false); }
 		
 		curveButton = button(function() /*=>*/ { attributes.curved = !attributes.curved; node.triggerRender(); })
-			.setIcon( THEME.curvable, [ function() /*=>*/ {return attributes.curved} ], COLORS._main_icon ).setTooltip("Toggle Curve");
+			.setIcon( THEME.curvable, [ function() /*=>*/ {return attributes.curved} ], COLORS._main_icon ).iconPad().setTooltip("Toggle Curve");
 		
 		editWidget.setSideButton(curveButton);
 		
@@ -483,7 +483,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		with(node) { newInput(_index, nodeValue_Surface( $"{other.name} {_suf}" )).setVisible(false, false); }
 		
 		mapButton = button(function() /*=>*/ { attributes.mapped = !attributes.mapped; node.triggerRender(); })
-			.setIcon( THEME.mappable_parameter, [ function() /*=>*/ {return attributes.mapped} ], COLORS._main_icon ).setTooltip("Toggle Map");
+			.setIcon( THEME.mappable_parameter, [ function() /*=>*/ {return attributes.mapped} ], COLORS._main_icon ).iconPad().setTooltip("Toggle Map");
 		
 		editWidget.setSideButton(mapButton);
 		

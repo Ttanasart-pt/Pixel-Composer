@@ -201,6 +201,10 @@ event_inherited();
 	sp_palette_size = ui(20);
 	click_block     = true;
 	
+	palette_spread  = undefined;
+	palette_spread_index = 0;
+	palette_spread_end   = 0;
+	
 	sp_palettes = new scrollPane(sp_palette_w, dialog_h - ui(48 + 8) - pal_padding, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
@@ -246,9 +250,12 @@ event_inherited();
 			}
 			
 			var _hoverColor = noone;
+			var _hoverIndex = noone;
+			
 			if(_exp || row == 1) {
 				_palRes = drawPaletteGrid(pal.palette, pd, yy + nh, _ww, _gs, { color : selector.current_color, mx : _m[0], my : _m[1] });
 				_hoverColor = _palRes.hoverIndex > noone? _palRes.hoverColor : noone;
+				_hoverIndex = _palRes.hoverIndex;
 			} else
 				drawPalette(pal.palette, pd, yy + nh, _ww, _gs);
 			
@@ -257,9 +264,47 @@ event_inherited();
 				draw_sprite_stretched_ext(THEME.box_r2, 1, _box[0], _box[1], _box[2], _box[3], c_white);
 			}
 			
+			if(palette_spread == i) {
+				if(_hoverIndex != noone) {
+					if(palette_spread_end != _hoverIndex) {
+						var _dir = sign(_hoverIndex - palette_spread_index);
+						var _amo = abs(_hoverIndex - palette_spread_index) + 1;
+						var _ind = palette_spread_index;
+						
+						if(_amo == 1) {
+							gradient = new gradientObject(pal.palette[palette_spread_index]);
+							
+						} else {
+							gradient = new gradientObject();
+							
+							var _stp = 1 / (_amo - 1);
+							var _prg = 0, j = 0;
+							
+							repeat(_amo) {
+								var _cc = pal.palette[_ind];
+								gradient.keys[j++] = new gradientKey(_prg, _cc);
+								
+								_prg += _stp;
+								_ind += _dir;
+							}
+						}
+						
+						onApply(gradient);
+					}
+					
+					palette_spread_end = _hoverIndex;
+				}
+			}
+			
 			if(!click_block && interactable && sFOCUS) {
 				if(mouse_click(mb_left)) {
-					if(_hoverColor != noone) {
+					if(key_mod_press(CTRL)) {
+						if(palette_spread == undefined && _hoverIndex != noone) {
+							palette_spread       = i;
+							palette_spread_index = _hoverIndex;
+						}
+						
+					} else if(_hoverColor != noone) {
 						var c = _hoverColor;
 						if(is_real(c)) c = cola(c);
 						
@@ -301,8 +346,10 @@ event_inherited();
 			hh += _height + ui(4);
 		}
 		
-		if(mouse_release(mb_left))
-			click_block = false;
+		if(mouse_release(mb_left)) {
+			click_block    = false;
+			palette_spread = undefined;
+		}
 		
 		return hh;
 	});

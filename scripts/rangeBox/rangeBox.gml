@@ -1,37 +1,31 @@
 function rangeBox(_onModify) : widget() constructor {
 	onModify = _onModify;
 	linked   = false;
+	disp_w   = 0;
+	extras   = -1;
 	
-	disp_w = 0;
-	
-	tooltip	= new tooltipSelector("Value Type", [
+	tooltip	 = new tooltipSelector("Value Type", [
 		__txtx("widget_range_random",   "Random Range"),
 		__txtx("widget_range_constant", "Constant"),
 	]);
 	
-	onModifyIndex = function(val, index) { 
+	onModifyIndex = function(val, _i) /*=>*/ { 
 		var modi = false;
 		
 		if(linked) {
-			for( var i = 0; i < 2; i++ )
-				modi = onModify(toNumber(val), i) || modi;
+			modi = onModify(toNumber(val), 0) || modi;
+			modi = onModify(toNumber(val), 1) || modi;
 			return modi;
 		}
 		
-		return onModify(toNumber(val), index); 
+		return onModify(toNumber(val), _i); 
 	}
 	
 	labels = [ "min", "max" ];
 	onModifySingle[0] = function(v) /*=>*/ {return onModifyIndex(toNumber(v), 0)};
 	onModifySingle[1] = function(v) /*=>*/ {return onModifyIndex(toNumber(v), 1)};
 	
-	extras = -1;
-	
-	for(var i = 0; i < 2; i++) {
-		tb[i] = new textBox(TEXTBOX_INPUT.number, onModifySingle[i])
-		           .setHide(true)
-		           .setLabel(labels[i]);
-	}
+	for(var i = 0; i < 2; i++) tb[i] = new textBox(TEXTBOX_INPUT.number, onModifySingle[i]).setHide(true).setLabel(labels[i]);
 	
 	static setFont = function(_f = noone) /*=>*/ { 
 		font = _f;
@@ -40,26 +34,24 @@ function rangeBox(_onModify) : widget() constructor {
 		return self; 
 	}
 	
-	static setInteract = function(interactable = noone) { 
-		self.interactable = interactable;
+	static setInteract = function(_inter = noone) /*=>*/ { 
+		interactable = _inter;
 		
-		tb[0].interactable = interactable;
-		if(!linked) tb[1].interactable = interactable;
+		tb[0].interactable = _inter;
+		if(!linked) tb[1].interactable = _inter;
 	} 
 	
-	static register = function(parent = noone) { 
-		tb[0].register(parent);
-		if(!linked) tb[1].register(parent);
+	static register = function(_parent = noone) /*=>*/ { 
+		tb[0].register(_parent);
+		if(!linked) tb[1].register(_parent);
 	} 
 	
-	static isHovering = function() { 
-		for( var i = 0, n = array_length(tb); i < n; i++ ) if(tb[i].isHovering()) return true;
-		return false;
-	} 
+	static isHovering = function() /*=>*/ {return tb[0].isHovering() || tb[1].isHovering()};
 	
 	static drawParam = function(params) { 
 		setParam(params);
-		for(var i = 0; i < 2; i++) tb[i].setParam(params);
+		tb[0].setParam(params);
+		tb[1].setParam(params);
 		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.display_data, params.m);
 	} 
@@ -85,7 +77,7 @@ function rangeBox(_onModify) : widget() constructor {
 			
 			var bx = _x;
 			var by = _y + _h / 2 - _bs / 2;
-			var b  = buttonInstant(THEME.button_hide_fill, bx, by, _bs, _bs, _m, hover, active, tooltip, THEME.value_link, linked, _icon_blend);
+			var b  = buttonInstant_Pad(THEME.button_hide_fill, bx, by, _bs, _bs, _m, hover, active, tooltip, THEME.value_link, linked, _icon_blend);
 			var tg = false;
 			
 			if(b == 1 && key_mod_press(SHIFT) && MOUSE_WHEEL != 0) tg = true;
@@ -105,8 +97,7 @@ function rangeBox(_onModify) : widget() constructor {
 			_w -= _bs + ui(4);
 		}
 		
-		var ww = linked? _w : _w / 2;
-		disp_w = disp_w == 0? ww : lerp_float(disp_w, ww, 5);
+		disp_w = linked? _w : _w / 2;
 		
 		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor, 1);
 		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor, 0.5 + 0.5 * interactable);	

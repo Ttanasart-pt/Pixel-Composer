@@ -686,22 +686,22 @@ function Panel_Inspector() : PanelContent() constructor {
                 continue;
                 
             } else if(is_array(jun)) { // Section
-                //yy += padd / 2;
                 
                 _colsp   = false;
                 var txt  = __txt(jun[0]);
                 var coll = _colMap[$ jun[0]] ?? jun[1];
                 
-                var lbx = 0;
-                var lbh = ui(26);
+                var fnt = viewMode == INSP_VIEW_MODE.spacious? f_p1 : f_p3;
+                var lbh = viewMode == INSP_VIEW_MODE.spacious? ui(26) : ui(22);
                 var lbw = con_w;
+                var lbx = 0;
                 
                 var togl   = array_safe_get_fast(jun, 2, noone);
                 var toging = false;
                 
                 if(togl != noone) {
-                    lbx += ui(40);
-                    lbw -= ui(40);
+                    lbx += lbh + ui(8);
+                    lbw -= lbh + ui(8);
                     toging = _inspecting.getInputData(togl);
                     if(is_array(toging)) toging = false;
                 }
@@ -729,7 +729,6 @@ function Panel_Inspector() : PanelContent() constructor {
                     var _bw = ui(32);
                     var _bh = lbh;
                     
-                    // draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _bx, _by, _bw, _bh, COLORS.panel_inspector_group_bg, 1);
                     righ.setFocusHover(pFOCUS, pHOVER);
                     righ.draw(_bx + ui(2), _by + ui(2), _bw - ui(4), _bh - ui(4), _m, THEME.button_hide_fill);
                 }
@@ -742,34 +741,30 @@ function Panel_Inspector() : PanelContent() constructor {
                 if(togl != noone) {
                 	var jun = _inspecting.inputs[togl];
                 	
-                    if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, ui(32), yy + lbh)) {
+                    if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, lbh, yy + lbh)) {
                         contentPane.hover_content = true;
-                        draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, yy, ui(32), lbh, COLORS.panel_inspector_group_hover, 1);
+                        draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, yy, lbh, lbh, COLORS.panel_inspector_group_hover, 1);
                         
-                        if(mouse_press(mb_left, pFOCUS))
-                            jun.setValue(!toging);
-                            
-                        if(mouse_press(mb_right, pFOCUS))
-                    		propRightClick(jun);
+                        if(mouse_press(mb_left,  pFOCUS)) jun.setValue(!toging);
+                        if(mouse_press(mb_right, pFOCUS)) propRightClick(jun);
                             
                     } else 
-                        draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, yy, ui(32), lbh, COLORS.panel_inspector_group_bg, 1);
+                        draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, yy, lbh, lbh, COLORS.panel_inspector_group_bg, 1);
                     
                     cc = toging? COLORS._main_accent : COLORS.panel_inspector_group_bg;
                     aa = 0.5 + toging * 0.5;
                     
-                    draw_sprite_ui(THEME.inspector_checkbox, 0, ui(16), yy + lbh / 2, 1, 1, 0, cc, 1);
-                    if(toging) 
-                        draw_sprite_ui(THEME.inspector_checkbox, 1, ui(16), yy + lbh / 2, 1, 1, 0, cc, 1);
+                               draw_sprite_stretched_ext(THEME.inspector_checkbox, 0, ui(4), yy + ui(4), lbh - ui(8), lbh - ui(8), cc, 1);
+                    if(toging) draw_sprite_stretched_ext(THEME.inspector_checkbox, 1, ui(4), yy + ui(4), lbh - ui(8), lbh - ui(8), cc, 1);
                 }
                 
                 var ltx = lbx + ui(32);
                 
-                draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text, aa);
+                draw_set_text(fnt, fa_left, fa_center, COLORS._main_text, aa);
                 draw_text_add(ltx, yy + lbh / 2, txt);
                 draw_set_alpha(1);
                 
-                hh += lbh + padd + ui(2);
+                hh += lbh + padd;
                 
                 if(coll) { // skip 
                     _colsp   = true;
@@ -801,10 +796,11 @@ function Panel_Inspector() : PanelContent() constructor {
             #region ++++ draw widget ++++
                 var _font = viewMode == INSP_VIEW_MODE.spacious? f_p2 : f_p3;
                 var  bs   = viewMode == INSP_VIEW_MODE.spacious? ui(20) : ui(16);
+                var _padx = viewMode == INSP_VIEW_MODE.spacious? ui(16) : ui(12);
                 
                 var lb_h = line_get_height(_font, 4 + viewMode * 2);
-                var lb_w = line_get_width(jun.getName(), _font) + ui(16);
-                var lb_x = bs * 2 + ui(8) + (ui(24) * (jun.color != -1));
+                var lb_w = line_get_width(jun.getName(), _font) + _padx;
+                var lb_x = bs * 2 + ui(16) + (ui(24) * (jun.color != -1)) - _padx / 2;
                 
                 var lbHov = point_in_rectangle(_m[0], _m[1], lb_x, yy, lb_x + lb_w, yy + lb_h);
                 if(lbHov) {

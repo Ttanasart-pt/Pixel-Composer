@@ -165,9 +165,11 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		var _tip = jun.tooltip;
 				
 		if(_tip != "") { // Tooltip
-			var tx = xx + ui(40) + string_width(dispName) + ui(16);
-			var ty = lb_y - ui(1);
-					
+			var ics = viewMode == INSP_VIEW_MODE.spacious? 1 : .75;
+			var tx  = lb_x + string_width(dispName) + ui(16) * ics;
+			var ty  = lb_y;
+			var aa  = .75;
+			
 			if(_hover && point_in_circle(_m[0], _m[1], tx, ty, ui(10))) {
 				cHov  = true;
 				
@@ -180,12 +182,13 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 					else 
 						dialogCall(_tip);
 				}
-					
-				draw_sprite_ui(THEME.info, 0, tx, ty,,,, COLORS._main_icon_light, 1);
-			} else 
-				draw_sprite_ui(THEME.info, 0, tx, ty,,,, COLORS._main_icon_light, 0.75);
+				
+				aa = 1;
+			} 
 			
-			lb_w += ui(32);
+			draw_sprite_ui(THEME.info_light, 0, tx, ty, ics, ics, 0, COLORS._main_icon_light, aa);
+			
+			lb_w += ui(16) * ics;
 		}
 	#endregion
 	

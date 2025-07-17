@@ -7,8 +7,7 @@ function matrixGrid(_type, _onModify, _unit = noone) : widget() constructor {
 	
 	tb = [];
 	linked = false;
-	b_link = button(function() /*=>*/ { linked = !linked; });
-	b_link.icon = THEME.value_link;
+	b_link = button(function() /*=>*/ { linked = !linked; }).setIcon(THEME.value_link).iconPad();
 	
 	onModifyIndex = function(val, index) { 
 		var modi = false;

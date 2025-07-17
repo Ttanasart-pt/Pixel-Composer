@@ -210,7 +210,7 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 			var _bx = _x + _w - _bs;
 			var _by = _y + _h / 2 - _bs / 2;
 			
-			var b = buttonInstant(THEME.button_hide_fill, _bx, _by, _bs, _bs, _m, hover, active, tooltip, THEME.inspector_area_type, mode);
+			var b = buttonInstant_Pad(THEME.button_hide_fill, _bx, _by, _bs, _bs, _m, hover, active, tooltip, THEME.inspector_area_type, mode);
 			if(b == 1) {
 				if(key_mod_press(SHIFT) && MOUSE_WHEEL > 0) mode = setMode(_data, (mode - 1 + 3) % 3);
 				if(key_mod_press(SHIFT) && MOUSE_WHEEL < 0) mode = setMode(_data, (mode + 1)     % 3);
@@ -221,7 +221,7 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 			var _by   = _y + _h + ui(4) + _h / 2 - _bs / 2;
 			var _btxt = __txtx("widget_area_fill_surface", "Fill surface");
 			
-			if(buttonInstant(THEME.button_hide_fill, _bx, _by, _bs, _bs, _m, hover, active, _btxt, THEME.fill, 0) == 2) { 
+			if(buttonInstant_Pad(THEME.button_hide_fill, _bx, _by, _bs, _bs, _m, hover, active, _btxt, THEME.fill) == 2) { 
 				var cnvt = unit != noone && unit.mode == VALUE_UNIT.reference;
 				
 				switch(mode) {
@@ -268,7 +268,7 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 				var _btxt = __txt("Link values");
 				var _bby  = useShape? _by + _h + ui(4) : _y + h / 2 - _bs / 2;
 			
-				if(buttonInstant(THEME.button_hide_fill, _bx, _bby, _bs, _bs, _m, hover, active, _btxt, THEME.value_link, link_value, cc) == 2)
+				if(buttonInstant_Pad(THEME.button_hide_fill, _bx, _bby, _bs, _bs, _m, hover, active, _btxt, THEME.value_link, link_value, cc) == 2)
 					link_value = !link_value;
 			}
 			

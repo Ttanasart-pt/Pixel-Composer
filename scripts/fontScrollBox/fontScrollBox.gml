@@ -8,7 +8,7 @@ function fontScrollBox(_onModify) : widget() constructor {
 	align = fa_center;
 	side_button = button(function() /*=>*/ {return shellOpenExplorer(DIRECTORY + "Fonts")})
 						.setTooltip(__txtx("widget_font_open_folder", "Open font folder"))
-						.setIcon(THEME.folder_content, 0, COLORS._main_icon);
+						.setIcon(THEME.folder_content, 0, COLORS._main_icon).iconPad();
 						
 	static trigger = function() {
 		open = true;

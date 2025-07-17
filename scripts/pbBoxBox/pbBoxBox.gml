@@ -93,7 +93,7 @@ function pbBoxBox(_junction) : widget() constructor {
 			var by = _y0 + ui(8);
 			var bb = linked? COLORS._main_accent : COLORS._main_icon;
 			
-			var b  = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, hover, active, "", THEME.value_link, linked, bb);
+			var b  = buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, _m, hover, active, "", THEME.value_link, linked, bb);
 			if(b == 2) linked = !linked;
         #endregion
         

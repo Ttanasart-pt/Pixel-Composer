@@ -575,7 +575,7 @@ function nodeValueUnit(__nodeValue) constructor {
 	}
 	
 	triggerButton = button(modeTrigger).setWheel(modeTrigger)
-						.setIcon(THEME.unit_ref, 0, COLORS._main_icon_light)
+						.setIcon(THEME.unit_ref, 0, COLORS._main_icon_light).iconPad()
 						.setTooltip(new tooltipSelector("Unit", ["Pixel", "Fraction"]));
 	
 	static setMode = function(type) {

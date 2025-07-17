@@ -10,8 +10,7 @@ function paddingBox(_onModify, _unit = noone) : widget() constructor {
 	unit	 = _unit;
 	
 	linked = false;
-	b_link = button(function() { linked = !linked; });
-	b_link.icon = THEME.value_link;
+	b_link = button(function() /*=>*/ { linked = !linked; }).setIcon(THEME.value_link).iconPad();
 	
 	onModifyIndex = function(val, index) { 
 		if(linked) {
@@ -23,10 +22,10 @@ function paddingBox(_onModify, _unit = noone) : widget() constructor {
 		onModify(toNumber(val), index); 
 	}
 	
-	onModifySingle[0] = function(val) { onModifyIndex(val, 0); }
-	onModifySingle[1] = function(val) { onModifyIndex(val, 1); }
-	onModifySingle[2] = function(val) { onModifyIndex(val, 2); }
-	onModifySingle[3] = function(val) { onModifyIndex(val, 3); }
+	onModifySingle[0] = function(val) /*=>*/ { onModifyIndex(val, 0); }
+	onModifySingle[1] = function(val) /*=>*/ { onModifyIndex(val, 1); }
+	onModifySingle[2] = function(val) /*=>*/ { onModifyIndex(val, 2); }
+	onModifySingle[3] = function(val) /*=>*/ { onModifyIndex(val, 3); }
 	
 	for(var i = 0; i < 4; i++) {
 		tb[i] = new textBox(TEXTBOX_INPUT.number, onModifySingle[i]);
