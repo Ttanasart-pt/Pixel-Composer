@@ -23,9 +23,11 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		return inputs[index];
 	}
 	
+	b_reset = button(function() /*=>*/ {return resetInput(true)}).setIcon(THEME.refresh_16, 0, COLORS._main_value_negative);
+	
 	input_display_list = [ 1, 0, 
 		["Mesh",    false], 2, 3, 
-		["Anchors",  true], 
+		["Anchors",  true, noone, b_reset], 
 	];
 	
 	setDynamicInput(1, false);
@@ -33,16 +35,26 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	attribute_surface_depth();
 	attribute_interpolation();
 	
-	static resetInput = function() {
-		input_display_list = array_clone(input_display_list_raw, 1);
-		array_resize(inputs, input_fix_len);
-		
+	static resetInput = function(_val = false) {
 		var _grid  = getInputData(2);
 		var _gridW = _grid[0];
 		var _gridH = _grid[1];
+		var _amo   = (_gridW + 1) * (_gridH + 1);
+		var _ind   = input_fix_len;
+		var _dim   = getDimension(0);
 		
-		var _ind  = input_fix_len;
-		var _dim  = getDimension(0);
+		if(_val && array_length(inputs) - input_fix_len == _amo) {
+			for(var i = 0; i <= _gridH; i++)
+			for(var j = 0; j <= _gridW; j++) {
+				var _inp = inputs[input_fix_len + i * (_gridW + 1) + j];
+				_inp.setValueInspector([ j / _gridW, i / _gridH ]);
+			}
+			
+			return;
+		}
+		
+		input_display_list = array_clone(input_display_list_raw, 1);
+		array_resize(inputs, input_fix_len);
 		
 		for(var i = 0; i <= _gridH; i++)
 		for(var j = 0; j <= _gridW; j++) {

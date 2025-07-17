@@ -3,13 +3,26 @@ varying vec4 v_vColour;
 
 uniform vec2  dimension;
 uniform float seed;
-uniform float scale;
 uniform int   iteration;
-uniform float flowRate;
+
+uniform vec2      scale;
+uniform int       scaleUseSurf;
+uniform sampler2D scaleSurf;
+
+uniform vec2      flowRate;
+uniform int       flowRateUseSurf;
+uniform sampler2D flowRateSurf;
 
 uniform int   externalForceType;
-uniform float externalForce;
-uniform float externalForceDir;
+
+uniform vec2      externalForce;
+uniform int       externalForceUseSurf;
+uniform sampler2D externalForceSurf;
+
+uniform vec2      externalForceDir;
+uniform int       externalForceDirUseSurf;
+uniform sampler2D externalForceDirSurf;
+
 
 #region ///////////////////// PERLIN START /////////////////////
 
@@ -62,19 +75,45 @@ float perlin ( vec2 st ) {
 #endregion ///////////////////// PERLIN END /////////////////////
 
 void main() {
-	vec2  tx   = 1. / dimension;
+	#region params
+		float sca = scale.x;
+		if(scaleUseSurf == 1) {
+			vec4 _vMap = texture2D( scaleSurf, v_vTexcoord );
+			sca = mix(scale.x, scale.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+		
+		float flowR = flowRate.x;
+		if(flowRateUseSurf == 1) {
+			vec4 _vMap = texture2D( flowRateSurf, v_vTexcoord );
+			flowR = mix(flowRate.x, flowRate.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+		
+		float extF = externalForce.x;
+		if(externalForceUseSurf == 1) {
+			vec4 _vMap = texture2D( externalForceSurf, v_vTexcoord );
+			extF = mix(externalForce.x, externalForce.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+		
+		float extR = externalForceDir.x;
+		if(externalForceDirUseSurf == 1) {
+			vec4 _vMap = texture2D( externalForceDirSurf, v_vTexcoord );
+			extR = mix(externalForceDir.x, externalForceDir.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+		
+		extR = radians(extR);
+	#endregion
 	
-	float x0 = perlin((v_vTexcoord + vec2(-tx.x, 0.)) * scale);
-	float x1 = perlin((v_vTexcoord + vec2( tx.x, 0.)) * scale);
-	float y0 = perlin((v_vTexcoord + vec2(0., -tx.y)) * scale);
-	float y1 = perlin((v_vTexcoord + vec2(0.,  tx.y)) * scale);
+	vec2  tx = 1. / dimension;
+	
+	float x0 = perlin((v_vTexcoord + vec2(-tx.x, 0.)) * sca);
+	float x1 = perlin((v_vTexcoord + vec2( tx.x, 0.)) * sca);
+	float y0 = perlin((v_vTexcoord + vec2(0., -tx.y)) * sca);
+	float y1 = perlin((v_vTexcoord + vec2(0.,  tx.y)) * sca);
 	
 	vec2 flow = vec2(x1 - x0, y1 - y0);
 	
-	if(externalForceType == 0) 
-		flow += externalForce * (v_vTexcoord - 0.5);
-	if(externalForceType == 1) 
-		flow += externalForce * vec2(cos(externalForceDir), sin(externalForceDir));
+	if(externalForceType == 0) flow += extF * (v_vTexcoord - 0.5);
+	if(externalForceType == 1) flow += extF * vec2(cos(extR), sin(extR));
 	
-    gl_FragColor = texture2D( gm_BaseTexture, v_vTexcoord - flow * flowRate );
+    gl_FragColor = texture2D( gm_BaseTexture, v_vTexcoord - flow * flowR );
 }

@@ -700,8 +700,9 @@ function Panel_Inspector() : PanelContent() constructor {
                 var toging = false;
                 
                 if(togl != noone) {
-                    lbx += lbh + ui(8);
-                    lbw -= lbh + ui(8);
+                	var _p = viewMode == INSP_VIEW_MODE.spacious? ui(8) : ui(4);
+                    lbx += lbh + _p;
+                    lbw -= lbh + _p;
                     toging = _inspecting.getInputData(togl);
                     if(is_array(toging)) toging = false;
                 }
