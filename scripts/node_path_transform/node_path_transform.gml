@@ -2,19 +2,21 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	name = "Transform Path";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_PathNode("Path"));
+	newInput(0, nodeValue_PathNode( "Path" ));
 	
-	newInput(1, nodeValue_Vec2("Position", [ 0, 0 ]))
-		.setUnitRef(function() /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
-	
-	newInput(2, nodeValue_Rotation("Rotation", 0));
-	
-	newInput(3, nodeValue_Vec2("Scale", [ 1, 1 ]));
-	
-	newInput(4, nodeValue_Vec2("Anchor", [ 0, 0 ]))
-		.setUnitRef(function() /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
+	newInput(1, nodeValue_Vec2(     "Position", [0,0] )).setUnitRef(function() /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
+	newInput(2, nodeValue_Rotation( "Rotation",  0    ));
+	newInput(3, nodeValue_Vec2(     "Scale",    [1,1] ));
+	newInput(4, nodeValue_Vec2(     "Anchor",   [0,0] )).setUnitRef(function() /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
+	//input 5
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, noone));
+	
+	b_center = button(function() /*=>*/ {return setCenter()}).setIcon(THEME.icon_center_canvas, 0, COLORS._main_icon, .5).setText("Center");
+	
+	input_display_list = [ 0, 
+		[ "Transform", false ], 1, 2, 3, 4, b_center, 
+	]
 	
 	function _transformedPath() constructor {
 		path       = noone;
@@ -121,15 +123,32 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		
 	}
 	
+	static setCenter = function() /*=>*/ {
+		var _path = getSingleValue(0);
+		if(!is_path(_path)) return;
+		
+		var _bbox = _path.getBoundary();
+		if(!is(_bbox, BoundingBox)) return;
+		
+		var _cx = (_bbox.minx + _bbox.maxx) / 2;
+		var _cy = (_bbox.miny + _bbox.maxy) / 2;
+		
+		inputs[4].setValue([_cx, _cy]);
+	}
+	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _path = getSingleValue(0, preview_index, true);
 		if(struct_has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
-		var _pos = getSingleValue(1);
-		var px  = _x + _pos[0] * _s;
-		var py  = _y + _pos[1] * _s;
+		var _ori = getSingleValue(4);
+		var ox = _x + _ori[0] * _s;
+		var oy = _y + _ori[1] * _s;
 		
-		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		var _pos = getSingleValue(1);
+		var  px  = ox + _pos[0] * _s;
+		var  py  = oy + _pos[1] * _s;
+		
+		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, ox, oy, _s, _mx, _my, _snx, _sny));
 		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
 		
 		inputs[4].overlay_draw_text = false;
