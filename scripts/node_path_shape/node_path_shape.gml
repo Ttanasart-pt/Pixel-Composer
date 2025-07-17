@@ -454,8 +454,8 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
                 var _ang = getInputData(12);
                 
                 loop = false;
-                var _st = 64 * _rev;
-                var _as = 360 / 64;
+                var _st = 64 * abs(_rev);
+                var _as = 360 / 64 * sign(_rev);
                 var _pp = 1 / 64 * _pit;
                 points  = array_create(_st);
                 
@@ -476,8 +476,8 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
                 var _ang = getInputData(12);
                 
                 loop = false;
-                var _st = 64 * _rev;
-                var _as = 360 / 64;
+                var _st = 64 * abs(_rev);
+                var _as = 360 / 64 * sign(_rev);
                 var _pp = 1 / _st;
                 points  = array_create(_st);
                 
