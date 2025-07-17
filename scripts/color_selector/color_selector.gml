@@ -114,9 +114,9 @@ function colorSelector(onApply = noone) constructor {
 	#endregion
 	
 	function resetHSV(_apply = true) {
-		hue = round(color_get_hue(current_color));
-		sat = round(color_get_saturation(current_color));
-		val = round(color_get_value(current_color));
+		hue = color_get_hue(current_color);
+		sat = color_get_saturation(current_color);
+		val = color_get_value(current_color);
 		
 		if(_apply && onApply != noone) onApply(int64(current_color));
 	}

@@ -282,8 +282,9 @@ function drawPaletteGrid(_pal, _x, _y, _w, _gs = 24, params = {}) {
 		
 		var _same = (c_color & 0x00FFFFFF) == (_clr & 0x00FFFFFF);
 		
-		draw_sprite_stretched_ext(THEME.palette_mask, _i, _x0, _y0, _cc == col - 1? _gw : ceil(_gw), _gs, _clr, 1);
+		draw_sprite_stretched_ext(THEME.palette_mask, _i, _x0, _y0, ceil(_gw), _gs, _clr, 1);
 		if(point_in_rectangle(_mx, _my, _x0, _y0, _x0 + _gw, _y0 + _gs)) {
+			
 			_hov = i;
 			_hcc = _clr;
 			

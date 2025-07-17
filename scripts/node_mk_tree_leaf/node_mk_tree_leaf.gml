@@ -14,6 +14,7 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	newInput( 2, nodeValue_Range( "Amount",  [8,16]        ));
 	newInput( 7, nodeValue_Range( "Spread",  [90,90], true )).setCurvable(16, CURVE_DEF_11, "Over Branch");
+	newInput(27, nodeValue_Range( "Gravity", [0,0],   true )).setCurvable(28, CURVE_DEF_11, "Over Branch");
 	newInput(10, nodeValue_Range( "Offset",  [0,0],   true )).setCurvable(17, CURVE_DEF_11, "Over Branch");
 	newInput(15, nodeValue_Bool(  "Pair",    false         ));
 	
@@ -24,24 +25,24 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(21, nodeValue_Slider(      "Leaf Span", .5    ));
 	
 	////- =Color
-	newInput( 4, nodeValue_Gradient(    "Color Per Branch",  new gradientObject(ca_white) )).setMappable(12);
+	newInput( 4, nodeValue_Gradient(    "Color Per Branch",  new gradientObject(ca_white) )).setMappableConst(12);
 	newInput(20, nodeValue_Gradient(    "Color Over Branch", new gradientObject(ca_white) ));
-	newInput( 6, nodeValue_Gradient(    "Color Per Leaf",    new gradientObject(ca_white) )).setMappable(13);
+	newInput( 6, nodeValue_Gradient(    "Color Per Leaf",    new gradientObject(ca_white) )).setMappableConst(13);
 	
 	////- =Edge
 	newInput(14, nodeValue_Enum_Button( "Render Edge",       0, [ "None", "Override", "Multiply", "Screen" ] ));
-	newInput(11, nodeValue_Gradient(    "Edge Color",        new gradientObject(ca_white) )).setMappable(25);
+	newInput(11, nodeValue_Gradient(    "Edge Color",        new gradientObject(ca_white) )).setMappableConst(25);
 	newInput(23, nodeValue_Enum_Button( "Render Top Edge",   0, [ "None", "Override", "Multiply", "Screen" ] ));
-	newInput(24, nodeValue_Gradient(    "Top Edge Color",    new gradientObject(ca_white) )).setMappable(26);
+	newInput(24, nodeValue_Gradient(    "Top Edge Color",    new gradientObject(ca_white) )).setMappableConst(26);
 	
 	////- =Growth
 	newInput(22, nodeValue_Range( "Grow Delay", [0,0], true ));
-	// input 27
+	// input 29
 	
 	newOutput(0, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setIcon(THEME.node_junction_mktree, COLORS.node_blend_mktree);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 5, 0, 
-		[ "Leaf",   false ], 1, 19, 2, 7, 16, 10, 17, 15, 
+		[ "Leaf",   false ], 1, 19, 2, 7, 16, 27, 28, 10, 17, 15, 
 		[ "Shape",  false ], 8, 3, 18, 9, 21, 
 		[ "Color",  false ], 4, 20, 12, 6, 13, new Inspector_Spacer(ui(4), true, true, ui(6)), 14, 11, 25, 23, 24, 26, 
 		[ "Growth", false ], 22, 
@@ -64,6 +65,7 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		#region data
 			var _seed = inline_context.seed + getInputData(5);
+			var _gDir = inline_context.gravityDir;
 			random_set_seed(_seed);
 			
 			var _tree = getInputData(0);
@@ -73,6 +75,8 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _amou = getInputData( 2);
 			var _sprd = getInputData( 7);
 			var _sprC = getInputData(16), curve_spread = inputs[ 7].attributes.curved? new curveMap(_sprC)  : undefined;
+			var _grav = getInputData(27);
+			var _graC = getInputData(28), curve_garvit = inputs[27].attributes.curved? new curveMap(_graC)  : undefined;
 			var _offs = getInputData(10);
 			var _offC = getInputData(17), curve_offset = inputs[10].attributes.curved? new curveMap(_offC)  : undefined;
 			var _doub = getInputData(15);
@@ -85,27 +89,23 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 			var _cBra     = getInputData( 4);
 			var _cBraMap  = getInputData(12);
-			var _cBraM    = inputs[4].attributes.mapped && is_surface(_cBraMap);
-			var _cBraSamp = _cBraM? new Surface_sampler(_cBraMap) : undefined;
+			var _cBraM    = inputs[ 4].attributes.mapped && is_surface(_cBraMap), _cBraSamp = _cBraM? new Surface_sampler(_cBraMap) : undefined;
 			
 			var _cOvrBra  = getInputData(20);
 			
 			var _cLef     = getInputData( 6);
 			var _cLefMap  = getInputData(13);
-			var _cLefM    = inputs[6].attributes.mapped && is_surface(_cLefMap);
-			var _cLefSamp = _cLefM? new Surface_sampler(_cLefMap) : undefined;
+			var _cLefM    = inputs[ 6].attributes.mapped && is_surface(_cLefMap), _cLefSamp = _cLefM? new Surface_sampler(_cLefMap) : undefined;
 			
 			var _edg      = getInputData(14);
 			var _edgC     = getInputData(11);
 			var _cEdgMap  = getInputData(25);
-			var _cEdgM    = inputs[11].attributes.mapped && is_surface(_cEdgMap);
-			var _cEdgSamp = _cEdgM? new Surface_sampler(_cEdgMap) : undefined;
+			var _cEdgM    = inputs[11].attributes.mapped && is_surface(_cEdgMap), _cEdgSamp = _cEdgM? new Surface_sampler(_cEdgMap) : undefined;
 			
 			var _edt      = getInputData(23);
-			var _edtC     = getInputData(24);
+			var _edtC     = getInputData(24); _edtC.cache();
 			var _cEdtMap  = getInputData(26);
-			var _cEdtM    = inputs[24].attributes.mapped && is_surface(_cEdtMap);
-			var _cEdtSamp = _cEdtM? new Surface_sampler(_cEdtMap) : undefined;
+			var _cEdtM    = inputs[24].attributes.mapped && is_surface(_cEdtMap), _cEdtSamp = _cEdtM? new Surface_sampler(_cEdtMap) : undefined;
 			
 			var _grow = getInputData(22);
 			
@@ -187,6 +187,11 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					var _spra = _sprdB * choose(-1, 1) * (curve_spread? curve_spread.get(_rBrns) : 1);
 					var _dr   = brnDir + _spra;
 					
+					var _ggv  = random_range(_grav[0], _grav[1]);
+					var _grv  = _ggv * (curve_garvit? curve_garvit.get(_rBrns) : 1);
+					    _grv  = clamp(_grv, 0, 1);
+					_dr = lerp_angle_direct(_dr, _gDir, _grv);
+					
 					var _sh = random_range(_offs[0], _offs[1]) * (curve_offset? curve_offset.get(_rBrns) : 1);
 					_lx += lengthdir_x(_sh, brnDir + 90);
 					_ly += lengthdir_y(_sh, brnDir + 90);
@@ -219,7 +224,7 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 						_l.colorU = undefined;
 						
 					} else {
-						var _edtCol = _cEdtM? _cEdtSamp.getPixel(round(_lx), round(_ly)) : _edtC.eval(random(1));
+						var _edtCol = _cEdtM? _cEdtSamp.getPixel(round(_lx), round(_ly)) : _edtC.evalFast(random(1));
 						
 						switch(_edt) {
 							case 1 : _l.colorU = _edtCol; break;
@@ -232,6 +237,8 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					
 					if(_doub) {
 						var _d2 = brnDir - _spra;
+						    _d2 = lerp_angle_direct(_d2, _gDir, _grv);
+						
 						var _l2 = new __MK_Tree_Leaf(_rBrn, _shap, _lx, _ly, _d2, lsx, lsy, _lspn).copy(_l);
 						array_push(_br.leaves, _l2);
 					}

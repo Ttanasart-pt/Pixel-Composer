@@ -32,14 +32,16 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(23, nodeValue_Range(  "Curl",      [0,0], true )).setCurvable(24, CURVE_DEF_11);
 	
 	////- =Rendering
-	newInput( 6, nodeValue_Range(       "Thickness",   [2,2] )).setCurvable(11, CURVE_DEF_11);
-	newInput(12, nodeValue_Gradient(    "Base Color",   new gradientObject(ca_white) ));
-	newInput(17, nodeValue_Enum_Button( "Render Edge",  0,   )).setChoices([ "None", "Override", "Multiply", "Screen" ]);
-	newInput(18, nodeValue_Gradient(    "Outer Color",  new gradientObject(ca_white) ));
+	newInput( 6, nodeValue_Range(       "Thickness",       [2,2] )).setCurvable(11, CURVE_DEF_11);
+	newInput(12, nodeValue_Gradient(    "Base Color",      new gradientObject(ca_white) ));
+	newInput(27, nodeValue_Enum_Button( "Length Blending", 0, [ "None", "Override", "Multiply", "Screen" ] ));
+	newInput(28, nodeValue_Gradient(    "Length Color",    new gradientObject(ca_white) ));
+	newInput(17, nodeValue_Enum_Button( "Edge Blending",   0,   )).setChoices([ "None", "Override", "Multiply", "Screen" ]);
+	newInput(18, nodeValue_Gradient(    "Edge Color",      new gradientObject(ca_white) ));
 	
 	////- =Growth
 	newInput(20, nodeValue_Range( "Grow Delay", [0,0], true ));
-	// input 27
+	// input 29
 	
 	newOutput(0, nodeValue_Output("Trunk",    VALUE_TYPE.struct, noone)).setIcon(THEME.node_junction_mktree, COLORS.node_blend_mktree);
 	newOutput(1, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setIcon(THEME.node_junction_mktree, COLORS.node_blend_mktree);
@@ -49,7 +51,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		[ "Segment",   false ], 7, 3, 13, 
 		[ "Direction", false ], 4, 10, 15, 9, 16, 
 		[ "Spiral",    false ], 25, 26, 21, 22, 23, 24, 
-		[ "Rendering", false ], 6, 11, 12, 17, 18, 
+		[ "Rendering", false ], 6, 11, 12, 27, 28, 17, 18, 
 		[ "Growth",    false ], 20, 
 	];
 	
@@ -69,6 +71,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		if(!is(inline_context, Node_MK_Tree_Inline)) return;
 		
 		var _seed = inline_context.seed + getInputData(14);
+		var _gDir = inline_context.gravityDir;
 		
 		var _tree = getInputData(0);
 		
@@ -96,13 +99,18 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 		var _thk      = getInputData( 6);
 		var _thkC     = getInputData(11), curve_thick  = inputs[ 6].attributes.curved? new curveMap(_thkC) : undefined;
+		
 		var _baseGrad = getInputData(12);
+		var _lenc     = getInputData(27);
+		var _lencGrad = getInputData(28); inputs[28].setVisible(_lenc > 0);
 		var _edge     = getInputData(17);
-		var _edgeGrad = getInputData(18);
+		var _edgeGrad = getInputData(18); inputs[18].setVisible(_edge > 0);
 		
 		var _grow = getInputData(20);
 		
-		inputs[18].setVisible(_edge > 0);
+		_baseGrad.cache();
+		_lencGrad.cache();
+		_edgeGrad.cache();
 		
 		random_set_seed(_seed);
 		
@@ -152,24 +160,20 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				var _growParam = {
 					length : _length,
 					angle  : _angle,   angleW : _angW,
-					grav   : _grav,    gravC  : curve_grav,
+					grav   : _grav,    gravC  : curve_grav,    gravD : _gDir, 
 					thick  : _thick,   thickC : curve_thick,
 					
 					spirS  : _spirS,   spirP  : _spirP,
 					wave   : _wave,    waveC  : curve_wave, 
 					curl   : _curl,    curlC  : curve_curl,
+					
+					cBase  : _baseGrad,
+					cLen   : _lenc,     cLenG  : _lencGrad,
+					cEdg   : _edge,     cEdgG  : _edgeGrad,
 				}
 				
 				_t.grow(_growParam);
-				_t.color     = _baseGrad.eval(random(1));
 			    _t.growShift = random_range(_grow[0], _grow[1]);
-				    
-				switch(_edge) {
-					case 0 : _t.colorOut = _t.color;                  break;
-					case 1 : _t.colorOut = _edgeGrad.eval(random(1)); break;
-					case 2 : _t.colorOut = colorMultiply( _edgeGrad.eval(random(1)), _t.color); break;
-					case 3 : _t.colorOut = colorScreen(   _edgeGrad.eval(random(1)), _t.color); break;
-				}
 				
 				array_push(_tr.children, _t);
 				array_push(_branches,    _t);

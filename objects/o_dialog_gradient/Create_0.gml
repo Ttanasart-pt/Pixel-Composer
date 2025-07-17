@@ -247,7 +247,7 @@ event_inherited();
 			
 			var _hoverColor = noone;
 			if(_exp || row == 1) {
-				_palRes = drawPaletteGrid(pal.palette, pd, yy + nh, _ww, _gs, { mx : _m[0], my : _m[1] });
+				_palRes = drawPaletteGrid(pal.palette, pd, yy + nh, _ww, _gs, { color : selector.current_color, mx : _m[0], my : _m[1] });
 				_hoverColor = _palRes.hoverIndex > noone? _palRes.hoverColor : noone;
 			} else
 				drawPalette(pal.palette, pd, yy + nh, _ww, _gs);
@@ -310,12 +310,8 @@ event_inherited();
 	//////////////////////// SEARCH ////////////////////////
 	
 	palette_search_string = "";
-	tb_palette_search = new textBox(TEXTBOX_INPUT.text, function(t) /*=>*/ {return searchPalette(t)} )
-	               .setFont(f_p2)
-	               .setHide(1)
-	               .setEmpty(false)
-	               .setPadding(ui(24))
-	               .setAutoUpdate();
+	tb_palette_search = textBox_Text(function(t) /*=>*/ {return searchPalette(t)} )
+		.setFont(f_p2).setHide(1).setEmpty(false).setPadding(ui(24)).setAutoUpdate();
 	
 	function searchPalette(t) {
 		palette_search_string = t;

@@ -82,7 +82,7 @@ function Panel_Nodes() : PanelContent() constructor {
 	
 	////- View
 	
-    function onFocusBegin() {
+    function onFocusBegin() { 
         PANEL_NODES = self; 
     } 
     

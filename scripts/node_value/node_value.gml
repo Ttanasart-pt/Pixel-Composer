@@ -483,7 +483,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		with(node) { newInput(_index, nodeValue_Surface( $"{other.name} {_suf}" )).setVisible(false, false); }
 		
 		mapButton = button(function() /*=>*/ { attributes.mapped = !attributes.mapped; node.triggerRender(); })
-			.setIcon( THEME.mappable_parameter, [ function() /*=>*/ {return attributes.curved} ], COLORS._main_icon ).setTooltip("Toggle Map");
+			.setIcon( THEME.mappable_parameter, [ function() /*=>*/ {return attributes.mapped} ], COLORS._main_icon ).setTooltip("Toggle Map");
 		
 		editWidget.setSideButton(mapButton);
 		
@@ -521,7 +521,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				break;
 			
 			case 3 : 
-				curveButton.icon_blend = attributes.mapped? c_white : COLORS._main_icon;
+				mapButton.icon_blend = attributes.mapped? c_white : COLORS._main_icon;
 				
 				var inp = node.inputs[attributes.map_index];
 				var vis = attributes.mapped && show_in_inspector;

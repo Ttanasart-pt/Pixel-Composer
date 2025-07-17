@@ -2,7 +2,6 @@ function Node_MK_Tree_Branch_Trim(_x, _y, _group = noone) : Node(_x, _y, _group)
 	name  = "Trim Branch";
 	color = COLORS.node_blend_mktree;
 	icon  = THEME.mkTree;
-	update_on_frame = true;
 	
 	setDimension(96, 48);
 	

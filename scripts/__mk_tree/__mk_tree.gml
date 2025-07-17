@@ -88,6 +88,9 @@ function __MK_Tree_Segment(_x, _y, _t) constructor {
 	x = _x;
 	y = _y;
 	thickness = _t;
+	
+	color     = c_white;
+	colorOut  = c_white;
 }
 
 function __MK_Tree() constructor {
@@ -105,8 +108,6 @@ function __MK_Tree() constructor {
 	
 	children  = [];
 	leaves    = [];
-	color     = c_white;
-	colorOut  = c_white;
 	
 	growShift = 0;
 	growSpeed = 1;
@@ -196,17 +197,28 @@ function __MK_Tree() constructor {
 		var _length = _param.length;
 		var _angle  = _param.angle;
 		var _angleW = _param.angleW;
+		
 		var _grav   = _param.grav;
 		var _gravC  = _param.gravC;
+		var _gravD  = _param.gravD;
+		
 		var _thick  = _param.thick;
 		var _thickC = _param.thickC;
 		
 		var _spirS  = _param.spirS;
 		var _spirP  = _param.spirP;
+		
 		var _wave   = _param.wave;
 		var _waveC  = _param.waveC;
+		
 		var _curl   = _param.curl;
 		var _curlC  = _param.curlC;
+		
+		var _cBase   = _param.cBase;
+		var _cLen    = _param.cLen;
+		var _cLenG   = _param.cLenG;
+		var _cEdg    = _param.cEdg;
+		var _cEdgG   = _param.cEdgG;
 		
 		segments       = array_create(amount + 1);
 		segmentLengths = array_create(amount + 1);
@@ -220,6 +232,9 @@ function __MK_Tree() constructor {
 		segments[0] = new __MK_Tree_Segment(ox, oy, t);
 		var _a = _angle;
 		var ll = _length / amount;
+		
+		var _gx = lengthdir_x(1, _gravD);
+		var _gy = lengthdir_y(1, _gravD);
 		
 		for( var i = 1; i <= amount; i++ ) {
 			var p = i / amount;
@@ -239,7 +254,6 @@ function __MK_Tree() constructor {
 				oy += lengthdir_y(_wLen, aa + 90);
 			}
 			
-			
 			var _crl = _curl * (_curlC? _curlC.get(p) : 1);
 			if(_crl != 0) {
 				var _cLen = sin(_spirP + p * pi * _spirS) * _crl;
@@ -247,12 +261,48 @@ function __MK_Tree() constructor {
 				oy += lengthdir_y(_cLen, aa);
 			}
 			
-			segments[i] = new __MK_Tree_Segment(ox, oy, t);
+			var _sg = new __MK_Tree_Segment(ox, oy, t);
+			segments[i] = _sg;
 			segmentLengths[i] = ll;
 			totalLength += ll;
 			
-			dy += _grav * ll * (_gravC? _gravC.get(p) : 1);
+			var _cc  = _cBase.evalFast(random(1));
+			switch(_cLen) {
+				case 0 : _sg.color = _cc; break;
+				case 1 : _sg.color = _cLenG.evalFast(p); break;
+				case 2 : _sg.color = colorMultiply( _cLenG.evalFast(p), _cc); break;
+				case 3 : _sg.color = colorScreen(   _cLenG.evalFast(p), _cc); break;
+			}
+			
+			switch(_cEdg) {
+				case 0 : _sg.colorOut = _sg.color; break;
+				case 1 : _sg.colorOut = _cEdgG.evalFast(random(1)); break;
+				case 2 : _sg.colorOut = colorMultiply( _cEdgG.evalFast(random(1)), _sg.color); break;
+				case 3 : _sg.colorOut = colorScreen(   _cEdgG.evalFast(random(1)), _sg.color); break;
+			}
+					
+			var _gg = _grav * (_gravC? _gravC.get(p) : 1);
+			dx += _gg * ll * _gx;
+			dy += _gg * ll * _gy;
+			
 			_a = point_direction(0, 0, dx, dy);
+		}
+		
+		_sg = segments[0];
+		
+		var _cc  = _cBase.evalFast(random(1));
+		switch(_cLen) {
+			case 0 : _sg.color = _cc; break;
+			case 1 : _sg.color = _cLenG.evalFast(0); break;
+			case 2 : _sg.color = colorMultiply( _cLenG.evalFast(0), _cc); break;
+			case 3 : _sg.color = colorScreen(   _cLenG.evalFast(0), _cc); break;
+		}
+		
+		switch(_cEdg) {
+			case 0 : _sg.colorOut = _sg.color; break;
+			case 1 : _sg.colorOut = _cEdgG.evalFast(random(1)); break;
+			case 2 : _sg.colorOut = colorMultiply( _cEdgG.evalFast(random(1)), _sg.color); break;
+			case 3 : _sg.colorOut = colorScreen(   _cEdgG.evalFast(random(1)), _sg.color); break;
 		}
 		
 		var l = 0;
@@ -290,8 +340,8 @@ function __MK_Tree() constructor {
 	}
 	
 	static draw = function() {
-		var ox, oy, ot, oa = 0;
-		var nx, ny, nt, na;
+		var ox, oy, ot, oa, oc, oce;
+		var nx, ny, nt, na, nc, nce;
 		
 		draw_set_circle_precision(16);
 		draw_primitive_begin(pr_trianglestrip);
@@ -309,18 +359,25 @@ function __MK_Tree() constructor {
 		for( var i = 0; i < len; i++ ) {
 			var _seg = segments[i];
 			
-			nx = _seg.x;
-			ny = _seg.y;
-			nt = _seg.thickness;
-			na = ang[i];
+			nx  = _seg.x;
+			ny  = _seg.y;
+			nt  = _seg.thickness;
+			nc  = _seg.color;
+			nce = _seg.colorOut;
+			
+			na  = ang[i];
+			
 			if(i > 0 && i < len - 1) na = lerp_angle_direct(ang[i], ang[i + 1], .5);
 			
-			if(i) draw_line_width2_angle_width(ox, oy, nx, ny, ot, nt, oa, na, color, color, colorOut, colorOut);
+			if(i) draw_line_width2_angle_width(ox, oy, nx, ny, ot, nt, oa, na, oc, nc, oce, nce);
 			
 			oa = na;
 			ox = nx;
 			oy = ny;
 			ot = nt;
+			
+			oc  = nc;
+			oce = nce;
 			
 			if(i % 32 == 0) {
 				draw_primitive_end();

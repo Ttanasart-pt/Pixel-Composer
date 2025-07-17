@@ -23,17 +23,19 @@ function Node_MK_Tree_Path_Root(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	////- =Rendering
 	newInput( 3, nodeValue_Range(       "Thickness",       [4,4], true )).setCurvable(4, CURVE_DEF_11);
 	newInput( 5, nodeValue_Gradient(    "Base Color",      new gradientObject(ca_white) ));
-	newInput( 6, nodeValue_Enum_Button( "Render Edge",     0, [ "None", "Override", "Multiply", "Screen" ] ));
-	newInput( 7, nodeValue_Gradient(    "Outer Color",     new gradientObject(ca_white) ));
-	// input 17
+	newInput(17, nodeValue_Enum_Button( "Length Blending",  0, [ "None", "Override", "Multiply", "Screen" ] ));
+	newInput(18, nodeValue_Gradient(    "Length Color",     new gradientObject(ca_white) ));
+	newInput( 6, nodeValue_Enum_Button( "Edge Blending",   0, [ "None", "Override", "Multiply", "Screen" ] ));
+	newInput( 7, nodeValue_Gradient(    "Edge Color",      new gradientObject(ca_white) ));
+	// input 19
 	
 	newOutput(0, nodeValue_Output("Trunk", VALUE_TYPE.struct, noone)).setIcon(THEME.node_junction_mktree, COLORS.node_blend_mktree);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 0, 
 		[ "Path",      false ], 1, 2, 
-		[ "Direction", false ], 8, 10, 9, 
+		[ "Direction", false ], 8, 10, 
 		[ "Spiral",    false ], 11, 12, 13, 14, 15, 16, 
-		[ "Render",    false ], 3, 4, 5, 6, 7, 
+		[ "Render",    false ], 3, 4, 5, 17, 18, 6, 7, 
 	];
 	
 	////- Nodes
@@ -61,7 +63,6 @@ function Node_MK_Tree_Path_Root(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			
 			var _wigg = getInputData( 8);
 			var _wigC = getInputData(10),    curve_wiggle = inputs[ 8].attributes.curved? new curveMap(_wigC)  : undefined;
-			var _grac = getInputData( 9);
 			
 			var _sprS = getInputData(11);
 			var _sprP = getInputData(12);
@@ -71,13 +72,14 @@ function Node_MK_Tree_Path_Root(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			var _cur  = getInputData(15);
 			var _curC = getInputData(16),    curve_curl  = inputs[15].attributes.curved? new curveMap(_curC)  : undefined;
 			
-			var _thck     = getInputData(3);
-			var _thckC    = getInputData(4), curve_thick  = inputs[ 3].attributes.curved? new curveMap(_thckC)  : undefined;
-			var _baseGrad = getInputData(5);
-			var _edge     = getInputData(6);
-			var _edgeGrad = getInputData(7);
+			var _thck     = getInputData( 3);
+			var _thckC    = getInputData( 4), curve_thick  = inputs[ 3].attributes.curved? new curveMap(_thckC)  : undefined;
+			var _baseGrad = getInputData( 5);
+			var _lenc     = getInputData(17);
+			var _lencGrad = getInputData(18); inputs[18].setVisible(_lenc > 0);
+			var _edge     = getInputData( 6);
+			var _edgeGrad = getInputData( 7); inputs[7].setVisible(_edge > 0);
 			
-			inputs[7].setVisible(_edge > 0);
 		#endregion
 		
 		if(!has(_path, "getPointRatio")) return;
@@ -139,14 +141,27 @@ function Node_MK_Tree_Path_Root(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			ox = nx; oy = ny;
 		}
 		
-		_t.color    = _baseGrad.eval(random(1));
 		
-		switch(_edge) {
-			case 0 : _t.colorOut = _t.color;                  break;
-			case 1 : _t.colorOut = _edgeGrad.eval(random(1)); break;
-			case 2 : _t.colorOut = colorMultiply( _edgeGrad.eval(random(1)), _t.color); break;
-			case 3 : _t.colorOut = colorScreen(   _edgeGrad.eval(random(1)), _t.color); break;
+		for( var i = 0; i <= _samp; i++ ) {
+			var _rat = i / _samp;
+			var _sg  = _t.segments[i];
+			var _cc  = _baseGrad.eval(random(1));
+			
+			switch(_lenc) {
+				case 0 : _sg.color = _cc;                       break;
+				case 1 : _sg.color = _lencGrad.eval(random(1)); break;
+				case 2 : _sg.color = colorMultiply( _lencGrad.eval(random(1)), _cc); break;
+				case 3 : _sg.color = colorScreen(   _lencGrad.eval(random(1)), _cc); break;
+			}
+			
+			switch(_edge) {
+				case 0 : _sg.colorOut = _sg.color;                 break;
+				case 1 : _sg.colorOut = _edgeGrad.eval(random(1)); break;
+				case 2 : _sg.colorOut = colorMultiply( _edgeGrad.eval(random(1)), _sg.color); break;
+				case 3 : _sg.colorOut = colorScreen(   _edgeGrad.eval(random(1)), _sg.color); break;
+			}
 		}
+		
 		
 		_t.amount   = array_length(_samp) + 1;
 		_t.getLength();

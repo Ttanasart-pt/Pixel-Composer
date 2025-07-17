@@ -457,7 +457,7 @@ function Panel_Inspector() : PanelContent() constructor {
     static drawNodeProperties = function(_y, _m, _inspecting = inspecting) {
         var con_w  = contentPane.surface_w - ui(4); 
         var _hover = pHOVER && contentPane.hover;
-        var _focus = pFOCUS;
+        var _focus = pFOCUS || PANEL_GRAPH.pFOCUS || PANEL_PREVIEW.pFOCUS;
         
         _inspecting.inspecting       = true;
         _inspecting.inspector_scroll = contentPane.scroll_y_to;
@@ -800,10 +800,11 @@ function Panel_Inspector() : PanelContent() constructor {
             
             #region ++++ draw widget ++++
                 var _font = viewMode == INSP_VIEW_MODE.spacious? f_p2 : f_p3;
+                var  bs   = viewMode == INSP_VIEW_MODE.spacious? ui(20) : ui(16);
                 
                 var lb_h = line_get_height(_font, 4 + viewMode * 2);
                 var lb_w = line_get_width(jun.getName(), _font) + ui(16);
-                var lb_x = ui(48) + (ui(24) * (jun.color != -1));
+                var lb_x = bs * 2 + ui(8) + (ui(24) * (jun.color != -1));
                 
                 var lbHov = point_in_rectangle(_m[0], _m[1], lb_x, yy, lb_x + lb_w, yy + lb_h);
                 if(lbHov) {
@@ -820,8 +821,6 @@ function Panel_Inspector() : PanelContent() constructor {
                 
             	var _selH = lb_h + widH;
                 hh += _selH + padd;
-                
-                // draw_set_color(c_blue); draw_rectangle(8, yy, con_w - 16, yy + _selH, true);
                 
                 if(jun == prop_highlight && prop_highlight_time) {
                     if(prop_highlight_time == 60)

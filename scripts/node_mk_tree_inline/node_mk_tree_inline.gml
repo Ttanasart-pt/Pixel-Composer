@@ -17,16 +17,19 @@ function Node_MK_Tree_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 		addNode(_render);
 	}
 	
-	seed = 0;
+	seed       = 0;
+	gravityDir = -90;
 	
 	newInput(0, nodeValueSeed(VALUE_TYPE.integer));
+	newInput(1, nodeValue_Rotation( "Gravity", -90 ));
+	
+	input_display_list = [ new Inspector_Sprite(s_MKFX), 0,
+		[ "Physics",   false ], 1, 
+	];
 	
 	static update = function() {
-		seed = inputs[0].getValue();
+		seed       = inputs[0].getValue();
+		gravityDir = inputs[1].getValue();
 	}
 	
-	static setRenderStatus = function(result) {
-		for( var i = 0, n = array_length(nodes); i < n; i++ ) 
-			nodes[i].rendered = result;
-	}
 }

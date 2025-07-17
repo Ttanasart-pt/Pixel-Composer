@@ -54,8 +54,10 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	#endregion
 	
 	#region left buttons
+		var bs   = viewMode == INSP_VIEW_MODE.spacious? ui(20) : ui(16);
+		var ics  = viewMode == INSP_VIEW_MODE.spacious? 1 : .85;
 		var butx = xx;
-		var lb_x = xx + ui(20);
+		var lb_x = xx + bs;
 		
 		if(jun.connect_type == CONNECT_TYPE.input && jun.isAnimable() && !jun.expUse) { 							// Animation
 			var index = jun.hasJunctionFrom()? 2 : jun.is_anim;
@@ -64,8 +66,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			if(jun.is_anim) cc = COLORS._main_value_positive;
 			if(index == 2)  cc = COLORS._main_accent;
 			
-			var _hov = _hover && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10));
-			draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, 1, cc, .8 + .2 * _hov);
+			var _hov = _hover && point_in_circle(_m[0], _m[1], butx, lb_y, bs / 2);
+			draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, ics, cc, .8 + .2 * _hov);
 			
 			if(_hov) {
 				cHov  = true;
@@ -73,7 +75,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				if(anim_hold != noone)
 					jun.setAnim(anim_hold, true);
 					
-				draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, 1, index == 2? COLORS._main_accent : c_white, 1);
+				draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, ics, index == 2? COLORS._main_accent : c_white, 1);
 				TOOLTIP = jun.hasJunctionFrom()? __txtx("panel_inspector_remove_link", "Remove link") : __txtx("panel_inspector_toggle_anim", "Toggle animation");
 						
 				if(mouse_press(mb_left, _focus)) {
@@ -90,12 +92,12 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		if(anim_hold != noone && mouse_release(mb_left)) anim_hold = noone;
 			
 		if(!global_var) {																							// Visibility
-			butx += ui(20);
-			lb_x += ui(20);
+			butx += bs;
+			lb_x += bs;
 			var _visi = jun.isVisible();
 			
-			draw_sprite_ui_uniform(THEME.junc_visible, _visi, butx, lb_y, 1,, 0.8);
-			if(_hover && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10))) {
+			draw_sprite_ui_uniform(THEME.junc_visible, _visi, butx, lb_y, ics, c_white, .8);
+			if(_hover && point_in_circle(_m[0], _m[1], butx, lb_y, bs / 2)) {
 				cHov  = true;
 				
 				if(visi_hold != noone && jun.visible_manual != visi_hold) {
@@ -103,7 +105,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 					jun.node.refreshNodeDisplay();
 				}
 				
-				draw_sprite_ui_uniform(THEME.junc_visible, _visi, butx, lb_y, 1,, 1);
+				draw_sprite_ui_uniform(THEME.junc_visible, _visi, butx, lb_y, ics,, 1);
 				TOOLTIP = __txt("Visibility");
 				
 				if(mouse_press(mb_left, _focus)) {
@@ -129,7 +131,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		}
 		
 		draw_set_text(_font, fa_left, fa_center, cc);
-		var lb_w = ui(!global_var * 20 + 20 + 16) + string_width(dispName);
+		var lb_w = !global_var * bs + bs + ui(16) + string_width(dispName);
 		
 		if(jun.color != -1) {
 			draw_sprite_ui(THEME.timeline_color, 1, lb_x + ui(8), lb_y, 1, 1, 0, jun.color, 1);

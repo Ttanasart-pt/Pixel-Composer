@@ -145,10 +145,10 @@ draggable = true;
 		
 		if(b == 2) {
 			menuCall("gradient_window_blend_menu", [ 
-				menuItem(__txtx("gradient_editor_blend_hard",  "Solid"),  function() { gradient.type = 1; onApply(gradient); }), 
-				menuItem(__txtx("gradient_editor_blend_RGB",   "RGB"),    function() { gradient.type = 0; onApply(gradient); }), 
-				menuItem(__txtx("gradient_editor_blend_HSV",   "HSV"),    function() { gradient.type = 2; onApply(gradient); }), 
-				menuItem(__txtx("gradient_editor_blend_OKLAB", "OKLAB"),  function() { gradient.type = 3; onApply(gradient); }), 
+				menuItem(__txtx("gradient_editor_blend_hard",  "Solid"), function() /*=>*/ { gradient.type = 1; onApply(gradient); }), 
+				menuItem(__txtx("gradient_editor_blend_RGB",   "RGB"),   function() /*=>*/ { gradient.type = 0; onApply(gradient); }), 
+				menuItem(__txtx("gradient_editor_blend_HSV",   "HSV"),   function() /*=>*/ { gradient.type = 2; onApply(gradient); }), 
+				menuItem(__txtx("gradient_editor_blend_OKLAB", "OKLAB"), function() /*=>*/ { gradient.type = 3; onApply(gradient); }), 
 			], bx + ui(32), by, fa_left, gradient);
 		}
 		bx -= ui(32);
