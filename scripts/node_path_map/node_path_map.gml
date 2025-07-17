@@ -65,6 +65,8 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		var _out = outputs[0].getValue();
 		    _out = surface_verify(_out, _dim[0], _dim[1])
 		
+		var _ind = 0;
+		
 		surface_set_shader(_out, noone);
 			draw_set_color(c_white);
 			
@@ -89,6 +91,11 @@ function Node_Path_Map(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					draw_vertex_texture(p2[0], p2[1], p2u, p2v);
 					draw_vertex_texture(p3[0], p3[1], p3u, p3v);
 					
+					if(_ind++ > 64) {
+						_ind = 0;
+						draw_primitive_end();
+						draw_primitive_begin_texture(pr_trianglelist, surface_get_texture(_surf));
+					}
 				}
 			draw_primitive_end();
 		surface_reset_shader();
