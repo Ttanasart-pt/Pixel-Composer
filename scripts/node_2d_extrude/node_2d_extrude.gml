@@ -2,31 +2,27 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	name = "2D Extrude";
 	
 	////- =Surface
-	
 	newInput(0, nodeValue_Surface(  "Surface In"));
 	
 	////- =Extrude
-	
-	newInput(1, nodeValue_Rotation( "Angle",     0));
-	newInput(2, nodeValue_Float(    "Distance", .5)).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(1, nodeValue_Rotation( "Angle",     0 ));
+	newInput(2, nodeValue_Float(    "Distance", .5 )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(7, nodeValue_Bool(     "Wrap",      false ));
 	
 	////- =Render
-	
 	newInput(3, nodeValue_Gradient(    "Color",       new gradientObject(ca_white)));
 	newInput(4, nodeValue_Enum_Scroll( "Clone Color", 0, [ "None", "Multiply", "Additive" ]));
 	
 	////- =Highlight
-	
 	newInput(5, nodeValue_Bool(     "Highlight",           false));
 	newInput(6, nodeValue_Color(    "Highlight Color",     ca_white));
-	
 	// input 8
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
 	    ["Surface",    false   ], 0, 
-	    ["Extrude",    false   ], 1, 2, 
+	    ["Extrude",    false   ], 1, 2, 7, 
 	    ["Render",     false   ], 3, 4, 
 	    ["Highlight",  false, 5], 6, 
     ];
@@ -84,12 +80,12 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		}
 	}
 	
-	static step = function() {}
-	
 	static processData = function(_outSurf, _data, _array_index = 0) { 
 	    var _surf = _data[0];
+	    
 	    var _ang  = _data[1];
 	    var _dist = _data[2];
+	    var _wrap = _data[7];
 	    
 	    var _grad = _data[3];
 	    var _clne = _data[4];
@@ -105,6 +101,7 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	        shader_set_dim("dimension",  _surf);
 			shader_set_f("angle",        degtorad(_ang));
 			shader_set_f("extDistance",  _dist);
+			shader_set_i("wrap",         _wrap);
 			
 	        draw_surface_safe(_surf);
 	    surface_reset_shader();
