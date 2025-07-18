@@ -42,14 +42,15 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	newInput( 9, nodeValue_Corner(         "Corner Radius", [0,0,0,0]      ));
 	newInput(12, nodeValue_Rotation(       "Angle",          0             ));
 	newInput(10, nodeValue_Float(          "Revolution",     4             ));
-	newInput(11, nodeValue_Float(          "Pitch",         .2             ));
-	// input 13
+	newInput(11, nodeValue_Float(          "Pitch",         .2             )).setCurvable(13, CURVE_DEF_11);
+	newInput(14, nodeValue_Int(            "Resolution",     64            ));
+	// input 15
 	
 	newOutput(0, nodeValue_Output("Path data", VALUE_TYPE.pathnode, self));
 		
 	input_display_list = [
 		["Transform", false], 0, 2, 1, 
-		["Shape",     false], 3, 4, 5, 6, 7, 8, 9, 12, 10, 11, 
+		["Shape",     false], 3, 4, 5, 6, 7, 8, 9, 12, 10, 11, 13, 14, 
 	];
 	
 	////- Path
@@ -181,15 +182,8 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	        var _inn  = getInputData(8);
 	        var _c    = getInputData(9);
 	        
-	        inputs[ 4].setVisible(false);
-	        inputs[ 5].setVisible(false);
-	        inputs[ 6].setVisible(false);
-	        inputs[ 7].setVisible(false);
-	        inputs[ 8].setVisible(false);
-	        inputs[ 9].setVisible(false);
-	        inputs[10].setVisible(false);
-	        inputs[11].setVisible(false);
-	        inputs[12].setVisible(false);
+	        for( var i = 4; i < array_length(inputs); i++ ) 
+	        	inputs[i].setVisible(false);
 		#endregion
     	
     	posx  = _pos[0]; posy  = _pos[1];
@@ -448,21 +442,29 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
                 inputs[10].setVisible(true);
                 inputs[11].setVisible(true);
                 inputs[12].setVisible(true);
+                inputs[14].setVisible(true);
                 
-                var _rev = getInputData(10);
-                var _pit = getInputData(11);
-                var _ang = getInputData(12);
+                var _ang  = getInputData(12);
+                var _rev  = getInputData(10);
+                var _pit  = getInputData(11);
+                var _pitC = getInputData(13), curve_pit   = inputs[11].attributes.curved? new curveMap(_pitC)  : undefined;
+                var _rst  = getInputData(14);
                 
                 loop = false;
-                var _st = 64 * abs(_rev);
-                var _as = 360 / 64 * sign(_rev);
-                var _pp = 1 / 64 * _pit;
+                var _st = _rst * abs(_rev);
+                var _as = 360 / _rst * sign(_rev);
+                var _is = 1 / (_st - 1);
+                var _rr = 0;
                 points  = array_create(_st);
                 
                 for( var i = 0; i < _st; i++ ) {
-                    nx = posx + lengthdir_x(scax * i * _pp, _ang + _as * i);
-                    ny = posy + lengthdir_y(scay * i * _pp, _ang + _as * i);
+                	var _pp = _pit / _rst;
+                	if(curve_pit) _pp *= curve_pit.get(i * _is);
+                	
+                    nx = posx + lengthdir_x(scax * _rr, _ang + _as * i);
+                    ny = posy + lengthdir_y(scay * _rr, _ang + _as * i);
                     
+                    _rr += _pp;
                     points[i] = [ nx, ny ];
                 }
                 
@@ -471,13 +473,15 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
             case "Spiral Circle" : 
                 inputs[10].setVisible(true);
                 inputs[12].setVisible(true);
+                inputs[14].setVisible(true);
                 
                 var _rev = getInputData(10);
                 var _ang = getInputData(12);
+                var _rst = getInputData(14);
                 
                 loop = false;
-                var _st = 64 * abs(_rev);
-                var _as = 360 / 64 * sign(_rev);
+                var _st = _rst * abs(_rev);
+                var _as = 360 / _rst * sign(_rev);
                 var _pp = 1 / _st;
                 points  = array_create(_st);
                 

@@ -1051,6 +1051,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _cy = _pos[1];
 			
 			var _d0 = point_rotate(_cx - _ax, _cy - _ay, _cx, _cy, _rot);
+			// _d0[0] = round(_d0[0]); _d0[1] = round(_d0[1]);
 			
 			array_push(_atlas, new SurfaceAtlas(_s, _d0[0], _d0[1], _rot, _sca[0], _sca[1]));
 			_trans[i] = [ _d0[0], _d0[1], _sca[0], _sca[1], _rot ];

@@ -33,6 +33,7 @@ function buttonAnchor(_input = noone, _onClick = noone) : widget() constructor {
 		hovering = false;
 		
 		var spacing = 9;
+		var size    = floor(spacing / 2);
 		
 		for( var i = -1; i <= 1; i++ ) 
 		for( var j = -1; j <= 1; j++ ) {
@@ -43,11 +44,14 @@ function buttonAnchor(_input = noone, _onClick = noone) : widget() constructor {
 			var _in  = (i + 1) * 3 + (j + 1);
 			var _fil = is_array(index)? index[_in] : _in == index;
 			
-			var hov = hover && point_in_rectangle(_m[0], _m[1], _bx - 4, _by - 4, _bx + 4, _by + 4);
+			var hov = hover && point_in_rectangle(_m[0], _m[1], _bx - size, _by - size, _bx + size, _by + size);
 			var cc  = hov? COLORS._main_accent : COLORS._main_icon;
 			var aa  = 0.75 + (_fil || hov) * 0.25;
 			
-			draw_sprite_ui(THEME.prop_anchor, _fil, _bx, _by, 1, 1, 0, cc, aa);
+			draw_set_color_alpha(cc, aa)
+			draw_rectangle_border(_bx - size, _by - size, _bx + size, _by + size, 2);
+			if(_fil) draw_rectangle(_bx - size, _by - size, _bx + size, _by + size, false);
+			draw_set_alpha(1);
 			
 			if(hov) {
 				hovering = true;

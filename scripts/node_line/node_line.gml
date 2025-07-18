@@ -800,7 +800,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						if(!ds_map_exists(widthMap, widProg))
 							widthMap[? widProg] = eval_curve_x(_widc, widProg, 0.1);
 						_nw *= widthMap[? widProg];
-						_nw *= _ww;
+						if(_wg2wid) _nw *= _ww / 2;
 						
 						if(_cap) {
 							if(j == 1) {
