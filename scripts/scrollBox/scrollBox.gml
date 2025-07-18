@@ -165,9 +165,10 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 			if(mouse_press(mb_left)) deactivate();
 		}
 		
+		var _arr = h > ui(16);
 		var _sps = min(1, h / 24);
 		var _ars = .6;
-		var _arw = sprite_get_width(arrow_spr) * _ars + ui(8);
+		var _arw = _arr * (sprite_get_width(arrow_spr) * _ars + ui(8));
 		var _spr = is_instanceof(_selVal, scrollItem) && _selVal.spr;
 		
 		var _x0  = _x;
@@ -177,6 +178,9 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 		if(_spr) _x0 += ui(32);
 		var _xc  = (_x0 + _x1) / 2;
 		var _tx1 = _x;
+		
+		var _sci = gpu_get_scissor();
+		gpu_set_scissor(_x, _y, _w, _h);
 		
 		if(show_icon && horizontal == 2) {
 			if(_spr) {
@@ -208,13 +212,17 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 				var _ss = (h - ui(4)) / sprite_get_height(_selVal.spr);
 				
 				gpu_set_tex_filter(filter);
-				draw_sprite_uniform(_selVal.spr, _selVal.spr_ind, _x + ui(8) + h / 2, _yc, _ss, _selVal.spr_blend);
+				draw_sprite_uniform(_selVal.spr, _selVal.spr_ind, _x + h / 2, _yc, _ss, _selVal.spr_blend);
 				gpu_set_tex_filter(false);
 			}
 		}
 		
-		if(type == 0) draw_sprite_ui_uniform(arrow_spr, arrow_ind, _x1 + _arw / 2, _yc, _ars, COLORS._main_icon, 0.5 + 0.5 * interactable);
-		if(type == 1) draw_sprite_ui_uniform(arrow_spr, arrow_ind, _tx1 + ui(16),  _yc, _ars, COLORS._main_icon, 0.5 + 0.5 * interactable);
+		if(_arr) {
+			if(type == 0) draw_sprite_ui_uniform(arrow_spr, arrow_ind, _x1 + _arw / 2, _yc, _ars, COLORS._main_icon, 0.5 + 0.5 * interactable);
+			if(type == 1) draw_sprite_ui_uniform(arrow_spr, arrow_ind, _tx1 + ui(16),  _yc, _ars, COLORS._main_icon, 0.5 + 0.5 * interactable);
+		}
+		
+		gpu_set_scissor(_sci);
 		
 		if(WIDGET_CURRENT == self)
 			draw_sprite_stretched_ext(THEME.widget_selecting, 0, _x - ui(3), _y - ui(3), _w + ui(6), h + ui(6), COLORS._main_accent, 1);	

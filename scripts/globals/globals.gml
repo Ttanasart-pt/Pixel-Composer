@@ -34,6 +34,7 @@ gml_pragma("UnityBuild", "true");
 	CMDIN    = [];
 	CMDPRG   = noone;
 	
+	// display_set_timing_method(tm_systemtiming);
 	window_set_showborder(OS != os_windows);
 	
 	FPS_REAL = 0;
@@ -47,9 +48,9 @@ gml_pragma("UnityBuild", "true");
 	LATEST_VERSION	= 1_19_00_0;
 	VERSION			= 1_19_05_1;
 	SAVE_VERSION	= 1_19_05_0;
-	VERSION_STRING  = MAC? "1.18.003m" : "1.19.6.005";
+	VERSION_STRING  = MAC? "1.18.003m" : "1.19.6.006";
 	RELEASE_STRING  = "1.19.5";
-	BUILD_NUMBER	= 1_19_05_1.005;
+	BUILD_NUMBER	= 1_19_05_1.006;
 	PREF_VERSION    = 1_17_1;
 	
 	var _lsp = array_last(string_split(VERSION_STRING, "."));

@@ -3,11 +3,10 @@ varying vec4 v_vColour;
 
 uniform vec4  color;
 uniform float index;
+uniform float angle;
 uniform int   type;
 
-float line_segment(in vec2 a, in vec2 b) {
-	vec2 p = v_vTexcoord;
-	
+float line_segment(in vec2 p, in vec2 a, in vec2 b) {
 	vec2 ba = b - a;
 	vec2 pa = p - a;
 	float h = clamp(dot(pa, ba) / dot(ba, ba), 0., 1.);
@@ -19,8 +18,11 @@ void main() {
 	float a = 0.3 - index * 0.1;
 	float b = 1. - a;
 	
-	dist = min(line_segment(vec2(0.5, a), vec2(0.5, b)), 
-			   line_segment(vec2(a, 0.5), vec2(b, 0.5))
+	vec2 tx = v_vTexcoord;
+	     tx = .5 + (tx - .5) * mat2(cos(angle), -sin(angle), sin(angle), cos(angle));
+	
+	dist = min(line_segment(tx, vec2(0.5, a), vec2(0.5, b)), 
+			   line_segment(tx, vec2(a, 0.5), vec2(b, 0.5))
 		   ) * 3.;
 	dist = 1. - dist - 0.5;
 	

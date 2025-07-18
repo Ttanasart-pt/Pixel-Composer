@@ -1784,7 +1784,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		var ww = w * _s * 0.5;
 		var wt = w * _s * 0.25;
-		var wx = _x + w * _s - ww - 8;
+		var wx = _x + w * _s - ww - 8 * _s;
 		var lx = _x + 12 * _s;
 		
 		var jy = _y + attributes.preview_size * _s + wh / 2;
@@ -1795,6 +1795,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var extY = 0;
 		var drwT = _s > 0.5;
 		var outY = 24;
+		var _fnt = _s < 2? f_p4 : f_p3;
 		
 		for(var i = 0, n = array_length(inputDisplayList); i < n; i++) {
 			var jun = inputDisplayList[i];
@@ -1829,13 +1830,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			_param.rx	= rx;
 			_param.ry	= ry;
 			_param.s    = wh;
-			_param.font = f_p2;
+			_param.font = _fnt;
 			_param.color = getColor();
 			
-			if(is(jun, checkBox))
-				_param.halign = fa_center;
+			if(is(wd, checkBox)) _param.halign = fa_center;
 			
-			wd.setInteract(wh > line_get_height(f_p2));
+			wd.setInteract(wh > line_get_height(_fnt));
 			wd.setFocusHover(_focus, _hover);
 			var _h = wd.drawParam(_param);
 			jun.graphWidgetH = _h / _s;

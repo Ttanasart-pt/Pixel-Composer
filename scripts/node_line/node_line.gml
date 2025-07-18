@@ -35,7 +35,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	////- =Width
 	
 	newInput(17, nodeValue_Bool(  "1px Mode",             false        )).setTooltip("Render pixel perfect 1px line.");
-	newInput( 3, nodeValue_Range( "Width",               [2,2]         ));
+	newInput( 3, nodeValue_Range( "Width",               [2,2],   true ));
 	newInput(11, nodeValue_Curve( "Width over Length",    CURVE_DEF_11 ));
 	newInput(12, nodeValue_Bool(  "Span Width over Path", false        )).setTooltip("Apply the full 'width over length' to the trimmed path.");
 	newInput(36, nodeValue_Bool(  "Apply Weight",         true         ));
