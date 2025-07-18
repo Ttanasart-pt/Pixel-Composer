@@ -1259,7 +1259,7 @@ function Panel_Animation_Dopesheet() {
             
             var _node = _cont.node;
             
-            if(_node.use_cache) { //cache
+            if(_node.use_cache || PROJECT.onion_skin.enabled) { //cache
 	        	draw_set_alpha(0.05);
 	            for(var j = 0, m = min(TOTAL_FRAMES, array_length(_node.cache_result)); j < m; j++) {
 	                var x0 = (j + 0) * timeline_scale + timeline_shift;

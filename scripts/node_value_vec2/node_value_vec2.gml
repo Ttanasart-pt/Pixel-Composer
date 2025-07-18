@@ -65,20 +65,18 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 	}
 	
 	static __getAnimValue = function(_time = CURRENT_FRAME) {
-		var _anim  = animator;
-		var _anims = animators;
 		
 		if(!getAnim()) {
-			if(sep_axis) return array_create_ext(2, function(i) /*=>*/ {return _anims[i].processType(_anims[i].values[0].value)});
-			return array_empty(_anim.values)? 0 : _anim.processType(_anim.values[0].value);
+			if(sep_axis) return array_create_ext(2, function(i) /*=>*/ {return animators[i].processType(animators[i].values[0].value)});
+			return array_empty(animator.values)? 0 : animator.processType(animator.values[0].value);
 		}
 		
 		if(sep_axis) {
 			__temp_time = _time;
-			return array_create_ext(2, function(i) /*=>*/ {return _anims[i].getValue(__temp_time)});
+			return array_create_ext(2, function(i) /*=>*/ {return animators[i].getValue(__temp_time)});
 		} 
 		
-		return _anim.getValue(_time);
+		return animator.getValue(_time);
 	}
 
 	////- DRAW
