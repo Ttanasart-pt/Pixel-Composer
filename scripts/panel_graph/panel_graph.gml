@@ -1077,8 +1077,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             }
         }
         
+        var _s = graph_s;
+        
         if(mouse_on_graph && pHOVER && graph_draggable) {
-            var _s = graph_s;
             if((!key_mod_press_any() || key_mod_press(CTRL)) && MOUSE_WHEEL != 0) {
 	            if(MOUSE_WHEEL == -1) {
 	            	if(graph_s_to > array_last(scale)) graph_s_to = array_last(scale);
@@ -1104,23 +1105,18 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             }
             
             graph_s = lerp_float(graph_s, graph_s_to, PREFERENCES.graph_zoom_smoooth);
+        }
+        
+        if(_s != graph_s) {
+            graph_x += (mx - graph_x * graph_s) / graph_s - (mx - graph_x * _s) / _s;
+            graph_y += (my - graph_y * graph_s) / graph_s - (my - graph_y * _s) / _s;
             
-            if(_s != graph_s) {
-                var mb_x = (mx - graph_x * _s) / _s;
-                var ma_x = (mx - graph_x * graph_s) / graph_s;
-                var md_x = ma_x - mb_x;
-                graph_x += md_x;
-                
-                var mb_y = (my - graph_y * _s) / _s;
-                var ma_y = (my - graph_y * graph_s) / graph_s;
-                var md_y = ma_y - mb_y;
-                graph_y += md_y;
-            }
+        } else {
+	        graph_x = round(graph_x);
+	        graph_y = round(graph_y);
         }
         
         graph_draggable = true;
-        graph_x = round(graph_x);
-        graph_y = round(graph_y);
     }
     
     function autoPanTo(_x, _y, _speed = 32) {

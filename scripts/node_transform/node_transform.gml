@@ -21,7 +21,6 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(0, nodeValue_Surface( "Surface In" ));
 	
 	////- =Output
-	
 	newInput(9, nodeValue_Enum_Scroll( "Output Dimension Type", OUTPUT_SCALING.same_as_input, [
 		new scrollItem("Same as input"),
 		new scrollItem("Constant"),
@@ -32,27 +31,22 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(7, nodeValue_Enum_Button( "Render Mode",  0, [ "Normal", "Tile", "Wrap" ] ));
 	
 	////- =Position
-	
 	newInput( 2, nodeValue_Vec2( "Position",       [.5,.5] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	newInput(10, nodeValue_Bool( "Round Position",  false, "Round position to the nearest integer value to avoid jittering."));
 	newInput( 3, nodeValue_Anchor());
 	
 	////- =Rotation
-	
 	newInput(4, nodeValue_Bool(     "Relative Anchor",    true ));
 	newInput(5, nodeValue_Rotation( "Rotation",           0    ));
 	newInput(8, nodeValue_Slider(   "Rotate by Velocity", 0    )).setTooltip("Make the surface rotates to follow its movement.");
 	
 	////- =Scale
-	
 	newInput(6, nodeValue_Vec2( "Scale", [1,1] ));
 	
 	////- =Render
-	
 	newInput(14, nodeValue_Slider( "Alpha", 1 ));
 	
 	////- =Echo
-	
 	newInput(12, nodeValue_Bool( "Echo",        false ));
 	newInput(13, nodeValue_Int(  "Echo Amount", 8     ));
 	
@@ -333,6 +327,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	overlay_drag_ma  = 0;
 	overlay_drag_sa  = 0;
 	
+	__p = [ 0, 0 ];
 	__tl  = [ 0, 0 ];
 	__tr  = [ 0, 0 ];
 	__bl  = [ 0, 0 ];
@@ -388,19 +383,19 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var bx1 = _x + (pos[0] + ww) * _s;
 			var by1 = _y + (pos[1] + hh) * _s;
 			
-			var bx2 = _x + (pos[0] + ww) * _s + 18;
-			var by2 = _y + (pos[1] + hh) * _s + 18;
+			var bx2 = _x + (pos[0] + ww) * _s + 18 * sign(sca[0]);
+			var by2 = _y + (pos[1] + hh) * _s + 18 * sign(sca[1]);
 			
 			var bax = _x + (pos[0] + anc[0]) * _s;
 			var bay = _y + (pos[1] + anc[1]) * _s;
 			
-			var tl = point_rotate(bx0, by0, bax, bay, rot, __tl);
-			var tr = point_rotate(bx1, by0, bax, bay, rot, __tr);
-			var bl = point_rotate(bx0, by1, bax, bay, rot, __bl);
-			var br = point_rotate(bx1, by1, bax, bay, rot, __br);
-			var sz = point_rotate(bx2, by2, bax, bay, rot, __sz);
-			
-			var rth = point_rotate((bx0 + bx1) / 2, by0 - 16, bax, bay, rot, __rth);
+			point_rotate(bx0, by0, bax, bay, rot, __p); var _tlx = __p[0], _tly = __p[1];
+			point_rotate(bx1, by0, bax, bay, rot, __p); var _trx = __p[0], _try = __p[1];
+			point_rotate(bx0, by1, bax, bay, rot, __p); var _blx = __p[0], _bly = __p[1];
+			point_rotate(bx1, by1, bax, bay, rot, __p); var _brx = __p[0], _bry = __p[1];
+			point_rotate(bx2, by2, bax, bay, rot, __p); var _szx = __p[0], _szy = __p[1];
+			point_rotate((bx0 + bx1) / 2, by0 - 16 * sign(sca[1]), bax, bay, rot, __p); var _rrx = __p[0], _rry = __p[1];
+			var _rcx = (_tlx + _trx) / 2, _rcy = (_tly + _try) / 2;
 			
 			var a_index  = 0;
 			var r_index  = 0;
@@ -410,27 +405,30 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var br_index = 0;
 			var sz_index = 0;
 			
+			     if(point_in_circle(_mx, _my,  bax,  bay, 8)) a_index  = 1;
+			else if(point_in_circle(_mx, _my, _rrx, _rry, 8)) r_index  = 1;
+			else if(point_in_circle(_mx, _my, _tlx, _tly, 8)) tl_index = 1;
+			else if(point_in_circle(_mx, _my, _trx, _try, 8)) tr_index = 1;			
+			else if(point_in_circle(_mx, _my, _blx, _bly, 8)) bl_index = 1;			
+			else if(point_in_circle(_mx, _my, _brx, _bry, 8)) br_index = 1;
+			else if(point_in_circle(_mx, _my, _szx, _szy, 8)) sz_index = 1;
+			
 			draw_set_color(COLORS._main_accent);
-			draw_line(tl[0], tl[1], tr[0], tr[1]);
-			draw_line(tl[0], tl[1], bl[0], bl[1]);
-			draw_line(tr[0], tr[1], br[0], br[1]);
-			draw_line(bl[0], bl[1], br[0], br[1]);
+			draw_line_width(_tlx, _tly, _trx, _try, 2);
+			draw_line_width(_tlx, _tly, _blx, _bly, 2);
+			draw_line_width(_trx, _try, _brx, _bry, 2);
+			draw_line_width(_blx, _bly, _brx, _bry, 2);
+			draw_line_width(_rcx, _rcy, _rrx, _rry, 2);
+			draw_line_width(_brx, _bry, _szx, _szy, 2);
 			
-			     if(point_in_circle(_mx, _my, bax, bay, 8))		  a_index  = 1;
-			else if(point_in_circle(_mx, _my, rth[0], rth[1], 8)) r_index  = 1;
-			else if(point_in_circle(_mx, _my, tl[0], tl[1], 8))	  tl_index = 1;
-			else if(point_in_circle(_mx, _my, tr[0], tr[1], 8))	  tr_index = 1;			
-			else if(point_in_circle(_mx, _my, bl[0], bl[1], 8))	  bl_index = 1;			
-			else if(point_in_circle(_mx, _my, br[0], br[1], 8))	  br_index = 1;
-			else if(point_in_circle(_mx, _my, sz[0], sz[1], 8))	  sz_index = 1;
+			draw_anchor(sz_index, _szx, _szy, ui(8), 1);
+			draw_anchor(r_index,  _rrx, _rry, ui(8), 1);
+			draw_anchor(tl_index, _tlx, _tly, ui(8), 2);
+			draw_anchor(tr_index, _trx, _try, ui(8), 2);
+			draw_anchor(bl_index, _blx, _bly, ui(8), 2);
+			draw_anchor(br_index, _brx, _bry, ui(8), 2);
 			
-			draw_sprite_colored(THEME.anchor, a_index, bax, bay);
-			draw_sprite_colored(THEME.anchor_selector, tl_index,  tl[0],  tl[1]);
-			draw_sprite_colored(THEME.anchor_selector, tr_index,  tr[0],  tr[1]);
-			draw_sprite_colored(THEME.anchor_selector, bl_index,  bl[0],  bl[1]);
-			draw_sprite_colored(THEME.anchor_selector, br_index,  br[0],  br[1]);
-			draw_sprite_colored(THEME.anchor_scale,    sz_index,  sz[0],  sz[1], 1, rot);
-			draw_sprite_colored(THEME.anchor_rotate,   r_index,  rth[0], rth[1], 1, rot);
+			draw_anchor_cross(a_index * .5, bax, bay, ui(8), 1, rot);
 		#endregion
 		
 		if(overlay_dragging && overlay_dragging < 3) { //Transform
@@ -455,6 +453,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			if(overlay_dragging == 1) { //Move
 				if(inputs[2].setValue([ pos_x, pos_y ]))
 					UNDO_HOLDING = true;
+					
 			} else if(overlay_dragging == 2) { //Move anchor
 				var nanx = pos_x / ww;
 				var nany = pos_y / hh;
@@ -464,8 +463,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					modi = modi || inputs[3].setValue([ nanx, nany ]);
 					modi = modi || inputs[2].setValue([ overlay_drag_px + pos_x, overlay_drag_py + pos_y ]);
 					
-					if(modi)
-						UNDO_HOLDING = true;
+					if(modi) UNDO_HOLDING = true;
 				} else {
 					if(inputs[3].setValue([ nanx, nany ]))
 						UNDO_HOLDING = true;
@@ -481,7 +479,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var da = angle_difference(overlay_drag_ma, aa);
 			var sa;
 			
-			if(key_mod_press(CTRL)) sa = round((overlay_drag_sa - da) / 15) * 15;
+			if(key_mod_press(CTRL)) sa = value_snap(overlay_drag_sa - da, 15);
 			else					sa = overlay_drag_sa - da;
 			
 			if(inputs[5].setValue(sa))
@@ -511,15 +509,19 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			if(corner_dragging == 0) {
 				sw = -_sw / _anc[0];
 				sh = -_sh / _anc[1];
+				
 			} else if(corner_dragging == 1) {
 				sw =  _sw / (1 - _anc[0]);
 				sh = -_sh / _anc[1];
+				
 			} else if(corner_dragging == 2) {
 				sw = -_sw / _anc[0];
 				sh =  _sh / (1 - _anc[1]);
+				
 			} else if(corner_dragging == 3) {
 				sw =  _sw / (1 - _anc[0]);
 				sh =  _sh / (1 - _anc[1]);
+				
 			} else if(corner_dragging == 4) {
 				sw =  _sw / (1 - _anc[0]);
 				sh =  _sh / (1 - _anc[1]);
@@ -552,31 +554,31 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				overlay_drag_px  = pos[0];
 				overlay_drag_py  = pos[1];
 				
-			} else if(point_in_circle(_mx, _my, tl[0], tl[1], 8) || 
-			          point_in_circle(_mx, _my, tr[0], tr[1], 8) || 
-					  point_in_circle(_mx, _my, bl[0], bl[1], 8) || 
-					  point_in_circle(_mx, _my, br[0], br[1], 8) || 
-					  point_in_circle(_mx, _my, sz[0], sz[1], 8)) {
+			} else if(point_in_circle(_mx, _my, _tlx, _tly, 8) || 
+			          point_in_circle(_mx, _my, _trx, _try, 8) || 
+					  point_in_circle(_mx, _my, _blx, _bly, 8) || 
+					  point_in_circle(_mx, _my, _brx, _bry, 8) || 
+					  point_in_circle(_mx, _my, _szx, _szy, 8)) {
 				overlay_dragging = 4;
 				
-				if(point_in_circle(_mx, _my, tl[0], tl[1], 8))		corner_dragging = 0;
-				else if(point_in_circle(_mx, _my, tr[0], tr[1], 8)) corner_dragging = 1;
-				else if(point_in_circle(_mx, _my, bl[0], bl[1], 8)) corner_dragging = 2;
-				else if(point_in_circle(_mx, _my, br[0], br[1], 8)) corner_dragging = 3;
-				else if(point_in_circle(_mx, _my, sz[0], sz[1], 8)) corner_dragging = 4;
+				     if(point_in_circle(_mx, _my, _tlx, _tly, 8)) corner_dragging = 0;
+				else if(point_in_circle(_mx, _my, _trx, _try, 8)) corner_dragging = 1;
+				else if(point_in_circle(_mx, _my, _blx, _bly, 8)) corner_dragging = 2;
+				else if(point_in_circle(_mx, _my, _brx, _bry, 8)) corner_dragging = 3;
+				else if(point_in_circle(_mx, _my, _szx, _szy, 8)) corner_dragging = 4;
 				
 				overlay_drag_mx  = _mx;
 				overlay_drag_my  = _my;
 				overlay_drag_sx  = sca[0];
 				overlay_drag_sy  = sca[1];
 				
-			} else if(point_in_circle(_mx, _my, rth[0], rth[1], 8)) {
+			} else if(point_in_circle(_mx, _my, _rrx, _rry, 8)) {
 				overlay_dragging = 3;
 				overlay_drag_ma  = point_direction(bax, bay, _mx, _my);
 				overlay_drag_sa  = rot;
 				
-			} else if(point_in_triangle(_mx, _my, tl[0], tl[1], tr[0], tr[1], bl[0], bl[1]) || 
-			          point_in_triangle(_mx, _my, tr[0], tr[1], bl[0], bl[1], br[0], br[1])) {
+			} else if(point_in_triangle(_mx, _my, _tlx, _tly, _trx, _try, _blx, _bly) || 
+			          point_in_triangle(_mx, _my, _trx, _try, _blx, _bly, _brx, _bry)) {
 				overlay_dragging = 1;
 				overlay_drag_mx  = _mx;
 				overlay_drag_my  = _my;

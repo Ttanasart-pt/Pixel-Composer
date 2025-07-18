@@ -820,9 +820,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				draw_line_width(p0x, p0y, p2x, p2y, 2);
 				draw_line_width(p3x, p3y, p1x, p1y, 2);
 				draw_line_width(p3x, p3y, p2x, p2y, 2);
-				
-				draw_line_width(rcx, rcy, rx, ry, 2);
-				draw_line_width(p3x, p3y, sx, sy, 2);
+				draw_line_width(rcx, rcy, rx,  ry,  2);
+				draw_line_width(p3x, p3y, sx,  sy,  2);
 				
 				draw_anchor(_ri,      rx,  ry,  ui(8), 1);
 				draw_anchor(_si,      sx,  sy,  ui(8), 1);

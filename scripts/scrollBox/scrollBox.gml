@@ -137,7 +137,7 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 			front_button.draw(_x, _y + h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
 			
 			_x += _bs + ui(4);
-			_w -= _bs + ui(4);
+			 w -= _bs + ui(4);
 		}
 		
 		if(open) { resetFocus(); return h; }
