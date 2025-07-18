@@ -17,18 +17,18 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	////- Surfaces
 	
-	newInput(0, nodeValue_Surface( "Surface In"));
-	newInput(8, nodeValue_Surface( "Mask"));
-	newInput(9, nodeValue_Slider(  "Mix", 1));
+	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput(8, nodeValue_Surface( "Mask"       ));
+	newInput(9, nodeValue_Slider(  "Mix",     1 ));
 	__init_mask_modifier(8, 13); // inputs 13, 14
 	newInput(7, nodeValue_Enum_Scroll("Oversample Mode",  0, [ "Empty", "Clamp", "Repeat" ]));
 	
 	////- Strength
 	
-	newInput( 1, nodeValue_Surface( "Displace map"));
-	newInput(17, nodeValue_Surface( "Displace map 2"));
-	newInput( 3, nodeValue_Float(   "Strength", 1)).setMappable(15);
-	newInput( 4, nodeValue_Slider(  "Mid value", 0)).setTooltip("Brightness value to be use as a basis for 'no displacement'.");
+	newInput( 1, nodeValue_Surface( "Displace map"   ));
+	newInput(17, nodeValue_Surface( "Displace map 2" ));
+	newInput( 3, nodeValue_Float(   "Strength",   1  )).setMappable(15);
+	newInput( 4, nodeValue_Slider(  "Mid value", .5  )).setTooltip("Brightness value to be use as a basis for 'no displacement'.");
 	
 	////- Displacement
 	
@@ -39,17 +39,17 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
     - Angle: Use red as angle, green as distance.
     - Gradient: Displace down the brightness value defined by the Displace map.");
     
-	newInput(16, nodeValue_Bool( "Separate axis", false));
-	newInput( 2, nodeValue_Vec2( "Position", [ 1, 0 ] )).setTooltip("Vector to displace the pixel by.").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput(16, nodeValue_Bool( "Separate axis", false ));
+	newInput( 2, nodeValue_Vec2( "Position",      [1,0] )).setTooltip("Vector to displace the pixel by.").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
 	
 	////- Iterate
 	
-	newInput( 6, nodeValue_Bool(        "Iterate", false));
-	newInput(11, nodeValue_Enum_Scroll( "Blend Mode", 0, [ "Overwrite", "Min", "Max" ]));
-	newInput(18, nodeValue_Int(         "Iteration", 16));
-	newInput(19, nodeValue_Bool(        "Fade Distance", false));
-	newInput(20, nodeValue_Bool(        "Reposition", false));
-	newInput(21, nodeValue_Int(         "Repeat", 1));
+	newInput( 6, nodeValue_Bool(        "Iterate",       false ));
+	newInput(11, nodeValue_Enum_Scroll( "Blend Mode",    0, [ "Overwrite", "Min", "Max" ]));
+	newInput(18, nodeValue_Int(         "Iteration",     16    ));
+	newInput(19, nodeValue_Bool(        "Fade Distance", false ));
+	newInput(20, nodeValue_Bool(        "Reposition",    false ));
+	newInput(21, nodeValue_Int(         "Repeat",        1     ));
 	
 	// inputs 22
 	

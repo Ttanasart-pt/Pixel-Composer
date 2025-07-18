@@ -8,6 +8,7 @@ uniform float angle;
 uniform float extDistance;
 
 uniform int   cloneColor;
+uniform int   wrap;
 
 uniform int   highlight;
 uniform vec4  highlightColor;
@@ -148,7 +149,8 @@ void main() {
 	vec2 tx = 1. / dimension;
 	
 	vec4  baseColor = texture2D(gm_BaseTexture, v_vTexcoord);
-	float extrude   = texture2D(extrudeMap, v_vTexcoord).r;
+	vec4  extData   = texture2D(extrudeMap, v_vTexcoord);
+	float extrude   = extData.r;
 	vec2  shf       = vec2(cos(angle), -sin(angle));
 	gl_FragColor    = baseColor;
 	
@@ -171,6 +173,8 @@ void main() {
 	if(cloneColor == 0) return;
 	
 	vec2 pos = v_vTexcoord - shf * tx * extrude;
+	if(wrap == 1) pos = fract(fract(pos) + 1.);
+	
 	vec4 cColor = texture2D(gm_BaseTexture, pos);
 	
 	if(cloneColor == 1) gl_FragColor *= cColor;

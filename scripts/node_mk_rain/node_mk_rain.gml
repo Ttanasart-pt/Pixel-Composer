@@ -35,14 +35,14 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	////- =Ground
 	
-	newInput(18, nodeValue_Bool(   "Ground",        false));
-	newInput(19, nodeValue_Float(  "Ground Start",  64));
-	newInput(20, nodeValue_Bool(   "Ripple",        false));
-	newInput(23, nodeValue_Float(  "Rip. Amount",   1));
-	newInput(21, nodeValue_Float(  "Rip. Lifespan", 2));
-	newInput(22, nodeValue_Float(  "Rip. Radius",   16));
-	newInput(24, nodeValue_Slider( "Rip. Delay",   .2));
-	newInput(25, nodeValue_Slider( "Rip. Alpha",    1));
+	newInput(18, nodeValue_Bool(   "Ground",        false   ));
+	newInput(19, nodeValue_Float(  "Ground Start",  64      ));
+	newInput(20, nodeValue_Bool(   "Ripple",        false   ));
+	newInput(23, nodeValue_Float(  "Rip. Amount",   1       ));
+	newInput(21, nodeValue_Float(  "Rip. Lifespan", 2       ));
+	newInput(22, nodeValue_Vec2(   "Rip. Radius",   [16,8]  ));
+	newInput(24, nodeValue_Slider( "Rip. Delay",   .2       ));
+	newInput(25, nodeValue_Slider( "Rip. Alpha",    1       ));
 	
 	// inputs 25
 		
@@ -220,12 +220,13 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 						var _ripPrg = _grdO / _ripLif;
 						
 						repeat( _ripAmo ) {
-							var _ripR = _ripPrg * _ripRad;
-							var _ripA = clamp(1 - _ripPrg, 0, 1);
-							if(_ripR <= 1) break;
+							var _ripRx = _ripPrg * _ripRad[0];
+							var _ripRy = _ripPrg * _ripRad[1];
+							var _ripA  = clamp(1 - _ripPrg, 0, 1);
+							if(_ripRx <= 1) break;
 							
 							draw_set_alpha(_ripAlp * _ripA);
-							draw_ellipse(_x0 - _ripR, _y0 - _ripR * .5, _x0 + _ripR, _y0 + _ripR * .5, true);
+							draw_ellipse(_x0 - _ripRx, _y0 - _ripRy, _x0 + _ripRx, _y0 + _ripRy, true);
 							
 							_ripPrg -= _ripDel;
 						}

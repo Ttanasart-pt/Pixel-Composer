@@ -111,6 +111,7 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	    	shader_set_dim("dimension",  _surf);
 	    	shader_set_f("angle",        degtorad(_ang));
 			shader_set_f("extDistance",  _dist);
+			shader_set_i("wrap",         _wrap);
 			
 			_grad.shader_submit();
 			shader_set_i("cloneColor",   _clne);

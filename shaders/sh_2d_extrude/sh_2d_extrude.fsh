@@ -20,7 +20,7 @@ void main() {
 		if(wrap == 1) px = fract(fract(px) + 1.);
 		
 		vec4 sp = texture2D(gm_BaseTexture, px);
-		if(sp.a != 0.) { gl_FragColor = vec4(i); return; }
+		if(sp.a != 0.) { gl_FragColor = vec4(i, px, 1.); return; }
 	}
 	
 }
