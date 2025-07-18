@@ -3,24 +3,38 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	setDimension(96, 48);
 	length = 0;
 	
-	newInput(0, nodeValue_PathNode("Path 1")).rejectArray();
+	////- =Paths
+	newInput(0, nodeValue_PathNode( "Path 1" ));
+	newInput(1, nodeValue_PathNode( "Path 2" ));
 	
-	newInput(1, nodeValue_PathNode("Path 2")).rejectArray();
-	
-	newInput(2, nodeValue_Slider("Ratio", 0))
-		.rejectArray();
+	////- =Paths
+	newInput(3, nodeValue_Enum_Scroll( "Mode",   0, [ "Lerp", "Add", "Subtract" ] ));
+	newInput(2, nodeValue_Slider(      "Amount", 0 ));
+	//input 4
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, noone));
+	
+	for( var i = 0, n = array_length(inputs); i < n; i++ ) inputs[i].rejectArray();
+	
+	input_display_list = [
+		[ "Paths", false ], 0, 1, 
+		[ "Blend", false ], 3, 2, 
+	]
 	
 	function _blendedPath() constructor {
 		cached_pos = {};
 		
 		curr_path1 = noone;
 		curr_path2 = noone;
-		curr_lerp  = noone;
+		
+		blend_mode  = 0;
+		blend_lerp  = 0;
 		
 		is_path1 = false;
 		is_path2 = false;
+		
+		accu_lengths = [];
+		total_length = [];
 		
 		static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 			
@@ -37,7 +51,7 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 				var _p = new __vec2P();
 				
 				for( var j = 0; j < 1; j += _stp ) {
-					_p = getPointRatio(j, i, _p);
+					_p = getPointRatio(clamp(j, 0., .99), i, _p);
 					nx = _x + _p.x * _s;
 					ny = _y + _p.y * _s;
 					
@@ -48,6 +62,8 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 				}
 			}
 		}
+		
+		////- Data
 		
 		static getLineCount = function() { return is_path1? curr_path1.getLineCount() : 1; }
 		
@@ -60,38 +76,47 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			return max(curr_path1.getSegmentCount(ind), curr_path2.getSegmentCount(ind));
 		}
 		
-		static getLength = function(ind = 0) {
+		static getLength     = function(i=0) /*=>*/ {return array_safe_get(total_length, i, 0)};
+		static getAccuLength = function(i=0) /*=>*/ {return array_safe_get(accu_lengths, i, [])};
+		
+		static setLength = function() {
+			var _amo = getLineCount();
 			
-			if(!is_path1 && !is_path2) return 0;
-			if( is_path1 && !is_path2) return curr_path1.getLength(ind);
-			if(!is_path1 &&  is_path2) return curr_path2.getLength(ind);
+			accu_lengths = array_create(_amo);
+			total_length = array_create(_amo);
 			
-			var _p1 = curr_path1.getLength(ind);
-			var _p2 = curr_path2.getLength(ind);
-			
-			return lerp(_p1, _p2, curr_lerp);
+			for( var i = 0; i < _amo; i++ ) {
+				var _p1_acc = curr_path1.getAccuLength(i);
+				var _p2_acc = curr_path2.getAccuLength(i);
+				
+				var len = max(array_length(_p1_acc), array_length(_p2_acc));
+				var res = [];
+				
+				for( var j = 0; j < len; j++ ) {
+					var _l1 = array_get_decimal(_p1_acc, j);
+					var _l2 = array_get_decimal(_p2_acc, j);
+					
+					switch(blend_mode) {
+						case 0 : res[j] = lerp(_l1, _l2, blend_lerp); break;
+						case 1 : res[j] = max(_l1, _l2); break;
+						case 2 : res[j] = max(_l1, _l2); break;
+					}
+				}	
+				
+				accu_lengths[i] = res;
+				
+				var _p1_len = curr_path1.getLength(i);
+				var _p2_len = curr_path2.getLength(i);
+				
+				switch(blend_mode) {
+					case 0 : total_length[i] = lerp(_p1_len, _p2_len, blend_lerp); break;
+					case 1 : total_length[i] = _p1_len + _p2_len; break;
+					case 2 : total_length[i] = _p1_len + _p2_len; break;
+				}
+			}
 		}
 		
-		static getAccuLength = function(ind = 0) {
-			
-			if(!is_path1 && !is_path2) return 0;
-			if( is_path1 && !is_path2) return curr_path1.getAccuLength(ind);
-			if(!is_path1 &&  is_path2) return curr_path2.getAccuLength(ind);
-			
-			var _p1 = curr_path1.getAccuLength(ind);
-			var _p2 = curr_path2.getAccuLength(ind);
-			
-			var len = max(array_length(_p1), array_length(_p2));
-			var res = [];
-			
-			for( var i = 0; i < len; i++ ) {
-				var _l1 = array_get_decimal(_p1, i);
-				var _l2 = array_get_decimal(_p2, i);
-				res[i] = lerp(_l1, _l2, curr_lerp);
-			}
-			
-			return res;
-		}
+		////- Get
 		
 		static getPointRatio = function(_rat, ind = 0, out = undefined) {
 			if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
@@ -112,9 +137,26 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			var _p1 = curr_path1.getPointRatio(_rat, ind);
 			var _p2 = curr_path2.getPointRatio(_rat, ind);
 			
-			out.x = lerp(_p1.x, _p2.x, curr_lerp);
-			out.y = lerp(_p1.y, _p2.y, curr_lerp);
-			out.weight = lerp(_p1.weight, _p2.weight, curr_lerp);
+			switch(blend_mode) {
+				case 0 :
+					out.x = lerp(_p1.x, _p2.x, blend_lerp);
+					out.y = lerp(_p1.y, _p2.y, blend_lerp);
+					out.weight = lerp(_p1.weight, _p2.weight, blend_lerp);
+					break;
+				
+				case 1 :
+					out.x = _p1.x + _p2.x * blend_lerp;
+					out.y = _p1.y + _p2.y * blend_lerp;
+					out.weight = _p1.weight + _p2.weight * blend_lerp;
+					break;
+				
+				case 2 :
+					out.x = _p1.x - _p2.x * blend_lerp;
+					out.y = _p1.y - _p2.y * blend_lerp;
+					out.weight = _p1.weight - _p2.weight * blend_lerp;
+					break;
+					
+			}
 			
 			cached_pos[$ _cKey] = new __vec2P(out.x, out.y, out.weight);
 			
@@ -132,7 +174,7 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			var _p1 = curr_path1.getBoundary(ind);
 			var _p2 = curr_path2.getBoundary(ind);
 			
-			return _p1.lerpTo(_p2, curr_lerp);
+			return _p1.lerpTo(_p2, blend_lerp);
 		}
 	}
 	
@@ -149,10 +191,14 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		_outData.cached_pos = {};
 		_outData.curr_path1 = _data[0];
 		_outData.curr_path2 = _data[1];
-		_outData.curr_lerp  = _data[2];
+		
+		_outData.blend_mode  = _data[3];
+		_outData.blend_lerp  = _data[2];
 		
 		_outData.is_path1 = is_path(_outData.curr_path1, "getPointRatio");
 		_outData.is_path2 = is_path(_outData.curr_path2, "getPointRatio");
+		
+		_outData.setLength();
 		
 		return _outData;
 		
