@@ -2371,6 +2371,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	////- ATTRIBUTES
 	
+	static setAttribute = function(k,v) { attributes[$ k] = v; return self; }
+	
 	static isMapped = function() /*=>*/ {return attributes.mapped};
 	
 	////- SERIALIZE

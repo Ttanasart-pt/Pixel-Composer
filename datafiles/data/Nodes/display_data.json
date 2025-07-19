@@ -626,6 +626,7 @@
             { "label": "Colors" },
             "Node_Solid",
             "Node_Gradient",
+            "Node_Gradient_Cos",
             "Node_Gradient_Points",
             "Node_Sky",
             
