@@ -17,7 +17,10 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	input_display_list = [ ["Rendering", false], 1, 2, 3 ];
+	input_display_list = [ 
+		[ "Rendering", false ], 1, 2, 3,
+		[ "Particles", false ], 
+	];
 	
 	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);

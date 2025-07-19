@@ -344,7 +344,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		var editBoxW   = (xx + ww) - editBoxX;
 		var editBoxH   = breakLine? TEXTBOX_HEIGHT : lb_h;
 		
-		var widH	   = breakLine? editBoxH : 0;
+		var _widH	   = breakLine? editBoxH : 0;
 		var mbRight	   = true;
 		
 		if(jun.expUse) {
@@ -357,8 +357,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			if(_focus) jun.express_edit.register(_scrollPane);
 				
 			var wd_h = jun.express_edit.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.expression, _m);
-			widH  = wd_h - (TEXTBOX_HEIGHT * !breakLine);
-			cHov = cHov || jun.express_edit.inBBOX(_m);
+			_widH = wd_h - (TEXTBOX_HEIGHT * !breakLine);
+			cHov  = cHov || jun.express_edit.inBBOX(_m);
 			
 			var un = jun.unit;
 			if(un.reference != noone) {
@@ -419,12 +419,11 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				
 			}
 			
-			var _widH = wid.drawParam(param) ?? 0;
+			_widH = wid.drawParam(param) ?? 0;
 			if(breakLine) _widH += ui(4);
 			else          _widH -= lb_h;
 			
 			_widH = max(0, _widH);
-			
 			cHov  = cHov || wid.inBBOX(_m);
 			
 			mbRight = mbRight && wid.right_click_block;
