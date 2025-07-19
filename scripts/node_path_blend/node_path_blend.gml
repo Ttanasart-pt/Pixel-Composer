@@ -8,7 +8,7 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput(1, nodeValue_PathNode( "Path 2" ));
 	
 	////- =Paths
-	newInput(3, nodeValue_Enum_Scroll( "Mode",   0, [ "Lerp", "Add", "Subtract" ] ));
+	newInput(3, nodeValue_Enum_Scroll( "Mode",   0, [ "Lerp", "Add", "Subtract", "Multiply" ] ));
 	newInput(2, nodeValue_Slider(      "Amount", 0 ));
 	//input 4
 	
@@ -80,6 +80,7 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		static getAccuLength = function(i=0) /*=>*/ {return array_safe_get(accu_lengths, i, [])};
 		
 		static setLength = function() {
+			if(!is_path1 || !is_path2) return;
 			var _amo = getLineCount();
 			
 			accu_lengths = array_create(_amo);
@@ -98,8 +99,9 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 					
 					switch(blend_mode) {
 						case 0 : res[j] = lerp(_l1, _l2, blend_lerp); break;
-						case 1 : res[j] = max(_l1, _l2); break;
-						case 2 : res[j] = max(_l1, _l2); break;
+						case 1 : 
+						case 2 : 
+						case 3 : res[j] = max(_l1, _l2); break;
 					}
 				}	
 				
@@ -110,8 +112,9 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 				
 				switch(blend_mode) {
 					case 0 : total_length[i] = lerp(_p1_len, _p2_len, blend_lerp); break;
-					case 1 : total_length[i] = _p1_len + _p2_len; break;
-					case 2 : total_length[i] = _p1_len + _p2_len; break;
+					case 1 : 
+					case 2 : 
+					case 3 : total_length[i] = _p1_len + _p2_len; break;
 				}
 			}
 		}
@@ -154,6 +157,18 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 					out.x = _p1.x - _p2.x * blend_lerp;
 					out.y = _p1.y - _p2.y * blend_lerp;
 					out.weight = _p1.weight - _p2.weight * blend_lerp;
+					break;
+					
+				case 3 :
+					var _p10 = curr_path1.getPointRatio(clamp(_rat - .01, 0, .999), ind);
+					var _p11 = curr_path1.getPointRatio(clamp(_rat + .01, 0, .999), ind);
+					var _dir = point_direction(_p10.x, _p10.y, _p11.x, _p11.y);
+					var _dis = _p2.y * blend_lerp;
+					
+					out.x = _p1.x + lengthdir_x(_dis, _dir + 90);
+					out.y = _p1.y + lengthdir_y(_dis, _dir + 90);
+					
+					out.weight = lerp(_p1.weight, _p2.weight, blend_lerp);
 					break;
 					
 			}

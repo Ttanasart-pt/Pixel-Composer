@@ -15,6 +15,7 @@ uniform vec2  sunPosition;
 
 uniform vec2  position;
 uniform vec2  scale;
+uniform vec2  view;
 
 float saturatedDot( in vec3 a, in vec3 b ) {
 	return max( dot( a, b ), 0.0 );   
@@ -114,12 +115,12 @@ void main() {
     uv.y  = 1. - uv.y;
     sun.y = 1. - sun.y;
     
-    float azimuth       = PI + 2. * PI * sun.x;
-    float inclination   = PI - sun.y * PI;
+    float azimuth     = PI + 2. * PI * sun.x;
+    float inclination = PI - sun.y * PI;
     
-    vec3 sunDir     	= normalize( vec3( sin( inclination ) * cos( azimuth ), cos( inclination ), sin( inclination ) * sin(azimuth) ) );
-    vec3 viewDir  		= -computeSphericalCoordinates( uv ).xzy;
-    vec3 skyLuminance 	= calculateSkyLuminanceRGB( sunDir, viewDir, turbidity );
+    vec3 sunDir       = normalize( vec3( sin( inclination ) * cos( azimuth ), cos( inclination ), sin( inclination ) * sin(azimuth) ) );
+    vec3 viewDir      = -computeSphericalCoordinates( uv ).xzy;
+    vec3 skyLuminance = calculateSkyLuminanceRGB( sunDir, viewDir, turbidity );
     
     gl_FragColor = vec4( skyLuminance * 0.05, 1.0 );
 }

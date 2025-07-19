@@ -109,6 +109,8 @@ uniform vec2      IOR;
 uniform int       IORUseSurf;
 uniform sampler2D IORSurf;
 
+uniform float perspective;
+
 void main() {
 	
 	#region mappables
@@ -139,6 +141,9 @@ void main() {
     float dist = ofs + dot(curDepth.rgb, vec3(0.2126, 0.7152, 0.0722)) * curDepth.a * dep;
     vec3  norm = normalize(vec3(curNormal.xy * 2. - 1., curNormal.z));
     vec3  inci = vec3(0., 0., -1.);
+          inci = vec3(0., 0., -1.) + vec3(v_vTexcoord - .5, 0.) * perspective;
+
+	inci = normalize(inci);
 
     vec3  refr = refract(inci, norm, ior);
     vec2  refSamp = v_vTexcoord + refr.xy * dist;

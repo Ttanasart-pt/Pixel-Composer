@@ -963,8 +963,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return targ.setFrom(junctionFrom);
 	}
 	
-	static getInputDataFull  = function(index, def = 0) { return array_safe_get_fast(inputs_data, index, def); }
-	static getInputDataForce = function(index, def = 0) { return inputs[index].getValue(); }
+	static getInputDataFull  = function(i,d=0) /*=>*/ {return array_safe_get_fast(inputs_data, i, d)};
+	static getInputDataForce = function(i,d=0) /*=>*/ {return inputs[i].getValue()};
 	
 	static getInputs = function(frame = CURRENT_FRAME) {
 		inputs_data	= array_verify(inputs_data, array_length(inputs));

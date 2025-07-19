@@ -2033,6 +2033,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			case VALUE_TYPE.integer : 
 			case VALUE_TYPE.float  : 
 				if(display_type == VALUE_DISPLAY.vector) {
+					if(array_empty(_raw)) return;
+					
 					var _d = array_get_depth(_raw);
 					draw_set_color(COLORS._main_accent);
 					draw_set_circle_precision(8);

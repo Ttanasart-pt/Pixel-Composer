@@ -11,27 +11,22 @@ function Node_Sky(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	newInput(0, nodeValue_Dimension());
 	
 	////- =Surface
-	
-	newInput(10, nodeValue_Surface("Mask"));
+	newInput(10, nodeValue_Surface( "Mask" ));
 	
 	////- =Transform
-	
-	newInput(1, nodeValue_Vec2(        "Offset",    [ 0, 0 ])).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput(2, nodeValue_Vec2(        "Scale",     [ 1, 1 ]));
+	newInput(1, nodeValue_Vec2( "Offset", [0,0] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(2, nodeValue_Vec2( "Scale",  [1,1] ));
 	
 	////- =Sky
-	
 	newInput(3, nodeValue_Enum_Scroll( "Model",     0, [ "Preetham", "Basic scattering", "Hosek" ]));
-	newInput(4, nodeValue_Float(       "Turbidity", 2));
-	newInput(8, nodeValue_Float(       "Albedo",    1));
+	newInput(4, nodeValue_Float(       "Turbidity", 2 ));
+	newInput(8, nodeValue_Float(       "Albedo",    1 ));
 	
 	////- =Sun
-	
-	newInput(5, nodeValue_Vec2(        "Sun",          [ .2, .2 ])).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput(6, nodeValue_Float(       "Sun Radius",   500));
-	newInput(7, nodeValue_Float(       "Sun Radiance",  20));
-	newInput(9, nodeValue_Enum_Scroll( "Coordinate",     0, [ "Rectangular", "Polar" ]));
-	
+	newInput(5, nodeValue_Vec2(        "Sun",          [.2,.2] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(6, nodeValue_Float(       "Sun Radius",     500   ));
+	newInput(7, nodeValue_Float(       "Sun Radiance",   20    ));
+	newInput(9, nodeValue_Enum_Scroll( "Coordinate",     0, [ "Rectangular", "Polar" ] ));
 	// input 11
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -46,8 +41,6 @@ function Node_Sky(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	attribute_surface_depth();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		
-		// InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		InputDrawOverlay(inputs[5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		
 		return w_hovering;

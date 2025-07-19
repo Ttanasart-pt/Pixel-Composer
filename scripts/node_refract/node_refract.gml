@@ -11,18 +11,19 @@ function Node_Refract(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	__init_mask_modifier(3, 5); // inputs 5, 6 
 	
 	////- =Refract
-	newInput( 7, nodeValue_Surface( "Normal Map"    ));
-	newInput( 8, nodeValue_Surface( "Depth Map"     ));
-	newInput( 9, nodeValue_Float(   "Depth",    4   )).setMappable(12);
-	newInput(10, nodeValue_Float(   "Distance", 4   )).setMappable(13);
-	newInput(11, nodeValue_Float(   "IOR",      1.3 )).setMappable(14);
-	// input 15
+	newInput( 7, nodeValue_Surface( "Normal Map" ));
+	newInput( 8, nodeValue_Surface( "Depth Map"  ));
+	newInput( 9, nodeValue_Float(   "Height",      4   )).setMappable(12);
+	newInput(10, nodeValue_Float(   "Distance",    4   )).setMappable(13);
+	newInput(11, nodeValue_Float(   "IOR",         1.3 )).setMappable(14);
+	newInput(15, nodeValue_Float(   "Perspective", 0   ))
+	// input 16
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 1, 2, 
 		[ "Surface",   true ], 0, 3, 4, 5, 6, 
-		[ "Refract",  false ], 7, 8, 9, 12, 10, 13, 11, 14, 
+		[ "Refract",  false ], 7, 8, 9, 12, 10, 13, 11, 14, 15, 
 	];
 	
 	////- Nodes
@@ -30,6 +31,8 @@ function Node_Refract(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	attribute_surface_depth();
 	attribute_oversample();
 	attribute_interpolation();
+	
+	attributes.oversample = 3;
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
 	
@@ -44,6 +47,7 @@ function Node_Refract(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _dept  = _data[ 9];
 		var _dist  = _data[10];
 		var _ior   = _data[11];
+		var _pres  = _data[15];
 		
 		var _dim   = surface_get_dimension(_surf);
 		
@@ -53,10 +57,11 @@ function Node_Refract(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			shader_set_surface( "refNormalSurf", _normS );
 			shader_set_surface( "refDepthSurf",  _deptS );
 			
-			shader_set_2( "dimension", _dim  );
-			shader_set_f_map( "depth",     _dept, _data[12], inputs[ 9] );
-			shader_set_f_map( "offset",    _dist, _data[13], inputs[10] );
-			shader_set_f_map( "IOR",       _ior,  _data[14], inputs[11] );
+			shader_set_2( "dimension",    _dim  );
+			shader_set_f( "perspective",  _pres );
+			shader_set_f_map( "depth",    _dept, _data[12], inputs[ 9] );
+			shader_set_f_map( "offset",   _dist, _data[13], inputs[10] );
+			shader_set_f_map( "IOR",      _ior,  _data[14], inputs[11] );
 			
 			draw_surface_safe(_surf);
 		surface_reset_shader();
