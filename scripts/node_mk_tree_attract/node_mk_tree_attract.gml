@@ -5,7 +5,7 @@ function Node_MK_Tree_Attract(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	setDimension(96, 48);
 	
 	newInput( 1, nodeValueSeed());
-	newInput( 0, nodeValue_Struct("Tree", noone)).setVisible(true, true).setIcon(THEME.node_junction_mktree, COLORS.node_blend_mktree);
+	newInput( 0, nodeValue_Struct("Tree", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
 	
 	////- =Attractor
 	newInput( 2, nodeValue_Area(   "Area",          DEF_AREA_REF )).setUnitRef(function(i) /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
@@ -17,7 +17,7 @@ function Node_MK_Tree_Attract(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	newInput( 5, nodeValue_Slider(  "Strength",  .2 ));
 	// input 6
 	
-	newOutput(0, nodeValue_Output("Tree", VALUE_TYPE.struct, noone)).setIcon(THEME.node_junction_mktree, COLORS.node_blend_mktree);
+	newOutput(0, nodeValue_Output("Tree", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 1, 0, 
 		[ "Area",   false ], 2, 3, 4, 

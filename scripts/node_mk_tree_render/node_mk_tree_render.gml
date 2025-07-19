@@ -3,7 +3,7 @@ function Node_MK_Tree_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	color = COLORS.node_blend_mktree;
 	icon  = THEME.mkTree;
 	
-	newInput(0, nodeValue_Struct("Tree", noone)).setVisible(true, true).setIcon(THEME.node_junction_mktree, COLORS.node_blend_mktree);
+	newInput(0, nodeValue_Struct("Tree", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
 	
 	////- =Output
 	newInput(1, nodeValue_Dimension());

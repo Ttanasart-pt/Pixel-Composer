@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"mktreeBox",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"mktreeBox",
+  "parent":{
+    "name":"object",
+    "path":"folders/widgets/object.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

@@ -1,3 +1,9 @@
+global.MKTREE_JUNC = {
+	icon:  function() /*=>*/ {return THEME.node_junction_mktree},
+	color: function() /*=>*/ {return COLORS.node_blend_mktree},
+	widg:  function() /*=>*/ {return new mktreeBox()},
+}
+
 function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 	rootPosition = _pos;
 	shape        = _shp;

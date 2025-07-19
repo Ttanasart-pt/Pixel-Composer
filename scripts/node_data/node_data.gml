@@ -934,7 +934,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	////- PRESETS
 	
 	set_default = true;
-	
 	static skipDefault = function() /*=>*/ { set_default = false; return self; }
 	
 	static resetDefault = function() {

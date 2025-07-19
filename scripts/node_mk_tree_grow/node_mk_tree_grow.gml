@@ -7,7 +7,7 @@ function Node_MK_Tree_Grow(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	setDimension(96, 48);
 	
 	newInput( 1, nodeValueSeed());
-	newInput( 0, nodeValue_Struct("Tree", noone)).setVisible(true, true).setIcon(THEME.node_junction_mktree, COLORS.node_blend_mktree);
+	newInput( 0, nodeValue_Struct("Tree", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
 	
 	////- =Grow
 	newInput( 2, nodeValue_Slider( "Progress",         1.5, [-1, 4, .001] ));
@@ -19,7 +19,7 @@ function Node_MK_Tree_Grow(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput( 4, nodeValue_Range(  "Leaf Falloff",     [4,4], true ));
 	// input 7
 	
-	newOutput(0, nodeValue_Output("Tree", VALUE_TYPE.struct, noone)).setIcon(THEME.node_junction_mktree, COLORS.node_blend_mktree);
+	newOutput(0, nodeValue_Output("Tree", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 1, 0, 
 		[ "Grow", false ], 2, 5, 3, 

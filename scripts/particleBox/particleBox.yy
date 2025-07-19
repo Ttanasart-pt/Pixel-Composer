@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"particleBox",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"particleBox",
+  "parent":{
+    "name":"object",
+    "path":"folders/widgets/object.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

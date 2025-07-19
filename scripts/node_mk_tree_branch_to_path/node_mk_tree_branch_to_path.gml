@@ -6,7 +6,7 @@ function Node_MK_Tree_Branch_To_Path(_x, _y, _group = noone) : Node(_x, _y, _gro
 	
 	setDimension(96, 48);
 	
-	newInput( 0, nodeValue_Struct("Branch", noone)).setVisible(true, true).setIcon(THEME.node_junction_mktree, COLORS.node_blend_mktree);
+	newInput( 0, nodeValue_Struct("Branch", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, self));
 	

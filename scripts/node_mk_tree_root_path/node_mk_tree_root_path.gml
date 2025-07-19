@@ -29,7 +29,7 @@ function Node_MK_Tree_Path_Root(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	newInput( 7, nodeValue_Gradient(    "Edge Color",      new gradientObject(ca_white) ));
 	// input 19
 	
-	newOutput(0, nodeValue_Output("Trunk", VALUE_TYPE.struct, noone)).setIcon(THEME.node_junction_mktree, COLORS.node_blend_mktree);
+	newOutput(0, nodeValue_Output("Trunk", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 0, 
 		[ "Path",      false ], 1, 2, 

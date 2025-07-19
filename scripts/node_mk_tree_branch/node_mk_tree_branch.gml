@@ -6,7 +6,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	setDimension(96, 48);
 	
 	newInput(14, nodeValueSeed());
-	newInput( 0, nodeValue_Struct("Tree", noone)).setVisible(true, true).setIcon(THEME.node_junction_mktree, COLORS.node_blend_mktree);
+	newInput( 0, nodeValue_Struct("Tree", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
 	
 	////- =Origin
 	newInput( 5, nodeValue_Range(        "Amount",          [4,8]     ));
@@ -43,8 +43,8 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(20, nodeValue_Range( "Grow Delay", [0,0], true ));
 	// input 29
 	
-	newOutput(0, nodeValue_Output("Trunk",    VALUE_TYPE.struct, noone)).setIcon(THEME.node_junction_mktree, COLORS.node_blend_mktree);
-	newOutput(1, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setIcon(THEME.node_junction_mktree, COLORS.node_blend_mktree);
+	newOutput(0, nodeValue_Output("Trunk",    VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
+	newOutput(1, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 14, 0, 
 		[ "Origin",    false ], 5, 19, 8, 

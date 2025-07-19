@@ -6,13 +6,13 @@ function Node_MK_Tree_Branch_Trim(_x, _y, _group = noone) : Node(_x, _y, _group)
 	setDimension(96, 48);
 	
 	newInput( 1, nodeValueSeed());
-	newInput( 0, nodeValue_Struct("Branch", noone)).setVisible(true, true).setIcon(THEME.node_junction_mktree, COLORS.node_blend_mktree);
+	newInput( 0, nodeValue_Struct("Branch", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
 	
 	////- =Trim
 	newInput( 2, nodeValue_Surface( "Mask" ));
 	// input 3
 	
-	newOutput(0, nodeValue_Output("Branch", VALUE_TYPE.struct, noone)).setIcon(THEME.node_junction_mktree, COLORS.node_blend_mktree);
+	newOutput(0, nodeValue_Output("Branch", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 1, 0, 
 		[ "Trim", false ], 2, 

@@ -7,7 +7,7 @@ function Node_MK_Tree_Wiggle(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	setDimension(96, 48);
 	
 	newInput( 1, nodeValueSeed());
-	newInput( 0, nodeValue_Struct("Tree", noone)).setVisible(true, true).setIcon(THEME.node_junction_mktree, COLORS.node_blend_mktree);
+	newInput( 0, nodeValue_Struct("Tree", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
 	
 	////- =Wiggle
 	newInput( 4, nodeValue_Range( "Speed",     [1,1], true ));
@@ -15,7 +15,7 @@ function Node_MK_Tree_Wiggle(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput( 3, nodeValue_Rotation_Random( "Direction", [0,0,360,0,0] ));
 	// input 
 	
-	newOutput(0, nodeValue_Output("Tree", VALUE_TYPE.struct, noone)).setIcon(THEME.node_junction_mktree, COLORS.node_blend_mktree);
+	newOutput(0, nodeValue_Output("Tree", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 1, 0, 
 		[ "Wiggle", false ], 4, 2, 3, 

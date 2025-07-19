@@ -2,11 +2,10 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	name  = "Tree Trunk";
 	color = COLORS.node_blend_mktree;
 	icon  = THEME.mkTree;
-	// renderAll = true;
 	setDimension(96, 48);
 	
 	newInput(14, nodeValueSeed());
-	newInput( 0, nodeValue_Struct("Tree", noone)).setVisible(true, true).setIcon(THEME.node_junction_mktree, COLORS.node_blend_mktree);
+	newInput( 0, nodeValue_Struct("Tree", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
 	
 	////- =Origin
 	newInput( 5, nodeValue_Range(        "Amount",          [1,1], true ));
@@ -39,7 +38,7 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(17, nodeValue_Gradient(    "Edge Color",       new gradientObject(ca_white) ));
 	// input 26
 	
-	newOutput(0, nodeValue_Output("Trunk", VALUE_TYPE.struct, noone)).setIcon(THEME.node_junction_mktree, COLORS.node_blend_mktree);
+	newOutput(0, nodeValue_Output("Trunk", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 14,
 		[ "Origin",    false ], 5, 1, 2, 

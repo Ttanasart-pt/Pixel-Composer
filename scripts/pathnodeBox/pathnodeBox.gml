@@ -1,15 +1,15 @@
 function pathnodeBox(_junction) : widget() constructor {
 	self.junction = _junction;
 	
-    b_newTileset = button(function() /*=>*/ { 
+    b_newPath = button(function() /*=>*/ { 
     	var b = nodeBuild("Node_Path", junction.node.x - 128, junction.ry - 32);
     	junction.setFrom(b.outputs[1]);
 	});
 	
-	b_newTileset.text       = __txt("New path");
-	b_newTileset.icon       = THEME.add_16;
-	b_newTileset.icon_size  = .75;
-	b_newTileset.icon_blend = COLORS._main_value_positive;
+	b_newPath.text       = __txt("New path");
+	b_newPath.icon       = THEME.add_16;
+	b_newPath.icon_size  = .75;
+	b_newPath.icon_blend = COLORS._main_value_positive;
     
 	static trigger = function() { }
 	
@@ -24,15 +24,10 @@ function pathnodeBox(_junction) : widget() constructor {
 		w = _w;
 		h = TEXTBOX_HEIGHT;
         
-        // if(junction.connect_type == CONNECT_TYPE.output) {
-        	
-        // 	return h;
-        // }
-        
         if(_path == noone) {
-            b_newTileset.setFocusHover(active, hover);
+            b_newPath.setFocusHover(active, hover);
             var param = new widgetParam(x, y, w, h, noone, {}, _m, rx, ry);
-            b_newTileset.drawParam(param);
+            b_newPath.drawParam(param);
             
         } else {
         	var ic = s_node_path;

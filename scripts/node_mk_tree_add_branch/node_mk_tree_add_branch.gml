@@ -6,9 +6,9 @@ function Node_MK_Tree_Add_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	
 	setDimension(96, 48);
 	
-	newInput( 0, nodeValue_Struct("Tree", noone)).setVisible(true, true).setIcon(THEME.node_junction_mktree, COLORS.node_blend_mktree);
+	newInput( 0, nodeValue_Struct("Tree", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
 	
-	newOutput(0, nodeValue_Output("Tree", VALUE_TYPE.struct, noone)).setIcon(THEME.node_junction_mktree, COLORS.node_blend_mktree);
+	newOutput(0, nodeValue_Output("Tree", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 0, 
 		[ "Branches", false ], 
@@ -18,14 +18,14 @@ function Node_MK_Tree_Add_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		var inAmo = array_length(inputs);
 		
 		newInput(index, nodeValue_Struct("Branch", noone)).setVisible(true, true)
-			.setIcon(THEME.node_junction_mktree, COLORS.node_blend_mktree);
+			.setCustomData(global.MKTREE_JUNC);
 		
 		array_push(input_display_list, inAmo);
 		return inputs[index];
 	}
 	
 	setDynamicInput(1, true, VALUE_TYPE.struct);
-	dummy_input.setIcon(THEME.node_junction_mktree, COLORS.node_blend_mktree);
+	dummy_input.setCustomData(global.MKTREE_JUNC);
 	
 	////- Nodes
 	

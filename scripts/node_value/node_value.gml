@@ -304,6 +304,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static setIcon = function(_ico, _colr) { custom_icon = _ico; custom_color = _colr; return self; }
 	
+	static setCustomData = function(param) {
+		custom_icon  = param.icon(); 
+		custom_color = param.color(); 
+		editWidget   = param.widg(); 
+		return self;
+	}
+	
 	static nonValidate = function() {
 		validateValue = false;
 		return self;
@@ -536,6 +543,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static setShaderProp = function(key) { node.shaderProp[$ key] = self; return self; }
+	
+	static setWidget = function(_widg) { editWidget = _widg; return self; }
 	
 	////- ANIMATION
 	
@@ -1080,7 +1089,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			case VALUE_TYPE.mesh :        editWidget = new meshBox(self); 											break;
 			case VALUE_TYPE.pbBox :       editWidget = new pbBoxBox(self); 											break;
 			case VALUE_TYPE.struct :      editWidget = new outputStructBox(); 										break;
-			case VALUE_TYPE.particle :    editWidget = noone; 														break;
+			case VALUE_TYPE.particle :    editWidget = new particleBox(self); 										break;
 				
 			default : editWidget = new outputBox(); break;
 		}
