@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_refract",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_refract",
+  "parent":{
+    "name":"warps",
+    "path":"folders/nodes/data/filter/warps.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

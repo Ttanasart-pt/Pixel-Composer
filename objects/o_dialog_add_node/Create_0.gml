@@ -427,10 +427,11 @@ event_inherited();
 	catagory_pane = new scrollPane(category_width, dialog_h - ui(66), function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
-		var ww = catagory_pane.surface_w;
-		var hh = 0;
-		var hg = line_get_height(f_p1, 6);
-		
+		var font  = f_p1;
+		var fontS = f_p1b;
+		var ww    = catagory_pane.surface_w;
+		var hh    = 0;
+		var hg    = line_get_height(font, 6);
 		var start = category == NODE_CATEGORY? -2 : 0;
 		
 		for(var i = start, n = array_length(category); i < n; i++) {
@@ -494,8 +495,8 @@ event_inherited();
 				cat_disp_y = _y + hh;
 			}
 			
-			if(i == ADD_NODE_PAGE) draw_set_text(f_p1b, fa_left, fa_center, COLORS._main_text_accent);
-			else                   draw_set_text(f_p1,  fa_left, fa_center, cc);
+			if(i == ADD_NODE_PAGE) draw_set_text(fontS, fa_left, fa_center, COLORS._main_text_accent);
+			else                   draw_set_text(font,  fa_left, fa_center, cc);
 			
 			var _is_extra = name == "Extra";
 			name = __txt(name);
@@ -525,9 +526,12 @@ event_inherited();
 	
 	subcatagory_pane = new scrollPane(ui(96), dialog_h - ui(66), function(_y, _m) {
 		draw_clear_alpha(COLORS._main_text, 0);
-		var yy = _y + ui(4);
-		var hh = 0 + ui(4);
-		var hg = line_get_height(f_p2, 6);
+		
+		var font  = f_p2;
+		var fontS = f_p2b;
+		var yy    = _y + ui(4);
+		var hh    = 0 + ui(4);
+		var hg    = line_get_height(font, 4);
 		
 		var  ww     = subcatagory_pane.surface_w;
 		var _hover  = subcatagory_pane.hover;
@@ -543,7 +547,7 @@ event_inherited();
 				if(mouse_click(mb_left, _active)) setSubgroup(i);
 			}
 			
-			var _f  = i == subgroup_index? f_p2b : f_p2;
+			var _f  = i == subgroup_index? fontS : font;
 			var _bc = CDEF.main_ltgrey;
 			var _c  = i == subgroup_index? COLORS._main_text_accent : _bc;
 			
@@ -582,6 +586,7 @@ event_inherited();
 			
 			if(is_string(_n) && !string_starts_with(_n, "/"))
 				_subg_cur++
+				
 			else if(_subg_cur == subgroup_index)
 				array_push(_list, _n);
 			

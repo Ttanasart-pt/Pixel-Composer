@@ -471,6 +471,7 @@
             "Node_Morph_Surface",
             "Node_Liquefy",
             "Node_Flow_Path",
+            "Node_Refract",
             { "label": "/Mappers" },
             "Node_Texture_Remap",
             "Node_Time_Remap",

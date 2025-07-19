@@ -9,9 +9,8 @@ function Node_Spherize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	newActiveInput(7);
 	newInput(8, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
-		
-	////- =Surfaces
 	
+	////- =Surfaces
 	newInput( 4, nodeValue_Enum_Scroll("Oversample Mode",  0, [ "Empty", "Clamp", "Repeat" ]));
 	newInput( 0, nodeValue_Surface( "Surface In" ));
 	newInput( 5, nodeValue_Surface( "Mask"       ));
@@ -19,7 +18,6 @@ function Node_Spherize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	__init_mask_modifier(5, 9); // inputs 9, 10
 	
 	////- =Spherize
-	
 	newInput( 1, nodeValue_Vec2(    "Center", [ DEF_SURF_W / 2, DEF_SURF_H / 2 ])).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
 	newInput( 2, nodeValue_Slider(  "Strength",   1 )).setMappable(11);
 	newInput( 3, nodeValue_Slider(  "Radius",    .2 )).setMappable(12);

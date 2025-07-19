@@ -1,0 +1,13 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_refract",
+  "name":"sh_refract",
+  "parent":{
+    "name":"warps",
+    "path":"folders/nodes/data/filter/warps.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "tags":[],
+  "type":1,
+}
