@@ -65,6 +65,30 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		if(!LOADING) project.modified = true;
 	}
 	
+	static getCoveringNodes = function(node_list, _x, _y, _s) {
+		var fx0 = (x + _x) * _s;
+        var fy0 = (y + _y) * _s;
+        var fx1 = fx0 + w * _s;
+        var fy1 = fy0 + h * _s;
+        
+    	__nodes = [];
+    	
+        for( var i = 0, n = array_length(node_list); i < n; i++ ) { // Select content
+            var _node = node_list[i];
+            
+            if(_node == self || !_node.selectable) continue;
+            if(!project.graphDisplay.show_control && _node.is_controller) continue;
+            
+            var _nx = (_node.x + _x) * _s;
+            var _ny = (_node.y + _y) * _s;
+            var _nw = _node.w * _s;
+            var _nh = _node.h * _s;
+            
+            if(_nw && _nh && rectangle_inside_rectangle(fx0, fy0, fx1, fy1, _nx, _ny, _nx + _nw, _ny + _nh))
+                array_push(__nodes, _node);
+        }
+	}
+	
 	////- Update
 	
 	static onValueUpdate = function(index = 3) { 
@@ -83,10 +107,7 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	static isRenderable = function() /*=>*/ {return false};
 	static doUpdate = function() {}
-	
-	static update   = function() {
-		
-	}
+	static update   = function() {}
 	
 	////- Draw
 	
@@ -111,7 +132,7 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		if(_panel != noone) {
 			px0 =  3;
-			py0 =  3 + _panel.topbar_height * project.graphDisplay.show_topbar;
+			py0 =  0 + _panel.topbar_height * project.graphDisplay.show_topbar;
 			px1 = -3 + _panel.w;
 			py1 = -0 + _panel.h - _panel.toolbar_height;
 			
@@ -138,13 +159,12 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static drawNodeFG = function(_x, _y, _mx, _my, _s, _dparam, _panel = noone) {
 		if(draw_x1 - draw_x0 < 4) return;
 		
-		var _nh = ui(name_height);
 		var _w  = draw_x1 - draw_x0;
 		var _h  = draw_y1 - draw_y0;
 		var txt = renamed? display_name : name;
 		var alp = _color_get_alpha(color);
 		
-		draw_sprite_stretched_ext(bg_spr, 1, draw_x0, draw_y0, _w, _h, color, alp * .50);
+		draw_sprite_stretched_ext(bg_spr, 1, draw_x0, draw_y0, _w, _h, color, alp * .3);
 		
 		if(WIDGET_CURRENT == tb_name) {
 			var nh = 24;
@@ -154,19 +174,20 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			tb_name.draw(draw_x0, draw_y0, _w, nh, txt, [ _mx, _my ]);
 			
 		} else {
-			draw_sprite_stretched_ext(bg_spr, 2, draw_x0, draw_y0, _w, _nh, color, alp * .75 * lAlpha);
+			var nh = ui(name_height);
+			draw_sprite_stretched_ext(bg_spr, 2, draw_x0, draw_y0, _w, nh, color, alp * .75 * lAlpha);
 			
 			draw_set_text(f_p2, fa_center, fa_bottom, tColor, _color_get_alpha(tColor));
-			draw_text_cut((draw_x0 + draw_x1) / 2, draw_y0 + _nh + 1, txt, _w - 4);
+			draw_text_cut((draw_x0 + draw_x1) / 2, draw_y0 + nh + 1, txt, _w - 4);
 			draw_set_alpha(1);
 			
-			if(point_in_rectangle(_mx, _my, draw_x0, draw_y0, draw_x0 + _w, draw_y0 + _nh)) {
+			if(point_in_rectangle(_mx, _my, draw_x0, draw_y0, draw_x0 + _w, draw_y0 + nh)) {
 				if(PANEL_GRAPH.pFOCUS && DOUBLE_CLICK)
 					tb_name.activate(txt);
 			}
 		}
 		
-		draw_sprite_stretched_add(bg_spr, 1, draw_x0, draw_y0, _w, _h, c_white, .20);
+		draw_sprite_stretched_add(bg_spr, 1, draw_x0, draw_y0, _w, _h, c_white, .1);
 		
 		if(active_draw_index > -1) {
 			draw_sprite_stretched_ext(bg_spr, 1, draw_x0, draw_y0, _w, _h, COLORS._main_accent, 1);
@@ -199,31 +220,34 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		var x1  = xx + w * _s;
 		var y1  = yy + h * _s;
-		var x0  = x1 - 16 * THEME_SCALE;
-		var y0  = y1 - 16 * THEME_SCALE;
+		var x0  = x1 - 10 * THEME_SCALE;
+		var y0  = y1 - 10 * THEME_SCALE;
 		var ics = 0.5;
 		var shf = 8 * ics;
 		
+		var hov = point_in_rectangle(_mx, _my, xx, yy, x1, y1);
+		
 		if(w * _s < 32 || h * _s < 32) return point_in_rectangle(_mx, _my, xx, yy, x1, y1);
 		
-		var _aa = size_dragging? .3 : .15;
-		
-		if(_panel != noone && !name_hover && point_in_rectangle(_mx, _my, x0, y0, x1, y1)) {
-			_aa = .3;
-			PANEL_GRAPH.drag_locking = true;
-			
-			if(mouse_press(mb_left)) {
-				size_dragging	 = true;
-				size_dragging_w  = w;
-				size_dragging_h  = h;
-				size_dragging_mx = mouse_mx;
-				size_dragging_my = mouse_my;
+		if(hov || size_dragging) {
+			var _aa = size_dragging? .3 : .15;
+			if(_panel != noone && !name_hover && point_in_rectangle(_mx, _my, x0, y0, x1, y1)) {
+				_aa = .3;
+				PANEL_GRAPH.drag_locking = true;
+				
+				if(mouse_press(mb_left)) {
+					size_dragging	 = true;
+					size_dragging_w  = w;
+					size_dragging_h  = h;
+					size_dragging_mx = mouse_mx;
+					size_dragging_my = mouse_my;
+				}
 			}
+			
+			draw_sprite_ext_add(THEME.node_resize, 0, x1 - shf, y1 - shf, ics, ics, 0, c_white, _aa);
 		}
 		
-		draw_sprite_ext_add(THEME.node_resize, 0, x1 - shf, y1 - shf, ics, ics, 0, c_white, _aa);
-		
-		return point_in_rectangle(_mx, _my, xx, yy, x1, y1);
+		return hov;
 	}
 	
 	static pointIn = function(_x, _y, _mx, _my, _s) {

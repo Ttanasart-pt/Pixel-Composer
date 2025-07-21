@@ -1724,32 +1724,15 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                                 _anc = nodes_select_anchor == node_hovering? noone : node_hovering;
                                 
                             if(is(node_hovering, Node_Frame)) {
-	                            var fx0 = (node_hovering.x + graph_x) * graph_s;
-	                            var fy0 = (node_hovering.y + graph_y) * graph_s;
-	                            var fx1 = fx0 + node_hovering.w * graph_s;
-	                            var fy1 = fy0 + node_hovering.h * graph_s;
+                            	node_hovering.getCoveringNodes(nodes_list, graph_x, graph_y, graph_s);
+                            	
 	                            var sel = key_mod_press(CTRL);
-	                            
-	                        	node_hovering.__nodes = [];
-	                            if(sel) nodes_selecting = [ node_hovering ];
-	                        	
-	                            for( var i = 0, n = array_length(nodes_list); i < n; i++ ) { // Select content
-	                                var _node = nodes_list[i];
-	                                
-	                                if(_node == node_hovering) continue;
-	                                if(!_node.selectable)      continue;
-	                                if(!project.graphDisplay.show_control && _node.is_controller) continue;
-	                                
-	                                var _x = (_node.x + graph_x) * graph_s;
-	                                var _y = (_node.y + graph_y) * graph_s;
-	                                var _w = _node.w * graph_s;
-	                                var _h = _node.h * graph_s;
-	                                
-	                                if(_w && _h && rectangle_inside_rectangle(fx0, fy0, fx1, fy1, _x, _y, _x + _w, _y + _h)) {
-	                                    array_push(node_hovering.__nodes, _node);
-	                                    if(sel) array_push(nodes_selecting, _node);
-	                                }
+	                            if(sel) {
+	                            	nodes_selecting = [ node_hovering ];
+	                            	for( var i = 0, n = array_length(node_hovering.__nodes); i < n; i++ ) 
+	                            		array_push(nodes_selecting, node_hovering.__nodes[i]);
 	                            }
+	                            
 	                        }
                         }
                         
@@ -3027,17 +3010,18 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	}
     	
     	if(getFocusStr() != noone) {
-    		var list = HOTKEYS[$ FOCUS_STR];
+    		var _list = HOTKEYS[$ FOCUS_STR];
+    		var _node = ALL_NODES[$ FOCUS_STR];
     		
     		draw_set_text(f_p2b, fa_left, fa_bottom, COLORS._main_text, .75);
 			var _tw = 0;
-			for( var i = 0, n = array_length(list); i < n; i++ ) 
-				_tw = max(_tw, string_width(list[i].getName()));
+			for( var i = 0, n = array_length(_list); i < n; i++ ) 
+				_tw = max(_tw, string_width(_list[i].getName()));
     		
 			var _ttx = _tx + _tw + ui(16);
 			
-    		for(var i = array_length(list) - 1; i >= 0; i--) {
-				var hotkey = list[i];
+    		for(var i = array_length(_list) - 1; i >= 0; i--) {
+				var hotkey = _list[i];
 				var _title = hotkey.name;
 				var _key   = hotkey.getName();
 				
@@ -3076,7 +3060,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 			
 			_ty -= ui(4);
 			draw_set_text(f_p1b, fa_left, fa_bottom, COLORS._main_text, .75);
-			draw_text_add(_tx, _ty, string_replace_all(FOCUS_STR, "_", " "));
+			draw_text_add(_tx, _ty, _node? _node.name : string_replace_all(FOCUS_STR, "_", " "));
 			
 			_ty -= line_get_height() + ui(8);
     	}
