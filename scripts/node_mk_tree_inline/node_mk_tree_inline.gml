@@ -20,11 +20,11 @@ function Node_MK_Tree_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	seed       = 0;
 	gravityDir = -90;
 	
-	newInput(0, nodeValueSeed(VALUE_TYPE.integer));
+	newInput(0, nodeValueSeed(  VALUE_TYPE.integer ));
 	newInput(1, nodeValue_Rotation( "Gravity", -90 ));
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 0,
-		[ "Physics",   false ], 1, 
+		[ "Physics", false ], 1, 
 	];
 	
 	static update = function() {

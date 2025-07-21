@@ -1,5 +1,3 @@
-global.__FRAME_LABEL_SCALE = 1;
-
 function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name   = "Frame";
 	w      = 240;
@@ -17,9 +15,8 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	hover_progress   = 0;
 	
 	color  = c_white;
-	alpha  = 1;
-	scale  = 1;
-	lcolor = false;
+	lAlpha = 1;
+	tColor = c_white;
 	
 	tb_name     = textBox_Text(function(txt) /*=>*/ { setDisplayName(txt); }).setFont(f_p2).setHide(true).setAlign(fa_center);
 	name_height = 18;
@@ -30,13 +27,19 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	draw_x1 = 0;
 	draw_y1 = 0;
 	
-	newInput(0, nodeValue_Vec2(   "Size",       [ 240, 160 ] ));
-	newInput(1, nodeValue_Color(  "Color",       ca_white    ));
-	newInput(2, nodeValue_Slider( "Alpha",       0.75        ));
-	newInput(3, nodeValue_Slider( "Label size",  global.__FRAME_LABEL_SCALE ));
-	newInput(4, nodeValue_Slider( "Blend label", 0 ));
+	newInput(0, nodeValue_Vec2(   "Size",        [240,160] ));
 	
-	input_display_list = [ 0, 1, 3, 4 ];
+	////- =Label
+	newInput(1, nodeValue_Color(  "Color",        ca_white ));
+	newInput(2, nodeValue_Slider( "Label Alpha", .75       ));
+	
+	////- =Text
+	newInput(3, nodeValue_Color(  "Text Color",   ca_white ));
+	
+	input_display_list = [ 0, 
+		[ "Label", false ], 1, 2,  
+		[ "Text",  false ], 3, 
+	];
 	
 	array_foreach(inputs, function(i) /*=>*/ {return i.rejectArray()});
 	
@@ -66,24 +69,24 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	static onValueUpdate = function(index = 3) { 
 		previewable = true;
-		global.__FRAME_LABEL_SCALE = inputs[3].getValue();
 		
 		var sz = inputs[0].getValue();
 		w = sz[0];
 		h = sz[1];
 		
 		color  = inputs[1].getValue();
-		alpha  = _color_get_alpha(color);
-		
-		scale  = inputs[3].getValue();
-		lcolor = inputs[4].getValue();
+		lAlpha = inputs[2].getValue();
+		tColor = inputs[3].getValue();
 	}
 	
 	static setHeight = function() {}
 	
 	static isRenderable = function() /*=>*/ {return false};
 	static doUpdate = function() {}
-	static update   = function() {}
+	
+	static update   = function() {
+		
+	}
 	
 	////- Draw
 	
@@ -108,7 +111,7 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		if(_panel != noone) {
 			px0 =  3;
-			py0 =  3;
+			py0 =  3 + _panel.topbar_height * project.graphDisplay.show_topbar;
 			px1 = -3 + _panel.w;
 			py1 = -0 + _panel.h - _panel.toolbar_height;
 			
@@ -127,8 +130,9 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		var _dw = x1 - x0;
 		var _dh = y1 - y0;
+		var alp = _color_get_alpha(color);
 		
-		draw_sprite_stretched_ext(bg_spr, 0, x0, y0, _dw, _dh, color, alpha);
+		draw_sprite_stretched_ext(bg_spr, 0, x0, y0, _dw, _dh, color, alp);
 	}
 	
 	static drawNodeFG = function(_x, _y, _mx, _my, _s, _dparam, _panel = noone) {
@@ -138,21 +142,23 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var _w  = draw_x1 - draw_x0;
 		var _h  = draw_y1 - draw_y0;
 		var txt = renamed? display_name : name;
+		var alp = _color_get_alpha(color);
 		
-		draw_sprite_stretched_ext(bg_spr, 1, draw_x0, draw_y0, _w, _h, color, alpha * .50);
+		draw_sprite_stretched_ext(bg_spr, 1, draw_x0, draw_y0, _w, _h, color, alp * .50);
 		
 		if(WIDGET_CURRENT == tb_name) {
 			var nh = 24;
-			draw_sprite_stretched_ext(bg_spr, 2, draw_x0, draw_y0, _w, nh, color, alpha * .75);
+			draw_sprite_stretched_ext(bg_spr, 2, draw_x0, draw_y0, _w, nh, color, alp * .75 * lAlpha);
 			
 			tb_name.setFocusHover(PANEL_GRAPH.pFOCUS, PANEL_GRAPH.pHOVER);
 			tb_name.draw(draw_x0, draw_y0, _w, nh, txt, [ _mx, _my ]);
 			
 		} else {
-			draw_sprite_stretched_ext(bg_spr, 2, draw_x0, draw_y0, _w, _nh, color, alpha * .75);
+			draw_sprite_stretched_ext(bg_spr, 2, draw_x0, draw_y0, _w, _nh, color, alp * .75 * lAlpha);
 			
-			draw_set_text(f_p2, fa_center, fa_bottom, COLORS._main_text);
+			draw_set_text(f_p2, fa_center, fa_bottom, tColor, _color_get_alpha(tColor));
 			draw_text_cut((draw_x0 + draw_x1) / 2, draw_y0 + _nh + 1, txt, _w - 4);
+			draw_set_alpha(1);
 			
 			if(point_in_rectangle(_mx, _my, draw_x0, draw_y0, draw_x0 + _w, draw_y0 + _nh)) {
 				if(PANEL_GRAPH.pFOCUS && DOUBLE_CLICK)
@@ -233,8 +239,13 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 
 	////- Serialize
 	
-	static postApplyDeserialize  = function() {
-		onValueUpdate();
+	static postApplyDeserialize  = function() { onValueUpdate(); }
+	
+	static postDeserialize = function() {
+		if(CLONING) return;
+		
+		if(LOADING_VERSION < 1_19_05_1)
+			load_map.inputs[3] = { raw_value : { d : ca_white } };
 	}
 	
 }
