@@ -36,7 +36,7 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	attribute_surface_depth();
 	
-	b_normalize = button(function() /*=>*/ {return normalize()}).setText("Normalize");
+	b_auto_l = button(function() /*=>*/ {return normalize()}).setText("Auto Brightness");
 	
 	level_dragging = noone;
 	level_drag_sx  = 0;
@@ -116,7 +116,7 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	input_display_list = [ 8, 9, 
 		level_renderer, 
 		["Surfaces",    true ], 0, 6, 7, 10, 11,
-		["Brightness", false ], 1, 12, b_normalize, 
+		["Brightness", false ], 1, 12, b_auto_l, 
 		["Red",        false ], 2, 13, 
 		["Green",      false ], 3, 14,  
 		["Blue",       false ], 4, 15, 

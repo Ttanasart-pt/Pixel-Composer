@@ -1626,8 +1626,18 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         #region drawNodeBG
 	        _frame_hovering = frame_hovering;
 	         frame_hovering = noone;
+	        _node_frames    = array_filter(_node_draw, function(_n) /*=>*/ {return is(_n, Node_Frame)});
 	        
-	        array_foreach(_node_draw, function(_n) /*=>*/ { if(_n.drawNodeBG(__gr_x, __gr_y, __mx, __my, __gr_s, project.graphDisplay, __self)) frame_hovering = _n; });
+	        array_foreach(_node_frames, function(_n) /*=>*/ { 
+	        	if(_n.drawNodeBG(__gr_x, __gr_y, __mx, __my, __gr_s, project.graphDisplay, __self)) 
+	        		frame_hovering = _n; 
+	        });
+	        
+	        array_foreach(_node_draw, function(_n) /*=>*/ { 
+	        	if(is(_n, Node_Frame)) return;
+	        	if(_n.drawNodeBG(__gr_x, __gr_y, __mx, __my, __gr_s, project.graphDisplay, __self)) 
+	        		frame_hovering = _n; 
+	        });
         #endregion
         
         #region node_hovering
@@ -1668,6 +1678,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                         NODE_DROPPER_TARGET.expressionUpdate(); 
                     }
                 } else if(mouse_press(mb_left, _focus)) {
+                	
+                	if(is(frame_hovering, Node_Frame)) frame_hovering.getCoveringNodes(nodes_list, graph_x, graph_y, graph_s);
                 	
                     if(key_mod_press(SHIFT)) {
                         if(node_hovering) array_toggle(nodes_selecting, node_hovering);
@@ -1724,10 +1736,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                                 _anc = nodes_select_anchor == node_hovering? noone : node_hovering;
                                 
                             if(is(node_hovering, Node_Frame)) {
-                            	node_hovering.getCoveringNodes(nodes_list, graph_x, graph_y, graph_s);
                             	
-	                            var sel = key_mod_press(CTRL);
-	                            if(sel) {
+	                            if(key_mod_press(CTRL)) {
 	                            	nodes_selecting = [ node_hovering ];
 	                            	for( var i = 0, n = array_length(node_hovering.__nodes); i < n; i++ ) 
 	                            		array_push(nodes_selecting, node_hovering.__nodes[i]);
