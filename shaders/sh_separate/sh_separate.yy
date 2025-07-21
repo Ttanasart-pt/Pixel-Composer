@@ -1,0 +1,13 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_separate",
+  "name":"sh_separate",
+  "parent":{
+    "name":"compose",
+    "path":"folders/nodes/data/compose.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "tags":[],
+  "type":1,
+}

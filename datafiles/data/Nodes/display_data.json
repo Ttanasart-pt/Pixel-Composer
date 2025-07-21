@@ -763,7 +763,11 @@
             "Node_Armature_Sample",
             
             { "label": "Export" },
-            "Node_Export"
+            "Node_Export", 
+            
+            { "label": "Decompose" },
+            "Node_Separate", 
+            "Node_Seperate_Shape", 
         ]
     },
     {
