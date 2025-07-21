@@ -436,6 +436,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	node_drag_connect    = noone;
     	node_drag_removing   = false;
     	node_drag_remove     = [];
+    	frame_draggings      = [];
     	
     	node_resize          = noone;
     	node_resize_mx       = 0;
@@ -487,6 +488,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         node_drag_search = false;
         
         frame_hovering   = noone;
+        frame_hoverings  = [];
         _frame_hovering  = noone;
         
         cache_group_edit = noone;
@@ -1539,7 +1541,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                 node_drag_ox = nx;
                 node_drag_oy = ny;
             }
-                
+            
+            if(!key_mod_press(SHIFT)) array_foreach(frame_draggings, function(f) /*=>*/ {return f.reFrame()});
+            
             if(mouse_release(mb_left) && (nx != node_drag_sx || ny != node_drag_sy)) {
                 var shfx = node_drag_sx - nx;
                 var shfy = node_drag_sy - ny;
@@ -1553,20 +1557,23 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                 }
             }
             
-            if(!node_drag_add && mouse_release(mb_left))
-            	node_dragging = noone;
+            if(!node_drag_add && mouse_release(mb_left)) {
+            	node_dragging   = noone;
+            	frame_draggings = [];
+            }
         }
         
         ////- Start Drag
         
         var _node = getFocusingNode();
         
-        if(!_focus || !mouse_on_graph) return;
-        if(_node == noone)             return;
-    	if(cache_group_edit != noone)  return;
-        if(value_focus != noone)       return;
-        if(!_node.draggable)           return;
-    	if(key_mod_press_any())        return;
+        // lmao what is this coding style
+        if(!_focus || !mouse_on_graph
+                   || _node == noone
+    	           || cache_group_edit != noone
+                   || value_focus != noone
+                   || !_node.draggable
+    	           || key_mod_press_any()) return;
         
         if(mouse_press(mb_left)) {
             node_dragging = _node;
@@ -1577,6 +1584,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             
             node_drag_ox  = -1;
             node_drag_oy  = -1;
+            
+            frame_draggings = frame_hoverings;
         }
     }
     
@@ -1624,13 +1633,16 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	    #endregion
         
         #region drawNodeBG
-	        _frame_hovering = frame_hovering;
-	         frame_hovering = noone;
-	        _node_frames    = array_filter(_node_draw, function(_n) /*=>*/ {return is(_n, Node_Frame)});
+	        _frame_hovering  = frame_hovering;
+	         frame_hovering  = noone;
+	         frame_hoverings = [];
+	        _node_frames     = array_filter(_node_draw, function(_n) /*=>*/ {return is(_n, Node_Frame)});
 	        
 	        array_foreach(_node_frames, function(_n) /*=>*/ { 
-	        	if(_n.drawNodeBG(__gr_x, __gr_y, __mx, __my, __gr_s, project.graphDisplay, __self)) 
+	        	if(_n.drawNodeBG(__gr_x, __gr_y, __mx, __my, __gr_s, project.graphDisplay, __self)) {
 	        		frame_hovering = _n; 
+	        		array_push(frame_hoverings, _n);
+	        	}
 	        });
 	        
 	        array_foreach(_node_draw, function(_n) /*=>*/ { 
@@ -1679,7 +1691,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                     }
                 } else if(mouse_press(mb_left, _focus)) {
                 	
-                	if(is(frame_hovering, Node_Frame)) frame_hovering.getCoveringNodes(nodes_list, graph_x, graph_y, graph_s);
+                	for( var i = 0, n = array_length(frame_hoverings); i < n; i++ ) 
+                		frame_hoverings[i].getCoveringNodes(nodes_list);
                 	
                     if(key_mod_press(SHIFT)) {
                         if(node_hovering) array_toggle(nodes_selecting, node_hovering);
@@ -1736,7 +1749,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                                 _anc = nodes_select_anchor == node_hovering? noone : node_hovering;
                                 
                             if(is(node_hovering, Node_Frame)) {
-                            	
 	                            if(key_mod_press(CTRL)) {
 	                            	nodes_selecting = [ node_hovering ];
 	                            	for( var i = 0, n = array_length(node_hovering.__nodes); i < n; i++ ) 
@@ -1849,6 +1861,20 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	                if(frame_hovering.previewable)         PANEL_PREVIEW.setNodePreview(frame_hovering);
 	            } 
 	        }
+	        
+	        dragNodes();
+	        nodeWrangler();
+	        
+	        if(mouse_on_graph && _focus) {
+	            if(DOUBLE_CLICK && junction_hovering != noone) {
+	                var _mx = value_snap(mouse_graph_x, project.graphGrid.size);
+	                var _my = value_snap(mouse_graph_y - 8, project.graphGrid.size);
+	                        
+	                var _pin = nodeBuild("Node_Pin", _mx, _my).skipDefault();
+	                _pin.inputs[0].setFrom(junction_hovering.value_from);
+	                junction_hovering.setFrom(_pin.outputs[0]);
+	            }
+	        } 
         #endregion
         
         #region drawActive
@@ -1989,22 +2015,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        // BLEND_NORMAL
 	    #endregion
 	        
-		#region node actions (dragNodes, nodeWrangler, pin)
-	        dragNodes();
-	        nodeWrangler();
-	        
-	        if(mouse_on_graph && _focus) {
-	            if(DOUBLE_CLICK && junction_hovering != noone) {
-	                var _mx = value_snap(mouse_graph_x, project.graphGrid.size);
-	                var _my = value_snap(mouse_graph_y - 8, project.graphGrid.size);
-	                        
-	                var _pin = nodeBuild("Node_Pin", _mx, _my).skipDefault();
-	                _pin.inputs[0].setFrom(junction_hovering.value_from);
-	                junction_hovering.setFrom(_pin.outputs[0]);
-	            }
-	        } 
-	    #endregion
-        
         #region draw selection frame
 	        if(nodes_select_drag) {
 	            if(point_distance(nodes_select_mx, nodes_select_my, mx, my) > 16)
@@ -3493,14 +3503,17 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             y1 = max(y1, _node.y + _node.h);
         }
         
-        x0 -= 64;
-        y0 -= 64;
-        x1 += 64;
-        y1 += 64;
+        x0 -= 32;
+        y0 -= 32;
+        x1 += 32;
+        y1 += 32;
     
         var _frame = nodeBuild("Node_Frame", x0, y0, getCurrentContext()).skipDefault();
         _frame.inputs[0].setValue([x1 - x0, y1 - y0]);
         _frame.tb_name.activate("Frame");
+        
+        _frame.getCoveringNodes(nodes_list);
+        _frame.reFrame();
         
         return _frame;
     } 

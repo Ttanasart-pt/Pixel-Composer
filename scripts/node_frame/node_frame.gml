@@ -18,6 +18,9 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	lAlpha = 1;
 	tColor = c_white;
 	
+	reframe = true;
+	repadd  = 32;
+	
 	tb_name     = textBox_Text(function(txt) /*=>*/ { setDisplayName(txt); }).setFont(f_p2).setHide(true).setAlign(fa_center);
 	name_height = 18;
 	__nodes     = [];
@@ -27,7 +30,10 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	draw_x1 = 0;
 	draw_y1 = 0;
 	
-	newInput(0, nodeValue_Vec2(   "Size",        [240,160] ));
+	////- =Relable
+	newInput(0, nodeValue_Vec2(   "Size",     [240,160] ));
+	newInput(4, nodeValue_Bool(   "Reframe",   true     ));
+	newInput(5, nodeValue_Float(  "Padding",   32       ));
 	
 	////- =Label
 	newInput(1, nodeValue_Color(  "Color",        ca_white ));
@@ -36,9 +42,10 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	////- =Text
 	newInput(3, nodeValue_Color(  "Text Color",   ca_white ));
 	
-	input_display_list = [ 0, 
-		[ "Label", false ], 1, 2,  
-		[ "Text",  false ], 3, 
+	input_display_list = [ 
+		[ "Reframe", false, 4 ], 5, 
+		[ "Label",   false ], 1, 2,  
+		[ "Text",    false ], 3, 
 	];
 	
 	array_foreach(inputs, function(i) /*=>*/ {return i.rejectArray()});
@@ -65,11 +72,11 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		if(!LOADING) project.modified = true;
 	}
 	
-	static getCoveringNodes = function(node_list, _x, _y, _s) {
-		var fx0 = (x + _x) * _s;
-        var fy0 = (y + _y) * _s;
-        var fx1 = fx0 + w * _s;
-        var fy1 = fy0 + h * _s;
+	static getCoveringNodes = function(node_list) {
+		var fx0 = x;
+        var fy0 = y;
+        var fx1 = x + w;
+        var fy1 = y + h;
         
     	__nodes = [];
     	
@@ -79,14 +86,44 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
             if(_node == self || !_node.selectable) continue;
             if(!project.graphDisplay.show_control && _node.is_controller) continue;
             
-            var _nx = (_node.x + _x) * _s;
-            var _ny = (_node.y + _y) * _s;
-            var _nw = _node.w * _s;
-            var _nh = _node.h * _s;
+            var nx0 = _node.x;
+            var ny0 = _node.y;
+            var nx1 = _node.x + _node.w;
+            var ny1 = _node.y + _node.h;
             
-            if(_nw && _nh && rectangle_inside_rectangle(fx0, fy0, fx1, fy1, _nx, _ny, _nx + _nw, _ny + _nh))
+            if(rectangle_in_rectangle(nx0, ny0, nx1, ny1, fx0, fy0, fx1, fy1) == 1)
                 array_push(__nodes, _node);
         }
+        
+	}
+	
+	static reFrame = function() {
+		if(!reframe || array_empty(__nodes)) return;
+		
+		var _minx =  infinity;
+		var _miny =  infinity;
+		var _maxx = -infinity;
+		var _maxy = -infinity;
+		var  padd = repadd;
+		
+		for( var i = 0, n = array_length(__nodes); i < n; i++ ) {
+			var _n = __nodes[i];
+			var x0 = _n.x - padd;
+			var y0 = _n.y - padd;
+			var x1 = _n.x + _n.w + padd;
+			var y1 = _n.y + _n.h + padd;
+			
+			_minx = min(_minx, x0);
+			_miny = min(_miny, y0);
+			_maxx = max(_maxx, x1);
+			_maxy = max(_maxy, y1);
+		}
+		
+		
+		x = _minx;
+		y = _miny;
+		w = _maxx - _minx;
+		h = _maxy - _miny;
 	}
 	
 	////- Update
@@ -101,6 +138,11 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		color  = inputs[1].getValue();
 		lAlpha = inputs[2].getValue();
 		tColor = inputs[3].getValue();
+		
+		reframe = inputs[4].getValue();
+		repadd  = inputs[5].getValue();
+		
+		reFrame();
 	}
 	
 	static setHeight = function() {}
