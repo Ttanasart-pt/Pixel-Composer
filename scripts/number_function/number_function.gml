@@ -53,3 +53,5 @@ function max_index() {
 	
 	return _ind;
 }
+
+function toDecimal(num) { return num == 0? 0 : num / power(10, 1 + floor(log10(num))); }

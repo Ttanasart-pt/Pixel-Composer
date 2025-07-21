@@ -278,6 +278,31 @@
 		return _outArr;
 	}
 	
+	function surface_get_range(surface) {
+		if(!is_surface(surface)) return [0,1];
+		
+		var _sw   = surface_get_width(surface);
+		var _sh   = surface_get_height(surface);
+		var _size = surface_get_byte_size(surface);
+		
+		buffer_resize(      global.__surface_is_empty_buffer, _size);
+		buffer_get_surface( global.__surface_is_empty_buffer,  surface, 0);
+		buffer_to_start(    global.__surface_is_empty_buffer);
+		
+		var _outB = buffer_create(16, buffer_fixed, 2);
+		var _amo  = surface_get_range_ext(buffer_get_address(global.__surface_is_empty_buffer), buffer_get_address(_outB), _sw, _sh);
+		
+		buffer_to_start(_outB);
+		var _outArr = [0,1];
+		var _min    = buffer_read(_outB, buffer_f64);
+		var _max    = buffer_read(_outB, buffer_f64);
+		_outArr[0]  = _min / 255;
+		_outArr[1]  = _max / 255;
+		buffer_delete(_outB);
+		
+		return _outArr;
+	}
+	
 #endregion ==================================== GET ====================================
 
 #region =================================== CREATE ===================================

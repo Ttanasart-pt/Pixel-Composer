@@ -5,34 +5,28 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(9, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surfaces
-	
 	newInput(0, nodeValue_Surface( "Surface In" ));
 	newInput(6, nodeValue_Surface( "Mask"       ));
 	newInput(7, nodeValue_Slider(  "Mix",     1 ));
 	__init_mask_modifier(6, 10); // inputs 10, 11
 	
 	////- =Brightness
-	
 	newInput( 1, nodeValue_Slider_Range( "White in",  [0,1] ));
 	newInput(12, nodeValue_Slider_Range( "White out", [0,1] ));
 	
 	////- =Red
-	
 	newInput( 2, nodeValue_Slider_Range( "Red in",    [0,1] ));
 	newInput(13, nodeValue_Slider_Range( "Red out",   [0,1] ));
 	
 	////- =Green
-	
 	newInput( 3, nodeValue_Slider_Range( "Green in",  [0,1] ));
 	newInput(14, nodeValue_Slider_Range( "Green out", [0,1] ));
 	
 	////- =Blue
-	
 	newInput( 4, nodeValue_Slider_Range( "Blue in",   [0,1] ));
 	newInput(15, nodeValue_Slider_Range( "Blue out",  [0,1] ));
 	
 	////- =Alpha
-	
 	newInput( 5, nodeValue_Slider_Range( "Alpha in",  [0,1] ));
 	newInput(16, nodeValue_Slider_Range( "Alpha out", [0,1] ));
 		
@@ -42,10 +36,11 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	attribute_surface_depth();
 	
+	b_normalize = button(function() /*=>*/ {return normalize()}).setText("Normalize");
+	
 	level_dragging = noone;
 	level_drag_sx  = 0;
 	level_drag_mx  = 0;
-	
 	level_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		var _h = 128;
 		var x0 = _x;
@@ -119,9 +114,9 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	});
 	
 	input_display_list = [ 8, 9, 
-		level_renderer,
+		level_renderer, 
 		["Surfaces",    true ], 0, 6, 7, 10, 11,
-		["Brightness", false ], 1, 12, 
+		["Brightness", false ], 1, 12, b_normalize, 
 		["Red",        false ], 2, 13, 
 		["Green",      false ], 3, 14,  
 		["Blue",       false ], 4, 15, 
@@ -129,6 +124,16 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	];
 	
 	histogramInit();
+	
+	////- Actions
+	
+	static normalize = function() {
+		var _surf  = getSingleValue(0);
+		var _range = surface_get_range(_surf);
+		
+		inputs[ 1].setValue(_range);
+		inputs[12].setValue([0,1]);
+	}
 	
 	////- Nodes
 	

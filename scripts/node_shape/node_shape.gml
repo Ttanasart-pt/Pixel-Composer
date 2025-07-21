@@ -38,7 +38,16 @@
 		addHotkey("Node_Shape", "Anti-aliasing > Toggle",  "A", 0, function() /*=>*/ { GRAPH_FOCUS var i=_n.inputs[ 6]; i.setValue(!i.getValue());        });
 		addHotkey("Node_Shape", "Height Render > Toggle",  "H", 0, function() /*=>*/ { GRAPH_FOCUS var i=_n.inputs[12]; i.setValue(!i.getValue());        });
 		addHotkey("Node_Shape", "Background > Toggle",     "B", 0, function() /*=>*/ { GRAPH_FOCUS var i=_n.inputs[ 1]; i.setValue(!i.getValue());        });
-		addHotkey("Node_Shape", "Dimension > Set",         KEY_GROUP.numeric, 0, function() /*=>*/ { GRAPH_FOCUS_NUMBER _n.inputs[0].setValue([KEYBOARD_NUMBER,KEYBOARD_NUMBER]); });
+		
+		addHotkey("Node_Shape", "Scale > Set",             KEY_GROUP.numeric, 0, function() /*=>*/ { 
+			GRAPH_FOCUS_NUMBER 
+			     if(keyboard_check(ord("S"))) { _n.inputs[ 4].setValue(round(KEYBOARD_NUMBER));     }
+			else if(keyboard_check(ord("I"))) { _n.inputs[ 5].setValue(toDecimal(KEYBOARD_NUMBER)); }
+			else if(keyboard_check(ord("C"))) { _n.inputs[ 9].setValue(toDecimal(KEYBOARD_NUMBER)); }
+			else                                _n.inputs[28].setValue(toDecimal(KEYBOARD_NUMBER));
+			
+			KEYBOARD_STRING = "";
+		});
 	});
 	
 #endregion
@@ -60,7 +69,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput( 3, nodeValue_Area(        "Position",          DEF_AREA_REF, { onSurfaceSize, useShape : false })).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
 	newInput(16, nodeValue_Vec2(        "Center",            [.5,.5] )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
 	newInput(17, nodeValue_Vec2(        "Half Size",         [.5,.5] )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
-	newInput(19, nodeValue_Rotation(    "Shape rotation",      0     ));
+	newInput(19, nodeValue_Rotation(    "Shape Rotation",      0     ));
 	newInput(28, nodeValue_Slider(      "Shape Scale",         1     ));
 	
 	////- Shape
