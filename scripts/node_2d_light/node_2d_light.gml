@@ -30,38 +30,46 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		var _val = nodeValue_Enum_Scroll("Light shape", 0, typeList);
 			_val.options_histories = [ typeListStr, { cond: function() /*=>*/ {return LOADING_VERSION < 1_18_00_0 && !CLONING}, list: [ "Point", "Line", "Line asymmetric", "Spot" ] } ];
+			
+		newInput(index + 14, nodeValue_Active());
+		
+		////- =Shape
 		newInput(index +  0, _val);
-		newInput(index +  1, nodeValue_Vec2(    "Center",            [16,16])).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
-		newInput(index +  2, nodeValue_Float(   "Range",              16));
-		newInput(index +  3, nodeValue_Slider(  "Intensity",          1, [ 0, 4, 0.01 ]));
-		newInput(index +  4, nodeValue_Color(   "Color",              ca_white));
-		newInput(index +  5, nodeValue_Vec2(    "Start",             [16,16]));
-		newInput(index +  6, nodeValue_Vec2(    "Finish",            [32,16]));
-		newInput(index +  7, nodeValue_ISlider( "Sweep",              15, [-80, 80, 0.1]));
-		newInput(index +  8, nodeValue_ISlider( "Sweep end",          0,  [-80, 80, 0.1]));
-		newInput(index +  9, nodeValue_ISlider( "Banding",            0,  [  0, 16, 0.1]));
+		newInput(index +  1, nodeValue_Vec2(     "Center",           [16,16] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+		newInput(index +  5, nodeValue_Vec2(     "Start",            [16,16] ));
+		newInput(index +  6, nodeValue_Vec2(     "Finish",           [32,16] ));
+		newInput(index +  7, nodeValue_ISlider(  "Sweep",             15, [-80, 80, 0.1] ));
+		newInput(index +  8, nodeValue_ISlider(  "Sweep End",         0,  [-80, 80, 0.1] ));
+		newInput(index + 22, nodeValue_Int(      "Sweep Soft",        1      ));
+		newInput(index + 23, nodeValue_Float(    "Sweep Spread",      1      ));
+		newInput(index + 15, nodeValue_Float(    "Radius x",          16     ));
+		newInput(index + 16, nodeValue_Float(    "Radius y",          16     ));
+		newInput(index + 17, nodeValue_Rotation( "Rotation",          0      ));
+		newInput(index + 20, nodeValue_Bool(     "Two Sides",         false  ));
+		newInput(index + 21, nodeValue_Float(    "Thickness",         2      ));
+		
+		////- =Light
+		newInput(index +  2, nodeValue_Float(   "Range",              16                ));
+		newInput(index +  3, nodeValue_Slider(  "Intensity",          1, [ 0, 4, 0.01 ] ));
+		newInput(index +  4, nodeValue_Color(   "Color",              ca_white          ));
+		newInput(index + 11, nodeValue_ISlider(  "Radial Banding",    0, [0, 16, 0.1]   ));
+		newInput(index + 12, nodeValue_Rotation( "Radial Start",      0                 ));
+		newInput(index + 13, nodeValue_Slider(   "Radial Band Ratio", 0.5               ));
+		
+		////- =Render
 		newInput(index + 10, nodeValue_Enum_Scroll("Attenuation",     0, __enum_array_gen([ "Quadratic", "Invert quadratic", "Linear" ], s_node_curve_type)))
 			 .setTooltip("Control how light fade out over distance.");
-			 
-		newInput(index + 11, nodeValue_ISlider(  "Radial banding",    0, [0, 16, 0.1]));
-		newInput(index + 12, nodeValue_Rotation( "Radial start",      0));
-		newInput(index + 13, nodeValue_Slider(   "Radial band ratio", 0.5));
-		newInput(index + 14, nodeValue_Active());
-		newInput(index + 15, nodeValue_Float(    "Radius x",          16));
-		newInput(index + 16, nodeValue_Float(    "Radius y",          16));
-		newInput(index + 17, nodeValue_Rotation( "Rotation",          0));
-		newInput(index + 18, nodeValue_Float(    "Exponent",          2));
-		newInput(index + 19, nodeValue_Bool(     "Anti aliasing",     false));
-		newInput(index + 20, nodeValue_Bool(     "Two sides",         false));
-		newInput(index + 21, nodeValue_Float(    "Thickness",         2));
+		newInput(index +  9, nodeValue_ISlider( "Banding",            0,  [0, 16, 0.1] ));
+		newInput(index + 18, nodeValue_Float(    "Exponent",          2                ));
+		newInput(index + 19, nodeValue_Bool(     "Anti Aliasing",     false            ));
+		// input 24
 		
 		refreshDynamicDisplay();
 		return inputs[index];
 	} 
 	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
-	
-	newOutput(1, nodeValue_Output("Light only", VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
+	newOutput(1, nodeValue_Output( "Light only",  VALUE_TYPE.surface, noone ));
 	
 	lights_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		if(array_length(current_data) != array_length(inputs)) return 0;
@@ -124,14 +132,14 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	});
 	
 	input_display_dynamic = [ // 14, 
-		["Shape",	false], 0, 1, 5, 6, 7, 8, 15, 16, 17, 20, 21,
+		["Shape",	false], 0, 1, 5, 6, 7, 8, 22, 23, 15, 16, 17, 20, 21,
 		["Light",	false], 2, 3, 4, 11, 12, 13,
 		["Render",	false], 10, 9, 18, 19, 
 	];
 	
 	input_display_list = [ 0, lights_renderer ];
 	
-	setDynamicInput(22, false);
+	setDynamicInput(24, false);
 	if(!LOADING && !APPENDING) createNewInput();
 	
 	attribute_surface_depth();
@@ -221,34 +229,38 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	}
 	
 	static applyLight = function(_data, _ind, _lightSurf) {
-		var _surf  = _data[0];
-		var _dim   = surface_get_dimension(_surf);
-		
-		var _shape = _data[_ind +  0];
-		var _pos   = _data[_ind +  1];
-		var _range = _data[_ind +  2];
-		var _inten = _data[_ind +  3];
-		var _color = _data[_ind +  4];
-		
-		var _start = _data[_ind +  5];
-		var _finis = _data[_ind +  6];
-		var _sweep = _data[_ind +  7];
-		var _swep2 = _data[_ind +  8];
-		
-		var _band  = _data[_ind +  9];
-		var _attn  = _data[_ind + 10];
-		var _rbnd  = _data[_ind + 11];
-		var _rbns  = _data[_ind + 12];
-		var _rbnr  = _data[_ind + 13];
-		
-		var _rngx  = _data[_ind + 15];
-		var _rngy  = _data[_ind + 16];
-		var _anng  = _data[_ind + 17];
-		
-		var _expo  = _data[_ind + 18];
-		var _aa    = _data[_ind + 19];
-		var _both  = _data[_ind + 20];
-		var _thick = _data[_ind + 21];
+		#region data
+			var _surf  = _data[0];
+			var _dim   = surface_get_dimension(_surf);
+			
+			var _shape = _data[_ind +  0];
+			var _pos   = _data[_ind +  1];
+			var _range = _data[_ind +  2];
+			var _inten = _data[_ind +  3];
+			var _color = _data[_ind +  4];
+			
+			var _start = _data[_ind +  5];
+			var _finis = _data[_ind +  6];
+			var _sweep = _data[_ind +  7];
+			var _swep2 = _data[_ind +  8];
+			var _swepS = _data[_ind + 22];
+			var _swepA = _data[_ind + 23];
+			
+			var _band  = _data[_ind +  9];
+			var _attn  = _data[_ind + 10];
+			var _rbnd  = _data[_ind + 11];
+			var _rbns  = _data[_ind + 12];
+			var _rbnr  = _data[_ind + 13];
+			
+			var _rngx  = _data[_ind + 15];
+			var _rngy  = _data[_ind + 16];
+			var _anng  = _data[_ind + 17];
+			
+			var _expo  = _data[_ind + 18];
+			var _aa    = _data[_ind + 19];
+			var _both  = _data[_ind + 20];
+			var _thick = _data[_ind + 21];
+		#endregion
 		
 		surface_set_shader(temp_surface[0], noone);
 			draw_clear(c_black);
@@ -295,28 +307,44 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				case LIGHT_SHAPE_2D.line :
 				case LIGHT_SHAPE_2D.line_asym :
 					var dir = point_direction(_start[0], _start[1], _finis[0], _finis[1]) + 90;
+					_swepS  = max(1, _swepS);
 					
-					var _r  = _range / dcos(_sweep);
-					var sq0 = dir + _sweep;
-					var sq1 = dir - ((_shape == LIGHT_SHAPE_2D.line_asym)? _swep2 : _sweep);
+					var _r   = _range / dcos(_sweep);
+					var sw0  = dir + _sweep;
+					var sw1  = dir - ((_shape == LIGHT_SHAPE_2D.line_asym)? _swep2 : _sweep);
+					var swS  = (_swepS - 1) / 2 * _swepA;
+					var _alp = 1 / _swepS;
 					
-					draw_primitive_begin(pr_trianglestrip);
-						draw_vertex_color(_start[0],                        _start[1],                        c_white, 1);
-						draw_vertex_color(_finis[0],                        _finis[1],                        c_white, 1);
-						draw_vertex_color(_start[0] + lengthdir_x(_r, sq0), _start[1] + lengthdir_y(_r, sq0), c_black, 1);
-						draw_vertex_color(_finis[0] + lengthdir_x(_r, sq1), _finis[1] + lengthdir_y(_r, sq1), c_black, 1);
-					draw_primitive_end();
-					
-					if(_both) {
-						var sq0 = 180 + dir - _sweep;
-						var sq1 = 180 + dir + ((_shape == LIGHT_SHAPE_2D.line_asym)? _swep2 : _sweep);
+					for( var i = 1; i <= _swepS; i++ ) {
+						
+						var sw0x = lengthdir_x(_r, sw0 - swS + i * _swepA), sw0y = lengthdir_y(_r, sw0 - swS + i * _swepA);
+						var sw1x = lengthdir_x(_r, sw1 + swS - i * _swepA), sw1y = lengthdir_y(_r, sw1 + swS - i * _swepA);
 						
 						draw_primitive_begin(pr_trianglestrip);
-							draw_vertex_color(_start[0],                        _start[1],                        c_white, 1);
-							draw_vertex_color(_finis[0],                        _finis[1],                        c_white, 1);
-							draw_vertex_color(_start[0] + lengthdir_x(_r, sq0), _start[1] + lengthdir_y(_r, sq0), c_black, 1);
-							draw_vertex_color(_finis[0] + lengthdir_x(_r, sq1), _finis[1] + lengthdir_y(_r, sq1), c_black, 1);
+							draw_vertex_color(_start[0], _start[1], c_white, _alp);
+							draw_vertex_color(_finis[0], _finis[1], c_white, _alp);
+							draw_vertex_color(_start[0] + sw0x, _start[1] + sw0y, c_black, _alp);
+							draw_vertex_color(_finis[0] + sw1x, _finis[1] + sw1y, c_black, _alp);
 						draw_primitive_end();
+						
+					}
+					
+					if(_both) {
+						var sw0 = dir + 180 - _sweep;
+						var sw1 = dir + 180 + ((_shape == LIGHT_SHAPE_2D.line_asym)? _swep2 : _sweep);
+						
+						for( var i = 1; i <= _swepS; i++ ) {
+						
+							var sw0x = lengthdir_x(_r, sw0 - swS + i * _swepA), sw0y = lengthdir_y(_r, sw0 - swS + i * _swepA);
+							var sw1x = lengthdir_x(_r, sw1 + swS - i * _swepA), sw1y = lengthdir_y(_r, sw1 + swS - i * _swepA);
+						
+							draw_primitive_begin(pr_trianglestrip);
+								draw_vertex_color(_start[0], _start[1], c_white, _alp);
+								draw_vertex_color(_finis[0], _finis[1], c_white, _alp);
+								draw_vertex_color(_start[0] + sw0x, _start[1] + sw0y, c_black, _alp);
+								draw_vertex_color(_finis[0] + sw1x, _finis[1] + sw1y, c_black, _alp);
+							draw_primitive_end();
+						}
 						
 					}
 					break;	
@@ -476,6 +504,8 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			inputs[_ind + 17].setVisible(false);
 			inputs[_ind + 20].setVisible(false);
 			inputs[_ind + 21].setVisible(false);
+			inputs[_ind + 22].setVisible(false);
+			inputs[_ind + 23].setVisible(false);
 			
 			switch(_shape) {
 				case LIGHT_SHAPE_2D.point :
@@ -501,6 +531,8 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 					inputs[_ind +  7].setVisible(true);
 					inputs[_ind +  8].setVisible(_shape == LIGHT_SHAPE_2D.line_asym);
 					inputs[_ind + 20].setVisible(true);
+					inputs[_ind + 22].setVisible(true);
+					inputs[_ind + 23].setVisible(true);
 					break;
 				
 				case LIGHT_SHAPE_2D.saber :
@@ -527,8 +559,9 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var _outSurf   = surface_verify(_outData[0], _dim[0], _dim[1]);
 		var _lightSurf = surface_verify(_outData[1], _dim[0], _dim[1]);
 		
-		for( var i = 0, n = array_length(temp_surface); i < n; i++ )
-			temp_surface[i] = surface_verify(temp_surface[i], _dim[0], _dim[1]);
+		temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1], surface_rgba32float);
+		temp_surface[1] = surface_verify(temp_surface[1], _dim[0], _dim[1]);
+		temp_surface[2] = surface_verify(temp_surface[2], _dim[0], _dim[1]);
 		
 		surface_set_target(_lightSurf);
 			draw_clear(c_black);

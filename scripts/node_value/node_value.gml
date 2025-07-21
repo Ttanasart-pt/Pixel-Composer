@@ -1756,7 +1756,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static isConnectable = function(_valueFrom, checkRecur = true, _log = false) { 
 		
-		if(_valueFrom == -1 || _valueFrom == undefined || _valueFrom == noone) {
+		if(!is(_valueFrom, NodeValue)) {
 			if(_log) noti_warning($"LOAD: Cannot set node connection from {_valueFrom} to {name} of node {node.name}.",, node);
 			return -1;
 		}
