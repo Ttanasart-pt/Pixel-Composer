@@ -154,7 +154,7 @@ void main() {
 	col.r = curveEval(r_curve, r_amount, col.r);
 	col.g = curveEval(g_curve, g_amount, col.g);
 	col.b = curveEval(b_curve, b_amount, col.b);
-	col.a = curveEval(a_curve, b_amount, col.a);
+	col.a = curveEval(a_curve, a_amount, col.a);
 	
 	float w = (col.r + col.g + col.b) / 3.;
 	float wtarget = curveEval(w_curve, w_amount, w);

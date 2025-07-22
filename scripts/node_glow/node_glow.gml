@@ -19,22 +19,23 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	__init_mask_modifier(5, 8); // inputs 8, 9, 
 	
 	////- =Glow
-	newInput(10, nodeValue_Enum_Button( "Mode",  0, [ "Greyscale", "Alpha" ]));
-	newInput(12, nodeValue_Enum_Button( "Side",  0, [ "Outer", "Inner" ]));
-	newInput( 1, nodeValue_Slider( "Border",     0, [0,  4, .1 ] ));
-	newInput( 2, nodeValue_Slider( "Size",       3, [1, 16, .1 ] ));
-	newInput( 3, nodeValue_Slider( "Strength",   1, [0,  4, .01] ));
+	newInput(10, nodeValue_Enum_Button( "Mode",  0,  [ "Greyscale", "Alpha" ] ));
+	newInput(12, nodeValue_Enum_Button( "Side",  0,  [ "Outer", "Inner" ] ));
+	newInput( 1, nodeValue_Slider( "Border",     0,  [0,  4, .1 ] ));
+	newInput( 2, nodeValue_Slider( "Size",       3,  [1, 16, .1 ] )).setMappable(16);
+	newInput( 3, nodeValue_Slider( "Strength",   1,  [0,  4, .01] )).setMappable(17);
+	newInput(15, nodeValue_Curve(  "Strength Curve", CURVE_DEF_01 ));
 	
 	////- =Render
 	newInput(13, nodeValue_Enum_Button( "Blend Mode",  3, [ "Normal", "Replace", -1, "Lighten", "Screen", -1, "Darken", "Multiply" ]));
 	newInput( 4, nodeValue_Color( "Color",          ca_white ));
 	newInput(14, nodeValue_Bool(  "Pixel Distance", true     ));
 	newInput(11, nodeValue_Bool(  "Draw Original",  true     ));
-	// input 15
+	// input 18
 		
 	input_display_list = [ 7, 
 		["Surfaces", true], 0, 5, 6, 8, 9, 
-		["Glow",	false], 10, 12, 2, 3,
+		["Glow",	false], 10, 12, 2, 16, 3, 17, 15, 
 		["Render",	false], 13, 4, 14, 11, 
 	]
 	
@@ -49,7 +50,8 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _side     = _data[12];
 		var _border   = _data[ 1];
 		var _size     = _data[ 2];
-		var _strength = _data[ 3];
+		var _strn = _data[ 3];
+		var _fallCur  = _data[15];
 		
 		var _blend    = _data[13];
 		var _color    = _data[ 4];
@@ -62,8 +64,9 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			shader_set_i("mode",      _mode);
 			shader_set_i("side",      _side);
 			shader_set_f("border",    _border);
-			shader_set_f("size",      _size);
-			shader_set_f("strength",  _strength);
+			shader_set_f_map("size",      _size, _data[16], inputs[2] );
+			shader_set_f_map("strength",  _strn, _data[17], inputs[3] );
+			shader_set_curve("falloff", _fallCur);
 			
 			shader_set_i("blend",     _blend);
 			shader_set_color("color", _color);
