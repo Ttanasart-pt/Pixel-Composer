@@ -957,6 +957,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         project    = _project;
         nodes_list = _project.nodes;
         connection_draw_update = true;
+        connect_related = noone;
         
         setTitle();
         run_in(10, function() /*=>*/ { setSlideShow(0); });
@@ -3306,7 +3307,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         	if(pFOCUS) FOCUS_STR = instanceof(node);
         }
         
-        if(connect_related != noone) {
+        if(is(connect_related, NodeValue)) {
         	for( var i = 0, n = array_length(node.inputs); i < n; i++ ) {
         		var _in = node.inputs[i];
         		if(_in.setFrom(connect_related)) break;

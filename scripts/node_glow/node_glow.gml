@@ -10,29 +10,25 @@
 function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Glow";
 	
-	newInput(0, nodeValue_Surface("Surface In"));
-	
-	newInput(1, nodeValue_Slider("Border", 0, [0, 4, 0.1] ));
-	
-	newInput(2, nodeValue_Slider("Size", 3, [1, 16, 0.1] ));
-	
-	newInput(3, nodeValue_Slider("Strength", 1, [ 0, 4, 0.01 ] ));
-	
-	newInput(4, nodeValue_Color("Color", ca_white));
-	
-	newInput(5, nodeValue_Surface("Mask"));
-	
-	newInput(6, nodeValue_Slider("Mix", 1));
-	
 	newActiveInput(7);
 	
+	////- =Surfaces
+	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput(5, nodeValue_Surface( "Mask"       ));
+	newInput(6, nodeValue_Slider(  "Mix", 1     ));
 	__init_mask_modifier(5, 8); // inputs 8, 9, 
 	
-	newInput(10, nodeValue_Enum_Button("Mode",  0, [ "Greyscale", "Alpha" ]));
-		
-	newInput(11, nodeValue_Bool("Draw Original", true));
+	////- =Glow
+	newInput(10, nodeValue_Enum_Button( "Mode",  0, [ "Greyscale", "Alpha" ]));
+	newInput(12, nodeValue_Enum_Button( "Side",  0, [ "Outer", "Inner" ]));
+	newInput( 1, nodeValue_Slider( "Border",     0, [0,  4, .1 ] ));
+	newInput( 2, nodeValue_Slider( "Size",       3, [1, 16, .1 ] ));
+	newInput( 3, nodeValue_Slider( "Strength",   1, [0,  4, .01] ));
 	
-	newInput(12, nodeValue_Enum_Button("Side",  0, [ "Outer", "Inner" ]));
+	////- =Render
+	newInput( 4, nodeValue_Color( "Color",         ca_white ));
+	newInput(11, nodeValue_Bool(  "Draw Original", true     ));
+	// input 13
 		
 	input_display_list = [ 7, 
 		["Surfaces", true], 0, 5, 6, 8, 9, 
