@@ -104,6 +104,7 @@ uniform int       strengthUseSurf;
 uniform sampler2D strengthSurf;
 
 uniform float trim;
+uniform float rotation;
 
 void main() {
 	float rad = radius.x;
@@ -119,7 +120,7 @@ void main() {
 	}
 	
 	vec2  cen  = center / dimension;
-	vec2  uv   = (v_vTexcoord - cen);
+	vec2  uv   = (v_vTexcoord - cen) * mat2(cos(rotation), - sin(rotation), sin(rotation), cos(rotation));
 	float d    = 1. - dot(uv, uv) / rad;
 	float dist = sqrt(abs(d));
 	vec4  c    = sampleTexture(gm_BaseTexture, mix(uv, cen + uv / dist, str));
