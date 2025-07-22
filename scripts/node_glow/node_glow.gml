@@ -27,14 +27,15 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	////- =Render
 	newInput(13, nodeValue_Enum_Button( "Blend Mode",  3, [ "Normal", "Replace", -1, "Lighten", "Screen", -1, "Darken", "Multiply" ]));
-	newInput( 4, nodeValue_Color( "Color",         ca_white ));
-	newInput(11, nodeValue_Bool(  "Draw Original", true     ));
-	// input 14
+	newInput( 4, nodeValue_Color( "Color",          ca_white ));
+	newInput(14, nodeValue_Bool(  "Pixel Distance", true     ));
+	newInput(11, nodeValue_Bool(  "Draw Original",  true     ));
+	// input 15
 		
 	input_display_list = [ 7, 
 		["Surfaces", true], 0, 5, 6, 8, 9, 
 		["Glow",	false], 10, 12, 2, 3,
-		["Render",	false], 13, 4, 11, 
+		["Render",	false], 13, 4, 14, 11, 
 	]
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -53,8 +54,7 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _blend    = _data[13];
 		var _color    = _data[ 4];
 		var _render   = _data[11];
-		
-		inputs[13].setVisible(_mode == 0);
+		var _pxDist   = _data[14];
 		
 		surface_set_shader(_outSurf, sh_glow);
 			shader_set_dim("dimension", _surf);
@@ -68,6 +68,7 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			shader_set_i("blend",     _blend);
 			shader_set_color("color", _color);
 			shader_set_i("render",    _render);
+			shader_set_i("pixelDist", _pxDist);
 			
 			draw_surface_safe(_surf);
 		surface_reset_shader();

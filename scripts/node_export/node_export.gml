@@ -55,7 +55,6 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	png_format       = [ "INDEX4", "INDEX8", "Default (PNG32)" ];
 	
 	////- =Export
-	
 	newInput( 0, nodeValue_Surface( "Surface"   ));
 	newInput( 1, nodeValue_Path(    "Directory" )).setDisplay(VALUE_DISPLAY.path_save, { filter: "dir" }).setVisible(true);
 	newInput(20, nodeValue_Text(    "File name" ));
@@ -66,7 +65,6 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	newInput(16, nodeValue_Bool(    "Export on Save", false)).setTooltip("Automatically export when saving project.");
 	
 	////- =Format
-	
 	newInput( 3, nodeValue_Enum_Scroll( "Type",   0, { data: format_single, update_hover: false } )).rejectArray();
 	newInput( 9, nodeValue_Enum_Scroll( "Format", 0, { data: format_image,  update_hover: false } )).rejectArray();
 	newInput(17, nodeValue_Bool(        "Use Built-in gif encoder", false      ))
@@ -77,16 +75,13 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	newInput(13, nodeValue_Enum_Scroll( "Subformat",                 2, { data: png_format, update_hover: false }));
 	
 	////- =Post-Process
-	
 	newInput(19, nodeValue_Float( "Scale", 1 ));
 	
 	////- =Custom Range
-	
 	newInput(15, nodeValue_Bool(         "Custom Range", false )).rejectArray();
 	newInput(12, nodeValue_Slider_Range( "Frame range", [0,-1], { range: [0, TOTAL_FRAMES, 0.1] }));
 	
 	////- =Animation
-	
 	newInput( 8, nodeValue_Int(  "Framerate",        30 )).rejectArray();
 	newInput( 5, nodeValue_Bool( "Loop",           true )).setVisible(false).rejectArray();
 	newInput(11, nodeValue_Int(  "Sequence begin",    0 ));
@@ -805,7 +800,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		directory = $"{TEMPDIR}{irandom_range(100000, 999999)}";
 		
 		var path = getInputData(1);
-		if(path == "") return;
+		if(path == "") { noti_warning("Export: Path is empty"); return; }
+		
 		var form = getInputData(3);
 		
 		if(form == NODE_EXPORT_FORMAT.single) {

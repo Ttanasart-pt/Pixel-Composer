@@ -13,16 +13,14 @@ uniform vec4  color;
 uniform int   blend;
 uniform int   side;
 uniform int   render;
+uniform int   pixelDist;
 
 float bright(in vec4 col) { return dot(col.rgb, vec3(0.2126, 0.7152, 0.0722)) * col.a; }
 vec4  sample(vec2    pos) { return texture2D( gm_BaseTexture, pos ); }
 
-float round(float val) { return fract(val) > 0.5? ceil(val) : floor(val); }
-vec2  round(vec2  val) { return vec2(round(val.x), round(val.y)); }
-
 void main() {
 	vec2 tx   = 1. / dimension;
-	vec2 px   = round(v_vTexcoord * dimension);
+	vec2 px   = floor(v_vTexcoord * dimension);
 	vec4 base = sample(v_vTexcoord);
 	
 	if(render == 1) {
@@ -52,15 +50,19 @@ void main() {
 		vec2  smPos = v_vTexcoord + vec2(cos(angle), sin(angle)) * i * tx;
 		vec4  samp  = sample(smPos);
 		
+		vec2  samPx  = floor(smPos * dimension);
+		float pxDist = distance(px, samPx);
+		
 		if(side == 0) {
 			if((mode == 0 && bright(samp) > bright(base)) || (mode == 1 && samp.a > base.a)) {
-				dist = i;
+				dist = pixelDist == 1? i : pxDist;
 				i = size;
 				break;
 			}
+			
 		} else if(side == 1) {
 			if((mode == 0 && bright(samp) < bright(base)) || (mode == 1 && samp.a < base.a)) {
-				dist = i;
+				dist = pixelDist == 1? i : pxDist;
 				i = size;
 				break;
 			}
@@ -73,22 +75,29 @@ void main() {
 	float str = (1. - dist / size) * strength;
 	
 	//blend
-	gl_FragColor = render == 1? base : vec4(0.);
+	vec4 baseColor   = base;
+	vec4 targetColor = base;
+	
+	baseColor = render == 1? base : vec4(0.);
+	
+	     if(blend == 0)   targetColor = cc; // normal
+	else if(blend == 1) { targetColor = cc; str = clamp(str, 0., 1.); } // replace
+	// 2
+	else if(blend == 3) targetColor = base + cc; // lighten
+	else if(blend == 4) targetColor = 1. - (1. - base) * (1. - cc); // screen
+	// 5
+	else if(blend == 6) targetColor = base - cc * str; // darken
+	else if(blend == 7) targetColor = base * cc; // multiply
 	
 	if(mode == 0) { // greyscale
-		     if(blend == 0) gl_FragColor.rgb  = mix(gl_FragColor.rgb, cc.rgb, str);                // normal
-		else if(blend == 1) gl_FragColor.rgb  = mix(gl_FragColor.rgb, cc.rgb, clamp(str, 0., 1.)); // replace
-		// 2
-		else if(blend == 3) gl_FragColor.rgb += cc.rgb * str; // lighten
-		else if(blend == 4) gl_FragColor.rgb  = mix(gl_FragColor.rgb, 1. - (1. - gl_FragColor.rgb) * (1. - cc.rgb), str); // screen
-		// 5
-		else if(blend == 6) gl_FragColor.rgb -= cc.rgb * str; // darken
-		else if(blend == 7) gl_FragColor.rgb  = mix(gl_FragColor.rgb, gl_FragColor.rgb * cc.rgb, str); // multiply
+		baseColor.a   = base.a;
+		targetColor.a = base.a;
 		
+	} else if(side == 0) { // outer alpha // remove alpha multipliers
+		baseColor   = vec4(cc.rgb, 0.);
+		targetColor = vec4(cc.rgb, 1.);
 		
-	} else { // alpha
-		cc.a *= str;
-		gl_FragColor += cc;
 	}
 	
+	gl_FragColor = mix(baseColor, targetColor, str);
 }
