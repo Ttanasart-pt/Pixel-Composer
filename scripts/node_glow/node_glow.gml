@@ -26,14 +26,15 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput( 3, nodeValue_Slider( "Strength",   1, [0,  4, .01] ));
 	
 	////- =Render
+	newInput(13, nodeValue_Enum_Button( "Blend Mode",  3, [ "Normal", "Replace", -1, "Lighten", "Screen", -1, "Darken", "Multiply" ]));
 	newInput( 4, nodeValue_Color( "Color",         ca_white ));
 	newInput(11, nodeValue_Bool(  "Draw Original", true     ));
-	// input 13
+	// input 14
 		
 	input_display_list = [ 7, 
 		["Surfaces", true], 0, 5, 6, 8, 9, 
 		["Glow",	false], 10, 12, 2, 3,
-		["Render",	false], 4, 11, 
+		["Render",	false], 13, 4, 11, 
 	]
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -41,29 +42,38 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	attribute_surface_depth();
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _border   = _data[1];
-		var _size     = _data[2];
-		var _strength = _data[3];
-		var _color    = _data[4];
+		var _surf     = _data[ 0];
+		
 		var _mode     = _data[10];
-		var _render   = _data[11];
 		var _side     = _data[12];
+		var _border   = _data[ 1];
+		var _size     = _data[ 2];
+		var _strength = _data[ 3];
+		
+		var _blend    = _data[13];
+		var _color    = _data[ 4];
+		var _render   = _data[11];
+		
+		inputs[13].setVisible(_mode == 0);
 		
 		surface_set_shader(_outSurf, sh_glow);
-			shader_set_dim("dimension", _data[0]);
+			shader_set_dim("dimension", _surf);
+			
 			shader_set_i("mode",      _mode);
+			shader_set_i("side",      _side);
 			shader_set_f("border",    _border);
 			shader_set_f("size",      _size);
 			shader_set_f("strength",  _strength);
+			
+			shader_set_i("blend",     _blend);
 			shader_set_color("color", _color);
 			shader_set_i("render",    _render);
-			shader_set_i("side",      _side);
 			
-			draw_surface_safe(_data[0]);
+			draw_surface_safe(_surf);
 		surface_reset_shader();
 		
 		__process_mask_modifier(_data);
-		_outSurf = mask_apply(_data[0], _outSurf, _data[5], _data[6]);
+		_outSurf = mask_apply(_surf, _outSurf, _data[5], _data[6]);
 		
 		return _outSurf;
 	}

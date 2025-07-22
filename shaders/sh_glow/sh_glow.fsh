@@ -10,6 +10,7 @@ uniform float size;
 uniform float strength;
 uniform vec4  color;
 
+uniform int   blend;
 uniform int   side;
 uniform int   render;
 
@@ -66,16 +67,28 @@ void main() {
 		}
 	}
 	
-	if(dist > 0.) {
-		vec4 cc   = color;
-		float str = (1. - dist / size) * strength;
+	if(dist <= 0.) return;
+	
+	vec4  cc  = color;
+	float str = (1. - dist / size) * strength;
+	
+	//blend
+	gl_FragColor = render == 1? base : vec4(0.);
+	
+	if(mode == 0) { // greyscale
+		     if(blend == 0) gl_FragColor.rgb  = mix(gl_FragColor.rgb, cc.rgb, str);                // normal
+		else if(blend == 1) gl_FragColor.rgb  = mix(gl_FragColor.rgb, cc.rgb, clamp(str, 0., 1.)); // replace
+		// 2
+		else if(blend == 3) gl_FragColor.rgb += cc.rgb * str; // lighten
+		else if(blend == 4) gl_FragColor.rgb  = mix(gl_FragColor.rgb, 1. - (1. - gl_FragColor.rgb) * (1. - cc.rgb), str); // screen
+		// 5
+		else if(blend == 6) gl_FragColor.rgb -= cc.rgb * str; // darken
+		else if(blend == 7) gl_FragColor.rgb  = mix(gl_FragColor.rgb, gl_FragColor.rgb * cc.rgb, str); // multiply
 		
-		if(mode == 0)      cc.rgb *= str;
-		else if(side == 0) cc.a   *= str;
-		else if(side == 1) cc.rgb *= str;
 		
-		if(render == 1)    gl_FragColor = base + cc;
-		else if(side == 0) gl_FragColor = cc;
-		else if(side == 1) gl_FragColor = base + cc;
+	} else { // alpha
+		cc.a *= str;
+		gl_FragColor += cc;
 	}
+	
 }
