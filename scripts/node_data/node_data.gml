@@ -2265,9 +2265,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static drawBadge = function(_x, _y, _s) {
 		badgePreview = lerp_float(badgePreview, !!previewing, 2);
 		badgeInspect = lerp_float(badgeInspect,   inspecting, 2);
-		var _si = UI_SCALE;
 		
-		if(previewable) {
+		var _si   = UI_SCALE;
+		var _full = previewable && w * _s > 64;
+		
+		if(_full) {
 			var xx = x * _s + _x + w * _s;
 			var yy = y * _s + _y;
 			var xw = 28 * _si;
@@ -2279,11 +2281,17 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		} else {
 			var xx = _x + _s * (x + w - 10);
 			var yy = _y + _s *  y;
+			
+			var ss = .5 * _s;
 			var xw = 12 * _s * _si;
 			
-			if(badgePreview > 0) { draw_sprite_ui_uniform(THEME.circle_16, 0, xx, yy, .5 * _s, CDEF.orange); xx -= xw; }
-			if(badgeInspect > 0) { draw_sprite_ui_uniform(THEME.circle_16, 0, xx, yy, .5 * _s, CDEF.lime);   xx -= xw; }
-			if(isTool)           { draw_sprite_ui_uniform(THEME.circle_16, 0, xx, yy, .5 * _s, CDEF.blue);   xx -= xw; }
+			gpu_set_tex_filter(true);
+			
+			if(badgePreview > 0) { draw_sprite_ui_uniform(THEME.circle_16, 0, xx, yy, ss, CDEF.orange); xx -= xw; }
+			if(badgeInspect > 0) { draw_sprite_ui_uniform(THEME.circle_16, 0, xx, yy, ss, CDEF.lime);   xx -= xw; }
+			if(isTool)           { draw_sprite_ui_uniform(THEME.circle_16, 0, xx, yy, ss, CDEF.blue);   xx -= xw; }
+			
+			gpu_set_tex_filter(false);
 		}
 		
 		inspecting = false;

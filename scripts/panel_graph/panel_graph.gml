@@ -1319,29 +1319,66 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	var gls = project.graphGrid.size;
         while(gls * graph_s < 8) gls *= 5;
         
-        shader_set(sh_panel_graph_grid);	
-        	shader_set_2("dimension", surface_get_dimension(surface_get_target()));
-        	shader_set_c("bgColor",   bg_color);
-        	
-        	shader_set_i("gridShow",      project.graphDisplay.show_grid);
-        	shader_set_f("gridSize",      gls);
-        	shader_set_c("gridColor",     project.graphGrid.color);
-        	shader_set_f("gridAlpha",     project.graphGrid.opacity);
-        	shader_set_i("gridOrigin",    project.graphGrid.show_origin);
-        	shader_set_f("gridHighlight", project.graphGrid.highlight);
-        	
-        	shader_set_2("graphPos",   [graph_x, graph_y]);
-        	shader_set_f("graphScale", graph_s);
-        	
-        	shader_set_i("glowShow", mouse_glow_rad > 0);
-        	shader_set_2("glowPos",  [ mouse_graph_x, mouse_graph_y ]);
-        	shader_set_f("glowRad",  mouse_glow_rad / graph_s);
-        	
-        	draw_empty();
-        shader_reset();
+    	if(OS == os_windows) {
         
-        mouse_glow_rad    = lerp_float(mouse_glow_rad, mouse_glow_rad_to, 5);
-        mouse_glow_rad_to = 0;
+	        shader_set(sh_panel_graph_grid);	
+	        	shader_set_2("dimension", surface_get_dimension(surface_get_target()));
+	        	shader_set_c("bgColor",   bg_color);
+	        	
+	        	shader_set_i("gridShow",      project.graphDisplay.show_grid);
+	        	shader_set_f("gridSize",      gls);
+	        	shader_set_c("gridColor",     project.graphGrid.color);
+	        	shader_set_f("gridAlpha",     project.graphGrid.opacity);
+	        	shader_set_i("gridOrigin",    project.graphGrid.show_origin);
+	        	shader_set_f("gridHighlight", project.graphGrid.highlight);
+	        	
+	        	shader_set_2("graphPos",   [graph_x, graph_y]);
+	        	shader_set_f("graphScale", graph_s);
+	        	
+	        	shader_set_i("glowShow", mouse_glow_rad > 0);
+	        	shader_set_2("glowPos",  [ mouse_graph_x, mouse_graph_y ]);
+	        	shader_set_f("glowRad",  mouse_glow_rad / graph_s);
+	        	
+	        	draw_empty();
+	        shader_reset();
+	        
+	        mouse_glow_rad    = lerp_float(mouse_glow_rad, mouse_glow_rad_to, 5);
+	        mouse_glow_rad_to = 0;
+	        
+	        return;
+    	}
+    	
+        var gr_x  = graph_x * graph_s;
+        var gr_y  = graph_y * graph_s;
+        var gr_ls = gls * graph_s;
+        var xx = -gr_ls - 1, xs = safe_mod(gr_x, gr_ls);
+        var yy = -gr_ls - 1, ys = safe_mod(gr_y, gr_ls);
+        
+        draw_set_color(project.graphGrid.color);
+        var aa  = graph_s < 0.25? .3 : .5;
+        var oa  = project.graphGrid.opacity;
+        var ori = project.graphGrid.show_origin;
+        var hig = project.graphGrid.highlight;
+        
+        while(xx < w + gr_ls) { 
+            draw_set_alpha( oa * aa * (1 + (round((xx + xs - gr_x) / gr_ls) % hig == 0) * 2) );
+            draw_line(xx + xs, 0, xx + xs, h);
+            xx += gr_ls;
+        }
+        
+        while(yy < h + gr_ls) {
+            draw_set_alpha( oa * aa * (1 + (round((yy + ys - gr_y) / gr_ls) % hig == 0) * 2) );
+            draw_line(0, yy + ys, w, yy + ys);
+            yy += gr_ls;
+        }
+        
+        draw_set_alpha(.2);
+        if(ori) {
+        	draw_line(gr_x, 0, gr_x, h);
+        	draw_line(0, gr_y, w, gr_y);
+        }
+        
+        draw_set_alpha(1);
     } 
     
     function drawViewController() { //
