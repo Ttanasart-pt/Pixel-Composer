@@ -27,7 +27,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		new scrollItem("Relative to input").setTooltip("Set dimension as a multiple of input surface."),
 		new scrollItem("Fit content").setTooltip("Automatically set dimension to fit content."),
 	]));
-	newInput(1, nodeValue_Vec2( "Output Dimension",   [1,1] )).setVisible(false);
+	newInput(1, nodeValue_Dimension()).setVisible(false);
 	newInput(7, nodeValue_Enum_Button( "Render Mode",  0, [ "Normal", "Tile", "Wrap" ] ));
 	
 	////- =Position
@@ -41,7 +41,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(8, nodeValue_Slider(   "Rotate by Velocity", 0    )).setTooltip("Make the surface rotates to follow its movement.");
 	
 	////- =Scale
-	newInput(6, nodeValue_Vec2( "Scale", [1,1] ));
+	newInput(6, nodeValue_Vec2( "Scale", [1,1], { linked: true} ));
 	
 	////- =Render
 	newInput(14, nodeValue_Slider( "Alpha", 1 ));

@@ -3339,7 +3339,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	    		node = doNewNode(_nodeType);
 	    		break;
 	    	
-	    	default :               node = doNewNode(_nodeType);        break;
+	    	default : node = doNewNode(_nodeType); break;
     	}
     	
         if(!is(node, Node)) return undefined;
