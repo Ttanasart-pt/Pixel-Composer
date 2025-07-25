@@ -12,7 +12,7 @@ function Node_3D_Mesh_Cube(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 	
 	////- Materials
 	
-	newInput(i+0, nodeValue_Bool(       "Material per side", false ));
+	newInput(i+0, nodeValue_Enum_Button( "Material Mode", 0, [ "Uniform", "Per Face", "Top and Side" ] ));
 	newInput(i+1, nodeValue_D3Material( "Material"        )).setVisible(true, true);
 	newInput(i+2, nodeValue_D3Material( "Material Bottom" )).setVisible(true, true);
 	newInput(i+3, nodeValue_D3Material( "Material Left"   )).setVisible(true, true);
@@ -47,13 +47,46 @@ function Node_3D_Mesh_Cube(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 		_subd[1] = max(1, _subd[1]);
 		_subd[2] = max(1, _subd[2]);
 		
-		inputs[i+1].name = _mat_side? "Material Top" : "Material";
-		inputs[i+1].setVisible(true, true);
-		inputs[i+2].setVisible(_mat_side, _mat_side);
-		inputs[i+3].setVisible(_mat_side, _mat_side);
-		inputs[i+4].setVisible(_mat_side, _mat_side);
-		inputs[i+5].setVisible(_mat_side, _mat_side);
-		inputs[i+6].setVisible(_mat_side, _mat_side);
+		var _mat = [ _mat_1, _mat_2, _mat_3, _mat_4, _mat_5, _mat_6 ];
+		
+		switch(_mat_side) {
+			case 0 :
+				inputs[i+1].name = "Material";
+				
+				inputs[i+1].setVisible(true, true);
+				inputs[i+2].setVisible(false, false);
+				inputs[i+3].setVisible(false, false);
+				inputs[i+4].setVisible(false, false);
+				inputs[i+5].setVisible(false, false);
+				inputs[i+6].setVisible(false, false);
+				break;
+			
+			case 1 :
+				inputs[i+1].name = "Material Top";
+				
+				inputs[i+1].setVisible(true, true);
+				inputs[i+2].setVisible(true, true);
+				inputs[i+3].setVisible(true, true);
+				inputs[i+4].setVisible(true, true);
+				inputs[i+5].setVisible(true, true);
+				inputs[i+6].setVisible(true, true);
+				break;
+			
+			case 2 :
+				inputs[i+1].name = "Material Top";
+				inputs[i+2].name = "Material Size";
+				
+				inputs[i+1].setVisible(true, true);
+				inputs[i+2].setVisible(true, true);
+				inputs[i+3].setVisible(false, false);
+				inputs[i+4].setVisible(false, false);
+				inputs[i+5].setVisible(false, false);
+				inputs[i+6].setVisible(false, false);
+				
+				_mat = [ _mat_1, _mat_1, _mat_2, _mat_2, _mat_2, _mat_2 ];
+				break;
+			
+		}
 		
 		var object = getObject(_array_index);
 		object.checkParameter({ 
@@ -62,7 +95,7 @@ function Node_3D_Mesh_Cube(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 			taper_axis:     _tap_axs, 
 			subdivision:    _subd, 
 		});
-		object.materials = [ _mat_1, _mat_2, _mat_3, _mat_4, _mat_5, _mat_6 ];
+		object.materials = _mat;
 		setTransform(object, _data);
 		
 		return object;
