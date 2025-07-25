@@ -5,10 +5,10 @@ function Node_Iterator_Each_Input(_x, _y, _group = noone) : Node(_x, _y, _group)
 	
 	manual_deletable = false;
 	
-	newOutput(0, nodeValue_Output("Value in", VALUE_TYPE.any, 0 ));
+	newOutput(0, nodeValue_Output("Value in", VALUE_TYPE.any,     0 ));
+	// newOutput(1, nodeValue_Output("Index",    VALUE_TYPE.integer, 0 ));
 	
-	outputs[0].getValueDefault = method(outputs[0], outputs[0].getValueRecursive); //Get value from outside loop
-	
+	outputs[0].getValueDefault = method(outputs[0], outputs[0].getValueRecursive); // Get value from outside loop
 	outputs[0].getValueRecursive = function(arr) {
 		if(!variable_struct_exists(group, "iterated"))
 			return outputs[0].getValueDefault(arr);

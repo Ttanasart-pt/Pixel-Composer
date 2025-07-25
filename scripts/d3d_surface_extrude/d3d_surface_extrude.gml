@@ -7,6 +7,9 @@ function __3dSurfaceExtrude(_surface = noone, _height = noone, _smooth = false) 
 	height   = _height;
 	smooth   = _smooth;
 	
+	voxel_use   = false;
+	voxel_scale = .1;
+	
 	back     = false;
 	bsurface = noone;
 	bheight  = noone;
@@ -142,6 +145,13 @@ function __3dSurfaceExtrude(_surface = noone, _height = noone, _smooth = false) 
 		var _bB = buffer_create(0, buffer_grow, 1); 
 		var _bS = buffer_create(0, buffer_grow, 1); 
 		
+		var sx = 1, sy = 1, sz = 1;
+		if(voxel_use) {
+			sx = voxel_scale * ww;
+			sy = voxel_scale * hh;
+			sz = voxel_scale;
+		}
+		
 		repeat(hh * ww) {
 			i = floor(n / ww);
 			j = n % ww;
@@ -163,6 +173,10 @@ function __3dSurfaceExtrude(_surface = noone, _height = noone, _smooth = false) 
 			var dep  = useH?         buffer_read_at(h_buff,  (round(i * hgtW) + round(j * hgtH) * hg_ww) * 2, buffer_u16) / 65536 * 0.5 : 0.5;
 			var depb = useH && back? buffer_read_at(hb_buff, (round(i * hgtW) + round(j * hgtH) * hg_ww) * 2, buffer_u16) / 65536 * 0.5 : dep;
 			depb = -depb;
+			
+			i0  *= sx; i1   *= sx;
+			j0  *= sy; j1   *= sy;
+			dep *= sz; depb *= sz;
 			
 			__vertex_buffer_add_pntc(_bB, i1, j0, depb, 0, 0, -1, tx1, ty0,,, 255, 0, 0);
 			__vertex_buffer_add_pntc(_bB, i0, j0, depb, 0, 0, -1, tx0, ty0,,, 0, 255, 0);

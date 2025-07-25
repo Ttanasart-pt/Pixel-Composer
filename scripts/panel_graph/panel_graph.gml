@@ -3329,6 +3329,16 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	    	case "Node_Export" :    node = doExport();                  break;
 	    	case "Node_Frame" :     node = doFrame();                   break;
 	    	
+	    	case "Node_Transform" : 
+	    		if(!array_empty(nodes_selecting) && !array_empty(nodes_selecting[0].outputs)) {
+	    			var _outP = nodes_selecting[0].outputs[0];
+	    			if(_outP.type == VALUE_TYPE.d3Mesh || _outP.type == VALUE_TYPE.d3Scene)
+	    				_nodeType = "Node_3D_Transform";
+	    		}
+	    		
+	    		node = doNewNode(_nodeType);
+	    		break;
+	    	
 	    	default :               node = doNewNode(_nodeType);        break;
     	}
     	
@@ -3555,7 +3565,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
         return _frame;
     } 
-
+	
     function doExport(_node = getFocusingNode()) {
         if(DEMO)   return noone;
         if(!_node) return noone;

@@ -2896,7 +2896,8 @@ function Panel_Preview() : PanelContent() constructor {
         var _node = getNodePreview();
         if(_node == noone || !is_surface(prevS)) return;
         
-        var path = get_save_filename_compat("image|*.png;*.jpg", _node.display_name == ""? "export" : _node.display_name, "Save surface as"); 
+        var fname = filename_name_only(PROJECT.path);
+        var path  = get_save_filename_compat("image|*.png;*.jpg", fname, "Save surface as"); 
         key_release();
         
         if(path == "") return;
@@ -2909,7 +2910,8 @@ function Panel_Preview() : PanelContent() constructor {
         
         if(_node == noone) return;
         
-        var path  = get_save_filename_compat("image|*.png;*.jpg", _node.display_name == ""? "export" : _node.display_name, "Save surfaces as"); 
+        var fname = filename_name_only(PROJECT.path);
+        var path  = get_save_filename_compat("image|*.png;*.jpg", fname, "Save surfaces as"); 
         key_release();
         
         if(path == "") return;
