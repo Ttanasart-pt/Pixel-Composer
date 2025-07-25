@@ -18,7 +18,8 @@
             "armature":  [ "Node_Armature_Pose", "Node_Armature_Bind", "Node_Armature_Path", "Node_Armature_Sample" ],
             "buffer":    [ "Node_Surface_From_Buffer" ],
 
-            "d3Mesh":    [ "Node_3D_Camera", "Node_3D_Camera_Set" ]
+            "d3Mesh":    [ "Node_3D_Camera", "Node_3D_Camera_Set" ],
+            "d3Scene":   [ "Node_3D_Camera", "Node_3D_Camera_Set" ],
         }
     },
     "connectTo": {

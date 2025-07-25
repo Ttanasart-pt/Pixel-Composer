@@ -26,27 +26,23 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	newInput(i+4, nodeValue_D3Scene("Scene", noone )).setVisible(true, true);
 	
 	////- =Output
-	
 	newInput(i+2, nodeValue_Dimension());
 	
 	////- =Transform
-	
 	newInput(i+ 9, nodeValue_Enum_Scroll( "Postioning Mode",       2, [ "Position + Rotation", "Position + Lookat", "Lookat + Rotation" ] ));
 	newInput(i+10, nodeValue_Vec3(        "Lookat Position",      [0,0,0]                                ));
 	newInput(i+11, nodeValue_Rotation(    "Roll",                  0                                     ));
 	newInput(i+12, nodeValue_Rotation(    "Horizontal Angle",      45                                    ));
 	newInput(i+13, nodeValue_Slider(      "Vertical Angle",        30, [ 0, 90, 0.1 ]                    ));
 	newInput(i+14, nodeValue_Float(       "Distance",              4                                     ));
+	newInput(i+ 8, nodeValue_Slider(       "Orthographic Scale",   .5, [ 0.01, 4, 0.01 ]                  ));
 	
 	////- =Camera
-	
 	newInput(i+3, nodeValue_Enum_Button(  "Projection",            1 , [ "Perspective", "Orthographic" ] ));
 	newInput(i+0, nodeValue_ISlider(      "FOV",                   60, [ 10, 90, 0.1 ]                   ));
 	newInput(i+1, nodeValue_Vec2(         "Clipping Distance",    [1,10]                                 ));
-	newInput(i+8, nodeValue_Slider(       "Orthographic Scale",   .5, [ 0.01, 4, 0.01 ]                  ));
 	
 	////- =Render
-	
 	newInput(i+ 5, nodeValue_Color(       "Ambient Light",         c_dkgrey                              ));
 	newInput(i+16, nodeValue_Surface(     "Environment Texture"                                          ));
 	newInput(i+ 6, nodeValue_Bool(        "Show Background",       false                                 ));
@@ -55,7 +51,6 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	newInput(i+22, nodeValue_Enum_Button( "Blend mode",            0, [ "Normal", "Additive" ]           ));
 	
 	////- =Wireframe
-	
 	newInput(i+23, nodeValue_Bool(        "Wireframe",             false                                 ));
 	newInput(i+24, nodeValue_Float(       "Wireframe Thickness",   1                                     ));
 	newInput(i+25, nodeValue_Color(       "Wireframe Color",       ca_black                              ));
@@ -64,14 +59,12 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	newInput(i+28, nodeValue_Bool(        "Wireframe only",        false                                 ));
 	
 	////- =Ambient Occlusion
-	
 	newInput(i+17, nodeValue_Bool(        "Ambient Occlusion",     false                                 ));
 	newInput(i+20, nodeValue_Slider(      "AO Strength",           1., [ .01, 4, .01 ]                   ));
 	newInput(i+18, nodeValue_Float(       "AO Radius",            .25                                    ));
 	newInput(i+19, nodeValue_Float(       "AO Bias",              .05                                    ));
 	
 	////- =Effects
-	
 	newInput(i+21, nodeValue_Int(         "Round Normal",          0                                     )).setWindows();
 	newInput(i+29, nodeValue_Color(       "Backface Blending",     ca_white                              ));
 	newInput(i+30, nodeValue_Bool(        "Swap View Normal X",    false                                 ));
@@ -90,8 +83,8 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	
 	input_display_list = [ i+4,
 		["Output",		     false],       i+ 2,
-		["Transform",	     false],       i+ 9, 0, 1, i+10, i+11, i+12, i+13, i+14, 
-		["Camera",		      true],       i+ 3, i+ 0, i+ 1, i+ 8, 
+		["Transform",	     false],       i+ 9, 0, 1, i+10, i+11, i+12, i+13, i+14, i+ 8, 
+		["Camera",		      true],       i+ 3, i+ 0, i+ 1, 
 		["Render",		      true],       i+ 5, i+16, i+ 6, i+ 7, i+15, i+22, 
 		["Wireframe",         true, i+23], i+24, i+25, i+26, i+27, i+28, 
 		["Ambient Occlusion", true, i+17], i+20, i+18, i+19, 
