@@ -35,7 +35,10 @@ function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 	
 	temp_surface = [ noone, noone ];
 	
-	setTrigger(1, "Refresh", [ THEME.refresh_20, 0, COLORS._main_value_positive ], function() /*=>*/ { for(var i = 0; i < process_amount; i++) getObject(i).initModel(); });
+	setTrigger(1, "Refresh", [ THEME.refresh_20, 0, COLORS._main_value_positive ], function() /*=>*/ { 
+		for(var i = 0; i < process_amount; i++) getObject(i).initModel(); 
+		triggerRender();
+	});
 	
 	static step = function() {
 		var _double = getSingleValue(in_mesh + 4);

@@ -45,6 +45,8 @@ function __3dObject() constructor {
 	materials      = [];
 	material_index = [];
 	
+	log = false;
+	
 	////- Object
 	
 	static checkParameter = function(params = {}, forceUpdate = false) {
@@ -196,10 +198,11 @@ function __3dObject() constructor {
 			
 			var _ind  = array_safe_get_fast(material_index, i, i);
 			var _mat  = array_safe_get_fast(materials, _ind, noone);
-			var _uMat = is_instanceof(_mat, __d3dMaterial);
+			var _uMat = is(_mat, __d3dMaterial);
 			
 			shader_set_i("mat_flip", texture_flip);
 			var _tex = _uMat? _mat.getTexture() : -1;
+			// if(log) print(i, _ind, _mat, _tex);
 				
 			if(_shader == sh_d3d_geometry) {
 				if(_uMat) _mat.submitGeometry();

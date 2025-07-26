@@ -585,6 +585,7 @@
             "Node_3D_Mesh_Extrude_Mesh",
             "Node_3D_Mesh_Path_Extrude",
             "Node_3D_Mesh_Path_Revolve",
+            "Node_3D_Mesh_Json",
             { "label": "/Exporters" },
             "Node_3D_Mesh_Export",
             "Node_3D_Mesh_Stack_Slice",

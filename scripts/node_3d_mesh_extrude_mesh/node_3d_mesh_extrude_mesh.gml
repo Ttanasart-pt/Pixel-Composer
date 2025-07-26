@@ -20,7 +20,10 @@ function Node_3D_Mesh_Extrude_Mesh(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 	
 	temp_surface = [ noone, noone ];
 	
-	setTrigger(1, "Refresh", [ THEME.refresh_20, 0, COLORS._main_value_positive ], function() /*=>*/ { for(var i = 0; i < process_amount; i++) getObject(i).initModel(); });
+	setTrigger(1, "Refresh", [ THEME.refresh_20, 0, COLORS._main_value_positive ], function() /*=>*/ { 
+		for(var i = 0; i < process_amount; i++) getObject(i).initModel(); 
+		triggerRender();
+	});
 	
 	static processData = function(_output, _data, _array_index = 0) {
 		var _mesh = _data[in_mesh + 0];
