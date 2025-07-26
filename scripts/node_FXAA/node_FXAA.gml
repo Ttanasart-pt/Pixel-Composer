@@ -1,3 +1,14 @@
+#region create
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_FXAA", "Distance > Set", KEY_GROUP.numeric, 0, function() /*=>*/ { 
+			GRAPH_FOCUS_NUMBER 
+			 _n.inputs[2].setValue(toDecimal(KEYBOARD_NUMBER));
+			KEYBOARD_STRING = "";
+		});
+	});
+	
+#endregion
+
 function Node_FXAA(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "FXAA";
 	
@@ -5,8 +16,8 @@ function Node_FXAA(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(0, nodeValue_Surface("Surface In"));
 	
 	////- =Effect
-	newInput(2, nodeValue_Slider("Distance", 0.5));
-	newInput(3, nodeValue_Slider("Mix", 1));
+	newInput(2, nodeValue_Slider( "Distance", .5 ));
+	newInput(3, nodeValue_Slider( "Mix",       1 ));
 	
 	input_display_list = [ 
 		1, 0,
