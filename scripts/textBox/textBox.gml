@@ -936,6 +936,20 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			}
 		}
 		
+		var _rmx = FILE_DROPPING_X;
+		var _rmy = FILE_DROPPING_Y;
+		var _hov = point_in_rectangle(_rmx, _rmy, rx + _x, ry + _y, rx + _x + _w, ry + _y + _h);
+		
+		if(_hov) {
+			if(FILE_IS_DROPPING)
+				draw_sprite_stretched_ext(THEME.ui_panel, 1, _x, _y, _w, _h, COLORS._main_value_positive, 1);
+			
+			if(FILE_DROPPED && !array_empty(FILE_DROPPING)) {
+				var _file = FILE_DROPPING[0];
+				onModify(_file)
+			}
+		}
+		
 		selecting = self == WIDGET_CURRENT;
 		resetFocus();
 		sprite_index = -1;

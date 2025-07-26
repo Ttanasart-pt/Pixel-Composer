@@ -25,7 +25,7 @@ function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 	name = "3D Json";
 	
 	////- =Transform
-	newInput(in_mesh + 4, nodeValue_Vec3( "Origin Offset", [0,0,0] ));
+	newInput(in_mesh + 4, nodeValue_Bool( "Reset Origin", false ));
 	
 	////- =Object
 	newInput(in_mesh + 0, nodeValue_Path(        "File Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "Json object|*.json" });
@@ -64,7 +64,7 @@ function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 	
 	model_scale  = 1;
 	model_axis   = 0;
-	model_offset = [ 0, 0, 0 ];
+	model_bbox   = [ 0, 0, 0, 0, 0, 0 ];
 	
 	tex_width  = 1;
 	tex_height = 1;
@@ -103,12 +103,13 @@ function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 				
 		}
 		
-		fx -= model_offset[0] * _s;
-		fy -= model_offset[1] * _s;
-		fz -= model_offset[2] * _s;
-		tx -= model_offset[0] * _s;
-		ty -= model_offset[1] * _s;
-		tz -= model_offset[2] * _s;
+		model_bbox[0] = min(model_bbox[0], fx);
+		model_bbox[1] = min(model_bbox[1], fy);
+		model_bbox[2] = min(model_bbox[2], fz);
+		
+		model_bbox[3] = max(model_bbox[3], tx);
+		model_bbox[4] = max(model_bbox[4], ty);
+		model_bbox[5] = max(model_bbox[5], tz);
 		
 		var _face = _element.faces; 
 		
@@ -231,19 +232,37 @@ function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 		
 		model_scale   = getSingleValue(in_mesh + 2);
 		model_axis    = getSingleValue(in_mesh + 3);
-		model_offset  = getSingleValue(in_mesh + 4);
+		var _reorigin = getSingleValue(in_mesh + 4);
 		
 		material_map  = _data.textures;
 		tex_width     = struct_try_get(_data, "textureWidth", 16);
 		tex_height    = struct_try_get(_data, "textureHeight", 16);
-	
+		
 		var _elements = _data.elements;
 		var _vertices = [];
 		material_arr  = [];
+		model_bbox    = [ infinity, infinity, infinity, -infinity, -infinity, -infinity ];
 		
 		for( var i = 0, n = array_length(_elements); i < n; i++ ) {
 			var _element = _elements[i];
 			readElement(_vertices, _element);
+		}
+		
+		if(_reorigin) {
+			var _ofx = ( model_bbox[0] + model_bbox[3] ) / 2;
+			var _ofy = ( model_bbox[1] + model_bbox[4] ) / 2;
+			var _ofz = ( model_bbox[2] + model_bbox[5] ) / 2;
+			
+			for( var i = 0, n = array_length(_vertices); i < n; i++ ) {
+				var _vers = _vertices[i];
+				for( var j = 0, m = array_length(_vers); j < m; j++ ) {
+					var _v = _vers[j];
+					
+					_v.x -= _ofx;
+					_v.y -= _ofy;
+					_v.z -= _ofz;
+				}
+			}
 		}
 		
 		object = new __3dObject();
@@ -252,7 +271,6 @@ function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 		object.VF = global.VF_POS_NORM_TEX_COL;
 		object.VB = object.build();
 		
-			
 		var _textureKeys = struct_get_names(material_map);
 		use_texture = !array_empty(_textureKeys);
 		var _in = [];
