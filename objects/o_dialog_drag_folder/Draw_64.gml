@@ -5,12 +5,12 @@ if !ready exit;
 	DIALOG_DRAW_BG
 	if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
 	
-	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
+	draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text);
 	draw_text(dialog_x + ui(20), dialog_y + ui(12), __txtx("add_images_title_direcory", "Import directory"));
 #endregion
 
 #region directory option
-	var dir_y = dialog_y + ui(44);
+	var dir_y = dialog_y + title_h;
 	
 	cb_recursive.setFocusHover(sFOCUS, sHOVER);
 	cb_recursive.draw(dialog_x + dialog_w - ui(48), dir_y, dir_recursive, mouse_ui);

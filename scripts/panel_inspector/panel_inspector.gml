@@ -32,7 +32,7 @@
         
         registerFunction(i, "Reset",                 "",    MOD_KEY.none,    panel_inspector_reset                  ).setMenu("inspector_reset")
         registerFunction(i, "Toggle Animation",      "",    MOD_KEY.none,    panel_inspector_animation_toggle       ).setMenu("inspector_animate_toggle")
-        registerFunction(i, "Toggle Axis",           "",    MOD_KEY.none,    panel_inspector_axis_toggle            ).setMenu("inspector_axis_toggle")
+        registerFunction(i, "Separate/Combine Axis",           "",    MOD_KEY.none,    panel_inspector_axis_toggle            ).setMenu("inspector_axis_toggle")
         registerFunction(i, "Toggle Expression",     "",    MOD_KEY.none,    panel_inspector_expression_toggle      ).setMenu("inspector_expression_toggle")
         registerFunction(i, "Extract to Globalvar",  "",    MOD_KEY.none,    panel_inspector_extract_global         ).setMenu("inspector_extract_global")
         registerFunction(i, "Extract Value",         "",    MOD_KEY.none,    panel_inspector_extract_single         ).setMenu("inspector_extract_value")
@@ -457,7 +457,7 @@ function Panel_Inspector() : PanelContent() constructor {
     static drawNodeProperties = function(_y, _m, _inspecting = inspecting) {
         var con_w  = contentPane.surface_w - ui(4); 
         var _hover = pHOVER && contentPane.hover;
-        var _focus = pFOCUS || PANEL_GRAPH.pFOCUS || PANEL_PREVIEW.pFOCUS;
+        var _focus = pFOCUS || PANEL_GRAPH.pFOCUS/* || PANEL_PREVIEW.pFOCUS*/;
         
         _inspecting.inspecting       = true;
         _inspecting.inspector_scroll = contentPane.scroll_y_to;

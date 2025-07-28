@@ -1,43 +1,44 @@
 #region function calls
     
-    function panel_preview_clear_tool()                 { CALL("preview_clear_tool");                PANEL_PREVIEW.clearTool();                                                }
+    function panel_preview_clear_tool()                 { CALL("preview_clear_tool");                PANEL_PREVIEW.clearTool();               }
     
-    function panel_preview_focus_content()              { CALL("preview_focus_content");             PANEL_PREVIEW.fullView();                                                }
-    function panel_preview_save_current_frame()         { CALL("preview_save_current_frame");        PANEL_PREVIEW.saveCurrentFrame();                                        }
-    function panel_preview_saveCurrentFrameToFocus()    { CALL("preview_save_to_focused_file");      PANEL_PREVIEW.saveCurrentFrameToFocus();                                 }
-    function panel_preview_saveCurrentFrameProject()    { CALL("preview_save_to_project");           PANEL_PREVIEW.saveCurrentFrameProject();                                 }
-    function panel_preview_save_all_current_frame()     { CALL("preview_save_all_current_frame");    PANEL_PREVIEW.saveAllCurrentFrames();                                    }
+    function panel_preview_focus_content()              { CALL("preview_focus_content");             PANEL_PREVIEW.fullView();                }
+    function panel_preview_save_current_frame()         { CALL("preview_save_current_frame");        PANEL_PREVIEW.saveCurrentFrame();        }
+    function panel_preview_saveCurrentFrameToFocus()    { CALL("preview_save_to_focused_file");      PANEL_PREVIEW.saveCurrentFrameToFocus(); }
+    function panel_preview_saveCurrentFrameProject()    { CALL("preview_save_to_project");           PANEL_PREVIEW.saveCurrentFrameProject(); }
+    function panel_preview_save_all_current_frame()     { CALL("preview_save_all_current_frame");    PANEL_PREVIEW.saveAllCurrentFrames();    }
     function panel_preview_preview_window()             { CALL("preview_preview_window");            PANEL_PREVIEW.create_preview_window(PANEL_PREVIEW.getNodePreview());     }
+    function panel_preview_cycle_channel()              { CALL("preview_cycle_channel");             PANEL_PREVIEW.cyclePreviewChannel();     }
     
-    function panel_preview_pan()                        { CALL("preview_pan");                       PANEL_PREVIEW.canvas_dragging_key = true;                                }
-    function panel_preview_zoom()                       { CALL("preview_zoom");                      PANEL_PREVIEW.canvas_zooming_key  = true;                                }
+    function panel_preview_pan()                        { CALL("preview_pan");                       PANEL_PREVIEW.canvas_dragging_key = true; }
+    function panel_preview_zoom()                       { CALL("preview_zoom");                      PANEL_PREVIEW.canvas_zooming_key  = true; }
     
-    function panel_preview_3d_view_front()              { CALL("preview_3d_front_view");             PANEL_PREVIEW.d3_view_action_front();                                    }
-    function panel_preview_3d_view_back()               { CALL("preview_3d_back_view");              PANEL_PREVIEW.d3_view_action_back();                                     }
-    function panel_preview_3d_view_right()              { CALL("preview_3d_right_view");             PANEL_PREVIEW.d3_view_action_right();                                    }
-    function panel_preview_3d_view_left()               { CALL("preview_3d_left_view");              PANEL_PREVIEW.d3_view_action_left();                                     }
-    function panel_preview_3d_view_top()                { CALL("preview_3d_top_view");               PANEL_PREVIEW.d3_view_action_top();                                      }
-    function panel_preview_3d_view_bottom()             { CALL("preview_3d_bottom_view");            PANEL_PREVIEW.d3_view_action_bottom();                                   }
+    function panel_preview_3d_view_front()              { CALL("preview_3d_front_view");             PANEL_PREVIEW.d3_view_action_front();  }
+    function panel_preview_3d_view_back()               { CALL("preview_3d_back_view");              PANEL_PREVIEW.d3_view_action_back();   }
+    function panel_preview_3d_view_right()              { CALL("preview_3d_right_view");             PANEL_PREVIEW.d3_view_action_right();  }
+    function panel_preview_3d_view_left()               { CALL("preview_3d_left_view");              PANEL_PREVIEW.d3_view_action_left();   }
+    function panel_preview_3d_view_top()                { CALL("preview_3d_top_view");               PANEL_PREVIEW.d3_view_action_top();    }
+    function panel_preview_3d_view_bottom()             { CALL("preview_3d_bottom_view");            PANEL_PREVIEW.d3_view_action_bottom(); }
     
-    function panel_preview_set_zoom(zoom)               { CALL("preview_preview_set_zoom");          PANEL_PREVIEW.fullView(zoom);                                            }
+    function panel_preview_set_zoom(zoom)               { CALL("preview_preview_set_zoom");          PANEL_PREVIEW.fullView(zoom);          }
     
-    function panel_preview_set_tile_off()               { CALL("preview_set_tile_off");              PANEL_PREVIEW.set_tile_off();                                            }
-    function panel_preview_set_tile_horizontal()        { CALL("preview_set_tile_horizontal");       PANEL_PREVIEW.set_tile_horizontal();                                     }
-    function panel_preview_set_tile_vertical()          { CALL("preview_set_tile_vertical");         PANEL_PREVIEW.set_tile_vertical();                                       }
-    function panel_preview_set_tile_both()              { CALL("preview_set_tile_both");             PANEL_PREVIEW.set_tile_both();                                           }
-    function panel_preview_set_tile_toggle()            { CALL("preview_set_tile_toggle");           PANEL_PREVIEW.toggle_tile();                                             }
+    function panel_preview_set_tile_off()               { CALL("preview_set_tile_off");              PANEL_PREVIEW.set_tile_off();          }
+    function panel_preview_set_tile_horizontal()        { CALL("preview_set_tile_horizontal");       PANEL_PREVIEW.set_tile_horizontal();   }
+    function panel_preview_set_tile_vertical()          { CALL("preview_set_tile_vertical");         PANEL_PREVIEW.set_tile_vertical();     }
+    function panel_preview_set_tile_both()              { CALL("preview_set_tile_both");             PANEL_PREVIEW.set_tile_both();         }
+    function panel_preview_set_tile_toggle()            { CALL("preview_set_tile_toggle");           PANEL_PREVIEW.toggle_tile();           }
     
-    function panel_preview_set_split_off()              { CALL("preview_set_split_off");             PANEL_PREVIEW.set_split_off();                                           }
-    function panel_preview_set_split_horizontal()       { CALL("preview_set_split_horizontal");      PANEL_PREVIEW.set_split_horizontal();                                    }
-    function panel_preview_set_split_vertical()         { CALL("preview_set_split_vertical");        PANEL_PREVIEW.set_split_vertical();                                      }
-    function panel_preview_toggle_split_view()          { CALL("preview_toggle_split_view");         PANEL_PREVIEW.toggle_split_view();                                       }
+    function panel_preview_set_split_off()              { CALL("preview_set_split_off");             PANEL_PREVIEW.set_split_off();         }
+    function panel_preview_set_split_horizontal()       { CALL("preview_set_split_horizontal");      PANEL_PREVIEW.set_split_horizontal();  }
+    function panel_preview_set_split_vertical()         { CALL("preview_set_split_vertical");        PANEL_PREVIEW.set_split_vertical();    }
+    function panel_preview_toggle_split_view()          { CALL("preview_toggle_split_view");         PANEL_PREVIEW.toggle_split_view();     }
     
-    function panel_preview_new_preview_window()         { CALL("preview_new_preview_window");        PANEL_PREVIEW.new_preview_window();                                      }
-    function panel_preview_saveCurrentFrame()           { CALL("preview_saveCurrentFrame");          PANEL_PREVIEW.saveCurrentFrame();                                        }
-    function panel_preview_saveAllCurrentFrames()       { CALL("preview_saveAllCurrentFrames");      PANEL_PREVIEW.saveAllCurrentFrames();                                    }
-    function panel_preview_copyCurrentFrame()           { CALL("preview_copyCurrentFrame");          PANEL_PREVIEW.copyCurrentFrame();                                        }
-    function panel_preview_copy_color()                 { CALL("preview_copy_color");                PANEL_PREVIEW.copy_color();                                              }
-    function panel_preview_copy_color_hex()             { CALL("preview_copy_color_hex");            PANEL_PREVIEW.copy_color_hex();                                          }
+    function panel_preview_new_preview_window()         { CALL("preview_new_preview_window");        PANEL_PREVIEW.new_preview_window();    }
+    function panel_preview_saveCurrentFrame()           { CALL("preview_saveCurrentFrame");          PANEL_PREVIEW.saveCurrentFrame();      }
+    function panel_preview_saveAllCurrentFrames()       { CALL("preview_saveAllCurrentFrames");      PANEL_PREVIEW.saveAllCurrentFrames();  }
+    function panel_preview_copyCurrentFrame()           { CALL("preview_copyCurrentFrame");          PANEL_PREVIEW.copyCurrentFrame();      }
+    function panel_preview_copy_color()                 { CALL("preview_copy_color");                PANEL_PREVIEW.copy_color();            }
+    function panel_preview_copy_color_hex()             { CALL("preview_copy_color_hex");            PANEL_PREVIEW.copy_color_hex();        }
     
     function panel_preview_toggle_grid_pixel()          { CALL("preview_toggle_grid_pixel");         PROJECT.previewGrid.pixel = !PROJECT.previewGrid.pixel;                  }
     function panel_preview_toggle_grid_visible()        { CALL("preview_toggle_grid_visible");       PROJECT.previewGrid.show  = !PROJECT.previewGrid.show;                   }
@@ -74,6 +75,7 @@
         registerFunction(p, "Save to Project",          "",  n, panel_preview_saveCurrentFrameProject  ).setMenu("preview_save_to_project")
         registerFunction(p, "Save all Current Frames",  "",  n, panel_preview_save_all_current_frame   ).setMenu("preview_save_all_current_frame")
         registerFunction(p, "Preview Window",           "P", c, panel_preview_preview_window           ).setMenu("preview_preview_window")
+        registerFunction(p, "Cycle Channel",            vk_tab, n, panel_preview_cycle_channel         ).setMenu("preview_cycle_channel")
     
         registerFunction(p, "Pan",                      "", c,     panel_preview_pan                   ).setMenu("preview_pan")
         registerFunction(p, "Zoom",                     "", a | c, panel_preview_zoom                  ).setMenu("preview_zoom")
@@ -679,6 +681,24 @@ function Panel_Preview() : PanelContent() constructor {
     }
     
     function onFocusBegin() { PANEL_PREVIEW = self; }
+    
+    function cyclePreviewChannel(_forward = true) {
+    	var node = __getNodePreview();
+        if(node == noone) return;
+        
+        var _chanCurr = node.preview_channel;
+        var _chanList = sbChannelIndex;
+        var _chanInfd = array_find(_chanList, _chanCurr);
+        if(array_empty(_chanList)) return;
+        
+        if(_chanInfd < 0 ) {
+        	node.preview_channel = _chanList[0];
+        	return;
+        }
+        
+        _chanInfd = (_chanInfd + (_forward? 1 : -1) + array_length(_chanList)) % array_length(_chanList);
+        node.preview_channel = _chanList[_chanInfd];
+    }
     
     ////- VIEW
     

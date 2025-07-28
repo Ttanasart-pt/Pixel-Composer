@@ -6,7 +6,7 @@ if !ready exit;
 	if(DIALOG_SHOW_FOCUS) DIALOG_DRAW_FOCUS
 	
 	draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
-	draw_text(dialog_x + ui(20), dialog_y + ui(8), __txtx("add_images_title_single", "Import image as"));
+	draw_text(dialog_x + ui(20), dialog_y + ui(8), __txt("Import JSON as"));
 #endregion
 
 #region nodes
@@ -31,9 +31,8 @@ if !ready exit;
 			if(mouse_press(mb_left, sFOCUS)) {
 				
 				switch(_node.node) {
-					case Node_Image          : Node_create_Image_path(nx, ny, path).skipDefault();                 break;
-					case Node_Image_Sequence : Node_create_Image_Sequence_path(nx, ny, [ path ]).skipDefault();	   break;
-					case Node_Canvas         : nodeBuild("Node_Canvas", nx, ny).skipDefault().loadImagePath(path); break;
+					case Node_Json_File_Read : Node_create_Json_File_Read_path(nx, ny, path).skipDefault(); break;
+					case Node_3D_Mesh_Json   : Node_create_3D_Json_path(nx, ny, path).skipDefault();        break;
 				}
 				instance_destroy();
 			}

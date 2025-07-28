@@ -10,8 +10,11 @@ event_inherited();
 	];
 	
 	destroy_on_click_out = true;
-	dialog_w = ui(50 + 80 * array_length(nodes));
-	dialog_h = ui(176);
+	title_h   = ui(32);
+	content_h = ui(132);
+	
+	dialog_w  = ui(50 + 80 * array_length(nodes));
+	dialog_h  = title_h + content_h;
 	
 	paths	      = "";
 	is_dir	      = false;

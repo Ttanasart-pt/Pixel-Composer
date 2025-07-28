@@ -3,7 +3,7 @@ function lerp_float(from, to, speed, pre = 0.01) {
 
     if(abs(from - to) < pre) return to;
     
-    var _rat = 1 - power(1 - 1 / speed, delta_time / 10000);
+    var _rat = 1 - power(1 - 1 / speed, delta_time / 10_000);
     return lerp(from, to, _rat);
 }
 

@@ -3,9 +3,8 @@ event_inherited();
 
 #region data
 	nodes = [
-		ALL_NODES[$ "Node_Image"],
-		ALL_NODES[$ "Node_Image_Sequence"],
-		ALL_NODES[$ "Node_Canvas"],
+		ALL_NODES[$ "Node_Json_File_Read"],
+		ALL_NODES[$ "Node_3D_Mesh_Json"],
 	];
 	
 	destroy_on_click_out = true;

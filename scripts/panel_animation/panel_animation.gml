@@ -96,7 +96,7 @@
         
         registerFunction("Animation", "Rename Group",       "", MOD_KEY.none, panel_animation_group_rename          ).setMenu("animation_rename_group",        )
         registerFunction("Animation", "Remove Group",       "", MOD_KEY.none, panel_animation_group_remove          ).setMenu("animation_remove_group",        THEME.cross)
-        registerFunction("Animation", "Toggle Axis",        "", MOD_KEY.none, panel_animation_toggle_axis           ).setMenu("animation_toggle_axis",         )
+        registerFunction("Animation", "Separate/Combine Axis",        "", MOD_KEY.none, panel_animation_toggle_axis           ).setMenu("animation_toggle_axis",         )
         registerFunction("Animation", "Separate Axis",      "", MOD_KEY.none, panel_animation_separate_axis         ).setMenu("animation_separate_axis",       )
         registerFunction("Animation", "Combine Axis",       "", MOD_KEY.none, panel_animation_combine_axis          ).setMenu("animation_combine_axis",        )
         

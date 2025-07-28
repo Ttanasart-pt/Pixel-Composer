@@ -25,12 +25,12 @@ function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 	name = "3D Json";
 	
 	////- =Transform
-	newInput(in_mesh + 4, nodeValue_Bool( "Reset Origin", false ));
+	newInput(in_mesh + 4, nodeValue_Bool( "Reset Origin", true ));
 	
 	////- =Object
 	newInput(in_mesh + 0, nodeValue_Path(        "File Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "Json object|*.json" });
 	newInput(in_mesh + 2, nodeValue_Float(       "Import Scale", 1/16 ));
-	newInput(in_mesh + 3, nodeValue_Enum_Scroll( "Axis",         0, [ "Z up", "Y up" ]));
+	newInput(in_mesh + 3, nodeValue_Enum_Scroll( "Axis",         1, [ "Z up", "Y up" ]));
 	
 	////- =Material
 	newInput(in_mesh + 1, nodeValue_Bool( "Flip UV", true, "Flip UV axis, can be use to fix some texture mapping error."));
@@ -90,15 +90,15 @@ function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 		
 		switch(model_axis) {
 			case 0 : 
-				fx = _fx * _s; tx = _tx * _s;
-				fy = _fy * _s; ty = _ty * _s;
-				fz = _fz * _s; tz = _tz * _s;
+				fx =  _fx * _s; tx =  _tx * _s;
+				fy =  _fy * _s; ty =  _ty * _s;
+				fz =  _fz * _s; tz =  _tz * _s;
 				break;
 				
 			case 1 : 
-				fx = _fx * _s; tx = _tx * _s;
-				fy = _fz * _s; ty = _tz * _s;
-				fz = _fy * _s; tz = _ty * _s;
+				fx =  _fx * _s; tx =  _tx * _s;
+				fy =  _fz * _s; ty =  _tz * _s;
+				fz =  _fy * _s; tz =  _ty * _s;
 				break;
 				
 		}
@@ -113,107 +113,119 @@ function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 		
 		var _face = _element.faces; 
 		
-		var _f  = _face.up;
-		var fu = _f.uv[0] / tex_width;
-		var fv = _f.uv[1] / tex_height;
-		var tu = _f.uv[2] / tex_width;
-		var tv = _f.uv[3] / tex_height;
-		
-		array_push(material_arr, string_trim(_f.texture, ["#"]));
-		array_push(_vertices, [ // +z
-			__vertexA( [ fx, fy, tz ] ).setNormal( 0, 0, 1 ).setUV(fu, fv),
-			__vertexA( [ fx, ty, tz ] ).setNormal( 0, 0, 1 ).setUV(fu, tv),
-			__vertexA( [ tx, ty, tz ] ).setNormal( 0, 0, 1 ).setUV(tu, tv),
+		if(has(_face, "up") && struct_try_get(_face.up, "enabled", true)) {
+			var _f  = _face.up;
+			var fu = _f.uv[0] / tex_width;
+			var fv = _f.uv[1] / tex_height;
+			var tu = _f.uv[2] / tex_width;
+			var tv = _f.uv[3] / tex_height;
 			
-			__vertexA( [ tx, fy, tz ] ).setNormal( 0, 0, 1 ).setUV(tu, fv),
-			__vertexA( [ fx, fy, tz ] ).setNormal( 0, 0, 1 ).setUV(fu, fv),
-			__vertexA( [ tx, ty, tz ] ).setNormal( 0, 0, 1 ).setUV(tu, tv),
-		]);
+			array_push(material_arr, string_trim(_f.texture, ["#"]));
+			array_push(_vertices, [ // +z
+				__vertexA( [ fx, fy, tz ] ).setNormal( 0, 0, 1 ).setUV(fu, fv),
+				__vertexA( [ fx, ty, tz ] ).setNormal( 0, 0, 1 ).setUV(fu, tv),
+				__vertexA( [ tx, ty, tz ] ).setNormal( 0, 0, 1 ).setUV(tu, tv),
+				
+				__vertexA( [ tx, fy, tz ] ).setNormal( 0, 0, 1 ).setUV(tu, fv),
+				__vertexA( [ fx, fy, tz ] ).setNormal( 0, 0, 1 ).setUV(fu, fv),
+				__vertexA( [ tx, ty, tz ] ).setNormal( 0, 0, 1 ).setUV(tu, tv),
+			]);
+		}
 		
-		var _f = _face.down;
-		var fu = _f.uv[0] / tex_width;
-		var fv = _f.uv[1] / tex_height;
-		var tu = _f.uv[2] / tex_width;
-		var tv = _f.uv[3] / tex_height;
-		
-		array_push(material_arr, string_trim(_f.texture, ["#"]));
-		array_push(_vertices, [ // -z
-			__vertexA( [ fx, fy, fz ] ).setNormal( 0, 0,-1 ).setUV(fu, fv),
-			__vertexA( [ tx, ty, fz ] ).setNormal( 0, 0,-1 ).setUV(tu, tv),
-			__vertexA( [ fx, ty, fz ] ).setNormal( 0, 0,-1 ).setUV(fu, tv),
+		if(has(_face, "down") && struct_try_get(_face.down, "enabled", true)) {
+			var _f = _face.down;
+			var fu = _f.uv[0] / tex_width;
+			var fv = _f.uv[1] / tex_height;
+			var tu = _f.uv[2] / tex_width;
+			var tv = _f.uv[3] / tex_height;
 			
-			__vertexA( [ tx, fy, fz ] ).setNormal( 0, 0,-1 ).setUV(tu, fv),
-			__vertexA( [ tx, ty, fz ] ).setNormal( 0, 0,-1 ).setUV(tu, tv),
-			__vertexA( [ fx, fy, fz ] ).setNormal( 0, 0,-1 ).setUV(fu, fv),
-		]);
+			array_push(material_arr, string_trim(_f.texture, ["#"]));
+			array_push(_vertices, [ // -z
+				__vertexA( [ fx, fy, fz ] ).setNormal( 0, 0,-1 ).setUV(fu, fv),
+				__vertexA( [ tx, ty, fz ] ).setNormal( 0, 0,-1 ).setUV(tu, tv),
+				__vertexA( [ fx, ty, fz ] ).setNormal( 0, 0,-1 ).setUV(fu, tv),
+				
+				__vertexA( [ tx, fy, fz ] ).setNormal( 0, 0,-1 ).setUV(tu, fv),
+				__vertexA( [ tx, ty, fz ] ).setNormal( 0, 0,-1 ).setUV(tu, tv),
+				__vertexA( [ fx, fy, fz ] ).setNormal( 0, 0,-1 ).setUV(fu, fv),
+			]);
+		}
 		
-		var _f = _face.east;
-		var fu = _f.uv[0] / tex_width;
-		var fv = _f.uv[1] / tex_height;
-		var tu = _f.uv[2] / tex_width;
-		var tv = _f.uv[3] / tex_height;
-		
-		array_push(material_arr, string_trim(_f.texture, ["#"]));
-		array_push(_vertices, [ // +x
-			__vertexA( [ tx, fy, fz ] ).setNormal( 1, 0, 0 ).setUV(fu, fv),
-			__vertexA( [ tx, fy, tz ] ).setNormal( 1, 0, 0 ).setUV(fu, tv),
-			__vertexA( [ tx, ty, tz ] ).setNormal( 1, 0, 0 ).setUV(tu, tv),
+		if(has(_face, "east") && struct_try_get(_face.east, "enabled", true)) {
+			var _f = _face.east;
+			var fu = _f.uv[0] / tex_width;
+			var fv = _f.uv[1] / tex_height;
+			var tu = _f.uv[2] / tex_width;
+			var tv = _f.uv[3] / tex_height;
 			
-			__vertexA( [ tx, ty, fz ] ).setNormal( 1, 0, 0 ).setUV(tu, fv),
-			__vertexA( [ tx, fy, fz ] ).setNormal( 1, 0, 0 ).setUV(fu, fv),
-			__vertexA( [ tx, ty, tz ] ).setNormal( 1, 0, 0 ).setUV(tu, tv),
-		]);
+			array_push(material_arr, string_trim(_f.texture, ["#"]));
+			array_push(_vertices, [ // +x
+				__vertexA( [ tx, fy, fz ] ).setNormal( 1, 0, 0 ).setUV(fu, fv),
+				__vertexA( [ tx, fy, tz ] ).setNormal( 1, 0, 0 ).setUV(fu, tv),
+				__vertexA( [ tx, ty, tz ] ).setNormal( 1, 0, 0 ).setUV(tu, tv),
+				
+				__vertexA( [ tx, ty, fz ] ).setNormal( 1, 0, 0 ).setUV(tu, fv),
+				__vertexA( [ tx, fy, fz ] ).setNormal( 1, 0, 0 ).setUV(fu, fv),
+				__vertexA( [ tx, ty, tz ] ).setNormal( 1, 0, 0 ).setUV(tu, tv),
+			]);
+		}
 		
-		var _f = _face.west;
-		var fu = _f.uv[0] / tex_width;
-		var fv = _f.uv[1] / tex_height;
-		var tu = _f.uv[2] / tex_width;
-		var tv = _f.uv[3] / tex_height;
-		
-		array_push(material_arr, string_trim(_f.texture, ["#"]));
-		array_push(_vertices, [ // -x
-			__vertexA( [ fx, fy, fz ] ).setNormal(-1, 0, 0 ).setUV(fu, fv),
-			__vertexA( [ fx, ty, tz ] ).setNormal(-1, 0, 0 ).setUV(tu, tv),
-			__vertexA( [ fx, fy, tz ] ).setNormal(-1, 0, 0 ).setUV(fu, tv),
+		if(has(_face, "west") && struct_try_get(_face.west, "enabled", true)) {
+			var _f = _face.west;
+			var fu = _f.uv[0] / tex_width;
+			var fv = _f.uv[1] / tex_height;
+			var tu = _f.uv[2] / tex_width;
+			var tv = _f.uv[3] / tex_height;
 			
-			__vertexA( [ fx, ty, fz ] ).setNormal(-1, 0, 0 ).setUV(tu, fv),
-			__vertexA( [ fx, ty, tz ] ).setNormal(-1, 0, 0 ).setUV(tu, tv),
-			__vertexA( [ fx, fy, fz ] ).setNormal(-1, 0, 0 ).setUV(fu, fv),
-		]);
+			array_push(material_arr, string_trim(_f.texture, ["#"]));
+			array_push(_vertices, [ // -x
+				__vertexA( [ fx, fy, fz ] ).setNormal(-1, 0, 0 ).setUV(fu, fv),
+				__vertexA( [ fx, ty, tz ] ).setNormal(-1, 0, 0 ).setUV(tu, tv),
+				__vertexA( [ fx, fy, tz ] ).setNormal(-1, 0, 0 ).setUV(fu, tv),
+				
+				__vertexA( [ fx, ty, fz ] ).setNormal(-1, 0, 0 ).setUV(tu, fv),
+				__vertexA( [ fx, ty, tz ] ).setNormal(-1, 0, 0 ).setUV(tu, tv),
+				__vertexA( [ fx, fy, fz ] ).setNormal(-1, 0, 0 ).setUV(fu, fv),
+			]);
+		}
 		
-		var _f = _face.north;
-		var fu = _f.uv[0] / tex_width;
-		var fv = _f.uv[1] / tex_height;
-		var tu = _f.uv[2] / tex_width;
-		var tv = _f.uv[3] / tex_height;
-		
-		array_push(material_arr, string_trim(_f.texture, ["#"]));
-		array_push(_vertices, [ // +y
-			__vertexA( [ fx, ty, fz ] ).setNormal( 0, 1, 0 ).setUV(fu, fv),
-			__vertexA( [ tx, ty, tz ] ).setNormal( 0, 1, 0 ).setUV(tu, tv),
-			__vertexA( [ fx, ty, tz ] ).setNormal( 0, 1, 0 ).setUV(fu, tv),
+		if(has(_face, "north") && struct_try_get(_face.north, "enabled", true)) {
+			var _f = _face.north;
+			var fu = _f.uv[0] / tex_width;
+			var fv = _f.uv[1] / tex_height;
+			var tu = _f.uv[2] / tex_width;
+			var tv = _f.uv[3] / tex_height;
 			
-			__vertexA( [ tx, ty, fz ] ).setNormal( 0, 1, 0 ).setUV(tu, fv),
-			__vertexA( [ tx, ty, tz ] ).setNormal( 0, 1, 0 ).setUV(tu, tv),
-			__vertexA( [ fx, ty, fz ] ).setNormal( 0, 1, 0 ).setUV(fu, fv),
-		]);
+			array_push(material_arr, string_trim(_f.texture, ["#"]));
+			array_push(_vertices, [ // +y
+				__vertexA( [ fx, fy, fz ] ).setNormal( 0, 1, 0 ).setUV(fu, fv),
+				__vertexA( [ fx, fy, tz ] ).setNormal( 0, 1, 0 ).setUV(fu, tv),
+				__vertexA( [ tx, fy, tz ] ).setNormal( 0, 1, 0 ).setUV(tu, tv),
+				
+				__vertexA( [ tx, fy, fz ] ).setNormal( 0, 1, 0 ).setUV(tu, fv),
+				__vertexA( [ fx, fy, fz ] ).setNormal( 0, 1, 0 ).setUV(fu, fv),
+				__vertexA( [ tx, fy, tz ] ).setNormal( 0, 1, 0 ).setUV(tu, tv),
+			]);
+		}
 		
-		var _f = _face.south;
-		var fu = _f.uv[0] / tex_width;
-		var fv = _f.uv[1] / tex_height;
-		var tu = _f.uv[2] / tex_width;
-		var tv = _f.uv[3] / tex_height;
-		
-		array_push(material_arr, string_trim(_f.texture, ["#"]));
-		array_push(_vertices, [ // -y
-			__vertexA( [ fx, fy, fz ] ).setNormal( 0,-1, 0 ).setUV(fu, fv),
-			__vertexA( [ fx, fy, tz ] ).setNormal( 0,-1, 0 ).setUV(fu, tv),
-			__vertexA( [ tx, fy, tz ] ).setNormal( 0,-1, 0 ).setUV(tu, tv),
+		if(has(_face, "south") && struct_try_get(_face.south, "enabled", true)) {
+			var _f = _face.south;
+			var fu = _f.uv[0] / tex_width;
+			var fv = _f.uv[1] / tex_height;
+			var tu = _f.uv[2] / tex_width;
+			var tv = _f.uv[3] / tex_height;
 			
-			__vertexA( [ tx, fy, fz ] ).setNormal( 0,-1, 0 ).setUV(tu, fv),
-			__vertexA( [ fx, fy, fz ] ).setNormal( 0,-1, 0 ).setUV(fu, fv),
-			__vertexA( [ tx, fy, tz ] ).setNormal( 0,-1, 0 ).setUV(tu, tv),
-		]);
+			array_push(material_arr, string_trim(_f.texture, ["#"]));
+			array_push(_vertices, [ // -y
+				__vertexA( [ fx, ty, fz ] ).setNormal( 0,-1, 0 ).setUV(fu, fv),
+				__vertexA( [ tx, ty, tz ] ).setNormal( 0,-1, 0 ).setUV(tu, tv),
+				__vertexA( [ fx, ty, tz ] ).setNormal( 0,-1, 0 ).setUV(fu, tv),
+				
+				__vertexA( [ tx, ty, fz ] ).setNormal( 0,-1, 0 ).setUV(tu, fv),
+				__vertexA( [ tx, ty, tz ] ).setNormal( 0,-1, 0 ).setUV(tu, tv),
+				__vertexA( [ fx, ty, fz ] ).setNormal( 0,-1, 0 ).setUV(fu, fv),
+			]);
+		}
 		
 		if(has(_element, "children"))
 		for( var i = 0, n = array_length(_element.children); i < n; i++ )
