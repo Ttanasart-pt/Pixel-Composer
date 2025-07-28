@@ -24,22 +24,26 @@ function Node_create_3D_Json_path(_x, _y, path) {
 function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group) constructor {
 	name = "3D Json";
 	
+	var i = in_mesh;
+	
 	////- =Transform
-	newInput(in_mesh + 4, nodeValue_Bool( "Reset Origin", true ));
+	newInput(i+4, nodeValue_Bool( "Reset Origin", true ));
 	
 	////- =Object
-	newInput(in_mesh + 0, nodeValue_Path(        "File Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "Json object|*.json" });
-	newInput(in_mesh + 2, nodeValue_Float(       "Import Scale", 1/16 ));
-	newInput(in_mesh + 3, nodeValue_Enum_Scroll( "Axis",         1, [ "Z up", "Y up" ]));
+	newInput(i+0, nodeValue_Path(        "File Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "Json object|*.json" });
+	newInput(i+5, nodeValue_Path(        "Texture Dir" ));
+	newInput(i+2, nodeValue_Float(       "Import Scale", 1/16 ));
+	newInput(i+3, nodeValue_Enum_Scroll( "Axis",         1, [ "Z up", "Y up" ]));
 	
 	////- =Material
-	newInput(in_mesh + 1, nodeValue_Bool( "Flip UV", true, "Flip UV axis, can be use to fix some texture mapping error."));
+	newInput(i+1, nodeValue_Bool( "Flip UV", true, "Flip UV axis, can be use to fix some texture mapping error."));
+	// input i+6
 		
 	input_display_list = [
 		__d3d_input_list_mesh,
-		__d3d_input_list_transform, in_mesh + 4, 
-		["Object",	 false], in_mesh + 0, in_mesh + 2, in_mesh + 3,  
-		["Material", false], in_mesh + 1, 
+		__d3d_input_list_transform, i+4, 
+		["Object",	 false], i+0, i+5, i+2, i+3,  
+		["Material", false], i+1, 
 	]
 	
 	array_foreach(inputs, function(i) /*=>*/ {return i.rejectArray()}, in_mesh);
@@ -69,49 +73,43 @@ function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 	tex_width  = 1;
 	tex_height = 1;
 	
+	invertMatrix = noone;
+	
 	setTrigger(1, __txt("Refresh"), [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() /*=>*/ { 
 		current_path = ""; 
 		outputs[0].setValue(noone);
 		triggerRender();
 	});
 	
+	edit_time = 0;
+	attributes.file_checker = true;
+	array_push(attributeEditors, [ "File Watcher", function() /*=>*/ {return attributes.file_checker}, new checkBox(function() /*=>*/ {return toggleAttribute("file_checker")}) ]);
+	
 	function setPath(path) { inputs[in_mesh + 0].setValue(path); }
 	
 	////- Update
 	
-	static readElement = function(_vertices, _element, _x = 0, _y = 0, _z = 0) {
-		var _fx = _x + _element.from[0], fx;
-		var _fy = _y + _element.from[1], fy;
-		var _fz = _z + _element.from[2], fz;
-		var _tx = _x + _element.to[0],   tx;
-		var _ty = _y + _element.to[1],   ty;
-		var _tz = _z + _element.to[2],   tz;
-		var _s  = model_scale;
-		
-		switch(model_axis) {
-			case 0 : 
-				fx =  _fx * _s; tx =  _tx * _s;
-				fy =  _fy * _s; ty =  _ty * _s;
-				fz =  _fz * _s; tz =  _tz * _s;
-				break;
-				
-			case 1 : 
-				fx =  _fx * _s; tx =  _tx * _s;
-				fy =  _fz * _s; ty =  _tz * _s;
-				fz =  _fy * _s; tz =  _ty * _s;
-				break;
-				
-		}
-		
-		model_bbox[0] = min(model_bbox[0], fx);
-		model_bbox[1] = min(model_bbox[1], fy);
-		model_bbox[2] = min(model_bbox[2], fz);
-		
-		model_bbox[3] = max(model_bbox[3], tx);
-		model_bbox[4] = max(model_bbox[4], ty);
-		model_bbox[5] = max(model_bbox[5], tz);
+	static readElement = function(_vertices, _matrices, _element, _mat) {
+		var _rx = struct_try_get(_element, "rotationX", 0);
+		var _ry = struct_try_get(_element, "rotationY", 0);
+		var _rz = struct_try_get(_element, "rotationZ", 0);
+		var _ro = struct_try_get(_element, "rotationOrigin", [0, 0, 0]);
 		
 		var _face = _element.faces; 
+		var _tMat = new BBMOD_Matrix().Translate(_ro[0], _ro[1], _ro[2])
+								      .Translate(_element.from[0], _element.from[1], _element.from[2])
+								      .RotateEuler(_rx, _ry, _rz)
+								      .Translate(-_ro[0], -_ro[1], -_ro[2])
+		
+		var _cMat = _tMat.Mul(_mat);
+		var _tArr = _cMat.Mul(invertMatrix).ToArray();
+		
+		var fx = 0;
+		var fy = 0;
+		var fz = 0;
+		var tx = _element.to[0] - _element.from[0];
+		var ty = _element.to[1] - _element.from[1];
+		var tz = _element.to[2] - _element.from[2];
 		
 		if(has(_face, "up") && struct_try_get(_face.up, "enabled", true)) {
 			var _f  = _face.up;
@@ -121,6 +119,7 @@ function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 			var tv = _f.uv[3] / tex_height;
 			
 			array_push(material_arr, string_trim(_f.texture, ["#"]));
+			array_push(_matrices,    _tArr);
 			array_push(_vertices, [ // +z
 				__vertexA( [ fx, fy, tz ] ).setNormal( 0, 0, 1 ).setUV(fu, fv),
 				__vertexA( [ fx, ty, tz ] ).setNormal( 0, 0, 1 ).setUV(fu, tv),
@@ -140,6 +139,7 @@ function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 			var tv = _f.uv[3] / tex_height;
 			
 			array_push(material_arr, string_trim(_f.texture, ["#"]));
+			array_push(_matrices,    _tArr);
 			array_push(_vertices, [ // -z
 				__vertexA( [ fx, fy, fz ] ).setNormal( 0, 0,-1 ).setUV(fu, fv),
 				__vertexA( [ tx, ty, fz ] ).setNormal( 0, 0,-1 ).setUV(tu, tv),
@@ -159,6 +159,7 @@ function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 			var tv = _f.uv[3] / tex_height;
 			
 			array_push(material_arr, string_trim(_f.texture, ["#"]));
+			array_push(_matrices,    _tArr);
 			array_push(_vertices, [ // +x
 				__vertexA( [ tx, fy, fz ] ).setNormal( 1, 0, 0 ).setUV(fu, fv),
 				__vertexA( [ tx, fy, tz ] ).setNormal( 1, 0, 0 ).setUV(fu, tv),
@@ -178,6 +179,7 @@ function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 			var tv = _f.uv[3] / tex_height;
 			
 			array_push(material_arr, string_trim(_f.texture, ["#"]));
+			array_push(_matrices,    _tArr);
 			array_push(_vertices, [ // -x
 				__vertexA( [ fx, fy, fz ] ).setNormal(-1, 0, 0 ).setUV(fu, fv),
 				__vertexA( [ fx, ty, tz ] ).setNormal(-1, 0, 0 ).setUV(tu, tv),
@@ -197,6 +199,7 @@ function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 			var tv = _f.uv[3] / tex_height;
 			
 			array_push(material_arr, string_trim(_f.texture, ["#"]));
+			array_push(_matrices,    _tArr);
 			array_push(_vertices, [ // +y
 				__vertexA( [ fx, fy, fz ] ).setNormal( 0, 1, 0 ).setUV(fu, fv),
 				__vertexA( [ fx, fy, tz ] ).setNormal( 0, 1, 0 ).setUV(fu, tv),
@@ -216,6 +219,7 @@ function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 			var tv = _f.uv[3] / tex_height;
 			
 			array_push(material_arr, string_trim(_f.texture, ["#"]));
+			array_push(_matrices,    _tArr);
 			array_push(_vertices, [ // -y
 				__vertexA( [ fx, ty, fz ] ).setNormal( 0,-1, 0 ).setUV(fu, fv),
 				__vertexA( [ tx, ty, tz ] ).setNormal( 0,-1, 0 ).setUV(tu, tv),
@@ -229,12 +233,13 @@ function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 		
 		if(has(_element, "children"))
 		for( var i = 0, n = array_length(_element.children); i < n; i++ )
-			readElement(_vertices, _element.children[i], _fx, _fy, _fz);
+			readElement(_vertices, _matrices, _element.children[i], _cMat);
 	}
 	
 	static readJson = function(_path) {
 		if(!file_exists_empty(_path)) return;
 		current_path = _path;
+		edit_time    = file_get_modify_s(_path);
 		
 		if(object != noone) object.destroy();
 		object = noone;
@@ -245,58 +250,76 @@ function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 		model_scale   = getSingleValue(in_mesh + 2);
 		model_axis    = getSingleValue(in_mesh + 3);
 		var _reorigin = getSingleValue(in_mesh + 4);
+		var _rootPath = getSingleValue(in_mesh + 5);
 		
-		material_map  = _data.textures;
+		material_map  = has(_data, "textures")? _data.textures : (has(_data, "texture")? _data.texture : {});
 		tex_width     = struct_try_get(_data, "textureWidth", 16);
 		tex_height    = struct_try_get(_data, "textureHeight", 16);
 		
 		var _elements = _data.elements;
 		var _vertices = [];
+		var _matrices = [];
 		material_arr  = [];
 		model_bbox    = [ infinity, infinity, infinity, -infinity, -infinity, -infinity ];
 		
-		for( var i = 0, n = array_length(_elements); i < n; i++ ) {
-			var _element = _elements[i];
-			readElement(_vertices, _element);
+		var _rMat = [
+			1, 0, 0, 0, 
+			0, 1, 0, 0, 
+			0, 0, 1, 0, 
+			0, 0, 0, 1
+		];
+		
+		if(model_axis == 1) {
+			_rMat = [
+				1, 0, 0, 0, 
+				0, 0, 1, 0, 
+				0,-1, 0, 0, 
+				0, 0, 0, 1
+			];
 		}
 		
-		if(_reorigin) {
-			var _ofx = ( model_bbox[0] + model_bbox[3] ) / 2;
-			var _ofy = ( model_bbox[1] + model_bbox[4] ) / 2;
-			var _ofz = ( model_bbox[2] + model_bbox[5] ) / 2;
+		invertMatrix = new BBMOD_Matrix(_rMat).Scale(model_scale, model_scale, model_scale);
+		
+		for( var i = 0, n = array_length(_elements); i < n; i++ ) {
+			var _element = _elements[i];
+			var _mat = new BBMOD_Matrix();
 			
-			for( var i = 0, n = array_length(_vertices); i < n; i++ ) {
-				var _vers = _vertices[i];
-				for( var j = 0, m = array_length(_vers); j < m; j++ ) {
-					var _v = _vers[j];
-					
-					_v.x -= _ofx;
-					_v.y -= _ofy;
-					_v.z -= _ofz;
-				}
-			}
+			readElement(_vertices, _matrices, _element, _mat);
 		}
 		
 		object = new __3dObject();
 		object.vertex = _vertices;
 		object.object_counts = array_length(_vertices);
-		object.VF = global.VF_POS_NORM_TEX_COL;
-		object.VB = object.build();
+		object.VF  = global.VF_POS_NORM_TEX_COL;
+		object.VB  = object.build();
+		object.VBM = _matrices;
 		
 		var _textureKeys = struct_get_names(material_map);
 		use_texture = !array_empty(_textureKeys);
 		var _in = [];
 		
 		if(use_texture) {
+			var renderAgain = false;
+			
 			for( var i = 0, n = array_length(_textureKeys); i < n; i++ ) {
 				var _tname = _textureKeys[i];
+				var _tpath = material_map[$ _tname];
 				
 				var _inp = array_safe_get(inputs, input_fix_len + i, noone);
 				if(_inp == noone) _inp = createNewInput();
 				
 				_inp.setName(_tname);
 				array_push(_in, _inp);
+				
+				var _fpath = filename_combine(_rootPath, _tpath) + ".png";
+				if(NOT_LOAD && file_exists_empty(_fpath)) {
+					var sol = Node_create_Image_path(x - (w + 128), y + i * (128 + 32), _fpath);
+					_inp.setFrom(sol.outputs[0]);
+					renderAgain = true;
+				}
 			}
+			
+			if(renderAgain) run_in(1, function() /*=>*/ {return triggerRender()});
 			
 		} else {
 			var _inp = array_safe_get(inputs, input_fix_len, noone);
@@ -314,6 +337,14 @@ function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 		for( var i = input_fix_len, n = array_length(inputs); i < n; i++ )
 			array_push(input_display_list, i);
 		
+	}
+	
+	static step = function() {
+		var _path = getSingleValue(in_mesh);
+		if(attributes.file_checker && file_get_modify_s(_path) > edit_time) {
+			readJson(_path); 
+			triggerRender();
+		}
 	}
 	
 	static processData_prebatch = function() {
@@ -336,7 +367,6 @@ function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 		}
 		
 		var materials = [];
-		
 		for( var i = 0, n = array_length(material_arr); i < n; i++ )
 			materials[i] = use_texture? struct_try_get(materialMap, material_arr[i], noone) : baseTex;
 		

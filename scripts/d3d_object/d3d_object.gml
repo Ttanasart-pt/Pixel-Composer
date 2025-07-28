@@ -30,6 +30,7 @@ function __3dObject() constructor {
 	vertex = [];
 	VB     = [];
 	VF     = global.VF_POS_COL;
+	VBM    = undefined;
 	NVB    = noone;
 	WVB    = noone;
 	name   = UUID_generate();
@@ -223,7 +224,9 @@ function __3dObject() constructor {
 				}
 			}
 			
+			if(VBM != undefined) { matrix_stack_push(VBM[i]); matrix_set(matrix_world, matrix_stack_top()); }
 			vertex_submit(VB[i], render_type, _tex);
+			if(VBM != undefined) { matrix_stack_pop();        matrix_set(matrix_world, matrix_stack_top()); }
 		}
 		// print(shader_get_name(_shader), instanceof(self));
 		gpu_set_tex_repeat(false);

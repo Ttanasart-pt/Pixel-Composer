@@ -906,10 +906,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var _ind = string(_in.value_from);
 			_io.map[$ _ind] = _in.value_from;
 			
-			if(struct_has(_io.inputs, _ind))
-				array_push(_io.inputs[$ _ind ], _in);
-			else 
-				_io.inputs[$ _ind ] = [ _in ];
+			if(!struct_has(_io.inputs, _ind))
+				_io.inputs[$ _ind ] = [];
+			array_push(_io.inputs[$ _ind ], _in);
 		}
 		
 		for(var i = 0; i < array_length(outputs); i++) {

@@ -8,6 +8,8 @@ function __transform() constructor {
 	
 	matrix = new BBMOD_Matrix();
 	
+	////- Matrix
+	
 	static submitMatrix = function() {
 		if(parent) parent.submitMatrix();
 		
@@ -40,7 +42,7 @@ function __transform() constructor {
 		matrix_stack_pop();
 	}
 	
-	////- Actions
+	////- Apply
 	
 	static applyMatrix = function() {
 		if(parent) parent.applyMatrix();
@@ -84,6 +86,18 @@ function __transform() constructor {
 		return _res;
 	}
 	
+	////- Actions
+	
+	static setPolar = function(ha, va, dist = 4) {
+		var pos = d3d_PolarToCart(0, 0, 0, ha, va, dist)
+		position.set(pos.x, pos.y, pos.z);
+		
+		var _rot = new __rot3().lookAt(position, new __vec3());
+		rotation.FromEuler(_rot.x, _rot.y, _rot.z);
+		
+		return self;
+	}
+	
 	static clone = function() {
 		var _res = new __transform();
 		
@@ -95,4 +109,6 @@ function __transform() constructor {
 		
 		return _res;
 	}
+	
+	
 }

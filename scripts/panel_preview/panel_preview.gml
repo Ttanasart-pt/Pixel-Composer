@@ -356,14 +356,22 @@ function Panel_Preview() : PanelContent() constructor {
             d3_scene_light_enabled = true;
             
             d3_scene_light0        = new __3dLightDirectional();
+            d3_scene_light0_ha     = 45;
+            d3_scene_light0_va     = 45;
+            d3_scene_light0.transform.setPolar(d3_scene_light0_ha, d3_scene_light0_va, 4);
+            
             d3_scene_light0.color  = $FFFFFF;
             d3_scene_light0.shadow_active    = false;
             d3_scene_light0.shadow_map_scale = 4;
-            d3_scene_light0.transform.position.set(-1, -2, 3);
+            // d3_scene_light0.transform.position.set(-1, -2, 3);
             
             d3_scene_light1        = new __3dLightDirectional();
+            d3_scene_light1_ha     = 45 + 180;
+            d3_scene_light1_va     = 45;
+            d3_scene_light1.transform.setPolar(d3_scene_light1_ha, d3_scene_light1_va, 4);
+            
             d3_scene_light1.color  = $505050;
-            d3_scene_light1.transform.position.set(1, 2, -3);
+            // d3_scene_light1.transform.position.set(1, 2, -3);
         #endregion
         
     #endregion

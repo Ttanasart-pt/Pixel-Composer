@@ -38,11 +38,7 @@ function Node_3D_Camera_Set(_x, _y, _group = noone) : Node_3D_Camera(_x, _y, _gr
 		var _col = _data[in_cam + 2];
 		var _int = _data[in_cam + 3];
 		
-		var pos = d3d_PolarToCart(0, 0, 0, _han, _van, 4)
-		light_key.transform.position.set(pos.x, pos.y, pos.z);
-		var _rot = new __rot3().lookAt(light_key.transform.position, new __vec3());
-		light_key.transform.rotation.FromEuler(_rot.x, _rot.y, _rot.z);
-		
+		light_key.transform.setPolar(_han, _van, 4);
 		light_key.color	    = _col;
 		light_key.intensity = _int;
 		
@@ -51,11 +47,7 @@ function Node_3D_Camera_Set(_x, _y, _group = noone) : Node_3D_Camera(_x, _y, _gr
 		var _col = _data[in_cam + 6];
 		var _int = _data[in_cam + 7];
 		
-		var pos = d3d_PolarToCart(0, 0, 0, _han, _van, 4)
-		light_fill.transform.position.set(pos.x, pos.y, pos.z);
-		var _rot = new __rot3().lookAt(light_fill.transform.position, new __vec3());
-		light_fill.transform.rotation.FromEuler(_rot.x, _rot.y, _rot.z);
-		
+		light_fill.transform.setPolar(_han, _van, 4);
 		light_fill.color	 = _col;
 		light_fill.intensity = _int;
 	}

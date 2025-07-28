@@ -209,6 +209,16 @@ function filename_name_only(name) { name = filename_name(name); return string_re
 function filename_ext_verify(_path, _ext)     { return filename_ext(_path) == _ext? _path : $"{filename_dir(_path)}/{filename_name_only(_path)}{_ext}"; }
 function filename_ext_verify_add(_path, _ext) { return filename_ext(_path) == _ext? _path : $"{_path}{_ext}"; }
 
+function filename_combine(_p1, _p2) {
+	_p1 = string_replace_all( _p1, "\\", "/" );
+	_p2 = string_replace_all( _p2, "\\", "/" );
+	
+	_p1 = string_trim_end(   _p1, ["/"] );
+	_p2 = string_trim_start( _p2, ["/"] );
+	
+	return _p1 + "/" + _p2;
+}
+
 	////- Actions
 
 function file_copy_override(src, dest) {
@@ -217,7 +227,6 @@ function file_copy_override(src, dest) {
 }
 
 function file_delete_safe(path) { if(!file_exists_empty(path)) return; file_delete(path); }
-
 
 	////- Overrides
 

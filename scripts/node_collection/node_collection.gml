@@ -724,7 +724,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			var _in    = _io.inputs;
 			var _inKey = struct_get_names(_in);
 			var _x, _y, m;
-				
+			
 			for( var i = 0, n = array_length(_inKey); i < n; i++ ) {
 				var _frm = _io.map[$ _inKey[i]];
 				var _tos = _in[$ _inKey[i]];
@@ -743,7 +743,20 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 				_x = value_snap(_x - 64 - 128, 32);
 				_y = value_snap(_y / m, 32);
 				
-				var _n  = new Node_Group_Input(_x, _y, _group);
+				var _conn = false;
+				for( var j = 0, m = array_length(_group.inputs); j < m; j++ ) {
+					var _inp = _group.inputs[j];
+					if(_inp.value_from == _frm) {
+						for( var k = 0, p = array_length(_tos); k < p; k++ )
+							_tos[k].setFrom(_inp.from.outputs[0]);
+						_conn = true;
+						break;
+					}
+				}
+				
+				if(_conn) continue;
+				
+				var _n = new Node_Group_Input(_x, _y, _group);
 				var _ti = array_find(GROUP_IO_TYPE_MAP, _frm.type);
 				if(_ti >= 0) _n.inputs[2].setValue(_ti);
 				
@@ -762,6 +775,20 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			for( var i = 0, n = array_length(_otKey); i < n; i++ ) {
 				var _frm = _io.map[$ _otKey[i]];
 				var _tos = _ot[$ _otKey[i]];
+				
+				var _conn = false;
+				for( var j = 0, m = array_length(_group.outputs); j < m; j++ ) {
+					var _oup = _group.outputs[j];
+					if(_oup.from.value_from == _frm) {
+						for( var k = 0; k < p; k++ )
+							_tos[k].setFrom(_oup);
+						
+						_conn = true;
+						break;
+					}
+				}
+				
+				if(_conn) continue;
 				
 				_x = value_snap(_frm.node.x + _frm.node.w + 64, 32);
 				_y = value_snap(_frm.node.y, 32);
