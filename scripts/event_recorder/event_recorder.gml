@@ -238,7 +238,7 @@ function Action(_type, _object, _data, _trigger = 0) constructor {
 				
 			case ACTION_TYPE.group :
 				obj.restore();
-				groupNodes(data.content, obj, false);
+				groupNodes(data.content, obj, false, false);
 				break;
 				
 			case ACTION_TYPE.ungroup :

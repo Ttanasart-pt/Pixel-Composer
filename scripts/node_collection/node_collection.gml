@@ -823,13 +823,13 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		collection.destroy();
 		UNDO_HOLDING = false;
 		
-		if(!record) return;
-		
-		recordAction(ACTION_TYPE.ungroup, collection, { 
-			content :   _content,
-			deleted :   _deleted,
-			connectTo : _conn_to,
-		});
+		if(record) {
+			recordAction(ACTION_TYPE.ungroup, collection, { 
+				content :   _content,
+				deleted :   _deleted,
+				connectTo : _conn_to,
+			});
+		}
 	}
 
 #endregion
