@@ -41,19 +41,19 @@ function Panel_Preview_3D_Setting() : Panel_Linear_Setting() constructor {
 		),
 		new __Panel_Linear_Setting_Item( __txt("Light Direction"),
 			new rotator(function(val) /*=>*/ { 
-				d3_scene_light0_ha = val;
-	            d3_scene_light0.transform.setPolar(d3_scene_light0_ha, d3_scene_light0_va, 4);
+				preview.d3_scene_light0_ha = val;
+	            preview.d3_scene_light0.transform.setPolar(preview.d3_scene_light0_ha, preview.d3_scene_light0_va, 4);
 	            
-	            d3_scene_light1_ha = val + 180;
-	            d3_scene_light1.transform.setPolar(d3_scene_light1_ha, d3_scene_light1_va, 4);
+	            preview.d3_scene_light1_ha = val + 180;
+	            preview.d3_scene_light1.transform.setPolar(preview.d3_scene_light1_ha, preview.d3_scene_light1_va, 4);
 			}),
-			function(   ) /*=>*/   {return preview.d3_scene_light0_ha},
+			function(   ) /*=>*/ {return preview.d3_scene_light0_ha},
 			function(val) /*=>*/ { 
-				d3_scene_light0_ha = val;
-	            d3_scene_light0.transform.setPolar(d3_scene_light0_ha, d3_scene_light0_va, 4);
+				preview.d3_scene_light0_ha = val;
+	            preview.d3_scene_light0.transform.setPolar(preview.d3_scene_light0_ha, preview.d3_scene_light0_va, 4);
 	            
-	            d3_scene_light1_ha = val + 180;
-	            d3_scene_light1.transform.setPolar(d3_scene_light1_ha, d3_scene_light1_va, 4);
+	            preview.d3_scene_light1_ha = val + 180;
+	            preview.d3_scene_light1.transform.setPolar(preview.d3_scene_light1_ha, preview.d3_scene_light1_va, 4);
 			},
 			45,
 		),

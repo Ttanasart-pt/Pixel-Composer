@@ -370,7 +370,7 @@ function Panel_Preview() : PanelContent() constructor {
             d3_scene_light1_va     = 45;
             d3_scene_light1.transform.setPolar(d3_scene_light1_ha, d3_scene_light1_va, 4);
             
-            d3_scene_light1.color  = $505050;
+            d3_scene_light1.color  = $202020;
             // d3_scene_light1.transform.position.set(1, 2, -3);
         #endregion
         
