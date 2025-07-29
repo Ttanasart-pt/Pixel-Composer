@@ -728,6 +728,7 @@
             "Node_MK_Grass",
             "Node_MK_Subpixel",
             "Node_MK_Parallax", 
+            "Node_MK_Dialog", 
         ]
     },
     {

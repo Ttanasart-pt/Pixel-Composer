@@ -543,32 +543,6 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	
 	////- Modify Keys
 	
-	static refreshAnimation = function() {
-		animate_frames = array_verify(animate_frames, TOTAL_FRAMES);
-		
-		var _anim = false;
-		var _fr   = noone;
-		
-		for( var i = 0, n = array_length(values); i < n; i++ ) {
-			var _key = values[i];
-			
-			if(_fr == noone)
-				array_fill(animate_frames, 0, _key.time, 0);
-			
-			else {
-				var frInd = array_equals(_fr.ease_out, [0, 0]) && array_equals(_fr.ease_in, [0, 1]) && isEqual(_fr.value, _key.value);
-				array_fill(animate_frames, _fr.time, _key.time, !frInd);
-				
-				// if(frInd) array_fill(animate_frames, _fr.time, _key.time, 0);
-				// else      array_fill(animate_frames, _fr.time, _key.time, 1);
-			}
-			
-			_fr = _key;
-		}
-		
-		if(_fr) array_fill(animate_frames, _fr.time, TOTAL_FRAMES, 0);
-	}
-	
 	static updateKeyMap = function() {
 		length = array_length(values);
 		

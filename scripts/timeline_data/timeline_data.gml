@@ -9,8 +9,10 @@ function timelineItem() constructor {
 	color_dsp = -1;
 	parent    = noone;
 	
-	static setColor = function(color) { self.color = color; }
-	static getColor = function()      { return color; }
+	static setColor  = function(c) /*=>*/ { color  = c; return self; }
+	static setParent = function(p) /*=>*/ { parent = p; return self; }
+	
+	static getColor  = function() /*=>*/ {return color};
 	
 	static drawLabel         = function(_x, _y, _w, _msx, _msy) {}
 	static drawDopesheet     = function(_x, _y, _s, _msx, _msy) {}
@@ -23,20 +25,22 @@ function timelineItem() constructor {
 	}
 	
 	static onSerialize = function(_map) {}
-	static serialize = function() {}
+	static serialize   = function() {}
 	
 	static onDeserialize = function(_map) {}
-	static deserialize = function(_map) {
+	static deserialize   = function(_map) {
 		
 		switch(_map.type) {
 			case "Folder" : return new timelineItemGroup().deserialize(_map);
 			case "Node"   : return new timelineItemNode(noone).deserialize(_map);
 			
 			case "timelineItemGroup_Canvas" :			return new timelineItemGroup_Canvas().deserialize(_map);
+			
 			case "timelineItemNode_Canvas" :			return new timelineItemNode_Canvas(noone).deserialize(_map);
 			case "timelineItemNode_Image_Animated" :	return new timelineItemNode_Image_Animated(noone).deserialize(_map);
 			case "timelineItemNode_Sequence_Anim" : 	return new timelineItemNode_Sequence_Anim(noone).deserialize(_map);
 			case "timelineItemNode_Image_gif" : 		return new timelineItemNode_Image_gif(noone).deserialize(_map);
+			case "timelineItemNode_MKDialog" : 		    return new timelineItemNode_MKDialog(noone).deserialize(_map);
 		}
 		
 		return self;
@@ -278,9 +282,12 @@ function timelineItemGroup() : timelineItem() constructor {
 		_map.show  = show;
 		_map.color = color;
 		
-		var _content = array_create(array_length(contents));
-		for( var i = 0, n = array_length(contents); i < n; i++ )
+		var len      = array_length(contents);
+		var _content = array_create(len);
+		
+		for( var i = 0; i < len; i++ )
 			_content[i] = contents[i].serialize();
+			
 		_map.contents = _content;
 		onSerialize(_map);
 		
@@ -292,11 +299,14 @@ function timelineItemGroup() : timelineItem() constructor {
 		name  = struct_try_get(_map, "name", "");
 		show  = struct_try_get(_map, "show", true);
 		
-		contents = array_create(array_length(_map.contents));
+		contents = [];
+		
 		for( var i = 0, n = array_length(_map.contents); i < n; i++ ) {
-			contents[i] = new timelineItem().deserialize(_map.contents[i]);
-			contents[i].parent = self;
+			var _con = _map.contents[i];
+			if(!is_struct(_con)) continue;
+			array_push(contents, new timelineItem().deserialize(_con).setParent(self));
 		}
+		
 		onDeserialize(_map);
 			
 		return self;

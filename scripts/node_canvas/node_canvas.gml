@@ -1674,8 +1674,6 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 function timelineItemNode_Canvas(_node) : timelineItemNode(_node) constructor {
 	
 	static drawDopesheetOver = function(_x, _y, _s, _msx, _msy, _hover, _focus) {

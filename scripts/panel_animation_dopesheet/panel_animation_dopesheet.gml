@@ -195,9 +195,9 @@ function Panel_Animation_Dopesheet() {
 	        function group_rename()          { context_selecting_item.item.rename();  }
 	        function group_remove()          { context_selecting_item.item.destroy(); }
 	        
-	        function toggle_axis()           { context_selecting_prop.sep_axis = !context_selecting_prop.sep_axis;  }
-	        function separate_axis()         { context_selecting_prop.sep_axis = true;  }
-	        function combine_axis()          { context_selecting_prop.sep_axis = false; }
+	        function toggle_axis()           { context_selecting_prop.toggleAxisSeparation(); }
+	        function separate_axis()         { context_selecting_prop.separateAxis();         }
+	        function combine_axis()          { context_selecting_prop.combineAxis();          }
 	        
 	        function range_set_start()       { if(FRAME_RANGE == noone) FRAME_RANGE = [ __selecting_frame, TOTAL_FRAMES ]; else FRAME_RANGE[0] = __selecting_frame; }
 	        function range_set_end()         { if(FRAME_RANGE == noone) FRAME_RANGE = [ 0, __selecting_frame ];            else FRAME_RANGE[1] = __selecting_frame; }
@@ -1922,31 +1922,33 @@ function Panel_Animation_Dopesheet() {
             
             for( var i = 0, n = array_length(timeline_contents); i < n; i++ ) {
                 var _cont = timeline_contents[i];
+                var _item = _cont.item;
+                
                 _cont.y   = key_y;
                 _cont.h   = 0;
                 
                 if(!_cont.show && show_nodes) continue;
-                if(item_dragging != noone && item_dragging.item == _cont.item) continue;
+                if(item_dragging != noone && item_dragging.item == _item) continue;
                 
-                var _expand = _cont.type == "node" && (_cont.item.show || !show_nodes); 
+                var _expand = _cont.type == "node" && (_item.show || !show_nodes); 
                 
                 var _ks = key_y;
-                if(_cont.item.color_dsp > -1) {
-                    draw_set_color(_cont.item.color_dsp);
-                    draw_rectangle(0, _ks - 1, bar_total_shift, _ks + ui(20), false);
+                if(_item.color_dsp > -1) {
+                    draw_set_color(_item.color_dsp);
+                    draw_rectangle(0, _ks - 1, bar_total_shift, _ks + _item.h, false);
                 }
                 
-                if(_cont.item.color_cur > -1) {
-                    c0 = colorMultiply(_cont.item.color_cur, COLORS.panel_animation_dope_key_bg);
-                    c1 = colorMultiply(_cont.item.color_cur, COLORS.panel_animation_dope_key_bg_hover);
+                if(_item.color_cur > -1) {
+                    c0 = colorMultiply(_item.color_cur, COLORS.panel_animation_dope_key_bg);
+                    c1 = colorMultiply(_item.color_cur, COLORS.panel_animation_dope_key_bg_hover);
                     
                 } else {
                     c0 = COLORS.panel_animation_dope_key_bg;
                     c1 = COLORS.panel_animation_dope_key_bg_hover;
                 }
                 
-                key_y   += ui(20) * show_nodes + _expand * ui(10);
-                _cont.h += ui(20) * show_nodes;
+                key_y   += _item.h * show_nodes + _expand * ui(10);
+                _cont.h += _item.h * show_nodes;
                 _ks      = key_y - ui(10);
                 
                 if(_expand) 
@@ -1958,7 +1960,7 @@ function Panel_Animation_Dopesheet() {
                     for( var k = 0, p = array_length(prop.animators); k < p; k++ ) {
                         prop.animators[k].y = key_y;
                         
-                        if(_cont.item.color_cur > -1) {
+                        if(_item.color_cur > -1) {
                             draw_set_color(c0);
                             draw_rectangle(0, key_y - ui(10), bar_total_shift, key_y + ui(10), false);
                             
@@ -1977,7 +1979,7 @@ function Panel_Animation_Dopesheet() {
                     var _graph_show = _prop.sep_axis? array_any(_prop.show_graphs, function(v) /*=>*/ {return v == true}) : _prop.show_graph;
                     
                     if(_graph_show && _prop.type != VALUE_TYPE.color) {
-                        if(_cont.item.color_cur > -1) {
+                        if(_item.color_cur > -1) {
                             draw_set_color(c1);
                             draw_rectangle(0, key_y - ui(10), bar_total_shift, key_y + ui(_prop.graph_h) - ui(2), false);
                         }

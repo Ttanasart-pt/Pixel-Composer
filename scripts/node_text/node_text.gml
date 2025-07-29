@@ -10,7 +10,6 @@
 
 function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Draw Text";
-	font = f_p0;
 	dimension_index = -1;
 	
 	////- =Text
@@ -81,9 +80,11 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	 
 	attribute_surface_depth();
 	
+	font = f_p0;
 	_font_current  = "";
 	_size_current  = 0;
 	_aa_current    = false;
+	
 	seed           = seed_random();
 	draw_data      = [];
 	draw_font_data = [];
@@ -407,7 +408,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			}
 		#endregion
 		
-		#region cut string
+		#region cut lines
 			var _cut_lines   = string_splice(str, "\n");
 			var _str_lines   = [];
 			var _line_widths = [];

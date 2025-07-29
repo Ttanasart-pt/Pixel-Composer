@@ -205,7 +205,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		setAttribute = function(k, v, r = false) /*=>*/ { attributes[$ k] = v;                if(r) triggerRender(); PROJECT.modified = true; }
 		toggleAttribute = function(k, r = false) /*=>*/ { attributes[$ k] = !attributes[$ k]; if(r) triggerRender(); PROJECT.modified = true; }
 		
-		attributeEditors = [
+		array_append(attributeEditors, [
 			"Display",  
 			["Annotation",     function() /*=>*/ {return attributes.annotation},       new textArea(TEXTBOX_INPUT.text,  function(v) /*=>*/ { setAttribute("annotation", v);          }) ],
 			["Node Width",     function() /*=>*/ {return attributes.node_width},       textBox_Number(function(v) /*=>*/ { setAttribute("node_width", v);       refreshNodeDisplay(); }) ],
@@ -218,8 +218,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			["Render Frame Input",function() /*=>*/ {return attributes.show_render_frame},   new checkBox(function() /*=>*/ { toggleAttribute("show_render_frame"); refreshNodeDisplay(); }) ],
 			["Update Trigger",    function() /*=>*/ {return attributes.show_update_trigger}, new checkBox(function() /*=>*/ { toggleAttribute("show_update_trigger");     }) ],
 			["Output Metadata",   function() /*=>*/ {return attributes.outp_meta},           new checkBox(function() /*=>*/ { toggleAttribute("outp_meta"); setHeight();  }) ],
-			["Always Show on Timeline", function() /*=>*/ {return attributes.show_timeline}, new checkBox(function() /*=>*/ { toggleAttribute("show_timeline"); refreshTimeline(); }) ],
-		];
+			["Show In Timeline",  function() /*=>*/ {return attributes.show_timeline},       new checkBox(function() /*=>*/ { toggleAttribute("show_timeline"); 
+				anim_timeline = attributes.show_timeline;
+				refreshTimeline();
+			})],
+		]);
 	#endregion
 	
 	#region ---- Preview ----

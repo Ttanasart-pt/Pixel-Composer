@@ -127,6 +127,11 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		return inputs[i];
 	} 
 	
+	input_display_dynamic = [ 
+		["Selection", false], 1, 9, 10, 11, 12, 13, 14, 
+		["Effects",   false], 0, 2, 3, 4, 5, 6, 7, 8, 15, 
+	];
+	
 	animator_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		
 		var bs = ui(24);
@@ -187,11 +192,6 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		return _h + ui(32);
 	});
-	
-	input_display_dynamic = [ 
-		["Selection", false], 1, 9, 10, 11, 12, 13, 14, 
-		["Effects",   false], 0, 2, 3, 4, 5, 6, 7, 8, 15, 
-	];
 	
 	b_gridFill = button(function() /*=>*/ {return gridFill()}).setIcon(THEME.fill, 0, COLORS._main_icon).setTooltip("Fill");
 	
@@ -342,10 +342,9 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _cls    = _data[19];
 			var _bld_md = _data[34];
 			
-			var _ani_amo = getInputAmount();
-			
 			inputs[3].editWidget.side_button = _pat == 1? b_gridFill : noone;
-		
+			
+			var _ani_amo = getInputAmount();
 			if(_ani_amo > 0) { // animator visibility
 				dynamic_input_inspecting = clamp(dynamic_input_inspecting, 0, getInputAmount() - 1);
 				var _ind = input_fix_len + dynamic_input_inspecting * data_length;

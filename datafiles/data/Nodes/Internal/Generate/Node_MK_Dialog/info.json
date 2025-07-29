@@ -1,0 +1,6 @@
+{
+    "name":          "MK Dialog",
+    "spr":           "s_node_mk_dialog",
+    "baseNode":      "Node_MK_Dialog",
+    "pxc_version":    119060,
+}

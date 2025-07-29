@@ -546,6 +546,65 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static setWidget = function(_widg) { editWidget = _widg; return self; }
 	
+	static separateAxis = function(_setValue = true) {
+		if(sep_axis) return;
+		if(!_setValue) { sep_axis = true; return; }
+		
+		var _vals = animator.values;
+		for( var i = 0, n = array_length(animators); i < n; i++ ) {
+			var _anim = animators[i];
+			_anim.values = [];
+			
+			for( var j = 0, m = array_length(_vals); j < m; j++ ) {
+				var _axval = _vals[j];
+				var _val   = array_safe_get_fast(_axval.value, i, 0);
+				var _kf    = new valueKey(_axval.time, _val, _anim);
+				
+				_kf.ease_in       = array_clone(_axval.ease_in);
+				_kf.ease_out      = array_clone(_axval.ease_out);
+				_kf.ease_in_type  = _axval.ease_in_type;
+				_kf.ease_out_type = _axval.ease_out_type;
+				
+				_anim.values[j] = _kf;
+			}
+			
+			_anim.updateKeyMap();
+		}
+		
+		sep_axis = true;
+	}
+	
+	static combineAxis = function(_setValue = true) {
+		if(!sep_axis) return;
+		if(!_setValue) { sep_axis = false; return; }
+		
+		var _keyTimes = []; 
+		for( var i = 0, n = array_length(animators); i < n; i++ ) {
+			var _anim = animators[i];
+			
+			for( var j = 0, m = array_length(_anim.values); j < m; j++ )
+				array_push(_keyTimes, _anim.values[j].time);
+		}
+		
+		array_unique_ext(_keyTimes);
+		array_sort(_keyTimes, true);
+		
+		animator.values = [];
+		
+		for( var i = 0, n = array_length(_keyTimes); i < n; i++ ) {
+			var _val = getValue(_keyTimes[i]);
+			animator.values[i] = new valueKey(_keyTimes[i], _val, animator);
+		}
+		
+		animator.updateKeyMap();
+		sep_axis = false;
+	}
+	
+	static toggleAxisSeparation = function(_setValue = true) {
+		if(sep_axis) combineAxis(_setValue);
+		else separateAxis(_setValue);
+	}
+	
 	////- ANIMATION
 	
 	static setAnimable = function(_anim) { animable = _anim; return self; }

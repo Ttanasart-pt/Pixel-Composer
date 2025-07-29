@@ -392,9 +392,7 @@ function Panel_Animation() : PanelContent() constructor {
                     if(!prop.isTimelineVisible()) continue;
                     
                     var anim = prop.sep_axis? prop.animators : [ prop.animator ];
-                    if(prop.sep_axis) array_append(_anim, prop.animators);
-                    else              array_push(_anim, prop.animator);
-                
+                    array_append(_anim, anim);
                     array_push(_prop, { prop, animators: anim, y: 0 });
                 }
                 
