@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"pathStructBox",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"pathStructBox",
+  "parent":{
+    "name":"text",
+    "path":"folders/widgets/text.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

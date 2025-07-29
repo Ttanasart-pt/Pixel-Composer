@@ -66,78 +66,80 @@
     }
 #endregion
 
-function Inspector_Custom_Renderer(drawFn, registerFn = noone) : widget() constructor {
-    self.draw = drawFn;
-    node  = noone;
-    panel = noone;
-    name  = "";
-    
-    popupPanel  = noone;
-    popupDialog = noone;
-    
-    h = 64;
-    fixHeight = -1;
-    
-    if(registerFn != noone) register = registerFn;
-    else {
-        register = function(parent = noone) { 
-            if(!interactable) return;
-            self.parent = parent;
-        }
-    }
-    
-    b_toggle = button(function() /*=>*/ { togglePopup(name); }).setIcon(THEME.node_goto, 0, COLORS._main_icon, .75);
-    
-    static setName  = function(n) /*=>*/ { name = n; return self; }
-    static setNode  = function(n) /*=>*/ { node = n; return self; }
-    static toString = function( ) /*=>*/ { return $"Custon renderer: {name}"; }
-    
-    static step = function() {
-        b_toggle.icon_blend = popupPanel == noone? COLORS._main_icon : COLORS._main_accent;
-    }
-    
-    static togglePopup = function(_title) { 
-        if(popupPanel == noone) {
-            popupPanel  = new Panel_Custom_Inspector(_title, self);
-            popupDialog = dialogPanelCall(popupPanel);
-            return;
-        }
-        
-        if(instance_exists(popupDialog))
-            instance_destroy(popupDialog);
-            
-        if(is(popupPanel, PanelContent))
-            popupPanel.close();
-        
-        popupPanel = noone;
-    }
-    
-    static clone    = function() { 
-        var _n = new Inspector_Custom_Renderer(draw, register);
-        var _key = variable_instance_get_names(self);
-        
-        for( var i = 0, n = array_length(_key); i < n; i++ ) 
-            _n[$ _key[i]] = self[$ _key[i]];
-        
-        return _n;
-    }
-}
-
-function Inspector_Sprite(_spr) constructor { spr = _spr; }
-
-function Inspector_Label(_text = "", _font = f_p3) constructor { 
-    text = _text; 
-    font = _font; 
-    open = true;
-}
-
-function __inspc(_h, _line = false, _coll = true, _shf = ui(2)) { return new Inspector_Spacer(_h, _line, _coll, _shf); }
-function Inspector_Spacer(_h, _line = false, _coll = true, _shf = ui(2)) constructor { 
-    h    = _h;  
-    line = _line;
-    coll = _coll;
-    lshf = _shf;
-}
+#region Elements
+	function Inspector_Custom_Renderer(drawFn, registerFn = noone) : widget() constructor {
+	    self.draw = drawFn;
+	    node  = noone;
+	    panel = noone;
+	    name  = "";
+	    
+	    popupPanel  = noone;
+	    popupDialog = noone;
+	    
+	    h = 64;
+	    fixHeight = -1;
+	    
+	    if(registerFn != noone) register = registerFn;
+	    else {
+	        register = function(parent = noone) { 
+	            if(!interactable) return;
+	            self.parent = parent;
+	        }
+	    }
+	    
+	    b_toggle = button(function() /*=>*/ { togglePopup(name); }).setIcon(THEME.node_goto, 0, COLORS._main_icon, .75);
+	    
+	    static setName  = function(n) /*=>*/ { name = n; return self; }
+	    static setNode  = function(n) /*=>*/ { node = n; return self; }
+	    static toString = function( ) /*=>*/ { return $"Custon renderer: {name}"; }
+	    
+	    static step = function() {
+	        b_toggle.icon_blend = popupPanel == noone? COLORS._main_icon : COLORS._main_accent;
+	    }
+	    
+	    static togglePopup = function(_title) { 
+	        if(popupPanel == noone) {
+	            popupPanel  = new Panel_Custom_Inspector(_title, self);
+	            popupDialog = dialogPanelCall(popupPanel);
+	            return;
+	        }
+	        
+	        if(instance_exists(popupDialog))
+	            instance_destroy(popupDialog);
+	            
+	        if(is(popupPanel, PanelContent))
+	            popupPanel.close();
+	        
+	        popupPanel = noone;
+	    }
+	    
+	    static clone    = function() { 
+	        var _n = new Inspector_Custom_Renderer(draw, register);
+	        var _key = variable_instance_get_names(self);
+	        
+	        for( var i = 0, n = array_length(_key); i < n; i++ ) 
+	            _n[$ _key[i]] = self[$ _key[i]];
+	        
+	        return _n;
+	    }
+	}
+	
+	function Inspector_Sprite(_spr) constructor { spr = _spr; }
+	
+	function Inspector_Label(_text = "", _font = f_p3) constructor { 
+	    text = _text; 
+	    font = _font; 
+	    open = true;
+	}
+	
+	function __inspc(_h, _line = false, _coll = true, _shf = ui(2)) { return new Inspector_Spacer(_h, _line, _coll, _shf); }
+	function Inspector_Spacer(_h, _line = false, _coll = true, _shf = ui(2)) constructor { 
+	    h    = _h;  
+	    line = _line;
+	    coll = _coll;
+	    lshf = _shf;
+	}
+#endregion
 
 function Panel_Inspector() : PanelContent() constructor {
     #region ---- Main ----

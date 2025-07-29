@@ -48,9 +48,9 @@ gml_pragma("UnityBuild", "true");
 	LATEST_VERSION	= 1_19_00_0;
 	VERSION			= 1_19_06_0;
 	SAVE_VERSION	= 1_19_05_1;
-	VERSION_STRING  = MAC? "1.18.003m" : "1.19.7.001";
+	VERSION_STRING  = MAC? "1.18.003m" : "1.19.7.002";
 	RELEASE_STRING  = "1.19.6";
-	BUILD_NUMBER	= 1_19_06_0.001;
+	BUILD_NUMBER	= 1_19_06_0.002;
 	PREF_VERSION    = 1_17_1;
 	
 	var _lsp = array_last(string_split(VERSION_STRING, "."));

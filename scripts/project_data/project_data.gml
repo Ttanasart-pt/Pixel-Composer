@@ -1,27 +1,28 @@
 #region global
-	globalvar PROJECTS, PROJECT;
-	PROJECT = noone;
+	globalvar PROJECTS;
+	globalvar PROJECT; PROJECT = noone;
+	
+	function Layer() constructor {
+		name  = "New Layer";
+		nodes = [];
+	}
 #endregion
 
-function Layer() constructor {
-	name  = "New Layer";
-	nodes = [];
-}
 
 function Project() constructor {
 	active	= true;
 	
-	seed       = irandom_range(100000, 999999);
-	meta       = __getdefaultMetaData();	
-	path	   = "";
-	thumbnail  = "";													
-	version    = SAVE_VERSION;
-	is_nightly = NIGHTLY;
-	freeze     = false;
+	seed        = irandom_range(100000, 999999);
+	meta        = __getdefaultMetaData();	
+	path	    = "";
+	thumbnail   = "";													
+	version     = SAVE_VERSION;
+	is_nightly  = NIGHTLY;
+	freeze      = false;
 	
-	modified  = false;
-	readonly  = false;
-	safeMode  = false;
+	modified    = false;
+	readonly    = false;
+	safeMode    = false;
 	
 	allNodes    = [];
 	nodes	    = [];
@@ -176,6 +177,9 @@ function Project() constructor {
 		attributes = variable_clone(PROJECT_ATTRIBUTES);
 		attributes.bind_gamemaker_path = "";
 		attributes.bind_godot_path     = "";
+		attributes.env_variables       = {
+			"json_asset_dir": "-",
+		};
 			
 		attributes.auto_organize       = false;
 		
@@ -216,9 +220,10 @@ function Project() constructor {
 					
 					attr[0]  = _res[0];
 					attr[1]  = _res[1];
-				} ],
+				} 
+			],
 				
-			[ "Palette", "palette", new buttonPalette(function(pal) { setPalette(pal); RENDER_ALL return true; }), 
+			[ "Palette", "palette", new buttonPalette(function(pal) /*=>*/ { setPalette(pal); RENDER_ALL return true; }), 
 				function(junc) {
 					if(!is_struct(junc) || !is(junc, NodeValue)) return;
 					if(junc.type != VALUE_TYPE.color || junc.display_type != VALUE_DISPLAY.palette) return;
@@ -226,6 +231,8 @@ function Project() constructor {
 					setPalette(junc.getValue());
 				} 
 			],
+			
+			[ "Variables", "env_variables", button(function() /*=>*/ { dialogPanelCall(new Panel_Project_Var()) }).setText("Edit..."), ],
 			
 		];
 		
@@ -309,7 +316,15 @@ function Project() constructor {
 	}
 		
 	static toString = function() { return $"ProjectObject [{path}]"; }
-
+	
+	static getVar = function(key) { 
+		if(has(attributes.env_variables, key))
+			return attributes.env_variables[$ key];
+			
+		attributes.env_variables[$ key] = "";
+		return "";
+	}
+	
 	////- Serialize
 
 	static serialize = function() {

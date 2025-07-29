@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"__panel_scrollcontent",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__panel_scrollcontent",
+  "parent":{
+    "name":"panels",
+    "path":"folders/panels.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

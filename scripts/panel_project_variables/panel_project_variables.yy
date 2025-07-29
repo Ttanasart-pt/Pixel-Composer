@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"panel_project_variables",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"panel_project_variables",
+  "parent":{
+    "name":"_others",
+    "path":"folders/panels/_others.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

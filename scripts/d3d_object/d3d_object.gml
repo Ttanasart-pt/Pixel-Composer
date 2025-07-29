@@ -238,7 +238,13 @@ function __3dObject() constructor {
 			if(NVB != noone) {
 				shader_set(sh_d3d_wireframe);
 				shader_set_color("blend", c_white);
-				array_foreach(NVB, function(n) /*=>*/ {vertex_submit(n, pr_linelist, -1)});
+				
+				for( var i = 0, n = array_length(NVB); i < n; i++ ) {
+					if(VBM != undefined) { matrix_stack_push(VBM[i]); matrix_set(matrix_world, matrix_stack_top()); }
+					vertex_submit(NVB[i], pr_linelist, -1);
+					if(VBM != undefined) { matrix_stack_pop();        matrix_set(matrix_world, matrix_stack_top()); }
+				}
+				
 				shader_reset();
 			}
 		}
