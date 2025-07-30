@@ -1,19 +1,21 @@
 function Node_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Tile";
 	
-	newInput(0, nodeValue_Surface("Surface In"));
+	newInput(0, nodeValue_Surface( "Surface In" ));
 	
-	newInput(1, nodeValue_Enum_Scroll("Scaling Type", 0, [ "Fix Dimension", "Relative To Input" ]));
-	
+	////- =Tiling
+	newInput(1, nodeValue_Enum_Scroll( "Scaling Type", 0, [ "Fix Dimension", "Relative To Input" ] ));
 	newInput(2, nodeValue_Dimension());
-	
-	newInput(3, nodeValue_Vec2("Amount", [ 2, 2 ]));
+	newInput(3, nodeValue_Vec2( "Amount", [2,2] ));
+	// input 4
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	 
 	input_display_list = [ 0,
 		["Tiling", false], 1, 2, 3, 
 	];
+	
+	attribute_surface_depth();
 	
 	static step = function() {}
 	
@@ -37,7 +39,7 @@ function Node_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			_sh = _idim[1] * _amo[1];
 		}
 		
-		_outSurf = surface_verify(_outSurf, _sw, _sh);
+		_outSurf = surface_verify(_outSurf, _sw, _sh, attrDepth());
 		surface_set_shader(_outSurf, sh_tile);
 			shader_set_2("scale", [ _sw / _idim[0], _sh / _idim[1] ]);
 			
