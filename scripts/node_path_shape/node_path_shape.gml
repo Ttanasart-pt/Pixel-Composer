@@ -9,23 +9,14 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	name = "Path Shape";
 	setDimension(96, 48);
 	
-	shapeScroll = [ 
-	    new scrollItem("Rectangle",     s_node_shape_type,  0), 
-	    new scrollItem("Trapezoid",     s_node_shape_type,  2), 
-	    new scrollItem("Parallelogram", s_node_shape_type,  3), 
-	    -1,
-	    new scrollItem("Ellipse",       s_node_shape_type,  5), 
-	    new scrollItem("Arc",           s_node_shape_type,  6), 
-	    new scrollItem("Squircle",      s_node_shape_type, 11), 
-	    -1,
-	    new scrollItem("Polygon",       s_node_shape_type, 12), 
-	    new scrollItem("Star",          s_node_shape_type, 13), 
-	    -1,
-	    new scrollItem("Line",          s_node_shape_type, 16), 
-	    new scrollItem("Curve",         s_shape_curve,      0), 
-	    new scrollItem("Spiral",        s_node_path_3d_shape,  6),
-	    new scrollItem("Spiral Circle", s_node_path_3d_shape,  6),
+	shape_types = [ 
+	        "Rectangle", "Trapezoid", "Parallelogram",
+	    -1, "Ellipse", "Arc", "Squircle", "Hypocycloid", "Epitrochoid", 
+	    -1, "Polygon", "Star", "Twist", 
+	    -1, "Line", "Curve", "Spiral", "Spiral Circle",
     ];
+    
+    __ind = 0; shapeScroll = array_map(shape_types, function(v, i) /*=>*/ {return v == -1? -1 : new scrollItem(v, s_node_shape_path_type, __ind++)});
     
     ////- =Transform
 	newInput( 0, nodeValue_Vec2(     "Position",  [.5,.5] )).setUnitRef(function() /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
@@ -33,7 +24,9 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	newInput( 1, nodeValue_Vec2(     "Half Size", [.5,.5] )).setUnitRef(function() /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
 	
     ////- =Shape
-	newInput( 3, nodeValue_Enum_Scroll(    "Shape",          0, { data: shapeScroll, horizontal: true, text_pad: ui(16) } ));
+	newInput( 3, nodeValue_Enum_Scroll(    "Shape",          0, { data: shapeScroll, horizontal: true, text_pad: ui(16) } ))
+		.setHistory([ shape_types, { cond: function() /*=>*/ {return LOADING_VERSION < 1_19_06_0}, list: global.node_path_shape_keys_195 } ]);
+		
 	newInput( 4, nodeValue_Slider(         "Skew",          .5, [-1,1,.01] ));
 	newInput( 5, nodeValue_Rotation_Range( "Angle Range",   [0,90]         ));
 	newInput( 6, nodeValue_Float(          "Factor",         4             ));
@@ -86,7 +79,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	    out ??= new __vec2P();
 	    _rat = frac(_rat);
 	    
-		switch(shapeScroll[shape].name) {
+		switch(shape_types[shape]) {
             case "Ellipse" : 
                 var a = 360 * _rat;
                 out.x = posx + lengthdir_x(scax, a);
@@ -181,6 +174,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	        var _sid  = getInputData(7);
 	        var _inn  = getInputData(8);
 	        var _c    = getInputData(9);
+	        var _rev  = getInputData(10);
 	        
 	        for( var i = 4; i < array_length(inputs); i++ ) 
 	        	inputs[i].setVisible(false);
@@ -199,7 +193,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
         
         var ox, oy, nx, ny, x0, y0;
           
-        switch(shapeScroll[shape].name) {
+        switch(shape_types[shape]) {
             case "Rectangle" : 
             	loop = true;
             	inputs[9].setVisible(true);
@@ -376,6 +370,52 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
                 }
                 break;
                 
+            case "Hypocycloid" :
+            	loop = true;
+            	inputs[ 6].setVisible(true);
+            	inputs[10].setVisible(true);
+            	
+            	var _k   = _pa3;
+            	var _st  = 32 * _k * _rev;
+            	var _ast = 360 / (_st - 1) * _rev;
+            	points  = array_create(_st);
+            	
+            	for( var i = 0; i < _st; i++ ) {
+            		var _aa = _ast * i;
+            		
+            		nx = (_k - 1) * dcos(_aa) + dcos( (_k - 1) * _aa );
+            		ny = (_k - 1) * dsin(_aa) - dsin( (_k - 1) * _aa );
+            		
+            		nx = posx + nx * scax / _k;
+					ny = posy + ny * scay / _k;
+            		
+            		points[i] = [ nx, ny ];
+            	}
+            	break;
+        	case "Epitrochoid" :
+            	loop = true;
+            	inputs[ 6].setVisible(true);
+            	inputs[ 8].setVisible(true);
+            	inputs[10].setVisible(true);
+            	
+            	var _innM = 1 / max(0.1, _inn);
+            	var _st   = 64 * _rev / _innM;
+            	var _ast  = 360 / (_st - 1) * _rev;
+            	points    = array_create(_st);
+            	
+            	for( var i = 0; i < _st; i++ ) {
+            		var _aa = _ast * i;
+            		
+            		nx = (1 + _innM) * dcos(_aa) - _pa3 * dcos((1 + _innM) / _innM * _aa);
+            		ny = (1 + _innM) * dsin(_aa) - _pa3 * dsin((1 + _innM) / _innM * _aa);
+            		
+            		nx = posx + nx * scax / (1 + _pa3);
+					ny = posy + ny * scay / (1 + _pa3);
+            		
+            		points[i] = [ nx, ny ];
+            	}
+            	break;
+            	
             case "Polygon" :
             	loop = true;
                 inputs[7].setVisible(true);
@@ -411,6 +451,26 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
                 }
                 break;
                 
+            case "Twist" :
+            	loop = true;
+                inputs[6].setVisible(true);
+                
+                var _fc = max(_pa3, 0);
+                var _st = 64 / clamp(_fc, .1, 1);
+                points  = array_create(_st * 2);
+                
+                for( var i = 0; i <= _st; i++ ) {
+                	
+                	nx = (i / _st) * 2 - 1;
+                	nx = sign(nx) * power(abs(nx), 1 / (_fc + 1));
+                	
+                	ny = lerp(nx, sign(nx) * sqrt(1 - nx * nx), power(abs(nx), _fc));
+                	
+                	points[i]           = [posx + nx * scax, posy + ny * scay];
+                	points[_st * 2 - i] = [posx + nx * scax, posy - ny * scay];
+                }
+                
+            	break;
             case "Line":
             	loop = false;
             	points = [
@@ -445,7 +505,6 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
                 inputs[14].setVisible(true);
                 
                 var _ang  = getInputData(12);
-                var _rev  = getInputData(10);
                 var _pit  = getInputData(11);
                 var _pitC = getInputData(13), curve_pit   = inputs[11].attributes.curved? new curveMap(_pitC)  : undefined;
                 var _rst  = getInputData(14);
@@ -566,3 +625,10 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static getPreviewBoundingBox = function() { return BBOX().fromBoundingBox(boundary); }
 }
+
+global.node_path_shape_keys_195 = [ 
+        "Rectangle", "Trapezoid", "Parallelogram",
+    -1, "Ellipse", "Arc", "Squircle", 
+    -1, "Polygon", "Star", 
+    -1, "Line", "Curve", "Spiral", "Spiral Circle",
+];

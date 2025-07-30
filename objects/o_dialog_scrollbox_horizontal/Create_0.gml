@@ -59,7 +59,6 @@ event_inherited();
 	}
 	
 	function setSize() {
-		
 		var _hori = horizon && search_string == "";
 		var _tpad = _hori? text_pad : ui(8);
 		var hght  = line_get_height(font) + item_pad;
@@ -108,9 +107,9 @@ event_inherited();
 			
 			_emp = false;
 			
-			tw     = string_width(txt) + _spr * (hght + _tpad) + _tpad * 2;
-			lw     = max(lw, tw);
-			lh    += hght;
+			tw  = string_width(txt) + _spr * (hght + _tpad) + _tpad * 2;
+			lw  = max(lw, tw);
+			lh += hght;
 		}
 		
 		lw = max(minWidth, lw);
@@ -146,9 +145,8 @@ event_inherited();
 					lwMin = 0;
 					lhMin = 0;
 					
-				} else {
+				} else
 					_h += ui(8);
-				}
 				
 				lwMin = max(lwMin, _w);
 				lhMin += _h;
@@ -160,7 +158,7 @@ event_inherited();
 			dialog_h = max(sh + lhMax + ui(8), hh);
 		}
 		
-		sc_content.resize(dialog_w - _tpad * 2, dialog_h - ui(40));
+		sc_content.resize(dialog_w - _tpad * 2, dialog_h - sh);
 		
 		resetPosition();
 	}

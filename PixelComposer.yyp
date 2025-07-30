@@ -4135,6 +4135,7 @@
     {"id":{"name":"s_node_shape_leaf","path":"sprites/s_node_shape_leaf/s_node_shape_leaf.yy",},},
     {"id":{"name":"s_node_shape_map","path":"sprites/s_node_shape_map/s_node_shape_map.yy",},},
     {"id":{"name":"s_node_shape_misc","path":"sprites/s_node_shape_misc/s_node_shape_misc.yy",},},
+    {"id":{"name":"s_node_shape_path_type","path":"sprites/s_node_shape_path_type/s_node_shape_path_type.yy",},},
     {"id":{"name":"s_node_shape_poly_type","path":"sprites/s_node_shape_poly_type/s_node_shape_poly_type.yy",},},
     {"id":{"name":"s_node_shape_polygon","path":"sprites/s_node_shape_polygon/s_node_shape_polygon.yy",},},
     {"id":{"name":"s_node_shape_rectangle","path":"sprites/s_node_shape_rectangle/s_node_shape_rectangle.yy",},},

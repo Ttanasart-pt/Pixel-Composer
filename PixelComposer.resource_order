@@ -2647,6 +2647,7 @@
     {"name":"s_node_shape_leaf","order":4,"path":"sprites/s_node_shape_leaf/s_node_shape_leaf.yy",},
     {"name":"s_node_shape_map","order":22,"path":"sprites/s_node_shape_map/s_node_shape_map.yy",},
     {"name":"s_node_shape_misc","order":6,"path":"sprites/s_node_shape_misc/s_node_shape_misc.yy",},
+    {"name":"s_node_shape_path_type","order":29,"path":"sprites/s_node_shape_path_type/s_node_shape_path_type.yy",},
     {"name":"s_node_shape_poly_type","order":1,"path":"sprites/s_node_shape_poly_type/s_node_shape_poly_type.yy",},
     {"name":"s_node_shape_polygon","order":25,"path":"sprites/s_node_shape_polygon/s_node_shape_polygon.yy",},
     {"name":"s_node_shape_rectangle","order":2,"path":"sprites/s_node_shape_rectangle/s_node_shape_rectangle.yy",},

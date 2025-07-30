@@ -26,10 +26,10 @@
     function panel_graph_group()                   { CALL("graph_group");               PANEL_GRAPH.doGroup();                }
     function panel_graph_ungroup()                 { CALL("graph_ungroup");             PANEL_GRAPH.doUngroup();              }
     function panel_graph_uninstance()              { CALL("graph_uninstance");          PANEL_GRAPH.doGroupRemoveInstance();  }
-                                                                                                                            
+	
     function panel_graph_canvas_copy()             { CALL("graph_canvas_copy");         PANEL_GRAPH.setCurrentCanvas();       }
     function panel_graph_canvas_blend()            { CALL("graph_canvas_blend");        PANEL_GRAPH.setCurrentCanvasBlend();  }
-                                                                                                                            
+    
     function panel_graph_rename()                  { CALL("graph_rename");              PANEL_GRAPH.doRename();               }
     function panel_graph_delete_break()            { CALL("graph_delete_break");        PANEL_GRAPH.doDelete(false);          }
     function panel_graph_delete_merge()            { CALL("graph_delete_merge");        PANEL_GRAPH.doDelete(true);           }
