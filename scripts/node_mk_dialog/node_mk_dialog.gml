@@ -8,6 +8,8 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	update_on_frame = true;
 	setAlwaysTimeline(new timelineItemNode_MKDialog(self));
 	
+	newInput(26, nodeValueSeed());
+	
 	////- =Text
 	newInput( 1, nodeValue_Text("Dialogs", [] )).setArrayDepth(1).setVisible(true, true);
 	newInput( 4, nodeValue_Enum_Scroll(  "Change Case", 0, [ "None", "Lowercase", "Uppercase", "Titlecase" ] ));
@@ -51,7 +53,7 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	newInput(23, nodeValue_Struct(      "Manual Data",  []    )).setArrayDepth(1).setAnimable(false);
 	
 	////- =Transition
-	// input 25
+	// input 27
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -81,8 +83,6 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			var _yy = ui(6) + yy + i * lh + lh / 2;
 			
 			var _ind  = input_fix_len + i * data_length;
-			var _posi = getInputData(_ind + 0);
-			var _anim = getInputData(_ind + 4);
 			var cc    = i == dynamic_input_inspecting? c_white : COLORS._main_icon;
 			var tc    = i == dynamic_input_inspecting? COLORS._main_text_accent : COLORS._main_icon;
 			var hov   = _hover && point_in_rectangle(_m[0], _m[1], _x0, _yy - lh / 2, _x1, _yy + lh / 2 - 1);
@@ -97,10 +97,20 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				}
 			}
 			
+			var _posi = getInputData(_ind + 0);
+			var _anim = getInputData(_ind + 4);
+			
 			draw_sprite_ext(s_node_mk_dialog_position, _posi, _x0 + ui(8), _yy, 1, 1, 0, cc);
 			
+			var _title = animTypeList[_anim];
+			switch(_posi) {
+				case 0 : _title += " in";    break;
+				case 1 : _title += " out";    break;
+				case 2 : _title += " in/out"; break;
+			}
+			
 			draw_set_text(f_p2, fa_left, fa_center, tc);
-			draw_text_add(_x0 + ui(28), _yy, animTypeList[_anim]);
+			draw_text_add(_x0 + ui(28), _yy, _title);
 			
 			var bs = ui(24);
 			var bx = _x1 - bs;
@@ -118,7 +128,7 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	b_match_len  = button(function() /*=>*/ { if(!array_empty(dialogTimelineData)) TOTAL_FRAMES = ceil(array_last(dialogTimelineData).to); }).setText("Match Animation Length");
 	b_reset_data = button(function() /*=>*/ { attributes.manual_position = []; triggerRender(); }).setText("Reset Timing");
 	
-	input_display_list = [ 
+	input_display_list = [ 26, 
 		[ "Text",       false ], 1, 4, 
 		[ "Output",     false ], 2, 0, 3, 
 		[ "Alignment",  false ], 17, 18, 16, 9, 
@@ -127,15 +137,16 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		[ "Background", false, 14 ], 15, 
 		
 		new Inspector_Spacer(ui(4), true, false, ui(4)), 
-		[ "Duration",     false ], 24, 19, 20, 21, 25, b_match_len, 
+		[ "Timing",       false ], 24, 19, 20, 21, 25, b_match_len, 
 		[ "Manual Timer", false, 22 ], b_reset_data, 
 		
 		new Inspector_Spacer(ui(4), true, false, ui(4)), 
 		animator_renderer, 
 	];
 	
-	animTypeList     = [ "Transform", "Blending" ];
-	positionTypeList = __enum_array_gen([ "Start", "End", "Start/End" ], s_node_mk_dialog_position, COLORS._main_icon_light);
+	animTypeList     = [ "Transform", "Blending", "Wiggle", "Wave" ];
+	positionTypeList = __enum_array_gen([ "Start", "End", "Start/End", "Always" ], s_node_mk_dialog_position, COLORS._main_icon_light);
+	applyGroupList   = __enum_array_gen([ "Letter", "Words", "All" ], s_node_mk_dialog_apply_group, COLORS._main_icon_light);
 	
 	function createNewInput(i = array_length(inputs)) {
 		var inAmo = array_length(inputs);
@@ -143,24 +154,26 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		dynamic_input_inspecting = getInputAmount();
 		
 		////- =Selection
-		newInput(i+ 0, nodeValue_Enum_Scroll( "Position",          0, positionTypeList ));
-		newInput(i+ 1, nodeValue_Enum_Scroll( "Apply Group",       0, [ "Letter", "Words", "All" ] ));
+		newInput(i+ 0, nodeValue_Enum_Scroll( "Track Position",    0, positionTypeList ));
+		newInput(i+ 1, nodeValue_Enum_Scroll( "Apply Group",       0, applyGroupList   ));
 		newInput(i+ 2, nodeValue_Slider(      "Origin",            0 ));
 		newInput(i+14, nodeValue_Enum_Scroll( "Duration Type",     1, [ "Frame", "Ratio" ] ));
 		newInput(i+ 3, nodeValue_Float(       "Duration",         .2 ));
 		newInput(i+13, nodeValue_Slider(      "Range",            .1 ));
 		
 		////- =Effects
-		newInput(i+ 4, nodeValue_Enum_Scroll( "Animation",         0, animTypeList           ));
-		newInput(i+ 5, nodeValue_Vec2(        "Position",         [0,0]                      ));
-		newInput(i+ 6, nodeValue_Rotation(    "Rotation",          0                         ));
-		newInput(i+ 7, nodeValue_Vec2(        "Scale",            [0,0]                      ));
+		newInput(i+ 4, nodeValue_Enum_Scroll( "Animation",         0, animTypeList ));
+		newInput(i+ 5, nodeValue_Vec2(        "Position",         [0,0]     ));
+		newInput(i+ 6, nodeValue_Rotation(    "Rotation",          0        ));
+		newInput(i+ 7, nodeValue_Vec2(        "Scale",            [0,0]     ));
 		newInput(i+ 8, nodeValue_Enum_Button( "Anchor type",       1, [ "Global", "Local" ]  ));
-		newInput(i+ 9, nodeValue_Vec2(        "Anchor Position", [.5,.5])).setTooltip("Anchor point for transformation, absolute value for global type, relative for local.");
-		newInput(i+10, nodeValue_Color(       "Color",             ca_white                  ));
-		newInput(i+11, nodeValue_Slider(      "Alpha",             1                         ));
-		newInput(i+12, nodeValue_Slider(      "Strength",          0, [ -1, 1, 0.01 ]        ));
-		// 15
+		newInput(i+ 9, nodeValue_Anchor(      "Anchor Position", [.5,.5])).setTooltip("Anchor point for transformation, absolute value for global type, relative for local.");
+		newInput(i+10, nodeValue_Color(       "Color",             ca_white ));
+		newInput(i+11, nodeValue_Slider(      "Alpha",             1        ));
+		newInput(i+12, nodeValue_Vec2(        "Amplitude",        [4,4], { linked: true } ));
+		newInput(i+15, nodeValue_Vec2(        "Frequency",        [4,4], { linked: true } ));
+		newInput(i+16, nodeValue_Vec2(        "Speed",            [4,4], { linked: true } ));
+		// 17
 		
 		refreshDynamicDisplay();
 		return inputs[i];
@@ -168,10 +181,10 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	input_display_dynamic = [ 
 		["Selection", false], 0, 1, 2, 14, 3, 13, 
-		["Effects",   false], 4, 5, 6, 7, 8, 9, 10, 11, 12, 
+		["Effects",   false], 4, 5, 6, 7, 8, 9, 10, 11, 12, 15, 16, 
 	];
 	
-	setDynamicInput(15, false);
+	setDynamicInput(17, false);
 	
 	////- Nodes
 	
@@ -186,7 +199,9 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	labelColors = [ CDEF.blue, CDEF.cyan, CDEF.yellow, CDEF.orange, CDEF.red, CDEF.pink, CDEF.purple, CDEF.lime ];
 	
 	curr_data = [];
-	
+	curr_seed = 0;
+	wigg_maps = [];
+
 	attributes.manual_position = [];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
@@ -323,15 +338,16 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var __temp_p = [ 0, 0 ];
 			
 		var _ax, _ay;
-			
+		var _charIndx = 0;
+		
 		for( var i = 0, n = array_length(_lineData.str_lines); i < n; i++ ) {
 			var _line = _str_lines[i];
 			var _widh = _line_widths[i];
 			
 			switch(_hali) {
 				case fa_left :   tx = _padd[2];              break;
-				case fa_center : tx = sw / 2 - str_w / 2;    break;
-				case fa_right :  tx = sw - _padd[0] - str_w; break;
+				case fa_center : tx = sw / 2 - _widh / 2;    break;
+				case fa_right :  tx = sw - _padd[0] - _widh; break;
 			}
 			
 			for( var j = 1, m = string_length(_line); j <= m; j++ ) {
@@ -367,7 +383,10 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 					var _anim_ancc = curr_data[_ind +  9];
 					var _anim_colr = curr_data[_ind + 10];
 					var _anim_alph = curr_data[_ind + 11];
-					var _anim_strn = curr_data[_ind + 12];
+					
+					var _anim_ampl  = curr_data[_ind + 12];
+					var _anim_freq  = curr_data[_ind + 15];
+					var _anim_speed = curr_data[_ind + 16];
 					
 					var _cur_prg = 0;
 					var _local_dura = _anim_sel_drt? _anim_sel_dur : _anim_sel_dur / max(1, _dialogData.duration - 1);
@@ -381,21 +400,24 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 								1 - clamp(_localTimeR / _local_dura, 0, 1),
 								clamp((_localTimeR - (1 - _local_dura)) / _local_dura, 0, 1)
 							); break;
+							
+						case 3 : _cur_prg = 1 - _local_dura; break;
 					}
 					
 					_cur_prg = lerp(-_anim_sel_rng, 1 + _anim_sel_rng, _cur_prg);
 					var _anim_sel_rng_st = _cur_prg - _anim_sel_rng;
 					var _anim_sel_rng_ed = _cur_prg + _anim_sel_rng;
 					
-					var _an_prg = 0;
+					var _an_prg = 0, _an_prg_raw = 0;
 					switch(_anim_sel_apl) {
-						case 0 : _an_prg = _letter_curr / _letter_counts; break;
-						case 1 : _an_prg = _word_curr   / _word_counts;   break;
-						case 2 : _an_prg = 1; _anim_sel_ori = .5; break;
+						case 0 : _an_prg = _letter_curr / _letter_counts; _an_prg_raw = _letter_curr; break;
+						case 1 : _an_prg = _word_curr   / _word_counts;   _an_prg_raw = _word_curr;   break;
+						case 2 : _an_prg = 1; _anim_sel_ori = .5;         _an_prg_raw = 0;            break;
 					}
 					
 					var _an_dst = 1 - abs(_anim_sel_ori - _an_prg);
-					var _an_inf = 1 - clamp((_an_dst - _anim_sel_rng_st) / _anim_sel_rng / 2, 0, 1);
+					var _an_inf = 1 - clamp((_an_dst - _anim_sel_rng_st) / max(_anim_sel_rng, 0.00001) / 2, 0, 1);
+					if(_anim_sel_pos == 3) _an_inf = 1 - _an_inf;
 					
 					if(_an_inf == 0) continue;
 					
@@ -403,25 +425,6 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 						case 0 : 
 							ttx += _anim_posi[0] * _an_inf;
 							tty += _anim_posi[1] * _an_inf;
-							
-							var _dr = _an_inf * _anim_rota;
-							if(_dr != 0) {
-								rot += _dr;
-								
-								if(_anim_anct == 0) { // global
-									_ax = _anim_ancc[0];
-									_ay = _anim_ancc[1];
-									
-								} else if(_anim_anct == 1) { // local
-									_ax = ttx + _anim_ancc[0] * chw;
-									_ay = tty + _anim_ancc[1] * chh;
-									
-								}
-								
-								__temp_p = point_rotate(ttx, tty, _ax, _ay, _dr, __temp_p);
-								ttx = __temp_p[0];
-								tty = __temp_p[1];
-							}
 							
 							var _dsx = _an_inf * _anim_scal[0];
 							var _dsy = _an_inf * _anim_scal[1];
@@ -432,22 +435,62 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 									_ay = _anim_ancc[1];
 									
 								} else if(_anim_anct == 1) { // local
-									_ax = ttx + (_anim_ancc[0] - .5) * chw;
-									_ay = tty + (_anim_ancc[1] - .5) * chh;
+									_ax = ttx + _anim_ancc[0] * chw;
+									_ay = tty + _anim_ancc[1] * chh;
 									
 								}
 								
+								ttx -= chw * _dsx * _anim_ancc[0];
+								tty -= chh * _dsy * _anim_ancc[1];
+								
 								xs += _dsx;
 								ys += _dsy;
-								
-								ttx += _dsx * (ttx - _ax);
-								tty += _dsy * (tty - _ay);
 							}
+							
+							var _dr = _an_inf * _anim_rota;
+							if(_dr != 0) {
+								rot += _dr;
+								
+								if(_anim_anct == 0) { // global
+									_ax = _anim_ancc[0];
+									_ay = _anim_ancc[1];
+									
+								} else if(_anim_anct == 1) { // local
+									_ax = ttx + _anim_ancc[0] * chw * xs;
+									_ay = tty + _anim_ancc[1] * chh * ys;
+									
+								}
+								
+								__temp_p = point_rotate(ttx, tty, _ax, _ay, _dr, __temp_p);
+								ttx = __temp_p[0];
+								tty = __temp_p[1];
+							}
+							
 							break;
 						
 						case 1 : 
 							cc  = merge_color(cc, colorMultiply(cc, _anim_colr), _an_inf);
 							aa  = lerp(aa, aa * _anim_alph, _an_inf);
+							break;
+							
+						case 2 : 
+							var _wmap = wigg_maps[k];
+							
+							var _wigx = _wmap[0].get(round(_an_prg * 100) + CURRENT_FRAME);
+							var _wigy = _wmap[1].get(round(_an_prg * 100) + CURRENT_FRAME);
+							
+							ttx += _wigx * _an_inf;
+							tty += _wigy * _an_inf;
+							break;
+						
+						case 3 : 
+							var _wmap = wigg_maps[k];
+							
+							var _wavx = dsin(_an_prg_raw * _anim_freq[0] + CURRENT_FRAME * _anim_speed[0]) * _anim_ampl[0];
+							var _wavy = dsin(_an_prg_raw * _anim_freq[1] + CURRENT_FRAME * _anim_speed[1]) * _anim_ampl[1];
+							
+							ttx += _wavx * _an_inf;
+							tty += _wavy * _an_inf;
 							break;
 					}
 				}
@@ -475,6 +518,9 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static update = function() { 
 		#region data
 			curr_data    = array_create_ext(array_length(inputs), function(i) /*=>*/ {return getInputData(i)});
+			
+			curr_seed    = curr_data[26];
+			random_set_seed(curr_seed);
 			
 			var _dimT    = curr_data[ 2];
 			var _dim     = curr_data[ 0];
@@ -517,8 +563,23 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				dynamic_input_inspecting = clamp(dynamic_input_inspecting, 0, getInputAmount() - 1);
 				var _ind = input_fix_len + dynamic_input_inspecting * data_length;
 				
+				var _trckPos  = getInputData(_ind + 0);
 				var _animType = getInputData(_ind + 4);
 				
+				if(_trckPos == 3) {
+					inputs[_ind + 14].setName("Range Type");
+					inputs[_ind +  3].setName("Range");
+					
+					inputs[_ind + 13].setName("Soft Edge");
+					
+				} else {
+					inputs[_ind + 14].setName("Duration Type");
+					inputs[_ind +  3].setName("Duration");
+					
+					inputs[_ind + 13].setName("Range");
+					
+				}
+					
 				inputs[_ind +  5].setVisible(_animType == 0);
 				inputs[_ind +  6].setVisible(_animType == 0);
 				inputs[_ind +  7].setVisible(_animType == 0);
@@ -526,9 +587,22 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				inputs[_ind +  9].setVisible(_animType == 0);
 				inputs[_ind + 10].setVisible(_animType == 1);
 				inputs[_ind + 11].setVisible(_animType == 1);
-				inputs[_ind + 12].setVisible(false);
+				inputs[_ind + 12].setVisible(_animType == 2 || _animType == 3);
+				inputs[_ind + 15].setVisible(_animType == 2 || _animType == 3);
+				inputs[_ind + 16].setVisible(_animType == 3);
 			}
 			
+			wigg_maps = [];
+			for( var i = 0; i < _ani_amo; i++ ) {
+				var _ind  = input_fix_len + i * data_length;
+				var _amp  = curr_data[_ind + 12];
+				var _freq = curr_data[_ind + 15];
+				
+				var wigg_map_x = new wiggleMap(curr_seed + 100, _freq[0] / 10, 100, _amp[0]).generate();
+				var wigg_map_y = new wiggleMap(curr_seed + 200, _freq[1] / 10, 100, _amp[1]).generate();
+				
+				wigg_maps[i] = [ wigg_map_x, wigg_map_y ];
+			}
 		#endregion
 		
 		#region text
@@ -599,7 +673,7 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 					
 					_from = _manTimID.from;
 					_to   = _manTimID.to;
-					
+					_duration = _to - _from;
 				}
 				
 				dialogTimelineData[i] = {
@@ -663,6 +737,7 @@ function timelineItemNode_MKDialog(_node) : timelineItemNode(_node) constructor 
 	h = ui(40);
 	
 	dragging    = noone;
+	drag_type   = 0;
 	dragging_mx = 0;
 	dragging_sx = 0;
 	dragging_sy = 0;
@@ -694,8 +769,15 @@ function timelineItemNode_MKDialog(_node) : timelineItemNode(_node) constructor 
 			
 			var _act = _data.active;
 			var _hov = _editing && _hover && point_in_rectangle(_msx, _msy, _dx, _dy, _dx + _dw, _dy + _dh);
+			if(_hov) {
+				if(_msx < _dx + 12)       _hov = 2;
+				if(_msx > _dx + _dw - 12) _hov = 3;
+			}
 			
-			draw_sprite_stretched_ext(THEME.box_r2, 0, _dx, _dy + _dh - ui(4), _dw - 2, ui(4), _data.color, .3 + .5 * _act + .3 * _hov);
+			draw_sprite_stretched_ext(THEME.box_r2, 0, _dx, _dy + _dh - ui(4), _dw - 2, ui(4), _data.color, .3 + .5 * _act + .3 * bool(_hov));
+			
+			if(_hov == 2) draw_sprite_ext(THEME.circle, 0, _dx,       _dy + _dh - ui(2), .5, .5, 0, _data.color);
+			if(_hov == 3) draw_sprite_ext(THEME.circle, 0, _dx + _dw, _dy + _dh - ui(2), .5, .5, 0, _data.color);
 			
 			draw_set_text(f_p4, fa_left, fa_bottom, _act? COLORS._main_text : COLORS._main_text_sub);
 			gpu_set_scissor(_dx, _dy, _dw - 2, _dh);
@@ -704,6 +786,8 @@ function timelineItemNode_MKDialog(_node) : timelineItemNode(_node) constructor 
 			
 			if(_hov && mouse_lpress(_focus)) {
 				dragging    = _time;
+				drag_type   = _hov;
+				
 				dragging_mx = _msx;
 				dragging_sx = _data.from;
 				dragging_sy = _data.to;
@@ -715,8 +799,12 @@ function timelineItemNode_MKDialog(_node) : timelineItemNode(_node) constructor 
 		if(dragging != noone) {
 			var _dx = (_msx - dragging_mx) / _s;
 			
-			dragging.from = dragging_sx + _dx;
-			dragging.to   = dragging_sy + _dx;
+			if(drag_type == 1) {
+				dragging.from = dragging_sx + _dx;
+				dragging.to   = dragging_sy + _dx;
+				
+			} else if(drag_type == 2) dragging.from = dragging_sx + _dx;
+			  else if(drag_type == 3) dragging.to   = dragging_sy + _dx;
 			
 			if(mouse_lrelease()) {
 				node.triggerRender();

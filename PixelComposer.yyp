@@ -3911,6 +3911,7 @@
     {"id":{"name":"s_node_mk_brownian","path":"sprites/s_node_mk_brownian/s_node_mk_brownian.yy",},},
     {"id":{"name":"s_node_mk_cable","path":"sprites/s_node_mk_cable/s_node_mk_cable.yy",},},
     {"id":{"name":"s_node_mk_delay_machine","path":"sprites/s_node_mk_delay_machine/s_node_mk_delay_machine.yy",},},
+    {"id":{"name":"s_node_mk_dialog_apply_group","path":"sprites/s_node_mk_dialog_apply_group/s_node_mk_dialog_apply_group.yy",},},
     {"id":{"name":"s_node_mk_dialog_position","path":"sprites/s_node_mk_dialog_position/s_node_mk_dialog_position.yy",},},
     {"id":{"name":"s_node_mk_dialog","path":"sprites/s_node_mk_dialog/s_node_mk_dialog.yy",},},
     {"id":{"name":"s_node_mk_fall","path":"sprites/s_node_mk_fall/s_node_mk_fall.yy",},},

@@ -14,6 +14,9 @@
     function panel_graph_preview_focus()           { CALL("graph_preview_focus");       PANEL_GRAPH.setCurrentPreview();     }
     
     function panel_graph_select_all()              { CALL("graph_select_all");          PANEL_GRAPH.nodes_selecting = PANEL_GRAPH.nodes_list; }
+    function panel_graph_select_none()             { CALL("graph_select_none");         PANEL_GRAPH.nodes_selecting = []; 
+                                                                                        PANEL_INSPECTOR.inspecting  = PANEL_GRAPH.getCurrentContext(); }
+    
     function panel_graph_toggle_grid()             { CALL("graph_toggle_grid");         PANEL_GRAPH.project.graphDisplay.show_grid      = !PANEL_GRAPH.project.graphDisplay.show_grid;        }
     function panel_graph_toggle_dimension()        { CALL("graph_toggle_dimension");    PANEL_GRAPH.project.graphDisplay.show_dimension = !PANEL_GRAPH.project.graphDisplay.show_dimension;   }
     function panel_graph_toggle_compute()          { CALL("graph_toggle_compute");      PANEL_GRAPH.project.graphDisplay.show_compute   = !PANEL_GRAPH.project.graphDisplay.show_compute;     }
@@ -84,6 +87,8 @@
         registerFunction("Graph", "Preview Focusing Node", "P", MOD_KEY.none,                    panel_graph_preview_focus       ).setMenu("graph_preview_focusing_node")
 		
         registerFunction("Graph", "Select All",            "A", MOD_KEY.ctrl,                    panel_graph_select_all          ).setMenu("graph_select_all")
+        registerFunction("Graph", "Select None",           vk_escape, MOD_KEY.none,              panel_graph_select_none         ).setMenu("graph_select_none")
+        
         registerFunction("Graph", "Toggle Grid",           "G", MOD_KEY.none,                    panel_graph_toggle_grid         ).setMenu("graph_toggle_grid")
         registerFunction("Graph", "Toggle Dimension",      "",  MOD_KEY.none,                    panel_graph_toggle_dimension    ).setMenu("graph_toggle_dimension")
         registerFunction("Graph", "Toggle Compute",        "",  MOD_KEY.none,                    panel_graph_toggle_compute      ).setMenu("graph_toggle_compute")

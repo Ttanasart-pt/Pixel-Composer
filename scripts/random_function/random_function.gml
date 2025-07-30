@@ -100,11 +100,11 @@ function getWiggle(_min = 0, _max = 1, _freq = 1, _time = 0, _seed = 0, startTim
 	return lerp(_min, _max, _lrp);
 }
 
-function wiggleMap(_seed, _freq, _length) constructor {
+function wiggleMap(_seed, _freq, _length, _amp = 1) constructor {
 	seed = _seed;
 	freq = _freq;
 	len  = _length;
-	amp  = 1;
+	amp  = _amp;
 	map  = array_create(_length);
 	shf  = 0;
 	
@@ -112,6 +112,7 @@ function wiggleMap(_seed, _freq, _length) constructor {
 		INLINE
 		
 		for(var i = 0; i < len; i++) map[i] = wiggle(-1, 1, freq, i + shf, seed);
+		return self;
 	}
 	
 	static check = function(_amp, _freq, _seed, _shf = 0) {

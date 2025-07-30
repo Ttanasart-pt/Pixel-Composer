@@ -21,23 +21,23 @@
     function __fnInit_Inspector() {
     	var i = "Inspector";
     	
-        registerFunction("", "Color Picker",         "",    MOD_KEY.alt,     panel_inspector_color_pick             ).setMenu("color_picker")
+        registerFunction("", "Color Picker",         "",  MOD_KEY.alt,  panel_inspector_color_pick             ).setMenu("color_picker")
         
-        registerFunction(i, "Copy Value",            "C",   MOD_KEY.ctrl,    panel_inspector_copy_prop              ).setMenu("inspector_copy_property",  THEME.copy)
-        registerFunction(i, "Paste Value",           "V",   MOD_KEY.ctrl,    panel_inspector_paste_prop             ).setMenu("inspector_paste_property", THEME.paste)
-        registerFunction(i, "Toggle Animation",      "I",   MOD_KEY.none,    panel_inspector_toggle_animation       ).setMenu("inspector_toggle_animation")
+        registerFunction(i, "Copy Value",            "C", MOD_KEY.ctrl, panel_inspector_copy_prop              ).setMenu("inspector_copy_property",  THEME.copy)
+        registerFunction(i, "Paste Value",           "V", MOD_KEY.ctrl, panel_inspector_paste_prop             ).setMenu("inspector_paste_property", THEME.paste)
+        registerFunction(i, "Toggle Animation",      "I", MOD_KEY.none, panel_inspector_toggle_animation       ).setMenu("inspector_toggle_animation")
         
-        registerFunction(i, "Expand All Sections",   "",    MOD_KEY.none,    panel_inspector_section_expand_all     ).setMenu("inspector_expand_all_sections")
-        registerFunction(i, "Collapse All Sections", "",    MOD_KEY.none,    panel_inspector_section_collapse_all   ).setMenu("inspector_collapse_all_sections")
+        registerFunction(i, "Expand All Sections",   "",  MOD_KEY.none, panel_inspector_section_expand_all     ).setMenu("inspector_expand_all_sections")
+        registerFunction(i, "Collapse All Sections", "",  MOD_KEY.none, panel_inspector_section_collapse_all   ).setMenu("inspector_collapse_all_sections")
         
-        registerFunction(i, "Reset",                 "",    MOD_KEY.none,    panel_inspector_reset                  ).setMenu("inspector_reset")
-        registerFunction(i, "Toggle Animation",      "",    MOD_KEY.none,    panel_inspector_animation_toggle       ).setMenu("inspector_animate_toggle")
-        registerFunction(i, "Separate/Combine Axis",           "",    MOD_KEY.none,    panel_inspector_axis_toggle            ).setMenu("inspector_axis_toggle")
-        registerFunction(i, "Toggle Expression",     "",    MOD_KEY.none,    panel_inspector_expression_toggle      ).setMenu("inspector_expression_toggle")
-        registerFunction(i, "Extract to Globalvar",  "",    MOD_KEY.none,    panel_inspector_extract_global         ).setMenu("inspector_extract_global")
-        registerFunction(i, "Extract Value",         "",    MOD_KEY.none,    panel_inspector_extract_single         ).setMenu("inspector_extract_value")
-        registerFunction(i, "Toggle Bypass",         "",    MOD_KEY.none,    panel_inspector_junction_bypass_toggle ).setMenu("inspector_bypass_toggle")
-        registerFunction(i, "Toggle Visible",        "",    MOD_KEY.none,    panel_inspector_visible_bypass_toggle  ).setMenu("inspector_visible_toggle")
+        registerFunction(i, "Reset",                 "",  MOD_KEY.none, panel_inspector_reset                  ).setMenu("inspector_reset")
+        registerFunction(i, "Toggle Animation",      "",  MOD_KEY.none, panel_inspector_animation_toggle       ).setMenu("inspector_animate_toggle")
+        registerFunction(i, "Separate/Combine Axis", "",  MOD_KEY.none, panel_inspector_axis_toggle            ).setMenu("inspector_axis_toggle")
+        registerFunction(i, "Toggle Expression",     "",  MOD_KEY.none, panel_inspector_expression_toggle      ).setMenu("inspector_expression_toggle")
+        registerFunction(i, "Extract to Globalvar",  "",  MOD_KEY.none, panel_inspector_extract_global         ).setMenu("inspector_extract_global")
+        registerFunction(i, "Extract Value",         "",  MOD_KEY.none, panel_inspector_extract_single         ).setMenu("inspector_extract_value")
+        registerFunction(i, "Toggle Bypass",         "",  MOD_KEY.none, panel_inspector_junction_bypass_toggle ).setMenu("inspector_bypass_toggle")
+        registerFunction(i, "Toggle Visible",        "",  MOD_KEY.none, panel_inspector_visible_bypass_toggle  ).setMenu("inspector_visible_toggle")
         
         __fnGroupInit_Inspector();
     }
