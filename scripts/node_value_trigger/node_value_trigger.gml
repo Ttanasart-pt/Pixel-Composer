@@ -1,6 +1,7 @@
 function nodeValue_Trigger(_name, _tooltip = "") { return new __NodeValue_Trigger(_name, self, _tooltip); }
 
 function __NodeValue_Trigger(_name, _node, _tooltip = "") : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.trigger, false, _tooltip) constructor {
+	setDisplay(VALUE_DISPLAY.button, { name: "Trigger" });
 	
 	/////============== GET =============
 	

@@ -25,7 +25,7 @@ function Node_Random(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput( 4, nodeValue_Enum_Scroll( "Mode", 0, [ "Per Frame", "Periordic", "Trigger", "Probabilistic", "Accumulative", "Per Animation" ]));
 	newInput( 5, nodeValue_Int(         "Period", 1));
 	newInput( 6, nodeValue_Int(         "Period Shift", 0));
-	newInput( 7, nodeValue_Trigger(     "Trigger")).setDisplay(VALUE_DISPLAY.button, { name: "Trigger" });
+	newInput( 7, nodeValue_Trigger(     "Trigger"));
 	newInput( 8, nodeValue_Slider(      "Probability", 1));
 	newInput(20, nodeValue_Float(       "Average Period", 4));
 	newInput(21, nodeValue_Float(       "Period Variance", 2));

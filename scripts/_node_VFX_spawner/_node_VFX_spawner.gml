@@ -19,7 +19,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	newInput(27, nodeValue_Bool(        "Spawn",                true          ));
 	newInput(16, nodeValue_Enum_Button( "Spawn Type",           0             )).setChoices([ "Stream", "Burst", "Trigger" ]);
-	newInput(44, nodeValue_Trigger(     "Spawn"                               )).setDisplay(VALUE_DISPLAY.button, { name: "Trigger" });
+	newInput(44, nodeValue_Trigger(     "Spawn"                               ));
 	newInput( 1, nodeValue_Int(         "Spawn Delay",          4             )).setTooltip("Frames delay between each particle spawn.");
 	newInput(51, nodeValue_Int(         "Burst Duration",       1             ));
 	newInput( 2, nodeValue_Range(       "Spawn Amount",        [2,2], true    )).setTooltip("Amount of particle spawn in that frame.");
@@ -102,7 +102,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput(21, nodeValue_Bool(     "Loop",                   true ));
 	newInput(25, nodeValue_Int(      "Boundary Data",          []   )).setArrayDepth(1).setVisible(false, true);
 	newInput(31, nodeValue_Surface(  "Atlas",                  []   )).setArrayDepth(1);
-	newInput(48, nodeValue_Trigger(  "Reset Seed"                   )).setDisplay(VALUE_DISPLAY.button, { name: "Trigger" })
+	newInput(48, nodeValue_Trigger(  "Reset Seed"                   ))
 	
 	// inputs 64
 	

@@ -19,7 +19,7 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	newInput(1, nodeValue_Enum_Scroll( "Force type", 0, [ "Constant", "Impulse", "Torque", "Torque Impulse", "Explode" ]));
 	newInput(6, nodeValue_Enum_Button( "Scope", 0, [ "Global", "Local" ]));
 	newInput(4, nodeValue_Bool(        "Apply",  true));
-	newInput(9, nodeValue_Trigger(     "Trigger")).setDisplay(VALUE_DISPLAY.button, { name: "Trigger" });
+	newInput(9, nodeValue_Trigger(     "Trigger"));
 	
 	////- Force
 	

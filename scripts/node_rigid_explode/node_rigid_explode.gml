@@ -16,7 +16,7 @@ function Node_Rigid_Explode(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	////- Explosion
 	
-	newInput(1, nodeValue_Trigger( "Trigger")).setDisplay(VALUE_DISPLAY.button, { name: "Trigger" });
+	newInput(1, nodeValue_Trigger( "Trigger"));
 	newInput(2, nodeValue_Vec2(    "Position", [ 0, 0 ]));
 	newInput(3, nodeValue_Float(   "Range", 8));
 	newInput(4, nodeValue_Slider(  "Strength", 1., [0, 16, 0.01]));
