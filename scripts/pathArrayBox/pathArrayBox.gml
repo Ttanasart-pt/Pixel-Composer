@@ -80,8 +80,5 @@ function pathArrayBox(_target, _data, _onClick) : widget() constructor {
 		return h;
 	}
 	
-	static clone = function() {
-		var cln = new pathArrayBox(target, data, onClick);
-		return cln;
-	}
+	static clone = function() { return new pathArrayBox(target, data, onClick); }
 }

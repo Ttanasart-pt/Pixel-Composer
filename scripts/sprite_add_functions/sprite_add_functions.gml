@@ -3,13 +3,16 @@ SPRITE_PATH_MAP = {};
 
 #macro __sprite_add sprite_add
 #macro sprite_add sprite_add_os
-function sprite_add_os(path, imagenumb, removeback, smooth, xorig, yorig) { return __sprite_add(filename_os(path), imagenumb, removeback, smooth, xorig, yorig); }
+function sprite_add_os(path, imagenumb, removeback, smooth, xorig, yorig) { 
+	return __sprite_add(filename_os(path), imagenumb, removeback, smooth, xorig, yorig); 
+}
 
-function sprite_add_map(path) {
-	var _real_path = sprite_path_check_depth(path);
-	var _s = sprite_add(_real_path, 1, 0, 0, 0, 0);
-	SPRITE_PATH_MAP[$ path] = _s;
-	return _s;
+function sprite_add_map(path, imagenumb = 1, removeback = false, smooth = false, xorig = 0, yorig = 0) {
+	var _path = sprite_path_check_depth(filename_os(path));
+	var _sprs = sprite_add(_path, imagenumb, removeback, smooth, xorig, yorig);
+	SPRITE_PATH_MAP[$ path] = _sprs;
+	
+	return _sprs;
 }
 
 function sprite_add_center(path) {

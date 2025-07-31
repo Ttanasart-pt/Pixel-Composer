@@ -44,18 +44,18 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	////- =Image
 	newInput(0, nodeValue_Path(        "Path",        []        )).setDisplay(VALUE_DISPLAY.path_array, { filter: ["image|*.png;*.jpg", ""] });
 	newInput(1, nodeValue_Padding(     "Padding",     [0,0,0,0] )).rejectArray();
-	newInput(8, nodeValue_Enum_Scroll( "Canvas size", 2, [ "First", "Minimum", "Maximum" ])).rejectArray();
+	newInput(8, nodeValue_Enum_Scroll( "Canvas Size", 2, [ "First", "Minimum", "Maximum" ])).rejectArray();
 	
 	////- =Animation
-	newInput(5, nodeValue_Trigger("Set animation length to match" ));
+	newInput(5, nodeValue_Trigger( "Set animation length to match" ));
 	b_match_len = button(function() /*=>*/ { if(array_empty(spr)) return; TOTAL_FRAMES = array_length(spr); }).setText("Match Length");
 	
-	newInput(4, nodeValue_Enum_Scroll( "Loop modes",  0, ["Loop", "Ping pong", "Hold last frame", "Hide"])).rejectArray();
-	newInput(2, nodeValue_Bool(  "Stretch frame",     false, "Stretch animation speed to match project length.")).rejectArray();
-	newInput(3, nodeValue_Float( "Animation speed",   1 )).rejectArray();
+	newInput(4, nodeValue_Enum_Scroll( "Loop Modes",      0, ["Loop", "Ping pong", "Hold last frame", "Hide"]       )).rejectArray();
+	newInput(2, nodeValue_Bool(        "Stretch Frame",   false, "Stretch animation speed to match project length." )).rejectArray();
+	newInput(3, nodeValue_Float(       "Animation Speed", 1 )).rejectArray();
 		
 	////- =Custom Order
-	newInput(6, nodeValue_Bool( "Custom frame order", false ));
+	newInput(6, nodeValue_Bool( "Custom Frame Order", false ));
 	newInput(7, nodeValue_Int(  "Frame", 0 ));
 	// input 9	
 	
@@ -120,8 +120,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				case ".png"	 :
 				case ".jpg"	 :
 				case ".jpeg" :
-					var _real_path = sprite_path_check_depth(_path);
-					var _spr = sprite_add(_real_path, 1, false, false, 0, 0);
+					var _spr = sprite_add_map(_path);
 					
 					if(_spr == -1) {
 						noti_warning($"Image node: File not a valid image.", noone, self);
