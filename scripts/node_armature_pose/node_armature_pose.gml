@@ -345,6 +345,8 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	static update = function(frame = CURRENT_FRAME) {
 		setBone();
+		if(!is(bonePose, __Bone)) return;
+		
 		var _b = getInputData(0);
 		
 		bonePose.resetPose().setPosition();
@@ -381,7 +383,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	////- Draw
 	
-	static getPreviewBoundingBox = function() /*=>*/ {return BBOX().fromPoints(bone_bbox[0], bone_bbox[1], bone_bbox[2], bone_bbox[3])};
+	static getPreviewBoundingBox = function() { return BBOX().fromPoints(bone_bbox[0], bone_bbox[1], bone_bbox[2], bone_bbox[3]); }
 	
 	static postApplyDeserialize = function() {
 		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {

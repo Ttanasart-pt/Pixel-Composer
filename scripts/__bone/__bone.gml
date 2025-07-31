@@ -527,7 +527,7 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 	}
 	
 	static __getBBOX = function() {
-		if(is_main) return noone;
+		if(is_main) return [ 0, 0, 1, 1, 0, 0 ];
 		
 		var p0 = bone_head_pose;
 		var p1 = bone_tail_pose;

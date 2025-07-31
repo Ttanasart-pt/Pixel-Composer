@@ -125,7 +125,7 @@ function Panel_Image_Array_Editor(_junction) : PanelContent() constructor {
 				var _pthw = itw - its - ui(16) + ui(8);
 				var _pthh = _txth;
 				
-				gpu_set_scissor(_pthx, _pthy, _pthw, _pthh);
+				gpu_set_scissor(_pthx, _pthy, _pthw - ui(8), _pthh);
 				draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text_sub);
 				draw_text_add(_txtx, _txty, path);
 				gpu_set_scissor(scr);
