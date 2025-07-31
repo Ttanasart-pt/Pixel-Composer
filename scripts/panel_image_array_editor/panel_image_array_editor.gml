@@ -64,9 +64,13 @@ function Panel_Image_Array_Editor(_junction) : PanelContent() constructor {
 		
 		itw = (sp_content.surface_w - pad) / col - pad;
 		
+		var hover = sp_content.hover;
+		var focus = sp_content.active;
+		
 		var yy			= _y;
 		var drag		= -1;
 		var inb_hover	= -1;
+		var scr = gpu_get_scissor();
 		
 		for( var i = 0; i < row; i++ ) {
 			var ch = ith;
@@ -80,14 +84,14 @@ function Panel_Image_Array_Editor(_junction) : PanelContent() constructor {
 				draw_sprite_stretched(THEME.ui_panel_bg, 0, xx, yy, its, its);
 				draw_sprite_stretched_add(THEME.ui_panel, 1, xx, yy, its, its, c_white, 0.2);
 				
-				if(sp_content.hover && point_in_rectangle(_m[0], _m[1], xx, yy, xx + its, yy + its)) {
+				if(hover && point_in_rectangle(_m[0], _m[1], xx, yy, xx + its, yy + its)) {
 					sp_content.hover_content = true;
 					inb_hover = index;
 					
 					if(dragging == -1 || dragging == index) 
 						draw_sprite_stretched_ext(THEME.ui_panel, 1, xx, yy, its, its, COLORS._main_accent, 1);
 					
-					if(mouse_press(mb_left, sp_content.active))
+					if(mouse_press(mb_left, focus))
 						dragging = index;
 				}
 				
@@ -115,23 +119,26 @@ function Panel_Image_Array_Editor(_junction) : PanelContent() constructor {
 				
 				var _txth = line_get_height(f_p3, 4);
 				var _txty = yy + its - _txth;
-				draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text_sub);
-				draw_text_add(_txtx, _txty, path);
 				
 				var _pthx = _txtx - ui(8);
 				var _pthy = _txty - ui(2);
 				var _pthw = itw - its - ui(16) + ui(8);
 				var _pthh = _txth;
 				
+				gpu_set_scissor(_pthx, _pthy, _pthw, _pthh);
+				draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text_sub);
+				draw_text_add(_txtx, _txty, path);
+				gpu_set_scissor(scr);
+				
 				if(tb_editing == i) {
-				    tb_edit.setFocusHover(sp_content.active, sp_content.hover);
+				    tb_edit.setFocusHover(focus, hover);
 				    tb_edit.draw(_pthx, _pthy, _pthw, _pthh, path, _m);
 				}
 				
-				if(sp_content.hover && point_in_rectangle(_m[0], _m[1], _pthx, _pthy, _pthx + _pthw, _pthy + _pthh)) {
+				if(hover && point_in_rectangle(_m[0], _m[1], _pthx, _pthy, _pthx + _pthw, _pthy + _pthh)) {
 				    draw_sprite_stretched_add(THEME.ui_panel, 1, _pthx, _pthy, _pthw, _pthh, COLORS._main_icon, 0.2);
 				    
-				    if(mouse_press(mb_left, sp_content.active)) {
+				    if(mouse_press(mb_left, focus)) {
 				        tb_editing = i;
 				        tb_edit.activate(path);
 				    }
@@ -143,6 +150,8 @@ function Panel_Image_Array_Editor(_junction) : PanelContent() constructor {
 			yy += ch;
 			_h += ch;
 		}
+		
+		gpu_set_scissor(scr);
 		
 		if(dragging != -1) {
 			if(inb_hover != -1) {
@@ -206,14 +215,39 @@ function Panel_Image_Array_Editor(_junction) : PanelContent() constructor {
 		var pw = w - padding * 2;
 		var ph = h - padding * 2;
 		
-		var msx = mx - px;
-		var msy = my - py;
+		var tamo = 2;
+		var ptw  = ui(24 + 2) * tamo - ui(2) + ui(12);
+		var pth  = ui(24 + 6);
 		
-		draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
+		draw_sprite_stretched(THEME.ui_panel_bg,   1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
 		
+		sp_content.setToolRect(ptw, pth);
     	sp_content.setFocusHover(pFOCUS, pHOVER);
-    	sp_content.draw(px, py, msx, msy);
+    	sp_content.drawOffset(px, py, mx, my);
     	
+		draw_sprite_stretched(THEME.ui_panel_tool, 0, px + pw + ui(8) - ptw, py - ui(8), ptw, pth);
+		
+		var bs = ui(24);
+		var bx = px + pw + ui(8) - bs;
+		var by = py - ui(8);
+		
+		var bc = COLORS._main_value_positive;
+		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [mx, my], pHOVER, pFOCUS, "Add...", THEME.add, 0, bc, 1, .75) == 2) {
+			var path = get_open_filenames_compat("image|*.png;*.jpg", "");
+    		if(path == "") return;
+    		
+			var paths = string_splice(path, "\n");
+			array_append(data, paths);
+			apply();
+		}
+		
+		bx -= bs + ui(2);
+		
+		var bc = COLORS._main_icon;
+		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [mx, my], pHOVER, pFOCUS, "Sort by Name", THEME.text, 0, bc, 1, .75) == 2) {
+			sortByName();
+		}
+		
     	if(pHOVER) {
     	    if(FILE_IS_DROPPING) draw_sprite_stretched_ext(THEME.ui_panel_selection, 0, 8, 8, w - 16, h - 16, COLORS._main_value_positive, 1);
     	    

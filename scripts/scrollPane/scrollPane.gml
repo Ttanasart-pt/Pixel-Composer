@@ -9,6 +9,8 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 	surface_w   = _w - ui(12);
 	surface_h   = _h;
 	surface     = surface_create_valid(surface_w, surface_h);
+	tool_w      = 0;
+	tool_h      = 0;
 	
 	drawFunc    = ondraw;
 	
@@ -59,7 +61,8 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		surface_h = _h;
 	}
 	
-	static setScroll = function(_scroll_y) { INLINE scroll_y_to  = _scroll_y; }
+	static setToolRect = function(_tw, _th)  { INLINE tool_w = _tw; tool_h = _th; return self; }
+	static setScroll   = function(_scroll_y) { INLINE scroll_y_to = _scroll_y;    return self; }
 	
 	static drawOffset = function(_x, _y, _mx = mouse_mx, _my = mouse_my) { return draw(_x, _y, _mx - _x, _my - _y); }
 	
@@ -73,8 +76,10 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		whover  = hover;
 		wactive = active;
 		
-		hover   = hover && point_in_rectangle( mx, my, 0, 0, surface_w, surface_h);
+		hover   = hover &&  point_in_rectangle( mx, my, 0, 0, surface_w, surface_h);
+		hover   = hover && !point_in_rectangle( mx, my, surface_w - tool_w, 0, surface_w, tool_h);
 		hover   = hover && pen_scrolling != 2;
+		
 		surface = surface_verify(surface, surface_w, surface_h);
 		hover_content = false;
 		
@@ -131,7 +136,13 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 			var _p   = PEN_USE && (is_scrolling || point_in_rectangle(x + mx, y + my, x + w - scroll_w - 2, y, x + w, y + surface_h));
 			scroll_w = lerp_float(scroll_w, _p? 12 : scroll_s, 5);
 			
-			draw_scroll(x + w - scroll_w, y + ui(6), true, surface_h - ui(12), -scroll_y / content_h, surface_h / (surface_h + content_h), x + mx, y + my, scroll_w);
+			var scrx = x + w - scroll_w;
+			var scry = y + ui(6) + tool_h;
+			var scrh = surface_h - ui(6 + 6) - tool_h;
+			var scrProg  = -scroll_y / content_h;
+			var scrRatio = surface_h / (surface_h + content_h);
+			
+			draw_scroll(scrx, scry, true, scrh, scrProg, scrRatio, x + mx, y + my, scroll_w);
 		}
 		
 		scroll_lock = false;
