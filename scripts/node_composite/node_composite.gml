@@ -697,6 +697,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _surf = current_data[index + 0];
 			if(!is_surface(_surf)) continue;
 			
+			if(!_vis[i]) continue;
+			
 			var _pos  = current_data[index + 1];
 			var _rot  = current_data[index + 2];
 			var _sca  = current_data[index + 3];
@@ -755,8 +757,6 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				siz: _siz,
 			}
 			
-			if(!_vis[i]) continue;
-			
 			var p0x = _d0[0], p0y = _d0[1];
 			var p1x = _d1[0], p1y = _d1[1];
 			var p2x = _d2[0], p2y = _d2[1];
@@ -766,6 +766,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var  rx = _rr[0],  ry = _rr[1];
 			var  sx = _ss[0],  sy = _ss[1];
 			
+			if(!_sel[i]) continue;
 			var _hov = point_in_rectangle_points(_mx, _my, p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y);
 			
 			if(dynamic_input_inspecting == i) {

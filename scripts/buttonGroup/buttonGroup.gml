@@ -126,8 +126,13 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 					draw_set_text(font, fa_center, fa_center, fColor);
 					draw_text_add(bx + bww / 2, _y + _h / 2, _d);
 					
-				} else if(sprite_exists(_d))
-					draw_sprite_ui_uniform(_d, i, bx + bww / 2, _y + _h / 2, 1, sprBlend);
+				} else if(sprite_exists(_d)) {
+					var _xx = bx + bww / 2;
+					var _yy = _y + _h / 2;
+					var _ss = min(ww / sprite_get_width(_d), _h / sprite_get_height(_d));
+					
+					draw_sprite_ext(_d, i, _xx, _yy, _ss, _ss, 0, sprBlend);
+				}
 				
 				bx += bww;
 			}
