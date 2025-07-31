@@ -140,7 +140,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 						
 					if(mouse_click(mb_left, _focus) && _vis[ind] != hold_visibility) {
 						_vis[ind] = hold_visibility;
-						doUpdate();
+						triggerRender();
 					}
 				} else 
 					draw_sprite_ui_uniform(THEME.junc_visible, vis, _bx, _cy + lh / 2, 1, COLORS._main_icon, 0.5 + 0.5 * vis);
@@ -171,7 +171,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					var _ssh = surface_get_height_safe(_surf);
 					var _sss = min(ssh / _ssw, ssh / _ssh);
 					draw_surface_ext_safe(_surf, _sx0, _sy0, _sss, _sss, 0, c_white, 1);
-				}
+				}				
 				
 				if(dynamic_input_inspecting == ind) draw_sprite_stretched_add(THEME.box_r2, 1, _sx0, _sy0, ssh, ssh, COLORS._main_accent, 1);
 				else                                draw_sprite_stretched_add(THEME.box_r2, 1, _sx0, _sy0, ssh, ssh, COLORS._main_icon, 0.3);
