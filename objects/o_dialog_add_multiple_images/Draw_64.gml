@@ -31,6 +31,7 @@ if !ready exit;
 			
 			if(mouse_press(mb_left, sFOCUS)) {
 				var path_arr = paths_to_array_ext(paths, dir_filter);
+				array_sort(path_arr, true);
 				
 				switch(_node.node) {
 					case Node_Image :
