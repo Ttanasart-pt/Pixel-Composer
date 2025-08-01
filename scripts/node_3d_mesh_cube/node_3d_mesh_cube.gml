@@ -13,12 +13,12 @@ function Node_3D_Mesh_Cube(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 	////- Materials
 	
 	newInput(i+0, nodeValue_Enum_Button( "Material Mode", 0, [ "Uniform", "Per Face", "Top and Side" ] ));
-	newInput(i+1, nodeValue_D3Material( "Material"        )).setVisible(true, true);
-	newInput(i+2, nodeValue_D3Material( "Material Bottom" )).setVisible(true, true);
-	newInput(i+3, nodeValue_D3Material( "Material Left"   )).setVisible(true, true);
-	newInput(i+4, nodeValue_D3Material( "Material Right"  )).setVisible(true, true);
-	newInput(i+5, nodeValue_D3Material( "Material Back"   )).setVisible(true, true);
-	newInput(i+6, nodeValue_D3Material( "Material Front"  )).setVisible(true, true);
+	newInput(i+1, nodeValue_D3Material(  "Material"        )).setVisible(true, true);
+	newInput(i+2, nodeValue_D3Material(  "Material Bottom" )).setVisible(true, true);
+	newInput(i+3, nodeValue_D3Material(  "Material Left"   )).setVisible(true, true);
+	newInput(i+4, nodeValue_D3Material(  "Material Right"  )).setVisible(true, true);
+	newInput(i+5, nodeValue_D3Material(  "Material Back"   )).setVisible(true, true);
+	newInput(i+6, nodeValue_D3Material(  "Material Front"  )).setVisible(true, true);
 	
 	input_display_list = [
 		__d3d_input_list_mesh,      i+9, i+7, i+8, 
@@ -74,7 +74,7 @@ function Node_3D_Mesh_Cube(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 			
 			case 2 :
 				inputs[i+1].name = "Material Top";
-				inputs[i+2].name = "Material Size";
+				inputs[i+2].name = "Material Side";
 				
 				inputs[i+1].setVisible(true, true);
 				inputs[i+2].setVisible(true, true);

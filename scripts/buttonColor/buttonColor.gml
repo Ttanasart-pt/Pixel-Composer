@@ -3,6 +3,7 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 	parentDialog  = dialog;
 	current_value = 0;
 	triggered     = false;
+	show_alpha    = true;
 	
 	hover_hex     = 0;
 	hover_wid     = ui(24);
@@ -33,6 +34,8 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 		triggered     = true;
 		onApply(value);
 	}
+	
+	static hideAlpha = function() /*=>*/ { show_alpha = false; return self; };
 	
 	static isTriggered = function() {
 		var t = triggered;
@@ -170,7 +173,7 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 			hover_wid = lerp_float(hover_wid, _htg, 5);
 			
 			var _a = _color_get_alpha(current_color);
-			if(_a == 1) {
+			if(_a == 1 || !show_alpha) {
 				draw_sprite_stretched_ext(THEME.palette_mask, 1, _bx, _by, _bww, _bh, current_color, 1);
 			} else {
 				draw_sprite_stretched_ext(THEME.button_backdroup, 4, _bx, _by, _bww, _bh, boxColor, 1);

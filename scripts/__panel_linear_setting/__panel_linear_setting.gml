@@ -32,14 +32,15 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 	bg_y_to = -1;
 	bg_a    =  0;
 	
-	resizable      = false;
-	hk_editing     = noone;
+	resizable     = false;
+	hk_editing    = noone;
 	selecting_key = noone;
-	properties     = [];
+	properties    = [];
 	
-	prop_height  = ui(32);
-	curr_height  = 0;
-	shift_height = true;
+	font = PANEL_INSPECTOR.viewMode? f_p2 : f_p3;
+	prop_height   = PANEL_INSPECTOR.viewMode? ui(32) : ui(26);
+	curr_height   = 0;
+	shift_height  = true;
 	
 	static setHeight   = function() { h = prop_height * array_length(properties) + ui(16) + hpad; }
 	static resetHeight = function(_h) { 
@@ -59,7 +60,7 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 		var yy = ui(4);
 		var th = prop_height;
 		var ww = max(wdgw, w * 0.5); 
-		var wh = TEXTBOX_HEIGHT;
+		var wh = prop_height - ui(6);
 	
 		var _bs = ui(32);
 		var _mm = [ mx, my ];
@@ -89,7 +90,7 @@ function Panel_Linear_Setting() : PanelContent() constructor {
                     draw_sprite_stretched_ext(THEME.box_r5_clr, 0, lbx, yy, lbw, lbh, CDEF.main_ltgrey, 1);
             	
                 draw_sprite_ui(THEME.arrow, coll * 3, lbx + ui(16), yy + lbh / 2, 1, 1, 0, COLORS.panel_inspector_group_bg, 1);
-                draw_set_text(f_p2, fa_left, fa_center, COLORS.panel_inspector_group_bg, 1);
+                draw_set_text(font, fa_left, fa_center, COLORS.panel_inspector_group_bg, 1);
                 draw_text_add(lbx + ui(32), yy + lbh / 2, txt);
                 draw_set_alpha(1);
                 
@@ -115,7 +116,7 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 				draw_sprite_stretched_ext(THEME.box_r5_clr, 0, ui(4), yy + ui(2), w - ui(8), th - ui(4), _colr, 1);
 				draw_sprite_ui(_spr, _ind, ui(4) + th / 2, yy + th / 2);
 				
-				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
+				draw_set_text(font, fa_left, fa_center, COLORS._main_text);
 				draw_text_add(ui(4) + th, yy + th / 2, _text);
 				
 				yy += th;
@@ -138,7 +139,7 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 					_whover = true;
 				}
 				
-				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
+				draw_set_text(font, fa_left, fa_center, COLORS._main_text);
 				draw_text_add(ui(16), yy + th / 2, _text);
 			
 				var _x1  =  w - ui(4);
@@ -147,9 +148,12 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 				if(_prop.prefKey    != noone) _wdw -= ui(24) + ui(4);
 				if(_prop.getDefault != noone) _wdw -= ui(24) + ui(4);
 				
-				var params = new widgetParam(_x1 - ww, yy + th / 2 - wh / 2, _wdw, wh, _data, {}, [ mx, my ], x, y)
-									.setFont(f_p2);
-				if(is(_widg, checkBox)) { params.halign = fa_center; params.valign = fa_center; }
+				var params = new widgetParam(_x1 - ww, yy + th / 2 - wh / 2, _wdw, wh, _data, {}, [ mx, my ], x, y).setFont(font);
+				if(is(_widg, checkBox)) { 
+					params.s = wh;
+					params.halign = fa_center; 
+					params.valign = fa_center; 
+				}
 				
 				_widg.drawParam(params); 
 				
@@ -170,7 +174,7 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 					
 								
 					if(_key) {
-						draw_set_font(f_p2);
+						draw_set_font(font);
 						var _ktxt = _key.getName();
 						var _tw   = string_width(_ktxt);
 						var _th   = line_get_height();
@@ -184,11 +188,11 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 						var _bh = _th + ui(6);
 						
 						if(hk_editing == _key) {
-							draw_set_text(f_p2, fa_right, fa_center, COLORS._main_accent);
+							draw_set_text(font, fa_right, fa_center, COLORS._main_accent);
 							draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, _bw, _bh, COLORS._main_text_accent);
 							
 						} else if(_ktxt != "") {
-							draw_set_text(f_p2, fa_right, fa_center, COLORS._main_text_sub);
+							draw_set_text(font, fa_right, fa_center, COLORS._main_text_sub);
 							// draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, _bw, _bh, CDEF.main_dkgrey);
 						}
 						

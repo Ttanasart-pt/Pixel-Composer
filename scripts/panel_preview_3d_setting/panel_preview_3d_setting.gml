@@ -58,7 +58,7 @@ function Panel_Preview_3D_Setting() : Panel_Linear_Setting() constructor {
 			45,
 		),
 		new __Panel_Linear_Setting_Item( __txt("Ambient Color"),
-			new buttonColor(function(col) /*=>*/ { scene.lightAmbient = col; }),
+			new buttonColor(function(col) /*=>*/ { scene.lightAmbient = col; }).hideAlpha(),
 			function(   ) /*=>*/   {return scene.lightAmbient},
 			function(val) /*=>*/ { scene.lightAmbient = val; },
 			$404040,
