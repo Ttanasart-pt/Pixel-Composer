@@ -14,22 +14,24 @@ function Panel_Project_Var(_proj = PROJECT) : PanelContent() constructor {
 	
 	tb_edit      = textBox_Text(function(text) /*=>*/ {
 		if(editing_key == undefined) return;
+		
 		var _vars = project.attributes.env_variables;
 		editing_text = text;
 		
 		if(editing_type == 0) {
-			if(has(_vars, editing_key)) {
+			if(editing_key != "" && has(_vars, editing_key)) {
 				var _val = _vars[$ editing_key];
 				struct_remove(_vars, editing_key);
 			}
 			
-			_vars[$ text] = _val;
+			if(text != "")
+				_vars[$ text] = _val;
 			
-		} else {
+		} else if(editing_key != "")
 			_vars[$ editing_key] = text;
-		}
 		
 		editing_key = undefined;
+		
 	}).setFont(f_p1);
 	
 	sc_content = new scrollPane(w - padding * 2, h - padding * 2, function(_y, _m) {
