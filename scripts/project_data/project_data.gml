@@ -232,7 +232,7 @@ function Project() constructor {
 				} 
 			],
 			
-			[ "Variables", "env_variables", button(function() /*=>*/ { dialogPanelCall(new Panel_Project_Var()) }).setText("Edit..."), ],
+			[ "Project Variables", "env_variables", button(function() /*=>*/ { dialogPanelCall(new Panel_Project_Var()) }).setText("Edit..."), ],
 			
 		];
 		

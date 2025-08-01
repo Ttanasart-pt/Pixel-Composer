@@ -1185,7 +1185,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			_tool.step(hover, active, _tx, _ty, _s, _mx, _my, _snx, _sny);
 			
 			if(_tool.brush_resizable) { 
-				if(hover && key_mod_press(CTRL) && MOUSE_WHEEL != 0)
+				if(_panel.pHOVER && key_mod_press(CTRL) && MOUSE_WHEEL != 0)
 					tool_attribute.size = clamp(tool_attribute.size + sign(MOUSE_WHEEL), 1, 64);
 				
 				brush.sizing(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);

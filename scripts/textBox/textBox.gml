@@ -139,6 +139,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	static setPadding    = function(_v) /*=>*/ { padding     = _v;    return self; }
 	static setEmpty      = function(  ) /*=>*/ { no_empty    = false; return self; }
 	static setAutoupdate = function(  ) /*=>*/ { auto_update = true;  return self; }
+	static setDeactivate = function(_d) /*=>*/ { onDeactivate = _d;   return self; }
 	
 	static activate = function(_def_str = _current_text) {
 		

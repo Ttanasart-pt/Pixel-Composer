@@ -257,6 +257,7 @@
 		_persist :   false,
 		_trusted:    false,
 		_lua:        true,
+		_nodir:      false, 
 	};
 	
 	CLI_EXPORT_AMOUNT = 0;
@@ -295,6 +296,10 @@
 					
 				case "-sl" : case "--skiplua" : 
 					PROGRAM_ARGUMENTS._lua = false; 
+					break;
+					
+				case "-nd" : case "--nodir" : 
+					PROGRAM_ARGUMENTS._nodir = true; 
 					break;
 					
 				default : paramType = string_trim(param, ["-"]); break;

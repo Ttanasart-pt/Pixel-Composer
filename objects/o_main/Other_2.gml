@@ -3,7 +3,7 @@
 
 #region directory
 	globalvar DIRECTORY, APP_DIRECTORY, APP_LOCATION, PRESIST_PREF;
-	DIRECTORY = "";
+	DIRECTORY    = "";
 	PRESIST_PREF = { path: "" };
 	
 	if(OS == os_linux) {
@@ -35,7 +35,7 @@
 		directory_verify(APP_DIRECTORY);
 		
 		var perstPath = APP_DIRECTORY + "persistPreference.json"; 
-		if(file_exists_empty(perstPath)) {
+		if(file_exists_empty(perstPath) && !PROGRAM_ARGUMENTS._nodir) {
 			struct_override(PRESIST_PREF, json_load_struct(perstPath));
 			DIRECTORY = struct_has(PRESIST_PREF, "path")? PRESIST_PREF.path : "";
 		}
@@ -71,7 +71,7 @@
 		directory_verify($"{DIRECTORY}log");
 		
 		APP_LOCATION = program_directory;
-		if(RUN_IDE)         APP_LOCATION = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/";
+		if(RUN_IDE) APP_LOCATION = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/";
 		
 	}
 	

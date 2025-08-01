@@ -61,7 +61,12 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		surface_h = _h;
 	}
 	
-	static setToolRect = function(_tw, _th)  { INLINE tool_w = _tw; tool_h = _th; return self; }
+	static setToolRect = function(_tools) { 
+		tool_w = ui(24 + 2) * _tools - ui(2) + ui(12);
+		tool_h = ui(24 + 6);
+		return self; 
+	}
+		
 	static setScroll   = function(_scroll_y) { INLINE scroll_y_to = _scroll_y;    return self; }
 	
 	static drawOffset = function(_x, _y, _mx = mouse_mx, _my = mouse_my) { return draw(_x, _y, _mx - _x, _my - _y); }
@@ -106,6 +111,7 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		}
 		
 		draw_surface_safe(surface, x, y);
+		if(tool_w) draw_sprite_stretched(THEME.ui_panel_tool, 0, x + w + ui(8) - tool_w, y - ui(8), tool_w, tool_h);
 		
 		if(hover && !scroll_lock) {
 			if(!key_mod_press(SHIFT) && !key_mod_press(CTRL) && MOUSE_WHEEL != 0)

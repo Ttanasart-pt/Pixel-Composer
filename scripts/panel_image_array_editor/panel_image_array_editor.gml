@@ -10,18 +10,16 @@ function Panel_Image_Array_Editor(_junction) : PanelContent() constructor {
 	dragging = -1;
 	drag_spr = -1;
 	sortAsc  = true;
+	viewMode = 0;
 	
 	tb_editing = -1;
-	tb_edit  = new textBox(TEXTBOX_INPUT.text, function(str) /*=>*/ {
-	    if(tb_editing == -1) return;
-	    if(!target) return;
+	tb_edit    = textBox_Text(function(str) /*=>*/ {
+	    if(tb_editing == -1 || !target) return;
 	    
 	    data[@ tb_editing] = str;
 	    target.node.triggerRender();
-	});
-	
-	tb_edit.font = f_p3;
-	tb_edit.onDeactivate = function() { tb_editing = -1; }
+	    
+	}).setFont(f_p3).setDeactivate(function() /*=>*/ { tb_editing = -1; });
 	
 	function apply() { target.setValue(data); target.node.triggerRender(); }
 	
@@ -40,11 +38,8 @@ function Panel_Image_Array_Editor(_junction) : PanelContent() constructor {
 		
 		array_sort(data, bool(sortAsc));
 		sortAsc = !sortAsc;
-		
 		apply();
 	}
-	
-	function onResize() { sp_content.resize(w - padding * 2, h - padding * 2); }
 	
 	sp_content = new scrollPane(w - padding * 2, h - padding * 2, function(_y, _m) {
 		if(!target) return 0;
@@ -52,11 +47,28 @@ function Panel_Image_Array_Editor(_junction) : PanelContent() constructor {
 		draw_clear_alpha(CDEF.main_mdblack, 1);
 		
 		var _h = ui(8);
+		var itw, ith, its, pad, padT, padS;
+		var _f = f_p1;
 		
-		var itw = ui(320);
-		var ith = ui(64);
-		var its = ui(64);
-		var pad = ui(16);
+		if(viewMode == 0) {
+			itw  = ui(320);
+			ith  = ui(64);
+			its  = ui(64);
+			pad  = ui(16);
+			padT = ui(4);
+			padS = ui(8);
+			_f   = f_p1;
+			
+		} else if(viewMode == 1) {
+			itw  = ui(240);
+			ith  = ui(36);
+			its  = ui(36);
+			pad  = ui(2);
+			padT = ui(0);
+			padS = ui(4);
+			_f   = f_p3;
+			
+		}
 		
 		var len = array_length(data);
 		var col = max(1, floor((sp_content.surface_w - pad) / (itw + pad)));
@@ -74,6 +86,7 @@ function Panel_Image_Array_Editor(_junction) : PanelContent() constructor {
 		
 		for( var i = 0; i < row; i++ ) {
 			var ch = ith;
+			
 			for( var j = 0; j < col; j++ ) {
 				var index = i * col + j;
 				if(index >= len) break;
@@ -109,21 +122,21 @@ function Panel_Image_Array_Editor(_junction) : PanelContent() constructor {
 				var aa = dragging == -1? 1 : (dragging == index? 1 : 0.5);
 				draw_sprite_ext(spr, 0, spr_x, spr_y, spr_s, spr_s, 0, c_white, aa);
 				
-				draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
+				draw_set_text(_f, fa_left, fa_top, COLORS._main_text);
 				var name  = filename_name_only(path);
 				var txt_h = string_height_ext(name, -1, itw);
-				var _txtx = xx + its + ui(16);
-				var _txty = yy + ui(4);
+				var _txtx = xx + its + padS + ui(8);
+				var _txty = yy + padT;
 				
 				draw_text_ext_add(_txtx, _txty, name, -1, itw);
 				
-				var _txth = line_get_height(f_p3, 4);
-				var _txty = yy + its - _txth;
+				var _txth = line_get_height(f_p3);
+				var _txty = yy + its - _txth - padT;
 				
 				var _pthx = _txtx - ui(8);
 				var _pthy = _txty - ui(2);
 				var _pthw = itw - its - ui(16) + ui(8);
-				var _pthh = _txth;
+				var _pthh = _txth + ui(4);
 				
 				gpu_set_scissor(_pthx, _pthy, _pthw - ui(8), _pthh);
 				draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text_sub);
@@ -215,18 +228,13 @@ function Panel_Image_Array_Editor(_junction) : PanelContent() constructor {
 		var pw = w - padding * 2;
 		var ph = h - padding * 2;
 		
-		var tamo = 2;
-		var ptw  = ui(24 + 2) * tamo - ui(2) + ui(12);
-		var pth  = ui(24 + 6);
-		
 		draw_sprite_stretched(THEME.ui_panel_bg,   1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
 		
-		sp_content.setToolRect(ptw, pth);
+		sp_content.verify(pw, ph);
+		sp_content.setToolRect(3)
     	sp_content.setFocusHover(pFOCUS, pHOVER);
     	sp_content.drawOffset(px, py, mx, my);
     	
-		draw_sprite_stretched(THEME.ui_panel_tool, 0, px + pw + ui(8) - ptw, py - ui(8), ptw, pth);
-		
 		var bs = ui(24);
 		var bx = px + pw + ui(8) - bs;
 		var by = py - ui(8);
@@ -242,11 +250,14 @@ function Panel_Image_Array_Editor(_junction) : PanelContent() constructor {
 		}
 		
 		bx -= bs + ui(2);
-		
 		var bc = COLORS._main_icon;
-		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [mx, my], pHOVER, pFOCUS, "Sort by Name", THEME.text, 0, bc, 1, .75) == 2) {
+		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [mx, my], pHOVER, pFOCUS, "Sort by Name", THEME.text, 0, bc, 1, .75) == 2)
 			sortByName();
-		}
+		
+		bx -= bs + ui(2);
+		var bc = COLORS._main_icon;
+		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [mx, my], pHOVER, pFOCUS, "View", THEME.view_mode, viewMode, bc, 1, .75) == 2)
+			viewMode = !viewMode;
 		
     	if(pHOVER) {
     	    if(FILE_IS_DROPPING) draw_sprite_stretched_ext(THEME.ui_panel_selection, 0, 8, 8, w - 16, h - 16, COLORS._main_value_positive, 1);
