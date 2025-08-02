@@ -252,18 +252,21 @@
 					drag_axis = 0;
 					drag_val  = drag_original.toArray();
 					drag_prev = undefined;
+					KEYBOARD_STRING = "";
 				}
 				
 				if(drag_axis != 1 && key_press(ord("Y"))) {
 					drag_axis = 1;
 					drag_val  = drag_original.toArray();
 					drag_prev = undefined;
+					KEYBOARD_STRING = "";
 				}
 				
 				if(drag_axis != 2 && key_press(ord("Z"))) {
 					drag_axis = 2;
 					drag_val  = drag_original.toArray();
 					drag_prev = undefined;
+					KEYBOARD_STRING = "";
 				}
 				
 				var _tooltipText = "Dragging";
@@ -489,18 +492,21 @@
 					drag_axis = 0;
 					drag_val  = array_clone(drag_original);
 					drag_prev = undefined;
+					KEYBOARD_STRING = "";
 				}
 				
 				if(drag_axis != 1 && key_press(ord("Y"))) {
 					drag_axis = 1;
 					drag_val  = array_clone(drag_original);
 					drag_prev = undefined;
+					KEYBOARD_STRING = "";
 				}
 				
 				if(drag_axis != 2 && key_press(ord("Z"))) {
 					drag_axis = 2;
 					drag_val  = array_clone(drag_original);
 					drag_prev = undefined;
+					KEYBOARD_STRING = "";
 				}
 				
 				var _tooltipText = "Rotating";
@@ -769,18 +775,21 @@
 					drag_axis = drag_axis == 0? 6 : 0;
 					drag_val  = drag_original.toArray();
 					drag_prev = undefined;
+					KEYBOARD_STRING = "";
 				}
 				
 				if(key_press(ord("Y"))) {
 					drag_axis = drag_axis == 1? 6 : 1;
 					drag_val  = drag_original.toArray();
 					drag_prev = undefined;
+					KEYBOARD_STRING = "";
 				}
 				
 				if(key_press(ord("Z"))) {
 					drag_axis = drag_axis == 2? 6 : 2;
 					drag_val  = drag_original.toArray();
 					drag_prev = undefined;
+					KEYBOARD_STRING = "";
 				}
 				
 				var _tooltipText = "Scaling";

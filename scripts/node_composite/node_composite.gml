@@ -1,16 +1,282 @@
-enum NODE_COMPOSE_DRAG {
-	move,
-	rotate,
-	scale,
-	box,
-	anchor,
-}
-
-enum COMPOSE_OUTPUT_SCALING {
-	first,
-	largest,
-	constant
-}
+#region 
+	enum NODE_COMPOSE_DRAG {
+		move,
+		rotate,
+		scale,
+		box,
+		anchor,
+	}
+	
+	enum COMPOSE_OUTPUT_SCALING {
+		first,
+		largest,
+		constant
+	}
+	
+	FN_NODE_TOOL_INVOKE {
+		hotkeyTool("Node_Composite", "Anchor", "A");
+		hotkeyTool("Node_Composite", "Move",   "G");
+		hotkeyTool("Node_Composite", "Rotate", "R");
+		hotkeyTool("Node_Composite", "Scale",  "S");
+	});
+	
+	function composite_transform_tool_move(_node) : ToolObject() constructor {
+		setNode(_node);
+		activeKeyboard = false;
+		surf_dragging  = -1;
+		
+		drag_sx = 0;
+		drag_sy = 0;
+		
+		drag_pmx = undefined;
+		drag_pmy = undefined;
+		
+		drag_axis = -1;
+		
+		static init = function() {
+			activeKeyboard = false;
+			
+			KEYBOARD_STRING = "";
+			KEYBOARD_NUMBER = undefined;
+		}
+		
+		static initKeyboard = function() /*=>*/ {
+			if(node.surf_dragging == -1) return;
+			
+			surf_dragging  = node.surf_dragging;
+			activeKeyboard = true;
+			
+			drag_pmx = undefined;
+			drag_pmy = undefined;
+			
+			var _val = node.inputs[surf_dragging + 1].getValue();
+			drag_sx = _val[0];
+			drag_sy = _val[1];
+			
+			drag_axis = -1;
+		}
+		
+		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
+			if(!activeKeyboard)     return;
+			if(surf_dragging == -1) return;
+			
+			var _val = node.inputs[surf_dragging + 1].getValue();
+			var  val = [drag_sx, drag_sy];
+			
+			if(drag_pmx == undefined) drag_pmx = _mx;
+			if(drag_pmy == undefined) drag_pmy = _my;
+			
+			if(drag_axis == 0 || drag_axis == -1) val[0] = drag_sx + (_mx - drag_pmx) / PANEL_PREVIEW.canvas_s;
+			if(drag_axis == 1 || drag_axis == -1) val[1] = drag_sy + (_my - drag_pmy) / PANEL_PREVIEW.canvas_s;
+			
+			draw_set_color(COLORS._main_icon);
+			if(drag_axis == 0) draw_line(0, _y + drag_sy * _s, WIN_H, _y + drag_sy * _s);
+			if(drag_axis == 1) draw_line(_x + drag_sx * _s, 0, _x + drag_sx * _s, WIN_W);
+			
+			if(node.inputs[surf_dragging + 1].setValue(val))
+				UNDO_HOLDING = true;
+			
+			if(key_press(ord("X"))) {
+				drag_axis = drag_axis == 0? -1 : 0;
+				KEYBOARD_STRING = "";
+			}
+			
+			if(key_press(ord("Y"))) {
+				drag_axis = drag_axis == 1? -1 : 1;
+				KEYBOARD_STRING = "";
+			}
+				
+			if(mouse_press(mb_left, active)) {
+				activeKeyboard = false;
+				UNDO_HOLDING   = false;
+				PANEL_PREVIEW.resetTool();
+			}
+		}
+	}
+	
+	function composite_transform_tool_rotate(_node) : ToolObject() constructor {
+		setNode(_node);
+		activeKeyboard = false;
+		surf_dragging  = -1;
+		
+		drag_sr  = 0;
+		drag_pmx = undefined;
+		drag_pmy = undefined;
+		
+		drag_axis = -1;
+		rotate_acc = 0;
+		
+		static init = function() {
+			activeKeyboard = false;
+			
+			KEYBOARD_STRING = "";
+			KEYBOARD_NUMBER = undefined;
+		}
+		
+		static initKeyboard = function() /*=>*/ {
+			if(node.surf_dragging == -1) return;
+			
+			surf_dragging  = node.surf_dragging;
+			activeKeyboard = true;
+			
+			var _val = node.inputs[surf_dragging + 2].getValue();
+			drag_sr  = _val;
+			rotate_acc = 0;
+			
+			drag_pmx = undefined;
+			drag_pmy = undefined;
+		}
+		
+		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
+			if(!activeKeyboard)     return;
+			if(surf_dragging == -1) return;
+				
+			var _pos = node.inputs[surf_dragging + 1].getValue();
+			var _px = _x + _pos[0] * _s;
+			var _py = _y + _pos[1] * _s;
+			
+			if(drag_pmx == undefined) drag_pmx = _mx;
+			if(drag_pmy == undefined) drag_pmy = _my;
+			
+			var _d0 = point_direction(_px, _py, drag_pmx, drag_pmy);
+			var _d1 = point_direction(_px, _py, _mx, _my);
+			
+			drag_pmx = _mx;
+			drag_pmy = _my;
+			
+			rotate_acc += angle_difference(_d1, _d0);
+			
+			if(node.inputs[surf_dragging + 2].setValue(drag_sr + rotate_acc))
+				UNDO_HOLDING   = true;
+				
+			if(mouse_press(mb_left, active)) {
+				activeKeyboard = false;
+				UNDO_HOLDING   = false;
+				PANEL_PREVIEW.resetTool();
+			}
+		}
+	}
+	
+	function composite_transform_tool_scale(_node) : ToolObject() constructor {
+		setNode(_node);
+		activeKeyboard = false;
+		surf_dragging  = -1;
+		
+		drag_sx = 0;
+		drag_sy = 0;
+		
+		drag_pmx = undefined;
+		drag_pmy = undefined;
+		
+		drag_axis = -1;
+		
+		static init = function() {
+			activeKeyboard = false;
+			
+			KEYBOARD_STRING = "";
+			KEYBOARD_NUMBER = undefined;
+		}
+		
+		static initKeyboard = function() /*=>*/ {
+			if(node.surf_dragging == -1) return;
+			
+			surf_dragging  = node.surf_dragging;
+			activeKeyboard = true;
+			
+			drag_pmx = undefined;
+			drag_pmy = undefined;
+			
+			var _val = node.inputs[surf_dragging + 3].getValue();
+			drag_sx = _val[0];
+			drag_sy = _val[1];
+			
+			drag_axis = -1;
+		}
+		
+		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
+			if(!activeKeyboard)     return;
+			if(surf_dragging == -1) return;
+			
+			var _pos = node.inputs[surf_dragging + 1].getValue();
+			var _px = _x + _pos[0] * _s;
+			var _py = _y + _pos[1] * _s;
+			
+			if(drag_pmx == undefined) drag_pmx = _mx;
+			if(drag_pmy == undefined) drag_pmy = _my;
+			
+			var val = [drag_sx, drag_sy];
+			var _ss = point_distance(_mx, _my, _px, _py) / point_distance(drag_pmx, drag_pmy, _px, _py);
+			var _sx = key_mod_press(SHIFT)? (_mx - _px) / (drag_pmx - _px) : _ss;
+			var _sy = key_mod_press(SHIFT)? (_my - _py) / (drag_pmy - _py) : _ss;
+			
+			if(drag_axis == 0 || drag_axis == -1) val[0] = drag_sx * _sx;
+			if(drag_axis == 1 || drag_axis == -1) val[1] = drag_sy * _sy;
+			
+			draw_set_color(COLORS._main_icon);
+			if(drag_axis == 0) draw_line(0, _py, WIN_H, _py);
+			if(drag_axis == 1) draw_line(_px, 0, _px, WIN_W);
+			
+			if(node.inputs[surf_dragging + 3].setValue(val))
+				UNDO_HOLDING = true;
+			
+			if(key_press(ord("X"))) {
+				drag_axis = drag_axis == 0? -1 : 0;
+				KEYBOARD_STRING = "";
+			}
+			
+			if(key_press(ord("Y"))) {
+				drag_axis = drag_axis == 1? -1 : 1;
+				KEYBOARD_STRING = "";
+			}
+				
+			if(mouse_press(mb_left, active)) {
+				activeKeyboard = false;
+				UNDO_HOLDING   = false;
+				PANEL_PREVIEW.resetTool();
+			}
+		}
+	}
+	
+	function composite_transform_tool_anchor(_node) : ToolObject() constructor {
+		setNode(_node);
+		activeKeyboard = false;
+		surf_dragging  = -1;
+		
+		drag_pmx = undefined;
+		drag_pmy = undefined;
+		
+		drag_axis = -1;
+		
+		static init = function() {
+			activeKeyboard = false;
+			
+			KEYBOARD_STRING = "";
+			KEYBOARD_NUMBER = undefined;
+		}
+		
+		static initKeyboard = function() /*=>*/ {
+			if(node.surf_dragging == -1) return;
+			
+			surf_dragging  = node.surf_dragging;
+			activeKeyboard = true;
+			
+			drag_pmx = undefined;
+			drag_pmy = undefined;
+		}
+		
+		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
+			if(!activeKeyboard)     return;
+			if(surf_dragging == -1) return;
+				
+			if(mouse_press(mb_left, active)) {
+				activeKeyboard = false;
+				UNDO_HOLDING   = false;
+				PANEL_PREVIEW.resetTool();
+			}
+		}
+	}
+	
+#endregion
 
 function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Composite";
@@ -448,6 +714,19 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newOutput(1, nodeValue_Output( "Atlas data",  VALUE_TYPE.atlas,   []    ));
 	newOutput(2, nodeValue_Output( "Dimension",   VALUE_TYPE.integer, [1,1] )).setVisible(false).setDisplay(VALUE_DISPLAY.vector);
 	
+	////- Tools
+	
+	tool_object_anc = new composite_transform_tool_anchor(self);
+	tool_object_mov = new composite_transform_tool_move(self);
+	tool_object_rot = new composite_transform_tool_rotate(self);
+	tool_object_sca = new composite_transform_tool_scale(self);
+	
+	tool_anc = new NodeTool( "Anchor", THEME.tools_3d_scale  ).setToolObject(tool_object_anc);
+	tool_pos = new NodeTool( "Move",   THEME.tools_2d_move   ).setToolObject(tool_object_mov);
+	tool_rot = new NodeTool( "Rotate", THEME.tools_2d_rotate ).setToolObject(tool_object_rot);
+	tool_sca = new NodeTool( "Scale",  THEME.tools_2d_scale  ).setToolObject(tool_object_sca);
+	tools    = [ tool_anc, tool_pos, tool_rot, tool_sca ];
+	
 	////- Nodes
 	
 	temp_surface       = [ surface_create(1, 1), surface_create(1, 1), surface_create(1, 1) ];
@@ -478,6 +757,10 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		PROCESSOR_OVERLAY_CHECK
 		
 		draw_set_circle_precision(16);
+		if(isUsingTool("Anchor")) tool_object_anc.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		if(isUsingTool("Move"))   tool_object_mov.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		if(isUsingTool("Rotate")) tool_object_rot.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		if(isUsingTool("Scale"))  tool_object_sca.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
 		var pad  = current_data[0];
 		var outs = getSingleValue(0, preview_index, true);
@@ -488,6 +771,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var x1 = _x + (ww - pad[0]) * _s;
 		var y0 = _y +       pad[1]  * _s;
 		var y1 = _y + (hh - pad[3]) * _s;
+		var snap = 4;
 		
 		if(input_dragging > -1) {
 			if(drag_type == NODE_COMPOSE_DRAG.move) {
@@ -495,21 +779,22 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				var _dy = (_my - dragging_my) / _s;
 				
 				if(key_mod_press(SHIFT)) {
-					if(abs(_dx) > abs(_dy) + ui(16))
-						_dy = 0;
-						
-					else if(abs(_dy) > abs(_dx) + ui(16))
-						_dx = 0;
-						
-					else {
-						_dx = max(_dx, _dy);
-						_dy = _dx;
-					}
+					draw_set_color(COLORS._main_icon);
+					
+					var _dirr = value_snap(point_direction(0, 0, _dx, _dy), 45);
+					var _diss = point_distance(0, 0, _dx, _dy);
+					
+					_dx = lengthdir_x(_diss, _dirr);
+					_dy = lengthdir_y(_diss, _dirr);
+					
+					var _ddx = _x + dragging_sx * _s;
+					var _ddy = _y + dragging_sy * _s;
+					draw_line(_ddx - lengthdir_x(999, _dirr), _ddy - lengthdir_y(999, _dirr), 
+					          _ddx + lengthdir_x(999, _dirr), _ddy + lengthdir_y(999, _dirr));
 				}
 				
 				var pos_x = value_snap(dragging_sx + _dx, _snx);
 				var pos_y = value_snap(dragging_sy + _dy, _sny);
-				var snap  = 4;
 				
 				if(key_mod_press(ALT)) {
 					var _sind = input_dragging - 1;
@@ -622,8 +907,51 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				var pos_x = _pos[0], pos_y = _pos[1];
 				var sca_x = _sca[0], sca_y = _sca[1];
 				
-				var _dmx  = _mx - dragging_mx;
-				var _dmy  = _my - dragging_my;
+				var _mmx = _mx;
+				var _mmy = _my;
+				
+				if(key_mod_press(ALT)) {
+					// draw_set_color(COLORS._main_icon);
+					// var amo = getInputAmount();
+					// for( var i = -1; i < amo; i++ ) {
+					// 	var _indS = input_fix_len + i * data_length;
+					// 	if(_indS == surf_dragging) continue;
+						
+					// 	var bbox = [0, 0, ww, hh];
+					// 	if(i >= 0) {
+					// 		var _isurf = current_data[_indS + 0];
+					// 		if(!is_surface(_isurf)) continue;
+							
+					// 		var _ipos  = current_data[_indS + 1];
+					// 		var _isca  = current_data[_indS + 3];
+					// 		var _ianc  = current_data[_indS + 6];
+							
+					// 		var _isw   = surface_get_width_safe(_isurf)  * _isca[0];
+					// 		var _ish   = surface_get_height_safe(_isurf) * _isca[1];
+							
+					// 		var _iax = _ianc[0] * _isw;
+					// 		var _iay = _ianc[1] * _ish;
+							
+					// 		bbox[0] = _ipos[0] - _iax;
+					// 		bbox[1] = _ipos[1] - _iay;
+					// 		bbox[2] =  bbox[0] + _isw;
+					// 		bbox[3] =  bbox[1] + _ish;
+					// 	}
+						
+					// 	var _ix0 = _x + _s * bbox[0];
+					// 	var _iy0 = _y + _s * bbox[1];
+					// 	var _ix1 = _x + _s * bbox[2];
+					// 	var _iy1 = _y + _s * bbox[3];
+						
+					// 	if(abs(_mmx - _ix0) < snap) { _mmx = _ix0; draw_line(_ix0, 0, _ix0, WIN_H); }
+					// 	if(abs(_mmx - _ix1) < snap) { _mmx = _ix1; draw_line(_ix1, 0, _ix1, WIN_H); }
+					// 	if(abs(_mmy - _iy0) < snap) { _mmy = _iy0; draw_line(0, _iy0, WIN_W, _iy0); }
+					// 	if(abs(_mmy - _iy1) < snap) { _mmy = _iy1; draw_line(0, _iy1, WIN_W, _iy1); }
+					// }
+				}
+				
+				var _dmx  = _mmx - dragging_mx;
+				var _dmy  = _mmy - dragging_my;
 				var _pmx  = dragging_px + _dmx / _s * _anc[0];
 				var _pmy  = dragging_py + _dmy / _s * _anc[1];
 				var _p    = point_rotate_origin(_dmx, _dmy, -_rot, __p);
@@ -797,43 +1125,43 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				var _ai = 0;
 				var _bi = noone;
 			
-				if(point_in_circle(_mx, _my, p0x, p0y, 12)) {
+				if((isNotUsingTool() || isUsingTool("Scale")) && point_in_circle(_mx, _my, p0x, p0y, 12)) {
 					hovering_type = NODE_COMPOSE_DRAG.box;
 					hovering_anc  = _d3;
 					hovering_ai   = 0;
 					hovering = i; _bi = 0;
 					
-				} else if(point_in_circle(_mx, _my, p1x, p1y, 12)) {
+				} else if((isNotUsingTool() || isUsingTool("Scale")) && point_in_circle(_mx, _my, p1x, p1y, 12)) {
 					hovering_type = NODE_COMPOSE_DRAG.box;
 					hovering_anc  = _d2;
 					hovering_ai   = 1;
 					hovering = i; _bi = 1;
 					
-				} else if(point_in_circle(_mx, _my, p2x, p2y, 12)) {
+				} else if((isNotUsingTool() || isUsingTool("Scale")) && point_in_circle(_mx, _my, p2x, p2y, 12)) {
 					hovering_type = NODE_COMPOSE_DRAG.box;
 					hovering_anc  = _d1;
 					hovering_ai   = 2;
 					hovering = i; _bi = 2;
 					
-				} else if(point_in_circle(_mx, _my, p3x, p3y, 12)) {
+				} else if((isNotUsingTool() || isUsingTool("Scale")) && point_in_circle(_mx, _my, p3x, p3y, 12)) {
 					hovering_type = NODE_COMPOSE_DRAG.box;
 					hovering_anc  = _d0;
 					hovering_ai   = 3;
 					hovering = i; _bi = 3;
 					
-				} else if(point_in_circle(_mx, _my, ax, ay, 12)) {
+				} else if((isNotUsingTool() || isUsingTool("Anchor")) && point_in_circle(_mx, _my, ax, ay, 12)) {
 					hovering_type = NODE_COMPOSE_DRAG.anchor;
 					hovering = i; _ai = 3;
 					
-				} else if(_hov) {
+				} else if((isNotUsingTool() || isUsingTool("Move")) && _hov) {
 					hovering_type = NODE_COMPOSE_DRAG.move; 
 					hovering = i;
 					
-				} else if(point_in_circle(_mx, _my, rx, ry, 12)) {
+				} else if((isNotUsingTool() || isUsingTool("Rotate")) && point_in_circle(_mx, _my, rx, ry, 12)) {
 					hovering_type = NODE_COMPOSE_DRAG.rotate;
 					hovering = i; _ri = 1;
 					
-				} else if(point_in_circle(_mx, _my, sx, sy, 12)) {
+				} else if((isNotUsingTool() || isUsingTool("Scale")) && point_in_circle(_mx, _my, sx, sy, 12)) {
 					hovering_type = NODE_COMPOSE_DRAG.scale;
 					hovering = i; _si = 1;
 				}
@@ -843,20 +1171,30 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				draw_line_width(p0x, p0y, p2x, p2y, 2);
 				draw_line_width(p3x, p3y, p1x, p1y, 2);
 				draw_line_width(p3x, p3y, p2x, p2y, 2);
-				draw_line_width(rcx, rcy, rx,  ry,  2);
-				draw_line_width(p3x, p3y, sx,  sy,  2);
 				
-				draw_anchor(_ri,      rx,  ry,  ui(8), 1);
-				draw_anchor(_si,      sx,  sy,  ui(8), 1);
-				draw_anchor(_bi == 0, p0x, p0y, ui(8), 2);
-				draw_anchor(_bi == 1, p1x, p1y, ui(8), 2);
-				draw_anchor(_bi == 2, p2x, p2y, ui(8), 2);
-				draw_anchor(_bi == 3, p3x, p3y, ui(8), 2);
+				if(isNotUsingTool() || isUsingTool("Rotate")) {
+					draw_line_width(rcx, rcy, rx,  ry,  2);
+					
+					draw_anchor(_ri,      rx,  ry,  ui(8), 1);
+				}
 				
-				draw_anchor_cross(_ai * .5, ax, ay, ui(8), 1, _rot);
+				if(isNotUsingTool() || isUsingTool("Scale")) {
+					draw_line_width(p3x, p3y, sx,  sy,  2);
+					
+					draw_anchor(_si,      sx,  sy,  ui(8), 1);
+					draw_anchor(_bi == 0, p0x, p0y, ui(8), 2);
+					draw_anchor(_bi == 1, p1x, p1y, ui(8), 2);
+					draw_anchor(_bi == 2, p2x, p2y, ui(8), 2);
+					draw_anchor(_bi == 3, p3x, p3y, ui(8), 2);
+				}
+				
+				if(isNotUsingTool() || isUsingTool("Anchor")) {
+					draw_anchor_cross(_ai * .5, ax, ay, ui(8), 1, _rot);
+				}
 				
 			} else if(!attributes.select_object && _hov) {
-				hovering_type = NODE_COMPOSE_DRAG.move;
+				if(isNotUsingTool() || isUsingTool("Move"))
+					hovering_type = NODE_COMPOSE_DRAG.move;
 				hovering = i;
 			}
 		}
@@ -891,6 +1229,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				}
 				
 				if(mouse_press(mb_left, active)) {
+					
 					if(hovering_type == NODE_COMPOSE_DRAG.move) {
 						surf_dragging	= hi;
 						input_dragging	= hi + 1;
@@ -953,7 +1292,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				}
 			}
 		}
-		
+			
 	}
 	
 	static drawOverlayTransform = function(_node) { 
