@@ -73,7 +73,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	];
 	
 	attributes.display_name = true;
-	attributes.snap_point   = false;
+	attributes.snap_point   = true;
 	attributes.snap_distance= 8;
 	attributes.weight       = [ [ 0, 1 ], [ 100, 1 ] ];
 	
@@ -944,6 +944,9 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 							
 						var _fax = _x + _focusAnc[0] * _s;
 						var _fay = _y + _focusAnc[1] * _s;
+						
+						draw_set_color(COLORS._main_icon);
+						draw_circle_border(_fax, _fay, 16, 2);
 						
 						if(key_mod_press(SHIFT)) {
 							var _mdx = _mmx - _fax;

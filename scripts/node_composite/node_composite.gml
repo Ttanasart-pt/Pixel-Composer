@@ -509,48 +509,70 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				
 				var pos_x = value_snap(dragging_sx + _dx, _snx);
 				var pos_y = value_snap(dragging_sy + _dy, _sny);
+				var snap  = 4;
 				
 				if(key_mod_press(ALT)) {
-					var _surf = current_data[input_dragging - 1];
-					var _sw = surface_get_width_safe(_surf);
-					var _sh = surface_get_height_safe(_surf);
+					var _sind = input_dragging - 1;
 					
-					var x0 = pos_x, x1 = pos_x + _sw;
-					var y0 = pos_y, y1 = pos_y + _sh;
-					var xc = (x0 + x1) / 2;
-					var yc = (y0 + y1) / 2;
-					var snap = 4;
+					var _surf = current_data[_sind + 0];
+					var _sca  = current_data[_sind + 3];
+					var _anc  = current_data[_sind + 6];
+					var _sw   = surface_get_width_safe(_surf)  * _sca[0];
+					var _sh   = surface_get_height_safe(_surf) * _sca[1];
 					
-					draw_set_color(COLORS._main_accent);
-					if(abs(x0 -  0) < snap) {
-						pos_x = 0;
-						draw_line_width(_x + _s * 0, 0, _x + _s * 0, WIN_H, 2);
+					var _ax = _anc[0] * _sw;
+					var _ay = _anc[1] * _sh;
+					
+					var  x0 = pos_x - _ax;
+					var  y0 = pos_y - _ay;
+					var  x1 = x0 + _sw;
+					var  y1 = y0 + _sh;
+					
+					draw_set_color(COLORS._main_icon);
+					var amo = getInputAmount();
+					for( var i = -1; i < amo; i++ ) {
+						var _indS = input_fix_len + i * data_length;
+						if(_indS == _sind) continue;
+						
+						var bbox = [0, 0, ww, hh];
+						if(i >= 0) {
+							var _isurf = current_data[_indS + 0];
+							if(!is_surface(_isurf)) continue;
+							
+							var _ipos  = current_data[_indS + 1];
+							var _isca  = current_data[_indS + 3];
+							var _ianc  = current_data[_indS + 6];
+							
+							var _isw   = surface_get_width_safe(_isurf)  * _isca[0];
+							var _ish   = surface_get_height_safe(_isurf) * _isca[1];
+							
+							var _iax = _ianc[0] * _isw;
+							var _iay = _ianc[1] * _ish;
+							
+							bbox[0] = _ipos[0] - _iax;
+							bbox[1] = _ipos[1] - _iay;
+							bbox[2] =  bbox[0] + _isw;
+							bbox[3] =  bbox[1] + _ish;
+						}
+						
+						var _ix0 = _x + _s * bbox[0];
+						var _iy0 = _y + _s * bbox[1];
+						var _ix1 = _x + _s * bbox[2];
+						var _iy1 = _y + _s * bbox[3];
+						
+						if(abs(x0 - bbox[0]) < snap) { pos_x = bbox[0] + _ax;         draw_line(_ix0, 0, _ix0, WIN_H); }
+						if(abs(x0 - bbox[2]) < snap) { pos_x = bbox[2] + _ax;         draw_line(_ix1, 0, _ix1, WIN_H); }
+						
+						if(abs(x1 - bbox[0]) < snap) { pos_x = bbox[0] - (_sw - _ax); draw_line(_ix0, 0, _ix0, WIN_H); }
+						if(abs(x1 - bbox[2]) < snap) { pos_x = bbox[2] - (_sw - _ax); draw_line(_ix1, 0, _ix1, WIN_H); }
+						
+						if(abs(y0 - bbox[1]) < snap) { pos_y = bbox[1] + _ay;         draw_line(0, _iy0, WIN_W, _iy0); }
+						if(abs(y0 - bbox[3]) < snap) { pos_y = bbox[3] + _ay;         draw_line(0, _iy1, WIN_W, _iy1); }
+						
+						if(abs(y1 - bbox[1]) < snap) { pos_y = bbox[1] - (_sh - _ay); draw_line(0, _iy0, WIN_W, _iy0); }
+						if(abs(y1 - bbox[3]) < snap) { pos_y = bbox[3] - (_sh - _ay); draw_line(0, _iy1, WIN_W, _iy1); }
 					}
 					
-					if(abs(y0 -  0) < snap) {
-						pos_y = 0;
-						draw_line_width(0, _y + _s * 0, WIN_W, _y + _s * 0, 2);
-					}
-					
-					if(abs(x1 - ww) < snap) {
-						pos_x = ww - _sw;
-						draw_line_width(_x + _s * ww, 0, _x + _s * ww, WIN_H, 2);
-					}
-					
-					if(abs(y1 - hh) < snap) {
-						pos_y = hh - _sh;
-						draw_line_width(0, _y + _s * hh, WIN_W, _y + _s * hh, 2);
-					}
-					
-					if(abs(xc - ww / 2) < snap) {
-						pos_x = ww / 2 - _sw / 2;
-						draw_line_width(_x + _s * ww / 2, 0, _x + _s * ww / 2, WIN_H, 2);
-					}
-					
-					if(abs(yc - hh / 2) < snap) {
-						pos_y = hh / 2 - _sh / 2;
-						draw_line_width(0, _y + _s * hh / 2, WIN_W, _y + _s * hh / 2, 2);
-					}
 				}
 				
 				if(inputs[input_dragging].setValue([ pos_x, pos_y ]))
