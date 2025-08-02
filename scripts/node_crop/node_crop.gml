@@ -10,23 +10,20 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	name = "Crop";
 	preview_alpha = 0.5;
 	
-	newInput(0, nodeValue_Surface("Surface In"));
-	
-	newInput(1, nodeValue_Padding("Crop", [ 0, 0, 0, 0 ]))
-		.setUnitRef(function(i) /*=>*/ {return getDimension(i)});
-	
 	newActiveInput(2);
-		
-	newInput(3, nodeValue_Enum_Scroll("Aspect Ratio",  0, [ "None", "Manual", "1:1", "3:2", "4:3", "16:9" ]));
-		
-	newInput(4, nodeValue_Vec2("Ratio", [ 1, 1 ]));
 	
-	newInput(5, nodeValue_Vec2("Center", [ .5, .5 ]))
-		.setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-		
-	newInput(6, nodeValue_Float("Width", 8 ));
-		
-	newInput(7, nodeValue_Enum_Scroll("Fit Mode",  0, [ "Manual", "Width", "Height", "Minimum" ]));
+	////- =Surface
+	newInput(0, nodeValue_Surface( "Surface In" ));
+	
+	////- =Crop
+	newInput(3, nodeValue_Enum_Scroll( "Aspect Ratio",   0, [ "None", "Manual", "1:1", "3:2", "4:3", "16:9" ]));
+	newInput(4, nodeValue_Vec2(        "Ratio",         [1,1]     ));
+	newInput(1, nodeValue_Padding(     "Crop",          [0,0,0,0] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	
+	newInput(7, nodeValue_Enum_Scroll( "Fit Mode",       0, [ "Manual", "Width", "Height", "Minimum" ]));
+	newInput(5, nodeValue_Vec2(        "Center",        [.5,.5]   )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(6, nodeValue_Float(       "Width",          8        ));
+	// input 8
 		
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -326,8 +323,8 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _px = _x + _cent[0] * _s;
 			var _py = _y + _cent[1] * _s;
 			
-			InputDrawOverlay(inputs[5].drawOverlay(w_hovering, active,  _x,  _y, _s, _mx, _my, _snx, _sny));
-			InputDrawOverlay(inputs[6].drawOverlay(w_hovering, active, _px, _py, _s / 2, _mx, _my, _snx, _sny));
+			InputDrawOverlay(inputs[5].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, _snx, _sny));
+			InputDrawOverlay(inputs[6].drawOverlay(w_hoverable, active, _px, _py, _s / 2, _mx, _my, _snx, _sny));
 			
 		} else {
 			var _idim = surface_get_dimension(_inSurf);
