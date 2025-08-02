@@ -19,6 +19,7 @@
     function panel_preview_3d_view_left()               { CALL("preview_3d_left_view");              PANEL_PREVIEW.d3_view_action_left();   }
     function panel_preview_3d_view_top()                { CALL("preview_3d_top_view");               PANEL_PREVIEW.d3_view_action_top();    }
     function panel_preview_3d_view_bottom()             { CALL("preview_3d_bottom_view");            PANEL_PREVIEW.d3_view_action_bottom(); }
+    function panel_preview_3d_view_projection()         { CALL("preview_3d_projection_toggle");      PANEL_PREVIEW.d3_view_projection();    }
     
     function panel_preview_set_zoom(zoom)               { CALL("preview_preview_set_zoom");          PANEL_PREVIEW.fullView(zoom);          }
     
@@ -86,6 +87,7 @@
         registerFunction(p, "3D Left View",             vk_numpad3, a, panel_preview_3d_view_left      ).setMenu("preview_3d_left_view")
         registerFunction(p, "3D Top View",              vk_numpad7, n, panel_preview_3d_view_top       ).setMenu("preview_3d_top_view")
         registerFunction(p, "3D Bottom View",           vk_numpad7, a, panel_preview_3d_view_bottom    ).setMenu("preview_3d_bottom_view")
+        registerFunction(p, "3D Projection Toggle",     vk_numpad5, n, panel_preview_3d_view_projection).setMenu("preview_3d_toggle_projection")
         
         registerFunction(p, "Scale x1",                 "1", n, function() /*=>*/ { panel_preview_set_zoom(1) }    ).setMenu("preview_scale_x1")
         registerFunction(p, "Scale x2",                 "2", n, function() /*=>*/ { panel_preview_set_zoom(2) }    ).setMenu("preview_scale_x2")
@@ -332,6 +334,7 @@ function Panel_Preview() : PanelContent() constructor {
             d3_camW          = 1;
             d3_camH          = 1;
         
+        	d3_view_camera.projection = CAMERA_PROJECTION.perspective;
             d3_view_camera.setFocusAngle(135, 45, 4);
             d3_camLerp       = 0;
             d3_camLerp_x     = 0;
@@ -345,6 +348,7 @@ function Panel_Preview() : PanelContent() constructor {
             
             d3_zoom_speed    = 0.2;
             d3_pan_speed     = 2;
+            d3_cam_projection_lock = d3_view_camera.projection;
         #endregion
         
         #region scene
@@ -568,12 +572,16 @@ function Panel_Preview() : PanelContent() constructor {
             ).setHotkey("Preview", "Popup"),
         ];
         
-        static d3_view_action_front  = function() /*=>*/ { d3_camLerp = 1; d3_camLerp_x =   0; d3_camLerp_y =   0; }
-        static d3_view_action_back   = function() /*=>*/ { d3_camLerp = 1; d3_camLerp_x = 180; d3_camLerp_y =   0; }
-        static d3_view_action_right  = function() /*=>*/ { d3_camLerp = 1; d3_camLerp_x =  90; d3_camLerp_y =   0; }
-        static d3_view_action_left   = function() /*=>*/ { d3_camLerp = 1; d3_camLerp_x = -90; d3_camLerp_y =   0; }
-        static d3_view_action_bottom = function() /*=>*/ { d3_camLerp = 1; d3_camLerp_x =   0; d3_camLerp_y = -89; }
-        static d3_view_action_top    = function() /*=>*/ { d3_camLerp = 1; d3_camLerp_x =   0; d3_camLerp_y =  89; }
+        static d3_view_action_front  = function() /*=>*/ { d3_camLerp = 1; d3_camLerp_x =   0; d3_camLerp_y =   0; d3_view_camera.projection = 1; }
+        static d3_view_action_back   = function() /*=>*/ { d3_camLerp = 1; d3_camLerp_x = 180; d3_camLerp_y =   0; d3_view_camera.projection = 1; }
+        static d3_view_action_right  = function() /*=>*/ { d3_camLerp = 1; d3_camLerp_x =  90; d3_camLerp_y =   0; d3_view_camera.projection = 1; }
+        static d3_view_action_left   = function() /*=>*/ { d3_camLerp = 1; d3_camLerp_x = -90; d3_camLerp_y =   0; d3_view_camera.projection = 1; }
+        static d3_view_action_bottom = function() /*=>*/ { d3_camLerp = 1; d3_camLerp_x =   0; d3_camLerp_y = -89; d3_view_camera.projection = 1; }
+        static d3_view_action_top    = function() /*=>*/ { d3_camLerp = 1; d3_camLerp_x =   0; d3_camLerp_y =  89; d3_view_camera.projection = 1; }
+        static d3_view_projection    = function() /*=>*/ { 
+        	d3_view_camera.projection = !d3_view_camera.projection;
+        	d3_cam_projection_lock = d3_view_camera.projection;
+        }
         
 		function view_control_toggle() { PROJECT.previewSetting.show_view_control = !PROJECT.previewSetting.show_view_control; }
 		function view_control_show()   { PROJECT.previewSetting.show_view_control =  true; }
@@ -842,6 +850,7 @@ function Panel_Preview() : PanelContent() constructor {
                 
                 d3_view_camera.focus_angle_x = ax;
                 d3_view_camera.focus_angle_y = ay;
+                d3_view_camera.projection = d3_cam_projection_lock;
             }
             
             d3_camPan_mx = mx;
@@ -1686,12 +1695,12 @@ function Panel_Preview() : PanelContent() constructor {
                 d3_view_camera.focus.set(targ);
             }
             
-            d3_view_camera.projection = CAMERA_PROJECTION.orthograph;
-            
             if(d3_view_camera.projection == CAMERA_PROJECTION.perspective)
             	d3_view_camera.setViewSize(w, h);
-            else if(d3_view_camera.projection == CAMERA_PROJECTION.orthograph)
-            	d3_view_camera.setViewSize(1 / .5, h / w / .5);
+            else if(d3_view_camera.projection == CAMERA_PROJECTION.orthograph) {
+            	var _orth = d3_view_camera.focus_dist;
+            	d3_view_camera.setViewSize(1 * _orth, h / w * _orth);
+            }
             	
             d3_view_camera.setMatrix();
         #endregion
