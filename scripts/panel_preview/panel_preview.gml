@@ -1425,8 +1425,8 @@ function Panel_Preview() : PanelContent() constructor {
         var psw  = 0, psh  = 0;
         var psx1 = 0, psy1 = 0;
         
-        preview_surface_width  = 0;
-    	preview_surface_height = 0;
+        preview_surface_width  = DEF_SURF_W * ss;
+    	preview_surface_height = DEF_SURF_H * ss;
         
         var ssx = 0, ssy = 0;
         var ssw = 0, ssh = 0;

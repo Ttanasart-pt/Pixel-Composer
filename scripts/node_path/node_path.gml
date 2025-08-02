@@ -1059,7 +1059,9 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					if(_tooln == "Edit Control point") {
 						_mode = key_mod_press(SHIFT)? 2 : 1;
 					} else {
-						_mode = key_mod_press(SHIFT)? 1 : 0;
+						if(key_mod_press(SHIFT))
+							_mode = key_mod_press(ALT)? 2 : 1;
+						
 					}
 					
 					var _spr = THEME.cursor_path_move;
