@@ -192,6 +192,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
         corners   = _c;
         
         var ox, oy, nx, ny, x0, y0;
+        var cind = [ 0, 1, 3, 2 ];
           
         switch(shape_types[shape]) {
             case "Rectangle" : 
@@ -224,9 +225,10 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
             	
             	var ar = array_create(4);
             	for( var i = 0; i < 4; i++ ) {
-            		ar[i] = _c[i]? get_corner_radius(p[i * 3 + 0][0], p[i * 3 + 0][1], 
+            		var c = cind[i];
+            		ar[i] = _c[c]? get_corner_radius(p[i * 3 + 0][0], p[i * 3 + 0][1], 
             		                                 p[i * 3 + 1][0], p[i * 3 + 1][1], 
-            		                                 p[i * 3 + 2][0], p[i * 3 + 2][1], _c[i], 64, 0) : [ p[i * 3 + 1] ];
+            		                                 p[i * 3 + 2][0], p[i * 3 + 2][1], _c[c], 64, 0) : [ p[i * 3 + 1] ];
             	}
             	
             	points = array_merge( ar[0], ar[1], ar[2], ar[3] );
@@ -269,9 +271,10 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
             	
             	var ar = array_create(4);
             	for( var i = 0; i < 4; i++ ) {
-            		ar[i] = _c[i]? get_corner_radius(p[i * 3 + 0][0], p[i * 3 + 0][1], 
+            		var c = cind[i];
+            		ar[i] = _c[c]? get_corner_radius(p[i * 3 + 0][0], p[i * 3 + 0][1], 
             		                                 p[i * 3 + 1][0], p[i * 3 + 1][1], 
-            		                                 p[i * 3 + 2][0], p[i * 3 + 2][1], _c[i], 64, 0) : [ p[i * 3 + 1] ];
+            		                                 p[i * 3 + 2][0], p[i * 3 + 2][1], _c[c], 64, 0) : [ p[i * 3 + 1] ];
             	}
             	
             	points = array_merge( ar[0], ar[1], ar[2], ar[3] );
@@ -314,9 +317,10 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
             	
             	var ar = array_create(4);
             	for( var i = 0; i < 4; i++ ) {
-            		ar[i] = _c[i]? get_corner_radius(p[i * 3 + 0][0], p[i * 3 + 0][1], 
+            		var c = cind[i];
+            		ar[i] = _c[c]? get_corner_radius(p[i * 3 + 0][0], p[i * 3 + 0][1], 
             		                                 p[i * 3 + 1][0], p[i * 3 + 1][1], 
-            		                                 p[i * 3 + 2][0], p[i * 3 + 2][1], _c[i], 64, 0) : [ p[i * 3 + 1] ];
+            		                                 p[i * 3 + 2][0], p[i * 3 + 2][1], _c[c], 64, 0) : [ p[i * 3 + 1] ];
             	}
             	
             	points = array_merge( ar[0], ar[1], ar[2], ar[3] );

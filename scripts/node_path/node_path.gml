@@ -1397,14 +1397,12 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var bbox = drawGetBbox(xx, yy, _s);
 		var _pth = outputs[0].getValue();
 		
-		if(!is(_pth, _pathObject) || array_empty(_pth.segments)) {
-			draw_sprite_fit(s_node_path, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-			
-		} else {
-			gpu_set_tex_filter(true);
-			draw_surface_bbox(path_preview_surface, bbox);
-			gpu_set_tex_filter(false);
-		}
+		gpu_set_tex_filter(true);
+			if(!is(_pth, _pathObject) || array_empty(_pth.segments))
+				draw_sprite_fit(s_node_path, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
+			else
+				draw_surface_bbox(path_preview_surface, bbox);
+		gpu_set_tex_filter(false);
 	}
 	
 	static getPreviewBoundingBox = function() { 
