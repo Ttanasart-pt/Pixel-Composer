@@ -73,10 +73,16 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	];
 	
 	attributes.display_name = true;
+	attributes.snap_point   = false;
+	attributes.snap_distance= 8;
 	attributes.weight       = [ [ 0, 1 ], [ 100, 1 ] ];
 	
 	array_push(attributeEditors, "Display");
 	array_push(attributeEditors, ["Display name", function() /*=>*/ {return attributes.display_name}, new checkBox(function() /*=>*/ {return toggleAttribute("display_name")})]);
+	
+	array_push(attributeEditors, "Snap");
+	array_push(attributeEditors, ["Snap Enable",  function() /*=>*/ {return attributes.snap_point},    new checkBox(function() /*=>*/ {return toggleAttribute("snap_point")})]);
+	array_push(attributeEditors, ["Snap Distance",function() /*=>*/ {return attributes.snap_distance}, textBox_Number(function(v) /*=>*/ {return setAttribute("snap_distance", v)})]);
 		
 	#region ---- editor ----
 		line_hover   = -1;
@@ -150,6 +156,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var _pth  = outputs[1].getValue();
 		if(!is(_pth, _pathObject)) return;
 		
+		var snap_dist = attributes.snap_distance;
 		var ansize = array_length(inputs) - input_fix_len;
 		var edited = false;
 		var _tooln = getUsingToolName();
@@ -320,6 +327,27 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		} else if(drag_point > -1) { 
 			var dx = value_snap(drag_point_sx + (_mx - drag_point_mx) / _s, _snx);
 			var dy = value_snap(drag_point_sy + (_my - drag_point_my) / _s, _sny);
+			
+			if(attributes.snap_point)
+			for( var i = 0, n = array_length(_pth.anchors); i < n; i++ ) {
+				if(drag_point == i) continue;
+				var _a  = _pth.anchors[i];
+				var _ax = _a[0];
+				var _ay = _a[1];
+				
+				if(abs(_ax - dx) < snap_dist / _s) { 
+					dx = _ax; 
+					draw_set_color(COLORS._main_icon);
+					draw_line(_x + _ax * _s, _y + _ay * _s, _x + dx * _s, _y + dy * _s);
+				}
+					
+				if(abs(_ay - dy) < snap_dist / _s) { 
+					dy = _ay; 
+					draw_set_color(COLORS._main_icon);
+					draw_line(_x + _ax * _s, _y + _ay * _s, _x + dx * _s, _y + dy * _s);
+				}
+				
+			}
 			
 			switch(drag_type) {
 				case  0 :
@@ -890,6 +918,26 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					var _mmy = _my;
 					
 					if(_line_hover == -1 && array_length(_pth.anchors)) {
+						if(attributes.snap_point)
+						for( var i = 0, n = array_length(_pth.anchors); i < n; i++ ) {
+							var _a  = _pth.anchors[i];
+							var _ax = _x + _a[0] * _s;
+							var _ay = _y + _a[1] * _s;
+							
+							if(abs(_ax - _mmx) < snap_dist) { 
+								_mmx = _ax; 
+								draw_set_color(COLORS._main_icon);
+								draw_line(_ax, _ay, _mmx, _mmy);
+							}
+								
+							if(abs(_ay - _mmy) < snap_dist) { 
+								_mmy = _ay; 
+								draw_set_color(COLORS._main_icon);
+								draw_line(_ax, _ay, _mmx, _mmy);
+							}
+							
+						}
+						
 						var _focusAnc = array_last(_pth.anchors);
 						if(key_mod_check(MOD_KEY.alt)) 
 							_focusAnc = array_first(_pth.anchors);
@@ -906,9 +954,6 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 							_mmx = _fax + lengthdir_x(_diss, _dirr);
 							_mmy = _fay + lengthdir_y(_diss, _dirr);
 							
-							// if(abs(_mdx) > abs(_mdy)) _mmy = _fay;
-							// else _mmx = _fax;
-								
 							draw_set_color(COLORS._main_icon);
 							draw_line(_fax, _fay, _mmx, _mmy);
 						}
