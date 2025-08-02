@@ -1,44 +1,33 @@
 function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Normal Light";
 	
-	newInput(0, nodeValue_Surface("Surface In"));
+	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput(1, nodeValue_Surface( "Normal map" ));
+	newInput(3, nodeValue_Color(   "Ambient",    ca_black ));
+	newInput(5, nodeValue_Bool(    "Keep Alpha", true     ));
 	
-	newInput(1, nodeValue_Surface("Normal map"));
+	newInput(2, nodeValue_Float(   "Height", 1  ));
+	newInput(4, nodeValue_Surface( "Height map" ));
+	// input 6
 	
-	newInput(2, nodeValue_Float("Height", 1));
-	
-	newInput(3, nodeValue_Color("Ambient", ca_black));
-	
-	newInput(4, nodeValue_Surface("Height map"));
-	
-	typeList = [ 
-		new scrollItem("Point", s_node_normal_light_type, 0), 
-		new scrollItem("Sun",   s_node_normal_light_type, 1), 
-		new scrollItem("Line",  s_node_normal_light_type, 2), 
-		new scrollItem("Spot",  s_node_normal_light_type, 3), 
-	];
-	typeListStr = array_create_ext(array_length(typeList), function(i) /*=>*/ {return typeList[i].name});
+	typeListStr = ["Point", "Sun", "Line", "Spot"];
+	typeList    = __enum_array_gen(typeListStr, s_node_normal_light_type);
 	
 	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		dynamic_input_inspecting = getInputAmount();
 		
-		newInput(index + 0, nodeValue_Enum_Scroll("Type", 0, typeList));
+		newInput(index+0, nodeValue_Enum_Scroll("Type", 0, typeList ));
+		newInput(index+1, nodeValue_Vec3(  "Position",     [0,0,1]  )).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+		newInput(index+5, nodeValue_Vec3(  "End Position", [0,0,1]  )).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+		newInput(index+2, nodeValue_Float( "Range",         16      ));
 		
-		newInput(index + 1, nodeValue_Vec3("Position", [ 0, 0, 1 ]))
-			.setUnitRef(function(index) /*=>*/ {return getDimension(index)});
+		newInput(index+3, nodeValue_Float( "Intensity", 4        ));
+		newInput(index+4, nodeValue_Color( "Color",     ca_white ));
+		newInput(index+6, nodeValue_Color( "End Color", ca_white ));
+		// input 7
 		
-		newInput(index + 2, nodeValue_Float("Range", 16));
 		inputs[index + 2].overlay_text_valign = fa_bottom;
-		
-		newInput(index + 3, nodeValue_Float("Intensity", 4));
-		
-		newInput(index + 4, nodeValue_Color("Color", ca_white));
-		
-		newInput(index + 5, nodeValue_Vec3("End Position", [ 0, 0, 1 ]))
-			.setUnitRef(function(index) /*=>*/ {return getDimension(index)});
-		
-		newInput(index + 6, nodeValue_Color("End Color", ca_white));
 		
 		refreshDynamicDisplay();
 		return inputs[index];
@@ -110,7 +99,7 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	];
 	
 	input_display_list = [ 
-		["Input",	false], 0, 1, 3, 
+		["Input",	false], 0, 1, 3, 5, 
 		new Inspector_Spacer(8, true),
 		new Inspector_Spacer(2, false, false),
 		lights_renderer, 
@@ -120,9 +109,10 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	setDynamicInput(7, false);
 	if(!LOADING && !APPENDING) createNewInput();
 	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
+	newOutput(1, nodeValue_Output( "Light Only",  VALUE_TYPE.surface, noone ));
 	
-	newOutput(1, nodeValue_Output("Light only", VALUE_TYPE.surface, noone));
+	////- Nodes
 	
 	attribute_surface_depth();
 	
@@ -204,6 +194,7 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _surf = _data[0];
 		var _norm = _data[1];
 		var _amb  = _data[3];
+		var _alph = _data[5];
 		var _dim  = is_surface(_surf)? surface_get_dimension(_surf) : surface_get_dimension(_norm);
 		
 		if(getInputAmount()) {
@@ -232,6 +223,7 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			shader_set_surface("baseSurface",  _surf);
 			shader_set_surface("lightSurface", _ligSurf);
 			shader_set_color("ambient", _amb);
+			shader_set_i("keepAlpha",   _alph);
 			
 			draw_empty();
 		surface_reset_shader();
