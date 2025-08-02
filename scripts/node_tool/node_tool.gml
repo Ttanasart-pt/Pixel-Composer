@@ -16,16 +16,16 @@ function NodeTool(name = "", spr = noone, contextString = instanceof(other)) con
 	
 	hk_object   = noone;
 	
-	static checkHotkey   = function() { return getToolHotkey(ctx, getName()); }
+	////- Get Set
 	
-	static setContext    = function(_c) { context    = _c; return self; }
-	static setToolObject = function(_o) { toolObject = _o; return self; }
-	static setToolFn     = function(_f) { toolFn     = _f; return self; }
+	static checkHotkey   = function() /*=>*/ {return getToolHotkey(ctx, getName())};
 	
-	static getName = function(index = 0) { return is_array(name)? array_safe_get_fast(name, index, "") : name; }
+	static setContext    = function(_c) /*=>*/ { context    = _c; return self; }
+	static setToolObject = function(_o) /*=>*/ { toolObject = _o; return self; }
+	static setToolFn     = function(_f) /*=>*/ { toolFn     = _f; return self; }
 	
-	static getToolObject = function() { return is_array(toolObject)? toolObject[selecting] : toolObject; }
-	
+	static getName        = function(index = 0) { return is_array(name)? array_safe_get_fast(name, index, "") : name; }
+	static getToolObject  = function() { return is_array(toolObject)? toolObject[selecting] : toolObject; }
 	static getDisplayName = function(index = 0) {
 		var _nme = getName(index);
 		var _key = checkHotkey();
@@ -33,6 +33,8 @@ function NodeTool(name = "", spr = noone, contextString = instanceof(other)) con
 		if(_key == noone) return _nme;
 		return new tooltipHotkey(_nme).setKey(_key.getName());
 	}
+	
+	////- Settings
 	
 	static setSettings = function(_s) { for(var i = 0; i < array_length(_s); i++) array_push(settings, _s[i]);    return self; }
 	static setSetting  = function(_s) { for(var i = 0; i < argument_count; i++) array_push(settings, argument[i]); return self; }
@@ -56,6 +58,8 @@ function NodeTool(name = "", spr = noone, contextString = instanceof(other)) con
 		return self;
 	}
 	
+	////- Toggle
+	
 	static toggle = function(index = 0) {
 		if(toolFn != noone) {
 			if(subtools == 0) toolFn(context);
@@ -64,10 +68,12 @@ function NodeTool(name = "", spr = noone, contextString = instanceof(other)) con
 		}
 		
 		if(subtools == 0) {
-			PANEL_PREVIEW.tool_current = PANEL_PREVIEW.tool_current == self? noone : self;
+			if(PANEL_PREVIEW.tool_current == self) PANEL_PREVIEW.resetTool();
+			else PANEL_PREVIEW.tool_current = self;
+			
 		} else {
 			if(PANEL_PREVIEW.tool_current == self && index == selecting) {
-				PANEL_PREVIEW.tool_current = noone;
+				PANEL_PREVIEW.resetTool();
 				selecting = 0;
 			} else {
 				PANEL_PREVIEW.tool_current = self;
@@ -75,7 +81,7 @@ function NodeTool(name = "", spr = noone, contextString = instanceof(other)) con
 			}
 		}
 		
-		if(PANEL_PREVIEW.tool_current == self)
+		if(onToggle != undefined && PANEL_PREVIEW.tool_current == self)
 			onToggle();
 			
 		var _obj = getToolObject();
@@ -86,25 +92,32 @@ function NodeTool(name = "", spr = noone, contextString = instanceof(other)) con
 		HOTKEY_BLOCK = true;
 		
 		if(subtools == 0) {
-			PANEL_PREVIEW.tool_current = PANEL_PREVIEW.tool_current == self? noone : self;
+			if(PANEL_PREVIEW.tool_current == self) PANEL_PREVIEW.resetTool();
+			else PANEL_PREVIEW.tool_current = self;
 			
 		} else if(PANEL_PREVIEW.tool_current != self) {
 			PANEL_PREVIEW.tool_current = self;
 			selecting = 0;
 			
 		} else if(selecting == subtools - 1) {
-			PANEL_PREVIEW.tool_current = noone;
+			PANEL_PREVIEW.resetTool();
 			selecting = 0;
 			
 		} else 
 			selecting++;
 		
-		if(PANEL_PREVIEW.tool_current == self)
+		if(onToggle != undefined && PANEL_PREVIEW.tool_current == self)
 			onToggle();
 			
 		var _obj = getToolObject();
-		if(_obj) _obj.init(context);
+		if(_obj) {
+			_obj.init(context);
+			_obj.initKeyboard();
+		}
 	}
+	
+	static onToggle    = undefined
+	static setOnToggle = function(_fn) /*=>*/ { onToggle = _fn; return self; }
 	
 	static rightClick = function() {
 		hk_object = checkHotkey();
@@ -119,6 +132,30 @@ function NodeTool(name = "", spr = noone, contextString = instanceof(other)) con
 		menuCall("", _menu);
 	}
 	
-	static onToggle    = function() {}
-	static setOnToggle = function(_fn) { onToggle = _fn; return self; }
+}
+
+function ToolObject() constructor {
+	node = noone;
+	
+	////- GetSet
+	
+	static setNode = function(_n) /*=>*/ { node = _n; return self; }
+	
+	////- Draw
+	
+	static drawOverlay   = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny ) /*=>*/ {}
+	static drawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) /*=>*/ {}
+	
+	////- Actions
+	
+	static step = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {}
+	
+	static init         = function() /*=>*/ {}
+	static initKeyboard = function() /*=>*/ {}
+	
+	////- Disable
+		
+	static disable   = function() /*=>*/ {}
+	static onDisable = function() /*=>*/ {}
+	
 }

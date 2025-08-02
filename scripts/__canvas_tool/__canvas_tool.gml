@@ -1,6 +1,4 @@
-function canvas_tool() constructor { 
-	
-	node = noone;
+function canvas_tool() : ToolObject() constructor { 
 	rightTools = [];
 	
 	override = false;
@@ -19,8 +17,6 @@ function canvas_tool() constructor {
 	
 	subtool = 0;
 	
-	function setNode(_n) { node = _n; return self; }
-	
 	function getTool() { return self; }
 	
 	function disable() { 
@@ -28,15 +24,8 @@ function canvas_tool() constructor {
 		onDisable(); 
 		return self; 
 	}
-		
-	function onDisable() {}
-	
-	function init() {}
-	
-	function step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
 	
 	function drawPreview(     hover, active, _x, _y, _s, _mx, _my, _snx, _sny ) {}
-	function drawOverlay(     hover, active, _x, _y, _s, _mx, _my, _snx, _sny ) {}
 	function drawPostOverlay( hover, active, _x, _y, _s, _mx, _my, _snx, _sny ) {}
 	function drawMask(        hover, active, _x, _y, _s, _mx, _my, _snx, _sny ) {}
 }

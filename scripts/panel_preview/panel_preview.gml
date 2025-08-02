@@ -970,13 +970,16 @@ function Panel_Preview() : PanelContent() constructor {
     
     ////- TOOL
     
-    function clearTool(_bypass_clearable = false) { 
-    	if(!tool_clearable && !_bypass_clearable) return;
-    	if(tool_current == noone) return;
-    	
+    function resetTool() {
     	var _tobj = tool_current.getToolObject();
 		if(_tobj) _tobj.disable();
         tool_current = noone;
+    }
+    
+    function clearTool(_bypass_clearable = false) { 
+    	if(!tool_clearable && !_bypass_clearable) return;
+    	if(tool_current == noone) return;
+    	resetTool();
     }
     
     function drawTools(_node) {
