@@ -329,7 +329,6 @@
             { "label": "/Effects" },
             "Node_PB_FX_Highlight",
             "Node_PB_FX_Extrude",
-            "Node_PB_FX_Bevel", 
             "Node_PB_FX_Shine",
         ],
         "context": ["Node_Pixel_Builder"],
@@ -485,6 +484,7 @@
             "Node_Blobify",
             "Node_SDF",
             "Node_Surface_Replace",
+            "Node_PB_FX_Bevel", 
             { "label": "/Post Processing" },
             "Node_Bloom",
             "Node_Blend_Edge",
@@ -558,6 +558,7 @@
             "Node_Normal",
             "Node_Normal_Light",
             "Node_Bevel",
+            "Node_PB_FX_Bevel", 
             "Node_Sprite_Stack",
             "Node_Ambient_Occlusion",
             
