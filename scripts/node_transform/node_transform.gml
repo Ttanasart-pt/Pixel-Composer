@@ -5,12 +5,277 @@
 		addHotkey("Node_Transform", "Output Dimension Type > Toggle",  "D", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[9].setValue((_n.inputs[9].getValue() + 1) % 4); });
 	});
 
+	FN_NODE_TOOL_INVOKE {
+		hotkeyTool("Node_Transform", "Move",   "G");
+		hotkeyTool("Node_Transform", "Rotate", "R");
+		hotkeyTool("Node_Transform", "Scale",  "S");
+	});
+	
 	enum OUTPUT_SCALING {
 		same_as_input,
 		constant,
 		relative,
 		scale
 	}
+	
+	function transform_tool_move(_node) : ToolObject() constructor {
+		setNode(_node);
+		activeKeyboard = false;
+		
+		drag_sx = 0;
+		drag_sy = 0;
+		
+		drag_pmx = undefined;
+		drag_pmy = undefined;
+		
+		drag_axis = -1;
+		
+		static init = function() {
+			activeKeyboard = false;
+			
+			KEYBOARD_STRING = "";
+			KEYBOARD_NUMBER = undefined;
+		}
+		
+		static initKeyboard = function() /*=>*/ {
+			activeKeyboard = true;
+			
+			drag_pmx = undefined;
+			drag_pmy = undefined;
+			
+			var _val = node.inputs[2].getValue();
+			drag_sx = _val[0];
+			drag_sy = _val[1];
+			
+			drag_axis = -1;
+		}
+		
+		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
+			if(!activeKeyboard)     return;
+			
+			var _val = node.inputs[2].getValue();
+			var  val = [drag_sx, drag_sy];
+			
+			if(drag_pmx == undefined) drag_pmx = _mx;
+			if(drag_pmy == undefined) drag_pmy = _my;
+			
+			if(drag_axis == -1) {
+				val[0] = drag_sx + (_mx - drag_pmx) / PANEL_PREVIEW.canvas_s;
+				val[1] = drag_sy + (_my - drag_pmy) / PANEL_PREVIEW.canvas_s;
+				
+			} else {
+				if(KEYBOARD_NUMBER == undefined) {
+					if(drag_axis == 0) val[0] = drag_sx + (_mx - drag_pmx) / PANEL_PREVIEW.canvas_s;
+					if(drag_axis == 1) val[1] = drag_sy + (_my - drag_pmy) / PANEL_PREVIEW.canvas_s;
+					
+				} else {
+					if(drag_axis == 0) val[0] = drag_sx + KEYBOARD_NUMBER;
+					if(drag_axis == 1) val[1] = drag_sy + KEYBOARD_NUMBER;
+					
+				}
+			}
+			
+			draw_set_color(COLORS._main_icon);
+			if(drag_axis == 0) draw_line(0, _y + drag_sy * _s, WIN_H, _y + drag_sy * _s);
+			if(drag_axis == 1) draw_line(_x + drag_sx * _s, 0, _x + drag_sx * _s, WIN_W);
+			
+			if(node.inputs[2].setValue(val))
+				UNDO_HOLDING = true;
+			
+			if(key_press(ord("X"))) {
+				drag_axis = drag_axis == 0? -1 : 0;
+				KEYBOARD_STRING = "";
+			}
+			
+			if(key_press(ord("Y"))) {
+				drag_axis = drag_axis == 1? -1 : 1;
+				KEYBOARD_STRING = "";
+			}
+				
+			if(mouse_press(mb_left, active)) {
+				activeKeyboard = false;
+				UNDO_HOLDING   = false;
+				PANEL_PREVIEW.resetTool();
+			}
+			
+			var _tooltipText = "Dragging";
+			switch(drag_axis) {
+				case 0 : _tooltipText += " X"; break;
+				case 1 : _tooltipText += " Y"; break;
+			}
+			
+			if(KEYBOARD_NUMBER != undefined) _tooltipText += $" [{KEYBOARD_NUMBER}]";
+			PANEL_PREVIEW.setActionTooltip(_tooltipText);
+			
+		}
+	}
+	
+	function transform_tool_rotate(_node) : ToolObject() constructor {
+		setNode(_node);
+		activeKeyboard = false;
+		
+		drag_sr  = 0;
+		drag_pmx = undefined;
+		drag_pmy = undefined;
+		
+		drag_axis = -1;
+		rotate_acc = 0;
+		
+		static init = function() {
+			activeKeyboard = false;
+			
+			KEYBOARD_STRING = "";
+			KEYBOARD_NUMBER = undefined;
+		}
+		
+		static initKeyboard = function() /*=>*/ {
+			activeKeyboard = true;
+			
+			var _val = node.inputs[5].getValue();
+			drag_sr  = _val;
+			rotate_acc = 0;
+			
+			drag_pmx = undefined;
+			drag_pmy = undefined;
+		}
+		
+		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
+			if(!activeKeyboard)     return;
+				
+			var _pos = node.inputs[2].getValue();
+			var _px = _x + _pos[0] * _s;
+			var _py = _y + _pos[1] * _s;
+			
+			if(drag_pmx == undefined) drag_pmx = _mx;
+			if(drag_pmy == undefined) drag_pmy = _my;
+			
+			var _d0 = point_direction(_px, _py, drag_pmx, drag_pmy);
+			var _d1 = point_direction(_px, _py, _mx, _my);
+			
+			drag_pmx = _mx;
+			drag_pmy = _my;
+			
+			rotate_acc += angle_difference(_d1, _d0);
+			var _rr = drag_sr + rotate_acc;
+			if(KEYBOARD_NUMBER != undefined) _rr = drag_sr + KEYBOARD_NUMBER;
+			
+			if(node.inputs[5].setValue(_rr))
+				UNDO_HOLDING   = true;
+				
+			if(mouse_press(mb_left, active)) {
+				activeKeyboard = false;
+				UNDO_HOLDING   = false;
+				PANEL_PREVIEW.resetTool();
+			}
+			
+			var _tooltipText = "Rotating";
+			if(KEYBOARD_NUMBER != undefined) _tooltipText += $" [{KEYBOARD_NUMBER}]";
+			PANEL_PREVIEW.setActionTooltip(_tooltipText);
+			
+		}
+	}
+	
+	function transform_tool_scale(_node) : ToolObject() constructor {
+		setNode(_node);
+		activeKeyboard = false;
+		
+		drag_sx = 0;
+		drag_sy = 0;
+		
+		drag_pmx = undefined;
+		drag_pmy = undefined;
+		
+		drag_axis = -1;
+		
+		static init = function() {
+			activeKeyboard = false;
+			
+			KEYBOARD_STRING = "";
+			KEYBOARD_NUMBER = undefined;
+		}
+		
+		static initKeyboard = function() /*=>*/ {
+			activeKeyboard = true;
+			
+			drag_pmx = undefined;
+			drag_pmy = undefined;
+			
+			var _val = node.inputs[6].getValue();
+			drag_sx = _val[0];
+			drag_sy = _val[1];
+			
+			drag_axis = -1;
+		}
+		
+		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
+			if(!activeKeyboard)     return;
+			
+			var _pos = node.inputs[2].getValue();
+			var _rot = node.inputs[5].getValue();
+			var _px = _x + _pos[0] * _s;
+			var _py = _y + _pos[1] * _s;
+			
+			if(drag_pmx == undefined) drag_pmx = _mx;
+			if(drag_pmy == undefined) drag_pmy = _my;
+			
+			var val = [drag_sx, drag_sy];
+			var _ss = point_distance(_mx, _my, _px, _py) / point_distance(drag_pmx, drag_pmy, _px, _py);
+			var _sx = key_mod_press(SHIFT)? (_mx - _px) / (drag_pmx - _px) : _ss;
+			var _sy = key_mod_press(SHIFT)? (_my - _py) / (drag_pmy - _py) : _ss;
+			
+			if(drag_axis == -1) {
+				val[0] = drag_sx * _sx;
+				val[1] = drag_sy * _sy;
+				
+			} else {
+				if(KEYBOARD_NUMBER == undefined) {
+					if(drag_axis == 0) val[0] = drag_sx * _sx;
+					if(drag_axis == 1) val[1] = drag_sy * _sy;
+					
+				} else {
+					if(drag_axis == 0) val[0] = drag_sx + KEYBOARD_NUMBER;
+					if(drag_axis == 1) val[1] = drag_sy + KEYBOARD_NUMBER;
+					
+				}
+			}
+			
+			draw_set_color(COLORS._main_icon);
+			if(drag_axis == 0) draw_line(_px - lengthdir_x(9999, _rot), _py - lengthdir_y(9999, _rot), 
+			                             _px + lengthdir_x(9999, _rot), _py + lengthdir_y(9999, _rot));
+			if(drag_axis == 1) draw_line(_px - lengthdir_x(9999, _rot + 90), _py - lengthdir_y(9999, _rot + 90), 
+			                             _px + lengthdir_x(9999, _rot + 90), _py + lengthdir_y(9999, _rot + 90));
+			
+			if(node.inputs[6].setValue(val))
+				UNDO_HOLDING = true;
+			
+			if(key_press(ord("X"))) {
+				drag_axis = drag_axis == 0? -1 : 0;
+				KEYBOARD_STRING = "";
+			}
+			
+			if(key_press(ord("Y"))) {
+				drag_axis = drag_axis == 1? -1 : 1;
+				KEYBOARD_STRING = "";
+			}
+				
+			if(mouse_press(mb_left, active)) {
+				activeKeyboard = false;
+				UNDO_HOLDING   = false;
+				PANEL_PREVIEW.resetTool();
+			}
+			
+			var _tooltipText = "Scaling";
+			switch(drag_axis) {
+				case 0 : _tooltipText += " X"; break;
+				case 1 : _tooltipText += " Y"; break;
+			}
+			
+			if(KEYBOARD_NUMBER != undefined) _tooltipText += $" [{KEYBOARD_NUMBER}]";
+			PANEL_PREVIEW.setActionTooltip(_tooltipText);
+			
+		}
+	}
+	
 #endregion
 
 function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
@@ -66,6 +331,17 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		["Render",		false], 14, 
 		["Echo",		 true, 12], 13, 
 	];
+	
+	////- Tool
+	
+	tool_object_mov = new transform_tool_move(self);
+	tool_object_rot = new transform_tool_rotate(self);
+	tool_object_sca = new transform_tool_scale(self);
+	
+	tool_pos = new NodeTool( "Move",   THEME.tools_2d_move   ).setToolObject(tool_object_mov);
+	tool_rot = new NodeTool( "Rotate", THEME.tools_2d_rotate ).setToolObject(tool_object_rot);
+	tool_sca = new NodeTool( "Scale",  THEME.tools_2d_scale  ).setToolObject(tool_object_sca);
+	tools    = [ tool_pos, tool_rot, tool_sca ];
 	
 	////- Nodes
 	
@@ -337,6 +613,10 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		PROCESSOR_OVERLAY_CHECK
+		
+		if(isUsingTool("Move"))   tool_object_mov.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		if(isUsingTool("Rotate")) tool_object_rot.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		if(isUsingTool("Scale"))  tool_object_sca.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
 		var _surf = current_data[0];
 		if(is_array(_surf)) {

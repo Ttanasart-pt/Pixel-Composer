@@ -66,8 +66,21 @@
 			if(drag_pmx == undefined) drag_pmx = _mx;
 			if(drag_pmy == undefined) drag_pmy = _my;
 			
-			if(drag_axis == 0 || drag_axis == -1) val[0] = drag_sx + (_mx - drag_pmx) / PANEL_PREVIEW.canvas_s;
-			if(drag_axis == 1 || drag_axis == -1) val[1] = drag_sy + (_my - drag_pmy) / PANEL_PREVIEW.canvas_s;
+			if(drag_axis == -1) {
+				val[0] = drag_sx + (_mx - drag_pmx) / PANEL_PREVIEW.canvas_s;
+				val[1] = drag_sy + (_my - drag_pmy) / PANEL_PREVIEW.canvas_s;
+				
+			} else {
+				if(KEYBOARD_NUMBER == undefined) {
+					if(drag_axis == 0) val[0] = drag_sx + (_mx - drag_pmx) / PANEL_PREVIEW.canvas_s;
+					if(drag_axis == 1) val[1] = drag_sy + (_my - drag_pmy) / PANEL_PREVIEW.canvas_s;
+					
+				} else {
+					if(drag_axis == 0) val[0] = drag_sx + KEYBOARD_NUMBER;
+					if(drag_axis == 1) val[1] = drag_sy + KEYBOARD_NUMBER;
+					
+				}
+			}
 			
 			draw_set_color(COLORS._main_icon);
 			if(drag_axis == 0) draw_line(0, _y + drag_sy * _s, WIN_H, _y + drag_sy * _s);
@@ -91,6 +104,16 @@
 				UNDO_HOLDING   = false;
 				PANEL_PREVIEW.resetTool();
 			}
+			
+			var _tooltipText = "Dragging";
+			switch(drag_axis) {
+				case 0 : _tooltipText += " X"; break;
+				case 1 : _tooltipText += " Y"; break;
+			}
+			
+			if(KEYBOARD_NUMBER != undefined) _tooltipText += $" [{KEYBOARD_NUMBER}]";
+			PANEL_PREVIEW.setActionTooltip(_tooltipText);
+			
 		}
 	}
 	
@@ -145,8 +168,10 @@
 			drag_pmy = _my;
 			
 			rotate_acc += angle_difference(_d1, _d0);
+			var _rr = drag_sr + rotate_acc;
+			if(KEYBOARD_NUMBER != undefined) _rr = drag_sr + KEYBOARD_NUMBER;
 			
-			if(node.inputs[surf_dragging + 2].setValue(drag_sr + rotate_acc))
+			if(node.inputs[surf_dragging + 2].setValue(_rr))
 				UNDO_HOLDING   = true;
 				
 			if(mouse_press(mb_left, active)) {
@@ -154,6 +179,11 @@
 				UNDO_HOLDING   = false;
 				PANEL_PREVIEW.resetTool();
 			}
+			
+			var _tooltipText = "Rotating";
+			if(KEYBOARD_NUMBER != undefined) _tooltipText += $" [{KEYBOARD_NUMBER}]";
+			PANEL_PREVIEW.setActionTooltip(_tooltipText);
+			
 		}
 	}
 	
@@ -198,6 +228,7 @@
 			if(surf_dragging == -1) return;
 			
 			var _pos = node.inputs[surf_dragging + 1].getValue();
+			var _rot = node.inputs[surf_dragging + 2].getValue();
 			var _px = _x + _pos[0] * _s;
 			var _py = _y + _pos[1] * _s;
 			
@@ -209,12 +240,27 @@
 			var _sx = key_mod_press(SHIFT)? (_mx - _px) / (drag_pmx - _px) : _ss;
 			var _sy = key_mod_press(SHIFT)? (_my - _py) / (drag_pmy - _py) : _ss;
 			
-			if(drag_axis == 0 || drag_axis == -1) val[0] = drag_sx * _sx;
-			if(drag_axis == 1 || drag_axis == -1) val[1] = drag_sy * _sy;
+			if(drag_axis == -1) {
+				val[0] = drag_sx * _sx;
+				val[1] = drag_sy * _sy;
+				
+			} else {
+				if(KEYBOARD_NUMBER == undefined) {
+					if(drag_axis == 0) val[0] = drag_sx * _sx;
+					if(drag_axis == 1) val[1] = drag_sy * _sy;
+					
+				} else {
+					if(drag_axis == 0) val[0] = drag_sx + KEYBOARD_NUMBER;
+					if(drag_axis == 1) val[1] = drag_sy + KEYBOARD_NUMBER;
+					
+				}
+			}
 			
 			draw_set_color(COLORS._main_icon);
-			if(drag_axis == 0) draw_line(0, _py, WIN_H, _py);
-			if(drag_axis == 1) draw_line(_px, 0, _px, WIN_W);
+			if(drag_axis == 0) draw_line(_px - lengthdir_x(9999, _rot), _py - lengthdir_y(9999, _rot), 
+			                             _px + lengthdir_x(9999, _rot), _py + lengthdir_y(9999, _rot));
+			if(drag_axis == 1) draw_line(_px - lengthdir_x(9999, _rot + 90), _py - lengthdir_y(9999, _rot + 90), 
+			                             _px + lengthdir_x(9999, _rot + 90), _py + lengthdir_y(9999, _rot + 90));
 			
 			if(node.inputs[surf_dragging + 3].setValue(val))
 				UNDO_HOLDING = true;
@@ -234,6 +280,16 @@
 				UNDO_HOLDING   = false;
 				PANEL_PREVIEW.resetTool();
 			}
+			
+			var _tooltipText = "Scaling";
+			switch(drag_axis) {
+				case 0 : _tooltipText += " X"; break;
+				case 1 : _tooltipText += " Y"; break;
+			}
+			
+			if(KEYBOARD_NUMBER != undefined) _tooltipText += $" [{KEYBOARD_NUMBER}]";
+			PANEL_PREVIEW.setActionTooltip(_tooltipText);
+			
 		}
 	}
 	
@@ -725,7 +781,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	tool_pos = new NodeTool( "Move",   THEME.tools_2d_move   ).setToolObject(tool_object_mov);
 	tool_rot = new NodeTool( "Rotate", THEME.tools_2d_rotate ).setToolObject(tool_object_rot);
 	tool_sca = new NodeTool( "Scale",  THEME.tools_2d_scale  ).setToolObject(tool_object_sca);
-	tools    = [ tool_anc, tool_pos, tool_rot, tool_sca ];
+	tools    = [ tool_pos, tool_rot, tool_sca ];
 	
 	////- Nodes
 	

@@ -21,7 +21,7 @@
     function panel_preview_3d_view_bottom()             { CALL("preview_3d_bottom_view");            PANEL_PREVIEW.d3_view_action_bottom(); }
     function panel_preview_3d_view_projection()         { CALL("preview_3d_projection_toggle");      PANEL_PREVIEW.d3_view_projection();    }
     
-    function panel_preview_set_zoom(zoom)               { CALL("preview_preview_set_zoom");          PANEL_PREVIEW.fullView(zoom);          }
+    function panel_preview_set_zoom(zoom)               { CALL("preview_preview_set_zoom");          PANEL_PREVIEW.fullViewNoTool(zoom);    }
     
     function panel_preview_set_tile_off()               { CALL("preview_set_tile_off");              PANEL_PREVIEW.set_tile_off();          }
     function panel_preview_set_tile_horizontal()        { CALL("preview_set_tile_horizontal");       PANEL_PREVIEW.set_tile_horizontal();   }
@@ -936,6 +936,11 @@ function Panel_Preview() : PanelContent() constructor {
         canvas_y = h / 2 - _h * canvas_s / 2 - _y * canvas_s;
     }
     
+    function fullViewNoTool(scale = 0) {
+    	if(tool_current == noone || tool_current.getToolObject() == noone)
+    		fullView(scale);
+    }
+    
     function drawNodeChannel(_node, _x, _y) {
     	var _chAmo = _node.getOutputChannelAmount();
     	_node.preview_channel = min(_node.preview_channel, _chAmo - 1);
@@ -975,6 +980,7 @@ function Panel_Preview() : PanelContent() constructor {
     ////- TOOL
     
     function resetTool() {
+    	if(tool_current == noone) return;
     	var _tobj = tool_current.getToolObject();
 		if(_tobj) _tobj.disable();
         tool_current = noone;
