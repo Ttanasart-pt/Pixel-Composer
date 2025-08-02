@@ -1686,7 +1686,13 @@ function Panel_Preview() : PanelContent() constructor {
                 d3_view_camera.focus.set(targ);
             }
             
-            d3_view_camera.setViewSize(w, h);
+            d3_view_camera.projection = CAMERA_PROJECTION.orthograph;
+            
+            if(d3_view_camera.projection == CAMERA_PROJECTION.perspective)
+            	d3_view_camera.setViewSize(w, h);
+            else if(d3_view_camera.projection == CAMERA_PROJECTION.orthograph)
+            	d3_view_camera.setViewSize(1 / .5, h / w / .5);
+            	
             d3_view_camera.setMatrix();
         #endregion
         

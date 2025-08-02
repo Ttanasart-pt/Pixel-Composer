@@ -30,12 +30,12 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	
 	////- =Transform
 	newInput(i+ 9, nodeValue_Enum_Scroll( "Postioning Mode",       2, [ "Position + Rotation", "Position + Lookat", "Lookat + Rotation" ] ));
-	newInput(i+10, nodeValue_Vec3(        "Lookat Position",      [0,0,0]                                ));
-	newInput(i+11, nodeValue_Rotation(    "Roll",                  0                                     ));
-	newInput(i+12, nodeValue_Rotation(    "Horizontal Angle",      45                                    ));
-	newInput(i+13, nodeValue_Slider(      "Vertical Angle",        30, [ 0, 90, 0.1 ]                    ));
-	newInput(i+14, nodeValue_Float(       "Distance",              4                                     ));
-	newInput(i+ 8, nodeValue_Slider(       "Orthographic Scale",   .5, [ 0.01, 4, 0.01 ]                  ));
+	newInput(i+10, nodeValue_Vec3(        "Lookat Position",      [0,0,0]                ));
+	newInput(i+11, nodeValue_Rotation(    "Roll",                  0                     ));
+	newInput(i+12, nodeValue_Rotation(    "Horizontal Angle",      45                    ));
+	newInput(i+13, nodeValue_Slider(      "Vertical Angle",        30, [ 0, 90, 0.1 ]    ));
+	newInput(i+14, nodeValue_Float(       "Distance",              4                     ));
+	newInput(i+ 8, nodeValue_Slider(      "Orthographic Scale",   .5, [ 0.01, 4, 0.01 ]  ));
 	
 	////- =Camera
 	newInput(i+3, nodeValue_Enum_Button(  "Projection",            1 , [ "Perspective", "Orthographic" ] ));
@@ -298,8 +298,8 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 			camera.projection = _proj;
 			camera.setViewFov(_fov, _clip[0], _clip[1]);
 			
-			if(_proj == 0)		camera.setViewSize(_dim[0], _dim[1]);
-			else if(_proj == 1) camera.setViewSize(1 / _orts, _dim[0] / _dim[1] / _orts);
+			     if(_proj == CAMERA_PROJECTION.perspective)	camera.setViewSize(_dim[0], _dim[1]);
+			else if(_proj == CAMERA_PROJECTION.orthograph)  camera.setViewSize(1 / _orts, _dim[1] / _dim[0] / _orts);
 			
 			camera.setMatrix();
 		#endregion

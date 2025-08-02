@@ -229,7 +229,7 @@
 						
 					} else {
 						var val = [ drag_original.x, drag_original.y, drag_original.z ];
-						val[drag_axis] += KEYBOARD_NUMBER;
+						if(drag_axis < 3) val[drag_axis] += KEYBOARD_NUMBER;
 						
 						if(node.inputs[index].setValue(val)) 
 							UNDO_HOLDING = true;
@@ -457,7 +457,7 @@
 						
 					} else {
 						var val = [ drag_original[0], drag_original[1], drag_original[2] ];
-						val[drag_axis] += KEYBOARD_NUMBER;
+						if(drag_axis < 3) val[drag_axis] += KEYBOARD_NUMBER;
 						
 						if(node.inputs[index].setValue(val)) 
 							UNDO_HOLDING = true;
@@ -535,6 +535,7 @@
 		drag_val   = 0;
 		
 		drag_mx = 0; drag_my = 0;
+		drag_sx = 0; drag_sy = 0;
 		drag_px = 0; drag_py = 0;
 		drag_cx = 0; drag_cy = 0;
 		drag_rot_axis = new BBMOD_Quaternion();
@@ -661,6 +662,11 @@
 						_hover = i;
 				}
 				
+				if(drag_axis == 6) {
+					draw_set_color(COLORS._main_icon);
+					draw_line_dashed(cx, cy, _mx, _my);
+				}
+				
 				axis_hover = _hover;
 			#endregion
 				
@@ -671,7 +677,7 @@
 						drag_mx += _mx - drag_px;
 						drag_my += _my - drag_py;
 							
-						var mAdj, nor, prj;
+						var mAdj, nor, prj, pln;
 						var ray = _camera.viewPointToWorldRay(drag_mx, drag_my);
 							
 						if(drag_axis < 3) {
@@ -684,7 +690,7 @@
 							nor = _qrot.Rotate(nor);
 							prj = _qrot.Rotate(prj);
 							
-							var pln = new __plane(drag_original, nor);
+							pln  = new __plane(drag_original, nor);
 							mAdj = d3d_intersect_ray_plane(ray, pln);
 								
 							if(drag_prev != undefined) {
@@ -696,7 +702,10 @@
 								if(node.inputs[index].setValue(value_snap(drag_val, _snx))) 
 									UNDO_HOLDING = true;
 							}
-						} else {
+							
+							drag_prev = mAdj;
+							
+						} else if(drag_axis < 6) {
 							switch(drag_axis) {
 								case 3 : nor = new __vec3(0, 0, 1); break;
 								case 4 : nor = new __vec3(1, 0, 0); break;
@@ -705,7 +714,7 @@
 								
 							nor = _qrot.Rotate(nor);
 								
-							var pln = new __plane(drag_original, nor);
+							pln  = new __plane(drag_original, nor);
 							mAdj = d3d_intersect_ray_plane(ray, pln);
 								
 							if(drag_prev != undefined) {
@@ -717,13 +726,27 @@
 								if(node.inputs[index].setValue(value_snap(drag_val, _snx))) 
 									UNDO_HOLDING = true;
 							}
-						}
 							
-						drag_prev = mAdj;
+							drag_prev = mAdj;
+							
+						} else if(drag_axis == 6) {
+							var _origDist = point_distance(drag_cx, drag_cy, drag_sx, drag_sy);
+							var _currDist = point_distance(drag_cx, drag_cy, drag_mx, drag_my);
+							var _sca = _currDist / _origDist;
+							var  val = [ drag_original.x * _sca, drag_original.y * _sca, drag_original.z * _sca ];
+							
+							if(node.inputs[index].setValue(val)) 
+								UNDO_HOLDING = true;
+						}
 						
 					} else {
 						var val = [ drag_original.x, drag_original.y, drag_original.z ];
-						val[drag_axis] += KEYBOARD_NUMBER;
+						if(drag_axis < 3) val[drag_axis] += KEYBOARD_NUMBER;
+						else if(drag_axis == 6) {
+							val[0] += KEYBOARD_NUMBER;
+							val[1] += KEYBOARD_NUMBER;
+							val[2] += KEYBOARD_NUMBER;
+						}
 						
 						if(node.inputs[index].setValue(val)) 
 							UNDO_HOLDING = true;
@@ -742,20 +765,20 @@
 					activeKeyboard = false;
 				}
 				
-				if(drag_axis != 0 && key_press(ord("X"))) {
-					drag_axis = 0;
+				if(key_press(ord("X"))) {
+					drag_axis = drag_axis == 0? 6 : 0;
 					drag_val  = drag_original.toArray();
 					drag_prev = undefined;
 				}
 				
-				if(drag_axis != 1 && key_press(ord("Y"))) {
-					drag_axis = 1;
+				if(key_press(ord("Y"))) {
+					drag_axis = drag_axis == 1? 6 : 1;
 					drag_val  = drag_original.toArray();
 					drag_prev = undefined;
 				}
 				
-				if(drag_axis != 2 && key_press(ord("Z"))) {
-					drag_axis = 2;
+				if(key_press(ord("Z"))) {
+					drag_axis = drag_axis == 2? 6 : 2;
 					drag_val  = drag_original.toArray();
 					drag_prev = undefined;
 				}
@@ -778,9 +801,10 @@
 				
 			} else {
 				if((_hover != noone && mouse_press(mb_left, active)) || activeKeyboard) {
-					drag_axis = activeKeyboard? 0 : _hover;
+					drag_axis = activeKeyboard? 6 : _hover;
 					drag_prev = undefined;
 					drag_mx	= _mx; drag_my = _my;
+					drag_sx	= _mx; drag_sy = _my;
 					drag_px = _mx; drag_py = _my;
 					drag_cx =  cx; drag_cy =  cy;
 						
