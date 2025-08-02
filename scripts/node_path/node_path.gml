@@ -886,10 +886,40 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					
 				} else {
 					draw_sprite_ui_uniform(THEME.cursor_path_add, 0, _mx + 4, _my + 4);
-				
+					var _mmx = _mx;
+					var _mmy = _my;
+					
+					if(_line_hover == -1 && array_length(_pth.anchors)) {
+						var _focusAnc = array_last(_pth.anchors);
+						if(key_mod_check(MOD_KEY.alt)) 
+							_focusAnc = array_first(_pth.anchors);
+							
+						var _fax = _x + _focusAnc[0] * _s;
+						var _fay = _y + _focusAnc[1] * _s;
+						
+						if(key_mod_press(SHIFT)) {
+							var _mdx = _mmx - _fax;
+							var _mdy = _mmy - _fay;
+							var _dirr = value_snap(point_direction(_fax, _fay, _mmx, _mmy), 45);
+							var _diss = point_distance(_fax, _fay, _mmx, _mmy);
+							
+							_mmx = _fax + lengthdir_x(_diss, _dirr);
+							_mmy = _fay + lengthdir_y(_diss, _dirr);
+							
+							// if(abs(_mdx) > abs(_mdy)) _mmy = _fay;
+							// else _mmx = _fax;
+								
+							draw_set_color(COLORS._main_icon);
+							draw_line(_fax, _fay, _mmx, _mmy);
+						}
+					}
+					
+					var _msx = value_snap((_mmx - _x) / _s, _snx);
+					var _msy = value_snap((_mmy - _y) / _s, _sny);
+					
 					if(mouse_press(mb_left, active)) {
 						var ind = array_length(inputs);
-						var anc = createNewInput(, value_snap((_mx - _x) / _s, _snx), value_snap((_my - _y) / _s, _sny), 0, 0, 0, 0, false);
+						var anc = createNewInput(, _msx, _msy, 0, 0, 0, 0, false);
 						
 						if(_line_hover == -1) {
 							if(key_mod_check(MOD_KEY.alt)) {
@@ -914,10 +944,10 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 						UNDO_HOLDING = true;
 						
 						drag_type     = -1;
-						drag_point_mx = _mx;
-						drag_point_my = _my;
-						drag_point_sx = (_mx - _x) / _s;
-						drag_point_sy = (_my - _y) / _s;
+						drag_point_mx =  _mx;
+						drag_point_my =  _my;
+						drag_point_sx = _msx;
+						drag_point_sy = _msy;
 						
 						RENDER_ALL
 					}
@@ -1112,6 +1142,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		lengthTotal = 0;
 		boundary    = new BoundingBox();
 		weights     = [];
+		__iacc      = 0;
 		
 		cached_pos  = {};
 		
@@ -1273,14 +1304,11 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			var _a0, _a1;
 			
 			for(var i = 0; i < ansize; i++) {
+				var _l  = array_safe_get(lengths,    i, 0, ARRAY_OVERFLOW.clamp);
+				if(_dist > _l) { _dist -= _l; continue; }
+				
 				_a0 = anchors[(i + 0) % ansize];
 				_a1 = anchors[(i + 1) % ansize];
-				
-				var _l = array_safe_get(lengths, i, 0, ARRAY_OVERFLOW.clamp);
-				if(_dist > _l) {
-					_dist -= _l;
-					continue;
-				}
 				
 				var _t   = _l == 0? 0 : _dist / _l;
 				var _rat = lerp(lengthRatio[i], lengthRatio[i + 1], _t) * 100;
@@ -1395,14 +1423,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
-		var _pth = outputs[0].getValue();
-		
-		gpu_set_tex_filter(true);
-			if(!is(_pth, _pathObject) || array_empty(_pth.segments))
-				draw_sprite_fit(s_node_path, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-			else
-				draw_surface_bbox(path_preview_surface, bbox);
-		gpu_set_tex_filter(false);
+		draw_sprite_bbox_uniform(s_node_path, 0, bbox, c_white, 1, true);
 	}
 	
 	static getPreviewBoundingBox = function() { 

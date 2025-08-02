@@ -226,6 +226,30 @@
 	}
 	
 	function array_sum(arr) { return array_reduce(arr, function(s, v) /*=>*/ {return s + v}, 0); }
+	
+	function array_search_min_bin(arr, value) {
+	    var _len = array_length(arr);
+	    if(_len <= 2) return 0;
+	    
+	    var low  = 0;
+	    var high = _len - 1;
+	
+	    while (low <= high) {
+	        var mid = floor((low + high) / 2);
+	        var mid_v0 = arr[mid];
+	        var mid_v1 = arr[mid + 1];
+	
+	        if(mid_v0 < value && mid_v1 >= value)
+	            return mid;
+	        
+	        if (mid_v0 < value) 
+	            low = mid + 1;
+	        else
+	            high = mid - 1;
+	    }
+	
+	    return 0;
+	}
 #endregion
 
 #region find
