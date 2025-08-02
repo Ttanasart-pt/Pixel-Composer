@@ -1054,15 +1054,25 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					}
 					
 				} else {
+					var _mode = 0;
+					
+					if(_tooln == "Edit Control point") {
+						_mode = key_mod_press(SHIFT)? 2 : 1;
+					} else {
+						_mode = key_mod_press(SHIFT)? 1 : 0;
+					}
+					
 					var _spr = THEME.cursor_path_move;
-					if(_tooln == "Edit Control point")
-						_spr = key_mod_press(SHIFT)? THEME.cursor_path_anchor_detach : THEME.cursor_path_anchor_unmirror;
+					switch(_mode) {
+						case 1 : _spr = THEME.cursor_path_anchor_unmirror; break;
+						case 2 : _spr = THEME.cursor_path_anchor_detach;   break;
+					}
 					
 					draw_sprite_ui_uniform(_spr, 0, _mx + 4, _my + 4);
 					
 					if(mouse_press(mb_left, active)) {
-						if(_tooln == "Edit Control point") {
-							_a[@_ANCHOR.ind] = key_mod_press(SHIFT)? 2 : 1;
+						if(_mode != 0) {
+							_a[@_ANCHOR.ind] = _mode;
 							inputs[input_fix_len + anchor_hover].setValue(_a);
 						}
 							
