@@ -144,43 +144,45 @@ float grandom (in vec2 st) {
 	}
 #endregion =========================================== COLORS SPACES ===========================================
 
+float absPow(float a) { return a = sign(a) * pow(abs(a), 3.); }
+
 void main() {
     vec4  c   = texture2D( gm_BaseTexture, v_vTexcoord );
     
 	float bri = brightness.x; if(brightnessUseSurf == 1) {
 		vec4 _vMap = texture2D( brightnessSurf, v_vTexcoord );
 		bri = mix(brightness.x, brightness.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
-	} bri *= bri;
+	} bri = absPow(bri);
 	
 	float r = red.x; if(redUseSurf == 1) {
 		vec4 _vMap = texture2D( redSurf, v_vTexcoord );
 		r = mix(red.x, red.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
-	} r *= r;
+	} r = absPow(r);
 	
 	float g = green.x; if(greenUseSurf == 1) {
 		vec4 _vMap = texture2D( greenSurf, v_vTexcoord );
 		g = mix(green.x, green.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
-	} g *= g;
+	} g = absPow(g);
 	
 	float b = blue.x; if(blueUseSurf == 1) {
 		vec4 _vMap = texture2D( blueSurf, v_vTexcoord );
 		b = mix(blue.x, blue.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
-	} b *= b;
+	} b = absPow(b);
 	
 	float h = hue.x; if(hueUseSurf == 1) {
 		vec4 _vMap = texture2D( hueSurf, v_vTexcoord );
 		h = mix(hue.x, hue.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
-	} h *= h;
+	} h = absPow(h);
 	
 	float s = sat.x; if(satUseSurf == 1) {
 		vec4 _vMap = texture2D( satSurf, v_vTexcoord );
 		s = mix(sat.x, sat.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
-	} s *= s;
+	} s = absPow(s);
 	
 	float v = val.x; if(valUseSurf == 1) {
 		vec4 _vMap = texture2D( valSurf, v_vTexcoord );
 		v = mix(val.x, val.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
-	} v *= v;
+	} v = absPow(v);
 	
 	float nBri  = grandom(v_vTexcoord + vec2(0.156, 0.6169));
 	vec3  grain = vec3(nBri);

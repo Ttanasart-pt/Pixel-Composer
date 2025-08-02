@@ -15,21 +15,21 @@ function Node_Grain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	////- =Brightness
 	
 	newInput(22, nodeValue_Enum_Scroll( "Blend mode", 0, [ "Additive", "Multiply", "Screen", "Overlay" ]))
-	newInput( 7, nodeValue_Slider(      "Brightness", 0 )).setMappable(8);
+	newInput( 7, nodeValue_Slider(      "Brightness", 0, [-1,1,.01] )).setMappable(8);
 	
 	////- =RGB
 	
 	newInput(23, nodeValue_Enum_Scroll( "Blend mode", 0, [ "Additive", "Multiply", "Screen" ]))
-	newInput(10, nodeValue_Slider(      "Red",        0 )).setMappable(11);
-	newInput(12, nodeValue_Slider(      "Green",      0 )).setMappable(13);
-	newInput(14, nodeValue_Slider(      "Blue",       0 )).setMappable(15);
+	newInput(10, nodeValue_Slider(      "Red",        0, [-1,1,.01] )).setMappable(11);
+	newInput(12, nodeValue_Slider(      "Green",      0, [-1,1,.01] )).setMappable(13);
+	newInput(14, nodeValue_Slider(      "Blue",       0, [-1,1,.01] )).setMappable(15);
 	
 	////- =HSV
 	
 	newInput(24, nodeValue_Enum_Scroll( "Blend mode", 0, [ "Additive", "Multiply", "Screen" ]))
-	newInput(16, nodeValue_Slider(      "Hue",        0 )).setMappable(17);
-	newInput(18, nodeValue_Slider(      "Saturation", 0 )).setMappable(19);
-	newInput(20, nodeValue_Slider(      "Value",      0 )).setMappable(21);
+	newInput(16, nodeValue_Slider(      "Hue",        0, [-1,1,.01] )).setMappable(17);
+	newInput(18, nodeValue_Slider(      "Saturation", 0, [-1,1,.01] )).setMappable(19);
+	newInput(20, nodeValue_Slider(      "Value",      0, [-1,1,.01] )).setMappable(21);
 		
 	// input 25
 		

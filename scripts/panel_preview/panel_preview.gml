@@ -843,11 +843,6 @@ function Panel_Preview() : PanelContent() constructor {
                 var ax = px + dx * 0.2 * d3_pan_speed;
                 var ay = py + dy * 0.1 * d3_pan_speed;
                 
-                //if(py < 90 && ay >= 90) ax -= 180;
-                //if(py > 90 && ay <= 90) ax += 180;
-                
-                //print($"{ax},\t{ay}");
-                
                 d3_view_camera.focus_angle_x = ax;
                 d3_view_camera.focus_angle_y = ay;
                 d3_view_camera.projection = d3_cam_projection_lock;
