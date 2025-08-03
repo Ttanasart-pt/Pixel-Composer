@@ -15,7 +15,7 @@ function Node_PB_Box_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		["Mirror", false], 2, 
 	]
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _pbase = getSingleValue(0);
 		var _pbbox = getSingleValue(1);
 		var _axis  = getSingleValue(2);

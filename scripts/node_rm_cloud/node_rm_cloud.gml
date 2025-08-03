@@ -39,7 +39,7 @@ function Node_RM_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		["Render",    false], 13, 12, 
 	];
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { }
 	
 	static step = function() {
 		

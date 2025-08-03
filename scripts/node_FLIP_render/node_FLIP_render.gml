@@ -49,7 +49,7 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	array_push(attributeEditors, ["Update domain",        function() /*=>*/ {return attributes.update},    new checkBox(function() /*=>*/ {return toggleAttribute("update", true)})]);
 	array_push(attributeEditors, ["Draw Fluid Particles", function() /*=>*/ {return attributes.debugDraw}, new checkBox(function() /*=>*/ {return toggleAttribute("debugDraw")})]);
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var domain = getInputData(0);
 		if(!instance_exists(domain)) return;
 		if(domain.domain == noone)   return;

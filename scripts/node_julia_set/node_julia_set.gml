@@ -25,7 +25,7 @@ function Node_Julia_Set(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	    ["Transform", false], 2, 3, 4, 
     ];
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		
 	    var _pos = current_data[2];
 	    var _px  = _x + _pos[0] * _s;

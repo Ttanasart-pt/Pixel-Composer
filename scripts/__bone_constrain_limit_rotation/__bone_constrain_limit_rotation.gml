@@ -58,11 +58,11 @@ function __Bone_Constrain_Limit_Rotation(_bone, _bid = "") : __Bone_Constrain(_b
         var _wdx = _x + ui(8);
         var _wdw = _w - ui(16);
         var _wdh = ui(24);
+        var _dParam = new widgetParam(_wdx, _y, _wdw, _wdh, [ limit_min, limit_max ], {}, _m, _drawParam.rx, _drawParam.ry);
         
-        tb_limit.rx = _drawParam.rx;
-        tb_limit.ry = _drawParam.ry;
+        tb_limit.register(_drawParam.panel);
         tb_limit.setFocusHover(_focus, _hover);
-        tb_limit.draw(_wdx, _y, _wdw, _wdh, [ limit_min, limit_max ], {}, _m);
+        tb_limit.drawParam(_dParam);
         
         _y += _wdh + ui(8);
         wh += _wdh + ui(8);
@@ -70,9 +70,7 @@ function __Bone_Constrain_Limit_Rotation(_bone, _bid = "") : __Bone_Constrain(_b
         return wh;
     }
     
-    static serialize   = function() { 
-        var _map = {};
-        _map.type      = "Stretch To";
+    static onSerialize = function(_map) { 
         _map.bone_id   = bone_id;
         _map.limit_min = limit_min;
         _map.limit_max = limit_max;

@@ -23,7 +23,7 @@ function Node_Armature_From_Path(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	
 	////- Preview
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _path = inputs[0].getValue();
 		if(struct_has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		

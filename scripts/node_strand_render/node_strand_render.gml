@@ -53,7 +53,7 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	static onInspector2Update = function() /*=>*/ {return clearCache()};
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		if(!attributes.show_strand) return;
 		
 		var _strd = getInputData(1);

@@ -10,7 +10,7 @@ function Node_Mesh_Create_Path(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	////- Nodes
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		InputDrawOverlay(inputs[0].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 	
 		var mesh = outputs[0].getValue();

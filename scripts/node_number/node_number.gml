@@ -81,7 +81,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	draw_spd      = 0;
 	draw_knob_rng = [ 0, 360 ];
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _val = getInputData(0);
 		var _dsp = getInputData(2);
 		if(is_array(_val)) return false;

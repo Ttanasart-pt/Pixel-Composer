@@ -30,7 +30,7 @@ function Node_Honeycomb_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x
 		["Transform", false], 1, 3, 2, 
 	];
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 
 		return w_hovering;

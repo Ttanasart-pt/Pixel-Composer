@@ -152,7 +152,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	static drawPreview = function(_x, _y, _s) {}
  
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _pth  = outputs[1].getValue();
 		if(!is(_pth, _pathObject)) return;
 		

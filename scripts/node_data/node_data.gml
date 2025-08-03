@@ -2330,10 +2330,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		__preview_bbox = getPreviewBoundingBox()
 		
 		try {
-			return drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params);
+			var _hv = drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params);
+			if(_hv != undefined) w_hovering = w_hovering || _hv;
 		} catch(e) { log_warning($"{toString()}, drawOverlay", exception_print(e)); }
 		
-		return false;
+		return w_hovering;
 	}
 	
 	static drawOverlay    = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params = {}) {}

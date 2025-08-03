@@ -37,7 +37,7 @@ function Node_Blur_Radial(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	attribute_oversample();
 	attribute_interpolation();
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var pos  = getInputData(2);
 		var px   = _x + pos[0] * _s;
 		var py   = _y + pos[1] * _s;

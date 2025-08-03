@@ -50,7 +50,7 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	////- Nodes
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _resT = outputs[0].getValue();
 		if(is_array(_resT)) 
 		for( var i = 0, n = array_length(_resT); i < n; i++ ) {

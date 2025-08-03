@@ -60,7 +60,7 @@ function Node_Active_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	temp_surface = [ noone, noone, noone ];
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _bpos = getInputData(2);
 		var _brot = brush_prev.rot;
 		

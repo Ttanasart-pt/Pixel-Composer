@@ -75,7 +75,7 @@ function Node_Custom(_x, _y, _group = noone, _param = {}) : Node_Processor(_x, _
 	static onParseInfo = function() {}
 	static postBuild   = function() { parseInfo(); }
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) {  
 	    var _hov = false;
 	    
         for( var i = 0, n = array_length(node_overlay); i < n; i++ ) {

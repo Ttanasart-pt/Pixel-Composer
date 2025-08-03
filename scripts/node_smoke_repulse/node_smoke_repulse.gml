@@ -26,7 +26,7 @@ function Node_Smoke_Repulse(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group)
 	
 	temp_surface = [ noone ];
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _pos = getInputData(1);
 		var _rad = getInputData(2);
 		var px = _x + _pos[0] * _s;

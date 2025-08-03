@@ -25,7 +25,7 @@ function Node_VerletSim_to_Path(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		cached_pos = ds_map_create();
 	#endregion
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _msh = getInputData(0);
 		
 		if(is(_msh, Mesh)) {

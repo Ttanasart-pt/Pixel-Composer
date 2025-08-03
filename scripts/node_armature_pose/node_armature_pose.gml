@@ -83,12 +83,13 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	////- Preview
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _b = inputs[0].getValue();
 		if(!is(_b, __Bone) || !is(bonePose, __Bone)) return;
 		
 		var _hov  = noone;
 		var _bhov = anchor_selecting;
+		var hovering = false;
 		
 		for( var i = 0, n = array_length(boneArray); i < n; i++ ) {
 			var _bne = boneArray[i];
@@ -112,6 +113,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		bonePose.drawControl(attributes);
 		
 		if(anchor_selecting != noone) {
+			hovering = true;
 			var _bne = anchor_selecting[0];
 			
 			if(struct_has(boneMap, _bne.ID)) {
@@ -339,6 +341,8 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				} 
 			}
 		}
+	
+		return hovering;
 	}
 	
 	////- Update

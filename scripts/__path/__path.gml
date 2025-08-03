@@ -7,7 +7,7 @@ function Path(_node) constructor {
 	boundary    = new BoundingBox();
 	loop		= false;
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		node.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	

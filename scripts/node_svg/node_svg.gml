@@ -68,7 +68,7 @@ function Node_SVG(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	setTrigger(1, __txt("Refresh"), [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() /*=>*/ { readFile(path_get(getInputData(0))); triggerRender(); });
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _scale   = getInputData(1);
 		
 		if(is_instanceof(content, SVG)) 

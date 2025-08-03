@@ -28,7 +28,7 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		anc  = [ 0, 0 ];
 		p    = new __vec2P();
 		
-		static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 			if(struct_has(path, "drawOverlay")) 
 				path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 			
@@ -136,7 +136,7 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		inputs[4].setValue([_cx, _cy]);
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _path = getSingleValue(0, preview_index, true);
 		if(struct_has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		

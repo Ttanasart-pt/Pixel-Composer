@@ -527,7 +527,7 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 	}
 	
 	static __getBBOX = function() {
-		if(is_main) return [ 0, 0, 1, 1, 0, 0 ];
+		if(is_main) return [ infinity, infinity, -infinity, -infinity, 0, 0 ];
 		
 		var p0 = bone_head_pose;
 		var p1 = bone_tail_pose;
@@ -541,8 +541,9 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 	}
 	
 	static bbox = function() {
-		var _bbox = __getBBOX();
+		if(is_main && array_empty(childs)) return [0,0,1,1,1,1];
 		
+		var _bbox = __getBBOX();
 		for( var i = 0, n = array_length(childs); i < n; i++ ) {
 			var _bbox_ch = childs[i].bbox();
 			

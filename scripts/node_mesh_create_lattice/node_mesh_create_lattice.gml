@@ -16,7 +16,7 @@ function Node_Mesh_Create_Lattice(_x, _y, _group = noone) : Node(_x, _y, _group)
 		["Mesh", false], 1, 2, 
 	];
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var mesh = outputs[0].getValue();
 		
 		if(mesh != noone) {

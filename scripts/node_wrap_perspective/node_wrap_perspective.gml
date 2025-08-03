@@ -44,7 +44,7 @@ function Node_Warp_Perspective(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	drag_my   = 0;
 	drag_s    = [[0, 0], [0, 0]];
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		PROCESSOR_OVERLAY_CHECK
 		
 		if(array_length(current_data) < array_length(inputs)) return;

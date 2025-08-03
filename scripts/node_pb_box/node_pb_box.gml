@@ -20,7 +20,7 @@ function Node_PB_Box(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		["Layout Override", true], 2, 3, 4, 5, 6, 7, 
 	]
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _pbbox = getSingleValue(1);
 		if(is(_pbbox, __pbBox)) _pbbox.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, self);
 	}

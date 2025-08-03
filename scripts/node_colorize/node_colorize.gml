@@ -29,7 +29,7 @@ function Node_Colorize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	attribute_surface_depth();
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _dim = surface_get_dimension(getSingleValue(0));
 		InputDrawOverlay(inputs[12].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, _dim));
 		

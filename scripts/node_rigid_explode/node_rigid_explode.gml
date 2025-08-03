@@ -29,7 +29,7 @@ function Node_Rigid_Explode(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		["Explosion",  false], 1, 2, 3, 4, 
 	];
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		if(process_amount > 0) return;
 		
 		var _pos = getInputData(2);

@@ -2024,7 +2024,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} updateColor();
 	
 	__preview_bbox = noone;
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		if(expUse) return -1;
 		
 		var argc = 9;

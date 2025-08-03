@@ -30,7 +30,7 @@ function Node_Armature_IK(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static toggleBoneTarget = function(i) /*=>*/ { bone_targeting = bone_targeting == i? 0 : i; }
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		inputs[1].setSelecting(bone_targeting == 1);
 		inputs[2].setSelecting(bone_targeting == 2);
 		
@@ -39,7 +39,7 @@ function Node_Armature_IK(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		if(bone_targeting == 0) {
 			var _tar = getInputData(1);
 			bone.draw(attributes, false, _x, _y, _s, _mx, _my, noone, _tar);
-			return;
+			return true;
 		}
 		
 		var _b = getInputData(0);
@@ -52,6 +52,8 @@ function Node_Armature_IK(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			if(_hv != noone) inputs[bone_targeting].setValue(_hv[0].name);
 			bone_targeting = 0;
 		}
+		
+		return anchor_selecting != noone;
 	}
 	
 	////- Update

@@ -206,7 +206,13 @@ function Panel_Preview() : PanelContent() constructor {
         sample_color        = noone;
         sample_x            = noone;
         sample_y            = noone;
-    
+    	
+    	selection_active = false;
+    	selection_mx = 0;
+    	selection_my = 0;
+    	selection_sx = 0;
+    	selection_sy = 0;
+    	
     #endregion
     
     #region ---- preview ----
@@ -2338,7 +2344,34 @@ function Panel_Preview() : PanelContent() constructor {
 				_ovs *= _trans[2];
             }
             
-            if(!CAPTURING) _node.doDrawOverlay(overHover, overActive, _ovx, _ovy, _ovs, _mx, _my, _snx, _sny, params);
+            if(!CAPTURING) {
+            	var _hoveringGizmo = false;
+	            _hoveringGizmo = _node.doDrawOverlay(overHover, overActive, _ovx, _ovy, _ovs, _mx, _my, _snx, _sny, params);
+	            
+	            if(!_hoveringGizmo && overHover) {
+	            	if(mouse_lpress(overActive)) {
+	            		selection_active = true;
+	            		selection_sx = _mx;
+	            		selection_sy = _my;
+	            	}
+	            }
+	        }
+	        
+	        if(selection_active) {
+	        	selection_mx = _mx;
+        		selection_my = _my;
+        		
+        		var sel_x0 = min(selection_mx, selection_sx);
+        		var sel_y0 = min(selection_my, selection_sy);
+        		var sel_x1 = max(selection_mx, selection_sx);
+        		var sel_y1 = max(selection_my, selection_sy);
+        		
+        		draw_sprite_stretched_points_clamp(THEME.ui_selection, 0, selection_sx, selection_sy, mx, my, COLORS._main_accent);
+        		
+        		if(mouse_lrelease()) {
+        			selection_active = false;
+        		}
+	        }
             
         } else {
             if(key_mod_press(CTRL) || PROJECT.previewSetting.d3_tool_snap) {

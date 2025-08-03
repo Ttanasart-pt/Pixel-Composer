@@ -62,7 +62,7 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	_a = new __vec2P();
 	_param = { x:0, y:0, t:0, r:0, O:0 };
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		InputDrawOverlay(inputs[5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		return w_hovering;
 	}

@@ -17,7 +17,7 @@ function Node_Pack_Sprites(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	input_display_list = [ 0, 4, 1, 2, 3 ];
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) {  #region
 		var rect = outputs[1].getValue();
 		var spac = getInputData(4);
 		

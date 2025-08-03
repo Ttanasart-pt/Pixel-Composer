@@ -94,7 +94,7 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	mesh = new Mesh();
 	path = new PathSegment();
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		if(array_length(current_data) != array_length(inputs)) return;
 		if(process_amount > 1) return;
 		

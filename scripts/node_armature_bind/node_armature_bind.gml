@@ -17,31 +17,22 @@ function __armature_bind_data(_surface, _bone = noone, _tran = 0, _aang = 0, _pa
 function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Armature Bind";
 	
+	newInput(1, nodeValue_Armature()).setVisible(true, true).rejectArray();
+	newInput(2, nodeValue_Struct("Bind data", noone)).setVisible(true, true).shortenDisplay().setArrayDepth(1); 
+	
+	////- =Output
 	newInput(0, nodeValue_Dimension());
 	
-	newInput(1, nodeValue_Armature())
-		.setVisible(true, true)
-		.rejectArray();
-		
-	newInput(2, nodeValue_Struct("Bind data", noone))
-		.setVisible(true, true)
-		.shortenDisplay()
-		.setArrayDepth(1); 
-		
-	newInput(3, nodeValue_Vec2("Bone transform", [ 0, 0 ]));
-		
-	newInput(4, nodeValue_Slider("Bone scale", 1, [ 0.1, 2, 0.01 ] ));
+	////- =Armature
+	newInput(3, nodeValue_Vec2(   "Bone transform", [0,0] ));
+	newInput(4, nodeValue_Slider( "Bone scale",      1, [.1,2,.01] ));
+	// inputs 5
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
-	
-	newOutput(1, nodeValue_Output("Atlas data", VALUE_TYPE.atlas, []))
-		.rejectArrayProcess();
-	
-	newOutput(2, nodeValue_Output("Bind data", VALUE_TYPE.struct, []))
-		.shortenDisplay()
-		.setArrayDepth(1);
+	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
+	newOutput(1, nodeValue_Output( "Atlas data",  VALUE_TYPE.atlas,   []    )).rejectArrayProcess();
+	newOutput(2, nodeValue_Output( "Bind data",   VALUE_TYPE.struct,  []    )).shortenDisplay().setArrayDepth(1);
 	
 	attribute_surface_depth();
 	attribute_interpolation();
@@ -494,8 +485,9 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		ds_stack_destroy(_bst);
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var dim   = getInputData(0);
+		var panel = _params.panel;
 		
 		if(isUsingTool("Pose")) { 
 			var _x0 = _x;
@@ -504,13 +496,11 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var _y1 = _y + dim[1] * _s;
 			
 			draw_set_color_alpha(COLORS.panel_bg_clear, .5);
-				draw_rectangle(_x0, _y0, _x1 - 1, _y1 - 1, false);
+				draw_rectangle(0, 0, panel.w, panel.h, false);
 			draw_set_alpha(1);
 			
 			var _arm = inputs[1].value_from;
-			if(_arm == noone) return;
-			
-			return _arm.node.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+			return _arm != noone? _arm.node.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) : false;
 		}
 		
 		var _bind = getInputData(2);
@@ -606,7 +596,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			}
 		}
 		
-		var hovering = noone;
+		var hovering      = noone;
 		var hovering_type = noone;
 		var _vis = attributes.layer_visible;
 		var _sel = attributes.layer_selectable;
@@ -741,6 +731,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 		if(mouse_press(mb_left, active))
 			surface_selecting = hovering;
+			
 		if(surface_selecting != noone) {
 			var a = array_safe_get_fast(anchors, surface_selecting, noone);
 			if(!is_struct(a)) surface_selecting = noone;
@@ -799,6 +790,8 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			deleteLayer(layer_remove);
 			layer_remove = -1;
 		}
+		
+		return hovering != noone;
 	}
 	
 	static processData_prebatch = function() {

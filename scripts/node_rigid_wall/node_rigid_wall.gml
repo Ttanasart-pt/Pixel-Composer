@@ -27,7 +27,7 @@ function Node_Rigid_Wall(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		["Physics",	false],	1, 4, 
 	];
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		if(!is(inline_context, Node_Rigid_Group_Inline)) return;
 		var _dim  = inline_context.dimension;
 		var _sids = getInputData(0);

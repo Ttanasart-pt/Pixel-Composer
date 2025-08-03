@@ -17,7 +17,7 @@ function Node_VerletSim_Mesh_Cache_Lerp(_x, _y, _group = noone) : Node(_x, _y, _
 	
 	////- Nodes
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		
 	}
 	

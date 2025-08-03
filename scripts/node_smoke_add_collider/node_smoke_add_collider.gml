@@ -19,7 +19,7 @@ function Node_Smoke_Add_Collider(_x, _y, _group = noone) : Node_Smoke(_x, _y, _g
 	
 	newOutput(0, nodeValue_Output("Domain", VALUE_TYPE.sdomain, noone));
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _mat = getInputData(1);
 		var _area = getInputData(2);
 		

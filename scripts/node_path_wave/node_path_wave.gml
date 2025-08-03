@@ -61,7 +61,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		cached_pos = {};
 		curr_path  = noone;
 		
-		static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 			if(is_path(curr_path)) curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 			
 			draw_set_color(COLORS._main_icon);
@@ -186,7 +186,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		static getPointDistance = function(_dist, ind = 0, out = undefined) { return getPointRatio(_dist / getLength(), ind, out); }
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _path = getSingleValue(0, preview_index, true);
 		if(struct_has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}

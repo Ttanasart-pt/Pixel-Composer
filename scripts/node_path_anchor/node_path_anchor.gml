@@ -25,7 +25,7 @@ function Node_Path_Anchor(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		new NodeTool( "Adjust control point", THEME.path_tools_anchor ),
 	];
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		PROCESSOR_OVERLAY_CHECK
 		
 		var _pos = current_data[0];

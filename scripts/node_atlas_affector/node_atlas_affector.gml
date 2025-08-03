@@ -74,7 +74,7 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		return surface_get_dimension(_atlas.oriSurf);
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _atlas = inputs[0].getValue();
 		
 		for( var i = 0, n = array_length(_atlas); i < n; i++ ) {

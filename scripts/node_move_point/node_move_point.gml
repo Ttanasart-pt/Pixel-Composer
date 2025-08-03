@@ -24,7 +24,7 @@ function Node_Move_Point(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		["Scale",    false], 4, 
 	];
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _anc = getSingleValue(1);
 		var _px  = _x + _anc[0] * _s;
 		var _py  = _y + _anc[1] * _s;

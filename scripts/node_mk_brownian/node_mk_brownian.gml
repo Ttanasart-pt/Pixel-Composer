@@ -41,7 +41,7 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		["Render",    false], 13, 6, 7, 
 	];
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		
 		return w_hovering;

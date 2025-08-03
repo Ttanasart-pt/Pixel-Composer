@@ -13,7 +13,7 @@ function Node_Mesh_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	__pp = [ 0, 0 ];
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var imesh = getInputData(0);
 		var omesh = outputs[0].getValue();
 		if(imesh == noone) return w_hovering;

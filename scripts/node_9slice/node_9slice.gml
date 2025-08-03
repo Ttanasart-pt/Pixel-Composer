@@ -43,7 +43,7 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		inputs[1].setValue( [ surface_get_width_safe(s), surface_get_height_safe(s) ] );
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		PROCESSOR_OVERLAY_CHECK
 		
 		var _dim    = isUsingTool("Preview Original")? surface_get_dimension(getSingleValue(0)) : current_data[1];

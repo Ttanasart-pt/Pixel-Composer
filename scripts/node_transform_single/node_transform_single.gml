@@ -47,7 +47,7 @@ function Node_Transform_Single(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	overlay_drag_ma  = 0;
 	overlay_drag_sa  = 0;
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		PROCESSOR_OVERLAY_CHECK
 		
 		if(array_length(current_data) < array_length(inputs)) return;

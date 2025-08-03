@@ -204,7 +204,7 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 
 	attributes.manual_position = [];
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { }
 	
 	////- Updates
 	

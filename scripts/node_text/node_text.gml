@@ -142,7 +142,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		return random_range_seed(-1, 1, _x + seed) * __wave_ampli;
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _hov = false;
 		
 		var _pth = getSingleValue(13);

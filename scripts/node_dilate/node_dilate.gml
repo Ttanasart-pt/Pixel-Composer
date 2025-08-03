@@ -31,7 +31,7 @@ function Node_Dilate(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	attribute_oversample();
 	attribute_interpolation();
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		PROCESSOR_OVERLAY_CHECK
 		
 		var pos  = current_data[1];

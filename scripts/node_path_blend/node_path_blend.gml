@@ -36,7 +36,7 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		accu_lengths = [];
 		total_length = [];
 		
-		static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 			
 			if(is_path1 && struct_has(curr_path1, "drawOverlay")) curr_path1.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 			if(is_path2 && struct_has(curr_path2, "drawOverlay")) curr_path2.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
@@ -193,7 +193,7 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		}
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _path = getSingleValue(0, preview_index, true);
 		if(struct_has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}

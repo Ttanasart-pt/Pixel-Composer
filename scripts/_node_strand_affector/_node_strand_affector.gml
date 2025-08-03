@@ -61,7 +61,7 @@ function _Node_Strand_Affector(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		["Shape",		false], 1, 2, 3, 4, 5, 
 	];
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 
 		var _typ = getInputData(1);
 		var _pos = getInputData(2);

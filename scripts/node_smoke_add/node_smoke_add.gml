@@ -46,7 +46,7 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 	
 	static getDimension = function() { var _dom = getInputData(0); return is(_dom, smokeSim_Domain)? [_dom.width, _dom.height] : [1,1]; }
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		
 		var _typ = getInputData(8);
 		var _mat = getInputData(1);

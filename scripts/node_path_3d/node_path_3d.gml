@@ -138,7 +138,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		}
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { }
 	
 	static drawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) {
 		var ansize = array_length(inputs) - input_fix_len;

@@ -34,14 +34,14 @@ function Node_Armature_Subdivide(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	
 	static toggleBoneTarget = function() /*=>*/ { bone_targeting = !bone_targeting; }
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		inputs[1].setSelecting(bone_targeting);
 		
 		if(!is(bone, __Bone)) return;
 		if(!bone_targeting) {
 			var _tar = getInputData(1);
 			bone.draw(attributes, false, _x, _y, _s, _mx, _my, noone, _tar);
-			return;
+			return true;
 		}
 		
 		var _b = getInputData(0);
@@ -54,6 +54,8 @@ function Node_Armature_Subdivide(_x, _y, _group = noone) : Node(_x, _y, _group) 
 			if(_hv != noone) inputs[1].setValue(_hv[0].name);
 			bone_targeting = false;
 		}
+		
+		return anchor_selecting != noone;
 	}
 	
 	////- Update

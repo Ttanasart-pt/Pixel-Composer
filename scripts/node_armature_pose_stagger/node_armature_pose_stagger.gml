@@ -58,7 +58,7 @@ function Node_Armature_Pose_Stagger(_x, _y, _group = noone) : Node(_x, _y, _grou
 	
 	static toggleBoneTarget = function() /*=>*/ { bone_targeting = !bone_targeting; }
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		inputs[1].setSelecting(bone_targeting);
 		
 		var _b = inputs[0].getValue();
@@ -67,7 +67,7 @@ function Node_Armature_Pose_Stagger(_x, _y, _group = noone) : Node(_x, _y, _grou
 		if(!bone_targeting) {
 			var _tar = getInputData(1);
 			bonePose.draw(attributes, false, _x, _y, _s, _mx, _my, noone, _tar);
-			return;
+			return true;
 		}
 		
 		var _b = getInputData(0);
@@ -80,6 +80,8 @@ function Node_Armature_Pose_Stagger(_x, _y, _group = noone) : Node(_x, _y, _grou
 			if(_hv != noone) inputs[1].setValue(_hv[0].name);
 			bone_targeting = false;
 		}
+		
+		return anchor_selecting != noone;
 	}
 	
 	////- Update

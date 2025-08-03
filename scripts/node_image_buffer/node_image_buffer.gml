@@ -7,7 +7,7 @@ function Node_Image_Buffer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	attributes.width  = 1;
 	attributes.height = 1;
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { }
 	
 	static step = function() {}
 	

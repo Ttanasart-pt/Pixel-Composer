@@ -73,7 +73,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		return inputs[index];
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var sample = PREFERENCES.path_resolution;
 		var loop   = getInputData(0);
 		var rond   = getInputData(1);

@@ -200,11 +200,12 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	current_bone = noone;
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _bones = inputs[0].getValue();
 		var _mesh  = inputs[1].getValue();
 		var _rdata = attributes.baked? attributes.bakeData : rigdata;
 		var _boneTargetID = noone;
+		var _hovering     = false;
 		brush_bone_target = noone;
 		
 		__weights = anchor_selecting == noone? noone : struct_try_get(_rdata, anchor_selecting[0].ID, noone);
@@ -275,7 +276,7 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			
 		}
 		
-		if(bone_posed == noone) return;
+		if(bone_posed == noone) return _hovering;
 		
 		var mx  = (_mx - _x) / _s;
 		var my  = (_my - _y) / _s;
@@ -284,6 +285,7 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		
 		if(isUsingTool("Pose")) {
 			anchor_selecting = bone_posed.draw(attributes, active * 0b111, _x, _y, _s, _mx, _my, anchor_selecting, posing_bone);
+			_hovering = _hovering || anchor_selecting != noone;
 			
 			if(posing_bone) {
 				if(posing_type == 0 && posing_bone.parent) { //move
@@ -369,11 +371,12 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 					posing_my = my;
 				}
 			}
-			return;
+			return _hovering;
 		} 
 		
 		if(attributes.baked && (isUsingTool("Weight Brush") || isUsingTool("Weight Eraser"))) {
-			if(_boneTargetID == noone) return;
+			if(_boneTargetID == noone) return _hovering;
+			_hovering = true;
 			
 			draw_set_color(COLORS._main_icon);
 			draw_set_circle_precision(32);
@@ -423,7 +426,8 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			}
 			
 			if(_boneTarget != noone) _boneTarget.drawBone(attributes, false, _x, _y, _s, _mx, _my, noone, noone, c_white, 1);
-			return;
+			
+			return _hovering;
 		}
 		
         for( var i = 0, n = array_length(bone_array); i < n; i++ ) {
@@ -431,6 +435,9 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
         	var _l = attributes.rigBones == noone || array_exists(attributes.rigBones, _b.ID);
 			_b.drawBone(attributes, false, _x, _y, _s, _mx, _my, anchor_selecting, noone, c_white, 0.25 + _l * 0.75);
         }
+        
+        _hovering = _hovering || anchor_selecting != noone;
+        return _hovering;
 	}
 	
 	static AutoWeightPaint = function(_render = true) {

@@ -47,7 +47,7 @@ function Node_Dotted(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	////- Nodes
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		PROCESSOR_OVERLAY_CHECK
 		
 		var _pos = getSingleValue(14);

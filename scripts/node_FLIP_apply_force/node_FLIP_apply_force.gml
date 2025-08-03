@@ -54,7 +54,7 @@ function Node_FLIP_Apply_Force(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		return [ domain.width, domain.height ];
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _posit = getInputData(1);
 		var _rad   = getInputData(2);
 		var _shp   = getInputData(3);

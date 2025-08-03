@@ -36,7 +36,7 @@ function Node_Rigid_Sensor(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	detectCapacity = 1024;
 	detectBuffer   = buffer_create(4 * detectCapacity, buffer_fixed, 4);
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		
 		var _typ = getInputData(1);

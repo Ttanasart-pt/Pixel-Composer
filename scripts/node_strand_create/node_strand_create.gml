@@ -121,7 +121,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		tool_grabbing = [];
 	#endregion
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _typ = getInputData(0);
 		var _pre = getInputData(16);
 		if(!attributes.use_groom && attributes.show_strand) strands.draw(_x, _y, _s, _pre);

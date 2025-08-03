@@ -7,7 +7,7 @@ function Node_PB_Crop_PBBOX(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	newOutput(0, nodeValue_Output("Surface", VALUE_TYPE.surface, noone));
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _pbbox = getSingleValue(1);
 		if(is(_pbbox, __pbBox)) _pbbox.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, self);
 	}

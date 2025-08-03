@@ -29,7 +29,7 @@ function Node_Rigid_Object_Segment(_x, _y, _group = noone) : Node(_x, _y, _group
 		["Physics",	false],	2, 3, 
 	];
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _pst = getInputData(0);
 		var _ped = getInputData(1);
 		

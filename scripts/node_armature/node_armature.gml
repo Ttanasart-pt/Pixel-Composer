@@ -190,15 +190,17 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			rx: constrain_renderer.rx, 
 			ry: constrain_renderer.ry,
 			
-			selecting: anchor_selecting,
+			selecting:  anchor_selecting,
 			bone_array: bone_array,
+			
+			panel: constrain_renderer.parent, 
 		}
 		
 		for( var i = 0, n = array_length(constrains); i < n; i++ ) {
 			var _con = constrains[i];
 			
 			draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, ty, _w, _con.draw_height + ui(32), COLORS.node_composite_bg_blend, 1);
-			draw_sprite_ui(s_bone_constrain, _con.sindex, _x + ui(4 + 16), ty + ui(16), 1, 1, 0, c_white, 1);
+			draw_sprite_ext(s_bone_constrain, _con.sindex, _x + ui(4 + 16), ty + ui(16), UI_SCALE, UI_SCALE);
 			
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
 			draw_text_add(_x + ui(4 + 32), ty + ui(6), _con.name);
@@ -208,8 +210,8 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			
 			if(point_in_circle(_m[0], _m[1], bx, by, 16)) {
 				draw_sprite_ui_uniform(THEME.icon_delete, 3, bx, by, 1, COLORS._main_value_negative);
-				
 				if(mouse_press(mb_left, _focus)) _del = i;
+				
 			} else 
 				draw_sprite_ui_uniform(THEME.icon_delete, 3, bx, by, 1, COLORS._main_icon);
 			
@@ -294,7 +296,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	
 	mirroring_bone = noone;
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _panel) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var mx = (_mx - _x) / _s;
 		var my = (_my - _y) / _s;
 		
@@ -302,6 +304,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		var smy = value_snap(my, _sny);
 		
 		var _b = bones;
+		var hovering = false;
 		
 		if(builder_bone != noone) {
 			gpu_set_texfilter(true);
@@ -598,10 +601,12 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					draw_rectangle(x0, y0, x1, y1, true);
 					draw_set_alpha(1);
 					
-					draw_anchor(_hov_type == 0, x0, y0, _r);
-					draw_anchor(_hov_type == 1, x1, y0, _r);
-					draw_anchor(_hov_type == 2, x0, y1, _r);
-					draw_anchor(_hov_type == 3, x1, y1, _r);
+					draw_anchor(_hov_type == 0, x0, y0, _r, 2);
+					draw_anchor(_hov_type == 1, x1, y0, _r, 2);
+					draw_anchor(_hov_type == 2, x0, y1, _r, 2);
+					draw_anchor(_hov_type == 3, x1, y1, _r, 2);
+					
+					if(_hov_type >= -1) hovering = true;
 					
 					if(_hov_type >= -1 && mouse_press(mb_left, active)) {
 						bone_arr = _b.toArray();
@@ -626,6 +631,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				break;
 				
 			case "Add bones" : 
+				hovering = true;
 				if(builder_bone == noone) {
 					anchor_selecting = _b.draw(attributes, active * 0b111, _x, _y, _s, _mx, _my, anchor_selecting);
 					_b.drawControl(attributes);
@@ -882,6 +888,9 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				}
 				break;
 		}
+		
+		if(anchor_selecting != noone) hovering = true;
+		return hovering;
 	} 
 	
 	static step = function() {}

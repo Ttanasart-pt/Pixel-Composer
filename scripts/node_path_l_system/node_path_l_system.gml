@@ -181,7 +181,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			refreshDynamicInput();
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		
 		var _out = getSingleValue(0, preview_index, true);

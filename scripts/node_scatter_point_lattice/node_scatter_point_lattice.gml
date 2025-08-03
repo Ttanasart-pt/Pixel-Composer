@@ -28,7 +28,7 @@ function Node_Scatter_Point_Lattice(_x, _y, _group = noone) : Node_Processor(_x,
 	
 	////- Nodes
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _area = getSingleValue(1);
 		var _subd = getSingleValue(2);
 		

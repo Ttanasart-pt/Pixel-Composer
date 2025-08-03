@@ -67,7 +67,7 @@ function SVGElement(svgObj = noone) constructor {
 	
 	static draw = function(scale = 1) {}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { }
 }
 
 function SVG(svgObj = noone) : SVGElement(svgObj) constructor {
@@ -125,7 +125,7 @@ function SVG(svgObj = noone) : SVGElement(svgObj) constructor {
 		}
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		for (var i = 0, n = array_length(contents); i < n; i++)
 			contents[i].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
@@ -673,7 +673,7 @@ function SVG_path(svgObj = noone) : SVGElement(svgObj) constructor {
 		surface_free(_temp[1]);
 	}
 
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		
 		for (var i = 0, n = array_length(segments); i < n; i++) {
 			var _seg = segments[i];
@@ -751,7 +751,7 @@ function SVG_rect(svgObj = noone) : SVGElement(svgObj) constructor {
 			draw_rectangle_border(_x, _y, _x + _w, _y + _h, stroke_width);
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		
 		var _ox = _x + x * _s;
 		var _oy = _y + y * _s;
@@ -796,7 +796,7 @@ function SVG_circle(svgObj = noone) : SVGElement(svgObj) constructor {
 			draw_circle_border(_cx, _cy, _r, stroke_width);
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		
 		var _ox = _x + cx * _s;
 		var _oy = _y + cy * _s;
@@ -843,7 +843,7 @@ function SVG_ellipse(svgObj = noone) : SVGElement(svgObj) constructor {
 			draw_ellipse_border(_cx - _rx, _cy - _ry, _cx + _rx, _cy + _ry, stroke_width);
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		
 		var _ox = _x + cx * _s;
 		var _oy = _y + cy * _s;
@@ -886,7 +886,7 @@ function SVG_line(svgObj = noone) : SVGElement(svgObj) constructor {
 			draw_line_width(_x0, _y0, _x1, _y1, stroke_width);
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		
 		var _x0 = _x + x0 * _s;
 		var _y0 = _y + y0 * _s;
@@ -930,7 +930,7 @@ function SVG_polyline(svgObj = noone) : SVGElement(svgObj) constructor {
 		
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		
 		draw_set_color(COLORS._main_accent);
 		
@@ -985,7 +985,7 @@ function SVG_polygon(svgObj = noone) : SVGElement(svgObj) constructor {
 		
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		
 		draw_set_color(COLORS._main_accent);
 		

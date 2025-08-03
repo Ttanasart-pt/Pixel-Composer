@@ -38,7 +38,7 @@ function Node_Path_Flattern(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			
 		#endregion
 		
-		static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 			if(curr_path && struct_has(curr_path, "drawOverlay")) 
 				curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		}
@@ -89,7 +89,7 @@ function Node_Path_Flattern(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _path = outputs[0].getValue();
 		if(struct_has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}

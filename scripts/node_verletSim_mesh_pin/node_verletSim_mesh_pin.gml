@@ -27,7 +27,7 @@ function Node_VerletSim_Mesh_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	
 	////- Nodes
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _msh = getInputData(0);
 		var _typ = getInputData(3);
 		

@@ -43,7 +43,7 @@ function Node_Path_Profile(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	temp_surface = [ surface_create(1, 1) ];
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) {  #region
 		var _path = getInputData(1);
 		if(_path && struct_has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	} #endregion

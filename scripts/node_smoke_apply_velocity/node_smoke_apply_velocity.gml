@@ -30,7 +30,7 @@ function Node_Smoke_Apply_Velocity(_x, _y, _group = noone) : Node_Smoke(_x, _y, 
 	
 	temp_surface = [ noone ];
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _typ = getInputData(5);
 		var _mat = getInputData(1);
 		var _pos = getInputData(2);

@@ -20,7 +20,7 @@ function Node_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		["Positions", false], 0, 1, 2, 
 	]
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		PROCESSOR_OVERLAY_CHECK
 		
 		var _shape = current_data[2];

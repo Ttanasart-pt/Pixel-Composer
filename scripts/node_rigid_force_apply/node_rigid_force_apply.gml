@@ -46,7 +46,7 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	array_push(attributeEditors, ["Show objects",  function() /*=>*/ {return attributes.show_objects},  new checkBox(function() /*=>*/ {return toggleAttribute("show_objects")})]);
 	array_push(attributeEditors, ["Display scale", function() /*=>*/ {return attributes.display_scale}, textBox_Number(function(v) /*=>*/ {return setAttribute("display_scale", v)})]);
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		if(process_amount > 0) return;
 		
 		var _typ = getInputData(1);
