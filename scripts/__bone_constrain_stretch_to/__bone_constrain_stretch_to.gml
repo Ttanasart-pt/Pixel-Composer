@@ -1,13 +1,16 @@
 function __Bone_Constrain_Stretch_To(_bone, _bid = "", _tid = "") : __Bone_Constrain(_bone) constructor {
-    name      = "Stretch To";
+    name      = "Stretch To Bone";
     sindex    = 5;
     bone_id   = _bid;
     target_id = _tid;
-    strength  = 1;
     
     bone_object   = noone;
     target_object = noone;
     
+    context  = 0;
+    strength = 1;
+    
+    context_bt  = new buttonGroup([ "Bone", "Global" ], function(i) /*=>*/ { context = i; node.triggerRender(); });
     tb_strength = slider(,,, function(v) /*=>*/ { strength = clamp(v, 0, 1); node.triggerRender(); }).setLabel("Strength").setBoxColor(COLORS._main_icon_light);
     
     ////- Actions
@@ -40,7 +43,7 @@ function __Bone_Constrain_Stretch_To(_bone, _bid = "", _tid = "") : __Bone_Const
         var _wdx =  _x + ui(8);
         var _wdw = (_w - ui(16 + 12)) / 2;
         var _wd2 = _wdx + _wdw + ui(12);
-        var _wdh = ui(24);
+        var _wdh = ui(20);
         draw_sprite_stretched_ext(THEME.textbox, 3, _wdx, _y, _wdw, _wdh, COLORS._main_icon_light, 1);
         draw_sprite_stretched_ext(THEME.textbox, 3, _wd2, _y, _wdw, _wdh, COLORS._main_icon_light, 1);
         
@@ -48,7 +51,7 @@ function __Bone_Constrain_Stretch_To(_bone, _bid = "", _tid = "") : __Bone_Const
             var _bname = bone_object.name;
             
             draw_sprite_ui(THEME.bone, 1, _wdx + ui(16), _y + _wdh / 2, 1, 1, 0, COLORS._main_icon, 1);
-            draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
+            draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text);
             draw_text_add(_wdx + ui(32), _y + _wdh / 2, _bname);
             
         } else
@@ -58,7 +61,7 @@ function __Bone_Constrain_Stretch_To(_bone, _bid = "", _tid = "") : __Bone_Const
             var _bname = target_object.name;
             
             draw_sprite_ui(THEME.bone, 1, _wd2 + ui(16), _y + _wdh / 2, 1, 1, 0, COLORS._main_icon, 1);
-            draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
+            draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text);
             draw_text_add(_wd2 + ui(32), _y + _wdh / 2, _bname);
             
         } else
@@ -78,18 +81,19 @@ function __Bone_Constrain_Stretch_To(_bone, _bid = "", _tid = "") : __Bone_Const
         
         draw_sprite_ui_uniform(THEME.arrow, 0, _x + _w / 2 - ui(1), _y + _wdh / 2, 1, COLORS._main_icon);
         
-        _y += _wdh + ui(4);
-        wh += _wdh + ui(4);
-        
         // draw widget
         var _lbx = _x + ui(16);
+        var _wdw = _w * 2/3;
+        var _wdx = _x + _w - _wdw - ui(8);
+        
+        _y += _wdh + ui(4);
+        wh += _wdh + ui(4);
         
         draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text);
         draw_text_add(_lbx, _y + _wdh / 2, __txt("Strength"));
         
         var _wdw = _w * 2/3;
         var _wdx = _x + _w - _wdw - ui(8);
-        var _wdh = ui(24);
         var _dParam = new widgetParam(_wdx, _y, _wdw, _wdh, strength, {}, _m, _drawParam.rx, _drawParam.ry)
             .setFont(f_p3).setScrollpane(_drawParam.panel).setFocusHover(_focus, _hover);
         tb_strength.drawParam(_dParam);
@@ -98,6 +102,21 @@ function __Bone_Constrain_Stretch_To(_bone, _bid = "", _tid = "") : __Bone_Const
         wh += _wdh + ui(8);
         
         return wh;
+    }
+    
+    static drawBone = function(_b, _x, _y, _s) {
+        var _bone   = bone_id == ""?   noone : _b.findBone(bone_id);
+        var _target = target_id == ""? noone : _b.findBone(target_id);
+        if(_bone == noone || _target == noone) return;
+        
+        var p0x = _x + _bone.bone_head_pose.x * _s;
+		var p0y = _y + _bone.bone_head_pose.y * _s;
+		var p1x = _x + _target.bone_head_pose.x * _s;
+		var p1y = _y + _target.bone_head_pose.y * _s;
+		
+		draw_set_color_alpha(COLORS._main_icon, .5);
+		draw_line_dashed(p0x, p0y, p1x, p1y);
+		draw_set_alpha(1);
     }
     
     ////- Serialize

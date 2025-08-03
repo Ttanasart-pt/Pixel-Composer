@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"__bone_constrain_stretch_to_point",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__bone_constrain_stretch_to_point",
+  "parent":{
+    "name":"constrain",
+    "path":"folders/nodes/data/armature/constrain.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

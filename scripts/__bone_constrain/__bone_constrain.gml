@@ -1,15 +1,17 @@
 function __Bone_Constrain(_bone) constructor {
-    name = "Constrain";
-    bone = _bone;
+    name    = "Constrain";
+    bone    = _bone;
+    bone_id = "";
+    node    = noone;
+    
     draw_height = 0;
-    node = noone;
     
     static init         = function() /*=>*/ {}
     static preConstrain = function() /*=>*/ {}
     static constrain    = function() /*=>*/ {}
     
     static drawInspector = function(_x, _y, _w, _m, _hover, _focus, _drawParam) { return 0; }
-    static drawBone = function(_x, _y, _s) {}
+    static drawBone = function(_b, _x, _y, _s) {}
     
     static build = function(type, _bid = "") { 
     	

@@ -90,7 +90,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var _bhov = anchor_selecting;
 		var hovering = false;
 		
-		// for( var i = 0, n = array_length(bonePose.constrains); i < n; i++ ) bonePose.constrains[i].drawBone(_x, _y, _s);
+		for( var i = 0, n = array_length(bonePose.constrains); i < n; i++ ) bonePose.constrains[i].drawBone(bonePose, _x, _y, _s);
 		
 		for( var i = 0, n = array_length(boneArray); i < n; i++ ) {
 			var _bne = boneArray[i];
@@ -106,7 +106,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			}
 			
 			var hh = _bne.drawBone(attributes, _sel * active * 0b111, _x, _y, _s, _mx, _my, _bhov, posing_bone, cc, .5 + .5 * _sel);
-			if(hh != noone && (_hov == noone || _bne.IKlength)) _hov = hh;
+			if(hh != noone && (_hov == noone || _bne.control)) _hov = hh;
 		}
 		
 		anchor_selecting = _hov;
@@ -250,7 +250,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			var _typ = anchor_selecting[1];
 			var _lck = key_mod_press(ALT);
 			
-			if(_bne.IKlength) _typ = 0;
+			if(_bne.control) _typ = 0;
 			
 			gpu_set_texfilter(true);
 			

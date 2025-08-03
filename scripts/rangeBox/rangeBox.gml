@@ -27,6 +27,12 @@ function rangeBox(_onModify) : widget() constructor {
 	
 	for(var i = 0; i < 2; i++) tb[i] = new textBox(TEXTBOX_INPUT.number, onModifySingle[i]).setHide(true).setLabel(labels[i]);
 	
+	static setBoxColor = function(_v) /*=>*/ { 
+		tb[0].setBoxColor(_v); 
+		tb[1].setBoxColor(_v); 
+		return self; 
+	}
+	
 	static setFont = function(_f = noone) /*=>*/ { 
 		font = _f;
 		tb[0].setFont(_f);

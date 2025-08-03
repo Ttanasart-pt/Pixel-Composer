@@ -133,6 +133,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		inputMap         = {};
 		outputMap        = {};
 		input_value_map  = {};
+		dimension_index  = 0;
 		
 		use_display_list		= true;
 		input_display_list		= -1;

@@ -2804,29 +2804,46 @@ function Panel_Preview() : PanelContent() constructor {
     	var prevS = getNodePreviewSurface();
     	var _surfMode = is_surface(prevS);
     	
+    	if(!_surfMode) selection_active = false;
+    	
+    	var mmx = mx;
+    	var mmy = my;
+    	
+    	if(PROJECT.previewGrid.snap || key_mod_press(CTRL)) {
+	    	var _snx = PROJECT.previewGrid.show? PROJECT.previewGrid.size[0] : 1;
+	        var _sny = PROJECT.previewGrid.show? PROJECT.previewGrid.size[1] : 1;
+	        
+	        mmx = value_snap(mmx, _snx);
+			mmy = value_snap(mmy, _sny);
+    	}
+    	
     	if(hoveringContent && !hoveringGizmo) {
         	if(mouse_lpress(pFOCUS)) {
         		selection_active    = false;
         		selection_selecting = true;
-        		selection_sx = mx;
-        		selection_sy = my;
+        		selection_sx = mmx;
+        		selection_sy = mmy;
         	}
         }
         
         if(selection_selecting) {
-        	selection_mx = mx;
-    		selection_my = my;
+        	selection_mx = mmx;
+    		selection_my = mmy;
     		
-    		var _x0 = (min(selection_mx, selection_sx) - canvas_x) / canvas_s;
-	    	var _y0 = (min(selection_my, selection_sy) - canvas_y) / canvas_s;
-	    	var _x1 = (max(selection_mx, selection_sx) - canvas_x) / canvas_s;
-	    	var _y1 = (max(selection_my, selection_sy) - canvas_y) / canvas_s;
+	    	var _x0 = (selection_sx - canvas_x) / canvas_s;
+	    	var _y0 = (selection_sy - canvas_y) / canvas_s;
+    		var _x1 = (selection_mx - canvas_x) / canvas_s;
+	    	var _y1 = (selection_my - canvas_y) / canvas_s;
     		
     		if(_surfMode) {
-    			_x0 = round(_x0);
-				_y0 = round(_y0);
-				_x1 = round(_x1);
-				_y1 = round(_y1);
+    			_x0 = round(_x0); _y0 = round(_y0);
+				_x1 = round(_x1); _y1 = round(_y1);
+    		}
+    		
+    		if(key_mod_press(SHIFT)) {
+    			var _ss = min(abs(_x1 - _x0), abs(_y1 - _y0));
+    			_x1 = _x0 + _ss * sign(_x1 - _x0);
+    			_y1 = _y0 + _ss * sign(_y1 - _y0);
     		}
     		
     		var _xx0 = canvas_x + _x0 * canvas_s;
@@ -2844,10 +2861,10 @@ function Panel_Preview() : PanelContent() constructor {
     			selection_selecting = false;
     			
     			if(_surfMode) {
-			    	selection_x0 = _x0;
-			    	selection_y0 = _y0;
-			    	selection_x1 = _x1;
-			    	selection_y1 = _y1;
+			    	selection_x0 = min(_x0, _x1);
+			    	selection_y0 = min(_y0, _y1);
+			    	selection_x1 = max(_x0, _x1);
+			    	selection_y1 = max(_y0, _y1);
 			    	
 			    	if(selection_x0 != selection_x1 && selection_y0 != selection_y1)
 	    				selection_active = true;
@@ -2861,10 +2878,10 @@ function Panel_Preview() : PanelContent() constructor {
         	var sx1 = canvas_x + selection_x1 * canvas_s;
         	var sy1 = canvas_y + selection_y1 * canvas_s;
         	
-        	draw_set_color(c_black);
+        	draw_set_color(COLORS._main_accent);
         	draw_rectangle(sx0, sy0, sx1, sy1, true);
         	draw_set_color(c_white);
-        	draw_rectangle_dashed(sx0, sy0, sx1 + 1, sy1 + 1);
+        	draw_rectangle_dashed(sx0 - 1, sy0 - 1, sx1, sy1);
         	
         }
     }

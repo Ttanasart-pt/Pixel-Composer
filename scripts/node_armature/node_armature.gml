@@ -32,17 +32,22 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	}
 	
 	bone_constrain_menu = [
-		new MenuItem("Copy Position",  function() /*=>*/ { addConstain("__Bone_Constrain_Copy_Position")  }, [ s_bone_constrain, 0, 1, c_white ]),
-		new MenuItem("Copy Rotation",  function() /*=>*/ { addConstain("__Bone_Constrain_Copy_Rotation")  }, [ s_bone_constrain, 1, 1, c_white ]),
-		new MenuItem("Copy Scale",     function() /*=>*/ { addConstain("__Bone_Constrain_Copy_Scale")     }, [ s_bone_constrain, 2, 1, c_white ]),
+		new MenuItem("Copy Bone Position",  function() /*=>*/ { addConstain("__Bone_Constrain_Copy_Position")    }, [ s_bone_constrain, 0, 1, c_white ]),
+		new MenuItem("Copy Bone Rotation",  function() /*=>*/ { addConstain("__Bone_Constrain_Copy_Rotation")    }, [ s_bone_constrain, 1, 1, c_white ]),
+		new MenuItem("Copy Bone Scale",     function() /*=>*/ { addConstain("__Bone_Constrain_Copy_Scale")       }, [ s_bone_constrain, 2, 1, c_white ]),
 		-1,
-		new MenuItem("Look At",        function() /*=>*/ { addConstain("__Bone_Constrain_Look_At")        }, [ s_bone_constrain, 3, 1, c_white ]),
-		new MenuItem("Move To",        function() /*=>*/ { addConstain("__Bone_Constrain_Move_To")        }, [ s_bone_constrain, 4, 1, c_white ]),
-		new MenuItem("Stretch To",     function() /*=>*/ { addConstain("__Bone_Constrain_Stretch_To")     }, [ s_bone_constrain, 5, 1, c_white ]),
+		new MenuItem("Look At Bone",        function() /*=>*/ { addConstain("__Bone_Constrain_Look_At")          }, [ s_bone_constrain, 3, 1, c_white ]),
+		new MenuItem("Move To Bone",        function() /*=>*/ { addConstain("__Bone_Constrain_Move_To")          }, [ s_bone_constrain, 4, 1, c_white ]),
+		new MenuItem("Stretch To Bone",     function() /*=>*/ { addConstain("__Bone_Constrain_Stretch_To")       }, [ s_bone_constrain, 5, 1, c_white ]),
+		// -1, 
+		// new MenuItem("Look At Point",       () => { addConstain("__Bone_Constrain_Look_At_Point")    }, [ s_bone_constrain, 3, 1, c_white ]),
+		// new MenuItem("Move To Point",       () => { addConstain("__Bone_Constrain_Move_To_Point")    }, [ s_bone_constrain, 4, 1, c_white ]),
+		// new MenuItem("Stretch To Point",    () => { addConstain("__Bone_Constrain_Stretch_To_Point") }, [ s_bone_constrain, 5, 1, c_white ]),
 		-1, 
-		new MenuItem("Limit Position", function() /*=>*/ { addConstain("__Bone_Constrain_Limit_Position") }, [ s_bone_constrain, 6, 1, c_white ]),
-		new MenuItem("Limit Rotation", function() /*=>*/ { addConstain("__Bone_Constrain_Limit_Rotation") }, [ s_bone_constrain, 7, 1, c_white ]),
-		new MenuItem("Limit Scale",    function() /*=>*/ { addConstain("__Bone_Constrain_Limit_Scale")    }, [ s_bone_constrain, 8, 1, c_white ]),
+		new MenuItem("Limit Position",      function() /*=>*/ { addConstain("__Bone_Constrain_Limit_Position")   }, [ s_bone_constrain, 6, 1, c_white ]),
+		new MenuItem("Limit Rotation",      function() /*=>*/ { addConstain("__Bone_Constrain_Limit_Rotation")   }, [ s_bone_constrain, 7, 1, c_white ]),
+		new MenuItem("Limit Scale",         function() /*=>*/ { addConstain("__Bone_Constrain_Limit_Scale")      }, [ s_bone_constrain, 8, 1, c_white ]),
+		new MenuItem("Limit Distance",      function() /*=>*/ { addConstain("__Bone_Constrain_Limit_Distance")   }, [ s_bone_constrain, 9, 1, c_white ]),
 	];
 	
 	bone_array    = [];
@@ -61,7 +66,13 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		var _bst = ds_stack_create();
 		ds_stack_push(_bst, [ _b, _x, _w ]);
 		
-		var bone_remove = noone;
+		var bone_remove      = noone;
+		var bone_constrained = {};
+		for( var i = 0, n = array_length(bones.constrains); i < n; i++ ) {
+			var _con = bones.constrains[i];
+			if(_con.bone_id == "") continue;
+			bone_constrained[$ _con.bone_id] = 1;
+		}
 		
 		while(!ds_stack_empty(_bst)) {
 			var _st  = ds_stack_pop(_bst);
@@ -76,6 +87,9 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			
 			if(bone.parent_anchor) 
 				draw_sprite_ui(THEME.bone, 1, __x + ui(12), ty + ui(14),,,, COLORS._main_icon);
+				
+			else if(bone.control) 
+				draw_sprite_ui(THEME.bone, 6, __x + ui(12), ty + ui(14),,,, COLORS._main_icon);
 				
 			else if(bone.IKlength) 
 				draw_sprite_ui(THEME.bone, 2, __x + ui(12), ty + ui(14),,,, COLORS._main_icon);
@@ -133,7 +147,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				draw_sprite_ui(THEME.bone, 4, _x0, _y0,,,, cc, 0.5);
 			
 			_x0 -= ui(20);
-			var cc = COLORS._main_icon;
+			var cc = has(bone_constrained, bone.ID)? COLORS._main_accent : COLORS._main_icon;
 			if(_hover && point_in_circle(_m[0], _m[1], _x0, _y0, ui(10))) {
 				TOOLTIP = "Add Constrains";
 				draw_sprite_ui(THEME.bone, 5, _x0, _y0,,,, cc, .75);
@@ -300,11 +314,12 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	#endregion
 	
 	tools = [
-		new NodeTool( "Transform",          		    THEME.bone_tool_move   ),
-		new NodeTool( [ "Add bones", "Mirror bones"], [ THEME.bone_tool_add, THEME.bone_tool_mirror ]),
-		new NodeTool( "Remove bones",                   THEME.bone_tool_remove ),
-		new NodeTool( "Detach bones",                   THEME.bone_tool_detach ),
-		new NodeTool( "IK",                             THEME.bone_tool_IK     ),
+		new NodeTool( "Transform",    THEME.bone_tool_move   ),
+		new NodeTool( [ "Add Bone", "Add Control Bone"], [ THEME.bone_tool_add, THEME.bone_tool_add_control ]),
+		new NodeTool( "Mirror Bones", THEME.bone_tool_mirror ),
+		new NodeTool( "Remove Bone",  THEME.bone_tool_remove ),
+		new NodeTool( "Detach Bone",  THEME.bone_tool_detach ),
+		new NodeTool( "IK",           THEME.bone_tool_IK     ),
 	];
 	
 	anchor_selecting = noone;
@@ -331,6 +346,8 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	bone_transform_type = -1;
 	
 	mirroring_bone = noone;
+	
+	////- Action
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var mx = (_mx - _x) / _s;
@@ -490,6 +507,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 						
 						IKbone.direction  = _ang;
 						IKbone.distance   = _len;
+						IKbone.control    = true;
 						IKbone.IKlength   = _blen;
 						IKbone.IKTargetID = ik_dragging.ID;
 						
@@ -666,7 +684,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				}
 				break;
 				
-			case "Add bones" : 
+			case "Add Bone" : 
 				hovering = true;
 				if(builder_bone == noone) {
 					anchor_selecting = _b.draw(attributes, active * 0b111, _x, _y, _s, _mx, _my, anchor_selecting);
@@ -723,7 +741,19 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					draw_sprite_ui(THEME.bone_tool_add, 0, _mx + 24, _my + 24, 1, 1, 0, c_white, 1);
 				break;
 				
-			case "Remove bones" : 
+			case "Add Control Bone" : 
+				hovering = true;
+				_b.draw(attributes, false, _x, _y, _s, _mx, _my);
+				
+				if(mouse_press(mb_left, active)) {
+					builder_bone = createBone(bones, point_distance(0, 0, smx, smy), point_direction(0, 0, smx, smy));
+					builder_bone.control = true;
+				}
+				
+				draw_sprite_ui(THEME.bone_tool_add_control, 0, _mx + 24, _my + 24, 1, 1, 0, c_white, 1);
+				break;
+				
+			case "Remove Bone" : 
 				anchor_selecting = _b.draw(attributes, active * 0b100, _x, _y, _s, _mx, _my, anchor_selecting);
 				
 				if(anchor_selecting != noone && anchor_selecting[1] == 2 && anchor_selecting[0].parent != noone && mouse_press(mb_left, active)) {
@@ -749,7 +779,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					draw_sprite_ui(THEME.bone_tool_remove, 1, _mx + 24, _my + 24, 1, 1, 0, c_white, 1);
 				break;
 				
-			case "Detach bones" : 
+			case "Detach Bone" : 
 				if(builder_bone == noone)
 					anchor_selecting = _b.draw(attributes, active * 0b100, _x, _y, _s, _mx, _my, anchor_selecting);
 				
@@ -786,7 +816,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					ik_dragging = anchor_selecting[0];
 				break;
 				
-			case "Mirror bones" : 
+			case "Mirror Bones" : 
 				if(builder_bone == noone)
 					anchor_selecting = _b.draw(attributes, active * 0b111, _x, _y, _s, _mx, _my, anchor_selecting);
 				

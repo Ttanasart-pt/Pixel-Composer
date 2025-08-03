@@ -13,7 +13,6 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	inputs_is_array = [];
 	inputs_index    = [];
 	
-	dimension_index = 0;
 	process_amount	= 0;
 	process_length  = [];
 	process_running = [];

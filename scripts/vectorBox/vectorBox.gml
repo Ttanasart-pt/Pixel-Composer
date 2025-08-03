@@ -48,6 +48,8 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 	
 	static setLinkable = function(_l = noone) { linkable = _l; return self; }
 	
+	static setBoxColor = function(_v) /*=>*/ { for(var i = 0; i < 4; i++) tb[i].setBoxColor(_v); return self; }
+	
 	static setFont = function(_f = noone) { 
 		for( var i = 0; i < size; i++ ) 
 			tb[i].setFont(_f);
