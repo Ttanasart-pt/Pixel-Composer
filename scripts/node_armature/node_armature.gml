@@ -40,7 +40,9 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		new MenuItem("Move To",        function() /*=>*/ { addConstain("__Bone_Constrain_Move_To")        }, [ s_bone_constrain, 4, 1, c_white ]),
 		new MenuItem("Stretch To",     function() /*=>*/ { addConstain("__Bone_Constrain_Stretch_To")     }, [ s_bone_constrain, 5, 1, c_white ]),
 		-1, 
-		new MenuItem("Limit Rotation", function() /*=>*/ { addConstain("__Bone_Constrain_Limit_Rotation") }, [ s_bone_constrain, 6, 1, c_white ]),
+		new MenuItem("Limit Position", function() /*=>*/ { addConstain("__Bone_Constrain_Limit_Position") }, [ s_bone_constrain, 6, 1, c_white ]),
+		new MenuItem("Limit Rotation", function() /*=>*/ { addConstain("__Bone_Constrain_Limit_Rotation") }, [ s_bone_constrain, 7, 1, c_white ]),
+		new MenuItem("Limit Scale",    function() /*=>*/ { addConstain("__Bone_Constrain_Limit_Scale")    }, [ s_bone_constrain, 8, 1, c_white ]),
 	];
 	
 	bone_array    = [];

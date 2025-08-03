@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"__bone_constrain_limit_position",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__bone_constrain_limit_position",
+  "parent":{
+    "name":"constrain",
+    "path":"folders/nodes/data/armature/constrain.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

@@ -5,7 +5,7 @@ function __Bone_Constrain_Limit_Rotation(_bone, _bid = "") : __Bone_Constrain(_b
     limit_min = 0;
     limit_max = 0;
     
-    lock_children = false;
+    lock_children = true;
     bone_object   = noone;
     
     tb_limit = new vectorBox(2, function(v, i) /*=>*/ { 
