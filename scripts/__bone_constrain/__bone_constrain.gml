@@ -9,6 +9,7 @@ function __Bone_Constrain(_bone) constructor {
     static constrain    = function() /*=>*/ {}
     
     static drawInspector = function(_x, _y, _w, _m, _hover, _focus, _drawParam) { return 0; }
+    static drawBone = function(_x, _y, _s) {}
     
     static build = function(type, _bid = "") { 
     	

@@ -72,7 +72,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		new NodeTool( "Weight edit",         THEME.path_tools_weight_edit ),
 	];
 	
-	attributes.display_name = true;
+	attributes.display_name = false;
 	attributes.snap_point   = true;
 	attributes.snap_distance= 8;
 	attributes.weight       = [ [ 0, 1 ], [ 100, 1 ] ];
@@ -618,6 +618,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var _closet_dist  = undefined;
 		var _point_hover  = noone;
 		var _point_ratio  = 0;
+		var hovering = false;
 		
 		var anchor_hover = -1;
 		var hover_type   = 0;
@@ -813,11 +814,9 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				}
 				
 				if(drag_point == i) {
-					draw_sprite_colored(THEME.anchor_selector, 1, xx, yy);
 					_anHov = 1;
 					
 				} else if(hover && point_in_circle(_mx, _my, xx, yy, 8)) {
-					draw_sprite_colored(THEME.anchor_selector, 1, xx, yy);
 					_anHov       = 1;
 					anchor_hover = i;
 					hover_type   = 0;
@@ -871,6 +870,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		switch(_tooln) {
 			case "Transform" :
+				hovering = true;
 				var hov = 0;
 					 if(hover && point_in_circle(_mx, _my, minx, miny, 8)) hov = 1;
 				else if(hover && point_in_circle(_mx, _my, maxx, miny, 8)) hov = 2;
@@ -899,7 +899,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				break;
 				
 			case "Anchor add / remove" :
-				
+				hovering = true;
 				if(anchor_hover != -1 && hover_type == 0) { //remove
 					draw_sprite_ui_uniform(THEME.cursor_path_remove, 0, _mx + 4, _my + 4);
 					
@@ -1004,6 +1004,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				break;
 			
 			case "Draw path" :
+				hovering = true;
 				draw_sprite_ui_uniform(THEME.path_tools_draw, 0, _mx + 16, _my + 16);
 				
 				if(mouse_press(mb_left, active)) {
@@ -1025,7 +1026,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			case "Rectangle path" : 
 			case "Circle path" :
 				draw_sprite_ui_uniform(THEME.cursor_path_add, 0, _mx + 4, _my + 4);
-			
+				hovering = true;
+				
 				if(mouse_press(mb_left, active)) {
 					while(array_length(inputs) > input_fix_len)
 						array_delete(inputs, input_fix_len, 1);
@@ -1042,6 +1044,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				break;
 				
 			case "Weight edit" : 
+				hovering = true;
 				if(_point_hover != noone) {
 					
 					if(_weight_hover == -1) {
@@ -1176,7 +1179,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				break;
 		}
 		
-		return true;
+		return anchor_hover != -1 || hovering;
 	}
 	
 	////- Path

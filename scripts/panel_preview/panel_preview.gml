@@ -120,10 +120,10 @@
         registerFunction(p, "Set Reset View On",        "", n, panel_preview_set_reset_view_on         ).setMenu("preview_set_reset_view_on")
         registerFunction(p, "Toggle Reset View",        "", n, panel_preview_toggle_reset_view         ).setMenu("preview_toggle_reset_view", noone, false, function() /*=>*/ {return PANEL_PREVIEW.resetViewOnDoubleClick})
         
-        registerFunction(p, "New Preview Window",       "", n, panel_preview_new_preview_window        ).setMenu("preview_new_preview_window")
-        registerFunction(p, "Copy Current Frame",       "", n, panel_preview_copyCurrentFrame          ).setMenu("preview_copy_current_frame", THEME.copy)
-        registerFunction(p, "Copy Color",               "", n, panel_preview_copy_color                ).setMenu("preview_copy_color")
-        registerFunction(p, "Copy Color Hex",           "", n, panel_preview_copy_color_hex            ).setMenu("preview_copy_color_hex")
+        registerFunction(p, "New Preview Window",       "",  n, panel_preview_new_preview_window        ).setMenu("preview_new_preview_window")
+        registerFunction(p, "Copy Current Frame",       "C", c, panel_preview_copyCurrentFrame          ).setMenu("preview_copy_current_frame", THEME.copy)
+        registerFunction(p, "Copy Color",               "",  n, panel_preview_copy_color                ).setMenu("preview_copy_color")
+        registerFunction(p, "Copy Color Hex",           "",  n, panel_preview_copy_color_hex            ).setMenu("preview_copy_color_hex")
         
         registerFunction(p, "Toggle Grid",              "G", c,  panel_preview_toggle_grid_visible     ).setMenu("preview_toggle_grid_visible")
         registerFunction(p, "Toggle Pixel Grid",        "G", cs, panel_preview_toggle_grid_pixel       ).setMenu("preview_toggle_grid_pixel")
@@ -207,12 +207,23 @@ function Panel_Preview() : PanelContent() constructor {
         sample_x            = noone;
         sample_y            = noone;
     	
-    	selection_active = false;
+    	selection_selecting = false;
     	selection_mx = 0;
     	selection_my = 0;
     	selection_sx = 0;
     	selection_sy = 0;
+    	selecting_w  = 0;
+    	selecting_h  = 0;
     	
+    	selection_active = false;
+    	selection_x0 = 0;
+    	selection_y0 = 0;
+    	selection_x1 = 0;
+    	selection_y1 = 0;
+    	
+    	hoveringContent = false;
+        hoveringGizmo   = false;
+        
     #endregion
     
     #region ---- preview ----
@@ -2019,10 +2030,20 @@ function Panel_Preview() : PanelContent() constructor {
                         var mpy = floor((my - canvas_y) / canvas_s);
                         draw_text(right_menu_x, right_menu_y, $"[{mpx}, {mpy}]");
                         
+                        if(selection_selecting) {
+                        	right_menu_y += _lh;
+				        	draw_text(right_menu_x, right_menu_y, $"[{selecting_w}, {selecting_h}]");
+				        	
+                        } else if(selection_active) {
+                        	right_menu_y += _lh;
+				        	draw_text(right_menu_x, right_menu_y, $"[{selection_x1 - selection_x0}, {selection_y1 - selection_y0}]");
+                        }
+                        
                         if(mouse_pos_string != "") {
                             right_menu_y += _lh;
                             draw_text(right_menu_x, right_menu_y, $"{mouse_pos_string}");
                         }
+                        
                     }
                     
                     if(_node != noone) {
@@ -2317,9 +2338,12 @@ function Panel_Preview() : PanelContent() constructor {
         overHover = overHover && point_in_rectangle(mx, my, (_node.tools != -1) * toolbar_width, toolbar_height, w, h - toolbar_height);
         overHover = overHover && !key_mod_press(CTRL);
         
+        hoveringContent = overHover;
+        
         var overActive = active && overHover;
         var params = { w, h, toolbar_height };
         params.panel = self;
+        
         
         if(_node.is_3D == NODE_3D.none) {
             
@@ -2344,35 +2368,8 @@ function Panel_Preview() : PanelContent() constructor {
 				_ovs *= _trans[2];
             }
             
-            if(!CAPTURING) {
-            	var _hoveringGizmo = false;
-	            _hoveringGizmo = _node.doDrawOverlay(overHover, overActive, _ovx, _ovy, _ovs, _mx, _my, _snx, _sny, params);
-	            
-	            if(!_hoveringGizmo && overHover) {
-	            	if(mouse_lpress(overActive)) {
-	            		selection_active = true;
-	            		selection_sx = _mx;
-	            		selection_sy = _my;
-	            	}
-	            }
-	        }
-	        
-	        if(selection_active) {
-	        	selection_mx = _mx;
-        		selection_my = _my;
-        		
-        		var sel_x0 = min(selection_mx, selection_sx);
-        		var sel_y0 = min(selection_my, selection_sy);
-        		var sel_x1 = max(selection_mx, selection_sx);
-        		var sel_y1 = max(selection_my, selection_sy);
-        		
-        		draw_sprite_stretched_points_clamp(THEME.ui_selection, 0, selection_sx, selection_sy, mx, my, COLORS._main_accent);
-        		
-        		if(mouse_lrelease()) {
-        			selection_active = false;
-        		}
-	        }
-            
+            if(!CAPTURING) hoveringGizmo = _node.doDrawOverlay(overHover, overActive, _ovx, _ovy, _ovs, _mx, _my, _snx, _sny, params);
+	    	 
         } else {
             if(key_mod_press(CTRL) || PROJECT.previewSetting.d3_tool_snap) {
                 _snx = PROJECT.previewSetting.d3_tool_snap_position;
@@ -2803,6 +2800,75 @@ function Panel_Preview() : PanelContent() constructor {
             draw_sprite_ui(THEME.node_resize, 0, mx0 + ui(4), my0 + ui(4), 0.5, 0.5, 180, c_white, 0.3);
     } 
     
+    function drawSelection() {
+    	var prevS = getNodePreviewSurface();
+    	var _surfMode = is_surface(prevS);
+    	
+    	if(hoveringContent && !hoveringGizmo) {
+        	if(mouse_lpress(pFOCUS)) {
+        		selection_active    = false;
+        		selection_selecting = true;
+        		selection_sx = mx;
+        		selection_sy = my;
+        	}
+        }
+        
+        if(selection_selecting) {
+        	selection_mx = mx;
+    		selection_my = my;
+    		
+    		var _x0 = (min(selection_mx, selection_sx) - canvas_x) / canvas_s;
+	    	var _y0 = (min(selection_my, selection_sy) - canvas_y) / canvas_s;
+	    	var _x1 = (max(selection_mx, selection_sx) - canvas_x) / canvas_s;
+	    	var _y1 = (max(selection_my, selection_sy) - canvas_y) / canvas_s;
+    		
+    		if(_surfMode) {
+    			_x0 = round(_x0);
+				_y0 = round(_y0);
+				_x1 = round(_x1);
+				_y1 = round(_y1);
+    		}
+    		
+    		var _xx0 = canvas_x + _x0 * canvas_s;
+        	var _yy0 = canvas_y + _y0 * canvas_s;
+        	var _xx1 = canvas_x + _x1 * canvas_s;
+        	var _yy1 = canvas_y + _y1 * canvas_s;
+        	
+        	selecting_w  = _x1 - _x0;
+    		selecting_h  = _y1 - _y0;
+        	
+        	if(_x0 != _x1 && _y0 != _y1) 
+    			draw_sprite_stretched_points_clamp(THEME.ui_selection, 0, _xx0, _yy0, _xx1, _yy1, COLORS._main_accent);
+    		
+    		if(mouse_lrelease()) {
+    			selection_selecting = false;
+    			
+    			if(_surfMode) {
+			    	selection_x0 = _x0;
+			    	selection_y0 = _y0;
+			    	selection_x1 = _x1;
+			    	selection_y1 = _y1;
+			    	
+			    	if(selection_x0 != selection_x1 && selection_y0 != selection_y1)
+	    				selection_active = true;
+    			}
+    		}
+        }
+        
+        if(selection_active) {
+        	var sx0 = canvas_x + selection_x0 * canvas_s;
+        	var sy0 = canvas_y + selection_y0 * canvas_s;
+        	var sx1 = canvas_x + selection_x1 * canvas_s;
+        	var sy1 = canvas_y + selection_y1 * canvas_s;
+        	
+        	draw_set_color(c_black);
+        	draw_rectangle(sx0, sy0, sx1, sy1, true);
+        	draw_set_color(c_white);
+        	draw_rectangle_dashed(sx0, sy0, sx1 + 1, sy1 + 1);
+        	
+        }
+    }
+    
     ////- DRAW MAIN
     
     function drawContent(panel) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> MAIN DRAW <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -2852,6 +2918,7 @@ function Panel_Preview() : PanelContent() constructor {
         
         drawViewController();
         
+        hoveringGizmo    = false;
         tool_side_draw_l = false;
         tool_side_draw_r = false;
         
@@ -2873,6 +2940,8 @@ function Panel_Preview() : PanelContent() constructor {
                 drawAllNodeGizmo(pFOCUS);
             }
         }
+        
+        drawSelection();
         
         if(d3_active == NODE_3D.none) drawSplitView();
         
@@ -2924,7 +2993,26 @@ function Panel_Preview() : PanelContent() constructor {
     
     function copyCurrentFrame() {
         var prevS = getNodePreviewSurface();
-        clipboard_set_surface(prevS);
+        if(!is_surface(prevS)) return;
+        
+    	if(selection_active) {
+        	var x0 = selection_x0;
+        	var y0 = selection_y0;
+        	var x1 = selection_x1;
+        	var y1 = selection_y1;
+        	
+        	var ww = x1 - x0;
+        	var hh = y1 - y0;
+        	var _s = surface_create(ww, hh);
+        	surface_set_shader(_s);
+        	draw_surface(prevS, -x0, -y0);
+        	surface_reset_shader();
+        	
+        	clipboard_set_surface(_s);
+        	surface_free(_s);
+        	
+        } else 
+        	clipboard_set_surface(prevS);
     }
     
     function saveCurrentFrameToFocus() {

@@ -112,6 +112,9 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 	////- Draw
 	
 	static draw = function(attributes, edit=false, _x=0, _y=0, _s=1, _mx=0, _my=0, _hover=noone, _select=noone, _blend=c_white, _alpha=1) {
+		
+		// for( var i = 0, n = array_length(constrains); i < n; i++ ) constrains[i].drawBone(_x, _y, _s);
+		
 		setControl(_x, _y, _s);
 		
 		var hover = noone, h;
@@ -140,11 +143,6 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		var p1x = _x + bone_tail_pose.x * _s;
 		var p1y = _y + bone_tail_pose.y * _s;
 		var _selecting = false;
-		
-		for( var i = 0, n = array_length(constrains); i < n; i++ ) {
-			var _cons = constrains[i];
-			
-		}
 		
 		if(is(_select, __Bone))     _selecting = _select.ID == self.ID; 
 		else if(is_string(_select)) _selecting = _select    == name; 

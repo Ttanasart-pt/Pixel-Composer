@@ -31,6 +31,7 @@ function __Bone_Constrain_Limit_Rotation(_bone, _bid = "") : __Bone_Constrain(_b
         if(!lock_children) return;
         
         var _bone   = bone_id == ""?   noone : _b.findBone(bone_id);
+        bone_object = _bone;
         if(_bone == noone) return;
         _bone.pose_rotate = clamp(_bone.pose_rotate, -limit_min, limit_max);
     }
@@ -39,6 +40,7 @@ function __Bone_Constrain_Limit_Rotation(_bone, _bid = "") : __Bone_Constrain(_b
         if(lock_children) return;
         
         var _bone   = bone_id == ""?   noone : _b.findBone(bone_id);
+        bone_object = _bone;
         if(_bone == noone) return;
         _bone.pose_angle = clamp(_bone.pose_angle, _bone.angle - limit_min, _bone.angle + limit_max);
     }
@@ -102,6 +104,20 @@ function __Bone_Constrain_Limit_Rotation(_bone, _bid = "") : __Bone_Constrain(_b
         wh += _wdh + ui(8);
         
         return wh;
+    }
+    
+    static drawBone = function(_x, _y, _s) {
+        if(bone_object == noone) return;
+        
+        var p0x = _x + bone_object.bone_head_pose.x * _s;
+		var p0y = _y + bone_object.bone_head_pose.y * _s;
+		
+		var a0 = bone_object.angle - limit_min;
+		var a1 = bone_object.angle + limit_max;
+		
+		draw_set_color_alpha(COLORS._main_icon, .5);
+		draw_arc_fill(p0x, p0y, ui(32), a0, a1);
+		draw_set_alpha(1);
     }
     
     ////- Serialize

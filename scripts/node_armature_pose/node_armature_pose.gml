@@ -90,6 +90,8 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var _bhov = anchor_selecting;
 		var hovering = false;
 		
+		// for( var i = 0, n = array_length(bonePose.constrains); i < n; i++ ) bonePose.constrains[i].drawBone(_x, _y, _s);
+		
 		for( var i = 0, n = array_length(boneArray); i < n; i++ ) {
 			var _bne = boneArray[i];
 			var _sel = false;

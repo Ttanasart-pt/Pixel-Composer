@@ -18,6 +18,7 @@ function __Bone_Constrain_Limit_Position(_bone, _bid = "") : __Bone_Constrain(_b
     
     static preConstrain = function(_b) {
         var _bone   = bone_id == ""?   noone : _b.findBone(bone_id);
+        bone_object = _bone;
         if(_bone == noone) return;
         
         var _pos = _bone.pose_posit;
@@ -80,6 +81,18 @@ function __Bone_Constrain_Limit_Position(_bone, _bid = "") : __Bone_Constrain(_b
         wh += _wdh + ui(8);
         
         return wh;
+    }
+    
+    static drawBone = function(_x, _y, _s) {
+        if(bone_object == noone) return;
+        
+        var p0x = _x + bone_object.bone_head_init.x * _s;
+		var p0y = _y + bone_object.bone_head_init.y * _s;
+		var rad = limit_range * _s;
+		
+		draw_set_color_alpha(COLORS._main_icon, .5);
+		draw_circle_prec(p0x, p0y, rad, 1);
+		draw_set_alpha(1);
     }
     
     ////- Serialize

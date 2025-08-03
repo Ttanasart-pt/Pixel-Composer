@@ -22,6 +22,9 @@ function __Bone_Constrain_Copy_Position(_bone, _bid = "", _tid = "") : __Bone_Co
     static constrain = function(_b) {
         var _bone   = bone_id == ""?   noone : _b.findBone(bone_id);
         var _target = target_id == ""? noone : _b.findBone(target_id);
+        bone_object   = _bone;
+        target_object = _target;
+        
         if(_bone == noone || _target == noone) return;
         
         var _fr = _bone.getHead();
