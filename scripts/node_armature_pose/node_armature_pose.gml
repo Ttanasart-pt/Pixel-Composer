@@ -42,7 +42,6 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		boneHash  = _h;
 		bonePose  = _b.clone().connect();
 		boneArray = bonePose.toArray();
-		bonePose.constrains = _b.constrains;
 		
 		var _inputs = [ inputs[0] ];
 		var _input_display_list = array_clone(input_display_list_raw, 1);
@@ -354,6 +353,8 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var _b = getInputData(0);
 		
 		bonePose.resetPose().setPosition();
+		bonePose.constrains = _b.constrains;
+		
 		outputs[0].setValue(bonePose);
 		
 		var bArrRaw = _b.toArray();

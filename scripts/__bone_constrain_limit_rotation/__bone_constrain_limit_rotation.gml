@@ -5,13 +5,21 @@ function __Bone_Constrain_Limit_Rotation(_bone, _bid = "") : __Bone_Constrain(_b
     limit_min = 0;
     limit_max = 0;
     
+    lock_children = false;
     bone_object   = noone;
     
-    tb_limit = new vectorBox(2, function(v, i) /*=>*/ { if(i == 0) limit_min = v; else if(i == 1) limit_max = v; node.triggerRender(); });
+    tb_limit = new vectorBox(2, function(v, i) /*=>*/ { 
+             if(i == 0) limit_min = v; 
+        else if(i == 1) limit_max = v; 
+        node.triggerRender(); 
+    });
+        
     tb_limit.axis = ["ccw", "cw"];
-    tb_limit.tb[0].font = f_p2;
-    tb_limit.tb[1].font = f_p2;
     tb_limit.boxColor = COLORS._main_icon_light;
+    
+    cb_lock = new checkBox(function() /*=>*/ { lock_children = !lock_children; node.triggerRender(); });
+    
+    ////- Actions
     
     static init = function() {
         if(!is(bone, __Bone)) return;
@@ -19,14 +27,25 @@ function __Bone_Constrain_Limit_Rotation(_bone, _bid = "") : __Bone_Constrain(_b
         bone_object   = bone_id == ""?   noone : bone.findBone(bone_id);
     }
     
-    static constrain = function(_b) {
+    static preConstrain = function(_b) {
+        if(!lock_children) return;
+        
         var _bone   = bone_id == ""?   noone : _b.findBone(bone_id);
         if(_bone == noone) return;
+        _bone.pose_rotate = clamp(_bone.pose_rotate, -limit_min, limit_max);
+    }
+    
+    static constrain = function(_b) {
+        if(lock_children) return;
         
+        var _bone   = bone_id == ""?   noone : _b.findBone(bone_id);
+        if(_bone == noone) return;
         _bone.pose_angle = clamp(_bone.pose_angle, _bone.angle - limit_min, _bone.angle + limit_max);
     }
     
-    static draw_inspector = function(_x, _y, _w, _m, _hover, _focus, _drawParam) { 
+    ////- Draw
+    
+    static drawInspector = function(_x, _y, _w, _m, _hover, _focus, _drawParam) { 
         var wh = 0;
         
         // draw bones
@@ -55,14 +74,29 @@ function __Bone_Constrain_Limit_Rotation(_bone, _bid = "") : __Bone_Constrain(_b
         wh += _wdh + ui(4);
         
         // draw widget
-        var _wdx = _x + ui(8);
-        var _wdw = _w - ui(16);
-        var _wdh = ui(24);
-        var _dParam = new widgetParam(_wdx, _y, _wdw, _wdh, [ limit_min, limit_max ], {}, _m, _drawParam.rx, _drawParam.ry);
+        var _lbx = _x + ui(16);
         
-        tb_limit.register(_drawParam.panel);
-        tb_limit.setFocusHover(_focus, _hover);
+        draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text);
+        draw_text_add(_lbx, _y + _wdh / 2, __txt("Range"));
+        
+        var _wdw = _w * 2/3;
+        var _wdx = _x + _w - _wdw - ui(8);
+        var _wdh = ui(24);
+        var _dParam = new widgetParam(_wdx, _y, _wdw, _wdh, [ limit_min, limit_max ], {}, _m, _drawParam.rx, _drawParam.ry)
+            .setFont(f_p3).setScrollpane(_drawParam.panel).setFocusHover(_focus, _hover);
         tb_limit.drawParam(_dParam);
+        
+        _y += _wdh + ui(4);
+        wh += _wdh + ui(4);
+        
+        draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text);
+        draw_text_add(_lbx, _y + _wdh / 2, __txt("Inherit"));
+        
+        _dParam = new widgetParam(_wdx, _y, _wdw, _wdh, lock_children, {}, _m, _drawParam.rx, _drawParam.ry)
+            .setFont(f_p3).setScrollpane(_drawParam.panel).setFocusHover(_focus, _hover);
+        _dParam.s = _wdh;
+        _dParam.halign = fa_center;
+        cb_lock.drawParam(_dParam);
         
         _y += _wdh + ui(8);
         wh += _wdh + ui(8);
@@ -70,18 +104,22 @@ function __Bone_Constrain_Limit_Rotation(_bone, _bid = "") : __Bone_Constrain(_b
         return wh;
     }
     
+    ////- Serialize
+    
     static onSerialize = function(_map) { 
-        _map.bone_id   = bone_id;
-        _map.limit_min = limit_min;
-        _map.limit_max = limit_max;
+        _map.bone_id       = bone_id;
+        _map.limit_min     = limit_min;
+        _map.limit_max     = limit_max;
+        _map.lock_children = lock_children;
         
         return _map; 
     }
     
     static deserialize = function(_map) {
-        bone_id    = _map.bone_id;
-        limit_min  = _map.limit_min;
-        limit_max  = _map.limit_max;
+        bone_id        = _map[$ "bone_id"]       ?? bone_id;
+        limit_min      = _map[$ "limit_min"]     ?? limit_min;
+        limit_max      = _map[$ "limit_max"]     ?? limit_max;
+        lock_children  = _map[$ "lock_children"] ?? lock_children;
         
         return self;
     }

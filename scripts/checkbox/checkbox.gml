@@ -23,6 +23,7 @@ function checkBox(_onClick) : widget() constructor {
 	}
 	
 	static drawParam = function(params) {
+		setParam(params);
 		var ss = params.s;
 		var x0, y0;
 		

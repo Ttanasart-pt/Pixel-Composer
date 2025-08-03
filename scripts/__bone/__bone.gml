@@ -141,6 +141,11 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		var p1y = _y + bone_tail_pose.y * _s;
 		var _selecting = false;
 		
+		for( var i = 0, n = array_length(constrains); i < n; i++ ) {
+			var _cons = constrains[i];
+			
+		}
+		
 		if(is(_select, __Bone))     _selecting = _select.ID == self.ID; 
 		else if(is_string(_select)) _selecting = _select    == name; 
 		
@@ -360,8 +365,11 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		__c_bone = self;
 		
 		setPosition();
+			array_foreach(constrains, function(c) /*=>*/ {return c.preConstrain(__c_bone)});
+			
 			setPoseTransform();
 			if(_ik) { setPosition(); setIKconstrain(); }
+			
 			array_foreach(constrains, function(c) /*=>*/ {return c.constrain(__c_bone)});
 		setPosition();
 		
@@ -369,10 +377,7 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 	}
 	
 	static setPoseTransform = function() {
-		if(is_main) {
-			array_foreach(childs, function(c) /*=>*/ {return c.setPoseTransform()});
-			return;
-		}
+		if(is_main) { array_foreach(childs, function(c) /*=>*/ {return c.setPoseTransform()}); return; }
 		
 		pose_apply_posit  = [ pose_posit[0], pose_posit[1] ];
 		pose_apply_rotate = pose_rotate;

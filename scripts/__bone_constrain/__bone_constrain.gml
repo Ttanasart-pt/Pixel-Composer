@@ -4,10 +4,11 @@ function __Bone_Constrain(_bone) constructor {
     draw_height = 0;
     node = noone;
     
-    static init      = function() {}
-    static constrain = function() {}
+    static init         = function() /*=>*/ {}
+    static preConstrain = function() /*=>*/ {}
+    static constrain    = function() /*=>*/ {}
     
-    static draw_inspector = function(_x, _y, _w, _m, _hover, _focus, _drawParam) { return 0; }
+    static drawInspector = function(_x, _y, _w, _m, _hover, _focus, _drawParam) { return 0; }
     
     static build = function(type, _bid = "") { 
     	

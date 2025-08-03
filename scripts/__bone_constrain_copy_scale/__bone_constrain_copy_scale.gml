@@ -8,10 +8,9 @@ function __Bone_Constrain_Copy_Scale(_bone, _bid = "", _tid = "") : __Bone_Const
     bone_object   = noone;
     target_object = noone;
     
-    tb_strength       = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ { strength = clamp(v, 0, 1); node.triggerRender(); });
-    tb_strength.font  = f_p2;
-    tb_strength.label = "Strength";
-    tb_strength.boxColor = COLORS._main_icon_light;
+    tb_strength = textBox_Number(function(v) /*=>*/ { strength = clamp(v, 0, 1); node.triggerRender(); }).setLabel("Strength").setBoxColor(COLORS._main_icon_light);
+    
+    ////- Actions
     
     static init = function() {
         if(!is(bone, __Bone)) return;
@@ -28,7 +27,9 @@ function __Bone_Constrain_Copy_Scale(_bone, _bid = "", _tid = "") : __Bone_Const
         _bone.pose_length = lerp(_bone.pose_length, _target.pose_length, strength);
     }
     
-    static draw_inspector = function(_x, _y, _w, _m, _hover, _focus, _drawParam) { 
+    ////- Draw
+    
+    static drawInspector = function(_x, _y, _w, _m, _hover, _focus, _drawParam) { 
         var wh = 0;
         
         // draw bones
@@ -74,12 +75,16 @@ function __Bone_Constrain_Copy_Scale(_bone, _bid = "", _tid = "") : __Bone_Const
         wh += _wdh + ui(4);
         
         // draw widget
-        var _wdx = _x + ui(8);
-        var _wdw = _w - ui(16);
-        var _wdh = ui(24);
-        var _dParam = new widgetParam(_wdx, _y, _wdw, _wdh, strength, {}, _m, _drawParam.rx, _drawParam.ry);
+        var _lbx = _x + ui(16);
         
-        tb_strength.setFocusHover(_focus, _hover);
+        draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text);
+        draw_text_add(_lbx, _y + _wdh / 2, __txt("Strength"));
+        
+        var _wdw = _w * 2/3;
+        var _wdx = _x + _w - _wdw - ui(8);
+        var _wdh = ui(24);
+        var _dParam = new widgetParam(_wdx, _y, _wdw, _wdh, strength, {}, _m, _drawParam.rx, _drawParam.ry)
+            .setFont(f_p3).setScrollpane(_drawParam.panel).setFocusHover(_focus, _hover);
         tb_strength.drawParam(_dParam);
         
         _y += _wdh + ui(8);
@@ -87,6 +92,8 @@ function __Bone_Constrain_Copy_Scale(_bone, _bid = "", _tid = "") : __Bone_Const
         
         return wh;
     }
+    
+    ////- Serialize
     
     static onSerialize = function(_map) { 
         _map.bone_id   = bone_id;

@@ -216,7 +216,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				draw_sprite_ui_uniform(THEME.icon_delete, 3, bx, by, 1, COLORS._main_icon);
 			
 			_con.node = self;
-			var _h = _con.draw_inspector(_x, ty + ui(32), _w, _m, _hover, _focus, _drawParam);
+			var _h = _con.drawInspector(_x, ty + ui(32), _w, _m, _hover, _focus, _drawParam);
 			
 			_con.draw_height = _h;
 			constrains_h += _h + ui(32 + 4);

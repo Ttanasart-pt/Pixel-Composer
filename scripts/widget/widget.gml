@@ -74,9 +74,11 @@ function widget() constructor {
 		if(!is_undefined(params.focus))
 			setFocusHover(params.focus, params.hover);
 			
-		if(!is_undefined(params.scrollpane) && inBBOX(params.m)) {
+		if(!is_undefined(params.scrollpane)) {
 			register(params.scrollpane);
-			params.scrollpane.hover_content = true;
+			
+			if(inBBOX(params.m))
+				params.scrollpane.hover_content = true;
 		}
 	}
 	
