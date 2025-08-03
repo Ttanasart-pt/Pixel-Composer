@@ -695,4 +695,11 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 	    return sha1_string_unicode(h);
 	}
 	
+	static getSpriteIndex = function() {
+		if(IKlength)      return 2;
+		if(control)       return 6;
+		if(parent_anchor) return 1;
+		return 0;
+	}
+	
 }

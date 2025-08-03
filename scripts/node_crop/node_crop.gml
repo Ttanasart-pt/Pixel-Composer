@@ -101,6 +101,7 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _asp	= current_data[3];
 		var _fit	= current_data[7];
 		var _splice;
+		var hovering = false;
 		
 		if(_asp == 0) {
 			tools = [ tool_drag ];
@@ -155,7 +156,7 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					draw_line(_mxs, 0, _mxs, params.h);
 					draw_line(0, _mys, params.w, _mys);
 					draw_set_alpha(1);
-				
+					
 					if(mouse_press(mb_left, active)) {
 						drag_side = 1;
 						drag_mx   = _mx;
@@ -168,7 +169,7 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				draw_line_width(sp_l, sp_t - 1, sp_l, sp_b + 1, 2);
 				draw_line_width(sp_l - 1, sp_t, sp_r + 1, sp_t, 2);
 				draw_line_width(sp_l - 1, sp_b, sp_r + 1, sp_b, 2);
-				return;
+				return true;
 			}
 			
 			draw_set_color(COLORS._main_accent);
@@ -288,6 +289,8 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			if(_hov != 7) draw_sprite_colored(THEME.anchor_selector, 0, sp_r, sp_b);
 			
 			if(drag_side == noone && _hov != noone) {
+				hovering = true;
+				
 				if(mouse_press(mb_left, active)) {
 					drag_side = _hov;
 					drag_mx   = _mx;
@@ -345,6 +348,7 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			draw_rectangle(_px0, _py0, _px1, _py1, true);
 		}
 		
+		return hovering;
 	}
 	
 	static onValueUpdate = function(index) {

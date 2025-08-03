@@ -85,23 +85,14 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				
 			if(bone.is_main) continue;
 			
-			if(bone.parent_anchor) 
-				draw_sprite_ui(THEME.bone, 1, __x + ui(12), ty + ui(14),,,, COLORS._main_icon);
-				
-			else if(bone.control) 
-				draw_sprite_ui(THEME.bone, 6, __x + ui(12), ty + ui(14),,,, COLORS._main_icon);
-				
-			else if(bone.IKlength) 
-				draw_sprite_ui(THEME.bone, 2, __x + ui(12), ty + ui(14),,,, COLORS._main_icon);
-				
-			else {
-				if(_hover && point_in_circle(_m[0], _m[1], __x + ui(12), ty + ui(12), ui(12))) {
-					draw_sprite_ui(THEME.bone, 0, __x + ui(12), ty + ui(14),,,, COLORS._main_icon_light);
-					if(mouse_press(mb_left, _focus))
-						bone_dragging = bone;
-				} else 
-					draw_sprite_ui(THEME.bone, 0, __x + ui(12), ty + ui(14),,,, COLORS._main_icon);
+			var bne_c = COLORS._main_icon;
+			if(_hover && point_in_circle(_m[0], _m[1], __x + ui(12), ty + ui(12), ui(12))) {
+				bne_c = COLORS._main_icon_light;
+				if(mouse_press(mb_left, _focus))
+					bone_dragging = bone;
 			}
+			
+			draw_sprite_ui(THEME.bone, bone.getSpriteIndex(), __x + ui(12), ty + ui(14),,,, bne_c);
 				
 			if(point_in_rectangle(_m[0], _m[1], __x + ui(24), ty + ui(3), __x + __w, ty + _hh - ui(3)))
 				anchor_selecting = [ bone, 2 ];
@@ -881,7 +872,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					var _bne = anchor_selecting[0];
 					var _typ = anchor_selecting[1];
 					
-					if(_bne.IKlength) _typ = 0;
+					if(_bne.control) _typ = 0;
 					
 					gpu_set_texfilter(true);
 					
@@ -1039,7 +1030,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	
 	static boneSelector = function(fn) {
 		__bone_fn = fn;
-		menuCall("", array_map(bone_array, function(b) /*=>*/ {return new MenuItem(b.name, __bone_fn, [ THEME.bone, 1, 1 ]).setParam({ bone: b })}) );
+		menuCall("", array_map(bone_array, function(b) /*=>*/ {return new MenuItem(b.name, __bone_fn, [ THEME.bone, b.getSpriteIndex(), 1 ]).setParam({ bone: b })}) );
 	}
 }
 

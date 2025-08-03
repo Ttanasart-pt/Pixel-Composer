@@ -8,14 +8,19 @@ function Node_Path_Offset(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newOutput(0, nodeValue_Output(  "Path", VALUE_TYPE.pathnode, noone));
 	
-	function _offsetedPath() constructor {
+	function _offsetedPath(_node) : Path(_node) constructor {
 		curr_path  = noone;
 		offset     = 0;
 		clampRat   = false;
 		
 		static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-			if(curr_path && struct_has(curr_path, "drawOverlay")) 
-				curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+			var hovering = false;
+			if(curr_path && struct_has(curr_path, "drawOverlay")) {
+				var hv = curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+				hovering = hovering || hv;
+			}
+			
+			return hovering;
 		}
 		
 		static getLineCount    = function(   ) /*=>*/ {return is_path(curr_path)? curr_path.getLineCount()                  : 1};
@@ -41,13 +46,13 @@ function Node_Path_Offset(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _path = getSingleValue(0, preview_index, true);
-		if(struct_has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		if(has(_path, "drawOverlay")) InputDrawOverlay(_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny));
 	}
 	
 	static processData = function(_outData, _data, _array_index = 0) { 
 		
 		if(!is(_outData, _offsetedPath)) 
-			_outData = new _offsetedPath();
+			_outData = new _offsetedPath(self);
 		
 		_outData.curr_path = _data[0];
 		_outData.offset    = _data[1];

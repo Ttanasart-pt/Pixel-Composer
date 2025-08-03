@@ -43,12 +43,12 @@ function Node_Path_Profile(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	temp_surface = [ surface_create(1, 1) ];
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) {  #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _path = getInputData(1);
-		if(_path && struct_has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-	} #endregion
+		if(has(_path, "drawOverlay")) InputDrawOverlay(_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny));
+	}
 	
-	static processData = function(_outSurf, _data, _array_index = 0) { #region
+	static processData = function(_outSurf, _data, _array_index = 0) {
 		var _dim  = _data[0];
 		var _path = _data[1];
 		var _res  = _data[2]; _res = max(_res, 2);
@@ -90,5 +90,5 @@ function Node_Path_Profile(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		surface_reset_shader();
 		
 		return _outSurf;
-	} #endregion
+	}
 }

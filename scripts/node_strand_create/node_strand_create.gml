@@ -124,6 +124,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _typ = getInputData(0);
 		var _pre = getInputData(16);
+		var hovering = false;
 		if(!attributes.use_groom && attributes.show_strand) strands.draw(_x, _y, _s, _pre);
 		
 		tools = attributes.use_groom? groomTools : -1;
@@ -159,7 +160,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			_msh.draw(_x, _y, _s);
 		}
 		
-		if(!attributes.use_groom) return;
+		if(!attributes.use_groom) return hovering;
 		groomed.draw(_x, _y, _s, _pre, true);
 		
 		var __mx = (_mx - _x) / _s;
@@ -328,6 +329,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		} 
 				
 		if(isUsingTool(0)) {
+			hovering = true;
 			var rad  = tool_push.attribute.radius;
 			var fall = tool_push.attribute.fall;
 			
@@ -342,8 +344,9 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				tool_my = (_my - _y) / _s;
 			}
 		} else if(isUsingTool(1)) {
-			if(tool_dragging == noone)
-				tool_dir_fix = tool_dir;
+			hovering = true;
+			if(tool_dragging == noone) tool_dir_fix = tool_dir;
+				
 			var wid = tool_comb.attribute.width;
 			var thk = tool_comb.attribute.thick;
 			
@@ -378,7 +381,9 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				tool_mx = (_mx - _x) / _s;
 				tool_my = (_my - _y) / _s;
 			}
+			
 		} else if(isUsingTool(2) || isUsingTool(3)) {
+			hovering = true;
 			var rad  = isUsingTool(2)? tool_stretch.attribute.radius : tool_cut.attribute.radius;
 			var fall = isUsingTool(2)? tool_stretch.attribute.fall   : tool_cut.attribute.fall;
 			
@@ -392,7 +397,9 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				tool_mx = (_mx - _x) / _s;
 				tool_my = (_my - _y) / _s;
 			}
+			
 		} else if(isUsingTool(4)) {
+			hovering = true;
 			var rad  = tool_grab.attribute.radius;
 			var fall = tool_grab.attribute.fall;
 			
@@ -420,9 +427,10 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			}
 		} 
 		
-		
 		tool_dmx = __mx;
 		tool_dmy = __my;
+		
+		return hovering;
 	}
 	
 	////- Nodes

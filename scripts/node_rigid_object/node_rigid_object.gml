@@ -377,6 +377,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _tex = getInputData(6);
 		var _pos = getInputData(7);
 		var _dim = surface_get_dimension(_tex);
+		var hovering = false;
 		
 		if(previewing == 0 && isNotUsingTool()) {
 			_x = _x + (_pos[0] - _dim[0] / 2) * _s;
@@ -385,8 +386,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		draw_set_color(COLORS._main_accent);
 		switch(_shp) {
-			case 0 : draw_rectangle(_x, _y, _x + _dim[0] * _s, _y + _dim[1] * _s, true); return active;
-			case 1 : draw_ellipse(  _x, _y, _x + _dim[0] * _s, _y + _dim[1] * _s, true); return active;
+			case 0 : draw_rectangle(_x, _y, _x + _dim[0] * _s, _y + _dim[1] * _s, true); return false;
+			case 1 : draw_ellipse(  _x, _y, _x + _dim[0] * _s, _y + _dim[1] * _s, true); return false;
 		}
 		
 		var meshes = attributes.mesh;
@@ -441,6 +442,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		}
 		
 		hover_index = _hover;
+		hovering = hovering || _hover != -1;
 		
 		if(anchor_dragging > -1) {
 			var dx = anchor_drag_sx + (_mx - anchor_drag_mx) / _s;
@@ -454,10 +456,10 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 			if(mouse_release(mb_left))
 				anchor_dragging = -1;
-			return active;
+			return hovering;
 		}
 		
-		if(hover_index == -1) return active;
+		if(hover_index == -1) return hovering;
 			
 		if(frac(hover_index) == 0) {
 			if(mouse_click(mb_left, active)) {
@@ -488,7 +490,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			}
 		}
 		
-		return active;
+		return hovering;
 	}
 	
 	////- Rigidbody

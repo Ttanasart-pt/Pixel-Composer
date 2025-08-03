@@ -12,7 +12,7 @@ function Node_Path_Flattern(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	////- Nodes
 	
-	function _flatternPath(_path) constructor {
+	function _flatternPath(_path, _node) : Path(_node) constructor {
 		curr_path  = _path;
 		reverse    = 0;
 		pingpong   = 0;
@@ -39,8 +39,14 @@ function Node_Path_Flattern(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		#endregion
 		
 		static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-			if(curr_path && struct_has(curr_path, "drawOverlay")) 
-				curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+			var hovering = false;
+			
+			if(has(curr_path, "drawOverlay")) {
+				var hv = curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+				hovering = hovering || hv;
+			}
+			
+			return hovering;
 		}
 		
 		static getLineCount    = function(   ) /*=>*/ {return 1};
@@ -91,14 +97,14 @@ function Node_Path_Flattern(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _path = outputs[0].getValue();
-		if(struct_has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		if(has(_path, "drawOverlay")) InputDrawOverlay(_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny));
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var path = getInputData(0); 
 		if(!struct_has(path, "getPointRatio")) return;
 		
-		var flat = new _flatternPath(path);
+		var flat = new _flatternPath(path, self);
 		flat.reverse  = getInputData(1); 
 		flat.pingpong = getInputData(2); 
 		

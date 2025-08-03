@@ -43,7 +43,7 @@ function Node_Path_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _path = getSingleValue(0);
-		if(struct_has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		if(has(_path, "drawOverlay")) InputDrawOverlay(_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		
 		var _pos = getSingleValue(2);
 		var _px = _x + _pos[0] * _s;
@@ -57,7 +57,7 @@ function Node_Path_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	function Path_Repeat(_path) constructor {
+	function Path_Repeat(_path, _node) : Path(_node) constructor {
 		line_amount    = 0;
 		path           = _path;
 		paths          = [];
@@ -135,7 +135,7 @@ function Node_Path_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			inputs[9].setVisible(patt == 1);
 		#endregion
 		
-		var _repeat = new Path_Repeat(path);
+		var _repeat = new Path_Repeat(path, self);
 		if(path == noone) return _repeat;
 		
 		var _line_amounts = path.getLineCount();

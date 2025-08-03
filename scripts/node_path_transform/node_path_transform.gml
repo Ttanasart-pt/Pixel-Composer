@@ -18,7 +18,7 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		[ "Transform", false ], 1, 2, 3, 4, b_center, 
 	]
 	
-	function _transformedPath() constructor {
+	function _transformedPath(_node) : Path(_node) constructor {
 		path       = noone;
 		cached_pos = {};
 		
@@ -29,8 +29,12 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		p    = new __vec2P();
 		
 		static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-			if(struct_has(path, "drawOverlay")) 
-				path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+			var hovering = false;
+			
+			if(struct_has(path, "drawOverlay")) {
+				var hv = path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+				hovering = hovering || hv;
+			}
 			
 			draw_set_color(COLORS._main_icon);
 			var _amo = getLineCount();
@@ -51,6 +55,8 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 					oy = ny;
 				}
 			}
+			
+			return hovering;
 		}
 		
 		static getLineCount 	= function()    /*=>*/ { return struct_has(path, "getLineCount")?      path.getLineCount()     : 1;  }
@@ -138,7 +144,7 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _path = getSingleValue(0, preview_index, true);
-		if(struct_has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		if(has(_path, "drawOverlay")) InputDrawOverlay(_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		
 		var _ori = getSingleValue(4);
 		var ox = _x + _ori[0] * _s;
@@ -160,7 +166,7 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		var _path = _data[0];
 		
 		if(!is(_outData, _transformedPath)) 
-			_outData = new _transformedPath();
+			_outData = new _transformedPath(self);
 		
 		_outData.cached_pos = {};
 		_outData.path = _path;

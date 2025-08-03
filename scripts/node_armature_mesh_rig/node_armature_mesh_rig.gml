@@ -107,10 +107,7 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			var _iy = ty + _hh / 2;
 			
 	        draw_sprite_stretched_ext(THEME.checkbox_def, 0, _x + ui(16), ty + ui(4), ui(20), ui(20), c_white);
-			
-				 if(_bone.parent_anchor) draw_sprite_ui(THEME.bone, 1, _dx + ui(12), _iy, 1, 1, 0, COLORS._main_icon);
-			else if(_bone.IKlength)      draw_sprite_ui(THEME.bone, 2, _dx + ui(12), _iy, 1, 1, 0, COLORS._main_icon);
-			else                         draw_sprite_ui(THEME.bone, 0, _dx + ui(12), _iy, 1, 1, 0, COLORS._main_icon);
+			draw_sprite_ui(THEME.bone, _bone.getSpriteIndex(), _dx + ui(12), _iy, 1, 1, 0, COLORS._main_icon);
 			
 			var  cc  = _sel? COLORS._main_text : COLORS._main_text_sub;
 			if(brush_bone_target == _bone.ID) cc = COLORS._main_value_positive;

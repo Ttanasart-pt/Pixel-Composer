@@ -26,7 +26,7 @@ function Node_Path_Spiral(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	////- Nodes
 	
-	function _spiralPath() constructor {
+	function _spiralPath(_node) : Path(_node) constructor {
 		freq      = 0; 
 		amplitude = 0;
 		amp_curve = noone;
@@ -41,8 +41,12 @@ function Node_Path_Spiral(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		curr_path  = noone;
 		
 		static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-			if(curr_path && struct_has(curr_path, "drawOverlay")) 
-				curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+			var hovering = false;
+			
+			if(has(curr_path, "drawOverlay")) {
+				var hv = curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+				hovering = hovering || hv;
+			}
 			
 			draw_set_color(COLORS._main_icon);
 			var _amo = getLineCount();
@@ -63,6 +67,8 @@ function Node_Path_Spiral(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 					oy = ny;
 				}
 			}
+			
+			return hovering;
 		}
 		
 		static getLineCount    = function(   ) /*=>*/ {return is_path(curr_path)? curr_path.getLineCount()     : 1};
@@ -151,13 +157,13 @@ function Node_Path_Spiral(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _path = getSingleValue(0, preview_index, true);
-		if(struct_has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		if(has(_path, "drawOverlay")) InputDrawOverlay(_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny));
 	}
 	
 	static processData = function(_outData, _data, _array_index = 0) { 
 		
 		if(!is(_outData, _spiralPath)) 
-			_outData = new _spiralPath();
+			_outData = new _spiralPath(self);
 		
 		_outData.cached_pos = {};
 		_outData.curr_path  = _data[0];

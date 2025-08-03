@@ -379,11 +379,17 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		if(!draw_input_overlay) return;
 		
+		var hovering = false;
 		for(var i = custom_input_index; i < array_length(inputs); i++) {
 			var _in = inputs[i];
 			var _hv = _in.from.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-			if(_hv != undefined) active = active && !_hv;
+			if(_hv != undefined) {
+				active   = active && !_hv;
+				hovering = hovering || _hv;
+			}
 		}
+		
+		return hovering;
 	}
 	
 	static onPreDraw = function(_x, _y, _s, _iny, _outy) {

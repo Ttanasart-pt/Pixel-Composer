@@ -60,7 +60,7 @@ function Node_Path_Map_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		return w_hovering;
 	}
 	
-	function _areaMappedPath() constructor {
+	function _areaMappedPath(_node) : Path(_node) constructor {
 		path = noone;
 		
 		areaFrom = [ 0, 0, 1, 1 ];

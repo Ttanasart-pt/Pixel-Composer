@@ -2319,6 +2319,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static InputDrawOverlay = function(hv) {
+		hv = hv ?? false;
 		w_hovering  = w_hovering || bool(hv); 
 		w_hoverable = w_hoverable && !hv;
 		return hv;

@@ -6,12 +6,18 @@ function Node_Path_Reverse(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, noone));
 	
-	function _reversePath() constructor {
+	function _reversePath(_node) : Path(_node) constructor {
 		curr_path  = noone;
 		
 		static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-			if(curr_path && struct_has(curr_path, "drawOverlay")) 
-				curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+			var hovering = false;
+			
+			if(has(curr_path, "drawOverlay")) {
+				var hv = curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+				hovering = hovering || hv;
+			}
+				
+			return hovering;
 		}
 		
 		static getLineCount    = function(       ) /*=>*/ {return is_path(curr_path)? curr_path.getLineCount()                    : 1};
@@ -32,13 +38,13 @@ function Node_Path_Reverse(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _path = getSingleValue(0, preview_index, true);
-		if(struct_has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		if(has(_path, "drawOverlay")) InputDrawOverlay(_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny));
 	}
 	
 	static processData = function(_outData, _data, _array_index = 0) { 
 		
 		if(!is(_outData, _reversePath)) 
-			_outData = new _reversePath();
+			_outData = new _reversePath(self);
 		
 		_outData.curr_path  = _data[0];
 		return _outData;

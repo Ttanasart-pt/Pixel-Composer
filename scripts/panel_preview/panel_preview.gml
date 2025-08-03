@@ -2958,9 +2958,10 @@ function Panel_Preview() : PanelContent() constructor {
             }
         }
         
-        drawSelection();
-        
-        if(d3_active == NODE_3D.none) drawSplitView();
+        if(d3_active == NODE_3D.none) {
+        	drawSplitView();
+        	drawSelection();
+        }
         
         drawTopbar(toolNode);
         drawToolBar(toolNode);

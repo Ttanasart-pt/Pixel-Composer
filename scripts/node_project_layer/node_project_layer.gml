@@ -105,6 +105,8 @@ function Node_Project_Layer(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				dragging = 0; 
 			}
 		}
+		
+		return _hov;
 	}
 	
 	static update = function() {

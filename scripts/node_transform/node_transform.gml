@@ -630,6 +630,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			_surf_out = _surf_out[preview_index];
 		}
 		
+		var hovering = false;
 		var __pos = current_data[2];
 		var pos   = [ __pos[0], __pos[1] ];
 		var _pos  = [ __pos[0], __pos[1] ];
@@ -824,46 +825,62 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			}
 		}
 		
-		if(overlay_dragging == 0 && mouse_press(mb_left, active)) {
+		if(overlay_dragging == 0) {
 			if(point_in_circle(_mx, _my, bax, bay, 8)) {
-				overlay_dragging = 2;
-				overlay_drag_mx  = _mx;
-				overlay_drag_my  = _my;
-				overlay_drag_sx  = anc[0];
-				overlay_drag_sy  = anc[1];
-				overlay_drag_px  = pos[0];
-				overlay_drag_py  = pos[1];
+				hovering = true;
+				
+				if(mouse_press(mb_left, active)) {
+					overlay_dragging = 2;
+					overlay_drag_mx  = _mx;
+					overlay_drag_my  = _my;
+					overlay_drag_sx  = anc[0];
+					overlay_drag_sy  = anc[1];
+					overlay_drag_px  = pos[0];
+					overlay_drag_py  = pos[1];
+				}
 				
 			} else if(point_in_circle(_mx, _my, _tlx, _tly, 8) || 
 			          point_in_circle(_mx, _my, _trx, _try, 8) || 
 					  point_in_circle(_mx, _my, _blx, _bly, 8) || 
 					  point_in_circle(_mx, _my, _brx, _bry, 8) || 
 					  point_in_circle(_mx, _my, _szx, _szy, 8)) {
-				overlay_dragging = 4;
 				
-				     if(point_in_circle(_mx, _my, _tlx, _tly, 8)) corner_dragging = 0;
-				else if(point_in_circle(_mx, _my, _trx, _try, 8)) corner_dragging = 1;
-				else if(point_in_circle(_mx, _my, _blx, _bly, 8)) corner_dragging = 2;
-				else if(point_in_circle(_mx, _my, _brx, _bry, 8)) corner_dragging = 3;
-				else if(point_in_circle(_mx, _my, _szx, _szy, 8)) corner_dragging = 4;
+				hovering = true;
 				
-				overlay_drag_mx  = _mx;
-				overlay_drag_my  = _my;
-				overlay_drag_sx  = sca[0];
-				overlay_drag_sy  = sca[1];
+				if(mouse_press(mb_left, active)) {
+					overlay_dragging = 4;
+					     if(point_in_circle(_mx, _my, _tlx, _tly, 8)) corner_dragging = 0;
+					else if(point_in_circle(_mx, _my, _trx, _try, 8)) corner_dragging = 1;
+					else if(point_in_circle(_mx, _my, _blx, _bly, 8)) corner_dragging = 2;
+					else if(point_in_circle(_mx, _my, _brx, _bry, 8)) corner_dragging = 3;
+					else if(point_in_circle(_mx, _my, _szx, _szy, 8)) corner_dragging = 4;
+					
+					overlay_drag_mx  = _mx;
+					overlay_drag_my  = _my;
+					overlay_drag_sx  = sca[0];
+					overlay_drag_sy  = sca[1];
+				}
 				
 			} else if(point_in_circle(_mx, _my, _rrx, _rry, 8)) {
-				overlay_dragging = 3;
-				overlay_drag_ma  = point_direction(bax, bay, _mx, _my);
-				overlay_drag_sa  = rot;
+				hovering = true;
+				
+				if(mouse_press(mb_left, active)) {
+					overlay_dragging = 3;
+					overlay_drag_ma  = point_direction(bax, bay, _mx, _my);
+					overlay_drag_sa  = rot;
+				}
 				
 			} else if(point_in_triangle(_mx, _my, _tlx, _tly, _trx, _try, _blx, _bly) || 
 			          point_in_triangle(_mx, _my, _trx, _try, _blx, _bly, _brx, _bry)) {
-				overlay_dragging = 1;
-				overlay_drag_mx  = _mx;
-				overlay_drag_my  = _my;
-				overlay_drag_sx  = _pos[0];
-				overlay_drag_sy  = _pos[1];
+				hovering = true;
+				
+	          	if(mouse_press(mb_left, active)) {
+					overlay_dragging = 1;
+					overlay_drag_mx  = _mx;
+					overlay_drag_my  = _my;
+					overlay_drag_sx  = _pos[0];
+					overlay_drag_sy  = _pos[1];
+	          	}
 			}
 		}
 	
@@ -902,6 +919,8 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 			draw_set_alpha(1);
 		}
+	
+		return hovering;
 	}
 
 	static drawOverlayTransform = function(_node) { 

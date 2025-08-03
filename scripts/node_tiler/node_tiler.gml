@@ -173,12 +173,13 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
     static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, params) { 
         if(tileset == noone) return;
         
+        var hovering = isUsingTool();
         var _mapSize = current_data[1];
     	var _tileSiz = tileset.tileSize;
 	    
 	    canvas_surface = surface_verify(canvas_surface, _mapSize[0], _mapSize[1], surface_rgba16float);
 	    
-        if(!surface_valid(drawing_surface, _mapSize[0], _mapSize[1], surface_rgba16float)) return false;
+        if(!surface_valid(drawing_surface, _mapSize[0], _mapSize[1], surface_rgba16float)) return hovering;
         
 	    #region surfaces
 	    	var _outDim   = [ _tileSiz[0] * _mapSize[0], _tileSiz[1] * _mapSize[1] ];
@@ -304,6 +305,8 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	    	
 	    	if(_h.isPressing()) _hk[1]();
 	    }
+    
+    	return hovering;
     }
     
     ////- Update

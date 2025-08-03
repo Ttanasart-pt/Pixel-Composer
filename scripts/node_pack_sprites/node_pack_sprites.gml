@@ -17,7 +17,7 @@ function Node_Pack_Sprites(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	input_display_list = [ 0, 4, 1, 2, 3 ];
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) {  #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var rect = outputs[1].getValue();
 		var spac = getInputData(4);
 		
@@ -41,16 +41,16 @@ function Node_Pack_Sprites(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				_x + _s * (_sx + _sw), 
 				_y + _s * (_sy + _sh), true);
 		}
-	} #endregion
+	}
 	
-	static step = function() { #region
+	static step = function() {
 		var algo = getInputData(1);
 		
 		inputs[2].setVisible(algo == 1 || algo == 0);
 		inputs[3].setVisible(algo == 2 || algo == 0);
-	} #endregion
+	}
 	
-	static update = function() { #region
+	static update = function() {
 		var _inpt = getInputData(0);
 		var _algo = getInputData(1);
 		var _spac = getInputData(4);
@@ -122,5 +122,5 @@ function Node_Pack_Sprites(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		surface_reset_target();
 		
 		outputs[1].setValue(atlas);
-	} #endregion
+	}
 }

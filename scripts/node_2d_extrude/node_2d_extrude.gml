@@ -78,6 +78,8 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			anchor_drag_mx  = _mx;
 			anchor_drag_my  = _my;
 		}
+		
+		return _hov;
 	}
 	
 	static processData = function(_outSurf, _data, _array_index = 0) { 

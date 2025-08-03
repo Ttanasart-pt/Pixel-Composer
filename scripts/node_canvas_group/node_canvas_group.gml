@@ -246,7 +246,8 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 	////- Draw
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, params) {
-		if(canvas_sel) canvas_sel.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, params);
+		if(canvas_sel) return canvas_sel.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, params);
+		return false;
 	}
 	
 	static drawTools = function(_mx, _my, xx, yy, tool_size, hover, focus) {

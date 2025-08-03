@@ -10,13 +10,16 @@ function Node_Path_Trim(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	input_display_list = [ 0, 1, 2 ];
 	
-	function _trimmedPath() constructor {
+	function _trimmedPath(_node) : Path(_node) constructor {
 		curr_path  = noone;
 		curr_range = noone;
 		
 		static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-			if(curr_path && struct_has(curr_path, "drawOverlay")) 
-				curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+			var hovering = false;
+			if(has(curr_path, "drawOverlay")) {
+				var hv = curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+				hovering = hovering || hv;
+			}
 			
 			draw_set_color(COLORS._main_icon);
 			
@@ -38,6 +41,8 @@ function Node_Path_Trim(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					oy = ny;
 				}
 			}
+			
+			return hovering;
 		}
 		
 		static getLineCount    = function(   ) /*=>*/ {return is_path(curr_path)? curr_path.getLineCount()     : 1};
@@ -58,12 +63,12 @@ function Node_Path_Trim(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _path = getSingleValue(0, preview_index, true);
-		if(struct_has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		if(has(_path, "drawOverlay")) InputDrawOverlay(_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny));
 	}
 	
 	static processData = function(_outData, _data, _array_index = 0) { 
 		if(!is(_outData, _trimmedPath)) 
-			_outData = new _trimmedPath();
+			_outData = new _trimmedPath(self);
 		
 		var _path = _data[0];
 		var _rang = [ _data[1][0], _data[1][1] ];

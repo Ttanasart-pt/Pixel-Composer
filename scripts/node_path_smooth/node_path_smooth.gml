@@ -77,6 +77,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var sample = PREFERENCES.path_resolution;
 		var loop   = getInputData(0);
 		var rond   = getInputData(1);
+		var hovering = false;
 		
 		var _line_hover   = -1;
 		var _anchor_hover = -1;
@@ -116,6 +117,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		if(key_mod_press(CTRL) || isUsingTool(0)) {	// anchor edit
 			draw_sprite_ui_uniform(_anchor_hover == -1? THEME.cursor_path_add : THEME.cursor_path_remove, 0, _mx + 4, _my + 4);
+			hovering = true;
 			
 			if(mouse_press(mb_left, active)) {
 				if(_anchor_hover == -1) {
@@ -137,7 +139,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			}
 		}
 		
-		return w_hovering;
+		return hovering || w_hovering;
 	}
 	
 	static updateLength = function() {

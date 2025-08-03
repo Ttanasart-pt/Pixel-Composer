@@ -30,8 +30,7 @@ function Node_Path_Weight_Adjust(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	temp_p = new __vec2P();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		if(curr_path && struct_has(curr_path, "drawOverlay")) 
-			curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		if(has(curr_path, "drawOverlay")) InputDrawOverlay(curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny));
 	}
 	
 	static getLineCount    = function(       ) /*=>*/ {return is_path(curr_path)? curr_path.getLineCount()       : 1};

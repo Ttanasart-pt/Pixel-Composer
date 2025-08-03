@@ -109,6 +109,7 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _posi = getSingleValue(14);
 		if(_fill) return;
 		
+		var hovering = false;
 		var sw = surface_get_width_safe( _surf);
 		var sh = surface_get_height_safe(_surf);
 		var fw = surface_get_width_safe( _fore);
@@ -140,6 +141,7 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		draw_set_color(COLORS._main_accent);
 		if(dragging || (active && point_in_rectangle(_mx, _my, _rx, _ry, _rx + _rw, _ry + _rh))) {
 			draw_rectangle_width(_rx, _ry, _rx + _rw, _ry + _rh, 2);
+			hovering = true;
 			
 			if(mouse_press(mb_left)) {
 				dragging = true;
@@ -150,6 +152,8 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			}
 		} else 
 			draw_rectangle(_rx, _ry, _rx + _rw, _ry + _rh, true);
+			
+		return hovering;
 	}
 	
 	static drawOverlayTransform = function(_node) { 

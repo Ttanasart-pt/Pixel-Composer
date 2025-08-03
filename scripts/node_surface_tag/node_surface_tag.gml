@@ -190,6 +190,8 @@ function Node_Surface_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
             	tag_dragging_my = _my;
     	    }
     	}
+    	
+    	return _tag_hov != noone;
 	}
 	
 	static processData_prebatch  = function() {

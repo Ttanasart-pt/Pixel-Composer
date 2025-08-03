@@ -8,7 +8,10 @@ function Path(_node) constructor {
 	loop		= false;
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		node.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		if(!is(node, Node)) return false;
+		
+		var hv = node.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		return (hv ?? false) || node.w_hovering;
 	}
 	
 	static getBoundary		= function() /*=>*/ {return boundary};

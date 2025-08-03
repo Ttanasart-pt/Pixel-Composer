@@ -69,7 +69,7 @@ function __Bone_Constrain_Limit_Distance(_bone, _bid = "") : __Bone_Constrain(_b
         if(bone_object != noone) {
             var _bname = bone_object.name;
             
-            draw_sprite_ui(THEME.bone, 1, _wdx + ui(16), _y + _wdh / 2, 1, 1, 0, COLORS._main_icon, 1);
+            draw_sprite_ui(THEME.bone, bone_object.getSpriteIndex(), _wdx + ui(16), _y + _wdh / 2, 1, 1, 0, COLORS._main_icon, 1);
             draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text);
             draw_text_add(_wdx + ui(32), _y + _wdh / 2, _bname);
             

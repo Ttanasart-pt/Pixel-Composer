@@ -17,7 +17,7 @@ function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _path = getInputData(0);
-		if(_path && struct_has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		if(has(_path, "drawOverlay")) InputDrawOverlay(_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		
 		var _pnt = outputs[0].getValue();
 		if(process_amount == 1) _pnt = [ _pnt ];

@@ -26,7 +26,7 @@ function Node_Path_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _path = getInputData(0);
-		if(_path && struct_has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		if(has(_path, "drawOverlay")) InputDrawOverlay(_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny));
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {

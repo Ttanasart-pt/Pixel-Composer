@@ -113,10 +113,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 					
 				if(_bone.is_main) continue;
 				
-					 if(_bone.parent_anchor) draw_sprite_ui(THEME.bone, 1, __x + ui(12), ty + ui(14),,,, COLORS._main_icon);
-				else if(_bone.IKlength)      draw_sprite_ui(THEME.bone, 2, __x + ui(12), ty + ui(14),,,, COLORS._main_icon);
-				else                         draw_sprite_ui(THEME.bone, 0, __x + ui(12), ty + ui(14),,,, COLORS._main_icon);
-						
+				draw_sprite_ui(THEME.bone, _bone.getSpriteIndex(), __x + ui(12), ty + ui(14),,,, COLORS._main_icon);
 				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
 				draw_text_add(__x + ui(24), ty + ui(12), _bone.name);
 				

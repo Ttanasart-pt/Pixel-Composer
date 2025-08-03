@@ -21,7 +21,7 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		[ "Blend", false ], 3, 2, 
 	]
 	
-	function _blendedPath() constructor {
+	function _blendedPath(_node) : Path(_node) constructor {
 		cached_pos = {};
 		
 		curr_path1 = noone;
@@ -37,9 +37,17 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		total_length = [];
 		
 		static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+			var hovering = false;
 			
-			if(is_path1 && struct_has(curr_path1, "drawOverlay")) curr_path1.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-			if(is_path2 && struct_has(curr_path2, "drawOverlay")) curr_path2.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+			if(has(curr_path1, "drawOverlay")) {
+				var _hv = curr_path1.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+				hovering = hovering || _hv;
+			}
+			
+			if(has(curr_path2, "drawOverlay")) {
+				var _hv = curr_path2.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+				hovering = hovering || _hv;
+			}
 			
 			draw_set_color(COLORS._main_icon);
 			
@@ -61,6 +69,8 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 					oy = ny;
 				}
 			}
+			
+			return hovering;
 		}
 		
 		////- Data
@@ -195,7 +205,7 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _path = getSingleValue(0, preview_index, true);
-		if(struct_has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		if(has(_path, "drawOverlay")) InputDrawOverlay(_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny));
 	}
 	
 	static processData = function(_outData, _data, _array_index = 0) { 

@@ -40,7 +40,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		["Wiggle",	 true, 6], 7, 8, 
 	];
 	
-	function _wavePath() constructor {
+	function _wavePath(_node) : Path(_node) constructor {
 		fre  = 0; 
 		amp  = 0;
 		shf  = 0;
@@ -62,7 +62,12 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		curr_path  = noone;
 		
 		static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-			if(is_path(curr_path)) curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+			var hovering = false;
+			
+			if(is_path(curr_path)) {
+				var hv = curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+				hovering = hovering || hv;
+			}
 			
 			draw_set_color(COLORS._main_icon);
 			var _amo = getLineCount();
@@ -83,6 +88,8 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					oy = ny;
 				}
 			}
+			
+			return hovering;
 		}
 		
 		static getLineCount    = function(   ) /*=>*/ {return is_path(curr_path)? curr_path.getLineCount()     : 1};
@@ -188,13 +195,13 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _path = getSingleValue(0, preview_index, true);
-		if(struct_has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		if(has(_path, "drawOverlay")) InputDrawOverlay(_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny));
 	}
 	
 	static processData = function(_outData, _data, _array_index = 0) { 
 		
 		if(!is(_outData, _wavePath)) 
-			_outData = new _wavePath();
+			_outData = new _wavePath(self);
 		
 		_outData.cached_pos = {};
 		_outData.curr_path  = _data[0];

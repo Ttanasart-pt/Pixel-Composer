@@ -1052,6 +1052,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		if(color_picking) return pickColor(_x, _y, _s, _mx, _my);
 		
+		var hovering = isUsingTool();
 		var _panel = params.panel;
 		if(palette_picking) {
 			hover  = false; 
@@ -1065,7 +1066,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		tool_size_edit.setInteract(!is_surface(brush.brush_surface));
 		
 		var _canvas_surface = getCanvasSurface();
-		if(!surface_exists(_canvas_surface)) return;
+		if(!surface_exists(_canvas_surface)) return hovering;
 		
 		#region surfaces
 			var _dim = attributes.dimension;
@@ -1154,7 +1155,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				shader_reset();
 				
 				_tool.drawPostOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-				return;
+				return hovering;
 			}
 		#endregion
 		
@@ -1382,6 +1383,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			}
 		}
 		
+		return hovering;
 	}
 	
 	static step = function() {

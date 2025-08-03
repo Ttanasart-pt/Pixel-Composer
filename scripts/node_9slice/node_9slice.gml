@@ -60,6 +60,7 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		var ww = WIN_W;
 		var hh = WIN_H;
+		var hovering = false;
 		
 		draw_set_color(COLORS._main_accent);
 		draw_line(sp_r, -hh, sp_r, hh);
@@ -100,6 +101,7 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		draw_set_color(COLORS._main_accent);
 		
 		if(distance_to_line_infinite(_mx, _my, sp_r, -hh, sp_r, hh) < 12) {
+			hovering = true;
 			draw_line_width(sp_r, -hh, sp_r, hh, 3);
 			if(mouse_press(mb_left, active)) {
 				drag_side = 0;
@@ -109,6 +111,7 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			}
 			
 		} else if(distance_to_line_infinite(_mx, _my, -ww, sp_t, ww, sp_t) < 12) {
+			hovering = true;
 			draw_line_width(-ww, sp_t, ww, sp_t, 3);
 			if(mouse_press(mb_left, active)) {
 				drag_side = 1;
@@ -118,6 +121,7 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			}
 			
 		} else if(distance_to_line_infinite(_mx, _my, sp_l, -hh, sp_l, hh) < 12) {
+			hovering = true;
 			draw_line_width(sp_l, -hh, sp_l, hh, 3);
 			if(mouse_press(mb_left, active)) {
 				drag_side = 2;
@@ -127,6 +131,7 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			}
 			
 		} else if(distance_to_line_infinite(_mx, _my, -ww, sp_b, ww, sp_b) < 12) {
+			hovering = true;
 			draw_line_width(-ww, sp_b, ww, sp_b, 3);
 			if(mouse_press(mb_left, active)) {
 				drag_side = 3;
@@ -136,6 +141,8 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			}
 			
 		}
+		
+		return hovering;
 		
 	}
 	
