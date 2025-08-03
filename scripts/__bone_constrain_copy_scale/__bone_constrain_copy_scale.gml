@@ -8,7 +8,7 @@ function __Bone_Constrain_Copy_Scale(_bone, _bid = "", _tid = "") : __Bone_Const
     bone_object   = noone;
     target_object = noone;
     
-    tb_strength = textBox_Number(function(v) /*=>*/ { strength = clamp(v, 0, 1); node.triggerRender(); }).setLabel("Strength").setBoxColor(COLORS._main_icon_light);
+    tb_strength = slider(,,, function(v) /*=>*/ { strength = clamp(v, 0, 1); node.triggerRender(); }).setLabel("Strength").setBoxColor(COLORS._main_icon_light);
     
     ////- Actions
     
@@ -34,10 +34,11 @@ function __Bone_Constrain_Copy_Scale(_bone, _bid = "", _tid = "") : __Bone_Const
         
         // draw bones
         var _wdx =  _x + ui(8);
-        var _wdw = (_w - ui(16 + 4)) / 2;
+        var _wdw = (_w - ui(16 + 12)) / 2;
+        var _wd2 = _wdx + _wdw + ui(12);
         var _wdh = ui(24);
-        draw_sprite_stretched_ext(THEME.textbox, 3, _wdx,                _y, _wdw, _wdh, COLORS._main_icon_light, 1);
-        draw_sprite_stretched_ext(THEME.textbox, 3, _wdx + _wdw + ui(4), _y, _wdw, _wdh, COLORS._main_icon_light, 1);
+        draw_sprite_stretched_ext(THEME.textbox, 3, _wdx, _y, _wdw, _wdh, COLORS._main_icon_light, 1);
+        draw_sprite_stretched_ext(THEME.textbox, 3, _wd2, _y, _wdw, _wdh, COLORS._main_icon_light, 1);
         
         if(bone_object != noone) {
             var _bname = bone_object.name;
@@ -52,12 +53,12 @@ function __Bone_Constrain_Copy_Scale(_bone, _bid = "", _tid = "") : __Bone_Const
         if(target_object != noone) {
             var _bname = target_object.name;
             
-            draw_sprite_ui(THEME.bone, 1, _wdx + _wdw + ui(4) + ui(16), _y + _wdh / 2, 1, 1, 0, COLORS._main_icon, 1);
+            draw_sprite_ui(THEME.bone, 1, _wd2 + ui(16), _y + _wdh / 2, 1, 1, 0, COLORS._main_icon, 1);
             draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-            draw_text_add(_wdx + _wdw + ui(4) + ui(32), _y + _wdh / 2, _bname);
+            draw_text_add(_wd2 + ui(32), _y + _wdh / 2, _bname);
             
         } else
-            draw_sprite_ui(THEME.bone, 1, _wdx + _wdw + ui(4) + ui(16), _y + _wdh / 2, 1, 1, 0, COLORS._main_icon, .5);
+            draw_sprite_ui(THEME.bone, 1, _wd2 + ui(16), _y + _wdh / 2, 1, 1, 0, COLORS._main_icon, .5);
         
         if(_hover && point_in_rectangle(_m[0], _m[1], _wdx, _y, _wdx + _wdw, _y + _wdh)) {
             draw_sprite_stretched_ext(THEME.textbox, 1, _wdx, _y, _wdw, _wdh, c_white, 1);
@@ -65,14 +66,13 @@ function __Bone_Constrain_Copy_Scale(_bone, _bid = "", _tid = "") : __Bone_Const
                 node.boneSelector(function(p) /*=>*/ { bone_id = p.bone.ID; init(); node.triggerRender(); });
         }
         
-        if(_hover && point_in_rectangle(_m[0], _m[1], _wdx + _wdw + ui(4), _y, _wdx + _wdw + ui(4) + _wdw, _y + _wdh)) {
-            draw_sprite_stretched_ext(THEME.textbox, 1, _wdx + _wdw + ui(4), _y, _wdw, _wdh, c_white, 1);
+        if(_hover && point_in_rectangle(_m[0], _m[1], _wd2, _y, _wd2 + _wdw, _y + _wdh)) {
+            draw_sprite_stretched_ext(THEME.textbox, 1, _wd2, _y, _wdw, _wdh, c_white, 1);
             if(mouse_click(mb_left, _focus)) 
                 node.boneSelector(function(p) /*=>*/ { target_id = p.bone.ID; init(); node.triggerRender(); });
         }
         
-        _y += _wdh + ui(4);
-        wh += _wdh + ui(4);
+        draw_sprite_ui_uniform(THEME.arrow, 2, _x + _w / 2 - ui(1), _y + _wdh / 2, 1, COLORS._main_icon);
         
         // draw widget
         var _lbx = _x + ui(16);

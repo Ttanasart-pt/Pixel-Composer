@@ -32,15 +32,15 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	}
 	
 	bone_constrain_menu = [
-		new MenuItem("Copy Position",  function() /*=>*/ { addConstain("Copy Position")  }, [ s_bone_constrain, 0, 1, c_white ]),
-		new MenuItem("Copy Rotation",  function() /*=>*/ { addConstain("Copy Rotation")  }, [ s_bone_constrain, 1, 1, c_white ]),
-		new MenuItem("Copy Scale",     function() /*=>*/ { addConstain("Copy Scale")     }, [ s_bone_constrain, 2, 1, c_white ]),
+		new MenuItem("Copy Position",  function() /*=>*/ { addConstain("__Bone_Constrain_Copy_Position")  }, [ s_bone_constrain, 0, 1, c_white ]),
+		new MenuItem("Copy Rotation",  function() /*=>*/ { addConstain("__Bone_Constrain_Copy_Rotation")  }, [ s_bone_constrain, 1, 1, c_white ]),
+		new MenuItem("Copy Scale",     function() /*=>*/ { addConstain("__Bone_Constrain_Copy_Scale")     }, [ s_bone_constrain, 2, 1, c_white ]),
 		-1,
-		new MenuItem("Look At",        function() /*=>*/ { addConstain("Look At")        }, [ s_bone_constrain, 3, 1, c_white ]),
-		new MenuItem("Move To",        function() /*=>*/ { addConstain("Move To")        }, [ s_bone_constrain, 4, 1, c_white ]),
-		new MenuItem("Stretch To",     function() /*=>*/ { addConstain("Stretch To")     }, [ s_bone_constrain, 5, 1, c_white ]),
+		new MenuItem("Look At",        function() /*=>*/ { addConstain("__Bone_Constrain_Look_At")        }, [ s_bone_constrain, 3, 1, c_white ]),
+		new MenuItem("Move To",        function() /*=>*/ { addConstain("__Bone_Constrain_Move_To")        }, [ s_bone_constrain, 4, 1, c_white ]),
+		new MenuItem("Stretch To",     function() /*=>*/ { addConstain("__Bone_Constrain_Stretch_To")     }, [ s_bone_constrain, 5, 1, c_white ]),
 		-1, 
-		new MenuItem("Limit Rotation", function() /*=>*/ { addConstain("Limit Rotation") }, [ s_bone_constrain, 6, 1, c_white ]),
+		new MenuItem("Limit Rotation", function() /*=>*/ { addConstain("__Bone_Constrain_Limit_Rotation") }, [ s_bone_constrain, 6, 1, c_white ]),
 	];
 	
 	bone_array    = [];
@@ -223,7 +223,11 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			ty += _h + ui(32 + 4);
 		}
 		
-		if(_del != -1) array_delete(constrains, _del, 1);
+		if(_del != -1) {
+			array_delete(constrains, _del, 1);
+			triggerRender();
+		}
+		
 		hh += constrains_h;
 		return hh;
 	}); 

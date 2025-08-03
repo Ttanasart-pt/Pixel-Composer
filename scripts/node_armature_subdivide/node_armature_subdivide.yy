@@ -6,9 +6,8 @@
   "name":"node_armature_subdivide",
   "parent":{
     "name":"armature",
-    "path":"folders/nodes/data/compose/armature.yy",
+    "path":"folders/nodes/data/armature.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
-  "tags":[],
 }

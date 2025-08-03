@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"__bone_constrain_copy_rotation",
   "parent":{
-    "name":"armature",
-    "path":"folders/nodes/data/compose/armature.yy",
+    "name":"constrain",
+    "path":"folders/nodes/data/armature/constrain.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
