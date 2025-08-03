@@ -177,17 +177,15 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	}); 
 	
 	constrains_h = 0;
+	constrains_dragging = noone;
+	
 	constrain_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { 
 		var _b = bones;
 		var hh = 0;
 		if(_b == noone) return 0;
 		
-		var ty  = _y;
+		constrains_h   = 0;
 		var constrains = _b.constrains;
-		
-		constrains_h = 0;
-		var _del = -1;
-		
 		var _drawParam = {
 			rx: constrain_renderer.rx, 
 			ry: constrain_renderer.ry,
@@ -198,13 +196,25 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			panel: constrain_renderer.parent, 
 		}
 		
+		var ty   = _y;
+		var _del = -1;
+		var _hovering = noone;
+		var _hoverInd = 0;
+		var _hoverY   = ty;
+		
 		for( var i = 0, n = array_length(constrains); i < n; i++ ) {
 			var _con = constrains[i];
+			var _hov = _hover && point_in_rectangle(_m[0], _m[1], 0, ty, _w - ui(32), ty + ui(32));
+			if(_hov) {
+				_hovering = _con;
+				_hoverInd = i;
+				_hoverY   = ty;
+			}
 			
 			draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, ty, _w, _con.draw_height + ui(32), COLORS.node_composite_bg_blend, 1);
-			draw_sprite_ext(s_bone_constrain, _con.sindex, _x + ui(4 + 16), ty + ui(16), UI_SCALE, UI_SCALE);
+			draw_sprite_ext(s_bone_constrain, _con.sindex, _x + ui(4 + 16), ty + ui(16), UI_SCALE / 2, UI_SCALE / 2);
 			
-			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
+			draw_set_text(f_p2, fa_left, fa_top, _hov? COLORS._main_text : COLORS._main_text_sub);
 			draw_text_add(_x + ui(4 + 32), ty + ui(6), _con.name);
 			
 			var bx = _x + _w - ui(16);
@@ -223,6 +233,26 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			_con.draw_height = _h;
 			constrains_h += _h + ui(32 + 4);
 			ty += _h + ui(32 + 4);
+			
+			if(_m[1] > ty) {
+				_hoverInd = i + 1;
+				_hoverY   = ty;
+			}
+		}
+		
+		if(_hovering != noone && mouse_lpress(_focus)) {
+			constrains_dragging = _hovering;
+			array_remove(constrains, constrains_dragging);
+		}
+		
+		if(constrains_dragging != noone) {
+			draw_set_color(COLORS._main_accent);
+			draw_line_round(ui(8), _hoverY, _w - ui(16), _hoverY, 2);
+			
+			if(mouse_lrelease()) {
+				array_insert(constrains, _hoverInd, constrains_dragging);
+				constrains_dragging = noone;
+			}
 		}
 		
 		if(_del != -1) {

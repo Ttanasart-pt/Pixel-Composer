@@ -56,7 +56,7 @@ function __Bone_Constrain_Limit_Position(_bone, _bid = "") : __Bone_Constrain(_b
         
         if(_hover && point_in_rectangle(_m[0], _m[1], _wdx, _y, _wdx + _wdw, _y + _wdh)) {
             draw_sprite_stretched_ext(THEME.textbox, 1, _wdx, _y, _wdw, _wdh, c_white, 1);
-            if(mouse_click(mb_left, _focus))
+            if(mouse_press(mb_left, _focus))
                 node.boneSelector(function(p) /*=>*/ { bone_id = p.bone.ID; init(); node.triggerRender(); })
         }
         

@@ -66,13 +66,13 @@ function __Bone_Constrain_Look_At(_bone, _bid = "", _tid = "") : __Bone_Constrai
         
         if(_hover && point_in_rectangle(_m[0], _m[1], _wdx, _y, _wdx + _wdw, _y + _wdh)) {
             draw_sprite_stretched_ext(THEME.textbox, 1, _wdx, _y, _wdw, _wdh, c_white, 1);
-            if(mouse_click(mb_left, _focus))
+            if(mouse_press(mb_left, _focus))
                 node.boneSelector(function(p) /*=>*/ { bone_id = p.bone.ID; init(); node.triggerRender(); });
         }
         
         if(_hover && point_in_rectangle(_m[0], _m[1], _wd2, _y, _wd2 + _wdw, _y + _wdh)) {
             draw_sprite_stretched_ext(THEME.textbox, 1, _wd2, _y, _wdw, _wdh, c_white, 1);
-            if(mouse_click(mb_left, _focus)) 
+            if(mouse_press(mb_left, _focus)) 
                 node.boneSelector(function(p) /*=>*/ { target_id = p.bone.ID; init(); node.triggerRender(); });
         }
         
