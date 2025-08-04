@@ -27,10 +27,10 @@ void main() {
 		c = mix(c, color, a);
 		
 	} else if(type == 2) { 
-		a = smoothstep(.0, .15, dist);
-		c = mix(c, color, a);      
+		a = smoothstep(.15, .25, dist);
+		c = mix(c, color, a);
 		
-		a = smoothstep(.25, .35, dist);
+		a = smoothstep(.35, .45, dist);
 		c = mix(c, vec4(1., 1., 1., 1.), a);
 	} 
 	

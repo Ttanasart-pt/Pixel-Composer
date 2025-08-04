@@ -1072,7 +1072,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var _dim = attributes.dimension;
 			_drawing_surface = surface_verify(_drawing_surface, _dim[0], _dim[1]);
 			drawing_surface  = surface_verify( drawing_surface, _dim[0], _dim[1], attrDepth());
-				
+			
 			surface_set_shader(_drawing_surface, noone); 
 				draw_surface_safe(drawing_surface); 
 			surface_reset_shader();

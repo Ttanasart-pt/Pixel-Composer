@@ -511,7 +511,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			#region draw title
 				var _txt = _inp.name;
 				var _txx = _sx1 + ui(12);
-				var _txy = _cy + lh / 2 + ui(2);
+				var _txy = _cy + lh / 2;
 				
 				if(_junc_canvas) hover = hover && _m[0] > _txx + ui(8 + 16);
 				
@@ -534,7 +534,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					
 					if(_junc_canvas) {
 						var _icx = _txx + ui(8);
-						var _icy = _txy - ui(1);
+						var _icy = _txy;
 						var _icc = COLORS._main_icon;
 						var _ica = aa * .8;
 						

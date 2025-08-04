@@ -2854,6 +2854,11 @@ function Panel_Preview() : PanelContent() constructor {
         	selecting_w  = _x1 - _x0;
     		selecting_h  = _y1 - _y0;
         	
+        	selection_x0 = min(_x0, _x1);
+	    	selection_y0 = min(_y0, _y1);
+	    	selection_x1 = max(_x0, _x1);
+	    	selection_y1 = max(_y0, _y1);
+	    	
         	if(_x0 != _x1 && _y0 != _y1) 
     			draw_sprite_stretched_points_clamp(THEME.ui_selection, 0, _xx0, _yy0, _xx1, _yy1, COLORS._main_accent);
     		
@@ -2861,11 +2866,6 @@ function Panel_Preview() : PanelContent() constructor {
     			selection_selecting = false;
     			
     			if(_surfMode) {
-			    	selection_x0 = min(_x0, _x1);
-			    	selection_y0 = min(_y0, _y1);
-			    	selection_x1 = max(_x0, _x1);
-			    	selection_y1 = max(_y0, _y1);
-			    	
 			    	if(selection_x0 != selection_x1 && selection_y0 != selection_y1)
 	    				selection_active = true;
     			}

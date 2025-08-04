@@ -239,22 +239,25 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 	////- Draw
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, params) {
+		if(composite != noone) {
+			var _outSurf = composite.outputs[0].getValue();
+			draw_surface_ext_safe(_outSurf, _x, _y, _s, _s);
+		}
+		
 		if(canvas_sel) return canvas_sel.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, params);
 		return false;
 	}
 	
-	// static drawTools = function(_mx, _my, xx, yy, tool_size, hover, focus) {
-	// 	if(canvas_sel) return canvas_sel.drawTools(_mx, _my, xx, yy, tool_size, hover, focus);
-	// 	return 0;
-	// }
+	static drawTools = function(_mx, _my, xx, yy, tool_size, hover, focus) {
+		if(canvas_sel) return canvas_sel.drawTools(_mx, _my, xx, yy, tool_size, hover, focus);
+		return 0;
+	}
 	
 	////- Update
 	
 	static step = function() {
-		tools         = -1;
-		tool_settings = [];
-		rightTools    = -1;
-		
+		tools      = -1;
+		rightTools = -1;
 		canvas_sel = noone;
 		
 		if(composite == noone) return;
@@ -267,15 +270,14 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 				
 				var _inp = composite.inputs[_ind];
 				var _can = _inp? _inp.value_from : noone;
-				if(_can && struct_has(layers, _can.node.node_id))
+				if(_can && has(layers, _can.node.node_id))
 					canvas_sel = layers[$ _can.node.node_id].canvas;
 			}
 		}
 		
 		if(canvas_sel) {
-			tools         = canvas_sel.tools;
-			tool_settings = canvas_sel.tool_settings;
-			rightTools    = canvas_sel.rightTools;
+			tools      = canvas_sel.tools;
+			rightTools = canvas_sel.rightTools;
 		}
 		
 		if(timeline_item_group) {
