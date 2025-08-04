@@ -516,7 +516,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				if(_junc_canvas) hover = hover && _m[0] > _txx + ui(8 + 16);
 				
 				var tc = ind == dynamic_input_inspecting? COLORS._main_text_accent : COLORS._main_icon;
-				var tf = ind == dynamic_input_inspecting? f_p1b : f_p1;
+				var tf = ind == dynamic_input_inspecting? f_p2b : f_p2;
 				if(hover) tc = COLORS._main_text;
 					
 				draw_set_text(tf, fa_left, fa_center, tc);

@@ -353,7 +353,7 @@
             
             { "label": "Canvas" },
             "Node_Canvas",
-            // "Node_Canvas_Group",
+            "Node_Canvas_Group",
             "Node_Active_Canvas",
             
             { "label": "Tileset" },

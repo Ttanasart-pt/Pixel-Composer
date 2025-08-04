@@ -116,8 +116,9 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		
 		if((_w - _bs) / _sz > ui(48)) {
 			if(side_button) {
-				if(is(side_button, buttonAnchor))
+				if(is(side_button, buttonAnchor)) 
 					side_button.index = round(array_safe_get(_data, 0) * 2 + array_safe_get(_data, 1) * 6);
+					
 				side_button.setFocusHover(active, hover);
 				side_button.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
 				_w -= _bs + ui(4);

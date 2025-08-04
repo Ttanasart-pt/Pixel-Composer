@@ -671,9 +671,11 @@ function nodeBuild(_name, _x, _y, _group = PANEL_GRAPH.getCurrentContext()) {
 	}
 	
 	var _skipc = false;
-	if(is(_group, Node_Collection_Inline)) {
+	
+	if(is(_group, Node_Collection) || is(_group, Node_Collection_Inline)) {
 		_skipc = true;
-		_group = _group.group;
+		if(is(_group, Node_Collection_Inline))
+			_group = _group.group;
 	}
 	
 	var _node  = ALL_NODES[$ _name];

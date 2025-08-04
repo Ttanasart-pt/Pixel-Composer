@@ -26,6 +26,8 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 		frame_renderer_x_to  = 0;
 		frame_renderer_x_max = 0;
 		
+		b_layer_add = button(function() /*=>*/ {return layerAdd()}).setIcon(THEME.add_16, 0, COLORS._main_value_positive);
+		
 		layer_height = 0;
 		layer_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 			var _h  = ui(4);
@@ -38,15 +40,6 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 		    _layer_ren.ry = layer_renderer.ry;
 			
 			var _yy = _y + _h;
-			var bx = _x;
-			var by = _yy;
-			var bs = ui(24);
-			if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, "", THEME.add_16, 0, COLORS._main_value_positive) == 2) 
-				layerAdd();
-				
-			_h  += bs + ui(8);
-			_yy += bs + ui(8);
-			
 			var _wdh = _layer_ren.draw(_x, _yy, _w, _m, _hover, _focus);
 			if(!is_undefined(_wdh)) _h += _wdh;
 			
@@ -89,7 +82,7 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 		});
 		
 		group_input_display_list = [ 0, 
-			["Layers", false], layer_renderer, 
+			["Layers", false, noone, b_layer_add], layer_renderer, 
 			["Frames",  true], frame_renderer, 
 			["Inputs", false], 
 		];
@@ -250,10 +243,10 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 		return false;
 	}
 	
-	static drawTools = function(_mx, _my, xx, yy, tool_size, hover, focus) {
-		if(canvas_sel) return canvas_sel.drawTools(_mx, _my, xx, yy, tool_size, hover, focus);
-		return 0;
-	}
+	// static drawTools = function(_mx, _my, xx, yy, tool_size, hover, focus) {
+	// 	if(canvas_sel) return canvas_sel.drawTools(_mx, _my, xx, yy, tool_size, hover, focus);
+	// 	return 0;
+	// }
 	
 	////- Update
 	
