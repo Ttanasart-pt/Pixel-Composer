@@ -29,7 +29,7 @@ function Node_VerletSim_Path(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var _tens = getInputData(2);
 		var _drag = getInputData(3);
 		
-		if(!struct_has(_path, "getPointRatio")) return;
+		if(!is_path(_path)) return;
 		
 		var _mesh = new __verlet_Mesh();
 		

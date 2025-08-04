@@ -207,7 +207,7 @@ function Panel_Preview() : PanelContent() constructor {
         sample_x            = noone;
         sample_y            = noone;
     	
-    	selection_selecting = false;
+    	selection_selecting = 0;
     	selection_mx = 0;
     	selection_my = 0;
     	selection_sx = 0;
@@ -1041,7 +1041,7 @@ function Panel_Preview() : PanelContent() constructor {
         
         ////- Left tools
         
-        for(var i = 0; i < array_length(_node.tools); i++) { 
+        for( var i = 0, n = array_length(_node.tools); i < n; i++ ) {
             var tool = _node.tools[i];
             var _x0  = xx - ts2;
             var _y0  = yy - ts2;
@@ -2801,10 +2801,10 @@ function Panel_Preview() : PanelContent() constructor {
     } 
     
     function drawSelection() {
-    	var prevS = getNodePreviewSurface();
-    	var _surfMode = is_surface(prevS);
+    	var prevN = getNodePreview();
+    	var prevS = is(prevN, Node) && !array_empty(prevN.outputs) && prevN.outputs[0].type == VALUE_TYPE.surface;
     	
-    	if(!_surfMode) selection_active = false;
+    	if(!prevS) selection_active = false;
     	
     	var mmx = mx;
     	var mmy = my;
@@ -2820,7 +2820,7 @@ function Panel_Preview() : PanelContent() constructor {
     	if(hoveringContent && !hoveringGizmo) {
         	if(mouse_lpress(pFOCUS)) {
         		selection_active    = false;
-        		selection_selecting = true;
+        		selection_selecting = 1;
         		selection_sx = mmx;
         		selection_sy = mmy;
         	}
@@ -2835,7 +2835,7 @@ function Panel_Preview() : PanelContent() constructor {
     		var _x1 = (selection_mx - canvas_x) / canvas_s;
 	    	var _y1 = (selection_my - canvas_y) / canvas_s;
     		
-    		if(_surfMode) {
+    		if(prevS) {
     			_x0 = round(_x0); _y0 = round(_y0);
 				_x1 = round(_x1); _y1 = round(_y1);
     		}
@@ -2859,13 +2859,15 @@ function Panel_Preview() : PanelContent() constructor {
 	    	selection_x1 = max(_x0, _x1);
 	    	selection_y1 = max(_y0, _y1);
 	    	
-        	if(_x0 != _x1 && _y0 != _y1) 
+        	if(_x0 != _x1 && _y0 != _y1) {
     			draw_sprite_stretched_points_clamp(THEME.ui_selection, 0, _xx0, _yy0, _xx1, _yy1, COLORS._main_accent);
+    			selection_selecting = max(selection_selecting, 2);
+        	}
     		
     		if(mouse_lrelease()) {
-    			selection_selecting = false;
+    			selection_selecting = 0;
     			
-    			if(_surfMode) {
+    			if(prevS) {
 			    	if(selection_x0 != selection_x1 && selection_y0 != selection_y1)
 	    				selection_active = true;
     			}

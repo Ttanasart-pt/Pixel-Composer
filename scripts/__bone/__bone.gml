@@ -258,6 +258,75 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		return hover;
 	}
 	
+	static drawSimple = function(attributes, _x=0, _y=0, _s=1, _mx=0, _my=0, _blend=c_white, _alpha=1) {
+		var p0x = _x + bone_head_pose.x * _s;
+		var p0y = _y + bone_head_pose.y * _s;
+		var p1x = _x + bone_tail_pose.x * _s;
+		var p1y = _y + bone_tail_pose.y * _s;
+		
+		draw_set_color(_blend);
+		draw_set_alpha(_alpha);
+			
+		if(control) {
+			var cc = draw_get_color();
+			draw_set_color(c_white);
+			if(!parent_anchor && parent.parent != noone) {
+				var _p  = parent.getTail();
+				var _px = _x + _p.x * _s;
+				var _py = _y + _p.y * _s;
+				draw_line_dashed(_px, _py, p0x, p0y, 1);
+			}
+			
+			draw_sprite_ui(THEME.preview_bone_IK, 0, p0x, p0y,,,, cc, draw_get_alpha());
+			
+		} else {
+			if(pose_rotate != 0) {
+				var nx = p0x + lengthdir_x(16, angle + pose_rotate);
+				var ny = p0y + lengthdir_y(16, angle + pose_rotate);
+				
+				draw_line_width(p0x, p0y, nx, ny, 2);
+			}
+			
+			if(!parent_anchor && parent.parent != noone) {
+				var _p  = parent.getTail();
+				var _px = _x + _p.x * _s;
+				var _py = _y + _p.y * _s;
+				draw_line_dashed(_px, _py, p0x, p0y, 2, 8);
+			}
+			
+			if(attributes.display_bone == 0) {
+				var _ppx = lerp(p0x, p1x, 0.2);
+				var _ppy = lerp(p0y, p1y, 0.2);
+				var _prr = point_direction(p0x, p0y, p1x, p1y) + 90;
+				var _prx = lengthdir_x(6 * pose_scale, _prr);
+				var _pry = lengthdir_y(6 * pose_scale, _prr);
+				
+				draw_primitive_begin(pr_trianglelist);
+					draw_vertex(p0x, p0y);
+					draw_vertex(_ppx, _ppy);
+					draw_vertex(_ppx + _prx, _ppy + _pry);
+					
+					draw_vertex(p0x, p0y);
+					draw_vertex(_ppx, _ppy);
+					draw_vertex(_ppx - _prx, _ppy - _pry);
+					
+					draw_vertex(p1x, p1y);
+					draw_vertex(_ppx, _ppy);
+					draw_vertex(_ppx + _prx, _ppy + _pry);
+					
+					draw_vertex(p1x, p1y);
+					draw_vertex(_ppx, _ppy);
+					draw_vertex(_ppx - _prx, _ppy - _pry);
+				draw_primitive_end();
+					
+			} else if(attributes.display_bone == 1)
+				draw_line_width(p0x, p0y, p1x, p1y, 3);
+			
+		}
+		
+		draw_set_alpha(1);
+	}
+	
 	static drawThumbnail = function(_s, _bbox, _bone_bbox = undefined) {
 		_bone_bbox ??= bbox();
 		
@@ -312,8 +381,8 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 	static drawControl = function(attributes) {
 		if(parent != noone && !control) {
 			if(!parent_anchor) 
-				draw_anchor(control_i0 * .5, control_x0, control_y0, ui(8), attributes.display_bone); 
-			draw_anchor(control_i1 * .5, control_x1, control_y1, ui(8), attributes.display_bone); 
+				draw_anchor(control_i0 * .5, control_x0, control_y0, ui(8), 1); 
+			draw_anchor(control_i1 * .5, control_x1, control_y1, ui(8), 1); 
 		}
 		
 		for( var i = 0, n = array_length(childs); i < n; i++ )
@@ -700,6 +769,64 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		if(control)       return 6;
 		if(parent_anchor) return 1;
 		return 0;
+	}
+	
+	static toPoints = function() {
+		var barr = toArray();
+		var rarr = [];
+		var points = {};
+		
+		for( var i = 0, n = array_length(barr); i < n; i++ ) {
+			var bone = barr[i];
+			
+			var _h  = bone.bone_head_init;
+			var _hk = _h.toString();
+			
+			if(!has(points, _hk)) points[$ _hk] = _h.clone();
+			_h = points[$ _hk];
+			
+			var _t = bone.bone_tail_init;
+			var _tk = _t.toString();
+			
+			if(!has(points, _tk)) points[$ _tk] = _t.clone();
+			_t = points[$ _tk];
+			
+			rarr[i * 3 + 0] = bone;
+			rarr[i * 3 + 1] = _h;
+			rarr[i * 3 + 2] = _t;
+		}
+		
+		return rarr;
+	}
+	
+	static fromPoints = function(rarr) {
+		
+		for( var i = 0, n = array_length(rarr); i < n; i += 3 ) {
+			var bone = rarr[i + 0];
+			var _h   = rarr[i + 1];
+			var _t   = rarr[i + 2];
+			
+			if(!bone.parent_anchor) {
+				var _ox = 0;
+				var _oy = 0;
+				
+				if(bone.parent) {
+					var _ph = bone.parent.getHead();
+					_ox = _ph.x;
+					_oy = _ph.y;
+				}
+				
+				bone.distance  = point_distance(  _ox, _oy, _h.x, _h.y );
+				bone.direction = point_direction( _ox, _oy, _h.x, _h.y );
+			}
+			
+			bone.length = point_distance(  _h.x, _h.y, _t.x, _t.y );
+			bone.angle  = point_direction( _h.x, _h.y, _t.x, _t.y );
+			
+			bone.__setPosition();
+			
+		}
+		
 	}
 	
 }

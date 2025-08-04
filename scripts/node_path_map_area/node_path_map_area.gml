@@ -79,7 +79,7 @@ function Node_Path_Map_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				ind = 0;
 			}
 			
-			if(!is_struct(path) || !struct_has(path, "getPointRatio"))
+			if(!is_struct(path) || !is_path(path))
 				return out;
 			
 			var _b = path.getBoundary();
@@ -123,7 +123,7 @@ function Node_Path_Map_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		if(!is(_outData, _areaMappedPath)) 
 			_outData = new _areaMappedPath();
 		
-		if(!struct_has(_path, "getPointRatio")) 
+		if(!is_path(_path)) 
 			return _outData;
 		
 		_outData.path = _path;

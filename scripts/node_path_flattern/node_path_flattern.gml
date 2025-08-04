@@ -102,7 +102,7 @@ function Node_Path_Flattern(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var path = getInputData(0); 
-		if(!struct_has(path, "getPointRatio")) return;
+		if(!is_path(path)) return;
 		
 		var flat = new _flatternPath(path, self);
 		flat.reverse  = getInputData(1); 

@@ -55,7 +55,7 @@ function Node_Rigid_Path_Collider(_x, _y, _group = noone) : Node(_x, _y, _group)
 		
 		objects = [];
 		var _pth = getInputData(0);
-		if(!struct_has(_pth, "getPointRatio")) return undefined;
+		if(!is_path(_pth)) return undefined;
 		
 		var _smp = getInputData(3);
 		

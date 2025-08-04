@@ -42,7 +42,7 @@ function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _mod  = _data[2];
 		
 		if(_path == noone)						return _output;
-		if(!struct_has(_path, "getPointRatio")) return _output;
+		if(!is_path(_path)) return _output;
 		if(!is_real(_rat))						return _output;
 		var inv = false;
 		

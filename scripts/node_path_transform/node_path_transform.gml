@@ -107,7 +107,7 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 				ind  = 0;
 			}
 			
-			if(!is_struct(path) || !struct_has(path, "getPointRatio"))
+			if(!is_struct(path) || !is_path(path))
 				return out;
 			
 			var _p = path.getPointRatio(_rat, ind);

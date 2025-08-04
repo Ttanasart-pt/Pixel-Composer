@@ -232,7 +232,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			inputs[32].setVisible(_dtype == 3);
 			inputs[33].setVisible(_dtype == 3);
 			
-			if(_dtype == 1 && !struct_has(_pat, "getPointRatio"))  
+			if(_dtype == 1 && !is_path(_pat))  
 				_dtype = 0;
 				
 			if(_dtype == 2 && (array_invalid(_segs) || array_invalid(_segs[0]))) 

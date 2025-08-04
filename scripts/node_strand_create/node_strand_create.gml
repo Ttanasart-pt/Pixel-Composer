@@ -136,7 +136,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			var _pth = getInputData(5);
 			var _sid = getInputData(7);
 			
-			if(!struct_has(_pth, "getPointRatio")) return;
+			if(!is_path(_pth)) return;
 			var lines = struct_has(_pth, "getLineCount")? _pth.getLineCount() : 1;
 			
 			draw_set_color(COLORS._main_accent);
@@ -489,7 +489,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			case 0 : strands.loop = true; break;
 			
 			case 1 : 
-				if(!struct_has(_pth, "getPointRatio")) return;
+				if(!is_path(_pth)) return;
 				
 				var _p0 = _pth.getPointRatio(0);
 				var _p1 = _pth.getPointRatio(0.999);

@@ -62,7 +62,7 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _shdSid  = _data[9];
 		#endregion
 		
-		if(!struct_has(_path, "getPointRatio")) return _outSurf;
+		if(!is_path(_path)) return _outSurf;
 		
 		var ox, oy, oc, ow, odx, ody; 
 		var nx, ny, nc, nw, ndx, ndy;

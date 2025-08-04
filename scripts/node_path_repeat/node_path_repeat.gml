@@ -78,7 +78,7 @@ function Node_Path_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			var _path = array_safe_get_fast(paths, ind, 0);
 			if(_path == 0) return out;
 			
-			if(!is_struct(path) || !struct_has(path, "getPointRatio"))
+			if(!is_struct(path) || !is_path(path))
 				return out;
 			
 			var _ind  = _path.index;

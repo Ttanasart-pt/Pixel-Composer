@@ -334,7 +334,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				_amount = array_length(_distData);
 			
 			} else if(_dist == NODE_SCATTER_DIST.path) { // Path
-				var path_valid    = path != noone && struct_has(path, "getPointRatio");
+				var path_valid    = path != noone && is_path(path);
 			
 				if(!path_valid) return _outData;
 			

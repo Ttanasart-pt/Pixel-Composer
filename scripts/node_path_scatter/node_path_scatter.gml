@@ -69,7 +69,7 @@ function Node_Path_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			if(_path == 0) return out;
 			
 			var _pathObj = _path.path;
-			if(!is_struct(_pathObj) || !struct_has(_pathObj, "getPointRatio"))
+			if(!is_struct(_pathObj) || !is_path(_pathObj))
 				return out;
 			
 			var _ind  = _path.index;

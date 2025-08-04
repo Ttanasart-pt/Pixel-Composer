@@ -39,7 +39,7 @@ function Node_Path_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	    var _bg   = _data[5];
 	    
 	    _outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
-	    if(!struct_has(_path, "getPointRatio")) return _outSurf; 
+	    if(!is_path(_path)) return _outSurf; 
 	    
 	    __tpath  = _path;
 		__step   = 1 / _reso;

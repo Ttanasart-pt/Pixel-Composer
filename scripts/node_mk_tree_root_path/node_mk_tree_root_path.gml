@@ -82,7 +82,7 @@ function Node_MK_Tree_Path_Root(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			
 		#endregion
 		
-		if(!has(_path, "getPointRatio")) return;
+		if(!is_path(_path)) return;
 		
 		random_set_seed(_seed);
 		

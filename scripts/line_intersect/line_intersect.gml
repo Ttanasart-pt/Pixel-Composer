@@ -14,3 +14,19 @@ function line_is_intersect(ax0, ay0, ax1, ay1, bx0, by0, bx1, by1) {
 	return line_is_intersect_ccw(ax0, ay0, bx0, by0, bx1, by1) != line_is_intersect_ccw(ax1, ay1, bx0, by0, bx1, by1) && 
 	       line_is_intersect_ccw(ax0, ay0, ax1, ay1, bx0, by0) != line_is_intersect_ccw(ax0, ay0, ax1, ay1, bx1, by1)
 }
+
+function line_intersect_rect(lx0, ly0, lx1, ly1, rx0, ry0, rx1, ry1) {
+	if(point_in_rectangle(lx0, ly0, rx0, ry0, rx1, ry1)) return true;
+	if(point_in_rectangle(lx1, ly1, rx0, ry0, rx1, ry1)) return true;
+
+	if(line_is_intersect(lx0, ly0, lx1, ly1, rx0, ry0, rx0, ry1)) return true;
+	if(line_is_intersect(lx0, ly0, lx1, ly1, rx0, ry1, rx1, ry1)) return true;
+	if(line_is_intersect(lx0, ly0, lx1, ly1, rx1, ry1, rx1, ry0)) return true;
+	if(line_is_intersect(lx0, ly0, lx1, ly1, rx1, ry0, rx0, ry0)) return true;
+
+	return false;
+}
+
+function line_inside_rect(lx0, ly0, lx1, ly1, rx0, ry0, rx1, ry1) {
+	return point_in_rectangle(lx0, ly0, rx0, ry0, rx1, ry1) && point_in_rectangle(lx1, ly1, rx0, ry0, rx1, ry1);
+}

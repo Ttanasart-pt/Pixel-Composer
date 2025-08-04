@@ -93,7 +93,7 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static pathSpread = function(arr, p) {
-		if(struct_has(p, "getPointRatio")) {
+		if(is_path(p)) {
 			array_push(arr, p);
 			return;
 		}

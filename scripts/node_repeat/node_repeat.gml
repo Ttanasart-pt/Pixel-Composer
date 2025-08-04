@@ -405,7 +405,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _prg = i / (_amo - 1);
 			
 			if(_pat == 0) {
-				if(struct_has(_path, "getPointRatio")) {
+				if(is_path(_path)) {
 					var rat = _prsh + _prng[0] + (_prng[1] - _prng[0]) * i / _amo;
 					if(_prng[1] - _prng[0] == 0) break;
 					rat = abs(frac(rat));

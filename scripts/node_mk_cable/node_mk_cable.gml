@@ -203,7 +203,7 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 					break;
 					
 				case 2 : 
-					if(!struct_has(_pth, "getPointRatio")) { surface_reset_target(); return _outSurf; }
+					if(!is_path(_pth)) { surface_reset_target(); return _outSurf; }
 					var ox, oy, nx, ny;
 					var _p = new __vec2P();
 					
@@ -227,7 +227,7 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 					break;
 					
 				case 3 : 
-					if(!struct_has(_pth, "getPointRatio")) { surface_reset_target(); return _outSurf; }
+					if(!is_path(_pth)) { surface_reset_target(); return _outSurf; }
 					var ox, oy, nx, ny;
 					
 					var _points = array_create(_segs + 1);

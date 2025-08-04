@@ -220,8 +220,8 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		_outData.blend_mode  = _data[3];
 		_outData.blend_lerp  = _data[2];
 		
-		_outData.is_path1 = is_path(_outData.curr_path1, "getPointRatio");
-		_outData.is_path2 = is_path(_outData.curr_path2, "getPointRatio");
+		_outData.is_path1 = is_path(_outData.curr_path1);
+		_outData.is_path2 = is_path(_outData.curr_path2);
 		
 		_outData.setLength();
 		

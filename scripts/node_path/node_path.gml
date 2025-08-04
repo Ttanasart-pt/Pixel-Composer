@@ -1,4 +1,6 @@
 #region
+	function is_path(p) { return has(p, "getPointRatio"); }
+	
 	enum _ANCHOR {
 		  x,   y,
 		c1x, c1y,
@@ -16,9 +18,364 @@
 		hotkeyTool("Node_Path", "Rectangle path",      "N");
 		hotkeyTool("Node_Path", "Circle path",         "M");
 		hotkeyTool("Node_Path", "Weight edit",         "W");
+		
+		hotkeyTool("Node_Path", "Move Selection",      "G");
+		hotkeyTool("Node_Path", "Rotate Selection",    "R");
+		hotkeyTool("Node_Path", "Scale Selection",     "S");
 	});
-
-	function is_path(p) { return struct_has(p, "getPointRatio"); }
+	
+	function path_tool_move(_node) : ToolObject() constructor {
+		setNode(_node);
+		activeKeyboard = false;
+		
+		origins = [];
+		origin_x = 0;
+		origin_y = 0;
+		
+		drag_pmx = undefined;
+		drag_pmy = undefined;
+		
+		drag_axis = -1;
+		
+		static init = function() {
+			activeKeyboard = false;
+			
+			KEYBOARD_STRING = "";
+			KEYBOARD_NUMBER = undefined;
+		}
+		
+		static initKeyboard = function() /*=>*/ {
+			var _ancs = node.anchor_select;
+			if(array_empty(_ancs)) { PANEL_PREVIEW.resetTool(); return; }
+			
+			activeKeyboard = true;
+			
+			drag_pmx = undefined;
+			drag_pmy = undefined;
+			
+			drag_axis = -1;
+			
+			origins  = [];
+			origin_x = 0;
+			origin_y = 0;
+			
+			for( var i = 0, n = array_length(_ancs); i < n; i++ ) {
+				var _p = node.inputs[node.input_fix_len + _ancs[i]].getValue();
+				origins[i] = array_clone(_p);
+				
+				origin_x += _p[0];
+				origin_y += _p[1];
+			}
+				
+			origin_x /= n;
+			origin_y /= n;
+		}
+		
+		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
+			if(!activeKeyboard) return;
+			
+			var _ancs = node.anchor_select;
+			
+			drag_pmx = drag_pmx == undefined? _mx : drag_pmx;
+			drag_pmy = drag_pmy == undefined? _my : drag_pmy;
+			
+			var ox = _x + origin_x * _s;
+			var oy = _y + origin_y * _s;
+			
+			var dx = (_mx - drag_pmx) / _s;
+			var dy = (_my - drag_pmy) / _s;
+			
+			for( var i = 0, n = array_length(_ancs); i < n; i++ ) {
+				var inp = node.inputs[node.input_fix_len + _ancs[i]];
+				var val = inp.getValue();
+				var ori = origins[i];
+				
+				val[0] = ori[0];
+				val[1] = ori[1];
+				
+				if(drag_axis == -1) {
+					val[0] = ori[0] + dx;
+					val[1] = ori[1] + dy;
+					
+				} else {
+					if(KEYBOARD_NUMBER == undefined) {
+						if(drag_axis == 0) val[0] = ori[0] + dx;
+						if(drag_axis == 1) val[1] = ori[1] + dy;
+						
+					} else {
+						if(drag_axis == 0) val[0] = ori[0] + KEYBOARD_NUMBER;
+						if(drag_axis == 1) val[1] = ori[1] + KEYBOARD_NUMBER;
+					}
+				}
+				
+				if(inp.setValue(val)) UNDO_HOLDING = true;
+			}
+			
+			draw_set_color(COLORS._main_icon);
+			switch(drag_axis) {
+				case  0: draw_line_dashed( 0, oy, 9999, oy); break;
+				case  1: draw_line_dashed(ox,  0, ox, 9999); break;
+			}
+			
+			if(key_press(ord("X"))) {
+				drag_axis = drag_axis == 0? -1 : 0;
+				KEYBOARD_STRING = "";
+			}
+			
+			if(key_press(ord("Y"))) {
+				drag_axis = drag_axis == 1? -1 : 1;
+				KEYBOARD_STRING = "";
+			}
+				
+			if(mouse_press(mb_left, active) || key_press(vk_enter)) {
+				activeKeyboard = false;
+				UNDO_HOLDING   = false;
+				PANEL_PREVIEW.resetTool();
+			}
+			
+			var _tooltipText = "Dragging";
+			switch(drag_axis) {
+				case 0 : _tooltipText += " X"; break;
+				case 1 : _tooltipText += " Y"; break;
+			}
+			
+			if(KEYBOARD_NUMBER != undefined) _tooltipText += $" [{KEYBOARD_NUMBER}]";
+			PANEL_PREVIEW.setActionTooltip(_tooltipText);
+			
+		}
+	}
+	
+	function path_tool_rotate(_node) : ToolObject() constructor {
+		setNode(_node);
+		activeKeyboard = false;
+		
+		origins = [];
+		origin_x = 0;
+		origin_y = 0;
+		
+		drag_pmx = undefined;
+		drag_pmy = undefined;
+		
+		rotate_acc = 0;
+		
+		static init = function() {
+			activeKeyboard = false;
+			
+			KEYBOARD_STRING = "";
+			KEYBOARD_NUMBER = undefined;
+		}
+		
+		static initKeyboard = function() /*=>*/ {
+			var _ancs = node.anchor_select;
+			if(array_empty(_ancs)) { PANEL_PREVIEW.resetTool(); return; }
+			
+			activeKeyboard = true;
+			
+			rotate_acc = 0;
+			drag_pmx = undefined;
+			drag_pmy = undefined;
+			
+			origins  = [];
+			origin_x = 0;
+			origin_y = 0;
+			
+			for( var i = 0, n = array_length(_ancs); i < n; i++ ) {
+				var _p = node.inputs[node.input_fix_len + _ancs[i]].getValue();
+				origins[i] = array_clone(_p);
+				
+				origin_x += _p[0];
+				origin_y += _p[1];
+			}
+				
+			origin_x /= n;
+			origin_y /= n;
+		}
+		
+		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
+			if(!activeKeyboard) return;
+			
+			var _ancs = node.anchor_select;
+			
+			if(drag_pmx == undefined) drag_pmx = _mx;
+			if(drag_pmy == undefined) drag_pmy = _my;
+			
+			var ox = _x + origin_x * _s;
+			var oy = _y + origin_y * _s;
+			
+			var _d0 = point_direction(ox, oy, drag_pmx, drag_pmy);
+			var _d1 = point_direction(ox, oy, _mx, _my);
+			
+			drag_pmx = _mx;
+			drag_pmy = _my;
+			
+			rotate_acc += angle_difference(_d1, _d0);
+			var rr = KEYBOARD_NUMBER ?? rotate_acc;
+			
+			for( var i = 0, n = array_length(_ancs); i < n; i++ ) {
+				var inp = node.inputs[node.input_fix_len + _ancs[i]];
+				var val = inp.getValue();
+				var ori = origins[i];
+				
+				var dis = point_distance(  origin_x, origin_y, ori[0], ori[1] );
+				var dir = point_direction( origin_x, origin_y, ori[0], ori[1] );
+				
+				var ds0 = point_distance(  0, 0, ori[2], ori[3] );
+				var dr0 = point_direction( 0, 0, ori[2], ori[3] );
+				
+				var ds1 = point_distance(  0, 0, ori[4], ori[5] );
+				var dr1 = point_direction( 0, 0, ori[4], ori[5] );
+				
+				val[0] = origin_x + lengthdir_x(dis, dir + rr);
+				val[1] = origin_y + lengthdir_y(dis, dir + rr);
+				
+				val[2] = lengthdir_x(ds0, dr0 + rr);
+				val[3] = lengthdir_y(ds0, dr0 + rr);
+				
+				val[4] = lengthdir_x(ds1, dr1 + rr);
+				val[5] = lengthdir_y(ds1, dr1 + rr);
+				
+				if(inp.setValue(val)) UNDO_HOLDING = true;
+			}
+			
+			draw_set_color(COLORS._main_icon);
+			draw_line_dashed(ox, oy, _mx, _my);
+			
+			if(mouse_press(mb_left, active) || key_press(vk_enter)) {
+				activeKeyboard = false;
+				UNDO_HOLDING   = false;
+				PANEL_PREVIEW.resetTool();
+			}
+			
+			var _tooltipText = "Rotating";
+			
+			if(KEYBOARD_NUMBER != undefined) _tooltipText += $" [{KEYBOARD_NUMBER}]";
+			PANEL_PREVIEW.setActionTooltip(_tooltipText);
+			
+		}
+	}
+	
+	function path_tool_scale(_node) : ToolObject() constructor {
+		setNode(_node);
+		activeKeyboard = false;
+		
+		origins = [];
+		origin_x = 0;
+		origin_y = 0;
+		
+		drag_pmx = undefined;
+		drag_pmy = undefined;
+		
+		drag_axis = -1;
+		
+		static init = function() {
+			activeKeyboard = false;
+			
+			KEYBOARD_STRING = "";
+			KEYBOARD_NUMBER = undefined;
+		}
+		
+		static initKeyboard = function() /*=>*/ {
+			var _ancs = node.anchor_select;
+			if(array_empty(_ancs)) { PANEL_PREVIEW.resetTool(); return; }
+			
+			activeKeyboard = true;
+			
+			rotate_acc = 0;
+			drag_pmx = undefined;
+			drag_pmy = undefined;
+			
+			drag_axis = -1;
+			
+			origins  = [];
+			origin_x = 0;
+			origin_y = 0;
+			
+			for( var i = 0, n = array_length(_ancs); i < n; i++ ) {
+				var _p = node.inputs[node.input_fix_len + _ancs[i]].getValue();
+				origins[i] = array_clone(_p);
+				
+				origin_x += _p[0];
+				origin_y += _p[1];
+			}
+				
+			origin_x /= n;
+			origin_y /= n;
+		}
+		
+		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
+			if(!activeKeyboard) return;
+			
+			var _ancs = node.anchor_select;
+			
+			drag_pmx = drag_pmx == undefined? _mx : drag_pmx;
+			drag_pmy = drag_pmy == undefined? _my : drag_pmy;
+			
+			var ox = _x + origin_x * _s;
+			var oy = _y + origin_y * _s;
+			
+			var _ss = point_distance(_mx, _my, ox, oy) / point_distance(drag_pmx, drag_pmy, ox, oy);
+			
+			for( var i = 0, n = array_length(_ancs); i < n; i++ ) {
+				var inp = node.inputs[node.input_fix_len + _ancs[i]];
+				var val = inp.getValue();
+				var ori = origins[i];
+				
+				val[0] = ori[0];
+				val[1] = ori[1];
+				
+				if(drag_axis == -1) {
+					val[0] = origin_x + (ori[0] - origin_x) * _ss;
+					val[1] = origin_y + (ori[1] - origin_y) * _ss;
+					
+				} else {
+					if(KEYBOARD_NUMBER == undefined) {
+						if(drag_axis == 0) val[0] = origin_x + (ori[0] - origin_x) * _ss;
+						if(drag_axis == 1) val[1] = origin_y + (ori[1] - origin_y) * _ss;
+						
+					} else {
+						if(drag_axis == 0) val[0] = origin_x + (ori[0] - origin_x) * KEYBOARD_NUMBER;
+						if(drag_axis == 1) val[1] = origin_y + (ori[1] - origin_y) * KEYBOARD_NUMBER;
+					}
+				}
+				
+				if(inp.setValue(val)) UNDO_HOLDING = true;
+			}
+			
+			draw_set_color(COLORS._main_icon);
+			switch(drag_axis) {
+				case -1: draw_line_dashed(ox, oy, _mx, _my); break;
+				case  0: draw_line_dashed( 0, oy, 9999, oy); break;
+				case  1: draw_line_dashed(ox,  0, ox, 9999); break;
+			}
+			
+			if(key_press(ord("X"))) {
+				drag_axis = drag_axis == 0? -1 : 0;
+				KEYBOARD_STRING = "";
+			}
+			
+			if(key_press(ord("Y"))) {
+				drag_axis = drag_axis == 1? -1 : 1;
+				KEYBOARD_STRING = "";
+			}
+				
+			if(mouse_press(mb_left, active) || key_press(vk_enter)) {
+				activeKeyboard = false;
+				UNDO_HOLDING   = false;
+				PANEL_PREVIEW.resetTool();
+			}
+			
+			var _tooltipText = "Scaling";
+			switch(drag_axis) {
+				case 0 : _tooltipText += " X"; break;
+				case 1 : _tooltipText += " Y"; break;
+			}
+			
+			if(KEYBOARD_NUMBER != undefined) _tooltipText += $" [{KEYBOARD_NUMBER}]";
+			PANEL_PREVIEW.setActionTooltip(_tooltipText);
+			
+		}
+	}
+	
 #endregion
 
 function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
@@ -39,7 +396,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	// Inputs 4
 	
-	newOutput(0, nodeValue_Output( "Position out", VALUE_TYPE.float,    [0,0] )).setDisplay(VALUE_DISPLAY.vector);
+	newOutput(0, nodeValue_Output( "Position out", VALUE_TYPE.float,    [0,0] )).setVisible(false).setDisplay(VALUE_DISPLAY.vector);
 	newOutput(1, nodeValue_Output( "Path data",    VALUE_TYPE.pathnode, noone ));
 	newOutput(2, nodeValue_Output( "Anchors",      VALUE_TYPE.float,    []    )).setVisible(false).setArrayDepth(1);
 	
@@ -51,39 +408,47 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	output_display_list   = [ 1, 0, 2 ];
 	
+	setDynamicInput(1, false);
+	
 	////- Nodes
 	
 	_path_preview_surface = noone;
 	path_preview_surface  = noone;
 	
-	setDynamicInput(1, false);
-	
-	tool_pathDrawer = new NodeTool( "Draw path", THEME.path_tools_draw )	
-		.addSetting("Smoothness", VALUE_TYPE.float,   function(val) /*=>*/ { tool_pathDrawer.attribute.thres = val; }, "thres", 4)
-		.addSetting("Replace",    VALUE_TYPE.boolean, function(   ) /*=>*/ { tool_pathDrawer.attribute.create = !tool_pathDrawer.attribute.create; }, "create", true);
-	
-	tools = [
-		new NodeTool( "Transform",           THEME.path_tools_transform   ),
-		new NodeTool( "Anchor add / remove", THEME.path_tools_add         ),
-		new NodeTool( "Edit Control point",  THEME.path_tools_anchor      ),
-		tool_pathDrawer,
-		new NodeTool( "Rectangle path",      THEME.path_tools_rectangle   ),
-		new NodeTool( "Circle path",         THEME.path_tools_circle      ),
-		new NodeTool( "Weight edit",         THEME.path_tools_weight_edit ),
-	];
-	
-	attributes.display_name = false;
-	attributes.snap_point   = true;
-	attributes.snap_distance= 8;
-	attributes.weight       = [ [ 0, 1 ], [ 100, 1 ] ];
-	
-	array_push(attributeEditors, "Display");
-	array_push(attributeEditors, ["Display name", function() /*=>*/ {return attributes.display_name}, new checkBox(function() /*=>*/ {return toggleAttribute("display_name")})]);
-	
-	array_push(attributeEditors, "Snap");
-	array_push(attributeEditors, ["Snap Enable",  function() /*=>*/ {return attributes.snap_point},    new checkBox(function() /*=>*/ {return toggleAttribute("snap_point")})]);
-	array_push(attributeEditors, ["Snap Distance",function() /*=>*/ {return attributes.snap_distance}, textBox_Number(function(v) /*=>*/ {return setAttribute("snap_distance", v)})]);
+	#region ---- tool ----
+		tool_pathDrawer = new NodeTool( "Draw path", THEME.path_tools_draw )	
+			.addSetting("Smoothness", VALUE_TYPE.float,   function(val) /*=>*/ { tool_pathDrawer.attribute.thres = val; }, "thres", 4)
+			.addSetting("Replace",    VALUE_TYPE.boolean, function(   ) /*=>*/ { tool_pathDrawer.attribute.create = !tool_pathDrawer.attribute.create; }, "create", true);
 		
+		tools = [
+			new NodeTool( "Transform",           THEME.path_tools_transform   ),
+			new NodeTool( "Anchor add / remove", THEME.path_tools_add         ),
+			new NodeTool( "Edit Control point",  THEME.path_tools_anchor      ),
+			tool_pathDrawer,
+			new NodeTool( "Rectangle path",      THEME.path_tools_rectangle   ),
+			new NodeTool( "Circle path",         THEME.path_tools_circle      ),
+			new NodeTool( "Weight edit",         THEME.path_tools_weight_edit ),
+			-1, 
+			new NodeTool( "Move Selection",      THEME.tools_2d_move   ).setToolObject(new path_tool_move(self)),
+			new NodeTool( "Rotate Selection",    THEME.tools_2d_rotate ).setToolObject(new path_tool_rotate(self)),
+			new NodeTool( "Scale Selection",     THEME.tools_2d_scale  ).setToolObject(new path_tool_scale(self)),
+		];
+	#endregion
+	
+	#region ---- attributes ----
+		attributes.display_name = false;
+		attributes.snap_point   = true;
+		attributes.snap_distance= 8;
+		attributes.weight       = [ [ 0, 1 ], [ 100, 1 ] ];
+		
+		array_push(attributeEditors, "Display");
+		array_push(attributeEditors, ["Display name", function() /*=>*/ {return attributes.display_name}, new checkBox(function() /*=>*/ {return toggleAttribute("display_name")})]);
+		
+		array_push(attributeEditors, "Snap");
+		array_push(attributeEditors, ["Snap Enable",  function() /*=>*/ {return attributes.snap_point},    new checkBox(function() /*=>*/ {return toggleAttribute("snap_point")})]);
+		array_push(attributeEditors, ["Snap Distance",function() /*=>*/ {return attributes.snap_distance}, textBox_Number(function(v) /*=>*/ {return setAttribute("snap_distance", v)})]);
+	#endregion
+	
 	#region ---- editor ----
 		line_hover   = -1;
 		weight_hover = -1;
@@ -112,6 +477,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		weight_drag_my = 0;
 		
 		anchor_selected = false;
+		anchor_freeze   = 0;
 		anchor_select   = [];
 		anchor_focus    = undefined;
 	#endregion
@@ -337,7 +703,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 			if(attributes.snap_point)
 			for( var i = 0, n = array_length(_pth.anchors); i < n; i++ ) {
-				if(drag_point == i) continue;
+				if(drag_point == i && drag_type == 0) continue;
 				var _a  = _pth.anchors[i];
 				var _ax = _a[0];
 				var _ay = _a[1];
@@ -643,10 +1009,10 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var _closet_dist  = undefined;
 		var _point_hover  = noone;
 		var _point_ratio  = 0;
-		var hovering = false;
 		
-		var anchor_hover = -1;
-		var hover_type   = 0;
+		var anchor_hover  = -1;
+		var hover_type    = 0;
+		var hovering      = false;
 		
 		var points = [];
 		var _a0, _a1;
@@ -1218,9 +1584,21 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				break;
 		}
 		
-		if(isNotUsingTool()) {
+		var _show_selecting = isNotUsingTool();
+		
+		if(isUsingTool()) {
+			var _currTool = PANEL_PREVIEW.tool_current;
+			var _tool     = _currTool.getToolObject();
 			
-			if(panel.selection_selecting && anchor_hover == -1) {
+			if(_tool != noone) {
+				_tool.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+				if(mouse_lclick()) anchor_freeze = 1;
+				_show_selecting = true;
+			}
+		}
+		
+		if(_show_selecting) {
+			if(anchor_freeze == 0 && panel.selection_selecting && anchor_hover == -1) {
 				var sx0 = panel.selection_x0;
 				var sy0 = panel.selection_y0;
 				var sx1 = panel.selection_x1;
@@ -1239,6 +1617,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			}
 			
 			if(mouse_lrelease()) {
+				anchor_freeze = 0;
 				if(!array_empty(anchor_select))
 					anchor_selected = true;
 			}
