@@ -20,7 +20,7 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	////- =Scatter
 	
 	onSurfaceSize = function() /*=>*/ {return DEF_SURF}; 
-	newInput( 0, nodeValue_Area(        "Point area",   DEF_AREA_REF, { onSurfaceSize } )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
+	newInput( 0, nodeValue_Area(        "Point area",   DEF_AREA_REF, { onSurfaceSize } )).setHotkey("A").setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
 	newInput( 1, nodeValue_Enum_Button( "Distribution", 0, [ "Area", "Border", "Map" ]  )).rejectArray();
 	newInput( 4, nodeValue_Surface(     "Distribution Map" ));
 	

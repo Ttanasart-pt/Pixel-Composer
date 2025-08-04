@@ -10,13 +10,12 @@ function Node_Scatter_Point_Lattice(_x, _y, _group = noone) : Node_Processor(_x,
 	setDimension(96, 48);
 	
 	////- =Base
-	
 	newInput(0, nodeValueSeed()).rejectArray();
 	
 	////- =Scatter
-	
 	onSurfaceSize = function() /*=>*/ {return DEF_SURF}; 
-	newInput( 1, nodeValue_Area(  "Point area",   DEF_AREA_REF, { onSurfaceSize, useShape : false } )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
+	newInput( 1, nodeValue_Area(  "Point area",   DEF_AREA_REF, { onSurfaceSize, useShape : false } )).setHotkey("A")
+		.setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
 	newInput( 2, nodeValue_IVec2( "Subdivision",  [2, 2] ));
 	// inputs 3
 	

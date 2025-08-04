@@ -14,8 +14,8 @@ function Node_Grid_Tri(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	////- =Pattern
 	
-	newInput( 1, nodeValue_Vec2(     "Position", [0,0] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
-	newInput( 4, nodeValue_Rotation( "Angle",     0    )).setMappable(13);
+	newInput( 1, nodeValue_Vec2(     "Position", [0,0] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput( 4, nodeValue_Rotation( "Angle",     0    )).setHotkey("R").setMappable(13);
 	newInput( 2, nodeValue_Vec2(     "Scale",    [2,2] )).setMappable(11);
 	newInput( 3, nodeValue_Slider(   "Gap",      .1, [0, 0.5, 0.001] )).setMappable(12);
 	
@@ -53,9 +53,13 @@ function Node_Grid_Tri(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	attribute_oversample();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-
+		var _pos = getSingleValue(1);
+		var  px  = _x + _pos[0] * _s;
+		var  py  = _y + _pos[1] * _s;
+		
 		InputDrawOverlay(inputs[ 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		InputDrawOverlay(inputs[18].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, getSingleValue(0)));
+		InputDrawOverlay(inputs[ 4].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
 		
 		return w_hovering;
 	}

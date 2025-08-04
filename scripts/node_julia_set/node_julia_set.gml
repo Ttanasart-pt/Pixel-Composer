@@ -2,27 +2,24 @@ function Node_Julia_Set(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	name = "Julia";
 	
 	newInput(0, nodeValue_Dimension());
+	newInput(7, nodeValue_Surface( "Mask" ));
 	
-	newInput(1, nodeValue_Vec2("C", [ -1, 0 ]))
-	    .setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	////- =Julia
+	newInput(1, nodeValue_Vec2(  "C", [ -1, 0 ] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(5, nodeValue_Int(   "Max Iteration",     128  ));
+	newInput(6, nodeValue_Float( "Diverge Threshold", 4    ));
 	
-	newInput(2, nodeValue_Vec2("Position", [ 0, 0 ]))
-	
-	newInput(3, nodeValue_Vec2("Scale", [ 1, 1 ]));
-	
-	newInput(4, nodeValue_Rotation("Rotation", 0));
-	
-	newInput(5, nodeValue_Int("Max Iteration", 128));
-	
-	newInput(6, nodeValue_Float("Diverge Threshold", 4));
-	
-	newInput(7, nodeValue_Surface("Mask"));
+	////- =Transform
+	newInput(2, nodeValue_Vec2(     "Position",  [0,0] )).setHotkey("G");
+	newInput(4, nodeValue_Rotation( "Rotation",   0    )).setHotkey("R");
+	newInput(3, nodeValue_Vec2(     "Scale",     [1,1] ));
+	// input 8
 	
 	newOutput(0, nodeValue_Output("Surface", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0, 7, 
 	    ["Julia",     false], 1, 5, 6, 
-	    ["Transform", false], 2, 3, 4, 
+	    ["Transform", false], 2, 4, 3, 
     ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 

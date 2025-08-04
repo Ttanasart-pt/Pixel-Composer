@@ -11,6 +11,21 @@ function __initHotKey() {
 
 	////- Classes
 
+function KeyCombination(_key = "", _modi = MOD_KEY.none) constructor {
+	key  = key_get_index(_key);
+	modi = _modi;
+	
+	static pressable  = function() /*=>*/ {return key > 0 || modi != MOD_KEY.none};
+	static isPressing = function(hold = false) /*=>*/ {return pressable()? key_press(key, modi, hold) : false};
+	
+	static toString = function() /*=>*/ {return key_get_name(key, modi)};
+	
+	////- Serialize
+	
+	static serialize   = function( ) /*=>*/ { return { key, modi } }
+	static deserialize = function(m) /*=>*/ { key = m.key; modi = m.modi; }
+}
+
 function Hotkey(_context, _name, _key = "", _mod = MOD_KEY.none, _action = noone, _param = noone) constructor {
 	context   = _context;
 	name      = _name;

@@ -273,6 +273,21 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			node.input_value_map[$ internalName] = _value;
 	#endregion
 	
+	#region ---- Preview ----
+		preview_hotkey = undefined;
+		preview_hotkey_active = false;
+		preview_hotkey_axis   = -1;
+		preview_hotkey_spr    = noone;
+		preview_hotkey_step   = 0;
+		
+		preview_hotkey_s  = 0;
+		preview_hotkey_mx = 0;
+		preview_hotkey_my = 0;
+		
+		static setHotkey = function(k = "", m = MOD_KEY.none) /*=>*/ { preview_hotkey = new KeyCombination(k,m); node.toolShow = true; return self; }
+		static setHotkeySpr = function(s) /*=>*/ { preview_hotkey_spr = s; return self; }
+	#endregion
+	
 	////- META
 	
 	static setDummy = function(get_node, _dummy_undo = -1, _dummy_redo = -1) {
@@ -2024,6 +2039,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} updateColor();
 	
 	__preview_bbox = noone;
+	static drawOverlayToggle = noone;
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) { 
 		if(expUse) return -1;
 		

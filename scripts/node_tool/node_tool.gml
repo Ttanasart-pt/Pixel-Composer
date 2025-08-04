@@ -15,6 +15,7 @@ function NodeTool(name = "", spr = noone, contextString = instanceof(other)) con
 	toolFnParam = {};
 	
 	hk_object   = noone;
+	visible     = true;
 	
 	////- Get Set
 	
@@ -23,6 +24,7 @@ function NodeTool(name = "", spr = noone, contextString = instanceof(other)) con
 	static setContext    = function(_c) /*=>*/ { context    = _c; return self; }
 	static setToolObject = function(_o) /*=>*/ { toolObject = _o; return self; }
 	static setToolFn     = function(_f) /*=>*/ { toolFn     = _f; return self; }
+	static setVisible    = function(_v) /*=>*/ { visible    = _v; return self; }
 	
 	static getName        = function(index = 0) { return is_array(name)? array_safe_get_fast(name, index, "") : name; }
 	static getToolObject  = function() { return is_array(toolObject)? toolObject[selecting] : toolObject; }

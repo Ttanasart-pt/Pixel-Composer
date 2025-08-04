@@ -20,7 +20,7 @@ function Node_Twirl(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	////- =Twirl
 	
-	newInput(1, nodeValue_Vec2(   "Center",   [.5,.5] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(1, nodeValue_Vec2(   "Center",   [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	newInput(2, nodeValue_Slider( "Strength",   3, [-10, 10, 0.01])).setMappable(11);
 	newInput(3, nodeValue_Float(  "Radius",    16 )).setMappable(12);
 	

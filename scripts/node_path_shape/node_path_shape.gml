@@ -19,8 +19,8 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
     __ind = 0; shapeScroll = array_map(shape_types, function(v, i) /*=>*/ {return v == -1? -1 : new scrollItem(v, s_node_shape_path_type, __ind++)});
     
     ////- =Transform
-	newInput( 0, nodeValue_Vec2(     "Position",  [.5,.5] )).setUnitRef(function() /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
-	newInput( 2, nodeValue_Rotation( "Rotation",    0     ));
+	newInput( 0, nodeValue_Vec2(     "Position",  [.5,.5] )).setHotkey("G").setUnitRef(function() /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
+	newInput( 2, nodeValue_Rotation( "Rotation",    0     )).setHotkey("R");
 	newInput( 1, nodeValue_Vec2(     "Half Size", [.5,.5] )).setUnitRef(function() /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
 	
     ////- =Shape

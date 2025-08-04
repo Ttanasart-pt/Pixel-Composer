@@ -3,6 +3,7 @@ function nodeValue_IVec2(_name, _value, _data = {}) { return new __NodeValue_IVe
 
 function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.float, _value, "") constructor {
 	setDisplay(VALUE_DISPLAY.vector, _data);
+	preview_hotkey_spr = THEME.tools_2d_move;
 	def_length = 2;
 	
 	////- GET
@@ -84,6 +85,51 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _typ = 0, _sca = [ 1, 1 ]) {
 		if(expUse || value_from != noone) return false;
 		
+		var _hovering = preview_hotkey_active;
+		
+		if(preview_hotkey_active) {
+			var _mmx = value_snap(_mx, _snx);
+			var _mmy = value_snap(_my, _sny);
+			
+			var _dx = KEYBOARD_NUMBER == undefined? (_mmx - preview_hotkey_mx) / _s / _sca[0] : KEYBOARD_NUMBER;
+			var _dy = KEYBOARD_NUMBER == undefined? (_mmy - preview_hotkey_my) / _s / _sca[1] : KEYBOARD_NUMBER;
+			
+			var _vx = preview_hotkey_s[0];
+			var _vy = preview_hotkey_s[1];
+			
+			if(preview_hotkey_axis == -1 || preview_hotkey_axis == 0) _vx = preview_hotkey_s[0] + _dx;
+			if(preview_hotkey_axis == -1 || preview_hotkey_axis == 1) _vy = preview_hotkey_s[1] + _dy;
+			
+			if(setValue([_vx, _vy])) UNDO_HOLDING = true;
+			
+			if(key_press(ord("X"))) { preview_hotkey_axis = preview_hotkey_axis == 0? -1 : 0; KEYBOARD_STRING = ""; }
+			if(key_press(ord("Y"))) { preview_hotkey_axis = preview_hotkey_axis == 1? -1 : 1; KEYBOARD_STRING = ""; }
+			
+			draw_set_color(COLORS._main_icon);
+			var _vdx = _x + _vx * _s * _sca[0];
+			var _vdy = _y + _vy * _s * _sca[1];
+			if(preview_hotkey_axis == 0) draw_line(0, _vdy, 9999, _vdy);
+			if(preview_hotkey_axis == 1) draw_line(_vdx, 0, _vdx, 9999);
+			
+			if(mouse_lpress(active) || key_press(vk_enter) || preview_hotkey.isPressing()) {
+				preview_hotkey_active = false;
+				UNDO_HOLDING = false;
+			}
+			
+		}
+		
+		if(active && preview_hotkey && preview_hotkey.isPressing()) {
+			var _val = getValue();
+			preview_hotkey_active = true;
+			preview_hotkey_axis   = -1;
+			
+			preview_hotkey_s  = array_clone(_val);
+			preview_hotkey_mx = _mx;
+			preview_hotkey_my = _my;
+			
+			KEYBOARD_STRING = "";
+		}
+		
 		if(getAnim()) {
 			var ox, oy, nx, ny;
 			draw_set_color(COLORS._main_accent);
@@ -114,7 +160,8 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 		
 		if(!is_array(_sca)) _sca = [ _sca, _sca ];
 		
-		return preview_overlay_vector(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _typ, _sca);
+		_hovering = _hovering || preview_overlay_vector(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _typ, _sca);
+		return _hovering;
 	}
 	
 }

@@ -24,7 +24,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput(51, nodeValue_Int(         "Burst Duration",       1             ));
 	newInput( 2, nodeValue_Range(       "Spawn Amount",        [2,2], true    )).setTooltip("Amount of particle spawn in that frame.");
 	newInput( 4, nodeValue_Enum_Scroll( "Spawn Source",         0,            )).setChoices([ "Area Inside", "Area Border", "Map", "Path", "Direct Data" ]);
-	newInput( 3, nodeValue_Area(        "Spawn Area",           DEF_AREA_REF  )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
+	newInput( 3, nodeValue_Area(        "Spawn Area",           DEF_AREA_REF  )).setHotkey("A").setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
 	newInput(30, nodeValue_Surface(     "Distribution Map"                    ));
 	newInput(55, nodeValue_PathNode(    "Spawn Path"                          ));
 	newInput(62, nodeValue_Vector(      "Spawn Data"                          )).setArrayDepth(1);

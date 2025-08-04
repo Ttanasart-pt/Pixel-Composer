@@ -1,25 +1,21 @@
 function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Flood Fill";
 	
-	newInput(0, nodeValue_Surface("Surface In"));
-		
-	newInput(1, nodeValue_Surface("Mask"));
-	
-	newInput(2, nodeValue_Slider("Mix", 1));
-	
 	newActiveInput(3);
-		
-	newInput(4, nodeValue_Vec2("Position", [ 1, 1 ]));
-		
-	newInput(5, nodeValue_Color("Colors", ca_black ));
 	
-	newInput(6, nodeValue_Slider("Threshold", 0.1));
-	
-	newInput(7, nodeValue_Bool("Diagonal", false));
-	
+	////- =Surfaces
+	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput(1, nodeValue_Surface( "Mask"       ));
+	newInput(2, nodeValue_Slider(  "Mix",     1 ));
 	__init_mask_modifier(1, 8); // inputs 8, 9
 	
-	newInput(10, nodeValue_Enum_Scroll("Blend",  0, [ "Override", "Multiply" ]));
+	////- =Fill
+	newInput( 4, nodeValue_Vec2(        "Position",   [.5,.5]   )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput( 6, nodeValue_Slider(      "Threshold",   .1       ));
+	newInput( 5, nodeValue_Color(       "Colors",      ca_black ));
+	newInput( 7, nodeValue_Bool(        "Diagonal",    false    ));
+	newInput(10, nodeValue_Enum_Scroll( "Blend",       0, [ "Override", "Multiply" ] ));
+	// input 11
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	

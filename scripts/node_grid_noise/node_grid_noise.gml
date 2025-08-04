@@ -8,30 +8,24 @@
 function Node_Grid_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Grid Noise";
 	
-	newInput(0, nodeValue_Dimension());
+	////- =Output
+	newInput( 0, nodeValue_Dimension());
+	newInput(11, nodeValue_Surface( "Mask" ));
 	
-	newInput(1, nodeValue_Vec2("Position", [ 0, 0 ]))
-		.setUnitRef(function(index) { return getDimension(index); });
+	////- =Noise
+	newInput( 3, nodeValueSeed());
+	newInput( 1, nodeValue_Vec2(        "Position",   [0,0] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput( 2, nodeValue_Vec2(        "Scale",      [8,8] ));
+	newInput( 6, nodeValue_Enum_Button( "Shift Axis",  0, ["x", "y"]        ));
+	newInput( 4, nodeValue_Slider(      "Shift",       0, [-0.5, 0.5, 0.01] ));
 	
-	newInput(2, nodeValue_Vec2("Scale", [ 8, 8 ]));
-	
-	newInput(3, nodeValueSeed());
-	
-	newInput(4, nodeValue_Slider("Shift", 0, [-0.5, 0.5, 0.01] ));
-		
-	newInput(5, nodeValue_Surface("Texture Sample"));
-	
-	newInput(6, nodeValue_Enum_Button("Shift Axis",  0, ["x", "y"]));
-	
-	newInput(7, nodeValue_Enum_Button("Color Mode",  0, [ "Greyscale", "RGB", "HSV" ]));
-	
-	newInput(8, nodeValue_Slider_Range("Color R Range", [ 0, 1 ]));
-	
-	newInput(9, nodeValue_Slider_Range("Color G Range", [ 0, 1 ]));
-	
-	newInput(10, nodeValue_Slider_Range("Color B Range", [ 0, 1 ]));
-	
-	newInput(11, nodeValue_Surface("Mask"));
+	////- =Render
+	newInput( 5, nodeValue_Surface(      "Texture Sample" ));
+	newInput( 7, nodeValue_Enum_Button(  "Color Mode",     0, [ "Greyscale", "RGB", "HSV" ]));
+	newInput( 8, nodeValue_Slider_Range( "Color R Range", [0,1] ));
+	newInput( 9, nodeValue_Slider_Range( "Color G Range", [0,1] ));
+	newInput(10, nodeValue_Slider_Range( "Color B Range", [0,1] ));
+	// input 11
 	
 	input_display_list = [
 		["Output",	false], 0, 11, 
@@ -44,7 +38,6 @@ function Node_Grid_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	attribute_surface_depth();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-
 		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		
 		return w_hovering;

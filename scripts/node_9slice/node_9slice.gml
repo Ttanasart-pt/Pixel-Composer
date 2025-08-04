@@ -9,12 +9,10 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	newInput(0, nodeValue_Surface("Surface In"));
 	
+	////- =Slices
 	newInput(1, nodeValue_Dimension());
-	
-	newInput(2, nodeValue_Padding("Splice", [ 0, 0, 0, 0 ]))
-		.setUnitRef(function(index) { return getDimension(index); });
-	
-	newInput(3, nodeValue_Enum_Scroll("Filling modes", 0, [ "Scale", "Repeat" ]));
+	newInput(2, nodeValue_Padding(     "Splice",       [0,0,0,0] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput(3, nodeValue_Enum_Scroll( "Filling modes", 0, [ "Scale", "Repeat" ] ));
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	

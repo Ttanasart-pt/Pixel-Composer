@@ -17,8 +17,8 @@ function Node_Box_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(11, nodeValue_Enum_Button( "Pattern",    0, [ "Cross", "Xor" ]));
 	newInput( 1, nodeValue_Slider(      "Scale",      2, [1, 16, 0.1] )).setMappable(6);
-	newInput( 2, nodeValue_Rotation(    "Angle",      0    )).setMappable(7);
-	newInput( 3, nodeValue_Vec2(        "Position",  [0,0] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput( 2, nodeValue_Rotation(    "Angle",      0    )).setHotkey("R").setMappable(7);
+	newInput( 3, nodeValue_Vec2(        "Position",  [0,0] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
 	newInput( 9, nodeValue_Slider(      "Width",      0.25 )).setMappable(10);
 	newInput(12, nodeValue_Int(         "Iteration",  4    ))
 	

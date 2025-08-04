@@ -85,7 +85,7 @@
 		}
 		
 		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
-			if(!activeKeyboard) return;
+			if(!activeKeyboard)  { PANEL_PREVIEW.resetTool(); return; }
 			
 			var _bones = node.bone_select;
 			
@@ -135,7 +135,7 @@
 				KEYBOARD_STRING = "";
 			}
 				
-			if(mouse_press(mb_left, active) || key_press(vk_enter)) {
+			if(mouse_press(mb_left) || key_press(vk_enter)) {
 				activeKeyboard = false;
 				UNDO_HOLDING   = false;
 				PANEL_PREVIEW.resetTool();
@@ -205,7 +205,7 @@
 		}
 		
 		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
-			if(!activeKeyboard) return;
+			if(!activeKeyboard)  { PANEL_PREVIEW.resetTool(); return; }
 			
 			var _bones = node.bone_select;
 			
@@ -242,7 +242,7 @@
 			draw_set_color(COLORS._main_icon);
 			draw_line_dashed(ox, oy, _mx, _my);
 			
-			if(mouse_press(mb_left, active) || key_press(vk_enter)) {
+			if(mouse_press(mb_left) || key_press(vk_enter)) {
 				activeKeyboard = false;
 				UNDO_HOLDING   = false;
 				PANEL_PREVIEW.resetTool();
@@ -311,7 +311,7 @@
 		}
 		
 		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
-			if(!activeKeyboard) return;
+			if(!activeKeyboard)  { PANEL_PREVIEW.resetTool(); return; }
 			
 			var _bones = node.bone_select;
 			
@@ -368,7 +368,7 @@
 				KEYBOARD_STRING = "";
 			}
 				
-			if(mouse_press(mb_left, active) || key_press(vk_enter)) {
+			if(mouse_press(mb_left) || key_press(vk_enter)) {
 				activeKeyboard = false;
 				UNDO_HOLDING   = false;
 				PANEL_PREVIEW.resetTool();
@@ -413,9 +413,9 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			new NodeTool( "Detach Bone",  THEME.bone_tool_detach ),
 			new NodeTool( "IK",           THEME.bone_tool_IK     ),
 			-1, 
-			new NodeTool( "Move Selection",   THEME.tools_2d_move   ).setToolObject(new armature_tool_move(self)),
-			new NodeTool( "Rotate Selection", THEME.tools_2d_rotate ).setToolObject(new armature_tool_rotate(self)),
-			new NodeTool( "Scale Selection",  THEME.tools_2d_scale  ).setToolObject(new armature_tool_scale(self)),
+			new NodeTool( "Move Selection",   THEME.tools_2d_move   ).setVisible(false).setToolObject(new armature_tool_move(self)),
+			new NodeTool( "Rotate Selection", THEME.tools_2d_rotate ).setVisible(false).setToolObject(new armature_tool_rotate(self)),
+			new NodeTool( "Scale Selection",  THEME.tools_2d_scale  ).setVisible(false).setToolObject(new armature_tool_scale(self)),
 		];
 		
 		anchor_selecting = noone;

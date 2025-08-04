@@ -25,8 +25,8 @@
 
 function nodeValue_Area(_name, _value = DEF_AREA, _data = {}) { return new __NodeValue_Area(_name, self, _value, _data); }
 function __NodeValue_Area(_name, _node, _value, _data = {}) : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.float, _value, "") constructor {
-	
 	setDisplay(VALUE_DISPLAY.area, _data);
+	preview_hotkey_spr = THEME.bone_tool_move;
 	def_length = AREA_ARRAY_LENGTH;
 	
 	/////============== GET =============
@@ -94,14 +94,74 @@ function __NodeValue_Area(_name, _node, _value, _data = {}) : NodeValue(_name, _
 	/////============== DRAW =============
 	
 	__preview_bbox = noone;
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	preview_hotkey_v0 = [ 0, 0 ];
+	
+	static drawOverlayToggle = function() {
+		preview_hotkey_active = true;
+		preview_hotkey_step   =  0;
+	}
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag = 0b0011) { 
 		if(expUse) return -1;
-		
-		var argc = 9;
 		__preview_bbox = node.__preview_bbox;
 		
-		var _flag = argument_count > argc + 0? argument[argc + 0] : 0b0011;
-		return preview_overlay_area(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag, struct_try_get(display_data, "onSurfaceSize"));
+		var _hovering = preview_hotkey_active;
+		
+		if(preview_hotkey_active) {
+			
+			var _vx = (_mx - _x) / _s;
+			var _vy = (_my - _y) / _s;
+			
+			switch(preview_hotkey_step) {
+				case 0 : 
+					if(mouse_lpress(active)) {
+						preview_hotkey_step = 1;
+						preview_hotkey_v0   = [ _vx, _vy ];
+					}
+					
+					draw_set_color(COLORS._main_icon);
+					draw_line(0, _my, 9999, _my);
+					draw_line(_mx, 0, _mx, 9999);
+					break;
+					
+				case 1 : 
+					var _cx = (preview_hotkey_v0[0] + _vx) / 2;
+					var _cy = (preview_hotkey_v0[1] + _vy) / 2;
+					
+					var _hw = abs(preview_hotkey_v0[0] - _vx) / 2;
+					var _hh = abs(preview_hotkey_v0[1] - _vy) / 2;
+					
+					var val = getValue();
+					val[0] = _cx;
+					val[1] = _cy;
+					
+					val[2] = _hw;
+					val[3] = _hh;
+					
+					if(setValue(val)) UNDO_HOLDING = true;
+					
+					if(mouse_lrelease()) {
+						preview_hotkey_active = false;
+						UNDO_HOLDING = false;
+					}
+					
+					draw_set_color(COLORS._main_accent);
+					draw_rectangle(_mx, _my, _x + preview_hotkey_v0[0] * _s, _y + preview_hotkey_v0[1] * _s, true);
+					break;
+			}
+			
+			if(key_press(vk_enter) || preview_hotkey.isPressing()) {
+				preview_hotkey_active = false;
+				UNDO_HOLDING = false;
+			}
+			
+		}
+		
+		if(active && preview_hotkey && preview_hotkey.isPressing()) 
+			drawOverlayToggle();
+		
+		_hovering = _hovering || preview_overlay_area(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag, struct_try_get(display_data, "onSurfaceSize"))
+		return _hovering;
 	}
 	
 	static drawOverlayFallOff = function(_x, _y, _s, _fall) {

@@ -1,32 +1,34 @@
 function Node_Perlin_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Smear noise";
 	
+	////- =Output
 	newInput(0, nodeValue_Dimension());
+	newInput(6, nodeValue_Surface(  "Mask"));
 	
-	newInput(1, nodeValue_Vec2("Position", [ 0, 0 ]))
-		.setUnitRef(function(index) { return getDimension(index); });
-	
-	newInput(2, nodeValue_Vec2("Scale", [ 4, 6 ]));
-	
-	newInput(3, nodeValue_Int("Iteration", 3));
-	
-	newInput(4, nodeValue_Slider("Brightness", 0.5));
-	
-	newInput(5, nodeValue_Rotation("Rotation", 0));
-		
-	newInput(6, nodeValue_Surface("Mask"));
+	////- =Noise
+	newInput(1, nodeValue_Vec2(     "Position",   [0,0] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput(5, nodeValue_Rotation( "Rotation",    0    )).setHotkey("R");
+	newInput(2, nodeValue_Vec2(     "Scale",      [4,6] ));
+	newInput(3, nodeValue_Int(      "Iteration",   3    ));
+	newInput(4, nodeValue_Slider(   "Brightness", .5    ));
+	// input 7
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
-		["Output",		false], 0, 6, 
-		["Noise",		false], 1, 5, 2, 3, 4,
+		["Output", false], 0, 6, 
+		["Noise",  false], 1, 5, 2, 3, 4,
 	];
 	
 	attribute_surface_depth();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+		var _pos = getSingleValue(1);
+		var  px  = _x + _pos[0] * _s;
+		var  py  = _y + _pos[1] * _s;
+		
 		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[5].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
 		
 		return w_hovering;
 	}

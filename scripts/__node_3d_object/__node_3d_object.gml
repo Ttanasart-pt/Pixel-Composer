@@ -286,7 +286,7 @@
 				PANEL_PREVIEW.setActionTooltip(_tooltipText);
 				
 			} else {
-				if((_hover != noone && mouse_press(mb_left, active)) || activeKeyboard) {
+				if((_hover != noone && mouse_press(mb_left)) || activeKeyboard) {
 					drag_axis = activeKeyboard? 0 : _hover;
 					drag_mx	= _mx; drag_my = _my;
 					drag_px = _mx; drag_py = _my;
@@ -432,7 +432,7 @@
 					drag_prev = mAng;
 				}
 					
-				if(_hover != noone && mouse_press(mb_left, active)) {
+				if(_hover != noone && mouse_press(mb_left)) {
 					drag_axis = _hover;
 					drag_prev = undefined;
 					drag_val  = _qrot.Clone();
@@ -475,7 +475,7 @@
 					}
 					
 				} else {
-					if((_hover != noone && mouse_press(mb_left, active)) || activeKeyboard) {
+					if((_hover != noone && mouse_press(mb_left)) || activeKeyboard) {
 						drag_axis = activeKeyboard? 0 : _hover;
 						drag_prev = undefined;
 						
@@ -809,7 +809,7 @@
 				PANEL_PREVIEW.setActionTooltip(_tooltipText);
 				
 			} else {
-				if((_hover != noone && mouse_press(mb_left, active)) || activeKeyboard) {
+				if((_hover != noone && mouse_press(mb_left)) || activeKeyboard) {
 					drag_axis = activeKeyboard? 6 : _hover;
 					drag_prev = undefined;
 					drag_mx	= _mx; drag_my = _my;

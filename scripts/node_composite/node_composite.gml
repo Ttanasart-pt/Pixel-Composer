@@ -99,7 +99,7 @@
 				KEYBOARD_STRING = "";
 			}
 				
-			if(mouse_press(mb_left, active) || key_press(vk_enter)) {
+			if(mouse_press(mb_left) || key_press(vk_enter)) {
 				activeKeyboard = false;
 				UNDO_HOLDING   = false;
 				PANEL_PREVIEW.resetTool();
@@ -174,7 +174,7 @@
 			if(node.inputs[surf_dragging + 2].setValue(_rr))
 				UNDO_HOLDING   = true;
 				
-			if(mouse_press(mb_left, active) || key_press(vk_enter)) {
+			if(mouse_press(mb_left) || key_press(vk_enter)) {
 				activeKeyboard = false;
 				UNDO_HOLDING   = false;
 				PANEL_PREVIEW.resetTool();
@@ -275,7 +275,7 @@
 				KEYBOARD_STRING = "";
 			}
 				
-			if(mouse_press(mb_left, active) || key_press(vk_enter)) {
+			if(mouse_press(mb_left) || key_press(vk_enter)) {
 				activeKeyboard = false;
 				UNDO_HOLDING   = false;
 				PANEL_PREVIEW.resetTool();
@@ -324,7 +324,7 @@
 			if(!activeKeyboard)     return;
 			if(surf_dragging == -1) return;
 				
-			if(mouse_press(mb_left, active) || key_press(vk_enter)) {
+			if(mouse_press(mb_left) || key_press(vk_enter)) {
 				activeKeyboard = false;
 				UNDO_HOLDING   = false;
 				PANEL_PREVIEW.resetTool();

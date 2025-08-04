@@ -244,6 +244,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		preview_channel  = 0;
 		preview_alpha	 = 1;
 		
+		preview_select_surface = true;
+		
 		preview_x  = 0;
 		preview_y  = 0;
 		preview_mx = 0;
@@ -298,8 +300,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	#endregion
 	
 	#region ---- Tools ----
-		tools			= -1;
-		rightTools		= -1;
+		tools		= -1;
+		rightTools	= -1;
+		toolShow    = false;
+		
 		isTool			= false;
 		isGizmoGlobal   = false;
 		tool_settings	= [];
@@ -2454,6 +2458,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		isTool = true;
 	}
+	
+	static showTool = function() { return tools != -1 || toolShow; }
 	
 	static drawTools = noone;
 	

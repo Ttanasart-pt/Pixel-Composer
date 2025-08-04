@@ -14,8 +14,8 @@ function Node_Wavelet_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, 
 	
 	////- =Transform
 	
-	newInput( 1, nodeValue_Vec2("Position",      [0,0] )).setShaderProp("position").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
-	newInput( 9, nodeValue_Rotation("Rotation",   0    )).setShaderProp("rotation");
+	newInput( 1, nodeValue_Vec2("Position",      [0,0] )).setHotkey("G").setShaderProp("position").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput( 9, nodeValue_Rotation("Rotation",   0    )).setHotkey("R").setShaderProp("rotation");
 	newInput( 2, nodeValue_Vec2("Scale",         [4,4] )).setShaderProp("scale").setMappable(6);
 	
 	// input 11
@@ -27,7 +27,13 @@ function Node_Wavelet_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, 
 	];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+		var _pos = getSingleValue(1);
+		var  px  = _x + _pos[0] * _s;
+		var  py  = _y + _pos[1] * _s;
+		
 		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[9].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
+		
 		return w_hovering;
 	}
 	

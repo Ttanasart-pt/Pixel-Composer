@@ -8,28 +8,23 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	name = "Simplex Noise";
 	
 	////- =Output
-	
 	newInput( 0, nodeValue_Dimension());
 	newInput(13, nodeValue_Surface( "Mask" ));
 	
 	////- =Noise
-	
 	newInput(14, nodeValueSeed());
 	newInput( 3, nodeValue_ISlider(  "Iteration",   1, [1, 16, 0.1] )).setMappable(9);
 	
 	////- =Transform
-	
-	newInput( 1, nodeValue_Vec2(     "Position",   [0,0] ));
+	newInput( 1, nodeValue_Vec2(     "Position",   [0,0] )).setHotkey("G");
 	newInput(10, nodeValue_Rotation( "Rotation",    0));
 	newInput( 2, nodeValue_Vec2(     "Scale",      [4,4] )).setMappable(8);
 	
 	////- =Iteration
-	
 	newInput(11, nodeValue_Float(  "Scaling",    2));
 	newInput(12, nodeValue_Slider( "Amplitude", .5));
 	
 	////- =Render
-	
 	newInput( 4, nodeValue_Enum_Button(  "Color Mode",     0, [ "Greyscale", "RGB", "HSV" ]));
 	newInput( 5, nodeValue_Slider_Range( "Color R Range", [0,1] ));
 	newInput( 6, nodeValue_Slider_Range( "Color G Range", [0,1] ));

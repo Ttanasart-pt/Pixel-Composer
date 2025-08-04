@@ -14,8 +14,8 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	////- =Pattern
 	
-	newInput( 1, nodeValue_Vec2(     "Position",      [0,0]  )).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
-	newInput( 4, nodeValue_Rotation( "Angle",          0     )).setMappable(15);
+	newInput( 1, nodeValue_Vec2(     "Position",      [0,0]  )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput( 4, nodeValue_Rotation( "Angle",          0     )).setHotkey("R").setMappable(15);
 	newInput(36, nodeValue_Bool(     "Invert Size",    false ));
 	newInput( 2, nodeValue_Vec2(     "Grid Size",     [8,8]  )).setMappable(13);
 	newInput(28, nodeValue_Bool(     "Uniform Gap",    true  ));

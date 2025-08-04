@@ -5,26 +5,22 @@ function Node_Path_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(0, nodeValue_PathNode( "Path" ));
 	
 	////- =Repeat
-	
 	newInput( 6, nodeValue_Enum_Button( "Pattern",      0, ["Linear", "Circular"] ));
 	newInput( 1, nodeValue_Int(         "Amount",       4     ));
 	newInput( 7, nodeValue_Vec2(        "Center",     [.5,.5] )).setUnitRef(function() /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
 	newInput( 8, nodeValue_Vec2(        "Radius",     [.5,.5] )).setUnitRef(function() /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
 	
 	////- =Position
-	
 	newInput(10, nodeValue_Vec2(     "Position",       [0,0]  )).setUnitRef(function() /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
 	newInput( 2, nodeValue_Vec2(     "Shift Position", [0,0]  )).setUnitRef(function() /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
 	
 	////- =Rotation
-	
 	newInput(11, nodeValue_Rotation( "Rotation",         0     ));
 	newInput( 3, nodeValue_Rotation( "Shift Rotation",   0     ));
 	newInput( 5, nodeValue_Vec2(     "Anchor",          [0,0]  )).setUnitRef(function() /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
 	newInput( 9, nodeValue_Bool(     "Rotate Along",    true   ));
 	
 	////- =Scale
-	
 	newInput(12, nodeValue_Vec2(     "Scale",          [1,1]  ));
 	newInput( 4, nodeValue_Vec2(     "Shift Scale",    [1,1]  ));
 		

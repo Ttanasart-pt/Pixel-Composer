@@ -24,7 +24,7 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	////- =Transform
 	
-	newInput( 1, nodeValue_Vec2(     "Position", [ DEF_SURF_W / 2, DEF_SURF_H / 2])).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput( 1, nodeValue_Vec2(     "Position", [ DEF_SURF_W / 2, DEF_SURF_H / 2])).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
 	newInput(12, nodeValue_Rotation( "Rotation", 0 ));
 	newInput( 2, nodeValue_Float(    "Scale",    4 )).setMappable(11);
 	

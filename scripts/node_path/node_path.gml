@@ -9,7 +9,7 @@
 		ind,
 		amount
 	}
-
+	
 	FN_NODE_TOOL_INVOKE {
 		hotkeyTool("Node_Path", "Transform",           "T");
 		hotkeyTool("Node_Path", "Anchor add / remove", "A");
@@ -72,7 +72,7 @@
 		}
 		
 		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
-			if(!activeKeyboard) return;
+			if(!activeKeyboard)  { PANEL_PREVIEW.resetTool(); return; }
 			
 			var _ancs = node.anchor_select;
 			
@@ -127,7 +127,7 @@
 				KEYBOARD_STRING = "";
 			}
 				
-			if(mouse_press(mb_left, active) || key_press(vk_enter)) {
+			if(mouse_press(mb_left) || key_press(vk_enter)) {
 				activeKeyboard = false;
 				UNDO_HOLDING   = false;
 				PANEL_PREVIEW.resetTool();
@@ -192,7 +192,7 @@
 		}
 		
 		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
-			if(!activeKeyboard) return;
+			if(!activeKeyboard)  { PANEL_PREVIEW.resetTool(); return; }
 			
 			var _ancs = node.anchor_select;
 			
@@ -240,7 +240,7 @@
 			draw_set_color(COLORS._main_icon);
 			draw_line_dashed(ox, oy, _mx, _my);
 			
-			if(mouse_press(mb_left, active) || key_press(vk_enter)) {
+			if(mouse_press(mb_left) || key_press(vk_enter)) {
 				activeKeyboard = false;
 				UNDO_HOLDING   = false;
 				PANEL_PREVIEW.resetTool();
@@ -303,7 +303,7 @@
 		}
 		
 		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
-			if(!activeKeyboard) return;
+			if(!activeKeyboard)  { PANEL_PREVIEW.resetTool(); return; }
 			
 			var _ancs = node.anchor_select;
 			
@@ -314,6 +314,7 @@
 			var oy = _y + origin_y * _s;
 			
 			var _ss = point_distance(_mx, _my, ox, oy) / point_distance(drag_pmx, drag_pmy, ox, oy);
+			var _sc = KEYBOARD_NUMBER ?? _ss;
 			
 			for( var i = 0, n = array_length(_ancs); i < n; i++ ) {
 				var inp = node.inputs[node.input_fix_len + _ancs[i]];
@@ -324,18 +325,28 @@
 				val[1] = ori[1];
 				
 				if(drag_axis == -1) {
-					val[0] = origin_x + (ori[0] - origin_x) * _ss;
-					val[1] = origin_y + (ori[1] - origin_y) * _ss;
+					val[0] = origin_x + (ori[0] - origin_x) * _sc;
+					val[1] = origin_y + (ori[1] - origin_y) * _sc;
+					
+					val[2] = ori[2] * _sc;
+					val[3] = ori[3] * _sc;
+					
+					val[4] = ori[4] * _sc;
+					val[5] = ori[5] * _sc;
 					
 				} else {
-					if(KEYBOARD_NUMBER == undefined) {
-						if(drag_axis == 0) val[0] = origin_x + (ori[0] - origin_x) * _ss;
-						if(drag_axis == 1) val[1] = origin_y + (ori[1] - origin_y) * _ss;
-						
-					} else {
-						if(drag_axis == 0) val[0] = origin_x + (ori[0] - origin_x) * KEYBOARD_NUMBER;
-						if(drag_axis == 1) val[1] = origin_y + (ori[1] - origin_y) * KEYBOARD_NUMBER;
+					if(drag_axis == 0) {
+						val[0] = origin_x + (ori[0] - origin_x) * _sc;
+						val[2] = ori[2] * _sc;
+						val[4] = ori[4] * _sc;
 					}
+					
+					if(drag_axis == 1) {
+						val[1] = origin_y + (ori[1] - origin_y) * _sc;
+						val[3] = ori[3] * _sc;
+						val[5] = ori[5] * _sc;
+					}
+					
 				}
 				
 				if(inp.setValue(val)) UNDO_HOLDING = true;
@@ -358,7 +369,7 @@
 				KEYBOARD_STRING = "";
 			}
 				
-			if(mouse_press(mb_left, active) || key_press(vk_enter)) {
+			if(mouse_press(mb_left) || key_press(vk_enter)) {
 				activeKeyboard = false;
 				UNDO_HOLDING   = false;
 				PANEL_PREVIEW.resetTool();
@@ -429,9 +440,9 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			new NodeTool( "Circle path",         THEME.path_tools_circle      ),
 			new NodeTool( "Weight edit",         THEME.path_tools_weight_edit ),
 			-1, 
-			new NodeTool( "Move Selection",      THEME.tools_2d_move   ).setToolObject(new path_tool_move(self)),
-			new NodeTool( "Rotate Selection",    THEME.tools_2d_rotate ).setToolObject(new path_tool_rotate(self)),
-			new NodeTool( "Scale Selection",     THEME.tools_2d_scale  ).setToolObject(new path_tool_scale(self)),
+			new NodeTool( "Move Selection",      THEME.tools_2d_move   ).setVisible(false).setToolObject(new path_tool_move(self)),
+			new NodeTool( "Rotate Selection",    THEME.tools_2d_rotate ).setVisible(false).setToolObject(new path_tool_rotate(self)),
+			new NodeTool( "Scale Selection",     THEME.tools_2d_scale  ).setVisible(false).setToolObject(new path_tool_scale(self)),
 		];
 	#endregion
 	
@@ -476,7 +487,6 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		weight_drag_mx = 0;
 		weight_drag_my = 0;
 		
-		anchor_selected = false;
 		anchor_freeze   = 0;
 		anchor_select   = [];
 		anchor_focus    = undefined;
@@ -1605,7 +1615,6 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				var sy1 = panel.selection_y1;
 				
 				anchor_select   = [];
-				anchor_selected = false;
 				
 				for( var i = 0, n = array_length(_pth.anchors); i < n; i++ ) {
 					var _anc = _pth.anchors[i];
@@ -1616,11 +1625,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				
 			}
 			
-			if(mouse_lrelease()) {
+			if(mouse_lrelease())
 				anchor_freeze = 0;
-				if(!array_empty(anchor_select))
-					anchor_selected = true;
-			}
 			
 			for( var i = 0, n = array_length(anchor_select); i < n; i++ ) {
 				var _a   = anchor_select[i];

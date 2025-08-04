@@ -26,7 +26,7 @@ function Node_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(11, nodeValue_Enum_Button( "Mode",       0, [ "Greyscale", "Alpha" ] ));
 	newInput(14, nodeValue_Bool(        "Invert",     false ));
 	newInput( 1, nodeValue_Slider(      "Strength",  .2, [0, 0.5, 0.001] )).setMappable(9);
-	newInput( 2, nodeValue_Rotation(    "Direction",  0 )).setMappable(10);
+	newInput( 2, nodeValue_Rotation(    "Direction",  0 )).setHotkey("R").setMappable(10);
 	newInput(13, nodeValue_Slider(      "Spread",     0, [ 0, 30, 1 ] ));
 	newInput(12, nodeValue_Enum_Button( "Modulate strength", 0, [ "Distance", "Color", "None" ]));
 	

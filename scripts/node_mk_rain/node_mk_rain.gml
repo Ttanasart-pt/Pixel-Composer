@@ -6,7 +6,6 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(8, nodeValueSeed());
 	
 	////- =Shapes
-	
 	newInput( 9, nodeValue_Enum_Scroll( "Shape",           0, __enum_array_gen([ "Rain", "Snow", "Texture" ], s_node_mk_rain_type)));
 	newInput( 3, nodeValue_Range(       "Raindrop Width",  [1,1]  ));
 	newInput( 4, nodeValue_Range(       "Raindrop Length", [5,10] ));
@@ -14,27 +13,23 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(11, nodeValue_Surface(     "Texture" ));
 	
 	////- =Lifespan
-	
 	newInput(14, nodeValue_Bool(         "Limited Lifespan",    false));
 	newInput(15, nodeValue_Slider_Range( "Lifespan",            [0,1])).setTooltip("Lifespan of a droplet as a ratio of the entire animation.");
 	newInput(13, nodeValue_Curve(        "Size over Lifetime",  CURVE_DEF_11));
 	newInput(16, nodeValue_Curve(        "Alpha over Lifetime", CURVE_DEF_11));
 	
 	////- =Effect
-	
 	newInput( 2, nodeValue_Float(        "Density",         5));
 	newInput( 1, nodeValue_Rotation(     "Direction",       45));
 	newInput( 7, nodeValue_Range(        "Velocity",        [1,2]));
 	newInput(12, nodeValue_Slider_Range( "Track Extension", [0,0], { range: [ 0, 10, 0.01 ] }));
 	
 	////- =Render
-	
 	newInput( 5, nodeValue_Gradient(     "Color",      new gradientObject(ca_white)));
 	newInput( 6, nodeValue_Slider_Range( "Alpha",      [.5,1]));
 	newInput(17, nodeValue_Bool(         "Fade Alpha", false));
 	
 	////- =Ground
-	
 	newInput(18, nodeValue_Bool(   "Ground",        false   ));
 	newInput(19, nodeValue_Float(  "Ground Start",  64      ));
 	newInput(20, nodeValue_Bool(   "Ripple",        false   ));

@@ -4,8 +4,8 @@ function Node_Mesh_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	newInput(0, nodeValue_Mesh( "Mesh" )).setVisible(true, true);
 	
-	newInput(1, nodeValue_Vec2(     "Position", [0,0] ));
-	newInput(2, nodeValue_Rotation( "Rotation",  0    ));
+	newInput(1, nodeValue_Vec2(     "Position", [0,0] )).setHotkey("G");
+	newInput(2, nodeValue_Rotation( "Rotation",  0    )).setHotkey("R");
 	newInput(3, nodeValue_Vec2(     "Scale",    [1,1] ));
 	newInput(4, nodeValue_Vec2(     "Anchor",   [0,0] ));
 	

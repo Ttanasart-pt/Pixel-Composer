@@ -15,7 +15,7 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	newInput(1, nodeValue_Dimension());
 	
 	////- =Spawn
-	newInput(3, nodeValue_Area( "Area"       ));
+	newInput(3, nodeValue_Area( "Area"       )).setHotkey("A");
 	newInput(4, nodeValue_Int(  "Amount", 10 ));
 	
 	////- =Physics

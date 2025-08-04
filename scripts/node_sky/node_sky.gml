@@ -23,7 +23,7 @@ function Node_Sky(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	newInput(8, nodeValue_Float(       "Albedo",    1 ));
 	
 	////- =Sun
-	newInput(5, nodeValue_Vec2(        "Sun",          [.2,.2] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(5, nodeValue_Vec2(        "Sun",          [.2,.2] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	newInput(6, nodeValue_Float(       "Sun Radius",     500   ));
 	newInput(7, nodeValue_Float(       "Sun Radiance",   20    ));
 	newInput(9, nodeValue_Enum_Scroll( "Coordinate",     0, [ "Rectangular", "Polar" ] ));
