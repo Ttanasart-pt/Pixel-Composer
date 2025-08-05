@@ -11,20 +11,17 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	newInput(4, nodeValueSeed());
 	
-	////- Surfaces
-	
+	////- =Surfaces
 	newInput(0, nodeValue_Surface( "Surface In" ));
 	newInput(1, nodeValue_Surface( "Mask"       ));
 	
-	////- Filter
-	
+	////- =Filter
 	newInput(11, nodeValue_Bool(  "Color Filter", false    ));
 	newInput( 5, nodeValue_Color( "Target Color", ca_white ));
 	newInput( 6, nodeValue_Bool(  "Inner Only",   false    )).setTooltip("Only fill regions with surrounding pixels.");
 	newInput(14, nodeValue_Bool(  "Expands",      true     )).setTooltip("Expands filled area to filtered pixels.");
 	
-	////- Fill
-	
+	////- =Fill
 	newInput(13, nodeValue_Slider(         "Threshold",      .1 ));
 	newInput( 8, nodeValue_Enum_Scroll(    "Fill Type",       0, [ "Random", "Color map", "Texture map", "Texture Coord", "Texture Index" ]));
 	newInput(15, nodeValue_Enum_Button(    "Source",          0, [ "Palette", "Gradient" ]));
@@ -36,11 +33,10 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(10, nodeValue_Surface(        "Texture Map"            ));
 	newInput(12, nodeValue_Rotation_Range( "Random Rotation", [0,0] ));
 	
-	////- Render
-	
+	////- =Render
 	newInput(7, nodeValue_Enum_Scroll("Draw Original",  0, [ "None", "Above", "Behind" ]));
 	
-	//// Inputs 17
+	// Inputs 17
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	

@@ -6,26 +6,22 @@ function Node_Grain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(9, nodeValueSeed());
 	
 	////- =Surfaces
-	
 	newInput(0, nodeValue_Surface( "Surface In" ));
 	newInput(1, nodeValue_Surface( "Mask"       ));
 	newInput(2, nodeValue_Slider(  "Mix", 1     ));
 	__init_mask_modifier(1, 5); // inputs 5, 6
 	
 	////- =Brightness
-	
 	newInput(22, nodeValue_Enum_Scroll( "Blend mode", 0, [ "Additive", "Multiply", "Screen", "Overlay" ]))
-	newInput( 7, nodeValue_Slider(      "Brightness", 0, [-1,1,.01] )).setMappable(8);
+	newInput( 7, nodeValue_Slider(      "Brightness", 0, [-1,1,.01] )).setHotkey("B").setMappable(8);
 	
 	////- =RGB
-	
 	newInput(23, nodeValue_Enum_Scroll( "Blend mode", 0, [ "Additive", "Multiply", "Screen" ]))
 	newInput(10, nodeValue_Slider(      "Red",        0, [-1,1,.01] )).setMappable(11);
 	newInput(12, nodeValue_Slider(      "Green",      0, [-1,1,.01] )).setMappable(13);
 	newInput(14, nodeValue_Slider(      "Blue",       0, [-1,1,.01] )).setMappable(15);
 	
 	////- =HSV
-	
 	newInput(24, nodeValue_Enum_Scroll( "Blend mode", 0, [ "Additive", "Multiply", "Screen" ]))
 	newInput(16, nodeValue_Slider(      "Hue",        0, [-1,1,.01] )).setMappable(17);
 	newInput(18, nodeValue_Slider(      "Saturation", 0, [-1,1,.01] )).setMappable(19);
@@ -43,6 +39,18 @@ function Node_Grain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+		PROCESSOR_OVERLAY_CHECK
+		
+		var _dim = getDimension();
+		var _cx = _x + _dim[0] / 2 * _s;
+		var _cy = _y + _dim[1] / 2 * _s;
+		
+		InputDrawOverlay(inputs[7].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my, _snx, _sny, 0, _dim[0] / 2));
+		
+		return w_hovering;
+	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		

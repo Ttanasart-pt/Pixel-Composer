@@ -11,22 +11,19 @@ function Node_Blur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(8, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surfaces
-	
 	newInput(0, nodeValue_Surface( "Surface In"));
 	newInput(5, nodeValue_Surface( "Mask"));
 	newInput(6, nodeValue_Slider(  "Mix", 1));
 	__init_mask_modifier(5, 9); // inputs 9, 10
 	
 	////- =Blur
-	
-	newInput( 1, nodeValue_Int("Size", 3)).setUnitRef(function(i) /*=>*/ {return getDimension(i)}).setValidator(VV_min(0))
-	newInput( 2, nodeValue_Enum_Scroll("Oversample mode",  0, [ "Empty", "Clamp", "Repeat" ]));
-	newInput( 3, nodeValue_Bool(  "Override color",        false)).setTooltip("Replace all color while keeping the alpha. Used to\nfix grey outline when bluring transparent pixel.");
-	newInput( 4, nodeValue_Color( "Color",                 ca_black));
-	newInput(11, nodeValue_Bool(  "Gamma Correction",      false));
+	newInput( 1, nodeValue_Int( "Size", 3 )).setHotkey("S").setUnitRef(function(i) /*=>*/ {return getDimension(i)}).setValidator(VV_min(0))
+	/* UNUSED */ newInput( 2, nodeValue_Enum_Scroll( "Oversample mode",  0, [ "Empty", "Clamp", "Repeat" ]));
+	newInput( 3, nodeValue_Bool(  "Override color",        false    )).setTooltip("Replace all color while keeping the alpha. Used to\nfix grey outline when bluring transparent pixel.");
+	newInput( 4, nodeValue_Color( "Color",                 ca_black ));
+	newInput(11, nodeValue_Bool(  "Gamma Correction",      false    ));
 	
 	////- =Directional
-	
 	newInput(12, nodeValue_Slider(   "Aspect Ratio", 1));
 	newInput(13, nodeValue_Rotation( "Direction",    0));
 	
@@ -45,6 +42,18 @@ function Node_Blur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	attribute_surface_depth();
 	attribute_oversample();
 	surface_blur_init();
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+		PROCESSOR_OVERLAY_CHECK
+		
+		var _dim = getDimension();
+		var _cx = _x + _dim[0] / 2 * _s;
+		var _cy = _y + _dim[1] / 2 * _s;
+		
+		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my, _snx, _sny));
+		
+		return w_hovering;
+	}
 	
 	static processData = function(_outSurf, _data, _array_index) {	
 		var _surf  = _data[0];

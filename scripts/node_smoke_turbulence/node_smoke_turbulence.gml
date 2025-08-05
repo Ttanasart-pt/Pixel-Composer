@@ -4,16 +4,14 @@ function Node_Smoke_Turbulence(_x, _y, _group = noone) : Node_Smoke(_x, _y, _gro
 	
 	manual_ungroupable	 = false;
 	
-	newInput(0, nodeValue("Domain", self, CONNECT_TYPE.input, VALUE_TYPE.sdomain, noone))
-		.setVisible(true, true);
+	////- =Domain
+	newInput(0, nodeValue( "Domain", self, CONNECT_TYPE.input, VALUE_TYPE.sdomain, noone)).setVisible(true, true);
 	
-	newInput(1, nodeValue_Area("Effect area", DEF_AREA, { useShape : false }));
-	
-	newInput(2, nodeValue_Slider("Strength", 0.10, [-1, 1, 0.01] ));
-	
-	newInput(3, nodeValue_Slider("Scale", 4, [1, 16, 0.01] ));
-	
+	////- =Turbulence
+	newInput(1, nodeValue_Area(   "Effect area", DEF_AREA, { useShape : false } )).setHotkey("A");
+	newInput(2, nodeValue_Slider( "Strength",    .10, [-1, 1, 0.01] ));
 	newInput(4, nodeValueSeed());
+	newInput(3, nodeValue_Slider( "Scale",         4, [1, 16, 0.01] ));
 	
 	input_display_list = [ 
 		["Domain",		false], 0, 

@@ -12,26 +12,23 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(10, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surfaces
-	
 	newInput( 0, nodeValue_Surface( "Surface In" ));
 	newInput( 4, nodeValue_Surface( "Mask"       ));
 	newInput( 5, nodeValue_Slider(  "Mix", 1     ));
 	__init_mask_modifier(4, 11); // inputs 11, 12
 	
 	////- =Brightness
-	
 	newInput( 1, nodeValue_Bool(        "Brightness",       false ));
 	newInput(15, nodeValue_Enum_Scroll( "Algorithm",        0, [ "Simple", "Adaptive mean" ] ));
-	newInput( 2, nodeValue_Slider(      "Threshold",       .5     )).setInternalName("Brightness Threshold").setMappable(13);
+	newInput( 2, nodeValue_Slider(      "Threshold",       .5     )).setHotkey("B").setInternalName("Brightness Threshold").setMappable(13);
 	newInput( 3, nodeValue_Slider(      "Smoothness",       0     )).setInternalName("Brightness Smoothness");
 	newInput(16, nodeValue_Int(         "Adaptive Radius",  4     ));
 	newInput(17, nodeValue_Bool(        "Invert",           false )).setInternalName("Brightness Invert");
 	newInput(19, nodeValue_Bool(        "Apply to Alpha",   false ));
 	
 	////- =Alpha
-	
 	newInput( 7, nodeValue_Bool(   "Alpha",       false ));
-	newInput( 8, nodeValue_Slider( "Threshold",  .5     )).setInternalName("Alpha Threshold").setMappable(14);
+	newInput( 8, nodeValue_Slider( "Threshold",  .5     )).setHotkey("A").setInternalName("Alpha Threshold").setMappable(14);
 	newInput( 9, nodeValue_Slider( "Smoothness",  0     )).setInternalName("Alpha Smoothness");
 	newInput(18, nodeValue_Bool(   "Invert",      false )).setInternalName("Alpha Invert");
 	
@@ -46,6 +43,19 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	];
 	
 	attribute_surface_depth();
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+		PROCESSOR_OVERLAY_CHECK
+		
+		var _dim = getDimension();
+		var _cx = _x + _dim[0] / 2 * _s;
+		var _cy = _y + _dim[1] / 2 * _s;
+		
+		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _cx, _cy - ui(16), _s, _mx, _my, _snx, _sny, 0, _dim[0] / 2));
+		InputDrawOverlay(inputs[8].drawOverlay(w_hoverable, active, _cx, _cy + ui(16), _s, _mx, _my, _snx, _sny, 0, _dim[0] / 2));
+		
+		return w_hovering;
+	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		

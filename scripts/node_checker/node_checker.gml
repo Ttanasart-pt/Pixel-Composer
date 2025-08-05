@@ -44,8 +44,8 @@ function Node_Checker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var px   = _x + pos[0] * _s;
 		var py   = _y + pos[1] * _s;
 		
-		InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		
 		return w_hovering;
 	}

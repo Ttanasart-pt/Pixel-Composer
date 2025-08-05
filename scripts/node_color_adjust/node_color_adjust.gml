@@ -2,35 +2,31 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	name = "Color Adjust";
 	
 	newActiveInput(11);
-	newInput(12, nodeValue_Enum_Button( "Input Type", 0, [ "Surface", "Color" ]));
-	newInput(15, nodeValue_Toggle(      "Channel",    0b1111, { data: array_create(4, THEME.inspector_channel) }));
+	newInput(12, nodeValue_Enum_Button( "Input Type", 0, [ "Surface", "Color" ] ));
+	newInput(15, nodeValue_Toggle(      "Channel",    0b1111, { data: array_create(4, THEME.inspector_channel) } ));
 	newInput( 9, nodeValue_Slider(      "Alpha",      1 )).setMappable(24);
 	
-	////- Input
-	
+	////- =Input
 	newInput( 0, nodeValue_Surface( "Surface In" ));
-	newInput( 8, nodeValue_Surface( "Mask" ));
+	newInput( 8, nodeValue_Surface( "Mask"       ));
 	newInput(16, nodeValue_Bool(    "Invert mask",  false ));
-	newInput(13, nodeValue_Palette( "Color",        array_clone(DEF_PALETTE))).setVisible(true, true);
-	newInput(17, nodeValue_Slider(  "Mask feather", 1, [ 1, 16, 0.1 ]));
+	newInput(13, nodeValue_Palette( "Color",        array_clone(DEF_PALETTE) )).setVisible(true, true);
+	newInput(17, nodeValue_Slider(  "Mask feather", 1, [ 1, 16, 0.1 ]        ));
 	
-	////- Brightness
+	////- =Brightness
+	newInput( 1, nodeValue_Slider(  "Brightness",  0, [ -1, 1, 0.01 ] )).setHotkey("B").setMappable(18);
+	newInput( 2, nodeValue_Slider(  "Contrast",   .5                  )).setHotkey("C").setMappable(19);
+	newInput(10, nodeValue_Slider(  "Exposure",    1, [ 0, 4, 0.01 ]  )).setHotkey("E").setMappable(25);
 	
-	newInput( 1, nodeValue_Slider(  "Brightness",  0, [ -1, 1, 0.01 ])).setMappable(18);
-	newInput( 2, nodeValue_Slider(  "Contrast",   .5 )).setMappable(19);
-	newInput(10, nodeValue_Slider(  "Exposure",    1, [ 0, 4, 0.01 ])).setMappable(25);
+	////- =HSV
+	newInput( 3, nodeValue_Slider(  "Hue",        0, [ -1, 1, 0.01 ]  )).setMappable(20);
+	newInput( 4, nodeValue_Slider(  "Saturation", 0, [ -1, 1, 0.01 ]  )).setMappable(21);
+	newInput( 5, nodeValue_Slider(  "Value",      0, [ -1, 1, 0.01 ]  )).setMappable(22);
 	
-	////- HSV
-	
-	newInput( 3, nodeValue_Slider(  "Hue",        0, [ -1, 1, 0.01 ])).setMappable(20);
-	newInput( 4, nodeValue_Slider(  "Saturation", 0, [ -1, 1, 0.01 ])).setMappable(21);
-	newInput( 5, nodeValue_Slider(  "Value",      0, [ -1, 1, 0.01 ])).setMappable(22);
-	
-	////- Color
-	
-	newInput( 6, nodeValue_Color(       "Blend",        ca_white ));
+	////- =Color
+	newInput( 6, nodeValue_Color(       "Blend",        ca_white       ));
 	newInput(14, nodeValue_Enum_Scroll( "Blend mode",   0, BLEND_TYPES ));
-	newInput( 7, nodeValue_Slider(      "Blend amount", 0)).setMappable(23);
+	newInput( 7, nodeValue_Slider(      "Blend amount", 0              )).setMappable(23);
 	
 	// inputs 26
 	
@@ -47,6 +43,20 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	temp_surface = [ surface_create(1, 1), surface_create(1, 1) ];
 	
 	attribute_surface_depth();
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+		PROCESSOR_OVERLAY_CHECK
+		
+		var _dim = getDimension();
+		var _cx = _x + _dim[0] / 2 * _s;
+		var _cy = _y + _dim[1] / 2 * _s;
+		
+		InputDrawOverlay(inputs[ 1].drawOverlay(w_hoverable, active, _cx, _cy - ui(24), _s, _mx, _my, _snx, _sny, 0, _dim[0] / 2));
+		InputDrawOverlay(inputs[ 2].drawOverlay(w_hoverable, active, _cx, _cy,          _s, _mx, _my, _snx, _sny, 0, _dim[0] / 2));
+		InputDrawOverlay(inputs[10].drawOverlay(w_hoverable, active, _cx, _cy + ui(24), _s, _mx, _my, _snx, _sny, 0, _dim[0] / 2));
+		
+		return w_hovering;
+	}
 	
 	static processData_prebatch = function() {
 		var _type = getSingleValue(12);

@@ -106,11 +106,13 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 			if(key_press(ord("X"))) { preview_hotkey_axis = preview_hotkey_axis == 0? -1 : 0; KEYBOARD_STRING = ""; }
 			if(key_press(ord("Y"))) { preview_hotkey_axis = preview_hotkey_axis == 1? -1 : 1; KEYBOARD_STRING = ""; }
 			
-			draw_set_color(COLORS._main_icon);
 			var _vdx = _x + _vx * _s * _sca[0];
 			var _vdy = _y + _vy * _s * _sca[1];
+			draw_set_color(COLORS._main_icon);
 			if(preview_hotkey_axis == 0) draw_line_dashed(0, _vdy, 9999, _vdy);
 			if(preview_hotkey_axis == 1) draw_line_dashed(_vdx, 0, _vdx, 9999);
+			
+			draw_anchor(0, _vdx, _vdy, ui(10), 2);
 			
 			if(mouse_lpress(active) || key_press(vk_enter) || preview_hotkey.isPressing()) {
 				preview_hotkey_active = false;
@@ -165,6 +167,7 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 			
 			var _vdx = drag_sx;
 			var _vdy = drag_sy;
+			draw_set_color(COLORS._main_icon);
 			if(preview_hotkey_axis == 0) draw_line_dashed(0, _vdy, 9999, _vdy);
 			if(preview_hotkey_axis == 1) draw_line_dashed(_vdx, 0, _vdx, 9999);
 			

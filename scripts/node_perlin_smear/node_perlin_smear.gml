@@ -8,7 +8,7 @@ function Node_Perlin_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	////- =Noise
 	newInput(1, nodeValue_Vec2(     "Position",   [0,0] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
 	newInput(5, nodeValue_Rotation( "Rotation",    0    )).setHotkey("R");
-	newInput(2, nodeValue_Vec2(     "Scale",      [4,6] ));
+	newInput(2, nodeValue_Vec2(     "Scale",      [4,6] )).setHotkey("S");
 	newInput(3, nodeValue_Int(      "Iteration",   3    ));
 	newInput(4, nodeValue_Slider(   "Brightness", .5    ));
 	// input 7
@@ -29,6 +29,7 @@ function Node_Perlin_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		InputDrawOverlay(inputs[5].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
 		
 		return w_hovering;
 	}

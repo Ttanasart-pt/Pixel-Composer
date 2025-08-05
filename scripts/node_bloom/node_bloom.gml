@@ -10,29 +10,25 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newActiveInput(7);
 	newInput(8, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
-	////- Surfaces
-	
+	////- =Surfaces
 	newInput(0, nodeValue_Surface( "Surface In" ));
 	newInput(5, nodeValue_Surface( "Mask" ));
 	newInput(6, nodeValue_Slider(  "Mix", 1));
 	__init_mask_modifier(5, 9); // inputs 9, 10
 	
-	////- Bloom
-	
-	newInput(1, nodeValue_Slider(  "Size",       3,   [1, 32, 0.1] )).setTooltip("Bloom blur radius.");
-	newInput(2, nodeValue_Slider(  "Tolerance",  .50               )).setTooltip("How bright a pixel should be to start blooming.");
-	newInput(3, nodeValue_Slider(  "Strength",   .25, [0, 2, 0.01] )).setTooltip("Blend intensity.");
+	////- =Bloom
+	newInput(1, nodeValue_Slider(  "Size",        3,   [1, 32, 0.1] )).setHotkey("S").setTooltip("Bloom blur radius.");
+	newInput(2, nodeValue_Slider(  "Tolerance",  .50                )).setTooltip("How bright a pixel should be to start blooming.");
+	newInput(3, nodeValue_Slider(  "Strength",   .25, [0, 2, 0.01]  )).setTooltip("Blend intensity.");
 	newInput(4, nodeValue_Surface( "Bloom mask"));
 	
-	////- Blur
-	
+	////- =Blur
 	newInput(13, nodeValue_Enum_Scroll( "Type",          0, [ "Gaussian", "Zoom", "Directional" ]));
 	newInput(11, nodeValue_Slider(      "Aspect Ratio",  1 ));
 	newInput(12, nodeValue_Rotation(    "Direction",     0 ));
 	newInput(14, nodeValue_Vec2(        "Zoom Origin", [.5,.5] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	
-	////- Blend
-	
+	////- =Blend
 	newInput(15, nodeValue_Color(  "Blend",      ca_white));
 	newInput(16, nodeValue_Slider( "Saturation", 1, [ 0, 2, 0.01 ] ));
 	
@@ -58,6 +54,8 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 		var cx = _x + _dim[0] / 2 * _s;
 		var cy = _y + _dim[1] / 2 * _s;
+		
+		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, cx, cy, _s, _mx, _my, _snx, _sny));
 		
 		if(_typ == 1) InputDrawOverlay(inputs[14].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		if(_typ == 2) InputDrawOverlay(inputs[12].drawOverlay(w_hoverable, active, cx, cy, _s, _mx, _my, _snx, _sny));

@@ -1,23 +1,20 @@
 function Node_De_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "De-Corner";
 	
-	newInput(0, nodeValue_Surface("Surface In"));
-	
 	newActiveInput(1);
 	
-	newInput(2, nodeValue_Slider("Tolerance", 0));
-	
-	newInput(3, nodeValue_Int("Iteration", 2))
-	
-	newInput(4, nodeValue_Enum_Button("Type",  0, [ "Double", "Diagonal" ]));
-	
-	newInput(5, nodeValue_Surface("Mask"));
-	
-	newInput(6, nodeValue_Slider("Mix", 1));
-	
+	////- =Surfaces
+	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput(5, nodeValue_Surface( "Mask"       ));
+	newInput(6, nodeValue_Slider(  "Mix",     1 ));
 	__init_mask_modifier(5, 7); // inputs 7, 8, 
 	
-	newInput(9, nodeValue_Toggle("Include", 0b11, { data: [ "Inner", "Side" ] }));
+	////- =Effect
+	newInput(4, nodeValue_Enum_Button( "Type",  0, [ "Double", "Diagonal" ] ));
+	newInput(9, nodeValue_Toggle( "Include",    0b11, { data: [ "Inner", "Side" ] } ));
+	newInput(2, nodeValue_Slider( "Tolerance",  0 ));
+	newInput(3, nodeValue_Int(    "Iteration",  2 ))
+	// input 10
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	

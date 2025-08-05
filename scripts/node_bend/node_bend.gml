@@ -13,9 +13,9 @@ function Node_Bend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newActiveInput(1);
 	
 	newInput(2, nodeValue_Enum_Scroll("Type", 0, [ new scrollItem("Arc",  s_node_bend_type, 0),
-		                                        		 new scrollItem("Wave", s_node_bend_type, 1) ]));
+		                                           new scrollItem("Wave", s_node_bend_type, 1) ]));
 	
-	newInput(3, nodeValue_Enum_Button("Axis",  0, [ "x", "y" ]));
+	newInput(3, nodeValue_Enum_Button("Axis",  0, [ "X", "Y" ]));
 	
 	newInput(4, nodeValue_Slider("Amount", 0.25, [-1, 1, 0.01] ));
 	

@@ -8,23 +8,20 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	name = "Grid";
 	
 	////- =Output
-	
 	newInput( 0, nodeValue_Dimension());
 	newInput(35, nodeValue_Surface( "Mask" ));
 	
 	////- =Pattern
-	
 	newInput( 1, nodeValue_Vec2(     "Position",      [0,0]  )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
 	newInput( 4, nodeValue_Rotation( "Angle",          0     )).setHotkey("R").setMappable(15);
 	newInput(36, nodeValue_Bool(     "Invert Size",    false ));
-	newInput( 2, nodeValue_Vec2(     "Grid Size",     [8,8]  )).setMappable(13);
+	newInput( 2, nodeValue_Vec2(     "Grid Size",     [8,8]  )).setHotkey("S").setMappable(13);
 	newInput(28, nodeValue_Bool(     "Uniform Gap",    true  ));
 	newInput(26, nodeValue_Float(    "Gap Width",      1     ));
 	newInput(27, nodeValue_Bool(     "Diagonal",       false ));
 	newInput( 3, nodeValue_Slider(   "Gap",           .2, [0, 0.5, 0.001] )).setMappable(14);
 	
 	////- =Shift
-	
 	newInput( 9, nodeValue_Enum_Button(          "Shift Axis",      0, ["X", "Y"] ));
 	newInput( 8, nodeValue_Slider(               "Shift",           0, [-0.5, 0.5, 0.01] )).setMappable(16);
 	newInput(31, nodeValue_Slider(               "Random Shift",    0 ));
@@ -32,13 +29,11 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(30, nodeValue_Slider(               "Secondary Shift", 0 ));
 	
 	////- =Scale
-	
 	newInput(33, nodeValue_Slider(               "Random Scale", 0    ));
 	newInput(34, nodeValueSeed(VALUE_TYPE.float, "Scale Seed"         ));
 	newInput(29, nodeValue_Float(                "Secondary Scale", 0 ));
 	
 	////- =Render
-	
 	newInput(10, nodeValue_Enum_Scroll( "Render Type",  0, ["Colored tile", "Colored tile (Accurate)", "Height map", "Texture grid", "Texture sample"]));
 	newInput(11, nodeValueSeed());
 	newInput( 5, nodeValue_Gradient(     "Tile Color", new gradientObject(ca_white))).setMappable(20);
@@ -49,7 +44,6 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(24, nodeValue_Slider_Range( "Level",                 [0,1] ));
 	
 	////- =Truchet
-	
 	newInput(17, nodeValue_Bool(           "Truchet",         false ));
 	newInput(18, nodeValue_Int(            "Truchet Seed",    seed_random()));
 	newInput(19, nodeValue_Slider(         "Flip Horizontal", .5    ));

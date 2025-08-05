@@ -6,19 +6,14 @@ function Node_FLIP_Destroy(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	manual_ungroupable = false;
 	
-	newInput(0, nodeValue_Fdomain("Domain"))
-		.setVisible(true, true);
+	newInput(0, nodeValue_Fdomain("Domain")).setVisible(true, true);
 	
-	newInput(1, nodeValue_Vec2("Position", [ 0, 0 ] ))
-		.setUnitRef(function(index) { return getDimension(); });
-	
-	newInput(2, nodeValue_Enum_Scroll("Shape",  0 , [ new scrollItem("Circle", s_node_shape_circle, 0), new scrollItem("Rectangle", s_node_shape_rectangle, 0), ]));
-		
-	newInput(3, nodeValue_Slider("Radius", 4, [1, 16, 0.1] ));
-		
-	newInput(4, nodeValue_Vec2("Size", [ 4, 4 ] ));
-		
-	newInput(5, nodeValue_Slider("Ratio", 1 ));
+	newInput(2, nodeValue_Enum_Scroll( "Shape",  0 , [ new scrollItem("Circle", s_node_shape_circle, 0), new scrollItem("Rectangle", s_node_shape_rectangle, 0), ]));
+	newInput(1, nodeValue_Vec2(   "Position",  [ 0, 0 ] )).setHotkey("G").setUnitRef(function() /*=>*/ {return getDimension()});
+	newInput(3, nodeValue_Slider( "Radius",      4, [1, 16, 0.1] ));
+	newInput(4, nodeValue_Vec2(   "Size",      [ 4, 4 ] ));
+	newInput(5, nodeValue_Slider( "Ratio",       1      ));
+	// input 6
 	
 	newOutput(0, nodeValue_Output("Domain", VALUE_TYPE.fdomain, noone ));
 	

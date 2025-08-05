@@ -7,21 +7,18 @@
 function Node_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Round Corner";
 	
-	newInput(0, nodeValue_Surface("Surface In"));
-	
-	newInput(1, nodeValue_ISlider("Radius", 2, [1, 16, 0.1] ));
-	
-	newInput(2, nodeValue_Surface("Mask"));
-	
-	newInput(3, nodeValue_Slider("Mix", 1));
-	
 	newActiveInput(4);
-	
 	newInput(5, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
+	////- =Surfaces
+	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput(2, nodeValue_Surface( "Mask"       ));
+	newInput(3, nodeValue_Slider(  "Mix",     1 ));
 	__init_mask_modifier(2, 6); // inputs 6, 7
 	
-	newInput(8, nodeValue_Slider("Thershold", .5));
+	////- =Corner
+	newInput(1, nodeValue_ISlider( "Radius",     2, [1, 16, 0.1] ));
+	newInput(8, nodeValue_Slider(  "Thershold", .5 )).setHotkey("T");
 	
 	input_display_list = [ 4, 5, 
 		["Surfaces", true], 0, 2, 3, 6, 7, 
@@ -34,6 +31,18 @@ function Node_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	attribute_oversample();
 	
 	temp_surface = array_create(2);
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+		PROCESSOR_OVERLAY_CHECK
+		
+		var _dim = getDimension();
+		var _cx = _x + _dim[0] / 2 * _s;
+		var _cy = _y + _dim[1] / 2 * _s;
+		
+		InputDrawOverlay(inputs[8].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my, _snx, _sny, 0, _dim[0] / 2));
+		
+		return w_hovering;
+	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		var _surf = _data[0];

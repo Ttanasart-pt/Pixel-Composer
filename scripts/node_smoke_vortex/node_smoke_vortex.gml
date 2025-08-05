@@ -4,16 +4,14 @@ function Node_Smoke_Vortex(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	
 	manual_ungroupable	 = false;
 	
-	newInput(0, nodeValue("Domain", self, CONNECT_TYPE.input, VALUE_TYPE.sdomain, noone))
-		.setVisible(true, true);
+	////- =Domain
+	newInput(0, nodeValue("Domain", self, CONNECT_TYPE.input, VALUE_TYPE.sdomain, noone)).setVisible(true, true);
 	
-	newInput(1, nodeValue_Vec2("Position", [0, 0]));
-	
-	newInput(2, nodeValue_Float("Radius", 8));
-	
-	newInput(3, nodeValue_Slider("Strength", 0.10, [-1, 1, 0.01] ));
-	
-	newInput(4, nodeValue_Slider("Attraction", 0, [-1, 1, 0.01] ));
+	////- =Vortex
+	newInput(1, nodeValue_Vec2(   "Position",   [0, 0] )).setHotkey("G");
+	newInput(2, nodeValue_Float(  "Radius",      8     )).setHotkey("S");
+	newInput(3, nodeValue_Slider( "Strength",   .10, [-1, 1, 0.01] ));
+	newInput(4, nodeValue_Slider( "Attraction",  0,  [-1, 1, 0.01] ));
 	
 	input_display_list = [ 
 		["Domain",	false], 0, 

@@ -18,7 +18,7 @@ function Node_Noise_Hex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	////- =Noise
 	newInput(1, nodeValueSeed());
 	newInput(2, nodeValue_Vec2( "Position", [0,0] )).setHotkey("G");
-	newInput(3, nodeValue_Vec2( "Scale",    [8,8] ));
+	newInput(3, nodeValue_Vec2( "Scale",    [8,8] )).setHotkey("S");
 	
 	////- =Texture
 	newInput(4, nodeValue_Surface( "Texture Sample" ));
@@ -36,7 +36,12 @@ function Node_Noise_Hex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	attribute_oversample();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+		var _pos = getSingleValue(2);
+		var  px  = _x + _pos[0] * _s;
+		var  py  = _y + _pos[1] * _s;
+		
 		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
 		
 		return w_hovering;
 	}

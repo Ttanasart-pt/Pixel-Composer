@@ -13,8 +13,8 @@ function Node_Level_Selector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	
 	////- =Level
 	
-	newInput( 1, nodeValue_Slider( "Midpoint",    0 )).setMappable(9);
-	newInput( 2, nodeValue_Slider( "Range",      .1 )).setMappable(10);
+	newInput( 1, nodeValue_Slider( "Midpoint",    0 )).setHotkey("M").setMappable(9);
+	newInput( 2, nodeValue_Slider( "Range",      .1 )).setHotkey("R").setMappable(10);
 	newInput(12, nodeValue_Slider( "Smoothness",  0 ));
 	
 	////- =Output
@@ -73,6 +73,19 @@ function Node_Level_Selector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		["Output",	false],	11, 
 	];
 	histogramInit();
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+		PROCESSOR_OVERLAY_CHECK
+		
+		var _dim = getDimension();
+		var _cx = _x + _dim[0] / 2 * _s;
+		var _cy = _y + _dim[1] / 2 * _s;
+		
+		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _cx, _cy - ui(16), _s, _mx, _my, _snx, _sny, 0, _dim[0] / 2));
+		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _cx, _cy + ui(16), _s, _mx, _my, _snx, _sny, 0, _dim[0] / 2));
+		
+		return w_hovering;
+	}
 	
 	static onInspect = function() {
 		if(array_length(current_data) > 0)

@@ -15,23 +15,20 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newActiveInput(10);
 	newInput(12, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
-	////- Surfaces
-	
+	////- =Surfaces
 	newInput(0, nodeValue_Surface( "Surface In" ));
 	newInput(8, nodeValue_Surface( "Mask"       ));
 	newInput(9, nodeValue_Slider(  "Mix",     1 ));
 	__init_mask_modifier(8, 13); // inputs 13, 14
 	newInput(7, nodeValue_Enum_Scroll("Oversample Mode",  0, [ "Empty", "Clamp", "Repeat" ]));
 	
-	////- Strength
-	
+	////- =Strength
 	newInput( 1, nodeValue_Surface( "Displace map"   ));
 	newInput(17, nodeValue_Surface( "Displace map 2" ));
-	newInput( 3, nodeValue_Float(   "Strength",   1  )).setMappable(15);
+	newInput( 3, nodeValue_Float(   "Strength",   1  )).setHotkey("S").setMappable(15);
 	newInput( 4, nodeValue_Slider(  "Mid value", .5  )).setTooltip("Brightness value to be use as a basis for 'no displacement'.");
 	
-	////- Displacement
-	
+	////- =Displacement
 	newInput( 5, nodeValue_Enum_Button("Mode", 0, [ "Linear", "Vector", "Angle", "Gradient" ]))
 		.setTooltip(@"Use color data for extra information.
     - Linear: Displace along a single line (defined by the position value).
@@ -42,8 +39,7 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(16, nodeValue_Bool( "Separate axis", false ));
 	newInput( 2, nodeValue_Vec2( "Position",      [1,0] )).setTooltip("Vector to displace the pixel by.").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
 	
-	////- Iterate
-	
+	////- =Iterate
 	newInput( 6, nodeValue_Bool(        "Iterate",       false ));
 	newInput(11, nodeValue_Enum_Scroll( "Blend Mode",    0, [ "Overwrite", "Min", "Max" ]));
 	newInput(18, nodeValue_Int(         "Iteration",     16    ));
@@ -67,6 +63,18 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	attribute_surface_depth();
 	attribute_oversample();
 	attribute_interpolation();
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+		PROCESSOR_OVERLAY_CHECK
+		
+		var _dim = getDimension();
+		var _cx = _x + _dim[0] / 2 * _s;
+		var _cy = _y + _dim[1] / 2 * _s;
+		
+		InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my, _snx, _sny, 0, _dim[0] / 2));
+		
+		return w_hovering;
+	}
 	
 	static step = function() {
 		var _mode = getInputData(5);

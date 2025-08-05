@@ -277,7 +277,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		preview_hotkey = undefined;
 		preview_hotkey_active = false;
 		preview_hotkey_axis   = -1;
-		preview_hotkey_spr    = noone;
+		preview_hotkey_spr    = THEME.tools_1d_move;
 		preview_hotkey_step   = 0;
 		
 		preview_hotkey_s  = 0;

@@ -20,17 +20,14 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput(16, nodeValue_Mesh( "Mesh" )).setVisible(true, true);
 	
 	////- =Output
-	
 	newInput( 0, nodeValue_Dimension());
 	
 	////- =Transform
-	
-	newInput( 5, nodeValue_Vec2(     "Position", [.5,.5])).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput( 6, nodeValue_Rotation( "Rotation", 0));
-	newInput( 7, nodeValue_Vec2(     "Scale",    [.5,.5])).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput( 5, nodeValue_Vec2(     "Position", [.5,.5])).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput( 6, nodeValue_Rotation( "Rotation", 0)).setHotkey("R");
+	newInput( 7, nodeValue_Vec2(     "Scale",    [.5,.5])).setHotkey("S").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	
 	////- =Shape
-	
 	newInput( 4, nodeValue_Enum_Scroll("Shape",  0, { data: shapesArray, horizontal: true, text_pad: ui(16) }))
 		.setHistory([ shapesArray, { cond: function() /*=>*/ {return LOADING_VERSION < 1_18_09_0}, list: global.node_shape_polygon_keys_1809 }, 
 		                           //{ cond: () => LOADING_VERSION < 1_19_02_0, list: global.node_shape_polygon_keys_1902 },
@@ -50,12 +47,10 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput(27, nodeValue_Float(          "Factor",           3));
 	
 	////- =Piecewise
-	
 	newInput(18, nodeValue_Rotation( "Piece Rotation", 0));
 	newInput(22, nodeValue_Float(    "Piece Scale",    1));
 	
 	////- =Render
-	
 	newInput( 3, nodeValue_Color(    "Shape color",     ca_white));
 	newInput(23, nodeValue_Palette(  "Shape Palette",  [ca_white]));
 	newInput(19, nodeValue_Color(    "Vertex Color 1",  ca_white));
@@ -64,7 +59,6 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput(24, nodeValue_Enum_Scroll("SSAA", 0, [ "None", "2x", "4x", "8x" ]));
 	
 	////- =Background
-	
 	newInput( 1, nodeValue_Bool(  "Background",       false));
 	newInput( 2, nodeValue_Color( "Background color", ca_black));
 	

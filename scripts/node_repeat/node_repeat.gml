@@ -47,7 +47,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	////- =Pattern
 	newInput( 3, nodeValue_Enum_Scroll(    "Pattern",          0, __enum_array_gen([ "Linear", "Grid", "Circular"], s_node_repeat_axis) ));
 	newInput( 9, nodeValue_Vec2(           "Start Position",  [0,0]   )).setHotkey("G").setUnitRef(function() /*=>*/ {return getInputData(1)}, VALUE_UNIT.reference);
-	newInput(32, nodeValue_Rotation(       "Start Rotation",   0      ));
+	newInput(32, nodeValue_Rotation(       "Start Rotation",   0      )).setHotkey("R");
 	newInput( 2, nodeValue_Int(            "Amount",           2      )).rejectArray();
 	newInput(18, nodeValue_Int(            "Column",           4      ));
 	newInput( 7, nodeValue_Rotation_Range( "Angle Range",     [0,360] ));
@@ -261,6 +261,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		InputDrawOverlay(inputs[31].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[1]));
 		InputDrawOverlay(inputs[11].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[32].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
 	
 		var _ani_amo = getInputAmount();
 		if(_ani_amo == 0) return w_hovering;

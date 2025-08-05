@@ -1,28 +1,25 @@
 function Node_Blur_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Path Blur";
 	
-	newInput(0, nodeValue_Surface("Surface In"));
-	newInput(1, nodeValue_PathNode("Blur Path"));
-	
-	newInput(2, nodeValue_Int("Resolution", 32));
-	
-	newInput(3, nodeValue_Surface("Mask"));
-	
-	newInput(4, nodeValue_Slider("Mix", 1));
-	
 	newActiveInput(5);
-	
 	newInput(6, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
+	////- =Surfaces
+	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput(3, nodeValue_Surface( "Mask"       ));
+	newInput(4, nodeValue_Slider(  "Mix",     1 ));
 	__init_mask_modifier(3, 7); // inputs 7, 8
 	
-	newInput(9, nodeValue_Float("Intensity", 1));
+	////- =Path
+	newInput( 1, nodeValue_PathNode(     "Blur Path"       ));
+	newInput(12, nodeValue_Slider(       "Path Origin", 0  ));
+	newInput(11, nodeValue_Slider_Range( "Range", [ 0, 1 ] ));
 	
-	newInput(10, nodeValue_Curve("Intensity Along Path", CURVE_DEF_11));
-	
-	newInput(11, nodeValue_Slider_Range("Range", [ 0, 1 ]));
-	
-	newInput(12, nodeValue_Slider("Path Origin", 0));
+	////- =Blur
+	newInput( 2, nodeValue_Int(   "Resolution",   32 ));
+	newInput( 9, nodeValue_Float( "Intensity",    1  ));
+	newInput(10, nodeValue_Curve( "Intensity Along Path", CURVE_DEF_11 ));
+	// input 13
 	
 	input_display_list = [ 5, 6, 
 		["Surfaces", true],	0, 3, 4, 7, 8, 

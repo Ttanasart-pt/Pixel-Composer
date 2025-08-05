@@ -1,13 +1,14 @@
 function Node_Morph_Surface(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Morph Surface";
 	
-	newInput(0, nodeValue_Surface("Surface from"));
+	////- =Surfaces
+	newInput(0, nodeValue_Surface( "Surface from" ));
+	newInput(1, nodeValue_Surface( "Surface to"   ));
 	
-	newInput(1, nodeValue_Surface("Surface to"));
-	
-	newInput(2, nodeValue_Slider("Morph amount", 0));
-	
-	newInput(3, nodeValue_Slider("Threshold", 0.5));
+	////- =Morph
+	newInput(2, nodeValue_Slider( "Morph Amount", 0 )).setHotkey("S");
+	newInput(3, nodeValue_Slider( "Threshold",   .5 )).setHotkey("T");
+	// input 4
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -19,7 +20,20 @@ function Node_Morph_Surface(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	attribute_surface_depth();
 	attribute_interpolation();
 	
-	static processData = function(_outSurf, _data, _array_index) { #region
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+		PROCESSOR_OVERLAY_CHECK
+		
+		var _dim = getDimension();
+		var _cx = _x + _dim[0] / 2 * _s;
+		var _cy = _y + _dim[1] / 2 * _s;
+		
+		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _cx, _cy - ui(16), _s, _mx, _my, _snx, _sny, 0, _dim[0] / 2));
+		InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _cx, _cy + ui(16), _s, _mx, _my, _snx, _sny, 0, _dim[0] / 2));
+		
+		return w_hovering;
+	}
+	
+	static processData = function(_outSurf, _data, _array_index) {
 		var sFrom = _data[0];
 		var sTo   = _data[1];
 		var amo   = _data[2];
@@ -40,5 +54,5 @@ function Node_Morph_Surface(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		surface_reset_shader();
 		
 		return _outSurf;
-	} #endregion
+	}
 }

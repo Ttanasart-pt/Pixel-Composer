@@ -111,6 +111,7 @@ void main() {
 	float u, v;
 	vec2 uv, _p;
 	
+	vec2  tx = 1. / dimension;
 	vec2 _p0 = p0;
 	vec2 _p1 = p1;
 	vec2 _p2 = p2;
@@ -118,23 +119,32 @@ void main() {
 	
 	bool invX = p2.x > p1.x && p3.x > p0.x;
 	bool invY = p3.y < p2.y && p0.y < p1.y;
-    	
+	
+	bool aliX = abs(p2.x - p3.x) < tx.x && abs(p1.x - p0.x) < tx.x;
+	bool aliY = abs(p3.y - p0.y) < tx.y && abs(p2.y - p1.y) < tx.y; 
+	
 	#region linear interpolation
-		if (abs(p3.y - p0.y) < 1. / dimension.y && abs(p2.y - p1.y) < 1. / dimension.y) { // trapezoid edge case
-	        float t = (py - p2.y) / (p3.y - p2.y);
-		
-			u = unmix(mix(p3.x, p2.x, 1. - t), mix(p0.x, p1.x, 1. - t), px);
-			v = t;
-	        uv = vec2(u, v);
-	        
-		} else if(abs(p2.x - p3.x) < 1. / dimension.x && abs(p1.x - p0.x) < 1. / dimension.x) { // trapezoid edge case
+		if(aliX && aliY) {
+			float tx = (px - p2.x) / (p1.x - p2.x);
+			float ty = (py - p2.y) / (p3.y - p2.y);
+				
+			uv = vec2(tx, ty);
+				
+		} else if(aliX) { // trapezoid edge case
 			float t = (px - p2.x) / (p1.x - p2.x);
 		
 			u = t;
 			v = unmix(mix(p1.y, p2.y, 1. - t), mix(p0.y, p3.y, 1. - t), py);
 	        uv = vec2(u, v);
 	        
-	    } else {
+	    } else if (aliY) { // trapezoid edge case
+	        float t = (py - p2.y) / (p3.y - p2.y);
+		
+			u = unmix(mix(p3.x, p2.x, 1. - t), mix(p0.x, p1.x, 1. - t), px);
+			v = t;
+	        uv = vec2(u, v);
+	        
+		} else {
 	    	
 	    	if(invX) {
 	    		_p = _p2; _p2 = _p1; _p1 = _p;
@@ -174,5 +184,4 @@ void main() {
 	
 	if(uv.x >= 0. && uv.y >= 0. && uv.x <= 1. && uv.y <= 1.)
 		gl_FragColor = flip? texture2Dintp( backSurface, uv ) : texture2Dintp( gm_BaseTexture, uv );
-	
 }

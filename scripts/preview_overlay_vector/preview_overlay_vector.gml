@@ -64,7 +64,8 @@ function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 			drag_rx   = __ax;
 			drag_ry   = __ay;
 			
-			KEYBOARD_STRING = "";
+			KEYBOARD_STRING     = "";
+			preview_hotkey_axis = -1;
 		}
 	} 
 	

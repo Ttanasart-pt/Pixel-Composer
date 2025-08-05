@@ -47,8 +47,28 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	warp_surface = array_create(2);
 	
 	static getDimension = function(arr = 0) {
-		var _surf = getSingleValue(0, preview_index, true);
-		return surface_get_dimension(_surf);
+		
+		var _surfF  = getSingleValue(0);
+		var _dimTyp = getSingleValue(6);
+		var _dim    = getSingleValue(7);
+		var _sdim   = getSingleValue(9);
+			
+		var sw = 1;
+		var sh = 1;
+		
+		switch(_dimTyp) {
+			case 0 : sw = surface_get_width_safe(_surfF);
+				     sh = surface_get_height_safe(_surfF); break;
+				
+			case 1 : sw = _dim[0];
+				     sh = _dim[1]; break;
+				
+			case 2 : sw = _sdim[0] * surface_get_width_safe(_surfF);
+				     sh = _sdim[1] * surface_get_height_safe(_surfF); break;
+				
+		}
+		
+		return [sw, sh];
 	}
 	
 	static onValueFromUpdate = function(index) { 
@@ -126,10 +146,10 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		draw_line(br[0], br[1], bl[0], bl[1]);
 		
 		var _hactive = active;
-		if(point_in_circle(_mx, _my, tl[0], tl[1], 12)) _hactive = false;
-		if(point_in_circle(_mx, _my, tr[0], tr[1], 12)) _hactive = false;
-		if(point_in_circle(_mx, _my, bl[0], bl[1], 12)) _hactive = false;
-		if(point_in_circle(_mx, _my, br[0], br[1], 12)) _hactive = false;
+		if(point_in_circle(_mx, _my, tl[0], tl[1], ui(12))) _hactive = false;
+		if(point_in_circle(_mx, _my, tr[0], tr[1], ui(12))) _hactive = false;
+		if(point_in_circle(_mx, _my, bl[0], bl[1], ui(12))) _hactive = false;
+		if(point_in_circle(_mx, _my, br[0], br[1], ui(12))) _hactive = false;
 		
 		var dx = 0;
 		var dy = 0;
@@ -246,10 +266,6 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	}
 	
 	static warpSurface = function(surfBase, surfWarp, surfBack, sw, sh, tl, tr, bl, br, tile = false) {
-		var teq = round(tl[1]) == round(tr[1]);
-		var beq = round(bl[1]) == round(br[1]);
-		var leq = round(tl[0]) == round(bl[0]);
-		var req = round(tr[0]) == round(br[0]);
 		
 		var _wdim = surface_get_dimension(surfWarp);
 		
@@ -268,7 +284,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			draw_surface_stretched(surfWarp, 0, 0, sw, sh);
 		surface_reset_shader();
 		
-		return surfWarp;
+		return surfBase;
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {

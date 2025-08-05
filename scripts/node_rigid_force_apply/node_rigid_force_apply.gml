@@ -23,11 +23,11 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	////- Force
 	
-	newInput(2, nodeValue_Vec2(        "Position", [ 0, 0 ]));
-	newInput(3, nodeValue_Float(       "Torque", 0));
-	newInput(5, nodeValue_Vec2(        "Force", [ 0.1, 0 ]));
-	newInput(8, nodeValue_Float(       "Range", 8));
-	newInput(7, nodeValue_Slider(      "Strength", 1., [0, 16, 0.01]));
+	newInput(2, nodeValue_Vec2(   "Position",  [ 0, 0 ] )).setHotkey("G");
+	newInput(3, nodeValue_Float(  "Torque",      0      ));
+	newInput(5, nodeValue_Vec2(   "Force",     [.1, 0 ] ));
+	newInput(8, nodeValue_Float(  "Range",       8      ));
+	newInput(7, nodeValue_Slider( "Strength",    1, [0, 16, 0.01] ));
 	
 	// inputs 10
 	
@@ -57,6 +57,8 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		var px = _x + _pos[0] * _s;
 		var py = _y + _pos[1] * _s;
 			
+		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		
 		if(_typ == 0 || _typ == 1) {
 			var _for = getInputData(5);
 			
@@ -68,7 +70,6 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			draw_line_width2(px, py, fx, fy, 8, 2);
 			draw_set_alpha(1);
 			
-			InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 			InputDrawOverlay(inputs[5].drawOverlay(w_hoverable, active, px, py, _s * attributes.display_scale, _mx, _my, _snx, _sny, 0, 10));
 			
 		} else if(_typ == 3) {
@@ -79,11 +80,9 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			draw_circle_prec(px, py, _rad * _s, 1);
 			draw_set_alpha(1);
 			
-			InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 			InputDrawOverlay(inputs[8].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
 			
-		} else 
-			InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		} 
 			
 		return w_hovering;
 	}

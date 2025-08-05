@@ -1,30 +1,23 @@
 function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Shadow";
 	
-	newInput(0, nodeValue_Surface("Surface In"));
-	newInput(1, nodeValue_Color("Color", ca_black));
-	
-	newInput(2, nodeValue_Slider("Strength", .5, [ 0, 2, 0.01] ));
-	
-	newInput(3, nodeValue_Vec2("Shift", [ 4, 4 ]))
-		.setUnitRef(function(index) { return getDimension(index); });
-	
-	newInput(4, nodeValue_Slider("Grow", 3, [0, 16, 0.1] ));
-	
-	newInput(5, nodeValue_Slider("Blur", 3, [1, 16, 0.1] ));
-	
-	newInput(6, nodeValue_Surface("Mask"));
-	
-	newInput(7, nodeValue_Slider("Mix", 1));
-	
 	newActiveInput(8);
 	
+	////- =Surfaces
+	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput( 6, nodeValue_Surface( "Mask"       ));
+	newInput( 7, nodeValue_Slider(  "Mix",     1 ));
 	__init_mask_modifier(6, 9); // inputs 9, 10
 	
-	newInput(11, nodeValue_Enum_Scroll("Positioning",  0, [ "Shift", "Light" ]));
-	
-	newInput(12, nodeValue_Vec2("Light Position", [ 0, 0 ]))
-		.setUnitRef(function(index) { return getDimension(index); });
+	////- =Surfaces
+	newInput( 1, nodeValue_Color(       "Color",           ca_black ));
+	newInput( 2, nodeValue_Slider(      "Strength",       .5, [ 0, 2, 0.01] )).setHotkey("S");
+	newInput(11, nodeValue_Enum_Scroll( "Positioning",     0, [ "Shift", "Light" ] ));
+	newInput( 3, nodeValue_Vec2(        "Shift",          [4,4] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput(12, nodeValue_Vec2(        "Light Position", [0,0] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput( 4, nodeValue_Slider(      "Grow", 3, [0, 16, 0.1] ));
+	newInput( 5, nodeValue_Slider(      "Blur", 3, [1, 16, 0.1] ));
+	// input 13
 		
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -52,9 +45,16 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			 if(_typ == 0) InputDrawOverlay(inputs[ 3].drawOverlay(w_hoverable, active, _x + ww / 2, _y + hh / 2, _s, _mx, _my, _snx, _sny));
 		else if(_typ == 1) InputDrawOverlay(inputs[12].drawOverlay(w_hoverable, active, _x,          _y,          _s, _mx, _my, _snx, _sny));
 		
+		var _dim = getDimension();
+		var _cx = _x + _dim[0] / 2 * _s;
+		var _cy = _y + _dim[1] / 2 * _s;
+		
+		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my, _snx, _sny));
+		
 		return w_hovering;
 	}
 	
+		
 	static processData = function(_outSurf, _data, _array_index) {
 		var _surf   = _data[0];
 		var cl      = _data[1];

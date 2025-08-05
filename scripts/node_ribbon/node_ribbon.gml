@@ -5,23 +5,19 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(0, nodeValueSeed());
 	
 	////- =Output
-	
 	newInput(1, nodeValue_Dimension());
 	
 	////- =Path
-	
 	newInput( 2, nodeValue_PathNode( "Path" ));
 	newInput( 3, nodeValue_Int(      "Sample", 64 ));
 	newInput(10, nodeValue_Bool(     "Invert", false ));
 	
 	////- =Ribbon
-	
-	newInput(4, nodeValue_Float(    "Size",      8 ));
-	newInput(8, nodeValue_Curve(    "Size Over Length",  CURVE_DEF_11));
+	newInput(4, nodeValue_Float(    "Size",      8 )).setHotkey("S");
+	newInput(8, nodeValue_Curve(    "Size Over Length",  CURVE_DEF_11 ));
 	newInput(5, nodeValue_Rotation( "Direction", 90 ));
 	
 	////- =Color
-	
 	newInput(6, nodeValue_Gradient( "Color over Length", new gradientObject(ca_white) ));
 	newInput(7, nodeValue_Gradient( "Color Weight",      new gradientObject(ca_white) ));
 	newInput(9, nodeValue_Bool(     "Shade Side",        false ));
@@ -42,6 +38,13 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _path = getSingleValue(2, preview_index, true);
 		if(has(_path, "drawOverlay")) InputDrawOverlay(_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		
+		var _dim = getDimension();
+		var _cx = _x + _dim[0] / 2 * _s;
+		var _cy = _y + _dim[1] / 2 * _s;
+		
+		InputDrawOverlay(inputs[4].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my, _snx, _sny));
+		
 	}
 	
 	static processData = function(_outSurf, _data, _array_index = 0) { 

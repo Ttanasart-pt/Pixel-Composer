@@ -5,12 +5,12 @@ function Node_Smoke_Add_Collider(_x, _y, _group = noone) : Node_Smoke(_x, _y, _g
 	
 	manual_ungroupable	 = false;
 	
-	newInput(0, nodeValue("Domain", self, CONNECT_TYPE.input, VALUE_TYPE.sdomain, noone))
-		.setVisible(true, true);
+	////- =Domain
+	newInput(0, nodeValue("Domain", self, CONNECT_TYPE.input, VALUE_TYPE.sdomain, noone)).setVisible(true, true);
 	
-	newInput(1, nodeValue_Surface("Collider"));
-	
-	newInput(2, nodeValue_Area("Area", DEF_AREA , { useShape : false }));
+	////- =Collider
+	newInput(1, nodeValue_Surface( "Collider" ));
+	newInput(2, nodeValue_Area(    "Area", DEF_AREA, { useShape : false } ));
 	
 	input_display_list = [ 
 		["Domain",		false], 0, 

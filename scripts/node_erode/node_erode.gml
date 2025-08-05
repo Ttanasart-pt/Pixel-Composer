@@ -13,15 +13,13 @@ function Node_Erode(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(7, nodeValue_Toggle( "Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surfaces
-	
 	newInput(0, nodeValue_Surface( "Surface In" ));
 	newInput(4, nodeValue_Surface( "Mask"       ));
 	newInput(5, nodeValue_Slider(  "Mix", 1     ));
 	__init_mask_modifier(4, 8); // inputs 8, 9, 
 	
 	////- =Erode
-	
-	newInput(1, nodeValue_Int(  "Width", 1)).setValidator(VV_min(0)).setMappable(10);
+	newInput(1, nodeValue_Int(  "Width", 1)).setHotkey("S").setValidator(VV_min(0)).setMappable(10);
 	newInput(2, nodeValue_Bool( "Preserve Border", false ));
 	newInput(3, nodeValue_Bool( "Use Alpha",        true ));
 	
@@ -35,6 +33,18 @@ function Node_Erode(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+		PROCESSOR_OVERLAY_CHECK
+		
+		var _dim = getDimension();
+		var _cx = _x + _dim[0] / 2 * _s;
+		var _cy = _y + _dim[1] / 2 * _s;
+		
+		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my, _snx, _sny));
+		
+		return w_hovering;
+	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		

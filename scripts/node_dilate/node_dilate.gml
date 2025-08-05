@@ -5,18 +5,16 @@ function Node_Dilate(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(8, nodeValue_Toggle( "Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surfaces
-	
-	newInput(4, nodeValue_Enum_Scroll("Oversample mode",  0, [ "Empty", "Clamp", "Repeat" ]));
+	/* UNUSED */ newInput(4, nodeValue_Enum_Scroll( "Oversample mode",  0, [ "Empty", "Clamp", "Repeat" ]));
 	newInput(0, nodeValue_Surface( "Surface In" ));
 	newInput(5, nodeValue_Surface( "Mask"       ));
 	newInput(6, nodeValue_Slider(  "Mix", 1     ));
 	__init_mask_modifier(5, 9); // inputs 9, 10
 	
 	////- =Dilate
-	
-	newInput(1, nodeValue_Vec2(   "Center",   [0,0] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
-	newInput(2, nodeValue_Slider( "Strength",  1, [-3, 3, 0.01] )).setMappable(11);
-	newInput(3, nodeValue_Float(  "Radius",    16 )).setMappable(12);
+	newInput(1, nodeValue_Vec2(   "Center",   [0,0] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput(2, nodeValue_Slider( "Strength",  1, [-3, 3, 0.01] )).setHotkey("S").setMappable(11);
+	newInput(3, nodeValue_Float(  "Radius",    16 )).setHotkey("R").setMappable(12);
 	
 	// input 13
 	
@@ -34,12 +32,17 @@ function Node_Dilate(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		PROCESSOR_OVERLAY_CHECK
 		
+		var _dim = getDimension();
+		var _cx = _x + _dim[0] / 2 * _s;
+		var _cy = _y + _dim[1] / 2 * _s;
+		
 		var pos  = current_data[1];
 		var px   = _x + pos[0] * _s;
 		var py   = _y + pos[1] * _s;
 		
-		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
-		InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my, _snx, _sny, 0, _dim[0] / 2));
+		InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active,  px,  py, _s, _mx, _my, _snx, _sny));
 		
 		return w_hovering;
 	}

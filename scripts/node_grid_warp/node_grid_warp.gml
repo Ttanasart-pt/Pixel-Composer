@@ -349,10 +349,10 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	preview_select_surface = false;
 	
 	newActiveInput(1);
-	newInput(0, nodeValue_Surface("Surface In"));
+	newInput(0, nodeValue_Surface( "Surface In" ));
 	
 	////- =Mesh
-	newInput(2, nodeValue_IVec2( "Grid", [ 2, 2 ])).setTooltip("Amount of grid subdivision. Higher number means more grid, detail.").rejectArray();
+	newInput(2, nodeValue_IVec2( "Grid", [ 2, 2 ] )).setTooltip("Amount of grid subdivision. Higher number means more grid, detail.").rejectArray();
 	newInput(3, nodeValue_Int(   "Subdivision", 4 ));
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -568,6 +568,7 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 		
 		if(_show_selecting) {
+			
 			if(anchor_freeze == 0 && panel.selection_selecting && !w_hovering) {
 				var sx0 = panel.selection_x0;
 				var sy0 = panel.selection_y0;
@@ -591,8 +592,9 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				anchor_select = [];
 				for( var i = 0, n = array_length(anchor_select_map); i < n; i++ ) 
 					if(anchor_select_map[i] == 1) array_push(anchor_select, i)
+					
 			}
-						
+			
 			if(mouse_lrelease())
 				anchor_freeze = 0;
 			

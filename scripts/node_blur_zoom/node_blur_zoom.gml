@@ -11,7 +11,6 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(9, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- Surface
-	
 	newInput(0, nodeValue_Surface( "Surface In"));
 	newInput(6, nodeValue_Surface( "Mask"));
 	newInput(7, nodeValue_Slider(  "Mix", 1));
@@ -19,14 +18,12 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(5, nodeValue_Surface("Blur mask"));
 	
 	////- Blur
-	
-	newInput( 4, nodeValue_Enum_Scroll( "Zoom origin",  1, [ "Start", "Middle", "End" ]));
 	newInput(15, nodeValue_Enum_Button( "Mode",         0, [ "Blur", "Step" ]));
-	newInput( 1, nodeValue_Float(       "Strength",    .2     )).setMappable(12);
-	newInput( 2, nodeValue_Vec2(        "Center",     [.5,.5] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput( 4, nodeValue_Enum_Scroll( "Zoom origin",  1, [ "Start", "Middle", "End" ]));
+	newInput( 1, nodeValue_Float(       "Strength",    .2     )).setHotkey("S").setMappable(12);
+	newInput( 2, nodeValue_Vec2(        "Center",     [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	
 	////- Render
-		
 	newInput( 3, nodeValue_Enum_Scroll(   "Oversample mode", 0, [ "Empty", "Clamp", "Repeat" ]));
 	newInput(14, nodeValue_Int(  "Samples", 64));
 	newInput(13, nodeValue_Bool( "Gamma Correction", false));
@@ -47,11 +44,12 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	surface_blur_init();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+		var _dim = getDimension();
 		var pos  = getInputData(2);
 		var px   = _x + pos[0] * _s;
 		var py   = _y + pos[1] * _s;
 		
-		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny, 0, 64));
+		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny, 0, _dim[0] / 2));
 		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		
 		return w_hovering;

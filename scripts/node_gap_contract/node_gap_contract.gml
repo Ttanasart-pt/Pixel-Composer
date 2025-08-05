@@ -3,18 +3,15 @@ function Node_Gap_Contract(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newActiveInput(1);
 	
-	////- Surfaces
-	
-	newInput(0, nodeValue_Surface("Surface In"));
-	newInput(2, nodeValue_Surface("Mask"));
-	newInput(3, nodeValue_Slider("Mix", 1));
+	////- =Surfaces
+	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput(2, nodeValue_Surface( "Mask"       ));
+	newInput(3, nodeValue_Slider(  "Mix",     1 ));
 	__init_mask_modifier(2, 4); // inputs 4, 5, 
-	newInput(7, nodeValue_Bool( "Invert", false));
+	newInput(7, nodeValue_Bool( "Invert", false ));
 	
-	////- Gap
-	
-	newInput(6, nodeValue_Int(  "Max Width", 8));
-	
+	////- =Gap
+	newInput(6, nodeValue_Int(  "Max Width", 8 )).setHotkey("S");
 	/// inputs 8
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -27,6 +24,18 @@ function Node_Gap_Contract(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	temp_surface = [ noone, noone ];
 	
 	attribute_surface_depth();
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+		PROCESSOR_OVERLAY_CHECK
+		
+		var _dim = getDimension();
+		var _cx = _x + _dim[0] / 2 * _s;
+		var _cy = _y + _dim[1] / 2 * _s;
+		
+		InputDrawOverlay(inputs[6].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my, _snx, _sny));
+		
+		return w_hovering;
+	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		var surf = _data[0];

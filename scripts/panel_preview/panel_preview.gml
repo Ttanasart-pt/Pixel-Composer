@@ -1021,11 +1021,13 @@ function Panel_Preview() : PanelContent() constructor {
     
     ////- TOOL
     
-    function resetTool() {
+    function clearSelection() {
     	selection_active = false;
         var prevN = getNodePreview();
         if(is(prevN, Node) && prevN.selectClear != undefined) prevN.selectClear();
-        
+    }
+    
+    function resetTool() {
     	if(tool_current == noone) return;
     	var _tobj = tool_current.getToolObject();
 		if(_tobj) _tobj.disable();
@@ -1034,10 +1036,6 @@ function Panel_Preview() : PanelContent() constructor {
     }
     
     function clearTool(_bypass_clearable = false) { 
-    	selection_active = false;
-        var prevN = getNodePreview();
-    	if(is(prevN, Node) && prevN.selectClear != undefined) prevN.selectClear();
-    	
     	if(!tool_clearable && !_bypass_clearable) return;
     	resetTool();
     }
@@ -1226,7 +1224,7 @@ function Panel_Preview() : PanelContent() constructor {
             draw_sprite_colored(_spr, 0, xx, yy);
         	
             var _hkstr = _key.toString();
-        	if(_hkstr != "" && __tool_show_key) {
+        	if(_hkstr != "") {
             	draw_set_text(f_p4, fa_right, fa_center, COLORS._main_text);
             	var _hks  = string_width(_hkstr) + ui(8);
             	var _hkx0 = _x1 - _hks;

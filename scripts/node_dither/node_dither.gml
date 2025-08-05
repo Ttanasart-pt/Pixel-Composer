@@ -24,36 +24,30 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	name = "Dither";
 	
-	newInput(0, nodeValue_Surface("Surface In"));
-	
-	newInput(1, nodeValue_Palette("Palette", array_clone(DEF_PALETTE)));
-	
-	newInput(2, nodeValue_Enum_Scroll("Pattern",  0, [ "2 x 2 Bayer", "4 x 4 Bayer", "8 x 8 Bayer", "White Noise", "Custom" ]));
-	
-	newInput(3, nodeValue_Surface("Dither map"))
-		.setVisible(false);
-	
-	newInput(4, nodeValue_Slider("Contrast", 1, [1, 5, 0.1] ));
-	
-	newInput(5, nodeValue_Surface("Contrast map"));
-	
-	newInput(6, nodeValue_Enum_Button("Mode", 0, [ "Color", "Alpha" ]));
-	
-	newInput(7, nodeValue_Surface("Mask"));
-	
-	newInput(8, nodeValue_Slider("Mix", 1));
-	
 	newActiveInput(9);
+	newInput(10, nodeValue_Toggle( "Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
+	newInput(13, nodeValueSeed());
 	
-	newInput(10, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
-	
+	////- =Surfaces
+	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput(7, nodeValue_Surface( "Mask"       ));
+	newInput(8, nodeValue_Slider(  "Mix",     1 ));
 	__init_mask_modifier(7, 11); // inputs 11, 12, 
 	
-	newInput(13, nodeValueSeed());
-		
-	newInput(14, nodeValue_Bool("Use palette", true));
+	////- =Pattern
+	newInput(2, nodeValue_Enum_Scroll( "Pattern",  0, [ "2 x 2 Bayer", "4 x 4 Bayer", "8 x 8 Bayer", "White Noise", "Custom" ]));
+	newInput(3, nodeValue_Surface(     "Dither map" )).setVisible(false);
 	
-	newInput(15, nodeValue_ISlider("Steps", 4, [2, 16, 0.1] ));
+	////- =Dither
+	newInput(6, nodeValue_Enum_Button( "Mode",     0, [ "Color", "Alpha" ] ));
+	newInput(4, nodeValue_Slider(      "Contrast", 1, [1, 5, 0.1]          )).setHotkey("C");
+	newInput(5, nodeValue_Surface(     "Contrast map" ));
+	
+	////- =Palette
+	newInput( 1, nodeValue_Palette( "Palette",     array_clone(DEF_PALETTE) ));
+	newInput(14, nodeValue_Bool(    "Use palette", true ));
+	newInput(15, nodeValue_ISlider( "Steps",       4, [2, 16, 0.1] ));
+	// input 16
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -65,6 +59,18 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	]
 	
 	attribute_surface_depth();
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+		PROCESSOR_OVERLAY_CHECK
+		
+		var _dim = getDimension();
+		var _cx = _x + _dim[0] / 2 * _s;
+		var _cy = _y + _dim[1] / 2 * _s;
+		
+		InputDrawOverlay(inputs[4].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my, _snx, _sny, 0, _dim[0] / 2));
+		
+		return w_hovering;
+	}
 	
 	static step = function() {
 		var _type    = getInputData(2);

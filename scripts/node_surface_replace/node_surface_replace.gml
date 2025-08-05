@@ -1,34 +1,29 @@
 function Node_Surface_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Replace Image";
 	
+	////- =Surfaces
 	newInput(0, nodeValue_Surface("Base Image"));
-	
-	newInput(1, nodeValue_Surface("Target Image"))
-		.setArrayDepth(1);
-	
-	newInput(2, nodeValue_Surface("Replacement Image"))
-		.setArrayDepth(1);
-	
-	newInput(3, nodeValue_Slider("Color Threshold", 0.1)).setTooltip("How similiar the color need to be in order to be count as matched." );
-	
-	newInput(4, nodeValue_Bool("Draw Base Image", true ));
-	
-	newInput(5, nodeValue_Bool("Fast Mode", true ));
-	
-	newInput(6, nodeValue_Slider("Pixel Threshold", 0.1)).setTooltip("How many pixel need to me matched to replace with replacement image." );
-	
+	newInput(1, nodeValue_Surface("Target Image")).setArrayDepth(1);
+	newInput(2, nodeValue_Surface("Replacement Image")).setArrayDepth(1);
 	newInput(7, nodeValue_Enum_Scroll("Array mode",  0, { data: [ "Match index", "Randomized" ], update_hover: false }));
-	
 	newInput(8, nodeValueSeed());
 	
+	////- =Searching
+	newInput(5, nodeValue_Bool("Fast Mode", true ));
+	newInput(3, nodeValue_Slider("Color Threshold", 0.1)).setTooltip("How similiar the color need to be in order to be count as matched." );
+	newInput(6, nodeValue_Slider("Pixel Threshold", 0.1)).setTooltip("How many pixel need to me matched to replace with replacement image." );
+	
+	////- =Render
+	newInput(4, nodeValue_Bool("Draw Base Image", true ));
 	newInput(9, nodeValue_Bool("Replace Empty", false))
+	// input 10
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
-		["Surfaces",	 true], 0, 1, 2, 7, 8, 
-		["Searching",	false], 5, 3, 6, 
-		["Render",		false], 4, 9, 
+		["Surfaces",   true], 0, 1, 2, 7, 8, 
+		["Searching", false], 5, 3, 6, 
+		["Render",    false], 4, 9, 
 	];
 	
 	temp_surface = [ surface_create(1, 1), surface_create(1, 1), surface_create(1, 1) ];

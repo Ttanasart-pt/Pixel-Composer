@@ -20,7 +20,7 @@ function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	////- =Blur
 	
-	newInput( 1, nodeValue_Float(   "Size",   3 )).setValidator(VV_min(0)).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput( 1, nodeValue_Float(   "Size",   3 )).setHotkey("S").setValidator(VV_min(0)).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
 	newInput( 3, nodeValue_Surface( "Blur mask" ));
 	newInput( 4, nodeValue_Bool(    "Override color",   false, "Replace all color while keeping the alpha. Used to\nfix grey outline when bluring transparent pixel."));
 	newInput( 5, nodeValue_Color(   "Color",            ca_black ));
@@ -43,6 +43,18 @@ function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	attribute_surface_depth();
 	attribute_oversample();
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+		PROCESSOR_OVERLAY_CHECK
+		
+		var _dim = getDimension();
+		var _cx = _x + _dim[0] / 2 * _s;
+		var _cy = _y + _dim[1] / 2 * _s;
+		
+		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my, _snx, _sny));
+		
+		return w_hovering;
+	}
 	
 	static processData = function(_outSurf, _data, _array_index) {	
 		if(!is_surface(_data[0])) return _outSurf;

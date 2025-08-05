@@ -4,18 +4,15 @@ function Node_Pixel_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newActiveInput(8);
 	
 	////- =Input
-	
 	newInput(0, nodeValue_Surface("Surface In"));
 	newInput(1, nodeValueSeed());
 	
 	////- =Movement
-	
 	newInput(5, nodeValue_Float(   "Distance",  1 ));
-	newInput(2, nodeValue_Slider(  "Strength", .1, [ 0, 2, 0.01] ));
+	newInput(2, nodeValue_Slider(  "Strength", .1, [ 0, 2, 0.01] )).setHotkey("S");
 	newInput(3, nodeValue_Surface( "Strength map" ));
 	
 	////- =Color
-	
 	newInput(4, nodeValue_Gradient( "Color over lifetime",  new gradientObject(ca_white))).setMappable(9);
 	newInput(6, nodeValue_Curve(    "Alpha over lifetime",  CURVE_DEF_11 ));
 	newInput(7, nodeValue_Slider(   "Random blending",     .1 ));
@@ -31,6 +28,18 @@ function Node_Pixel_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+		PROCESSOR_OVERLAY_CHECK
+		
+		var _dim = getDimension();
+		var _cx = _x + _dim[0] / 2 * _s;
+		var _cy = _y + _dim[1] / 2 * _s;
+		
+		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my, _snx, _sny, 0, _dim[0] / 2));
+		
+		return w_hovering;
+	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		

@@ -7,24 +7,20 @@
 function Node_Blur_Box(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Box Blur";
 	
-	newInput(0, nodeValue_Surface("Surface In"));
-	
-	newInput(1, nodeValue_Int("Size", 3))
-		.setUnitRef(function(index) /*=>*/ {return getDimension(index)});
-	
-	newInput(2, nodeValue_Surface("Mask"));
-	
-	newInput(3, nodeValue_Slider("Mix", 1));
-	
 	newActiveInput(4);
-	
 	newInput(5, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
+	////- =Surfaces
+	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput(2, nodeValue_Surface( "Mask"       ));
+	newInput(3, nodeValue_Slider(  "Mix",     1 ));
 	__init_mask_modifier(2, 6); // inputs 6, 7, 
 	
-	newInput(8, nodeValue_Bool("Separate Axis", false));
-	
-	newInput(9, nodeValue_Vec2("2D Size", [ 3, 3 ]));
+	////- =Blur
+	newInput(1, nodeValue_Int(  "Size",           3     )).setHotkey("S").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput(8, nodeValue_Bool( "Separate Axis",  false ));
+	newInput(9, nodeValue_Vec2( "2D Size",       [3,3]  ));
+	// input 10
 	
 	input_display_list = [ 4, 5, 
 		["Surfaces", true], 0, 2, 3, 6, 7, 
@@ -38,6 +34,18 @@ function Node_Blur_Box(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	attribute_surface_depth();
 	attribute_oversample();
 	attribute_interpolation();
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+		PROCESSOR_OVERLAY_CHECK
+		
+		var _dim = getDimension();
+		var _cx = _x + _dim[0] / 2 * _s;
+		var _cy = _y + _dim[1] / 2 * _s;
+		
+		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my, _snx, _sny));
+		
+		return w_hovering;
+	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		var _surf = _data[0];

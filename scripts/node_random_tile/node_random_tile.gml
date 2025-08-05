@@ -8,19 +8,16 @@ function Node_Random_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	name = "Random Tile";
 	
 	////- =Output
-	
 	newInput( 0, nodeValue_Dimension());
 	newInput(21, nodeValue_Surface( "Mask" ));
 	
 	////- =Pattern
-	
 	newInput( 1, nodeValue_Vec2(     "Position",  [0,0] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
 	newInput( 3, nodeValue_Rotation( "Angle",      0    )).setHotkey("R").setMappable(12);
-	newInput( 2, nodeValue_Vec2(     "Scale",     [2,2] )).setMappable(11);
+	newInput( 2, nodeValue_Vec2(     "Scale",     [2,2] )).setHotkey("S").setMappable(11);
 	newInput( 4, nodeValue_Slider(   "Gap",       .1, [0, 0.5, 0.001] )).setMappable(13);
 	
 	////- =Render
-	
 	newInput( 7, nodeValue_Enum_Scroll( "Render Type",  0, ["Colored tile", "Height map", "Texture grid"]));
 	newInput( 8, nodeValueSeed());
 	newInput( 5, nodeValue_Gradient(     "Tile Color", new gradientObject(ca_white))).setMappable(17);
@@ -30,7 +27,6 @@ function Node_Random_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(20, nodeValue_Slider_Range( "Level",         [0,1] ));
 	
 	////- =Truchet
-	
 	newInput(14, nodeValue_Bool(           "Truchet",           false         ));
 	newInput(15, nodeValue_Int(            "Truchet Seed",      seed_random() ));
 	newInput(16, nodeValue_Slider(         "Truchet Threshold", .5            ));
@@ -58,6 +54,7 @@ function Node_Random_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		
 		InputDrawOverlay(inputs[ 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		InputDrawOverlay(inputs[ 3].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[ 2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
 		InputDrawOverlay(inputs[18].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, getSingleValue(0)));
 		
 		return w_hovering;

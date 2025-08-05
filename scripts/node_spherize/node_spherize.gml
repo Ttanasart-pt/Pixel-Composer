@@ -18,9 +18,9 @@ function Node_Spherize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	__init_mask_modifier(5, 9); // inputs 9, 10
 	
 	////- =Spherize
-	newInput( 1, nodeValue_Vec2(     "Center",   [.5,.5] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput(14, nodeValue_Rotation( "Rotation",   0     ));
-	newInput( 2, nodeValue_Slider(   "Strength",   1     )).setMappable(11);
+	newInput( 1, nodeValue_Vec2(     "Center",   [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(14, nodeValue_Rotation( "Rotation",   0     )).setHotkey("R");
+	newInput( 2, nodeValue_Slider(   "Strength",   1     )).setHotkey("S").setMappable(11);
 	newInput( 3, nodeValue_Slider(   "Radius",    .2     )).setMappable(12);
 	newInput(13, nodeValue_Slider(   "Trim Edge",  0     ));
 	// input 15
@@ -45,11 +45,17 @@ function Node_Spherize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var px   = _x + pos[0] * _s;
 		var py   = _y + pos[1] * _s;
 		
-		InputDrawOverlay(inputs[ 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
-		InputDrawOverlay(inputs[14].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
+		var _dim = getDimension();
+		var _cx = _x + _dim[0] / 2 * _s;
+		var _cy = _y + _dim[1] / 2 * _s;
+		
+		InputDrawOverlay(inputs[ 1].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[ 2].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my, _snx, _sny, 0, _dim[0] / 2));
+		InputDrawOverlay(inputs[14].drawOverlay(w_hoverable, active,  px,  py, _s, _mx, _my, _snx, _sny));
 		
 		return w_hovering;
 	}
+	
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		var _samp = getAttribute("oversample");

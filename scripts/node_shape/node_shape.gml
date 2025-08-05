@@ -58,22 +58,19 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	onSurfaceSize = function() /*=>*/ {return getInputData(0, DEF_SURF)};
 	
-	////- Output
-	
+	////- =Output
 	newInput(0, nodeValue_Dimension());
 	newInput(6, nodeValue_Bool("Anti-aliasing", false));
 	
-	////- Transform
-	
+	////- =Transform
 	newInput(15, nodeValue_Enum_Scroll( "Positioning Mode",    2, [ "Area", "Center + Scale", "Full Image" ]))
-	newInput( 3, nodeValue_Area(        "Position",          DEF_AREA_REF, { onSurfaceSize, useShape : false })).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
-	newInput(16, nodeValue_Vec2(        "Center",            [.5,.5] )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
-	newInput(17, nodeValue_Vec2(        "Half Size",         [.5,.5] )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
-	newInput(19, nodeValue_Rotation(    "Shape Rotation",      0     ));
-	newInput(28, nodeValue_Slider(      "Shape Scale",         1     ));
+	newInput( 3, nodeValue_Area(        "Position",          DEF_AREA_REF, { onSurfaceSize, useShape : false })).setHotkey("A").setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
+	newInput(16, nodeValue_Vec2(        "Center",            [.5,.5] )).setHotkey("G").setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
+	newInput(17, nodeValue_Vec2(        "Half Size",         [.5,.5] )).setHotkey("S").setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
+	newInput(19, nodeValue_Rotation(    "Shape Rotation",      0     )).setHotkey("R");
+	newInput(28, nodeValue_Slider(      "Shape Scale",         1     )).setHotkey("S");
 	
-	////- Shape
-	
+	////- =Shape
 	shape_types = [ 
 		    "Rectangle", "Diamond", "Trapezoid", "Parallelogram", "Half", 
 		-1, "Ellipse", "Arc", "Donut", "Crescent", "Disk Segment", "Pie", "Squircle", 
@@ -110,20 +107,17 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(31, nodeValue_Float(          "Factor",          2.5    ));
 	newInput(36, nodeValue_Enum_Button(    "Corner Shape",    0, [ "Round", "Cut" ]))
 	
-	////- Render
-		
+	////- =Render
 	newInput(10, nodeValue_Color( "Shape color", ca_white ));
 	newInput(18, nodeValue_Bool(  "Tile",        false    ));
 	
-	////- Height
-	
+	////- =Height
 	newInput(12, nodeValue_Bool(         "Height",  false        ));
 	newInput(29, nodeValue_Curve(        "Curve",   CURVE_DEF_01 ));
 	newInput(20, nodeValue_Slider_Range( "Level",   [0,1]        ));
 	newInput(37, nodeValue_Bool(         "Opacity", false        ));
 	
-	////- Background
-	
+	////- =Background
 	newInput( 1, nodeValue_Bool(  "Background", false));
 	newInput(11, nodeValue_Color( "Background color", ca_black));
 	

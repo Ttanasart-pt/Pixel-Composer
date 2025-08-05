@@ -13,13 +13,11 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(19, nodeValueSeed());
 	
 	////- =Output
-	
 	newInput( 0, nodeValue_Dimension());
 	newInput(20, nodeValue_Surface( "Mask" ));
 	
 	////- =Pattern
-	
-	newInput( 1, nodeValue_Slider(   "Amount",         1, [1, 16, 0.1] )).setMappable(11);
+	newInput( 1, nodeValue_Slider(   "Amount",         1, [1, 16, 0.1] )).setHotkey("S").setMappable(11);
 	newInput(10, nodeValue_Slider(   "Strip Ratio",   .5    )).setMappable(14);
 	newInput( 2, nodeValue_Rotation( "Angle",          0    )).setHotkey("R").setMappable(12);
 	newInput( 4, nodeValue_Vec2(     "Position",      [0,0] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
@@ -27,7 +25,6 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(17, nodeValue_Slider(   "Progress",      .5    ));
 	
 	////- =Render
-	
 	newInput( 3, nodeValue_Enum_Button( "Type",      0, [ "Solid", "Smooth", "AA" ] ));
 	newInput( 6, nodeValue_Enum_Button( "Coloring",  0, [ "Alternate", "Palette", "Random" ] ));
 	newInput( 7, nodeValue_Gradient(    "Colors",    new gradientObject(ca_white) )).setMappable(15);
@@ -54,6 +51,7 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var px   = _x + pos[0] * _s;
 		var py   = _y + pos[1] * _s;
 		
+		InputDrawOverlay(inputs[ 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		InputDrawOverlay(inputs[ 4].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		InputDrawOverlay(inputs[ 2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
 		InputDrawOverlay(inputs[16].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[0]));

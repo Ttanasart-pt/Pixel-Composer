@@ -6,17 +6,13 @@ function Node_FLIP_Vortex(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	manual_ungroupable = false;
 	
-	newInput(0, nodeValue_Fdomain("Domain"))
-		.setVisible(true, true);
+	newInput(0, nodeValue_Fdomain("Domain")).setVisible(true, true);
 	
-	newInput(1, nodeValue_Vec2("Position", [ 0, 0 ] ))
-		.setUnitRef(function(index) { return getDimension(); });
-	
-	newInput(2, nodeValue_Float("Radius", 4 ));
-	
-	newInput(3, nodeValue_Slider("Strength", 4, [ -8, 8, 0.01 ] ));
-	
-	newInput(4, nodeValue_Slider("Attraction", 0, [ -8, 8, 0.01 ] ));
+	newInput(1, nodeValue_Vec2(   "Position", [ 0, 0 ] )).setHotkey("G").setUnitRef(function() /*=>*/ {return getDimension()});
+	newInput(2, nodeValue_Float(  "Radius",     4      ));
+	newInput(3, nodeValue_Slider( "Strength",   4, [ -8, 8, 0.01 ] ));
+	newInput(4, nodeValue_Slider( "Attraction", 0, [ -8, 8, 0.01 ] ));
+	// input 5
 		
 	input_display_list = [ 0, 
 		["Vertex",	false], 1, 2, 3, 4, 

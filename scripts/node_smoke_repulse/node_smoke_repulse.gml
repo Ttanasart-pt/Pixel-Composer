@@ -4,18 +4,16 @@ function Node_Smoke_Repulse(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group)
 	
 	manual_ungroupable	 = false;
 	
-	newInput(0, nodeValue("Domain", self, CONNECT_TYPE.input, VALUE_TYPE.sdomain, noone))
-		.setVisible(true, true);
+	////- =Domain
+	newInput(0, nodeValue( "Domain", self, CONNECT_TYPE.input, VALUE_TYPE.sdomain, noone)).setVisible(true, true);
 	
-	newInput(1, nodeValue_Vec2("Position", [0, 0]));
-	
-	newInput(2, nodeValue_Float("Radius", 8));
-	
-	newInput(3, nodeValue_Slider("Strength", 0.10, [-1, 1, 0.01] ));
-	
-	newInput(4, nodeValue_Float("Spokes", 0));
-	
-	newInput(5, nodeValue_Rotation("Twist", 0));
+	////- =Repulse
+	newInput(1, nodeValue_Vec2(     "Position",  [0, 0] )).setHotkey("G");
+	newInput(2, nodeValue_Float(    "Radius",     8     )).setHotkey("S");
+	newInput(3, nodeValue_Slider(   "Strength",   0.10, [-1, 1, 0.01] ));
+	newInput(4, nodeValue_Float(    "Spokes",     0     ));
+	newInput(5, nodeValue_Rotation( "Twist",      0     ));
+	// input 6
 	
 	input_display_list = [ 
 		["Domain",	false], 0, 

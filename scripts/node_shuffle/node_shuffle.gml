@@ -12,9 +12,8 @@ function Node_Shuffle(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(2, nodeValueSeed());
 	
 	////- =Shuffle
-	
 	newInput(1, nodeValue_Enum_Scroll( "Type",         0, [ "Pixel", "Block" ]                 ));
-	newInput(5, nodeValue_Slider(      "Randomness",   1                                       ));
+	newInput(5, nodeValue_Slider(      "Randomness",   1                                       )).setHotkey("R");
 	newInput(3, nodeValue_Enum_Scroll( "Axis",         2, [ "Horizontal", "Vertical", "Both" ] ));
 	newInput(4, nodeValue_IVec2(       "Block count", [4,4]                                    ));
 	
@@ -27,6 +26,18 @@ function Node_Shuffle(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	];
 	
 	temp_surface = [ noone, noone ];
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+		PROCESSOR_OVERLAY_CHECK
+		
+		var _dim = getDimension();
+		var _cx = _x + _dim[0] / 2 * _s;
+		var _cy = _y + _dim[1] / 2 * _s;
+		
+		InputDrawOverlay(inputs[5].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my, _snx, _sny, 0, _dim[0] / 2));
+		
+		return w_hovering;
+	}
 	
 	static processData_prebatch  = function() { 
 	    var _type = getSingleValue(1);

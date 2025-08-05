@@ -12,15 +12,13 @@ function Node_Blend_Edge(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput(4, nodeValue_Toggle( "Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surfaces
-	
 	newInput(0, nodeValue_Surface( "Surface In" ));
 	
 	////- =Blend
-	
 	newInput(2, nodeValue_Enum_Button( "Types",       0, [ "Both", "Horizontal", "Vertical" ]));
-	newInput(1, nodeValue_Slider(      "Width",      .1 )).setMappable(5);
-	newInput(6, nodeValue_Slider(      "Blending",    1 ));
-	newInput(7, nodeValue_Slider(      "Smoothness",  0 ));
+	newInput(1, nodeValue_Slider(      "Width",      .1 )).setHotkey("W").setMappable(5);
+	newInput(6, nodeValue_Slider(      "Blending",    1 )).setHotkey("B");
+	newInput(7, nodeValue_Slider(      "Smoothness",  0 )).setHotkey("S");
 	
 	// input 8
 		
@@ -34,6 +32,20 @@ function Node_Blend_Edge(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	temp_surface = array_create(1);
 	
 	attribute_surface_depth();
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+		PROCESSOR_OVERLAY_CHECK
+		
+		var _dim = getDimension();
+		var _cx = _x + _dim[0] / 2 * _s;
+		var _cy = _y + _dim[1] / 2 * _s;
+		
+		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _cx, _cy - ui(24), _s, _mx, _my, _snx, _sny, 0, _dim[0] / 2));
+		InputDrawOverlay(inputs[6].drawOverlay(w_hoverable, active, _cx, _cy,          _s, _mx, _my, _snx, _sny, 0, _dim[0] / 2));
+		InputDrawOverlay(inputs[7].drawOverlay(w_hoverable, active, _cx, _cy + ui(24), _s, _mx, _my, _snx, _sny, 0, _dim[0] / 2));
+		
+		return w_hovering;
+	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		var _sw = surface_get_width_safe(_data[0]);

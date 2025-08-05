@@ -17,8 +17,8 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	////- =Transform
 	newInput( 1, nodeValue_Vec2(     "Position",   [0,0] )).setHotkey("G");
-	newInput(10, nodeValue_Rotation( "Rotation",    0));
-	newInput( 2, nodeValue_Vec2(     "Scale",      [4,4] )).setMappable(8);
+	newInput(10, nodeValue_Rotation( "Rotation",    0    )).setHotkey("R");
+	newInput( 2, nodeValue_Vec2(     "Scale",      [4,4] )).setHotkey("S").setMappable(8);
 	
 	////- =Iteration
 	newInput(11, nodeValue_Float(  "Scaling",    2));
@@ -29,7 +29,6 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput( 5, nodeValue_Slider_Range( "Color R Range", [0,1] ));
 	newInput( 6, nodeValue_Slider_Range( "Color G Range", [0,1] ));
 	newInput( 7, nodeValue_Slider_Range( "Color B Range", [0,1] ));
-	
 	// input 15
 	
 	input_display_list = [
@@ -46,6 +45,18 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	attribute_surface_depth();
 	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+		var _pos = getSingleValue(1);
+		var  px  = _x + _pos[0] * _s;
+		var  py  = _y + _pos[1] * _s;
+		
+		InputDrawOverlay(inputs[ 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[10].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[ 2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
+		
+		return w_hovering;
+	}
+
 	static step = function() {
 		var _col = getInputData(4);
 		
@@ -97,9 +108,4 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		return _outSurf;
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
-		
-		return w_hovering;
-	}
 }

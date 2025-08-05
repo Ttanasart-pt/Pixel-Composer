@@ -9,7 +9,7 @@ function Node_Flip(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newInput(0, nodeValue_Surface("Surface In"));
 	
-	newInput(1, nodeValue_Enum_Button("Axis",  0, [ "x", "y" ]));
+	newInput(1, nodeValue_Enum_Button("Axis",  0, [ "X", "Y" ]));
 	
 	newActiveInput(2);
 		

@@ -29,7 +29,6 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(0, nodeValue_Dimension());
 	
 	////- =Data
-	
 	newInput( 1, nodeValue_Float(        "Data",              []                       )).setArrayDepth(1).setVisible(true, true);
 	newInput(12, nodeValue_Float(        "Value Offset",      0                        ));
 	newInput(21, nodeValue_Bool(         "Flip Value",        false                    ));
@@ -40,17 +39,15 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(16, nodeValue_Float(        "Window Offset",     0                        ));
 	
 	////- =Plot
-	
 	newInput(11, nodeValue_Enum_Scroll( "Type",               0, __enum_array_gen([ "Bar chart", "Graph"], s_node_plot_linear_type)));
 	newInput( 4, nodeValue_Vec2(        "Origin",           [ 0, DEF_SURF_H / 2 ]      ));
 	newInput(10, nodeValue_Rotation(    "Direction",          0                        ));
-	newInput(20, nodeValue_PathNode(    "Path"));
+	newInput(20, nodeValue_PathNode(    "Path" ));
 	newInput( 5, nodeValue_Float(       "Scale",              DEF_SURF_W / 2           ));
 	newInput(22, nodeValue_Bool(        "Loop",               false                    ));
 	newInput(23, nodeValue_Slider(      "Smooth",             0                        ));
 	
 	////- =Render
-	
 	newInput( 6, nodeValue_Color(        "Base Color",         ca_white                ));
 	newInput(13, nodeValue_Gradient(     "Color Over Sample",  new gradientObject(ca_white))).setMappable(27);
 	newInput(24, nodeValue_Gradient(     "Color Over Value",   new gradientObject(ca_white))).setMappable(29);
@@ -62,7 +59,6 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(19, nodeValue_Bool(         "Rounded Bar",        false                   ));
 	
 	////- =Background
-	
 	newInput(8, nodeValue_Bool(  "Background",       false    ));
 	newInput(9, nodeValue_Color( "Background color", ca_black ));
 	

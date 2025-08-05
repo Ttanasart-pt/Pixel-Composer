@@ -12,23 +12,21 @@ function Node_Path_Profile(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newInput(0, nodeValue_Dimension());
 	
-	newInput(1, nodeValue_PathNode("Path" ));
+	////- =Profile
+	newInput(1, nodeValue_PathNode( "Path" ));
+	newInput(2, nodeValue_Int( "Resolution", 64 ));
 	
-	newInput(2, nodeValue_Int("Resolution", 64 ));
+	////- =Render
+	newInput(9, nodeValue_Enum_Button( "Fill",    0, [ "Odd", "All" ]       ));
+	newInput(3, nodeValue_Enum_Button( "Side",    0, [ "L", "R", "T", "D" ] ));
+	newInput(5, nodeValue_Color( "Color",         ca_white ));
+	newInput(4, nodeValue_Bool(  "Mirror",        false    ));
+	newInput(6, nodeValue_Bool(  "Anti-aliasing", false    ));
 	
-	newInput(3, nodeValue_Enum_Button("Side",  0 , [ "L", "R", "T", "D" ]));
-	
-	newInput(4, nodeValue_Bool("Mirror", false ));
-	
-	newInput(5, nodeValue_Color("Color", ca_white ));
-	
-	newInput(6, nodeValue_Bool("Anti-aliasing", false ));
-	
-	newInput(7, nodeValue_Bool("Background", false ));
-	
-	newInput(8, nodeValue_Color("BG Color", ca_black ));
-	
-	newInput(9, nodeValue_Enum_Button("Fill", 0, [ "Odd", "All" ] ));
+	////- =Background
+	newInput(7, nodeValue_Bool(  "Background",    false    ));
+	newInput(8, nodeValue_Color( "BG Color",      ca_black ));
+	// input 10
 	
 	newOutput(0, nodeValue_Output("Output", VALUE_TYPE.surface, noone ));
 	

@@ -14,7 +14,7 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 	////- Spawn
 	
 	newInput(6, nodeValue_Bool( "Spawn", true));
-	newInput(1, nodeValue_Area( "Spawn area", DEF_AREA));
+	newInput(1, nodeValue_Area( "Spawn area", DEF_AREA)).setHotkey("A");
 	newInput(2, nodeValue_Enum_Button(   "Spawn type", 0, [ "Stream", "Burst" ]));
 	newInput(3, nodeValue_Int(  "Spawn delay", 4));
 	newInput(5, nodeValue_Int(  "Spawn frame", 0));

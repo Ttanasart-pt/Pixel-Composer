@@ -8,17 +8,18 @@
 function Node_Cross_Section(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Draw Cross Section";
 	
-	newInput(0, nodeValue_Surface("Surface In"));
+	////- =Surfaces
+	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput(5, nodeValue_Surface( "Mask"       ));
 	
-	newInput(1, nodeValue_Enum_Button("Axis",  0 , [ "X", "Y" ]));
+	////- =Axis
+	newInput(1, nodeValue_Enum_Button( "Axis", 0 , [ "X", "Y" ] ));
+	newInput(2, nodeValue_Slider(  "Position", 0 )).setHotkey("G");
 	
-	newInput(2, nodeValue_Slider("Position", 0 ));
-	
+	////- =Output
+	newInput(4, nodeValue_Enum_Button( "Mode",  0 , [ "BW", "Colored" ] ));
 	newInput(3, nodeValue_Bool("Anti-aliasing", false ));
-	
-	newInput(4, nodeValue_Enum_Button("Mode",  0 , [ "BW", "Colored" ]));
-	
-	newInput(5, nodeValue_Surface("Mask"));
+	// input 6
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone ));
 	
@@ -54,6 +55,8 @@ function Node_Cross_Section(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 		draw_set_color(COLORS._main_accent);
 		draw_line(_x0, _y0, _x1, _y1);
+		
+		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, _snx, _sny));
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {

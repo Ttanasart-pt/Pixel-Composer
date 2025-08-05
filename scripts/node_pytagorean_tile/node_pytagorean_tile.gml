@@ -8,20 +8,17 @@ function Node_Pytagorean_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	name = "Pytagorean Tile";
 	
 	////- =Output
-	
 	newInput( 0, nodeValue_Dimension());
 	newInput(22, nodeValue_Surface( "Mask" ));
 	
 	////- =Pattern
-	
 	newInput( 1, nodeValue_Vec2(     "Position",  [0,0] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
 	newInput( 3, nodeValue_Rotation( "Rotation",   0    )).setHotkey("R").setMappable(12);
-	newInput( 2, nodeValue_Vec2(     "Scale",     [1,1] )).setMappable(11);
+	newInput( 2, nodeValue_Vec2(     "Scale",     [1,1] )).setHotkey("S").setMappable(11);
 	newInput(17, nodeValue_Rotation( "Phase",      90   ));
 	newInput( 4, nodeValue_Slider(   "Gap",       .25, [0, 0.5, 0.001] )).setMappable(13);
 	
 	////- =Render
-	
 	newInput( 7, nodeValue_Enum_Scroll( "Render Type",  0, ["Colored tile", "Height map", "Texture grid"]));
 	newInput( 8, nodeValueSeed());
 	newInput( 5, nodeValue_Gradient(     "Tile Color", new gradientObject(ca_white))).setMappable(18);
@@ -31,7 +28,6 @@ function Node_Pytagorean_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	newInput(21, nodeValue_Slider_Range( "Level",         [0,1] ));
 	
 	////- =Truchet
-	
 	newInput(14, nodeValue_Bool(           "Truchet",            false));
 	newInput(15, nodeValue_Int(            "Truchet Seed",       seed_random()));
 	newInput(16, nodeValue_Slider(         "Truchet Threshold", .5));
@@ -58,6 +54,7 @@ function Node_Pytagorean_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		InputDrawOverlay(inputs[ 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		InputDrawOverlay(inputs[19].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, getSingleValue(0)));
 		InputDrawOverlay(inputs[ 3].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[ 2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
 		
 		return w_hovering;
 	}

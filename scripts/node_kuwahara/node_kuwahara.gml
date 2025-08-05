@@ -8,32 +8,24 @@
 function Node_Kuwahara(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Kuwahara";
 	
-	newInput(0, nodeValue_Surface("Surface In"));
-	
 	newActiveInput(1);
-	
-	newInput(2, nodeValue_Int("Radius", 2))
-		.setValidator(VV_min(1));
-	
-	newInput(3, nodeValue_Surface("Mask"));
-	
-	newInput(4, nodeValue_Slider("Mix", 1));
-	
 	newActiveInput(5);
+	newInput( 6, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
-	newInput(6, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
-	
+	////- =Surfaces
+	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput(3, nodeValue_Surface( "Mask"       ));
+	newInput(4, nodeValue_Slider(  "Mix",     1 ));
 	__init_mask_modifier(3, 7); // inputs 7, 8
 	
-	newInput(9, nodeValue_Enum_Scroll("Types", 0, [ "Basic", "Anisotropics", "Generalized" ]));
-	
-	newInput(10, nodeValue_Slider("Alpha", 1));
-		
-	newInput(11, nodeValue_Slider("Zero crossing", 0.58));
-		
-	newInput(12, nodeValue_Float("Hardness", 8))
-	
-	newInput(13, nodeValue_Float("Sharpness", 8))
+	////- =Surfaces
+	newInput( 9, nodeValue_Enum_Scroll( "Types",  0, [ "Basic", "Anisotropics", "Generalized" ]));
+	newInput( 2, nodeValue_Int(         "Radius",         2  )).setHotkey("R").setValidator(VV_min(1));
+	newInput(10, nodeValue_Slider(      "Alpha",          1  ));
+	newInput(11, nodeValue_Slider(      "Zero crossing", .58 ));
+	newInput(12, nodeValue_Float(       "Hardness",       8  ));
+	newInput(13, nodeValue_Float(       "Sharpness",      8  ));
+	// input 14
 		
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -45,6 +37,18 @@ function Node_Kuwahara(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	temp_surface = array_create(4);
 	
 	attribute_surface_depth();
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+		PROCESSOR_OVERLAY_CHECK
+		
+		var _dim = getDimension();
+		var _cx = _x + _dim[0] / 2 * _s;
+		var _cy = _y + _dim[1] / 2 * _s;
+		
+		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my, _snx, _sny));
+		
+		return w_hovering;
+	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		var _surf = _data[0];

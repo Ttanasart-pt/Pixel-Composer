@@ -9,12 +9,12 @@ function Node_VerletSim_Wind(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(0, nodeValue_Mesh( "Mesh" )).setVisible(true, true);
 	
 	////- =Wind
-	newInput(1, nodeValue_Vec2(     "Center",      [.5,.5] )).setUnitRef(function(i) /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
-	newInput(2, nodeValue_Rotation( "Direction",     0 ));
-	newInput(3, nodeValue_Float(    "Width",         8 ));
-	newInput(4, nodeValue_Float(    "Falloff",       4 ));
+	newInput(1, nodeValue_Vec2(     "Center",      [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
+	newInput(2, nodeValue_Rotation( "Direction",     0     )).setHotkey("R");
+	newInput(3, nodeValue_Float(    "Width",         8     ));
+	newInput(4, nodeValue_Float(    "Falloff",       4     ));
 	newInput(5, nodeValue_Curve(    "Falloff Curve", CURVE_DEF_01 ));
-	newInput(6, nodeValue_Float(    "Strength",  1 ));
+	newInput(6, nodeValue_Float(    "Strength",      1     ));
 	
 	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.mesh, noone));
 	

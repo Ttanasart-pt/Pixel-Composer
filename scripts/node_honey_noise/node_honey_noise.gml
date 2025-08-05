@@ -9,20 +9,18 @@ function Node_Honeycomb_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x
 	shader = sh_noise_honey;
 	
 	////- =Output
-	
 	newInput(7, nodeValue_Surface("Mask"));
 	
 	////- =Noise
-	
 	newInput(5, nodeValueSeed()).setShaderProp("seed");
 	newInput(4, nodeValue_Enum_Button( "Mode",       0, [ "Hexagon", "Star" ])).setShaderProp("mode");
 	newInput(6, nodeValue_Int(         "Iteration",  1)).setShaderProp("iteration");
 	
 	////- =Transform
-	
 	newInput(1, nodeValue_Vec2(        "Position",  [0,0] )).setHotkey("G").setShaderProp("position").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
 	newInput(3, nodeValue_Rotation(    "Rotation",   0    )).setHotkey("R").setShaderProp("rotation");
-	newInput(2, nodeValue_Vec2(        "Scale",     [2,2] )).setShaderProp("scale");
+	newInput(2, nodeValue_Vec2(        "Scale",     [2,2] )).setHotkey("S").setShaderProp("scale");
+	// input 8
 	
 	input_display_list = [ 
 		["Output",     true], 0, 7, 
@@ -37,6 +35,7 @@ function Node_Honeycomb_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x
 		
 		InputDrawOverlay(inputs[ 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		InputDrawOverlay(inputs[ 3].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[ 2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
 
 		return w_hovering;
 	}

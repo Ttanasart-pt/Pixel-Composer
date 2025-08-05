@@ -7,19 +7,19 @@
 function Node_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Noise";
 	
+	////- =Output
 	newInput(0, nodeValue_Dimension());
+	newInput(6, nodeValue_Surface( "Mask" ));
 	
+	////- =Moise
 	newInput(1, nodeValueSeed());
 	
-	newInput(2, nodeValue_Enum_Button("Color Mode",  0, [ "Greyscale", "RGB", "HSV" ]));
-	
-	newInput(3, nodeValue_Slider_Range("Color R Range", [ 0, 1 ]));
-	
-	newInput(4, nodeValue_Slider_Range("Color G Range", [ 0, 1 ]));
-	
-	newInput(5, nodeValue_Slider_Range("Color B Range", [ 0, 1 ]));
-	
-	newInput(6, nodeValue_Surface("Mask"));
+	////- =Color
+	newInput(2, nodeValue_Enum_Button(  "Color Mode",      0, [ "Greyscale", "RGB", "HSV" ] ));
+	newInput(3, nodeValue_Slider_Range( "Color R Range", [ 0, 1 ] ));
+	newInput(4, nodeValue_Slider_Range( "Color G Range", [ 0, 1 ] ));
+	newInput(5, nodeValue_Slider_Range( "Color B Range", [ 0, 1 ] ));
+	// input 7
 	
 	input_display_list = [
 		["Output",	false], 0, 6, 

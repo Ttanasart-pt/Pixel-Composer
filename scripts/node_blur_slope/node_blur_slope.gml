@@ -20,7 +20,7 @@ function Node_Blur_Slope(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	////- =Blur
 	
 	newInput( 2, nodeValue_Surface( "Slope Map" ));
-	newInput( 1, nodeValue_Slider(  "Strength",   4, [1, 32, 0.1 ] )).setMappable(9);
+	newInput( 1, nodeValue_Slider(  "Strength",   4, [1, 32, 0.1 ] )).setHotkey("S").setMappable(9);
 	newInput(10, nodeValue_Slider(  "Step",      .1, [0,  1, 0.01] ));
 	newInput(11, nodeValue_Bool(    "Gamma Correction", false ));
 	
@@ -36,6 +36,18 @@ function Node_Blur_Slope(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	attribute_surface_depth();
 	attribute_oversample();
 	attribute_interpolation();
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+		PROCESSOR_OVERLAY_CHECK
+		
+		var _dim = getDimension();
+		var _cx = _x + _dim[0] / 2 * _s;
+		var _cy = _y + _dim[1] / 2 * _s;
+		
+		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my, _snx, _sny));
+		
+		return w_hovering;
+	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		surface_set_shader(_outSurf, sh_blur_slope);

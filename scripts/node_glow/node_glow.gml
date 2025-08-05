@@ -21,9 +21,9 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	////- =Glow
 	newInput(10, nodeValue_Enum_Button( "Mode",  0,  [ "Greyscale", "Alpha" ] ));
 	newInput(12, nodeValue_Enum_Button( "Side",  0,  [ "Outer", "Inner" ] ));
-	newInput( 1, nodeValue_Slider( "Border",     0,  [0,  4, .1 ] ));
-	newInput( 2, nodeValue_Slider( "Size",       3,  [1, 16, .1 ] )).setMappable(16);
-	newInput( 3, nodeValue_Slider( "Strength",   1,  [0,  4, .01] )).setMappable(17);
+	newInput( 1, nodeValue_Slider( "Border",     0,  [0,  4, .1 ] )).setHotkey("B");
+	newInput( 2, nodeValue_Slider( "Size",       3,  [1, 16, .1 ] )).setHotkey("S").setMappable(16);
+	newInput( 3, nodeValue_Slider( "Strength",   1,  [0,  4, .01] )).setHotkey("T").setMappable(17);
 	newInput(15, nodeValue_Curve(  "Strength Curve", CURVE_DEF_01 ));
 	
 	////- =Render
@@ -42,6 +42,20 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	attribute_surface_depth();
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+		PROCESSOR_OVERLAY_CHECK
+		
+		var _dim = getDimension();
+		var _cx = _x + _dim[0] / 2 * _s;
+		var _cy = _y + _dim[1] / 2 * _s;
+		
+		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _cx, _cy - ui(24), _s, _mx, _my, _snx, _sny, 0, _dim[0] / 2));
+		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _cx, _cy,          _s, _mx, _my, _snx, _sny, 0, _dim[0] / 2));
+		InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _cx, _cy + ui(24), _s, _mx, _my, _snx, _sny, 0, _dim[0] / 2));
+		
+		return w_hovering;
+	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		var _surf     = _data[ 0];

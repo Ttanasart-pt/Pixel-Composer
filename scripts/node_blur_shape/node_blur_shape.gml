@@ -1,24 +1,21 @@
 function Node_Blur_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Shape Blur";
 	
-	newInput(0, nodeValue_Surface("Surface In"));
-	newInput(1, nodeValue_Surface("Blur Shape"));
-	
-	newInput(2, nodeValue_Surface("Blur mask"));
-	
-	newInput(3, nodeValue_Surface("Mask"));
-	
-	newInput(4, nodeValue_Slider("Mix", 1));
-	
 	newActiveInput(5);
-	
 	newInput(6, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
-	newInput(7, nodeValue_Enum_Button("Mode",  0, [ "Blur", "Max" ]));
-	
+	////- =Surfaces
+	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput(3, nodeValue_Surface( "Mask"       ));
+	newInput(4, nodeValue_Slider(  "Mix",     1 ));
 	__init_mask_modifier(3, 8); // inputs 8, 9, 
 	
-	newInput(10, nodeValue_Bool("Gamma Correction", false));
+	////- =Blur
+	newInput( 7, nodeValue_Enum_Button( "Mode",  0, [ "Blur", "Max" ] ));
+	newInput( 1, nodeValue_Surface(     "Blur Shape" ));
+	newInput( 2, nodeValue_Surface(     "Blur mask"  ));
+	newInput(10, nodeValue_Bool(        "Gamma Correction", false ));
+	// input 11
 	
 	input_display_list = [ 5, 6, 
 		["Surfaces", true],	0, 3, 4, 8, 9, 

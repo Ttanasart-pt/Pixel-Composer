@@ -20,8 +20,8 @@ function Node_Blur_Radial(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	////- =Blur
 	
-	newInput( 1, nodeValue_Rotation( "Strength",          45     )).setMappable(10);
-	newInput( 2, nodeValue_Vec2(     "Center",           [.5,.5] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput( 1, nodeValue_Rotation( "Strength",          45     )).setHotkey("R").setMappable(10);
+	newInput( 2, nodeValue_Vec2(     "Center",           [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	newInput(11, nodeValue_Bool(     "Gamma Correction",  false  ));
 	
 	// input 12

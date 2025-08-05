@@ -4,14 +4,12 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 	newActiveInput(3);
 	
 	////- =Surface
-	
 	newInput(0, nodeValue_Surface( "Surface In" ));
 	
 	////- =Effect
-	
 	newInput(5, nodeValue_Enum_Button( "Type",       0, [ "RGB", "Continuous" ] ));
-	newInput(1, nodeValue_Vec2(        "Center",   [.5,.5] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput(2, nodeValue_Slider(      "Strength",   1, [-16, 16, 0.01] )).setMappable(4);
+	newInput(1, nodeValue_Vec2(        "Center",   [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(2, nodeValue_Slider(      "Strength",   1, [-16, 16, 0.01] )).setHotkey("S").setMappable(4);
 	
 	// input 6
 	
@@ -26,7 +24,13 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 	attribute_interpolation();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		
+		var _dim = getDimension();
+		var _cx = _x + _dim[0] / 2 * _s;
+		var _cy = _y + _dim[1] / 2 * _s;
+		
+		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my, _snx, _sny));
 		
 		return w_hovering;
 	}

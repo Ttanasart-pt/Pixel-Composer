@@ -26,13 +26,11 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	objects         = [];
 	attributes.mesh = [];
 	
-	////- Spawn
-	
+	////- =Spawn
 	newInput( 8, nodeValue_Bool(  "Spawn", true, "Make object spawn when start."));
 	newInput(20, nodeValue_Int(   "Spawn Frame", 0));
 	
-	////- Physics
-	
+	////- =Physics
 	newInput(12, nodeValue_Int(    "Collision Group", 1));
 	newInput( 0, nodeValue_Bool(   "Affect by Force", true));
 	newInput( 1, nodeValue_Float(  "Mass", 10));
@@ -42,8 +40,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(13, nodeValue_Slider( "Bounciness", 0.2));
 	newInput(22, nodeValue_Float(  "Gravity Scale", 1));
 	
-	////- Shape
-	
+	////- =Shape
 	newInput( 6, nodeValue_Surface(     "Texture"));
 	newInput( 5, nodeValue_Enum_Scroll( "Shape",  0, [ new scrollItem("Box",    s_node_shape_rectangle, 0), 
 	                                                           new scrollItem("Circle", s_node_shape_circle,    0), 
@@ -53,18 +50,15 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(10, nodeValue_Slider(      "Mesh Expansion", 0, [ -2, 2, 0.1 ]));
 	newInput(11, nodeValue_Bool(        "Add Pixel for Empty", true));
 	
-	////- Transform
+	////- =Transform
+	newInput( 7, nodeValue_Vec2(     "Start Position", [ 16, 16 ])).setHotkey("G");
+	newInput(17, nodeValue_Rotation( "Start Rotation", 0)).setHotkey("R");
 	
-	newInput( 7, nodeValue_Vec2(     "Start Position", [ 16, 16 ]));
-	newInput(17, nodeValue_Rotation( "Start Rotation", 0));
-	
-	////- Initial Velocity
-	
+	////- =Initial Velocity
 	newInput(18, nodeValue_Bool( "Use Initial Velocity", false));
 	newInput(19, nodeValue_Vec2( "Initial Velocity", [ 0, 0 ]));
 	
-	////- Simulation
-	
+	////- =Simulation
 	newInput(14, nodeValue_Bool( "Continuous", false));
 	newInput(15, nodeValue_Bool( "Fix Rotation", false));
 	newInput(16, nodeValue_Bool( "Sleepable",  true));
@@ -371,7 +365,12 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		if(worldIndex == undefined) return;
 		
-		InputDrawOverlay(inputs[7].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		var pos = getInputData(7);
+		var px  = _x + pos[0] * _s;
+		var py  = _y + pos[1] * _s;
+		
+		InputDrawOverlay(inputs[ 7].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[17].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
 		
 		var _shp = getInputData(5);
 		var _tex = getInputData(6);

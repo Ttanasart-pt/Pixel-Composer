@@ -4,22 +4,20 @@ function Node_Smoke_Apply_Velocity(_x, _y, _group = noone) : Node_Smoke(_x, _y, 
 	
 	manual_ungroupable	 = false;
 	
-	newInput(0, nodeValue("Domain", self, CONNECT_TYPE.input, VALUE_TYPE.sdomain, noone))
-		.setVisible(true, true);
-	
-	newInput(1, nodeValue_Surface("Brush"));
-	
-	newInput(2, nodeValue_Vec2("Position", [ 0, 0 ]));
-	
-	newInput(3, nodeValue_Vec2("Velocity", [ 1, 0 ]));
-	
+	////- =Domain
 	newActiveInput(4);
+	newInput(0, nodeValue( "Domain", self, CONNECT_TYPE.input, VALUE_TYPE.sdomain, noone )).setVisible(true, true);
 	
-	newInput(5, nodeValue_Enum_Button("Type", 0, [ "Shape", "Surface" ]));
+	////- =Brush
+	newInput(5, nodeValue_Enum_Button( "Type", 0, [ "Shape", "Surface" ] ));
+	newInput(1, nodeValue_Surface( "Brush" ));
+	newInput(6, nodeValue_Vec2(    "Scale",    [ 8, 8 ] )).setHotkey("S");
+	newInput(2, nodeValue_Vec2(    "Position", [ 0, 0 ] )).setHotkey("G");
 	
-	newInput(6, nodeValue_Vec2("Scale", [ 8, 8 ]));
-	
-	newInput(7, nodeValue_Float("Strength", 1));
+	////- =Velocity
+	newInput(3, nodeValue_Vec2(    "Velocity", [ 1, 0 ] ));
+	newInput(7, nodeValue_Float(   "Strength", 1        ));
+	// input 8
 	
 	input_display_list = [ 4, 0, 
 		["Brush",	 false], 5, 1, 6, 2, 

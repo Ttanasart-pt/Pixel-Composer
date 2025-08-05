@@ -5,7 +5,7 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	////- =Camera
 	
 	newInput(6, nodeValue_Dimension());
-	newInput(0, nodeValue_Vec2(   "Focus Center", [.5,.5] )).setUnitRef(function() /*=>*/ {return getInputData(6)}, VALUE_UNIT.reference);
+	newInput(0, nodeValue_Vec2(   "Focus Center", [.5,.5] )).setHotkey("G").setUnitRef(function() /*=>*/ {return getInputData(6)}, VALUE_UNIT.reference);
 	newInput(1, nodeValue_Slider( "Zoom",         1, [.01,4,.01] ));
 	
 	////- =FOV

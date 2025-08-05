@@ -3,6 +3,43 @@ function preview_overlay_rotation(interact, active, _x, _y, _s, _mx, _my, _snx, 
 	var hover = -1;
 	if(is_array(_val)) return hover;
 	
+	////- Hotkey
+	
+	if(preview_hotkey_active) {
+		hover = 1;
+		var _d0 = point_direction(_x, _y, preview_hotkey_mx, preview_hotkey_my);
+		var _d1 = point_direction(_x, _y, _mx, _my);
+		
+		preview_hotkey_mx = _mx;
+		preview_hotkey_my = _my;
+		
+		var _vx = _val + angle_difference(_d1, _d0);
+		if(KEYBOARD_NUMBER != undefined) _vx = preview_hotkey_s + KEYBOARD_NUMBER;
+		
+		if(setValue(_vx)) UNDO_HOLDING = true;
+		
+		draw_set_color(COLORS._main_icon);
+		draw_circle_prec(_x, _y, _rad, true);
+		
+		if(mouse_lpress(active) || key_press(vk_enter) || preview_hotkey.isPressing()) {
+			preview_hotkey_active = false;
+			UNDO_HOLDING = false;
+		}
+		
+	}
+	
+	if(active && preview_hotkey && preview_hotkey.isPressing()) {
+		preview_hotkey_active = true;
+		
+		preview_hotkey_s  = _val;
+		preview_hotkey_mx = _mx;
+		preview_hotkey_my = _my;
+		
+		KEYBOARD_STRING = "";
+	}
+	
+	////- Draw
+	
 	var _ax   = _x + lengthdir_x(_rad, _val);
 	var _ay   = _y + lengthdir_y(_rad, _val);
 	var index = 0;

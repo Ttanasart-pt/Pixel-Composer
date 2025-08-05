@@ -19,8 +19,8 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	
 	////- Blur
 	
-	newInput( 1, nodeValue_Float(    "Strength",         4 )).setMappable(9);
-	newInput( 2, nodeValue_Rotation( "Direction",        0 )).setMappable(10);
+	newInput( 1, nodeValue_Float(    "Strength",         4     )).setHotkey("S").setMappable(9);
+	newInput( 2, nodeValue_Rotation( "Direction",        0     )).setHotkey("R").setMappable(10);
 	newInput(11, nodeValue_Bool(     "Single Direction", false ));
 	newInput(13, nodeValue_Bool(     "Fade Distance",    false ));
 	newInput(12, nodeValue_Bool(     "Gamma Correction", false ));
@@ -45,10 +45,12 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 			_surf = _surf[preview_index];
 		}
 		
-		var ww = surface_get_width_safe(_surf);
-		var hh = surface_get_height_safe(_surf);
+		var _dim = getDimension();
+		var _cx = _x + _dim[0] / 2 * _s;
+		var _cy = _y + _dim[1] / 2 * _s;
 		
-		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x + ww / 2 * _s, _y + hh / 2 * _s, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my, _snx, _sny));
 		
 		return w_hovering;
 	}

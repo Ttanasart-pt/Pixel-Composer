@@ -1,17 +1,15 @@
 function Node_Average(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Average";
 	
-	newInput(0, nodeValue_Surface("Surface In"));
-	
-	newInput(1, nodeValue_Surface("Mask"));
-	
-	newInput(2, nodeValue_Slider("Mix", 1));
-	
 	newActiveInput(3);
-		
-	newInput(4, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
+	newInput(4, nodeValue_Toggle( "Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
+	////- =Surfaces
+	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput(1, nodeValue_Surface( "Mask"       ));
+	newInput(2, nodeValue_Slider(  "Mix",     1 ));
 	__init_mask_modifier(1, 5); // inputs 5, 6, 
+	// input 7
 	
 	input_display_list = [ 3, 4, 
 		["Surfaces", false], 0, 1, 2, 5, 6, 

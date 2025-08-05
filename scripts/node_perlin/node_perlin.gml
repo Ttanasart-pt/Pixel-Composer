@@ -8,35 +8,29 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	name = "Perlin Noise";
 	
 	////- =Output
-	
 	newInput( 0, nodeValue_Dimension());
 	newInput(12, nodeValue_Surface( "Mask" ));
 	
 	////- =Noise
-	
 	newInput( 5, nodeValueSeed());
 	newInput(13, nodeValue_Rotation( "Phase",     0    ));
 	newInput( 3, nodeValue_Int(      "Iteration", 4    ));
 	newInput( 4, nodeValue_Bool(     "Tile",      true ));
 	
 	////- =Transform
-	
 	newInput( 1, nodeValue_Vec2(     "Position",  [0,0] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
 	newInput(11, nodeValue_Rotation( "Rotation",   0    )).setHotkey("R");
-	newInput( 2, nodeValue_Vec2(     "Scale",     [5,5] )).setMappable(10);
+	newInput( 2, nodeValue_Vec2(     "Scale",     [5,5] )).setHotkey("S").setMappable(10);
 	
 	////- =Iteration
-	
 	newInput(14, nodeValue_Float(  "Scaling",    2 ));
 	newInput(15, nodeValue_Slider( "Amplitude", .5 ));
 	
 	////- =Render
-	
 	newInput( 6, nodeValue_Enum_Button(  "Color Mode",     0, [ "Greyscale", "RGB", "HSV" ]));
 	newInput( 7, nodeValue_Slider_Range( "Color R Range", [0,1] ));
 	newInput( 8, nodeValue_Slider_Range( "Color G Range", [0,1] ));
 	newInput( 9, nodeValue_Slider_Range( "Color B Range", [0,1] ));
-	
 	// input 16
 	
 	input_display_list = [
@@ -60,6 +54,8 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		InputDrawOverlay(inputs[ 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		InputDrawOverlay(inputs[11].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[ 2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
+		
 		return w_hovering;
 	}
 	

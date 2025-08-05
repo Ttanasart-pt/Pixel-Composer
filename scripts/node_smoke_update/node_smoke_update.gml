@@ -6,8 +6,7 @@ function Node_Smoke_Update(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	
 	manual_ungroupable	 = false;
 	
-	newInput(0, nodeValue("Domain", self, CONNECT_TYPE.input, VALUE_TYPE.sdomain, noone))
-		.setVisible(true, true);
+	newInput(0, nodeValue("Domain", self, CONNECT_TYPE.input, VALUE_TYPE.sdomain, noone)).setVisible(true, true);
 	
 	newActiveInput(1);
 	

@@ -10,16 +10,14 @@ function Node_Time_Remap(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	use_cache = CACHE_USE.manual;
 	update_on_frame = true;
 	
-	newInput(0, nodeValue_Surface("Surface In"))
-		.rejectArray();
+	////- =Surfaces
+	newInput(0, nodeValue_Surface( "Surface In" )).rejectArray();
+	newInput(1, nodeValue_Surface( "Map" )).rejectArray();
 	
-	newInput(1, nodeValue_Surface("Map"))
-		.rejectArray();
-	
-	newInput(2, nodeValue_Int("Max Life", 3))
-		.rejectArray();
-	
-	newInput(3, nodeValue_Bool("Loop", false))
+	////- =Remap
+	newInput(2, nodeValue_Int(  "Max Life", 3     )).rejectArray();
+	newInput(3, nodeValue_Bool( "Loop",     false ))
+	// input 4
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	

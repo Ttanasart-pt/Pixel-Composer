@@ -2,23 +2,19 @@ function Node_RD(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Reaction Diffusion";
 	
 	////- =Surfaces
-	
 	newInput( 0, nodeValue_Surface( "Seed"  ));
 	newInput( 7, nodeValue_Surface( "Add B" ));
 	
 	////- =Diffusion
-	
 	newInput(13, nodeValue_Slider(  "Diffusion",   1. ))
 	newInput( 5, nodeValue_Slider(  "Diffusion A", 1. )).setMappable(11);
 	newInput( 6, nodeValue_Slider(  "Diffusion B", .2 )).setMappable(12);
 	
 	////- =Parameter
-	
 	newInput( 1, nodeValue_Slider(  "Kill rate", 0.058, [ 0, 0.1, 0.001] )).setMappable(8);
 	newInput( 2, nodeValue_Slider(  "Feed rate", 0.043, [ 0, 0.1, 0.001] )).setMappable(9);
 	
 	////- =Simulation
-	
 	newInput( 3, nodeValue_Float(   "Timestep",  1  )).setMappable(10);
 	newInput( 4, nodeValue_Int(     "Iteration", 16 ));
 	

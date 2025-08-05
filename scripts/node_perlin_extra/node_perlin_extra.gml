@@ -10,11 +10,9 @@ function Node_Perlin_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	shader = sh_perlin_extra;
 	
 	////- =Output
-	
 	newInput(17, nodeValue_Surface("Mask"));
 	
 	////- =Noise
-	
 	newInput( 5, nodeValueSeed()).setShaderProp("seed");
 	newInput(10, nodeValue_Enum_Scroll( "Noise Type",       0, [ "Absolute worley", "Fluid", "Noisy", "Camo", "Blocky", "Max", "Vine" ])).setShaderProp("type");
 	newInput( 3, nodeValue_Int(         "Iteration",        2    )).setShaderProp("iteration");
@@ -23,17 +21,16 @@ function Node_Perlin_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	newInput(12, nodeValue_Float(       "Parameter B",      1    )).setShaderProp("paramB").setMappable(15);
 	
 	////- =Transform
-	
 	newInput( 1, nodeValue_Vec2(     "Position",    [0,0] )).setHotkey("G").setShaderProp("position").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
 	newInput(16, nodeValue_Rotation( "Rotation",     0    )).setHotkey("R").setShaderProp("rotation");
-	newInput( 2, nodeValue_Vec2(     "Scale",       [4,4] )).setShaderProp("scale").setMappable(13);
+	newInput( 2, nodeValue_Vec2(     "Scale",       [4,4] )).setHotkey("S").setShaderProp("scale").setMappable(13);
 	
 	////- =Render
-	
 	newInput( 6, nodeValue_Enum_Button(  "Color Mode",     0, [ "Greyscale", "RGB", "HSV" ] )).setShaderProp("colored");
 	newInput( 7, nodeValue_Slider_Range( "Color R Range", [0,1] )).setShaderProp("colorRanR");
 	newInput( 8, nodeValue_Slider_Range( "Color G Range", [0,1] )).setShaderProp("colorRanG");
 	newInput( 9, nodeValue_Slider_Range( "Color B Range", [0,1] )).setShaderProp("colorRanB");
+	// input 18
 	
 	input_display_list = [
 		["Output",     true], 0, 17, 
@@ -51,6 +48,8 @@ function Node_Perlin_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 		
 		InputDrawOverlay(inputs[ 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		InputDrawOverlay(inputs[16].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[ 2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
+		
 		return w_hovering;
 	}
 	

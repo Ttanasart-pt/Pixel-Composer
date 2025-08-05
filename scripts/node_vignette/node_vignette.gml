@@ -7,9 +7,9 @@ function Node_Vignette(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(0, nodeValue_Surface( "Surface In" ));
 	
 	////- =Vignette
-	newInput(5, nodeValue_Slider( "Roundness",  0  )).setMappable(7);
-	newInput(2, nodeValue_Float(  "Exposure",   15 )).setMappable(8);
-	newInput(3, nodeValue_Slider( "Strength",   1, [ 0, 2, 0.01 ] )).setMappable(9);
+	newInput(5, nodeValue_Slider( "Roundness",  0  )).setHotkey("R").setMappable(7);
+	newInput(2, nodeValue_Float(  "Exposure",   15 )).setHotkey("E").setMappable(8);
+	newInput(3, nodeValue_Slider( "Strength",   1, [ 0, 2, 0.01 ] )).setHotkey("S").setMappable(9);
 	newInput(4, nodeValue_Slider( "Exponent",  .25 ));
 	
 	////- =Render
@@ -25,6 +25,20 @@ function Node_Vignette(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	]
 	
 	attribute_surface_depth();
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+		PROCESSOR_OVERLAY_CHECK
+		
+		var _dim = getDimension();
+		var _cx = _x + _dim[0] / 2 * _s;
+		var _cy = _y + _dim[1] / 2 * _s;
+		
+		InputDrawOverlay(inputs[5].drawOverlay(w_hoverable, active, _cx, _cy - ui(24), _s, _mx, _my, _snx, _sny, 0, _dim[0] / 2));
+		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _cx, _cy,          _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _cx, _cy + ui(24), _s, _mx, _my, _snx, _sny, 0, _dim[0]));
+		
+		return w_hovering;
+	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		var _surf = _data[0];

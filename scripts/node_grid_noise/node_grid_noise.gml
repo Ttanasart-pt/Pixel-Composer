@@ -15,8 +15,8 @@ function Node_Grid_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	////- =Noise
 	newInput( 3, nodeValueSeed());
 	newInput( 1, nodeValue_Vec2(        "Position",   [0,0] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput( 2, nodeValue_Vec2(        "Scale",      [8,8] ));
-	newInput( 6, nodeValue_Enum_Button( "Shift Axis",  0, ["x", "y"]        ));
+	newInput( 2, nodeValue_Vec2(        "Scale",      [8,8] )).setHotkey("S");
+	newInput( 6, nodeValue_Enum_Button( "Shift Axis",  0, ["X", "Y"]        ));
 	newInput( 4, nodeValue_Slider(      "Shift",       0, [-0.5, 0.5, 0.01] ));
 	
 	////- =Render
@@ -38,7 +38,12 @@ function Node_Grid_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	attribute_surface_depth();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+		var _pos = getSingleValue(1);
+		var  px  = _x + _pos[0] * _s;
+		var  py  = _y + _pos[1] * _s;
+		
 		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
 		
 		return w_hovering;
 	}

@@ -8,19 +8,16 @@ function Node_Grid_Pentagonal(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	name = "Pentagonal Grid";
 	
 	////- =Output
-	
 	newInput( 0, nodeValue_Dimension());
 	newInput(18, nodeValue_Surface( "Mask" ));
 	
 	////- =Pattern
-	
 	newInput( 1, nodeValue_Vec2(     "Position", [0,0] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
 	newInput( 4, nodeValue_Rotation( "Angle",     0    )).setHotkey("R").setMappable(13);
-	newInput( 2, nodeValue_Vec2(     "Scale",    [4,4] )).setMappable(11);
+	newInput( 2, nodeValue_Vec2(     "Scale",    [4,4] )).setHotkey("S").setMappable(11);
 	newInput( 3, nodeValue_Slider(   "Gap",       .1, [0, 0.5, 0.001] )).setMappable(12);
 	
 	////- =Render
-	
 	newInput( 8, nodeValue_Enum_Scroll( "Render Type",  0, ["Colored tile", "Height map", "Texture grid"] ));
 	newInput( 9, nodeValueSeed());
 	newInput( 5, nodeValue_Gradient(     "Tile Color", new gradientObject(ca_white) )).setMappable(14);
@@ -48,6 +45,7 @@ function Node_Grid_Pentagonal(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		InputDrawOverlay(inputs[ 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		InputDrawOverlay(inputs[15].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, getSingleValue(0)));
 		InputDrawOverlay(inputs[ 4].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[ 2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
 		
 		return w_hovering;
 	}

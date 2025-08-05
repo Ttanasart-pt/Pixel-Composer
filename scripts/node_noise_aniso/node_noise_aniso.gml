@@ -17,13 +17,12 @@ function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput( 1, nodeValue_Float(    "X Amount",  2     )).setMappable(6);
 	newInput( 5, nodeValue_Float(    "Y Amount",  16    )).setMappable(7);
 	newInput( 3, nodeValue_Vec2(     "Position", [0,0]  )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
-	newInput( 4, nodeValue_Rotation( "Rotation",  0     )).setMappable(8);
+	newInput( 4, nodeValue_Rotation( "Rotation",  0     )).setHotkey("R").setMappable(8);
 	newInput(12, nodeValue_Bool(     "Tile",      false ));
 	
 	////- =Render
 	newInput( 9, nodeValue_Enum_Scroll( "Render Mode", 0, [ "Blend", "Waterfall" ] ));
 	newInput(10, nodeValueSeed());
-	
 	// input 13
 	
 	input_display_list = [
@@ -37,7 +36,12 @@ function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	attribute_surface_depth();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+		var _pos = getSingleValue(3);
+		var  px  = _x + _pos[0] * _s;
+		var  py  = _y + _pos[1] * _s;
+		
 		InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[4].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
 		
 		return w_hovering;
 	}

@@ -1,14 +1,15 @@
 function Node_Blobify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Blobify";
 	
-	newInput(0, nodeValue_Surface("Surface In"));
-	
 	newActiveInput(1);
 	
-	newInput(2, nodeValue_Int("Radius", 3))
-		.setValidator(VV_min(0));
+	////- =Surface
+	newInput(0, nodeValue_Surface( "Surface In" ));
 	
-	newInput(3, nodeValue_Slider("Threshold", 0.5));
+	////- =Blobify
+	newInput(2, nodeValue_Int(    "Radius",     3 )).setValidator(VV_min(0));
+	newInput(3, nodeValue_Slider( "Threshold", .5 ));
+	// input 4
 	
 	input_display_list = [ 1, 
 		["Surface", false], 0, 
@@ -19,7 +20,7 @@ function Node_Blobify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	attribute_surface_depth();
 	
-	static processData = function(_outSurf, _data, _array_index) { #region	
+	static processData = function(_outSurf, _data, _array_index) {	
 		var _rad = _data[2];
 		var _thr = _data[3];
 		
@@ -32,5 +33,5 @@ function Node_Blobify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		surface_reset_shader();
 		
 		return _outSurf;
-	} #endregion
+	}
 }

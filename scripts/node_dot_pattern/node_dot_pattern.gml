@@ -4,24 +4,20 @@ function Node_Dotted(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(20, nodeValueSeed());
 	
 	////- =Output
-	
 	newInput(0, nodeValue_Dimension());
 	newInput(1, nodeValue_Surface( "Mask" ));
 	
 	////- =Transform
-	
 	newInput(14, nodeValue_Vec2(     "Position", [0,0] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	newInput( 4, nodeValue_Rotation( "Angle",     0    )).setHotkey("R").setMappable(5);
 	
 	////- =Pattern
-	
 	newInput(13, nodeValue_Enum_Button( "Pattern",   0, [ "Grid", "Hexagonal" ]));
-	newInput( 2, nodeValue_Float(       "Size",      4            )).setMappable(3);
+	newInput( 2, nodeValue_Float(       "Size",      4            )).setHotkey("S").setMappable(3);
 	newInput(15, nodeValue_Vec2(        "Spacing",  [1,1]         ));
 	newInput( 9, nodeValue_Slider(      "Dot Size", .5, [0,2,.01] )).setMappable(10);
 	
 	////- =Render
-	
 	newInput( 7, nodeValue_Color(       "BG Color",        ca_black ));
 	newInput( 6, nodeValue_Enum_Button( "Render Mode",     0, [ "Step", "AA", "Smooth" ] ));
 	newInput(16, nodeValue_Enum_Button( "Dot Color Mode",  0, [ "Solid", "Palette", "Random", "Texture" ] ));
@@ -56,6 +52,7 @@ function Node_Dotted(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		InputDrawOverlay(inputs[14].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, _snx, _sny));
 		InputDrawOverlay(inputs[ 4].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[ 2].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny));
 		
 		return w_hovering;
 	}
