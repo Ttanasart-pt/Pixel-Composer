@@ -15,6 +15,9 @@ function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 	if(drag_type) {
 		_index = 1;
 		
+		_val[0] = (drag_sx - _x) / _s / _scale[0];
+		_val[1] = (drag_sy - _y) / _s / _scale[1];
+		
 		var _nx = (drag_sx + (_mx - drag_mx) - _x) / _s / _scale[0];
 		var _ny = (drag_sy + (_my - drag_my) - _y) / _s / _scale[1];
 		
@@ -32,12 +35,12 @@ function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 		}
 		
 		if(key_mod_press(CTRL)) {
-			_val[0] = round(_nx);
-			_val[1] = round(_ny);
-		} else {
-			_val[0] = _nx;
-			_val[1] = _ny;
-		}
+			_nx = round(_nx);
+			_ny = round(_ny);
+		} 
+		
+		if(preview_hotkey_axis == -1 || preview_hotkey_axis == 0) _val[0] = _nx;
+		if(preview_hotkey_axis == -1 || preview_hotkey_axis == 1) _val[1] = _ny;
 							
 		if(setValueInspector( unit.invApply(_val) )) 
 			UNDO_HOLDING = true;
@@ -60,6 +63,8 @@ function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 			drag_sy   = _ay;
 			drag_rx   = __ax;
 			drag_ry   = __ay;
+			
+			KEYBOARD_STRING = "";
 		}
 	} 
 	

@@ -9,25 +9,21 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newActiveInput(5, nodeValue_Bool("Active", true));
 	
-	////- Surface
-	
-	newInput( 0, nodeValue_Surface(     "Surface In"));
-	newInput(10, nodeValue_Surface(     "Back Surface"));
+	////- =Surface
+	newInput( 0, nodeValue_Surface(     "Surface In"   ));
+	newInput(10, nodeValue_Surface(     "Back Surface" ));
 	newInput( 6, nodeValue_Enum_Scroll( "Dimension Type", 0, [ "Input", "Absolute", "Relative" ]));
 	newInput( 7, nodeValue_Dimension());
-	newInput( 9, nodeValue_Vec2("Relative Dimension", [ 1, 1 ] ));
+	newInput( 9, nodeValue_Vec2( "Relative Dimension", [ 1, 1 ] ));
 	
-	////- Warp
+	////- =Warp
+	newInput(1, nodeValue_Vec2( "Top Left",     [ 0, 0 ] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(2, nodeValue_Vec2( "Top Right",    [ 1, 0 ] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(3, nodeValue_Vec2( "Bottom Left",  [ 0, 1 ] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(4, nodeValue_Vec2( "Bottom Right", [ 1, 1 ] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	
-	newInput(1, nodeValue_Vec2("Top Left", [ 0, 0 ] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput(2, nodeValue_Vec2("Top Right", [ 1, 0 ] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput(3, nodeValue_Vec2("Bottom Left", [ 0, 1 ] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput(4, nodeValue_Vec2("Bottom Right", [ 1, 1 ] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	
-	////- Render
-	
+	////- =Render
 	newInput(8, nodeValue_Bool("Tile", false));
-	
 	//// inputs 11
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -271,44 +267,48 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 			draw_surface_stretched(surfWarp, 0, 0, sw, sh);
 		surface_reset_shader();
+		
+		return surfWarp;
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var tl   = _data[1];
-		var tr   = _data[2];
-		var bl   = _data[3];
-		var br   = _data[4];
-		var tile = _data[8];
-		
-		var _dimTyp = _data[6];
-		var _dim    = _data[7];
-		var _sdim   = _data[9];
-		
-		var _surfF  = _data[ 0];
-		var _surfB  = is_surface(_data[10])? _data[10] : _surfF;
-		
-		inputs[7].setVisible(_dimTyp == 1);
-		inputs[8].setVisible(_dimTyp == 2);
-		
-		if(!is_surface(_data[0])) return _outSurf;
+		#region data
+			var tl      = _data[1];
+			var tr      = _data[2];
+			var bl      = _data[3];
+			var br      = _data[4];
+			var tile    = _data[8];
+			
+			var _dimTyp = _data[6];
+			var _dim    = _data[7];
+			var _sdim   = _data[9];
+			
+			var _surfF  = _data[ 0];
+			var _surfB  = is_surface(_data[10])? _data[10] : _surfF;
+			
+			inputs[7].setVisible(_dimTyp == 1);
+			inputs[8].setVisible(_dimTyp == 2);
+			
+			if(!is_surface(_surfF)) return _outSurf;
+		#endregion
 		
 		var sw = 1;
 		var sh = 1;
 		
 		switch(_dimTyp) {
-			case 0 : sw = surface_get_width_safe(_data[0]);
-				     sh = surface_get_height_safe(_data[0]); break;
+			case 0 : sw = surface_get_width_safe(_surfF);
+				     sh = surface_get_height_safe(_surfF); break;
 				
 			case 1 : sw = _dim[0];
 				     sh = _dim[1]; break;
 				
-			case 2 : sw = _sdim[0] * surface_get_width_safe(_data[0]);
-				     sh = _sdim[1] * surface_get_height_safe(_data[0]); break;
+			case 2 : sw = _sdim[0] * surface_get_width_safe(_surfF);
+				     sh = _sdim[1] * surface_get_height_safe(_surfF); break;
 				
 		}
 		
 		_outSurf = surface_verify(_outSurf, sw, sh);
-		warpSurface(_outSurf, _surfF, _surfB, sw, sh, tl, tr, bl, br, tile);
+		_outSurf = warpSurface(_outSurf, _surfF, _surfB, sw, sh, tl, tr, bl, br, tile);
 		
 		return _outSurf;
 	}

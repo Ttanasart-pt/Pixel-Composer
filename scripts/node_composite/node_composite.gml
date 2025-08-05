@@ -83,8 +83,8 @@
 			}
 			
 			draw_set_color(COLORS._main_icon);
-			if(drag_axis == 0) draw_line(0, _y + drag_sy * _s, WIN_H, _y + drag_sy * _s);
-			if(drag_axis == 1) draw_line(_x + drag_sx * _s, 0, _x + drag_sx * _s, WIN_W);
+			if(drag_axis == 0) draw_line_dashed(0, _y + drag_sy * _s, WIN_H, _y + drag_sy * _s);
+			if(drag_axis == 1) draw_line_dashed(_x + drag_sx * _s, 0, _x + drag_sx * _s, WIN_W);
 			
 			if(node.inputs[surf_dragging + 1].setValue(val))
 				UNDO_HOLDING = true;

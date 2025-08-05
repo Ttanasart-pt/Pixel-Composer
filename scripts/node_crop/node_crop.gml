@@ -143,7 +143,7 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					draw_line(0, _y + _my1 * _s, params.w, _y + _my1 * _s);
 					draw_set_alpha(1);
 					
-					if(mouse_release(mb_left, active)) {
+					if(mouse_lrelease()) {
 						drag_side    = noone;
 						UNDO_HOLDING = false;
 					}
@@ -225,7 +225,7 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				if(inputs[1].setValue(_splice))
 					UNDO_HOLDING = true;
 				
-				if(mouse_release(mb_left, active)) {
+				if(mouse_lrelease()) {
 					drag_side    = noone;
 					UNDO_HOLDING = false;
 				}

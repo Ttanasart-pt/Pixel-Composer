@@ -403,6 +403,8 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	attribute_surface_depth();
 	attribute_interpolation();
 	
+	static selectClear = function() { anchor_select = []; }
+	
 	static resetInput = function(_val = false) {
 		var _grid  = getInputData(2);
 		var _gridW = _grid[0];

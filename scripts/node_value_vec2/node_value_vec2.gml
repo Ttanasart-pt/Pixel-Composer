@@ -85,6 +85,7 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _typ = 0, _sca = [ 1, 1 ]) {
 		if(expUse || value_from != noone) return false;
 		
+		if(!is_array(_sca)) _sca = [ _sca, _sca ];
 		var _hovering = preview_hotkey_active;
 		
 		if(preview_hotkey_active) {
@@ -108,8 +109,8 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 			draw_set_color(COLORS._main_icon);
 			var _vdx = _x + _vx * _s * _sca[0];
 			var _vdy = _y + _vy * _s * _sca[1];
-			if(preview_hotkey_axis == 0) draw_line(0, _vdy, 9999, _vdy);
-			if(preview_hotkey_axis == 1) draw_line(_vdx, 0, _vdx, 9999);
+			if(preview_hotkey_axis == 0) draw_line_dashed(0, _vdy, 9999, _vdy);
+			if(preview_hotkey_axis == 1) draw_line_dashed(_vdx, 0, _vdx, 9999);
 			
 			if(mouse_lpress(active) || key_press(vk_enter) || preview_hotkey.isPressing()) {
 				preview_hotkey_active = false;
@@ -158,7 +159,16 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 			}
 		}
 		
-		if(!is_array(_sca)) _sca = [ _sca, _sca ];
+		if(drag_type == 1) {
+			if(key_press(ord("X"))) { preview_hotkey_axis = preview_hotkey_axis == 0? -1 : 0; KEYBOARD_STRING = ""; }
+			if(key_press(ord("Y"))) { preview_hotkey_axis = preview_hotkey_axis == 1? -1 : 1; KEYBOARD_STRING = ""; }
+			
+			var _vdx = drag_sx;
+			var _vdy = drag_sy;
+			if(preview_hotkey_axis == 0) draw_line_dashed(0, _vdy, 9999, _vdy);
+			if(preview_hotkey_axis == 1) draw_line_dashed(_vdx, 0, _vdx, 9999);
+			
+		}
 		
 		_hovering = _hovering || preview_overlay_vector(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _typ, _sca);
 		return _hovering;

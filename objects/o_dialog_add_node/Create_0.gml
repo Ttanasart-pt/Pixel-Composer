@@ -1169,6 +1169,7 @@ event_inherited();
 						
 						if(mouse_release(mb_left, sFOCUS))
 							buildNode(_node, _param);
+							
 						else if(struct_has(_node, "node") && mouse_release(mb_right, right_free && sFOCUS))
 							rightClick(_node);
 					}

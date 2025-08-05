@@ -2463,6 +2463,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static drawTools = noone;
 	
+	static selectAll   = undefined;
+	static selectClear = undefined;
+	
 	////- INSTANCE
 	
 	static setInstance = function(n) /*=>*/ { 

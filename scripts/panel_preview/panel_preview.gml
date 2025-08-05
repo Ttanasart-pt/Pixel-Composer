@@ -58,6 +58,8 @@
 	function panel_preview_view_control_toggle()        { PANEL_PREVIEW.view_control_toggle(); }
 	function panel_preview_view_control_show()          { PANEL_PREVIEW.view_control_show();   }
 	function panel_preview_view_control_hide()          { PANEL_PREVIEW.view_control_hide();   }
+	
+	function panel_preview_select_all()                 { PANEL_PREVIEW.selectAll();           }
 	                                                         
     function __fnInit_Preview() {
     	var p = "Preview";
@@ -145,6 +147,8 @@
 		registerFunction(p, "Toggle View Control",      "", n, panel_preview_view_control_toggle  ).setMenu("preview_view_control_toggle", noone, false, function() /*=>*/ {return PROJECT.previewSetting.show_view_control});
 		registerFunction(p, "Show View Control",        "", n, panel_preview_view_control_show    ).setMenu("preview_view_control_show");
 		registerFunction(p, "Hide View Control",        "", n, panel_preview_view_control_hide    ).setMenu("preview_view_control_hide");
+		
+		registerFunction(p, "Select All",               "A", c, panel_preview_select_all          ).setMenu("preview_select_all");
 		
         __fnGroupInit_Preview();
     }
@@ -992,20 +996,49 @@ function Panel_Preview() : PanelContent() constructor {
         return ww + ui(4);
     }
     
+    function selectAll() {
+    	var prevN = getNodePreview();
+    	if(!is(prevN, Node)) return;
+    	
+    	var prevS = prevN.preview_select_surface && !array_empty(prevN.outputs) && prevN.outputs[0].type == VALUE_TYPE.surface;
+    	if(prevS) {
+    		var surf = prevN.outputs[0].getValue();
+    		
+        	selection_x0 = 0;
+	    	selection_y0 = 0;
+	    	selection_x1 = surface_get_width_safe(surf);
+	    	selection_y1 = surface_get_height_safe(surf);
+	    	
+    		selection_active = true;
+    		
+    	} 
+    	
+    	if(prevN.selectAll != undefined) prevN.selectAll();
+    	
+    }
+    
     static onFullScreen = function() { run_in(1, fullView); }
     
     ////- TOOL
     
     function resetTool() {
+    	selection_active = false;
+        var prevN = getNodePreview();
+        if(is(prevN, Node) && prevN.selectClear != undefined) prevN.selectClear();
+        
     	if(tool_current == noone) return;
     	var _tobj = tool_current.getToolObject();
 		if(_tobj) _tobj.disable();
+		
         tool_current = noone;
     }
     
     function clearTool(_bypass_clearable = false) { 
+    	selection_active = false;
+        var prevN = getNodePreview();
+    	if(is(prevN, Node) && prevN.selectClear != undefined) prevN.selectClear();
+    	
     	if(!tool_clearable && !_bypass_clearable) return;
-    	if(tool_current == noone) return;
     	resetTool();
     }
     

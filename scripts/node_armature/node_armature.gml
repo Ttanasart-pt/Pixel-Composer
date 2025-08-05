@@ -111,7 +111,7 @@
 					
 				} else {
 					if(drag_axis == 0) bne.x = bne.sx + dx;
-					if(drag_axis == 1) bne.y = bne.sy + dx; 
+					if(drag_axis == 1) bne.y = bne.sy + dy; 
 				}
 				
 			}
@@ -737,6 +737,8 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		["Bones",      false], bone_renderer,
 		["Constrains", false], constrain_renderer, 
 	];
+	
+	static selectClear = function() { bone_select = []; }
 	
 	static drawOverlay_Transform = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var mx = (_mx - _x) / _s;
