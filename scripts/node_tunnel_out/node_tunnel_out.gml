@@ -9,7 +9,6 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	newInput(0, nodeValue_Text("Name", LOADING || APPENDING? "" : ds_map_find_first(project.tunnels_in) )).rejectArray();
 	
 	////- =Display
-	
 	newInput(1, nodeValue_Enum_Button( "Label Position", 0, [ "T", "B", "L", "R" ] ));
 	newInput(2, nodeValue_Float(       "Label Scale",    1 ));
 	newInput(3, nodeValue_Color(       "Label Color",    cola(COLORS._main_text) ));

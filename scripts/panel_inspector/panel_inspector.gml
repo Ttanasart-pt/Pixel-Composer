@@ -1342,6 +1342,8 @@ function Panel_Inspector() : PanelContent() constructor {
         
         var bx = w - ui(44);
         var by = ui(12);
+        var bs = ui(32);
+        var m  = [mx, my];
         
         if(inspecting.hasInspector1Update(true)) {
             var icon = inspecting.insp1UpdateIcon;
@@ -1350,9 +1352,13 @@ function Panel_Inspector() : PanelContent() constructor {
             var tt = inspecting.insp1UpdateTooltip;
             if(inspectGroup) tt += " [All]";
             
-            if(buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(32), [mx, my], pHOVER && ac, pFOCUS && ac, tt, icon[0], icon[1], cc) == 2) {
+            if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, m, pHOVER && ac, pFOCUS && ac, tt, icon[0], icon[1], cc) == 2) {
                 if(inspectGroup == 1) {
-                    for( var i = 0, n = array_length(inspectings); i < n; i++ ) inspectings[i].inspector1Update();
+                    for( var i = 0, n = array_length(inspectings); i < n; i++ ) {
+                    	if(inspectings[i].hasInspector1Update())
+                    		inspectings[i].inspector1Update();
+                    }
+                    
                 } else 
                     inspecting.inspector1Update();
             }
@@ -1361,15 +1367,20 @@ function Panel_Inspector() : PanelContent() constructor {
         
         if(inspecting.hasInspector2Update()) {
             by += ui(36);
+            
             var icon = inspecting.insp2UpdateIcon;
             var ac = inspecting.insp2UpdateActive;
             var cc = ac? icon[2] : COLORS._main_icon_dark;
             var tt = inspecting.insp2UpdateTooltip;
             if(inspectGroup) tt += " [All]";
             
-            if(buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(32), [mx, my], pHOVER && ac, pFOCUS && ac, tt, icon[0], icon[1], cc) = 2) {
+            if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, m, pHOVER && ac, pFOCUS && ac, tt, icon[0], icon[1], cc) = 2) {
                 if(inspectGroup) {
-                    for( var i = 0, n = array_length(inspectings); i < n; i++ ) inspectings[i].inspector2Update();
+                    for( var i = 0, n = array_length(inspectings); i < n; i++ ) {
+                    	if(inspectings[i].hasInspector2Update())
+                    		inspectings[i].inspector2Update();
+                    }
+                    
                 } else 
                     inspecting.inspector2Update();
             }

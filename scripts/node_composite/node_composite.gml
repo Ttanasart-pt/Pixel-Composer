@@ -168,8 +168,7 @@
 			drag_pmy = _my;
 			
 			rotate_acc += angle_difference(_d1, _d0);
-			var _rr = drag_sr + rotate_acc;
-			if(KEYBOARD_NUMBER != undefined) _rr = drag_sr + KEYBOARD_NUMBER;
+			var _rr = drag_sr + (KEYBOARD_NUMBER ?? rotate_acc);
 			
 			if(node.inputs[surf_dragging + 2].setValue(_rr))
 				UNDO_HOLDING   = true;

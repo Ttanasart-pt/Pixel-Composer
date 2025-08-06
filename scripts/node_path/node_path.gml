@@ -1633,7 +1633,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				
 			}
 			
-			if(mouse_lrelease())
+			if(mouse_lrelease()) 
 				anchor_freeze = 0;
 			
 			for( var i = 0, n = array_length(anchor_select); i < n; i++ ) {

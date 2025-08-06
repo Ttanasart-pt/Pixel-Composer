@@ -312,6 +312,7 @@ function connectionParameter() constructor {
 
 	////- Graph
     
+
 function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     title       = __txt("Graph");
     title_raw   = "";
@@ -821,27 +822,13 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     function getFreeY(_x, _y) {
     	var gls = project.graphGrid.size;
     	var fre = [];
-    	var _node, _y0, _y1;
+    	var _node;
     	
     	for( var i = 0, n = array_length(nodes_list); i < n; i++ ) {
     		_node = nodes_list[i];
-    		if(!_node.active) continue;
-    		if(_node.x + _node.w < _x || _node.x > _x) continue;
+    		if(!_node.active || _node.x + _node.w < _x || _node.x > _x) continue;
     		
-    		_y0   = _node.y;
-    		_y1   = _node.y + _node.h;
-    		if(_y1 < _y) continue;
-    		
-    		_y0 = floor((_y0 - _y) / gls);
-    		_y1 = floor((_y1 - _y) / gls);
-    		fre = array_verify_min(fre, _y1 + 1);
-    		
-    		for( var j = _y0; j < _y1; j++ ) fre[j] = 1;
-    	}
-    	
-    	for( var i = 0, n = array_length(fre); i < n; i++ ) {
-    		if(fre[i] == 0) return _y;
-    		_y += gls;
+    		_y = max(_y, _node.y + _node.h);
     	}
     	
     	return _y;

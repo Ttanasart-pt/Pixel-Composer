@@ -1,7 +1,266 @@
 #region
 	FN_NODE_TOOL_INVOKE {
 		hotkeyTool("Node_Armature_Bind", "Pose", "P");		
+		
+		hotkeyTool("Node_Armature_Bind", "Move Selection",   "G");		
+		hotkeyTool("Node_Armature_Bind", "Rotate Selection", "R");		
+		hotkeyTool("Node_Armature_Bind", "Scale Selection",  "S");		
 	});
+	
+	function armature_bind_tool_move(_node) : ToolObject() constructor {
+		setNode(_node);
+		activeKeyboard = false;
+		surface_selecting = noone;
+		
+		drag_trans = 0;
+		
+		drag_pmx = undefined;
+		drag_pmy = undefined;
+		
+		drag_axis = -1;
+		
+		static init = function() {
+			activeKeyboard = false;
+			
+			KEYBOARD_STRING = "";
+			KEYBOARD_NUMBER = undefined;
+		}
+		
+		static initKeyboard = function() /*=>*/ {
+			if(node.surface_selecting == noone) return;
+			
+			surface_selecting = node.surface_selecting;
+			activeKeyboard = true;
+			
+			drag_pmx = undefined;
+			drag_pmy = undefined;
+			
+			var _val   = node.inputs[surface_selecting + 1].getValue();
+			drag_trans = array_clone(_val);
+			drag_axis  = -1;
+		}
+		
+		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
+			if(!activeKeyboard)  { PANEL_PREVIEW.resetTool(); return; }
+			
+			var  val  = array_clone(drag_trans);
+			var _bone = array_safe_get(node.boneIDMap, (surface_selecting - node.input_fix_len) / node.data_length, "");
+			    _bone = node.boneMap[$ _bone];
+			    
+			if(drag_pmx == undefined) drag_pmx = _mx;
+			if(drag_pmy == undefined) drag_pmy = _my;
+			
+		    var _dx = KEYBOARD_NUMBER ?? (_mx - drag_pmx);
+			var _dy = KEYBOARD_NUMBER ?? (_my - drag_pmy);
+			
+			var _p  = point_rotate(_dx, _dy, 0, 0, -_bone.pose_angle);
+			
+			if(drag_axis == 0 || drag_axis == -1) val[0] = drag_trans[0] + _p[0] / PANEL_PREVIEW.canvas_s;
+			if(drag_axis == 1 || drag_axis == -1) val[1] = drag_trans[1] + _p[1] / PANEL_PREVIEW.canvas_s;
+			
+			// draw_set_color(COLORS._main_icon);
+			// if(drag_axis == 0) draw_line_dashed(0, _y + drag_trans[1] * _s, WIN_H, _y + drag_trans[1] * _s);
+			// if(drag_axis == 1) draw_line_dashed(_x + drag_trans[0] * _s, 0, _x + drag_trans[0] * _s, WIN_W);
+			
+			if(node.inputs[surface_selecting + 1].setValue(val))
+				UNDO_HOLDING = true;
+			
+			if(key_press(ord("X"))) {
+				drag_axis = drag_axis == 0? -1 : 0;
+				KEYBOARD_STRING = "";
+			}
+			
+			if(key_press(ord("Y"))) {
+				drag_axis = drag_axis == 1? -1 : 1;
+				KEYBOARD_STRING = "";
+			}
+				
+			if(mouse_press(mb_left) || key_press(vk_enter)) {
+				activeKeyboard = false;
+				UNDO_HOLDING   = false;
+				PANEL_PREVIEW.resetTool();
+			}
+			
+			var _tooltipText = "Dragging";
+			switch(drag_axis) {
+				case 0 : _tooltipText += " X"; break;
+				case 1 : _tooltipText += " Y"; break;
+			}
+			
+			if(KEYBOARD_NUMBER != undefined) _tooltipText += $" [{KEYBOARD_NUMBER}]";
+			PANEL_PREVIEW.setActionTooltip(_tooltipText);
+			
+		}
+	}
+	
+	function armature_bind_tool_rotate(_node) : ToolObject() constructor {
+		setNode(_node);
+		activeKeyboard = false;
+		surface_selecting = noone;
+		
+		drag_trans = 0;
+		
+		drag_pmx = undefined;
+		drag_pmy = undefined;
+		
+		drag_axis  = -1;
+		rotate_acc = 0;
+		
+		static init = function() {
+			activeKeyboard = false;
+			
+			KEYBOARD_STRING = "";
+			KEYBOARD_NUMBER = undefined;
+		}
+		
+		static initKeyboard = function() /*=>*/ {
+			if(node.surface_selecting == noone) return;
+			
+			surface_selecting = node.surface_selecting;
+			activeKeyboard = true;
+			
+			drag_pmx = undefined;
+			drag_pmy = undefined;
+			
+			var _val   = node.inputs[surface_selecting + 1].getValue();
+			drag_trans = array_clone(_val);
+			drag_axis  = -1;
+			rotate_acc = 0;
+		}
+		
+		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
+			if(!activeKeyboard)  { PANEL_PREVIEW.resetTool(); return; }
+			
+			var  val  = array_clone(drag_trans);
+			var _bone = array_safe_get(node.boneIDMap, (surface_selecting - node.input_fix_len) / node.data_length, "");
+			    _bone = node.boneMap[$ _bone];
+			    
+			var _data = node.draw_data[surface_selecting];
+			var _px = _x + _data.cx * _s;
+			var _py = _y + _data.cy * _s;
+			
+			if(drag_pmx == undefined) drag_pmx = _mx;
+			if(drag_pmy == undefined) drag_pmy = _my;
+			
+			var _d0 = point_direction(_px, _py, drag_pmx, drag_pmy);
+			var _d1 = point_direction(_px, _py, _mx, _my);
+			
+			drag_pmx = _mx;
+			drag_pmy = _my;
+			
+			rotate_acc += angle_difference(_d1, _d0);
+			var _rr = drag_trans[TRANSFORM.rot] + (KEYBOARD_NUMBER ?? rotate_acc);
+			val[TRANSFORM.rot] = _rr;
+			
+			draw_set_color(COLORS._main_icon);
+			draw_circle_prec(_px, _py, ui(64), true);
+			
+			if(node.inputs[surface_selecting + 1].setValue(val))
+				UNDO_HOLDING = true;
+			
+			if(mouse_press(mb_left) || key_press(vk_enter)) {
+				activeKeyboard = false;
+				UNDO_HOLDING   = false;
+				PANEL_PREVIEW.resetTool();
+			}
+			
+			var _tooltipText = "Rotating";
+			
+			if(KEYBOARD_NUMBER != undefined) _tooltipText += $" [{KEYBOARD_NUMBER}]";
+			PANEL_PREVIEW.setActionTooltip(_tooltipText);
+			
+		}
+	}
+	
+	function armature_bind_tool_scale(_node) : ToolObject() constructor {
+		setNode(_node);
+		activeKeyboard = false;
+		surface_selecting = noone;
+		
+		drag_trans = 0;
+		
+		drag_pmx = undefined;
+		drag_pmy = undefined;
+		
+		drag_axis = -1;
+		
+		static init = function() {
+			activeKeyboard = false;
+			
+			KEYBOARD_STRING = "";
+			KEYBOARD_NUMBER = undefined;
+		}
+		
+		static initKeyboard = function() /*=>*/ {
+			if(node.surface_selecting == noone) return;
+			
+			surface_selecting = node.surface_selecting;
+			activeKeyboard = true;
+			
+			drag_pmx = undefined;
+			drag_pmy = undefined;
+			
+			var _val   = node.inputs[surface_selecting + 1].getValue();
+			drag_trans = array_clone(_val);
+			drag_axis  = -1;
+		}
+		
+		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
+			if(!activeKeyboard)  { PANEL_PREVIEW.resetTool(); return; }
+			
+			var  val  = array_clone(drag_trans);
+			var _bone = array_safe_get(node.boneIDMap, (surface_selecting - node.input_fix_len) / node.data_length, "");
+			    _bone = node.boneMap[$ _bone];
+			    
+			var _data = node.draw_data[surface_selecting];
+			var _px = _x + _data.cx * _s;
+			var _py = _y + _data.cy * _s;
+			
+			if(drag_pmx == undefined) drag_pmx = _mx;
+			if(drag_pmy == undefined) drag_pmy = _my;
+			
+		    var _ss = point_distance(_mx, _my, _px, _py) / point_distance(drag_pmx, drag_pmy, _px, _py);
+			var _sx = KEYBOARD_NUMBER ?? (key_mod_press(SHIFT)? (_mx - _px) / (drag_pmx - _px) : _ss);
+			var _sy = KEYBOARD_NUMBER ?? (key_mod_press(SHIFT)? (_my - _py) / (drag_pmy - _py) : _ss);
+			
+			if(drag_axis == 0 || drag_axis == -1) val[TRANSFORM.sca_x] = drag_trans[TRANSFORM.sca_x] * _sx;
+			if(drag_axis == 1 || drag_axis == -1) val[TRANSFORM.sca_y] = drag_trans[TRANSFORM.sca_y] * _sy;
+			
+			// draw_set_color(COLORS._main_icon);
+			// if(drag_axis == 0) draw_line_dashed(0, _y + drag_trans[1] * _s, WIN_H, _y + drag_trans[1] * _s);
+			// if(drag_axis == 1) draw_line_dashed(_x + drag_trans[0] * _s, 0, _x + drag_trans[0] * _s, WIN_W);
+			
+			if(node.inputs[surface_selecting + 1].setValue(val))
+				UNDO_HOLDING = true;
+			
+			if(key_press(ord("X"))) {
+				drag_axis = drag_axis == 0? -1 : 0;
+				KEYBOARD_STRING = "";
+			}
+			
+			if(key_press(ord("Y"))) {
+				drag_axis = drag_axis == 1? -1 : 1;
+				KEYBOARD_STRING = "";
+			}
+				
+			if(mouse_press(mb_left) || key_press(vk_enter)) {
+				activeKeyboard = false;
+				UNDO_HOLDING   = false;
+				PANEL_PREVIEW.resetTool();
+			}
+			
+			var _tooltipText = "Dragging";
+			switch(drag_axis) {
+				case 0 : _tooltipText += " X"; break;
+				case 1 : _tooltipText += " Y"; break;
+			}
+			
+			if(KEYBOARD_NUMBER != undefined) _tooltipText += $" [{KEYBOARD_NUMBER}]";
+			PANEL_PREVIEW.setActionTooltip(_tooltipText);
+			
+		}
+	}
+	
 #endregion
 
 function __armature_bind_data(_surface, _bone = noone, _tran = 0, _aang = 0, _pang = 0, _asca = 0, _psca = 0) constructor {
@@ -25,7 +284,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput(0, nodeValue_Dimension());
 	
 	////- =Armature
-	newInput(3, nodeValue_Vec2(   "Bone transform", [0,0] )).setHotkey("G");
+	newInput(3, nodeValue_Vec2(   "Bone transform", [0,0] ));
 	newInput(4, nodeValue_Slider( "Bone scale",      1, [.1,2,.01] ));
 	// inputs 5
 	
@@ -416,6 +675,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	////- Bones
 	
 	anchor_selecting = noone;
+	selection_freeze = 0;
 	
 	boneMap   = {};
 	surfMap   = {};
@@ -424,6 +684,12 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	////- Nodes
 	
 	#region ---- tools ----
+		tools = [
+			new NodeTool( "Move Selection",   THEME.tools_2d_move   ).setVisible(false).setToolObject(new armature_bind_tool_move(self)),
+			new NodeTool( "Rotate Selection", THEME.tools_2d_rotate ).setVisible(false).setToolObject(new armature_bind_tool_rotate(self)),
+			new NodeTool( "Scale Selection",  THEME.tools_2d_scale  ).setVisible(false).setToolObject(new armature_bind_tool_scale(self)),
+		]
+		
 		temp_surface = [ surface_create(1, 1), surface_create(1, 1), surface_create(1, 1) ];
 		blend_temp_surface = temp_surface[2];
 		
@@ -440,6 +706,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		overlay_w = 0;
 		overlay_h = 0;
 		
+		draw_data  = [];
 		atlas_data = [];
 		bind_data  = [];
 		
@@ -812,6 +1079,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				
 			}
 		}
+		draw_data = anchors;
 		
 		if(attributes.select_object && selection_sampler.active) {
 			var _msx = floor((_mx - _x) / _s);
@@ -825,13 +1093,25 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			}
 		}
 		
-		if(mouse_press(mb_left, active)) surface_selecting = hovering;
+		if(isUsingTool()) {
+			var _currTool = PANEL_PREVIEW.tool_current;
+			var _tool     = _currTool.getToolObject();
+			
+			if(_tool != noone) {
+				_tool.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+				if(mouse_lclick()) selection_freeze = 1;
+			}
+		}
+		
+		if(selection_freeze == 0 && mouse_press(mb_left, active)) surface_selecting = hovering;
 			
 		if(surface_selecting != noone) {
 			var a = array_safe_get_fast(anchors, surface_selecting, noone);
 			if(!is_struct(a)) surface_selecting = noone;
 		}
-			
+		
+		if(mouse_lrelease()) selection_freeze = 0;
+		
 		if(hovering != noone) {
 			hoveringWid = true;
 			var a = anchors[hovering];

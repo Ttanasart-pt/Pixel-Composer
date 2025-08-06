@@ -10,12 +10,10 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	newInput(1, nodeValue(      "Value in", self, CONNECT_TYPE.input, VALUE_TYPE.any, noone )).setVisible(true, true);
 	
 	////- =Display
-	
 	newInput(2, nodeValue_Enum_Button( "Label Position", 0, [ "T", "B", "L", "R" ] ));
-	newInput(3, nodeValue_Float(       "Label Scale",    1 ));
-	newInput(4, nodeValue_Color(       "Label Color",    cola(COLORS._main_text) ));
-	newInput(5, nodeValue_Slider(      "Label Alpha",    1 ));
-	
+	newInput(3, nodeValue_Float(       "Label Scale",    1        ));
+	newInput(4, nodeValue_Color(       "Label Color",    ca_white ));
+	newInput(5, nodeValue_Slider(      "Label Alpha",    1        ));
 	// input 6
 	
 	input_display_list = [ 0, 1, 
@@ -62,7 +60,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	////- Update
 	
 	setTrigger(1, "Tunnel Panel", [ THEME.tunnel_panel, 0, c_white ]);
-	static onInspector1Update = function() { dialogPanelCall(new Panel_Tunnels()); }
+	static onInspector1Update = function() /*=>*/ { dialogPanelCall(new Panel_Tunnels()); }
 	
 	setTrigger(2, "Create Receiver", [ THEME.tunnel, 0, COLORS.node_blend_tunnel ]);
 	static onInspector2Update = function() {
@@ -70,8 +68,9 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _ny = PANEL_GRAPH.getFreeY(_nx, y);
 		    
 		var _node = nodeBuild("Node_Tunnel_Out", _nx, _ny).skipDefault();
-		var _key  = inputs[0].getValue();
+		if(!is(_node, Node)) return;
 		
+		var _key = inputs[0].getValue();
 		_node.inputs[0].setValue(_key);
 	}
 	
