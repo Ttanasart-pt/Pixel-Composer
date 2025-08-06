@@ -11,7 +11,7 @@ function Node_Path_Map_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	////- =To
 	newInput(4, nodeValue_Enum_Scroll( "Map To",      0, [ "Area", "Fix Dimension", "BBOX" ]));
-	newInput(1, nodeValue_Area(        "Area",        DEF_AREA, { useShape : false }));
+	newInput(1, nodeValue_Area(        "Area",        DEF_AREA, { useShape : false })).setHotkey("A");
 	newInput(5, nodeValue_Dimension(   "Dimension To"           ));
 	newInput(7, nodeValue_Vec4(        "BBOX To",     [0,0,1,1] ));
 	// input 8
@@ -56,6 +56,9 @@ function Node_Path_Map_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				break;
 				
 		}
+		
+		PathDrawOverlay(outputs[0].getValue(), _x, _y, _s);
+		InputDrawOverlay(inputs[0].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, _params));
 		
 		return w_hovering;
 	}

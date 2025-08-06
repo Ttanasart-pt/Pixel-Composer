@@ -32,29 +32,11 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			var hovering = false;
 			
 			if(struct_has(path, "drawOverlay")) {
-				var hv = path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+				var hv = path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params);
 				hovering = hovering || hv;
 			}
 			
-			draw_set_color(COLORS._main_icon);
-			var _amo = getLineCount();
-			for( var i = 0; i < _amo; i++ ) {
-				var _len = getLength(i);
-				var _stp = 1 / clamp(_len * _s, 1, 64);
-				
-				var ox, oy, nx, ny;
-				
-				for( var j = 0; j < 1; j += _stp ) {
-					p = getPointRatio(j, i, p);
-					nx = _x + p.x * _s;
-					ny = _y + p.y * _s;
-					
-					if(j > 0) draw_line_width(ox, oy, nx, ny, 1);
-					
-					ox = nx;
-					oy = ny;
-				}
-			}
+			PathDrawOverlay(self, _x, _y, _s);
 			
 			return hovering;
 		}
@@ -143,8 +125,7 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		var _path = getSingleValue(0, preview_index, true);
-		if(has(_path, "drawOverlay")) InputDrawOverlay(_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(outputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params));
 		
 		var _ori = getSingleValue(4);
 		var ox = _x + _ori[0] * _s;

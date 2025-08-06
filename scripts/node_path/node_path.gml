@@ -392,6 +392,7 @@
 function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Path";
 	preview_channel = 1;
+	preview_select_surface = false;
 	
 	setDimension(96, 48);
 	
@@ -532,9 +533,14 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	////- Draw
 	
-	static drawPreview = function(_x, _y, _s) {}
-	
 	static selectClear = function() { anchor_select = []; }
+	static selectAll   = function() { 
+		anchor_select = array_create(array_length(inputs) - input_fix_len);
+		for( var i = input_fix_len, n = array_length(inputs); i < n; i++ )
+			anchor_select[i - input_fix_len] = i - input_fix_len;
+	}
+	
+	static drawPreview = function(_x, _y, _s) {}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _pth  = outputs[1].getValue();

@@ -13,10 +13,12 @@ function Node_Path_Reverse(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			var hovering = false;
 			
 			if(has(curr_path, "drawOverlay")) {
-				var hv = curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+				var hv = curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params);
 				hovering = hovering || hv;
 			}
-				
+			
+			PathDrawOverlay(self, _x, _y, _s);
+			
 			return hovering;
 		}
 		
@@ -37,8 +39,7 @@ function Node_Path_Reverse(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		var _path = getSingleValue(0, preview_index, true);
-		if(has(_path, "drawOverlay")) InputDrawOverlay(_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(outputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params));
 	}
 	
 	static processData = function(_outData, _data, _array_index = 0) { 

@@ -2084,8 +2084,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				break;
 			
 			case VALUE_TYPE.pathnode :
-				var _path = getValue();
-				if(is_struct(_path) && struct_has(_path, "drawOverlay")) return _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+				var _path  = getValue();
+				var _param = argument_count > argc + 0? argument[argc + 0] : {};
+				if(has(_path, "drawOverlay")) return _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _param);
 				break;
 		}
 		

@@ -38,12 +38,10 @@ function Node_Path_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		var _path = getSingleValue(0);
-		if(has(_path, "drawOverlay")) InputDrawOverlay(_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params));
+		InputDrawOverlay(inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params));
 		
-		var _path = getSingleValue(1);
-		if(has(_path, "drawOverlay")) InputDrawOverlay(_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny));
-		
+		return w_hovering;
 	}
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -56,6 +54,12 @@ function Node_Path_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		accu_lengths   = [];
 		
 		__temp_p = [ 0, 0 ];
+		
+		static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+			PathDrawOverlay(self, _x, _y, _s);
+			
+			return false;
+		}
 		
 		static getLineCount     = function()    /*=>*/ {return line_amount};
 		static getSegmentCount  = function(i=0) /*=>*/ {return array_safe_get_fast(segment_counts, i)};

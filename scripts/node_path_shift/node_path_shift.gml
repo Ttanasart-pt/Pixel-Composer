@@ -3,8 +3,7 @@ function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue_PathNode("Path"));
-	
-	newInput(1, nodeValue_Float("Distance", 0));
+	newInput(1, nodeValue_Float("Distance", 0)).setHotkey("D");
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, self));
 	
@@ -17,31 +16,12 @@ function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var hovering = false;
 		
 		if(has(curr_path, "drawOverlay")) {
-			var hv = curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+			var hv = curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params);
 			hovering = hovering || hv;
 		}
 		
-		draw_set_color(COLORS._main_icon);
-		
-		var _amo = getLineCount();
-		var _p   = new __vec2P();
-		
-		for( var i = 0; i < _amo; i++ ) {
-			var _len = getLength(_amo);
-			var _stp = 1 / clamp(_len * _s, 1, 64);
-			var ox, oy, nx, ny;
-			
-			for( var j = 0; j < 1; j += _stp ) {
-				_p = getPointRatio(j, i, _p);
-				nx = _x + _p.x * _s;
-				ny = _y + _p.y * _s;
-				
-				if(j > 0) draw_line_width(ox, oy, nx, ny, 3);
-				
-				ox = nx;
-				oy = ny;
-			}
-		}
+		PathDrawOverlay(self, _x, _y, _s);
+		InputDrawOverlay(inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		
 		return hovering;
 	}

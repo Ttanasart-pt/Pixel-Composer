@@ -15,10 +15,12 @@ function Node_Path_Offset(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		
 		static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 			var hovering = false;
-			if(curr_path && struct_has(curr_path, "drawOverlay")) {
-				var hv = curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+			if(has(curr_path, "drawOverlay")) {
+				var hv = curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params);
 				hovering = hovering || hv;
 			}
+			
+			PathDrawOverlay(self, _x, _y, _s);
 			
 			return hovering;
 		}
@@ -45,8 +47,8 @@ function Node_Path_Offset(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		var _path = getSingleValue(0, preview_index, true);
-		if(has(_path, "drawOverlay")) InputDrawOverlay(_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(outputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params));
+		return w_hovering;
 	}
 	
 	static processData = function(_outData, _data, _array_index = 0) { 
@@ -57,8 +59,6 @@ function Node_Path_Offset(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		_outData.curr_path = _data[0];
 		_outData.offset    = _data[1];
 		_outData.clampRat  = _data[2];
-		
-		// _outData.offset = array_create_ext(10, (i) => random_range(-1,1));
 		
 		return _outData;
 	}

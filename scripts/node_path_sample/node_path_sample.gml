@@ -16,8 +16,7 @@ function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newOutput(2, nodeValue_Output("Weight", VALUE_TYPE.float, 0));
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		var _path = getInputData(0);
-		if(has(_path, "drawOverlay")) InputDrawOverlay(_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params));
 		
 		var _pnt = outputs[0].getValue();
 		if(process_amount == 1) _pnt = [ _pnt ];
@@ -30,6 +29,8 @@ function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			
 			draw_circle(_px, _py, 4, false);
 		}
+		
+		return w_hovering;
 	}
 	
 	__temp_p  = new __vec2P();

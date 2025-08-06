@@ -42,7 +42,7 @@ function Node_Path_Flattern(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			var hovering = false;
 			
 			if(has(curr_path, "drawOverlay")) {
-				var hv = curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+				var hv = curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params);
 				hovering = hovering || hv;
 			}
 			
@@ -96,8 +96,8 @@ function Node_Path_Flattern(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		var _path = outputs[0].getValue();
-		if(has(_path, "drawOverlay")) InputDrawOverlay(_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(outputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params));
+		return w_hovering;
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {

@@ -21,7 +21,7 @@ function preview_overlay_rotation(interact, active, _x, _y, _s, _mx, _my, _snx, 
 		draw_set_color(COLORS._main_icon);
 		draw_circle_prec(_x, _y, _rad, true);
 		
-		if(mouse_lpress(active) || key_press(vk_enter) || preview_hotkey.isPressing()) {
+		if(mouse_lpress() || key_press(vk_enter) || preview_hotkey.isPressing()) {
 			preview_hotkey_active = false;
 			UNDO_HOLDING = false;
 		}

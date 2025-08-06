@@ -41,7 +41,7 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		
 		if(curr_path && struct_has(curr_path, "drawOverlay")) 
-			InputDrawOverlay(curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny));
+			InputDrawOverlay(curr_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params));
 		
 		var _amo = array_length(anchors);
 		var ox, oy, nx, ny;
@@ -76,6 +76,8 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				}
 			}
 		}
+	
+		return w_hovering;
 	}
 	
 	static getLineCount    = function(   ) /*=>*/ {return getInputData(1)};

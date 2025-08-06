@@ -74,8 +74,11 @@ function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 	draw_anchor(__overlay_hover[0], _ax, _ay, _r, _type);
 	
 	if(overlay_draw_text) {
+		var _tx = round(_ax);
+		var _ty = round(_ay - ui(4));
+		
 		draw_set_text(f_p2b, fa_center, fa_bottom, COLORS._main_accent);
-		draw_text_add(round(_ax), round(_ay - ui(4)), name);
+		draw_text_add(_tx, _ty, name);
 	}
 	
 	return hover;

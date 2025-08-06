@@ -10,7 +10,7 @@ function Path(_node) constructor {
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		if(!is(node, Node)) return false;
 		
-		var hv = node.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		var hv = node.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params);
 		return (hv ?? false) || node.w_hovering;
 	}
 	
@@ -125,4 +125,34 @@ function PathSegment() : Path() constructor {
 			oy = ny;
 		}
 	} #endregion
+}
+
+function PathDrawOverlay(_path, _x, _y, _s) {
+	if(!is_path(_path)) return;
+	
+	draw_set_color(COLORS._main_icon);
+	
+	var _amo = _path.getLineCount();
+	var _p   = new __vec2P();
+	var _sam = 16;
+	var _stp = 1 / _sam;
+	
+	for( var i = 0; i < _amo; i++ ) {
+		var ox, oy, nx, ny;
+		var j = 0;
+		
+		repeat(_sam) {
+			_p = _path.getPointRatio(j, i, _p);
+			nx = _x + _p.x * _s;
+			ny = _y + _p.y * _s;
+			
+			if(j > 0) draw_line_width(ox, oy, nx, ny, 3);
+			
+			ox = nx;
+			oy = ny;
+			
+			j += _stp;
+		}
+	}
+	
 }

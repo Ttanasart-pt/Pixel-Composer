@@ -36,8 +36,7 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	////- Nodes
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		var _path = getSingleValue(2, preview_index, true);
-		if(has(_path, "drawOverlay")) InputDrawOverlay(_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[2].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params));
 		
 		var _dim = getDimension();
 		var _cx = _x + _dim[0] / 2 * _s;

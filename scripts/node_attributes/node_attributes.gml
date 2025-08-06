@@ -103,6 +103,9 @@
 		if(label) array_push(attributeEditors, "Surface");
 		array_push(attributeEditors, interpolate_editor);
 		checkGroupAttribute(interpolate_editor);
+		
+		attrKey_interpolate = new KeyCombination("I", MOD_KEY.alt);
+		attrKey_oversample  = new KeyCombination("O", MOD_KEY.alt);
 	}
 	
 	function attribute_oversample(label = false) {
@@ -116,6 +119,9 @@
 		if(label) array_push(attributeEditors, "Surface");
 		array_push(attributeEditors, oversample_editor);
 		checkGroupAttribute(oversample_editor);
+		
+		attrKey_interpolate = new KeyCombination("I", MOD_KEY.alt);
+		attrKey_oversample  = new KeyCombination("O", MOD_KEY.alt);
 	}
 	
 	function attribute_auto_execute(label = false) {
@@ -124,6 +130,25 @@
 		if(label) array_push(attributeEditors, "Node");
 		array_push(attributeEditors, ["Auto execute", function() /*=>*/ {return attributes.auto_exe}, 
 			new checkBox(function() /*=>*/ { attribute_set("auto_exe", !attributes.auto_exe); })]);
+	}
+	
+	function attribute_drawOverlay(hover, active) {
+		if(!active) return;
+		
+		if(has(attributes, "oversample") && attrKey_oversample.isPressing()) {
+			attributes.oversample = (attributes.oversample + 1) % array_length(global.SURFACE_OVERSAMPLE);
+			triggerRender();
+			
+			PANEL_PREVIEW.setActionTooltip($"Set Oversample: {global.SURFACE_OVERSAMPLE[attributes.oversample].name}");
+		}
+		
+		if(has(attributes, "interpolate") && attrKey_interpolate.isPressing()) {
+			attributes.interpolate = (attributes.interpolate + 1) % array_length(global.SURFACE_INTERPOLATION);
+			triggerRender();
+			
+			PANEL_PREVIEW.setActionTooltip($"Set Interpolate: {global.SURFACE_INTERPOLATION[attributes.interpolate].name}");
+		}
+		
 	}
 	
 #endregion

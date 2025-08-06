@@ -145,9 +145,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _hov = false;
 		
-		var _pth = getSingleValue(13);
-		if(struct_has(_pth, "drawOverlay")) { var hv = _pth.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); _hov = _hov || bool(hv); }
-		
+		InputDrawOverlay(inputs[13].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params));
 		if(isNotUsingTool()) return _hov;
 		
 		var _dat = array_safe_get(draw_data,      preview_index, 0);

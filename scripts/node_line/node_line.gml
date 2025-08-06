@@ -12,7 +12,6 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(39, nodeValueSeed());
 	
 	////- =Output
-	
 	newInput( 0, nodeValue_Dimension());
 	newInput( 1, nodeValue_Bool(    "Background",            false    ));
 	newInput(30, nodeValue_Bool(    "Use Path Bounding Box", false    ));
@@ -20,7 +19,6 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(16, nodeValue_Bool(    "Width Pass",            false    ));
 	
 	////- =Line data
-	
 	newInput(27, nodeValue_Enum_Scroll( "Data Type", 1, [ "None", "Path", "Segments", "Two points" ]));
 	newInput( 6, nodeValue_Rotation(    "Rotation",  0 ));
 	newInput( 7, nodeValue_PathNode(    "Path"    ));
@@ -33,7 +31,6 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(20, nodeValue_Float(       "Segment Length", 4 ));
 	
 	////- =Width
-	
 	newInput(17, nodeValue_Bool(  "1px Mode",             false        )).setTooltip("Render pixel perfect 1px line.");
 	newInput( 3, nodeValue_Range( "Width",               [2,2],   true ));
 	newInput(11, nodeValue_Curve( "Width over Length",    CURVE_DEF_11 ));
@@ -41,7 +38,6 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(36, nodeValue_Bool(  "Apply Weight",         true         ));
 	
 	////- =Line settings
-	
 	newInput( 8, nodeValue_Slider_Range( "Range",        [0,1]  )).setTooltip("Range of the path to draw.");
 	newInput(25, nodeValue_Bool(         "Invert",        false ));
 	newInput( 9, nodeValue_Float(        "Shift",         0     ));
@@ -50,12 +46,10 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(14, nodeValue_ISlider(      "Round Segment", 8, [2, 32, 0.1] ));
 	
 	////- =Wiggle
-	
 	newInput(4, nodeValue_Slider( "Wiggle",      0, [0, 16, 0.01] ));
 	newInput(5, nodeValue_Float(  "Random Seed", 0 ));
 	
 	////- =Color
-	
 	newInput(10, nodeValue_Gradient( "Color over Length",    new gradientObject(ca_white) ));
 	newInput(24, nodeValue_Gradient( "Random Blend",         new gradientObject(ca_white) ));
 	newInput(15, nodeValue_Bool(     "Span Color over Path", false )).setTooltip("Apply the full 'color over length' to the trimmed path.");
@@ -63,7 +57,6 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(38, nodeValue_Vec2(     "Color Range",          [0,1] ));
 	
 	////- =Texture
-	
 	newInput(18, nodeValue_Surface(  "Texture"));
 	newInput(21, nodeValue_Vec2(     "Texture Position",       [0,0] ));
 	newInput(22, nodeValue_Rotation( "Texture Rotation",        0    ));
@@ -71,13 +64,11 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(29, nodeValue_Bool(     "Scale Texture to Length", true ));
 	
 	////- =Line Cap
-	
 	newInput(40, nodeValue_Surface( "Start Cap" ));
 	newInput(41, nodeValue_Surface( "End Cap"   ));
 	newInput(42, nodeValue_Bool(    "Rotate Cap", true ));
 	
 	////- =Render
-	
 	newInput(34, nodeValue_Enum_Scroll( "SSAA", 0, [ "None", "2x", "4x", "8x" ] ));
 	
 	// Inputs 43
@@ -131,7 +122,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _dtype = getInputData(27);
 		
 		if(_dtype == 1) {
-			InputDrawOverlay(inputs[7].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+			InputDrawOverlay(inputs[7].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, _params));
 			
 		} else if(_dtype == 3) {
 			InputDrawOverlay(inputs[32].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));

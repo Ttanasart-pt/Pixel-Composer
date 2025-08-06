@@ -48,8 +48,7 @@ function Node_MK_Tree_Path_Root(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			if(is(_t, __MK_Tree)) _t.drawOverlay(_x, _y, _s);
 		}
 		
-		var _path = getInputData(1);
-		if(has(_path, "drawOverlay")) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		InputDrawOverlay(inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params));
 	}
 	
 	static update = function() {

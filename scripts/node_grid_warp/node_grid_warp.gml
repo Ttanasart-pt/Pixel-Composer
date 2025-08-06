@@ -404,6 +404,11 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	attribute_interpolation();
 	
 	static selectClear = function() { anchor_select = []; }
+	static selectAll   = function() { 
+		anchor_select = array_create(array_length(inputs) - input_fix_len);
+		for( var i = input_fix_len, n = array_length(inputs); i < n; i++ )
+			anchor_select[i - input_fix_len] = i;
+	}
 	
 	static resetInput = function(_val = false) {
 		var _grid  = getInputData(2);

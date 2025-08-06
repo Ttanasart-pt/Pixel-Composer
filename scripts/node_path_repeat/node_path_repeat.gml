@@ -12,18 +12,17 @@ function Node_Path_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	////- =Position
 	newInput(10, nodeValue_Vec2(     "Position",       [0,0]  )).setUnitRef(function() /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
-	newInput( 2, nodeValue_Vec2(     "Shift Position", [0,0]  )).setUnitRef(function() /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
+	newInput( 2, nodeValue_Vec2(     "Shift Position", [0,0]  )).setHotkey("G").setUnitRef(function() /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
 	
 	////- =Rotation
 	newInput(11, nodeValue_Rotation( "Rotation",         0     ));
-	newInput( 3, nodeValue_Rotation( "Shift Rotation",   0     ));
+	newInput( 3, nodeValue_Rotation( "Shift Rotation",   0     )).setHotkey("R");
 	newInput( 5, nodeValue_Vec2(     "Anchor",          [0,0]  )).setUnitRef(function() /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
 	newInput( 9, nodeValue_Bool(     "Rotate Along",    true   ));
 	
 	////- =Scale
 	newInput(12, nodeValue_Vec2(     "Scale",          [1,1]  ));
 	newInput( 4, nodeValue_Vec2(     "Shift Scale",    [1,1]  ));
-		
 	// input 13
 		
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, noone));
@@ -38,8 +37,7 @@ function Node_Path_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	////- Nodes
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		var _path = getSingleValue(0);
-		if(has(_path, "drawOverlay")) InputDrawOverlay(_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(outputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params));
 		
 		var _pos = getSingleValue(2);
 		var _px = _x + _pos[0] * _s;
@@ -51,7 +49,7 @@ function Node_Path_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		return w_hovering;
 	}
 	
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	function Path_Repeat(_path, _node) : Path(_node) constructor {
 		line_amount    = 0;
@@ -62,6 +60,18 @@ function Node_Path_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		accu_lengths   = [];
 		
 		__temp_p = [ 0, 0 ];
+		
+		static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+			var hovering = false;
+			if(has(path, "drawOverlay")) {
+				var hv = path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params);
+				hovering = hovering || hv;
+			}
+			
+			PathDrawOverlay(self, _x, _y, _s);
+			
+			return hovering;
+		}
 		
 		static getLineCount     = function()    /*=>*/ {return line_amount};
 		static getSegmentCount  = function(i=0) /*=>*/ {return array_safe_get_fast(segment_counts, i)};

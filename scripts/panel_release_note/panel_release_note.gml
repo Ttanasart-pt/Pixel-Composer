@@ -168,7 +168,7 @@ function Panel_Release_Note() : PanelContent() constructor {
 						if(mouse_press(mb_right, pFOCUS)) {
 							var _menu = array_clone(dl.dMenu);
 							
-							array_push(_menu, -1, menuItem("Open URL", function(p) /*=>*/ {return url_open(p).setParam(dl.link)}));
+							array_push(_menu, -1, menuItem("Open URL", function(p) /*=>*/ {return url_open(p)}).setParam(dl.link));
 							menuCall("", _menu);
 						}
 					}

@@ -5,7 +5,7 @@ function Node_Path_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(1, nodeValue_PathNode( "Path"));
 	newInput(2, nodeValue_Int(      "Resolution", 64)).setValidator(VV_min(2));
-	newInput(6, nodeValue_Vec2(        "Scale", [ 1, 1 ]));
+	newInput(6, nodeValue_Vec2(     "Scale", [ 1, 1 ]));
 	
 	newInput(3, nodeValue_Color( "Color", ca_white))
 	newInput(4, nodeValue_Bool(  "Inverted", false))
@@ -24,8 +24,7 @@ function Node_Path_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	path_points  = [];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-	    var _path = getSingleValue(1);
-		if(has(_path, "drawOverlay")) InputDrawOverlay(_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny));
+	    InputDrawOverlay(inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params));
 	}
 	
 	static processData = function(_outSurf, _data, _array_index = 0) { 

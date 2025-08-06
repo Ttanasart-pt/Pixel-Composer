@@ -95,6 +95,11 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 			var _dx = KEYBOARD_NUMBER == undefined? (_mmx - preview_hotkey_mx) / _s / _sca[0] : KEYBOARD_NUMBER;
 			var _dy = KEYBOARD_NUMBER == undefined? (_mmy - preview_hotkey_my) / _s / _sca[1] : KEYBOARD_NUMBER;
 			
+			if(key_mod_press(SHIFT)) {
+				_dx = min(_dx, _dy);
+				_dy = _dx;
+			}
+			
 			var _vx = preview_hotkey_s[0];
 			var _vy = preview_hotkey_s[1];
 			
@@ -114,7 +119,7 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 			
 			draw_anchor(0, _vdx, _vdy, ui(10), 2);
 			
-			if(mouse_lpress(active) || key_press(vk_enter) || preview_hotkey.isPressing()) {
+			if(mouse_lpress() || key_press(vk_enter) || preview_hotkey.isPressing()) {
 				preview_hotkey_active = false;
 				UNDO_HOLDING = false;
 			}

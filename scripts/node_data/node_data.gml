@@ -2340,6 +2340,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(_hv != undefined) w_hovering = w_hovering || _hv;
 		} catch(e) { log_warning($"{toString()}, drawOverlay", exception_print(e)); }
 		
+		attribute_drawOverlay(hover, active);
+		
 		return w_hovering;
 	}
 	

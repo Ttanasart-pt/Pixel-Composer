@@ -542,9 +542,8 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var _src = getInputData(4);
 		
 		if(_src == 3) {
-			var _path = getInputData(55);
-			if(_path) _path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-		
+			InputDrawOverlay(inputs[55].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, _params));
+			
 		} else if(_src == 4) {
 			
 			

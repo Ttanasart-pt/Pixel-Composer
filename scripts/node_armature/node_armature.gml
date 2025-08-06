@@ -390,8 +390,9 @@
 
 function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Armature Create";
-	setDimension(96, 96);
 	draw_padding = 8;
+	preview_select_surface = false;
+	setDimension(96, 96);
 	
 	newOutput(0, nodeValue_Output("Armature", VALUE_TYPE.armature, noone));
 	
@@ -739,6 +740,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	];
 	
 	static selectClear = function() { bone_select = []; }
+	static selectAll   = function() { bone_select = array_create_ext(array_length(bone_points), function(i) /*=>*/ {return i}); }
 	
 	static drawOverlay_Transform = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var mx = (_mx - _x) / _s;

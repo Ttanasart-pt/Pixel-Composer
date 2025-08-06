@@ -24,7 +24,7 @@ function preview_overlay_scalar(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 		draw_line_dashed(_x - lengthdir_x(9999, _angle), _y - lengthdir_y(9999, _angle), 
 		                 _x + lengthdir_x(9999, _angle), _y + lengthdir_y(9999, _angle));
 		
-		if(mouse_lpress(active) || key_press(vk_enter) || preview_hotkey.isPressing()) {
+		if(mouse_lpress() || key_press(vk_enter) || preview_hotkey.isPressing()) {
 			preview_hotkey_active = false;
 			UNDO_HOLDING = false;
 		}

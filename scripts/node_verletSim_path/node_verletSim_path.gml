@@ -17,8 +17,9 @@ function Node_VerletSim_Path(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		var _path = getInputData(0);
-		if(has(_path, "drawOverlay")) InputDrawOverlay(_path.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params));
+		
+		return w_hovering;
 	}
 	
 	static update = function() {

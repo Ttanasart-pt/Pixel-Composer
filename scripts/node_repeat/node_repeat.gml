@@ -260,7 +260,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		else if(_pat == 2)         InputDrawOverlay(inputs[8].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
 		
 		InputDrawOverlay(inputs[31].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[1]));
-		InputDrawOverlay(inputs[11].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[11].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, _params));
 		InputDrawOverlay(inputs[32].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
 	
 		var _ani_amo = getInputAmount();
