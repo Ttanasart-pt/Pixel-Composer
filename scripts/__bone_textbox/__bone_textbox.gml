@@ -1,7 +1,7 @@
 function armature_autocomplete_server(prompt, _, node) {
 	var res = [];
 	
-	var armature = node.boneArray;
+	var armature = node.bone_array;
 	var pr_list  = ds_priority_create();
 	
 	//////////////////////////////////

@@ -1,21 +1,450 @@
+#region
+	FN_NODE_TOOL_INVOKE {
+		hotkeyTool("Node_Armature_Pose", "Move Selection",   "G");
+		hotkeyTool("Node_Armature_Pose", "Rotate Selection", "R");
+		hotkeyTool("Node_Armature_Pose", "Scale Selection",  "S");
+	});
+	
+	function armature_pose_tool_move(_node) : ToolObject() constructor {
+		setNode(_node);
+		activeKeyboard = false;
+		
+		origin_x = 0;
+		origin_y = 0;
+		
+		drag_pmx = undefined;
+		drag_pmy = undefined;
+		drag_points = [];
+		
+		drag_axis = -1;
+		
+		params = {
+			lock_scale: false, 
+			lock_unselected: true, 
+		}
+		
+		static init = function() {
+			activeKeyboard = false;
+			
+			KEYBOARD_STRING = "";
+			KEYBOARD_NUMBER = undefined;
+		}
+		
+		static initKeyboard = function() /*=>*/ {
+			var _bones = node.bone_select;
+			if(array_empty(_bones)) { PANEL_PREVIEW.resetTool(); return; }
+			
+			activeKeyboard = true;
+			drag_points    = node.bonePose.toPoints(true);
+			
+			drag_axis = -1;
+			
+			drag_pmx = undefined;
+			drag_pmy = undefined;
+			
+			origin_x = 0;
+			origin_y = 0;
+			var cnt  = 0;
+			
+			for( var i = 0, n = array_length(_bones); i < n; i++ ) {
+				var bne = drag_points[_bones[i]];
+				if(is(bne, __vec2)) {
+					origin_x += bne.x;
+					origin_y += bne.y;
+					
+					bne.sx = bne.x;
+					bne.sy = bne.y;
+					
+					cnt++;
+				}
+			}
+			
+			if(cnt) {
+				origin_x /= cnt;
+				origin_y /= cnt;
+			}
+			
+			params.lock_scale = false;
+			params.lock_unselected = true;
+		}
+		
+		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
+			if(!activeKeyboard)  { PANEL_PREVIEW.resetTool(); return; }
+			
+			var _bones = node.bone_select;
+			
+			if(drag_pmx == undefined) drag_pmx = _mx;
+			if(drag_pmy == undefined) drag_pmy = _my;
+			
+			var ox = _x + origin_x * _s;
+			var oy = _y + origin_y * _s;
+			
+			var dx = KEYBOARD_NUMBER == undefined? (_mx - drag_pmx) / _s : KEYBOARD_NUMBER;
+			var dy = KEYBOARD_NUMBER == undefined? (_my - drag_pmy) / _s : KEYBOARD_NUMBER;
+			
+			for( var i = 0, n = array_length(drag_points); i < n; i++ )
+				drag_points[i].selected = false;
+			
+			for( var i = 0, n = array_length(_bones); i < n; i++ ) {
+				var bne = drag_points[_bones[i]];
+				if(!is(bne, __vec2)) { bne.selected = true; continue; }
+				
+				bne.x = bne.sx;
+				bne.y = bne.sy;
+
+				if(drag_axis == -1) {
+					bne.x = bne.sx + dx;
+					bne.y = bne.sy + dy;
+					
+				} else {
+					if(drag_axis == 0) bne.x = bne.sx + dx;
+					if(drag_axis == 1) bne.y = bne.sy + dy; 
+				}
+				
+			}
+			
+			node.bonePose.fromPoints(drag_points, node, params);
+			node.triggerRender();
+			
+			draw_set_color(COLORS._main_icon);
+			switch(drag_axis) {
+				case  0: draw_line_dashed( 0, oy, 9999, oy); break;
+				case  1: draw_line_dashed(ox,  0, ox, 9999); break;
+			}
+			
+			if(key_press(ord("X"))) {
+				drag_axis = drag_axis == 0? -1 : 0;
+				KEYBOARD_STRING = "";
+			}
+			
+			if(key_press(ord("Y"))) {
+				drag_axis = drag_axis == 1? -1 : 1;
+				KEYBOARD_STRING = "";
+			}
+				
+			if(key_press(ord("C"))) {
+				params.lock_scale = !params.lock_scale;
+				KEYBOARD_STRING = "";
+			}
+			
+			if(key_press(ord("U"))) {
+				params.lock_unselected = !params.lock_unselected;
+				KEYBOARD_STRING = "";
+			}
+			
+			if(mouse_press(mb_left) || key_press(vk_enter)) {
+				activeKeyboard = false;
+				UNDO_HOLDING   = false;
+				PANEL_PREVIEW.resetTool();
+			}
+			
+			var _tooltipText = "Dragging";
+			switch(drag_axis) {
+				case 0 : _tooltipText += " X"; break;
+				case 1 : _tooltipText += " Y"; break;
+			}
+			
+			_tooltipText += $": [C] Lock Scale {params.lock_scale? "On":"Off"}";
+			_tooltipText += $": [U] Lock Unselected {params.lock_unselected? "On":"Off"}";
+			
+			if(KEYBOARD_NUMBER != undefined) _tooltipText += $" [{KEYBOARD_NUMBER}]";
+			PANEL_PREVIEW.setActionTooltip(_tooltipText);
+			
+		}
+	}
+	
+	function armature_pose_tool_rotate(_node) : ToolObject() constructor {
+		setNode(_node);
+		activeKeyboard = false;
+		
+		rotate_acc  = 0;
+		origin_x    = 0;
+		origin_y    = 0;
+		
+		params = {
+			lock_scale: false, 
+			lock_unselected: true, 
+		}
+		
+		static init = function() {
+			activeKeyboard = false;
+			
+			KEYBOARD_STRING = "";
+			KEYBOARD_NUMBER = undefined;
+		}
+		
+		static initKeyboard = function() /*=>*/ {
+			var _bones = node.bone_select;
+			if(array_empty(_bones)) { PANEL_PREVIEW.resetTool(); return; }
+			
+			activeKeyboard = true;
+			drag_points    = node.bonePose.toPoints(true);
+			
+			rotate_acc = 0;
+			drag_pmx = undefined;
+			drag_pmy = undefined;
+			
+			origin_x = 0;
+			origin_y = 0;
+			var cnt  = 0;
+			
+			for( var i = 0, n = array_length(_bones); i < n; i++ ) {
+				var bne = drag_points[_bones[i]];
+				if(is(bne, __vec2)) {
+					origin_x += bne.x;
+					origin_y += bne.y;
+					
+					bne.sx = bne.x;
+					bne.sy = bne.y;
+					
+					cnt++;
+				}
+			}
+			
+			if(cnt) {
+				origin_x /= cnt;
+				origin_y /= cnt;
+			}
+			
+			params.lock_scale = false;
+			params.lock_unselected = true;
+		}
+		
+		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
+			if(!activeKeyboard)  { PANEL_PREVIEW.resetTool(); return; }
+			
+			var _bones = node.bone_select;
+			
+			if(drag_pmx == undefined) drag_pmx = _mx;
+			if(drag_pmy == undefined) drag_pmy = _my;
+			
+			var ox = _x + origin_x * _s;
+			var oy = _y + origin_y * _s;
+			
+			var _d0 = point_direction(ox, oy, drag_pmx, drag_pmy);
+			var _d1 = point_direction(ox, oy, _mx, _my);
+			
+			drag_pmx = _mx;
+			drag_pmy = _my;
+			
+			rotate_acc += angle_difference(_d1, _d0);
+			var rr = KEYBOARD_NUMBER ?? rotate_acc;
+			
+			for( var i = 0, n = array_length(drag_points); i < n; i++ )
+				drag_points[i].selected = false;
+			
+			for( var i = 0, n = array_length(_bones); i < n; i++ ) {
+				var bne = drag_points[_bones[i]];
+				if(!is(bne, __vec2)) { bne.selected = true; continue; }
+				
+				var dis = point_distance(  origin_x, origin_y, bne.sx, bne.sy );
+				var dir = point_direction( origin_x, origin_y, bne.sx, bne.sy );
+				
+				bne.x = origin_x + lengthdir_x(dis, dir + rr);
+				bne.y = origin_y + lengthdir_y(dis, dir + rr);
+				
+			}
+			
+			node.bonePose.fromPoints(drag_points, node, params);
+			node.triggerRender();
+			
+			draw_set_color(COLORS._main_icon);
+			draw_line_dashed(ox, oy, _mx, _my);
+			
+			if(key_press(ord("C"))) {
+				params.lock_scale = !params.lock_scale;
+				KEYBOARD_STRING = "";
+			}
+			
+			if(key_press(ord("U"))) {
+				params.lock_unselected = !params.lock_unselected;
+				KEYBOARD_STRING = "";
+			}
+			
+			if(mouse_press(mb_left) || key_press(vk_enter)) {
+				activeKeyboard = false;
+				UNDO_HOLDING   = false;
+				PANEL_PREVIEW.resetTool();
+			}
+			
+			var _tooltipText = "Rotating";
+			
+			_tooltipText += $": [C] Lock Scale {params.lock_scale? "On":"Off"}";
+			_tooltipText += $": [U] Lock Unselected {params.lock_unselected? "On":"Off"}";
+			
+			if(KEYBOARD_NUMBER != undefined) _tooltipText += $" [{KEYBOARD_NUMBER}]";
+			PANEL_PREVIEW.setActionTooltip(_tooltipText);
+			
+		}
+	}
+	
+	function armature_pose_tool_scale(_node) : ToolObject() constructor {
+		setNode(_node);
+		activeKeyboard = false;
+		
+		origin_x = 0;
+		origin_y = 0;
+		
+		drag_pmx = undefined;
+		drag_pmy = undefined;
+		
+		drag_axis = -1;
+		
+		params = {
+			lock_scale: false, 
+			lock_unselected: true, 
+		}
+		
+		static init = function() {
+			activeKeyboard = false;
+			
+			KEYBOARD_STRING = "";
+			KEYBOARD_NUMBER = undefined;
+		}
+		
+		static initKeyboard = function() /*=>*/ {
+			var _bones = node.bone_select;
+			if(array_empty(_bones)) { PANEL_PREVIEW.resetTool(); return; }
+			
+			activeKeyboard = true;
+			drag_points    = node.bonePose.toPoints(true);
+			
+			drag_axis = -1;
+			
+			drag_pmx = undefined;
+			drag_pmy = undefined;
+			
+			origin_x = 0;
+			origin_y = 0;
+			var cnt  = 0;
+			
+			for( var i = 0, n = array_length(_bones); i < n; i++ ) {
+				var bne = drag_points[_bones[i]];
+				if(is(bne, __vec2)) {
+					origin_x += bne.x;
+					origin_y += bne.y;
+					
+					bne.sx = bne.x;
+					bne.sy = bne.y;
+					
+					cnt++;
+				}
+			}
+			
+			if(cnt) {
+				origin_x /= cnt;
+				origin_y /= cnt;
+			}
+			
+			params.lock_scale = false;
+			params.lock_unselected = true;
+		}
+		
+		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
+			if(!activeKeyboard)  { PANEL_PREVIEW.resetTool(); return; }
+			
+			var _bones = node.bone_select;
+			
+			if(drag_pmx == undefined) drag_pmx = _mx;
+			if(drag_pmy == undefined) drag_pmy = _my;
+			
+			var ox = _x + origin_x * _s;
+			var oy = _y + origin_y * _s;
+			
+			var _ss = point_distance(_mx, _my, ox, oy) / point_distance(drag_pmx, drag_pmy, ox, oy);
+			
+			for( var i = 0, n = array_length(drag_points); i < n; i++ )
+				drag_points[i].selected = false;
+			
+			for( var i = 0, n = array_length(_bones); i < n; i++ ) {
+				var bne = drag_points[_bones[i]];
+				if(!is(bne, __vec2)) { bne.selected = true; continue; }
+				
+				bne.x = bne.sx;
+				bne.y = bne.sy;
+				
+				if(drag_axis == -1) {
+					bne.x = origin_x + (bne.sx - origin_x) * _ss;
+					bne.y = origin_y + (bne.sy - origin_y) * _ss;
+					
+				} else {
+					if(KEYBOARD_NUMBER == undefined) {
+						if(drag_axis == 0) bne.x = origin_x + (bne.sx - origin_x) * _ss;
+						if(drag_axis == 1) bne.y = origin_y + (bne.sy - origin_y) * _ss;
+							
+					} else {
+						if(drag_axis == 0) bne.x = origin_x + (bne.sx - origin_x) * KEYBOARD_NUMBER;
+						if(drag_axis == 1) bne.y = origin_y + (bne.sy - origin_y) * KEYBOARD_NUMBER;
+							
+					}
+				}
+				
+			}
+			
+			node.bonePose.fromPoints(drag_points, node, params);
+			node.triggerRender();
+			
+			draw_set_color(COLORS._main_icon);
+			switch(drag_axis) {
+				case -1: draw_line_dashed(ox, oy, _mx, _my); break;
+				case  0: draw_line_dashed( 0, oy, 9999, oy); break;
+				case  1: draw_line_dashed(ox,  0, ox, 9999); break;
+			}
+			
+			if(key_press(ord("X"))) {
+				drag_axis = drag_axis == 0? -1 : 0;
+				KEYBOARD_STRING = "";
+			}
+			
+			if(key_press(ord("Y"))) {
+				drag_axis = drag_axis == 1? -1 : 1;
+				KEYBOARD_STRING = "";
+			}
+				
+			if(key_press(ord("C"))) {
+				params.lock_scale = !params.lock_scale;
+				KEYBOARD_STRING = "";
+			}
+			
+			if(key_press(ord("U"))) {
+				params.lock_unselected = !params.lock_unselected;
+				KEYBOARD_STRING = "";
+			}
+			
+			if(mouse_press(mb_left) || key_press(vk_enter)) {
+				activeKeyboard = false;
+				UNDO_HOLDING   = false;
+				PANEL_PREVIEW.resetTool();
+			}
+			
+			var _tooltipText = "Dragging";
+			switch(drag_axis) {
+				case 0 : _tooltipText += " X"; break;
+				case 1 : _tooltipText += " Y"; break;
+			}
+			
+			_tooltipText += $": [C] Lock Scale {params.lock_scale? "On":"Off"}";
+			_tooltipText += $": [U] Lock Unselected {params.lock_unselected? "On":"Off"}";
+			
+			if(KEYBOARD_NUMBER != undefined) _tooltipText += $" [{KEYBOARD_NUMBER}]";
+			PANEL_PREVIEW.setActionTooltip(_tooltipText);
+			
+		}
+	}
+	
+#endregion
+
 function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Armature Pose";
-	setDimension(96, 96);
 	draw_padding = 8;
+	preview_select_surface = false;
+	setDimension(96, 96);
 	
 	newInput(0, nodeValue_Armature()).setVisible(true, true);
 	
 	newOutput(0, nodeValue_Output("Armature", VALUE_TYPE.armature, noone));
 	
 	input_display_list = [ 0 ]
-	
-	boneHash  = "";
-	bonePose  = noone;
-	bone_bbox = [0, 0, 1, 1, 1, 1];
-	boneArray = [];
-	boneMap   = {};
-	
-	__node_bone_attributes();
 	
 	function createNewInput(index = array_length(inputs), bone = noone) {
 		var inAmo = array_length(inputs);
@@ -32,6 +461,21 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	setDynamicInput(1, false);
 	
+	////- Bone
+	
+	boneHash    = "";
+	bonePose    = noone;
+	bone_bbox   = [0, 0, 1, 1, 1, 1];
+	boneMap     = {};
+	bone_array  = [];
+	bone_points = [];
+	
+	bone_selected = false;
+	bone_freeze   = 0;
+	bone_select   = [];
+	
+	__node_bone_attributes();
+	
 	static setBone = function() {
 		var _b = getInputData(0);
 		if(!is(_b, __Bone)) { boneHash = ""; return; }
@@ -41,13 +485,13 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		boneHash  = _h;
 		bonePose  = _b.clone().connect();
-		boneArray = bonePose.toArray();
+		bone_array = bonePose.toArray();
 		
 		var _inputs = [ inputs[0] ];
 		var _input_display_list = array_clone(input_display_list_raw, 1);
 		
-		for( var i = 0, n = array_length(boneArray); i < n; i++ ) {
-			var bone = boneArray[i];
+		for( var i = 0, n = array_length(bone_array); i < n; i++ ) {
+			var bone = bone_array[i];
 			var _idx = array_length(_inputs);
 			var _inp;
 			
@@ -67,7 +511,11 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		input_display_list = _input_display_list;
 	}
 	
-	tools = [];
+	tools = [
+		new NodeTool( "Move Selection",   THEME.tools_2d_move   ).setVisible(false).setToolObject(new armature_pose_tool_move(self)),
+		new NodeTool( "Rotate Selection", THEME.tools_2d_rotate ).setVisible(false).setToolObject(new armature_pose_tool_rotate(self)),
+		new NodeTool( "Scale Selection",  THEME.tools_2d_scale  ).setVisible(false).setToolObject(new armature_pose_tool_scale(self)),
+	];
 	
 	anchor_selecting = noone;
 	posing_bone      = noone;
@@ -80,7 +528,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	posing_mx = 0;
 	posing_my = 0;
 	
-	////- Preview
+	////- Draw
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _b = inputs[0].getValue();
@@ -88,12 +536,13 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		var _hov  = noone;
 		var _bhov = anchor_selecting;
+		var panel = _params.panel;
 		var hovering = false;
 		
 		for( var i = 0, n = array_length(bonePose.constrains); i < n; i++ ) bonePose.constrains[i].drawBone(bonePose, _x, _y, _s);
 		
-		for( var i = 0, n = array_length(boneArray); i < n; i++ ) {
-			var _bne = boneArray[i];
+		for( var i = 0, n = array_length(bone_array); i < n; i++ ) {
+			var _bne = bone_array[i];
 			var _sel = false;
 			var  cc  = c_white;
 			
@@ -105,7 +554,9 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 					_bhov = [ _bne, 2 ];
 			}
 			
-			var hh = _bne.drawBone(attributes, _sel * active * 0b111, _x, _y, _s, _mx, _my, _bhov, posing_bone, cc, .5 + .5 * _sel);
+			var _selectMask = isNotUsingTool()? _sel * active * 0b111 : false;
+			
+			var hh = _bne.drawBone(attributes, _selectMask, _x, _y, _s, _mx, _my, _bhov, posing_bone, cc, .5 + .5 * _sel);
 			if(hh != noone && (_hov == noone || _bne.control)) _hov = hh;
 		}
 		
@@ -301,7 +752,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				posing_type     = _typ;
 				pose_child_lock = _lck;
 				
-				if(!struct_exists(boneMap, _bne.ID)) setBone();
+				if(!has(boneMap, _bne.ID)) setBone();
 				posing_input = boneMap[$ _bne.ID];
 				
 				if(_typ == 0) { // move
@@ -341,8 +792,68 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 					
 				} 
 			}
-		}
-	
+		
+		} 
+		
+		#region select drag	
+			var _show_selecting = isNotUsingTool() && posing_bone == noone;
+			
+			if(isUsingTool()) {
+				var _currTool = PANEL_PREVIEW.tool_current;
+				var _tool     = _currTool.getToolObject();
+				
+				if(_tool != noone) {
+					_tool.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+					if(mouse_lclick()) bone_freeze = 1;
+					_show_selecting = true;
+				}
+			}
+			
+			if(_show_selecting) {
+				if(bone_freeze == 0 && panel.selection_selecting) {
+					var sx0 = panel.selection_x0;
+					var sy0 = panel.selection_y0;
+					var sx1 = panel.selection_x1;
+					var sy1 = panel.selection_y1;
+					
+					bone_select   = [];
+					bone_selected = false;
+					
+					for( var i = 0, n = array_length(bone_points); i < n; i += 3 ) {
+						var _bone = bone_points[i + 0];
+						var _h    = bone_points[i + 1];
+						var _t    = bone_points[i + 2];
+						
+						var _inh = point_in_rectangle(_h.x, _h.y, sx0, sy0, sx1, sy1);
+						var _int = point_in_rectangle(_t.x, _t.y, sx0, sy0, sx1, sy1);
+						
+						if(_inh && _int) array_push(bone_select, i + 0);
+						if(_inh) array_push(bone_select, i + 1);
+						if(_int) array_push(bone_select, i + 2);
+					}
+				}
+				
+				if(mouse_lrelease()) {
+					bone_freeze = 0;
+					array_unique_ext(bone_select);
+					if(!array_empty(bone_select))
+						bone_selected = true;
+				}
+				
+				for( var i = 0, n = array_length(bone_select); i < n; i++ ) {
+					var _bone = bone_points[bone_select[i]];
+					
+					if(is(_bone, __Bone)) _bone.drawSimple(attributes, _x, _y, _s, _mx, _my, c_white);
+					if(is(_bone, __vec2)) draw_anchor(0, _x + _bone.x * _s, _y + _bone.y * _s, ui(8), 2); 
+				}
+				
+			} else {
+				bone_select   = [];
+				bone_selected = false;
+			}
+		#endregion
+		
+		if(anchor_selecting != noone) hovering = true;
 		return hovering;
 	}
 	
@@ -384,8 +895,8 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 		
 		bonePose.setPose();
-		bone_bbox = bonePose.bbox();
-		
+		bone_bbox   = bonePose.bbox();
+		bone_points = bonePose.toPoints(true);
 	}
 	
 	////- Draw

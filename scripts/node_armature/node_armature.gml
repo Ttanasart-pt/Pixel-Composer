@@ -434,7 +434,6 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		moving  = false;
 		scaling = false;
 		
-		bone_array      = [];
 		bone_point_maps = [];
 		bone_point_mape = [];
 		
@@ -443,10 +442,6 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		bone_transform_type = -1;
 		
 		mirroring_bone = noone;
-		
-		bone_selected = false;
-		bone_freeze   = 0;
-		bone_select   = [];
 	#endregion
 	
 	////- Bone
@@ -583,6 +578,10 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		return bh;
 	}); 
 	
+	bone_selected = false;
+	bone_freeze   = 0;
+	bone_select   = [];
+	
 	static createBone = function(parent, distance, direction) { 
 		recordAction(ACTION_TYPE.struct_modify, bones)
 			.setName("Create bone")
@@ -716,21 +715,6 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		array_push(bones.constrains, new __Bone_Constrain(bones).build(_c, bone_constrain_adding.ID));
 		triggerRender();
 	}
-	
-	////- Action
-	
-	static step = function() {}
-	
-	static update = function(frame = CURRENT_FRAME) { 
-		array_foreach(bones.constrains, function(c) /*=>*/ { c.bone = bones; c.init(); });
-		
-		bones.resetPose().setPosition();
-		outputs[0].setValue(bones);
-		
-		bone_bbox   = bones.bbox();
-		bone_array  = bones.toArray();
-		bone_points = bones.toPoints();
-	} 
 	
 	////- Draw
 	
@@ -1342,66 +1326,66 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				break;
 		}
 		
-		var _show_selecting = isNotUsingTool() && builder_bone == noone;
-		
-		if(isUsingTool()) {
-			var _currTool = PANEL_PREVIEW.tool_current;
-			var _tool     = _currTool.getToolObject();
+		#region select drag
+			var _show_selecting = isNotUsingTool() && builder_bone == noone;
 			
-			if(_tool != noone) {
-				_tool.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-				if(mouse_lclick()) bone_freeze = 1;
-				_show_selecting = true;
-			}
-		}
-		
-		if(_show_selecting) {
-			anchor_selecting = _b.draw(attributes, active * 0b111, _x, _y, _s, _mx, _my, anchor_selecting);
-			_b.drawControl(attributes);
-			
-			if(bone_freeze == 0 && panel.selection_selecting) {
-				var sx0 = panel.selection_x0;
-				var sy0 = panel.selection_y0;
-				var sx1 = panel.selection_x1;
-				var sy1 = panel.selection_y1;
+			if(isUsingTool()) {
+				var _currTool = PANEL_PREVIEW.tool_current;
+				var _tool     = _currTool.getToolObject();
 				
-				bone_select   = [];
-				bone_selected = false;
-				
-				for( var i = 0, n = array_length(bone_points); i < n; i += 3 ) {
-					var _bone = bone_points[i + 0];
-					var _h    = bone_points[i + 1];
-					var _t    = bone_points[i + 2];
-					
-					var _inh = point_in_rectangle(_h.x, _h.y, sx0, sy0, sx1, sy1);
-					var _int = point_in_rectangle(_t.x, _t.y, sx0, sy0, sx1, sy1);
-					
-					if(_inh && _int) array_push(bone_select, i + 0);
-					if(_inh) array_push(bone_select, i + 1);
-					if(_int) array_push(bone_select, i + 2);
+				if(_tool != noone) {
+					_tool.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+					if(mouse_lclick()) bone_freeze = 1;
+					_show_selecting = true;
 				}
 			}
 			
-			
-			if(mouse_lrelease()) {
-				bone_freeze = 0;
-				array_unique_ext(bone_select);
-				if(!array_empty(bone_select))
-					bone_selected = true;
-			}
-			
-			for( var i = 0, n = array_length(bone_select); i < n; i++ ) {
-				var _bone = bone_points[bone_select[i]];
+			if(_show_selecting) {
+				anchor_selecting = _b.draw(attributes, active * 0b111, _x, _y, _s, _mx, _my, anchor_selecting);
+				_b.drawControl(attributes);
 				
-				if(is(_bone, __Bone)) _bone.drawSimple(attributes, _x, _y, _s, _mx, _my, c_white);
-				if(is(_bone, __vec2)) draw_anchor(0, _x + _bone.x * _s, _y + _bone.y * _s, ui(8), 2); 
+				if(bone_freeze == 0 && panel.selection_selecting) {
+					var sx0 = panel.selection_x0;
+					var sy0 = panel.selection_y0;
+					var sx1 = panel.selection_x1;
+					var sy1 = panel.selection_y1;
+					
+					bone_select   = [];
+					bone_selected = false;
+					
+					for( var i = 0, n = array_length(bone_points); i < n; i += 3 ) {
+						var _bone = bone_points[i + 0];
+						var _h    = bone_points[i + 1];
+						var _t    = bone_points[i + 2];
+						
+						var _inh = point_in_rectangle(_h.x, _h.y, sx0, sy0, sx1, sy1);
+						var _int = point_in_rectangle(_t.x, _t.y, sx0, sy0, sx1, sy1);
+						
+						if(_inh && _int) array_push(bone_select, i + 0);
+						if(_inh) array_push(bone_select, i + 1);
+						if(_int) array_push(bone_select, i + 2);
+					}
+				}
+				
+				if(mouse_lrelease()) {
+					bone_freeze = 0;
+					array_unique_ext(bone_select);
+					if(!array_empty(bone_select))
+						bone_selected = true;
+				}
+				
+				for( var i = 0, n = array_length(bone_select); i < n; i++ ) {
+					var _bone = bone_points[bone_select[i]];
+					
+					if(is(_bone, __Bone)) _bone.drawSimple(attributes, _x, _y, _s, _mx, _my, c_white);
+					if(is(_bone, __vec2)) draw_anchor(0, _x + _bone.x * _s, _y + _bone.y * _s, ui(8), 2); 
+				}
+				
+			} else {
+				bone_select   = [];
+				bone_selected = false;
 			}
-			
-		} else {
-			bone_select   = [];
-			bone_selected = false;
-			
-		}
+		#endregion
 		
 		if(anchor_selecting != noone) hovering = true;
 		return hovering;
@@ -1450,6 +1434,21 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		draw_sprite_ext_filter(s_node_armature, 0, bbox.x0 + 24 * _ss, bbox.y1 - 24 * _ss, _ss, _ss, 0, c_white, 0.5);
 		
 		bones.drawThumbnail(_s, bbox, bone_bbox);
+	} 
+	
+	////- Action
+	
+	static step = function() {}
+	
+	static update = function(frame = CURRENT_FRAME) { 
+		array_foreach(bones.constrains, function(c) /*=>*/ { c.bone = bones; c.init(); });
+		
+		bones.resetPose().setPosition();
+		outputs[0].setValue(bones);
+		
+		bone_bbox   = bones.bbox();
+		bone_array  = bones.toArray();
+		bone_points = bones.toPoints();
 	} 
 	
 	////- Serialize

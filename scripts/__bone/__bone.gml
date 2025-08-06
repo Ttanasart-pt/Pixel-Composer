@@ -195,8 +195,8 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 				var _ppx = lerp(p0x, p1x, 0.2);
 				var _ppy = lerp(p0y, p1y, 0.2);
 				var _prr = point_direction(p0x, p0y, p1x, p1y) + 90;
-				var _prx = lengthdir_x(6 * pose_scale, _prr);
-				var _pry = lengthdir_y(6 * pose_scale, _prr);
+				var _prx = lengthdir_x(6 * clamp(pose_scale, 1, 8), _prr);
+				var _pry = lengthdir_y(6 * clamp(pose_scale, 1, 8), _prr);
 				
 				draw_primitive_begin(pr_trianglelist);
 					draw_vertex(p0x, p0y);
@@ -298,8 +298,8 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 				var _ppx = lerp(p0x, p1x, 0.2);
 				var _ppy = lerp(p0y, p1y, 0.2);
 				var _prr = point_direction(p0x, p0y, p1x, p1y) + 90;
-				var _prx = lengthdir_x(6 * pose_scale, _prr);
-				var _pry = lengthdir_y(6 * pose_scale, _prr);
+				var _prx = lengthdir_x(6 * clamp(pose_scale, 1, 8), _prr);
+				var _pry = lengthdir_y(6 * clamp(pose_scale, 1, 8), _prr);
 				
 				draw_primitive_begin(pr_trianglelist);
 					draw_vertex(p0x, p0y);
@@ -421,7 +421,6 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		bone_tail_init = getPoint(1, false);
 		bone_tail_pose = getPoint(1, true);
 	}
-		
 	static setPosition = function() {
 		__setPosition();
 		
@@ -446,20 +445,18 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		return self;
 	}
 	
-	static setPoseTransform = function() {
-		if(is_main) { array_foreach(childs, function(c) /*=>*/ {return c.setPoseTransform()}); return; }
-		
-		pose_apply_posit  = [ pose_posit[0], pose_posit[1] ];
+	static __setPoseTransform = function() {
+		// pose_apply_posit  = [ pose_posit[0], pose_posit[1] ];
 		pose_apply_rotate = pose_rotate;
 		pose_apply_scale  = pose_scale;
 		
 		if(parent) { // do this instead of recursion.
-			pose_local_posit     = parent.pose_apply_posit;
+			// pose_local_posit     = parent.pose_apply_posit;
 			pose_local_rotate    = apply_rotation? parent.pose_apply_rotate : 0;
 			pose_local_scale     = apply_scale?    parent.pose_apply_scale  : 1;
 			
-			pose_apply_posit[0] += pose_local_posit[0];
-			pose_apply_posit[1] += pose_local_posit[1];
+			// pose_apply_posit[0] += pose_local_posit[0];
+			// pose_apply_posit[1] += pose_local_posit[1];
 			pose_apply_rotate   += pose_local_rotate;
 			pose_apply_scale    *= pose_local_scale;
 		}
@@ -472,6 +469,12 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		
 		pose_angle     = angle  + pose_apply_rotate;
 		pose_length    = length * pose_apply_scale;
+		
+	}
+	static setPoseTransform = function() {
+		if(is_main) { array_foreach(childs, function(c) /*=>*/ {return c.setPoseTransform()}); return; }
+		
+		__setPoseTransform();
 		
 		array_foreach(childs, function(c) /*=>*/ {return c.setPoseTransform()});
 	}
@@ -771,7 +774,7 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		return 0;
 	}
 	
-	static toPoints = function() {
+	static toPoints = function(_pose = false) {
 		var barr = toArray();
 		var rarr = [];
 		var points = {};
@@ -779,13 +782,13 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		for( var i = 0, n = array_length(barr); i < n; i++ ) {
 			var bone = barr[i];
 			
-			var _h  = bone.bone_head_init;
+			var _h  = bone.getHead(_pose);
 			var _hk = _h.toString();
 			
 			if(!has(points, _hk)) points[$ _hk] = _h.clone();
 			_h = points[$ _hk];
 			
-			var _t = bone.bone_tail_init;
+			var _t = bone.getTail(_pose);
 			var _tk = _t.toString();
 			
 			if(!has(points, _tk)) points[$ _tk] = _t.clone();
@@ -799,29 +802,62 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 		return rarr;
 	}
 	
-	static fromPoints = function(rarr) {
+	static fromPoints = function(rarr, _pose = noone, _param = {}) {
 		
 		for( var i = 0, n = array_length(rarr); i < n; i += 3 ) {
 			var bone = rarr[i + 0];
 			var _h   = rarr[i + 1];
 			var _t   = rarr[i + 2];
+			var val  = [0, 0, 0, 1];
 			
+			if(_pose != noone && _param.lock_unselected && !bone.selected) continue;
+			
+			if(_pose != noone && has(_pose.boneMap, bone.ID))
+				val = _pose.boneMap[$ bone.ID].getValue();
+					
 			if(!bone.parent_anchor) {
 				var _ox = 0;
 				var _oy = 0;
 				
 				if(bone.parent) {
-					var _ph = bone.parent.getHead();
+					var _ph = bone.parent.getHead(_pose != noone);
 					_ox = _ph.x;
 					_oy = _ph.y;
 				}
 				
-				bone.distance  = point_distance(  _ox, _oy, _h.x, _h.y );
-				bone.direction = point_direction( _ox, _oy, _h.x, _h.y );
+				if(_pose == noone) {
+					bone.distance  = point_distance(  _ox, _oy, _h.x, _h.y );
+					bone.direction = point_direction( _ox, _oy, _h.x, _h.y );
+					
+				} else {
+					val[TRANSFORM.pos_x] = (_h.x - _ox) - lengthdir_x(bone.distance, bone.direction);
+					val[TRANSFORM.pos_y] = (_h.y - _oy) - lengthdir_y(bone.distance, bone.direction);
+				}
 			}
 			
-			bone.length = point_distance(  _h.x, _h.y, _t.x, _t.y );
-			bone.angle  = point_direction( _h.x, _h.y, _t.x, _t.y );
+			if(_pose == noone) {
+				bone.length = point_distance(  _h.x, _h.y, _t.x, _t.y );
+				bone.angle  = point_direction( _h.x, _h.y, _t.x, _t.y );
+				
+			} else if(!control) {
+				val[TRANSFORM.rot] = point_direction( _h.x, _h.y, _t.x, _t.y ) - (bone.pose_local_rotate + bone.angle);
+				
+				var s = bone.pose_local_scale * bone.length;
+				if(s != 0 && !_param.lock_scale) val[TRANSFORM.sca_x] = point_distance(  _h.x, _h.y, _t.x, _t.y ) / s;
+			}
+			
+			if(_pose != noone) {
+				bone.pose_posit[0] = val[TRANSFORM.pos_x];
+				bone.pose_posit[1] = val[TRANSFORM.pos_y];
+				bone.pose_rotate   = val[TRANSFORM.rot];
+				bone.pose_scale    = val[TRANSFORM.sca_x];
+				
+				bone.__setPosition();
+				bone.__setPoseTransform();
+				
+				if(has(_pose.boneMap, bone.ID))
+					_pose.boneMap[$ bone.ID].setValue(val);
+			}
 			
 			bone.__setPosition();
 			

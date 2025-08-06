@@ -26,7 +26,7 @@ function Node_Armature_Mirror(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	bone      = new __Bone();
 	bone_bbox = [0, 0, 1, 1, 1, 1];
-	boneArray  = [];
+	bone_array  = [];
 	
 	bone_target = "";
 	bone_subdiv = 1;
@@ -82,7 +82,7 @@ function Node_Armature_Mirror(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		if(!is(_b, __Bone)) return;
 		
 		bone      = _b.clone();
-		boneArray  = bone.toArray();
+		bone_array  = bone.toArray();
 		
 		bone.resetPose().setPosition();
 		outputs[0].setValue(bone);

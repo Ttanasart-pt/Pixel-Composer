@@ -33,7 +33,7 @@ function Node_Armature_Pose_Stagger(_x, _y, _group = noone) : Node(_x, _y, _grou
 	boneHash  = "";
 	bonePose  = new __Bone();
 	bone_bbox = [0, 0, 1, 1, 1, 1];
-	boneArray  = [];
+	bone_array  = [];
 	
 	anchor_selecting = noone;
 	bone_targeting   = false;
@@ -50,7 +50,7 @@ function Node_Armature_Pose_Stagger(_x, _y, _group = noone) : Node(_x, _y, _grou
 		
 		boneHash  = _h;
 		bonePose  = _b.clone().connect();
-		boneArray = bonePose.toArray();
+		bone_array = bonePose.toArray();
 		bonePose.constrains = _b.constrains;
 	}
 	

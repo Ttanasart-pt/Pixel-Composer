@@ -217,7 +217,7 @@ function Panel_Release_Note() : PanelContent() constructor {
 					
 				} else if(dl.status == -1) {
 					draw_set_text(f_p3, fa_left, fa_top, COLORS._main_value_negative);
-					draw_text_cut(xx + ui(8), yy + ui(24), $"HTTP get error : open the download link in browser.", ww - ui(16));
+					draw_text_cut(xx + ui(8), yy + ui(24), $"HTTP get error {dl.statusMsg} : open the download link in browser.", ww - ui(16));
 				}
 				
 				if(dl.status) {
@@ -263,6 +263,7 @@ function Panel_Release_Note() : PanelContent() constructor {
 					var _v = d.version;
 					
 					d.status            = 0;
+					d.statusMsg         = "";
 					d.download_path     = "";
 					
 					d.size_total      = 0;
@@ -301,6 +302,11 @@ function Panel_Release_Note() : PanelContent() constructor {
 		} else if (struct_has(downloading, _id)) {
 			var dl = downloading[$ _id];
 			
+			if(ds_map_exists(async_load, "http_status")) {
+				var _http_status   = ds_map_find_value(async_load, "http_status");
+				dl.statusMsg = _http_status;
+			}
+			
 			if(_status == 0) {
 				if(dl.size_downloaded < 10000) {
 					dl.status = -1;
@@ -312,11 +318,6 @@ function Panel_Release_Note() : PanelContent() constructor {
 				}
 				
 			} else if(_status == 1) {
-				if(ds_map_exists(async_load, "http_status")) {
-					var _http_status   = ds_map_find_value(async_load, "http_status");
-					print(_http_status);
-				}
-				
 				dl.size_total      = ds_map_find_value(async_load, "contentLength");
 				dl.size_downloaded = ds_map_find_value(async_load, "sizeDownloaded");
 				

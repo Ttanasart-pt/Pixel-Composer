@@ -1012,38 +1012,21 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				var _pmy  = dragging_py + _dmy / _s * _anc[1];
 				var _p    = point_rotate_origin(_dmx, _dmy, -_rot, __p);
 				
+				pos_x = _pmx;
+				pos_y = _pmy;
+				
 				switch(drag_anchor) {
-					case 0 :
-						pos_x = _pmx;
-						pos_y = _pmy;
-						
-						sca_x = (dragging_sx - _p[0]) / _s / _sw;
-						sca_y = (dragging_sy - _p[1]) / _s / _sh;
-						break;
+					case 0 : sca_x = (dragging_sx - _p[0]) / _s / _sw;
+					         sca_y = (dragging_sy - _p[1]) / _s / _sh; break;
 					
-					case 1 :
-						pos_x = _pmx;
-						pos_y = _pmy;
+					case 1 : sca_x = (dragging_sx - _p[0]) / _s / _sw;
+					         sca_y = (dragging_sy + _p[1]) / _s / _sh; break;
 						
-						sca_x = (dragging_sx - _p[0]) / _s / _sw;
-						sca_y = (dragging_sy + _p[1]) / _s / _sh;
-						break;
+					case 2 : sca_x = (dragging_sx + _p[0]) / _s / _sw;
+					         sca_y = (dragging_sy - _p[1]) / _s / _sh; break;
 						
-					case 2 :
-						pos_x = _pmx;
-						pos_y = _pmy;
-						
-						sca_x = (dragging_sx + _p[0]) / _s / _sw;
-						sca_y = (dragging_sy - _p[1]) / _s / _sh;
-						break;
-						
-					case 3 : 
-						pos_x = _pmx;
-						pos_y = _pmy;
-						
-						sca_x = (dragging_sx + _p[0]) / _s / _sw;
-						sca_y = (dragging_sy + _p[1]) / _s / _sh;
-						break;
+					case 3 : sca_x = (dragging_sx + _p[0]) / _s / _sw;
+					         sca_y = (dragging_sy + _p[1]) / _s / _sh; break;
 				}
 				
 				var e0 = inputs[surf_dragging + 1].setValue([ pos_x, pos_y ]);
@@ -1103,7 +1086,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _surf = current_data[index + 0];
 			if(!is_surface(_surf)) continue;
 			
-			if(!_vis[i]) continue;
+			if(!array_safe_get_fast(_vis, i)) continue;
 			
 			var _pos  = current_data[index + 1];
 			var _rot  = current_data[index + 2];
@@ -1163,6 +1146,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				siz: _siz,
 			}
 			
+			if(!array_safe_get_fast(_sel, i)) continue;
+			
 			var p0x = _d0[0], p0y = _d0[1];
 			var p1x = _d1[0], p1y = _d1[1];
 			var p2x = _d2[0], p2y = _d2[1];
@@ -1172,7 +1157,6 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var  rx = _rr[0],  ry = _rr[1];
 			var  sx = _ss[0],  sy = _ss[1];
 			
-			if(!_sel[i]) continue;
 			var _hov = point_in_rectangle_points(_mx, _my, p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y);
 			
 			if(dynamic_input_inspecting == i) {
@@ -1244,9 +1228,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					draw_anchor(_bi == 3, p3x, p3y, ui(8), 2);
 				}
 				
-				if(isNotUsingTool() || isUsingTool("Anchor")) {
+				if(isNotUsingTool() || isUsingTool("Anchor"))
 					draw_anchor_cross(_ai * .5, ax, ay, ui(8), 1, _rot);
-				}
 				
 			} else if(!attributes.select_object && _hov) {
 				if(isNotUsingTool() || isUsingTool("Move"))

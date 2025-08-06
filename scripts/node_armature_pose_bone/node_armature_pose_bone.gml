@@ -32,7 +32,7 @@ function Node_Armature_Pose_Bone(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	
 	boneHash  = "";
 	bonePose  = new __Bone();
-	boneArray = [];
+	bone_array = [];
 	bone_bbox = [0, 0, 1, 1, 1, 1];
 	
 	anchor_selecting = noone;
@@ -81,7 +81,7 @@ function Node_Armature_Pose_Bone(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		
 		boneHash  = _h;
 		bonePose  = _b.clone().connect();
-		boneArray = bonePose.toArray();
+		bone_array = bonePose.toArray();
 		bonePose.constrains = _b.constrains;
 	}
 	

@@ -15,7 +15,7 @@ function Node_Armature_Sample(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	__node_bone_attributes();
 	
 	bone_targeting = false;
-	boneArray       = [];
+	bone_array       = [];
 	
 	static toggleBoneTarget = function() /*=>*/ { bone_targeting = !bone_targeting; }
 	
@@ -35,7 +35,7 @@ function Node_Armature_Sample(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		
 		if(!is(_bone, __Bone)) return;
 		
-		boneArray = _bone.toArray();
+		bone_array = _bone.toArray();
 		_name    = string_trim(_name);
 		
 		var _b = _bone.findBoneByName(_name);
