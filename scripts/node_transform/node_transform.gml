@@ -592,24 +592,16 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		return _outData;
 	}
 	
-	overlay_dragging = 0;
-	corner_dragging  = 0;
-	overlay_drag_mx  = 0;
-	overlay_drag_my  = 0;
-	overlay_drag_sx  = 0;
-	overlay_drag_sy  = 0;
-	overlay_drag_px  = 0;
-	overlay_drag_py  = 0;
-	overlay_drag_ma  = 0;
-	overlay_drag_sa  = 0;
+	drag_type = noone;
+	drag_anchor  = 0;
+	dragging_ax  = 0; dragging_ay  = 0;
+	dragging_sx  = 0; dragging_sy  = 0;
+	dragging_px  = 0; dragging_py  = 0;
+	dragging_mx  = 0; dragging_my  = 0;
+	dragging_ma  = 0; 
+	dragging_sa  = 0;
 	
 	__p = [ 0, 0 ];
-	__tl  = [ 0, 0 ];
-	__tr  = [ 0, 0 ];
-	__bl  = [ 0, 0 ];
-	__br  = [ 0, 0 ];
-	__sz  = [ 0, 0 ];
-	__rth = [ 0, 0 ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		PROCESSOR_OVERLAY_CHECK
@@ -619,14 +611,14 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		if(isUsingTool("Scale"))  tool_object_sca.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
 		var _surf = current_data[0];
-		if(is_array(_surf)) {
-			if(array_length(_surf) == 0) return;
+		if(is_array(_surf)) { 
+			if(array_empty(_surf)) return;
 			_surf = _surf[preview_index];
 		}
 		
 		var _surf_out = outputs[0].getValue();
 		if(is_array(_surf_out)) {
-			if(array_length(_surf_out) == 0) return;
+			if(array_empty(_surf_out)) return;
 			_surf_out = _surf_out[preview_index];
 		}
 		
@@ -645,11 +637,14 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var srw = surface_get_width_safe(_surf);
 		var srh = surface_get_height_safe(_surf);
 		
-		var ow = surface_get_width_safe(_surf_out);
-		var oh = surface_get_height_safe(_surf_out);
+		var ow  = surface_get_width_safe(_surf_out);
+		var oh  = surface_get_height_safe(_surf_out);
 		
 		var ww  = srw * sca[0];
 		var hh  = srh * sca[1];
+		
+		var hov_ax = 0;
+		var hov_ay = 0;
 		
 		anc[0] *= ww;
 		anc[1] *= hh;
@@ -664,8 +659,8 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var bx1 = _x + (pos[0] + ww) * _s;
 			var by1 = _y + (pos[1] + hh) * _s;
 			
-			var bx2 = _x + (pos[0] + ww) * _s + 18 * sign(sca[0]);
-			var by2 = _y + (pos[1] + hh) * _s + 18 * sign(sca[1]);
+			var bx2 = _x + (pos[0] + ww) * _s + 16 * sign(sca[0]);
+			var by2 = _y + (pos[1] + hh) * _s + 16 * sign(sca[1]);
 			
 			var bax = _x + (pos[0] + anc[0]) * _s;
 			var bay = _y + (pos[1] + anc[1]) * _s;
@@ -675,24 +670,23 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			point_rotate(bx0, by1, bax, bay, rot, __p); var _blx = __p[0], _bly = __p[1];
 			point_rotate(bx1, by1, bax, bay, rot, __p); var _brx = __p[0], _bry = __p[1];
 			point_rotate(bx2, by2, bax, bay, rot, __p); var _szx = __p[0], _szy = __p[1];
-			point_rotate((bx0 + bx1) / 2, by0 - 16 * sign(sca[1]), bax, bay, rot, __p); var _rrx = __p[0], _rry = __p[1];
+			point_rotate((bx0 + bx1) / 2, by0 - 24 * sign(sca[1]), bax, bay, rot, __p); var _rrx = __p[0], _rry = __p[1];
 			var _rcx = (_tlx + _trx) / 2, _rcy = (_tly + _try) / 2;
 			
 			var a_index  = 0;
 			var r_index  = 0;
-			var tl_index = 0;
-			var tr_index = 0;
-			var bl_index = 0;
-			var br_index = 0;
 			var sz_index = 0;
+			
+			var hov_corner = noone;
 			
 			     if(point_in_circle(_mx, _my,  bax,  bay, 8)) a_index  = 1;
 			else if(point_in_circle(_mx, _my, _rrx, _rry, 8)) r_index  = 1;
-			else if(point_in_circle(_mx, _my, _tlx, _tly, 8)) tl_index = 1;
-			else if(point_in_circle(_mx, _my, _trx, _try, 8)) tr_index = 1;			
-			else if(point_in_circle(_mx, _my, _blx, _bly, 8)) bl_index = 1;			
-			else if(point_in_circle(_mx, _my, _brx, _bry, 8)) br_index = 1;
 			else if(point_in_circle(_mx, _my, _szx, _szy, 8)) sz_index = 1;
+			
+			else if(point_in_circle(_mx, _my, _tlx, _tly, 8)) { hov_corner = 0; hov_ax = _brx; hov_ay = _bry; }
+			else if(point_in_circle(_mx, _my, _blx, _bly, 8)) { hov_corner = 1; hov_ax = _trx; hov_ay = _try; }
+			else if(point_in_circle(_mx, _my, _trx, _try, 8)) { hov_corner = 2; hov_ax = _blx; hov_ay = _bly; }
+			else if(point_in_circle(_mx, _my, _brx, _bry, 8)) { hov_corner = 3; hov_ax = _tlx; hov_ay = _tly; }
 			
 			draw_set_color(COLORS._main_accent);
 			draw_line_width(_tlx, _tly, _trx, _try, 2);
@@ -704,182 +698,196 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			draw_anchor(sz_index, _szx, _szy, ui(8), 1);
 			draw_anchor(r_index,  _rrx, _rry, ui(8), 1);
-			draw_anchor(tl_index, _tlx, _tly, ui(8), 2);
-			draw_anchor(tr_index, _trx, _try, ui(8), 2);
-			draw_anchor(bl_index, _blx, _bly, ui(8), 2);
-			draw_anchor(br_index, _brx, _bry, ui(8), 2);
+			
+			draw_anchor(hov_corner == 0, _tlx, _tly, ui(8), 2);
+			draw_anchor(hov_corner == 1, _blx, _bly, ui(8), 2);
+			draw_anchor(hov_corner == 2, _trx, _try, ui(8), 2);
+			draw_anchor(hov_corner == 3, _brx, _bry, ui(8), 2);
 			
 			draw_anchor_cross(a_index * .5, bax, bay, ui(8), 1, rot);
 		#endregion
 		
-		if(overlay_dragging && overlay_dragging < 3) { //Transform
-			var px = _mx - overlay_drag_mx;
-			var py = _my - overlay_drag_my;
-			var pos_x, pos_y;
-			
-			if(key_mod_press(SHIFT)) {
-				var ang  = round(point_direction(overlay_drag_mx, overlay_drag_my, _mx, _my) / 45) * 45;
-				var dist = point_distance(overlay_drag_mx, overlay_drag_my, _mx, _my) / _s;
+		if(drag_type != noone) {
+			if(drag_type == NODE_COMPOSE_DRAG.move) {
+				var px = _mx - dragging_mx;
+				var py = _my - dragging_my;
+				var pos_x, pos_y;
 				
-				pos_x = overlay_drag_sx + lengthdir_x(dist, ang);
-				pos_y = overlay_drag_sy + lengthdir_y(dist, ang);
-			} else {
-				pos_x = overlay_drag_sx + px / _s;
-				pos_y = overlay_drag_sy + py / _s;
-			}
-			
-			pos_x = value_snap(pos_x, _snx);
-			pos_y = value_snap(pos_y, _sny);
-			
-			if(overlay_dragging == 1) { //Move
-				if(inputs[2].setValue([ pos_x, pos_y ]))
-					UNDO_HOLDING = true;
+				if(key_mod_press(SHIFT)) {
+					var ang  = round(point_direction(dragging_mx, dragging_my, _mx, _my) / 45) * 45;
+					var dist = point_distance(dragging_mx, dragging_my, _mx, _my) / _s;
 					
-			} else if(overlay_dragging == 2) { //Move anchor
-				var nanx = pos_x / ww;
-				var nany = pos_y / hh;
+					pos_x = dragging_sx + lengthdir_x(dist, ang);
+					pos_y = dragging_sy + lengthdir_y(dist, ang);
+				} else {
+					pos_x = dragging_sx + px / _s;
+					pos_y = dragging_sy + py / _s;
+				}
+				
+				pos_x = value_snap(pos_x, _snx);
+				pos_y = value_snap(pos_y, _sny);
+				
+				if(inputs[2].setValue([ pos_x, pos_y ])) UNDO_HOLDING = true;
+			
+			} else if(drag_type == NODE_COMPOSE_DRAG.anchor) {
+				var px = _mx - dragging_mx;
+				var py = _my - dragging_my;
+				var pos_x, pos_y;
+				
+				if(key_mod_press(SHIFT)) {
+					var ang  = round(point_direction(dragging_mx, dragging_my, _mx, _my) / 45) * 45;
+					var dist = point_distance(dragging_mx, dragging_my, _mx, _my) / _s;
+					
+					pos_x = dragging_sx + lengthdir_x(dist, ang);
+					pos_y = dragging_sy + lengthdir_y(dist, ang);
+				} else {
+					pos_x = dragging_sx + px / _s;
+					pos_y = dragging_sy + py / _s;
+				}
+				
+				var nanx = value_snap(pos_x, _snx) / ww;
+				var nany = value_snap(pos_y, _sny) / hh;
 				
 				if(key_mod_press(ALT)) {
-					var modi = false;
-					modi = modi || inputs[3].setValue([ nanx, nany ]);
-					modi = modi || inputs[2].setValue([ overlay_drag_px + pos_x, overlay_drag_py + pos_y ]);
+					var a0 = inputs[3].setValue([ nanx, nany ]);
+					var a1 = inputs[2].setValue([ dragging_px + pos_x, dragging_py + pos_y ]);
 					
-					if(modi) UNDO_HOLDING = true;
+					if(a0 || a1) UNDO_HOLDING = true;
+					
 				} else {
-					if(inputs[3].setValue([ nanx, nany ]))
-						UNDO_HOLDING = true;
-				}
-			}
-			
-			if(mouse_release(mb_left)) {
-				overlay_dragging = 0;	
-				UNDO_HOLDING = false;
-			}
-		} else if(overlay_dragging == 3) { //Angle
-			var aa = point_direction(bax, bay, _mx, _my);
-			var da = angle_difference(overlay_drag_ma, aa);
-			var sa;
-			
-			if(key_mod_press(CTRL)) sa = value_snap(overlay_drag_sa - da, 15);
-			else					sa = overlay_drag_sa - da;
-			
-			if(inputs[5].setValue(sa))
-				UNDO_HOLDING = true;
-			
-			if(mouse_release(mb_left)) {
-				overlay_dragging = 0;
-				UNDO_HOLDING = false;
-			}
-		} else if(overlay_dragging == 4) { //Scale
-			var ol_x = (overlay_drag_mx - _x) / _s;
-			var ol_y = (overlay_drag_my - _y) / _s;
-			var ml_x = (_mx - _x) / _s;
-			var ml_y = (_my - _y) / _s;
-			
-			var os_x = value_snap(ol_x, _snx);
-			var os_y = value_snap(ol_y, _sny);
-			var ms_x = value_snap(ml_x, _snx);
-			var ms_y = value_snap(ml_y, _sny);
-			
-			var _p   = point_rotate(ms_x - os_x, ms_y - os_y, 0, 0, -rot);
-			
-			var _sw = _p[0] / srw;
-			var _sh = _p[1] / srh;
-			var sw, sh;
-			
-			if(corner_dragging == 0) {
-				sw = -_sw / _anc[0];
-				sh = -_sh / _anc[1];
-				
-			} else if(corner_dragging == 1) {
-				sw =  _sw / (1 - _anc[0]);
-				sh = -_sh / _anc[1];
-				
-			} else if(corner_dragging == 2) {
-				sw = -_sw / _anc[0];
-				sh =  _sh / (1 - _anc[1]);
-				
-			} else if(corner_dragging == 3) {
-				sw =  _sw / (1 - _anc[0]);
-				sh =  _sh / (1 - _anc[1]);
-				
-			} else if(corner_dragging == 4) {
-				sw =  _sw / (1 - _anc[0]);
-				sh =  _sh / (1 - _anc[1]);
-			}
-			
-			var _sw = overlay_drag_sx + sw;
-			var _sh = overlay_drag_sy + sh;
-			
-			if(key_mod_press(SHIFT)) {
-				_sw = max(_sw, _sh);
-				_sh = _sw;
-			}
-			
-			if(inputs[6].setValue([ _sw, _sh ]))
-				UNDO_HOLDING = true;
-			
-			if(mouse_release(mb_left)) {
-				overlay_dragging = 0;
-				UNDO_HOLDING = false;
-			}
-		}
-		
-		if(overlay_dragging == 0) {
-			if(point_in_circle(_mx, _my, bax, bay, 8)) {
-				hovering = true;
-				
-				if(mouse_press(mb_left, active)) {
-					overlay_dragging = 2;
-					overlay_drag_mx  = _mx;
-					overlay_drag_my  = _my;
-					overlay_drag_sx  = anc[0];
-					overlay_drag_sy  = anc[1];
-					overlay_drag_px  = pos[0];
-					overlay_drag_py  = pos[1];
+					if(inputs[3].setValue([ nanx, nany ])) UNDO_HOLDING = true;
 				}
 				
-			} else if(point_in_circle(_mx, _my, _tlx, _tly, 8) || 
-			          point_in_circle(_mx, _my, _trx, _try, 8) || 
-					  point_in_circle(_mx, _my, _blx, _bly, 8) || 
-					  point_in_circle(_mx, _my, _brx, _bry, 8) || 
-					  point_in_circle(_mx, _my, _szx, _szy, 8)) {
+			} else if(drag_type == NODE_COMPOSE_DRAG.rotate) {
+				var aa = point_direction(bax, bay, _mx, _my);
+				var da = angle_difference(dragging_ma, aa);
+				var sa;
 				
-				hovering = true;
+				if(key_mod_press(CTRL)) sa = value_snap(dragging_sa - da, 15);
+				else					sa = dragging_sa - da;
 				
-				if(mouse_press(mb_left, active)) {
-					overlay_dragging = 4;
-					     if(point_in_circle(_mx, _my, _tlx, _tly, 8)) corner_dragging = 0;
-					else if(point_in_circle(_mx, _my, _trx, _try, 8)) corner_dragging = 1;
-					else if(point_in_circle(_mx, _my, _blx, _bly, 8)) corner_dragging = 2;
-					else if(point_in_circle(_mx, _my, _brx, _bry, 8)) corner_dragging = 3;
-					else if(point_in_circle(_mx, _my, _szx, _szy, 8)) corner_dragging = 4;
+				if(inputs[5].setValue(sa)) UNDO_HOLDING = true;
+				
+			} else if(drag_type == NODE_COMPOSE_DRAG.scale) {
+				var _dmx  = _mx - dragging_mx;
+				var _dmy  = _my - dragging_my;
+				var _p    = point_rotate_origin(_dmx, _dmy, -rot, __p);
+				
+				var sca_x = (dragging_sx + _p[0] / (1 - _anc[0])) / _s / srw;
+		        var sca_y = (dragging_sy + _p[1] / (1 - _anc[1])) / _s / srh;
+		        
+				if(key_mod_press(SHIFT)) {
+					sca_x = min(sca_x, sca_y);
+					sca_y = sca_x;
+				}
+				
+				var e1 = inputs[6].setValue([ sca_x, sca_y ]);
+				if(e1) UNDO_HOLDING = true;
+				
+			} else if(drag_type == NODE_COMPOSE_DRAG.box) {
+				var _mmx = _mx;
+				var _mmy = _my;
+				
+				if(key_mod_press(SHIFT)) {
+					var _dax = _mx - dragging_ax;
+					var _day = _my - dragging_ay;
+					var _p = point_rotate_origin(_dax, _day, -rot, __p);
 					
-					overlay_drag_mx  = _mx;
-					overlay_drag_my  = _my;
-					overlay_drag_sx  = sca[0];
-					overlay_drag_sy  = sca[1];
+					_dax = _p[0];
+					_day = _p[1];
+					
+					var _scd = min(abs(_dax / srw), abs(_day / srh));
+					var _p = point_rotate_origin(srw * sign(_dax), srh * sign(_day), rot, __p);
+					
+					_mmx = dragging_ax + _scd * _p[0];
+					_mmy = dragging_ay + _scd * _p[1];
 				}
 				
-			} else if(point_in_circle(_mx, _my, _rrx, _rry, 8)) {
+				var _dmx  = _mmx - dragging_mx;
+				var _dmy  = _mmy - dragging_my;
+				var _p    = point_rotate_origin(_dmx, _dmy, -rot, __p);
+				
+				var sca_x = (dragging_sx + _p[0] * (bool(drag_anchor & 0b10) * 2 - 1)) / _s / srw;
+		        var sca_y = (dragging_sy + _p[1] * (bool(drag_anchor & 0b01) * 2 - 1)) / _s / srh;
+		        
+				var pos_x = dragging_px + _dmx / _s * _anc[0];
+				var pos_y = dragging_py + _dmy / _s * _anc[1];
+				
+				var e0 = inputs[2].setValue([ pos_x, pos_y ]);
+				var e1 = inputs[6].setValue([ sca_x, sca_y ]);
+				    
+				if(e0 || e1) UNDO_HOLDING = true;
+				
+			}
+			
+			if(mouse_release(mb_left)) {
+				drag_type = noone;
+				UNDO_HOLDING = false;
+			}
+			
+		} else {
+			var hov_rect   = point_in_rectangle_points(_mx, _my, _tlx, _tly, _trx, _try, _blx, _bly, _brx, _bry);
+			
+			if(a_index) {
 				hovering = true;
 				
 				if(mouse_press(mb_left, active)) {
-					overlay_dragging = 3;
-					overlay_drag_ma  = point_direction(bax, bay, _mx, _my);
-					overlay_drag_sa  = rot;
+					drag_type    = NODE_COMPOSE_DRAG.anchor;
+					dragging_mx  = _mx;
+					dragging_my  = _my;
+					dragging_sx  = anc[0];
+					dragging_sy  = anc[1];
+					dragging_px  = pos[0];
+					dragging_py  = pos[1];
 				}
 				
-			} else if(point_in_triangle(_mx, _my, _tlx, _tly, _trx, _try, _blx, _bly) || 
-			          point_in_triangle(_mx, _my, _trx, _try, _blx, _bly, _brx, _bry)) {
+			} else if(sz_index) {
+				hovering = true;
+				
+				if(mouse_press(mb_left, active)) {
+					drag_type    = NODE_COMPOSE_DRAG.scale;
+					dragging_mx  = _mx;
+					dragging_my  = _my;
+					dragging_sx  =  sca[0] * _s * srw;
+					dragging_sy  =  sca[1] * _s * srh;
+					dragging_px  = _pos[0];
+					dragging_py  = _pos[1];
+				}
+				
+			} else if(r_index) {
+				hovering = true;
+				
+				if(mouse_press(mb_left, active)) {
+					drag_type    = NODE_COMPOSE_DRAG.rotate;
+					dragging_ma  = point_direction(bax, bay, _mx, _my);
+					dragging_sa  = rot;
+				}
+				
+			} else if(hov_corner != noone) {
+				hovering = true;
+				
+				if(mouse_press(mb_left, active)) {
+					drag_type    = NODE_COMPOSE_DRAG.box;
+					drag_anchor  = hov_corner;
+					dragging_mx  = _mx;
+					dragging_my  = _my;
+					dragging_sx  =  sca[0] * _s * srw;
+					dragging_sy  =  sca[1] * _s * srh;
+					dragging_px  = _pos[0];
+					dragging_py  = _pos[1];
+					dragging_ax	 = hov_ax;
+					dragging_ay	 = hov_ay;
+				}
+				
+			} else if(hov_rect) {
 				hovering = true;
 				
 	          	if(mouse_press(mb_left, active)) {
-					overlay_dragging = 1;
-					overlay_drag_mx  = _mx;
-					overlay_drag_my  = _my;
-					overlay_drag_sx  = _pos[0];
-					overlay_drag_sy  = _pos[1];
+					drag_type    = NODE_COMPOSE_DRAG.move;
+					dragging_mx  = _mx;
+					dragging_my  = _my;
+					dragging_sx  = _pos[0];
+					dragging_sy  = _pos[1];
 	          	}
 			}
 		}

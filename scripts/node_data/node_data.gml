@@ -618,7 +618,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static getOutput = function(_y = 0, junc = noone) {
 		var _targ = noone;
-		var _dy   = 9999;
+		var _dy   = infinity;
 		
 		for( var i = 0; i < array_length(outputs); i++ ) {
 			var _outp = outputs[i];
@@ -639,7 +639,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static getInput = function(_y = 0, _junc = noone, _shft = input_fix_len, _over = false) {
 		
 		var _targ = noone;
-		var _dy   = 9999;
+		var _dy   = infinity;
 		
 		for( var i = _shft; i < array_length(inputs); i++ ) {
 			var _inp = inputs[i];

@@ -69,7 +69,7 @@
     	var a = MOD_KEY.alt;
     	var cs = MOD_KEY.ctrl | MOD_KEY.shift;
     	
-        registerFunction(p, "Clear Tool",               vk_escape, n, panel_preview_clear_tool         )
+        registerFunction(p, "Clear Tool",               vk_escape, n, panel_preview_clear_tool         ).setMenu("preview_focus_content");
         
         registerFunction(p, "Focus Content",            "F", n, panel_preview_focus_content            ).setMenu("preview_focus_content",      THEME.icon_center_canvas)
         registerFunction(p, "Save Current Frame",       "S", s, panel_preview_save_current_frame       ).setMenu("preview_save_current_frame", THEME.icon_preview_export)
@@ -172,8 +172,8 @@ function Panel_Preview() : PanelContent() constructor {
     last_focus = noone;
     
     #region ---- canvas control & sample ----
-        function initSize() { canvas_x = w / 2; canvas_y = h / 2; }
-        run_in(1, function() /*=>*/ { initSize() });
+        initSize = function() /*=>*/ { canvas_x = w / 2; canvas_y = h / 2; }
+        run_in(1, function() /*=>*/ {return initSize()});
         
         canvas_x    = 0;
         canvas_y    = 0;
@@ -3199,6 +3199,25 @@ function Panel_Preview() : PanelContent() constructor {
             surface_save_safe(prev, _name);
             ind++;
         }
+    }
+    
+    function callAddDialog() {
+    	var  ctx = PANEL_GRAPH.getCurrentContext();
+    	var _dia = dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8, { context: ctx });
+    	
+    	_dia.buildCallback = addNodeCallback;
+    }
+    
+    function addNodeCallback(_node) {
+    	if(!is(_node, Node)) return;
+    	
+    	var _baseNode = getNodePreview();
+    	
+		var _outp = _node.getOutput();
+		if(_outp == noone) return;
+		
+    	if(is(_baseNode, Node_Composite) && _outp.type == VALUE_TYPE.surface)
+    		_baseNode.addInput(_outp);
     }
     
     ////- Serialize

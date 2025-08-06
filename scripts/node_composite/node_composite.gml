@@ -965,68 +965,30 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				var _mmx = _mx;
 				var _mmy = _my;
 				
-				if(key_mod_press(ALT)) {
-					// draw_set_color(COLORS._main_icon);
-					// var amo = getInputAmount();
-					// for( var i = -1; i < amo; i++ ) {
-					// 	var _indS = input_fix_len + i * data_length;
-					// 	if(_indS == surf_dragging) continue;
-						
-					// 	var bbox = [0, 0, ww, hh];
-					// 	if(i >= 0) {
-					// 		var _isurf = current_data[_indS + 0];
-					// 		if(!is_surface(_isurf)) continue;
-							
-					// 		var _ipos  = current_data[_indS + 1];
-					// 		var _isca  = current_data[_indS + 3];
-					// 		var _ianc  = current_data[_indS + 6];
-							
-					// 		var _isw   = surface_get_width_safe(_isurf)  * _isca[0];
-					// 		var _ish   = surface_get_height_safe(_isurf) * _isca[1];
-							
-					// 		var _iax = _ianc[0] * _isw;
-					// 		var _iay = _ianc[1] * _ish;
-							
-					// 		bbox[0] = _ipos[0] - _iax;
-					// 		bbox[1] = _ipos[1] - _iay;
-					// 		bbox[2] =  bbox[0] + _isw;
-					// 		bbox[3] =  bbox[1] + _ish;
-					// 	}
-						
-					// 	var _ix0 = _x + _s * bbox[0];
-					// 	var _iy0 = _y + _s * bbox[1];
-					// 	var _ix1 = _x + _s * bbox[2];
-					// 	var _iy1 = _y + _s * bbox[3];
-						
-					// 	if(abs(_mmx - _ix0) < snap) { _mmx = _ix0; draw_line(_ix0, 0, _ix0, WIN_H); }
-					// 	if(abs(_mmx - _ix1) < snap) { _mmx = _ix1; draw_line(_ix1, 0, _ix1, WIN_H); }
-					// 	if(abs(_mmy - _iy0) < snap) { _mmy = _iy0; draw_line(0, _iy0, WIN_W, _iy0); }
-					// 	if(abs(_mmy - _iy1) < snap) { _mmy = _iy1; draw_line(0, _iy1, WIN_W, _iy1); }
-					// }
+				if(key_mod_press(SHIFT)) {
+					var _dax = _mx - dragging_ax;
+					var _day = _my - dragging_ay;
+					var _p = point_rotate_origin(_dax, _day, -_rot, __p);
+					
+					_dax = _p[0];
+					_day = _p[1];
+					
+					var _scd = min(abs(_dax / _sw), abs(_day / _sh));
+					var _p = point_rotate_origin(_sw * sign(_dax), _sh * sign(_day), _rot, __p);
+					
+					_mmx = dragging_ax + _scd * _p[0];
+					_mmy = dragging_ay + _scd * _p[1];
 				}
 				
 				var _dmx  = _mmx - dragging_mx;
 				var _dmy  = _mmy - dragging_my;
-				var _pmx  = dragging_px + _dmx / _s * _anc[0];
-				var _pmy  = dragging_py + _dmy / _s * _anc[1];
-				var _p    = point_rotate_origin(_dmx, _dmy, -_rot, __p);
 				
-				pos_x = _pmx;
-				pos_y = _pmy;
-				
-				switch(drag_anchor) {
-					case 0 : sca_x = (dragging_sx - _p[0]) / _s / _sw;
-					         sca_y = (dragging_sy - _p[1]) / _s / _sh; break;
-					
-					case 1 : sca_x = (dragging_sx - _p[0]) / _s / _sw;
-					         sca_y = (dragging_sy + _p[1]) / _s / _sh; break;
-						
-					case 2 : sca_x = (dragging_sx + _p[0]) / _s / _sw;
-					         sca_y = (dragging_sy - _p[1]) / _s / _sh; break;
-						
-					case 3 : sca_x = (dragging_sx + _p[0]) / _s / _sw;
-					         sca_y = (dragging_sy + _p[1]) / _s / _sh; break;
-				}
+				var _p = point_rotate_origin(_dmx, _dmy, -_rot, __p);
+				sca_x = (dragging_sx + _p[0] * (bool(drag_anchor & 0b10) * 2 - 1)) / _s / _sw;
+		        sca_y = (dragging_sy + _p[1] * (bool(drag_anchor & 0b01) * 2 - 1)) / _s / _sh;
+		        
+				pos_x  = dragging_px + _dmx / _s * _anc[0];
+				pos_y  = dragging_py + _dmy / _s * _anc[1];
 				
 				var e0 = inputs[surf_dragging + 1].setValue([ pos_x, pos_y ]);
 				var e1 = inputs[surf_dragging + 3].setValue([ sca_x, sca_y ]);

@@ -304,10 +304,6 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	__node_bone_attributes();
 	
-	tools = [
-		new NodeTool( "Pose", THEME.bone_tool_pose ), 
-	];
-	
 	hold_visibility = true;
 	hold_select		= true;
 	_layer_dragging	= noone;
@@ -685,6 +681,8 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	#region ---- tools ----
 		tools = [
+			new NodeTool( "Pose", THEME.bone_tool_pose ), 
+			-1,
 			new NodeTool( "Move Selection",   THEME.tools_2d_move   ).setVisible(false).setToolObject(new armature_bind_tool_move(self)),
 			new NodeTool( "Rotate Selection", THEME.tools_2d_rotate ).setVisible(false).setToolObject(new armature_bind_tool_rotate(self)),
 			new NodeTool( "Scale Selection",  THEME.tools_2d_scale  ).setVisible(false).setToolObject(new armature_bind_tool_scale(self)),
@@ -863,8 +861,32 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				var sca_x = _tran[TRANSFORM.sca_x];
 				var sca_y = _tran[TRANSFORM.sca_y];
 				
-				var _dmx  = smx - dragging_mx;
-				var _dmy  = smy - dragging_my;
+				var _mmx = _mx;
+				var _mmy = _my;
+				
+				if(key_mod_press(SHIFT)) {
+					var _aax = dragging_ax;
+					var _aay = dragging_ay;
+					
+					var _dax = _mmx - _aax;
+					var _day = _mmy - _aay;
+					var _p = point_rotate_origin(_dax, _day, -_rot, __p);
+					
+					_dax = _p[0];
+					_day = _p[1];
+					
+					var _scd = min(abs(_dax / _sw), abs(_day / _sh));
+					var _p = point_rotate_origin(_sw * sign(_dax), _sh * sign(_day), _rot, __p);
+					
+					_mmx = _aax + _scd * _p[0];
+					_mmy = _aay + _scd * _p[1];
+				}
+				
+				_mmx = value_snap((_mmx - _x) / _s, _snx);
+				_mmy = value_snap((_mmy - _y) / _s, _sny);
+		
+				var _dmx  = _mmx - dragging_mx;
+				var _dmy  = _mmy - dragging_my;
 				
 				point_rotate(_dmx, _dmy, 0, 0, -_bone.pose_angle, __p);
 				
@@ -873,19 +895,8 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				
 				point_rotate(_dmx, _dmy, 0, 0, -_rot, __p);
 				
-				switch(drag_anchor) {
-					case 0 : sca_x = (dragging_sx - __p[0]) / _sw;
-					         sca_y = (dragging_sy - __p[1]) / _sh; break;
-					
-					case 1 : sca_x = (dragging_sx - __p[0]) / _sw;
-					         sca_y = (dragging_sy + __p[1]) / _sh; break;
-						
-					case 2 : sca_x = (dragging_sx + __p[0]) / _sw;
-					         sca_y = (dragging_sy - __p[1]) / _sh; break;
-						
-					case 3 : sca_x = (dragging_sx + __p[0]) / _sw;
-					         sca_y = (dragging_sy + __p[1]) / _sh; break;
-				}
+				sca_x = (dragging_sx + __p[0] * (bool(drag_anchor & 0b10) * 2 - 1)) / _sw;
+		        sca_y = (dragging_sy + __p[1] * (bool(drag_anchor & 0b01) * 2 - 1)) / _sh;
 				
 				_tran[TRANSFORM.pos_x] = pos_x;
 				_tran[TRANSFORM.pos_y] = pos_y;

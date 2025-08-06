@@ -220,6 +220,8 @@ event_inherited();
 #endregion
 
 #region build
+	buildCallback = undefined;
+	
 	function buildNode(_node, _param = {}) {
 		instance_destroy();
 		instance_destroy(o_dialog_menubox);
@@ -263,6 +265,8 @@ event_inherited();
 			
 			for( var i = 0, n = array_length(_new_node.outputs); i < n; i++ ) 
 				array_push(_outputs, _new_node.outputs[i]);
+			
+			if(buildCallback != undefined) buildCallback(_new_node);
 			
 		} else if(is(_node, NodeAction)) {  // NOT IMPLEMENTED
 			var _dat = _node.build(node_target_x, node_target_y,, _param);
