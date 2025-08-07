@@ -2057,7 +2057,6 @@ function Panel_Preview() : PanelContent() constructor {
         } 
         
         toolbar_draw = false;
-        
         var _node = getNodePreview();
         
         #region status texts (top right)
@@ -2176,31 +2175,36 @@ function Panel_Preview() : PanelContent() constructor {
             
             if(mouse_release(mb_left)) preview_selecting = false;
             
-            if(array_length(pseq) > 1) {
-                var _xx = tool_side_draw_l * ui(40);
-                var xx  = _xx + preview_x + ui(8);
-                var yy  = h - toolbar_height - prev_size - ui(8);
+            var pseql = array_length(pseq);
             
+            if(pseql > 1) {
+                var _xx = tool_side_draw_l * ui(40);
+                var sx  = _xx + preview_x + ui(8);
+                var yy  = h - toolbar_height - prev_size - ui(8);
+            	
                 if(my > yy - 8) mouse_on_preview = 0;
                 var hoverable = pHOVER && point_in_rectangle(mx, my, _xx, ui(32), w, h - toolbar_height);
-            
-                for(var i = 0; i < array_length(pseq); i++) {
-                    var prev   = pseq[i];
-                    if(is_instanceof(prev, __d3dMaterial))
-                        prev = prev.surface;
+            	
+                for( var i = 0, n = pseql; i < n; i++ ) {
+                    var prev = pseq[i];
+                	var xx   = sx + (prev_size + ui(8)) * i;
+                	
+                	if(xx + prev_size < -ui(16)) continue;
+                	if(xx > w + ui(16)) break;
+                    
+                    if(is(prev, __d3dMaterial)) prev = prev.surface;
                     if(!is_surface(prev)) continue;
-                
+                	
                     var prev_w  = surface_get_width_safe(prev);
                     var prev_h  = surface_get_height_safe(prev);
                     var ss      = prev_size / max(prev_w, prev_h);
-                    var prev_sw = prev_w * ss;
-            		var _hov    = hoverable && point_in_rectangle(mx, my, xx, yy, xx + prev_sw, yy + prev_h * ss);
+            		var _hov    = hoverable && point_in_rectangle(mx, my, xx, yy, xx + prev_size, yy + prev_size);
             		
                     draw_set_color(COLORS.panel_preview_surface_outline);
-                    draw_rectangle(xx, yy, xx + prev_w * ss, yy + prev_h * ss, true);
+                    draw_rectangle(xx, yy, xx + prev_size, yy + prev_size, true);
                 	draw_surface_ext_safe(prev, xx, yy, ss, ss, 0, c_white, .5 + .5 * _hov);
                 	
-                    if((_hov && mouse_press(mb_left, pFOCUS)) || (preview_selecting && mx > xx && mx <= xx + prev_sw)) {
+                    if((_hov && mouse_press(mb_left, pFOCUS)) || (preview_selecting && mx > xx && mx <= xx + prev_size)) {
                         _node.preview_index = i;
                         _node.onValueUpdate(0);
                         if(resetViewOnDoubleClick) do_fullView = true;
@@ -2210,12 +2214,12 @@ function Panel_Preview() : PanelContent() constructor {
                 
                     if(i == _node.preview_index) {
                         draw_set_color(COLORS._main_accent);
-                        draw_rectangle(xx, yy, xx + prev_sw, yy + prev_h * ss, true);
+                        draw_rectangle(xx, yy, xx + prev_size, yy + prev_size, true);
                     }
-            
-                    xx += prev_sw + ui(8);
-                    preview_x_max += prev_sw + ui(8);
+            		
                 }
+                
+                preview_x_max = (prev_size + ui(8)) * pseql;
             }
         #endregion
         

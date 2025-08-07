@@ -902,20 +902,20 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				var _display_text = _raw_text;
 				
 				if(input == TEXTBOX_INPUT.number) {
-					var dig       = floor(_w / string_width("0")) - 3;
+					var dig       = floor(_w / ui(8)) - 3;
 					_display_text = string_real(_display_text, dig, precision);
-				}
-			
-				var tw = string_width(_display_text);
-				var th = string_height(_display_text);
-				
-				switch(align) {
-					case fa_left   :				break;
-					case fa_center : tx -= tw / 2;	break;
-					case fa_right  : tx -= tw;		break;
 				}
 				
 				if(_update || _display_text != _disp_text) {
+					var tw = string_width(_display_text);
+					var th = string_height(_display_text);
+					
+					switch(align) {
+						case fa_left   :				break;
+						case fa_center : tx -= tw / 2;	break;
+						case fa_right  : tx -= tw;		break;
+					}
+					
 					surface_set_shader(text_surface, noone, true, BLEND.add);
 						display_text(tx - tb_surf_x, _h / 2 - th / 2, _display_text, _w - ui(4));
 					surface_reset_shader();

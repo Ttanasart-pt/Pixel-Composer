@@ -296,8 +296,7 @@ _FILE_DROPPED     = false;
 
 #region cmd
 	var _resPath = program_directory + "in";
-	
-	if(file_exists(_resPath)) {
+	if(IS_CMD && file_exists(_resPath)) {
 		var cmd = file_read_all(_resPath);
 		cmd_submit(cmd);
 		file_delete(_resPath);

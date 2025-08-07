@@ -82,7 +82,6 @@ function shader_set_f_map(uniform, value, surface = noone, junc = noone) {
 }
 
 function shader_set_f_map_s(uniform, value, surface, junc) {
-	
 	shader_set_f(uniform, is_array(value)? value : [ value, value ]); 
 	shader_set_i(uniform + "UseSurf", junc.attributes.mapped && is_surface(surface));
 }

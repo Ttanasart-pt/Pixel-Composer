@@ -65,8 +65,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
         [ [THEME.panel_tab_align, 3], function() /*=>*/ { tab_align = 3; refreshSize(); } ],
     ]);
 	
-	static getContent = function() { return array_safe_get_fast(content, content_index, noone); }
-	static hasContent = function() { return bool(array_length(content)); }
+	static getContent = function() /*=>*/ {return array_safe_get_fast(content, content_index, noone)};
 	
 	////- Content
 	
@@ -177,7 +176,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		setTabSize();
 		var hori = oppose == ANCHOR.left || oppose == ANCHOR.right;
 		
-		if(hasContent()) {
+		if(!array_empty(content)) {
 			var res = true;
 			for( var i = 0, n = array_length(content); i < n; i++ )
 				res = res && hori? tw + dw > content[i].min_w : th + dh > content[i].min_h;
@@ -458,7 +457,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	} resetMask();
 	
 	static draw = function() {
-		if(hasContent()) { drawContent(); return; }
+		if(!array_empty(content)) { drawContent(); return; }
 		
 		if(array_empty(childs)) return;
 		
@@ -480,8 +479,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			
 			_panel.draw();
 			
-			if!(HOVER == noone || is_struct(HOVER))
-				continue;
+			if!(HOVER == noone || is_struct(HOVER)) continue;
 			
 			var p = ui(6 - 1);
 			
@@ -503,7 +501,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 							
 					CURSOR = cr_size_ns;
 					if(mouse_press(mb_left)) {
-						dragging = 2;
+						dragging  = 2;
 						drag_sval = _panel.h;
 						drag_sm   = mouse_my;
 					}
@@ -908,6 +906,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				min_h = con.min_h;
 				if(tw >= min_w && th >= min_h)
 					con.draw(self);
+					
 				else {
 					draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_sub);
 					draw_text(tw / 2, th / 2, "Panel too small for content");
@@ -925,7 +924,6 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		draw_surface_safe(content_surface, tx, ty);
 		draw_sprite_stretched_ext(THEME.ui_panel, 1, tx + padding, ty + padding, _tw, _th, COLORS.panel_frame);
 		if(tab && tab_cover != noone) draw_sprite_bbox(THEME.ui_panel_tab, 3, tab_cover);
-		// if(tab && tab_cover != noone) draw_sprite_bbox(s_fx_pixel, 3, tab_cover);
 		
 		if(FOCUS == self || (instance_exists(o_dialog_menubox) && o_dialog_menubox.getContextPanel() == self)) {
 			var _color = PREFERENCES.panel_outline_accent? COLORS._main_accent : COLORS.panel_select_border;
@@ -980,11 +978,11 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		HOVER = noone;
 		FOCUS = noone;
 		
-		if(hasContent()) return;
+		if(!array_empty(content)) return;
 		var ind = !array_find(parent.childs, self); //index of the other child
 		var sib = parent.childs[ind];
 		
-		if(!sib.hasContent() && array_length(sib.childs) == 2) { //other child is compound panel
+		if(!array_empty(sib.content) && array_length(sib.childs) == 2) { //other child is compound panel
 			var gparent = parent.parent;
 			if(gparent == noone) {
 				sib.x = PANEL_MAIN.x; sib.y = PANEL_MAIN.y;
@@ -999,7 +997,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				sib.parent = gparent;
 				gparent.refreshSize();
 			}
-		} else if(sib.hasContent()) { //other child is content panel, set parent to content panel
+		} else if(!array_empty(sib.content)) { //other child is content panel, set parent to content panel
 			parent.setContent(sib.content);
 			parent.childs = [];
 		}
@@ -1086,7 +1084,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		
 		refresh();
 		
-		if(hasContent()) return;
+		if(!array_empty(content)) return;
 		if(parent == noone) { show_message("Can't close the main panel."); return; }
 		
 		if(array_length(parent.childs) == 2) {

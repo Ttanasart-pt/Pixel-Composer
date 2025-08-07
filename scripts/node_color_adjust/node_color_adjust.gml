@@ -98,9 +98,9 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _mskInv = _data[16];
 		var _mskFea = _data[17];
 		
-		_col = array_clone(_col);
-		
 		if(_type == 1) { // single color adjust
+			_col = array_clone(_col);
+			
 			if(is_array(_bri)) _bri = array_safe_get_fast(_bri, 0);
 			if(is_array(_con)) _con = array_safe_get_fast(_con, 0);
 			if(is_array(_hue)) _hue = array_safe_get_fast(_hue, 0);

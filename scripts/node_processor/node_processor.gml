@@ -31,27 +31,27 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static getInputData = function(index, def = 0) { INLINE return array_safe_get_fast(inputs_data, index, def); }
 	
 	static getSingleValue = function(_index, _arr = preview_index, output = false) { 
-		var _l = output? outputs : inputs;
-		if(_index < 0 || _index >= array_length(_l)) return 0;
+		if(output) {
+			var _val = outputs[_index].getValue();
+			return process_amount <= 1? _val : array_safe_get_fast(_val, _arr);
+		}
 		
-		var _n  = _l[_index];
+		var _n = array_safe_get(inputs, _index);
 		if(!is(_n, NodeValue)) return 0;
 		
-		var _in = output? _n.getValue() : getInputData(_index);
-		
-		if(!_n.isArray(_in)) return _in;
-		if(!is_array(_in))   return 0;
+		var _val = getInputData(_index);
+		if(process_amount <= 1 || !is_array(_val) || process_length[_index] <= 1) return _val;
 		
 		var _aIndex = _arr;
 		
 		switch(attributes.array_process) {
-			case ARRAY_PROCESS.loop :		_aIndex = safe_mod(_arr, process_length[_index]);													break;
-			case ARRAY_PROCESS.hold :		_aIndex = min(_arr, process_length[_index] - 1	); 													break;
-			case ARRAY_PROCESS.expand :		_aIndex = floor(_arr / process_running[_index]) % process_length[_index];							break;
-			case ARRAY_PROCESS.expand_inv : _aIndex = floor(_arr / process_running[array_length(_l) - 1 - _index]) % process_length[_index];	break;
+			case ARRAY_PROCESS.loop :		_aIndex = safe_mod(_arr, process_length[_index]);	break;
+			case ARRAY_PROCESS.hold :		_aIndex = min(_arr, process_length[_index] - 1	); 	break;
+			case ARRAY_PROCESS.expand :		_aIndex = floor(_arr / process_running[_index]) % process_length[_index]; break;
+			case ARRAY_PROCESS.expand_inv : _aIndex = floor(_arr / process_running[array_length(inputs) - 1 - _index]) % process_length[_index]; break;
 		}
 		
-		return array_safe_get_fast(_in, _aIndex);
+		return array_safe_get_fast(_val, _aIndex);
 	} 
 	
 	static getDimension = function(arr = 0) { 
