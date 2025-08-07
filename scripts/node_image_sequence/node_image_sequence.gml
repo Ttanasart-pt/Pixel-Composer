@@ -68,6 +68,8 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	edit_time    = 0;
 	
 	attributes.file_checker = true;
+	file_check_timer = 0;
+	file_check_index = 0;
 	array_push(attributeEditors, [ "File Watcher", function() /*=>*/ {return attributes.file_checker}, new checkBox(function() /*=>*/ {return toggleAttribute("file_checker")}) ]);
 	
 	on_drop_file = function(path) {
@@ -130,14 +132,17 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	}
 	
 	static step = function() {
-		if(attributes.file_checker)
-		for( var i = 0, n = array_length(path_current); i < n; i++ ) {
-			var _ed = file_get_modify_s(path_current[i]);
+		if(attributes.file_checker && !array_empty(path_current)) {
+			file_check_timer += DELTA_TIME;
 			
-			if(_ed > edit_time) {
-				updatePaths();
-				triggerRender();
-				break;
+			if(file_check_timer > 1) {
+				file_check_timer = 0;
+				
+				var _ed = file_get_modify_s(path_current[(file_check_index++) % array_length(path_current)]);
+				if(_ed > edit_time) {
+					updatePaths();
+					triggerRender();
+				}
 			}
 		}
 	}
