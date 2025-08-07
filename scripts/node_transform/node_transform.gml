@@ -665,11 +665,21 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var bax = _x + (pos[0] + anc[0]) * _s;
 			var bay = _y + (pos[1] + anc[1]) * _s;
 			
-			point_rotate(bx0, by0, bax, bay, rot, __p); var _tlx = __p[0], _tly = __p[1];
-			point_rotate(bx1, by0, bax, bay, rot, __p); var _trx = __p[0], _try = __p[1];
-			point_rotate(bx0, by1, bax, bay, rot, __p); var _blx = __p[0], _bly = __p[1];
-			point_rotate(bx1, by1, bax, bay, rot, __p); var _brx = __p[0], _bry = __p[1];
-			point_rotate(bx2, by2, bax, bay, rot, __p); var _szx = __p[0], _szy = __p[1];
+			point_rotate(bx0, by0, bax, bay, rot, __p); 
+			var _tlx = __p[0], _tly = __p[1];
+			
+			point_rotate(bx1, by0, bax, bay, rot, __p); 
+			var _trx = __p[0], _try = __p[1];
+			
+			point_rotate(bx0, by1, bax, bay, rot, __p); 
+			var _blx = __p[0], _bly = __p[1];
+			
+			point_rotate(bx1, by1, bax, bay, rot, __p); 
+			var _brx = __p[0], _bry = __p[1];
+			
+			point_rotate(bx2, by2, bax, bay, rot, __p); 
+			var _szx = __p[0], _szy = __p[1];
+			
 			point_rotate((bx0 + bx1) / 2, by0 - 24 * sign(sca[1]), bax, bay, rot, __p); var _rrx = __p[0], _rry = __p[1];
 			var _rcx = (_tlx + _trx) / 2, _rcy = (_tly + _try) / 2;
 			
@@ -789,8 +799,11 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				var _mmy = _my;
 				
 				if(key_mod_press(SHIFT)) {
-					var _dax = _mx - dragging_ax;
-					var _day = _my - dragging_ay;
+					var _aax = key_mod_press(ALT)? bax : dragging_ax;
+					var _aay = key_mod_press(ALT)? bay : dragging_ay;
+					
+					var _dax = _mx - _aax;
+					var _day = _my - _aay;
 					var _p = point_rotate_origin(_dax, _day, -rot, __p);
 					
 					_dax = _p[0];
@@ -799,24 +812,42 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					var _scd = min(abs(_dax / srw), abs(_day / srh));
 					var _p = point_rotate_origin(srw * sign(_dax), srh * sign(_day), rot, __p);
 					
-					_mmx = dragging_ax + _scd * _p[0];
-					_mmy = dragging_ay + _scd * _p[1];
+					_mmx = _aax + _scd * _p[0];
+					_mmy = _aay + _scd * _p[1];
 				}
 				
 				var _dmx  = _mmx - dragging_mx;
 				var _dmy  = _mmy - dragging_my;
 				var _p    = point_rotate_origin(_dmx, _dmy, -rot, __p);
 				
-				var sca_x = (dragging_sx + _p[0] * (bool(drag_anchor & 0b10) * 2 - 1)) / _s / srw;
-		        var sca_y = (dragging_sy + _p[1] * (bool(drag_anchor & 0b01) * 2 - 1)) / _s / srh;
-		        
-				var pos_x = dragging_px + _dmx / _s * _anc[0];
-				var pos_y = dragging_py + _dmy / _s * _anc[1];
+				var _sdx = _p[0] * (bool(drag_anchor & 0b10) * 2 - 1);
+				var _sdy = _p[1] * (bool(drag_anchor & 0b01) * 2 - 1);
 				
-				var e0 = inputs[2].setValue([ pos_x, pos_y ]);
-				var e1 = inputs[6].setValue([ sca_x, sca_y ]);
-				    
-				if(e0 || e1) UNDO_HOLDING = true;
+				var _ax  = bool(drag_anchor & 0b10)? _anc[0] : 1 - _anc[0];
+				var _ay  = bool(drag_anchor & 0b01)? _anc[1] : 1 - _anc[1];
+				
+				if(key_mod_press(ALT)) {
+					var sca_x = (dragging_sx + _sdx / (1 - _ax)) / _s / srw;
+			        var sca_y = (dragging_sy + _sdy / (1 - _ay)) / _s / srh;
+			        
+					var pos_x = dragging_px;
+					var pos_y = dragging_py;
+					
+			        var e0 = inputs[2].setValue([ pos_x, pos_y ]);
+					var e1 = inputs[6].setValue([ sca_x, sca_y ]);
+				    if(e0 || e1) UNDO_HOLDING = true;
+					
+				} else {
+					var sca_x = (dragging_sx + _sdx) / _s / srw;
+			        var sca_y = (dragging_sy + _sdy) / _s / srh;
+			        
+					var pos_x = dragging_px + _dmx / _s * _ax;
+					var pos_y = dragging_py + _dmy / _s * _ay;
+				
+					var e0 = inputs[2].setValue([ pos_x, pos_y ]);
+					var e1 = inputs[6].setValue([ sca_x, sca_y ]);
+					if(e0 || e1) UNDO_HOLDING = true;
+				}
 				
 			}
 			

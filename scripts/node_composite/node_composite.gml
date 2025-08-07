@@ -966,8 +966,11 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				var _mmy = _my;
 				
 				if(key_mod_press(SHIFT)) {
-					var _dax = _mx - dragging_ax;
-					var _day = _my - dragging_ay;
+					var _aax = key_mod_press(ALT)? _x + pos_x * _s : dragging_ax;
+					var _aay = key_mod_press(ALT)? _y + pos_y * _s : dragging_ay;
+					
+					var _dax = _mx - _aax;
+					var _day = _my - _aay;
 					var _p = point_rotate_origin(_dax, _day, -_rot, __p);
 					
 					_dax = _p[0];
@@ -976,23 +979,42 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					var _scd = min(abs(_dax / _sw), abs(_day / _sh));
 					var _p = point_rotate_origin(_sw * sign(_dax), _sh * sign(_day), _rot, __p);
 					
-					_mmx = dragging_ax + _scd * _p[0];
-					_mmy = dragging_ay + _scd * _p[1];
+					_mmx = _aax + _scd * _p[0];
+					_mmy = _aay + _scd * _p[1];
 				}
 				
 				var _dmx  = _mmx - dragging_mx;
 				var _dmy  = _mmy - dragging_my;
-				
 				var _p = point_rotate_origin(_dmx, _dmy, -_rot, __p);
-				sca_x = (dragging_sx + _p[0] * (bool(drag_anchor & 0b10) * 2 - 1)) / _s / _sw;
-		        sca_y = (dragging_sy + _p[1] * (bool(drag_anchor & 0b01) * 2 - 1)) / _s / _sh;
-		        
-				pos_x  = dragging_px + _dmx / _s * _anc[0];
-				pos_y  = dragging_py + _dmy / _s * _anc[1];
 				
-				var e0 = inputs[surf_dragging + 1].setValue([ pos_x, pos_y ]);
-				var e1 = inputs[surf_dragging + 3].setValue([ sca_x, sca_y ]);
-				if(e0 || e1) UNDO_HOLDING = true;
+				var _sdx = _p[0] * (bool(drag_anchor & 0b10) * 2 - 1);
+				var _sdy = _p[1] * (bool(drag_anchor & 0b01) * 2 - 1);
+				
+				var _ax  = bool(drag_anchor & 0b10)? _anc[0] : 1 - _anc[0];
+				var _ay  = bool(drag_anchor & 0b01)? _anc[1] : 1 - _anc[1];
+				
+				if(key_mod_press(ALT)) {
+					var sca_x = (dragging_sx + _sdx / (1 - _ax)) / _s / _sw;
+			        var sca_y = (dragging_sy + _sdy / (1 - _ay)) / _s / _sh;
+			        
+					var pos_x = dragging_px;
+					var pos_y = dragging_py;
+					
+			        var e0 = inputs[surf_dragging + 1].setValue([ pos_x, pos_y ]);
+					var e1 = inputs[surf_dragging + 3].setValue([ sca_x, sca_y ]);
+					if(e0 || e1) UNDO_HOLDING = true;
+					
+				} else {
+					var sca_x = (dragging_sx + _sdx) / _s / _sw;
+			        var sca_y = (dragging_sy + _sdy) / _s / _sh;
+			        
+					var pos_x  = dragging_px + _dmx / _s * _ax;
+					var pos_y  = dragging_py + _dmy / _s * _ay;
+					
+					var e0 = inputs[surf_dragging + 1].setValue([ pos_x, pos_y ]);
+					var e1 = inputs[surf_dragging + 3].setValue([ sca_x, sca_y ]);
+					if(e0 || e1) UNDO_HOLDING = true;
+				}
 				
 			} else if(drag_type == NODE_COMPOSE_DRAG.anchor) {
 				var _surf = current_data[surf_dragging + 0];
