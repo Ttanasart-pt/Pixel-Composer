@@ -187,6 +187,9 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		var ss = max(0.5, _s) * 0.5;
 		by = bbox.y0 + bbox.h * 0.25 / 2;
 			
-		draw_text_cut(bx, by, text, bbox.w, ss);
+		var _scis = gpu_get_scissor();
+		gpu_set_scissor(bbox.x0, bbox.y0, bbox.w, bbox.h);
+		draw_text_transformed(bx, by, text, ss, ss, 0);
+		gpu_set_scissor(_scis);
 	}
 }

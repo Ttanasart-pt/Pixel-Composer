@@ -164,11 +164,19 @@ event_inherited();
 				
 			} else if(dl.status == 2) {
 				draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text_sub);
-				draw_text_cut(xx + ui(8), yy + ui(24), dl.download_path, ww - ui(16));
+				
+				var _scis = gpu_get_scissor();
+				gpu_set_scissor(xx + ui(8), yy + ui(24), ww - ui(16), hh);
+				draw_text_add(xx + ui(8), yy + ui(24), dl.download_path, ww - ui(16));
+				gpu_set_scissor(_scis);
 				
 			} else if(dl.status == -1) {
 				draw_set_text(f_p3, fa_left, fa_top, COLORS._main_value_negative);
-				draw_text_cut(xx + ui(8), yy + ui(24), $"HTTP get error : open the download link in browser.", ww - ui(16));
+				
+				var _scis = gpu_get_scissor();
+				gpu_set_scissor(xx + ui(8), yy + ui(24), ww - ui(16), hh);
+				draw_text_add(xx + ui(8), yy + ui(24), $"HTTP get error : open the download link in browser.");
+				gpu_set_scissor(_scis);
 			}
 			
 			if(dl.status) {

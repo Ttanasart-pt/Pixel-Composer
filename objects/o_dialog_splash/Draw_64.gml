@@ -154,7 +154,10 @@ if !ready exit;
 		}
 		
 		draw_set_color(cc);
-		draw_text_cut(_btx, y0 - ui(4), dtxt, _tabW - ui(16));
+		var _scis = gpu_get_scissor();
+		gpu_set_scissor(bx + ui(8), y0 - ui(32), _tabW - ui(16), ui(32));
+		draw_text_add(_btx, y0 - ui(4), dtxt);
+		gpu_set_scissor(_scis);
 		
 		_btx += ui(8) + string_width(dtxt);
 		

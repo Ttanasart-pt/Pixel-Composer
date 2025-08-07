@@ -155,15 +155,10 @@ function draw_text_bbox_cut(bbox, text, scale = 1) {
 	draw_set_halign(fa_center);
 	draw_set_valign(fa_center);
 	
-	draw_text_cut(bbox.xc, bbox.yc, text, bbox.w, ss * scale);
-}
-
-function draw_text_cut(x, y, str, w, scale = 1, _add = false) {
-	INLINE
-	if(_add) { BLEND_ADD }
-	else     { BLEND_ALPHA_MULP }
-	draw_text_transformed(round(x), round(y), string_cut(str, w,, scale), scale, scale, 0);
-	BLEND_NORMAL
+	var _scis = gpu_get_scissor();
+	gpu_set_scissor(bbox.x0, bbox.y0, bbox.w, bbox.h);
+	draw_text_transform_add(bbox.xc, bbox.yc, text, ss * scale);
+	gpu_set_scissor(_scis);
 }
 
 function draw_text_int(x, y, str) {

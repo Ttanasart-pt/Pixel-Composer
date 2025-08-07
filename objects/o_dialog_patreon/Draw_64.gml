@@ -6,7 +6,7 @@ if !ready exit;
 	
 	draw_sprite_stretched_ext(THEME.ui_panel_bg, 3, dialog_x + 3, dialog_y + 3, dialog_w - 6, title_height + 2, COLORS._main_icon_light, 1);
 	draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
-	draw_text_cut(dialog_x + ui(10), dialog_y + ui(8), "Patreon connect", dialog_w - ui(32 + 32));
+	draw_text_add(dialog_x + ui(10), dialog_y + ui(8), "Patreon connect");
 	
 	var _bx = dialog_x + dialog_w - ui(28);
 	var _by = dialog_y + ui(8);

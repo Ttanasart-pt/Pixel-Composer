@@ -87,7 +87,11 @@ event_inherited();
 			
 				ly += line_get_height() + ui(2);
 				draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
-				draw_text_cut(fx + ui(12), ly, _rec, ww - ui(24));
+				
+				var _scis = gpu_get_scissor();
+				gpu_set_scissor(fx + ui(12), ly, ww - ui(24), ui(999));
+				draw_text_add(fx + ui(12), ly, _rec);
+				gpu_set_scissor(_scis);
 			}
 			
 			hh += hg + pad;

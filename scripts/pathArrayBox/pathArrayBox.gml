@@ -66,11 +66,14 @@ function pathArrayBox(_target, _data, _onClick) : widget() constructor {
 		txt += "]";
 		
 		draw_set_text(font, fa_left, fa_center, COLORS._main_text);
+		var _scis = gpu_get_scissor();
 		if(_h >= line_get_height()) {
+			gpu_set_scissor(_x, _y, _w - ui(16), _h);
 			draw_set_alpha(aa);
-			draw_text_cut(_x + ui(8), _y + _h / 2, txt, _w - ui(16));
+			draw_text_add(_x + ui(8), _y + _h / 2, txt);
 			draw_set_alpha(1);
 		}
+		gpu_set_scissor(_scis);
 		
 		if(WIDGET_CURRENT == self)
 			draw_sprite_stretched_ext(THEME.widget_selecting, 0, _x - ui(3), _y - ui(3), _w + ui(6), _h + ui(6), COLORS._main_accent, 1);	

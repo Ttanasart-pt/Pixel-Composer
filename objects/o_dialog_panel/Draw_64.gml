@@ -53,7 +53,10 @@ if(content.showHeader) {
 	
 	draw_sprite_stretched_ext(THEME.ui_panel_bg, 3, dialog_x + 3, dialog_y + 3, dialog_w - 6, title_height + 2, COLORS._main_icon_light, 1);
 	draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
-	draw_text_cut(_tx, dialog_y + ui(8), content.title, dialog_w - ui(32 + 32));
+	var _scis = gpu_get_scissor();
+	gpu_set_scissor(_tx, dialog_y, dialog_w - ui(64), title_height);
+	draw_text_add(_tx, dialog_y + ui(8), content.title);
+	gpu_set_scissor(_scis);
 	
 	var _bx = dialog_x + dialog_w - ui(8);
 	var _by = dialog_y + ui(6);

@@ -84,7 +84,10 @@ function folderArrayBox(_arr, _onApply) : widget() constructor {
 				draw_sprite_stretched_ext(THEME.textbox, 0, _tx, _ty, _tw, _h, boxColor);
 				
 			draw_set_text(font, fa_left, fa_center, COLORS._main_text);
-			draw_text_cut(_tx + ui(8), round(_ty + _h / 2), array[i], _tw - ui(16));
+			var _scis = gpu_get_scissor();
+			gpu_set_scissor(_tx + ui(8), _ty, _tw - ui(16), _h);
+			draw_text_add(_tx + ui(8), round(_ty + _h / 2), array[i]);
+			gpu_set_scissor(_scis);
 			
 			var _bs = ui(24);
 			var _bx = _x + _w - _bs;

@@ -43,7 +43,11 @@ event_inherited();
 			if(_ly + hght < 0 || _ly > _dh) continue;
 					
 			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-			draw_text_cut(ui(8), _ly + hght / 2, filename_name_only(data[i]), _dw);
+			
+			var _scis = gpu_get_scissor();
+			gpu_set_scissor(ui(8), _ly, _dw, hght);
+			draw_text_add(ui(8), _ly + hght / 2, filename_name_only(data[i]));
+			gpu_set_scissor(_scis);
 			
 			if(!ds_map_exists(FONT_SPRITES, fullpath)) loadFontSprite(fullpath);
 			
