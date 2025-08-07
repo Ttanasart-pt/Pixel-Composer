@@ -10,7 +10,7 @@ if !ready exit;
 #endregion
 
 #region nodes
-	draw_sprite_stretched(THEME.ui_panel_bg, 1, dialog_x + ui(12), dialog_y + title_h, dialog_w - ui(24), ui(120));
+	draw_sprite_stretched(THEME.ui_panel_bg, 1, dialog_x + ui(12), dialog_y + title_h, dialog_w - ui(24), content_h);
 	var grid_size  = ui(64);
 	var grid_space = ui(16);
 	var grid_width = grid_size + grid_space;
@@ -30,7 +30,8 @@ if !ready exit;
 			draw_sprite_stretched_ext(THEME.node_bg, 1, xx, yy, grid_size, grid_size, COLORS._main_accent, 1);
 			
 			if(mouse_press(mb_left, sFOCUS)) {
-				var path_arr = paths_to_array_ext(paths, dir_filter);
+				
+				var path_arr = dir_recursive? path_dirs_get_files(paths, dir_filter, true) : paths_to_array_ext(paths, dir_filter);
 				array_sort(path_arr, true);
 				
 				switch(_node.node) {
@@ -68,7 +69,7 @@ if !ready exit;
 
 #region directory option
 	if(is_dir) {
-		var dir_y = dialog_y + dialog_h + ui(4);
+		var dir_y = dialog_y + title_h + content_h + ui(8);
 		
 		cb_recursive.setFocusHover(sFOCUS, sHOVER);
 		cb_recursive.draw(dialog_x + dialog_w - ui(48), dir_y, dir_recursive, mouse_ui);

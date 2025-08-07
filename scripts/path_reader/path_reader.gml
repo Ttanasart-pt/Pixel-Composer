@@ -5,6 +5,17 @@ function path_search(paths, _filter = ".png") {
 	return _paths;
 }
 
+function path_dirs_get_files(paths, _extension = ".png", _recur = true) {
+	var _paths = [];
+	
+	for( var i = 0, n = array_length(paths); i < n; i++ ) {
+		var p = path_dir_get_files(paths[i], _extension, _recur);
+		array_append(_paths, p);
+	}
+	
+	return _paths;
+}
+
 function path_dir_get_files(paths, _extension = ".png", _recur = true) {
 	paths      = string_trim_end(paths, ["/", "\\"]);
 	var _ext   = string_splice(_extension, ";", false, false);
@@ -18,18 +29,26 @@ function path_dir_get_files(paths, _extension = ".png", _recur = true) {
 	
 	while(!ds_stack_empty(st)) {
 		var curr_path = ds_stack_pop(st);
-		var file = file_find_first(curr_path + "/*", fa_none);
 		
+		var file = file_find_first(curr_path + "/*", fa_none);
 		while(file != "") {
-			var file_full = curr_path + "/" + file;
+			var file_full = $"{curr_path}/{file}";
+			
+			if(array_exists(_ext, string_lower(filename_ext(file))))
+				array_push(_paths, file_full);
+		
+			file = file_find_next();
+		}
+		file_find_close();
+		
+		var dirs = file_find_first(curr_path + "/*", fa_directory);
+		while(dirs != "") {
+			var file_full = $"{curr_path}/{dirs}";
 			
 			if((_recur || _root) && directory_exists(file_full))
 				ds_stack_push(st, file_full);
 				
-			else if(array_exists(_ext, string_lower(filename_ext(file))))
-				array_push(_paths, file_full);
-		
-			file = file_find_next();
+			dirs = file_find_next();
 		}
 		file_find_close();
 		
