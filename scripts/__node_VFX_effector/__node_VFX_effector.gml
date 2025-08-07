@@ -12,13 +12,11 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(0, nodeValue_Particle()).setVisible(true, true);
 	
 	////- =Area
-	
 	newInput(1, nodeValue_Area(  "Area",             DEF_AREA_REF )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
 	newInput(2, nodeValue_Curve( "Falloff",          CURVE_DEF_01 ));
 	newInput(3, nodeValue_Float( "Falloff distance", 4            ));
 	
 	////- =Effect
-	
 	newInput(8, nodeValueSeed());
 	newInput(4, nodeValue_Vec2(           "Effect Vector",    [-1,0] ));
 	newInput(5, nodeValue_Float(          "Strength",           1    ));
@@ -67,7 +65,7 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static getDimension = function() { return is(inline_context, Node_VFX_Group_Inline)? inline_context.dimension : DEF_SURF; }
 	
-	static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) {
 		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, _params));
 		
 		var area = getInputData(1);

@@ -182,22 +182,46 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 				shader_set_surface("param0", temp_surface[0]);
 				shader_set_surface("param1", temp_surface[1]);
 				
-				shader_set_f_map_s("brightness", _bri, _data[18], inputs[ 1]);
-				shader_set_f_map_s("exposure",   _exp, _data[25], inputs[10]);
-				shader_set_f_map_s("contrast",   _con, _data[19], inputs[ 2]);
-				shader_set_f_map_s("hue",        _hue, _data[20], inputs[ 3]);
-				shader_set_f_map_s("sat",        _sat, _data[21], inputs[ 4]);
-				shader_set_f_map_s("val",        _val, _data[22], inputs[ 5]);
+				// shader_set_f_map_s("brightness", _bri, _data[18], inputs[ 1]);
+				shader_set_f("brightness", is_array(_bri)? _bri : [ _bri, _bri ]); 
+				shader_set_i("brightnessUseSurf", inputs[ 1].attributes.mapped && is_surface(_data[18]));
+	
+				// shader_set_f_map_s("exposure",   _exp, _data[25], inputs[10]);
+				shader_set_f("exposure", is_array(_exp)? _exp : [ _exp, _exp ]); 
+				shader_set_i("exposureUseSurf", inputs[10].attributes.mapped && is_surface(_data[25]));
+	
+				// shader_set_f_map_s("contrast",   _con, _data[19], inputs[ 2]);
+				shader_set_f("contrast", is_array(_con)? _con : [ _con, _con ]); 
+				shader_set_i("contrastUseSurf", inputs[ 2].attributes.mapped && is_surface(_data[19]));
+	
+				// shader_set_f_map_s("hue",        _hue, _data[20], inputs[ 3]);
+				shader_set_f("hue", is_array(_hue)? _hue : [ _hue, _hue ]); 
+				shader_set_i("hueUseSurf", inputs[ 3].attributes.mapped && is_surface(_data[20]));
+	
+				// shader_set_f_map_s("sat",        _sat, _data[21], inputs[ 4]);
+				shader_set_f("sat", is_array(_sat)? _sat : [ _sat, _sat ]); 
+				shader_set_i("satUseSurf", inputs[ 4].attributes.mapped && is_surface(_data[21]));
+	
+				// shader_set_f_map_s("val",        _val, _data[22], inputs[ 5]);
+				shader_set_f("val", is_array(_val)? _val : [ _val, _val ]); 
+				shader_set_i("valUseSurf", inputs[ 5].attributes.mapped && is_surface(_data[22]));
+	
+				var _blnd = _bla * _color_get_alpha(_bl);
+				// shader_set_f_map_s("blendAmount", _blnd, _data[23], inputs[7]);
+				shader_set_f("blendAmount", is_array(_blnd)? _blnd : [ _blnd, _blnd ]); 
+				shader_set_i("blendAmountUseSurf", inputs[ 7].attributes.mapped && is_surface(_data[23]));
 				
-				shader_set_color("blend",   _bl);
-				shader_set_f_map_s("blendAmount", _bla * _color_get_alpha(_bl), _data[23], inputs[7]);
 				shader_set_i("blendMode",   _blm);
+				shader_set_color("blend",   _bl);
 				
-				shader_set_f_map_s("alpha", _alp, _data[24], inputs[9]);
+				// shader_set_f_map_s("alpha", _alp, _data[24], inputs[9]);
+				shader_set_f("alpha", is_array(_alp)? _alp : [ _alp, _alp ]); 
+				shader_set_i("alphaUseSurf", inputs[ 9].attributes.mapped && is_surface(_data[24]));
+				
 				shader_set_i("use_mask", is_surface(_m));
 				shader_set_surface("mask", _m);
 			
-				draw_surface_ext_safe(_surf, 0, 0, 1, 1, 0, c_white, 1);
+				draw_surface(_surf, 0, 0);
 			surface_reset_shader();
 		#endregion
 		

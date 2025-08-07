@@ -1045,7 +1045,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	////- Nodes
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		
 		if(!tool_selection.is_selected && active && key_mod_press(ALT)) 
 			color_picking = true;
@@ -1053,7 +1053,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(color_picking) return pickColor(_x, _y, _s, _mx, _my);
 		
 		var hovering = isUsingTool();
-		var _panel = params.panel;
+		var _panel   = _params.panel;
 		if(palette_picking) {
 			hover  = false; 
 			active = false; 

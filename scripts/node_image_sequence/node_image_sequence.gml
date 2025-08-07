@@ -42,17 +42,10 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	spr   = [];
 	color = COLORS.node_blend_input;
 	
-	newInput(0, nodeValue_Path("Paths", []))
-		.setDisplay(VALUE_DISPLAY.path_array, { filter: ["image|*.png;*.jpg", ""] });
-	
-	newInput(1, nodeValue_Padding("Padding", [0, 0, 0, 0]))
-		.rejectArray();
-	
-	newInput(2, nodeValue_Enum_Scroll("Canvas size",  0, [ "Individual", "Minimum", "Maximum" ]))
-		.rejectArray();
-	
-	newInput(3, nodeValue_Enum_Scroll("Sizing method",  0, [ "Padding / Crop", "Scale" ]))
-		.rejectArray();
+	newInput(0, nodeValue_Path("Paths", [])).setDisplay(VALUE_DISPLAY.path_array, { filter: ["image|*.png;*.jpg", ""] });
+	newInput(1, nodeValue_Padding("Padding", [0, 0, 0, 0])).rejectArray();
+	newInput(2, nodeValue_Enum_Scroll("Canvas size",  0, [ "Individual", "Minimum", "Maximum" ])).rejectArray();
+	newInput(3, nodeValue_Enum_Scroll("Sizing method",  0, [ "Padding / Crop", "Scale" ])).rejectArray();
 	
 	input_display_list = [
 		["Array settings",	false], 0, 1, 2, 3
@@ -135,7 +128,7 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		if(attributes.file_checker && !array_empty(path_current)) {
 			file_check_timer += DELTA_TIME;
 			
-			if(file_check_timer > 1) {
+			if(file_check_timer > .1) {
 				file_check_timer = 0;
 				
 				var _ed = file_get_modify_s(path_current[(file_check_index++) % array_length(path_current)]);

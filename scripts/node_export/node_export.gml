@@ -1,4 +1,7 @@
 function Node_create_Export(_x, _y, _group = noone) {
+	var node = new Node_Export(_x, _y, _group);
+	node.skipDefault();
+	
 	var path = "";
 	if(NODE_NEW_MANUAL) {
 		path = get_save_filename_compat(@"Portable Network Graphics (.png)|*.png|
@@ -9,12 +12,14 @@ MPEG-4 (.mp4)|*.mp4",
 			"export");
 			
 		key_release();
+		
+		var _dirr = filename_dir(path);
+		var _namm = filename_name(path);
+		
+		node.inputs[ 1].setValue(_dirr);
+		node.inputs[20].setValue(_namm);
+		node.extensionCheck();
 	}
-	
-	var node = new Node_Export(_x, _y, _group);
-	node.skipDefault();
-	node.inputs[1].setValue(path);
-	if(NODE_NEW_MANUAL) node.extensionCheck();
 	
 	return node;
 }

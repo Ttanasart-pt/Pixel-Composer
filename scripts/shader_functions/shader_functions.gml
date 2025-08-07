@@ -1,3 +1,4 @@
+
 function shader_set_i(uniform, value) {
 	
 	var shader = shader_current();
@@ -31,7 +32,6 @@ function shader_set_f_array(uniform, value, max_length = 128) {
 	var shader = shader_current();
 	if(shader == -1) return;
 	
-	if(array_empty(value)) return;
 	shader_set_uniform_f_array_safe(shader_get_uniform(shader, uniform), value, max_length);
 }
 
@@ -41,8 +41,8 @@ function shader_set_f(uniform, value) {
 	if(shader == -1) return;
 	
 	if(is_array(value)) {
-		if(array_empty(value)) return;
-		shader_set_uniform_f_array_safe(shader_get_uniform(shader, uniform), value);
+		if(array_length(value) == 0) return;
+		shader_set_uniform_f_array(shader_get_uniform(shader, uniform), value);
 		return;
 	}
 	
@@ -82,13 +82,13 @@ function shader_set_f_map(uniform, value, surface = noone, junc = noone) {
 }
 
 function shader_set_f_map_s(uniform, value, surface, junc) {
+	INLINE
 	shader_set_f(uniform, is_array(value)? value : [ value, value ]); 
 	shader_set_i(uniform + "UseSurf", junc.attributes.mapped && is_surface(surface));
 }
 
 function shader_set_uniform_f_array_safe(uniform, array, max_length = 4096) {
-	
-	if(!is_array(array)) return;
+	// if(!is_array(array)) return;
 	
 	var _len = array_length(array);
 	if(_len == 0) return;
