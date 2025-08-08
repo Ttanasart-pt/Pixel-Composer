@@ -271,7 +271,13 @@ function directory_exists_os(_p) { return __directory_exists(filename_os(_p)); }
 
 #macro __directory_create directory_create
 #macro directory_create directory_create_os
-function directory_create_os(_p) { return __directory_create(filename_os(_p)); }
+function directory_create_os(_p) { 
+	_p = filename_os(_p);
+	print($"Creating dir: {_p}")
+	
+	// if(OS == os_linux) return ProcessExecute($"sudo mkdir \"{_p}\"");
+	return __directory_create(_p); 
+}
 
  // ZIP
  

@@ -50,4 +50,6 @@ function json_save_struct(path, struct, pretty = false) {
 	var f = file_text_open_write(path);
 	file_text_write_string(f, s);
 	file_text_close(f);
+	
+	// show_debug_message($"Save struct at {path}");
 }

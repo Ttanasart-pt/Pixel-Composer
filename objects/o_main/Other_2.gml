@@ -11,6 +11,13 @@
 		DIRECTORY     = working_directory;
 	    APP_LOCATION  = working_directory;
 	    
+	    var _user = string_trim(shell_execute("", "whoami"));
+		DIRECTORY     = $"/home/{_user}/PixelComposer/";
+	    
+	    show_debug_message($"working_directory = {working_directory}");
+	    show_debug_message($"temp_directory = {temp_directory}");
+	    show_debug_message($"program_directory = {program_directory}");
+	    
 		PREFERENCES_DIR = $"{DIRECTORY}Preferences/{PREF_VERSION}/";
 		directory_verify($"{DIRECTORY}Cache");
 		directory_verify($"{DIRECTORY}log");
@@ -78,7 +85,10 @@
 	printDebug($"===================== WORKING DIRECTORIES =====================\n");
     show_debug_message($"APP_DIRECTORY: {APP_DIRECTORY}");
     show_debug_message($"DIRECTORY: {DIRECTORY}");
+    show_debug_message($"PREFERENCES_DIR: {PREFERENCES_DIR}");
     show_debug_message($"working_directory: {working_directory}");
+    
+    directory_verify(PREFERENCES_DIR);
 #endregion
 	
 	var t = get_timer();

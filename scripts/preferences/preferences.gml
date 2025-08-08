@@ -357,6 +357,7 @@
 	
 	function PREF_SAVE() {
 		if(IS_CMD) return;
+		// print("PREF_SAVE")
 		
 		directory_verify($"{DIRECTORY}Preferences");
 		directory_verify($"{DIRECTORY}Preferences/{PREF_VERSION}");

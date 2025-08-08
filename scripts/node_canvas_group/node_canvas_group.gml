@@ -238,13 +238,13 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 	
 	////- Draw
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, params) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) {
 		if(composite != noone) {
 			var _outSurf = composite.outputs[0].getValue();
 			draw_surface_ext_safe(_outSurf, _x, _y, _s, _s);
 		}
 		
-		if(canvas_sel) return canvas_sel.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, params);
+		if(canvas_sel) return canvas_sel.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params);
 		return false;
 	}
 	
