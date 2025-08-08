@@ -28,20 +28,14 @@ function Node_Directory_Search(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	name  = "Directory Search";
 	color = COLORS.node_blend_input;
 	
-	newInput(0, nodeValue_Path("Path"))
-		.setDisplay(VALUE_DISPLAY.path_load, { filter: "dir" });
-		
+	newInput(0, nodeValue_Path("Path")).setDisplay(VALUE_DISPLAY.path_load, { filter: "dir" });
 	newInput(1, nodeValue_Text("Extensions", ".png"));
-	
 	newInput(2, nodeValue_Enum_Scroll("Type",  0, [ "Surface", "Text" ]));
-	
-	newInput(3, nodeValue_Bool("Recursive", false))
+	newInput(3, nodeValue_Bool("Recursive", false));
+	// input 4
 		
-	newOutput(0, nodeValue_Output("Outputs", VALUE_TYPE.surface, []))
-		.setVisible(true, true);
-		
-	newOutput(1, nodeValue_Output("Paths", VALUE_TYPE.path, [""]))
-		.setVisible(true, true);
+	newOutput(0, nodeValue_Output("Outputs", VALUE_TYPE.surface, [])).setVisible(true, true);
+	newOutput(1, nodeValue_Output("Paths", VALUE_TYPE.path, [""])).setVisible(true, true);
 	
 	attribute_surface_depth();
 	

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_iterate_each_file_inline_output",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_iterate_each_file_inline_output",
+  "parent":{
+    "name":"for_each_file",
+    "path":"folders/nodes/data/iterate/for_each_file.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

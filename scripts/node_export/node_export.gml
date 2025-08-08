@@ -67,7 +67,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	newInput( 2, nodeValue_Text(    "Template",        "%d%n" )).rejectArray();
 	inputs[2].editWidget.format		 = TEXT_AREA_FORMAT.path_template;
 	inputs[2].editWidget.auto_update = true;
-	newInput(16, nodeValue_Bool(    "Export on Save", false)).setTooltip("Automatically export when saving project.");
+	newInput(16, nodeValue_Bool(    "Export on Save",   false)).setTooltip("Automatically export when saving project.");
+	newInput(22, nodeValue_Bool(    "Export on Update", false));
 	
 	////- =Format
 	newInput( 3, nodeValue_Enum_Scroll( "Type",   0, { data: format_single, update_hover: false } )).rejectArray();
@@ -93,7 +94,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	newInput(14, nodeValue_Int(  "Frame step",        1 ));
 	newInput(21, nodeValue_Int(  "Batch gif",         0 )).setTooltip("Batch animations to reduce memory footprint. Set to zero to export all at once.");
 	
-	// inputs 22
+	// inputs 23
 	
 	newOutput(0, nodeValue_Output("Preview", VALUE_TYPE.surface, noone));
 	
@@ -183,7 +184,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	});
 	
 	input_display_list = [
-		["Export",		 false    ],  0,  1, 20,  2, export_template, 16, 
+		["Export",		 false    ],  0,  1, 20,  2, export_template, 16, 22, 
 		["Format",		 false    ],  3,  9, 17, 18,  6,  7, 10, 13, 
 		["Post-Process", false    ], 19,
 		["Custom Range",  true, 15], 12, 
@@ -955,7 +956,10 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var anim = getInputData(3);
+		var anim = getInputData( 3);
+		var expt = getInputData(22);
+		
+		if(expt) export(false);
 		
 		if(anim == NODE_EXPORT_FORMAT.single)
 			return;

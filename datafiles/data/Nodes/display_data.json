@@ -1075,6 +1075,7 @@
             "Node_Feedback",
             "Node_Iterate",
             "Node_Iterate_Each_Inline",
+            "Node_Iterate_Each_File_Inline",
             "Node_Iterate_Filter_Inline",
             
             { "label": "Lua" },

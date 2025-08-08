@@ -286,14 +286,15 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(0, nodeValue_Surface( "Surface In" ));
 	
 	////- =Output
-	newInput(9, nodeValue_Enum_Scroll( "Output Dimension Type", OUTPUT_SCALING.same_as_input, [
+	newInput( 9, nodeValue_Enum_Scroll( "Output Dimension Type", OUTPUT_SCALING.same_as_input, [
 		new scrollItem("Same as input"),
 		new scrollItem("Constant"),
 		new scrollItem("Relative to input").setTooltip("Set dimension as a multiple of input surface."),
 		new scrollItem("Fit content").setTooltip("Automatically set dimension to fit content."),
 	]));
-	newInput(1, nodeValue_Dimension()).setVisible(false);
-	newInput(7, nodeValue_Enum_Button( "Render Mode",  0, [ "Normal", "Tile", "Wrap" ] ));
+	newInput( 1, nodeValue_Dimension()).setVisible(false);
+	newInput(15, nodeValue_Vec2( "Dimension Scale", [1,1], { linked: true} ));
+	newInput( 7, nodeValue_Enum_Button( "Render Mode",  0, [ "Normal", "Tile", "Wrap" ] ));
 	
 	////- =Position
 	newInput( 2, nodeValue_Vec2( "Position",       [.5,.5] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
@@ -314,17 +315,13 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	////- =Echo
 	newInput(12, nodeValue_Bool( "Echo",        false ));
 	newInput(13, nodeValue_Int(  "Echo Amount", 8     ));
+	// input 16
 	
-	// input 15
-	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
-	
-	newOutput(1, nodeValue_Output("Dimension", VALUE_TYPE.integer, [ 1, 1 ]))
-		.setDisplay(VALUE_DISPLAY.vector)
-		.setVisible(false);
+	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone    ));
+	newOutput(1, nodeValue_Output( "Dimension",   VALUE_TYPE.integer, [ 1, 1 ] )).setDisplay(VALUE_DISPLAY.vector).setVisible(false);
 	
 	input_display_list = [ 11, 0,  
-		["Output",		 true],	9, 1, 7,
+		["Output",		 true],	9, 1, 15, 7,
 		["Position",	false], 2, 10, 3, 
 		["Rotation",	false], 5, 8, 
 		["Scale",		false], 6, 
@@ -343,7 +340,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	tool_sca = new NodeTool( "Scale",  THEME.tools_2d_scale  ).setToolObject(tool_object_sca);
 	tools    = [ tool_pos, tool_rot, tool_sca ];
 	
-	////- Nodes
+	////- Draw
 	
 	attribute_surface_depth();
 	attribute_interpolation();
@@ -356,241 +353,6 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	__p1 = [ 0, 0 ];
 	__p2 = [ 0, 0 ];
 	__p3 = [ 0, 0 ];
-	
-	static getDimension = function(arr = 0) {
-		var _surf		= getSingleValue(0, arr);
-		var _out_type	= getSingleValue(9, arr);
-		var _out		= getSingleValue(1, arr);
-		var _rotate		= getSingleValue(5, arr);
-		var _scale		= getSingleValue(6, arr);
-		var ww, hh;
-		
-		var sw  = surface_get_width_safe(_surf);
-		var sh  = surface_get_height_safe(_surf);
-		
-		switch(_out_type) {
-			case OUTPUT_SCALING.same_as_input :
-				ww = sw;
-				hh = sh;
-				break;
-				
-			case OUTPUT_SCALING.relative : 
-				ww = sw * _out[0];
-				hh = sh * _out[1];
-				break;
-				
-			case OUTPUT_SCALING.constant :	
-				ww = _out[0];
-				hh = _out[1];
-				break;
-				
-			case OUTPUT_SCALING.scale :	
-				ww = sw * _scale[0];
-				hh = sh * _scale[1];
-				
-				var p0 = point_rotate( 0,  0, ww / 2, hh / 2, _rotate, __p0);
-				var p1 = point_rotate(ww,  0, ww / 2, hh / 2, _rotate, __p1);
-				var p2 = point_rotate( 0, hh, ww / 2, hh / 2, _rotate, __p2);
-				var p3 = point_rotate(ww, hh, ww / 2, hh / 2, _rotate, __p3);
-				
-				var minx = min(p0[0], p1[0], p2[0], p3[0]);
-				var maxx = max(p0[0], p1[0], p2[0], p3[0]);
-				var miny = min(p0[1], p1[1], p2[1], p3[1]);
-				var maxy = max(p0[1], p1[1], p2[1], p3[1]);
-				
-				ww = maxx - minx;
-				hh = maxy - miny;
-				break;
-		}
-		
-		return [ ww, hh ];
-	}
-	
-	static centerAnchor = function() {
-		var _surf = getInputData(0);
-		
-		var _out_type = getInputData(9);
-		var _out = getInputData(1);
-		var _sca = getInputData(6);
-		
-		if(is_array(_surf)) {
-			if(array_length(_surf) == 0) return;
-			_surf = _surf[preview_index];
-		}
-		
-		inputs[3].setValue([ 0.5, 0.5 ]);
-		inputs[2].setValue([ surface_get_width_safe(_surf) / 2, surface_get_height_safe(_surf) / 2 ]);
-	}
-	
-	static step = function() {
-		if(!PROJECT.animator.frame_progress) return;
-		var pos = getSingleValue(2);
-		
-		if(IS_FIRST_FRAME) {
-			vel = 0;
-			prev_pos[0] = pos[0];
-			prev_pos[1] = pos[1];
-			
-		} else {
-			vel = point_direction(prev_pos[0], prev_pos[1], pos[0], pos[1]);
-				
-			prev_pos[0] = pos[0];
-			prev_pos[1] = pos[1];
-		}
-	}
-	
-	static processData = function(_outData, _data, _array_index) {
-		var ins = _data[0];
-		
-		var out_type  = _data[9];
-		var out		  = _data[1];
-		var pos		  = [ _data[2][0], _data[2][1] ];
-		var pos_exact = _data[10];
-		var anc       = [ _data[3][0], _data[3][1] ];
-		var rot_vel   = vel * _data[8];
-		var rot		  = _data[5] + rot_vel;
-		var sca       = _data[6];
-		var mode      = _data[7];
-		
-		var echo      = _data[12];
-		var echo_amo  = _data[13];
-		var alp       = _data[14];
-		
-		var _outSurf  = _outData[0];
-		
-		var cDep = attrDepth();
-		
-		var  ww = surface_get_width_safe(ins);
-		var  hh = surface_get_height_safe(ins);
-		var _ww = ww;
-		var _hh = hh;
-		
-		if(!is_surface(ins)) {
-			surface_free_safe(_outSurf);
-			_outSurf = noone;
-		}
-		
-		_outData[1] = [ ww, hh ];
-		if(_ww <= 1 && _hh <= 1) return _outData;
-		
-		switch(out_type) { // output dimension
-			case OUTPUT_SCALING.same_as_input :
-				inputs[1].setVisible(false);
-				break;
-				
-			case OUTPUT_SCALING.constant :	
-				inputs[1].setVisible(true);
-				_ww  = out[0];
-				_hh  = out[1];
-				break;
-				
-			case OUTPUT_SCALING.relative : 
-				inputs[1].setVisible(true);
-				_ww = ww * out[0];
-				_hh = hh * out[1];
-				break;
-				
-			case OUTPUT_SCALING.scale : 
-				inputs[1].setVisible(false);
-				_ww = ww * sca[0];
-				_hh = hh * sca[1];
-				
-				var p0 = point_rotate(  0,   0, _ww / 2, _hh / 2, rot, __p0);
-				var p1 = point_rotate(_ww,   0, _ww / 2, _hh / 2, rot, __p1);
-				var p2 = point_rotate(  0, _hh, _ww / 2, _hh / 2, rot, __p2);
-				var p3 = point_rotate(_ww, _hh, _ww / 2, _hh / 2, rot, __p3);
-				
-				var minx = min(p0[0], p1[0], p2[0], p3[0]);
-				var maxx = max(p0[0], p1[0], p2[0], p3[0]);
-				var miny = min(p0[1], p1[1], p2[1], p3[1]);
-				var maxy = max(p0[1], p1[1], p2[1], p3[1]);
-				
-				_ww = maxx - minx;
-				_hh = maxy - miny;
-				break;
-		}
-		
-		_outData[1] = [ ww, hh ];
-		
-		if(_ww <= 0 || _hh <= 0) return _outData;
-		
-		_outSurf = surface_verify(_outSurf, _ww, _hh, cDep);
-		_outData[0] = _outSurf;
-		
-		anc[0] *= ww * sca[0];
-		anc[1] *= hh * sca[1];
-		
-		pos[0] -= anc[0];
-		pos[1] -= anc[1];
-		
-		pos = point_rotate(pos[0], pos[1], pos[0] + anc[0], pos[1] + anc[1], rot);
-		
-		var draw_x, draw_y;
-		draw_x = pos[0];
-		draw_y = pos[1];
-				
-		if(pos_exact) {
-			draw_x = round(draw_x);
-			draw_y = round(draw_y);
-		}
-			
-		if(mode == 1) { // Tile
-			surface_set_shader(_outSurf);
-			shader_set_interpolation(ins);
-			
-				draw_surface_tiled_ext_safe(ins, draw_x, draw_y, sca[0], sca[1], rot, c_white, alp);
-				
-			surface_reset_shader();
-			
-		} else { // Normal or wrap
-			surface_set_shader(_outSurf);
-			shader_set_interpolation(ins);
-			
-			if(echo && CURRENT_FRAME && prev_data != noone) {
-				var _pre = prev_data[_array_index];
-				
-				for( var i = 0; i <= echo_amo; i++ ) {
-					var rat = i / echo_amo;
-					var _px = lerp(_pre[0][0], draw_x, rat);
-					var _py = lerp(_pre[0][1], draw_y, rat);
-					var _rt = lerp(_pre[1],    rot,    rat);
-					var _sx = lerp(_pre[2][0], sca[0], rat);
-					var _sy = lerp(_pre[2][1], sca[1], rat);
-					
-					if(pos_exact) {
-						_px = round(_px);
-						_py = round(_py);
-					}
-					
-					draw_surface_ext_safe(ins, _px, _py, _sx, _sy, _rt, c_white, alp);
-				}
-			} else 
-				draw_surface_ext_safe(ins, draw_x, draw_y, sca[0], sca[1], rot, c_white, alp);
-			
-			if(mode == 2) {
-				draw_surface_ext_safe(ins, draw_x - _ww, draw_y - _hh, sca[0], sca[1], rot, c_white, alp);
-				draw_surface_ext_safe(ins, draw_x,       draw_y - _hh, sca[0], sca[1], rot, c_white, alp);
-				draw_surface_ext_safe(ins, draw_x + _ww, draw_y - _hh, sca[0], sca[1], rot, c_white, alp);
-				
-				draw_surface_ext_safe(ins, draw_x - _ww, draw_y, sca[0], sca[1], rot, c_white, alp);
-				draw_surface_ext_safe(ins, draw_x + _ww, draw_y, sca[0], sca[1], rot, c_white, alp);
-				
-				draw_surface_ext_safe(ins, draw_x - _ww, draw_y + _hh, sca[0], sca[1], rot, c_white, alp);
-				draw_surface_ext_safe(ins, draw_x,       draw_y + _hh, sca[0], sca[1], rot, c_white, alp);
-				draw_surface_ext_safe(ins, draw_x + _ww, draw_y + _hh, sca[0], sca[1], rot, c_white, alp);
-			}
-			surface_reset_shader();
-		
-		}
-		
-		prev_data[_array_index] = [
-			[ draw_x, draw_y ],
-			rot,
-			[ sca[0], sca[1] ],
-		];
-		
-		return _outData;
-	}
 	
 	drag_type = noone;
 	drag_anchor  = 0;
@@ -967,6 +729,244 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		var _tr = array_safe_get(prev_data, preview_index, noone);
 		return _tr == noone? noone : [ _tr[0][0], _tr[0][1], _tr[2][0], _tr[2][1], _tr[1] ];
+	}
+	
+	////- Nodes
+	
+	static getDimension = function(arr = 0) {
+		var _surf     = getSingleValue( 0, arr);
+		var _out_type = getSingleValue( 9, arr);
+		var _dim      = getSingleValue( 1, arr);
+		var _dimScal  = getSingleValue(15, arr);
+		var _rotate   = getSingleValue( 5, arr);
+		var _scale    = getSingleValue( 6, arr);
+		var ww, hh;
+		
+		var sw  = surface_get_width_safe(_surf);
+		var sh  = surface_get_height_safe(_surf);
+		
+		switch(_out_type) {
+			case OUTPUT_SCALING.same_as_input :
+				ww = sw;
+				hh = sh;
+				break;
+				
+			case OUTPUT_SCALING.relative : 
+				ww = sw * _dimScal[0];
+				hh = sh * _dimScal[1];
+				break;
+				
+			case OUTPUT_SCALING.constant :	
+				ww = _dim[0];
+				hh = _dim[1];
+				break;
+				
+			case OUTPUT_SCALING.scale :	
+				ww = sw * _scale[0];
+				hh = sh * _scale[1];
+				
+				var p0 = point_rotate( 0,  0, ww / 2, hh / 2, _rotate, __p0);
+				var p1 = point_rotate(ww,  0, ww / 2, hh / 2, _rotate, __p1);
+				var p2 = point_rotate( 0, hh, ww / 2, hh / 2, _rotate, __p2);
+				var p3 = point_rotate(ww, hh, ww / 2, hh / 2, _rotate, __p3);
+				
+				var minx = min(p0[0], p1[0], p2[0], p3[0]);
+				var maxx = max(p0[0], p1[0], p2[0], p3[0]);
+				var miny = min(p0[1], p1[1], p2[1], p3[1]);
+				var maxy = max(p0[1], p1[1], p2[1], p3[1]);
+				
+				ww = maxx - minx;
+				hh = maxy - miny;
+				break;
+		}
+		
+		return [ ww, hh ];
+	}
+	
+	static centerAnchor = function() {
+		var _surf = getInputData(0);
+		
+		var _out_type = getInputData(9);
+		var _out = getInputData(1);
+		var _sca = getInputData(6);
+		
+		if(is_array(_surf)) {
+			if(array_length(_surf) == 0) return;
+			_surf = _surf[preview_index];
+		}
+		
+		inputs[3].setValue([ 0.5, 0.5 ]);
+		inputs[2].setValue([ surface_get_width_safe(_surf) / 2, surface_get_height_safe(_surf) / 2 ]);
+	}
+	
+	static step = function() {
+		if(!PROJECT.animator.frame_progress) return;
+		var pos = getSingleValue(2);
+		
+		if(IS_FIRST_FRAME) {
+			vel = 0;
+			prev_pos[0] = pos[0];
+			prev_pos[1] = pos[1];
+			
+		} else {
+			vel = point_direction(prev_pos[0], prev_pos[1], pos[0], pos[1]);
+				
+			prev_pos[0] = pos[0];
+			prev_pos[1] = pos[1];
+		}
+	}
+	
+	static processData = function(_outData, _data, _array_index) {
+		var ins = _data[0];
+		
+		var out_type  = _data[9];
+		var dim		  = _data[1];
+		var dimScal   = _data[15];
+		var pos		  = [ _data[2][0], _data[2][1] ];
+		var pos_exact = _data[10];
+		var anc       = [ _data[3][0], _data[3][1] ];
+		var rot_vel   = vel * _data[8];
+		var rot		  = _data[5] + rot_vel;
+		var sca       = _data[6];
+		var mode      = _data[7];
+		
+		var echo      = _data[12];
+		var echo_amo  = _data[13];
+		var alp       = _data[14];
+		
+		var _outSurf  = _outData[0];
+		
+		var cDep = attrDepth();
+		
+		var  ww = surface_get_width_safe(ins);
+		var  hh = surface_get_height_safe(ins);
+		var _ww = ww;
+		var _hh = hh;
+		
+		if(!is_surface(ins)) {
+			surface_free_safe(_outSurf);
+			_outSurf = noone;
+		}
+		
+		_outData[1] = [ ww, hh ];
+		if(_ww <= 1 && _hh <= 1) return _outData;
+		
+		inputs[ 1].setVisible(out_type == OUTPUT_SCALING.constant);
+		inputs[15].setVisible(out_type == OUTPUT_SCALING.relative);
+		
+		switch(out_type) { // output dimension
+			case OUTPUT_SCALING.same_as_input :
+				break;
+				
+			case OUTPUT_SCALING.constant :	
+				_ww  = dim[0];
+				_hh  = dim[1];
+				break;
+				
+			case OUTPUT_SCALING.relative : 
+				_ww = ww * dimScal[0];
+				_hh = hh * dimScal[1];
+				break;
+				
+			case OUTPUT_SCALING.scale : 
+				_ww = ww * sca[0];
+				_hh = hh * sca[1];
+				
+				var p0 = point_rotate(  0,   0, _ww / 2, _hh / 2, rot, __p0);
+				var p1 = point_rotate(_ww,   0, _ww / 2, _hh / 2, rot, __p1);
+				var p2 = point_rotate(  0, _hh, _ww / 2, _hh / 2, rot, __p2);
+				var p3 = point_rotate(_ww, _hh, _ww / 2, _hh / 2, rot, __p3);
+				
+				var minx = min(p0[0], p1[0], p2[0], p3[0]);
+				var maxx = max(p0[0], p1[0], p2[0], p3[0]);
+				var miny = min(p0[1], p1[1], p2[1], p3[1]);
+				var maxy = max(p0[1], p1[1], p2[1], p3[1]);
+				
+				_ww = maxx - minx;
+				_hh = maxy - miny;
+				break;
+		}
+		
+		_outData[1] = [ ww, hh ];
+		
+		if(_ww <= 0 || _hh <= 0) return _outData;
+		
+		_outSurf = surface_verify(_outSurf, _ww, _hh, cDep);
+		_outData[0] = _outSurf;
+		
+		anc[0] *= ww * sca[0];
+		anc[1] *= hh * sca[1];
+		
+		pos[0] -= anc[0];
+		pos[1] -= anc[1];
+		
+		pos = point_rotate(pos[0], pos[1], pos[0] + anc[0], pos[1] + anc[1], rot);
+		
+		var draw_x, draw_y;
+		draw_x = pos[0];
+		draw_y = pos[1];
+				
+		if(pos_exact) {
+			draw_x = round(draw_x);
+			draw_y = round(draw_y);
+		}
+			
+		if(mode == 1) { // Tile
+			surface_set_shader(_outSurf);
+			shader_set_interpolation(ins);
+			
+				draw_surface_tiled_ext_safe(ins, draw_x, draw_y, sca[0], sca[1], rot, c_white, alp);
+				
+			surface_reset_shader();
+			
+		} else { // Normal or wrap
+			surface_set_shader(_outSurf);
+			shader_set_interpolation(ins);
+			
+			if(echo && CURRENT_FRAME && prev_data != noone) {
+				var _pre = prev_data[_array_index];
+				
+				for( var i = 0; i <= echo_amo; i++ ) {
+					var rat = i / echo_amo;
+					var _px = lerp(_pre[0][0], draw_x, rat);
+					var _py = lerp(_pre[0][1], draw_y, rat);
+					var _rt = lerp(_pre[1],    rot,    rat);
+					var _sx = lerp(_pre[2][0], sca[0], rat);
+					var _sy = lerp(_pre[2][1], sca[1], rat);
+					
+					if(pos_exact) {
+						_px = round(_px);
+						_py = round(_py);
+					}
+					
+					draw_surface_ext_safe(ins, _px, _py, _sx, _sy, _rt, c_white, alp);
+				}
+			} else 
+				draw_surface_ext_safe(ins, draw_x, draw_y, sca[0], sca[1], rot, c_white, alp);
+			
+			if(mode == 2) {
+				draw_surface_ext_safe(ins, draw_x - _ww, draw_y - _hh, sca[0], sca[1], rot, c_white, alp);
+				draw_surface_ext_safe(ins, draw_x,       draw_y - _hh, sca[0], sca[1], rot, c_white, alp);
+				draw_surface_ext_safe(ins, draw_x + _ww, draw_y - _hh, sca[0], sca[1], rot, c_white, alp);
+				
+				draw_surface_ext_safe(ins, draw_x - _ww, draw_y, sca[0], sca[1], rot, c_white, alp);
+				draw_surface_ext_safe(ins, draw_x + _ww, draw_y, sca[0], sca[1], rot, c_white, alp);
+				
+				draw_surface_ext_safe(ins, draw_x - _ww, draw_y + _hh, sca[0], sca[1], rot, c_white, alp);
+				draw_surface_ext_safe(ins, draw_x,       draw_y + _hh, sca[0], sca[1], rot, c_white, alp);
+				draw_surface_ext_safe(ins, draw_x + _ww, draw_y + _hh, sca[0], sca[1], rot, c_white, alp);
+			}
+			surface_reset_shader();
+		
+		}
+		
+		prev_data[_array_index] = [
+			[ draw_x, draw_y ],
+			rot,
+			[ sca[0], sca[1] ],
+		];
+		
+		return _outData;
 	}
 	
 }

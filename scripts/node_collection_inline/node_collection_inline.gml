@@ -86,13 +86,22 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	static getNodeBorder = function(_ind, _vertex, _node) {
 		var _rad = 6;
 		var _stp = 30;
+		var _nx0, _ny0, _nx1, _ny1;
 		
 		__temp_node = _node;
 		
-		var _nx0 = array_any(input_node_types,   function(n) /*=>*/ {return is(__temp_node, n)})? _node.x + _node.w / 2 : _node.x - 32 + _rad;
-		var _ny0 = _node.y - 32 + _rad;
-		var _nx1 = array_any(output_node_types, function(n) /*=>*/ {return is(__temp_node, n)})? _node.x + _node.w / 2 : _node.x + _node.w + 32 - _rad;
-		var _ny1 = _node.y + _node.h + 32 - _rad;
+		if(is(_node, Node_Pin)) {
+			_nx0 = _node.x - 32;
+			_ny0 = _node.y - 32;
+			_nx1 = _node.x + 32;
+			_ny1 = _node.y + 32;
+
+		} else {
+			_nx0 = array_any(input_node_types,  function(n) /*=>*/ {return is(__temp_node, n)})? _node.x + _node.w / 2 : _node.x - 32 + _rad;
+			_ny0 = _node.y - 32 + _rad;
+			_nx1 = array_any(output_node_types, function(n) /*=>*/ {return is(__temp_node, n)})? _node.x + _node.w / 2 : _node.x + _node.w + 32 - _rad;
+			_ny1 = _node.y + _node.h + 32 - _rad;
+		}
 		
 		for( var i =   0; i <=  90; i += _stp ) _vertex[_ind++] = [ _nx1 + lengthdir_x(_rad, i), _ny0 + lengthdir_y(_rad, i) ];
 		for( var i =  90; i <= 180; i += _stp ) _vertex[_ind++] = [ _nx0 + lengthdir_x(_rad, i), _ny0 + lengthdir_y(_rad, i) ];
