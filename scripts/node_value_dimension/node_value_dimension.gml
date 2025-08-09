@@ -1,6 +1,5 @@
 function nodeValue_Dimension(name = "Dimension") { return new __NodeValue_Dimension(self, DEF_SURF, name); }
-function __NodeValue_Dimension(_node, value, _name = "Dimension") : NodeValue("Dimension", _node, CONNECT_TYPE.input, VALUE_TYPE.integer, value, "") constructor {
-	setDisplay(VALUE_DISPLAY.vector);
+function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_Vec2("Dimension", _node, value, true) constructor {
 	def_length = 2;
 	
 	attributes.use_project_dimension = true;

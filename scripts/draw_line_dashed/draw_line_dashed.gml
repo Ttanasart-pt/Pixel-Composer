@@ -1,26 +1,11 @@
 function draw_line_dashed(x0, y0, x1, y1, th = 1, dash_distance = 8, dash_shift = 0) {
-	var dis  = point_distance(x0, y0, x1, y1);
-	var dir  = point_direction(x0, y0, x1, y1);
-	var part = ceil(dis / dash_distance);
-	
-	var dx = lengthdir_x(1, dir);
-	var dy = lengthdir_y(1, dir);
-	
-	var ox, oy, nx, ny, od, nd;
-	var rat = dash_distance / dis;
-	
-	for( var i = 0; i <= part; i++ ) {
-		nd = dis * frac(i * rat + dash_shift / dis);
-		nx = x0 + dx * nd;
-		ny = y0 + dy * nd;
+	shader_set(sh_ui_line_dashed);
+		shader_set_2( "worldPos",   [x0, y0]);
+		shader_set_f( "dash",       dash_distance);
+		shader_set_f( "dashShift",  dash_shift);
 		
-		if(i && i % 2 && nd > od)
-			draw_line_width(ox, oy, nx, ny, th);
-		
-		ox = nx;
-		oy = ny;
-		od = nd;
-	}
+		draw_line_width(x0, y0, x1, y1, th);
+	shader_reset();
 }
 
 function draw_line_dashed_color(x0, y0, x1, y1, th, c0, c1, dash_distance = 8) {

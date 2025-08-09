@@ -52,7 +52,7 @@ function __file_selector(_mode = "save", _dir = PREFERENCES.dialog_path, _fname 
 	_arg[$ "-y"]      = WIN_Y + WIN_H / 2;
 	
 	var rep  = $"{APP_LOCATION}fs/fs.exe";
-	if(OS == os_linux) rep = $"{APP_LOCATION}fs/fs.appimage";
+	if(OS == os_linux) rep = FS_PATH;
 	
 	var args = shellCommandBuilder(_arg);
 	var _out = shell_execute(rep, args);

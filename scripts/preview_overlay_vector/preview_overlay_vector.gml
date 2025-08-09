@@ -15,11 +15,11 @@ function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 	if(drag_type) {
 		_index = 1;
 		
-		_val[0] = (drag_sx - _x) / _s / _scale[0];
-		_val[1] = (drag_sy - _y) / _s / _scale[1];
+		_val[0] = drag_sx;
+		_val[1] = drag_sy;
 		
-		var _nx = (drag_sx + (_mx - drag_mx) - _x) / _s / _scale[0];
-		var _ny = (drag_sy + (_my - drag_my) - _y) / _s / _scale[1];
+		var _nx = drag_sx + ((_mx - drag_mx) / _s / _scale[0]);
+		var _ny = drag_sy + ((_my - drag_my) / _s / _scale[1]);
 		
 		_nx = value_snap(_nx, _snx);
 		_ny = value_snap(_ny, _sny);
@@ -30,8 +30,11 @@ function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 			else
 				_nx = drag_rx;
 			
+			var _sax = drag_sx * _s * _scale[0] + _x;
+			var _say = drag_sy * _s * _scale[1] + _y;
+	
 			draw_set_color(COLORS._main_accent);
-			draw_line(drag_sx, drag_sy, _x + _nx * _s * _scale[0], _y + _ny * _s * _scale[1]);
+			draw_line(_sax, _say, _x + _nx * _s * _scale[0], _y + _ny * _s * _scale[1]);
 		}
 		
 		if(key_mod_press(CTRL)) {
@@ -59,8 +62,8 @@ function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 			drag_type = 1;
 			drag_mx   = _mx;
 			drag_my   = _my;
-			drag_sx   = _ax;
-			drag_sy   = _ay;
+			drag_sx   = _val[0];
+			drag_sy   = _val[1];
 			drag_rx   = __ax;
 			drag_ry   = __ay;
 			

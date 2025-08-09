@@ -2,8 +2,9 @@
 //print("===== Game Start Begin =====");
 
 #region directory
-	globalvar DIRECTORY, APP_DIRECTORY, APP_LOCATION, PRESIST_PREF;
+	globalvar DIRECTORY, APP_DIRECTORY, APP_LOCATION, PRESIST_PREF, FS_PATH;
 	DIRECTORY    = "";
+	FS_PATH      = "";
 	PRESIST_PREF = { path: "" };
 	
 	if(OS == os_linux) {
@@ -12,7 +13,7 @@
 	    APP_LOCATION  = working_directory;
 	    
 	    var _user = string_trim(shell_execute("", "whoami"));
-		DIRECTORY     = $"/home/{_user}/PixelComposer/";
+		DIRECTORY = $"/home/{_user}/PixelComposer/";
 	    
 	    show_debug_message($"working_directory = {working_directory}");
 	    show_debug_message($"temp_directory = {temp_directory}");
@@ -23,8 +24,11 @@
 		directory_verify($"{DIRECTORY}log");
 		
 		var fsPath = $"{APP_LOCATION}fs/fs.appimage";
-		ProcessExecute($"chmod +x {fsPath}");
-	
+		FS_PATH    = $"{DIRECTORY}fs.appimage";
+		
+		file_copy_override(fsPath, FS_PATH);
+		shell_execute("", $"chmod +x {FS_PATH}");
+		
 	} else if(OS == os_macosx) {
 		APP_DIRECTORY = working_directory;
 		DIRECTORY     = working_directory;

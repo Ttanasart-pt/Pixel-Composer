@@ -39,18 +39,17 @@ gml_pragma("UnityBuild", "true");
 	
 	FPS_REAL = 0;
 	RUN_IDE  = GM_build_type == "run";
-	
-	DEBUG = false;
+	DEBUG    = false;
 	COLOR_KEY_ARRAY = [];
 	
 	globalvar VERSION, SAVE_VERSION, VERSION_STRING, BUILD_NUMBER, LATEST_VERSION, NIGHTLY, RELEASE_STRING;
 	
 	LATEST_VERSION	= 1_19_00_0;
-	VERSION			= 1_19_07_0;
+	VERSION			= 1_19_07_1;
 	SAVE_VERSION	= 1_19_06_0;
-	VERSION_STRING  = MAC? "1.18.003m" : "1.19.8.001";
+	VERSION_STRING  = MAC? "1.18.003m" : "1.19.7.1";
 	RELEASE_STRING  = "1.19.7";
-	BUILD_NUMBER	= 1_19_07_0.001;
+	BUILD_NUMBER	= 1_19_07_1;
 	PREF_VERSION    = 1_17_1;
 	
 	var _lsp = array_last(string_split(VERSION_STRING, "."));

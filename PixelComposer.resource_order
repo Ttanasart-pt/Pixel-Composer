@@ -310,6 +310,7 @@
     {"name":"rotator","order":1,"path":"folders/widgets/rotator.yy",},
     {"name":"sliders","order":2,"path":"folders/widgets/sliders.yy",},
     {"name":"text","order":3,"path":"folders/widgets/text.yy",},
+    {"name":"shaders","order":21,"path":"folders/functions/draw/shaders.yy",},
   ],
   "ResourceOrderSettings":[
     {"name":"ac_disappear","order":2,"path":"animcurves/ac_disappear/ac_disappear.yy",},
@@ -1272,6 +1273,7 @@
     {"name":"node_shuffle","order":56,"path":"scripts/node_shuffle/node_shuffle.yy",},
     {"name":"node_skew","order":18,"path":"scripts/node_skew/node_skew.yy",},
     {"name":"node_sky","order":22,"path":"scripts/node_sky/node_sky.yy",},
+    {"name":"sh_ui_line_dashed","order":0,"path":"shaders/sh_ui_line_dashed/sh_ui_line_dashed.yy",},
     {"name":"node_slider_range_data","order":16,"path":"scripts/node_slider_range_data/node_slider_range_data.yy",},
     {"name":"node_slideshow","order":33,"path":"scripts/node_slideshow/node_slideshow.yy",},
     {"name":"node_smear","order":27,"path":"scripts/node_smear/node_smear.yy",},
