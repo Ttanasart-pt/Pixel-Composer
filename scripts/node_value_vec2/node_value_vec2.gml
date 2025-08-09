@@ -33,7 +33,7 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 			
 			if(_d == 0) return valueProcess([ val, val ], nod, applyUnit, arrIndex);
 			if(_d == 1) return valueProcess(val, nod, applyUnit, arrIndex);
-			if(_d == 2) return array_map(val, function(v, i) /*=>*/ {return valueProcess(array_verify(v, 2), __nod, __applyUnit, __arrIndex)});
+			if(_d == 2) return array_map(val, function(v, i) /*=>*/ {return valueProcess(array_verify_min(v, 2), __nod, __applyUnit, __arrIndex)});
 			
 			return val;
 		}

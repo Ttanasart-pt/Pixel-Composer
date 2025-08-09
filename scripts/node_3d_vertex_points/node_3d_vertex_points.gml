@@ -36,9 +36,9 @@ function Node_3D_Mesh_Vertex_Points(_x, _y, _group = noone) : Node_Processor(_x,
 			var _p = _points[i];
 			if(!is_array(_p)) continue;
 			
-			_v3.x = _p[0];
-			_v3.y = _p[1];
-			_v3.z = _p[2];
+			_v3.x = array_safe_get_fast(_p, 0);
+			_v3.y = array_safe_get_fast(_p, 1);
+			_v3.z = array_safe_get_fast(_p, 2);
 			
 			var _posView = _camera.worldPointToViewPoint(_v3);
 			var _x = _posView.x;
