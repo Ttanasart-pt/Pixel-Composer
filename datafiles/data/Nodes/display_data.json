@@ -403,6 +403,7 @@
             { "label": "Transforms" },
             "Node_Transform",
             "Node_Scale",
+            "Node_Downscale",
             "Node_Scale_Algo",
             "Node_Flip",
             "Node_Offset",

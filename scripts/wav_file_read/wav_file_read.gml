@@ -101,10 +101,17 @@ function file_read_wav_step() {
 	if(!content)          return false;
 	
 	var t = current_time;
-	var bf_type, lim;
-	if(content.bit_depth == 8)		 { bf_type = buffer_u8;	 lim =           255; }
-	else if(content.bit_depth == 16) { bf_type = buffer_s16; lim =        32_768; }
-	else if(content.bit_depth == 32) { bf_type = buffer_s32; lim = 2_147_483_648; }
+	var bf_type = undefined, lim;
+	
+	switch(content.bit_depth) {
+		case  8 : bf_type = buffer_u8;  lim =           255; break;
+		case 16 : bf_type = buffer_s16; lim =        32_768; break;
+		case 32 : bf_type = buffer_s32; lim = 2_147_483_648; break;
+		
+		default :
+			noti_warning($"Bit depth {content.bit_depth} not supported, the audio file need to be 8, 16, 32 bit uncompressed PCM wav with no extension.");
+			return true;
+	}
 	
 	// print($"Reading {wav_file_prg} to {content.packet} ({content.packet - wav_file_prg}) with remaining data {(buffer_get_size(wav_file_reader) - buffer_tell(wav_file_reader)) / (content.bit_depth / 8)}");
 	while(wav_file_prg < content.packet) {

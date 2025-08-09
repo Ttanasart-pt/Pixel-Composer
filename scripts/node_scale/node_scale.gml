@@ -8,23 +8,19 @@
 function Node_Scale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Scale";
 	dimension_index = -1;
-	
-	manage_atlas = false;
+	manage_atlas    = false;
 	
 	newActiveInput(4);
 	
-	////- Surfaces
-	
+	////- =Surfaces
 	newInput(0, nodeValue_Surface("Surface In"));
 	
-	////- Scale
-	
+	////- =Scale
 	newInput(2, nodeValue_Enum_Button( "Mode", 0, [ "Upscale", "Scale to fit" ]));
 	newInput(6, nodeValue_Enum_Button( "Fit Mode", 0, [ "Stretch", "Minimum", "Maximum" ]));
 	newInput(1, nodeValue_Float(       "Scale", 1));
 	newInput(3, nodeValue_Vec2(        "Target Dimension", DEF_SURF));
 	newInput(5, nodeValue_Bool(        "Scale Atlas Position", true));
-	
 	// inputs 6
 		
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -62,20 +58,20 @@ function Node_Scale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _surf = isAtlas? _outSurf.getSurface() : _outSurf;
 		
 		var ww, hh, scx = 1, scy = 1;
-		var _sw = surface_get_width_safe(surf);
-		var _sh = surface_get_height_safe(surf);
+		var sw = surface_get_width_safe(surf);
+		var sh = surface_get_height_safe(surf);
 		
 		switch(mode) {
 			case 0 :
 				scx = scale;
 				scy = scale;
-				ww	= scale * _sw;
-				hh	= scale * _sh;
+				ww	= scale * sw;
+				hh	= scale * sh;
 				break;
 				
 			case 1 : 
-				scx = targ[0] / _sw;
-				scy = targ[1] / _sh;
+				scx = targ[0] / sw;
+				scy = targ[1] / sh;
 				
 				switch(fmode) {
 					case 0 : 
@@ -86,15 +82,15 @@ function Node_Scale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 					case 1 :
 						scx = min(scx, scy);
 						scy = scx;
-						ww  = _sw * scx;
-						hh  = _sh * scx;
+						ww  = sw * scx;
+						hh  = sh * scx;
 						break;
 						
 					case 2 :
 						scx = max(scx, scy);
 						scy = scx;
-						ww  = _sw * scx;
-						hh  = _sh * scx;
+						ww  = sw * scx;
+						hh  = sh * scx;
 						break;
 						
 				}
@@ -103,12 +99,16 @@ function Node_Scale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 		_surf = surface_verify(_surf, ww, hh, cDep);
 		
-		surface_set_shader(_surf);
+		surface_set_shader(_surf, sh_scale);
 			shader_set_interpolation(surf);
+			
+			shader_set_2("baseDimension", [ww, hh]);
+			shader_set_2("surfDimension", [sw, sh]);
+			
 			draw_surface_stretched_safe(surf, 0, 0, ww, hh);
 		surface_reset_shader();
 		
-		draw_transforms[_array_index] = [ 0, 0, ww * _sw, hh * _sh, 0];
+		draw_transforms[_array_index] = [ 0, 0, ww * sw, hh * sh, 0];
 		
 		if(!isAtlas) return _surf;
 		

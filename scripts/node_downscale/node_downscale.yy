@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_downscale",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_downscale",
+  "parent":{
+    "name":"transform",
+    "path":"folders/nodes/data/transform.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

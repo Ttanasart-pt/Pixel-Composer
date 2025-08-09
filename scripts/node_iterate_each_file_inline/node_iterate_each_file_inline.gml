@@ -48,8 +48,8 @@ function Node_Iterate_Each_File_Inline(_x, _y, _group = noone) : Node_Collection
 		}
 	}
 	
-	static getIterationCount = function() /*=>*/ {return activated? array_length(paths) : 0};
-	static bypassNextNode    = function() /*=>*/ {return activated? iterated < getIterationCount() : false};
+	static getIterationCount = function() /*=>*/ {return array_length(paths)};
+	static bypassNextNode    = function() /*=>*/ {return iterated < getIterationCount()};
 	
 	static getNextNodes = function(checkLoop = false) {
 		LOG_BLOCK_START();	
@@ -113,7 +113,8 @@ function Node_Iterate_Each_File_Inline(_x, _y, _group = noone) : Node_Collection
 		var _type = inputs[2].getValue();
 		activated = inputs[3].getValue();
 		
-		paths = activated? path_dir_get_files(_path, _ext, true) : [];
+		paths = path_dir_get_files(_path, _ext, true);
+		if(!activated && !array_empty(paths)) paths = [ paths[0] ];
 	}
 	
 }

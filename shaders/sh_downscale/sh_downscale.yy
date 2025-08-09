@@ -1,0 +1,13 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_downscale",
+  "name":"sh_downscale",
+  "parent":{
+    "name":"transform",
+    "path":"folders/nodes/data/transform.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "tags":[],
+  "type":1,
+}

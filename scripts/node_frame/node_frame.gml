@@ -221,7 +221,7 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 			draw_set_text(f_p2, fa_center, fa_bottom, tColor, _color_get_alpha(tColor));
 			var _scis = gpu_get_scissor();
-			gpu_set_scissor(drax_x0, draw_y0, _w, nh);
+			gpu_set_scissor(draw_x0, draw_y0, _w, nh);
 			draw_text_add((draw_x0 + draw_x1) / 2, draw_y0 + nh + 1, txt);
 			gpu_set_scissor(_scis);
 			draw_set_alpha(1);
