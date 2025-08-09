@@ -2680,6 +2680,7 @@
     {"name":"s_node_smoke_apply_velocity","order":7,"path":"sprites/s_node_smoke_apply_velocity/s_node_smoke_apply_velocity.yy",},
     {"name":"s_node_smoke_domain_queue","order":3,"path":"sprites/s_node_smoke_domain_queue/s_node_smoke_domain_queue.yy",},
     {"name":"s_node_smoke_domain","order":11,"path":"sprites/s_node_smoke_domain/s_node_smoke_domain.yy",},
+    {"name":"sh_ui_line_dotted","order":1,"path":"shaders/sh_ui_line_dotted/sh_ui_line_dotted.yy",},
     {"name":"s_node_smoke_group","order":12,"path":"sprites/s_node_smoke_group/s_node_smoke_group.yy",},
     {"name":"s_node_smoke_render","order":9,"path":"sprites/s_node_smoke_render/s_node_smoke_render.yy",},
     {"name":"s_node_smoke_repulse","order":1,"path":"sprites/s_node_smoke_repulse/s_node_smoke_repulse.yy",},

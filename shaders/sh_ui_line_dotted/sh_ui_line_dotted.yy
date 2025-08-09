@@ -1,0 +1,13 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_ui_line_dotted",
+  "name":"sh_ui_line_dotted",
+  "parent":{
+    "name":"shaders",
+    "path":"folders/functions/draw/shaders.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "tags":[],
+  "type":1,
+}

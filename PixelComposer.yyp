@@ -2619,6 +2619,7 @@
     {"id":{"name":"node_smoke_domain_queue","path":"scripts/node_smoke_domain_queue/node_smoke_domain_queue.yy",},},
     {"id":{"name":"node_smoke_domain","path":"scripts/node_smoke_domain/node_smoke_domain.yy",},},
     {"id":{"name":"node_smoke_group_inline","path":"scripts/node_smoke_group_inline/node_smoke_group_inline.yy",},},
+    {"id":{"name":"sh_ui_line_dotted","path":"shaders/sh_ui_line_dotted/sh_ui_line_dotted.yy",},},
     {"id":{"name":"node_smoke_group","path":"scripts/node_smoke_group/node_smoke_group.yy",},},
     {"id":{"name":"node_smoke_render_output","path":"scripts/node_smoke_render_output/node_smoke_render_output.yy",},},
     {"id":{"name":"node_smoke_render","path":"scripts/node_smoke_render/node_smoke_render.yy",},},
