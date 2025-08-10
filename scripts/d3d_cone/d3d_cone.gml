@@ -67,8 +67,8 @@ function __3dCone(radius = 0.5, height = 1, sides = 8, smooth = false) : __3dObj
 			edges[eid++] = new __3dObject_Edge([x0, y0, -_h], [0, 0, _h]);
 		}
 		
-		vertex	= [ v0, vs ];
-		
+		vertex = [ v0, vs ];
+		edges  = [ edges ];
 		VB = build();
 	} initModel();
 	

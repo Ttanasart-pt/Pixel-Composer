@@ -25,6 +25,7 @@ function readObj_init(_scale = 1, _axis = false) {
 	f   = [];
 	ft  = [];
 	fn  = [];
+	e   = [];
 	tri = 0;
 }
 
@@ -221,6 +222,7 @@ function readObj_buff() {
 		var _vblen = array_length(_VB);
 		var VBS    = array_create(_vblen);
 		var V      = array_create(_vblen);
+		var edges  = [];
 		
 		for(var i = 0; i < _vblen; i++)  {
 			var VB = vertex_create_buffer();
@@ -264,6 +266,12 @@ function readObj_buff() {
 				array_push(_v, new __vertex(_pf0[0], _pf0[1], _pf0[2]).setNormal(_pfn0[0], _pfn0[1]).setUV(_pft0[0], _pft0[1]));
 				array_push(_v, new __vertex(_pf2[0], _pf2[1], _pf2[2]).setNormal(_pfn2[0], _pfn2[1]).setUV(_pft2[0], _pft2[1]));
 				array_push(_v, new __vertex(_pf1[0], _pf1[1], _pf1[2]).setNormal(_pfn1[0], _pfn1[1]).setUV(_pft1[0], _pft1[1]));
+					
+				if(_vlen == 3) {
+					array_push(edges, new __3dObject_Edge(_pf0, _pf1));
+					array_push(edges, new __3dObject_Edge(_pf1, _pf2));
+					array_push(edges, new __3dObject_Edge(_pf2, _pf0));
+				} 
 				
 				if(_vlen == 4) {
 					var _pf3  = _pf[3];
@@ -277,6 +285,11 @@ function readObj_buff() {
 					array_push(_v, new __vertex(_pf0[0], _pf0[1], _pf0[2]).setNormal(_pfn0[0], _pfn0[1]).setUV(_pft0[0], _pft0[1]));
 					array_push(_v, new __vertex(_pf3[0], _pf3[1], _pf3[2]).setNormal(_pfn3[0], _pfn3[1]).setUV(_pft3[0], _pft3[1]));
 					array_push(_v, new __vertex(_pf2[0], _pf2[1], _pf2[2]).setNormal(_pfn2[0], _pfn2[1]).setUV(_pft2[0], _pft2[1]));
+					
+					array_push(edges, new __3dObject_Edge(_pf0, _pf1));
+					array_push(edges, new __3dObject_Edge(_pf1, _pf2));
+					array_push(edges, new __3dObject_Edge(_pf2, _pf3));
+					array_push(edges, new __3dObject_Edge(_pf3, _pf0));
 				} 
 				
 			}
@@ -297,6 +310,7 @@ function readObj_buff() {
 		vertex_count:  vertex,
 		vertex_groups: VBS,
 		object_counts: _vblen,
+		edge_data:     edges,
 		
 		use_material:	use_material,
 		materials:		mats,

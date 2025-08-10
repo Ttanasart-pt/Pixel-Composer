@@ -65,6 +65,7 @@ function __3dScene(_camera, _name = "New scene") constructor {
 	ssao_radius         = 0.1;
 	ssao_bias           = 0.1;
 	ssao_strength       = 1.;
+	ssao_blur_radius    = 9;
 	
 	backface_blending   = ca_white;
 	
@@ -187,18 +188,15 @@ function __3dScene(_camera, _name = "New scene") constructor {
 	}
 	
 	static ssaoPass = function(deferData) {
-		if(!ssao_enabled) {
-			surface_free(deferData.ssao);
-			return;
-		}
+		if(!ssao_enabled) { surface_free(deferData.ssao); return; }
 		
 		var _sw = surface_get_width_safe(deferData.geometry_data[0]);
 		var _sh = surface_get_height_safe(deferData.geometry_data[0]);
 		var _ssao_surf = surface_create(_sw, _sh);
 		
 		surface_set_shader(_ssao_surf, sh_d3d_ssao);
-			shader_set_surface("vPosition", deferData.geometry_data[0]);
-			shader_set_surface("vNormal",   deferData.geometry_data[2]);
+			shader_set_s("vPosition",       deferData.geometry_data[0]);
+			shader_set_s("vNormal",         deferData.geometry_data[2]);
 			shader_set_f("radius",          ssao_radius);
 			shader_set_f("bias",            ssao_bias);
 			shader_set_f("strength",        ssao_strength * 2);
@@ -212,7 +210,8 @@ function __3dScene(_camera, _name = "New scene") constructor {
 		
 		surface_set_shader(deferData.ssao, sh_d3d_ssao_blur);
 			shader_set_f("dimension", _sw, _sh);
-			shader_set_surface("vNormal",   deferData.geometry_data[2]);
+			shader_set_f("radius",    ssao_blur_radius);
+			shader_set_s("vNormal",   deferData.geometry_data[2]);
 			
 			draw_surface(_ssao_surf, 0, 0);
 		surface_reset_shader();

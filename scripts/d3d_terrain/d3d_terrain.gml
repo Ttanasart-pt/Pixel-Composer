@@ -201,6 +201,7 @@ function __3dTerrain() : __3dObject() constructor {
 		}
 		
 		vertex = [ _vt ];
+		edges  = [ edges ];
 		VB = build();
 	} initModel();
 	
@@ -451,6 +452,7 @@ function __3dTerrain() : __3dObject() constructor {
 			edges[i] = new __3dObject_Edge(_e0, _e1);
 		}
 		
+		edges = [ edges ];
 		buildEdge();
 	}
 	

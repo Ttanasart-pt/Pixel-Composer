@@ -149,8 +149,10 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		object_data.vertex        = obj_raw.vertex;
 		object_data.size          = obj_raw.model_size;
 		object_data.object_counts = obj_raw.object_counts;
-		use_normal    = obj_raw.use_normal;
+		object_data.edges         = [ obj_raw.edge_data ];
+		object_data.buildEdge();
 		
+		use_normal    = obj_raw.use_normal;
 		materialNames = [ "Material" ];
 		materialIndex = obj_raw.material_index;
 		materials     = [ new MTLmaterial("Material") ];
@@ -212,6 +214,7 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		var _object = getObject(_array_index);
 		_object.VF		        = global.VF_POS_NORM_TEX_COL;
 		_object.VB		        = object_data.VB;
+		_object.EB		        = object_data.EB;
 		_object.NVB		        = object_data.NVB;
 		_object.vertex          = object_data.vertex;
 		_object.size            = object_data.size;

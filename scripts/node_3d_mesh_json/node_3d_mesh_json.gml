@@ -88,7 +88,7 @@ function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 	
 	////- Update
 	
-	static readElement = function(_vertices, _matrices, _element, _mat) {
+	static readElement = function(_edges, _vertices, _matrices, _element, _mat) {
 		var _rx = struct_try_get(_element, "rotationX", 0);
 		var _ry = struct_try_get(_element, "rotationY", 0);
 		var _rz = struct_try_get(_element, "rotationZ", 0);
@@ -131,6 +131,10 @@ function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 				__vertexA( [ fx, ty, fz ] ).setNormal( 0, 1, 0 ).setUV(fu, fv),
 			]);
 			
+			array_push(_edges, [ new __3dObject_Edge([fx, ty, fz], [fx, ty, tz]), 
+			                     new __3dObject_Edge([fx, ty, tz], [tx, ty, tz]), 
+			                     new __3dObject_Edge([tx, ty, tz], [tx, ty, fz]), 
+			                     new __3dObject_Edge([tx, ty, fz], [fx, ty, fz]) ]); 
 		}
 		
 		if(has(_face, "down") && struct_try_get(_face.down, "enabled", true)) {
@@ -151,6 +155,11 @@ function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 				__vertexA( [ fx, fy, fz ] ).setNormal( 0,-1, 0 ).setUV(fu, fv),
 				__vertexA( [ tx, fy, tz ] ).setNormal( 0,-1, 0 ).setUV(tu, tv),
 			]);
+			
+			array_push(_edges, [ new __3dObject_Edge([fx, fy, fz], [fx, fy, tz]),
+			                     new __3dObject_Edge([fx, fy, tz], [tx, fy, tz]),
+			                     new __3dObject_Edge([tx, fy, tz], [tx, fy, fz]),
+			                     new __3dObject_Edge([tx, fy, fz], [fx, fy, fz]) ]);
 		}
 		
 		if(has(_face, "east") && struct_try_get(_face.east, "enabled", true)) {
@@ -171,6 +180,11 @@ function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 				__vertexA( [ tx, fy, fz ] ).setNormal( 1, 0, 0 ).setUV(tu, fv),
 				__vertexA( [ tx, ty, tz ] ).setNormal( 1, 0, 0 ).setUV(fu, tv),
 			]);
+			
+			array_push(_edges, [ new __3dObject_Edge([tx, fy, fz], [tx, fy, tz]), 
+			                     new __3dObject_Edge([tx, fy, tz], [tx, ty, tz]), 
+			                     new __3dObject_Edge([tx, ty, tz], [tx, ty, fz]), 
+			                     new __3dObject_Edge([tx, ty, fz], [tx, fy, fz]) ]);
 		}
 		
 		if(has(_face, "west") && struct_try_get(_face.west, "enabled", true)) {
@@ -191,6 +205,11 @@ function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 				__vertexA( [ fx, ty, tz ] ).setNormal(-1, 0, 0 ).setUV(tu, tv),
 				__vertexA( [ fx, fy, fz ] ).setNormal(-1, 0, 0 ).setUV(fu, fv),
 			]);
+			
+			array_push(_edges, [ new __3dObject_Edge([fx, fy, fz], [fx, fy, tz]), 
+			                     new __3dObject_Edge([fx, fy, tz], [fx, ty, tz]), 
+			                     new __3dObject_Edge([fx, ty, tz], [fx, ty, fz]), 
+			                     new __3dObject_Edge([fx, ty, fz], [fx, fy, fz]) ]);
 		}
 		
 		if(has(_face, "north") && struct_try_get(_face.north, "enabled", true)) {
@@ -211,6 +230,11 @@ function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 				__vertexA( [ tx, ty, fz ] ).setNormal( 0, 0,-1 ).setUV(tu, tv),
 				__vertexA( [ fx, fy, fz ] ).setNormal( 0, 0,-1 ).setUV(fu, fv),
 			]);
+			
+			array_push(_edges, [ new __3dObject_Edge([fx, fy, fz], [fx, ty, fz]), 
+			                     new __3dObject_Edge([fx, ty, fz], [tx, ty, fz]), 
+			                     new __3dObject_Edge([tx, ty, fz], [tx, fy, fz]), 
+			                     new __3dObject_Edge([tx, fy, fz], [fx, fy, fz]) ]);
 			
 		}
 		
@@ -233,11 +257,16 @@ function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 				__vertexA( [ fx, fy, tz ] ).setNormal( 0, 0, 1 ).setUV(fu, fv),
 				__vertexA( [ tx, ty, tz ] ).setNormal( 0, 0, 1 ).setUV(tu, tv),
 			]);
+			
+			array_push(_edges, [ new __3dObject_Edge([fx, fy, tz], [fx, ty, tz]), 
+			                     new __3dObject_Edge([fx, ty, tz], [tx, ty, tz]), 
+			                     new __3dObject_Edge([tx, ty, tz], [tx, fy, tz]), 
+			                     new __3dObject_Edge([tx, fy, tz], [fx, fy, tz]) ]);
 		}
 		
 		if(has(_element, "children"))
 		for( var i = 0, n = array_length(_element.children); i < n; i++ )
-			readElement(_vertices, _matrices, _element.children[i], _cMat);
+			readElement(_edges, _vertices, _matrices, _element.children[i], _cMat);
 	}
 	
 	static readJson = function(_path) {
@@ -261,6 +290,7 @@ function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 		
 		var _elements = _data.elements;
 		var _vertices = [];
+		var _edges    = [];
 		var _matrices = [];
 		material_arr  = [];
 		model_bbox    = [ infinity, infinity, infinity, -infinity, -infinity, -infinity ];
@@ -287,15 +317,16 @@ function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 			var _element = _elements[i];
 			var _mat = new BBMOD_Matrix();
 			
-			readElement(_vertices, _matrices, _element, _mat);
+			readElement(_edges, _vertices, _matrices, _element, _mat);
 		}
 		
 		object = new __3dObject();
-		object.vertex = _vertices;
 		object.object_counts = array_length(_vertices);
-		object.VF  = global.VF_POS_NORM_TEX_COL;
-		object.VB  = object.build();
-		object.VBM = _matrices;
+		object.vertex = _vertices;
+		object.edges  = _edges;
+		object.VF     = global.VF_POS_NORM_TEX_COL;
+		object.VB     = object.build();
+		object.VBM    = _matrices;
 		
 		var _textureKeys = struct_get_names(material_map);
 		use_texture = !array_empty(_textureKeys);

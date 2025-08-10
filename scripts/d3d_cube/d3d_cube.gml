@@ -81,6 +81,8 @@ function __3dCube() : __3dObject() constructor {
 			edges[eid++] = new __3dObject_Edge(p[1], p[5]);
 			edges[eid++] = new __3dObject_Edge(p[2], p[6]);
 			edges[eid++] = new __3dObject_Edge(p[3], p[7]);
+			
+			edges = [ edges ];
 		#endregion
 		
 		#region 

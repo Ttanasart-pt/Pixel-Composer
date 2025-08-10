@@ -110,7 +110,8 @@ function __3dTorus(radT = 1, radP = .2, sideT = 16, sideP = 8, smooth = false) :
 			}
 		}
 		
-		vertex	= [ vs ];
+		edges  = [ edges ];
+		vertex = [ vs ];
 		VB = build();
 	} 
 	

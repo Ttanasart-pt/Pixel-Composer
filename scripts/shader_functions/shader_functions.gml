@@ -97,6 +97,7 @@ function shader_set_uniform_f_array_safe(uniform, array, max_length = 4096) {
 	shader_set_uniform_f_array(uniform, array);
 }
 
+#macro shader_set_s shader_set_surface
 function shader_set_surface(sampler, surface, linear = false, _repeat = false) {
 	
 	var shader = shader_current();

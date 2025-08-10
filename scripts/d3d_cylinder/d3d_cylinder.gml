@@ -101,6 +101,7 @@ function __3dCylinder(radius = 0.5, height = 1, sides = 8, smooth = false) : __3
 			}
 		}
 		
+		edges  = [ edges ];
 		vertex = caps? [ vs, v0, v1 ] : [ vs ];
 		object_counts = array_length(vertex);
 		VB = build();

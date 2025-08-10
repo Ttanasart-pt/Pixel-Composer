@@ -168,6 +168,7 @@ function __3dICOSphere(radius = 0.5, level = 2, smt = false) : __3dObject() cons
 		ds_list_destroy(_vertices);
 		ds_list_destroy(_normals);
 		
+		edges = [ edges ];
 		VB = build();
 	} initModel();
 	

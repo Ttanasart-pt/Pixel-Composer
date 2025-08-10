@@ -253,6 +253,7 @@ function __3dPathExtrude(_radius = 0.5, _sides = 8, _smooth = false) : __3dObjec
 			o.z = n.z;
 		}
 		
+		edges  = [ edges ];
 		vertex = endCap && !loop? [ vs, v0, v1 ] : [ vs ];
 		object_counts = array_length(vertex);
 		VB = build();

@@ -11,7 +11,6 @@ function __3dPlane() : __3dObject() constructor {
 		
 		var _nor = [ 0, 0, 1 ];
 		var _vt  = [];
-		vertex   = [ _vt ];
 		object_counts = 1 + two_side;
 		
 		switch(normal) {
@@ -67,6 +66,8 @@ function __3dPlane() : __3dObject() constructor {
 				break;	
 		}
 		
+		vertex   = [ _vt ];
+		
 		if(two_side) {
 			vertex[1] = array_create(6);
 			for( var i = 0; i < 6; i++ ) {
@@ -75,6 +76,7 @@ function __3dPlane() : __3dObject() constructor {
 			}
 		}
 		
+		edges = [ edges ];
 		VB = build();
 	} initModel();
 	

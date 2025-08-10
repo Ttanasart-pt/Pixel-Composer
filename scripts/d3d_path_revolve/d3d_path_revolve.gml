@@ -160,6 +160,7 @@ function __3dPathRevolve() : __3dObject() constructor {
 			array_push(vertex, vcape);
 		}
 		
+		edges = [ edges ];
 		object_counts = array_length(vertex);
 		VB = build();
 	} initModel();

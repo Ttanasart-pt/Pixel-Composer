@@ -1,11 +1,9 @@
-//
-// Simple passthrough fragment shader
-//
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform sampler2D vNormal;
-uniform vec2 dimension;
+uniform float radius;
+uniform vec2  dimension;
 
 void main() {
 	vec3 cNormal = texture2D( vNormal, v_vTexcoord ).rgb;
@@ -13,7 +11,6 @@ void main() {
 	
 	vec3  sampled = vec3(0.);
 	float weight = 0.;
-	float radius = 3.;
 	
 	for(float i = -radius; i <= radius; i++)
 	for(float j = -radius; j <= radius; j++) {

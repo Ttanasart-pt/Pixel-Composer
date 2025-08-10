@@ -38,7 +38,7 @@ function __3dObject() constructor {
 	name   = UUID_generate();
 	
 	edges  = [];
-	EB     = noone;
+	EB     = [];
 	
 	transform = new __transform();
 	size      = new __vec3(1);
@@ -151,21 +151,29 @@ function __3dObject() constructor {
 	
 	static buildEdge = function() {
 		if(array_empty(edges)) return;
-		var _buffer = vertex_create_buffer();
-		vertex_begin(_buffer, global.VF_POS_COL);
 		
-		for( var i = 0, n = array_length(edges); i < n; i++ ) {
-			var e  = edges[i];
+		array_foreach(EB, function(b) /*=>*/ { if(b != noone) vertex_delete_buffer(b); });
+		EB = [];
+		
+		for( var e = 0, m = array_length(edges); e < m; e++ ) {
+			var _buffer = vertex_create_buffer();
+			vertex_begin(_buffer, global.VF_POS_COL);
 			
-			vertex_position_3d( _buffer, e.p0[0], e.p0[1], e.p0[2]);
-			vertex_color(       _buffer, c_white, 1);
+			var _edg = edges[e];
 			
-			vertex_position_3d( _buffer, e.p1[0], e.p1[1], e.p1[2]);
-			vertex_color(       _buffer, c_white, 1);
+			for( var i = 0, n = array_length(_edg); i < n; i++ ) {
+				var _e = _edg[i];
+				
+				vertex_position_3d( _buffer, _e.p0[0], _e.p0[1], _e.p0[2]);
+				vertex_color(       _buffer, c_white, 1);
+				
+				vertex_position_3d( _buffer, _e.p1[0], _e.p1[1], _e.p1[2]);
+				vertex_color(       _buffer, c_white, 1);
+			}
+			
+			vertex_end(_buffer);
+			EB[e] = _buffer;
 		}
-		
-		vertex_end(_buffer);
-		EB = _buffer;
 	}
 	
 	static build = function(_buffer = VB, _vertex = vertex, counts = object_counts) {
@@ -305,14 +313,18 @@ function __3dObject() constructor {
 	}
 	
 	static submitEdge = function(cc = c_black, aa = 1) {
-		if(EB == noone) return;
+		if(array_empty(EB)) return;
 		
 		shader_set(sh_d3d_wireframe);
 		transform.submitMatrix();
 		matrix_set(matrix_world, matrix_stack_top());
 		
 		shader_set_c("blend", cc, aa);
-		vertex_submit(EB, pr_linelist, -1);
+		for( var i = 0, n = array_length(EB); i < n; i++ ) {
+			if(VBM != undefined) { matrix_stack_push(VBM[i]); matrix_set(matrix_world, matrix_stack_top()); }
+			vertex_submit(EB[i], pr_linelist, -1);
+			if(VBM != undefined) { matrix_stack_pop();        matrix_set(matrix_world, matrix_stack_top()); }
+		}
 		
 		transform.clearMatrix();	
 		matrix_set(matrix_world, matrix_build_identity());

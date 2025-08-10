@@ -116,6 +116,7 @@ function __3dUVSphere(radius = 0.5, hori = 16, vert = 8, smt = false) : __3dObje
 			vt[ind + 5].setUV(u2, v2);
 	    }
 		
+		edges = [ edges ];
 		VB = build();
 	} initModel();
 	

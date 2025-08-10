@@ -9,6 +9,9 @@ function __3dMeshExtrude() : __3dObject() constructor {
 	
 	static initModel = function() { 
 	    if(mesh == noone) return;
+		
+		edges   = [];
+		var eid = 0;
 	    
 	    var _pnts = mesh.points;
 	    var _tris = mesh.triangles;
@@ -40,13 +43,22 @@ function __3dMeshExtrude() : __3dObject() constructor {
     		var p2u  = (p2.x - _minx) / _boxw;
     		var p2v  = (p2.y - _miny) / _boxh;
     		
-			v0[i * 3 + 0] = new __vertex(p0u * 2 - 1, p0v * 2 - 1, _h).setNormal(0, 0,  1).setUV(p0u, p0v);
-			v0[i * 3 + 1] = new __vertex(p1u * 2 - 1, p1v * 2 - 1, _h).setNormal(0, 0,  1).setUV(p1u, p1v);
-			v0[i * 3 + 2] = new __vertex(p2u * 2 - 1, p2v * 2 - 1, _h).setNormal(0, 0,  1).setUV(p2u, p2v);
+			v0[i*3+0] = new __vertex(p0u * 2 - 1, p0v * 2 - 1, _h).setNormal(0, 0,  1).setUV(p0u, p0v);
+			v0[i*3+1] = new __vertex(p1u * 2 - 1, p1v * 2 - 1, _h).setNormal(0, 0,  1).setUV(p1u, p1v);
+			v0[i*3+2] = new __vertex(p2u * 2 - 1, p2v * 2 - 1, _h).setNormal(0, 0,  1).setUV(p2u, p2v);
 			
-			v1[i * 3 + 0] = new __vertex(p0u * 2 - 1, p0v * 2 - 1, -_h).setNormal(0, 0, -1).setUV(p0u, p0v);
-			v1[i * 3 + 1] = new __vertex(p2u * 2 - 1, p2v * 2 - 1, -_h).setNormal(0, 0, -1).setUV(p2u, p2v);
-			v1[i * 3 + 2] = new __vertex(p1u * 2 - 1, p1v * 2 - 1, -_h).setNormal(0, 0, -1).setUV(p1u, p1v);
+			v1[i*3+0] = new __vertex(p0u * 2 - 1, p0v * 2 - 1, -_h).setNormal(0, 0, -1).setUV(p0u, p0v);
+			v1[i*3+1] = new __vertex(p2u * 2 - 1, p2v * 2 - 1, -_h).setNormal(0, 0, -1).setUV(p2u, p2v);
+			v1[i*3+2] = new __vertex(p1u * 2 - 1, p1v * 2 - 1, -_h).setNormal(0, 0, -1).setUV(p1u, p1v);
+			
+			edges[eid++] = new __3dObject_Edge(v0[i*3+0].toArrayPos(), v0[i*3+1].toArrayPos());
+			edges[eid++] = new __3dObject_Edge(v0[i*3+1].toArrayPos(), v0[i*3+2].toArrayPos());
+			edges[eid++] = new __3dObject_Edge(v0[i*3+2].toArrayPos(), v0[i*3+0].toArrayPos());
+			
+			edges[eid++] = new __3dObject_Edge(v1[i*3+0].toArrayPos(), v1[i*3+1].toArrayPos());
+			edges[eid++] = new __3dObject_Edge(v1[i*3+1].toArrayPos(), v1[i*3+2].toArrayPos());
+			edges[eid++] = new __3dObject_Edge(v1[i*3+2].toArrayPos(), v1[i*3+0].toArrayPos());
+			
 		}
 		
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -91,15 +103,19 @@ function __3dMeshExtrude() : __3dObject() constructor {
 	    		var n1 = n0;
     		}
     		
-    		vs[i * 6 + 0] = new __vertex(p0u * 2 - 1, p0v * 2 - 1,  _h).setNormal(n0[0], n0[1], 0).setUV(u0, 0);
-			vs[i * 6 + 1] = new __vertex(p0u * 2 - 1, p0v * 2 - 1, -_h).setNormal(n0[0], n0[1], 0).setUV(u0, 1);
-			vs[i * 6 + 2] = new __vertex(p1u * 2 - 1, p1v * 2 - 1,  _h).setNormal(n1[0], n1[1], 0).setUV(u1, 0);
+    		vs[i*6+0] = new __vertex(p0u * 2 - 1, p0v * 2 - 1,  _h).setNormal(n0[0], n0[1], 0).setUV(u0, 0);
+			vs[i*6+1] = new __vertex(p0u * 2 - 1, p0v * 2 - 1, -_h).setNormal(n0[0], n0[1], 0).setUV(u0, 1);
+			vs[i*6+2] = new __vertex(p1u * 2 - 1, p1v * 2 - 1,  _h).setNormal(n1[0], n1[1], 0).setUV(u1, 0);
 			
-			vs[i * 6 + 3] = new __vertex(p1u * 2 - 1, p1v * 2 - 1,  _h).setNormal(n1[0], n1[1], 0).setUV(u1, 0);
-			vs[i * 6 + 4] = new __vertex(p0u * 2 - 1, p0v * 2 - 1, -_h).setNormal(n0[0], n0[1], 0).setUV(u0, 1);
-			vs[i * 6 + 5] = new __vertex(p1u * 2 - 1, p1v * 2 - 1, -_h).setNormal(n1[0], n1[1], 0).setUV(u1, 1);
+			vs[i*6+3] = new __vertex(p1u * 2 - 1, p1v * 2 - 1,  _h).setNormal(n1[0], n1[1], 0).setUV(u1, 0);
+			vs[i*6+4] = new __vertex(p0u * 2 - 1, p0v * 2 - 1, -_h).setNormal(n0[0], n0[1], 0).setUV(u0, 1);
+			vs[i*6+5] = new __vertex(p1u * 2 - 1, p1v * 2 - 1, -_h).setNormal(n1[0], n1[1], 0).setUV(u1, 1);
+			
+			edges[eid++] = new __3dObject_Edge(vs[i*6+0].toArrayPos(), vs[i*6+1].toArrayPos());
+			edges[eid++] = new __3dObject_Edge(vs[i*6+3].toArrayPos(), vs[i*6+5].toArrayPos());
 		}
 		
+		edges  = [ edges ];
 		vertex = [ v0, v1, vs ];
 		VB = build();
 	} initModel();
