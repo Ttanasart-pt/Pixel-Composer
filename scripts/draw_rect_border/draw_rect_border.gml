@@ -17,8 +17,19 @@ function draw_rectangle_border(x0, y0, x1, y1, thick) {
 	draw_line_width(x1, y0 - thick / 2, x1, y1 + thick / 2, thick);
 }
 
-function draw_rectangle_border_points(x0, y0, x1, y1, x2, y2, x3, y3, thick) {
+function draw_rectangle_border_points(x0, y0, x1, y1, x2, y2, x3, y3, thick = 1) {
 	INLINE
+	if(thick == 1) {
+		draw_primitive_begin(pr_linestrip);
+			draw_vertex(x0, y0);
+			draw_vertex(x1, y1);
+			draw_vertex(x3, y3);
+			draw_vertex(x2, y2);
+			draw_vertex(x0, y0);
+		draw_primitive_end();
+		return;
+	} 
+	
 	draw_line_width(x0, y0, x1, y1, thick);
 	draw_line_width(x1, y1, x3, y3, thick);
 	draw_line_width(x3, y3, x2, y2, thick);

@@ -47,9 +47,9 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				breakLine = true;
 				break;
 				
-			case "matrixGrid"      : 
-				breakLine = breakLine || wid.size[0] > 5;
-				break;
+			case "matrixGrid"      : breakLine = breakLine || wid.size[0] > 5; break;
+			case "outputStructBox" : breakLine = breakLine || wid.expand;      break;
+				
 		}
 	#endregion
 	
