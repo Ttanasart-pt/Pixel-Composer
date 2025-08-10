@@ -1,12 +1,9 @@
 function Node_String_Regex_Match(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "RegEx Match";
-	
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Text("Text"))
-		.setVisible(true, true);
-	
-	newInput(1, nodeValue_Text("Regex"));
+	newInput(0, nodeValue_Text( "Text"  )).setVisible(true, true);
+	newInput(1, nodeValue_Text( "Regex" ));
 	
 	newOutput(0, nodeValue_Output("Results", VALUE_TYPE.boolean, false));
 	

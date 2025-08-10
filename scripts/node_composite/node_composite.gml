@@ -25,8 +25,8 @@
 		activeKeyboard = false;
 		surf_dragging  = noone;
 		
-		drag_sx = 0;
-		drag_sy = 0;
+		drag_position  = [ 0, 0 ];
+		drag_positions = [];
 		
 		drag_pmx = undefined;
 		drag_pmy = undefined;
@@ -41,52 +41,70 @@
 		}
 		
 		static initKeyboard = function() /*=>*/ {
-			if(node.dynamic_input_inspecting == noone) { PANEL_PREVIEW.resetTool(); return; }
+			if(node.dynamic_input_inspecting == noone && array_empty(node.surface_selecting)) { PANEL_PREVIEW.resetTool(); return; }
 			
-			surf_dragging  = node.input_fix_len + node.dynamic_input_inspecting * node.data_length;
 			activeKeyboard = true;
+			drag_axis = -1;
 			
 			drag_pmx = undefined;
 			drag_pmy = undefined;
 			
-			var _val = node.inputs[surf_dragging + 1].getValue();
-			drag_sx = _val[0];
-			drag_sy = _val[1];
-			
-			drag_axis = -1;
+			if(array_empty(node.surface_selecting)) {
+				surf_dragging  = node.input_fix_len + node.dynamic_input_inspecting * node.data_length;
+				
+				var _val = node.inputs[surf_dragging + 1].getValue();
+				drag_position[0] = _val[0];
+				drag_position[1] = _val[1];
+				
+			} else {
+				var _amo = array_length(node.inputs);
+				drag_positions = array_verify(drag_positions, _amo);
+				
+				for( var i = 0; i < _amo; i++ ) drag_positions[i] = node.inputs[i].getValue();
+				
+				drag_position[0] = node.selection_bbox[4];
+				drag_position[1] = node.selection_bbox[5];
+			}
 		}
 		
 		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
-			if(!activeKeyboard || surf_dragging == noone) { PANEL_PREVIEW.resetTool(); return; }
-			
-			var _val = node.inputs[surf_dragging + 1].getValue();
-			var  val = [drag_sx, drag_sy];
+			if(!activeKeyboard) { PANEL_PREVIEW.resetTool(); return; }
 			
 			if(drag_pmx == undefined) drag_pmx = _mx;
 			if(drag_pmy == undefined) drag_pmy = _my;
 			
-			if(drag_axis == -1) {
-				val[0] = drag_sx + (_mx - drag_pmx) / PANEL_PREVIEW.canvas_s;
-				val[1] = drag_sy + (_my - drag_pmy) / PANEL_PREVIEW.canvas_s;
+			var _dx = KEYBOARD_NUMBER ?? (_mx - drag_pmx) / PANEL_PREVIEW.canvas_s;
+			var _dy = KEYBOARD_NUMBER ?? (_my - drag_pmy) / PANEL_PREVIEW.canvas_s;
+			var _edit = false;
+			
+			if(array_empty(node.surface_selecting)) {
+				var val = [ drag_position[0], drag_position[1] ];
+				
+				if(drag_axis == -1 || drag_axis == 0) val[0] = drag_position[0] + _dx;
+				if(drag_axis == -1 || drag_axis == 1) val[1] = drag_position[1] + _dy;
+				
+				if(node.inputs[surf_dragging + 1].setValue(val)) _edit = true;
 				
 			} else {
-				if(KEYBOARD_NUMBER == undefined) {
-					if(drag_axis == 0) val[0] = drag_sx + (_mx - drag_pmx) / PANEL_PREVIEW.canvas_s;
-					if(drag_axis == 1) val[1] = drag_sy + (_my - drag_pmy) / PANEL_PREVIEW.canvas_s;
+				for( var i = 0, n = array_length(node.surface_selecting); i < n; i++ ) {
+					var _suri = node.surface_selecting[i];
+					var _orig = drag_positions[_suri + 1];
 					
-				} else {
-					if(drag_axis == 0) val[0] = drag_sx + KEYBOARD_NUMBER;
-					if(drag_axis == 1) val[1] = drag_sy + KEYBOARD_NUMBER;
+					var val = [ _orig[0], _orig[1] ];
 					
+					if(drag_axis == -1 || drag_axis == 0) val[0] = _orig[0] + _dx;
+					if(drag_axis == -1 || drag_axis == 1) val[1] = _orig[1] + _dy;
+					
+					if(node.inputs[_suri + 1].setValue(val)) _edit = true;
 				}
+				
 			}
 			
+			if(_edit) UNDO_HOLDING = true;
+				
 			draw_set_color(COLORS._main_icon);
-			if(drag_axis == 0) draw_line_dashed(0, _y + drag_sy * _s, WIN_H, _y + drag_sy * _s);
-			if(drag_axis == 1) draw_line_dashed(_x + drag_sx * _s, 0, _x + drag_sx * _s, WIN_W);
-			
-			if(node.inputs[surf_dragging + 1].setValue(val))
-				UNDO_HOLDING = true;
+			if(drag_axis == 0) draw_line_dashed(0, _y + drag_position[1] * _s, WIN_H, _y + drag_position[1] * _s);
+			if(drag_axis == 1) draw_line_dashed(_x + drag_position[0] * _s, 0, _x + drag_position[0] * _s, WIN_W);
 			
 			if(key_press(ord("X"))) {
 				drag_axis = drag_axis == 0? -1 : 0;
@@ -121,7 +139,10 @@
 		activeKeyboard = false;
 		surf_dragging  = noone;
 		
-		drag_sr  = 0;
+		drag_rotation   = 0;
+		drag_rotations  = [];
+		rotation_anchor = [ 0, 0 ];
+		
 		drag_pmx = undefined;
 		drag_pmy = undefined;
 		
@@ -136,25 +157,37 @@
 		}
 		
 		static initKeyboard = function() /*=>*/ {
-			if(node.dynamic_input_inspecting == noone) { PANEL_PREVIEW.resetTool(); return; }
+			if(node.dynamic_input_inspecting == noone && array_empty(node.surface_selecting)) { PANEL_PREVIEW.resetTool(); return; }
 			
-			surf_dragging  = node.input_fix_len + node.dynamic_input_inspecting * node.data_length;
 			activeKeyboard = true;
-			
-			var _val = node.inputs[surf_dragging + 2].getValue();
-			drag_sr  = _val;
 			rotate_acc = 0;
 			
 			drag_pmx = undefined;
 			drag_pmy = undefined;
+			
+			if(array_empty(node.surface_selecting)) {
+				surf_dragging  = node.input_fix_len + node.dynamic_input_inspecting * node.data_length;
+				
+				drag_rotation   = node.inputs[surf_dragging + 2].getValue();
+				rotation_anchor = node.inputs[surf_dragging + 1].getValue();
+				
+			} else {
+				var _amo = array_length(node.inputs);
+				drag_rotations = array_verify(drag_rotations, _amo);
+				
+				for( var i = 0; i < _amo; i++ ) drag_rotations[i] = node.inputs[i].getValue();
+				
+				rotation_anchor[0] = node.selection_bbox[4];
+				rotation_anchor[1] = node.selection_bbox[5];
+			}
+			
 		}
 		
 		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
-			if(!activeKeyboard || surf_dragging == noone) { PANEL_PREVIEW.resetTool(); return; }
-				
-			var _pos = node.inputs[surf_dragging + 1].getValue();
-			var _px = _x + _pos[0] * _s;
-			var _py = _y + _pos[1] * _s;
+			if(!activeKeyboard) { PANEL_PREVIEW.resetTool(); return; }
+			
+			var _px = _x + rotation_anchor[0] * _s;
+			var _py = _y + rotation_anchor[1] * _s;
 			
 			if(drag_pmx == undefined) drag_pmx = _mx;
 			if(drag_pmy == undefined) drag_pmy = _my;
@@ -166,10 +199,30 @@
 			drag_pmy = _my;
 			
 			rotate_acc += angle_difference(_d1, _d0);
-			var _rr = drag_sr + (KEYBOARD_NUMBER ?? rotate_acc);
 			
-			if(node.inputs[surf_dragging + 2].setValue(_rr))
-				UNDO_HOLDING   = true;
+			var _dr   = KEYBOARD_NUMBER ?? rotate_acc;
+			var _edit = false;
+			
+			if(array_empty(node.surface_selecting)) {
+				var _rr = drag_rotation + _dr;
+				if(node.inputs[surf_dragging + 2].setValue(_rr)) _edit = true;
+					
+			} else {
+				for( var i = 0, n = array_length(node.surface_selecting); i < n; i++ ) {
+					var _suri = node.surface_selecting[i];
+					var _opos = drag_rotations[_suri + 1];
+					var _orot = drag_rotations[_suri + 2];
+					var _rr   = _orot + _dr;
+					
+					var _pp = point_rotate(_opos[0], _opos[1], rotation_anchor[0], rotation_anchor[1], _rr);
+					
+					if(node.inputs[_suri + 1].setValue(_pp)) _edit = true;
+					if(node.inputs[_suri + 2].setValue(_rr)) _edit = true;
+				}
+				
+			}
+			
+			if(_edit) UNDO_HOLDING = true;
 				
 			if(mouse_press(mb_left) || key_press(vk_enter)) {
 				activeKeyboard = false;
@@ -189,8 +242,10 @@
 		activeKeyboard = false;
 		surf_dragging  = noone;
 		
-		drag_sx = 0;
-		drag_sy = 0;
+		drag_scale   = [ 0, 0 ];
+		drag_scales  = [];
+		scale_anchor = [ 0, 0 ];
+		axis_angle   = 0;
 		
 		drag_pmx = undefined;
 		drag_pmy = undefined;
@@ -205,61 +260,87 @@
 		}
 		
 		static initKeyboard = function() /*=>*/ {
-			if(node.dynamic_input_inspecting == noone) { PANEL_PREVIEW.resetTool(); return; }
+			if(node.dynamic_input_inspecting == noone && array_empty(node.surface_selecting)) { PANEL_PREVIEW.resetTool(); return; }
 			
-			surf_dragging  = node.input_fix_len + node.dynamic_input_inspecting * node.data_length;
 			activeKeyboard = true;
-			
-			drag_pmx = undefined;
-			drag_pmy = undefined;
-			
-			var _val = node.inputs[surf_dragging + 3].getValue();
-			drag_sx = _val[0];
-			drag_sy = _val[1];
-			
 			drag_axis = -1;
+			
+			drag_pmx  = undefined;
+			drag_pmy  = undefined;
+			
+			if(array_empty(node.surface_selecting)) {
+				surf_dragging  = node.input_fix_len + node.dynamic_input_inspecting * node.data_length;
+				var _val = node.inputs[surf_dragging + 3].getValue();
+				drag_scale[0] = _val[0];
+				drag_scale[1] = _val[1];
+				
+				var _val = node.inputs[surf_dragging + 1].getValue();
+				scale_anchor[0] = _val[0];
+				scale_anchor[1] = _val[1];
+				
+				axis_angle = node.inputs[surf_dragging + 2].getValue();
+				
+			} else {
+				var _amo = array_length(node.inputs);
+				drag_scales = array_verify(drag_scales, _amo);
+				
+				for( var i = 0; i < _amo; i++ ) drag_scales[i] = node.inputs[i].getValue();
+				
+				scale_anchor[0] = node.selection_bbox[4];
+				scale_anchor[1] = node.selection_bbox[5];
+				
+				axis_angle = 0;
+			}
 		}
 		
 		static drawOverlay  = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) /*=>*/ {
-			if(!activeKeyboard || surf_dragging == noone) { PANEL_PREVIEW.resetTool(); return; }
+			if(!activeKeyboard) { PANEL_PREVIEW.resetTool(); return; }
 			
-			var _pos = node.inputs[surf_dragging + 1].getValue();
-			var _rot = node.inputs[surf_dragging + 2].getValue();
-			var _px = _x + _pos[0] * _s;
-			var _py = _y + _pos[1] * _s;
+			var _px = _x + scale_anchor[0] * _s;
+			var _py = _y + scale_anchor[1] * _s;
 			
 			if(drag_pmx == undefined) drag_pmx = _mx;
 			if(drag_pmy == undefined) drag_pmy = _my;
 			
-			var val = [drag_sx, drag_sy];
 			var _ss = point_distance(_mx, _my, _px, _py) / point_distance(drag_pmx, drag_pmy, _px, _py);
 			var _sx = key_mod_press(SHIFT)? (_mx - _px) / (drag_pmx - _px) : _ss;
 			var _sy = key_mod_press(SHIFT)? (_my - _py) / (drag_pmy - _py) : _ss;
+			var _edit = false;
 			
-			if(drag_axis == -1) {
-				val[0] = drag_sx * _sx;
-				val[1] = drag_sy * _sy;
+			if(array_empty(node.surface_selecting)) {
+				var val = [drag_scale[0], drag_scale[1]];
+				if(drag_axis == -1 || drag_axis == 0) val[0] = KEYBOARD_NUMBER == undefined? drag_scale[0] * _sx : drag_scale[0] + KEYBOARD_NUMBER;
+				if(drag_axis == -1 || drag_axis == 1) val[1] = KEYBOARD_NUMBER == undefined? drag_scale[1] * _sy : drag_scale[1] + KEYBOARD_NUMBER;
+				
+				if(node.inputs[surf_dragging + 3].setValue(val)) _edit = true;
 				
 			} else {
-				if(KEYBOARD_NUMBER == undefined) {
-					if(drag_axis == 0) val[0] = drag_sx * _sx;
-					if(drag_axis == 1) val[1] = drag_sy * _sy;
+				for( var i = 0, n = array_length(node.surface_selecting); i < n; i++ ) {
+					var _suri = node.surface_selecting[i];
+					var _opos = drag_scales[_suri + 1];
+					var _osca = drag_scales[_suri + 3];
 					
-				} else {
-					if(drag_axis == 0) val[0] = drag_sx + KEYBOARD_NUMBER;
-					if(drag_axis == 1) val[1] = drag_sy + KEYBOARD_NUMBER;
+					var _ss = [_osca[0], _osca[1]];
+					if(drag_axis == -1 || drag_axis == 0) _ss[0] = KEYBOARD_NUMBER == undefined? _osca[0] * _sx : _osca[0] + KEYBOARD_NUMBER;
+					if(drag_axis == -1 || drag_axis == 1) _ss[1] = KEYBOARD_NUMBER == undefined? _osca[1] * _sy : _osca[1] + KEYBOARD_NUMBER;
 					
+					var _pp = [_opos[0], _opos[1]];
+					_pp[0] = scale_anchor[0] + (_opos[0] - scale_anchor[0]) / _osca[0] * _ss[0];
+					_pp[1] = scale_anchor[1] + (_opos[1] - scale_anchor[1]) / _osca[1] * _ss[1];
+				
+					if(node.inputs[_suri + 1].setValue(_pp)) _edit = true;
+					if(node.inputs[_suri + 3].setValue(_ss)) _edit = true;
 				}
+				
 			}
 			
-			draw_set_color(COLORS._main_icon);
-			if(drag_axis == 0) draw_line(_px - lengthdir_x(9999, _rot), _py - lengthdir_y(9999, _rot), 
-			                             _px + lengthdir_x(9999, _rot), _py + lengthdir_y(9999, _rot));
-			if(drag_axis == 1) draw_line(_px - lengthdir_x(9999, _rot + 90), _py - lengthdir_y(9999, _rot + 90), 
-			                             _px + lengthdir_x(9999, _rot + 90), _py + lengthdir_y(9999, _rot + 90));
+			if(_edit) UNDO_HOLDING = true;
 			
-			if(node.inputs[surf_dragging + 3].setValue(val))
-				UNDO_HOLDING = true;
+			draw_set_color(COLORS._main_icon);
+			if(drag_axis == 0) draw_line(_px - lengthdir_x(9999, axis_angle     ), _py - lengthdir_y(9999, axis_angle     ), 
+			                             _px + lengthdir_x(9999, axis_angle     ), _py + lengthdir_y(9999, axis_angle     ));
+			if(drag_axis == 1) draw_line(_px - lengthdir_x(9999, axis_angle + 90), _py - lengthdir_y(9999, axis_angle + 90), 
+			                             _px + lengthdir_x(9999, axis_angle + 90), _py + lengthdir_y(9999, axis_angle + 90));
 			
 			if(key_press(ord("X"))) {
 				drag_axis = drag_axis == 0? -1 : 0;
@@ -787,6 +868,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	surf_dragging     = noone;
 	surface_selecting = [];
 	select_freeze     = 0;
+	selection_bbox    = [0, 0, 1, 1, 0, 0];
 	
 	drag_type   = 0; drag_anchor = 0;
 	dragging_sx = 0; dragging_sy = 0;
@@ -1055,12 +1137,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var anchors = array_create(array_length(inputs));
 		if(amo == 0) { dynamic_input_inspecting = noone; return; }
 		
-		array_verify(attributes.layer_visible,    amo);
-		array_verify(attributes.layer_selectable, amo);
-		
 		var _vis = attributes.layer_visible;
 		var _sel = attributes.layer_selectable;
-		
 		dynamic_input_inspecting = min(dynamic_input_inspecting, amo - 1);
 		
 		for(var i = 0; i < amo; i++) {
@@ -1237,173 +1315,170 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		if(hovering != noone) hovering_ianc = array_safe_get_fast(anchors, input_fix_len + hovering * data_length);
 		
+		var _show_selecting = true;
+		
 		if(isUsingTool()) {
+			_show_selecting = false;
 			var _currTool = PANEL_PREVIEW.tool_current;
 			var _tool     = _currTool.getToolObject();
 			
 			if(_tool != noone) {
 				_tool.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 				if(mouse_lclick()) select_freeze = 1;
+				_show_selecting = true;
 			}
 		}
 		
 		if(select_freeze == 0 && mouse_lpress(active)) { 
 			dynamic_input_inspecting = hovering; 
+			surface_selecting = [];
+			
 			refreshDynamicDisplay(); 
 		}
 		
-		if(mouse_lrelease()) select_freeze = 0;
+		if(_show_selecting) { // Multi Selections
+			if(select_freeze == 0 && panel.selection_selecting && surf_dragging == noone) {
+				var sx0 = _x + panel.selection_x0 * _s;
+				var sy0 = _y + panel.selection_y0 * _s;
+				var sx1 = _x + panel.selection_x1 * _s;
+				var sy1 = _y + panel.selection_y1 * _s;
+				
+				surface_selecting = [];
+				
+				for( var i = 0; i < amo; i++ ) {
+					if(!_vis[i] || !_sel[i]) continue;
+					
+					var ind = input_fix_len + i * data_length;
+					var a  = anchors[ind];
+					if(!is_struct(a)) continue;
+					
+					var p00 = a.d0[0], p01 = a.d0[1];
+					var p10 = a.d1[0], p11 = a.d1[1];
+					var p20 = a.d2[0], p21 = a.d2[1];
+					var p30 = a.d3[0], p31 = a.d3[1];
+					
+					var o0 = rectangle_in_triangle(sx0, sy0, sx1, sy1, p00, p01, p10, p11, p20, p21);
+					var o1 = rectangle_in_triangle(sx0, sy0, sx1, sy1, p10, p11, p20, p21, p30, p31);
+					
+					if(o0 || o1) array_push(surface_selecting, ind);
+				}
+				
+			}
+			
+			if(!array_empty(surface_selecting)) {
+				var _selx0 =  infinity;
+				var _sely0 =  infinity;
+				var _selx1 = -infinity;
+				var _sely1 = -infinity;
+				
+				draw_set_color(COLORS._main_accent);
+				for( var i = 0, n = array_length(surface_selecting); i < n; i++ ) {
+					var a = array_safe_get_fast(anchors, surface_selecting[i]);
+					if(!is_struct(a)) continue;
+					
+					draw_line(a.d0[0], a.d0[1], a.d1[0], a.d1[1]);
+					draw_line(a.d0[0], a.d0[1], a.d2[0], a.d2[1]);
+					draw_line(a.d3[0], a.d3[1], a.d1[0], a.d1[1]);
+					draw_line(a.d3[0], a.d3[1], a.d2[0], a.d2[1]);
+					
+					_selx0 = min(_selx0, a.d0[0]); _sely0 = min(_sely0, a.d0[1]);
+					_selx1 = max(_selx1, a.d0[0]); _sely1 = max(_sely1, a.d0[1]);
+					
+					_selx0 = min(_selx0, a.d1[0]); _sely0 = min(_sely0, a.d1[1]);
+					_selx1 = max(_selx1, a.d1[0]); _sely1 = max(_sely1, a.d1[1]);
+					
+					_selx0 = min(_selx0, a.d2[0]); _sely0 = min(_sely0, a.d2[1]);
+					_selx1 = max(_selx1, a.d2[0]); _sely1 = max(_sely1, a.d2[1]);
+					
+					_selx0 = min(_selx0, a.d3[0]); _sely0 = min(_sely0, a.d3[1]);
+					_selx1 = max(_selx1, a.d3[0]); _sely1 = max(_sely1, a.d3[1]);
+					
+				}
+				
+				var _selxc = (_selx0 + _selx1) / 2;
+				var _selyc = (_sely0 + _sely1) / 2;
+				var _ri = 0;
+				var _si = 0;
+				var _ai = 0;
+				var _bi = noone;
+				var _hov = point_in_rectangle(_mx, _my, _selx0, _sely0, _selx1, _sely1);
+				
+				// if((isNotUsingTool() || isUsingTool("Scale")) && point_in_circle(_mx, _my, _selx0, _sely0, 12)) {
+				// 	hovering_type = NODE_COMPOSE_DRAG.box;
+				// 	hovering_oanc = [_selx1, _sely1];
+				// 	hovering_ai   = 0;
+				// 	hovering = -1; _bi = 0;
+					
+				// } else if((isNotUsingTool() || isUsingTool("Scale")) && point_in_circle(_mx, _my, _selx1, _sely0, 12)) {
+				// 	hovering_type = NODE_COMPOSE_DRAG.box;
+				// 	hovering_oanc = [_selx0, _sely1];
+				// 	hovering_ai   = 1;
+				// 	hovering = -1; _bi = 1;
+					
+				// } else if((isNotUsingTool() || isUsingTool("Scale")) && point_in_circle(_mx, _my, _selx0, _sely1, 12)) {
+				// 	hovering_type = NODE_COMPOSE_DRAG.box;
+				// 	hovering_oanc = [_selx1, _sely0];
+				// 	hovering_ai   = 2;
+				// 	hovering = -1; _bi = 2;
+					
+				// } else if((isNotUsingTool() || isUsingTool("Scale")) && point_in_circle(_mx, _my, _selx1, _sely1, 12)) {
+				// 	hovering_type = NODE_COMPOSE_DRAG.box;
+				// 	hovering_oanc = [_selx0, _sely0];
+				// 	hovering_ai   = 3;
+				// 	hovering = -1; _bi = 3;
+					
+				// } else if((isNotUsingTool() || isUsingTool("Move")) && _hov) {
+				// 	hovering_type = NODE_COMPOSE_DRAG.move; 
+				// 	hovering = -1;
+					
+				// } else if((isNotUsingTool() || isUsingTool("Rotate")) && point_in_circle(_mx, _my, _selxc, _sely0 - 24, 12)) {
+				// 	hovering_type = NODE_COMPOSE_DRAG.rotate;
+				// 	hovering = -1; _ri = 1;
+					
+				// } else if((isNotUsingTool() || isUsingTool("Scale")) && point_in_circle(_mx, _my, _selx1 + 16, _sely1 + 16, 12)) {
+				// 	hovering_type = NODE_COMPOSE_DRAG.scale;
+				// 	hovering = -1; _si = 1;
+				// }
+				
+				// if(hovering == -1) {
+				// 	hovering_ianc = {
+				// 		d0: [_selx0, _sely0], d1: [_selx1, _sely0], d2: [_selx0, _sely1], d3: [_selx1, _sely1],
+				// 		rr: [_selxc, _sely0 - 24], ss: [_selx1 + 16, _sely1 + 16], 
+				// 		cx: _selxc, cy: _selyc,
+						
+				// 		anc: [ _selxc, _selyc ],
+				// 		siz: [ _selx1 - _selx0, _sely1 - _sely0 ],
+						
+				// 		raw_pos: [ _selxc, _selyc ],
+				// 		raw_rot: 0,
+				// 		raw_sca: [ 1, 1 ],
+				// 		raw_anc: [ .5, .5 ],
+				// 	};
+				// }
+				
+				draw_rectangle_border(_selx0, _sely0, _selx1, _sely1, 2);
+				
+				// draw_line_width(_selxc, _sely0 - 24, _selxc, _sely0,  2);
+				// draw_anchor(_ri, _selxc, _sely0 - 24,  ui(8), 1);
+				
+				// draw_line_width(_selx1, _sely1, _selx1 + 16, _sely1 + 16,  2);
+				// draw_anchor(_si, _selx1 + 16, _sely1 + 16,  ui(8), 1);
+				// draw_anchor(_bi == 0, _selx0, _sely0, ui(8), 2);
+				// draw_anchor(_bi == 1, _selx1, _sely0, ui(8), 2);
+				// draw_anchor(_bi == 2, _selx0, _sely1, ui(8), 2);
+				// draw_anchor(_bi == 3, _selx1, _sely1, ui(8), 2);
+				
+				selection_bbox[0] = (_selx0 - _x) / _s;
+				selection_bbox[1] = (_sely0 - _y) / _s;
+				selection_bbox[2] = (_selx1 - _x) / _s;
+				selection_bbox[3] = (_sely1 - _y) / _s;
+				selection_bbox[4] = (_selxc - _x) / _s;
+				selection_bbox[5] = (_selyc - _y) / _s;
+				
+			}
+		}
 		
-		#region multi selections
-			// var _show_selecting = isNotUsingTool();
-			
-			// if(isUsingTool()) {
-			// 	var _currTool = PANEL_PREVIEW.tool_current;
-			// 	var _tool     = _currTool.getToolObject();
-				
-			// 	if(_tool != noone) {
-			// 		_tool.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-			// 		if(mouse_lclick()) select_freeze = 1;
-			// 		_show_selecting = true;
-			// 	}
-			// }
-			
-			// if(_show_selecting) {
-			// 	if(select_freeze == 0 && panel.selection_selecting && surf_dragging == noone) {
-			// 		var sx0 = _x + panel.selection_x0 * _s;
-			// 		var sy0 = _y + panel.selection_y0 * _s;
-			// 		var sx1 = _x + panel.selection_x1 * _s;
-			// 		var sy1 = _y + panel.selection_y1 * _s;
-					
-			// 		surface_selecting = [];
-					
-			// 		for( var i = 0; i < amo; i++ ) {
-			// 			if(!_vis[i] || !_sel[i]) continue;
-						
-			// 			var ind = input_fix_len + i * data_length;
-			// 			var a  = anchors[ind];
-			// 			if(!is_struct(a)) continue;
-						
-			// 			var p00 = a.d0[0], p01 = a.d0[1];
-			// 			var p10 = a.d1[0], p11 = a.d1[1];
-			// 			var p20 = a.d2[0], p21 = a.d2[1];
-			// 			var p30 = a.d3[0], p31 = a.d3[1];
-						
-			// 			var o0 = rectangle_in_triangle(sx0, sy0, sx1, sy1, p00, p01, p10, p11, p20, p21);
-			// 			var o1 = rectangle_in_triangle(sx0, sy0, sx1, sy1, p10, p11, p20, p21, p30, p31);
-						
-			// 			if(o0 || o1) array_push(surface_selecting, ind);
-			// 		}
-					
-			// 	}
-				
-			// 	if(mouse_lrelease()) select_freeze = 0;
-				
-			// 	if(!array_empty(surface_selecting)) {
-			// 		var _selx0 =  infinity;
-			// 		var _sely0 =  infinity;
-			// 		var _selx1 = -infinity;
-			// 		var _sely1 = -infinity;
-					
-			// 		draw_set_color(COLORS._main_accent);
-			// 		for( var i = 0, n = array_length(surface_selecting); i < n; i++ ) {
-			// 			var a = array_safe_get_fast(anchors, surface_selecting[i]);
-			// 			if(!is_struct(a)) continue;
-						
-			// 			draw_line(a.d0[0], a.d0[1], a.d1[0], a.d1[1]);
-			// 			draw_line(a.d0[0], a.d0[1], a.d2[0], a.d2[1]);
-			// 			draw_line(a.d3[0], a.d3[1], a.d1[0], a.d1[1]);
-			// 			draw_line(a.d3[0], a.d3[1], a.d2[0], a.d2[1]);
-						
-			// 			_selx0 = min(_selx0, a.d0[0]); _sely0 = min(_sely0, a.d0[1]);
-			// 			_selx1 = max(_selx1, a.d0[0]); _sely1 = max(_sely1, a.d0[1]);
-						
-			// 			_selx0 = min(_selx0, a.d1[0]); _sely0 = min(_sely0, a.d1[1]);
-			// 			_selx1 = max(_selx1, a.d1[0]); _sely1 = max(_sely1, a.d1[1]);
-						
-			// 			_selx0 = min(_selx0, a.d2[0]); _sely0 = min(_sely0, a.d2[1]);
-			// 			_selx1 = max(_selx1, a.d2[0]); _sely1 = max(_sely1, a.d2[1]);
-						
-			// 			_selx0 = min(_selx0, a.d3[0]); _sely0 = min(_sely0, a.d3[1]);
-			// 			_selx1 = max(_selx1, a.d3[0]); _sely1 = max(_sely1, a.d3[1]);
-						
-			// 		}
-					
-			// 		var _selxc = (_selx0 + _selx1) / 2;
-			// 		var _selyc = (_sely0 + _sely1) / 2;
-			// 		var _ri = 0;
-			// 		var _si = 0;
-			// 		var _ai = 0;
-			// 		var _bi = noone;
-			// 		var _hov = point_in_rectangle(_mx, _my, _selx0, _sely0, _selx1, _sely1);
-					
-			// 		if((isNotUsingTool() || isUsingTool("Scale")) && point_in_circle(_mx, _my, _selx0, _sely0, 12)) {
-			// 			hovering_type = NODE_COMPOSE_DRAG.box;
-			// 			hovering_oanc = [_selx1, _sely1];
-			// 			hovering_ai   = 0;
-			// 			hovering = -1; _bi = 0;
-						
-			// 		} else if((isNotUsingTool() || isUsingTool("Scale")) && point_in_circle(_mx, _my, _selx1, _sely0, 12)) {
-			// 			hovering_type = NODE_COMPOSE_DRAG.box;
-			// 			hovering_oanc = [_selx0, _sely1];
-			// 			hovering_ai   = 1;
-			// 			hovering = -1; _bi = 1;
-						
-			// 		} else if((isNotUsingTool() || isUsingTool("Scale")) && point_in_circle(_mx, _my, _selx0, _sely1, 12)) {
-			// 			hovering_type = NODE_COMPOSE_DRAG.box;
-			// 			hovering_oanc = [_selx1, _sely0];
-			// 			hovering_ai   = 2;
-			// 			hovering = -1; _bi = 2;
-						
-			// 		} else if((isNotUsingTool() || isUsingTool("Scale")) && point_in_circle(_mx, _my, _selx1, _sely1, 12)) {
-			// 			hovering_type = NODE_COMPOSE_DRAG.box;
-			// 			hovering_oanc = [_selx0, _sely0];
-			// 			hovering_ai   = 3;
-			// 			hovering = -1; _bi = 3;
-						
-			// 		} else if((isNotUsingTool() || isUsingTool("Move")) && _hov) {
-			// 			hovering_type = NODE_COMPOSE_DRAG.move; 
-			// 			hovering = -1;
-						
-			// 		} else if((isNotUsingTool() || isUsingTool("Rotate")) && point_in_circle(_mx, _my, _selxc, _sely0 - 24, 12)) {
-			// 			hovering_type = NODE_COMPOSE_DRAG.rotate;
-			// 			hovering = -1; _ri = 1;
-						
-			// 		} else if((isNotUsingTool() || isUsingTool("Scale")) && point_in_circle(_mx, _my, _selx1 + 16, _sely1 + 16, 12)) {
-			// 			hovering_type = NODE_COMPOSE_DRAG.scale;
-			// 			hovering = -1; _si = 1;
-			// 		}
-					
-			// 		if(hovering == -1) {
-			// 			hovering_ianc = {
-			// 				d0: [_selx0, _sely0], d1: [_selx1, _sely0], d2: [_selx0, _sely1], d3: [_selx1, _sely1],
-			// 				rr: [_selxc, _sely0 - 24], ss: [_selx1 + 16, _sely1 + 16], 
-			// 				cx: _selxc, cy: _selyc,
-							
-			// 				anc: [ _selxc, _selyc ],
-			// 				siz: [ _selx1 - _selx0, _sely1 - _sely0 ],
-							
-			// 				raw_pos: [ _selxc, _selyc ],
-			// 				raw_rot: 0,
-			// 				raw_sca: [ 1, 1 ],
-			// 				raw_anc: [ .5, .5 ],
-			// 			};
-			// 		}
-					
-			// 		draw_rectangle_border(_selx0, _sely0, _selx1, _sely1, 2);
-					
-			// 		draw_line_width(_selxc, _sely0 - 24, _selxc, _sely0,  2);
-			// 		draw_anchor(_ri, _selxc, _sely0 - 24,  ui(8), 1);
-					
-			// 		draw_line_width(_selx1, _sely1, _selx1 + 16, _sely1 + 16,  2);
-			// 		draw_anchor(_si, _selx1 + 16, _sely1 + 16,  ui(8), 1);
-			// 		draw_anchor(_bi == 0, _selx0, _sely0, ui(8), 2);
-			// 		draw_anchor(_bi == 1, _selx1, _sely0, ui(8), 2);
-			// 		draw_anchor(_bi == 2, _selx0, _sely1, ui(8), 2);
-			// 		draw_anchor(_bi == 3, _selx1, _sely1, ui(8), 2);
-			// 	}
-			// }
-		#endregion
+		if(mouse_lrelease()) select_freeze = 0;
 		
 		if(hovering != noone) {
 			w_hover = true;

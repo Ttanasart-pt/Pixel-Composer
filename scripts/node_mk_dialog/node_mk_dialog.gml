@@ -33,9 +33,10 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	////- =Rendering
 	/* unused */ newInput(10, nodeValue_Bool(         "Round Position",   true      ));
-	/* unused */ newInput(11, nodeValue_Enum_Button(  "Blend Mode",       1, [ "Normal", "Alpha" ] ));
+	newInput(11, nodeValue_Enum_Button(  "Blend Mode",       1, [ "Normal", "Alpha" ] ));
 	newInput(12, nodeValue_Color(        "Color",            ca_white  ));
-	newInput(13, nodeValue_Palette(      "Color by Letter", [ca_white] )).setOptions("Select by:", "array_select", [ "Index", "Random" ], THEME.array_select_type).iconPad();
+	newInput(13, nodeValue_Palette(      "Color by Letter", [ca_white] ))
+		.setOptions("Select by:", "array_select", [ "Index Loop", "Index Ping-pong", "Random" ], THEME.array_select_type).iconPad();
 	
 	////- =Background
 	newInput(14, nodeValue_Bool(         "Render Background", false    ));
@@ -133,7 +134,7 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		[ "Output",     false ], 2, 0, 3, 
 		[ "Alignment",  false ], 17, 18, 16, 9, 
 		[ "Font",       false ], 5, 6, 7, 
-		[ "Rendering",  false ], 12, 13, 
+		[ "Rendering",  false ], 11, 12, 13, 
 		[ "Background", false, 14 ], 15, 
 		
 		new Inspector_Spacer(ui(4), true, false, ui(4)), 
@@ -359,10 +360,18 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				var ttx  = tx;
 				var tty  = ty;
 				
-				var _clti = _cletTyp == 0? _letter_curr % _cletLen : irandom(_cletLen - 1);
-				var _clt  = array_safe_get_fast(_clet, _clti);
-				var cc    = colorMultiply(_colr, _clt);
-				var aa    = _color_get_alpha(_colr);
+				var clti = _letter_curr;
+				switch(_cletTyp) {
+					case 0  : clti = _letter_curr % _cletLen; break;
+					case 1  : clti = _letter_curr % (_cletLen * 2 - 1); 
+							  if(clti >= _cletLen) clti = _cletLen * 2 - 1 - clti; break;
+					case 2  : clti = irandom(_cletLen - 1);   break;
+					default : clti = _letter_curr % _cletLen; break;
+				}
+				
+				var clt  = _clet[clti];
+				var cc   = colorMultiply(_colr, clt);
+				var aa   = _color_get_alpha(cc);
 				
 				var xs   = 1;
 				var ys   = 1;
@@ -722,6 +731,11 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			if(_rbg) draw_clear(_bgcol, _color_get_alpha(_bgcol));
 			else DRAW_CLEAR
 			
+			switch(_blnd) {
+				case 0 : BLEND_NORMAL;     break;
+				case 1 : BLEND_ALPHA_MULP; break;
+			} 
+			
 			for( var i = 0, n = array_length(dialogTimelineData); i < n; i++ ) {
 				var _data = dialogTimelineData[i];
 				if(!_data.active) continue;
@@ -735,6 +749,7 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				drawDialog(i, timerValue, _lineData, sw, sh);
 			}
 			
+			BLEND_NORMAL
 			draw_set_alpha(1);
 		surface_reset_target();
 		

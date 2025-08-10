@@ -861,6 +861,7 @@
             "Node_String_Get_Char",
             "Node_Datetime_Get",
             { "label": "/Operators" },
+            "Node_String_Replace",
             "Node_String_Merge",
             "Node_String_Join",
             "Node_String_Split",
