@@ -43,7 +43,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	newInput(i+1, nodeValue_Vec2(         "Clipping Distance",    [1,10]                                 ));
 	
 	////- =Render
-	newInput(i+ 5, nodeValue_Color(       "Ambient Light",         c_dkgrey                              ));
+	newInput(i+ 5, nodeValue_Color(       "Ambient Light",         cola(c_dkgrey)                        ));
 	newInput(i+16, nodeValue_Surface(     "Environment Texture"                                          ));
 	newInput(i+ 6, nodeValue_Bool(        "Show Background",       false                                 ));
 	newInput(i+ 7, nodeValue_Enum_Button( "Backface Culling",      2, [ "None", "CW", "CCW" ]            ));
@@ -51,12 +51,12 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	newInput(i+22, nodeValue_Enum_Button( "Blend mode",            0, [ "Normal", "Additive" ]           ));
 	
 	////- =Wireframe
-	newInput(i+23, nodeValue_Bool(        "Wireframe",             false                                 ));
-	newInput(i+24, nodeValue_Float(       "Wireframe Thickness",   1                                     ));
-	newInput(i+25, nodeValue_Color(       "Wireframe Color",       ca_black                              ));
-	newInput(i+26, nodeValue_Bool(        "Wireframe antialias",   false                                 ));
-	newInput(i+27, nodeValue_Bool(        "Wireframe shading",     false                                 ));
-	newInput(i+28, nodeValue_Bool(        "Wireframe only",        false                                 ));
+	newInput(i+23, nodeValue_Enum_Button( "Vire Mode",             0, [ "Solid", "Solid + Wireframe", "Edge Front", "Edge All" ] ));
+	newInput(i+24, nodeValue_Float(       "Wireframe Thickness",   1        ));
+	newInput(i+25, nodeValue_Color(       "Wireframe Color",       ca_black ));
+	newInput(i+26, nodeValue_Bool(        "Wireframe antialias",   false    ));
+	newInput(i+27, nodeValue_Bool(        "Wireframe shading",     false    ));
+	newInput(i+28, nodeValue_Bool(        "Wireframe only",        false    ));
 	
 	////- =Ambient Occlusion
 	newInput(i+17, nodeValue_Bool(        "Ambient Occlusion",     false                                 ));
@@ -86,8 +86,8 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		["Transform",	     false],       i+ 9, 0, 1, i+10, i+11, i+12, i+13, i+14, i+ 8, 
 		["Camera",		      true],       i+ 3, i+ 0, i+ 1, 
 		["Render",		      true],       i+ 5, i+16, i+ 6, i+ 7, i+15, i+22, 
-		["Wireframe",         true, i+23], i+24, i+25, i+26, i+27, i+28, 
-		["Ambient Occlusion", true, i+17], i+20, i+18, i+19, 
+		["Wireframe",         true], i+23, i+24, i+25, i+26, i+27, i+28, 
+		["Ambient Occlusion", true,  i+17],i+20, i+18, i+19, 
 		["Effects",			  true],       i+21, i+29, i+30, 
 	];
 	
@@ -242,6 +242,8 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 			inputs[in_d3d + 18].setVisible(_aoEn);
 			inputs[in_d3d + 19].setVisible(_aoEn);
 			inputs[in_d3d + 20].setVisible(_aoEn);
+			
+			inputs[in_d3d + 24].setVisible(_wire != 2);
 			
 		#endregion
 		

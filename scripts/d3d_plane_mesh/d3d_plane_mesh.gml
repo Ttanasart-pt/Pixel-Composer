@@ -6,13 +6,17 @@ function __3dPlane() : __3dObject() constructor {
 	two_side = false;
 	
 	static initModel = function() {
+		edges   = [];
+		var eid = 0;
+		
 		var _nor = [ 0, 0, 1 ];
-		vertex   = [];
+		var _vt  = [];
+		vertex   = [ _vt ];
 		object_counts = 1 + two_side;
 		
 		switch(normal) {
 			case 0 : 
-				vertex[0] = [
+				_vt = [
 					new __vertex(0, -.5, -.5).setNormal(1, 0, 0).setUV(0, 1), 
 					new __vertex(0,  .5,  .5).setNormal(1, 0, 0).setUV(1, 0), 
 					new __vertex(0,  .5, -.5).setNormal(1, 0, 0).setUV(1, 1),
@@ -21,10 +25,15 @@ function __3dPlane() : __3dObject() constructor {
 					new __vertex(0, -.5,  .5).setNormal(1, 0, 0).setUV(0, 0), 
 					new __vertex(0,  .5,  .5).setNormal(1, 0, 0).setUV(1, 0),
 				];
+				
+				edges[0] = new __3dObject_Edge([0, -.5, -.5], [0,  .5, -.5]);
+				edges[1] = new __3dObject_Edge([0,  .5, -.5], [0,  .5,  .5]);
+				edges[2] = new __3dObject_Edge([0,  .5,  .5], [0, -.5,  .5]);
+				edges[3] = new __3dObject_Edge([0, -.5,  .5], [0, -.5, -.5]);
 				break;	
 				
 			case 1 : 
-				vertex[0] = [
+				_vt = [
 					new __vertex(-.5, 0, -.5).setNormal(0, 1, 0).setUV(1, 1), 
 					new __vertex( .5, 0, -.5).setNormal(0, 1, 0).setUV(0, 1), 
 					new __vertex( .5, 0,  .5).setNormal(0, 1, 0).setUV(0, 0), 
@@ -33,10 +42,15 @@ function __3dPlane() : __3dObject() constructor {
 					new __vertex( .5, 0,  .5).setNormal(0, 1, 0).setUV(0, 0),
 					new __vertex(-.5, 0,  .5).setNormal(0, 1, 0).setUV(1, 0),
 				];
+				
+				edges[0] = new __3dObject_Edge([-.5, 0, -.5], [ .5, 0, -.5]);
+				edges[1] = new __3dObject_Edge([ .5, 0, -.5], [ .5, 0,  .5]);
+				edges[2] = new __3dObject_Edge([ .5, 0,  .5], [-.5, 0,  .5]);
+				edges[3] = new __3dObject_Edge([-.5, 0,  .5], [-.5, 0, -.5]);
 				break;	
 				
 			case 2 : 
-				vertex[0] = [
+				_vt = [
 					new __vertex(-.5, -.5, 0).setNormal(0, 0, 1).setUV(0, 0), 
 					new __vertex( .5,  .5, 0).setNormal(0, 0, 1).setUV(1, 1), 
 					new __vertex( .5, -.5, 0).setNormal(0, 0, 1).setUV(0, 1),
@@ -45,6 +59,11 @@ function __3dPlane() : __3dObject() constructor {
 					new __vertex(-.5,  .5, 0).setNormal(0, 0, 1).setUV(1, 0), 
 					new __vertex( .5,  .5, 0).setNormal(0, 0, 1).setUV(1, 1),
 				];
+				
+				edges[0] = new __3dObject_Edge([-.5, -.5, 0], [ .5, -.5, 0]);
+				edges[1] = new __3dObject_Edge([ .5, -.5, 0], [ .5,  .5, 0]);
+				edges[2] = new __3dObject_Edge([ .5,  .5, 0], [-.5,  .5, 0]);
+				edges[3] = new __3dObject_Edge([-.5,  .5, 0], [-.5, -.5, 0]);
 				break;	
 		}
 		

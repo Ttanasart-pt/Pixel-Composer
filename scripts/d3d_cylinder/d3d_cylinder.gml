@@ -12,6 +12,9 @@ function __3dCylinder(radius = 0.5, height = 1, sides = 8, smooth = false) : __3
 	profiles = [ 1, 1 ];
 	
 	static initModel = function() {
+		edges   = [];
+		var eid = 0;
+		
 		var v0 = array_create(3 * sides);
 		var v1 = array_create(3 * sides);
 		var _h = height / 2;
@@ -38,10 +41,13 @@ function __3dCylinder(radius = 0.5, height = 1, sides = 8, smooth = false) : __3
 			v0[i * 3 + 0] = new __vertex(       0,        0,  _h).setNormal(0, 0,  1).setUV(0.5,  0.5);
 			v0[i * 3 + 1] = new __vertex(x0 * _r0, y0 * _r0,  _h).setNormal(0, 0,  1).setUV(_u0,  _v0);
 			v0[i * 3 + 2] = new __vertex(x1 * _r0, y1 * _r0,  _h).setNormal(0, 0,  1).setUV(_u1,  _v1);
+			edges[eid++] = new __3dObject_Edge([x0 * _r0, y0 * _r0,  _h], [x1 * _r0, y1 * _r0,  _h]);
 			
 			v1[i * 3 + 0] = new __vertex(       0,        0, -_h).setNormal(0, 0, -1).setUV(0.5,  0.5);
 			v1[i * 3 + 1] = new __vertex(x1 * _r1, y1 * _r1, -_h).setNormal(0, 0, -1).setUV(_u1,  _v1);
 			v1[i * 3 + 2] = new __vertex(x0 * _r1, y0 * _r1, -_h).setNormal(0, 0, -1).setUV(_u0,  _v0);
+			edges[eid++] = new __3dObject_Edge([x0 * _r1, y0 * _r1, -_h], [x1 * _r1, y1 * _r1, -_h]);
+			
 		}
 		
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -89,6 +95,9 @@ function __3dCylinder(radius = 0.5, height = 1, sides = 8, smooth = false) : __3
 				vs[_ix++] = new __vertex(x0, y0, _h0).setNormal(nx0, ny0, 0).setUV(ux0, _j0);
 				vs[_ix++] = new __vertex(x1, y1, _h0).setNormal(nx1, ny1, 0).setUV(ux1, _j0);
 				vs[_ix++] = new __vertex(x3, y3, _h1).setNormal(nx1, ny1, 0).setUV(ux1, _j1);
+				
+				edges[eid++] = new __3dObject_Edge([x0, y0, _h0], [x2, y2, _h1]);
+				edges[eid++] = new __3dObject_Edge([x1, y1, _h0], [x3, y3, _h1]);
 			}
 		}
 		

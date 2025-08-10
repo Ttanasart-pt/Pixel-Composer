@@ -3,12 +3,15 @@ function __3dTerrain() : __3dObject() constructor {
 	VF = global.VF_POS_NORM_TEX_COL;
 	render_type = pr_trianglelist;
 	smooth      = false;
-	
-	self.subdivision = 4;
+	edgesMap    = [];
+	subdivision = 4;
 	
 	heights = array_create((subdivision + 1) * (subdivision + 1));
 	
 	static initModel = function() {
+		edgesMap = [];
+		var eid  = 0;
+		
 		var _hs = 1 / 2;
 		var _vt = array_create(3 * 2 * subdivision * subdivision);
 		var _in = 0;
@@ -38,7 +41,12 @@ function __3dTerrain() : __3dObject() constructor {
 				_vt[_in + 3] = new __vertex(x0, y0, 0).setNormal(0., 0., 1.).setUV(u0, v0); 
 				_vt[_in + 4] = new __vertex(x0, y1, 0).setNormal(0., 0., 1.).setUV(u0, v1); 
 				_vt[_in + 5] = new __vertex(x1, y1, 0).setNormal(0., 0., 1.).setUV(u1, v1);
-					
+				
+				edgesMap[eid++] = [_in + 0, _in + 4];
+				edgesMap[eid++] = [_in + 4, _in + 1];
+				edgesMap[eid++] = [_in + 1, _in + 2];
+				edgesMap[eid++] = [_in + 2, _in + 0];
+				
 				_in += 6;
 			}
 			
@@ -142,6 +150,11 @@ function __3dTerrain() : __3dObject() constructor {
 					_vt[_in + 4] = new __vertex(x0, y1, _h2).setNormal(_n2x, _n2y, _n2z).setUV(u0, v1); 
 					_vt[_in + 5] = new __vertex(x1, y1, _h3).setNormal(_n3x, _n3y, _n3z).setUV(u1, v1);
 					
+					edgesMap[eid++] = [_in + 0, _in + 4];
+					edgesMap[eid++] = [_in + 4, _in + 1];
+					edgesMap[eid++] = [_in + 1, _in + 2];
+					edgesMap[eid++] = [_in + 2, _in + 0];
+				
 				} else {
 					var _nx0 = st;
 					var _ny0 = 0;
@@ -168,10 +181,23 @@ function __3dTerrain() : __3dObject() constructor {
 					_vt[_in + 4] = new __vertex(x0, y1, _h2).setNormal(_nx, _ny, _nz).setUV(u0, v1); 
 					_vt[_in + 5] = new __vertex(x1, y1, _h3).setNormal(_nx, _ny, _nz).setUV(u1, v1);
 					
+					edgesMap[eid++] = [_in + 0, _in + 4];
+					edgesMap[eid++] = [_in + 4, _in + 1];
+					edgesMap[eid++] = [_in + 1, _in + 2];
+					edgesMap[eid++] = [_in + 2, _in + 0];
+					
 				}
 					
 				_in += 6;
 			}
+		}
+		
+		edges = [];
+		for( var i = 0, n = array_length(edgesMap); i < n; i++ ) {
+			var _ei = edgesMap[i];
+			var _e0 = _vt[_ei[0]].toArrayPos();
+			var _e1 = _vt[_ei[1]].toArrayPos();
+			edges[i] = new __3dObject_Edge(_e0, _e1);
 		}
 		
 		vertex = [ _vt ];
@@ -415,8 +441,17 @@ function __3dTerrain() : __3dObject() constructor {
 		
 		}
 		
-		
 		vertex_end(VB[0]);
+		
+		edges = [];
+		for( var i = 0, n = array_length(edgesMap); i < n; i++ ) {
+			var _ei = edgesMap[i];
+			var _e0 = _vt[_ei[0]].toArrayPos();
+			var _e1 = _vt[_ei[1]].toArrayPos();
+			edges[i] = new __3dObject_Edge(_e0, _e1);
+		}
+		
+		buildEdge();
 	}
 	
 	onParameterUpdate = initModel;

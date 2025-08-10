@@ -9,6 +9,9 @@ function __3dCone(radius = 0.5, height = 1, sides = 8, smooth = false) : __3dObj
 	self.smooth = smooth;
 		
 	static initModel = function() {
+		edges   = [];
+		var eid = 0;
+		
 		var v0 = array_create(3 * sides);
 		var vs = array_create(3 * sides);
 		
@@ -31,6 +34,8 @@ function __3dCone(radius = 0.5, height = 1, sides = 8, smooth = false) : __3dObj
 			v0[i * 3 + 0] = new __vertex( 0,  0, -_h).setNormal(0, 0, -1).setUV(0.5,  0.5);
 			v0[i * 3 + 1] = new __vertex(x1, y1, -_h).setNormal(0, 0, -1).setUV(_u1,  _v1);
 			v0[i * 3 + 2] = new __vertex(x0, y0, -_h).setNormal(0, 0, -1).setUV(_u0,  _v0);
+			
+			edges[eid++] = new __3dObject_Edge([x0, y0, -_h], [x1, y1, -_h]);
 		}
 		
 		for( var i = 0; i < sides; i++ ) {
@@ -58,6 +63,8 @@ function __3dCone(radius = 0.5, height = 1, sides = 8, smooth = false) : __3dObj
 			vs[i * 3 + 0] = new __vertex( 0,  0,  _h).setNormal(nxc, nyc, nz).setUV(ux0, 0);
 			vs[i * 3 + 1] = new __vertex(x0, y0, -_h).setNormal(nx0, ny0, nz).setUV(ux0, 1);
 			vs[i * 3 + 2] = new __vertex(x1, y1, -_h).setNormal(nx1, ny1, nz).setUV(ux1, 0);
+			
+			edges[eid++] = new __3dObject_Edge([x0, y0, -_h], [0, 0, _h]);
 		}
 		
 		vertex	= [ v0, vs ];

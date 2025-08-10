@@ -99,7 +99,6 @@ function __3dScene(_camera, _name = "New scene") constructor {
 	////- Submit
 	
 	static submit       = function(o, sh=noone) /*=>*/ { D3DSCENE_PRESUBMIT o.submit(      self, sh); D3DSCENE_POSTSUBMIT }
-	static submitUI     = function(o, sh=noone) /*=>*/ { D3DSCENE_PRESUBMIT o.submitUI(    self, sh); D3DSCENE_POSTSUBMIT }
 	static submitSel    = function(o, sh=noone) /*=>*/ { D3DSCENE_PRESUBMIT o.submitSel(   self, sh); D3DSCENE_POSTSUBMIT }
 	static submitShader = function(o, sh=noone) /*=>*/ { D3DSCENE_PRESUBMIT o.submitShader(self, sh); D3DSCENE_POSTSUBMIT }
 	

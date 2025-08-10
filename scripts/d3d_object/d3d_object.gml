@@ -25,6 +25,8 @@
 	#macro vertex_vec3 vertex_float3
 #endregion
 
+function __3dObject_Edge(_ind0, _ind1) constructor { p0 = _ind0; p1 = _ind1; }
+
 function __3dObject() constructor {
 	object_counts = 1;
 	vertex = [];
@@ -34,6 +36,9 @@ function __3dObject() constructor {
 	NVB    = noone;
 	WVB    = noone;
 	name   = UUID_generate();
+	
+	edges  = [];
+	EB     = noone;
 	
 	transform = new __transform();
 	size      = new __vec3(1);
@@ -144,6 +149,25 @@ function __3dObject() constructor {
 		return _buffer;
 	}
 	
+	static buildEdge = function() {
+		if(array_empty(edges)) return;
+		var _buffer = vertex_create_buffer();
+		vertex_begin(_buffer, global.VF_POS_COL);
+		
+		for( var i = 0, n = array_length(edges); i < n; i++ ) {
+			var e  = edges[i];
+			
+			vertex_position_3d( _buffer, e.p0[0], e.p0[1], e.p0[2]);
+			vertex_color(       _buffer, c_white, 1);
+			
+			vertex_position_3d( _buffer, e.p1[0], e.p1[1], e.p1[2]);
+			vertex_color(       _buffer, c_white, 1);
+		}
+		
+		vertex_end(_buffer);
+		EB = _buffer;
+	}
+	
 	static build = function(_buffer = VB, _vertex = vertex, counts = object_counts) {
 			 if(is_array(_buffer)) array_foreach(_buffer, function(b) /*=>*/ { if(b != noone) vertex_delete_buffer(b); });
 		else if(_buffer != noone)  vertex_delete_buffer(_buffer);
@@ -154,29 +178,54 @@ function __3dObject() constructor {
 		for( var i = 0; i < counts; i++ )
 			_res[i] = buildVertex(_vertex[i]);
 		
+		buildEdge();
 		return _res;
 	}
 	
 	////- Submit
 	
-	static preSubmitVertex  = function(_sc = {}) {}
-	static postSubmitVertex = function(_sc = {}) {}
+	static preSubmitVertex  = function(_sc = noone) /*=>*/ {}
+	static postSubmitVertex = function(_sc = noone) /*=>*/ {}
 	
-	static getCenter = function() { return new __vec3(transform.position.x, transform.position.y, transform.position.z); }
-	static getBBOX   = function() { return new __bbox3D(size.multiplyVec(transform.scale).multiply(-0.5), size.multiplyVec(transform.scale).multiply(0.5)); }
+	static getCenter = function() /*=>*/ {return new __vec3(transform.position.x, transform.position.y, transform.position.z)};
+	static getBBOX   = function() /*=>*/ {return new __bbox3D(size.multiplyVec(transform.scale).multiply(-0.5), size.multiplyVec(transform.scale).multiply(0.5))};
 	
-	static submit		= function(_sc = {}, _sh = noone) { submitVertex(_sc, _sh); }
-	static submitUI		= function(_sc = {}, _sh = noone) { submitVertex(_sc, _sh); }
-	static submitSel	= function(_sc = {}, _sh = noone) {
-		var _s = variable_clone(_sc);
-		_s.show_normal = false;
-		submitVertex(_s, sh_d3d_silhouette); 
+	static submitShadow = function(_sc = noone, _ob = noone) /*=>*/ {}
+	static submitSel	= function(_sc = noone, _sh = noone) /*=>*/ { submitVertex(_sc, sh_d3d_silhouette, true);  }
+	static submitShader = function(_sc = noone, _sh = noone) /*=>*/ { submit(_sc, _sh); }
+	static submit		= function(_sc = noone, _sh = noone) /*=>*/ { 
+		if(!is(_sc, __3dScene)) return submitVertex(_sc, _sh);
+		
+		switch(_sc.show_wireframe) {
+			case 0 : 
+				submitVertex(_sc, _sh); 
+				break;
+				
+			case 1 : 
+				submitVertex(_sc, _sh);
+				submitEdge(_sc.wireframe_color, _color_get_alpha(_sc.wireframe_color));
+				break;
+				
+			case 2 : 
+				gpu_set_blendmode_ext(bm_zero, bm_one);
+				gpu_set_cullmode(cull_clockwise);
+				submitVertex(_sc, _sh);
+				gpu_set_cullmode(cull_counterclockwise);
+				BLEND_NORMAL
+				
+				gpu_set_zfunc(cmpfunc_less);
+				submitEdge(_sc.wireframe_color, _color_get_alpha(_sc.wireframe_color));
+				gpu_set_zfunc(cmpfunc_lessequal);
+				break;
+				
+			case 3 : 
+				submitEdge(_sc.wireframe_color, _color_get_alpha(_sc.wireframe_color));
+				break;
+				
+		}
 	}
 	
-	static submitShader = function(_sc = {}, _sh = noone) { submitVertex(_sc, _sh); }
-	static submitShadow = function(_sc = {}, _ob = noone) {}
-	
-	static submitVertex = function(_sc = {}, _sh = noone) {
+	static submitVertex = function(_sc = noone, _sh = noone, _selection = false) {
 		var _shader;
 		
 		switch(VF) {
@@ -233,7 +282,7 @@ function __3dObject() constructor {
 		
 		if(!is_undefined(_sh)) shader_reset();
 		
-		if(_sc.show_normal) {
+		if(_sc.show_normal && !_selection) {
 			if(NVB == noone) generateNormal();
 			if(NVB != noone) {
 				shader_set(sh_d3d_wireframe);
@@ -253,6 +302,23 @@ function __3dObject() constructor {
 		matrix_set(matrix_world, matrix_build_identity());
 		postSubmitVertex(_sc);
 		
+	}
+	
+	static submitEdge = function(cc = c_black, aa = 1) {
+		if(EB == noone) return;
+		
+		shader_set(sh_d3d_wireframe);
+		transform.submitMatrix();
+		matrix_set(matrix_world, matrix_stack_top());
+		
+		shader_set_c("blend", cc, aa);
+		vertex_submit(EB, pr_linelist, -1);
+		
+		transform.clearMatrix();	
+		matrix_set(matrix_world, matrix_build_identity());
+		shader_reset();
+		
+		draw_set_alpha(1);
 	}
 	
 	////- Actions

@@ -65,7 +65,6 @@ function __3dObjectInstancer() : __3dObject() constructor {
 	static generateNormal = function(_s = normal_draw_size) {}
 	
 	static submit		= function(scene = {}, shader = noone) { submitVertex(scene, shader); }
-	static submitUI		= function(scene = {}, shader = noone) { submitVertex(scene, shader); }
 	static submitSel	= function(scene = {}, shader = noone) { submitVertex(scene, shader); }
 	
 	static submitShader = function(scene = {}, shader = noone) {}

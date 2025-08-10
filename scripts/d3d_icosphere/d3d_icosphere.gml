@@ -54,6 +54,9 @@ function __3dICOSphere(radius = 0.5, level = 2, smt = false) : __3dObject() cons
 		var phi = (1 + sqrt(5)) * 0.5; // golden ratio
 		var a = 1.0;
 		var b = 1.0 / phi;
+		
+		edges   = [];
+		var eid = 0;
 	
 		icoverts = [
 			new __vec3Sub( 1,  1,  1)._normalize()._multiply(radius),
@@ -96,7 +99,7 @@ function __3dICOSphere(radius = 0.5, level = 2, smt = false) : __3dObject() cons
 		ds_list_add(_vertices, icoverts[11], icoverts[ 5], icoverts[ 9]);
 		
 		var lv = min(level, 5);
-		repeat(lv) { #region subdivide
+		repeat(lv) { // subdivide
 		    ds_map_clear(_vhash);
 			var newVertices = ds_list_create();
 		    
@@ -129,21 +132,27 @@ function __3dICOSphere(radius = 0.5, level = 2, smt = false) : __3dObject() cons
 			
 			ds_list_destroy(_vertices);
 		    _vertices = newVertices;
-		} #endregion
-
-		for( var i = 0, n = ds_list_size(_vertices) / 3; i < n; i++ ) { #region normal, uv generation
+		}
+		
+		for( var i = 0, n = ds_list_size(_vertices) / 3; i < n; i++ ) { // normal, uv generation
 			var _v0 = _vertices[| i * 3 + 0];
 			var _v1 = _vertices[| i * 3 + 1];
 			var _v2 = _vertices[| i * 3 + 2];
+			
 			if(smooth) {
 				ds_list_add(_normals, _v0.normalize(), _v1.normalize(), _v2.normalize());
 			} else {
 				var _n  = _v2.subtract(_v0).cross(_v1.subtract(_v0));
 				ds_list_add(_normals, _n, _n, _n);
 			}
-		} #endregion
+			
+			edges[eid++] = new __3dObject_Edge([_v0.x, _v0.y, _v0.z], [_v1.x, _v1.y, _v1.z]);
+			edges[eid++] = new __3dObject_Edge([_v0.x, _v0.y, _v0.z], [_v2.x, _v2.y, _v2.z]);
+			edges[eid++] = new __3dObject_Edge([_v2.x, _v2.y, _v2.z], [_v1.x, _v1.y, _v1.z]);
+		}
 		
-		vertex   = [ array_create(ds_list_size(_vertices)) ];
+		var vt = array_create(ds_list_size(_vertices));
+		vertex = [ vt ];
 		
 		for( var i = 0, n = ds_list_size(_vertices); i < n; i++ ) {
 			var _v = _vertices[| i];
@@ -153,7 +162,7 @@ function __3dICOSphere(radius = 0.5, level = 2, smt = false) : __3dObject() cons
 			var _va = (point_direction(0, 0, _v.x, _v.z) + 90) % 360;
 			if(_va > 180) _va = 360 - _va;
 			
-			vertex[0][i] = new __vertex(_v.x, _v.y, _v.z).setNormal(_n.x, _n.y, _n.z).setUV(_ha / 360, _va / 180);
+			vt[i] = new __vertex(_v.x, _v.y, _v.z).setNormal(_n.x, _n.y, _n.z).setUV(_ha / 360, _va / 180);
 		}
 		
 		ds_list_destroy(_vertices);

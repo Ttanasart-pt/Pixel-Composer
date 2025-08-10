@@ -39,6 +39,9 @@ function __3dPathExtrude(_radius = 0.5, _sides = 8, _smooth = false) : __3dObjec
 		var _uy = new __vec3(0, 1, 0);
 		var _uz = new __vec3(0, 0, 1);
 		
+		edges   = [];
+		var eid = 0;
+		
 		if(_subd < 2) return;
 		
 		o.x = points[0];
@@ -110,6 +113,8 @@ function __3dPathExtrude(_radius = 0.5, _sides = 8, _smooth = false) : __3dObjec
 			    	v0[_in0++] = new __vertex(o.x, o.y, o.z).setNormal(-v.x, -v.y, -v.z).setUV(0.5, 0.5);
 					v0[_in0++] = new __vertex(cx0, cy0, cz0).setNormal(-v.x, -v.y, -v.z).setUV(__u0, __v0);
 					v0[_in0++] = new __vertex(cx1, cy1, cz1).setNormal(-v.x, -v.y, -v.z).setUV(__u1, __v1);
+					
+					edges[eid++] = new __3dObject_Edge([cx0, cy0, cz0], [cx1, cy1, cz1]);
 			    }
 			    
 			    for (var j = 0, m = array_length(prevn); j < m; j++)
@@ -205,6 +210,12 @@ function __3dPathExtrude(_radius = 0.5, _sides = 8, _smooth = false) : __3dObjec
 						vs[_ind++] = new __vertex(x2, y2, z2).setNormal(_n2.x, _n2.y, _n2.z).setUV(__v1 * _vs, 1 - __u0 * _us);
 						vs[_ind++] = new __vertex(x3, y3, z3).setNormal(_n3.x, _n3.y, _n3.z).setUV(__v1 * _vs, 1 - __u1 * _us);
 					}
+					
+					edges[eid++] = new __3dObject_Edge([x0, y0, z0], [x1, y1, z1]);
+					edges[eid++] = new __3dObject_Edge([x1, y1, z1], [x3, y3, z3]);
+					edges[eid++] = new __3dObject_Edge([x3, y3, z3], [x2, y2, z2]);
+					edges[eid++] = new __3dObject_Edge([x2, y2, z2], [x0, y0, z0]);
+				
 				}
 		    }
 		    
@@ -232,6 +243,8 @@ function __3dPathExtrude(_radius = 0.5, _sides = 8, _smooth = false) : __3dObjec
 			    	v1[_in1++] = new __vertex(n.x, n.y, n.z).setNormal(-v.x, -v.y, -v.z).setUV(0.5, 0.5);
 					v1[_in1++] = new __vertex(cx1, cy1, cz1).setNormal(-v.x, -v.y, -v.z).setUV(__u1, __v1);
 					v1[_in1++] = new __vertex(cx0, cy0, cz0).setNormal(-v.x, -v.y, -v.z).setUV(__u0, __v0);
+					
+					edges[eid++] = new __3dObject_Edge([cx0, cy0, cz0], [cx1, cy1, cz1]);
 			    }
 			}
 			

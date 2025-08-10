@@ -47,6 +47,8 @@ function __vertex(_x = 0, _y = _x, _z = _x, color = c_white, alpha = 1) construc
 	
 	static toString = function() { return $"[__vertex] ( pos: ({x}, {y}, {z}), nor: ({nx}, {ny}, {nz}), uv: ({u}, {v}), {color}, {alpha} )"; }
 	
+	static toArrayPos = function() /*=>*/ {return [x,y,z]};
+	
 	static clone = function() {
 		INLINE
 		var _v = new __vertex(x, y, z, color, alpha);

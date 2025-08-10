@@ -12,8 +12,10 @@ function __3dTorus(radT = 1, radP = .2, sideT = 16, sideP = 8, smooth = false) :
 	angP = 0;
 		
 	static initModel = function() {
-		var vs = []//array_create(sideT * sideP * 2);
-		var ix = 0;
+		edges   = [];
+		var eid = 0;
+		var vs  = [];
+		var ix  = 0;
 		
 		for( var i = 0; i < sideT; i++ ) {
 			var aT0 = (i + 0) / sideT * 360 + angT;
@@ -100,6 +102,11 @@ function __3dTorus(radT = 1, radP = .2, sideT = 16, sideP = 8, smooth = false) :
 				vs[ix++] = new __vertex(x0, y0, z0).setNormal(nx0, ny0, nz0).setUV(ux0, uy0);	
 				vs[ix++] = new __vertex(x3, y3, z3).setNormal(nx3, ny3, nz3).setUV(ux0, uy1);
 				vs[ix++] = new __vertex(x2, y2, z2).setNormal(nx2, ny2, nz2).setUV(ux1, uy1);
+				
+				edges[eid++] = new __3dObject_Edge([x0, y0, z0], [x1, y1, z1]);
+				edges[eid++] = new __3dObject_Edge([x1, y1, z1], [x2, y2, z2]);
+				edges[eid++] = new __3dObject_Edge([x2, y2, z2], [x3, y3, z3]);
+				edges[eid++] = new __3dObject_Edge([x3, y3, z3], [x0, y0, z0]);
 			}
 		}
 		

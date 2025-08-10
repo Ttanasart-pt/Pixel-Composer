@@ -12,6 +12,9 @@ function __3dPathRevolve() : __3dObject() constructor {
 	
 	static initModel = function() {
 		
+		edges   = [];
+		var eid = 0;
+		
 		var _astp = 360 / sides;
 		var _ustp = 1 / sides;
 		var _vstp = 1 / array_length(points);
@@ -95,6 +98,11 @@ function __3dPathRevolve() : __3dObject() constructor {
 				vside[_in0++] = new __vertex(x2, y2, z2).setNormal(nx2, ny2, nz2).setUV(_u1, _v1);
 				vside[_in0++] = new __vertex(x3, y3, z3).setNormal(nx3, ny3, nz3).setUV(_u1, _v0);
 				vside[_in0++] = new __vertex(x0, y0, z0).setNormal(nx0, ny0, nz0).setUV(_u0, _v0);
+				
+				edges[eid++] = new __3dObject_Edge([x0, y0, z0], [x1, y1, z1]);
+				edges[eid++] = new __3dObject_Edge([x1, y1, z1], [x2, y2, z2]);
+				edges[eid++] = new __3dObject_Edge([x2, y2, z2], [x3, y3, z3]);
+				edges[eid++] = new __3dObject_Edge([x3, y3, z3], [x0, y0, z0]);
 			}
 		}
 		

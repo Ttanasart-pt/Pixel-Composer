@@ -61,7 +61,7 @@ function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 				//print($"Submitting object {_prev}\n{_b}, {_c}, {_sca}");
 				
 				D3D_GLOBAL_PREVIEW.custom_transform.scale.set(_sca);
-				D3D_GLOBAL_PREVIEW.submitUI(_prev);
+				D3D_GLOBAL_PREVIEW.submit(_prev);
 			}
 		surface_reset_target();
 		surface_depth_disable(true);

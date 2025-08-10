@@ -1899,7 +1899,7 @@ function Panel_Preview() : PanelContent() constructor {
                 var _prev = _prev_obj[i];
                 if(_prev == noone) continue;
                 
-                _prev.submitUI(d3_scene_preview);
+                _prev.submit(d3_scene_preview);
             }
             
             gpu_set_cullmode(cull_noculling); 

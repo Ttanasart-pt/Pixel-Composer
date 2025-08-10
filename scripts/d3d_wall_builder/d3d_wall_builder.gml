@@ -11,6 +11,9 @@ function __3dWall_builder() : __3dObject() constructor {
 	static initModel = function() {
 		if(array_empty(points)) return;
 		
+		edges   = [];
+		var eid = 0;
+		
 		var ofl = [];
         var ofr = [];
         var len = array_length(points);
@@ -69,6 +72,12 @@ function __3dWall_builder() : __3dObject() constructor {
 			vbl[i * 6 + 3] = new __vertex(x0, y0, 0).setNormal(-y0, x0, 0).setUV(u0, 0);
 			vbl[i * 6 + 4] = new __vertex(x1, y1, z).setNormal(-y1, x1, 0).setUV(u1, 1);
 			vbl[i * 6 + 5] = new __vertex(x0, y0, z).setNormal(-y0, x0, 0).setUV(u0, 1);
+			
+			if(i == 0)     edges[eid++] = new __3dObject_Edge([x0, y0, 0], [x0, y0, z]);
+			if(i == n - 1) edges[eid++] = new __3dObject_Edge([x1, y1, 0], [x1, y1, z]);
+			
+			edges[eid++] = new __3dObject_Edge([x0, y0, 0], [x1, y1, 0]);
+			edges[eid++] = new __3dObject_Edge([x0, y0, z], [x1, y1, z]);
 		}
 		
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -91,6 +100,12 @@ function __3dWall_builder() : __3dObject() constructor {
 			vbr[i * 6 + 3] = new __vertex(x0, y0, 0).setNormal(-y0, x0, 0).setUV(u0, 0);
 			vbr[i * 6 + 4] = new __vertex(x1, y1, z).setNormal(-y1, x1, 0).setUV(u1, 1);
 			vbr[i * 6 + 5] = new __vertex(x0, y0, z).setNormal(-y0, x0, 0).setUV(u0, 1);
+			
+			if(i == 0)     edges[eid++] = new __3dObject_Edge([x0, y0, 0], [x0, y0, z]);
+			if(i == n - 1) edges[eid++] = new __3dObject_Edge([x1, y1, 0], [x1, y1, z]);
+			
+			edges[eid++] = new __3dObject_Edge([x0, y0, 0], [x1, y1, 0]);
+			edges[eid++] = new __3dObject_Edge([x0, y0, z], [x1, y1, z]);
 		}
 		
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -114,6 +129,9 @@ function __3dWall_builder() : __3dObject() constructor {
     		vbs[4] = new __vertex(x0, y0, z).setNormal(-y0, x0, 0).setUV(0, 1);
     		vbs[5] = new __vertex(x1, y1, z).setNormal(-y1, x1, 0).setUV(1, 1);
     		
+    		edges[eid++] = new __3dObject_Edge([x0, y0, 0], [x1, y1, 0]);
+    		edges[eid++] = new __3dObject_Edge([x0, y0, z], [x1, y1, z]);
+    		
     		var p0 = ofl[len];
     	    var p1 = ofr[0];
     	    
@@ -127,6 +145,10 @@ function __3dWall_builder() : __3dObject() constructor {
     		vbs[ 9] = new __vertex(x0, y0, 0).setNormal(-y0, x0, 0).setUV(0, 0);
     		vbs[10] = new __vertex(x1, y1, z).setNormal(-y1, x1, 0).setUV(1, 1);
     		vbs[11] = new __vertex(x0, y0, z).setNormal(-y0, x0, 0).setUV(0, 1);
+    		
+    		edges[eid++] = new __3dObject_Edge([x0, y0, 0], [x1, y1, 0]);
+    		edges[eid++] = new __3dObject_Edge([x0, y0, z], [x1, y1, z]);
+    		
         }
 		
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

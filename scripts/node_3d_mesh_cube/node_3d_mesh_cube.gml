@@ -6,9 +6,9 @@ function Node_3D_Mesh_Cube(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 	
 	////- Mesh
 	
-	newInput(i+9, nodeValue_IVec3(       "Subdivision", [1,1,1] ));
-	newInput(i+7, nodeValue_Slider(      "Taper",        0, [-1,1,0.01] ));
-	newInput(i+8, nodeValue_Enum_Button( "Taper Axis",   0, [ "X", "Y", "Z" ]));
+	newInput(i+9, nodeValue_IVec3(       "Subdivision", [1,1,1]               ));
+	newInput(i+7, nodeValue_Slider(      "Taper",        0, [-1,1,0.01]       ));
+	newInput(i+8, nodeValue_Enum_Button( "Taper Axis",   0, [ "X", "Y", "Z" ] ));
 	
 	////- Materials
 	
