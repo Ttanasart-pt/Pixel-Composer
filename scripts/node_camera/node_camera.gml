@@ -273,8 +273,14 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _pos  = current_data[0];
 		var _zoom = current_data[1];
 		
-		var _cam_x = _x + (_pos[0] - _dim[0] / 2 * _zoom) * _s;
-		var _cam_y = _y + (_pos[1] - _dim[1] / 2 * _zoom) * _s;
+		var _cam_w = round(_dim[0]);
+		var _cam_h = round(_dim[1]);
+		
+		var _surf_w = round(surface_valid_size(_cam_w));
+		var _surf_h = round(surface_valid_size(_cam_h));
+		
+		var _cam_x = _x + (_pos[0] - _surf_w / 2 * _zoom) * _s;
+		var _cam_y = _y + (_pos[1] - _surf_h / 2 * _zoom) * _s;
 		
 		var _px = _x + _pos[0] * _s;
 		var _py = _y + _pos[1] * _s;
@@ -288,8 +294,8 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		draw_set_color(COLORS._main_accent);
 		var x0 = _cam_x;
 		var y0 = _cam_y;
-		var x1 = x0 + _dim[0] * _zoom * _s;
-		var y1 = y0 + _dim[1] * _zoom * _s;
+		var x1 = x0 + _surf_w * _zoom * _s;
+		var y1 = y0 + _surf_h * _zoom * _s;
 		
 		draw_rectangle_dashed(x0, y0, x1, y1);
 	}

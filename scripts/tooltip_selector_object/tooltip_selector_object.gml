@@ -1,7 +1,7 @@
-function tooltipSelector(title, data, index = 0) constructor {
-	self.title = title;
-	self.data  = data;
-	self.index = index;
+function tooltipSelector(_title, _data, _index = 0) constructor {
+	title = _title;
+	data  = _data;
+	index = _index;
 	
 	arrow_pos    = noone;
 	arrow_pos_to = 0;

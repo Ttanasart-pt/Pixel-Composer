@@ -11,10 +11,12 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 	
 	text	= "";
 	tooltip = "";
+	tooltipIndexFn = undefined;
 	blend   = c_white;
 	
-	onClick = _onClick;
+	onClick   = _onClick;
 	triggered = false;
+	params    = undefined;
 	
 	activate_on_press = false;
 	clicked = false;
@@ -33,7 +35,8 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 	
 	static setBaseSprite = function(_b) /*=>*/ { base_spr = _b; return self; }
 	static setText       = function(_t) /*=>*/ { text     = _t; return self; }
-	static setTooltip    = function(_t) /*=>*/ { tooltip  = _t; return self; }
+	static setParams     = function(_p) /*=>*/ { params   = _p; return self; }
+	static setTooltip    = function(_t, _v = undefined) /*=>*/ { tooltip  = _t; tooltipIndexFn = _v; return self; }
 	
 	static setIcon = function(_icon, _index = 0, _blend = c_white, _size = 1) {
 		icon       = _icon; 
@@ -67,7 +70,8 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 			return noone;
 			
 		triggered = true;
-		onClick();
+		if(params == undefined) onClick();
+		else onClick(params);
 	}
 	
 	static isTriggered = function() {
@@ -76,13 +80,12 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 		return t;
 	}
 	
-	static drawParam = function(params) {
-		setParam(params);
-		
-		return draw(params.x, params.y, params.w, params.h, params.m);
+	static drawParam = function(_params) {
+		setParam(_params);
+		return draw(_params.x, _params.y, _params.w, _params.h, _params.m);
 	}
 	
-	static draw = function(_x, _y, _w, _h, _m, spr = base_spr, blend = c_white) {
+	static draw = function(_x, _y, _w, _h, _m, spr = base_spr, _blend = c_white) {
 		x = _x;
 		y = _y;
 		w = _w;
@@ -91,7 +94,7 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 		clicked  = false;
 		hovering = hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h);
 		
-		var b = colorMultiply(self.blend, blend);
+		var b = colorMultiply(blend, _blend);
 		
 		if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
 			draw_sprite_stretched_ext(spr, toggled? 2 : 1, _x, _y, _w, _h, b, 1);
@@ -108,7 +111,11 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 				draw_sprite_stretched_ext(spr, 2, _x, _y, _w, _h, b, 1);
 				draw_sprite_stretched_ext(spr, 3, _x, _y, _w, _h, COLORS._main_accent, 1);
 			}
-			if(tooltip != "") TOOLTIP = tooltip;
+			if(tooltip != "") {
+				var _ind = is_method(tooltipIndexFn)? tooltipIndexFn(params) : 0;
+				if(is(tooltip, tooltipSelector)) tooltip.index = _ind;
+				TOOLTIP = tooltip;
+			}
 			
 			if(onWUp   != undefined && key_mod_press(SHIFT) && MOUSE_WHEEL > 0) onWUp();
 			if(onWDown != undefined && key_mod_press(SHIFT) && MOUSE_WHEEL < 0) onWDown();
@@ -133,7 +140,11 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 		}
 		
 		if(icon) {
-			var ind = is_array(icon_index)? icon_index[0]() : icon_index;
+			var ind = icon_index;
+			
+			     if(is_array(ind))    ind = ind[0](params);
+			else if(is_method(ind)) ind = ind(params);
+			
 			gpu_set_tex_filter(true);
 			if(icon_size == 0) {
 				var ics = min(1, (_w - icon_padd) / icon_w, (_h - icon_padd) / icon_h);

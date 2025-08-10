@@ -326,6 +326,23 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return self;
 	}
 	
+	static setOptions = function(_title, _key, _choices, _icon, _val = 0) {
+		attributes[$ _key] = _val;
+		
+		optionButton = button(function(p) /*=>*/ {
+			var _k = p.key;
+			var _v = getAttribute(_k);
+			var _a = (_v + 1) % p.choiceAmount;
+			
+			setAttribute(_k, _a);
+		}).setParams({ key: _key, choiceAmount: array_length(_choices) })
+		  .setIcon(_icon, function(p) /*=>*/ {return getAttribute(p.key)})
+		  .setTooltip(new tooltipSelector(_title, _choices, _val), function(p) /*=>*/ {return getAttribute(p.key)});
+		  
+		editWidget.side_button = optionButton;
+		return optionButton;
+	}
+	
 	static nonValidate = function() {
 		validateValue = false;
 		return self;
@@ -557,7 +574,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 	}
 	
-	static setShaderProp = function(key) { node.shaderProp[$ key] = self; return self; }
+	static setShaderProp = function(_key) { node.shaderProp[$ _key] = self; return self; }
 	
 	static setWidget = function(_widg) { editWidget = _widg; return self; }
 	
@@ -2447,7 +2464,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	////- ATTRIBUTES
 	
-	static setAttribute = function(k,v) { attributes[$ k] = v; return self; }
+	static setAttribute = function(k,v) { attributes[$ k] = v; node.triggerRender(); return self; }
+	
+	static getAttribute = function(k) { return attributes[$ k] ?? 0; }
 	
 	static isMapped = function() /*=>*/ {return attributes.mapped};
 	

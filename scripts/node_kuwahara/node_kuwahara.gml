@@ -29,7 +29,7 @@ function Node_Kuwahara(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	input_display_list = [ 1, 
+	input_display_list = [ 1, 6, 
 		["Surfaces",  true], 0, 3, 4, 7, 8, 
 		["Effects",  false], 9, 2, 10, 11, 12, 13, 
 	];
@@ -37,6 +37,7 @@ function Node_Kuwahara(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	temp_surface = array_create(4);
 	
 	attribute_surface_depth();
+	attribute_oversample();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		PROCESSOR_OVERLAY_CHECK
@@ -63,6 +64,7 @@ function Node_Kuwahara(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		switch(_type) {
 			case 0 : 
 				surface_set_shader(_outSurf, sh_kuwahara);
+					shader_set_interpolation(_surf);
 					shader_set_2("dimension", _dim);
 					shader_set_i("radius",      _data[2]);
 					
@@ -74,24 +76,28 @@ function Node_Kuwahara(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				for( var i = 0; i < 3; i++ ) temp_surface[i] = surface_verify(temp_surface[i], _dim[0], _dim[1]);
 				
 				surface_set_shader(temp_surface[0], sh_kuwahara_ani_pass1);
+					shader_set_interpolation(_surf);
 					shader_set_2("dimension", _dim);
 					
 					draw_surface_safe(_surf);
 				surface_reset_shader();
 				
 				surface_set_shader(temp_surface[1], sh_kuwahara_ani_pass2);
+					shader_set_interpolation(_surf);
 					shader_set_2("dimension", _dim);
 					
 					draw_surface_safe(temp_surface[0]);
 				surface_reset_shader();
 				
 				surface_set_shader(temp_surface[2], sh_kuwahara_ani_pass3);
+					shader_set_interpolation(_surf);
 					shader_set_2("dimension", _dim);
 					
 					draw_surface_safe(temp_surface[1]);
 				surface_reset_shader();
 				
 				surface_set_shader(_outSurf, sh_kuwahara_ani_pass4);
+					shader_set_interpolation(_surf);
 					shader_set_surface("tfm", temp_surface[2]);
 					shader_set_2("dimension", _dim);
 					
@@ -108,6 +114,7 @@ function Node_Kuwahara(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 			case 2 : 
 				surface_set_shader(_outSurf, sh_kuwahara_gen);
+					shader_set_interpolation(_surf);
 					shader_set_2("dimension", _dim);
 					shader_set_i("kernelSize",   _data[2]);
 					shader_set_f("zeroCrossing", _data[11]);

@@ -422,7 +422,11 @@ function Panel_Collection() : PanelContent() constructor {
 						var _ty = yy + grid_size + ui(2);
 						var _tw = grid_width + grid_space;
 						
-						var _txtH   = draw_text_ext_add(_tx, _ty, _node.name, -1, _tw, 1, PREFERENCES.collection_name_force_cut);
+						BLEND_ALPHA_MULP
+						draw_text_ext(_tx, _ty, _node.name, -1, _tw);
+						BLEND_NORMAL
+						
+						var _txtH   = string_height_ext(_node.name, -1, _tw);
 						name_height = max(name_height, _txtH + ui(4));
 					}
 				}
@@ -707,7 +711,11 @@ function Panel_Collection() : PanelContent() constructor {
 				var _ty =  yy + grid_size + ui(2);
 				var _tw = round(grid_width + grid_space);
 				
-				var _txtH = draw_text_ext_add(_tx, _ty, _node.name, -1, _tw);
+				BLEND_ALPHA_MULP
+				draw_text_ext(_tx, _ty, _node.name, -1, _tw);
+				BLEND_NORMAL
+				
+				var _txtH = string_height_ext(_node.name, -1, _tw);
 				name_height = max(name_height, _txtH + ui(4));
 			}
 			

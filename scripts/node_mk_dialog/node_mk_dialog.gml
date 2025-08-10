@@ -35,7 +35,7 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	/* unused */ newInput(10, nodeValue_Bool(         "Round Position",   true      ));
 	/* unused */ newInput(11, nodeValue_Enum_Button(  "Blend Mode",       1, [ "Normal", "Alpha" ] ));
 	newInput(12, nodeValue_Color(        "Color",            ca_white  ));
-	/* unused */ newInput(13, nodeValue_Palette(      "Color by Letter", [ca_white] ));
+	newInput(13, nodeValue_Palette(      "Color by Letter", [ca_white] )).setOptions("Select by:", "array_select", [ "Index", "Random" ], THEME.array_select_type).iconPad();
 	
 	////- =Background
 	newInput(14, nodeValue_Bool(         "Render Background", false    ));
@@ -133,7 +133,7 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		[ "Output",     false ], 2, 0, 3, 
 		[ "Alignment",  false ], 17, 18, 16, 9, 
 		[ "Font",       false ], 5, 6, 7, 
-		[ "Rendering",  false ], 12, 
+		[ "Rendering",  false ], 12, 13, 
 		[ "Background", false, 14 ], 15, 
 		
 		new Inspector_Spacer(ui(4), true, false, ui(4)), 
@@ -334,7 +334,8 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _localTimeR = _localTime / max(1, _dialogData.duration - 1);
 		
 		var _colr = curr_data[12];
-		var _clet = curr_data[13];
+		var _clet = curr_data[13], _cletLen = array_length(_clet), _cletTyp = inputs[13].attributes.array_select;
+		
 		var __temp_p = [ 0, 0 ];
 			
 		var _ax, _ay;
@@ -350,23 +351,30 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				case fa_right :  tx = sw - _padd[0] - _widh; break;
 			}
 			
-			for( var j = 1, m = string_length(_line); j <= m; j++ ) {
+			var j = 1;
+			var chCount = string_length(_line);
+			
+			repeat(chCount) {
 				var _ch  = string_char_at(_line, j);
 				var ttx  = tx;
 				var tty  = ty;
 				
-				var cc   = _colr;
-				var aa   = _color_get_alpha(_colr);
+				var _clti = _cletTyp == 0? _letter_curr % _cletLen : irandom(_cletLen - 1);
+				var _clt  = array_safe_get_fast(_clet, _clti);
+				var cc    = colorMultiply(_colr, _clt);
+				var aa    = _color_get_alpha(_colr);
 				
 				var xs   = 1;
 				var ys   = 1;
 				var rot  = 0;
 				
-				var chw  = string_width(_ch);
-				var chh  = string_height(_ch);
+				var chw = string_width(_ch);
+				var chh = string_height(_ch);
+				var k   = 0;
 				
-				for( var k = 0; k < _ani_amo; k++ ) {
-					var _ind = input_fix_len + k * data_length;
+				repeat(_ani_amo) {
+					var _aId = k; k++;
+					var _ind = input_fix_len + _aId * data_length;
 					
 					var _anim_sel_pos = curr_data[_ind +  0];
 					var _anim_sel_apl = curr_data[_ind +  1];
@@ -474,7 +482,7 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 							break;
 							
 						case 2 : 
-							var _wmap = wigg_maps[k];
+							var _wmap = wigg_maps[_aId];
 							
 							var _wigx = _wmap[0].get(round(_an_prg * 100) + CURRENT_FRAME);
 							var _wigy = _wmap[1].get(round(_an_prg * 100) + CURRENT_FRAME);
@@ -484,7 +492,7 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 							break;
 						
 						case 3 : 
-							var _wmap = wigg_maps[k];
+							var _wmap = wigg_maps[_aId];
 							
 							var _wavx = dsin(_an_prg_raw * _anim_freq[0] + CURRENT_FRAME * _anim_speed[0]) * _anim_ampl[0];
 							var _wavy = dsin(_an_prg_raw * _anim_freq[1] + CURRENT_FRAME * _anim_speed[1]) * _anim_ampl[1];
@@ -508,6 +516,7 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				
 				_letter_curr++;
 				_word_curr += _ch == " ";
+				j++;
 			}
 			
 			ty += lineh;

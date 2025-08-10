@@ -53,7 +53,7 @@ function Node_3D_Mesh_Cube(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 			case 0 :
 				inputs[i+1].name = "Material";
 				
-				inputs[i+1].setVisible(true, true);
+				inputs[i+1].setVisible( true,  true);
 				inputs[i+2].setVisible(false, false);
 				inputs[i+3].setVisible(false, false);
 				inputs[i+4].setVisible(false, false);

@@ -10,15 +10,13 @@ function Node_Blur_Contrast(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newActiveInput(5);
 	newInput(6, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
-	////- Surfaces
-	
+	////- =Surfaces
 	newInput(0, nodeValue_Surface( "Surface In" ));
 	newInput(3, nodeValue_Surface( "Mask"       ));
 	newInput(4, nodeValue_Slider(  "Mix", 1     ));
 	__init_mask_modifier(3, 7); // inputs 7, 8
 	
-	////- Blur
-	
+	////- =Blur
 	newInput(1, nodeValue_Float(  "Size",        3 )).setHotkey("S").setValidator(VV_min(0)).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
 	newInput(2, nodeValue_Slider( "Threshold",  .2 )).setTooltip("Brightness different to be blur together.");
 	newInput(9, nodeValue_Bool(   "Gamma Correction", false ));
@@ -35,6 +33,7 @@ function Node_Blur_Contrast(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	temp_surface = [ surface_create(1, 1) ];
 	
 	attribute_surface_depth();
+	attribute_oversample();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		PROCESSOR_OVERLAY_CHECK
@@ -60,6 +59,7 @@ function Node_Blur_Contrast(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var hh = surface_get_height_safe(_surf);
 		
 		surface_set_shader(_outSurf, sh_blur_box_contrast);
+		shader_set_interpolation(_surf);
 			shader_set_f("dimension", [ ww, hh ]);
 			shader_set_f("size",      _size);
 			shader_set_f("treshold",  _tres);

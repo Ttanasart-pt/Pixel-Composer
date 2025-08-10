@@ -113,8 +113,7 @@ function Node_Iterate_Each_File_Inline(_x, _y, _group = noone) : Node_Collection
 		var _type = inputs[2].getValue();
 		activated = inputs[3].getValue();
 		
-		paths = path_dir_get_files(_path, _ext, true);
-		if(!activated && !array_empty(paths)) paths = [ paths[0] ];
+		paths = activated? path_dir_get_files(_path, _ext, true) : [];
 	}
 	
 }

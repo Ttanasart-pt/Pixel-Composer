@@ -1,3 +1,21 @@
+#pragma use(sampler_simple)
+
+#region -- sampler_simple -- [1729740692.1417658]
+    uniform int  sampleMode;
+    
+    vec4 sampleTexture( sampler2D texture, vec2 pos) {
+        if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
+            return texture2D(texture, pos);
+        
+             if(sampleMode <= 1) return vec4(0.);
+        else if(sampleMode == 2) return texture2D(texture, clamp(pos, 0., 1.));
+        else if(sampleMode == 3) return texture2D(texture, fract(pos));
+        else if(sampleMode == 4) return vec4(vec3(0.), 1.);
+        
+        return vec4(0.);
+    }
+#endregion -- sampler_simple --
+
 /*
 Generalized Kuwahara filter, based on work of Acerola
 Basically Acerola code rewritten to Shadertoy
@@ -39,7 +57,7 @@ void main () {
 		if(y >  radius) break;
 		
         vec2  v   = vec2(x, y) / float(radius);
-        vec3  c   = texture2D( gm_BaseTexture, v_vTexcoord + vec2(x, y) * tx).xyz;
+        vec3  c   = sampleTexture( gm_BaseTexture, v_vTexcoord + vec2(x, y) * tx).xyz;
 		      c   = clamp(c, 0., 1.);
         float sum = 0.;
 		

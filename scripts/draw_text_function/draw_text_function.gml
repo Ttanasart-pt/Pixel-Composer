@@ -123,6 +123,12 @@ function draw_text_lang(_x, _y, _text, scale = 1) {
 function draw_text_ext_add(_x, _y, _text, _sep, _w, scale = 1, forceCut = false) {
 	INLINE
 	BLEND_ALPHA_MULP
+	if(!forceCut) {
+		draw_text_ext_transformed(_x, _y, _text, _sep, _w, scale, scale, 0);
+		BLEND_NORMAL
+		return string_height_ext(_text, _sep, _w) * scale;
+	}
+	
 	var h = __draw_text_ext_transformed(_x, _y, _text, _sep, _w, scale, scale, 0, forceCut);
 	BLEND_NORMAL
 	return h;
@@ -131,6 +137,12 @@ function draw_text_ext_add(_x, _y, _text, _sep, _w, scale = 1, forceCut = false)
 function draw_text_ext_alpha(_x, _y, _text, _sep, _w, scale = 1, forceCut = false) {
 	INLINE
 	BLEND_ALPHA
+	if(!forceCut) {
+		draw_text_ext_transformed(_x, _y, _text, _sep, _w, scale, scale, 0);
+		BLEND_NORMAL
+		return string_height_ext(_text, _sep, _w) * scale;
+	}
+	
 	var h = __draw_text_ext_transformed(_x, _y, _text, _sep, _w, scale, scale, 0, forceCut);
 	BLEND_NORMAL
 	return h;

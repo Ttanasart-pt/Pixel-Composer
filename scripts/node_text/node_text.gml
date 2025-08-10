@@ -24,42 +24,42 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	////- =Alignment
 	newInput(13, nodeValue_PathNode(     "Path"));
-	newInput(14, nodeValue_Float(        "Path Shift",        0 ));
-	newInput( 7, nodeValue_Enum_Button(  "H Align",           0, array_create(3, THEME.inspector_text_halign)));
-	newInput( 8, nodeValue_Enum_Button(  "V Align",           0, array_create(3, THEME.inspector_text_valign)));
-	newInput(27, nodeValue_Int(          "Max Line Width",    0 ));
+	newInput(14, nodeValue_Float(        "Path Shift",        0    ));
+	newInput( 7, nodeValue_Enum_Button(  "H Align",           0, array_create(3, THEME.inspector_text_halign) ));
+	newInput( 8, nodeValue_Enum_Button(  "V Align",           0, array_create(3, THEME.inspector_text_valign) ));
+	newInput(27, nodeValue_Int(          "Max Line Width",    0    ));
 	newInput(30, nodeValue_Bool(         "Rotate Along Path", true ));
 	
 	////- =Font
 	newInput( 1, nodeValue_Font()).setVisible(true, false);
-	newInput( 4, nodeValue_Vec2(         "Character Range", [32,128]));
-	newInput( 2, nodeValue_Int(          "Size",             16));
-	newInput(15, nodeValue_Bool(         "Scale to Fit",     false));
-	newInput( 3, nodeValue_Bool(         "Anti-aliasing ",   false));
-	newInput(11, nodeValue_Float(        "Letter Spacing",   0));
-	newInput(12, nodeValue_Float(        "Line Height",      0));
+	newInput( 4, nodeValue_Vec2(         "Character Range", [32,128] ));
+	newInput( 2, nodeValue_Int(          "Size",             16      ));
+	newInput(15, nodeValue_Bool(         "Scale to Fit",     false   ));
+	newInput( 3, nodeValue_Bool(         "Anti-aliasing ",   false   ));
+	newInput(11, nodeValue_Float(        "Letter Spacing",   0       ));
+	newInput(12, nodeValue_Float(        "Line Height",      0       ));
 	
 	////- =Rendering
-	newInput(28, nodeValue_Bool(         "Round Position",   true ));
-	newInput( 5, nodeValue_Color(        "Color",            ca_white));
-	newInput(29, nodeValue_Enum_Button(  "Blend Mode",       1, [ "Normal", "Alpha" ]));
-	newInput(31, nodeValue_Palette(      "Color by Letter", [ca_white]));
+	newInput(28, nodeValue_Bool(         "Round Position",   true     ));
+	newInput( 5, nodeValue_Color(        "Color",            ca_white ));
+	newInput(29, nodeValue_Enum_Button(  "Blend Mode",       1, [ "Normal", "Alpha" ] ));
+	newInput(31, nodeValue_Palette(      "Color by Letter", [ca_white] )).setOptions("Select by:", "array_select", [ "Index", "Random" ], THEME.array_select_type).iconPad();
 	
 	////- =Background
-	newInput(16, nodeValue_Bool(         "Render Background", false));
-	newInput(17, nodeValue_Color(        "BG Color",          ca_black));
+	newInput(16, nodeValue_Bool(         "Render Background", false    ));
+	newInput(17, nodeValue_Color(        "BG Color",          ca_black ));
 	
 	////- =Wave
-	newInput(18, nodeValue_Bool(         "Wave",           false));
+	newInput(18, nodeValue_Bool(         "Wave",           false ));
 	newInput(22, nodeValue_Slider(       "Wave Shape",     0, [ 0, 3, 0.01 ]));
-	newInput(19, nodeValue_Float(        "Wave Amplitude", 4));
-	newInput(20, nodeValue_Float(        "Wave Scale",     30));
-	newInput(21, nodeValue_Rotation(     "Wave Phase",     0));
+	newInput(19, nodeValue_Float(        "Wave Amplitude", 4     ));
+	newInput(20, nodeValue_Float(        "Wave Scale",     30    ));
+	newInput(21, nodeValue_Rotation(     "Wave Phase",     0     ));
 	
 	////- =Trim
-	newInput(23, nodeValue_Bool(         "Trim",               false));
-	newInput(25, nodeValue_Enum_Button(  "Trim Type",          0, [ "Character", "Word", "Line" ]));
-	newInput(24, nodeValue_Slider_Range( "Range",             [0,1]));
+	newInput(23, nodeValue_Bool(         "Trim",               false ));
+	newInput(25, nodeValue_Enum_Button(  "Trim Type",          0, [ "Character", "Word", "Line" ] ));
+	newInput(24, nodeValue_Slider_Range( "Range",             [0,1]  ));
 	newInput(26, nodeValue_Bool(         "Use Full Text Size", false ));
 		
 	// inputs 34
@@ -535,6 +535,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 		__col       = _col;
 		__colLt     = _colLt;
+		__colLtTyp  = inputs[31].attributes.array_select;
 		__colLtLen  = array_length(_colLt);
 		__outAtlas  = _atls;
 		__atlas     = [];
@@ -584,8 +585,9 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						_ty += lengthdir_y(_wd, _line_ang + 90);
 					}
 					
-					var _clt = array_safe_get_fast(__colLt, __dwDataI % __colLtLen);
-					var _c   = colorMultiply(__col, _clt);
+					var _clti = __colLtTyp == 0? __dwDataI % __colLtLen : irandom(__colLtLen - 1);
+					var _clt  = array_safe_get_fast(__colLt, _clti);
+					var _c    = colorMultiply(__col, _clt);
 					draw_set_color(_c);
 					
 					draw_text_transformed(_tx, _ty, _chr, 1, 1, _nor);
