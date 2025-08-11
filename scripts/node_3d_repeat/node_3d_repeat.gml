@@ -1,54 +1,37 @@
 function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constructor {
 	name  = "3D Repeat";
 		
-	newInput(0, nodeValue_D3Mesh("Objects", noone))
-		.setArrayDepth(1)
-		.setVisible(true, true);
+	newInput( 0, nodeValue_D3Mesh(      "Objects",           noone      )).setArrayDepth(1).setVisible(true, true);
+	newInput( 3, nodeValue_Vec3(        "Starting Position", [0,0,0]    ));
+	newInput( 4, nodeValue_Quaternion(  "Starting Rotation", [0,0,0,1 ] ));
+	newInput( 5, nodeValue_Vec3(        "Starting Scale",    [1,1,1]    ));
 	
-	newInput(1, nodeValue_Enum_Button("Object Mode",  0 , [ "Duplicate", "Array" ] ))
-		.rejectArray();
+	newInput( 1, nodeValue_Enum_Button( "Object Mode",  0 , [ "Duplicate", "Array" ] )).rejectArray();
+	newInput( 2, nodeValue_Int(         "Amount",       1 ));
 	
-	newInput(2, nodeValue_Int("Amount", 1 ));
+	newInput( 9, nodeValue_Float( "Positions", [] )).setArrayDepth(2);
+	newInput(10, nodeValue_Float( "Rotations", [] )).setArrayDepth(2);
+	newInput(11, nodeValue_Float( "Scales",    [] )).setArrayDepth(2);
 	
-	newInput(3, nodeValue_Vec3("Starting Position", [ 0, 0, 0 ] ));
-	
-	newInput(4, nodeValue_Quaternion("Starting Rotation", [ 0, 0, 0, 1 ] ));
-	
-	newInput(5, nodeValue_Vec3("Starting Scale", [ 1, 1, 1 ] ));
-	
-	newInput(6, nodeValue_Vec3("Shift Position", [ 0, 0, 0 ] ));
-	
-	newInput(7, nodeValue_Quaternion("Shift Rotation", [ 0, 0, 0, 1 ] ));
-	
-	newInput(8, nodeValue_Vec3("Shift Scale", [ 0, 0, 0 ] ));
-	
-	newInput(9, nodeValue_Float("Positions", [] ))
-		.setArrayDepth(2);
-	
-	newInput(10, nodeValue_Float("Rotations", [] ))
-		.setArrayDepth(2);
-	
-	newInput(11, nodeValue_Float("Scales", [] ))
-		.setArrayDepth(2);
-	
-	newInput(12, nodeValue_Bool("Use Instance", true ))
+	newInput( 6, nodeValue_Vec3(       "Shift Position", [0,0,0]   ));
+	newInput( 7, nodeValue_Quaternion( "Shift Rotation", [0,0,0,1] ));
+	newInput( 8, nodeValue_Vec3(       "Shift Scale",    [0,0,0]   ));
+	/* UNUSED */ newInput(12, nodeValue_Bool(       "Use Instance",    true     ))
+	// input 13
 	
 	newOutput(0, nodeValue_Output("Scene", VALUE_TYPE.d3Scene, noone));
 	
 	input_display_list = [
-		["Objects",		false], 0, 3, 4, 5, 
-		["Repeat",		false], 1, 2, 
-		["Transforms",	false], 9, 10, 11, 
-		["Shift",		false], 6, 7, 8, 
+		["Objects",    false], 0, 3, 4, 5, 
+		["Repeat",     false], 1, 2, 
+		["Transforms", false], 9, 10, 11, 
+		["Shift",      false], 6, 7, 8, 
 	]
 	
-	static step = function() { #region
+	static preGetInputs = function() {
 		var _mode = getSingleValue(1);
-		
 		inputs[0].setArrayDepth(_mode == 1);
-		
-		inputs[2].setVisible(_mode == 0);
-	} #endregion
+	}
 	
 	static processData = function(_output, _data, _array_index = 0) {
 		var _object = _data[0];
@@ -65,6 +48,8 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		var _Asca = _data[11];
 		var _inst = _data[12];
 		
+		inputs[2].setVisible(_mode == 0);
+		
 		var _scene = new __3dGroup();
 		
 		if(_mode == 1 && !is_array(_object)) return _scene;
@@ -73,8 +58,6 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		for( var i = 0; i < _amo; i++ ) {
 			var _obj = _mode == 1? _object[i] : _object;
 			if(!is_struct(_obj)) continue;
-			
-			//if(!_inst) _obj = _obj.clone(false, true);
 			
 			var _apos = array_safe_get_fast(_Apos, i);
 			var _arot = array_safe_get_fast(_Arot, i);
@@ -104,7 +87,7 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 						   _sRotE.z + _arot[2] + _rRotE.z * i ];
 						   
 			var _fRot = new BBMOD_Quaternion().FromEuler(_fRotE[0], _fRotE[1], _fRotE[2]);
-			
+			 
 			_subScene.transform.position.set(_sPos);
 			_subScene.transform.rotation.set(_fRot.X, _fRot.Y, _fRot.Z, _fRot.W);
 			_subScene.transform.scale.set(_sSca);

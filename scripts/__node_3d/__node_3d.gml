@@ -3,7 +3,7 @@ function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 	is_3D = NODE_3D.polygon;
 	dimension_index = -1;
 	
-	mesh_prev_surface = surface_create(64, 64);
+	mesh_prev_surface = noone;
 	
 	static drawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) {}
 	
@@ -37,6 +37,7 @@ function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 		
 		surface_depth_disable(false);
 		mesh_prev_surface = surface_verify(mesh_prev_surface, PREFERENCES.node_3d_preview_size, PREFERENCES.node_3d_preview_size);
+		
 		surface_set_target(mesh_prev_surface);
 			DRAW_CLEAR
 			
@@ -49,7 +50,7 @@ function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 			
 			for( var i = 0, n = array_length(_prev_obj); i < n; i++ ) {
 				var _prev = _prev_obj[i];
-				if(!is_struct(_prev) || !struct_has(_prev, "getBBOX")) continue;
+				if(!has(_prev, "getBBOX")) continue;
 				
 				var _b = _prev.getBBOX();
 				var _c = _prev.getCenter();
@@ -58,7 +59,6 @@ function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 				D3D_GLOBAL_PREVIEW.custom_transform.position.set(_c._multiply(-1));
 				
 				var _sca = 2 / _b.getScale();
-				//print($"Submitting object {_prev}\n{_b}, {_c}, {_sca}");
 				
 				D3D_GLOBAL_PREVIEW.custom_transform.scale.set(_sca);
 				D3D_GLOBAL_PREVIEW.submit(_prev);
@@ -69,7 +69,7 @@ function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 		D3D_GLOBAL_PREVIEW.camera.resetCamera();
 	}
 	
-	static postProcess = function() { refreshPreview(); }
+	static postProcess = function() /*=>*/ { if(!IS_PLAYING) refreshPreview(); }
 	
 	static getGraphPreviewSurface = function() { return mesh_prev_surface; }
 	

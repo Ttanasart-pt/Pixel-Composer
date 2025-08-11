@@ -1,7 +1,7 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-#define MAX_SAMPLE 256
+#define MAX_SAMPLE 512
 
 uniform sampler2D vPosition;
 uniform sampler2D vNormal;

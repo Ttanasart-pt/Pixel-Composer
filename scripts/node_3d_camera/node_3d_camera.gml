@@ -63,7 +63,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	newInput(i+20, nodeValue_Slider(      "AO Strength",           1., [ .01, 4, .01 ] ));
 	newInput(i+18, nodeValue_Float(       "AO Radius",            .25                  ));
 	newInput(i+19, nodeValue_Float(       "AO Bias",              .05                  ));
-	newInput(i+31, nodeValue_Float(       "AO Blur",               5                   ));
+	newInput(i+31, nodeValue_Int(         "AO Blur",               5                   ));
 	
 	////- =Effects
 	newInput(i+21, nodeValue_Int(         "Round Normal",          0        )).setWindows();
