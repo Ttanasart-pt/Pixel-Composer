@@ -19,7 +19,7 @@ function Node_3D_Scene(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constru
 		
 		for( var i = input_fix_len, n = array_length(inputs); i < n; i += data_length ) {
 			var _obj = _data[i];
-			if(is_instanceof(_obj, __3dObject) || is_instanceof(_obj, __3dGroup)) 
+			if(is(_obj, __3dObject) || is(_obj, __3dGroup)) 
 				_scene.addObject(_obj);
 		}
 		

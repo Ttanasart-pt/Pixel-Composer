@@ -109,7 +109,9 @@ function __3dScene(_camera, _name = "New scene") constructor {
 		if(deferData == noone) {
 			deferData = {
 				geometry_data: array_create(4, noone),
-				ssao: noone,
+				ssao:     noone,
+				ssaoTemp: noone,
+				ssaoBlur: noone,
 			}
 		}
 		
@@ -148,53 +150,54 @@ function __3dScene(_camera, _name = "New scene") constructor {
 			surface_set_target_ext(i, deferData.geometry_data[i]);
 		}
 			
-			gpu_set_zwriteenable(true);
-			
-			gpu_set_ztestenable(true);
-			gpu_set_alphatestenable(true);
-			
-			DRAW_CLEAR
-			camera.setMatrix();
-			camera.applyCamera();
-			
-			gpu_set_cullmode(cull_mode);
-			
-			shader_set(sh_d3d_geometry);
-			shader_set_f("planeNear", camera.view_near);
-			shader_set_f("planeFar",  camera.view_far);
-			shader_set_i("use_8bit",  OS == os_macosx);
-			
-			submit(object, sh_d3d_geometry);
-			
-			shader_reset();
-			
-			gpu_set_ztestenable(false);
-			gpu_set_alphatestenable(false);
+		gpu_set_zwriteenable(true);
+		
+		gpu_set_ztestenable(true);
+		gpu_set_alphatestenable(true);
+		
+		DRAW_CLEAR
+		camera.setMatrix();
+		camera.applyCamera();
+		
+		gpu_set_cullmode(cull_mode);
+		
+		shader_set(sh_d3d_geometry);
+		shader_set_f("planeNear", camera.view_near);
+		shader_set_f("planeFar",  camera.view_far);
+		shader_set_i("use_8bit",  OS == os_macosx);
+		
+		submit(object, sh_d3d_geometry);
+		
+		shader_reset();
+		
+		gpu_set_ztestenable(false);
+		gpu_set_alphatestenable(false);
 		surface_reset_target();
 		
-		if(defer_normal_radius) {
-			var _normal_blurred = surface_create_size(deferData.geometry_data[2], surface_rgba32float);
-			surface_set_shader(_normal_blurred, sh_d3d_normal_blur);
+		if(defer_normal_radius) { 
+			var _geos = deferData.geometry_data[2];
+			deferData.ssaoBlur = surface_verify(deferData.ssaoBlur, surface_get_width_safe(_geos), surface_get_height_safe(_geos), surface_rgba32float);
+			
+			surface_set_shader(deferData.ssaoBlur, sh_d3d_normal_blur);
 				shader_set_f("radius",      defer_normal_radius);
 				shader_set_i("use_8bit",    OS == os_macosx);
 				shader_set_dim("dimension", deferData.geometry_data[2]);
 				
 				draw_surface(deferData.geometry_data[2], 0, 0);
 			surface_reset_shader();
-		
-			surface_free(deferData.geometry_data[2]);
-			deferData.geometry_data[2] = _normal_blurred;
+			
+			var _temp = deferData.geometry_data[2];
+			deferData.geometry_data[2] = deferData.ssaoBlur;
+			deferData.ssaoBlur         = _temp;
 		}
 	}
 	
 	static ssaoPass = function(deferData) {
-		if(!ssao_enabled) { surface_free(deferData.ssao); return; }
-		
 		var _sw = surface_get_width_safe(deferData.geometry_data[0]);
 		var _sh = surface_get_height_safe(deferData.geometry_data[0]);
-		var _ssao_surf = surface_create(_sw, _sh);
+		deferData.ssaoTemp = surface_verify(deferData.ssaoTemp, _sw, _sh);
 		
-		surface_set_shader(_ssao_surf, sh_d3d_ssao);
+		surface_set_shader(deferData.ssaoTemp, sh_d3d_ssao);
 			shader_set_s("vPosition",       deferData.geometry_data[0]);
 			shader_set_s("vNormal",         deferData.geometry_data[2]);
 			shader_set_f("radius",          ssao_radius);
@@ -213,10 +216,8 @@ function __3dScene(_camera, _name = "New scene") constructor {
 			shader_set_f("radius",    ssao_blur_radius);
 			shader_set_s("vNormal",   deferData.geometry_data[2]);
 			
-			draw_surface(_ssao_surf, 0, 0);
+			draw_surface(deferData.ssaoTemp, 0, 0);
 		surface_reset_shader();
-		
-		surface_free(_ssao_surf);
 	}
 	
 	static apply = function(deferData = noone) {
@@ -224,14 +225,14 @@ function __3dScene(_camera, _name = "New scene") constructor {
 		shader_set_i("use_8bit",  OS == os_macosx);
 			
 			#region ---- background ----
-				shader_set_color("light_ambient",		lightAmbient);
-				shader_set_i("env_use_mapping",			is_surface(enviroment_map) );
-				shader_set_surface("env_map",			enviroment_map, false, true );
-				shader_set_dim("env_map_dimension",		enviroment_map );
+				shader_set_color("light_ambient",	lightAmbient);
+				shader_set_i("env_use_mapping",		is_surface(enviroment_map) );
+				shader_set_surface("env_map",		enviroment_map, false, true );
+				shader_set_dim("env_map_dimension",	enviroment_map );
 				if(deferData != noone) shader_set_surface("ao_map",		deferData.ssao );
 			#endregion
 			
-			shader_set_i("light_dir_count",				lightDir_count);
+			shader_set_i("light_dir_count", lightDir_count);
 			if(lightDir_count) {
 				shader_set_f("light_dir_direction", 	lightDir_direction);
 				shader_set_f("light_dir_color",			lightDir_color);
@@ -246,7 +247,7 @@ function __3dScene(_camera, _name = "New scene") constructor {
 				shader_set_f("light_dir_shadow_bias",	lightDir_shadowBias);
 			}
 			
-			shader_set_i("light_pnt_count",				lightPnt_count);
+			shader_set_i("light_pnt_count", lightPnt_count);
 			if(lightPnt_count) {
 				shader_set_f("light_pnt_position",  	lightPnt_position);
 				shader_set_f("light_pnt_color",			lightPnt_color);

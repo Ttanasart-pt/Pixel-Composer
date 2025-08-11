@@ -94,7 +94,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	
 	output_display_list = [ 0, 5, 1, 6, 2, 3, 4 ];
 	
-	temp_surface = [ noone ];
+	temp_surface = [ noone, noone, noone ];
 	tool_lookat  = new NodeTool( "Move Target", THEME.tools_3d_transform_object );
 	
 	_qi1  = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(0, 1, 0),  90);
@@ -336,14 +336,13 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		
 		#region submit
 			for( var i = 0, n = array_length(_outData); i < n; i++ ) {
-				if(is_surface(_outData[i]) && !surface_has_depth(_outData[i]))
-					surface_free(_outData[i]);
+				if(is_surface(_outData[i]) && !surface_has_depth(_outData[i])) surface_free(_outData[i]);
 				_outData[i] = surface_verify(_outData[i], _dim[0], _dim[1]);
 			}
 			
 			temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1]);
 			var _render = temp_surface[0];
-			var _bgSurf = _dbg? scene.renderBackground(_dim[0], _dim[1]) : noone;
+			var _bgSurf = _dbg? scene.renderBackground(_dim[0], _dim[1], temp_surface[1]) : noone;
 			
 			if(_sobj) {
 				_sobj.submitShadow(scene, _sobj);
@@ -401,10 +400,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 				DRAW_CLEAR
 				BLEND_ALPHA
 				
-				if(_dbg) { 
-					draw_surface_safe(_bgSurf);
-					surface_free(_bgSurf);
-				}
+				if(_dbg) draw_surface_safe(_bgSurf);
 				draw_surface_safe(_render);
 				
 				if(deferData) {
@@ -413,7 +409,6 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 					BLEND_NORMAL
 				}
 			surface_reset_target();
-			surface_free(_render);
 			
 			if(deferData) {
 				surface_set_shader(_outData[4], noone, true, BLEND.over);

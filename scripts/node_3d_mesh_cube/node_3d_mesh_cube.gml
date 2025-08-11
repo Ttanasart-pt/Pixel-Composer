@@ -4,14 +4,12 @@ function Node_3D_Mesh_Cube(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 	
 	var i = in_mesh;
 	
-	////- Mesh
-	
+	////- =Mesh
 	newInput(i+9, nodeValue_IVec3(       "Subdivision", [1,1,1]               ));
 	newInput(i+7, nodeValue_Slider(      "Taper",        0, [-1,1,0.01]       ));
 	newInput(i+8, nodeValue_Enum_Button( "Taper Axis",   0, [ "X", "Y", "Z" ] ));
 	
-	////- Materials
-	
+	////- =Materials
 	newInput(i+0, nodeValue_Enum_Button( "Material Mode", 0, [ "Uniform", "Per Face", "Top and Side" ] ));
 	newInput(i+1, nodeValue_D3Material(  "Material"        )).setVisible(true, true);
 	newInput(i+2, nodeValue_D3Material(  "Material Bottom" )).setVisible(true, true);

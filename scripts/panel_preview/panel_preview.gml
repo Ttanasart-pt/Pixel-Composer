@@ -1782,6 +1782,7 @@ function Panel_Preview() : PanelContent() constructor {
                 
                 if(d3_view_camera.position.equal(_pos) && d3_view_camera.focus.equal(targ))
                     d3_active_transition = 0;
+                    
             } else if(d3_active_transition == -1) {
                 var _pos = new __vec3(0, 0, 8);
                 var targ = new __vec3(0, 0, 0);
@@ -1796,6 +1797,7 @@ function Panel_Preview() : PanelContent() constructor {
                 
                 if(d3_view_camera.position.equal(_pos) && d3_view_camera.focus.equal(targ))
                     d3_active_transition = 0;
+                    
             } else {
                 d3_view_camera.position.set(_pos);
                 d3_view_camera.focus.set(targ);
@@ -1812,10 +1814,8 @@ function Panel_Preview() : PanelContent() constructor {
         #endregion
         
         #region background
-            surface_free_safe(d3_surface_bg);
-            
             if(d3_scene_preview != d3_scene)
-                d3_surface_bg = d3_scene_preview.renderBackground(w, h);
+                d3_scene_preview.renderBackground(w, h, d3_surface_bg);
         #endregion
      
         #region shadow
