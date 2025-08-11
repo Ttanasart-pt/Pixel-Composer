@@ -91,6 +91,7 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			_subScene.transform.position.set(_sPos);
 			_subScene.transform.rotation.set(_fRot.X, _fRot.Y, _fRot.Z, _fRot.W);
 			_subScene.transform.scale.set(_sSca);
+			_subScene.transform.applyMatrix();
 			
 			_subScene.addObject(_obj);
 			_scene.addObject(_subScene);

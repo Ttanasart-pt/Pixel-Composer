@@ -226,6 +226,7 @@ function Node_Path_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _g
 				if(!_for.isZero()) camera.rotation = new BBMOD_Quaternion().FromLookRotation(_for, camera.up).Mul(curr_qi1).Mul(curr_qi2);
 					
 				lookat.transform.position.set(curr_look);
+				lookat.transform.applyMatrix();
 				lookLine = new __3dGizmoLineDashed(camera.position, camera.focus, 0.25, c_gray, 1);
 				break;
 				
@@ -240,18 +241,21 @@ function Node_Path_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _g
 				if(!_for.isZero()) camera.rotation = new BBMOD_Quaternion().FromLookRotation(_for, camera.up.multiply(-1)).Mul(curr_qi1).Mul(curr_qi3);
 				
 				lookat.transform.position.set(curr_look);
+				lookat.transform.applyMatrix();
 				lookLine = new __3dGizmoLineDashed(camera.position, camera.focus, 0.25, c_gray, 1);
 				
 				var _camRad = camera.position.subtract(camera.focus);
 				var _rad = point_distance(0, 0, _camRad.x, _camRad.y) * 2;
 				lookRad.transform.scale.set(_rad, _rad, 1);
 				lookRad.transform.position.set(new __vec3(camera.focus.x, camera.focus.y, camera.position.z));
+				lookRad.transform.applyMatrix();
 				break;
 		}
 		
 		#region camera view project
 			object.transform.position.set(camera.position);
 			object.transform.rotation = camera.rotation.Clone();
+			object.transform.applyMatrix();
 			
 			camera.projection = curr_proj;
 			camera.setViewFov(curr_fov, curr_dept[0], curr_dept[1]);

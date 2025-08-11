@@ -925,11 +925,13 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			];
 		
 		gizmo.transform.position.set(	_pos[0], _pos[1], _pos[2]);
+		gizmo.transform.applyMatrix();
 		
 		object.transform.position.set(	_pos[0], _pos[1], _pos[2]);
 		object.transform.anchor.set(	_anc[0], _anc[1], _anc[2]);
 		object.transform.rotation.set(	_rot[0], _rot[1], _rot[2], _rot[3]);
 		object.transform.scale.set(		_sca[0], _sca[1], _sca[2]);
+		object.transform.applyMatrix();
 		
 		return object;
 	}

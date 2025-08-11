@@ -6,40 +6,22 @@ function __transform() constructor {
 	rotation = new BBMOD_Quaternion();
 	scale    = new __vec3(1);
 	
-	matrix = new BBMOD_Matrix();
+	matrix  = new BBMOD_Matrix();
+	matTran = noone;
+	matPos  = noone;
+	matRot  = noone;
+	matSca  = noone;
+	matAnc  = noone;
 	
 	////- Matrix
 	
 	static submitMatrix = function() {
 		if(parent) parent.submitMatrix();
-		
-		var pos = matrix_build(position.x, position.y, position.z, 
-							   0, 0, 0, 
-							   1, 1, 1);
-		var rot = rotation.ToMatrix();
-		var sca = matrix_build(0, 0, 0, 
-					  		   0, 0, 0, 
-					  		   scale.x,    scale.y,    scale.z);
-		var anc = matrix_build(-anchor.x, -anchor.y, -anchor.z, 
-							   0, 0, 0, 
-							   1, 1, 1);
-							   
-		matrix_stack_push(pos);
-		matrix_stack_push(rot);
-		matrix_stack_push(sca);
-		matrix_stack_push(anc);
-		
-		matrix = new BBMOD_Matrix().Mul(new BBMOD_Matrix().FromArray(pos))
-								   .Mul(new BBMOD_Matrix().FromArray(rot)) 
-								   .Mul(new BBMOD_Matrix().FromArray(sca)) 
-								   .Mul(new BBMOD_Matrix().FromArray(anc)) 
+		if(matTran != noone) matrix_stack_push(matTran);
 	}
 	
 	static clearMatrix = function() {
-		matrix_stack_pop();
-		matrix_stack_pop();
-		matrix_stack_pop();
-		matrix_stack_pop();
+		if(matTran != noone) matrix_stack_pop();
 	}
 	
 	////- Apply
@@ -47,21 +29,24 @@ function __transform() constructor {
 	static applyMatrix = function() {
 		if(parent) parent.applyMatrix();
 		
-		var pos = matrix_build(position.x, position.y, position.z, 
-							   0, 0, 0, 
-							   1, 1, 1);
-		var rot = rotation.ToMatrix();
-		var sca = matrix_build(0, 0, 0, 
-					  		   0, 0, 0, 
-					  		   scale.x,    scale.y,    scale.z);
-		var anc = matrix_build(-anchor.x, -anchor.y, -anchor.z, 
+		matPos = matrix_build(position.x, position.y, position.z, 
+							  0, 0, 0, 
+							  1, 1, 1);
+		matRot = rotation.ToMatrix();
+		matSca = matrix_build(0, 0, 0, 
+					  		  0, 0, 0, 
+					  		  scale.x,    scale.y,    scale.z);
+		matAnc = matrix_build(-anchor.x, -anchor.y, -anchor.z, 
 							   0, 0, 0, 
 							   1, 1, 1);
 		
-		matrix = new BBMOD_Matrix().Mul(new BBMOD_Matrix().FromArray(pos))
-								   .Mul(new BBMOD_Matrix().FromArray(rot)) 
-								   .Mul(new BBMOD_Matrix().FromArray(sca)) 
-								   .Mul(new BBMOD_Matrix().FromArray(anc)) 
+		matrix = new BBMOD_Matrix()
+                       .Mul(new BBMOD_Matrix().FromArray(matAnc)) 
+                       .Mul(new BBMOD_Matrix().FromArray(matSca)) 
+                       .Mul(new BBMOD_Matrix().FromArray(matRot)) 
+		               .Mul(new BBMOD_Matrix().FromArray(matPos))
+								   
+		matTran = matrix.ToArray();
 	}
 	
 	static applyTransform = function(_transform) {
@@ -94,6 +79,8 @@ function __transform() constructor {
 		
 		var _rot = new __rot3().lookAt(position, new __vec3());
 		rotation.FromEuler(_rot.x, _rot.y, _rot.z);
+		
+		applyMatrix();
 		
 		return self;
 	}

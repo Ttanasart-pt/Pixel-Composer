@@ -8,6 +8,7 @@ function __3dLightDirectional() : __3dLight() constructor {
 	intensity = 1;
 	transform.position.set(4, 0, 0);
 	transform.scale.set(0.6);
+	transform.applyMatrix();
 	
 	shadow_mapper = sh_d3d_shadow_depth;
 	

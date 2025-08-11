@@ -33,6 +33,7 @@ function __3dCamera_object() : __3dObject() constructor {
 	transform.position.set(-5, -5, 5);
 	transform.rotation.FromEuler(0, 30, 135);
 	transform.scale.set(1, room_width / room_height, 1);
+	transform.applyMatrix();
 	
 	static submitSel = function(params = {}) { 
 		shader_set(sh_d3d_wireframe);

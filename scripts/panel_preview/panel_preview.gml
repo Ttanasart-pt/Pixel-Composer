@@ -388,7 +388,6 @@ function Panel_Preview() : PanelContent() constructor {
             d3_scene_light0.color  = $FFFFFF;
             d3_scene_light0.shadow_active    = false;
             d3_scene_light0.shadow_map_scale = 4;
-            // d3_scene_light0.transform.position.set(-1, -2, 3);
             
             d3_scene_light1        = new __3dLightDirectional();
             d3_scene_light1_ha     = 45 + 180;
@@ -396,7 +395,6 @@ function Panel_Preview() : PanelContent() constructor {
             d3_scene_light1.transform.setPolar(d3_scene_light1_ha, d3_scene_light1_va, 4);
             
             d3_scene_light1.color  = $202020;
-            // d3_scene_light1.transform.position.set(1, 2, -3);
         #endregion
         
     #endregion
@@ -1764,7 +1762,8 @@ function Panel_Preview() : PanelContent() constructor {
         
         _node.previewing = 1;
         
-        d3_scene_preview = struct_has(_node, "scene")? _node.scene : d3_scene;
+        d3_scene_preview = has(_node, "scene")? _node.scene : d3_scene;
+        // d3_scene_preview = d3_scene;
         d3_scene_preview.camera = d3_view_camera;
         
         #region view
@@ -1814,8 +1813,8 @@ function Panel_Preview() : PanelContent() constructor {
         #endregion
         
         #region background
-            if(d3_scene_preview != d3_scene)
-                d3_scene_preview.renderBackground(w, h, d3_surface_bg);
+        	d3_surface_bg = surface_verify(d3_surface_bg, w, h);
+            if(d3_scene_preview != d3_scene) d3_scene_preview.renderBackground(d3_surface_bg);
         #endregion
      
         #region shadow
@@ -1851,24 +1850,21 @@ function Panel_Preview() : PanelContent() constructor {
             
             gpu_set_ztestenable(true);
             gpu_set_zwriteenable(false);
+            gpu_set_cullmode(cull_noculling); 
             
-            if(OS != os_macosx) {
-                gpu_set_cullmode(cull_noculling); 
+            shader_set(sh_d3d_grid_view);
+                var _dist = round(d3_view_camera.focus.distance(d3_view_camera.position));
+                var _tx   = round(d3_view_camera.focus.x);
+                var _ty   = round(d3_view_camera.focus.y);
+            
+                var _scale = _dist * 2;
+                while(_scale > 32) _scale /= 2;
                 
-                shader_set(sh_d3d_grid_view);
-                    var _dist = round(d3_view_camera.focus.distance(d3_view_camera.position));
-                    var _tx   = round(d3_view_camera.focus.x);
-                    var _ty   = round(d3_view_camera.focus.y);
-                
-                    var _scale = _dist * 2;
-                    while(_scale > 32) _scale /= 2;
-                    
-                    shader_set_f("axisBlend", _blend);
-                    shader_set_f("scale", _scale);
-                    shader_set_f("shift", _tx / _dist / 2, _ty / _dist / 2);
-                    draw_sprite_stretched(s_fx_pixel, 0, _tx - _dist, _ty - _dist, _dist * 2, _dist * 2);
-                shader_reset();
-            }
+                shader_set_f("axisBlend", _blend);
+                shader_set_f("scale", _scale);
+                shader_set_f("shift", _tx / _dist / 2, _ty / _dist / 2);
+                draw_sprite_stretched(s_fx_pixel, 0, _tx - _dist, _ty - _dist, _dist * 2, _dist * 2);
+            shader_reset();
             
             gpu_set_zwriteenable(true);
         #endregion
@@ -1909,12 +1905,12 @@ function Panel_Preview() : PanelContent() constructor {
             
             switch(d3_preview_channel) {
                 case 0 : 
-                    if(d3_scene_preview.draw_background)
-                        draw_surface_safe(d3_surface_bg);    
+                    if(d3_scene_preview.draw_background) 
+                    	draw_surface_safe(d3_surface_bg);    
                     
                     draw_surface_safe(d3_surface);
                     
-                    if(is_struct(d3_deferData)) {
+                    if(is_struct(d3_deferData) && d3_scene_preview.ssao_enabled) {
                         BLEND_MULTIPLY
                         draw_surface_safe(d3_deferData.ssao);
                         BLEND_NORMAL

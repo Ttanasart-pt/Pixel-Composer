@@ -32,11 +32,6 @@ function dynaSurf_3d() : dynaSurf() constructor {
 			camera.setMatrix();
 		#endregion
 		
-		#region background
-			//surface_free_safe(surfaces[0]);
-			//surfaces[0] = scene.renderBackground(_sw, _sh, surfaces[0]);
-		#endregion
-		
 		#region surfaces
 			surfaces[1] = surface_verify(surfaces[1], _sw, _sh);
 			surfaces[2] = surface_verify(surfaces[2], _sw, _sh);
@@ -72,9 +67,11 @@ function dynaSurf_3d() : dynaSurf() constructor {
 			//	draw_surface_safe(surfaces[0], _xx, _yy);
 			draw_surface_safe(surfaces[1], _xx, _yy);
 			
-			BLEND_MULTIPLY
-			draw_surface_safe(deferData.ssao, _xx, _yy);
-			BLEND_NORMAL
+			if(scene.ssao_enabled) {
+				BLEND_MULTIPLY
+				draw_surface_safe(deferData.ssao, _xx, _yy);
+				BLEND_NORMAL
+			}
 		#endregion
 	}
 	

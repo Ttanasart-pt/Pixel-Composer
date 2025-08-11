@@ -76,6 +76,7 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 		camObj.transform.position.set(new __vec3(0, 0, 2));
 		camObj.transform.rotation = new BBMOD_Quaternion().FromEuler(0, -90, 180);
 		camObj.transform.scale.set(.5, .5, .5);
+		camObj.transform.applyMatrix();
 		
 		if(!is_surface(_surf)) return noone;
 		
