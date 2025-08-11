@@ -93,6 +93,7 @@ function __transform() constructor {
 		_res.anchor   = anchor.clone();
 		_res.rotation = rotation.Clone();
 		_res.scale    = scale.clone();
+		_res.applyMatrix();
 		
 		return _res;
 	}

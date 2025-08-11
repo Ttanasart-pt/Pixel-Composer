@@ -31,10 +31,7 @@ function __vec3(_x = 0, _y = _x, _z = _x) constructor {
 		return self;
 	} set(_x, _y, _z);
 	
-	static isZero = function() {
-		INLINE
-		return x == 0 && y == 0 && z == 0;
-	}
+	static isZero = function() { INLINE return x == 0 && y == 0 && z == 0; }
 	
 	static setIndex = function(index, value) {
 		INLINE

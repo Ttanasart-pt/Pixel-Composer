@@ -41,6 +41,7 @@ function Node_3D_Transform_Scene(_x, _y, _group = noone) : Node_3D(_x, _y, _grou
 					_object.transform.position.x += _pos[0];
 					_object.transform.position.y += _pos[1];
 					_object.transform.position.z += _pos[2];
+					
 				} else if(_temp_data[4] == 1) {
 					_object.transform.position.x  = _pos[0];
 					_object.transform.position.y  = _pos[1];
@@ -64,16 +65,21 @@ function Node_3D_Transform_Scene(_x, _y, _group = noone) : Node_3D(_x, _y, _grou
 					_object.transform.scale.x += _sca[0];
 					_object.transform.scale.y += _sca[1];
 					_object.transform.scale.z += _sca[2];
+					
 				} else if(_temp_data[6] == 1) {
 					_object.transform.scale.x *= _sca[0];
 					_object.transform.scale.y *= _sca[1];
 					_object.transform.scale.z *= _sca[2];
+					
 				} else if(_temp_data[6] == 2) {
 					_object.transform.scale.x  = _sca[0];
 					_object.transform.scale.y  = _sca[1];
 					_object.transform.scale.z  = _sca[2];
+					
 				}
 			}
+			
+			_object.transform.applyMatrix();
 		});
 		
 		return _nscn;

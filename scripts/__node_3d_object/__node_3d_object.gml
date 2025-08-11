@@ -890,7 +890,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	
 	static drawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) { 
 		var object = getPreviewObjects();
-		if(array_empty(object)) return;
+		if(object == noone || array_empty(object)) return;
 		object = object[0];
 		
 		var _pos  = inputs[0].getValue(,,, true);

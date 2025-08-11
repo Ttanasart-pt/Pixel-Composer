@@ -13,6 +13,9 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	newInput( 2, nodeValue_Int(         "Amount",       2       ));
 	newInput(14, nodeValue_IVec3(       "Grid",         [2,2,1] ));
 	newInput(17, nodeValue_Float(       "Radius",       1       ));
+	newInput(19, nodeValue_Slider(      "Look At Center", 0     ));
+	newInput(18, nodeValue_PathNode(    "Shift Path"            ));
+	newInput(20, nodeValue_Slider(      "Follow Path",  0       ));
 	
 	////- =Transform
 	newInput( 9, nodeValue_Vec3( "Positions", [0,0,0] )).setArrayDepth(1);
@@ -26,18 +29,21 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	newInput( 7, nodeValue_Quaternion( "Shift Rotation",   [0,0,0,1] ));
 	newInput( 8, nodeValue_Vec3(       "Shift Scale",      [0,0,0]   ));
 	/* UNUSED */ newInput(12, nodeValue_Bool( "Use Instance", true ))
-	// input 18
+	// input 20
 	
 	newOutput(0, nodeValue_Output("Scene", VALUE_TYPE.d3Scene, noone));
 	
 	input_display_list = [
 		["Objects",    false], 0, 3, 4, 5, 
-		["Repeat",     false], 1, 13, 2, 14, 17, 
+		["Repeat",     false], 1, 13, 2, 14, 17, 19, 18, 20, 
 		["Transforms",  true], 9, 10, 11, 
 		["Shift",      false], 6, 15, 16, 7, 8, 
 	]
 	
 	////- Nodes
+	
+	vectorUp = new __vec3(0, 0, 1);
+	qRotateZ = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), 90);
 	
 	static preGetInputs = function() {
 		var _mode = getSingleValue(1);
@@ -45,7 +51,7 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	}
 	
 	static processData = function(_output, _data, _array_index = 0) {
-		#region data
+		#region input
 			var _objs = _data[0];
 			var _Spos = _data[3];
 			var _Srot = _data[4];
@@ -56,84 +62,139 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			var _aamo = _data[ 2];
 			var _grid = _data[14];
 			var _radR = _data[17];
+			var _radL = _data[19];
+			var _ppth = _data[18];
+			var _rpth = _data[20];
 			
 			var _Apos = _data[ 9];
 			var _Arot = _data[10];
 			var _Asca = _data[11];
 			
-			var _Rpos  = _data[ 6];
-			var _RposY = _data[15];
-			var _RposZ = _data[16];
+			var _Rpos    = _data[ 6];
+			var _RposY   = _data[15];
+			var _RposZ   = _data[16];
+			
 			var _Rrot  = _data[ 7];
 			var _Rsca  = _data[ 8];
 			
 			inputs[ 2].setVisible(_patt != 1);
+			
+			inputs[18].setVisible(_patt == 0, _patt == 0);
+			inputs[20].setVisible(_patt == 0);
 			
 			inputs[14].setVisible(_patt == 1);
 			inputs[15].setVisible(_patt == 1);
 			inputs[16].setVisible(_patt == 1);
 			
 			inputs[17].setVisible(_patt == 2);
+			inputs[19].setVisible(_patt == 2);
 		#endregion
 		
-		var _scene = new __3dGroup();
-		var _amo   = 1;
-		
-		var _upos = array_get_depth(_Apos) == 2, _apos;
-		var _urot = array_get_depth(_Arot) == 2, _arot;
-		var _usca = array_get_depth(_Asca) == 2, _asca;
-		
-		var _Sposx = _Spos[0], _Rposx = _Rpos[0], _RposYx = _RposY[0], _RposZx = _RposZ[0];
-		var _Sposy = _Spos[1], _Rposy = _Rpos[1], _RposYy = _RposY[1], _RposZy = _RposZ[1];
-		var _Sposz = _Spos[2], _Rposz = _Rpos[2], _RposYz = _RposY[2], _RposZz = _RposZ[2];
-		
-		var _sRotE = new BBMOD_Quaternion(_Srot[0], _Srot[1], _Srot[2], _Srot[3]).ToEuler();
-		var _rRotE = new BBMOD_Quaternion(_Rrot[0], _Rrot[1], _Rrot[2], _Rrot[3]).ToEuler();
+		#region data
+			var _scene = new __3dGroup();
+			var _amo   = 1;
 			
-		var _sRotEx = _sRotE.x, _rRotEx = _rRotE.x;
-		var _sRotEy = _sRotE.y, _rRotEy = _rRotE.y;
-		var _sRotEz = _sRotE.z, _rRotEz = _rRotE.z;
-		
-		var _Sscax = _Ssca[0], _Rscax = _Rsca[0];
-		var _Sscay = _Ssca[1], _Rscay = _Rsca[1];
-		var _Sscaz = _Ssca[2], _Rscaz = _Rsca[2];
-		
-		if(_mode == 1) {
-			if(!is_array(_objs)) return _scene;
-			_amo = array_length(_objs);
+			var _upos = array_get_depth(_Apos) == 2, _apos;
+			var _urot = array_get_depth(_Arot) == 2, _arot;
+			var _usca = array_get_depth(_Asca) == 2, _asca;
 			
-		} else {
-			switch(_patt) {
-				case 0 : 
-				case 2 : _amo = _aamo; break;
-				case 1 : _amo = _grid[0] * _grid[1] * _grid[2]; break;
+			var _Sposx = _Spos[0], _Rposx = _Rpos[0], _RposYx = _RposY[0], _RposZx = _RposZ[0];
+			var _Sposy = _Spos[1], _Rposy = _Rpos[1], _RposYy = _RposY[1], _RposZy = _RposZ[1];
+			var _Sposz = _Spos[2], _Rposz = _Rpos[2], _RposYz = _RposY[2], _RposZz = _RposZ[2];
+			
+			var _sRotE = new BBMOD_Quaternion(_Srot[0], _Srot[1], _Srot[2], _Srot[3]).ToEuler();
+			var _rRotE = new BBMOD_Quaternion(_Rrot[0], _Rrot[1], _Rrot[2], _Rrot[3]).ToEuler();
+				
+			var _sRotEx = _sRotE.x, _rRotEx = _rRotE.x;
+			var _sRotEy = _sRotE.y, _rRotEy = _rRotE.y;
+			var _sRotEz = _sRotE.z, _rRotEz = _rRotE.z;
+			
+			var _Sscax = _Ssca[0], _Rscax = _Rsca[0];
+			var _Sscay = _Ssca[1], _Rscay = _Rsca[1];
+			var _Sscaz = _Ssca[2], _Rscaz = _Rsca[2];
+			
+			if(_mode == 1) {
+				if(!is_array(_objs)) return _scene;
+				_amo = array_length(_objs);
+				
+			} else {
+				switch(_patt) {
+					case 0 : 
+					case 2 : _amo = _aamo; break;
+					case 1 : _amo = _grid[0] * _grid[1] * _grid[2]; break;
+				}
 			}
-		}
-		
-		var _gridP = _grid[0] * _grid[1];
-		
+			
+			var _gridP = _grid[0] * _grid[1];
+			var __p = new __vec3P();
+			var _rt = _amo >= 1? 1 / (_amo - 1) : 0;
+			
+		#endregion
+			
 		for( var i = 0; i < _amo; i++ ) {
 			var _obj = _mode == 1? _objs[i] : _objs;
 			if(!is(_obj, __3dInstance)) continue;
 			
 			var _subScene = new __3dTransformed(_obj); 
 			
+			var _rat   = i * _rt;
 			var _gridZ = floor(i / _gridP);
 			var _gridY = floor((i - _gridZ * _gridP) / _grid[0]);
 			var _gridX = (i - _gridZ * _gridP) % _grid[0];
 			
-			//// Position
+			var _sPosX = _Sposx;
+			var _sPosY = _Sposy;
+			var _sPosZ = _Sposz;
+			
+			var _fRotEx = _sRotEx + _rRotEx * i;
+			var _fRotEy = _sRotEy + _rRotEy * i;
+			var _fRotEz = _sRotEz + _rRotEz * i;
+			
 			switch(_patt) {
 				case 0 :
-					var _sPosX = _Sposx + _Rposx * i;
-					var _sPosY = _Sposy + _Rposy * i;
-					var _sPosZ = _Sposz + _Rposz * i;
+					_sPosX += _Rposx * i;
+					_sPosY += _Rposy * i;
+					_sPosZ += _Rposz * i;
+					
+					if(is_path(_ppth)) {
+						__p = _ppth.getPointRatio(_rat, 0, __p);
+						
+						_sPosX += __p.x;
+						_sPosY += __p.y;
+						_sPosZ += __p.z;
+						
+						if(_rpth > 0) {
+							__p = _ppth.getPointRatio(clamp(_rat - _rt/2, 0, 0.999), 0, __p);
+							var __px0 = __p.x;
+							var __py0 = __p.y;
+							var __pz0 = __p.z;
+							
+							__p = _ppth.getPointRatio(clamp(_rat + _rt/2, 0, 0.999), 0, __p);
+							var __px1 = __p.x;
+							var __py1 = __p.y;
+							var __pz1 = __p.z;
+							
+							var __rdx = __px1 - __px0;
+							var __rdy = __py1 - __py0;
+							var __rdz = __pz1 - __pz0;
+							
+							var _for  = new __vec3(__rdy, __rdx, __rdz)._normalize();
+							if(!_for.isZero()) {
+								var _look = new BBMOD_Quaternion().FromLookRotation(_for, vectorUp).Mul(qRotateZ).ToEuler(true);
+								
+								_fRotEx += _look[0] * _rpth;
+								_fRotEy += _look[1] * _rpth;
+								_fRotEz += _look[2] * _rpth;
+							}
+						}
+						
+					}
 					break;
 				
 				case 1 :
-					var _sPosX = _Sposx + _Rposx * _gridX + _RposYx * _gridY + _RposZx * _gridZ;
-					var _sPosY = _Sposy + _Rposy * _gridX + _RposYy * _gridY + _RposZy * _gridZ;
-					var _sPosZ = _Sposz + _Rposz * _gridX + _RposYz * _gridY + _RposZz * _gridZ;
+					_sPosX += _Rposx * _gridX + _RposYx * _gridY + _RposZx * _gridZ;
+					_sPosY += _Rposy * _gridX + _RposYy * _gridY + _RposZy * _gridZ;
+					_sPosZ += _Rposz * _gridX + _RposYz * _gridY + _RposZz * _gridZ;
 					break;
 				
 				case 2 :
@@ -141,17 +202,14 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 					var _ax = lengthdir_x(_radR, _aa);
 					var _ay = lengthdir_y(_radR, _aa);
 					
-					var _sPosX = _Sposx + _Rposx * i + _ax;
-					var _sPosY = _Sposy + _Rposy * i + _ay;
-					var _sPosZ = _Sposz + _Rposz * i;
+					_sPosX += _Rposx * i + _ax;
+					_sPosY += _Rposy * i + _ay;
+					_sPosZ += _Rposz * i;
+					
+					if(_radL > 0) _fRotEz += _aa * _radL;
 					break;
 					
 			}
-			
-			//// Rotation
-			var _fRotEx = _sRotEx + _rRotEx * i;
-			var _fRotEy = _sRotEy + _rRotEy * i;
-			var _fRotEz = _sRotEz + _rRotEz * i;
 			
 			//// Scale
 			var _sScaX = _Sscax + _Rscax * i;

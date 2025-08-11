@@ -11,8 +11,7 @@
 ///
 /// @note If you leave the arguments to their default values, then an identity
 /// quaternion is created.
-function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
-{
+function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor {
 	/// @var {Real} The first component of the quaternion.
 	X = _x;
 

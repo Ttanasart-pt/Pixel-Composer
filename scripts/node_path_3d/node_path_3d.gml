@@ -90,6 +90,19 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		cached_pos = ds_map_create();
 	#endregion
 	
+	#region ---- attributes ----
+		attributes.display_name = false;
+		attributes.snap_point   = true;
+		attributes.snap_distance= 8;
+		
+		array_push(attributeEditors, "Display");
+		array_push(attributeEditors, ["Display name", function() /*=>*/ {return attributes.display_name}, new checkBox(function() /*=>*/ {return toggleAttribute("display_name")})]);
+		
+		array_push(attributeEditors, "Snap");
+		array_push(attributeEditors, ["Snap Enable",  function() /*=>*/ {return attributes.snap_point},    new checkBox(function() /*=>*/ {return toggleAttribute("snap_point")})]);
+		array_push(attributeEditors, ["Snap Distance",function() /*=>*/ {return attributes.snap_distance}, textBox_Number(function(v) /*=>*/ {return setAttribute("snap_distance", v)})]);
+	#endregion
+	
 	#region ---- editor ----
 		line_hover = -1;
 	
@@ -325,15 +338,13 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 					draw_circle_ui(_ax1, _ay1, 4, 0, COLORS._main_accent);
 				}
 				
-				draw_sprite_colored(THEME.anchor_selector, 0, xx, yy);
-				draw_set_text(f_p1, fa_left, fa_bottom, COLORS._main_accent);
-				draw_text(xx + ui(4), yy - ui(4), inputs[input_fix_len + i].name);
+				var _anHov = 0;
 				
 				if(drag_point == i) {
-					draw_sprite_colored(THEME.anchor_selector, 1, xx, yy);
+					_anHov = 1;
 					
 				} else if(point_in_circle(_mx, _my, xx, yy, 8)) {
-					draw_sprite_colored(THEME.anchor_selector, 1, xx, yy);
+					_anHov = 1;
 					anchor_hover = i;
 					hover_type   = 0;
 					
@@ -347,6 +358,14 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 					anchor_hover =  i;
 					hover_type   = -1;
 				}
+				
+				draw_anchor(_anHov, xx, yy, ui(8), 1);
+				
+				if(attributes.display_name) {
+					draw_set_text(f_p1, fa_left, fa_bottom, COLORS._main_accent);
+					draw_text(xx + ui(4), yy - ui(4), inputs[input_fix_len + i].name);
+				}
+				
 			}
 		}
 		
@@ -399,7 +418,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 					
 					array_delete(inputs, _indx, 1);
 					resetDisplayList();
-					doUpdate();
+					triggerRender();
 				}
 			} else {
 				draw_sprite_ui_uniform(THEME.cursor_path_move, 0, _mx + 4, _my + 4);

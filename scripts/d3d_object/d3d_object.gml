@@ -362,11 +362,12 @@ function __3dObject() : __3dInstance() constructor {
 				_obj.VB[i] = vertex_create_buffer_from_buffer(_buff, VF);
 			}
 		} else {
-			_obj.VB  = [];
+			_obj.VB  = VB;
 		}
 		
 		_obj.NVB            = NVB;
 		_obj.VF             = VF;
+		_obj.EB             = EB;
 		_obj.render_type    = render_type;
 		_obj.custom_shader  = custom_shader;
 		_obj.object_counts  = object_counts;

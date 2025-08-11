@@ -265,8 +265,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 				camera.up.set(0, 0, -1);
 				
 				var _for = camera.focus.subtract(camera.position);
-				if(!_for.isZero())
-					camera.rotation = new BBMOD_Quaternion().FromLookRotation(_for, camera.up).Mul(_qi1).Mul(_qi2);
+				if(!_for.isZero()) camera.rotation = new BBMOD_Quaternion().FromLookRotation(_for, camera.up).Mul(_qi1).Mul(_qi2);
 					
 				lookat.transform.position.set(_look);
 				lookat.transform.applyMatrix();

@@ -1,10 +1,7 @@
 function Node_3D_Transform(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group) constructor {
 	name  = "Transform";
 	
-	newInput(in_d3d + 0, nodeValue_D3Mesh("Mesh", noone))
-		.setVisible(true, true);
-	
-	// newInput(in_d3d + 1, nodeValue_D3Mesh("Mesh", noone));
+	newInput(in_d3d + 0, nodeValue_D3Mesh("Mesh", noone)).setVisible(true, true);
 	
 	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.d3Mesh, noone));
 	
@@ -14,12 +11,10 @@ function Node_3D_Transform(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _gro
 	
 	static processData = function(_output, _data, _array_index = 0) {
 		var _mesh = _data[in_d3d + 0];
+		if(!is(_mesh, __3dInstance)) return noone;
 		
-		var _scene = new __3dGroup();
-		if(!is_struct(_mesh)) return _scene;
-		
+		var _scene = new __3dTransformed(_mesh);
 		setTransform(_scene, _data);
-		_scene.addObject(_mesh);
 		
 		return _scene;
 	}

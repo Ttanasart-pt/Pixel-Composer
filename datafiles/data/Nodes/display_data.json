@@ -567,6 +567,7 @@
             "Node_3D_Camera",
             "Node_3D_Camera_Set",
             "Node_3D_Scene",
+            "Node_3D_Affector",
             
             { "label": "Materials" },
             "Node_3D_Material",
