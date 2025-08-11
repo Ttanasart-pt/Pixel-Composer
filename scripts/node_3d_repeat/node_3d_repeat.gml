@@ -10,9 +10,9 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	////- =Repeat
 	newInput( 1, nodeValue_Enum_Button( "Object Data",  0 , [ "Single", "Array" ] )).rejectArray();
 	newInput(13, nodeValue_Enum_Scroll( "Pattern",      0 , __enum_array_gen([ "Linear", "Grid", "Circular"], s_node_repeat_axis) )).rejectArray();
-	newInput( 2, nodeValue_Int(         "Amount",       1       ));
+	newInput( 2, nodeValue_Int(         "Amount",       2       ));
 	newInput(14, nodeValue_IVec3(       "Grid",         [2,2,1] ));
-	newInput(17, nodeValue_Vec3(        "Radius",       1       ));
+	newInput(17, nodeValue_Float(       "Radius",       1       ));
 	
 	////- =Transform
 	newInput( 9, nodeValue_Vec3( "Positions", [0,0,0] )).setArrayDepth(1);
@@ -26,7 +26,7 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	newInput( 7, nodeValue_Quaternion( "Shift Rotation",   [0,0,0,1] ));
 	newInput( 8, nodeValue_Vec3(       "Shift Scale",      [0,0,0]   ));
 	/* UNUSED */ newInput(12, nodeValue_Bool( "Use Instance", true ))
-	// input 19
+	// input 18
 	
 	newOutput(0, nodeValue_Output("Scene", VALUE_TYPE.d3Scene, noone));
 	
@@ -74,7 +74,6 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			inputs[16].setVisible(_patt == 1);
 			
 			inputs[17].setVisible(_patt == 2);
-			inputs[18].setVisible(_patt == 2);
 		#endregion
 		
 		var _scene = new __3dGroup();
@@ -138,7 +137,7 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 					break;
 				
 				case 2 :
-					var _aa = 360 / (_amo - 1) * i;
+					var _aa = 360 / _amo * i;
 					var _ax = lengthdir_x(_radR, _aa);
 					var _ay = lengthdir_y(_radR, _aa);
 					
