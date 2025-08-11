@@ -1,6 +1,6 @@
-function __bbox3D(first, second) constructor {
-	self.first  = first;
-	self.second = second;
+function __bbox3D(_first, _second) constructor {
+	first  = _first;
+	second = _second;
 	
 	static getScale = function() {
 		INLINE
@@ -19,4 +19,6 @@ function __bbox3D(first, second) constructor {
 			abs(first.z - second.z),
 		);
 	}
+	
+	static clone = function() { return new __bbox3D(first.clone(), second.clone()); }
 }

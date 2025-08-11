@@ -1916,8 +1916,8 @@ function Panel_Preview() : PanelContent() constructor {
                         BLEND_NORMAL
                     }
                     break;
-                case 1 : draw_surface_safe(d3_surface_normal);    break;
-                case 2 : draw_surface_safe(d3_surface_depth);    break;
+                case 1 : draw_surface_safe(d3_surface_normal); break;
+                case 2 : draw_surface_safe(d3_surface_depth);  break;
             }
         #endregion
         

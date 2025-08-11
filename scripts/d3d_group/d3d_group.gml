@@ -1,10 +1,8 @@
 #macro __3D_GROUP_PRESUB transform.submitMatrix(); for( var i = 0, n = array_length(objects); i < n; i++ )
 #macro __3D_GROUP_POSSUB transform.clearMatrix();
 
-function __3dGroup() constructor {
+function __3dGroup() : __3dInstance() constructor {
 	objects = [];
-	
-	transform = new __transform();
 	
 	static getCenter = function() {
 		var _v = new __vec3();
@@ -60,7 +58,7 @@ function __3dGroup() constructor {
 	static submit       = function(_sc = {}, _sh = noone)    /*=>*/ { __3D_GROUP_PRESUB objects[i].submit(_sc, _sh);       __3D_GROUP_POSSUB }
 	static submitSel    = function(_sc = {}, _sh = noone)    /*=>*/ { __3D_GROUP_PRESUB objects[i].submitSel(_sc, _sh);    __3D_GROUP_POSSUB }
 	static submitShader = function(_sc = {}, _sh = noone)    /*=>*/ { __3D_GROUP_PRESUB objects[i].submitShader(_sc, _sh); __3D_GROUP_POSSUB }
-	static submitShadow = function(_sc = {}, object = noone) /*=>*/ { for( var i = 0, n = array_length(objects); i < n; i++ ) objects[i].submitShadow(_sc, object); }
+	static submitShadow = function(_sc = {}, _ob = noone) /*=>*/ { for( var i = 0, n = array_length(objects); i < n; i++ ) objects[i].submitShadow(_sc, _ob); }
 	static map = function(callback, _sc = {}) /*=>*/ { for( var i = 0, n = array_length(objects); i < n; i++ ) callback(objects[i], _sc); }
 	
 	static clone = function(vertex = true, cloneBuffer = false) {
@@ -71,6 +69,38 @@ function __3dGroup() constructor {
 		
 		for( var i = 0, n = array_length(objects); i < n; i++ )
 			_new.objects[i] = objects[i].clone(vertex, cloneBuffer);
+		
+		return _new;
+	}
+}
+
+function __3dTransformed(_object = noone) : __3dInstance() constructor {
+	object = _object;
+	
+	static getCenter = function() { return object.getCenter().add(transform.position); }
+	
+	static getBBOX   = function() {
+		var _b = object.getBBOX().clone();
+		
+		_b.first.multiplyVec(transform.scale);
+		_b.first.add(transform.position);
+		
+		_b.second.multiplyVec(transform.scale);
+		_b.second.add(transform.position);
+		
+		return _b;
+	}
+	
+	static submit       = function(_sc = {}, _sh = noone) /*=>*/ { transform.submitMatrix(); object.submit(_sc, _sh);       transform.clearMatrix(); }
+	static submitSel    = function(_sc = {}, _sh = noone) /*=>*/ { transform.submitMatrix(); object.submitSel(_sc, _sh);    transform.clearMatrix(); }
+	static submitShader = function(_sc = {}, _sh = noone) /*=>*/ { transform.submitMatrix(); object.submitShader(_sc, _sh); transform.clearMatrix(); }
+	static submitShadow = function(_sc = {}, _ob = noone) /*=>*/ { object.submitShadow(_sc, _ob); }
+	
+	static clone = function(vertex = true, cloneBuffer = false) {
+		var _new = new __3dTransformed();
+		
+		_new.transform = transform.clone();
+		_new.object    = object.clone(vertex, cloneBuffer);
 		
 		return _new;
 	}

@@ -27,7 +27,11 @@
 
 function __3dObject_Edge(_ind0, _ind1) constructor { p0 = _ind0; p1 = _ind1; }
 
-function __3dObject() constructor {
+function __3dInstance() constructor {
+	transform = new __transform();
+}
+
+function __3dObject() : __3dInstance() constructor {
 	object_counts = 1;
 	vertex = [];
 	VB     = [];
@@ -40,7 +44,6 @@ function __3dObject() constructor {
 	edges  = [];
 	EB     = [];
 	
-	transform = new __transform();
 	size      = new __vec3(1);
 	
 	normal_draw_size = 0.2;
