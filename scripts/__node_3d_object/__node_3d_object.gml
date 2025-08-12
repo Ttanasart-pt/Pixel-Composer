@@ -248,22 +248,22 @@
 					activeKeyboard = false;
 				}
 				
-				if(drag_axis != 0 && key_press(ord("X"))) {
-					drag_axis = 0;
+				if(key_press(ord("X"))) {
+					drag_axis = drag_axis == 0? 3 : 0;
 					drag_val  = drag_original.toArray();
 					drag_prev = undefined;
 					KEYBOARD_STRING = "";
 				}
 				
-				if(drag_axis != 1 && key_press(ord("Y"))) {
-					drag_axis = 1;
+				if(key_press(ord("Y"))) {
+					drag_axis = drag_axis == 1? 3 : 1;
 					drag_val  = drag_original.toArray();
 					drag_prev = undefined;
 					KEYBOARD_STRING = "";
 				}
 				
-				if(drag_axis != 2 && key_press(ord("Z"))) {
-					drag_axis = 2;
+				if(key_press(ord("Z"))) {
+					drag_axis = drag_axis == 2? 3 : 2;
 					drag_val  = drag_original.toArray();
 					drag_prev = undefined;
 					KEYBOARD_STRING = "";
@@ -287,7 +287,7 @@
 				
 			} else {
 				if((_hover != noone && mouse_press(mb_left)) || activeKeyboard) {
-					drag_axis = activeKeyboard? 0 : _hover;
+					drag_axis = activeKeyboard? 3 : _hover;
 					drag_mx	= _mx; drag_my = _my;
 					drag_px = _mx; drag_py = _my;
 					drag_cx =  cx; drag_cy = cy;
