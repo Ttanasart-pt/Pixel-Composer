@@ -37,11 +37,12 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(27, nodeValue_Enum_Button( "Length Blending", 0, [ "None", "Override", "Multiply", "Screen" ] ));
 	newInput(28, nodeValue_Gradient(    "Length Color",    new gradientObject(ca_white) ));
 	newInput(17, nodeValue_Enum_Button( "Edge Blending",   0,   )).setChoices([ "None", "Override", "Multiply", "Screen" ]);
-	newInput(18, nodeValue_Gradient(    "Edge Color",      new gradientObject(ca_white) ));
+	newInput(18, nodeValue_Gradient(    "L Edge Color",    new gradientObject(ca_white) ));
+	newInput(29, nodeValue_Gradient(    "R Edge Color",    new gradientObject(ca_white) ));
 	
 	////- =Growth
 	newInput(20, nodeValue_Range( "Grow Delay", [0,0], true ));
-	// input 29
+	// input 30
 	
 	newOutput(0, nodeValue_Output("Trunk",    VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	newOutput(1, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
@@ -51,7 +52,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		[ "Segment",   false ], 7, 3, 13, 
 		[ "Direction", false ], 4, 10, 15, 9, 16, 
 		[ "Spiral",    false ], 25, 26, 21, 22, 23, 24, 
-		[ "Rendering", false ], 6, 11, 12, 27, 28, 17, 18, 
+		[ "Rendering", false ], 6, 11, 12, 27, 28, 17, 18, 29, 
 		[ "Growth",    false ], 20, 
 	];
 	
@@ -106,13 +107,15 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var _lenc     = getInputData(27);
 		var _lencGrad = getInputData(28); inputs[28].setVisible(_lenc > 0);
 		var _edge     = getInputData(17);
-		var _edgeGrad = getInputData(18); inputs[18].setVisible(_edge > 0);
+		var _edgeLGrd = getInputData(18); inputs[18].setVisible(_edge > 0);
+		var _edgeRGrd = getInputData(29); inputs[29].setVisible(_edge > 0);
 		
 		var _grow = getInputData(20);
 		
 		_baseGrad.cache();
 		_lencGrad.cache();
-		_edgeGrad.cache();
+		_edgeLGrd.cache();
+		_edgeRGrd.cache();
 		
 		random_set_seed(_seed);
 		
@@ -171,7 +174,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 					
 					cBase  : _baseGrad,
 					cLen   : _lenc,     cLenG  : _lencGrad,
-					cEdg   : _edge,     cEdgG  : _edgeGrad,
+					cEdg   : _edge,     cEdgL  : _edgeLGrd,    cEdgR  : _edgeRGrd
 				}
 				
 				_t.grow(_growParam);

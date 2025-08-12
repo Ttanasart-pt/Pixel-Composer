@@ -1,17 +1,19 @@
-globalvar LOCALE, TEST_LOCALE, LOCALE_DEF;
-globalvar LOCALE_NOTE_DATA, LOCALE_NOTE_JUNC;
-
-TEST_LOCALE  = 0;
-LOCALE_DEF   = 1;
-LOCALE       = { fontDir: "", config: { per_character_line_break: false } }
-LOCALE_NOTE_DATA = {};
-LOCALE_NOTE_JUNC = {};
-
-global.missing_locale     = {}
-global.missing_lfile      = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/data/Locale/missing.txt";
-
-global.missing_lnode      = {}
-global.missing_lfile_node = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/data/Locale/missing.txt";
+#region data
+	globalvar LOCALE, TEST_LOCALE, LOCALE_DEF;
+	globalvar LOCALE_NOTE_DATA, LOCALE_NOTE_JUNC;
+	
+	TEST_LOCALE  = 0;
+	LOCALE_DEF   = 1;
+	LOCALE       = { fontDir: "", config: { per_character_line_break: false } }
+	LOCALE_NOTE_DATA = {};
+	LOCALE_NOTE_JUNC = {};
+	
+	global.missing_locale     = {}
+	global.missing_lfile      = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/data/Locale/missing.txt";
+	
+	global.missing_lnode      = {}
+	global.missing_lfile_node = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/data/Locale/missing.txt";
+#endregion
 
 function __locale_file(file) {
 	var dirr = $"{DIRECTORY}Locale/{PREFERENCES.local}";

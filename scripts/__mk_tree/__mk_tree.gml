@@ -95,8 +95,9 @@ function __MK_Tree_Segment(_x, _y, _t) constructor {
 	y = _y;
 	thickness = _t;
 	
-	color     = c_white;
-	colorOut  = c_white;
+	color = c_white;
+	colorEdgeL = c_white;
+	colorEdgeR = c_white;
 }
 
 function __MK_Tree() constructor {
@@ -224,7 +225,8 @@ function __MK_Tree() constructor {
 		var _cLen    = _param.cLen;
 		var _cLenG   = _param.cLenG;
 		var _cEdg    = _param.cEdg;
-		var _cEdgG   = _param.cEdgG;
+		var _cEdgL   = _param.cEdgL;
+		var _cEdgR   = _param.cEdgR;
 		
 		segments       = array_create(amount + 1);
 		segmentLengths = array_create(amount + 1);
@@ -274,19 +276,26 @@ function __MK_Tree() constructor {
 			
 			var _cc  = _cBase.evalFast(random(1));
 			switch(_cLen) {
-				case 0 : _sg.color = _cc; break;
-				case 1 : _sg.color = _cLenG.evalFast(p); break;
+				case 0 : _sg.color = _cc;                                     break;
+				case 1 : _sg.color = _cLenG.evalFast(p);                      break;
 				case 2 : _sg.color = colorMultiply( _cLenG.evalFast(p), _cc); break;
 				case 3 : _sg.color = colorScreen(   _cLenG.evalFast(p), _cc); break;
 			}
 			
 			switch(_cEdg) {
-				case 0 : _sg.colorOut = _sg.color; break;
-				case 1 : _sg.colorOut = _cEdgG.evalFast(random(1)); break;
-				case 2 : _sg.colorOut = colorMultiply( _cEdgG.evalFast(random(1)), _sg.color); break;
-				case 3 : _sg.colorOut = colorScreen(   _cEdgG.evalFast(random(1)), _sg.color); break;
+				case 0 : _sg.colorEdgeL = _sg.color;                                             break;
+				case 1 : _sg.colorEdgeL = _cEdgL.evalFast(random(1));                            break;
+				case 2 : _sg.colorEdgeL = colorMultiply( _cEdgL.evalFast(random(1)), _sg.color); break;
+				case 3 : _sg.colorEdgeL = colorScreen(   _cEdgL.evalFast(random(1)), _sg.color); break;
 			}
-					
+			
+			switch(_cEdg) {
+				case 0 : _sg.colorEdgeR = _sg.color;                                             break;
+				case 1 : _sg.colorEdgeR = _cEdgR.evalFast(random(1));                            break;
+				case 2 : _sg.colorEdgeR = colorMultiply( _cEdgR.evalFast(random(1)), _sg.color); break;
+				case 3 : _sg.colorEdgeR = colorScreen(   _cEdgR.evalFast(random(1)), _sg.color); break;
+			}
+			
 			var _gg = _grav * (_gravC? _gravC.get(p) : 1);
 			dx += _gg * ll * _gx;
 			dy += _gg * ll * _gy;
@@ -298,17 +307,24 @@ function __MK_Tree() constructor {
 		
 		var _cc  = _cBase.evalFast(random(1));
 		switch(_cLen) {
-			case 0 : _sg.color = _cc; break;
-			case 1 : _sg.color = _cLenG.evalFast(0); break;
+			case 0 : _sg.color = _cc;                                     break;
+			case 1 : _sg.color = _cLenG.evalFast(0);                      break;
 			case 2 : _sg.color = colorMultiply( _cLenG.evalFast(0), _cc); break;
 			case 3 : _sg.color = colorScreen(   _cLenG.evalFast(0), _cc); break;
 		}
 		
 		switch(_cEdg) {
-			case 0 : _sg.colorOut = _sg.color; break;
-			case 1 : _sg.colorOut = _cEdgG.evalFast(random(1)); break;
-			case 2 : _sg.colorOut = colorMultiply( _cEdgG.evalFast(random(1)), _sg.color); break;
-			case 3 : _sg.colorOut = colorScreen(   _cEdgG.evalFast(random(1)), _sg.color); break;
+			case 0 : _sg.colorEdgeL = _sg.color;                                             break;
+			case 1 : _sg.colorEdgeL = _cEdgL.evalFast(random(1));                            break;
+			case 2 : _sg.colorEdgeL = colorMultiply( _cEdgL.evalFast(random(1)), _sg.color); break;
+			case 3 : _sg.colorEdgeL = colorScreen(   _cEdgL.evalFast(random(1)), _sg.color); break;
+		}
+		
+		switch(_cEdg) {
+			case 0 : _sg.colorEdgeR = _sg.color;                                             break;
+			case 1 : _sg.colorEdgeR = _cEdgR.evalFast(random(1));                            break;
+			case 2 : _sg.colorEdgeR = colorMultiply( _cEdgR.evalFast(random(1)), _sg.color); break;
+			case 3 : _sg.colorEdgeR = colorScreen(   _cEdgR.evalFast(random(1)), _sg.color); break;
 		}
 		
 		var l = 0;
@@ -345,9 +361,9 @@ function __MK_Tree() constructor {
 		array_foreach(children, function(c) /*=>*/ {return c.drawOverlay(__x, __y, __s)});
 	}
 	
-	static draw = function() {
-		var ox, oy, ot, oa, oc, oce;
-		var nx, ny, nt, na, nc, nce;
+	static drawBranch = function() {
+		var ox, oy, ot, oa, oc, ocl, ocr;
+		var nx, ny, nt, na, nc, ncl, ncr;
 		
 		draw_set_circle_precision(16);
 		draw_primitive_begin(pr_trianglestrip);
@@ -369,13 +385,41 @@ function __MK_Tree() constructor {
 			ny  = _seg.y;
 			nt  = _seg.thickness;
 			nc  = _seg.color;
-			nce = _seg.colorOut;
+			ncl = _seg.colorEdgeL;
+			ncr = _seg.colorEdgeR;
 			
 			na  = ang[i];
 			
 			if(i > 0 && i < len - 1) na = lerp_angle_direct(ang[i], ang[i + 1], .5);
 			
-			if(i) draw_line_width2_angle_width(ox, oy, nx, ny, ot, nt, oa, na, oc, nc, oce, nce);
+			if(i) {
+				// draw_line_width2_angle_width(ox, oy, nx, ny, ot, nt, oa, na, oc, nc, oe, nce);
+				
+				var _d0x = lengthdir_x(ot / 2, oa);
+				var _d0y = lengthdir_y(ot / 2, oa);	
+				var _d1x = lengthdir_x(nt / 2, na);
+				var _d1y = lengthdir_y(nt / 2, na);
+				
+				var _x0 = ox + _d0x;
+				var _y0 = oy + _d0y;
+				var _x1 = nx + _d1x;
+				var _y1 = ny + _d1y;
+				
+				draw_vertex_color( ox,  oy, oc,  1);
+				draw_vertex_color( nx,  ny, nc,  1);
+				draw_vertex_color(_x0, _y0, ocl, 1);
+				draw_vertex_color(_x1, _y1, ncl, 1);
+				
+				var _x0 = ox - _d0x;
+				var _y0 = oy - _d0y;
+				var _x1 = nx - _d1x;
+				var _y1 = ny - _d1y;
+				
+				draw_vertex_color( ox,  oy, oc,  1);
+				draw_vertex_color( nx,  ny, nc,  1);
+				draw_vertex_color(_x0, _y0, ocr, 1);
+				draw_vertex_color(_x1, _y1, ncr, 1);
+			}
 			
 			oa = na;
 			ox = nx;
@@ -383,7 +427,8 @@ function __MK_Tree() constructor {
 			ot = nt;
 			
 			oc  = nc;
-			oce = nce;
+			ocl = ncl; 
+			ocr = ncr; 
 			
 			if(i % 32 == 0) {
 				draw_primitive_end();
@@ -393,6 +438,11 @@ function __MK_Tree() constructor {
 		}
 		
 		draw_primitive_end();
+		
+	}
+	
+	static draw = function() {
+		if(array_length(segments) >= 2) drawBranch();
 		
 		array_foreach(leaves,   function(l) /*=>*/ { if(is(l, __MK_Tree_Leaf)) l.draw(); });
 		array_foreach(children, function(c) /*=>*/ { if(is(c, __MK_Tree))      c.draw(); });

@@ -24,10 +24,11 @@ function Node_MK_Tree_Path_Root(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	newInput( 3, nodeValue_Range(       "Thickness",       [4,4], true )).setCurvable(4, CURVE_DEF_11);
 	newInput( 5, nodeValue_Gradient(    "Base Color",      new gradientObject(ca_white) ));
 	newInput(17, nodeValue_Enum_Button( "Length Blending",  0, [ "None", "Override", "Multiply", "Screen" ] ));
-	newInput(18, nodeValue_Gradient(    "Length Color",     new gradientObject(ca_white) ));
-	newInput( 6, nodeValue_Enum_Button( "Edge Blending",   0, [ "None", "Override", "Multiply", "Screen" ] ));
-	newInput( 7, nodeValue_Gradient(    "Edge Color",      new gradientObject(ca_white) ));
-	// input 19
+	newInput(18, nodeValue_Gradient(    "Length Color",    new gradientObject(ca_white) ));
+	newInput( 6, nodeValue_Enum_Button( "Edge Blending",    0, [ "None", "Override", "Multiply", "Screen" ] ));
+	newInput( 7, nodeValue_Gradient(    "L Edge Color",    new gradientObject(ca_white) ));
+	newInput(19, nodeValue_Gradient(    "R Edge Color",    new gradientObject(ca_white) ));
+	// input 20
 	
 	newOutput(0, nodeValue_Output("Trunk", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	
@@ -35,7 +36,7 @@ function Node_MK_Tree_Path_Root(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		[ "Path",      false ], 1, 2, 
 		[ "Direction", false ], 8, 10, 
 		[ "Spiral",    false ], 11, 12, 13, 14, 15, 16, 
-		[ "Render",    false ], 3, 4, 5, 17, 18, 6, 7, 
+		[ "Render",    false ], 3, 4, 5, 17, 18, 6, 7, 19, 
 	];
 	
 	////- Nodes
@@ -79,7 +80,8 @@ function Node_MK_Tree_Path_Root(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			var _lenc     = getInputData(17);
 			var _lencGrad = getInputData(18); inputs[18].setVisible(_lenc > 0);
 			var _edge     = getInputData( 6);
-			var _edgeGrad = getInputData( 7); inputs[7].setVisible(_edge > 0);
+			var _edgeLGrd = getInputData( 7); inputs[ 7].setVisible(_edge > 0);
+			var _edgeRGrd = getInputData(19); inputs[19].setVisible(_edge > 0);
 			
 		#endregion
 		
@@ -156,11 +158,19 @@ function Node_MK_Tree_Path_Root(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			}
 			
 			switch(_edge) {
-				case 0 : _sg.colorOut = _sg.color;                 break;
-				case 1 : _sg.colorOut = _edgeGrad.eval(random(1)); break;
-				case 2 : _sg.colorOut = colorMultiply( _edgeGrad.eval(random(1)), _sg.color); break;
-				case 3 : _sg.colorOut = colorScreen(   _edgeGrad.eval(random(1)), _sg.color); break;
+				case 0 : _sg.colorEdgeL = _sg.color;                 break;
+				case 1 : _sg.colorEdgeL = _edgeLGrd.eval(random(1)); break;
+				case 2 : _sg.colorEdgeL = colorMultiply( _edgeLGrd.eval(random(1)), _sg.color); break;
+				case 3 : _sg.colorEdgeL = colorScreen(   _edgeLGrd.eval(random(1)), _sg.color); break;
 			}
+			
+			switch(_edge) {
+				case 0 : _sg.colorEdgeR = _sg.color;                 break;
+				case 1 : _sg.colorEdgeR = _edgeRGrd.eval(random(1)); break;
+				case 2 : _sg.colorEdgeR = colorMultiply( _edgeRGrd.eval(random(1)), _sg.color); break;
+				case 3 : _sg.colorEdgeR = colorScreen(   _edgeRGrd.eval(random(1)), _sg.color); break;
+			}
+			
 		}
 		
 		
