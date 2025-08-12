@@ -60,11 +60,16 @@ function Node_3D_Affector(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _grou
 			gizmo_sphere[0].transform.scale.set(_maxs + _fald, _maxs + _fald, _maxs + _fald);
 			gizmo_sphere[1].transform.scale.set(_maxs - _fald, _maxs - _fald, _maxs - _fald);
 			
+			gizmo_sphere[0].transform.applyMatrix();
+			gizmo_sphere[1].transform.applyMatrix();
+		
 		} else if(_ftyp == 1) {
 			gizmo_object = gizmo_plane;
 			
 			setTransform(gizmo_plane[0], _data);
 			gizmo_plane[0].transform.scale.set(1, 1, 1);
+			gizmo_plane[0].transform.applyMatrix();
+			
 			gizmo_plane[0].checkParameter({ distance: _fald });
 			
 			var _prot    = new BBMOD_Quaternion(_rot[0], _rot[1], _rot[2], _rot[3]);

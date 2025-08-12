@@ -40,36 +40,34 @@ function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 		triggerRender();
 	});
 	
-	static step = function() {
-		var _double = getSingleValue(in_mesh + 4);
-		
-		inputs[in_mesh + 5].setVisible(true, _double);
-		inputs[in_mesh + 6].setVisible(true, _double);
-	}
-	
 	static processData = function(_output, _data, _array_index = 0) {
-		var _updt = _data[in_mesh + 3];
-		
-		var _vox  = _data[in_mesh + 12];
-		var _voxs = _data[in_mesh + 13];
-		
-		var _fmat = _data[in_mesh + 0];
-		var _hght = _data[in_mesh + 1];
-		var _flv  = _data[in_mesh + 7];
-		
-		var _back = _data[in_mesh + 4];
-		var _bmat = _data[in_mesh + 5];
-		var _bhgt = _data[in_mesh + 6];
-		var _blv  = _data[in_mesh + 8];
-		
-		var _smt  = _data[in_mesh +  2];
-		var _matF = _data[in_mesh +  9];
-		var _matB = _data[in_mesh + 10];
-		var _matS = _data[in_mesh + 11];
-		
-		var _surf  = is(_fmat, __d3dMaterial)? _fmat.surface : noone;
-		var _bsurf = is(_bmat, __d3dMaterial)? _bmat.surface : noone;
-		if(!is_surface(_surf)) return noone;
+		#region data
+			var _updt = _data[in_mesh +  3];
+			
+			var _vox  = _data[in_mesh + 12];
+			var _voxs = _data[in_mesh + 13];
+			
+			var _fmat = _data[in_mesh +  0];
+			var _hght = _data[in_mesh +  1];
+			var _flv  = _data[in_mesh +  7];
+			
+			var _back = _data[in_mesh +  4];
+			var _bmat = _data[in_mesh +  5];
+			var _bhgt = _data[in_mesh +  6];
+			var _blv  = _data[in_mesh +  8];
+			
+			var _smt  = _data[in_mesh +  2];
+			var _matF = _data[in_mesh +  9];
+			var _matB = _data[in_mesh + 10];
+			var _matS = _data[in_mesh + 11];
+			
+			inputs[in_mesh + 5].setVisible(true, _back);
+			inputs[in_mesh + 6].setVisible(true, _back);
+			
+			var _surf  = is(_fmat, __d3dMaterial)? _fmat.surface : noone;
+			var _bsurf = is(_bmat, __d3dMaterial)? _bmat.surface : noone;
+			if(!is_surface(_surf)) return noone;
+		#endregion
 		
 		var _object = getObject(_array_index);
 		_object.checkParameter( { 
