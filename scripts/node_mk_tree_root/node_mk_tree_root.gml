@@ -37,7 +37,8 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(16, nodeValue_Enum_Button( "Edge Blending",    0, [ "None", "Override", "Multiply", "Screen" ] ));
 	newInput(17, nodeValue_Gradient(    "L Edge Color",     new gradientObject(ca_white) ));
 	newInput(26, nodeValue_Gradient(    "R Edge Color",     new gradientObject(ca_white) ));
-	// input 27
+	newInput(27, nodeValue_Surface(     "Texture" ));
+	// input 28
 	
 	newOutput(0, nodeValue_Output("Trunk", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	
@@ -46,7 +47,7 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		[ "Segment",   false ], 7, 3, 
 		[ "Direction", false ], 4, 10, 9, 15, 
 		[ "Spiral",    false ], 22, 23, 18, 19, 20, 21, 
-		[ "Render",    false ], 6, 11, 12, 24, 25, 16, 17, 26, 
+		[ "Render",    false ], 6, 11, 12, 24, 25, 16, 17, 26, 27, 
 	];
 	
 	////- Nodes
@@ -99,7 +100,8 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _edge     = getInputData(16);
 		var _edgeLGrd = getInputData(17); inputs[17].setVisible(_edge > 0);
 		var _edgeRGrd = getInputData(26); inputs[26].setVisible(_edge > 0);
-		
+		var _tex      = getInputData(27);
+			
 		random_set_seed(_seed);
 		
 		var _amo   = irandom_range(_bran[0], _bran[1]);
@@ -113,7 +115,8 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 			_t.x = ox;
 			_t.y = oy;
-			_t.amount = random_range(_segs[0], _segs[1]);
+			_t.amount  = random_range(_segs[0], _segs[1]);
+			_t.texture = _tex;
 			
 			var _length = random_range(_len[0], _len[1]);
 			var _angle  = rotation_random_eval(_ang);

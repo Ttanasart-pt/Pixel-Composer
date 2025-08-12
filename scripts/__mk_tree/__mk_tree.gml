@@ -119,6 +119,8 @@ function __MK_Tree() constructor {
 	growShift = 0;
 	growSpeed = 1;
 	
+	texture   = noone;
+	
 	////- Get
 	
 	static getPosition = function(rat, res) {
@@ -317,17 +319,17 @@ function __MK_Tree() constructor {
 		}
 		
 		switch(_cEdg) {
-			case 0 : _sg.colorEdgeL = _sg.color;                                             break;
-			case 1 : _sg.colorEdgeL = _cEdgL.evalFast(random(1));                            break;
-			case 2 : _sg.colorEdgeL = colorMultiply( _cEdgL.evalFast(random(1)), _sg.color); break;
-			case 3 : _sg.colorEdgeL = colorScreen(   _cEdgL.evalFast(random(1)), _sg.color); break;
-		}
-		
-		switch(_cEdg) {
-			case 0 : _sg.colorEdgeR = _sg.color;                                             break;
-			case 1 : _sg.colorEdgeR = _cEdgR.evalFast(random(1));                            break;
-			case 2 : _sg.colorEdgeR = colorMultiply( _cEdgR.evalFast(random(1)), _sg.color); break;
-			case 3 : _sg.colorEdgeR = colorScreen(   _cEdgR.evalFast(random(1)), _sg.color); break;
+			case 0 : _sg.colorEdgeL = _sg.color;                                             
+                     _sg.colorEdgeR = _sg.color;                                              break;
+                     
+			case 1 : _sg.colorEdgeL = _cEdgL.evalFast(random(1));                            
+                     _sg.colorEdgeR = _cEdgR.evalFast(random(1));                             break;
+                     
+			case 2 : _sg.colorEdgeL = colorMultiply( _cEdgL.evalFast(random(1)), _sg.color); 
+                     _sg.colorEdgeR = colorMultiply( _cEdgR.evalFast(random(1)), _sg.color);  break;
+                     
+			case 3 : _sg.colorEdgeL = colorScreen(   _cEdgL.evalFast(random(1)), _sg.color); 
+                     _sg.colorEdgeR = colorScreen(   _cEdgR.evalFast(random(1)), _sg.color);  break;
 		}
 		
 		_sg.colorEdgeL = merge_color(_sg.color, _sg.colorEdgeL, _color_get_alpha(_sg.colorEdgeL));
@@ -368,11 +370,12 @@ function __MK_Tree() constructor {
 	}
 	
 	static drawBranch = function() {
-		var ox, oy, ot, oa, oc, ocl, ocr;
-		var nx, ny, nt, na, nc, ncl, ncr;
+		var ox, oy, ot, oa, oc, ocl, ocr, orat;
+		var nx, ny, nt, na, nc, ncl, ncr, nrat;
+		var tid = is_surface(texture)? surface_get_texture(texture) : -1;
 		
 		draw_set_circle_precision(16);
-		draw_primitive_begin(pr_trianglestrip);
+		draw_primitive_begin_texture(pr_trianglelist, tid);
 		
 		var len = array_length(segments);
 		var ang = array_create(len);
@@ -399,30 +402,29 @@ function __MK_Tree() constructor {
 			if(i > 0 && i < len - 1) na = lerp_angle_direct(ang[i], ang[i + 1], .5);
 			
 			if(i) {
+				orat = segmentRatio[i - 1];
+				nrat = segmentRatio[i];
+				
 				var _d0x = lengthdir_x(ot / 2, oa);
 				var _d0y = lengthdir_y(ot / 2, oa);	
 				var _d1x = lengthdir_x(nt / 2, na);
 				var _d1y = lengthdir_y(nt / 2, na);
 				
-				var _x0 = ox + _d0x;
-				var _y0 = oy + _d0y;
-				var _x1 = nx + _d1x;
-				var _y1 = ny + _d1y;
+				draw_vertex_texture_color( ox,        oy,        .5, orat, oc,  1);
+				draw_vertex_texture_color( nx,        ny,        .5, nrat, nc,  1);
+				draw_vertex_texture_color( ox + _d0x, oy + _d0y,  1, orat, ocr, 1);
 				
-				draw_vertex_color( ox,  oy, oc,  1);
-				draw_vertex_color( nx,  ny, nc,  1);
-				draw_vertex_color(_x0, _y0, ocl, 1);
-				draw_vertex_color(_x1, _y1, ncl, 1);
+				draw_vertex_texture_color( ox + _d0x, oy + _d0y,  1, orat, ocr, 1);
+				draw_vertex_texture_color( nx,        ny,        .5, nrat, nc,  1);
+				draw_vertex_texture_color( nx + _d1x, ny + _d1y,  1, nrat, ncr, 1);
 				
-				var _x0 = ox - _d0x;
-				var _y0 = oy - _d0y;
-				var _x1 = nx - _d1x;
-				var _y1 = ny - _d1y;
+				draw_vertex_texture_color( ox,        oy,        .5, orat, oc,  1);
+				draw_vertex_texture_color( nx,        ny,        .5, nrat, nc,  1);
+				draw_vertex_texture_color( ox - _d0x, oy - _d0y,  0, orat, ocl, 1);
 				
-				draw_vertex_color( ox,  oy, oc,  1);
-				draw_vertex_color( nx,  ny, nc,  1);
-				draw_vertex_color(_x0, _y0, ocr, 1);
-				draw_vertex_color(_x1, _y1, ncr, 1);
+				draw_vertex_texture_color( ox - _d0x, oy - _d0y,  0, orat, ocl, 1);
+				draw_vertex_texture_color( nx,        ny,        .5, nrat, nc,  1);
+				draw_vertex_texture_color( nx - _d1x, ny - _d1y,  0, nrat, ncl, 1);
 			}
 			
 			oa = na;
@@ -434,9 +436,9 @@ function __MK_Tree() constructor {
 			ocl = ncl; 
 			ocr = ncr; 
 			
-			if(i % 32 == 0) {
+			if(i && i % 32 == 0) {
 				draw_primitive_end();
-				draw_primitive_begin(pr_trianglestrip);
+				draw_primitive_begin_texture(pr_trianglelist, tid);
 			}
 			
 		}
