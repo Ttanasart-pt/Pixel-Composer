@@ -10,8 +10,8 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	////- =Origin
 	newInput( 5, nodeValue_Range(        "Amount",          [1,1], true ));
 	newInput( 8, nodeValue_Slider_Range( "Origin Ratio",    [.5,1]      ));
-	newInput( 1, nodeValue_Vec2(         "Origin Position", [.5,1]      )).setUnitRef(function(i) /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
-	newInput( 2, nodeValue_Vec2_Range(   "Origin Wiggle",   [0,0,0,0]   )).setUnitRef(function(i) /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
+	newInput( 1, nodeValue_Vec2(         "Origin Position", [.5,1]      )).setUnitRef(function(i) /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
+	newInput( 2, nodeValue_Vec2_Range(   "Origin Wiggle",   [0,0,0,0]   )).setUnitRef(function(i) /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
 	
 	////- =Segment
 	newInput( 7, nodeValue_Range(  "Segments", [4,8]       ));
@@ -49,6 +49,8 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	];
 	
 	////- Nodes
+	
+	static getDimension = function() /*=>*/ {return is(inline_context, Node_MK_Tree_Inline)? inline_context.dimension : [1,1]};
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _resT = outputs[0].getValue();

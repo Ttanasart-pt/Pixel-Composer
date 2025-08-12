@@ -8,7 +8,7 @@ function Node_MK_Tree_Repulse(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	newInput( 0, nodeValue_Struct("Tree", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
 	
 	////- =Attractor
-	newInput( 2, nodeValue_Area(   "Area",          DEF_AREA_REF )).setUnitRef(function(i) /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
+	newInput( 2, nodeValue_Area(   "Area",          DEF_AREA_REF )).setUnitRef(function(i) /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
 	newInput( 3, nodeValue_Float(  "Falloff",       0            ));
 	newInput( 4, nodeValue_Curve(  "Falloff Curve", CURVE_DEF_01 ));
 	
@@ -25,6 +25,8 @@ function Node_MK_Tree_Repulse(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	];
 	
 	////- Nodes
+	
+	static getDimension = function() /*=>*/ {return is(inline_context, Node_MK_Tree_Inline)? inline_context.dimension : [1,1]};
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _resT = outputs[0].getValue();

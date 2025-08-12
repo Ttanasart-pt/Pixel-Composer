@@ -28,6 +28,8 @@ function Node_MK_Tree_Branch_To_Path(_x, _y, _group = noone) : Node(_x, _y, _gro
 		cached_pos   = {};
 	#endregion
 	
+	static getDimension = function() /*=>*/ {return is(inline_context, Node_MK_Tree_Inline)? inline_context.dimension : [1,1]};
+	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _resT = inputs[0].getValue();
 		if(is_array(_resT)) 

@@ -5,22 +5,20 @@ function Node_MK_Tree_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	newInput(0, nodeValue_Struct("Tree", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
 	
-	////- =Output
-	newInput(1, nodeValue_Dimension());
-	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 0, 
-		[ "Output", false ], 1, 
 	];
 	
 	////- Nodes
+	
+	static getDimension = function() /*=>*/ {return is(inline_context, Node_MK_Tree_Inline)? inline_context.dimension : [1,1]};
 	
 	static update = function() {
 		if(!is(inline_context, Node_MK_Tree_Inline)) return;
 		
 		var _tree = getInputData(0);
-		var _dim  = getInputData(1);
+		var _dim  = getDimension();
 		
 		var _outSurf = outputs[0].getValue();
 		
