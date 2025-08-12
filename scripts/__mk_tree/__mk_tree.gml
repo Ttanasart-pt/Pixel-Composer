@@ -296,6 +296,9 @@ function __MK_Tree() constructor {
 				case 3 : _sg.colorEdgeR = colorScreen(   _cEdgR.evalFast(random(1)), _sg.color); break;
 			}
 			
+			_sg.colorEdgeL = merge_color(_sg.color, _sg.colorEdgeL, _color_get_alpha(_sg.colorEdgeL));
+			_sg.colorEdgeR = merge_color(_sg.color, _sg.colorEdgeR, _color_get_alpha(_sg.colorEdgeR));
+			
 			var _gg = _grav * (_gravC? _gravC.get(p) : 1);
 			dx += _gg * ll * _gx;
 			dy += _gg * ll * _gy;
@@ -326,6 +329,9 @@ function __MK_Tree() constructor {
 			case 2 : _sg.colorEdgeR = colorMultiply( _cEdgR.evalFast(random(1)), _sg.color); break;
 			case 3 : _sg.colorEdgeR = colorScreen(   _cEdgR.evalFast(random(1)), _sg.color); break;
 		}
+		
+		_sg.colorEdgeL = merge_color(_sg.color, _sg.colorEdgeL, _color_get_alpha(_sg.colorEdgeL));
+		_sg.colorEdgeR = merge_color(_sg.color, _sg.colorEdgeR, _color_get_alpha(_sg.colorEdgeR));
 		
 		var l = 0;
 		for( var i = 0, n = array_length(segmentLengths); i < n; i++ ) {
@@ -393,8 +399,6 @@ function __MK_Tree() constructor {
 			if(i > 0 && i < len - 1) na = lerp_angle_direct(ang[i], ang[i + 1], .5);
 			
 			if(i) {
-				// draw_line_width2_angle_width(ox, oy, nx, ny, ot, nt, oa, na, oc, nc, oe, nce);
-				
 				var _d0x = lengthdir_x(ot / 2, oa);
 				var _d0y = lengthdir_y(ot / 2, oa);	
 				var _d1x = lengthdir_x(nt / 2, na);

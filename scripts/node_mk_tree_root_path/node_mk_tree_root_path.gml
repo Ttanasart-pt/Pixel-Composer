@@ -171,6 +171,9 @@ function Node_MK_Tree_Path_Root(_x, _y, _group = noone) : Node(_x, _y, _group) c
 				case 3 : _sg.colorEdgeR = colorScreen(   _edgeRGrd.eval(random(1)), _sg.color); break;
 			}
 			
+			_sg.colorEdgeL = merge_color(_sg.color, _sg.colorEdgeL, _color_get_alpha(_sg.colorEdgeL));
+			_sg.colorEdgeR = merge_color(_sg.color, _sg.colorEdgeR, _color_get_alpha(_sg.colorEdgeR));
+			
 		}
 		
 		

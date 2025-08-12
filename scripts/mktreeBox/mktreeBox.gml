@@ -26,7 +26,7 @@ function mktreeBox() : widget() constructor {
     	draw_sprite_stretched_ext(THEME.button_def, bi, x, y, iw, h);
     	
         draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, x + iw + ui(4), y, w - iw - ui(4), h, COLORS._main_icon_light);
-        draw_sprite_ext(ic, 0, x + iw / 2, y + h / 2, _s, _s);
+        draw_sprite_ext(ic, 0, x + iw / 2, y + h / 2, _s, _s, 0, COLORS.node_blend_mktree);
         
         draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text_sub);
         draw_text_add(x + iw + ui(4 + 8), y + h / 2, "Tree");
