@@ -236,47 +236,57 @@ function __MK_Tree() constructor {
 		totalLength    = 0;
 		
 		var ox = x, oy = y;
-		
 		var t = _thick * (_thickC? _thickC.get(0) : 1);
 		
 		segments[0] = new __MK_Tree_Segment(ox, oy, t);
-		var _a = _angle;
-		var ll = _length / amount;
+		var _sg = segments[0];
+		var _a  = _angle;
+		var ll  = _length / amount;
 		
 		var _gx = lengthdir_x(1, _gravD);
 		var _gy = lengthdir_y(1, _gravD);
+		var _gg;
 		
-		for( var i = 1; i <= amount; i++ ) {
-			var p = i / amount;
-			var t  = _thick * (_thickC? _thickC.get(p) : 1);
-			
-			var aa = _a + random_range(_angleW[0], _angleW[1]) * choose(-1, 1);
-			var dx = lengthdir_x(ll, aa);
-			var dy = lengthdir_y(ll, aa);
-			
-			ox += dx;
-			oy += dy;
-			
-			var _wav = _wave * (_waveC? _waveC.get(p) : 1);
-			if(_wav != 0) {
-				var _wLen = cos(_spirP + p * pi * _spirS) * _wav;
-				ox += lengthdir_x(_wLen, aa + 90);
-				oy += lengthdir_y(_wLen, aa + 90);
+		var _cc  = _cBase.evalFast(random(1));
+		
+		for( var i = 0; i <= amount; i++ ) {
+			if(i) {
+				var p = i / amount;
+				var t  = _thick * (_thickC? _thickC.get(p) : 1);
+				
+				var aa = _a + random_range(_angleW[0], _angleW[1]) * choose(-1, 1);
+				var dx = lengthdir_x(ll, aa);
+				var dy = lengthdir_y(ll, aa);
+				
+				ox += dx;
+				oy += dy;
+				
+				var _wav = _wave * (_waveC? _waveC.get(p) : 1);
+				if(_wav != 0) {
+					var _wLen = cos(_spirP + p * pi * _spirS) * _wav;
+					ox += lengthdir_x(_wLen, aa + 90);
+					oy += lengthdir_y(_wLen, aa + 90);
+				}
+				
+				var _crl = _curl * (_curlC? _curlC.get(p) : 1);
+				if(_crl != 0) {
+					var _cLen = sin(_spirP + p * pi * _spirS) * _crl;
+					ox += lengthdir_x(_cLen, aa);
+					oy += lengthdir_y(_cLen, aa);
+				}
+				
+				_sg = new __MK_Tree_Segment(ox, oy, t);
+				segments[i] = _sg;
+				segmentLengths[i] = ll;
+				totalLength += ll;
+				
+				_gg = _grav * (_gravC? _gravC.get(p) : 1);
+				dx += _gg * ll * _gx;
+				dy += _gg * ll * _gy;
+				
+				_a = point_direction(0, 0, dx, dy);
 			}
 			
-			var _crl = _curl * (_curlC? _curlC.get(p) : 1);
-			if(_crl != 0) {
-				var _cLen = sin(_spirP + p * pi * _spirS) * _crl;
-				ox += lengthdir_x(_cLen, aa);
-				oy += lengthdir_y(_cLen, aa);
-			}
-			
-			var _sg = new __MK_Tree_Segment(ox, oy, t);
-			segments[i] = _sg;
-			segmentLengths[i] = ll;
-			totalLength += ll;
-			
-			var _cc  = _cBase.evalFast(random(1));
 			switch(_cLen) {
 				case 0 : _sg.color = _cc;                                     break;
 				case 1 : _sg.color = _cLenG.evalFast(p);                      break;
@@ -300,40 +310,7 @@ function __MK_Tree() constructor {
 			
 			_sg.colorEdgeL = merge_color(_sg.color, _sg.colorEdgeL, _color_get_alpha(_sg.colorEdgeL));
 			_sg.colorEdgeR = merge_color(_sg.color, _sg.colorEdgeR, _color_get_alpha(_sg.colorEdgeR));
-			
-			var _gg = _grav * (_gravC? _gravC.get(p) : 1);
-			dx += _gg * ll * _gx;
-			dy += _gg * ll * _gy;
-			
-			_a = point_direction(0, 0, dx, dy);
 		}
-		
-		_sg = segments[0];
-		
-		var _cc  = _cBase.evalFast(random(1));
-		switch(_cLen) {
-			case 0 : _sg.color = _cc;                                     break;
-			case 1 : _sg.color = _cLenG.evalFast(0);                      break;
-			case 2 : _sg.color = colorMultiply( _cLenG.evalFast(0), _cc); break;
-			case 3 : _sg.color = colorScreen(   _cLenG.evalFast(0), _cc); break;
-		}
-		
-		switch(_cEdg) {
-			case 0 : _sg.colorEdgeL = _sg.color;                                             
-                     _sg.colorEdgeR = _sg.color;                                              break;
-                     
-			case 1 : _sg.colorEdgeL = _cEdgL.evalFast(random(1));                            
-                     _sg.colorEdgeR = _cEdgR.evalFast(random(1));                             break;
-                     
-			case 2 : _sg.colorEdgeL = colorMultiply( _cEdgL.evalFast(random(1)), _sg.color); 
-                     _sg.colorEdgeR = colorMultiply( _cEdgR.evalFast(random(1)), _sg.color);  break;
-                     
-			case 3 : _sg.colorEdgeL = colorScreen(   _cEdgL.evalFast(random(1)), _sg.color); 
-                     _sg.colorEdgeR = colorScreen(   _cEdgR.evalFast(random(1)), _sg.color);  break;
-		}
-		
-		_sg.colorEdgeL = merge_color(_sg.color, _sg.colorEdgeL, _color_get_alpha(_sg.colorEdgeL));
-		_sg.colorEdgeR = merge_color(_sg.color, _sg.colorEdgeR, _color_get_alpha(_sg.colorEdgeR));
 		
 		var l = 0;
 		for( var i = 0, n = array_length(segmentLengths); i < n; i++ ) {

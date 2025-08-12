@@ -20,6 +20,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput( 3, nodeValue_Range(  "Length",     [16,32]   )).setCurvable(13, CURVE_DEF_11);
 	
 	////- =Direction
+	newInput(31, nodeValue_Enum_Button(     "Direction Type",   0, [ "Random", "Uniform" ] ));
 	newInput( 4, nodeValue_Rotation_Random( "Direction",        [0,80,100,0,0] ));
 	newInput(10, nodeValue_Range(           "Direction Wiggle", [0,0], true    ));
 	newInput(15, nodeValue_Enum_Scroll(     "Reflect",           0,            )).setChoices([ "None", "Randomize", "Ordered" ]);
@@ -43,7 +44,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	////- =Growth
 	newInput(20, nodeValue_Range( "Grow Delay", [0,0], true ));
-	// input 31
+	// input 32
 	
 	newOutput(0, nodeValue_Output("Trunk",    VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	newOutput(1, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
@@ -51,7 +52,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 14, 0, 
 		[ "Origin",    false ], 5, 19, 8, 
 		[ "Segment",   false ], 7, 3, 13, 
-		[ "Direction", false ], 4, 10, 15, 9, 16, 
+		[ "Direction", false ], 31, 4, 10, 15, 9, 16, 
 		[ "Spiral",    false ], 25, 26, 21, 22, 23, 24, 
 		[ "Rendering", false ], 6, 11, 12, 27, 28, 17, 18, 29, 30, 
 		[ "Growth",    false ], 20, 
@@ -74,52 +75,55 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	static update = function() {
 		if(!is(inline_context, Node_MK_Tree_Inline)) return;
 		
-		var _seed = inline_context.seed + getInputData(14);
-		var _gDir = inline_context.gravityDir;
-		
-		var _tree = getInputData(0);
-		
-		var _bran = getInputData( 5);
-		var _dist = getInputData(19);
-		var _oriR = getInputData( 8);
-		
-		var _segs = getInputData( 7);
-		var _len  = getInputData( 3);
-		var _lenC = getInputData(13),     curve_length = inputs[ 3].attributes.curved? new curveMap(_lenC)  : undefined;
-		
-		var _sprS = getInputData(25);
-		var _sprP = getInputData(26);
-		var _wav  = getInputData(21);
-		var _wavC = getInputData(22),     curve_wave  = inputs[21].attributes.curved? new curveMap(_wavC)  : undefined;
-		
-		var _cur  = getInputData(23);
-		var _curC = getInputData(24),     curve_curl  = inputs[23].attributes.curved? new curveMap(_curC)  : undefined;
-		
-		var _ang  = getInputData( 4);
-		var _angW = getInputData(10);
-		var _refl = getInputData(15);
-		var _grv  = getInputData( 9);
-		var _grvC = getInputData(16),     curve_grav   = inputs[ 9].attributes.curved? new curveMap(_grvC)  : undefined;
-		
-		var _thk      = getInputData( 6);
-		var _thkC     = getInputData(11), curve_thick  = inputs[ 6].attributes.curved? new curveMap(_thkC) : undefined;
-		
-		var _baseGrad = getInputData(12);
-		var _lenc     = getInputData(27);
-		var _lencGrad = getInputData(28); inputs[28].setVisible(_lenc > 0);
-		var _edge     = getInputData(17);
-		var _edgeLGrd = getInputData(18); inputs[18].setVisible(_edge > 0);
-		var _edgeRGrd = getInputData(29); inputs[29].setVisible(_edge > 0);
-		var _tex      = getInputData(30);
+		#region data
+			var _seed = inline_context.seed + getInputData(14);
+			var _gDir = inline_context.gravityDir;
 			
-		var _grow = getInputData(20);
+			var _tree = getInputData(0);
+			
+			var _bran = getInputData( 5);
+			var _dist = getInputData(19);
+			var _oriR = getInputData( 8);
+			
+			var _segs = getInputData( 7);
+			var _len  = getInputData( 3);
+			var _lenC = getInputData(13),     curve_length = inputs[ 3].attributes.curved? new curveMap(_lenC)  : undefined;
+			
+			var _sprS = getInputData(25);
+			var _sprP = getInputData(26);
+			var _wav  = getInputData(21);
+			var _wavC = getInputData(22),     curve_wave  = inputs[21].attributes.curved? new curveMap(_wavC)  : undefined;
+			
+			var _cur  = getInputData(23);
+			var _curC = getInputData(24),     curve_curl  = inputs[23].attributes.curved? new curveMap(_curC)  : undefined;
+			
+			var _angT = getInputData(31);
+			var _ang  = getInputData( 4);
+			var _angW = getInputData(10);
+			var _refl = getInputData(15);
+			var _grv  = getInputData( 9);
+			var _grvC = getInputData(16),     curve_grav   = inputs[ 9].attributes.curved? new curveMap(_grvC)  : undefined;
+			
+			var _thk      = getInputData( 6);
+			var _thkC     = getInputData(11), curve_thick  = inputs[ 6].attributes.curved? new curveMap(_thkC) : undefined;
+			
+			var _baseGrad = getInputData(12);
+			var _lenc     = getInputData(27);
+			var _lencGrad = getInputData(28); inputs[28].setVisible(_lenc > 0);
+			var _edge     = getInputData(17);
+			var _edgeLGrd = getInputData(18); inputs[18].setVisible(_edge > 0);
+			var _edgeRGrd = getInputData(29); inputs[29].setVisible(_edge > 0);
+			var _tex      = getInputData(30);
+				
+			var _grow = getInputData(20);
 		
-		_baseGrad.cache();
-		_lencGrad.cache();
-		_edgeLGrd.cache();
-		_edgeRGrd.cache();
-		
-		random_set_seed(_seed);
+			_baseGrad.cache();
+			_lencGrad.cache();
+			_edgeLGrd.cache();
+			_edgeRGrd.cache();
+			
+			random_set_seed(_seed);
+		#endregion
 		
 		var _branches  = [];
 		var _spawnIndx = 0;
@@ -151,7 +155,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				
 				var _baseDir = ori[2];
 				var _length  = random_range(_len[0], _len[1]) * (curve_length? curve_length.get(rat) : 1);
-				var _angle   = rotation_random_eval(_ang);
+				var _angle = _angT == 0? rotation_random_eval(_ang) : rotation_random_eval_uniform(_ang, j / (_amo - 1));
 				
 				switch(_refl) {
 					case 1 : if(choose(0, 1))   _angle = _baseDir + angle_difference(_baseDir, _angle); break;
