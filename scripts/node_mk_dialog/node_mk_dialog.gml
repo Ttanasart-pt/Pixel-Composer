@@ -244,7 +244,7 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var lineh = string_height("l") + _linh;
 		
 		for( var i = 0, n = array_length(_cut_lines); i < n; i++ ) {
-			var _line  = _cut_lines[i];
+			var _line  = string_trim(_cut_lines[i]);
 			var _words = string_split(_line, " ");
 			
 			_letter_counts += string_length(_line);
@@ -259,6 +259,9 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				
 				if(_curr_width + _wwid > _wrapWidth) {
 					if(_curr_line != "") {
+						_curr_line  = string_trim(_curr_line);
+						_curr_width = string_width(_curr_line);
+						
 						array_push(_str_lines,   _curr_line);
 						array_push(_line_widths, _curr_width);
 						
@@ -276,6 +279,9 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			}
 			
 			if(_curr_line != "") {
+				_curr_line  = string_trim(_curr_line);
+				_curr_width = string_width(_curr_line);
+						
 				array_push(_str_lines,   _curr_line);
 				array_push(_line_widths, _curr_width);
 				
@@ -661,7 +667,7 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			var _duraAcc   = _durStrt;
 			
 			for( var i = 0; i < dialogCount; i++ ) {
-				var _text  = _dias[i];
+				var _text  = string_trim(_dias[i]);
 				var _dText = _text;
 					
 				var _duration = _durTimF;
