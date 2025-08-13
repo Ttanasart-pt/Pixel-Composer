@@ -37,10 +37,10 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
         new scrollItem("Relative to input").setTooltip("Set dimension as a multiple of input surface."),
         new scrollItem("Fit content").setTooltip("Automatically set dimension to fit content."),
     ]));
-	newInput(36, nodeValue_Vec2(    "Relative Dimension", [1,1]     ));
-	newInput(37, nodeValue_Padding( "Padding",            [0,0,0,0] ));
+	newInput(36, nodeValue_Vec2(        "Relative Dimension", [1,1]     ));
+	newInput(37, nodeValue_Padding(     "Padding",            [0,0,0,0] ));
 	newInput( 1, nodeValue_Dimension());
-	newInput(16, nodeValue_Enum_Button("Array Select",     0 )).setChoices([ "Order", "Random", "Spread" ])
+	newInput(16, nodeValue_Enum_Button( "Array Select",        0 )).setChoices([ "Order", "Random", "Spread" ])
 		.setTooltip("Whether to select image from an array in order, at random, or spread each image to its own output.");
 	newInput(17, nodeValueSeed());
 	
@@ -57,6 +57,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(11, nodeValue_PathNode(       "Path",            noone   )).setTooltip("Make each copy follow along path.");
 	newInput(12, nodeValue_Slider_Range(   "Path Range",      [0,1]   )).setTooltip("Range of the path to follow.");
 	newInput(13, nodeValue_Float(          "Path Shift",       0      ));
+	newInput(39, nodeValue_Anchor(         "Anchor" ));
 	
 	////- =Position
 	newInput( 4, nodeValue_Vec2(           "Shift Position",  [.5,0]       )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
@@ -89,7 +90,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	/* deprecated */ newInput(28, nodeValue_Slider(   "Animator alpha",     1                 ));
 	/* deprecated */ newInput(29, nodeValue_Bool(     "Animator",           false             ))
 	
-	// input 39
+	// input 40
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -197,8 +198,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	input_display_list = [
 		["Surfaces",  true],  0, 35, 36, 37,  1, 16, 17,
-		["Pattern",	 false],  3, 9, 32,  2, 18,  7,  8, 
-		["Path",	  true], 11, 12, 13, 
+		["Pattern",	 false],  3,  9, 32,  2, 18,  7,  8, 
+		["Path",	  true], 11, 12, 13, 39, 
 		["Position", false],  4, 26, 19, 38, 
 		["Rotation", false], 33,  5, 
 		["Scale",	 false],  6, 10, 
@@ -331,6 +332,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _path = _data[11];
 			var _prng = _data[12];
 			var _prsh = _data[13];
+			var _panc = _data[39];
 			
 			var _grad       = _data[14];
 			var _grad_map   = _data[30];
@@ -471,6 +473,12 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			
 			var cc  = evaluate_gradient_map(i / (_amo - 1), _grad, _grad_map, _grad_range, inputs[14]);
 			var aa  = _color_get_alpha(cc);
+			
+			if(_pat == 0 && is_path(_path)) {
+				posx -= _panc[0] * sw;
+				posy -= _panc[1] * sh;
+				
+			}
 			
 			atlases[atlas_i++] = {
 				surface : _surf, 
