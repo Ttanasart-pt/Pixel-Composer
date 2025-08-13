@@ -22,8 +22,10 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput( 6, nodeValue_Gradient( "Color over Length", new gradientObject(ca_white) ));
 	newInput( 7, nodeValue_Gradient( "Color Weight",      new gradientObject(ca_white) ));
 	newInput(12, nodeValue_Surface(  "Texture",           noone ));
+	newInput(13, nodeValue_Vec2(     "Texture Position",  [0,0] ));
+	newInput(14, nodeValue_Vec2(     "Texture Scale",     [1,1] ));
 	newInput( 9, nodeValue_Bool(     "Shade Side",        false ));
-	// input 13
+	// input 15
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -31,7 +33,7 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		["Output", false], 1, 
 		["Path",   false], 2, 11, 3, 10, 
 		["Ribbon", false], 4, 8, 5, 
-		["Render", false], 6, 7, 12, 9, 
+		["Render", false], 6, 7, 12, 13, 14, 9, 
 	];
 	
 	////- Nodes
@@ -64,6 +66,8 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _colLen  = _data[ 6];
 			var _colWei  = _data[ 7];
 			var _texture = _data[12];
+			var _textPos = _data[13];
+			var _textSca = _data[14];
 			var _shdSid  = _data[ 9];
 		#endregion
 		
@@ -73,19 +77,23 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var nx, ny, nc, nw, nt, ndx, ndy;
 		var prg;
 		
-		var t = 1 / (_samp - 1);
+		var t = 1 / _samp;
 		var p = new __vec2P();
 		
 		surface_set_target(_outSurf);
 			DRAW_CLEAR
 			
 			draw_primitive_begin_texture(pr_trianglelist, surface_get_texture_safe(_texture));
+			shader_set(sh_draw_ribbon);
+			shader_set_2("position", _textPos);
+			shader_set_2("scale",    _textSca);
+			shader_set_interpolation(_texture);
 			
-			for( var i = 0; i < _samp; i++ ) {
+			for( var i = 0; i <= _samp; i++ ) {
 				prg = i * t;
 				if(_invp) prg = 1 - prg;
 				
-				p   = _path.getPointRatio(_loop? prg : clamp(prg, 0, .99), 0, p);
+				p  = _path.getPointRatio(_loop? prg : clamp(prg, 0, .99), 0, p);
 				
 				nx = p.x;
 				ny = p.y;
@@ -151,6 +159,7 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				}
 			}
 			
+			shader_reset();
 			draw_primitive_end();
 		surface_reset_target();
 		

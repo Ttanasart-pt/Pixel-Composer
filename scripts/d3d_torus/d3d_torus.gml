@@ -1,15 +1,16 @@
-function __3dTorus(radT = 1, radP = .2, sideT = 16, sideP = 8, smooth = false) : __3dObject() constructor {
+function __3dTorus(_radT = 1, _radP = .2, _sideT = 16, _sideP = 8, _smooth = false) : __3dObject() constructor {
 	VF = global.VF_POS_NORM_TEX_COL;
 	render_type   = pr_trianglelist;
 	object_counts = 1;
 	
-	self.radT   = radT;
-	self.radP   = radP;
-	self.sideT  = sideT;
-	self.sideP  = sideP;
-	self.smooth = smooth;
-	angT = 0;
-	angP = 0;
+	radT   = _radT;
+	radP   = _radP;
+	sideT  = _sideT;
+	sideP  = _sideP;
+	smooth = _smooth;
+	twist  = 0;
+	angT   = 0;
+	angP   = 0;
 		
 	static initModel = function() {
 		edges   = [];
@@ -30,29 +31,34 @@ function __3dTorus(radT = 1, radP = .2, sideT = 16, sideP = 8, smooth = false) :
 			var yT0 = _lt0_y * radT;
 			var xT1 = _lt1_x * radT;
 			var yT1 = _lt1_y * radT;
-				
+			var tws = twist;
+			
 			for( var j = 0; j < sideP; j++ ) {
-				var aP0 = (j + 0) / sideP * 360 + angP;
-				var aP1 = (j + 1) / sideP * 360 + angP;
+				var aP00 = (j + 0) / sideP * 360 + angP;
+				var aP01 = (j + 1) / sideP * 360 + angP;
 				
-				var xP0 = lengthdir_x(radP, aP0);
-				var xP1 = lengthdir_x(radP, aP1);
+				var aP10 = (j + 0 + tws) / sideP * 360 + angP;
+				var aP11 = (j + 1 + tws) / sideP * 360 + angP;
 				
-				var x0 = _lt0_x * (radT + xP0);
-				var y0 = _lt0_y * (radT + xP0);
-				var z0 = lengthdir_y(radP, aP0);
+				var xP0 = lengthdir_x(radP, aP00);
+				var x0  = _lt0_x * (radT + xP0);
+				var y0  = _lt0_y * (radT + xP0);
+				var z0  = lengthdir_y(radP, aP00);
 				
-				var x1 = _lt1_x * (radT + xP0);
-				var y1 = _lt1_y * (radT + xP0);
-				var z1 = z0;
+				var xP0 = lengthdir_x(radP, aP10);
+				var x1  = _lt1_x * (radT + xP0);
+				var y1  = _lt1_y * (radT + xP0);
+				var z1  = lengthdir_y(radP, aP10);
 				
-				var x2 = _lt1_x * (radT + xP1);
-				var y2 = _lt1_y * (radT + xP1);
-				var z2 = lengthdir_y(radP, aP1);
+				var xP1 = lengthdir_x(radP, aP11);
+				var x2  = _lt1_x * (radT + xP1);
+				var y2  = _lt1_y * (radT + xP1);
+				var z2  = lengthdir_y(radP, aP11);
 				
-				var x3 = _lt0_x * (radT + xP1);
-				var y3 = _lt0_y * (radT + xP1);
-				var z3 = z2;
+				var xP1 = lengthdir_x(radP, aP01);
+				var x3  = _lt0_x * (radT + xP1);
+				var y3  = _lt0_y * (radT + xP1);
+				var z3  = lengthdir_y(radP, aP01);
 				
 				var ux0 = 1 - (i + 0) / sideT;
 				var ux1 = 1 - (i + 1) / sideT;

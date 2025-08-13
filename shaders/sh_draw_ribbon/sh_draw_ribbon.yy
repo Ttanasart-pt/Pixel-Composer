@@ -1,0 +1,13 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_draw_ribbon",
+  "name":"sh_draw_ribbon",
+  "parent":{
+    "name":"drawer",
+    "path":"folders/nodes/data/generator/drawer.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "tags":[],
+  "type":1,
+}

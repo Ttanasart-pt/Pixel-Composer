@@ -583,6 +583,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					shader_set_2("position", _texPos);
 					shader_set_f("rotation", degtorad(_texRot));
 					shader_set_2("scale",    _texSca);
+					shader_set_i("flipAxis", true);
 					
 					shader_set_interpolation(_tex);
 					if(_scaleTex) shader_set_2("scale", [ _texSca[0] * _len, _texSca[1] ]);

@@ -93,16 +93,11 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform vec2  position;
-uniform float rotation;
 uniform vec2  scale;
-uniform int   flipAxis;
 
 void main() {
-	vec2 cpos = (flipAxis == 1? v_vTexcoord.yx : v_vTexcoord.xy) - vec2(0.5), pos;
-	pos.x = cpos.x * cos(rotation) - cpos.y * sin(rotation);
-	pos.y = cpos.x * sin(rotation) + cpos.y * cos(rotation);
-	pos = pos * scale + vec2(0.5) - position;
-	pos = fract(pos);
+	vec2 pos = v_vTexcoord * scale - position;
+	     pos = fract(fract(pos) + 1.);
 	
     gl_FragColor = v_vColour * texture2Dintp( gm_BaseTexture, pos );
 }
