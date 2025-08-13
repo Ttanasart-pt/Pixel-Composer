@@ -25,9 +25,9 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	////- =Alignment
 	newInput(13, nodeValue_PathNode(     "Path"));
 	newInput(14, nodeValue_Float(        "Path Shift",        0    ));
+	newInput(27, nodeValue_Int(          "Max Line Width",    0    ));
 	newInput( 7, nodeValue_Enum_Button(  "H Align",           0, array_create(3, THEME.inspector_text_halign) ));
 	newInput( 8, nodeValue_Enum_Button(  "V Align",           0, array_create(3, THEME.inspector_text_valign) ));
-	newInput(27, nodeValue_Int(          "Max Line Width",    0    ));
 	newInput(30, nodeValue_Bool(         "Rotate Along Path", true ));
 	
 	////- =Font
@@ -68,7 +68,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	input_display_list = [ 
 		["Text",	    false    ],  0, 32, 
 		["Output",		 true    ],	 9,  6, 10, 33, 
-		["Alignment",	false    ], 13, 14,  7,  8, 27, 30, 
+		["Alignment",	false    ], 13, 14, 27,  7,  8, 30, 
 		["Font",		false    ],  1,  2, 15,  3, 11, 12, 
 		["Rendering",	false    ],  5, 31, 
 		["Background",   true, 16], 17, 
@@ -302,9 +302,9 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			var _path  = _data[13];
 			var _pthS  = _data[14];
+			var _lineW = _data[27];
 			var _hali  = _data[ 7];
 			var _vali  = _data[ 8];
-			var _lineW = _data[27];
 			__pthR     = _data[30];
 			
 			var _font  = _data[ 1];
@@ -333,9 +333,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			var _use_path = _path != noone && struct_has(_path, "getPointDistance");
 			
-			inputs[ 6].setVisible(_dimt == 0 || _use_path);
-			inputs[ 7].setVisible(_dimt == 0 || _use_path);
-			inputs[ 8].setVisible(_dimt == 0 || _use_path);
+			inputs[ 6].setVisible(_dimt == 0 || _lineW > 0 || _use_path);
 			inputs[ 9].setVisible(!_use_path);
 			inputs[14].setVisible( _use_path);
 			inputs[15].setVisible(_dimt == 0 && !_use_path && _font != "");
@@ -631,7 +629,6 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				
 				tx = _padd[PADDING.left];
 				
-				if(_dimt == 0) 
 				switch(_hali) {
 					case 0 : tx = _padd[PADDING.left];								break;
 					case 1 : tx = (_sw - _line_width * _ss) / 2;					break;

@@ -20,9 +20,9 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	newInput( 3, nodeValue_Padding(     "Padding",          [0,0,0,0] ));
 	
 	////- =Alignment
-	newInput(17, nodeValue_Enum_Button(  "H Align",           0, array_create(3, THEME.inspector_text_halign)));
-	newInput(18, nodeValue_Enum_Button(  "V Align",           0, array_create(3, THEME.inspector_text_valign)));
 	newInput(16, nodeValue_Int(          "Max Line Width",   0     ));
+	newInput(17, nodeValue_Enum_Button(  "H Align",          0, array_create(3, THEME.inspector_text_halign)));
+	newInput(18, nodeValue_Enum_Button(  "V Align",          0, array_create(3, THEME.inspector_text_valign)));
 	newInput( 9, nodeValue_Float(        "Line Height",      0     ));
 	
 	////- =Font
@@ -132,7 +132,7 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	input_display_list = [ 26, 
 		[ "Text",       false ], 1, 4, 
 		[ "Output",     false ], 2, 0, 3, 
-		[ "Alignment",  false ], 17, 18, 16, 9, 
+		[ "Alignment",  false ], 16, 17, 18,  9, 
 		[ "Font",       false ], 5, 6, 7, 
 		[ "Rendering",  false ], 11, 12, 13, 
 		[ "Background", false, 14 ], 15, 
@@ -547,10 +547,10 @@ function Node_MK_Dialog(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			var _dias    = curr_data[ 1]; if(!is_array(_dias)) _dias = [ _dias ];
 			var _case    = curr_data[ 4];
 			
+			var _linw    = curr_data[16]; if(_linw <= 0) _linw = 99999;
 			var _hali    = curr_data[17];
 			var _vali    = curr_data[18];
 			var _trck    = curr_data[ 8];
-			var _linw    = curr_data[16]; if(_linw <= 0) _linw = 99999;
 			var _linh    = curr_data[ 9]; if(_linh <= 0) _linh = -1;
 			
 			var _font    = curr_data[ 5];
