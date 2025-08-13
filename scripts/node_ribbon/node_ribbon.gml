@@ -8,8 +8,9 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(1, nodeValue_Dimension());
 	
 	////- =Path
-	newInput( 2, nodeValue_PathNode( "Path" ));
-	newInput( 3, nodeValue_Int(      "Sample", 64 ));
+	newInput( 2, nodeValue_PathNode( "Path"          ));
+	newInput(11, nodeValue_Bool(     "Loop",   false ));
+	newInput( 3, nodeValue_Int(      "Sample", 64    ));
 	newInput(10, nodeValue_Bool(     "Invert", false ));
 	
 	////- =Ribbon
@@ -17,20 +18,20 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(8, nodeValue_Curve(    "Size Over Length",  CURVE_DEF_11 ));
 	newInput(5, nodeValue_Rotation( "Direction", 90 ));
 	
-	////- =Color
-	newInput(6, nodeValue_Gradient( "Color over Length", new gradientObject(ca_white) ));
-	newInput(7, nodeValue_Gradient( "Color Weight",      new gradientObject(ca_white) ));
-	newInput(9, nodeValue_Bool(     "Shade Side",        false ));
-	
-	// input 11
+	////- =Render
+	newInput( 6, nodeValue_Gradient( "Color over Length", new gradientObject(ca_white) ));
+	newInput( 7, nodeValue_Gradient( "Color Weight",      new gradientObject(ca_white) ));
+	newInput(12, nodeValue_Surface(  "Texture",           noone ));
+	newInput( 9, nodeValue_Bool(     "Shade Side",        false ));
+	// input 13
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0, 
 		["Output", false], 1, 
-		["Path",   false], 2, 3, 10, 
+		["Path",   false], 2, 11, 3, 10, 
 		["Ribbon", false], 4, 8, 5, 
-		["Color",  false], 6, 7, 9, 
+		["Render", false], 6, 7, 12, 9, 
 	];
 	
 	////- Nodes
@@ -52,6 +53,7 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _dim     = _data[1];
 			
 			var _path    = _data[ 2];
+			var _loop    = _data[11];
 			var _samp    = _data[ 3]; _samp = max(2, _samp);
 			var _invp    = _data[10];
 			
@@ -59,15 +61,16 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _sizeLen = _data[8]; var _sizeLenMap = new curveMap(_sizeLen, 128);
 			var _dirc    = _data[5];
 			
-			var _colLen  = _data[6];
-			var _colWei  = _data[7];
-			var _shdSid  = _data[9];
+			var _colLen  = _data[ 6];
+			var _colWei  = _data[ 7];
+			var _texture = _data[12];
+			var _shdSid  = _data[ 9];
 		#endregion
 		
 		if(!is_path(_path)) return _outSurf;
 		
-		var ox, oy, oc, ow, odx, ody; 
-		var nx, ny, nc, nw, ndx, ndy;
+		var ox, oy, oc, ow, ot, odx, ody; 
+		var nx, ny, nc, nw, nt, ndx, ndy;
 		var prg;
 		
 		var t = 1 / (_samp - 1);
@@ -76,14 +79,17 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		surface_set_target(_outSurf);
 			DRAW_CLEAR
 			
+			draw_primitive_begin_texture(pr_trianglelist, surface_get_texture_safe(_texture));
+			
 			for( var i = 0; i < _samp; i++ ) {
 				prg = i * t;
 				if(_invp) prg = 1 - prg;
 				
-				p   = _path.getPointRatio(clamp(prg, 0, .99), 0, p);
+				p   = _path.getPointRatio(_loop? prg : clamp(prg, 0, .99), 0, p);
 				
 				nx = p.x;
 				ny = p.y;
+				nt = t * i;
 				
 				var _cLen = _colLen.eval(prg);
 				var _cWei = _colWei.eval(p.weight);
@@ -101,15 +107,32 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 					var nx1 = nx + ndx, ny1 = ny + ndy;
 					
 					if(_shdSid) {
-						draw_triangle_color(ox0, oy0, ox , oy , nx0, ny0, 0 , oc, 0 , false);
-						draw_triangle_color(ox , oy , nx0, ny0, nx , ny , oc, 0 , nc, false);
+						draw_vertex_texture_color(ox0, oy0,  0, ot,  0, 1);
+						draw_vertex_texture_color(ox , oy,  .5, ot, oc, 1);
+						draw_vertex_texture_color(nx0, ny0,  0, nt,  0, 1);
 						
-						draw_triangle_color(ox , oy , ox1, oy1, nx , ny , oc, 0 , nc, false);
-						draw_triangle_color(ox1, oy1, nx , ny , nx1, ny1, 0 , nc, 0 , false);
+						draw_vertex_texture_color(ox , oy,   0, ot, oc, 1);
+						draw_vertex_texture_color(nx0, ny0, .5, nt,  0, 1);
+						draw_vertex_texture_color(nx , ny,   0, nt, nc, 1);
+						
+						
+						draw_vertex_texture_color(ox , oy,  .5, ot, oc, 1);
+						draw_vertex_texture_color(ox1, oy1,  1, ot,  0, 1);
+						draw_vertex_texture_color(nx , ny,  .5, nt, nc, 1);
+						
+						draw_vertex_texture_color(ox1, oy1,  1, ot,  0, 1);
+						draw_vertex_texture_color(nx , ny,  .5, nt, nc, 1);
+						draw_vertex_texture_color(nx1, ny1,  1, nt,  0, 1);
 						
 					} else {
-						draw_triangle_color(ox0, oy0, ox1, oy1, nx0, ny0, oc, oc, nc, false);
-						draw_triangle_color(ox1, oy1, nx0, ny0, nx1, ny1, oc, nc, nc, false);
+						draw_vertex_texture_color(ox0, oy0, 0, ot, oc, 1);
+						draw_vertex_texture_color(ox1, oy1, 1, ot, oc, 1);
+						draw_vertex_texture_color(nx0, ny0, 0, nt, nc, 1);
+						
+						draw_vertex_texture_color(ox1, oy1, 1, ot, oc, 1);
+						draw_vertex_texture_color(nx0, ny0, 0, nt, nc, 1);
+						draw_vertex_texture_color(nx1, ny1, 1, nt, nc, 1);
+						
 					}
 				}
 				
@@ -120,7 +143,15 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				
 				oc = nc;
 				ow = nw;
+				ot = nt;
+				
+				if(i && i % 32 == 0) {
+					draw_primitive_end();
+					draw_primitive_begin_texture(pr_trianglelist, surface_get_texture_safe(_texture));
+				}
 			}
+			
+			draw_primitive_end();
 		surface_reset_target();
 		
 		return _outSurf; 

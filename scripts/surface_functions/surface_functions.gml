@@ -250,7 +250,7 @@
 		var sz = sw * sh * surface_format_get_bytes(surface_get_format(surface));
 		return sz;
 	}
-
+	
 	function surface_get_nonempty(surface) {
 		if(!is_surface(surface)) return true;
 		
@@ -302,6 +302,8 @@
 		
 		return _outArr;
 	}
+	
+	function surface_get_texture_safe(surface) { return is_surface(surface)? surface_get_texture(surface) : -1; }
 	
 #endregion ==================================== GET ====================================
 
