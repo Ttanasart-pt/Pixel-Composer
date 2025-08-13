@@ -1228,7 +1228,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				
 				if(brush.brush_sizing) 
 					canvas_draw_point_brush(brush, brush.brush_sizing_dx, brush.brush_sizing_dy);
-				else if(_tool)
+				else if(_tool && !key_mod_press(CTRL))
 					_tool.drawPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 					
 				draw_set_alpha(1);
