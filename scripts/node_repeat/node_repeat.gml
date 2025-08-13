@@ -57,10 +57,10 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(11, nodeValue_PathNode(       "Path",            noone   )).setTooltip("Make each copy follow along path.");
 	newInput(12, nodeValue_Slider_Range(   "Path Range",      [0,1]   )).setTooltip("Range of the path to follow.");
 	newInput(13, nodeValue_Float(          "Path Shift",       0      ));
-	newInput(39, nodeValue_Anchor(         "Anchor" ));
 	
 	////- =Position
 	newInput( 4, nodeValue_Vec2(           "Shift Position",  [.5,0]       )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
+	newInput(39, nodeValue_Anchor(         "Anchor" ));
 	newInput(26, nodeValue_Enum_Button(    "Stack",             0,         )).setChoices([ "None", "X", "Y" ]).setTooltip("Place each copy next to each other, taking surface dimension into account.");
 	newInput(19, nodeValue_Vec2(           "Shift Column",     [0,.5]      )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
 	newInput(38, nodeValue_Curve(          "Shift per Copy",  CURVE_DEF_11 ));
@@ -199,8 +199,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	input_display_list = [
 		["Surfaces",  true],  0, 35, 36, 37,  1, 16, 17,
 		["Pattern",	 false],  3,  9, 32,  2, 18,  7,  8, 
-		["Path",	  true], 11, 12, 13, 39, 
-		["Position", false],  4, 26, 19, 38, 
+		["Path",	  true], 11, 12, 13, 
+		["Position", false],  4, 39, 26, 19, 38, 
 		["Rotation", false], 33,  5, 
 		["Scale",	 false],  6, 10, 
 		["Render",	 false], 34, 14, 30, 
@@ -318,6 +318,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _srot = _data[32];
 			
 			var _rpos = _data[ 4];
+			var _panc = _data[39];
 			var _cpos = _data[38];
 			
 			var _rsta = _data[26];
@@ -332,7 +333,6 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _path = _data[11];
 			var _prng = _data[12];
 			var _prsh = _data[13];
-			var _panc = _data[39];
 			
 			var _grad       = _data[14];
 			var _grad_map   = _data[30];
@@ -474,11 +474,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var cc  = evaluate_gradient_map(i / (_amo - 1), _grad, _grad_map, _grad_range, inputs[14]);
 			var aa  = _color_get_alpha(cc);
 			
-			if(_pat == 0 && is_path(_path)) {
-				posx -= _panc[0] * sw;
-				posy -= _panc[1] * sh;
-				
-			}
+			posx -= _panc[0] * sw;
+			posy -= _panc[1] * sh;
 			
 			atlases[atlas_i++] = {
 				surface : _surf, 

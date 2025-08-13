@@ -19,6 +19,7 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	// input 8
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	newOutput(1, nodeValue_Output("Depth",       VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
 	    ["Surface",    false   ], 0, 
@@ -82,7 +83,7 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		return _hov;
 	}
 	
-	static processData = function(_outSurf, _data, _array_index = 0) { 
+	static processData = function(_outData, _data, _array_index = 0) { 
 	    var _surf = _data[0];
 	    
 	    var _ang  = _data[1];
@@ -108,7 +109,7 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	        draw_surface_safe(_surf);
 	    surface_reset_shader();
 	    
-	    surface_set_shader(_outSurf, sh_2d_extrude_apply);
+	    surface_set_shader(_outData, sh_2d_extrude_apply);
 	    	shader_set_surface("extrudeMap", temp_surface[0]);
 	    	shader_set_dim("dimension",  _surf);
 	    	shader_set_f("angle",        degtorad(_ang));
@@ -124,6 +125,6 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	    	draw_surface_safe(_surf);
 	    surface_reset_shader();
 	    
-	    return _outSurf; 
+	    return _outData; 
 	}
 }

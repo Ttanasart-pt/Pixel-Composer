@@ -152,7 +152,8 @@ void main() {
 	vec4  extData   = texture2D(extrudeMap, v_vTexcoord);
 	float extrude   = extData.r;
 	vec2  shf       = vec2(cos(angle), -sin(angle));
-	gl_FragColor    = baseColor;
+	gl_FragData[0]  = baseColor;
+	gl_FragData[1]  = vec4(vec3(extrude == -1.? 0. : 1.), 1.);
 	
 	if(extrude == -1. && highlight == 1) {
 	    vec2 hgc = vec2(shf.x > 0.? 1. : -1., shf.y > 0.? 1. : -1.) * tx;
@@ -160,15 +161,18 @@ void main() {
 	    float e1 = texture2D(extrudeMap, v_vTexcoord + vec2(hgc.x, 0.)).r;
 	    float e2 = texture2D(extrudeMap, v_vTexcoord + vec2(0., hgc.y)).r;
 	    
-	    if(e1 > 0. || e2 > 0.)
-	        gl_FragColor = mix(gl_FragColor, vec4(highlightColor.rgb, gl_FragColor.a), highlightColor.a);
+	    if(e1 > 0. || e2 > 0.) {
+	        gl_FragData[0] = mix(gl_FragData[0], vec4(highlightColor.rgb, gl_FragData[0].a), highlightColor.a);
+	        gl_FragData[1] = vec4(vec3(highlightColor.a), 1.);
+	    }
 	    return;
 	}
 	
 	if(extrude <= 0.) return;
 	
 	float prog = extrude / extDistance;
-	gl_FragColor = gradientEval(prog);
+	gl_FragData[0] = gradientEval(prog);
+	gl_FragData[1] = vec4(vec3(prog), 1.);
 	
 	if(cloneColor == 0) return;
 	
@@ -177,6 +181,6 @@ void main() {
 	
 	vec4 cColor = texture2D(gm_BaseTexture, pos);
 	
-	if(cloneColor == 1) gl_FragColor *= cColor;
-	if(cloneColor == 2) gl_FragColor += cColor;
+	if(cloneColor == 1) gl_FragData[0] *= cColor;
+	if(cloneColor == 2) gl_FragData[0] += cColor;
 }

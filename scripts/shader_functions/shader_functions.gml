@@ -200,13 +200,16 @@ function shader_set_palette(pal, pal_uni = "palette", amo_uni = "paletteAmount",
 	}
 	
 	function surface_set_shader(surface, shader = sh_sample, clear = true, blend = BLEND.alpha) {
-		if(!is_surface(surface)) {
-			__surface_set = false;
-			return;
+		if(is_array(surface)) {
+			for( var i = 0, n = array_length(surface); i < n; i++ )
+				surface_set_target_ext(i, surface[i]);
+			
+		} else {
+			if(!is_surface(surface)) { __surface_set = false; return; }
+			surface_set_target(surface);
 		}
 		
 		__surface_set = true;
-		surface_set_target(surface);
 		if(clear) DRAW_CLEAR;
 		
 		switch(blend) {
