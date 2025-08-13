@@ -602,6 +602,7 @@
             { "label": "/Meshes" },
             "Node_3D_Transform",
             "Node_3D_Transform_Scene",
+            "Node_3D_Mirror",
             "Node_3D_Round_Vertex",
             "Node_3D_Displace",
             "Node_3D_Subdivide",

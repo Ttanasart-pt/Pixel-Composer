@@ -125,6 +125,6 @@ function Node_3D_Affector(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _grou
 		return _nscn;
 	}
 	
-	static getPreviewObjects		= function() { return array_append([getPreviewObject()], gizmo_object); }
-	static getPreviewObjectOutline  = function() { return gizmo_object; }
+	static getPreviewObjects		= function() /*=>*/ {return array_append([getPreviewObject()], gizmo_object)};
+	static getPreviewObjectOutline  = function() /*=>*/ {return gizmo_object};
 }
