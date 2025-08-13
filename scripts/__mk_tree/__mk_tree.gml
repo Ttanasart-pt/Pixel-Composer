@@ -250,8 +250,9 @@ function __MK_Tree() constructor {
 		var _cc  = _cBase.evalFast(random(1));
 		
 		for( var i = 0; i <= amount; i++ ) {
+			var p = i / amount;
+			
 			if(i) {
-				var p = i / amount;
 				var t  = _thick * (_thickC? _thickC.get(p) : 1);
 				
 				var aa = _a + random_range(_angleW[0], _angleW[1]) * choose(-1, 1);
@@ -373,6 +374,7 @@ function __MK_Tree() constructor {
 			nc  = _seg.color;
 			ncl = _seg.colorEdgeL;
 			ncr = _seg.colorEdgeR;
+			aa  = 1;
 			
 			na  = ang[i];
 			
@@ -387,21 +389,21 @@ function __MK_Tree() constructor {
 				var _d1x = lengthdir_x(nt / 2, na);
 				var _d1y = lengthdir_y(nt / 2, na);
 				
-				draw_vertex_texture_color( ox,        oy,        .5, orat, oc,  1);
-				draw_vertex_texture_color( nx,        ny,        .5, nrat, nc,  1);
-				draw_vertex_texture_color( ox + _d0x, oy + _d0y,  1, orat, ocr, 1);
+				draw_vertex_texture_color( ox,        oy,        .5, orat, oc,  aa);
+				draw_vertex_texture_color( nx,        ny,        .5, nrat, nc,  aa);
+				draw_vertex_texture_color( ox + _d0x, oy + _d0y,  1, orat, ocr, aa);
 				
-				draw_vertex_texture_color( ox + _d0x, oy + _d0y,  1, orat, ocr, 1);
-				draw_vertex_texture_color( nx,        ny,        .5, nrat, nc,  1);
-				draw_vertex_texture_color( nx + _d1x, ny + _d1y,  1, nrat, ncr, 1);
+				draw_vertex_texture_color( ox + _d0x, oy + _d0y,  1, orat, ocr, aa);
+				draw_vertex_texture_color( nx,        ny,        .5, nrat, nc,  aa);
+				draw_vertex_texture_color( nx + _d1x, ny + _d1y,  1, nrat, ncr, aa);
 				
-				draw_vertex_texture_color( ox,        oy,        .5, orat, oc,  1);
-				draw_vertex_texture_color( nx,        ny,        .5, nrat, nc,  1);
-				draw_vertex_texture_color( ox - _d0x, oy - _d0y,  0, orat, ocl, 1);
+				draw_vertex_texture_color( ox,        oy,        .5, orat, oc,  aa);
+				draw_vertex_texture_color( nx,        ny,        .5, nrat, nc,  aa);
+				draw_vertex_texture_color( ox - _d0x, oy - _d0y,  0, orat, ocl, aa);
 				
-				draw_vertex_texture_color( ox - _d0x, oy - _d0y,  0, orat, ocl, 1);
-				draw_vertex_texture_color( nx,        ny,        .5, nrat, nc,  1);
-				draw_vertex_texture_color( nx - _d1x, ny - _d1y,  0, nrat, ncl, 1);
+				draw_vertex_texture_color( ox - _d0x, oy - _d0y,  0, orat, ocl, aa);
+				draw_vertex_texture_color( nx,        ny,        .5, nrat, nc,  aa);
+				draw_vertex_texture_color( nx - _d1x, ny - _d1y,  0, nrat, ncl, aa);
 			}
 			
 			oa = na;

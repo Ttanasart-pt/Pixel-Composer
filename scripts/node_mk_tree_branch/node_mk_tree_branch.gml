@@ -155,7 +155,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				
 				var _baseDir = ori[2];
 				var _length  = random_range(_len[0], _len[1]) * (curve_length? curve_length.get(rat) : 1);
-				var _angle = _angT == 0? rotation_random_eval(_ang) : rotation_random_eval_uniform(_ang, j / (_amo - 1));
+				var _angle   = _angT == 0? rotation_random_eval(_ang) : rotation_random_eval_uniform(_ang, j / (_amo - 1));
 				
 				switch(_refl) {
 					case 1 : if(choose(0, 1))   _angle = _baseDir + angle_difference(_baseDir, _angle); break;

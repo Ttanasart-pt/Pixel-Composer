@@ -250,6 +250,15 @@
 	
 	    return 0;
 	}
+	
+	function array_2d_toString(arr) {
+		var _txt = "";
+		
+		for( var i = 0, n = array_length(arr); i < n; i++ )
+			_txt += $"{arr[i]},\n"
+		
+		return _txt;
+	}
 #endregion
 
 #region find

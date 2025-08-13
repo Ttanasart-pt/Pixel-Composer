@@ -5,7 +5,6 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput(32, nodeValueSeed());
 	
 	////- =Sprite
-	
 	newInput( 0, nodeValue_Surface("Particle Sprite"));
 	
 	newInput(22, nodeValue_Enum_Scroll("Surface Array", 0, [ "Random", "Order", "Animation", "Scale" ]))
@@ -16,7 +15,6 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput(26, nodeValue_Enum_Button( "On Animation End",     ANIM_END_ACTION.loop     )).setChoices([ "Loop", "Ping pong", "Destroy" ]);
 	
 	////- =Spawn
-	
 	newInput(27, nodeValue_Bool(        "Spawn",                true          ));
 	newInput(16, nodeValue_Enum_Button( "Spawn Type",           0             )).setChoices([ "Stream", "Burst", "Trigger" ]);
 	newInput(44, nodeValue_Trigger(     "Spawn"                               ));
@@ -33,15 +31,14 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput( 5, nodeValue_Range(       "Lifespan",            [20,30]        ));
 	
 	////- =Movement
-	
 	newInput(29, nodeValue_Bool(            "Directed From Center",       false              )).setTooltip("Make particle move away from the spawn center.");
 	newInput(53, nodeValue_Rotation_Range(  "Angle Range",                [0,360]            ));
+	newInput(64, nodeValue_Enum_Button(     "Direction Type",              0, [ "Random", "Uniform" ] ));
 	newInput( 6, nodeValue_Rotation_Random( "Initial Direction",          [0,45,135,0,0]     )); 
 	newInput(18, nodeValue_Range(           "Initial Speed",              [1,2]              ));
 	newInput(60, nodeValue_Curve(           "Base Speed Over Time",       CURVE_DEF_11       )).setTooltip("Speed may conflict with physics-based properties.");
 	
 	////- =Rotation
-	
 	newInput(15, nodeValue_Bool(            "Rotate by Direction",        false              )).setTooltip("Make the particle rotates to follow its movement.");
 	newInput( 8, nodeValue_Rotation_Random( "Initial Rotation",           [0,0,0,0,0]        ));
 	newInput( 9, nodeValue_Rotation_Random( "Rotational Speed",           [0,0,0,0,0]        ));
@@ -49,13 +46,11 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput(61, nodeValue_Float(           "Snap Rotation",              0                  ));
 	
 	////- =Scale
-	
 	newInput(10, nodeValue_Vec2_Range( "Initial Scale",        [1,1,1,1], { linked : true }  ));
 	newInput(17, nodeValue_Range(      "Initial Size",         [1,1],     { linked : true }  ));
 	newInput(11, nodeValue_Curve(      "Scale Over Time",      CURVE_DEF_11                  ));
 	
 	////- =Color
-	
 	newInput(12, nodeValue_Gradient( "Color Over Lifetime",    new gradientObject(ca_white)  ));
 	newInput(28, nodeValue_Gradient( "Random Blend",           new gradientObject(ca_white)  ));
 	newInput(50, nodeValue_Palette(  "Color by Index",         [ca_white]                    ));
@@ -64,13 +59,11 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput(56, nodeValue_Surface(  "Sample Surface"                                        ));
 	
 	////- =Path
-	
 	newInput(45, nodeValue_Bool(     "Follow Path",            false                         ));
 	newInput(46, nodeValue_PathNode( "Path"                                                  ));
 	newInput(47, nodeValue_Curve(    "Path Deviation",         CURVE_DEF_11                  ));
 	
 	////- =Physics
-	
 	newInput(57, nodeValue_Bool(     "Use Physics",            false                         ));
 	newInput(54, nodeValue_Range(    "Friction",               [0,0], { linked : true }      ));
 	newInput( 7, nodeValue_Range(    "Acceleration",           [0,0], { linked : true }      ));
@@ -82,7 +75,6 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput(36, nodeValue_Float(    "Turn Scale with Speed",  false                         ));
 	
 	////- =Ground
-	
 	newInput(37, nodeValue_Bool(        "Collide Ground",      false                         ));
 	newInput(63, nodeValue_Enum_Button( "Ground Offset Type",  0, [ "Relative", "Absolute" ] ));
 	newInput(38, nodeValue_Range(       "Ground Offset",       [0,0], { linked : true }      ));
@@ -90,7 +82,6 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput(40, nodeValue_Slider(      "Bounce Friction",     .1                            )).setTooltip("Apply horizontal friction once particle stop bouncing.");
 		
 	////- =Wiggles
-	
 	newInput(58, nodeValue_Bool(     "Use Wiggles",            false ));
 	newInput(20, nodeValue_Vec2(     "Direction Wiggle",       [0,0], { label: [ "Amplitude", "Period" ], linkable: false, per_line: true } ));
 	newInput(41, nodeValue_Vec2(     "Position Wiggle",        [0,0], { label: [ "Amplitude", "Period" ], linkable: false, per_line: true } ));
@@ -98,13 +89,12 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput(43, nodeValue_Vec2(     "Scale Wiggle",           [0,0], { label: [ "Amplitude", "Period" ], linkable: false, per_line: true } ));
 	
 	////- =Unused
-	
 	newInput(21, nodeValue_Bool(     "Loop",                   true ));
 	newInput(25, nodeValue_Int(      "Boundary Data",          []   )).setArrayDepth(1).setVisible(false, true);
 	newInput(31, nodeValue_Surface(  "Atlas",                  []   )).setArrayDepth(1);
 	newInput(48, nodeValue_Trigger(  "Reset Seed"                   ))
 	
-	// inputs 64
+	// inputs 65
 	
 	array_foreach(inputs, function(inp, i) /*=>*/ { if(i == 6 || i == 8) return; inp.rejectArray(); }, 1);
 	
@@ -144,7 +134,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	input_display_list = [ 32, 
 		["Sprite",	   false],	    0, dynaDraw_parameter, 22, 23, 49, 26,
 		["Spawn",		true],	   27, 16, 44,  1, 51,  2,  4,  3, 30, 55, 62, 24, __inspc(ui(6), true), 52,  5, 
-		["Movement",	true],     29, 53,  6, 18, 60, 
+		["Movement",	true],     29, 53, 64,  6, 18, 60, 
 		["Rotation",	true],	   15,  8,  9, 59, 61, 
 		["Scale",		true],	   10, 17, 11, 
 		["Color",		true],	   12, 28, 50, 13, 14, 56, 
@@ -214,6 +204,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var _spawn_period   = getInputData(52);
 		
 		var _life       	= getInputData( 5);
+		var _directionType  = getInputData(64);
 		var _direction  	= getInputData( 6);
 		var _directCenter	= getInputData(29);
 		var _directRange	= getInputData(53);
@@ -271,22 +262,20 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			part.reset();
 			
 			var _spr = _inSurf, _index = 0;
-			if(is_array(_inSurf)) {
-				switch(_arr_type) {
-					case 0 : 	
-						_index = irandom(array_length(_inSurf) - 1);
-						_spr = _inSurf[_index];						
-						break;
-						
-					case 1 : 
-						_index = safe_mod(spawn_index, array_length(_inSurf));
-						_spr = _inSurf[_index];
-						break;
-						
-					case 2 : case 3 : 
-						_spr = _inSurf;
-						break;
-				}
+			if(is_array(_inSurf)) switch(_arr_type) {
+				case 0 : 	
+					_index = irandom(array_length(_inSurf) - 1);
+					_spr = _inSurf[_index];						
+					break;
+					
+				case 1 : 
+					_index = safe_mod(spawn_index, array_length(_inSurf));
+					_spr = _inSurf[_index];
+					break;
+					
+				case 2 : case 3 : 
+					_spr = _inSurf;
+					break;
 			}
 			
 			var xx = 0;
@@ -337,8 +326,8 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			var _rot_spd  = rotation_random_eval(_rotation_speed);
 			var _rot_snap = _rotation_snap;
 			
-			var _dirRand  = rotation_random_eval(is_array(_direction[0])? _direction[i] : _direction);
-			var _dirr	  = _dirRand;
+			var _dirs     = is_array(_direction[0])? _direction[i] : _direction;
+			var _dirr	  = _directionType == 0? rotation_random_eval(_dirs) : rotation_random_eval_uniform(_dirs, i / (_amo - 1));
 			if(_directCenter) {
 				var _pointDir = point_direction(_spawn_area[0], _spawn_area[1], xx, yy);
 				    _pointDir = lerp(_directRange[0], _directRange[1], _pointDir / 360);
