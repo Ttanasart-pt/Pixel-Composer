@@ -322,6 +322,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     title_raw   = "";
     context_str = "Graph";
     icon        = THEME.panel_graph_icon;
+    pause_when_rendering = true;
     
     function setTitle() {
         title_raw = project.path == ""? "New project" : filename_name_only(project.path);

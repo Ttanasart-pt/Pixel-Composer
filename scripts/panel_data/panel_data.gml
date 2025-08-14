@@ -897,31 +897,39 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		}
 		
 		content_surface = surface_verify(content_surface, tw, th);
-			
-		surface_set_target(content_surface);
-			draw_clear(COLORS.panel_bg_clear);
-			
-			if(con) {
-				min_w = con.min_w;
-				min_h = con.min_h;
-				if(tw >= min_w && th >= min_h)
-					con.draw(self);
-					
-				else {
-					draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_sub);
-					draw_text(tw / 2, th / 2, "Panel too small for content");
-				}
-			} else {
-				draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_sub);
-				draw_text(tw / 2, th / 2, "No content");
-			}
-			
-			gpu_set_blendmode(bm_subtract);
-			draw_surface_safe(mask_surface);
-			gpu_set_blendmode(bm_normal);
-		surface_reset_target();
+		var _active = true;
+		if(con && con.pause_when_rendering && IS_RENDERING) _active = false; 
 		
-		draw_surface_safe(content_surface, tx, ty);
+		if(_active) {
+			surface_set_target(content_surface);
+				draw_clear(COLORS.panel_bg_clear);
+				
+				if(con) {
+					min_w = con.min_w;
+					min_h = con.min_h;
+					if(tw >= min_w && th >= min_h)
+						con.draw(self);
+						
+					else {
+						draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_sub);
+						draw_text(tw / 2, th / 2, "Panel too small for content");
+					}
+				} else {
+					draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_sub);
+					draw_text(tw / 2, th / 2, "No content");
+				}
+				
+				gpu_set_blendmode(bm_subtract);
+				draw_surface_safe(mask_surface);
+				gpu_set_blendmode(bm_normal);
+			surface_reset_target();
+			
+			draw_surface_safe(content_surface, tx, ty);
+			
+		} else {
+			draw_surface_ext_safe(content_surface, tx, ty, 1, 1, 0, c_white, .5);
+		}
+		
 		draw_sprite_stretched_ext(THEME.ui_panel, 1, tx + padding, ty + padding, _tw, _th, COLORS.panel_frame);
 		if(tab && tab_cover != noone) draw_sprite_bbox(THEME.ui_panel_tab, 3, tab_cover);
 		
@@ -1128,6 +1136,7 @@ function PanelContent() constructor {
 	showHeader  = true;
 	
 	title_actions = [];
+	pause_when_rendering = false;
 	
 	////- Size
 	

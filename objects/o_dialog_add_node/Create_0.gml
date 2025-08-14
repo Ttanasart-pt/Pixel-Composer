@@ -244,6 +244,7 @@ event_inherited();
 			
 			_new_node = _node.build(node_target_x, node_target_y, _context, _param, _skipc);
 			if(!_new_node) return;
+			if(_new_node.set_default) _new_node.resetDefault()
 			
 			if(category == NODE_CATEGORY && _node.show_in_recent) {
 				array_remove(global.RECENT_NODES, _node.nodeName);
