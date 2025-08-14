@@ -235,7 +235,7 @@ function Panel_Preview() : PanelContent() constructor {
         preview_node        = [ noone, noone ];
         preview_surfaces    = [ 0, 0 ];
         preview_junction    = noone;
-        tile_surface        = surface_create(1, 1);
+        tile_surface        = noone;
         
         preview_x           = 0;
         preview_x_to        = 0;

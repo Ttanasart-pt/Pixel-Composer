@@ -408,20 +408,20 @@
 		if(!skipCheck && !is_surface(surface))			return surface;
 		if(!is_numeric(width) || !is_numeric(height))	return surface;
 		if(width < 1 && height < 1)						return surface;
-	
+		
 		if(format != noone && format != surface_get_format(surface)) {
 			surface_free(surface);
 			return surface_create(width, height, format);
 		}
-	
+		
 		width  = surface_valid_size(width);
 		height = surface_valid_size(height);
-	
+		
 		var ww = surface_get_width(surface);
 		var hh = surface_get_height(surface);
-	
+		
 		if(ww == width && hh == height) return surface;
-	
+		
 		surface_free(surface);
 		surface = surface_create(width, height, format == noone? surface_rgba8unorm : format);
 		
@@ -683,12 +683,7 @@
 	#macro surface_free surface_free_safe
 	#macro __surface_free surface_free 
 
-	function surface_free_safe(surface) {
-		INLINE
-	
-		if(!surface_exists(surface)) return;
-		__surface_free(surface);
-	}
+	function surface_free_safe(surface) { INLINE if(surface_exists(surface)) __surface_free(surface); }
 
 #endregion =================================== OTHERS ===================================
 

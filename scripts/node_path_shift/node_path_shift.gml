@@ -46,11 +46,18 @@ function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		if(!is_path(curr_path)) return out;
 		
-		var _p0 = curr_path.getPointRatio(clamp(_rat - 0.001, 0, 0.999999), ind);
 		var _p  = curr_path.getPointRatio(_rat, ind);
-		var _p1 = curr_path.getPointRatio(clamp(_rat + 0.001, 0, 0.999999), ind);
+		var dir = 0;
 		
-		var dir = point_direction(_p0.x, _p0.y, _p1.x, _p1.y) + 90;
+		if(has(curr_path, "getPointTangent")) {
+			dir = curr_path.getPointTangent(_rat, ind) + 90;
+			
+		} else {
+			var _p0 = curr_path.getPointRatio(clamp(_rat - .001, 0, .999), ind);
+			var _p1 = curr_path.getPointRatio(clamp(_rat + .001, 0, .999), ind);
+			
+			dir = point_direction(_p0.x, _p0.y, _p1.x, _p1.y) + 90;
+		}
 		
 		out.x += _p.x + lengthdir_x(curr_shift, dir);
 		out.y += _p.y + lengthdir_y(curr_shift, dir);

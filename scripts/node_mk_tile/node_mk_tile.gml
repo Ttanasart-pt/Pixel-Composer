@@ -68,7 +68,7 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	__edge_uniform = array_create(4);
 	__edge_surface = array_create(4 * 7);
-	__edge_buffer  = [ surface_create(1, 1), surface_create(1, 1), surface_create(1, 1) ];
+	__edge_buffer  = [ noone, noone, noone ];
 	edge_surface   = [];
 	
 	attributes.show_tile_index = false;

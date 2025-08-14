@@ -60,7 +60,7 @@ function Panel_Presets(_node) : PanelContent() constructor {
 		MENU_ITEMS.preset_reset,
 	];
 	
-	thumbnail_mask = surface_create(1, 1);
+	thumbnail_mask = noone;
 	
 	function replacePreset(path) {
 		if(node == noone) return;

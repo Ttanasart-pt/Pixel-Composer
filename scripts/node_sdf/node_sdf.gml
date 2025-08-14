@@ -39,7 +39,7 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	attribute_surface_depth();
 	attribute_oversample();
 	
-	temp_surface = [ surface_create(1, 1), surface_create(1, 1) ];
+	temp_surface = [ noone, noone ];
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		var inSurf = _data[0];

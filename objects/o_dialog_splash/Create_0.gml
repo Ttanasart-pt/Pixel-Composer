@@ -16,7 +16,7 @@ event_inherited();
 	
 	recent_width = PREFERENCES.splash_expand_recent? ui(576) : ui(288);
 	
-	clip_surf = surface_create(1, 1);
+	clip_surf = noone;
 #endregion
 
 #region content
@@ -281,21 +281,9 @@ event_inherited();
 					var ox = sprite_get_xoffset(spr) * s;
 					var oy = sprite_get_yoffset(spr) * s;
 					
-					clip_surf = surface_verify(clip_surf, _spw, _sph);
-					
-					surface_set_target(clip_surf);
-						DRAW_CLEAR
-						BLEND_OVERRIDE	
-						if(_curr_tag == "Getting started") gpu_set_tex_filter(true);
-						draw_sprite_uniform(spr, 0, ox, oy, s);
-						gpu_set_tex_filter(false);
-						
-						gpu_set_blendmode_ext(bm_dest_colour, bm_zero);
-						draw_sprite_stretched(THEME.ui_panel_bg, 4, 0, 0, _spw, _sph);
-						BLEND_NORMAL
-					surface_reset_target();
-					
-					draw_surface(clip_surf, _sx, _sy);
+					gpu_set_tex_filter(_curr_tag == "Getting started");
+					draw_sprite_uniform(spr, 0, _sx + ox, _sy + oy, s);
+					gpu_set_tex_filter(false);
 					
 				} else {
 					var _sx = _boxx + grid_width / 2;
@@ -406,7 +394,7 @@ event_inherited();
 	attachment = ds_map_create();
 	contests   = [];
 	
-	grid_surface = surface_create(1, 1);
+	grid_surface = noone;
 	banner       = noone;
 	banner_alpha = 0;
 	

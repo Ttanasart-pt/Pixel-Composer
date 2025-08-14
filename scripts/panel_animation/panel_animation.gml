@@ -171,8 +171,8 @@ function Panel_Animation() : PanelContent() constructor {
     Panel_Animation_Dopesheet();
     
     #region ---- Timeline ----
-    	timeline_surface = surface_create_valid(timeline_w, timeline_h);
-	    timeline_mask    = surface_create_valid(timeline_w, timeline_h);
+    	timeline_surface = noone;
+	    timeline_mask    = noone;
 	    
         timeline_scubbing = false;
         timeline_scub_st  = 0;

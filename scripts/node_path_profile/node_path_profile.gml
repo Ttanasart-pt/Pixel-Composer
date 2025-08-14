@@ -39,7 +39,7 @@ function Node_Path_Profile(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	brush_prev = noone;
 	brush_next_dist = 0;
 	
-	temp_surface = [ surface_create(1, 1) ];
+	temp_surface = [ noone ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		InputDrawOverlay(inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params));

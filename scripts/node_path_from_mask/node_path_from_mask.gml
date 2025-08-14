@@ -14,7 +14,7 @@ function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	////- Nodes
 	
-	temp_surface = [ surface_create(1, 1) ];
+	temp_surface = [ noone ];
 	
 	anchors     = [];
 	lengthTotal = 0;

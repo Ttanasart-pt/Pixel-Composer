@@ -35,7 +35,7 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	array_push(attributeEditors, "Verlet solver");
 	array_push(attributeEditors, ["Iteration", function() /*=>*/ {return attributes.iteration}, textBox_Number(function(v) /*=>*/ {return setAttribute("iteration", v, true)})]);
 	
-	temp_surface = [ surface_create(1, 1), surface_create(1, 1) ];
+	temp_surface = [ noone, noone ];
 	
 	////- Data
 	

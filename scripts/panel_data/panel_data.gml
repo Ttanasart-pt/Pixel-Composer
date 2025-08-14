@@ -1124,7 +1124,7 @@ function PanelContent() constructor {
 	
 	in_dialog   = false;
 	
-	dragSurface = surface_create(1, 1);
+	dragSurface = noone;
 	showHeader  = true;
 	
 	title_actions = [];

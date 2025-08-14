@@ -14,7 +14,7 @@ function Panel_Capture_Project() : PanelContent() constructor {
 	gif_d  = 2;
 	gif_w  = 1;
 	gif_h  = 1;
-	gif_s  = surface_create(1, 1);
+	gif_s  = noone;
 	gif    = noone;
 	
 	gif_scal = .5;

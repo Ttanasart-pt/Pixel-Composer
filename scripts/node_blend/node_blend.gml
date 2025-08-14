@@ -87,7 +87,7 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	attribute_surface_depth();
 	
-	temp_surface	   = [ surface_create(1, 1), surface_create(1, 1) ];
+	temp_surface	   = [ noone, noone ];
 	blend_temp_surface = temp_surface[1];
 	
 	dragging = false;

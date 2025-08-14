@@ -40,7 +40,7 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		["Color blend", false], 6, 14, 7, 23, 
 	];
 	
-	temp_surface = [ surface_create(1, 1), surface_create(1, 1) ];
+	temp_surface = [ noone, noone ];
 	
 	attribute_surface_depth();
 	

@@ -29,6 +29,8 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	surface_blur_init();
 	attribute_surface_depth();
 		
+	temp_surface = [ noone ];
+		
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _surf = outputs[0].getValue();
 		
@@ -54,7 +56,6 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		return w_hovering;
 	}
 	
-		
 	static processData = function(_outSurf, _data, _array_index) {
 		var _surf   = _data[0];
 		var cl      = _data[1];
@@ -67,7 +68,7 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _lgh    = _data[12];
 		var _dim    = surface_get_dimension(_surf);
 		
-		var pass1 = surface_create_valid(_dim[0], _dim[1], attrDepth());	
+		temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1], attrDepth());	
 		var _shax = _shf[0]; 
 		var _shay = _shf[1];
 		
@@ -79,7 +80,7 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		inputs[ 3].setVisible(_posi == 0);
 		inputs[12].setVisible(_posi == 1);
 		
-		surface_set_shader(pass1, sh_outline_only);
+		surface_set_shader(temp_surface[0], sh_outline_only);
 			shader_set_f("dimension",   _dim);
 			shader_set_f("borderSize",  _border);
 			shader_set_f("borderColor", [ 1., 1., 1., 1. ]);
@@ -90,14 +91,12 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		surface_set_target(_outSurf);
 			DRAW_CLEAR
 			BLEND_OVERRIDE
-				var _s = surface_apply_gaussian(pass1, _size, false, cl, 2);
+				var _s = surface_apply_gaussian(temp_surface[0], _size, false, cl, 2);
 				draw_surface_ext_safe(_s, 0, 0, 1, 1, 0, cl, _stre * _color_get_alpha(cl));
 			BLEND_ALPHA_MULP
 				draw_surface_safe(_surf);
 			BLEND_NORMAL
 		surface_reset_target();
-		
-		surface_free(pass1);
 		
 		__process_mask_modifier(_data);
 		_outSurf = mask_apply(_data[0], _outSurf, _data[6], _data[7]);

@@ -304,7 +304,7 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		["Render",	  false], 3, 4, 
 	]
 	
-	temp_surface = [ surface_create(1, 1) ];
+	temp_surface = [ noone ];
 	seed         = seed_random();
 	
 	flares = [];

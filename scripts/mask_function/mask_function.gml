@@ -8,6 +8,8 @@ function __init_mask_modifier(_mask_index, _ind = undefined) {
 	__mask_mod_index = _ind;
 	__mask_invert    = false;
 	__mask_feather   = 0;
+	
+	__mask_surface   = noone;
 }
 
 function __process_mask_modifier(data) {
@@ -19,7 +21,7 @@ function mask_modify(mask, invert = false, feather = 0) {
 	if(!is_surface(mask)) return mask; 
 	if(!invert && feather == 0) return mask;
 	
-	if(!struct_has(self, "__temp_mask")) __temp_mask = surface_create(1, 1);
+	if(!struct_has(self, "__temp_mask")) __temp_mask = noone;
 	
 	__temp_mask = surface_verify(__temp_mask, surface_get_width_safe(mask), surface_get_height_safe(mask));
 	
@@ -39,15 +41,18 @@ function mask_modify(mask, invert = false, feather = 0) {
 function mask_apply(original, edited, mask, mix = 1) {
 	if(!is_surface(mask) && mix == 1) return edited;
 	
+	var _w = surface_get_width(edited);
+	var _h = surface_get_height(edited);
 	var _f = surface_get_format(edited);
-	var _s = surface_create_size(original, _f);
+	
+	__mask_surface = surface_verify(__mask_surface, _w, _h, _f);
 	
 	if(is_surface(mask) && __mask_feather > 0) {
 		surface_blur_init();
 		mask = surface_apply_gaussian(mask, __mask_feather, false, c_white, 1, noone);
 	}
 	
-	surface_set_shader(_s, sh_mask);
+	surface_set_shader(__mask_surface, sh_mask);
 		shader_set_surface("original", original);
 		shader_set_surface("edited",   edited);
 		shader_set_surface("mask",     mask);
@@ -59,18 +64,24 @@ function mask_apply(original, edited, mask, mix = 1) {
 		draw_empty();
 	surface_reset_shader();
 	
-	surface_free(edited);
-	return _s;
+	surface_set_shader(edited);
+		draw_surface(__mask_surface, 0, 0);
+	surface_reset_shader();
+	
+	return edited;
 }
 
 function channel_apply(original, edited, channel) {
 	if(channel == 0b1111) return edited;
 	if(!surface_exists(original)) return edited;
 	
+	var _w = surface_get_width(edited);
+	var _h = surface_get_height(edited);
 	var _f = surface_get_format(edited);
-	var _s = surface_create_size(original, _f);
 	
-	surface_set_target(_s);
+	__mask_surface = surface_verify(__mask_surface, _w, _h, _f);
+	
+	surface_set_target(__mask_surface);
 		DRAW_CLEAR
 		BLEND_ADD_ONE
 		
@@ -84,8 +95,11 @@ function channel_apply(original, edited, channel) {
 		BLEND_NORMAL
 	surface_reset_target();
 	
-	surface_free(edited);
-	return _s;
+	surface_set_shader(edited);
+		draw_surface(__mask_surface, 0, 0);
+	surface_reset_shader();
+	
+	return edited;
 }
 
 function mask_apply_empty(_surf, _mask) {

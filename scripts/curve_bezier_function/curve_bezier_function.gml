@@ -16,24 +16,25 @@
 //////////////////////////////////////////////////////////////////////////////////////////// DRAW ////////////////////////////////////////////////////////////////////////////////////////////
 
 function eval_curve_segment_t_position(_t, bbz) { 
+	static __temp_arr = [0,0,0,0, 0,0,0,0];
 	
 	var _t2 = _t * _t;
 	var _t3 = _t * _t * _t;
 	var _T  =  1 - _t;
 	var _T2 = _T * _T;
 	var _T3 = _T * _T * _T;
+
+    __temp_arr[0] =     _T3       * 0;
+	__temp_arr[1] = 3 * _T2 * _t  * bbz[1];
+	__temp_arr[2] = 3 * _T  * _t2 * bbz[3];
+	__temp_arr[3] =           _t3 * 1;
+	 
+	__temp_arr[4] =     _T3 *       bbz[0];
+	__temp_arr[5] = 3 * _T2 * _t  * bbz[2];
+	__temp_arr[6] = 3 * _T  * _t2 * bbz[4];
+	__temp_arr[7] =           _t3 * bbz[5];
 	
-	return [ 
-		           _T3       * 0 
-			 + 3 * _T2 * _t  * bbz[1] 
-			 + 3 * _T  * _t2 * bbz[3]
-			 +           _t3 * 1, 
-			 
-			       _T3 *       bbz[0]
-			 + 3 * _T2 * _t  * bbz[2] 
-			 + 3 * _T  * _t2 * bbz[4]
-			 +           _t3 * bbz[5]
-		];
+	return __temp_arr;
 }
 
 function draw_curve(x0, y0, _w, _h, _bz, minx = 0, maxx = 1, miny = 0, maxy = 1, _shift = 0, _scale = 1) {

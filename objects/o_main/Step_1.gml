@@ -78,11 +78,6 @@ _FILE_DROPPED     = false;
 	CURSOR_IS_LOCK = CURSOR_LOCK;
 	CURSOR_LOCK    = false;
 	
-	if(!is_surface(watcher_surface)) {
-		RENDER_ALL
-		watcher_surface = surface_create(1, 1);
-	}
-	
 	if(PEN_POOL <= 0) PEN_USE = false;
 	else              PEN_POOL--;
 	
@@ -166,9 +161,8 @@ _FILE_DROPPED     = false;
 					if(PROJECT.animator.frame_progress) {
 						__addon_preAnim();
 						
-						if(IS_FIRST_FRAME)
-							ResetAllNodesRender();
-							
+						// if(IS_FIRST_FRAME) ResetAllNodesRender();
+						
 						if(IS_CMD) Render(false);
 						else       Render(true);
 						

@@ -24,7 +24,7 @@ function Node_Normalize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	attribute_surface_depth();
 	
-	temp_surface = [ surface_create(1, 1), surface_create(1, 1), surface_create(1, 1), surface_create(1, 1) ];
+	temp_surface = [ noone, noone, noone, noone ];
 	
 	static step = function() {}
 	

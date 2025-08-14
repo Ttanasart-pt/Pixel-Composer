@@ -7,10 +7,10 @@ function Panel_Palette_Mixer(_selector = noone) : PanelContent() constructor {
 	w = ui(320);
 	h = ui(400);
 	
-	connect_surf       = surface_create(1, 1);
-	connect_blend_surf = surface_create(1, 1);
+	connect_surf       = noone;
+	connect_blend_surf = noone;
 	
-	content_surf = surface_create(1, 1);
+	content_surf = noone;
 	
 	var _def = load_palette_mixer();
 	palette_data = _def != noone? _def : {

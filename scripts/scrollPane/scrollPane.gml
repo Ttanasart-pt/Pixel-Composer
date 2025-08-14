@@ -8,7 +8,7 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 	h			= _h;
 	surface_w   = _w - ui(12);
 	surface_h   = _h;
-	surface     = surface_create_valid(surface_w, surface_h);
+	surface     = noone;
 	tool_w      = 0;
 	tool_h      = 0;
 	

@@ -50,7 +50,7 @@ function __PaletteColor(_color = c_black) constructor {
 	selector.discretize_pal = false;
 	
 	previous_palette  = c_black;
-	selection_surface = surface_create(1, 1);
+	selection_surface = noone;
 	
 	b_cancel = button(function() /*=>*/ { onApply(previous_palette); instance_destroy(); }).setIcon(THEME.undo, 0, COLORS._main_icon)
 	                                                                           .setTooltip(__txtx("dialog_revert_and_exit", "Revert and exit"));

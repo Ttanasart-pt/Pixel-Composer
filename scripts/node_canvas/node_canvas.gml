@@ -96,7 +96,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		menuItem(__txt("Delete"),    function() /*=>*/ { removeFrame(frame_selecting); }, THEME.cross),
 	];
 	
-	frame_renderer_content = surface_create(1, 1);
+	frame_renderer_content = noone;
 	frame_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus, _panel = noone, _full = true, _fx = frame_renderer_x) {
 		var _h    = _full? 64 : 48;
 		var _anim = getInputData(12);

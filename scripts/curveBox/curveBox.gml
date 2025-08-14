@@ -724,7 +724,7 @@ function curveBox(_onModify) : widget() constructor {
 		tby -= tbh;
 		tb_range.setFont(f_p3);
 		tb_range.setFocusHover(active, hover);
-		tb_range.draw(_x,       tby, _w, tbh, [_miny, _maxy], range_display_data, _m);
+		tb_range.draw(_x, tby, _w, tbh, [_miny, _maxy], range_display_data, _m);
 		tby -= ui(4);
 		
 		resetFocus();

@@ -316,7 +316,6 @@ function connectionParameter() constructor {
 } 
 
 	////- Graph
-    
 
 function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     title       = __txt("Graph");
@@ -477,13 +476,13 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         add_node_draw_y      = 0;
         
         draw_refresh           = true;
-        node_surface           = surface_create(1, 1);
+        node_surface           = noone;
         node_surface_update    = true;
         
         connection_aa          = 2;
-        connection_surface     = surface_create(1, 1);
-        connection_surface_cc  = surface_create(1, 1);
-        connection_surface_aa  = surface_create(1, 1);
+        connection_surface     = noone;
+        connection_surface_cc  = noone;
+        connection_surface_aa  = noone;
         
         connection_draw_mouse  = noone;
         connection_draw_target = noone;

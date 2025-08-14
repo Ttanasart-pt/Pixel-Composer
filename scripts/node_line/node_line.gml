@@ -230,7 +230,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				_dtype = 0; 
 		#endregion
 		
-		#region prep data
+		#region line data
 			random_set_seed(_seed);
 			
 			if(IS_FIRST_FRAME || inputs[11].is_anim)

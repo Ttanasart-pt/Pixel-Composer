@@ -26,7 +26,7 @@ function Node_Surface_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		["Render",    false], 4, 9, 
 	];
 	
-	temp_surface = [ surface_create(1, 1), surface_create(1, 1), surface_create(1, 1) ];
+	temp_surface = [ noone, noone, noone ];
 	
 	static matchTemplate = function(_index, _surf, _base, _target, _cthr, _pthr, _fst) {
 		

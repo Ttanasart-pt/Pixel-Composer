@@ -462,6 +462,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	#endregion
 	
 	#region ---- editor ----
+		
 		line_hover   = -1;
 		weight_hover = -1;
 		
@@ -1211,11 +1212,12 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					draw_line(_ax0, _ay0, xx, yy);
 					draw_line(_ax1, _ay1, xx, yy);
 					
-					draw_circle_ui(_ax0, _ay0, 4, 0, COLORS._main_accent);
-					draw_circle_ui(_ax1, _ay1, 4, 0, COLORS._main_accent);
+					draw_circle(_ax0, _ay0, ui(3), false);
+					draw_circle(_ax1, _ay1, ui(3), false);
 				}
 				
 				var _anHov = 0;
+				draw_set_color(COLORS._main_accent);
 				
 				if(attributes.display_name) {
 					draw_set_text(f_p1, fa_left, fa_bottom, COLORS._main_accent);
@@ -1231,12 +1233,12 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					hover_type   = 0;
 					
 				} else if(cont && hover && point_in_circle(_mx, _my, _ax0, _ay0, 8)) {
-					draw_circle_ui(_ax0, _ay0, ui(6), 0, COLORS._main_accent);
+					draw_circle(_ax0, _ay0, ui(4), false);
 					anchor_hover = i;
 					hover_type   = 1;
 					
 				} else if(cont && hover && point_in_circle(_mx, _my, _ax1, _ay1, 8)) {
-					draw_circle_ui(_ax1, _ay1, ui(6), 0, COLORS._main_accent);
+					draw_circle(_ax1, _ay1, ui(4), false);
 					anchor_hover =  i;
 					hover_type   = -1;
 				}
@@ -1812,12 +1814,12 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			surface_reset_shader();
 		}
 		
-		static getPointDistance = function(_dist, _ind = 0, out = undefined) {
+		static getPointDistance = function(_dis, _ind = 0, out = undefined) {
 			if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
 			if(array_empty(lengths)) return out;
 			
 			out.weight = 1;
-			var _cKey  = _dist;
+			var _cKey  = _dis;
 			
 			if(struct_has(cached_pos, _cKey)) {
 				var _cachep = cached_pos[$ _cKey];
@@ -1827,21 +1829,22 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				return out;
 			}
 			
-			if(loop) _dist = safe_mod(_dist, lengthTotal, MOD_NEG.wrap);
+			if(loop) _dis = safe_mod(_dis, lengthTotal, MOD_NEG.wrap);
 			
 			var ansize = array_length(anchors);
 			if(ansize == 0) return out;
 			
 			var _a0, _a1;
+			var i = 0;
 			
-			for(var i = 0; i < ansize; i++) {
-				var _l  = array_safe_get(lengths,    i, 0, ARRAY_OVERFLOW.clamp);
-				if(_dist > _l) { _dist -= _l; continue; }
+			repeat(ansize) {
+				var _l = array_safe_get(lengths, i, 0, ARRAY_OVERFLOW.clamp);
+				if(_dis > _l) { _dis -= _l; i++; continue; }
 				
-				_a0 = anchors[(i + 0) % ansize];
+				_a0 = anchors[i];
 				_a1 = anchors[(i + 1) % ansize];
 				
-				var _t   = _l == 0? 0 : _dist / _l;
+				var _t   = _l == 0? 0 : _dis / _l;
 				var _rat = lerp(lengthRatio[i], lengthRatio[i + 1], _t) * 100;
 				var _nw  = array_get_decimal(weightRatio, _rat);
 				
@@ -1866,6 +1869,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			var pix = (loop? frac(_rat) : clamp(_rat, 0, 0.99)) * lengthTotal;
 			return getPointDistance(pix, _ind, out);
 		}
+		
 		static getPointSegment  = function(_rat) {
 			if(array_empty(lengths)) return new __vec2P();
 			
@@ -1904,7 +1908,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var _typ = getInputData(2);
 		var _rnd = getInputData(3);
 		
-		var _pth = outputs[0].getValue();
+		var _pth = outputs[1].getValue();
 		if(!is(_pth, _pathObject)) _pth = new _pathObject(self);
 		
 		var _a = [];
@@ -1926,6 +1930,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		_pth.loop    = _lop;
 		_pth.anchors = _a;
 		_pth.weights = attributes.weight;
+		_pth.cached_pos  = {};
 		
 		_pth.updateLength();
 		_pth.updateThumbnail(_path_preview_surface, path_preview_surface);
@@ -1950,6 +1955,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 			outputs[0].setValue(_out.toArray());
 		}
+		
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

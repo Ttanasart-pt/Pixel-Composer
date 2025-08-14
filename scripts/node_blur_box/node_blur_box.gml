@@ -29,7 +29,7 @@ function Node_Blur_Box(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	temp_surface = [ surface_create(1, 1) ];
+	temp_surface = [ noone ];
 	
 	attribute_surface_depth();
 	attribute_oversample();

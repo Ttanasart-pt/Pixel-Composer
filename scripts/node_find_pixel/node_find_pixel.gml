@@ -22,7 +22,7 @@ function Node_Find_Pixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		["Alpha",   true, 4], 5, 
 	]
 	
-	temp_surface = [ surface_create(1, 1) ];
+	temp_surface = [ noone ];
 	
 	static getPreviewValues = function() { return getInputData(0); }
 	

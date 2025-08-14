@@ -61,8 +61,6 @@ function Node_Zigzag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		inputs[10].setVisible(_bnd != 1);
 		
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
-		
 		surface_set_shader(_outSurf, sh_zigzag);
 			shader_set_f("dimension",   _dim);
 			shader_set_f("position",   _pos[0] / _dim[0], _pos[1] / _dim[1]);

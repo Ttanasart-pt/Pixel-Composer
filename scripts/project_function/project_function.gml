@@ -30,6 +30,8 @@ function closeProject(project) {
 	project.cleanup();
 }
 
+global.project_get_thumbnail_surface = surface_create(64, 64);
+
 function project_get_thumbnail(_path) {
 	if(!file_exists_empty(_path)) return undefined;
 	
@@ -48,12 +50,10 @@ function project_get_thumbnail(_path) {
 	buffer_copy(rawBuff, buffer_tell(rawBuff), thumbLen, thumbBuf, 0);
 	thumbBuf = buffer_decompress(thumbBuf);
 	
-	var thumbSurf = surface_create(64, 64);
-	buffer_set_surface(thumbBuf, thumbSurf, 0);
+	global.project_get_thumbnail_surface = surface_verify(global.project_get_thumbnail_surface, 64, 64);
+	buffer_set_surface(thumbBuf, global.project_get_thumbnail_surface, 0);
 	
-	var _spr = sprite_create_from_surface(thumbSurf, 0, 0, 64, 64, false, false, 32, 32);
-	surface_free(thumbSurf);
-	
+	var _spr = sprite_create_from_surface(global.project_get_thumbnail_surface, 0, 0, 64, 64, false, false, 32, 32);
 	return _spr;
 }
 

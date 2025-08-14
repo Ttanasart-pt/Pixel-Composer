@@ -7,6 +7,8 @@ function Path(_node) constructor {
 	boundary    = new BoundingBox();
 	loop		= false;
 	
+	__temp_p    = new __vec2P();
+	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		if(!is(node, Node)) return false;
 		
@@ -21,11 +23,23 @@ function Path(_node) constructor {
 	static getLineCount     = function() /*=>*/ {return 1};
 	static getTangentRatio  = function(_rat) /*=>*/ {return 0};
 	
-	static getPointDistance = function(_seg, _ind = 0, out = undefined) { return new __vec2P(0, 0); }
+	static getPointDistance = function(_dis, _ind = 0, out = undefined) { return new __vec2P(0, 0); }
+	static getPointRatio    = function(_rat, _ind = 0, out = undefined) { return getPointDistance(frac(_rat) * lengthTotal, _ind, out); }
 	
-	static getPointRatio    = function(_rat, _ind = 0, out = undefined) { 
-		var pix = frac(_rat) * lengthTotal;
-		return getPointDistance(pix, _ind, out);
+	static getPointTangent  = function(_rat, _ind = 0) {
+		var _r0 = clamp(clamp(_rat, .001, 0.999) - .001, 0, .999);
+		var _r2 = clamp(clamp(_rat, .001, 0.999) + .001, 0, .999);
+		
+		getPointRatio(_r0, _ind, __temp_p);
+		var _p0x = __temp_p.x;
+		var _p0y = __temp_p.y;
+		
+		getPointRatio(_r2, _ind, __temp_p);
+		var _p1x = __temp_p.x;
+		var _p1y = __temp_p.y;
+		
+		var _dir = point_direction(_p0x, _p0y, _p1x, _p1y);
+		return _dir;
 	}
 }
 

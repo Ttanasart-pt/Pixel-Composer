@@ -688,7 +688,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			new NodeTool( "Scale Selection",  THEME.tools_2d_scale  ).setVisible(false).setToolObject(new armature_bind_tool_scale(self)),
 		]
 		
-		temp_surface = [ surface_create(1, 1), surface_create(1, 1), surface_create(1, 1) ];
+		temp_surface = [ noone, noone, noone ];
 		blend_temp_surface = temp_surface[2];
 		
 		surf_dragging = -1;

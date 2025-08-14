@@ -30,11 +30,11 @@ function Panel_Animation_Dopesheet() {
 	    
 	    dopesheet_w            = w - tool_width;
         dopesheet_h            = h - timeline_h - ui(20);
-        dopesheet_surface      = surface_create_valid(dopesheet_w, 1);
-        dopesheet_mask         = surface_create_valid(dopesheet_w, 1);
+        dopesheet_surface      = noone;
+        dopesheet_mask         = noone;
         
-        dopesheet_name_mask    = surface_create_valid(tool_width, 1);
-        dopesheet_name_surface = surface_create_valid(tool_width, 1);
+        dopesheet_name_mask    = noone;
+        dopesheet_name_surface = noone;
     #endregion
 	
 	#region ---- Timeline ----

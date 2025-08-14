@@ -15,11 +15,12 @@ function Node_Average(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		["Surfaces", false], 0, 1, 2, 5, 6, 
 	]
 	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
-	
-	newOutput(1, nodeValue_Output("Color", VALUE_TYPE.color, c_black));
+	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
+	newOutput(1, nodeValue_Output( "Color",       VALUE_TYPE.color, c_black ));
 	
 	attribute_surface_depth();
+	
+	temp_surface = [0,0]
 	
 	static processData = function(_outData, _data, _array_index) {
 		var inSurf   = _data[0];
@@ -32,27 +33,26 @@ function Node_Average(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var cc;
 		
 		if(side / 2 >= 1) {
-			var _Surf = [ surface_create_valid(side, side), surface_create_valid(side, side) ];
+			temp_surface[0] = surface_verify(temp_surface[0], side, side);
+			temp_surface[1] = surface_verify(temp_surface[1], side, side);
 			var _ind = 1;
 			
-			surface_set_shader(_Surf[0], noone);
+			surface_set_shader(temp_surface[0], noone);
 				draw_surface_stretched_safe(inSurf, 0, 0, side, side);
 			surface_reset_shader();
 			
 			for( var i = 0; i <= lop; i++ ) {
-				surface_set_shader(_Surf[_ind], sh_average);
+				surface_set_shader(temp_surface[_ind], sh_average);
 					shader_set_f("dimension", side);
-					draw_surface_safe(_Surf[!_ind]);
+					draw_surface_safe(temp_surface[!_ind]);
 				surface_reset_shader();
 				
 				_ind = !_ind;
 				side /= 2;
 			}
 			
-			cc = surface_get_pixel(_Surf[!_ind], 0, 0);
+			cc = surface_get_pixel(temp_surface[!_ind], 0, 0);
 			
-			surface_free(_Surf[0]);
-			surface_free(_Surf[1]);
 		} else 
 			cc = surface_get_pixel(inSurf, 0, 0);
 		

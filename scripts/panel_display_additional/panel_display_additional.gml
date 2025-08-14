@@ -7,7 +7,7 @@ function panelDisplayInit() {
 	focusing_prog  = 0;
 	focusing_draw  = [ 0, 0, WIN_W, WIN_H ];
 	focusing_targ  = [ 0, 0, WIN_W, WIN_H ];
-	focusing_surface = surface_create(1, 1);
+	focusing_surface = noone;
 }
 
 function panelDisplayDraw() {

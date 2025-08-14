@@ -30,8 +30,8 @@ function Panel_Color() : PanelContent() constructor {
 	current_color  = c_white;
 	discretize_pal = false;
 	
-	content_surface = surface_create(1, 1);
-	side_surface    = surface_create(1, 1);
+	content_surface = noone;
+	side_surface    = noone;
 	
 	static setColor = function(color) {
 		CURRENT_COLOR = color;

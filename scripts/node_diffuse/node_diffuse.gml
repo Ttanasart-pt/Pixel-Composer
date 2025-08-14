@@ -32,7 +32,7 @@ function Node_Diffuse(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		["Rendering",	false], 5, 
 	]
 	
-	temp_surface = [ surface_create(1, 1), surface_create(1, 1) ];
+	temp_surface = [ noone, noone ];
 	
 	static update = function() {
 		#region data

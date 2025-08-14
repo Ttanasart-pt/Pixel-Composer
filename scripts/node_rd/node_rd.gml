@@ -34,7 +34,7 @@ function Node_RD(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	attribute_surface_depth();
 		
-	temp_surface = [ surface_create(1, 1), surface_create(1, 1) ];
+	temp_surface = [ noone, noone ];
 	
 	static update = function() {
 		var _surf = getInputData(0);
