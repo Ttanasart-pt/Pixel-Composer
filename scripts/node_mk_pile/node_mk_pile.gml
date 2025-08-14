@@ -7,7 +7,7 @@ function Node_MK_Pile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	////- =Object
 	newInput( 0, nodeValue_Surface(     "Surface In"    ));
-	newInput( 3, nodeValue_Enum_Scroll( "Shape",      0, [ "Cylinder", "Cube" ] ));
+	newInput( 3, nodeValue_Enum_Scroll( "Pattern",    0, [ "Auto", "Manual" ] ));
 	newInput( 4, nodeValue_Float( "Depth",            2 ));
 	newInput( 9, nodeValue_Float( "Depth Adjustment", 0 ));
 	
@@ -46,7 +46,7 @@ function Node_MK_Pile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _seed = _data[2];
 			
 			var _surf = _data[ 0];
-			var _shap = _data[ 3];
+			var _patt = _data[ 3];
 			var _dept = _data[ 4];
 			var _depj = _data[ 9];
 			

@@ -2,28 +2,29 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	name = "2D Extrude";
 	
 	////- =Surface
-	newInput(0, nodeValue_Surface(  "Surface In"));
+	newInput( 0, nodeValue_Surface(  "Surface In"));
 	
 	////- =Extrude
-	newInput(1, nodeValue_Rotation( "Angle",     0 ));
-	newInput(2, nodeValue_Float(    "Distance", .5 )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput(7, nodeValue_Bool(     "Wrap",      false ));
+	newInput( 1, nodeValue_Rotation( "Angle",     0 ));
+	newInput( 2, nodeValue_Float(    "Distance", .5 )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput( 8, nodeValue_Slider(    "Shift",    0, [-1,1,.01] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput( 7, nodeValue_Bool(     "Wrap",      false ));
 	
 	////- =Render
-	newInput(3, nodeValue_Gradient(    "Color",       new gradientObject(ca_white)));
-	newInput(4, nodeValue_Enum_Scroll( "Clone Color", 0, [ "None", "Multiply", "Additive" ]));
+	newInput( 3, nodeValue_Gradient(    "Color",       new gradientObject(ca_white)));
+	newInput( 4, nodeValue_Enum_Scroll( "Clone Color", 0, [ "None", "Multiply", "Additive" ]));
 	
 	////- =Highlight
-	newInput(5, nodeValue_Bool(     "Highlight",           false));
-	newInput(6, nodeValue_Color(    "Highlight Color",     ca_white));
-	// input 8
+	newInput( 5, nodeValue_Bool(     "Highlight",           false));
+	newInput( 6, nodeValue_Color(    "Highlight Color",     ca_white));
+	// input 9
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	newOutput(1, nodeValue_Output("Depth",       VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
 	    ["Surface",    false   ], 0, 
-	    ["Extrude",    false   ], 1, 2, 7, 
+	    ["Extrude",    false   ], 1, 2, 8, 7, 
 	    ["Render",     false   ], 3, 4, 
 	    ["Highlight",  false, 5], 6, 
     ];
@@ -63,6 +64,11 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			var _dir = point_direction( _px, _py, _mx, _my);
 			var _dis = point_distance(  _px, _py, _mx, _my) / _s;
 			
+			if(key_mod_press(CTRL)) {
+				_dir = value_snap(_dir, 15);
+				_dis = round(_dis);
+			}
+			
 			var h1 = inputs[1].setValue(_dir);
 			var h2 = inputs[2].setValue(_dis);
 			
@@ -84,24 +90,28 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	}
 	
 	static processData = function(_outData, _data, _array_index = 0) { 
-	    var _surf = _data[0];
-	    
-	    var _ang  = _data[1];
-	    var _dist = _data[2];
-	    var _wrap = _data[7];
-	    
-	    var _grad = _data[3];
-	    var _clne = _data[4];
-	    
-	    var _high = _data[5];
-	    var _hgcl = _data[6];
-	    
-	    var _dim  = surface_get_dimension(_surf);
+		#region data
+		    var _surf = _data[0];
+		    
+		    var _ang  = _data[1];
+		    var _dist = _data[2];
+		    var _shft = _data[8];
+		    var _wrap = _data[7];
+		    
+		    var _grad = _data[3];
+		    var _clne = _data[4];
+		    
+		    var _high = _data[5];
+		    var _hgcl = _data[6];
+		    
+		    var _dim  = surface_get_dimension(_surf);
+	    #endregion
 	    
 	    temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1], surface_r16float);
 	    
 	    surface_set_shader(temp_surface[0], sh_2d_extrude);
 	        shader_set_dim("dimension",  _surf);
+			shader_set_f("shift",        _shft / _dim[0]);
 			shader_set_f("angle",        degtorad(_ang));
 			shader_set_f("extDistance",  _dist);
 			shader_set_i("wrap",         _wrap);
@@ -114,6 +124,7 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	    	shader_set_dim("dimension",  _surf);
 	    	shader_set_f("angle",        degtorad(_ang));
 			shader_set_f("extDistance",  _dist);
+			shader_set_f("shift",        _shft / _dim[0]);
 			shader_set_i("wrap",         _wrap);
 			
 			_grad.shader_submit();

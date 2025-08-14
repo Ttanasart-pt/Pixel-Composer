@@ -6,6 +6,7 @@ uniform vec2  dimension;
 
 uniform float angle;
 uniform float extDistance;
+uniform float shift;
 
 uniform int   cloneColor;
 uniform int   wrap;
@@ -146,12 +147,14 @@ uniform vec4  highlightColor;
 #endregion //////////////////////////////////// GRADIENT ////////////////////////////////////
 
 void main() {
-	vec2 tx = 1. / dimension;
+	vec2 tx  = 1. / dimension;
+	vec2 shf = vec2(cos(angle), -sin(angle)) * tx;
+	vec2 vt  = v_vTexcoord - shift * shf * extDistance;
 	
-	vec4  baseColor = texture2D(gm_BaseTexture, v_vTexcoord);
+	vec4  baseColor = texture2D(gm_BaseTexture, vt);
 	vec4  extData   = texture2D(extrudeMap, v_vTexcoord);
 	float extrude   = extData.r;
-	vec2  shf       = vec2(cos(angle), -sin(angle));
+	
 	gl_FragData[0]  = baseColor;
 	gl_FragData[1]  = vec4(vec3(extrude == -1.? 0. : 1.), 1.);
 	
@@ -176,11 +179,12 @@ void main() {
 	
 	if(cloneColor == 0) return;
 	
-	vec2 pos = v_vTexcoord - shf * tx * extrude;
+	vec2 pos = vt - shf * extrude;
 	if(wrap == 1) pos = fract(fract(pos) + 1.);
 	
 	vec4 cColor = texture2D(gm_BaseTexture, pos);
-	
 	if(cloneColor == 1) gl_FragData[0] *= cColor;
 	if(cloneColor == 2) gl_FragData[0] += cColor;
+	
+	// gl_FragData[0] = vec4(pos, 0., 1.);
 }
