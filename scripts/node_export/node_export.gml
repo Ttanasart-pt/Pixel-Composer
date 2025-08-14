@@ -1,6 +1,5 @@
 function Node_create_Export(_x, _y, _group = noone) {
-	var node = new Node_Export(_x, _y, _group);
-	node.skipDefault();
+	var node = new Node_Export(_x, _y, _group).skipDefault();
 	
 	var path = "";
 	if(NODE_NEW_MANUAL) {
@@ -612,6 +611,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var user = getInputData(15);
 		var scal = getInputData(19);
 		
+		if(!user) rang = [ FIRST_FRAME + 1, LAST_FRAME + 1];
+		
 		if(form >= 1) {
 			var rng_s  = rang[0] - 1;
 			var rng_e  = rang[1] - 1;
@@ -861,7 +862,6 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		inputs[12].editWidget.minn = FIRST_FRAME + 1;
 		inputs[12].editWidget.maxx = LAST_FRAME + 1;
-		if(!user) inputs[12].setValueDirect([ FIRST_FRAME + 1, LAST_FRAME + 1], noone, false, 0, false);
 		
 		inputs[14].setVisible(anim >  0);
 		
@@ -953,6 +953,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				render_process_batch = [];
 			}
 		}
+	
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {

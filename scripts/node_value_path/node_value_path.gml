@@ -13,7 +13,7 @@ function __NodeValue_Path(_name, _node, _value, _tooltip = "") : NodeValue(_name
 		
 		if(is_array(val)) val = array_map(val, function(v) /*=>*/ {return valueProcess(v)});
 		else              val = valueProcess(val);
-			
+		
 		return val;
 	}
 	
