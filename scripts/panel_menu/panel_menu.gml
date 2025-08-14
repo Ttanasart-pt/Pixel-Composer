@@ -310,7 +310,7 @@ function Panel_Menu() : PanelContent() constructor {
             -1,
             menuItem(__txt("Collection Manager"),                                 function() /*=>*/ {return dialogPanelCall(new Panel_Collection_Manager())}),
             menuItem(__txt("Nodes Manager"),                                      function() /*=>*/ {return dialogPanelCall(new Panel_Nodes_Manager())}),
-            menuItem(__txtx("panel_menu_test_gen_guide", "Generate Node Locale"), function() /*=>*/ {return dialogPanelCall(new Panel_Node_Data_Gen())}),
+            // menuItem(__txtx("panel_menu_test_gen_guide", "Generate Node Locale"), () => dialogPanelCall(new Panel_Node_Data_Gen())),
             -1,
             menuItem(__txtx("panel_menu_test_warning", "Display Warning"),        function() /*=>*/ {return noti_warning("Error message")}),
             menuItem(__txtx("panel_menu_test_error", "Display Error"),            function() /*=>*/ {return noti_error("Error message")}),

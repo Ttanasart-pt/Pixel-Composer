@@ -68,15 +68,22 @@ function cornerBox(_onModify, _unit = noone) : widget() constructor {
 		var _bs = min(_h, ui(32));
 		
 		if((_w - _bs) / 2 > ui(64)) {
-			b_link.setFocusHover(active, hover);
 			b_link.icon_index = linked;
 			b_link.icon_blend = linked? COLORS._main_accent : COLORS._main_icon;
 			b_link.tooltip = linked? __txt("Unlink values") : __txt("Link values");
 		
 			var _bx = _x;
 			var _by = _y + _h / 2 - _bs / 2;
+			b_link.setFocusHover(active, hover);
 			b_link.draw(_bx, _by, _bs, _bs, _m, THEME.button_hide_fill);
-		
+			
+			if(unit != noone) {
+				_by += _h + ui(4);
+				
+				unit.triggerButton.setFocusHover(active, hover);
+				unit.draw(_bx, _by, _bs, _bs, _m, THEME.button_hide_fill);
+			}
+			
 			_w -= _bs + ui(4);
 			_x += _bs + ui(4);
 		}

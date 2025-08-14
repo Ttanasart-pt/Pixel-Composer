@@ -32,7 +32,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	newInput( 6, nodeValue_Float(          "Factor",         4             ));
 	newInput( 7, nodeValue_Int(            "Sides",          4             ));
 	newInput( 8, nodeValue_Float(          "Inner Radius",  .5             ));
-	newInput( 9, nodeValue_Corner(         "Corner Radius", [0,0,0,0]      ));
+	newInput( 9, nodeValue_Corner(         "Corner Radius", [0,0,0,0]      )).setUnitRef(function() /*=>*/ {return DEF_SURF}, VALUE_UNIT.constant);
 	newInput(12, nodeValue_Rotation(       "Angle",          0             ));
 	newInput(10, nodeValue_Float(          "Revolution",     4             ));
 	newInput(11, nodeValue_Float(          "Pitch",         .2             )).setCurvable(13, CURVE_DEF_11);

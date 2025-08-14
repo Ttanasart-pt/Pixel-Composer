@@ -1414,49 +1414,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(connect_type == CONNECT_TYPE.output) return val;
 		
-		if(typ == VALUE_TYPE.surface && (type == VALUE_TYPE.integer || type == VALUE_TYPE.float)) { // Dimension conversion
-			if(is_array(val)) {
-				var eqSize = true;
-				var sArr = [];
-				var _osZ = 0;
-				
-				for( var i = 0, n = array_length(val); i < n; i++ ) {
-					if(!is_surface(val[i])) continue;
-					
-					var surfSz = surface_get_dimension(val[i]);
-					array_push(sArr, surfSz);
-					
-					if(i && !array_equals(surfSz, _osZ))
-						eqSize = false;
-					
-					_osZ = surfSz;
-				}
-				
-				if(eqSize) return _osZ;
-				return sArr;
-			} else if (is_surface(val)) 
-				return [ surface_get_width_safe(val), surface_get_height_safe(val) ];
-			return [ 1, 1 ];
-			
-		}
-		
-		if(type == VALUE_TYPE.d3Material) {
-			if(nod == self) {
-				return def_val;
-				
-			} else if(typ == VALUE_TYPE.surface) {
-				if(!is_array(val)) return def_val.clone(val);
-				
-				var _val = array_create(array_length(val));
-				for( var i = 0, n = array_length(val); i < n; i++ ) 
-					_val[i] = def_val.clone(val[i]);
-				
-				return _val;
-			}
-		}
-		
-		if(PROJECT.attributes.strict) return val;
-		
 		val = arrayBalance(val);
 		
 		if(isArray(val) && array_length(val) < 1024) { // Process data

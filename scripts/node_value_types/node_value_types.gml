@@ -569,6 +569,7 @@ function nodeValueUnit(__nodeValue) constructor {
 	reference = noone;
 	modeTrigger = function() /*=>*/ { 
 		mode = !mode; 
+		
 		_nodeValue.cache_value[0] = false;
 		_nodeValue.unitConvert(mode);
 		_nodeValue.node.doUpdate();
@@ -589,7 +590,7 @@ function nodeValueUnit(__nodeValue) constructor {
 	}
 	
 	static draw = function(_x, _y, _w, _h, _m) {
-		triggerButton.icon_index = mode;
+		triggerButton.icon_index    = mode;
 		triggerButton.tooltip.index = mode;
 		triggerButton.draw(_x, _y, _w, _h, _m, THEME.button_hide_fill);
 	}
@@ -664,6 +665,13 @@ function nodeValueUnit(__nodeValue) constructor {
 						_val[i] = is_real(value[i])? value[i] * base[i % 2] : value[i];
 						
 					_val[4] = array_safe_get(value, 4);
+					return _val;
+					
+				case VALUE_DISPLAY.corner :
+					_val[0] = is_real(value[0])? value[0] * base[0] : value[0];
+					_val[1] = is_real(value[1])? value[1] * base[1] : value[1];
+					_val[2] = is_real(value[2])? value[2] * base[0] : value[2];
+					_val[3] = is_real(value[3])? value[3] * base[1] : value[3];
 					return _val;
 			}
 			
