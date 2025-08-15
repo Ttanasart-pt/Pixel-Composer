@@ -4,12 +4,12 @@ function Node_3D_Mesh_Vertex_Points(_x, _y, _group = noone) : Node_Processor(_x,
 	is_3D = NODE_3D.polygon;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_D3Mesh("Mesh", noone)).setVisible(true, true);
+	newInput(0, nodeValue_D3Mesh( "Mesh", noone )).setVisible(true, true);
+	newInput(1, nodeValue_Bool(   "Apply Transform", false ));
 	
 	newOutput(0, nodeValue_Output("Points", VALUE_TYPE.float, [ 0, 0, 0 ])).setDisplay(VALUE_DISPLAY.vector).setArrayDepth(1);
 	
-	input_display_list = [ 0,
-	];
+	input_display_list = [ 0, 1 ];
 	
 	////- Draw
 	
@@ -53,6 +53,7 @@ function Node_3D_Mesh_Vertex_Points(_x, _y, _group = noone) : Node_Processor(_x,
 	
 	static processData = function(_outData, _data, _array_index) {
 		var _mesh = _data[0];
+		var _appy = _data[1];
 		
 		var pos = [];
 		if(!is(_mesh, __3dObject)) return pos;
@@ -115,7 +116,11 @@ function Node_3D_Mesh_Vertex_Points(_x, _y, _group = noone) : Node_Processor(_x,
 						break;
 				}
 			}
-			
+		}
+		
+		if(_appy) {
+			__mat = _mesh.transform.matrix;
+			array_map_ext(pos, function(v,i) /*=>*/ { return __mat.MulArray(v); })
 		}
 		
 		return pos;

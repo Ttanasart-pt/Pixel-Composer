@@ -30,24 +30,11 @@ function __3dObjectInstancer() : __3dObject() constructor {
 	
 	__initInstanceRenderer();
 	
-	static setData = function() {
+	static setBuffer = function(_buffer) {
 		d3d11_cbuffer_begin();
 		d3d11_cbuffer_add_float(4 * instance_amount);
 		instance_data = d3d11_cbuffer_end();
-		
-		if (!d3d11_cbuffer_exists(instance_data)) noti_warning("Could not create instanceData!");
-		
-		var _buffer = buffer_create(d3d11_cbuffer_get_size(instance_data), buffer_fixed, 1);
-		
-		repeat(instance_amount) {
-			buffer_write(_buffer, buffer_f32, random_range(-20, 20)); 
-			buffer_write(_buffer, buffer_f32, random_range(-20, 20)); 
-			buffer_write(_buffer, buffer_f32, random_range(-20, 20));
-			buffer_write(_buffer, buffer_f32, 0);
-		}
-		
 		d3d11_cbuffer_update(instance_data, _buffer);
-		buffer_delete(_buffer);
 	}
 	
 	static generateNormal = function(_s = normal_draw_size) {}
@@ -71,12 +58,16 @@ function __3dObjectInstancer() : __3dObject() constructor {
 			_cbSize += cbuffer_write_i(  _buffer, _sc.gammaCorrection     );
 			
 			_cbSize += cbuffer_write_c(  _buffer, _sc.lightAmbient        );
+			
 			_cbSize += cbuffer_write_i(  _buffer, _sc.lightDir_count      );
+			_cbSize += cbuffer_write_i(  _buffer, _sc.lightPnt_count      );
+			_cbSize += cbuffer_write_i(  _buffer, 0 );
+			_cbSize += cbuffer_write_i(  _buffer, 0 );
+			
 			_cbSize += cbuffer_write_fs( _buffer, _sc._lightDir_direction );
 			_cbSize += cbuffer_write_fs( _buffer, _sc._lightDir_color     );
 			_cbSize += cbuffer_write_fs( _buffer, _sc._lightDir_intensity );
 			
-			_cbSize += cbuffer_write_i(  _buffer, _sc.lightPnt_count      );
 			_cbSize += cbuffer_write_fs( _buffer, _sc._lightPnt_position  );
 			_cbSize += cbuffer_write_fs( _buffer, _sc._lightPnt_color     );
 			_cbSize += cbuffer_write_fs( _buffer, _sc._lightPnt_intensity );
@@ -84,6 +75,7 @@ function __3dObjectInstancer() : __3dObject() constructor {
 			
 			if(_cbSize % 4) d3d11_cbuffer_add_float(4 - _cbSize % 4);
 			var cbuff = d3d11_cbuffer_end();
+			buffer_resize(_buffer, d3d11_cbuffer_get_size(cbuff));
 			d3d11_cbuffer_update(cbuff, _buffer);
 			buffer_delete(_buffer);
 			
@@ -100,6 +92,7 @@ function __3dObjectInstancer() : __3dObject() constructor {
 			
 			if(_cbSize % 4) d3d11_cbuffer_add_float(4 - _cbSize % 4);
 			var cbuff = d3d11_cbuffer_end();
+			buffer_resize(_buffer, d3d11_cbuffer_get_size(cbuff));
 			d3d11_cbuffer_update(cbuff, _buffer);
 			buffer_delete(_buffer);
 			
@@ -136,6 +129,7 @@ function __3dObjectInstancer() : __3dObject() constructor {
 				
 				if(_cbSize % 4) d3d11_cbuffer_add_float(4 - _cbSize % 4);
 				var cbuff = d3d11_cbuffer_end();
+				buffer_resize(_buffer, d3d11_cbuffer_get_size(cbuff));
 				d3d11_cbuffer_update(cbuff, _buffer);
 				buffer_delete(_buffer);
 				

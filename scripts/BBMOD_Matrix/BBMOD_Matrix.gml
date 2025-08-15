@@ -475,6 +475,22 @@ function BBMOD_Matrix(_raw=undefined) constructor
 		return _res;
 	}
 
+	static MulArray = function(_vector) {
+		INLINE
+		var _raw = Raw;
+		var _vx  = _vector[0];
+		var _vy  = _vector[1];
+		var _vz  = _vector[2];
+		var _vw  = 0;
+
+		_vector[0] = _raw[0] * _vx + _raw[4] * _vy + _raw[8] * _vz + _raw[12] * _vw;
+		_vector[1] = _raw[1] * _vx + _raw[5] * _vy + _raw[9] * _vz + _raw[13] * _vw;
+		_vector[2] = _raw[2] * _vx + _raw[6] * _vy + _raw[10] * _vz + _raw[14] * _vw;
+		_vector[3] = _raw[3] * _vx + _raw[7] * _vy + _raw[11] * _vz + _raw[15] * _vw;
+		
+		return _vector;
+	}
+	
 	/// @func AddComponentwise(_matrix)
 	///
 	/// @desc Adds each component of the matrix to corresponding component of
