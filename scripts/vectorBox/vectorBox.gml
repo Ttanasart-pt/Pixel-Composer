@@ -131,9 +131,11 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 			}
 		}
 		
-		if(!is_array(_data))   return _h;
-		if(array_empty(_data)) return _h;
-		if(is_array(_data[0])) return _h;
+		if(array_invalid(_data) || is_array(_data[0])) {
+			draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor,  1);
+			draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor, .5);	
+			return _h;
+		}
 		
 		current_value = _data;
 		

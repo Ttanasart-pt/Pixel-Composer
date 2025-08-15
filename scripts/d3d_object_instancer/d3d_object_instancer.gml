@@ -25,6 +25,7 @@ function __3dObjectInstancer() : __3dObject() constructor {
 	VF = global.VF_POS_NORM_TEX_COL;
 	render_type = pr_trianglelist;
 	
+	objectTransform = new __transform();
 	transform = new __transform();
 	size      = new __vec3(1);
 	
@@ -32,7 +33,7 @@ function __3dObjectInstancer() : __3dObject() constructor {
 	
 	static setBuffer = function(_buffer) {
 		d3d11_cbuffer_begin();
-		d3d11_cbuffer_add_float(4 * instance_amount);
+		d3d11_cbuffer_add_float(16 * instance_amount);
 		instance_data = d3d11_cbuffer_end();
 		d3d11_cbuffer_update(instance_data, _buffer);
 	}
@@ -87,8 +88,9 @@ function __3dObjectInstancer() : __3dObject() constructor {
 			var _buffer = buffer_create(1, buffer_grow, 1);
 			var _cbSize = 0;
 			
-			_cbSize += cbuffer_write_f( _buffer, _sc.camera.view_near );
-			_cbSize += cbuffer_write_f( _buffer, _sc.camera.view_far  );
+			_cbSize += cbuffer_write_fs( _buffer, objectTransform.matTran );
+			_cbSize += cbuffer_write_f(  _buffer, _sc.camera.view_near );
+			_cbSize += cbuffer_write_f(  _buffer, _sc.camera.view_far  );
 			
 			if(_cbSize % 4) d3d11_cbuffer_add_float(4 - _cbSize % 4);
 			var cbuff = d3d11_cbuffer_end();

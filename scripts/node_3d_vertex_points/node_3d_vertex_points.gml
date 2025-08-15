@@ -7,7 +7,8 @@ function Node_3D_Mesh_Vertex_Points(_x, _y, _group = noone) : Node_Processor(_x,
 	newInput(0, nodeValue_D3Mesh( "Mesh", noone )).setVisible(true, true);
 	newInput(1, nodeValue_Bool(   "Apply Transform", false ));
 	
-	newOutput(0, nodeValue_Output("Points", VALUE_TYPE.float, [ 0, 0, 0 ])).setDisplay(VALUE_DISPLAY.vector).setArrayDepth(1);
+	newOutput(0, nodeValue_Output( "Positions", VALUE_TYPE.float, [ 0, 0, 0 ])).setDisplay(VALUE_DISPLAY.vector).setArrayDepth(1);
+	newOutput(1, nodeValue_Output( "Normals",   VALUE_TYPE.float, [ 0, 0, 0 ])).setDisplay(VALUE_DISPLAY.vector).setArrayDepth(1);
 	
 	input_display_list = [ 0, 1 ];
 	
@@ -55,75 +56,103 @@ function Node_3D_Mesh_Vertex_Points(_x, _y, _group = noone) : Node_Processor(_x,
 		var _mesh = _data[0];
 		var _appy = _data[1];
 		
-		var pos = [];
-		if(!is(_mesh, __3dObject)) return pos;
+		var pos = _outData[0];
+		var nor = _outData[1];
 		
-		var vbs = _mesh.VB;
-		var vf  = _mesh.VF;
+		if(!is(_mesh, __3dObject)) return _outData;
 		
-		for( var i = 0, n = array_length(vbs); i < n; i++ ) {
-			var _vb = vbs[i];
-			var  vb = buffer_create_from_vertex_buffer(_vb, buffer_fixed, 1);
-			
-			var siz = buffer_get_size(vb);
-			var vsz = 0;
-			
-			switch(vf) {
-				case global.VF_POS_COL :          vsz = global.VF_POS_COL_size;          break;
-				case global.VF_POS_NORM_TEX_COL : vsz = global.VF_POS_NORM_TEX_COL_size; break;
+		__mat = _mesh.transform.matrix;
+		
+		var _ind = 0;
+		
+		if(!array_empty(_mesh.vertex)) {
+			for( var i = 0, n = array_length(_mesh.vertex); i < n; i++ ) {
+				var _vs = _mesh.vertex[i];
+				var for( var j = 0, m = array_length(_vs); j < m; j++ ) {
+					var _v = _vs[j];
+					
+					pos[_ind] = [ _v.x,  _v.y,  _v.z  ];
+					nor[_ind] = [ _v.nx, _v.ny, _v.nz ];
+					_ind++;
+				}
 			}
 			
-			var vamo = floor(siz / vsz);
+		} else {
+			var vbs = _mesh.VB;
+			var vf  = _mesh.VF;
 			
-			buffer_to_start(vb);
-			repeat(vamo) {
+			for( var i = 0, n = array_length(vbs); i < n; i++ ) {
+				var _vb = vbs[i];
+				var  vb = buffer_create_from_vertex_buffer(_vb, buffer_fixed, 1);
+				
+				var siz = buffer_get_size(vb);
+				var vsz = 0;
+				
+				switch(vf) {
+					case global.VF_POS_COL :          vsz = global.VF_POS_COL_size;          break;
+					case global.VF_POS_NORM_TEX_COL : vsz = global.VF_POS_NORM_TEX_COL_size; break;
+				}
+				
+				var vamo = floor(siz / vsz);
+				
+				buffer_to_start(vb);
 				switch(vf) {
 					case global.VF_POS_COL :          
-						var _px = buffer_read(vb, buffer_f32);
-						var _py = buffer_read(vb, buffer_f32);
-						var _pz = buffer_read(vb, buffer_f32);
-						
-						var _r  = buffer_read(vb, buffer_s8);
-						var _g  = buffer_read(vb, buffer_s8);
-						var _b  = buffer_read(vb, buffer_s8);
-						var _a  = buffer_read(vb, buffer_s8);
-						
-						array_push(pos, [_px, _py, _pz]);
+						repeat(vamo) {
+							var _px = buffer_read(vb, buffer_f32);
+							var _py = buffer_read(vb, buffer_f32);
+							var _pz = buffer_read(vb, buffer_f32);
+							
+							var _r  = buffer_read(vb, buffer_s8);
+							var _g  = buffer_read(vb, buffer_s8);
+							var _b  = buffer_read(vb, buffer_s8);
+							var _a  = buffer_read(vb, buffer_s8);
+							
+							pos[_ind] = [_px, _py, _pz];
+							_ind++;
+						}
 						break;
 						
 					case global.VF_POS_NORM_TEX_COL : 
-						var _px = buffer_read(vb, buffer_f32);
-						var _py = buffer_read(vb, buffer_f32);
-						var _pz = buffer_read(vb, buffer_f32);
-						
-						var _nx = buffer_read(vb, buffer_f32);
-						var _ny = buffer_read(vb, buffer_f32);
-						var _nz = buffer_read(vb, buffer_f32);
-						
-						var _u  = buffer_read(vb, buffer_f32);
-						var _v  = buffer_read(vb, buffer_f32);
-						
-						var _r  = buffer_read(vb, buffer_s8);
-						var _g  = buffer_read(vb, buffer_s8);
-						var _b  = buffer_read(vb, buffer_s8);
-						var _a  = buffer_read(vb, buffer_s8);
-						
-						var _bx = buffer_read(vb, buffer_f32);
-						var _by = buffer_read(vb, buffer_f32);
-						var _bz = buffer_read(vb, buffer_f32);
-						
-						array_push(pos, [_px, _py, _pz]);
+						repeat(vamo) {
+							var _px = buffer_read(vb, buffer_f32);
+							var _py = buffer_read(vb, buffer_f32);
+							var _pz = buffer_read(vb, buffer_f32);
+							
+							var _nx = buffer_read(vb, buffer_f32);
+							var _ny = buffer_read(vb, buffer_f32);
+							var _nz = buffer_read(vb, buffer_f32);
+							
+							var _u  = buffer_read(vb, buffer_f32);
+							var _v  = buffer_read(vb, buffer_f32);
+							
+							var _r  = buffer_read(vb, buffer_s8);
+							var _g  = buffer_read(vb, buffer_s8);
+							var _b  = buffer_read(vb, buffer_s8);
+							var _a  = buffer_read(vb, buffer_s8);
+							
+							var _bx = buffer_read(vb, buffer_f32);
+							var _by = buffer_read(vb, buffer_f32);
+							var _bz = buffer_read(vb, buffer_f32);
+							
+							pos[_ind] = [_px, _py, _pz];
+							_ind++;
+						}
 						break;
 				}
 			}
+			
 		}
+		
+		array_resize(pos, _ind);
+		array_resize(nor, _ind);
 		
 		if(_appy) {
-			__mat = _mesh.transform.matrix;
-			array_map_ext(pos, function(v,i) /*=>*/ { return __mat.MulArray(v); })
+			array_map_ext(pos, function(v,i) /*=>*/ {return __mat.MulArray(v, 1)});
+			array_map_ext(nor, function(v,i) /*=>*/ {return __mat.MulArray(v, 0)});
 		}
 		
-		return pos;
+		return _outData;
 	}
 	
 	////- Preview

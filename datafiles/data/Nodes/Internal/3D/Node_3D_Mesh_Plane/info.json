@@ -1,10 +1,8 @@
 {
-  "tooltip":"Put 2D image on a plane in 3D space.",
-  "spr":"s_node_3d_mesh_plane",
-  "pxc_version":11510.0,
-  "baseNode":"Node_3D_Mesh_Plane",
-  "io":[
-    "d3Mesh"
-  ],
-  "name":"3D Plane"
+    "name":          "3D Plane",
+    "tooltip":       "Put 2D image on a plane in 3D space.",
+    "spr":           "s_node_3d_mesh_plane",
+    "baseNode":      "Node_3D_Mesh_Plane",
+    "pxc_version":    11510,
+    "io":             ["d3Mesh"],
 }

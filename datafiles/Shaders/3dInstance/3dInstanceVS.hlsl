@@ -23,7 +23,7 @@ struct Transform {
 	float4 position;
 	float4 rotation;
 	float4 scale;
-	float4 reserved;
+	float4 upNormal;
 };
 
 cbuffer Data : register(b10) {	
@@ -31,6 +31,7 @@ cbuffer Data : register(b10) {
 };
 
 cbuffer SceneData : register(b11) {	
+	float4x4 objectTransform;
 	float planeNear;
 	float planeFar;
 }
@@ -49,22 +50,58 @@ float4x4 EulerToMatrix(float3 eulerAngles) {
     return rotationMatrix;
 }
 
+float4x4 lookatMatrix(float3 target, float3 up) {
+	float3 zaxis = normalize(target);
+	float3 xaxis = cross(up, zaxis);
+
+	if (length(xaxis) < 0.0001)
+		return float4x4(
+			1.0, 0.0, 0.0, 0.0,
+			0.0, 1.0, 0.0, 0.0,
+			0.0, 0.0, 1.0, 0.0,
+			0.0, 0.0, 0.0, 1.0
+		);
+
+	       xaxis = normalize(xaxis);
+	float3 yaxis = cross(zaxis, xaxis);
+
+	return float4x4(
+		xaxis.x, yaxis.x, zaxis.x, 0.0,
+		xaxis.y, yaxis.y, zaxis.y, 0.0,
+		xaxis.z, yaxis.z, zaxis.z, 0.0,
+		    0.0,     0.0,     0.0, 1.0
+	);
+}
+
 void main(in VS_in IN, out VS_out OUT) {
 	float3 position   = IN.Position.xyz;
 	float3 normal     = IN.Normal.xyz;
 
-	float4x4 rotation = EulerToMatrix(InstanceTransforms[IN.InstanceID].rotation.xyz);
-	float3 scale      = InstanceTransforms[IN.InstanceID].scale.xyz;
+	Transform transform = InstanceTransforms[IN.InstanceID];
+	float3   tran_pos = transform.position.xyz;
+	float4x4 tran_rot = EulerToMatrix(transform.rotation.xyz);
+	float3   tran_sca = transform.scale.xyz;
+	float3   tran_nor = transform.upNormal.xyz;
+	float3   colr = float3(transform.position.w, transform.rotation.w, transform.scale.w);
 
-	position = mul(rotation, float4(position, 1.)).xyz;
-	position = position * scale;
-	position = position + InstanceTransforms[IN.InstanceID].position.xyz;
+	position = mul(objectTransform, float4(position, 1.)).xyz;
+	position = mul(tran_rot, float4(position, 1.)).xyz;
 
-	normal   = mul(rotation, float4(normal, 0.)).xyz;
+	if(length(tran_nor) > 0.) {
+		float3 upNormal = normalize(tran_nor);
+		float4x4 lookat = lookatMatrix(upNormal, float3(0.0, 0.0, 1.0));
+
+		position = mul(lookat, float4(position, 1.)).xyz;
+	}
+
+	position *= tran_sca;
+	position += tran_pos;
+
+	normal   = mul(tran_rot, float4(normal, 0.)).xyz;
 	
 	OUT.Position = mul(gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION], float4(position.xyz, 1.0));
 	OUT.Normal   = mul(gm_Matrices[MATRIX_WORLD], float4(normal, 0.0));
-	OUT.Color    = IN.Color;
+	OUT.Color    = IN.Color * float4(colr, 1.0);
 	OUT.TexCoord = IN.TexCoord;
 
 	OUT.WorldPosition  = mul(gm_Matrices[MATRIX_WORLD], float4(position, 1.0));

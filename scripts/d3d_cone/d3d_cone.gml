@@ -1,12 +1,12 @@
-function __3dCone(radius = 0.5, height = 1, sides = 8, smooth = false) : __3dObject() constructor {
+function __3dCone() : __3dObject() constructor {
 	VF = global.VF_POS_NORM_TEX_COL;
 	render_type = pr_trianglelist;
 	object_counts = 2;
 	
-	self.radius = radius;
-	self.height = height;
-	self.sides  = sides;
-	self.smooth = smooth;
+	radius = .5;
+	height =  1;
+	sides  =  8;
+	smooth = false;
 		
 	static initModel = function() {
 		edges   = [];
@@ -17,7 +17,7 @@ function __3dCone(radius = 0.5, height = 1, sides = 8, smooth = false) : __3dObj
 		
 		var _h = height / 2;
 		
-		for( var i = 0; i < sides; i++ ) {
+		for( var i = 0; i < sides; i++ ) { // bottom
 			var a0 = (i + 0) / sides * 360;
 			var a1 = (i + 1) / sides * 360;
 			
@@ -38,7 +38,7 @@ function __3dCone(radius = 0.5, height = 1, sides = 8, smooth = false) : __3dObj
 			edges[eid++] = new __3dObject_Edge([x0, y0, -_h], [x1, y1, -_h]);
 		}
 		
-		for( var i = 0; i < sides; i++ ) {
+		for( var i = 0; i < sides; i++ ) { // side
 			var a0 = (i + 0) / sides * 360;
 			var a1 = (i + 1) / sides * 360;
 			
@@ -60,9 +60,9 @@ function __3dCone(radius = 0.5, height = 1, sides = 8, smooth = false) : __3dObj
 			var ux0 = (i + 0) / sides;
 			var ux1 = (i + 1) / sides;
 			
-			vs[i * 3 + 0] = new __vertex( 0,  0,  _h).setNormal(nxc, nyc, nz).setUV(ux0, 0);
+			vs[i * 3 + 0] = new __vertex( 0,  0,  _h).setNormal(nxc, nyc, nz).setUV((ux0 + ux1) / 2, 0);
 			vs[i * 3 + 1] = new __vertex(x0, y0, -_h).setNormal(nx0, ny0, nz).setUV(ux0, 1);
-			vs[i * 3 + 2] = new __vertex(x1, y1, -_h).setNormal(nx1, ny1, nz).setUV(ux1, 0);
+			vs[i * 3 + 2] = new __vertex(x1, y1, -_h).setNormal(nx1, ny1, nz).setUV(ux1, 1);
 			
 			edges[eid++] = new __3dObject_Edge([x0, y0, -_h], [0, 0, _h]);
 		}

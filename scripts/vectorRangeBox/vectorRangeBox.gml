@@ -1,5 +1,6 @@
 function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() constructor {
 	size     = _size;
+	dim      = _size / 2;
 	type     = _type;
 	onModify = _onModify;
 	unit	 = _unit;
@@ -18,29 +19,30 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 		var modi = false;
 		
 		if(linked && !ranged) {
-			modi = onModify(v, 0) || modi;
-			modi = onModify(v, 1) || modi;
-			modi = onModify(v, 2) || modi;
-			modi = onModify(v, 3) || modi;
+			for( var i = 0; i < size; i++ )
+				modi = onModify(v, i) || modi;
 			
 		} else if(linked) {
 			modi = onModify(v,  index) || modi;
-			modi = onModify(v, (index + 2) % 4) || modi;
+			modi = onModify(v, (index + dim) % size) || modi;
 			
 		} else if(!ranged) {
-			modi = onModify(v, floor(index / 2) * 2 + 0) || modi;
-			modi = onModify(v, floor(index / 2) * 2 + 1) || modi;
+			modi = onModify(v, floor(index / dim) * dim + 0) || modi;
+			modi = onModify(v, floor(index / dim) * dim + 1) || modi;
 			
+			if(size == 6) modi = onModify(v, floor(index / dim) * dim + 2) || modi;
 		}
 		
 		return modi;
 	}
 	
 	axis = [ "x", "y", "z", "w"];
-	onModifySingle[0] = function(val) { return onModifyIndex(val, 0); }
-	onModifySingle[1] = function(val) { return onModifyIndex(val, 1); }
-	onModifySingle[2] = function(val) { return onModifyIndex(val, 2); }
-	onModifySingle[3] = function(val) { return onModifyIndex(val, 3); }
+	onModifySingle[0] = function(v) /*=>*/ {return onModifyIndex(v,0)};
+	onModifySingle[1] = function(v) /*=>*/ {return onModifyIndex(v,1)};
+	onModifySingle[2] = function(v) /*=>*/ {return onModifyIndex(v,2)};
+	onModifySingle[3] = function(v) /*=>*/ {return onModifyIndex(v,3)};
+	onModifySingle[4] = function(v) /*=>*/ {return onModifyIndex(v,4)};
+	onModifySingle[5] = function(v) /*=>*/ {return onModifyIndex(v,5)};
 	
 	extras = -1;
 	
@@ -101,6 +103,7 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 				if(linked) {
 					onModifyIndex(_data[0], 0);
 					onModifyIndex(_data[1], 1);
+					if(size == 6) onModifyIndex(_data[1], 2);
 				}
 			}
 			
@@ -119,6 +122,7 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 				if(!ranged) {
 					onModifyIndex(_data[0], 0);
 					onModifyIndex(_data[1], 2);
+					if(size == 6) onModifyIndex(_data[1], 4);
 				}
 			}
 			
@@ -126,7 +130,7 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 			_w -= _bs + ui(4);
 		}
 		
-		var ww = _w / 2;
+		var ww = _w / dim;
 		
 		for( var j = 0; j < 2; j++ ) {
 			var by = _y + (_h + ui(4)) * j;
@@ -136,24 +140,26 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 		}
 		
 		if(linked) {
-			draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, _x      + ww / 2 - ui(2), _y + _h / 2, ui(4), _h + ui(4), COLORS._main_accent, .2);
-			draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, _x + ww + ww / 2 - ui(2), _y + _h / 2, ui(4), _h + ui(4), COLORS._main_accent, .2);
+			draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, _x          + ww / 2 - ui(2), _y + _h / 2, ui(4), _h + ui(4), COLORS._main_accent, .2);
+			draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, _x + ww * 1 + ww / 2 - ui(2), _y + _h / 2, ui(4), _h + ui(4), COLORS._main_accent, .2);
+			draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, _x + ww * 2 + ww / 2 - ui(2), _y + _h / 2, ui(4), _h + ui(4), COLORS._main_accent, .2);
 		}
 		
 		if(!ranged) {
-			draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, _x + ww / 2, _y +              _h / 2 - ui(2), ww, ui(4), COLORS._main_accent, .2);
-			draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, _x + ww / 2, _y + _h + ui(4) + _h / 2 - ui(2), ww, ui(4), COLORS._main_accent, .2);
+			draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, _x + ww / 2, _y +              _h / 2 - ui(2), _w - ww / 2, ui(4), COLORS._main_accent, .2);
+			draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, _x + ww / 2, _y + _h + ui(4) + _h / 2 - ui(2), _w - ww / 2, ui(4), COLORS._main_accent, .2);
 		}
 		
 		for( var j = 0; j < 2; j++ ) {
 			var by = _y + (_h + ui(4)) * j;
 			
-			for( var i = 0; i < 2; i++ ) {
-				var bx = _x + ww * i;
+			for( var i = 0; i < dim; i++ ) {
+				var bx  = _x + ww * i;
+				var ind = j * dim + i;
 				
-				if(i == 0) tb[j * 2 + i].label = axis[j];
-				tb[j * 2 + i].setFocusHover(active, hover);
-				tb[j * 2 + i].draw(bx, by, ww, _h, _data[j * 2 + i], _m);
+				if(i == 0) tb[ind].label = axis[j];
+				tb[ind].setFocusHover(active, hover);
+				tb[ind].draw(bx, by, ww, _h, _data[ind], _m);
 			}
 		}
 		

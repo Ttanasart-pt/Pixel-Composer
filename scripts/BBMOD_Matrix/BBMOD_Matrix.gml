@@ -475,13 +475,13 @@ function BBMOD_Matrix(_raw=undefined) constructor
 		return _res;
 	}
 
-	static MulArray = function(_vector) {
+	static MulArray = function(_vector, w = 1) {
 		INLINE
 		var _raw = Raw;
 		var _vx  = _vector[0];
 		var _vy  = _vector[1];
 		var _vz  = _vector[2];
-		var _vw  = 0;
+		var _vw  = w;
 
 		_vector[0] = _raw[0] * _vx + _raw[4] * _vy + _raw[8] * _vz + _raw[12] * _vw;
 		_vector[1] = _raw[1] * _vx + _raw[5] * _vy + _raw[9] * _vz + _raw[13] * _vw;
