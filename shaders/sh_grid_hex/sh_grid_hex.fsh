@@ -233,10 +233,11 @@ void main() {
 		}
 	#endregion
 	
-	vec2 pos = (v_vTexcoord - position) * sca, _pos;
-	float ratio = dimension.x / dimension.y;
-	_pos.x = pos.x * ratio * cos(ang) - pos.y * sin(ang);
-	_pos.y = pos.x * ratio * sin(ang) + pos.y * cos(ang);
+	vec2  asp = vec2(dimension.x / dimension.y, 1.);
+	vec2  pos = (v_vTexcoord - position) * asp * sca, _pos;
+	
+	_pos.x = pos.x * cos(ang) - pos.y * sin(ang);
+	_pos.y = pos.x * sin(ang) + pos.y * cos(ang);
 	
     vec4 hc = HexCoords(_pos);
 	vec4 colr;

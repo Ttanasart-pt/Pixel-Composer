@@ -288,7 +288,7 @@ function __3dObject() : __3dInstance() constructor {
 			vertex_submit(VB[i], render_type, _tex);
 			if(VBM != undefined) { matrix_stack_pop();        matrix_set(matrix_world, matrix_stack_top()); }
 		}
-		// print(shader_get_name(_shader), instanceof(self));
+		
 		gpu_set_tex_repeat(false);
 		
 		if(!is_undefined(_sh)) shader_reset();
@@ -354,13 +354,9 @@ function __3dObject() : __3dInstance() constructor {
 		if(cloneBuffer) {
 			_obj.VB = array_create(array_length(VB));
 			
-			for( var i = 0, n = array_length(VB); i < n; i++ ) {
-				var _vnum = vertex_get_number(VB[i]);
-				var _buff = buffer_create(1, buffer_grow, 1);
-				buffer_copy_from_vertex_buffer(VB[i], 0, _vnum - 1, _buff, 0);
-				
-				_obj.VB[i] = vertex_create_buffer_from_buffer(_buff, VF);
-			}
+			for( var i = 0, n = array_length(VB); i < n; i++ )
+				_obj.VB[i] = vertex_buffer_clone(VB[i], VF);
+			
 		} else {
 			_obj.VB  = VB;
 		}

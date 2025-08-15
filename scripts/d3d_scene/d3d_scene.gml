@@ -1,5 +1,7 @@
 #region global preview camera
 	globalvar D3D_GLOBAL_PREVIEW;
+	globalvar D3D_LIGHT_MAX;     D3D_LIGHT_MAX = 16;
+	
 	
 	function set3DGlobalPreview() {
 		var d3_view_camera = new __3dCamera();
@@ -73,9 +75,9 @@ function __3dScene(_camera, _name = "New scene") constructor {
 	
 	static reset = function() {
 		lightDir_count        = 0;
-		lightDir_direction    = [];
-		lightDir_color        = [];
-		lightDir_intensity    = [];
+		lightDir_direction    = []; _lightDir_direction    = array_create( D3D_LIGHT_MAX * 3 ); 
+		lightDir_color        = []; _lightDir_color        = array_create( D3D_LIGHT_MAX * 4 ); 
+		lightDir_intensity    = []; _lightDir_intensity    = array_create( D3D_LIGHT_MAX * 1 ); 
 		
 		lightDir_shadow_count = 0;
 		lightDir_shadow       = [];
@@ -85,10 +87,10 @@ function __3dScene(_camera, _name = "New scene") constructor {
 		lightDir_shadowBias   = [];
 		
 		lightPnt_count        = 0;
-		lightPnt_position     = [];
-		lightPnt_color        = [];
-		lightPnt_intensity    = [];
-		lightPnt_radius       = [];
+		lightPnt_position     = []; _lightPnt_position     = array_create( D3D_LIGHT_MAX * 3 ); 
+		lightPnt_color        = []; _lightPnt_color        = array_create( D3D_LIGHT_MAX * 4 ); 
+		lightPnt_intensity    = []; _lightPnt_intensity    = array_create( D3D_LIGHT_MAX * 1 ); 
+		lightPnt_radius       = []; _lightPnt_radius       = array_create( D3D_LIGHT_MAX * 1 ); 
 		
 		lightPnt_shadow_count = 0;
 		lightPnt_shadow       = [];
@@ -350,6 +352,17 @@ function __3dScene(_camera, _name = "New scene") constructor {
 		lightPnt_count++;
 		
 		return self;
+	}
+	
+	static fixArray = function() {
+		for( var i = 0, n = array_length(lightDir_direction); i < n; i++ ) _lightDir_direction[i] = lightDir_direction[i];
+		for( var i = 0, n = array_length(lightDir_color);     i < n; i++ ) _lightDir_color[i]     = lightDir_color[i];
+		for( var i = 0, n = array_length(lightDir_intensity); i < n; i++ ) _lightDir_intensity[i] = lightDir_intensity[i];
+		
+		for( var i = 0, n = array_length(lightPnt_position);  i < n; i++ ) _lightPnt_position[i]  = lightPnt_position[i];
+		for( var i = 0, n = array_length(lightPnt_color);     i < n; i++ ) _lightPnt_color[i]     = lightPnt_color[i];
+		for( var i = 0, n = array_length(lightPnt_intensity); i < n; i++ ) _lightPnt_intensity[i] = lightPnt_intensity[i];
+		for( var i = 0, n = array_length(lightPnt_radius);    i < n; i++ ) _lightPnt_radius[i]    = lightPnt_radius[i];
 	}
 		
 	static toString = function() { return $"[3D Scene] {name}"; }

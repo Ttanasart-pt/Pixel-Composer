@@ -96,3 +96,12 @@ function __vertex_buffer_add_pntc(buffer, _px, _py, _pz, _nx, _ny, _nz, _u, _v, 
 	buffer_write(buffer, buffer_f32, by);
 	buffer_write(buffer, buffer_f32, bz);
 }
+
+function vertex_buffer_clone(vb, vf) {
+	var _vnum = vertex_get_number(vb);
+	var _buff = buffer_create(1, buffer_grow, 1);
+	buffer_copy_from_vertex_buffer(vb, 0, _vnum, _buff, 0);
+	
+	var _vb = vertex_create_buffer_from_buffer(_buff, vf);
+	return _vb;
+}

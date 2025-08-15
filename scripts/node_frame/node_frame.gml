@@ -72,6 +72,13 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		if(!LOADING) project.modified = true;
 	}
 	
+	static setCoveringNodes = function(node_list) {
+		__nodes = [];
+		
+		for( var i = 0, n = array_length(node_list); i < n; i++ )
+            __nodes[i] = node_list[i];
+	}
+	
 	static getCoveringNodes = function(node_list) {
 		var fx0 = x;
         var fy0 = y;

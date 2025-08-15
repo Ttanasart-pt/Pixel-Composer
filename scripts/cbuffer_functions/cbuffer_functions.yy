@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"cbuffer_functions",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"cbuffer_functions",
+  "parent":{
+    "name":"buffer",
+    "path":"folders/functions/buffer.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

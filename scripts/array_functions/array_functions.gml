@@ -56,9 +56,15 @@
 		return arr;
 	}
 	
-	function array_verify(arr, length) {
-		INLINE
+	function _array_verify(arr, length) { INLINE 
+		if(!is_array(arr)) return array_create(length);
+		if(array_length(arr) == length) return arr;
 		
+		array_resize(array_clone(arr), length);
+		return arr;
+	}
+		
+	function  array_verify(arr, length) { INLINE
 		if(!is_array(arr)) return array_create(length);
 		if(array_length(arr) == length) return arr;
 		

@@ -412,50 +412,26 @@ struct PixelShaderOutput {
 					if(_arg_name == "") continue;
 					
 					switch(_arg_type) {
-						case 0 :														// u_float
-							d3d11_cbuffer_add_float(1); 
-							_cbSize++;
-					
-							buffer_write(_buffer, buffer_f32, _arg_valu);
-							break;
-						case 1 :														// u_int
-							d3d11_cbuffer_add_int(1); 
-							_cbSize++;
-					
-							buffer_write(_buffer, buffer_s32, _arg_valu);
-							break;
+						case 0 : _cbSize += cbuffer_write_f(_buffer, _arg_valu); break; // u_float
+						case 1 : _cbSize += cbuffer_write_i(_buffer, _arg_valu); break; // u_int
 							
 						case 2 :														// u_vec2
 						case 3 :														// u_vec3
 						case 4 :														// u_vec4
 						case 5 :														// u_mat3
 						case 6 :														// u_mat4
-							if(is_array(_arg_valu)) {
-								d3d11_cbuffer_add_float(array_length(_arg_valu)); 
-								_cbSize += array_length(_arg_valu);
-						
-								for( var j = 0, m = array_length(_arg_valu); j < m; j++ ) 
-									buffer_write(_buffer, buffer_f32, _arg_valu[j]);		
-							}
-							break;
+							_cbSize += cbuffer_write_fs(_buffer, _arg_valu); break;
 							
 						case 7 :														// u_sampler2D
-							if(is_surface(_arg_valu))
+							if(is_surface(_arg_valu)) 
 								d3d11_texture_set_stage_ps(sampler_slot, surface_get_texture(_arg_valu));
 							sampler_slot++;
 							break;
 							
-						case 8 :														// u_vec4 color
-							var _clr = colToVec4(_arg_valu); 
-							d3d11_cbuffer_add_float(4);
-							_cbSize += 4;
-							
-							for( var j = 0; j < 4; j++ ) 
-								buffer_write(_buffer, buffer_f32, _clr[j]);
-							break;
+						case 8 : _cbSize += cbuffer_write_c(_buffer, _arg_valu); break; // u_vec4 color
 					}
 				}
-		
+				
 				d3d11_cbuffer_add_float(4 - _cbSize % 4);
 				var cbuff = d3d11_cbuffer_end();
 				d3d11_cbuffer_update(cbuff, _buffer);

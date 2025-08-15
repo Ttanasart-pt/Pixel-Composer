@@ -250,9 +250,9 @@ void main() {
 		amoVec = vec2(amo) / spacing;
 	#endregion
 	
-	vec2  pos  = v_vTexcoord * vec2(dimension.x / dimension.y, 1.);
-	      pos -= position / dimension;
-	      pos *= mat2(cos(ang), -sin(ang), sin(ang), cos(ang));
+	vec2 asp  = vec2(dimension.x / dimension.y, 1.);
+	vec2 pos  = (v_vTexcoord - position / dimension) * asp;
+	     pos *= mat2(cos(ang), -sin(ang), sin(ang), cos(ang));
 	      
 	vec4 cbg  = color0;
 	vec4 dott = vec4(0.);

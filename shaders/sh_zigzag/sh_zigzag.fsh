@@ -33,9 +33,9 @@ void main() {
 		ang = radians(ang);
 	#endregion
 	
-	vec2 vtx     = floor(v_vTexcoord * dimension) / dimension;
-	vec2 ntx     = vtx * vec2(1., dimension.y / dimension.x);
-	vec2 pos     = ntx - position;
+	vec2 asp = vec2(dimension.x / dimension.y, 1.);
+	vec2 vtx = floor(v_vTexcoord * dimension) / dimension;
+	vec2 pos = (vtx - position) * asp;
 	float _cell  = 1. / (amo * 2.); 
 	pos.y -= _cell / 2.;
 	pos   *= mat2(cos(ang), -sin(ang), sin(ang), cos(ang));

@@ -3557,7 +3557,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         _frame.inputs[0].setValue([x1 - x0, y1 - y0]);
         _frame.tb_name.activate("Frame");
         
-        _frame.getCoveringNodes(nodes_list);
+        _frame.setCoveringNodes(nodes_selecting);
         _frame.reFrame();
         
         return _frame;

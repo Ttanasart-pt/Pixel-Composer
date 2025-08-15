@@ -612,6 +612,9 @@
             "Node_3D_Set_Material",
             "Node_3D_UV_Remap",
             
+            { "label": "VFX" },
+            "Node_3D_Instancer", 
+            
             { "label": "Points" },
             "Node_Scatter_Points_3D",
             "Node_Scatter_Point_Lattice_3D",
@@ -1127,6 +1130,7 @@
             "Node_Application_Out",
             "Node_Assert",
             "Node_Image_Grid_Patreon",
+            "Node_Image_List_Bug",
         ]
     },
     {

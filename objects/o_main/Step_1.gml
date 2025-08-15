@@ -134,6 +134,11 @@ _FILE_DROPPED     = false;
 #endregion
 
 #region animation & render
+	if(!surface_exists(watcher_surface)) {
+		RENDER_ALL
+		watcher_surface = surface_create(1, 1);
+	}
+	
 	DEF_SURFACE_RESET();
 	
 	if(!PROJECT.safeMode && UPDATE_RENDER_ORDER) {

@@ -2,10 +2,11 @@
 //print("===== Game Start Begin =====");
 
 #region directory
-	globalvar DIRECTORY, APP_DIRECTORY, APP_LOCATION, PRESIST_PREF, FS_PATH;
+	globalvar DIRECTORY, APP_DIRECTORY, APP_LOCATION, PRESIST_PREF, FS_PATH, WORKING_DIRECTORY;
 	DIRECTORY    = "";
 	FS_PATH      = "";
 	PRESIST_PREF = { path: "" };
+	WORKING_DIRECTORY = working_directory;
 	
 	if(OS == os_linux) {
 		APP_DIRECTORY = working_directory;

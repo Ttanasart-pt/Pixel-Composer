@@ -18,9 +18,8 @@ function Node_3D_Mesh_Extrude_Mesh(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 	// input i+7
 	
 	input_display_list = [ i+3,
-		__d3d_input_list_mesh,
+		__d3d_input_list_mesh, i+0, i+1, i+2, i+7, 
 		__d3d_input_list_transform,
-		["Mesh",   false], i+0, i+1, i+2, i+7, 
 		["Render", false], i+4, i+5, i+6,  
 	]
 	
