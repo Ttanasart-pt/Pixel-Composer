@@ -138,6 +138,8 @@ function __vec3(_x = 0, _y = _x, _z = _x) constructor {
 		return sqrt(dx * dx + dy * dy + dz * dz);
 	}
 	
+	static directionTo = function(_vec3) { INLINE return point_direction(x, y, _vec3.x, _vec3.y); }
+	
 	static length = function() {
 		INLINE
 		return sqrt(x * x + y * y + z * z);

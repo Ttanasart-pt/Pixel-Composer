@@ -152,6 +152,17 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 			draw_surface_ext_safe(_outSurf, _px, _py, _ps, _ps);
 			draw_set_color(COLORS._main_icon);
 			draw_rectangle(_px, _py, _px + _pws, _py + _phs, true);
+			
+			// if(deferData != noone) {
+			// 	for( var i = 0, n = array_length(deferData.geometry_data); i < n; i++ ) {
+			// 		var _s = deferData.geometry_data[i];
+					
+			// 		_py -= 128 + 16;
+			// 		draw_surface_ext_safe(_s, _px, _py, _ps, _ps);
+			// 		draw_set_color(COLORS._main_icon);
+			// 		draw_rectangle(_px, _py, _px + _pws, _py + _phs, true);
+			// 	}
+			// }
 		#endregion
 	}
 	

@@ -20,7 +20,7 @@
 #endregion
 
 function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name  = "3D Path";
+	name  = "Path 3D";
 	is_3D = NODE_3D.polygon;
 	
 	setDimension(96, 48);
@@ -609,7 +609,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	static getAccuLength	= function() /*=>*/ {return lengthAccs};
 	
 	static getPointDistance = function(_dist, _ind = 0, out = undefined) {
-		if(out == undefined) out = new __vec3P(); else { out.x = 0; out.y = 0; out.z = 0; }
+		if(!is(out, __vec3P)) out = new __vec3P(); else { out.x = 0; out.y = 0; out.z = 0; }
 		if(array_empty(lengths)) return out;
 		
 		var _cKey = _dist;

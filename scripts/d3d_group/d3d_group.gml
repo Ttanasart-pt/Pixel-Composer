@@ -105,3 +105,32 @@ function __3dTransformed(_object = noone) : __3dInstance() constructor {
 		return _new;
 	}
 }
+
+#region actions
+	
+	function __d3d_flattern(_objs, _obj) {
+		if(is(_obj, __3dObject)) {
+			array_append( _objs.VB,  _obj.VB  );
+			array_append( _objs.VBM, _obj.VBM == undefined? array_create(array_length(_obj.VB), undefined) : _obj.VBM );
+			
+		} else if(is(_obj, __3dGroup)) {
+			for( var i = 0, n = array_length(_obj.objects); i < n; i++ )
+				__d3d_flattern(_objs, _obj.objects[i]);
+			
+		} else if(is(_obj, __3dTransformed)) {
+			__d3d_flattern(_objs, _obj.object);
+			
+		}
+	}
+	
+	function d3d_flattern(_obj) {
+		if(!is(_obj, __3dInstance)) return _obj;
+		
+		var _objs = { VB: [], VBM: [] };
+		
+		__d3d_flattern(_objs, _obj);
+		
+		return _objs;
+	}
+	
+#endregion

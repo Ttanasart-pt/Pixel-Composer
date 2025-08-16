@@ -1,14 +1,18 @@
 #include "CommonPS.hlsl"
 
 struct VS_out {
-	float4 Position : SV_POSITION;
-	float3 Normal   : NORMAL0;
-	float4 Color    : COLOR0;
-	float2 TexCoord : TEXCOORD0;
-	
+	float4 Position       : SV_POSITION;
 	float4 WorldPosition  : TEXCOORD1;
 	float3 ViewPosition   : TEXCOORD2;
+
+	float3 Normal         : NORMAL0;
+	float3 ViewNormal     : TEXCOORD4;
+
+	float4 Color          : COLOR0;
+	float2 TexCoord       : TEXCOORD0;
+
 	float  cameraDistance : TEXCOORD3;
+	uint   InstanceID     : SV_InstanceID;
 };
 
 struct PS_out {
@@ -25,16 +29,16 @@ cbuffer SceneData : register(b10) {
 
 	int    light_dir_count;
 	int    light_pnt_count;
-	int    _reserved0, _reserved1;
-
+	int    reserve0, reserve1;
+	
 	float4 light_dir_direction[16];
 	float4 light_dir_color[16];
-	float  light_dir_intensity[16];
+	float4 light_dir_intensities[4];
 
 	float4 light_pnt_position[16];
 	float4 light_pnt_color[16];
-	float  light_pnt_intensity[16];
-	float  light_pnt_radius[16];
+	float4 light_pnt_intensities[4];
+	float4 light_pnt_radiuses[4];
 }
 
 cbuffer MatData : register(b11) {
@@ -88,19 +92,27 @@ void main(in VS_out IN, out PS_out OUT) {
 	for (int i = 0; i < light_dir_count; i++) {
 		float3 lightVector = normalize(light_dir_direction[i]);
 		float3 light_phong = phongLight(baseColor, normal, lightVector, viewDirection, light_dir_color[i].rgb);
-		float  ints = light_dir_intensity[i];
-
+		float4 light_dir_intensity = light_dir_intensities[i / 4];
+		float  ints = light_dir_intensity[i % 4];
+		
 		light_effect += light_phong * float3(ints, ints, ints);
 	}
 
+	float light_attenuation = 1.0;
+
 	for (int i = 0; i < light_pnt_count; i++) {
 		float3 lightVector = light_pnt_position[i] - IN.WorldPosition.xyz;
-		float light_distance = length(lightVector);
-		if (light_distance > light_pnt_radius[i]) continue;
+		float  light_distance = length(lightVector);
+		float4 light_pnt_radius = light_pnt_radiuses[i / 4];
+		float  light_rad = light_pnt_radius[i % 4];
+		if (light_distance > light_rad) continue;
 
 		lightVector = normalize(lightVector);
-		float3 light_phong = phongLight(baseColor, normal, lightVector, viewDirection, light_pnt_color[i].rgb * (1.0 - pow(light_distance / light_pnt_radius[i], 2.0)));
-		float  ints = light_pnt_intensity[i];
+		light_attenuation = 1. - pow(light_distance / light_rad, 2.0);
+
+		float3 light_phong = phongLight(baseColor, normal, lightVector, viewDirection, light_pnt_color[i].rgb * light_attenuation);
+		float4 light_pnt_intensity = light_pnt_intensities[i / 4];
+		float  ints = light_pnt_intensity[i % 4];
 
 		light_effect += light_phong * float3(ints, ints, ints);
 	}
@@ -121,5 +133,4 @@ void main(in VS_out IN, out PS_out OUT) {
 
 	float d = 1. - abs(IN.cameraDistance);
 	OUT.Depth  = float4(d, d, d, final_color.a);
-	
 }

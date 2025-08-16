@@ -4,11 +4,12 @@ varying vec3 v_viewPosition;
 varying vec3 v_vNormal;
 varying vec3 v_viewNormal;
 
-uniform int       mat_flip;
 uniform int       use_normal;
 uniform int       use_8bit;
 uniform float     normal_strength;
 uniform sampler2D normal_map;
+
+uniform int       mat_flip;
 uniform vec2      mat_texScale;
 uniform vec2      mat_texShift;
 

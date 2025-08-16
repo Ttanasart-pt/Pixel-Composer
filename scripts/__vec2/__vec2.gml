@@ -162,10 +162,7 @@ function __vec2(_x = 0, _y = _x) constructor {
 		return sqrt(dx * dx + dy * dy);
 	}
 	
-	static directionTo = function(_vec2) {
-		INLINE
-		return point_direction(x, y, _vec2.x, _vec2.y);
-	}
+	static directionTo = function(_vec2) { INLINE return point_direction(x, y, _vec2.x, _vec2.y); }
 	
 	static length = function() {
 		INLINE

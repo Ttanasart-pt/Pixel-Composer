@@ -9,14 +9,18 @@ struct VS_in {
 };
 
 struct VS_out {
-	float4 Position : SV_POSITION;
-	float3 Normal   : NORMAL0;
-	float4 Color    : COLOR0;
-	float2 TexCoord : TEXCOORD0;
-
+	float4 Position       : SV_POSITION;
 	float4 WorldPosition  : TEXCOORD1;
 	float3 ViewPosition   : TEXCOORD2;
+
+	float3 Normal         : NORMAL0;
+	float3 ViewNormal     : TEXCOORD4;
+
+	float4 Color          : COLOR0;
+	float2 TexCoord       : TEXCOORD0;
+
 	float  cameraDistance : TEXCOORD3;
+	uint   InstanceID     : SV_InstanceID;
 };
 
 struct Transform {
@@ -99,14 +103,17 @@ void main(in VS_in IN, out VS_out OUT) {
 
 	normal   = mul(tran_rot, float4(normal, 0.)).xyz;
 	
-	OUT.Position = mul(gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION], float4(position.xyz, 1.0));
-	OUT.Normal   = mul(gm_Matrices[MATRIX_WORLD], float4(normal, 0.0));
-	OUT.Color    = IN.Color * float4(colr, 1.0);
-	OUT.TexCoord = IN.TexCoord;
-
+	OUT.Position       = mul(gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION], float4(position.xyz, 1.0));
 	OUT.WorldPosition  = mul(gm_Matrices[MATRIX_WORLD], float4(position, 1.0));
 	OUT.ViewPosition   = mul(gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION], float4(position.xyz, 1.0));
-	
+
+	OUT.Normal         = mul(gm_Matrices[MATRIX_WORLD], float4(normal, 0.0));
+	OUT.ViewNormal     = mul(gm_Matrices[MATRIX_WORLD_VIEW], float4(normal, 0.0)).xyz;
+
+	OUT.Color          = IN.Color * float4(colr, 1.0);
+	OUT.TexCoord       = IN.TexCoord;
+	OUT.InstanceID     = IN.InstanceID;
+
 	float depthRange = abs(planeFar - planeNear);
 	float ndcZ = (OUT.ViewPosition.z - planeNear) / depthRange;
 	OUT.cameraDistance = ndcZ * .5 + .5;

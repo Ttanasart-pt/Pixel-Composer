@@ -17,8 +17,8 @@ function __3dLight() : __3dObject() constructor {
 	shadow_map_proj   = array_create(16, 0);
 	shadow_bias	  = 0.001;
 	
-	static getCenter = function() { return noone; }
-	static getBBOX   = function() { return noone; }
+	static getCenter = function() /*=>*/ {return new __vec3(transform.position.x, transform.position.y, transform.position.z)};
+	static getBBOX   = function() /*=>*/ {return new __bbox3D(new __vec3(-1,-1,-1), new __vec3(1,1,1))};
 	
 	static submit    = function(scene = {}, shader = noone) {}
 	

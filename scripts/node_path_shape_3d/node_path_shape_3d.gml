@@ -61,7 +61,7 @@ function Node_Path_Shape_3D(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	static getAccuLength	= function() /*=>*/ {return lengthAccs};
 	
 	static getPointRatio    = function(_rat, _ind = 0, out = undefined) { 
-	    out ??= new __vec3P();
+		if(!is(out, __vec3P)) out = new __vec3P();
 	    _rat = frac(_rat);
 	    
 		switch(shapeScroll[shape].name) {
@@ -72,7 +72,7 @@ function Node_Path_Shape_3D(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	}
 	
 	static getPointDistance = function(_dist, _ind = 0, out = undefined) {
-	    out ??= new __vec3P();
+	    if(!is(out, __vec3P)) out = new __vec3P();
 	    _dist = safe_mod(_dist, lengthTotal);
 	    
 	    var _d = _dist, l;

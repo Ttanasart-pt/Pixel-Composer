@@ -167,10 +167,9 @@ function __3dScene(_camera, _name = "New scene") constructor {
 		shader_set_f("planeNear", camera.view_near);
 		shader_set_f("planeFar",  camera.view_far);
 		shader_set_i("use_8bit",  OS == os_macosx);
+		shader_reset();
 		
 		submit(object, sh_d3d_geometry);
-		
-		shader_reset();
 		
 		gpu_set_ztestenable(false);
 		gpu_set_alphatestenable(false);

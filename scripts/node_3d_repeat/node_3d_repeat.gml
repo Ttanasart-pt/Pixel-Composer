@@ -1,6 +1,8 @@
 function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constructor {
 	name  = "3D Repeat";
 		
+	newInput(21, nodeValueSeed());
+	
 	////- =Objects
 	newInput( 0, nodeValue_D3Mesh(      "Objects",           noone      )).setArrayDepth(1).setVisible(true, true);
 	newInput( 3, nodeValue_Vec3(        "Starting Position", [0,0,0]    ));
@@ -8,19 +10,19 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	newInput( 5, nodeValue_Vec3(        "Starting Scale",    [1,1,1]    ));
 	
 	////- =Repeat
-	newInput( 1, nodeValue_Enum_Button( "Object Data",  0 , [ "Single", "Array" ] )).rejectArray();
-	newInput(13, nodeValue_Enum_Scroll( "Pattern",      0 , __enum_array_gen([ "Linear", "Grid", "Circular"], s_node_repeat_axis) )).rejectArray();
+	newInput( 1, nodeValue_Enum_Button( "Object Type",  0, [ "Single", "Array" ] )).rejectArray();
+	newInput(13, nodeValue_Enum_Scroll( "Pattern",      0, __enum_array_gen([ "Linear", "Grid", "Circular"], s_node_repeat_axis) )).rejectArray();
 	newInput( 2, nodeValue_Int(         "Amount",       2       ));
 	newInput(14, nodeValue_IVec3(       "Grid",         [2,2,1] ));
 	newInput(17, nodeValue_Float(       "Radius",       1       ));
-	newInput(19, nodeValue_Slider(      "Look At Center", 0     ));
+	newInput(19, nodeValue_Slider(      "Look At Center",0      ));
 	newInput(18, nodeValue_PathNode(    "Shift Path"            ));
 	newInput(20, nodeValue_Slider(      "Follow Path",  0       ));
 	
 	////- =Transform
-	newInput( 9, nodeValue_Vec3( "Positions", [0,0,0] )).setArrayDepth(1);
-	newInput(10, nodeValue_Vec3( "Rotations", [0,0,0] )).setArrayDepth(1);
-	newInput(11, nodeValue_Vec3( "Scales",    [0,0,0] )).setArrayDepth(1);
+	newInput( 9, nodeValue_Vec3( "Positions", [[0,0,0]] )).setArrayDepth(1);
+	newInput(10, nodeValue_Vec3( "Rotations", [[0,0,0]] )).setArrayDepth(1);
+	newInput(11, nodeValue_Vec3( "Scales",    [[0,0,0]] )).setArrayDepth(1);
 	
 	////- =Shift
 	newInput( 6, nodeValue_Vec3(       "Shift Position",   [1,0,0]   ));
@@ -29,15 +31,23 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	newInput( 7, nodeValue_Quaternion( "Shift Rotation",   [0,0,0,1] ));
 	newInput( 8, nodeValue_Vec3(       "Shift Scale",      [0,0,0]   ));
 	/* UNUSED */ newInput(12, nodeValue_Bool( "Use Instance", true ))
-	// input 20
+	
+	////- =Scatter
+	newInput(22, nodeValue_Vec3_Range( "Position Scatter", array_create(6,0) ));
+	newInput(23, nodeValue_Vec3_Range( "Rotation Scatter", array_create(6,0) ));
+	newInput(24, nodeValue_Vec3_Range( "Scale Scatter",    array_create(6,0) ));
+	newInput(25, nodeValue_Bool(       "Scale Uniform",    true              ));
+	
+	// input 26
 	
 	newOutput(0, nodeValue_Output("Scene", VALUE_TYPE.d3Scene, noone));
 	
-	input_display_list = [
+	input_display_list = [ 21, 
 		["Objects",    false], 0, 3, 4, 5, 
 		["Repeat",     false], 1, 13, 2, 14, 17, 19, 18, 20, 
-		["Transforms",  true], 9, 10, 11, 
+		["Transforms Data", true], 9, 10, 11, 
 		["Shift",      false], 6, 15, 16, 7, 8, 
+		["Scatter",    false], 22, 23, 24, 25, 
 	]
 	
 	////- Nodes
@@ -52,6 +62,8 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	
 	static processData = function(_output, _data, _array_index = 0) {
 		#region input
+			var _seed = _data[21];
+			
 			var _objs = _data[0];
 			var _Spos = _data[3];
 			var _Srot = _data[4];
@@ -74,8 +86,13 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			var _RposY   = _data[15];
 			var _RposZ   = _data[16];
 			
-			var _Rrot  = _data[ 7];
-			var _Rsca  = _data[ 8];
+			var _Rrot   = _data[ 7];
+			var _Rsca   = _data[ 8];
+			
+			var _posh   = _data[22];
+			var _roth   = _data[23];
+			var _scah   = _data[24];
+			var _scauni = _data[25];
 			
 			inputs[ 2].setVisible(_patt != 1);
 			
@@ -113,6 +130,18 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			var _Sscay = _Ssca[1], _Rscay = _Rsca[1];
 			var _Sscaz = _Ssca[2], _Rscaz = _Rsca[2];
 			
+			var _SCposx0 = _posh[0], _SCposx1 = _posh[3];
+			var _SCposy0 = _posh[1], _SCposy1 = _posh[4];
+			var _SCposz0 = _posh[2], _SCposz1 = _posh[5];
+			
+			var _SCrotx0 = degtorad(_roth[0]), _SCrotx1 = degtorad(_roth[3]);
+			var _SCroty0 = degtorad(_roth[1]), _SCroty1 = degtorad(_roth[4]);
+			var _SCrotz0 = degtorad(_roth[2]), _SCrotz1 = degtorad(_roth[5]);
+			
+			var _SCscax0 = _scah[0], _SCscax1 = _scah[3];
+			var _SCscay0 = _scah[1], _SCscay1 = _scah[4];
+			var _SCscaz0 = _scah[2], _SCscaz1 = _scah[5];
+			
 			if(_mode == 1) {
 				if(!is_array(_objs)) return _scene;
 				_amo = array_length(_objs);
@@ -131,7 +160,11 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			
 		#endregion
 			
-		for( var i = 0; i < _amo; i++ ) {
+		var _i = 0;
+		repeat(_amo) {
+			var i = _i++;
+			random_set_seed(_seed + _i * 78);
+			
 			var _obj = _mode == 1? _objs[i] : _objs;
 			if(!is(_obj, __3dInstance)) continue;
 			
@@ -142,13 +175,13 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			var _gridY = floor((i - _gridZ * _gridP) / _grid[0]);
 			var _gridX = (i - _gridZ * _gridP) % _grid[0];
 			
-			var _sPosX = _Sposx;
-			var _sPosY = _Sposy;
-			var _sPosZ = _Sposz;
+			var _sPosX = _Sposx + random_range(_SCposx0, _SCposx1);
+			var _sPosY = _Sposy + random_range(_SCposy0, _SCposy1);
+			var _sPosZ = _Sposz + random_range(_SCposz0, _SCposz1);
 			
-			var _fRotEx = _sRotEx + _rRotEx * i;
-			var _fRotEy = _sRotEy + _rRotEy * i;
-			var _fRotEz = _sRotEz + _rRotEz * i;
+			var _fRotEx = _sRotEx + _rRotEx * i + random_range(_SCrotx0, _SCrotx1);
+			var _fRotEy = _sRotEy + _rRotEy * i + random_range(_SCroty0, _SCroty1);
+			var _fRotEz = _sRotEz + _rRotEz * i + random_range(_SCrotz0, _SCrotz1);
 			
 			switch(_patt) {
 				case 0 :
@@ -212,9 +245,10 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			}
 			
 			//// Scale
-			var _sScaX = _Sscax + _Rscax * i;
-			var _sScaY = _Sscay + _Rscay * i;
-			var _sScaZ = _Sscaz + _Rscaz * i;
+			var _sScaX = _Sscax + _Rscax * i + random_range(_SCscax0, _SCscax1);
+			var _sScaY = _Sscay + _Rscay * i + random_range(_SCscay0, _SCscay1);
+			var _sScaZ = _Sscaz + _Rscaz * i + random_range(_SCscaz0, _SCscaz1);
+			if(_scauni) { _sScaY = _sScaX; _sScaZ = _sScaX; }
 			
 			//// Apply
 			if(_upos) { 

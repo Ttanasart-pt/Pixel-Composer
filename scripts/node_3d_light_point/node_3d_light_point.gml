@@ -14,7 +14,7 @@ function Node_3D_Light_Point(_x, _y, _group = noone) : Node_3D_Light(_x, _y, _gr
 	newInput(in_light + 3, nodeValue_Float("Shadow Bias", 0.01))
 		.setWindows();
 	
-	input_display_list = [
+	input_display_list = [ in_d3d + 0, 
 		["Transform", false], 0,
 		__d3d_input_list_light, in_light,
 		["Shadow", false, in_light + 1], in_light + 2, in_light + 3, 

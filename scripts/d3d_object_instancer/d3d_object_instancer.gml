@@ -1,6 +1,7 @@
 #region shader
-	globalvar INSTANCE_SHADER_VS; INSTANCE_SHADER_VS = undefined;
-	globalvar INSTANCE_SHADER_PS; INSTANCE_SHADER_PS = undefined;
+	globalvar INSTANCE_SHADER_VS;   INSTANCE_SHADER_VS   = undefined;
+	globalvar INSTANCE_SHADER_PS;   INSTANCE_SHADER_PS   = undefined;
+	globalvar INSTANCE_GEOMETRY_PS; INSTANCE_GEOMETRY_PS = undefined;
 	
 	function __initInstanceRenderer() {
 		if(INSTANCE_SHADER_VS != undefined && INSTANCE_SHADER_PS != undefined) return;
@@ -8,12 +9,16 @@
 		
 		var _vp = $"{WORKING_DIRECTORY}Shaders/3dInstance/3dInstanceVS.hlsl";
 		var _fp = $"{WORKING_DIRECTORY}Shaders/3dInstance/3dInstancePS.hlsl";
+		var _gp = $"{WORKING_DIRECTORY}Shaders/3dInstance/3dInstanceGeometryPS.hlsl";
 		
-		INSTANCE_SHADER_VS = d3d11_shader_compile_vs(_vp, "main", "vs_4_0");
-		INSTANCE_SHADER_PS = d3d11_shader_compile_ps(_fp, "main", "ps_4_0");
+		INSTANCE_SHADER_VS   = d3d11_shader_compile_vs(_vp, "main", "vs_4_0");
+		if (!d3d11_shader_exists(INSTANCE_SHADER_PS))   noti_warning(d3d11_get_error_string());
 		
-		if (!d3d11_shader_exists(INSTANCE_SHADER_VS)) noti_warning(d3d11_get_error_string());
-		if (!d3d11_shader_exists(INSTANCE_SHADER_PS)) noti_warning(d3d11_get_error_string());
+		INSTANCE_SHADER_PS   = d3d11_shader_compile_ps(_fp, "main", "ps_4_0");
+		if (!d3d11_shader_exists(INSTANCE_SHADER_VS))   noti_warning(d3d11_get_error_string());
+		
+		INSTANCE_GEOMETRY_PS = d3d11_shader_compile_ps(_gp, "main", "ps_4_0");
+		if (!d3d11_shader_exists(INSTANCE_GEOMETRY_PS)) noti_warning(d3d11_get_error_string());
 	}
 	
 #endregion
@@ -46,12 +51,18 @@ function __3dObjectInstancer() : __3dObject() constructor {
 	static submit		= function(_sc = noone, _sh = noone) /*=>*/ { submitVertex(_sc, _sh); }
 	
 	static submitVertex = function(_sc = noone, _sh = noone) {
+		if(!is(_sc, __3dScene)) return;
+			
 		d3d11_shader_override_vs(INSTANCE_SHADER_VS);
-		d3d11_shader_override_ps(INSTANCE_SHADER_PS);
 		
-		if(is(_sc, __3dScene)) {
+		if(_sh == sh_d3d_geometry) {
+			d3d11_shader_override_ps(INSTANCE_GEOMETRY_PS);
+			
+		} else {
+			d3d11_shader_override_ps(INSTANCE_SHADER_PS);
+				
 			d3d11_cbuffer_begin();
-			var _buffer = buffer_create(1, buffer_grow, 1);
+			var _buffer = buffer_create(1, buffer_grow, 1); buffer_to_start(_buffer);
 			var _cbSize = 0;
 			_sc.fixArray();
 			
@@ -82,31 +93,33 @@ function __3dObjectInstancer() : __3dObject() constructor {
 			
 			d3d11_shader_set_cbuffer_ps(10, cbuff);
 			
-			////////////////////////////////////////////////////////////////////////////////////////////////
-			
-			d3d11_cbuffer_begin();
-			var _buffer = buffer_create(1, buffer_grow, 1);
-			var _cbSize = 0;
-			
-			_cbSize += cbuffer_write_fs( _buffer, objectTransform.matTran );
-			_cbSize += cbuffer_write_f(  _buffer, _sc.camera.view_near );
-			_cbSize += cbuffer_write_f(  _buffer, _sc.camera.view_far  );
-			
-			if(_cbSize % 4) d3d11_cbuffer_add_float(4 - _cbSize % 4);
-			var cbuff = d3d11_cbuffer_end();
-			buffer_resize(_buffer, d3d11_cbuffer_get_size(cbuff));
-			d3d11_cbuffer_update(cbuff, _buffer);
-			buffer_delete(_buffer);
-			
-			d3d11_shader_set_cbuffer_vs(11, cbuff);
-			
 		}
+		
+		////////////////////////////////////////////////////////////////////////////////////////////////
+		
+		d3d11_shader_set_cbuffer_vs(10, instance_data);
+		
+		d3d11_cbuffer_begin();
+		var _buffer = buffer_create(1, buffer_grow, 1); buffer_to_start(_buffer);
+		var _cbSize = 0;
+		
+		_cbSize += cbuffer_write_fs( _buffer, objectTransform.matTran );
+		_cbSize += cbuffer_write_f(  _buffer, _sc.camera.view_near );
+		_cbSize += cbuffer_write_f(  _buffer, _sc.camera.view_far  );
+		
+		if(_cbSize % 4) d3d11_cbuffer_add_float(4 - _cbSize % 4);
+		var cbuff = d3d11_cbuffer_end();
+		buffer_resize(_buffer, d3d11_cbuffer_get_size(cbuff));
+		d3d11_cbuffer_update(cbuff, _buffer);
+		buffer_delete(_buffer);
+		
+		d3d11_shader_set_cbuffer_vs(11, cbuff);
 		
 		preSubmitVertex(_sc);
 		transform.submitMatrix();
 		matrix_set(matrix_world, matrix_stack_top());
 		
-		d3d11_shader_set_cbuffer_vs(10, instance_data);
+		////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		for( var i = 0, n = array_length(VB); i < n; i++ ) {
 			var _ind = array_safe_get_fast(material_index, i, i);
@@ -117,17 +130,24 @@ function __3dObjectInstancer() : __3dObject() constructor {
 				_tex = _mat.getTexture();
 				
 				d3d11_cbuffer_begin();
-				var _buffer = buffer_create(1, buffer_grow, 1);
+				var _buffer = buffer_create(1, buffer_grow, 1); buffer_to_start(_buffer);
 				var _cbSize = 0;
 				
-				_cbSize += cbuffer_write_f(  _buffer, _mat.diffuse    );
-				_cbSize += cbuffer_write_f(  _buffer, _mat.specular   );
-				_cbSize += cbuffer_write_f(  _buffer, _mat.shine      );
-				_cbSize += cbuffer_write_i(  _buffer, _mat.metalic    );
-				_cbSize += cbuffer_write_f(  _buffer, _mat.reflective );
-				_cbSize += cbuffer_write_fs( _buffer, _mat.texScale   );
-				_cbSize += cbuffer_write_fs( _buffer, _mat.texShift   );
-				_cbSize += cbuffer_write_i(  _buffer, texture_flip    );
+				if(_sh == sh_d3d_geometry) {
+					_cbSize += cbuffer_write_fs( _buffer, _mat.texScale   );
+					_cbSize += cbuffer_write_fs( _buffer, _mat.texShift   );
+					_cbSize += cbuffer_write_i(  _buffer, texture_flip    );
+					
+				} else {
+					_cbSize += cbuffer_write_f(  _buffer, _mat.diffuse    );
+					_cbSize += cbuffer_write_f(  _buffer, _mat.specular   );
+					_cbSize += cbuffer_write_f(  _buffer, _mat.shine      );
+					_cbSize += cbuffer_write_i(  _buffer, _mat.metalic    );
+					_cbSize += cbuffer_write_f(  _buffer, _mat.reflective );
+					_cbSize += cbuffer_write_fs( _buffer, _mat.texScale   );
+					_cbSize += cbuffer_write_fs( _buffer, _mat.texShift   );
+					_cbSize += cbuffer_write_i(  _buffer, texture_flip    );
+				}
 				
 				if(_cbSize % 4) d3d11_cbuffer_add_float(4 - _cbSize % 4);
 				var cbuff = d3d11_cbuffer_end();
@@ -138,9 +158,9 @@ function __3dObjectInstancer() : __3dObject() constructor {
 				d3d11_shader_set_cbuffer_ps(11, cbuff);
 			}
 					
-			if(VBM != undefined) { matrix_stack_push(VBM[i]); matrix_set(matrix_world, matrix_stack_top()); }
+			if(VBM[i] != undefined) { matrix_stack_push(VBM[i]); matrix_set(matrix_world, matrix_stack_top()); }
 			vertex_submit_instanced(VB[i], render_type, _tex, instance_amount);
-			if(VBM != undefined) { matrix_stack_pop();        matrix_set(matrix_world, matrix_stack_top()); }
+			if(VBM[i] != undefined) { matrix_stack_pop();        matrix_set(matrix_world, matrix_stack_top()); }
 		}
 		
 		d3d11_shader_override_vs(-1);

@@ -2,24 +2,19 @@ function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	name = "Sample Path";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_PathNode("Path"));
+	newInput(0, nodeValue_PathNode(    "Path" ));
+	newInput(1, nodeValue_Float(       "Ratio", 0 ));
+	newInput(2, nodeValue_Enum_Scroll( "Type",  0, [ "Loop", "Ping pong" ] ));
 	
-	newInput(1, nodeValue_Float("Ratio", 0));
-	
-	newInput(2, nodeValue_Enum_Scroll("Type",  0, [ "Loop", "Ping pong" ]));
-	
-	newOutput(0, nodeValue_Output("Position", VALUE_TYPE.float, [ 0, 0 ]))
-		.setDisplay(VALUE_DISPLAY.vector);
-	
-	newOutput(1, nodeValue_Output("Direction", VALUE_TYPE.float, 0));
-	
-	newOutput(2, nodeValue_Output("Weight", VALUE_TYPE.float, 0));
+	newOutput(0, nodeValue_Output( "Position",  VALUE_TYPE.float, [ 0, 0 ] )).setDisplay(VALUE_DISPLAY.vector);
+	newOutput(1, nodeValue_Output( "Direction", VALUE_TYPE.float, 0 ));
+	newOutput(2, nodeValue_Output( "Weight",    VALUE_TYPE.float, 0 ));
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		InputDrawOverlay(inputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params));
 		
 		var _pnt = outputs[0].getValue();
-		if(process_amount == 1) _pnt = [ _pnt ];
+		if(array_get_depth(_pnt) == 1) _pnt = [ _pnt ];
 		
 		draw_set_color(COLORS._main_accent);
 		for( var i = 0, n = array_length(_pnt); i < n; i++ ) {
@@ -42,9 +37,8 @@ function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _rat  = _data[1];
 		var _mod  = _data[2];
 		
-		if(_path == noone)						return _output;
 		if(!is_path(_path)) return _output;
-		if(!is_real(_rat))						return _output;
+		if(!is_real(_rat))  return _output;
 		var inv = false;
 		
 		switch(_mod) {
@@ -62,7 +56,7 @@ function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				break;
 		}
 		
-		_path.getPointRatio(_rat, 0, __temp_p);
+		__temp_p = _path.getPointRatio(_rat, 0, __temp_p);
 		
 		var _px = __temp_p.x;
 		var _py = __temp_p.y;
@@ -71,16 +65,16 @@ function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var r0 = clamp(_rat - 0.0001, 0, 1);
 		var r1 = clamp(_rat + 0.0001, 0, 1);
 		
-		_path.getPointRatio(r0, 0, __temp_p0);
-		_path.getPointRatio(r1, 0, __temp_p1);
+		__temp_p0 = _path.getPointRatio(r0, 0, __temp_p0);
+		__temp_p1 = _path.getPointRatio(r1, 0, __temp_p1);
 		
-		var dir = inv? __temp_p1.directionTo(__temp_p0) : __temp_p0.directionTo(__temp_p1);
+		var arr = __temp_p.toArray();
+		var dir = 0;
 		
-		return [
-			[ _px, _py ],
-			dir,
-			_pw
-		];
+		     if(is(__temp_p, __vec2)) dir = inv? __temp_p1.directionTo(__temp_p0)        : __temp_p0.directionTo(__temp_p1);
+		else if(is(__temp_p, __vec3)) dir = inv? __temp_p1.subtract(__temp_p0).toArray() : __temp_p0.subtract(__temp_p1).toArray();
+		
+		return [ arr, dir, _pw ];
 		
 	}
 	

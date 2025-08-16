@@ -11,7 +11,7 @@ function Node_3D_Light_Directional(_x, _y, _group = noone) : Node_3D_Light(_x, _
 	
 	newInput(in_light + 3, nodeValue_Float("Shadow Bias", 0.01));
 	
-	input_display_list = [
+	input_display_list = [ in_d3d + 0, 
 		["Transform", false], 0,
 		__d3d_input_list_light,
 		["Shadow", false, in_light + 0], in_light + 1, in_light + 2, in_light + 3, 

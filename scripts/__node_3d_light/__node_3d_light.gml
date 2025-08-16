@@ -14,7 +14,7 @@ function Node_3D_Light(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group) 
 	
 	newOutput(0, nodeValue_Output("Light", VALUE_TYPE.d3Light, noone));
 	
-	#macro __d3d_input_list_light ["Light", false], in_d3d + 0, in_d3d + 1, in_d3d + 2
+	#macro __d3d_input_list_light ["Light", false], in_d3d + 1, in_d3d + 2
 	
 	static setLight = function(light, _data) {
 		var _col = _data[in_d3d + 1];

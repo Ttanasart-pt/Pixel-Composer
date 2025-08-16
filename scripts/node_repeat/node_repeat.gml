@@ -691,8 +691,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 					_y += _padd[1] - miny;
 				}
 				
-				// print(dec_to_hex(color_real(_a.color)));
-				draw_surface_ext_safe(_a.surface, _x, _y, _a.sx, _a.sy, _a.rot, _a.color, _a.alpha);
+				draw_surface_ext(_a.surface, _x, _y, _a.sx, _a.sy, _a.rot, _a.color, _a.alpha);
 			}
 			
 			BLEND_NORMAL

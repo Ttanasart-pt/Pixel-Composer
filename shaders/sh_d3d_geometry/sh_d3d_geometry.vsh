@@ -23,7 +23,7 @@ void main() {
 	//viewPos.z       = (viewPos.z - planeNear - planeFar) / (planeFar - planeNear);
 	v_viewPosition  = viewPos.xyz;
 	
-	 v_vTexcoord     = in_TextureCoord;
+	v_vTexcoord     = in_TextureCoord;
 	 
 	vec3 worldNormal = normalize(gm_Matrices[MATRIX_WORLD] * vec4(in_Normal, 0.)).xyz;
 	v_vNormal = worldNormal;
