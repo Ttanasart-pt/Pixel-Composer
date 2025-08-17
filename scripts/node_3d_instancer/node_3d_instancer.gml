@@ -34,7 +34,7 @@ function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D_Modifier(_x, _y, _g
 	////- =Scatter
 	newInput(i+5, nodeValue_Vec3_Range( "Position Scatter", array_create(6,0) ));
 	newInput(i+6, nodeValue_Vec3_Range( "Rotation Scatter", array_create(6,0) ));
-	newInput(i+7, nodeValue_Vec3_Range( "Scale Scatter",    array_create(6,1) ));
+	newInput(i+7, nodeValue_Vec3_Range( "Scale Scatter",    array_create(6,0) ));
 	newInput(i+9, nodeValue_Bool(       "Scale Uniform",    true              ));
 	
 	////- =Render
@@ -147,17 +147,17 @@ function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D_Modifier(_x, _y, _g
 			var _Sscay = _sta_sca[1], _Rscay = _shf_sca[1];
 			var _Sscaz = _sta_sca[2], _Rscaz = _shf_sca[2];
 			
-			var _SCposx0 = _posh[0], _SCposx1 = _posh[3];
-			var _SCposy0 = _posh[1], _SCposy1 = _posh[4];
-			var _SCposz0 = _posh[2], _SCposz1 = _posh[5];
+			var _SCposx0 = _posh[0], _SCposx1 = _posh[1];
+			var _SCposy0 = _posh[2], _SCposy1 = _posh[3];
+			var _SCposz0 = _posh[4], _SCposz1 = _posh[5];
 			
-			var _SCrotx0 = degtorad(_roth[0]), _SCrotx1 = degtorad(_roth[3]);
-			var _SCroty0 = degtorad(_roth[1]), _SCroty1 = degtorad(_roth[4]);
-			var _SCrotz0 = degtorad(_roth[2]), _SCrotz1 = degtorad(_roth[5]);
+			var _SCrotx0 = degtorad(_roth[0]), _SCrotx1 = degtorad(_roth[1]);
+			var _SCroty0 = degtorad(_roth[2]), _SCroty1 = degtorad(_roth[3]);
+			var _SCrotz0 = degtorad(_roth[4]), _SCrotz1 = degtorad(_roth[5]);
 			
-			var _SCscax0 = _scah[0], _SCscax1 = _scah[3];
-			var _SCscay0 = _scah[1], _SCscay1 = _scah[4];
-			var _SCscaz0 = _scah[2], _SCscaz1 = _scah[5];
+			var _SCscax0 = _scah[0], _SCscax1 = _scah[1];
+			var _SCscay0 = _scah[2], _SCscay1 = _scah[3];
+			var _SCscaz0 = _scah[4], _SCscaz1 = _scah[5];
 			
 			var _gridP = _grid[0] * _grid[1];
 			var _rt = _amo >= 1? 1 / (_amo - 1) : 0;

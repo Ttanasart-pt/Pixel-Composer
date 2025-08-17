@@ -177,6 +177,7 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _sel = getInputData(0);
 		var _res = getInputData(1);
 		var _frm = input_selecting;
+		if(!is(_frm, NodeValue)) return;
 		
 		var to = outputs[0];
 		var c0 = value_color(_frm.type);

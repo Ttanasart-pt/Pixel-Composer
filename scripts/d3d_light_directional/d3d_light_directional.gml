@@ -23,31 +23,31 @@ function __3dLightDirectional() : __3dLight() constructor {
 	static submitShader = function(params = {}) { params.addLightDirectional(self); }
 	
 	static preSubmitVertex = function(params = {}) {
-		var _rot = new __rot3(0, 0, 0).lookAt(transform.position, params.camera.position);
 		
-		var rot = matrix_build(0, 0, 0, 
-							   _rot.x, _rot.y, _rot.z, 
-							   1, 1, 1);
-		var sca = matrix_build(0, 0, 0, 
-							   0, 0, 0, 
-							   transform.scale.x, transform.scale.y, transform.scale.z);
-		var pos = matrix_build(transform.position.x, transform.position.y, transform.position.z, 
-							   0, 0, 0, 
-							   1, 1, 1);
+		var _mat = matrix_stack_top();
+		var _pos = [ transform.position.x, transform.position.y, transform.position.z, 1 ];
+		var _pos = matrix_multiply_vector_column(_mat, _pos);
 		
-		matrix_stack_push(pos);
-		matrix_stack_push(rot);
+		var rot = new __rot3(0, 0, 0).lookAt(new __vec3(_pos), params.camera.position);
+		var rx  = rot.x;
+		var ry  = rot.y;
+		var rz  = rot.z;
 		
-		matrix_set(matrix_world, matrix_stack_top());
+		var px  = _pos[0];
+		var py  = _pos[1];
+		var pz  = _pos[2];
+		
+		var pos = matrix_build(px, py, pz,  0,  0,  0,  1,  1,  1);
+		var rot = matrix_build( 0,  0,  0, rx, ry, rz,  1,  1,  1);
+		var sca = matrix_build( 0,  0,  0,  0,  0,  0, .6, .6, .6);
+		
+		var trans = matrix_multiply(rot, pos);
+		
+		matrix_set(matrix_world, trans);
 		vertex_submit(VB_UI[0], pr_linestrip, -1);
 		
-		matrix_stack_push(sca);
-		matrix_set(matrix_world, matrix_stack_top());
+		matrix_set(matrix_world, matrix_multiply(sca, trans));
 		vertex_submit(VB_UI[0], pr_linestrip, -1);
-		
-		matrix_stack_pop();
-		matrix_stack_pop();
-		matrix_stack_pop();
 		
 		matrix_set(matrix_world, matrix_build_identity());
 	}

@@ -131,3 +131,23 @@ function __mat4() constructor {
 		return $"[{s0},\n{s1},\n{s2},\n{s3}]";
 	}
 }
+
+function matrix_multiply_vector(_matrix, _vector) {
+	var res = [0,0,0,0];
+
+    res[0] = _matrix[0] * _vector[0] + _matrix[1] * _vector[1] + _matrix[2] * _vector[2] + _matrix[3] * _vector[3];
+    res[1] = _matrix[4] * _vector[0] + _matrix[5] * _vector[1] + _matrix[6] * _vector[2] + _matrix[7] * _vector[3];
+    res[2] = _matrix[8] * _vector[0] + _matrix[9] * _vector[1] + _matrix[10] * _vector[2] + _matrix[11] * _vector[3];
+    res[3] = _matrix[12] * _vector[0] + _matrix[13] * _vector[1] + _matrix[14] * _vector[2] + _matrix[15] * _vector[3];
+    return res;
+}
+
+function matrix_multiply_vector_column(_matrix, _vector) {
+    var res = [0,0,0,0];
+
+    res[0] = _matrix[0] * _vector[0] + _matrix[4] * _vector[1] + _matrix[8] * _vector[2] + _matrix[12] * _vector[3];
+    res[1] = _matrix[1] * _vector[0] + _matrix[5] * _vector[1] + _matrix[9] * _vector[2] + _matrix[13] * _vector[3];
+    res[2] = _matrix[2] * _vector[0] + _matrix[6] * _vector[1] + _matrix[10] * _vector[2] + _matrix[14] * _vector[3];
+    res[3] = _matrix[3] * _vector[0] + _matrix[7] * _vector[1] + _matrix[11] * _vector[2] + _matrix[15] * _vector[3];
+    return res;
+}

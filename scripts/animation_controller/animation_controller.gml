@@ -63,9 +63,7 @@
 		static isFirstFrame = function() { return current_frame == getFirstFrame(); }
 		static isLastFrame  = function() { return current_frame == getLastFrame();  }
 		
-		static animationStart = function() {
-			array_foreach(PROJECT.allNodes, function(node) { node.onAnimationStart(); });
-		}
+		static animationStart = function() { array_foreach(PROJECT.allNodes, function(n) /*=>*/ {return n.onAnimationStart()}); }
 		
 		static toggle = function() {
 			is_playing			  = !is_playing;
@@ -88,6 +86,8 @@
 			frame_progress		  = true;
 			time_since_last_frame = 0;
 			play_direction        = 1;
+			
+			RENDER_ALL
 		}
 		
 		static render = function() {

@@ -1,6 +1,6 @@
-#macro __vec3_forward new __vec3(1.0, 0.0, 0.0)
-#macro __vec3_right   new __vec3(0.0, 1.0, 0.0)
-#macro __vec3_up      new __vec3(0.0, 0.0, 1.0)
+globalvar __vec3_forward; __vec3_forward = new __vec3(1.0, 0.0, 0.0);
+globalvar __vec3_right;   __vec3_right   = new __vec3(0.0, 1.0, 0.0);
+globalvar __vec3_up;      __vec3_up      = new __vec3(0.0, 0.0, 1.0);
 
 function __vec3(_x = 0, _y = _x, _z = _x) constructor {
 	static set = function(_x = 0, _y = _x, _z = _x) {

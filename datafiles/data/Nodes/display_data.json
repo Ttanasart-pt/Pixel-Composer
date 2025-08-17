@@ -614,6 +614,7 @@
             
             { "label": "VFX" },
             "Node_3D_Instancer", 
+            "Node_3D_Particle", 
             
             { "label": "Points" },
             "Node_Scatter_Points_3D",

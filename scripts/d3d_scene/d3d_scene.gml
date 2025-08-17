@@ -298,12 +298,15 @@ function __3dScene(_camera, _name = "New scene") constructor {
 	////- Data
 	
 	static addLightDirectional = function(light) {
-		if(lightDir_count >= lightDir_max) {
-			noti_warning("Direction light limit exceeded");
-			return self;
-		}
+		if(lightDir_count >= lightDir_max) { noti_warning("Direction light limit exceeded"); return self; }
 		
-		array_append(lightDir_direction, [ light.transform.position.x, light.transform.position.y, light.transform.position.z ]);
+		light.transform.submitMatrix(); 
+		var _mat = matrix_stack_top();
+		var _pos = [ light.transform.position.x, light.transform.position.y, light.transform.position.z, 1 ];
+		var _pos = matrix_multiply_vector_column(_mat, _pos); 
+		light.transform.clearMatrix();
+		
+		array_append(lightDir_direction, [_pos[0], _pos[1], _pos[2]]);
 		array_append(lightDir_color,     colToVec4(light.color));
 		
 		array_push(lightDir_intensity, light.intensity);
@@ -325,12 +328,15 @@ function __3dScene(_camera, _name = "New scene") constructor {
 	}
 	
 	static addLightPoint = function(light) {
-		if(lightPnt_count >= lightPnt_max) {
-			noti_warning("Point light limit exceeded");
-			return self;
-		}
+		if(lightPnt_count >= lightPnt_max) { noti_warning("Point light limit exceeded"); return self; }
 		
-		array_append(lightPnt_position,  [ light.transform.position.x, light.transform.position.y, light.transform.position.z ]);
+		light.transform.submitMatrix(); 
+		var _mat = matrix_stack_top();
+		var _pos = [ light.transform.position.x, light.transform.position.y, light.transform.position.z, 1 ];
+		var _pos = matrix_multiply_vector_column(_mat, _pos); 
+		light.transform.clearMatrix();
+		
+		array_append(lightPnt_position,  [_pos[0], _pos[1], _pos[2]]);
 		array_append(lightPnt_color,     colToVec4(light.color));
 		
 		array_push(lightPnt_intensity, light.intensity);

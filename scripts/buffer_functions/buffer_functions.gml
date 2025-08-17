@@ -66,6 +66,13 @@ function buffer_setPixel(buffer, _w, _h, _x, _y, _c) {
 	buffer_write(buffer, buffer_u32, _c);
 }
 
+function buffer_clear(buffer) {
+	var size = buffer_get_size(buffer);
+	buffer_to_start(buffer);
+	
+	repeat(size) buffer_write(buffer, buffer_u8, 0);
+}
+
 	////- Get
 
 function buffer_read_at(buffer, position, type) {

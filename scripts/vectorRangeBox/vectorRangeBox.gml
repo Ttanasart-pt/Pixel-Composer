@@ -19,24 +19,24 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 		var modi = false;
 		
 		if(linked && !ranged) {
-			for( var i = 0; i < size; i++ )
-				modi = onModify(v, i) || modi;
+			for( var i = 0; i < size; i++ ) {
+				var m = onModify(v, i); modi = modi || m;
+			}
 			
 		} else if(linked) {
-			modi = onModify(v,  index) || modi;
-			modi = onModify(v, (index + dim) % size) || modi;
+			if(dim >= 1) { var m = onModify(v, 0 + (index % 2)); modi = modi || m; }
+			if(dim >= 2) { var m = onModify(v, 2 + (index % 2)); modi = modi || m; }
+			if(dim >= 3) { var m = onModify(v, 4 + (index % 2)); modi = modi || m; }
 			
 		} else if(!ranged) {
-			modi = onModify(v, floor(index / dim) * dim + 0) || modi;
-			modi = onModify(v, floor(index / dim) * dim + 1) || modi;
-			
-			if(size == 6) modi = onModify(v, floor(index / dim) * dim + 2) || modi;
+			var m = onModify(v, index + 0); modi = modi || m;
+			var m = onModify(v, index + 1); modi = modi || m;
 		}
 		
 		return modi;
 	}
 	
-	axis = [ "x", "y", "z", "w"];
+	axis = [ "min", "max" ];
 	onModifySingle[0] = function(v) /*=>*/ {return onModifyIndex(v,0)};
 	onModifySingle[1] = function(v) /*=>*/ {return onModifyIndex(v,1)};
 	onModifySingle[2] = function(v) /*=>*/ {return onModifyIndex(v,2)};
@@ -81,7 +81,7 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 		if(struct_has(_display_data, "linked")) linked = _display_data.linked;
 		if(struct_has(_display_data, "ranged")) ranged = _display_data.ranged;
 		
-		h = _h * 2 + ui(4);
+		h = ranged? _h * 2 + ui(4) : _h;
 		
 		var _bs = min(_h, ui(32));
 		
@@ -99,15 +99,15 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 			if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, _bs, _bs, _m, hover, active, __txt("Link axis"), THEME.value_link, linked, bc) == 2) {
 				linked = !linked;
 				_display_data.linked = linked;
-			
+				
 				if(linked) {
-					onModifyIndex(_data[0], 0);
-					onModifyIndex(_data[1], 1);
-					if(size == 6) onModifyIndex(_data[1], 2);
+					if(dim >= 1) { onModifyIndex(_data[0], 0); onModifyIndex(_data[1], 1); }
+					if(dim >= 2) { onModifyIndex(_data[0], 2); onModifyIndex(_data[1], 3); }
+					if(dim >= 3) { onModifyIndex(_data[0], 4); onModifyIndex(_data[1], 5); }
 				}
 			}
 			
-			by += _h + ui(4);
+			bx += _bs + ui(4);
 			
 			tooltip_ranged.index = ranged;
 			var b  = buttonInstant_Pad(THEME.button_hide_fill, bx, by, _bs, _bs, _m, hover, active, tooltip_ranged, THEME.value_range, ranged);
@@ -118,21 +118,21 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 			if(tg) {
 				ranged = !ranged;
 				_display_data.ranged = ranged;
-			
+				
 				if(!ranged) {
-					onModifyIndex(_data[0], 0);
-					onModifyIndex(_data[1], 2);
-					if(size == 6) onModifyIndex(_data[1], 4);
+					if(dim >= 1) { onModifyIndex(_data[0], 1); }
+					if(dim >= 2) { onModifyIndex(_data[2], 3); }
+					if(dim >= 3) { onModifyIndex(_data[4], 5); }
 				}
 			}
 			
-			_x += _bs + ui(4);
-			_w -= _bs + ui(4);
+			_x += (_bs + ui(4)) * 2;
+			_w -= (_bs + ui(4)) * 2;
 		}
 		
 		var ww = _w / dim;
 		
-		for( var j = 0; j < 2; j++ ) {
+		for( var j = 0; j < 1 + ranged; j++ ) {
 			var by = _y + (_h + ui(4)) * j;
 			
 			draw_sprite_stretched_ext(THEME.textbox, 3, _x, by, _w, _h, boxColor, 1);
@@ -140,24 +140,28 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 		}
 		
 		if(linked) {
-			draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, _x          + ww / 2 - ui(2), _y + _h / 2, ui(4), _h + ui(4), COLORS._main_accent, .2);
-			draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, _x + ww * 1 + ww / 2 - ui(2), _y + _h / 2, ui(4), _h + ui(4), COLORS._main_accent, .2);
-			draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, _x + ww * 2 + ww / 2 - ui(2), _y + _h / 2, ui(4), _h + ui(4), COLORS._main_accent, .2);
+			draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, _x + ww / 2 - ui(2), _y + _h / 2, _w - ww, ui(4), COLORS._main_accent, .2);
 		}
 		
-		if(!ranged) {
-			draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, _x + ww / 2, _y +              _h / 2 - ui(2), _w - ww / 2, ui(4), COLORS._main_accent, .2);
-			draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, _x + ww / 2, _y + _h + ui(4) + _h / 2 - ui(2), _w - ww / 2, ui(4), COLORS._main_accent, .2);
-		}
-		
-		for( var j = 0; j < 2; j++ ) {
-			var by = _y + (_h + ui(4)) * j;
-			
+		if(ranged) {
+			for( var i = 0; i < dim; i++ ) {
+				for( var j = 0; j < 2; j++ ) {
+					var bx  = _x + ww * i;
+					var by  = _y + (_h + ui(4)) * j;
+					var ind = i * 2 + j;
+					
+					if(i == 0) tb[ind].label = axis[j];
+					tb[ind].setFocusHover(active, hover);
+					tb[ind].draw(bx, by, ww, _h, _data[ind], _m);
+				}
+			}
+		} else {
 			for( var i = 0; i < dim; i++ ) {
 				var bx  = _x + ww * i;
-				var ind = j * dim + i;
+				var by  = _y;
+				var ind = i * 2;
 				
-				if(i == 0) tb[ind].label = axis[j];
+				tb[ind].label = "";
 				tb[ind].setFocusHover(active, hover);
 				tb[ind].draw(bx, by, ww, _h, _data[ind], _m);
 			}

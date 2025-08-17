@@ -31,12 +31,12 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput( 5, nodeValue_Range(       "Lifespan",            [20,30]        ));
 	
 	////- =Movement
-	newInput(29, nodeValue_Bool(            "Directed From Center",       false              )).setTooltip("Make particle move away from the spawn center.");
-	newInput(53, nodeValue_Rotation_Range(  "Angle Range",                [0,360]            ));
 	newInput(64, nodeValue_Enum_Button(     "Direction Type",              0, [ "Random", "Uniform" ] ));
 	newInput( 6, nodeValue_Rotation_Random( "Initial Direction",          [0,45,135,0,0]     )); 
 	newInput(18, nodeValue_Range(           "Initial Speed",              [1,2]              ));
 	newInput(60, nodeValue_Curve(           "Base Speed Over Time",       CURVE_DEF_11       )).setTooltip("Speed may conflict with physics-based properties.");
+	newInput(29, nodeValue_Bool(            "Directed From Center",       false              )).setTooltip("Make particle move away from the spawn center.");
+	newInput(53, nodeValue_Rotation_Range(  "Angle Range",                [0,360]            ));
 	
 	////- =Rotation
 	newInput(15, nodeValue_Bool(            "Rotate by Direction",        false              )).setTooltip("Make the particle rotates to follow its movement.");
@@ -134,7 +134,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	input_display_list = [ 32, 
 		["Sprite",	   false],	    0, dynaDraw_parameter, 22, 23, 49, 26,
 		["Spawn",		true],	   27, 16, 44,  1, 51,  2,  4,  3, 30, 55, 62, 24, __inspc(ui(6), true), 52,  5, 
-		["Movement",	true],     29, 53, 64,  6, 18, 60, 
+		["Movement",	true],     64,  6, 18, 60, 29, 53, 
 		["Rotation",	true],	   15,  8,  9, 59, 61, 
 		["Scale",		true],	   10, 17, 11, 
 		["Color",		true],	   12, 28, 50, 13, 14, 56, 

@@ -36,6 +36,10 @@ function __3dObjectInstancer() : __3dObject() constructor {
 	
 	__initInstanceRenderer();
 	
+	vs = INSTANCE_SHADER_VS;
+	ps = INSTANCE_SHADER_PS;
+	gs = INSTANCE_GEOMETRY_PS;
+	
 	static setBuffer = function(_buffer) {
 		d3d11_cbuffer_begin();
 		d3d11_cbuffer_add_float(16 * instance_amount);
@@ -50,16 +54,20 @@ function __3dObjectInstancer() : __3dObject() constructor {
 	static submitShader = function(_sc = noone, _sh = noone) /*=>*/ { submitVertex(_sc, _sh); }
 	static submit		= function(_sc = noone, _sh = noone) /*=>*/ { submitVertex(_sc, _sh); }
 	
+	static submitCbuffer = function() {
+		d3d11_shader_set_cbuffer_vs(10, instance_data);
+	}
+	
 	static submitVertex = function(_sc = noone, _sh = noone) {
 		if(!is(_sc, __3dScene)) return;
 			
-		d3d11_shader_override_vs(INSTANCE_SHADER_VS);
+		d3d11_shader_override_vs(vs);
 		
 		if(_sh == sh_d3d_geometry) {
-			d3d11_shader_override_ps(INSTANCE_GEOMETRY_PS);
+			d3d11_shader_override_ps(gs);
 			
 		} else {
-			d3d11_shader_override_ps(INSTANCE_SHADER_PS);
+			d3d11_shader_override_ps(ps);
 				
 			d3d11_cbuffer_begin();
 			var _buffer = buffer_create(1, buffer_grow, 1); buffer_to_start(_buffer);
@@ -97,7 +105,7 @@ function __3dObjectInstancer() : __3dObject() constructor {
 		
 		////////////////////////////////////////////////////////////////////////////////////////////////
 		
-		d3d11_shader_set_cbuffer_vs(10, instance_data);
+		submitCbuffer();
 		
 		d3d11_cbuffer_begin();
 		var _buffer = buffer_create(1, buffer_grow, 1); buffer_to_start(_buffer);
