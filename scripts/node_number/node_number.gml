@@ -108,7 +108,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			w_hovering = hover && point_in_rectangle(_mx, _my, _rx0, _ry0, _rx1, _ry1);
 			
 			if(gz_style == 1) {
-				draw_set_color(_h || gz_dragging? COLORS._main_accent : COLORS._main_icon);
+				draw_set_color(w_hovering || gz_dragging? COLORS._main_accent : COLORS._main_icon);
 				draw_set_circle_precision(32);
 				
 				switch(gz_shape) {
