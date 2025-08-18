@@ -3328,8 +3328,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	    	
 	    	case "Node_Transform" : 
 	    		if(!array_empty(nodes_selecting) && !array_empty(nodes_selecting[0].outputs)) {
-	    			var _outP = nodes_selecting[0].outputs[0];
-	    			if(_outP.type == VALUE_TYPE.d3Mesh || _outP.type == VALUE_TYPE.d3Scene)
+	    			var _outT = nodes_selecting[0].outputs[0].type;
+	    			if(_outT == VALUE_TYPE.d3Mesh || _outT == VALUE_TYPE.d3Scene) 
 	    				_nodeType = "Node_3D_Transform";
 	    		}
 	    		

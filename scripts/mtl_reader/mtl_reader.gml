@@ -39,9 +39,9 @@ function readMtl(path) {
 			case "Ka" :		cur_mat.refc = colorFromRGBArray([sep[1], sep[2], sep[3]]); break;
 			case "Kd" :		cur_mat.diff = colorFromRGBArray([sep[1], sep[2], sep[3]]); break;
 			case "Ks" :		cur_mat.spec = colorFromRGBArray([sep[1], sep[2], sep[3]]); break;
-			case "map_Ka":	cur_mat.refc_path = filename_dir(path) + "/" + str_strip_nr(sep[1]);  break;
-			case "map_Kd":	cur_mat.diff_path = filename_dir(path) + "/" + str_strip_nr(sep[1]);  break;
-			case "map_Ks":	cur_mat.spec_path = filename_dir(path) + "/" + str_strip_nr(sep[1]);  break;
+			case "map_Ka":	cur_mat.refc_path = str_strip_nr(sep[1]);  break;
+			case "map_Kd":	cur_mat.diff_path = str_strip_nr(sep[1]);  break;
+			case "map_Ks":	cur_mat.spec_path = str_strip_nr(sep[1]);  break;
 		}
 	}
 	

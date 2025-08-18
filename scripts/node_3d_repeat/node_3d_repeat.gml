@@ -20,9 +20,9 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	newInput(20, nodeValue_Slider(      "Follow Path",  0       ));
 	
 	////- =Transform
-	newInput( 9, nodeValue_Vec3( "Positions", [[0,0,0]] )).setArrayDepth(1);
-	newInput(10, nodeValue_Vec3( "Rotations", [[0,0,0]] )).setArrayDepth(1);
-	newInput(11, nodeValue_Vec3( "Scales",    [[0,0,0]] )).setArrayDepth(1);
+	newInput( 9, nodeValue_Vec3( "Positions", [] )).setArrayDepth(1);
+	newInput(10, nodeValue_Vec3( "Rotations", [] )).setArrayDepth(1);
+	newInput(11, nodeValue_Vec3( "Scales",    [] )).setArrayDepth(1);
 	
 	////- =Shift
 	newInput( 6, nodeValue_Vec3(       "Shift Position",   [1,0,0]   ));

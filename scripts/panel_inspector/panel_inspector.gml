@@ -207,7 +207,7 @@ function Panel_Inspector() : PanelContent() constructor {
     	
         prop_page   = 0;
         prop_page_b = new buttonGroup(__txts([ "Properties", "Settings", THEME.message_16 ]), function(val) /*=>*/ { prop_page = val; })
-   							.setButton([ THEME.button_hide_left, THEME.button_hide_middle, THEME.button_hide_right ])
+   							.setButton([ THEME.button_hide_left, THEME.button_hide_middle, THEME.button_hide_right ]).iconPad(ui(8))
    							.setFont(f_p2, COLORS._main_text_sub)
         
         proj_prop_page   = 0;

@@ -23,6 +23,12 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 	static setCollape   = function(cc) /*=>*/ { collapsable = cc; return self; } 
 	static setBlend     = function(bb) /*=>*/ { sprBlend    = bb; return self; } 
 	
+	static iconPad = function(_padd = ui(4)) {
+		for( var i = 0, n = array_length(buttons); i < n; i++ ) 
+			buttons[i].iconPad(_padd);
+		return self;
+	}
+	
 	static trigger = function() {
 		if(!is_real(current_selecting)) return;
 		

@@ -25,13 +25,11 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 	name = "3D Obj";
 	
 	////- =Object
-	
 	newInput(in_mesh + 0, nodeValue_Path(        "File Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "3d object|*.obj" });
 	newInput(in_mesh + 2, nodeValue_Float(       "Import Scale", 1 ));
 	newInput(in_mesh + 3, nodeValue_Enum_Scroll( "Axis",         0, [ "XYZ", "XZ-Y", "X-ZY" ]));
 	
 	////- =Material
-	
 	newInput(in_mesh + 1, nodeValue_Bool( "Flip UV", true, "Flip UV axis, can be use to fix some texture mapping error."));
 		
 	input_display_list = [
@@ -79,30 +77,25 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 	
 	static createMaterial = function(m_index) {
 		var index = input_fix_len + m_index;
-		
-		input_display_list[input_display_len + m_index] = index;
-		if(index < array_length(inputs)) return;
-		
-		createNewInput(index);
-		
-		if(m_index >= array_length(materials)) return;
+		if(index < array_length(inputs) || m_index >= array_length(materials)) return;
 		
 		var matY = y - (array_length(materials) - 1) / 2 * (128 + 32);
 		var mat  = materials[m_index];
-		inputs[index].name = materialNames[m_index] + " Material";
+		var inp  = createNewInput(index);
+		inp.name = materialNames[m_index] + " Material";
 		
 		if(file_exists_empty(mat.diff_path)) {
-			var sol = Node_create_Image_path(x - (w + 128), matY + m_index * (128 + 32), mat.diff_path);
+			var sol = Node_create_Image_path(x - (w + 64), matY + m_index * (128 + 32), mat.diff_path);
 			sol.name = mat.name + " texture";
 			
-			inputs[index].setFrom(sol.outputs[0]);
 		} else {
-			var sol = nodeBuild("Node_Solid", x - (w + 128), matY + m_index * (128 + 32));
+			var sol = nodeBuild("Node_Solid", x - (w + 64), matY + m_index * (128 + 32));
 			sol.name = mat.name + " texture";
 			sol.inputs[1].setValue(cola(mat.diff));
 			
-			inputs[index].setFrom(sol.outputs[0]);
 		}
+		
+		inp.setFrom(sol.outputs[0]);
 	}
 	
 	static updateObjStart = function(_path) {
@@ -131,12 +124,12 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		use_display_list = true;
 		if(obj_raw == noone) return;
 		
-		var txt = $"========== OBJ import ==========\n";
-		txt += $"Vertex counts:   {obj_raw.vertex_count}\n";
-		txt += $"Object counts:   {obj_raw.object_counts}\n";
-		txt += $"Material counts: {array_length(obj_raw.materials)}\n";
-		txt += $"Model BBOX:      {obj_raw.model_size}\n";
-		txt += $"Load completed in {(get_timer() - obj_read_time) / 1000} ms\n";
+		var txt =   $"========== OBJ import ==========\n"
+		          + $"Vertex counts:   {obj_raw.vertex_count}\n"
+		          + $"Object counts:   {obj_raw.object_counts}\n"
+		          + $"Material counts: {array_length(obj_raw.materials)}\n"
+		          + $"Model BBOX:      {obj_raw.model_size}\n"
+		          + $"Load completed in {(get_timer() - obj_read_time) / 1000} ms\n"
 		logNode(txt);
 		
 		var span = max(abs(obj_raw.model_size.x), abs(obj_raw.model_size.y), abs(obj_raw.model_size.z));
@@ -171,15 +164,17 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 			} else
 				noti_warning("Load mtl error: Material amount defined in .mtl file not match the .obj file.", noone, self);
 		}
-		
-		array_resize(input_display_list, input_display_len);
 			
 		var _overflow = input_fix_len + array_length(materialNames);
 		while(array_length(inputs) > _overflow)
 			array_delete(inputs, _overflow, 1);
 		
-		for(var i = 0; i < array_length(materialNames); i++) 
+		for(var i = 0; i < array_length(materialNames); i++)
 			createMaterial(i);
+		
+		array_resize(input_display_list, input_display_len);	
+		for(var i = 0; i < array_length(materialNames); i++)
+			array_push(input_display_list, input_fix_len + i);
 		
 		triggerRender();
 	}
@@ -207,9 +202,9 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		var _flip = _data[in_mesh + 1];
 		
 		if(object_data == noone) return noone;
-		var materials = [];
+		var _materials = [];
 		for( var i = input_fix_len, n = array_length(_data); i < n; i++ ) 
-			materials[i - input_fix_len] = _data[i];
+			_materials[i - input_fix_len] = _data[i];
 		
 		var _object = getObject(_array_index);
 		_object.VF		        = global.VF_POS_NORM_TEX_COL;
@@ -219,7 +214,7 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		_object.vertex          = object_data.vertex;
 		_object.size            = object_data.size;
 		_object.object_counts	= object_data.object_counts;
-		_object.materials		= materials;
+		_object.materials		= _materials;
 		_object.material_index	= materialIndex;
 		_object.texture_flip    = _flip;
 		
