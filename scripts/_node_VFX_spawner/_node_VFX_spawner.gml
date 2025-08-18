@@ -93,7 +93,6 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput(25, nodeValue_Int(      "Boundary Data",          []   )).setArrayDepth(1).setVisible(false, true);
 	newInput(31, nodeValue_Surface(  "Atlas",                  []   )).setArrayDepth(1);
 	newInput(48, nodeValue_Trigger(  "Reset Seed"                   ))
-	
 	// inputs 65
 	
 	array_foreach(inputs, function(inp, i) /*=>*/ { if(i == 6 || i == 8) return; inp.rejectArray(); }, 1);

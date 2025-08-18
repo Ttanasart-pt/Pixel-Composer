@@ -41,11 +41,23 @@ struct ParticleData {
 	float lifeMax;
 	float lifeTime;
 
+	int renderFlags, reserved0, reserved1, reserved2; // 16 bytes padding 
+	
 	float4 color;
+	float4 velocity;
+	
 };
 
 cbuffer Data : register(b12) {	
 	ParticleData particleData[1024];
+};
+
+struct ParticleData2 {
+	float4 startingPosition;
+};
+
+cbuffer Data : register(b13) {	
+	ParticleData2 particleData2[1024];
 };
 
 void main(in VS_in IN, out VS_out OUT) {
@@ -67,6 +79,14 @@ void main(in VS_in IN, out VS_out OUT) {
 	float3   tran_nor = transform.upNormal.xyz;
 	float4   colr     = particle.color;
 
+	int renderFlags = particle.renderFlags;
+	bool isBillboard = (renderFlags & 0x1) != 0;
+	if(isBillboard) {
+		float4x4 lookat = lookatMatrix(cameraPosition, float3(0.0, 0.0, 1.0));
+		position = mul(lookat, float4(position, 1.)).xyz;
+		normal = mul(lookat, float4(normal, 0.)).xyz;
+	}
+	
 	position = mul(objectTransform, float4(position, 1.)).xyz;
 	position = mul(matx_rot, float4(position, 1.)).xyz;
 

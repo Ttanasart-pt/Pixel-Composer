@@ -3,6 +3,7 @@
 
 cbuffer SceneData : register(b11) {	
 	float4x4 objectTransform;
+	float3 cameraPosition;
 	float planeNear;
 	float planeFar;
 }

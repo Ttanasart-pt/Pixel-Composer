@@ -108,10 +108,6 @@ function Node_Path_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _g
 			tool_pos_object.drawOverlay3D(in_d3d + 5, noone, _lkvpos, active, params, _mx, _my, _snx, _sny, _panel);
 		}
 		
-		if(drag_axis != noone && mouse_release(mb_left)) {
-			drag_axis = noone;
-			UNDO_HOLDING = false;
-		}
 	}
 	
 	////- Path

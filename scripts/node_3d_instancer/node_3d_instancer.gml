@@ -1,55 +1,59 @@
-function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D_Modifier(_x, _y, _group) constructor {
+function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constructor {
 	name = "3D Instancer";
 	
-	var i = in_mesh;
-	newInput(i+8, nodeValueSeed());
+	newInput( 9, nodeValueSeed());
+	
+	////- =Object
+	newInput( 0, nodeValue_D3Mesh("Mesh", noone)).setVisible(true, true);
 	
 	////- =Objects
-	newInput(i+15, nodeValue_Vec3(        "Starting Position", [0,0,0]    ));
-	newInput(i+16, nodeValue_Quaternion(  "Starting Rotation", [0,0,0,1 ] ));
-	newInput(i+17, nodeValue_Vec3(        "Starting Scale",    [1,1,1]    ));
+	newInput(16, nodeValue_Vec3(        "Starting Position", [0,0,0]    ));
+	newInput(17, nodeValue_Quaternion(  "Starting Rotation", [0,0,0,1 ] ));
+	newInput(18, nodeValue_Vec3(        "Starting Scale",    [1,1,1]    ));
 	
 	////- =Repeat
-	newInput(i+18, nodeValue_Enum_Scroll( "Pattern",      0, __enum_array_gen([ "Linear", "Grid", "Circular"], s_node_repeat_axis) )).rejectArray();
-	newInput(i+0,  nodeValue_Int(         "Amounts",      1 ));
-	newInput(i+19, nodeValue_IVec3(       "Grid",         [2,2,1] ));
-	newInput(i+20, nodeValue_Float(       "Radius",       1       ));
-	newInput(i+21, nodeValue_Bool(        "Look At Center", false ));
-	newInput(i+22, nodeValue_PathNode(    "Shift Path"            ));
-	newInput(i+23, nodeValue_Bool(        "Follow Path",  false   ));
+	newInput(19, nodeValue_Enum_Scroll( "Pattern",      0, __enum_array_gen([ "Linear", "Grid", "Circular"], s_node_repeat_axis) )).rejectArray();
+	newInput( 1, nodeValue_Int(         "Amounts",      1 ));
+	newInput(20, nodeValue_IVec3(       "Grid",         [2,2,1] ));
+	newInput(21, nodeValue_Float(       "Radius",       1       ));
+	newInput(22, nodeValue_Bool(        "Look At Center", false ));
+	newInput(23, nodeValue_PathNode(    "Shift Path"            ));
+	newInput(24, nodeValue_Bool(        "Follow Path",  false   ));
 	
 	////- =Transform Data
-	newInput(i+1, nodeValue_Vec3( "Positions", [[0,0,0]] )).setArrayDepth(1);
-	newInput(i+2, nodeValue_Vec3( "Rotations", [[0,0,0]] )).setArrayDepth(1);
-	newInput(i+3, nodeValue_Vec3( "Scales",    [[1,1,1]] )).setArrayDepth(1);
-	newInput(i+4, nodeValue_Vec3( "Normal",    [[0,0,0]] )).setArrayDepth(1);
+	newInput(2, nodeValue_Vec3( "Positions", [[0,0,0]] )).setArrayDepth(1);
+	newInput(3, nodeValue_Vec3( "Rotations", [[0,0,0]] )).setArrayDepth(1);
+	newInput(4, nodeValue_Vec3( "Scales",    [[1,1,1]] )).setArrayDepth(1);
+	newInput(5, nodeValue_Vec3( "Normal",    [[0,0,0]] )).setArrayDepth(1);
 	
 	////- =Shift
-	newInput(i+12, nodeValue_Vec3(       "Shift Position",   [1,0,0]   ));
-	newInput(i+24, nodeValue_Vec3(       "Shift Position Y", [0,1,0]   ));
-	newInput(i+25, nodeValue_Vec3(       "Shift Position Z", [0,0,1]   ));
-	newInput(i+13, nodeValue_Quaternion( "Shift Rotation",   [0,0,0,1] ));
-	newInput(i+14, nodeValue_Vec3(       "Shift Scale",      [0,0,0]   ));
+	newInput(13, nodeValue_Vec3(       "Shift Position",   [1,0,0]   ));
+	newInput(25, nodeValue_Vec3(       "Shift Position Y", [0,1,0]   ));
+	newInput(26, nodeValue_Vec3(       "Shift Position Z", [0,0,1]   ));
+	newInput(14, nodeValue_Quaternion( "Shift Rotation",   [0,0,0,1] ));
+	newInput(15, nodeValue_Vec3(       "Shift Scale",      [0,0,0]   ));
 	
 	////- =Scatter
-	newInput(i+5, nodeValue_Vec3_Range( "Position Scatter", array_create(6,0) ));
-	newInput(i+6, nodeValue_Vec3_Range( "Rotation Scatter", array_create(6,0) ));
-	newInput(i+7, nodeValue_Vec3_Range( "Scale Scatter",    array_create(6,0) ));
-	newInput(i+9, nodeValue_Bool(       "Scale Uniform",    true              ));
+	newInput( 6, nodeValue_Vec3_Range( "Position Scatter", array_create(6,0) ));
+	newInput( 7, nodeValue_Vec3_Range( "Rotation Scatter", array_create(6,0) ));
+	newInput( 8, nodeValue_Vec3_Range( "Scale Scatter",    array_create(6,0) ));
+	newInput(10, nodeValue_Bool(       "Scale Uniform",    true              ));
 	
 	////- =Render
-	newInput(i+11, nodeValue_Palette(  "Colors Per Index", [ ca_white ] ));
-	newInput(i+10, nodeValue_Gradient( "Random Colors",    new gradientObject(ca_white) ));
-	// i+26
+	newInput(12, nodeValue_Palette(  "Colors Per Index", [ ca_white ] ));
+	newInput(11, nodeValue_Gradient( "Random Colors",    new gradientObject(ca_white) ));
+	// 27
 	
-	input_display_list = [ i+8, 
-		[ "Object",  false ], 0, i+15, i+16, i+17,
-		[ "Repeat",  false ], i+18, i+0, i+19, i+20, i+21, i+22, i+23,
-		[ "Transform Data", true ], i+1, i+2, i+3, i+4, 
-		[ "Shift",   false ], i+12, i+24, i+25, i+13, i+14, 
-		[ "Scatter", false ], i+5, i+6, i+7, i+9, 
-		[ "Render",  false ], i+11, i+10, 
+	input_display_list = [ 9, 
+		[ "Object",  false ], 0, 16, 17, 18,
+		[ "Repeat",  false ], 19, 1, 20, 21, 22, 23, 24,
+		[ "Transform Data", true ], 2, 3, 4, 5, 
+		[ "Shift",   false ], 13, 25, 26, 14, 15, 
+		[ "Scatter", false ],  6,  7,  8, 10, 
+		[ "Render",  false ], 12, 11, 
 	];
+	
+	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.d3Mesh, noone));
 	
 	static processData = function(_output, _data, _array_index = 0) {
 		var _obj = _data[0];
@@ -57,50 +61,50 @@ function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D_Modifier(_x, _y, _g
 		if(_obj.VF != global.VF_POS_NORM_TEX_COL)	return noone;
 		
 		#region data
-			var _seed    = _data[in_mesh + 8];
+			var _seed    = _data[ 9];
 			
-			var _sta_pos = _data[in_mesh + 15];
-			var _sta_rot = _data[in_mesh + 16];
-			var _sta_sca = _data[in_mesh + 17];
+			var _sta_pos = _data[16];
+			var _sta_rot = _data[17];
+			var _sta_sca = _data[18];
 			
-			var _patt    = _data[in_mesh + 18];
-			var _amo     = _data[in_mesh + 0]; if(_amo <= 0) return noone;
-			var _grid    = _data[in_mesh + 19];
-			var _radius  = _data[in_mesh + 20];
-			var _lok_cen = _data[in_mesh + 21];
-			var _path    = _data[in_mesh + 22];
-			var _fol_pth = _data[in_mesh + 23];
+			var _patt    = _data[19];
+			var _amo     = _data[ 1]; if(_amo <= 0) return noone;
+			var _grid    = _data[20];
+			var _radius  = _data[21];
+			var _lok_cen = _data[22];
+			var _path    = _data[23];
+			var _fol_pth = _data[24];
 			
-			var _poss    = _data[in_mesh + 1];
-			var _rots    = _data[in_mesh + 2];
-			var _scas    = _data[in_mesh + 3];
-			var _nors    = _data[in_mesh + 4];
+			var _poss    = _data[ 2];
+			var _rots    = _data[ 3];
+			var _scas    = _data[ 4];
+			var _nors    = _data[ 5];
 			
-			var _shf_pos   = _data[in_mesh + 12];
-			var _shf_pos_y = _data[in_mesh + 24];
-			var _shf_pos_z = _data[in_mesh + 25];
-			var _shf_rot   = _data[in_mesh + 13];
-			var _shf_sca   = _data[in_mesh + 14];
+			var _shf_pos   = _data[13];
+			var _shf_pos_y = _data[25];
+			var _shf_pos_z = _data[26];
+			var _shf_rot   = _data[14];
+			var _shf_sca   = _data[15];
 			
-			var _posh    = _data[in_mesh + 5];
-			var _roth    = _data[in_mesh + 6];
-			var _scah    = _data[in_mesh + 7];
-			var _scauni  = _data[in_mesh + 9];
+			var _posh    = _data[ 6];
+			var _roth    = _data[ 7];
+			var _scah    = _data[ 8];
+			var _scauni  = _data[10];
 			
-			var _cind    = _data[in_mesh + 11]; 
-			var _grnd    = _data[in_mesh + 10]; _grnd.cache();
+			var _cind    = _data[12]; 
+			var _grnd    = _data[11]; _grnd.cache();
 			
-			inputs[in_mesh +  0].setVisible(_patt != 1);
+			inputs[ 1].setVisible(_patt != 1);
 			
-			inputs[in_mesh + 22].setVisible(_patt == 0, _patt == 0);
-			inputs[in_mesh + 23].setVisible(_patt == 0);
+			inputs[23].setVisible(_patt == 0, _patt == 0);
+			inputs[24].setVisible(_patt == 0);
 			
-			inputs[in_mesh + 19].setVisible(_patt == 1);
-			inputs[in_mesh + 24].setVisible(_patt == 1);
-			inputs[in_mesh + 25].setVisible(_patt == 1);
+			inputs[20].setVisible(_patt == 1);
+			inputs[25].setVisible(_patt == 1);
+			inputs[26].setVisible(_patt == 1);
 			
-			inputs[in_mesh + 20].setVisible(_patt == 2);
-			inputs[in_mesh + 21].setVisible(_patt == 2);
+			inputs[21].setVisible(_patt == 2);
+			inputs[22].setVisible(_patt == 2);
 		#endregion
 			
 		#region base instancer

@@ -112,6 +112,7 @@ function __3dObjectInstancer() : __3dObject() constructor {
 		var _cbSize = 0;
 		
 		_cbSize += cbuffer_write_fs( _buffer, objectTransform.matTran );
+		_cbSize += cbuffer_write_fs( _buffer, _sc.camera.position.toArray());
 		_cbSize += cbuffer_write_f(  _buffer, _sc.camera.view_near );
 		_cbSize += cbuffer_write_f(  _buffer, _sc.camera.view_far  );
 		
@@ -128,6 +129,9 @@ function __3dObjectInstancer() : __3dObject() constructor {
 		matrix_set(matrix_world, matrix_stack_top());
 		
 		////////////////////////////////////////////////////////////////////////////////////////////////
+		
+		gpu_set_zwriteenable(!transparent);
+		draw_set_color_alpha(c_white, 1);
 		
 		for( var i = 0, n = array_length(VB); i < n; i++ ) {
 			var _ind = array_safe_get_fast(material_index, i, i);
@@ -164,12 +168,26 @@ function __3dObjectInstancer() : __3dObject() constructor {
 				buffer_delete(_buffer);
 				
 				d3d11_shader_set_cbuffer_ps(11, cbuff);
+				
+				gpu_set_tex_filter(_mat.texFilter);
 			}
-					
+			
+			switch(blend_mode) {
+				case BLEND.normal:  BLEND_NORMAL; break;
+				case BLEND.alpha:   BLEND_ALPHA;  break;
+				case BLEND.add:     BLEND_ADD;    break;
+				case BLEND.maximum: BLEND_MAX;    break;
+			}
+			
 			if(VBM[i] != undefined) { matrix_stack_push(VBM[i]); matrix_set(matrix_world, matrix_stack_top()); }
 			vertex_submit_instanced(VB[i], render_type, _tex, instance_amount);
 			if(VBM[i] != undefined) { matrix_stack_pop();        matrix_set(matrix_world, matrix_stack_top()); }
+			
+			BLEND_NORMAL
 		}
+		
+		gpu_set_tex_filter(false);
+		gpu_set_zwriteenable(true);
 		
 		d3d11_shader_override_vs(-1);
 		d3d11_shader_override_ps(-1);

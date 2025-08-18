@@ -127,11 +127,6 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 			tool_pos_object.drawOverlay3D(in_d3d + 10, noone, _lkvpos, active, params, _mx, _my, _snx, _sny, _panel);
 		}
 		
-		if(drag_axis != noone && mouse_release(mb_left)) {
-			drag_axis = noone;
-			UNDO_HOLDING = false;
-		}
-		
 		#region draw result
 			var _outSurf = outputs[0].getValue();
 			if(is_array(_outSurf)) _outSurf = array_safe_get_fast(_outSurf, 0);

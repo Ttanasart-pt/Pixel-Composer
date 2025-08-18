@@ -126,7 +126,7 @@ void main(in VS_out IN, out PS_out OUT) {
 	}
 
 	final_color.rgb *= light_effect;
-	if (final_color.a < 0.1) discard;
+	if (final_color.a < 0.01) discard;
 
 	OUT.Color  = final_color;
 	OUT.Normal = float4(.5 + normal * .5, final_color.a);

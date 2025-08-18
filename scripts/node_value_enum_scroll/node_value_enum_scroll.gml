@@ -8,7 +8,7 @@ function __NodeValue_Enum_Scroll(_name, _node, _value, _data) : NodeValue(_name,
 	
 	/////============== SET =============
 	
-	static setChoices = function(_ch) { setDisplay(VALUE_DISPLAY.enum_button, _ch); return self; }
+	static setChoices = function(_ch) { setDisplay(VALUE_DISPLAY.enum_scroll, _ch); return self; }
 	
 	static scrollValue = function(_d=1) /*=>*/ { 
 		choicesAmount = array_length(editWidget.data);

@@ -44,7 +44,8 @@ function __3dObject() : __3dInstance() constructor {
 	edges  = [];
 	EB     = [];
 	
-	size      = new __vec3(1);
+	size        = new __vec3(1);
+	transparent = false;
 	
 	normal_draw_size = 0.2;
 	render_type      = pr_trianglelist;
@@ -53,6 +54,7 @@ function __3dObject() : __3dInstance() constructor {
 	texture_flip   = false;
 	materials      = [];
 	material_index = [];
+	blend_mode     = BLEND.normal;
 	
 	log = false;
 	
@@ -252,6 +254,7 @@ function __3dObject() : __3dInstance() constructor {
 		preSubmitVertex(_sc);
 		transform.submitMatrix();
 		matrix_set(matrix_world, matrix_stack_top());
+		draw_set_color_alpha(c_white, 1);
 		
 		gpu_set_tex_repeat(true);
 		for( var i = 0, n = array_length(VB); i < n; i++ ) {
@@ -263,8 +266,7 @@ function __3dObject() : __3dInstance() constructor {
 			
 			shader_set_i("mat_flip", texture_flip);
 			var _tex = _uMat? _mat.getTexture() : -1;
-			// if(log) print(i, _ind, _mat, _tex);
-				
+			
 			if(_shader == sh_d3d_geometry) {
 				if(_uMat) _mat.submitGeometry();
 				else {
@@ -289,6 +291,7 @@ function __3dObject() : __3dInstance() constructor {
 			if(VBM != undefined) { matrix_stack_pop();        matrix_set(matrix_world, matrix_stack_top()); }
 		}
 		
+		gpu_set_tex_filter(false);
 		gpu_set_tex_repeat(false);
 		
 		if(!is_undefined(_sh)) shader_reset();

@@ -16,19 +16,27 @@
 function __3dObjectParticle() : __3dObjectInstancer() constructor {
 	__initInstanceParticleRenderer();
 	
-	particle_data = noone;
+	particle_data  = noone;
+	particle_data2 = noone;
 	vs = INSTANCE_PARTICLE_VS;
 	
-	static setBufferParticle = function(_buffer) {
+	static setBufferParticle = function(_buffer, _buffer2) {
 		d3d11_cbuffer_begin();
 		d3d11_cbuffer_add_float(16 * instance_amount);
 		particle_data = d3d11_cbuffer_end();
 		d3d11_cbuffer_update(particle_data, _buffer);
+		
+		d3d11_cbuffer_begin();
+		d3d11_cbuffer_add_float(4 * instance_amount);
+		particle_data2 = d3d11_cbuffer_end();
+		d3d11_cbuffer_update(particle_data2, _buffer2);
+		
 	}
 	
 	static submitCbuffer = function() {
 		d3d11_shader_set_cbuffer_vs(10, instance_data);
 		d3d11_shader_set_cbuffer_vs(12, particle_data);
+		d3d11_shader_set_cbuffer_vs(13, particle_data2);
 	}
 	
 }
