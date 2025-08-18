@@ -82,19 +82,27 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		var matY = y - (array_length(materials) - 1) / 2 * (128 + 32);
 		var mat  = materials[m_index];
 		var inp  = createNewInput(index);
+		var sol  = noone;
 		inp.name = materialNames[m_index] + " Material";
 		
-		if(file_exists_empty(mat.diff_path)) {
-			var sol = Node_create_Image_path(x - (w + 64), matY + m_index * (128 + 32), mat.diff_path);
-			sol.name = mat.name + " texture";
+		if(mat.diff_path == "") {
+			var sol = nodeBuild("Node_Solid", x - (w + 64), matY + m_index * (128 + 32));
+			sol.inputs[1].setValue(cola(mat.diff));
 			
 		} else {
-			var sol = nodeBuild("Node_Solid", x - (w + 64), matY + m_index * (128 + 32));
-			sol.name = mat.name + " texture";
-			sol.inputs[1].setValue(cola(mat.diff));
+			if(file_exists_empty(mat.diff_path)) {
+				var sol = Node_create_Image_path(x - (w + 64), matY + m_index * (128 + 32), mat.diff_path);
+				
+			} else {
+				var sol = nodeBuild("Node_Solid", x - (w + 64), matY + m_index * (128 + 32));
+				sol.inputs[1].setValue(cola(mat.diff));
+				
+				noti_warning($"Texture image not found {mat.diff_path}");
+			}
 			
 		}
 		
+		if(sol != noone) sol.name = mat.name + " texture";
 		inp.setFrom(sol.outputs[0]);
 	}
 	
@@ -164,6 +172,8 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 			} else
 				noti_warning("Load mtl error: Material amount defined in .mtl file not match the .obj file.", noone, self);
 		}
+			
+		print(materials)
 			
 		var _overflow = input_fix_len + array_length(materialNames);
 		while(array_length(inputs) > _overflow)

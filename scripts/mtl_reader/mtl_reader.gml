@@ -28,7 +28,14 @@ function readMtl(path) {
 		l = string_trim(l);
 		
 		var sep = string_splice(l, " ");
+		var pth = "";
 		if(array_length(sep) == 0 || sep[0] == "") continue;
+		
+		if(array_length(sep) > 1) {
+			pth = string_trim_start(l, [sep[0]]);
+			pth = string_trim(pth);
+			pth = str_strip_nr(pth);
+		}
 		
 		switch(sep[0]) {
 			case "newmtl" :
@@ -39,9 +46,10 @@ function readMtl(path) {
 			case "Ka" :		cur_mat.refc = colorFromRGBArray([sep[1], sep[2], sep[3]]); break;
 			case "Kd" :		cur_mat.diff = colorFromRGBArray([sep[1], sep[2], sep[3]]); break;
 			case "Ks" :		cur_mat.spec = colorFromRGBArray([sep[1], sep[2], sep[3]]); break;
-			case "map_Ka":	cur_mat.refc_path = str_strip_nr(sep[1]);  break;
-			case "map_Kd":	cur_mat.diff_path = str_strip_nr(sep[1]);  break;
-			case "map_Ks":	cur_mat.spec_path = str_strip_nr(sep[1]);  break;
+			
+			case "map_Ka":	cur_mat.refc_path = pth;  break;
+			case "map_Kd":	cur_mat.diff_path = pth;  break;
+			case "map_Ks":	cur_mat.spec_path = pth;  break;
 		}
 	}
 	
