@@ -51,6 +51,7 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 		icon_size = 0;
 		icon_padd = _padd;
 		if(icon == noone) return self;
+		
 		icon_w    = sprite_get_width(icon);
 		icon_h    = sprite_get_height(icon);
 		

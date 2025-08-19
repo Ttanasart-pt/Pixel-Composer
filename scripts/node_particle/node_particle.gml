@@ -23,9 +23,8 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	
 	array_foreach(inputs, function(i) /*=>*/ {return i.rejectArray()}, i);
 	
-	array_insert( input_display_list, 0, ["Output", true], i+3, i+0);
-	array_append( input_display_list, [
-		__inspc(ui(6), true, false, ui(3)), 
+	array_insert( input_display_list, 1, ["Output", true], i+3, i+0);
+	array_insert_after( input_display_list, 56, [
 		["Render", true], i+4, i+5, 21, i+1, i+2
 	]);
 	

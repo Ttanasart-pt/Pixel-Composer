@@ -35,6 +35,9 @@ function readMtl(path) {
 			pth = string_trim_start(l, [sep[0]]);
 			pth = string_trim(pth);
 			pth = str_strip_nr(pth);
+			
+			if(!string_pos(":/", pth))
+				pth = filename_combine(filename_dir(path), pth);
 		}
 		
 		switch(sep[0]) {

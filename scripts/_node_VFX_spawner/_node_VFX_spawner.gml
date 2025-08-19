@@ -21,6 +21,9 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput( 1, nodeValue_Int(         "Spawn Delay",          4             )).setTooltip("Frames delay between each particle spawn.");
 	newInput(51, nodeValue_Int(         "Burst Duration",       1             ));
 	newInput( 2, nodeValue_Range(       "Spawn Amount",        [2,2], true    )).setTooltip("Amount of particle spawn in that frame.");
+	newInput( 5, nodeValue_Range(       "Lifespan",            [20,30]        ));
+	
+	////- =Spawn Source
 	newInput( 4, nodeValue_Enum_Scroll( "Spawn Source",         0,            )).setChoices([ "Area Inside", "Area Border", "Map", "Path", "Direct Data" ]);
 	newInput( 3, nodeValue_Area(        "Spawn Area",           DEF_AREA_REF  )).setHotkey("A").setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
 	newInput(30, nodeValue_Surface(     "Distribution Map"                    ));
@@ -28,34 +31,31 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput(62, nodeValue_Vector(      "Spawn Data"                          )).setArrayDepth(1);
 	newInput(24, nodeValue_Enum_Button( "Distribution",         1             )).setChoices([ "Uniform", "Random" ]);
 	newInput(52, nodeValue_Float(       "Uniform Period",       4             ));
-	newInput( 5, nodeValue_Range(       "Lifespan",            [20,30]        ));
 	
 	////- =Movement
 	newInput(64, nodeValue_Enum_Button(     "Direction Type",              0, [ "Random", "Uniform" ] ));
 	newInput( 6, nodeValue_Rotation_Random( "Initial Direction",          [0,45,135,0,0]     )); 
-	newInput(18, nodeValue_Range(           "Initial Speed",              [1,2]              ));
-	newInput(60, nodeValue_Curve(           "Base Speed Over Time",       CURVE_DEF_11       )).setTooltip("Speed may conflict with physics-based properties.");
+	newInput(18, nodeValue_Range(           "Speed",                      [1,2]              )).setCurvable(60, CURVE_DEF_11, "Over Lifespan");
+	inputs[60].setTooltip("Speed may conflict with physics-based properties.");
+	
 	newInput(29, nodeValue_Bool(            "Directed From Center",       false              )).setTooltip("Make particle move away from the spawn center.");
 	newInput(53, nodeValue_Rotation_Range(  "Angle Range",                [0,360]            ));
 	
 	////- =Rotation
 	newInput(15, nodeValue_Bool(            "Rotate by Direction",        false              )).setTooltip("Make the particle rotates to follow its movement.");
 	newInput( 8, nodeValue_Rotation_Random( "Initial Rotation",           [0,0,0,0,0]        ));
-	newInput( 9, nodeValue_Rotation_Random( "Rotational Speed",           [0,0,0,0,0]        ));
-	newInput(59, nodeValue_Curve(           "Rotational Speed Over Time", CURVE_DEFN_11      ));
+	newInput( 9, nodeValue_Rotation_Random( "Rotational Speed",           [0,0,0,0,0]        )).setCurvable(59, CURVE_DEF_11, "Over Lifespan");
 	newInput(61, nodeValue_Float(           "Snap Rotation",              0                  ));
 	
 	////- =Scale
-	newInput(10, nodeValue_Vec2_Range( "Initial Scale",        [1,1,1,1], { linked : true }  ));
-	newInput(17, nodeValue_Range(      "Initial Size",         [1,1],     { linked : true }  ));
-	newInput(11, nodeValue_Curve(      "Scale Over Time",      CURVE_DEF_11                  ));
+	newInput(10, nodeValue_Vec2_Range( "Scale",        [1,1,1,1], { linked : true }  ));
+	newInput(17, nodeValue_Range(      "Size",         [1,1],     { linked : true }  )).setCurvable(11, CURVE_DEF_11, "Over Lifespan");
 	
 	////- =Color
 	newInput(12, nodeValue_Gradient( "Color Over Lifetime",    new gradientObject(ca_white)  ));
 	newInput(28, nodeValue_Gradient( "Random Blend",           new gradientObject(ca_white)  ));
 	newInput(50, nodeValue_Palette(  "Color by Index",         [ca_white]                    ));
-	newInput(13, nodeValue_Range(    "Alpha",                  [1,1], { linked : true }      ));
-	newInput(14, nodeValue_Curve(    "Alpha Over Time",        CURVE_DEF_11                  ));
+	newInput(13, nodeValue_Range(    "Alpha",                  [1,1], { linked : true }      )).setCurvable(14, CURVE_DEF_11, "Over Lifespan");
 	newInput(56, nodeValue_Surface(  "Sample Surface"                                        ));
 	
 	////- =Path
@@ -111,7 +111,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			var _dat = attributes.parameter_curves[$ _n];
 			if(_wig == undefined || _dat == undefined) continue;
 			
-			var _txt = string_title(_n) + " Over Time";
+			var _txt = string_title(_n) + " Over Lifespan";
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
 			draw_text_add(_x, _y, _txt);
 			
@@ -131,18 +131,19 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	});
 	
 	input_display_list = [ 32, 
-		["Sprite",	   false],	    0, dynaDraw_parameter, 22, 23, 49, 26,
-		["Spawn",		true],	   27, 16, 44,  1, 51,  2,  4,  3, 30, 55, 62, 24, __inspc(ui(6), true), 52,  5, 
-		["Movement",	true],     64,  6, 18, 60, 29, 53, 
-		["Rotation",	true],	   15,  8,  9, 59, 61, 
-		["Scale",		true],	   10, 17, 11, 
-		["Color",		true],	   12, 28, 50, 13, 14, 56, 
+		[ "Sprite",       true ],  0, dynaDraw_parameter, 22, 23, 49, 26,
+		[ "Spawn",        true ], 27, 16, 44,  1, 51,  2, __inspc(ui(6), true),  5, 
+		[ "Spawn Source", true ],  4,  3, 30, 55, 62, 24, 52, 
+		[ "Movement",     true ], 64,  6, 18, 60, 29, 53, 
+		[ "Rotation",     true ], 15,  8,  9, 59, 61, 
+		[ "Scale",        true ], 10, 17, 11, 
+		[ "Color",        true ], 12, 28, 50, 13, 14, 56, 
 		__inspc(ui(6), true, false, ui(3)), 
 		
-		["Follow path", true, 45], 46, 47, 
-		["Physics",		true, 57], 54,  7, 19, 33, 34, 35, 36, 
-		["Ground",		true, 37], 38, 63, 39, 40, 
-		["Wiggles",		true, 58], 20, 41, 42, 43, 
+		[ "Follow path", true, 45 ], 46, 47, 
+		[ "Physics",     true, 57 ], 54,  7, 19, 33, 34, 35, 36, 
+		[ "Ground",      true, 37 ], 38, 63, 39, 40, 
+		[ "Wiggles",     true, 58 ], 20, 41, 42, 43, 
 		
 	];
 	
@@ -571,7 +572,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			var _usePth = getInputData(45);
 			var _direct = getInputData(29);
 			
-			inputs[24].setVisible(_dist != 2);
+			inputs[24].setVisible(_dist == 0 || _dist == 1 || _dist == 3);
 			
 			inputs[ 3].setVisible(_dist != 3 && _dist != 4);
 			inputs[30].setVisible(_dist == 2, _dist == 2);

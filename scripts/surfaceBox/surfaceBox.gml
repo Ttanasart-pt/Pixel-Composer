@@ -127,7 +127,10 @@ function surfaceBox(_onModify, _def_path = "") : widget() constructor {
 			draw_text_add(sx1 - ui(3), sy1 + ui(1), _txt);
 		}
 		
-		draw_sprite_ui_uniform(THEME.scroll_box_arrow, 0, _x + _w - min(_h / 2, ui(20)), _y + _h / 2, min(1, _h / 64), COLORS._main_icon, 0.5 + 0.5 * interactable);
+		var _arx = _x + _w - min(_h / 2, ui(20));
+		var _ary = _y + _h / 2;
+		var _ars = min(.5, (_h - ui(8)) / 64);
+		draw_sprite_ui_uniform(THEME.scroll_box_arrow, 0, _arx, _ary, _ars, COLORS._main_icon, .5 + .5 * interactable);
 		
 		if(WIDGET_CURRENT == self)
 			draw_sprite_stretched_ext(THEME.widget_selecting, 0, _x - ui(3), _y - ui(3), _w + ui(6), _h + ui(6), COLORS._main_accent, 1);	

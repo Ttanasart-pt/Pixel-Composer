@@ -98,7 +98,7 @@ function Node_3D_Particle(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 	
 	input_display_list = [ 1, 
 		[ "Object",       true ],  0, 
-		[ "Spawn",        true ],  2,  3,  4,  5,  6,  7, 12,  
+		[ "Spawn",        true ],  2,  3,  4,  5,  6,  7, __inspc(ui(6), true), 12,  
 		[ "Spawn Source", true ],  8,  30, 9, 27, 57, 10, 29, 11, 
 		[ "Movement",     true ], 13, 15, 14, 16, 
 		[ "Rotation",     true ], 17, 18, 19, 54, 
@@ -160,8 +160,6 @@ function Node_3D_Particle(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 	
 	static processData = function(_output, _data, _array_index = 0) {
 		var _obj = _data[0];
-		if(!is(_obj, __3dObject)) return noone;
-		if(_obj.VF != global.VF_POS_NORM_TEX_COL) return noone;
 		
 		#region data
 			_seed       = _data[ 1];
@@ -278,7 +276,10 @@ function Node_3D_Particle(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 			// wig_dir.check(_wigg_dir[0], _wigg_dir[1], _seed + 60);
 			
 		#endregion
-			
+		
+		if(!is(_obj, __3dObject)) return noone;
+		if(_obj.VF != global.VF_POS_NORM_TEX_COL) return noone;
+		
 		#region base instancer
 			var system = particleSystem;
 			

@@ -257,8 +257,9 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		if(_w - _bs > ui(100)) { 
 			var _bx   = _x;
 			var _by   = _y + _h / 2 - _bs / 2;
-				
-			if(useShape && !is_array(_bind) && buttonInstant(THEME.button_hide_fill, _bx, _by, _bs, _bs, _m, _bhov, _bact,, THEME.inspector_area, _bind) == 2) {
+			
+			if(useShape && !is_array(_bind))	
+			if(buttonInstant_Pad(THEME.button_hide_fill, _bx, _by, _bs, _bs, _m, _bhov, _bact,, THEME.inspector_area, _bind) == 2) {
 				var val = (array_safe_get_fast(_data, 4) + 1) % 2;
 				onModify(val, 4);
 			}

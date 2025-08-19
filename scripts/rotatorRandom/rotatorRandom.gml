@@ -96,14 +96,20 @@ function rotatorRandom(_onModify) : widget() constructor {
 		
 		mode  = _data[0];
 		
+		var _bs = min(_h, ui(32));
 		var _hh = mode > 1? _h * 2 + ui(4) : _h;
 		h = h == 0? _hh : lerp_float(h, _hh, 5);
+		
+		if(side_button) {
+			side_button.setFocusHover(active, hover);
+			side_button.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
+			_w -= _bs + ui(4);
+		}
 		
 		var _khv = dragging_index;
 		var _r   = _h;
 		var _drawRot = _w - _r > ui(64);
 		
-		var _bs = min(_h, ui(32));
 		var _tx = _drawRot? _x + _r + ui(4) : _x;
 		var _tw = _drawRot? _w - _r - ui(4) : _w;
 		var _ty = _y;

@@ -8,11 +8,12 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 	sprBlend       = c_white;
 	fColor         = COLORS._main_text;
 	tooltips       = [];
+	icon_padd      = ui(4);
 	
 	current_selecting = 0;
 	collapsable = true;
 	
-	for(var i = 0; i < array_length(data); i++) 
+	for(var i = 0; i < array_length(data); i++)
 		buttons[i] = button(-1);
 	
 	sb_small = new scrollBox(data, _onClick);
@@ -24,6 +25,7 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 	static setBlend     = function(bb) /*=>*/ { sprBlend    = bb; return self; } 
 	
 	static iconPad = function(_padd = ui(4)) {
+		icon_padd = _padd;
 		for( var i = 0, n = array_length(buttons); i < n; i++ ) 
 			buttons[i].iconPad(_padd);
 		return self;
@@ -135,7 +137,7 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 				} else if(sprite_exists(_d)) {
 					var _xx = bx + bww / 2;
 					var _yy = _y + _h / 2;
-					var _ss = min((ww - ui(4)) / sprite_get_width(_d), (_h - ui(4)) / sprite_get_height(_d));
+					var _ss = min((ww - icon_padd) / sprite_get_width(_d), (_h - icon_padd) / sprite_get_height(_d));
 					
 					gpu_set_texfilter(true);
 					draw_sprite_ext(_d, i, _xx, _yy, _ss, _ss, 0, sprBlend);
