@@ -59,9 +59,10 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput(56, nodeValue_Surface(  "Sample Surface"                                        ));
 	
 	////- =Path
-	newInput(45, nodeValue_Bool(     "Follow Path",            false                         ));
-	newInput(46, nodeValue_PathNode( "Path"                                                  ));
-	newInput(47, nodeValue_Curve(    "Path Deviation",         CURVE_DEF_11                  ));
+	newInput(45, nodeValue_Bool(       "Follow Path",          false                         ));
+	newInput(46, nodeValue_PathNode(   "Path"                                                ));
+	newInput(66, nodeValue_Vec2_Range( "Path Range",           [0,0,1,1]                     ));
+	newInput(47, nodeValue_Curve(      "Path Deviation",       CURVE_DEF_11                  ));
 	
 	////- =Physics
 	newInput(57, nodeValue_Bool(     "Use Physics",            false                         ));
@@ -90,10 +91,11 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	////- =Unused
 	newInput(21, nodeValue_Bool(     "Loop",                   true ));
+	newInput(65, nodeValue_Int(      "Pre-Render",             -1   ));
 	newInput(25, nodeValue_Int(      "Boundary Data",          []   )).setArrayDepth(1).setVisible(false, true);
 	newInput(31, nodeValue_Surface(  "Atlas",                  []   )).setArrayDepth(1);
 	newInput(48, nodeValue_Trigger(  "Reset Seed"                   ))
-	// inputs 65
+	// inputs 67
 	
 	array_foreach(inputs, function(inp, i) /*=>*/ { if(i == 6 || i == 8) return; inp.rejectArray(); }, 1);
 	
@@ -140,7 +142,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		[ "Color",        true ], 12, 28, 50, 13, 14, 56, 
 		__inspc(ui(6), true, false, ui(3)), 
 		
-		[ "Follow path", true, 45 ], 46, 47, 
+		[ "Follow path", true, 45 ], 46, 66, 47, 
 		[ "Physics",     true, 57 ], 54,  7, 19, 33, 34, 35, 36, 
 		[ "Ground",      true, 37 ], 38, 63, 39, 40, 
 		[ "Wiggles",     true, 58 ], 20, 41, 42, 43, 
@@ -225,6 +227,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		//////////////////////////////////////////////////////////////////////////////
 		
 		var _path       	= getInputData(46);
+		var _pathRange      = getInputData(66);
 		
 		var _use_phy     	= getInputData(57);
 		var _accel      	= getInputData( 7);
@@ -355,6 +358,8 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 					_bld  = colorMultiply(_bld, _samC);
 			}
 			
+			var _path_range = [ random_range(_pathRange[0], _pathRange[1]), random_range(_pathRange[2], _pathRange[3]) ];
+			
 			part.create(_spr, xx, yy, _lif);
 			
 			part.seed       = irandom_range(100000, 999999);
@@ -370,7 +375,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			
 			part.setTransform( _scx, _scy, curve_scale, _rot, _rot_spd, curve_rotate, _rot_snap, _follow );
 			part.setDraw(   _color, _bld, _alp, curve_alpha );
-			part.setPath(   _path, curve_path_div );
+			part.setPath(   _path, _path_range, curve_path_div );
 			part.setPhysic( _use_phy, _vx, _vy, curve_speed, _acc, _frc, _gravity, _gvDir, _trn, _turnSc );
 			
 			var __ground_offset = random_range(_ground_offset[0], _ground_offset[1]);

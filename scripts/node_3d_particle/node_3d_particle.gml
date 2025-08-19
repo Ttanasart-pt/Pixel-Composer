@@ -94,7 +94,7 @@ function Node_3D_Particle(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 	newInput(51, nodeValue_Vec2(     "Rotation Wiggle",        [0,0], { label: [ "Amplitude", "Period" ], linkable: false, per_line: true } ));
 	newInput(52, nodeValue_Vec2(     "Scale Wiggle",           [0,0], { label: [ "Amplitude", "Period" ], linkable: false, per_line: true } ));
 	
-	// 578
+	// 58
 	
 	input_display_list = [ 1, 
 		[ "Object",       true ],  0, 

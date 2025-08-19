@@ -102,8 +102,11 @@ function __part(_node) : __particleObject() constructor {
 	rot_s	 = 0;
 	rot_snap = 0;
 	
+	////- Path
+	
 	path      = noone;
-	pathIndex = 0;
+	pathIndex =  0;
+	pathRange = [0,1];
 	pathPos   = new __vec2();
 	pathDiv   = noone;
 	
@@ -268,11 +271,12 @@ function __part(_node) : __particleObject() constructor {
 		alp_fade = _fade;
 	}
 	
-	static setPath = function(_path, _pathDiv) {
+	static setPath = function(_path, _pathRange, _pathDiv) {
 		INLINE
 		
-		path    = _path;
-		pathDiv = _pathDiv;
+		path      = _path;
+		pathRange = _pathRange;
+		pathDiv   = _pathDiv;
 	}
 	
 	////- Actions
@@ -382,10 +386,10 @@ function __part(_node) : __particleObject() constructor {
 		}
 		
 		if(path != noone) {
-			var _lifeRat = clamp(lifeRat, 0., 1.);
-			var _pathDiv = pathDiv.get(_lifeRat);
+			var _pathPrg = clamp(lerp(pathRange[0], pathRange[1], lifeRat), 0., 1.);
+			var _pathDiv = pathDiv.get(_pathPrg);
 			
-			pathPos = path.getPointRatio(clamp(_lifeRat, 0, 0.99), pathIndex, pathPos);
+			pathPos = path.getPointRatio(clamp(_pathPrg, 0, 0.99), pathIndex, pathPos);
 			drawx   = pathPos.x + drawx * _pathDiv;
 			drawy   = pathPos.y + drawy * _pathDiv;
 		}

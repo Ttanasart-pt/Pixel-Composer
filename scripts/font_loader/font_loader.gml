@@ -1,4 +1,4 @@
-globalvar FONT_DEF, FONT_ISLOADED, FONT_CACHE, FONT_CUST_CACHE, GLYPH_MAP, FONT_LIST;
+globalvar FONT_DEF, FONT_ISLOADED, FONT_CACHE, FONT_CUST_CACHE, FONT_LIST;
 globalvar f_h1, f_h2, f_h3, f_h5, f_p0, f_p0b, f_p1, f_p1b, f_p2, f_p2b, f_p3, f_p4;
 globalvar f_code, f_sdf, f_sdf_medium;
 
@@ -9,7 +9,6 @@ global.LINE_HEIGHTS = {};
 	FONT_CACHE      = {};
 	FONT_CUST_CACHE = {};
 	FONT_ISLOADED   = false;
-	GLYPH_MAP       = {};
 	FONT_LIST       = {};
 	
 	f_h1   = _f_h1;
@@ -70,32 +69,13 @@ function _font_add(path, size, sdf = false, custom = false) {
 	if(struct_has(_cache, _key) && font_exists(_cache[$ _key]))
 		return _cache[$ _key];
 	
-	var _t = current_time;
 	var _f = font_add(path, size, false, false, 0, 0);
-	if(sdf) font_enable_sdf(_f, true);
 	_cache[$ _key] = _f;
+	if(!font_exists(_f)) return undefined;
 	
-	_font_extend_locale(_f, _f);
+	if(sdf) font_enable_sdf(_f, true);
 	
 	return _f;
-}
-
-function _font_extend_locale(baseFont, localFont, override = false) {
-	if(!struct_exists(GLYPH_MAP, baseFont))
-		GLYPH_MAP[$ baseFont] = {};
-	
-	var Gmap    = GLYPH_MAP[$ baseFont];
-	var _fInfo  = font_get_info(localFont);
-	var _gMap   = _fInfo.glyphs;
-	var _glyphs = variable_struct_get_names(_gMap);
-	
-	for( var i = 0, n = array_length(_glyphs); i < n; i++ ) {
-		var _g = _glyphs[i];
-		if(_gMap[$ _g] == undefined) continue;
-		
-		if(override || !struct_has(Gmap, _g))
-			Gmap[$ _g] = localFont;
-	}
 }
 
 function _font_path(rel) {

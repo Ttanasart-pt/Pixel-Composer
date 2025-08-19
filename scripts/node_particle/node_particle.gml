@@ -59,11 +59,12 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	
 	static reLoop = function() {
 		var _loop = getInputData(21);
+		var _prer = getInputData(65); if(_prer == -1) _prer = TOTAL_FRAMES;
 		var _type = getInputData(input_len + 4);
 		
 		if(!_loop) return;
 		
-		for(var i = 0; i < TOTAL_FRAMES; i++) {
+		for(var i = TOTAL_FRAMES - _prer; i < TOTAL_FRAMES; i++) {
 			runVFX(i, _type);
 			updateParticleForward();
 		}

@@ -67,59 +67,6 @@ function draw_text_bm_add(_x, _y, _text, scale = 1) {
 	}
 }
 
-function draw_text_lang_add(_x, _y, _text, scale = 1) {
-	INLINE
-	BLEND_ALPHA_MULP
-	draw_text_lang(_x, _y, _text, scale);
-	BLEND_NORMAL
-}
-
-function draw_text_lang_over(_x, _y, _text, scale = 1) {
-	INLINE
-	BLEND_OVERRIDE
-	draw_text_lang(_x, _y, _text, scale);
-	BLEND_NORMAL
-}
-
-function draw_text_lang(_x, _y, _text, scale = 1) {
-	var _w = string_width(_text);
-	var _h = string_height(_text);
-	
-	var _ha = draw_get_halign();
-	switch(_ha) {
-		case fa_left :    break;
-		case fa_center : _x -= _w / 2;  break;
-		case fa_right :  _x -= _w;      break;
-	}
-	draw_set_halign(fa_left);
-	
-	var amo   = string_length(_text);
-	var _f    = draw_get_font();
-	var _font = _f;
-	var _gMap = GLYPH_MAP[$ _f];
-	var gly, _g , _ff;
-	
-	for( var i = 1; i <= amo; i++ ) {
-		gly = string_char_at(_text, i);
-		
-		if(struct_has(_gMap, gly)) {
-			_ff = _gMap[$ gly];
-			_g  = gly;
-		} else {
-			_ff = _f;
-			_g  = "?";
-		}
-		
-		if(_font != _ff) draw_set_font(_ff);
-		_font = _ff;
-		draw_text_transformed(round(_x), round(_y), _g, scale, scale, 0);
-		_x += string_width(_g) * scale;
-	}
-	
-	draw_set_font(_f);
-	draw_set_halign(_ha);
-}
-
 function draw_text_ext_add(_x, _y, _text, _sep, _w, scale = 1, forceCut = false) {
 	INLINE
 	BLEND_ALPHA_MULP

@@ -6,11 +6,12 @@ function Node_VFX_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 	is_root  = false;
 	topoList = [];
 	
-	newInput(0, nodeValue_Bool( "Loop", true )).rejectArray();
 	newInput(1, nodeValue_Dimension()).rejectArray();
+	newInput(0, nodeValue_Bool( "Loop",       true )).rejectArray();
+	newInput(2, nodeValue_Int(  "Pre-Render", -1   ));
 	
-	output_node_types   = [ Node_VFX_Renderer ];
-	input_display_list = [ 1, 0 ]
+	output_node_types  = [ Node_VFX_Renderer ];
+	input_display_list = [ 1, 0, 2 ]
 	
 	////- Nodes
 	
@@ -40,10 +41,11 @@ function Node_VFX_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 			node.reset();
 		}
 		
-		var loop = getInputData(0);
-		if(!loop) return;
+		var _loop = getInputData(0);
+		var _prer = getInputData(2); if(_prer == -1) _prer = TOTAL_FRAMES;
+		if(!_loop) return;
 		
-		for( var i = 0; i < TOTAL_FRAMES; i++ ) {
+		for(var i = TOTAL_FRAMES - _prer; i < TOTAL_FRAMES; i++) {
 			for( var j = 0, m = array_length(topoList); j < m; j++ ) {
 				var node = topoList[j];
 				var _ins = instanceof(node);
