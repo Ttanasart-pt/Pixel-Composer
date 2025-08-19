@@ -29,13 +29,13 @@
 			activeKeyboard = true;
 		}
 		
-		function drawOverlay3D(index, object, _vpos, active, params, _mx, _my, _snx, _sny, _panel) {
+		function drawOverlay3D(index, object, _vpos, active, _mx, _my, _snx, _sny, _params) {
 			#region ---- main ----
 				var _pos  = node.inputs[index].getValue(,,, true);
 				var _qrot = object == noone? new BBMOD_Quaternion() : object.transform.rotation;
 				var _qinv = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), 90);
 			
-				var _camera = params.camera;
+				var _camera = _params.scene.camera;
 				var _qview  = new BBMOD_Quaternion().FromEuler(_camera.focus_angle_y, -_camera.focus_angle_x, 0);
 				
 				var _axis = node.tool_attribute.context;
@@ -56,23 +56,6 @@
 			#endregion
 				
 			#region display
-				ga[0] = new BBMOD_Vec3(-size, 0, 0);
-				ga[1] = new BBMOD_Vec3(0, 0,  size);
-				ga[2] = new BBMOD_Vec3(0, -size, 0);
-				
-				ga[3] = [	new BBMOD_Vec3(-hs + sq,        0,  hs - sq),
-							new BBMOD_Vec3(-hs - sq,        0,  hs - sq), 
-							new BBMOD_Vec3(-hs - sq,        0,  hs + sq), 
-							new BBMOD_Vec3(-hs + sq,        0,  hs + sq), ];
-				ga[4] = [	new BBMOD_Vec3(       0, -hs + sq,  hs - sq),
-							new BBMOD_Vec3(       0, -hs - sq,  hs - sq), 
-							new BBMOD_Vec3(       0, -hs - sq,  hs + sq), 
-							new BBMOD_Vec3(       0, -hs + sq,  hs + sq), ];
-				ga[5] = [	new BBMOD_Vec3(-hs + sq, -hs - sq,        0),
-							new BBMOD_Vec3(-hs - sq, -hs - sq,        0), 
-							new BBMOD_Vec3(-hs - sq, -hs + sq,        0), 
-							new BBMOD_Vec3(-hs + sq, -hs + sq,        0), ];
-				
 				ga[0] = new BBMOD_Vec3(-size, 0, 0);
 				ga[1] = new BBMOD_Vec3(0, -size, 0);
 				ga[2] = new BBMOD_Vec3(0, 0, -size);
@@ -190,8 +173,9 @@
 								var _diff = mAdj.subtract(drag_prev);
 								var _dist = _diff.dot(prj);
 								
-								for( var i = 0; i < 3; i++ ) 
-									val[i] += prj.getIndex(i) * _dist;
+								val[0] += prj.x * _dist;
+								val[1] += prj.y * _dist;
+								val[2] += prj.z * _dist;
 								
 								if(node.inputs[index].setValue(value_snap(val, _snx)))
 									UNDO_HOLDING = true;
@@ -211,8 +195,9 @@
 							if(drag_prev != undefined) {
 								var _diff = mAdj.subtract(drag_prev);
 								
-								for( var i = 0; i < 3; i++ ) 
-									val[i] += _diff.getIndex(i);
+								val[0] += _diff.x;
+								val[1] += _diff.y;
+								val[2] += _diff.z;
 								
 								if(node.inputs[index].setValue(value_snap(val, _snx))) 
 									UNDO_HOLDING = true;
@@ -324,13 +309,13 @@
 			activeKeyboard = true;
 		}
 		
-		function drawOverlay3D(index, object, _vpos, active, params, _mx, _my, _snx, _sny, _panel) {
+		function drawOverlay3D(index, object, _vpos, active, _mx, _my, _snx, _sny, _params) {
 			#region ---- main ----
 				var _rot  = node.inputs[index].getValue();
 				var _qrot = object == noone? new BBMOD_Quaternion() : object.transform.rotation;
 				var _qinv = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), 90);
 				
-				var _camera = params.camera;
+				var _camera = _params.scene.camera;
 				var _qview  = new BBMOD_Quaternion().FromEuler(_camera.focus_angle_y, -_camera.focus_angle_x, 0);
 			
 				var _ang    = node.inputs[index].attributes.angle_display;
@@ -353,7 +338,6 @@
 			#endregion
 			
 			#region display
-				var size  = 64;
 				for( var i = 0; i < 3; i++ ) {
 					var op, np;
 					
@@ -554,14 +538,14 @@
 			activeKeyboard = true;
 		}
 		
-		function drawOverlay3D(index, object, _vpos, active, params, _mx, _my, _snx, _sny, _panel) {
+		function drawOverlay3D(index, object, _vpos, active, _mx, _my, _snx, _sny, _params) {
 			
 			#region ---- main ----
 				var _sca  = node.inputs[index].getValue(,,, true);
 				var _qrot = object == noone? new BBMOD_Quaternion() : object.transform.rotation;
 				var _qinv = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), 90);
 			
-				var _camera = params.camera;
+				var _camera = _params.scene.camera;
 				var _qview  = new BBMOD_Quaternion().FromEuler(_camera.focus_angle_y, -_camera.focus_angle_x, 0);
 			
 				var _hover     = noone;
@@ -828,7 +812,7 @@ function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 	
 	mesh_prev_surface = noone;
 	
-	static drawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) {}
+	static drawOverlay3D = function(active, _mx, _my, _snx, _sny, _params) {}
 	
 	static processData = function(_outSurf, _data, _array_index) {}
 	static onDrawNode  = function(xx, yy, _mx, _my, _s, _hover, _focus) {}

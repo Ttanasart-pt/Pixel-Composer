@@ -42,13 +42,14 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 	
 	attribute_interpolation();
 	
-	static onDrawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) {
+	static onDrawOverlay3D = function(active, _mx, _my, _snx, _sny, _params) {
 		var _outSurf = outputs[1].getValue();
 		if(is_array(_outSurf)) _outSurf = array_safe_get_fast(_outSurf, preview_index);
 		if(!is_surface(_outSurf)) return;
-	
-		var _w = _panel.w;
-		var _h = _panel.h - _panel.toolbar_height;
+		
+		var _panel = _params.panel;
+		var _w  = _panel.w;
+		var _h  = _panel.h - _panel.toolbar_height;
 		var _pw = surface_get_width_safe(_outSurf);
 		var _ph = surface_get_height_safe(_outSurf);
 		var _ps = min(128 / _ph, 160 / _pw);

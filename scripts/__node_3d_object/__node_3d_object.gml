@@ -48,7 +48,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		static getToolSettings = function() /*=>*/ {return (isUsingTool("Transform") || isUsingTool("Rotate"))? tool_settings : []};
 	#endregion
 	
-	static drawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) { 
+	static drawOverlay3D = function(active, _mx, _my, _snx, _sny, _params) { 
 		var object = getPreviewObjects();
 		if(object == noone || array_empty(object)) return;
 		object = object[0];
@@ -56,14 +56,14 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		var _pos  = inputs[0].getValue(,,, true);
 		var _vpos = new __vec3( _pos[0], _pos[1], _pos[2] );
 		
-		if(isUsingTool("Transform")) tool_object_pos.drawOverlay3D(0, object, _vpos, active, params, _mx, _my, _snx, _sny, _panel);
-		if(isUsingTool("Rotate"))    tool_object_rot.drawOverlay3D(1, object, _vpos, active, params, _mx, _my, _snx, _sny, _panel);
-		if(isUsingTool("Scale"))     tool_object_sca.drawOverlay3D(2, object, _vpos, active, params, _mx, _my, _snx, _sny, _panel);
+		if(isUsingTool("Transform")) tool_object_pos.drawOverlay3D(0, object, _vpos, active, _mx, _my, _snx, _sny, _params);
+		if(isUsingTool("Rotate"))    tool_object_rot.drawOverlay3D(1, object, _vpos, active, _mx, _my, _snx, _sny, _params);
+		if(isUsingTool("Scale"))     tool_object_sca.drawOverlay3D(2, object, _vpos, active, _mx, _my, _snx, _sny, _params);
 		
-		onDrawOverlay3D(active, params, _mx, _my, _snx, _sny, _panel);
+		onDrawOverlay3D(active, _mx, _my, _snx, _sny, _params);
 	} 
 	
-	static onDrawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) {}
+	static onDrawOverlay3D = function(active, _mx, _my, _snx, _sny, _params) {}
 	
 	static setTransform = function(object, _data) {
 		if(object == noone) return;

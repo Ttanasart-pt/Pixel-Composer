@@ -1,10 +1,13 @@
 #region functions
 	FN_NODE_TOOL_INVOKE {
-		hotkeyTool("Node_Path_3D", "Transform",           "T");
+		hotkeyTool("Node_Path_3D", "Transform", "G");
+		hotkeyTool("Node_Path_3D", "Rotate",    "R");
+		hotkeyTool("Node_Path_3D", "Scale",     "S");
+		
 		hotkeyTool("Node_Path_3D", "Anchor add / remove", "A");
 		hotkeyTool("Node_Path_3D", "Edit Control point",  "C");
 	});
-
+	
 	enum _ANCHOR3 {
 		  x,   y,   z,
 		c1x, c1y, c1z,
@@ -17,6 +20,808 @@
 		weight = _w;
 		static clone = function() /*=>*/ {return new __vec3P(x, y, z, weight)};
 	}
+	
+	function d3d_path_tool_position(_node) : ToolObject() constructor {
+		activeKeyboard = false;
+		setNode(_node);
+		
+		drag_axis  = noone;
+		drag_prev  = 0;
+		
+		original_values = [];
+		drag_original   = new __vec3();
+		
+		drag_origin_x = 0; drag_origin_y = 0; drag_origin_z = 0;
+		drag_dx       = 0; drag_dy       = 0; drag_dz       = 0;
+		
+		drag_mx = 0; drag_my = 0;
+		drag_px = 0; drag_py = 0;
+		axis_hover = noone;
+		
+		sz = 64;
+		hs = sz / 2;
+		sq = 8;
+		ga = [0,0,0,0,0,0];
+		
+		static init = function() {
+			activeKeyboard = false;
+			
+			KEYBOARD_STRING = "";
+			KEYBOARD_NUMBER = undefined;
+		}
+		
+		static initKeyboard = function() /*=>*/ {
+			activeKeyboard = true;
+		}
+		
+		function drawOverlay3D(active, _mx, _my, _snx, _sny, _params) {
+			if(array_empty(node.anchor_select)) { PANEL_PREVIEW.resetTool(); return; }
+			
+			#region ---- main ----
+				var _qinv = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), 90);
+				
+				var _camera = _params.scene.camera;
+				var _panel  = _params.panel;
+				var _qview  = new BBMOD_Quaternion().FromEuler(_camera.focus_angle_y, -_camera.focus_angle_x, 0);
+				
+				var _hover     = noone;
+				var _hoverDist = 10;
+				
+				var cx = node.anchor_select_cx;
+				var cy = node.anchor_select_cy;
+		
+				var _amo = array_length(node.anchor_select);
+			#endregion
+				
+			#region display
+				ga[0] = new BBMOD_Vec3(-sz, 0, 0);
+				ga[1] = new BBMOD_Vec3(0, -sz, 0);
+				ga[2] = new BBMOD_Vec3(0, 0, -sz);
+				
+				ga[3] = [	new BBMOD_Vec3(-hs + sq, -hs - sq,        0),
+							new BBMOD_Vec3(-hs - sq, -hs - sq,        0), 
+							new BBMOD_Vec3(-hs - sq, -hs + sq,        0), 
+							new BBMOD_Vec3(-hs + sq, -hs + sq,        0), ];
+				ga[4] = [	new BBMOD_Vec3(       0, -hs + sq, -hs - sq),
+							new BBMOD_Vec3(       0, -hs - sq, -hs - sq), 
+							new BBMOD_Vec3(       0, -hs - sq, -hs + sq), 
+							new BBMOD_Vec3(       0, -hs + sq, -hs + sq), ];
+				ga[5] = [	new BBMOD_Vec3(-hs + sq,        0, -hs - sq),
+							new BBMOD_Vec3(-hs - sq,        0, -hs - sq), 
+							new BBMOD_Vec3(-hs - sq,        0, -hs + sq), 
+							new BBMOD_Vec3(-hs + sq,        0, -hs + sq), ];
+					
+				for( var i = 0; i < 3; i++ ) {
+					ga[i] = _qview.Rotate(_qinv.Rotate(ga[i]));
+					
+					var th = 2 + (axis_hover == i || drag_axis == i);
+					if(drag_axis != noone && drag_axis != i)
+						continue;
+					
+					draw_set_color(COLORS.axis[i]);
+					if(point_distance(cx, cy, cx + ga[i].X, cy + ga[i].Y) < 5)
+						draw_line_round(cx, cy, cx + ga[i].X, cy + ga[i].Y, th);
+					else 
+						draw_line_round_arrow(cx, cy, cx + ga[i].X, cy + ga[i].Y, th, 3);
+					
+					var _d = distance_to_line(_mx, _my, cx, cy, cx + ga[i].X, cy + ga[i].Y);
+					if(_d < _hoverDist) {
+						_hover     =  i;
+						_hoverDist = _d;
+					}
+				}
+				
+				for( var i = 3; i < 6; i++ ) {
+					for( var j = 0; j < 4; j++ )
+						ga[i][j] = _qview.Rotate(_qinv.Rotate(ga[i][j]));
+					
+					var th = 1;
+					
+					var p0x = cx + ga[i][0].X, p0y = cy + ga[i][0].Y;
+					var p1x = cx + ga[i][1].X, p1y = cy + ga[i][1].Y;
+					var p2x = cx + ga[i][2].X, p2y = cy + ga[i][2].Y;
+					var p3x = cx + ga[i][3].X, p3y = cy + ga[i][3].Y;
+					
+					var _pax = (p0x + p1x + p2x + p3x) / 4;
+					var _pay = (p0y + p1y + p2y + p3y) / 4;
+					
+					if((abs(p0x - _pax) + abs(p1x - _pax) + abs(p2x - _pax) + abs(p3x - _pax)) / 4 < 1)
+						continue;
+						
+					if((abs(p0y - _pay) + abs(p1y - _pay) + abs(p2y - _pay) + abs(p3y - _pay)) / 4 < 1)
+						continue;
+					
+					draw_set_color(COLORS.axis[(i - 3 - 1 + 3) % 3]);
+					if(axis_hover == i || drag_axis == i) {
+						draw_primitive_begin(pr_trianglestrip);
+							draw_vertex(p0x, p0y);
+							draw_vertex(p1x, p1y);
+							draw_vertex(p3x, p3y);
+							draw_vertex(p2x, p2y);
+						draw_primitive_end();
+						
+					} else if (drag_axis == noone) {
+						draw_line(p0x, p0y, p1x, p1y);
+						draw_line(p1x, p1y, p2x, p2y);
+						draw_line(p2x, p2y, p3x, p3y);
+						draw_line(p3x, p3y, p0x, p0y);
+						
+					} else 
+						continue;
+					
+					if(point_in_rectangle_points(_mx, _my, p0x, p0y, p1x, p1y, p3x, p3y, p2x, p2y))
+						_hover = i;
+				}
+				
+				axis_hover = _hover;
+			#endregion display
+			
+			if(drag_axis != noone) { // editing
+				var mAdj, nor, prj, pln;
+				var edit = false;
+				
+				if(!MOUSE_WRAPPING) {
+					if(KEYBOARD_NUMBER == undefined) {
+						drag_mx += _mx - drag_px;
+						drag_my += _my - drag_py;
+							
+						var ray = _camera.viewPointToWorldRay(drag_mx, drag_my);
+						
+						if(drag_axis < 3) {
+							switch(drag_axis) {
+								case 0 : nor = new __vec3(0, 1, 0); prj = new __vec3(1, 0, 0); break;
+								case 1 : nor = new __vec3(0, 0, 1); prj = new __vec3(0, 1, 0); break;
+								case 2 : nor = new __vec3(1, 0, 0); prj = new __vec3(0, 0, 1); break;
+							}
+							
+							pln  = new __plane(drag_original, nor);
+							mAdj = d3d_intersect_ray_plane(ray, pln);
+							
+							if(drag_prev != undefined) {
+								var _diff = mAdj.subtract(drag_prev);
+								var _dist = _diff.dot(prj);
+								
+								drag_dx += prj.x * _dist;
+								drag_dy += prj.y * _dist;
+								drag_dz += prj.z * _dist;
+							}
+							
+						} else {
+							switch(drag_axis) {
+								case 3 : nor = new __vec3(0, 0, 1); break;
+								case 4 : nor = new __vec3(1, 0, 0); break;
+								case 5 : nor = new __vec3(0, 1, 0); break;
+							}
+								
+							pln  = new __plane(drag_original, nor);
+							mAdj = d3d_intersect_ray_plane(ray, pln);
+								
+							if(drag_prev != undefined) {
+								var _diff = mAdj.subtract(drag_prev);
+								
+								drag_dx += _diff.x;
+								drag_dy += _diff.y;
+								drag_dz += _diff.z;
+								
+							}
+						}
+						
+						for( var i = 0; i < _amo; i++ ) {
+							var _i    = node.anchor_select[i];
+							var _ind  = node.input_fix_len + _i;
+							var _orig = original_values[_i];
+							
+							var val = array_clone(_orig);
+							val[0] += drag_dx;
+							val[1] += drag_dy;
+							val[2] += drag_dz;
+							
+							if(node.inputs[_ind].setValue(val)) edit = true;
+						}
+						
+						drag_prev = mAdj;
+						
+					} else {
+						for( var i = 0; i < _amo; i++ ) {
+							var _i    = node.anchor_select[i];
+							var _ind  = node.input_fix_len + _i;
+							var _orig = original_values[_i];
+							
+							var val = array_clone(_orig);
+							if(drag_axis < 3) val[drag_axis] += KEYBOARD_NUMBER;
+							
+							if(node.inputs[_ind].setValue(val)) edit = true;
+						}
+					}
+					
+					if(edit) UNDO_HOLDING = true;
+				}
+					
+				setMouseWrap();
+				drag_px = _mx;
+				drag_py = _my;
+				
+				if((!activeKeyboard && mouse_release(mb_left)) || (activeKeyboard && (mouse_press(mb_left) || key_press(vk_enter))) ) {
+					if(activeKeyboard) PANEL_PREVIEW.resetTool();
+					
+					drag_axis      = noone;
+					UNDO_HOLDING   = false;
+					activeKeyboard = false;
+				}
+				
+				if(key_press(ord("X"))) {
+					drag_axis = drag_axis == 0? 3 : 0;
+					drag_prev = undefined;
+					
+					drag_dx = 0; 
+					drag_dy = 0; 
+					drag_dz = 0;
+					
+					KEYBOARD_STRING = "";
+				}
+				
+				if(key_press(ord("Y"))) {
+					drag_axis = drag_axis == 1? 3 : 1;
+					drag_prev = undefined;
+					
+					drag_dx = 0; 
+					drag_dy = 0; 
+					drag_dz = 0;
+					
+					KEYBOARD_STRING = "";
+				}
+				
+				if(key_press(ord("Z"))) {
+					drag_axis = drag_axis == 2? 3 : 2;
+					drag_prev = undefined;
+					
+					drag_dx = 0; 
+					drag_dy = 0; 
+					drag_dz = 0;
+					
+					KEYBOARD_STRING = "";
+				}
+				
+				var _tooltipText = "Dragging";
+				switch(drag_axis) {
+					case 0 : _tooltipText += " X"; break;
+					case 1 : _tooltipText += " Y"; break;
+					case 2 : _tooltipText += " Z"; break;
+					
+					case 3 : _tooltipText += " XY"; break;
+					case 4 : _tooltipText += " YZ"; break;
+					case 5 : _tooltipText += " XZ"; break;
+				}
+				
+				if(KEYBOARD_NUMBER != undefined)
+					_tooltipText += $" [{KEYBOARD_NUMBER}]";
+				
+				PANEL_PREVIEW.setActionTooltip(_tooltipText);
+				
+			} else {
+				if((_hover != noone && mouse_press(mb_left)) || activeKeyboard) {
+					drag_axis = activeKeyboard? 3 : _hover;
+					drag_mx	= _mx; drag_my = _my;
+					drag_px = _mx; drag_py = _my;
+					
+					drag_prev = undefined;
+					
+					drag_origin_x = 0;
+					drag_origin_y = 0;
+					drag_origin_z = 0;
+					
+					for( var i = 0; i < _amo; i++ ) {
+						var _i = node.anchor_select[i];
+						var _a = node.anchors[_i];
+					
+						drag_origin_x += _a[0];
+						drag_origin_y += _a[1];
+						drag_origin_z += _a[2];
+					}
+						
+					drag_origin_x /= _amo;
+					drag_origin_y /= _amo;
+					drag_origin_z /= _amo;
+					
+					drag_original = new __vec3(drag_origin_x, drag_origin_y, drag_origin_z);
+					
+					drag_dx = 0; 
+					drag_dy = 0; 
+					drag_dz = 0;
+					
+					original_values = array_verify(original_values, array_length(node.anchors));
+					for( var i = 0, n = array_length(node.anchors); i < n; i++ ) 
+						original_values[i] = array_clone(node.anchors[i]);
+				}
+			}
+		}
+	}
+	
+	function d3d_path_tool_rotation(_node) : ToolObject() constructor {
+		activeKeyboard = false;
+		setNode(_node);
+		
+		drag_axis  = noone;
+		drag_prev  = 0;
+		
+		original_values = [];
+		drag_original   = new __vec3();
+		
+		drag_origin_x = 0; drag_origin_y = 0; drag_origin_z = 0;
+		drag_accu_rot = 0; 
+		
+		drag_mx = 0; drag_my = 0;
+		drag_px = 0; drag_py = 0;
+		axis_hover = noone;
+		
+		sz = 64;
+		hs = sz / 2;
+		sq = 8;
+		ga = [0,0,0,0,0,0];
+		
+		cx = 0;
+		cy = 0;
+		
+		static init = function() {
+			activeKeyboard = false;
+			
+			KEYBOARD_STRING = "";
+			KEYBOARD_NUMBER = undefined;
+		}
+		
+		static initKeyboard = function() /*=>*/ {
+			activeKeyboard = true;
+		}
+		
+		function drawOverlay3D(active, _mx, _my, _snx, _sny, _params) {
+			if(array_empty(node.anchor_select)) { PANEL_PREVIEW.resetTool(); return; }
+			
+			#region ---- main ----
+				var _qinv = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), 90);
+				
+				var _camera = _params.scene.camera;
+				var _panel  = _params.panel;
+				var _qview  = new BBMOD_Quaternion().FromEuler(_camera.focus_angle_y, -_camera.focus_angle_x, 0);
+				
+				var _hover     = noone;
+				var _hoverDist = 10;
+				
+				var _amo = array_length(node.anchor_select);
+			#endregion
+				
+			#region display
+				for( var i = 0; i < 3; i++ ) {
+					var op, np;
+					var th = 2 + (axis_hover == i || drag_axis == i);
+					
+					if(drag_axis != noone && drag_axis != i)
+						continue;
+						
+					draw_set_color(COLORS.axis[i]);
+					for( var j = 0; j <= 32; j++ ) {
+						var ang = j / 32 * 360;
+						
+						switch(i) {
+							case 0 : np = new BBMOD_Vec3(0, lengthdir_x(sz, ang), lengthdir_y(sz, ang)); break;
+							case 1 : np = new BBMOD_Vec3(lengthdir_x(sz, ang), 0, lengthdir_y(sz, ang)); break;
+							case 2 : np = new BBMOD_Vec3(lengthdir_x(sz, ang), lengthdir_y(sz, ang), 0); break;
+						}
+						
+						np = _qview.Rotate(_qinv.Rotate(np));
+						
+						if(j && (op.Z > 0 && np.Z > 0 || drag_axis == i)) {
+							draw_line_round(cx + op.X, cy + op.Y, cx + np.X, cy + np.Y, th);
+							var _d = distance_to_line(_mx, _my, cx + op.X, cy + op.Y, cx + np.X, cy + np.Y);
+							if(_d < _hoverDist) {
+								_hover = i;
+								_hoverDist = _d;
+							}
+						}
+						
+						op = np;
+					}
+				}
+				axis_hover = _hover;
+			#endregion
+			
+			if(drag_axis != noone) { // editing
+				var mAdj, nor, prj, pln;
+				var _rotator;
+				var edit = false;
+				
+				if(!MOUSE_WRAPPING) {
+					if(KEYBOARD_NUMBER == undefined) {
+						var mAng = point_direction(cx, cy, _mx, _my);
+						
+						if(drag_prev != undefined)
+							drag_accu_rot += drag_prev - mAng;
+						drag_prev = mAng;
+						
+					} else 
+						drag_accu_rot = KEYBOARD_NUMBER;
+					
+					switch(drag_axis) {
+						case 0 : _rotator = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), drag_accu_rot); break;
+						case 1 : _rotator = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(0, 1, 0), drag_accu_rot); break;
+						case 2 : _rotator = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(0, 0, 1), drag_accu_rot); break;
+					}
+					
+					for( var i = 0; i < _amo; i++ ) {
+						var _i    = node.anchor_select[i];
+						var _ind  = node.input_fix_len + _i;
+						var _orig = original_values[_i];
+						
+						var _vv  = new BBMOD_Vec3(_orig[0] - drag_origin_x, _orig[1] - drag_origin_y, _orig[2] - drag_origin_z);
+						var _vr  = _rotator.Rotate(_vv);
+						var _val = array_clone(_orig);
+						
+						_val[0] = drag_origin_x + _vr.X;
+						_val[1] = drag_origin_y + _vr.Y;
+						_val[2] = drag_origin_z + _vr.Z;
+						
+						var _vv  = new BBMOD_Vec3(_orig[3], _orig[4], _orig[5]);
+						var _vr  = _rotator.Rotate(_vv);
+						
+						_val[3] = _vr.X;
+						_val[4] = _vr.Y;
+						_val[5] = _vr.Z;
+						
+						var _vv  = new BBMOD_Vec3(_orig[6], _orig[7], _orig[8]);
+						var _vr  = _rotator.Rotate(_vv);
+						
+						_val[6] = _vr.X;
+						_val[7] = _vr.Y;
+						_val[8] = _vr.Z;
+						
+						if(node.inputs[_ind].setValue(_val)) edit = true;
+					}
+					
+					if(edit) UNDO_HOLDING = true;
+				}
+					
+				setMouseWrap();
+				drag_px = _mx;
+				drag_py = _my;
+				
+				if((!activeKeyboard && mouse_release(mb_left)) || (activeKeyboard && (mouse_press(mb_left) || key_press(vk_enter))) ) {
+					if(activeKeyboard) PANEL_PREVIEW.resetTool();
+					
+					drag_axis      = noone;
+					UNDO_HOLDING   = false;
+					activeKeyboard = false;
+				}
+				
+				if(drag_axis != 0 && key_press(ord("X"))) {
+					drag_axis = 0;
+					drag_accu_rot = 0; 
+					drag_prev = undefined;
+					KEYBOARD_STRING = "";
+				}
+				
+				if(drag_axis != 1 && key_press(ord("Y"))) {
+					drag_axis = 1;
+					drag_accu_rot = 0; 
+					drag_prev = undefined;
+					KEYBOARD_STRING = "";
+				}
+				
+				if(drag_axis != 2 && key_press(ord("Z"))) {
+					drag_axis = 2;
+					drag_accu_rot = 0; 
+					drag_prev = undefined;
+					KEYBOARD_STRING = "";
+				}
+				
+				var _tooltipText = "Rotating";
+				switch(drag_axis) {
+					case 0 : _tooltipText += " X"; break;
+					case 1 : _tooltipText += " Y"; break;
+					case 2 : _tooltipText += " Z"; break;
+					
+					case 3 : _tooltipText += " XY"; break;
+					case 4 : _tooltipText += " YZ"; break;
+					case 5 : _tooltipText += " XZ"; break;
+				}
+				
+				if(KEYBOARD_NUMBER != undefined)
+					_tooltipText += $" [{KEYBOARD_NUMBER}]";
+				
+				PANEL_PREVIEW.setActionTooltip(_tooltipText);
+				
+			} else {
+				if((_hover != noone && mouse_press(mb_left)) || activeKeyboard) {
+					drag_axis = activeKeyboard? 2 : _hover;
+					drag_mx	= _mx; drag_my = _my;
+					drag_px = _mx; drag_py = _my;
+					
+					drag_prev = undefined;
+					
+					drag_origin_x = 0;
+					drag_origin_y = 0;
+					drag_origin_z = 0;
+					
+					for( var i = 0; i < _amo; i++ ) {
+						var _i = node.anchor_select[i];
+						var _a = node.anchors[_i];
+					
+						drag_origin_x += _a[0];
+						drag_origin_y += _a[1];
+						drag_origin_z += _a[2];
+					}
+						
+					drag_origin_x /= _amo;
+					drag_origin_y /= _amo;
+					drag_origin_z /= _amo;
+					
+					drag_original = new __vec3(drag_origin_x, drag_origin_y, drag_origin_z);
+					drag_accu_rot = 0; 
+					
+					original_values = array_verify(original_values, array_length(node.anchors));
+					for( var i = 0, n = array_length(node.anchors); i < n; i++ ) 
+						original_values[i] = array_clone(node.anchors[i]);
+					
+					cx = node.anchor_select_cx;
+					cy = node.anchor_select_cy;
+					
+				}
+			}
+		}
+	}
+	
+	function d3d_path_tool_scale(_node) : ToolObject() constructor {
+		activeKeyboard = false;
+		setNode(_node);
+		
+		drag_axis  = noone;
+		
+		original_values = [];
+		
+		drag_origin_x = 0; drag_origin_y = 0; drag_origin_z = 0;
+		drag_mx = 0; drag_my = 0;
+		drag_px = 0; drag_py = 0;
+		axis_hover = noone;
+		
+		sz = 64;
+		hs = sz / 2;
+		sq = 8;
+		ga = [0,0,0,0,0,0];
+		
+		cx = 0;
+		cy = 0;
+
+		static init = function() {
+			activeKeyboard = false;
+			
+			KEYBOARD_STRING = "";
+			KEYBOARD_NUMBER = undefined;
+		}
+		
+		static initKeyboard = function() /*=>*/ {
+			activeKeyboard = true;
+		}
+		
+		function drawOverlay3D(active, _mx, _my, _snx, _sny, _params) {
+			if(array_empty(node.anchor_select)) { PANEL_PREVIEW.resetTool(); return; }
+			
+			#region ---- main ----
+				var _qinv = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), 90);
+				
+				var _camera = _params.scene.camera;
+				var _panel  = _params.panel;
+				var _qview  = new BBMOD_Quaternion().FromEuler(_camera.focus_angle_y, -_camera.focus_angle_x, 0);
+				
+				var _hover     = noone;
+				var _hoverDist = 10;
+				
+				var _amo = array_length(node.anchor_select);
+			#endregion
+				
+			#region display
+				ga[0] = new BBMOD_Vec3(-sz, 0, 0);
+				ga[1] = new BBMOD_Vec3(0, -sz, 0);
+				ga[2] = new BBMOD_Vec3(0, 0, -sz);
+				
+				ga[3] = [	new BBMOD_Vec3(-hs + sq, -hs - sq,        0),
+							new BBMOD_Vec3(-hs - sq, -hs - sq,        0), 
+							new BBMOD_Vec3(-hs - sq, -hs + sq,        0), 
+							new BBMOD_Vec3(-hs + sq, -hs + sq,        0), ];
+				ga[4] = [	new BBMOD_Vec3(       0, -hs + sq, -hs - sq),
+							new BBMOD_Vec3(       0, -hs - sq, -hs - sq), 
+							new BBMOD_Vec3(       0, -hs - sq, -hs + sq), 
+							new BBMOD_Vec3(       0, -hs + sq, -hs + sq), ];
+				ga[5] = [	new BBMOD_Vec3(-hs + sq,        0, -hs - sq),
+							new BBMOD_Vec3(-hs - sq,        0, -hs - sq), 
+							new BBMOD_Vec3(-hs - sq,        0, -hs + sq), 
+							new BBMOD_Vec3(-hs + sq,        0, -hs + sq), ];
+					
+				for( var i = 0; i < 3; i++ ) {
+					ga[i] = _qview.Rotate(_qinv.Rotate(ga[i]));
+					
+					var th = 2 + (axis_hover == i || drag_axis == i);
+					if(drag_axis != noone && drag_axis != i)
+						continue;
+					
+					draw_set_color(COLORS.axis[i]);
+					if(point_distance(cx, cy, cx + ga[i].X, cy + ga[i].Y) < 5)
+						draw_line_round(cx, cy, cx + ga[i].X, cy + ga[i].Y, th);
+					else 
+						draw_line_round_arrow(cx, cy, cx + ga[i].X, cy + ga[i].Y, th, 3);
+					
+					var _d = distance_to_line(_mx, _my, cx, cy, cx + ga[i].X, cy + ga[i].Y);
+					if(_d < _hoverDist) {
+						_hover     =  i;
+						_hoverDist = _d;
+					}
+				}
+				
+				for( var i = 3; i < 6; i++ ) {
+					for( var j = 0; j < 4; j++ )
+						ga[i][j] = _qview.Rotate(_qinv.Rotate(ga[i][j]));
+					
+					var th = 1;
+					
+					var p0x = cx + ga[i][0].X, p0y = cy + ga[i][0].Y;
+					var p1x = cx + ga[i][1].X, p1y = cy + ga[i][1].Y;
+					var p2x = cx + ga[i][2].X, p2y = cy + ga[i][2].Y;
+					var p3x = cx + ga[i][3].X, p3y = cy + ga[i][3].Y;
+					
+					var _pax = (p0x + p1x + p2x + p3x) / 4;
+					var _pay = (p0y + p1y + p2y + p3y) / 4;
+					
+					if((abs(p0x - _pax) + abs(p1x - _pax) + abs(p2x - _pax) + abs(p3x - _pax)) / 4 < 1)
+						continue;
+						
+					if((abs(p0y - _pay) + abs(p1y - _pay) + abs(p2y - _pay) + abs(p3y - _pay)) / 4 < 1)
+						continue;
+					
+					draw_set_color(COLORS.axis[(i - 3 - 1 + 3) % 3]);
+					if(axis_hover == i || drag_axis == i) {
+						draw_primitive_begin(pr_trianglestrip);
+							draw_vertex(p0x, p0y);
+							draw_vertex(p1x, p1y);
+							draw_vertex(p3x, p3y);
+							draw_vertex(p2x, p2y);
+						draw_primitive_end();
+						
+					} else if (drag_axis == noone) {
+						draw_line(p0x, p0y, p1x, p1y);
+						draw_line(p1x, p1y, p2x, p2y);
+						draw_line(p2x, p2y, p3x, p3y);
+						draw_line(p3x, p3y, p0x, p0y);
+						
+					} else 
+						continue;
+					
+					if(point_in_rectangle_points(_mx, _my, p0x, p0y, p1x, p1y, p3x, p3y, p2x, p2y))
+						_hover = i;
+				}
+				
+				axis_hover = _hover;
+			#endregion display
+			
+			if(drag_axis != noone) { // editing
+				var mAdj, nor, prj, pln;
+				var edit = false;
+				
+				if(!MOUSE_WRAPPING) {
+					var _ss = KEYBOARD_NUMBER ?? (point_distance(cx, cy, _mx, _my) / point_distance(cx, cy, drag_mx, drag_my));
+					var _sx = _ss, _sy = _ss, _sz = _ss;
+					
+					switch(drag_axis) {
+						case 0 : _sx = _ss; _sy =   1; _sz =   1; break;
+						case 1 : _sx =   1; _sy = _ss; _sz =   1; break;
+						case 2 : _sx =   1; _sy =   1; _sz = _ss; break;
+						
+						case 3 : _sx = _ss; _sy = _ss; _sz =   1; break;
+						case 4 : _sx =   1; _sy = _ss; _sz = _ss; break;
+						case 5 : _sx = _ss; _sy =   1; _sz = _ss; break;
+						
+						case 6 : _sx = _ss; _sy = _ss; _sz = _ss; break;
+					}
+					
+					for( var i = 0; i < _amo; i++ ) {
+						var _i    = node.anchor_select[i];
+						var _ind  = node.input_fix_len + _i;
+						var _orig = original_values[_i];
+						var val   = array_clone(_orig);
+						
+						val[0] = drag_origin_x + (val[0] - drag_origin_x) * _sx;
+						val[1] = drag_origin_y + (val[1] - drag_origin_y) * _sy;
+						val[2] = drag_origin_z + (val[2] - drag_origin_z) * _sz;
+						
+						val[3] = val[3] * _sx;
+						val[4] = val[4] * _sy;
+						val[5] = val[5] * _sz;
+						
+						val[6] = val[6] * _sx;
+						val[7] = val[7] * _sy;
+						val[8] = val[8] * _sz;
+						
+						if(node.inputs[_ind].setValue(val)) edit = true;
+					}
+					
+					if(edit) UNDO_HOLDING = true;
+				}
+					
+				setMouseWrap();
+				drag_px = _mx;
+				drag_py = _my;
+				
+				if((!activeKeyboard && mouse_release(mb_left)) || (activeKeyboard && (mouse_press(mb_left) || key_press(vk_enter))) ) {
+					if(activeKeyboard) PANEL_PREVIEW.resetTool();
+					
+					drag_axis      = noone;
+					UNDO_HOLDING   = false;
+					activeKeyboard = false;
+				}
+				
+				if(key_press(ord("X"))) {
+					drag_axis = drag_axis == 0? 6 : 0;
+					KEYBOARD_STRING = "";
+				}
+				
+				if(key_press(ord("Y"))) {
+					drag_axis = drag_axis == 1? 6 : 1;
+					KEYBOARD_STRING = "";
+				}
+				
+				if(key_press(ord("Z"))) {
+					drag_axis = drag_axis == 2? 6 : 2;
+					KEYBOARD_STRING = "";
+				}
+				
+				var _tooltipText = "Dragging";
+				switch(drag_axis) {
+					case 0 : _tooltipText += " X"; break;
+					case 1 : _tooltipText += " Y"; break;
+					case 2 : _tooltipText += " Z"; break;
+					
+					case 3 : _tooltipText += " XY"; break;
+					case 4 : _tooltipText += " YZ"; break;
+					case 5 : _tooltipText += " XZ"; break;
+					
+					case 6 : _tooltipText += " XYZ"; break;
+				}
+				
+				if(KEYBOARD_NUMBER != undefined)
+					_tooltipText += $" [{KEYBOARD_NUMBER}]";
+				
+				PANEL_PREVIEW.setActionTooltip(_tooltipText);
+				
+			} else {
+				if((_hover != noone && mouse_press(mb_left)) || activeKeyboard) {
+					drag_axis = activeKeyboard? 6 : _hover;
+					drag_mx	= _mx; drag_my = _my;
+					drag_px = _mx; drag_py = _my;
+					
+					drag_origin_x = 0;
+					drag_origin_y = 0;
+					drag_origin_z = 0;
+					
+					for( var i = 0; i < _amo; i++ ) {
+						var _i = node.anchor_select[i];
+						var _a = node.anchors[_i];
+					
+						drag_origin_x += _a[0];
+						drag_origin_y += _a[1];
+						drag_origin_z += _a[2];
+					}
+						
+					drag_origin_x /= _amo;
+					drag_origin_y /= _amo;
+					drag_origin_z /= _amo;
+					
+					original_values = array_verify(original_values, array_length(node.anchors));
+					for( var i = 0, n = array_length(node.anchors); i < n; i++ ) 
+						original_values[i] = array_clone(node.anchors[i]);
+						
+					cx = node.anchor_select_cx;
+					cy = node.anchor_select_cy;
+				}
+			}
+		}
+	}
+	
 #endregion
 
 function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
@@ -26,24 +831,22 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	setDimension(96, 48);
 	
 	////- =Path
-	
 	newInput(1, nodeValue_Bool( "Loop",         false )).rejectArray();
 	newInput(3, nodeValue_Bool( "Round anchor", false )).rejectArray();
 	
 	////- =Sampling
-	
 	newInput(0, nodeValue_Slider(      "Path progress", 0 )).setTooltip("Sample position from path.");
 	newInput(2, nodeValue_Enum_Scroll( "Progress mode", 0, ["Entire line", "Segment"])).rejectArray();
-	// input 4 
+	// inputs 4 
 		
 	newOutput(0, nodeValue_Output( "Position out", VALUE_TYPE.float,    [0,0] )).setDisplay(VALUE_DISPLAY.vector);
 	newOutput(1, nodeValue_Output( "Path data",    VALUE_TYPE.pathnode, self  ));
 	newOutput(2, nodeValue_Output( "Anchors",      VALUE_TYPE.float,    []    )).setVisible(false).setArrayDepth(1);
 	
 	input_display_list = [
-		["Path",     false], 1, 3, 
-		["Sampling", false], 0, 2, 
-		["Anchors",  false], 
+		[ "Path",     false ], 1, 3, 
+		[ "Sampling", false ], 0, 2, 
+		[ "Anchors",  false ], 
 	];
 	
 	output_display_list  = [ 1, 0, 2 ];
@@ -71,16 +874,11 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	////- Nodes
 	
 	path_preview_surface = noone;
-	
-	tools = [
-		new NodeTool( "Transform", THEME.path_tools_transform ),
-		new NodeTool( "Anchor add / remove", THEME.path_tools_add ),
-		new NodeTool( "Edit Control point", THEME.path_tools_anchor ),
-	];
-	
+		
 	#region ---- path ----
 		path_loop    = false;
 		anchors		 = [];
+		anchor_view  = [];
 		segments     = [];
 		lengths		 = [];
 		lengthAccs	 = [];
@@ -104,6 +902,20 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	#endregion
 	
 	#region ---- editor ----
+		tool_object_pos = new d3d_path_tool_position(self);
+		tool_object_rot = new d3d_path_tool_rotation(self);
+		tool_object_sca = new d3d_path_tool_scale(self);
+		
+		tool_pos = new NodeTool( "Transform", THEME.tools_3d_transform, "Node_Path_3D" ).setToolObject(tool_object_pos);
+		tool_rot = new NodeTool( "Rotate",    THEME.tools_3d_rotate,    "Node_Path_3D" ).setToolObject(tool_object_rot);
+		tool_sca = new NodeTool( "Scale",     THEME.tools_3d_scale,     "Node_Path_3D" ).setToolObject(tool_object_sca);
+		
+		tools = [
+			tool_pos, tool_rot, tool_sca, -1, 
+			new NodeTool( "Anchor add / remove", THEME.path_tools_add       ),
+			new NodeTool( "Edit Control point",  THEME.path_tools_anchor    ),
+		];
+		
 		line_hover = -1;
 	
 		drag_point    = -1;
@@ -129,6 +941,13 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		transform_cx = 0;   transform_cy = 0;   transform_cz = 0;
 		transform_sx = 0;   transform_sy = 0;   transform_sz = 0;
 		transform_mx = 0;   transform_my = 0;   transform_mz = 0;
+		
+		anchor_freeze   = 0;
+		anchor_select   = [];
+		anchor_focus    = undefined;
+		
+		anchor_select_cx = 0;
+		anchor_select_cy = 0;
 	#endregion
 	
 	static resetDisplayList = function() {
@@ -151,17 +970,20 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		}
 	}
 	
+	////- Draw
+	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { }
 	
-	static drawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) {
+	static drawOverlay3D = function(active, _mx, _my, _snx, _sny, _params) {
 		var ansize = array_length(inputs) - input_fix_len;
 		var edited = false;
 		
 		var _qinv  = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), 90);
 	
-		var _camera = params.camera;
+		var _camera = _params.scene.camera;
 		var _qview  = new BBMOD_Quaternion().FromEuler(_camera.focus_angle_y, -_camera.focus_angle_x, 0);
 		var ray     = _camera.viewPointToWorldRay(_mx, _my);
+		var _tooln  = getUsingToolName();
 		
 		/////////////////////////////////////////////////////// EDIT ///////////////////////////////////////////////////////
 		
@@ -255,12 +1077,15 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		var _line_hover  = -1;
 		var anchor_hover = -1;
 		var hover_type   = 0;
+		var hovering     = false;
 		
 		var minx =  99999, miny =  99999, minz =  99999;
 		var maxx = -99999, maxy = -99999, maxz = -99999;
 				
+		anchor_view = array_verify(anchor_view, array_length(anchors));
+				
 		if(!array_empty(anchors)) {
-			draw_set_color(isUsingTool(0)? COLORS._main_icon : COLORS._main_accent);
+			draw_set_color(COLORS._main_accent);
 			
 			var _v3 = new __vec3();
 			
@@ -295,7 +1120,14 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 				}
 			}
 			
-			if(!isUsingTool(0))
+			var _showAnchor = true;
+			switch(_tooln) {
+				case "Weight edit" : 
+					_showAnchor = false;
+					break;
+			}
+			
+			if(_showAnchor)
 			for(var i = 0; i < ansize; i++) {
 				var _a = anchors[i];
 				_v3.x  = _a[0];
@@ -308,7 +1140,9 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 				var cont = false;
 				var _ax0 = 0, _ay0 = 0;
 				var _ax1 = 0, _ay1 = 0;
-		
+				
+				anchor_view[i] = [ xx,yy ];
+				
 				if(array_length(_a) < 6) continue;
 				
 				if(_a[2] != 0 || _a[3] != 0 || _a[4] != 0 || _a[5] != 0) {
@@ -333,9 +1167,9 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 					draw_set_color(COLORS.node_path_overlay_control_line);
 					draw_line(_ax0, _ay0, xx, yy);
 					draw_line(_ax1, _ay1, xx, yy);
-			
-					draw_circle_ui(_ax0, _ay0, 4, 0, COLORS._main_accent);
-					draw_circle_ui(_ax1, _ay1, 4, 0, COLORS._main_accent);
+					
+					draw_circle(_ax0, _ay0, ui(3), false);
+					draw_circle(_ax1, _ay1, ui(3), false);
 				}
 				
 				var _anHov = 0;
@@ -359,7 +1193,8 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 					hover_type   = -1;
 				}
 				
-				draw_anchor(_anHov, xx, yy, ui(8), 1);
+				var _type = anchor_focus == i? 2 : 1;
+				draw_anchor(_anHov, xx, yy, ui(8), _type);
 				
 				if(attributes.display_name) {
 					draw_set_text(f_p1, fa_left, fa_bottom, COLORS._main_accent);
@@ -458,7 +1293,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 				}
 			}
 		
-		} else if(key_mod_press(CTRL) || isUsingTool(1)) {	// anchor edit
+		} else if(key_mod_press(CTRL) || _tooln == "Anchor add / remove") {	// anchor edit
 			draw_sprite_ui_uniform(THEME.cursor_path_add, 0, _mx + 4, _my + 4);
 			
 			if(mouse_press(mb_left, active)) {
@@ -498,6 +1333,65 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			}
 		}
 		
+		var _show_selecting = isNotUsingTool();
+		
+		if(isUsingTool()) {
+			hovering = true;
+			
+			var _currTool = PANEL_PREVIEW.tool_current;
+			var _tool     = _currTool.getToolObject();
+			
+			if(_tool != noone) {
+				_tool.drawOverlay3D(active, _mx, _my, _snx, _sny, _params);
+				if(mouse_lclick()) anchor_freeze = 1;
+				_show_selecting = true;
+			}
+		}
+		
+		if(_show_selecting) {
+			var panel  = _params.panel;
+			
+			if(anchor_freeze == 0 && panel.selection_selecting && anchor_hover == -1) {
+				var sx0 = panel.canvas_x + panel.selection_x0 * panel.canvas_s;
+	        	var sy0 = panel.canvas_y + panel.selection_y0 * panel.canvas_s;
+	        	var sx1 = panel.canvas_x + panel.selection_x1 * panel.canvas_s;
+	        	var sy1 = panel.canvas_y + panel.selection_y1 * panel.canvas_s;
+	        	
+				anchor_select   = [];
+				
+				for( var i = 0, n = array_length(anchor_view); i < n; i++ ) {
+					var _anc = anchor_view[i];
+					
+					if(point_in_rectangle(_anc[0], _anc[1], sx0, sy0, sx1, sy1)) 
+						array_push(anchor_select, i);
+				}
+				
+			}
+			
+			if(mouse_lrelease()) 
+				anchor_freeze = 0;
+		}
+		
+		var _amo = array_length(anchor_select);
+		if(_amo) {
+			anchor_select_cx = 0;
+			anchor_select_cy = 0;
+		
+			for( var i = 0; i < _amo; i++ ) {
+				var _a   = anchor_select[i];
+				var _anc = anchor_view[_a];
+				
+				draw_anchor(0, _anc[0], _anc[1], ui(8), 2);
+				
+				anchor_select_cx += _anc[0];
+				anchor_select_cy += _anc[1];
+			}
+			
+			anchor_select_cx /= _amo;
+			anchor_select_cy /= _amo;
+		}
+		
+		return anchor_hover != -1 || hovering;
 	}
 	
 	static updateLength = function() { 

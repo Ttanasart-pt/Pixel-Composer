@@ -146,7 +146,7 @@ function ToolObject() constructor {
 	////- Draw
 	
 	static drawOverlay   = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny ) /*=>*/ {}
-	static drawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) /*=>*/ {}
+	static drawOverlay3D = function(active, _mx, _my, _snx, _sny, _params) /*=>*/ {}
 	
 	////- Actions
 	

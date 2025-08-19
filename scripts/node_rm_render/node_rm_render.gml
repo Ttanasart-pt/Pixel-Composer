@@ -49,7 +49,7 @@ function Node_RM_Render(_x, _y, _group = noone) : Node_RM(_x, _y, _group) constr
 	environ = new RM_Environment();
 	object  = noone;
 	
-	static drawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) {}
+	static drawOverlay3D = function(active, _mx, _my, _snx, _sny, _params) {}
 	
 	static step = function() {
 		var _pro = getSingleValue( 1);

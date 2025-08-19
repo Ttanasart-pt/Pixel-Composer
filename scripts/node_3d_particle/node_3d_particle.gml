@@ -122,10 +122,10 @@ function Node_3D_Particle(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 	tool_ori     = new NodeTool( "Move Origin", THEME.tools_3d_transform, "Node_3D_Particle" ).setToolObject(tool_ori_obj);
 	tools = [ tool_ori ];
 	
-	static drawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) { 
+	static drawOverlay3D = function(active, _mx, _my, _snx, _sny, _params) { 
 		var _ori = new __vec3(inputs[9].getValue(,,, true));
 		
-		if(isUsingTool("Move Origin")) tool_ori_obj.drawOverlay3D(9, noone, _ori, active, params, _mx, _my, _snx, _sny, _panel);
+		if(isUsingTool("Move Origin")) tool_ori_obj.drawOverlay3D(9, noone, _ori, active, _mx, _my, _snx, _sny, _params);
 	} 
 	
 	////- Node

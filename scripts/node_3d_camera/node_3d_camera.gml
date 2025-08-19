@@ -110,7 +110,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		return [];
 	}
 	
-	static drawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) {
+	static drawOverlay3D = function(active, _mx, _my, _snx, _sny, _params) {
 		var preObj = getPreviewObjects();
 		if(array_empty(preObj)) return;
 		preObj = preObj[0];
@@ -118,13 +118,13 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		var _pos  = inputs[0].getValue(,,, true);
 		var _vpos = new __vec3( _pos[0], _pos[1], _pos[2] );
 		
-		if(isUsingTool("Transform"))	tool_pos_object.drawOverlay3D(0, preObj, _vpos, active, params, _mx, _my, _snx, _sny, _panel);
-		else if(isUsingTool("Rotate"))	tool_object_rot.drawOverlay3D(1, preObj, _vpos, active, params, _mx, _my, _snx, _sny, _panel);
+		if(isUsingTool("Transform"))	tool_pos_object.drawOverlay3D(0, preObj, _vpos, active, _mx, _my, _snx, _sny, _params);
+		else if(isUsingTool("Rotate"))	tool_object_rot.drawOverlay3D(1, preObj, _vpos, active, _mx, _my, _snx, _sny, _params);
 		else if(isUsingTool("Move Target")) {
 			var _lkpos  = inputs[in_d3d + 10].getValue(,,, true);
 			var _lkvpos = new __vec3( _lkpos[0], _lkpos[1], _lkpos[2] );
 			
-			tool_pos_object.drawOverlay3D(in_d3d + 10, noone, _lkvpos, active, params, _mx, _my, _snx, _sny, _panel);
+			tool_pos_object.drawOverlay3D(in_d3d + 10, noone, _lkvpos, active, _mx, _my, _snx, _sny, _params);
 		}
 		
 		#region draw result

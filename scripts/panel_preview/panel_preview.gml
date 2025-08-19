@@ -220,10 +220,10 @@ function Panel_Preview() : PanelContent() constructor {
     	selecting_h  = 0;
     	
     	selection_active = false;
-    	selection_x0 = 0;
-    	selection_y0 = 0;
-    	selection_x1 = 0;
-    	selection_y1 = 0;
+    	selection_x0 = 0; 
+    	selection_y0 = 0; 
+    	selection_x1 = 0; 
+    	selection_y1 = 0; 
     	
     	hoveringContent = false;
         hoveringGizmo   = false;
@@ -2429,9 +2429,9 @@ function Panel_Preview() : PanelContent() constructor {
         hoveringContent = overHover;
         
         var overActive = active && overHover;
-        var params = { w, h, toolbar_height };
-        params.panel = self;
-        
+        var _params = { w, h, toolbar_height };
+            _params.panel = self;
+            _params.scene = d3_scene;
         
         if(_node.is_3D == NODE_3D.none) {
             
@@ -2456,7 +2456,7 @@ function Panel_Preview() : PanelContent() constructor {
 				_ovs *= _trans[2];
             }
             
-            if(!CAPTURING) hoveringGizmo = _node.doDrawOverlay(overHover, overActive, _ovx, _ovy, _ovs, _mx, _my, _snx, _sny, params);
+            if(!CAPTURING) hoveringGizmo = _node.doDrawOverlay(overHover, overActive, _ovx, _ovy, _ovs, _mx, _my, _snx, _sny, _params);
 	    	 
         } else {
             if(key_mod_press(CTRL) || PROJECT.previewSetting.d3_tool_snap) {
@@ -2464,7 +2464,7 @@ function Panel_Preview() : PanelContent() constructor {
                 _sny = PROJECT.previewSetting.d3_tool_snap_rotation;
             }
             
-            if(!CAPTURING) _node.drawOverlay3D(overActive, d3_scene, _mx, _my, _snx, _sny, params);
+            if(!CAPTURING) hoveringGizmo = _node.drawOverlay3D(overActive, _mx, _my, _snx, _sny, _params) ?? true;
         }
         
         overlay_hovering = false;
@@ -3043,11 +3043,10 @@ function Panel_Preview() : PanelContent() constructor {
             }
         }
         
-        if(d3_active == NODE_3D.none) {
+        if(d3_active == NODE_3D.none)
         	drawSplitView();
-        	drawSelection();
-        }
         
+    	drawSelection();
         drawTopbar(toolNode);
         drawToolBar(toolNode);
         

@@ -210,7 +210,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 			    // _pos  = [ -_pos[0], _pos[2], -_pos[1] ];
 			var _qinv = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), 90);
 			
-			var _camera = params.camera;
+			var _camera = _params.scene.camera;
 			var _qview  = new BBMOD_Quaternion().FromEuler(_camera.focus_angle_y, -_camera.focus_angle_x, 0);
 			
 			var _hover     = noone;
@@ -384,9 +384,9 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 		} #endregion
 	} #endregion
 	
-	static drawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) {
+	static drawOverlay3D = function(active, _mx, _my, _snx, _sny, _params) {
 		var _pos    = getSingleValue(2);
-		var _camera = params.camera;
+		var _camera = _params.scene.camera;
 		var _vpos   = new __vec3( -_pos[0], _pos[2], -_pos[1] );
 		
 		if(isUsingTool("Transform"))	drawGizmoPosition(2, _vpos, active, params, _mx, _my, _snx, _sny, _panel);

@@ -208,14 +208,14 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		return w_hovering;
 	}
 	
-	static drawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) {
+	static drawOverlay3D = function(active, _mx, _my, _snx, _sny, _params) {
 		
 		var _out = getSingleValue(0, preview_index, true);
 		if(!is_struct(_out)) return;
 		
 		var _qinv  = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), 90);
 		
-		var _camera = params.camera;
+		var _camera = _params.scene.camera;
 		var _qview  = new BBMOD_Quaternion().FromEuler(_camera.focus_angle_y, -_camera.focus_angle_x, 0);
 		var ray     = _camera.viewPointToWorldRay(_mx, _my);
 		
