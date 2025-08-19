@@ -1150,7 +1150,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				break;
 			
 			case VALUE_TYPE.font :
-				editWidget = new fontScrollBox(function(val) /*=>*/ {return setValueInspector(FONT_INTERNAL[val])});
+				editWidget = new fontScrollBox(function(val) /*=>*/ {return setValueInspector(val)});
 				break;
 				
 			case VALUE_TYPE.d3Material :

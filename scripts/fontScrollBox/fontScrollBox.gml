@@ -5,10 +5,14 @@ function fontScrollBox(_onModify) : widget() constructor {
 	open_rx = 0;
 	open_ry = 0;
 	
+	show_folder = true;
+	
 	align = fa_center;
 	side_button = button(function() /*=>*/ {return shellOpenExplorer(DIRECTORY + "Fonts")})
 						.setTooltip(__txtx("widget_font_open_folder", "Open font folder"))
 						.setIcon(THEME.folder_content, 0, COLORS._main_icon).iconPad();
+			
+	static setFolder = function(v) /*=>*/ { show_folder = v; return self; }
 						
 	static trigger = function() {
 		open = true;
@@ -39,10 +43,12 @@ function fontScrollBox(_onModify) : widget() constructor {
 		
 		var _bs = min(_h, ui(32));
 		
-		if(_w - _bs > ui(100) && side_button != noone) {
-			side_button.setFocusHover(active, hover);
-			side_button.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
-			w -= _bs + ui(4);
+		if(show_folder) {
+			if(_w - _bs > ui(100) && side_button != noone) {
+				side_button.setFocusHover(active, hover);
+				side_button.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
+				w -= _bs + ui(4);
+			}
 		}
 		
 		if(open) { resetFocus(); return h; }

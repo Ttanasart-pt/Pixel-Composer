@@ -814,7 +814,7 @@
 					original_values = array_verify(original_values, array_length(node.anchors));
 					for( var i = 0, n = array_length(node.anchors); i < n; i++ ) 
 						original_values[i] = array_clone(node.anchors[i]);
-						
+					
 					cx = node.anchor_select_cx;
 					cy = node.anchor_select_cy;
 				}
@@ -972,7 +972,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	
 	////- Draw
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { }
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) {}
 	
 	static drawOverlay3D = function(active, _mx, _my, _snx, _sny, _params) {
 		var ansize = array_length(inputs) - input_fix_len;

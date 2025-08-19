@@ -42,8 +42,10 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	
 	newOutput(0, nodeValue_Output("Scene", VALUE_TYPE.d3Scene, noone));
 	
+	b_centeralize = button(function() /*=>*/ {return centralize()}).setText("Centralize");
+	
 	input_display_list = [ 21, 
-		["Objects",    false], 0, 3, 4, 5, 
+		["Objects",    false], 0, 3, 4, 5, b_centeralize, 
 		["Repeat",     false], 1, 13, 2, 14, 17, 19, 18, 20, 
 		["Transforms Data", true], 9, 10, 11, 
 		["Shift",      false], 6, 15, 16, 7, 8, 
@@ -54,6 +56,17 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	
 	vectorUp = new __vec3(0, 0, 1);
 	qRotateZ = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), 90);
+	span     = [0, 0, 0, 0, 0, 0];
+	
+	static centralize = function() {
+		if(span[0] == infinity) return;
+		
+		var _cx = -(span[0] + span[1]) / 2;
+		var _cy = -(span[2] + span[3]) / 2;
+		var _cz = -(span[4] + span[5]) / 2;
+		
+		inputs[3].setValue([_cx, _cy, _cz]);
+	}
 	
 	static preGetInputs = function() {
 		var _mode = getSingleValue(1);
@@ -158,8 +171,9 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			var __p = new __vec3P();
 			var _rt = _amo >= 1? 1 / (_amo - 1) : 0;
 			
+			span = [infinity, -infinity, infinity, -infinity, infinity, -infinity];
 		#endregion
-			
+		
 		var _i = 0;
 		repeat(_amo) {
 			var i = _i++;
@@ -273,6 +287,11 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			
 			_subScene.transform.applyMatrix();
 			_scene.addObject(_subScene);
+			
+			span[0] = min(span[0], _sPosX - _Sposx); span[1] = max(span[1], _sPosX - _Sposx);
+			span[2] = min(span[2], _sPosY - _Sposy); span[3] = max(span[3], _sPosY - _Sposy);
+			span[4] = min(span[4], _sPosZ - _Sposz); span[5] = max(span[5], _sPosZ - _Sposz);
+			
 		}
 		
 		return _scene;

@@ -455,7 +455,7 @@
 					
 				} else {
 					if((_hover != noone && mouse_press(mb_left)) || activeKeyboard) {
-						drag_axis = activeKeyboard? 0 : _hover;
+						drag_axis = activeKeyboard? 2 : _hover;
 						drag_prev = undefined;
 						
 						drag_original = node.inputs[index].getValue(CURRENT_FRAME, false);
@@ -857,17 +857,7 @@ function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 			
 			for( var i = 0, n = array_length(_prev_obj); i < n; i++ ) {
 				var _prev = _prev_obj[i];
-				if(!has(_prev, "getBBOX")) continue;
-				
-				var _b = _prev.getBBOX();
-				var _c = _prev.getCenter();
-				if(_b == noone || _c == noone) continue;
-				
-				D3D_GLOBAL_PREVIEW.custom_transform.position.set(_c._multiply(-1));
-				
-				var _sca = 2 / _b.getScale();
-				
-				D3D_GLOBAL_PREVIEW.custom_transform.scale.set(_sca);
+				if(!is(_prev, __3dInstance)) continue;
 				D3D_GLOBAL_PREVIEW.submit(_prev);
 			}
 		surface_reset_target();

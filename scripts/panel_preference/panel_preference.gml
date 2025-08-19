@@ -6,7 +6,6 @@ function __Panel_Linear_Setting_Item_Preference(name, key, editWidget, _data = n
 }
 
 function Panel_Preference() : PanelContent() constructor {
-	
 	title    = "Preference";
 	w        = min(WIN_W - ui(16), ui(1000));
 	h        = min(WIN_H - ui(16), ui(700));
@@ -28,7 +27,8 @@ function Panel_Preference() : PanelContent() constructor {
     function prefSet(_key, _val, _restart = false) {
     	struct_set(PREFERENCES, _key, _val);
     	should_restart = should_restart || _restart;
-    	PREF_SAVE(); }
+    	PREF_SAVE(); 
+    }
     
     function prefToggle(_key, _apply = false, _restart = false) {
     	struct_set(PREFERENCES, _key, !struct_try_get(PREFERENCES, _key));
@@ -686,7 +686,8 @@ function Panel_Preference() : PanelContent() constructor {
     	sb_theme.font  = f_p2;
     	sb_theme.align = fa_left;
     	
-    	tb_override = new textBox(TEXTBOX_INPUT.text, function(val) /*=>*/ { PREFERENCES.theme_override = val; loadColor(PREFERENCES.theme); PREF_SAVE(); })
+    	tb_override = textBox_Text(function(v) /*=>*/ { PREFERENCES.theme_override = v; loadColor(PREFERENCES.theme); should_restart = true; PREF_SAVE(); })
+    	font_override_sb = new fontScrollBox(function(v) /*=>*/ { PREFERENCES.font_overwrite = v; should_restart = true; PREF_SAVE(); }).setFolder(false);
     	
     	sp_theme = new scrollPane(panel_width, panel_height - ui(40), function(_y, _m) {
     		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
@@ -710,9 +711,7 @@ function Panel_Preference() : PanelContent() constructor {
     		}
     		
     		var _wdw  = ui(128);
-    		var _wpar = new widgetParam(ww - _h - ui(4) - _wdw, _y, _wdw, _h, 0, 0, _m, _rx, _ry)
-    							.setFont(f_p3)
-    							.setFocusHover(_focus, _hover);
+    		var _wpar = new widgetParam(ww - _h - ui(4) - _wdw, _y, _wdw, _h, 0, 0, _m, _rx, _ry).setFont(f_p3).setFocusHover(_focus, _hover);
     		
     		var thName = themeCurrent == noone? PREFERENCES.theme : themeCurrent.name;
     		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
@@ -724,21 +723,32 @@ function Panel_Preference() : PanelContent() constructor {
     		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
     		draw_text_add(ui(8), _y + _h / 2, __txt("Variant"));
     		tb_override.drawParam(_wpar.setY(_y).setData(PREFERENCES.theme_override));
-    		_y += _h + ui(8 + 4);
-    		hh += _h + ui(8 + 4);
+    		_y += _h + ui(8);
+    		hh += _h + ui(8);
     		
     		// Font override
     		
     		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
     		draw_text_add(ui(8), _y + _h / 2, __txt("Font Override"));
     		
-    		var _ovr = PREFERENCES.font_overwrite == ""? "None" : filename_name_only(PREFERENCES.font_overwrite);
-    		draw_set_text(f_p3, fa_right, fa_center, COLORS._main_text_sub);
-    		draw_text_add(ww - _h - ui(4), _y + _h / 2, _ovr);
-    		_y += _h + ui(8 + 4);
-    		hh += _h + ui(8 + 4);
+    		font_override_sb.drawParam(_wpar.setY(_y).setData(PREFERENCES.font_overwrite));
+    		
+    		if(buttonInstant(THEME.button_hide_fill, ww - _h, _y, _h, _h, _m, _hover, _focus, __txt("Reset"), THEME.refresh_16) == 2) {
+    			PREFERENCES.font_overwrite = "";
+    			should_restart = true; 
+    			PREF_SAVE();
+    		}
+    		
+    		// var _ovr = PREFERENCES.font_overwrite == ""? "None" : filename_name_only(PREFERENCES.font_overwrite);
+    		// draw_set_text(f_p3, fa_right, fa_center, COLORS._main_text_sub);
+    		// draw_text_add(ww - _h - ui(4), _y + _h / 2, _ovr);
+    		_y += _h + ui(8);
+    		hh += _h + ui(8);
     		
     		// Metadata box
+    		
+    		_y += ui(4);
+    		hh += ui(4);
     		
     		var _mh = themeCurrent == noone? ui(16) : ui(8 + 4 + 20 * 4);
     		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, 0, _y, ww, _mh, COLORS._main_icon_light);

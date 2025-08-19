@@ -115,8 +115,9 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		if(array_empty(preObj)) return;
 		preObj = preObj[0];
 		
-		var _pos  = inputs[0].getValue(,,, true);
-		var _vpos = new __vec3( _pos[0], _pos[1], _pos[2] );
+		var _panel = _params.panel;
+		var _pos   = inputs[0].getValue(,,, true);
+		var _vpos  = new __vec3( _pos[0], _pos[1], _pos[2] );
 		
 		if(isUsingTool("Transform"))	tool_pos_object.drawOverlay3D(0, preObj, _vpos, active, _mx, _my, _snx, _sny, _params);
 		else if(isUsingTool("Rotate"))	tool_object_rot.drawOverlay3D(1, preObj, _vpos, active, _mx, _my, _snx, _sny, _params);
@@ -131,7 +132,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 			var _outSurf = outputs[0].getValue();
 			if(is_array(_outSurf)) _outSurf = array_safe_get_fast(_outSurf, 0);
 			if(!is_surface(_outSurf)) return;
-		
+			
 			var _w = _panel.w;
 			var _h = _panel.h - _panel.toolbar_height;
 			var _pw = surface_get_width_safe(_outSurf);

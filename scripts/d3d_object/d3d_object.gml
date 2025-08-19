@@ -239,19 +239,22 @@ function __3dObject() : __3dInstance() constructor {
 	}
 	
 	static submitVertex = function(_sc = noone, _sh = noone, _selection = false) {
-		var _shader;
 		
-		switch(VF) {
-			case global.VF_POS_COL:			     _shader = sh_d3d_wireframe;         break;
-			case global.VF_POS_NORM_TEX_COL:     
-			default :                            _shader = sh_d3d_default;           break;
-		}
-		
-		if(custom_shader != noone) _shader = custom_shader;
-		if(_sh != noone)           _shader = _sh;
-		if(!is_undefined(_sh))     shader_set(_shader);
+		#region shader
+			var _shader;
+			switch(VF) {
+				case global.VF_POS_COL:			     _shader = sh_d3d_wireframe;         break;
+				case global.VF_POS_NORM_TEX_COL:     
+				default :                            _shader = sh_d3d_default;           break;
+			}
+			
+			if(custom_shader != noone) _shader = custom_shader;
+			if(_sh != noone)           _shader = _sh;
+			if(!is_undefined(_sh))     shader_set(_shader);
+		#endregion
 		
 		preSubmitVertex(_sc);
+		
 		transform.submitMatrix();
 		matrix_set(matrix_world, matrix_stack_top());
 		draw_set_color_alpha(c_white, 1);

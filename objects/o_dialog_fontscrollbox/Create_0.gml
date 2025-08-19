@@ -35,7 +35,7 @@ event_inherited();
 				draw_sprite_stretched_ext(THEME.textbox, 3, 0, _ly, _dw, hght, COLORS.dialog_menubox_highlight, 1);
 				
 				if(sFOCUS && (mouse_press(mb_left) || keyboard_check_pressed(vk_enter))) {
-					scrollbox.onModify(array_find_string(FONT_INTERNAL, fullpath));
+					scrollbox.onModify(fullpath);
 					instance_destroy();
 				}
 			}
