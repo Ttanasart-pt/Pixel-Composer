@@ -97,11 +97,56 @@ function __vertex_buffer_add_pntc(buffer, _px, _py, _pz, _nx, _ny, _nz, _u, _v, 
 	buffer_write(buffer, buffer_f32, bz);
 }
 
-function vertex_buffer_clone(vb, vf) {
+function vertex_buffer_clone(vb, vf, _transMat = undefined) {
 	var _vnum = vertex_get_number(vb);
 	var _buff = buffer_create(1, buffer_grow, 1);
 	buffer_copy_from_vertex_buffer(vb, 0, _vnum, _buff, 0);
 	
-	var _vb = vertex_create_buffer_from_buffer(_buff, vf);
-	return _vb;
+	if(_transMat != undefined && vf == global.VF_POS_NORM_TEX_COL) {
+		buffer_to_start(_buff);
+		
+		var _buffer = vertex_create_buffer();
+		vertex_begin(_buffer, vf);
+		
+		repeat(_vnum) {
+			var px = buffer_read(_buff, buffer_f32);
+			var py = buffer_read(_buff, buffer_f32);
+			var pz = buffer_read(_buff, buffer_f32);
+			
+			var _ptrans = matrix_multiply_vector_column(_transMat, [px, py, pz, 1]);
+			
+			px = _ptrans[0];
+			py = _ptrans[1];
+			pz = _ptrans[2];
+			
+			var nx = buffer_read(_buff, buffer_f32);
+			var ny = buffer_read(_buff, buffer_f32);
+			var nz = buffer_read(_buff, buffer_f32);
+			
+			var u = buffer_read(_buff, buffer_f32);
+			var v = buffer_read(_buff, buffer_f32);
+			
+			var r = buffer_read(_buff, buffer_u8);
+			var g = buffer_read(_buff, buffer_u8);
+			var b = buffer_read(_buff, buffer_u8);
+			var a = buffer_read(_buff, buffer_u8);
+			
+			var bx = buffer_read(_buff, buffer_f32);
+			var by = buffer_read(_buff, buffer_f32);
+			var bz = buffer_read(_buff, buffer_f32);
+			
+			vertex_position_3d( _buffer, px, py, pz);
+			vertex_normal(      _buffer, nx, ny, nz);
+			vertex_texcoord(    _buffer, u, v);
+			vertex_color(       _buffer, make_color_rgb(r, g, b), a);
+			vertex_float3(      _buffer, bx, by, bz);
+		}
+		
+		vertex_end(_buffer);
+		buffer_delete(_buff);
+		
+		return _buffer;
+	} 
+	
+	return vertex_create_buffer_from_buffer(_buff, vf);
 }

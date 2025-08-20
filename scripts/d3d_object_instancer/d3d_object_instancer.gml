@@ -2,6 +2,8 @@
 	globalvar INSTANCE_SHADER_VS;   INSTANCE_SHADER_VS   = undefined;
 	globalvar INSTANCE_SHADER_PS;   INSTANCE_SHADER_PS   = undefined;
 	globalvar INSTANCE_GEOMETRY_PS; INSTANCE_GEOMETRY_PS = undefined;
+	globalvar INSTANCE_BATCH_SIZE;  INSTANCE_BATCH_SIZE  = os_type == os_windows? 1024 : 500; 
+	// INSTANCE_BATCH_SIZE = 500;
 	
 	function __initInstanceRenderer() {
 		if(INSTANCE_SHADER_VS != undefined && INSTANCE_SHADER_PS != undefined) return;
@@ -24,8 +26,10 @@
 #endregion
 
 function __3dObjectInstancer() : __3dObject() constructor {
-	instance_data   = noone;
+	instance_data   = [];
 	instance_amount = 128;
+	batch_count     = 0;
+	batch_amount    = [];
 	
 	VF = global.VF_POS_NORM_TEX_COL;
 	render_type = pr_trianglelist;
@@ -40,25 +44,44 @@ function __3dObjectInstancer() : __3dObject() constructor {
 	ps = INSTANCE_SHADER_PS;
 	gs = INSTANCE_GEOMETRY_PS;
 	
-	static setBuffer = function(_buffer) {
-		d3d11_cbuffer_begin();
-		d3d11_cbuffer_add_float(16 * instance_amount);
-		instance_data = d3d11_cbuffer_end();
-		d3d11_cbuffer_update(instance_data, _buffer);
+	glsl_shader_default  = sh_d3d_default_instanced;
+	glsl_shader_geometry = sh_d3d_geometry_instanced;
+	
+	static setBuffer = function(_buffer, _index, _amount) {
+		if(OS == os_windows) {
+			d3d11_cbuffer_begin();
+			d3d11_cbuffer_add_float(16 * _amount);
+			instance_data[_index] = d3d11_cbuffer_end();
+			d3d11_cbuffer_update(instance_data[_index], _buffer);
+			
+		} else {
+			_buffer = buffer_clone(_buffer);
+			buffer_resize(_buffer, INSTANCE_BATCH_SIZE * 4 * 4 * 4);
+			instance_data[_index] = _buffer;
+		}
+		
+		batch_amount[_index] = _amount;
 	}
 	
 	static generateNormal = function(_s = normal_draw_size) {}
 	
 	static submitShadow = function(_sc = {}, object = noone) /*=>*/ {}
-	static submitSel	= function(_sc = noone, _sh = noone) /*=>*/ { submitVertex(_sc, _sh); }
-	static submitShader = function(_sc = noone, _sh = noone) /*=>*/ { submitVertex(_sc, _sh); }
-	static submit		= function(_sc = noone, _sh = noone) /*=>*/ { submitVertex(_sc, _sh); }
-	
-	static submitCbuffer = function() {
-		d3d11_shader_set_cbuffer_vs(10, instance_data);
+	static submitSel	= function(_sc = noone, _sh = noone) /*=>*/ { submit(_sc, _sh); }
+	static submitShader = function(_sc = noone, _sh = noone) /*=>*/ { submit(_sc, _sh); }
+	static submit		= function(_sc = noone, _sh = noone) /*=>*/ { 
+		if(OS == os_windows) submitVertex_HLSL(_sc, _sh); 
+		else submitVertex_OpenGL(_sc, _sh); 
 	}
 	
-	static submitVertex = function(_sc = noone, _sh = noone) {
+	static submitCbuffer = function(b = 0) {
+		if(OS == os_windows) d3d11_shader_set_cbuffer_vs(10, instance_data[b]);
+		else {
+			var _uniId = shader_get_uniform(shader_current(), "InstanceTransforms");
+			shader_set_uniform_f_buffer(_uniId, instance_data[b], 0, INSTANCE_BATCH_SIZE * 4 * 4);
+		}
+	}
+	
+	static submitVertex_HLSL = function(_sc = noone, _sh = noone) {
 		if(!is(_sc, __3dScene)) return;
 			
 		d3d11_shader_override_vs(vs);
@@ -105,8 +128,6 @@ function __3dObjectInstancer() : __3dObject() constructor {
 		
 		////////////////////////////////////////////////////////////////////////////////////////////////
 		
-		submitCbuffer();
-		
 		d3d11_cbuffer_begin();
 		var _buffer = buffer_create(1, buffer_grow, 1); buffer_to_start(_buffer);
 		var _cbSize = 0;
@@ -133,31 +154,30 @@ function __3dObjectInstancer() : __3dObject() constructor {
 		gpu_set_zwriteenable(!transparent);
 		draw_set_color_alpha(c_white, 1);
 		
-		for( var i = 0, n = array_length(VB); i < n; i++ ) {
-			var _ind = array_safe_get_fast(material_index, i, i);
-			var _mat = array_safe_get_fast(materials, _ind, noone);
-			var _tex = -1;
+		for( var b = 0; b < batch_count; b++ ) {
+			submitCbuffer(b);
 			
-			if(is(_mat, __d3dMaterial)) {
-				_tex = _mat.getTexture();
+			for( var i = 0, n = array_length(VB); i < n; i++ ) {
+				var _mat = materials[i];
+				var _tex = _mat.texture;
 				
 				d3d11_cbuffer_begin();
 				var _buffer = buffer_create(1, buffer_grow, 1); buffer_to_start(_buffer);
 				var _cbSize = 0;
 				
 				if(_sh == sh_d3d_geometry) {
-					_cbSize += cbuffer_write_fs( _buffer, _mat.texScale   );
-					_cbSize += cbuffer_write_fs( _buffer, _mat.texShift   );
-					_cbSize += cbuffer_write_i(  _buffer, texture_flip    );
+					_cbSize += cbuffer_write_fs( _buffer, _mat.mat_texScale   );
+					_cbSize += cbuffer_write_fs( _buffer, _mat.mat_texShift   );
+					_cbSize += cbuffer_write_i(  _buffer, texture_flip        );
 					
 				} else {
-					_cbSize += cbuffer_write_f(  _buffer, _mat.diffuse    );
-					_cbSize += cbuffer_write_f(  _buffer, _mat.specular   );
-					_cbSize += cbuffer_write_f(  _buffer, _mat.shine      );
-					_cbSize += cbuffer_write_i(  _buffer, _mat.metalic    );
-					_cbSize += cbuffer_write_f(  _buffer, _mat.reflective );
-					_cbSize += cbuffer_write_fs( _buffer, _mat.texScale   );
-					_cbSize += cbuffer_write_fs( _buffer, _mat.texShift   );
+					_cbSize += cbuffer_write_f(  _buffer, _mat.mat_diffuse    );
+					_cbSize += cbuffer_write_f(  _buffer, _mat.mat_specular   );
+					_cbSize += cbuffer_write_f(  _buffer, _mat.mat_shine      );
+					_cbSize += cbuffer_write_i(  _buffer, _mat.mat_metalic    );
+					_cbSize += cbuffer_write_f(  _buffer, _mat.mat_reflective );
+					_cbSize += cbuffer_write_fs( _buffer, _mat.mat_texScale   );
+					_cbSize += cbuffer_write_fs( _buffer, _mat.mat_texShift   );
 					_cbSize += cbuffer_write_i(  _buffer, texture_flip    );
 				}
 				
@@ -168,22 +188,19 @@ function __3dObjectInstancer() : __3dObject() constructor {
 				buffer_delete(_buffer);
 				
 				d3d11_shader_set_cbuffer_ps(11, cbuff);
+				gpu_set_tex_filter(_mat.tex_filter);
 				
-				gpu_set_tex_filter(_mat.texFilter);
+				switch(blend_mode) {
+					case BLEND.normal:  BLEND_NORMAL; break;
+					case BLEND.alpha:   BLEND_ALPHA;  break;
+					case BLEND.add:     BLEND_ADD;    break;
+					case BLEND.maximum: BLEND_MAX;    break;
+				}
+				
+				vertex_submit_instanced(VB[i], render_type, _tex, batch_amount[b]);
+				
+				BLEND_NORMAL
 			}
-			
-			switch(blend_mode) {
-				case BLEND.normal:  BLEND_NORMAL; break;
-				case BLEND.alpha:   BLEND_ALPHA;  break;
-				case BLEND.add:     BLEND_ADD;    break;
-				case BLEND.maximum: BLEND_MAX;    break;
-			}
-			
-			if(VBM[i] != undefined) { matrix_stack_push(VBM[i]); matrix_set(matrix_world, matrix_stack_top()); }
-			vertex_submit_instanced(VB[i], render_type, _tex, instance_amount);
-			if(VBM[i] != undefined) { matrix_stack_pop();        matrix_set(matrix_world, matrix_stack_top()); }
-			
-			BLEND_NORMAL
 		}
 		
 		gpu_set_tex_filter(false);
@@ -197,6 +214,71 @@ function __3dObjectInstancer() : __3dObject() constructor {
 		
 		postSubmitVertex(_sc);
 	}
+
+	static submitVertex_OpenGL = function(_sc = noone, _sh = noone) {
+		
+		_sc.reApply(glsl_shader_default);
+		
+		if(_sh == sh_d3d_geometry)
+			shader_set(glsl_shader_geometry);
+		else 
+			shader_set(glsl_shader_default);
+			
+		preSubmitVertex(_sc);
+		
+		shader_set_uniform_matrix_array(shader_get_uniform(shader_current(), "objectTransform"), objectTransform.matTran);
+		shader_set_3("cameraPosition", _sc.camera.position.toArray());
+		
+		transform.submitMatrix();
+		matrix_set(matrix_world, matrix_stack_top());
+		draw_set_color_alpha(c_white, 1);
+		
+		gpu_set_tex_repeat(true);
+		for( var b = 0; b < batch_count; b++ ) {
+			submitCbuffer(b);
+			var _bamo = batch_amount[b];
+			var _bind = 0;
+			
+			repeat(_bamo) {
+				shader_set_i("InstanceID", _bind++);
+				shader_set_i("mat_flip", texture_flip);
+				
+				for( var i = 0, n = array_length(VB); i < n; i++ ) {
+					var _mat = materials[i];
+					var _tex = _mat.texture;
+					
+					shader_set_i("use_normal", is_surface(_mat.use_normal));
+					
+					shader_set_surface("normal_map", _mat.normal_map      );
+					shader_set_f("normal_strength",  _mat.normal_strength );
+					
+					shader_set_f("mat_diffuse",      _mat.mat_diffuse     );
+					shader_set_f("mat_specular",     _mat.mat_specular    );
+					shader_set_f("mat_shine",        _mat.mat_shine       );
+					shader_set_i("mat_metalic",      _mat.mat_metalic     );
+					shader_set_f("mat_reflective",   _mat.mat_reflective  );
+					
+					shader_set_f("mat_texScale",     _mat.mat_texScale    ); 
+					shader_set_f("mat_texShift",     _mat.mat_texShift    ); 
+					gpu_set_tex_filter(_mat.tex_filter); 
+					
+					vertex_submit(VB[i], render_type, _tex);
+				}
+				
+			}
+		}
+		
+		gpu_set_tex_filter(false);
+		gpu_set_tex_repeat(false);
+		
+		shader_reset();
+		
+		transform.clearMatrix();
+		matrix_set(matrix_world, matrix_build_identity());
+		postSubmitVertex(_sc);
+		
+	}
+	
 		
 	static clone = function(_vertex = true) {}
 	

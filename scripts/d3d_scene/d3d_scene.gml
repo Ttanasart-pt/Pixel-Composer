@@ -73,6 +73,7 @@ function __3dScene(_camera, _name = "New scene") constructor {
 	backface_blending   = ca_white;
 	
 	enable_ztest        = true;
+	deferData           = noone;
 	
 	static reset = function() {
 		lightDir_count        = 0;
@@ -110,9 +111,9 @@ function __3dScene(_camera, _name = "New scene") constructor {
 	
 	////- Rendering
 	
-	static deferPass = function(object, w, h, deferData = noone) {
-		if(deferData == noone) {
-			deferData = {
+	static deferPass = function(object, w, h, _deferData = noone) {
+		if(_deferData == noone) {
+			_deferData = {
 				geometry_data: array_create(4, noone),
 				ssao:       noone,
 				ssaoTemp:   noone,
@@ -120,10 +121,10 @@ function __3dScene(_camera, _name = "New scene") constructor {
 			}
 		}
 		
-		geometryPass(deferData, object, w, h);
-		if(ssao_enabled) ssaoPass(deferData);
+		geometryPass(_deferData, object, w, h);
+		if(ssao_enabled) ssaoPass(_deferData);
 		
-		return deferData;
+		return _deferData;
 	}
 	
 	static renderBackground = function(surf) {
@@ -148,10 +149,10 @@ function __3dScene(_camera, _name = "New scene") constructor {
 		return surf;
 	}
 	
-	static geometryPass = function(deferData, object, w = 512, h = 512) {
+	static geometryPass = function(_deferData, object, w = 512, h = 512) {
 		for( var i = 0; i < 4; i++ ) {
-			deferData.geometry_data[i] = surface_verify(deferData.geometry_data[i], w, h, surface_rgba32float);
-			surface_set_target_ext(i, deferData.geometry_data[i]);
+			_deferData.geometry_data[i] = surface_verify(_deferData.geometry_data[i], w, h, surface_rgba32float);
+			surface_set_target_ext(i, _deferData.geometry_data[i]);
 		}
 			
 		gpu_set_zwriteenable(true);
@@ -197,14 +198,14 @@ function __3dScene(_camera, _name = "New scene") constructor {
 		}
 	}
 	
-	static ssaoPass = function(deferData) {
-		var _sw = surface_get_width_safe(deferData.geometry_data[0]);
-		var _sh = surface_get_height_safe(deferData.geometry_data[0]);
-		deferData.ssaoTemp = surface_verify(deferData.ssaoTemp, _sw, _sh);
+	static ssaoPass = function(_deferData) {
+		var _sw = surface_get_width_safe(_deferData.geometry_data[0]);
+		var _sh = surface_get_height_safe(_deferData.geometry_data[0]);
+		_deferData.ssaoTemp = surface_verify(_deferData.ssaoTemp, _sw, _sh);
 		
-		surface_set_shader(deferData.ssaoTemp, sh_d3d_ssao);
-			shader_set_s("vPosition",       deferData.geometry_data[0]);
-			shader_set_s("vNormal",         deferData.geometry_data[2]);
+		surface_set_shader(_deferData.ssaoTemp, sh_d3d_ssao);
+			shader_set_s("vPosition",       _deferData.geometry_data[0]);
+			shader_set_s("vNormal",         _deferData.geometry_data[2]);
 			shader_set_f("radius",          ssao_radius);
 			shader_set_f("bias",            ssao_bias);
 			shader_set_f("strength",        ssao_strength * 2);
@@ -214,19 +215,21 @@ function __3dScene(_camera, _name = "New scene") constructor {
 			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _sw, _sh);
 		surface_reset_shader();
 		
-		deferData.ssao = surface_verify(deferData.ssao, _sw, _sh);
+		_deferData.ssao = surface_verify(_deferData.ssao, _sw, _sh);
 		
-		surface_set_shader(deferData.ssao, sh_d3d_ssao_blur);
+		surface_set_shader(_deferData.ssao, sh_d3d_ssao_blur);
 			shader_set_f("dimension", _sw, _sh);
 			shader_set_f("radius",    ssao_blur_radius);
-			shader_set_s("vNormal",   deferData.geometry_data[2]);
+			shader_set_s("vNormal",   _deferData.geometry_data[2]);
 			
-			draw_surface(deferData.ssaoTemp, 0, 0);
+			draw_surface(_deferData.ssaoTemp, 0, 0);
 		surface_reset_shader();
 	}
 	
-	static apply = function(deferData = noone) {
-		shader_set(sh_d3d_default);
+	static apply = function(_deferData = noone, _shader = sh_d3d_default) {
+		deferData = _deferData;
+		
+		shader_set(_shader);
 		shader_set_i("use_8bit",  OS == os_macosx);
 			
 			#region ---- background ----
@@ -268,9 +271,9 @@ function __3dScene(_camera, _name = "New scene") constructor {
 				shader_set_f("light_pnt_shadow_bias",	lightPnt_shadowBias);
 			}
 			
-			if(OS == os_windows && defer_normal && deferData != noone && array_length(deferData.geometry_data) > 2) {
+			if(OS == os_windows && defer_normal && _deferData != noone && array_length(_deferData.geometry_data) > 2) {
 				shader_set_i("mat_defer_normal", 1);
-				shader_set_surface("mat_normal_map", deferData.geometry_data[2]);
+				shader_set_surface("mat_normal_map", _deferData.geometry_data[2]);
 			} else 
 				shader_set_i("mat_defer_normal", 0);
 			
@@ -296,6 +299,8 @@ function __3dScene(_camera, _name = "New scene") constructor {
 			
 		shader_reset();
 	}
+	
+	static reApply = function(_shader) { apply(noone, _shader); }
 	
 	////- Data
 	

@@ -1,6 +1,40 @@
 #ifndef __COMMONINSVS_HLSL__
 #define __COMMONINSVS_HLSL__
 
+struct VS_in {
+	float3 Position   : POSITION;
+	float3 Normal     : NORMAL0;
+	float4 Color      : COLOR0;
+	float2 TexCoord   : TEXCOORD0;
+	uint   InstanceID : SV_InstanceID;
+};
+
+struct VS_out {
+	float4 Position       : SV_POSITION;
+	float4 WorldPosition  : TEXCOORD1;
+	float3 ViewPosition   : TEXCOORD2;
+
+	float3 Normal         : NORMAL0;
+	float3 ViewNormal     : TEXCOORD4;
+
+	float4 Color          : COLOR0;
+	float2 TexCoord       : TEXCOORD0;
+
+	float  cameraDistance : TEXCOORD3;
+	uint   InstanceID     : SV_InstanceID;
+};
+
+struct Transform {
+	float4 position;
+	float4 rotation;
+	float4 scale;
+	float4 upNormal;
+};
+
+cbuffer Data : register(b10) {	
+	Transform InstanceTransforms[1024];
+};
+
 cbuffer SceneData : register(b11) {	
 	float4x4 objectTransform;
 	float3 cameraPosition;

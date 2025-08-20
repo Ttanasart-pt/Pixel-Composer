@@ -40,12 +40,14 @@ function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D(_x, _y, _group) con
 	newInput(10, nodeValue_Bool(       "Scale Uniform",    true              ));
 	
 	////- =Render
-	newInput(12, nodeValue_Palette(  "Colors Per Index", [ ca_white ] ));
+	newInput(12, nodeValue_Palette(  "Colors Per Index", [ca_white] )).setOptions("Select by:", "array_select", [ "Index Loop", "Index Ping-pong", "Random" ], THEME.array_select_type).iconPad();
 	newInput(11, nodeValue_Gradient( "Random Colors",    new gradientObject(ca_white) ));
 	// 27
 	
+	b_centeralize = button(function() /*=>*/ {return centralize()}).setText("Centralize");
+	
 	input_display_list = [ 9, 
-		[ "Object",  false ], 0, 16, 17, 18,
+		[ "Object",  false ], 0, 16, 17, 18, b_centeralize, 
 		[ "Repeat",  false ], 19, 1, 20, 21, 22, 23, 24,
 		[ "Transform Data", true ], 2, 3, 4, 5, 
 		[ "Shift",   false ], 13, 25, 26, 14, 15, 
@@ -54,6 +56,20 @@ function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D(_x, _y, _group) con
 	];
 	
 	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.d3Mesh, noone));
+	
+	////- Nodes
+	
+	span     = [0, 0, 0, 0, 0, 0];
+	
+	static centralize = function() {
+		if(span[0] == infinity) return;
+		
+		var _cx = -(span[0] + span[1]) / 2;
+		var _cy = -(span[2] + span[3]) / 2;
+		var _cz = -(span[4] + span[5]) / 2;
+		
+		inputs[16].setValue([_cx, _cy, _cz]);
+	}
 	
 	static processData = function(_output, _data, _array_index = 0) {
 		var _obj = _data[0];
@@ -68,7 +84,7 @@ function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D(_x, _y, _group) con
 			var _sta_sca = _data[18];
 			
 			var _patt    = _data[19];
-			var _amo     = _data[ 1]; if(_amo <= 0) return noone;
+			var _amo     = _data[ 1];
 			var _grid    = _data[20];
 			var _radius  = _data[21];
 			var _lok_cen = _data[22];
@@ -91,7 +107,7 @@ function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D(_x, _y, _group) con
 			var _scah    = _data[ 8];
 			var _scauni  = _data[10];
 			
-			var _cind    = _data[12]; 
+			var _cind    = _data[12], _cind_len  = array_length(_cind), _cind_typ = inputs[12].attributes.array_select;
 			var _grnd    = _data[11]; _grnd.cache();
 			
 			inputs[ 1].setVisible(_patt != 1);
@@ -108,6 +124,14 @@ function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D(_x, _y, _group) con
 		#endregion
 			
 		#region base instancer
+			switch(_patt) {
+				case 0 : 
+				case 2 : _amo = _amo; break;
+				case 1 : _amo = _grid[0] * _grid[1] * _grid[2]; break;
+			}
+			
+			if(_amo <= 0) return noone;
+			
 			var _res = new __3dObjectInstancer();
 			
 			_res.instance_amount = _amo;
@@ -119,20 +143,13 @@ function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D(_x, _y, _group) con
 			_res.texture_flip    = _obj.texture_flip;
 			_res.vertex          = _obj.vertex;
 			_res.objectTransform = _obj.transform;
-			
 			_res.objectTransform.applyMatrix();
 			
-			_res.VF  = _obj.VF;
-			
 			var _flat_vb = d3d_flattern(_obj);
+			_res.VF = _obj.VF;
+			_res.VB = _flat_vb.VB;
+			_res.materials = _flat_vb.materials;
 			
-			_res.VBM = _flat_vb.VBM;
-			_res.VB  = [];
-			
-			for( var i = 0, n = array_length(_flat_vb.VB); i < n; i++ ) {
-				_res.VB[i] = vertex_buffer_clone(_flat_vb.VB[i], _obj.VF);
-				vertex_freeze(_res.VB[i]);
-			}
 		#endregion
 		
 		#region data 
@@ -169,132 +186,155 @@ function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D(_x, _y, _group) con
 			var _i  = 0;
 			
 			var _0 = [0,0,0], _1 = [1,1,1];
+			
+			span = [infinity, -infinity, infinity, -infinity, infinity, -infinity];
 		#endregion
 		
 		#region constant buffer
-			var _buffer = buffer_create(1, buffer_grow, 1);
 			
 			var _posl = array_length(_poss);
 			var _rotl = array_length(_rots);
 			var _scal = array_length(_scas);
 			var _norl = array_length(_nors);
 			
-			var _camo = array_length(_cind);
+			var batch_count = ceil(_amo / INSTANCE_BATCH_SIZE);
+			var batch_id     = 0;
 			
-			repeat(_amo) {
-				random_set_seed(_seed + _i * 78);
-				var _rat = _i * _rt;
+			_res.batch_count = batch_count;
+			
+			repeat(batch_count) {
+				var _buffer = buffer_create(1, buffer_grow, 1);
+				var _amo_batch = min(INSTANCE_BATCH_SIZE, _amo);
 				
-				var _p = array_safe_get_fast(_poss, _i % _posl, _0);
-				var _px = _Sposx + random_range(_SCposx0, _SCposx1) + _p[0];
-				var _py = _Sposy + random_range(_SCposy0, _SCposy1) + _p[1];
-				var _pz = _Sposz + random_range(_SCposz0, _SCposz1) + _p[2];
-				
-				var _r = array_safe_get_fast(_rots, _i % _rotl, _0);
-				var _rx = _sRotEx + _rRotEx * _i + random_range(_SCrotx0, _SCrotx1) + _r[0];
-				var _ry = _sRotEy + _rRotEy * _i + random_range(_SCroty0, _SCroty1) + _r[1];
-				var _rz = _sRotEz + _rRotEz * _i + random_range(_SCrotz0, _SCrotz1) + _r[2];
-				
-				var _s = array_safe_get_fast(_scas, _i % _scal, _1);
-				var _sx = (_Sscax - 1) + _Rscax * _i + random_range(_SCscax0, _SCscax1) + _s[0];
-				var _sy = (_Sscay - 1) + _Rscay * _i + random_range(_SCscay0, _SCscay1) + _s[1];
-				var _sz = (_Sscaz - 1) + _Rscaz * _i + random_range(_SCscaz0, _SCscaz1) + _s[2];
-				if(_scauni) { _sy = _sx; _sz = _sx; }
-				
-				var _n  = array_safe_get_fast(_nors, _i % _norl, _0);
-				var _nx = _n[0];
-				var _ny = _n[1];
-				var _nz = _n[2];
-				
-				switch(_patt) {
-					case 0 :
-						_px += _Rposx * _i;
-						_py += _Rposy * _i;
-						_pz += _Rposz * _i;
-						
-						if(is_path(_path)) {
-							__p = _path.getPointRatio(_rat, 0, __p);
+				repeat(_amo_batch) {
+					random_set_seed(_seed + _i * 78);
+					var _rat = _i * _rt;
+					
+					var _p = array_safe_get_fast(_poss, _i % _posl, _0);
+					var _px = _Sposx + random_range(_SCposx0, _SCposx1) + _p[0];
+					var _py = _Sposy + random_range(_SCposy0, _SCposy1) + _p[1];
+					var _pz = _Sposz + random_range(_SCposz0, _SCposz1) + _p[2];
+					
+					var _r = array_safe_get_fast(_rots, _i % _rotl, _0);
+					var _rx = _sRotEx + _rRotEx * _i + random_range(_SCrotx0, _SCrotx1) + _r[0];
+					var _ry = _sRotEy + _rRotEy * _i + random_range(_SCroty0, _SCroty1) + _r[1];
+					var _rz = _sRotEz + _rRotEz * _i + random_range(_SCrotz0, _SCrotz1) + _r[2];
+					
+					var _s = array_safe_get_fast(_scas, _i % _scal, _1);
+					var _sx = (_Sscax - 1) + _Rscax * _i + random_range(_SCscax0, _SCscax1) + _s[0];
+					var _sy = (_Sscay - 1) + _Rscay * _i + random_range(_SCscay0, _SCscay1) + _s[1];
+					var _sz = (_Sscaz - 1) + _Rscaz * _i + random_range(_SCscaz0, _SCscaz1) + _s[2];
+					if(_scauni) { _sy = _sx; _sz = _sx; }
+					
+					var _n  = array_safe_get_fast(_nors, _i % _norl, _0);
+					var _nx = _n[0];
+					var _ny = _n[1];
+					var _nz = _n[2];
+					
+					switch(_patt) {
+						case 0 :
+							_px += _Rposx * _i;
+							_py += _Rposy * _i;
+							_pz += _Rposz * _i;
 							
-							_px += __p.x;
-							_py += __p.y;
-							_pz += __p.z;
-							
-							if(_fol_pth) {
-								__p = _path.getPointRatio(clamp(_rat - _rt/2, 0, 0.999), 0, __p);
-								var __px0 = __p.x;
-								var __py0 = __p.y;
-								var __pz0 = __p.z;
+							if(is_path(_path)) {
+								__p = _path.getPointRatio(_rat, 0, __p);
 								
-								__p = _path.getPointRatio(clamp(_rat + _rt/2, 0, 0.999), 0, __p);
-								var __px1 = __p.x;
-								var __py1 = __p.y;
-								var __pz1 = __p.z;
+								_px += __p.x;
+								_py += __p.y;
+								_pz += __p.z;
 								
-								_nx += __px1 - __px0;
-								_ny += __py1 - __py0;
-								_nz += __pz1 - __pz0;
+								if(_fol_pth) {
+									__p = _path.getPointRatio(clamp(_rat - _rt/2, 0, 0.999), 0, __p);
+									var __px0 = __p.x;
+									var __py0 = __p.y;
+									var __pz0 = __p.z;
+									
+									__p = _path.getPointRatio(clamp(_rat + _rt/2, 0, 0.999), 0, __p);
+									var __px1 = __p.x;
+									var __py1 = __p.y;
+									var __pz1 = __p.z;
+									
+									_nx += __px1 - __px0;
+									_ny += __py1 - __py0;
+									_nz += __pz1 - __pz0;
+								}
+								
 							}
+							break;
+						
+						case 1 :
+							var _gridZ = floor(_i / _gridP);
+							var _gridY = floor((_i - _gridZ * _gridP) / _grid[0]);
+							var _gridX = (_i - _gridZ * _gridP) % _grid[0];
 							
-						}
-						break;
+							_px += _Rposx * _gridX + _RposYx * _gridY + _RposZx * _gridZ;
+							_py += _Rposy * _gridX + _RposYy * _gridY + _RposZy * _gridZ;
+							_pz += _Rposz * _gridX + _RposYz * _gridY + _RposZz * _gridZ;
+							break;
+						
+						case 2 :
+							var _aa = 360 / _amo * _i;
+							var _ax = lengthdir_x(_radius, _aa);
+							var _ay = lengthdir_y(_radius, _aa);
+							
+							_px += _Rposx * _i + _ax;
+							_py += _Rposy * _i + _ay;
+							_pz += _Rposz * _i;
+							
+							if(_lok_cen > 0) {
+								_nx += _px - _Sposx;
+								_ny += _py - _Sposy;
+								_nz += _pz - _Sposz;
+							}
+							break;
+							
+					}
 					
-					case 1 :
-						var _gridZ = floor(_i / _gridP);
-						var _gridY = floor((_i - _gridZ * _gridP) / _grid[0]);
-						var _gridX = (i - _gridZ * _gridP) % _grid[0];
-						
-						_px += _Rposx * _gridX + _RposYx * _gridY + _RposZx * _gridZ;
-						_py += _Rposy * _gridX + _RposYy * _gridY + _RposZy * _gridZ;
-						_pz += _Rposz * _gridX + _RposYz * _gridY + _RposZz * _gridZ;
-						break;
+					var clti  = _i;
+					switch(_cind_typ) {
+						case 0  : clti = _i % _cind_len;                break;
+						case 1  : clti = pingpong_value(_i, _cind_len); break;
+						case 2  : clti = irandom(_cind_len - 1);        break;
+					}
 					
-					case 2 :
-						var _aa = 360 / _amo * _i;
-						var _ax = lengthdir_x(_radius, _aa);
-						var _ay = lengthdir_y(_radius, _aa);
-						
-						_px += _Rposx * _i + _ax;
-						_py += _Rposy * _i + _ay;
-						_pz += _Rposz * _i;
-						
-						if(_lok_cen > 0) {
-							_nx += _px - _Sposx;
-							_ny += _py - _Sposy;
-							_nz += _pz - _Sposz;
-						}
-						break;
-						
+					var _clr_ind = array_safe_get(_cind, clti, ca_white);
+					var cc = colorMultiply(_clr_ind, _grnd.evalFast(random(1)));
+					
+					buffer_write(_buffer, buffer_f32, _px); // pos X
+					buffer_write(_buffer, buffer_f32, _py); // pos Y
+					buffer_write(_buffer, buffer_f32, _pz); // pos Z
+					buffer_write(_buffer, buffer_f32, _color_get_r(cc));
+					
+					buffer_write(_buffer, buffer_f32, _rx); // rot X 
+					buffer_write(_buffer, buffer_f32, _ry); // rot Y 
+					buffer_write(_buffer, buffer_f32, _rz); // rot Z
+					buffer_write(_buffer, buffer_f32, _color_get_g(cc));
+					
+					buffer_write(_buffer, buffer_f32, _sx); // sca X 
+					buffer_write(_buffer, buffer_f32, _sy); // sca Y 
+					buffer_write(_buffer, buffer_f32, _sz); // sca Z
+					buffer_write(_buffer, buffer_f32, _color_get_b(cc));
+					
+					buffer_write(_buffer, buffer_f32, _nx); // norm X
+					buffer_write(_buffer, buffer_f32, _ny); // norm Y
+					buffer_write(_buffer, buffer_f32, _nz); // norm Z
+					buffer_write(_buffer, buffer_f32, 0);
+					
+					
+					span[0] = min(span[0], _px - _Sposx); span[1] = max(span[1], _px - _Sposx);
+					span[2] = min(span[2], _py - _Sposy); span[3] = max(span[3], _py - _Sposy);
+					span[4] = min(span[4], _pz - _Sposz); span[5] = max(span[5], _pz - _Sposz);
+					
+					_i++;
 				}
-			
 				
-				var cc = colorMultiply(_cind[_i % _camo], _grnd.evalFast(random(1)));
+				_amo -= INSTANCE_BATCH_SIZE;
+				_res.setBuffer(_buffer, batch_id, _amo_batch);
+				batch_id++;
 				
-				buffer_write(_buffer, buffer_f32, _px); // pos X
-				buffer_write(_buffer, buffer_f32, _py); // pos Y
-				buffer_write(_buffer, buffer_f32, _pz); // pos Z
-				buffer_write(_buffer, buffer_f32, _color_get_r(cc));
-				
-				buffer_write(_buffer, buffer_f32, _rx); // rot X 
-				buffer_write(_buffer, buffer_f32, _ry); // rot Y 
-				buffer_write(_buffer, buffer_f32, _rz); // rot Z
-				buffer_write(_buffer, buffer_f32, _color_get_g(cc));
-				
-				buffer_write(_buffer, buffer_f32, _sx); // sca X 
-				buffer_write(_buffer, buffer_f32, _sy); // sca Y 
-				buffer_write(_buffer, buffer_f32, _sz); // sca Z
-				buffer_write(_buffer, buffer_f32, _color_get_b(cc));
-				
-				buffer_write(_buffer, buffer_f32, _nx); // norm X
-				buffer_write(_buffer, buffer_f32, _ny); // norm Y
-				buffer_write(_buffer, buffer_f32, _nz); // norm Z
-				buffer_write(_buffer, buffer_f32, 0);
-				
-				_i++;
+				buffer_delete(_buffer);
 			}
-			
-			_res.setBuffer(_buffer);
-			buffer_delete(_buffer);
-			
 		#endregion
 		
 		return _res;

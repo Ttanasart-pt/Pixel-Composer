@@ -1,47 +1,16 @@
 #include "CommonVS.hlsl"
 #include "CommonInstanceVS.hlsl"
 
-struct VS_in {
-	float3 Position   : POSITION;
-	float3 Normal     : NORMAL0;
-	float4 Color      : COLOR0;
-	float2 TexCoord   : TEXCOORD0;
-	uint   InstanceID : SV_InstanceID;
-};
-
-struct VS_out {
-	float4 Position       : SV_POSITION;
-	float4 WorldPosition  : TEXCOORD1;
-	float3 ViewPosition   : TEXCOORD2;
-
-	float3 Normal         : NORMAL0;
-	float3 ViewNormal     : TEXCOORD4;
-
-	float4 Color          : COLOR0;
-	float2 TexCoord       : TEXCOORD0;
-
-	float  cameraDistance : TEXCOORD3;
-	uint   InstanceID     : SV_InstanceID;
-};
-
-struct Transform {
-	float4 position;
-	float4 rotation;
-	float4 scale;
-	float4 upNormal;
-};
-
-cbuffer Data : register(b10) {	
-	Transform InstanceTransforms[1024];
-};
-
 struct ParticleData {
-	int active;
-	int meshIndex;
+	float active;
+	float meshIndex;
 	float lifeMax;
 	float lifeTime;
 
-	int renderFlags, reserved0, reserved1, reserved2; // 16 bytes padding 
+	float renderFlags;
+	float reserved0;
+	float reserved1;
+	float reserved2;
 	
 	float4 color;
 	float4 velocity;
@@ -50,14 +19,6 @@ struct ParticleData {
 
 cbuffer Data : register(b12) {	
 	ParticleData particleData[1024];
-};
-
-struct ParticleData2 {
-	float4 startingPosition;
-};
-
-cbuffer Data : register(b13) {	
-	ParticleData2 particleData2[1024];
 };
 
 void main(in VS_in IN, out VS_out OUT) {
@@ -79,7 +40,7 @@ void main(in VS_in IN, out VS_out OUT) {
 	float3   tran_nor = transform.upNormal.xyz;
 	float4   colr     = particle.color;
 
-	int renderFlags = particle.renderFlags;
+	int renderFlags = round(particle.renderFlags);
 	bool isBillboard = (renderFlags & 0x1) != 0;
 	if(isBillboard) {
 		float4x4 lookat = lookatMatrix(cameraPosition, float3(0.0, 0.0, 1.0));

@@ -9,6 +9,7 @@ varying vec3 v_barycentric;
 
 varying vec4  v_worldPosition;
 varying vec3  v_viewPosition;
+varying vec3  v_viewNormal;
 varying float v_cameraDistance;
 
 #define PI  3.14159265359

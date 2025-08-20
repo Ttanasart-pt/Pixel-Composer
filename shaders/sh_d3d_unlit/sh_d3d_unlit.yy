@@ -3,8 +3,8 @@
   "%Name":"sh_d3d_unlit",
   "name":"sh_d3d_unlit",
   "parent":{
-    "name":"shader",
-    "path":"folders/nodes/data/3D/__util/shader.yy",
+    "name":"__shaders",
+    "path":"folders/nodes/data/3D/__shaders.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

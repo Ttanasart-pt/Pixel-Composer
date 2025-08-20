@@ -14,10 +14,7 @@ function __d3dMaterial(s = noone) constructor {
 	reflective = 0;
 	texFilter  = false;
 	
-	static getTexture = function() {
-		if(!is_surface(surface)) return -1;
-		return surface_get_texture(surface);
-	}
+	static getTexture = function() { return is_surface(surface)? surface_get_texture(surface) : -1; }
 	
 	static setSurface = function(s) { surface = s; return self; }
 	

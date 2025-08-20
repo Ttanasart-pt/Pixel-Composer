@@ -4,7 +4,7 @@
   "name":"sh_3d_extrude_filler_depth",
   "parent":{
     "name":"legacy",
-    "path":"folders/nodes/data/3D/__util/shader/legacy.yy",
+    "path":"folders/nodes/data/3D/__shaders/legacy.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

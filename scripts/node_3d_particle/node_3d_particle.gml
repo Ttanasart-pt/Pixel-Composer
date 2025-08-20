@@ -56,7 +56,7 @@ function Node_3D_Particle(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 	////- =Color
 	newInput(24, nodeValue_Gradient(    "Color Over Lifetime",  new gradientObject(ca_white)  ));
 	newInput(25, nodeValue_Gradient(    "Random Blend",         new gradientObject(ca_white)  ));
-	newInput(26, nodeValue_Palette(     "Color by Index",       [ca_white]                    ));
+	newInput(26, nodeValue_Palette(     "Color by Index",       [ca_white]                    )).setOptions("Select by:", "array_select", [ "Index Loop", "Index Ping-pong", "Random" ], THEME.array_select_type).iconPad();
 	newInput(55, nodeValue_Range(       "Alpha",                [1,1], true                   )).setCurvable(53, CURVE_DEF_11, "Over Life"); 
 	
 	////- =Render
@@ -131,7 +131,7 @@ function Node_3D_Particle(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 	////- Node
 	
 	particleSystem = new __3dObjectParticle();
-	pool_size      = 1024;
+	pool_size      = INSTANCE_BATCH_SIZE;
 	
 	buffer_transform = [ undefined, undefined ];
 	buffer_particle  = [ undefined, undefined ];
@@ -198,7 +198,7 @@ function Node_3D_Particle(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 			
 			_colr_over  = _data[24];
 			_colr_rand  = _data[25];
-			_colr_indx  = _data[26];
+			_colr_indx  = _data[26]; _colr_indx_len  = array_length(_colr_indx); _colr_indx_typ = inputs[26].attributes.array_select;
 			_alph_init  = _data[55];
 			_alph_over  = _data[53];
 			
@@ -297,15 +297,9 @@ function Node_3D_Particle(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 				system.objectTransform.applyMatrix();
 				
 				var _flat_vb = d3d_flattern(_obj);
-				
-				system.VBM = _flat_vb.VBM;
-				system.VF  = _obj.VF;
-				system.VB  = [];
-				
-				for( var i = 0, n = array_length(_flat_vb.VB); i < n; i++ ) {
-					system.VB[i] = vertex_buffer_clone(_flat_vb.VB[i], _obj.VF);
-					vertex_freeze(system.VB[i]);
-				}
+				system.VF = _obj.VF;
+				system.VB = _flat_vb.VB;
+				system.materials = _flat_vb.materials;
 				
 				buffer_clear(buffer_transform[0]);
 				buffer_clear(buffer_transform[1]);
@@ -336,10 +330,10 @@ function Node_3D_Particle(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 			
 			var _wbTran  = buffer_transform[ buffer_index ];
 			var _wbPart  = buffer_particle[  buffer_index ];
-			var _wbPart2 = buffer_particle2[ buffer_index ];
 			
-			system.setBuffer(_wbTran);
-			system.setBufferParticle(_wbPart, _wbPart2);
+			system.batch_count = 1;
+			system.setBuffer(         _wbTran, 0, max_buffer_id );
+			system.setBufferParticle( _wbPart, 0, max_buffer_id );
 			
 			switch(_blnd_mode) {
 				case 0 : system.blend_mode = BLEND.normal;  break;
@@ -431,15 +425,15 @@ function Node_3D_Particle(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 			var _nz = buffer_read(_rbTran, buffer_f32);
 			          buffer_read(_rbTran, buffer_f32);
 			
-			var _curr_act = buffer_read(_rbPart, buffer_s32);
-			var _spwn_ind = buffer_read(_rbPart, buffer_s32);
+			var _curr_act = buffer_read(_rbPart, buffer_f32);
+			var _spwn_ind = buffer_read(_rbPart, buffer_f32);
 			var _life_max = buffer_read(_rbPart, buffer_f32);
 			var _life_cur = buffer_read(_rbPart, buffer_f32);
 			
-			var _flag = buffer_read(_rbPart, buffer_u32);
-			            buffer_read(_rbPart, buffer_u32);
-			            buffer_read(_rbPart, buffer_u32);
-			            buffer_read(_rbPart, buffer_u32);
+			var _flag = buffer_read(_rbPart, buffer_f32);
+			            buffer_read(_rbPart, buffer_f32);
+			            buffer_read(_rbPart, buffer_f32);
+			            buffer_read(_rbPart, buffer_f32);
 			
 			var _cr = buffer_read(_rbPart, buffer_f32); _cr = 1;
 			var _cg = buffer_read(_rbPart, buffer_f32); _cg = 1;
@@ -707,8 +701,15 @@ function Node_3D_Particle(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 				
 				var c0 = _colr_over.eval(rat);
 				var c1 = _colr_rand.eval(random(1));
-				var c2 = _colr_indx[_spwn_ind % array_length(_colr_indx)];
 				
+				var clti  = _spwn_ind;
+				switch(_colr_indx_typ) {
+					case 0  : clti = _spwn_ind % _colr_indx_len;                break;
+					case 1  : clti = pingpong_value(_spwn_ind, _colr_indx_len); break;
+					case 2  : clti = irandom(_colr_indx_len - 1);               break;
+				}
+				
+				var c2   = array_safe_get(_colr_indx, clti, ca_white);
 				var cc   = colorMultiply(c0, colorMultiply(c1, c2));
 				var _alp = random_range(_alph_init[0], _alph_init[1]) * curve_alpha.get(rat); 
 				
@@ -738,15 +739,15 @@ function Node_3D_Particle(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 			buffer_write(_wbTran, buffer_f32, _nz); // norm Z
 			buffer_write(_wbTran, buffer_f32, 0);
 			
-			buffer_write(_wbPart, buffer_s32, _curr_act); // active
-			buffer_write(_wbPart, buffer_s32, _spwn_ind); // particle index
+			buffer_write(_wbPart, buffer_f32, _curr_act); // active
+			buffer_write(_wbPart, buffer_f32, _spwn_ind); // particle index
 			buffer_write(_wbPart, buffer_f32, _life_max); // life max
 			buffer_write(_wbPart, buffer_f32, _life_cur); // life curr
 			
-			buffer_write(_wbPart, buffer_u32, _flag); // render flag
-			buffer_write(_wbPart, buffer_u32, 0); // 
-			buffer_write(_wbPart, buffer_u32, 0); // 
-			buffer_write(_wbPart, buffer_u32, 0); // 
+			buffer_write(_wbPart, buffer_f32, _flag); // render flag
+			buffer_write(_wbPart, buffer_f32, 0); // 
+			buffer_write(_wbPart, buffer_f32, 0); // 
+			buffer_write(_wbPart, buffer_f32, 0); // 
 			
 			buffer_write(_wbPart, buffer_f32, _cr); // color R
 			buffer_write(_wbPart, buffer_f32, _cg); // color G

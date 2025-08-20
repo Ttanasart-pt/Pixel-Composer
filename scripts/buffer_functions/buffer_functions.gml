@@ -172,3 +172,10 @@ function buffer_to_start(buff) { INLINE buffer_seek(buff, buffer_seek_start, 0);
 
 function buffer_delete_safe(buff) { INLINE if(buffer_exists(buff)) buffer_delete(buff); }
 
+function buffer_clone(_buff) {
+	var _size  = buffer_get_size(_buff);
+	var _clone = buffer_create(_size, buffer_grow, 1);
+	
+	buffer_copy(_buff, 0, _size, _clone, 0);
+	return _clone;
+}

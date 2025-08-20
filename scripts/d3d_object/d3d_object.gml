@@ -53,7 +53,7 @@ function __3dObject() : __3dInstance() constructor {
 	custom_shader  = noone;
 	texture_flip   = false;
 	materials      = [];
-	material_index = [];
+	material_index = undefined;
 	blend_mode     = BLEND.normal;
 	
 	log = false;
@@ -263,8 +263,7 @@ function __3dObject() : __3dInstance() constructor {
 		for( var i = 0, n = array_length(VB); i < n; i++ ) {
 			if(VB[i] == noone) continue;
 			
-			var _ind  = array_safe_get_fast(material_index, i, i);
-			var _mat  = array_safe_get_fast(materials, _ind, noone);
+			var _mat  = array_safe_get_fast(materials, material_index == undefined? i : material_index[i], noone);
 			var _uMat = is(_mat, __d3dMaterial);
 			
 			shader_set_i("mat_flip", texture_flip);
@@ -289,9 +288,10 @@ function __3dObject() : __3dInstance() constructor {
 				}
 			}
 			
-			if(VBM != undefined) { matrix_stack_push(VBM[i]); matrix_set(matrix_world, matrix_stack_top()); }
+			var _mat = array_safe_get_fast(VBM, i, undefined);
+			if(is_array(_mat)) { matrix_stack_push(_mat); matrix_set(matrix_world, matrix_stack_top()); }
 			vertex_submit(VB[i], render_type, _tex);
-			if(VBM != undefined) { matrix_stack_pop();        matrix_set(matrix_world, matrix_stack_top()); }
+			if(is_array(_mat)) { matrix_stack_pop();      matrix_set(matrix_world, matrix_stack_top()); }
 		}
 		
 		gpu_set_tex_filter(false);

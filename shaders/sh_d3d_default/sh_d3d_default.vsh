@@ -11,6 +11,7 @@ varying vec3  v_barycentric;
 
 varying vec4  v_worldPosition;
 varying vec3  v_viewPosition;
+varying vec3  v_viewNormal;
 varying float v_cameraDistance;
 
 uniform float planeNear;
@@ -26,8 +27,8 @@ void main() {
     v_vColour       = in_Colour;
     v_vTexcoord     = in_TextureCoord;
 	
-	vec3 worldNormal = normalize(gm_Matrices[MATRIX_WORLD] * vec4(in_Normal, 0.)).xyz;
-	v_vNormal = worldNormal;
+	v_vNormal    = normalize(gm_Matrices[MATRIX_WORLD] * vec4(in_Normal, 0.)).xyz;
+	v_viewNormal = normalize(gm_Matrices[MATRIX_WORLD_VIEW] * vec4(in_Normal, 0.)).xyz;
 	
 	float depthRange = abs(planeFar - planeNear);
 	float ndcDepth   = (gl_Position.z - planeNear) / depthRange;
