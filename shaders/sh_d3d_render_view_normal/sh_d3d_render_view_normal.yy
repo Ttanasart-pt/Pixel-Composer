@@ -4,10 +4,9 @@
   "name":"sh_d3d_render_view_normal",
   "parent":{
     "name":"shader",
-    "path":"folders/nodes/data/3D/shader.yy",
+    "path":"folders/nodes/data/3D/__util/shader.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",
-  "tags":[],
   "type":1,
 }

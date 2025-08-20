@@ -336,7 +336,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			
 			setAttribute(_k, _a);
 		}).setParams({ key: _key, choiceAmount: array_length(_choices) })
-		  .setIcon(_icon, function(p) /*=>*/ {return getAttribute(p.key)})
+		  .setIcon(_icon, function(p) /*=>*/ {return getAttribute(p.key)}, COLORS._main_icon)
 		  .setTooltip(new tooltipSelector(_title, _choices, _val), function(p) /*=>*/ {return getAttribute(p.key)});
 		  
 		editWidget.side_button = optionButton;

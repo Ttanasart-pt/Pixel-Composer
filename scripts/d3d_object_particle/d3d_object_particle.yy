@@ -5,10 +5,9 @@
   "isDnD":false,
   "name":"d3d_object_particle",
   "parent":{
-    "name":"3d",
-    "path":"folders/functions/3d.yy",
+    "name":"d3d_particle",
+    "path":"folders/nodes/data/3D/d3d_particle.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
-  "tags":[],
 }

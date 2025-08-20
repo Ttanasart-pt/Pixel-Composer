@@ -39,7 +39,7 @@ function Node_3D_Mesh_Path_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 		var _pathSca = _data[in_mesh + 13];
 		var _loop    = _data[in_mesh + 10];
 		
-		var _samp    = _data[in_mesh +  6] + 1;
+		var _samp    = _data[in_mesh +  6];
 		var _sides   = _data[in_mesh +  1];
 		var _pfrot   = _data[in_mesh + 12];
 		var _rad     = _data[in_mesh +  7];
@@ -55,41 +55,57 @@ function Node_3D_Mesh_Path_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 		inputs[in_mesh + 3].setVisible(_caps, _caps);
 		if(_path == noone) return noone;
 		
-		var _points  = array_create(_samp * 3);
-		var _radPath = array_create(_samp);
-		var _uvProg  = array_create(_samp);
+		if(_loop) _caps = false;
 		
-		var _distTotal = 0;
+		var _pathAmo = _path.getLineCount();
+		var _points  = array_create(_pathAmo);
+		var _uvProg  = array_create(_pathAmo);
+		var _radPath = array_create(_samp);
+		
 		var _stp = 1 / (_samp - 1);
 		var _p   = new __vec3();
 		
-		for(var i = 0; i < _samp; i++) {
-			var _prg = _stp * i;
-			_p = _path.getPointRatio(_prg, 0, _p);
+		for( var p = 0; p < _pathAmo; p++ ) {
+			var __points  = array_create(_samp * 3);
+			var __uvProg  = array_create(_samp);
+			var _distTotal = 0;
 			
-			_points[i * 3 + 0] = _p.x * _pathSca;
-			_points[i * 3 + 1] = _p.y * _pathSca;
-			_points[i * 3 + 2] = _p.z * _pathSca;
-			
-			_radPath[i] = eval_curve_x(_radOv, _prg);
-			
-			if(i) {
-				var _d = point_distance_3d(_points[i * 3 - 3 + 0], _points[i * 3 - 3 + 1], _points[i * 3 - 3 + 2], 
-				                           _points[i * 3 + 0], _points[i * 3 + 1], _points[i * 3 + 2]);
-				_distTotal += _d;
-				_uvProg[i]  = _distTotal;
+			for(var i = 0; i < _samp; i++) {
+				var _prg = _stp * i;
+				if(!_loop) _prg = clamp(_prg, 0, 0.999);
+				
+				_p = _path.getPointRatio(_prg, p, _p);
+				
+				var _pointId = i * 3;
+				__points[_pointId + 0] = _p.x * _pathSca;
+				__points[_pointId + 1] = _p.y * _pathSca;
+				__points[_pointId + 2] = _p.z * _pathSca;
+				
+				if(i) {
+					var _d = point_distance_3d(__points[_pointId - 3 + 0], __points[_pointId - 3 + 1], __points[_pointId - 3 + 2], 
+					                           __points[_pointId     + 0], __points[_pointId     + 1], __points[_pointId     + 2]);
+					_distTotal += _d;
+					__uvProg[i] = _distTotal;
+				}
 			}
+			
+			for (var i = 0; i < _samp; i++) __uvProg[i]  /= _distTotal;
+			__uvProg[_samp] = 1;
+			
+			_points[p] = __points;
+			_uvProg[p] = __uvProg;
 		}
 		
-		for (var i = 0; i < _samp; i++) 
-			_uvProg[i] /= _distTotal;
-		_uvProg[_samp] = 1;
+		for (var i = 0; i < _samp; i++)
+			_radPath[i] = eval_curve_x(_radOv, _stp * i);
 		
 		var object = getObject(_array_index);
 		object.checkParameter({ 
 			sides  : _sides, 
 			endCap : _caps,
 			smooth : _smt, 
+			
+			pathAmount : _pathAmo, 
 			points : _points, 
 			radius : _rad, 
 			radiusOverPath: _radPath, 
@@ -101,7 +117,7 @@ function Node_3D_Mesh_Path_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 			uvScale : _uvScale,
 		});
 		
-		object.materials = _caps? [ _mat_sid, _mat_cap, _mat_cap ] : [ _mat_sid ];
+		object.materials = [ _mat_sid, _mat_cap ];
 		
 		setTransform(object, _data);
 		

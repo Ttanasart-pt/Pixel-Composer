@@ -687,7 +687,7 @@ function Panel_Preference() : PanelContent() constructor {
     	sb_theme.align = fa_left;
     	
     	tb_override = textBox_Text(function(v) /*=>*/ { PREFERENCES.theme_override = v; loadColor(PREFERENCES.theme); should_restart = true; PREF_SAVE(); })
-    	font_override_sb = new fontScrollBox(function(v) /*=>*/ { PREFERENCES.font_overwrite = v; should_restart = true; PREF_SAVE(); }).setFolder(false);
+    	font_override_sb = new fontScrollBox(function(v) /*=>*/ { PREFERENCES.font_overwrite = v; should_restart = true; PREF_SAVE(); });
     	
     	sp_theme = new scrollPane(panel_width, panel_height - ui(40), function(_y, _m) {
     		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);

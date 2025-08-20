@@ -4,7 +4,7 @@
   "name":"sh_d3d_wireframe",
   "parent":{
     "name":"shader",
-    "path":"folders/nodes/data/3D/shader.yy",
+    "path":"folders/nodes/data/3D/__util/shader.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

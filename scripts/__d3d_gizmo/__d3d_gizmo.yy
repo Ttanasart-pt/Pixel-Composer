@@ -6,7 +6,7 @@
   "name":"__d3d_gizmo",
   "parent":{
     "name":"gizmo",
-    "path":"folders/functions/3d/gizmo.yy",
+    "path":"folders/nodes/data/3D/__util/gizmo.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

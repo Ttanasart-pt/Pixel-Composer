@@ -47,9 +47,9 @@ gml_pragma("UnityBuild", "true");
 	LATEST_VERSION	= 1_19_00_0;
 	VERSION			= 1_19_07_1;
 	SAVE_VERSION	= 1_19_06_0;
-	VERSION_STRING  = MAC? "1.18.003m" : "1.19.8.009";
+	VERSION_STRING  = MAC? "1.18.003m" : "1.19.8.010";
 	RELEASE_STRING  = "1.19.7";
-	BUILD_NUMBER	= 1_19_07_1.009;
+	BUILD_NUMBER	= 1_19_07_1.010;
 	PREF_VERSION    = 1_17_1;
 	
 	var _lsp = array_last(string_split(VERSION_STRING, "."));
@@ -62,8 +62,7 @@ gml_pragma("UnityBuild", "true");
 	globalvar TOOLTIP, DRAGGING, DIALOG_DEPTH_HOVER;
 	global.KEYS = { download_links: "" };
 	
-	globalvar CURRENT_COLOR; 
-	CURRENT_COLOR = ca_white;
+	globalvar CURRENT_COLOR; CURRENT_COLOR = ca_white;
 #endregion
 
 #region input

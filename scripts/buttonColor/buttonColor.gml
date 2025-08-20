@@ -19,7 +19,7 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 	
 	is_picking    = false;
 	current_color = c_black;
-	b_picker      = button(onColorPick).setIcon(THEME.color_picker_dropper);
+	b_picker      = button(onColorPick).setIcon(THEME.color_picker_dropper, 0, COLORS._main_icon);
 	b_quick_pick  = button(function() /*=>*/ {
 		var pick = instance_create(mouse_mx, mouse_my, o_dialog_color_quick_pick);
 		array_insert(pick.palette, 0, current_color);
@@ -80,7 +80,7 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 			b_picker.setFocusHover(active && !instance_exists(o_dialog_color_quick_pick), hover);
 			
 			b_picker.draw(bx, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
-			b_picker.icon_blend = c_white;
+			b_picker.icon_blend = COLORS._main_icon;
 			b_picker.icon_index = 0;
 			b_picker.icon_size  = min(1, _bs / ui(32));
 			
@@ -88,8 +88,7 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 				if(o_dialog_color_selector.drop_target == self) {
 					b_picker.icon_blend = COLORS._main_accent;
 					b_picker.icon_index = 1;
-				} else
-					b_picker.icon_blend = COLORS._main_icon;
+				}
 			}
 			
 			if(_cw > ui(128)) {

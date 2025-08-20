@@ -43,8 +43,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(28, nodeValue_Bool(         "Round Position",   true     ));
 	newInput( 5, nodeValue_Color(        "Color",            ca_white ));
 	newInput(29, nodeValue_Enum_Button(  "Blend Mode",       1, [ "Normal", "Alpha" ] ));
-	newInput(31, nodeValue_Palette(      "Color by Letter", [ca_white] ))
-		.setOptions("Select by:", "array_select", [ "Index Loop", "Index Ping-pong", "Random" ], THEME.array_select_type).iconPad();
+	newInput(31, nodeValue_Palette(      "Color by Letter", [ca_white] )).setOptions("Select by:", "array_select", [ "Index Loop", "Index Ping-pong", "Random" ], THEME.array_select_type).iconPad();
 	
 	////- =Background
 	newInput(16, nodeValue_Bool(         "Render Background", false    ));

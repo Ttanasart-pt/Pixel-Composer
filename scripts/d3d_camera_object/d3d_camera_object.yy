@@ -6,7 +6,7 @@
   "name":"d3d_camera_object",
   "parent":{
     "name":"camera",
-    "path":"folders/functions/3d/camera.yy",
+    "path":"folders/nodes/data/3D/d3d_camera/camera.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

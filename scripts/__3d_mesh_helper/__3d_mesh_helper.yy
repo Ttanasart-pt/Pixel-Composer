@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"__3d_mesh_helper",
   "parent":{
-    "name":"3d",
-    "path":"folders/functions/3d.yy",
+    "name":"__util",
+    "path":"folders/nodes/data/3D/__util.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

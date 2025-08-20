@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"d3d_transformation",
   "parent":{
-    "name":"util",
-    "path":"folders/functions/3d/util.yy",
+    "name":"ds",
+    "path":"folders/nodes/data/3D/__util/ds.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

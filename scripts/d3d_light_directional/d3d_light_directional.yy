@@ -6,7 +6,7 @@
   "name":"d3d_light_directional",
   "parent":{
     "name":"light",
-    "path":"folders/functions/3d/light.yy",
+    "path":"folders/nodes/data/3D/d3d_light/light.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

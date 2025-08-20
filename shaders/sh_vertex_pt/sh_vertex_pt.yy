@@ -4,7 +4,7 @@
   "name":"sh_vertex_pt",
   "parent":{
     "name":"legacy",
-    "path":"folders/nodes/data/3D/shader/legacy.yy",
+    "path":"folders/nodes/data/3D/__util/shader/legacy.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

@@ -4,7 +4,7 @@
   "name":"sh_d3d_ssao",
   "parent":{
     "name":"ssao",
-    "path":"folders/nodes/data/3D/shader/ssao.yy",
+    "path":"folders/nodes/data/3D/__util/shader/ssao.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",
