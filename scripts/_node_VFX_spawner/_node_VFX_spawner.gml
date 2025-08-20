@@ -54,7 +54,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	////- =Color
 	newInput(12, nodeValue_Gradient( "Color Over Lifetime",    new gradientObject(ca_white)  ));
 	newInput(28, nodeValue_Gradient( "Random Blend",           new gradientObject(ca_white)  ));
-	newInput(50, nodeValue_Palette(  "Color by Index",         [ca_white]                    ));
+	newInput(50, nodeValue_Palette(  "Color by Index",         [ca_white]                    )).setOptions("Select by:", "array_select", [ "Index Loop", "Index Ping-pong", "Random" ], THEME.array_select_type).iconPad();
 	newInput(13, nodeValue_Range(    "Alpha",                  [1,1], { linked : true }      )).setCurvable(14, CURVE_DEF_11, "Over Lifespan");
 	newInput(56, nodeValue_Surface(  "Sample Surface"                                        ));
 	
@@ -221,7 +221,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		var _color      	= getInputData(12);
 		var _blend      	= getInputData(28);
-		var _color_idx   	= getInputData(50), _color_idx_len  = array_length(_color_idx);
+		var _color_idx   	= getInputData(50), _color_idx_len  = array_length(_color_idx), _color_idx_typ = inputs[50].attributes.array_select;
 		var _alpha      	= getInputData(13);
 		
 		//////////////////////////////////////////////////////////////////////////////
@@ -337,20 +337,27 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 				_dirr += _pointDir;
 			}
 			
-			var _velo	  = random_range(_velocity[0], _velocity[1]);
-			var _vx		  = lengthdir_x(_velo, _dirr);
-			var _vy		  = lengthdir_y(_velo, _dirr);
-			var _acc	  = random_range(_accel[0], _accel[1]);
-			var _frc	  = random_range(_friction[0], _friction[1]);
+			var _velo = random_range(_velocity[0], _velocity[1]);
+			var _vx   = lengthdir_x(_velo, _dirr);
+			var _vy   = lengthdir_y(_velo, _dirr);
+			var _acc  = random_range(_accel[0], _accel[1]);
+			var _frc  = random_range(_friction[0], _friction[1]);
 			
-			var _ss       = random_range(_size[0], _size[1]);
-			var _scx      = random_range(_scale[0], _scale[1]) * _ss;
-			var _scy      = random_range(_scale[2], _scale[3]) * _ss;
+			var _ss   = random_range(_size[0], _size[1]);
+			var _scx  = random_range(_scale[0], _scale[1]) * _ss;
+			var _scy  = random_range(_scale[2], _scale[3]) * _ss;
 				
-			var _alp      = random_range(_alpha[0], _alpha[1]);
-			var _bld      = _blend.eval(random(1));
+			var _alp  = random_range(_alpha[0], _alpha[1]);
+			var _bld  = _blend.eval(random(1));
 			
-			var _clr_ind  = array_safe_get(_color_idx, safe_mod(spawn_index, _color_idx_len), ca_white);
+			var clti  = spawn_index;
+			switch(_color_idx_typ) {
+				case 0  : clti = spawn_index % _color_idx_len;                break;
+				case 1  : clti = pingpong_value(spawn_index, _color_idx_len); break;
+				case 2  : clti = irandom(_color_idx_len - 1);                 break;
+			}
+			
+			var _clr_ind  = array_safe_get(_color_idx, clti, ca_white);
 			    _bld      = colorMultiply(_bld, _clr_ind);
 			
 			if(surfSamp.active) {

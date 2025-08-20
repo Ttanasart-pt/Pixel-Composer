@@ -584,12 +584,10 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					}
 					
 					var clti = __dwDataI;
-					switch(_cletTyp) {
-						case 0  : clti = __dwDataI % __colLtLen;  break;
-						case 1  : clti = __dwDataI % (__colLtLen * 2 - 1); 
-							      if(clti >= __colLtLen) clti = __colLtLen * 2 - 1 - clti; break;
-						case 2  : clti = irandom(__colLtLen - 1); break;
-						default : clti = __dwDataI % __colLtLen;  break;
+					switch(__colLtTyp) {
+						case 0  : clti = __dwDataI % __colLtLen;                break;
+						case 1  : clti = pingpong_value(__dwDataI, __colLtLen); break;
+						case 2  : clti = irandom(__colLtLen - 1);               break;
 					}
 					
 					var _clt  = __colLt[clti];
@@ -643,7 +641,14 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					
 					if(__wave) _ty += waveGet(_ind);
 					
-					var _clt = array_safe_get_fast(__colLt, __dwDataI % __colLtLen);
+					var clti = __dwDataI;
+					switch(__colLtTyp) {
+						case 0  : clti = __dwDataI % __colLtLen;                break;
+						case 1  : clti = pingpong_value(__dwDataI, __colLtLen); break;
+						case 2  : clti = irandom(__colLtLen - 1);               break;
+					}
+					
+					var _clt = array_safe_get_fast(__colLt, clti);
 					var _c   = colorMultiply(__col, _clt);
 					draw_set_color(_c);
 					
