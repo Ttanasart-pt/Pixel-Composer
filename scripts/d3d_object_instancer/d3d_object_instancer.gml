@@ -234,35 +234,55 @@ function __3dObjectInstancer() : __3dObject() constructor {
 		draw_set_color_alpha(c_white, 1);
 		
 		gpu_set_tex_repeat(true);
+		var vbcount = array_length(VB);
+		
+		var sh = shader_current();
+		var uInstanceID = shader_get_uniform(sh, "InstanceID" );
+		var umat_flip   = shader_get_uniform(sh, "mat_flip"   );
+		
+		var uuse_normal      = shader_get_uniform(sh, "use_normal"      );
+		var unormal_strength = shader_get_uniform(sh, "normal_strength" );
+		var umat_diffuse     = shader_get_uniform(sh, "mat_diffuse"     );
+		var umat_specular    = shader_get_uniform(sh, "mat_specular"    );
+		var umat_shine       = shader_get_uniform(sh, "mat_shine"       );
+		var umat_metalic     = shader_get_uniform(sh, "mat_metalic"     );
+		var umat_reflective  = shader_get_uniform(sh, "mat_reflective"  );
+		var umat_texScale    = shader_get_uniform(sh, "mat_texScale"    );
+		var umat_texShift    = shader_get_uniform(sh, "mat_texShift"    );
+		
+		var tnormal_map      = shader_get_sampler_index(sh, "normal_map");
+		
 		for( var b = 0; b < batch_count; b++ ) {
 			submitCbuffer(b);
 			var _bamo = batch_amount[b];
 			var _bind = 0;
 			
 			repeat(_bamo) {
-				shader_set_i("InstanceID", _bind++);
-				shader_set_i("mat_flip", texture_flip);
+				shader_set_uniform_i(uInstanceID, _bind++);
+				shader_set_uniform_i(umat_flip,   texture_flip);
 				
-				for( var i = 0, n = array_length(VB); i < n; i++ ) {
+				var i = 0;
+				repeat(vbcount) {
 					var _mat = materials[i];
 					var _tex = _mat.texture;
 					
-					shader_set_i("use_normal", is_surface(_mat.use_normal));
+					shader_set_uniform_i(uuse_normal, _mat.use_normal);
 					
-					shader_set_surface("normal_map", _mat.normal_map      );
-					shader_set_f("normal_strength",  _mat.normal_strength );
+					texture_set_stage(tnormal_map,          _mat.normal_map);
+					shader_set_uniform_f(unormal_strength,  _mat.normal_strength );
 					
-					shader_set_f("mat_diffuse",      _mat.mat_diffuse     );
-					shader_set_f("mat_specular",     _mat.mat_specular    );
-					shader_set_f("mat_shine",        _mat.mat_shine       );
-					shader_set_i("mat_metalic",      _mat.mat_metalic     );
-					shader_set_f("mat_reflective",   _mat.mat_reflective  );
+					shader_set_uniform_f(umat_diffuse,      _mat.mat_diffuse     );
+					shader_set_uniform_f(umat_specular,     _mat.mat_specular    );
+					shader_set_uniform_f(umat_shine,        _mat.mat_shine       );
+					shader_set_uniform_i(umat_metalic,      _mat.mat_metalic     );
+					shader_set_uniform_f(umat_reflective,   _mat.mat_reflective  );
 					
-					shader_set_f("mat_texScale",     _mat.mat_texScale    ); 
-					shader_set_f("mat_texShift",     _mat.mat_texShift    ); 
+					shader_set_uniform_f(umat_texScale,     _mat.mat_texScale    ); 
+					shader_set_uniform_f(umat_texShift,     _mat.mat_texShift    ); 
 					gpu_set_tex_filter(_mat.tex_filter); 
 					
 					vertex_submit(VB[i], render_type, _tex);
+					i++;
 				}
 				
 			}
