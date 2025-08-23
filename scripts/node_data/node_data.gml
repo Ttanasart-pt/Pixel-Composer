@@ -1733,7 +1733,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(_name == "") return;
 		
 		draw_name = true;
-		var _si = _s / UI_SCALE;
 		
 		var nodeC = getColor();
 		var aa = (.25 + .5 * renderActive) * (.25 + .75 * isHighlightingInGraph());
@@ -1749,35 +1748,33 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		aa += 0.25;
 		
-		var tx = xx     + 6 * _si;
-		var tw = w * _s - 8 * _si;
+		var tx = xx + 4 * _s;
+		var ty = round(yy + nh / 2);
 		
 		if(_panel && _panel.is_searching && _panel.search_string != "" && search_match == -9999)
 			aa *= .15;
 				
 		if(icon) {
-			var _icS = _si * .75;
-			tx += _icS * 8;
+			var _ics = _s / THEME_SCALE;
+			draw_sprite_ext(icon, 0, tx + 6 * _s, ty, _ics, _ics, 0, nodeC, .6);
 			
-			draw_sprite_ui_uniform(icon, 0, round(tx), round(yy + nh / 2), _icS, nodeC, .75);
-			
-			tx += _icS *  16;
-			tw -= _icS * (16 + 6);
+			tx += 16 * _s;
 		}
 		
-		var _ts  = _si * 0.275;
+		var _ts  = _s * .275 / UI_SCALE;
 		var _tx  = round(tx);
-		var _ty  = round(yy + nh / 2 + 1);
+		var _scis = gpu_get_scissor();
 		
+		gpu_set_scissor(xx, yy, w * _s - 4, nh);
 		draw_set_text(f_sdf, fa_left, fa_center, cc, aa);
-			var _txt = string_cut(_name, tw, "...", _ts);
 			BLEND_ALPHA_MULP
 			
-			draw_set_color(0);  draw_set_alpha(1); draw_text_transformed(_tx + 1, _ty + 1, _txt, _ts, _ts, 0);
-			draw_set_color(cc); draw_set_alpha(1); draw_text_transformed(_tx, _ty, _txt, _ts, _ts, 0);
+			draw_set_color(c_black); draw_text_transformed(_tx+1, ty+1, _name, _ts, _ts, 0);
+			draw_set_color(cc);      draw_text_transformed(_tx,   ty,   _name, _ts, _ts, 0);
 			
 			BLEND_NORMAL
 		draw_set_alpha(1);
+		gpu_set_scissor(_scis);
 	}
 	
 	static drawJunctionWidget = function(_x, _y, _mx, _my, _s, _hover, _focus, _display_parameter = noone, _panel = noone) {

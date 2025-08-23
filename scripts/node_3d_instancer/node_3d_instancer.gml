@@ -73,8 +73,7 @@ function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D(_x, _y, _group) con
 	
 	static processData = function(_output, _data, _array_index = 0) {
 		var _obj = _data[0];
-		if(!is_instanceof(_obj, __3dObject))		return noone;
-		if(_obj.VF != global.VF_POS_NORM_TEX_COL)	return noone;
+		if(!is(_obj, __3dInstance)) return noone;
 		
 		#region data
 			var _seed    = _data[ 9];
@@ -135,18 +134,10 @@ function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D(_x, _y, _group) con
 			var _res = new __3dObjectInstancer();
 			
 			_res.instance_amount = _amo;
-			_res.render_type     = _obj.render_type;
-			_res.custom_shader   = _obj.custom_shader;
-			_res.size            = _obj.size.clone();
-			_res.materials       = _obj.materials;
-			_res.material_index  = _obj.material_index;
-			_res.texture_flip    = _obj.texture_flip;
-			_res.vertex          = _obj.vertex;
 			_res.objectTransform = _obj.transform;
 			_res.objectTransform.applyMatrix();
 			
 			var _flat_vb = d3d_flattern(_obj);
-			_res.VF = _obj.VF;
 			_res.VB = _flat_vb.VB;
 			_res.materials = _flat_vb.materials;
 			

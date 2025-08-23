@@ -73,8 +73,10 @@ function Node_String_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			
 			_s *= 0.5;
 			
+			var _scis = gpu_get_scissor();
+			gpu_set_scissor(bbox.x0 + 4 * _s, bbox.y0, bbox.w - 8 * _s, bbox.h);
+			
 			draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
-			_deli = string_cut(_deli, bbox.w - _s * 32, "...", _s);
 			draw_text_add(cx, cy, _deli, _s);
 			
 			var ww = (string_width(_deli) / 2) * _s;
@@ -83,6 +85,8 @@ function Node_String_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			
 			draw_set_halign(fa_left);
 			draw_text_transformed(cx + ww, cy, "|", _s, _s, 0);
+			
+			gpu_set_scissor(_scis);
 			
 		} else if(_mode == 1) {
 			

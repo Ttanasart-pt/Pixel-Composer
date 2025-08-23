@@ -118,7 +118,7 @@ function Node_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) co
 			_insMap[$ _inp_nod.node_id] = _inp;
 			_curMap[$ _inp.node_id] = _inp_nod;
 			
-			run_in(1, function(_inp) /*=>*/ { _inp.refreshWidget(); }, [_inp]);
+			run_in(1, function(_inp) /*=>*/ { if(_inp.active) _inp.refreshWidget(); }, [_inp]);
 		}
 		
 		for( var i = array_length(inputs) - 1; i >= _iamo; i--) {

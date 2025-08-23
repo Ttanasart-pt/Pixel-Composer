@@ -277,27 +277,19 @@ function Node_3D_Particle(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 			
 		#endregion
 		
-		if(!is(_obj, __3dObject)) return noone;
-		if(_obj.VF != global.VF_POS_NORM_TEX_COL) return noone;
+		if(!is(_obj, __3dInstance)) return noone;
 		
 		#region base instancer
 			var system = particleSystem;
 			
 			if(IS_FIRST_FRAME) {
 				system.instance_amount = pool_size;
-				system.render_type     = _obj.render_type;
-				system.custom_shader   = _obj.custom_shader;
-				system.size            = _obj.size.clone();
-				system.materials       = _obj.materials;
-				system.material_index  = _obj.material_index;
-				system.texture_flip    = _obj.texture_flip;
-				system.vertex          = _obj.vertex;
-				system.objectTransform = _obj.transform;
 				system.transparent     = _transpar;
+				
+				system.objectTransform = _obj.transform;
 				system.objectTransform.applyMatrix();
 				
 				var _flat_vb = d3d_flattern(_obj);
-				system.VF = _obj.VF;
 				system.VB = _flat_vb.VB;
 				system.materials = _flat_vb.materials;
 				

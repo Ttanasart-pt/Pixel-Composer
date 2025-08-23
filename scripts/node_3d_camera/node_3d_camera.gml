@@ -51,7 +51,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	newInput(i+22, nodeValue_Enum_Button( "Blend mode",            0, [ "Normal", "Additive" ] ));
 	
 	////- =Wireframe
-	newInput(i+23, nodeValue_Enum_Button( "Vire Mode",             0, [ "Solid", "Solid + Wireframe", "Edge Front", "Edge All" ] ));
+	newInput(i+23, nodeValue_Enum_Button( "Wire Mode",             0, [ "Solid", "Solid + Wireframe", "Edge Front", "Edge All" ] ));
 	newInput(i+24, nodeValue_Float(       "Wireframe Thickness",   1        ));
 	newInput(i+25, nodeValue_Color(       "Wireframe Color",       ca_black ));
 	newInput(i+26, nodeValue_Bool(        "Wireframe antialias",   false    ));

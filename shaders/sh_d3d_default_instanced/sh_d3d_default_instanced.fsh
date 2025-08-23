@@ -1,3 +1,6 @@
+#pragma use(d3d_default_fragment)
+
+#region -- d3d_default_fragment -- [1755735844.5561614]
 #ifdef _YY_HLSL11_
 	#extension GL_OES_standard_derivatives : enable
 #endif
@@ -383,3 +386,5 @@ void main() {
 	gl_FragData[2] = vec4(vec3(1. - abs(v_cameraDistance)), final_color.a);
 	gl_FragData[3] = vec4(shadow, 1.);
 }
+#endregion -- d3d_default_fragment --
+#pragma use(d3d_default_fragment)

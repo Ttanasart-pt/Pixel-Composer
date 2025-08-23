@@ -148,7 +148,7 @@ function __3dTransformed(_object = noone) : __3dInstance() constructor {
 				_mdat = {
 					texture:         _m.getTexture(),  
 					use_normal:      is_surface(_m.normal),
-					normal_map:      _m.normal,
+					normal_map:      surface_get_texture_safe(_m.normal),
 					normal_strength: _m.normalStr,
 					
 					mat_diffuse:    _m.diffuse,

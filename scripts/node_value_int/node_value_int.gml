@@ -2,7 +2,7 @@ function nodeValue_Int(_name, _value, _tooltip = "") { return new __NodeValue_In
 
 function __NodeValue_Int(_name, _node, _value, _tooltip = "") : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.integer, _value, _tooltip) constructor {
 	
-	/////============== GET =============
+	////- GET
 	
 	static valueProcess = function(value, nodeFrom = undefined, applyUnit = true, arrIndex = 0) {
 		if(validator != noone) value = validator.validate(value);
@@ -10,7 +10,7 @@ function __NodeValue_Int(_name, _node, _value, _tooltip = "") : NodeValue(_name,
 		return is_real(value)? round(value) : value;
 	}
 	
-	static getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { //// Get value
+	static getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) {
 		getValueRecursive(self.__curr_get_val, _time);
 		var val = __curr_get_val[0];
 		var nod = __curr_get_val[1]; if(!is(nod, NodeValue)) return val;
@@ -18,38 +18,12 @@ function __NodeValue_Int(_name, _node, _value, _tooltip = "") : NodeValue(_name,
 		var typ = nod.type;
 		var dis = nod.display_type;
 		
-		if(typ != VALUE_TYPE.surface) {
-			if(typ == VALUE_TYPE.text)     val = toNumber(val);
-			if(is_struct(val) && struct_has(val, "to_real")) val = val.to_real();
-			
-			return valueProcess(val, nod, applyUnit);
-		}
+		if(typ == VALUE_TYPE.surface) return surface_get_dimension(val);
+		if(typ == VALUE_TYPE.text) val = toNumber(val);
 		
-		// Dimension conversion
-		if(is_array(val)) {
-			var eqSize = true;
-			var sArr = [];
-			var _osZ = 0;
-			
-			for( var i = 0, n = array_length(val); i < n; i++ ) {
-				if(!is_surface(val[i])) continue;
-				
-				var surfSz = surface_get_dimension(val[i]);
-				array_push(sArr, surfSz);
-				
-				if(i && !array_equals(surfSz, _osZ))
-					eqSize = false;
-				
-				_osZ = surfSz;
-			}
-			
-			if(eqSize) return _osZ;
-			return sArr;
-			
-		} else if (is_surface(val)) 
-			return [ surface_get_width_safe(val), surface_get_height_safe(val) ];
-			
-		return [ 1, 1 ];
+		if(is_struct(val) && struct_has(val, "to_real")) val = val.to_real();
+		
+		return valueProcess(val, nod, applyUnit);
 	}
 	
 	static __getAnimValue = function(_time = CURRENT_FRAME) {

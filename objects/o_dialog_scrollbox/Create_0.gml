@@ -21,10 +21,7 @@ event_inherited();
 	search_string	= "";
 	KEYBOARD_RESET
 	tb_search = new textBox(TEXTBOX_INPUT.text, function(s) /*=>*/ { search_string = string(s); filterSearch(); })
-					.setFont(f_p2)
-					.setAutoUpdate()
-					.setEmpty()
-					.setAlign(fa_left);
+					.setFont(f_p2).setAutoUpdate().setEmpty().setAlign(fa_left);
 	
 	WIDGET_CURRENT  = tb_search;
 	
@@ -161,7 +158,7 @@ event_inherited();
 			}
 			
 			if(_spr) {
-				var _ss = _sca? 28 / sprite_get_height(_val.spr) : 1;
+				var _ss = _sca? (hght - ui(8)) / sprite_get_height(_val.spr) : 1;
 				
 				gpu_set_tex_filter(true);
 				draw_sprite_uniform(_val.spr, _val.spr_ind, ui(8) + hght / 2, _yy, _ss, _val.spr_blend);

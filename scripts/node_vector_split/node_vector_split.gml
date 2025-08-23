@@ -5,10 +5,7 @@ function Node_Vector_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	setDimension(96, 0);
 	
-	newInput(0, nodeValue("Vector", self, CONNECT_TYPE.input, VALUE_TYPE.float, [ 0, 0, 0, 0 ]))
-		.setDisplay(VALUE_DISPLAY.vector)
-		.setArrayDynamic()
-		.setVisible(true, true);
+	newInput(0, nodeValue_Vec4("Vector", [ 0, 0, 0, 0 ] )).setArrayDynamic().setVisible(true, true);
 	
 	newOutput(0, nodeValue_Output("x", VALUE_TYPE.float, 0));
 	newOutput(1, nodeValue_Output("y", VALUE_TYPE.float, 0));

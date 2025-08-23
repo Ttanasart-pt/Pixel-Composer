@@ -31,6 +31,7 @@ function __3dObjectInstancer() : __3dObject() constructor {
 	batch_count     = 0;
 	batch_amount    = [];
 	
+	VB = undefined;
 	VF = global.VF_POS_NORM_TEX_COL;
 	render_type = pr_trianglelist;
 	
@@ -69,6 +70,8 @@ function __3dObjectInstancer() : __3dObject() constructor {
 	static submitSel	= function(_sc = noone, _sh = noone) /*=>*/ { submit(_sc, _sh); }
 	static submitShader = function(_sc = noone, _sh = noone) /*=>*/ { submit(_sc, _sh); }
 	static submit		= function(_sc = noone, _sh = noone) /*=>*/ { 
+		if(VB == undefined) return;
+		
 		if(OS == os_windows) submitVertex_HLSL(_sc, _sh); 
 		else submitVertex_OpenGL(_sc, _sh); 
 	}
@@ -277,8 +280,8 @@ function __3dObjectInstancer() : __3dObject() constructor {
 					shader_set_uniform_i(umat_metalic,      _mat.mat_metalic     );
 					shader_set_uniform_f(umat_reflective,   _mat.mat_reflective  );
 					
-					shader_set_uniform_f(umat_texScale,     _mat.mat_texScale    ); 
-					shader_set_uniform_f(umat_texShift,     _mat.mat_texShift    ); 
+					shader_set_uniform_f_array(umat_texScale, _mat.mat_texScale    ); 
+					shader_set_uniform_f_array(umat_texShift, _mat.mat_texShift    ); 
 					gpu_set_tex_filter(_mat.tex_filter); 
 					
 					vertex_submit(VB[i], render_type, _tex);

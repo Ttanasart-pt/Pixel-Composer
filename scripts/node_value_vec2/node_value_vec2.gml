@@ -17,54 +17,28 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 		return applyUnit? unit.apply(value, arrIndex) : value;
 	}
 	
-	static getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { //// Get value
+	static getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) {
 		getValueRecursive(self.__curr_get_val, _time);
 		var val = __curr_get_val[0];
 		var nod = __curr_get_val[1]; if(!is(nod, NodeValue)) return val;
 		var typ = nod.type;
 		
-		if(typ != VALUE_TYPE.surface) {
-			if(array_empty(val)) return val;
-			var _d = array_get_depth(val);
-			
-			__nod       = nod;
-			__applyUnit = applyUnit;
-			__arrIndex  = arrIndex;
-			
-			switch(_d) {
-				case 0: return valueProcess([ val, val ], nod, applyUnit, arrIndex);
-				case 1: return valueProcess(val, nod, applyUnit, arrIndex);
-				case 2: return array_map(val, function(v, i) /*=>*/ {return valueProcess(array_verify_new(v, 2), __nod, __applyUnit, __arrIndex)}); 
-			}
-			
-			return val;
+		if(typ == VALUE_TYPE.surface) return surface_get_dimension(val);
+		if(array_empty(val)) return val;
+		
+		var _d = array_get_depth(val);
+		
+		__nod       = nod;
+		__applyUnit = applyUnit;
+		__arrIndex  = arrIndex;
+		
+		switch(_d) {
+			case 0: return valueProcess([ val, val ], nod, applyUnit, arrIndex);
+			case 1: return valueProcess(val, nod, applyUnit, arrIndex);
+			case 2: return array_map(val, function(v, i) /*=>*/ {return valueProcess(array_verify_new(v, 2), __nod, __applyUnit, __arrIndex)}); 
 		}
 		
-		// Dimension conversion
-		if(is_array(val)) {
-			var eqSize = true;
-			var sArr = [];
-			var _osZ = 0;
-			
-			for( var i = 0, n = array_length(val); i < n; i++ ) {
-				if(!is_surface(val[i])) continue;
-				
-				var surfSz = surface_get_dimension(val[i]);
-				array_push(sArr, surfSz);
-				
-				if(i && !array_equals(surfSz, _osZ))
-					eqSize = false;
-				
-				_osZ = surfSz;
-			}
-			
-			if(eqSize) return _osZ;
-			return sArr;
-			
-		} else if (is_surface(val)) 
-			return surface_get_dimension(val);
-			
-		return [ 1, 1 ];
+		return val;
 	}
 	
 	static __getAnimValue = function(_time = CURRENT_FRAME) {
