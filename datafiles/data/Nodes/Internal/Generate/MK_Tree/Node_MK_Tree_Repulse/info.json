@@ -1,6 +1,0 @@
-{
-    "name":          "Tree Repulse",
-    "spr":           "s_node_mk_tree_repulse",
-    "baseNode":      "Node_MK_Tree_Repulse",
-    "pxc_version":    119051.00,
-}

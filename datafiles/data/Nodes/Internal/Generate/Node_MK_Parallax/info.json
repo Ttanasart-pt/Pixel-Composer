@@ -1,6 +1,0 @@
-{
-    "name":          "MK Parallax",
-    "spr":           "s_node_mk_parallax",
-    "baseNode":      "Node_MK_Parallax",
-    "pxc_version":    119010,
-}

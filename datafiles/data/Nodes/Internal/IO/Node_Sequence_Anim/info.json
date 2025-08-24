@@ -1,9 +1,0 @@
-{
-  "tooltip":"Convert array of images into animation.",
-  "spr":"s_node_sequence_anim",
-  "baseNode":"Node_Sequence_Anim",
-  "io":[
-    "surface"
-  ],
-  "name":"Array to Anim"
-}

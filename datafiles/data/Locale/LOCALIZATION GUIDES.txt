@@ -1,7 +1,0 @@
-You can find sample locale folder in the `installation folder/data/locale/sample locale` (For Steam user you can right click > Properties > Installed File > Browse...).
-
-- nodes.json, UI.json, words.json is for translation.
-- If your language use non-ascii characters (or character not included in the default font Noto Sans), you need to supply your own font files in the fonts folder.
-    - Copy font files (.ttf, .otf) to the fonts folder (You can delete the existed fonts in that folder). 
-    - Edit `fonts/fonts.json` such that each "path" value point to the font file.
-    - If your language does not use space to separate words, you need to edit `config.json` and set "per_character_line_break" to true.

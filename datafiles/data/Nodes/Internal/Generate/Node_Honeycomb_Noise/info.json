@@ -1,9 +1,0 @@
-{
-  "tooltip":"Generate honeycomb noise",
-  "spr":"s_node_honeycomb_noise",
-  "baseNode":"Node_Honeycomb_Noise",
-  "io":[
-    "surface"
-  ],
-  "name":"Honeycomb Noise"
-}

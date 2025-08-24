@@ -1,9 +1,0 @@
-{
-  "tooltip":"Generate particle effect.",
-  "spr":"s_node_particle",
-  "baseNode":"Node_Particle",
-  "io":[
-    "surface"
-  ],
-  "name":"Particle"
-}

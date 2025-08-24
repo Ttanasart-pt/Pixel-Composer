@@ -1,6 +1,0 @@
-{
-    "name":          "Rotation Range",
-    "spr":           "s_node_rotation_range_data",
-    "baseNode":      "Node_Rotation_Range_Data",
-    "pxc_version":    119010,
-}

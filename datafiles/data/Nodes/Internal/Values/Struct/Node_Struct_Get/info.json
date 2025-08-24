@@ -1,9 +1,0 @@
-{
-  "tooltip":"Get value from struct and key.",
-  "spr":"s_node_struct_get",
-  "baseNode":"Node_Struct_Get",
-  "io":[
-    "struct"
-  ],
-  "name":"Struct Get"
-}

@@ -1,9 +1,0 @@
-{
-    "Node_Path_L_System": {
-        "Starting rule": { "path": "./notes/l_system.md" }
-    },
-
-    "Node_Blend": {
-        "Blend mode": { "path": "./notes/blendmodes.md" }
-    }
-}

@@ -1,6 +1,0 @@
-{
-    "name":          "MK Tree",
-    "spr":           "s_node_mk_tree",
-    "baseNode":      "Node_MK_Tree_Inline",
-    "pxc_version":    119051,
-}

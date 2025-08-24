@@ -1,9 +1,0 @@
-{
-  "tooltip":"Create (rgb) color from value in RGB color space.",
-  "spr":"s_node_color_from_rgb",
-  "baseNode":"Node_Color_RGB",
-  "io":[
-    "color"
-  ],
-  "name":"RGB Color"
-}

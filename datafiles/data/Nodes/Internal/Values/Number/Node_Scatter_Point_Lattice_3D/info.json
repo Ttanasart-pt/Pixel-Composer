@@ -1,6 +1,0 @@
-{
-    "name":          "Lattice Point 3D",
-    "spr":           "s_node_scatter_point_lattice_3d",
-    "baseNode":      "Node_Scatter_Point_Lattice_3D",
-    "pxc_version":    119030,
-}

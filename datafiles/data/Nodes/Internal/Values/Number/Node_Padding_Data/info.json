@@ -1,6 +1,0 @@
-{
-    "name":          "Padding Data",
-    "spr":           "s_node_padding_data",
-    "baseNode":      "Node_Padding_Data",
-    "pxc_version":    119010,
-}

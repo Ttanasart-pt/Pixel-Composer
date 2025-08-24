@@ -1,8 +1,0 @@
-{
-    "name":          "Transform 3D",
-    "tooltip":       "Transform 3D object.",
-    "spr":           "s_node_3d_transform",
-    "baseNode":      "Node_3D_Transform",
-    "pxc_version":    11570,
-    "io":             ["d3Mesh"],
-}

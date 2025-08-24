@@ -1,6 +1,0 @@
-{
-    "name":          "Armature IK",
-    "spr":           "s_node_armature_ik",
-    "baseNode":      "Node_Armature_IK",
-    "pxc_version":    119043,
-}

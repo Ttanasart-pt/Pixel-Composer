@@ -1,6 +1,0 @@
-{
-    "name":          "Downscale",
-    "spr":           "s_node_downscale",
-    "baseNode":      "Node_Downscale",
-    "pxc_version":    119070,
-}

@@ -1,7 +1,0 @@
-{
-    "name":          "PB Polar",
-    "spr":           "s_node_pb_filter_polar",
-    "baseNode":      "Node_PB_Filter_Polar",
-    "pxc_version":    118090,
-    "show_in_recent": false,
-}

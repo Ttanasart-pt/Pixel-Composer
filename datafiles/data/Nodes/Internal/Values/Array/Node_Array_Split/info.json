@@ -1,9 +1,0 @@
-{
-  "tooltip":"Split array members into individual outputs.",
-  "spr":"s_node_array_split",
-  "baseNode":"Node_Array_Split",
-  "io":[
-    "any"
-  ],
-  "name":"Array Split"
-}

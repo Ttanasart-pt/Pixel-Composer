@@ -1,9 +1,0 @@
-{
-  "tooltip":"Create websocket server to send data to the network.",
-  "spr":"s_node_websocket_sender",
-  "pxc_version":1145.0,
-  "baseNode":"Node_Websocket_Sender",
-  "io":[
-  ],
-  "name":"Websocket Sender"
-}

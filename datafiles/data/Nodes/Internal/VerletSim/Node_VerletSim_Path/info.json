@@ -1,6 +1,0 @@
-{
-    "name":          "Verlet Path",
-    "spr":           "s_node_verletsim_path",
-    "baseNode":      "Node_VerletSim_Path",
-    "pxc_version":    119041,
-}

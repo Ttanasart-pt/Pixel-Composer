@@ -1,8 +1,0 @@
-{
-  "name":"Count Text",
-  "tooltip":"Counts the number of times a subtext occurs in a text.",
-  "spr":"s_node_string_count",
-  "pxc_version":118090,
-  "baseNode":"Node_String_Count",
-  "io":[ "text" ],
-}

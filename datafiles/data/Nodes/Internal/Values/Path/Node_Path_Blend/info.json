@@ -1,9 +1,0 @@
-{
-  "tooltip":"Blend between 2 paths.",
-  "spr":"s_node_path_blend",
-  "baseNode":"Node_Path_Blend",
-  "io":[
-    "pathnode"
-  ],
-  "name":"Blend Path"
-}

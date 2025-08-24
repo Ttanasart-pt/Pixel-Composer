@@ -1,9 +1,0 @@
-{
-  "tooltip":"Create frame surrounding nodes.",
-  "spr":"s_node_frame",
-  "baseNode":"Node_Frame",
-  "io":[
-    "any"
-  ],
-  "name":"Frame"
-}

@@ -1,6 +1,0 @@
-{
-    "name":          "Flow Path",
-    "spr":           "s_node_flow_path",
-    "baseNode":      "Node_Flow_Path",
-    "pxc_version":    119020,
-}

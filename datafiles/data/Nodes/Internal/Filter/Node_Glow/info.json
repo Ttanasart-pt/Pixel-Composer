@@ -1,9 +1,0 @@
-{
-  "tooltip":"Apply glow to the border of the image.",
-  "spr":"s_node_glow",
-  "baseNode":"Node_Glow",
-  "io":[
-    "surface"
-  ],
-  "name":"Glow"
-}

@@ -1,6 +1,0 @@
-{
-    "name":          "Pin Mesh",
-    "spr":           "s_node_verletsim_mesh_pin",
-    "baseNode":      "Node_VerletSim_Mesh_Pin",
-    "pxc_version":    119041,
-}

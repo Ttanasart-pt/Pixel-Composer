@@ -1,6 +1,0 @@
-{
-    "name":          "Armature Mirror",
-    "spr":           "s_node_armature_mirror",
-    "baseNode":      "Node_Armature_Mirror",
-    "pxc_version":    119043,
-}

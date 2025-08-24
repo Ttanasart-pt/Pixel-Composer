@@ -1,7 +1,0 @@
-{
-  "name":"Pixel Extract",
-  "tooltip":"Extract pixels from an image.",
-  "baseNode":"Node_Pixel_Extract",
-  "pxc_version":118071,
-  "io":[ "color", "surface" ],
-}

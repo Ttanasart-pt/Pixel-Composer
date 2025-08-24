@@ -1,6 +1,0 @@
-{
-    "name":          "Rotation Random",
-    "spr":           "s_node_rotation_random_data",
-    "baseNode":      "Node_Rotation_Random_Data",
-    "pxc_version":    119010,
-}

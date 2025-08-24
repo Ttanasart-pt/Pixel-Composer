@@ -1,8 +1,0 @@
-{
-  "spr":"s_node_image",
-  "baseNode":"Node_Slideshow",
-  "io":[
-    "any"
-  ],
-  "name":"Slideshow"
-}

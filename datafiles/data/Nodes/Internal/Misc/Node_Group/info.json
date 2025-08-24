@@ -1,8 +1,0 @@
-{
-  "spr":"s_node_group",
-  "baseNode":"Node_Group",
-  "io":[
-    "any"
-  ],
-  "name":"Group"
-}

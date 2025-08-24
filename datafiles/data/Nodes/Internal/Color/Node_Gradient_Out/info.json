@@ -1,9 +1,0 @@
-{
-  "tooltip":"Create gradient object",
-  "spr":"s_node_gradient_out",
-  "baseNode":"Node_Gradient_Out",
-  "io":[
-    "gradient"
-  ],
-  "name":"Gradient"
-}

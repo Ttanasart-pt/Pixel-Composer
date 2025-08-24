@@ -1,7 +1,0 @@
-{
-    "name":          "Rotate Joint",
-    "spr":           "s_node_rigid_joint_rotate",
-    "baseNode":      "Node_Rigid_Joint_Rotate",
-    "pxc_version":    119010,
-    "show_in_recent": false,
-}

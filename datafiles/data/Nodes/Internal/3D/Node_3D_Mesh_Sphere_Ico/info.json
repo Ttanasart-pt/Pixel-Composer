@@ -1,8 +1,0 @@
-{
-    "name":          "3D Icosphere",
-    "tooltip":       "Create 3D icosphere mesh",
-    "spr":           "s_node_3d_mesh_sphere_ico",
-    "baseNode":      "Node_3D_Mesh_Sphere_Ico",
-    "pxc_version":    11510,
-    "io":             ["d3Mesh"],
-}

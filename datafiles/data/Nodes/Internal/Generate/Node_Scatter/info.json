@@ -1,9 +1,0 @@
-{
-  "tooltip":"Scatter image randomly multiple times.",
-  "spr":"s_node_scatter",
-  "baseNode":"Node_Scatter",
-  "io":[
-    "surface"
-  ],
-  "name":"Scatter"
-}

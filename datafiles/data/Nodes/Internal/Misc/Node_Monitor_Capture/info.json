@@ -1,8 +1,0 @@
-{
-  "spr":"s_node_monitor_capture",
-  "baseNode":"Node_Monitor_Capture",
-  "io":[
-    "any"
-  ],
-  "name":"Monitor Capture"
-}

@@ -1,8 +1,0 @@
-{
-    "name":          "PB Output",
-    "spr":           "s_node_pb_output",
-    "baseNode":      "Node_PB_Output",
-    "pxc_version":    118090,
-    "io":             ["surface"],
-    "show_in_recent": false,
-}
