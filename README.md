@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/Ttanasart-pt/Pixel-Composer/blob/6ed587ed6cd52317f6870836c1188ad914c834d4/img/s_banner.png" alt="Pixel Composer"/>
+  <img src="https://github.com/Ttanasart-pt/Pixel-Composer/blob/ada302b3f64f73f7fbffd0d38c0a369320e0d92c/img/s_banner.png" alt="Pixel Composer"/>
 </p>
 
 Node base VFX editor for pixel art.
