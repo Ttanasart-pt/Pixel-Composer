@@ -35,14 +35,10 @@ function Node_Iterator_Each_Inline_Output(_x, _y, _group = noone) : Node(_x, _y,
 		
 		if(!is_array(arr)) return;
 		
-		if(_typ == VALUE_TYPE.surface) {
-				 if(is(val, SurfaceAtlas)) arr[@ itr] = val.clone();
-			else if(surface_exists(val))   arr[@ itr] = surface_clone(val);
-			else                           arr[@ itr] = val;
-			
-		} else 
-			arr[@ itr] = val;
-			
+		if(_typ == VALUE_TYPE.surface)
+			val = surface_array_clone(val);
+		
+		arr[@ itr] = val;
 		outputs[0].setValue(arr);
 	}
 }

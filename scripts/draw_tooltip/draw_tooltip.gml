@@ -60,7 +60,7 @@ function draw_tooltip_palette(clr) {
 	
 	var _y = my + pd;
 	for( var i = 0, n = array_length(clr); i < n; i++ ) {
-		drawPalette(clr[i], mx + pd, _y, ui(ww), ph);
+		drawPalette(clr[i], mx + pd, _y, ww, ph);
 		_y += ph;
 	}
 	

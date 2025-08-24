@@ -54,6 +54,7 @@ function __file_selector(_mode = "save", _dir = PREFERENCES.dialog_path, _fname 
 	var rep  = $"{APP_LOCATION}fs/fs.exe";
 	if(OS == os_linux) rep = FS_PATH;
 	
+	print("###file_start###");
 	var args = shellCommandBuilder(_arg);
 	var _out = shell_execute(rep, args);
 	var _res = undefined;
