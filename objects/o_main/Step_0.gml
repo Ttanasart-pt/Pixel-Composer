@@ -73,26 +73,6 @@ if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 	HOTKEY_BLOCK = false;
 #endregion
 
-#region GIF builder
-	for( var i = 0; i < ds_list_size(GIF_READER); i++ ) {
-		var _reader = GIF_READER[| i];
-		
-		var _readComplete = _reader[0].reading();
-		if(_readComplete) {
-			var ret = _reader[2];
-			ret(new __gif_sprite_builder(_reader[0]));
-			ds_stack_push(gif_complete_st, i);
-		}
-	}
-	
-	while(!ds_stack_empty(gif_complete_st)) {
-		var i = ds_stack_pop(gif_complete_st);
-		buffer_delete(GIF_READER[| i][1]);
-		delete GIF_READER[| i][0];
-		ds_list_delete(GIF_READER, i);
-	}
-#endregion
-
 #region file drop
 	if(OS == os_macosx) {		
 		file_dnd_set_files(file_dnd_pattern, file_dnd_allowfiles, file_dnd_allowdirs, file_dnd_allowmulti);

@@ -36,3 +36,8 @@ function dec_to_bin(dec, len = 1)  {
 	
     return bin;
 }
+
+function dec_to_hex2(dec) {
+    static dig = "0123456789ABCDEF";
+    return string_char_at(dig, ((dec >> 4) & $F) + 1) + string_char_at(dig, (dec & $F) + 1);
+}

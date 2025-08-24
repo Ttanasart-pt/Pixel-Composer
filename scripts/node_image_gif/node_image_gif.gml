@@ -26,8 +26,8 @@ function Node_create_Image_gif_path(_x, _y, path) {
 }
 
 function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name			= "Image GIF";
-	color			= COLORS.node_blend_input;
+	name  = "Image GIF";
+	color = COLORS.node_blend_input;
 	update_on_frame = true;
 	setAlwaysTimeline(new timelineItemNode_Image_gif(self));
 	
@@ -67,11 +67,13 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	attribute_surface_depth();
 	
+	spr_builder	 = noone; 
+	spr_buffer   = undefined;
+	
 	spr			 = noone;
 	path_current = "";
 	loading		 = 0;
 	load_start_t = 0;
-	spr_builder	 = noone; 
 	surfaces	 = [];
 	
 	edit_time = 0;
@@ -87,6 +89,46 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	setTrigger(1, __txt("Refresh"), [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() /*=>*/ { updatePaths(path_get(getInputData(0))); });
 	
+	function read_gif_init(path) {
+		spr_buffer  = buffer_load(path);
+		spr_builder = new Gif(spr_buffer);
+		
+		loading = 1;
+		load_start_t = get_timer();
+	}
+	
+	function read_gif_reading() {
+		var _readComplete = spr_builder.reading();
+		if(_readComplete) {
+			spr_builder = new __gif_sprite_builder(spr_builder);
+			loading = 2;
+		}
+	}
+	
+	function read_gif_building() {
+		var _buildComplete = spr_builder.building();
+		
+		if(_buildComplete)
+			read_gif_completed();
+	}
+	
+	function read_gif_completed() {
+		surface_array_free(surfaces);
+			
+		surfaces = [];
+		spr = spr_builder._spr;
+		detail.text = $"{filename_name(path_current)}\n{sprite_get_number(spr)} frames";
+		print($"Load gif finish in {(get_timer() - load_start_t) / 1_000}ms");
+		
+		triggerRender();
+		loading = 0;
+		
+		gc_collect();
+		
+		buffer_delete(spr_buffer);
+		delete spr_builder;
+	}
+	
 	function updatePaths(path = path_current) {
 		if(path == -1) return false;
 		
@@ -100,10 +142,8 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		outputs[1].setValue(path);
 		
 		if(spr) sprite_delete(spr);
-		sprite_add_gif(path, function(_spr) /*=>*/ { spr_builder = _spr; loading = 2; });
-		loading = 1;
-		load_start_t = get_timer();
-				
+		read_gif_init(path);
+		
 		if(path_current == "") first_update = true;
 		path_current = path;
 		edit_time    = max(edit_time, file_get_modify_s(path_current));	
@@ -113,6 +153,25 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	}
 	
 	static step = function() {
+		switch(loading) {
+			case 1 : read_gif_reading();  break;
+			case 2 : read_gif_building(); break;
+		}
+		
+		if(attributes.file_checker && file_exists_empty(path_current)) {
+			var _modi = file_get_modify_s(path_current);
+			
+			if(_modi > edit_time) {
+				edit_time = _modi;
+				run_in(2, function() /*=>*/ { updatePaths(); triggerRender(); });
+			}
+		}
+	}
+	
+	static update = function(frame = CURRENT_FRAME) {
+		var path = path_get(getInputData(0));
+		if(path_current != path) updatePaths(path);
+		
 		var _arr = getInputData(2);
 		var _lop = getInputData(3);
 		var _cus = getInputData(5);
@@ -121,34 +180,6 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		inputs[4].setVisible(!_cus);
 		inputs[6].setVisible( _cus);
 		inputs[7].setVisible(!_cus);
-		
-		if(loading == 2 && spr_builder != noone && spr_builder.building()) {
-			surfaces = [];
-			spr = spr_builder._spr;
-			detail.text = $"{filename_name(path_current)}\n{sprite_get_number(spr)} frames";
-			print($"Load gif finish in {(get_timer() - load_start_t) / 1_000}ms");
-			
-			triggerRender();
-			loading = 0;
-			
-			gc_collect();
-		}
-		
-		if(attributes.file_checker && file_exists_empty(path_current)) {
-			var _modi = file_get_modify_s(path_current);
-			
-			if(_modi > edit_time) {
-				edit_time = _modi;
-				
-				run_in(2, function() { updatePaths(); triggerRender(); });
-			}
-			
-		}
-	}
-	
-	static update = function(frame = CURRENT_FRAME) {
-		var path = path_get(getInputData(0));
-		if(path_current != path) updatePaths(path);
 		
 		if(!spr || !sprite_exists(spr)) return;
 		
@@ -193,14 +224,17 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			case ANIMATION_END.loop : 
 				_frm = safe_mod(_frm, _len);
 				break;
+				
 			case ANIMATION_END.ping :
 				_frm = safe_mod(_frm, _len * 2 - 2);
 				if(_frm >= _len)
 					_frm = _len * 2 - 2 - _frm;
 				break;
+				
 			case ANIMATION_END.hold :
 				_frm = clamp(_frm, -_len, _len - 1);
 				break;
+				
 			case ANIMATION_END.hide :	
 				if(_frm < 0 || _frm >= _len) 
 					_drw = false;

@@ -30,12 +30,6 @@
 #endregion
 
 #region Gif
-	function sprite_add_gif(_path, _return_func) {
-		var _buf = buffer_load(_path);
-		var _gif = new Gif(_buf);
-		ds_list_add(GIF_READER, [_gif, _buf, _return_func] );
-	}
-	
 	function Gif(_buff) constructor {
 		buffer = _buff;
 		loops  = -1;
@@ -45,13 +39,7 @@
 		reader_data = undefined;
 		
 		static destroy = function() {
-			var len = array_length(frames);
-			var i = 0;
-			
-			repeat(len) {
-				var _frame = frames[i++];
-				_frame.destroy();
-			}
+			array_foreach(frames, function(f) /*=>*/ {return f.destroy()});
 		}
 		
 		static readBegin = function() {
@@ -74,15 +62,15 @@
 			var _globalColorTable = undefined;
 			
 			if (reader_data.globalColorTable != undefined) 
-				_globalColorTable = _colorTableToVector(reader_data.globalColorTable, reader_data.logicalScreenDescriptor.globalColorTableSize);
+				_globalColorTable = reader_data.globalColorTable;
 			
-			var __g  = 0;
-			var __g1 = reader_data.blocks;
-			var __break = false;
+			var i = 0;
+			var __break  = false;
+			var blocks   = reader_data.blocks;
+			var blockAmo = array_length(blocks);
 			
-			while (__g < array_length(__g1)) {
-				var _block = __g1[__g];
-				__g++;
+			repeat (blockAmo) {
+				var _block = blocks[i++];
 				
 				switch (_block.__enumIndex__) { // format_gif_Block
 					case 0 : // BFrame
@@ -106,7 +94,7 @@
 						_gf.height = _f.height;
 						
 						var _colorTable = _globalColorTable;
-						if (_f.colorTable != undefined) _colorTable = _colorTableToVector(_f.colorTable, _f.localColorTableSize);
+						if (_f.colorTable != undefined) _colorTable = _f.colorTable;
 						
 						var _buf = buffer_create(_f.width * _f.height * 4, buffer_fixed, 1);
 						if(_transparentIndex >= 0) _colorTable[_transparentIndex] = 0;
@@ -115,8 +103,7 @@
 						var _pxCount = buffer_get_size(_pxBuff), _i = 0;
 						
 						buffer_to_start(_pxBuff);
-						repeat(_pxCount) buffer_write(_buf, buffer_s32, _colorTable[buffer_read(_pxBuff, buffer_u8)]);
-						buffer_delete(_pxBuff);
+						repeat(_pxCount) { buffer_write(_buf, buffer_s32, _colorTable[buffer_read(_pxBuff, buffer_u8)]); }
 						
 						_gf.buffer = _buf;
 						var _sf = surface_create(_f.width, _f.height);
@@ -148,26 +135,19 @@
 				if (__break) break;
 			}
 			
+			var i = 0;
+			
+			repeat (blockAmo) {
+				var _block = blocks[i++];
+				if(_block.__enumIndex__ == 0) {
+					var _pxBuff = _block.frame.pixels;
+					buffer_delete(_pxBuff);
+				}
+			}
+			
 			buffer_delete(buffer);
 		}
 		
-		static _colorTableToVector = function(_pal, _num) {
-			var _r, _g, _b;
-			var _p   = 0;
-			var _a   = 255;
-			var _vec = array_create(_num, undefined);
-			
-			for (var _i = 0; _i < _num; _i++) {
-				_r = _pal[_p  ];
-				_g = _pal[_p+1];
-				_b = _pal[_p+2];
-				
-				_vec[_i] = ((((_a << 24) | (_b << 16)) | (_g << 8)) | _r);
-				_p += 3;
-			}
-			return _vec;
-		}
-
 		readBegin();
 	}
 	
@@ -588,14 +568,18 @@
 		}
 		
 		static readColorTable = function(_size) {
-			_size *= 3;
 			var _output = array_create(_size, 0);
 			var _data   = data;
+			var _c = 0, _r, _g, _b;
+			var _a = 255;
+			var col;
 			
-			for (var _c = 0; _c < _size; _c += 3) {
-				_output[_c  ] = buffer_read(_data, buffer_u8) & 255;
-				_output[_c+1] = buffer_read(_data, buffer_u8) & 255;
-				_output[_c+2] = buffer_read(_data, buffer_u8) & 255;
+			repeat(_size) {
+				_r = buffer_read(_data, buffer_u8) & 255;
+				_g = buffer_read(_data, buffer_u8) & 255;
+				_b = buffer_read(_data, buffer_u8) & 255;
+				
+				_output[_c++] = ((((_a << 24) | (_b << 16)) | (_g << 8)) | _r);
 			}
 			
 			return _output;

@@ -152,6 +152,27 @@ function buffer_to_string(buffer) {
     
     return ss;
 }
+	
+function buffer_to_string_u8(buffer) {
+	if(!buffer_exists(buffer)) return "";
+
+	buffer_seek(buffer, buffer_seek_start, 0);
+	var len = buffer_get_size(buffer);
+    var ss  = "";
+    var ix  = 0;
+    
+    repeat(len) {
+		var _r = buffer_read(buffer, buffer_u8);
+		ss += string(_r) + " ";
+		
+		if(ix++ == 4) {
+			ss += "  ";
+			ix = 0;
+		}
+	}
+    
+    return ss;
+}
 
 function buffer_compress_string(str) {
 	var _len   = string_length(str);
