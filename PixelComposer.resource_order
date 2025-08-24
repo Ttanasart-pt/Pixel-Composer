@@ -455,7 +455,6 @@
     {"name":"__d3d11_cbuffer","order":1,"path":"scripts/__d3d11_cbuffer/__d3d11_cbuffer.yy",},
     {"name":"__d3d11_shader","order":2,"path":"scripts/__d3d11_shader/__d3d11_shader.yy",},
     {"name":"__initAddon","order":2,"path":"scripts/__initAddon/__initAddon.yy",},
-    {"name":"__KEYS_PRIVATE","order":21,"path":"scripts/__KEYS_PRIVATE/__KEYS_PRIVATE.yy",},
     {"name":"__matrix3","order":5,"path":"scripts/__matrix3/__matrix3.yy",},
     {"name":"__matrix4","order":6,"path":"scripts/__matrix4/__matrix4.yy",},
     {"name":"__node_3d_light","order":1,"path":"scripts/__node_3d_light/__node_3d_light.yy",},

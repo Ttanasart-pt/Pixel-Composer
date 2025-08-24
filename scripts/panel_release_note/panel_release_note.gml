@@ -49,7 +49,7 @@ function Panel_Release_Note() : PanelContent() constructor {
 	#endregion
 	
 	#region downloads
-		dl_get       = http_get(global.KEYS.download_links);
+		dl_get       = http_get(global.DOWNLOAD_LINKS);
 		dls          = [];
 		downloading  = {};
 		dl_selecting = noone;

@@ -1698,7 +1698,6 @@
     {"id":{"name":"__d3d11","path":"scripts/__d3d11/__d3d11.yy",},},
     {"id":{"name":"__init_dynaDraw","path":"scripts/__init_dynaDraw/__init_dynaDraw.yy",},},
     {"id":{"name":"__initAddon","path":"scripts/__initAddon/__initAddon.yy",},},
-    {"id":{"name":"__KEYS_PRIVATE","path":"scripts/__KEYS_PRIVATE/__KEYS_PRIVATE.yy",},},
     {"id":{"name":"__matrix","path":"scripts/__matrix/__matrix.yy",},},
     {"id":{"name":"__matrix3","path":"scripts/__matrix3/__matrix3.yy",},},
     {"id":{"name":"__matrix4","path":"scripts/__matrix4/__matrix4.yy",},},

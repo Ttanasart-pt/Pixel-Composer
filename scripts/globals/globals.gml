@@ -60,7 +60,7 @@ gml_pragma("UnityBuild", "true");
 	HOTKEY_CONTEXT = [0];
 	
 	globalvar TOOLTIP, DRAGGING, DIALOG_DEPTH_HOVER;
-	global.KEYS = { download_links: "" };
+	global.DOWNLOAD_LINKS = "";
 	
 	globalvar CURRENT_COLOR; CURRENT_COLOR = ca_white;
 #endregion
