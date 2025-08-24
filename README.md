@@ -4,7 +4,7 @@
 
 Node base VFX editor for pixel art.
 
-![Box Explode](https://github.com/Ttanasart-pt/Pixel-Composer/blob/1f1dcc29b5337c1446cb4c51de8aac4b3f4505fe/img/Box%20explode.gif)
+![Box Explode](https://github.com/Ttanasart-pt/Pixel-Composer/blob/dd4c4e400cb84d9dcf053e17a1cd558d789eab51/img/boxgrav.gif)
 
 
 ## Set up guides
