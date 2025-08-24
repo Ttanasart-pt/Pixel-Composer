@@ -15,8 +15,11 @@
     "Steam":{
       "copyToTargets":"64",
     },
+    "Itch":{
+      "copyToTargets":"64",
+    },
   },
-  "copyToTargets":194,
+  "copyToTargets":0,
   "description":"",
   "exportToGame":true,
   "extensionVersion":"1.0.0",

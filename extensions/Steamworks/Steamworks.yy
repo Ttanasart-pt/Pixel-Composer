@@ -19,7 +19,7 @@
       "copyToTargets":"194",
     },
   },
-  "copyToTargets":194,
+  "copyToTargets":0,
   "description":"",
   "exportToGame":true,
   "extensionVersion":"1.7.0",
