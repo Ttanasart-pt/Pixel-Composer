@@ -16,7 +16,7 @@
       "copyToTargets":"64",
     },
   },
-  "copyToTargets":105554172285166,
+  "copyToTargets":194,
   "description":"",
   "exportToGame":true,
   "extensionVersion":"1.0.0",

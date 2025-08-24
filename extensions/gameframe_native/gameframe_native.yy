@@ -11,7 +11,12 @@
   "androidsourcedir":"",
   "author":"",
   "classname":"",
-  "copyToTargets":3035426170322551020,
+  "ConfigValues":{
+    "Steam":{
+      "copyToTargets":"194",
+    },
+  },
+  "copyToTargets":194,
   "description":"",
   "exportToGame":true,
   "extensionVersion":"1.0.0",

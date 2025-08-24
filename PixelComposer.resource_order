@@ -319,7 +319,6 @@
     {"name":"discordBridge","order":4,"path":"extensions/discordBridge/discordBridge.yy",},
     {"name":"display_measure","order":1,"path":"extensions/display_measure/display_measure.yy",},
     {"name":"display_screenshot","order":4,"path":"extensions/display_screenshot/display_screenshot.yy",},
-    {"name":"dllTest","order":4,"path":"extensions/dllTest/dllTest.yy",},
     {"name":"file_dropper","order":3,"path":"extensions/file_dropper/file_dropper.yy",},
     {"name":"FirebaseSetup","order":3,"path":"extensions/FirebaseSetup/FirebaseSetup.yy",},
     {"name":"FLIP","order":1,"path":"extensions/FLIP/FLIP.yy",},

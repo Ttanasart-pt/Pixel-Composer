@@ -1539,7 +1539,6 @@
     {"id":{"name":"discordBridge","path":"extensions/discordBridge/discordBridge.yy",},},
     {"id":{"name":"display_measure","path":"extensions/display_measure/display_measure.yy",},},
     {"id":{"name":"display_screenshot","path":"extensions/display_screenshot/display_screenshot.yy",},},
-    {"id":{"name":"dllTest","path":"extensions/dllTest/dllTest.yy",},},
     {"id":{"name":"file_dropper","path":"extensions/file_dropper/file_dropper.yy",},},
     {"id":{"name":"FileDropper","path":"extensions/FileDropper/FileDropper.yy",},},
     {"id":{"name":"FirebaseSetup","path":"extensions/FirebaseSetup/FirebaseSetup.yy",},},

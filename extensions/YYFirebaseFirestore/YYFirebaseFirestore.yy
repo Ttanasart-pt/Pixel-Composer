@@ -11,7 +11,12 @@
   "androidsourcedir":"",
   "author":"",
   "classname":"YYFirebaseFirestore",
-  "copyToTargets":3035426170322551022,
+  "ConfigValues":{
+    "Steam":{
+      "copyToTargets":"194",
+    },
+  },
+  "copyToTargets":194,
   "description":"",
   "exportToGame":true,
   "extensionVersion":"2.4.1",

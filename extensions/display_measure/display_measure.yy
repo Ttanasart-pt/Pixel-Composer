@@ -13,13 +13,13 @@
   "classname":"",
   "ConfigValues":{
     "Steam":{
-      "copyToTargets":"4294967532",
+      "copyToTargets":"224",
     },
     "Itch":{
       "copyToTargets":"64",
     },
   },
-  "copyToTargets":113497714299118,
+  "copyToTargets":194,
   "description":"",
   "exportToGame":true,
   "extensionVersion":"1.0.0",
