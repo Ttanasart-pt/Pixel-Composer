@@ -42,7 +42,7 @@ function cmd_program_patreon_legacy(mail) : cmd_program() constructor {
 			
 			var _map = ds_map_create();
 			
-			_map[? "Api-Token"]    = patreon_get_email_token();
+			_map[? "Api-Token"]    = patreon_email_token;
 			_map[? "Content-Type"] = "application/json";
 			
 			var _body = {
@@ -118,4 +118,9 @@ function __initPatreon() {
 	var _code = ds_map_try_get(_load, "code")
 	
 	IS_PATREON = string_starts_with(_code, "pxc");
+}
+
+function patreon_generate_activation_key(_mail) {
+	var token = string(patreon_activation_key, _mail);
+	return sha1_string_utf8(token);
 }

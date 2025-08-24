@@ -49,7 +49,7 @@ function Panel_Patreon() : PanelContent() constructor {
 			
 			var _map = ds_map_create();
 			
-			_map[? "Api-Token"]    = patreon_get_email_token();
+			_map[? "Api-Token"]    = patreon_email_token;
 			_map[? "Content-Type"] = "application/json";
 			
 			var _body = {

@@ -21,10 +21,10 @@
   "exportToGame":true,
   "extensionVersion":"0.0.1",
   "files":[
-    {"$GMExtensionFile":"","%Name":"patreon_key.gml","constants":[],"copyToTargets":-1,"filename":"patreon_key.gml","final":"","functions":[
-        {"$GMExtensionFunction":"","%Name":"patreon_generate_activation_key","argCount":0,"args":[1,],"documentation":"","externalName":"patreon_generate_activation_key","help":"","hidden":false,"kind":2,"name":"patreon_generate_activation_key","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":1,},
-        {"$GMExtensionFunction":"","%Name":"patreon_get_email_token","argCount":0,"args":[],"documentation":"","externalName":"get_email_token","help":"","hidden":false,"kind":2,"name":"patreon_get_email_token","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":1,},
-      ],"init":"","kind":2,"name":"patreon_key.gml","order":[],"origname":"","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
+    {"$GMExtensionFile":"","%Name":"patreon_key.gml","constants":[
+        {"$GMExtensionConstant":"","%Name":"patreon_email_token","hidden":false,"name":"patreon_email_token","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"\"2b0087ebabc2cd8d0b9449f24169312a\"",},
+        {"$GMExtensionConstant":"","%Name":"patreon_activation_key","hidden":false,"name":"patreon_activation_key","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"\"895%MakhamDevPC{0}#TPT\"",},
+      ],"copyToTargets":-1,"filename":"patreon_key.gml","final":"","functions":[],"init":"","kind":2,"name":"patreon_key.gml","order":[],"origname":"","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
   ],
   "gradleinject":"",
   "hasConvertedCodeInjection":true,
