@@ -140,9 +140,11 @@ function setException() {
 		tt += $"\nOperating system: {os_type_sting()} ({os_version})"
 		tt += "\n\n---------------------------- :( ----------------------------\n";
 		
-		var path = $"{env_user()}log/crash_log.txt";
+		var path_log = $"{env_user()}log/crash_log.txt";
+		var path_pro = $"{env_user()}log/program_path.txt";
 		
-		file_text_write_all(path, tt);
+		file_text_write_all(path_log, tt);
+		file_text_write_all(path_pro, program_directory);
 		clipboard_set_text(tt);
 		
 		if(IS_CMD) {
