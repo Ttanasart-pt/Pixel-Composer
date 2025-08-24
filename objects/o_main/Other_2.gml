@@ -82,8 +82,8 @@
 		directory_verify($"{DIRECTORY}Cache");
 		directory_verify($"{DIRECTORY}log");
 		
-		APP_LOCATION = program_directory;
-		if(RUN_IDE) APP_LOCATION = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/";
+		APP_LOCATION = working_directory;
+		// if(RUN_IDE) APP_LOCATION = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/";
 		
 	}
 	

@@ -618,50 +618,6 @@ function __initNodes(unzip = true) {
 	__initHLSL();
 }
 
-function __generateNodeData() {
-	var _dir = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/data/Nodes/Internal"
-	
-	for( var i = 0, n = array_length(NODE_CATEGORY); i < n; i++ ) {
-		var _cat = NODE_CATEGORY[i];
-		
-		var _lnme = _cat.name;
-		var _list = _cat.list;
-		directory_verify($"{_dir}/{_lnme}");
-		
-		for( var j = 0, m = array_length(_list); j < m; j++ ) {
-			var _node = _list[j];
-			if(!is(_node, NodeObject)) continue;
-			
-			var _nme  = _node.nodeName;
-			var _vnme = filename_name_validate(_nme);
-			
-			var _str  = _node.serialize();
-			directory_verify($"{_dir}/{_lnme}/{_vnme}");
-			json_save_struct($"{_dir}/{_lnme}/{_vnme}/info.json", _str, true);
-		}
-	}
-	
-	for( var i = 0, n = array_length(NODE_PCX_CATEGORY); i < n; i++ ) {
-		var _cat = NODE_PCX_CATEGORY[i];
-		
-		var _lnme = _cat.name;
-		var _list = _cat.list;
-		directory_verify($"{_dir}/{_lnme}");
-		
-		for( var j = 0, m = array_length(_list); j < m; j++ ) {
-			var _node = _list[j];
-			if(!is(_node, NodeObject)) continue;
-			
-			var _nme  = _node.nodeName;
-			var _vnme = filename_name_validate(_nme);
-			
-			var _str  = _node.serialize();
-			directory_verify($"{_dir}/pcx_{_lnme}/{_vnme}");
-			json_save_struct($"{_dir}/pcx_{_lnme}/{_vnme}/info.json", _str, true);
-		}
-	}
-}
-
 	////- Actions
 
 function nodeBuild(_name, _x, _y, _group = PANEL_GRAPH.getCurrentContext()) {
