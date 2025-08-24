@@ -25,6 +25,4 @@ objects/o_dialog_patreon/*
 build
 gmedit
 
-*.zip
-
 !*.yy
