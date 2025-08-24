@@ -4,7 +4,8 @@
 
 Node base VFX editor for pixel art.
 
-![sample 2](https://github.com/Ttanasart-pt/Pixel-Composer/blob/2986c4c6131e8729437bdd785bde11980056678c/img/sample%202.gif)
+![Box Explode](https://github.com/Ttanasart-pt/Pixel-Composer/blob/1f1dcc29b5337c1446cb4c51de8aac4b3f4505fe/img/Box%20explode.gif)
+
 
 ## Set up guides
 - Install GameMaker: Studio IDE 2024.11.0.179 (runtime 2024.11.0.227)
