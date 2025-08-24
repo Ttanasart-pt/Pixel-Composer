@@ -2,7 +2,7 @@ globalvar CAPTURING; CAPTURING = false;
 
 function Panel_Capture_Project() : PanelContent() constructor {
 	w = ui(320);
-	h = ui(192);
+	h = ui(56 + (28 + 6) * 4);
 	
 	title      = "Capture Project";
 	auto_pin   = true;
@@ -27,6 +27,9 @@ function Panel_Capture_Project() : PanelContent() constructor {
 	tb_fps   = textBox_Number(function(v) /*=>*/ { gif_fps  = v; }).setLabel("FPS");
 	
 	tb_ver   = textBox_Text(  function(v) /*=>*/ { cap_vers = v; }).setLabel("vers.").setAlign(fa_right);
+	
+	show_text = true;
+	cb_show_text = new checkBox(function() /*=>*/ { show_text = !show_text; } );
 	
 	function doCapture() {
 		if(!PROJECT.animator.is_playing) {
@@ -59,6 +62,7 @@ function Panel_Capture_Project() : PanelContent() constructor {
 				draw_surface_ext(_s, _sx, _sy, gif_scal, gif_scal, 0, c_white, 1);
 				draw_sprite_stretched_ext(THEME.ui_panel, 1, _sx + _pd, _sy + _pd, _p.w * gif_scal - 3, _p.h * gif_scal - 3, COLORS.panel_frame);
 				
+				if(show_text) {
 				// BLEND_ADD
 					var _tx = gif_w - 24;
 					var _ty = 16;
@@ -70,6 +74,7 @@ function Panel_Capture_Project() : PanelContent() constructor {
 					draw_text_transformed(_tx, _ty, cap_vers, 1, 1, 0);
 					draw_set_alpha(1);
 				// BLEND_NORMAL
+				}
 			surface_reset_target();
 			
 			gif_add_surface(gif, gif_s, 100 / gif_fps);
@@ -95,12 +100,11 @@ function Panel_Capture_Project() : PanelContent() constructor {
 		tb_scale.drawParam(param);
 		
 		ty += th + ui(6);
-		var param = new widgetParam(tx, ty, tw, th, gif_step, {}, [ mx, my ]);
+		var param = new widgetParam(tx, ty, tw / 2, th, gif_step, {}, [ mx, my ]);
 		tb_step.setFocusHover(pHOVER, pFOCUS);
 		tb_step.drawParam(param);
 		
-		ty += th + ui(6);
-		var param = new widgetParam(tx, ty, tw, th, gif_fps, {}, [ mx, my ]);
+		var param = new widgetParam(tx + tw / 2, ty, tw / 2, th, gif_fps, {}, [ mx, my ]);
 		tb_fps.setFocusHover(pHOVER, pFOCUS);
 		tb_fps.drawParam(param);
 		
@@ -108,6 +112,11 @@ function Panel_Capture_Project() : PanelContent() constructor {
 		var param = new widgetParam(tx, ty, tw, th, cap_vers, {}, [ mx, my ]);
 		tb_ver.setFocusHover(pHOVER, pFOCUS);
 		tb_ver.drawParam(param);
+		
+		ty += th + ui(6);
+		var param = new widgetParam(tx, ty, tw, th, show_text, {}, [ mx, my ]);
+		cb_show_text.setFocusHover(pHOVER, pFOCUS);
+		cb_show_text.drawParam(param);
 		
 		var bw = w - _pd - _pd;
 		var bh = ui(24);
