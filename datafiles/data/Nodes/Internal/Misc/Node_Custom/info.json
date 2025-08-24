@@ -1,0 +1,10 @@
+{
+  "tooltip":"Custom node",
+  "spr":"s_node_icon",
+  "baseNode":"Node_Custom",
+  "io":[
+  ],
+  "build":"Node_create_Custom",
+  "name":"Custom",
+  "testable":false,
+}

@@ -1,0 +1,39 @@
+{
+    "shader_vs": "shader.vs",
+    "shader_fs": "shader.fs",
+    "texfilter": "linear",
+
+    "inputs": [
+        {
+            "name": "Surface in",
+            "type": "surface",
+            "value": -4,
+
+            "flag": "SURFACE_IN"
+        },
+        {
+            "name": "Radius",
+            "type": "float",
+            "value": 3,
+
+            "uniform": "uRadius"
+        },
+        {
+            "name": "Iterations",
+            "type": "int",
+            "value": 30,
+
+            "uniform": "uIterations"
+        }
+        
+    ],
+    "input_display": [ 0, ["Effect", false], 1, 2, ],
+
+    "outputs": [
+        {
+            "name": "Surface out",
+            "type": "surface",
+            "value": -4
+        }
+    ],
+}

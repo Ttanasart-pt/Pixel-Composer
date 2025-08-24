@@ -1,0 +1,9 @@
+{
+  "tooltip":"Load a SVG file.",
+  "spr":"s_node_svg",
+  "baseNode":"Node_SVG",
+  "io":[
+    "surface"
+  ],
+  "name":"SVG"
+}

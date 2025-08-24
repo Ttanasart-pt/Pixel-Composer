@@ -1,0 +1,6 @@
+{
+    "name":          "Tree Trunk Path",
+    "spr":           "s_node_mk_tree_path_root",
+    "baseNode":      "Node_MK_Tree_Path_Root",
+    "pxc_version":    119051,
+}

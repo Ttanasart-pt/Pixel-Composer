@@ -1,0 +1,11 @@
+{
+  "tooltip":"Draw gradient connecting 2 paths.",
+  "spr":"s_node_path_morph",
+  "pxc_version":118062.0,
+  "baseNode":"Node_Path_Morph",
+  "io":[
+    "pathnode",
+    "surface"
+  ],
+  "name":"Morph Path"
+}

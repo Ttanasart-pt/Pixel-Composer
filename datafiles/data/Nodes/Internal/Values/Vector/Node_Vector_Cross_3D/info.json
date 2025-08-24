@@ -1,0 +1,10 @@
+{
+  "tooltip":"Calculate cross product of 2 vec3s.",
+  "spr":"s_node_vector_cross_3d",
+  "pxc_version":1141.0,
+  "baseNode":"Node_Vector_Cross_3D",
+  "io":[
+    "float"
+  ],
+  "name":"Cross product 3D"
+}

@@ -1,0 +1,11 @@
+{
+  "tooltip":"Search for files in directory.",
+  "spr":"s_node_directory_search",
+  "pxc_version":11710.0,
+  "baseNode":"Node_Directory_Search",
+  "io":[
+    "text"
+  ],
+  "build":"Node_create_Directory_Search",
+  "name":"Directory Search"
+}

@@ -1,0 +1,10 @@
+{
+  "tooltip":"Extract palette from an image.",
+  "spr":"s_node_palette_extract",
+  "pxc_version":1100.0,
+  "baseNode":"Node_Palette_Extract",
+  "io":[
+    "color"
+  ],
+  "name":"Palette Extract"
+}

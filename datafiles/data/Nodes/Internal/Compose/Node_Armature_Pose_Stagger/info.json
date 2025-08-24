@@ -1,0 +1,6 @@
+{
+    "name":          "Armature Stagger",
+    "spr":           "s_node_armature_pose_stagger",
+    "baseNode":      "Node_Armature_Pose_Stagger",
+    "pxc_version":    119043,
+}

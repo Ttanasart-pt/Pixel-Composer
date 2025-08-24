@@ -1,0 +1,10 @@
+{
+  "tooltip":"Create directional light directed at the origin point.",
+  "spr":"s_node_3d_light_directional",
+  "pxc_version":11510.0,
+  "baseNode":"Node_3D_Light_Directional",
+  "io":[
+    "d3Mesh"
+  ],
+  "name":"Directional Light"
+}

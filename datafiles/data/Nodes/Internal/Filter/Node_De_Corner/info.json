@@ -1,0 +1,12 @@
+{
+  "tooltip":"Attempt to remove single pixel corner from the image.",
+  "alias":[
+    "decorner"
+  ],
+  "spr":"s_node_de_corner",
+  "baseNode":"Node_De_Corner",
+  "io":[
+    "surface"
+  ],
+  "name":"De-Corner"
+}

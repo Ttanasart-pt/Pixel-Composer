@@ -1,0 +1,10 @@
+{
+  "name":"Matrix Set",
+  "baseNode":"Node_Matrix_Set",
+  "tooltip":"Set value in a matrix.",
+  "spr":"s_node_matrix_set",
+  "io":[
+    "float",
+  ],
+  "pxc_version":118069,
+}

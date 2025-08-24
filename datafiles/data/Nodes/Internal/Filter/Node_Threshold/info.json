@@ -1,0 +1,10 @@
+{
+  "tooltip":"Set a threshold where pixel darker will becomes black, and brighter to white. Also works with alpha.",
+  "spr":"s_node_threshold",
+  "pxc_version":1080.0,
+  "baseNode":"Node_Threshold",
+  "io":[
+    "surface"
+  ],
+  "name":"Threshold"
+}

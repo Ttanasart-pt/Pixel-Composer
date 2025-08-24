@@ -1,0 +1,6 @@
+{
+    "name":          "Render",
+    "spr":           "s_node_verletsim_render",
+    "baseNode":      "Node_VerletSim_Render",
+    "pxc_version":    119041,
+}

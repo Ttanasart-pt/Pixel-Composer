@@ -1,0 +1,9 @@
+{
+  "tooltip":"Draw text on an image.",
+  "spr":"s_node_text",
+  "baseNode":"Node_Text",
+  "io":[
+    "surface"
+  ],
+  "name":"Draw Text"
+}

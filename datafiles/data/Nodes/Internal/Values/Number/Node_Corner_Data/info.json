@@ -1,0 +1,6 @@
+{
+    "name":          "Corner Data",
+    "spr":           "s_node_corner_data",
+    "baseNode":      "Node_Corner_Data",
+    "pxc_version":    119010,
+}

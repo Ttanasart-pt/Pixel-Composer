@@ -1,0 +1,6 @@
+{
+    "name":          "Atlas Affector",
+    "spr":           "s_node_atlas_affector",
+    "baseNode":      "Node_Atlas_Affector",
+    "pxc_version":    119020,
+}

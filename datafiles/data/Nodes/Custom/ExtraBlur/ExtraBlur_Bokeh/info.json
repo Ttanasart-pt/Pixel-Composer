@@ -1,0 +1,17 @@
+{
+  "name":"Bokeh",
+  "author":"David Hoskins",
+  "license":"Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License",
+  
+  "iname":"extrablur_bokeh",
+  "tooltip":"Apply bokeh effect.",
+  "custom":true,
+  "alias":[],
+  "baseNode":"Node_Custom_Shader",
+  "io":[
+    "surface"
+  ],
+  "params": {
+    "data": "node.json" 
+  },
+}

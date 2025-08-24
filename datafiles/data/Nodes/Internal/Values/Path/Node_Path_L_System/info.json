@@ -1,0 +1,10 @@
+{
+  "name":"L system",
+  "tooltip":"Generate path using Lindenmayer system.",
+  "spr":"s_node_path_l_system",
+  "pxc_version":1137.0,
+  "baseNode":"Node_Path_L_System",
+  "io":[
+    "pathnode"
+  ]
+}

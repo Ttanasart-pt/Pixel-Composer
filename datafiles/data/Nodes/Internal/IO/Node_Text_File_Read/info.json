@@ -1,0 +1,13 @@
+{
+  "tooltip":"Load .txt in as text.",
+  "alias":[
+    "txt"
+  ],
+  "spr":"s_node_text_file_read",
+  "pxc_version":1080.0,
+  "baseNode":"Node_Text_File_Read",
+  "io":[
+    "text"
+  ],
+  "name":"Text File In"
+}

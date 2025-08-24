@@ -1,0 +1,10 @@
+{
+  "tooltip":"Apply non-linear operation (minimum, maximum) on each pixel locally.",
+  "spr":"s_node_local_analyze",
+  "pxc_version":1110.0,
+  "baseNode":"Node_Local_Analyze",
+  "io":[
+    "surface"
+  ],
+  "name":"Local Analyze"
+}

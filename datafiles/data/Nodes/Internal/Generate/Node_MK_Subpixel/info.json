@@ -1,0 +1,10 @@
+{
+  "tooltip":"Apply subpixel filter on top of a surface.",
+  "spr":"s_node_mk_subpixel",
+  "pxc_version":117110.0,
+  "baseNode":"Node_MK_Subpixel",
+  "io":[
+    "surface"
+  ],
+  "name":"MK Subpixel"
+}

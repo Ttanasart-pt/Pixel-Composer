@@ -1,0 +1,10 @@
+{
+  "tooltip":"Apply vignette effect to the border.",
+  "spr":"s_node_vignette",
+  "pxc_version":11630.0,
+  "baseNode":"Node_Vignette",
+  "io":[
+    "surface"
+  ],
+  "name":"Vignette"
+}

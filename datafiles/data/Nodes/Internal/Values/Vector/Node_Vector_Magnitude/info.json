@@ -1,0 +1,14 @@
+{
+  "tooltip":"Calculate magnitude (length) of a vector.",
+  "alias":[
+    "vector length",
+    "vector magnitude"
+  ],
+  "spr":"s_node_vector_magnitude",
+  "pxc_version":117100.0,
+  "baseNode":"Node_Vector_Magnitude",
+  "io":[
+    "float"
+  ],
+  "name":"Magnitude"
+}

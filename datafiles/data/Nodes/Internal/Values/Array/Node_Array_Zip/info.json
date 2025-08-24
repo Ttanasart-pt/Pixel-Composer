@@ -1,0 +1,10 @@
+{
+  "tooltip":"Combine multiple arrays into higher dimension array by grouping member of the same indicies.",
+  "spr":"s_node_array_zip",
+  "pxc_version":1138.0,
+  "baseNode":"Node_Array_Zip",
+  "io":[
+    "any"
+  ],
+  "name":"Array Zip"
+}

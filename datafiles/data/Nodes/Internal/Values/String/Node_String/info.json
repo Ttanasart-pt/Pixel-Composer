@@ -1,0 +1,10 @@
+{
+  "tooltip":"Generate text\/string data.",
+  "spr":"s_node_string",
+  "baseNode":"Node_String",
+  "io":[
+    "text",
+    "text"
+  ],
+  "name":"Text"
+}

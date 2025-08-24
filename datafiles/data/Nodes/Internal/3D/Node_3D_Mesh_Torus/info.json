@@ -1,0 +1,8 @@
+{
+    "name":          "3D Torus",
+    "tooltip":       "Create 3D torus mesh",
+    "spr":           "s_node_3d_mesh_torus",
+    "baseNode":      "Node_3D_Mesh_Torus",
+    "pxc_version":    118010,
+    "io":             ["d3Mesh"],
+}

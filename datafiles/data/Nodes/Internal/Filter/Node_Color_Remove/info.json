@@ -1,0 +1,12 @@
+{
+  "tooltip":"Remove color that match a palette.",
+  "alias":[
+    "delete color"
+  ],
+  "spr":"s_node_color_remove",
+  "baseNode":"Node_Color_Remove",
+  "io":[
+    "surface"
+  ],
+  "name":"Remove Color"
+}

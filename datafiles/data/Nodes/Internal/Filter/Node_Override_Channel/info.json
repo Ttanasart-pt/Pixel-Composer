@@ -1,0 +1,10 @@
+{
+  "tooltip":"Replace RGBA value of one surface with another.",
+  "spr":"s_node_override_channel",
+  "pxc_version":11640.0,
+  "baseNode":"Node_Override_Channel",
+  "io":[
+    "surface"
+  ],
+  "name":"Override Channel"
+}

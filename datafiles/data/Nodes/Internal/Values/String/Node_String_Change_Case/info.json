@@ -1,0 +1,8 @@
+{
+  "name":"Change Case",
+  "tooltip":"Change text to uppercase, lowercase, or titlecase.",
+  "spr":"s_node_string_insert",
+  "pxc_version":118090,
+  "baseNode":"Node_String_Change_Case",
+  "io":[ "text" ],
+}

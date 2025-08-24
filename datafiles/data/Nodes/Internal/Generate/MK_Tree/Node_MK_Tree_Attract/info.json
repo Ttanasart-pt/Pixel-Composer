@@ -1,0 +1,6 @@
+{
+    "name":          "Tree Attract",
+    "spr":           "s_node_mk_tree_attract",
+    "baseNode":      "Node_MK_Tree_Attract",
+    "pxc_version":    119051.00,
+}

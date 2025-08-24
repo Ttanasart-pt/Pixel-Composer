@@ -1,0 +1,6 @@
+{
+    "name":          "VerletSim",
+    "spr":           "s_node_verletsim_inline",
+    "baseNode":      "Node_VerletSim_Inline",
+    "pxc_version":    119041,
+}

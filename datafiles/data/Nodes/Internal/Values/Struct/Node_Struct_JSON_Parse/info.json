@@ -1,0 +1,11 @@
+{
+  "tooltip":"Parse json string into struct\/array.",
+  "spr":"s_node_struct_json_parse",
+  "pxc_version":1145.0,
+  "baseNode":"Node_Struct_JSON_Parse",
+  "io":[
+    "struct",
+    "text"
+  ],
+  "name":"Parse JSON"
+}

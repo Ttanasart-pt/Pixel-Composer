@@ -1,0 +1,10 @@
+{
+  "tooltip":"Morph pixel between two surfaces.",
+  "spr":"s_node_morph_surface",
+  "pxc_version":1141.0,
+  "baseNode":"Node_Morph_Surface",
+  "io":[
+    "surface"
+  ],
+  "name":"Morph Surface"
+}

@@ -1,0 +1,13 @@
+{
+  "tooltip":"Apply high pass filter",
+  "alias":[
+    "sharpen"
+  ],
+  "spr":"s_node_high_pass",
+  "pxc_version":118010.0,
+  "baseNode":"Node_High_Pass",
+  "io":[
+    "surface"
+  ],
+  "name":"High Pass"
+}

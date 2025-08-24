@@ -1,0 +1,10 @@
+{
+  "tooltip":"Stretch out brighter pixel in one direction.",
+  "spr":"s_node_smear",
+  "pxc_version":11670.0,
+  "baseNode":"Node_Smear",
+  "io":[
+    "surface"
+  ],
+  "name":"Smear"
+}

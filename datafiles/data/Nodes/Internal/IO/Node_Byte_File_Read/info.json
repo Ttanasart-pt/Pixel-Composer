@@ -1,0 +1,11 @@
+{
+  "tooltip":"Load any file to buffer.",
+  "spr":"s_node_byte_file_read",
+  "pxc_version":11670.0,
+  "baseNode":"Node_Byte_File_Read",
+  "io":[
+    "text",
+    "buffer"
+  ],
+  "name":"Byte File In"
+}

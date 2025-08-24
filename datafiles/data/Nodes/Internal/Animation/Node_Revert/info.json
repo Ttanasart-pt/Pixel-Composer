@@ -1,0 +1,10 @@
+{
+  "tooltip":"Cache the entire animation and replay backward.",
+  "spr":"s_node_revert",
+  "pxc_version":117110.0,
+  "baseNode":"Node_Revert",
+  "io":[
+    "surface"
+  ],
+  "name":"Reverse"
+}

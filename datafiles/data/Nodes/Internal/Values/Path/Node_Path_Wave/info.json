@@ -1,0 +1,13 @@
+{
+  "tooltip":"Apply wave effect along the path.",
+  "alias":[
+    "zigzag path"
+  ],
+  "spr":"s_node_path_wave",
+  "pxc_version":1130.0,
+  "baseNode":"Node_Path_Wave",
+  "io":[
+    "pathnode"
+  ],
+  "name":"Wave Path"
+}

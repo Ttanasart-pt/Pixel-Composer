@@ -1,0 +1,14 @@
+{
+  "tooltip":"Bind and render image to an armature system.",
+  "alias":[
+    "rigging",
+    "bone"
+  ],
+  "spr":"s_node_armature_bind",
+  "pxc_version":1146.0,
+  "baseNode":"Node_Armature_Bind",
+  "io":[
+    "surface"
+  ],
+  "name":"Armature Bind"
+}

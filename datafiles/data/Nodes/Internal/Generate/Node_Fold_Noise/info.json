@@ -1,0 +1,10 @@
+{
+  "tooltip":"Generate cloth fold noise",
+  "spr":"s_node_fold_noise",
+  "pxc_version":11650.0,
+  "baseNode":"Node_Fold_Noise",
+  "io":[
+    "surface"
+  ],
+  "name":"Fold Noise"
+}

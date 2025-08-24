@@ -1,0 +1,11 @@
+{
+  "tooltip":"Create path that wrap around a mask.",
+  "spr":"s_node_path_from_mask",
+  "pxc_version":11640.0,
+  "baseNode":"Node_Path_From_Mask",
+  "io":[
+    "pathnode",
+    "surface"
+  ],
+  "name":"Path from Mask"
+}

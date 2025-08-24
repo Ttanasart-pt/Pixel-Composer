@@ -1,0 +1,10 @@
+{
+  "name":"Matrix",
+  "baseNode":"Node_Matrix",
+  "tooltip":"Create matrix.",
+  "spr":"s_node_matrix",
+  "io":[
+    "float",
+  ],
+  "pxc_version":118069,
+}

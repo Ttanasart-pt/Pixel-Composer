@@ -1,0 +1,10 @@
+{
+  "tooltip":"Blend the edges of an image to create tilable patterns.",
+  "spr":"s_node_blend_edge",
+  "pxc_version":11740.0,
+  "baseNode":"Node_Blend_Edge",
+  "io":[
+    "surface"
+  ],
+  "name":"Blend Edge"
+}

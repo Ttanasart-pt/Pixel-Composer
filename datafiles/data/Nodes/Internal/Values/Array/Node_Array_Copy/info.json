@@ -1,0 +1,10 @@
+{
+  "tooltip":"Copy array or subarray.",
+  "spr":"s_node_array_copy",
+  "pxc_version":1144.0,
+  "baseNode":"Node_Array_Copy",
+  "io":[
+    "any"
+  ],
+  "name":"Array Copy"
+}

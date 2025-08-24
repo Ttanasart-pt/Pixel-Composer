@@ -1,0 +1,11 @@
+{
+  "tooltip":"Extrude 2D image into 3D object.",
+  "spr":"s_node_3d_mesh_extrude",
+  "pxc_version":11510.0,
+  "baseNode":"Node_3D_Mesh_Extrude",
+  "io":[
+    "d3Mesh",
+    "surface"
+  ],
+  "name":"Surface Extrude"
+}

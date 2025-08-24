@@ -1,0 +1,14 @@
+{
+  "tooltip":"Create buffer from a surface.",
+  "alias":[
+    "surface to buffer"
+  ],
+  "spr":"s_node_surface_to_buffer",
+  "pxc_version":1146.0,
+  "baseNode":"Node_Surface_To_Buffer",
+  "io":[
+    "surface",
+    "buffer"
+  ],
+  "name":"Buffer from Surface"
+}

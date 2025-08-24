@@ -1,0 +1,17 @@
+{
+  "name":"Polar Blur",
+  "author":"Inigo Quilez",
+  "license":"Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License",
+  
+  "iname":"extrablur_polar",
+  "tooltip":"Motion blur on a 2D deformation effect.",
+  "custom":true,
+  "alias":[],
+  "baseNode":"Node_Custom_Shader",
+  "io":[
+    "surface"
+  ],
+  "params": {
+    "data": "node.json" 
+  },
+}

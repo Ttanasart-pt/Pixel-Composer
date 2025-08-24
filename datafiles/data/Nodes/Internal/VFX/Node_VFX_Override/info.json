@@ -1,0 +1,11 @@
+{
+  "tooltip":"Replace particle variable with a new one.",
+  "spr":"s_node_vfx_override",
+  "pxc_version":1120.0,
+  "show_in_recent":false,
+  "baseNode":"Node_VFX_Override",
+  "io":[
+    "particle"
+  ],
+  "name":"VFX Override"
+}

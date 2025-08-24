@@ -1,0 +1,14 @@
+{
+  "tooltip":"Load wav audio file.",
+  "spr":"s_node_wav_file_read",
+  "pxc_version":1144.0,
+  "baseNode":"Node_WAV_File_Read",
+  "io":[
+    "text",
+    "audioBit",
+    "audioBit",
+    "text"
+  ],
+  "build":"Node_create_WAV_File_Read",
+  "name":"WAV File In"
+}

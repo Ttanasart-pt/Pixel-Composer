@@ -1,0 +1,19 @@
+{
+  "tooltip":"Apply logic operation (and, or, not, etc.) to boolean(s).",
+  "alias":[
+    "and",
+    "or",
+    "not",
+    "nand",
+    "nor",
+    "xor"
+  ],
+  "spr":"s_node_logic",
+  "baseNode":"Node_Logic",
+  "io":[
+    "boolean",
+    "float"
+  ],
+  "build":"Node_create_Logic",
+  "name":"Logic Opr"
+}

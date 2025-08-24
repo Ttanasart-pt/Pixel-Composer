@@ -1,0 +1,10 @@
+{
+  "name":"Frame Loop",
+  "tooltip":"Loop animation around the given period.",
+  "spr":"s_node_loop",
+  "pxc_version":118090,
+  "baseNode":"Node_Anim_Loop",
+  "io":[
+    "surface"
+  ],
+}

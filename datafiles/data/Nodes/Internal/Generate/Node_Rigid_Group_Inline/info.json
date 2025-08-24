@@ -1,0 +1,10 @@
+{
+  "tooltip":"Create group for rigidbody simulation.",
+  "spr":"s_node_rigid",
+  "pxc_version":1110.0,
+  "baseNode":"Node_Rigid_Group_Inline",
+  "io":[
+    "surface"
+  ],
+  "name":"RigidSim"
+}

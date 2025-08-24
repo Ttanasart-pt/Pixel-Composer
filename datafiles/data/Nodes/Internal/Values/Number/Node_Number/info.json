@@ -1,0 +1,10 @@
+{
+  "tooltip":"Generate number data.",
+  "spr":"s_node_number",
+  "baseNode":"Node_Number",
+  "io":[
+    "float",
+    "float"
+  ],
+  "name":"Number"
+}

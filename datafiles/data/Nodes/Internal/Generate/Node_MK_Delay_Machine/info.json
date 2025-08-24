@@ -1,0 +1,10 @@
+{
+  "tooltip":"Combines multiple frames of animation into one.",
+  "spr":"s_node_mk_delay_machine",
+  "pxc_version":11680.0,
+  "baseNode":"Node_MK_Delay_Machine",
+  "io":[
+    "surface"
+  ],
+  "name":"MK Delay Machine"
+}

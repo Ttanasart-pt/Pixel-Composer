@@ -1,0 +1,12 @@
+{
+  "tooltip":"Apply fast approximate anti-aliasing to te image.",
+  "alias":[
+    "anti aliasing"
+  ],
+  "spr":"s_node_fxaa",
+  "baseNode":"Node_FXAA",
+  "io":[
+    "surface"
+  ],
+  "name":"FXAA"
+}

@@ -1,0 +1,11 @@
+{
+  "name":"Path To SDF",
+  "tooltip":"Draw distance field from path.",
+  "alias":[],
+  "spr":"s_node_path_sdf",
+  "pxc_version":118068,
+  "baseNode":"Node_Path_SDF",
+  "io":[
+    "pathnode"
+  ],
+}

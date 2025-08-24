@@ -1,0 +1,6 @@
+{
+    "name":          "MK Grass",
+    "spr":           "s_node_mk_grass",
+    "baseNode":      "Node_MK_Grass",
+    "pxc_version":    119010,
+}

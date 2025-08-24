@@ -1,0 +1,10 @@
+{
+  "tooltip":"Attract particle in range to one point.",
+  "spr":"s_node_vfx_attract",
+  "show_in_recent":false,
+  "baseNode":"Node_VFX_Attract",
+  "io":[
+    "particle"
+  ],
+  "name":"Attract"
+}

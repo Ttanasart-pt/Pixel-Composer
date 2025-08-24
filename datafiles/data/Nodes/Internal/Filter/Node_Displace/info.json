@@ -1,0 +1,12 @@
+{
+  "tooltip":"Distort image using another image as a map.",
+  "alias":[
+    "distort"
+  ],
+  "spr":"s_node_displace",
+  "baseNode":"Node_Displace",
+  "io":[
+    "surface"
+  ],
+  "name":"Displace"
+}

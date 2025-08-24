@@ -1,0 +1,6 @@
+{
+    "name":          "Replace Text",
+    "spr":           "s_node_string_replace",
+    "baseNode":      "Node_String_Replace",
+    "pxc_version":    119071,
+}

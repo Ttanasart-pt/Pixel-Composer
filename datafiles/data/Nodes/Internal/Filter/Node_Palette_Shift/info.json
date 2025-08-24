@@ -1,0 +1,10 @@
+{
+  "tooltip":"Shift the order of color in palette.",
+  "spr":"s_node_palette_shift",
+  "pxc_version":1147.0,
+  "baseNode":"Node_Palette_Shift",
+  "io":[
+    "surface"
+  ],
+  "name":"Palette Shift"
+}

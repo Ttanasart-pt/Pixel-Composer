@@ -1,0 +1,10 @@
+{
+  "tooltip":"Generate square-based patterns.",
+  "spr":"s_node_box_pattern",
+  "pxc_version":11750.0,
+  "baseNode":"Node_Box_Pattern",
+  "io":[
+    "surface"
+  ],
+  "name":"Box Pattern"
+}

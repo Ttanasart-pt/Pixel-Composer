@@ -1,0 +1,11 @@
+{
+  "tooltip":"Generate boolean (true, false) data.",
+  "spr":"s_node_boolean",
+  "pxc_version":1090.0,
+  "baseNode":"Node_Boolean",
+  "io":[
+    "boolean",
+    "boolean"
+  ],
+  "name":"Boolean"
+}

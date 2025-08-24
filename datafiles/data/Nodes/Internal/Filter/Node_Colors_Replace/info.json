@@ -1,0 +1,14 @@
+{
+  "tooltip":"Replace selected colors with a new one.",
+  "alias":[
+    "isolate colors",
+    "select color",
+    "palette swap"
+  ],
+  "spr":"s_node_colors_replace",
+  "baseNode":"Node_Colors_Replace",
+  "io":[
+    "surface"
+  ],
+  "name":"Replace Colors"
+}

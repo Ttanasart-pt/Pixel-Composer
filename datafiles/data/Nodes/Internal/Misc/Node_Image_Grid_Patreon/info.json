@@ -1,0 +1,7 @@
+{
+    "name":          "Patreon Grid",
+    "spr":           "s_node_image_grid_patreon",
+    "baseNode":      "Node_Image_Grid_Patreon",
+    "pxc_version":    118100,
+    "show_in_recent": false,
+}
