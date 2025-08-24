@@ -13,7 +13,7 @@ Node base VFX editor for pixel art.
 - To use native exception handler (for more information) goto `debug` (crtl+T > debug) and comment out `setException()`.
 
 - Optional extension:
-	+ YellowAfterLife Apollo (Optional, $15) [itch](https://yellowafterlife.itch.io/gamemaker-lua)
+    + YellowAfterLife Apollo ($15, used in Lua nodes) [itch](https://yellowafterlife.itch.io/gamemaker-lua)
 
 ## Links
 
