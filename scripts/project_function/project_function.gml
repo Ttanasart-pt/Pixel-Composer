@@ -36,6 +36,8 @@ function project_get_thumbnail(_path) {
 	if(!file_exists_empty(_path)) return undefined;
 	
 	var rawBuff = buffer_load(_path);
+	if(!buffer_exists(rawBuff)) return undefined;
+	
 	buffer_to_start(rawBuff);
 	
 	var _id = buffer_read_text(rawBuff, 4);
