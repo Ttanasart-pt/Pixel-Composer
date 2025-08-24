@@ -1,7 +1,7 @@
 .vs
 docs
-patreon_key
-PRIVATE_KEYS
+patreon_key/patreon_key.gml
+PRIVATE_KEYS/PRIVATE_KEYS.gml
 *.cpp
 
 Apollo
