@@ -1,8 +1,8 @@
 \#backups
 \#config
 
-options
 options/extensions
+options/linux
 options/mac
 
 datafiles/data/BBMOD
