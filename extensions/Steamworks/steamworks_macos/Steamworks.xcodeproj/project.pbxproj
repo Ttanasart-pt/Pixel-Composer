@@ -1,0 +1,703 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1FE71D5227B2DF3A00ABC624 /* libsteam_api.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BDE09B62790A50B0090737D /* libsteam_api.dylib */; };
+		2BC97897287F3DAD0079F3E2 /* DesktopExtensionTools.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2BC97896287F3DAD0079F3E2 /* DesktopExtensionTools.mm */; };
+		2BC9789C287F3DE60079F3E2 /* DesktopExtensionTools.h in Headers */ = {isa = PBXBuildFile; fileRef = 2BC9789A287F3DE60079F3E2 /* DesktopExtensionTools.h */; };
+		2BDE099E278F97E60090737D /* Extension_Interface.h in Headers */ = {isa = PBXBuildFile; fileRef = 2BDE0997278F97E60090737D /* Extension_Interface.h */; };
+		2BDE099F278F97E60090737D /* dllmain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BDE0998278F97E60090737D /* dllmain.cpp */; };
+		2BDE09A0278F97E60090737D /* pch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2BDE0999278F97E60090737D /* pch.cpp */; };
+		2BDE09A1278F97E60090737D /* YYRValue.h in Headers */ = {isa = PBXBuildFile; fileRef = 2BDE099A278F97E60090737D /* YYRValue.h */; };
+		2BDE09A2278F97E60090737D /* Ref.h in Headers */ = {isa = PBXBuildFile; fileRef = 2BDE099B278F97E60090737D /* Ref.h */; };
+		2BDE09A3278F97E60090737D /* framework.h in Headers */ = {isa = PBXBuildFile; fileRef = 2BDE099C278F97E60090737D /* framework.h */; };
+		2BDE09A4278F97E60090737D /* pch.h in Headers */ = {isa = PBXBuildFile; fileRef = 2BDE099D278F97E60090737D /* pch.h */; };
+		6A2A823E2934DA8D002B2CE5 /* isteamps3overlayrenderer.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A820F2934DA8C002B2CE5 /* isteamps3overlayrenderer.h */; };
+		6A2A823F2934DA8D002B2CE5 /* steamhttpenums.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A82102934DA8C002B2CE5 /* steamhttpenums.h */; };
+		6A2A82402934DA8D002B2CE5 /* steam_api_internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A82112934DA8C002B2CE5 /* steam_api_internal.h */; };
+		6A2A82412934DA8D002B2CE5 /* isteamapps.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A82122934DA8C002B2CE5 /* isteamapps.h */; };
+		6A2A82422934DA8D002B2CE5 /* isteamremoteplay.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A82132934DA8C002B2CE5 /* isteamremoteplay.h */; };
+		6A2A82432934DA8D002B2CE5 /* isteamvideo.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A82142934DA8C002B2CE5 /* isteamvideo.h */; };
+		6A2A82442934DA8D002B2CE5 /* isteamappticket.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A82152934DA8C002B2CE5 /* isteamappticket.h */; };
+		6A2A82452934DA8D002B2CE5 /* isteamclient.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A82162934DA8D002B2CE5 /* isteamclient.h */; };
+		6A2A82462934DA8D002B2CE5 /* isteamhtmlsurface.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A82172934DA8D002B2CE5 /* isteamhtmlsurface.h */; };
+		6A2A82472934DA8D002B2CE5 /* isteamutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A82182934DA8D002B2CE5 /* isteamutils.h */; };
+		6A2A82482934DA8D002B2CE5 /* isteammatchmaking.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A82192934DA8D002B2CE5 /* isteammatchmaking.h */; };
+		6A2A82492934DA8D002B2CE5 /* isteamhttp.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A821A2934DA8D002B2CE5 /* isteamhttp.h */; };
+		6A2A824A2934DA8D002B2CE5 /* isteamnetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A821B2934DA8D002B2CE5 /* isteamnetworking.h */; };
+		6A2A824B2934DA8D002B2CE5 /* isteamuserstats.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A821C2934DA8D002B2CE5 /* isteamuserstats.h */; };
+		6A2A824C2934DA8D002B2CE5 /* isteamparentalsettings.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A821D2934DA8D002B2CE5 /* isteamparentalsettings.h */; };
+		6A2A824D2934DA8D002B2CE5 /* isteamgamecoordinator.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A821E2934DA8D002B2CE5 /* isteamgamecoordinator.h */; };
+		6A2A824E2934DA8D002B2CE5 /* steam_api.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A821F2934DA8D002B2CE5 /* steam_api.h */; };
+		6A2A824F2934DA8D002B2CE5 /* steamencryptedappticket.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A82212934DA8D002B2CE5 /* steamencryptedappticket.h */; };
+		6A2A82502934DA8D002B2CE5 /* isteammusic.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A82222934DA8D002B2CE5 /* isteammusic.h */; };
+		6A2A82512934DA8D002B2CE5 /* isteamremotestorage.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A82232934DA8D002B2CE5 /* isteamremotestorage.h */; };
+		6A2A82522934DA8D002B2CE5 /* steamnetworkingfakeip.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A82242934DA8D002B2CE5 /* steamnetworkingfakeip.h */; };
+		6A2A82532934DA8D002B2CE5 /* steam_gameserver.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A82252934DA8D002B2CE5 /* steam_gameserver.h */; };
+		6A2A82542934DA8D002B2CE5 /* steamnetworkingtypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A82272934DA8D002B2CE5 /* steamnetworkingtypes.h */; };
+		6A2A82552934DA8D002B2CE5 /* steamtypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A82282934DA8D002B2CE5 /* steamtypes.h */; };
+		6A2A82562934DA8D002B2CE5 /* isteamdualsense.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A82292934DA8D002B2CE5 /* isteamdualsense.h */; };
+		6A2A82572934DA8D002B2CE5 /* isteamnetworkingmessages.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A822A2934DA8D002B2CE5 /* isteamnetworkingmessages.h */; };
+		6A2A82582934DA8D002B2CE5 /* isteamgameserverstats.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A822B2934DA8D002B2CE5 /* isteamgameserverstats.h */; };
+		6A2A82592934DA8D002B2CE5 /* steam_api_common.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A822C2934DA8D002B2CE5 /* steam_api_common.h */; };
+		6A2A825A2934DA8D002B2CE5 /* isteamcontroller.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A822D2934DA8D002B2CE5 /* isteamcontroller.h */; };
+		6A2A825B2934DA8D002B2CE5 /* isteamnetworkingutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A822E2934DA8D002B2CE5 /* isteamnetworkingutils.h */; };
+		6A2A825C2934DA8D002B2CE5 /* isteamnetworkingsockets.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A822F2934DA8D002B2CE5 /* isteamnetworkingsockets.h */; };
+		6A2A825D2934DA8D002B2CE5 /* steam_api_flat.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A82302934DA8D002B2CE5 /* steam_api_flat.h */; };
+		6A2A825E2934DA8D002B2CE5 /* isteamugc.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A82312934DA8D002B2CE5 /* isteamugc.h */; };
+		6A2A825F2934DA8D002B2CE5 /* steamps3params.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A82322934DA8D002B2CE5 /* steamps3params.h */; };
+		6A2A82602934DA8D002B2CE5 /* steamuniverse.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A82332934DA8D002B2CE5 /* steamuniverse.h */; };
+		6A2A82612934DA8D002B2CE5 /* isteammusicremote.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A82342934DA8D002B2CE5 /* isteammusicremote.h */; };
+		6A2A82622934DA8D002B2CE5 /* isteamapplist.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A82352934DA8D002B2CE5 /* isteamapplist.h */; };
+		6A2A82632934DA8D002B2CE5 /* isteamgameserver.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A82362934DA8D002B2CE5 /* isteamgameserver.h */; };
+		6A2A82642934DA8D002B2CE5 /* isteaminventory.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A82372934DA8D002B2CE5 /* isteaminventory.h */; };
+		6A2A82652934DA8D002B2CE5 /* isteamuser.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A82382934DA8D002B2CE5 /* isteamuser.h */; };
+		6A2A82662934DA8D002B2CE5 /* isteamfriends.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A82392934DA8D002B2CE5 /* isteamfriends.h */; };
+		6A2A82672934DA8D002B2CE5 /* isteamscreenshots.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A823A2934DA8D002B2CE5 /* isteamscreenshots.h */; };
+		6A2A82682934DA8D002B2CE5 /* matchmakingtypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A823B2934DA8D002B2CE5 /* matchmakingtypes.h */; };
+		6A2A82692934DA8D002B2CE5 /* isteaminput.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A823C2934DA8D002B2CE5 /* isteaminput.h */; };
+		6A2A826A2934DA8D002B2CE5 /* steamclientpublic.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A823D2934DA8D002B2CE5 /* steamclientpublic.h */; };
+		6A2A828A2934DAD3002B2CE5 /* steam_networking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A2A826B2934DAD3002B2CE5 /* steam_networking.cpp */; };
+		6A2A828C2934DAD3002B2CE5 /* steam_input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A2A826D2934DAD3002B2CE5 /* steam_input.cpp */; };
+		6A2A828D2934DAD3002B2CE5 /* steam_funcs.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A826E2934DAD3002B2CE5 /* steam_funcs.h */; };
+		6A2A828E2934DAD3002B2CE5 /* gml_glue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A2A826F2934DAD3002B2CE5 /* gml_glue.cpp */; };
+		6A2A828F2934DAD3002B2CE5 /* steam_friends.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A2A82702934DAD3002B2CE5 /* steam_friends.cpp */; };
+		6A2A82902934DAD3002B2CE5 /* steam_ugc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A2A82712934DAD3002B2CE5 /* steam_ugc.cpp */; };
+		6A2A82912934DAD3002B2CE5 /* steam_workshop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A2A82722934DAD3002B2CE5 /* steam_workshop.cpp */; };
+		6A2A82922934DAD3002B2CE5 /* steam_screenshots.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A2A82732934DAD3002B2CE5 /* steam_screenshots.cpp */; };
+		6A2A82932934DAD3002B2CE5 /* steam_init.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A2A82742934DAD3002B2CE5 /* steam_init.cpp */; };
+		6A2A82942934DAD3002B2CE5 /* steam_utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A2A82752934DAD3002B2CE5 /* steam_utils.cpp */; };
+		6A2A82952934DAD3002B2CE5 /* gml_glue_map.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A82762934DAD3002B2CE5 /* gml_glue_map.h */; };
+		6A2A82962934DAD3002B2CE5 /* steam_glue.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A82772934DAD3002B2CE5 /* steam_glue.h */; };
+		6A2A82972934DAD3002B2CE5 /* steam_unsorted.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A2A82782934DAD3002B2CE5 /* steam_unsorted.cpp */; };
+		6A2A82982934DAD3002B2CE5 /* steam_init_new.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A2A82792934DAD3002B2CE5 /* steam_init_new.cpp */; };
+		6A2A82992934DAD3002B2CE5 /* steam_glue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A2A827A2934DAD3002B2CE5 /* steam_glue.cpp */; };
+		6A2A829A2934DAD3002B2CE5 /* steam_misc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A2A827B2934DAD3002B2CE5 /* steam_misc.cpp */; };
+		6A2A829B2934DAD3002B2CE5 /* steam_apps.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A2A827C2934DAD3002B2CE5 /* steam_apps.cpp */; };
+		6A2A829C2934DAD3002B2CE5 /* steam_controller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A2A827D2934DAD3002B2CE5 /* steam_controller.cpp */; };
+		6A2A829D2934DAD3002B2CE5 /* steam_callbacks.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A2A827E2934DAD3002B2CE5 /* steam_callbacks.cpp */; };
+		6A2A829E2934DAD3002B2CE5 /* steam_common.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A827F2934DAD3002B2CE5 /* steam_common.h */; };
+		6A2A829F2934DAD3002B2CE5 /* steam_userstats.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A2A82802934DAD3002B2CE5 /* steam_userstats.cpp */; };
+		6A2A82A02934DAD3002B2CE5 /* steam_callbacks.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A82812934DAD3002B2CE5 /* steam_callbacks.h */; };
+		6A2A82A12934DAD3002B2CE5 /* steam_remotestorage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A2A82822934DAD3002B2CE5 /* steam_remotestorage.cpp */; };
+		6A2A82A22934DAD3002B2CE5 /* gml_ext.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A82832934DAD3002B2CE5 /* gml_ext.h */; };
+		6A2A82A32934DAD3002B2CE5 /* steam_lobby_chat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A2A82842934DAD3002B2CE5 /* steam_lobby_chat.cpp */; };
+		6A2A82A42934DAD3002B2CE5 /* steam_funcs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A2A82852934DAD3002B2CE5 /* steam_funcs.cpp */; };
+		6A2A82A52934DAD3002B2CE5 /* gml_glue.h in Headers */ = {isa = PBXBuildFile; fileRef = 6A2A82862934DAD3002B2CE5 /* gml_glue.h */; };
+		6A2A82A62934DAD3002B2CE5 /* steam_inventory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A2A82872934DAD3002B2CE5 /* steam_inventory.cpp */; };
+		6A2A82A72934DAD3002B2CE5 /* steam_matchmaking.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A2A82882934DAD3002B2CE5 /* steam_matchmaking.cpp */; };
+		6A2A82A82934DAD3002B2CE5 /* steam_user.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A2A82892934DAD3002B2CE5 /* steam_user.cpp */; };
+		6A7D31FA2B9244640062496A /* steam_music.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6A7D31F92B9244640062496A /* steam_music.cpp */; };
+		6ABC1B48280CBC3200BE82A7 /* libSteamworks.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2BDE0923278F96F80090737D /* libSteamworks.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		2BADDA3427C27D9E00682B15 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "${PROJECT_DIR}/..";
+			dstSubfolderSpec = 0;
+			files = (
+				6ABC1B48280CBC3200BE82A7 /* libSteamworks.dylib in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		2B53B66B27972B9300544C01 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		2BC97896287F3DAD0079F3E2 /* DesktopExtensionTools.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = DesktopExtensionTools.mm; path = ../steamworks_cpp/DesktopExtensionTools.mm; sourceTree = SOURCE_ROOT; };
+		2BC9789A287F3DE60079F3E2 /* DesktopExtensionTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DesktopExtensionTools.h; path = ../steamworks_cpp/DesktopExtensionTools.h; sourceTree = SOURCE_ROOT; };
+		2BDE0923278F96F80090737D /* libSteamworks.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libSteamworks.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		2BDE0997278F97E60090737D /* Extension_Interface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Extension_Interface.h; path = ../steamworks_cpp/Extension_Interface.h; sourceTree = SOURCE_ROOT; };
+		2BDE0998278F97E60090737D /* dllmain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dllmain.cpp; path = ../steamworks_cpp/dllmain.cpp; sourceTree = SOURCE_ROOT; };
+		2BDE0999278F97E60090737D /* pch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = pch.cpp; path = ../steamworks_cpp/pch.cpp; sourceTree = SOURCE_ROOT; };
+		2BDE099A278F97E60090737D /* YYRValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = YYRValue.h; path = ../steamworks_cpp/YYRValue.h; sourceTree = SOURCE_ROOT; };
+		2BDE099B278F97E60090737D /* Ref.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Ref.h; path = ../steamworks_cpp/Ref.h; sourceTree = SOURCE_ROOT; };
+		2BDE099C278F97E60090737D /* framework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = framework.h; path = ../steamworks_cpp/framework.h; sourceTree = SOURCE_ROOT; };
+		2BDE099D278F97E60090737D /* pch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pch.h; path = ../steamworks_cpp/pch.h; sourceTree = SOURCE_ROOT; };
+		2BDE09B62790A50B0090737D /* libsteam_api.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsteam_api.dylib; path = ../../../../Steamworks_sdk/redistributable_bin/osx/libsteam_api.dylib; sourceTree = SOURCE_ROOT; };
+		6A2A820F2934DA8C002B2CE5 /* isteamps3overlayrenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isteamps3overlayrenderer.h; sourceTree = "<group>"; };
+		6A2A82102934DA8C002B2CE5 /* steamhttpenums.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = steamhttpenums.h; sourceTree = "<group>"; };
+		6A2A82112934DA8C002B2CE5 /* steam_api_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = steam_api_internal.h; sourceTree = "<group>"; };
+		6A2A82122934DA8C002B2CE5 /* isteamapps.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isteamapps.h; sourceTree = "<group>"; };
+		6A2A82132934DA8C002B2CE5 /* isteamremoteplay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isteamremoteplay.h; sourceTree = "<group>"; };
+		6A2A82142934DA8C002B2CE5 /* isteamvideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isteamvideo.h; sourceTree = "<group>"; };
+		6A2A82152934DA8C002B2CE5 /* isteamappticket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isteamappticket.h; sourceTree = "<group>"; };
+		6A2A82162934DA8D002B2CE5 /* isteamclient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isteamclient.h; sourceTree = "<group>"; };
+		6A2A82172934DA8D002B2CE5 /* isteamhtmlsurface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isteamhtmlsurface.h; sourceTree = "<group>"; };
+		6A2A82182934DA8D002B2CE5 /* isteamutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isteamutils.h; sourceTree = "<group>"; };
+		6A2A82192934DA8D002B2CE5 /* isteammatchmaking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isteammatchmaking.h; sourceTree = "<group>"; };
+		6A2A821A2934DA8D002B2CE5 /* isteamhttp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isteamhttp.h; sourceTree = "<group>"; };
+		6A2A821B2934DA8D002B2CE5 /* isteamnetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isteamnetworking.h; sourceTree = "<group>"; };
+		6A2A821C2934DA8D002B2CE5 /* isteamuserstats.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isteamuserstats.h; sourceTree = "<group>"; };
+		6A2A821D2934DA8D002B2CE5 /* isteamparentalsettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isteamparentalsettings.h; sourceTree = "<group>"; };
+		6A2A821E2934DA8D002B2CE5 /* isteamgamecoordinator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isteamgamecoordinator.h; sourceTree = "<group>"; };
+		6A2A821F2934DA8D002B2CE5 /* steam_api.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = steam_api.h; sourceTree = "<group>"; };
+		6A2A82202934DA8D002B2CE5 /* steam_api.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = steam_api.json; sourceTree = "<group>"; };
+		6A2A82212934DA8D002B2CE5 /* steamencryptedappticket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = steamencryptedappticket.h; sourceTree = "<group>"; };
+		6A2A82222934DA8D002B2CE5 /* isteammusic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isteammusic.h; sourceTree = "<group>"; };
+		6A2A82232934DA8D002B2CE5 /* isteamremotestorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isteamremotestorage.h; sourceTree = "<group>"; };
+		6A2A82242934DA8D002B2CE5 /* steamnetworkingfakeip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = steamnetworkingfakeip.h; sourceTree = "<group>"; };
+		6A2A82252934DA8D002B2CE5 /* steam_gameserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = steam_gameserver.h; sourceTree = "<group>"; };
+		6A2A82262934DA8D002B2CE5 /* lib */ = {isa = PBXFileReference; lastKnownFileType = folder; path = lib; sourceTree = "<group>"; };
+		6A2A82272934DA8D002B2CE5 /* steamnetworkingtypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = steamnetworkingtypes.h; sourceTree = "<group>"; };
+		6A2A82282934DA8D002B2CE5 /* steamtypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = steamtypes.h; sourceTree = "<group>"; };
+		6A2A82292934DA8D002B2CE5 /* isteamdualsense.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isteamdualsense.h; sourceTree = "<group>"; };
+		6A2A822A2934DA8D002B2CE5 /* isteamnetworkingmessages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isteamnetworkingmessages.h; sourceTree = "<group>"; };
+		6A2A822B2934DA8D002B2CE5 /* isteamgameserverstats.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isteamgameserverstats.h; sourceTree = "<group>"; };
+		6A2A822C2934DA8D002B2CE5 /* steam_api_common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = steam_api_common.h; sourceTree = "<group>"; };
+		6A2A822D2934DA8D002B2CE5 /* isteamcontroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isteamcontroller.h; sourceTree = "<group>"; };
+		6A2A822E2934DA8D002B2CE5 /* isteamnetworkingutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isteamnetworkingutils.h; sourceTree = "<group>"; };
+		6A2A822F2934DA8D002B2CE5 /* isteamnetworkingsockets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isteamnetworkingsockets.h; sourceTree = "<group>"; };
+		6A2A82302934DA8D002B2CE5 /* steam_api_flat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = steam_api_flat.h; sourceTree = "<group>"; };
+		6A2A82312934DA8D002B2CE5 /* isteamugc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isteamugc.h; sourceTree = "<group>"; };
+		6A2A82322934DA8D002B2CE5 /* steamps3params.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = steamps3params.h; sourceTree = "<group>"; };
+		6A2A82332934DA8D002B2CE5 /* steamuniverse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = steamuniverse.h; sourceTree = "<group>"; };
+		6A2A82342934DA8D002B2CE5 /* isteammusicremote.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isteammusicremote.h; sourceTree = "<group>"; };
+		6A2A82352934DA8D002B2CE5 /* isteamapplist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isteamapplist.h; sourceTree = "<group>"; };
+		6A2A82362934DA8D002B2CE5 /* isteamgameserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isteamgameserver.h; sourceTree = "<group>"; };
+		6A2A82372934DA8D002B2CE5 /* isteaminventory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isteaminventory.h; sourceTree = "<group>"; };
+		6A2A82382934DA8D002B2CE5 /* isteamuser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isteamuser.h; sourceTree = "<group>"; };
+		6A2A82392934DA8D002B2CE5 /* isteamfriends.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isteamfriends.h; sourceTree = "<group>"; };
+		6A2A823A2934DA8D002B2CE5 /* isteamscreenshots.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isteamscreenshots.h; sourceTree = "<group>"; };
+		6A2A823B2934DA8D002B2CE5 /* matchmakingtypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = matchmakingtypes.h; sourceTree = "<group>"; };
+		6A2A823C2934DA8D002B2CE5 /* isteaminput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isteaminput.h; sourceTree = "<group>"; };
+		6A2A823D2934DA8D002B2CE5 /* steamclientpublic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = steamclientpublic.h; sourceTree = "<group>"; };
+		6A2A826B2934DAD3002B2CE5 /* steam_networking.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = steam_networking.cpp; sourceTree = "<group>"; };
+		6A2A826D2934DAD3002B2CE5 /* steam_input.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = steam_input.cpp; sourceTree = "<group>"; };
+		6A2A826E2934DAD3002B2CE5 /* steam_funcs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = steam_funcs.h; sourceTree = "<group>"; };
+		6A2A826F2934DAD3002B2CE5 /* gml_glue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gml_glue.cpp; sourceTree = "<group>"; };
+		6A2A82702934DAD3002B2CE5 /* steam_friends.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = steam_friends.cpp; sourceTree = "<group>"; };
+		6A2A82712934DAD3002B2CE5 /* steam_ugc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = steam_ugc.cpp; sourceTree = "<group>"; };
+		6A2A82722934DAD3002B2CE5 /* steam_workshop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = steam_workshop.cpp; sourceTree = "<group>"; };
+		6A2A82732934DAD3002B2CE5 /* steam_screenshots.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = steam_screenshots.cpp; sourceTree = "<group>"; };
+		6A2A82742934DAD3002B2CE5 /* steam_init.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = steam_init.cpp; sourceTree = "<group>"; };
+		6A2A82752934DAD3002B2CE5 /* steam_utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = steam_utils.cpp; sourceTree = "<group>"; };
+		6A2A82762934DAD3002B2CE5 /* gml_glue_map.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gml_glue_map.h; sourceTree = "<group>"; };
+		6A2A82772934DAD3002B2CE5 /* steam_glue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = steam_glue.h; sourceTree = "<group>"; };
+		6A2A82782934DAD3002B2CE5 /* steam_unsorted.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = steam_unsorted.cpp; sourceTree = "<group>"; };
+		6A2A82792934DAD3002B2CE5 /* steam_init_new.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = steam_init_new.cpp; sourceTree = "<group>"; };
+		6A2A827A2934DAD3002B2CE5 /* steam_glue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = steam_glue.cpp; sourceTree = "<group>"; };
+		6A2A827B2934DAD3002B2CE5 /* steam_misc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = steam_misc.cpp; sourceTree = "<group>"; };
+		6A2A827C2934DAD3002B2CE5 /* steam_apps.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = steam_apps.cpp; sourceTree = "<group>"; };
+		6A2A827D2934DAD3002B2CE5 /* steam_controller.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = steam_controller.cpp; sourceTree = "<group>"; };
+		6A2A827E2934DAD3002B2CE5 /* steam_callbacks.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = steam_callbacks.cpp; sourceTree = "<group>"; };
+		6A2A827F2934DAD3002B2CE5 /* steam_common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = steam_common.h; sourceTree = "<group>"; };
+		6A2A82802934DAD3002B2CE5 /* steam_userstats.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = steam_userstats.cpp; sourceTree = "<group>"; };
+		6A2A82812934DAD3002B2CE5 /* steam_callbacks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = steam_callbacks.h; sourceTree = "<group>"; };
+		6A2A82822934DAD3002B2CE5 /* steam_remotestorage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = steam_remotestorage.cpp; sourceTree = "<group>"; };
+		6A2A82832934DAD3002B2CE5 /* gml_ext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gml_ext.h; sourceTree = "<group>"; };
+		6A2A82842934DAD3002B2CE5 /* steam_lobby_chat.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = steam_lobby_chat.cpp; sourceTree = "<group>"; };
+		6A2A82852934DAD3002B2CE5 /* steam_funcs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = steam_funcs.cpp; sourceTree = "<group>"; };
+		6A2A82862934DAD3002B2CE5 /* gml_glue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gml_glue.h; sourceTree = "<group>"; };
+		6A2A82872934DAD3002B2CE5 /* steam_inventory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = steam_inventory.cpp; sourceTree = "<group>"; };
+		6A2A82882934DAD3002B2CE5 /* steam_matchmaking.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = steam_matchmaking.cpp; sourceTree = "<group>"; };
+		6A2A82892934DAD3002B2CE5 /* steam_user.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = steam_user.cpp; sourceTree = "<group>"; };
+		6A7D31F92B9244640062496A /* steam_music.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = steam_music.cpp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2BDE0921278F96F80090737D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1FE71D5227B2DF3A00ABC624 /* libsteam_api.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2BDE091A278F96F80090737D = {
+			isa = PBXGroup;
+			children = (
+				2BDE0925278F96F80090737D /* Steamworks */,
+				2BDE0924278F96F80090737D /* Products */,
+				2BDE09A5278F9A940090737D /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		2BDE0924278F96F80090737D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2BDE0923278F96F80090737D /* libSteamworks.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2BDE0925278F96F80090737D /* Steamworks */ = {
+			isa = PBXGroup;
+			children = (
+				2BC9789A287F3DE60079F3E2 /* DesktopExtensionTools.h */,
+				2BC97896287F3DAD0079F3E2 /* DesktopExtensionTools.mm */,
+				2BDE0998278F97E60090737D /* dllmain.cpp */,
+				2BDE0997278F97E60090737D /* Extension_Interface.h */,
+				2BDE099C278F97E60090737D /* framework.h */,
+				2BDE0999278F97E60090737D /* pch.cpp */,
+				2BDE099D278F97E60090737D /* pch.h */,
+				2BDE099B278F97E60090737D /* Ref.h */,
+				2BDE099A278F97E60090737D /* YYRValue.h */,
+				2BDE0932278F975F0090737D /* GMSteam */,
+				2BDE0931278F974F0090737D /* Include */,
+			);
+			name = Steamworks;
+			path = ../steamworks_cpp;
+			sourceTree = SOURCE_ROOT;
+		};
+		2BDE0931278F974F0090737D /* Include */ = {
+			isa = PBXGroup;
+			children = (
+				6A2A82352934DA8D002B2CE5 /* isteamapplist.h */,
+				6A2A82122934DA8C002B2CE5 /* isteamapps.h */,
+				6A2A82152934DA8C002B2CE5 /* isteamappticket.h */,
+				6A2A82162934DA8D002B2CE5 /* isteamclient.h */,
+				6A2A822D2934DA8D002B2CE5 /* isteamcontroller.h */,
+				6A2A82292934DA8D002B2CE5 /* isteamdualsense.h */,
+				6A2A82392934DA8D002B2CE5 /* isteamfriends.h */,
+				6A2A821E2934DA8D002B2CE5 /* isteamgamecoordinator.h */,
+				6A2A82362934DA8D002B2CE5 /* isteamgameserver.h */,
+				6A2A822B2934DA8D002B2CE5 /* isteamgameserverstats.h */,
+				6A2A82172934DA8D002B2CE5 /* isteamhtmlsurface.h */,
+				6A2A821A2934DA8D002B2CE5 /* isteamhttp.h */,
+				6A2A823C2934DA8D002B2CE5 /* isteaminput.h */,
+				6A2A82372934DA8D002B2CE5 /* isteaminventory.h */,
+				6A2A82192934DA8D002B2CE5 /* isteammatchmaking.h */,
+				6A2A82222934DA8D002B2CE5 /* isteammusic.h */,
+				6A2A82342934DA8D002B2CE5 /* isteammusicremote.h */,
+				6A2A821B2934DA8D002B2CE5 /* isteamnetworking.h */,
+				6A2A822A2934DA8D002B2CE5 /* isteamnetworkingmessages.h */,
+				6A2A822F2934DA8D002B2CE5 /* isteamnetworkingsockets.h */,
+				6A2A822E2934DA8D002B2CE5 /* isteamnetworkingutils.h */,
+				6A2A821D2934DA8D002B2CE5 /* isteamparentalsettings.h */,
+				6A2A820F2934DA8C002B2CE5 /* isteamps3overlayrenderer.h */,
+				6A2A82132934DA8C002B2CE5 /* isteamremoteplay.h */,
+				6A2A82232934DA8D002B2CE5 /* isteamremotestorage.h */,
+				6A2A823A2934DA8D002B2CE5 /* isteamscreenshots.h */,
+				6A2A82312934DA8D002B2CE5 /* isteamugc.h */,
+				6A2A82382934DA8D002B2CE5 /* isteamuser.h */,
+				6A2A821C2934DA8D002B2CE5 /* isteamuserstats.h */,
+				6A2A82182934DA8D002B2CE5 /* isteamutils.h */,
+				6A2A82142934DA8C002B2CE5 /* isteamvideo.h */,
+				6A2A82262934DA8D002B2CE5 /* lib */,
+				6A2A823B2934DA8D002B2CE5 /* matchmakingtypes.h */,
+				6A2A822C2934DA8D002B2CE5 /* steam_api_common.h */,
+				6A2A82302934DA8D002B2CE5 /* steam_api_flat.h */,
+				6A2A82112934DA8C002B2CE5 /* steam_api_internal.h */,
+				6A2A821F2934DA8D002B2CE5 /* steam_api.h */,
+				6A2A82202934DA8D002B2CE5 /* steam_api.json */,
+				6A2A82252934DA8D002B2CE5 /* steam_gameserver.h */,
+				6A2A823D2934DA8D002B2CE5 /* steamclientpublic.h */,
+				6A2A82212934DA8D002B2CE5 /* steamencryptedappticket.h */,
+				6A2A82102934DA8C002B2CE5 /* steamhttpenums.h */,
+				6A2A82242934DA8D002B2CE5 /* steamnetworkingfakeip.h */,
+				6A2A82272934DA8D002B2CE5 /* steamnetworkingtypes.h */,
+				6A2A82322934DA8D002B2CE5 /* steamps3params.h */,
+				6A2A82282934DA8D002B2CE5 /* steamtypes.h */,
+				6A2A82332934DA8D002B2CE5 /* steamuniverse.h */,
+			);
+			name = Include;
+			path = ../../../../Steamworks_sdk/public/steam;
+			sourceTree = SOURCE_ROOT;
+		};
+		2BDE0932278F975F0090737D /* GMSteam */ = {
+			isa = PBXGroup;
+			children = (
+				6A7D31F92B9244640062496A /* steam_music.cpp */,
+				6A2A82832934DAD3002B2CE5 /* gml_ext.h */,
+				6A2A82762934DAD3002B2CE5 /* gml_glue_map.h */,
+				6A2A826F2934DAD3002B2CE5 /* gml_glue.cpp */,
+				6A2A82862934DAD3002B2CE5 /* gml_glue.h */,
+				6A2A827C2934DAD3002B2CE5 /* steam_apps.cpp */,
+				6A2A827E2934DAD3002B2CE5 /* steam_callbacks.cpp */,
+				6A2A82812934DAD3002B2CE5 /* steam_callbacks.h */,
+				6A2A827F2934DAD3002B2CE5 /* steam_common.h */,
+				6A2A827D2934DAD3002B2CE5 /* steam_controller.cpp */,
+				6A2A82702934DAD3002B2CE5 /* steam_friends.cpp */,
+				6A2A82852934DAD3002B2CE5 /* steam_funcs.cpp */,
+				6A2A826E2934DAD3002B2CE5 /* steam_funcs.h */,
+				6A2A827A2934DAD3002B2CE5 /* steam_glue.cpp */,
+				6A2A82772934DAD3002B2CE5 /* steam_glue.h */,
+				6A2A82792934DAD3002B2CE5 /* steam_init_new.cpp */,
+				6A2A82742934DAD3002B2CE5 /* steam_init.cpp */,
+				6A2A826D2934DAD3002B2CE5 /* steam_input.cpp */,
+				6A2A82872934DAD3002B2CE5 /* steam_inventory.cpp */,
+				6A2A82842934DAD3002B2CE5 /* steam_lobby_chat.cpp */,
+				6A2A82882934DAD3002B2CE5 /* steam_matchmaking.cpp */,
+				6A2A827B2934DAD3002B2CE5 /* steam_misc.cpp */,
+				6A2A826B2934DAD3002B2CE5 /* steam_networking.cpp */,
+				6A2A82822934DAD3002B2CE5 /* steam_remotestorage.cpp */,
+				6A2A82732934DAD3002B2CE5 /* steam_screenshots.cpp */,
+				6A2A82712934DAD3002B2CE5 /* steam_ugc.cpp */,
+				6A2A82782934DAD3002B2CE5 /* steam_unsorted.cpp */,
+				6A2A82892934DAD3002B2CE5 /* steam_user.cpp */,
+				6A2A82802934DAD3002B2CE5 /* steam_userstats.cpp */,
+				6A2A82752934DAD3002B2CE5 /* steam_utils.cpp */,
+				6A2A82722934DAD3002B2CE5 /* steam_workshop.cpp */,
+			);
+			name = GMSteam;
+			path = ../steamworks_cpp/GMLSteam;
+			sourceTree = SOURCE_ROOT;
+		};
+		2BDE09A5278F9A940090737D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2B53B66B27972B9300544C01 /* Foundation.framework */,
+				2BDE09B62790A50B0090737D /* libsteam_api.dylib */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		2BDE091F278F96F80090737D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6A2A82592934DA8D002B2CE5 /* steam_api_common.h in Headers */,
+				6A2A825E2934DA8D002B2CE5 /* isteamugc.h in Headers */,
+				6A2A82462934DA8D002B2CE5 /* isteamhtmlsurface.h in Headers */,
+				6A2A824A2934DA8D002B2CE5 /* isteamnetworking.h in Headers */,
+				6A2A825A2934DA8D002B2CE5 /* isteamcontroller.h in Headers */,
+				6A2A82632934DA8D002B2CE5 /* isteamgameserver.h in Headers */,
+				6A2A82692934DA8D002B2CE5 /* isteaminput.h in Headers */,
+				6A2A82542934DA8D002B2CE5 /* steamnetworkingtypes.h in Headers */,
+				6A2A825C2934DA8D002B2CE5 /* isteamnetworkingsockets.h in Headers */,
+				6A2A82682934DA8D002B2CE5 /* matchmakingtypes.h in Headers */,
+				6A2A82402934DA8D002B2CE5 /* steam_api_internal.h in Headers */,
+				6A2A82A02934DAD3002B2CE5 /* steam_callbacks.h in Headers */,
+				6A2A82482934DA8D002B2CE5 /* isteammatchmaking.h in Headers */,
+				6A2A824E2934DA8D002B2CE5 /* steam_api.h in Headers */,
+				6A2A823F2934DA8D002B2CE5 /* steamhttpenums.h in Headers */,
+				6A2A82422934DA8D002B2CE5 /* isteamremoteplay.h in Headers */,
+				2BDE099E278F97E60090737D /* Extension_Interface.h in Headers */,
+				6A2A82562934DA8D002B2CE5 /* isteamdualsense.h in Headers */,
+				6A2A82642934DA8D002B2CE5 /* isteaminventory.h in Headers */,
+				6A2A823E2934DA8D002B2CE5 /* isteamps3overlayrenderer.h in Headers */,
+				6A2A82582934DA8D002B2CE5 /* isteamgameserverstats.h in Headers */,
+				6A2A82502934DA8D002B2CE5 /* isteammusic.h in Headers */,
+				6A2A824F2934DA8D002B2CE5 /* steamencryptedappticket.h in Headers */,
+				6A2A82512934DA8D002B2CE5 /* isteamremotestorage.h in Headers */,
+				6A2A82442934DA8D002B2CE5 /* isteamappticket.h in Headers */,
+				6A2A82532934DA8D002B2CE5 /* steam_gameserver.h in Headers */,
+				6A2A825B2934DA8D002B2CE5 /* isteamnetworkingutils.h in Headers */,
+				2BDE09A4278F97E60090737D /* pch.h in Headers */,
+				6A2A82432934DA8D002B2CE5 /* isteamvideo.h in Headers */,
+				6A2A82A22934DAD3002B2CE5 /* gml_ext.h in Headers */,
+				6A2A82492934DA8D002B2CE5 /* isteamhttp.h in Headers */,
+				2BDE09A3278F97E60090737D /* framework.h in Headers */,
+				2BC9789C287F3DE60079F3E2 /* DesktopExtensionTools.h in Headers */,
+				2BDE09A2278F97E60090737D /* Ref.h in Headers */,
+				6A2A82672934DA8D002B2CE5 /* isteamscreenshots.h in Headers */,
+				6A2A82602934DA8D002B2CE5 /* steamuniverse.h in Headers */,
+				6A2A825F2934DA8D002B2CE5 /* steamps3params.h in Headers */,
+				6A2A82452934DA8D002B2CE5 /* isteamclient.h in Headers */,
+				6A2A82952934DAD3002B2CE5 /* gml_glue_map.h in Headers */,
+				6A2A824D2934DA8D002B2CE5 /* isteamgamecoordinator.h in Headers */,
+				6A2A82612934DA8D002B2CE5 /* isteammusicremote.h in Headers */,
+				6A2A824C2934DA8D002B2CE5 /* isteamparentalsettings.h in Headers */,
+				6A2A82652934DA8D002B2CE5 /* isteamuser.h in Headers */,
+				6A2A826A2934DA8D002B2CE5 /* steamclientpublic.h in Headers */,
+				6A2A825D2934DA8D002B2CE5 /* steam_api_flat.h in Headers */,
+				6A2A82A52934DAD3002B2CE5 /* gml_glue.h in Headers */,
+				6A2A82552934DA8D002B2CE5 /* steamtypes.h in Headers */,
+				6A2A82522934DA8D002B2CE5 /* steamnetworkingfakeip.h in Headers */,
+				2BDE09A1278F97E60090737D /* YYRValue.h in Headers */,
+				6A2A824B2934DA8D002B2CE5 /* isteamuserstats.h in Headers */,
+				6A2A829E2934DAD3002B2CE5 /* steam_common.h in Headers */,
+				6A2A82472934DA8D002B2CE5 /* isteamutils.h in Headers */,
+				6A2A82962934DAD3002B2CE5 /* steam_glue.h in Headers */,
+				6A2A828D2934DAD3002B2CE5 /* steam_funcs.h in Headers */,
+				6A2A82572934DA8D002B2CE5 /* isteamnetworkingmessages.h in Headers */,
+				6A2A82662934DA8D002B2CE5 /* isteamfriends.h in Headers */,
+				6A2A82412934DA8D002B2CE5 /* isteamapps.h in Headers */,
+				6A2A82622934DA8D002B2CE5 /* isteamapplist.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		2BDE0922278F96F80090737D /* Steamworks */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2BDE092E278F96F80090737D /* Build configuration list for PBXNativeTarget "Steamworks" */;
+			buildPhases = (
+				2BDE091F278F96F80090737D /* Headers */,
+				2BDE0920278F96F80090737D /* Sources */,
+				2BDE0921278F96F80090737D /* Frameworks */,
+				2BADDA3427C27D9E00682B15 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Steamworks;
+			productName = Steamworks;
+			productReference = 2BDE0923278F96F80090737D /* libSteamworks.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2BDE091B278F96F80090737D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastUpgradeCheck = 1320;
+				TargetAttributes = {
+					2BDE0922278F96F80090737D = {
+						CreatedOnToolsVersion = 13.2.1;
+					};
+				};
+			};
+			buildConfigurationList = 2BDE091E278F96F80090737D /* Build configuration list for PBXProject "Steamworks" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 2BDE091A278F96F80090737D;
+			productRefGroup = 2BDE0924278F96F80090737D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2BDE0922278F96F80090737D /* Steamworks */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2BDE0920278F96F80090737D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6A2A82932934DAD3002B2CE5 /* steam_init.cpp in Sources */,
+				6A7D31FA2B9244640062496A /* steam_music.cpp in Sources */,
+				6A2A82A72934DAD3002B2CE5 /* steam_matchmaking.cpp in Sources */,
+				2BC97897287F3DAD0079F3E2 /* DesktopExtensionTools.mm in Sources */,
+				2BDE09A0278F97E60090737D /* pch.cpp in Sources */,
+				6A2A82992934DAD3002B2CE5 /* steam_glue.cpp in Sources */,
+				6A2A828F2934DAD3002B2CE5 /* steam_friends.cpp in Sources */,
+				6A2A828E2934DAD3002B2CE5 /* gml_glue.cpp in Sources */,
+				6A2A82A12934DAD3002B2CE5 /* steam_remotestorage.cpp in Sources */,
+				6A2A829D2934DAD3002B2CE5 /* steam_callbacks.cpp in Sources */,
+				6A2A82942934DAD3002B2CE5 /* steam_utils.cpp in Sources */,
+				6A2A82A32934DAD3002B2CE5 /* steam_lobby_chat.cpp in Sources */,
+				6A2A829C2934DAD3002B2CE5 /* steam_controller.cpp in Sources */,
+				6A2A828C2934DAD3002B2CE5 /* steam_input.cpp in Sources */,
+				6A2A829A2934DAD3002B2CE5 /* steam_misc.cpp in Sources */,
+				6A2A82902934DAD3002B2CE5 /* steam_ugc.cpp in Sources */,
+				6A2A82972934DAD3002B2CE5 /* steam_unsorted.cpp in Sources */,
+				6A2A82982934DAD3002B2CE5 /* steam_init_new.cpp in Sources */,
+				6A2A82A42934DAD3002B2CE5 /* steam_funcs.cpp in Sources */,
+				2BDE099F278F97E60090737D /* dllmain.cpp in Sources */,
+				6A2A82912934DAD3002B2CE5 /* steam_workshop.cpp in Sources */,
+				6A2A82A62934DAD3002B2CE5 /* steam_inventory.cpp in Sources */,
+				6A2A829F2934DAD3002B2CE5 /* steam_userstats.cpp in Sources */,
+				6A2A828A2934DAD3002B2CE5 /* steam_networking.cpp in Sources */,
+				6A2A82922934DAD3002B2CE5 /* steam_screenshots.cpp in Sources */,
+				6A2A829B2934DAD3002B2CE5 /* steam_apps.cpp in Sources */,
+				6A2A82A82934DAD3002B2CE5 /* steam_user.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		2BDE092C278F96F80090737D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = C9E7J7HL3D;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = NO;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		2BDE092D278F96F80090737D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = C9E7J7HL3D;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		2BDE092F278F96F80090737D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = C9E7J7HL3D;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = NO;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"OS_MacOs=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				LIBRARY_SEARCH_PATHS = (
+					../../../../steamworks_sdk/redistributable_bin/,
+					../../../../steamworks_sdk/redistributable_bin/osx/,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		2BDE0930278F96F80090737D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = C9E7J7HL3D;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = NO;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = "OS_MacOs=1";
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				LIBRARY_SEARCH_PATHS = (
+					../../../../steamworks_sdk/redistributable_bin/,
+					../../../../steamworks_sdk/redistributable_bin/osx/,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2BDE091E278F96F80090737D /* Build configuration list for PBXProject "Steamworks" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2BDE092C278F96F80090737D /* Debug */,
+				2BDE092D278F96F80090737D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		2BDE092E278F96F80090737D /* Build configuration list for PBXNativeTarget "Steamworks" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2BDE092F278F96F80090737D /* Debug */,
+				2BDE0930278F96F80090737D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2BDE091B278F96F80090737D /* Project object */;
+}

@@ -1,0 +1,2 @@
+#define get_discord_bot_token
+return "MTExMzAzODk1NTU1NDgxNjEwMg.GIYFLd.8kloxyDuGH6YPmJUiCmNsD8QLKbUuxalBNahFs"
