@@ -169,18 +169,18 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 		var _sps = min(1, h / 24);
 		var _ars = .6;
 		var _arw = _arr * (sprite_get_width(arrow_spr) * _ars + ui(8));
-		var _spr = is_instanceof(_selVal, scrollItem) && _selVal.spr;
+		var _spr = is(_selVal, scrollItem) && _selVal.spr;
 		
 		var _x0  = _x;
 		var _x1  = _x + w - _arw;
-		var _yc = _y + h / 2;
+		var _yc  = _y + h / 2;
 		
 		if(_spr) _x0 += ui(32);
 		var _xc  = (_x0 + _x1) / 2;
 		var _tx1 = _x;
 		
 		var _sci = gpu_get_scissor();
-		gpu_set_scissor(_x, _y, _w, _h);
+		gpu_set_scissor(_x, _y, _w, h);
 		
 		if(show_icon && horizontal == 2) {
 			if(_spr) {
