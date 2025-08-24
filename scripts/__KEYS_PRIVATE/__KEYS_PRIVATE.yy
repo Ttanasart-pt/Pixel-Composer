@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"__KEYS_PRIVATE",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__KEYS_PRIVATE",
+  "parent":{
+    "name":"components",
+    "path":"folders/main/components.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
