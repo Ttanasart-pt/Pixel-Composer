@@ -1555,6 +1555,7 @@
     {"id":{"name":"path_from_mask","path":"extensions/path_from_mask/path_from_mask.yy",},},
     {"id":{"name":"patreon_key","path":"extensions/patreon_key/patreon_key.yy",},},
     {"id":{"name":"poissonC","path":"extensions/poissonC/poissonC.yy",},},
+    {"id":{"name":"PRIVATE_KEYS","path":"extensions/PRIVATE_KEYS/PRIVATE_KEYS.yy",},},
     {"id":{"name":"Regex","path":"extensions/Regex/Regex.yy",},},
     {"id":{"name":"Spout","path":"extensions/Spout/Spout.yy",},},
     {"id":{"name":"Steamworks","path":"extensions/Steamworks/Steamworks.yy",},},

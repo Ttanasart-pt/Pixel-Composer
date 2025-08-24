@@ -333,6 +333,7 @@
     {"name":"path_from_mask","order":9,"path":"extensions/path_from_mask/path_from_mask.yy",},
     {"name":"patreon_key","order":2,"path":"extensions/patreon_key/patreon_key.yy",},
     {"name":"poissonC","order":4,"path":"extensions/poissonC/poissonC.yy",},
+    {"name":"PRIVATE_KEYS","order":11,"path":"extensions/PRIVATE_KEYS/PRIVATE_KEYS.yy",},
     {"name":"Regex","order":3,"path":"extensions/Regex/Regex.yy",},
     {"name":"Steamworks","order":5,"path":"extensions/Steamworks/Steamworks.yy",},
     {"name":"surface_manager","order":8,"path":"extensions/surface_manager/surface_manager.yy",},

@@ -1,6 +1,7 @@
 .vs
 docs
 patreon_key
+PRIVATE_KEYS
 *.cpp
 
 Apollo

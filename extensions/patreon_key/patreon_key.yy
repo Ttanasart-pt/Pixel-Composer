@@ -22,8 +22,8 @@
   "extensionVersion":"0.0.1",
   "files":[
     {"$GMExtensionFile":"","%Name":"patreon_key.gml","constants":[
-        {"$GMExtensionConstant":"","%Name":"patreon_email_token","hidden":false,"name":"patreon_email_token","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"\"2b0087ebabc2cd8d0b9449f24169312a\"",},
-        {"$GMExtensionConstant":"","%Name":"patreon_activation_key","hidden":false,"name":"patreon_activation_key","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"\"895%MakhamDevPC{0}#TPT\"",},
+        {"$GMExtensionConstant":"","%Name":"patreon_activation_key","hidden":false,"name":"patreon_activation_key","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"",},
+        {"$GMExtensionConstant":"","%Name":"patreon_email_token","hidden":false,"name":"patreon_email_token","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"",},
       ],"copyToTargets":-1,"filename":"patreon_key.gml","final":"","functions":[],"init":"","kind":2,"name":"patreon_key.gml","order":[],"origname":"","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
   ],
   "gradleinject":"",
