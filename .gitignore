@@ -21,9 +21,10 @@ fonts/_f_sdf_medium/_f_sdf_medium.yy
 
 scripts/__KEYS_PRIVATE/__KEYS_PRIVATE.gml
 objects/o_dialog_patreon/*
-!objects/o_dialog_patreon/o_dialog_patreon.yy
 
 build
 gmedit
 
 *.zip
+
+!*.yy
