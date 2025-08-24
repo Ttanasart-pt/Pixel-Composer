@@ -16,17 +16,20 @@ function Node_Iterate_Each(_x, _y, _group = noone) : Node_Iterator(_x, _y, _grou
 		output.inputs[0].setFrom(input.outputs[0]);
 	}
 	
-	static onStep = function() {
-		var type = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;
-		inputs[0].setType(type);
-	}
-	
 	static doInitLoop = function() {
 		var arrIn  = getInputData(0);
 		var arrOut = outputs[0].getValue();
+		var _iLen  = array_length(arrIn);
 		
-		if(array_length(arrOut) != array_length(arrIn))
+		if(inputs[0].type == VALUE_TYPE.surface) {
+			surface_array_free(arrOut);
 			outputs[0].setValue([]);
+			
+		} else {
+			arrOut = array_verify(arrOut, _iLen);
+			outputs[0].setValue(arrOut);
+		}
+		
 	}
 	
 	static getIterationCount = function() {
@@ -36,4 +39,11 @@ function Node_Iterate_Each(_x, _y, _group = noone) : Node_Iterator(_x, _y, _grou
 		
 		return maxIter;
 	}
+	
+	static update = function(frame = CURRENT_FRAME) { 
+		inputs[0].setType(inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type);
+		
+		initLoop(); 
+	}
+	
 }
