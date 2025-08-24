@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"colToVec4",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"colToVec4",
+  "parent":{
+    "name":"shader",
+    "path":"folders/functions/shader.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
