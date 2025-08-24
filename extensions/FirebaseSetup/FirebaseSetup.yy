@@ -13,7 +13,7 @@
   "classname":"",
   "ConfigValues":{
     "Steam":{
-      "copyToTargets":"194",
+      "copyToTargets":"130",
     },
   },
   "copyToTargets":130,

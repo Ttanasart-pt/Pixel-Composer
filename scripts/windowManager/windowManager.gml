@@ -69,22 +69,21 @@ function winMan_setRect(_x, _y, _w, _h) {
 function winMan_isMinimized() {
 	INLINE
 	if(OS == os_macosx) return false;
-	return gameframe_is_natively_minimized();
+	return winMan_is_minimized_ext(window_handle());
 }
 
 function winMan_Maximize() { 
 	INLINE
-	if(gameframe_is_natively_minimized()) return;
+	if(winMan_is_minimized_ext(window_handle())) return;
 	window_is_maximized = true;
 	
 	var _mon = winMan_getData();
 	winMan_setRect(_mon[4], _mon[5], _mon[6], _mon[7]);
-	gameframe_set_shadow(false);
 }
 
 function winMan_Unmaximize() {
 	INLINE
-	if(gameframe_is_natively_minimized()) return;
+	if(winMan_is_minimized_ext(window_handle())) return;
 	window_is_maximized = false;
 	
 	var _mon = winMan_getData();
@@ -95,13 +94,12 @@ function winMan_Unmaximize() {
 		window_minimize_size[0], 
 		window_minimize_size[1]
 	);
-	gameframe_set_shadow(true);
 }
 
 function winMan_Minimize() {
 	INLINE
-	if(gameframe_is_natively_minimized()) return;
-	gameframe_syscommand(61472);
+	if(winMan_is_minimized_ext(window_handle())) return;
+	winMan_minimize_ext(window_handle());
 }
 
 function winMan_initDrag(_index) {
@@ -122,7 +120,7 @@ function winMan_setFullscreen(full) {
 	var _mon = winMan_getData();
 	if(full) {
 		winMan_setRect(_mon[0], _mon[1], _mon[2], _mon[3]);
-		gameframe_set_shadow(false);
+		
 	} else {
 		if(window_is_maximized) winMan_Maximize();
 		else					winMan_Unmaximize();

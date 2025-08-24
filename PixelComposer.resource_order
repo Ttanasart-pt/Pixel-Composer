@@ -338,6 +338,7 @@
     {"name":"Steamworks","order":5,"path":"extensions/Steamworks/Steamworks.yy",},
     {"name":"surface_manager","order":8,"path":"extensions/surface_manager/surface_manager.yy",},
     {"name":"TabletStuff","order":2,"path":"extensions/TabletStuff/TabletStuff.yy",},
+    {"name":"winMan","order":5,"path":"extensions/winMan/winMan.yy",},
     {"name":"YYFirebaseFirestore","order":4,"path":"extensions/YYFirebaseFirestore/YYFirebaseFirestore.yy",},
     {"name":"_f_code_s","order":16,"path":"fonts/_f_code_s/_f_code_s.yy",},
     {"name":"_f_code","order":15,"path":"fonts/_f_code/_f_code.yy",},
