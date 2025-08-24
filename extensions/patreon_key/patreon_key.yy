@@ -21,10 +21,9 @@
   "exportToGame":true,
   "extensionVersion":"0.0.1",
   "files":[
-    {"$GMExtensionFile":"","%Name":"patreon_key.gml","constants":[
-        {"$GMExtensionConstant":"","%Name":"patreon_activation_key","hidden":false,"name":"patreon_activation_key","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"",},
-        {"$GMExtensionConstant":"","%Name":"patreon_email_token","hidden":false,"name":"patreon_email_token","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"",},
-      ],"copyToTargets":-1,"filename":"patreon_key.gml","final":"","functions":[],"init":"","kind":2,"name":"patreon_key.gml","order":[],"origname":"","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
+    {"$GMExtensionFile":"","%Name":"patreon_key.gml","constants":[],"copyToTargets":-1,"filename":"patreon_key.gml","final":"","functions":[
+        {"$GMExtensionFunction":"","%Name":"patreon_init_keys","argCount":0,"args":[],"documentation":"","externalName":"patreon_init_keys","help":"","hidden":true,"kind":2,"name":"patreon_init_keys","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
+      ],"init":"patreon_init_keys","kind":2,"name":"patreon_key.gml","order":[],"origname":"","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
   ],
   "gradleinject":"",
   "hasConvertedCodeInjection":true,

@@ -1,4 +1,6 @@
-global.PATREON_VERIFY_CODE = undefined;
+global.PATREON_VERIFY_CODE     = undefined;
+global.PATREON_ACTIVATION_KEYS = "";
+global.PATREON_EMAIL_TOKENS    = "";
 
 function Panel_Patreon() : PanelContent() constructor {
 	w = ui(480);
@@ -49,7 +51,7 @@ function Panel_Patreon() : PanelContent() constructor {
 			
 			var _map = ds_map_create();
 			
-			_map[? "Api-Token"]    = patreon_email_token;
+			_map[? "Api-Token"]    = global.PATREON_EMAIL_TOKENS;
 			_map[? "Content-Type"] = "application/json";
 			
 			var _body = {
