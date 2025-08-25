@@ -386,6 +386,9 @@
             "Node_ASE_layer",
             "Node_ASE_Tag",
             
+            { "label": "Krita" },
+            "Node_Krita_File_Read",
+            
             { "label": "External" },
             "Node_Websocket_Receiver",
             "Node_Websocket_Sender",

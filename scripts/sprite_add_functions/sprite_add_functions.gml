@@ -1,9 +1,11 @@
 globalvar SPRITE_PATH_MAP;
 SPRITE_PATH_MAP = {};
 
+function sprite_delete_safe(spr) { if(sprite_exists(spr)) sprite_delete(spr); }
+
 #macro __sprite_add sprite_add
 #macro sprite_add sprite_add_os
-function sprite_add_os(path, imagenumb, removeback, smooth, xorig, yorig) { 
+function sprite_add_os(path, imagenumb = 1, removeback = false, smooth = false, xorig = 0, yorig = 0) { 
 	return __sprite_add(filename_os(path), imagenumb, removeback, smooth, xorig, yorig); 
 }
 

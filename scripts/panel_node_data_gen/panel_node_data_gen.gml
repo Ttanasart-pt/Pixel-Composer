@@ -57,8 +57,6 @@ function Panel_Node_Data_Gen() : PanelContent() constructor {
 		if(_n.nodeName == "Node_Custom")        { if(++cur < amo) return; }
 		if(_n.nodeName == "Node_Custom_Shader") { if(++cur < amo) return; }
 		
-		var _b = _n.build(0, 0);
-		
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		draw_set_text(f_p0, fa_center, fa_top, COLORS._main_text);
 		draw_text_add(w / 2, ui(8), cur + 2 < amo? $"Dumping node data [{key[cur]}]" : "Writing JSON");
@@ -74,7 +72,8 @@ function Panel_Node_Data_Gen() : PanelContent() constructor {
 		draw_sprite_stretched(THEME.progress_bar, 0, bx0, by0, bw, bh);
 		draw_sprite_stretched(THEME.progress_bar, 1, bx0, by0, bw * cur / amo, bh);
 		
-		if(_b.name == "") return;
+		var _b = _n.build(0, 0);
+		if(!is(_b, Node) || _b.name == "") { cur++; return; } 
 		
 		var _lCon  = $"\t\t\"name\":\"{_n.name}\",\n";
 		    _lCon += $"\t\t\"tooltip\":{sanitize(_n.tooltip)},\n";

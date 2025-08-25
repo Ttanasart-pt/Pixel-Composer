@@ -8,8 +8,7 @@
 /// 
 /// @jujuadams 2022-10-30
 
-function SnapBufferReadXML(_buffer, _offset, _size)
-{
+function SnapBufferReadXML(_buffer, _offset, _size) {
     var _oldOffset = buffer_tell(_buffer);
     buffer_seek(_buffer, buffer_seek_start, _offset);
     
@@ -49,25 +48,20 @@ function SnapBufferReadXML(_buffer, _offset, _size)
     var _stack = ds_list_create();
     ds_list_add(_stack, _stack_top);
     
-    repeat(_size)
-    {
+    repeat(_size) {
         var _value = buffer_read(_buffer, buffer_u8);
         
         if (_skip_whitespace && (_value > 32)) _skip_whitespace = false;
     
-        if (!_skip_whitespace)
-        {
-            if (_in_tag)
-            {
-                if (_in_key)
-                {
-                    if ((_value == ord("/")) || (_value == ord("?")))
-                    {
+        if (!_skip_whitespace) {
+            if (_in_tag) {
+                if (_in_key) {
+                    if ((_value == ord("/")) || (_value == ord("?"))) {
                         _in_key = false;
                         if (_value == ord("/")) _tag_terminating = true;
                     }
-                    else if ((_value == ord(" ")) || (_value == ord("=")))
-                    {
+                    
+                    else if ((_value == ord(" ")) || (_value == ord("="))) {
                         buffer_poke(_buffer, buffer_tell(_buffer)-1, buffer_u8, 0x0);
                         buffer_seek(_buffer, buffer_seek_start, _key_start);
                         _key = buffer_read(_buffer, buffer_string);
@@ -75,27 +69,23 @@ function SnapBufferReadXML(_buffer, _offset, _size)
                         _in_key   = false;
                         _in_value = true;
                     }
-                    else if (_key_start < 0)
-                    {
+                    
+                    else if (_key_start < 0) {
                         _key_start = buffer_tell(_buffer) - 1;
                     }
-                }
-                else if (_in_value)
-                {
-                    if (_in_string)
-                    {
-                        if (_value == ord("&")) //Check for ampersands so we can trigger a find-replace on the output value
-                        {
+                    
+                } else if (_in_value) {
+                    if (_in_string) {
+                        if (_value == ord("&")) { //Check for ampersands so we can trigger a find-replace on the output value
                             _text_has_ampersand = true;
                         }
-                        else if (_value == ord("\"")) //End string
-                        {
+                        
+                        else if (_value == ord("\"")) { //End string
                             buffer_poke(_buffer, buffer_tell(_buffer)-1, buffer_u8, 0x0);
                             buffer_seek(_buffer, buffer_seek_start, _string_start);
                             var _substring = buffer_read(_buffer, buffer_string);
                         
-                            if (_text_has_ampersand) //Only run these checks if we found an ampersand
-                            {
+                            if (_text_has_ampersand) { //Only run these checks if we found an ampersand
                                 _substring = string_replace_all(_substring, "&lt;"  , "<");
                                 _substring = string_replace_all(_substring, "&gt;"  , ">");
                                 _substring = string_replace_all(_substring, "&amp;" , "&");
@@ -103,8 +93,7 @@ function SnapBufferReadXML(_buffer, _offset, _size)
                                 _substring = string_replace_all(_substring, "&quot;", "\"");
                             }
                         
-                            if (!_tag_is_comment)
-                            {
+                            if (!_tag_is_comment) {
                                 if (!variable_struct_exists(_stack_top, "attributes")) _stack_top.attributes = {};
                                 _stack_top.attributes[$ _key] = _substring;
                             }
@@ -114,17 +103,15 @@ function SnapBufferReadXML(_buffer, _offset, _size)
                             _in_string       = false;
                             _skip_whitespace = true;
                         }
-                    }
-                    else if (_value == ord("\"")) //Start the value reading at the quote mark
-                    {
+                        
+                    } else if (_value == ord("\"")) { //Start the value reading at the quote mark
                         _in_string    = true;
                         _string_start = buffer_tell(_buffer);
                     }
-                }
-                else
-                {
-                    switch(_value)
-                    {
+                    
+                } else {
+                    
+                    switch(_value) {
                         case ord("?"): //Prolog indicator
                             if (buffer_tell(_buffer) == _tag_start + 1) _tag_is_prolog = true;
                         break;
@@ -134,14 +121,11 @@ function SnapBufferReadXML(_buffer, _offset, _size)
                         break;
                         
                         case ord("/"): //Close tag indicator
-                            if (buffer_tell(_buffer) == _tag_start + 1)
-                            {
+                            if (buffer_tell(_buffer) == _tag_start + 1) {
                                 _tag_terminating = true;
-                            }
-                            else
-                            {
-                                if ((_tag == undefined) && (buffer_tell(_buffer) > _tag_start))
-                                {
+                                
+                            } else {
+                                if ((_tag == undefined) && (buffer_tell(_buffer) > _tag_start)) {
                                     _tag_terminating = true;
                                     
                                     buffer_poke(_buffer, buffer_tell(_buffer)-1, buffer_u8, 0x0);
@@ -167,27 +151,23 @@ function SnapBufferReadXML(_buffer, _offset, _size)
                         break;
                         
                         case ord(" "):
-                            if (!_tag_is_prolog)
-                            {
+                            if (!_tag_is_prolog) {
                                 buffer_poke(_buffer, buffer_tell(_buffer)-1, buffer_u8, 0x0);
                                 buffer_seek(_buffer, buffer_seek_start, _tag_start);
                                 _tag = buffer_read(_buffer, buffer_string);
                             }
                             
-                            if (!_tag_is_comment && !_tag_terminating)
-                            {
+                            if (!_tag_is_comment && !_tag_terminating) {
                                 _stack_top = {
                                     type: (_tag_is_prolog? "prolog" : _tag),
                                 };
                                 
                                 ds_list_insert(_stack, 0, _stack_top);
                                 
-                                if (_tag_is_prolog)
-                                {
+                                if (_tag_is_prolog) {
                                     _stack_parent.prolog = _stack_top;
-                                }
-                                else
-                                {
+                                    
+                                } else {
                                     if (!variable_struct_exists(_stack_parent, "children")) _stack_parent.children = [];
                                     array_push(_stack_parent.children, _stack_top);
                                 }
@@ -200,32 +180,26 @@ function SnapBufferReadXML(_buffer, _offset, _size)
                         break;
                     }
                 }
-        
-                if (!_in_string && (_value == ord(">")))
-                {
-                    if (!_tag_reading_attributes && !_tag_is_comment)
-                    {
-                        if (!_tag_is_prolog && (_tag == undefined))
-                        {
-                            buffer_poke(_buffer, buffer_tell(_buffer)-1, buffer_u8, 0x0);
+                
+                if (!_in_string && (_value == ord(">"))) {
+                    if (!_tag_reading_attributes && !_tag_is_comment) {
+                        if (!_tag_is_prolog && (_tag == undefined)) {
+                            buffer_poke(_buffer, buffer_tell(_buffer) - 1, buffer_u8, 0x0);
                             buffer_seek(_buffer, buffer_seek_start, _tag_start);
                             _tag = buffer_read(_buffer, buffer_string);
                         }
                         
-                        if (!_tag_terminating)
-                        {
+                        if (!_tag_terminating) {
                             _stack_top = {
                                 type: (_tag_is_prolog? "prolog" : _tag),
                             };
                             
                             ds_list_insert(_stack, 0, _stack_top);
                             
-                            if (_tag_is_prolog)
-                            {
+                            if (_tag_is_prolog) {
                                 _stack_parent.prolog = _stack_top;
-                            }
-                            else
-                            {
+                                
+                            } else {
                                 if (!variable_struct_exists(_stack_parent, "children")) _stack_parent.children = [];
                                 array_push(_stack_parent.children, _stack_top);
                             }
@@ -233,49 +207,38 @@ function SnapBufferReadXML(_buffer, _offset, _size)
                     }
                     
                     var _previous_value = buffer_peek(_buffer, buffer_tell(_buffer)-2, buffer_u8);
-                    if (_previous_value == ord("?")) //Detect ?> method to close the prolog
-                    {
+                    if (_previous_value == ord("?")) { //Detect ?> method to close the prolog
                         _tag_terminating = true;
-                    }
-                    else if (_previous_value == ord("/")) //Detect /> method to close a tag
-                    {
+                        
+                    } else if (_previous_value == ord("/")) { //Detect /> method to close a tag
                         _tag_terminating      = true;
                         _tag_self_terminating = true;
                     }
                     
-                    if (!_tag_is_comment && (!_tag_self_terminating || _tag_reading_attributes))
-                    {
-                        if (_tag_terminating || _tag_is_prolog)
-                        {
+                    if (!_tag_is_comment && (!_tag_self_terminating || _tag_reading_attributes)) {
+                        if (_tag_terminating || _tag_is_prolog) {
                             ds_list_delete(_stack, 0);
                             _stack_top = _stack[| 0];
-                        }
-                        else
-                        {
+                            
+                        } else {
                             _in_text            = true;
                             _text_has_ampersand = false;
                             _text_start         = buffer_tell(_buffer);
                         }
                     }
                     
-                    if (!_tag_is_comment || (_tag_is_comment && _previous_value == ord("-")))
-                    {
-                        _tag      = undefined;
-                        _in_tag   = false;
-                        _in_key   = false;
-                        _in_value = false;
-                    }
+                    _tag      = undefined;
+                    _in_tag   = false;
+                    _in_key   = false;
+                    _in_value = false;
                 }
-            }
-            else if ((_value == 10) || (_value == 13)) //Newline
-            {
+                
+            } else if ((_value == 10) || (_value == 13)) { //Newline
                 _in_text        = false;
                 _skip_whitespace = true;
-            }
-            else if (_value == ord("<")) //Open a tag
-            {
-                if (_in_text)
-                {
+                
+            } else if (_value == ord("<")) { //Open a tag
+                if (_in_text) {
                     _in_text = false;
                     buffer_poke(_buffer, buffer_tell(_buffer)-1, buffer_u8, 0x0);
                     buffer_seek(_buffer, buffer_seek_start, _text_start);
@@ -283,7 +246,7 @@ function SnapBufferReadXML(_buffer, _offset, _size)
                     
                     _stack_top.text = _text;
                 }
-            
+                
                 _stack_parent           = _stack_top;
                 _in_tag                 = true;
                 _tag_terminating        = false;

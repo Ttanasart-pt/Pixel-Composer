@@ -19,8 +19,8 @@ function __locale_file(file) {
 	var dirr = $"{DIRECTORY}Locale/{PREFERENCES.local}";
 	if(!directory_exists(dirr) || !file_exists_empty(dirr + file)) 
 		dirr = $"{DIRECTORY}Locale/en";
-		
-	return dirr + file;
+	
+	return filename_combine(dirr, file);
 }
 
 function __initLocale() {
@@ -63,6 +63,7 @@ function loadLocale() {
 	
 	var fontDir = $"{DIRECTORY}Locale/{PREFERENCES.local}/fonts/";
 	LOCALE.fontDir = directory_exists(fontDir)? fontDir : noone;
+	
 }
 
 function __txtx(key, def = "") {
@@ -107,7 +108,7 @@ function __txt(txt, prefix = "") {
 function __txta(txt) {
 	var _txt = __txt(txt);
 	for(var i = 1; i < argument_count; i++)
-		_txt = string_replace_all(_txt, "{"+string(i)+"}", string(argument[i]));
+		_txt = string_replace_all(_txt, "{" + string(i) + "}", string(argument[i]));
 	
 	return _txt;
 }

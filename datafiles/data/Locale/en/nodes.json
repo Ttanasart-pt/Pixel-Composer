@@ -1,4 +1,50 @@
 {
+  "Node_2D_Extrude":{
+    "name":"2D Extrude",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Surface In"
+      },
+      {
+        "name":"Angle"
+      },
+      {
+        "name":"Distance"
+      },
+      {
+        "name":"Color"
+      },
+      {
+        "name":"Clone Color",
+        "display_data":[
+          "None",
+          "Multiply",
+          "Additive"
+        ]
+      },
+      {
+        "name":"Highlight"
+      },
+      {
+        "name":"Highlight Color"
+      },
+      {
+        "name":"Wrap"
+      },
+      {
+        "name":"Shift"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Surface Out"
+      },
+      {
+        "name":"Depth"
+      }
+    ]
+  },
   "Node_2D_light":{
     "name":"2D Light",
     "tooltip":"Apply different shaped light on the image.",
@@ -40,7 +86,7 @@
         "name":"Sweep"
       },
       {
-        "name":"Sweep end"
+        "name":"Sweep End"
       },
       {
         "name":"Banding"
@@ -55,13 +101,13 @@
         ]
       },
       {
-        "name":"Radial banding"
+        "name":"Radial Banding"
       },
       {
-        "name":"Radial start"
+        "name":"Radial Start"
       },
       {
-        "name":"Radial band ratio"
+        "name":"Radial Band Ratio"
       },
       {
         "name":"Active"
@@ -79,13 +125,19 @@
         "name":"Exponent"
       },
       {
-        "name":"Anti aliasing"
+        "name":"Anti Aliasing"
       },
       {
-        "name":"Two sides"
+        "name":"Two Sides"
       },
       {
         "name":"Thickness"
+      },
+      {
+        "name":"Sweep Soft"
+      },
+      {
+        "name":"Sweep Spread"
       }
     ],
     "outputs":[
@@ -94,6 +146,54 @@
       },
       {
         "name":"Light only"
+      }
+    ]
+  },
+  "Node_3D_Affector":{
+    "name":"Scene Affector",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Position"
+      },
+      {
+        "name":"Rotation"
+      },
+      {
+        "name":"Scale"
+      },
+      {
+        "name":"Anchor"
+      },
+      {
+        "name":"Scene"
+      },
+      {
+        "name":"Shape",
+        "display_data":[
+          "Sphere",
+          "Plane"
+        ]
+      },
+      {
+        "name":"Falloff distance"
+      },
+      {
+        "name":"Falloff curve"
+      },
+      {
+        "name":"Affect Position"
+      },
+      {
+        "name":"Affect Rotation"
+      },
+      {
+        "name":"Affect Scale"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Scene"
       }
     ]
   },
@@ -201,7 +301,13 @@
         ]
       },
       {
-        "name":"Wireframe"
+        "name":"Wire Mode",
+        "display_data":[
+          "Solid",
+          "Solid + Wireframe",
+          "Edge Front",
+          "Edge All"
+        ]
       },
       {
         "name":"Wireframe Thickness"
@@ -220,6 +326,12 @@
       },
       {
         "name":"Backface Blending"
+      },
+      {
+        "name":"Swap View Normal X"
+      },
+      {
+        "name":"AO Blur"
       }
     ],
     "outputs":[
@@ -240,6 +352,9 @@
       },
       {
         "name":"Diffuse"
+      },
+      {
+        "name":"View Normal"
       }
     ]
   },
@@ -347,7 +462,13 @@
         ]
       },
       {
-        "name":"Wireframe"
+        "name":"Wire Mode",
+        "display_data":[
+          "Solid",
+          "Solid + Wireframe",
+          "Edge Front",
+          "Edge All"
+        ]
       },
       {
         "name":"Wireframe Thickness"
@@ -366,6 +487,12 @@
       },
       {
         "name":"Backface Blending"
+      },
+      {
+        "name":"Swap View Normal X"
+      },
+      {
+        "name":"AO Blur"
       },
       {
         "name":"L1 H angle"
@@ -410,6 +537,9 @@
       },
       {
         "name":"Diffuse"
+      },
+      {
+        "name":"View Normal"
       }
     ]
   },
@@ -431,6 +561,103 @@
       },
       {
         "name":"Recalculate normal"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Mesh"
+      }
+    ]
+  },
+  "Node_3D_Instancer":{
+    "name":"3D Instancer",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Mesh"
+      },
+      {
+        "name":"Amounts"
+      },
+      {
+        "name":"Positions"
+      },
+      {
+        "name":"Rotations"
+      },
+      {
+        "name":"Scales"
+      },
+      {
+        "name":"Normal"
+      },
+      {
+        "name":"Position Scatter"
+      },
+      {
+        "name":"Rotation Scatter"
+      },
+      {
+        "name":"Scale Scatter"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Scale Uniform"
+      },
+      {
+        "name":"Random Colors"
+      },
+      {
+        "name":"Colors Per Index"
+      },
+      {
+        "name":"Shift Position"
+      },
+      {
+        "name":"Shift Rotation"
+      },
+      {
+        "name":"Shift Scale"
+      },
+      {
+        "name":"Starting Position"
+      },
+      {
+        "name":"Starting Rotation"
+      },
+      {
+        "name":"Starting Scale"
+      },
+      {
+        "name":"Pattern",
+        "display_data":[
+          "Linear",
+          "Grid",
+          "Circular"
+        ]
+      },
+      {
+        "name":"Grid"
+      },
+      {
+        "name":"Radius"
+      },
+      {
+        "name":"Look At Center"
+      },
+      {
+        "name":"Shift Path"
+      },
+      {
+        "name":"Follow Path"
+      },
+      {
+        "name":"Shift Position Y"
+      },
+      {
+        "name":"Shift Position Z"
       }
     ],
     "outputs":[
@@ -623,7 +850,12 @@
         "name":"Anchor"
       },
       {
-        "name":"Material per side"
+        "name":"Material Mode",
+        "display_data":[
+          "Uniform",
+          "Per Face",
+          "Top and Side"
+        ]
       },
       {
         "name":"Material"
@@ -726,6 +958,12 @@
       },
       {
         "name":"Invert UV"
+      },
+      {
+        "name":"Apply Transform"
+      },
+      {
+        "name":"Invert YZ Axis"
       }
     ],
     "outputs":[]
@@ -781,6 +1019,12 @@
       },
       {
         "name":"Side Texture"
+      },
+      {
+        "name":"Voxel Scale"
+      },
+      {
+        "name":"Voxel Size"
       }
     ],
     "outputs":[
@@ -825,6 +1069,55 @@
       },
       {
         "name":"Back Texture"
+      },
+      {
+        "name":"Taper"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Mesh"
+      }
+    ]
+  },
+  "Node_3D_Mesh_Json":{
+    "name":"3D Json",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Position"
+      },
+      {
+        "name":"Rotation"
+      },
+      {
+        "name":"Scale"
+      },
+      {
+        "name":"Anchor"
+      },
+      {
+        "name":"File Path"
+      },
+      {
+        "name":"Flip UV",
+        "tooltip":"Flip UV axis, can be use to fix some texture mapping error."
+      },
+      {
+        "name":"Import Scale"
+      },
+      {
+        "name":"Axis",
+        "display_data":[
+          "Z up",
+          "Y up"
+        ]
+      },
+      {
+        "name":"Reset Origin"
+      },
+      {
+        "name":"Material"
       }
     ],
     "outputs":[
@@ -931,6 +1224,66 @@
       },
       {
         "name":"Profile Angle"
+      },
+      {
+        "name":"Path Scale"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Mesh"
+      }
+    ]
+  },
+  "Node_3D_Mesh_Path_Revolve":{
+    "name":"Path Revolve",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Position"
+      },
+      {
+        "name":"Rotation"
+      },
+      {
+        "name":"Scale"
+      },
+      {
+        "name":"Anchor"
+      },
+      {
+        "name":"Path"
+      },
+      {
+        "name":"Revolve Axis",
+        "display_data":[
+          "X",
+          "Y"
+        ]
+      },
+      {
+        "name":"Revolve Origin"
+      },
+      {
+        "name":"Caps"
+      },
+      {
+        "name":"Path Sample"
+      },
+      {
+        "name":"Revolve Sample"
+      },
+      {
+        "name":"Smooth"
+      },
+      {
+        "name":"Material Side"
+      },
+      {
+        "name":"Material Cap"
+      },
+      {
+        "name":"Path Scale"
       }
     ],
     "outputs":[
@@ -1166,11 +1519,34 @@
       },
       {
         "name":"Poloidal Angle"
+      },
+      {
+        "name":"Twist"
       }
     ],
     "outputs":[
       {
         "name":"Mesh"
+      }
+    ]
+  },
+  "Node_3D_Mesh_Vertex_Points":{
+    "name":"Mesh Vertices",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Mesh"
+      },
+      {
+        "name":"Apply Transform"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Positions"
+      },
+      {
+        "name":"Normals"
       }
     ]
   },
@@ -1219,6 +1595,255 @@
       },
       {
         "name":"Loop"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Mesh"
+      }
+    ]
+  },
+  "Node_3D_Mirror":{
+    "name":"Mirror 3D",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Position"
+      },
+      {
+        "name":"Rotation"
+      },
+      {
+        "name":"Scale"
+      },
+      {
+        "name":"Anchor"
+      },
+      {
+        "name":"Mesh"
+      },
+      {
+        "name":"Axis",
+        "display_data":[
+          "X",
+          "Y",
+          "Z"
+        ]
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Mesh"
+      }
+    ]
+  },
+  "Node_3D_Particle":{
+    "name":"3D Particle",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Mesh"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Spawn"
+      },
+      {
+        "name":"Spawn Type",
+        "display_data":[
+          "Stream",
+          "Burst",
+          "Trigger"
+        ]
+      },
+      {
+        "name":"Spawn Trigger"
+      },
+      {
+        "name":"Spawn Delay",
+        "tooltip":"Frames delay between each particle spawn."
+      },
+      {
+        "name":"Burst Duration"
+      },
+      {
+        "name":"Spawn Amount",
+        "tooltip":"Amount of particle spawn in that frame."
+      },
+      {
+        "name":"Spawn Source",
+        "display_data":[
+          "Shape",
+          "Path",
+          "Mesh Vertices",
+          "Direct Data"
+        ]
+      },
+      {
+        "name":"Spawn Origin"
+      },
+      {
+        "name":"Spawn Path"
+      },
+      {
+        "name":"Spawn Data"
+      },
+      {
+        "name":"Lifespan"
+      },
+      {
+        "name":"Velocity"
+      },
+      {
+        "name":"Acceleration"
+      },
+      {
+        "name":"Velocity Over Life"
+      },
+      {
+        "name":"Follow Spawn Shape"
+      },
+      {
+        "name":"Rotation"
+      },
+      {
+        "name":"Rotational Speed"
+      },
+      {
+        "name":"Rotational Speed Over Life"
+      },
+      {
+        "name":"Snap Rotation"
+      },
+      {
+        "name":"Scale"
+      },
+      {
+        "name":"Size"
+      },
+      {
+        "name":"Size Over Life"
+      },
+      {
+        "name":"Color Over Lifetime"
+      },
+      {
+        "name":"Random Blend"
+      },
+      {
+        "name":"Color by Index"
+      },
+      {
+        "name":"Spawn Span"
+      },
+      {
+        "name":"Blend Mode",
+        "display_data":[
+          "Normal",
+          "Alpha",
+          "Additive",
+          "Maximum"
+        ]
+      },
+      {
+        "name":"Spawn Mesh"
+      },
+      {
+        "name":"Spawn Shape",
+        "display_data":[
+          "Box",
+          "Sphere",
+          "Circle"
+        ]
+      },
+      {
+        "name":"Loop"
+      },
+      {
+        "name":"Billboard"
+      },
+      {
+        "name":"Transparent"
+      },
+      {
+        "name":"Follow Path"
+      },
+      {
+        "name":"Path"
+      },
+      {
+        "name":"Path Deviation"
+      },
+      {
+        "name":"Use Physics"
+      },
+      {
+        "name":"Gravity"
+      },
+      {
+        "name":"Gravity Direction"
+      },
+      {
+        "name":"Turning"
+      },
+      {
+        "name":"Turn Both Directions",
+        "tooltip":"Apply randomized 1, -1 multiplier to the turning speed."
+      },
+      {
+        "name":"Turn Scale with Speed"
+      },
+      {
+        "name":"Collide Ground"
+      },
+      {
+        "name":"Ground Offset Type",
+        "display_data":[
+          "Relative",
+          "Absolute"
+        ]
+      },
+      {
+        "name":"Ground Offset"
+      },
+      {
+        "name":"Bounce Amount"
+      },
+      {
+        "name":"Bounce Friction",
+        "tooltip":"Apply horizontal friction once particle stop bouncing."
+      },
+      {
+        "name":"Use Wiggles"
+      },
+      {
+        "name":"Direction Wiggle"
+      },
+      {
+        "name":"Position Wiggle"
+      },
+      {
+        "name":"Rotation Wiggle"
+      },
+      {
+        "name":"Scale Wiggle"
+      },
+      {
+        "name":"Alpha Over Life"
+      },
+      {
+        "name":"Follow Velocity"
+      },
+      {
+        "name":"Alpha"
+      },
+      {
+        "name":"Path Range"
+      },
+      {
+        "name":"Spawn Rotation"
       }
     ],
     "outputs":[
@@ -1280,9 +1905,9 @@
         "name":"Objects"
       },
       {
-        "name":"Object Mode",
+        "name":"Object Type",
         "display_data":[
-          "Duplicate",
+          "Single",
           "Array"
         ]
       },
@@ -1318,6 +1943,50 @@
       },
       {
         "name":"Use Instance"
+      },
+      {
+        "name":"Pattern",
+        "display_data":[
+          "Linear",
+          "Grid",
+          "Circular"
+        ]
+      },
+      {
+        "name":"Grid"
+      },
+      {
+        "name":"Shift Position Y"
+      },
+      {
+        "name":"Shift Position Z"
+      },
+      {
+        "name":"Radius"
+      },
+      {
+        "name":"Shift Path"
+      },
+      {
+        "name":"Look At Center"
+      },
+      {
+        "name":"Follow Path"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Position Scatter"
+      },
+      {
+        "name":"Rotation Scatter"
+      },
+      {
+        "name":"Scale Scatter"
+      },
+      {
+        "name":"Scale Uniform"
       }
     ],
     "outputs":[
@@ -1398,7 +2067,7 @@
     ]
   },
   "Node_3D_Transform":{
-    "name":"Transform",
+    "name":"Transform 3D",
     "tooltip":"Transform 3D object.",
     "inputs":[
       {
@@ -1424,7 +2093,7 @@
     ]
   },
   "Node_3D_Transform_Image":{
-    "name":"Transform 3D",
+    "name":"Transform Image 3D",
     "tooltip":"Transform image in 3D space",
     "inputs":[
       {
@@ -1592,7 +2261,7 @@
         "name":"Position"
       },
       {
-        "name":"Rotation"
+        "name":"Base Rotation"
       },
       {
         "name":"Scale"
@@ -1608,6 +2277,27 @@
       },
       {
         "name":"Distance"
+      },
+      {
+        "name":"Rotate by Direction"
+      },
+      {
+        "name":"Direction Shift"
+      },
+      {
+        "name":"Rotation Jitter"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Position Jitter"
+      },
+      {
+        "name":"Scale Jitter"
+      },
+      {
+        "name":"Color Jitter"
       }
     ],
     "outputs":[
@@ -1941,6 +2631,88 @@
       }
     ]
   },
+  "Node_Armature_Bone":{
+    "name":"Armature Bone",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Origin"
+      },
+      {
+        "name":"Type",
+        "display_data":[
+          "Polar",
+          "Two Points"
+        ]
+      },
+      {
+        "name":"Length"
+      },
+      {
+        "name":"Direction"
+      },
+      {
+        "name":"Tail"
+      },
+      {
+        "name":"Armature"
+      },
+      {
+        "name":"Name"
+      },
+      {
+        "name":"Parent"
+      },
+      {
+        "name":"Connect"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Armature"
+      }
+    ]
+  },
+  "Node_Armature_From_Path":{
+    "name":"Armature from Path",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Path"
+      },
+      {
+        "name":"Bones"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Armature"
+      }
+    ]
+  },
+  "Node_Armature_IK":{
+    "name":"Armature IK",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Armature"
+      },
+      {
+        "name":"Origin"
+      },
+      {
+        "name":"Target"
+      },
+      {
+        "name":"Name"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Armature"
+      }
+    ]
+  },
   "Node_Armature_Mesh_Rig":{
     "name":"Armature Mesh Rig",
     "tooltip":"Rig mesh to armature system.",
@@ -1961,6 +2733,39 @@
     "outputs":[
       {
         "name":"Rigged Surface"
+      }
+    ]
+  },
+  "Node_Armature_Mirror":{
+    "name":"Armature Mirror",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Armature"
+      },
+      {
+        "name":"Origin"
+      },
+      {
+        "name":"Axis"
+      },
+      {
+        "name":"Suffix"
+      },
+      {
+        "name":"Angle Mode",
+        "display_data":[
+          "Bone",
+          "Custom"
+        ]
+      },
+      {
+        "name":"Angle"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Armature"
       }
     ]
   },
@@ -1995,6 +2800,88 @@
       }
     ]
   },
+  "Node_Armature_Pose_Bone":{
+    "name":"Armature Pose Bone",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Armature"
+      },
+      {
+        "name":"Bone"
+      },
+      {
+        "name":"Position"
+      },
+      {
+        "name":"Rotation"
+      },
+      {
+        "name":"Scale"
+      },
+      {
+        "name":"Position Mode",
+        "display_data":[
+          "Absolute",
+          "Relative"
+        ]
+      },
+      {
+        "name":"Position Mode",
+        "display_data":[
+          "Absolute",
+          "Relative"
+        ]
+      },
+      {
+        "name":"Position Mode",
+        "display_data":[
+          "Absolute",
+          "Relative"
+        ]
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Armature"
+      }
+    ]
+  },
+  "Node_Armature_Pose_Stagger":{
+    "name":"Armature Stagger",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Armature"
+      },
+      {
+        "name":"Bone"
+      },
+      {
+        "name":"Amount"
+      },
+      {
+        "name":"Rotation"
+      },
+      {
+        "name":"Scale"
+      },
+      {
+        "name":"Stiffness"
+      },
+      {
+        "name":"Frame"
+      },
+      {
+        "name":"Intertia"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Armature"
+      }
+    ]
+  },
   "Node_Armature_Sample":{
     "name":"Armature Sample",
     "tooltip":"Sample point from armature system.",
@@ -2003,7 +2890,7 @@
         "name":"Armature"
       },
       {
-        "name":"Bone name"
+        "name":"Bone"
       },
       {
         "name":"Sample point"
@@ -2012,6 +2899,26 @@
     "outputs":[
       {
         "name":"Position"
+      }
+    ]
+  },
+  "Node_Armature_Subdivide":{
+    "name":"Armature Subdivide",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Armature"
+      },
+      {
+        "name":"Bone"
+      },
+      {
+        "name":"Subdivision"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Armature"
       }
     ]
   },
@@ -2528,6 +3435,26 @@
       }
     ]
   },
+  "Node_Array_Trim":{
+    "name":"Array Trim",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Array"
+      },
+      {
+        "name":"Trim Start"
+      },
+      {
+        "name":"Trim End"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Array"
+      }
+    ]
+  },
   "Node_Array_Unique":{
     "name":"Array Unique",
     "tooltip":"Return a new array with all duplicate values removed.",
@@ -2686,6 +3613,119 @@
       }
     ]
   },
+  "Node_Atlas_Affector":{
+    "name":"Atlas Affector",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Atlas In"
+      },
+      {
+        "name":"Influence Shape",
+        "display_data":[
+          "Area",
+          "Linear Wipe",
+          "Map"
+        ]
+      },
+      {
+        "name":"Area"
+      },
+      {
+        "name":"Wipe Origin"
+      },
+      {
+        "name":"Wipe Angle"
+      },
+      {
+        "name":"Falloff"
+      },
+      {
+        "name":"Influence Map"
+      },
+      {
+        "name":"Effect Position"
+      },
+      {
+        "name":"Mode",
+        "display_data":[
+          "Absolute",
+          "Relative"
+        ]
+      },
+      {
+        "name":"Position"
+      },
+      {
+        "name":"Set Rotation"
+      },
+      {
+        "name":"Mode",
+        "display_data":[
+          "Absolute",
+          "Relative"
+        ]
+      },
+      {
+        "name":"Rotation"
+      },
+      {
+        "name":"Recalculate Position"
+      },
+      {
+        "name":"Set Scale"
+      },
+      {
+        "name":"Mode",
+        "display_data":[
+          "Absolute",
+          "Additive",
+          "Multiplicative"
+        ]
+      },
+      {
+        "name":"Scale"
+      },
+      {
+        "name":"Anchor"
+      },
+      {
+        "name":"Set Blending"
+      },
+      {
+        "name":"Mode",
+        "display_data":[
+          "Absolute",
+          "Multiplicative"
+        ]
+      },
+      {
+        "name":"Blend"
+      },
+      {
+        "name":"Set Alpha"
+      },
+      {
+        "name":"Mode",
+        "display_data":[
+          "Absolute",
+          "Additive",
+          "Multiplicative"
+        ]
+      },
+      {
+        "name":"Alpha"
+      },
+      {
+        "name":"Falloff Curve"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Atlas Out"
+      }
+    ]
+  },
   "Node_Atlas_Draw":{
     "name":"Draw Atlas",
     "tooltip":"Render image atlas to a surface.",
@@ -2698,6 +3738,12 @@
       },
       {
         "name":"Combine"
+      },
+      {
+        "name":"Use Base Dimension"
+      },
+      {
+        "name":"Padding"
       }
     ],
     "outputs":[
@@ -2967,8 +4013,8 @@
       {
         "name":"Axis",
         "display_data":[
-          "x",
-          "y"
+          "X",
+          "Y"
         ]
       },
       {
@@ -3022,7 +4068,6 @@
       },
       {
         "name":"Oversample mode",
-        "tooltip":"How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.",
         "display_data":[
           "Empty",
           "Clamp",
@@ -3036,7 +4081,7 @@
         "name":"Mask feather"
       },
       {
-        "name":"Height map"
+        "name":"Height Map"
       }
     ],
     "outputs":[
@@ -3100,6 +4145,7 @@
       },
       {
         "name":"Blend mode",
+        "tooltip":{},
         "display_data":[
           "Normal",
           "Replace",
@@ -3167,17 +4213,17 @@
       {
         "name":"Horizontal Align",
         "display_data":[
-          "@ref sprite(__newsprite1122)",
-          "@ref sprite(__newsprite1122)",
-          "@ref sprite(__newsprite1122)"
+          "@ref sprite(__newsprite1158)",
+          "@ref sprite(__newsprite1158)",
+          "@ref sprite(__newsprite1158)"
         ]
       },
       {
         "name":"Vertical Align",
         "display_data":[
-          "@ref sprite(__newsprite1123)",
-          "@ref sprite(__newsprite1123)",
-          "@ref sprite(__newsprite1123)"
+          "@ref sprite(__newsprite1159)",
+          "@ref sprite(__newsprite1159)",
+          "@ref sprite(__newsprite1159)"
         ]
       },
       {
@@ -3221,13 +4267,51 @@
         "name":"Channel"
       },
       {
-        "name":"Width map"
+        "name":"Width Map"
       },
       {
         "name":"Blending"
       },
       {
         "name":"Smoothness"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Surface Out"
+      }
+    ]
+  },
+  "Node_Blend_Height":{
+    "name":"Blend Height",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Background"
+      },
+      {
+        "name":"Foreground"
+      },
+      {
+        "name":"Factor"
+      },
+      {
+        "name":"Type",
+        "display_data":[
+          "Exponent",
+          "Root",
+          "Sigmoid",
+          "Quadratic",
+          "Cubic",
+          "Circular"
+        ]
+      },
+      {
+        "name":"Mode",
+        "display_data":[
+          "Union",
+          "Intersect"
+        ]
       }
     ],
     "outputs":[
@@ -3306,10 +4390,11 @@
         "name":"Direction"
       },
       {
-        "name":"Types",
+        "name":"Type",
         "display_data":[
           "Gaussian",
-          "Zoom"
+          "Zoom",
+          "Directional"
         ]
       },
       {
@@ -3343,7 +4428,6 @@
       },
       {
         "name":"Oversample mode",
-        "tooltip":"How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.",
         "display_data":[
           "Empty",
           "Clamp",
@@ -3420,7 +4504,7 @@
         "name":"Mask feather"
       },
       {
-        "name":"Strength map"
+        "name":"Strength Map"
       }
     ],
     "outputs":[
@@ -3544,16 +4628,19 @@
         "name":"Mask feather"
       },
       {
-        "name":"Strength map"
+        "name":"Strength Map"
       },
       {
-        "name":"Direction map"
+        "name":"Direction Map"
       },
       {
-        "name":"Single direction"
+        "name":"Single Direction"
       },
       {
         "name":"Gamma Correction"
+      },
+      {
+        "name":"Fade Distance"
       }
     ],
     "outputs":[
@@ -3627,7 +4714,6 @@
       },
       {
         "name":"Oversample mode",
-        "tooltip":"How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.",
         "display_data":[
           "Empty",
           "Clamp",
@@ -3653,7 +4739,7 @@
         "name":"Mask feather"
       },
       {
-        "name":"Strength map"
+        "name":"Strength Map"
       },
       {
         "name":"Gamma Correction"
@@ -3725,7 +4811,6 @@
       },
       {
         "name":"Oversample mode",
-        "tooltip":"How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.",
         "display_data":[
           "Empty",
           "Clamp",
@@ -3764,10 +4849,10 @@
         "name":"Gradient"
       },
       {
-        "name":"Gradient map"
+        "name":"Gradient Map"
       },
       {
-        "name":"Gradient map range"
+        "name":"Gradient Map Range"
       },
       {
         "name":"Use Gradient"
@@ -3814,7 +4899,7 @@
         "name":"Mask feather"
       },
       {
-        "name":"Strength map"
+        "name":"Strength Map"
       },
       {
         "name":"Step"
@@ -3844,7 +4929,6 @@
       },
       {
         "name":"Oversample mode",
-        "tooltip":"How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.",
         "display_data":[
           "Empty",
           "Clamp",
@@ -3881,7 +4965,7 @@
         "name":"Mask feather"
       },
       {
-        "name":"Strength map"
+        "name":"Strength Map"
       },
       {
         "name":"Gamma Correction"
@@ -3895,6 +4979,9 @@
           "Blur",
           "Step"
         ]
+      },
+      {
+        "name":"Fade"
       }
     ],
     "outputs":[
@@ -3950,7 +5037,7 @@
         "name":"Color 2"
       },
       {
-        "name":"Amount Map"
+        "name":"Scale Map"
       },
       {
         "name":"Angle Map"
@@ -4036,6 +5123,29 @@
       }
     ]
   },
+  "Node_Buffer_to_String":{
+    "name":"Buffer to Text",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Buffer"
+      },
+      {
+        "name":"Format",
+        "display_data":[
+          "Binary",
+          "Hexadecimal",
+          "ASCII",
+          "Base64"
+        ]
+      }
+    ],
+    "outputs":[
+      {
+        "name":"String Out"
+      }
+    ]
+  },
   "Node_BW":{
     "name":"BW",
     "tooltip":"Convert color image to black and white.",
@@ -4068,10 +5178,10 @@
         "name":"Mask feather"
       },
       {
-        "name":"Brightness map"
+        "name":"Brightness Map"
       },
       {
-        "name":"Contrast map"
+        "name":"Contrast Map"
       }
     ],
     "outputs":[
@@ -4105,7 +5215,7 @@
         "name":"Path"
       },
       {
-        "name":"Content"
+        "name":"Buffer"
       }
     ],
     "outputs":[]
@@ -4302,6 +5412,12 @@
           "Hold",
           "Clear"
         ]
+      },
+      {
+        "name":"Data Source"
+      },
+      {
+        "name":"Transfer Dimension"
       }
     ],
     "outputs":[
@@ -4404,7 +5520,7 @@
         "name":"Colored"
       },
       {
-        "name":"Scale map"
+        "name":"Scale Map"
       },
       {
         "name":"Rotation"
@@ -4445,10 +5561,10 @@
         "name":"Color 2"
       },
       {
-        "name":"Amount map"
+        "name":"Amount Map"
       },
       {
-        "name":"Angle map"
+        "name":"Angle Map"
       },
       {
         "name":"Type",
@@ -4488,7 +5604,7 @@
         "name":"Active"
       },
       {
-        "name":"Strength map"
+        "name":"Strength Map"
       },
       {
         "name":"Type",
@@ -4611,28 +5727,28 @@
         "name":"Mask feather"
       },
       {
-        "name":"Brightness map"
+        "name":"Brightness Map"
       },
       {
-        "name":"Contrast map"
+        "name":"Contrast Map"
       },
       {
-        "name":"Hue map"
+        "name":"Hue Map"
       },
       {
-        "name":"Saturation map"
+        "name":"Saturation Map"
       },
       {
-        "name":"Value map"
+        "name":"Value Map"
       },
       {
-        "name":"Blend map"
+        "name":"Blend amount Map"
       },
       {
-        "name":"Alpha map"
+        "name":"Alpha Map"
       },
       {
-        "name":"Exposure map"
+        "name":"Exposure Map"
       }
     ],
     "outputs":[
@@ -4807,7 +5923,7 @@
         "name":"Mask feather"
       },
       {
-        "name":"Threshold map"
+        "name":"Threshold Map"
       }
     ],
     "outputs":[
@@ -5025,13 +6141,13 @@
         "name":"Mask feather"
       },
       {
-        "name":"Gradient shift map"
+        "name":"Gradient Shift Map"
       },
       {
-        "name":"Gradient map"
+        "name":"Gradient Map"
       },
       {
-        "name":"Gradient map range"
+        "name":"Gradient Map Range"
       },
       {
         "name":"Keep Alpha"
@@ -5138,7 +6254,7 @@
         "tooltip":"Set value to the unconnected color channels."
       },
       {
-        "name":"Base value"
+        "name":"Base value Map"
       },
       {
         "name":"Array Input"
@@ -5246,6 +6362,9 @@
       },
       {
         "name":"Opacity 0"
+      },
+      {
+        "name":"Anchor"
       }
     ],
     "outputs":[
@@ -5343,7 +6462,6 @@
       },
       {
         "name":"Oversample mode",
-        "tooltip":"How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.",
         "display_data":[
           "Empty",
           "Clamp",
@@ -5419,6 +6537,29 @@
       }
     ]
   },
+  "Node_Corner_Data":{
+    "name":"Corner Data",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Top Left"
+      },
+      {
+        "name":"Top Right"
+      },
+      {
+        "name":"Bottom Left"
+      },
+      {
+        "name":"Bottom Right"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Corner"
+      }
+    ]
+  },
   "Node_Counter":{
     "name":"Frame Index",
     "tooltip":"Output current frame as frame index, or animation progress (0 - 1).",
@@ -5431,11 +6572,17 @@
       },
       {
         "name":"Mode",
-        "tooltip":"Counting mode\\n- Frame count: Count value up\/down per frame.\\n- Animation progress: Count from 0 (first frame) to 1 (last frame). ",
+        "tooltip":"Counting mode\r\n- Frame count: Count value up\/down per frame.\r\n- Animation progress: Count from 0 (first frame) to 1 (last frame).",
         "display_data":[
           "Frame count",
           "Animation progress"
         ]
+      },
+      {
+        "name":"Async"
+      },
+      {
+        "name":"Reset"
       }
     ],
     "outputs":[
@@ -5907,6 +7054,21 @@
       },
       {
         "name":"External Direction"
+      },
+      {
+        "name":"Dissipation Map"
+      },
+      {
+        "name":"Scale Map"
+      },
+      {
+        "name":"Flow rate Map"
+      },
+      {
+        "name":"External Strength Map"
+      },
+      {
+        "name":"External Direction Map"
       }
     ],
     "outputs":[
@@ -5933,7 +7095,6 @@
       },
       {
         "name":"Oversample mode",
-        "tooltip":"How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.",
         "display_data":[
           "Empty",
           "Clamp",
@@ -5959,10 +7120,10 @@
         "name":"Mask feather"
       },
       {
-        "name":"Strength map"
+        "name":"Strength Map"
       },
       {
-        "name":"Radius map"
+        "name":"Radius Map"
       }
     ],
     "outputs":[
@@ -6013,7 +7174,7 @@
       },
       {
         "name":"Position",
-        "tooltip":"Vector to displace pixel by."
+        "tooltip":"Vector to displace the pixel by."
       },
       {
         "name":"Strength"
@@ -6033,12 +7194,10 @@
         ]
       },
       {
-        "name":"Iterate",
-        "tooltip":"If not set, then strength value is multiplied directly to the displacement.\r\nIf set, then strength value control how many times the effect applies on itself."
+        "name":"Iterate"
       },
       {
         "name":"Oversample Mode",
-        "tooltip":"How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.",
         "display_data":[
           "Empty",
           "Clamp",
@@ -6072,7 +7231,7 @@
         "name":"Mask feather"
       },
       {
-        "name":"Strength map"
+        "name":"Strength Map"
       },
       {
         "name":"Separate axis"
@@ -6088,6 +7247,9 @@
       },
       {
         "name":"Reposition"
+      },
+      {
+        "name":"Repeat"
       }
     ],
     "outputs":[
@@ -6279,7 +7441,7 @@
         "name":"Size"
       },
       {
-        "name":"Scale Map"
+        "name":"Size Map"
       },
       {
         "name":"Angle"
@@ -6346,6 +7508,34 @@
       },
       {
         "name":"Seed"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Surface Out"
+      }
+    ]
+  },
+  "Node_Downscale":{
+    "name":"Downscale",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Surface In"
+      },
+      {
+        "name":"Downscale"
+      },
+      {
+        "name":"Mode",
+        "display_data":[
+          "Mix",
+          "Max",
+          "Min"
+        ]
+      },
+      {
+        "name":"Active"
       }
     ],
     "outputs":[
@@ -6432,7 +7622,7 @@
     "tooltip":"Edge detect by applying Sobel, Prewitt, or Laplacian kernel.",
     "inputs":[
       {
-        "name":"Surface in self"
+        "name":"Surface i"
       },
       {
         "name":"Algorithm",
@@ -6531,7 +7721,7 @@
         "name":"Mask feather"
       },
       {
-        "name":"Width map"
+        "name":"Width Map"
       }
     ],
     "outputs":[
@@ -6582,7 +7772,8 @@
           ".png",
           ".jpg",
           ".webp",
-          ".exr"
+          ".exr",
+          ".bmp"
         ]
       },
       {
@@ -6616,13 +7807,21 @@
         "name":"Use Built-in gif encoder"
       },
       {
-        "name":"Quality"
+        "name":"Quality",
+        "tooltip":[0.0,3.0,1.0]
       },
       {
         "name":"Scale"
       },
       {
         "name":"File name"
+      },
+      {
+        "name":"Batch gif",
+        "tooltip":"Batch animations to reduce memory footprint. Set to zero to export all at once."
+      },
+      {
+        "name":"Export on Update"
       }
     ],
     "outputs":[
@@ -6698,7 +7897,7 @@
         "tooltip":"Define enum choices, use comma to separate each choice."
       },
       {
-        "name":"Vector size",
+        "name":"Vector Size",
         "display_data":[
           "2",
           "3",
@@ -6709,7 +7908,7 @@
         "name":"Order"
       },
       {
-        "name":"Display preview gizmo"
+        "name":"Display Preview Gizmo"
       },
       {
         "name":"Step"
@@ -6831,8 +8030,8 @@
       {
         "name":"Axis",
         "display_data":[
-          "x",
-          "y"
+          "X",
+          "Y"
         ]
       },
       {
@@ -7133,7 +8332,7 @@
         "name":"Spawn Duration"
       },
       {
-        "name":"Spawn Szie"
+        "name":"Spawn Size"
       }
     ],
     "outputs":[
@@ -7277,6 +8476,65 @@
       },
       {
         "name":"Mask"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Surface Out"
+      }
+    ]
+  },
+  "Node_Flow_Path":{
+    "name":"Flow Path",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Surface In"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Mix"
+      },
+      {
+        "name":"Invert mask"
+      },
+      {
+        "name":"Mask feather"
+      },
+      {
+        "name":"Active"
+      },
+      {
+        "name":"Channel"
+      },
+      {
+        "name":"Path"
+      },
+      {
+        "name":"Radius"
+      },
+      {
+        "name":"Flow Rate"
+      },
+      {
+        "name":"Sample"
+      },
+      {
+        "name":"Apply Weight"
+      },
+      {
+        "name":"Flow Speed"
+      },
+      {
+        "name":"Invert"
+      },
+      {
+        "name":"Tile"
+      },
+      {
+        "name":"Blur"
       }
     ],
     "outputs":[
@@ -7486,13 +8744,16 @@
         "name":"Color"
       },
       {
-        "name":"Alpha"
+        "name":"Label Alpha"
       },
       {
-        "name":"Label size"
+        "name":"Text Color"
       },
       {
-        "name":"Blend label"
+        "name":"Reframe"
+      },
+      {
+        "name":"Padding"
       }
     ],
     "outputs":[]
@@ -7552,16 +8813,16 @@
         "name":"Phase"
       },
       {
-        "name":"Scale map"
+        "name":"Scale Map"
       },
       {
-        "name":"Density map"
+        "name":"Density Map"
       },
       {
-        "name":"Sharpness map"
+        "name":"Sharpness Map"
       },
       {
-        "name":"Phase map"
+        "name":"Phase Map"
       },
       {
         "name":"Rotation"
@@ -7620,6 +8881,9 @@
       },
       {
         "name":"Max Width"
+      },
+      {
+        "name":"Invert"
       }
     ],
     "outputs":[
@@ -7678,6 +8942,31 @@
           "Outer",
           "Inner"
         ]
+      },
+      {
+        "name":"Blend Mode",
+        "display_data":[
+          "Normal",
+          "Replace",
+          -1.0,
+          "Lighten",
+          "Screen",
+          -1.0,
+          "Darken",
+          "Multiply"
+        ]
+      },
+      {
+        "name":"Pixel Distance"
+      },
+      {
+        "name":"Strength Curve"
+      },
+      {
+        "name":"Size Map"
+      },
+      {
+        "name":"Strength Map"
       }
     ],
     "outputs":[
@@ -7746,28 +9035,111 @@
         "name":"Scale"
       },
       {
-        "name":"Angle map"
+        "name":"Angle Map"
       },
       {
-        "name":"Radius map"
+        "name":"Radius Map"
       },
       {
-        "name":"Shift map"
+        "name":"Shift Map"
       },
       {
-        "name":"Scale map"
+        "name":"Scale Map"
       },
       {
         "name":"Uniform ratio"
       },
       {
-        "name":"Gradient map"
+        "name":"Gradient Map"
       },
       {
-        "name":"Gradient map range"
+        "name":"Gradient Map Range"
       },
       {
         "name":"Shape"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Surface Out"
+      }
+    ]
+  },
+  "Node_Gradient_Cos":{
+    "name":"Draw Cos Gradient",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Dimension"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"a"
+      },
+      {
+        "name":"a Max"
+      },
+      {
+        "name":"a Map"
+      },
+      {
+        "name":"b"
+      },
+      {
+        "name":"b Max"
+      },
+      {
+        "name":"b Map"
+      },
+      {
+        "name":"c"
+      },
+      {
+        "name":"c Max"
+      },
+      {
+        "name":"c Map"
+      },
+      {
+        "name":"d"
+      },
+      {
+        "name":"d Max"
+      },
+      {
+        "name":"d Map"
+      },
+      {
+        "name":"Type",
+        "display_data":[
+          "Linear",
+          "Circular",
+          "Radial",
+          "Diamond"
+        ]
+      },
+      {
+        "name":"Angle"
+      },
+      {
+        "name":"Radius"
+      },
+      {
+        "name":"Center"
+      },
+      {
+        "name":"Shape"
+      },
+      {
+        "name":"Uniform ratio"
+      },
+      {
+        "name":"Shift"
+      },
+      {
+        "name":"Scale"
       }
     ],
     "outputs":[
@@ -8002,7 +9374,7 @@
         "name":"Brightness"
       },
       {
-        "name":"Brightness map"
+        "name":"Brightness Map"
       },
       {
         "name":"Seed"
@@ -8011,37 +9383,37 @@
         "name":"Red"
       },
       {
-        "name":"Red map"
+        "name":"Red Map"
       },
       {
         "name":"Green"
       },
       {
-        "name":"Green map"
+        "name":"Green Map"
       },
       {
         "name":"Blue"
       },
       {
-        "name":"Blue map"
+        "name":"Blue Map"
       },
       {
         "name":"Hue"
       },
       {
-        "name":"Hue map"
+        "name":"Hue Map"
       },
       {
         "name":"Saturation"
       },
       {
-        "name":"Saturation map"
+        "name":"Saturation Map"
       },
       {
         "name":"Value"
       },
       {
-        "name":"Value map"
+        "name":"Value Map"
       },
       {
         "name":"Blend mode",
@@ -8153,10 +9525,10 @@
         "name":"Mask feather"
       },
       {
-        "name":"Brightness map"
+        "name":"Brightness Map"
       },
       {
-        "name":"Contrast map"
+        "name":"Contrast Map"
       }
     ],
     "outputs":[
@@ -8220,7 +9592,7 @@
         "name":"Anti-aliasing"
       },
       {
-        "name":"Scale Map"
+        "name":"Grid Size Map"
       },
       {
         "name":"Gap Map"
@@ -8241,10 +9613,10 @@
         "name":"Flip Horizontal"
       },
       {
-        "name":"Gradient Map"
+        "name":"Tile Color Map"
       },
       {
-        "name":"Gradient Map Range"
+        "name":"Tile Color Map Range"
       },
       {
         "name":"Flip Vertical"
@@ -8360,10 +9732,10 @@
         "name":"Truchet Threshold"
       },
       {
-        "name":"Gradient Map"
+        "name":"Tile Color Map"
       },
       {
-        "name":"Gradient Map Range"
+        "name":"Tile Color Map Range"
       },
       {
         "name":"Texture Angle"
@@ -8409,8 +9781,8 @@
       {
         "name":"Shift Axis",
         "display_data":[
-          "x",
-          "y"
+          "X",
+          "Y"
         ]
       },
       {
@@ -8492,10 +9864,10 @@
         "name":"Angle Map"
       },
       {
-        "name":"Gradient Map"
+        "name":"Tile Color Map"
       },
       {
-        "name":"Gradient Map Range"
+        "name":"Tile Color Map Range"
       },
       {
         "name":"Level"
@@ -8575,10 +9947,10 @@
         "name":"Truchet Threshold"
       },
       {
-        "name":"Gradient Map"
+        "name":"Tile Color Map"
       },
       {
-        "name":"Gradient Map Range"
+        "name":"Tile Color Map Range"
       },
       {
         "name":"Texture Angle"
@@ -8591,6 +9963,33 @@
       },
       {
         "name":"Mask"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Surface Out"
+      }
+    ]
+  },
+  "Node_Grid_Warp":{
+    "name":"Grid Warp",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Surface In"
+      },
+      {
+        "name":"Active"
+      },
+      {
+        "name":"Grid",
+        "tooltip":"Amount of grid subdivision. Higher number means more grid, detail."
+      },
+      {
+        "name":"Subdivision"
+      },
+      {
+        "name":"Anchor 0"
       }
     ],
     "outputs":[
@@ -8660,7 +10059,7 @@
         "tooltip":"Define enum choices, use comma to separate each choice."
       },
       {
-        "name":"Vector size",
+        "name":"Vector Size",
         "display_data":[
           "2",
           "3",
@@ -8671,7 +10070,7 @@
         "name":"Order"
       },
       {
-        "name":"Display preview gizmo"
+        "name":"Display Preview Gizmo"
       },
       {
         "name":"Step"
@@ -8737,7 +10136,7 @@
     ],
     "outputs":[
       {
-        "name":"Output"
+        "name":"Out"
       }
     ]
   },
@@ -8805,10 +10204,10 @@
         "name":"Tile length"
       },
       {
-        "name":"Gradient Map"
+        "name":"Tile Color Map"
       },
       {
-        "name":"Gradient Map Range"
+        "name":"Tile Color Map Range"
       },
       {
         "name":"Texture Angle"
@@ -9053,14 +10452,14 @@
         "name":"Padding"
       },
       {
-        "name":"Stretch frame",
+        "name":"Stretch Frame",
         "tooltip":"Stretch animation speed to match project length."
       },
       {
-        "name":"Animation speed"
+        "name":"Animation Speed"
       },
       {
-        "name":"Loop modes",
+        "name":"Loop Modes",
         "display_data":[
           "Loop",
           "Ping pong",
@@ -9072,13 +10471,13 @@
         "name":"Set animation length to match"
       },
       {
-        "name":"Custom frame order"
+        "name":"Custom Frame Order"
       },
       {
         "name":"Frame"
       },
       {
-        "name":"Canvas size",
+        "name":"Canvas Size",
         "display_data":[
           "First",
           "Minimum",
@@ -9200,6 +10599,38 @@
       },
       {
         "name":"Surfaces"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Atlas data"
+      }
+    ]
+  },
+  "Node_Image_List_Bug":{
+    "name":"Bug List",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Texts"
+      },
+      {
+        "name":"Dimension"
+      },
+      {
+        "name":"Origin"
+      },
+      {
+        "name":"Time Per List"
+      },
+      {
+        "name":"Start Frame"
+      },
+      {
+        "name":"Spacing"
+      },
+      {
+        "name":"Ease in"
       }
     ],
     "outputs":[
@@ -9387,10 +10818,10 @@
         "name":"Gradient"
       },
       {
-        "name":"Gradient map"
+        "name":"Gradient Map"
       },
       {
-        "name":"Gradient map range"
+        "name":"Gradient Map Range"
       }
     ],
     "outputs":[
@@ -9483,6 +10914,52 @@
         "name":"Array"
       }
     ]
+  },
+  "Node_Iterate_Each_File_Inline":{
+    "name":"Loop File",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Path"
+      },
+      {
+        "name":"Extensions"
+      },
+      {
+        "name":"Type",
+        "display_data":[
+          "Surface",
+          "Text"
+        ]
+      },
+      {
+        "name":"Active"
+      }
+    ],
+    "outputs":[]
+  },
+  "Node_Iterate_Each_File_Inline_Input":{
+    "name":"Loop Input",
+    "tooltip":"",
+    "inputs":[],
+    "outputs":[
+      {
+        "name":"Surface"
+      },
+      {
+        "name":"Path"
+      }
+    ]
+  },
+  "Node_Iterate_Each_File_Inline_Output":{
+    "name":"Loop Output",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Value Out"
+      }
+    ],
+    "outputs":[]
   },
   "Node_Iterate_Each_Inline":{
     "name":"Loop Array",
@@ -9721,7 +11198,7 @@
         "tooltip":"Define enum choices, use comma to separate each choice."
       },
       {
-        "name":"Vector size",
+        "name":"Vector Size",
         "display_data":[
           "2",
           "3",
@@ -9732,7 +11209,7 @@
         "name":"Order"
       },
       {
-        "name":"Display preview gizmo"
+        "name":"Display Preview Gizmo"
       },
       {
         "name":"Step"
@@ -10047,6 +11524,16 @@
       }
     ]
   },
+  "Node_Layer_Output":{
+    "name":"Layer Output",
+    "tooltip":"",
+    "inputs":[],
+    "outputs":[
+      {
+        "name":"Surface Out"
+      }
+    ]
+  },
   "Node_Level":{
     "name":"Level",
     "tooltip":"Adjust brightness of an image by changing its brightness range.",
@@ -10141,10 +11628,10 @@
         "name":"Mask feather"
       },
       {
-        "name":"Midpoint map"
+        "name":"Midpoint Map"
       },
       {
-        "name":"Range map"
+        "name":"Range Map"
       },
       {
         "name":"Keep Original"
@@ -10185,8 +11672,7 @@
         "name":"Rotation"
       },
       {
-        "name":"Path",
-        "tooltip":"Draw line along path."
+        "name":"Path"
       },
       {
         "name":"Range",
@@ -10265,7 +11751,7 @@
         ]
       },
       {
-        "name":"Segments"
+        "name":"Segment"
       },
       {
         "name":"Scale Texture to Length"
@@ -10498,7 +11984,7 @@
       },
       {
         "name":"Lua code",
-        "tooltip":"@ref object(o_dialog_lua_reference)"
+        "tooltip":{}
       },
       {
         "name":"Execution thread"
@@ -10537,7 +12023,7 @@
     "inputs":[
       {
         "name":"Lua code",
-        "tooltip":"@ref object(o_dialog_lua_reference)"
+        "tooltip":{}
       },
       {
         "name":"Run order",
@@ -10568,7 +12054,7 @@
       },
       {
         "name":"Lua code",
-        "tooltip":"@ref object(o_dialog_lua_reference)"
+        "tooltip":{}
       },
       {
         "name":"Execution thread"
@@ -10836,6 +12322,26 @@
     "outputs":[
       {
         "name":"Matrix"
+      }
+    ]
+  },
+  "Node_Mesh_Create_Lattice":{
+    "name":"Lattice Mesh",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Area"
+      },
+      {
+        "name":"Sample"
+      },
+      {
+        "name":"Quad"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Mesh"
       }
     ]
   },
@@ -11157,6 +12663,80 @@
       }
     ]
   },
+  "Node_MK_Cable":{
+    "name":"MK Cables",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Surface In"
+      },
+      {
+        "name":"Point 1"
+      },
+      {
+        "name":"Point 2"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Tension"
+      },
+      {
+        "name":"Amount"
+      },
+      {
+        "name":"Thickness"
+      },
+      {
+        "name":"Colors"
+      },
+      {
+        "name":"Segments"
+      },
+      {
+        "name":"Radius 1"
+      },
+      {
+        "name":"Radius 2"
+      },
+      {
+        "name":"Swing"
+      },
+      {
+        "name":"Amplitude"
+      },
+      {
+        "name":"Frequency"
+      },
+      {
+        "name":"Gravity"
+      },
+      {
+        "name":"Type",
+        "display_data":[
+          "Fix Points",
+          "Fix Point Array",
+          "Path Anchor",
+          "Path Sample"
+        ]
+      },
+      {
+        "name":"Points"
+      },
+      {
+        "name":"Path"
+      },
+      {
+        "name":"Path Points"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Surface Out"
+      }
+    ]
+  },
   "Node_MK_Delay_Machine":{
     "name":"MK Delay Machine",
     "tooltip":"Combines multiple frames of animation into one.",
@@ -11211,6 +12791,204 @@
     "outputs":[
       {
         "name":"Surface"
+      }
+    ]
+  },
+  "Node_MK_Dialog":{
+    "name":"MK Dialog",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Dimension"
+      },
+      {
+        "name":"Dialogs"
+      },
+      {
+        "name":"Output Dimension",
+        "display_data":[
+          "Fixed",
+          "Dynamic"
+        ]
+      },
+      {
+        "name":"Padding"
+      },
+      {
+        "name":"Change Case",
+        "display_data":[
+          "None",
+          "Lowercase",
+          "Uppercase",
+          "Titlecase"
+        ]
+      },
+      {
+        "name":"Font"
+      },
+      {
+        "name":"Size"
+      },
+      {
+        "name":"Anti-aliasing "
+      },
+      {
+        "name":"Letter Spacing"
+      },
+      {
+        "name":"Line Height"
+      },
+      {
+        "name":"Round Position"
+      },
+      {
+        "name":"Blend Mode",
+        "display_data":[
+          "Normal",
+          "Alpha"
+        ]
+      },
+      {
+        "name":"Color"
+      },
+      {
+        "name":"Color by Letter"
+      },
+      {
+        "name":"Render Background"
+      },
+      {
+        "name":"BG Color"
+      },
+      {
+        "name":"Max Line Width"
+      },
+      {
+        "name":"H Align",
+        "display_data":[
+          "@ref sprite(__newsprite1115)",
+          "@ref sprite(__newsprite1115)",
+          "@ref sprite(__newsprite1115)"
+        ]
+      },
+      {
+        "name":"V Align",
+        "display_data":[
+          "@ref sprite(__newsprite1116)",
+          "@ref sprite(__newsprite1116)",
+          "@ref sprite(__newsprite1116)"
+        ]
+      },
+      {
+        "name":"Duration Type",
+        "display_data":[
+          "Fixed",
+          "Letter Count",
+          "Word Count (space)"
+        ]
+      },
+      {
+        "name":"Fixed Duration"
+      },
+      {
+        "name":"Multiply Duration"
+      },
+      {
+        "name":"Manual Timer"
+      },
+      {
+        "name":"Manual Data"
+      },
+      {
+        "name":"Start Frame"
+      },
+      {
+        "name":"Dialog Spacing"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Track Position",
+        "display_data":[
+          "Start",
+          "End",
+          "Start\/End",
+          "Always"
+        ]
+      },
+      {
+        "name":"Apply Group",
+        "display_data":[
+          "Letter",
+          "Words",
+          "All"
+        ]
+      },
+      {
+        "name":"Origin"
+      },
+      {
+        "name":"Duration"
+      },
+      {
+        "name":"Animation",
+        "display_data":[
+          "Transform",
+          "Blending",
+          "Wiggle",
+          "Wave"
+        ]
+      },
+      {
+        "name":"Position"
+      },
+      {
+        "name":"Rotation"
+      },
+      {
+        "name":"Scale"
+      },
+      {
+        "name":"Anchor type",
+        "display_data":[
+          "Global",
+          "Local"
+        ]
+      },
+      {
+        "name":"Anchor Position",
+        "tooltip":"Anchor point for transformation, absolute value for global type, relative for local."
+      },
+      {
+        "name":"Color"
+      },
+      {
+        "name":"Alpha"
+      },
+      {
+        "name":"Amplitude"
+      },
+      {
+        "name":"Range"
+      },
+      {
+        "name":"Duration Type",
+        "display_data":[
+          "Frame",
+          "Ratio"
+        ]
+      },
+      {
+        "name":"Frequency"
+      },
+      {
+        "name":"Speed"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Surface Out"
       }
     ]
   },
@@ -11285,14 +13063,21 @@
         "name":"Scale"
       },
       {
-        "name":"Render Type",
+        "name":"Shape",
         "display_data":[
           "Leaf",
-          "Circle"
+          "Circle",
+          "Surface"
         ]
       },
       {
         "name":"Twist Radius"
+      },
+      {
+        "name":"Leaf Surface"
+      },
+      {
+        "name":"Rotation"
       }
     ],
     "outputs":[
@@ -11406,7 +13191,7 @@
         "name":"Progress"
       },
       {
-        "name":"Progress map"
+        "name":"Progress Map"
       },
       {
         "name":"Movement"
@@ -11424,10 +13209,10 @@
         "name":"Gravity"
       },
       {
-        "name":"Movement map"
+        "name":"Movement Map"
       },
       {
-        "name":"Rotation map"
+        "name":"Rotation Map"
       },
       {
         "name":"Brick Shift"
@@ -11441,6 +13226,104 @@
           "X",
           "Y"
         ]
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Surface Out"
+      }
+    ]
+  },
+  "Node_MK_Grass":{
+    "name":"MK Grass",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Surface In"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Source",
+        "display_data":[
+          "Area",
+          "Mask",
+          "Region",
+          "Color Picker"
+        ]
+      },
+      {
+        "name":"Area"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Picker"
+      },
+      {
+        "name":"Picker Threshold"
+      },
+      {
+        "name":"Shape",
+        "display_data":[
+          "Dense Bush",
+          "V",
+          "Hash",
+          "Line",
+          "W"
+        ]
+      },
+      {
+        "name":"Size"
+      },
+      {
+        "name":"Distribution"
+      },
+      {
+        "name":"Level"
+      },
+      {
+        "name":"Sharpness"
+      },
+      {
+        "name":"Render Type",
+        "display_data":[
+          "Gradient",
+          "Sample Multiply",
+          "Sample Add"
+        ]
+      },
+      {
+        "name":"Colors"
+      },
+      {
+        "name":"Noise Scale"
+      },
+      {
+        "name":"Noise Detail"
+      },
+      {
+        "name":"Color Variance"
+      },
+      {
+        "name":"Spread"
+      },
+      {
+        "name":"Fill Ground"
+      },
+      {
+        "name":"Ground"
+      },
+      {
+        "name":"Extra"
+      },
+      {
+        "name":"Sway X"
+      },
+      {
+        "name":"Ratio"
       }
     ],
     "outputs":[
@@ -11466,7 +13349,7 @@
         "name":"Light"
       },
       {
-        "name":"Scatter"
+        "name":"Amount"
       },
       {
         "name":"Seed"
@@ -11475,31 +13358,88 @@
         "name":"Shading"
       },
       {
-        "name":"Scatter direction"
+        "name":"Phase"
+      },
+      {
+        "name":"Position"
+      },
+      {
+        "name":"Amount"
+      },
+      {
+        "name":"Selection"
       },
       {
         "name":"Shift"
       },
       {
-        "name":"Stretch"
-      },
-      {
-        "name":"Stretch direction"
-      },
-      {
-        "name":"Stretch shift"
-      },
-      {
         "name":"Roundness"
       },
       {
-        "name":"Twist"
+        "name":"Amount"
       },
       {
-        "name":"Twist axis"
+        "name":"Axis"
       },
       {
-        "name":"Twist shift"
+        "name":"Shift"
+      },
+      {
+        "name":"Scatter Use"
+      },
+      {
+        "name":"Stretch Use"
+      },
+      {
+        "name":"Twist Use"
+      },
+      {
+        "name":"Ball Size"
+      },
+      {
+        "name":"Direction"
+      },
+      {
+        "name":"Amount Map"
+      },
+      {
+        "name":"Amount Map"
+      },
+      {
+        "name":"Selection Map"
+      },
+      {
+        "name":"Direction Map"
+      },
+      {
+        "name":"Shift Map"
+      },
+      {
+        "name":"Amount Map"
+      },
+      {
+        "name":"Axis Map"
+      },
+      {
+        "name":"Shift Map"
+      },
+      {
+        "name":"Roundness Map"
+      },
+      {
+        "name":"Light Map"
+      },
+      {
+        "name":"Shading Map"
+      },
+      {
+        "name":"Ball Size Map"
+      },
+      {
+        "name":"Light Height"
+      },
+      {
+        "name":"Light Height Map"
       }
     ],
     "outputs":[
@@ -11561,6 +13501,83 @@
       }
     ]
   },
+  "Node_MK_Parallax":{
+    "name":"MK Parallax",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Surface 0"
+      },
+      {
+        "name":"Position 0"
+      },
+      {
+        "name":"Parallax 0"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Surface Out"
+      }
+    ]
+  },
+  "Node_MK_Pile":{
+    "name":"MK Pile",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Surface In"
+      },
+      {
+        "name":"Dimension"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Pattern",
+        "display_data":[
+          "Auto",
+          "Manual"
+        ]
+      },
+      {
+        "name":"Depth"
+      },
+      {
+        "name":"Origin"
+      },
+      {
+        "name":"Amount"
+      },
+      {
+        "name":"Angles of Repose"
+      },
+      {
+        "name":"Column Shift"
+      },
+      {
+        "name":"Depth Adjustment"
+      },
+      {
+        "name":"Center Bias"
+      },
+      {
+        "name":"Amount"
+      },
+      {
+        "name":"Range"
+      },
+      {
+        "name":"Shuffle"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Surface Out"
+      }
+    ]
+  },
   "Node_MK_Rain":{
     "name":"MK Rain",
     "tooltip":"Generate deterministic rain.",
@@ -11575,10 +13592,10 @@
         "name":"Density"
       },
       {
-        "name":"Raindrop width"
+        "name":"Raindrop Width"
       },
       {
-        "name":"Raindrop length"
+        "name":"Raindrop Length"
       },
       {
         "name":"Color"
@@ -11601,29 +13618,53 @@
         ]
       },
       {
-        "name":"Snow size"
+        "name":"Snow Size"
       },
       {
         "name":"Texture"
       },
       {
-        "name":"Track extension"
+        "name":"Track Extension"
       },
       {
-        "name":"Size over lifetime"
+        "name":"Size over Lifetime"
       },
       {
-        "name":"Limited lifespan"
+        "name":"Limited Lifespan"
       },
       {
         "name":"Lifespan",
         "tooltip":"Lifespan of a droplet as a ratio of the entire animation."
       },
       {
-        "name":"Alpha over lifetime"
+        "name":"Alpha over Lifetime"
       },
       {
-        "name":"Fade alpha"
+        "name":"Fade Alpha"
+      },
+      {
+        "name":"Ground"
+      },
+      {
+        "name":"Ground Start"
+      },
+      {
+        "name":"Ripple"
+      },
+      {
+        "name":"Rip. Lifespan"
+      },
+      {
+        "name":"Rip. Radius"
+      },
+      {
+        "name":"Rip. Amount"
+      },
+      {
+        "name":"Rip. Delay"
+      },
+      {
+        "name":"Rip. Alpha"
       }
     ],
     "outputs":[
@@ -11813,7 +13854,7 @@
         "name":"Texture"
       },
       {
-        "name":"Background texture"
+        "name":"Background Texture"
       },
       {
         "name":"Type",
@@ -11834,7 +13875,7 @@
         "name":"Crop"
       },
       {
-        "name":"Edge type",
+        "name":"Edge Type",
         "display_data":[
           "Uniform",
           "Individual"
@@ -11844,42 +13885,705 @@
         "name":"Edge"
       },
       {
-        "name":"Edge bottom"
+        "name":"Edge Bottom"
       },
       {
-        "name":"Edge left"
+        "name":"Edge Left"
       },
       {
-        "name":"Edge right"
+        "name":"Edge Right"
       },
       {
-        "name":"Edge shift"
+        "name":"Edge Shift"
       },
       {
-        "name":"Full edge"
+        "name":"Full Edge"
       },
       {
-        "name":"Edge sprite",
+        "name":"Edge Sprite",
         "display_data":[
           "Single",
-          "Side + Center",
-          "Side + Center + Side"
+          "Left + Center + Right"
         ]
       },
       {
-        "name":"Edge transform",
+        "name":"Edge Transform",
         "display_data":[
           "Flip",
           "Rotate"
         ]
       },
       {
-        "name":"Sort array by bit"
+        "name":"Sort Array by Bit"
+      },
+      {
+        "name":"Inner Edge"
+      },
+      {
+        "name":"Inner Edge Shift"
       }
     ],
     "outputs":[
       {
         "name":"Surface Out"
+      }
+    ]
+  },
+  "Node_MK_Tree_Add_Branch":{
+    "name":"Tree Add Branch",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Tree"
+      },
+      {
+        "name":"Branch"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Tree"
+      }
+    ]
+  },
+  "Node_MK_Tree_Attract":{
+    "name":"Tree Attract",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Tree"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Area"
+      },
+      {
+        "name":"Falloff"
+      },
+      {
+        "name":"Falloff Curve"
+      },
+      {
+        "name":"Strength"
+      },
+      {
+        "name":"Mode",
+        "display_data":[
+          "Propagate",
+          "Direct"
+        ]
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Tree"
+      }
+    ]
+  },
+  "Node_MK_Tree_Branch":{
+    "name":"Tree Branch",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Tree"
+      },
+      {
+        "name":"Origin Position"
+      },
+      {
+        "name":"Origin Wiggle"
+      },
+      {
+        "name":"Length"
+      },
+      {
+        "name":"Direction"
+      },
+      {
+        "name":"Amount"
+      },
+      {
+        "name":"Thickness"
+      },
+      {
+        "name":"Segments"
+      },
+      {
+        "name":"Origin Ratio"
+      },
+      {
+        "name":"Gravity"
+      },
+      {
+        "name":"Direction Wiggle"
+      },
+      {
+        "name":"Thickness Curve"
+      },
+      {
+        "name":"Base Color"
+      },
+      {
+        "name":"Length Curve"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Reflect",
+        "display_data":[
+          "None",
+          "Randomize",
+          "Ordered"
+        ]
+      },
+      {
+        "name":"Gravity Curve"
+      },
+      {
+        "name":"Edge Blending",
+        "display_data":[
+          "None",
+          "Override",
+          "Multiply",
+          "Screen"
+        ]
+      },
+      {
+        "name":"L Edge Color"
+      },
+      {
+        "name":"Distribution",
+        "display_data":[
+          "Random",
+          "Uniform"
+        ]
+      },
+      {
+        "name":"Grow Delay"
+      },
+      {
+        "name":"Wave"
+      },
+      {
+        "name":"Wave Curve"
+      },
+      {
+        "name":"Curl"
+      },
+      {
+        "name":"Curl Curve"
+      },
+      {
+        "name":"Frequency"
+      },
+      {
+        "name":"Phase"
+      },
+      {
+        "name":"Length Blending",
+        "display_data":[
+          "None",
+          "Override",
+          "Multiply",
+          "Screen"
+        ]
+      },
+      {
+        "name":"Length Color"
+      },
+      {
+        "name":"R Edge Color"
+      },
+      {
+        "name":"Texture"
+      },
+      {
+        "name":"Direction Type",
+        "display_data":[
+          "Random",
+          "Uniform"
+        ]
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Trunk"
+      },
+      {
+        "name":"Branches"
+      }
+    ]
+  },
+  "Node_MK_Tree_Branch_To_Path":{
+    "name":"Branch to Path",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Branch"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Path"
+      }
+    ]
+  },
+  "Node_MK_Tree_Branch_Trim":{
+    "name":"Trim Branch",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Branch"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Mask"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Branch"
+      }
+    ]
+  },
+  "Node_MK_Tree_Grow":{
+    "name":"Tree Grow",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Tree"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Progress"
+      },
+      {
+        "name":"Thickness Effect"
+      },
+      {
+        "name":"Leaf Falloff"
+      },
+      {
+        "name":"Branch Speed"
+      },
+      {
+        "name":"Leaf Delay"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Tree"
+      }
+    ]
+  },
+  "Node_MK_Tree_Inline":{
+    "name":"MK Tree",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Gravity"
+      },
+      {
+        "name":"Dimension"
+      }
+    ],
+    "outputs":[]
+  },
+  "Node_MK_Tree_Leaf":{
+    "name":"Tree Leaves",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Branches"
+      },
+      {
+        "name":"Branch Position"
+      },
+      {
+        "name":"Amount"
+      },
+      {
+        "name":"Size"
+      },
+      {
+        "name":"Color Per Branch"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Color Per Leaf"
+      },
+      {
+        "name":"Spread"
+      },
+      {
+        "name":"Shape",
+        "display_data":[
+          "Leaf",
+          "Circle",
+          "Surface"
+        ]
+      },
+      {
+        "name":"Texture"
+      },
+      {
+        "name":"Offset"
+      },
+      {
+        "name":"Edge Color"
+      },
+      {
+        "name":"Color Per Branch Map"
+      },
+      {
+        "name":"Color Per Leaf Map"
+      },
+      {
+        "name":"Render Edge",
+        "display_data":[
+          "None",
+          "Override",
+          "Multiply",
+          "Screen"
+        ]
+      },
+      {
+        "name":"Pair"
+      },
+      {
+        "name":"Spread Over Branch"
+      },
+      {
+        "name":"Offset Over Branch"
+      },
+      {
+        "name":"Size Over Branch"
+      },
+      {
+        "name":"Distribution",
+        "display_data":[
+          "Random",
+          "Uniform"
+        ]
+      },
+      {
+        "name":"Color Over Branch"
+      },
+      {
+        "name":"Leaf Span"
+      },
+      {
+        "name":"Grow Delay"
+      },
+      {
+        "name":"Render Top Edge",
+        "display_data":[
+          "None",
+          "Override",
+          "Multiply",
+          "Screen"
+        ]
+      },
+      {
+        "name":"Top Edge Color"
+      },
+      {
+        "name":"Edge Color Map"
+      },
+      {
+        "name":"Top Edge Color Map"
+      },
+      {
+        "name":"Gravity"
+      },
+      {
+        "name":"Gravity Over Branch"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Branches"
+      }
+    ]
+  },
+  "Node_MK_Tree_Path_Root":{
+    "name":"Tree Trunk Path",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Path"
+      },
+      {
+        "name":"Sample"
+      },
+      {
+        "name":"Thickness"
+      },
+      {
+        "name":"Thickness Curve"
+      },
+      {
+        "name":"Base Color"
+      },
+      {
+        "name":"Edge Blending",
+        "display_data":[
+          "None",
+          "Override",
+          "Multiply",
+          "Screen"
+        ]
+      },
+      {
+        "name":"L Edge Color"
+      },
+      {
+        "name":"Wiggle"
+      },
+      {
+        "name":"Gravity"
+      },
+      {
+        "name":"Wiggle Curve"
+      },
+      {
+        "name":"Frequency"
+      },
+      {
+        "name":"Phase"
+      },
+      {
+        "name":"Wave"
+      },
+      {
+        "name":"Wave Curve"
+      },
+      {
+        "name":"Curl"
+      },
+      {
+        "name":"Curl Curve"
+      },
+      {
+        "name":"Length Blending",
+        "display_data":[
+          "None",
+          "Override",
+          "Multiply",
+          "Screen"
+        ]
+      },
+      {
+        "name":"Length Color"
+      },
+      {
+        "name":"R Edge Color"
+      },
+      {
+        "name":"Texture"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Trunk"
+      }
+    ]
+  },
+  "Node_MK_Tree_Render":{
+    "name":"Tree Render",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Tree"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Surface Out"
+      }
+    ]
+  },
+  "Node_MK_Tree_Repulse":{
+    "name":"Tree Repulse",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Tree"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Area"
+      },
+      {
+        "name":"Falloff"
+      },
+      {
+        "name":"Falloff Curve"
+      },
+      {
+        "name":"Strength"
+      },
+      {
+        "name":"Mode",
+        "display_data":[
+          "Propagate",
+          "Direct"
+        ]
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Tree"
+      }
+    ]
+  },
+  "Node_MK_Tree_Root":{
+    "name":"Tree Trunk",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Tree"
+      },
+      {
+        "name":"Origin Position"
+      },
+      {
+        "name":"Origin Wiggle"
+      },
+      {
+        "name":"Length"
+      },
+      {
+        "name":"Direction"
+      },
+      {
+        "name":"Amount"
+      },
+      {
+        "name":"Thickness"
+      },
+      {
+        "name":"Segments"
+      },
+      {
+        "name":"Origin Ratio"
+      },
+      {
+        "name":"Gravity"
+      },
+      {
+        "name":"Direction Wiggle"
+      },
+      {
+        "name":"Thickness Curve"
+      },
+      {
+        "name":"Base Color"
+      },
+      {
+        "name":"Length Curve"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Gravity Curve"
+      },
+      {
+        "name":"Edge Blending",
+        "display_data":[
+          "None",
+          "Override",
+          "Multiply",
+          "Screen"
+        ]
+      },
+      {
+        "name":"L Edge Color"
+      },
+      {
+        "name":"Wave"
+      },
+      {
+        "name":"Wave Curve"
+      },
+      {
+        "name":"Curl"
+      },
+      {
+        "name":"Curl Curve"
+      },
+      {
+        "name":"Frequency"
+      },
+      {
+        "name":"Phase"
+      },
+      {
+        "name":"Length Blending",
+        "display_data":[
+          "None",
+          "Override",
+          "Multiply",
+          "Screen"
+        ]
+      },
+      {
+        "name":"Length Color"
+      },
+      {
+        "name":"R Edge Color"
+      },
+      {
+        "name":"Texture"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Trunk"
+      }
+    ]
+  },
+  "Node_MK_Tree_Wiggle":{
+    "name":"Tree Wiggle",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Tree"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Strength"
+      },
+      {
+        "name":"Direction"
+      },
+      {
+        "name":"Speed"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Tree"
       }
     ]
   },
@@ -11923,7 +14627,7 @@
         "name":"Surface to"
       },
       {
-        "name":"Morph amount"
+        "name":"Morph Amount"
       },
       {
         "name":"Threshold"
@@ -12021,13 +14725,13 @@
         "name":"Y Amount"
       },
       {
-        "name":"X Amount map"
+        "name":"X Amount Map"
       },
       {
-        "name":"Y Amount map"
+        "name":"Y Amount Map"
       },
       {
-        "name":"Rotation map"
+        "name":"Rotation Map"
       },
       {
         "name":"Render Mode",
@@ -12041,6 +14745,9 @@
       },
       {
         "name":"Mask"
+      },
+      {
+        "name":"Tile"
       }
     ],
     "outputs":[
@@ -12196,10 +14903,10 @@
         "name":"Color B Range"
       },
       {
-        "name":"Scale map"
+        "name":"Scale Map"
       },
       {
-        "name":"Iteration map"
+        "name":"Iteration Map"
       },
       {
         "name":"Rotation"
@@ -12212,6 +14919,9 @@
       },
       {
         "name":"Mask"
+      },
+      {
+        "name":"Seed"
       }
     ],
     "outputs":[
@@ -12254,8 +14964,8 @@
       {
         "name":"Axis",
         "display_data":[
-          "x",
-          "y"
+          "X",
+          "Y"
         ]
       },
       {
@@ -12295,7 +15005,7 @@
         "name":"Scale"
       },
       {
-        "name":"Texture sample"
+        "name":"Texture Sample"
       },
       {
         "name":"Mask"
@@ -12357,6 +15067,9 @@
         "name":"Height map"
       },
       {
+        "name":"Keep Alpha"
+      },
+      {
         "name":"Type",
         "display_data":[
           "Point",
@@ -12389,7 +15102,7 @@
         "name":"Surface Out"
       },
       {
-        "name":"Light only"
+        "name":"Light Only"
       }
     ]
   },
@@ -12592,7 +15305,6 @@
       },
       {
         "name":"Oversample mode",
-        "tooltip":"How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.",
         "display_data":[
           "Empty",
           "Clamp",
@@ -12622,13 +15334,13 @@
         "name":"Mask feather"
       },
       {
-        "name":"Width map"
+        "name":"Width Map"
       },
       {
-        "name":"Blend alpha map"
+        "name":"Blend alpha Map"
       },
       {
-        "name":"Start map"
+        "name":"Start Map"
       },
       {
         "name":"Profile",
@@ -12733,7 +15445,8 @@
         "name":"Fill Method",
         "display_data":[
           "Empty",
-          "Solid"
+          "Solid",
+          "Pixel Expand"
         ]
       },
       {
@@ -12755,23 +15468,52 @@
       {
         "name":"Horizontal Alignment",
         "display_data":[
-          "@ref sprite(__newsprite1122)",
-          "@ref sprite(__newsprite1122)",
-          "@ref sprite(__newsprite1122)"
+          "@ref sprite(__newsprite1158)",
+          "@ref sprite(__newsprite1158)",
+          "@ref sprite(__newsprite1158)"
         ]
       },
       {
         "name":"Vertical Alignment",
         "display_data":[
-          "@ref sprite(__newsprite1123)",
-          "@ref sprite(__newsprite1123)",
-          "@ref sprite(__newsprite1123)"
+          "@ref sprite(__newsprite1159)",
+          "@ref sprite(__newsprite1159)",
+          "@ref sprite(__newsprite1159)"
         ]
       }
     ],
     "outputs":[
       {
         "name":"Surface Out"
+      }
+    ]
+  },
+  "Node_Padding_Data":{
+    "name":"Padding Data",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Left"
+      },
+      {
+        "name":"Right"
+      },
+      {
+        "name":"Top"
+      },
+      {
+        "name":"Bottom"
+      },
+      {
+        "name":"Use Fractional"
+      },
+      {
+        "name":"Reference Surface"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Padding"
       }
     ]
   },
@@ -12990,7 +15732,8 @@
           "Area Inside",
           "Area Border",
           "Map",
-          "Path"
+          "Path",
+          "Direct Data"
         ]
       },
       {
@@ -13009,10 +15752,10 @@
         "name":"Rotational Speed"
       },
       {
-        "name":"Initial Scale"
+        "name":"Scale"
       },
       {
-        "name":"Scale Over Time"
+        "name":"Size Over Lifespan"
       },
       {
         "name":"Color Over Lifetime"
@@ -13021,7 +15764,7 @@
         "name":"Alpha"
       },
       {
-        "name":"Alpha Over Time"
+        "name":"Alpha Over Lifespan"
       },
       {
         "name":"Rotate by Direction",
@@ -13036,10 +15779,10 @@
         ]
       },
       {
-        "name":"Initial Size"
+        "name":"Size"
       },
       {
-        "name":"Initial Speed"
+        "name":"Speed"
       },
       {
         "name":"Gravity"
@@ -13181,24 +15924,47 @@
         "name":"Use Wiggles"
       },
       {
-        "name":"Rotational Speed Over Time"
+        "name":"Rotational Speed Over Lifespan"
       },
       {
-        "name":"Base Speed Over Time",
+        "name":"Speed Over Lifespan",
         "tooltip":"Speed may conflict with physics-based properties."
       },
       {
         "name":"Snap Rotation"
       },
       {
+        "name":"Spawn Data"
+      },
+      {
+        "name":"Ground Offset Type",
+        "display_data":[
+          "Relative",
+          "Absolute"
+        ]
+      },
+      {
+        "name":"Direction Type",
+        "display_data":[
+          "Random",
+          "Uniform"
+        ]
+      },
+      {
+        "name":"Pre-Render"
+      },
+      {
+        "name":"Path Range"
+      },
+      {
         "name":"Dimension"
       },
       {
-        "name":"Round position",
+        "name":"Round Position",
         "tooltip":"Round position to the closest integer value to avoid jittering."
       },
       {
-        "name":"Blend mode",
+        "name":"Blend Mode",
         "display_data":[
           "Normal",
           "Alpha",
@@ -13217,7 +15983,7 @@
         ]
       },
       {
-        "name":"Line life"
+        "name":"Line Life"
       }
     ],
     "outputs":[
@@ -13416,10 +16182,20 @@
         "name":"Path"
       },
       {
-        "name":"Segment length"
+        "name":"Segment Length"
       },
       {
-        "name":"Spread single path"
+        "name":"Spread Single Path"
+      },
+      {
+        "name":"Sample Type",
+        "display_data":[
+          "Length",
+          "Amount"
+        ]
+      },
+      {
+        "name":"Output Amount"
       }
     ],
     "outputs":[
@@ -13439,7 +16215,16 @@
         "name":"Path 2"
       },
       {
-        "name":"Ratio"
+        "name":"Amount"
+      },
+      {
+        "name":"Mode",
+        "display_data":[
+          "Lerp",
+          "Add",
+          "Subtract",
+          "Multiply"
+        ]
       }
     ],
     "outputs":[
@@ -13460,6 +16245,16 @@
       },
       {
         "name":"Smooth"
+      },
+      {
+        "name":"Distribution",
+        "display_data":[
+          "Uniform",
+          "Random"
+        ]
+      },
+      {
+        "name":"Seed"
       }
     ],
     "outputs":[
@@ -13517,6 +16312,26 @@
       }
     ]
   },
+  "Node_Path_Flattern":{
+    "name":"Path Flatten",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Path"
+      },
+      {
+        "name":"Reverse"
+      },
+      {
+        "name":"Ping Pong"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Path"
+      }
+    ]
+  },
   "Node_Path_From_Mask":{
     "name":"Path from Mask",
     "tooltip":"Create path that wrap around a mask.",
@@ -13525,7 +16340,10 @@
         "name":"Mask"
       },
       {
-        "name":"Smooth angle"
+        "name":"Smoothness"
+      },
+      {
+        "name":"Smooth"
       }
     ],
     "outputs":[
@@ -13552,7 +16370,7 @@
       },
       {
         "name":"Starting rule",
-        "tooltip":"@ref object(o_dialog_l_system)"
+        "tooltip":{}
       },
       {
         "name":"End replacement",
@@ -13591,6 +16409,20 @@
     "outputs":[
       {
         "name":"Path"
+      }
+    ]
+  },
+  "Node_Path_Length":{
+    "name":"Path Length",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Path"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Surface Out"
       }
     ]
   },
@@ -13636,7 +16468,7 @@
         ]
       },
       {
-        "name":"Dimension From"
+        "name":"Dimension"
       },
       {
         "name":"Map To",
@@ -13647,7 +16479,7 @@
         ]
       },
       {
-        "name":"Dimension To"
+        "name":"Dimension"
       },
       {
         "name":"BBOX From"
@@ -13691,6 +16523,26 @@
     "outputs":[
       {
         "name":"Surface Out"
+      }
+    ]
+  },
+  "Node_Path_Offset":{
+    "name":"Offset Path",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Path"
+      },
+      {
+        "name":"Offset"
+      },
+      {
+        "name":"Clamp"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Path"
       }
     ]
   },
@@ -13825,6 +16677,31 @@
       },
       {
         "name":"Anchor"
+      },
+      {
+        "name":"Pattern",
+        "display_data":[
+          "Linear",
+          "Circular"
+        ]
+      },
+      {
+        "name":"Center"
+      },
+      {
+        "name":"Radius"
+      },
+      {
+        "name":"Rotate Along"
+      },
+      {
+        "name":"Position"
+      },
+      {
+        "name":"Rotation"
+      },
+      {
+        "name":"Scale"
       }
     ],
     "outputs":[
@@ -14005,9 +16882,12 @@
           "Ellipse",
           "Arc",
           "Squircle",
+          "Hypocycloid",
+          "Epitrochoid",
           -1.0,
           "Polygon",
           "Star",
+          "Twist",
           -1.0,
           "Line",
           "Curve",
@@ -14038,6 +16918,15 @@
       },
       {
         "name":"Pitch"
+      },
+      {
+        "name":"Angle"
+      },
+      {
+        "name":"Pitch Curve"
+      },
+      {
+        "name":"Resolution"
       }
     ],
     "outputs":[
@@ -14140,6 +17029,35 @@
       }
     ]
   },
+  "Node_Path_Spiral":{
+    "name":"Spiral Path",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Path"
+      },
+      {
+        "name":"Frequency"
+      },
+      {
+        "name":"Amplitude"
+      },
+      {
+        "name":"Spiral"
+      },
+      {
+        "name":"Phase"
+      },
+      {
+        "name":"Amplitude Over Length"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Path"
+      }
+    ]
+  },
   "Node_Path_Transform":{
     "name":"Transform Path",
     "tooltip":"Move rotate and scale a path.",
@@ -14223,7 +17141,7 @@
         "name":"Wiggle Frequency"
       },
       {
-        "name":"Amplitude over length"
+        "name":"Amplitude Over Length"
       },
       {
         "name":"Post Fn",
@@ -14486,12 +17404,12 @@
       {
         "name":"Type",
         "display_data":[
-          "@ref sprite(__newsprite938)",
-          "@ref sprite(__newsprite938)",
-          "@ref sprite(__newsprite938)",
-          "@ref sprite(__newsprite938)",
-          "@ref sprite(__newsprite938)",
-          "@ref sprite(__newsprite938)"
+          "@ref sprite(__newsprite1185)",
+          "@ref sprite(__newsprite1185)",
+          "@ref sprite(__newsprite1185)",
+          "@ref sprite(__newsprite1185)",
+          "@ref sprite(__newsprite1185)",
+          "@ref sprite(__newsprite1185)"
         ]
       },
       {
@@ -14592,16 +17510,16 @@
       {
         "name":"Position",
         "display_data":[
-          "@ref sprite(__newsprite955)",
-          "@ref sprite(__newsprite955)",
-          "@ref sprite(__newsprite955)"
+          "@ref sprite(__newsprite1203)",
+          "@ref sprite(__newsprite1203)",
+          "@ref sprite(__newsprite1203)"
         ]
       },
       {
         "name":"Corner",
         "display_data":[
-          "@ref sprite(__newsprite956)",
-          "@ref sprite(__newsprite956)"
+          "@ref sprite(__newsprite1205)",
+          "@ref sprite(__newsprite1205)"
         ]
       },
       {
@@ -14781,16 +17699,16 @@
       {
         "name":"Position",
         "display_data":[
-          "@ref sprite(__newsprite955)",
-          "@ref sprite(__newsprite955)",
-          "@ref sprite(__newsprite955)"
+          "@ref sprite(__newsprite1203)",
+          "@ref sprite(__newsprite1203)",
+          "@ref sprite(__newsprite1203)"
         ]
       },
       {
         "name":"Corner",
         "display_data":[
-          "@ref sprite(__newsprite956)",
-          "@ref sprite(__newsprite956)"
+          "@ref sprite(__newsprite1205)",
+          "@ref sprite(__newsprite1205)"
         ]
       },
       {
@@ -14963,16 +17881,16 @@
       {
         "name":"Position",
         "display_data":[
-          "@ref sprite(__newsprite955)",
-          "@ref sprite(__newsprite955)",
-          "@ref sprite(__newsprite955)"
+          "@ref sprite(__newsprite1203)",
+          "@ref sprite(__newsprite1203)",
+          "@ref sprite(__newsprite1203)"
         ]
       },
       {
         "name":"Corner",
         "display_data":[
-          "@ref sprite(__newsprite956)",
-          "@ref sprite(__newsprite956)"
+          "@ref sprite(__newsprite1205)",
+          "@ref sprite(__newsprite1205)"
         ]
       },
       {
@@ -15062,12 +17980,12 @@
       {
         "name":"Type",
         "display_data":[
-          "@ref sprite(__newsprite938)",
-          "@ref sprite(__newsprite938)",
-          "@ref sprite(__newsprite938)",
-          "@ref sprite(__newsprite938)",
-          "@ref sprite(__newsprite938)",
-          "@ref sprite(__newsprite938)"
+          "@ref sprite(__newsprite1185)",
+          "@ref sprite(__newsprite1185)",
+          "@ref sprite(__newsprite1185)",
+          "@ref sprite(__newsprite1185)",
+          "@ref sprite(__newsprite1185)",
+          "@ref sprite(__newsprite1185)"
         ]
       },
       {
@@ -15165,16 +18083,16 @@
       {
         "name":"Position",
         "display_data":[
-          "@ref sprite(__newsprite955)",
-          "@ref sprite(__newsprite955)",
-          "@ref sprite(__newsprite955)"
+          "@ref sprite(__newsprite1203)",
+          "@ref sprite(__newsprite1203)",
+          "@ref sprite(__newsprite1203)"
         ]
       },
       {
         "name":"Corner",
         "display_data":[
-          "@ref sprite(__newsprite956)",
-          "@ref sprite(__newsprite956)"
+          "@ref sprite(__newsprite1205)",
+          "@ref sprite(__newsprite1205)"
         ]
       },
       {
@@ -15356,16 +18274,16 @@
       {
         "name":"Position",
         "display_data":[
-          "@ref sprite(__newsprite955)",
-          "@ref sprite(__newsprite955)",
-          "@ref sprite(__newsprite955)"
+          "@ref sprite(__newsprite1203)",
+          "@ref sprite(__newsprite1203)",
+          "@ref sprite(__newsprite1203)"
         ]
       },
       {
         "name":"Corner",
         "display_data":[
-          "@ref sprite(__newsprite956)",
-          "@ref sprite(__newsprite956)"
+          "@ref sprite(__newsprite1205)",
+          "@ref sprite(__newsprite1205)"
         ]
       },
       {
@@ -15544,16 +18462,16 @@
       {
         "name":"Position",
         "display_data":[
-          "@ref sprite(__newsprite955)",
-          "@ref sprite(__newsprite955)",
-          "@ref sprite(__newsprite955)"
+          "@ref sprite(__newsprite1203)",
+          "@ref sprite(__newsprite1203)",
+          "@ref sprite(__newsprite1203)"
         ]
       },
       {
         "name":"Corner",
         "display_data":[
-          "@ref sprite(__newsprite956)",
-          "@ref sprite(__newsprite956)"
+          "@ref sprite(__newsprite1205)",
+          "@ref sprite(__newsprite1205)"
         ]
       },
       {
@@ -15738,16 +18656,16 @@
       {
         "name":"Position",
         "display_data":[
-          "@ref sprite(__newsprite955)",
-          "@ref sprite(__newsprite955)",
-          "@ref sprite(__newsprite955)"
+          "@ref sprite(__newsprite1203)",
+          "@ref sprite(__newsprite1203)",
+          "@ref sprite(__newsprite1203)"
         ]
       },
       {
         "name":"Corner",
         "display_data":[
-          "@ref sprite(__newsprite956)",
-          "@ref sprite(__newsprite956)"
+          "@ref sprite(__newsprite1205)",
+          "@ref sprite(__newsprite1205)"
         ]
       },
       {
@@ -15920,16 +18838,16 @@
       {
         "name":"Position",
         "display_data":[
-          "@ref sprite(__newsprite955)",
-          "@ref sprite(__newsprite955)",
-          "@ref sprite(__newsprite955)"
+          "@ref sprite(__newsprite1203)",
+          "@ref sprite(__newsprite1203)",
+          "@ref sprite(__newsprite1203)"
         ]
       },
       {
         "name":"Corner",
         "display_data":[
-          "@ref sprite(__newsprite956)",
-          "@ref sprite(__newsprite956)"
+          "@ref sprite(__newsprite1205)",
+          "@ref sprite(__newsprite1205)"
         ]
       },
       {
@@ -16115,16 +19033,16 @@
       {
         "name":"Position",
         "display_data":[
-          "@ref sprite(__newsprite955)",
-          "@ref sprite(__newsprite955)",
-          "@ref sprite(__newsprite955)"
+          "@ref sprite(__newsprite1203)",
+          "@ref sprite(__newsprite1203)",
+          "@ref sprite(__newsprite1203)"
         ]
       },
       {
         "name":"Corner",
         "display_data":[
-          "@ref sprite(__newsprite956)",
-          "@ref sprite(__newsprite956)"
+          "@ref sprite(__newsprite1205)",
+          "@ref sprite(__newsprite1205)"
         ]
       },
       {
@@ -16316,16 +19234,16 @@
       {
         "name":"Position",
         "display_data":[
-          "@ref sprite(__newsprite955)",
-          "@ref sprite(__newsprite955)",
-          "@ref sprite(__newsprite955)"
+          "@ref sprite(__newsprite1203)",
+          "@ref sprite(__newsprite1203)",
+          "@ref sprite(__newsprite1203)"
         ]
       },
       {
         "name":"Corner",
         "display_data":[
-          "@ref sprite(__newsprite956)",
-          "@ref sprite(__newsprite956)"
+          "@ref sprite(__newsprite1205)",
+          "@ref sprite(__newsprite1205)"
         ]
       },
       {
@@ -16548,16 +19466,16 @@
       {
         "name":"Position",
         "display_data":[
-          "@ref sprite(__newsprite955)",
-          "@ref sprite(__newsprite955)",
-          "@ref sprite(__newsprite955)"
+          "@ref sprite(__newsprite1203)",
+          "@ref sprite(__newsprite1203)",
+          "@ref sprite(__newsprite1203)"
         ]
       },
       {
         "name":"Corner",
         "display_data":[
-          "@ref sprite(__newsprite956)",
-          "@ref sprite(__newsprite956)"
+          "@ref sprite(__newsprite1205)",
+          "@ref sprite(__newsprite1205)"
         ]
       },
       {
@@ -16758,16 +19676,16 @@
       {
         "name":"Position",
         "display_data":[
-          "@ref sprite(__newsprite955)",
-          "@ref sprite(__newsprite955)",
-          "@ref sprite(__newsprite955)"
+          "@ref sprite(__newsprite1203)",
+          "@ref sprite(__newsprite1203)",
+          "@ref sprite(__newsprite1203)"
         ]
       },
       {
         "name":"Corner",
         "display_data":[
-          "@ref sprite(__newsprite956)",
-          "@ref sprite(__newsprite956)"
+          "@ref sprite(__newsprite1205)",
+          "@ref sprite(__newsprite1205)"
         ]
       },
       {
@@ -17297,7 +20215,7 @@
         "name":"Color B Range"
       },
       {
-        "name":"Scale map"
+        "name":"Scale Map"
       },
       {
         "name":"Rotation"
@@ -17307,6 +20225,12 @@
       },
       {
         "name":"Phase"
+      },
+      {
+        "name":"Scaling"
+      },
+      {
+        "name":"Amplitude"
       }
     ],
     "outputs":[
@@ -17332,8 +20256,7 @@
         "name":"Iteration"
       },
       {
-        "name":"Tile",
-        "tooltip":"Tiling only works with integer scale, and some effect type doesn't support tiling."
+        "name":"Tile"
       },
       {
         "name":"Seed"
@@ -17374,13 +20297,13 @@
         "name":"Parameter B"
       },
       {
-        "name":"Scale map"
+        "name":"Scale Map"
       },
       {
-        "name":"Parameter A map"
+        "name":"Parameter A Map"
       },
       {
-        "name":"Parameter B map"
+        "name":"Parameter B Map"
       },
       {
         "name":"Rotation"
@@ -17401,6 +20324,21 @@
     "inputs":[
       {
         "name":"In"
+      },
+      {
+        "name":"Label Position",
+        "display_data":[
+          "T",
+          "B",
+          "L",
+          "R"
+        ]
+      },
+      {
+        "name":"Label Scale"
+      },
+      {
+        "name":"Label Color"
       }
     ],
     "outputs":[
@@ -17464,10 +20402,10 @@
         "name":"Active"
       },
       {
-        "name":"Gradient map"
+        "name":"Color over lifetime Map"
       },
       {
-        "name":"Gradient map range"
+        "name":"Color over lifetime Map Range"
       }
     ],
     "outputs":[
@@ -17606,10 +20544,10 @@
         "name":"Gradient"
       },
       {
-        "name":"Gradient map"
+        "name":"Gradient Map"
       },
       {
-        "name":"Gradient map range"
+        "name":"Gradient Map Range"
       },
       {
         "name":"Color Blending",
@@ -17763,21 +20701,98 @@
         "name":"Absolute"
       },
       {
-        "name":"Sample Gradient map"
+        "name":"Color Over Sample Map"
       },
       {
-        "name":"Sample Gradient map range"
+        "name":"Color Over Sample Map Range"
       },
       {
-        "name":"Value Gradient map"
+        "name":"Color Over Value Map"
       },
       {
-        "name":"Value Gradient map range"
+        "name":"Color Over Value Map Range"
       }
     ],
     "outputs":[
       {
         "name":"Surface Out"
+      }
+    ]
+  },
+  "Node_Point_3D_Camera":{
+    "name":"3D Point Camera",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Position"
+      },
+      {
+        "name":"Rotation"
+      },
+      {
+        "name":"Scale"
+      },
+      {
+        "name":"Anchor"
+      },
+      {
+        "name":"FOV"
+      },
+      {
+        "name":"Projection",
+        "display_data":[
+          "Perspective",
+          "Orthographic"
+        ]
+      },
+      {
+        "name":"Points"
+      },
+      {
+        "name":"Orthographic Scale"
+      },
+      {
+        "name":"Postioning Mode",
+        "display_data":[
+          "Position + Rotation",
+          "Position + Lookat",
+          "Lookat + Rotation"
+        ]
+      },
+      {
+        "name":"Lookat Position"
+      },
+      {
+        "name":"Roll"
+      },
+      {
+        "name":"Horizontal Angle"
+      },
+      {
+        "name":"Vertical Angle"
+      },
+      {
+        "name":"Distance"
+      },
+      {
+        "name":"Dimension"
+      },
+      {
+        "name":"Depth From"
+      },
+      {
+        "name":"Depth To"
+      },
+      {
+        "name":"Range From"
+      },
+      {
+        "name":"Range To"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Points"
       }
     ]
   },
@@ -17798,6 +20813,29 @@
     "outputs":[
       {
         "name":"Is in"
+      }
+    ]
+  },
+  "Node_Point_SDF":{
+    "name":"Point to SDF",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Dimension"
+      },
+      {
+        "name":"Points"
+      },
+      {
+        "name":"Max Distance"
+      },
+      {
+        "name":"Inverted"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Surface Out"
       }
     ]
   },
@@ -17899,7 +20937,7 @@
         "name":"Posterize alpha"
       },
       {
-        "name":"Gamma map"
+        "name":"Gamma Map"
       },
       {
         "name":"Space",
@@ -17959,6 +20997,45 @@
       }
     ]
   },
+  "Node_Project_Layer":{
+    "name":"Layer",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Surface In"
+      },
+      {
+        "name":"Depth"
+      },
+      {
+        "name":"Position"
+      },
+      {
+        "name":"Anchor"
+      },
+      {
+        "name":"Rotation"
+      },
+      {
+        "name":"Scale"
+      }
+    ],
+    "outputs":[]
+  },
+  "Node_Project_Output":{
+    "name":"Project Output",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Surface In"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Surface Out"
+      }
+    ]
+  },
   "Node_Pytagorean_Tile":{
     "name":"Pytagorean Tile",
     "tooltip":"Generate Pytagorean tile pattern.",
@@ -18005,7 +21082,7 @@
         "name":"Scale Map"
       },
       {
-        "name":"Angle Map"
+        "name":"Rotation Map"
       },
       {
         "name":"Gap Map"
@@ -18023,10 +21100,10 @@
         "name":"Phase"
       },
       {
-        "name":"Gradient Map"
+        "name":"Tile Color Map"
       },
       {
-        "name":"Gradient Map Range"
+        "name":"Tile Color Map Range"
       },
       {
         "name":"Texture Angle"
@@ -18067,16 +21144,16 @@
         "name":"Color 2"
       },
       {
-        "name":"Scale map"
+        "name":"Scale Map"
       },
       {
-        "name":"Angle map"
+        "name":"Angle Map"
       },
       {
         "name":"Phase"
       },
       {
-        "name":"Phasemap"
+        "name":"Phase Map"
       },
       {
         "name":"Angle Range"
@@ -18114,7 +21191,8 @@
           "Periordic",
           "Trigger",
           "Probabilistic",
-          "Accumulative"
+          "Accumulative",
+          "Per Animation"
         ]
       },
       {
@@ -18180,6 +21258,9 @@
       },
       {
         "name":"Period Variance"
+      },
+      {
+        "name":"Deterministic"
       }
     ],
     "outputs":[
@@ -18275,10 +21356,10 @@
         "name":"Truchet Threshold"
       },
       {
-        "name":"Gradient Map"
+        "name":"Tile Color Map"
       },
       {
-        "name":"Gradient Map Range"
+        "name":"Tile Color Map Range"
       },
       {
         "name":"Texture Angle"
@@ -18345,19 +21426,19 @@
         "name":"Add B"
       },
       {
-        "name":"Kill map"
+        "name":"Kill rate Map"
       },
       {
-        "name":"Feed map"
+        "name":"Feed rate Map"
       },
       {
-        "name":"Time map"
+        "name":"Timestep Map"
       },
       {
-        "name":"DfA map"
+        "name":"Diffusion A Map"
       },
       {
-        "name":"DfB map"
+        "name":"Diffusion B Map"
       },
       {
         "name":"Diffusion"
@@ -18372,6 +21453,122 @@
       }
     ]
   },
+  "Node_Recursive_Subdiv":{
+    "name":"Recursive Subdivision",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Dimension"
+      },
+      {
+        "name":"Phase"
+      },
+      {
+        "name":"Iteration"
+      },
+      {
+        "name":"Color Source",
+        "display_data":[
+          "Palette",
+          "Random HSV"
+        ]
+      },
+      {
+        "name":"Palette"
+      },
+      {
+        "name":"H Range"
+      },
+      {
+        "name":"S Range"
+      },
+      {
+        "name":"V Range"
+      },
+      {
+        "name":"Color Seed"
+      },
+      {
+        "name":"Render Gap"
+      },
+      {
+        "name":"Gap Color"
+      },
+      {
+        "name":"Gap Thickness"
+      },
+      {
+        "name":"SubD Range"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Surface Out"
+      }
+    ]
+  },
+  "Node_Refract":{
+    "name":"Refract",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Surface In"
+      },
+      {
+        "name":"Active"
+      },
+      {
+        "name":"Channel"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Mix"
+      },
+      {
+        "name":"Invert mask"
+      },
+      {
+        "name":"Mask feather"
+      },
+      {
+        "name":"Normal Map"
+      },
+      {
+        "name":"Depth Map"
+      },
+      {
+        "name":"Height"
+      },
+      {
+        "name":"Distance"
+      },
+      {
+        "name":"IOR"
+      },
+      {
+        "name":"Height Map"
+      },
+      {
+        "name":"Distance Map"
+      },
+      {
+        "name":"IOR Map"
+      },
+      {
+        "name":"Perspective"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Surface Out"
+      }
+    ]
+  },
   "Node_Region_Fill":{
     "name":"Region Fill",
     "tooltip":"Fill connected pixel with colors.",
@@ -18383,7 +21580,7 @@
         "name":"Mask"
       },
       {
-        "name":"Fill Colors"
+        "name":"Fill Palette"
       },
       {
         "name":"Fill"
@@ -18427,6 +21624,23 @@
       },
       {
         "name":"Random Rotation"
+      },
+      {
+        "name":"Threshold"
+      },
+      {
+        "name":"Expands",
+        "tooltip":"Expands filled area to filtered pixels."
+      },
+      {
+        "name":"Source",
+        "display_data":[
+          "Palette",
+          "Gradient"
+        ]
+      },
+      {
+        "name":"Fill Gradient"
       }
     ],
     "outputs":[
@@ -18490,6 +21704,9 @@
       },
       {
         "name":"Custom Range"
+      },
+      {
+        "name":"Skip Empty"
       }
     ],
     "outputs":[
@@ -18523,45 +21740,45 @@
         ]
       },
       {
-        "name":"Shift position"
+        "name":"Shift Position"
       },
       {
-        "name":"Repeat rotation"
+        "name":"Repeat Rotation"
       },
       {
-        "name":"Scale multiply"
+        "name":"Scale Multiply"
       },
       {
-        "name":"Angle range"
+        "name":"Angle Range"
       },
       {
         "name":"Radius"
       },
       {
-        "name":"Start position"
+        "name":"Start Position"
       },
       {
-        "name":"Scale over copy"
+        "name":"Scale Over Copy"
       },
       {
         "name":"Path",
         "tooltip":"Make each copy follow along path."
       },
       {
-        "name":"Path range",
+        "name":"Path Range",
         "tooltip":"Range of the path to follow."
       },
       {
-        "name":"Path shift"
+        "name":"Path Shift"
       },
       {
-        "name":"Color over copy"
+        "name":"Color Over Copy"
       },
       {
         "name":"Alpha over copy"
       },
       {
-        "name":"Array select",
+        "name":"Array Select",
         "tooltip":"Whether to select image from an array in order, at random, or spread each image to its own output.",
         "display_data":[
           "Order",
@@ -18576,7 +21793,7 @@
         "name":"Column"
       },
       {
-        "name":"Column shift"
+        "name":"Shift Column"
       },
       {
         "name":"Animator midpoint"
@@ -18615,16 +21832,16 @@
         "name":"Animator"
       },
       {
-        "name":"Gradient map"
+        "name":"Color Over Copy Map"
       },
       {
-        "name":"Gradient map range"
+        "name":"Color Over Copy Map Range"
       },
       {
-        "name":"Start rotation"
+        "name":"Start Rotation"
       },
       {
-        "name":"Base rotation"
+        "name":"Base Rotation"
       },
       {
         "name":"Blend Mode",
@@ -18635,7 +21852,7 @@
         ]
       },
       {
-        "name":"Output dimension type",
+        "name":"Output Dimension Type",
         "display_data":[
           "Same as input",
           "Constant",
@@ -18644,13 +21861,19 @@
         ]
       },
       {
-        "name":"Relative dimension"
+        "name":"Relative Dimension"
       },
       {
         "name":"Padding"
       },
       {
-        "name":"Shift per copy"
+        "name":"Shift per Copy"
+      },
+      {
+        "name":"Anchor"
+      },
+      {
+        "name":"Rotate Along Path"
       },
       {
         "name":"Animator type",
@@ -18697,7 +21920,7 @@
         "name":"Selection area"
       },
       {
-        "name":"Selection index"
+        "name":"Selection i"
       },
       {
         "name":"Selection range"
@@ -18799,6 +22022,62 @@
       }
     ]
   },
+  "Node_Ribbon":{
+    "name":"Draw Ribbon",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Dimension"
+      },
+      {
+        "name":"Path"
+      },
+      {
+        "name":"Sample"
+      },
+      {
+        "name":"Size"
+      },
+      {
+        "name":"Direction"
+      },
+      {
+        "name":"Color over Length"
+      },
+      {
+        "name":"Color Weight"
+      },
+      {
+        "name":"Size Over Length"
+      },
+      {
+        "name":"Shade Side"
+      },
+      {
+        "name":"Invert"
+      },
+      {
+        "name":"Loop"
+      },
+      {
+        "name":"Texture"
+      },
+      {
+        "name":"Texture Position"
+      },
+      {
+        "name":"Texture Scale"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Surface Out"
+      }
+    ]
+  },
   "Node_Rigid_Activate":{
     "name":"Activate Physics",
     "tooltip":"Enable or disable rigidbody object.",
@@ -18807,7 +22086,33 @@
         "name":"Object"
       },
       {
-        "name":"Physics activated"
+        "name":"Activated"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Object"
+      }
+    ]
+  },
+  "Node_Rigid_Explode":{
+    "name":"Explode",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Object"
+      },
+      {
+        "name":"Trigger"
+      },
+      {
+        "name":"Position"
+      },
+      {
+        "name":"Range"
+      },
+      {
+        "name":"Strength"
       }
     ],
     "outputs":[
@@ -18829,6 +22134,7 @@
           "Constant",
           "Impulse",
           "Torque",
+          "Torque Impulse",
           "Explode"
         ]
       },
@@ -18839,8 +22145,7 @@
         "name":"Torque"
       },
       {
-        "name":"Apply frame",
-        "tooltip":"Frame index to apply force."
+        "name":"Apply"
       },
       {
         "name":"Force"
@@ -18857,6 +22162,9 @@
       },
       {
         "name":"Range"
+      },
+      {
+        "name":"Trigger"
       }
     ],
     "outputs":[
@@ -18865,21 +22173,65 @@
       }
     ]
   },
-  "Node_Rigid_Global":{
-    "name":"RigidSim Global",
+  "Node_Rigid_Fracture":{
+    "name":"Fracture",
     "tooltip":"",
     "inputs":[
       {
-        "name":"Gravity"
+        "name":"Base Texture"
+      },
+      {
+        "name":"Fracture Map"
+      },
+      {
+        "name":"Fracture Threshold"
+      },
+      {
+        "name":"Mesh Expansion"
+      },
+      {
+        "name":"Density"
+      },
+      {
+        "name":"Friction"
+      },
+      {
+        "name":"Air Resistance"
+      },
+      {
+        "name":"Rotation Resistance"
+      },
+      {
+        "name":"Bounciness"
+      },
+      {
+        "name":"Position"
+      },
+      {
+        "name":"Use Joint"
+      },
+      {
+        "name":"Stiffness"
+      },
+      {
+        "name":"Damping"
+      },
+      {
+        "name":"Breaking Force",
+        "tooltip":"Amount of force to break the joint, zero for unbreakable."
+      },
+      {
+        "name":"Activate on Spawn"
+      },
+      {
+        "name":"Gravity Scale"
       }
     ],
-    "outputs":[]
-  },
-  "Node_Rigid_Group":{
-    "name":"RigidSim",
-    "tooltip":"Create group for rigidbody simulation.",
-    "inputs":[],
-    "outputs":[]
+    "outputs":[
+      {
+        "name":"Object"
+      }
+    ]
   },
   "Node_Rigid_Group_Inline":{
     "name":"RigidSim",
@@ -18890,28 +22242,120 @@
       },
       {
         "name":"Dimension"
+      },
+      {
+        "name":"Simulation Scale"
+      },
+      {
+        "name":"Gravity Direction"
+      },
+      {
+        "name":"Gravity Strength"
+      },
+      {
+        "name":"Sleepable"
+      },
+      {
+        "name":"Continuous"
+      },
+      {
+        "name":"Use Wall"
+      },
+      {
+        "name":"Walls"
+      },
+      {
+        "name":"Wall Friction"
+      },
+      {
+        "name":"Wall Bounciness"
       }
     ],
     "outputs":[]
+  },
+  "Node_Rigid_Joint_Fix":{
+    "name":"Fix Joint",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Object A"
+      },
+      {
+        "name":"Object B"
+      },
+      {
+        "name":"Custom Anchor",
+        "tooltip":"Use custom anchor point. Off to use center of mass."
+      },
+      {
+        "name":"Anchor",
+        "tooltip":"Anchor point in world scope."
+      },
+      {
+        "name":"Stiffness"
+      },
+      {
+        "name":"Damping"
+      },
+      {
+        "name":"Breaking Force",
+        "tooltip":"Amount of force to break the joint, zero for unbreakable."
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Object"
+      }
+    ]
+  },
+  "Node_Rigid_Joint_Rotate":{
+    "name":"Rotate Joint",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Object A"
+      },
+      {
+        "name":"Object B"
+      },
+      {
+        "name":"Offset"
+      },
+      {
+        "name":"Max Force"
+      },
+      {
+        "name":"Max Torque"
+      },
+      {
+        "name":"Breaking Force",
+        "tooltip":"Amount of force to break the joint, zero for unbreakable."
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Object"
+      }
+    ]
   },
   "Node_Rigid_Object":{
     "name":"Object",
     "tooltip":"Spawn a rigidbody object.",
     "inputs":[
       {
-        "name":"Affect by force"
+        "name":"Affect by Force"
       },
       {
-        "name":"Weight"
+        "name":"Mass"
       },
       {
-        "name":"Contact friction"
+        "name":"Friction"
       },
       {
-        "name":"Air resistance"
+        "name":"Air Resistance"
       },
       {
-        "name":"Rotation resistance"
+        "name":"Rotation Resistance"
       },
       {
         "name":"Shape",
@@ -18925,23 +22369,108 @@
         "name":"Texture"
       },
       {
-        "name":"Start position"
+        "name":"Start Position"
       },
       {
         "name":"Spawn",
         "tooltip":"Make object spawn when start."
       },
       {
-        "name":"Generate mesh"
+        "name":"Generate Mesh"
       },
       {
-        "name":"Mesh expansion"
+        "name":"Mesh Expansion"
       },
       {
-        "name":"Add pixel collider"
+        "name":"Add Pixel for Empty"
       },
       {
-        "name":"Collision group"
+        "name":"Collision Group"
+      },
+      {
+        "name":"Bounciness"
+      },
+      {
+        "name":"Continuous"
+      },
+      {
+        "name":"Fix Rotation"
+      },
+      {
+        "name":"Sleepable"
+      },
+      {
+        "name":"Start Rotation"
+      },
+      {
+        "name":"Use Initial Velocity"
+      },
+      {
+        "name":"Initial Velocity"
+      },
+      {
+        "name":"Spawn Frame"
+      },
+      {
+        "name":"Activate on Spawn"
+      },
+      {
+        "name":"Gravity Scale"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Object"
+      }
+    ]
+  },
+  "Node_Rigid_Object_Get_Collision":{
+    "name":"Get Collisions",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Objects"
+      },
+      {
+        "name":"Filter Object"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Collision Data"
+      },
+      {
+        "name":"Collision Points"
+      },
+      {
+        "name":"New Collision Trigger"
+      },
+      {
+        "name":"New Collision Points"
+      },
+      {
+        "name":"Collision Normals"
+      },
+      {
+        "name":"New Collision Normals"
+      }
+    ]
+  },
+  "Node_Rigid_Object_Segment":{
+    "name":"Segment",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Segment Start"
+      },
+      {
+        "name":"Segment End"
+      },
+      {
+        "name":"Contact Friction"
+      },
+      {
+        "name":"Bounciness"
       }
     ],
     "outputs":[
@@ -18981,6 +22510,12 @@
       },
       {
         "name":"Seed"
+      },
+      {
+        "name":"Random Color"
+      },
+      {
+        "name":"Alpha"
       }
     ],
     "outputs":[
@@ -18997,22 +22532,148 @@
         "name":"Object"
       },
       {
+        "name":"Set Surfaces"
+      },
+      {
+        "name":"Surfaces"
+      },
+      {
+        "name":"Set Positions"
+      },
+      {
+        "name":"Mode",
+        "display_data":[
+          "Absolute",
+          "Relative"
+        ]
+      },
+      {
         "name":"Positions"
       },
       {
-        "name":"Scales"
+        "name":"Set Rotations"
+      },
+      {
+        "name":"Mode",
+        "display_data":[
+          "Absolute",
+          "Relative"
+        ]
       },
       {
         "name":"Rotations"
       },
       {
+        "name":"Set Scales"
+      },
+      {
+        "name":"Mode",
+        "display_data":[
+          "Absolute",
+          "Relative Add",
+          "Relative Muliply"
+        ]
+      },
+      {
+        "name":"Scales"
+      },
+      {
+        "name":"Set Blends"
+      },
+      {
         "name":"Blends"
+      },
+      {
+        "name":"Set Alpha"
+      },
+      {
+        "name":"Mode",
+        "display_data":[
+          "Absolute",
+          "Relative"
+        ]
       },
       {
         "name":"Alpha"
       },
       {
-        "name":"Velocity"
+        "name":"Set Mass"
+      },
+      {
+        "name":"Mode",
+        "display_data":[
+          "Absolute",
+          "Relative Add",
+          "Relative Muliply"
+        ]
+      },
+      {
+        "name":"Mass"
+      },
+      {
+        "name":"Set Friction"
+      },
+      {
+        "name":"Mode",
+        "display_data":[
+          "Absolute",
+          "Relative Add",
+          "Relative Muliply"
+        ]
+      },
+      {
+        "name":"Friction"
+      },
+      {
+        "name":"Set Bounciness"
+      },
+      {
+        "name":"Mode",
+        "display_data":[
+          "Absolute",
+          "Relative Add",
+          "Relative Muliply"
+        ]
+      },
+      {
+        "name":"Bounciness"
+      },
+      {
+        "name":"Set Gravity Scale"
+      },
+      {
+        "name":"Mode",
+        "display_data":[
+          "Absolute",
+          "Relative Add",
+          "Relative Muliply"
+        ]
+      },
+      {
+        "name":"Gravity Scale"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Object"
+      }
+    ]
+  },
+  "Node_Rigid_Path_Collider":{
+    "name":"Path Collider",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Path"
+      },
+      {
+        "name":"Contact Friction"
+      },
+      {
+        "name":"Bounciness"
+      },
+      {
+        "name":"Samples"
       }
     ],
     "outputs":[
@@ -19026,10 +22687,16 @@
     "tooltip":"Render rigidbody object to surface.",
     "inputs":[
       {
-        "name":"Render dimension"
+        "name":"Round Position"
       },
       {
-        "name":"Round position"
+        "name":"Timestep (ms)"
+      },
+      {
+        "name":"Quality"
+      },
+      {
+        "name":"Simulate"
       },
       {
         "name":"Object"
@@ -19041,28 +22708,68 @@
       }
     ]
   },
-  "Node_Rigid_Render_Output":{
-    "name":"Render",
+  "Node_Rigid_Render_ID":{
+    "name":"Render ID",
     "tooltip":"",
     "inputs":[
       {
-        "name":"Render dimension"
+        "name":"Round Position"
       },
       {
-        "name":"Round position"
+        "name":"Timestep (ms)"
+      },
+      {
+        "name":"Quality"
+      },
+      {
+        "name":"Simulate"
       },
       {
         "name":"Object"
       }
     ],
-    "outputs":[]
+    "outputs":[
+      {
+        "name":"Surface Out"
+      }
+    ]
+  },
+  "Node_Rigid_Sensor":{
+    "name":"Sensor",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Detect Objects"
+      },
+      {
+        "name":"Shape",
+        "display_data":[
+          "Rectangle",
+          "Elipse"
+        ]
+      },
+      {
+        "name":"Position"
+      },
+      {
+        "name":"Span"
+      },
+      {
+        "name":"Radius"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Detected Objects"
+      }
+    ]
   },
   "Node_Rigid_Variable":{
     "name":"Rigidbody Variable",
     "tooltip":"Extract veriable from rigidbody object.",
     "inputs":[
       {
-        "name":"Object"
+        "name":"Objects"
       }
     ],
     "outputs":[
@@ -19085,10 +22792,10 @@
         "name":"Velocity"
       },
       {
-        "name":"Center of mass"
+        "name":"Center of Mass"
       },
       {
-        "name":"Velocity magnitude"
+        "name":"Velocity Magnitude"
       }
     ]
   },
@@ -19107,9 +22814,16 @@
       },
       {
         "name":"Collision Group"
+      },
+      {
+        "name":"Bounciness"
       }
     ],
-    "outputs":[]
+    "outputs":[
+      {
+        "name":"Object"
+      }
+    ]
   },
   "Node_RM_Cloud":{
     "name":"RM Cloud",
@@ -19569,6 +23283,56 @@
       }
     ]
   },
+  "Node_Rotation_Random_Data":{
+    "name":"Rotation Random",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Type",
+        "display_data":[
+          "Single",
+          "Range",
+          "Span",
+          "Double Range",
+          "Double Span"
+        ]
+      },
+      {
+        "name":"Range Start"
+      },
+      {
+        "name":"Range End"
+      },
+      {
+        "name":"Range 2 Start"
+      },
+      {
+        "name":"Range 2 End"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Rotation Random"
+      }
+    ]
+  },
+  "Node_Rotation_Range_Data":{
+    "name":"Rotation Range",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Start"
+      },
+      {
+        "name":"End"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Rotation Range"
+      }
+    ]
+  },
   "Node_Sampler":{
     "name":"Sampler",
     "tooltip":"Sample color from an image.",
@@ -19618,6 +23382,14 @@
       },
       {
         "name":"Scale Atlas Position"
+      },
+      {
+        "name":"Fit Mode",
+        "display_data":[
+          "Stretch",
+          "Minimum",
+          "Maximum"
+        ]
       }
     ],
     "outputs":[
@@ -19785,10 +23557,10 @@
         ]
       },
       {
-        "name":"Gradient Map"
+        "name":"Random Blend Map"
       },
       {
-        "name":"Gradient Map Range"
+        "name":"Random Blend Map Range"
       },
       {
         "name":"Uniform Amount"
@@ -19839,6 +23611,9 @@
       },
       {
         "name":"Distance"
+      },
+      {
+        "name":"Path Range"
       }
     ],
     "outputs":[
@@ -19847,6 +23622,49 @@
       },
       {
         "name":"Atlas Data"
+      }
+    ]
+  },
+  "Node_Scatter_Point_Lattice":{
+    "name":"Lattice Point",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Point area"
+      },
+      {
+        "name":"Subdivision"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Points"
+      }
+    ]
+  },
+  "Node_Scatter_Point_Lattice_3D":{
+    "name":"Lattice Point 3D",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Center"
+      },
+      {
+        "name":"Half-Size"
+      },
+      {
+        "name":"Subdivision"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Points"
       }
     ]
   },
@@ -19874,8 +23692,7 @@
         ]
       },
       {
-        "name":"Amount",
-        "tooltip":"Amount of particle spawn in that frame."
+        "name":"Amount"
       },
       {
         "name":"Distribution Map"
@@ -19909,6 +23726,36 @@
       },
       {
         "name":"Distance"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Points"
+      }
+    ]
+  },
+  "Node_Scatter_Points_3D":{
+    "name":"Scatter Points 3D",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Center"
+      },
+      {
+        "name":"Half-Size"
+      },
+      {
+        "name":"Amount"
+      },
+      {
+        "name":"Amount",
+        "display_data":[
+          "Cube",
+          "Sphere"
+        ]
       }
     ],
     "outputs":[
@@ -19959,7 +23806,7 @@
     "tooltip":"Filter segment (vec2 array) based on a conditions.",
     "inputs":[
       {
-        "name":"Segments"
+        "name":"Segment"
       },
       {
         "name":"Angle"
@@ -19974,6 +23821,29 @@
     "outputs":[
       {
         "name":"Segments"
+      }
+    ]
+  },
+  "Node_Separate":{
+    "name":"Separate",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Surface In"
+      },
+      {
+        "name":"Separate Mask"
+      },
+      {
+        "name":"Threshold"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Surface 0"
+      },
+      {
+        "name":"Surface 1"
       }
     ]
   },
@@ -20114,39 +23984,39 @@
         "name":"Light Position"
       },
       {
-        "name":"Soft light radius"
+        "name":"Soft Light Radius"
       },
       {
-        "name":"Light density"
+        "name":"Light Density"
       },
       {
-        "name":"Light type",
+        "name":"Light Type",
         "display_data":[
           "Point",
           "Sun"
         ]
       },
       {
-        "name":"Ambient color"
+        "name":"Ambient Color"
       },
       {
-        "name":"Light color"
+        "name":"Light Color"
       },
       {
-        "name":"Light radius"
+        "name":"Light Radius"
       },
       {
-        "name":"Render solid"
+        "name":"Render Solid"
       },
       {
-        "name":"Use BG color",
+        "name":"Use BG Color",
         "tooltip":"If checked, background color will be used as shadow caster."
       },
       {
-        "name":"BG threshold"
+        "name":"BG Threshold"
       },
       {
-        "name":"Light intensity"
+        "name":"Light Intensity"
       },
       {
         "name":"Banding"
@@ -20161,10 +24031,10 @@
         ]
       },
       {
-        "name":"Ambient occlusion"
+        "name":"Ambient Occlusion"
       },
       {
-        "name":"Ambient occlusion strength"
+        "name":"Ambient Occlusion Strength"
       },
       {
         "name":"Active"
@@ -20274,7 +24144,7 @@
         "name":"Tile"
       },
       {
-        "name":"Shape rotation"
+        "name":"Shape Rotation"
       },
       {
         "name":"Level"
@@ -20434,7 +24304,7 @@
         "name":"Sides"
       },
       {
-        "name":"Inner radius"
+        "name":"Inner Radius"
       },
       {
         "name":"Radius"
@@ -20443,16 +24313,16 @@
         "name":"Teeth"
       },
       {
-        "name":"Teeth height"
+        "name":"Teeth Height"
       },
       {
-        "name":"Teeth taper"
+        "name":"Teeth Taper"
       },
       {
-        "name":"Angle range"
+        "name":"Angle Range"
       },
       {
-        "name":"Round cap"
+        "name":"Round Cap"
       },
       {
         "name":"Mesh"
@@ -20488,7 +24358,7 @@
         ]
       },
       {
-        "name":"Trapezoid sides"
+        "name":"Trapezoid Sides"
       },
       {
         "name":"Skew"
@@ -20532,13 +24402,13 @@
         "name":"Progress"
       },
       {
-        "name":"Scale map"
+        "name":"Scale Map"
       },
       {
-        "name":"Sharpness map"
+        "name":"Sharpness Map"
       },
       {
-        "name":"Progress map"
+        "name":"Progress Map"
       },
       {
         "name":"Rotation"
@@ -20614,8 +24484,8 @@
       {
         "name":"Axis",
         "display_data":[
-          "x",
-          "y"
+          "X",
+          "Y"
         ]
       },
       {
@@ -20654,7 +24524,7 @@
         "name":"Mask feather"
       },
       {
-        "name":"Strength map"
+        "name":"Strength Map"
       }
     ],
     "outputs":[
@@ -20716,6 +24586,23 @@
       }
     ]
   },
+  "Node_Slider_Range_Data":{
+    "name":"Slider Range",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Start"
+      },
+      {
+        "name":"End"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Range"
+      }
+    ]
+  },
   "Node_Slideshow":{
     "name":"Slideshow",
     "tooltip":"",
@@ -20771,10 +24658,10 @@
         "name":"Mask feather"
       },
       {
-        "name":"Strength map"
+        "name":"Strength Map"
       },
       {
-        "name":"Direction map"
+        "name":"Direction Map"
       },
       {
         "name":"Mode",
@@ -21028,57 +24915,6 @@
       }
     ]
   },
-  "Node_Smoke_Group":{
-    "name":"SmokeSim",
-    "tooltip":"Create group for fluid simulation.",
-    "inputs":[
-      {
-        "name":"Dimension"
-      },
-      {
-        "name":"Collision"
-      },
-      {
-        "name":"Material dissipation type",
-        "display_data":[
-          "Multiply",
-          "Subtract"
-        ]
-      },
-      {
-        "name":"Material dissipation"
-      },
-      {
-        "name":"Velocity dissipation type",
-        "display_data":[
-          "Multiply",
-          "Subtract"
-        ]
-      },
-      {
-        "name":"Velocity dissipation"
-      },
-      {
-        "name":"Acceleration"
-      },
-      {
-        "name":"Material intertia"
-      },
-      {
-        "name":"Initial pressure"
-      },
-      {
-        "name":"Material Maccormack weight"
-      },
-      {
-        "name":"Velocity Maccormack weight"
-      },
-      {
-        "name":"Wrap"
-      }
-    ],
-    "outputs":[]
-  },
   "Node_Smoke_Group_Inline":{
     "name":"SmokeSim",
     "tooltip":"Create group for smoke simulation.",
@@ -21103,6 +24939,9 @@
       },
       {
         "name":"Auto Update"
+      },
+      {
+        "name":"Update Step"
       }
     ],
     "outputs":[
@@ -21281,7 +25120,6 @@
       },
       {
         "name":"Oversample Mode",
-        "tooltip":"How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.",
         "display_data":[
           "Empty",
           "Clamp",
@@ -21314,6 +25152,9 @@
       },
       {
         "name":"Trim Edge"
+      },
+      {
+        "name":"Rotation"
       }
     ],
     "outputs":[
@@ -21599,7 +25440,7 @@
     "tooltip":"Create strands from point, path, or mesh.",
     "inputs":[
       {
-        "name":"Type",
+        "name":"Source",
         "display_data":[
           "Point",
           "Path",
@@ -21752,12 +25593,6 @@
         "name":"Strand"
       }
     ]
-  },
-  "Node_Strand_Group":{
-    "name":"StrandSim",
-    "tooltip":"Create group for hair simulation.",
-    "inputs":[],
-    "outputs":[]
   },
   "Node_Strand_Group_Inline":{
     "name":"StrandSim",
@@ -22138,6 +25973,29 @@
       }
     ]
   },
+  "Node_String_Replace":{
+    "name":"Replace Text",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Text"
+      },
+      {
+        "name":"Find"
+      },
+      {
+        "name":"Replace"
+      },
+      {
+        "name":"All"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Results"
+      }
+    ]
+  },
   "Node_String_Split":{
     "name":"Split Text",
     "tooltip":"Split string into arrays of substring based on delimiter.",
@@ -22258,13 +26116,13 @@
         "name":"Random Map"
       },
       {
-        "name":"Ratio Map"
+        "name":"Strip Ratio Map"
       },
       {
-        "name":"Gradient Map"
+        "name":"Colors Map"
       },
       {
-        "name":"Gradient Map Range"
+        "name":"Colors Map Range"
       },
       {
         "name":"Progress"
@@ -22396,6 +26254,20 @@
       }
     ]
   },
+  "Node_Surface_Is_Empty":{
+    "name":"Surface is Empty",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Surface In"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Is Empty"
+      }
+    ]
+  },
   "Node_Surface_Replace":{
     "name":"Replace Image",
     "tooltip":"Replace instances of an image with a new one.",
@@ -22511,7 +26383,7 @@
         "name":"Case"
       },
       {
-        "name":"value"
+        "name":"Value"
       }
     ],
     "outputs":[
@@ -22558,17 +26430,17 @@
       {
         "name":"H Align",
         "display_data":[
-          "@ref sprite(__newsprite1002)",
-          "@ref sprite(__newsprite1002)",
-          "@ref sprite(__newsprite1002)"
+          "@ref sprite(__newsprite1115)",
+          "@ref sprite(__newsprite1115)",
+          "@ref sprite(__newsprite1115)"
         ]
       },
       {
         "name":"V Align",
         "display_data":[
-          "@ref sprite(__newsprite1004)",
-          "@ref sprite(__newsprite1004)",
-          "@ref sprite(__newsprite1004)"
+          "@ref sprite(__newsprite1116)",
+          "@ref sprite(__newsprite1116)",
+          "@ref sprite(__newsprite1116)"
         ]
       },
       {
@@ -22618,7 +26490,7 @@
         "name":"Wave Shape"
       },
       {
-        "name":"Typewriter"
+        "name":"Trim"
       },
       {
         "name":"Range"
@@ -22646,11 +26518,32 @@
           "Normal",
           "Alpha"
         ]
+      },
+      {
+        "name":"Rotate Along Path"
+      },
+      {
+        "name":"Color by Letter"
+      },
+      {
+        "name":"Change Case",
+        "display_data":[
+          "None",
+          "Lowercase",
+          "Uppercase",
+          "Titlecase"
+        ]
+      },
+      {
+        "name":"Atlas"
       }
     ],
     "outputs":[
       {
         "name":"Surface Out"
+      },
+      {
+        "name":"Draw Data"
       }
     ]
   },
@@ -22692,7 +26585,8 @@
         "name":"Surface In"
       },
       {
-        "name":"RG Map"
+        "name":"RG Map",
+        "tooltip":"Displacement map where red retermine the X position, and green determine the Y position."
       },
       {
         "name":"Active"
@@ -22761,10 +26655,10 @@
         "name":"Mask feather"
       },
       {
-        "name":"Brightness map"
+        "name":"Threshold Map"
       },
       {
-        "name":"Alpha map"
+        "name":"Threshold Map"
       },
       {
         "name":"Algorithm",
@@ -23130,7 +27024,7 @@
         "name":"Surface In"
       },
       {
-        "name":"Output Dimension"
+        "name":"Dimension"
       },
       {
         "name":"Position"
@@ -23183,6 +27077,9 @@
       },
       {
         "name":"Alpha"
+      },
+      {
+        "name":"Dimension Scale"
       }
     ],
     "outputs":[
@@ -23260,6 +27157,24 @@
       },
       {
         "name":"Value in"
+      },
+      {
+        "name":"Label Position",
+        "display_data":[
+          "T",
+          "B",
+          "L",
+          "R"
+        ]
+      },
+      {
+        "name":"Label Scale"
+      },
+      {
+        "name":"Label Color"
+      },
+      {
+        "name":"Label Alpha"
       }
     ],
     "outputs":[]
@@ -23270,6 +27185,24 @@
     "inputs":[
       {
         "name":"Name"
+      },
+      {
+        "name":"Label Position",
+        "display_data":[
+          "T",
+          "B",
+          "L",
+          "R"
+        ]
+      },
+      {
+        "name":"Label Scale"
+      },
+      {
+        "name":"Label Color"
+      },
+      {
+        "name":"Label Alpha"
       }
     ],
     "outputs":[
@@ -23296,7 +27229,6 @@
       },
       {
         "name":"Oversample Mode",
-        "tooltip":"How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.",
         "display_data":[
           "Empty",
           "Clamp",
@@ -23322,10 +27254,10 @@
         "name":"Mask feather"
       },
       {
-        "name":"Strength map"
+        "name":"Strength Map"
       },
       {
-        "name":"Radius map"
+        "name":"Radius Map"
       }
     ],
     "outputs":[
@@ -23537,6 +27469,27 @@
       }
     ]
   },
+  "Node_Vector_Direction":{
+    "name":"Vector Direction",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Vector"
+      },
+      {
+        "name":"Unit",
+        "display_data":[
+          "Degree",
+          "Radians"
+        ]
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Direction"
+      }
+    ]
+  },
   "Node_Vector_Dot":{
     "name":"Dot product",
     "tooltip":"Calculate dot product between vectors.",
@@ -23640,6 +27593,392 @@
     "outputs":[
       {
         "name":"Result"
+      }
+    ]
+  },
+  "Node_VerletSim_Drag":{
+    "name":"Drag Mesh",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Mesh"
+      },
+      {
+        "name":"Active"
+      },
+      {
+        "name":"Drag"
+      },
+      {
+        "name":"Auto Anchor"
+      },
+      {
+        "name":"Anchor"
+      },
+      {
+        "name":"Rotation"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Mesh"
+      }
+    ]
+  },
+  "Node_VerletSim_Force":{
+    "name":"Push Mesh",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Mesh"
+      },
+      {
+        "name":"Area"
+      },
+      {
+        "name":"Falloff"
+      },
+      {
+        "name":"Push"
+      },
+      {
+        "name":"Falloff Curve"
+      },
+      {
+        "name":"Strength"
+      },
+      {
+        "name":"Active"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Mesh"
+      }
+    ]
+  },
+  "Node_VerletSim_Inline":{
+    "name":"VerletSim",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Substep"
+      },
+      {
+        "name":"Gravity"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Mesh"
+      }
+    ]
+  },
+  "Node_VerletSim_Mesh":{
+    "name":"Verlet Mesh",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Mesh"
+      },
+      {
+        "name":"Tension"
+      },
+      {
+        "name":"Remap"
+      },
+      {
+        "name":"UV Map"
+      },
+      {
+        "name":"Drag"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Mesh"
+      }
+    ]
+  },
+  "Node_VerletSim_Mesh_Cache":{
+    "name":"Cache Mesh",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Mesh"
+      },
+      {
+        "name":"Autocache"
+      },
+      {
+        "name":"Frame"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Cached Data"
+      }
+    ]
+  },
+  "Node_VerletSim_Mesh_Cache_Lerp":{
+    "name":"Mesh Mix Cache",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Mesh"
+      },
+      {
+        "name":"Cache Mesh"
+      },
+      {
+        "name":"Amount"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Mesh"
+      }
+    ]
+  },
+  "Node_VerletSim_Mesh_Pin":{
+    "name":"Pin Mesh",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Mesh"
+      },
+      {
+        "name":"Area"
+      },
+      {
+        "name":"Mode",
+        "display_data":[
+          "Override",
+          "Pin",
+          "Unpin"
+        ]
+      },
+      {
+        "name":"Source",
+        "display_data":[
+          "Area",
+          "Surface"
+        ]
+      },
+      {
+        "name":"Surface"
+      },
+      {
+        "name":"Active"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Mesh"
+      }
+    ]
+  },
+  "Node_VerletSim_Mesh_Pleat":{
+    "name":"Pleat Mesh",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Mesh"
+      },
+      {
+        "name":"Area"
+      },
+      {
+        "name":"Amount"
+      },
+      {
+        "name":"Strength"
+      },
+      {
+        "name":"Offset"
+      },
+      {
+        "name":"Offset Falloff"
+      },
+      {
+        "name":"Stretch Falloff"
+      },
+      {
+        "name":"Contract"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Mesh"
+      }
+    ]
+  },
+  "Node_VerletSim_Mesh_Tear":{
+    "name":"Tear Mesh",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Mesh"
+      },
+      {
+        "name":"Source",
+        "display_data":[
+          "Area",
+          "Surface"
+        ]
+      },
+      {
+        "name":"Area"
+      },
+      {
+        "name":"Surface"
+      },
+      {
+        "name":"Active"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Mesh"
+      }
+    ]
+  },
+  "Node_VerletSim_Path":{
+    "name":"Verlet Path",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Path"
+      },
+      {
+        "name":"Samples"
+      },
+      {
+        "name":"Tension"
+      },
+      {
+        "name":"Drag"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Mesh"
+      }
+    ]
+  },
+  "Node_VerletSim_Render":{
+    "name":"Render",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Mesh"
+      },
+      {
+        "name":"Dimension"
+      },
+      {
+        "name":"Texture"
+      },
+      {
+        "name":"Type",
+        "display_data":[
+          "Textured",
+          "Wireframe"
+        ]
+      },
+      {
+        "name":"Step"
+      },
+      {
+        "name":"Color"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Surface Out"
+      }
+    ]
+  },
+  "Node_VerletSim_Simple":{
+    "name":"Verlet",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Mesh"
+      },
+      {
+        "name":"Substep"
+      },
+      {
+        "name":"Gravity"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Mesh"
+      }
+    ]
+  },
+  "Node_VerletSim_Step":{
+    "name":"Step",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Mesh"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Mesh"
+      }
+    ]
+  },
+  "Node_VerletSim_to_Path":{
+    "name":"Mesh to Path",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Mesh"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Path"
+      }
+    ]
+  },
+  "Node_VerletSim_Wind":{
+    "name":"Wind",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Mesh"
+      },
+      {
+        "name":"Center"
+      },
+      {
+        "name":"Direction"
+      },
+      {
+        "name":"Width"
+      },
+      {
+        "name":"Falloff"
+      },
+      {
+        "name":"Falloff Curve"
+      },
+      {
+        "name":"Strength"
+      },
+      {
+        "name":"Active"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Mesh"
       }
     ]
   },
@@ -23813,16 +28152,6 @@
       }
     ]
   },
-  "Node_VFX_Group":{
-    "name":"VFX",
-    "tooltip":"",
-    "inputs":[
-      {
-        "name":"Loop"
-      }
-    ],
-    "outputs":[]
-  },
   "Node_VFX_Group_Inline":{
     "name":"VFX",
     "tooltip":"Create VFX group, which generate particles that can be manipulated using different force nodes.",
@@ -23832,6 +28161,9 @@
       },
       {
         "name":"Dimension"
+      },
+      {
+        "name":"Pre-Render"
       }
     ],
     "outputs":[]
@@ -24098,7 +28430,8 @@
           "Area Inside",
           "Area Border",
           "Map",
-          "Path"
+          "Path",
+          "Direct Data"
         ]
       },
       {
@@ -24117,10 +28450,10 @@
         "name":"Rotational Speed"
       },
       {
-        "name":"Initial Scale"
+        "name":"Scale"
       },
       {
-        "name":"Scale Over Time"
+        "name":"Size Over Lifespan"
       },
       {
         "name":"Color Over Lifetime"
@@ -24129,7 +28462,7 @@
         "name":"Alpha"
       },
       {
-        "name":"Alpha Over Time"
+        "name":"Alpha Over Lifespan"
       },
       {
         "name":"Rotate by Direction",
@@ -24144,10 +28477,10 @@
         ]
       },
       {
-        "name":"Initial Size"
+        "name":"Size"
       },
       {
-        "name":"Initial Speed"
+        "name":"Speed"
       },
       {
         "name":"Gravity"
@@ -24289,14 +28622,37 @@
         "name":"Use Wiggles"
       },
       {
-        "name":"Rotational Speed Over Time"
+        "name":"Rotational Speed Over Lifespan"
       },
       {
-        "name":"Base Speed Over Time",
+        "name":"Speed Over Lifespan",
         "tooltip":"Speed may conflict with physics-based properties."
       },
       {
         "name":"Snap Rotation"
+      },
+      {
+        "name":"Spawn Data"
+      },
+      {
+        "name":"Ground Offset Type",
+        "display_data":[
+          "Relative",
+          "Absolute"
+        ]
+      },
+      {
+        "name":"Direction Type",
+        "display_data":[
+          "Random",
+          "Uniform"
+        ]
+      },
+      {
+        "name":"Pre-Render"
+      },
+      {
+        "name":"Path Range"
       },
       {
         "name":"Spawn trigger"
@@ -24576,6 +28932,15 @@
       },
       {
         "name":"Lighten"
+      },
+      {
+        "name":"Roundness Map"
+      },
+      {
+        "name":"Exposure Map"
+      },
+      {
+        "name":"Strength Map"
       }
     ],
     "outputs":[
@@ -24759,13 +29124,13 @@
         "name":"Detail"
       },
       {
-        "name":"Scale map"
+        "name":"Scale Map"
       },
       {
-        "name":"Progress map"
+        "name":"Progress Map"
       },
       {
-        "name":"Detail map"
+        "name":"Detail Map"
       },
       {
         "name":"Rotation"
@@ -25069,10 +29434,10 @@
         ]
       },
       {
-        "name":"Amount map"
+        "name":"Amount Map"
       },
       {
-        "name":"Angle map"
+        "name":"Angle Map"
       },
       {
         "name":"Angle"

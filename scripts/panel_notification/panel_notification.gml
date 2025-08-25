@@ -1,10 +1,10 @@
 #region funtion calls
 	function __fnInit_Notification() {
-		registerFunction("Notifications", "Clear log messages",			"",   MOD_KEY.none,	notification_clear_all		).setMenu("noti_clear_all");
-		registerFunction("Notifications", "Clear warning messages",		"",   MOD_KEY.none,	notification_clear_log		).setMenu("noti_clear_log");
-		registerFunction("Notifications", "Clear all notifications",	"",   MOD_KEY.none,	notification_clear_warning	).setMenu("noti_clear_warning");
+		registerFunction("Notifications", "Clear log messages",      "", MOD_KEY.none, notification_clear_all     ).setMenu("noti_clear_all");
+		registerFunction("Notifications", "Clear warning messages",  "", MOD_KEY.none, notification_clear_log     ).setMenu("noti_clear_log");
+		registerFunction("Notifications", "Clear all notifications", "", MOD_KEY.none, notification_clear_warning ).setMenu("noti_clear_warning");
 		
-		registerFunction("Notifications", "Open log folder....",		"",   MOD_KEY.none,	notification_open_log		).setMenu("noti_open_log");
+		registerFunction("Notifications", "Open log folder...",      "", MOD_KEY.none, notification_open_log      ).setMenu("noti_open_log");
 		
 	}
 	

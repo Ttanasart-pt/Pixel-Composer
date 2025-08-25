@@ -233,9 +233,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		path_current = path;
 		
-		var ext   = string_lower(filename_ext(path));
-		var _name = filename_name_only(path);
-		
+		var ext = string_lower(filename_ext(path));
 		if(ext != ".ase" && ext != ".aseprite") return false;
 		
 		content = read_ase(path);

@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"kra_reader",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"kra_reader",
+  "parent":{
+    "name":"importers",
+    "path":"folders/functions/importers.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

@@ -387,6 +387,7 @@
     {"$GMFolder":"","%Name":"rotator","folderPath":"folders/widgets/rotator.yy","name":"rotator","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"sliders","folderPath":"folders/widgets/sliders.yy","name":"sliders","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"text","folderPath":"folders/widgets/text.yy","name":"text","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"krita","folderPath":"folders/nodes/data/io/krita.yy","name":"krita","resourceType":"GMFolder","resourceVersion":"2.0",},
   ],
   "IncludedFiles":[
     {"$GMIncludedFile":"","%Name":"Addons.zip","CopyToMask":-1,"filePath":"datafiles/data","name":"Addons.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
@@ -1466,11 +1467,7 @@
     {"$GMIncludedFile":"","%Name":"Canvas.png","CopyToMask":-1,"filePath":"datafiles/data/Welcome files/Templates","name":"Canvas.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Canvas.pxc","CopyToMask":-1,"filePath":"datafiles/data/Welcome files/Templates","name":"Canvas.pxc","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Welcome files.zip","CopyToMask":-1,"filePath":"datafiles/data/Welcome files","name":"Welcome files.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"dllcredits.txt","ConfigValues":{
-        "Itch":{
-          "CopyToMask":"0",
-        },
-      },"CopyToMask":0,"filePath":"datafiles","name":"dllcredits.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"dllcredits.txt","ConfigValues":{"Itch":{"CopyToMask":"0",},},"CopyToMask":0,"filePath":"datafiles","name":"dllcredits.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"dlltest1.dll","CopyToMask":-1,"filePath":"datafiles","name":"dlltest1.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"ffmpeg.exe","CopyToMask":-1,"filePath":"datafiles/ffmpeg/bin","name":"ffmpeg.exe","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"LICENSE","CopyToMask":-1,"filePath":"datafiles/ffmpeg","name":"LICENSE","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
@@ -1496,11 +1493,7 @@
     {"$GMIncludedFile":"","%Name":"mf.dll","CopyToMask":-1,"filePath":"datafiles","name":"mf.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"mfcore.dll","CopyToMask":-1,"filePath":"datafiles","name":"mfcore.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"mfplat.dll","CopyToMask":-1,"filePath":"datafiles","name":"mfplat.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"PixelComposer_profile-2.provisionprofile","ConfigValues":{
-        "Itch":{
-          "CopyToMask":"2",
-        },
-      },"CopyToMask":-1,"filePath":"datafiles","name":"PixelComposer_profile-2.provisionprofile","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"PixelComposer_profile-2.provisionprofile","ConfigValues":{"Itch":{"CopyToMask":"2",},},"CopyToMask":-1,"filePath":"datafiles","name":"PixelComposer_profile-2.provisionprofile","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"data.win","CopyToMask":-1,"filePath":"datafiles/report","name":"data.win","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"execute_shell_simple_ext_x64.dll","CopyToMask":-1,"filePath":"datafiles/report","name":"execute_shell_simple_ext_x64.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"options.ini","CopyToMask":-1,"filePath":"datafiles/report","name":"options.ini","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
@@ -3868,6 +3861,7 @@
     {"id":{"name":"s_node_gradient_palette","path":"sprites/s_node_gradient_palette/s_node_gradient_palette.yy",},},
     {"id":{"name":"s_node_gradient_points","path":"sprites/s_node_gradient_points/s_node_gradient_points.yy",},},
     {"id":{"name":"s_node_gradient_replace_color","path":"sprites/s_node_gradient_replace_color/s_node_gradient_replace_color.yy",},},
+    {"id":{"name":"kra_reader","path":"scripts/kra_reader/kra_reader.yy",},},
     {"id":{"name":"s_node_gradient_sample","path":"sprites/s_node_gradient_sample/s_node_gradient_sample.yy",},},
     {"id":{"name":"s_node_gradient_shift","path":"sprites/s_node_gradient_shift/s_node_gradient_shift.yy",},},
     {"id":{"name":"s_node_gradient_type","path":"sprites/s_node_gradient_type/s_node_gradient_type.yy",},},
@@ -3961,6 +3955,7 @@
     {"id":{"name":"s_node_mk_brownian","path":"sprites/s_node_mk_brownian/s_node_mk_brownian.yy",},},
     {"id":{"name":"s_node_mk_cable","path":"sprites/s_node_mk_cable/s_node_mk_cable.yy",},},
     {"id":{"name":"s_node_mk_delay_machine","path":"sprites/s_node_mk_delay_machine/s_node_mk_delay_machine.yy",},},
+    {"id":{"name":"node_krita_file_read","path":"scripts/node_krita_file_read/node_krita_file_read.yy",},},
     {"id":{"name":"s_node_mk_dialog_apply_group","path":"sprites/s_node_mk_dialog_apply_group/s_node_mk_dialog_apply_group.yy",},},
     {"id":{"name":"s_node_mk_dialog_position","path":"sprites/s_node_mk_dialog_position/s_node_mk_dialog_position.yy",},},
     {"id":{"name":"s_node_mk_dialog","path":"sprites/s_node_mk_dialog/s_node_mk_dialog.yy",},},

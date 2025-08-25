@@ -67,8 +67,7 @@ function Node_XML_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		outputs[1].setValue(path);
 		
-		var _content = file_text_read_all_lines(path);
-		content = SnapFromXML(_content);
+		content = xml_read_file(path);
 		
 		if(path_current == "") 
 		path_current = path;

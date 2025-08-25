@@ -4305,7 +4305,9 @@ function load_file_path(path, _x = undefined, _y = undefined) {
                 	break;
                     
                 case "ase"      :
-                case "aseprite" : node = Node_create_ASE_File_Read_path(_x, _y, p);  break;
+                case "aseprite" : node = Node_create_ASE_File_Read_path(_x, _y, p);   break;
+                
+                case "kra"      : node = Node_create_Krita_File_Read_path(_x, _y, p); break;
                 
                 case "png"      :
                 case "jpg"      :
