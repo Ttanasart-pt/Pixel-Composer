@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_krita_layer",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_krita_layer",
+  "parent":{
+    "name":"krita",
+    "path":"folders/nodes/data/io/krita.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

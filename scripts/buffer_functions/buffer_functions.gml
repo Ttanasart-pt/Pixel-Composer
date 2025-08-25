@@ -163,7 +163,7 @@ function buffer_to_string_u8(buffer) {
     
     repeat(len) {
 		var _r = buffer_read(buffer, buffer_u8);
-		ss += string(_r) + " ";
+		ss += dec_to_hex2(_r) + " ";
 		
 		if(ix++ == 4) {
 			ss += "  ";

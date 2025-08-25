@@ -388,6 +388,7 @@
             
             { "label": "Krita" },
             "Node_Krita_File_Read",
+            "Node_Krita_layer",
             
             { "label": "External" },
             "Node_Websocket_Receiver",

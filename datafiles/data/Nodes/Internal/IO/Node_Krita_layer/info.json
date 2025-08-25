@@ -1,0 +1,6 @@
+{
+    "name":          "Krita Layer",
+    "spr":           "s_node_krita_layer",
+    "baseNode":      "Node_Krita_layer",
+    "pxc_version":    119080,
+}
