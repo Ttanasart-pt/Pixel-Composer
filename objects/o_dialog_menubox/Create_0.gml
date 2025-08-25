@@ -114,4 +114,6 @@ event_inherited();
 	}
 	
 	function getContextPanel() { return is(context, PanelContent)? context.panel : context; }
+	
+	function setTooltip(_tooltips) { tooltips = _tooltips; return self; }
 #endregion

@@ -38,13 +38,17 @@
             registerFunction("", "Recent Files",    "R",    MOD_KEY.ctrl | MOD_KEY.shift,
                 function(_dat) { 
                     var arr = [];
+                    var tip = [];
                     
                     for(var i = 0; i < min(10, ds_list_size(RECENT_FILES)); i++)  {
                         var _rec = RECENT_FILES[| i];
-                        array_push(arr, menuItem(_rec, function(_d) /*=>*/ {return LOAD_PATH(_d)}, noone, noone, noone, _rec));
+                        var _thm = project_get_thumbnail_surface(_rec);
+                        
+                        arr[i] = menuItem(_rec, function(_d) /*=>*/ {return LOAD_PATH(_d)}, noone, noone, noone, _rec);
+                        tip[i] = [ _thm, VALUE_TYPE.surface ];
                     }
                     
-                    return submenuCall(_dat, arr, "recent_files");
+                    return submenuCall(_dat, arr, "recent_files").setTooltip(tip);
                 }).setMenu("recent_files",, true);
                 
             registerFunction("", "Import .zip",     "",     MOD_KEY.none, __IMPORT_ZIP             ).setMenu("import_zip")
@@ -811,15 +815,16 @@ function Panel_Menu() : PanelContent() constructor {
                 for(var i = 0, n = min(10, ds_list_size(RECENT_FILES)); i < n; i++)  {
                     var _rec = RECENT_FILES[| i];
                     var _dat = RECENT_FILE_DATA[| i];
-                    array_push(arr, menuItem(_rec, function(_dat) /*=>*/ {return LOAD_PATH(_dat.path)}, noone, noone, noone, { path: _dat.path }) );
-                    array_push(tip, [ method(_dat, _dat.getThumbnail), VALUE_TYPE.surface ]);
+                    var _thm = project_get_thumbnail_surface(_dat.path);
+                    
+                    arr[i] = menuItem(_rec, function(_dat) /*=>*/ {return LOAD_PATH(_dat.path)}, noone, noone, noone, { path: _dat.path }) ;
+                    tip[i] = [ _thm, VALUE_TYPE.surface ];
                 }
                 
                 var dx  = hori? x + tcx : x + w;
                 var dy  = hori? y + h : y + tby0;
                 var da  = hori? fa_center : fa_left;
-                var dia = menuCall("title_recent_menu", arr, dx, dy, da);
-                if(dia) dia.tooltips = tip;
+                var dia = menuCall("title_recent_menu", arr, dx, dy, da).setTooltip(tip);
             }
             
             draw_set_font(f_p0b);

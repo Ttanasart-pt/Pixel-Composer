@@ -124,9 +124,9 @@ function LOAD_AT(path, params = new __loadParams()) {
 	printIf(log, $" > Create temp : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
 	
 	#region read 
-		var _ext = filename_ext_raw(path), s;
+		var _ext    = filename_ext_raw(path), s;
 		var rawBuff = buffer_load(path);
-		var offset   = 0;
+		var offset  = 0;
 		buffer_to_start(rawBuff);
 		
 		var _id = buffer_read_text(rawBuff, 4);
@@ -137,8 +137,6 @@ function LOAD_AT(path, params = new __loadParams()) {
 			contBuff = buffer_create(1, buffer_grow, 1);
 			buffer_copy(rawBuff, offset, buffer_get_size(rawBuff) - offset, contBuff, 0);
 		}
-		
-		// print(_id, offset);
 		
 		var compBuff = buffer_decompress(contBuff);
 		if(compBuff == -1) {

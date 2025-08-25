@@ -960,7 +960,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var anim = getInputData( 3);
 		var expt = getInputData(22);
 		
-		if(expt) export(false);
+		if(expt && !IS_RENDERING) export(false);
 		
 		if(anim == NODE_EXPORT_FORMAT.single)
 			return;

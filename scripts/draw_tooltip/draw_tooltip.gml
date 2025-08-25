@@ -138,7 +138,7 @@ function draw_tooltip_surface(surf) {
 		return;
 	}
 	
-	if(is_instanceof(surf, SurfaceAtlas)) {
+	if(is(surf, SurfaceAtlas)) {
 		draw_tooltip_atlas(surf);
 		return;
 	}
