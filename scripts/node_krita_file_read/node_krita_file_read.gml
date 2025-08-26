@@ -30,7 +30,7 @@ function Node_Krita_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	w    = 128;
 	update_on_frame = false;
 	
-	newInput(0, nodeValue_Path(    "Path"            )).setDisplay(VALUE_DISPLAY.path_load, { filter: "Aseprite file|*.ase;*.aseprite" });
+	newInput(0, nodeValue_Path( "Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "Aseprite file|*.ase;*.aseprite" });
 	
 	b_gen_layer = button(function() /*=>*/ {return refreshLayers()}).setText("Generate Layers");
 	

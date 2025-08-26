@@ -390,6 +390,10 @@
             "Node_Krita_File_Read",
             "Node_Krita_layer",
             
+            { "label": "ORA" },
+            "Node_ORA_File_Read",
+            "Node_ORA_layer",
+            
             { "label": "External" },
             "Node_Websocket_Receiver",
             "Node_Websocket_Sender",

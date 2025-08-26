@@ -66,17 +66,6 @@ function read_kra(_path) {
 	return _content;
 }
 
-function buffer_read_line(buf) {
-	var line = "";
-	while (true) {
-        var cr = chr(buffer_read(buf, buffer_u8));
-        if(cr == "\n") return line;
-        else line += cr;
-	}
-	
-	return line;
-}
-
 function read_kra_layer_pixel(_fname) {
     var buf = buffer_load(_fname);
     buffer_seek(buf, buffer_seek_start, 0);

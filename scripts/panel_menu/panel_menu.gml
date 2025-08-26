@@ -37,10 +37,11 @@
             
             registerFunction("", "Recent Files",    "R",    MOD_KEY.ctrl | MOD_KEY.shift,
                 function(_dat) { 
-                    var arr = [];
-                    var tip = [];
+                    var amo = min(10, ds_list_size(RECENT_FILES));
+                    var arr = array_create(amo);
+                    var tip = array_create(amo);
                     
-                    for(var i = 0; i < min(10, ds_list_size(RECENT_FILES)); i++)  {
+                    for(var i = 0; i < amo; i++)  {
                         var _rec = RECENT_FILES[| i];
                         var _thm = project_get_thumbnail_surface(_rec);
                         
@@ -808,11 +809,11 @@ function Panel_Menu() : PanelContent() constructor {
             if(_b) _draggable = false;
             if(_b == 2) {
                 _hov = true;
-                var arr = [];
-                var dat = [];
-                var tip = [];
+                var amo = min(10, ds_list_size(RECENT_FILES));
+                var arr = array_create(amo);
+                var tip = array_create(amo);
                 
-                for(var i = 0, n = min(10, ds_list_size(RECENT_FILES)); i < n; i++)  {
+                for(var i = 0; i < amo; i++)  {
                     var _rec = RECENT_FILES[| i];
                     var _dat = RECENT_FILE_DATA[| i];
                     var _thm = project_get_thumbnail_surface(_dat.path);

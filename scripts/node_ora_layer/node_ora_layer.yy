@@ -1,0 +1,14 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_ora_layer",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_ora_layer",
+  "parent":{
+    "name":"ora",
+    "path":"folders/nodes/data/io/ora.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+  "tags":[],
+}

@@ -1,0 +1,6 @@
+{
+    "name":          "ORA File In",
+    "spr":           "s_node_ora_file_read",
+    "baseNode":      "Node_ORA_File_Read",
+    "pxc_version":    119080,
+}

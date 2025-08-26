@@ -88,6 +88,17 @@ function buffer_read_text(buffer, len) {
 	return _s;
 }
 
+function buffer_read_line(buf) {
+	var line = "";
+	while (true) {
+        var cr = chr(buffer_read(buf, buffer_u8));
+        if(cr == "\n") return line;
+        else line += cr;
+	}
+	
+	return line;
+}
+
 function buffer_get_color(buffer, _x, _y, w, h) {
 	INLINE
 	buffer_seek(buffer, buffer_seek_start, (w * _y + _x) * 4);
