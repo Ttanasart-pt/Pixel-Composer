@@ -456,4 +456,15 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 	}
 	
+	/*[cpp]
+	function double inlinec_add(double a, double b) {
+		return a + b;
+	}
+	*/ 
+	
+	var a = 10;
+	var b =  1;
+	var c = inlinec_add(a,b)
+	
+	print(c); // 11
 }

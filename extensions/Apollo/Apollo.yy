@@ -16,7 +16,7 @@
       "copyToTargets":"64",
     },
     "Itch":{
-      "copyToTargets":"64",
+      "copyToTargets":"192",
     },
   },
   "copyToTargets":0,
@@ -24,7 +24,11 @@
   "exportToGame":true,
   "extensionVersion":"1.0.0",
   "files":[
-    {"$GMExtensionFile":"","%Name":"","constants":[
+    {"$GMExtensionFile":"","%Name":"","ConfigValues":{
+        "Itch":{
+          "copyToTargets":"192",
+        },
+      },"constants":[
         {"$GMExtensionConstant":"","%Name":"lua_btype_nil","hidden":true,"name":"lua_btype_nil","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"0",},
         {"$GMExtensionConstant":"","%Name":"lua_btype_bool","hidden":true,"name":"lua_btype_bool","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"1",},
         {"$GMExtensionConstant":"","%Name":"lua_btype_int32","hidden":true,"name":"lua_btype_int32","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"2",},

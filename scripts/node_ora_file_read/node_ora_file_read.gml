@@ -52,17 +52,17 @@ function Node_ORA_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		var _lay = content.layerData;
 		var _amo = array_length(_lay);
-		var hh   = ui(24);
-		var _h   = hh * _amo + ui(16);
+		var _hg  = ui(24);
+		var _h   = _hg * _amo + ui(16);
 		
 		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, _h, COLORS.node_composite_bg_blend, 1);
 		for( var i = 0, n = array_length(_lay); i < n; i++ ) {
-			var _yy = _y + ui(8) + i * hh;
+			var _yy = _y + ui(8) + i * _hg;
 			var _bx = _x + ui(8);
 			var _layer = _lay[i];
 			
 			draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-			draw_text_add(_bx, _yy + hh / 2, _layer.name);
+			draw_text_add(_bx, _yy + _hg / 2, _layer.name);
 		}
 		
 		return _h;

@@ -1,6 +1,6 @@
 {
     "name":          "ORA Layer",
-    "spr":           "s_node_ora_layer",
+    "spr":           "s_node_ora_file",
     "baseNode":      "Node_ORA_layer",
     "pxc_version":    119080,
 }

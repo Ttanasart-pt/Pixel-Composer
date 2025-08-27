@@ -94,8 +94,7 @@ function Node_ORA_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _lspr = _ldat.spr;
 		
 		surface_set_shader(_outSurf);
-			if(_lspr != noone)
-				draw_sprite(_lspr, 0, _lx, _ly);
+			if(_lspr != noone) draw_sprite(_lspr, 0, _lx, _ly);
 		surface_reset_shader();
 		
 		outputs[0].setValue(_outSurf);
