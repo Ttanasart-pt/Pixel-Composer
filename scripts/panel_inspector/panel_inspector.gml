@@ -236,10 +236,10 @@ function Panel_Inspector() : PanelContent() constructor {
         
         meta_steam_avatar = new checkBox(function() /*=>*/ { STEAM_UGC_ITEM_AVATAR = !STEAM_UGC_ITEM_AVATAR; });
         
-        global_button_edit = button(function() /*=>*/ { meta_display[2][1] = false; global_drawer.editing = !global_drawer.editing; })
+        global_button_edit = button(function() /*=>*/ { meta_display[3][1] = false; global_drawer.editing = !global_drawer.editing; })
 			.setIcon(THEME.gear_16, 0, COLORS._main_icon_light);
                                     
-        global_button_new  = button(function() /*=>*/ { meta_display[2][1] = false; PROJECT.globalNode.createValue();               })
+        global_button_new  = button(function() /*=>*/ { meta_display[3][1] = false; PROJECT.globalNode.createValue();               })
 			.setIcon(THEME.add_16,  0, COLORS._main_value_positive);
                                 
         global_buttons         = [ global_button_edit ];

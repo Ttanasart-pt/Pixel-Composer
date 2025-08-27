@@ -226,7 +226,7 @@ def buildExtension(srcArr, extDir):
         dllPathW = dllPath["windows"]
         dllPathL = dllPath["linux"]
 
-        dllName = os.path.basename(dllPathW).replace(".dll", "")
+        dllName = os.path.basename(dllPathW)
 
         iArray = [2 if t == "double" else 1 for t, n in inputs]
         oType  = 2 if return_type == "double" else 1

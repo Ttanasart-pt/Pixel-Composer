@@ -13,7 +13,7 @@
   "classname":"",
   "ConfigValues":{
     "Steam":{
-      "copyToTargets":"64",
+      "copyToTargets":"192",
     },
     "Itch":{
       "copyToTargets":"192",
@@ -26,6 +26,9 @@
   "files":[
     {"$GMExtensionFile":"","%Name":"","ConfigValues":{
         "Itch":{
+          "copyToTargets":"192",
+        },
+        "Steam":{
           "copyToTargets":"192",
         },
       },"constants":[

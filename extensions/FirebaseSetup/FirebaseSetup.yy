@@ -11,14 +11,6 @@
   "androidsourcedir":"",
   "author":"",
   "classname":"",
-  "ConfigValues":{
-    "Steam":{
-      "copyToTargets":"130",
-    },
-    "Itch":{
-      "copyToTargets":"0",
-    },
-  },
   "copyToTargets":0,
   "description":"",
   "exportToGame":true,

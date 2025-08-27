@@ -1,6 +1,6 @@
 {
   "$GMExtension":"",
-  "%Name":"inlineC",
+  "%Name": "inlineC",
   "androidactivityinject":null,
   "androidclassname":"",
   "androidcodeinjection":"",
@@ -15,16 +15,32 @@
   "description":"",
   "exportToGame":true,
   "extensionVersion":"0.0.1",
-  "files":[
-    {"$GMExtensionFile":"","%Name":"","constants":[],"copyToTargets":-1,"filename":"dll/inlinec_add","final":"","functions":[
-        {"$GMExtensionFunction":"","%Name":"inlinec_add","argCount":0,"args":[2,2,],"documentation":"","externalName":"inlinec_add","help":"","hidden":false,"kind":1,"name":"inlinec_add","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
-      ],"init":"","kind":1,"name":"","order":[],"origname":"","ProxyFiles":[
-        {"$GMProxyFile":"","%Name":"dll/inlinec_add.dll","name":"dll/inlinec_add.dll","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":6,},
-        {"$GMProxyFile":"","%Name":"dll/inlinec_add.so","name":"dll/inlinec_add.so","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":7,},
-      ],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
+  "files":[ {
+  "$GMExtensionFile":"",
+  "%Name":"",
+  "constants":[],
+  "copyToTargets":-1,
+  "filename":"dll/inlinec_add.dll",
+  "final":"",
+  "functions":[ 
+    {"$GMExtensionFunction":"","%Name":"inlinec_add","argCount":0,"args":[2, 2],"documentation":"","externalName":"inlinec_add","help":"","hidden":false,"kind":1,"name":"inlinec_add","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2}
   ],
+  "init":"",
+  "kind":1,
+  "name":"",
+  "order":[],
+  "origname":"",
+  "ProxyFiles":[
+    {"$GMProxyFile":"","%Name":"dll/inlinec_add.dll","name":"dll/inlinec_add.dll","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":6,},
+    {"$GMProxyFile":"","%Name":"dll/inlinec_add.so","name":"dll/inlinec_add.so","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":7,},
+  ],
+  "resourceType":"GMExtensionFile",
+  "resourceVersion":"2.0",
+  "uncompress":false,
+  "usesRunnerInterface":false
+} ],
   "gradleinject":null,
-  "hasConvertedCodeInjection":true,
+  "hasConvertedCodeInjection":false,
   "helpfile":"",
   "HTML5CodeInjection":"",
   "html5Props":false,
@@ -42,7 +58,7 @@
   "maccompilerflags":"",
   "maclinkerflags":"",
   "macsourcedir":"",
-  "name":"inlineC",
+  "name": "inlineC",
   "options":[],
   "optionsFile":"options.json",
   "packageId":"",
