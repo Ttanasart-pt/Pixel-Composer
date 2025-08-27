@@ -315,7 +315,6 @@
   "ResourceOrderSettings":[
     {"name":"ac_disappear","order":2,"path":"animcurves/ac_disappear/ac_disappear.yy",},
     {"name":"ac_ripple","order":1,"path":"animcurves/ac_ripple/ac_ripple.yy",},
-    {"name":"buffer2string","order":5,"path":"extensions/buffer2string/buffer2string.yy",},
     {"name":"clipboard","order":7,"path":"extensions/clipboard/clipboard.yy",},
     {"name":"delaunayC","order":2,"path":"extensions/delaunayC/delaunayC.yy",},
     {"name":"discordBridge","order":4,"path":"extensions/discordBridge/discordBridge.yy",},

@@ -16,11 +16,13 @@
   "exportToGame":true,
   "extensionVersion":"0.0.1",
   "files":[
-    {"$GMExtensionFile":"","%Name":"","constants":[],"copyToTargets":192,"filename":"inlinec_add.dll","final":"","functions":[
-        {"$GMExtensionFunction":"","%Name":"inlinec_add","argCount":0,"args":[2,2,],"documentation":"","externalName":"inlinec_add","help":"","hidden":false,"kind":1,"name":"inlinec_add","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
+    {"$GMExtensionFile":"","%Name":"","constants":[],"copyToTargets":192,"filename":"buffer_to_string_bin.dll","final":"","functions":[
+        {"$GMExtensionFunction":"","%Name":"buffer_to_string_bin","argCount":0,"args":[1,2,1,],"documentation":"","externalName":"buffer_to_string_bin","help":"","hidden":false,"kind":1,"name":"buffer_to_string_bin","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
+        {"$GMExtensionFunction":"","%Name":"buffer_to_string_hex","argCount":0,"args":[1,2,1,],"documentation":"","externalName":"buffer_to_string_hex","help":"","hidden":false,"kind":1,"name":"buffer_to_string_hex","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
+        {"$GMExtensionFunction":"","%Name":"buffer_to_string_base64","argCount":0,"args":[1,2,1,],"documentation":"","externalName":"buffer_to_string_base64","help":"","hidden":false,"kind":1,"name":"buffer_to_string_base64","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
       ],"init":"","kind":1,"name":"","order":[],"origname":"","ProxyFiles":[
-        {"$GMProxyFile":"","%Name":"inlinec_add.dll","name":"inlinec_add.dll","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":6,},
-        {"$GMProxyFile":"","%Name":"inlinec_add.so","name":"inlinec_add.so","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":7,},
+        {"$GMProxyFile":"","%Name":"buffer_to_string_bin.dll","name":"buffer_to_string_bin.dll","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":6,},
+        {"$GMProxyFile":"","%Name":"buffer_to_string_bin.so","name":"buffer_to_string_bin.so","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":7,},
       ],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
     {"$GMExtensionFile":"","%Name":"","constants":[],"copyToTargets":192,"filename":"surface_is_empty_c.dll","final":"","functions":[
         {"$GMExtensionFunction":"","%Name":"surface_is_empty_c","argCount":0,"args":[1,2,2,],"documentation":"","externalName":"surface_is_empty_c","help":"","hidden":false,"kind":1,"name":"surface_is_empty_c","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
