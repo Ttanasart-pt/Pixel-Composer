@@ -589,7 +589,7 @@ function Panel_Inspector() : PanelContent() constructor {
         var _colMap = _inspecting.inspector_collapse;
         var _cAll   = 0;
         
-        var padd    = viewMode == INSP_VIEW_MODE.spacious? ui(6) : ui(6);
+        var padd    = ui(6);
         
         for(var i = 0; i < amo; i++) {
             var yy = hh + _y;

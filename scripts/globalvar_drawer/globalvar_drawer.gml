@@ -18,7 +18,7 @@ function GlobalVarDrawer() constructor {
 		var _node = PROJECT.globalNode;
 		if(array_empty(_node.inputs)) return [ 0, false ];
 		
-		var _font = viewMode == INSP_VIEW_MODE.spacious? f_p0 : f_p2;
+		var _font = viewMode == INSP_VIEW_MODE.spacious? f_p2 : f_p3;
 		var  del  = noone;
 		
 		yy += ui(8);
@@ -131,8 +131,11 @@ function GlobalVarDrawer() constructor {
 			if(mouse_release(mb_left)) dragging = noone;
 		}
 					
-		if(del != noone) array_delete(_node.inputs, del, 1);
-			
+		if(del != noone) {
+			array_delete(_node.inputs, del, 1);
+			_node.valueUpdate();
+		}
+		
 		return [ hh, chov ];
 	}
 	
@@ -140,10 +143,10 @@ function GlobalVarDrawer() constructor {
 		var hh   = 0;
 		var chov = false; 
 		
-		var lb_h  = line_get_height(f_p0) + ui(8);
+		var _font = viewMode == INSP_VIEW_MODE.spacious? f_p2 : f_p3;
+		var lb_h  = line_get_height(_font, 4 + viewMode * 2);
 		var _node = PROJECT.globalNode;
-		var _font = viewMode == INSP_VIEW_MODE.spacious? f_p0 : f_p2;
-		var _padd = viewMode == INSP_VIEW_MODE.spacious? ui(8) : ui(4);
+		var _padd = ui(6);
 		
 		if(viewMode == INSP_VIEW_MODE.compact) { 
 			yy += ui(4); 
@@ -155,7 +158,7 @@ function GlobalVarDrawer() constructor {
 			var widH    = widg[0];
 			var mbRight = widg[1];
 			var widHov  = widg[2];
-						
+			
 			if(hover && point_in_rectangle(_m[0], _m[1], xx, yy, xx + ww, yy + widH))
 				_HOVERING_ELEMENT = _node.inputs[j];
 			

@@ -207,15 +207,18 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 	input_display_list = -1;
 	anim_priority      = -999;
 	
-	static isActiveDynamic = function(frame = CURRENT_FRAME) { return true; }
-		
-	static valueUpdate = function(index) { RENDER_ALL }
+	static isActiveDynamic = function(frame = CURRENT_FRAME) /*=>*/ {return true}
+	static valueUpdate = function(index) /*=>*/ { RENDER_ALL }
 	
 	static createValue = function() {
-		var _key   = $"NewValue{array_length(inputs)}";
+		var _ind   = array_length(inputs);
+		while(inputExist($"NewValue{_ind}")) _ind++;
+		var _key   = $"NewValue{_ind}";
+		
 		var _in    = nodeValue_Float(_key, 0);
 		_in.editor = new variable_editor(_in);
 		array_push(inputs, _in);
+		valueUpdate();
 		
 		return _in;
 	}
