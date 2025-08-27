@@ -15,6 +15,7 @@ enum PUPPET_FORCE_MODE {
 }
 
 function controlPointBox(_onModify) : widget() constructor {
+	always_break_line  = true;
 	onModify = _onModify;
 	onSurfaceSize = -1;
 	

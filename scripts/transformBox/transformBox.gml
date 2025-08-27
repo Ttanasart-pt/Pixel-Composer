@@ -7,6 +7,7 @@ enum TRANSFORM {
 }
 
 function transformBox(_onModify) : widget() constructor {
+	always_break_line  = true;
 	onModify = _onModify;
 	
 	onModifySingle[TRANSFORM.pos_x] = function(val) /*=>*/ { onModify(val, TRANSFORM.pos_x); }

@@ -1,4 +1,5 @@
 function curveBox(_onModify) : widget() constructor {
+	always_break_line  = true;
 	h = ui(200);
 	
 	onModify    = _onModify;

@@ -1,4 +1,5 @@
 function pbBoxBox(_junction) : widget() constructor {
+	always_break_line  = true;
 	junction   = _junction;
 	node       = junction.node;
 	curr_pbbox = noone;

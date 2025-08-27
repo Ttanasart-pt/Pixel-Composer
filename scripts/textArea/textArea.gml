@@ -13,6 +13,7 @@ function textArea_Number(_onModify) { return new textArea(TEXTBOX_INPUT.number, 
 function textArea(_input, _onModify) : textInput(_input, _onModify) constructor {
 	hide     = false;
 	color    = COLORS._main_text;
+	always_break_line  = true;
 	
 	_input_text_line       = [];
 	_input_text_line_index = [];

@@ -17,6 +17,7 @@ function widget() constructor {
 	
 	right_click_block = true;
 	
+	always_break_line  = false;
 	always_side_button = false;
 	side_button  = noone;
 	front_button = noone;

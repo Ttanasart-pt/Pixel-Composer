@@ -154,13 +154,14 @@ function GlobalVarDrawer() constructor {
 		}
 		
 		for( var i = 0, n = array_length(_node.inputs); i < n; i++ ) {
-			var widg    = drawWidget(xx, yy, ww, _m, _node.inputs[i], true, hover, focus, _scrollPane, rx, ry, ID);
+			var _inp = _node.inputs[i];
+			var widg    = drawWidget(xx, yy, ww, _m, _inp, true, hover, focus, _scrollPane, rx, ry, ID);
 			var widH    = widg[0];
 			var mbRight = widg[1];
 			var widHov  = widg[2];
 			
 			if(hover && point_in_rectangle(_m[0], _m[1], xx, yy, xx + ww, yy + widH))
-				_HOVERING_ELEMENT = _node.inputs[j];
+				_HOVERING_ELEMENT = _inp;
 			
 			yy += lb_h + widH + _padd;
 			hh += lb_h + widH + _padd;

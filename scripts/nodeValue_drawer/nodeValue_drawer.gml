@@ -16,18 +16,20 @@ function drawWidgetInit() {
 
 function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _focus = false, _scrollPane = noone, rx = 0, ry = 0, _ID = undefined) { 
 	#region data
-		var con_w     = ww - ui(4);
-		var xc	      = xx + ww / 2;
 		var _font     = viewMode == INSP_VIEW_MODE.spacious? f_p2 : f_p3;
 		var breakLine = viewMode == INSP_VIEW_MODE.spacious || jun.expUse;
-		var lb_h      = line_get_height(_font, 4 + viewMode * 2);
-		var lb_y      = yy + lb_h / 2;
+		
+		var con_w = ww - ui(4);
+		var xc	  = xx + ww / 2;
+		var lb_h  = line_get_height(_font, 4 + viewMode * 2);
+		var lb_y  = yy + lb_h / 2;
+		var cHov  = false;
 		
 		var _name     = jun.getName();
 		var dispName  = _name;
 		var wid       = jun.editWidget;
 		
-		if(!is(wid, widget)) return [ 0, true, false ];
+		if(!is(wid, widget)) return [ 0, true, cHov ];
 		
 		if(_ID != undefined) {
 			var _map = jun.editWidgetMap;
@@ -38,17 +40,9 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		
 		if(global_var) dispName = string_title(string_replace_all(_name, "_", " "));
 		
-		var cHov = false;
+		breakLine = breakLine || wid.always_break_line;
 		
 		switch(instanceof(wid)) {
-			case "textArea"        : 
-			case "controlPointBox" : 
-			case "transformBox"    : 
-			case "pbBoxBox"        : 
-			case "curveBox"        : 
-				breakLine = true;
-				break;
-				
 			case "matrixGrid"      : breakLine = breakLine || wid.size[0] > 5; break;
 			case "outputStructBox" : breakLine = breakLine || wid.expand;      break;
 				
