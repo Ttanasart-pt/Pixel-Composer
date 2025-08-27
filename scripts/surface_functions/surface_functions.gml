@@ -15,7 +15,7 @@
 		double max;
 	};
 	
-	function double surface_is_empty_c(void* pixelArrayBuffer, double _size, double _emptyMode) {
+	cfunction double surface_is_empty_c(void* pixelArrayBuffer, double _size, double _emptyMode) {
 	    pixel* pixelArray = (pixel*)pixelArrayBuffer;
 		size_t size       = (size_t)_size;
 		int emptyMode     = (int)_emptyMode;
@@ -53,7 +53,7 @@
 	    return 1;
 	}
 	
-	function double surface_get_nonempty_c(void* pixelArrayBuffer, void* outputBuffer, double width, double height) {
+	cfunction double surface_get_nonempty_c(void* pixelArrayBuffer, void* outputBuffer, double width, double height) {
 		pixel*    pixelArray  = (pixel*)pixelArrayBuffer;
 		uint16_t* outputArray = (uint16_t*)outputBuffer;
 	
@@ -75,7 +75,7 @@
 	    return amount;
 	}
 	
-	function double surface_get_range_c(void* pixelArrayBuffer, void* outputBuffer, double width, double height) {
+	cfunction double surface_get_range_c(void* pixelArrayBuffer, void* outputBuffer, double width, double height) {
 		pixel*    pixelArray  = (pixel*)pixelArrayBuffer;
 		uint16_t* outputArray = (uint16_t*)outputBuffer;
 	

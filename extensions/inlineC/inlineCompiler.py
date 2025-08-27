@@ -89,7 +89,7 @@ yycfileTemplate = """{{
   "usesRunnerInterface":false
 }},"""
 
-yycfunctionTemplate = """{{"$GMExtensionFunction":"","%Name":"{func_name}","argCount":0,"args":{iArray},"documentation":"","externalName":"{func_name}","help":"","hidden":false,"kind":1,"name":"{func_name}","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":{oType}}},"""
+yycfunctionTemplate = """{{"$GMExtensionFunction":"","%Name":"{func_name}","argCount":{iCount},"args":{iArray},"documentation":"","externalName":"{func_name}","help":"","hidden":false,"kind":1,"name":"{func_name}","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":{oType}}},"""
 srcCache = set()
 
 def getFileHash(filePath):
@@ -114,10 +114,16 @@ def compileFile(srcPath, outDir, includes):
     
     print(f"Compiling {srcPath}...")
     
-    gccPath = "C:\\MinGW\\bin\\gcc"
-    gccPath = "C:\\mingw64\\bin\\gcc" # 64-bit
+    if os.path.isfile(outPathW):
+        os.remove(outPathW)
 
-    cmd = [ gccPath, "-fpic", "-shared", srcPath, "-o", outPathW, "-Wl,--subsystem,windows"]
+    if os.path.isfile(outPathL):
+        os.remove(outPathL)
+
+    # gccPath = "C:\\MinGW\\bin\\gcc"
+    gccPath = "C:\\mingw64\\bin\\g++" # 64-bit
+
+    cmd = [ gccPath, "-fpic", "-shared", srcPath, "-o", outPathW, "-Wl,--subsystem,windows", "-m64"]
     
     try:
         subprocess.run(cmd, capture_output=True, text=True, check=True)
@@ -137,6 +143,12 @@ def compileFile(srcPath, outDir, includes):
         print("Compilation errors:" + e.stderr + "|")
         raise Exception(f"Compilation failed: {e.stderr}")
     
+    if(not os.path.isfile(outPathW)):
+        raise Exception(f"Compilation failed: output file {outPathW} not found")
+    
+    if(not os.path.isfile(outPathL)):
+        raise Exception(f"Compilation failed: output file {outPathL} not found")
+
     return {
         "windows": outPathW,
         "linux": outPathL
@@ -145,10 +157,11 @@ def compileFile(srcPath, outDir, includes):
 def buildInline(fileName, code):
     full_code  = '''
 #ifdef _WIN32
-    #define function extern "C" __declspec(dllexport)
+    #define cfunction extern "C" __declspec(dllexport)
 #else
-    #define function extern "C"
+    #define cfunction extern "C"
 #endif
+
 '''
     full_code += code
     
@@ -164,18 +177,19 @@ def buildInline(fileName, code):
         if match:
             includes.append(match.group(1).strip())
 
-        if line.startswith("function "):
-            header = line[len("function "):].strip()
+        if line.startswith("cfunction "):
+            header = line[len("cfunction "):].strip()
 
             otype, fnSignature = header.strip().split(" ", 1)
             fname, fparams = fnSignature.split("(", 1)
             fparams = fparams.rsplit(")", 1)[0]
 
             inputs = []
-            paramList = fparams.split(",")
-            for param in paramList:
-                ptype, pname = param.rsplit(" ", 1)
-                inputs.append((ptype.strip(), pname.strip()))
+            if(fparams.strip() != ""):
+                paramList = fparams.split(",")
+                for param in paramList:
+                    ptype, pname = param.rsplit(" ", 1)
+                    inputs.append((ptype.strip(), pname.strip()))
 
             functions.append({
                 "funcName": fname.strip(),
@@ -193,7 +207,7 @@ def buildInline(fileName, code):
         "functions": functions,
     }
 
-def scanInline(src):
+def scanInline(src, fpath):
     functions = []
     lines = src.splitlines()
     i = 0
@@ -212,6 +226,7 @@ def scanInline(src):
                 inline_code += line + "\n"
                 i += 1
             
+            print(f"Found inline C/C++ code block in file: {os.path.basename(fpath)}")
             functions.append(buildInline(fileName, inline_code))
         i += 1
     return functions
@@ -224,15 +239,16 @@ def scanFolder(folder):
                 filePath = os.path.join(root, file)
                 with open(filePath, 'r', encoding='utf-8') as f:
                     src = f.read()
-                funcs = scanInline(src)
+
+                if('/*[cpp]' not in src):
+                    continue
+
+                funcs = scanInline(src, filePath)
                 srcArr.extend(funcs)
     return srcArr
 
 def buildExtension(srcArr, extDir):
     extYYPath = os.path.join(extDir, "inlineC.yy")
-    
-    if not os.path.isfile(extYYPath):
-        raise Exception("Extension definition file does not exist: " + extYYPath)
     
     srcDir = os.path.join(extDir, "src")
     if not os.path.isdir(srcDir):
@@ -267,11 +283,13 @@ def buildExtension(srcArr, extDir):
             return_type = func["returnType"]
             inputs      = func["inputs"]
             iArray = [2 if t == "double" else 1 for t, n in inputs]
+            sArray = ", ".join([str(v) for v in iArray]).replace(" ", "")
             oType  = 2 if return_type == "double" else 1
 
             fnEntry += yycfunctionTemplate.format(
                 func_name=func_name,
-                iArray=iArray,
+                iArray=f"[{sArray}]",
+                iCount=len(inputs),
                 oType=oType
             ) + "\n"
 

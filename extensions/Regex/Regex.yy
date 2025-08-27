@@ -13,7 +13,7 @@
   "classname":"",
   "ConfigValues":{
     "Itch":{
-      "copyToTargets":"64",
+      "copyToTargets":"0",
     },
   },
   "copyToTargets":194,

@@ -15,8 +15,9 @@ function Node_String_Regex_Search(_x, _y, _group = noone) : Node_Processor(_x, _
 		var str = _data[0];
 		var reg = _data[1];
 		
-		var res = RegexSearch(string(str), reg);
-		return json_parse(res);
+		return "";
+		// var res = RegexSearch(str, reg);
+		// return res;
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

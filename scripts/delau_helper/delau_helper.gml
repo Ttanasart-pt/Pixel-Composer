@@ -115,5 +115,5 @@ function delaunay_triangle_in_polygon(points, triangle) {
 		ins += line_is_intersect(xc, yc, xc + 10000, yc, p0[0], p0[1], p1[0], p1[1]);
 	}
 	
-	return ins % 2;
+	return !(ins % 2);
 }

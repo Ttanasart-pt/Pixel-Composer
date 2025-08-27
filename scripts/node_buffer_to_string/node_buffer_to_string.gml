@@ -63,7 +63,7 @@ function Node_Buffer_to_String(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	
 	using namespace std;
 	
-	function double buffer_to_string_bin(char* inBuffer, double size, char* outBuffer) {
+	cfunction double buffer_to_string_bin(char* inBuffer, double size, char* outBuffer) {
 		int s = (int)size;
 		
 		for (int i = 0; i < s; i++) {
@@ -76,7 +76,7 @@ function Node_Buffer_to_String(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		return s * 8 + 1;
 	}
 	
-	function double buffer_to_string_hex(char* inBuffer, double size, char* outBuffer) {
+	cfunction double buffer_to_string_hex(char* inBuffer, double size, char* outBuffer) {
 		int s = (int)size;
 	
 		for (int i = 0; i < s; i++) {
@@ -91,7 +91,7 @@ function Node_Buffer_to_String(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		return s * 2 + 1; 
 	}
 	
-	function double buffer_to_string_base64(char* inBuffer, double size, char* outBuffer) {
+	cfunction double buffer_to_string_base64(char* inBuffer, double size, char* outBuffer) {
 		int s = (int)size;
 		const char* base64_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 		int j = 0;

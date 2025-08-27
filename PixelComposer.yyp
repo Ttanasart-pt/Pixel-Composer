@@ -2988,6 +2988,7 @@
     {"id":{"name":"rangeBox","path":"scripts/rangeBox/rangeBox.yy",},},
     {"id":{"name":"real_number_functions","path":"scripts/real_number_functions/real_number_functions.yy",},},
     {"id":{"name":"rectangle_collision","path":"scripts/rectangle_collision/rectangle_collision.yy",},},
+    {"id":{"name":"regex","path":"scripts/regex/regex.yy",},},
     {"id":{"name":"render_data","path":"scripts/render_data/render_data.yy",},},
     {"id":{"name":"rotator","path":"scripts/rotator/rotator.yy",},},
     {"id":{"name":"rotatorRandom","path":"scripts/rotatorRandom/rotatorRandom.yy",},},
