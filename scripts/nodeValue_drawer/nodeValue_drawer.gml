@@ -27,6 +27,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		var dispName  = _name;
 		var wid       = jun.editWidget;
 		
+		if(!is(wid, widget)) return [ 0, true, false ];
+		
 		if(_ID != undefined) {
 			var _map = jun.editWidgetMap;
 			if(!struct_has(_map, _ID)) 

@@ -121,8 +121,8 @@ function widget() constructor {
 		hover  = false;
 	}
 	
-	static inBBOX    = function(_m) { return point_in_rectangle(_m[0], _m[1], x, y, x + w, y + h); }
-	static clone     = function()   { return struct_clone(self); }
+	static inBBOX    = function(_m) /*=>*/ {return point_in_rectangle(_m[0], _m[1], x, y, x + w, y + h)};
+	static clone     = function(  ) /*=>*/ {return variable_clone(self)};
 	
 	static drawParam = function(params) {}
 	static draw      = function() {}

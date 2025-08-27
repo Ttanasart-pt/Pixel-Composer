@@ -153,8 +153,8 @@ function GlobalVarDrawer() constructor {
 			hh += ui(4); 
 		}
 		
-		for( var j = 0; j < array_length(_node.inputs); j++ ) {
-			var widg    = drawWidget(xx, yy, ww, _m, _node.inputs[j], true, hover, focus, _scrollPane, rx, ry, ID);
+		for( var i = 0, n = array_length(_node.inputs); i < n; i++ ) {
+			var widg    = drawWidget(xx, yy, ww, _m, _node.inputs[i], true, hover, focus, _scrollPane, rx, ry, ID);
 			var widH    = widg[0];
 			var mbRight = widg[1];
 			var widHov  = widg[2];

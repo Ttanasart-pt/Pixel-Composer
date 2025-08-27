@@ -243,8 +243,10 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 	static step = function() {
 		ds_map_clear(value);
 		
-		for( var i = 0; i < array_length(inputs); i++ ) {
+		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
 			var _inp = inputs[i];
+			if(!is(_inp, NodeValue)) continue;
+			
 			value[? _inp.name] = _inp;
 			
 			var val = true;
@@ -260,6 +262,8 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 		
 		var _inputs = [];
 		for(var i = 0; i < array_length(inputs); i++) {
+			if(!is(inputs[i], NodeValue)) continue;
+			
 			var _ser = inputs[i].serialize();
 			
 			_ser.global_type    = inputs[i].editor.type_index;
@@ -281,6 +285,8 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 		
 		for(var i = 0; i < array_length(_inputs); i++) {
 			var _des  = _inputs[i];
+			if(!is_struct(_des)) continue;
+			
 			var _in   = createValue();
 			
 			_in.editor.type_index = struct_try_get(_des, "global_type", 0);
