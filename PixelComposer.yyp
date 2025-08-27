@@ -1506,7 +1506,7 @@
         "Itch":{
           "CopyToMask":"2",
         },
-      },"CopyToMask":-1,"filePath":"datafiles","name":"PixelComposer_profile-2.provisionprofile","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+      },"CopyToMask":2,"filePath":"datafiles","name":"PixelComposer_profile-2.provisionprofile","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"data.win","CopyToMask":-1,"filePath":"datafiles/report","name":"data.win","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"execute_shell_simple_ext_x64.dll","CopyToMask":-1,"filePath":"datafiles/report","name":"execute_shell_simple_ext_x64.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"options.ini","CopyToMask":-1,"filePath":"datafiles/report","name":"options.ini","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
@@ -1567,7 +1567,6 @@
     {"id":{"name":"Regex","path":"extensions/Regex/Regex.yy",},},
     {"id":{"name":"Spout","path":"extensions/Spout/Spout.yy",},},
     {"id":{"name":"Steamworks","path":"extensions/Steamworks/Steamworks.yy",},},
-    {"id":{"name":"surface_manager","path":"extensions/surface_manager/surface_manager.yy",},},
     {"id":{"name":"TabletStuff","path":"extensions/TabletStuff/TabletStuff.yy",},},
     {"id":{"name":"winMan","path":"extensions/winMan/winMan.yy",},},
     {"id":{"name":"YYFirebaseFirestore","path":"extensions/YYFirebaseFirestore/YYFirebaseFirestore.yy",},},

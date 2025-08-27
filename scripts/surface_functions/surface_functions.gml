@@ -1,3 +1,110 @@
+#region CPP
+/*[cpp]
+	#include <cstddef>
+	#include <cstdint>
+	
+	struct pixel {
+		uint8_t r;
+		uint8_t g;
+		uint8_t b;
+		uint8_t a;
+	};
+	
+	struct range {
+	    double min;
+		double max;
+	};
+	
+	function double surface_is_empty_c(void* pixelArrayBuffer, double _size, double _emptyMode) {
+	    pixel* pixelArray = (pixel*)pixelArrayBuffer;
+		size_t size       = (size_t)_size;
+		int emptyMode     = (int)_emptyMode;
+		
+	    size_t i = 0;
+	    size_t limit = size & ~3ULL; // Multiple of 4
+	
+	    switch(emptyMode) {
+	        case 0 :
+	            for (; i < limit; i += 4) {
+	                if (pixelArray[i].a != 0 || pixelArray[i+1].a != 0 ||
+	                    pixelArray[i+2].a != 0 || pixelArray[i+3].a != 0)
+	                    return 0;
+	            }
+	            for (; i < size; ++i) {
+	                if (pixelArray[i].a != 0) return 0;
+	            }
+	        break;
+	
+	        case 1 :
+	            for (; i < limit; i += 4) {
+	                if (pixelArray[i].r != 0 || pixelArray[i].g != 0 || pixelArray[i].b != 0 ||
+	                    pixelArray[i+1].r != 0 || pixelArray[i+1].g != 0 || pixelArray[i+1].b != 0 ||
+	                    pixelArray[i+2].r != 0 || pixelArray[i+2].g != 0 || pixelArray[i+2].b != 0 ||
+	                    pixelArray[i+3].r != 0 || pixelArray[i+3].g != 0 || pixelArray[i+3].b != 0)
+	                    return 0;
+	            }
+	            for (; i < size; ++i) {
+	                if (pixelArray[i].r != 0 || pixelArray[i].g != 0 || pixelArray[i].b != 0)
+	                    return 0;
+	            }
+	        break;
+	    }
+	
+	    return 1;
+	}
+	
+	function double surface_get_nonempty_c(void* pixelArrayBuffer, void* outputBuffer, double width, double height) {
+		pixel*    pixelArray  = (pixel*)pixelArrayBuffer;
+		uint16_t* outputArray = (uint16_t*)outputBuffer;
+	
+		size_t widthInt  = (size_t)width;
+		size_t heightInt = (size_t)height;
+		size_t size      = widthInt * heightInt;
+	
+	    int amount = 0;
+	    int index  = 0;
+	
+		for (size_t i = 0; i < size; ++i) {
+			if (pixelArray[i].a == 0) continue;
+	
+			outputArray[index++] = (uint16_t)(i % widthInt);
+			outputArray[index++] = (uint16_t)(i / widthInt);
+		    amount++;
+	    }
+		
+	    return amount;
+	}
+	
+	function double surface_get_range_c(void* pixelArrayBuffer, void* outputBuffer, double width, double height) {
+		pixel*    pixelArray  = (pixel*)pixelArrayBuffer;
+		uint16_t* outputArray = (uint16_t*)outputBuffer;
+	
+		size_t widthInt  = (size_t)width;
+		size_t heightInt = (size_t)height;
+		size_t size      = widthInt * heightInt;
+	
+		range* outputRange = (range*)outputArray;
+	
+		double _min =  999999;
+		double _max = -999999;
+		
+		for (size_t i = 0; i < size; ++i) {
+			if (pixelArray[i].a == 0) continue;
+	
+			double value = (double)(pixelArray[i].r + pixelArray[i].g + pixelArray[i].b) / 3.0;
+	
+			_min = value < _min ? value : _min;
+			_max = value > _max ? value : _max;
+	    }
+	
+		outputRange->min = _min;
+		outputRange->max = _max;
+		
+	    return 0;
+	}
+*/
+#endregion
+
 #region ==================================== DRAW ====================================
 
 	function draw_surface_safe(surface, _x = 0, _y = 0) {
@@ -151,7 +258,7 @@
 		buffer_get_surface(global.__surface_is_empty_buffer, surf, 0);
 		buffer_to_start(global.__surface_is_empty_buffer);
 		
-		return surface_is_empty_ext(buffer_get_address(global.__surface_is_empty_buffer), _size/4, 0);
+		return surface_is_empty_c(buffer_get_address(global.__surface_is_empty_buffer), _size/4, 0);
 	}
 
 #endregion ==================================== CHECK ====================================
@@ -263,7 +370,7 @@
 		buffer_to_start(    global.__surface_is_empty_buffer);
 		
 		var _outB = buffer_create(_sw * _sh * 2, buffer_fixed, 2);
-		var _amo  = surface_get_nonempty_ext(buffer_get_address(global.__surface_is_empty_buffer), buffer_get_address(_outB), _sw, _sh);
+		var _amo  = surface_get_nonempty_c(buffer_get_address(global.__surface_is_empty_buffer), buffer_get_address(_outB), _sw, _sh);
 		
 		buffer_to_start(_outB);
 		var _outArr = array_create(_amo * 2), i = 0;
@@ -290,7 +397,7 @@
 		buffer_to_start(    global.__surface_is_empty_buffer);
 		
 		var _outB = buffer_create(16, buffer_fixed, 2);
-		var _amo  = surface_get_range_ext(buffer_get_address(global.__surface_is_empty_buffer), buffer_get_address(_outB), _sw, _sh);
+		var _amo  = surface_get_range_c(buffer_get_address(global.__surface_is_empty_buffer), buffer_get_address(_outB), _sw, _sh);
 		
 		buffer_to_start(_outB);
 		var _outArr = [0,1];

@@ -1,6 +1,7 @@
 import os
 import subprocess
 import re
+import hashlib
 
 yycTemplate = """{{
   "$GMExtension":"",
@@ -15,7 +16,7 @@ yycTemplate = """{{
   "androidsourcedir":"",
   "author":"",
   "classname":"",
-  "copyToTargets":-1,
+  "copyToTargets":192,
   "description":"",
   "exportToGame":true,
   "extensionVersion":"0.0.1",
@@ -51,7 +52,7 @@ yycTemplate = """{{
   "resourceType":"GMExtension",
   "resourceVersion":"2.0",
   "sourcedir":"",
-  "supportedTargets":-1,
+  "supportedTargets":105554172285166,
   "tvosclassname":null,
   "tvosCocoaPodDependencies":"",
   "tvosCocoaPods":"",
@@ -65,45 +66,59 @@ yycTemplate = """{{
   "tvosThirdPartyFrameworkEntries":[],
 }}"""
 
-yycfunctionTemplate = """{{
+yycfileTemplate = """{{
   "$GMExtensionFile":"",
   "%Name":"",
   "constants":[],
-  "copyToTargets":-1,
-  "filename":"dll/{dllName}",
+  "copyToTargets":192,
+  "filename":"{dllName}",
   "final":"",
-  "functions":[ 
-    {{"$GMExtensionFunction":"","%Name":"{func_name}","argCount":0,"args":{iArray},"documentation":"","externalName":"{func_name}","help":"","hidden":false,"kind":1,"name":"{func_name}","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":{oType}}}
-  ],
+  "functions":[{functions} ],
   "init":"",
   "kind":1,
   "name":"",
   "order":[],
   "origname":"",
   "ProxyFiles":[
-    {{"$GMProxyFile":"","%Name":"dll/{dllNameW}","name":"dll/{dllNameW}","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":6,}},
-    {{"$GMProxyFile":"","%Name":"dll/{dllNameL}","name":"dll/{dllNameL}","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":7,}},
+    {{"$GMProxyFile":"","%Name":"{dllNameW}","name":"{dllNameW}","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":6,}},
+    {{"$GMProxyFile":"","%Name":"{dllNameL}","name":"{dllNameL}","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":7,}},
   ],
   "resourceType":"GMExtensionFile",
   "resourceVersion":"2.0",
   "uncompress":false,
   "usesRunnerInterface":false
-}}"""
+}},"""
 
-def compileFile(srcPath, outDir):
-    print(f"Compiling {srcPath}...")
+yycfunctionTemplate = """{{"$GMExtensionFunction":"","%Name":"{func_name}","argCount":0,"args":{iArray},"documentation":"","externalName":"{func_name}","help":"","hidden":false,"kind":1,"name":"{func_name}","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":{oType}}},"""
+srcCache = set()
+
+def getFileHash(filePath):
+    hasher = hashlib.md5()
+    with open(filePath, 'rb') as f:
+        buf = f.read()
+        hasher.update(buf)
+    return hasher.hexdigest()
+
+def compileFile(srcPath, outDir, includes):
     
-    objPath = os.path.splitext(srcPath)[0] + ".o"
     outName = os.path.splitext(os.path.basename(srcPath))[0]
     outPathW = os.path.join(outDir, outName + ".dll")
     outPathL = os.path.join(outDir, outName + ".so")
 
+    fhash = getFileHash(srcPath)
+    if fhash in srcCache:
+        return {
+            "windows": outPathW,
+            "linux": outPathL
+        }
+    
+    print(f"Compiling {srcPath}...")
+    
     gccPath = "C:\\MinGW\\bin\\gcc"
     gccPath = "C:\\mingw64\\bin\\gcc" # 64-bit
 
-    # cmd = [ gccPath, "-fpic", "-shared", srcPath, "-o", outPath, "-Wl,--subsystem,windows"]
-
-    cmd = [ gccPath, "-c", srcPath, "-o", objPath ]
+    cmd = [ gccPath, "-fpic", "-shared", srcPath, "-o", outPathW, "-Wl,--subsystem,windows"]
+    
     try:
         subprocess.run(cmd, capture_output=True, text=True, check=True)
     except subprocess.CalledProcessError as e:
@@ -111,55 +126,71 @@ def compileFile(srcPath, outDir):
         print("Compilation errors:" + e.stderr + "|")
         raise Exception(f"Compilation failed: {e.stderr}")
 
-    cmd = [ gccPath, "-shared", objPath, "-o", outPathW, "-Wl,--subsystem,windows"]
-    try:
-        subprocess.run(cmd, capture_output=True, text=True, check=True)
-    except subprocess.CalledProcessError as e:
-        print("Failed to run command: " + " ".join(cmd))
-        print("Linking errors:" + e.stderr + "|")
-        raise Exception(f"Linking failed: {e.stderr}")
+    srcMntPath  = re.sub(r'^[A-Za-z]:', lambda m: '/mnt/' + m.group(0)[0].lower(), os.path.abspath(srcPath).replace("\\", "/"))
+    outMntPathL = re.sub(r'^[A-Za-z]:', lambda m: '/mnt/' + m.group(0)[0].lower(), os.path.abspath(outPathL).replace("\\", "/"))
+    cmd = [ "wsl", "g++", "-fPIC", "-shared", srcMntPath, "-o", outMntPathL ]
     
-    cmd = [ gccPath, "-shared", objPath, "-o", outPathL ]
     try:
         subprocess.run(cmd, capture_output=True, text=True, check=True)
     except subprocess.CalledProcessError as e:
         print("Failed to run command: " + " ".join(cmd))
-        print("Linking errors:" + e.stderr + "|")
-        raise Exception(f"Linking failed: {e.stderr}")
-
-    os.remove(objPath)
+        print("Compilation errors:" + e.stderr + "|")
+        raise Exception(f"Compilation failed: {e.stderr}")
+    
     return {
         "windows": outPathW,
         "linux": outPathL
     }
 
-def buildInline(string):
-    full_code  = "#define function extern \"C\" __declspec(dllexport)\n"
-    full_code += string
+def buildInline(fileName, code):
+    full_code  = '''
+#ifdef _WIN32
+    #define function extern "C" __declspec(dllexport)
+#else
+    #define function extern "C"
+#endif
+'''
+    full_code += code
     
-    lines  = string.splitlines()
-    header = ""
+    lines  = code.splitlines()
+    functions = []
+    includes = []
+    includes_re = re.compile(r'#include\s*<([^>]+)>')
+
     for line in lines:
         line = line.strip()
+
+        match = includes_re.match(line)
+        if match:
+            includes.append(match.group(1).strip())
+
         if line.startswith("function "):
             header = line[len("function "):].strip()
-            break
 
-    otype, fnSignature = header.strip().split(" ", 1)
-    fname, fparams = fnSignature.split("(", 1)
-    fparams = fparams.rsplit(")", 1)[0]
+            otype, fnSignature = header.strip().split(" ", 1)
+            fname, fparams = fnSignature.split("(", 1)
+            fparams = fparams.rsplit(")", 1)[0]
 
-    inputs = []
-    paramList = fparams.split(",")
-    for param in paramList:
-        ptype, pname = param.rsplit(" ", 1)
-        inputs.append((ptype.strip(), pname.strip()))
+            inputs = []
+            paramList = fparams.split(",")
+            for param in paramList:
+                ptype, pname = param.rsplit(" ", 1)
+                inputs.append((ptype.strip(), pname.strip()))
 
+            functions.append({
+                "funcName": fname.strip(),
+                "returnType": otype.strip(),
+                "inputs": inputs,
+            })
+
+    if fileName == "" and len(functions) > 0:
+        fileName = functions[0]["funcName"]
+        
     return {
+        "filename": fileName,
         "code": full_code,
-        "func_name": fname.strip(),
-        "return_type": otype.strip(),
-        "inputs": inputs
+        "includes": includes,
+        "functions": functions,
     }
 
 def scanInline(src):
@@ -171,7 +202,8 @@ def scanInline(src):
         line = lines[i].strip()
 
         if line.startswith("/*[cpp]"):
-            inline_code = line[7:].strip() + "\n"
+            fileName = line[7:].strip()
+            inline_code = ""
             i += 1
             while i < len(lines):
                 line = lines[i].strip()
@@ -180,7 +212,7 @@ def scanInline(src):
                 inline_code += line + "\n"
                 i += 1
             
-            functions.append(buildInline(inline_code))
+            functions.append(buildInline(fileName, inline_code))
         i += 1
     return functions
 
@@ -206,44 +238,52 @@ def buildExtension(srcArr, extDir):
     if not os.path.isdir(srcDir):
         os.makedirs(srcDir)
 
-    dllDir = os.path.join(extDir, "dll")
-    if not os.path.isdir(dllDir):
-        os.makedirs(dllDir)
+    for root, dirs, files in os.walk(srcDir):
+        for file in files:
+            if file.endswith(".cpp"):
+                srcCache.add(getFileHash(os.path.join(root, file)))
 
     files  = [];
 
     for src in srcArr:
+        filename = src["filename"]
         code = src["code"]
-        func_name = src["func_name"]
-        return_type = src["return_type"]
-        inputs = src["inputs"]
+        includes = src["includes"]
+        functions = src["functions"]
 
-        srcPath = os.path.join(srcDir, f"{func_name}.cpp")
+        srcPath = os.path.join(srcDir, f"{filename}.cpp")
         with open(srcPath, 'w') as f:
             f.write(code)
 
-        dllPath = compileFile(srcPath, dllDir)
+        dllPath = compileFile(srcPath, extDir, includes)
         dllPathW = dllPath["windows"]
         dllPathL = dllPath["linux"]
 
         dllName = os.path.basename(dllPathW)
+        fnEntry = ""
 
-        iArray = [2 if t == "double" else 1 for t, n in inputs]
-        oType  = 2 if return_type == "double" else 1
+        for func in functions:
+            func_name   = func["funcName"]
+            return_type = func["returnType"]
+            inputs      = func["inputs"]
+            iArray = [2 if t == "double" else 1 for t, n in inputs]
+            oType  = 2 if return_type == "double" else 1
 
-        fnEntry = yycfunctionTemplate.format(
+            fnEntry += yycfunctionTemplate.format(
+                func_name=func_name,
+                iArray=iArray,
+                oType=oType
+            ) + "\n"
+
+        files.append(yycfileTemplate.format(
             dllName=dllName,
             dllNameW=os.path.basename(dllPathW),
             dllNameL=os.path.basename(dllPathL),
-            func_name=func_name,
-            iArray=iArray,
-            oType=oType
-        )
-
-        files.append(fnEntry)
+            functions=fnEntry
+        ))
             
     yyString = yycTemplate.format(
-        files=",".join(files)
+        files="".join(files)
     )
 
     with open(extYYPath, 'w') as f:
