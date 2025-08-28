@@ -114,7 +114,8 @@ def compile_with_msvc(src_file, out_dll):
         msvcPath,
         '/LD',
         src_file,
-        f'/Fe:{out_dll}'
+        f'/Fe:{out_dll}',
+        "/EHsc" # Enable C++ exceptions
     ]
     # Use the captured environment
     result = subprocess.run(cmd, env={**os.environ, **msvc_env}, shell=True)

@@ -136,7 +136,7 @@ function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		buffer_write(_args, buffer_bool, 0);
 		buffer_write(_args, buffer_f64,  _smtEp);
 		
-		var _ancAmo = path_from_mask_ext(buffer_get_address(_args));
+		var _ancAmo = path_from_mask(buffer_get_address(_args));
 		
 		var ox, oy, nx, ny;
 		var _lind = 0;
@@ -174,6 +174,185 @@ function Node_Path_From_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 	}
 	
-	static getGraphPreviewSurface = function() { return /*temp_surface[0]*/ getInputData(0); }
-	static getPreviewValues       = function() { return /*temp_surface[0]*/ getInputData(0); }
+	static getGraphPreviewSurface = function() /*=>*/ {return getInputData(0)};
+	static getPreviewValues       = function() /*=>*/ {return getInputData(0)};
 }
+
+/*[cpp]
+#include <iostream>
+#include <cstdint>
+#include <vector>
+#include <cmath>
+
+struct pixel {
+	uint8_t r;
+	uint8_t g;
+	uint8_t b;
+	uint8_t a;
+};
+
+struct pathFromMaskArgs {
+	void* pixelArrayBuffer;
+	void* outputBuffer;
+
+	uint16_t surfaceWidth;
+	uint16_t surfaceHeight;
+	uint16_t maxOutput;
+
+	bool   useSmooth;
+	double smoothEpsilon;
+};
+
+struct vec2 {
+	int32_t x;
+	int32_t y;
+};
+
+uint16_t iabs(int16_t value) { return value < 0 ? -value : value; }
+
+double perpendicularDistance(const vec2& a, const vec2& b, const vec2& c) {
+	double ax = static_cast<double>(a.x);
+	double ay = static_cast<double>(a.y);
+	double bx = static_cast<double>(b.x);
+	double by = static_cast<double>(b.y);
+	double cx = static_cast<double>(c.x);
+	double cy = static_cast<double>(c.y);
+
+	double dx = bx - ax;
+	double dy = by - ay;
+	double lengthSquared = dx * dx + dy * dy;
+	if (lengthSquared == 0) return sqrt(((cx - ax) * (cx - ax) + (cy - ay) * (cy - ay)));
+	
+	double t = ((cx - ax) * dx + (cy - ay) * dy) / lengthSquared;
+	
+	if (t < 0) return sqrt(((cx - ax) * (cx - ax) + (cy - ay) * (cy - ay)));
+	if (t > 1) return sqrt(((cx - bx) * (cx - bx) + (cy - by) * (cy - by)));
+
+	double projX = ax + t * dx;
+	double projY = ay + t * dy;
+
+	return static_cast<double>((cx - projX) * (cx - projX) + (cy - projY) * (cy - projY));
+}
+
+std::vector<vec2> douglasPeucker(const std::vector<vec2>& points, double epsilon) {
+	if (points.size() < 3) return points;
+	
+	double maxDist    = 0.0;
+	size_t index      = 0;
+	vec2   pointFront = points.front();
+	vec2   pointBack  = points.back();
+
+	for (size_t i = 1; i < points.size() - 1; i++) {
+		double dist = perpendicularDistance(pointFront, pointBack, points[i]);
+		if (dist > maxDist) {
+			maxDist = dist;
+			index   = i;
+		}
+	}
+
+	if (maxDist > epsilon) {
+		std::vector<vec2> left(points.begin(), points.begin() + index + 1);
+		std::vector<vec2> right(points.begin() + index, points.end());
+
+		auto leftResult  = douglasPeucker(left,  epsilon);
+		auto rightResult = douglasPeucker(right, epsilon);
+
+		leftResult.pop_back();
+		leftResult.insert(leftResult.end(), rightResult.begin(), rightResult.end());
+		return leftResult;
+	}
+	
+	return { pointFront, pointBack };
+}
+
+cfunction double path_from_mask(void* args) {
+	pathFromMaskArgs* pArgs = (pathFromMaskArgs*)args;
+
+	pixel*   pixels = (pixel*)pArgs->pixelArrayBuffer;
+	uint16_t width  = pArgs->surfaceWidth;
+	uint16_t height = pArgs->surfaceHeight;
+
+	vec2*    output      = (vec2*)pArgs->outputBuffer;
+	vec2*    outputStart = output;
+	uint16_t maxOutput   = pArgs->maxOutput;
+
+	uint16_t x = -1;
+	uint16_t y = -1;
+
+	for (uint16_t i = 0, n = width * height; i < n; i++) {
+		if (pixels[i].a > 0) {
+			x = i % width;
+			y = i / width;
+			break;
+		}
+	}
+
+	if (x == -1 || y == -1 || x >= width || y >= height) return 0.0; // Empty mask
+
+	vec2 directions[8] = {{1, 0}, {1, -1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}, {0, 1}, {1, 1}};
+	uint16_t dir = 3;
+	uint16_t pointCount = 0;
+	
+	bool firstPoint = true;
+	uint16_t sx = x;
+	uint16_t sy = y;
+	maxOutput--;
+
+	pixels[y * width + x].a = 0;
+	while (pointCount++ < maxOutput) {
+		output->x = x;
+		output->y = y;
+		output++;
+
+		bool found = false;
+		uint16_t startDir = (dir + 7 - (dir % 2)) % 8;
+		for (uint16_t i = 0; i < 8; i++) {
+			uint16_t checkDir = (startDir + i) % 8;
+			uint16_t newX = x + directions[checkDir].x;
+			uint16_t newY = y + directions[checkDir].y;
+			if (newX >= 0 && newY >= 0 && newX < width && newY < height && pixels[newY * width + newX].a > 0) {
+				if (!firstPoint && dir == checkDir) { // Remove the last point if we are still in the same direction
+					output--;
+					pointCount--;
+				}
+
+				x     = newX;
+				y     = newY;
+				dir   = checkDir;
+				found = true;
+
+				pixels[newY * width + newX].a = 0; // Mark as visited
+				break;
+			}
+		}
+
+		firstPoint = false;
+		if (!found) break;
+	}
+	
+	if(!pArgs->useSmooth) {
+		output->x = sx;
+		output->y = sy;
+
+		return static_cast<double>(pointCount + 1);
+	}
+
+	std::vector<vec2> points;
+	for (uint16_t i = 0; i < pointCount; i++)
+		points.push_back(outputStart[i]);
+	
+	std::vector<vec2> simplified = douglasPeucker(points, pArgs->smoothEpsilon);
+	size_t simplifiedSize = simplified.size();
+
+	for (size_t i = 0; i < simplifiedSize - 1; i++) {
+		outputStart[i].x = simplified[i].x;
+		outputStart[i].y = simplified[i].y;
+	}
+
+	outputStart[simplifiedSize - 1].x = sx;
+	outputStart[simplifiedSize - 1].y = sy;
+
+	return static_cast<double>(simplifiedSize);
+}
+
+*/

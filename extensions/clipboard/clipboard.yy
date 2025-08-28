@@ -15,6 +15,9 @@
     "Itch":{
       "copyToTargets":"194",
     },
+    "Steam":{
+      "copyToTargets":"194",
+    },
   },
   "copyToTargets":194,
   "description":"",

@@ -30,6 +30,12 @@
         {"$GMProxyFile":"","%Name":"buffer_to_string_bin.dll","name":"buffer_to_string_bin.dll","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":6,},
         {"$GMProxyFile":"","%Name":"buffer_to_string_bin.so","name":"buffer_to_string_bin.so","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":7,},
       ],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
+    {"$GMExtensionFile":"","%Name":"","constants":[],"copyToTargets":192,"filename":"path_from_mask.dll","final":"","functions":[
+        {"$GMExtensionFunction":"","%Name":"path_from_mask","argCount":1,"args":[1,],"documentation":"","externalName":"path_from_mask","help":"","hidden":false,"kind":1,"name":"path_from_mask","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
+      ],"init":"","kind":1,"name":"","order":[],"origname":"","ProxyFiles":[
+        {"$GMProxyFile":"","%Name":"path_from_mask.dll","name":"path_from_mask.dll","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":6,},
+        {"$GMProxyFile":"","%Name":"path_from_mask.so","name":"path_from_mask.so","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":7,},
+      ],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
     {"$GMExtensionFile":"","%Name":"","constants":[],"copyToTargets":192,"filename":"poisson_get_points.dll","final":"","functions":[
         {"$GMExtensionFunction":"","%Name":"poisson_get_points","argCount":1,"args":[1,],"documentation":"","externalName":"poisson_get_points","help":"","hidden":false,"kind":1,"name":"poisson_get_points","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
       ],"init":"","kind":1,"name":"","order":[],"origname":"","ProxyFiles":[
