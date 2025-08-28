@@ -59,7 +59,7 @@ function Node_FLIP_Vortex(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _str   = getInputData(3);
 		var _attr  = getInputData(4);
 		
-		FLIP_Vortex(domain.domain, _posit[0], _posit[1], _rad, _str, _attr);
+		FLIP_vortex(domain.domain, _posit[0], _posit[1], _rad, _str, _attr);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

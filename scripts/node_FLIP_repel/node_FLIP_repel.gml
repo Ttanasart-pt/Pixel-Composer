@@ -57,7 +57,7 @@ function Node_FLIP_Repel(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var _rad   = getInputData(2);
 		var _str   = getInputData(3);
 		
-		FLIP_Repel(domain.domain, _posit[0], _posit[1], _rad, _str * 8);
+		FLIP_repel(domain.domain, _posit[0], _posit[1], _rad, _str * 8);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
