@@ -269,7 +269,7 @@ function area_get_random_point_poisson_c(_area, _distance, _seed) {
 	buffer_write(_args, buffer_f64, _seed);
 	buffer_write(_args, buffer_f64, MAX_POINT);
 	
-	var _pointAmount = poisson_get_points_ext(buffer_get_address(_args));
+	var _pointAmount = poisson_get_points(buffer_get_address(_args));
 	if(_pointAmount >= MAX_POINT) noti_warning($"Scatter amount higher than max points ({MAX_POINT}) results may not be correct.");
 	var _points      = array_create(_pointAmount);
 	var i = 0;

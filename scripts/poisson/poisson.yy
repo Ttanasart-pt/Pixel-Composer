@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"poisson",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"poisson",
+  "parent":{
+    "name":"poisson",
+    "path":"folders/functions/poisson.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
