@@ -164,6 +164,7 @@ function resetException() { exception_unhandled_handler(undefined); }
 
 function printCallStack(maxDepth = 32) {
 	var stack = debug_get_callstack(maxDepth);
+	var text  = "";
 	
 	print($"Call Stack:");
 	for( var i = 2, n = array_length(stack) - 1; i < n; i++ ) {
@@ -186,9 +187,9 @@ function printCallStack(maxDepth = 32) {
 			
 			_txt += $"     > {sp[0][j]}";
 			if(j == m - 1) 
-				_txt += $" line: {sp[1]}";
-			print(_txt);
+				_txt += $" line: {sp[1] - 1}";
+			text += _txt + "\n";
 		}
 	}
-	print("")
+	print(text);
 }

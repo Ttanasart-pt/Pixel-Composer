@@ -106,7 +106,7 @@ def get_msvc_env(vcvars_path):
     return env
 
 vcvars_path = "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Auxiliary\\Build\\vcvars64.bat"
-msvc_env = get_msvc_env(vcvars_path)
+msvc_env = None
 
 def compile_with_msvc(src_file, out_dll):
     msvcPath = "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe"
@@ -163,7 +163,10 @@ def compileFile(srcPath, outDir, _):
         }
     
     print(f"Compiling {outName}...")
-    
+    global msvc_env
+    if msvc_env is None:
+        msvc_env = get_msvc_env(vcvars_path)
+
     flags = ["-static-libgcc", "-static-libstdc++"]
 
     if os.path.isfile(outPathW):

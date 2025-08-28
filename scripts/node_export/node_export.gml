@@ -1,5 +1,6 @@
 function Node_create_Export(_x, _y, _group = noone) {
-	var node = new Node_Export(_x, _y, _group).skipDefault();
+	var node = new Node_Export(_x, _y, _group);
+	    node.skipDefault();
 	
 	var path = "";
 	if(NODE_NEW_MANUAL) {
@@ -28,8 +29,7 @@ function exportAll() {
 	
 	for (var i = 0, n = array_length(PROJECT.allNodes); i < n; i++) {
 		var node = PROJECT.allNodes[i];
-		if(!node.active) continue;
-		if(!is_instanceof(node, Node_Export)) continue;
+		if(!is(node, Node_Export) || !node.active) continue;
 		
 		node.doInspectorAction();
 	}
@@ -989,5 +989,5 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	////- Serialize
 	
-	static postApplyDeserialize = function() { onValueUpdate(3); }
+	static postApplyDeserialize = function() /*=>*/ {return onValueUpdate(3)};
 }
