@@ -1556,7 +1556,6 @@
     {"id":{"name":"libfilesystem","path":"extensions/libfilesystem/libfilesystem.yy",},},
     {"id":{"name":"libsysinfo","path":"extensions/libsysinfo/libsysinfo.yy",},},
     {"id":{"name":"libxprocess","path":"extensions/libxprocess/libxprocess.yy",},},
-    {"id":{"name":"LZF","path":"extensions/LZF/LZF.yy",},},
     {"id":{"name":"macMinimize","path":"extensions/macMinimize/macMinimize.yy",},},
     {"id":{"name":"patreon_key","path":"extensions/patreon_key/patreon_key.yy",},},
     {"id":{"name":"PRIVATE_KEYS","path":"extensions/PRIVATE_KEYS/PRIVATE_KEYS.yy",},},

@@ -330,7 +330,6 @@
     {"name":"libdlgmodule","order":2,"path":"extensions/libdlgmodule/libdlgmodule.yy",},
     {"name":"libfilesystem","order":1,"path":"extensions/libfilesystem/libfilesystem.yy",},
     {"name":"libsysinfo","order":3,"path":"extensions/libsysinfo/libsysinfo.yy",},
-    {"name":"LZF","order":12,"path":"extensions/LZF/LZF.yy",},
     {"name":"macMinimize","order":2,"path":"extensions/macMinimize/macMinimize.yy",},
     {"name":"patreon_key","order":2,"path":"extensions/patreon_key/patreon_key.yy",},
     {"name":"PRIVATE_KEYS","order":11,"path":"extensions/PRIVATE_KEYS/PRIVATE_KEYS.yy",},

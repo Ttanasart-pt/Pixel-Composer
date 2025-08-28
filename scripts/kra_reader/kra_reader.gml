@@ -150,3 +150,79 @@ function lzf_decompress_buffer(buf_in, maxout) {
     
     return oBuf;
 }
+
+/*
+ *  SPDX-FileCopyrightText: 2005-2006 Ariya Hidayat <ariya@kde.org>
+ *  SPDX-FileCopyrightText: 2010 Dmitry Kazakov <dimula73@gmail.com>
+ *
+ *  SPDX-License-Identifier: GPL-2.0-or-later
+ */
+
+/*[cpp]
+#include <cstdint>
+
+cfunction double lzff_decompress(void* input, double length, void* output, double maxout) {
+    const uint8_t* ip = (const uint8_t*) input;
+    const uint8_t* ip_limit  = ip + (int)length - 1;
+    uint8_t* op = (uint8_t*) output;
+    uint8_t* op_limit = op + (int)maxout;
+    uint8_t* ref;
+
+    while (ip < ip_limit) {
+        uint32_t ctrl = (*ip) + 1;
+        uint32_t ofs = ((*ip) & 31) << 8;
+        uint32_t len = (*ip++) >> 5;
+
+        if (ctrl < 33) {
+            // literal copy
+            if (op + ctrl > op_limit)
+                return 0;
+
+            // crazy unrolling
+            if (ctrl) {
+                *op++ = *ip++;
+                ctrl--;
+
+                if (ctrl) {
+                    *op++ = *ip++;
+                    ctrl--;
+
+                    if (ctrl) {
+                        *op++ = *ip++;
+                        ctrl--;
+
+                        for (; ctrl; ctrl--)
+                            *op++ = *ip++;
+                    }
+                }
+            }
+        } else {
+            // back reference
+            len--;
+            ref = op - ofs;
+            ref--;
+
+            if (len == 7 - 1)
+                len += *ip++;
+
+            ref -= *ip++;
+
+            if (op + len + 3 > op_limit)
+                return 0;
+
+            if (ref < (uint8_t*)output)
+                return 0;
+
+            *op++ = *ref++;
+            *op++ = *ref++;
+            *op++ = *ref++;
+            if (len)
+                for (; len; --len)
+                    *op++ = *ref++;
+        }
+    }
+
+    return op - (uint8_t*)output;
+}
+
+*/
