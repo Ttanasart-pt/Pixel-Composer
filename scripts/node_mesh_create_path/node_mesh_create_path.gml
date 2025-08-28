@@ -37,19 +37,21 @@ function Node_Mesh_Create_Path(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		var quality  = _sam;
 		var sample   = quality * segCount;
+		var polygon  = [];
 		
 		for( var i = 0; i < sample; i++ ) {
 			var t   = i / sample;
 			var pos = _pth.getPointRatio(t);
 			
 			array_push(points, pos);
+			array_push(polygon, [pos.x, pos.y]);
 		}
 		
 		var triangles = [];
 		switch(_algo) {
-			case 0 : triangles = polygon_triangulate(points, 4, true)[0];       break;
-			case 1 : triangles = polygon_triangulate_convex_fan(points, true);  break;
-			case 2 : triangles = delaunay_triangulation_c(points, noone, true); break;
+			case 0 : triangles = polygon_triangulate(points, 4, true)[0];         break;
+			case 1 : triangles = polygon_triangulate_convex_fan(points, true);    break;
+			case 2 : triangles = delaunay_triangulation_c(points, polygon, true); break;
 		}
 		
 		for( var i = 0, n = array_length(triangles); i < n; i++ ) {

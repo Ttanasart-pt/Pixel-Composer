@@ -90,6 +90,44 @@ yycfileTemplate = """{{
 }},"""
 
 yycfunctionTemplate = """{{"$GMExtensionFunction":"","%Name":"{func_name}","argCount":{iCount},"args":{iArray},"documentation":"","externalName":"{func_name}","help":"","hidden":false,"kind":1,"name":"{func_name}","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":{oType}}},"""
+
+def get_msvc_env(vcvars_path):
+    # Run vcvars64.bat and dump environment variables to a temp file
+    dump_env = 'set > "%temp%\\msvc_env.txt"'
+    cmd = f'cmd /c ""{vcvars_path}" && {dump_env}"'
+    subprocess.run(cmd, shell=True)
+    env_file = os.path.expandvars(r'%temp%\msvc_env.txt')
+    env = {}
+    with open(env_file) as f:
+        for line in f:
+            if '=' in line:
+                k, v = line.strip().split('=', 1)
+                env[k] = v
+    return env
+
+vcvars_path = "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Auxiliary\\Build\\vcvars64.bat"
+msvc_env = get_msvc_env(vcvars_path)
+
+def compile_with_msvc(src_file, out_dll):
+    msvcPath = "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe"
+    cmd = [
+        msvcPath,
+        '/LD',
+        src_file,
+        f'/Fe:{out_dll}'
+    ]
+    # Use the captured environment
+    result = subprocess.run(cmd, env={**os.environ, **msvc_env}, shell=True)
+
+    base = os.path.splitext(out_dll)[0]
+    for ext in ['.lib', '.exp']:
+        try:
+            os.remove(base + ext)
+        except FileNotFoundError:
+            pass
+    
+    return result.returncode == 0
+
 srcCache = set()
 
 def getFileHash(filePath):
@@ -99,49 +137,55 @@ def getFileHash(filePath):
         hasher.update(buf)
     return hasher.hexdigest()
 
-def compileFile(srcPath, outDir, includes):
+def executeCmd(cmd):
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+        return result.stdout
+    except subprocess.CalledProcessError as e:
+        print("Failed to run command: " + " ".join(cmd))
+        print("Error output:" + e.stderr + "|")
+        raise Exception(f"Command failed: {e.stderr}")
+
+def compileFile(srcPath, outDir, _):
     
-    outName = os.path.splitext(os.path.basename(srcPath))[0]
+    outName  = os.path.splitext(os.path.basename(srcPath))[0]
+    objPath  = os.path.join(outDir, outName + ".o")
     outPathW = os.path.join(outDir, outName + ".dll")
     outPathL = os.path.join(outDir, outName + ".so")
 
     fhash = getFileHash(srcPath)
     if fhash in srcCache:
+        print(f"Skipping compilation for {outName}, no changes detected.")
         return {
             "windows": outPathW,
             "linux": outPathL
         }
     
-    print(f"Compiling {srcPath}...")
+    print(f"Compiling {outName}...")
     
+    flags = ["-static-libgcc", "-static-libstdc++"]
+
     if os.path.isfile(outPathW):
         os.remove(outPathW)
 
     if os.path.isfile(outPathL):
         os.remove(outPathL)
 
-    # gccPath = "C:\\MinGW\\bin\\gcc"
-    gccPath = "C:\\mingw64\\bin\\g++" # 64-bit
+    # gccPath = "C:\\mingw64\\bin\\g++" # 64-bit
+    # cmd = [ gccPath, "-fpic", "-shared", srcPath, "-o", outPathW, "-Wl,--subsystem,windows", "-m64"]
+    # cmd.extend(flags)
+    # executeCmd(cmd)
 
-    cmd = [ gccPath, "-fpic", "-shared", srcPath, "-o", outPathW, "-Wl,--subsystem,windows", "-m64"]
-    
-    try:
-        subprocess.run(cmd, capture_output=True, text=True, check=True)
-    except subprocess.CalledProcessError as e:
-        print("Failed to run command: " + " ".join(cmd))
-        print("Compilation errors:" + e.stderr + "|")
-        raise Exception(f"Compilation failed: {e.stderr}")
+    compile_with_msvc(srcPath, outPathW)
+
+    if os.path.isfile(objPath):
+        os.remove(objPath)
 
     srcMntPath  = re.sub(r'^[A-Za-z]:', lambda m: '/mnt/' + m.group(0)[0].lower(), os.path.abspath(srcPath).replace("\\", "/"))
     outMntPathL = re.sub(r'^[A-Za-z]:', lambda m: '/mnt/' + m.group(0)[0].lower(), os.path.abspath(outPathL).replace("\\", "/"))
-    cmd = [ "wsl", "g++", "-fPIC", "-shared", srcMntPath, "-o", outMntPathL ]
-    
-    try:
-        subprocess.run(cmd, capture_output=True, text=True, check=True)
-    except subprocess.CalledProcessError as e:
-        print("Failed to run command: " + " ".join(cmd))
-        print("Compilation errors:" + e.stderr + "|")
-        raise Exception(f"Compilation failed: {e.stderr}")
+    cmd = [ "wsl", "g++", "-fPIC", "-shared", srcMntPath, "-o", outMntPathL]
+    cmd.extend(flags)
+    executeCmd(cmd)
     
     if(not os.path.isfile(outPathW)):
         raise Exception(f"Compilation failed: output file {outPathW} not found")
@@ -197,7 +241,7 @@ def buildInline(fileName, code):
                 "inputs": inputs,
             })
 
-    if fileName == "" and len(functions) > 0:
+    if fileName.strip() == "" and len(functions) > 0:
         fileName = functions[0]["funcName"]
         
     return {

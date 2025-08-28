@@ -46,6 +46,8 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		["Gizmo",    true], 8, 11, 12, 13, 14, 9, 10,
 	];
 	
+	////- NOdes
+	
 	gz_style  = 0;
 	gz_shape  = 0;
 	gz_sprite = 0;
@@ -455,4 +457,5 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				
 		}
 	}
+
 }
