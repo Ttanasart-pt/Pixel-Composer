@@ -5,7 +5,6 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(0, nodeValue_Surface("Surface In"));
 	
 	////- =Source
-	
 	onSurfaceSize = function() /*=>*/ {return getDimension()};
 	
 	newInput(2, nodeValue_Enum_Scroll("Source", 0, [ "Area", "Mask", "Region", "Color Picker" ]));
@@ -15,31 +14,27 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(6, nodeValue_Slider(     "Picker Threshold", .1 ));
 	
 	////- =Shape
-	
 	shape_types = __enum_array_gen([ "Dense Bush", "V", "Hash", "Line", "W" ], s_node_mk_grass_type, c_white);
 	newInput( 7, nodeValue_Enum_Scroll( "Shape",    0, { data: shape_types, horizontal: 2, text_pad: ui(16) } )).getEditWidget().setFilter(false);
-	newInput(22, nodeValue_Slider(      "Ratio",   .5));
+	newInput(22, nodeValue_Slider(      "Ratio",   .5     ));
 	newInput( 8, nodeValue_Range(       "Size",    [4,4], { linked: true }));
-	newInput(17, nodeValue_Slider(      "Spread",   0));
-	newInput(20, nodeValue_Float(       "Extra",    0));
-	newInput(21, nodeValue_Range(       "Sway X",  [-4,4]));
+	newInput(17, nodeValue_Slider(      "Spread",   0     ));
+	newInput(20, nodeValue_Float(       "Extra",    0     ));
+	newInput(21, nodeValue_Range(       "Sway X",  [-4,4] ));
 	
 	////- =Scatter
-	
-	newInput( 9, nodeValue_Slider( "Distribution", .5));
-	newInput(10, nodeValue_Int(    "Level",         1));
-	newInput(11, nodeValue_Slider( "Sharpness",    .5));
-	newInput(14, nodeValue_Float(  "Noise Scale",   1));
-	newInput(15, nodeValue_Int(    "Noise Detail",  1));
+	newInput( 9, nodeValue_Slider( "Distribution", .5 ));
+	newInput(10, nodeValue_Int(    "Level",         1 ));
+	newInput(11, nodeValue_Slider( "Sharpness",    .5 ));
+	newInput(14, nodeValue_Float(  "Noise Scale",   1 ));
+	newInput(15, nodeValue_Int(    "Noise Detail",  1 ));
 	
 	////- =Render
-	
-	newInput(12, nodeValue_Enum_Scroll( "Render Type", 0, [ "Gradient", "Sample Multiply", "Sample Add" ]));
-	newInput(13, nodeValue_Gradient(    "Colors",      new gradientObject([ca_black, ca_white])));
-	newInput(16, nodeValue_Slider(      "Color Variance", 0));
+	newInput(12, nodeValue_Enum_Scroll( "Render Type",    0, [ "Gradient", "Sample Multiply", "Sample Add" ] ));
+	newInput(13, nodeValue_Gradient(    "Colors",         new gradientObject([ca_black, ca_white]) ));
+	newInput(16, nodeValue_Slider(      "Color Variance", 0 ));
 	
 	////- =Ground
-	
 	newInput(18, nodeValue_Bool(  "Fill Ground", false));
 	newInput(19, nodeValue_Color( "Ground",      ca_black));
 	
@@ -323,3 +318,88 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		return _outSurf;
 	}
 }
+
+/*[cpp]
+#include <cstdint>
+#include <stdlib.h>
+
+struct pixel {
+	uint8_t r;
+	uint8_t g;
+	uint8_t b;
+	uint8_t a;
+};
+
+struct mk_grass_parameter {
+	void* pixelArrayBuffer;
+	void* outputBuffer;
+	double width;
+	double height;
+
+	double seed;
+	double size_min;
+	double size_max;
+	double sway_min;
+	double sway_max;
+};
+
+struct mk_grass_pixel{
+	double x;
+	double y;
+
+	double gx;
+	double gy;
+
+	double r;
+	double g;
+	double b;
+};
+
+double random_range(double min, double max) {
+	return min + (static_cast<double>(rand()) / RAND_MAX) * (max - min);
+}
+
+cfunction double mk_grass_get_data(void* args) {
+	mk_grass_parameter* params = (mk_grass_parameter*)args;
+
+	pixel* pixelArray = (pixel*)params->pixelArrayBuffer;
+	mk_grass_pixel* outputArray = (mk_grass_pixel*)params->outputBuffer;
+
+	size_t widthInt  = (size_t)params->width;
+	size_t heightInt = (size_t)params->height;
+	size_t size      = widthInt * heightInt;
+
+	double seed     = params->seed;
+	double size_min = params->size_min;
+	double size_max = params->size_max;
+	double sway_min = params->sway_min;
+	double sway_max = params->sway_max;
+
+    int amount = 0;
+
+	for (size_t i = 0; i < size; ++i) {
+		if (pixelArray[i].a == 0) continue;
+
+		double g = (double)pixelArray[i].g / 255.0;
+
+		uint16_t x = (uint16_t)(i % widthInt);
+		uint16_t y = (uint16_t)(i / widthInt);
+
+		srand((uint32_t)(seed + i * 100));
+
+		outputArray[amount].x  = x;
+		outputArray[amount].y  = y;
+		outputArray[amount].gx = random_range(sway_min, sway_max) * g;
+		outputArray[amount].gy = random_range(size_min, size_max) * g;
+
+		outputArray[amount].r = (double)pixelArray[i].r / 255.0;
+		outputArray[amount].g = (double)pixelArray[i].g / 255.0;
+		outputArray[amount].b = (double)pixelArray[i].b / 255.0;
+
+	    amount++;
+    }
+	
+    return amount;
+}
+
+*/

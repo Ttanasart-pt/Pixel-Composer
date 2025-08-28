@@ -30,6 +30,12 @@
         {"$GMProxyFile":"","%Name":"buffer_to_string_bin.dll","name":"buffer_to_string_bin.dll","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":6,},
         {"$GMProxyFile":"","%Name":"buffer_to_string_bin.so","name":"buffer_to_string_bin.so","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":7,},
       ],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
+    {"$GMExtensionFile":"","%Name":"","constants":[],"copyToTargets":192,"filename":"mk_grass_get_data.dll","final":"","functions":[
+        {"$GMExtensionFunction":"","%Name":"mk_grass_get_data","argCount":1,"args":[1,],"documentation":"","externalName":"mk_grass_get_data","help":"","hidden":false,"kind":1,"name":"mk_grass_get_data","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
+      ],"init":"","kind":1,"name":"","order":[],"origname":"","ProxyFiles":[
+        {"$GMProxyFile":"","%Name":"mk_grass_get_data.dll","name":"mk_grass_get_data.dll","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":6,},
+        {"$GMProxyFile":"","%Name":"mk_grass_get_data.so","name":"mk_grass_get_data.so","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":7,},
+      ],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
     {"$GMExtensionFile":"","%Name":"","constants":[],"copyToTargets":192,"filename":"path_from_mask.dll","final":"","functions":[
         {"$GMExtensionFunction":"","%Name":"path_from_mask","argCount":1,"args":[1,],"documentation":"","externalName":"path_from_mask","help":"","hidden":false,"kind":1,"name":"path_from_mask","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
       ],"init":"","kind":1,"name":"","order":[],"origname":"","ProxyFiles":[
