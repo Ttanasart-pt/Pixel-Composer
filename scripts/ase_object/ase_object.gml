@@ -78,25 +78,25 @@ function ase_cel(_layer, _data, _file) constructor {
 	}
 }
 
-function ase_layer(name, type = 0) constructor {
-	self.name = name;
-	self.type = type;
-	cels	= [];
-	tag		= noone;
+function ase_layer(_name, _type = 0) constructor {
+	name = _name;
+	type = _type;
+	cels = [];
+	tag	 = noone;
 	
 	static setFrameCel = function(index, cel) { cels[index] = cel; }
 	
-	static getCelRaw = function(index = CURRENT_FRAME) {
-		ind = safe_mod(index, array_length(cels));
+	static getCelRaw = function(index = CURRENT_FRAME, _loop = false) {
+		ind = _loop? safe_mod(index, array_length(cels)) : index;
 		return array_safe_get_fast(cels, ind);
 	}
 	
-	static getCel = function(index = CURRENT_FRAME) {
-		if(tag == noone) return getCelRaw(index);
+	static getCel = function(index = CURRENT_FRAME, _loop = false) {
+		if(tag == noone) return getCelRaw(index, _loop);
 			
 		var st  = tag[$ "Frame start"];
 		var ed  = tag[$ "Frame end"];
-		var ind = st + safe_mod(index, ed - st + 1);
+		var ind = st + (_loop? safe_mod(index, ed - st + 1) : index);
 		
 		return array_safe_get_fast(cels, ind);
 	}

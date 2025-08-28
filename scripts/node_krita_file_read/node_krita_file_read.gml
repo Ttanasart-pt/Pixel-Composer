@@ -32,8 +32,6 @@ function Node_Krita_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	newInput(0, nodeValue_Path( "Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "Aseprite file|*.ase;*.aseprite" });
 	
-	b_gen_layer = button(function() /*=>*/ {return refreshLayers()}).setText("Generate Layers");
-	
 	/////////////////////////////////
 	
 	newOutput(0, nodeValue_Output( "Merged Image", VALUE_TYPE.surface, noone ));
@@ -41,6 +39,8 @@ function Node_Krita_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	newOutput(2, nodeValue_Output( "Path",         VALUE_TYPE.path,    ""    )).setVisible(false);
 	
 	////- Nodes
+	
+	b_gen_layer = button(function() /*=>*/ {return refreshLayers()}).setIcon(THEME.generate_layers).iconPad().setTooltip("Generate Layers");
 	
 	hold_visibility = true;
 	layer_renderer  = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { 
@@ -74,7 +74,7 @@ function Node_Krita_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	blend_temp_surface = noone;
 	
 	input_display_list = [ 0, 
-		["Layers",	false], b_gen_layer, layer_renderer, 
+		["Layers",	false, noone, b_gen_layer], layer_renderer, 
 	];
 	
 	attributes.interpolate   = 1;

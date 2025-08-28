@@ -30,10 +30,8 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	w    = 128;
 	update_on_frame = false;
 	
-	newInput(0, nodeValue_Path(    "Path"            )).setDisplay(VALUE_DISPLAY.path_load, { filter: "Aseprite file|*.ase;*.aseprite" });
-	
+	newInput(0, nodeValue_Path( "Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "Aseprite file|*.ase;*.aseprite" });
 	newInput(1, nodeValue_Trigger( "Generate layers" ));
-	b_gen_layer = button(function() /*=>*/ {return refreshLayers()}).setText("Generate Layers");
 	
 	newInput(2, nodeValue_Text(    "Current tag"     ));
 	newInput(3, nodeValue_Bool(    "Use cel dimension", false ));
@@ -50,6 +48,9 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	newOutput(7, nodeValue_Output( "Frame Amount", VALUE_TYPE.integer, 1     )).setVisible(false);
 	
 	////- Nodes
+	
+	b_set_frame = button(function() /*=>*/ {return setFrames()}).setText("Match Animation Length")
+	b_gen_layer = button(function() /*=>*/ {return refreshLayers()}).setIcon(THEME.generate_layers).iconPad().setTooltip("Generate Layers");
 	
 	hold_visibility = true;
 	layer_renderer  = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { 
@@ -160,8 +161,8 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	temp_surface = [ noone, noone, noone ];
 	blend_temp_surface = noone;
 	
-	input_display_list = [ 0, 
-		["Layers",	false], b_gen_layer, 3, layer_renderer, 
+	input_display_list = [ 0, b_set_frame, 
+		["Layers",	false, noone, b_gen_layer], 3, layer_renderer, 
 		["Tags",	false], 2, tag_renderer,
 	];
 	
@@ -221,6 +222,13 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			lvs[i] = _node;
 		}
 	} 
+	
+	function setFrames() {
+		if(content == noone) return;
+		var _frm = content[$ "Frame amount"];
+		TOTAL_FRAMES = _frm;
+		triggerRender();
+	}
 	
 	function updatePaths(path = path_current) { 
 		if(!active)    return false;

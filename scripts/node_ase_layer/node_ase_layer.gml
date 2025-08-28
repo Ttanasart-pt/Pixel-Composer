@@ -2,19 +2,13 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	name = "ASE Layer";
 	
 	newInput(0, nodeValue("ASE data", self, CONNECT_TYPE.input, VALUE_TYPE.object, noone))
-		.setIcon(THEME.junc_aseprite, c_white)
-		.setVisible(false, true)
-		.rejectArray();
-	
-	newInput(1, nodeValue_Bool("Crop Output", false))
-		.rejectArray();
-	
-	newInput(2, nodeValue_Text("Layer name"))
-		.rejectArray();
+		.setIcon(THEME.junc_aseprite, c_white).setVisible(false, true).rejectArray();
+	newInput(2, nodeValue_Text( "Layer Name"         )).rejectArray();
+	newInput(1, nodeValue_Bool( "Crop Output", false )).rejectArray();
+	newInput(3, nodeValue_Bool( "Loop",        false )).rejectArray();
 		
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
-	
-	newOutput(1, nodeValue_Output("Layer name", VALUE_TYPE.text, ""));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone ));
+	newOutput(1, nodeValue_Output("Layer name",  VALUE_TYPE.text,    ""    ));
 	
 	layer_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		if(ase_data == noone) {
@@ -61,7 +55,7 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	}); 
 	
 	input_display_list = [
-		0, layer_renderer, 2, 1, 
+		0, layer_renderer, 2, 1, 3, 
 	];
 	
 	ase_data     = noone;
@@ -91,6 +85,7 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var data   = getInputData(0);
 		var celDim = getInputData(1);
 		var _lname = getInputData(2);
+		var _loop  = getInputData(3);
 		
 		ase_data = data;
 		outputs[1].setValue(_lname);
@@ -100,7 +95,7 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			return;
 		}
 		
-		var cel  = layer_object.getCel(CURRENT_FRAME - data._tag_delay);
+		var cel  = layer_object.getCel(CURRENT_FRAME - data._tag_delay, _loop);
 		var ww = data.content[$ "Width"];
 		var hh = data.content[$ "Height"];
 		var cw = cel? cel.data[$ "Width"]  : 1;

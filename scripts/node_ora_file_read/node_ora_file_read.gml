@@ -68,10 +68,10 @@ function Node_ORA_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		return _h;
 	}); 
 	
-	b_gen_layer = button(function() /*=>*/ {return refreshLayers()}).setText("Generate Layers");
+	b_gen_layer = button(function() /*=>*/ {return refreshLayers()}).setIcon(THEME.generate_layers).iconPad().setTooltip("Generate Layers");
 	
 	input_display_list = [ 0, 
-		["Layers",	false], b_gen_layer, layer_renderer, 
+		["Layers",	false, noone, b_gen_layer], layer_renderer, 
 	];
 	
 	////- Nodes
