@@ -53,8 +53,11 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	b_gen_layer = button(function() /*=>*/ {return refreshLayers()}).setIcon(THEME.generate_layers).iconPad().setTooltip("Generate Layers");
 	
 	hold_visibility = true;
+	hold_loop       = true;
+	
 	layer_renderer  = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { 
 		var _vis = attributes.layer_visible;
+		var _lop = attributes.layer_loop;
 		var _amo = array_length(layers);
 		var hh   = ui(24);
 		var _h   = hh * _amo + ui(16);
@@ -67,7 +70,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			
 			if(_layer.type == 0) {
 				var vis = array_safe_get_fast(_vis, i, true);
-				if(point_in_circle(_m[0], _m[1], _bx, _yy + hh / 2, ui(12))) {
+				if(point_in_circle(_m[0], _m[1], _bx, _yy + hh / 2, ui(8))) {
 					draw_sprite_ui_uniform(THEME.junc_visible, vis, _bx, _yy + hh / 2, 1, c_white);
 					
 					if(mouse_press(mb_left, _focus))
@@ -75,22 +78,43 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 						
 					if(mouse_click(mb_left, _focus) && _vis[i] != hold_visibility) {
 						_vis[@ i] = hold_visibility;
-						update();
+						triggerRender();
 					}
 				} else 
 					draw_sprite_ui_uniform(THEME.junc_visible, vis, _bx, _yy + hh / 2, 1, COLORS._main_icon, 0.5 + 0.5 * vis);
+				
+				_bx += ui(16 + 4);
+				
+				var lop = array_safe_get_fast(_lop, i, true);
+				if(point_in_circle(_m[0], _m[1], _bx, _yy + hh / 2, ui(8))) {
+					draw_sprite_ui_uniform(THEME.prop_on_end, lop, _bx, _yy + hh / 2, 1, c_white);
 					
-			} else if(_layer.type == 1)
+					if(mouse_press(mb_left, _focus))
+						hold_loop = !_lop[i];
+						
+					if(mouse_click(mb_left, _focus) && _lop[i] != hold_loop) {
+						_lop[@ i] = hold_loop;
+						triggerRender();
+					}
+				} else 
+					draw_sprite_ui_uniform(THEME.prop_on_end, lop, _bx, _yy + hh / 2, 1, COLORS._main_icon, 0.5 + 0.5 * lop);
+				
+				_bx += ui(16);
+				
+			} else if(_layer.type == 1) {
 				draw_sprite_ui_uniform(THEME.folder_16, 0, _bx, _yy + hh / 2, 1, COLORS._main_icon);
+				
+				_bx += ui(16 * 2 + 4);
+			}
 			
 			draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-			draw_text_add(_bx + ui(16), _yy + hh / 2, _layer.name);
+			draw_text_add(_bx, _yy + hh / 2, _layer.name);
 		}
 		
 		return _h;
 	}); 
 	
-	tag_renderer    = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { 
+	tag_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { 
 		var current_tag = getInputData(2);
 		var amo = array_length(tags);
 		var abx = ui(24);
@@ -158,15 +182,16 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		return _h;
 	}); 
 	
-	temp_surface = [ noone, noone, noone ];
-	blend_temp_surface = noone;
-	
 	input_display_list = [ 0, b_set_frame, 
 		["Layers",	false, noone, b_gen_layer], 3, layer_renderer, 
 		["Tags",	false], 2, tag_renderer,
 	];
 	
+	temp_surface = [ noone, noone, noone ];
+	blend_temp_surface = noone;
+	
 	attributes.layer_visible = [];
+	attributes.layer_loop    = [];
 	attributes.interpolate   = 1;
 	attributes.oversample    = 1;
 	
@@ -249,6 +274,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		layers     = [];
 		var vis    = attributes.layer_visible;
+		var lop    = attributes.layer_loop;
 		var frames = content[$ "Frames"];
 		if(array_empty(frames)) return false;
 				
@@ -287,6 +313,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 						
 						array_push(layers, new ase_layer(name, type));
 						array_push(vis, true);
+						array_push(lop, false);
 						break;
 						
 					case 0x2005: //cel
@@ -384,6 +411,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 		
 		var vis = attributes.layer_visible;
+		var lop = attributes.layer_loop;
 		var ww  = content[$ "Width"];
 		var hh  = content[$ "Height"];
 		
@@ -402,11 +430,14 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		for( var i = 0, n = array_length(layers); i < n; i++ ) {
 			_layerNames[i] = layers[i].name;
-			
 			layers[i].tag = tag;
-			var cel = layers[i].getCel(CURRENT_FRAME - _tag_delay);
+			
+			var _v  = array_safe_get_fast(vis, i, true);
+			var _l  = array_safe_get_fast(lop, i, false);
+			if(!_v) continue;
+			
+			var cel = layers[i].getCel(CURRENT_FRAME - _tag_delay, _l);
 			if(!cel) continue;
-			if(!array_safe_get_fast(vis, i, true)) continue;
 		
 			var _inSurf = cel.getSurface();
 			if(!is_surface(_inSurf)) continue;
@@ -428,19 +459,19 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		surface_reset_shader();
 	} 
 	
-	static attributeSerialize = function() { 
-		var att = {};
-		att.layer_visible = attributes.layer_visible;
-		
-		return att;
-	} 
+	////- Serialize
 	
 	static attributeDeserialize = function(attr) { 
 		struct_append(attributes, attr); 
 		
 		if(struct_has(attr, "layer_visible"))
 			attributes.layer_visible = attr.layer_visible;
+			
+		if(struct_has(attr, "layer_visible"))
+			attributes.layer_visible = attr.layer_visible;
 	} 
+	
+	////- Actions
 	
 	static dropPath = function(path) { 
 		if(is_array(path)) path = array_safe_get(path, 0);
