@@ -323,12 +323,15 @@ function Node_3D_Particle(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 			// 	vfxStep(CURRENT_FRAME);
 			// }
 		
-			if(_loop && IS_FIRST_FRAME) {
-				for( var i = TOTAL_FRAMES - _pre_rend; i < TOTAL_FRAMES; i++ ) vfxStep(i);
-				spawn_index = 0;
+			if(IS_FIRST_FRAME) {
+				if(_loop) {
+					for( var i = TOTAL_FRAMES - _pre_rend; i < TOTAL_FRAMES; i++ ) vfxStep(i);
+					spawn_index = 0;
+				}
+				
 				__next_update_frame = CURRENT_FRAME + 1;
 				
-			} else if(__next_update_frame == CURRENT_FRAME) {
+			} else if(__next_update_frame == CURRENT_FRAME) {	
 				vfxStep(CURRENT_FRAME);
 				__next_update_frame = CURRENT_FRAME + 1;
 			}
@@ -407,7 +410,10 @@ function Node_3D_Particle(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 			
 		#endregion
 		
-		var rep = min(pool_size, max_buffer_id + _toSpawn);
+		var rep = min(pool_size, max_buffer_id + _toSpawn + 1);
+		
+		if(_toSpawn) print($"Step {_t}: spawn {_toSpawn}");
+		
 		repeat(rep) {
 			
 			var _px = buffer_read(_rbTran, buffer_f32), _plx = _px;
@@ -456,6 +462,8 @@ function Node_3D_Particle(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 			           buffer_read(_rbPart2, buffer_f32);
 			
 			if(_curr_act == 0 && _toSpawn) {
+				print("    > Spawn")
+				
 				_spwn_ind = spawn_index++;
 				random_set_seed(_seed + _spwn_ind * 78);
 				
