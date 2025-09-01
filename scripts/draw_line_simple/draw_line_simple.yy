@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"draw_line_simple",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"draw_line_simple",
+  "parent":{
+    "name":"line",
+    "path":"folders/functions/draw/line.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

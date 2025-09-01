@@ -245,9 +245,12 @@ def buildInline(fileName, code):
                 "inputs": inputs,
             })
 
-    if fileName.strip() == "" and len(functions) > 0:
-        fileName = functions[0]["funcName"]
-        
+    if fileName == "":
+        if len(functions) == 0:
+            return None
+        else: 
+            fileName = functions[0]["funcName"]
+
     return {
         "filename": fileName,
         "code": full_code,
@@ -275,7 +278,9 @@ def scanInline(src, fpath):
                 i += 1
             
             print(f"Found inline C/C++ code block in file: {os.path.basename(fpath)}")
-            functions.append(buildInline(fileName, inline_code))
+            fn = buildInline(fileName, inline_code)
+            if fn is not None:
+                functions.append(fn)
         i += 1
     return functions
 

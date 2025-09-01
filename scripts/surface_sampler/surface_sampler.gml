@@ -82,9 +82,10 @@ function Surface_Sampler_Grey(s = noone, _rng = [0,1]) constructor {
     
     static getPixel = function(_u,_v) /*=>*/ {
         if(!active) return range[0];
-        var _x = round(clamp(_u, 0, 1) * sw);
-        var _y = round(clamp(_v, 0, 1) * sh);
-        return lerp(range[0], range[1], buffer_read_at(buffer, _y * sw + _x * 2, buffer_f16));
+        var _x = round(clamp(_u, 0, 1) * (sw - 1));
+        var _y = round(clamp(_v, 0, 1) * (sh - 1));
+        
+        return lerp(range[0], range[1], buffer_read_at(buffer, (_y * sw + _x) * 2, buffer_f16));
     }
     
     static free = function() /*=>*/ { buffer_delete_safe(buffer); }

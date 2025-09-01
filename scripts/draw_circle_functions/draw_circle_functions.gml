@@ -153,39 +153,70 @@ function draw_ellipse_width(x0, y0, x1, y1, th = 1) {
 	}
 }
 
-function draw_ellipse_dash(cx, cy, ww, hh, th = 1, dash = 8, ang = 0) {
-	var rd = max(ww, hh);
+// function draw_ellipse_dash(cx, cy, ww, hh, th = 1, dash = 8, ang = 0) {
+// 	var rd = max(ww, hh);
 	
-	var dash_dist = 0, is_dash = true;
-	var samp = min(64, dash * max(cx, cy));
-	var ox, oy, nx, ny;
-	var p0 = [ 0, 0 ];
+// 	var dash_dist = 0, is_dash = true;
+// 	var samp = min(64, dash * max(cx, cy));
+// 	var ox, oy, nx, ny;
+// 	var p0 = [ 0, 0 ];
 	
-	for( var i = 0; i < samp; i++ ) {
-		nx = cx + lengthdir_x(ww, i * 360 / samp);
-		ny = cy + lengthdir_y(hh, i * 360 / samp);
+// 	for( var i = 0; i < samp; i++ ) {
+// 		nx = cx + lengthdir_x(ww, i * 360 / samp);
+// 		ny = cy + lengthdir_y(hh, i * 360 / samp);
 		
-		if(ang != 0) {
-	        point_rotate(nx, ny, cx, cy, ang, p0);
-	        nx = p0[0];
-	        ny = p0[1];
-		}
+// 		if(ang != 0) {
+// 	        point_rotate(nx, ny, cx, cy, ang, p0);
+// 	        nx = p0[0];
+// 	        ny = p0[1];
+// 		}
         
-		if(i) {
-			dash_dist += point_distance(ox, oy, nx, ny);
-			if(dash_dist >= dash) {
-				dash_dist -= dash;
-				is_dash = !is_dash;
+// 		if(i) {
+// 			dash_dist += point_distance(ox, oy, nx, ny);
+// 			if(dash_dist >= dash) {
+// 				dash_dist -= dash;
+// 				is_dash = !is_dash;
+// 			}
+			
+// 			if(is_dash)
+// 				draw_line_width(ox, oy, nx, ny, th);
+// 		}
+		
+// 		ox = nx;
+// 		oy = ny;
+// 	}
+// }
+
+function draw_ellipse_dash(cx, cy, ww, hh, th = 1, dash = 8, ang = 0, shift = 0) {
+	var step = 64;
+	var astp = 360 / step;
+	var shft = shift;
+	
+	var px, py, _px, _py;
+	
+	shader_set(sh_ui_line_dashed);
+		shader_set_2( "worldPos",   [cx, cy]);
+		shader_set_f( "dash",       dash);
+		
+		for(var i = 0; i <= step; i++) {
+			var an = i * astp;
+			var px = cx + lengthdir_x(ww, an);
+			var py = cy + lengthdir_y(hh, an);
+		
+			if(i) {
+				shader_set_f( "dashShift",  shft);
+				shader_set_f( "direction",  degtorad(an + astp / 2 + 90));
+				draw_line(_px, _py, px, py);
+				shft = (shft + point_distance(_px, _py, px, py)) % (dash * 2);
 			}
 			
-			if(is_dash)
-				draw_line_width(ox, oy, nx, ny, th);
+			_px = px;
+			_py = py;
 		}
 		
-		ox = nx;
-		oy = ny;
-	}
+	shader_reset();
 }
+
 
 function draw_circle_dash(_x, _y, rad, th = 1, dash = 8, ang = 0) { draw_ellipse_dash(_x, _y, rad, rad, th, dash, ang); }
 

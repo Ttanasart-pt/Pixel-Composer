@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"draw_line_dashed",
   "parent":{
-    "name":"draw",
-    "path":"folders/functions/draw.yy",
+    "name":"line",
+    "path":"folders/functions/draw/line.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

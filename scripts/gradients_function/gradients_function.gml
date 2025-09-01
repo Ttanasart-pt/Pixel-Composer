@@ -1,12 +1,19 @@
-enum GRADIENT_INTER {
-	smooth,
-	none,
-	hue,
-	oklab,
-	srgb
-}
-
-global.gradient_sort_list = ds_priority_create();
+#region global
+	enum GRADIENT_INTER {
+		smooth,
+		none,
+		hue,
+		oklab,
+		srgb
+	}
+	
+	global.gradient_sort_list = ds_priority_create();
+	
+	#macro gra_white new gradientObject(ca_white)
+	#macro gra_black new gradientObject(ca_black)
+	#macro gra_white_black new gradientObject([ca_white, ca_black])
+	#macro gra_black_white new gradientObject([ca_black, ca_white])
+#endregion
 
 function gradientKey(_time, _value) constructor {
 	time   = _time;

@@ -49,6 +49,9 @@ function __3dObjectInstancer() : __3dObject() constructor {
 	glsl_shader_geometry = sh_d3d_geometry_instanced;
 	
 	static setBuffer = function(_buffer, _index, _amount) {
+		batch_amount[_index] = _amount;
+		if(_amount <= 0) return;
+		
 		if(OS == os_windows) {
 			d3d11_cbuffer_begin();
 			d3d11_cbuffer_add_float(16 * _amount);
@@ -61,7 +64,6 @@ function __3dObjectInstancer() : __3dObject() constructor {
 			instance_data[_index] = _buffer;
 		}
 		
-		batch_amount[_index] = _amount;
 	}
 	
 	static generateNormal = function(_s = normal_draw_size) {}
@@ -129,7 +131,7 @@ function __3dObjectInstancer() : __3dObject() constructor {
 			
 		}
 		
-		////////////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////////
 		
 		d3d11_cbuffer_begin();
 		var _buffer = buffer_create(1, buffer_grow, 1); buffer_to_start(_buffer);
@@ -152,15 +154,17 @@ function __3dObjectInstancer() : __3dObject() constructor {
 		transform.submitMatrix();
 		matrix_set(matrix_world, matrix_stack_top());
 		
-		////////////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////////
 		
 		gpu_set_zwriteenable(!transparent);
 		draw_set_color_alpha(c_white, 1);
 		
 		for( var b = 0; b < batch_count; b++ ) {
+			if(batch_amount[b] <= 0) continue;
 			submitCbuffer(b);
 			
 			for( var i = 0, n = array_length(VB); i < n; i++ ) {
+				
 				var _mat = materials[i];
 				var _tex = _mat.texture;
 				

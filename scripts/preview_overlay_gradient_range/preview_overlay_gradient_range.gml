@@ -1,6 +1,6 @@
 function preview_overlay_gradient_range(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _dim) {
 	var _val   = array_clone(getValue());
-	var _targI = node.inputs[mappedJunc.attributes.map_index];
+	var _targI = node.inputs[mappedJunc.parameters.map_index];
 	var _surf  = _targI.getValue();
 	
 	var hover  = -1;

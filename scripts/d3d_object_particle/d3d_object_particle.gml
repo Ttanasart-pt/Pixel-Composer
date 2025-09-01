@@ -23,11 +23,13 @@ function __3dObjectParticle() : __3dObjectInstancer() constructor {
 	glsl_shader_geometry = sh_d3d_geometry_particle;
 	
 	static setBufferParticle = function(_buffer, _index, _amount) {
+		if(_amount <= 0) return;
+		
 		if(OS == os_windows) {
-		d3d11_cbuffer_begin();
-		d3d11_cbuffer_add_float(16 * _amount);
-		particle_data[_index] = d3d11_cbuffer_end();
-		d3d11_cbuffer_update(particle_data[_index], _buffer);
+			d3d11_cbuffer_begin();
+			d3d11_cbuffer_add_float(16 * _amount);
+			particle_data[_index] = d3d11_cbuffer_end();
+			d3d11_cbuffer_update(particle_data[_index], _buffer);
 			
 		} else {
 			_buffer = buffer_clone(_buffer);

@@ -70,6 +70,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		icon           = noone;
 		icon_24        = noone;
 		icon_blend     = c_white;
+		node_draw_icon = noone;
 		bg_spr         = THEME.node_bg;
 		bg_spr_add     = 0.1;
 		bg_spr_add_clr = c_white;
@@ -1755,8 +1756,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			aa *= .15;
 				
 		if(icon) {
-			var _ics = _s / THEME_SCALE;
+			var _ics = _s / THEME_SCALE * .8;
+			gpu_set_texfilter(true);
 			draw_sprite_ext(icon, 0, tx + 6 * _s, ty, _ics, _ics, 0, nodeC, .6);
+			gpu_set_texfilter(false);
 			
 			tx += 16 * _s;
 		}
@@ -2206,6 +2209,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				
 		if(previewable && _panel != noone) {
 			if(preview_draw) drawPreview(xx, yy, _s);
+			if(node_draw_icon != noone) {
+				var bbox = drawGetBbox(xx, yy, _s);
+				draw_sprite_bbox_uniform(node_draw_icon, 0, bbox);
+			}
 			
 			try { onDrawNode(xx, yy, _mx, _my, _s, _hover, _focus); }
 			catch(e) { log_warning("NODE onDrawNode", exception_print(e)); }
@@ -2969,6 +2976,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		min_w = _w;
 		w     = max(w, min_w);
+		// if(_h == 0) previewable = false;
 		
 		if(_h != undefined && (NODE_NEW_MANUAL || LOADING_VERSION < 1_19_05_0)) attributes.preview_size = _h;
 		if(_apply == undefined) return;

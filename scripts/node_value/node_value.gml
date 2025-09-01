@@ -117,7 +117,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		validateValue = true;
 		
 		fullUpdate    = false;
-		attributes    = {};
+		attributes    = {};   // serizlized
+		parameters    = {};   // non-serizlized
 		
 		__curr_get_val = [ 0, 0 ];
 		validator      = noone;
@@ -462,7 +463,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		attributes.mapped     = false;
-		attributes.map_index  = _index;
+		parameters.map_index  = _index;
 		mapped_vec4 = _vec4;
 		mapped_type = 1;
 		array_push(node.inputMappable, self);
@@ -499,7 +500,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static setCurvable = function(_index, _val = CURVE_DEF_11, _suf = "Curve") {
 		attributes.curved    = false;
-		attributes.map_index = _index;
+		parameters.map_index = _index;
 		mapped_type = 2;
 		array_push(node.inputMappable, self);
 		
@@ -515,7 +516,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static setMappableConst = function(_index, _suf = "Map") {
 		attributes.mapped    = false;
-		attributes.map_index = _index;
+		parameters.map_index = _index;
 		mapped_type = 3;
 		array_push(node.inputMappable, self);
 		
@@ -537,7 +538,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				
 				setArrayDepth(attributes.mapped);
 				
-				var inp = node.inputs[attributes.map_index];
+				var inp = node.inputs[parameters.map_index];
 				var vis = attributes.mapped && show_in_inspector;
 				
 				if(inp.visible != vis) {
@@ -550,7 +551,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			case 2 : 
 				curveButton.icon_blend = attributes.curved? c_white : COLORS._main_icon;
 				
-				var inp = node.inputs[attributes.map_index];
+				var inp = node.inputs[parameters.map_index];
 				var vis = attributes.curved && show_in_inspector;
 				
 				if(inp.show_in_inspector != vis) {
@@ -562,7 +563,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			case 3 : 
 				mapButton.icon_blend = attributes.mapped? c_white : COLORS._main_icon;
 				
-				var inp = node.inputs[attributes.map_index];
+				var inp = node.inputs[parameters.map_index];
 				var vis = attributes.mapped && show_in_inspector;
 				
 				if(inp.show_in_inspector != vis) {
@@ -684,7 +685,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		if(type == VALUE_TYPE.gradient && struct_has(attributes, "map_index")) 
-			node.inputs[attributes.map_index + 1].setAnim(anim);
+			node.inputs[parameters.map_index + 1].setAnim(anim);
 		
 		node.refreshTimeline();
 		if(NOT_LOAD && node.group) node.group.checkPureFunction();

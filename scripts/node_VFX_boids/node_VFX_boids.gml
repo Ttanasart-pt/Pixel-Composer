@@ -12,29 +12,25 @@ function Node_VFX_Boids(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	newInput(0, nodeValue_Particle()).setVisible(true, true);
 	newInput(7, nodeValue_Float("Speed amplification", 1   ));
 	
-	////- Separation
+	////- =Separation
+	newInput(11, nodeValue_Bool(   "Separate",  true ));
+	newInput( 1, nodeValue_Float(  "Radius",    4    )).setInternalName("sep_radius");
+	newInput( 2, nodeValue_Slider( "Influence", 0.2  )).setInternalName("sep_influence");
 	
-	newInput(11, nodeValue_Bool( "Separate", true));
-	newInput( 1, nodeValue_Float( "Sep. radius", 4   ));
-	newInput( 2, nodeValue_Slider( "Sep. influence", 0.2 ));
+	////- =Alignment
+	newInput(12, nodeValue_Bool(   "Align",     true ));
+	newInput( 3, nodeValue_Float(  "Radius",    32   )).setInternalName("ali_radius");
+	newInput( 4, nodeValue_Slider( "Influence", 0.2  )).setInternalName("ali_influence");
 	
-	////- Alignment
-		
-	newInput(12, nodeValue_Bool( "Align", true));
-	newInput( 3, nodeValue_Float( "Ali. radius", 32  ));
-	newInput( 4, nodeValue_Slider( "Ali. influence", 0.2 ));
+	////- =Grouping
+	newInput(13, nodeValue_Bool(   "Group",     true ));
+	newInput( 5, nodeValue_Float(  "Radius",    32   )).setInternalName("grp_radius");
+	newInput( 6, nodeValue_Slider( "Influence", 0.2  )).setInternalName("grp_influence");
 	
-	////- Grouping
-		
-	newInput(13, nodeValue_Bool( "Group", true));
-	newInput( 5, nodeValue_Float( "Grp. radius", 32  ));
-	newInput( 6, nodeValue_Slider( "Grp. influence", 0.2 ));
-	
-	////- Follow
-	
-	newInput( 8, nodeValue_Bool( "Follow point", false    ));
-	newInput( 9, nodeValue_Vec2( "Point", [ 0, 0 ] )).setUnitRef(function() /*=>*/ {return inline_context.dimension}, VALUE_UNIT.reference);
-	newInput(10, nodeValue_Slider( "Fol. influence", 0.1      ));
+	////- =Follow
+	newInput( 8, nodeValue_Bool(   "Follow point", false ));
+	newInput( 9, nodeValue_Vec2(   "Point",        [0,0] )).setUnitRef(function() /*=>*/ {return inline_context.dimension}, VALUE_UNIT.reference);
+	newInput(10, nodeValue_Slider( "Influence",    .1    )).setInternalName("fol_influence");
 	
 	input_display_list = [ 0, 7, 
 		["Separation",	 false, 11],  1,  2, 
@@ -74,17 +70,17 @@ function Node_VFX_Boids(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 		
 		var _use_sep = getInputData(11);
-		var _sep_rad = getInputData(1), _sep_rad2 = _sep_rad * _sep_rad;
-		var _sep_amo = getInputData(2);
+		var _sep_rad = getInputData( 1), _sep_rad2 = _sep_rad * _sep_rad;
+		var _sep_amo = getInputData( 2);
 		
 		var _use_ali = getInputData(12);
-		var _ali_rad = getInputData(3), _ali_rad2 = _ali_rad * _ali_rad;
-		var _ali_amo = getInputData(4);
+		var _ali_rad = getInputData( 3), _ali_rad2 = _ali_rad * _ali_rad;
+		var _ali_amo = getInputData( 4);
 		
 		var _use_grp = getInputData(13);
-		var _grp_rad = getInputData(5), _grp_rad2 = _grp_rad * _grp_rad;
-		var _grp_amo = getInputData(6);
-		var _spd_amp = getInputData(7);
+		var _grp_rad = getInputData( 5), _grp_rad2 = _grp_rad * _grp_rad;
+		var _grp_amo = getInputData( 6);
+		var _spd_amp = getInputData( 7);
 		
 		var _fol_pnt = getInputData( 8);
 		var _pnt_tar = getInputData( 9);

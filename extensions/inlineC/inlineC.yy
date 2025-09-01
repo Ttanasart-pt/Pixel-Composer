@@ -256,6 +256,27 @@
   "resourceVersion":"2.0",
   "uncompress":false,
   "usesRunnerInterface":false
+},{
+  "$GMExtensionFile":"",
+  "%Name":"",
+  "constants":[],
+  "copyToTargets":192,
+  "filename":"pSystem_main.dll",
+  "final":"",
+  "functions":[ ],
+  "init":"",
+  "kind":1,
+  "name":"",
+  "order":[],
+  "origname":"",
+  "ProxyFiles":[
+    {"$GMProxyFile":"","%Name":"pSystem_main.dll","name":"pSystem_main.dll","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":6,},
+    {"$GMProxyFile":"","%Name":"pSystem_main.so","name":"pSystem_main.so","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":7,},
+  ],
+  "resourceType":"GMExtensionFile",
+  "resourceVersion":"2.0",
+  "uncompress":false,
+  "usesRunnerInterface":false
 }, ],
   "gradleinject":null,
   "hasConvertedCodeInjection":false,

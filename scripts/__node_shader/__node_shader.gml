@@ -21,7 +21,7 @@ function Node_Shader(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _val = _data[_ind];
 			
 			if(struct_has(_inp.attributes, "mapped") && _inp.attributes.mapped) {
-				shader_set_f_map(_key, _val, _data[_inp.attributes.map_index], _inp);
+				shader_set_f_map(_key, _val, _data[_inp.parameters.map_index], _inp);
 				continue;
 			}
 			

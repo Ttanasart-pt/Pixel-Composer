@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_psystem_wiggle",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_psystem_wiggle",
+  "parent":{
+    "name":"transform",
+    "path":"folders/nodes/data/simulation/particleSystem/transform.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

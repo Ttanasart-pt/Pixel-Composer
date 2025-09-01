@@ -1,17 +1,15 @@
 function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _group) constructor {
 	name = "Particle";
 	use_cache = CACHE_USE.auto;
+	var i = input_len;
 	
 	onSurfaceSize = function() /*=>*/ {return getInputData(input_len, DEF_SURF)};
 	
 	////- =Output
-	
-	var i = input_len;
 	newInput(i+3, nodeValue_Surface( "Background" ));
 	newInput(i+0, nodeValue_Dimension());
 	
 	////- =Render
-	
 	newInput(i+4, nodeValue_Enum_Button( "Render Type",    PARTICLE_RENDER_TYPE.surface , [ "Surface", "Line" ]));
 	newInput(i+5, nodeValue_Int(         "Line Life",      4 ));
 	newInput(i+1, nodeValue_Bool(        "Round Position", true, "Round position to the closest integer value to avoid jittering."));

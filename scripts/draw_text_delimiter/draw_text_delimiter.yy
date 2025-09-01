@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"draw_text_delimiter",
   "parent":{
-    "name":"draw",
-    "path":"folders/functions/draw.yy",
+    "name":"text",
+    "path":"folders/functions/draw/text.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

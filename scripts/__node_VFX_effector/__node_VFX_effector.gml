@@ -4,8 +4,8 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	icon   = THEME.vfx;
 	reloop = true;
 	
-	manual_ungroupable	 = false;
-	node_draw_icon       = s_node_vfx_accelerate;
+	node_draw_icon = s_node_vfx_accelerate;
+	manual_ungroupable = false;
 
 	setDimension(96, 48);
 	
@@ -188,11 +188,6 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static onVFXUpdate  = function(frame = CURRENT_FRAME) {}
-	
-	static onDrawNode   = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = drawGetBbox(xx, yy, _s);
-		draw_sprite_fit(node_draw_icon, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-	}
 	
 	static getPreviewingNode = function() { return is(inline_context, Node_VFX_Group_Inline)? inline_context.getPreviewingNode() : self; }
 	static getPreviewValues  = function() { return is(inline_context, Node_VFX_Group_Inline)? inline_context.getPreviewValues()  : self; }

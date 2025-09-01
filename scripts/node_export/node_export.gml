@@ -13,7 +13,7 @@ MPEG-4 (.mp4)|*.mp4",
 			
 		key_release();
 		
-		var _dirr = filename_dir(path);
+		var _dirr = filename_dir(path) + "\\";
 		var _namm = filename_name(path);
 		
 		node.inputs[ 1].setValue(_dirr);

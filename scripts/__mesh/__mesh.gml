@@ -11,8 +11,8 @@ function Mesh() constructor {
 	
 	////- Functions
 	
-	static getRandomPoint = function(seed) {
-		random_set_seed(seed);
+	static getRandomPoint = function(seed = undefined) {
+		if(seed != undefined) random_set_seed(seed);
 		if(array_length(triangles) == 0) return new __vec2();
 		
 		var tri = triangles[irandom(array_length(triangles) - 1)];

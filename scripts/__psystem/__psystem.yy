@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"__psystem",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__psystem",
+  "parent":{
+    "name":"particleSystem",
+    "path":"folders/nodes/data/simulation/particleSystem.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

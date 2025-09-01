@@ -14,8 +14,9 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 	static setRootDir = function(d) /*=>*/ { 
 		internalDir = new DirectoryObject(d).scan(["NodeObject"]); 
 		rootDir     = d;
-	}
-	setRootDir("D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/data/Nodes/Internal");
+	} setRootDir("D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/data/Nodes/Internal");
+	
+	sourceDir = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/scripts";
 	
 	parseArray = function(t) /*=>*/ {return (t != "" && !string_pos(",", t))? [ t ] : json_try_parse(t, [])};
 	
@@ -170,9 +171,29 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 					var _dirpath = $"{selectDir.path}/{_inode}";
 					directory_create(_dirpath);
 					
+					var _name = "";
+					var _lnode = string_lower(_inode);
+					
+					var _srcFile = $"{sourceDir}/{_lnode}/{_lnode}.gml";
+					if(file_exists(_srcFile)) {
+						var _ff = file_text_open_read(_srcFile);
+						while(!file_text_eof(_ff)) {
+							var _l = file_text_readln(_ff);
+							    _l = string_trim(_l);
+							    
+							if(string_starts_with(_l, "name") && string_pos("=", _l)) {
+								var _spr = string_splice(_l, "=");
+								var _nam = string_trim(_spr[1], [" ", ";", "\""]);
+								_name = _nam;
+								break;
+							}
+						}
+						file_text_close(_ff);
+					}
+					
 					var _infpath = $"{_dirpath}/info.json";
 					var _newNode = {
-						name:        "",
+						name:        _name,
 					    spr:         $"s_{string_lower(_inode)}",
 					    baseNode:    $"{_inode}",
 					    pxc_version: VERSION,

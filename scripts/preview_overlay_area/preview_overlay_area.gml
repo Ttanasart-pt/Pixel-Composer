@@ -64,6 +64,7 @@ function preview_overlay_area_padding(hover, active, _x, _y, _s, _mx, _my, _snx,
 		
 		     if(drag_type == 1) _sval[0] = _r;
 		else if(drag_type == 2) _sval[1] = _t;
+		
 		else if(drag_type == 3) _sval[2] = _l;
 		else if(drag_type == 4) _sval[3] = _b;
 		
@@ -355,7 +356,7 @@ function preview_overlay_area_span(hover, active, _x, _y, _s, _mx, _my, _snx, _s
 			_val[3] = _dy;
 		}
 							
-		if(keyboard_check(vk_shift)) {
+		if(key_mod_press(SHIFT)) {
 			_val[2] = max(_dx, _dy);
 			_val[3] = max(_dx, _dy);
 		}

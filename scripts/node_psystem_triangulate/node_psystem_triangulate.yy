@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_psystem_triangulate",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_psystem_triangulate",
+  "parent":{
+    "name":"generators",
+    "path":"folders/nodes/data/simulation/particleSystem/generators.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

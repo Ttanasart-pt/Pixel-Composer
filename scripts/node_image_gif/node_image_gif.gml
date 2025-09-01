@@ -141,7 +141,7 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		setDisplayName(_name, false);
 		outputs[1].setValue(path);
 		
-		if(spr) sprite_delete(spr);
+		if(spr && sprite_exists(spr)) sprite_delete(spr);
 		read_gif_init(path);
 		
 		if(path_current == "") first_update = true;

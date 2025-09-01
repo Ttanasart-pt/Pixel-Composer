@@ -100,7 +100,7 @@ function getWiggle(_min = 0, _max = 1, _freq = 1, _time = 0, _seed = 0, startTim
 	return lerp(_min, _max, _lrp);
 }
 
-function wiggleMap(_seed, _freq, _length, _amp = 1) constructor {
+function wiggleMap(_seed, _freq, _length, _amp = 1) constructor { // candidate for cpp version huh?
 	seed = _seed;
 	freq = _freq;
 	len  = _length;
@@ -129,12 +129,8 @@ function wiggleMap(_seed, _freq, _length, _amp = 1) constructor {
 		return self;
 	}
 	
-	static get = function(i) { 
-		INLINE
-		
-		if(amp == 0) return 0;
-		return map[abs(i) % len] * amp; 
-	}
+	static get      = function(i) /*=>*/ { INLINE return amp == 0? 0 : map[abs(i) % len] * amp; }
+	static getDelta = function(i) /*=>*/ { INLINE return amp == 0? 0 : (map[abs(i) % len] - map[abs(i-1) % len]) * amp; }
 }
 
 function random_gaussian(_mean = 0, _var = 1) {

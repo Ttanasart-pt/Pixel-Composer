@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_psystem_spawn",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_psystem_spawn",
+  "parent":{
+    "name":"main",
+    "path":"folders/nodes/data/simulation/particleSystem/main.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

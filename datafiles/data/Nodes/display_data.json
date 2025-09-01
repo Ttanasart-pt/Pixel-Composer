@@ -134,6 +134,53 @@
         "color": "node_blend_vfx"
     },
     {
+        "name": "pSystem", "nodes": [
+            { "label": "System" },
+            { "label": "/Particles" },
+            "Node_pSystem_Spawn",
+            "Node_pSystem_Render",
+            "Node_pSystem_Destroy",
+            "Node_pSystem_Clone",
+            
+            { "label": "/Mask" },
+            "Node_pSystem_Mask",
+            "Node_pSystem_Mask_Data",
+            
+            { "label": "/Event" },
+            "Node_pSystem_Trigger_Event",
+            
+            { "label": "Transform" },
+            { "label": "/Transform" },
+            "Node_pSystem_Transform",
+            "Node_pSystem_Snap_Transform",
+            "Node_pSystem_Attract",
+            "Node_pSystem_Oscillate",
+            "Node_pSystem_Wiggle",
+            "Node_pSystem_Follow_Path",
+            "Node_pSystem_Align_to_Velocity",
+            
+            { "label": "/Relations" },
+            "Node_pSystem_Boids",
+            
+            { "label": "/Physics" },
+            "Node_pSystem_Gravity",
+            "Node_pSystem_Acceleration",
+            "Node_pSystem_Collision",
+            
+            { "label": "Rendering" },
+            { "label": "/Render" },
+            "Node_pSystem_Render",
+            "Node_pSystem_Render_Trail",
+            "Node_pSystem_Triangulate",
+            
+            { "label": "/Blending" },
+            "Node_pSystem_Blend",
+            "Node_pSystem_Sample_Color",
+        ],
+        "context": ["Node_pSystem_Inline"],
+        "color": "node_blend_vfx"
+    },
+    {
         "name": "RigidSim", "nodes": [
             { "label": "Groups" },
             "Node_Group_Input",
@@ -711,6 +758,7 @@
             
             { "label": "Simulation" },
             "Node_Particle",
+            "Node_pSystem_Inline",
             "Node_VFX_Group_Inline",
             "Node_Rigid_Group_Inline",
             "Node_FLIP_Group_Inline",

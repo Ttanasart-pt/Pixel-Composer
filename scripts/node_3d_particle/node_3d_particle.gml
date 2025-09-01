@@ -39,30 +39,31 @@ function Node_3D_Particle(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 	newInput(11, nodeValue_Vector(      "Spawn Data"                    )).setArrayDepth(1);
 	
 	////- =Movement
-	newInput(13, nodeValue_Vec3_Range(  "Velocity",             [0,0,0,0,0,0] )).setCurvable(15, CURVE_DEF_11, "Over Life"); 
+	newInput(13, nodeValue_Vec3_Range(  "Velocity",             [0,0,0,0,0,0] )).setCurvable(15, CURVE_DEF_11, "Over Lifespan"); 
 	newInput(14, nodeValue_Vec3_Range(  "Acceleration",         [0,0,0,0,0,0] )); 
 	newInput(16, nodeValue_Range(       "Follow Spawn Shape",   [0,0], true   ));
 	
 	////- =Rotation
 	newInput(17, nodeValue_Vec3_Range(  "Rotation",             [0,0,0,0,0,0] ));
-	newInput(18, nodeValue_Vec3_Range(  "Rotational Speed",     [0,0,0,0,0,0] )).setCurvable(19, CURVE_DEF_11, "Over Life"); 
+	newInput(18, nodeValue_Vec3_Range(  "Rotational Speed",     [0,0,0,0,0,0] )).setCurvable(19, CURVE_DEF_11, "Over Lifespan"); 
 	newInput(20, nodeValue_Float(       "Snap Rotation",        0             ));
 	newInput(54, nodeValue_Bool(        "Follow Velocity",      false         ));
 	
 	////- =Scale
 	newInput(21, nodeValue_Vec3_Range(  "Scale",                [1,1,1,1,1,1] ));
-	newInput(22, nodeValue_Range(       "Size",                 [1,1], true   )).setCurvable(23, CURVE_DEF_11, "Over Life"); 
+	newInput(22, nodeValue_Range(       "Size",                 [1,1], true   )).setCurvable(23, CURVE_DEF_11, "Over Lifespan"); 
 	
 	////- =Color
 	newInput(24, nodeValue_Gradient(    "Color Over Lifetime",  new gradientObject(ca_white)  ));
 	newInput(25, nodeValue_Gradient(    "Random Blend",         new gradientObject(ca_white)  ));
 	newInput(26, nodeValue_Palette(     "Color by Index",       [ca_white]                    )).setOptions("Select by:", "array_select", [ "Index Loop", "Index Ping-pong", "Random" ], THEME.array_select_type).iconPad();
-	newInput(55, nodeValue_Range(       "Alpha",                [1,1], true                   )).setCurvable(53, CURVE_DEF_11, "Over Life"); 
+	newInput(55, nodeValue_Range(       "Alpha",                [1,1], true                   )).setCurvable(53, CURVE_DEF_11, "Over Lifespan"); 
 	
 	////- =Render
 	newInput(28, nodeValue_Enum_Scroll( "Blend Mode",     0, [ "Normal", "Alpha", "Additive", "Maximum" ]));
 	newInput(32, nodeValue_Bool(        "Billboard",      false ));
 	newInput(31, nodeValue_Bool(        "Loop",           true  ));
+	newInput(58, nodeValue_Int(         "Pre-Render",     -1  ));
 	newInput(33, nodeValue_Bool(        "Transparent",    false ));
 	
 	////- =Path
@@ -94,7 +95,7 @@ function Node_3D_Particle(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 	newInput(51, nodeValue_Vec2(     "Rotation Wiggle",        [0,0], { label: [ "Amplitude", "Period" ], linkable: false, per_line: true } ));
 	newInput(52, nodeValue_Vec2(     "Scale Wiggle",           [0,0], { label: [ "Amplitude", "Period" ], linkable: false, per_line: true } ));
 	
-	// 58
+	// 59
 	
 	input_display_list = [ 1, 
 		[ "Object",       true ],  0, 
@@ -104,7 +105,7 @@ function Node_3D_Particle(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 		[ "Rotation",     true ], 17, 18, 19, 54, 
 		[ "Scale",        true ], 21, 22, 23, 
 		[ "Color",        true ], 24, 25, 26, 55, 53, 
-		[ "Render",       true ], 28, 32, 31, 33, 
+		[ "Render",       true ], 28, 32, 31, 58, 33, 
 		__inspc(ui(6), true, false, ui(3)), 
 		
 		["Follow path", true, 34], 35, 56, 36, 
@@ -205,6 +206,7 @@ function Node_3D_Particle(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 			_blnd_mode  = _data[28];
 			_billboard  = _data[32];
 			_loop       = _data[31];
+			_pre_rend   = _data[58]; if(_pre_rend == -1) _pre_rend = TOTAL_FRAMES;
 			_transpar   = _data[33];
 			
 			_fpath_use  = _data[34];
@@ -242,6 +244,8 @@ function Node_3D_Particle(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 			inputs[11].setVisible(_spawn_sour == 3);
 			
 			inputs[35].setVisible(_fpath_use, _fpath_use);
+			
+			inputs[58].setVisible(_loop);
 			if(!is_path(_fpath_path)) _fpath_use = false;
 			
 			     if(_spawn_type == 0) inputs[5].name = "Spawn Delay";
@@ -310,8 +314,17 @@ function Node_3D_Particle(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 		#endregion
 		
 		#region constant buffer
+			// if(IS_FIRST_FRAME) {
+			// 	for( var i = 0; i < TOTAL_FRAMES - 1; i++ ) vfxStep(i);
+			// 	spawn_index = 0;
+			// 	__next_update_frame = CURRENT_FRAME + 1;
+				
+			// } else {
+			// 	vfxStep(CURRENT_FRAME);
+			// }
+		
 			if(_loop && IS_FIRST_FRAME) {
-				for( var i = 0; i < TOTAL_FRAMES - 1; i++ ) vfxStep(i);
+				for( var i = TOTAL_FRAMES - _pre_rend; i < TOTAL_FRAMES; i++ ) vfxStep(i);
 				spawn_index = 0;
 				__next_update_frame = CURRENT_FRAME + 1;
 				
@@ -373,7 +386,7 @@ function Node_3D_Particle(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 			var _wbPart2 = buffer_particle2[ !buffer_index ];  buffer_to_start(_wbPart2);
 			
 			buffer_index = !buffer_index;
-			var system = particleSystem;
+			var system   = particleSystem;
 			
 			var _i = 0;
 			var _toSpawn = 0;

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_psystem_acceleration",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_psystem_acceleration",
+  "parent":{
+    "name":"physics",
+    "path":"folders/nodes/data/simulation/particleSystem/physics.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
