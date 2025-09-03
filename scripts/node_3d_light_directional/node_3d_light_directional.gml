@@ -21,7 +21,7 @@ function Node_3D_Light_Directional(_x, _y, _group = noone) : Node_3D_Light(_x, _
 	tool_settings = [];
 	tool_attribute.context = 1;
 	
-	static processData = function(_output, _data, _array_index = 0) {
+	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		var _active = _data[in_d3d + 0];
 		if(!_active) return noone;
 		

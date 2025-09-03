@@ -14,7 +14,7 @@ function Node_Color_Mix(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	input_display_list = [ 3, 0, 1, 2 ];
 	
-	static processData = function(_output, _data, _array_index = 0) {  
+	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {  
 		var c = c_black;
 		
 		switch(_data[3]) {

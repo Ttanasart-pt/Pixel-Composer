@@ -71,7 +71,7 @@ function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D(_x, _y, _group) con
 		inputs[16].setValue([_cx, _cy, _cz]);
 	}
 	
-	static processData = function(_output, _data, _array_index = 0) {
+	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		var _obj = _data[0];
 		if(!is(_obj, __3dInstance)) return noone;
 		

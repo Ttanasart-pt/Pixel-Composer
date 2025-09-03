@@ -28,7 +28,7 @@ function Node_Rotation_Random_Data(_x, _y, _group = noone) : Node_Processor(_x, 
 		["Rotation", false], 1, 2, 3, 4, 
 	]
 	
-	static processData = function(_output, _data, _array_index = 0) {
+	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		var _type = _data[0];
 		
 		var _rn1s = _data[1];

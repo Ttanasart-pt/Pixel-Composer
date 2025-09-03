@@ -9,7 +9,7 @@ function Node_3D_Transform(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _gro
 		["Transform", false], 0, 1, 2,
 	];
 	
-	static processData = function(_output, _data, _array_index = 0) {
+	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		var _mesh = _data[in_d3d + 0];
 		if(!is(_mesh, __3dInstance)) return noone;
 		

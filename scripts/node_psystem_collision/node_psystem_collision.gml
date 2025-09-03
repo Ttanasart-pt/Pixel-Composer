@@ -242,11 +242,12 @@ function Node_pSystem_Collision(_x, _y, _group = noone) : Node(_x, _y, _group) c
 				_vx = lengthdir_x(_diss, _refl) * _boun;
 				_vy = lengthdir_y(_diss, _refl) * _boun;
 				
-				buffer_write(collideTrig, buffer_f64, _px);
-				buffer_write(collideTrig, buffer_f64, _py);
+				buffer_write(collideTrig, buffer_f64, _cx);
+				buffer_write(collideTrig, buffer_f64, _cy);
 				buffer_write(collideTrig, buffer_f64,   0);
 				
 				buffer_write(collideTrig, buffer_f64, _vx);
+				buffer_write(collideTrig, buffer_f64, _vy);
 				buffer_write(collideTrig, buffer_f64,   0);
 				collideCount++;
 			}

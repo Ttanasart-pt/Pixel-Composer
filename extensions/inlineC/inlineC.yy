@@ -240,6 +240,7 @@
   "filename":"surface_is_empty_c.dll",
   "final":"",
   "functions":[{"$GMExtensionFunction":"","%Name":"surface_is_empty_c","argCount":3,"args":[1,2,2],"documentation":"","externalName":"surface_is_empty_c","help":"","hidden":false,"kind":1,"name":"surface_is_empty_c","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2},
+{"$GMExtensionFunction":"","%Name":"surface_is_color_c","argCount":3,"args":[1,2,1],"documentation":"","externalName":"surface_is_color_c","help":"","hidden":false,"kind":1,"name":"surface_is_color_c","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2},
 {"$GMExtensionFunction":"","%Name":"surface_get_nonempty_c","argCount":4,"args":[1,1,2,2],"documentation":"","externalName":"surface_get_nonempty_c","help":"","hidden":false,"kind":1,"name":"surface_get_nonempty_c","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2},
 {"$GMExtensionFunction":"","%Name":"surface_get_range_c","argCount":4,"args":[1,1,2,2],"documentation":"","externalName":"surface_get_range_c","help":"","hidden":false,"kind":1,"name":"surface_get_range_c","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2},
  ],

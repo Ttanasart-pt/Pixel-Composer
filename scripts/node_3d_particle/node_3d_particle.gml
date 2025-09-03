@@ -161,7 +161,7 @@ function Node_3D_Particle(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 	
 	prerendering = false;
 	
-	static processData = function(_output, _data, _array_index = 0) {
+	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		var _obj = _data[0];
 		
 		#region data
@@ -403,7 +403,6 @@ function Node_3D_Particle(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 			
 			random_set_seed(_seed + _t);
 			if(_doSpawn) _toSpawn = irandom_range(_spawn_amou[0], _spawn_amou[1]);
-			
 		#endregion
 		
 		var rep = min(pool_size, max_buffer_id + _toSpawn + 1);

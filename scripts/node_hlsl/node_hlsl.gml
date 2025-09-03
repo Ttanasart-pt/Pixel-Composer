@@ -378,7 +378,7 @@ struct PixelShaderOutput {
 		_fsmain_edit.globalParams = _globalParams;
 	}
 	
-	static processData = function(_output, _data, _array_index = 0) {
+	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		onCodeEdited();
 		
 		var _surf = _data[2];

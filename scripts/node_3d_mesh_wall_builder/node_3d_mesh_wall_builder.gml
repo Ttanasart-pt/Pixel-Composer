@@ -31,7 +31,7 @@ function Node_3D_Mesh_Wall_Builder(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 		["Material",	false], in_mesh + 4, in_mesh + 5, in_mesh + 7, in_mesh + 8, 
 	]
 	
-	static processData = function(_output, _data, _array_index = 0) {
+	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		var _paths   = _data[in_mesh + 0];
 		var _segment = _data[in_mesh + 1];
 		var _loop    = _data[in_mesh + 9];

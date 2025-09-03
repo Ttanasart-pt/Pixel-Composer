@@ -326,7 +326,7 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posy,   buffer_f64, _py     );
 			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.scax,   buffer_f64, _sx     );
 			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.scay,   buffer_f64, _sy     );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.rot,    buffer_f64, _rot    );
+			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.rotx,    buffer_f64, _rot    );
 			
 			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64, _lif    );
 			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64, _lifMax );
@@ -355,7 +355,7 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dposy, buffer_f64,  0       );
 			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dscax, buffer_f64,  0       );
 			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dscay, buffer_f64,  0       );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.drot,  buffer_f64,  0       );
+			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.drotx,  buffer_f64,  0       );
 			
 			partPool.cursor    = (partPool.cursor + 1) % partPool.poolSize;
 			partPool.maxCursor = max(partPool.maxCursor, partPool.cursor);
@@ -524,9 +524,11 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				repeat(_siz) {
 					var _px  = buffer_read(_sp_trig, buffer_f64);
 					var _py  = buffer_read(_sp_trig, buffer_f64);
+					var _pz  = buffer_read(_sp_trig, buffer_f64);
 					
 					var _vx  = buffer_read(_sp_trig, buffer_f64);
 					var _vy  = buffer_read(_sp_trig, buffer_f64);
+					var _vz  = buffer_read(_sp_trig, buffer_f64);
 					
 					spawn(_frame, _px, _py, _vx, _vy);
 				}

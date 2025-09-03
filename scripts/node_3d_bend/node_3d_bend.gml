@@ -17,7 +17,7 @@ function Node_3D_Bend(_x, _y, _group = noone) : Node_3D_Modifier(_x, _y, _group)
 		["Bend", false], i+0, i+3, i+1, i+2, i+4, 
 	];
 	
-	static processData = function(_output, _data, _array_index = 0) { 
+	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) { 
 		var _obj = _data[0];
 		var _axs = _data[in_mesh + 0];
 		var _rad = _data[in_mesh + 1];

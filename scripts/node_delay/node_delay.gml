@@ -30,7 +30,7 @@ function Node_Delay(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			surf_indexes[i] = array_verify(surf_indexes[i], TOTAL_FRAMES);
 	}
 	
-	static processData = function(_output, _data, _array_index = 0) {  
+	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {  
 		var _surf = _data[0];
 		var _frme = _data[1];
 		var _ovrf = _data[2];

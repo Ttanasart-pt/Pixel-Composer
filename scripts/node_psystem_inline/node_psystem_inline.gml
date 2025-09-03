@@ -26,7 +26,7 @@ function Node_pSystem_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	dimension    = DEF_SURF;
 	
 	if(NODE_NEW_MANUAL) {
-		var input  = nodeBuild("Node_pSystem_Spawn",  x,  y,      self);
+		var input  = nodeBuild("Node_pSystem_Spawn",  x,       y, self);
 		var output = nodeBuild("Node_pSystem_Render", x + 256, y, self);
 		
 		output.inputs[0].setFrom(input.outputs[0]);
@@ -49,7 +49,6 @@ function Node_pSystem_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 		if(!IS_PLAYING) { array_foreach(nodes, function(n) /*=>*/ { if(struct_has(n, "resetSeed")) n.resetSeed(); }); return; }
 		
 		prerendering = true;
-		// var _t = get_timer(); print($"Pre-rendering started");
 		
 		for(var i = TOTAL_FRAMES - _prer; i < TOTAL_FRAMES; i++) {
 			for( var j = 0, m = array_length(topoList); j < m; j++ ) {
@@ -62,7 +61,6 @@ function Node_pSystem_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 		
 		prerendering = false;
 		array_foreach(nodes, function(n) /*=>*/ { if(struct_has(n, "resetSeed")) n.resetSeed(); });
-		// print($"Pre-rendering completed in {(get_timer() - _t) / 1000}ms");
 	}
 	
 	static update = function() {

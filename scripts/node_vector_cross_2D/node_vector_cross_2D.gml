@@ -12,7 +12,7 @@ function Node_Vector_Cross_2D(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		
 	newOutput(0, nodeValue_Output("Result", VALUE_TYPE.float, 0 ));
 	
-	static processData = function(_output, _data, _array_index = 0) {  
+	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {  
 		var vec1 = _data[0];
 		var vec2 = _data[1];
 		

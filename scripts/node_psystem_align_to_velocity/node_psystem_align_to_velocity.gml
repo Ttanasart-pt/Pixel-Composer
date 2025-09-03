@@ -82,7 +82,7 @@ function Node_pSystem_Align_to_Velocity(_x, _y, _group = noone) : Node(_x, _y, _
 			var _dy  = _py + _vy - _ppy;
 			var _dir = point_direction(0, 0, _dx, _dy) + _offs_curr;
 			
-			buffer_write_at(_partBuff, _start + (bool(_dfg & 0b001)? PSYSTEM_OFF.drot  : PSYSTEM_OFF.rot), buffer_f64, _dir );
+			buffer_write_at(_partBuff, _start + (bool(_dfg & 0b001)? PSYSTEM_OFF.drotx  : PSYSTEM_OFF.rotx), buffer_f64, _dir );
 		}
 		
 	}

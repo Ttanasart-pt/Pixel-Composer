@@ -1,54 +1,60 @@
 #region global
 	globalvar PSYSTEM_OFF; PSYSTEM_OFF = {};
+	
 	PSYSTEM_OFF.active =   0;   // buffer_bool : Active             : 1
+	PSYSTEM_OFF._res   =   1;   // buffer_bool : _reserved          : 1
 	PSYSTEM_OFF.dflag  =   2;   // buffer_u16  : Draw Flag          : 2
 	PSYSTEM_OFF.sindex =   4;   // buffer_u32  : Spawn Index        : 4
-	
+
 	PSYSTEM_OFF.posx   =   8;   // buffer_f64  : Position X         : 8
 	PSYSTEM_OFF.posy   =  16;   // buffer_f64  : Position Y         : 8
 	PSYSTEM_OFF.posz   =  24;   // buffer_f64  : Position Z         : 8
-	
+
 	PSYSTEM_OFF.scax   =  32;   // buffer_f64  : Scale X            : 8
 	PSYSTEM_OFF.scay   =  40;   // buffer_f64  : Scale Y            : 8
 	PSYSTEM_OFF.scaz   =  48;   // buffer_f64  : Scale Z            : 8
-	PSYSTEM_OFF.rot    =  56;   // buffer_f64  : Rotation           : 8
-	
-	PSYSTEM_OFF.life   =  64;   // buffer_f64  : Life               : 8
-	PSYSTEM_OFF.mlife  =  72;   // buffer_f64  : Max Life           : 8
-	
-	PSYSTEM_OFF.surf   =  80;   // buffer_f64  : Surface            : 8
-	PSYSTEM_OFF.blnr   =  88;   // buffer_u8   : Blend Red          : 1
-	PSYSTEM_OFF.blng   =  89;   // buffer_u8   : Blend Green        : 1
-	PSYSTEM_OFF.blnb   =  90;   // buffer_u8   : Blend Blue         : 1
-	PSYSTEM_OFF.blna   =  91;   // buffer_u8   : Blend Alpha        : 1
-	
-	PSYSTEM_OFF.blnsr  =  92;   // buffer_u8   : Blend Start Red    : 1
-	PSYSTEM_OFF.blnsg  =  93;   // buffer_u8   : Blend Start Green  : 1
-	PSYSTEM_OFF.blnsb  =  94;   // buffer_u8   : Blend Start Blue   : 1
-	PSYSTEM_OFF.blnsa  =  95;   // buffer_u8   : Blend Start Alpha  : 1
-	
-	PSYSTEM_OFF.possx  =  96;   // buffer_f64  : Position Start X   : 8
-	PSYSTEM_OFF.possy  = 104;   // buffer_f64  : Position Start Y   : 8
-	PSYSTEM_OFF.possz  = 112;   // buffer_f64  : Position Start Z   : 8
-	
-	PSYSTEM_OFF.pospx  = 120;   // buffer_f64  : Position Prev X    : 8
-	PSYSTEM_OFF.pospy  = 128;   // buffer_f64  : Position Prev Y    : 8
-	PSYSTEM_OFF.pospz  = 136;   // buffer_f64  : Position Prev Z    : 8
-	
-	PSYSTEM_OFF.velx   = 144;   // buffer_f64  : Velocity X         : 8
-	PSYSTEM_OFF.vely   = 152;   // buffer_f64  : Velocity Y         : 8
-	PSYSTEM_OFF.velz   = 160;   // buffer_f64  : Velocity Z         : 8
-	
-	PSYSTEM_OFF.dposx  = 168;   // buffer_f64  : Draw Position X    : 8
-	PSYSTEM_OFF.dposy  = 176;   // buffer_f64  : Draw Position Y    : 8
-	PSYSTEM_OFF.dposz  = 184;   // buffer_f64  : Draw Position Z    : 8
-	
-	PSYSTEM_OFF.dscax  = 192;   // buffer_f64  : Draw Scale X       : 8
-	PSYSTEM_OFF.dscay  = 200;   // buffer_f64  : Draw Scale Y       : 8
-	PSYSTEM_OFF.dscaz  = 208;   // buffer_f64  : Draw Scale Z       : 8
-	PSYSTEM_OFF.drot   = 216;   // buffer_f64  : Draw Rotation      : 8
-	
-	global.pSystem_data_length = 224;
+	PSYSTEM_OFF.rotx   =  56;   // buffer_f64  : Rotation X         : 8
+	PSYSTEM_OFF.roty   =  64;   // buffer_f64  : Rotation Y         : 8
+	PSYSTEM_OFF.rotz   =  72;   // buffer_f64  : Rotation Z         : 8
+
+	PSYSTEM_OFF.life   =  80;   // buffer_f64  : Life               : 8
+	PSYSTEM_OFF.mlife  =  88;   // buffer_f64  : Max Life           : 8
+
+	PSYSTEM_OFF.surf   =  96;   // buffer_f64  : Surface            : 8
+	PSYSTEM_OFF.blnr   = 104;   // buffer_u8   : Blend Red          : 1
+	PSYSTEM_OFF.blng   = 105;   // buffer_u8   : Blend Green        : 1
+	PSYSTEM_OFF.blnb   = 106;   // buffer_u8   : Blend Blue         : 1
+	PSYSTEM_OFF.blna   = 107;   // buffer_u8   : Blend Alpha        : 1
+
+	PSYSTEM_OFF.blnsr  = 108;   // buffer_u8   : Blend Start Red    : 1
+	PSYSTEM_OFF.blnsg  = 109;   // buffer_u8   : Blend Start Green  : 1
+	PSYSTEM_OFF.blnsb  = 110;   // buffer_u8   : Blend Start Blue   : 1
+	PSYSTEM_OFF.blnsa  = 111;   // buffer_u8   : Blend Start Alpha  : 1
+
+	PSYSTEM_OFF.possx  = 112;   // buffer_f64  : Position Start X   : 8
+	PSYSTEM_OFF.possy  = 120;   // buffer_f64  : Position Start Y   : 8
+	PSYSTEM_OFF.possz  = 128;   // buffer_f64  : Position Start Z   : 8
+
+	PSYSTEM_OFF.pospx  = 136;   // buffer_f64  : Position Prev X    : 8
+	PSYSTEM_OFF.pospy  = 144;   // buffer_f64  : Position Prev Y    : 8
+	PSYSTEM_OFF.pospz  = 152;   // buffer_f64  : Position Prev Z    : 8
+
+	PSYSTEM_OFF.velx   = 160;   // buffer_f64  : Velocity X         : 8
+	PSYSTEM_OFF.vely   = 168;   // buffer_f64  : Velocity Y         : 8
+	PSYSTEM_OFF.velz   = 176;   // buffer_f64  : Velocity Z         : 8
+
+	PSYSTEM_OFF.dposx  = 184;   // buffer_f64  : Draw Position X    : 8
+	PSYSTEM_OFF.dposy  = 192;   // buffer_f64  : Draw Position Y    : 8
+	PSYSTEM_OFF.dposz  = 200;   // buffer_f64  : Draw Position Z    : 8
+
+	PSYSTEM_OFF.dscax  = 208;   // buffer_f64  : Draw Scale X       : 8
+	PSYSTEM_OFF.dscay  = 216;   // buffer_f64  : Draw Scale Y       : 8
+	PSYSTEM_OFF.dscaz  = 224;   // buffer_f64  : Draw Scale Z       : 8
+	PSYSTEM_OFF.drotx  = 232;   // buffer_f64  : Draw Rotation X    : 8
+	PSYSTEM_OFF.droty  = 240;   // buffer_f64  : Draw Rotation Y    : 8
+	PSYSTEM_OFF.drotz  = 248;   // buffer_f64  : Draw Rotation Z    : 8
+
+	global.pSystem_data_length = 256;
 	global.pSystem_trig_length = 8*3 + 8*3; // px, py, pz, vx, vy, vz
 	
 	function pSystem_Particles() constructor {

@@ -17,7 +17,7 @@ function Node_3D_Mesh_Cone(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 		["Material",	false], i+3, i+1, i+2, 
 	]
 	
-	static processData = function(_output, _data, _array_index = 0) {
+	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		var _side     = _data[in_mesh + 0];
 		var _mat_bot  = _data[in_mesh + 1];
 		var _mat_sid  = _data[in_mesh + 2];

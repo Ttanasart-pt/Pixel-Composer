@@ -14,7 +14,7 @@ function Node_3D_Scene(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constru
 		return inputs[index];
 	} setDynamicInput(1, true, VALUE_TYPE.d3Mesh);
 	
-	static processData = function(_output, _data, _array_index = 0) {
+	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		var _scene = new __3dGroup();
 		
 		for( var i = input_fix_len, n = array_length(inputs); i < n; i += data_length ) {

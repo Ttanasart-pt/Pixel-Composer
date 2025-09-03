@@ -70,3 +70,15 @@ function point_vec2_rotate(p, ox, oy, a) {
 	
 	return p;
 }
+
+function point_rotate_3d(px, py, pz, ax, ay, az, angle, _arr) {
+    var c = dcos(angle);
+    var s = dsin(angle);
+    var t = 1 - c;
+
+    _arr[0] = px * (t * ax * ax + c) + py * (t * ax * ay - s * az) + pz * (t * ax * az + s * ay);
+    _arr[1] = px * (t * ax * ay + s * az) + py * (t * ay * ay + c) + pz * (t * ay * az - s * ax);
+    _arr[2] = px * (t * ax * az - s * ay) + py * (t * ay * az + s * ax) + pz * (t * az * az + c);
+
+    return _arr;
+}

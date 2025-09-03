@@ -47,14 +47,10 @@ function Node_pSystem_Turbulence(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		
 		var _seed = getInputData( 2);
 		var _strn = getInputData( 3), _strn_curved = inputs[3].attributes.curved && curve_strn != undefined;
-		var _dirr = getInputData( 5);
 		
 		var _partAmo  = _parts.maxCursor;
 		var _partBuff = _parts.buffer;
 		var _off = 0;
-		
-		var _gx = lengthdir_x(1, _dirr);
-		var _gy = lengthdir_y(1, _dirr);
 		
 		repeat(_partAmo) {
 			var _start = _off;
@@ -81,6 +77,10 @@ function Node_pSystem_Turbulence(_x, _y, _group = noone) : Node(_x, _y, _group) 
 			var _strn_mod = _strn_curved? curve_strn.get(rat) : 1;
 			var _strn_cur = random_range(_strn[0], _strn[1]) * _strn_mod * _mask;
 			
+			var _dirr = 0;
+			var _gx = lengthdir_x(1, _dirr);
+			var _gy = lengthdir_y(1, _dirr);
+		
 			_vx += _gx * _strn_cur;
 			_vy += _gy * _strn_cur;
 			

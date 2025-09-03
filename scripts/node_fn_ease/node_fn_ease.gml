@@ -39,7 +39,7 @@ function Node_Fn_Ease(_x, _y, _group = noone) : Node_Fn(_x, _y, _group) construc
 		return __smooth(_v);
 	}
 	
-	static processData = function(_output, _data, _array_index = 0) { #region
+	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) { #region
 		rang = _data[inl + 0];
 		ease = _data[inl + 1];
 		type = _data[inl + 2];

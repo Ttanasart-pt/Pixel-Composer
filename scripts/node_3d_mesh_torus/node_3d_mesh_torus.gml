@@ -21,7 +21,7 @@ function Node_3D_Mesh_Torus(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _grou
 		["Material",	false], i+5, i+4, 
 	]
 	
-	static processData = function(_output, _data, _array_index = 0) {
+	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		var _sideT = _data[in_mesh + 0];
 		var _sideP = _data[in_mesh + 1];
 		var _radT  = _data[in_mesh + 2];

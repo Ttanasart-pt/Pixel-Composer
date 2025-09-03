@@ -145,9 +145,9 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 	}
 	
-	static processData   = function(_outSurf, _data, _array_index = 0) { return _outSurf; }
+	static processData   = function(_outSurf, _data, _array_index = 0, _frame = CURRENT_FRAME) { return _outSurf; }
 	
-	static processOutput = function() { 
+	static processOutput = function(frame = CURRENT_FRAME) { 
 		var _is  = array_length(inputs);
 		var _os  = array_length(outputs);
 		
@@ -178,13 +178,13 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			}
 			
 			if(_os == 1) {
-				data = processData(_out[0], inputs_data, 0);
+				data = processData(_out[0], inputs_data, 0, frame);
 				if(data == noone) return;
 				
 				outputs[0].setValue(data);
 				
 			} else {
-				data = processData(_out, inputs_data, 0);
+				data = processData(_out, inputs_data, 0, frame);
 				if(data == noone) return;
 				
 				for(var i = 0; i < min(_os, array_length(data)); i++) outputs[i].setValue(data[i]);
@@ -219,11 +219,11 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			}
 			
 			if(_os == 1) {
-				data = processData(_outa[0], _inputs, l);
+				data = processData(_outa[0], _inputs, l, frame);
 				_outputs[0][l] = data;
 				
 			} else {
-				data = processData(_outa, _inputs, l);
+				data = processData(_outa, _inputs, l, frame);
 				for(var i = 0; i < _os; i++) _outputs[i][l] = data[i];
 			}
 		}
@@ -241,13 +241,13 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static postPostProcess       = undefined;
 	
 	static update = function(frame = CURRENT_FRAME) { 
-		if(processData_prebatch  != undefined) processData_prebatch();
+		if(processData_prebatch  != undefined) processData_prebatch(frame);
 			
-		processOutput();
+		processOutput(frame);
 			
-		if(processData_postbatch != undefined) processData_postbatch();
-		if(postProcess           != undefined) postProcess();
-		if(postPostProcess       != undefined) postPostProcess();
+		if(processData_postbatch != undefined) processData_postbatch(frame);
+		if(postProcess           != undefined) postProcess(frame);
+		if(postPostProcess       != undefined) postPostProcess(frame);
 	}
 	
 	///////////////////// CACHE /////////////////////

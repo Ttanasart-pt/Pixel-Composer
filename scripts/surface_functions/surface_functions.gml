@@ -53,6 +53,27 @@
 	    return 1;
 	}
 	
+	cfunction double surface_is_color_c(void* pixelArrayBuffer, double _size, void* _color) {
+	    pixel* pixelArray = (pixel*)pixelArrayBuffer;
+		size_t size       = (size_t)_size;
+	    pixel* color      = (pixel*)_color;
+		
+	    size_t i = 0;
+	    size_t limit = size & ~3ULL; // Multiple of 4
+        
+        uint8_t red   = color->r;
+        uint8_t green = color->g;
+        uint8_t blue  = color->b;
+        uint8_t alpha = color->a;
+
+        for(; i<size; i++) {
+            if (pixelArray[i].r != red || pixelArray[i].g != green || pixelArray[i].b != blue || pixelArray[i].a != alpha)
+                return 0;
+        }
+	     
+	    return 1;
+	}
+	
 	cfunction double surface_get_nonempty_c(void* pixelArrayBuffer, void* outputBuffer, double width, double height) {
 		pixel*    pixelArray  = (pixel*)pixelArrayBuffer;
 		uint16_t* outputArray = (uint16_t*)outputBuffer;
@@ -249,18 +270,35 @@
 		return _sw == w && _sh == h && _f == format;
 	}
 
-	global.__surface_is_empty_buffer = buffer_create(1, buffer_grow, 1);
+	global.__surface_is_empty_buffer = buffer_create(1, buffer_grow,  1);
+	global.__surface_is_color_buffer = buffer_create(4, buffer_fixed, 1);
+	
 	function surface_is_empty(surf) {
 		if(!is_surface(surf)) return true;
 		
 		var _size = surface_get_byte_size(surf);
 		buffer_resize(global.__surface_is_empty_buffer, _size);
 		buffer_get_surface(global.__surface_is_empty_buffer, surf, 0);
-		buffer_to_start(global.__surface_is_empty_buffer);
 		
 		return surface_is_empty_c(buffer_get_address(global.__surface_is_empty_buffer), _size/4, 0);
 	}
-
+	
+	function surface_is_color(surf, color) {
+		if(!is_surface(surf)) return true;
+		
+		var _size = surface_get_byte_size(surf);
+		buffer_resize(global.__surface_is_empty_buffer, _size);
+		buffer_get_surface(global.__surface_is_empty_buffer, surf, 0);
+		
+		buffer_to_start(global.__surface_is_color_buffer);
+		buffer_write(global.__surface_is_color_buffer, buffer_u8, color_get_red(color));
+		buffer_write(global.__surface_is_color_buffer, buffer_u8, color_get_green(color));
+		buffer_write(global.__surface_is_color_buffer, buffer_u8, color_get_blue(color));
+		buffer_write(global.__surface_is_color_buffer, buffer_u8, color_get_alpha(color));
+		
+		return surface_is_color_c(buffer_get_address(global.__surface_is_empty_buffer), _size/4, buffer_get_address(global.__surface_is_color_buffer));
+	}
+	
 #endregion ==================================== CHECK ====================================
 
 #region ==================================== GET =====================================

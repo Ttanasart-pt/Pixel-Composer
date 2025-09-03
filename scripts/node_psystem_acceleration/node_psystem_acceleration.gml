@@ -15,7 +15,7 @@ function Node_pSystem_Acceleration(_x, _y, _group = noone) : Node(_x, _y, _group
 	
 	////- =Acceleration
 	newInput( 3, nodeValue_Range( "Acceleration", [0,0], true )).setCurvable( 4, CURVE_DEF_11, "Over Lifespan"); 
-	// 6
+	// 5
 	
 	newOutput(0, nodeValue_Output("Particles", VALUE_TYPE.particle, noone ));
 	
@@ -45,14 +45,10 @@ function Node_pSystem_Acceleration(_x, _y, _group = noone) : Node(_x, _y, _group
 		
 		var _seed = getInputData( 2);
 		var _acel = getInputData( 3), _acel_curved = inputs[3].attributes.curved && curve_acel != undefined;
-		var _dirr = getInputData( 5);
 		
 		var _partAmo  = _parts.maxCursor;
 		var _partBuff = _parts.buffer;
 		var _off = 0;
-		
-		var _gx = lengthdir_x(1, _dirr);
-		var _gy = lengthdir_y(1, _dirr);
 		
 		repeat(_partAmo) {
 			var _start = _off;

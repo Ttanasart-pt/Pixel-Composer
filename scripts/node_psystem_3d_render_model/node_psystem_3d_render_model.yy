@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_psystem_3d_render_model",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_psystem_3d_render_model",
+  "parent":{
+    "name":"rendering",
+    "path":"folders/nodes/data/simulation/particleSystem3D/rendering.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

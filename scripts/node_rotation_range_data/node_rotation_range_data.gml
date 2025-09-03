@@ -16,7 +16,7 @@ function Node_Rotation_Range_Data(_x, _y, _group = noone) : Node_Processor(_x, _
 		["Rotation", false], 0, 1, 
 	]
 	
-	static processData = function(_output, _data, _array_index = 0) {
+	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		var _st = _data[0];
 		var _ed = _data[1];
 		

@@ -11,7 +11,7 @@ function Node_Differential(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
     
     prev_values = [];
     
-    static processData = function(_output, _data, _array_index = 0) {
+    static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
         var _v = _data[0];
         
         var _p = array_safe_get_fast(prev_values, _array_index, 0);

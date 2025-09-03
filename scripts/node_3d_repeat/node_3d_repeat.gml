@@ -73,7 +73,7 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		inputs[0].setArrayDepth(_mode == 1);
 	}
 	
-	static processData = function(_output, _data, _array_index = 0) {
+	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		#region input
 			var _seed = _data[21];
 			

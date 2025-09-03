@@ -32,7 +32,7 @@ function Node_3D_Mesh_Extrude_Mesh(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 		triggerRender();
 	});
 	
-	static processData = function(_output, _data, _array_index = 0) {
+	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		var _updt = _data[in_mesh + 3];
 		
 		var _mesh = _data[in_mesh + 0];

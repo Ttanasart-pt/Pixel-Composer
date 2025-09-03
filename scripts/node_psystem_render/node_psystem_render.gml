@@ -156,7 +156,7 @@ function Node_pSystem_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				var _draw_y   = buffer_read_at( _partBuff, _start + (bool(_dfg & 0b100)? PSYSTEM_OFF.dposy : PSYSTEM_OFF.posy), buffer_f64 );
 				var _draw_sx  = buffer_read_at( _partBuff, _start + (bool(_dfg & 0b010)? PSYSTEM_OFF.dscax : PSYSTEM_OFF.scax), buffer_f64 );
 				var _draw_sy  = buffer_read_at( _partBuff, _start + (bool(_dfg & 0b010)? PSYSTEM_OFF.dscay : PSYSTEM_OFF.scay), buffer_f64 );
-				var _draw_rot = buffer_read_at( _partBuff, _start + (bool(_dfg & 0b001)? PSYSTEM_OFF.drot  : PSYSTEM_OFF.rot),  buffer_f64 );
+				var _draw_rot = buffer_read_at( _partBuff, _start + (bool(_dfg & 0b001)? PSYSTEM_OFF.drotx  : PSYSTEM_OFF.rotx),  buffer_f64 );
 				
 				var _draw_a = _bldA / 255 * _mask;
 				var rat     = _lif / (_lifMax - 1);

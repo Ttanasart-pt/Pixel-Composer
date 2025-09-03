@@ -10,7 +10,7 @@ function Node_3D_Affector(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _grou
 	
 	////- =Affectors
 	newInput(i+1, nodeValue_Enum_Scroll( "Shape", 0, [ new scrollItem("Sphere", s_node_3d_affector_shape, 0), 
-	                                                          new scrollItem("Plane",  s_node_3d_affector_shape, 1), ]));
+	                                                   new scrollItem("Plane",  s_node_3d_affector_shape, 1), ]));
 	newInput(i+2, nodeValue_Float( "Falloff distance",   0.5    ));
 	newInput(i+3, nodeValue_Curve( "Falloff curve",      CURVE_DEF_01 ));
 	
@@ -30,7 +30,7 @@ function Node_3D_Affector(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _grou
 	curve_falloff = noone;
 	plane_normal  = [ 0, 0, 1 ];
 	
-	static processData = function(_output, _data, _array_index = 0) {
+	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		#region data
 			var _pos  = _data[0];
 			var _rot  = _data[1];

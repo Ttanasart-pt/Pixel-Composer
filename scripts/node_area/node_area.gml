@@ -66,7 +66,7 @@ function Node_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		return w_hovering;
 	}
 	
-	static processData = function(_output, _data, _array_index = 0) {
+	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		var _v0   = _data[0];
 		var _v1   = _data[1];
 		var _shap = _data[2];

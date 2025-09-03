@@ -26,7 +26,7 @@ function Node_Anim_Curve(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	disp_type = 0;
 	disp_prog = 0;
 	
-	static processData = function(_output, _data, _array_index = 0) {  		
+	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {  		
 		var curve = _data[0];
 		var _anim = _data[4];
 		var time  = _anim? CURRENT_FRAME / (TOTAL_FRAMES - 1) : _data[1];

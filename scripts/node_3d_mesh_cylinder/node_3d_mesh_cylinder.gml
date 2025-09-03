@@ -29,7 +29,7 @@ function Node_3D_Mesh_Cylinder(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _g
 		inputs[in_mesh + 2].setVisible(_caps, _caps);
 	}
 	
-	static processData = function(_output, _data, _array_index = 0) {
+	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		var _side     = _data[in_mesh + 0];
 		var _mat_top  = _data[in_mesh + 1];
 		var _mat_bot  = _data[in_mesh + 2];

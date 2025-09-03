@@ -13,7 +13,7 @@ function Node_Fn_Constant(_x, _y, _group = noone) : Node_Fn(_x, _y, _group) cons
 		return value;
 	}
 	
-	static processData = function(_output, _data, _array_index = 0) { #region
+	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) { #region
 		value = _data[inl + 0];
 		
 		var val = __fnEval(CURRENT_FRAME / TOTAL_FRAMES);

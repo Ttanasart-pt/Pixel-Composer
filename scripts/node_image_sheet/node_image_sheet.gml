@@ -2,14 +2,12 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	name  = "Splice Spritesheet";
 	
 	////- =Sprite
-	
 	newInput(0, nodeValue_Surface( "Surface In"));
 	newInput(1, nodeValue_Vec2(    "Sprite size", [32,32]   ));
 	newInput(6, nodeValue_Padding( "Padding",     [0,0,0,0] ));
 	newInput(2, nodeValue_Int(     "Row",          1        )); //unused
 	
 	////- =Sheet
-	
 	newInput( 3, nodeValue_Vec2(        "Amount", [1,1]  ));
 	newInput(10, nodeValue_Trigger(     "Auto fill", "Automatically set amount based on sprite size."));
 	b_auto_fill = button(function() /*=>*/ {
@@ -38,7 +36,6 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput( 5, nodeValue_Vec2(        "Spacing",  [0,0] ));
 	
 	////- =Output
-	
 	newInput( 7, nodeValue_Enum_Scroll( "Output",          1, [ "Animation", "Array" ]));
 	newInput( 8, nodeValue_Float(       "Animation speed", 1 ));
 	newInput(11, nodeValue_Trigger(     "Sync animation"     ));
@@ -49,7 +46,6 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	}).setText("Sync Frames");
 		
 	////- =Filter
-	
 	newInput(12, nodeValue_Bool(        "Filter empty output", false ));
 	newInput(13, nodeValue_Enum_Scroll( "Filtered Pixel",      0, [ "Transparent", "Color" ]));
 	newInput(14, nodeValue_Color(       "Filtered Color",      ca_black ));
@@ -64,7 +60,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput(1, nodeValue_Output( "Atlas Data",  VALUE_TYPE.atlas,   []    )).setArrayDepth(1);
 	
-	////- Nodes
+	////- Preview
 	
 	attribute_surface_depth();
 	
@@ -298,15 +294,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		return hovering;
 	}
 	
-	static step = function() {
-		var _out  = getInputData(7);
-		var _flty = getInputData(13);
-		
-		b_sync_frame.setVisible(!_out);
-		inputs[11].setVisible(!_out);
-		inputs[ 8].setVisible(!_out);
-		inputs[14].setVisible(_flty);
-	}
+	////- Update
 	
 	static spliceSprite = function() {
 		var _inSurf  = getInputData(0);
@@ -344,22 +332,6 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		if(ww < 1 || hh < 1) return;
 		
-		if(_filt) {
-			var filSize = 4;
-			temp_surface[0] = surface_verify(temp_surface[0], surface_get_width_safe(_inSurf), surface_get_height_safe(_inSurf));
-			
-			surface_set_shader(temp_surface[0], sh_slice_spritesheet_empty_scan, true, BLEND.over);
-				shader_set_dim("dimension",  _inSurf);
-				shader_set_f("paddingStart", _off);
-				shader_set_f("spacing",		 surf_space);
-				shader_set_f("spriteDim",	 _dim);
-				shader_set_color("color",	 _flcl);
-				shader_set_i("empty",		!_fltp);
-				
-				draw_surface_safe(_inSurf);
-			surface_reset_shader();
-		}
-		
 		var _atl = array_create(_total);
 		var _sar = array_create(_total);
 		var _arrAmo = 0, _s, _a;
@@ -393,15 +365,14 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				continue;
 			}
 			
-			var empPx = surface_get_pixel_ext(temp_surface[0], _spr_pos[0], _spr_pos[1]);
-			var empty = empPx == 0.;
+			var _empty = _fltp == 0? surface_is_empty(_s) : surface_is_color(_s, _flcl);
 					
-			if(!empty) {
+			if(!_empty) {
 				_atl[_arrAmo] = _a;
 				_sar[_arrAmo] = _s;
 				_arrAmo++;
 			}
-			sprite_valid[i] = !empty;
+			sprite_valid[i] = !_empty;
 		}
 		
 		for( var i = _arrAmo, n = array_length(surf_array); i < n; i++ )
@@ -420,14 +391,17 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static update = function(frame = CURRENT_FRAME) {
 		spliceSprite();
 		
-		var _out = getInputData(7);
-		if(_out == 1) { 
-			update_on_frame = false;
-			return;
-		}
+		var _out  = getInputData(7);
+		var _spd  = getInputData(8);
+		var _fltp = getInputData(13);
 		
-		var _spd = getInputData(8);
-		update_on_frame = true;
+		b_sync_frame.setVisible(!_out);
+		inputs[11].setVisible(!_out);
+		inputs[ 8].setVisible(!_out);
+		inputs[14].setVisible(_fltp);
+		
+		update_on_frame = _out != 1;
+		if(!update_on_frame) return;
 		
 		if(array_length(surf_array)) {
 			var ind = safe_mod(CURRENT_FRAME * _spd, array_length(surf_array));

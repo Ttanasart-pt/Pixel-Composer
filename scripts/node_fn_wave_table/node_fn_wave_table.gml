@@ -260,7 +260,7 @@ function Node_Fn_WaveTable(_x, _y, _group = noone) : Node_Fn(_x, _y, _group) con
 		return lerp(range_min, range_max, _lr);
 	}
 	
-	static processData = function(_output, _data, _array_index = 0) {
+	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		pattern     = _data[inl + 0];
 		var ran     = _data[inl + 1];
 		range_min   = array_safe_get_fast(ran, 0);

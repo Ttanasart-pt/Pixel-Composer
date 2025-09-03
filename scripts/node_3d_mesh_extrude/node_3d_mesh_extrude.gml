@@ -40,7 +40,7 @@ function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 		triggerRender();
 	});
 	
-	static processData = function(_output, _data, _array_index = 0) {
+	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		#region data
 			var _updt = _data[in_mesh +  3];
 			

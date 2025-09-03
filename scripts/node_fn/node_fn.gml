@@ -39,7 +39,7 @@ function Node_Fn(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 	
 	static postPostProcess = function() { if(!IS_PLAYING) refreshDisplay(); }
 	
-	static processData = function(_output, _data, _array_index = 0) { }
+	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) { }
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var bbox = drawGetBbox(xx, yy, _s);

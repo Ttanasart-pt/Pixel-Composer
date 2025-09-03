@@ -23,13 +23,18 @@ function Node_pSystem_Mask_Data(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	newInput( 3, nodeValue_Enum_Scroll( "Data", 0, data_type_keys)); 
 	
 	////- =Remap
-	newInput( 4, nodeValue_Range( "Remap From",     [0,1]        )); 
-	newInput( 5, nodeValue_Range( "Remap To",       [0,1]        )); 
+	newInput( 4, nodeValue_Range( "Remap From", [0,1] )); 
+	newInput( 5, nodeValue_Range( "Remap To",   [0,1] )); 
+	
+	////- =Clamp
+	newInput( 9, nodeValue_Bool(  "Use Clamp",  false )); 
+	newInput(10, nodeValue_Range( "Clamp",      [0,1] )); 
 	
 	////- =Curve
 	newInput( 8, nodeValue_Bool(  "Use Curve",      false        )); 
 	newInput( 6, nodeValue_Curve( "Modifier Curve", CURVE_DEF_01 )); 
 	newInput( 7, nodeValue_Range( "Curve X Range",  [0,1]        )); 
+	// 11
 	
 	newOutput(0, nodeValue_Output( "Particles", VALUE_TYPE.particle, noone ));
 	newOutput(1, nodeValue_Output( "Mask",      VALUE_TYPE.buffer,   noone ));
@@ -38,6 +43,7 @@ function Node_pSystem_Mask_Data(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		[ "Particles", false ], 0, 
 		[ "Data",      false ], 3, 
 		[ "Remap",     false ], 4, 5,
+		[ "Clamp", false, 9  ], 10, 
 		[ "Curve", false, 8  ], 6, 7,
 	];
 	
@@ -71,6 +77,9 @@ function Node_pSystem_Mask_Data(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		var _cuse = getInputData( 8) && curve_modi != undefined;
 		var _crng = getInputData( 7);
 		
+		var _clam = getInputData( 9);
+		var _clmr = getInputData(10);
+		
 		if(!is(_parts, pSystem_Particles)) return;
 		
 		var _pools = _parts.poolSize;
@@ -99,7 +108,7 @@ function Node_pSystem_Mask_Data(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			var _ppy = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.pospy,  buffer_f64  );
 			var _sy  = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.scay,   buffer_f64  );
 			var _sy  = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.scay,   buffer_f64  );
-			var _rot = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.rot,    buffer_f64  );
+			var _rot = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.rotx,    buffer_f64  );
 			var _vx  = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.velx,   buffer_f64  );
 			var _vy  = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.vely,   buffer_f64  );
 			
@@ -144,6 +153,7 @@ function Node_pSystem_Mask_Data(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			var _inf = lerp(_mapt[0], _mapt[1], lerp_invert(_val, _mapf[0], _mapf[1]));
 			
 			if(_cuse) _inf = curve_modi.get(lerp_invert(_inf, _crng[0], _crng[1]));
+			if(_clam) _inf = clamp(_inf, _clmr[0], _clmr[1]);
 			
 			buffer_write(mask_buffer, buffer_f32, _inf);
 		}

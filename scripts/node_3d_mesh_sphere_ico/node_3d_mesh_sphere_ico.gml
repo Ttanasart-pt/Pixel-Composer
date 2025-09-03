@@ -17,7 +17,7 @@ function Node_3D_Mesh_Sphere_Ico(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 		["Material",	false], in_mesh + 2, in_mesh + 1, 
 	]
 	
-	static processData = function(_output, _data, _array_index = 0) {
+	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		var _sub = _data[in_mesh + 0];
 		var _mat = _data[in_mesh + 1];
 		var _smt = _data[in_mesh + 2];

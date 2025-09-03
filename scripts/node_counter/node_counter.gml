@@ -24,7 +24,7 @@ function Node_Counter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		[ "Async",    false, 3 ], 4, 
 	];
 	
-	static processData = function(_output, _data, _array_index = 0) {  
+	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {  
 		var _time = CURRENT_FRAME;
 		var _mode = _data[2];
 		var _star = _data[0];

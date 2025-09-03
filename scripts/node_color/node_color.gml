@@ -6,7 +6,7 @@ function Node_Color(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	newOutput(0, nodeValue_Output("Color", VALUE_TYPE.color, c_white));
 	
-	static processData = function(_output, _data, _array_index = 0) {  
+	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {  
 		return _data[0];
 	}
 	

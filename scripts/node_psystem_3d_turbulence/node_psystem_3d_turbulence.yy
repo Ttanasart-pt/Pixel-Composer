@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_psystem_3d_turbulence",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_psystem_3d_turbulence",
+  "parent":{
+    "name":"transform",
+    "path":"folders/nodes/data/simulation/particleSystem3D/transform.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

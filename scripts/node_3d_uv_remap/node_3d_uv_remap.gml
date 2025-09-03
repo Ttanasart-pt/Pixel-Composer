@@ -120,7 +120,7 @@ function Node_3D_UV_Remap(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _grou
 		return noone;
 	}
 	
-	static processData = function(_output, _data, _array_index = 0) {
+	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		b_bake_uv.text = attributes.bakedUV? "Unbake UV" : "Bake UV";
 		setTransform(gizmo, _data);
 		

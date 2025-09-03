@@ -18,7 +18,7 @@ function Node_Corner_Data(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		["Corner", false], 0, 1, 2, 3, 
 	]
 	
-	static processData = function(_output, _data, _array_index = 0) {
+	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		var _tl = _data[0];
 		var _tr = _data[1];
 		var _bl = _data[2];

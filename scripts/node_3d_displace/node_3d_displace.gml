@@ -14,7 +14,7 @@ function Node_3D_Displace(_x, _y, _group = noone) : Node_3D_Modifier(_x, _y, _gr
 		["Displace", false], in_mesh + 0, in_mesh + 1, in_mesh + 3
 	];
 	
-	static processData = function(_output, _data, _array_index = 0) { 
+	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) { 
 		var _obj = _data[0];
 		var _tex = _data[in_mesh + 0];
 		var _hei = _data[in_mesh + 1];

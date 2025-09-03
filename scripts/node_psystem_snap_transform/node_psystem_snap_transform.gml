@@ -101,7 +101,7 @@ function Node_pSystem_Snap_Transform(_x, _y, _group = noone) : Node(_x, _y, _gro
 			var _py     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posy,   buffer_f64  );
 			var _sx     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.scax,   buffer_f64  );
 			var _sy     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.scay,   buffer_f64  );
-			var _rot    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.rot,    buffer_f64  );
+			var _rot    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.rotx,    buffer_f64  );
 			
 			var _dfg    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.dflag,  buffer_u16  );
 			
@@ -155,7 +155,7 @@ function Node_pSystem_Snap_Transform(_x, _y, _group = noone) : Node(_x, _y, _gro
 			buffer_write_at( _partBuff, _start + ( _posi_over? PSYSTEM_OFF.posy : PSYSTEM_OFF.dposy ), buffer_f64, _py  );
 			buffer_write_at( _partBuff, _start + ( _scal_over? PSYSTEM_OFF.scax : PSYSTEM_OFF.dscax ), buffer_f64, _sx  );
 			buffer_write_at( _partBuff, _start + ( _scal_over? PSYSTEM_OFF.scay : PSYSTEM_OFF.dscay ), buffer_f64, _sy  );
-			buffer_write_at( _partBuff, _start + ( _rota_over? PSYSTEM_OFF.rot  : PSYSTEM_OFF.drot  ), buffer_f64, _rot );
+			buffer_write_at( _partBuff, _start + ( _rota_over? PSYSTEM_OFF.rotx  : PSYSTEM_OFF.drotx  ), buffer_f64, _rot );
 			
 			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dflag, buffer_u16, _dfg );
 		}

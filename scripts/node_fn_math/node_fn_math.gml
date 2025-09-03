@@ -49,7 +49,7 @@ function Node_Fn_Math(_x, _y, _group = noone) : Node_Fn(_x, _y, _group) construc
 		return [ _v0, _v1 ]; 
 	}
 	
-	static processData = function(_output, _data, _array_index = 0) { #region
+	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) { #region
 		type   = _data[inl + 0];
 		var v0 = _data[inl + 1];
 		var v1 = _data[inl + 2];
