@@ -13,7 +13,7 @@ function Node_pSystem_3D_Inline(_x, _y, _group = noone) : Node_Collection_Inline
 	newInput(1, nodeValue_Int(  "Pre-Render", -1   ));
 	
 	input_node_types   = [ Node_pSystem_3D_Spawn  ];
-	output_node_types  = [ Node_pSystem_3D_Render_Model ];
+	output_node_types  = [ Node_pSystem_3D_Render_Model, Node_pSystem_3D_Trail ];
 	input_display_list = [ 
 		[ "Loop", false, 0 ], 1,  
 	];

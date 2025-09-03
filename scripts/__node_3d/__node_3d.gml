@@ -814,7 +814,6 @@ function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 	
 	static drawOverlay3D = function(active, _mx, _my, _snx, _sny, _params) {}
 	
-	static processData = function(_outSurf, _data, _array_index) {}
 	static onDrawNode  = function(xx, yy, _mx, _my, _s, _hover, _focus) {}
 	
 	static getPreviewObject = function() {

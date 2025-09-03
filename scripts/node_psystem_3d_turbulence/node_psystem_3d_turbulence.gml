@@ -2,7 +2,7 @@ function Node_pSystem_3D_Turbulence(_x, _y, _group = noone) : Node_3D(_x, _y, _g
 	name  = "Turbulence";
 	icon  = THEME.vfx;
 	color = COLORS.node_blend_vfx;
-	node_draw_icon = s_node_psystem_turb;
+	node_draw_icon = s_node_psystem_3d_turb;
 	
 	setDimension(96, 0);
 	update_on_frame = true;
@@ -30,11 +30,13 @@ function Node_pSystem_3D_Turbulence(_x, _y, _group = noone) : Node_3D(_x, _y, _g
 	
 	static getDimension = function() { return is(inline_context, Node_pSystem_Inline)? inline_context.dimension : DEF_SURF; }
 	
-	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
+	static update = function(_frame = CURRENT_FRAME) { 
+		var _data = inputs_data;
+		
 		var _parts = _data[ 0];
 		var _masks = _data[ 1], use_mask = _masks != noone;
 		
-		if(!is(_parts, pSystem_Particles)) return _parts;
+		if(!is(_parts, pSystem_Particles)) return;
 		if(use_mask) buffer_to_start(_masks);
 		outputs[0].setValue(_parts);
 		
@@ -81,7 +83,6 @@ function Node_pSystem_3D_Turbulence(_x, _y, _group = noone) : Node_3D(_x, _y, _g
 			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.vely, buffer_f64, _vy );
 		}
 		
-		return _parts;
 	}
 	
 	static reset = function() {

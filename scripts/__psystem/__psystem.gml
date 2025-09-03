@@ -13,6 +13,7 @@
 	PSYSTEM_OFF.scax   =  32;   // buffer_f64  : Scale X            : 8
 	PSYSTEM_OFF.scay   =  40;   // buffer_f64  : Scale Y            : 8
 	PSYSTEM_OFF.scaz   =  48;   // buffer_f64  : Scale Z            : 8
+	
 	PSYSTEM_OFF.rotx   =  56;   // buffer_f64  : Rotation X         : 8
 	PSYSTEM_OFF.roty   =  64;   // buffer_f64  : Rotation Y         : 8
 	PSYSTEM_OFF.rotz   =  72;   // buffer_f64  : Rotation Z         : 8
@@ -50,6 +51,7 @@
 	PSYSTEM_OFF.dscax  = 208;   // buffer_f64  : Draw Scale X       : 8
 	PSYSTEM_OFF.dscay  = 216;   // buffer_f64  : Draw Scale Y       : 8
 	PSYSTEM_OFF.dscaz  = 224;   // buffer_f64  : Draw Scale Z       : 8
+	
 	PSYSTEM_OFF.drotx  = 232;   // buffer_f64  : Draw Rotation X    : 8
 	PSYSTEM_OFF.droty  = 240;   // buffer_f64  : Draw Rotation Y    : 8
 	PSYSTEM_OFF.drotz  = 248;   // buffer_f64  : Draw Rotation Z    : 8
@@ -115,7 +117,7 @@
 	}
 #endregion
 
-/*[cpp] pSystem_main
+/*[cpp] pSystem_main.h
 #include <cstdint>
 
 struct Particle {
@@ -130,7 +132,10 @@ struct Particle {
 	double sx;
 	double sy;
 	double sz;
-	double angle;
+
+	double rx;
+	double ry;
+	double rz;
 	
 	double life;
 	double lifeMax;
@@ -166,9 +171,8 @@ struct Particle {
 	double draw_sy;
 	double draw_sz;
 	
-	double draw_angle;
-	
+	double draw_rx;
+	double draw_ry;
+	double draw_rz;
 };
-	
-	
 */

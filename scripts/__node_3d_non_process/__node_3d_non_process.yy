@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"__node_3d_non_process",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__node_3d_non_process",
+  "parent":{
+    "name":"__util",
+    "path":"folders/nodes/data/3D/__util.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

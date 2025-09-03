@@ -72,13 +72,13 @@ function Node_pSystem_Gravity(_x, _y, _group = noone) : Node(_x, _y, _group) con
 			if(!_act) continue;
 			
 			var _px     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64  );
-			var _py     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posy,   buffer_f64  );
+			var _py     = buffer_read(    _partBuff,                              buffer_f64  );
 			
 			var _lif    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
-			var _lifMax = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
+			var _lifMax = buffer_read(    _partBuff,                              buffer_f64  );
 			
 			var _vx     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.velx,   buffer_f64  );
-			var _vy     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.vely,   buffer_f64  );
+			var _vy     = buffer_read(    _partBuff,                              buffer_f64  );
 			
 			var rat = _lif / (_lifMax - 1);
 			random_set_seed(_seed + _spwnId);
@@ -89,10 +89,9 @@ function Node_pSystem_Gravity(_x, _y, _group = noone) : Node(_x, _y, _group) con
 			_vx += _gx * _strn_cur * _mask;
 			_vy += _gy * _strn_cur * _mask;
 			
-			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.velx, buffer_f64, _vx );
-			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.vely, buffer_f64, _vy );
+			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.velx, buffer_f64, _vx );
+			buffer_write(    _partBuff,                            buffer_f64, _vy );
 		}
 		
 	}
-	
 }

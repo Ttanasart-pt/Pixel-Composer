@@ -72,9 +72,9 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	curve_step = undefined;
 	
-	spawnTrig   = undefined; spawnCount   = 0;
-	stepTrig    = undefined; stepCount    = 0;
-	destroyTrig = undefined; destroyCount = 0;
+	spawnTrig   = undefined; spawnCount   = 0; spawnTrigUse   = false;
+	stepTrig    = undefined; stepCount    = 0; stepTrigUse    = false;
+	destroyTrig = undefined; destroyCount = 0; destroyTrigUse = false;
 	
 	__p = new __vec2P();
 	cache_grad = undefined;
@@ -323,44 +323,50 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32,  spawn_index );
 			
 			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64, _px     );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posy,   buffer_f64, _py     );
+			buffer_write(    _partBuff,                              buffer_f64, _py     );
+			
 			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.scax,   buffer_f64, _sx     );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.scay,   buffer_f64, _sy     );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.rotx,    buffer_f64, _rot    );
+			buffer_write(    _partBuff,                              buffer_f64, _sy     );
+			
+			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.rotx,   buffer_f64, _rot    );
 			
 			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64, _lif    );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64, _lifMax );
+			buffer_write(    _partBuff,                              buffer_f64, _lifMax );
 			
 			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.surf,   buffer_f64, _surf   );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.blnr,   buffer_u8,  _bldR   );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.blng,   buffer_u8,  _bldG   );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.blnb,   buffer_u8,  _bldB   );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.blna,   buffer_u8,  _bldA   );
+			buffer_write(    _partBuff,                              buffer_u8,  _bldR   );
+			buffer_write(    _partBuff,                              buffer_u8,  _bldG   );
+			buffer_write(    _partBuff,                              buffer_u8,  _bldB   );
+			buffer_write(    _partBuff,                              buffer_u8,  _bldA   );
 			
 			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.blnsr,  buffer_u8,  _bldR   );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.blnsg,  buffer_u8,  _bldG   );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.blnsb,  buffer_u8,  _bldB   );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.blnsa,  buffer_u8,  _bldA   );
+			buffer_write(    _partBuff,                              buffer_u8,  _bldG   );
+			buffer_write(    _partBuff,                              buffer_u8,  _bldB   );
+			buffer_write(    _partBuff,                              buffer_u8,  _bldA   );
 			
 			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.possx,  buffer_f64, _px     );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.possy,  buffer_f64, _py     );
+			buffer_write(    _partBuff,                              buffer_f64, _py     );
+			
 			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.pospx,  buffer_f64, _px     );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.pospy,  buffer_f64, _py     );
+			buffer_write(    _partBuff,                              buffer_f64, _py     );
 			
 			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.velx,   buffer_f64, _vx     );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.vely,   buffer_f64, _vy     );
+			buffer_write(    _partBuff,                              buffer_f64, _vy     );
 			
 			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dflag, buffer_u16,  0       );
+			
 			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dposx, buffer_f64,  0       );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dposy, buffer_f64,  0       );
+			buffer_write(    _partBuff,                             buffer_f64,  0       );
 			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dscax, buffer_f64,  0       );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dscay, buffer_f64,  0       );
-			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.drotx,  buffer_f64,  0       );
+			buffer_write(    _partBuff,                             buffer_f64,  0       );
+			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.drotx, buffer_f64,  0       );
 			
 			partPool.cursor    = (partPool.cursor + 1) % partPool.poolSize;
 			partPool.maxCursor = max(partPool.maxCursor, partPool.cursor);
 			spawn_index++;
 			_sp_indx++;
+			
+			if(!spawnTrigUse) continue;
 			
 			buffer_write(spawnTrig, buffer_f64, _px);
 			buffer_write(spawnTrig, buffer_f64, _py);
@@ -392,30 +398,31 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			var _spwnId = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
 			
 			var _lif    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
-			var _lifMax = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
+			var _lifMax = buffer_read(    _partBuff,                              buffer_f64  );
 			
 			_lif++;
 			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.life,   buffer_f64,  _lif);
 			if(!_act) continue;
 			
 			var _px  = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64  );
-			var _py  = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posy,   buffer_f64  );
+			var _py  = buffer_read(    _partBuff,                              buffer_f64  );
 			
 			var _vx  = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.velx,   buffer_f64  );
-			var _vy  = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.vely,   buffer_f64  );
-			
-			var _bldsA  = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.blnsa,  buffer_u8   );
+			var _vy  = buffer_read(    _partBuff,                              buffer_f64  );
 			
 			var rat = _lif / (_lifMax - 1);
 			random_set_seed(_seed + _spwnId);
 			
 			if(_lif >= _lifMax) {
 				_act = false;
+				buffer_write_at(_partBuff, _start + PSYSTEM_OFF.active, buffer_bool, _act);
+				if(!destroyTrigUse) continue;
 				
-				var _dfg    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.dflag,  buffer_u16  );
+				var _dfg = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.dflag,  buffer_u16  );
+				
 				if(bool(_dfg & 0b100)) {
 					var _dpx = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.dposx, buffer_f64  );
-					var _dpy = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.dposy, buffer_f64  );
+					var _dpy = buffer_read(    _partBuff,                             buffer_f64  );
 					
 					buffer_write(destroyTrig, buffer_f64, _dpx);
 					buffer_write(destroyTrig, buffer_f64, _dpy);
@@ -432,17 +439,17 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				buffer_write(destroyTrig, buffer_f64,   0);
 				
 				destroyCount++;
-				buffer_write_at(_partBuff, _start + PSYSTEM_OFF.active, buffer_bool, _act);
-				
 				continue;
 			}
 			
-			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64,  _px + _vx);
-			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.posy,   buffer_f64,  _py + _vy);
+			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64,  _px + _vx);
+			buffer_write(    _partBuff,                              buffer_f64,  _py + _vy);
 			
-			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.pospx,  buffer_f64,  _px);
-			buffer_write_at(_partBuff, _start + PSYSTEM_OFF.pospy,  buffer_f64,  _py);
+			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.pospx,  buffer_f64,  _px);
+			buffer_write(    _partBuff,                              buffer_f64,  _py);
 			 
+			if(!stepTrigUse) continue;
+			
 			var _step_mod = _step_curved? curve_step.get(rat) : 1;
 			var _step_cur = round(random_range(_step[0], _step[1]) * _step_mod);
 			
@@ -504,6 +511,10 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			spawnCount   = 0;
 			stepCount    = 0;
 			destroyCount = 0;
+			
+			spawnTrigUse   = outputs[1].hasJunctionTo();
+			stepTrigUse    = outputs[2].hasJunctionTo();
+			destroyTrigUse = outputs[3].hasJunctionTo();
 		#endregion	
 		
 		partStep();
@@ -541,9 +552,7 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				case 1 : _do_spawn = _frame >= _sp_dely && _frame < _sp_dely + _sp_dura; break;
 			}
 			
-			if(_do_spawn) {
-				spawn(_frame)
-			}
+			if(_do_spawn) spawn(_frame)
 		}
 		
 		buffer_write_at(spawnTrig,   0, buffer_u32, spawnCount);

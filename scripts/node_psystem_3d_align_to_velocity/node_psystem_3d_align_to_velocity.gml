@@ -2,7 +2,7 @@ function Node_pSystem_3D_Align_to_Velocity(_x, _y, _group = noone) : Node_3D(_x,
 	name  = "Align Velocity";
 	icon  = THEME.vfx;
 	color = COLORS.node_blend_vfx;
-	node_draw_icon = s_node_psystem_align_to_velocity;
+	node_draw_icon = s_node_psystem_3d_align_to_velocity;
 	
 	setDimension(96, 0);
 	update_on_frame = true;
@@ -33,11 +33,13 @@ function Node_pSystem_3D_Align_to_Velocity(_x, _y, _group = noone) : Node_3D(_x,
 		
 	}
 	
-	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
+	static update = function(_frame = CURRENT_FRAME) { 
+		var _data = inputs_data;
+		
 		var _parts = _data[ 0];
 		var _masks = _data[ 1], use_mask = _masks != noone;
 		
-		if(!is(_parts, pSystem_Particles)) return _parts;
+		if(!is(_parts, pSystem_Particles)) return;
 		if(use_mask) buffer_to_start(_masks);
 		outputs[0].setValue(_parts);
 		
@@ -158,7 +160,6 @@ function Node_pSystem_3D_Align_to_Velocity(_x, _y, _group = noone) : Node_3D(_x,
 			
 		}
 		
-		return _parts;
 	}
 	
 }

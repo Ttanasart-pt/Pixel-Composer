@@ -2,7 +2,7 @@ function Node_pSystem_3D_Trigger_Event(_x, _y, _group = noone) : Node_3D(_x, _y,
 	name  = "Trigger";
 	icon  = THEME.vfx;
 	color = COLORS.node_blend_vfx;
-	node_draw_icon = s_node_psystem_trigger_event;
+	node_draw_icon = s_node_psystem_3d_trigger_event;
 	
 	setDimension(96, 0);
 	update_on_frame = true;
@@ -40,11 +40,14 @@ function Node_pSystem_3D_Trigger_Event(_x, _y, _group = noone) : Node_3D(_x, _y,
 	
 	static getDimension = function() { return is(inline_context, Node_pSystem_Inline)? inline_context.dimension : DEF_SURF; }
 	
-	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
+	static update = function(_frame = CURRENT_FRAME) { 
+		var _data = inputs_data;
+		
 		var _parts = getInputData(0);
 		var _masks = getInputData(1), use_mask = _masks != noone;
 		
-		if(!is(_parts, pSystem_Particles)) return stepTrig;
+		if(!is(_parts, pSystem_Particles)) return;
+		outputs[0].setValue(stepTrig);
 		if(use_mask) buffer_to_start(_masks);
 		
 		var _seed = getInputData( 2);
@@ -105,7 +108,6 @@ function Node_pSystem_3D_Trigger_Event(_x, _y, _group = noone) : Node_3D(_x, _y,
 		
 		buffer_write_at(stepTrig, 0, buffer_u32, stepCount);
 		
-		return stepTrig;
 	}
 	
 	static reset = function() {

@@ -1986,9 +1986,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return false;
 	}
 	
-	static hasJunctionFrom = function() { INLINE return value_from != noone || value_from_loop != noone; }
-	
 	static getJunctionTo = function() { return array_filter(value_to, function(v) /*=>*/ {return v.value_from == self && v.node.active}); }
+	
+	static hasJunctionFrom = function() /*=>*/ {return value_from != noone || value_from_loop != noone};
+	static hasJunctionTo   = function() /*=>*/ {return array_length(getJunctionTo())};
 	
 	////- DRAW
 	

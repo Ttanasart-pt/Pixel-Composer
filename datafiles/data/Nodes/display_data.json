@@ -212,6 +212,9 @@
             { "label": "/Render" },
             "Node_pSystem_3D_Render_Model",
             
+            { "label": "/Generate" },
+            "Node_pSystem_3D_Trail", 
+            
             { "label": "/Blending" },
             "Node_pSystem_3D_Blend",
         ],

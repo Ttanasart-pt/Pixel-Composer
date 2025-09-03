@@ -202,7 +202,16 @@ def compileFile(srcPath, outDir, _):
         "linux": outPathL
     }
 
-def buildInline(fileName, code):
+def buildInlineH(fileName, code):
+    return {
+        "filename": fileName,
+        "type": "header",
+        "code": code,
+        "includes": [],
+        "functions": [],
+    }
+
+def buildInlineC(fileName, code):
     full_code  = '''
 #ifdef _WIN32
     #define cfunction extern "C" __declspec(dllexport)
@@ -253,6 +262,7 @@ def buildInline(fileName, code):
 
     return {
         "filename": fileName,
+        "type": "code",
         "code": full_code,
         "includes": includes,
         "functions": functions,
@@ -268,6 +278,7 @@ def scanInline(src, fpath):
 
         if line.startswith("/*[cpp]"):
             fileName = line[7:].strip()
+            
             inline_code = ""
             i += 1
             while i < len(lines):
@@ -277,10 +288,16 @@ def scanInline(src, fpath):
                 inline_code += line + "\n"
                 i += 1
             
-            print(f"Found inline C/C++ code block in file: {os.path.basename(fpath)}")
-            fn = buildInline(fileName, inline_code)
-            if fn is not None:
-                functions.append(fn)
+            if fileName.endswith(".h"):
+                print(f"Found inline C/C++ header block in file: {os.path.basename(fpath)}")
+                fn = buildInlineH(fileName, inline_code)
+                if fn is not None:
+                    functions.append(fn)
+            else:
+                print(f"Found inline C/C++ code block in file: {os.path.basename(fpath)}")
+                fn = buildInlineC(fileName, inline_code)
+                if fn is not None:
+                    functions.append(fn)
         i += 1
     return functions
 
@@ -315,10 +332,17 @@ def buildExtension(srcArr, extDir):
     files  = [];
 
     for src in srcArr:
-        filename = src["filename"]
-        code = src["code"]
-        includes = src["includes"]
+        filename  = src["filename"]
+        ftype     = src["type"]
+        code      = src["code"]
+        includes  = src["includes"]
         functions = src["functions"]
+
+        if ftype == "header":
+            scrPath = os.path.join(srcDir, filename)
+            with open(scrPath, 'w') as f:
+                f.write(code)
+            continue
 
         srcPath = os.path.join(srcDir, f"{filename}.cpp")
         with open(srcPath, 'w') as f:
@@ -366,3 +390,5 @@ if __name__ == "__main__":
 
     srcArr = scanFolder(scriptDir)
     buildExtension(srcArr, extDir)
+
+    print("Compile completed.")

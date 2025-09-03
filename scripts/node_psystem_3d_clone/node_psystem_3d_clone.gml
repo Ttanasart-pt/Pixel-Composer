@@ -2,7 +2,7 @@ function Node_pSystem_3D_Clone(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 	name  = "Clone";
 	icon  = THEME.vfx;
 	color = COLORS.node_blend_vfx;
-	node_draw_icon = s_node_psystem_destroy;
+	node_draw_icon = s_node_psystem_3d_destroy;
 	
 	setDimension(96, 0);
 	update_on_frame = true;
@@ -42,11 +42,13 @@ function Node_pSystem_3D_Clone(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 		}
 	}
 	
-	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
+	static update = function(_frame = CURRENT_FRAME) { 
+		var _data = inputs_data;
+		
 		var _parts = getInputData(0);
 		var _masks = getInputData(1), use_mask = _masks != noone;
 		
-		if(!is(_parts, pSystem_Particles)) return [ _parts, partPool ];
+		if(!is(_parts, pSystem_Particles)) return;
 		if(use_mask) buffer_to_start(_masks);
 		
 		var _seed = getInputData( 2);
@@ -66,7 +68,8 @@ function Node_pSystem_3D_Clone(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 			buffer_copy(_parts.buffer, 0, _bufSize, partPool.buffer, 0);
 		}
 		
-		return [ _parts, partPool ];
+		outputs[0].setValue(_parts);
+		outputs[1].setValue(partPool);
 	}
 	
 }

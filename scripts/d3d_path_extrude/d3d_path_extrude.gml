@@ -14,6 +14,7 @@ function __3dPathExtrude(_radius = 0.5, _sides = 8, _smooth = false) : __3dObjec
 	points  = [];
 	uvProg  = [];
 	uvScale = [ 1, 1 ];
+	colors  = [];
 	radiusOverPath = [];
 	
 	vertex_side = [];
@@ -29,6 +30,7 @@ function __3dPathExtrude(_radius = 0.5, _sides = 8, _smooth = false) : __3dObjec
 		
 		var _points = points[_index];
 		var _uvProg = uvProg[_index];
+		var _colors = colors[_index];
 		
 		var o = new __vec3();
 		var n = new __vec3();
@@ -79,6 +81,7 @@ function __3dPathExtrude(_radius = 0.5, _sides = 8, _smooth = false) : __3dObjec
 			w = v.cross(u);
 			
 			var _rr = radius * radiusOverPath[0];
+			var _cc = array_first(_colors);
 			
 			for(var j = 0; j <= sides; j++) {
 		    	var a0 = yaw + j * _iside;
@@ -109,9 +112,9 @@ function __3dPathExtrude(_radius = 0.5, _sides = 8, _smooth = false) : __3dObjec
 				var __u1 = 0.5 + lengthdir_x(0.5, a1);
 				var __v1 = 0.5 + lengthdir_y(0.5, a1);
 				
-		    	vertex_caps[_in0++] = new __vertex(o.x, o.y, o.z).setNormal(-v.x, -v.y, -v.z).setUV(0.5, 0.5);
-				vertex_caps[_in0++] = new __vertex(cx0, cy0, cz0).setNormal(-v.x, -v.y, -v.z).setUV(__u0, __v0);
-				vertex_caps[_in0++] = new __vertex(cx1, cy1, cz1).setNormal(-v.x, -v.y, -v.z).setUV(__u1, __v1);
+		    	vertex_caps[_in0++] = new __vertex(o.x, o.y, o.z, _cc).setNormal(-v.x, -v.y, -v.z).setUV(0.5, 0.5);
+				vertex_caps[_in0++] = new __vertex(cx0, cy0, cz0, _cc).setNormal(-v.x, -v.y, -v.z).setUV(__u0, __v0);
+				vertex_caps[_in0++] = new __vertex(cx1, cy1, cz1, _cc).setNormal(-v.x, -v.y, -v.z).setUV(__u1, __v1);
 				
 				edges[eid++] = new __3dObject_Edge([cx0, cy0, cz0], [cx1, cy1, cz1]);
 		    }
@@ -126,9 +129,10 @@ function __3dPathExtrude(_radius = 0.5, _sides = 8, _smooth = false) : __3dObjec
 			n.z = _points[i * 3 + 2];
 			
 			if(i < _subd - 1) {
-				v.x = _points[(i + 1) * 3 + 0] - o.x;
-				v.y = _points[(i + 1) * 3 + 1] - o.y;
-				v.z = _points[(i + 1) * 3 + 2] - o.z;
+				v.x = _points[i * 3 + 3] - o.x;
+				v.y = _points[i * 3 + 4] - o.y;
+				v.z = _points[i * 3 + 5] - o.z;
+				
 			} else {
 				v.x = n.x - o.x;
 				v.y = n.y - o.y;
@@ -148,6 +152,9 @@ function __3dPathExtrude(_radius = 0.5, _sides = 8, _smooth = false) : __3dObjec
 			var __v0 = 1. - _uvProg[i-1];
 			var __v1 = 1. - _uvProg[i  ];
 			
+			var c0 = _colors[i-1];
+			var c1 = _colors[i];
+					
 			for(var j = 0; j <= sides; j++) {
 		    	var a0 = yaw + j * _iside;
 		    	
@@ -197,22 +204,22 @@ function __3dPathExtrude(_radius = 0.5, _sides = 8, _smooth = false) : __3dObjec
 					var __u1 = (j  ) / sides;
 					
 					if(invert) {
-						vertex_side[_ind++] = new __vertex(x0, y0, z0).setNormal(_n0.x, _n0.y, _n0.z).setUV(__v0 * _vs, 1 - __u0 * _us);
-						vertex_side[_ind++] = new __vertex(x1, y1, z1).setNormal(_n1.x, _n1.y, _n1.z).setUV(__v0 * _vs, 1 - __u1 * _us);
-						vertex_side[_ind++] = new __vertex(x2, y2, z2).setNormal(_n2.x, _n2.y, _n2.z).setUV(__v1 * _vs, 1 - __u0 * _us);
+						vertex_side[_ind++] = new __vertex(x0, y0, z0, c0).setNormal(_n0.x, _n0.y, _n0.z).setUV(__v0 * _vs, 1 - __u0 * _us);
+						vertex_side[_ind++] = new __vertex(x1, y1, z1, c0).setNormal(_n1.x, _n1.y, _n1.z).setUV(__v0 * _vs, 1 - __u1 * _us);
+						vertex_side[_ind++] = new __vertex(x2, y2, z2, c1).setNormal(_n2.x, _n2.y, _n2.z).setUV(__v1 * _vs, 1 - __u0 * _us);
 						
-						vertex_side[_ind++] = new __vertex(x1, y1, z1).setNormal(_n1.x, _n1.y, _n1.z).setUV(__v0 * _vs, 1 - __u1 * _us);
-						vertex_side[_ind++] = new __vertex(x3, y3, z3).setNormal(_n3.x, _n3.y, _n3.z).setUV(__v1 * _vs, 1 - __u1 * _us);	
-						vertex_side[_ind++] = new __vertex(x2, y2, z2).setNormal(_n2.x, _n2.y, _n2.z).setUV(__v1 * _vs, 1 - __u0 * _us);
+						vertex_side[_ind++] = new __vertex(x1, y1, z1, c0).setNormal(_n1.x, _n1.y, _n1.z).setUV(__v0 * _vs, 1 - __u1 * _us);
+						vertex_side[_ind++] = new __vertex(x3, y3, z3, c1).setNormal(_n3.x, _n3.y, _n3.z).setUV(__v1 * _vs, 1 - __u1 * _us);	
+						vertex_side[_ind++] = new __vertex(x2, y2, z2, c1).setNormal(_n2.x, _n2.y, _n2.z).setUV(__v1 * _vs, 1 - __u0 * _us);
 						
 					} else {
-						vertex_side[_ind++] = new __vertex(x0, y0, z0).setNormal(_n0.x, _n0.y, _n0.z).setUV(__v0 * _vs, 1 - __u0 * _us);
-						vertex_side[_ind++] = new __vertex(x2, y2, z2).setNormal(_n2.x, _n2.y, _n2.z).setUV(__v1 * _vs, 1 - __u0 * _us);
-						vertex_side[_ind++] = new __vertex(x1, y1, z1).setNormal(_n1.x, _n1.y, _n1.z).setUV(__v0 * _vs, 1 - __u1 * _us);
+						vertex_side[_ind++] = new __vertex(x0, y0, z0, c0).setNormal(_n0.x, _n0.y, _n0.z).setUV(__v0 * _vs, 1 - __u0 * _us);
+						vertex_side[_ind++] = new __vertex(x2, y2, z2, c1).setNormal(_n2.x, _n2.y, _n2.z).setUV(__v1 * _vs, 1 - __u0 * _us);
+						vertex_side[_ind++] = new __vertex(x1, y1, z1, c0).setNormal(_n1.x, _n1.y, _n1.z).setUV(__v0 * _vs, 1 - __u1 * _us);
 						
-						vertex_side[_ind++] = new __vertex(x1, y1, z1).setNormal(_n1.x, _n1.y, _n1.z).setUV(__v0 * _vs, 1 - __u1 * _us);
-						vertex_side[_ind++] = new __vertex(x2, y2, z2).setNormal(_n2.x, _n2.y, _n2.z).setUV(__v1 * _vs, 1 - __u0 * _us);
-						vertex_side[_ind++] = new __vertex(x3, y3, z3).setNormal(_n3.x, _n3.y, _n3.z).setUV(__v1 * _vs, 1 - __u1 * _us);
+						vertex_side[_ind++] = new __vertex(x1, y1, z1, c0).setNormal(_n1.x, _n1.y, _n1.z).setUV(__v0 * _vs, 1 - __u1 * _us);
+						vertex_side[_ind++] = new __vertex(x2, y2, z2, c1).setNormal(_n2.x, _n2.y, _n2.z).setUV(__v1 * _vs, 1 - __u0 * _us);
+						vertex_side[_ind++] = new __vertex(x3, y3, z3, c1).setNormal(_n3.x, _n3.y, _n3.z).setUV(__v1 * _vs, 1 - __u1 * _us);
 					}
 					
 					edges[eid++] = new __3dObject_Edge([x0, y0, z0], [x1, y1, z1]);
@@ -232,6 +239,8 @@ function __3dPathExtrude(_radius = 0.5, _sides = 8, _smooth = false) : __3dObjec
 		} // side
 		
 		#region cap end
+			var _cc = array_last(_colors);
+			
 			for(var j = 0; j < sides; j++) {
 		    	var cx0 = prevp[j * 3 + 0];
 		    	var cy0 = prevp[j * 3 + 1];
@@ -249,9 +258,9 @@ function __3dPathExtrude(_radius = 0.5, _sides = 8, _smooth = false) : __3dObjec
 				var __u1 = 0.5 + lengthdir_x(0.5, a1);
 				var __v1 = 0.5 + lengthdir_y(0.5, a1);
 				
-		    	vertex_cape[_in1++] = new __vertex(n.x, n.y, n.z).setNormal(-v.x, -v.y, -v.z).setUV(0.5, 0.5);
-				vertex_cape[_in1++] = new __vertex(cx1, cy1, cz1).setNormal(-v.x, -v.y, -v.z).setUV(__u1, __v1);
-				vertex_cape[_in1++] = new __vertex(cx0, cy0, cz0).setNormal(-v.x, -v.y, -v.z).setUV(__u0, __v0);
+		    	vertex_cape[_in1++] = new __vertex(n.x, n.y, n.z, _cc).setNormal(-v.x, -v.y, -v.z).setUV(0.5, 0.5);
+				vertex_cape[_in1++] = new __vertex(cx1, cy1, cz1, _cc).setNormal(-v.x, -v.y, -v.z).setUV(__u1, __v1);
+				vertex_cape[_in1++] = new __vertex(cx0, cy0, cz0, _cc).setNormal(-v.x, -v.y, -v.z).setUV(__u0, __v0);
 				
 				edges[eid++] = new __3dObject_Edge([cx0, cy0, cz0], [cx1, cy1, cz1]);
 		    }

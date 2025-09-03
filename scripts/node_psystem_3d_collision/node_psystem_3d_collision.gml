@@ -2,7 +2,7 @@ function Node_pSystem_3D_Collision(_x, _y, _group = noone) : Node_3D_Object(_x, 
 	name  = "Collide";
 	icon  = THEME.vfx;
 	color = COLORS.node_blend_vfx;
-	node_draw_icon = s_node_psystem_collision;
+	node_draw_icon = s_node_psystem_3d_collision;
 	
 	setDimension(96, 0);
 	update_on_frame = true;
@@ -49,12 +49,14 @@ function Node_pSystem_3D_Collision(_x, _y, _group = noone) : Node_3D_Object(_x, 
 		
 	}
 	
-	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
+	static update = function(_frame = CURRENT_FRAME) { 
+		var _data = inputs_data;
+		
 		var i = in_d3d;
 		var _parts = _data[i+0];
 		var _masks = _data[i+1], use_mask = _masks != noone;
 		
-		if(!is(_parts, pSystem_Particles)) return [ _parts, collideTrig, mask_buffer ];
+		if(!is(_parts, pSystem_Particles)) return;
 		if(use_mask) buffer_to_start(_masks);
 		
 		var _seed = _data[i+2];
@@ -215,7 +217,9 @@ function Node_pSystem_3D_Collision(_x, _y, _group = noone) : Node_3D_Object(_x, 
 		
 		buffer_write_at(collideTrig, 0, buffer_u32, collideCount);
 		
-		return [ _parts, collideTrig, mask_buffer ];
+		outputs[0].setValue(_parts);
+		outputs[1].setValue(collideTrig);
+		outputs[2].setValue(mask_buffer);
 	}
 	
 	static getPreviewObjects		= function() /*=>*/ {return [getPreviewObject(), gizmo_object]};

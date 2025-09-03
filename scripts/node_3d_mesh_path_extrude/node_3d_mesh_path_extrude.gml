@@ -23,13 +23,14 @@ function Node_3D_Mesh_Path_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 	newInput(i+ 2, nodeValue_D3Material( "Material Side",     new __d3dMaterial() ));
 	newInput(i+ 3, nodeValue_D3Material( "Material Cap",      new __d3dMaterial() ));
 	newInput(i+ 9, nodeValue_Vec2(       "Texture Scale",    [1,1]                ));
-	// input i+14
+	newInput(i+14, nodeValue_Bool(       "Use Path Color",   false                ));
+	// input i+15
 	
 	input_display_list = [
 		["Path",		false], 	i+0, i+13,i+10,
 		__d3d_input_list_mesh,		i+6, i+1, i+12, i+7, i+8, i+5, i+11, 
 		__d3d_input_list_transform,
-		["Material",	false], 	i+4, i+2, i+3, i+9, 
+		["Material",	false], 	i+4, i+2, i+3, i+9, i+14, 
 	]
 	
 	////- Nodes
@@ -51,6 +52,7 @@ function Node_3D_Mesh_Path_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 		var _mat_sid = _data[in_mesh +  2];
 		var _mat_cap = _data[in_mesh +  3];
 		var _uvScale = _data[in_mesh +  9];
+		var _useColr = _data[in_mesh + 14];
 		
 		inputs[in_mesh + 3].setVisible(_caps, _caps);
 		if(_path == noone) return noone;
@@ -60,14 +62,16 @@ function Node_3D_Mesh_Path_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 		var _pathAmo = _path.getLineCount();
 		var _points  = array_create(_pathAmo);
 		var _uvProg  = array_create(_pathAmo);
+		var _colors  = array_create(_pathAmo);
 		var _radPath = array_create(_samp);
 		
 		var _stp = 1 / (_samp - 1);
-		var _p   = new __vec3();
+		var _p   = new __vec3PC();
 		
 		for( var p = 0; p < _pathAmo; p++ ) {
 			var __points  = array_create(_samp * 3);
 			var __uvProg  = array_create(_samp);
+			var __colors  = array_create(_samp);
 			var _distTotal = 0;
 			
 			for(var i = 0; i < _samp; i++) {
@@ -87,6 +91,8 @@ function Node_3D_Mesh_Path_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 					_distTotal += _d;
 					__uvProg[i] = _distTotal;
 				}
+				
+				__colors[i] = _useColr? _p.color : c_white;
 			}
 			
 			for (var i = 0; i < _samp; i++) __uvProg[i]  /= _distTotal;
@@ -94,6 +100,7 @@ function Node_3D_Mesh_Path_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 			
 			_points[p] = __points;
 			_uvProg[p] = __uvProg;
+			_colors[p] = __colors;
 		}
 		
 		for (var i = 0; i < _samp; i++)
@@ -104,6 +111,7 @@ function Node_3D_Mesh_Path_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 			sides  : _sides, 
 			endCap : _caps,
 			smooth : _smt, 
+			colors : _colors,
 			
 			pathAmount : _pathAmo, 
 			points : _points, 

@@ -250,7 +250,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		if(postPostProcess       != undefined) postPostProcess(frame);
 	}
 	
-	///////////////////// CACHE /////////////////////
+	////- CACHE
 	
 	static cacheCurrentFrameIndex = function(_aindex, _surface) {
 		cacheArrayCheck();
@@ -291,4 +291,5 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var surf = array_safe_get_fast(cached_output, _frame);
 		return array_safe_get_fast(surf, _aindex, noone);
 	}
+
 }

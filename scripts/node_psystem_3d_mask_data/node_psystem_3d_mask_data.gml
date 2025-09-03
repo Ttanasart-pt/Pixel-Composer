@@ -2,7 +2,7 @@ function Node_pSystem_3D_Mask_Data(_x, _y, _group = noone) : Node_3D(_x, _y, _gr
 	name  = "Mask Data";
 	icon  = THEME.vfx;
 	color = COLORS.node_blend_vfx;
-	node_draw_icon = s_node_psystem_mask_data;
+	node_draw_icon = s_node_psystem_3d_mask_data;
 	
 	setDimension(96, 0);
 	update_on_frame = true;
@@ -65,7 +65,9 @@ function Node_pSystem_3D_Mask_Data(_x, _y, _group = noone) : Node_3D(_x, _y, _gr
 		curve_modi = new curveMap(getInputData(6));
 	}
 	
-	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
+	static update = function(_frame = CURRENT_FRAME) { 
+		var _data = inputs_data;
+		
 		var _parts = _data[ 0];
 		var _masks = _data[ 1];
 		
@@ -81,7 +83,7 @@ function Node_pSystem_3D_Mask_Data(_x, _y, _group = noone) : Node_3D(_x, _y, _gr
 		var _clam = _data[ 9];
 		var _clmr = _data[10];
 		
-		if(!is(_parts, pSystem_Particles)) return [ _parts, mask_buffer ];
+		if(!is(_parts, pSystem_Particles)) return;
 		
 		var _pools = _parts.poolSize;
 		mask_buffer = buffer_verify(mask_buffer, _pools * 4);
@@ -173,7 +175,8 @@ function Node_pSystem_3D_Mask_Data(_x, _y, _group = noone) : Node_3D(_x, _y, _gr
 			buffer_write(mask_buffer, buffer_f32, _inf);
 		}
 		
-		return [ _parts, mask_buffer ];
+		outputs[0].setValue(_parts);
+		outputs[1].setValue(mask_buffer);
 	}
 	
 }

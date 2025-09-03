@@ -69,15 +69,26 @@ bool angleFiltered(float angle) {
 	
 	int  _ind = 0;
 	
-		 if(_dg <= 22.5 + 45. * 0.) _ind = 3;
-	else if(_dg <= 22.5 + 45. * 1.) _ind = 0;
-	else if(_dg <= 22.5 + 45. * 2.) _ind = 1;
-	else if(_dg <= 22.5 + 45. * 3.) _ind = 2;
-	else if(_dg <= 22.5 + 45. * 4.) _ind = 5;
-	else if(_dg <= 22.5 + 45. * 5.) _ind = 8;
-	else if(_dg <= 22.5 + 45. * 6.) _ind = 7;
-	else if(_dg <= 22.5 + 45. * 7.) _ind = 6;
-	else                            _ind = 3;
+	     if(_dg ==   0.) _ind = 3;
+	else if(_dg ==  90.) _ind = 1;
+	else if(_dg == 180.) _ind = 5;
+	else if(_dg == 270.) _ind = 7;
+	else {
+		     if(_dg <  90.) _ind = 0;
+		else if(_dg < 180.) _ind = 2;
+		else if(_dg < 270.) _ind = 8;
+		else if(_dg < 360.) _ind = 6;
+	}
+	
+	// 	 if(_dg <= 22.5 + 45. * 0.) _ind = 3;
+	// else if(_dg <= 22.5 + 45. * 1.) _ind = 0;
+	// else if(_dg <= 22.5 + 45. * 2.) _ind = 1;
+	// else if(_dg <= 22.5 + 45. * 3.) _ind = 2;
+	// else if(_dg <= 22.5 + 45. * 4.) _ind = 5;
+	// else if(_dg <= 22.5 + 45. * 5.) _ind = 8;
+	// else if(_dg <= 22.5 + 45. * 6.) _ind = 7;
+	// else if(_dg <= 22.5 + 45. * 7.) _ind = 6;
+	// else                            _ind = 3;
 	
 	return filter[_ind] == 0;
 }

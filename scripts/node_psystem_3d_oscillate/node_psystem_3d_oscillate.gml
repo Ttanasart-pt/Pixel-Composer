@@ -2,7 +2,7 @@ function Node_pSystem_3D_Oscillate(_x, _y, _group = noone) : Node_3D(_x, _y, _gr
 	name  = "Oscillate";
 	icon  = THEME.vfx;
 	color = COLORS.node_blend_vfx;
-	node_draw_icon = s_node_psystem_oscillate;
+	node_draw_icon = s_node_psystem_3d_oscillate;
 	
 	setDimension(96, 0);
 	update_on_frame = true;
@@ -34,11 +34,13 @@ function Node_pSystem_3D_Oscillate(_x, _y, _group = noone) : Node_3D(_x, _y, _gr
 	
 	static getDimension = function() { return is(inline_context, Node_pSystem_Inline)? inline_context.dimension : DEF_SURF; }
 	
-	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
+	static update = function(_frame = CURRENT_FRAME) { 
+		var _data = inputs_data;
+		
 		var _parts = getInputData(0);
 		var _masks = getInputData(1), use_mask = _masks != noone;
 		
-		if(!is(_parts, pSystem_Particles)) return _parts;
+		if(!is(_parts, pSystem_Particles)) return;
 		if(use_mask) buffer_to_start(_masks);
 		outputs[0].setValue(_parts);
 		
@@ -105,7 +107,6 @@ function Node_pSystem_3D_Oscillate(_x, _y, _group = noone) : Node_3D(_x, _y, _gr
 			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.dposy, buffer_f64, _dpy );
 		}
 		
-		return _parts;
 	}
 	
 	static reset = function() {

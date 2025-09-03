@@ -33,8 +33,10 @@ function Node_pSystem_3D_Render_Model(_x, _y, _group = noone) : Node_3D(_x, _y, 
 	buffer_particle  = undefined;
 	buffer_particle2 = undefined;
 	
-	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
-		if(!is(inline_context, Node_pSystem_3D_Inline) || inline_context.prerendering) return particleSystem;
+	static update = function(_frame = CURRENT_FRAME) { 
+		var _data = inputs_data;
+		
+		if(!is(inline_context, Node_pSystem_3D_Inline) || inline_context.prerendering) return;
 		
 		var _parts = _data[0];
 		var _masks = _data[1], use_mask = _masks != noone;
@@ -43,8 +45,8 @@ function Node_pSystem_3D_Render_Model(_x, _y, _group = noone) : Node_3D(_x, _y, 
 		var _blnd_mode = _data[4];
 		var _billboard = _data[5];
 			
-		if(!is(_parts, pSystem_Particles)) return particleSystem;
-		if(!is(_obj, __3dInstance))        return particleSystem;
+		if(!is(_parts, pSystem_Particles)) return;
+		if(!is(_obj, __3dInstance))        return;
 		if(use_mask) buffer_to_start(_masks);
 		
 		var _poolSize = _parts.poolSize;
@@ -192,7 +194,7 @@ function Node_pSystem_3D_Render_Model(_x, _y, _group = noone) : Node_3D(_x, _y, 
 			}
 		#endregion
 		
-		return system;
+		outputs[0].setValue(system);
 	}
 	
 	static reset = function() {

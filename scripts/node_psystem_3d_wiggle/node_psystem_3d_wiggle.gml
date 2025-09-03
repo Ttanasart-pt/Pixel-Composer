@@ -2,7 +2,7 @@ function Node_pSystem_3D_Wiggle(_x, _y, _group = noone) : Node_3D(_x, _y, _group
 	name  = "Wiggle";
 	icon  = THEME.vfx;
 	color = COLORS.node_blend_vfx;
-	node_draw_icon = s_node_psystem_wiggle;
+	node_draw_icon = s_node_psystem_3d_wiggle;
 	
 	setDimension(96, 0);
 	update_on_frame = true;
@@ -105,11 +105,13 @@ function Node_pSystem_3D_Wiggle(_x, _y, _group = noone) : Node_3D(_x, _y, _group
 		curve_dir = new curveMap(getInputData(22));
 	}
 	
-	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
+	static update = function(_frame = CURRENT_FRAME) { 
+		var _data = inputs_data;
+		
 		var _parts = _data[ 0];
 		var _masks = _data[ 1], use_mask = _masks != noone;
 		
-		if(!is(_parts, pSystem_Particles)) return _parts;
+		if(!is(_parts, pSystem_Particles)) return;
 		if(use_mask) buffer_to_start(_masks);
 		outputs[0].setValue(_parts);
 		
@@ -219,7 +221,6 @@ function Node_pSystem_3D_Wiggle(_x, _y, _group = noone) : Node_3D(_x, _y, _group
 			}
 		}
 		
-		return _parts;
 	}
 	
 }

@@ -21,6 +21,12 @@
 		static clone = function() /*=>*/ {return new __vec3P(x, y, z, weight)};
 	}
 	
+	function __vec3PC(_x = 0, _y = _x, _z = _x, _w = 1, _c = c_white) : __vec3P(_x, _y, _z) constructor {
+		weight = _w;
+		color  = _c;
+		static clone = function() /*=>*/ {return new __vec3PC(x, y, z, weight)};
+	}
+	
 	function d3d_path_tool_position(_node) : ToolObject() constructor {
 		activeKeyboard = false;
 		setNode(_node);
@@ -874,20 +880,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	////- Nodes
 	
 	path_preview_surface = noone;
-		
-	#region ---- path ----
-		path_loop    = false;
-		anchors		 = [];
-		anchor_view  = [];
-		segments     = [];
-		lengths		 = [];
-		lengthAccs	 = [];
-		lengthTotal	 = 0;
-		boundary     = new BoundingBox3D();
-		
-		cached_pos = ds_map_create();
-	#endregion
-	
+
 	#region ---- attributes ----
 		attributes.display_name = false;
 		attributes.snap_point   = true;
@@ -1393,6 +1386,21 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		
 		return anchor_hover != -1 || hovering;
 	}
+	
+	////- Path
+			
+	#region ---- path ----
+		path_loop    = false;
+		anchors		 = [];
+		anchor_view  = [];
+		segments     = [];
+		lengths		 = [];
+		lengthAccs	 = [];
+		lengthTotal	 = 0;
+		boundary     = new BoundingBox3D();
+		
+		cached_pos = ds_map_create();
+	#endregion
 	
 	static updateLength = function() { 
 		boundary     = new BoundingBox();

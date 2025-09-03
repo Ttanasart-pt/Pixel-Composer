@@ -22,15 +22,13 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	newActiveInput(11);
 	
-	////- Surfaces
-	
+	////- =Surfaces
 	newInput( 0, nodeValue_Surface( "Surface In" ));
 	newInput( 9, nodeValue_Surface( "Mask"       ));
 	newInput(10, nodeValue_Slider(  "Mix",     1 ));
 	__init_mask_modifier(9, 13);
 	
-	////- Outline
-	
+	////- =Outline
 	newInput(18, nodeValue_Enum_Scroll( "Profile",     0, [ "Circle", "Square", "Diamond" ] ));
 	newInput( 1, nodeValue_Int(         "Width",       0 )).setHotkey("S").setDisplay(VALUE_DISPLAY._default, { front_button : filter_button }).setValidator(VV_min(0)).setMappable(15);
 	newInput( 5, nodeValue_Enum_Button( "Position",    1, ["Inside", "Outside"] ));
@@ -38,13 +36,11 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(12, nodeValue_Bool(        "Crop border", false ));
 	newInput(19, nodeValue_Slider(      "Threshold",  .5     ));
 	
-	////- Render
-	
+	////- =Render
 	newInput(2, nodeValue_Color( "Color",         ca_white ));
 	newInput(6, nodeValue_Bool(  "Anti-aliasing", 0        ));
 	
-	////- Blend
-	
+	////- =Blend
 	newInput( 3, nodeValue_Bool(        "Blend",           false, "Blend outline color with the original color." ));
 	newInput( 4, nodeValue_Slider(      "Blend alpha",     1 )).setMappable(16);
 	newInput( 7, nodeValue_Enum_Scroll( "Oversample mode", 0, [ "Empty", "Clamp", "Repeat" ] ));

@@ -2,7 +2,7 @@ function Node_pSystem_3D_Mask(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _
 	name  = "Mask";
 	icon  = THEME.vfx;
 	color = COLORS.node_blend_vfx;
-	node_draw_icon = s_node_psystem_mask;
+	node_draw_icon = s_node_psystem_3d_mask;
 	
 	setDimension(96, 0);
 	update_on_frame = true;
@@ -45,7 +45,9 @@ function Node_pSystem_3D_Mask(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _
 	mask_sampler = undefined;
 	plane_normal = [ 0, 0, 1 ];
 	
-	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
+	static update = function(_frame = CURRENT_FRAME) { 
+		var _data = inputs_data;
+		
 		#region data
 			var i = in_d3d;
 			var _seed  = _data[i+2];
@@ -103,7 +105,7 @@ function Node_pSystem_3D_Mask(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _
 			
 		}
 		
-		if(!is(_parts, pSystem_Particles)) return [ _parts, mask_buffer ];
+		if(!is(_parts, pSystem_Particles)) return;
 		
 		var _pools  = _parts.poolSize;
 		mask_buffer = buffer_verify(mask_buffer, _pools * 4);
@@ -160,7 +162,8 @@ function Node_pSystem_3D_Mask(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _
 			buffer_write(mask_buffer, buffer_f32, _inf);
 		}
 		
-		return [ _parts, mask_buffer ];
+		outputs[0].setValue(_parts);
+		outputs[1].setValue(mask_buffer);
 	}
 	
 	static getPreviewObjects		= function() /*=>*/ {return shape_type == 0? array_append([getPreviewObject()], gizmo_object) : []};
