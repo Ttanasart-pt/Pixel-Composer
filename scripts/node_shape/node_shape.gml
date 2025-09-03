@@ -284,12 +284,8 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
 		surface_set_shader(_outSurf, sh_shape);
-			if(_bg) {
-				draw_clear_alpha(0, 1);
-			} else {
-				DRAW_CLEAR
-				BLEND_OVERRIDE
-			}
+			draw_clear_alpha(0, _bg);
+			if(!_bg) BLEND_OVERRIDE
 			
 			inputs[ 4].setVisible(false);
 			inputs[ 5].setVisible(false);
@@ -534,24 +530,25 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 					
 			}
 			
-			shader_set_f("dimension",   _dim);
-			shader_set_f("bgColor",     _bgcol);
-			shader_set_i("aa",          _aa);
-			shader_set_i("drawBG",      _bg);
-			shader_set_i("drawOpacity", _draOpa);
-			shader_set_i("drawDF",      _df);
-			shader_set_2("dfLevel",     _level);
-			shader_set_i("tile",        _tile);
-			shader_set_f("corner",      _corner);
-			shader_set_curve("w",       _curve);
-			shader_set_i("cornerShape", _crnPro);
+			shader_set_f("dimension",   _dim    );
+			shader_set_f("bgColor",     _bgcol  );
+			shader_set_i("aa",          _aa     );
+			shader_set_i("drawBG",      _bg     );
+			shader_set_i("drawOpacity", _draOpa );
+			shader_set_i("drawDF",      _df     );
+			shader_set_2("dfLevel",     _level  );
+			shader_set_i("tile",        _tile   );
+			shader_set_f("corner",      _corner );
+			shader_set_curve("w",       _curve  );
+			shader_set_i("cornerShape", _crnPro );
 			
-			shader_set_2("center",    _center);
-			shader_set_2("scale",     _scale );
-			shader_set_f("shapeScale",_shpSca);
-			shader_set_f("rotation",  degtorad(_rotat));
+			shader_set_2("center",      _center );
+			shader_set_2("scale",       _scale  );
+			shader_set_f("shapeScale",  _shpSca );
+			shader_set_f("rotation",    degtorad(_rotat));
+			shader_set_c("baseColor",   _color  );
 			
-			draw_sprite_stretched_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], _color, _color_get_alpha(_color));
+			draw_empty();
 		surface_reset_shader();
 		
 		return _outSurf;

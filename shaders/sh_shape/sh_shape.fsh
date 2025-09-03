@@ -181,6 +181,7 @@ uniform vec2  point2;
 uniform float thickness;
 
 uniform vec4 bgColor;
+uniform vec4 baseColor;
 uniform int  cornerShape;
 
 #define PI  3.14159265359
@@ -509,7 +510,7 @@ void main() {
 	else if(shape == 20) { d = sdSegment(center + coordUni, p1, p2) - thickness;                                                                          }
 	else if(shape == 21) { d = sdHalf(v_vTexcoord, p1, -rotation);                                                                                        }
 	
-	float cc, color = 0.;
+	float cc, intensity = 0.;
 	
 	if(aa == 0) 
 		cc = step(d, 0.0);
@@ -518,17 +519,16 @@ void main() {
 		cc = smoothstep(_aa, -_aa, d);
 	}
 	
-	color = cc;
+	intensity = cc;
 	
 	if(drawDF == 1) {
-		color  = -d;
-		color  = clamp((color - dfLevel.x) / (dfLevel.y - dfLevel.x), 0., 1.);
-		color  = curveEval(w_curve, w_amount, color);
-		
-		color *= cc;
+		intensity  = -d;
+		intensity  = clamp((intensity - dfLevel.x) / (dfLevel.y - dfLevel.x), 0., 1.);
+		intensity  = curveEval(w_curve, w_amount, intensity);
+		intensity *= cc;
 	}
 	
-	     if(drawBG == 1)      gl_FragColor = mix(bgColor, v_vColour, color);
-	else if(drawOpacity == 0) gl_FragColor = vec4(v_vColour.rgb * color, v_vColour.a * cc);
-	else                      gl_FragColor = vec4(v_vColour.rgb, v_vColour.a * color);
+	     if(drawBG == 1)      gl_FragColor = mix(bgColor, baseColor, intensity);
+	else if(drawOpacity == 0) gl_FragColor = vec4(baseColor.rgb, baseColor.a * intensity);
+	else                      gl_FragColor = vec4(baseColor.rgb, baseColor.a * intensity);
 }
