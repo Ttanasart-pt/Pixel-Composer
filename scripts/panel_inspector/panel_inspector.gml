@@ -146,6 +146,7 @@ function Panel_Inspector() : PanelContent() constructor {
         context_str = "Inspector";
         title       = __txt("Inspector");
         icon        = THEME.panel_inspector_icon;
+        pause_when_rendering = true;
     
         w     = ui(400);
         h     = ui(640);
@@ -247,6 +248,10 @@ function Panel_Inspector() : PanelContent() constructor {
         global_drawer          = new GlobalVarDrawer();
         
         GM_Explore_draw_init();
+        
+        variables_buttons = [ button(function() /*=>*/ {return dialogPanelCall(new Panel_Project_Var())})
+        	.setIcon(THEME.gear_16, 0, COLORS._main_icon_light)
+        	.setTooltip(__txt("Project Variables")) ];
         
         metadata_buttons = [ button(function() /*=>*/ { json_save_struct(DIRECTORY + "meta.json", PROJECT.meta.serialize()); })
         	.setIcon(THEME.save,  0, COLORS._main_icon_light, .75)
@@ -981,6 +986,7 @@ function Panel_Inspector() : PanelContent() constructor {
             
             var _butts = noone;
             switch(_tag) { // buttons
+            	case "settings"  : _butts = variables_buttons;   break;
             	case "layers"    : _butts = globallayer_buttons; break;
             	case "metadata"  : _butts = metadata_buttons;    break;
                 case "globalvar" : _butts = global_drawer.editing? global_buttons_editing : global_buttons; break;

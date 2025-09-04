@@ -34,18 +34,19 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput( 5, nodeValue_Enum_Button( "Position",    1, ["Inside", "Outside"] ));
 	newInput( 8, nodeValue_Int(         "Start",       0, "Shift outline inside, outside the shape." )).setMappable(17);
 	newInput(12, nodeValue_Bool(        "Crop border", false ));
-	newInput(19, nodeValue_Slider(      "Threshold",  .5     ));
+	newInput(19, nodeValue_Slider(      "Threshold",   1     ));
 	
 	////- =Render
-	newInput(2, nodeValue_Color( "Color",         ca_white ));
-	newInput(6, nodeValue_Bool(  "Anti-aliasing", 0        ));
+	newInput( 2, nodeValue_Color( "Color",         ca_white ));
+	newInput( 6, nodeValue_Bool(  "Anti-aliasing", 0        ));
+	newInput(20, nodeValue_Bool(  "High res",      0        ));
 	
 	////- =Blend
 	newInput( 3, nodeValue_Bool(        "Blend",           false, "Blend outline color with the original color." ));
 	newInput( 4, nodeValue_Slider(      "Blend alpha",     1 )).setMappable(16);
 	newInput( 7, nodeValue_Enum_Scroll( "Oversample mode", 0, [ "Empty", "Clamp", "Repeat" ] ));
 	
-	//// inputs 20
+	//// inputs 21
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -54,7 +55,7 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	input_display_list = [ 11, 
 		["Surfaces", true],    0, 9, 10, 13, 14, 
 		["Outline",	false],    18, 1, 15, 5, 8, 17, 12, 19, 
-		["Render",	false],    2, 6, 
+		["Render",	false],    2, 6, 20, 
 		["Blend",	 true, 3], 4, 16,
 	];
 	
@@ -86,6 +87,7 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var crop = _data[12];
 		var prof = _data[18];
 		var thrs = _data[19];
+		var hres = _data[20];
 		
 		var ww   = surface_get_width_safe(surf);
 		var hh   = surface_get_height_safe(surf);
@@ -103,7 +105,7 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				shader_set_f_map("blend_alpha", _data[4], _data[16], inputs[4]);
 				shader_set_i("filter",          attributes.filter);
 				
-				shader_set_i("highRes",         0);
+				shader_set_i("highRes",         hres);
 				shader_set_c("borderColor",     colr);
 				shader_set_i("profile",         prof);
 				shader_set_i("side",            side);

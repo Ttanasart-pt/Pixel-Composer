@@ -232,8 +232,6 @@ function Project() constructor {
 				} 
 			],
 			
-			[ "Project Variables", "env_variables", button(function() /*=>*/ { dialogPanelCall(new Panel_Project_Var()) }).setText("Edit..."), ],
-			
 		];
 		
 		static setPalette = function(pal = noone) { 

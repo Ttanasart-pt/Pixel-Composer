@@ -163,7 +163,7 @@ void main() {
 		float itr = bStr + bSiz + float(is_aa);
 		
 		if(profile == 0) {
-			float atr = highRes == 1? 256. : 64.;
+			float atr = highRes == 1? 512. : 64.;
 			
 			for(float i = 1.; i <= itr; i++) {
 				float base = 1.;
@@ -228,8 +228,8 @@ void main() {
 	
 	float _aa = 1.;
 	
-	if(is_aa == 1) _aa = min(smoothstep(bSiz + bStr + 1., bSiz + bStr, closetDistance), smoothstep(bStr - 1., bStr, closetDistance));
-	else           _aa = min(step(-(bSiz + bStr + 0.5), -closetDistance), step(bStr - 0.5, closetDistance));
+	if(is_aa == 1) _aa = min(smoothstep(bSiz + bStr + .5, bSiz + bStr, closetDistance), smoothstep(bStr - .5, bStr, closetDistance));
+	else           _aa = min(step(-(bSiz + bStr + .5), -closetDistance), step(bStr - .5, closetDistance));
 	
 	if(_aa == 0.) return;
 	

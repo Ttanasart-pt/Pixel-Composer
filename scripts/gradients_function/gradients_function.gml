@@ -370,7 +370,7 @@ function evaluate_gradient_map(_x, gradient, surface, range, junc, fast = false)
 		
 	return surface_getpixel_ext(surface, _sx, _sy);
 }
-	
+
 globalvar GRADIENTS;
 GRADIENTS = [];
 

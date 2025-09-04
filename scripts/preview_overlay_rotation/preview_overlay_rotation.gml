@@ -96,8 +96,10 @@ function preview_overlay_rotation(interact, active, _x, _y, _s, _mx, _my, _snx, 
 	
 	//draw_sprite_colored(THEME.anchor_rotate, index, _ax, _ay, 1, _val - 90);
 	
-	draw_set_text(f_p2b, fa_center, fa_bottom, COLORS._main_accent);
-	draw_text_add(round(_ax), round(_ay - ui(4)), name);
+	if(overlay_draw_text) {
+		draw_set_text(f_p2b, fa_center, fa_bottom, COLORS._main_accent);
+		draw_text_add(round(_ax), round(_ay - ui(4)), name);
+	}
 	
 	return hover;
 }

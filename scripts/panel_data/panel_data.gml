@@ -926,9 +926,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			
 			draw_surface_safe(content_surface, tx, ty);
 			
-		} else {
+		} else 
 			draw_surface_ext_safe(content_surface, tx, ty, 1, 1, 0, c_white, .5);
-		}
 		
 		draw_sprite_stretched_ext(THEME.ui_panel, 1, tx + padding, ty + padding, _tw, _th, COLORS.panel_frame);
 		if(tab && tab_cover != noone) draw_sprite_bbox(THEME.ui_panel_tab, 3, tab_cover);

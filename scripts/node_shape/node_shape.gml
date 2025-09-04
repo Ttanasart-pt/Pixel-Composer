@@ -224,7 +224,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _aa		= _data[6];
 		var _corner = _data[9];  _corner = clamp(_corner, 0, .9);
 		var _color  = _data[10];
-		var _df		= _data[12];
+		var _hegiht = _data[12];
 		var _bgcol  = _bg? colToVec4(_data[11]) : [0, 0, 0, 0];
 		
 		var _posTyp	= _data[15];
@@ -535,7 +535,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			shader_set_i("aa",          _aa     );
 			shader_set_i("drawBG",      _bg     );
 			shader_set_i("drawOpacity", _draOpa );
-			shader_set_i("drawDF",      _df     );
+			shader_set_i("drawDF",      _hegiht );
 			shader_set_2("dfLevel",     _level  );
 			shader_set_i("tile",        _tile   );
 			shader_set_f("corner",      _corner );

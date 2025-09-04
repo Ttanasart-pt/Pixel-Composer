@@ -37,6 +37,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
         new scrollItem("Relative to input").setTooltip("Set dimension as a multiple of input surface."),
         new scrollItem("Fit content").setTooltip("Automatically set dimension to fit content."),
     ]));
+    
 	newInput(36, nodeValue_Vec2(        "Relative Dimension", [1,1]     ));
 	newInput(37, nodeValue_Padding(     "Padding",            [0,0,0,0] ));
 	newInput( 1, nodeValue_Dimension());
@@ -51,7 +52,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput( 2, nodeValue_Int(            "Amount",           2      )).rejectArray();
 	newInput(18, nodeValue_Int(            "Column",           4      ));
 	newInput( 7, nodeValue_Rotation_Range( "Angle Range",     [0,360] ));
-	newInput( 8, nodeValue_Float(          "Radius",           1      ));
+	newInput( 8, nodeValue_Float(          "Radius",           8      ));
 	
 	////- =Path
 	newInput(11, nodeValue_PathNode(       "Path",            noone   )).setTooltip("Make each copy follow along path.");
@@ -60,19 +61,17 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(40, nodeValue_Bool(           "Rotate Along Path", false ));
 	
 	////- =Position
-	newInput( 4, nodeValue_Vec2(           "Shift Position",  [.5,0]       )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
+	newInput( 4, nodeValue_Vec2(           "Shift Position",  [.5,0]       )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference).setCurvable(38, CURVE_DEF_11, "Over Copy");
 	newInput(39, nodeValue_Anchor(         "Anchor" ));
 	newInput(26, nodeValue_Enum_Button(    "Stack",             0,         )).setChoices([ "None", "X", "Y" ]).setTooltip("Place each copy next to each other, taking surface dimension into account.");
 	newInput(19, nodeValue_Vec2(           "Shift Column",     [0,.5]      )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
-	newInput(38, nodeValue_Curve(          "Shift per Copy",  CURVE_DEF_11 ));
 	
 	////- =Rotation
 	newInput(33, nodeValue_Rotation(       "Base Rotation",     0          ));
 	newInput( 5, nodeValue_Rotation_Range( "Repeat Rotation",  [0,0]       ));
 	
 	////- =Scale
-	newInput( 6, nodeValue_Float(          "Scale Multiply",    1          ));
-	newInput(10, nodeValue_Curve(          "Scale Over Copy", CURVE_DEF_11 ));
+	newInput( 6, nodeValue_Float(          "Scale Multiply",    1          )).setCurvable(10, CURVE_DEF_11, "Over Copy")
 	
 	////- =Render
 	newInput(34, nodeValue_Enum_Scroll(    "Blend Mode",        0, [ "Normal", "Additive", "Maximum" ] ));
@@ -215,6 +214,28 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	////- Nodes
 	
 	output_dimension = [];
+	surface_atlases  = [];
+	grad_sampler = new Surface_sampler();
+	anim_sampler = [];
+	
+	__temp_p   = [0,0];
+	__temp_pth = new __vec2P();
+	
+	enum ATLAS_ARRAY {
+		surface,
+		x,
+		y,
+		cx,
+		cy,
+		sx,
+		sy,
+		sw,
+		sh,
+		rot,
+		color,
+		alpha,
+		length, 
+	}
 	
 	attribute_surface_depth();
 	attribute_interpolation();
@@ -250,7 +271,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		PROCESSOR_OVERLAY_CHECK
 		
 		var _hov = false;
-		InputDrawOverlay(inputs[9].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[9].hide_label().drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		
 		var _pat  = current_data[3];
 		var _spos = current_data[9];
@@ -258,13 +279,52 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var px = _x + _spos[0] * _s;
 		var py = _y + _spos[1] * _s;
 		
-		if(_pat == 0 || _pat == 1) InputDrawOverlay(inputs[4].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
-		else if(_pat == 2)         InputDrawOverlay(inputs[8].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
+		draw_set_color(COLORS._main_accent);
 		
-		InputDrawOverlay(inputs[31].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[1]));
-		InputDrawOverlay(inputs[11].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, _params));
-		InputDrawOverlay(inputs[32].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
-	
+		switch(_pat) {
+			case 0 :
+				var _rpos = current_data[4];
+				var _rx = px + _rpos[0] * _s;
+				var _ry = py + _rpos[1] * _s;
+				
+				draw_line_dashed(px, py, _rx, _ry);
+				InputDrawOverlay(inputs[ 4].hide_label().drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
+				InputDrawOverlay(inputs[33].hide_label().drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
+				break;
+				
+			case 1 :
+				var _rpos = current_data[ 4];
+				var _cls  = current_data[19];
+				var _rx   = px + _rpos[0] * _s;
+				var _ry   = py + _rpos[1] * _s;
+				var _clx  = px + _cls[0] * _s;
+				var _cly  = py + _cls[1] * _s;
+				
+				draw_line_dashed(px, py,  _rx,  _ry);
+				draw_line_dashed(px, py, _clx, _cly);
+				
+				InputDrawOverlay(inputs[ 4].hide_label().drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
+				InputDrawOverlay(inputs[19].hide_label().drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
+				InputDrawOverlay(inputs[33].hide_label().drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
+				break;
+				
+			case 2 :
+				var _arad = current_data[ 8];
+				var _srot = current_data[32];
+				var _rx = px + lengthdir_x(_arad * _s, _srot);
+				var _ry = py + lengthdir_y(_arad * _s, _srot);
+				
+				draw_line_dashed(px, py, _rx, _ry);
+				
+				InputDrawOverlay(inputs[ 8].hide_label().drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny, _srot));
+				InputDrawOverlay(inputs[32].hide_label().drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
+				InputDrawOverlay(inputs[33].hide_label().drawOverlay(w_hoverable, active,_rx,_ry, _s, _mx, _my, _snx, _sny));
+				break;
+		}
+		
+		InputDrawOverlay(inputs[31].hide_label().drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[1]));
+		InputDrawOverlay(inputs[11].hide_label().drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, _params));
+		
 		var _ani_amo = getInputAmount();
 		if(_ani_amo == 0) return w_hovering;
 		
@@ -274,9 +334,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _prop = current_data[_ind + 0];
 		var _selc = current_data[_ind + 1];
 		
-		if(_selc == 1) {
-			InputDrawOverlay(inputs[_ind + 9].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
-		}
+		if(_selc == 1) InputDrawOverlay(inputs[_ind + 9].hide_label().drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		
 		return w_hovering;
 	}
@@ -318,15 +376,13 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _spos = _data[ 9];
 			var _srot = _data[32];
 			
-			var _rpos = _data[ 4];
+			var _rpos = _data[ 4], _rpos_curved = inputs[4].attributes.curved, shift_curve = new curveMap(_data[38]);
 			var _panc = _data[39];
-			var _cpos = _data[38];
 			
 			var _rsta = _data[26];
 			var _rrot = _data[ 5];
 			var _rots = _data[33];
-			var _rsca = _data[ 6];
-			var _msca = _data[10];
+			var _rsca = _data[ 6], _rsca_curved = inputs[6].attributes.curved, scale_curve = new curveMap(_data[10]);
 			
 			var _aran = _data[ 7];
 			var _arad = _data[ 8];
@@ -336,9 +392,10 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _prsh = _data[13];
 			var _pfol = _data[40];
 			
-			var _grad       = _data[14];
-			var _grad_map   = _data[30];
-			var _grad_range = _data[31];
+			var _grad         = _data[14];
+			var _grad_map     = _data[30];
+			var _grad_range   = _data[31];
+			var _grad_use_map = inputs[14].attributes.mapped && is_surface(_grad_map)
 			
 			var _arr    = _data[16];
 			var _sed    = _data[17];
@@ -367,18 +424,41 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				// inputs[_ind + 15].setVisible(_prop == 2);
 				
 				inputs[_ind +  9].setVisible(_selc == 1);
-				inputs[_ind + 10].setVisible(_selc == 0);
 				inputs[_ind + 11].setVisible(_selc == 0);
 				inputs[_ind + 12].setVisible(_selc != 2);
 				inputs[_ind + 13].setVisible(_selc != 2);
 				inputs[_ind + 14].setVisible(_selc == 2, _selc == 2);
 			}
 			
+			_grad.cache();
+			if(_grad_use_map) { 
+				var _grad_map_w = surface_get_width(_grad_map);
+				var _grad_map_h = surface_get_height(_grad_map);
+					
+				grad_sampler.setSurface(_grad_map);
+			}
+			
+			var _anim_fall_curves = array_create(_ani_amo);
+			anim_sampler = array_verify(anim_sampler, _ani_amo);
+			
+			for( var j = 0; j < _ani_amo; j++ ) {
+				var _ii = input_fix_len + j * data_length;
+				_anim_fall_curves[j] = new curveMap(_data[_ii + 13], amo);
+				if(!is(anim_sampler[j], Surface_Sampler_Grey))
+					anim_sampler[j] = new Surface_Sampler_Grey();
+					
+				var _an_ssrf = _data[_ii + 14];
+				anim_sampler[j].setSurface(_an_ssrf);
+				
+			}
 		#endregion
 			
 		var _surf, posx, posy, scax, scay, rot;
-		var _dim, _sdim = [ 1, 1 ];
+		var _dim, _sdim = [ 1, 1 ], _dims = [];
 		var _surf = _iSrf;
+		var _baseSurface = _surf;
+		var _use_array   = is_array(_surf);
+		var _arr_length  = _use_array? array_length(_surf) : 1;
 		
 		var minx =  999999, miny =  999999;
 		var maxx = -999999, maxy = -999999;
@@ -386,16 +466,21 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		if(is_array(_surf)) {
 			for( var i = 0, n = array_length(_surf); i < n; i++ ) {
 				var _ddim = surface_get_dimension(_surf[i]);
+				_baseSurface = _surf[i];
 				_sdim[0] = max(_sdim[0], _ddim[0]);
 				_sdim[1] = max(_sdim[1], _ddim[1]);
+				_dims[i] = _ddim;
 			}
 			
 		} else if(is_surface(_surf))
 			_sdim = surface_get_dimension(_surf);
 		
+		if(!is_surface(_baseSurface) || _arr_length < 1) return _outSurf;
+		
 		random_set_seed(_sed);
 		
-		var atlases = array_create(_amo, 0);
+		surface_atlases = array_verify_min(surface_atlases, _amo * ATLAS_ARRAY.length);
+		var atlases = surface_atlases;
 		var atlas_i = 0;
 		var runx = 0;
 		var runy = 0;
@@ -421,7 +506,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 					if(_prng[1] - _prng[0] == 0) break;
 					rat = abs(frac(rat));
 					
-					var _p = _path.getPointRatio(rat);
+					var _p = _path.getPointRatio(rat, 0, __temp_pth);
 					posx = _p.x;
 					posy = _p.y;
 					
@@ -437,7 +522,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 					posx += _spos[0] + _rposx;
 					posy += _spos[1] + _rposy;
 					
-					var _rpos_sca = eval_curve_x(_cpos, _prg);
+					var _rpos_sca = _rpos_curved? shift_curve.get(_prg) : 1;
 					_rposx += _rpos[0] * _rpos_sca;
 					_rposy += _rpos[1] * _rpos_sca;
 				}
@@ -455,24 +540,26 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				posy = _spos[1] + lengthdir_y(_arad, aa);
 			}
 			
-			scax = eval_curve_x(_msca, _prg) * _rsca;
+			scax = _rsca * (_rsca_curved? scale_curve.get(_prg) : 1);
 			scay = scax;
 			rot += lerp(_rrot[0], _rrot[1], st);
 			
-			var _surf = _iSrf;
-			if(is_array(_iSrf)) {
-				var _sid = 0;
+			var _surface = _iSrf;
+			var _sw  = _sdim[0];
+			var _sh  = _sdim[1];
+			var _sid = 0;
+			
+			if(_use_array) {
+				switch(_arr) {
+					case 0: _sid = safe_mod(i, _arr_length); break;
+					case 1: _sid = irandom(_arr_length - 1); break;
+				}
 				
-				     if(_arr == 0) _sid = safe_mod(i, array_length(_iSrf));
-				else if(_arr == 1) _sid = irandom(array_length(_iSrf) - 1);
-				
-				_surf = array_safe_get_fast(_iSrf, _sid);
+				_surface = _iSrf[_sid];
+				_sw = _dims[_sid][0];
+				_sh = _dims[_sid][1];
 			}
 			
-			if(!is_surface(_surf)) continue;
-			
-			var _sw = surface_get_width_safe(_surf);
-			var _sh = surface_get_height_safe(_surf);
 			var sw = _sw * scax;
 			var sh = _sh * scay;
 			
@@ -487,40 +574,48 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				}
 			}
 			
-			var cc  = evaluate_gradient_map(i / (_amo - 1), _grad, _grad_map, _grad_range, inputs[14]);
+			if(_grad_use_map) {
+				var _grad_sx = round(lerp(_grad_range[0], _grad_range[2], _prg) * _grad_map_w);
+				var _grad_sy = round(lerp(_grad_range[1], _grad_range[3], _prg) * _grad_map_h);
+					
+				cc = grad_sampler.getPixel(_grad_sx, _grad_sy);
+			} else 
+				cc = _grad.evalFast(_prg);
+				
 			var aa  = _color_get_alpha(cc);
 			
 			posx -= _panc[0] * sw;
 			posy -= _panc[1] * sh;
 			
-			atlases[atlas_i++] = {
-				surface : _surf, 
-				x       : posx, 
-				y       : posy, 
-				cx      : posx + sw / 2, 
-				cy      : posy + sh / 2, 
-				sx      : scax, 
-				sy      : scay, 
-				rot     : rot, 
-				color   : cc, 
-				alpha   : aa
-			};
+			var _i = atlas_i * ATLAS_ARRAY.length;
+			atlas_i++;
+			
+			atlases[ _i + ATLAS_ARRAY.surface ] = _surface;
+			atlases[ _i + ATLAS_ARRAY.x       ] = posx;
+			atlases[ _i + ATLAS_ARRAY.y       ] = posy;
+			atlases[ _i + ATLAS_ARRAY.cx      ] = posx + sw / 2;
+			atlases[ _i + ATLAS_ARRAY.cy      ] = posy + sh / 2;
+			atlases[ _i + ATLAS_ARRAY.sx      ] = scax;
+			atlases[ _i + ATLAS_ARRAY.sy      ] = scay;
+			atlases[ _i + ATLAS_ARRAY.sw      ] = _sw;
+			atlases[ _i + ATLAS_ARRAY.sh      ] = _sh;
+			atlases[ _i + ATLAS_ARRAY.rot     ] = rot;
+			atlases[ _i + ATLAS_ARRAY.color   ] = cc;
+			atlases[ _i + ATLAS_ARRAY.alpha   ] = aa;
 			
 			if(_rsta == 1)	runx += _sw / 2;
 			if(_rsta == 2)	runy += _sh / 2;
 		}
 		
-		var __temp_p = [ 0,0 ];
-		
 		for( var i = 0, n = atlas_i; i < n; i++ ) { // animators
-			var _a    = atlases[i];
-			var _surf = _a.surface;
+			var _i    = i * ATLAS_ARRAY.length;
+			var _surf = atlases[_i + ATLAS_ARRAY.surface];
 			
-			var _x = _a.cx;
-			var _y = _a.cy;
+			var _x = atlases[_i + ATLAS_ARRAY.cx];
+			var _y = atlases[_i + ATLAS_ARRAY.cy];
 			
-			var _sw = surface_get_width_safe(_surf);
-			var _sh = surface_get_height_safe(_surf);
+			var _sw = atlases[_i + ATLAS_ARRAY.sw];
+			var _sh = atlases[_i + ATLAS_ARRAY.sh];
 			
 			for( var j = 0; j < _ani_amo; j++ ) {
 				var _ii = input_fix_len + j * data_length;
@@ -559,13 +654,11 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 					_inf = 1 - area_point_in_fallout(_an_sare, _x, _y, _an_sfal);
 					
 				} else if(_an_selt == 2) { // surface
-					if(is_surface(_an_ssrf)) {
-						var b = surface_getpixel(_an_ssrf, _x, _y);
-						_inf = 1 - _color_get_light(b);
-					}
+					if(anim_sampler[j].active) 
+						_inf = 1 - anim_sampler[j].getPixel(round(_x), round(_y));
 				}
 				
-				_inf = eval_curve_x(_an_sfcr, _inf);
+				_inf = _anim_fall_curves[j].get(_inf);
 				if(_inf == 0) continue;
 				
 				switch(_an_prop) {
@@ -575,7 +668,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 						
 						var _dr = _inf * _an_rota;
 						if(_dr != 0) {
-							_a.rot += _dr;
+							atlases[_i + ATLAS_ARRAY.rot] += _dr;
 							
 							if(_an_anct == 0) { // global
 								_ax = _an_ancp[0];
@@ -605,8 +698,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 								
 							}
 							
-							_a.sx  += _inf * _an_scal[0];
-							_a.sy  += _inf * _an_scal[1];
+							atlases[_i + ATLAS_ARRAY.sx] += _inf * _an_scal[0];
+							atlases[_i + ATLAS_ARRAY.sy] += _inf * _an_scal[1];
 							
 							_x += _dsx * (_x - _ax);
 							_y += _dsy * (_y - _ay);
@@ -614,24 +707,24 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 						break;
 						
 					case 1 : 
-						_a.color  = merge_color(_a.color, _an_colr, _inf);
-						_a.alpha += _inf * _an_alph;
+						atlases[_i + ATLAS_ARRAY.color]  = merge_color(atlases[_i + ATLAS_ARRAY.color], _an_colr, _inf);
+						atlases[_i + ATLAS_ARRAY.alpha] += _inf * _an_alph;
 						break;
 				}
 				
 			}
 			
-			var  sw = _sw * _a.sx;
-			var  sh = _sh * _a.sy;
-			var pos = point_rotate(-sw / 2, -sh / 2, 0, 0, _a.rot);
+			var  sw = _sw * atlases[_i + ATLAS_ARRAY.sx];
+			var  sh = _sh * atlases[_i + ATLAS_ARRAY.sy];
+			var pos = point_rotate(-sw / 2, -sh / 2, 0, 0, atlases[_i + ATLAS_ARRAY.rot], __temp_p);
 			
 			minx = min(minx, _x + pos[0], _x - pos[0], _x + pos[1], _x - pos[1]);
 			miny = min(miny, _y + pos[0], _y - pos[0], _y + pos[1], _y - pos[1]);
 			maxx = max(maxx, _x + pos[0], _x - pos[0], _x + pos[1], _x - pos[1]);
 			maxy = max(maxy, _y + pos[0], _y - pos[0], _y + pos[1], _y - pos[1]);
 			
-			_a.x = _x + pos[0];
-			_a.y = _y + pos[1];
+			atlases[_i + ATLAS_ARRAY.x] = _x + pos[0];
+			atlases[_i + ATLAS_ARRAY.y] = _y + pos[1];
 		}
 		
 		/////////////////////////////////////// ===== DIMENSION
@@ -679,19 +772,27 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			else if(_bld_md == 1) { BLEND_ADD        }
 			else if(_bld_md == 2) { BLEND_MAX        }
 			
+			shader_set_interpolation(_baseSurface);
+			
 			for( var i = 0, n = atlas_i; i < n; i++ ) {
-				var _a = atlases[i];
+				var _i = i * ATLAS_ARRAY.length;
 				
-				shader_set_interpolation(_a.surface);
-				var _x = _a.x;
-				var _y = _a.y;
+				var _x = atlases[_i + ATLAS_ARRAY.x];
+				var _y = atlases[_i + ATLAS_ARRAY.y];
 				
 				if(_dimt == OUTPUT_SCALING.scale) {
 					_x += _padd[2] - minx;
 					_y += _padd[1] - miny;
 				}
 				
-				draw_surface_ext(_a.surface, _x, _y, _a.sx, _a.sy, _a.rot, _a.color, _a.alpha);
+				var _surf = atlases[_i + ATLAS_ARRAY.surface];
+				var _sx   = atlases[_i + ATLAS_ARRAY.sx];
+				var _sy   = atlases[_i + ATLAS_ARRAY.sy];
+				var _rot  = atlases[_i + ATLAS_ARRAY.rot];
+				var _col  = atlases[_i + ATLAS_ARRAY.color];
+				var _alp  = atlases[_i + ATLAS_ARRAY.alpha];
+				
+				draw_surface_ext(_surf, _x, _y, _sx, _sy, _rot, _col, _alp);
 			}
 			
 			BLEND_NORMAL
