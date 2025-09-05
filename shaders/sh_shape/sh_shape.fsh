@@ -519,20 +519,20 @@ void main() {
 		cc = smoothstep(_aa, -_aa, d);
 	}
 	
+	if(drawBG == 1) gl_FragData[0] = mix(bgColor, baseColor, cc);
+	else gl_FragData[0] = vec4(baseColor.rgb, baseColor.a * cc);
 	
-	if(drawDF == 1) {
-		float intensity = cc;
-		intensity  = -d;
-		intensity  = clamp((intensity - dfLevel.x) / (dfLevel.y - dfLevel.x), 0., 1.);
-		intensity  = curveEval(w_curve, w_amount, intensity);
-		intensity *= cc;
-		
-			 if(drawBG == 1)      gl_FragColor = mix(bgColor, baseColor, intensity);
-		else if(drawOpacity == 0) gl_FragColor = vec4(baseColor.rgb * intensity, baseColor.a * cc);
-		else                      gl_FragColor = vec4(baseColor.rgb, baseColor.a * intensity);
-		
-	} else {
-		if(drawBG == 1) gl_FragColor = mix(bgColor, baseColor, cc);
-		else gl_FragColor = vec4(baseColor.rgb, baseColor.a * cc);
-	}
+	gl_FragData[1] = vec4(cc, cc, cc, 1.);
+	
+	float intensity = cc;
+	intensity  = -d;
+	intensity  = clamp((intensity - dfLevel.x) / (dfLevel.y - dfLevel.x), 0., 1.);
+	intensity  = curveEval(w_curve, w_amount, intensity);
+	intensity *= cc;
+	
+		 if(drawBG == 1)      gl_FragData[2] = mix(bgColor, baseColor, intensity);
+	else if(drawOpacity == 0) gl_FragData[2] = vec4(baseColor.rgb * intensity, baseColor.a * cc);
+	else                      gl_FragData[2] = vec4(baseColor.rgb, baseColor.a * intensity);
+	
+	if(drawDF == 1) gl_FragData[0] = gl_FragData[2];
 }

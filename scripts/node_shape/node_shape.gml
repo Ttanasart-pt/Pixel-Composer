@@ -123,7 +123,9 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	/////////////////////////////////////////////
 	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output( "Colored", VALUE_TYPE.surface, noone ));
+	newOutput(1, nodeValue_Output( "Mask",    VALUE_TYPE.surface, noone ));
+	newOutput(2, nodeValue_Output( "Height",  VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [
 		["Output",     false],      0,  6, 
@@ -217,7 +219,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		return w_hovering;
 	}
 	
-	static processData = function(_outSurf, _data, _array_index) {
+	static processData = function(_outData, _data, _array_index) {
 		var _dim	= _data[0];
 		var _bg		= _data[1];
 		var _shape	= _data[2];
@@ -249,8 +251,8 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 				break;
 				
 			case 1 :
-				var _posit	= _data[16];
-				var _scal 	= _data[17];
+				var _posit = _data[16];
+				var _scal  = _data[17];
 				
 				_center = [     _posit[0] / _dim[0],     _posit[1] / _dim[1]  ];
 				_scale  = [  abs(_scal[0] / _dim[0]), abs(_scal[1] / _dim[1]) ];
@@ -281,9 +283,10 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		inputs[35].setVisible(false);
 		inputs[36].setVisible(false);
 		
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
+		for( var i = 0, n = array_length(_outData); i < n; i++ ) 
+			_outData[i] = surface_verify(_outData[i], _dim[0], _dim[1], attrDepth());
 		
-		surface_set_shader(_outSurf, sh_shape);
+		surface_set_shader(_outData, sh_shape);
 			draw_clear_alpha(0, _bg);
 			if(!_bg) BLEND_OVERRIDE
 			
@@ -551,7 +554,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			draw_empty();
 		surface_reset_shader();
 		
-		return _outSurf;
+		return _outData;
 	}
 	
 	static postDeserialize = function() {
