@@ -42,49 +42,35 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	spr       = noone;
 	edit_time = 0;
+	temp_path = "";
 	
 	attributes.check_splice = true;
 	attributes.file_checker = true;
 	array_push(attributeEditors, [ "File Watcher", function() /*=>*/ {return attributes.file_checker}, new checkBox(function() /*=>*/ {return toggleAttribute("file_checker")}) ]);
 	
-	static on_drop_file = function(path) {
-		inputs[0].setValue(path);
-		if(updatePaths(path)) { doUpdate(); return true; }
+	static on_drop_file = function(_path) {
+		inputs[0].setValue(_path);
+		if(updatePaths(_path)) { doUpdate(); return true; }
 		return false;
 	}
 	
-	static createSprite = function(path) {
-		if(!file_exists(path)) 
-			return noone;
+	static createSprite = function(_path) {
+		if(!file_exists(_path)) return noone;
 		
-		var ext   = string_lower(filename_ext(path));
-		var _name = filename_name_only(path);
+		var _name = filename_name_only(_path);
+		var _spr  = sprite_add_map(_path);	
+		setDisplayName(_name, false);
 		
-		switch(ext) {
-			case ".png":
-			case ".jpg":
-			case ".jpeg":
-			case ".gif":
-				setDisplayName(_name, false);
-				
-				var _spr = sprite_add_map(path);
-				
-				if(_spr == -1) {
-					noti_warning($"Image node: File not a valid image.", noone, self);
-					break;
-				}
-				
-				edit_time = file_get_modify_s(path);
-				logNode($"Loaded file: {path}", false);
-				return _spr;
-		}
+		if(_spr == -1) { noti_warning($"Image node: File not a valid image.", noone, self); return noone; }
 		
-		return noone;
+		edit_time = file_get_modify_s(_path);
+		logNode($"Loaded file: {_path}", false);
+		return _spr;
 	}
 	
-	static updatePaths = function(path) {
+	static updatePaths = function(_path) {
 		if(sprite_exists(spr)) sprite_delete(spr);
-		spr = createSprite(path);
+		spr = createSprite(_path);
 	}
 	
 	setTrigger(1, __txt("Refresh"), [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() /*=>*/ { updatePaths(path_get(getInputData(0))); triggerRender(); });

@@ -114,24 +114,12 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			array_push(path_current, _path);
 			if(file_exists_empty(_path)) setDisplayName(filename_name_only(_path), false);
 			
-			var ext = string_lower(filename_ext(_path));
+			var _spr = sprite_add_map(_path);
+			if(_spr == -1) { noti_warning($"Image node: File not a valid image.", noone, self); continue; }
 			
-			switch(ext) {
-				case ".png"	 :
-				case ".jpg"	 :
-				case ".jpeg" :
-					var _spr = sprite_add_map(_path);
-					
-					if(_spr == -1) {
-						noti_warning($"Image node: File not a valid image.", noone, self);
-						return false;
-					}
-					
-					edit_time = max(edit_time, file_get_modify_s(_path));
-					array_push(spr, _spr);
-					logNode($"Loaded file: {_path}", false);
-					break;
-			}
+			edit_time = max(edit_time, file_get_modify_s(_path));
+			array_push(spr, _spr);
+			logNode($"Loaded file: {_path}", false);
 		}
 		
 		return true;

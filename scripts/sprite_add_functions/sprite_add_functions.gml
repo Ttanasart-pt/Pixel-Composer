@@ -11,7 +11,7 @@ function sprite_add_os(path, imagenumb = 1, removeback = false, smooth = false, 
 
 function sprite_add_map(path, imagenumb = 1, removeback = false, smooth = false, xorig = 0, yorig = 0) {
 	var _path = sprite_path_check_depth(filename_os(path));
-	var _sprs = sprite_add(_path, imagenumb, removeback, smooth, xorig, yorig);
+	var _sprs = __sprite_add(filename_os(_path), imagenumb, removeback, smooth, xorig, yorig);
 	SPRITE_PATH_MAP[$ path] = _sprs;
 	
 	return _sprs;
@@ -29,21 +29,34 @@ function sprite_add_center(path) {
 	return _s;
 }
 
-function sprite_path_check_depth(path, noti = true) {
-	if(filename_ext(path) != ".png") return path;
+function sprite_path_check_depth(_path, noti = true) {
+	static path_convert = filepath_resolve(PREFERENCES.ImageMagick_path) + "convert.exe";
+	static path_magick  = filepath_resolve(PREFERENCES.ImageMagick_path) + "magick.exe";
 	
-	var _data = read_png_header(path, noti);
-	if(_data == noone)   return path;
-	if(_data.depth <= 8) return path;
+	var _extx = string_lower(filename_ext(_path));
+	var _name = filename_name_only(_path);
+	var proxy_path  = $"{TEMPDIR}{_name}_{seed_random(6)}.png";
 	
-	if(noti) noti_warning($"{_data.depth} bits image is not supported. Proxy will be used.");
+	switch(_extx) {
+		case ".png":
+			var _data = read_png_header(_path, noti);
+			if(_data == noone || _data.depth <= 8) return _path;
+			
+			if(noti) noti_warning($"{_data.depth} bits image is not supported. Proxy will be used.");
+			
+			var shell_cmd = $"convert \"{_path}\" -depth 8 \"{proxy_path}\"";
+			shell_execute(path_magick, shell_cmd, self);
+			
+			return proxy_path;
+			
+		case ".bmp": 
+		case ".tga": 
+			if(noti) noti_warning($"Used proxy for {_extx} file.");
+			shell_execute(path_convert, $"\"{_path}\" \"{proxy_path}\"");
+			return proxy_path;
+	}
 	
-	var path_magick = filepath_resolve(PREFERENCES.ImageMagick_path) + "magick.exe";
-	var proxy_path  = $"{TEMPDIR}{filename_name_only(path)}_{seed_random(6)}.png";
-	var shell_cmd   = $"convert \"{path}\" -depth 8 \"{proxy_path}\"";
-	shell_execute(path_magick, shell_cmd, self);
-	
-	return proxy_path;
+	return _path;
 }
 
 #region ================================= SERIALIZE ==================================

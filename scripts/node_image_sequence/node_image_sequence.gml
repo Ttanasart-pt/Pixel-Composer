@@ -103,20 +103,11 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			if(file_exists_empty(path)) setDisplayName(filename_name_only(path), false);
 			edit_time = max(edit_time, file_get_modify_s(path));
 			
-			switch(ext) {
-				case ".png"	 :
-				case ".jpg"	 :
-				case ".jpeg" :
-					var _spr = sprite_add_map(path);
-					if(_spr == -1) { noti_warning($"Image node: {path} is not a valid image.", noone, self); continue; }
-					
-					logNode($"Loaded file: {path}", false);
-					array_push(spr, _spr);
-					break;
-				
-				default : noti_warning($"Image node: {path} is not a valid image.", noone, self); break;
-					
-			}
+			var _spr = sprite_add_map(path);
+			if(_spr == -1) { noti_warning($"Image node: {path} is not a valid image.", noone, self); continue; }
+			
+			array_push(spr, _spr);
+			logNode($"Loaded file: {path}", false);
 		}
 		
 		outputs[1].setValue(paths);

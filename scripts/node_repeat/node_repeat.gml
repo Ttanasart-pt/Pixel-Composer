@@ -490,8 +490,11 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		var _prg;
 		var _st = 1 / _amo;
+		var ii = 0, _i = 0;
 		
-		for( var i = 0; i < _amo; i++ ) {
+		repeat(_amo) {
+			var i = ii++;
+			
 			posx = runx;
 			posy = runy;
 			
@@ -500,44 +503,48 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			
 			var st = i * _st;
 			
-			if(_pat == 0) {
-				if(is_path(_path)) {
-					var rat = _prsh + _prng[0] + (_prng[1] - _prng[0]) * st;
-					if(_prng[1] - _prng[0] == 0) break;
-					rat = abs(frac(rat));
-					
-					var _p = _path.getPointRatio(rat, 0, __temp_pth);
-					posx = _p.x;
-					posy = _p.y;
-					
-					if(_pfol) {
-						var _p0 = _path.getPointRatio(clamp(rat - _st / 2, 0, .999));
-						var _p1 = _path.getPointRatio(clamp(rat + _st / 2, 0, .999));
+			switch(_pat) {
+				case 0 :
+					if(is_path(_path)) {
+						var rat = _prsh + _prng[0] + (_prng[1] - _prng[0]) * st;
+						if(_prng[1] - _prng[0] == 0) break;
+						rat = abs(frac(rat));
 						
-						var _dir = point_direction(_p0.x, _p0.y, _p1.x, _p1.y);
-						rot += _dir;
+						var _p = _path.getPointRatio(rat, 0, __temp_pth);
+						posx = _p.x;
+						posy = _p.y;
+						
+						if(_pfol) {
+							var _p0 = _path.getPointRatio(clamp(rat - _st / 2, 0, .999));
+							var _p1 = _path.getPointRatio(clamp(rat + _st / 2, 0, .999));
+							
+							var _dir = point_direction(_p0.x, _p0.y, _p1.x, _p1.y);
+							rot += _dir;
+						}
+						
+					} else {
+						posx += _spos[0] + _rposx;
+						posy += _spos[1] + _rposy;
+						
+						var _rpos_sca = _rpos_curved? shift_curve.get(_prg) : 1;
+						_rposx += _rpos[0] * _rpos_sca;
+						_rposy += _rpos[1] * _rpos_sca;
 					}
+					break;
+				
+				case 1 :
+					var row = floor(i / _col);
+					var col = safe_mod(i, _col);
 					
-				} else {
-					posx += _spos[0] + _rposx;
-					posy += _spos[1] + _rposy;
-					
-					var _rpos_sca = _rpos_curved? shift_curve.get(_prg) : 1;
-					_rposx += _rpos[0] * _rpos_sca;
-					_rposy += _rpos[1] * _rpos_sca;
-				}
+					posx = _spos[0] + _rpos[0] * col + _cls[0] * row;
+					posy = _spos[1] + _rpos[1] * col + _cls[1] * row;
+					break;
 				
-			} else if(_pat == 1) {
-				var row = floor(i / _col);
-				var col = safe_mod(i, _col);
-				
-				posx = _spos[0] + _rpos[0] * col + _cls[0] * row;
-				posy = _spos[1] + _rpos[1] * col + _cls[1] * row;
-				
-			} else if(_pat == 2) {
-				var aa = _srot + lerp(_aran[0], _aran[1], st);
-				posx = _spos[0] + lengthdir_x(_arad, aa);
-				posy = _spos[1] + lengthdir_y(_arad, aa);
+				case 2 :
+					var aa = _srot + lerp(_aran[0], _aran[1], st);
+					posx = _spos[0] + lengthdir_x(_arad, aa);
+					posy = _spos[1] + lengthdir_y(_arad, aa);
+					break;
 			}
 			
 			scax = _rsca * (_rsca_curved? scale_curve.get(_prg) : 1);
@@ -563,15 +570,9 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var sw = _sw * scax;
 			var sh = _sh * scay;
 			
-			if(i) {
-				if(_rsta == 1) { 
-					runx += _sw / 2;
-					posx += _sw / 2;
-				}
-				if(_rsta == 2) { 
-					runy += _sh / 2;
-					posy += _sh / 2;
-				}
+			if(i) switch(_rsta) { 
+				case 1 : runx += _sw / 2; posx += _sw / 2; break;
+				case 2 : runy += _sh / 2; posy += _sh / 2; break;
 			}
 			
 			if(_grad_use_map) {
@@ -587,7 +588,6 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			posx -= _panc[0] * sw;
 			posy -= _panc[1] * sh;
 			
-			var _i = atlas_i * ATLAS_ARRAY.length;
 			atlas_i++;
 			
 			atlases[ _i + ATLAS_ARRAY.surface ] = _surface;
@@ -602,11 +602,13 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			atlases[ _i + ATLAS_ARRAY.rot     ] = rot;
 			atlases[ _i + ATLAS_ARRAY.color   ] = cc;
 			atlases[ _i + ATLAS_ARRAY.alpha   ] = aa;
+			_i += ATLAS_ARRAY.length;
 			
 			if(_rsta == 1)	runx += _sw / 2;
 			if(_rsta == 2)	runy += _sh / 2;
 		}
 		
+		if(_ani_amo > 0)
 		for( var i = 0, n = atlas_i; i < n; i++ ) { // animators
 			var _i    = i * ATLAS_ARRAY.length;
 			var _surf = atlases[_i + ATLAS_ARRAY.surface];
@@ -727,7 +729,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			atlases[_i + ATLAS_ARRAY.y] = _y + pos[1];
 		}
 		
-		/////////////////////////////////////// ===== DIMENSION
+		////- DIMENSION
 		
 		inputs[ 1].setVisible(false);
 		inputs[36].setVisible(false);
@@ -765,7 +767,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		var _x, _y;
 		
-		/////////////////////////////////////// ===== RENDERING
+		////- RENDERING
 		
 		surface_set_shader(_outSurf);
 			     if(_bld_md == 0) { BLEND_ALPHA_MULP }
@@ -774,9 +776,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			
 			shader_set_interpolation(_baseSurface);
 			
-			for( var i = 0, n = atlas_i; i < n; i++ ) {
-				var _i = i * ATLAS_ARRAY.length;
-				
+			var _i = 0;
+			repeat( atlas_i ) {
 				var _x = atlases[_i + ATLAS_ARRAY.x];
 				var _y = atlases[_i + ATLAS_ARRAY.y];
 				
@@ -793,6 +794,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				var _alp  = atlases[_i + ATLAS_ARRAY.alpha];
 				
 				draw_surface_ext(_surf, _x, _y, _sx, _sy, _rot, _col, _alp);
+				
+				_i += ATLAS_ARRAY.length;
 			}
 			
 			BLEND_NORMAL

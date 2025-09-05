@@ -2349,7 +2349,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return w_hovering;
 	}
 	
-	static drawOverlay    = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params = {}) {}
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params = {}) {}
 	
 	static drawOverlayChainTransform = function(_node) {
 		var _ch = getNodeChildList(_node);

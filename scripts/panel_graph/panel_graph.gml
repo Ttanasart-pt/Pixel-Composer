@@ -4284,65 +4284,62 @@ function load_file_path(path, _x = undefined, _y = undefined) {
     }
     
     var is_multi = type == "image" && (array_length(path) > 1 || directory_exists(path[0]));
+    if(is_multi) { dialogCall(o_dialog_add_multiple_images).setPath(path); return; } 
     
-    if(is_multi) {
-        dialogCall(o_dialog_add_multiple_images).setPath(path);
+    if(!IS_CMD) PANEL_GRAPH.onStepBegin();
+    
+    var node = noone;
+    for( var i = 0, n = array_length(path); i < n; i++ ) {
+        var p = path[i];
+        var ext = filename_ext_raw(p);
         
-    } else {
-        if(!IS_CMD) PANEL_GRAPH.onStepBegin();
-        
-        var node = noone;
-        for( var i = 0, n = array_length(path); i < n; i++ ) {
-            var p = path[i];
-            var ext = filename_ext_raw(p);
+        switch(ext) {
+            case "txt"  : node = Node_create_Text_File_Read_path(_x, _y, p); break;
+            case "csv"  : node = Node_create_CSV_File_Read_path(_x, _y, p);  break;
             
-            switch(ext) {
-                case "txt"      : node = Node_create_Text_File_Read_path(_x, _y, p); break;
-                case "csv"      : node = Node_create_CSV_File_Read_path(_x, _y, p);  break;
-                case "json"     : 
-                	if(keyboard_check_direct(vk_shift)) dialogCall(o_dialog_add_json).setPath(p);
-                    else node = Node_create_Json_File_Read_path(_x, _y, p);
-                	break;
-                    
-                case "ase"      :
-                case "aseprite" : node = Node_create_ASE_File_Read_path(_x, _y, p);   break;
+            case "json" : 
+            	if(keyboard_check_direct(vk_shift)) dialogCall(o_dialog_add_json).setPath(p);
+                else node = Node_create_Json_File_Read_path(_x, _y, p);
+            	break;
                 
-                case "kra"      : node = Node_create_Krita_File_Read_path(_x, _y, p); break;
-                case "ora"      : node = Node_create_ORA_File_Read_path(_x, _y, p);   break;
-                
-                case "png"      :
-                case "jpg"      :
-                case "jpeg"     : 
-                    if(keyboard_check_direct(vk_shift)) dialogCall(o_dialog_add_image).setPath(p);
-                    else node = Node_create_Image_path(_x, _y, p);
-                    break;
-                    
-                case "gif"      : node = Node_create_Image_gif_path(_x, _y, p);     break;
-                case "obj"      : node = Node_create_3D_Obj_path(_x, _y, p);        break;
-                case "wav"      : node = Node_create_WAV_File_Read_path(_x, _y, p); break;
-                case "xml"      : node = Node_create_XML_File_Read_path(_x, _y, p); break;
-                case "svg"      : node = Node_create_SVG_path(_x, _y, p);           break;
-                
-                case "pxc"      :
-                case "cpxc"     : LOAD_PATH(p); break;
-                case "pxcc"     : APPEND(p);    break;
-                
-                case "hex"      : 
-                case "gpl"      : 
-                case "pal"      : 
-                    node = new Node_Palette(_x, _y, PANEL_GRAPH.getCurrentContext());
-                    node.skipDefault()
-                    node.inputs[0].setValue(loadPalette(p));
-                    break;
-                    
-            	default : 
-            		if(string_starts_with(ext, "pxc")) LOAD_PATH(p);
-            }
+            case "ase"      :
+            case "aseprite" : node = Node_create_ASE_File_Read_path(_x, _y, p);   break;
             
-            if(!IS_CMD) PANEL_GRAPH.mouse_grid_y += 160;
+            case "kra"  : node = Node_create_Krita_File_Read_path(_x, _y, p); break;
+            case "ora"  : node = Node_create_ORA_File_Read_path(_x, _y, p);   break;
+            
+            case "png"  :
+            case "jpg"  :
+            case "jpeg" : 
+            case "bmp"  : 
+            case "tga"  : 
+                if(keyboard_check_direct(vk_shift)) dialogCall(o_dialog_add_image).setPath(p);
+                else node = Node_create_Image_path(_x, _y, p);
+                break;
+                
+            case "gif"  : node = Node_create_Image_gif_path(_x, _y, p);     break;
+            case "obj"  : node = Node_create_3D_Obj_path(_x, _y, p);        break;
+            case "wav"  : node = Node_create_WAV_File_Read_path(_x, _y, p); break;
+            case "xml"  : node = Node_create_XML_File_Read_path(_x, _y, p); break;
+            case "svg"  : node = Node_create_SVG_path(_x, _y, p);           break;
+            
+            case "pxc"  :
+            case "cpxc" : LOAD_PATH(p); break;
+            case "pxcc" : APPEND(p);    break;
+            
+            case "hex"  : 
+            case "gpl"  : 
+            case "pal"  : 
+                node = new Node_Palette(_x, _y, PANEL_GRAPH.getCurrentContext());
+                node.skipDefault()
+                node.inputs[0].setValue(loadPalette(p));
+                break;
+                
+        	default : 
+        		if(string_starts_with(ext, "pxc")) LOAD_PATH(p);
         }
         
-        // if(node && !IS_CMD) PANEL_GRAPH.toCenterNode();
+        if(!IS_CMD) PANEL_GRAPH.mouse_grid_y += 160;
     }
 }
 
