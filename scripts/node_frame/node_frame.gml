@@ -330,10 +330,10 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			}
 		}
 		
-		if(_hh == 1) draw_sprite_ext_add(THEME.node_resize, 0, xx + shf, yy + shf, ics, ics, 180, c_white, .25);
-		if(_hh == 2) draw_sprite_ext_add(THEME.node_resize, 0, xx + shf, y1 - shf, ics, ics, 270, c_white, .25);
-		if(_hh == 3) draw_sprite_ext_add(THEME.node_resize, 0, x1 - shf, yy + shf, ics, ics,  90, c_white, .25);
-		if(_hh == 4) draw_sprite_ext_add(THEME.node_resize, 0, x1 - shf, y1 - shf, ics, ics,   0, c_white, .25);
+		if(_hh == 1 || size_dragging == 1) draw_sprite_ext_add(THEME.node_resize, 0, xx + shf, yy + shf, ics, ics, 180, c_white, .25);
+		if(_hh == 2 || size_dragging == 2) draw_sprite_ext_add(THEME.node_resize, 0, xx + shf, y1 - shf, ics, ics, 270, c_white, .25);
+		if(_hh == 3 || size_dragging == 3) draw_sprite_ext_add(THEME.node_resize, 0, x1 - shf, yy + shf, ics, ics,  90, c_white, .25);
+		if(_hh == 4 || size_dragging == 4) draw_sprite_ext_add(THEME.node_resize, 0, x1 - shf, y1 - shf, ics, ics,   0, c_white, .25);
 		
 		return true;
 	}

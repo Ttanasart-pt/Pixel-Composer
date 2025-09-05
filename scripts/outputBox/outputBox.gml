@@ -1,6 +1,6 @@
 function outputBox() : widget() constructor {
 	expand  = false;
-	shorted = false;
+	shorted = true;
 	
 	static trigger = function() { }
 	

@@ -12,6 +12,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput(10, nodeValue_Trigger(     "Auto fill", "Automatically set amount based on sprite size."));
 	b_auto_fill = button(function() /*=>*/ {
 		var _sur = getInputData(0);
+		if(is_array(_sur)) _sur = array_safe_get_fast(_sur, 0);
 		if(!is_surface(_sur) || _sur == DEF_SURFACE) return;
 		
 		var ww = surface_get_width(_sur);
@@ -44,21 +45,23 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _spd = getInputData(8);
 		TOTAL_FRAMES = max(1, _spd == 0? 1 : ceil(array_length(_atl) / _spd));
 	}).setText("Sync Frames");
+	newInput(15, nodeValue_Bool(       "Flatten Array", true ));
 		
 	////- =Filter
 	newInput(12, nodeValue_Bool(        "Filter empty output", false ));
 	newInput(13, nodeValue_Enum_Scroll( "Filtered Pixel",      0, [ "Transparent", "Color" ]));
 	newInput(14, nodeValue_Color(       "Filtered Color",      ca_black ));
+	//16
+	
+	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
+	newOutput(1, nodeValue_Output( "Atlas Data",  VALUE_TYPE.atlas,   []    )).setArrayDepth(1);
 	
 	input_display_list = [
 		[ "Sprite",      false     ], 0, 1, 6, 
 		[ "Sheet",       false     ], 3, b_auto_fill, 9, 4, 5, 
-		[ "Output",      false     ], 7, 8, b_sync_frame,
+		[ "Output",      false     ], 7, 8, b_sync_frame, 15, 
 		[ "Filter Empty", true, 12 ], 13, 14, 
 	];
-	
-	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
-	newOutput(1, nodeValue_Output( "Atlas Data",  VALUE_TYPE.atlas,   []    )).setArrayDepth(1);
 	
 	////- Preview
 	
@@ -73,8 +76,8 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	curr_dim     = [0, 0];
 	curr_amo     = [0, 0];
 	  
-	surf_array   = [];
-	atls_array   = [];
+	surface_pool = [];
+	atlas_pool   = [];
 	
 	surf_size_w  = 1;
 	surf_size_h  = 1;
@@ -98,9 +101,6 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	}
 	
 	getGraphPreviewSurface = getPreviewValues;
-	
-	static onValueFromUpdate = function() { _inSurf = noone; }
-	static onValueUpdate     = function() { _inSurf = noone; }
 	
 	function getSpritePosition(index) {
 		var _dim = curr_dim;
@@ -130,9 +130,6 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		if(preview_channel != 0) return;
-		
-		var _inSurf  = getInputData(0);
-		if(!is_surface(_inSurf)) return;
 		
 		var hovering = false;
 		var _out = getInputData(7);
@@ -296,11 +293,9 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	////- Update
 	
-	static spliceSprite = function() {
-		var _inSurf  = getInputData(0);
-		if(!is_surface(_inSurf)) return;
-		
-		spliceSurf   = _inSurf;
+	static spliceSprite = function(_surf, _pool_i = 0) {
+		if(!is_surface(_surf)) return undefined;
+		spliceSurf   = _surf;
 		
 		var _outSurf = outputs[0].getValue();
 		var _out	 = getInputData(7);
@@ -330,35 +325,37 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		curr_amo = is_array(_amo)? _amo : [1, 1];
 		curr_off = _off;
 		
-		if(ww < 1 || hh < 1) return;
+		if(ww < 1 || hh < 1) return undefined;
 		
-		var _atl = array_create(_total);
 		var _sar = array_create(_total);
+		var _atl = array_create(_total);
 		var _arrAmo = 0, _s, _a;
 		
 		for(var i = 0; i < _total; i++) 
 			sprite_pos[i] = getSpritePosition(i);
 		
 		for(var i = 0; i < _total; i++) {
-			_s = array_safe_get_fast(surf_array, i);
+			_s = array_safe_get_fast(surface_pool, _pool_i + i);
 		    _s = surface_verify(_s, ww, hh, cDep);
+		    surface_pool[_pool_i + i] = _s;
 			
-			_a = array_safe_get_fast(atls_array, i, 0);
+			_a = array_safe_get_fast(atlas_pool, _pool_i + i, 0);
 			if(_a == 0) _a = new SurfaceAtlas(_s, 0, 0);
 			else        _a.setSurface(_s);
+			atlas_pool[_pool_i + i] = _a;
 			
 			var _spr_pos = sprite_pos[i];
 			
 			surface_set_shader(_s, noone, true, BLEND.over);
-				draw_surface_part(_inSurf, _spr_pos[0], _spr_pos[1], _dim[0], _dim[1], _pad[2], _pad[1]);
+				draw_surface_part(_surf, _spr_pos[0], _spr_pos[1], _dim[0], _dim[1], _pad[2], _pad[1]);
 			surface_reset_shader();
 			
 			_a.x = _spr_pos[0];
 			_a.y = _spr_pos[1];
 				
 			if(!_filt) {
-				_atl[_arrAmo] = _a;
 				_sar[_arrAmo] = _s;
+				_atl[_arrAmo] = _a;
 				_arrAmo++;
 				
 				sprite_valid[i] = true;
@@ -368,45 +365,74 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			var _empty = _fltp == 0? surface_is_empty(_s) : surface_is_color(_s, _flcl);
 					
 			if(!_empty) {
-				_atl[_arrAmo] = _a;
 				_sar[_arrAmo] = _s;
+				_atl[_arrAmo] = _a;
 				_arrAmo++;
 			}
 			sprite_valid[i] = !_empty;
 		}
 		
-		for( var i = _arrAmo, n = array_length(surf_array); i < n; i++ )
-			if(is_surface(surf_array[i])) surface_free(surf_array[i]);
-			
-		surf_array = array_create(_arrAmo);
-		array_copy(surf_array, 0, _sar, 0, _arrAmo);
+		array_resize(_sar, _arrAmo);
+		array_resize(_atl, _arrAmo);
 		
-		atls_array = array_create(_arrAmo);
-		array_copy(atls_array, 0, _atl, 0, _arrAmo);
-		
-		if(_out == 1) outputs[0].setValue(surf_array);
-		outputs[1].setValue(atls_array);
+		return [_sar, _atl]
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		spliceSprite();
+		var _inSurf = getInputData( 0);
+		var _out    = getInputData( 7);
+		var _spd    = getInputData( 8);
+		var _fltp   = getInputData(13);
+		var _flat   = getInputData(15);
 		
-		var _out  = getInputData(7);
-		var _spd  = getInputData(8);
-		var _fltp = getInputData(13);
-		
-		b_sync_frame.setVisible(!_out);
-		inputs[11].setVisible(!_out);
-		inputs[ 8].setVisible(!_out);
+		b_sync_frame.setVisible( _out == 0 );
+		inputs[11].setVisible( _out == 0 );
+		inputs[ 8].setVisible( _out == 0 );
+		inputs[15].setVisible( _out == 1 );
 		inputs[14].setVisible(_fltp);
 		
-		update_on_frame = _out != 1;
-		if(!update_on_frame) return;
+		var _surfDat = undefined;
 		
-		if(array_length(surf_array)) {
-			var ind = safe_mod(CURRENT_FRAME * _spd, array_length(surf_array));
-			outputs[0].setValue(array_safe_get_fast(surf_array, ind));
+		if(is_array(_inSurf)) {
+			_surfDat = [ [], [] ];
+			var _i = 0;
+			
+			for( var i = 0, n = array_length(_inSurf); i < n; i++ ) {
+				if(!is_surface(_inSurf[i])) continue;
+				var _dat = spliceSprite(_inSurf[i], _i);
+				if(_dat == undefined) continue;
+				
+				_i += array_length(_dat[0]) + 1;
+				
+				if(_flat) {
+					array_append(_surfDat[0], _dat[0]);
+					array_append(_surfDat[1], _dat[1]);
+					
+				} else {
+					array_push(_surfDat[0], _dat[0]);
+					array_push(_surfDat[1], _dat[1]);
+				}
+			}
+			
+		} else if(is_surface(_inSurf))
+			_surfDat = spliceSprite(_inSurf);
+		
+		if(_surfDat == undefined) return;
+		
+		if(_out == 0) {
+			update_on_frame = true;
+			if(array_length(_surfDat[0])) {
+				var ind = safe_mod(CURRENT_FRAME * _spd, array_length(_surfDat[0]));
+				outputs[0].setValue(array_safe_get_fast(_surfDat[0], ind));
+			}
+			
+		} else if(_out == 1) {
+			update_on_frame = false;
+			outputs[0].setValue(_surfDat[0]);
 		}
+		
+		outputs[1].setValue(_surfDat[1]);
+		
 	}
 
 	static getOutputChannelAmount = function() /*=>*/ {return 2};
