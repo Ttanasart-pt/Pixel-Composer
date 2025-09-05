@@ -249,18 +249,47 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	}
 	
 	static drawNodeBG = function(_x, _y, _mx, _my, _s, _dparam, _panel = noone) {
-		
 		if(size_dragging) {
-			w = size_dragging_w + (mouse_mx - size_dragging_mx) / _s;
-			h = size_dragging_h + (mouse_my - size_dragging_my) / _s;
+			var _dx = (mouse_mx - size_dragging_mx) / _s;
+			var _dy = (mouse_my - size_dragging_my) / _s;
+
+			if(!key_mod_press(CTRL)) { 
+				_dx = value_snap(_dx, 16);
+				_dy = value_snap(_dy, 16);
+			}
 			
-			if(!key_mod_press(CTRL)) {
-				w = value_snap(w, 16);
-				h = value_snap(h, 16);
+			switch(size_dragging) {
+				case 1 : 
+					x = size_dragging_x + _dx;
+					y = size_dragging_y + _dy;
+					
+					w = size_dragging_w - _dx;
+					h = size_dragging_h - _dy;
+					break;
+				
+				case 2 : 
+					x = size_dragging_x + _dx;
+					
+					w = size_dragging_w - _dx;
+					h = size_dragging_h + _dy;
+					break;
+					
+				case 3 : 
+					y = size_dragging_y + _dy;
+					
+					w = size_dragging_w + _dx;
+					h = size_dragging_h - _dy;
+					break;
+					
+				case 4 : 
+					w = size_dragging_w + _dx;
+					h = size_dragging_h + _dy;
+					break;
+					
 			}
 			
 			if(mouse_release(mb_left))
-				size_dragging = false;
+				size_dragging = 0;
 		}
 		
 		var xx = x * _s + _x;
@@ -278,7 +307,7 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		if(!hov) return false;
 		
 		var _aa = .15;
-		var _sz = 10 * THEME_SCALE;
+		var _sz = 12 * THEME_SCALE;
 		var _hh = 0;
 		
 		if(!name_hover) {
@@ -301,10 +330,10 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			}
 		}
 		
-		if(_hh == 1) draw_sprite_ext_add(THEME.node_resize, 0, xx + shf, yy + shf, ics, ics, 180, c_white, .15);
-		if(_hh == 2) draw_sprite_ext_add(THEME.node_resize, 0, xx + shf, y1 - shf, ics, ics, 270, c_white, .15);
-		if(_hh == 3) draw_sprite_ext_add(THEME.node_resize, 0, x1 - shf, yy + shf, ics, ics,  90, c_white, .15);
-		if(_hh == 4) draw_sprite_ext_add(THEME.node_resize, 0, x1 - shf, y1 - shf, ics, ics,   0, c_white, .15);
+		if(_hh == 1) draw_sprite_ext_add(THEME.node_resize, 0, xx + shf, yy + shf, ics, ics, 180, c_white, .25);
+		if(_hh == 2) draw_sprite_ext_add(THEME.node_resize, 0, xx + shf, y1 - shf, ics, ics, 270, c_white, .25);
+		if(_hh == 3) draw_sprite_ext_add(THEME.node_resize, 0, x1 - shf, yy + shf, ics, ics,  90, c_white, .25);
+		if(_hh == 4) draw_sprite_ext_add(THEME.node_resize, 0, x1 - shf, y1 - shf, ics, ics,   0, c_white, .25);
 		
 		return true;
 	}
