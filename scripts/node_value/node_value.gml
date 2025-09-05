@@ -1076,11 +1076,23 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 						editWidget.align = fa_left;
 						editWidget.side_button = button(function() { 
-							var path = display_data.filter == "dir"? get_open_directory_compat(PREFERENCES.dialog_path) : get_save_filename_compat(display_data.filter, "");
+							var _dir  = "";
+							var _path = "";
+							
+							if(has(display_data, "default_dir"))
+								_dir = display_data.default_dir();
+							
+							if(_dir == "")
+								_dir = PREFERENCES.dialog_path;
+							
+							if(display_data.filter == "dir")
+								_path = get_open_directory_compat("", _dir);
+							else 
+								_path = get_save_filename_compat(display_data.filter, "", "Save as", _dir);
 							key_release();
 							
-							if(path == "") return noone;
-							return setValueInspector(path);
+							if(_path == "") return noone;
+							return setValueInspector(_path);
 						}).setIcon(THEME.button_path_icon, 0, COLORS._main_icon).setTooltip(__txt("Open Explorer..."));
 						
 						editWidget.front_button = button(function() { 

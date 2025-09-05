@@ -257,6 +257,7 @@
 	PROJECT_ATTRIBUTES.surface_dimension = [ 32, 32 ];
 	PROJECT_ATTRIBUTES.palette           = [ ca_white, ca_black ];
 	PROJECT_ATTRIBUTES.palette_fix       = false;
+	PROJECT_ATTRIBUTES.export_dir        = "";
 #endregion
 
 #region recent files

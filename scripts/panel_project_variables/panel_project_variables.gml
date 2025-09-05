@@ -147,6 +147,8 @@ function Panel_Project_Var(_proj = PROJECT) : PanelContent() constructor {
 		
 		if(editing_key != undefined) {
 			var _param = new widgetParam(edit_x, edit_y, ww - padx * 2, hg, editing_text, {}, _m).setFocusHover(focus, hover);
+				
+			tb_edit.align = editing_type == 0? fa_left : fa_right;
 			tb_edit.drawParam(_param);
 		}
 		

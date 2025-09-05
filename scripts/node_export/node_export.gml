@@ -4,13 +4,16 @@ function Node_create_Export(_x, _y, _group = noone) {
 	
 	var path = "";
 	if(NODE_NEW_MANUAL) {
-		path = get_save_filename_compat(@"Portable Network Graphics (.png)|*.png|
+		var _ext = @"Portable Network Graphics (.png)|*.png|
 Joint Photographic Experts Group (.jpg)|*.jpg|
 Graphics Interchange Format (.gif)|*.gif|
 Animated WebP (.webp)|*.webp|
-MPEG-4 (.mp4)|*.mp4", 
-			"export");
-			
+MPEG-4 (.mp4)|*.mp4";
+		
+		var _dir = PROJECT.attributes.export_dir;
+		if(_dir == "") _dir = PREFERENCES.dialog_path;
+		
+		path = get_save_filename_compat(_ext, "export", "Export to", _dir);
 		key_release();
 		
 		var _dirr = filename_dir(path) + "\\";
@@ -60,7 +63,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	////- =Export
 	newInput( 0, nodeValue_Surface( "Surface"   ));
-	newInput( 1, nodeValue_Path(    "Directory" )).setDisplay(VALUE_DISPLAY.path_save, { filter: "dir" }).setVisible(true);
+	newInput( 1, nodeValue_Path(    "Directory" )).setDisplay(VALUE_DISPLAY.path_save, { filter: "dir", default_dir: function() /*=>*/ {return PROJECT.attributes.export_dir} }).setVisible(true);
 	newInput(20, nodeValue_Text(    "File name" ));
 	newInput( 4, nodeValue_Int(     "Template guides", 0      ));
 	newInput( 2, nodeValue_Text(    "Template",        "%d%n" )).rejectArray();

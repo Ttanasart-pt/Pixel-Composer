@@ -1073,9 +1073,7 @@ function Panel_Inspector() : PanelContent() constructor {
                         var _wdh  = spac? TEXTBOX_HEIGHT  : _lh;
                         
                         var _param = new widgetParam(_wdx, _wdy, _wdw, _wdh, _data, {}, _m, rx, ry)
-                        					.setHalign(fa_center)
-                        					.setFont(_font)
-					    					.setScrollpane(contentPane);
+                        					.setFont(_font).setScrollpane(contentPane);
 					    					
                         editW.setFocusHover(pFOCUS, _hover);
                         wh = editW.drawParam(_param);

@@ -48,6 +48,7 @@ function __file_selector(_mode = "save", _dir = PREFERENCES.dialog_path, _fname 
 	_arg[$ "--dir"]   = _dir;
 	_arg[$ "--file"]  = _fname;
 	_arg[$ "--ftype"] = _ftype;
+	_arg[$ "--project"] = PROJECT.path;
 	_arg[$ "-x"]      = WIN_X + WIN_W / 2;
 	_arg[$ "-y"]      = WIN_Y + WIN_H / 2;
 	
@@ -77,12 +78,12 @@ function __file_selector(_mode = "save", _dir = PREFERENCES.dialog_path, _fname 
 	return _res;
 }
 
-function get_open_filenames_compat(ext, fname, caption = "Open") {
+function get_open_filenames_compat(ext, fname, caption = "Open", _dir = PREFERENCES.dialog_path) {
 	var _native = PREFERENCES.use_native_file_browser && OS == os_windows;
 	if(_native) {
 		var pat, w = OS == os_windows;
 		
-		if(w) pat = get_open_filenames_ext(ext, fname, PREFERENCES.dialog_path, caption);
+		if(w) pat = get_open_filenames_ext(ext, fname, _dir, caption);
 		else  pat = get_open_filename_compat(ext, fname, caption);
 		
 		key_release();
@@ -103,17 +104,17 @@ function get_open_filenames_compat(ext, fname, caption = "Open") {
 	return _paths;
 }
 
-function get_open_filename_compat(ext, fname, caption = "Open") {
+function get_open_filename_compat(ext, fname, caption = "Open", _dir = PREFERENCES.dialog_path) {
 	var _native = PREFERENCES.use_native_file_browser && OS == os_windows;
 	if(_native) {
-		var path = get_open_filename_ext(ext, fname, PREFERENCES.dialog_path, caption);
+		var path = get_open_filename_ext(ext, fname, _dir, caption);
 		    path = string(path);
 		if(path != "") PREFERENCES.dialog_path = filename_dir(path);
 		
 		return path;
 	}
 	
-	var _res = __file_selector("load", PREFERENCES.dialog_path, fname, ext, false);
+	var _res = __file_selector("load", _dir, fname, ext, false);
 	if(!is_struct(_res)) return "";
 	
 	var path = array_empty(_res.selected)? "" : _res.selected[0].path;
@@ -121,29 +122,32 @@ function get_open_filename_compat(ext, fname, caption = "Open") {
 	return path;
 }
 
-function get_open_directory_compat(fname) {
+function get_open_directory_compat(fname, _dir = PREFERENCES.dialog_path) {
 	var _native = PREFERENCES.use_native_file_browser && OS == os_windows;
 	if(_native) return get_directory(fname);
 	
-	var _res = __file_selector("load", PREFERENCES.dialog_path, fname, "folder", false);
+	var _res = __file_selector("load", _dir, fname, "folder", false);
 	if(!is_struct(_res)) return "";
 	
-	var path = array_empty(_res.selected)? "" : _res.selected[0].path;
+	var path = _res.path;
+	if(!array_empty(_res.selected))
+		path = _res.selected[0].path;
+	
 	if(path != "") PREFERENCES.dialog_path = filename_dir(path);
 	return path;
 }
 
-function get_save_filename_compat(ext, fname, caption = "Save as") {
+function get_save_filename_compat(ext, fname, caption = "Save as", _dir = PREFERENCES.dialog_path) {
 	var _native = PREFERENCES.use_native_file_browser && OS == os_windows;
 	if(_native) {
-		var path = get_save_filename_ext(ext, fname, PREFERENCES.dialog_path, caption);
+		var path = get_save_filename_ext(ext, fname, _dir, caption);
 		    path = string(path);
 		    
 		if(path != "") PREFERENCES.dialog_path = filename_dir(path);
 		return path;
 	}
 	
-	var _res = __file_selector("save", PREFERENCES.dialog_path, fname, ext, false);
+	var _res = __file_selector("save", _dir, fname, ext, false);
 	if(!is_struct(_res)) return "";
 	
 	var path = _res.path;

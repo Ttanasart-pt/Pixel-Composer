@@ -222,15 +222,23 @@ function Project() constructor {
 					attr[1]  = _res[1];
 				} 
 			],
-				
+			
 			[ "Palette", "palette", new buttonPalette(function(pal) /*=>*/ { setPalette(pal); RENDER_ALL return true; }), 
 				function(junc) {
-					if(!is_struct(junc) || !is(junc, NodeValue)) return;
+					if(!is(junc, NodeValue)) return;
 					if(junc.type != VALUE_TYPE.color || junc.display_type != VALUE_DISPLAY.palette) return;
 					
 					setPalette(junc.getValue());
 				} 
 			],
+			
+			[ "Export Directory", "export_dir", textBox_Text(function(str) /*=>*/ { attributes.export_dir = str; return true; })
+				.setSideButton(
+					button(function() /*=>*/ { 
+						var path = get_open_directory_compat(attributes.export_dir); key_release();
+						if(path != "") attributes.export_dir = path;
+					}).setIcon(THEME.button_path_icon, 0, COLORS._main_icon)
+				) ],
 			
 		];
 		
