@@ -26,12 +26,13 @@ function LOAD_SAMPLE() {
 	SAMPLE_PROJECTS = [];
 	
 	var zzip = $"{working_directory}data/Welcome files/Welcome files.zip";
-	if(os_type != os_windows) zzip = $"{working_directory}data/welcome_files/Welcome files.zip";
-	
 	var targ = $"{DIRECTORY}Welcome files";
-	
 	directory_verify(targ);
-	zip_unzip(zzip, targ);
+	
+	if(check_version($"{targ}/version")) {
+		directory_destroy($"{targ}/Sample Projects")
+		zip_unzip(zzip, targ);
+	}
 	
 	var path = $"{DIRECTORY}Welcome files";
 	var _dir = directory_listdir(path, fa_directory);

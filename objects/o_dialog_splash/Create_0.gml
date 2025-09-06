@@ -19,7 +19,7 @@ event_inherited();
 	clip_surf = noone;
 #endregion
 
-#region content
+#region recent files
 	var x0 = dialog_x + ui(16);
 	var x1 = x0 + recent_width;
 	var y0 = dialog_y + ui(128);
@@ -101,11 +101,13 @@ event_inherited();
 		return hh;
 	});
 	sp_recent.always_scroll = false;
+#endregion
+
+#region sample projects
+	meta_filter = [];
 	
 	x0 = x1 + ui(16);
 	x1 = dialog_x + dialog_w - ui(16);
-	
-	meta_filter = [];
 	
 	sp_sample = new scrollPane(x1 - x0 - ui(12), y1 - y0 - 2, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);

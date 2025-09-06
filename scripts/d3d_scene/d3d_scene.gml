@@ -178,7 +178,7 @@ function __3dScene(_camera, _name = "New scene") constructor {
 		gpu_set_alphatestenable(false);
 		surface_reset_target();
 		
-		if(defer_normal_radius) { 
+		if(defer_normal_radius && is_struct(deferData)) { 
 			var _geos = deferData.geometry_data[2];
 			var _sw = surface_get_width_safe(_geos);
 			var _sh = surface_get_height_safe(_geos);

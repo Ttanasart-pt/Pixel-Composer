@@ -104,7 +104,7 @@ function SAVE_AT(project = PROJECT, path = "", log = "save at ", _thum = true) {
 			if(is(_pan, Panel)) _thumbSurf = _pan.content_surface;
 		}
 		
-		var _thumbSize = 64;
+		var _thumbSize = PREFERENCES.save_thumbnail_size;
 		var _thumbLeng = 0;
 		var _thumbData = 0;
 		var _thumb     = _thum && PREFERENCES.save_thumbnail && is_surface(_thumbSurf);

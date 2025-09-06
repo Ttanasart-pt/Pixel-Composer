@@ -52,10 +52,11 @@ function project_get_thumbnail(_path) {
 	buffer_copy(rawBuff, buffer_tell(rawBuff), thumbLen, thumbBuf, 0);
 	thumbBuf = buffer_decompress(thumbBuf);
 	
-	global.project_get_thumbnail_surface = surface_verify(global.project_get_thumbnail_surface, 64, 64);
+	var thumbSiz = sqrt(buffer_get_size(thumbBuf) / 4);
+	global.project_get_thumbnail_surface = surface_verify(global.project_get_thumbnail_surface, thumbSiz, thumbSiz);
 	buffer_set_surface(thumbBuf, global.project_get_thumbnail_surface, 0);
 	
-	var _spr = sprite_create_from_surface(global.project_get_thumbnail_surface, 0, 0, 64, 64, false, false, 32, 32);
+	var _spr = sprite_create_from_surface(global.project_get_thumbnail_surface, 0, 0, thumbSiz, thumbSiz, false, false, thumbSiz/2, thumbSiz/2);
 	return _spr;
 }
 
