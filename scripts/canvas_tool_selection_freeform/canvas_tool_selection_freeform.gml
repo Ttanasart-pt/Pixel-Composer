@@ -1,19 +1,13 @@
-function canvas_tool_selection_freeform(selector, brush) : canvas_tool_selection(selector) constructor {
-	self.brush = brush;
+function canvas_tool_selection_freeform(_selector, _brush) : canvas_tool_selection(_selector) constructor {
+	brush = _brush;
 	
 	mouse_pre_x = 0;
 	mouse_pre_y = 0;
 	freeform_shape = [];
 	
-	function step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		
-		mouse_cur_x = round((_mx - _x) / _s - 0.5);
-		mouse_cur_y = round((_my - _y) / _s - 0.5);
-			
+	function onStep(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		attributes = node.attributes;
 		var _dim   = attributes.dimension;
-		
-		if(is_selected) { onSelected(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); return; }
 		
 		if(!selector.is_select_drag && mouse_press(mb_left, active)) {
 			is_selecting = true;

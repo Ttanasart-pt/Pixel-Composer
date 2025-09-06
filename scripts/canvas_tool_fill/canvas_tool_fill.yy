@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"canvas_tool_fill",
   "parent":{
-    "name":"tools",
-    "path":"folders/nodes/data/canvas/tools.yy",
+    "name":"fill",
+    "path":"folders/nodes/data/canvas/tools/fill.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

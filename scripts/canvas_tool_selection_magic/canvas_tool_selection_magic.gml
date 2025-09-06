@@ -1,14 +1,8 @@
-function canvas_tool_selection_magic(selector, toolAttr) : canvas_tool_selection(selector) constructor {
-	 
-	tool_attribute = toolAttr;
+function canvas_tool_selection_magic(_selector, _toolAttr) : canvas_tool_selection(_selector) constructor {
+	tool_attribute = _toolAttr;
 	selecting      = false;
 	
-	function step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		
-		mouse_cur_x = round((_mx - _x) / _s - 0.5);
-		mouse_cur_y = round((_my - _y) / _s - 0.5);
-		
-		if(is_selected) { onSelected(hover, active, _x, _y, _s, _mx, _my, _snx, _sny); return; }
+	function onStep(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		
 		var _thr		= tool_attribute.thres;
 		var _fill_type	= tool_attribute.fillType;

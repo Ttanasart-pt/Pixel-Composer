@@ -1,6 +1,6 @@
-function canvas_freeform_step(active, _x, _y, _s, _mx, _my, _draw) { #region
+function canvas_freeform_step(active, _x, _y, _s, _mx, _my, _draw) {
 	var _dim = attributes.dimension;
-		
+	
 	var _mmx = (_mx - _x) / _s;
 	var _mmy = (_my - _y) / _s;
 		
@@ -70,4 +70,4 @@ function canvas_freeform_step(active, _x, _y, _s, _mx, _my, _draw) { #region
 				
 		surface_clear(drawing_surface);
 	}
-} #endregion
+}

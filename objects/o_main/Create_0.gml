@@ -27,6 +27,7 @@
 	DIALOG_DEPTH_HOVER = 0;
 	UPDATE             = RENDER_TYPE.none;
 	CURSOR             = cr_default;
+	CURSOR_SPRITE      = noone;
 	CURSOR_LOCK		   = false;
 	CURSOR_IS_LOCK	   = false;
 	CURSOR_LOCK_X	   = 0;

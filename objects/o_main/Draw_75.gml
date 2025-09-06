@@ -158,6 +158,11 @@ if(winMan_isMinimized()) exit;
 #region draw gui top
 	PANEL_MAIN.drawGUI();
 	
+	if(CURSOR_SPRITE != noone) {
+		draw_sprite_ui(CURSOR_SPRITE, 0, mouse_x + ui(4), mouse_y + ui(4));
+		CURSOR_SPRITE = noone;
+	}
+	
 	if(NODE_DROPPER_TARGET != noone) {
 		draw_sprite_ui(THEME.node_dropper, 0, mouse_x + ui(20), mouse_y + ui(20));
 		if(mouse_press(mb_left, NODE_DROPPER_TARGET_CAN))

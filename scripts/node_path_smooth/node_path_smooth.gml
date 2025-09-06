@@ -116,7 +116,7 @@ function Node_Path_Smooth(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		line_hover = _line_hover;
 		
 		if(key_mod_press(CTRL) || isUsingTool(0)) {	// anchor edit
-			draw_sprite_ui_uniform(_anchor_hover == -1? THEME.cursor_path_add : THEME.cursor_path_remove, 0, _mx + 4, _my + 4);
+			CURSOR_SPRITE = _anchor_hover == -1? THEME.cursor_path_add : THEME.cursor_path_remove;
 			hovering = true;
 			
 			if(mouse_press(mb_left, active)) {

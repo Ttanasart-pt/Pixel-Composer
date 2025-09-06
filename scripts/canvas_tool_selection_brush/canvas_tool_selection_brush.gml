@@ -1,6 +1,5 @@
-function canvas_tool_selection_brush(selector, brush) : canvas_tool_selection(selector) constructor {
-	self.brush = brush;
-	
+function canvas_tool_selection_brush(_selector, _brush) : canvas_tool_selection(_selector) constructor {
+	brush = _brush;
 	brush_resizable = true;
 	
 	mouse_cur_x = 0;
@@ -15,12 +14,9 @@ function canvas_tool_selection_brush(selector, brush) : canvas_tool_selection(se
 	sel_x1 = 0;
 	sel_y1 = 0;
 	
-	function step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	function onStep(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		attributes = node.attributes;
 		var _dim   = attributes.dimension;
-		
-		mouse_cur_x = round((_mx - _x) / _s - 0.5);
-		mouse_cur_y = round((_my - _y) / _s - 0.5);
 		
 		if(!selector.is_select_drag && mouse_press(mb_left, active)) {
 			selection_mask = surface_verify(selection_mask, _dim[0], _dim[1]);
@@ -84,7 +80,7 @@ function canvas_tool_selection_brush(selector, brush) : canvas_tool_selection(se
 			
 	}
 		
-	function drawPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	function onDrawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		canvas_draw_point_brush(brush, mouse_cur_x, mouse_cur_y);
 	}
 }

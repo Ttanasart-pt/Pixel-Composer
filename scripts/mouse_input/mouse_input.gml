@@ -1,5 +1,6 @@
 #region mouse global
-	globalvar CURSOR, CURSOR_LOCK, CURSOR_IS_LOCK, CURSOR_LOCK_X, CURSOR_LOCK_Y;
+	globalvar CURSOR, CURSOR_SPRITE;
+	globalvar CURSOR_LOCK, CURSOR_IS_LOCK, CURSOR_LOCK_X, CURSOR_LOCK_Y;
 	globalvar MOUSE_WRAP, MOUSE_WRAPPING, MOUSE_BLOCK, _MOUSE_BLOCK;
 	globalvar MOUSE_POOL;
 	
@@ -8,6 +9,7 @@
 	globalvar MOUSE_ZOOM_X, MOUSE_ZOOM_Y;
 	globalvar MOUSE_PAN;
 	
+	CURSOR_SPRITE  = noone;
 	MOUSE_WRAP     = false;
 	MOUSE_WRAPPING = false;
 	MOUSE_BLOCK    = false;

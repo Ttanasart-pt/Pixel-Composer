@@ -1320,7 +1320,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				hovering      = true;
 			
 				if(anchor_hover != -1 && hover_type == 0) { //remove
-					draw_sprite_ui_uniform(THEME.cursor_path_remove, 0, _mx + 4, _my + 4);
+					CURSOR_SPRITE = THEME.cursor_path_remove;
 					
 					if(mouse_press(mb_left, active)) {
 						var _indx = input_fix_len + anchor_hover;
@@ -1332,7 +1332,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					} 
 					
 				} else {
-					draw_sprite_ui_uniform(THEME.cursor_path_add, 0, _mx + 4, _my + 4);
+					CURSOR_SPRITE = THEME.cursor_path_add;
 					var _mmx = _mx;
 					var _mmy = _my;
 					
@@ -1449,7 +1449,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			case "Circle path" :
 				hovering      = true;
 				anchor_select = [];
-				draw_sprite_ui_uniform(THEME.cursor_path_add, 0, _mx + 4, _my + 4);
+				CURSOR_SPRITE = THEME.cursor_path_add;
 				
 				if(mouse_press(mb_left, active)) {
 					while(array_length(inputs) > input_fix_len)
@@ -1475,7 +1475,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 						draw_circle(_point_hover[0], _point_hover[1], 4, false);
 						
 					} else if(_weight_hover != -1 && key_mod_press(SHIFT)) {
-						draw_sprite_ui_uniform(THEME.cursor_path_remove, 0, _mx + 4, _my + 4);
+						CURSOR_SPRITE = THEME.cursor_path_remove;
 						
 						if(mouse_press(mb_left, active)) {
 							if(_weight_hover == 0 || _weight_hover == array_length(attributes.weight) - 1) 
@@ -1518,7 +1518,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				var _a/*:_ANCHOR*/ = array_clone(getInputData(input_fix_len + anchor_hover));
 				
 				if(hover_type == 0 && _tooln == "Edit Control point") { // add / remove anchor point
-					draw_sprite_ui_uniform(THEME.cursor_path_anchor, 0, _mx + 4, _my + 4);
+					CURSOR_SPRITE = THEME.cursor_path_anchor;
 					
 					if(mouse_press(mb_left, active)) {
 						if(_a[_ANCHOR.c1x] != 0 || _a[_ANCHOR.c1y] != 0 || _a[_ANCHOR.c2x] != 0 || _a[_ANCHOR.c2y] != 0) {
@@ -1546,7 +1546,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					}
 					
 				} else if(hover_type == 0 && key_mod_press(SHIFT)) { // remove
-					draw_sprite_ui_uniform(THEME.cursor_path_remove, 0, _mx + 4, _my + 4);
+					CURSOR_SPRITE = THEME.cursor_path_remove;
 					
 					if(mouse_press(mb_left, active)) {
 						var _indx = input_fix_len + anchor_hover;
@@ -1574,7 +1574,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 						case 2 : _spr = THEME.cursor_path_anchor_detach;   break;
 					}
 					
-					draw_sprite_ui_uniform(_spr, 0, _mx + 4, _my + 4);
+					CURSOR_SPRITE = _spr;
 					
 					if(mouse_press(mb_left, active)) {
 						if(_mode != 0) {
