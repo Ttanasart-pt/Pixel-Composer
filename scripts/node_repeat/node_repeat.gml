@@ -10,9 +10,9 @@
 		switch(query) {
 			case "repeat polar" : 
 			case "repeat circular" : 
-				node.inputs[3].setValue(2);
-				node.inputs[9].unit.setMode(VALUE_UNIT.reference);
-				node.inputs[9].setValueDirect([ 0.5, 0.5 ]);
+				node.inputs[3].skipDefault().setValue(2);
+				node.inputs[9].skipDefault().unit.setMode(VALUE_UNIT.reference);
+				node.inputs[9].skipDefault().setValueDirect([ 0.5, 0.5 ]);
 				break;
 		}
 		

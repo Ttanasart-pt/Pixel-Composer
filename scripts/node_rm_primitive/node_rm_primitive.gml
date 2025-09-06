@@ -21,7 +21,7 @@ function Node_create_RM_Primitive(_x, _y, _group = noone, _param = {}) {
 		default     : ind = array_find_string(node.shape_types, query);
 	}
 	
-	if(ind >= 0) node.inputs[1].setValue(ind);
+	if(ind >= 0) node.inputs[1].skipDefault().setValue(ind);
 	return node;
 }
 

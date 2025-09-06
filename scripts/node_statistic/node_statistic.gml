@@ -21,7 +21,7 @@
 			default : ind = array_find(global.node_statistic_keys, query);
 		}
 		
-		if(ind >= 0) node.inputs[0].setValue(ind);
+		if(ind >= 0) node.inputs[0].skipDefault().setValue(ind);
 	
 		return node;
 	}

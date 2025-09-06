@@ -23,7 +23,7 @@
 			default : ind = array_find_string(node.shape_types, query);
 		}
 		
-		if(ind >= 0) node.inputs[2].setValue(ind);
+		if(ind >= 0) node.inputs[2].skipDefault().setValue(ind);
 		
 		return node;
 	}

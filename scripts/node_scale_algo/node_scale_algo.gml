@@ -5,9 +5,9 @@
 		node.skipDefault();
 		
 		switch(query) {
-			case "scale2x" :   node.inputs[1].setValue(0); break;	
-			case "scale3x" :   node.inputs[1].setValue(1); break;	
-			case "cleanedge" : node.inputs[1].setValue(2); break;	
+			case "scale2x" :   node.inputs[1].skipDefault().setValue(0); break;
+			case "scale3x" :   node.inputs[1].skipDefault().setValue(1); break;
+			case "cleanedge" : node.inputs[1].skipDefault().setValue(2); break;
 		}
 		
 		return node;

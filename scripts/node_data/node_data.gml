@@ -959,7 +959,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var _preset = global.PRESETS_MAP_NODE[? _fName];
 		if(_preset.content == -1) _preset.content = json_load_struct(_preset.path);
 		
-		deserialize(_preset.content, true, true);
+		deserialize(_preset.content, true, 1 + (pName == "_default"));
 		return true;
 	}
 	
@@ -2859,6 +2859,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		for(var i = 0; i < amo; i++) {
 			if(inputs[i] == noone || _inputs[i] == noone) continue;
+			if(preset == 2 && !inputs[i].set_default)     continue;
 			
 			// print($"      Apply {i} : {name}, {inputs[i].name}");
 			inputs[i].applyDeserialize(_inputs[i], load_scale, preset);

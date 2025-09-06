@@ -10,7 +10,7 @@
 		switch(query) {
 			case "waveform" : 
 			case "graph" : 
-				node.inputs[11].setValue(1); 
+				node.inputs[11].skipDefault().setValue(1); 
 				break;
 		}
 		

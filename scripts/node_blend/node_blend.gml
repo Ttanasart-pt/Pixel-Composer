@@ -1,11 +1,10 @@
 #region create
 	function Node_create_Blend(_x, _y, _group = noone, _param = {}) {
-		var node = new Node_Blend(_x, _y, _group);
-		node.skipDefault();
-		
+		var node  = new Node_Blend(_x, _y, _group);
 		var query = struct_try_get(_param, "query", "");
 		var ind   = array_find(global.node_blend_keys, query);
-		if(ind >= 0) node.inputs[2].setValue(ind);
+		
+		if(ind >= 0) node.inputs[2].skipDefault().setValue(ind);
 		return node;
 	}
 	

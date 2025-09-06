@@ -384,7 +384,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return self;
 	}
 	
+	set_default = true;
+	static skipDefault = function() /*=>*/ { set_default = false; return self; }
+	
 	static resetValue = function() {
+		if(!set_default) return;
 		
 		unit.mode = def_unit;
 		setValue(unit.apply(variable_clone(def_val))); 

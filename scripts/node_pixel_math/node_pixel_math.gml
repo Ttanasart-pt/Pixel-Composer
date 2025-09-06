@@ -14,7 +14,7 @@
 		node.skipDefault();
 	
 		var ind = array_find(global.node_math_keys, query);
-		if(ind != -1) node.inputs[7].setValue(global.node_math_keys_map[ind]);
+		if(ind != -1) node.inputs[7].skipDefault().setValue(global.node_math_keys_map[ind]);
 	
 		return node;
 	}
