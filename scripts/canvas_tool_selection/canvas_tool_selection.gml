@@ -380,6 +380,8 @@ function canvas_tool_selection(_selector) : canvas_tool() constructor {
 	function onDrawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
 	
 	function drawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		onDrawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+		
 		if(!is_selecting) return;
 		
 		var sel_x0 = min(selection_sx, mouse_cur_x);
@@ -389,8 +391,6 @@ function canvas_tool_selection(_selector) : canvas_tool() constructor {
 		var _dy = _y + sel_y0 * _s;
 		
 		draw_surface_ext_safe(selection_mask, _dx, _dy, _s, _s);
-		
-		onDrawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
 	function drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {

@@ -81,6 +81,13 @@ function canvas_tool_selection_brush(_selector, _brush) : canvas_tool_selection(
 	}
 		
 	function onDrawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		canvas_draw_point_brush(brush, mouse_cur_x, mouse_cur_y);
+		if(selector.selection_hovering) return;
+		
+		var _dx = _x + mouse_cur_x * _s;
+		var _dy = _y + mouse_cur_y * _s;
+		
+		canvas_draw_point_brush_ext(brush, _dx, _dy, _s);
 	}
+	
+	function drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
 }

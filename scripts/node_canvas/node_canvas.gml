@@ -1271,6 +1271,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				DRAW_CLEAR
 				if(selection.is_selected) selection.drawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 				if(_tool) _tool.drawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+				
+				if(key_mod_press(CTRL)) canvas_draw_point_brush_ext(brush, _x + mouse_cur_x * _s, _y + mouse_cur_y * _s, _s);
 			surface_reset_target();
 			
 			shader_set(sh_brush_outline);

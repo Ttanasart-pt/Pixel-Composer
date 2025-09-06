@@ -1,5 +1,4 @@
-function canvas_draw_point_brush(brush, _x, _y, _draw = false) {
-	
+function canvas_draw_point_brush(brush, _x, _y, _randomize = false) {
 	if(is_surface(brush.brush_surface)) {
 		var _sw = surface_get_width_safe(brush.brush_surface);
 		var _sh = surface_get_height_safe(brush.brush_surface);
@@ -7,8 +6,7 @@ function canvas_draw_point_brush(brush, _x, _y, _draw = false) {
 		var _p  = point_rotate(-_sw / 2, -_sh / 2, 0, 0, _r);
 			
 		draw_surface_ext_safe(brush.brush_surface, round(_x + _p[0]), round(_y + _p[1]), 1, 1, _r, draw_get_color(), draw_get_alpha());
-			
-		if(_draw) brush.brush_seed = irandom_range(100000, 999999);
+		if(_randomize) brush.brush_seed = irandom_range(100000, 999999);
 		
 	} else {
 		if(brush.brush_size <= 1) 
@@ -21,6 +19,34 @@ function canvas_draw_point_brush(brush, _x, _y, _draw = false) {
 					
 		} else
 			draw_circle_prec(_x, _y, brush.brush_size / 2, 0);
+	}
+}
+
+function canvas_draw_point_brush_ext(brush, _x, _y, _s = 1, _randomize = false) {
+	if(is_surface(brush.brush_surface)) {
+		var _sw = surface_get_width_safe(brush.brush_surface);
+		var _sh = surface_get_height_safe(brush.brush_surface);
+		var _r  = brush.brush_direction + rotation_random_eval(brush.brush_rand_dir, brush.brush_seed);
+		var _p  = point_rotate(-_sw / 2, -_sh / 2, 0, 0, _r);
+			
+		draw_surface_ext_safe(brush.brush_surface, round(_x + _p[0]), round(_y + _p[1]), _s, _s, _r, draw_get_color(), draw_get_alpha());
+		if(_randomize) brush.brush_seed = irandom_range(100000, 999999);
+		
+	} else {
+		if(brush.brush_size <= 1) 
+			draw_rectangle(_x, _y, _x + _s, _y + _s, false);
+				
+		else if(brush.brush_size < global.FIX_POINTS_AMOUNT) { 
+			var fx = global.FIX_POINTS[brush.brush_size];
+			for( var i = 0, n = array_length(fx); i < n; i++ ) {
+				var _xx = _x + fx[i][0] * _s;
+				var _yy = _y + fx[i][1] * _s;
+				
+				draw_rectangle(_xx, _yy, _xx + _s, _yy + _s, false);	
+			}
+					
+		} else
+			draw_circle_prec(_x, _y, brush.brush_size / 2 * _s, 0);
 	}
 }
 
