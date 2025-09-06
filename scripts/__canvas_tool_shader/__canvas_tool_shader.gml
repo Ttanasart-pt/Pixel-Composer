@@ -26,7 +26,7 @@ function canvas_tool_shader() : canvas_tool() constructor {
 		}
 				
 		var _dim  = node.attributes.dimension;
-		var _sel  = node.tool_selection;
+		var _sel  = node.selection;
 		
 		preview_surface[0] = surface_verify(preview_surface[0], _dim[0], _dim[1]);
 		preview_surface[1] = surface_verify(preview_surface[1], _dim[0], _dim[1]);

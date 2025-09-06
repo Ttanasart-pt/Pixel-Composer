@@ -165,10 +165,10 @@ function canvas_selection() : canvas_tool() constructor {
 	
 	////- Step
 	
-	function apply() {
+	function apply(targetSurface = canvas_surface) {
 		var _drawLay = node.tool_attribute.drawLayer;
-		var _sw = surface_get_width(canvas_surface);
-		var _sh = surface_get_height(canvas_surface);
+		var _sw = surface_get_width(targetSurface);
+		var _sh = surface_get_height(targetSurface);
 		
 		var _selectionSurf = surface_create(_sw, _sh);
 		var _drawnSurface  = surface_create(_sw, _sh);
@@ -183,27 +183,29 @@ function canvas_selection() : canvas_tool() constructor {
 			shader_set_f("channels",  1, 1, 1, 1);
 			shader_set_f("alpha",     1);
 			
-			shader_set_surface("back", canvas_surface);
+			shader_set_surface("back", targetSurface);
 			shader_set_surface("fore", _selectionSurf);
 			
 			draw_empty();
 		surface_reset_shader();
 		
-		node.setCanvasSurface(_drawnSurface);
-		surface_free(canvas_surface);
-		canvas_surface = _drawnSurface;
+		if(targetSurface == canvas_surface) {
+			node.setCanvasSurface(_drawnSurface);
+			canvas_surface = _drawnSurface;
+			node.surface_store_buffer();
+			is_selected = false;
+		}
 		
-		node.surface_store_buffer();
-		
-		is_selected = false;
+		surface_free(targetSurface);
+		return _drawnSurface;
 	}
 	
 	function onSelected(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		selection_hovering = false;
-		if(!is_surface(selection_surface)) {
-			is_selected = false;
-			return;
-		} 
+		if(!is_surface(selection_surface)) { is_selected = false; return; } 
+		
+		if(key_mod_press(SHIFT)) { CURSOR_SPRITE = THEME.cursor_path_add;    return; }
+		if(key_mod_press(ALT))   { CURSOR_SPRITE = THEME.cursor_path_remove; return; }
 		
 		if(is_select_drag) {
 			var px = selection_sx + (mouse_cur_x - selection_mx);
@@ -220,8 +222,8 @@ function canvas_selection() : canvas_tool() constructor {
 		var pos_y = selection_position[1];
 		var sel_w = selection_size[0];
 		var sel_h = selection_size[1];
-		selection_hovering = point_in_rectangle(mouse_cur_x, mouse_cur_y, pos_x, pos_y, pos_x + sel_w, pos_y + sel_h);
 		
+		selection_hovering = point_in_rectangle(mouse_cur_x, mouse_cur_y, pos_x, pos_y, pos_x + sel_w, pos_y + sel_h);
 		if(selection_hovering) CURSOR_SPRITE = THEME.cursor_path_move;
 		
 		if(mouse_press(mb_left, active)) {
@@ -281,7 +283,7 @@ function canvas_selection() : canvas_tool() constructor {
 		
 		draw_set_color(c_black);
 		draw_rectangle(pos_x, pos_y, pos_x + sel_w, pos_y + sel_h, true);
-						
+		
 		draw_set_color(c_white);
 		draw_rectangle_dashed(pos_x, pos_y, pos_x + sel_w, pos_y + sel_h, true, 6, current_time / 100);
 	}

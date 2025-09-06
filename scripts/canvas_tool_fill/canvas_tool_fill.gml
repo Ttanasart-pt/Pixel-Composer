@@ -20,14 +20,14 @@ function canvas_tool_fill(toolAttr) : canvas_tool() constructor {
 			node.storeAction();
 			var _surf = _use_output? output_surface : canvas_surface;
 			
-			if(node.tool_selection.is_selected) {
+			if(node.selection.is_selected) {
 				var _srf = _surf;
 				var _dim = surface_get_dimension(_surf);
 				_surf = surface_create(_dim[0], _dim[1]);
 				
-				var _fore = node.tool_selection.selection_surface;
-				var _mask = node.tool_selection.selection_mask;
-				var _pos  = node.tool_selection.selection_position;
+				var _fore = node.selection.selection_surface;
+				var _mask = node.selection.selection_mask;
+				var _pos  = node.selection.selection_position;
 				
 				mouse_cur_x += _pos[0];
 				mouse_cur_y += _pos[1];
@@ -58,7 +58,7 @@ function canvas_tool_fill(toolAttr) : canvas_tool() constructor {
 			node.apply_draw_surface();
 			node.surface_store_buffer();
 			
-			if(node.tool_selection.is_selected)
+			if(node.selection.is_selected)
 				surface_free(_surf);
 		}
 			

@@ -20,7 +20,7 @@ function canvas_tool_corner() : canvas_tool_shader() constructor {
 		anchorsRounded = [];
 	
 		#region content extract
-			var _sel  = node.tool_selection;
+			var _sel  = node.selection;
 			var _surf = _sel.selection_surface;
 			var _dim  = surface_get_dimension(_surf);
 			
@@ -377,18 +377,7 @@ function canvas_tool_corner() : canvas_tool_shader() constructor {
 			BLEND_MULTIPLY
 				draw_surface_safe(temp_surface[1]);
 			BLEND_NORMAL
-			
 		surface_reset_shader();
-		
-		// surface_set_shader(preview_surface[1], sh_canvas_corner);
-			
-		// 	shader_set_f("dimension",  _dim);
-		// 	shader_set_f("amount",     amount);
-		// 	shader_set_surface("base", _suf);
-			
-		// 	draw_surface_safe(preview_surface[0]);
-		// surface_reset_shader();
-		
 	}
 	
 	function drawPostOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
@@ -449,35 +438,6 @@ function canvas_tool_corner() : canvas_tool_shader() constructor {
 			          _x + (mx + sx) * _s, _y + (my + sy) * _s);
 			          
 		}
-		
-		    
-		// var a, b, c;
-		// var d;
-		
-		// for( var i = 0, n = array_length(anchors); i < n; i++ ) {
-		// 	a = anchors[(i - 1 + n) % n];
-		// 	b = anchors[i];
-		// 	c = anchors[(i + 1 + n) % n];
-			
-		// 	d = calculateCircleCenter(a, b, c, amount);
-			
-		// 	var _ox = _x + (mx + d[0]) * _s;
-		// 	var _oy = _y + (my + d[1]) * _s;
-		// 	var _or = d[2] * _s;
-			
-		// 	var dd = sqrt(sqr(d[3]) - sqr(d[2]));
-		// 	var ba = point_direction(b[0], b[1], a[0], a[1]);
-  //  		var bc = point_direction(b[0], b[1], c[0], c[1]);
-    	
-  //  		var e = [ b[0] + lengthdir_x(dd, ba), b[1] + lengthdir_y(dd, ba) ];
-  //  		var f = [ b[0] + lengthdir_x(dd, bc), b[1] + lengthdir_y(dd, bc) ];
-    		
-  //  		var ee = point_direction(d[0], d[1], e[0], e[1]);
-  //  		var ff = point_direction(d[0], d[1], f[0], f[1]);
-    		
-		// 	// draw_circle(_ox, _oy, _or, true);
-		// 	draw_arc(_ox, _oy, _or, ee, ff, 1, 90);
-		// }
 	}
 }
 

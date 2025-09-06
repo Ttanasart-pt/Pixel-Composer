@@ -20,7 +20,7 @@ function canvas_tool_node(_canvas, _node) : canvas_tool() constructor {
 	setColor       = true;
 
 	static destroy = function() {
-		if(applySelection) canvas.tool_selection.apply();
+		if(applySelection) canvas.selection.apply();
 		cleanUp();
 	}
 	
@@ -48,8 +48,8 @@ function canvas_tool_node(_canvas, _node) : canvas_tool() constructor {
 	
 	function init() {
 		
-		applySelection = canvas.tool_selection.is_selected;
-		sourceSurface  = applySelection? canvas.tool_selection.selection_surface : canvas.getCanvasSurface();
+		applySelection = canvas.selection.is_selected;
+		sourceSurface  = applySelection? canvas.selection.selection_surface : canvas.getCanvasSurface();
 		if(!is_surface(sourceSurface)) return noone;
 		
 		sw = surface_get_width(sourceSurface);
@@ -103,7 +103,7 @@ function canvas_tool_node(_canvas, _node) : canvas_tool() constructor {
 		var _surf = surface_create(sw, sh);
 		
 		if(applySelection) {
-			var _fore = canvas.tool_selection.selection_surface;
+			var _fore = canvas.selection.selection_surface;
 			
 			if(_repl) {
 				surface_set_shader(_surf, noone);
@@ -121,8 +121,8 @@ function canvas_tool_node(_canvas, _node) : canvas_tool() constructor {
 			}
 			
 			surface_free(_fore);
-			canvas.tool_selection.selection_surface = _surf;
-			canvas.tool_selection.apply();
+			canvas.selection.selection_surface = _surf;
+			canvas.selection.apply();
 			
 		} else {
 			var _fore = canvas.getCanvasSurface();
@@ -160,10 +160,10 @@ function canvas_tool_node(_canvas, _node) : canvas_tool() constructor {
 		var _px, _py, _pw, _ph;
 		
 		if(applySelection) {
-			_px = canvas.tool_selection.selection_position[0];
-			_py = canvas.tool_selection.selection_position[1];
-			_pw = canvas.tool_selection.selection_size[0];
-			_ph = canvas.tool_selection.selection_size[1];
+			_px = canvas.selection.selection_position[0];
+			_py = canvas.selection.selection_position[1];
+			_pw = canvas.selection.selection_size[0];
+			_ph = canvas.selection.selection_size[1];
 			
 		} else {
 			_px = 0;
@@ -189,7 +189,7 @@ function canvas_tool_node(_canvas, _node) : canvas_tool() constructor {
 			surface_set_shader(maskedSurface);
 				draw_surface_safe(_surf);
 				BLEND_MULTIPLY
-					draw_surface_safe(canvas.tool_selection.selection_mask);
+					draw_surface_safe(canvas.selection.selection_mask);
 				BLEND_NORMAL
 			surface_reset_shader();
 			

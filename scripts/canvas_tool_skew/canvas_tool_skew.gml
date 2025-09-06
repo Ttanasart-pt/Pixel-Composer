@@ -16,7 +16,7 @@ function canvas_tool_skew() : canvas_tool_shader() constructor {
 	function init() { mouse_init = true; }
 	
 	function onInit(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _sel = node.tool_selection;
+		var _sel = node.selection;
 		if(!_sel.is_selected) {
 			PANEL_PREVIEW.tool_current = noone;
 			return;

@@ -36,9 +36,11 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	newInput( 0, nodeValue_Dimension());
 	
 	////- =Animation
-	newInput(12, nodeValue_Bool(        "Frames Animation", true ));
-	newInput(18, nodeValue_Enum_Scroll( "Animation Type",   0, [ "Loop", "Hold", "Clear" ]));
-	newInput(13, nodeValue_Float(       "Animation Speed",  1 ));
+	newInput(12, nodeValue_Bool(    "Frames Animation", true ));
+	newInput( 5, nodeValue_Bool(    "Auto Frame",       true ));
+	newInput( 7, nodeValue_Int(     "Frame Index",      0    ));
+	newInput(13, nodeValue_Float(   "Animation Speed",  1    ));
+	newInput(18, nodeValue_EScroll( "On End",           0, [ "Loop", "Hold", "Clear" ]));
 	
 	////- =Brush
 	newInput( 6, nodeValue_Surface(         "Brush" )).setVisible(true, false);
@@ -50,8 +52,6 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	/* deprecated */ newInput( 2, nodeValue_ISlider(     "Brush Size",           1, [1,32,.1] ));
 	/* deprecated */ newInput( 3, nodeValue_Slider(      "Fill Threshold",       0            ));
 	/* deprecated */ newInput( 4, nodeValue_Enum_Scroll( "Fill Type",            0, ["4 connect", "8 connect", "Entire canvas"] ));
-	/* deprecated */ newInput( 5, nodeValue_Bool(        "Draw Preview Overlay", true         ));
-	/* deprecated */ newInput( 7, nodeValue_Int(         "Surface Amount",       1            ));
 	/* deprecated */ newInput(11, nodeValue_Slider(      "Alpha",                1            ));
 	
 	////- =Background
@@ -93,8 +93,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	frame_renderer_content = noone;
 	frame_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus, _panel = noone, _full = true, _fx = frame_renderer_x) {
-		var _h    = _full? 64 : 48;
-		var _anim = getInputData(12);
+		var _h     = _full? 64 : 48;
 		var _cnt_hover = false;
 		
 		if(_full) {
@@ -243,7 +242,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	input_display_list = [ 
 		["Frames",       false    ],  0, frame_renderer, 
-		["Animation",    false, 12], 18, 13, 
+		["Animation",    false, 12],  5,  7, 13, 18, 
 		["Brush",         true    ],  6, 15, 17, 16, 
 		["Background",    true, 10],  8, 14,  9, 
 		["Data Transfer", true, noone, b_transferData], 19, 20, button(function() /*=>*/ {return transferData()}).setText("Transfer Data"), 
@@ -830,7 +829,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	static setFrame = function(frame) {
 		var _anim  = getInputData(12);
-		if(_anim) PROJECT.animator.setFrame(frame);
+		var _autof = getInputData( 5);
+		if(_anim && _autof) PROJECT.animator.setFrame(frame);
 		
 		preview_index = frame;
 	}
@@ -1040,6 +1040,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	////- Draw Overlay
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+		preview_surface_sample = isNotUsingTool();
+		
 		#region color picker
 			if(!selection.is_selected && active && key_mod_press(ALT)) 
 				color_picking = true;
@@ -1201,7 +1203,6 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		#endregion
 		
 		#region preview
-			if(selection.is_selected) selection.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 			if(_tool_sel) _tool_sel.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 			if(_tool)     _tool.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 			
@@ -1234,7 +1235,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				
 				if(brush.brush_sizing) 
 					canvas_draw_point_brush(brush, brush.brush_sizing_dx, brush.brush_sizing_dy);
-				else if(_tool && !key_mod_press(CTRL))
+				else if(_tool)
 					_tool.drawPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 					
 				draw_set_alpha(1);
@@ -1326,6 +1327,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			draw_set_color(COLORS.panel_preview_surface_outline);
 			draw_rectangle(_x0, _y0, _x1 - 1, _y1 - 1, true);
 			draw_set_alpha(1);
+			
+			if(selection.is_selected && _tool_sel == noone && is(_tool, canvas_tool_selection))
+				selection.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		#endregion
 		
 		#region hotkeys
@@ -1406,14 +1410,11 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	////- Nodes
 	
 	static step = function() {
-		var _fram  = attributes.frames;
-		var _brush = getInputData(6);
 		var _anim  = getInputData(12);
+		var _autof = getInputData( 5);
+		var _fram  = attributes.frames;
 		
-		inputs[15].setVisible(is_surface(_brush));
-		inputs[16].setVisible(is_surface(_brush));
-		
-		update_on_frame = _fram > 1 && _anim;
+		update_on_frame = _fram > 1 && _anim && _autof;
 		
 		if(update_on_frame) {
 			var _anims = getInputData(13);
@@ -1425,70 +1426,91 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var _dim   = getInputData(0);
-		var _bg    = getInputData(8);
-		var _bga   = getInputData(9);
-		var _bgr   = getInputData(10);
+		#region data
+			var _dim   = getInputData( 0);
+			
+			var _anim  = getInputData(12);
+			var _autof = getInputData( 5);
+			var _frame = getInputData( 7);
+			var _anims = getInputData(13);
+			var _atype = getInputData(18);
+			
+			var _brush = getInputData( 6), _brushSurf = is_surface(_brush);
+			
+			var _bgr   = getInputData(10);
+			var _bg    = getInputData( 8);
+			var _bgDim = getInputData(14);
+			var _bga   = getInputData( 9);
+			
+			var cDep   = attrDepth();
+			
+			inputs[ 7].setVisible(!_autof);
+			inputs[13].setVisible( _autof);
+			
+			inputs[15].setVisible(_brushSurf);
+			inputs[16].setVisible(_brushSurf);
+		#endregion
 		
-		var _anim  = getInputData(12);
-		var _anims = getInputData(13);
-		var _bgDim = getInputData(14);
-		var _atype = getInputData(18);
-		
-		var cDep   = attrDepth();
-		
-		attributes.useBGDim  = false;
-		
-		if(_bgDim) {
-			var _bgDim = _bg;
-			if(is_array(_bgDim) && !array_empty(_bgDim)) _bgDim = _bg[0];
-			if(is_surface(_bgDim)) {
-				attributes.useBGDim = true;
-				_dim = surface_get_dimension(_bgDim);
+		#region dimension
+			attributes.useBGDim  = false;
+			
+			if(_bgDim) {
+				var _bgDim = _bg;
+				if(is_array(_bgDim) && !array_empty(_bgDim)) _bgDim = _bg[0];
+				if(is_surface(_bgDim)) {
+					attributes.useBGDim = true;
+					_dim = surface_get_dimension(_bgDim);
+				}
 			}
-		}
-		attributes.dimension = _dim;
+			attributes.dimension = _dim;
+		#endregion
 		
-		apply_surfaces();
-		
-		var _frames  = attributes.frames;
-		
-		if(!is_array(output_surface)) output_surface = array_create(_frames);
-		else if(array_length(output_surface) != _frames)
-			array_resize(output_surface, _frames);
-		
-		if(_frames == 1) {
-			var _canvas_surface = getCanvasSurface(0);
-			if(is_array(_bg) && !array_empty(_bg)) _bg = _bg[0];
+		#region surface
+			apply_surfaces();
 			
-			output_surface[0] = surface_verify(output_surface[0], _dim[0], _dim[1], cDep);
+			var _frames  = attributes.frames;
 			
-			surface_set_shader(output_surface[0], noone,, BLEND.alpha);
-				if(_bgr && is_surface(_bg))
-					draw_surface_stretched_ext(_bg, 0, 0, _dim[0], _dim[1], c_white, _bga);
-				draw_surface_safe(_canvas_surface);
-			surface_reset_shader();
+			if(!is_array(output_surface)) output_surface = array_create(_frames);
+			else if(array_length(output_surface) != _frames)
+				array_resize(output_surface, _frames);
 			
-			outputs[0].setValue(output_surface[0]);
-			
-		} else {
-			for( var i = 0; i < _frames; i++ ) {
-				var _canvas_surface = getCanvasSurface(i);
-				var _bgArray        = is_array(_bg)? array_safe_get_fast(_bg, i, 0) : _bg;
-				output_surface[i]   = surface_verify(output_surface[i], _dim[0], _dim[1], cDep);
+			if(_frames == 1) {
+				var _canvas_surface = getCanvasSurface(0);
+				if(is_array(_bg) && !array_empty(_bg)) _bg = _bg[0];
 				
-				surface_set_shader(output_surface[i], noone,, BLEND.alpha);
-					if(_bgr && is_surface(_bgArray))
-						draw_surface_stretched_ext(_bgArray, 0, 0, _dim[0], _dim[1], c_white, _bga);
+				output_surface[0] = surface_verify(output_surface[0], _dim[0], _dim[1], cDep);
+				
+				surface_set_shader(output_surface[0], noone,, BLEND.alpha);
+					if(_bgr && is_surface(_bg))
+						draw_surface_stretched_ext(_bg, 0, 0, _dim[0], _dim[1], c_white, _bga);
 					draw_surface_safe(_canvas_surface);
 				surface_reset_shader();
+				
+			} else {
+				for( var i = 0; i < _frames; i++ ) {
+					var _canvas_surface = getCanvasSurface(i);
+					var _bgArray        = is_array(_bg)? array_safe_get_fast(_bg, i, 0) : _bg;
+					output_surface[i]   = surface_verify(output_surface[i], _dim[0], _dim[1], cDep);
+					
+					surface_set_shader(output_surface[i], noone,, BLEND.alpha);
+						if(_bgr && is_surface(_bgArray))
+							draw_surface_stretched_ext(_bgArray, 0, 0, _dim[0], _dim[1], c_white, _bga);
+						draw_surface_safe(_canvas_surface);
+					surface_reset_shader();
+				}
+				
+				temp_surface[1] = surface_verify(temp_surface[1], _dim[0], _dim[1], cDep);
+				surface_clear(temp_surface[1]);
 			}
-			
-			temp_surface[1] = surface_verify(temp_surface[1], _dim[0], _dim[1], cDep);
-			surface_clear(temp_surface[1]);
-			
-			if(_anim) {
-				var _fr_index = CURRENT_FRAME * _anims;
+		#endregion
+		
+		#region output
+			if(_frames == 1) {
+				outputs[0].setValue(output_surface[0]);
+				
+			} else if(_anim) {
+				var _fr_index = _autof? (CURRENT_FRAME * _anims) : _frame;
+				
 				switch(_atype) {
 					case 0 : _fr_index = safe_mod(max(0, _fr_index), _frames);                     break;
 					case 1 : _fr_index = clamp(_fr_index, 0, _frames - 1);                         break;
@@ -1499,21 +1521,22 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				
 			} else
 				outputs[0].setValue(output_surface);
-		}
+		#endregion
 		
-		if(live_edit) {
-			if(!is_struct(PANEL_FILE)) return;
-			
-			var _fileO = PANEL_FILE.file_focus;
-			if(_fileO == noone) return;
-			
-			var path = _fileO.path;
-			if(path == "") return;
-			
-			surface_save(getCanvasSurface(0), path);
-			_fileO.refreshThumbnail();
-		}
-		
+		#region live edit
+			if(live_edit) {
+				if(!is_struct(PANEL_FILE)) return;
+				
+				var _fileO = PANEL_FILE.file_focus;
+				if(_fileO == noone) return;
+				
+				var path = _fileO.path;
+				if(path == "") return;
+				
+				surface_save(getCanvasSurface(0), path);
+				_fileO.refreshThumbnail();
+			}
+		#endregion
 	}
 	
 	static getPreviewValues = function() {

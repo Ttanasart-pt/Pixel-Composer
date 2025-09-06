@@ -1,15 +1,14 @@
 function canvas_tool_selection_magic(_selector, _toolAttr) : canvas_tool_selection(_selector) constructor {
 	tool_attribute = _toolAttr;
-	selecting      = false;
 	
 	function onStep(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		if(selector.is_select_drag) return;
 		
 		var _thr		= tool_attribute.thres;
 		var _fill_type	= tool_attribute.fillType;
 		var _use_output	= tool_attribute.useBG;
 		
-		if(!selector.is_select_drag && mouse_press(mb_left, active)) {
-			selecting = true;
+		if(mouse_press(mb_left, active)) {
 			canvas_buffer = node.canvas_buffer;
 			preview_index = node.preview_index;
 		
@@ -24,13 +23,13 @@ function canvas_tool_selection_magic(_selector, _toolAttr) : canvas_tool_selecti
 				surface_set_target(_temp_surface);
 					DRAW_CLEAR
 					var _surf = _use_output? output_surface : canvas_surface;
+					if(selector.is_selected) _surf = selector.apply(_surf);
 					
 					switch(_fill_type) {
 						case 0 : bb = canvas_magic_selection_scanline(_surf, mouse_cur_x, mouse_cur_y, _thr, false); break;
 						case 1 : bb = canvas_magic_selection_scanline(_surf, mouse_cur_x, mouse_cur_y, _thr, true);  break;
 						case 2 : bb = canvas_magic_selection_all(_surf, mouse_cur_x, mouse_cur_y, _thr);             break;
 					}
-					
 				surface_reset_target();
 				
 				var sel_x0 = bb[0];
@@ -52,11 +51,11 @@ function canvas_tool_selection_magic(_selector, _toolAttr) : canvas_tool_selecti
 				selector.createSelection(selection_mask, sel_x0, sel_y0, sel_w, sel_h);
 				surface_free_safe(selection_mask);
 				
-				if(node.selection_tool_after != noone)
+				if(node.selection_tool_after != noone) {
 					node.selection_tool_after.toggle();
 					node.selection_tool_after  = noone;
-			} else 
-				selector.apply();
+				}
+			}
 		}
 	}
 	
