@@ -10,20 +10,20 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newActiveInput(8);
 	newInput(9, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
-	////- Surface
+	////- =Surface
 	newInput(0, nodeValue_Surface( "Surface In"));
 	newInput(6, nodeValue_Surface( "Mask"));
 	newInput(7, nodeValue_Slider(  "Mix", 1));
 	__init_mask_modifier(6, 10);
 	newInput(5, nodeValue_Surface("Blur mask"));
 	
-	////- Blur
+	////- =Blur
 	newInput(15, nodeValue_Enum_Button( "Mode",         0, [ "Blur", "Step" ]));
 	newInput( 4, nodeValue_Enum_Scroll( "Zoom origin",  1, [ "Start", "Middle", "End" ]));
-	newInput( 1, nodeValue_Float(       "Strength",    .2     )).setHotkey("S").setMappable(12);
+	newInput( 1, nodeValue_Float(       "Strength",     8     )).setHotkey("S").setMappable(12);
 	newInput( 2, nodeValue_Vec2(        "Center",     [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	
-	////- Render
+	////- =Render
 	newInput( 3, nodeValue_Enum_Scroll(   "Oversample mode", 0, [ "Empty", "Clamp", "Repeat" ]));
 	newInput(14, nodeValue_Int(  "Samples", 64));
 	newInput(13, nodeValue_Bool( "Gamma Correction", false));
@@ -58,20 +58,20 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	static processData = function(_outSurf, _data, _array_index) {
 		var _sam = getAttribute("oversample");
 		
-		var _surf = _data[0];
-		var _mask = _data[5];
+		var _surf   = _data[0];
+		var _mask   = _data[5];
 		
-		var _orig = _data[ 4];
-		var _mode = _data[15];
-		var _strn = _data[ 1];
+		var _orig   = _data[ 4];
+		var _mode   = _data[15];
+		var _strn   = _data[ 1];
 		var _strmap = _data[12];
-		var _cent = _data[ 2];
+		var _cent   = _data[ 2];
 		
-		var _samp = _data[14];
-		var _gamm = _data[13];
-		var _fade = _data[16];
+		var _samp   = _data[14];
+		var _gamm   = _data[13];
+		var _fade   = _data[16];
 		
-		var _args = new blur_zoom_args(_surf, [_strn, _strmap, inputs[1]], _cent[0], _cent[1], _orig, _sam, _samp)
+		var _args = new blur_zoomargs(_surf, [_strn, _strmap, inputs[1]], _cent[0], _cent[1], _orig, _sam, _samp)
 							.setMode(_mode)
 							.setFadeDistance(_fade)
 							.setGamma(_gamm)

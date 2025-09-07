@@ -92,7 +92,6 @@ function blur_zoom_args(_surface, _size, _origin_x, _origin_y, _blurMode = 0, _s
 	mode         = 0;     static setMode         = function(i) /*=>*/ { mode = i;         return self; }
 	fadeDistance = true;  static setFadeDistance = function(i) /*=>*/ { fadeDistance = i; return self; }
 	gamma        = false; static setGamma        = function(i) /*=>*/ { gamma = i;        return self; }
-	
 	useMask      = false; static setMask         = function(i) /*=>*/ { mask = i; useMask = is_surface(mask); return self; }
 	mask         = noone;
 }
@@ -101,13 +100,14 @@ function surface_apply_blur_zoom(outputSurf, args) {
 	if(!is_surface(args.surface)) return outputSurf;
 	
 	var format = surface_get_format(args.surface);
-	var _sw    = surface_get_width_safe(args.surface);
-	var _sh    = surface_get_height_safe(args.surface);
+	var _sw = surface_get_width_safe(args.surface);
+	var _sh = surface_get_height_safe(args.surface);
+	var _ss =  max(_sw, _sh) / 2;
 	
 	outputSurf = surface_verify(outputSurf, _sw, _sh, format);
 	
 	var _sizeArr   = is_array(args.size);
-	var _size      = min(_sizeArr? args.size[0] : args.size, 128) / 128;
+	var _size      = min(_sizeArr? args.size[0] : args.size, _ss) / _ss;
 	var _sizeSurf  =  _sizeArr? args.size[1] : noone;
 	var _sizeJunc  =  _sizeArr? args.size[2] : noone;
 	

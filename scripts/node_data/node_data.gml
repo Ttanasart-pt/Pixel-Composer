@@ -976,7 +976,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static getInputDataForce = function(i,d=0) /*=>*/ {return inputs[i].getValue()};
 	
 	static getInputs = function(frame = CURRENT_FRAME) {
-		inputs_data	= array_verify(inputs_data, array_length(inputs));
+		inputs_data	= array_verify_min(inputs_data, array_length(inputs));
 		__frame     = frame;
 		
 		array_foreach(inputs, function(_inp, i) /*=>*/ {
@@ -985,7 +985,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var val = _inp.getValue(__frame);
 			
 			if(_inp.bypass_junc.visible) _inp.bypass_junc.setValue(val);
-			inputs_data[i] = val;								// setInputData(i, val);
+			inputs_data[i] = val;
 			input_value_map[$ _inp.internalName] = val;
 		});
 		
@@ -1065,7 +1065,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		cached_manual = false;
 		
 		if(!use_cache && project.onion_skin.enabled) {
-			for( var i = 0; i < array_length(outputs); i++ ) {
+			var _amo = array_length(outputs), _i = 0, i;
+			repeat(_amo) { i = _i++;
 				if(outputs[i].type != VALUE_TYPE.surface) continue;
 				cacheCurrentFrame(outputs[i].getValue());
 				break;
@@ -2855,13 +2856,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var _inputs = load_map.inputs;
 		var amo = min(array_length(inputs), array_length(_inputs));
 		
-		//print($"Applying deserialzie for {name}");
-		
-		for(var i = 0; i < amo; i++) {
+		var _i = 0, i;
+		repeat(amo) { i = _i++;
 			if(inputs[i] == noone || _inputs[i] == noone) continue;
 			if(preset == 2 && !inputs[i].set_default)     continue;
-			
-			// print($"      Apply {i} : {name}, {inputs[i].name}");
 			inputs[i].applyDeserialize(_inputs[i], load_scale, preset);
 		}
 		
@@ -2869,9 +2867,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var _outputs = load_map.outputs;
 			var amo = min(array_length(outputs), array_length(_outputs));
 			
-			for(var i = 0; i < amo; i++) {
+			var _i = 0, i;
+			repeat(amo) { i = _i++;
 				if(outputs[i] == noone) continue;
-				
 				outputs[i].applyDeserialize(_outputs[i], load_scale, preset);
 			}
 		}
@@ -2888,9 +2886,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		if(struct_has(load_map, "outputMeta")) {
 			var _outMeta = load_map.outputMeta;
-			
-			for(var i = 0; i < min(array_length(_outMeta), array_length(junc_meta)); i++)
-				junc_meta[i].applyDeserialize(_outMeta[i], load_scale, preset);
+			var _amo = min(array_length(_outMeta), array_length(junc_meta));
+			var _i = 0, i;
+			repeat(amo) { i = _i++; junc_meta[i].applyDeserialize(_outMeta[i], load_scale, preset); }
 		}
 		
 		//print($"Applying deserialzie for {name} complete");
