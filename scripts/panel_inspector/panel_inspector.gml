@@ -1476,15 +1476,15 @@ function Panel_Inspector() : PanelContent() constructor {
 	                	var _txt = __txtx("panel_inspector_workshop_upload", "Upload to Steam Workshop");
 	                    if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mse, pHOVER, pFOCUS, _txt, THEME.workshop_upload, 0, COLORS._main_icon_light) == 2) {
                             steam_ugc_create_project();
-                            workshop_uploading = by;
+                            workshop_uploading = 2;
                     	}
                     }
                     
                 } else if(PROJECT.meta.steam && PROJECT.meta.author_steam_id == STEAM_USER_ID) { // user-owned steam project
-                	var _txt = __txtx("panel_inspector_workshop_upload_new", "Upload as new Steam Workshop");
+                	var _txt = __txtx("panel_inspector_workshop_upload_new", "Upload as a new Steam Workshop submission");
                     if(buttonInstant(THEME.button_hide_fill, bx, by - ui(36), bs, bs, mse, pHOVER, pFOCUS, _txt, THEME.workshop_upload, 0, COLORS._main_icon_light) == 2) {
                         steam_ugc_create_project();
-                        workshop_uploading = by - ui(36);
+                        workshop_uploading = 1;
                 	}
                 	
                     if(PROJECT.meta.file_id == 0) {
@@ -1494,17 +1494,19 @@ function Panel_Inspector() : PanelContent() constructor {
                     } else {
                     	var _txt = __txtx("panel_inspector_workshop_update",  "Update Steam Workshop content");
                     	if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mse, pHOVER, pFOCUS, _txt, THEME.workshop_update, 0, COLORS._main_icon_light) == 2) {
-	                        SAVE_AT(PROJECT, PROJECT.path);
-	                        
-	                        steam_ugc_update_project();
-	                        workshop_uploading = by;
+	                        textboxCall("Update note", function(t) /*=>*/ {
+	                        	SAVE_AT(PROJECT, PROJECT.path);
+	                        	steam_ugc_update_project(false, t);
+	                        	workshop_uploading = 2;
+	                        });
 	                    }
                     }
                 }
             }
             
             if(workshop_uploading) {
-                draw_sprite_ui(THEME.loading_s, 0, bx + ui(16), workshop_uploading + ui(16),,, current_time / 5, COLORS._main_icon);
+            	var _by = ui(12) + (workshop_uploading - 1) * ui(36);
+                draw_sprite_ui(THEME.loading_s, 0, bx + ui(16), _by + ui(16),,, current_time / 5, COLORS._main_icon);
                 if(STEAM_UGC_ITEM_UPLOADING == false)
                     workshop_uploading = 0;
             }
