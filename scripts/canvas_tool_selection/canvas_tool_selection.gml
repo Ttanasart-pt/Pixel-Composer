@@ -18,6 +18,7 @@ function canvas_selection() : canvas_tool() constructor {
 	selection_sx = 0; selection_sy = 0;
 	selection_ex = 0; selection_ey = 0;
 	selection_mx = 0; selection_my = 0;
+	selection_aa = 0;
 	
 	mouse_cur_x  = 0; mouse_cur_y  = 0;
 	
@@ -39,7 +40,36 @@ function canvas_selection() : canvas_tool() constructor {
 		updateSelection();
 	}
 	
+	function trimSelection() {
+		if(!is_surface(selection_mask)) return;
+		
+		var _bbox = surface_get_bbox(selection_mask);
+		
+		selection_position[0] += _bbox[0];
+		selection_position[1] += _bbox[1];
+		selection_size[0]      = _bbox[2];
+		selection_size[1]      = _bbox[3];
+		
+		var _temp_surface = surface_create(_bbox[2], _bbox[3]);
+		var _temp_mask    = surface_create(_bbox[2], _bbox[3]);
+		
+		surface_set_shader(_temp_surface);
+			draw_surface(selection_surface, -_bbox[0], -_bbox[1]);
+		surface_reset_shader();
+		
+		surface_set_shader(_temp_mask);
+			draw_surface(selection_mask, -_bbox[0], -_bbox[1]);
+		surface_reset_shader();
+		
+		surface_free(selection_surface);
+		surface_free(selection_mask);
+		
+		selection_surface = _temp_surface;
+		selection_mask    = _temp_mask;
+	}
+	
 	function updateSelection() {
+		selection_aa = 0;
 		selection_sampler.setSurface(selection_mask);
 		
 		selection_surface_base = surface_verify(selection_surface_base, selection_size[0], selection_size[1]); 
@@ -230,6 +260,9 @@ function canvas_selection() : canvas_tool() constructor {
 		if(key_mod_press(SHIFT)) { CURSOR_SPRITE = THEME.cursor_add;    return; }
 		if(key_mod_press(ALT))   { CURSOR_SPRITE = THEME.cursor_remove; return; }
 		
+		var _smx = (_mx - _x) / _s;
+		var _smy = (_my - _y) / _s;
+			
 		var pos_x0  = selection_position[0];
 		var pos_y0  = selection_position[1];
 		var pos_x1  = pos_x0 + selection_size[0];
@@ -314,6 +347,54 @@ function canvas_selection() : canvas_tool() constructor {
 			
 			selection_hovering = true;
 			
+		} else if(is_select_rota) {
+			var a0 = point_direction(selection_sx, selection_sy, selection_mx, selection_my);
+			var a1 = point_direction(selection_sx, selection_sy, _smx, _smy);
+			
+			selection_mx = _smx;
+			selection_my = _smy;
+			
+			var _dd = angle_difference(a1, a0);
+			selection_aa += _dd;
+			
+			var aa = selection_aa;
+			if(key_mod_press(CTRL)) aa = value_snap(aa, 45);
+			
+			var sw = surface_get_width(selection_surface_base);
+			var sh = surface_get_height(selection_surface_base);
+			var pd = max(sw, sh) - min(sw, sh);
+			var pw = sw + pd * 2;
+			var ph = sh + pd * 2;
+			
+			var _p = point_rotate(pw / 2 - sw / 2, ph / 2 - sh / 2, pw / 2, ph / 2, aa);
+			
+			selection_surface = surface_verify(selection_surface, pw, ph);
+			selection_mask    = surface_verify(selection_mask,    pw, ph);
+			
+			surface_set_shader(selection_surface, noone);
+				draw_surface_ext(selection_surface_base, _p[0], _p[1], 1, 1, aa, c_white, 1);
+			surface_reset_shader();
+			
+			surface_set_shader(selection_mask, noone);
+				draw_surface_ext(selection_mask_base, _p[0], _p[1], 1, 1, aa, c_white, 1);
+			surface_reset_shader();
+			
+			selection_position[0] = selection_sx - pw / 2;
+			selection_position[1] = selection_sy - ph / 2;
+			
+			selection_size[0] = pw;
+			selection_size[1] = ph;
+			
+			if((is_select_rota == 1 && mouse_release(mb_left)) || (is_select_rota == 2 && mouse_press(mb_left))) {
+				selection_aa = aa;
+				
+				trimSelection();
+				updateSelection();
+				is_select_rota = 0;
+			}
+			
+			selection_hovering = true;
+			
 		} else {
 			if(point_in_rectangle(mouse_cur_x, mouse_cur_y, pos_x0, pos_y0, pos_x1 - 1, pos_y1 - 1)) {
 				var _msx  = mouse_cur_x - pos_x0;
@@ -324,9 +405,6 @@ function canvas_selection() : canvas_tool() constructor {
 				hover_index = 0;
 			}
 			
-			var _smx = (_mx - _x) / _s;
-			var _smy = (_my - _y) / _s;
-				
 			if(point_in_circle(_smx, _smy, pos_x0, pos_y0, 8 / _s)) hover_index = 1;
 			if(point_in_circle(_smx, _smy, pos_x1, pos_y0, 8 / _s)) hover_index = 2;
 			if(point_in_circle(_smx, _smy, pos_x0, pos_y1, 8 / _s)) hover_index = 3;
@@ -356,8 +434,8 @@ function canvas_selection() : canvas_tool() constructor {
 					is_select_rota = 1;
 					selection_sx = pos_xc;
 					selection_sy = pos_yc;
-					selection_mx = mouse_cur_x;
-					selection_my = mouse_cur_y;
+					selection_mx = _smx;
+					selection_my = _smy;
 					break;
 					
 				default :
@@ -404,6 +482,8 @@ function canvas_selection() : canvas_tool() constructor {
 	}
 	
 	function drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		if(is_select_drag || is_select_rota || is_select_scal) return;
+		
 		var pos_x = _x + selection_position[0] * _s;
 		var pos_y = _y + selection_position[1] * _s;
 		var sel_w = selection_size[0] * _s;
