@@ -18,33 +18,29 @@ function canvas_tool_selection_freeform(_selector, _brush) : canvas_tool_selecti
 		}
 		
 		if(is_selecting) {
-			var sel_x0, sel_y0, sel_x1, sel_y1;
-			var sel_w = 1, sel_h = 1;
-			
 			draw_set_color(c_white);
 			canvas_freeform_step(active, _x, _y, _s, _mx, _my, false);
 			
 			if(mouse_release(mb_left)) {
 				is_selecting = false;
-							
-				var _bbox = surface_get_bbox(drawing_surface);
 				
-				sel_x0 = _bbox[0];
-				sel_y0 = _bbox[1];
-				sel_w  = _bbox[2];
-				sel_h  = _bbox[3];
+				var _bbox = surface_get_bbox(drawing_surface);
+				var sel_x = _bbox[0];
+				var sel_y = _bbox[1];
+				var sel_w = _bbox[2];
+				var sel_h = _bbox[3];
 				
 				if(sel_w > 1 && sel_h > 1) {
 					selection_mask = surface_verify(selection_mask, sel_w, sel_h);
 					surface_set_target(selection_mask);
 						DRAW_CLEAR
-						draw_surface(drawing_surface, -sel_x0, -sel_y0);
+						draw_surface(drawing_surface, -sel_x, -sel_y);
 					surface_reset_target();
 				}
 				
 				surface_clear(drawing_surface);
 				
-				selector.createSelection(selection_mask, sel_x0, sel_y0, sel_w, sel_h);
+				selector.createSelection(selection_mask, sel_x, sel_y, sel_w, sel_h);
 				surface_free_safe(selection_mask);
 			}
 					

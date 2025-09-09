@@ -80,6 +80,11 @@ function Surface_Sampler_Grey(s = noone, _rng = [0,1]) constructor {
     
     setSurface(s);
     
+    static getPixelDirect = function(_x,_y) /*=>*/ {
+        if(!active) return 0;
+        return buffer_read_at(buffer, (_y * sw + _x) * 2, buffer_f16);
+    }
+    
     static getPixel = function(_u,_v) /*=>*/ {
         if(!active) return range[0];
         var _x = round(clamp(_u, 0, 1) * (sw - 1));

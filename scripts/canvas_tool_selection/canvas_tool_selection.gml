@@ -4,6 +4,7 @@ function canvas_selection() : canvas_tool() constructor {
 	selection_position	= [ 0, 0 ];
 	selection_size   	= [ 0, 0 ];
 	selection_hovering  = false;
+	selection_sampler   = new Surface_Sampler_Grey();
 	
 	is_selected    = false;
 	is_select_drag = false;
@@ -20,13 +21,19 @@ function canvas_selection() : canvas_tool() constructor {
 	////- Create Selection
 	
 	function createSelection(_mask, sel_x0, sel_y0, sel_w, sel_h) {
-		if(!is_selected) { createNewSelection(_mask, sel_x0, sel_y0, sel_w, sel_h); return; }
+		if(!is_selected) { 
+			createNewSelection(_mask, sel_x0, sel_y0, sel_w, sel_h); 
+			selection_sampler.setSurface(selection_mask);
+			return; 
+		}
 		
 		apply();
 		
 		     if(key_mod_press(SHIFT)) modifySelection(_mask, sel_x0, sel_y0, sel_w, sel_h, true);
 		else if(key_mod_press(ALT))   modifySelection(_mask, sel_x0, sel_y0, sel_w, sel_h, false);
 		else                          createNewSelection(_mask, sel_x0, sel_y0, sel_w, sel_h);
+		
+		selection_sampler.setSurface(selection_mask);
 	}
 	
 	function createSelectionFromSurface(surface, sel_x0 = 0, sel_y0 = 0) {
@@ -223,27 +230,26 @@ function canvas_selection() : canvas_tool() constructor {
 		var sel_w = selection_size[0];
 		var sel_h = selection_size[1];
 		
-		selection_hovering = point_in_rectangle(mouse_cur_x, mouse_cur_y, pos_x, pos_y, pos_x + sel_w, pos_y + sel_h);
+		selection_hovering = false;
+		
+		if(point_in_rectangle(mouse_cur_x, mouse_cur_y, pos_x, pos_y, pos_x + sel_w - 1, pos_y + sel_h - 1)) {
+			var _msx  = mouse_cur_x - pos_x;
+			var _msy  = mouse_cur_y - pos_y;
+			var _mask = selection_sampler.getPixelDirect(_msx, _msy);
+			selection_hovering = _mask > 0;
+		}
+		
 		if(selection_hovering) CURSOR_SPRITE = THEME.cursor_path_move;
 		
 		if(mouse_press(mb_left, active)) {
-			var _apply = true;
-			
 			if(selection_hovering) {
-				var _c = 1;//surface_getpixel_ext(selection_mask, mouse_cur_x - pos_x, mouse_cur_y - pos_y);
+				is_select_drag = true;
+				selection_sx = pos_x;
+				selection_sy = pos_y;
+				selection_mx = mouse_cur_x;
+				selection_my = mouse_cur_y;
 				
-				if(_c > 0) {
-					is_select_drag = true;
-					selection_sx = pos_x;
-					selection_sy = pos_y;
-					selection_mx = mouse_cur_x;
-					selection_my = mouse_cur_y;
-					
-					_apply = false;
-				}
-			}
-			
-			if(_apply && PANEL_PREVIEW.tool_current == noone)
+			} else if(PANEL_PREVIEW.tool_current == noone)
 				apply();
 		}
 	}

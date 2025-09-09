@@ -9,11 +9,6 @@ function canvas_tool_selection_brush(_selector, _brush) : canvas_tool_selection(
 	mouse_pre_draw_x = undefined;
 	mouse_pre_draw_y = undefined;
 	
-	sel_x0 = 0;
-	sel_y0 = 0;
-	sel_x1 = 0;
-	sel_y1 = 0;
-	
 	function onStep(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		attributes = node.attributes;
 		var _dim   = attributes.dimension;
@@ -29,11 +24,6 @@ function canvas_tool_selection_brush(_selector, _brush) : canvas_tool_selection(
 			
 			mouse_pre_draw_x = mouse_cur_x;
 			mouse_pre_draw_y = mouse_cur_y;	
-			
-			sel_x0 = mouse_cur_x - brush.brush_size;
-			sel_y0 = mouse_cur_y - brush.brush_size;
-			sel_x1 = mouse_cur_x + brush.brush_size;
-			sel_y1 = mouse_cur_y + brush.brush_size;
 		}
 			
 		if(is_selecting) {
@@ -52,23 +42,21 @@ function canvas_tool_selection_brush(_selector, _brush) : canvas_tool_selection(
 			mouse_pre_draw_x = mouse_cur_x;
 			mouse_pre_draw_y = mouse_cur_y;	
 			
-			sel_x0 = min(sel_x0, mouse_cur_x - brush.brush_size);
-			sel_y0 = min(sel_y0, mouse_cur_y - brush.brush_size);
-			sel_x1 = max(sel_x1, mouse_cur_x + brush.brush_size);
-			sel_y1 = max(sel_y1, mouse_cur_y + brush.brush_size);
-				
-			var _sel_w = sel_x1 - sel_x0;
-			var _sel_h = sel_y1 - sel_y0;
-				
 			if(mouse_release(mb_left)) {
-				var _sel = surface_create(_sel_w, _sel_h);
+				var _bbox = surface_get_bbox(selection_mask);
+				var sel_x = _bbox[0];
+				var sel_y = _bbox[1];
+				var sel_w = _bbox[2];
+				var sel_h = _bbox[3];
+				
+				var _sel = surface_create(sel_w, sel_h);
 				surface_set_shader(_sel);
-					draw_surface(selection_mask, -sel_x0, -sel_y0);
+					draw_surface(selection_mask, -sel_x, -sel_y);
 				surface_reset_shader();
 				
 				is_selecting   = false;
 				
-				selector.createSelection(_sel, sel_x0, sel_y0, _sel_w, _sel_h);
+				selector.createSelection(_sel, sel_x, sel_y, sel_w, sel_h);
 				surface_free_safe(selection_mask);
 			}
 		}
