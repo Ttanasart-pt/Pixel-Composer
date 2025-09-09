@@ -26,7 +26,7 @@ function canvas_tool_selection_shape(_selector, _shape) : canvas_tool_selection(
 						
 					case CANVAS_TOOL_SHAPE.ellipse   : 
 						draw_set_circle_precision(32);
-						draw_ellipse(0, 0, sel_w - 1, sel_h - 1, false);
+						draw_ellipse(-1, -1, sel_w - 1, sel_h - 1, false);
 						break;
 				}
 			surface_reset_target();

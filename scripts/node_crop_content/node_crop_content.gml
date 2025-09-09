@@ -117,8 +117,6 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			}
 		}
 		
-		print(minx, miny);
-		
 		var res   = [];
 		var crop  = [];
 		var atlas = [];

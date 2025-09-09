@@ -27,23 +27,13 @@ function canvas_tool_selection_freeform(_selector, _brush) : canvas_tool_selecti
 			if(mouse_release(mb_left)) {
 				is_selecting = false;
 							
-				sel_x0 = _dim[0];
-				sel_y0 = _dim[1];
-				sel_x1 = 0;
-				sel_y1 = 0;
+				var _bbox = surface_get_bbox(drawing_surface);
 				
-				for( var i = 0, n = array_length(freeform_shape); i < n; i++ ) {
-					var _f = freeform_shape[i];
-								
-					sel_x0 = min(sel_x0, round(_f.x - 0.5));
-					sel_y0 = min(sel_y0, round(_f.y - 0.5));
-					sel_x1 = max(sel_x1, round(_f.x - 0.5));
-					sel_y1 = max(sel_y1, round(_f.y - 0.5));
-				}
+				sel_x0 = _bbox[0];
+				sel_y0 = _bbox[1];
+				sel_w  = _bbox[2];
+				sel_h  = _bbox[3];
 				
-				sel_w = sel_x1 - sel_x0 + 1;
-				sel_h = sel_y1 - sel_y0 + 1;
-							
 				if(sel_w > 1 && sel_h > 1) {
 					selection_mask = surface_verify(selection_mask, sel_w, sel_h);
 					surface_set_target(selection_mask);
@@ -51,7 +41,7 @@ function canvas_tool_selection_freeform(_selector, _brush) : canvas_tool_selecti
 						draw_surface(drawing_surface, -sel_x0, -sel_y0);
 					surface_reset_target();
 				}
-							
+				
 				surface_clear(drawing_surface);
 				
 				selector.createSelection(selection_mask, sel_x0, sel_y0, sel_w, sel_h);

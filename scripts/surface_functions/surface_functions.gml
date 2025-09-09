@@ -123,6 +123,47 @@
 		
 	    return 0;
 	}
+	
+	cfunction double surface_get_boundingbox_c(void* pixelArrayBuffer, void* outputBuffer, double width, double height) {
+		pixel*  pixelArray  = (pixel*)pixelArrayBuffer;
+		double* outputArray = (double*)outputBuffer;
+	
+		size_t widthInt  = (size_t)width;
+		size_t heightInt = (size_t)height;
+		size_t size      = widthInt * heightInt;
+	
+		double minX = widthInt;
+		double minY = heightInt;
+		double maxX = -1;
+		double maxY = -1;
+	
+		for (size_t i = 0; i < size; ++i) {
+			if (pixelArray[i].a == 0) continue;
+	
+			double x = (double)(i % widthInt);
+			double y = (double)(i / widthInt);
+	
+			minX = x < minX ? x : minX;
+			minY = y < minY ? y : minY;
+			maxX = x > maxX ? x : maxX;
+			maxY = y > maxY ? y : maxY;
+	    }
+	
+		if (maxX == -1 || maxY == -1) {
+			outputArray[0] = 0;
+			outputArray[1] = 0;
+			outputArray[2] = 0;
+			outputArray[3] = 0;
+			return 0;
+		}
+		
+		outputArray[0] = (double)minX;
+		outputArray[1] = (double)minY;
+		outputArray[2] = (double)(maxX - minX + 1);
+		outputArray[3] = (double)(maxY - minY + 1);
+		
+	    return 1;
+	}
 */
 #endregion
 
@@ -424,28 +465,51 @@
 	}
 	
 	function surface_get_range(surface) {
+		static __surface_get_range_buffer = buffer_create(1, buffer_grow,  1);
 		if(!is_surface(surface)) return [0,1];
 		
 		var _sw   = surface_get_width(surface);
 		var _sh   = surface_get_height(surface);
 		var _size = surface_get_byte_size(surface);
 		
-		buffer_resize(      global.__surface_is_empty_buffer, _size);
-		buffer_get_surface( global.__surface_is_empty_buffer,  surface, 0);
-		buffer_to_start(    global.__surface_is_empty_buffer);
+		buffer_resize(      __surface_get_range_buffer, _size);
+		buffer_get_surface( __surface_get_range_buffer,  surface, 0);
+		buffer_to_start(    __surface_get_range_buffer);
 		
 		var _outB = buffer_create(16, buffer_fixed, 2);
-		var _amo  = surface_get_range_c(buffer_get_address(global.__surface_is_empty_buffer), buffer_get_address(_outB), _sw, _sh);
+		var _amo  = surface_get_range_c(buffer_get_address(__surface_get_range_buffer), buffer_get_address(_outB), _sw, _sh);
 		
 		buffer_to_start(_outB);
-		var _outArr = [0,1];
-		var _min    = buffer_read(_outB, buffer_f64);
-		var _max    = buffer_read(_outB, buffer_f64);
-		_outArr[0]  = _min / 255;
-		_outArr[1]  = _max / 255;
+		var _min = buffer_read(_outB, buffer_f64);
+		var _max = buffer_read(_outB, buffer_f64);
 		buffer_delete(_outB);
 		
-		return _outArr;
+		return [ _min / 255, _max / 255 ];
+	}
+	
+	function surface_get_bbox(surface) {
+		static __surface_get_bbox_buffer = buffer_create(1, buffer_grow,  1);
+		if(!is_surface(surface)) return [0,0,1,1];
+		
+		var _sw   = surface_get_width(surface);
+		var _sh   = surface_get_height(surface);
+		var _size = surface_get_byte_size(surface);
+		
+		buffer_resize(      __surface_get_bbox_buffer, _size);
+		buffer_get_surface( __surface_get_bbox_buffer,  surface, 0);
+		buffer_to_start(    __surface_get_bbox_buffer);
+		
+		var _outB = buffer_create(32, buffer_fixed, 1);
+		var _amo  = surface_get_boundingbox_c(buffer_get_address(__surface_get_bbox_buffer), buffer_get_address(_outB), _sw, _sh);
+		
+		buffer_to_start(_outB);
+		var _minx = buffer_read(_outB, buffer_f64);
+		var _miny = buffer_read(_outB, buffer_f64);
+		var _maxx = buffer_read(_outB, buffer_f64);
+		var _maxy = buffer_read(_outB, buffer_f64);
+		buffer_delete(_outB);
+		
+		return [ _minx, _miny, _maxx, _maxy ];
 	}
 	
 	function surface_get_texture_safe(surface) { return is_surface(surface)? surface_get_texture(surface) : -1; }

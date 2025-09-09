@@ -281,11 +281,7 @@ function canvas_selection() : canvas_tool() constructor {
 		var sel_w = selection_size[0] * _s;
 		var sel_h = selection_size[1] * _s;
 		
-		draw_set_color(c_black);
-		draw_rectangle(pos_x, pos_y, pos_x + sel_w, pos_y + sel_h, true);
-		
-		draw_set_color(c_white);
-		draw_rectangle_dashed(pos_x, pos_y, pos_x + sel_w, pos_y + sel_h, true, 6, current_time / 100);
+		draw_rectangle_dashed_bg(pos_x - 1, pos_y - 1, pos_x + sel_w, pos_y + sel_h, true, 6, current_time / 100, c_black, c_white);
 	}
 	
 	////- Actions
@@ -395,14 +391,5 @@ function canvas_tool_selection(_selector) : canvas_tool() constructor {
 		draw_surface_ext_safe(selection_mask, _dx, _dy, _s, _s);
 	}
 	
-	function drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		if(selector.selection_hovering) return;
-		if(is_selecting) return;
-		
-		var x0 = _x + mouse_cur_x * _s;
-		var y0 = _y + mouse_cur_y * _s;
-		
-		draw_set_color(c_white);
-		draw_rectangle(x0, y0, x0 + _s, y0 + _s, true);
-	}
+	function drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
 }
