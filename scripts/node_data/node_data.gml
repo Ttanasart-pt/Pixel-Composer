@@ -2428,6 +2428,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(_tool == noone) //not using any tool
 			return false;
 		
+		if(_tool.ctx != instanceof(self))
+			return false;
+		
 		if(index == undefined) //using any tool
 			return true;
 		
@@ -2448,7 +2451,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return _tool == noone? "" : _tool.getName(_tool.selecting);
 	}
 	
-	static isNotUsingTool = function() { return PANEL_PREVIEW.tool_current == noone; }
+	static isNotUsingTool = function() { return PANEL_PREVIEW.tool_current == noone || PANEL_PREVIEW.tool_current.ctx != instanceof(self); }
 	
 	static getTool = function() { return self; }
 	

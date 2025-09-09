@@ -1559,6 +1559,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				}
 				
 				if(mouse_lpress(active)) {
+					
 					surf_dragging	= hovering > -1? input_fix_len + hovering * data_length : -1;
 					drag_type		= hovering_type;
 					

@@ -637,6 +637,7 @@ function Panel_Preview() : PanelContent() constructor {
         if(_view && resetViewOnDoubleClick)
             do_fullView = true;
         
+        resetTool();
         preview_node[splitView? splitSelection : 0] = _node;
         locked = _lock;
         

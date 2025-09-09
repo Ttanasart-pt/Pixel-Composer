@@ -1,15 +1,22 @@
 function canvas_selection() : canvas_tool() constructor {
-	selection_surface	= noone;
-	selection_mask		= noone;
+	selection_surface	   = noone;
+	selection_mask		   = noone;
+	selection_surface_base = noone;
+	selection_mask_base    = noone;
+	
 	selection_position	= [ 0, 0 ];
 	selection_size   	= [ 0, 0 ];
 	selection_hovering  = false;
 	selection_sampler   = new Surface_Sampler_Grey();
 	
 	is_selected    = false;
-	is_select_drag = false;
+	hover_index    = noone;
+	is_select_drag = 0;
+	is_select_scal = 0; is_select_scal_anchor = 0;
+	is_select_rota = 0;
 	
 	selection_sx = 0; selection_sy = 0;
+	selection_ex = 0; selection_ey = 0;
 	selection_mx = 0; selection_my = 0;
 	
 	mouse_cur_x  = 0; mouse_cur_y  = 0;
@@ -21,11 +28,7 @@ function canvas_selection() : canvas_tool() constructor {
 	////- Create Selection
 	
 	function createSelection(_mask, sel_x0, sel_y0, sel_w, sel_h) {
-		if(!is_selected) { 
-			createNewSelection(_mask, sel_x0, sel_y0, sel_w, sel_h); 
-			selection_sampler.setSurface(selection_mask);
-			return; 
-		}
+		if(!is_selected) { createNewSelection(_mask, sel_x0, sel_y0, sel_w, sel_h); updateSelection(); return; }
 		
 		apply();
 		
@@ -33,7 +36,18 @@ function canvas_selection() : canvas_tool() constructor {
 		else if(key_mod_press(ALT))   modifySelection(_mask, sel_x0, sel_y0, sel_w, sel_h, false);
 		else                          createNewSelection(_mask, sel_x0, sel_y0, sel_w, sel_h);
 		
+		updateSelection();
+	}
+	
+	function updateSelection() {
 		selection_sampler.setSurface(selection_mask);
+		
+		selection_surface_base = surface_verify(selection_surface_base, selection_size[0], selection_size[1]); 
+		surface_copy(selection_surface_base, 0, 0, selection_surface);
+		
+		selection_mask_base    = surface_verify(selection_mask_base,    selection_size[0], selection_size[1]); 
+		surface_copy(selection_mask_base,    0, 0, selection_mask);
+		
 	}
 	
 	function createSelectionFromSurface(surface, sel_x0 = 0, sel_y0 = 0) {
@@ -168,6 +182,8 @@ function canvas_selection() : canvas_tool() constructor {
 		selection_position = [ 0, 0 ];
 		selection_size     = [ sel_w,  sel_h  ];
 		is_selected = true;
+		
+		updateSelection();
 	}
 	
 	////- Step
@@ -211,8 +227,16 @@ function canvas_selection() : canvas_tool() constructor {
 		selection_hovering = false;
 		if(!is_surface(selection_surface)) { is_selected = false; return; } 
 		
-		if(key_mod_press(SHIFT)) { CURSOR_SPRITE = THEME.cursor_path_add;    return; }
-		if(key_mod_press(ALT))   { CURSOR_SPRITE = THEME.cursor_path_remove; return; }
+		if(key_mod_press(SHIFT)) { CURSOR_SPRITE = THEME.cursor_add;    return; }
+		if(key_mod_press(ALT))   { CURSOR_SPRITE = THEME.cursor_remove; return; }
+		
+		var pos_x0  = selection_position[0];
+		var pos_y0  = selection_position[1];
+		var pos_x1  = pos_x0 + selection_size[0];
+		var pos_y1  = pos_y0 + selection_size[1];
+		var pos_xc  = (pos_x0 + pos_x1) / 2;
+		var pos_yc  = (pos_y0 + pos_y1) / 2;
+		hover_index = noone;
 		
 		if(is_select_drag) {
 			var px = selection_sx + (mouse_cur_x - selection_mx);
@@ -221,36 +245,134 @@ function canvas_selection() : canvas_tool() constructor {
 			selection_position[0] = px;
 			selection_position[1] = py;
 			
-			if(mouse_release(mb_left))
-				is_select_drag = false;
+			if((is_select_drag == 1 && mouse_release(mb_left)) || (is_select_drag == 2 && mouse_press(mb_left)))
+				is_select_drag = 0;
+			
+			selection_hovering = true;
+			
+		} else if(is_select_scal) {
+			var _dx = mouse_cur_x - selection_mx;
+			var _dy = mouse_cur_y - selection_my;
+			
+			var px = selection_sx;
+			var py = selection_sy;
+			
+			var pw = selection_ex - selection_sx;
+			var ph = selection_ey - selection_sy;
+					
+			switch(is_select_scal_anchor) {
+				case 1 : 
+					px += _dx;
+					py += _dy;
+					
+					pw -= _dx;
+					ph -= _dy;
+					break;
+				
+				case 2 : 
+					py += _dy;
+					
+					pw += _dx;
+					ph -= _dy;
+					break;
+				
+				case 3 : 
+					px += _dx;
+					
+					pw -= _dx;
+					ph += _dy;
+					break;
+					
+				case 4 : 
+					pw += _dx;
+					ph += _dy;
+					break;
+					
+			}
+			
+			selection_surface = surface_verify(selection_surface, pw, ph);
+			selection_mask    = surface_verify(selection_mask,    pw, ph);
+			
+			surface_set_shader(selection_surface, noone);
+				draw_surface_stretched(selection_surface_base, 0, 0, pw, ph);
+			surface_reset_shader();
+			
+			surface_set_shader(selection_mask, noone);
+				draw_surface_stretched(selection_mask_base, 0, 0, pw, ph);
+			surface_reset_shader();
+			
+			selection_position[0] = px;
+			selection_position[1] = py;
+			
+			selection_size[0] = pw;
+			selection_size[1] = ph;
+			
+			if((is_select_scal == 1 && mouse_release(mb_left)) || (is_select_scal == 2 && mouse_press(mb_left))) {
+				selection_sampler.setSurface(selection_mask);
+				is_select_scal = 0;
+			}
+			
+			selection_hovering = true;
+			
+		} else {
+			if(point_in_rectangle(mouse_cur_x, mouse_cur_y, pos_x0, pos_y0, pos_x1 - 1, pos_y1 - 1)) {
+				var _msx  = mouse_cur_x - pos_x0;
+				var _msy  = mouse_cur_y - pos_y0;
+				var _mask = selection_sampler.getPixelDirect(_msx, _msy);
+				selection_hovering = _mask > 0;
+				
+				hover_index = 0;
+			}
+			
+			var _smx = (_mx - _x) / _s;
+			var _smy = (_my - _y) / _s;
+				
+			if(point_in_circle(_smx, _smy, pos_x0, pos_y0, 8 / _s)) hover_index = 1;
+			if(point_in_circle(_smx, _smy, pos_x1, pos_y0, 8 / _s)) hover_index = 2;
+			if(point_in_circle(_smx, _smy, pos_x0, pos_y1, 8 / _s)) hover_index = 3;
+			if(point_in_circle(_smx, _smy, pos_x1, pos_y1, 8 / _s)) hover_index = 4;
+			if(point_in_circle(_smx, _smy, pos_xc, pos_y0 - 24 / _s, 8 / _s)) hover_index = 5;
+			
+			if(hover_index) selection_hovering = true;
 		}
 		
-		var pos_x = selection_position[0];
-		var pos_y = selection_position[1];
-		var sel_w = selection_size[0];
-		var sel_h = selection_size[1];
-		
-		selection_hovering = false;
-		
-		if(point_in_rectangle(mouse_cur_x, mouse_cur_y, pos_x, pos_y, pos_x + sel_w - 1, pos_y + sel_h - 1)) {
-			var _msx  = mouse_cur_x - pos_x;
-			var _msy  = mouse_cur_y - pos_y;
-			var _mask = selection_sampler.getPixelDirect(_msx, _msy);
-			selection_hovering = _mask > 0;
+		if(hover_index == noone) {
+			if(PANEL_PREVIEW.tool_current == noone && mouse_press(mb_left, active)) 
+				apply();
+			return;
 		}
-		
-		if(selection_hovering) CURSOR_SPRITE = THEME.cursor_path_move;
 		
 		if(mouse_press(mb_left, active)) {
-			if(selection_hovering) {
-				is_select_drag = true;
-				selection_sx = pos_x;
-				selection_sy = pos_y;
-				selection_mx = mouse_cur_x;
-				selection_my = mouse_cur_y;
+			switch(hover_index) {
+				case 0 : 
+					is_select_drag = 1;
+					selection_sx = pos_x0;
+					selection_sy = pos_y0;
+					selection_mx = mouse_cur_x;
+					selection_my = mouse_cur_y;
+					break;
 				
-			} else if(PANEL_PREVIEW.tool_current == noone)
-				apply();
+				case 5 : 
+					is_select_rota = 1;
+					selection_sx = pos_xc;
+					selection_sy = pos_yc;
+					selection_mx = mouse_cur_x;
+					selection_my = mouse_cur_y;
+					break;
+					
+				default :
+					is_select_scal = 1;
+					is_select_scal_anchor = hover_index;
+					
+					selection_sx = pos_x0;
+					selection_sy = pos_y0;
+					selection_ex = pos_x1;
+					selection_ey = pos_y1;
+					selection_mx = mouse_cur_x;
+					selection_my = mouse_cur_y;
+					break;
+					
+			}
 		}
 	}
 	
@@ -288,6 +410,15 @@ function canvas_selection() : canvas_tool() constructor {
 		var sel_h = selection_size[1] * _s;
 		
 		draw_rectangle_dashed_bg(pos_x - 1, pos_y - 1, pos_x + sel_w, pos_y + sel_h, true, 6, current_time / 100, c_black, c_white);
+		
+		draw_anchor(hover_index == 1, pos_x,         pos_y,         ui(8), 1);
+		draw_anchor(hover_index == 2, pos_x + sel_w, pos_y,         ui(8), 1);
+		draw_anchor(hover_index == 3, pos_x,         pos_y + sel_h, ui(8), 1);
+		draw_anchor(hover_index == 4, pos_x + sel_w, pos_y + sel_h, ui(8), 1);
+		
+		draw_set_color(c_white)
+		draw_line(pos_x + sel_w / 2, pos_y, pos_x + sel_w / 2, pos_y - 24);
+		draw_anchor(hover_index == 5, pos_x + sel_w / 2, pos_y - 24, ui(8), 1);
 	}
 	
 	////- Actions

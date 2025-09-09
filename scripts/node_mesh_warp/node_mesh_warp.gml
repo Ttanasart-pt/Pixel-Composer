@@ -397,7 +397,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		if(hover != -1) hovering = true;
 		
 		if(isUsingTool("Edit control point")) {
-			CURSOR_SPRITE = key_mod_press(SHIFT)? THEME.cursor_path_remove : THEME.cursor_path_add;
+			CURSOR_SPRITE = key_mod_press(SHIFT)? THEME.cursor_remove : THEME.cursor_add;
 			
 			if(mouse_press(mb_left, active)) {
 				if(_hover == -1) {
@@ -418,7 +418,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			}
 		} else if(isUsingTool("Pin mesh")) {
 			hovering = true;
-			CURSOR_SPRITE = key_mod_press(SHIFT)? THEME.cursor_path_remove : THEME.cursor_path_add;
+			CURSOR_SPRITE = key_mod_press(SHIFT)? THEME.cursor_remove : THEME.cursor_add;
 			
 			draw_set_color(COLORS._main_accent);
 			var rad = 16;

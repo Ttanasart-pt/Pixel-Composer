@@ -1320,7 +1320,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				hovering      = true;
 			
 				if(anchor_hover != -1 && hover_type == 0) { //remove
-					CURSOR_SPRITE = THEME.cursor_path_remove;
+					CURSOR_SPRITE = THEME.cursor_remove;
 					
 					if(mouse_press(mb_left, active)) {
 						var _indx = input_fix_len + anchor_hover;
@@ -1332,7 +1332,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					} 
 					
 				} else {
-					CURSOR_SPRITE = THEME.cursor_path_add;
+					CURSOR_SPRITE = THEME.cursor_add;
 					var _mmx = _mx;
 					var _mmy = _my;
 					
@@ -1449,7 +1449,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			case "Circle path" :
 				hovering      = true;
 				anchor_select = [];
-				CURSOR_SPRITE = THEME.cursor_path_add;
+				CURSOR_SPRITE = THEME.cursor_add;
 				
 				if(mouse_press(mb_left, active)) {
 					while(array_length(inputs) > input_fix_len)
@@ -1475,7 +1475,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 						draw_circle(_point_hover[0], _point_hover[1], 4, false);
 						
 					} else if(_weight_hover != -1 && key_mod_press(SHIFT)) {
-						CURSOR_SPRITE = THEME.cursor_path_remove;
+						CURSOR_SPRITE = THEME.cursor_remove;
 						
 						if(mouse_press(mb_left, active)) {
 							if(_weight_hover == 0 || _weight_hover == array_length(attributes.weight) - 1) 
@@ -1546,7 +1546,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					}
 					
 				} else if(hover_type == 0 && key_mod_press(SHIFT)) { // remove
-					CURSOR_SPRITE = THEME.cursor_path_remove;
+					CURSOR_SPRITE = THEME.cursor_remove;
 					
 					if(mouse_press(mb_left, active)) {
 						var _indx = input_fix_len + anchor_hover;
@@ -1568,7 +1568,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 							_mode = key_mod_press(ALT)? 2 : 1;
 					}
 					
-					var _spr = THEME.cursor_path_move;
+					var _spr = THEME.cursor_move;
 					switch(_mode) {
 						case 1 : _spr = THEME.cursor_path_anchor_unmirror; break;
 						case 2 : _spr = THEME.cursor_path_anchor_detach;   break;

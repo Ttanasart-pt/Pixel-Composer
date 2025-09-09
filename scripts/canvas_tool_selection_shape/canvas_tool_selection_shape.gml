@@ -44,7 +44,7 @@ function canvas_tool_selection_shape(_selector, _shape) : canvas_tool_selection(
 				surface_free_safe(selection_mask);
 			}
 			
-		} else if(!selector.is_select_drag && mouse_press(mb_left, active)) {
+		} else if(!selector.selection_hovering && mouse_press(mb_left, active)) {
 			is_selecting = true;
 			selection_sx = mouse_cur_x;
 			selection_sy = mouse_cur_y;

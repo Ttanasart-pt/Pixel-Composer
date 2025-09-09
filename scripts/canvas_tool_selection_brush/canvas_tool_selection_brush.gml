@@ -13,7 +13,7 @@ function canvas_tool_selection_brush(_selector, _brush) : canvas_tool_selection(
 		attributes = node.attributes;
 		var _dim   = attributes.dimension;
 		
-		if(!selector.is_select_drag && mouse_press(mb_left, active)) {
+		if(!selector.selection_hovering && mouse_press(mb_left, active)) {
 			selection_mask = surface_verify(selection_mask, _dim[0], _dim[1]);
 			
 			surface_set_shader(selection_mask, noone);

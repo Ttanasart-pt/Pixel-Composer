@@ -9,7 +9,7 @@ function canvas_tool_selection_freeform(_selector, _brush) : canvas_tool_selecti
 		attributes = node.attributes;
 		var _dim   = attributes.dimension;
 		
-		if(!selector.is_select_drag && mouse_press(mb_left, active)) {
+		if(!selector.selection_hovering && mouse_press(mb_left, active)) {
 			is_selecting = true;
 			selection_sx = mouse_cur_x;
 			selection_sy = mouse_cur_y;
