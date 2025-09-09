@@ -1,8 +1,8 @@
 #region
 	FN_NODE_TOOL_INVOKE {
-		hotkeyTool("Node_Armature_Pose", "Move Selection",   "G");
-		hotkeyTool("Node_Armature_Pose", "Rotate Selection", "R");
-		hotkeyTool("Node_Armature_Pose", "Scale Selection",  "S");
+		hotkeyCustom("Node_Armature_Pose", "Move Selection",   "G");
+		hotkeyCustom("Node_Armature_Pose", "Rotate Selection", "R");
+		hotkeyCustom("Node_Armature_Pose", "Scale Selection",  "S");
 	});
 	
 	function armature_pose_tool_move(_node) : ToolObject() constructor {

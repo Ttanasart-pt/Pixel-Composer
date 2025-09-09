@@ -1,9 +1,9 @@
 #region
 	
 	FN_NODE_TOOL_INVOKE {
-		hotkeyTool("Node_Grid_Warp", "Move Selection",      "G");
-		hotkeyTool("Node_Grid_Warp", "Rotate Selection",    "R");
-		hotkeyTool("Node_Grid_Warp", "Scale Selection",     "S");
+		hotkeyCustom("Node_Grid_Warp", "Move Selection",      "G");
+		hotkeyCustom("Node_Grid_Warp", "Rotate Selection",    "R");
+		hotkeyCustom("Node_Grid_Warp", "Scale Selection",     "S");
 	});
 	
 	function grid_warp_tool_move(_node) : ToolObject() constructor {

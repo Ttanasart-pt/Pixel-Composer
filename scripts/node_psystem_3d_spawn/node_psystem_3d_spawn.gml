@@ -1,6 +1,6 @@
 #region
 	FN_NODE_TOOL_INVOKE {
-		hotkeyTool("Node_pSystem_3D_Spawn", "Move Origin", "G");
+		hotkeyCustom("Node_pSystem_3D_Spawn", "Move Origin", "G");
 	});
 	
 #endregion

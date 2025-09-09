@@ -1,16 +1,16 @@
 #region
 	FN_NODE_TOOL_INVOKE {
-		hotkeyTool("Node_Armature", "Move",         "V");
-		hotkeyTool("Node_Armature", "Scale",        "S");
-		hotkeyTool("Node_Armature", "Transform",    "T");
-		hotkeyTool("Node_Armature", "Add Bone",     "A");
-		hotkeyTool("Node_Armature", "Remove Bone",  "E");
-		hotkeyTool("Node_Armature", "Detach Bone",  "D");
-		hotkeyTool("Node_Armature", "IK",           "K");
+		hotkeyCustom("Node_Armature", "Move",         "V");
+		hotkeyCustom("Node_Armature", "Scale",        "S");
+		hotkeyCustom("Node_Armature", "Transform",    "T");
+		hotkeyCustom("Node_Armature", "Add Bone",     "A");
+		hotkeyCustom("Node_Armature", "Remove Bone",  "E");
+		hotkeyCustom("Node_Armature", "Detach Bone",  "D");
+		hotkeyCustom("Node_Armature", "IK",           "K");
 		
-		hotkeyTool("Node_Armature", "Move Selection",   "G");
-		hotkeyTool("Node_Armature", "Rotate Selection", "R");
-		hotkeyTool("Node_Armature", "Scale Selection",  "S");
+		hotkeyCustom("Node_Armature", "Move Selection",   "G");
+		hotkeyCustom("Node_Armature", "Rotate Selection", "R");
+		hotkeyCustom("Node_Armature", "Scale Selection",  "S");
 	});
 	
 	enum ARMATURE_DRAG_TYPE {

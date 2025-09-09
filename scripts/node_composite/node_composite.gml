@@ -14,10 +14,10 @@
 	}
 	
 	FN_NODE_TOOL_INVOKE {
-		hotkeyTool("Node_Composite", "Anchor", "A");
-		hotkeyTool("Node_Composite", "Move",   "G");
-		hotkeyTool("Node_Composite", "Rotate", "R");
-		hotkeyTool("Node_Composite", "Scale",  "S");
+		hotkeyCustom("Node_Composite", "Anchor", "A");
+		hotkeyCustom("Node_Composite", "Move",   "G");
+		hotkeyCustom("Node_Composite", "Rotate", "R");
+		hotkeyCustom("Node_Composite", "Scale",  "S");
 	});
 	
 	function composite_transform_tool_move(_node) : ToolObject() constructor {

@@ -1,14 +1,14 @@
 #region
 	FN_NODE_TOOL_INVOKE {
-		hotkeyTool("Node_Tile_Drawer", "Pencil",           "B");
-		hotkeyTool("Node_Tile_Drawer", "Eraser",           "E");
-		hotkeyTool("Node_Tile_Drawer", "Rectangle",        "N");
-		hotkeyTool("Node_Tile_Drawer", "Ellipse",          "M");
-		hotkeyTool("Node_Tile_Drawer", "Fill",             "G");
-		hotkeyTool("Node_Tile_Drawer", "Brush Rotate CW",  "R");
-		hotkeyTool("Node_Tile_Drawer", "Brush Rotate CCW", "R", MOD_KEY.shift);
-		hotkeyTool("Node_Tile_Drawer", "Brush Flip H",     "T");
-		hotkeyTool("Node_Tile_Drawer", "Brush Flip V",     "T", MOD_KEY.shift);	
+		hotkeyCustom("Node_Tile_Drawer", "Pencil",           "B");
+		hotkeyCustom("Node_Tile_Drawer", "Eraser",           "E");
+		hotkeyCustom("Node_Tile_Drawer", "Rectangle",        "N");
+		hotkeyCustom("Node_Tile_Drawer", "Ellipse",          "M");
+		hotkeyCustom("Node_Tile_Drawer", "Fill",             "G");
+		hotkeyCustom("Node_Tile_Drawer", "Brush Rotate CW",  "R");
+		hotkeyCustom("Node_Tile_Drawer", "Brush Rotate CCW", "R", MOD_KEY.shift);
+		hotkeyCustom("Node_Tile_Drawer", "Brush Flip H",     "T");
+		hotkeyCustom("Node_Tile_Drawer", "Brush Flip V",     "T", MOD_KEY.shift);	
 	});
 #endregion
 
@@ -298,13 +298,7 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				tool_tile_picker = true;
 		}
 	    
-	    for( var i = 0, n = array_length(hotkeys); i < n; i++ ) {
-	    	var _hk = hotkeys[i];
-	    	var _h = getToolHotkey("Node_Tile_Drawer", _hk[0]);
-	    	if(_h == noone) continue;
-	    	
-	    	if(_h.isPressing()) _hk[1]();
-	    }
+	    array_foreach(hotkeys, function(h) /*=>*/ { if(HOTKEYS_CUSTOM[$ "Node_Tile_Drawer"][$ h[0]].isPressing()) h[1](); });
     
     	return hovering;
     }

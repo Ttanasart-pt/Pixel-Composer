@@ -1,6 +1,6 @@
 #region
 	FN_NODE_TOOL_INVOKE {
-		hotkeyTool("Node_RM_Primitive", "Transform", "T");
+		hotkeyCustom("Node_RM_Primitive", "Transform", "T");
 	});
 #endregion
 

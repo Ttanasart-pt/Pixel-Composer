@@ -6,9 +6,9 @@
 	});
 
 	FN_NODE_TOOL_INVOKE {
-		hotkeyTool("Node_Transform", "Move",   "G");
-		hotkeyTool("Node_Transform", "Rotate", "R");
-		hotkeyTool("Node_Transform", "Scale",  "S");
+		hotkeyCustom("Node_Transform", "Move",   "G");
+		hotkeyCustom("Node_Transform", "Rotate", "R");
+		hotkeyCustom("Node_Transform", "Scale",  "S");
 	});
 	
 	enum OUTPUT_SCALING {

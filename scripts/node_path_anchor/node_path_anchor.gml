@@ -1,6 +1,6 @@
 #region
 	FN_NODE_TOOL_INVOKE {
-		hotkeyTool("Node_Path_Anchor", "Adjust control point", "A");
+		hotkeyCustom("Node_Path_Anchor", "Adjust control point", "A");
 	});
 #endregion
 

@@ -1,8 +1,8 @@
 #region
 	FN_NODE_TOOL_INVOKE {
-		hotkeyTool("Node_3D_Object", "Transform", "G");
-		hotkeyTool("Node_3D_Object", "Rotate",    "R");
-		hotkeyTool("Node_3D_Object", "Scale",     "S");
+		hotkeyCustom("Node_3D_Object", "Transform", "G");
+		hotkeyCustom("Node_3D_Object", "Rotate",    "R");
+		hotkeyCustom("Node_3D_Object", "Scale",     "S");
 	});
 	
 #endregion

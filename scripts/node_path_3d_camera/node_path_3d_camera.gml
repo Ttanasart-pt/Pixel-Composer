@@ -1,6 +1,6 @@
 #region
 	FN_NODE_TOOL_INVOKE {
-		hotkeyTool("Node_Path_3D_Camera", "Move Target", "T");
+		hotkeyCustom("Node_Path_3D_Camera", "Move Target", "T");
 	});
 #endregion
 

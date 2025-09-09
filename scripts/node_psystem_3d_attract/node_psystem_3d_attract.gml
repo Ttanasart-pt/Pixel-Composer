@@ -1,6 +1,6 @@
 #region
 	FN_NODE_TOOL_INVOKE {
-		hotkeyTool("Node_pSystem_3D_Attract", "Move Target", "G");
+		hotkeyCustom("Node_pSystem_3D_Attract", "Move Target", "G");
 	});
 	
 #endregion

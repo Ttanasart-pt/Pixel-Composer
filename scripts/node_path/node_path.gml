@@ -11,17 +11,17 @@
 	}
 	
 	FN_NODE_TOOL_INVOKE {
-		hotkeyTool("Node_Path", "Transform",           "T");
-		hotkeyTool("Node_Path", "Anchor add / remove", "A");
-		hotkeyTool("Node_Path", "Edit Control point",  "C");
-		hotkeyTool("Node_Path", "Draw path",           "B");
-		hotkeyTool("Node_Path", "Rectangle path",      "N");
-		hotkeyTool("Node_Path", "Circle path",         "M");
-		hotkeyTool("Node_Path", "Weight edit",         "W");
+		hotkeyCustom("Node_Path", "Transform",           "T");
+		hotkeyCustom("Node_Path", "Anchor add / remove", "A");
+		hotkeyCustom("Node_Path", "Edit Control point",  "C");
+		hotkeyCustom("Node_Path", "Draw path",           "B");
+		hotkeyCustom("Node_Path", "Rectangle path",      "N");
+		hotkeyCustom("Node_Path", "Circle path",         "M");
+		hotkeyCustom("Node_Path", "Weight edit",         "W");
 		
-		hotkeyTool("Node_Path", "Move Selection",      "G");
-		hotkeyTool("Node_Path", "Rotate Selection",    "R");
-		hotkeyTool("Node_Path", "Scale Selection",     "S");
+		hotkeyCustom("Node_Path", "Move Selection",      "G");
+		hotkeyCustom("Node_Path", "Rotate Selection",    "R");
+		hotkeyCustom("Node_Path", "Scale Selection",     "S");
 	});
 	
 	function path_tool_move(_node) : ToolObject() constructor {

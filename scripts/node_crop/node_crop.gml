@@ -1,8 +1,8 @@
 #region
 	FN_NODE_TOOL_INVOKE {
-		hotkeyTool("Node_Crop", "Draw crop area", "D");
-		hotkeyTool("Node_Crop", "Fit Width",      "W");
-		hotkeyTool("Node_Crop", "Fit Height",     "H");
+		hotkeyCustom("Node_Crop", "Draw crop area", "D");
+		hotkeyCustom("Node_Crop", "Fit Width",      "W");
+		hotkeyCustom("Node_Crop", "Fit Height",     "H");
 	});
 #endregion
 

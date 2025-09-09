@@ -1,8 +1,8 @@
 #region
 	FN_NODE_TOOL_INVOKE {
-		hotkeyTool("Node_Armature_Mesh_Rig",  "Pose",          "P");
-		hotkeyTool("Node_Armature_Mesh_Rig",  "Weight Brush",  "B");
-		hotkeyTool("Node_Armature_Mesh_Rig",  "Weight Eraser", "E");
+		hotkeyCustom("Node_Armature_Mesh_Rig",  "Pose",          "P");
+		hotkeyCustom("Node_Armature_Mesh_Rig",  "Weight Brush",  "B");
+		hotkeyCustom("Node_Armature_Mesh_Rig",  "Weight Eraser", "E");
 	});
 #endregion
 

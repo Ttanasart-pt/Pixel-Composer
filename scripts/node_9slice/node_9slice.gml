@@ -1,6 +1,6 @@
 #region
 	FN_NODE_TOOL_INVOKE {
-		hotkeyTool("Node_9Slice", "Preview Original", "P");
+		hotkeyCustom("Node_9Slice", "Preview Original", "P");
 	});
 #endregion
 

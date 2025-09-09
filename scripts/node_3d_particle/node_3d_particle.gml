@@ -1,6 +1,6 @@
 #region
 	FN_NODE_TOOL_INVOKE {
-		hotkeyTool("Node_3D_Particle", "Move Origin", "G");
+		hotkeyCustom("Node_3D_Particle", "Move Origin", "G");
 	});
 	
 #endregion

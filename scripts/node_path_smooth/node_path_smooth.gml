@@ -1,6 +1,6 @@
 #region
 	FN_NODE_TOOL_INVOKE {
-		hotkeyTool("Node_Path_Smooth", "Anchor add / remove", "A");
+		hotkeyCustom("Node_Path_Smooth", "Anchor add / remove", "A");
 	});
 #endregion
 

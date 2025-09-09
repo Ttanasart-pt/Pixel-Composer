@@ -39,7 +39,8 @@ function Hotkey(_context, _name, _key = "", _mod = MOD_KEY.none, _action = noone
 	rawAction = _action;
 	param     = _param;
 	
-	static setParam = function(p) /*=>*/ { param = p; return self; }
+	static setParam  = function(p) /*=>*/ { param = p;     return self; }
+	static setAction = function(a) /*=>*/ { rawAction = a; return self; }
 	
 	static action = function() {
 		if(param == noone) rawAction();
@@ -78,7 +79,7 @@ function Hotkey(_context, _name, _key = "", _mod = MOD_KEY.none, _action = noone
 	if(VERSION >= 1_18_10_1) deserialize(HOTKEYS_DATA[$ getNameFull()]);
 }
 
-function hotkeyTool(_context, _name, _key = "", _mod = MOD_KEY.none) { 
+function hotkeyCustom(_context, _name, _key = "", _mod = MOD_KEY.none) { 
 	var _hk = new Hotkey(_context, _name, _key, _mod);
 	
 	if(!struct_has(HOTKEYS_CUSTOM, _context)) HOTKEYS_CUSTOM[$ _context] = {};
@@ -125,7 +126,6 @@ function find_hotkey(_context, _name) {
 
 function getToolHotkey(_group, _key) {
 	INLINE
-	
 	if(!struct_has(HOTKEYS_CUSTOM, _group)) return noone;
 	
 	var _grp = HOTKEYS_CUSTOM[$ _group];

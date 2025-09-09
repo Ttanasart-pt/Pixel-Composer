@@ -1,28 +1,34 @@
 #region 
 	FN_NODE_TOOL_INVOKE {
-		hotkeyTool("Node_Canvas", "Selection",       "S");
-		hotkeyTool("Node_Canvas", "Magic Selection", "W");
-		hotkeyTool("Node_Canvas", "Pencil",          "B");
-		hotkeyTool("Node_Canvas", "Eraser",          "E");
-		hotkeyTool("Node_Canvas", "Rectangle",       "N");
-		hotkeyTool("Node_Canvas", "Ellipse",         "M");
-		hotkeyTool("Node_Canvas", "Iso Cube",        "");
-		hotkeyTool("Node_Canvas", "Curve",           "");
-		hotkeyTool("Node_Canvas", "Freeform",        "Q");
-		hotkeyTool("Node_Canvas", "Fill",            "G");
-		hotkeyTool("Node_Canvas", "Gradient",        "G", MOD_KEY.shift);
+		hotkeyCustom("Node_Canvas", "Selection",       "S");
+		hotkeyCustom("Node_Canvas", "Magic Selection", "W");
+		hotkeyCustom("Node_Canvas", "Pencil",          "B");
+		hotkeyCustom("Node_Canvas", "Eraser",          "E");
+		hotkeyCustom("Node_Canvas", "Rectangle",       "N");
+		hotkeyCustom("Node_Canvas", "Ellipse",         "M");
+		hotkeyCustom("Node_Canvas", "Iso Cube",        "");
+		hotkeyCustom("Node_Canvas", "Curve",           "");
+		hotkeyCustom("Node_Canvas", "Freeform",        "Q");
+		hotkeyCustom("Node_Canvas", "Fill",            "G");
+		hotkeyCustom("Node_Canvas", "Gradient",        "G", MOD_KEY.shift);
 		
-		hotkeyTool("Node_Canvas", "Outline",         "O", MOD_KEY.alt);
-		hotkeyTool("Node_Canvas", "Extrude",         "E", MOD_KEY.alt);
-		hotkeyTool("Node_Canvas", "Inset",           "I", MOD_KEY.alt);
-		hotkeyTool("Node_Canvas", "Skew",            "S", MOD_KEY.alt);
-		hotkeyTool("Node_Canvas", "Corner",          "C", MOD_KEY.alt);
+		hotkeyCustom("Node_Canvas", "Outline",         "O", MOD_KEY.alt);
+		hotkeyCustom("Node_Canvas", "Extrude",         "E", MOD_KEY.alt);
+		hotkeyCustom("Node_Canvas", "Inset",           "I", MOD_KEY.alt);
+		hotkeyCustom("Node_Canvas", "Skew",            "S", MOD_KEY.alt);
+		hotkeyCustom("Node_Canvas", "Corner",          "C", MOD_KEY.alt);
 		
-		hotkeyTool("Node_Canvas", "Resize Canvas",   "");
-		// hotkeyTool("Node_Canvas", "Rotate 90 CW",    "");
-		// hotkeyTool("Node_Canvas", "Rotate 90 CCW",   "");
-		// hotkeyTool("Node_Canvas", "Flip H",          "");
-		// hotkeyTool("Node_Canvas", "Flip V",          "");
+		hotkeyCustom("Node_Canvas", "Resize Canvas",   "");
+		// hotkeyCustom("Node_Canvas", "Rotate 90 CW",    "");
+		// hotkeyCustom("Node_Canvas", "Rotate 90 CCW",   "");
+		// hotkeyCustom("Node_Canvas", "Flip H",          "");
+		// hotkeyCustom("Node_Canvas", "Flip V",          "");
+		
+		hotkeyCustom("Node_Canvas", "New Frame",       "N", MOD_KEY.alt);
+		hotkeyCustom("Node_Canvas", "Select All",      "A", MOD_KEY.ctrl);
+		hotkeyCustom("Node_Canvas", "Copy Selection",  "C", MOD_KEY.ctrl);
+		hotkeyCustom("Node_Canvas", "Paste",           "V", MOD_KEY.ctrl);
+		hotkeyCustom("Node_Canvas", "Paste at Cursor", "V", MOD_KEY.ctrl | MOD_KEY.shift);
 	});
 #endregion 
 
@@ -48,12 +54,6 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	newInput(17, nodeValue_Rotation_Random( "Random Direction",                  [0,0,0,0,0]  ));
 	newInput(16, nodeValue_Bool(            "Rotate Brush by Direction",         false        ));
 	
-	/* deprecated */ newInput( 1, nodeValue_Color(       "Color",                ca_white     ));
-	/* deprecated */ newInput( 2, nodeValue_ISlider(     "Brush Size",           1, [1,32,.1] ));
-	/* deprecated */ newInput( 3, nodeValue_Slider(      "Fill Threshold",       0            ));
-	/* deprecated */ newInput( 4, nodeValue_Enum_Scroll( "Fill Type",            0, ["4 connect", "8 connect", "Entire canvas"] ));
-	/* deprecated */ newInput(11, nodeValue_Slider(      "Alpha",                1            ));
-	
 	////- =Background
 	newInput(10, nodeValue_Bool(    "Render Background",        true ));
 	newInput( 8, nodeValue_Surface( "Background"                     ));
@@ -63,6 +63,13 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	////- =Data Transfer
 	newInput(19, nodeValue_Surface( "Data Source" ));
 	newInput(20, nodeValue_Bool(    "Transfer Dimension", true ));
+	
+	/* deprecated */ newInput( 1, nodeValue_Color(       "Color",                ca_white     ));
+	/* deprecated */ newInput( 2, nodeValue_ISlider(     "Brush Size",           1, [1,32,.1] ));
+	/* deprecated */ newInput( 3, nodeValue_Slider(      "Fill Threshold",       0            ));
+	/* deprecated */ newInput( 4, nodeValue_Enum_Scroll( "Fill Type",            0, ["4 connect", "8 connect", "Entire canvas"] ));
+	/* deprecated */ newInput(11, nodeValue_Slider(      "Alpha",                1            ));
+	
 	// input 21
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -204,12 +211,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _bx = _x1 + _aw / 2 - _bs / 2;
 		var _by = _y + _h / 2  - _bs / 2;
 		
-		if(buttonInstant(noone, _bx, _by, _bs, _bs, _m, _hover, _focus, "", THEME.add_16, 0, [ COLORS._main_icon, COLORS._main_value_positive ]) == 2) {
-			setFrame(attributes.frames);
-			attributes.frames++;
-			refreshFrames();
-			update();
-		}
+		if(buttonInstant(noone, _bx, _by, _bs, _bs, _m, _hover, _focus, "", THEME.add_16, 0, [ COLORS._main_icon, COLORS._main_value_positive ]) == 2)
+			addFrame(true);
 		
 		if(frame_dragging != noone) {
 			
@@ -243,8 +246,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	input_display_list = [ 
 		["Frames",       false    ],  0, frame_renderer, 
 		["Animation",    false, 12],  5,  7, 13, 18, 
-		["Brush",         true    ],  6, 15, 17, 16, 
 		["Background",    true, 10],  8, 14,  9, 
+		["Brush",         true    ],  6, 15, 17, 16, 
 		["Data Transfer", true, noone, b_transferData], 19, 20, button(function() /*=>*/ {return transferData()}).setText("Transfer Data"), 
 	];
 	
@@ -681,6 +684,18 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		selection_tool_after = noone;
 	#endregion
 	
+	#region ++++ hotkey ++++
+		hotkeys = [
+			[ "New Frame",  function() /*=>*/ { addFrame(); } ], 
+			
+			[ "Select All",      function() /*=>*/ { if(selection.is_selected) { selection.apply(); } selection.selectAll(); } ], 
+			[ "Copy Selection",  function() /*=>*/ { selection.copySelection(); selection.apply(); } ], 
+			[ "Paste",           function() /*=>*/ { pasteSurface(false); } ], 
+			[ "Paste at Cursor", function() /*=>*/ { pasteSurface(true);  } ], 
+			
+		];
+	#endregion
+	
 	function getToolColor() { return !use_color_3d || color_3d_selected == 0? CURRENT_COLOR : brush.colors[color_3d_selected - 1]; }
 	function setToolColor(color) { 
 		if(!use_color_3d || color_3d_selected == 0) CURRENT_COLOR = color;
@@ -833,6 +848,13 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(_anim && _autof) PROJECT.animator.setFrame(frame);
 		
 		preview_index = frame;
+	}
+	
+	static addFrame = function(_focus = true) {
+		if(_focus) setFrame(attributes.frames);
+		attributes.frames++;
+		refreshFrames();
+		update();
 	}
 	
 	static removeFrame = function(index = 0) {
@@ -1042,12 +1064,15 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		preview_surface_sample = isNotUsingTool();
 		
+		#region hotkey
+			array_foreach(hotkeys, function(h) /*=>*/ { if(HOTKEYS_CUSTOM[$ "Node_Canvas"][$ h[0]].isPressing()) h[1](); });
+		#endregion
+		
 		#region color picker
 			if(!selection.is_selected && active && key_mod_press(ALT)) 
 				color_picking = true;
-				
-			if(color_picking) 
-				return pickColor(_x, _y, _s, _mx, _my);
+			
+			if(color_picking) return pickColor(_x, _y, _s, _mx, _my);
 		#endregion
 		
 		#region parameters
@@ -1330,46 +1355,6 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			if(selection.is_selected && _tool_sel == noone && is(_tool, canvas_tool_selection))
 				selection.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-		#endregion
-		
-		#region hotkeys
-			if(key_press(ord("C"), MOD_KEY.ctrl) && selection.is_selected) {
-				selection.copySelection();
-				selection.apply();
-			}
-			
-			if(keyboard_check_pressed(ord("V")) && key_mod_press(CTRL) && (_tool == noone || !_tool.mouse_holding)) {
-				var _str = json_try_parse(clipboard_get_text(), noone);
-				
-				if(struct_has(_str, "buffer")) {
-					var _surf = surface_decode(_str);
-					
-					if(surface_exists(_surf)) {
-						selection.createSelectionFromSurface(_surf);
-						surface_free(_surf);
-						
-						var _sel_x = 0;
-						var _sel_y = 0;
-						
-						if(has(_str, "position")) {
-							_sel_x = _str.position[0];
-							_sel_y = _str.position[1];
-						}
-						
-						if(key_mod_press(SHIFT)) {
-							_sel_x = mouse_cur_x;
-							_sel_y = mouse_cur_y;
-						}
-						
-						selection.selection_position = [ _sel_x, _sel_y ];
-					}
-				}
-			}
-			
-			if(key_press(ord("A"), MOD_KEY.ctrl)) {
-				if(selection.is_selected) selection.apply();
-				selection.selectAll();
-			}
 		#endregion
 		
 		#region color picker 
@@ -1715,6 +1700,32 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		setCanvasSurface(_canSurf);
 		surface_store_buffer();
+	}
+	
+	static pasteSurface = function(_cursor = false) {
+		var _str = json_try_parse(clipboard_get_text(), noone);
+		if(!struct_has(_str, "buffer")) return;
+		
+		var _surf = surface_decode(_str);
+		if(!surface_exists(_surf)) return;
+		
+		selection.createSelectionFromSurface(_surf);
+		surface_free(_surf);
+		
+		var _sel_x = 0;
+		var _sel_y = 0;
+		
+		if(has(_str, "position")) {
+			_sel_x = _str.position[0];
+			_sel_y = _str.position[1];
+		}
+		
+		if(_cursor) {
+			_sel_x = mouse_cur_x;
+			_sel_y = mouse_cur_y;
+		}
+		
+		selection.selection_position = [ _sel_x, _sel_y ];
 	}
 }
 

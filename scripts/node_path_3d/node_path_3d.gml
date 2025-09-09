@@ -1,11 +1,11 @@
 #region functions
 	FN_NODE_TOOL_INVOKE {
-		hotkeyTool("Node_Path_3D", "Transform", "G");
-		hotkeyTool("Node_Path_3D", "Rotate",    "R");
-		hotkeyTool("Node_Path_3D", "Scale",     "S");
+		hotkeyCustom("Node_Path_3D", "Transform", "G");
+		hotkeyCustom("Node_Path_3D", "Rotate",    "R");
+		hotkeyCustom("Node_Path_3D", "Scale",     "S");
 		
-		hotkeyTool("Node_Path_3D", "Anchor add / remove", "A");
-		hotkeyTool("Node_Path_3D", "Edit Control point",  "C");
+		hotkeyCustom("Node_Path_3D", "Anchor add / remove", "A");
+		hotkeyCustom("Node_Path_3D", "Edit Control point",  "C");
 	});
 	
 	enum _ANCHOR3 {
