@@ -690,7 +690,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         toolbars_distrib_space = [
             new panel_toolbar_icon("", THEME.obj_distribute_h, function() /*=>*/ {return 0}, function() /*=>*/ {return ""}, function(p) /*=>*/ { node_hdistribute_dist(nodes_selecting, nodes_select_anchor, distribution_spacing); } ),
             new panel_toolbar_icon("", THEME.obj_distribute_v, function() /*=>*/ {return 0}, function() /*=>*/ {return ""}, function(p) /*=>*/ { node_vdistribute_dist(nodes_selecting, nodes_select_anchor, distribution_spacing); } ),
-            [ new textBox(TEXTBOX_INPUT.number, function(val) { distribution_spacing = value_snap(val, 4); } ).setPadding(4), function() /*=>*/ {return distribution_spacing} ],
+            [ textBox_Number(function(val) /*=>*/ { distribution_spacing = val; } ).setPadding(4), function() /*=>*/ {return distribution_spacing} ],
         ];
         
         toolbars = [ toolbars_general ];
@@ -2602,18 +2602,19 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                     tbObj.setFocusHover(pFOCUS, hov);
                     
                     var _wdw = ui(32);
-                    var _wdx = tbx - _wdw;
+                    var _wdx = tbx + bs - _wdw;
                     if(_wdx < cont_x) break;
                     
-                    var _param = new widgetParam(_wdx, ty + ui(8), _wdw, toolbar_height - ui(16), tb[1](), {}, _m, x, y);
-                    _param.font = f_p3;
+                    var _param = new widgetParam(_wdx, ty + ui(8), _wdw, toolbar_height - ui(16), tb[1](), {}, _m, x, y)
+                    	.setFont(f_p3)
+                    	.setHalign(fa_left);
                     
                     tbObj.color = COLORS._main_text_sub;
                     tbObj.drawParam(_param);
                     
                     tbx -= _wdw + ui(4);
                     
-                } else {
+                } else if(is_array(tb)) {
                     var tbInd     = tb[1]();
                     var tbTooltip = tb[2]();
                     if(tbx - (bs + ui(4)) < cont_x) break;
@@ -3606,7 +3607,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         var _gs = project.graphGrid.size;
         
         var node = nodeBuild(_nodeType, _mx, _my);
-        if(node == noone) return node;
+        if(node == noone) return noone;
         
         mouse_create_y = ceil((mouse_create_y + node.h + _gs / 2) / _gs) * _gs;
         

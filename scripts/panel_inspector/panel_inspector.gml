@@ -1464,17 +1464,17 @@ function Panel_Inspector() : PanelContent() constructor {
             if(STEAM_ENABLED && workshop_uploading == 0) {
                 if(PROJECT.path == "") { // unsaved project
                 	var _txt = __txtx("panel_inspector_workshop_save", "Save file before upload");
-                    buttonInstant(noone, bx, by, bs, bs, mse, pHOVER, pFOCUS, _txt, THEME.workshop_upload, 0, COLORS._main_icon_light);
+                    buttonInstant(noone, bx, by, bs, bs, mse, pHOVER, pFOCUS, _txt, THEME.workshop_upload, 0, c_white);
                     
                 } else if(PROJECT.meta.steam == FILE_STEAM_TYPE.local) { // project made locally
                     var s = PANEL_PREVIEW.getNodePreviewSurface();
                     if(!is_surface(s)) {
                     	var _txt = __txtx("panel_inspector_workshop_no_thumbnail", "Send node to preview to be use as project thumbnail before uploading.");
-                    	buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mse, pHOVER, pFOCUS, _txt, THEME.workshop_upload, 0, COLORS._main_icon_light);
+                    	buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mse, pHOVER, pFOCUS, _txt, THEME.workshop_no_file, 0, c_white);
                     	
                     } else {
 	                	var _txt = __txtx("panel_inspector_workshop_upload", "Upload to Steam Workshop");
-	                    if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mse, pHOVER, pFOCUS, _txt, THEME.workshop_upload, 0, COLORS._main_icon_light) == 2) {
+	                    if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mse, pHOVER, pFOCUS, _txt, THEME.workshop_upload, 0, c_white) == 2) {
                             steam_ugc_create_project();
                             workshop_uploading = 2;
                     	}
@@ -1482,18 +1482,18 @@ function Panel_Inspector() : PanelContent() constructor {
                     
                 } else if(PROJECT.meta.steam && PROJECT.meta.author_steam_id == STEAM_USER_ID) { // user-owned steam project
                 	var _txt = __txtx("panel_inspector_workshop_upload_new", "Upload as a new Steam Workshop submission");
-                    if(buttonInstant(THEME.button_hide_fill, bx, by - ui(36), bs, bs, mse, pHOVER, pFOCUS, _txt, THEME.workshop_upload, 0, COLORS._main_icon_light) == 2) {
+                    if(buttonInstant(THEME.button_hide_fill, bx, by - ui(36), bs, bs, mse, pHOVER, pFOCUS, _txt, THEME.workshop_add, 0, c_white) == 2) {
                         steam_ugc_create_project();
                         workshop_uploading = 1;
                 	}
                 	
                     if(PROJECT.meta.file_id == 0) {
                 		var _txt = __txtx("panel_inspector_workshop_not_found", "File ID not found, try open the project from the workshop tab.");
-                        buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mse, pHOVER, pFOCUS, _txt, THEME.workshop_no_file, 0, COLORS._main_icon_light);
+                        buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mse, pHOVER, pFOCUS, _txt, THEME.workshop_no_file, 0, c_white);
                         
                     } else {
                     	var _txt = __txtx("panel_inspector_workshop_update",  "Update Steam Workshop content");
-                    	if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mse, pHOVER, pFOCUS, _txt, THEME.workshop_update, 0, COLORS._main_icon_light) == 2) {
+                    	if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mse, pHOVER, pFOCUS, _txt, THEME.workshop_update, 0, c_white) == 2) {
 	                        textboxCall("Update note", function(t) /*=>*/ {
 	                        	SAVE_AT(PROJECT, PROJECT.path);
 	                        	steam_ugc_update_project(false, t);
