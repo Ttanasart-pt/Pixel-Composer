@@ -1215,15 +1215,13 @@ function PanelContent() constructor {
 }
 
 function setFocus(target, fstring = noone) {
-	if((instance_exists(FOCUS) && variable_instance_exists(FOCUS, "onFocusEnd")) || 
-		(is_struct(FOCUS) && struct_has(FOCUS, "onFocusEnd"))) 
+	if((instance_exists(FOCUS) && variable_instance_exists(FOCUS, "onFocusEnd")) || struct_has(FOCUS, "onFocusEnd")) 
 		FOCUS.onFocusEnd();
 	
 	FOCUS = target;
 	if(fstring != noone) FOCUS_STR = fstring;
 	
-	if((instance_exists(FOCUS) && variable_instance_exists(FOCUS, "onFocusBegin")) || 
-		(is_struct(FOCUS) && struct_has(FOCUS, "onFocusBegin"))) 
+	if((instance_exists(FOCUS) && variable_instance_exists(FOCUS, "onFocusBegin")) || struct_has(FOCUS, "onFocusBegin")) 
 		FOCUS.onFocusBegin();
 		
 }

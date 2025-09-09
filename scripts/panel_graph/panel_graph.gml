@@ -3119,6 +3119,11 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 			draw_text_add(_tx, _ty, _node? _node.name : string_replace_all(FOCUS_STR, "_", " "));
 			
 			_ty -= line_get_height() + ui(8);
+			
+			if(pHOVER) {
+				if(key_press(vk_space) || key_press(vk_enter) || key_press(vk_escape)) 
+					setFocus(panel, context_str);
+			}
     	}
 		
 		draw_set_alpha(1);

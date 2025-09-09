@@ -53,6 +53,11 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	array_foreach(inputs, function(i) /*=>*/ {return i.rejectArray()});
 	
+	////- Node
+	
+	attributes.reframe_w = 0;
+	attributes.reframe_h = 0;
+	
 	static move = function(_x, _y) {
 		if(moved) return;
 		if(x == _x && y == _y) return;
@@ -134,6 +139,10 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		y = _miny;
 		w = _maxx - _minx;
 		h = _maxy - _miny;
+		
+		attributes.reframe_w = w;
+		attributes.reframe_h = h;
+		
 	}
 	
 	////- Update
@@ -351,7 +360,12 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 
 	////- Serialize
 	
-	static postApplyDeserialize  = function() { onValueUpdate(); }
+	static postApplyDeserialize  = function() { 
+		if(attributes.reframe_w) w = attributes.reframe_w;
+		if(attributes.reframe_h) h = attributes.reframe_h;
+		
+		onValueUpdate(); 
+	}
 	
 	static postDeserialize = function() {
 		if(CLONING) return;
