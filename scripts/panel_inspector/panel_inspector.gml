@@ -219,13 +219,14 @@ function Panel_Inspector() : PanelContent() constructor {
     
     #region ---- Metadata ----
         current_meta = -1;
-        meta_tb[0] = new textArea(TEXTBOX_INPUT.text, function(s) /*=>*/ { current_meta.description = s; });
-        meta_tb[1] = new textArea(TEXTBOX_INPUT.text, function(s) /*=>*/ { current_meta.author      = s; });
-        meta_tb[2] = new textArea(TEXTBOX_INPUT.text, function(s) /*=>*/ { current_meta.contact     = s; });
-        meta_tb[3] = new textArea(TEXTBOX_INPUT.text, function(s) /*=>*/ { current_meta.alias       = s; });
+        meta_tb[0] = textArea_Text( function(s) /*=>*/ { current_meta.description = s; } ).setVAlign(ui(4));
+        meta_tb[1] = textArea_Text( function(s) /*=>*/ { current_meta.author      = s; } ).setVAlign(ui(4));
+        meta_tb[2] = textArea_Text( function(s) /*=>*/ { current_meta.contact     = s; } ).setVAlign(ui(4));
+        meta_tb[3] = textArea_Text( function(s) /*=>*/ { current_meta.alias       = s; } ).setVAlign(ui(4));
         meta_tb[4] = new textArrayBox(noone, META_TAGS);
-        for( var i = 0, n = array_length(meta_tb); i < n; i++ )
-            meta_tb[i].hide = true;
+        
+        if(STEAM_ENABLED) meta_tb[1].setSideButton(button(function() /*=>*/ { current_meta.author = STEAM_USERNAME; })
+        								.setIcon(THEME.steam, 0, COLORS._main_icon).iconPad(ui(12)).setTooltip("Use Steam username"));
         
         meta_display = [ 
             [ __txt("Project Settings"),    false, "settings"   ], 
@@ -1443,7 +1444,16 @@ function Panel_Inspector() : PanelContent() constructor {
             
             if(PROJECT.meta.steam != FILE_STEAM_TYPE.local) {
                 var tw = string_width(txt) / 2 * ss;
-                draw_sprite_ui(THEME.steam, 0, tx - tw - ui(16), ty, 1, 1, 0, COLORS._main_icon);
+            	var sx = tx - tw - ui(16);
+                draw_sprite_ui(THEME.steam, 0, sx, ty, 1, 1, 0, COLORS._main_icon);
+                
+                if(PROJECT.meta.file_id != 0 && pHOVER && point_in_circle(mx, my, sx, ty, ui(10))) {
+                	draw_sprite_ui(THEME.steam, 0, sx, ty, 1, 1, 0, COLORS._main_icon_light);
+                	TOOLTIP = "View on Steam workshop...";
+                	
+                	if(mouse_lpress(pFOCUS))
+                		steam_activate_overlay_browser($"https://steamcommunity.com/sharedfiles/filedetails/?id={PROJECT.meta.file_id}");
+                }
             }
             
             var bx = w - ui(44);
@@ -1482,7 +1492,7 @@ function Panel_Inspector() : PanelContent() constructor {
                         buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mse, pHOVER, pFOCUS, _txt, THEME.workshop_no_file, 0, COLORS._main_icon_light);
                         
                     } else {
-                    	var _txt = __txtx("panel_inspector_workshop_update",  "Update Steam Workshop content.");
+                    	var _txt = __txtx("panel_inspector_workshop_update",  "Update Steam Workshop content");
                     	if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mse, pHOVER, pFOCUS, _txt, THEME.workshop_update, 0, COLORS._main_icon_light) == 2) {
 	                        SAVE_AT(PROJECT, PROJECT.path);
 	                        

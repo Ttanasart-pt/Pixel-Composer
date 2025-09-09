@@ -757,14 +757,12 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		draw_set_font(font);
 		if(_stretch_width) _w = string_width(self == WIDGET_CURRENT? _input_text : _text) + ui(16);
 		
-		w  = _w;
-		var _bs = min(h, ui(32));
+		var c_h = line_get_height();
 		
-		if(_w - _bs > ui(100) && side_button && instanceof(side_button) == "buttonClass") {
-			side_button.setFocusHover(active, hover);
-			side_button.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
-			_w -= _bs + ui(8);
-		}
+		w  = _w;
+		var _bw = min(c_h + padding_v * 2, ui(32));
+		var _drawB = is(side_button, buttonClass) && _w - _bw > ui(100);
+		if(_drawB) _w -= _bw + ui(4);
 		
 		var tx = ui(8);
 		var hh = _h;
@@ -781,7 +779,6 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		if(_stretch_width) line_width = 9999999;
 		cursor_tx = _x + tx;
 		
-		var c_h        = line_get_height();
 		var line_count = max(min_lines, array_length(_input_text_line));
 		
 		hh = max(_h, padding_v * 2 + c_h * line_count);
@@ -791,6 +788,12 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		if(max_height && text_y_max) {
 			_hw        -= 16;
 			line_width -= 16;
+		}
+		
+		if(_drawB) {
+			var bh = c_h + padding_v * 2;
+			side_button.setFocusHover(active, hover);
+			side_button.draw(_x + w - _bw, _y, _bw, bh, _m, THEME.button_hide_fill);
 		}
 		
 		////- Draw
