@@ -1,6 +1,10 @@
 function steam_ugc_create_project() {
 	if(STEAM_UGC_ITEM_UPLOADING) return;
 	
+	PROJECT.meta.author_steam_id = STEAM_USER_ID;
+    PROJECT.meta.steam = FILE_STEAM_TYPE.steamUpload;
+    SAVE_AT(PROJECT, PROJECT.path);
+	
 	var file         = new FileObject(PROJECT.path);
 	file.meta        = PROJECT.meta;
 	file.spr_path[0] = DIRECTORY + "steamUGC/thumbnail.png";
@@ -111,13 +115,15 @@ function steam_ugc_project_generate(file, dest_path = TEMPDIR + "steamUGCthumbna
 		draw_sprite_ext(spr, 0, prev_size / 2 + ox, prev_size / 2 + oy, ss, ss, 0, c_white, 1);
 		
 		draw_sprite_stretched(s_workshop_badge, 0, 8, 8, 88, 88);
-		draw_sprite_ui(THEME.workshop_project, 0, 40, 40, 1, 1, 0, COLORS._main_icon_dark, 1);
+		draw_sprite_ext(THEME.workshop_project, 0, 40, 40, 1 / THEME_SCALE, 1 / THEME_SCALE, 0, COLORS._main_icon_dark, 1);
 		
 		draw_set_text(f_h2, fa_right, fa_bottom, COLORS._main_icon_dark);
-		var _bw = 48 + string_width(VERSION_STRING);
-		var _bh = 80;
+		var _bw = 48 + string_width(VERSION_STRING) / UI_SCALE;
+		var _bh = 22 + string_height(VERSION_STRING) / UI_SCALE;
 		draw_sprite_stretched(s_workshop_badge_version, 0, prev_size - 8 - _bw, prev_size - 8 - _bh, _bw, _bh);
-		draw_text(prev_size - 16, prev_size - 4, VERSION_STRING);
+		gpu_set_tex_filter(true);
+		draw_text_transformed(prev_size - 16, prev_size - 8, VERSION_STRING, 1 / UI_SCALE, 1 / UI_SCALE, 0);
+		gpu_set_tex_filter(false);
 		
 		if(sprite_exists(STEAM_AVATAR) && STEAM_UGC_ITEM_AVATAR) draw_surface(avartar, prev_size - 24 - avar_size, 24);
 	surface_reset_target();

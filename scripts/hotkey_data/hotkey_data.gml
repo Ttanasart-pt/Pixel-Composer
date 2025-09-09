@@ -116,12 +116,10 @@ function addHotkey(_context, _name, _key, _mod, _action) {
 function find_hotkey(_context, _name) {
 	if(!struct_has(HOTKEYS, _context)) return getToolHotkey(_context, _name);
 	
-	for(var j = 0; j < array_length(HOTKEYS[$ _context]); j++) {
-		if(HOTKEYS[$ _context][j].name == _name)
-			return HOTKEYS[$ _context][j];
-	}
-	
-	return noone;
+	__name = _name;
+	var hk = HOTKEYS[$ _context];
+	var i  = array_find_index(hk, function(h) /*=>*/ {return h.name == __name});
+	return i == -1? noone : hk[i];
 }
 
 function getToolHotkey(_group, _key) {

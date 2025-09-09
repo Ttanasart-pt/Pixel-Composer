@@ -3,7 +3,7 @@ var ev_id = async_load[? "id"];
 var ev_type = async_load[? "event_type"];
 
 if(string(ev_id) == string(STEAM_UGC_ITEM_ID) && ev_type == "ugc_create_item") {
-	STEAM_UGC_PUBLISH_ID = async_load[? "published_file_id"];
+	STEAM_UGC_PUBLISH_ID    = async_load[? "published_file_id"];
 	STEAM_UGC_UPDATE_HANDLE = steam_ugc_start_item_update(STEAM_APP_ID, STEAM_UGC_PUBLISH_ID);
 	
 	steam_ugc_set_item_title(STEAM_UGC_UPDATE_HANDLE, STEAM_UGC_ITEM_FILE.name);
@@ -13,7 +13,13 @@ if(string(ev_id) == string(STEAM_UGC_ITEM_ID) && ev_type == "ugc_create_item") {
 	var tgs = array_clone(STEAM_UGC_ITEM_FILE.meta.tags);
 	switch(STEAM_UGC_TYPE) {
 		case STEAM_UGC_FILE_TYPE.collection :	array_insert_unique(tgs, 0, "Collection");	break;
-		case STEAM_UGC_FILE_TYPE.project :		array_insert_unique(tgs, 0, "Project");		break;
+		
+		case STEAM_UGC_FILE_TYPE.project :		
+			array_insert_unique(tgs, 0, "Project");
+			PROJECT.meta.file_id = STEAM_UGC_PUBLISH_ID;
+			SAVE_AT(PROJECT, PROJECT.path);
+			break;
+			
 		case STEAM_UGC_FILE_TYPE.node_preset :	array_insert_unique(tgs, 0, "Node preset");	break;
 	}
 	
@@ -39,10 +45,11 @@ if(string(ev_id) == string(STEAM_UGC_SUBMIT_ID)) {
 	
 	if(async_load[? "result"] == ugc_result_success) {
 		if(STEAM_UGC_UPDATE) {
-			log_message("WORKSHOP", type + " updated", THEME.workshop_update);
+			noti_status($"Steam Workshop: {type} updated", THEME.workshop_update, true);
 			PANEL_MENU.setNotiIcon(THEME.workshop_update);
+			
 		} else {
-			log_message("WORKSHOP", type + " uploaded", THEME.workshop_upload);
+			noti_status($"Steam Workshop: {type} updated", THEME.workshop_upload, true);
 			PANEL_MENU.setNotiIcon(THEME.workshop_upload);
 		}
 		

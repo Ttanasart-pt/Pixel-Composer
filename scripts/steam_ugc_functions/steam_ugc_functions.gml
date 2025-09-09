@@ -1,4 +1,4 @@
-function __initSteamUGC() { #region
+function __initSteamUGC() {
 	globalvar STEAM_SUBS, STEAM_COLLECTION, STEAM_PROJECTS, STEAM_TAGS;
 	
 	STEAM_SUBS		   = ds_list_create();
@@ -11,9 +11,9 @@ function __initSteamUGC() { #region
 	
 	directory_verify(DIRECTORY + "steamUGC");
 	try { steamUCGload(); } catch(e) { log_message("SESSION", $"> init SteamUGC      | error {e}"); }
-} #endregion
+}
 
-function steamUCGload() { #region
+function steamUCGload() {
 	ds_list_clear(STEAM_SUBS);
 	STEAM_COLLECTION = [];
 	STEAM_PROJECTS = [];
@@ -40,9 +40,9 @@ function steamUCGload() { #region
 		
 		ds_map_destroy(item_map);
 	}
-} #endregion
+}
 
-function __loadSteamUGC(file_id, item_map) { #region
+function __loadSteamUGC(file_id, item_map) {
 	var _path = item_map[? "folder"];
 	
 	var f = file_find_first(_path + "/*.pxcc", 0); file_find_close();
@@ -56,9 +56,9 @@ function __loadSteamUGC(file_id, item_map) { #region
 		__loadSteamUGCProject(file_id, p, _path);
 		return;
 	}
-} #endregion
+}
 
-function __loadSteamUGCCollection(file_id, f, path) { #region
+function __loadSteamUGCCollection(file_id, f, path) {
 	if(filename_ext_raw(f) != "pxcc") return;
 	
 	var fullPath  = $"{path}/{f}";
@@ -81,9 +81,9 @@ function __loadSteamUGCCollection(file_id, f, path) { #region
 	var meta = file.getMetadata(true);
 	meta.steam   = FILE_STEAM_TYPE.steamOpen;
 	meta.file_id = file_id;
-} #endregion
+}
 
-function __loadSteamUGCProject(file_id, f, path) { #region
+function __loadSteamUGCProject(file_id, f, path) {
 	if(!path_is_project(f, false)) return;
 	
 	var fullPath  = $"{path}/{f}";
@@ -109,4 +109,4 @@ function __loadSteamUGCProject(file_id, f, path) { #region
 	
 	for (var i = 0, n = array_length(meta.tags); i < n; i++)
 		array_push_unique(STEAM_TAGS, meta.tags[i]);
-} #endregion
+}
