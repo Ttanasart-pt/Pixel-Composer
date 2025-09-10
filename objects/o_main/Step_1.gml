@@ -40,7 +40,10 @@ _FILE_DROPPED     = false;
 	var  foc     = window_has_focus();
 	var _fps_cur = game_get_speed(gamespeed_fps);
 	var _fps_tar = foc || IS_PLAYING? PREFERENCES.ui_framerate : PREFERENCES.ui_framerate_non_focus;
-	if(_fps_tar != _fps_cur) game_set_speed(_fps_tar, gamespeed_fps);
+	if(_fps_tar != _fps_cur) {
+		if(_fps_tar == 0) display_set_timing_method(tm_systemtiming);
+		else game_set_speed(_fps_tar, gamespeed_fps);
+	}
 	
 #endregion
 

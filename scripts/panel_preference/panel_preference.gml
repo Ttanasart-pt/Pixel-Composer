@@ -413,13 +413,13 @@ function Panel_Preference() : PanelContent() constructor {
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_ui_frame_rate", "UI frame rate"),
     			"ui_framerate",
-    			textBox_Number(function(str) /*=>*/ {return prefSet("ui_framerate", max(15, round(real(str))))})
+    			textBox_Number(function(str) /*=>*/ {return prefSet("ui_framerate", round(real(str)))})
     		));
     		
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_ui_frame_rate", "UI inactive frame rate"),
     			"ui_framerate_non_focus",
-    			textBox_Number(function(str) /*=>*/ {return prefSet("ui_framerate_non_focus", max(1, round(real(str))))})
+    			textBox_Number(function(str) /*=>*/ {return prefSet("ui_framerate_non_focus", round(real(str)))})
     		));
     		
     		ds_list_add(pref_appr, item_locale);
