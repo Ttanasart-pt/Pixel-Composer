@@ -22,8 +22,7 @@ function steam_ugc_create_project() {
 	json_save_struct($"{_dir}/{filename_name_only(file.path)}.meta", file.meta);
 	
 	var preview_surface = PANEL_PREVIEW.getNodePreviewSurface();
-	surface_save_safe(preview_surface, $"{_dir}/thumbnail.png");
-	steam_ugc_project_generate($"{_dir}/thumbnail.png");
+	steam_ugc_project_generate(preview_surface);
 	
 	STEAM_UGC_ITEM_ID = steam_ugc_create_item(STEAM_APP_ID, ugc_filetype_community);
 }
@@ -59,7 +58,8 @@ function steam_ugc_update_project(update_preview = false, update_note = "Updated
 	array_insert_unique(tgs, 0, "Project");
 	array_push_unique(tgs, VERSION_STRING);
 	
-	steam_ugc_project_generate(PROJECT.thumbnail);
+	var preview_surface = PANEL_PREVIEW.getNodePreviewSurface();
+	steam_ugc_project_generate(preview_surface);
 	
 	steam_ugc_set_item_tags(STEAM_UGC_UPDATE_HANDLE, tgs);
 	steam_ugc_set_item_content(STEAM_UGC_UPDATE_HANDLE, _dir);
@@ -69,17 +69,17 @@ function steam_ugc_update_project(update_preview = false, update_note = "Updated
 	STEAM_UGC_SUBMIT_ID = steam_ugc_submit_item_update(STEAM_UGC_UPDATE_HANDLE, update_note);
 }
 
-function steam_ugc_project_generate(file, dest_path = TEMPDIR + "steamUGCthumbnail.png") {
+function steam_ugc_project_generate(_surface, dest_path = TEMPDIR + "steamUGCthumbnail.png") {
 	file_delete(dest_path);
 	
 	var prev_size = 512;
-	var spr = sprite_add(file, 0, false, false, 0, 0);
-	var _s  = surface_create(prev_size, prev_size);
+	var _surf = surface_exists(_surface);
+	var _s    = surface_create(prev_size, prev_size);
 	
 	var avar_size = 80;
 	var avartar   = surface_create(avar_size, avar_size);
 	
-	if(sprite_exists(STEAM_AVATAR)) {
+	if(STEAM_UGC_ITEM_AVATAR && sprite_exists(STEAM_AVATAR)) {
 		var spw = sprite_get_width(STEAM_AVATAR);
 		var sph = sprite_get_height(STEAM_AVATAR);
 		var ss  = avar_size / max(spw, sph);
@@ -108,11 +108,18 @@ function steam_ugc_project_generate(file, dest_path = TEMPDIR + "steamUGCthumbna
 		draw_sprite_tiled(s_workshop_bg, 0, -64, -64);
 		draw_sprite_stretched_ext(s_workshop_frame, 0, 0, 0, prev_size, prev_size, COLORS._main_accent);
 		
-		if(spr == -1) spr = THEME.workshop_collection;
-		var ss = (prev_size - 160) / max(sprite_get_width(spr), sprite_get_height(spr));
-		var ox = (sprite_get_xoffset(spr) - sprite_get_width(spr) / 2) * ss;
-		var oy = (sprite_get_yoffset(spr) - sprite_get_height(spr) / 2) * ss;
-		draw_sprite_ext(spr, 0, prev_size / 2 + ox, prev_size / 2 + oy, ss, ss, 0, c_white, 1);
+		if(!_surf) {
+			var spr = THEME.workshop_collection;
+			var ss  = (prev_size - 160) / max(sprite_get_width(spr), sprite_get_height(spr));
+			draw_sprite_ext(spr, 0, prev_size / 2, prev_size / 2, ss, ss, 0, c_white, 1);
+			
+		} else {
+			var sw = surface_get_width(_surface);
+			var sh = surface_get_height(_surface);
+			var ss = (prev_size - 160) / max(sw, sh);
+			
+			draw_surface_ext(_surface, prev_size / 2 - sw / 2 * ss, prev_size / 2 - sh / 2 * ss, ss, ss, 0, c_white, 1);
+		}
 		
 		draw_sprite_stretched_ext(s_workshop_badge, 0, 8, 8, 88, 88, COLORS._main_accent);
 		draw_sprite_ext(THEME.workshop_project, 0, 40, 40, 1 / THEME_SCALE, 1 / THEME_SCALE, 0, COLORS._main_icon_dark, 1);
@@ -126,7 +133,7 @@ function steam_ugc_project_generate(file, dest_path = TEMPDIR + "steamUGCthumbna
 		draw_text_transformed(prev_size - 16, prev_size - 8, VERSION_STRING, 1 / UI_SCALE, 1 / UI_SCALE, 0);
 		gpu_set_tex_filter(false);
 		
-		if(sprite_exists(STEAM_AVATAR) && STEAM_UGC_ITEM_AVATAR) draw_surface(avartar, prev_size - 24 - avar_size, 24);
+		if(STEAM_UGC_ITEM_AVATAR && sprite_exists(STEAM_AVATAR)) draw_surface(avartar, prev_size - 24 - avar_size, 24);
 	surface_reset_target();
 	surface_save_safe(_s, dest_path);
 	

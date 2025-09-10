@@ -192,6 +192,8 @@ function canvas_selection() : canvas_tool() constructor {
 	}
 	
 	function selectAll() {
+		if(is_selected) apply();
+		
 		var sel_w = surface_get_width(canvas_surface);
 		var sel_h = surface_get_height(canvas_surface);
 		

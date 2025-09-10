@@ -1,4 +1,6 @@
 /// @description 
+if(asyncLoad(async_load)) exit;
+
 var _id = async_load[? "id"];
 var _nid = $"net_{struct_names_count(NETWORK_LOG_DATA)}";
 

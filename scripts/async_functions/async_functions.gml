@@ -3,17 +3,18 @@ function asyncInit() {
 }
 
 function asyncCall(aid, callback = noone, parameters = {}) {
-	global.asyncCalls[? aid] = [ callback, parameters ];
+	global.asyncCalls[? aid] = { callback, parameters };
 }
 
 function asyncLoad(data) {
-	if(!ds_map_exists(global.asyncCalls, data[? "id"])) return;
+	if(!ds_map_exists(global.asyncCalls, data[? "id"])) return false;
 	
 	var cal = global.asyncCalls[? data[? "id"]];
-	var callback   = cal[0];
-	var parameters = cal[1];
+	var callback   = cal.callback;
+	var parameters = cal.parameters;
 	if(callback != noone) callback(parameters, data);
 	
-	if(data[? "status"] == 0)
-		ds_map_delete(global.asyncCalls, data[? "id"]);
+	if(data[? "status"] == 0) ds_map_delete(global.asyncCalls, data[? "id"]);
+	
+	return true;
 }

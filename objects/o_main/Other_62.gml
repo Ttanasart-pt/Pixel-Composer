@@ -1,4 +1,6 @@
 /// @description network
+if(asyncLoad(async_load)) exit;
+
 var _id  = async_load[? "id"];
 
 if(ds_map_exists(global.FILE_LOAD_ASYNC, async_load[? "id"])) {
@@ -40,5 +42,3 @@ if(PALETTE_LOSPEC && _id == PALETTE_LOSPEC) {
     with(o_dialog_palette)  { initPalette(); }
     with(o_dialog_gradient) { initPalette(); }
 }
-
-asyncLoad(async_load);

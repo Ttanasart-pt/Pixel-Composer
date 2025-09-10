@@ -285,6 +285,7 @@ function Panel_Menu() : PanelContent() constructor {
             }),
             
             MENU_ITEMS.preview_histogram,
+            MENU_ITEMS.steam_workshop_panel,
         ]];
         
         menu_help = [ __txt("Help"), [

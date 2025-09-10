@@ -1,10 +1,11 @@
 function __initSteamUGC() {
-	globalvar STEAM_SUBS, STEAM_COLLECTION, STEAM_PROJECTS, STEAM_TAGS;
 	
-	STEAM_SUBS		   = ds_list_create();
-	STEAM_COLLECTION = [];
-	STEAM_PROJECTS     = [];
-	STEAM_TAGS         = [];
+	globalvar STEAM_SUBS;        STEAM_SUBS        = ds_list_create();
+	globalvar STEAM_COLLECTION;  STEAM_COLLECTION  = [];
+	globalvar STEAM_PROJECTS;    STEAM_PROJECTS    = [];
+	globalvar STEAM_TAGS;        STEAM_TAGS        = [];
+	globalvar STEAM_SUBS_IDS;    STEAM_SUBS_IDS    = {};
+	globalvar STEAM_SUBSCRIBING; STEAM_SUBSCRIBING = {};
 	
 	if(DEMO) return;
 	if(!STEAM_ENABLED) return;
@@ -46,16 +47,10 @@ function __loadSteamUGC(file_id, item_map) {
 	var _path = item_map[? "folder"];
 	
 	var f = file_find_first(_path + "/*.pxcc", 0); file_find_close();
-	if(f != "") {
-		__loadSteamUGCCollection(file_id, f, _path);
-		return;
-	}
+	if(f != "") { __loadSteamUGCCollection(file_id, f, _path); return; }
 	
 	var p = file_find_first(_path + "/*.pxc", 0); file_find_close();
-	if(p != "") {
-		__loadSteamUGCProject(file_id, p, _path);
-		return;
-	}
+	if(p != "") { __loadSteamUGCProject(file_id, p, _path); return; }
 }
 
 function __loadSteamUGCCollection(file_id, f, path) {
@@ -81,6 +76,8 @@ function __loadSteamUGCCollection(file_id, f, path) {
 	var meta = file.getMetadata(true);
 	meta.steam   = FILE_STEAM_TYPE.steamOpen;
 	meta.file_id = file_id;
+	
+	STEAM_SUBS_IDS[$ file_id] = file;
 }
 
 function __loadSteamUGCProject(file_id, f, path) {
@@ -109,4 +106,39 @@ function __loadSteamUGCProject(file_id, f, path) {
 	
 	for (var i = 0, n = array_length(meta.tags); i < n; i++)
 		array_push_unique(STEAM_TAGS, meta.tags[i]);
+		
+	STEAM_SUBS_IDS[$ file_id] = file;
+}
+
+function UGC_subscribe_item(file_id) {
+	var _id = steam_ugc_subscribe_item(file_id);
+	STEAM_SUBSCRIBING[$ file_id] = _id;
+	
+	asyncCall(_id, function(_params, _data) /*=>*/ {
+		var _result = _data[? "result"];
+			
+		if(_result != ugc_result_success) {
+			var errStr = steam_ugc_get_error(_result);
+			noti_warning($"UGC subscribe error {_result}: {errStr}");
+			return;
+		}
+	});
+	
+}
+
+function UGC_unsubscribe_item(file_id) {
+	var _id = steam_ugc_unsubscribe_item(file_id);
+	struct_remove(STEAM_SUBS_IDS, file_id);
+	// STEAM_SUBSCRIBING[$ file_id] = _id;
+	
+	asyncCall(_id, function(_params, _data) /*=>*/ {
+		var _result = _data[? "result"];
+			
+		if(_result != ugc_result_success) {
+			var errStr = steam_ugc_get_error(_result);
+			noti_warning($"UGC unsubscribe error {_result}: {errStr}");
+			return;
+		}
+	});
+	
 }

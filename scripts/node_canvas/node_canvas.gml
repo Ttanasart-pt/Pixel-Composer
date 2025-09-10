@@ -688,10 +688,10 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		hotkeys = [
 			[ "New Frame",  function() /*=>*/ { addFrame(); } ], 
 			
-			[ "Select All",      function() /*=>*/ { if(selection.is_selected) { selection.apply(); } selection.selectAll(); } ], 
+			[ "Select All",      function() /*=>*/ { selection.selectAll();                        } ], 
 			[ "Copy Selection",  function() /*=>*/ { selection.copySelection(); selection.apply(); } ], 
-			[ "Paste",           function() /*=>*/ { pasteSurface(false); } ], 
-			[ "Paste at Cursor", function() /*=>*/ { pasteSurface(true);  } ], 
+			[ "Paste",           function() /*=>*/ { pasteSurface(false);                          } ], 
+			[ "Paste at Cursor", function() /*=>*/ { pasteSurface(true);                           } ], 
 			
 		];
 	#endregion

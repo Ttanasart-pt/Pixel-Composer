@@ -2,7 +2,8 @@
 //print("===== Game Start Begin =====");
 
 #region directory
-	globalvar DIRECTORY, APP_DIRECTORY, APP_LOCATION, PRESIST_PREF, FS_PATH, WORKING_DIRECTORY;
+	globalvar DIRECTORY, APP_DIRECTORY, APP_LOCATION, PRESIST_PREF, FS_PATH, WORKING_DIRECTORY, ROAMING_DIRECTORY;
+	ROAMING_DIRECTORY = "";
 	DIRECTORY    = "";
 	FS_PATH      = "";
 	PRESIST_PREF = { path: "" };
@@ -42,6 +43,7 @@
 	} else {
 		APP_DIRECTORY = env_user();
 		APP_DIRECTORY = string_replace_all(APP_DIRECTORY, "\\", "/");
+		ROAMING_DIRECTORY = string_replace(APP_DIRECTORY, "Local", "Roaming");
 		show_debug_message($"App directory: {APP_DIRECTORY}");
 		
 		directory_verify(APP_DIRECTORY);

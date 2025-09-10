@@ -190,20 +190,33 @@ if !ready exit;
 			sp_sample.setFocusHover(sFOCUS, sHOVER);
 			sp_sample.draw(x0 + ui(6), y0 + 1);
 			
-			if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Open Welcome files Folder..."), THEME.dPath_open) == 2)
+			var _txt = __txt("Open Welcome files Folder...");
+			if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, _txt, THEME.dPath_open) == 2)
 				shellOpenExplorer($"{DIRECTORY}Welcome files");
+				
+			if(STEAM_ENABLED) {
+				bx -= bs + ui(4);
+				var _txt = __txtx("workshop_open", "Open Steam Workshop");
+				if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, _txt, THEME.steam) == 2) {
+					dialogPanelCall(new Panel_Steam_Workshop());
+					instance_destroy();
+				}
+			}
 			break;
 			
 		case "Workshop" : 
 			sp_sample.setFocusHover(sFOCUS, sHOVER);
 			sp_sample.draw(x0 + ui(6), y0 + 1);
 			
-			if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txtx("workshop_open", "Open Steam Workshop"), THEME.steam) == 2)
-				steam_activate_overlay_browser("https://steamcommunity.com/app/2299510/workshop/");
-		
-			bx -= bs + ui(4);
 			if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Refresh"), THEME.refresh_icon) == 2)
 				steamUCGload();
+				
+			bx -= bs + ui(4);
+			var _txt = __txtx("workshop_open", "Open Steam Workshop");
+			if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, _txt, THEME.steam) == 2) {
+				dialogPanelCall(new Panel_Steam_Workshop());
+				instance_destroy();
+			}
 			break;
 			
 		case "Contests" : 

@@ -48,7 +48,6 @@ function steam_ugc_update_collection(file, update_preview = false, update_note =
 	
 	array_insert_unique(tgs, 0, "Collection");
 	array_push_unique(tgs, VERSION_STRING);
-	
 	steam_ugc_collection_generate(array_safe_get_fast(file.spr_path, 0));
 	
 	steam_ugc_set_item_tags(STEAM_UGC_UPDATE_HANDLE, tgs);

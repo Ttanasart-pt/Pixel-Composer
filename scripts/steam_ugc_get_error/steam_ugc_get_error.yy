@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"steam_ugc_get_error",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"steam_ugc_get_error",
+  "parent":{
+    "name":"UGC",
+    "path":"folders/__extensions/Steamworks/UGC.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

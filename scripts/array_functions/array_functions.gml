@@ -482,8 +482,7 @@
 		INLINE
 		self.__temp_arr = arr1;
 		
-		if(!is_array(arr0)) return false;
-		if(!is_array(arr1)) return false;
+		if(!is_array(arr0) || !is_array(arr1)) return false;
 		
 		var _a = array_any(arr0, function(_val, _ind) { return array_exists(self.__temp_arr, _val); });
 		

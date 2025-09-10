@@ -517,6 +517,7 @@
 	function call_panel_Globalvar()         { panelAdd("Panel_Globalvar",		    true);      }
 	function call_panel_File_Explorer()     { panelAdd("Panel_File_Explorer",	    true);      }
 	
+	function call_panel_Steam_Workshop()    { dialogPanelCall(new Panel_Steam_Workshop());      }
 	function call_panel_Collection_Runner() { dialogPanelCall(new Panel_Collection_Runner());   }
 	
 	function __fnInit_Panels() {
@@ -534,7 +535,7 @@
         registerFunction("", "Collections Panel",         "", MOD_KEY.none, call_panel_Collection             ).setMenuAlt("Collections",  "collections_panel")
         registerFunction("", "Graph Panel",               "", MOD_KEY.none, call_panel_Graph                  ).setMenuAlt("Graph",        "graph_panel")
         registerFunction("", "Preview Panel",             "", MOD_KEY.none, call_panel_Preview                ).setMenuAlt("Preview",      "preview_panel")
-        registerFunction("", "Preview Histogram",         "", MOD_KEY.none, call_panel_Preview_Histogram      ).setMenuAlt("Preview",      "preview_histogram")
+        registerFunction("", "Preview Histogram",         "", MOD_KEY.none, call_panel_Preview_Histogram      ).setMenuAlt("Histogram",      "preview_histogram")
         registerFunction("", "Inspector Panel",           "", MOD_KEY.none, call_panel_Inspector              ).setMenuAlt("Inspector",    "inspector_panel")
         registerFunction("", "Workspace Panel",           "", MOD_KEY.none, call_panel_Workspace              ).setMenuAlt("Workspace",    "workspace_panel")
         registerFunction("", "Animation Panel",           "", MOD_KEY.none, call_panel_Animation              ).setMenuAlt("Animation",    "animation_panel")
@@ -552,6 +553,7 @@
         registerFunction("", "Globalvar Panel",           "", MOD_KEY.none, call_panel_Globalvar              ).setMenuAlt("Globalvar",    "globalvar_panel")
         registerFunction("", "File Explorer Panel",       "", MOD_KEY.none, call_panel_File_Explorer          ).setMenuAlt("File",         "file_explorer_panel")
         
-        registerFunction("", "Collection Runner Panel",   "", MOD_KEY.none, call_panel_Collection_Runner      ).setMenuAlt("Runner",       "collection_runner_panel")
+        registerFunction("", "Steam Workshop Panel",      "", MOD_KEY.none, call_panel_Steam_Workshop         ).setMenuAlt("Steam Workshop", "steam_workshop_panel")
+        registerFunction("", "Collection Runner Panel",   "", MOD_KEY.none, call_panel_Collection_Runner      ).setMenuAlt("Runner",         "collection_runner_panel")
 	}
 #endregion

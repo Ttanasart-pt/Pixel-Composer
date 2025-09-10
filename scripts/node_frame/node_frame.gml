@@ -360,7 +360,7 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 
 	////- Serialize
 	
-	static postApplyDeserialize  = function() { 
+	static postApplyDeserialize = function() { 
 		if(attributes.reframe_w) w = attributes.reframe_w;
 		if(attributes.reframe_h) h = attributes.reframe_h;
 		

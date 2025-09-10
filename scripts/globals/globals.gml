@@ -41,18 +41,18 @@ gml_pragma("UnityBuild", "true");
 	DEBUG    = false;
 	COLOR_KEY_ARRAY = [];
 	
-	globalvar VERSION, SAVE_VERSION, VERSION_STRING, BUILD_NUMBER, LATEST_VERSION, NIGHTLY, RELEASE_STRING;
+	globalvar LATEST_VERSION;  LATEST_VERSION = 1_19_00_0;
+	globalvar VERSION;         VERSION        = 1_19_09_0;
+	globalvar SAVE_VERSION;    SAVE_VERSION   = 1_19_06_0;
+	globalvar VERSION_STRING;  VERSION_STRING = MAC? "1.18.003m" : "1.19.9.001";
+	globalvar RELEASE_STRING;  RELEASE_STRING = "1.19.9";
+	globalvar BUILD_NUMBER;    BUILD_NUMBER   = 1_19_09_0.001;
+	globalvar PREF_VERSION;    PREF_VERSION   = 1_17_1;
 	
-	LATEST_VERSION	= 1_19_00_0;
-	VERSION			= 1_19_09_0;
-	SAVE_VERSION	= 1_19_06_0;
-	VERSION_STRING  = MAC? "1.18.003m" : "1.19.9.001";
-	RELEASE_STRING  = "1.19.9";
-	BUILD_NUMBER	= 1_19_09_0.001;
-	PREF_VERSION    = 1_17_1;
+	var _versions = string_split(VERSION_STRING, ".");
 	
-	var _lsp = array_last(string_split(VERSION_STRING, "."));
-	NIGHTLY  = string_length(_lsp) == 3;
+	globalvar VERSION_MAJOR;   VERSION_MAJOR  = toNumber(_versions[1]);
+	globalvar NIGHTLY;         NIGHTLY        = string_length(array_last(_versions)) == 3;
 	
 	globalvar HOTKEYS, HOTKEY_CONTEXT;
 	HOTKEYS        = {};
