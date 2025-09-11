@@ -161,7 +161,7 @@
 #endregion
 
 #region steam
-	globalvar STEAM_ENABLED, STEAM_APP_ID, STEAM_USER_ID, STEAM_USERNAME, STEAM_AVATAR;
+	globalvar STEAM_ENABLED, STEAM_APP_ID, STEAM_ID, STEAM_USER_ID, STEAM_USERNAME, STEAM_AVATAR;
 	globalvar STEAM_UGC_ITEM_UPLOADING, STEAM_UGC_ITEM_ID, STEAM_UGC_ITEM_FILE, STEAM_UGC_UPDATE_HANDLE;
 	globalvar STEAM_UGC_ITEM_AVATAR;
 	
@@ -195,8 +195,9 @@
 	if(STEAM_ENABLED) {
 		STEAM_APP_ID    = steam_get_app_id();
 		STEAM_USER_ID   = steam_get_user_account_id();
+		STEAM_ID        = steam_get_user_steam_id();
 		STEAM_USERNAME  = steam_get_persona_name();
-		steam_avatar_id = steam_get_user_avatar(steam_get_user_steam_id(), steam_user_avatar_size_large);
+		steam_avatar_id = steam_get_user_avatar(STEAM_ID, steam_user_avatar_size_large);
 		
 		steam_set_warning_message_hook();
 	}

@@ -186,11 +186,14 @@ function Steam_workshop_item(_qData) constructor {
 		if(sprite_exists(preview_sprite)) sprite_delete(preview_sprite);
 		preview_sprite = undefined;
 	}
+
+	static toString = function() /*=>*/ {return $"{title}: {vote_score}"};
 }
 
 function Panel_Steam_Workshop() : PanelContent() constructor {
 	title     = "Steam Workshop";
 	auto_pin  = true;
+	contentPage = 0;
 	
 	w       = ui(960);
 	h       = ui(640);
@@ -218,20 +221,24 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 	fileCache    = {};
 	allFiles     = [];
 	displayFiles = [];
+	queryingFiles = 0;
 	
 	search_string = "";
+	author_string = "";
 	type_strings  = [ "Project", "Collection" ];
 	
-	sc_sort = new scrollBox([ "Vote", "Trending", "Publication Date" ], 
-		function(i) /*=>*/ { if(sort_type == i) return; sort_type = i; queryFiles(); }, false).setAlign(fa_left);
+	sort_types     = __txts([ "Vote", "Trending", "Publication Date" ]);
+	sort_days      = [ "D", "W", "M", "Y" ];
+	sort_days_tool = __txts([ "Today",  "This Week",  "This Month",  "This Year" ]);
 	
-	sc_trend_days = new scrollBox([ "Today",  "This Week",  "This Month",  "This Year" ], 
-		function(i) /*=>*/ { if(sort_trend_day == i) return; sort_trend_day = i; queryFiles(); }, false).setAlign(fa_left);
+	file_dragging  = undefined;
+	file_drag_x    = 0;
+	file_drag_y    = 0;
 	
 	tb_search = textBox_Text(function(s) /*=>*/ { search_string = s; filterFiles(); })
 				.setAutoUpdate()
 				.setEmpty()
-				.setAlign(fa_right)
+				.setAlign(fa_left)
 				.setVAlign(fa_center);
 	page_goto = undefined;
 	
@@ -266,6 +273,16 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 		}
 	}
 	
+	function sortFiles() {
+		if(contentPage != 1) return;
+		
+		switch(sort_type) {
+			case 0 : array_sort(allFiles, function(a,b) /*=>*/ {return sign(b.vote_score - a.vote_score)});     break;
+			case 2 : array_sort(allFiles, function(a,b) /*=>*/ {return sign(b.time_created - a.time_created)}); break;
+		}
+		
+	}
+	
 	function filterFiles(_reset = true, _offset = 0) {
 		if(_reset) {
 			sc_content.setScroll(0);
@@ -277,9 +294,15 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 		var _type_use = !array_empty(type_filter);
 		var _ver_use  = !array_empty(ver_filter);
 		var _search   = string_lower(search_string);
+		var _searchA  = string_lower(author_string);
 		
 		for( var i = _offset, n = array_length(allFiles); i < n; i++ ) {
 			var _file = allFiles[i];
+			
+			if(contentPage == 2) {
+				var _match = STEAM_ID == _file.owner_steam_id;
+				if(!_match) continue;
+			}
 			
 			if(_tag_use) {
 				var _match = array_overlap(tag_filter, _file.tags);
@@ -303,7 +326,13 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 			if(search_string != "") {
 				var _match = false;
 				    _match = _match || string_pos(_search, string_lower(_file.title)) != 0;
-				    _match = _match || string_pos(_search, string_lower(_file.getAuthorName())) != 0;
+				
+				if(!_match) continue;
+			}
+			
+			if(author_string != "") {
+				var _match = false;
+				    _match = _match || string_pos(_searchA, string_lower(_file.getAuthorName())) != 0;
 				
 				if(!_match) continue;
 			}
@@ -320,7 +349,7 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 		setPageIndices();
 	}
 	
-	function queryAllFiles(_page = page) {
+	function queryAllFiles(_page = 1) {
 		var _type  = ugc_query_RankedByVote;
 		var _mType = ugc_match_Items;
 		
@@ -331,7 +360,7 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 		}
 		
 		var _que = steam_ugc_create_query_all(_type, _mType, _page);
-		
+			
 		if(sort_type == 1) {
 			var _days = 1;
 			switch(sort_trend_day) {
@@ -388,11 +417,55 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 	
 	function queryFiles() {
 		sc_content.setScroll(0);
-		querying     = true;
 		allFiles     = [];
 		displayFiles = [];
+		pageIndex    = [];
 		
-		queryAllFiles(1);
+		if(contentPage == 0 || contentPage == 2) {
+			querying = true;
+			queryAllFiles();
+			
+		} else if(contentPage == 1) {
+			var _l = ds_list_create();
+			steam_ugc_get_subscribed_items(_l);
+			queryingFiles = 0;
+			
+			for( var i = 0, n = ds_list_size(_l); i < n; i++ ) {
+				var _fid = _l[| i];
+				if(struct_has(fileCache, _fid)) {
+					var _item = fileCache[$ _fid];
+					array_push(allFiles, _item);
+					continue;
+				}
+				
+				queryingFiles++;
+				
+				asyncCall(steam_ugc_request_item_details(_fid, 30), function(_params, _data) /*=>*/ {
+					var _result = _data[? "result"];
+					queryingFiles--;
+					
+					if(_result != ugc_result_success) {
+						var errStr = steam_ugc_get_error(_result);
+						noti_warning($"UGC query error {_result}: {errStr}");
+						if(queryingFiles == 0) sortFiles();
+						return;
+					}
+					
+					var _fid  = _data[? "published_file_id"];
+					var _item = new Steam_workshop_item(_data);
+					fileCache[$ _fid] = _item;
+					array_push(allFiles, _item);
+					
+					if(queryingFiles == 0) sortFiles();
+					filterFiles(false, array_length(allFiles) - 1);
+				});
+			}
+			
+			ds_list_destroy(_l);
+			
+			sortFiles();
+			filterFiles(true, 0);
+		}
 	}
 	
 	sc_content = new scrollPane(1, 1, function(_y, _m) {
@@ -514,25 +587,9 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 				}
 				
 				if(!_subHov && _own && mouse_lpress(_focus)) {
-					var _info = steam_ugc_get_item_install_info(_fid, ds_map_info);
-					
-					if(_info) {
-						var _dir = ds_map_info[? "folder"];
-							
-						if(_file.type == FILE_TYPE.project) {
-							var _fil = file_find_first(_dir + "/*.pxc", 0); file_find_close();
-							var _pat = filename_combine(_dir, _fil);
-							
-							DRAGGING = { type : "Project", data : { path: _pat, spr: _spr } };
-						}
-						
-						if(_file.type == FILE_TYPE.collection) {
-							var _fil = file_find_first(_dir + "/*.pxcc", 0); file_find_close();
-							var _pat = filename_combine(_dir, _fil);
-							
-							DRAGGING = { type : "Collection", data : { path: _pat, spr: _spr } };
-						}
-					}
+					file_dragging  = _file;
+					file_drag_x    = _m[0];
+					file_drag_y    = _m[1];
 				}
 			}
 			
@@ -582,8 +639,39 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 		}
 		
 		if(_filt != undefined) {
-			search_string = _filt; 
+			author_string = _filt; 
 			filterFiles();	
+		}
+		
+		if(file_dragging != undefined) {
+			var _dist = point_distance(file_drag_x, file_drag_y, _m[0], _m[1]);
+			if(_dist > ui(16)) {
+				var _info = steam_ugc_get_item_install_info(file_dragging.file_id, ds_map_info);
+					
+				if(_info) {
+					var _dir = ds_map_info[? "folder"];
+					var _spr = file_dragging.getPreviewSprite();
+					
+					if(file_dragging.type == FILE_TYPE.project) {
+						var _fil = file_find_first(_dir + "/*.pxc", 0); file_find_close();
+						var _pat = filename_combine(_dir, _fil);
+						
+						DRAGGING = { type : "Project", data : { path: _pat, spr: _spr } };
+					}
+					
+					if(file_dragging.type == FILE_TYPE.collection) {
+						var _fil = file_find_first(_dir + "/*.pxcc", 0); file_find_close();
+						var _pat = filename_combine(_dir, _fil);
+						
+						DRAGGING = { type : "Collection", data : { path: _pat, spr: _spr } };
+					}
+				}
+				
+				file_dragging = undefined;
+			}
+			
+			if(mouse_lrelease())
+				file_dragging = undefined;
 		}
 		
 		return _hh;
@@ -615,23 +703,25 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 		#region own
 			y0 += ui(8);
 			
-			var hv = _hover && point_in_rectangle(mx, my, x0, y0, x0 + ww, y0 + ui(16));
-			var hs = own_filter;
-			
-			draw_sprite_stretched_ext(THEME.box_r5_clr, 0, x0, y0, ui(16), ui(16), COLORS._main_icon);
-			if(hs) draw_sprite_stretched_ext(THEME.box_r2, 0, x0 + ui(2), y0 + ui(2), ui(16 - 4), ui(16 - 4), COLORS._main_accent);
-			
-			if(hv) {
-				draw_sprite_stretched_add(THEME.box_r5, 1, x0, y0, ui(16), ui(16), COLORS._main_icon, .5);
-				if(mouse_lpress(_focus)) {
-					own_filter = !own_filter;
-					filterFiles();
+			if(contentPage == 0) {
+				var hv = _hover && point_in_rectangle(mx, my, x0, y0, x0 + ww, y0 + ui(16));
+				var hs = own_filter;
+				
+				draw_sprite_stretched_ext(THEME.box_r5_clr, 0, x0, y0, ui(16), ui(16), COLORS._main_icon);
+				if(hs) draw_sprite_stretched_ext(THEME.box_r2, 0, x0 + ui(2), y0 + ui(2), ui(16 - 4), ui(16 - 4), COLORS._main_accent);
+				
+				if(hv) {
+					draw_sprite_stretched_add(THEME.box_r5, 1, x0, y0, ui(16), ui(16), COLORS._main_icon, .5);
+					if(mouse_lpress(_focus)) {
+						own_filter = !own_filter;
+						filterFiles();
+					}
 				}
+				
+				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
+				draw_text_add(x0 + ui(22), y0 + ui(8), "Subscribed");
+				y0 += ui(22);
 			}
-			
-			draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-			draw_text_add(x0 + ui(22), y0 + ui(8), "Subscribed");
-			y0 += ui(22);
 		#endregion
 		
 		#region type
@@ -773,13 +863,41 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 			var bx = padding + ui(4);
 			var by = padding + ui(2);
 			var bs = ui(24);
-			var bc = [COLORS._main_icon, COLORS._main_icon_light];
 			
-			if(buttonInstant(noone, bx, by, bs, bs, [mx, my], pHOVER, pFOCUS, __txt("Open in Browser"), THEME.steam, 0, bc) == 2)
+			if(buttonInstant(noone, bx, by, bs, bs, [mx, my], pHOVER, pFOCUS, __txt("Open in Browser"), THEME.steam, 0, [COLORS._main_icon_light, c_white]) == 2)
 				steam_activate_overlay_browser("https://steamcommunity.com/app/2299510/workshop/");
 			bx += bs + ui(4);
 			
-			bx = _filt_width - bs - ui(4);
+			var bc = contentPage == 0? COLORS._main_accent : [COLORS._main_icon, COLORS._main_icon_light];
+			if(buttonInstant(noone, bx, by, bs, bs, [mx, my], pHOVER, pFOCUS, __txt("Workshop"), THEME.globe, 0, bc, 1, .75) == 2) {
+				contentPage = 0;
+				sort_type   = 1;
+				queryFiles();
+			}
+			bx += bs;
+			
+			var bc = contentPage == 1? COLORS._main_accent : [COLORS._main_icon, COLORS._main_icon_light];
+			if(buttonInstant(noone, bx, by, bs, bs, [mx, my], pHOVER, pFOCUS, __txt("Downloaded"), THEME.download, 0, bc, 1, .7) == 2) {
+				contentPage = 1;
+				sort_type   = 0;
+				queryFiles();
+			}
+			bx += bs;
+			
+			var bc = contentPage == 2? COLORS._main_accent : [COLORS._main_icon, COLORS._main_icon_light];
+			if(buttonInstant(noone, bx, by, bs, bs, [mx, my], pHOVER, pFOCUS, __txt("Your Creation"), THEME.steam_creator, 0, bc, 1, .8) == 2) {
+				contentPage = 2;
+				sort_type   = 1;
+				queryFiles();
+			}
+			bx += bs;
+			
+			//////////////////////////////////////////////////////////////////////////
+			
+			var bx = _filt_width - bs - ui(4);
+			var by = padding + ui(2);
+			var bs = ui(24);
+			var bc = [COLORS._main_icon, COLORS._main_icon_light];
 			
 			if(buttonInstant(noone, bx, by, bs, bs, [mx, my], pHOVER, pFOCUS, __txt("Refresh"), THEME.refresh_16, 0, bc) == 2) {
 				var _dir = ROAMING_DIRECTORY + "ugc";
@@ -796,38 +914,73 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 		
 		#region sort
 			var ww = _filt_width;
-			var x0 = px + ui(8);
-			var y0 = padding;
 			var hh = _sort_height - padding;
+			var bs = ui(24);
+			var x0 = px + ui(16);
+			var y0 = padding;
 			
-			var _txt = __txt("Sort by: ");
-			draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text_sub);
-			draw_text(x0, y0 + hh / 2, _txt);
-			x0 += string_width(_txt);
-			
-			var _param = new widgetParam(x0, y0, ww, hh, sort_type, {}, [mx, my], x, y)
-				.setFocusHover(pFOCUS, pHOVER)
-				.setFont(f_p2);
+			for( var i = 0, n = array_length(sort_types); i < n; i++ ) {
+				if(i == 1 && contentPage == 1) continue;
 				
-			sc_sort.drawParam(_param);
+				var bx = x0;
+				var by = y0 + hh / 2;
+				
+				var hv = pHOVER && point_in_circle(mx, my, bx, by, bs / 2);
+				if(hv) TOOLTIP = sort_types[i];
+				
+				if(sort_type != i) {
+					var cc = hv? COLORS._main_icon_light : COLORS._main_icon;
+					draw_sprite_ui(THEME.workshop_sort, i, bx, by, .75, .75, 0, cc, 1);
+					
+					if(hv && mouse_lpress(pFOCUS)) {
+						sort_type = i; 
+						queryFiles();
+					}
+					
+				} else 
+					draw_sprite_ui(THEME.workshop_sort, i, bx, by, .75, .75, 0, COLORS._main_accent, 1);
+				
+				x0 += bs + ui(2);
+			}
+			
+			draw_set_color(CDEF.main_dkblack);
+            draw_line_round(x0-bs/2+ui(3), y0, x0-bs/2+ui(3), y0 + hh, 2);
+			x0 += ui(6);
 			
 			if(sort_type == 1) {
-				x0 += ww + ui(8);
-			
-				var _param = new widgetParam(x0, y0, ui(104), hh, sort_trend_day, {}, [mx, my], x, y)
-					.setFocusHover(pFOCUS, pHOVER)
-					.setFont(f_p2);
+				for( var i = 0, n = array_length(sort_days); i < n; i++ ) {
+					var bx = x0;
+					var by = y0 + hh / 2;
 					
-				sc_trend_days.drawParam(_param);
+					var hv = pHOVER && point_in_circle(mx, my, bx, by, bs / 2);
+					if(hv) TOOLTIP = sort_days_tool[i];
 					
+					var cc = COLORS._main_accent;
+					
+					if(sort_trend_day != i) {
+						cc = hv? COLORS._main_icon_light : COLORS._main_icon;
+						
+						if(hv && mouse_lpress(pFOCUS)) {
+							sort_trend_day = i;
+							queryFiles();
+						}
+					} 
+					
+					draw_set_text(f_sdf, fa_center, fa_center, cc);
+					draw_text_add(bx, by, sort_days[i], .35);
+					
+					x0 += bs + ui(2);
+				}
 			}
 		#endregion
 		
 		#region search
 			var ww = ui(200);
+			var hh = _sort_height - padding;
+			
 			var x0 = px + pw - ww;
 			var y0 = padding;
-			var hh = _sort_height - padding;
+			var yc = y0 + hh / 2;
 			
 			var _param = new widgetParam(x0, y0, ww, hh, search_string, {}, [mx, my], x, y)
 				.setFocusHover(pFOCUS, pHOVER)
@@ -836,14 +989,34 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 			tb_search.setBoxColor(search_string == ""? c_white : COLORS._main_accent).drawParam(_param);
 			
 			if(search_string == "")
-				draw_sprite_ui(THEME.search, 0, x0 + ui(16), y0 + hh / 2, 1, 1, 0, COLORS._main_icon);
+				draw_sprite_ui(THEME.search, 0, x0 + ui(16), yc, 1, 1, 0, COLORS._main_icon);
 			else {
-				var _hov = pHOVER && point_in_circle(mx, my, x0 + ui(16), y0 + hh / 2, hh / 2);
+				var _cx  = x0 + ww - ui(16);
+				var _hov = pHOVER && point_in_circle(mx, my, _cx, yc, hh / 2);
 				
-				draw_sprite_ui(THEME.cross_16, 0, x0 + ui(16), y0 + hh / 2, 1, 1, 0, _hov? COLORS._main_icon_light : COLORS._main_icon);
+				draw_sprite_ui(THEME.cross_16, 0, _cx, yc, 1, 1, 0, _hov? COLORS._main_icon_light : COLORS._main_icon);
+				
 				if(_hov && mouse_lpress(pFOCUS)) {
 					tb_search.deactivate();
 					search_string = ""; 
+					filterFiles();	
+				}
+			}
+			
+			if(author_string != "") {
+				draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text);
+				var tw   = string_width(author_string) + ui(12 + 16);
+				var tx   = x0 - ui(6) - tw;
+				var _cx  = tx + ui(12);
+				var _hov = pHOVER && point_in_circle(mx, my, _cx, yc, hh / 2);
+				
+				draw_sprite_stretched_ext(THEME.button_def, 0, tx, y0, tw, hh);
+				draw_text_add(tx + ui(16 + 6), yc, author_string);
+				
+				draw_sprite_ui(THEME.cross_12, 0, _cx, yc, 1, 1, 0, _hov? COLORS._main_icon_light : COLORS._main_icon);
+				
+				if(_hov && mouse_lpress(pFOCUS)) {
+					author_string = ""; 
 					filterFiles();	
 				}
 			}
@@ -879,39 +1052,46 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 				
 				if(page_goto == i) {
 					draw_sprite_stretched_add(THEME.box_r2, 1, _px - _ps/2, _py - _ps/2, _ps, _ps, COLORS._main_accent, 1);
-					draw_set_text(f_p2, fa_center, fa_center, COLORS._main_text);
+					draw_set_text(f_p2b, fa_center, fa_center, COLORS._main_text);
 					draw_text_add(_px, _py, KEYBOARD_NUMBER ?? "");
 					continue;
 				}
 				
 				var _hv = pHOVER && point_in_rectangle(mx, my, _px - _ps/2 + 1, _py - _ps/2, _px + _ps/2 - 1, _py + _ps/2);
+				var  cc = COLORS._main_text_sub;
 				
 				if(_page == -1) {
 					if(_hv) {
-						draw_sprite_stretched_add(THEME.box_r2, 1, _px - _ps/2, _py - _ps/2, _ps, _ps, c_white, .25);
+						cc = COLORS._main_text;
 						if(mouse_lpress(pFOCUS)) {
 							page_goto = i;
 							KEYBOARD_RESET
 						}
 					}
 					
-					draw_set_text(f_p2, fa_center, fa_center, COLORS._main_text_sub);
+					draw_set_text(f_p2b, fa_center, fa_center, cc);
 					draw_text_add(_px, _py, "...");
 					continue;
 				} 
 				
 				var _pc = _page == page;
 				
+				if(_pc) cc = COLORS._main_accent;
 				if(_hv && !_pc) {
-					draw_sprite_stretched_add(THEME.box_r2, 1, _px - _ps/2, _py - _ps/2, _ps, _ps, c_white, .25);
+					cc = COLORS._main_text;
 					
 					if(mouse_lpress(pFOCUS))
 						_pageSet = _page;
 				}
 				
-				draw_set_text(f_p2, fa_center, fa_center, _pc? COLORS._main_accent : COLORS._main_text_sub);
+				draw_set_text(f_p2b, fa_center, fa_center, cc);
 				draw_text_add(_px, _py, _page);
 				
+			}
+			
+			if(pFOCUS) {
+				if(key_press(vk_left))  _pageSet = max(page - 1, 1);
+				if(key_press(vk_right)) _pageSet = min(page + 1, pageTotal);
 			}
 			
 			if(_pageSet != noone)

@@ -151,6 +151,7 @@ function LOAD_AT(path, params = new __loadParams()) {
 	#endregion
 	
 	var content = json_try_parse(s);
+	print(content);
 	printIf(log, $" > Load struct : {(get_timer() - t1) / 1000} ms");
 	
 	return instance_create(0, 0, project_loader, { path, content, log, params, t0, t1 });

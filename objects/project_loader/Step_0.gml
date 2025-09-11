@@ -2,6 +2,8 @@
 switch(load_process) {
     case 1 : 
         if(!struct_has(content, "nodes")) {
+            LOADING = false;
+            
             log_warning("LOAD", "Cannot read node data.");
             instance_destroy();
             break;
