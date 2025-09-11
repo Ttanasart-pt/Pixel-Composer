@@ -72,7 +72,7 @@ function __loadSteamUGCCollection(file_id, f, path) {
 	}
 	
 	array_push(STEAM_COLLECTION, file);
-				
+		
 	var meta = file.getMetadata(true);
 	meta.steam   = FILE_STEAM_TYPE.steamOpen;
 	meta.file_id = file_id;

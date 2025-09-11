@@ -3993,7 +3993,12 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                 break;
             
             case "Project":
-                run_in(1, function(path) { LOAD_PATH(path); }, [ DRAGGING.data.path ]);
+                run_in(1, function(_data) /*=>*/ {
+                	var _path = _data.path;
+                	var _read = _data[$ "readonly"] ?? false;
+                	
+                	LOAD_PATH(_path, _read);
+            	}, [ DRAGGING.data ]);
                 break;
                 
             case "Node":

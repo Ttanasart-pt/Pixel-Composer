@@ -646,7 +646,8 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 		if(file_dragging != undefined) {
 			var _dist = point_distance(file_drag_x, file_drag_y, _m[0], _m[1]);
 			if(_dist > ui(16)) {
-				var _info = steam_ugc_get_item_install_info(file_dragging.file_id, ds_map_info);
+				var _fid  = file_dragging.file_id;
+				var _info = steam_ugc_get_item_install_info(_fid, ds_map_info);
 					
 				if(_info) {
 					var _dir = ds_map_info[? "folder"];
@@ -656,7 +657,7 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 						var _fil = file_find_first(_dir + "/*.pxc", 0); file_find_close();
 						var _pat = filename_combine(_dir, _fil);
 						
-						DRAGGING = { type : "Project", data : { path: _pat, spr: _spr } };
+						DRAGGING = { type : "Project", data : { path: _pat, spr: _spr, readonly: true } };
 					}
 					
 					if(file_dragging.type == FILE_TYPE.collection) {
