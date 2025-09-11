@@ -242,6 +242,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			_node.inputs[0].setFrom(outputs[1]);
 			_node.inputs[1].setValue(use_cel);
 			_node.inputs[2].setValue(_name);
+			_node.inputs[3].setValue(attributes.layer_loop[i]);
 			_node.setDisplayName(_name, false);
 			
 			lvs[i] = _node;
@@ -313,13 +314,15 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 						
 						array_push(layers, new ase_layer(name, type));
 						array_push(vis, true);
-						array_push(lop, false);
+						array_push(lop, true);
 						break;
 						
 					case 0x2005: //cel
 						var _layer = chunk[$ "Layer index"];
 						var cel	= new ase_cel(layers[_layer], chunk, content);
+						
 						layers[_layer].setFrameCel(i, cel);
+						if(i > 0) lop[_layer] = false;
 						break;
 				}
 			}
@@ -363,7 +366,9 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			
 			if(!struct_has(_l, "cels")) continue;
 			var cel = _l.cels;
-			if(array_length(cel)) update_on_frame = true;
+			
+			if(array_length(cel) > 1) 
+				update_on_frame = true;
 		}
 		
 		logNode($"Loaded file: {path}", false);
@@ -378,7 +383,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			edit_time = max(edit_time, file_get_modify_s(path_current));
 			run_in_s(PREFERENCES.file_watcher_delay, function() /*=>*/ { updatePaths(); triggerRender(); });
 		}
-	} 
+	}
 	
 	static update = function(frame = CURRENT_FRAME) { 
 		var path        = path_get(getInputData(0));
@@ -387,6 +392,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		outputs[2].setValue(path);
 		outputs[6].setValue(content);
 		
+		if(!update_on_frame) frame = 0;
 		if(path_current != path) updatePaths(path);
 		if(content == noone) return;
 		
@@ -406,7 +412,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		_tag_delay = 0;
 		for( var i = 0; i < array_length(inputs[2].animator.values); i++ ) {
 			var kf = inputs[2].animator.values[i];
-			if(kf.time > CURRENT_FRAME) break;
+			if(kf.time > frame) break;
 			_tag_delay = kf.time;
 		}
 		
@@ -436,7 +442,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			var _l  = array_safe_get_fast(lop, i, false);
 			if(!_v) continue;
 			
-			var cel = layers[i].getCel(CURRENT_FRAME - _tag_delay, _l);
+			var cel = layers[i].getCel(frame - _tag_delay, _l);
 			if(!cel) continue;
 		
 			var _inSurf = cel.getSurface();

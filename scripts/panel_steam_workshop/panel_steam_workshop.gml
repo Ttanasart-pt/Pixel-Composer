@@ -37,6 +37,8 @@ function Steam_workshop_item(_qData) constructor {
 	
 	type = FILE_TYPE.assets;
 	
+	description = string_trim(description);
+	
 	for( var i = 0, n = array_length(tags); i < n; i++ ) {
 		var _tag = tags[i];
 		if(string_starts_with(_tag, "1."))
@@ -102,22 +104,21 @@ function Steam_workshop_item(_qData) constructor {
 		_h += string_height_ext(title, -1, ww) - ui(4);
 		_w = max(_w, string_width_ext(title, -1, ww));
 		
-		draw_set_font(f_p1);
+		draw_set_font(f_p2);
 		_h += string_height_ext(_aut, -1, ww);
 		_w = max(_w, string_width_ext(_aut, -1, ww));
 		
 		if(description != "") {
-			draw_set_font(f_p1);
-			_h += ui(8);
+			draw_set_font(f_p2);
 			_h += string_height_ext(description, -1, ww);
 			_w = max(_w, string_width_ext(description, -1, ww));
 		}
 		
 		if(array_length(tags)) {
-			draw_set_font(f_p1);
+			draw_set_font(f_p2);
 			_h += ui(8);
 			var tx = 0;
-			var hh = line_get_height(f_p1, ui(4));
+			var hh = line_get_height(f_p2, ui(4));
 			var th = hh;
 			for( var i = 0, n = array_length(tags); i < n; i++ ) {
 				var _ww = string_width(tags[i]) + ui(16);
@@ -146,25 +147,24 @@ function Steam_workshop_item(_qData) constructor {
 		var ty = my + ui(8);
 		
 		draw_set_text(f_h5, fa_left, fa_top, COLORS._main_text);
-		draw_text_line(tx, ty, title, -1, _w);
+		draw_text_ext(tx, ty, title, -1, _w);
 		ty += string_height_ext(title, -1, _w) - ui(4);
 		
-		draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);
-		draw_text_line(tx, ty, _aut, -1, _w);
+		draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
+		draw_text_ext(tx, ty, _aut, -1, _w);
 		ty += string_height_ext(_aut, -1, _w);
 		
 		if(description != "") {
-			ty += ui(8);
-			draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
-			draw_text_line(tx, ty, description, -1, _w);
+			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text);
+			draw_text_ext(tx, ty, description, -1, _w);
 			ty += string_height_ext(description, -1, _w);
 		}
 		
 		if(array_length(tags)) {
-			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
+			draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
 			ty += ui(8);
 			var tx = 0;
-			var hh = line_get_height(f_p1, ui(4));
+			var hh = line_get_height(f_p2, ui(4));
 			
 			for( var i = 0, n = array_length(tags); i < n; i++ ) {
 				var ww = string_width(tags[i]) + ui(16);
@@ -175,7 +175,7 @@ function Steam_workshop_item(_qData) constructor {
 				
 				draw_sprite_stretched_ext(THEME.box_r5_clr, 0, mx + ui(8) + tx, ty, ww, hh, COLORS._main_icon, 1);
 				draw_text(mx + ui(8) + tx + ui(8), ty + hh / 2, tags[i]);
-			
+				
 				tx += ww + ui(2);
 			}
 		}

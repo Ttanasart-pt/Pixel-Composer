@@ -1,0 +1,1 @@
+function nodeValue_Any(_name, _value = noone, _tooltip = "") { return new NodeValue( _name, self, CONNECT_TYPE.input, VALUE_TYPE.any, _value ); }

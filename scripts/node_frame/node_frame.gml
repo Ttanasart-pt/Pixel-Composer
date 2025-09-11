@@ -361,8 +361,15 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	////- Serialize
 	
 	static postApplyDeserialize = function() { 
-		if(attributes.reframe_w) w = attributes.reframe_w;
-		if(attributes.reframe_h) h = attributes.reframe_h;
+		if(LOADING_VERSION < 1_19_06_0) {
+			var _size = inputs[0].getValue();
+			w = _size[0];
+			h = _size[1];
+
+		} else {
+			if(attributes.reframe_w) w = attributes.reframe_w;
+			if(attributes.reframe_h) h = attributes.reframe_h;
+		}
 		
 		onValueUpdate(); 
 	}

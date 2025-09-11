@@ -61,27 +61,31 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	ase_data     = noone;
 	layer_object = noone;
 	
-	static onValueFromUpdate = function(index) { findLayer(); }
+	static onValueFromUpdate = function(index) { if(index == 0 || index == 2) findLayer(); }
 	
 	static findLayer = function() {
-		layer_object = noone;
+		var _data  = getInputDataForce(0);
+		var _lname = getInputDataForce(2);
 		
-		var data = getInputDataForce(0);
-		ase_data = data;
-		if(data == noone) return;
+		ase_data = _data;
+		if(_data == noone) return;
+		if(layer_object != noone && layer_object.name == _lname) return;
 		
-		var _lname = getInputData(2);
+		layer_object    = noone;
+		update_on_frame = false;
+		
 		setDisplayName(_lname, false);
 		
-		for( var i = 0, n = array_length(data.layers); i < n; i++ ) {
-			if(data.layers[i].name == _lname) 
-				layer_object = data.layers[i];
+		for( var i = 0, n = array_length(ase_data.layers); i < n; i++ ) {
+			if(ase_data.layers[i].name != _lname) continue;
+			
+			layer_object    = ase_data.layers[i];
+			update_on_frame = layer_object.anim;
+			break;
 		}
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		findLayer();
-		
 		var data   = getInputData(0);
 		var celDim = getInputData(1);
 		var _lname = getInputData(2);
@@ -90,12 +94,14 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		ase_data = data;
 		outputs[1].setValue(_lname);
 		
-		if(layer_object == noone) {
-			logNode($"Layer name {_lname} not found.");
-			return;
+		if(!update_on_frame) frame = 0;
+		if(layer_object == noone) findLayer();
+		if(layer_object == noone) { 
+			logNode($"Layer name {_lname} not found."); 
+			return; 
 		}
 		
-		var cel  = layer_object.getCel(CURRENT_FRAME - data._tag_delay, _loop);
+		var cel  = layer_object.getCel(frame - data._tag_delay, _loop);
 		var ww = data.content[$ "Width"];
 		var hh = data.content[$ "Height"];
 		var cw = cel? cel.data[$ "Width"]  : 1;
@@ -120,5 +126,7 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static postApplyDeserialize = function() {
 		if(LOADING_VERSION < 1_18_00_0 && display_name != "")
 			inputs[2].setValue(display_name);
+			
+		findLayer();
 	}
 }

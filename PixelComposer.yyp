@@ -2864,6 +2864,7 @@
     {"id":{"name":"node_twirl","path":"scripts/node_twirl/node_twirl.yy",},},
     {"id":{"name":"node_unicode","path":"scripts/node_unicode/node_unicode.yy",},},
     {"id":{"name":"node_value_anchor","path":"scripts/node_value_anchor/node_value_anchor.yy",},},
+    {"id":{"name":"node_value_any","path":"scripts/node_value_any/node_value_any.yy",},},
     {"id":{"name":"node_value_area","path":"scripts/node_value_area/node_value_area.yy",},},
     {"id":{"name":"node_value_armature_bone","path":"scripts/node_value_armature_bone/node_value_armature_bone.yy",},},
     {"id":{"name":"node_value_armature","path":"scripts/node_value_armature/node_value_armature.yy",},},

@@ -2,14 +2,15 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	name  = "Splice Spritesheet";
 	
 	////- =Sprite
-	newInput(0, nodeValue_Surface( "Surface In"));
+	newInput(0, nodeValue_Surface( "Surface In" ));
 	newInput(1, nodeValue_Vec2(    "Sprite size", [32,32]   ));
 	newInput(6, nodeValue_Padding( "Padding",     [0,0,0,0] ));
 	newInput(2, nodeValue_Int(     "Row",          1        )); //unused
 	
 	////- =Sheet
-	newInput( 3, nodeValue_Vec2(        "Amount", [1,1]  ));
-	newInput(10, nodeValue_Trigger(     "Auto fill", "Automatically set amount based on sprite size."));
+	newInput( 3, nodeValue_Vec2(    "Amount",    [1,1] ));
+	newInput(10, nodeValue_Trigger( "Auto fill", "Automatically set amount based on sprite size." ));
+	
 	b_auto_fill = button(function() /*=>*/ {
 		var _sur = getInputData(0);
 		if(is_array(_sur)) _sur = array_safe_get_fast(_sur, 0);
@@ -32,6 +33,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 		doUpdate();
 	}).setText("Auto Fill");
+	
 	newInput( 9, nodeValue_Enum_Scroll( "Main Axis", 0, __enum_array_gen(["Horizontal", "Vertical"], s_node_alignment)));
 	newInput( 4, nodeValue_Vec2(        "Offset",   [0,0] ));
 	newInput( 5, nodeValue_Vec2(        "Spacing",  [0,0] ));
@@ -40,11 +42,14 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput( 7, nodeValue_Enum_Scroll( "Output",          1, [ "Animation", "Array" ]));
 	newInput( 8, nodeValue_Float(       "Animation speed", 1 ));
 	newInput(11, nodeValue_Trigger(     "Sync animation"     ));
+	
 	b_sync_frame = button(function() /*=>*/ { 
 		var _atl = outputs[1].getValue();
 		var _spd = getInputData(8);
 		TOTAL_FRAMES = max(1, _spd == 0? 1 : ceil(array_length(_atl) / _spd));
+		
 	}).setText("Sync Frames");
+	
 	newInput(15, nodeValue_Bool(       "Flatten Array", true ));
 		
 	////- =Filter

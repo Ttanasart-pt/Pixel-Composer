@@ -7,44 +7,27 @@
 
 function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Condition";
-	
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Float("Check value", 0 ))
-		.setVisible(true, true)
-		.rejectArray();
-		
-	newInput(1, nodeValue_Enum_Scroll("Condition",  0 , [ new scrollItem("Equal",             s_node_condition_type, 0), 
-												                new scrollItem("Not equal",         s_node_condition_type, 1), 
-												                new scrollItem("Less ",             s_node_condition_type, 2), 
-												                new scrollItem("Less or equal ",	s_node_condition_type, 3), 
-												                new scrollItem("Greater ",			s_node_condition_type, 4), 
-												                new scrollItem("Greater or equal",  s_node_condition_type, 5), ]))
-		.rejectArray();
-		
-	newInput(2, nodeValue_Float("Compare to", 0 ))
-		.rejectArray();
+	cond_array = __enum_array_gen([ "Equal", "Not equal", "Less ", "Less or equal ", "Greater ", "Greater or equal" ], s_node_condition_type);
 	
-	newInput(3, nodeValue("True", self, CONNECT_TYPE.input, VALUE_TYPE.any, -1 ))
-		.setVisible(true, true);
-		
-	newInput(4, nodeValue("False", self, CONNECT_TYPE.input, VALUE_TYPE.any, -1 ))
-		.setVisible(true, true);
+	newInput(5, nodeValue_EScroll( "Eval Mode",  0 , ["Boolean", "Number compare", "Text compare" ])).rejectArray();
 	
-	newInput(5, nodeValue_Enum_Scroll("Eval Mode",  0 , ["Boolean", "Number compare", "Text compare" ]))
-		.rejectArray();
+	////- =Condition
+	newInput(0, nodeValue_Float(   "Check value", 0             )).setVisible(true, true);
+	newInput(1, nodeValue_EScroll( "Condition",   0, cond_array )).rejectArray();
+	newInput(2, nodeValue_Float(   "Compare to",  0             ));
+	newInput(6, nodeValue_Bool(    "Boolean",     false         )).setVisible(true, true);
+	newInput(7, nodeValue_Text(    "Text 1" ));
+	newInput(8, nodeValue_Text(    "Text 2" ));
 	
-	newInput(6, nodeValue_Bool("Boolean", false ))
-		.setVisible(true, true)
-		.rejectArray();
-	
-	newInput(7, nodeValue_Text("Text 1"));
-	
-	newInput(8, nodeValue_Text("Text 2"));
+	////- =Result
+	newInput(3, nodeValue_Any( "True"  )).setVisible(true, true);
+	newInput(4, nodeValue_Any( "False" )).setVisible(true, true);
 		
 	input_display_list = [ 5,
-		["Condition", false], 0, 1, 2, 6, 7, 8, 
-		["Result",	  true], 3, 4
+		[ "Condition", false ], 0, 1, 2, 6, 7, 8, 
+		[ "Result",    true  ], 3, 4
 	]
 	
 	newOutput(0, nodeValue_Output("Result", VALUE_TYPE.any, []));
@@ -79,6 +62,8 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		switch(_mode) {
 			case 0 : res = _bool; break;
 			case 1 :
+				if(is_array(_chck) || is_array(_valu)) break;
+				
 				switch(_cond) {
 					case 0 : res = _chck == _valu; break;
 					case 1 : res = _chck != _valu; break;
@@ -88,6 +73,7 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 					case 5 : res = _chck >= _valu; break;
 				}
 				break;
+				
 			case 2 : res = _txt1 == _txt2; break;
 		}
 		
@@ -95,6 +81,7 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			outputs[0].setValue(_true);
 			outputs[0].setType(inputs[3].type);
 			outputs[0].display_type = inputs[3].display_type;
+			
 		} else {
 			outputs[0].setValue(_fals);
 			outputs[0].setType(inputs[4].type);	

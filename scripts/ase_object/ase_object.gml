@@ -82,9 +82,13 @@ function ase_layer(_name, _type = 0) constructor {
 	name = _name;
 	type = _type;
 	cels = [];
+	anim = false;
 	tag	 = noone;
 	
-	static setFrameCel = function(index, cel) { cels[index] = cel; }
+	static setFrameCel = function(index, cel) { 
+		cels[index] = cel; 
+		anim = array_length(cels) > 1;
+	}
 	
 	static getCelRaw = function(index = CURRENT_FRAME, _loop = false) {
 		ind = _loop? safe_mod(index, array_length(cels)) : index;

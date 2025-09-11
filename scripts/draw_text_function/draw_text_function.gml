@@ -200,13 +200,13 @@ function __draw_text_ext_transformed(_x, _y, _text, _sep, _w, sx = 1, sy = 1, ro
 	return hh;
 }
 
-#macro _string_width_ext string_width_ext
-#macro string_width_ext __string_width_ext
+#macro __string_width_ext string_width_ext
+#macro string_width_ext string_width_ext_override
 
-function __string_width_ext(text, sep, w) {
+function string_width_ext_override(text, sep, w) {
 	INLINE
 	if(!LOCALE.config.per_character_line_break)
-		return _string_width_ext(text, sep, w);
+		return __string_width_ext(text, sep, w);
 	
 	var mxw = 0;
 	var lw  = 0;
@@ -227,12 +227,12 @@ function __string_width_ext(text, sep, w) {
 	return mxw;
 }
 
-#macro _string_height_ext string_height_ext
-#macro string_height_ext __string_height_ext
+#macro __string_height_ext string_height_ext
+#macro string_height_ext string_height_ext_override
 
-function __string_height_ext(text, sep, w, _break = LOCALE.config.per_character_line_break) {
+function string_height_ext_override(text, sep, w, _break = LOCALE.config.per_character_line_break) {
 	INLINE
-	if(!_break) return _string_height_ext(text, sep, w);
+	if(!_break) return __string_height_ext(text, sep, w);
 	
 	var lw  = 0;
 	var amo = string_length(text);
