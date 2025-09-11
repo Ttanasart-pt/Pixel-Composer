@@ -170,31 +170,41 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				var _af = array_safe_length(__f, -1);
 				var _at = array_safe_length(__t, -1);
 				
-				if(_af ==  0 || _at ==  0) return 0;
-				if(_af == -1 && _at == -1) return interpolateValue(__fr, __to, __f, __t, __r);
-				if(_af == _at)             return array_create_ext(_af, function(i) /*=>*/ {return interpolateValue(__fr, __to, __f[i], __t[i], __r)});
+				return array_create_ext(min(_af, _at), function(i) /*=>*/ {return interpolateValue(__fr, __to, __f[i], __t[i], __r)});
 				
-				if(_af == -1 && _at != -1) return array_create_ext(_at, function(i) /*=>*/ {return interpolateValue(__fr, __to, __f, __t[i], __r)});
-				if(_af != -1 && _at == -1) return array_create_ext(_af, function(i) /*=>*/ {return interpolateValue(__fr, __to, __f[i], __t, __r)});
+				// if(_af ==  0 || _at ==  0) return 0;
+				// if(_af == -1 && _at == -1) return interpolateValue(__fr, __to, __f, __t, __r);
+				// if(_af == _at)             return array_create_ext(_af, (i) => interpolateValue(__fr, __to, __f[i], __t[i], __r));
 				
-				return array_create_ext(max(_af, _at), function(i) /*=>*/ {return interpolateValue(__fr, __to, 
-				                                                    is_array(__f)? array_safe_get_fast(__f, i, 0) : __f, 
-							                                        is_array(__t)? array_safe_get_fast(__t, i, 0) : __t, __r)});
+				// if(_af == -1 && _at != -1) return array_create_ext(_at, (i) => interpolateValue(__fr, __to, __f, __t[i], __r));
+				// if(_af != -1 && _at == -1) return array_create_ext(_af, (i) => interpolateValue(__fr, __to, __f[i], __t, __r));
+				
+				// return array_create_ext(max(_af, _at), (i) => interpolateValue(__fr, __to, 
+				//                                                     is_array(__f)? array_safe_get_fast(__f, i, 0) : __f, 
+				// 			                                        is_array(__t)? array_safe_get_fast(__t, i, 0) : __t, __r));
 				
 			case VALUE_TYPE.integer : 
 				var _af = array_safe_length(__f, -1);
 				var _at = array_safe_length(__t, -1);
 				
-				if(_af ==  0 || _at ==  0) return 0;
-				if(_af == -1 && _at == -1) return round(interpolateValue(from, to, __f, __t, rat));
-				if(_af == _at)             return array_create_ext(_af, function(i) /*=>*/ {return round(interpolateValue(__fr, __to, __f[i], __t[i], __r))});
+				return array_create_ext(min(_af, _at), function(i) /*=>*/ {return round(interpolateValue(__fr, __to, __f[i], __t[i], __r))});
 				
-				if(_af == -1 && _at != -1) return array_create_ext(_at, function(i) /*=>*/ {return round(interpolateValue(__fr, __to, __f, __t[i], __r))});
-				if(_af != -1 && _at == -1) return array_create_ext(_af, function(i) /*=>*/ {return round(interpolateValue(__fr, __to, __f[i], __t, __r))});
+				// if(_af ==  0 || _at ==  0) return 0;
+				// if(_af == -1 && _at == -1) return round(interpolateValue(from, to, __f, __t, rat));
+				// if(_af == _at)             return array_create_ext(_af, (i) => round(interpolateValue(__fr, __to, __f[i], __t[i], __r)));
 				
-				return array_create_ext(max(_af, _at), function(i) /*=>*/ {return round(interpolateValue(__fr, __to, 
-				                                                     is_array(__f)? array_safe_get_fast(__f, i, 0) : __f, 
-							                                         is_array(__t)? array_safe_get_fast(__t, i, 0) : __t, __r))});
+				// if(_af == -1 && _at != -1) return array_create_ext(_at, (i) => round(interpolateValue(__fr, __to, __f, __t[i], __r)));
+				// if(_af != -1 && _at == -1) return array_create_ext(_af, (i) => round(interpolateValue(__fr, __to, __f[i], __t, __r)));
+				
+				// return array_create_ext(max(_af, _at), (i) => round(interpolateValue(__fr, __to, 
+				//                                                      is_array(__f)? array_safe_get_fast(__f, i, 0) : __f, 
+				// 			                                         is_array(__t)? array_safe_get_fast(__t, i, 0) : __t, __r)));
+			
+			case VALUE_TYPE.curve : 
+				var _af = array_safe_length(__f, -1);
+				var _at = array_safe_length(__t, -1);
+				return array_create_ext(min(_af, _at), function(i) /*=>*/ {return interpolateValue(__fr, __to, __f[i], __t[i], __r)});
+				
 				
 			case VALUE_TYPE.color : 
 				__lrp = interpolate(from, to, rat);
