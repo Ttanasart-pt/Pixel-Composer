@@ -140,8 +140,11 @@ function LOAD_AT(path, params = new __loadParams()) {
 		
 		var compBuff = buffer_decompress(contBuff);
 		if(compBuff == -1) {
+			buffer_to_start(contBuff);
 			s = buffer_read(contBuff, buffer_string);
+			
 		} else {
+			buffer_to_start(compBuff);
 			s = buffer_read(compBuff, buffer_string);
 			buffer_delete(compBuff);
 		}
@@ -151,7 +154,6 @@ function LOAD_AT(path, params = new __loadParams()) {
 	#endregion
 	
 	var content = json_try_parse(s);
-	print(content);
 	printIf(log, $" > Load struct : {(get_timer() - t1) / 1000} ms");
 	
 	return instance_create(0, 0, project_loader, { path, content, log, params, t0, t1 });
