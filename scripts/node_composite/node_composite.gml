@@ -1205,6 +1205,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var hovering_ianc = noone;
 		var hovering_ai   = noone;
 		
+		var hovering_con  = noone;
+		
 		var amo     = getInputAmount();
 		var anchors = array_create(array_length(inputs));
 		if(amo == 0) { dynamic_input_inspecting = noone; return; }
@@ -1213,12 +1215,22 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _sel = attributes.layer_selectable;
 		dynamic_input_inspecting = min(dynamic_input_inspecting, amo - 1);
 		
+		if(attributes.select_object && selection_sampler.active) {
+			var _msx = floor((_mx - _x) / _s);
+			var _msy = floor((_my - _y) / _s);
+			var _ind = selection_sampler.getPixel(_msx, _msy);
+			
+			if(_ind) {
+				hovering_type = NODE_COMPOSE_DRAG.move;
+				hovering_con  = _ind - 1;
+			}
+		}
+		
 		for(var i = 0; i < amo; i++) {
 			var index = input_fix_len + i * data_length;
 			var _surf = current_data[index + 0];
 			
-			if(!is_surface(_surf)) continue;
-			if(!_vis[i]) continue;
+			if(!is_surface(_surf) || !_vis[i]) continue;
 			
 			var _pos  = current_data[index + 1];
 			var _rot  = current_data[index + 2];
@@ -1271,7 +1283,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			anchors[index] = {
 				d0: _d0, d1: _d1, d2: _d2, d3: _d3,
 				cx: _cx, cy: _cy,
-				rr: _rr, ss: _ss, 
+				rr: _rr, ss: _ss, rc: _rc, 
 				
 				anc: _aa, 
 				siz: _siz,
@@ -1284,108 +1296,107 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			if(!_sel[i]) continue;
 			
-			var p0x = _d0[0], p0y = _d0[1];
-			var p1x = _d1[0], p1y = _d1[1];
-			var p2x = _d2[0], p2y = _d2[1];
-			var p3x = _d3[0], p3y = _d3[1];
-			var rcx = _rc[0], rcy = _rc[1];
-			var  ax = _aa[0],  ay = _aa[1];
-			var  rx = _rr[0],  ry = _rr[1];
-			var  sx = _ss[0],  sy = _ss[1];
+			var _hov = point_in_rectangle_points(_mx, _my, _d0[0], _d0[1], _d1[0], _d1[1], _d2[0], _d2[1], _d3[0], _d3[1]);
 			
-			var _hov = point_in_rectangle_points(_mx, _my, p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y);
-			
-			if(dynamic_input_inspecting == i) {
-				var _ri = 0;
-				var _si = 0;
-				var _ai = 0;
-				var _bi = noone;
-			
-				if((isNotUsingTool() || isUsingTool("Scale")) && point_in_circle(_mx, _my, p0x, p0y, 12)) {
-					hovering_type = NODE_COMPOSE_DRAG.box;
-					hovering_oanc = _d3;
-					hovering_ai   = 0;
-					hovering = i; _bi = 0;
-					
-				} else if((isNotUsingTool() || isUsingTool("Scale")) && point_in_circle(_mx, _my, p1x, p1y, 12)) {
-					hovering_type = NODE_COMPOSE_DRAG.box;
-					hovering_oanc = _d2;
-					hovering_ai   = 1;
-					hovering = i; _bi = 1;
-					
-				} else if((isNotUsingTool() || isUsingTool("Scale")) && point_in_circle(_mx, _my, p2x, p2y, 12)) {
-					hovering_type = NODE_COMPOSE_DRAG.box;
-					hovering_oanc = _d1;
-					hovering_ai   = 2;
-					hovering = i; _bi = 2;
-					
-				} else if((isNotUsingTool() || isUsingTool("Scale")) && point_in_circle(_mx, _my, p3x, p3y, 12)) {
-					hovering_type = NODE_COMPOSE_DRAG.box;
-					hovering_oanc = _d0;
-					hovering_ai   = 3;
-					hovering = i; _bi = 3;
-					
-				} else if((isNotUsingTool() || isUsingTool("Anchor")) && point_in_circle(_mx, _my, ax, ay, 12)) {
-					hovering_type = NODE_COMPOSE_DRAG.anchor;
-					hovering = i; _ai = 3;
-					
-				} else if((isNotUsingTool() || isUsingTool("Move")) && _hov) {
-					hovering_type = NODE_COMPOSE_DRAG.move; 
-					hovering = i;
-					
-				} else if((isNotUsingTool() || isUsingTool("Rotate")) && point_in_circle(_mx, _my, rx, ry, 12)) {
-					hovering_type = NODE_COMPOSE_DRAG.rotate;
-					hovering = i; _ri = 1;
-					
-				} else if((isNotUsingTool() || isUsingTool("Scale")) && point_in_circle(_mx, _my, sx, sy, 12)) {
-					hovering_type = NODE_COMPOSE_DRAG.scale;
-					hovering = i; _si = 1;
-				}
-				
-				draw_set_color(COLORS._main_accent);
-				draw_rectangle_border_points(p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y, 2);
-				
-				if(isNotUsingTool() || isUsingTool("Rotate")) {
-					draw_line_width(rcx, rcy, rx,  ry,  2);
-					
-					draw_anchor(_ri,      rx,  ry,  ui(8), 1);
-				}
-				
-				if(isNotUsingTool() || isUsingTool("Scale")) {
-					draw_line_width(p3x, p3y, sx,  sy,  2);
-					
-					draw_anchor(_si,      sx,  sy,  ui(8), 1);
-					draw_anchor(_bi == 0, p0x, p0y, ui(8), 2);
-					draw_anchor(_bi == 1, p1x, p1y, ui(8), 2);
-					draw_anchor(_bi == 2, p2x, p2y, ui(8), 2);
-					draw_anchor(_bi == 3, p3x, p3y, ui(8), 2);
-				}
-				
-				if(isNotUsingTool() || isUsingTool("Anchor"))
-					draw_anchor_cross(_ai * .5, ax, ay, ui(8), 1, _rot);
-				
-			} else if(!attributes.select_object && _hov) {
+			if(_hov) {
 				if(isNotUsingTool() || isUsingTool("Move"))
 					hovering_type = NODE_COMPOSE_DRAG.move;
 				hovering = i;
 			}
 		}
 		
-		if(attributes.select_object && selection_sampler.active) {
-			var _msx = floor((_mx - _x) / _s);
-			var _msy = floor((_my - _y) / _s);
-			var _ind = selection_sampler.getPixel(_msx, _msy);
+		if(attributes.select_object && selection_sampler.active)
+			hovering = hovering_con;
+		
+		if(dynamic_input_inspecting >= 0) {
+			var _index = dynamic_input_inspecting;
+			var _i = input_fix_len + dynamic_input_inspecting * data_length;
+			var _a = anchors[_i];
 			
-			if(_ind) {
-				hovering = _ind - 1;
-				hovering_type = NODE_COMPOSE_DRAG.move;
+			var p0x = _a.d0[0], p0y = _a.d0[1];
+			var p1x = _a.d1[0], p1y = _a.d1[1];
+			var p2x = _a.d2[0], p2y = _a.d2[1];
+			var p3x = _a.d3[0], p3y = _a.d3[1];
+			var rcx = _a.rc[0], rcy = _a.rc[1];
+			var  rx = _a.rr[0],  ry = _a.rr[1];
+			var  sx = _a.ss[0],  sy = _a.ss[1];
+			var  ax = _a.anc[0], ay = _a.anc[1];
+			
+			var _ri = 0;
+			var _si = 0;
+			var _ai = 0;
+			var _bi = noone;
+			
+			var _hov = !attributes.select_object && point_in_rectangle_points(_mx, _my, p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y);
+		
+			if((isNotUsingTool() || isUsingTool("Scale")) && point_in_circle(_mx, _my, p0x, p0y, 12)) {
+				hovering_type = NODE_COMPOSE_DRAG.box;
+				hovering_oanc = _d3;
+				hovering_ai   = 0;
+				hovering      = _index; _bi = 0;
+				
+			} else if((isNotUsingTool() || isUsingTool("Scale")) && point_in_circle(_mx, _my, p1x, p1y, 12)) {
+				hovering_type = NODE_COMPOSE_DRAG.box;
+				hovering_oanc = _d2;
+				hovering_ai   = 1;
+				hovering      = _index; _bi = 1;
+				
+			} else if((isNotUsingTool() || isUsingTool("Scale")) && point_in_circle(_mx, _my, p2x, p2y, 12)) {
+				hovering_type = NODE_COMPOSE_DRAG.box;
+				hovering_oanc = _d1;
+				hovering_ai   = 2;
+				hovering      = _index; _bi = 2;
+				
+			} else if((isNotUsingTool() || isUsingTool("Scale")) && point_in_circle(_mx, _my, p3x, p3y, 12)) {
+				hovering_type = NODE_COMPOSE_DRAG.box;
+				hovering_oanc = _d0;
+				hovering_ai   = 3;
+				hovering      = _index; _bi = 3;
+				
+			} else if((isNotUsingTool() || isUsingTool("Anchor")) && point_in_circle(_mx, _my, ax, ay, 12)) {
+				hovering_type = NODE_COMPOSE_DRAG.anchor;
+				hovering      = _index; _ai = 3;
+				
+			} else if((isNotUsingTool() || isUsingTool("Move")) && _hov) {
+				hovering_type = NODE_COMPOSE_DRAG.move; 
+				hovering      = _index;
+				
+			} else if((isNotUsingTool() || isUsingTool("Rotate")) && point_in_circle(_mx, _my, rx, ry, 12)) {
+				hovering_type = NODE_COMPOSE_DRAG.rotate;
+				hovering      = _index; _ri = 1;
+				
+			} else if((isNotUsingTool() || isUsingTool("Scale")) && point_in_circle(_mx, _my, sx, sy, 12)) {
+				hovering_type = NODE_COMPOSE_DRAG.scale;
+				hovering      = _index; _si = 1;
 			}
+			
+			draw_set_color(COLORS._main_accent);
+			draw_rectangle_border_points(p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y, 2);
+			
+			if(isNotUsingTool() || isUsingTool("Rotate")) {
+				draw_line_width(rcx, rcy, rx,  ry,  2);
+				
+				draw_anchor(_ri,      rx,  ry,  ui(8), 1);
+			}
+			
+			if(isNotUsingTool() || isUsingTool("Scale")) {
+				draw_line_width(p3x, p3y, sx,  sy,  2);
+				
+				draw_anchor(_si,      sx,  sy,  ui(8), 1);
+				draw_anchor(_bi == 0, p0x, p0y, ui(8), 2);
+				draw_anchor(_bi == 1, p1x, p1y, ui(8), 2);
+				draw_anchor(_bi == 2, p2x, p2y, ui(8), 2);
+				draw_anchor(_bi == 3, p3x, p3y, ui(8), 2);
+			}
+			
+			if(isNotUsingTool() || isUsingTool("Anchor"))
+				draw_anchor_cross(_ai * .5, ax, ay, ui(8), 1, _rot);
+			
 		}
 		
 		if(hovering != noone) hovering_ianc = array_safe_get_fast(anchors, input_fix_len + hovering * data_length);
 		
 		var _show_selecting = true;
-		
 		if(isUsingTool()) {
 			_show_selecting = false;
 			var _currTool = PANEL_PREVIEW.tool_current;
