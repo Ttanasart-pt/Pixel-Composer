@@ -70,14 +70,24 @@ event_inherited();
 			
 				if(_hov) {
 					sp_recent.hover_content = true;
-					if(!_thumb) TOOLTIP = new tooltipRecentFile(_rec, sp_recent.rx + fx, sp_recent.ry + _y + hg - hgt, ww, hg);
-					else        TOOLTIP = _dat.path;
+					if(!instance_exists(o_dialog_menubox)) {
+						if(!_thumb) TOOLTIP = new tooltipRecentFile(_rec, sp_recent.rx + fx, sp_recent.ry + _y + hg - hgt, ww, hg);
+						else        TOOLTIP = _dat.path;
+					}
 					
 					draw_sprite_stretched_ext(THEME.ui_panel, 1, fx, _y, ww, hg, COLORS._main_accent, 1);
-				
-					if(mouse_press(mb_left, sFOCUS)) {
+					
+					if(mouse_lpress(sFOCUS)) {
 						LOAD_PATH(_rec);
 						instance_destroy();
+						
+					} else if(mouse_rpress(sFOCUS)) {
+						menuCall("splash_recent", [
+							menuItem(__txt("Load File"), function(_rec) /*=>*/ { LOAD_PATH(_rec); instance_destroy(); }).setParam(_rec),
+							menuItem(__txt("Load in Safe Mode"), function(_rec) /*=>*/ { LOAD_PATH(_rec, false, true); instance_destroy(); }).setParam(_rec),
+							-1, 
+							menuItem(__txt("Open in Explorer"), function(_rec) /*=>*/ {return shellOpenExplorer(filename_dir(_rec))}).setParam(_rec),
+						]);
 					}
 				}
 			

@@ -11,9 +11,9 @@ function Node_Iterate_Each_File_Inline(_x, _y, _group = noone) : Node_Collection
 	output_node_types = [ Node_Iterate_Each_File_Inline_Output ];
 	
 	newActiveInput(3);
-	newInput(0, nodeValue_Path("Path")).setDisplay(VALUE_DISPLAY.path_load, { filter: "dir" }).setVisible(true, false);
-	newInput(1, nodeValue_Text("Extensions", ".png"));
-	newInput(2, nodeValue_Enum_Scroll("Type",  0, [ "Surface", "Text" ]));
+	newInput(0, nodeValue_Path( "Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "dir" }).setVisible(true, false);
+	newInput(1, nodeValue_Text( "Extensions", ".png" ));
+	newInput(2, nodeValue_Enum_Scroll( "Type",  0, [ "Surface", "Text" ] ));
 	
 	iteration_count  = 0;
 	iterated         = 0;
@@ -113,12 +113,10 @@ function Node_Iterate_Each_File_Inline(_x, _y, _group = noone) : Node_Collection
 		var _type = inputs[2].getValue();
 		activated = inputs[3].getValue();
 		
-		if(!file_exists_empty(_path)) {
-			paths = [];
-			return;
-		}
+		paths = [];
+		if(!file_exists_empty(_path)) return;
 		
-		paths = activated? path_dir_get_files(_path, _ext, true) : [];
+		if(activated) paths = path_dir_get_files(_path, _ext, true);
 	}
 	
 }

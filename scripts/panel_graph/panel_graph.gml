@@ -3235,6 +3235,11 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         drawSlideShow();
         drawActionTooltip();
         
+        if(project.safeMode) {
+			draw_set_text(f_sdf, fa_right, fa_bottom, COLORS._main_text_sub);
+			draw_text_transform_add(w - ui(8), h - toolbar_height, __txtx("safe_mode", "SAFE MODE"), .5);
+		}
+		
         ///////////////////////////////////// File drop /////////////////////////////////////
         
         if(pHOVER) {

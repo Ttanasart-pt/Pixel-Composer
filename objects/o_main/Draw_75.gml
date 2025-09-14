@@ -145,16 +145,6 @@ if(winMan_isMinimized()) exit;
 	}
 #endregion
 
-#region safe mode
-	if(PROJECT.safeMode) {
-		draw_sprite_stretched_ext(THEME.ui_panel, 1, 0, 0, WIN_W, WIN_H, COLORS._main_value_negative, 1);
-		draw_set_text(f_h1, fa_right, fa_bottom, COLORS._main_value_negative);
-		draw_set_alpha(0.25);
-		draw_text(WIN_W - ui(16), WIN_H - ui(8), __txtx("safe_mode", "SAFE MODE"));
-		draw_set_alpha(1);
-	}
-#endregion
-
 #region draw gui top
 	PANEL_MAIN.drawGUI();
 	
