@@ -15,7 +15,9 @@ function Node_String_Regex_Search(_x, _y, _group = noone) : Node_Processor(_x, _
 		var str = _data[0];
 		var reg = _data[1];
 		
-		var resRaw = regex_search_c(str, reg);
+		if(str == "" || reg == "") return false;
+		
+		var resRaw = regex_search_c(string(str), string(reg));
 		var resArr = string_splice(resRaw, "\n");
 		return resArr;
 	}

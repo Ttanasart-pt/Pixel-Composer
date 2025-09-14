@@ -15,7 +15,8 @@ function Node_String_Regex_Match(_x, _y, _group = noone) : Node_Processor(_x, _y
 		var str = _data[0];
 		var reg = _data[1];
 		
-		return regex_match_c(str, reg);
+		if(str == "" || reg == "") return false;
+		return regex_match_c(string(str), string(reg));
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

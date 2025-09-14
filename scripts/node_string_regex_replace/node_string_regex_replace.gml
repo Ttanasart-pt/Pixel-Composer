@@ -17,7 +17,8 @@ function Node_String_Regex_Replace(_x, _y, _group = noone) : Node_Processor(_x, 
 		var reg = _data[1];
 		var rep = _data[2];
 		
-		return regex_replace_c(str, reg, rep);
+		if(str == "" || reg == "") return "";
+		return regex_replace_c(string(str), string(reg), string(rep));
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
