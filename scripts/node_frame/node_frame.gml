@@ -55,8 +55,8 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	////- Node
 	
-	attributes.reframe_w = 0;
-	attributes.reframe_h = 0;
+	attributes.w = 0;
+	attributes.h = 0;
 	
 	static move = function(_x, _y) {
 		if(moved) return;
@@ -140,8 +140,8 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		w = _maxx - _minx;
 		h = _maxy - _miny;
 		
-		attributes.reframe_w = w;
-		attributes.reframe_h = h;
+		attributes.w = w;
+		attributes.h = h;
 		
 	}
 	
@@ -301,6 +301,9 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				size_dragging = 0;
 		}
 		
+		attributes.w = w;
+		attributes.h = h;
+		
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		drawNodeBase(xx, yy, _s, _panel);
@@ -361,15 +364,12 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	////- Serialize
 	
 	static postApplyDeserialize = function() { 
-		if(LOADING_VERSION < 1_19_06_0) {
-			var _size = inputs[0].getValue();
-			w = _size[0];
-			h = _size[1];
-
-		} else {
-			if(attributes.reframe_w) w = attributes.reframe_w;
-			if(attributes.reframe_h) h = attributes.reframe_h;
-		}
+		var _size = inputs[0].getValue();
+		w = _size[0];
+		h = _size[1];
+		
+		if(attributes.w) w = attributes.w;
+		if(attributes.h) h = attributes.h;
 		
 		onValueUpdate(); 
 	}
@@ -379,6 +379,7 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		if(LOADING_VERSION < 1_19_05_1)
 			load_map.inputs[3] = { raw_value : { d : ca_white } };
+			
 	}
 	
 }

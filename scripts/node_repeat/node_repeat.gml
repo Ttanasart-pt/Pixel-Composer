@@ -584,9 +584,9 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				cc = _grad.evalFast(_prg);
 				
 			var aa  = _color_get_alpha(cc);
-			
-			posx -= _panc[0] * sw;
-			posy -= _panc[1] * sh;
+			point_rotate(sw * _panc[0], sh * _panc[1], 0, 0, rot, __temp_p);
+			posx -= __temp_p[0];
+			posy -= __temp_p[1];
 			
 			atlas_i++;
 			
