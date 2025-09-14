@@ -1,5 +1,6 @@
-globalvar PATREON_MAIL_CHECK, PATREON_MAIL_CALLBACK;
-globalvar IS_PATREON;
+globalvar PATREON_MAIL_CHECK;    PATREON_MAIL_CHECK    = undefined;
+globalvar PATREON_MAIL_CALLBACK; PATREON_MAIL_CALLBACK = undefined;
+globalvar IS_PATREON;            IS_PATREON            = false;
 
 #macro FIRESTORE_ID "pixelcomposer-f9cef"
 
@@ -107,17 +108,6 @@ function patreon_create_verification_code(code) {
 	
 	ds_map_secure_save(_map, _path);
 	IS_PATREON = true;
-}
-
-function __initPatreon() {
-	IS_PATREON = false;
-	var _path = DIRECTORY + "patreon";
-	
-	if(!file_exists_empty(_path)) return;
-	var _load = ds_map_secure_load(_path);
-	var _code = ds_map_try_get(_load, "code")
-	
-	IS_PATREON = string_starts_with(_code, "pxc");
 }
 
 function patreon_generate_activation_key(_mail) {

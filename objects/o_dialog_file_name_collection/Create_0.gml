@@ -4,6 +4,7 @@ event_inherited();
 #region data
 	dialog_w = ui(360);
 	dialog_h = ui(48);
+	padding  = ui(12);
 	
 	dialog_w_expand = ui(480);
 	dialog_h_expand = ui(570);
@@ -21,23 +22,19 @@ event_inherited();
 	node      = noone;
 	data_path = "";
 	
+	font = f_p2;
 	ugc  = 0;
 	ugc_loading = false;
 	
 	KEYBOARD_RESET
-	tb_name  = new textBox( TEXTBOX_INPUT.text, function(str) /*=>*/ { meta.name = filename_name_validate(str); });
-	t_desc   = new textArea(TEXTBOX_INPUT.text, function(str) /*=>*/ { meta.description = str; });
-	t_auth   = new textArea(TEXTBOX_INPUT.text, function(str) /*=>*/ { meta.author	    = str; });
-	t_cont   = new textArea(TEXTBOX_INPUT.text, function(str) /*=>*/ { meta.contact	    = str; });
-	t_alias  = new textArea(TEXTBOX_INPUT.text, function(str) /*=>*/ { meta.alias	    = str; });
-	t_update = new textArea(TEXTBOX_INPUT.text, function(str) /*=>*/ { update_note	    = str; });
-	t_tags   = new textArrayBox(function() /*=>*/ {return meta.tags}, META_TAGS);
+	tb_name  = textBox_Text(  function(str) /*=>*/ { meta.name        = filename_name_validate(str); });
 	
-	t_desc.auto_update   = true;
-	t_auth.auto_update   = true;
-	t_cont.auto_update   = true;
-	t_alias.auto_update  = true;
-	t_update.auto_update = true;
+	t_update = textArea_Text( function(str) /*=>*/ { update_note      = str; }).setAutoUpdate();
+	t_desc   = textArea_Text( function(str) /*=>*/ { meta.description = str; }).setAutoUpdate();
+	t_auth   = textBox_Text(  function(str) /*=>*/ { meta.author      = str; }).setAutoUpdate();
+	t_cont   = textBox_Text(  function(str) /*=>*/ { meta.contact     = str; }).setAutoUpdate();
+	t_alias  = textBox_Text(  function(str) /*=>*/ { meta.alias       = str; }).setAutoUpdate();
+	t_tags   = new textArrayBox(function() /*=>*/ {return meta.tags}, META_TAGS);
 	
 	function doExpand() {
 		meta_expand = true;

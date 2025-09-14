@@ -1,4 +1,5 @@
 /// @description init
 event_inherited();
 
-arrayBox.open = false;
+if(arrayBox) arrayBox.open = false;
+if(onClose) onClose(arraySet);

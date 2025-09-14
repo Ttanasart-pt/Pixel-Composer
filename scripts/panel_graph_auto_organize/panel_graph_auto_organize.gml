@@ -2,7 +2,6 @@ function Panel_Graph_Auto_Organize(_nodes) : PanelContent() constructor {
 	title    = __txt("Auto Organize");
 	w        = ui(400);
 	h        = ui(320);
-	auto_pin = true;
 	nodes    = _nodes;
 	param    = new node_auto_organize_parameter();
 	

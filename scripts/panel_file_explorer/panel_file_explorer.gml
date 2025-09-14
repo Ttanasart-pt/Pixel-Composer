@@ -519,9 +519,6 @@ function Panel_File_Explorer() : PanelContent() constructor {
 		
 		var _h = drawDir(rootFile, 0, _y, contentPane.surface_w, _m);
 		
-		tba_filter.data     = struct_get_names(current_ext);
-		tba_filter.arraySet = filter_ext;
-		
 		if(frame_dragging) draw_sprite_stretched_points_clamp(THEME.ui_selection, 0, frame_drag_mx, frame_drag_my, _m[0], _m[1], COLORS._main_accent);
 		if(context_hovering == noone) context_hovering = rootFile;
 		
@@ -690,7 +687,8 @@ function Panel_File_Explorer() : PanelContent() constructor {
 			bc = array_empty(filter_ext)? COLORS._main_icon : COLORS._main_accent;
 			if(buttonInstant(bspr, bx1 - bs, by, bs, bs, m, pHOVER, pFOCUS, "Filter...", THEME.filter, 1, bc, 1, .8) == 2) {
 				with(dialogCall(o_dialog_arrayBox, x + bx1 - bs, y + by)) {
-					arrayBox = other.tba_filter;	
+					data     = other.struct_get_names(current_ext);
+					arraySet = other.filter_ext;
 					dialog_w = ui(160);
 					font     = f_p3;
 					mode     = 0;

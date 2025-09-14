@@ -14,8 +14,8 @@ function directory_verify(path) {
 }
 
 function directory_clear(path) {
-	if(!directory_exists(path)) return;
-	directory_destroy(path);
+	if(directory_exists(path)) 
+		directory_destroy(path);
 	directory_create(path);
 }
 

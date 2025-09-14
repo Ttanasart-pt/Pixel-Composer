@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"pxc_account",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"pxc_account",
+  "parent":{
+    "name":"account",
+    "path":"folders/functions/account.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

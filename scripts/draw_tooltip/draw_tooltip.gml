@@ -419,3 +419,34 @@ function tooltip_modifiers(title, keys) constructor {
 		}
 	}
 }
+
+function tooltip_two_lines(title, content) constructor {
+	self.title   = title;
+	self.content = content;
+	
+	static drawTooltip = function() {
+		
+		draw_set_font(f_p1b);
+		var w1 = string_width(title);
+		var h1 = string_height(title);
+		
+		draw_set_font(f_p2);
+		var w2 = string_width(content);
+		var h2 = string_height(content);
+		
+		var tw = max(w1, w2);
+		var th = h1 + h2;
+		
+		var mx = min(mouse_mxs + ui(16), WIN_W - (tw + ui(16)));
+		var my = min(mouse_mys + ui(16), WIN_H - (th + ui(16)));
+		
+		draw_sprite_stretched(THEME.textbox, 3, mx, my, tw + ui(16), th + ui(16));
+		draw_sprite_stretched(THEME.textbox, 0, mx, my, tw + ui(16), th + ui(16));
+		
+		draw_set_text(f_p1b, fa_left, fa_top, COLORS._main_text_accent);
+		draw_text(mx + ui(8), my + ui(8), title);
+		
+		draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text);
+		draw_text(mx + ui(8), my + ui(8) + h1, content);
+	}
+}

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"panel_account",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"panel_account",
+  "parent":{
+    "name":"account",
+    "path":"folders/panels/_others/account.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

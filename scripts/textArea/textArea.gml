@@ -5,6 +5,8 @@ enum TEXT_AREA_FORMAT {
 	delimiter,
 	path_template,
 	node_title,
+	
+	password,
 }
 
 function textArea_Text(_onModify)   { return new textArea(TEXTBOX_INPUT.text,   _onModify); }
@@ -14,6 +16,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	hide     = false;
 	color    = COLORS._main_text;
 	always_break_line  = true;
+	display_h = 0;
 	
 	_input_text_line       = [];
 	_input_text_line_index = [];
@@ -62,6 +65,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	text_scrolling = false;
 	text_scroll_sy = 0;
 	text_scroll_my = 0;
+	mouse_lhold    = false;
 	
 	border_heightlight_color = COLORS._main_accent;
 	
@@ -806,6 +810,8 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		
 		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, hh, boxColor, 1);
 		
+		var _scis = gpu_get_scissor();
+		
 		surface_set_shader(text_surface, noone, true, BLEND.add);
 			if(isCodeFormat() && show_line_number) {
 				draw_sprite_stretched_ext(THEME.textbox_code, 0, 0, 0, ui(code_line_width), hh, boxColor, 1);
@@ -819,6 +825,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 				}
 			}
 		surface_reset_shader();
+		gpu_set_scissor(_scis);
 		
 		////- Selecting
 		
@@ -929,6 +936,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 				}
 				
 			surface_reset_shader();
+			gpu_set_scissor(_scis);
 		
 			BLEND_ALPHA
 				draw_surface(text_surface, _x, _y);
@@ -952,14 +960,17 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 				o_dialog_textbox_autocomplete.activate(self);
 				autocomplete_modi = false;
 			}
-				
-			if(!point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh) && mouse_press(mb_left) && HOVER != o_dialog_textbox_autocomplete.id)
+			
+			var hoverRect = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh);
+			if(!hoverRect && mouse_lpress() && HOVER != o_dialog_textbox_autocomplete.id && !mouse_lhold)
 				deactivate();
+			if(mouse_lrelease()) mouse_lhold = false;
 				
 		} else {
 			surface_set_shader(text_surface, noone, false, BLEND.add);
 				display_text(tx, text_y + padding_v, _text);
 			surface_reset_shader();
+			gpu_set_scissor(_scis);
 			
 			BLEND_ALPHA
 				draw_surface(text_surface, _x, _y);
@@ -1033,6 +1044,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		shift_new_line = true;
 		resetFocus();
 		
+		display_h = hh;
 		return hh;
 	}
 	

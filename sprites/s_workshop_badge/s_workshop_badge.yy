@@ -44,8 +44,8 @@
   },
   "origin":4,
   "parent":{
-    "name":"Steamworks",
-    "path":"folders/__extensions/Steamworks.yy",
+    "name":"Sprites",
+    "path":"folders/__extensions/Steamworks/Sprites.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

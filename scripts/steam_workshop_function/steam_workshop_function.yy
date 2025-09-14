@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"steam_workshop_function",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"steam_workshop_function",
+  "parent":{
+    "name":"UGC",
+    "path":"folders/__extensions/Steamworks/UGC.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

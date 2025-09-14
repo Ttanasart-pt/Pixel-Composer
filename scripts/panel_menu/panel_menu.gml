@@ -259,7 +259,12 @@ function Panel_Menu() : PanelContent() constructor {
             
             MENU_ITEMS.collections_panel,
             MENU_ITEMS.graph_panel,
-            MENU_ITEMS.preview_panel,
+            
+            menuItemShelf(__txt("Preview"), function(_dat) /*=>*/ {return submenuCall(_dat, [
+                MENU_ITEMS.preview_panel,
+                MENU_ITEMS.preview_histogram,
+            ])}),
+            
             MENU_ITEMS.inspector_panel,
             MENU_ITEMS.workspace_panel,
             MENU_ITEMS.animation_panel,
@@ -267,24 +272,20 @@ function Panel_Menu() : PanelContent() constructor {
             MENU_ITEMS.globalvar_panel,
             MENU_ITEMS.file_explorer_panel,
             
-            menuItemShelf(__txt("Nodes"), function(_dat) { 
-                return submenuCall(_dat, [
-                    MENU_ITEMS.align_panel,
-                    MENU_ITEMS.nodes_panel,
-                    MENU_ITEMS.tunnels_panel,
-                ]);
-            }),
+            menuItemShelf(__txt("Nodes"), function(_dat) /*=>*/ {return submenuCall(_dat, [
+                MENU_ITEMS.align_panel,
+                MENU_ITEMS.nodes_panel,
+                MENU_ITEMS.tunnels_panel,
+            ])}),
             
-            menuItemShelf(__txt("Color"), function(_dat) { 
-                return submenuCall(_dat, [
-                    MENU_ITEMS.color_panel,
-                    MENU_ITEMS.palettes_panel,
-                    MENU_ITEMS.palettes_mixer_panel,
-                    MENU_ITEMS.gradients_panel,
-                ]);
-            }),
+            menuItemShelf(__txt("Color"), function(_dat) /*=>*/ {return submenuCall(_dat, [
+                MENU_ITEMS.color_panel,
+                MENU_ITEMS.palettes_panel,
+                MENU_ITEMS.palettes_mixer_panel,
+                MENU_ITEMS.gradients_panel,
+            ])}),
             
-            MENU_ITEMS.preview_histogram,
+            -1, 
             MENU_ITEMS.steam_workshop_panel,
         ]];
         
@@ -346,6 +347,19 @@ function Panel_Menu() : PanelContent() constructor {
         ]; 
         
         if(TESTING) array_push(menus, menu_test);
+        
+        profile_menu = [];
+        if(STEAM_ENABLED) {
+            profile_menu = [
+                menuItem(__txt("Steam Workshop"),      function() /*=>*/ {return dialogPanelCall(new Panel_Steam_Workshop())} ),
+                menuItem(__txt("Your Workshop Page"),  function() /*=>*/ {
+                    var _p = new Panel_Steam_Workshop();
+                    _p.navigate({ type: 2, page: 0 });
+                    dialogPanelCall(_p);
+                    
+                }),
+            ];
+        }
     #endregion
         
     function onFocusBegin() { PANEL_MENU = self; }
@@ -620,77 +634,138 @@ function Panel_Menu() : PanelContent() constructor {
         
         #region actions
             var bs = ui(28);
+            var bspr = THEME.button_hide_fill;
             
-            if(_action)
-            for( var i = 0, n = array_length(action_buttons); i < n; i++ ) {
-                var action = action_buttons[i];
-                
-                switch(action) {
-                    case "exit":
-                        var b = buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, m, pHOVER, true,, THEME.window_exit_icon, 0, COLORS._main_accent);
-                        if(b) _draggable = false;
-                        if(b == 2) window_close();
-                        break;
-                        
-                    case "maximize":
-                        var win_max = window_is_maximized || window_is_fullscreen;
-                        if(OS == os_macosx)
-                            win_max = __win_is_maximized;
-                        
-                        var b = buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, m, pHOVER, true,, THEME.window_maximize_icon, win_max, [ COLORS._main_icon, CDEF.lime ]);
-                        if(b) _draggable = false;
-                        if(b == 2) {
-                            if(OS == os_windows) {
-                                if(window_is_fullscreen) {
-                                    winMan_setFullscreen(false);
-                                    winMan_Unmaximize();
+            if(_action) {
+                for( var i = 0, n = array_length(action_buttons); i < n; i++ ) {
+                    var action = action_buttons[i];
+                    
+                    switch(action) {
+                        case "exit":
+                            var b = buttonInstant(bspr, x1 - bs, ui(6), bs, bs, m, pHOVER, true,, THEME.window_exit_icon, 0, COLORS._main_accent);
+                            if(b) _draggable = false;
+                            if(b == 2) window_close();
+                            break;
+                            
+                        case "maximize":
+                            var win_max = window_is_maximized || window_is_fullscreen;
+                            if(OS == os_macosx)
+                                win_max = __win_is_maximized;
+                            
+                            var bc = [ COLORS._main_icon, CDEF.lime ];
+                            var b  = buttonInstant(bspr, x1 - bs, ui(6), bs, bs, m, pHOVER, true,, THEME.window_maximize_icon, win_max, bc);
+                            if(b) _draggable = false;
+                            if(b == 2) {
+                                if(OS == os_windows) {
+                                    if(window_is_fullscreen) {
+                                        winMan_setFullscreen(false);
+                                        winMan_Unmaximize();
+                                        
+                                    } else if(window_is_maximized) {
+                                        winMan_Unmaximize();
+                                        DISPLAY_REFRESH
+                                        
+                                    } else {
+                                        winMan_Maximize();
+                                        DISPLAY_REFRESH
+                                    }
                                     
-                                } else if(window_is_maximized) {
-                                    winMan_Unmaximize();
-                                    DISPLAY_REFRESH
-                                    
-                                } else {
-                                    winMan_Maximize();
-                                    DISPLAY_REFRESH
+                                } else if(OS == os_macosx) {
+                                    if(__win_is_maximized)  mac_window_minimize();
+                                    else                    mac_window_maximize();
                                 }
-                                
-                            } else if(OS == os_macosx) {
-                                if(__win_is_maximized)  mac_window_minimize();
-                                else                    mac_window_maximize();
                             }
-                        }
-                        break;
-                        
-                    case "minimize":
-                        var b = buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, m, pHOVER, true,, THEME.window_minimize_icon, 0, [ COLORS._main_icon, CDEF.yellow ]);
-                        if(b) _draggable = false;
-                        if(b == -2) {
-                                 if(OS == os_windows) winMan_Minimize();
-                            else if(OS == os_macosx)  mac_window_dock();
-                        }
-                        break;
-                        
-                    case "fullscreen":
-                        var win_full = window_is_fullscreen;
-                        var b = buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, m, pHOVER, true,, THEME.window_fullscreen_icon, win_full, [ COLORS._main_icon, CDEF.cyan ]);
-                        if(b) _draggable = false;
-                        if(b == 2) {
-                            if(OS == os_windows)
-                                winMan_setFullscreen(!win_full);
-                                
-                            else if(OS == os_macosx) {
-                                if(win_full) {
-                                    winMan_setFullscreen(false);
-                                    mac_window_minimize();
-                                } else
-                                    winMan_setFullscreen(true);
+                            break;
+                            
+                        case "minimize":
+                            var bc = [ COLORS._main_icon, CDEF.yellow ];
+                            var b  = buttonInstant(bspr, x1 - bs, ui(6), bs, bs, m, pHOVER, true,, THEME.window_minimize_icon, 0, bc);
+                            if(b) _draggable = false;
+                            if(b == -2) {
+                                     if(OS == os_windows) winMan_Minimize();
+                                else if(OS == os_macosx)  mac_window_dock();
                             }
-                        }
-                        break;
+                            break;
+                            
+                        case "fullscreen":
+                            var win_full = window_is_fullscreen;
+                            var bc = [ COLORS._main_icon, CDEF.cyan ];
+                            var b  = buttonInstant(bspr, x1 - bs, ui(6), bs, bs, m, pHOVER, true,, THEME.window_fullscreen_icon, win_full, bc);
+                            if(b) _draggable = false;
+                            if(b == 2) {
+                                if(OS == os_windows)
+                                    winMan_setFullscreen(!win_full);
+                                    
+                                else if(OS == os_macosx) {
+                                    if(win_full) {
+                                        winMan_setFullscreen(false);
+                                        mac_window_minimize();
+                                    } else
+                                        winMan_setFullscreen(true);
+                                }
+                            }
+                            break;
+                    }
+                    
+                    if(_right) x1 -= bs + ui(4);
+                    else       x1 += bs + ui(4);
+                }
+            
+                if(_right) {
+                    draw_set_color(COLORS.panel_toolbar_separator);
+                    draw_line_width(x1, ui(8), x1, h - ui(8), 2);
+                    x1 -= ui(8);
                 }
                 
-                if(_right) x1 -= bs + ui(4);
-                else       x1 += bs + ui(4);
+                if(os_is_network_connected()) {
+                    var _sts = h - ui(20);
+                    var _stx = x1 - _sts;
+                    var _sty = ui(10);
+                    var _hv = pHOVER && point_in_rectangle(mx, my, _stx, _sty, _stx + _sts, _sty + _sts);
+                    
+                    if(sprite_exists(STEAM_AVATAR)) {
+                        draw_sprite_stretched(STEAM_AVATAR, 0, _stx, _sty, _sts, _sts);
+                        
+                    } else {
+                        draw_sprite_stretched_ext(THEME.box_r2, 0, _stx, _sty, _sts, _sts, COLORS._main_icon_dark);
+                        draw_sprite_ui(THEME.steam_creator, 0, _stx + _sts / 2, _sty + _sts / 2, 1, 1, 0, COLORS._main_icon, .5);
+                    }
+                    
+                    draw_sprite_stretched_add(THEME.box_r2, 1, _stx, _sty, _sts, _sts, c_white, .35 + _hv * .25);
+                    if(_hv) {
+                        if(ACCOUNT_ID == undefined) {
+                            TOOLTIP = __txt("Online Accounts");
+                            
+                            if(mouse_lpress(true)) {
+                                var _menu = array_clone(profile_menu, 1);
+                                array_push(_menu, -1,
+                                    menuItem(__txt("PXC Login"), function() /*=>*/ {return dialogPanelCall(new Panel_Account_Sign_In())} )
+                                );
+                                
+                                menuCall("pxc_logout", _menu);
+                            }
+                            
+                        } else {
+                            TOOLTIP = __txt($"PXC Account: {ACCOUNT_DATA.displayName}");
+                            
+                            if(mouse_lpress(true)) {
+                                var _menu = array_clone(profile_menu, 1);
+                                array_push(_menu, -1,
+                                    // menuItem(__txt("PXC Hub"),          () => {}),
+                                    // menuItem(__txt("Your Page"),        () => {}),
+                                    // menuItem(__txt("Subscribed Items"), () => {}),
+                                    menuItem(__txt("Account Setting"),  function() /*=>*/ {return dialogPanelCall(new Panel_Account_Settings())} ),
+                                    -1,
+                                    menuItem(__txt("PXC Logout"), function() /*=>*/ {return PXC_Logout()}, THEME.cross_12)
+                                );
+                                
+                                menuCall("pxc_user", _menu);
+                            }
+                        }
+                    }
+                    
+                    x1 -= _sts + ui(4);
+                }
             }
         #endregion
         
@@ -698,7 +773,6 @@ function Panel_Menu() : PanelContent() constructor {
             var _xx1 = _right? x1 : w - ui(40);
             
             var txt = $"v. {VERSION_STRING}";
-            if(STEAM_ENABLED) txt += " Steam";
             
             version_name_copy = lerp_float(version_name_copy, 0, 10);
             var tc  = merge_color(COLORS._main_text_sub, COLORS._main_value_positive, min(1, version_name_copy));
@@ -708,7 +782,7 @@ function Panel_Menu() : PanelContent() constructor {
             if(hori) {
                 if(w > 1500) {
                     draw_set_text(fnt, fa_right, fa_center, tc);
-                    var  ww = string_width(txt) + ui(12) + ui(20) * NIGHTLY;
+                    var  ww = string_width(txt) + ui(12) + ui(20) * NIGHTLY + ui(20) * STEAM_ENABLED;
                     var  hh = string_height(txt) + ui(8);
                     var _x0 = _xx1 - ww;
                     var _x1 = _xx1;
@@ -729,9 +803,12 @@ function Panel_Menu() : PanelContent() constructor {
                         }
                     }
                     
-                    var _ty = (_y0 + _y1) / 2;
-                    draw_text(_x1 - ui(6), round(_ty), txt);
-                    if(NIGHTLY) draw_sprite_ext(s_nightly, 0, _x0 + ui(16), _ty, 1, 1, 0, COLORS._main_icon);
+                    var _ty  = (_y0 + _y1) / 2;
+                    var _tx1 = _x1 - ui(6) - ui(20) * STEAM_ENABLED;
+                    draw_text_add(_tx1, _ty - ui(1), txt);
+                    if(NIGHTLY)       draw_sprite_ext(s_nightly,  0, _x0  + ui(16), _ty,   1,   1, 0, COLORS._main_icon);
+                    if(STEAM_ENABLED) draw_sprite_ui(THEME.steam, 0, _tx1 + ui(10), _ty, .75, .75, 0, COLORS._main_icon);
+                    
                     _xx1 = _x0 - ui(8);
                 }
                 

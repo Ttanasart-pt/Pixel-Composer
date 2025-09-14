@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"account_functions",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"account_functions",
+  "parent":{
+    "name":"account",
+    "path":"folders/functions/account.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

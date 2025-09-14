@@ -74,8 +74,6 @@ function LOAD_PATH(path, readonly = false, safe_mode = false) {
 	if(!IS_CMD) setFocus(PANEL_GRAPH.panel);
 	
 	if(PROJECT.meta.author_steam_id) {
-		PROJECT.meta.steam = FILE_STEAM_TYPE.steamOpen;
-		
 		if(PROJECT.meta.file_id == 0) {
 			var _tryId = filename_name_only(filename_dir(path));
 			if(string_digits(_tryId) == _tryId)

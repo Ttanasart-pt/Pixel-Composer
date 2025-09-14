@@ -113,6 +113,11 @@ function Node_Iterate_Each_File_Inline(_x, _y, _group = noone) : Node_Collection
 		var _type = inputs[2].getValue();
 		activated = inputs[3].getValue();
 		
+		if(!file_exists_empty(_path)) {
+			paths = [];
+			return;
+		}
+		
 		paths = activated? path_dir_get_files(_path, _ext, true) : [];
 	}
 	

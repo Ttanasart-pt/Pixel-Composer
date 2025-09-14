@@ -266,25 +266,51 @@ function buttonTextIconInstant(active, spr, _x, _y, _w, _h, _m, _act, _hvr, _tip
 	var bxc = _x + _w / 2 - (string_width(_icon_label) + ui(64)) / 2;
 	var byc = _y + _h / 2;
 	
-	if(_icon) draw_sprite_ui(_icon, 0, bxc + ui(24), byc, 1, 1, 0, _icon_blend, _icon_alpha * (0.5 + 0.5 * active));
+	var _icon_s = _icon;
+	var _icon_a = 0;
+	
+	if(is_array(_icon)) {
+		_icon_s = _icon[0];
+		_icon_a = _icon[1];
+	}
+	
+	if(_icon_s) draw_sprite_ui(_icon_s, _icon_a, bxc + ui(24), byc, 1, 1, 0, _icon_blend, _icon_alpha * (0.5 + 0.5 * active));
 	
 	draw_text_add(bxc + ui(48), byc, _icon_label);
 	
 	return _b;
 }
 
-function buttonInstantGlass(hover, focus, mx, my, bx, by, bw, bh, txt = "", aa = .3) {
+function buttonTextInstant(active, spr, _x, _y, _w, _h, _m, _act, _hvr, _tip = "", _label = "") {
+	var _b = 0;
+	
+	if(active) _b = buttonInstant(spr, _x, _y, _w, _h, _m, _hvr, _act, _tip);
+	
+	draw_set_text(f_p2, fa_center, fa_center, active? COLORS._main_text : COLORS._main_text_sub);
+	var bxc = _x + _w / 2;
+	var byc = _y + _h / 2;
+	
+	draw_text_add(bxc, byc, _label);
+	
+	return _b;
+}
+
+function buttonInstantGlass(hover, focus, mx, my, bx, by, bw, bh, txt = "", aa = .3, cc = COLORS._main_value_positive) {
 	var _hov = hover && point_in_rectangle(mx, my, bx, by, bx + bw, by + bh);
 	var _res = _hov;
+	var _clk = false;
 	
-	draw_sprite_stretched_ext(THEME.ui_panel, 0, bx, by, bw, bh, _hov? COLORS._main_value_positive : COLORS._main_icon, aa     + _hov * .1);
-	draw_sprite_stretched_ext(THEME.ui_panel, 1, bx, by, bw, bh, _hov? COLORS._main_value_positive : COLORS._main_icon, aa * 2 + _hov * .25);
-	
-	draw_set_text(f_p2, fa_center, fa_center, _hov? COLORS._main_value_positive : COLORS._main_icon);
-	draw_text_add(bx + bw / 2, by + bh / 2, txt);
+	if(mouse_click(mb_left, focus && _hov))
+		_clk = true; 
 	
 	if(mouse_press(mb_left, focus && _hov))
 		_res = 2;
+	
+	draw_sprite_stretched_ext(THEME.ui_panel, 0, bx, by, bw, bh, _hov? cc : COLORS._main_icon, aa     + _hov * .1);
+	draw_sprite_stretched_ext(THEME.ui_panel, _clk? 0 : 1, bx, by, bw, bh, _hov? cc : COLORS._main_icon, aa * 2 + _hov * .25);
+	
+	draw_set_text(f_p2, fa_center, fa_center, _hov? cc : COLORS._main_icon_light);
+	draw_text_add(bx + bw / 2, by + bh / 2, txt);
 		
 	return _res;
 }

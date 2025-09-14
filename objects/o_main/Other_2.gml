@@ -115,7 +115,7 @@
 	var t    = get_timer();
 	var _lua = PROGRAM_ARGUMENTS._lua;
 	
-				  __initPatreon();        printDebug($"> init Patreon       | complete in {get_timer() - t}");    t = get_timer();
+				  __initUser();           printDebug($"> init User          | complete in {get_timer() - t}");    t = get_timer();
 	if(!IS_CMD) { __initTheme();          printDebug($"> init Theme         | complete in {get_timer() - t}");    t = get_timer(); }
 	if(!IS_CMD) { loadFonts();            printDebug($"> init Font          | complete in {get_timer() - t}");    t = get_timer(); }
 	if(!IS_CMD) { __initProject();        printDebug($"> init Project       | complete in {get_timer() - t}");    t = get_timer(); }

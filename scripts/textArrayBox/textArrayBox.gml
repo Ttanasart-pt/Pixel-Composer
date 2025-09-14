@@ -1,9 +1,9 @@
-function textArrayBox(arraySet, data, onModify = noone) : widget() constructor {
-	self.getArray = arraySet;
-	self.arraySet = noone;
+function textArrayBox(_arraySet, _data, _onModify = noone) : widget() constructor {
+	getArray = _arraySet;
+	arraySet = noone;
 	
-	self.data     = data;
-	self.onModify = onModify;
+	data     = _data;
+	onModify = _onModify;
 	
 	hide = false;
 	open = false;
@@ -35,7 +35,9 @@ function textArrayBox(arraySet, data, onModify = noone) : widget() constructor {
 				
 				if(pressed && mouse_release(mb_left, active)) {
 					with(dialogCall(o_dialog_arrayBox, _rx + _x, _ry + _y + h)) {
-						arrayBox = other;	
+						arrayBox = other;
+						data     = other.data;
+						arraySet = other.arraySet;
 						dialog_w = other.w;
 						font     = other.font;
 						mode     = other.mode;

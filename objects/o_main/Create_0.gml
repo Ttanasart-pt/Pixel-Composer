@@ -161,36 +161,16 @@
 #endregion
 
 #region steam
-	globalvar STEAM_ENABLED, STEAM_APP_ID, STEAM_ID, STEAM_USER_ID, STEAM_USERNAME, STEAM_AVATAR;
-	globalvar STEAM_UGC_ITEM_UPLOADING, STEAM_UGC_ITEM_ID, STEAM_UGC_ITEM_FILE, STEAM_UGC_UPDATE_HANDLE;
-	globalvar STEAM_UGC_ITEM_AVATAR;
-	
-	globalvar STEAM_UGC_SUBMIT_ID, STEAM_UGC_UPDATE_MAP, STEAM_UGC_PUBLISH_ID, STEAM_UGC_UPDATE, STEAM_UGC_TYPE;
-	globalvar STEAM_SUB_ID;
-	
-	enum STEAM_UGC_FILE_TYPE {
-		collection,
-		project,
-		node_preset
-	}
-	
-	STEAM_UGC_TYPE = STEAM_UGC_FILE_TYPE.collection;
-	STEAM_SUB_ID   = 0;
-	STEAM_USER_ID  = 0;
-	STEAM_USERNAME = "";
-	STEAM_AVATAR   = 0;
+	globalvar STEAM_ENABLED;         STEAM_ENABLED         = steam_initialised();
+	globalvar STEAM_APP_ID;          STEAM_APP_ID          = 0;
+	globalvar STEAM_ID;              STEAM_ID              = 0;
+	globalvar STEAM_USER_ID;         STEAM_USER_ID         = 0;
+	globalvar STEAM_USERNAME;        STEAM_USERNAME        = "";
+	globalvar STEAM_AVATAR;          STEAM_AVATAR          = 0;
+	globalvar STEAM_UGC_ITEM_AVATAR; STEAM_UGC_ITEM_AVATAR = true;
+	globalvar STEAM_UGC_UPLOADING;   STEAM_UGC_UPLOADING   = false;
 	
 	steam_avatar_id = "";
-	
-	STEAM_UGC_UPDATE_HANDLE  = 0;
-	STEAM_UGC_ITEM_ID        = 0;
-	STEAM_UGC_PUBLISH_ID     = 0;
-	STEAM_UGC_SUBMIT_ID      = 0;
-	STEAM_UGC_ITEM_UPLOADING = false;
-	STEAM_ENABLED            = steam_initialised();
-	STEAM_UGC_UPDATE         = false;
-	STEAM_UGC_UPDATE_MAP     = ds_map_create();
-	STEAM_UGC_ITEM_AVATAR    = true;
 	
 	if(STEAM_ENABLED) {
 		STEAM_APP_ID    = steam_get_app_id();

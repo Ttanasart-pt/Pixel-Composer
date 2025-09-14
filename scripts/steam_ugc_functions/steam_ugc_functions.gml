@@ -74,7 +74,6 @@ function __loadSteamUGCCollection(file_id, f, path) {
 	array_push(STEAM_COLLECTION, file);
 		
 	var meta = file.getMetadata(true);
-	meta.steam   = FILE_STEAM_TYPE.steamOpen;
 	meta.file_id = file_id;
 	
 	STEAM_SUBS_IDS[$ file_id] = file;
@@ -101,7 +100,6 @@ function __loadSteamUGCProject(file_id, f, path) {
 	array_push(STEAM_PROJECTS, file);
 	
 	var meta     = file.getMetadata(true);
-	meta.steam   = FILE_STEAM_TYPE.steamOpen;
 	meta.file_id = file_id;
 	
 	for (var i = 0, n = array_length(meta.tags); i < n; i++)

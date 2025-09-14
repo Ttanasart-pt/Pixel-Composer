@@ -11,11 +11,6 @@
 		assets
 	}
 	
-	enum FILE_STEAM_TYPE {
-		local,
-		steamUpload,
-		steamOpen
-	}
 #endregion
 
 function MetaDataManager() constructor {
@@ -31,7 +26,6 @@ function MetaDataManager() constructor {
 	file_id		= 0;
 	tags		= [];
 	version		= SAVE_VERSION;
-	steam		= FILE_STEAM_TYPE.local;
 	
 	static displays = [
 		[ "Description",  function(m) /*=>*/ {return m.description}, 5],

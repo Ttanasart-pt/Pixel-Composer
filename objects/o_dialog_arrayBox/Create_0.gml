@@ -13,27 +13,31 @@ event_inherited();
 	mode     = 0;
 	anchor   = ANCHOR.top | ANCHOR.left;
 	
+	data     = [];
+	arraySet = [];
+	
+	onClose  = undefined;
+	
 	sc_content = new scrollPane(0, 0, function(_y, _m) {
 		draw_clear(COLORS.panel_bg_clear, 1);
 		
 		var hght  = line_get_height(font, 8);
-		var _h    = array_length(arrayBox.data) * hght;
+		var _h    = array_length(data) * hght;
 		var _dw   = sc_content.surface_w;
-		var array = arrayBox.arraySet;
 		
-		for(var i = 0; i < array_length(arrayBox.data); i++) {
+		for(var i = 0; i < array_length(data); i++) {
 			var _ly = _y + i * hght;	
 			var yc  = _ly + hght / 2;
 			var exists = 0;
 			
 			if(mode == 0) {
-				for( var j = 0; j < array_length(array); j++ ) 
-					if(arrayBox.data[i] == array[j]) exists = 1;
+				for( var j = 0; j < array_length(arraySet); j++ ) 
+					if(data[i] == arraySet[j]) exists = 1;
 					
 			} else if(mode == 1) {
-				for( var j = 0; j < array_length(array); j++ ) {
-					if("+" + arrayBox.data[i] == array[j]) exists =  1;
-					if("-" + arrayBox.data[i] == array[j]) exists = -1;
+				for( var j = 0; j < array_length(arraySet); j++ ) {
+					if("+" + data[i] == arraySet[j]) exists =  1;
+					if("-" + data[i] == arraySet[j]) exists = -1;
 				}
 			}
 			
@@ -50,23 +54,23 @@ event_inherited();
 				
 				if(sFOCUS && (mouse_press(mb_left) || keyboard_check_pressed(vk_enter))) {
 					if(mode == 0) {
-						if(exists)	array_remove(array, arrayBox.data[i]);
-						else		array_push(array, arrayBox.data[i]);
+						if(exists)	array_remove(arraySet, data[i]);
+						else		array_push(arraySet, data[i]);
 						
 					} else if(mode == 1) {
 						switch(exists) {
-							case 0  : array_push(array, "+" + arrayBox.data[i]); break;
+							case 0  : array_push(arraySet, "+" + data[i]); break;
 								
 							case 1  : 
-								array_remove(array, "+" + arrayBox.data[i]); 
-								array_push(array, "-" + arrayBox.data[i]); 
+								array_remove(arraySet, "+" + data[i]); 
+								array_push(arraySet, "-" + data[i]); 
 								break;
 								
-							case -1 : array_remove(array, "-" + arrayBox.data[i]); break;
+							case -1 : array_remove(arraySet, "-" + data[i]); break;
 						}
 					}
 					
-					if(arrayBox.onModify) arrayBox.onModify();
+					if(arrayBox && arrayBox.onModify) arrayBox.onModify();
 				}
 			}
 			
@@ -82,17 +86,17 @@ event_inherited();
 			}
 			
 			draw_set_text(font, fa_left, fa_center, COLORS._main_text);
-			draw_text_add(ui(40), yc, arrayBox.data[i]);
+			draw_text_add(ui(40), yc, data[i]);
 		}
 		
 		if(sFOCUS) {
 			if(KEYBOARD_PRESSED == vk_up) {
 				selecting--;
-				if(selecting < 0) selecting = array_length(arrayBox.data) - 1;
+				if(selecting < 0) selecting = array_length(data) - 1;
 			}
 			
 			if(KEYBOARD_PRESSED == vk_down)
-				selecting = safe_mod(selecting + 1, array_length(arrayBox.data));
+				selecting = safe_mod(selecting + 1, array_length(data));
 				
 			if(keyboard_check_pressed(vk_escape))
 				instance_destroy();

@@ -6,9 +6,9 @@
 		registerFunction("Collection", "Update Thumbnail",	"",   MOD_KEY.none,	panel_collection_update_thumbnail	).setMenu("collection_update_thumbnail")
 		registerFunction("Collection", "Delete Collection",	"",   MOD_KEY.none,	panel_collection_delete_collection	).setMenu("collection_delete_collection",	THEME.cross)
 		
-		registerFunction("Collection", "Upload To Steam",	"",   MOD_KEY.none,	panel_collection_steam_file_upload	).setMenu("collection_upload_to_steam", 	THEME.workshop_upload)
-		registerFunction("Collection", "Update Steam",		"",   MOD_KEY.none,	panel_collection_steam_file_update	).setMenu("collection_update_steam",    	THEME.workshop_update)
-		registerFunction("Collection", "Unsubscribe",		"",   MOD_KEY.none,	panel_collection_steam_unsubscribe	).setMenu("collection_unsubscribe")
+		registerFunction("Collection", "Upload To Workshop",	     "", MOD_KEY.none, panel_collection_steam_file_upload ).setMenu("collection_upload_to_steam", 	THEME.workshop_upload)
+		registerFunction("Collection", "Update Content to Workshop", "", MOD_KEY.none, panel_collection_steam_file_update ).setMenu("collection_update_steam",    	THEME.workshop_update)
+		registerFunction("Collection", "Unsubscribe",		         "", MOD_KEY.none, panel_collection_steam_unsubscribe ).setMenu("collection_unsubscribe")
 	}
 	
 	function panel_collection_search_toggle()		{ CALL("collection_search_toggle");		PANEL_COLLECTION.search_toggle();		}
@@ -163,7 +163,7 @@ function Panel_Collection() : PanelContent() constructor {
 		
 		contentMenu = [];
 		
-		if(meta == noone || !meta.steam) {
+		if(meta == noone || meta.file_id == 0) {
 			contentMenu = [
 				MENU_ITEMS.collection_replace,
 				MENU_ITEMS.collection_edit_meta,
@@ -171,19 +171,25 @@ function Panel_Collection() : PanelContent() constructor {
 				-1,
 				MENU_ITEMS.collection_delete_collection,
 			];
-			
-			if(STEAM_ENABLED) 
-				array_push(contentMenu, -1);
 		} 
 		
 		if(STEAM_ENABLED) {
-			if(meta.steam == FILE_STEAM_TYPE.local) {
+			if(!array_empty(contentMenu)) array_push(contentMenu, -1);
+			
+			if(meta.file_id == 0) {
 				array_push(contentMenu, MENU_ITEMS.collection_upload_to_steam);
 				
 			} else {
 				if(meta.author_steam_id && meta.author_steam_id == STEAM_USER_ID)
 					array_push(contentMenu, MENU_ITEMS.collection_update_steam);
-				array_push(contentMenu, MENU_ITEMS.collection_unsubscribe);
+					
+				array_push(contentMenu, MENU_ITEMS.collection_unsubscribe, -1);
+				array_push(contentMenu, menuItem( __txt("View on Workshop..."), function(_fid) /*=>*/ {
+					var _p = new Panel_Steam_Workshop();
+                    _p.navigate({ type: "fileid", fileid: _fid });
+                    dialogPanelCall(_p);
+                    
+				}, THEME.steam_invert_24).setParam(meta.file_id) );
 			}
 		}
 	}

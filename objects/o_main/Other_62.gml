@@ -1,5 +1,5 @@
 /// @description network
-if(asyncLoad(async_load)) exit;
+if(asyncLoad(async_load, "id", "http")) exit;
 
 var _id  = async_load[? "id"];
 

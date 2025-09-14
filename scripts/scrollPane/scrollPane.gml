@@ -52,6 +52,8 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 	scroll_color_bar_active = COLORS.scrollbar_active;
 	scroll_color_bar_alpha  = 1;
 	
+	use_depth = false;
+	
 	static verify = function(_w,_h) /*=>*/ { if(w == _w && h == _h) return; resize(_w, _h); }
 	
 	static resize = function(_w, _h) {
@@ -67,7 +69,8 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		return self; 
 	}
 		
-	static setScroll   = function(_scroll_y) { INLINE scroll_y_to = _scroll_y;    return self; }
+	static setScroll   = function(_s) /*=>*/ { scroll_y_to = _s; return self; }
+	static setUseDepth = function(  ) /*=>*/ { use_depth = true; return self; }
 	
 	static drawOffset = function(_x, _y, _mx = mouse_mx, _my = mouse_my) { return draw(_x, _y, _mx - _x, _my - _y); }
 	
@@ -85,7 +88,10 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		hover   = hover && !point_in_rectangle( mx, my, surface_w - tool_w, 0, surface_w, tool_h);
 		hover   = hover && pen_scrolling != 2;
 		
+		surface_depth_disable(!use_depth);
 		surface = surface_verify(surface, surface_w, surface_h);
+		surface_depth_disable(true);
+		
 		hover_content = false;
 		
 		/// Draw

@@ -81,10 +81,11 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	
 	sprite_index = -1;
 	
-	text_surface = noone;
-	
-	shake_amount = 0;
-	onDeactivate = -1;
+	text_surface  = noone;
+	shake_amount  = 0;
+	onDeactivate  = -1;
+	password_show = false;
+	mouse_lhold   = false;
 	
 	undoable   = true;
 	undo_stack = ds_stack_create();
@@ -138,11 +139,11 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	static setPrecision  = function(_v) /*=>*/ { precision   = _v;    return self; }
 	static setPadding    = function(_v) /*=>*/ { padding     = _v;    return self; }
 	static setEmpty      = function(  ) /*=>*/ { no_empty    = false; return self; }
+	static setFormat     = function(_f) /*=>*/ { format      = _f;    return self; }
 	static setAutoupdate = function(  ) /*=>*/ { auto_update = true;  return self; }
 	static setDeactivate = function(_d) /*=>*/ { onDeactivate = _d;   return self; }
 	
 	static activate = function(_def_str = _current_text) {
-		
 		WIDGET_CURRENT = self;
 		WIDGET_CURRENT_SCROLL = parent;
 		parentFocus();
@@ -179,6 +180,11 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		if(PEN_USE) keyboard_virtual_hide();
 		
 		if(onDeactivate != -1) onDeactivate();
+	}
+	
+	static reset = function() {
+		_input_text = _last_text;
+		deactivate();
 	}
 	
 	static onKey = function(key) {
@@ -419,8 +425,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			move_cursor(string_length(_input_text) - cursor);
 			
 		} else if(keyboard_check_pressed(vk_escape)) {
-			_input_text = _last_text;
-			deactivate();
+			reset();
 			
 		} else if(keyboard_check_pressed(vk_enter)) {
 			deactivate();
@@ -464,6 +469,19 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				
 			} else
 				draw_text_add(_x + disp_x, _y, $"{_text}{suffix}");
+			
+		} else if(format == TEXT_AREA_FORMAT.password && !password_show) {
+			var _tx = _x + disp_x;
+			var _ty = _y;
+			
+			for( var i = 1; i <= string_length(_text); i++ ) {
+				var _ch  = string_char_at(_text, i);
+				var _chw = string_width(_ch);
+				var _chh = string_height(_ch);
+				
+				draw_sprite_ui(THEME.circle_16, 0, _tx + _chw / 2, _ty + _chh / 2, .4, .4);
+				_tx += _chw;
+			}
 			
 		} else 
 			draw_text_add(_x + disp_x, _y, $"{_text}{suffix}");
@@ -524,6 +542,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		}
 		
 		var drawText = selecting || _h >= line_get_height(font);
+		var _update  = false;
 		
 		////- Positions
 		
@@ -542,10 +561,12 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		////- Buttons
 		
 		var _bs = min(h, ui(32));
+		var _bx = _x + _w - _bs;
+		var _by = _y + _h / 2 - _bs / 2;
 		
 		if(_w - _bs > ui(100) && front_button) {
 			front_button.setFocusHover(active, hover);
-			front_button.draw(_x, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
+			front_button.draw(_x, _by, _bs, _bs, _m, THEME.button_hide_fill);
 			
 			_x += _bs + ui(4);
 			_w -= _bs + ui(4);
@@ -553,13 +574,27 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		
 		if(unit != noone && unit.reference != noone) {
 			unit.triggerButton.setFocusHover(iactive, ihover);
-			unit.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m);
+			unit.draw(_bx, _by, _bs, _bs, _m);
 			_w -= _bs + ui(4);
 		}
 		
 		if((_w - _bs > ui(100) || always_side_button) && side_button) {
 			side_button.setFocusHover(active, hover);
-			side_button.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
+			side_button.draw(_bx, _by, _bs, _bs, _m, THEME.button_hide_fill);
+			_w -= _bs + ui(4);
+		}
+		
+		if(format == TEXT_AREA_FORMAT.password) {
+			var hov = hover && point_in_rectangle(_m[0], _m[1], _bx, _by, _bx + _bs, _by + _bs);
+			var cc  = hov ? COLORS._main_icon_light : COLORS._main_icon;
+			if(password_show) cc = COLORS._main_accent;
+			
+			draw_sprite_ui(THEME.junc_visible, password_show, _bx+_bs/2, _by+_bs/2, 1, 1, 0, cc, 1);
+			if(hov && mouse_lpress(active)) {
+				password_show = !password_show;
+				_update = true;
+			}
+			
 			_w -= _bs + ui(4);
 		}
 		
@@ -579,14 +614,15 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			case fa_right  : tx = _x + _w - padding; break;
 		}
 		
-		var _update = false;
 		if(drawText) {
-			_update = !surface_valid(text_surface, _w - padding * 2, _h);
+			_update = _update || !surface_valid(text_surface, _w - padding * 2, _h);
 			if(_update) text_surface = surface_verify(text_surface, _w - padding * 2, _h);
 		}
 		
 		////- Draw
 		
+		var _scis = gpu_get_scissor();
+			
 		if(hide <= 0) {
 			draw_sprite_stretched_ext(THEME.textbox, base_index, _x, _y, _w, _h, boxColor, 1);
 			
@@ -849,6 +885,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				surface_set_shader(text_surface, noone, true, BLEND.add);
 					display_text(tx - tb_surf_x, _h / 2 - th / 2, _display_text, _w - ui(4), _mx - tb_surf_x);
 				surface_reset_shader();
+				gpu_set_scissor(_scis);
 				
 				BLEND_ALPHA
 				draw_surface_ext(text_surface, tb_surf_x, tb_surf_y, 1, 1, 0, postBlend, postAlpha);
@@ -863,8 +900,10 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			#endregion
 			
 			disp_x_to = clamp(disp_x_to, disp_x_min, disp_x_max);
-			if(!hoverRect && mouse_press(mb_left)) 
+			if(!hoverRect && mouse_lpress() && !mouse_lhold) 
 				deactivate();
+				
+			if(mouse_lrelease()) mouse_lhold = false;
 			
 			if(mouse_press(mb_right, hoverRect, active))
 				menuCall("textbox_context", context_menu_selecting);
@@ -919,6 +958,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					surface_set_shader(text_surface, noone, true, BLEND.add);
 						display_text(tx - tb_surf_x, _h / 2 - th / 2, _display_text, _w - ui(4));
 					surface_reset_shader();
+					gpu_set_scissor(_scis);
 				}
 				
 				BLEND_ALPHA

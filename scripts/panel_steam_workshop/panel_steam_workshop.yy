@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"panel_steam_workshop",
   "parent":{
-    "name":"_others",
-    "path":"folders/panels/_others.yy",
+    "name":"workshop",
+    "path":"folders/panels/_others/workshop.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
