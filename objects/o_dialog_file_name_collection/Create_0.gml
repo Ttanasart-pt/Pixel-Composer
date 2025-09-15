@@ -34,7 +34,7 @@ event_inherited();
 	t_auth   = textBox_Text(  function(str) /*=>*/ { meta.author      = str; }).setAutoUpdate();
 	t_cont   = textBox_Text(  function(str) /*=>*/ { meta.contact     = str; }).setAutoUpdate();
 	t_alias  = textBox_Text(  function(str) /*=>*/ { meta.alias       = str; }).setAutoUpdate();
-	t_tags   = new textArrayBox(function() /*=>*/ {return meta.tags}, META_TAGS);
+	t_tags   = new textArrayBox(function() /*=>*/ {return meta.tags}, META_TAGS).setAddable(true);
 	
 	function doExpand() {
 		meta_expand = true;
