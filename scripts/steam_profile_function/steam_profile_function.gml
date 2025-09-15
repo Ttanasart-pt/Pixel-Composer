@@ -97,6 +97,7 @@ function Steam_workshop_profile(_sid) constructor {
 		is_patreon = false;
 	    
 		asyncCallGroup("social", FirebaseFirestore($"steam").Where("steamid", "==", string(account_steam_id)).Query(), function(_params, _data) /*=>*/ {
+			data = -1;
 			if (_data[? "status"] != 200) { noti_warning(_data[? "errorMessage"]); return; }
 		    
 		    var res  = _data[? "value"];

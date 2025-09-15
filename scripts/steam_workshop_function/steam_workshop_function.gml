@@ -275,7 +275,7 @@ function Steam_workshop_item() constructor {
 				var _subHov = _hover && point_in_rectangle(_m[0], _m[1], _ox - ui(8), _oy - ui(8), _ox + ui(8), _oy + ui(8));
 				if(_subHov) {
 					_hov = false;
-					TOOLTIP = "PXC hub connected";
+					TOOLTIP = "PXC hub";
 				}
 				
 				draw_sprite_ui(THEME.pxc_hub, 0, _ox, _oy, 1, 1, 0, COLORS._main_accent, .8 + _subHov * .2);

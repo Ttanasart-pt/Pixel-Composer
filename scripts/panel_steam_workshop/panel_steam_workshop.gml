@@ -246,6 +246,7 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 			
 			if(_page == 0) queryHomePage();
 			
+			current_page.page = _page;
 			page = _page;
 			setPageIndices();
 		}
@@ -492,7 +493,6 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 		if(_reset) {
 			sc_content.setScroll(0);
 			displayFiles = [];
-			if(page > 1) page = 1;
 		}
 		
 		var _tag_use  = !array_empty(tag_filter);

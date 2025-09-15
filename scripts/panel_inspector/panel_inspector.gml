@@ -1428,37 +1428,50 @@ function Panel_Inspector() : PanelContent() constructor {
             title = __txt("Inspector");
             
             var txt = "Untitled";
-            var context = PANEL_GRAPH.getCurrentContext();
+            var ctx = PANEL_GRAPH.getCurrentContext();
+            var sav = file_exists_empty(PROJECT.path);
             
-            if(context == noone && file_exists_empty(PROJECT.path))
-                txt = filename_name_only(PROJECT.path);
-                
-            else if(is(context, Node))
-                txt = context.getDisplayName();
+            if(ctx == noone && sav) txt = filename_name_only(PROJECT.path);
+            else if(is(ctx, Node))  txt = ctx.getDisplayName();
             
             draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
-            var ss = min(.5, (w - ui(96)) / string_width(txt));
+            var ww = w - ui(160);
+            var ss = clamp(ww / string_width(txt), .25, .5);
             var tx = w / 2;
             var ty = ui(30);
-            draw_text_add(tx, ty, txt, ss);
             
-            if(PROJECT.meta.file_id != 0) {
-                var tw = string_width(txt) / 2 * ss;
-            	var sx = tx - tw - ui(16);
-                draw_sprite_ui(THEME.steam, 0, sx, ty, 1, 1, 0, COLORS._main_icon);
-                
-                if(pHOVER && point_in_circle(mx, my, sx, ty, ui(10))) {
-                	draw_sprite_ui(THEME.steam, 0, sx, ty, 1, 1, 0, COLORS._main_icon_light);
-                	TOOLTIP = __txt("View on Workshop...");
-                	
-                	if(mouse_lpress(pFOCUS)) {
-                		var _p = new Panel_Steam_Workshop();
+            var tw  = string_width(txt) / 2 * ss;
+            var sx0 = max(    ui(64), tx - tw - ui(20));
+            var sx1 = min(w - ui(64), tx + tw + ui(20));
+            
+            if(sav) {
+	            if(PROJECT.meta.file_id != 0) {
+	            	if(buttonInstant_Icon(sx0, ty, ui(10), [mx,my], pHOVER, pFOCUS, __txt("View on Workshop..."), THEME.steam_invert_24, 0, .8) == 2) {
+	                	var _p = new Panel_Steam_Workshop();
 	                    _p.navigate({ type: "fileid", fileid: PROJECT.meta.file_id });
 	                    dialogPanelCall(_p);
-	                    
-                	}
-                }
+	                }
+	            }
+	            
+	            if(buttonInstant_Icon(sx1, ty, ui(10), [mx,my], pHOVER, pFOCUS, __txt("Rename"), THEME.rename, 0, .8) == 2) {
+	            	textboxCall(txt, function(t) /*=>*/ {
+	            		if(t == "") return;
+	            		
+	            		var _opth = PROJECT.path;
+	            		var _dir = filename_dir(PROJECT.path);
+	            		var _pth = filename_ext_verify(filename_combine(_dir, t), ".pxc");
+	            		
+	            		SAVE_AT(PROJECT, _pth);
+	            		PROJECT.path = _pth;
+	            		file_delete_safe(_opth);
+	            	});
+	            }
             }
+            
+            var _scis = gpu_get_scissor();
+            gpu_set_scissor(sx0 + ui(16), ty - ui(16), sx1 - sx0 - ui(32), ui(32));
+            draw_text_add(tx, ty, txt, ss);
+            gpu_set_scissor(_scis);
             
             var bx = w - ui(44);
             var by = ui(12);
@@ -1495,7 +1508,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 	if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mse, pHOVER, pFOCUS, _txt, THEME.workshop_update, 0, c_white) == 2) {
                         textboxCall("Update note", function(t) /*=>*/ {
                         	SAVE_AT(PROJECT, PROJECT.path);
-                        	steam_ugc_update_project(false, t);
+                        	steam_ugc_update_project(true, t);
                         	workshop_uploading = 2;
                         });
                     }

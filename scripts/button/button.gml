@@ -257,6 +257,31 @@ function buttonInstant_Pad(spr, _x, _y, _w, _h, _m, _hvr, _act, _tip = "",
 	return res;
 }
 
+function buttonInstant_Icon(_cx, _cy, _s, _m, _hvr, _act, _tip = "", 
+	_icon = noone, _icon_index = 0, _icon_scale = 1, _icon_blend = COLORS._main_icon, _icon_blend_hover = COLORS._main_icon_light, _icon_alpha = 1) {
+	
+	var res = 0;
+	var cc  = _icon_blend;
+	
+	if(_hvr && point_in_circle(_m[0], _m[1], _cx, _cy, _s)) {
+		cc = _icon_blend_hover;
+			
+		res = 1;
+		if(_tip != "") TOOLTIP = _tip;
+		
+		if(mouse_press(mb_left, _act))		res = 2;
+		if(mouse_press(mb_right, _act))		res = 3;
+			
+		if(mouse_release(mb_left, _act))	res = -2;
+		if(mouse_release(mb_right, _act))	res = -3;
+	}
+	
+	     if(is(_icon, sprite_drawer)) _icon.draw(_cx, _cy, _icon_scale, cc, _icon_alpha);
+	else if(sprite_exists(_icon))     draw_sprite_ui_uniform(_icon, _icon_index, _cx, _cy, _icon_scale, cc, _icon_alpha);
+	
+	return res;
+}
+
 function buttonTextIconInstant(active, spr, _x, _y, _w, _h, _m, _act, _hvr, _tip = "", _icon = noone, _icon_label = "", _icon_blend = COLORS._main_icon_light, _icon_alpha = 1) {
 	var _b = 0;
 	
