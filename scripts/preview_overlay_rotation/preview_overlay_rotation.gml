@@ -94,11 +94,79 @@ function preview_overlay_rotation(interact, active, _x, _y, _s, _mx, _my, _snx, 
 		draw_sprite_stretched(s_fx_pixel, 0, _arx - _r * 2, _ary - _r * 2, _r * 4, _r * 4);
 	shader_reset();
 	
-	//draw_sprite_colored(THEME.anchor_rotate, index, _ax, _ay, 1, _val - 90);
-	
 	if(overlay_draw_text) {
 		draw_set_text(f_p2b, fa_center, fa_bottom, COLORS._main_accent);
 		draw_text_add(round(_ax), round(_ay - ui(4)), name);
+	}
+	
+	return hover;
+}
+
+function preview_overlay_rotation_range(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _rad) {
+	var _val  = getValue();
+	var hover = -1;
+	
+	////- Draw
+	
+	var index = 0;
+	
+	if(drag_type) {
+		index = drag_type;
+		
+		var angle = point_direction(_x, _y, _mx, _my);
+		if(key_mod_press(CTRL))
+			angle = round(angle / 15) * 15;
+		
+		_val = [ _val[0], _val[1] ];
+		_val[drag_type - 1] = angle;
+			
+		if(setValueInspector( _val ))
+			UNDO_HOLDING = true;
+							
+		if(mouse_release(mb_left)) {
+			drag_type = 0;
+			UNDO_HOLDING = false;
+		}
+	}
+	
+	var _r  = ui(10);
+	
+	for( var i = 0; i < 2; i++ ) {
+		var _ax = _x + lengthdir_x(_rad, _val[i]);
+		var _ay = _y + lengthdir_y(_rad, _val[i]);
+		
+		if(interact && point_in_circle(_mx, _my, _ax, _ay, _r)) {
+			hover = 1;
+			index = i + 1;
+			
+			if(mouse_press(mb_left, active)) {
+				drag_type = i + 1;
+				drag_mx   = _mx;
+				drag_my   = _my;
+				drag_sx   = _ax;
+				drag_sy   = _ay;
+			}
+		} 
+	}
+	
+	draw_set_color(COLORS._main_accent);
+	if(index) {
+		draw_set_alpha(0.5);
+		draw_circle_prec(_x, _y, _rad, true);
+		draw_set_alpha(1);
+	}
+	
+	draw_arc_linear(_x, _y, _rad, min(_val[0], _val[1]), max(_val[0], _val[1]), 2);
+	
+	__overlay_hover = array_verify(__overlay_hover, 2);
+	
+	for( var i = 0; i < 2; i++ ) {
+		__overlay_hover[i] = lerp_float(__overlay_hover[i], i + 1 == index, 4);
+		
+		var _ax = _x + lengthdir_x(_rad, _val[i]);
+		var _ay = _y + lengthdir_y(_rad, _val[i]);
+		
+		draw_anchor(__overlay_hover[i], _ax, _ay, _r, 1);
 	}
 	
 	return hover;

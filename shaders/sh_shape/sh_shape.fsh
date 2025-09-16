@@ -403,11 +403,14 @@ float sdCutDisk( in vec2 p, in float r, in float h ) {
                      length(p-vec2(w,h));
 }
 
-float sdPie( in vec2 p, in vec2 c, in float r ) {
+float sdPie( in vec2 p, in vec2 sca, in vec2 scb, in float r ) {
+	p = -p;
+    p *= mat2(sca.x, sca.y, -sca.y, sca.x);
     p.x = abs(p.x);
+    
     float l = length(p) - r;
-    float m = length(p-c*clamp(dot(p,c),0.0,r)); // c=sin/cos of aperture
-    return max(l,m*sign(c.y*p.x-c.x*p.y));
+    float m = length(p-scb * clamp(dot(p, scb), 0., r)); // c=sin/cos of aperture
+    return max(l, m * sign(scb.y * p.x - scb.x * p.y));
 }
 
 float sdRoundedCross( in vec2 p, in float h ) {
@@ -502,7 +505,7 @@ void main() {
 	else if(shape == 12) { d = sdParallelogram(	coord, 1. - corner - parall, 1. - corner, parall) - corner;   			                                  }
 	else if(shape == 13) { d = sdHeart(         coord );                                                            	                                  }
 	else if(shape == 14) { d = sdCutDisk( 		coord, 1., inner );                                             		                                  }
-	else if(shape == 15) { d = sdPie( 			coord, vec2(sin(angle), cos(angle)), 1. );                          	                                  }
+	else if(shape == 15) { d = sdPie( 			coord, vec2(sin(angle), cos(angle)), angle_range, 1. );                          	                                  }
 	else if(shape == 16) { d = sdRoundedCross( 	coord, 1. - corner ) - corner;                              			                                  }
 	else if(shape == 18) { d = sdGear(          coord, inner, teeth, teethSize, teethAngle, corner);                        	                          }
 	else if(shape == 19) { d = pow(pow(abs(coord.x), squircle_factor) + pow(abs(coord.y), squircle_factor), 1. / squircle_factor) - 1.;                   }

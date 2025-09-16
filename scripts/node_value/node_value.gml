@@ -2054,6 +2054,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						var _rad = argument_count >  argc + 0? argument[ argc + 0] : 64;
 						return preview_overlay_rotation(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _rad);
 								
+					case VALUE_DISPLAY.rotation_range :
+						var _rad = argument_count >  argc + 0? argument[ argc + 0] : 64;
+						return preview_overlay_rotation_range(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _rad);
+								
 					case VALUE_DISPLAY.vector :
 						var _typ = argument_count > argc + 0? argument[argc + 0] : 0;
 						var _sca = argument_count > argc + 1? argument[argc + 1] : [ 1, 1 ];

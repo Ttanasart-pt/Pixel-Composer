@@ -54,7 +54,7 @@
 
 function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name   = "Draw Shape";
-	inputs = array_create(38);
+	// inputs = array_create(38);
 	
 	onSurfaceSize = function() /*=>*/ {return getInputData(0, DEF_SURF)};
 	
@@ -83,25 +83,28 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput( 2, nodeValue_Enum_Scroll(    "Shape",  0, { data: shape_types_str, horizontal: true, text_pad: ui(16) }))
 		.setHistory([ shape_types, { cond: function() /*=>*/ {return LOADING_VERSION < 1_18_00_0}, list: global.node_shape_keys_18 } ]);
 		
-	newInput(32, nodeValue_Vec2(   "Point 1",   [0,0] )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
-	newInput(33, nodeValue_Vec2(   "Point 2",   [1,1] )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
-	newInput(35, nodeValue_Vec2(   "Point 3",   [1,0] )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
-	newInput(34, nodeValue_Slider( "Thickness",  0.1  ));
+	newInput(32, nodeValue_Vec2(   "Point 1",    [ 0, 0] )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
+	newInput(33, nodeValue_Vec2(   "Point 2",    [ 1, 1] )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
+	newInput(35, nodeValue_Vec2(   "Point 3",    [ 1, 0] )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
+	newInput(40, nodeValue_Vec2(   "Half Point", [.5,.5] )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference).hide_label();
+	newInput(34, nodeValue_Slider( "Thickness",   .1    ));
 	
 	newInput( 9, nodeValue_Slider(         "Corner radius",  0, { range: [0, 0.5, 0.001] })).setValidator(VV_clamp(0, .5));
 	inputs[9].overlay_draw_text = false;
-	newInput( 4, nodeValue_Int(            "Sides",          3       )).setVisible(false);
-	newInput(13, nodeValue_Slider(         "Start radius",  .1       )).setVisible(false);
-	newInput( 5, nodeValue_Slider(         "Inner radius",  .5       )).setVisible(false);
+	newInput( 4, nodeValue_Int(            "Sides",          3       )).hide_label().setVisible(false);
+	newInput(13, nodeValue_Slider(         "Start radius",  .1       )).hide_label().setVisible(false);
+	newInput( 5, nodeValue_Slider(         "Inner radius",  .5       )).hide_label().setVisible(false);
 	newInput( 7, nodeValue_Rotation(       "Rotation",       0       ));
 	newInput( 8, nodeValue_Rotation_Range( "Angle range",   [0,180]  ));
 	newInput(14, nodeValue_PathNode(       "Shape path" ));
 	newInput(21, nodeValue_Slider_Range(   "Angles",        [.5, 1.] ));
-	newInput(22, nodeValue_Slider(         "Skew",           .5      ));
+	newInput(38, nodeValue_Slider(         "Top Side",       .5      )).hide_label();
+	newInput(39, nodeValue_Slider(         "Botton Side",     1      )).hide_label();
+	newInput(22, nodeValue_Slider(         "Skew",           .5      )).hide_label();
 	newInput(23, nodeValue_Float(          "Arrow Sizes",    .3      ));
 	newInput(24, nodeValue_Float(          "Arrow Head",      1      ));
-	newInput(25, nodeValue_Int(            "Teeth Amount",    6      ));
-	newInput(26, nodeValue_Vec2(           "Teeth Size",    [.2,.2] , { slideSpeed : 0.01 }));
+	newInput(25, nodeValue_Int(            "Teeth Amount",    6      )).hide_label();
+	newInput(26, nodeValue_Vec2(           "Teeth Size",    [.2,.2] , { slideSpeed : 0.01 })).hide_label();
 	newInput(27, nodeValue_Rotation(       "Teeth Rotation",  0      ));
 	newInput(30, nodeValue_Bool(           "Caps",            false  ));
 	newInput(31, nodeValue_Float(          "Factor",          2.5    ));
@@ -120,6 +123,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	////- =Background
 	newInput( 1, nodeValue_Bool(  "Background", false));
 	newInput(11, nodeValue_Color( "Background color", ca_black));
+	// 41
 	
 	/////////////////////////////////////////////
 	
@@ -130,7 +134,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	input_display_list = [
 		["Output",     false],      0,  6, 
 		["Transform",  false],     15,  3, 16, 17, 19, 28, 
-		["Shape",	   false],      2, 32, 33, 35, 34, /**/ 9, 4, 13, 5, 7, 8, 21, 22, 23, 24, 25, 26, 27, 30, 31, 36, 
+		["Shape",	   false],      2, 32, 33, 35, 40, 34, /**/ 9, 4, 13, 5, 7, 8, 38, 39, 22, 23, 24, 25, 26, 27, 30, 31, 36, 
 		["Render",	    true],     10, 18,
 		["Height",	    true, 12], 29, 20, 37,  
 		["Background",	true, 1],  11, 
@@ -146,13 +150,35 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _dim     = current_data[ 0];
 		var _shape   = current_data[ 2];
 		var _posMode = current_data[15];
-		var _pos  = [ 0, 0 ];
-		var _sca  = [ 1, 1 ];
-		var _px, _py;
-		var hv;
+		var _pos     = [ 0, 0 ];
+		var _sca     = [ 1, 1 ];
 		
+		switch(_posMode) {
+			case 0 :	
+				_pos = [ current_data[3][0], current_data[3][1] ];
+				_sca = [ current_data[3][2], current_data[3][3] ];
+				break;
+				
+			case 1 : 
+				_pos = current_data[16];
+				_sca = current_data[17];
+				break;
+				
+			case 2 : 
+				_pos = [ _dim[0] / 2, _dim[1] / 2 ];
+				_sca = [ _dim[0] / 2, _dim[1] / 2 ];
+				break;
+		}
+		
+		var _px = _x  + _pos[0] * _s;
+		var _py = _y  + _pos[1] * _s;
+			
+		var _x0 = _px - _sca[0] * _s;
+		var _y0 = _py - _sca[1] * _s;
+		var _x1 = _px + _sca[0] * _s;
+		var _y1 = _py + _sca[1] * _s;
+				
 		var _shp = array_safe_get(shape_types, _shape, "");
-		if(is_struct(_shp)) _shp = _shp.data;
 		
 		switch(_shp) {
 			case "Arrow" :
@@ -162,48 +188,162 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 				return w_hovering;
 				
 			case "Half"	:
-				InputDrawOverlay(inputs[32].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+				InputDrawOverlay(inputs[40].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, 1));
 				return w_hovering;
+				
+			case "Trapezoid" : 
+				InputDrawOverlay(inputs[38].drawOverlay(w_hoverable, active, _px, _y0, _s * _sca[0], _mx, _my, _snx, _sny, 0, 1, 1));
+				InputDrawOverlay(inputs[39].drawOverlay(w_hoverable, active, _px, _y1, _s * _sca[0], _mx, _my, _snx, _sny, 0, 1, 1));
+				break;
+				
+			case "Parallelogram" : 
+				InputDrawOverlay(inputs[22].drawOverlay(w_hoverable, active, _x0, _y1, _s * _sca[0] * 2, _mx, _my, _snx, _sny, 0, 1, 1));
+				break;
+				
+			case "Pie" : 
+				InputDrawOverlay(inputs[8].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny));
+				break;
+				
+			case "Arc" : 
+				var _inn = current_data[5];
+				var _ix  = _x1 - _inn * _s * _sca[0];
+				var _iy = _py;
+				
+				draw_set_color(COLORS._main_accent);
+				draw_line_dashed(_x1, _py, _ix, _iy);
+				
+				InputDrawOverlay(inputs[ 8].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny));
+				InputDrawOverlay(inputs[ 5].drawOverlay(w_hoverable, active, _x1, _py, _s * _sca[0], _mx, _my, _snx, _sny, 180, 1, 1));
+				break;
+				
+			case "Donut" : 
+				var _inn = current_data[5];
+				var _ix  = _x1 - _inn * _s * _sca[0];
+				var _iy = _py;
+				
+				draw_set_color(COLORS._main_accent);
+				draw_line_dashed(_x1, _py, _ix, _iy);
+				
+				InputDrawOverlay(inputs[ 5].drawOverlay(w_hoverable, active, _x1, _py, _s * _sca[0], _mx, _my, _snx, _sny, 180, 1, 1));
+				break;
+				
+			case "Crescent" : 
+				var _shf = current_data[ 5];
+				var _inn = current_data[13];
+				
+				var _ix = _x1 - _shf * _s * _sca[0] * _inn;
+				var _iy = _py - _inn * _sca[1] * _s;
+				
+				draw_set_color(COLORS._main_accent);
+				draw_line_dashed(_px, _py, _px, _iy);
+				
+				InputDrawOverlay(inputs[ 5].drawOverlay(w_hoverable, active, _x1, _py, _s * _sca[0] * _inn, _mx, _my, _snx, _sny, 180, 1, 1));
+				InputDrawOverlay(inputs[13].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[1], _mx, _my, _snx, _sny,  90, 1, 1));
+				break;
+				
+			case "Disk Segment" : 
+				InputDrawOverlay(inputs[13].drawOverlay(w_hoverable, active, _px, _y0, _s * _sca[1] * 2, _mx, _my, _snx, _sny, -90, 1, 1));
+				break;
+				
+			case "Squircle" : 
+				var _fact = current_data[31];
+				
+				var _ix = _px + _fact * _s * _sca[0] / 4;
+				
+				draw_set_color(COLORS._main_accent);
+				draw_line_dashed(_px, _py, _ix, _py);
+				
+				InputDrawOverlay(inputs[31].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[0] / 4, _mx, _my, _snx, _sny, 0, 1, 1));
+				break;
+				
+			case "Regular polygon" : 
+				var _side = current_data[4];
+				
+				var _iy = _py - _side * _s * _sca[1] / 12;
+				
+				draw_set_color(COLORS._main_accent);
+				draw_line_dashed(_px, _py, _px, _iy);
+				
+				InputDrawOverlay(inputs[4].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[1] / 12, _mx, _my, _snx, _sny, 90, 1, 1));
+				break;
+				
+			case "Star" : 
+				var _side = current_data[4];
+				var _inn  = current_data[5];
+				
+				var _ix = _px + _inn * _s * _sca[0];
+				var _iy = _py;
+				
+				var _sy = _py - _side * _s * _sca[1] / 12;
+				
+				draw_set_color(COLORS._main_accent);
+				draw_line_dashed(_px, _py, _ix, _iy);
+				draw_line_dashed(_px, _py, _px, _sy);
+				
+				InputDrawOverlay(inputs[4].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[1] / 12, _mx, _my, _snx, _sny, 90, 1, 1));
+				InputDrawOverlay(inputs[5].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[0], _mx, _my, _snx, _sny, 0, 1, 1));
+				break;
+				
+			case "Cross" : 
+				InputDrawOverlay(inputs[13].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[1] * 2, _mx, _my, _snx, _sny, 0, 1, 1));
+				break;
+				
+			case "Teardrop" : 
+				var _r0 = current_data[ 5];
+				var _r1 = current_data[13];
+				
+				var _ty0 = _py - _sca[1] * _s * .5;
+				var _ty1 = _py + _sca[1] * _s * .5;
+				
+				draw_set_color(COLORS._main_accent);
+				draw_circle_dash(_px, _ty1, _r0 * _s * _sca[0]);
+				draw_circle_dash(_px, _ty0, _r1 * _s * _sca[0]);
+				
+				InputDrawOverlay(inputs[ 5].drawOverlay(w_hoverable, active, _px, _ty1, _s * _sca[0], _mx, _my, _snx, _sny, 0, 1, 1));
+				InputDrawOverlay(inputs[13].drawOverlay(w_hoverable, active, _px, _ty0, _s * _sca[0], _mx, _my, _snx, _sny, 0, 1, 1));
+				break;
+				
+			case "Leaf" : 
+				var _r0 = current_data[ 5];
+				var _r1 = current_data[13];
+				
+				var _ty0 = _py - _sca[1] * _s * .5;
+				var _ty1 = _py + _sca[1] * _s * .5;
+				
+				draw_set_color(COLORS._main_accent);
+				draw_line_dashed(_px, _ty0, _px + _r0 * _s * _sca[0], _ty0);
+				draw_line_dashed(_px, _ty1, _px + _r1 * _s * _sca[0], _ty1);
+				
+				InputDrawOverlay(inputs[ 5].drawOverlay(w_hoverable, active, _px, _ty0, _s * _sca[0], _mx, _my, _snx, _sny, 0, 1, 1));
+				InputDrawOverlay(inputs[13].drawOverlay(w_hoverable, active, _px, _ty1, _s * _sca[0], _mx, _my, _snx, _sny, 0, 1, 1));
+				break;
+				
+			case "Gear" : 
+				var _inn = current_data[13];
+				var _tam = current_data[25];
+				
+				var _sy = _py - _tam * _s * _sca[1] / 12;
+				
+				draw_set_color(COLORS._main_accent);
+				draw_line_dashed(_px, _py, _px, _sy);
+				
+				InputDrawOverlay(inputs[25].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[1] / 12, _mx, _my, _snx, _sny, 90, 1, 1));
+				InputDrawOverlay(inputs[13].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[0], _mx, _my, _snx, _sny, 0, 1, 1));
+				InputDrawOverlay(inputs[27].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny));
+				break;
 		}
 		
-		if(_posMode == 0) {
-			_pos = [ current_data[3][0], current_data[3][1] ];
-			_sca = [ current_data[3][2], current_data[3][3] ];
-			
-		} else if(_posMode == 1) {
-			_pos = current_data[16];
-			_sca = current_data[17];
-			
-		}
+		if(inputs[7].show_in_inspector) InputDrawOverlay(inputs[7].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny));
 		
 		if(inputs[9].show_in_inspector) { // corner
-			var _psx = _pos[0], _psy = _pos[1];
-			var _ssx = _sca[0], _ssy = _sca[1];
-			
-			if(_posMode == 2) {
-				_psx = _dim[0] / 2;
-				_psy = _dim[1] / 2;
-				
-				_ssx = _dim[0] / 2;
-				_ssy = _dim[1] / 2;
-			}
-			
-			var _px = _x  + _psx * _s;
-			var _py = _y  + _psy * _s;
-			
-			var _x0 = _px - _ssx * _s;
-			var _y0 = _py - _ssy * _s;
-			var _x1 = _px + _ssx * _s;
-			var _y1 = _py + _ssy * _s;
-			
 			var aa = -45;
 			var ar = 90;
 			
-				 if(_ssx < 0 && _ssy < 0) { aa =  135; ar = -90; }
-			else if(_ssx < 0 && _ssy > 0) { aa = -135; ar =   0; }
-			else if(_ssx > 0 && _ssy < 0) { aa =   45; ar = 180; }
+				 if(_sca[0] < 0 && _sca[1] < 0) { aa =  135; ar = -90; }
+			else if(_sca[0] < 0 && _sca[1] > 0) { aa = -135; ar =   0; }
+			else if(_sca[0] > 0 && _sca[1] < 0) { aa =   45; ar = 180; }
 			
-			var _max_s = max(abs(_ssx), abs(_ssy)) * 2;
+			var _max_s = max(abs(_sca[0]), abs(_sca[1])) * 2;
 			var _corr  = current_data[9] * _s * _max_s;
 			var _cor   = _corr / sqrt(2);
 			
@@ -216,91 +356,84 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			InputDrawOverlay(inputs[9].drawOverlay(w_hoverable, active, _x0, _y0, _s, _mx, _my, _snx, _sny, aa, _max_s, 2));
 		}
 		
-		if(_posMode == 0) {
-			InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		switch(_posMode) {
+			case 0 : 
+				InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+				break;
 			
-		} else if(_posMode == 1) {
-			_px  = _x + _pos[0] * _s;
-			_py  = _y + _pos[1] * _s;
-			
-			InputDrawOverlay(inputs[16].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, _snx, _sny));
-			InputDrawOverlay(inputs[17].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny));
-		
+			case 1 : 
+				InputDrawOverlay(inputs[16].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, _snx, _sny));
+				InputDrawOverlay(inputs[17].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny));
+				break;
 		}
 		
 		return w_hovering;
 	}
 	
 	static processData = function(_outData, _data, _array_index) {
-		var _dim	= _data[0];
-		var _bg		= _data[1];
-		var _shape	= _data[2];
-		var _aa		= _data[6];
-		var _corner = _data[9];  _corner = clamp(_corner, 0, .9);
-		var _color  = _data[10];
-		var _hegiht = _data[12];
-		var _bgcol  = _bg? colToVec4(_data[11]) : [0, 0, 0, 0];
-		
-		var _posTyp	= _data[15];
-		var _tile   = _data[18];
-		var _rotat  = _data[19];
-		var _level  = _data[20];
-		var _curve  = _data[29];
-		var _shpSca = _data[28];
-		
-		var _crnPro = _data[36];
-		var _draOpa = _data[37];
-		
-		var _center = [ 0, 0 ];
-		var _scale  = [ 0, 0 ];
-		
-		switch(_posTyp) {
-			case 0 :
-				var _area = _data[3];
-				
-				_center = [     _area[0] / _dim[0],      _area[1] / _dim[1]  ];
-				_scale  = [ abs(_area[2] / _dim[0]), abs(_area[3] / _dim[1]) ];
-				break;
-				
-			case 1 :
-				var _posit = _data[16];
-				var _scal  = _data[17];
-				
-				_center = [     _posit[0] / _dim[0],     _posit[1] / _dim[1]  ];
-				_scale  = [  abs(_scal[0] / _dim[0]), abs(_scal[1] / _dim[1]) ];
-				break;
-				
-			case 2 :
-				_center = [ 0.5, 0.5 ];
-				_scale  = [ 0.5, 0.5 ];
-				break;
-		}
-		
-		_scale[0] *= _shpSca;
-		_scale[1] *= _shpSca;
-		
-		_level = [ _level[0] / _shpSca, _level[1] / _shpSca];
-		
-		inputs[ 3].setVisible(_posTyp == 0);
-		inputs[16].setVisible(_posTyp == 1);
-		inputs[17].setVisible(_posTyp == 1);
-		
-		inputs[15].setVisible(true);
-		
-		inputs[30].setVisible(false);
-		inputs[31].setVisible(false);
-		inputs[32].setVisible(false);
-		inputs[33].setVisible(false);
-		inputs[34].setVisible(false);
-		inputs[35].setVisible(false);
-		inputs[36].setVisible(false);
-		
-		for( var i = 0, n = array_length(_outData); i < n; i++ ) 
-			_outData[i] = surface_verify(_outData[i], _dim[0], _dim[1], attrDepth());
-		
-		surface_set_shader(_outData, sh_shape);
-			draw_clear_alpha(0, _bg);
-			if(!_bg) BLEND_OVERRIDE
+		#region data
+			var _dim	= _data[0];
+			var _bg		= _data[1];
+			var _shape	= _data[2];
+			var _aa		= _data[6];
+			var _corner = _data[9];  _corner = clamp(_corner, 0, .9);
+			var _color  = _data[10];
+			var _hegiht = _data[12];
+			var _bgcol  = _bg? colToVec4(_data[11]) : [0, 0, 0, 0];
+			
+			var _posTyp	= _data[15];
+			var _tile   = _data[18];
+			var _rotat  = _data[19];
+			var _level  = _data[20];
+			var _curve  = _data[29];
+			var _shpSca = _data[28];
+			
+			var _crnPro = _data[36];
+			var _draOpa = _data[37];
+			
+			var _center = [ 0, 0 ];
+			var _scale  = [ 0, 0 ];
+			
+			switch(_posTyp) {
+				case 0 :
+					var _area = _data[3];
+					
+					_center = [     _area[0] / _dim[0],      _area[1] / _dim[1]  ];
+					_scale  = [ abs(_area[2] / _dim[0]), abs(_area[3] / _dim[1]) ];
+					break;
+					
+				case 1 :
+					var _posit = _data[16];
+					var _scal  = _data[17];
+					
+					_center = [     _posit[0] / _dim[0],     _posit[1] / _dim[1]  ];
+					_scale  = [  abs(_scal[0] / _dim[0]), abs(_scal[1] / _dim[1]) ];
+					break;
+					
+				case 2 :
+					_center = [ 0.5, 0.5 ];
+					_scale  = [ 0.5, 0.5 ];
+					break;
+			}
+			
+			_scale[0] *= _shpSca;
+			_scale[1] *= _shpSca;
+			
+			_level = [ _level[0] / _shpSca, _level[1] / _shpSca];
+			
+			inputs[ 3].setVisible(_posTyp == 0);
+			inputs[16].setVisible(_posTyp == 1);
+			inputs[17].setVisible(_posTyp == 1);
+			
+			inputs[15].setVisible(true);
+			
+			inputs[30].setVisible(false);
+			inputs[31].setVisible(false);
+			inputs[32].setVisible(false);
+			inputs[33].setVisible(false);
+			inputs[34].setVisible(false);
+			inputs[35].setVisible(false);
+			inputs[36].setVisible(false);
 			
 			inputs[ 4].setVisible(false);
 			inputs[ 5].setVisible(false);
@@ -310,12 +443,23 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			inputs[13].setVisible(false);
 			inputs[18].setVisible( true);
 			inputs[21].setVisible(false);
+			inputs[38].setVisible(false);
+			inputs[39].setVisible(false);
+			inputs[40].setVisible(false);
 			inputs[22].setVisible(false);
 			inputs[23].setVisible(false);
 			inputs[24].setVisible(false);
 			inputs[25].setVisible(false);
 			inputs[26].setVisible(false);
 			inputs[27].setVisible(false);
+		#endregion
+			
+		for( var i = 0, n = array_length(_outData); i < n; i++ ) 
+			_outData[i] = surface_verify(_outData[i], _dim[0], _dim[1], attrDepth());
+		
+		surface_set_shader(_outData, sh_shape);
+			draw_clear_alpha(0, _bg);
+			if(!_bg) BLEND_OVERRIDE
 			
 			var _shp = array_safe_get(shape_types, _shape, "");
 			if(is_struct(_shp)) _shp = _shp.data;
@@ -337,10 +481,11 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 										
 				case "Trapezoid" :
 					inputs[ 9].setVisible( true);
-					inputs[21].setVisible( true);
+					inputs[38].setVisible( true);
+					inputs[39].setVisible( true);
 					
 					shader_set_i("shape", 11);
-					shader_set_2("trep",  _data[21]);
+					shader_set_2("trep",  [_data[38], _data[39]]);
 					break;
 					
 				case "Parallelogram" :
@@ -351,10 +496,90 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 					shader_set_f("parall", _data[22]);
 					break;
 					
+				case "Half":
+					inputs[40].setVisible(true);
+					
+					shader_set_i("shape", 21);
+					shader_set_2("point1",	 _data[40]);
+					break;
+				
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				
 				case "Ellipse" :	
 					shader_set_i("shape", 1);
 					break;
 					
+				case "Arc" :
+					inputs[ 5].setVisible(true);
+					inputs[ 8].setVisible(true);
+					inputs[30].setVisible(true);
+					
+					inputs[5].name = "Thickness";
+					
+					var ar = _data[8];
+					var center =  degtorad(ar[0] + ar[1]) / 2;
+					var range  =  abs(degtorad(ar[0] - ar[1]) / 2);
+					
+					shader_set_i("shape",       4);
+					shader_set_i("endcap",      _data[30]);
+					shader_set_f("angle",       center);
+					shader_set_f("angle_range", [ sin(range), cos(range) ] );
+					shader_set_f("inner",       _data[5] / 2);
+					break;
+					
+				case "Donut" :
+					inputs[ 5].setVisible(true);
+					
+					inputs[ 5].name = "Thickness";
+					
+					shader_set_i("shape", 9);
+					shader_set_f("inner", 1 - _data[5]);
+					break;
+				
+				case "Crescent" :
+					inputs[ 5].setVisible(true);
+					inputs[ 7].setVisible(true);
+					inputs[13].setVisible(true);
+					
+					inputs[ 5].name = "Shift";
+					inputs[13].name = "Inner circle";
+					
+					shader_set_i("shape", 8);
+					shader_set_f("outer", _data[ 5]);
+					shader_set_f("angle", -degtorad(_data[7]));
+					shader_set_f("inner", _data[13]);
+					break;
+					
+				case "Disk Segment":
+					inputs[13].setVisible(true);
+					
+					inputs[13].name = "Segment Size";
+					
+					shader_set_i("shape", 14);
+					shader_set_f("inner", -1 + clamp(_data[13], 0, 1) * 2.);
+					break;
+				
+				case "Pie":
+					inputs[ 8].setVisible(true);
+					
+					var ar = _data[8];
+					var center =  degtorad(ar[0] + ar[1]) / 2;
+					var range  =  abs(degtorad(ar[0] - ar[1]) / 2);
+					
+					shader_set_i("shape", 15);
+					shader_set_f("angle",       center);
+					shader_set_f("angle_range", [ sin(range), cos(range) ] );
+					break;
+					
+				case "Squircle" :	
+					inputs[31].setVisible(true);
+				
+					shader_set_i("shape", 19);
+					shader_set_f("squircle_factor", abs(_data[31]));
+					break;
+					
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				
 				case "Regular polygon" :
 					inputs[ 4].setVisible(true);
 					inputs[ 7].setVisible(true);
@@ -378,37 +603,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 					shader_set_i("shape", 3);
 					shader_set_i("sides", _data[4]);
 					shader_set_f("angle", degtorad(_data[7]));
-					shader_set_f("inner", _data[5]);
-					break;
-					
-				case "Arc" :
-					inputs[ 5].setVisible(true);
-					inputs[ 8].setVisible(true);
-					inputs[30].setVisible(true);
-					
-					inputs[5].name = "Inner radius";
-					
-					var ar = _data[8];
-					var center =  degtorad(ar[0] + ar[1]) / 2;
-					var range  =  abs(degtorad(ar[0] - ar[1]) / 2);
-					
-					shader_set_i("shape",       4);
-					shader_set_i("endcap",      _data[30]);
-					shader_set_f("angle",       center);
-					shader_set_f("angle_range", [ sin(range), cos(range) ] );
-					shader_set_f("inner",       _data[5] / 2);
-					break;
-					
-				case "Teardrop" :
-					inputs[ 5].setVisible(true);
-					inputs[13].setVisible(true);
-					
-					inputs[ 5].name = "End radius";
-					inputs[13].name = "Start radius";
-					
-					shader_set_i("shape", 5);
-					shader_set_f("edRad", _data[ 5]);
-					shader_set_f("stRad", _data[13]);
+					shader_set_f("inner", 1 - _data[5]);
 					break;
 					
 				case "Cross" :
@@ -422,66 +617,24 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 					shader_set_f("outer", _data[13]);
 					break;
 					
-				case "Leaf" :
-					inputs[ 5].setVisible(true);
-					inputs[13].setVisible(true);
-					
-					inputs[ 5].name = "Inner radius";
-					inputs[13].name = "Outer radius";
-					
-					shader_set_i("shape", 7);
-					shader_set_f("inner", _data[ 5]);
-					shader_set_f("outer", _data[13]);
-					break;
-					
-				case "Crescent" :
-					inputs[ 5].setVisible(true);
-					inputs[ 7].setVisible(true);
-					inputs[13].setVisible(true);
-					
-					inputs[ 5].name = "Shift";
-					inputs[13].name = "Inner circle";
-					
-					shader_set_i("shape", 8);
-					shader_set_f("outer", _data[ 5]);
-					shader_set_f("angle", -degtorad(_data[7]));
-					shader_set_f("inner", _data[13]);
-					break;
-					
-				case "Donut" :
-					inputs[13].setVisible(true);
-					
-					inputs[13].name = "Inner circle";
-					
-					shader_set_i("shape", 9);
-					shader_set_f("inner", _data[13]);
-					break;
-				
-				case "Heart":
-					
-					shader_set_i("shape", 13);
-					break;
-					
-				case "Disk Segment":
-					inputs[13].setVisible(true);
-					
-					inputs[13].name = "Segment Size";
-					
-					shader_set_i("shape", 14);
-					shader_set_f("inner", -1 + _data[13] * 2.);
-					break;
-				
-				case "Pie":
-					inputs[ 7].setVisible(true);
-					
-					shader_set_i("shape", 15);
-					shader_set_f("angle", degtorad(_data[7]));
-					break;
-					
 				case "Rounded Cross":
 					inputs[ 9].setVisible(true);
 					
 					shader_set_i("shape", 16);
+					break;
+					
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				
+				case "Line":
+					inputs[32].setVisible(true);
+					inputs[33].setVisible(true);
+					inputs[34].setVisible(true);
+					inputs[36].setVisible(true);
+					
+					shader_set_i("shape", 20);
+					shader_set_2("point1",	  _data[32]);
+					shader_set_2("point2",	  _data[33]);
+					shader_set_f("thickness", _data[34]);
 					break;
 					
 				case "Arrow":
@@ -500,16 +653,35 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 					shader_set_f("thickness",  _data[34]);
 					break;
 					
-				case "Line":
-					inputs[32].setVisible(true);
-					inputs[33].setVisible(true);
-					inputs[34].setVisible(true);
-					inputs[36].setVisible(true);
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				
+				case "Teardrop" :
+					inputs[ 5].setVisible(true);
+					inputs[13].setVisible(true);
 					
-					shader_set_i("shape", 20);
-					shader_set_2("point1",	  _data[32]);
-					shader_set_2("point2",	  _data[33]);
-					shader_set_f("thickness", _data[34]);
+					inputs[ 5].name = "End radius";
+					inputs[13].name = "Start radius";
+					
+					shader_set_i("shape", 5);
+					shader_set_f("edRad", _data[ 5]);
+					shader_set_f("stRad", _data[13]);
+					break;
+					
+				case "Leaf" :
+					inputs[ 5].setVisible(true);
+					inputs[13].setVisible(true);
+					
+					inputs[ 5].name = "Inner radius";
+					inputs[13].name = "Outer radius";
+					
+					shader_set_i("shape", 7);
+					shader_set_f("inner", _data[ 5]);
+					shader_set_f("outer", _data[13]);
+					break;
+					
+				case "Heart":
+					
+					shader_set_i("shape", 13);
 					break;
 					
 				case "Gear":
@@ -527,20 +699,6 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 					shader_set_i("teeth",		_data[25]);
 					shader_set_2("teethSize",	_data[26]);
 					shader_set_f("teethAngle",	_data[27]);
-					break;
-					
-				case "Squircle" :	
-					inputs[31].setVisible(true);
-				
-					shader_set_i("shape", 19);
-					shader_set_f("squircle_factor", abs(_data[31]));
-					break;
-					
-				case "Half":
-					inputs[32].setVisible(true);
-					
-					shader_set_i("shape", 21);
-					shader_set_2("point1",	 _data[32]);
 					break;
 					
 			}
