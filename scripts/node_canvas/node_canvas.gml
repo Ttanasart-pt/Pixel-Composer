@@ -1493,8 +1493,15 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		#region output
 			switch(_anim) {
 				case 0 : 
+					outputs[0].setName("Surface Out");
+					
 					if(_frames == 1) outputs[0].setValue(output_surface[0]);
 					else outputs[0].setValue(output_surface); 
+					
+					if(array_length(outputs) != 1) {
+						array_resize(outputs, 1);
+						__preDraw_data.force = true;
+					}
 					break;
 					
 				case 1 : 
@@ -1506,7 +1513,13 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 						case 2 : _fr_index = _fr_index >= 0 && _fr_index < _frames? _fr_index : noone; break;
 					}
 					
+					outputs[0].setName("Surface Out");
 					outputs[0].setValue(_fr_index == noone? temp_surface[1] : output_surface[_fr_index]);
+					
+					if(array_length(outputs) != 1) {
+						array_resize(outputs, 1);
+						__preDraw_data.force = true;
+					}
 					break;
 					
 				case 2 :
@@ -1515,12 +1528,13 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					for (var i = 0; i < amo; i++) {
 						if(i >= array_length(outputs)) {
 							var _pl = array_safe_get(output_pool, i, 0);
-							if(_pl == 0) _pl = nodeValue_Output($"val {i}", VALUE_TYPE.surface, 0);
+							if(_pl == 0) _pl = nodeValue_Output("Frame", VALUE_TYPE.surface, 0);
 							
 							newOutput(i, _pl);
 							output_pool[i] = _pl;
 						}
 						
+						outputs[i].setName($"Frame {i}");
 						outputs[i].setValue(output_surface[i]);
 					}
 					

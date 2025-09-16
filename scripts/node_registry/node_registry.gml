@@ -43,7 +43,7 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 	usecreateFn  = false;
 	createFn     = noone;
 	createParam  = noone;
-	
+
 	sourceDir    = "";
 	tags         = struct_try_get(NODE_ALIAS, nodeName, []);
 	tooltip      = _tooltip;
@@ -352,12 +352,19 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 			var _bfn = asset_get_index(_data.build);
 			if(_bfn != -1) setBuild(_bfn);
 		}
-	
+		
+		var _createFn = $"Node_create_{string_trim_start(nodeName, ["Node_"])}";
+		_createFn = asset_get_index(_createFn);
+		if(_createFn != -1) setBuild(_createFn);
+		
 		if(struct_has(_data, "deprecated"))
 			isDeprecated();
 		
 		if(struct_has(_data, "alias"))
 			setTags(_data.alias);
+			
+		if(variable_global_exists($"{name}_alias"))
+			setTags(variable_global_get($"{name}_alias"));
 			
 		if(struct_has(_data, "show_in_recent"))
 			show_in_recent = _data.show_in_recent;

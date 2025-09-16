@@ -1,69 +1,71 @@
-enum LIQUEFY_TYPE {
-	push,
-	twirl,
-	pinch,
-	bloat,
-}
+#region create
+	global.Liquefy_alias = array_map([ "Push", "Twirl", "Pinch", "Bloat" ], function(t) /*=>*/ {return string_lower(t)});
+	function Node_create_Liquefy(_x, _y, _group = noone, _param = {}) {
+		var node  = new Node_Liquefy(_x, _y, _group);
+		var query = struct_try_get(_param, "query", "");
+		
+		if(query != "") {
+			var inp  = node.input_fix_len;
+			var type = array_get_index(global.Liquefy_alias, query);
+			if(type >= 0) node.inputs[inp].skipDefault().setValue(type);
+		}
+		
+		return node;
+	}
+	
+	enum LIQUEFY_TYPE {
+		push,
+		twirl,
+		pinch,
+		bloat,
+	}
+	
+#endregion
 
 function Node_Liquefy(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Liquefy";
 	
-	newInput(0, nodeValue_Surface("Surface In"));
-	
 	newActiveInput(1);
-	
-	newInput(2, nodeValue_Surface("Mask"));
-	
-	newInput(3, nodeValue_Slider("Mix", 1));
-	
 	newInput(4, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
+	////- =Surfaces
+	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput(2, nodeValue_Surface( "Mask"       ));
+	newInput(3, nodeValue_Slider(  "Mix", 1     ));
 	__init_mask_modifier(2, 5); // inputs 5, 6, 
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	typeList = [ 
-		new scrollItem("Push",  s_node_liquefy_type, 0), 
-		new scrollItem("Twirl", s_node_liquefy_type, 1), 
-		new scrollItem("Pinch", s_node_liquefy_type, 2), 
-		new scrollItem("Bloat", s_node_liquefy_type, 3), 
-	];
-	typeListStr = array_create_ext(array_length(typeList), function(i) /*=>*/ {return typeList[i].name});
+	typeListStr = [ "Push", "Twirl", "Pinch", "Bloat" ];
+	typeList    = __enum_array_gen(typeListStr, s_node_liquefy_type);
 	
-	function createNewInput(index = array_length(inputs)) {
+	function createNewInput(i = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		dynamic_input_inspecting = getInputAmount();
 		
-		newInput(index + 0, nodeValue_Enum_Scroll("Type", 0, typeList));
+		newInput(i+ 0, nodeValue_Enum_Scroll( "Type", 0, typeList ));
 		
-		newInput(index + 1, nodeValue_Vec2("Position", [ 0, 0 ]))
-			.setUnitRef(function(index) /*=>*/ {return getDimension(index)}, VALUE_UNIT.reference);
+		////- =Region
+		newInput(i+ 1, nodeValue_Vec2(     "Position",    [.5,.5] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+		newInput(i+ 2, nodeValue_Vec2(     "Position 2",  [ 1, 0] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+		newInput(i+ 8, nodeValue_PathNode( "Push path"            ))
+		newInput(i+ 9, nodeValue_Int(      "Push resolution",  16 ));
+		newInput(i+ 3, nodeValue_Float(    "Radius",            8 )).hide_label();
+		newInput(i+10, nodeValue_Float(    "Radius 2",          8 ));
+		newInput(i+ 5, nodeValue_Float(    "Falloff",           0 )).hide_label();
+		newInput(i+ 6, nodeValue_Curve(    "Falloff Curve", CURVE_DEF_10 ));
 		
-		newInput(index + 2, nodeValue_Vec2("Position 2", [ 1, 0 ])) // push
-			.setUnitRef(function(index) /*=>*/ {return getDimension(index)}, VALUE_UNIT.reference);
+		////- =Effect
+		newInput(i+ 4, nodeValue_Slider( "Intensity", .1, [ -1, 1, 0.01] ));
+		newInput(i+ 7, nodeValue_Slider( "Push",      .1, [ -1, 1, 0.01] ));
 		
-		newInput(index + 3, nodeValue_Float("Radius", 8));
-		inputs[index + 3].overlay_text_valign = fa_bottom;
-		
-		newInput(index + 4, nodeValue_Slider("Intensity", 0.1, [ 0, 4, 0.01] ));
-		
-		newInput(index + 5, nodeValue_Float("Falloff", 0));
-		
-		newInput(index + 6, nodeValue_Curve("Falloff Curve", CURVE_DEF_10));
-		
-		newInput(index + 7, nodeValue_Slider("Push", 0.1, [ 0, 4, 0.01] ));
-		
-		newInput(index + 8, nodeValue_PathNode("Push path"))
-		
-		newInput(index + 9, nodeValue_Int("Push resolution", 16));
-		
-		newInput(index + 10, nodeValue_Float("Radius 2", 8));
-		inputs[index + 10].overlay_text_valign = fa_bottom;
+		inputs[i+ 3].overlay_text_valign = fa_bottom;
+		inputs[i+10].overlay_text_valign = fa_bottom;
 		
 		refreshDynamicDisplay();
-		return inputs[index];
+		return inputs[i];
 	} 
 	
 	effect_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
@@ -75,7 +77,9 @@ function Node_Liquefy(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			createNewInput();
 			triggerRender();
 		}
-			
+		
+		if(array_length(current_data) != array_length(inputs)) return ui(32);
+		
 		var amo = getInputAmount();
 		var lh  = ui(28);
 		var _h  = ui(12) + lh * amo;
@@ -148,9 +152,7 @@ function Node_Liquefy(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	disp_path = [];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-
 		PROCESSOR_OVERLAY_CHECK
-		
 		if(getInputAmount() == 0) return w_hovering;
 		
 		dynamic_input_inspecting = clamp(dynamic_input_inspecting, 0, getInputAmount() - 1);
@@ -166,7 +168,7 @@ function Node_Liquefy(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		switch(_type) {
 			case LIQUEFY_TYPE.push :
-				var _path = current_data[_ind + 8];
+				var _path = current_data[_ind +  8];
 				var rad2  = current_data[_ind + 10] * _s;
 				
 				if(_path == noone) {
@@ -175,12 +177,13 @@ function Node_Liquefy(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					var qy  = _y + pos2[1] * _s;
 					
 					draw_set_color(COLORS._main_accent);
+					draw_line_dashed(px, py, qx, qy);
 					draw_circle(px, py, rad,  true);
 					draw_circle(qx, qy, rad2, true);
 					
 					InputDrawOverlay(inputs[_ind +  2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 					InputDrawOverlay(inputs[_ind +  1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
-					InputDrawOverlay(inputs[_ind + 10].drawOverlay(w_hoverable, active, qx, qy, _s, _mx, _my, _snx, _sny));
+					InputDrawOverlay(inputs[_ind + 10].drawOverlay(w_hoverable, active, qx, qy, _s, _mx, _my, _snx, _sny, 0, 1, 1));
 					
 				} else if(!array_empty(disp_path)) {
 					var ox, oy, nx, ny;
@@ -209,13 +212,34 @@ function Node_Liquefy(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					InputDrawOverlay(inputs[_ind + 10].drawOverlay(w_hoverable, active, ox, oy, _s, _mx, _my, _snx, _sny));
 				}
 				break;
+			
+			case LIQUEFY_TYPE.twirl :
+			case LIQUEFY_TYPE.pinch :
+			case LIQUEFY_TYPE.bloat :
+				var fal = current_data[_ind + 5] * _s;
+				var fx  = px + rad;
 				
+				if(fal != 0) {
+					draw_set_color(COLORS._main_accent);
+					if(rad - fal > 0) 
+						draw_circle_dash(px, py, rad - fal);
+					draw_circle_dash(px, py, rad + fal);
+					
+					InputDrawOverlay(inputs[_ind + 5].drawOverlay(w_hoverable, active, fx, py, _s, _mx, _my, _snx, _sny, 0, 1, 2));
+				} else 
+					InputDrawOverlay(inputs[_ind + 5].drawOverlay(w_hoverable, active, fx + ui(6), py, _s, _mx, _my, _snx, _sny, 0, 1, 2));
+					
+				InputDrawOverlay(inputs[_ind + 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+				break;
+			
 			default:
 				InputDrawOverlay(inputs[_ind + 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 				break;
 		}
 		
-		InputDrawOverlay(inputs[_ind + 3].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
+		draw_set_color(COLORS._main_accent);
+		draw_circle(px, py, rad, true);
+		InputDrawOverlay(inputs[_ind + 3].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny, 0, 1, 1));
 		return w_hovering;
 	}
 	

@@ -54,6 +54,7 @@ function Node_Array_Split(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			outputs[i].resetDisplay();
 		}
 		
+		__preDraw_data.force = true;
 		attributes.output_amount = amo;
 	}
 	

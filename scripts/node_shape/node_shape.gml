@@ -143,6 +143,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		PROCESSOR_OVERLAY_CHECK
 		
+		var _dim     = current_data[ 0];
 		var _shape   = current_data[ 2];
 		var _posMode = current_data[15];
 		var _pos  = [ 0, 0 ];
@@ -154,8 +155,8 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		if(is_struct(_shp)) _shp = _shp.data;
 		
 		switch(_shp) {
-			case "Arrow"	:
-			case "Line"	:
+			case "Arrow" :
+			case "Line"	 :
 				InputDrawOverlay(inputs[32].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 				InputDrawOverlay(inputs[33].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 				return w_hovering;
@@ -175,6 +176,46 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			
 		}
 		
+		if(inputs[9].show_in_inspector) { // corner
+			var _psx = _pos[0], _psy = _pos[1];
+			var _ssx = _sca[0], _ssy = _sca[1];
+			
+			if(_posMode == 2) {
+				_psx = _dim[0] / 2;
+				_psy = _dim[1] / 2;
+				
+				_ssx = _dim[0] / 2;
+				_ssy = _dim[1] / 2;
+			}
+			
+			var _px = _x  + _psx * _s;
+			var _py = _y  + _psy * _s;
+			
+			var _x0 = _px - _ssx * _s;
+			var _y0 = _py - _ssy * _s;
+			var _x1 = _px + _ssx * _s;
+			var _y1 = _py + _ssy * _s;
+			
+			var aa = -45;
+			var ar = 90;
+			
+				 if(_ssx < 0 && _ssy < 0) { aa =  135; ar = -90; }
+			else if(_ssx < 0 && _ssy > 0) { aa = -135; ar =   0; }
+			else if(_ssx > 0 && _ssy < 0) { aa =   45; ar = 180; }
+			
+			var _max_s = max(abs(_ssx), abs(_ssy)) * 2;
+			var _corr  = current_data[9] * _s * _max_s;
+			var _cor   = _corr / sqrt(2);
+			
+			var cx = _x0 + lengthdir_x(_corr, aa);
+			var cy = _y0 + lengthdir_y(_corr, aa);
+			
+			draw_set_color(COLORS._main_accent);
+			draw_arc(cx, cy, _cor, ar, ar + 90);
+			
+			InputDrawOverlay(inputs[9].drawOverlay(w_hoverable, active, _x0, _y0, _s, _mx, _my, _snx, _sny, aa, _max_s, 2));
+		}
+		
 		if(_posMode == 0) {
 			InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 			
@@ -185,35 +226,6 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			InputDrawOverlay(inputs[16].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, _snx, _sny));
 			InputDrawOverlay(inputs[17].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny));
 		
-		}
-		
-		if(inputs[9].show_in_inspector && _posMode != 2) { // corner
-			var _px = _x  + _pos[0] * _s;
-			var _py = _y  + _pos[1] * _s;
-			
-			var _x0 = _px - _sca[0] * _s;
-			var _y0 = _py - _sca[1] * _s;
-			var _x1 = _px + _sca[0] * _s;
-			var _y1 = _py + _sca[1] * _s;
-			
-			var aa = -45;
-			var ar = 90;
-			
-				 if(_sca[0] < 0 && _sca[1] < 0) { aa =  135; ar = -90; }
-			else if(_sca[0] < 0 && _sca[1] > 0) { aa = -135; ar =   0; }
-			else if(_sca[0] > 0 && _sca[1] < 0) { aa =   45; ar = 180; }
-			
-			var _max_s = max(abs(_sca[0]), abs(_sca[1]));
-			var _corr  = current_data[9] * _s * _max_s;
-			var _cor   = _corr / (sqrt(2) - 1);
-			
-			var cx = _x0 + lengthdir_x(_cor, aa);
-			var cy = _y0 + lengthdir_y(_cor, aa);
-			
-			draw_set_color(COLORS._main_accent);
-			draw_arc(cx, cy, _cor - _corr, ar, ar + 90, 2);
-			
-			InputDrawOverlay(inputs[9].drawOverlay(w_hoverable, active, _x0, _y0, _s, _mx, _my, _snx, _sny, aa, _max_s, 1));
 		}
 		
 		return w_hovering;
