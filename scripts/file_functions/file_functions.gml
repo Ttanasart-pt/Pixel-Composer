@@ -34,6 +34,22 @@ function file_get_modify_s(path) {
 	return ((((_y * 12 + _m) * 31 + _d) * 24 + _h) * 60 + _n) * 60 + _s;
 }
 
+function file_get_create_s(path) {
+	INLINE
+	
+	if(!file_exists_empty(path)) return 0;
+	
+	var _y = file_datetime_created_year(path) - 2000;
+	var _m = file_datetime_created_month(path);
+	var _d = file_datetime_created_day(path);
+	var _h = file_datetime_created_hour(path);
+	var _n = file_datetime_created_minute(path);
+	var _s = file_datetime_created_second(path);
+	
+	return ((((_y * 12 + _m) * 31 + _d) * 24 + _h) * 60 + _n) * 60 + _s;
+}
+
+
 	////- Open Dialog
 
 function __file_selector(_mode = "save", _dir = PREFERENCES.dialog_path, _fname = "", _ftype = "", _multi = false) {

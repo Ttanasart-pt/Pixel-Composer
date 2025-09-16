@@ -701,17 +701,20 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 				    	
 				    	if(!has(FIREBASE_FILE_CACHE, _file)) {
 				    		var _item = new Patreon_project_item(_file);
+				    		_item.data = json_try_parse(resJ[$ _file]);
+				    		
 				    		FIREBASE_FILE_CACHE[$ _file] = _item;
 				    	}
 				    	
-				    	array_push(allFiles,     FIREBASE_FILE_CACHE[$ _file]);
-				    	array_push(displayFiles, FIREBASE_FILE_CACHE[$ _file]);
+				    	array_push(allFiles, FIREBASE_FILE_CACHE[$ _file]);
 				    }
 				    
+				    array_sort(allFiles, function(a,b) /*=>*/ {return sign((b.data[$ "creation_time"] ?? 0) - (a.data[$ "creation_time"] ?? 0))}); 
+				    for( var i = 0, n = array_length(allFiles); i < n; i++ ) 
+				    	displayFiles[i] = allFiles[i];
 				});
 				break;
 		}
-		
 	}
 	
 	function queryAuthorPageNew(_page = 1) {

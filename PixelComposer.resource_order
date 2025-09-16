@@ -3025,6 +3025,7 @@
     {"name":"s_workshop_badge_version","order":3,"path":"sprites/s_workshop_badge_version/s_workshop_badge_version.yy",},
     {"name":"s_workshop_badge","order":2,"path":"sprites/s_workshop_badge/s_workshop_badge.yy",},
     {"name":"s_workshop_bg","order":1,"path":"sprites/s_workshop_bg/s_workshop_bg.yy",},
+    {"name":"s_workshop_shadow","order":5,"path":"sprites/s_workshop_shadow/s_workshop_shadow.yy",},
     {"name":"spr_gameframe_buttons","order":1,"path":"sprites/spr_gameframe_buttons/spr_gameframe_buttons.yy",},
     {"name":"spr_gameframe_caption","order":2,"path":"sprites/spr_gameframe_caption/spr_gameframe_caption.yy",},
     {"name":"spr_gameframe_pixel","order":3,"path":"sprites/spr_gameframe_pixel/spr_gameframe_pixel.yy",},

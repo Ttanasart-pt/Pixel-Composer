@@ -19,16 +19,40 @@
 		    PXC_HUB_DATA = resJ;
 		});
 	}
+
+	if(RUN_IDE) {
+		debug_promodirs  = directory_listdir("D:/Project/MakhamDev/LTS-PixelComposer/PROMOTIONAL MATERIALS/Projects");
+		globalvar debug_promofiles; debug_promofiles = {};
+		
+		for( var i = 0, n = array_length(debug_promodirs); i < n; i++ ) {
+			var _dir =  debug_promodirs[i];
+			var _fil = directory_listdir(_dir, 0);
+			
+			for( var j = 0, m = array_length(_fil); j < m; j++ ) {
+				var _f = _fil[j];
+				
+				var _d = {
+					name : filename_name_only(_f), 
+					pack : i, 
+					create_time : file_get_create_s(_f), 
+				};
+				
+				debug_promofiles[$ _d.name] = _d;
+			}
+		}
+		
+	}
 #endregion
 
 function Patreon_project_item(_file) constructor {
 	title = _file;
 	
-	content_path   = $"{FIREBASE_STORE_PATH}/{_file}%2F{_file}.pxc";
+	var _url = string_replace_all(_file, " ", "%20");
+	content_path   = $"{FIREBASE_STORE_PATH}/{_url}.pxc";
 	content_fpath  = $"{DIRECTORY}Projects/{_file}.pxc";
 	content_dl     = false;
 	
-	preview_path   = $"{FIREBASE_STORE_PATH}/{_file}%2F{_file}.png";
+	preview_path   = $"{FIREBASE_STORE_PATH}/{_url}.png";
 	preview_fpath  = $"{DIRECTORY}Cache/{_file}.png";
 	preview_sprite = undefined;
 	
@@ -48,7 +72,7 @@ function Patreon_project_item(_file) constructor {
 		    
 	        var _res = _data[? "result"];
 	        var _dat = json_try_parse(_res, undefined);
-	        if(_dat == undefined) { preview_sprite = -4; return; }
+	        if(_dat == undefined || !has(_dat, "downloadTokens")) { preview_sprite = -4; return; }
 	        
 	        var _dlToken = _dat.downloadTokens;
 	        var _dlUrl   = preview_path + $"?alt=media&token={_dlToken}";
@@ -74,7 +98,7 @@ function Patreon_project_item(_file) constructor {
 		    
 	        var _res = _data[? "result"];
 	        var _dat = json_try_parse(_res, undefined);
-	        if(_dat == undefined) return;
+	        if(_dat == undefined || !has(_dat, "downloadTokens")) return;
 	        
 	        var _dlToken = _dat.downloadTokens;
 	        var _dlUrl   = content_path + $"?alt=media&token={_dlToken}";
@@ -182,6 +206,23 @@ function Patreon_project_item(_file) constructor {
 			gpu_set_scissor(_scis);
 		}
 	}
+	
+	function updateDB() {
+		var _prm = debug_promofiles[$ title];
+		if(_prm == undefined) { print($"Uncategorized {title}"); return; }
+		
+		var _res = {
+			path : title,
+			pack : _prm.pack,
+			creation_time : _prm.create_time,	
+		};
+		
+		asyncCallGroup("social", FirebaseFirestore($"patreon_projects/{title}").Set(json_stringify(_res)), function(_params, _data) /*=>*/ {
+			if (_data[? "status"] != 200) { print(_data[? "errorMessage"]); return; }
+	    });
+	}
+	
+	// if(RUN_IDE) updateDB();
 }
 
 function Steam_workshop_item() constructor {

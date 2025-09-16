@@ -4634,6 +4634,7 @@
     {"id":{"name":"s_workshop_badge","path":"sprites/s_workshop_badge/s_workshop_badge.yy",},},
     {"id":{"name":"s_workshop_bg","path":"sprites/s_workshop_bg/s_workshop_bg.yy",},},
     {"id":{"name":"s_workshop_frame","path":"sprites/s_workshop_frame/s_workshop_frame.yy",},},
+    {"id":{"name":"s_workshop_shadow","path":"sprites/s_workshop_shadow/s_workshop_shadow.yy",},},
     {"id":{"name":"spr_gameframe_border","path":"sprites/spr_gameframe_border/spr_gameframe_border.yy",},},
     {"id":{"name":"spr_gameframe_buttons","path":"sprites/spr_gameframe_buttons/spr_gameframe_buttons.yy",},},
     {"id":{"name":"spr_gameframe_caption","path":"sprites/spr_gameframe_caption/spr_gameframe_caption.yy",},},

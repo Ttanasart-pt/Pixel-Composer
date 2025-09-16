@@ -32,6 +32,8 @@ function steam_ugc_generate_thumbnail(_data, _type, _dest_path = TEMPDIR + "stea
 	var _avarUse  = STEAM_UGC_ITEM_AVATAR && sprite_exists(STEAM_AVATAR);
 	var _ico      = undefined;
 	
+	var _padd     = _type == UGC_TYPE.patreon? 32 : 80;
+	
 	switch(_type) {
 		case UGC_TYPE.project :    _ico = THEME.workshop_project;    break;
 		case UGC_TYPE.collection : _ico = THEME.workshop_collection; break;
@@ -65,23 +67,24 @@ function steam_ugc_generate_thumbnail(_data, _type, _dest_path = TEMPDIR + "stea
 	surface_set_target(_s);
 		draw_clear(COLORS._main_icon_dark);
 		draw_sprite_tiled(s_workshop_bg, 0, -64, -64);
-		draw_sprite_stretched_ext(s_workshop_frame, 0, 0, 0, prev_size, prev_size, COLORS._main_accent);
 		
 		if(_surfUse) {
 			var sw = surface_get_width(_surface);
 			var sh = surface_get_height(_surface);
-			var ss = (prev_size - 160) / max(sw, sh);
+			var ss = (prev_size - _padd * 2) / max(sw, sh);
 			draw_surface_ext(_surface, prev_size / 2 - sw / 2 * ss, prev_size / 2 - sh / 2 * ss, ss, ss, 0, c_white, 1);
 			
 		} else {
-			var ss  = (prev_size - 160) / max(sprite_get_width(spr), sprite_get_height(spr));
+			var ss  = (prev_size - _padd * 2) / max(sprite_get_width(spr), sprite_get_height(spr));
 			gpu_set_tex_filter(true);
 			draw_sprite_ext(_ico, 0, prev_size / 2, prev_size / 2, ss, ss, 0, c_white, 1);
 			gpu_set_tex_filter(false);
 			
 		}
 		
-		draw_sprite_stretched_ext(s_workshop_badge, 0, 8, 8, 88, 88, COLORS._main_accent);
+		// draw_sprite_stretched_ext(s_workshop_shadow, 0, 0, 0, prev_size, prev_size, COLORS._main_accent);
+		draw_sprite_stretched_ext(s_workshop_frame,  0, 0, 0, prev_size, prev_size, COLORS._main_accent);
+		draw_sprite_stretched_ext(s_workshop_badge,  0, 8, 8, 88, 88, COLORS._main_accent);
 		draw_sprite_ext(_ico, 0, 40, 40, 1 / THEME_SCALE, 1 / THEME_SCALE, 0, COLORS._main_icon_dark, 1);
 		
 		draw_set_text(f_h2, fa_right, fa_bottom, COLORS._main_icon_dark);
@@ -98,11 +101,21 @@ function steam_ugc_generate_thumbnail(_data, _type, _dest_path = TEMPDIR + "stea
 		
 		if(_avarUse) draw_surface(avartar, prev_size - 24 - avar_size, 24);
 	surface_reset_target();
-	surface_save_safe(_s, _dest_path);
+	
+	if(_type == UGC_TYPE.patreon) {
+		var _scal = surface_create(prev_size/2, prev_size/2);
+		surface_set_shader(_scal);
+			draw_surface_stretched(_s, 0, 0, prev_size/2, prev_size/2);
+		surface_reset_shader();
+		
+		surface_save_safe(_scal, _dest_path);
+		surface_free(_scal);
+		
+	} else 
+		surface_save_safe(_s, _dest_path);
 	
 	surface_free(_s);
 	surface_free(avartar);
-	
 	if(_clear) surface_free(_surface);
 	
 	return _dest_path;
