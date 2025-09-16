@@ -516,7 +516,7 @@
 	}
 	
 	function array_substract(arr1, arr2) {
-		if(!is_array(arr1) || !is_array(arr2)) return;
+		if(!is_array(arr1) || !is_array(arr2)) return [];
 		
 		var _hsh = {};
 		var _arr = [];

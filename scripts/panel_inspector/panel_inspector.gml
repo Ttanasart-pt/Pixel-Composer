@@ -1479,7 +1479,7 @@ function Panel_Inspector() : PanelContent() constructor {
             
             by += ui(36);
             if(STEAM_ENABLED && workshop_uploading == 0) {
-                if(PROJECT.path == "") { // unsaved project
+                if(!sav) { // unsaved project
                 	var _txt = __txtx("panel_inspector_workshop_save", "Save file before upload");
                     buttonInstant(noone, bx, by, bs, bs, mse, pHOVER, pFOCUS, _txt, THEME.workshop_upload, 0, c_white);
                     
@@ -1497,7 +1497,7 @@ function Panel_Inspector() : PanelContent() constructor {
                     	}
                     }
                     
-                } else if(PROJECT.meta.file_id && PROJECT.meta.author_steam_id == STEAM_USER_ID) { // user-owned steam project
+                } else if(PROJECT.meta.author_steam_id == STEAM_USER_ID) { // user-owned steam project
                 	var _txt = __txtx("panel_inspector_workshop_upload_new", "Upload as a new Steam Workshop submission");
                     if(buttonInstant(THEME.button_hide_fill, bx, by - ui(36), bs, bs, mse, pHOVER, pFOCUS, _txt, THEME.workshop_add, 0, c_white) == 2) {
                         steam_ugc_create_project();
@@ -1506,11 +1506,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 	
                 	var _txt = __txtx("panel_inspector_workshop_update",  "Update Steam Workshop content");
                 	if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mse, pHOVER, pFOCUS, _txt, THEME.workshop_update, 0, c_white) == 2) {
-                        textboxCall("Update note", function(t) /*=>*/ {
-                        	SAVE_AT(PROJECT, PROJECT.path);
-                        	steam_ugc_update_project(true, t);
-                        	workshop_uploading = 2;
-                        });
+                        dialogCall(o_dialog_steam_project_update, mouse_mx + 8, mouse_my + 8).activate("Update note");
                     }
                 }
             }

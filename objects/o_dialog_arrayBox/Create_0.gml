@@ -23,8 +23,7 @@ event_inherited();
 	onClose  = undefined;
 	
 	addable  = false;
-	
-	adding      = false;
+	adding   = false;
 	WIDGET_CURRENT = self;
 #endregion
 

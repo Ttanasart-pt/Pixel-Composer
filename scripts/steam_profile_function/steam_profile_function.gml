@@ -112,8 +112,11 @@ function Steam_workshop_profile(_sid) constructor {
 	    	data.badges = json_try_parse(data[$ "badges"], []);
 	    	links       = json_try_parse(data[$ "links"],  []);
 	    	
-	    	if(struct_has(data, "banner"))
+	    	if(struct_has(data, "banner")) 
 	    		banner = data.banner;
+    		
+	    	if(struct_has(data, "pageContent")) 
+	    		pageContent = json_try_parse(data[$ "pageContent"], pageContent);
 	    		
 			total_upvotes = data[$ "total_upvotes"] ?? 0;
 			max_upvotes   = data[$ "max_upvotes"]   ?? 0;

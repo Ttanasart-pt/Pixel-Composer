@@ -1,5 +1,5 @@
 #region tags
-	globalvar META_TAGS; META_TAGS = [ "3D", "Disappear", "Effect", "Filter", "Generator", "Transform", "Transition", "Utility" ];
+	globalvar META_TAGS; META_TAGS = [ "3D", "Animation", "Disappear", "Effect", "Filter", "Generator", "Transform", "Transition", "Utility" ];
 	globalvar VERSIONS;  VERSIONS  = [];
 	
 	for( var i = 14; i <= VERSION_MAJOR; i++ )

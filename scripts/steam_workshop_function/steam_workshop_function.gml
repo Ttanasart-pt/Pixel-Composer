@@ -1,6 +1,9 @@
 #region globals
-	globalvar PXC_HUB_DATA;        PXC_HUB_DATA        = undefined;
+	globalvar PXC_HUB_DATA; PXC_HUB_DATA = undefined;
+	globalvar FIREBASE_STORE_PATH; FIREBASE_STORE_PATH = "https://firebasestorage.googleapis.com/v0/b/pixelcomposer-f9cef.firebasestorage.app/o";
+	
 	globalvar WORKSHOP_FILE_CACHE; WORKSHOP_FILE_CACHE = {};
+	globalvar FIREBASE_FILE_CACHE; FIREBASE_FILE_CACHE = {};
 	
 	function PXC_HUB_get_data() {
 		asyncCallGroup("social", FirebaseFirestore($"workshops").Query(), function(_params, _data) /*=>*/ {
@@ -17,6 +20,169 @@
 		});
 	}
 #endregion
+
+function Patreon_project_item(_file) constructor {
+	title = _file;
+	
+	content_path   = $"{FIREBASE_STORE_PATH}/{_file}%2F{_file}.pxc";
+	content_fpath  = $"{DIRECTORY}Projects/{_file}.pxc";
+	content_dl     = false;
+	
+	preview_path   = $"{FIREBASE_STORE_PATH}/{_file}%2F{_file}.png";
+	preview_fpath  = $"{DIRECTORY}Cache/{_file}.png";
+	preview_sprite = undefined;
+	
+	static getPreviewSprite = function() {
+		if(preview_sprite != undefined) return preview_sprite;
+		
+		if(file_exists_empty(preview_fpath)) {
+			preview_sprite = sprite_add(preview_fpath);
+			return preview_sprite;
+		}
+		
+		preview_sprite = -1;
+		directory_verify($"{DIRECTORY}Cache");
+		asyncCallGroup("http", http_get(preview_path), function(_params, _data) /*=>*/ {
+			var _status = _data[? "status"];
+		    if (_status < 0) { preview_sprite = -4; return; }
+		    
+	        var _res = _data[? "result"];
+	        var _dat = json_try_parse(_res, undefined);
+	        if(_dat == undefined) { preview_sprite = -4; return; }
+	        
+	        var _dlToken = _dat.downloadTokens;
+	        var _dlUrl   = preview_path + $"?alt=media&token={_dlToken}";
+	        
+	        asyncCallGroup("http", http_get_file(_dlUrl, preview_fpath), function(_params, _data) /*=>*/ {
+	        	var _status = _data[? "status"];
+		    	if (_status < 0) { preview_sprite = -4; return; }
+		    	
+	        	preview_sprite = sprite_add(preview_fpath);
+	        });
+		});
+		
+		return preview_sprite;
+	}
+	
+	static downloadContent = function() {
+		content_dl = true;
+		
+		directory_verify($"{DIRECTORY}Projects");
+		asyncCallGroup("http", http_get(content_path), function(_params, _data) /*=>*/ {
+			var _status = _data[? "status"];
+		    if (_status < 0) return;
+		    
+	        var _res = _data[? "result"];
+	        var _dat = json_try_parse(_res, undefined);
+	        if(_dat == undefined) return;
+	        
+	        var _dlToken = _dat.downloadTokens;
+	        var _dlUrl   = content_path + $"?alt=media&token={_dlToken}";
+	        
+	        asyncCallGroup("http", http_get_file(_dlUrl, content_fpath), function(_params, _data) /*=>*/ {
+	        	content_dl = false;
+	        	var _status = _data[? "status"];
+		    	if (_status < 0) return;
+	        });
+		});
+		
+	}
+	
+	static drawThumbnail = function(_rx, _ry, _x, _y, _w, _h, _i) {
+		var _spr = getPreviewSprite();
+		if(!sprite_exists(_spr)) return;
+		
+		gpu_set_stencil_enable(true);
+		
+		draw_clear_stencil(0);
+		gpu_set_stencil_pass(stencilop_replace);
+		
+		gpu_set_stencil_compare(cmpfunc_greater, 128);
+		draw_roundrect_ext(_x, _y, _x + _w - 1, _y + _h - 1, ui(5), ui(5), false);
+		
+		gpu_set_stencil_compare(cmpfunc_less, 64);
+		draw_sprite_stretched(_spr, 0, _x, _y, _w, _h);
+		
+		gpu_set_stencil_enable(false);
+	} 
+		
+	static draw = function(_panel, _rx, _ry, _x0, _y0, _x1, _y1, _m, _hover, _focus, _title = true) {
+		var _th = line_get_height(f_p2b) + ui(4) + line_get_height(f_p4);
+		var _cw = _x1 - _x0;
+		var _ch = _y1 - _y0;
+		
+		var _hov  = _hover && point_in_rectangle(_m[0], _m[1], _x0, _y0, _x1, _y1);
+		var _spr  = getPreviewSprite();
+		var _own  = file_exists_empty(content_fpath);
+		var _addi = content_dl;
+		
+		var _xc = (_x0 + _x1) / 2;
+		var _yc = (_y0 + _y1) / 2;
+		
+		if(_spr == -1) {
+			draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _x0, _y0, _cw, _ch, c_white, 1);
+			draw_sprite_ui(THEME.loading, 0, _xc, _yc, 1, 1, current_time / 2, COLORS._main_icon, 1);
+			
+		} else 
+			drawThumbnail(_rx, _ry, _x0, _y0, _cw, _ch, 0);
+		if(_hov) draw_sprite_stretched_add(THEME.box_r5, 1, _x0, _y0, _cw, _ch, c_white, .5);
+		
+		#region badges
+			var _ox = _x0 + ui(14);
+			var _oy = _y1 - ui(14);
+			var _subHov = _hover && point_in_rectangle(_m[0], _m[1], _ox - ui(8), _oy - ui(8), _ox + ui(8), _oy + ui(8));
+			if(_subHov) _hov = false;
+			
+			if(_own) {
+				var cc = COLORS._main_icon;
+				if(_subHov) {
+					TOOLTIP = __txt("Open");
+					cc = COLORS._main_value_positive;
+					if(mouse_lpress(_focus)) LOAD_PATH(content_fpath, true);
+				}
+				
+				draw_sprite_ui(THEME.accept_inv_16, 0, _ox, _oy, 1, 1, 0, cc, .8 + _subHov * .2);
+				
+			} else if(_addi) {
+				draw_sprite_ui(THEME.loading_s, 0, _ox, _oy, .75, .75, current_time / 2, COLORS._main_icon, .8);
+				
+			} else {
+				draw_sprite_ui(THEME.download_inv_16, 0, _ox, _oy, 1, 1, 0, COLORS._main_value_positive, .8 + _subHov * .2);
+				if(_subHov) {
+					TOOLTIP = __txt("Download");
+					if(mouse_lpress(_focus)) downloadContent();
+				}
+			}
+		#endregion
+			
+		if(_hov && _own) {
+			if(mouse_lpress(_focus)) {
+				// _panel.file_dragging  = self;
+				// _panel.file_drag_x    = mouse_mx;
+				// _panel.file_drag_y    = mouse_my;
+			}
+		}
+		
+		if(_title) {
+			var _ty = _y1 + ui(6);
+			
+			var _scis = gpu_get_scissor();
+			gpu_set_scissor(_x0, _ty, _cw, _th);
+			draw_set_color(COLORS.panel_bg_clear_inner);
+			draw_rectangle(_x0, _ty, _x1, _ty + _th, false);
+			
+			draw_set_text(f_p2b, fa_left, fa_top, COLORS._main_text);
+			draw_text_add(_x0, _ty, title);
+			_ty += line_get_height(f_p2b);
+			
+			var _author = "MakhamDev";
+			var cc = CDEF.main_mdwhite;
+			draw_set_text(f_p4, fa_left, fa_top, cc);
+			draw_text_add(_x0, _ty, _author);
+			gpu_set_scissor(_scis);
+		}
+	}
+}
 
 function Steam_workshop_item() constructor {
 	ready = false;
@@ -55,7 +221,7 @@ function Steam_workshop_item() constructor {
 		banned              = _qData[? "banned"];
 		accepted            = _qData[? "accepted_for_use"];
 		
-		tags                = _qData[? "tags"];
+		tags                = _qData[? "tags"]; 
 		handle_file         = int64(_qData[? "handle_file"]);
 		handle_preview_file = int64(_qData[? "handle_preview_file"]);
 		
@@ -78,16 +244,17 @@ function Steam_workshop_item() constructor {
 		}
 	
 		type = FILE_TYPE.assets;
-		tag_type    = "";
-		tag_version = "";
+		tags_content = [];
+		tag_type     = "";
+		tag_version  = "";
 		
 		for( var i = 0, n = array_length(tags); i < n; i++ ) {
 			var _tag = tags[i];
-			if(string_starts_with(_tag, "1."))
-				tag_version = _tag;
 				
-			if(_tag == "Project")    { tag_type = _tag; type = FILE_TYPE.project; }
-			if(_tag == "Collection") { tag_type = _tag; type = FILE_TYPE.collection; }
+			if(string_starts_with(_tag, "1.")) tag_version = _tag;
+			else if(_tag == "Project")    { tag_type = _tag; type = FILE_TYPE.project;    }
+			else if(_tag == "Collection") { tag_type = _tag; type = FILE_TYPE.collection; }
+			else array_push(tags_content, _tag);
 		}
 		
 		preview_path   = $"ugc\\{file_id}.png"
@@ -270,15 +437,17 @@ function Steam_workshop_item() constructor {
 			
 			var _hubStat = getHUBStatus();
 			
-			if(_hubStat) {
+			if(_hubStat == 1) {
 				_ox += ui(20);
 				var _subHov = _hover && point_in_rectangle(_m[0], _m[1], _ox - ui(8), _oy - ui(8), _ox + ui(8), _oy + ui(8));
 				if(_subHov) {
 					_hov = false;
 					TOOLTIP = "PXC hub";
 				}
-				
 				draw_sprite_ui(THEME.pxc_hub, 0, _ox, _oy, 1, 1, 0, COLORS._main_accent, .8 + _subHov * .2);
+				
+			} else if(_hubStat == 0) {
+				draw_sprite_ui(THEME.loading_s, 0, _ox, _oy, .75, .75, current_time / 2, COLORS._main_icon, .8);
 			}
 		#endregion
 			
@@ -397,14 +566,14 @@ function Steam_workshop_item() constructor {
 			dw  = max(dw, string_width_ext(description, -1, ww));
 		}
 		
-		if(array_length(tags)) {
+		if(array_length(tags_content)) {
 			draw_set_font(f_p2);
 			hh += ui(8);
 			var tx = 0;
 			var lh = line_get_height(f_p2, ui(4));
 			var th = lh;
-			for( var i = 0, n = array_length(tags); i < n; i++ ) {
-				var _ww = string_width(tags[i]) + ui(16);
+			for( var i = 0, n = array_length(tags_content); i < n; i++ ) {
+				var _ww = string_width(tags_content[i]) + ui(16);
 				
 				if(tx + _ww + ui(2) > ww - ui(16)) {
 					tx = 0;
@@ -475,21 +644,21 @@ function Steam_workshop_item() constructor {
 			ty += string_height_ext(description, -1, ww);
 		}
 		
-		if(array_length(tags)) {
+		if(array_length(tags_content)) {
 			draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
 			ty += ui(8);
 			var tx = 0;
 			var hh = line_get_height(f_p2, ui(4));
 			
-			for( var i = 0, n = array_length(tags); i < n; i++ ) {
-				var _ww = string_width(tags[i]) + ui(16);
+			for( var i = 0, n = array_length(tags_content); i < n; i++ ) {
+				var _ww = string_width(tags_content[i]) + ui(16);
 				if(tx + _ww + ui(2) > ww - ui(16)) {
 					tx = 0;
 					ty += hh + ui(2);
 				}
 				
 				draw_sprite_stretched_ext(THEME.box_r5_clr, 0, mx + ui(8) + tx, ty, _ww, hh, COLORS._main_icon, 1);
-				draw_text(mx + ui(8) + tx + ui(8), ty + hh / 2, tags[i]);
+				draw_text(mx + ui(8) + tx + ui(8), ty + hh / 2, tags_content[i]);
 				
 				tx += _ww + ui(2);
 			}

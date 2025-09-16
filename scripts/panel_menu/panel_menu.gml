@@ -308,29 +308,35 @@ function Panel_Menu() : PanelContent() constructor {
         
         menu_test = [ __txt("Dev"), [
             MENU_ITEMS.console_panel,
-            menuItem(__txt("Debug overlay"),   function() /*=>*/ { show_debug_overlay(true);                      }),
-            menuItem(__txt("Render Profiler"), function() /*=>*/ { dialogPanelCall(new Panel_Profile_Render());   }),
-            menuItem(__txt("Capture"),         function() /*=>*/ { dialogPanelCall(new Panel_Capture_Project());  }),
+            menuItemShelf(__txt("Debugger"), function(_dat) /*=>*/ {return submenuCall(_dat, [ 
+                menuItem(__txt("Debug overlay"),   function() /*=>*/ { show_debug_overlay(true);                      }),
+                menuItem(__txt("Render Profiler"), function() /*=>*/ { dialogPanelCall(new Panel_Profile_Render());   }),
+                menuItem(__txt("Tester"),          function() /*=>*/ { dialogPanelCall(new Panel_Test());             }),
+                -1,
+                menuItem(__txtx("panel_menu_test_warning", "Display Warning"),        function() /*=>*/ {return noti_warning("Error message")}),
+                menuItem(__txtx("panel_menu_test_error", "Display Error"),            function() /*=>*/ {return noti_error("Error message")}),
+                menuItem(__txtx("panel_menu_test_crash", "Force crash"),              function() /*=>*/ {return print(1 + "a")}),
+            ])}),
+            
+            menuItemShelf(__txt("Tools"), function(_dat) /*=>*/ {return submenuCall(_dat, [ 
+                menuItem(__txt("Collection Manager"),                                 function() /*=>*/ {return dialogPanelCall(new Panel_Collection_Manager())}),
+                menuItem(__txt("Nodes Manager"),                                      function() /*=>*/ {return dialogPanelCall(new Panel_Nodes_Manager())}),
+                menuItem(__txtx("panel_menu_test_gen_guide", "Generate Node Locale"), function() /*=>*/ {return dialogPanelCall(new Panel_Node_Data_Gen())}),
+                -1, 
+                menuItem(__txt("Generate UGC Thumbnail"), function() /*=>*/ {
+                    var _proj = PROJECT.path;
+                    var _dest = filename_combine(filename_dir(_proj), filename_name_only(_proj) + ".png");
+                    steam_ugc_generate_thumbnail(PANEL_PREVIEW.getNodePreviewSurface(), UGC_TYPE.patreon, _dest);
+                }),
+            ])}),
+            
             -1,
             menuItem(__txt("Save frozen"),     function() /*=>*/ { PROJECT.freeze = true; SAVE();     }),
-            menuItem(__txt("Tester"),          function() /*=>*/ { dialogPanelCall(new Panel_Test()); }),
+            menuItem(__txt("Capture Project"), function() /*=>*/ { dialogPanelCall(new Panel_Capture_Project());  }),
             -1,
-            menuItem(__txt("Collection Manager"),                                 function() /*=>*/ {return dialogPanelCall(new Panel_Collection_Manager())}),
-            menuItem(__txt("Nodes Manager"),                                      function() /*=>*/ {return dialogPanelCall(new Panel_Nodes_Manager())}),
-            menuItem(__txtx("panel_menu_test_gen_guide", "Generate Node Locale"), function() /*=>*/ {return dialogPanelCall(new Panel_Node_Data_Gen())}),
-            -1,
-            menuItem(__txtx("panel_menu_test_warning", "Display Warning"),        function() /*=>*/ {return noti_warning("Error message")}),
-            menuItem(__txtx("panel_menu_test_error", "Display Error"),            function() /*=>*/ {return noti_error("Error message")}),
-            menuItem(__txtx("panel_menu_test_crash", "Force crash"),              function() /*=>*/ {return print(1 + "a")}),
-            -1,
-            MENU_ITEMS.reload_theme,
-            -1,
-            menuItemShelf(__txt("Misc."), function(_dat) { 
-                return submenuCall(_dat, [ 
-                    menuItem("Node credit dialog", function() /*=>*/ { dialogPanelCall(new Panel_Node_Cost()); }), 
-                    // menuItem("RogueTD",            () => { dialogPanelCall(new Panel_RogueTD());   }), 
-                ]);
-            }),
+            menuItemShelf(__txt("Misc."), function(_dat) /*=>*/ {return submenuCall(_dat, [ 
+                menuItem("Node credit dialog", function() /*=>*/ {return dialogPanelCall(new Panel_Node_Cost())} ), 
+            ])}),
         ]];
         
         menus = [

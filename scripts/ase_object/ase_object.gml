@@ -100,9 +100,13 @@ function ase_layer(_name, _type = 0) constructor {
 			
 		var st  = tag[$ "Frame start"];
 		var ed  = tag[$ "Frame end"];
-		var ind = st + (_loop? safe_mod(index, ed - st + 1) : index);
+		if(_loop) {
+			var ind = st + safe_mod(index, ed - st + 1);
+			return array_safe_get_fast(cels, ind);
+		}
 		
-		return array_safe_get_fast(cels, ind);
+		if(index < st || index > ed) return 0;
+		return array_safe_get_fast(cels, index);
 	}
 	
 	function toString() {

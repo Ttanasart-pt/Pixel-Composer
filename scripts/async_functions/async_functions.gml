@@ -14,9 +14,13 @@ function asyncLoad(data, _key = "id", _group = "") {
 	
 	var callback   = cal.callback;
 	var parameters = cal.parameters;
-	if(callback != noone) callback(parameters, data);
+	var complete   = false;
+	if(callback != noone) {
+		var res = callback(parameters, data);
+		if(res != undefined) complete = res;
+	}
 	
-	ds_map_delete(global.asyncCalls, _id);
+	if(complete) ds_map_delete(global.asyncCalls, _id);
 	
 	return true;
 }

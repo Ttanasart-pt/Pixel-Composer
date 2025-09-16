@@ -778,7 +778,42 @@ function Panel_Animation_Dopesheet() {
                 
                 draw_set_alpha(1);
                 
-            } else if(key.ease_out_type == CURVE_TYPE.linear && key_next.ease_in_type == CURVE_TYPE.linear) { //linear draw
+            } else if(key_next.ease_in_type == CURVE_TYPE.cut) { // hold draw
+            	nx  = (key_next.time + 1) * timeline_scale + timeline_shift;
+                
+                _kv = key.value;
+                _kn = key_next.value;
+                
+                if(!valArray) {
+                    _kv = [ _kv ];
+                    _kn = [ _kn ];
+                }
+                
+                var kn = min(array_length(_kv), array_length(_kn));
+                for( var ki = 0; ki < kn; ki++ ) {
+                    var cc = COLORS.panel_animation_graph_line;
+                    if(valArray)                    cc = array_safe_get(COLORS.axis, ki, cc);
+                    else if(animator.prop.sep_axis) cc = array_safe_get(COLORS.axis, animator.index, cc);
+                    
+                    cc = colorMultiplyRGB(cc, CDEF.main_ltgrey); 
+                    draw_set_color(cc);
+                    draw_set_alpha(aa);
+                    
+                    ny[ki] = value_map(_kv[ki], _gy_val_min, _gy_val_max, _gy1, _gy0);
+                    
+                    if(array_length(oy) > ki) draw_line(t, oy[ki], t, ny[ki]);
+                    oy[ki] = ny[ki];
+                    
+                    ny[ki] = value_map(_kn[ki], _gy_val_min, _gy_val_max, _gy1, _gy0);
+                    draw_line( t, oy[ki], nx, oy[ki]);
+                    draw_line(nx, oy[ki], nx, ny[ki]);
+                    oy[ki] = ny[ki];
+                }
+                
+                ox = nx;
+             //   draw_set_alpha(1);
+                
+            } else if(key.ease_out_type == CURVE_TYPE.linear && key_next.ease_in_type == CURVE_TYPE.linear) { // linear draw
                 nx  = (key_next.time + 1) * timeline_scale + timeline_shift;
                 
                 _kv = key.value;

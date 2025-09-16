@@ -15,14 +15,17 @@ event_inherited();
 	refocus  = true;
 	onModify = -1;
 	params   = undefined;
-	tb_name  = textBox_Text(function(txt) /*=>*/ { onModify(txt, params); instance_destroy(); });
+	tb_name  = textBox_Text(function(txt) /*=>*/ { onModify(txt, params); instance_destroy(); }).setEmpty();
 	
-	function setLabel(_label  = "") { label  = _label; return self; }
-	function setParam(_params = "") { params = _params; return self; }
+	function setLabel(l)  { label    = l; return self; }
+	function setParam(p)  { params   = p; return self; }
+	function setModify(m) { onModify = m; return self; }
 	
 	function activate(_initText = "") {
 		text = _initText;
 		tb_name.activate(text);
 		tb_name.mouse_lhold = true;
+		
+		return self;
 	}
 #endregion

@@ -85,3 +85,5 @@ function struct_find_key(struct, value) {
 		if(value == struct[$ _keys[i]]) return _keys[i];
 	return undefined;
 }
+
+function struct_remove_safe(struct, key) { if(has(struct, key)) struct_remove(struct, key) }
