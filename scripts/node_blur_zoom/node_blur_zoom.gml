@@ -71,7 +71,7 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _gamm   = _data[13];
 		var _fade   = _data[16];
 		
-		var _args = new blur_zoomargs(_surf, [_strn, _strmap, inputs[1]], _cent[0], _cent[1], _orig, _sam, _samp)
+		var _args = new blur_zoom_args(_surf, [_strn, _strmap, inputs[1]], _cent[0], _cent[1], _orig, _sam, _samp)
 							.setMode(_mode)
 							.setFadeDistance(_fade)
 							.setGamma(_gamm)

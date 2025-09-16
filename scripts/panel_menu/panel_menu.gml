@@ -16,6 +16,12 @@
         }
     }
     
+    function generate_UGC_patreon() {
+        var _proj = PROJECT.path;
+        var _dest = filename_combine(filename_dir(_proj), filename_name_only(_proj) + ".png");
+        steam_ugc_generate_thumbnail(PANEL_PREVIEW.getNodePreviewSurface(), UGC_TYPE.patreon, _dest);
+    }
+    
     function __fnInit_Global() {
         registerFunction("", "New file",            "N",    MOD_KEY.ctrl,                                 NEW                      ).setMenu("new_file",       THEME.new_file)
         
@@ -88,6 +94,8 @@
             
             return submenuCall(_dat, arr);
         }).setMenu("addon_menu", THEME.addon_icon, true)
+        
+        registerFunction("", "Generate UGC",        "",     MOD_KEY.none, generate_UGC_patreon     )
         
     }
     
@@ -323,11 +331,7 @@ function Panel_Menu() : PanelContent() constructor {
                 menuItem(__txt("Nodes Manager"),                                      function() /*=>*/ {return dialogPanelCall(new Panel_Nodes_Manager())}),
                 menuItem(__txtx("panel_menu_test_gen_guide", "Generate Node Locale"), function() /*=>*/ {return dialogPanelCall(new Panel_Node_Data_Gen())}),
                 -1, 
-                menuItem(__txt("Generate UGC Thumbnail"), function() /*=>*/ {
-                    var _proj = PROJECT.path;
-                    var _dest = filename_combine(filename_dir(_proj), filename_name_only(_proj) + ".png");
-                    steam_ugc_generate_thumbnail(PANEL_PREVIEW.getNodePreviewSurface(), UGC_TYPE.patreon, _dest);
-                }),
+                menuItem(__txt("Generate UGC Thumbnail"), function() /*=>*/ {return generate_UGC_patreon()}),
             ])}),
             
             -1,
