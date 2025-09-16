@@ -1004,7 +1004,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static postUpdate = function(frame = CURRENT_FRAME) {}
 	
 	static doUpdateLite = function(frame = CURRENT_FRAME) {
-		
 		render_timer = get_timer();
 		setRenderStatus(true);
 		

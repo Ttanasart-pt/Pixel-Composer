@@ -41,8 +41,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	////- =Frames
 	newInput( 0, nodeValue_Dimension());
 	
-	////- =Animation
-	newInput(12, nodeValue_Bool(    "Frames Animation", true ));
+	////- =Output
+	newInput(12, nodeValue_Enum_Scroll( "Output Type",  1, [ "Array", "Animation", "Outputs" ] ));
 	newInput( 5, nodeValue_Bool(    "Auto Frame",       true ));
 	newInput( 7, nodeValue_Int(     "Frame Index",      0    ));
 	newInput(13, nodeValue_Float(   "Animation Speed",  1    ));
@@ -245,7 +245,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	input_display_list = [ 
 		["Frames",       false    ],  0, frame_renderer, 
-		["Animation",    false, 12],  5,  7, 13, 18, 
+		["Output",       false,   ], 12,  5,  7, 13, 18, 
 		["Background",    true, 10],  8, 14,  9, 
 		["Brush",         true    ],  6, 15, 17, 16, 
 		["Data Transfer", true, noone, b_transferData], 19, 20, button(function() /*=>*/ {return transferData()}).setText("Transfer Data"), 
@@ -257,6 +257,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	live_edit   = false;
 	live_target = "";
+	output_pool = [];
 	
 	#region ++++ data ++++
 		attributes.frames = 1;
@@ -845,7 +846,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	static setFrame = function(frame) {
 		var _anim  = getInputData(12);
 		var _autof = getInputData( 5);
-		if(_anim && _autof) PROJECT.animator.setFrame(frame);
+		if(_anim == 1 && _autof) PROJECT.animator.setFrame(frame);
 		
 		preview_index = frame;
 	}
@@ -1399,7 +1400,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _autof = getInputData( 5);
 		var _fram  = attributes.frames;
 		
-		update_on_frame = _fram > 1 && _anim && _autof;
+		update_on_frame = _fram > 1 && _anim == 1 && _autof;
 		
 		if(update_on_frame) {
 			var _anims = getInputData(13);
@@ -1490,22 +1491,51 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		#endregion
 		
 		#region output
-			if(_frames == 1) {
-				outputs[0].setValue(output_surface[0]);
-				
-			} else if(_anim) {
-				var _fr_index = _autof? (CURRENT_FRAME * _anims) : _frame;
-				
-				switch(_atype) {
-					case 0 : _fr_index = safe_mod(max(0, _fr_index), _frames);                     break;
-					case 1 : _fr_index = clamp(_fr_index, 0, _frames - 1);                         break;
-					case 2 : _fr_index = _fr_index >= 0 && _fr_index < _frames? _fr_index : noone; break;
-				}
-				
-				outputs[0].setValue(_fr_index == noone? temp_surface[1] : output_surface[_fr_index]);
-				
-			} else
-				outputs[0].setValue(output_surface);
+			switch(_anim) {
+				case 0 : 
+					if(_frames == 1) outputs[0].setValue(output_surface[0]);
+					else outputs[0].setValue(output_surface); 
+					break;
+					
+				case 1 : 
+					var _fr_index = _autof? (CURRENT_FRAME * _anims) : _frame;
+			
+					switch(_atype) {
+						case 0 : _fr_index = safe_mod(max(0, _fr_index), _frames);                     break;
+						case 1 : _fr_index = clamp(_fr_index, 0, _frames - 1);                         break;
+						case 2 : _fr_index = _fr_index >= 0 && _fr_index < _frames? _fr_index : noone; break;
+					}
+					
+					outputs[0].setValue(_fr_index == noone? temp_surface[1] : output_surface[_fr_index]);
+					break;
+					
+				case 2 :
+					var amo = _frames;
+		
+					for (var i = 0; i < amo; i++) {
+						if(i >= array_length(outputs)) {
+							var _pl = array_safe_get(output_pool, i, 0);
+							if(_pl == 0) _pl = nodeValue_Output($"val {i}", VALUE_TYPE.surface, 0);
+							
+							newOutput(i, _pl);
+							output_pool[i] = _pl;
+						}
+						
+						outputs[i].setValue(output_surface[i]);
+					}
+					
+					var _rem = array_length(outputs);
+					for(var i = amo; i < _rem; i++) {
+						var _to = outputs[i].getJunctionTo();
+						
+						for( var j = 0, m = array_length(_to); j < m; j++ ) 
+							_to[j].removeFrom();
+					}
+					
+					array_resize(outputs, amo);
+					__preDraw_data.force = true;
+					break;
+			}
 		#endregion
 		
 		#region live edit
