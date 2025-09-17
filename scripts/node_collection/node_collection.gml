@@ -693,25 +693,27 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		UNDO_HOLDING = true;
 		
+		var amo = array_length(nodeArray);
+		
 		if(_group == noone) {
-			var cx = 0;
-			var cy = 0;
-			for(var i = 0; i < array_length(nodeArray); i++) {
+			var cx  = 0;
+			var cy  = 0;
+			for( var i = 0; i < amo; i++ ) {
 				var _node = nodeArray[i];
 				cx += _node.x;
 				cy += _node.y;
 			}
 			
 			var _grd = PROJECT.graphGrid.size;
-			cx = value_snap(cx / array_length(nodeArray), _grd);
-			cy = value_snap(cy / array_length(nodeArray), _grd);
+			cx = value_snap(cx / amo, _grd);
+			cy = value_snap(cy / amo, _grd);
 			
 			_group = new Node_Group(cx, cy, PANEL_GRAPH.getCurrentContext());
 		}
 		
 		var _content = [];
 		
-		for(var i = 0; i < array_length(nodeArray); i++) {
+		for(var i = 0; i < amo; i++) {
 			_group.add(nodeArray[i]);
 			_content[i] = nodeArray[i];
 		}
@@ -724,16 +726,15 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		if(check_connect) { // IO creation
 			var _io = { inputs: {}, outputs: {}, map: {} };
 			
-			for(var i = 0; i < array_length(nodeArray); i++)
+			for(var i = 0; i < amo; i++)
 				nodeArray[i].checkConnectGroup(_io);
 			
-			var _in    = _io.inputs;
-			var _inKey = struct_get_names(_in);
+			var _inKey = struct_get_names(_io.inputs);
 			var _x, _y, m;
 			
 			for( var i = 0, n = array_length(_inKey); i < n; i++ ) {
 				var _frm = _io.map[$ _inKey[i]];
-				var _tos = _in[$ _inKey[i]];
+				var _tos = _io.inputs[$ _inKey[i]];
 				
 				_x = 0
 				_y = 0;
@@ -749,11 +750,12 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 				_x = value_snap(_x - 64 - 128, 32);
 				_y = value_snap(_y / m, 32);
 				
+				// connect to parent input if one of the input already connect to outside junction
 				var _conn = false;
-				for( var j = 0, m = array_length(_group.inputs); j < m; j++ ) {
+				for( var j = 0, _gi = array_length(_group.inputs); j < _gi; j++ ) {
 					var _inp = _group.inputs[j];
 					if(_inp.value_from == _frm) {
-						for( var k = 0, p = array_length(_tos); k < p; k++ )
+						for( var k = 0; k < m; k++ )
 							_tos[k].setFrom(_inp.from.outputs[0]);
 						_conn = true;
 						break;
@@ -762,7 +764,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 				
 				if(_conn) continue;
 				
-				var _n = new Node_Group_Input(_x, _y, _group);
+				var _n  = new Node_Group_Input(_x, _y, _group);
 				var _ti = array_find(GROUP_IO_TYPE_MAP, _frm.type);
 				if(_ti >= 0) _n.inputs[2].setValue(_ti);
 				
@@ -775,12 +777,11 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 				}
 			}
 			
-			var _ot    = _io.outputs;
-			var _otKey = struct_get_names(_ot);
+			var _otKey = struct_get_names(_io.outputs);
 				
 			for( var i = 0, n = array_length(_otKey); i < n; i++ ) {
 				var _frm = _io.map[$ _otKey[i]];
-				var _tos = _ot[$ _otKey[i]];
+				var _tos = _io.outputs[$ _otKey[i]];
 				
 				var _conn = false;
 				for( var j = 0, m = array_length(_group.outputs); j < m; j++ ) {

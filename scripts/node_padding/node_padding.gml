@@ -1,5 +1,9 @@
 #region
 	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Padding", "Padding > Set", KEY_GROUP.numeric, MOD_KEY.none, function() /*=>*/ { 
+			GRAPH_FOCUS_NUMBER _n.inputs[1].setValue(array_create(4, KEYBOARD_NUMBER));
+		});
+			
 		addHotkey("Node_Padding", "Fill Method > Toggle", "F", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[2].setValue((_n.inputs[2].getValue() + 1) % 2); });
 	});
 #endregion

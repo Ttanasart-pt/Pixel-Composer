@@ -909,7 +909,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var _y  = y;
 		var _n  = noone;
 		
-		for(var i = 0; i < array_length(inputs); i++) {
+		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
 			var _in = inputs[i];
 			if(_in.value_from == noone)				continue;
 			if(_in.value_from.node.group == group)	continue;
@@ -922,7 +922,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			array_push(_io.inputs[$ _ind ], _in);
 		}
 		
-		for(var i = 0; i < array_length(outputs); i++) {
+		for( var i = 0, n = array_length(outputs); i < n; i++ ) {
 			var _ou = outputs[i];
 			
 			for(var j = 0; j < array_length(_ou.value_to); j++) {
