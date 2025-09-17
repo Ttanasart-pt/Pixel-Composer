@@ -443,7 +443,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		if(thumbnail_node != noone) return thumbnail_node.inputs[0].getValue();
 		
 		preview_channel = clamp(preview_channel, 0, array_length(outputs) - 1);
-		var _oj = array_safe_get(outputs, preview_channel);
+		var _oj = array_safe_get(outputs, preview_channel_temp ?? preview_channel);
 		if(!is(_oj, NodeValue)) return noone;
 		
 		if(_oj.from == noone) return noone;

@@ -243,6 +243,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		preview_speed	 = 0;
 		preview_index	 = 0;
 		preview_channel  = 0;
+		preview_channel_temp = undefined;
 		preview_alpha	 = 1;
 		
 		preview_surface_sample = true;
@@ -1893,11 +1894,15 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(jun.drawJunction(_draw, _s, _mx, _my, _fast)) hover = jun;
 		}
 		
+		preview_channel_temp = undefined;
 		for(var i = 0; i < array_length(outputs); i++) {
 			var jun = outputs[i];
 			
 			if(!jun.isVisible()) continue;
-			if(jun.drawJunction(_draw, _s, _mx, _my, _fast)) hover = jun;
+			if(jun.drawJunction(_draw, _s, _mx, _my, _fast)) {
+				hover = jun;
+				preview_channel_temp = i;
+			}
 		}
 		
 		for( var i = 0; i < array_length(inputs); i++ ) {
@@ -2405,7 +2410,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static getPreviewBoundingBoxExpanded = function() /*=>*/ {return __preview_bbox};
 	
 	static getGraphPreviewSurface = function() { 
-		var _node = array_safe_get(outputs, preview_channel);
+		var _node = array_safe_get(outputs, preview_channel_temp ?? preview_channel);
 		if(!is(_node, NodeValue)) return noone;
 		
 		switch(_node.type) {

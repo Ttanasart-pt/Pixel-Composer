@@ -180,11 +180,20 @@ function Patreon_project_item(_file) constructor {
 		#endregion
 			
 		if(_hov && _own) {
-			if(mouse_lpress(_focus)) {
-				// _panel.file_dragging  = self;
-				// _panel.file_drag_x    = mouse_mx;
-				// _panel.file_drag_y    = mouse_my;
+			if(mouse_rpress(_focus)) {
+				menuCall("patreon_project_item", [
+					menuItem(__txt("Open in Explorer"), function() /*=>*/ {return shellOpenExplorer(content_fpath)} )
+				]);
+				
+				_panel.hold_tooltip = true;
 			}
+			
+			if(mouse_lpress(_focus)) {
+				_panel.file_dragging  = self;
+				_panel.file_drag_x    = mouse_mx;
+				_panel.file_drag_y    = mouse_my;
+			}
+			
 		}
 		
 		if(_title) {
@@ -207,6 +216,11 @@ function Patreon_project_item(_file) constructor {
 		}
 	}
 	
+	static dragStart = function() {
+		var _spr = getPreviewSprite();
+		DRAGGING = { type : "Project", data : { path: content_fpath, spr: _spr, readonly: true } };
+	}
+	
 	function updateDB() {
 		var _prm = debug_promofiles[$ title];
 		if(_prm == undefined) { print($"Uncategorized {title}"); return; }
@@ -221,7 +235,6 @@ function Patreon_project_item(_file) constructor {
 			if (_data[? "status"] != 200) { print(_data[? "errorMessage"]); return; }
 	    });
 	}
-	
 	// if(RUN_IDE) updateDB();
 }
 
@@ -497,7 +510,7 @@ function Steam_workshop_item() constructor {
 			
 			if(mouse_rpress(_focus)) {
 				menuCall("steam_workshop_item", [
-					menuItem(__txt("Open in browser"), function(_fid) /*=>*/ {
+					menuItem(__txt("Open in Browser"), function(_fid) /*=>*/ {
 						steam_activate_overlay_browser($"https://steamcommunity.com/sharedfiles/filedetails/?id={_fid}")
 					}, THEME.globe).setParam(_fid)
 				]);
@@ -803,6 +816,33 @@ function Steam_workshop_item() constructor {
 	static refresh = function() {
 		if(sprite_exists(preview_sprite)) sprite_delete(preview_sprite);
 		preview_sprite = undefined;
+	}
+	
+	static dragStart = function() {
+		var _fid  = file_id;
+		var _map  = ds_map_create();
+		var _info = steam_ugc_get_item_install_info(_fid, _map);
+		
+		if(_info) {
+			var _dir = _map[? "folder"];
+			var _spr = getPreviewSprite();
+			
+			if(type == FILE_TYPE.project) {
+				var _fil = file_find_first(_dir + "/*.pxc", 0); file_find_close();
+				var _pat = filename_combine(_dir, _fil);
+				
+				DRAGGING = { type : "Project", data : { path: _pat, spr: _spr, readonly: true } };
+			}
+			
+			if(type == FILE_TYPE.collection) {
+				var _fil = file_find_first(_dir + "/*.pxcc", 0); file_find_close();
+				var _pat = filename_combine(_dir, _fil);
+				
+				DRAGGING = { type : "Collection", data : { path: _pat, spr: _spr } };
+			}
+		}
+		
+		ds_map_destroy(_map);
 	}
 	
 	static toString = function() /*=>*/ {return $"{title}: {vote_score}"};
