@@ -342,37 +342,33 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 			
 		];
 		
-		// banner_uploading = false;
-		// menu_banner_edit = [
-		// 	menuItem(__txt("Upload Banner"), () => {
-		// 		var _path = get_open_filename_compat("image|*.png;*.jpg", "");
-		// 		if(!file_exists_empty(_path)) return;
+		banner_uploading = false;
+		menu_banner_edit = [
+			menuItem(__txt("Change Banner") + "...", function() /*=>*/ {return dialogPanelCall(new Steam_workshop_profile_banner_edit(currentAuthor))}), 
+			menuItem(__txt("Remove"), function() /*=>*/ {
+				currentAuthor.banner = { type: -1 }
+				currentAuthor.updateData({ banner: json_stringify(currentAuthor.banner) });
+			}, THEME.cross_16), 
+		];
+		
+		profile_uploading = false;
+		menu_profile_edit = [
+			__txt("Profile image uses data from Steam."), 
+			menuItem(__txt("Set Graph"), function() /*=>*/ {
+				var _path = get_open_filename_compat("Pixel Composer collection (.pxcc)|*.pxcc", "");
+				if(!file_exists_empty(_path)) return;
 				
-		// 		var _size = file_size(_path);
-		// 		if(_size > 4*1024*1024) { noti_warning("File too large. (>4 Mb)"); return; }
+				var _str = file_read_all(_path);
+				currentAuthor.profile_graph     = _str;
+				currentAuthor.profile_graph_obj = json_try_parse(_str);
+				currentAuthor.updateData({ profile_graph: currentAuthor.profile_graph });
 				
-		// 		banner_uploading = true;
-		// 		asyncCallGroup("social", FirebaseStorage_Upload(_path, "gs://pixelcomposer-f9cef.firebasestorage.app"), (_params, _data) => {
-		// 			banner_uploading = false;
-		// 			if (_data[? "status"] != 200) { print($"banner upload error {_data[? "errorMessage"]}"); return; }
-					
-		// 			var _path      = _data[? "path"];
-		// 			var _localPath = _data[? "localPath"];
-					
-		// 			currentAuthor.banner = {
-		// 				type : 2,
-		// 				url  : _path,
-		// 			}
-					
-		// 			currentAuthor.banner_spr = sprite_add(_localPath);
-		// 			currentAuthor.updateData({ banner: json_stringify(currentAuthor.banner) });
-		// 		});
-		// 	}),
-		// 	menuItem(__txt("Remove Banner"), () => {
-		// 		currentAuthor.banner = { type : 0 }
-		// 		currentAuthor.updateData({ banner: json_stringify(currentAuthor.banner) });
-		// 	})
-		// ];
+			}), 
+			menuItem(__txt("Remove Graph"), function() /*=>*/ {
+				currentAuthor.profile_graph = "";
+				currentAuthor.updateData({ profile_graph: currentAuthor.profile_graph });
+			}, THEME.cross_16), 
+		];
 	#endregion
 	
 	#region item view 
@@ -695,7 +691,9 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 				    var resJ = json_try_parse(res, undefined);
 				    if(resJ == undefined) return;
 				    
-				    var _keys = struct_get_names(resJ);
+				    var _files = _params.allFiles;
+				    var _keys  = struct_get_names(resJ);
+				    
 				    for( var i = 0, n = array_length(_keys); i < n; i++ ) {
 				    	var _file = _keys[i];
 				    	
@@ -706,13 +704,13 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 				    		FIREBASE_FILE_CACHE[$ _file] = _item;
 				    	}
 				    	
-				    	array_push(allFiles, FIREBASE_FILE_CACHE[$ _file]);
+				    	array_push(_files, FIREBASE_FILE_CACHE[$ _file]);
 				    }
 				    
-				    array_sort(allFiles, function(a,b) /*=>*/ {return sign((b.data[$ "creation_time"] ?? 0) - (a.data[$ "creation_time"] ?? 0))}); 
-				    for( var i = 0, n = array_length(allFiles); i < n; i++ ) 
-				    	displayFiles[i] = allFiles[i];
-				});
+				    array_sort(_files, function(a,b) /*=>*/ {return sign((b.data[$ "creation_time"] ?? 0) - (a.data[$ "creation_time"] ?? 0))}); 
+				    for( var i = 0, n = array_length(_files); i < n; i++ ) 
+				    	displayFiles[i] = _files[i];
+				}, { files: allFiles });
 				break;
 		}
 	}
@@ -946,15 +944,16 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 			var _banner = _author.banner;
 			switch(_banner.type) {
 				case 0 :
+					var _ban_spr = asset_get_index(_banner.sprite);
+					if(!sprite_exists(_ban_spr)) _ban_spr = s_workshop_bg_pxc;
+					
 					shader_set(sh_tile);
 						shader_set_2("scale", [ _w / 64, _h / 64 ]);
-						draw_sprite_stretched(s_workshop_bg, 0, 0, 0, _w, _h);
+						draw_sprite_stretched(_ban_spr, 0, 0, 0, _w, _h);
 					shader_reset();
 					break;
 					
-				case 1 : 
-					draw_clear(_banner.color); 
-					break;
+				case 1 : draw_clear(_banner.color); break;
 				
 				case 2 : 
 					var _spr = _author.getBanner();
@@ -970,24 +969,22 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 					break;
 			}
 			
-			// if(_myPage) {
-			// 	var _gx = _w - ui(8);
-			// 	var _gy = ui(8);
-			// 	var _hv = _hhov && point_in_circle(_m[0], _m[1], _gx, _gy, ui(10));
+			if(_myPage) {
+				var _gx = _w - ui(8);
+				var _gy = ui(8);
+				var _hv = _hhov && point_in_circle(_m[0], _m[1], _gx, _gy, ui(10));
 				
-			// 	draw_sprite_ui(THEME.gear_16, 0, _gx, _gy, 1, 1, 0, _hv? COLORS._main_icon_light : COLORS._main_icon);
-			// 	if(_hv && mouse_lpress(_focus)) menuCall("steam_author_banner_edit", menu_banner_edit);
+				draw_sprite_ui(THEME.gear_16, 0, _gx, _gy, 1, 1, 0, _hv? COLORS._main_icon_light : COLORS._main_icon);
+				if(_hv && mouse_lpress(_focus)) menuCall("steam_author_banner_edit", menu_banner_edit);
 				
-			// 	if(banner_uploading) {
-			// 		_gx -= ui(20);
-			// 		draw_sprite_ui(THEME.loading_s, 0, _gx, _gy, .65, .65, current_time / 2, COLORS._main_icon, .8);
-			// 	}
-			// }
+				if(banner_uploading) {
+					_gx -= ui(20);
+					draw_sprite_ui(THEME.loading_s, 0, _gx, _gy, .65, .65, current_time / 2, COLORS._main_icon, .8);
+				}
+			}
 		#endregion	
 			
 		#region profile
-			var _ava = _author.getAvatar();
-			
 			gpu_set_stencil_enable(true);
 			
 			draw_clear_stencil(0);
@@ -998,8 +995,7 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 			draw_roundrect_ext(_px, _py, _px + _ps - 1, _py + _ps - 1, ui(8), ui(8), false);
 			
 			gpu_set_stencil_compare(cmpfunc_less, 64);
-			if(sprite_exists(_ava)) 
-				draw_sprite_stretched(_ava, 0, _px, _py, _ps, _ps);
+			_author.drawProfile(_px, _py, _ps);
 			
 			gpu_set_stencil_enable(false);
 			
@@ -1007,6 +1003,16 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 			draw_roundrect_ext(_px, _py, _px + _ps - 1, _py + _ps - 1, ui(8), ui(8), true);
 			draw_set_alpha(1);
 			
+			if(_myPage) {
+				var _gx = _px + _ps - ui(10);
+				var _gy = _py + ui(10);
+				
+				var _hv = _hhov && point_in_circle(_m[0], _m[1], _gx, _gy, ui(10));
+				
+				draw_sprite_ui(THEME.gear_16, 0, _gx, _gy, 1, 1, 0, _hv? COLORS._main_icon_light : COLORS._main_icon);
+				if(_hv && mouse_lpress(_focus)) menuCall("steam_author_profile_edit", menu_profile_edit);
+				
+			}
 		#endregion
 		
 		#region links

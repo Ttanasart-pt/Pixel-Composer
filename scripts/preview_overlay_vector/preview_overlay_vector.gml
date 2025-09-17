@@ -74,6 +74,7 @@ function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 	
 	__overlay_hover = array_verify(__overlay_hover, 1);
 	__overlay_hover[0] = lerp_float(__overlay_hover[0], _index, 4);
+	if(_type == 1) draw_sprite_ui(THEME.arrow4_24, 0, _ax, _ay, 1, 1, 0, COLORS._main_accent);
 	draw_anchor(__overlay_hover[0], _ax, _ay, _r, _type);
 	
 	if(overlay_draw_text) {

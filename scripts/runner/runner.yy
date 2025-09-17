@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"runner",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"runner",
+  "parent":{
+    "name":"components",
+    "path":"folders/main/components.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

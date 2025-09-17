@@ -25,8 +25,8 @@
   "nineSlice":null,
   "origin":4,
   "parent":{
-    "name":"badges",
-    "path":"folders/__extensions/Steamworks/badges.yy",
+    "name":"Badges",
+    "path":"folders/__extensions/Steamworks/Badges.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

@@ -391,7 +391,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	static processType = function(_val) {
 		INLINE
 		
-		if(PROJECT.attributes.strict) return processValue(_val);
+		if(prop.node.project.attributes.strict) return processValue(_val);
 		__val    = _val;
 		var _res = _val;
 		
@@ -428,7 +428,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		if(!array_exists(values, _key))	    return 0;
 		if(_key.time == _time && !_replace)	return 0;
 		
-		if(!LOADING) PROJECT.modified = true;
+		if(!LOADING) prop.node.project.modified = true;
 		
 		var _prevTime = _key.time;
 		_time = max(_time, 0);
@@ -665,8 +665,8 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			if(is_array(value)) 
 			for(var i = 0; i < array_length(value); i++) {
 				var _keyframe = value[i];
-				var _t = struct_try_get(_keyframe, "time");
-				var _v = struct_try_get(_keyframe, "value");
+				var _t = _keyframe[$  "time"] ?? 0;
+				var _v = _keyframe[$ "value"] ?? 0;
 				
 				array_push(_val, new gradientKey(_t, _v));
 			}

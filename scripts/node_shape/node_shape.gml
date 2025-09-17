@@ -182,8 +182,52 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		switch(_shp) {
 			case "Arrow" :
 			case "Line"	 :
-				InputDrawOverlay(inputs[32].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
-				InputDrawOverlay(inputs[33].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+				var _p0 = current_data[32];
+				var _p1 = current_data[33];
+				var _th = current_data[34];
+				
+				var _p0x = _x + _p0[0] * _s;
+				var _p0y = _y + _p0[1] * _s;
+				
+				var _p1x = _x + _p1[0] * _s;
+				var _p1y = _y + _p1[1] * _s;
+				
+				var _pcx = (_p0x + _p1x) / 2;
+				var _pcy = (_p0y + _p1y) / 2;
+				var _paa = point_direction(_p0x, _p0y, _p1x, _p1y);
+				
+				var _tx  = _pcx + lengthdir_x(_th * _s * _sca[0] * 2, _paa + 90);
+				var _ty  = _pcy + lengthdir_y(_th * _s * _sca[0] * 2, _paa + 90);
+				
+				draw_set_color(COLORS._main_accent);
+				draw_line_dashed(_p0x, _p0y, _p1x, _p1y);
+				draw_line_dashed(_pcx, _pcy, _tx, _ty);
+				
+				InputDrawOverlay(inputs[32].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, 2));
+				InputDrawOverlay(inputs[33].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, 2));
+				
+				InputDrawOverlay(inputs[34].drawOverlay(w_hoverable, active, _pcx, _pcy, _s * _sca[0] * 2, _mx, _my, _snx, _sny, _paa + 90, 1, 1));
+				
+				if(_shp == "Arrow") {
+					var _ars = current_data[23];
+					var _arh = current_data[24];
+					
+					var _pds = _s * _sca[0] * 2;
+					var _phs = _s * 16 * _ars / .25;
+					
+					var _phx = _p1x + lengthdir_x(_ars * _pds, _paa + 180);
+					var _phy = _p1y + lengthdir_y(_ars * _pds, _paa + 180);
+					
+					var _pex = _phx + lengthdir_x(_arh * _phs, _paa -  90);
+					var _pey = _phy + lengthdir_y(_arh * _phs, _paa -  90);
+				
+					draw_set_color(COLORS._main_accent);
+					draw_line_dashed(_phx, _phy, _pex, _pey);
+				
+					InputDrawOverlay(inputs[23].drawOverlay(w_hoverable, active, _p1x, _p1y, _pds, _mx, _my, _snx, _sny, _paa + 180, 1, 1));
+					InputDrawOverlay(inputs[24].drawOverlay(w_hoverable, active, _phx, _phy, _phs, _mx, _my, _snx, _sny, _paa -  90, 1, 1));
+				}
+				
 				return w_hovering;
 				
 			case "Half"	:
@@ -284,7 +328,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 				break;
 				
 			case "Cross" : 
-				InputDrawOverlay(inputs[13].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[1] * 2, _mx, _my, _snx, _sny, 0, 1, 1));
+				InputDrawOverlay(inputs[13].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[0], _mx, _my, _snx, _sny, 0, 1, 1));
 				break;
 				
 			case "Teardrop" : 
@@ -322,13 +366,16 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 				var _tam = current_data[25];
 				
 				var _sy = _py - _tam * _s * _sca[1] / 12;
+				var _sx = _px + _inn * _s * _sca[0];
 				
 				draw_set_color(COLORS._main_accent);
 				draw_line_dashed(_px, _py, _px, _sy);
+				draw_line_dashed(_px, _py, _sx, _py);
 				
-				InputDrawOverlay(inputs[25].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[1] / 12, _mx, _my, _snx, _sny, 90, 1, 1));
-				InputDrawOverlay(inputs[13].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[0], _mx, _my, _snx, _sny, 0, 1, 1));
-				InputDrawOverlay(inputs[27].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny));
+				InputDrawOverlay(inputs[25].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[1] / 12, _mx, _my, _snx, _sny, 90, 1, 1 ));
+				InputDrawOverlay(inputs[13].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[0],      _mx, _my, _snx, _sny,  0, 1, 1 ));
+				InputDrawOverlay(inputs[27].drawOverlay(w_hoverable, active, _px, _py, _s,                _mx, _my, _snx, _sny           ));
+				InputDrawOverlay(inputs[26].drawOverlay(w_hoverable, active, _px, _py, _s * _sca[0],      _mx, _my, _snx, _sny,  1       ));
 				break;
 		}
 		
@@ -644,8 +691,8 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 					inputs[34].setVisible(true);
 					
 					shader_set_i("shape", 17);
-					shader_set_f("arrow",      _data[23] / _data[24]);
-					shader_set_f("arrow_head", _data[24]);
+					shader_set_f("arrow",      _data[23] * _data[24]);
+					shader_set_f("arrow_head", 1 / _data[24]);
 					
 					shader_set_2("point1",	   _data[32]);
 					shader_set_2("point2",	   _data[33]);

@@ -7,6 +7,33 @@
 		STEAM_WORKSHOP_DATA.account[$ _aid] = _a;
 		return _a;
 	}
+	
+	globalvar AUTHOR_BANNER; AUTHOR_BANNER = [
+		"s_workshop_bg_check",
+		"s_workshop_bg_check_dark",
+		"s_workshop_bg_donut",
+		"s_workshop_bg_donut_dark",
+		"s_workshop_bg_dot",
+		"s_workshop_bg_dot_dark",
+		"s_workshop_bg_grid",
+		"s_workshop_bg_grid_dark",
+		"s_workshop_bg_node",
+		"s_workshop_bg_node_dark",
+		"s_workshop_bg_pxc",
+		"s_workshop_bg_pxc_dark",
+		"s_workshop_bg_round_block",
+		"s_workshop_bg_round_block_dark",
+		"s_workshop_bg_star",
+		"s_workshop_bg_star_dark",
+		"s_workshop_bg_strip",
+		"s_workshop_bg_strip_dark",
+		"s_workshop_bg_strip_d",
+		"s_workshop_bg_strip_d_dark",
+		"s_workshop_bg_strip_s",
+		"s_workshop_bg_strip_s_dark",
+		"s_workshop_bg_zigzag",
+		"s_workshop_bg_zigzag_dark",
+	];
 #endregion	
 
 function Steam_workshop_profile(_sid) constructor {
@@ -21,9 +48,14 @@ function Steam_workshop_profile(_sid) constructor {
 	
 	projects = [];
 	
-	banner = { type: 0 }
+	banner      = { type: 0, sprite: 0 };
 	banner_path = $"{TEMPDIR}{_sid}_banner.png";
 	banner_spr  = undefined;
+	
+	profile_graph          = undefined;
+	profile_graph_str      = undefined;
+	profile_graph_runner   = undefined;
+	profile_graph_surfaces = [-1,-1];
 	
 	is_patreon  = undefined;
 	pageContent = [ { type: "Popular"}, { type: "Recents"} ];
@@ -113,7 +145,12 @@ function Steam_workshop_profile(_sid) constructor {
 	    	links       = json_try_parse(data[$ "links"],  []);
 	    	
 	    	if(struct_has(data, "banner")) 
-	    		banner = data.banner;
+	    		banner = json_try_parse(data[$ "banner"], banner);
+    		
+	    	if(struct_has(data, "profile_graph")) {
+	    		profile_graph     = data.profile_graph;
+	    		profile_graph_str = json_try_parse(profile_graph, -1);
+	    	}
     		
 	    	if(struct_has(data, "pageContent")) 
 	    		pageContent = json_try_parse(data[$ "pageContent"], pageContent);
@@ -126,6 +163,50 @@ function Steam_workshop_profile(_sid) constructor {
 		});
 		
 		return data;
+	}
+	
+	static drawProfileSimple = function(_px, _py, _ps) {
+		var _ava = getAvatar();
+		draw_sprite_stretched(_ava, 0, _px, _py, _ps, _ps);
+	}
+	
+	static drawProfile = function(_px, _py, _ps, _update = false) {
+		var _ava = getAvatar();
+		if(!sprite_exists(_ava)) return undefined;
+		
+		if(!is_struct(profile_graph_str)) {
+			drawProfileSimple(_px, _py, _ps);
+			return undefined;
+		}
+		
+		if(profile_graph_runner == undefined)
+			profile_graph_runner = new Runner().appendMap(profile_graph_str).fetchIO();
+		
+		if(!profile_graph_runner.processable()) {
+			drawProfileSimple(_px, _py, _ps);
+			return undefined;
+		}
+		
+		if(!surface_exists(profile_graph_surfaces[1]) || _update) {
+			profile_graph_surfaces[0] = surface_verify(profile_graph_surfaces[0], _ps, _ps);
+			
+			surface_set_shader(profile_graph_surfaces[0]);
+				draw_sprite_stretched(_ava, 0, 0, 0, _ps, _ps);
+			surface_reset_shader();
+			
+			var _surf = profile_graph_runner.process(profile_graph_surfaces[0]);
+			profile_graph_surfaces[1] = surface_verify(profile_graph_surfaces[1], surface_get_width(_surf), surface_get_height(_surf));
+			
+			surface_set_shader(profile_graph_surfaces[1]);
+				draw_surface_safe(_surf);
+			surface_reset_shader();
+			
+		}
+		
+		var _cx = _px + _ps / 2 - surface_get_width(profile_graph_surfaces[1])  / 2;
+		var _cy = _py + _ps / 2 - surface_get_height(profile_graph_surfaces[1]) / 2;
+	
+		draw_surface_safe(profile_graph_surfaces[1], _cx, _cy);
 	}
 	
 	static setProjects = function(_list) {
@@ -245,4 +326,84 @@ function Steam_workshop_profile(_sid) constructor {
 
 	////- Actions
 	
+}
+
+function Steam_workshop_profile_banner_edit(_author) : PanelContent() constructor {
+	title     = "Change Banner";
+	auto_pin  = true;
+	author    = _author;
+	
+	w = ui(596);
+	h = ui(320);
+	
+	sc_content = new scrollPane(1, 1, function(_y, _m) {
+		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
+		
+		var _hover = sc_content.hover;
+		var _focus = sc_content.active;
+		
+		var _yy = _y;
+		var _w  = sc_content.surface_w;
+		var _h  = sc_content.surface_h;
+		var _hh = 0;
+		
+		_y += ui(12);
+		draw_set_text(f_h5, fa_left, fa_top, COLORS._main_text);
+		draw_text_add(ui(8), _y, __txt("PXC Sprites"));
+		_y += line_get_height() + ui(12);
+		
+		var _sx = ui(8);
+		var _ss = ui(64);
+		
+		var _banner = author.banner;
+		
+		for( var i = 0, n = array_length(AUTHOR_BANNER); i < n; i++ ) {
+			var _nam = AUTHOR_BANNER[i];
+			var _spr = asset_get_index(_nam);
+			
+			if(i) {
+				_sx += _ss + ui(4);
+				if(_sx + _ss > _w - ui(8)) {
+					_sx = ui(8);
+					_y += _ss + ui(4);
+				}
+			}
+			
+			var _hov = _hover && point_in_rectangle(_m[0], _m[1], _sx, _y, _sx + _ss, _y + _ss);
+			var _cc  = COLORS._main_icon;
+			var _aa  = .5 + _hov * .5;
+			
+			if(_banner.type == 0 && _banner.sprite == _nam) {
+				_cc = COLORS._main_accent;
+				_aa = 1;
+			}
+			
+			draw_sprite_stretched(_spr, 0, _sx, _y, _ss, _ss);
+			draw_sprite_stretched_ext(THEME.box_r2, 1, _sx, _y, _ss, _ss, _cc, _aa);
+			
+			if(_hov && mouse_lpress(_focus)) {
+				author.banner = { type: 0, sprite: _nam };
+				author.updateData({ banner: json_stringify(author.banner) });
+			}
+		}
+		
+		_y += _ss + ui(16);
+		 
+		return _y - _yy;
+	});
+	
+	function drawContent(panel) {
+		draw_clear_alpha(COLORS.panel_bg_clear, 0);
+		
+		var px = padding;
+		var py = padding;
+		var pw = w - padding * 2;
+		var ph = h - padding * 2;
+		
+		draw_sprite_stretched(THEME.ui_panel_bg, 1, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
+		
+		sc_content.setFocusHover(pFOCUS, pHOVER);
+		sc_content.verify(pw, ph);
+		sc_content.draw(px, py, mx - px, my - py);
+	}
 }

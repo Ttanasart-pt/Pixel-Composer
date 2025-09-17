@@ -116,6 +116,22 @@ function array_to_string(arr) {
 	return s + "]";
 }
 
+function compress_string(str) {
+    var str_buffer = buffer_create(string_byte_length(str), buffer_fixed, 1);
+    buffer_write(str_buffer, buffer_string, str);
+    var compressed = buffer_compress(str_buffer, 0, buffer_get_size(str_buffer));
+    buffer_delete(str_buffer);
+    
+    var _size = buffer_get_size(compressed);
+    
+    var result = "";
+    for (var i = 0; i < _size; i++)
+        result += chr(buffer_read(compressed, buffer_u8));
+    
+    buffer_delete(compressed);
+    return result;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function string_partial_match(str, key) {

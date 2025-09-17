@@ -235,8 +235,8 @@ function Project() constructor {
 			[ "Export Directory", "export_dir", textBox_Text(function(str) /*=>*/ { attributes.export_dir = str; return true; })
 				.setSideButton(
 					button(function() /*=>*/ { 
-						var path = get_open_directory_compat(attributes.export_dir); key_release();
-						if(path != "") attributes.export_dir = path;
+						var _fpath = get_open_directory_compat(attributes.export_dir); key_release();
+						if(_fpath != "") attributes.export_dir = _fpath;
 					}).setIcon(THEME.button_path_icon, 0, COLORS._main_icon)
 				) ],
 			

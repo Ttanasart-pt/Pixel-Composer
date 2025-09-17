@@ -164,16 +164,16 @@
 		var _y    = _data.y;
 		var _type = _data.type;
 		
-		if(ds_map_exists(APPEND_MAP, _data.id)) {
-			var _node   = node_from_id(APPEND_MAP[? _data.id]);
+		// if(ds_map_exists(APPEND_MAP, _data.id)) {
+		// 	var _node = node_from_id(APPEND_MAP[? _data.id]);
 			
-			if(_node != noone) {
-				_node.x   = _x;
-				_node.y   = _y;
-				_node.deserialize(_data, scale);
-				return _node;
-			}
-		}
+		// 	if(_node != noone) {
+		// 		_node.x   = _x;
+		// 		_node.y   = _y;
+		// 		_node.deserialize(_data, scale);
+		// 		return _node;
+		// 	}
+		// }
 		
 		var _node = nodeBuild(_type, _x, _y, _group);
 		if(_node) _node.deserialize(_data, scale);

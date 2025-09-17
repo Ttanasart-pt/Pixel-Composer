@@ -633,16 +633,18 @@ function nodeBuild(_name, _x, _y, _group = PANEL_GRAPH.getCurrentContext()) {
 		return noone;
 	}
 	
-	var _skipc = false;
+	var _skipc   = false;
 	
 	if(is(_group, Node_Collection) || is(_group, Node_Collection_Inline)) {
 		_skipc = true;
 		if(is(_group, Node_Collection_Inline))
 			_group = _group.group;
+		
 	}
 	
 	var _node  = ALL_NODES[$ _name];
 	var _bnode = _node.build(_x, _y, _group, {}, _skipc);
+	
 	if(_bnode) {
 		if(!APPENDING && !LOADING && _bnode.set_default) _bnode.resetDefault()
 		recordAction(ACTION_TYPE.node_added, _bnode).setRef(_bnode);

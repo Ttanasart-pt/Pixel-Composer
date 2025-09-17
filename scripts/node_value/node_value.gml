@@ -172,6 +172,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	#region ---- Inspector ----
 		visible = _connect == CONNECT_TYPE.output || _type == VALUE_TYPE.surface || _type == VALUE_TYPE.path || _type == VALUE_TYPE.PCXnode;
+		visible_def       = visible;
 		visible_manual    = 0;
 		show_in_inspector = true;
 		visible_in_list   = true;
@@ -1100,7 +1101,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						}).setIcon(THEME.button_path_icon, 0, COLORS._main_icon).setTooltip(__txt("Open Explorer..."));
 						
 						editWidget.front_button = button(function() { 
-							var project = PROJECT;
+							var project = node.project;
 							if(project.path == "") {
 								noti_warning("Save the current project first.")
 								return;
@@ -1778,7 +1779,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(fullUpdate) RENDER_ALL
 		
-		if(!LOADING) PROJECT.modified = true;
+		if(!LOADING) node.project.modified = true;
 					
 		cache_value[0] = false;
 		onValidate();
@@ -1931,9 +1932,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		cache_value[0] = false;
 		
 		if(NOT_LOAD && !CLONING) {
-			draw_line_shift_x	= 0;
-			draw_line_shift_y	= 0;
-			PROJECT.modified	= true;
+			draw_line_shift_x = 0;
+			draw_line_shift_y = 0;
+			node.project.modified = true;
 		}
 		
 		RENDER_PARTIAL_REORDER
@@ -1966,7 +1967,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		node.clearCacheForward();
 		node.refreshNodeDisplay();
 		
-		PROJECT.modified = true;
+		node.project.modified = true;
 		if(PANEL_GRAPH) PANEL_GRAPH.connection_draw_update = true;
 						
 		RENDER_ALL_REORDER
@@ -1978,7 +1979,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(value_from_loop != noone)
 			value_from_loop.destroy();
 		
-		PROJECT.modified = true;
+		node.project.modified = true;
 	}
 	
 	static checkConnection = function(_remove_list = true) {
@@ -2341,8 +2342,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(target != noone)
 			drawCorner |= target.type == VALUE_TYPE.action;
 		
-		var corner = PROJECT.graphConnection.line_corner * ss;
-		var th     = max(1, PROJECT.graphConnection.line_width * ss);
+		var corner = node.project.graphConnection.line_corner * ss;
+		var th     = max(1, node.project.graphConnection.line_width * ss);
 		
 		var sx = x;
 		var sy = y;
@@ -2355,7 +2356,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		_mx *= aa;
 		_my *= aa;
 		
-		var _fade = PROJECT.graphConnection.line_highlight_fade;
+		var _fade = node.project.graphConnection.line_highlight_fade;
 		var  col  = custom_color == noone? merge_color(_fade, color_display, .5) : custom_color;
 		draw_set_color(col);
 		
@@ -2363,13 +2364,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var _output = connect_type == CONNECT_TYPE.output;
 		var _drawParam = {
 			corner :    corner,
-			extend :    PROJECT.graphConnection.line_extend,
+			extend :    node.project.graphConnection.line_extend,
 			fromIndex : 1,
 			toIndex :   1,
 			type :      LINE_STYLE.solid,
 		}
 		
-		switch(PROJECT.graphConnection.type) {
+		switch(node.project.graphConnection.type) {
 			case 0 : 
 				if(drawCorner) draw_line_width(sx, sy, _mx, _my, th); 
 				else {
@@ -2454,15 +2455,16 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static serialize = function(scale = false, preset = false) {
 		var _map = {};
 		
-		if(visible)             _map.v              = real(visible);
+		if(visible != visible_def) _map.v = real(visible);
 		if(visible_manual != 0) _map.visible_manual = visible_manual;
 		if(color != -1)         _map.color          = color;
 		
-		if(graph_h != 96)       _map.graph_h        = graph_h;
-		_map.graph_sh  = show_graph;
-		_map.graph_shs = array_clone(show_graphs);
-		
 		if(connect_type == CONNECT_TYPE.output) return _map;
+		
+		if(graph_h != 96)       _map.graph_h        = graph_h;
+		if(show_graph)          _map.graph_sh       = show_graph;
+		if(array_any(show_graphs, function(v) /*=>*/ {return bool(v)})) 
+			_map.graph_shs = array_clone(show_graphs);
 		
 		if(name_custom)                 _map.name		 = name;
 		if(unit.mode != 0)              _map.unit		 = unit.mode;
@@ -2470,10 +2472,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(loop_range != -1)            _map.loop_range	 = loop_range;
 		if(sep_axis)                    _map.sep_axis	 = sep_axis;
 		
-		if(draw_line_shift_x !=  0) _map.shift_x     = draw_line_shift_x;
-		if(draw_line_shift_y !=  0) _map.shift_y     = draw_line_shift_y;
-		if(draw_line_shift_e != -1) _map.shift_e     = draw_line_shift_e;
-		if(is_modified == true)     _map.is_modified = is_modified;
+		if(draw_line_shift_x !=  0) _map.shift_x = draw_line_shift_x;
+		if(draw_line_shift_y !=  0) _map.shift_y = draw_line_shift_y;
+		if(draw_line_shift_e != -1) _map.shift_e = draw_line_shift_e;
+		if(is_modified == true)     _map.m       = 1;
 		
 		if(!preset && value_from) {
 			_map.from_node  = value_from.node.node_id;
@@ -2486,7 +2488,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(expression != "") _map.global_key = expression;
 		if(is_anim)          _map.anim       = is_anim;
 		
-		if(is_modified) _map.raw_value  = animator.serialize(scale);
+		if(is_modified) _map.r  = animator.serialize(scale);
 		
 		var _animLen = array_length(animators);
 		if(is_modified && _animLen) {
@@ -2518,7 +2520,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(!is_struct(_map))  return;
 		
 		if(!preset) {
-			visible 	   = _map[$ LOADING_VERSION >= 1_18_04_0 || CLONING? "v" : "visible"] ?? 0;
+			visible = visible_def;
+			visible = _map[$ "v"]       ?? visible;
+			visible = _map[$ "visible"] ?? visible;
+			
 			visible_manual = _map[$ "visible_manual"] ?? 0;
 			color   	   = _map[$ "color"] ?? -1;
 			
@@ -2542,7 +2547,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		draw_line_shift_x = _map[$ "shift_x"]     ??  0;
 		draw_line_shift_y = _map[$ "shift_y"]     ??  0;
 		draw_line_shift_e = _map[$ "shift_e"]     ?? -1;
-		is_modified       = _map[$ "is_modified"] ?? true;
+		is_modified       = true;
+		if(has(_map, "m"))           is_modified = bool(_map.m);
+		if(has(_map, "is_modified")) is_modified = bool(_map.is_modified);
 		
 		#region attributse
 			if(has(_map, "attri")) struct_append(attributes, _map.attri);
@@ -2555,7 +2562,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			if(has(_map, "ranged")) display_data.ranged = _map.ranged;
 		#endregion
 			
-		if(struct_has(_map, "global_name")) {
+		if(has(_map, "global_name")) {
 			name_custom = true;
 			name = _map[$ "global_name"];
 			
@@ -2565,13 +2572,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			
 		}
 			
-		if(struct_has(_map, "raw_value")) 
-			animator.deserialize(_map[$ "raw_value"], scale);
+		if(has(_map, "raw_value")) animator.deserialize(_map[$ "raw_value"], scale);
+		if(has(_map, "r"))         animator.deserialize(_map[$ "r"],         scale);
 			
-		if(bypass_junc) 
-			bypass_junc.visible = _map[$ "bypass"] ?? false;
+		if(bypass_junc) bypass_junc.visible = _map[$ "bypass"] ?? false;
 		
-		if(struct_has(_map, "animators")) {
+		if(has(_map, "animators")) {
 			var anims = _map.animators;
 			var amo = min(array_length(anims), array_length(animators));
 			for( var i = 0; i < amo; i++ )
@@ -2605,24 +2611,26 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static connect = function(log = false, _nodeGroup = undefined) {
 		if(con_node == -1 || con_index == -1) return true;
 		
-		var _node = con_node;
+		var _nodeid = con_node;
 		if(APPENDING) {
-			_node = GetAppendID(con_node);
-			if(_node == noone) return true;
+			_nodeid = GetAppendID(con_node);
+			if(_nodeid == noone) return true;
+			
+			// print(ds_map_exists(node.project.nodeMap, _nodeid), _nodeid, ds_map_keys_to_array(node.project.nodeMap));
 		}
 		
-		if(!ds_map_exists(PROJECT.nodeMap, _node)) {
-			var txt = $"Node connect error : Node ID {_node} not found.";
+		if(!ds_map_exists(node.project.nodeMap, _nodeid)) {
+			var txt = $"Node connect error : Node ID {_nodeid} not found.";
 			log_warning("LOAD", $"[Connect] {txt}", node);
 			return false;
 		}
 		
-		var _nd = PROJECT.nodeMap[? _node];
+		var _nd = node.project.nodeMap[? _nodeid];
 		var _ol = array_length(_nd.outputs);
 		
 		if(_nd.group != node.group) return true;
 		if(_nodeGroup != undefined) {
-			if(!struct_has(_nodeGroup, _node)) return true;
+			if(!struct_has(_nodeGroup, _nodeid)) return true;
 		}
 		
 		// if(log) log_warning("LOAD", $"    [Connect] Connecting {node.name} to {_nd.name}", node);

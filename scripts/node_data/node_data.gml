@@ -47,6 +47,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		is_instancer = false;
 		instanceBase = noone;
+		
+		static setParam = function() /*=>*/ {return false};
 	#endregion
 	
 	if(NOT_LOAD) {
@@ -166,7 +168,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		input_hash_raw	  = "";
 		
 		inputs_amount     = 0;
-		in_cache_len      = 0;
+		in_cache_len      = -4;
 		inputDisplayList  = [];
 		inputDisplayGroup = [];
 		
@@ -174,7 +176,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		inputs_draw_index   = [];
 		outputs_draw_index  = [];
-		out_cache_len       = 0;
+		out_cache_len       = -4;
 		
 		toRefreshNodeDisplay = false;
 		input_mask_index     = -1;
@@ -204,8 +206,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		attributes.annotation_size   = .4;
 		attributes.annotation_color  = COLORS._main_text_sub;
 		
-		setAttribute = function(k, v, r = false) /*=>*/ { attributes[$ k] = v;                if(r) triggerRender(); PROJECT.modified = true; }
-		toggleAttribute = function(k, r = false) /*=>*/ { attributes[$ k] = !attributes[$ k]; if(r) triggerRender(); PROJECT.modified = true; }
+		setAttribute = function(k, v, r = false) /*=>*/ { attributes[$ k] = v;                if(r) triggerRender(); project.modified = true; }
+		toggleAttribute = function(k, r = false) /*=>*/ { attributes[$ k] = !attributes[$ k]; if(r) triggerRender(); project.modified = true; }
 		
 		array_append(attributeEditors, [
 			"Display",  
@@ -2633,9 +2635,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var _map = {};
 		//print(" > Serializing: " + name);
 		
-		_map.visible      = visible;
-		_map.is_instancer = is_instancer;
-		_map.version      = SAVE_VERSION;
+		_map.version = SAVE_VERSION;
+		if(!visible)     _map.visible      = visible;
+		if(is_instancer) _map.is_instancer = is_instancer;
 		
 		if(!preset) {
 			_map.id	     = node_id;
@@ -2649,11 +2651,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(group != noone)          _map.group = group.node_id;
 			if(inline_context != noone) _map.ictx  = inline_context.node_id;
 			
-			if(!renderActive)  _map.render         = renderActive;
-			if(!previewable)   _map.previewable    = previewable;
-			if(show_parameter) _map.show_parameter = show_parameter;
+			if(!renderActive)    _map.render         = renderActive;
+			if(!previewable)     _map.previewable    = previewable;
+			if(show_parameter)   _map.show_parameter = show_parameter;
 			
-			_map.insp_scr = inspector_scroll;
+			if(inspector_scroll) _map.insp_scr       = inspector_scroll;
 			_map.insp_col = variable_clone(inspector_collapse);
 		}
 		
@@ -2713,7 +2715,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(!array_empty(_outMeta)) _map.outputMeta = _outMeta;
 		if(renamed)                _map.renamed    = renamed;
 		
-		_map.instanceBase = instanceBase? instanceBase.node_id : noone;
+		if(instanceBase != noone)  _map.instanceBase = instanceBase.node_id;
 		
 		doSerialize(_map);
 		processSerialize(_map);
@@ -2761,7 +2763,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		visible      = load_map[$ "visible"] ?? true;
-		is_instancer = load_map[$ "is_instancer"] ?? false;
+		is_instancer = load_map[$ "is_instancer"] ?? is_instancer;
 		
 		if(struct_has(load_map, "attri")) {
 			var _lattr = load_map.attri;

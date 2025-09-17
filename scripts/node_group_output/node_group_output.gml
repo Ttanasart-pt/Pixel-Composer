@@ -7,9 +7,7 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	skipDefault();
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue("Value", self, CONNECT_TYPE.input, VALUE_TYPE.any, -1))
-		.uncache()
-		.setVisible(true, true);
+	newInput(0, nodeValue("Value", self, CONNECT_TYPE.input, VALUE_TYPE.any, -1)).uncache().setVisible(true, true);
 	inputs[0].onSetFrom = function(juncFrom) /*=>*/ { if(attributes.inherit_name && !LOADING && !APPENDING) setDisplayName(juncFrom.name); }
 	
 	attributes.inherit_name = true;
