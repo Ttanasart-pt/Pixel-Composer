@@ -1867,7 +1867,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			return -8;
 		}
 			
-		if(!accept_array && _valueFrom.type == VALUE_TYPE.surface && (type == VALUE_TYPE.integer || type == VALUE_TYPE.float)) {
+		if(!accept_array && _valueFrom.type == VALUE_TYPE.surface && (type == VALUE_TYPE.integer || type == VALUE_TYPE.float) 
+			&& display_type != VALUE_DISPLAY.vector) {
+				
 			if(_log) noti_warning("setFrom: Array mismatch",, node);
 			return -9;
 		}
