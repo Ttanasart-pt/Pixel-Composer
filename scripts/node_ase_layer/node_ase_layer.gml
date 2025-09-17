@@ -69,7 +69,7 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		ase_data = _data;
 		if(_data == noone) return;
-		if(layer_object != noone && layer_object.name == _lname) return;
+		if(layer_object != noone) return;
 		
 		layer_object    = noone;
 		update_on_frame = false;
@@ -94,18 +94,15 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		ase_data = data;
 		outputs[1].setValue(_lname);
 		
+		findLayer();
 		if(!update_on_frame) frame = 0;
-		if(layer_object == noone) findLayer();
-		if(layer_object == noone) { 
-			logNode($"Layer name {_lname} not found."); 
-			return; 
-		}
+		if(layer_object == noone) { logNode($"Layer name {_lname} not found."); return; }
 		
-		var cel  = layer_object.getCel(frame - data._tag_delay, _loop);
-		var ww = data.content[$ "Width"];
-		var hh = data.content[$ "Height"];
-		var cw = cel? cel.data[$ "Width"]  : 1;
-		var ch = cel? cel.data[$ "Height"] : 1;
+		var cel = layer_object.getCel(frame - data._tag_delay, _loop);
+		var ww  = data.content[$ "Width"];
+		var hh  = data.content[$ "Height"];
+		var cw  = cel? cel.data[$ "Width"]  : 1;
+		var ch  = cel? cel.data[$ "Height"] : 1;
 		
 		var surf = outputs[0].getValue();
 		if(celDim)	surf = surface_verify(surf, cw, ch);

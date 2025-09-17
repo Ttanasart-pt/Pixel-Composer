@@ -87,27 +87,26 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(33, nodeValue_Vec2(   "Point 2",    [ 1, 1] )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
 	newInput(35, nodeValue_Vec2(   "Point 3",    [ 1, 0] )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
 	newInput(40, nodeValue_Vec2(   "Half Point", [.5,.5] )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference).hide_label();
-	newInput(34, nodeValue_Slider( "Thickness",   .1    ));
+	newInput(34, nodeValue_Slider( "Thickness",   .1    )).hide_label();
 	
-	newInput( 9, nodeValue_Slider(         "Corner radius",  0, { range: [0, 0.5, 0.001] })).setValidator(VV_clamp(0, .5));
-	inputs[9].overlay_draw_text = false;
+	newInput( 9, nodeValue_Slider(         "Corner radius",  0, { range: [0, 0.5, 0.001] })).hide_label().setValidator(VV_clamp(0, .5));
 	newInput( 4, nodeValue_Int(            "Sides",          3       )).hide_label().setVisible(false);
 	newInput(13, nodeValue_Slider(         "Start radius",  .1       )).hide_label().setVisible(false);
 	newInput( 5, nodeValue_Slider(         "Inner radius",  .5       )).hide_label().setVisible(false);
-	newInput( 7, nodeValue_Rotation(       "Rotation",       0       ));
-	newInput( 8, nodeValue_Rotation_Range( "Angle range",   [0,180]  ));
+	newInput( 7, nodeValue_Rotation(       "Rotation",       0       )).hide_label();
+	newInput( 8, nodeValue_Rotation_Range( "Angle range",   [0,180]  )).hide_label();
 	newInput(14, nodeValue_PathNode(       "Shape path" ));
-	newInput(21, nodeValue_Slider_Range(   "Angles",        [.5, 1.] ));
+	newInput(21, nodeValue_Slider_Range(   "Angles",        [.5, 1.] )).hide_label();
 	newInput(38, nodeValue_Slider(         "Top Side",       .5      )).hide_label();
 	newInput(39, nodeValue_Slider(         "Botton Side",     1      )).hide_label();
 	newInput(22, nodeValue_Slider(         "Skew",           .5      )).hide_label();
-	newInput(23, nodeValue_Float(          "Arrow Sizes",    .3      ));
-	newInput(24, nodeValue_Float(          "Arrow Head",      1      ));
+	newInput(23, nodeValue_Float(          "Arrow Sizes",    .3      )).hide_label();
+	newInput(24, nodeValue_Float(          "Arrow Head",      1      )).hide_label();
 	newInput(25, nodeValue_Int(            "Teeth Amount",    6      )).hide_label();
 	newInput(26, nodeValue_Vec2(           "Teeth Size",    [.2,.2] , { slideSpeed : 0.01 })).hide_label();
-	newInput(27, nodeValue_Rotation(       "Teeth Rotation",  0      ));
-	newInput(30, nodeValue_Bool(           "Caps",            false  ));
-	newInput(31, nodeValue_Float(          "Factor",          2.5    ));
+	newInput(27, nodeValue_Rotation(       "Teeth Rotation",  0      )).hide_label();
+	newInput(30, nodeValue_Bool(           "Caps",            false  )).hide_label();
+	newInput(31, nodeValue_Float(          "Factor",          2.5    )).hide_label();
 	newInput(36, nodeValue_Enum_Button(    "Corner Shape",    0, [ "Round", "Cut" ]))
 	
 	////- =Render
@@ -177,7 +176,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _y0 = _py - _sca[1] * _s;
 		var _x1 = _px + _sca[0] * _s;
 		var _y1 = _py + _sca[1] * _s;
-				
+		
 		var _shp = array_safe_get(shape_types, _shape, "");
 		
 		switch(_shp) {
