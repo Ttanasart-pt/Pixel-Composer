@@ -58,10 +58,7 @@ function Panel_Collection() : PanelContent() constructor {
 		function replace() { 
 			if(_menu_node == noone) return;
 			
-			var _path = filename_dir(_menu_node.path);
-			var _name = filename_name(_menu_node.path);
-			
-			saveCollection(PANEL_INSPECTOR.getInspecting(), _path, _name, false, _menu_node.meta);
+			saveCollection(PANEL_INSPECTOR.getInspecting(), _menu_node.path, false, _menu_node.meta);
 		}
 		
 		function edit_meta() { 

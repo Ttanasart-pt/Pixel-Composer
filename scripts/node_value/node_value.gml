@@ -2615,8 +2615,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(APPENDING) {
 			_nodeid = GetAppendID(con_node);
 			if(_nodeid == noone) return true;
-			
-			// print(ds_map_exists(node.project.nodeMap, _nodeid), _nodeid, ds_map_keys_to_array(node.project.nodeMap));
 		}
 		
 		if(!ds_map_exists(node.project.nodeMap, _nodeid)) {

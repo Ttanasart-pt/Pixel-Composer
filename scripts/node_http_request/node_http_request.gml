@@ -20,6 +20,8 @@ function Node_HTTP_request(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	array_push(attributeEditors, ["Max request size", function() /*=>*/ {return attributes.max_file_size}, textBox_Number(function(v) /*=>*/ {return setAttribute("max_file_size", v)}) ]);
 	
 	static request = function() {
+		if(project.online) return false;
+		
 		var _addr = getInputData(0);
 		var _type = getInputData(1);
 		var _post = getInputData(2);
@@ -63,6 +65,8 @@ function Node_HTTP_request(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static update = function() {
+		if(project.online) return false;
+		
 		var _addr = getInputData(0);
 		var _type = getInputData(1);
 		var _post = getInputData(2);

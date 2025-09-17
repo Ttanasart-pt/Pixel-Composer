@@ -36,6 +36,8 @@ function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	setTrigger(1, __txt("Resend"), [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() /*=>*/ {return triggerRender()});
 	
 	static connectTo = function(newPort, newUrl) {
+		if(project.online) return false;
+		
 		if(port == newPort && url == newUrl) return;
 		if(socket != noone) network_destroy(socket);
 		
@@ -96,6 +98,8 @@ function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
+		if(project.online) return false;
+		
 		var _port   = getInputData(0);
 		var _target = getInputData(5);
 		

@@ -360,7 +360,13 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 				
 				var _str = file_read_all(_path);
 				currentAuthor.profile_graph     = _str;
-				currentAuthor.profile_graph_obj = json_try_parse(_str);
+				currentAuthor.profile_graph_str = json_try_parse(_str);
+				
+				if(currentAuthor.profile_graph_runner) {
+					currentAuthor.profile_graph_runner.cleanup();
+					currentAuthor.profile_graph_runner = undefined;
+				}
+				
 				currentAuthor.updateData({ profile_graph: currentAuthor.profile_graph });
 				
 			}), 
@@ -985,23 +991,7 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 		#endregion	
 			
 		#region profile
-			gpu_set_stencil_enable(true);
-			
-			draw_clear_stencil(0);
-			gpu_set_stencil_pass(stencilop_replace);
-			
-			gpu_set_stencil_compare(cmpfunc_greater, 128);
-			draw_set_color_alpha(CDEF.main_dkblack);
-			draw_roundrect_ext(_px, _py, _px + _ps - 1, _py + _ps - 1, ui(8), ui(8), false);
-			
-			gpu_set_stencil_compare(cmpfunc_less, 64);
-			_author.drawProfile(_px, _py, _ps);
-			
-			gpu_set_stencil_enable(false);
-			
-			draw_set_color_alpha(COLORS._main_icon, .5);
-			draw_roundrect_ext(_px, _py, _px + _ps - 1, _py + _ps - 1, ui(8), ui(8), true);
-			draw_set_alpha(1);
+			_author.drawProfile(_px, _py, _ps, true);
 			
 			if(_myPage) {
 				var _gx = _px + _ps - ui(10);

@@ -15,6 +15,8 @@ function Node_Shell(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	setTrigger(1,,, function() /*=>*/ {return update()});
 	
 	static update = function() { 
+		if(project.online) return false;
+		
 		var _pro = getInputData(0);
 		var _scr = getInputData(1);
 		if(_pro == "" && _scr == "") return;

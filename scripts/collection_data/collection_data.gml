@@ -53,23 +53,22 @@ function searchCollection(_list, _search_str, _toList = true) {
 	ds_stack_destroy(st);
 }
 
-function saveCollection(_node, _path, _name, save_surface = true, metadata = noone) {
+function saveCollection(_node, _path, save_surface = true, metadata = noone) {
 	if(_node == noone) return;
 		
-	var _pxz  = false;
-	var _file = _path + "/" + filename_name_only(_name);
+	var _pxz   = false;
+	var _fpath = string_replace(_path, filename_ext(_path), "");
 	
 	if(_pxz) {
-		_path = _file + ".pxz";
-		SAVE_PXZ_COLLECTION(_node, _path, PANEL_PREVIEW.getNodePreviewSurface(), metadata, _node.group);
+		_fpath += ".pxz";
+		SAVE_PXZ_COLLECTION(_node, _fpath, PANEL_PREVIEW.getNodePreviewSurface(), metadata, _node.group);
 		
 	} else {
-		_path = _file + ".pxcc";
-		SAVE_COLLECTION(_node, _path, save_surface, metadata, _node.group);
-		
+		_fpath += ".pxcc";
+		SAVE_COLLECTION(_node, _fpath, save_surface, metadata, _node.group);
 	}
 	
-	PANEL_COLLECTION.updated_path = _path;
+	PANEL_COLLECTION.updated_path = _fpath;
 	PANEL_COLLECTION.updated_prog = 1;
 	PANEL_COLLECTION.refreshContext();
 }

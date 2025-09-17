@@ -18,6 +18,8 @@ function Node_HTTP_Request_File(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	setTrigger(1, "Trigger", [ THEME.sequence_control, 1, COLORS._main_value_positive ], function() /*=>*/ {return request()});
 	
 	static request = function() {
+		if(project.online) return false;
+		
 		var _addr = getInputData(0);
 		downloaded_size = 0;
 		
@@ -53,6 +55,8 @@ function Node_HTTP_Request_File(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	}
 	
 	static update = function() {
+		if(project.online) return false;
+		
 		var _addr = getInputData(0);
 	    var _form = getInputData(1);
 	    

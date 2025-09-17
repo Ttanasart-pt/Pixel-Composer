@@ -59,6 +59,8 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	}
 	
 	static asyncPackets = function(_async_load) {
+		if(project.online) return false;
+		
 		if(!active) return;
 		
 		var _active = getInputData(1);
@@ -112,6 +114,8 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
+		if(project.online) return false;
+		
 		if(CLONING) return;
 		setPort();
 	}

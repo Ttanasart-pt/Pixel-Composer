@@ -41,7 +41,6 @@ function json_load_struct(path, def = {}) {
 }
 
 function json_save_struct(path, struct, pretty = false) {
-	gml_pragma("forceinline");
 	
 	var s;
 	if(pretty) s = json_stringify(struct, true);

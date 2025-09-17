@@ -167,7 +167,26 @@ function Steam_workshop_profile(_sid) constructor {
 	
 	static drawProfileSimple = function(_px, _py, _ps) {
 		var _ava = getAvatar();
+		
+		gpu_set_stencil_enable(true);
+			
+		draw_clear_stencil(0);
+		gpu_set_stencil_pass(stencilop_replace);
+		
+		gpu_set_stencil_compare(cmpfunc_greater, 128);
+		draw_set_color_alpha(CDEF.main_dkblack);
+		draw_roundrect_ext(_px, _py, _px + _ps - 1, _py + _ps - 1, ui(8), ui(8), false);
+		
+		gpu_set_stencil_compare(cmpfunc_less, 64);
+			
 		draw_sprite_stretched(_ava, 0, _px, _py, _ps, _ps);
+		
+		gpu_set_stencil_enable(false);
+		
+		draw_set_color_alpha(COLORS._main_icon, .5);
+		draw_roundrect_ext(_px, _py, _px + _ps - 1, _py + _ps - 1, ui(8), ui(8), true);
+		draw_set_alpha(1);
+		
 	}
 	
 	static drawProfile = function(_px, _py, _ps, _update = false) {
@@ -187,15 +206,26 @@ function Steam_workshop_profile(_sid) constructor {
 			return undefined;
 		}
 		
-		if(!surface_exists(profile_graph_surfaces[1]) || _update) {
+		if(!surface_exists(profile_graph_surfaces[0])) {
 			profile_graph_surfaces[0] = surface_verify(profile_graph_surfaces[0], _ps, _ps);
 			
 			surface_set_shader(profile_graph_surfaces[0]);
 				draw_sprite_stretched(_ava, 0, 0, 0, _ps, _ps);
 			surface_reset_shader();
+		}
+		
+		if(!surface_exists(profile_graph_surfaces[1]) || _update) {
 			
-			var _surf = profile_graph_runner.process(profile_graph_surfaces[0]);
-			profile_graph_surfaces[1] = surface_verify(profile_graph_surfaces[1], surface_get_width(_surf), surface_get_height(_surf));
+			var _animm = profile_graph_runner.project.animator;
+			var _anLen = _animm.frames_total;
+			var _anSpd = _animm.framerate;
+			var _frame = floor(current_time / 1000 * _anSpd) % _anLen;
+			var _surf  = profile_graph_runner.process(profile_graph_surfaces[0], _frame);
+			
+			var _sw = surface_get_width_safe(_surf);
+			var _sh = surface_get_height_safe(_surf);
+			
+			profile_graph_surfaces[1] = surface_verify(profile_graph_surfaces[1], _sw, _sh);
 			
 			surface_set_shader(profile_graph_surfaces[1]);
 				draw_surface_safe(_surf);
@@ -203,9 +233,11 @@ function Steam_workshop_profile(_sid) constructor {
 			
 		}
 		
-		var _cx = _px + _ps / 2 - surface_get_width(profile_graph_surfaces[1])  / 2;
-		var _cy = _py + _ps / 2 - surface_get_height(profile_graph_surfaces[1]) / 2;
-	
+		var _sw = surface_get_width_safe(profile_graph_surfaces[1]);
+		var _sh = surface_get_height_safe(profile_graph_surfaces[1]);
+		var _cx = _px + _ps/2 - _sw/2;
+		var _cy = _py + _ps/2 - _sh/2;
+		
 		draw_surface_safe(profile_graph_surfaces[1], _cx, _cy);
 	}
 	

@@ -23,6 +23,7 @@ function Project() constructor {
 	modified    = false;
 	readonly    = false;
 	safeMode    = false;
+	online      = false;
 	
 	allNodes    = [];
 	nodes	    = [];

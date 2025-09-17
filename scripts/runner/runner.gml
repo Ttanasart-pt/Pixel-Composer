@@ -1,18 +1,35 @@
 function Runner() constructor {
-	project  = new Project();
-	project  = PROJECT;
+	project        = new Project();
+	project.online = true;
+	
+	project = PROJECT; // debug
 	
 	io_node     = undefined;
 	input_junc  = undefined;
 	output_junc = undefined;
+	curr_frame  = undefined;
 	
 	////- Process
 	
 	static processable = function() { return io_node != undefined; }
 	
 	static process = function(_surf, _frame = 0) {
-		input_junc.setValue(_surf)
-		io_node.update(_frame);
+		project.animator.current_frame  = _frame;
+		
+		if(curr_frame == _frame) {
+			project.animator.is_playing     = false;
+			project.animator.frame_progress = false;
+			return output_junc.getValue();
+		}
+		
+		project.animator.is_playing     = true;
+		project.animator.frame_progress = true;
+		input_junc.setValue(_surf);
+		
+		try { io_node.update(_frame); }
+		catch(e) { log_warning("UPDATE: profile", exception_print(e)); }
+		
+		curr_frame = _frame;
 		
 		return output_junc.getValue();
 	}
@@ -22,9 +39,11 @@ function Runner() constructor {
 	static appendMap = function(_map) {
 		var _p = PROJECT;
 		
+		SUPPRESS_NOTI = true;
 		PROJECT  = project;
 		__APPEND_MAP(_map, -4);
 		PROJECT  = _p;
+		SUPPRESS_NOTI = false;
 		
 		return self;
 	}
@@ -44,6 +63,10 @@ function Runner() constructor {
 		}
 		
 		return self;
+	}
+	
+	static cleanup = function() {
+		project.cleanup();
 	}
 	
 }

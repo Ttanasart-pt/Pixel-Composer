@@ -259,7 +259,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 	}
 	
-	static update = function() {
+	static update = function(frame = CURRENT_FRAME) {
 		#region thumbnail
 			var _ind = array_find_index(nodes, function(n) /*=>*/ {return is(n, Node_Group_Thumbnail)});
 			var _thm = thumbnail_node;
@@ -270,7 +270,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		if(!isPure) return;
 		for( var i = 0, n = array_length(nodeTopo); i < n; i++ )
-			nodeTopo[i].doUpdate();
+			nodeTopo[i].doUpdate(frame);
 	}
 	
 	static getNextNodes = function(checkLoop = false) { return isPure? getNextNodesExternal() : getNextNodesInternal(); } 

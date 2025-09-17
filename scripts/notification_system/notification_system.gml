@@ -1,5 +1,6 @@
 #region notification
 	globalvar STATUSES, WARNING, ERRORS, STATS_PROGRESS;
+	globalvar SUPPRESS_NOTI; SUPPRESS_NOTI = false;
 	
 	STATUSES = ds_list_create();
 	WARNING  = ds_list_create();
@@ -109,7 +110,7 @@
 		ds_list_add(STATUSES, noti);
 		ds_list_add(WARNING, noti);
 		
-		if(!instance_exists(o_dialog_warning))
+		if(!SUPPRESS_NOTI && !instance_exists(o_dialog_warning)) 
 			dialogCall(o_dialog_warning, mouse_mx + ui(16), mouse_my + ui(16)).setText(str);
 		
 		if(ref) {

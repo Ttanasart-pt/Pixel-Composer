@@ -68,7 +68,7 @@
 				meta.author_steam_id = STEAM_USER_ID;
 			
 			if(updating == noone && node != noone) {
-				saveCollection(node, data_path, meta.name, true, meta);
+				saveCollection(node, filename_combine(data_path, meta.name), true, meta);
 			} else {
 				var _map     = json_load_struct(updating.path);
 				var _meta    = meta.serialize();
@@ -100,7 +100,7 @@
 				ugc_loading = true;
 				
 			} else if(ugc == 2) {
-				saveCollection(node, data_path, updating.path, false, updating.meta);
+				saveCollection(node, updating.path, false, updating.meta);
 				steam_ugc_update_collection(updating, false, update_note);
 				ugc_loading = true;
 				
