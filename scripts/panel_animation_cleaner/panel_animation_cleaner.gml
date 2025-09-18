@@ -36,7 +36,7 @@ function Panel_Animation_Cleaner() : Panel_Linear_Setting() constructor {
 					
 					if(quantize) t.time = round(t.time);
 					
-					if(delete_overflow && (t.time < 0 || t.time > TOTAL_FRAMES))
+					if(delete_overflow && (t.time < 0 || t.time > GLOBAL_TOTAL_FRAMES))
 					    in.animator.removeKey(t, false);
 				}
 				

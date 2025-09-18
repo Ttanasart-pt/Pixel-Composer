@@ -197,7 +197,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var _anim_end   	= getInputData(26);
 		
 		var _spawn_amount	= getInputData( 2);
-		var _spawn_area 	= getInputData( 3);
+		var _spawn_area 	= getInputDataForce(3);
 		var _distrib    	= getInputData( 4);
 		var _dist_map   	= getInputData(30);
 		var _dist_path   	= getInputData(55);
@@ -564,17 +564,15 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	////- Step
 	
-	static onStep = function() {}
-	
-	static step = function() {
-		onStep();
-	}
+	static onStep = function() /*=>*/ {}
+	static step   = function() /*=>*/ {return onStep()};
 	
 	////- Update
 	
 	static getDimension = function() /*=>*/ {return DEF_SURF};
 	
 	static update = function(frame = CURRENT_FRAME) {
+		
 		#region visiblity
 			var _inSurf = getInputData(0);
 			var _dist   = getInputData(4);

@@ -63,7 +63,7 @@ function Node_pSystem_3D_Inline(_x, _y, _group = noone) : Node_Collection_Inline
 	
 	static update = function() {
 		if(IS_FIRST_FRAME) {
-			if(IS_PLAYING) topoList = NodeListSort(nodes);
+			if(IS_PLAYING) topoList = NodeListSort(nodes, project);
 			reset();
 		}
 	}

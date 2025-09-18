@@ -74,12 +74,12 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	hasInsp1 = false;
 	setTrigger(1, __txtx("panel_inspector_execute", "Execute node contents"), [ THEME.sequence_control, 1, COLORS._main_value_positive ], function() /*=>*/ {
-		array_foreach(NodeListSort(nodes), function(n) /*=>*/ { if(n.hasInspector1Update()) n.inspector1Update(); }); 
+		array_foreach(NodeListSort(nodes, project), function(n) /*=>*/ { if(n.hasInspector1Update()) n.inspector1Update(); }); 
 	});
 	
 	hasInsp2 = false;
 	setTrigger(2, "Clear cache", [ THEME.cache, 0, COLORS._main_icon ], function() /*=>*/ { 
-		array_foreach(NodeListSort(nodes), function(n) /*=>*/ { if(n.hasInspector2Update()) n.inspector2Update(); }); 
+		array_foreach(NodeListSort(nodes, project), function(n) /*=>*/ { if(n.hasInspector2Update()) n.inspector2Update(); }); 
 	});
 	
 	static hasInspector1Update = function() /*=>*/ {return hasInsp1};
@@ -113,7 +113,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		icon_blend = p? COLORS._main_value_positive : c_white;
 		
-		if(updateTopo || !isPure && p) nodeTopo = NodeListSort(nodes);
+		if(updateTopo || !isPure && p) nodeTopo = NodeListSort(nodes, project);
 		isPure = p;
 		
 		if(group) group.checkPureFunction(updateTopo);
@@ -269,6 +269,10 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		#endregion
 		
 		if(!isPure) return;
+		render(frame);
+	}
+	
+	static render = function(frame) {
 		for( var i = 0, n = array_length(nodeTopo); i < n; i++ )
 			nodeTopo[i].doUpdate(frame);
 	}

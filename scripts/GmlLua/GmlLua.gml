@@ -243,8 +243,8 @@ Project.fps		   = 0;
 
 function lua_projectData(state) {
 	lua_add_code(state, @"
-Project.frame	   = " + string(CURRENT_FRAME) + @";
-Project.frameTotal = " + string(TOTAL_FRAMES) + @";
+Project.frame	   = " + string(GLOBAL_CURRENT_FRAME) + @";
+Project.frameTotal = " + string(GLOBAL_TOTAL_FRAMES) + @";
 Project.fps		   = " + string(PROJECT.animator.framerate) + @";
 ");
 }

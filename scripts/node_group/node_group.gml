@@ -40,8 +40,6 @@ function Node_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) co
 			return;
 		}
 		
-		// nodeTopo = NodeListSort(nodes);
-		
 		var instTopo = instanceBase.nodeTopo;
 		var currTopo = nodeTopo;
 		

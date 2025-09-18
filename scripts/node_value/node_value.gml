@@ -665,14 +665,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(is_anim) {
 			if(array_empty(animator.values))
-				array_push(animator.values, new valueKey(CURRENT_FRAME, animator.getValue(), animator));
-			animator.values[0].time = CURRENT_FRAME;
+				array_push(animator.values, new valueKey(NODE_CURRENT_FRAME, animator.getValue(), animator));
+			animator.values[0].time = NODE_CURRENT_FRAME;
 			animator.updateKeyMap();
 			
 			for( var i = 0, n = array_length(animators); i < n; i++ ) {
 				if(array_length(animators[i].values))
-					array_push(animators[i].values, new valueKey(CURRENT_FRAME, animators[i].getValue(), animators[i]));
-				animators[i].values[0].time = CURRENT_FRAME;
+					array_push(animators[i].values, new valueKey(NODE_CURRENT_FRAME, animators[i].getValue(), animators[i]));
+				animators[i].values[0].time = NODE_CURRENT_FRAME;
 				animators[i].updateKeyMap();
 			}
 		} else {
@@ -1263,11 +1263,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	__init_dynamic = true;
 	__value_from   = noone;
 	
-	static isDynamic = function() {
+	static isDynamic = function() { 
 		if(__init_dynamic)             { __init_dynamic = false;      return true; }
 		if(value_from != __value_from) { __value_from   = value_from; return true; }
 		
-		if(!IS_PLAYING)           return true;
+		if(!node.project.animator.is_playing) return true;
 		if(value_from_loop)       return true;
 		if(value_from != noone)   return true;
 		if(instanceBase != noone) return instanceBase.isDynamic();
@@ -1384,7 +1384,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static getStaticValue = function() { INLINE return array_empty(animator.values)? 0 : animator.values[0].value; } 
 	
-	static getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { //// Get value
+	static getValue = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { //// Get value
 		draw_junction_index = type;
 		if(type == VALUE_TYPE.trigger) return _getValue(_time, false, 0, false);
 		
@@ -1421,7 +1421,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return val;
 	}
 	
-	static _getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, log = false) {
+	static _getValue = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, log = false) {
 		
 		getValueRecursive(self.__curr_get_val, _time);
 		var val = __curr_get_val[0];
@@ -1447,7 +1447,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return _val;
 	}
 	
-	static getValueRecursive = function(arr = __curr_get_val, _time = CURRENT_FRAME) {
+	static getValueRecursive = function(arr = __curr_get_val, _time = NODE_CURRENT_FRAME) {
 		
 		if(value_from_loop && value_from_loop.bypassConnection() && value_from_loop.junc_out) {
 			value_from_loop.getValue(arr);
@@ -1508,7 +1508,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return val;
 	}
 	
-	static __getAnimValue = function(_time = CURRENT_FRAME) {
+	static __getAnimValue = function(_time = NODE_CURRENT_FRAME) {
 		var _anim  = animator;
 		var _anims = animators;
 		
@@ -1544,7 +1544,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var val = 0;
 		
 		if(value_from != noone || is_anim || expUse) 
-			val = getValue(CURRENT_FRAME, false);
+			val = getValue(NODE_CURRENT_FRAME, false);
 			
 		else if(sep_axis) {
 			show_val = array_verify(show_val, array_length(animators));
@@ -1669,7 +1669,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static onSetValue = undefined;
-	static setValue = function(val = 0, record = true, time = CURRENT_FRAME, _update = true) { ////Set value
+	static setValue = function(val = 0, record = true, time = NODE_CURRENT_FRAME, _update = true) { ////Set value
 		val = unit.invApply(val);
 		var _set = setValueDirect(val, noone, record, time, _update);
 		if(onSetValue != undefined) onSetValue(val);
@@ -1687,7 +1687,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 	}
 	
-	static setValueInspector = function(_val = 0, _index = noone, time = CURRENT_FRAME) { // This should be in panel_inspector not here. 
+	static setValueInspector = function(_val = 0, _index = noone, time = NODE_CURRENT_FRAME) { // This should be in panel_inspector not here. 
 		INLINE
 		
 		var res = false;
@@ -1710,7 +1710,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static onSetValueDirect = undefined;
-	static setValueDirect = function(val = 0, _index = noone, record = true, time = CURRENT_FRAME, _update = true) {
+	static setValueDirect = function(val = 0, _index = noone, record = true, time = NODE_CURRENT_FRAME, _update = true) {
 		is_modified = true;
 		var updated = false;
 		var _val    = val;

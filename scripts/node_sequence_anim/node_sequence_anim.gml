@@ -145,7 +145,7 @@ function timelineItemNode_Sequence_Anim(_node) : timelineItemNode(_node) constru
 		var _ry = h / 2 + _y;
 		
 		for (var i = 0, n = array_length(_arr); i < n; i++) {
-			if(i >= TOTAL_FRAMES) break;
+			if(i >= NODE_TOTAL_FRAMES) break;
 			
 			_surf = _arr[i];
 			if(_useq) {
@@ -160,7 +160,7 @@ function timelineItemNode_Sequence_Anim(_node) : timelineItemNode(_node) constru
 			var _sw = surface_get_width_safe(_surf);
 			var _sh = surface_get_height_safe(_surf);
 			var _ss = _h / max(_sw, _sh);
-			_aa = .5 + .5 * (i == CURRENT_FRAME);
+			_aa = .5 + .5 * (i == NODE_CURRENT_FRAME);
 			
 			draw_surface_ext(_surf, _rx - _sw * _ss / 2, _ry - _sh * _ss / 2, _ss, _ss, 0, c_white, _aa);
 		}

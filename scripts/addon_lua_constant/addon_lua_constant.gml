@@ -156,7 +156,7 @@ function __addon_lua_panel_variable(lua, panel) {
 		$"Panel.clickable = {panel.pFOCUS}\n" +
 	
 		$"Animator.frame_current = {CURRENT_FRAME}\n" + 
-		$"Animator.frame_total   = {TOTAL_FRAMES}\n" + 
+		$"Animator.frame_total   = {GLOBAL_TOTAL_FRAMES}\n" + 
 		$"Animator.frame_rate    = {PROJECT.animator.framerate}\n"
 	);
 }

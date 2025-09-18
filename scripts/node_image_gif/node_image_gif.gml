@@ -291,7 +291,7 @@ function timelineItemNode_Image_gif(_node) : timelineItemNode(_node) constructor
 			_rx = _x + (i + 1) * _s;
 			_ry = h / 2 + _y;
 			
-			_aa = .5 + .5 * (i == CURRENT_FRAME);
+			_aa = .5 + .5 * (i == NODE_CURRENT_FRAME);
 			draw_sprite_ext(_spr, i, _rx - _hw, _ry - _hh, _ss, _ss, 0, c_white, _aa);
 		}
 	}

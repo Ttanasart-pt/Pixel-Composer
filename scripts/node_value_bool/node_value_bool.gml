@@ -5,13 +5,13 @@ function __NodeValue_Bool(_name, _node, _value, _tooltip = "") : NodeValue(_name
 	
 	function toBool(a) { return is_array(a)? array_map(a, function(v) /*=>*/ {return toBool(v)}) : bool(a) };
 	
-	static getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { //// Get value
+	static getValue = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { //// Get value
 		getValueRecursive(self.__curr_get_val, _time);
 		var val = __curr_get_val[0];
 		return toBool(val);
 	}
 	
-	static __getAnimValue = function(_time = CURRENT_FRAME) {
+	static __getAnimValue = function(_time = NODE_CURRENT_FRAME) {
 		var _anim  = animator;
 		var _anims = animators;
 		
@@ -28,12 +28,12 @@ function __NodeValue_Bool_single(_name, _node, _value, _tooltip = "") : NodeValu
 	
 	/////============== GET =============
 	
-	static getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { //// Get value
+	static getValue = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { //// Get value
 		getValueRecursive(self.__curr_get_val, _time);
 		return bool(__curr_get_val[0]);
 	}
 	
-	static __getAnimValue = function(_time = CURRENT_FRAME) {
+	static __getAnimValue = function(_time = NODE_CURRENT_FRAME) {
 		var _anim  = animator;
 		var _anims = animators;
 		
@@ -55,7 +55,7 @@ function __NodeValue_Active(_node) : __NodeValue_Bool_single("Active", _node, tr
 		is_anim = anim;
 		
 		if(is_anim) {
-			animator.values = [ new valueKey(0, true, animator), new valueKey(TOTAL_FRAMES - 1, false, animator) ];
+			animator.values = [ new valueKey(0, true, animator), new valueKey(NODE_TOTAL_FRAMES - 1, false, animator) ];
 			
 		} else {
 			var _val = animator.getValue();

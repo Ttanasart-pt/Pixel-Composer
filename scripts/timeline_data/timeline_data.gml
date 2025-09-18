@@ -136,7 +136,7 @@ function timelineItemNode(_node) : timelineItem() constructor {
 		if(!is_surface(_surf)) return;
 		
 		var _h  = h - 2;
-		var _rx = _x + (CURRENT_FRAME + 1) * _s;
+		var _rx = _x + (GLOBAL_CURRENT_FRAME + 1) * _s;
 		var _ry = h / 2 + _y;
 		
 		var _sw = surface_get_width_safe(_surf);

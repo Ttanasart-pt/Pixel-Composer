@@ -67,7 +67,7 @@ function Node_pSystem_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 		dimension = inputs[1].getValue();
 		
 		if(IS_FIRST_FRAME) {
-			if(IS_PLAYING) topoList = NodeListSort(nodes);
+			if(IS_PLAYING) topoList = NodeListSort(nodes, project);
 			reset();
 		}
 	}

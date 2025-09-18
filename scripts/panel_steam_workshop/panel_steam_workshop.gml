@@ -354,7 +354,7 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 		profile_uploading = false;
 		menu_profile_edit = [
 			__txt("Profile image uses data from Steam."), 
-			menuItem(__txt("Set Graph"), function() /*=>*/ {
+			menuItem(__txt("Set Profile Graph"), function() /*=>*/ {
 				var _path = get_open_filename_compat("Pixel Composer collection (.pxcc)|*.pxcc", "", "Open", DIRECTORY + "Collections");
 				if(!file_exists_empty(_path)) return;
 				
@@ -370,8 +370,15 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 				currentAuthor.updateData({ profile_graph: currentAuthor.profile_graph });
 				
 			}), 
-			menuItem(__txt("Remove Graph"), function() /*=>*/ {
-				currentAuthor.profile_graph = "";
+			menuItem(__txt("Remove Profile Graph"), function() /*=>*/ {
+				currentAuthor.profile_graph     = "";
+				currentAuthor.profile_graph_str = undefined;
+				
+				if(currentAuthor.profile_graph_runner) {
+					currentAuthor.profile_graph_runner.cleanup();
+					currentAuthor.profile_graph_runner = undefined;
+				}
+				
 				currentAuthor.updateData({ profile_graph: currentAuthor.profile_graph });
 			}, THEME.cross_16), 
 		];
@@ -996,12 +1003,31 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 			if(_myPage) {
 				var _gx = _px + _ps - ui(10);
 				var _gy = _py + ui(10);
-				
 				var _hv = _hhov && point_in_circle(_m[0], _m[1], _gx, _gy, ui(10));
 				
 				draw_sprite_ui(THEME.gear_16, 0, _gx, _gy, 1, 1, 0, _hv? COLORS._main_icon_light : COLORS._main_icon);
 				if(_hv && mouse_lpress(_focus)) menuCall("steam_author_profile_edit", menu_profile_edit);
+			}
+			
+			if(_author.profile_graph_runner) {
+				var _gx = _px + _ps - ui(10);
+				var _gy = _py + _ps - ui(10);
+				var _hv = _hhov && point_in_circle(_m[0], _m[1], _gx, _gy, ui(10));
 				
+				draw_sprite_ui(THEME.animate_node_go, 0, _gx, _gy, 1, 1, 0, _hv? COLORS._main_icon_light : COLORS._main_icon);
+				if(_hv) {
+					TOOLTIP = __txt("View Graph...");
+					
+					if(mouse_lpress(_focus)) {
+						var _graph = new Panel_Graph(_author.profile_graph_runner.project).setSize(ui(800), ui(480));
+						_graph.title = _name + "'s " + __txt("Profile Graph");
+						_graph.applyGlobal = false;
+						
+						if(_author.profile_graph_runner.io_node != undefined)
+							_graph.addContext(_author.profile_graph_runner.io_node);
+						dialogPanelCall(_graph);
+					}
+				}
 			}
 		#endregion
 		

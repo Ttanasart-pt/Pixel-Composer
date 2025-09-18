@@ -276,7 +276,7 @@ function timelineItemNode_Image_Animated(_node) : timelineItemNode(_node) constr
 			var _sh = sprite_get_height(_spr);
 			var _ss = h / max(_sw, _sh);
 			
-			_aa = .5 + .5 * (i == CURRENT_FRAME);
+			_aa = .5 + .5 * (i == NODE_CURRENT_FRAME);
 			draw_sprite_ext(_spr, 0, _rx - _sw * _ss / 2, _ry - _sh * _ss / 2, _ss, _ss, 0, c_white, _aa);
 		}
 	}

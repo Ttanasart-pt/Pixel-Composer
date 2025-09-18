@@ -2,7 +2,7 @@ function Runner() constructor {
 	project        = new Project();
 	project.online = true;
 	
-	project = PROJECT; // debug
+	// project = PROJECT; // debug
 	
 	io_node     = undefined;
 	input_junc  = undefined;
@@ -26,7 +26,11 @@ function Runner() constructor {
 		project.animator.frame_progress = true;
 		input_junc.setValue(_surf);
 		
-		try { io_node.update(_frame); }
+		// project.stepBegin();
+		// project.step();
+		// project.postStep();
+		
+		try { Render(project); }
 		catch(e) { log_warning("UPDATE: profile", exception_print(e)); }
 		
 		curr_frame = _frame;
@@ -44,6 +48,8 @@ function Runner() constructor {
 		__APPEND_MAP(_map, -4);
 		PROJECT  = _p;
 		SUPPRESS_NOTI = false;
+		
+		NodeTopoSort(project);
 		
 		return self;
 	}

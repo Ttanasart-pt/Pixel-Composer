@@ -136,7 +136,7 @@ function Panel_Animation_Dopesheet() {
     
 	    on_end_dragging_anim = noone;
 	    onion_dragging       = noone;
-	    prev_cache           = array_create(TOTAL_FRAMES);
+	    prev_cache           = array_create(GLOBAL_TOTAL_FRAMES);
 	    copy_clipboard       = ds_list_create();
 	    
 	    __keyframe_editing   = noone;
@@ -144,7 +144,7 @@ function Panel_Animation_Dopesheet() {
 	    modulate_animator    = noone;
 	    modulate_type        = KEYFRAME_MODULATE.envelope;
 	    modulate_keys        = [];
-	    modulate_range       = [ 0, TOTAL_FRAMES ];
+	    modulate_range       = [ 0, GLOBAL_TOTAL_FRAMES ];
 	    modulate_value_range = [ 0, 0 ];
 	    modulate_fade_anchor = [ 0, 0 ];
 	    modulate_fade        = [ 0, 0 ];
@@ -199,9 +199,9 @@ function Panel_Animation_Dopesheet() {
 	        function separate_axis()         { context_selecting_prop.separateAxis();         }
 	        function combine_axis()          { context_selecting_prop.combineAxis();          }
 	        
-	        function range_set_start()       { if(FRAME_RANGE == noone) FRAME_RANGE = [ __selecting_frame, TOTAL_FRAMES ]; else FRAME_RANGE[0] = __selecting_frame; }
-	        function range_set_end()         { if(FRAME_RANGE == noone) FRAME_RANGE = [ 0, __selecting_frame ];            else FRAME_RANGE[1] = __selecting_frame; }
-	        function range_reset()           { FRAME_RANGE = noone; }
+	        function range_set_start()       { if(GLOBAL_FRAME_RANGE == noone) GLOBAL_FRAME_RANGE = [ __selecting_frame, GLOBAL_TOTAL_FRAMES ]; else GLOBAL_FRAME_RANGE[0] = __selecting_frame; }
+	        function range_set_end()         { if(GLOBAL_FRAME_RANGE == noone) GLOBAL_FRAME_RANGE = [ 0, __selecting_frame ];            else GLOBAL_FRAME_RANGE[1] = __selecting_frame; }
+	        function range_reset()           { GLOBAL_FRAME_RANGE = noone; }
 	        
 		    context_selecting_item = noone;
 		    context_selecting_prop = noone;
@@ -272,7 +272,7 @@ function Panel_Animation_Dopesheet() {
             
 		    	for(var k = 0; k < array_length(animator.values); k++) {
 		            var _key = animator.values[k];
-		            if(_key.time < CURRENT_FRAME)
+		            if(_key.time < GLOBAL_CURRENT_FRAME)
                         _t = max(_t, _key.time);
 		        }
     		}
@@ -293,7 +293,7 @@ function Panel_Animation_Dopesheet() {
             
 		    	for(var k = 0; k < array_length(animator.values); k++) {
 		            var _key = animator.values[k];
-		            if(_key.time > CURRENT_FRAME)
+		            if(_key.time > GLOBAL_CURRENT_FRAME)
 		            	_t = min(_t, _key.time);
 		        }
     		}
@@ -317,11 +317,11 @@ function Panel_Animation_Dopesheet() {
         
         if(timeline_scubbing) {
             var rfrm = (mx - bar_x - timeline_shift) / timeline_scale - 1;
-            if(!key_mod_press(CTRL)) rfrm = clamp(rfrm, 0, TOTAL_FRAMES - 1);
+            if(!key_mod_press(CTRL)) rfrm = clamp(rfrm, 0, GLOBAL_TOTAL_FRAMES - 1);
             
             PROJECT.animator.setFrame(rfrm, !key_mod_press(ALT));
             
-            timeline_show_time  = CURRENT_FRAME;
+            timeline_show_time  = GLOBAL_CURRENT_FRAME;
             if(timeline_show_time != _scrub_frame)
                 _scrub_frame = timeline_show_time;
                 
@@ -349,7 +349,7 @@ function Panel_Animation_Dopesheet() {
             		
             	} else if(mouse_press(mb_left, pFOCUS) && !key_mod_press_any()) {
                     timeline_scubbing = true;
-                    timeline_scub_st  = CURRENT_FRAME;
+                    timeline_scub_st  = GLOBAL_CURRENT_FRAME;
                     _scrub_frame      = timeline_scub_st;
                     KEYBOARD_RESET
             	}
@@ -372,7 +372,7 @@ function Panel_Animation_Dopesheet() {
         
         if(timeline_stretch == 1) {
             TOOLTIP = __txtx("panel_animation_length", "Animation length") + $" {len}";
-            TOTAL_FRAMES = len;
+            GLOBAL_TOTAL_FRAMES = len;
             
             timeline_draggable = false;
             if(mouse_release(mb_left) && !timeline_frame_typing) timeline_stretch = 0;
@@ -381,8 +381,8 @@ function Panel_Animation_Dopesheet() {
         
         if(timeline_stretch == 2) {
             TOOLTIP  = __txtx("panel_animation_length", "Animation length") + $" {len}";
-            var _len = TOTAL_FRAMES;
-            TOTAL_FRAMES = len;
+            var _len = GLOBAL_TOTAL_FRAMES;
+            GLOBAL_TOTAL_FRAMES = len;
             
             if(_len != len) {
                 for (var m = 0, n = array_length(PROJECT.allNodes); m < n; m++) {
@@ -412,7 +412,7 @@ function Panel_Animation_Dopesheet() {
             return;
         } 
         
-        if(!IS_PLAYING && pHOVER && point_in_circle(msx, msy, stx, sty, sty)) {
+        if(!GLOBAL_IS_PLAYING && pHOVER && point_in_circle(msx, msy, stx, sty, sty)) {
         	TOOLTIP = tooltip_anim_end;
         	
         	if(key_mod_press(ALT)) {
@@ -420,14 +420,14 @@ function Panel_Animation_Dopesheet() {
         		
                 if(DOUBLE_CLICK) {
                 	timeline_stretch      = 2;
-                    timeline_stretch_sx   = TOTAL_FRAMES;
+                    timeline_stretch_sx   = GLOBAL_TOTAL_FRAMES;
                 	timeline_frame_typing = true;
                 	KEYBOARD_RESET
                 	
                 } else if(mouse_press(mb_left, pFOCUS)) {
                     timeline_stretch    = 2;
                     timeline_stretch_mx = msx;
-                    timeline_stretch_sx = TOTAL_FRAMES;
+                    timeline_stretch_sx = GLOBAL_TOTAL_FRAMES;
                 }
                 
             } else if(key_mod_press(CTRL)) {
@@ -435,14 +435,14 @@ function Panel_Animation_Dopesheet() {
         		
                 if(DOUBLE_CLICK) {
                 	timeline_stretch      = 1;
-                    timeline_stretch_sx   = TOTAL_FRAMES;
+                    timeline_stretch_sx   = GLOBAL_TOTAL_FRAMES;
                 	timeline_frame_typing = true;
                 	KEYBOARD_RESET
                 	
                 } else if(mouse_press(mb_left, pFOCUS)) {
                     timeline_stretch    = 1;
                     timeline_stretch_mx = msx;
-                    timeline_stretch_sx = TOTAL_FRAMES;
+                    timeline_stretch_sx = GLOBAL_TOTAL_FRAMES;
                 }
             }
         }
@@ -695,7 +695,7 @@ function Panel_Animation_Dopesheet() {
                 
                 switch(key.drivers.type) {
                     case DRIVER_TYPE.linear :
-                        var nk = k + 1 < amo? animator.values[k + 1].time : TOTAL_FRAMES;
+                        var nk = k + 1 < amo? animator.values[k + 1].time : GLOBAL_TOTAL_FRAMES;
                     
                         var spd = key.drivers.speed * (nk - key.time);
                         _minn += min(spd, 0);
@@ -910,11 +910,11 @@ function Panel_Animation_Dopesheet() {
             var key_last = array_last(animator.values);
             var t_last = (key_last.time + 1) * timeline_scale + timeline_shift;
                 
-            if(key_last.time < TOTAL_FRAMES) {
+            if(key_last.time < GLOBAL_TOTAL_FRAMES) {
                 if(key_last.drivers.type) {
                     nx = t_last;
                     
-                    for( var _time = key_last.time; _time < TOTAL_FRAMES; _time++ ) {
+                    for( var _time = key_last.time; _time < GLOBAL_TOTAL_FRAMES; _time++ ) {
                         _kv = animator.processDriver(_time, key_last);
                         if(!valArray) _kv = [ _kv ];
                         
@@ -1081,7 +1081,7 @@ function Panel_Animation_Dopesheet() {
             }
             
             key_next = array_last(prop.animator.values);
-            if(key_next.time < TOTAL_FRAMES) {
+            if(key_next.time < GLOBAL_TOTAL_FRAMES) {
                 draw_set_color(key_next.value);
                 draw_rectangle(key_next.dopesheet_x, _gy0, bar_total_shift, _gy1, 0);
             }
@@ -1103,12 +1103,12 @@ function Panel_Animation_Dopesheet() {
             for(var i = _st; i <= _fr; i++) {
                 var bar_frame  = i * timeline_separate;
                 var _cc = COLORS.panel_animation_frame_divider;
-                var _aa = (i % timeline_separate == 0? 1 : 0.1) * ((bar_frame <= TOTAL_FRAMES) * 0.5 + 0.5) * 0.3;
+                var _aa = (i % timeline_separate == 0? 1 : 0.1) * ((bar_frame <= GLOBAL_TOTAL_FRAMES) * 0.5 + 0.5) * 0.3;
                 
                 drawFrameLine(bar_frame, 0, _gh, _cc, _aa);
             }
             
-            drawFrameLine(TOTAL_FRAMES, 0, _gh, COLORS.panel_animation_end_line, .5);
+            drawFrameLine(GLOBAL_TOTAL_FRAMES, 0, _gh, COLORS.panel_animation_end_line, .5);
             drawFrameLine(0, 0, _gh, COLORS.panel_animation_end_line, .5);
                 
             if(prop.sep_axis) {
@@ -1193,7 +1193,7 @@ function Panel_Animation_Dopesheet() {
         
         if(is(animator.prop, __NodeValue_Active)) { //draw active region
 	        var _ox = timeline_shift, _nx;
-        	var _y1 = timeline_shift + TOTAL_FRAMES * timeline_scale;
+        	var _y1 = timeline_shift + GLOBAL_TOTAL_FRAMES * timeline_scale;
         	var _ov, _nv;
         	
         	draw_set_color_alpha(COLORS._main_value_positive, .4);
@@ -1214,7 +1214,7 @@ function Panel_Animation_Dopesheet() {
         	
         } else if(animator.prop.type == VALUE_TYPE.boolean) { //draw boolean true region
         	var _ox = timeline_shift, _nx;
-        	var _y1 = timeline_shift + TOTAL_FRAMES * timeline_scale;
+        	var _y1 = timeline_shift + GLOBAL_TOTAL_FRAMES * timeline_scale;
         	var _ov, _nv;
         	
         	draw_set_color_alpha(COLORS._main_value_positive, .3);
@@ -1296,7 +1296,7 @@ function Panel_Animation_Dopesheet() {
             
             if(_node.use_cache || PROJECT.onion_skin.enabled) { //cache
 	        	draw_set_alpha(0.05);
-	            for(var j = 0, m = min(TOTAL_FRAMES, array_length(_node.cache_result)); j < m; j++) {
+	            for(var j = 0, m = min(GLOBAL_TOTAL_FRAMES, array_length(_node.cache_result)); j < m; j++) {
 	                var x0 = (j + 0) * timeline_scale + timeline_shift;
 	                var x1 = (j + 1) * timeline_scale + timeline_shift;
 	                
@@ -1642,7 +1642,7 @@ function Panel_Animation_Dopesheet() {
                 var _t = -1;
                 for(var k = 0; k < array_length(animator.values); k++) {
                     var _key = animator.values[k];
-                    if(_key.time < CURRENT_FRAME)
+                    if(_key.time < GLOBAL_CURRENT_FRAME)
                         _t = _key.time;
                 }
                 if(_t > -1) PROJECT.animator.setFrame(_t);
@@ -1652,7 +1652,7 @@ function Panel_Animation_Dopesheet() {
             if(buttonInstant(noone, tx - ui(10), ty - ui(9), ui(20), ui(17), [msx, msy], pHOVER, pFOCUS, "", THEME.prop_keyframe, 2, [COLORS._main_icon, COLORS._main_icon_on_inner], _tool_a) == 2) {
                 for(var k = 0; k < array_length(animator.values); k++) {
                     var _key = animator.values[k];
-                    if(_key.time > CURRENT_FRAME) {
+                    if(_key.time > GLOBAL_CURRENT_FRAME) {
                         PROJECT.animator.setFrame(_key.time);
                         break;
                     }
@@ -1666,20 +1666,20 @@ function Panel_Animation_Dopesheet() {
                 var _add = false;
                 for(var k = 0; k < array_length(animator.values); k++) {
                     var _key = animator.values[k];
-                    if(_key.time == CURRENT_FRAME) {
+                    if(_key.time == GLOBAL_CURRENT_FRAME) {
                         if(array_length(animator.values) > 1)
                             array_delete(animator.values, k, 1);
                         _add = true;
                         break;
                         
-                    } else if(_key.time > CURRENT_FRAME) {
-                        array_insert(animator.values, k, new valueKey(CURRENT_FRAME, variable_clone(animator.getValue()), animator));
+                    } else if(_key.time > GLOBAL_CURRENT_FRAME) {
+                        array_insert(animator.values, k, new valueKey(GLOBAL_CURRENT_FRAME, variable_clone(animator.getValue()), animator));
                         _add = true;
                         break;    
                     }
                 }
                 
-                if(!_add) array_push(animator.values, new valueKey(CURRENT_FRAME, variable_clone(animator.getValue(, false)), animator));    
+                if(!_add) array_push(animator.values, new valueKey(GLOBAL_CURRENT_FRAME, variable_clone(animator.getValue(, false)), animator));    
             }
         #endregion
                 
@@ -1898,7 +1898,7 @@ function Panel_Animation_Dopesheet() {
         bar_w = timeline_w;
         bar_h = timeline_h;
         
-        bar_total_w     = TOTAL_FRAMES * timeline_scale;
+        bar_total_w     = GLOBAL_TOTAL_FRAMES * timeline_scale;
         bar_total_shift = bar_total_w + timeline_shift;
         
         #region Scroll
@@ -2037,12 +2037,12 @@ function Panel_Animation_Dopesheet() {
             
             for(var i = _st; i <= _fr; i++) {
                 var bar_frame = i * timeline_separate;
-                var _aa = (bar_frame % timeline_separate == 0? 1 : 0.1) * ((bar_frame <= TOTAL_FRAMES) * 0.5 + 0.5);
+                var _aa = (bar_frame % timeline_separate == 0? 1 : 0.1) * ((bar_frame <= GLOBAL_TOTAL_FRAMES) * 0.5 + 0.5);
                 
                 drawFrameLine(bar_frame, ui(16), dopesheet_h, COLORS.panel_animation_frame_divider, _aa);
             }
             
-            drawFrameLine(TOTAL_FRAMES, ui(16), dopesheet_h, COLORS.panel_animation_end_line, .5);
+            drawFrameLine(GLOBAL_TOTAL_FRAMES, ui(16), dopesheet_h, COLORS.panel_animation_end_line, .5);
             drawFrameLine(0,            ui(16), dopesheet_h, COLORS.panel_animation_end_line, .5);
         #endregion
         
@@ -2268,11 +2268,11 @@ function Panel_Animation_Dopesheet() {
         #region Overlay 
             var hh = ui(20);
             
-            var bar_line_x = (CURRENT_FRAME + 1) * timeline_scale + timeline_shift;
+            var bar_line_x = (GLOBAL_CURRENT_FRAME + 1) * timeline_scale + timeline_shift;
             
             var cc = PROJECT.animator.is_playing? COLORS._main_value_positive : COLORS._main_accent;
-            var aa = (CURRENT_FRAME >= 0 && CURRENT_FRAME < TOTAL_FRAMES) * .5 + .5;
-            drawFrameLine(CURRENT_FRAME + 1, PANEL_PAD, dopesheet_h, cc, aa);
+            var aa = (GLOBAL_CURRENT_FRAME >= 0 && GLOBAL_CURRENT_FRAME < GLOBAL_TOTAL_FRAMES) * .5 + .5;
+            drawFrameLine(GLOBAL_CURRENT_FRAME + 1, PANEL_PAD, dopesheet_h, cc, aa);
             
             var _phover = pHOVER && msy > hh;
             for( var i = 0, n = array_length(timeline_contents); i < n; i++ ) {
@@ -2294,7 +2294,7 @@ function Panel_Animation_Dopesheet() {
             for(var i = _st; i <= _fr; i++) {
                 var bar_frame = i * timeline_separate;
                 var ln_x = bar_frame * timeline_scale + timeline_shift;
-                var ln_a = (bar_frame < 0 || bar_frame > TOTAL_FRAMES)? .5 : 1;
+                var ln_a = (bar_frame < 0 || bar_frame > GLOBAL_TOTAL_FRAMES)? .5 : 1;
                 
                 draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text_sub, ln_a);
                 draw_text_add(ln_x, PANEL_PAD, bar_frame);
@@ -2302,8 +2302,8 @@ function Panel_Animation_Dopesheet() {
             
             draw_set_alpha(1);
             draw_set_text(f_p2, fa_center, fa_top, CDEF.main_mdwhite);
-            var end_x = TOTAL_FRAMES * timeline_scale + timeline_shift;
-            draw_text_add(end_x, PANEL_PAD, TOTAL_FRAMES);
+            var end_x = GLOBAL_TOTAL_FRAMES * timeline_scale + timeline_shift;
+            draw_text_add(end_x, PANEL_PAD, GLOBAL_TOTAL_FRAMES);
             
             var end_x = 0 * timeline_scale + timeline_shift;
             draw_text_add(end_x, PANEL_PAD, 0);
@@ -2321,7 +2321,7 @@ function Panel_Animation_Dopesheet() {
                 var rang = PROJECT.onion_skin.range;
                 var colr = PROJECT.onion_skin.color;
             
-                var fr = CURRENT_FRAME + 1;
+                var fr = GLOBAL_CURRENT_FRAME + 1;
                 var tx = fr * timeline_scale + timeline_shift;
                 var sx = (fr + rang[0]) * timeline_scale + timeline_shift;
                 var ex = (fr + rang[1]) * timeline_scale + timeline_shift;
@@ -2377,7 +2377,7 @@ function Panel_Animation_Dopesheet() {
             }
             
             draw_set_font(f_p2);
-            var cf = string(CURRENT_FRAME + 1);
+            var cf = string(GLOBAL_CURRENT_FRAME + 1);
             var tx = string_width(cf) + ui(4);
             
             if(timeline_frame_typing && timeline_stretch == 0) {
@@ -2395,9 +2395,9 @@ function Panel_Animation_Dopesheet() {
             }
             
             if(timeline_frame_typing && timeline_stretch) {
-            	var bar_end_x = TOTAL_FRAMES * timeline_scale + timeline_shift;
+            	var bar_end_x = GLOBAL_TOTAL_FRAMES * timeline_scale + timeline_shift;
             	var cc = COLORS._main_value_positive;
-            	var cf = string(TOTAL_FRAMES);
+            	var cf = string(GLOBAL_TOTAL_FRAMES);
             	var tx = string_width(cf) + ui(4);
             	
             	draw_sprite_stretched_ext(THEME.box_r2, 0, bar_end_x - tx / 2, 0, tx, hh + PANEL_PAD, CDEF.main_dkblack, 1);
@@ -2414,12 +2414,12 @@ function Panel_Animation_Dopesheet() {
 	        var drw = timeline_stretch > 0;
 	        var _cc = timeline_stretch == 1? COLORS._main_accent : COLORS._main_value_positive;
 	        
-			if(!IS_PLAYING && timeline_stretch == 0 && pHOVER && point_in_circle(msx, msy, stx, sty, sty)) { 
+			if(!GLOBAL_IS_PLAYING && timeline_stretch == 0 && pHOVER && point_in_circle(msx, msy, stx, sty, sty)) { 
 				_cc = COLORS._main_icon_light;
 				drw = true;
 			}
 	        
-            if(drw) drawFrameLine(TOTAL_FRAMES, sty - ui(10), sty + ui(10), _cc);
+            if(drw) drawFrameLine(GLOBAL_TOTAL_FRAMES, sty - ui(10), sty + ui(10), _cc);
         #endregion
         
         BLEND_SUBTRACT
@@ -2492,10 +2492,10 @@ function Panel_Animation_Dopesheet() {
         if(ds_list_empty(copy_clipboard)) return;
         
         var shf  = 0;
-        var minx = TOTAL_FRAMES + 2;
+        var minx = GLOBAL_TOTAL_FRAMES + 2;
         for( var i = 0; i < ds_list_size(copy_clipboard); i++ )
             minx = min(minx, copy_clipboard[| i].time);
-        shf = CURRENT_FRAME - minx;
+        shf = GLOBAL_CURRENT_FRAME - minx;
         
         var multiVal = false;
         var _val = noone;

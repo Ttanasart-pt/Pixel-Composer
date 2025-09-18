@@ -898,7 +898,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		
 		content_surface = surface_verify(content_surface, tw, th);
 		var _active = true;
-		if(con && con.pause_when_rendering && IS_RENDERING) _active = false; 
+		if(con && con.pause_when_rendering && GLOBAL_IS_RENDERING) _active = false; 
 		
 		if(_active) {
 			surface_set_target(content_surface);
@@ -1144,6 +1144,7 @@ function PanelContent() constructor {
 		onResize();
 	}
 	
+	static setSize      = function(_w, _h) { w = _w; h = _h; return self; } 
 	static onResize     = function() {}
 	static setPanelSize = function(_panel) {
 		x = _panel.tx;

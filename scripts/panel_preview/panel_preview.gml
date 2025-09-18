@@ -1491,7 +1491,7 @@ function Panel_Preview() : PanelContent() constructor {
         var _step = PROJECT.onion_skin.step;
         var _top  = PROJECT.onion_skin.on_top;
         
-        var fr = CURRENT_FRAME;
+        var fr = GLOBAL_CURRENT_FRAME;
         var st = min(_rang[0], _rang[1]);
         var ed = max(_rang[0], _rang[1]);
             
@@ -2081,9 +2081,9 @@ function Panel_Preview() : PanelContent() constructor {
                 draw_text(right_menu_x, right_menu_y, txt);
                 right_menu_y += _lh;
             
-                var _cur_frame = CURRENT_FRAME + 1;
+                var _cur_frame = GLOBAL_CURRENT_FRAME + 1;
                 draw_set_color(frac(_cur_frame) == 0? COLORS._main_text_sub : COLORS._main_value_negative);
-                draw_text(right_menu_x, right_menu_y, $"{__txt("Frame")} {_cur_frame}/{TOTAL_FRAMES}");
+                draw_text(right_menu_x, right_menu_y, $"{__txt("Frame")} {_cur_frame}/{GLOBAL_TOTAL_FRAMES}");
             
                 if(d3_active == NODE_3D.none) {
                     right_menu_y += _lh;

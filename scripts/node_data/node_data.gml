@@ -1204,8 +1204,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static setRenderStatus = function(result) {
-		INLINE
-		
 		if(rendered == result) return;
 		logNodeDebug($"Set render status for {getFullName()} : {result}", 3);
 		

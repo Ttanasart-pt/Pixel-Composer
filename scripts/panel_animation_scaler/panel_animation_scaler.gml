@@ -2,7 +2,7 @@ function Panel_Animation_Scaler() : Panel_Linear_Setting() constructor {
 	title = __txtx("anim_scale_title", "Animation Scaler");
 	w     = ui(380);
 	
-	scale_to = TOTAL_FRAMES;
+	scale_to = GLOBAL_TOTAL_FRAMES;
 	quantize = false;
 	
 	properties = [
@@ -24,7 +24,7 @@ function Panel_Animation_Scaler() : Panel_Linear_Setting() constructor {
 	b_apply = button(function() /*=>*/ {return scale()}).setIcon(THEME.accept_16, 0, COLORS._main_icon_dark);
 	
 	static scale = function() {
-		var fac = scale_to / TOTAL_FRAMES;
+		var fac = scale_to / GLOBAL_TOTAL_FRAMES;
 		
 		for (var i = 0, n = array_length(PROJECT.allNodes); i < n; i++) {
 			var _node = PROJECT.allNodes[i];
@@ -42,7 +42,7 @@ function Panel_Animation_Scaler() : Panel_Linear_Setting() constructor {
 			}
 		}
 		
-		TOTAL_FRAMES = scale_to;
+		GLOBAL_TOTAL_FRAMES = scale_to;
 		close();
 	}
 	

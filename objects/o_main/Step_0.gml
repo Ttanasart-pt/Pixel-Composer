@@ -8,12 +8,6 @@ if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 	
 	try {
 		if(PANEL_MAIN != 0) PANEL_MAIN.step();
-		array_foreach(PROJECT.allNodes, function(_node) /*=>*/ { 
-			if(!_node.active) return; 
-			
-			_node.triggerCheck(); 
-			_node.doStep(); 
-		});
 	} catch(e) {
 		noti_warning("Step error: " + exception_print(e));
 	}

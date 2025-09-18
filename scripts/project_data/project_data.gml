@@ -268,6 +268,24 @@ function Project() constructor {
 		
 		animator.step();
 		globalNode.step();
+		
+		try {
+			array_foreach(allNodes, function(n) /*=>*/ { 
+				if(!n.active) return; 
+				
+				n.triggerCheck(); 
+				n.doStep(); 
+			});
+		} catch(e) {
+			noti_warning("Node Step error: " + exception_print(e));
+		}
+	}
+	
+	static stepBegin = function() { 
+		array_foreach(allNodes, function(n) /*=>*/ { 
+			if(!n.active) return; 
+			n.stepBegin(); 
+		});
 	}
 	
 	static postStep = function() { slideShowPostStep(); }

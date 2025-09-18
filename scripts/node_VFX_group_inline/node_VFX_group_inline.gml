@@ -67,7 +67,7 @@ function Node_VFX_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 		dimension = inputs[1].getValue();
 		
 		if(IS_FIRST_FRAME) {
-			topoList = NodeListSort(nodes);
+			topoList = NodeListSort(nodes, project);
 			reset();
 		}
 	}

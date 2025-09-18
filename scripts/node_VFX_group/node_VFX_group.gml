@@ -71,7 +71,7 @@ function Node_VFX_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group
 	
 	static update = function() {
 		if(IS_FIRST_FRAME) 
-			topoList = NodeListSort(nodes);
+			topoList = NodeListSort(nodes, project);
 		
 		allCached = true;
 		for( var i = 0, n = array_length(nodes); i < n; i++ ) {

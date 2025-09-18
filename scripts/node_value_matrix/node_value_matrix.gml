@@ -6,7 +6,7 @@ function __NodeValue_Matrix(_name, _node, _value, _data = {}) : NodeValue(_name,
 	
 	__temp_matrix_object = new Matrix(3);
 	
-	static getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { //// Get value
+	static getValue = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { //// Get value
 		getValueRecursive(self.__curr_get_val, _time);
 		var val = __curr_get_val[0];
 		var nod = __curr_get_val[1]; if(!is(nod, NodeValue)) return val;
@@ -23,7 +23,7 @@ function __NodeValue_Matrix(_name, _node, _value, _data = {}) : NodeValue(_name,
 		return __temp_matrix_object;
 	}
 	
-	static setValueDirect = function(val = 0, index = noone, record = true, time = CURRENT_FRAME, _update = true) {
+	static setValueDirect = function(val = 0, index = noone, record = true, time = NODE_CURRENT_FRAME, _update = true) {
 	    is_modified = true;
 	    var _val = val;
 	    
@@ -40,7 +40,7 @@ function __NodeValue_Matrix(_name, _node, _value, _data = {}) : NodeValue(_name,
 		draw_junction_index = type;
 		
 		if(_update) {
-			if(!IS_PLAYING) node.triggerRender();
+			node.triggerRender();
 			node.valueUpdate(self.index);
 			node.clearCacheForward();
 		}

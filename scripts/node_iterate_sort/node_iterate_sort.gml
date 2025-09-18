@@ -21,7 +21,7 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 	outputNode = noone;
 	nodeValid  = false;
 	
-	if(NODE_NEW_MANUAL) { #region
+	if(NODE_NEW_MANUAL) {
 		var input0 = nodeBuild("Node_Iterator_Sort_Input", -256, -64, self);
 		input0.setDisplayName("Value 1", false);
 		input0.attributes.sort_inputs = 1;
@@ -32,25 +32,25 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 		
 		var output = nodeBuild("Node_Iterator_Sort_Output", 256, -32, self);
 		output.attributes.sort_inputs = 9;
-	} #endregion
+	}
 	
-	static isActiveDynamic = function(frame = CURRENT_FRAME) { #region
+	static isActiveDynamic = function(frame = CURRENT_FRAME) {
 		for( var i = 0, n = array_length(nodes); i < n; i++ )
 			if(nodes[i].isActiveDynamic(frame)) return true;
 		
 		return false;
-	} #endregion
+	}
 	
 	static getNextNodes = function(checkLoop = false) { return getNextNodesExternal(); }
 	
-	static onStep = function() { #region
+	static onStep = function() {
 		var type = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;
 		inputs[0].setType(type);
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		if(IS_FIRST_FRAME) {
-			topoList = NodeListSort(nodes);
+			topoList = NodeListSort(nodes, project);
 			
 			inputNodes     = [ noone, noone ];
 			outputNode     = noone;
@@ -97,15 +97,15 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 		}
 		
 		if(nodeValid) sortArray();
-	} #endregion
+	}
 	
-	static swap = function(arr, a, b) { #region
+	static swap = function(arr, a, b) {
 		var temp = arr[a];
 		arr[@ a] = arr[b];
 		arr[@ b] = temp;
-	} #endregion
+	}
 	
-	static compareValue = function(val1, val2) { #region
+	static compareValue = function(val1, val2) {
 		if(!nodeValid) return 0;
 		inputNodes[0].setValue(val1,,, false);
 		inputNodes[1].setValue(val2,,, false);
@@ -116,9 +116,9 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 		var res = outputNode.getValue();
 		LOG_IF(global.FLAG.render == 1, $"Iterating | Comparing {val1}, {val2} = {res}");
 		return res;
-	} #endregion
+	}
 	
-	static partition = function(arr, low, high) { #region
+	static partition = function(arr, low, high) {
 		var pv = arr[high]; 
 		var i  = low - 1;
 		
@@ -131,18 +131,18 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 		
 		swap(arr, i + 1, high);
 		return i + 1;
-	} #endregion
+	}
 	
-	static quickSort = function(arr, low, high) { #region
+	static quickSort = function(arr, low, high) {
 		if(low >= high) return;
 		
 		var p = partition(arr, low, high);
 		
 		quickSort(arr, low, p - 1);
 		quickSort(arr, p + 1, high);
-	} #endregion
+	}
 	
-	static sortArray = function() { #region
+	static sortArray = function() {
 		iterated = 0;
 		loop_start_time = get_timer();
 		
@@ -157,5 +157,5 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 		
 		quickSort(arrOut, 0, array_length(arrOut) - 1);
 		outputs[0].setValue(arrOut);
-	} #endregion
+	}
 }

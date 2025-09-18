@@ -39,7 +39,7 @@
 function init(_width, _height, _particleSize, _density, _maxParticles) {
 	particlePos  = array_create(_maxParticles * 2);
 	particleVel  = array_create(_maxParticles * 2);
-	particleHist = array_create(_maxParticles * 2 * TOTAL_FRAMES);
+	particleHist = array_create(_maxParticles * 2 * GLOBAL_TOTAL_FRAMES);
 	particleLife = array_create(_maxParticles);
 	obstracles   = [];
 	numParticles = 0;
@@ -122,7 +122,7 @@ function step() {
 	buffer_seek(particleLifeBuff, buffer_seek_start, 0);
 	
 	for(var i = 0; i < maxParticles * 2; i++) {
-		particleHist[maxParticles * 2 * CURRENT_FRAME + i] = particlePos[i];
+		particleHist[maxParticles * 2 * GLOBAL_CURRENT_FRAME + i] = particlePos[i];
 		particlePos[i]  = buffer_read(particlePosBuff, buffer_f64);
 		particleVel[i]  = buffer_read(particleVelBuff, buffer_f64);
 	}

@@ -90,12 +90,12 @@ function ase_layer(_name, _type = 0) constructor {
 		anim = array_length(cels) > 1;
 	}
 	
-	static getCelRaw = function(index = CURRENT_FRAME, _loop = false) {
+	static getCelRaw = function(index = GLOBAL_CURRENT_FRAME, _loop = false) {
 		ind = _loop? safe_mod(index, array_length(cels)) : index;
 		return array_safe_get_fast(cels, ind);
 	}
 	
-	static getCel = function(index = CURRENT_FRAME, _loop = false) {
+	static getCel = function(index = GLOBAL_CURRENT_FRAME, _loop = false) {
 		if(tag == noone) return getCelRaw(index, _loop);
 			
 		var st  = tag[$ "Frame start"];

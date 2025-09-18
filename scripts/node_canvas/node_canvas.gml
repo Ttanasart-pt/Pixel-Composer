@@ -314,6 +314,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		use_color_3d        = false;
 		color_3d_selected   = 0;
+		
+		mouse_cur_x = 0;
+		mouse_cur_y = 0;
 	#endregion
 	
 	#region ++++ tools ++++
@@ -1085,8 +1088,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				active = false; 
 			}
 			
-			var mouse_cur_x = round((_mx - _x) / _s - 0.5);
-			var mouse_cur_y = round((_my - _y) / _s - 0.5);
+			mouse_cur_x = round((_mx - _x) / _s - 0.5);
+			mouse_cur_y = round((_my - _y) / _s - 0.5);
 		#endregion
 		
 		#region brush
@@ -1822,7 +1825,7 @@ function timelineItemNode_Canvas(_node) : timelineItemNode(_node) constructor {
 		}
 		
 		var _fr = round((_msx - _x) / _s);
-		if(_fr < 1 || _fr > TOTAL_FRAMES) return _hov;
+		if(_fr < 1 || _fr > NODE_TOTAL_FRAMES) return _hov;
 		
 		var _frAdd = _fr - node.attributes.frames;
 		if(!_hov && _chv && _frAdd < 16) {

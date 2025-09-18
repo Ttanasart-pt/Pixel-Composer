@@ -40,7 +40,7 @@ function Panel_Capture_Project() : PanelContent() constructor {
 		
 		if(!PROJECT.animator.frame_progress) return;
 			
-		if(CAPTURING > 1 && CURRENT_FRAME % gif_step == 0) {
+		if(CAPTURING > 1 && GLOBAL_CURRENT_FRAME % gif_step == 0) {
 			gif_s  = surface_verify(gif_s, gif_w, gif_h);
 			
 			var _p, _s;

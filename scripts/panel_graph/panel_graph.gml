@@ -323,6 +323,11 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     context_str = "Graph";
     icon        = THEME.panel_graph_icon;
     pause_when_rendering = true;
+    applyGlobal = true;
+    
+    w = ui(800);
+    h = ui(640);
+    auto_pin = true;
     
     function setTitle() {
         title_raw = project.path == ""? "New project" : filename_name_only(project.path);
@@ -964,7 +969,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     
     function onFocusBegin() {
         PANEL_GRAPH = self; 
-        PROJECT = project;
+        if(applyGlobal)
+        	PROJECT = project;
         
         nodes_select_drag = 0;
     } 
@@ -1493,7 +1499,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		
 		connection_draw_update = connection_draw_update || _upd;
 		
-		_upd = _upd || connection_cache[$ "frame"]     != CURRENT_FRAME;     connection_cache[$ "frame"]     = CURRENT_FRAME;
+		_upd = _upd || connection_cache[$ "frame"]     != GLOBAL_CURRENT_FRAME;     connection_cache[$ "frame"]     = GLOBAL_CURRENT_FRAME;
 		node_surface_update    = node_surface_update || _upd;
     }
     
@@ -1630,7 +1636,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         #region data
         	var log = 0, t = get_timer();
         	
-	        var _highType   = PROJECT.graphConnection.line_highlight;
+	        var _highType   = project.graphConnection.line_highlight;
 	        var _highlight  = !array_empty(nodes_selecting);
 	        	_highlight &= (_highType == 1 && key_mod_press(ALT)) || _highType == 2;
 	        project.graphDisplay.highlight = _highlight;
@@ -1740,7 +1746,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                         	var _ctx = getCurrentContext();
                         	
                         	if(!PANEL_INSPECTOR.locked) PANEL_INSPECTOR.inspecting = _ctx; 
-                        	if(_ctx || !array_empty(PROJECT.globalLayer_nodes)) PANEL_PREVIEW.setNodePreview(_ctx);
+                        	if(_ctx || !array_empty(project.globalLayer_nodes)) PANEL_PREVIEW.setNodePreview(_ctx);
                         }
                     
                     } else if(cache_group_edit != noone) {
@@ -2997,7 +3003,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             }
         }
         
-        var _dir = filename_name_only(filename_dir(PROJECT.path));
+        var _dir = filename_name_only(filename_dir(project.path));
         if(_dir == "Getting started") {
         	var _spx1 = _sl_x - ui(8);
         	var _spx0 = _spx1 - ui(40);

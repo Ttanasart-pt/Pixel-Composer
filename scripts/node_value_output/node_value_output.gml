@@ -7,11 +7,11 @@ function __NodeValue_Output(_name, _node, _type, _value, _tooltip = "") : NodeVa
 	
 	output_value = _value;
 	
-	static getValue = function(_time = CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { 
+	static getValue = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { 
 		return output_value;
 	}
 	
-	static getValueRecursive = function(arr = __curr_get_val, _time = CURRENT_FRAME) {
+	static getValueRecursive = function(arr = __curr_get_val, _time = NODE_CURRENT_FRAME) {
 		arr[@ 0] = output_value;
 		arr[@ 1] = self;
 	}
@@ -21,7 +21,7 @@ function __NodeValue_Output(_name, _node, _type, _value, _tooltip = "") : NodeVa
 	
 	/////============== SET =============
 	
-	static setValue = function(val = 0, record = true, time = CURRENT_FRAME, _update = true) {
+	static setValue = function(val = 0, record = true, time = NODE_CURRENT_FRAME, _update = true) {
 		output_value = val;
 		
 		for( var i = 0, n = array_length(value_to_loop); i < n; i++ )
@@ -30,7 +30,7 @@ function __NodeValue_Output(_name, _node, _type, _value, _tooltip = "") : NodeVa
 		return true;
 	}
 	
-	static setValueDirect = function(val = 0, index = noone, record = true, time = CURRENT_FRAME, _update = true) {
+	static setValueDirect = function(val = 0, index = noone, record = true, time = NODE_CURRENT_FRAME, _update = true) {
 		output_value = val;
 		return true;
 	}

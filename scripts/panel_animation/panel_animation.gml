@@ -3,15 +3,15 @@
     function panel_animation_settings_call()           { var dia = dialogPanelCall(new Panel_Animation_Setting()); dia.anchor = ANCHOR.none;                                                             }
     function panel_animation_scale_call()              { dialogPanelCall(new Panel_Animation_Scaler());                                                                                                  }
     
-    function panel_animation_play_pause()              { CALL("play_pause");           if(IS_RENDERING) return; if(IS_PLAYING) PROJECT.animator.pause() else PROJECT.animator.play();                    }
-    function panel_animation_resume()                  { CALL("resume_pause");         if(IS_RENDERING) return; if(PROJECT.animator.is_playing) PROJECT.animator.pause() else PROJECT.animator.resume(); }
+    function panel_animation_play_pause()              { CALL("play_pause");           if(GLOBAL_IS_RENDERING) return; if(GLOBAL_IS_PLAYING) PROJECT.animator.pause() else PROJECT.animator.play();                    }
+    function panel_animation_resume()                  { CALL("resume_pause");         if(GLOBAL_IS_RENDERING) return; if(PROJECT.animator.is_playing) PROJECT.animator.pause() else PROJECT.animator.resume(); }
     
-    function panel_animation_first_frame()             { CALL("first_frame");          if(IS_RENDERING) return; PROJECT.animator.firstFrame();                                                           }
-    function panel_animation_last_frame()              { CALL("last_frame");           if(IS_RENDERING) return; PROJECT.animator.lastFrame();                                                            }
-    function panel_animation_prev_frame()              { CALL("previous_frame");       if(IS_RENDERING) return; PROJECT.animator.setFrame(max(PROJECT.animator.real_frame - 1, 0));                      }
-    function panel_animation_next_frame()              { CALL("next_frame");           if(IS_RENDERING) return; PROJECT.animator.setFrame(min(PROJECT.animator.real_frame + 1, TOTAL_FRAMES - 1));       }
-    function panel_animation_prev_keyframe()           { CALL("previous_keyframe");    if(IS_RENDERING) return; PANEL_ANIMATION.toPrevKeyframe(); }
-    function panel_animation_next_keyframe()           { CALL("next_keyframe");        if(IS_RENDERING) return; PANEL_ANIMATION.toNextKeyframe(); }
+    function panel_animation_first_frame()             { CALL("first_frame");          if(GLOBAL_IS_RENDERING) return; PROJECT.animator.firstFrame();                                                           }
+    function panel_animation_last_frame()              { CALL("last_frame");           if(GLOBAL_IS_RENDERING) return; PROJECT.animator.lastFrame();                                                            }
+    function panel_animation_prev_frame()              { CALL("previous_frame");       if(GLOBAL_IS_RENDERING) return; PROJECT.animator.setFrame(max(PROJECT.animator.real_frame - 1, 0));                      }
+    function panel_animation_next_frame()              { CALL("next_frame");           if(GLOBAL_IS_RENDERING) return; PROJECT.animator.setFrame(min(PROJECT.animator.real_frame + 1, GLOBAL_TOTAL_FRAMES - 1));       }
+    function panel_animation_prev_keyframe()           { CALL("previous_keyframe");    if(GLOBAL_IS_RENDERING) return; PANEL_ANIMATION.toPrevKeyframe(); }
+    function panel_animation_next_keyframe()           { CALL("next_keyframe");        if(GLOBAL_IS_RENDERING) return; PANEL_ANIMATION.toNextKeyframe(); }
     
     function panel_animation_collapseToggle()          { CALL("animation_collapse_toggle");         PANEL_ANIMATION.collapseToggle();                                                                    }
     function panel_animation_delete_key()              { CALL("animation_delete_key");              PANEL_ANIMATION.deleteKeys();                                                                        }
@@ -263,19 +263,19 @@ function Panel_Animation() : PanelContent() constructor {
         var bar_w = timeline_w;
         var bar_h = timeline_h;
         
-        var bar_total_w = TOTAL_FRAMES * timeline_scale;
-    	var bar_line_w  = TOTAL_FRAMES * timeline_scale + timeline_shift;
+        var bar_total_w = GLOBAL_TOTAL_FRAMES * timeline_scale;
+    	var bar_line_w  = GLOBAL_TOTAL_FRAMES * timeline_scale + timeline_shift;
         var bar_int_x   = min(bar_x + bar_w, bar_x + bar_line_w);
         
         timeline_shift = lerp_float(timeline_shift, timeline_shift_to, 4);
         
         if(timeline_scubbing) {
             var rfrm = (mx - bar_x - timeline_shift) / timeline_scale - 1;
-            if(!key_mod_press(CTRL)) rfrm = clamp(rfrm, 0, TOTAL_FRAMES - 1);
+            if(!key_mod_press(CTRL)) rfrm = clamp(rfrm, 0, GLOBAL_TOTAL_FRAMES - 1);
             
             PROJECT.animator.setFrame(rfrm, !key_mod_press(ALT));
             
-            timeline_show_time = CURRENT_FRAME;
+            timeline_show_time = GLOBAL_CURRENT_FRAME;
             if(timeline_show_time != _scrub_frame)
                 _scrub_frame = timeline_show_time;
                 
@@ -331,13 +331,13 @@ function Panel_Animation() : PanelContent() constructor {
         		
         	} else if(mouse_press(mb_left, pFOCUS) && mx < bar_int_x) {
                 timeline_scubbing = true;
-                timeline_scub_st  = CURRENT_FRAME;
+                timeline_scub_st  = GLOBAL_CURRENT_FRAME;
                 _scrub_frame      = timeline_scub_st;
                 KEYBOARD_RESET
         	}
             
             if(mouse_press(mb_right, pFOCUS)) {
-                __selecting_frame = clamp(round((mx - bar_x - timeline_shift) / timeline_scale), 0, TOTAL_FRAMES - 1);
+                __selecting_frame = clamp(round((mx - bar_x - timeline_shift) / timeline_scale), 0, GLOBAL_TOTAL_FRAMES - 1);
                 menuCall("animation_summary", menuItems_gen("animation_summary"));
             }
         }
@@ -432,7 +432,7 @@ function Panel_Animation() : PanelContent() constructor {
         var bar_y       = h - timeline_h - ui(10);
         var bar_w       = timeline_w;
         var bar_h       = timeline_h;
-        var bar_total_w = TOTAL_FRAMES * timeline_scale;
+        var bar_total_w = GLOBAL_TOTAL_FRAMES * timeline_scale;
         var inspecting  = PANEL_INSPECTOR.getInspecting();
         
         var msx = mx - bar_x;
@@ -450,7 +450,7 @@ function Panel_Animation() : PanelContent() constructor {
 	        #region BG & Lines
 		        if(inspecting && inspecting.use_cache) { //cache
 		        	draw_set_alpha(0.05);
-		            for(var i = 0, n = min(TOTAL_FRAMES, array_length(inspecting.cache_result)); i < n; i++) {
+		            for(var i = 0, n = min(GLOBAL_TOTAL_FRAMES, array_length(inspecting.cache_result)); i < n; i++) {
 		                var x0 = (i + 0) * timeline_scale + timeline_shift;
 		                var x1 = (i + 1) * timeline_scale + timeline_shift;
 		                
@@ -467,7 +467,7 @@ function Panel_Animation() : PanelContent() constructor {
 	            for(var i = _st; i <= _fr; i++) {
 	                var bar_frame  = i * timeline_separate;
 	                var bar_line_x = bar_frame * timeline_scale + timeline_shift;
-	                var ln_a = (bar_frame < 0 || bar_frame > TOTAL_FRAMES)? .5 : 1;
+	                var ln_a = (bar_frame < 0 || bar_frame > GLOBAL_TOTAL_FRAMES)? .5 : 1;
 	                
 	                draw_set_alpha(ln_a);
 	                draw_set_color(COLORS.panel_animation_frame_divider);
@@ -479,10 +479,10 @@ function Panel_Animation() : PanelContent() constructor {
 	            
 	            draw_set_alpha(1);
 	            
-                var bar_line_x = TOTAL_FRAMES * timeline_scale + timeline_shift;
+                var bar_line_x = GLOBAL_TOTAL_FRAMES * timeline_scale + timeline_shift;
                 
                 draw_set_text(f_p2, fa_center, fa_bottom, CDEF.main_mdwhite);
-                draw_text_add(bar_line_x, ui(16), TOTAL_FRAMES);
+                draw_text_add(bar_line_x, ui(16), GLOBAL_TOTAL_FRAMES);
                 
 	            draw_set_color_alpha(COLORS.panel_animation_end_line, .5);
                 draw_line_width(bar_line_x, ui(12), bar_line_x, bar_h, 2);
@@ -497,9 +497,9 @@ function Panel_Animation() : PanelContent() constructor {
 	            	
 	            draw_set_alpha(1);
 	            
-	            if(FRAME_RANGE != noone) {
-	                var _fr_x0 = FRAME_RANGE[0] * timeline_scale + timeline_shift - 6;
-	                var _fr_x1 = FRAME_RANGE[1] * timeline_scale + timeline_shift + 2;
+	            if(GLOBAL_FRAME_RANGE != noone) {
+	                var _fr_x0 = GLOBAL_FRAME_RANGE[0] * timeline_scale + timeline_shift - 6;
+	                var _fr_x1 = GLOBAL_FRAME_RANGE[1] * timeline_scale + timeline_shift + 2;
 	                var _rng_spr = PROJECT.animator.is_simulating? THEME.ui_selection_range_sim_hori : THEME.ui_selection_range_hori;
 	                var _rng_clr = PROJECT.animator.is_simulating? COLORS.panel_animation_range_sim  : COLORS.panel_animation_range;
 	                
@@ -518,16 +518,16 @@ function Panel_Animation() : PanelContent() constructor {
 		            draw_set_alpha(1);
 	            }
 	            
-	            var bar_line_x = (CURRENT_FRAME + 1) * timeline_scale + timeline_shift;
+	            var bar_line_x = (GLOBAL_CURRENT_FRAME + 1) * timeline_scale + timeline_shift;
 	            var cc = PROJECT.animator.is_playing? COLORS._main_value_positive : COLORS._main_accent;
 	            
 	            draw_set_color(cc);
-	            draw_set_alpha((CURRENT_FRAME >= 0 && CURRENT_FRAME < TOTAL_FRAMES) * .5 + .5);
+	            draw_set_alpha((GLOBAL_CURRENT_FRAME >= 0 && GLOBAL_CURRENT_FRAME < GLOBAL_TOTAL_FRAMES) * .5 + .5);
 	            draw_line(bar_line_x, ui(15), bar_line_x, bar_h - PANEL_PAD);
 	            draw_set_alpha(1);
 	            
 	            draw_set_text(f_p2, fa_center, fa_bottom, cc);
-	            var cf = string(CURRENT_FRAME + 1);
+	            var cf = string(GLOBAL_CURRENT_FRAME + 1);
             	var tx = string_width(cf) + ui(4);
             	
 	            draw_text_add(bar_line_x, ui(16), cf);
@@ -662,10 +662,10 @@ function Panel_Animation() : PanelContent() constructor {
                 var but = control_buttons[ind];
                 var txt = but[0]();
                 var ind = but[1]();
-                var cc  = IS_RENDERING? COLORS._main_icon_dark : but[2]();
+                var cc  = GLOBAL_IS_RENDERING? COLORS._main_icon_dark : but[2]();
                 var fnc = but[3];
             
-                if(buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(32), [mx, my], pHOVER && !IS_RENDERING, pFOCUS && !IS_RENDERING, txt, THEME.sequence_control, ind, cc) == 2)
+                if(buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(32), [mx, my], pHOVER && !GLOBAL_IS_RENDERING, pFOCUS && !GLOBAL_IS_RENDERING, txt, THEME.sequence_control, ind, cc) == 2)
                     fnc();
             
                 bx += ui(36);
@@ -684,19 +684,19 @@ function Panel_Animation() : PanelContent() constructor {
             draw_sprite_stretched(THEME.ui_panel_bg, 1, ui(8), y0, w - ui(16), y1 - y0);
             
             var pw = w - ui(16);
-            var px = ui(8) + pw * (CURRENT_FRAME / TOTAL_FRAMES);
+            var px = ui(8) + pw * (GLOBAL_CURRENT_FRAME / GLOBAL_TOTAL_FRAMES);
             draw_set_color(COLORS._main_accent);
             draw_line(px, y0, px, y1);
             
             if(point_in_rectangle(mx, my, ui(8), y0, w - ui(16), y1) && timeline_stretch == 0) {
                 if(mouse_click(mb_left, pFOCUS)) {
-                    var rfrm = (mx - ui(8)) / (w - ui(16)) * TOTAL_FRAMES;
-                    if(!key_mod_press(CTRL)) rfrm = clamp(rfrm, 0, TOTAL_FRAMES - 1);                 // clamp to animating region
+                    var rfrm = (mx - ui(8)) / (w - ui(16)) * GLOBAL_TOTAL_FRAMES;
+                    if(!key_mod_press(CTRL)) rfrm = clamp(rfrm, 0, GLOBAL_TOTAL_FRAMES - 1);                 // clamp to animating region
                     PROJECT.animator.setFrame(rfrm);
                 }
             }
             
-            var txt = string(CURRENT_FRAME + 1) + "/" + string(TOTAL_FRAMES);
+            var txt = string(GLOBAL_CURRENT_FRAME + 1) + "/" + string(GLOBAL_TOTAL_FRAMES);
             
             if(y1 - y0 < ui(40)) {
                 draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text_sub);
@@ -733,7 +733,7 @@ function Panel_Animation() : PanelContent() constructor {
         drawAnimationControl();
         
         if(timeline_show_time > -1) {
-            TOOLTIP = $"{__txt("Frame")} {timeline_show_time + 1}/{TOTAL_FRAMES}";
+            TOOLTIP = $"{__txt("Frame")} {timeline_show_time + 1}/{GLOBAL_TOTAL_FRAMES}";
             timeline_show_time = -1;
         }
     }
@@ -741,7 +741,7 @@ function Panel_Animation() : PanelContent() constructor {
     ////- Actions
     
 	function resetView() {
-		var _sca = timeline_w / (TOTAL_FRAMES + 2);
+		var _sca = timeline_w / (GLOBAL_TOTAL_FRAMES + 2);
 		var _shf = _sca;
 		
 		timeline_scale    = _sca;
@@ -751,7 +751,7 @@ function Panel_Animation() : PanelContent() constructor {
 	
     function focusTimeline() {
     	var bar_w       = timeline_w;
-    	var bar_line_x  = (CURRENT_FRAME + 1) * timeline_scale;
+    	var bar_line_x  = (GLOBAL_CURRENT_FRAME + 1) * timeline_scale;
     	var bar_line_sx = bar_line_x + timeline_shift;
     	
     	if(bar_line_sx < 0 || bar_line_sx > bar_w) {

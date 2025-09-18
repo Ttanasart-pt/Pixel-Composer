@@ -3,8 +3,6 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	use_cache = CACHE_USE.auto;
 	var i = input_len;
 	
-	onSurfaceSize = function() /*=>*/ {return getInputData(input_len, DEF_SURF)};
-	
 	////- =Output
 	newInput(i+3, nodeValue_Surface( "Background" ));
 	newInput(i+0, nodeValue_Dimension());
@@ -43,7 +41,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	
 	static onInspector2Update = function() /*=>*/ { clearCache(); }
 	
-	static getDimension = function() /*=>*/ {return onSurfaceSize()};
+	static getDimension = function() /*=>*/ {return inputs[input_len].getValue()};
 	
 	static onValueUpdate = function(index = 0) {
 		if(index == input_len + 0) {
@@ -70,13 +68,8 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		seed = getInputData(32);
 	}
 	
-	static onStep = function() {
-		use_cache = attributes.cache? CACHE_USE.auto : CACHE_USE.none;
-		
+	static preUpdate = function() /*=>*/ {
 		var _dim = getInputData(input_len + 0);
-		var _typ = getInputData(input_len + 4);
-		
-		inputs[input_len + 5].setVisible(_typ == PARTICLE_RENDER_TYPE.line);
 		
 		if(curr_dimension[0] != _dim[0] || curr_dimension[1] != _dim[1]) {
 			clearCache();
@@ -87,10 +80,15 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	}
 	
 	static onUpdate = function(frame = CURRENT_FRAME) {
+		use_cache = attributes.cache? CACHE_USE.auto : CACHE_USE.none;
+		
 		var _inSurf  = getInputData(0);
 		var _dim	 = getInputData(input_len + 0);
 		var _bg 	 = getInputData(input_len + 3);
+		var _typ     = getInputData(input_len + 4);
 		var _outSurf = outputs[0].getValue();
+		
+		inputs[input_len + 5].setVisible(_typ == PARTICLE_RENDER_TYPE.line);
 		
 		if(is_surface(_bg)) _dim = surface_get_dimension(_bg)
 		
@@ -99,10 +97,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		
 		outputs[0].setValue(_outSurf);
 		
-		if(IS_FIRST_FRAME) {
-			reset();
-			reLoop();
-		}
+		if(IS_FIRST_FRAME) { reset(); reLoop(); }
 		
 		runVFX(frame);
 	}
@@ -146,8 +141,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 			}
 		surface_reset_shader();	
 		
-		if(PROJECT.animator.is_playing)
-			cacheCurrentFrame(_outSurf);
+		if(GLOBAL_IS_PLAYING) cacheCurrentFrame(_outSurf);
 	}
 	
 }

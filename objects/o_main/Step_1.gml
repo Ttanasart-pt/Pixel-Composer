@@ -39,7 +39,7 @@ _FILE_DROPPED     = false;
 	
 	var  foc     = window_has_focus();
 	var _fps_cur = game_get_speed(gamespeed_fps);
-	var _fps_tar = foc || IS_PLAYING? PREFERENCES.ui_framerate : PREFERENCES.ui_framerate_non_focus;
+	var _fps_tar = foc || GLOBAL_IS_PLAYING? PREFERENCES.ui_framerate : PREFERENCES.ui_framerate_non_focus;
 	if(_fps_tar != _fps_cur) {
 		if(_fps_tar == 0) {
 			display_set_timing_method(tm_systemtiming);
@@ -147,15 +147,13 @@ _FILE_DROPPED     = false;
 	
 	DEF_SURFACE_RESET();
 	
-	if(!PROJECT.safeMode && UPDATE_RENDER_ORDER) {
-		// ResetAllNodesRender();
+	if(!PROJECT.safeMode && UPDATE_RENDER_ORDER)
 		NodeTopoSort();
-	}
 	
 	if(!LOADING) {
-		if(!PROJECT.safeMode) array_foreach(PROJECT.allNodes, function(_node) /*=>*/ { if(!_node.active) return; _node.stepBegin(); });
-	
-		if(LIVE_UPDATE) Render();
+		if(!PROJECT.safeMode) PROJECT.stepBegin();
+		
+		if(LIVE_UPDATE) Render(PROJECT);
 		else if(!PROJECT.safeMode) {
 			UPDATE_RENDER_ORDER = false;
 			
@@ -168,14 +166,12 @@ _FILE_DROPPED     = false;
 						PROGRAM_ARGUMENTS._run = false;
 					}
 							
-				} else if(IS_PLAYING || IS_RENDERING) {
+				} else if(GLOBAL_IS_PLAYING || GLOBAL_IS_RENDERING) {
 					if(PROJECT.animator.frame_progress) {
 						__addon_preAnim();
 						
-						// if(IS_FIRST_FRAME) ResetAllNodesRender();
-						
-						if(IS_CMD) Render(false);
-						else       Render(true);
+						if(IS_CMD) Render(PROJECT, false);
+						else       Render(PROJECT, true);
 						
 						__addon_postAnim();
 					}
@@ -183,10 +179,10 @@ _FILE_DROPPED     = false;
 					
 				} else {
 					if(UPDATE & RENDER_TYPE.full)
-						Render();
+						Render(PROJECT);
 						
 					else if(UPDATE & RENDER_TYPE.partial)
-						Render(true);
+						Render(PROJECT, true);
 				}
 			}
 		}

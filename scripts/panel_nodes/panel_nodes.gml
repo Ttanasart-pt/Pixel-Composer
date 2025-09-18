@@ -25,7 +25,7 @@ function Panel_Nodes() : PanelContent() constructor {
 	w           = ui(320);
 	h           = ui(480);
 	
-	NodeTreeSort();
+	NodeTreeSort(PROJECT);
 	
 	search_string = "";
 	tb_search     = textBox_Text(function(str) /*=>*/ { search_string = string(str); })

@@ -348,7 +348,7 @@ function UNDO() {
 	for(var i = array_length(actions) - 1; i >= 0; i--)
 		actions[i].undo();
 	IS_UNDOING = false;
-	Render();
+	Render(PROJECT);
 	
 	ds_stack_push(REDO_STACK, actions);
 	PANEL_MENU.undoUpdate();
@@ -364,7 +364,7 @@ function REDO() {
 	for(var i = 0; i < array_length(actions); i++)
 		actions[i].redo();
 	IS_UNDOING = false;
-	Render();
+	Render(PROJECT);
 	
 	ds_stack_push(UNDO_STACK, actions);	
 	PANEL_MENU.undoUpdate();

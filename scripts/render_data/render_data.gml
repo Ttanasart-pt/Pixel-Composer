@@ -18,44 +18,30 @@ enum RENDER_TYPE {
 	global.getvalue_hit = 0;
 #endregion
 
-function ResetAllNodesRender() {
-	LOG_IF(global.FLAG.render == 1, $"XXXXXXXXXXXXXXXXXXXX RESETTING ALL NODES [frame {CURRENT_FRAME}] XXXXXXXXXXXXXXXXXXXX");
-	
-	array_foreach(PROJECT.allNodes, function(_node) { 
-		if(!is_instanceof(_node, Node)) return;
-		
-		_node.setRenderStatus(false);
-		for( var i = 0, n = array_length(_node.inputs); i < n; i++ ) 
-			_node.inputs[i].resetCache();
-		return;
-	});
-}
-
-function NodeTopoSort() {
+function NodeTopoSort(_project = PROJECT) {
 	LOG_IF(global.FLAG.render == 1, $"======================= RESET TOPO =======================")
 	
-	var amo  = array_length(PROJECT.allNodes);
+	var amo  = array_length(_project.allNodes);
 	var _t   = get_timer();
 	
-	array_foreach(PROJECT.allNodes, function(n) /*=>*/ { if(is(n, Node_Collection)) n.refreshNodes(); });
+	array_foreach(_project.allNodes, function(n) /*=>*/ { if(is(n, Node_Collection)) n.refreshNodes(); });
 	
-	PROJECT.nodeTopo   = [];
-	__topoSort(PROJECT.nodeTopo, PROJECT.nodes);
+	_project.nodeTopo   = [];
+	__topoSort(_project.nodeTopo, _project.nodes, {}, _project);
 	
-	array_foreach(PROJECT.allNodes, function(n) /*=>*/ { if(is(n, Node_Group)) n.updateInstance(); });
+	array_foreach(_project.allNodes, function(n) /*=>*/ { if(is(n, Node_Group)) n.updateInstance(); });
 	
-	PROJECT.nodeTopoID = UUID_generate();
-	LOG_IF(global.FLAG.render == 1, $"+++++++ Topo Sort Completed: {array_length(PROJECT.nodeTopo)}/{amo} nodes sorted in {(get_timer() - _t) / 1000} ms +++++++");
+	_project.nodeTopoID = UUID_generate();
+	LOG_IF(global.FLAG.render == 1, $"+++++++ Topo Sort Completed: {array_length(_project.nodeTopo)}/{amo} nodes sorted in {(get_timer() - _t) / 1000} ms +++++++");
 	
-	NodeTreeSort();
+	NodeTreeSort(_project);
 }
 
-function NodeListSort(_nodeList) {
-	var _arr = __topoSort([], _nodeList);
-	return _arr;
+function NodeListSort(_nodeList, _project = PROJECT) {
+	var _arr = __topoSort([], _nodeList, {}, _project); return _arr;
 }
 
-function __sortNode(_arr, _node, _sorted, _nodeMap = undefined) {
+function __sortNode(_arr, _node, _sorted, _nodeMap = undefined, _project = PROJECT) {
 	if(struct_has(_sorted, _node.node_id)) return;
 	
 	var _parents = [];
@@ -72,10 +58,10 @@ function __sortNode(_arr, _node, _sorted, _nodeMap = undefined) {
 	// print($"> Checking {_node.name}: {array_length(_parents)} {_parents}");
 	
 	if(is_instanceof(_node, Node_Collection) && !_node.managedRenderOrder)
-		__topoSort(_arr, _node.nodes, _sorted);
+		__topoSort(_arr, _node.nodes, _sorted, _project);
 	
 	for( var i = 0, n = array_length(_parents); i < n; i++ ) 
-		__sortNode(_arr, _parents[i], _sorted, _nodeMap);
+		__sortNode(_arr, _parents[i], _sorted, _nodeMap, _project);
 	
 	if(struct_has(_sorted, _node.node_id)) return;
 	array_push(_arr, _node);
@@ -86,10 +72,10 @@ function __sortNode(_arr, _node, _sorted, _nodeMap = undefined) {
 	// print($"        > Adding > {_node.name} | {_arr}");
 }
 
-function __topoSort(_arr = [], _nodeArr = [], _sorted = {}) {
+function __topoSort(_arr = [], _nodeArr = [], _sorted = {}, _project = PROJECT) {
 	var _leaf     = [];
 	var _leftOver = [];
-	var _global   = _nodeArr == PROJECT.nodes;
+	var _global   = _nodeArr == _project.nodes;
 	var _nodeMap  = _global? undefined : {};
 	__temp_nodeList = _nodeArr;
 	
@@ -121,7 +107,7 @@ function __topoSort(_arr = [], _nodeArr = [], _sorted = {}) {
 	// print($"Leaf: {_leaf}");
 	
 	for( var i = 0, n = array_length(_leaf); i < n; i++ ) 
-		__sortNode(_arr, _leaf[i], _sorted, _nodeMap);
+		__sortNode(_arr, _leaf[i], _sorted, _nodeMap, _project);
 	
 	for( var i = 0, n = array_length(_leftOver); i < n; i++ ) {
 		if(!struct_has(_sorted, _leftOver[i].node_id))
@@ -169,14 +155,14 @@ function __nodeIsRenderLeaf(_node) {
 	return true;
 }
 
-function Render(partial = false, runAction = false) {
-	// node_auto_organize(PROJECT.nodes);
-	// print($"======================== RENDER {CURRENT_FRAME} ========================")
+function Render(_project = PROJECT, partial = false, runAction = false) {
+	// node_auto_organize(_project.nodes);
+	// print($"======================== RENDER {GLOBAL_CURRENT_FRAME} ========================")
 	
 	LOG_END();
 
 	LOG_BLOCK_START();
-	LOG_IF(global.FLAG.render, $"============================== RENDER START [{partial? "PARTIAL" : "FULL"}] [frame {CURRENT_FRAME}] ==============================");
+	LOG_IF(global.FLAG.render, $"============================== RENDER START [{partial? "PARTIAL" : "FULL"}] [frame {GLOBAL_CURRENT_FRAME}] ==============================");
 	
 	try {
 		var t  = get_timer();
@@ -191,24 +177,24 @@ function Render(partial = false, runAction = false) {
 		var renderable;
 		
 		if(reset_all) {
-			LOG_IF(global.FLAG.render == 1, $"xxxxxxxxxx Resetting {array_length(PROJECT.nodeTopo)} nodes xxxxxxxxxx");
+			LOG_IF(global.FLAG.render == 1, $"xxxxxxxxxx Resetting {array_length(_project.nodeTopo)} nodes xxxxxxxxxx");
 			
-			for (var i = 0, n = array_length(PROJECT.allNodes); i < n; i++) {
-				var _node = PROJECT.allNodes[i];
+			for (var i = 0, n = array_length(_project.allNodes); i < n; i++) {
+				var _node = _project.allNodes[i];
 				_node.setRenderStatus(false);
 			}
 		}
 		
 		// get leaf node
-		LOG_IF(global.FLAG.render == 1, $"----- Finding leaf from {array_length(PROJECT.nodeTopo)} nodes -----");
+		LOG_IF(global.FLAG.render == 1, $"----- Finding leaf from {array_length(_project.nodeTopo)} nodes -----");
 		RENDER_QUEUE.clear();
-		array_foreach(PROJECT.nodeTopo, function(n) /*=>*/ { 
+		array_foreach(_project.nodeTopo, function(n) /*=>*/ { 
 			// n.__nextNodes    = noone;
 			n.passiveDynamic = false;
 			n.render_time    = 0;
 		});
 		
-		array_foreach(PROJECT.nodeTopo, function(n) /*=>*/ { 
+		array_foreach(_project.nodeTopo, function(n) /*=>*/ { 
 			if(!__nodeIsRenderLeaf(n)) return;
 			
 			LOG_IF(global.FLAG.render == 1, $"    Found leaf [{n.internalName}]");
@@ -261,7 +247,7 @@ function Render(partial = false, runAction = false) {
 		
 		_render_time /= 1000;
 		
-		LOG_IF(global.FLAG.renderTime || global.FLAG.render >= 1, $"=== RENDER FRAME {CURRENT_FRAME} COMPLETE IN {(get_timer() - t1) / 1000} ms ===\n");
+		LOG_IF(global.FLAG.renderTime || global.FLAG.render >= 1, $"=== RENDER FRAME {GLOBAL_CURRENT_FRAME} COMPLETE IN {(get_timer() - t1) / 1000} ms ===\n");
 		LOG_IF(global.FLAG.render >  1, $"=== RENDER SUMMARY STA ===");
 		LOG_IF(global.FLAG.render >  1, $"  total time:  {(get_timer() - t1) / 1000} ms");
 		LOG_IF(global.FLAG.render >  1, $"  leaf:        {_leaf_time / 1000} ms");
@@ -276,7 +262,7 @@ function Render(partial = false, runAction = false) {
 	// print("\n============== render stat ==============");
 	// print($"Get value hit: {global.getvalue_hit}");
 	
-	PROJECT.postRender();
+	_project.postRender();
 	
 	LOG_END();
 	
@@ -415,7 +401,7 @@ function NodeTreeItem(_node = noone) constructor {
 	}
 }
 
-function NodeTreeSort(_nlist = PROJECT.nodes) {
+function NodeTreeSort(_project = PROJECT, _nlist = _project.nodes) {
 	var roots = [];
 	var tree  = [];
 	
@@ -424,7 +410,7 @@ function NodeTreeSort(_nlist = PROJECT.nodes) {
 		if(is(_node, Node_Frame)) continue;
 		
 		if(is(_node, Node_Collection)) 
-			_node.nodeTree = NodeTreeSort(_node.nodes);
+			_node.nodeTree = NodeTreeSort(_project, _node.nodes);
 		
 		if(array_empty(_node.getNodeTo())) 
 			array_push(tree, new NodeTreeItem(_node));
@@ -435,8 +421,8 @@ function NodeTreeSort(_nlist = PROJECT.nodes) {
 	var _tree = new NodeTreeItem();
 	    _tree.children = tree;
 	   
-	if(_nlist == PROJECT.nodes)
-		PROJECT.nodeTree = _tree;
+	if(_nlist == _project.nodes)
+		_project.nodeTree = _tree;
 		
 	return _tree;
 }

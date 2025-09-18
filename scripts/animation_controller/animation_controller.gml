@@ -5,19 +5,34 @@
 		pingpong,
 	}
 	
-	#macro ANIMATION_STATIC !(PROJECT.animator.is_playing || PROJECT.animator.frame_progress)
-	#macro IS_PLAYING    PROJECT.animator.is_playing
-	#macro IS_RENDERING  PROJECT.animator.is_rendering
-	#macro CURRENT_FRAME PROJECT.animator.current_frame
+	#macro GLOBAL_IS_PLAYING     PROJECT.animator.is_playing
+	#macro GLOBAL_IS_RENDERING   PROJECT.animator.is_rendering
+	#macro GLOBAL_CURRENT_FRAME  PROJECT.animator.current_frame
 	
-	#macro TOTAL_FRAMES  PROJECT.animator.frames_total
-	#macro FRAME_RANGE   PROJECT.animator.frame_range
+	#macro GLOBAL_TOTAL_FRAMES   PROJECT.animator.frames_total
+	#macro GLOBAL_FRAME_RANGE    PROJECT.animator.frame_range
 	
-	#macro FIRST_FRAME   PROJECT.animator.getFirstFrame()
-	#macro LAST_FRAME    PROJECT.animator.getLastFrame()
+	#macro GLOBAL_FIRST_FRAME    PROJECT.animator.getFirstFrame()
+	#macro GLOBAL_LAST_FRAME     PROJECT.animator.getLastFrame()
 	
-	#macro IS_FIRST_FRAME PROJECT.animator.isFirstFrame()
-	#macro IS_LAST_FRAME  PROJECT.animator.isLastFrame()
+	#macro GLOBAL_IS_FIRST_FRAME PROJECT.animator.isFirstFrame()
+	#macro GLOBAL_IS_LAST_FRAME  PROJECT.animator.isLastFrame()
+	
+	#macro NODE_CURRENT_FRAME    node.project.animator.current_frame
+	#macro NODE_TOTAL_FRAMES     node.project.animator.frames_total
+	
+	#macro IS_PLAYING            project.animator.is_playing
+	#macro IS_RENDERING          project.animator.is_rendering
+	#macro CURRENT_FRAME         project.animator.current_frame
+	
+	#macro TOTAL_FRAMES          project.animator.frames_total
+	#macro FRAME_RANGE           project.animator.frame_range
+	
+	#macro FIRST_FRAME           project.animator.getFirstFrame()
+	#macro LAST_FRAME            project.animator.getLastFrame()
+	
+	#macro IS_FIRST_FRAME        project.animator.isFirstFrame()
+	#macro IS_LAST_FRAME         project.animator.isLastFrame()
 #endregion
 
 #region animation class

@@ -5,7 +5,7 @@ enum DRIVER_TYPE { none, linear, wiggle, sine }
 function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 	#region ---- main ----
 		time	= _time;
-		ratio	= time / (TOTAL_FRAMES - 1);
+		ratio	= time / (GLOBAL_TOTAL_FRAMES - 1);
 		value	= _value;
 		anim	= _anim;
 	
@@ -33,7 +33,7 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 	
 	static setTime = function(_time) {
 		time  = _time;
-		ratio = _time / (TOTAL_FRAMES - 1);
+		ratio = _time / (GLOBAL_TOTAL_FRAMES - 1);
 	}
 	
 	static clone = function(target = noone) {
@@ -99,8 +99,9 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		
 		index   = 0;      static setIndex = function(i) /*=>*/ { index = i; return self; }
 		prop    = _prop;
+		node    = prop.node;
 		y       = 0;
-		key_map = array_create(TOTAL_FRAMES);
+		key_map = array_create(NODE_TOTAL_FRAMES);
 		key_map_mode = KEYFRAME_END.hold;
 		
 		animate_frames = [];
@@ -236,7 +237,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	
 	static getName = function() { return prop.name + suffix; }
 	
-	static getValue = function(_time = CURRENT_FRAME) {
+	static getValue = function(_time = NODE_CURRENT_FRAME) {
 		//if(!prop.is_anim) return staticValue;
 		length = array_length(values);
 		
@@ -245,7 +246,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		if(prop.type == VALUE_TYPE.trigger) {
 			if(length == 0 || !prop.is_anim) return false;
 			
-			if(array_length(key_map) != TOTAL_FRAMES) updateKeyMap();
+			if(array_length(key_map) != NODE_TOTAL_FRAMES) updateKeyMap();
 			
 			return key_map[_time];
 		}
@@ -264,7 +265,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		
 		if(prop.type == VALUE_TYPE.path) return processType(values[0].value);
 		if(!prop.is_anim)				 return processType(values[0].value);
-		var _len = max(TOTAL_FRAMES, values[length - 1].time);
+		var _len = max(NODE_TOTAL_FRAMES, values[length - 1].time);
 		if(array_length(key_map) != _len) updateKeyMap();
 		
 		var _time_first = prop.loop_range == -1? values[0].time : values[length - 1 - prop.loop_range].time;
@@ -306,8 +307,8 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				var fTime = from.time;
 				var tTime = to.time;
 				
-				var prog = TOTAL_FRAMES - fTime + _time;
-				var totl = TOTAL_FRAMES - fTime + tTime;
+				var prog = NODE_TOTAL_FRAMES - fTime + _time;
+				var totl = NODE_TOTAL_FRAMES - fTime + tTime;
 				
 				return lerpValue(from, to, prog / totl);
 			}
@@ -327,7 +328,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				var from = _lstKey;
 				var to   = values[0];
 				var prog = _time - from.time;
-				var totl = TOTAL_FRAMES - from.time + to.time;
+				var totl = NODE_TOTAL_FRAMES - from.time + to.time;
 				
 				return lerpValue(from, to, prog / totl);
 			}
@@ -365,7 +366,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 					return val + w;
 					
 				case DRIVER_TYPE.sine : 
-					var w = sin((drivers.phase * (_index + 1) + _t * drivers.frequency / TOTAL_FRAMES) * pi * 2) * drivers.amplitude;
+					var w = sin((drivers.phase * (_index + 1) + _t * drivers.frequency / NODE_TOTAL_FRAMES) * pi * 2) * drivers.amplitude;
 					return val + w;
 			}
 			
@@ -391,7 +392,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	static processType = function(_val) {
 		INLINE
 		
-		if(prop.node.project.attributes.strict) return processValue(_val);
+		if(node.project.attributes.strict) return processValue(_val);
 		__val    = _val;
 		var _res = _val;
 		
@@ -428,7 +429,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		if(!array_exists(values, _key))	    return 0;
 		if(_key.time == _time && !_replace)	return 0;
 		
-		if(!LOADING) prop.node.project.modified = true;
+		if(!LOADING) node.project.modified = true;
 		
 		var _prevTime = _key.time;
 		_time = max(_time, 0);
@@ -444,7 +445,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				updateKeyMap();
 				
 				data.undo = !data.undo;
-			}, { overKey : values[i], index : i, undo : true, tooltip : $"Modify '{prop.name}' timeline" }).setRef(prop.node);
+			}, { overKey : values[i], index : i, undo : true, tooltip : $"Modify '{prop.name}' timeline" }).setRef(node);
 			
 			values[i] = _key;
 			updateKeyMap();
@@ -459,7 +460,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				setKeyTime(data.key, data.time, false); 
 				
 				data.time = _prevTime;
-			}, { key : _key, time : _prevTime, tooltip : $"Modify '{prop.name}' timeline" }, onUndo).setRef(prop.node);
+			}, { key : _key, time : _prevTime, tooltip : $"Modify '{prop.name}' timeline" }, onUndo).setRef(node);
 			
 			array_insert(values, i, _key);
 			if(_replace) updateKeyMap();
@@ -471,14 +472,14 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			setKeyTime(data.key, data.time, false); 
 			
 			data.time = _prevTime;
-		}, { key : _key, time : _prevTime, tooltip : $"Modify '{prop.name}' timeline" }, onUndo).setRef(prop.node);
+		}, { key : _key, time : _prevTime, tooltip : $"Modify '{prop.name}' timeline" }, onUndo).setRef(node);
 			
 		array_push(values, _key);
 		if(_replace) updateKeyMap();
 		return 1;
 	}
 	
-	static setValue = function(_val = 0, _record = true, _time = CURRENT_FRAME, ease_in = 0, ease_out = 0) {
+	static setValue = function(_val = 0, _record = true, _time = NODE_CURRENT_FRAME, ease_in = 0, ease_out = 0) {
 		
 		if(prop.type == VALUE_TYPE.trigger) {
 			if(!prop.is_anim) {
@@ -512,7 +513,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			if(isEqual(values[0].value, _val)) 
 				return false;
 			
-			if(_record) recordAction_variable_change(values[0], "value", values[0].value, prop.name, onUndo).setRef(prop.node);
+			if(_record) recordAction_variable_change(values[0], "value", values[0].value, prop.name, onUndo).setRef(node);
 			
 			values[0].value = _val;
 			return true;
@@ -521,7 +522,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		if(array_length(values) == 0) { // Should not be called normally
 			var k = new valueKey(_time, _val, self, ease_in, ease_out);
 			array_push(values, k);
-			if(_record) recordAction(ACTION_TYPE.array_insert, values, [ k, array_length(values) - 1, $"Add '{prop.name}'' keyframe" ], onUndo).setRef(prop.node);
+			if(_record) recordAction(ACTION_TYPE.array_insert, values, [ k, array_length(values) - 1, $"Add '{prop.name}'' keyframe" ], onUndo).setRef(node);
 			return true;
 		}
 		
@@ -531,7 +532,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				if(!global.FLAG.keyframe_override) return false;
 				
 				if(_key.value != _val) {
-					if(_record) recordAction_variable_change(_key, "value", _key.value, $"{prop.name}", onUndo).setRef(prop.node);
+					if(_record) recordAction_variable_change(_key, "value", _key.value, $"{prop.name}", onUndo).setRef(node);
 					_key.value = _val;
 					return true;
 				}
@@ -540,14 +541,14 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			} else if(_key.time > _time) {
 				var k = new valueKey(_time, _val, self, ease_in, ease_out);
 				array_insert(values, i, k);
-				if(_record) recordAction(ACTION_TYPE.array_insert, values, [k, i, $"Add '{prop.name}'' keyframe" ], onUndo).setRef(prop.node);
+				if(_record) recordAction(ACTION_TYPE.array_insert, values, [k, i, $"Add '{prop.name}'' keyframe" ], onUndo).setRef(node);
 				updateKeyMap();
 				return true;
 			}
 		}
 		
 		var k = new valueKey(_time, _val, self, ease_in, ease_out);
-		if(_record) recordAction(ACTION_TYPE.array_insert, values, [ k, array_length(values), $"Add '{prop.name}'' keyframe" ], onUndo).setRef(prop.node);
+		if(_record) recordAction(ACTION_TYPE.array_insert, values, [ k, array_length(values), $"Add '{prop.name}'' keyframe" ], onUndo).setRef(node);
 		array_push(values, k);
 		updateKeyMap();
 		return true;
@@ -561,11 +562,11 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		if(!prop.is_anim && !LOADING && !APPENDING) return;
 		
 		if(array_empty(values)) { 
-			array_resize(key_map, TOTAL_FRAMES); 
+			array_resize(key_map, NODE_TOTAL_FRAMES); 
 			return; 
 		}
 		
-		var _len = max(TOTAL_FRAMES, array_last(values).time);
+		var _len = max(NODE_TOTAL_FRAMES, array_last(values).time);
 		key_map_mode = prop.on_end;
 		
 		if(array_length(key_map) != _len)
@@ -612,7 +613,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		
 		for(var i = 0; i < array_length(values); i++) {
 			var _value_list = [];
-			_value_list[0] = scale? values[i].time / (TOTAL_FRAMES - 1) : values[i].time;
+			_value_list[0] = scale? values[i].time / (NODE_TOTAL_FRAMES - 1) : values[i].time;
 			
 			var _v  = values[i];
 			var val = _v.value;
@@ -686,7 +687,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			var _keyframe = _data[i];
 			var _time = array_safe_get_fast(_keyframe, 0);
 			
-			if(scale) _time = round(_time * (TOTAL_FRAMES - 1));
+			if(scale) _time = round(_time * (NODE_TOTAL_FRAMES - 1));
 			
 			var value		  = array_safe_get_fast(_keyframe, 1);
 			var ease_in		  = array_safe_get_fast(_keyframe, 2, [0, 1]);
@@ -756,7 +757,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				}
 			} 
 			
-			// print($"Deserialize {prop.node.name}:{prop.name} = {_val} ");
+			// print($"Deserialize {node.name}:{prop.name} = {_val} ");
 			var vk = new valueKey(_time, _val, self, ease_in, ease_out);
 			vk.ease_in_type  = ease_in_type;
 			vk.ease_out_type = ease_out_type;
