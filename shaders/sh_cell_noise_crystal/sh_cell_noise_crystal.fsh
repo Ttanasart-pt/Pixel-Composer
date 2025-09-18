@@ -7,14 +7,20 @@ uniform vec2  dimension;
 uniform vec2  position;
 uniform float seed;
 uniform float phase;
-
-uniform float contrast;
-uniform float middle;
 uniform float rotation;
+
+uniform int   iteration;
+uniform float iterScale;
+uniform float iterAmpli;
+uniform int   blendMode;
 
 uniform vec2      scale;
 uniform int       scaleUseSurf;
 uniform sampler2D scaleSurf;
+
+uniform int   inverted;
+uniform float contrast;
+uniform float middle;
 
 #define TAU 6.283185307179586
 
@@ -67,8 +73,21 @@ void main() {
 	vec2 pos = position / dimension;
 	vec2 st  = (ntx - pos) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca * 0.75;
 	
-    float n = voronoi3d(vec3(st, seed), sca);
-	      n = middle + (n - middle) * contrast;
+    float amp = pow(1. / iterAmpli, float(iteration) - 1.) / (pow(1. / iterAmpli, float(iteration)) - 1.);
+    float md  = .0;
+    
+	for(int i = 0; i < iteration; i++) {
+		float _noise = voronoi3d(vec3(st, seed), sca);
+		
+		     if(blendMode == 0) md += _noise * amp;
+		else if(blendMode == 1) md  = max(md, _noise);
+		
+		amp *= iterAmpli;
+		st  *= iterScale;
+	}
 	
-    gl_FragColor = vec4(vec3(n), 1.);
+	float c = middle + (md - middle) * contrast;
+	if(inverted == 1) c = 1. - c;
+	
+    gl_FragColor = vec4(vec3(c), 1.);
 }

@@ -1,6 +1,3 @@
-//
-// Simple passthrough fragment shader
-//
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -9,8 +6,11 @@ uniform vec2  position;
 uniform float seed;
 uniform float phase;
 
-uniform float contrast;
-uniform float middle;
+uniform int   iteration;
+uniform float iterScale;
+uniform float iterAmpli;
+uniform int   blendMode;
+
 uniform float radiusScale;
 uniform float radiusShatter;
 uniform int   pattern;
@@ -21,6 +21,10 @@ uniform int   tiled;
 uniform vec2      scale;
 uniform int       scaleUseSurf;
 uniform sampler2D scaleSurf;
+
+uniform int   inverted;
+uniform float contrast;
+uniform float middle;
 
 #define TAU 6.283185307179586
 
@@ -36,28 +40,13 @@ vec3 colorNoise(in vec2 st) {
 	return vec3(randR, randG, randB);
 }
 
-void main() {
-	#region params
-		float sca    = scale.x;
-		float scaMax = max(scale.x, scale.y);
-		if(scaleUseSurf == 1) {
-			vec4 _vMap = texture2D( scaleSurf, v_vTexcoord );
-			sca = mix(scale.x, scale.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
-		}
-		
-		float ang = rotation;
-	#endregion
-	
-	vec2 ntx   = v_vTexcoord * vec2(1., dimension.y / dimension.x);
-	vec2 pos   = position / dimension;
-    vec2 st    = (ntx - pos) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca;
-    vec3 color = vec3(.0);
-
+vec2 cellNoise(vec2 ntx, vec2 pos, float sca, float scaMax, float ang) {
+	vec2 st   = (ntx - pos) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca;
     vec2 i_st = floor(st);
     vec2 f_st = fract(st);
 
     float m_dist = 1.;
-	vec2 mp;
+	vec2  mp;
 	
 	if(pattern < 2) {
 	    for (int y = -1; y <= 1; y++) {
@@ -94,10 +83,46 @@ void main() {
 		}
 	}
 
-	if(colored == 0) {
-		float c = middle + (random(mp + 1.) - middle) * contrast;
-	    gl_FragColor = vec4(vec3(c), 1.0);
-	} else if(colored == 1) {
-		gl_FragColor = vec4(colorNoise(mp), 1.);
+	return mp;
+}
+
+void main() {
+	#region params
+		float sca    = scale.x;
+		float scaMax = max(scale.x, scale.y);
+		if(scaleUseSurf == 1) {
+			vec4 _vMap = texture2D( scaleSurf, v_vTexcoord );
+			sca = mix(scale.x, scale.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+		
+		float ang = rotation;
+	#endregion
+	
+	vec2 ntx = v_vTexcoord * vec2(1., dimension.y / dimension.x);
+	vec2 pos = position / dimension;
+	
+	float amp = pow(1. / iterAmpli, float(iteration) - 1.) / (pow(1. / iterAmpli, float(iteration)) - 1.);
+    vec3  md  = vec3(.0);
+    
+	for(int i = 0; i < iteration; i++) {
+		vec2 _f = cellNoise(ntx, pos, sca, scaMax, ang);
+		vec3 _noise;
+		
+		if(colored == 0) {
+			float c = middle + (random(_f + 1.) - middle) * contrast;
+		    if(inverted == 1) c = 1. - c;
+			
+		    _noise = vec3(c) * amp;
+		    
+		} else if(colored == 1)
+			_noise = colorNoise(_f) * amp;
+		
+		     if(blendMode == 0) md += _noise * amp;
+		else if(blendMode == 1) md  = max(md, _noise);
+		
+		amp *= iterAmpli;
+		pos *= iterScale;
 	}
+	
+	gl_FragColor = vec4(md, 1.0);
 }

@@ -1,5 +1,3 @@
-// Cellular noise
-
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -8,17 +6,24 @@ uniform vec2  position;
 uniform float seed;
 uniform float phase;
 
-uniform float contrast;
-uniform float middle;
 uniform float radiusScale;
 uniform float radiusShatter;
 uniform int   pattern;
 uniform float rotation;
 uniform int   tiled;
 
+uniform int   iteration;
+uniform float iterScale;
+uniform float iterAmpli;
+uniform int   blendMode;
+
 uniform vec2      scale;
 uniform int       scaleUseSurf;
 uniform sampler2D scaleSurf;
+
+uniform int   inverted;
+uniform float contrast;
+uniform float middle;
 
 #define TAU 6.283185307179586
 #define PI 3.14159265359
@@ -27,21 +32,8 @@ vec2 random2( vec2 p ) { return fract(sin(vec2(dot(p, vec2(127.1, 311.7)), dot(p
 
 float random (in vec2 st) { return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123); }
 
-void main() {
-	#region params
-		float sca    = scale.x;
-		float scaMax = max(scale.x, scale.y);
-		if(scaleUseSurf == 1) {
-			vec4 _vMap = texture2D( scaleSurf, v_vTexcoord );
-			sca = mix(scale.x, scale.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
-		}
-		
-		float ang = rotation;
-	#endregion
-	
-	vec2 ntx = v_vTexcoord * vec2(1., dimension.y / dimension.x);
-	vec2 pos = position / dimension;
-    vec2 st  = (ntx - pos) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca;
+float cellNoise(vec2 ntx, vec2 pos, float sca, float scaMax, float ang) {
+	vec2 st  = (ntx - pos) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca;
 	
     float md = 8.;
     vec2 mg, mr;
@@ -77,6 +69,7 @@ void main() {
 			if(dot(mr - r, mr - r) > .000001)
 				md = min( md, dot( 0.5 * (mr + r), normalize(r - mr)) );
 		}
+		
 	} else if(pattern == 2) {
 		for (int j = 0; j <= int(sca / 2.); j++) {
 			int _amo = int(sca) + int(float(j) * radiusShatter);
@@ -113,6 +106,39 @@ void main() {
 		}
 	}
 	
+	return md;
+}
+
+void main() {
+	#region params
+		float sca    = scale.x;
+		float scaMax = max(scale.x, scale.y);
+		if(scaleUseSurf == 1) {
+			vec4 _vMap = texture2D( scaleSurf, v_vTexcoord );
+			sca = mix(scale.x, scale.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+		
+		float ang = rotation;
+	#endregion
+	
+	vec2 ntx = v_vTexcoord * vec2(1., dimension.y / dimension.x);
+	vec2 pos = position / dimension;
+    
+    float amp = pow(1. / iterAmpli, float(iteration) - 1.) / (pow(1. / iterAmpli, float(iteration)) - 1.);
+    float md  = .0;
+    
+	for(int i = 0; i < iteration; i++) {
+		float _noise = cellNoise(ntx, pos, sca, scaMax, ang);
+		
+		     if(blendMode == 0) md += _noise * amp;
+		else if(blendMode == 1) md  = max(md, _noise);
+		
+		amp *= iterAmpli;
+		pos *= iterScale;
+	}
+	
 	float c = middle + (md - middle) * contrast;
+	if(inverted == 1) c = 1. - c;
+	
     gl_FragColor = vec4(vec3(c), 1.0);
 }

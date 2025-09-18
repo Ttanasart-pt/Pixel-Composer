@@ -18,7 +18,7 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 4, nodeValue_Enum_Scroll( "Type",    0, [ "Point", "Edge", "Cell", "Crystal" ]));
 	newInput( 6, nodeValue_Enum_Button( "Pattern", 0, [ "Tiled", "Uniform", "Radial" ]));
 	newInput( 3, nodeValueSeed());
-	newInput(14, nodeValue_Rotation(    "Phase",   0 ));
+	newInput(14, nodeValue_Rotation(    "Phase",     0 ));
 	
 	////- =Transform
 	newInput( 1, nodeValue_Vec2(     "Position", [.5,.5])).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
@@ -29,22 +29,31 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 8, nodeValue_Slider( "Radial scale",   2, [  1, 10, 0.01] ));
 	newInput( 9, nodeValue_Slider( "Radial shatter", 0, [-10, 10, 0.01] )).setVisible(false);
 	
-	////- =Rendering
-	newInput( 5, nodeValue_Slider( "Contrast",  1, [0, 4, 0.01] ));
-	newInput( 7, nodeValue_Slider( "Middle",   .5, [0, 1, 0.01] ));
-	newInput(10, nodeValue_Bool(   "Colored",  false ))
+	////- =Iteration
+	newInput(16, nodeValue_Int(         "Iteration",        1 ));
+	newInput(18, nodeValue_Float(       "Iter Scale",       2 ));
+	newInput(19, nodeValue_Slider(      "Iter Amplitude",  .5 ));
+	newInput(17, nodeValue_Enum_Scroll( "Blend Mode", 0, [ "Additive", "Maximum" ] ));
 	
-	// input 15
+	////- =Rendering
+	newInput(15, nodeValue_Bool(   "Inverted",  false ))
+	newInput( 5, nodeValue_Slider( "Contrast",   1, [0, 4, 0.01] ));
+	newInput( 7, nodeValue_Slider( "Middle",    .5, [0, 1, 0.01] ));
+	newInput(10, nodeValue_Bool(   "Colored",   false ))
+	// input 19
 	
 	input_display_list = [
 		["Output",    false], 0, 13, 
 		["Noise",     false], 4, 6, 3, 14, 
+		["Iteration", false], 16, 18, 19, 17, 
 		["Transform", false], 1, 12, 2, 11, 
 		["Radial",    false], 8, 9,
-		["Rendering", false], 5, 7, 10, 
+		["Rendering", false], 15, 5, 7, 10, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	
+	////- Node
 	
 	attribute_surface_depth();
 	
@@ -69,16 +78,23 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var _pat  = _data[6];
 		var _mid  = _data[7];
 		
-		inputs[ 8].setVisible(_pat  == 2);
-		inputs[ 9].setVisible(_pat  == 2);
-		inputs[10].setVisible(_type == 2);
-		inputs[14].setVisible(_type != 3);
-		
 		var _rad = _data[ 8];
 		var _sht = _data[ 9];
 		var _col = _data[10];
 		var _rot = _data[12];
-		var _phs = _data[14];
+		
+		var _itr    = _data[16];
+		var _iscale = _data[18];
+		var _iampli = _data[19];
+		var _iblend = _data[17];
+		
+		var _phase    = _data[14];
+		var _inverted = _data[15];
+		
+		inputs[ 8].setVisible(_pat  == 2);
+		inputs[ 9].setVisible(_pat  == 2);
+		inputs[10].setVisible(_type == 2);
+		inputs[14].setVisible(_type != 3);
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
@@ -92,7 +108,7 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		surface_set_shader(_outSurf, shader);
 			shader_set_f("dimension",     _dim);
 			shader_set_f("seed",          _tim);
-			shader_set_f("phase",         _phs / 360);
+			shader_set_f("phase",         _phase / 360);
 			
 			shader_set_2("position",      _pos);
 			shader_set_f_map("scale",     _data[2], _data[11], inputs[2]);
@@ -101,6 +117,13 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			shader_set_f("radiusScale",   _rad);
 			shader_set_f("radiusShatter", _sht);
 			shader_set_i("pattern",       _pat);
+			
+			shader_set_i("iteration",     _itr);
+			shader_set_f("iterScale",     _iscale);
+			shader_set_f("iterAmpli",     _iampli);
+			shader_set_i("blendMode",     _iblend);
+			
+			shader_set_i("inverted",      _inverted);
 			shader_set_i("colored",       _col);
 			shader_set_f("rotation",      degtorad(_rot));
 			
