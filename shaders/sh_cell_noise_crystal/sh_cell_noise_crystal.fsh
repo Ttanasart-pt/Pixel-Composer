@@ -84,8 +84,10 @@ void main() {
 		
 		amp *= iterAmpli;
 		st  *= iterScale;
+		st  += TAU;
 	}
 	
+	if(blendMode == 2) md = 1. - md;
 	float c = middle + (md - middle) * contrast;
 	if(inverted == 1) c = 1. - c;
 	

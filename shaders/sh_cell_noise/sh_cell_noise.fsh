@@ -96,11 +96,14 @@ void main() {
 		
 		     if(blendMode == 0) md += _noise * amp;
 		else if(blendMode == 1) md  = max(md, _noise);
+		else if(blendMode == 2) md  = max(md, 1. - _noise);
 		
 		amp *= iterAmpli;
 		pos *= iterScale;
+		pos += TAU;
 	}
 	
+	if(blendMode == 2) md = 1. - md;
 	float c = middle + (md - middle) * contrast;
 	if(inverted == 1) c = 1. - c;
 	

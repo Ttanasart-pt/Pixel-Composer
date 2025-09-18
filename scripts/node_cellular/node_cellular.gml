@@ -33,7 +33,7 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(16, nodeValue_Int(         "Iteration",        1 ));
 	newInput(18, nodeValue_Float(       "Iter Scale",       2 ));
 	newInput(19, nodeValue_Slider(      "Iter Amplitude",  .5 ));
-	newInput(17, nodeValue_Enum_Scroll( "Blend Mode", 0, [ "Additive", "Maximum" ] ));
+	newInput(17, nodeValue_Enum_Scroll( "Blend Mode", 0, [ "Additive", "Maximum", "Minimum" ] ));
 	
 	////- =Rendering
 	newInput(15, nodeValue_Bool(   "Inverted",  false ))
@@ -70,32 +70,34 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _dim  = _data[0];
-		var _pos  = _data[1];
-		var _tim  = _data[3];
-		var _type = _data[4];
-		var _con  = _data[5];
-		var _pat  = _data[6];
-		var _mid  = _data[7];
-		
-		var _rad = _data[ 8];
-		var _sht = _data[ 9];
-		var _col = _data[10];
-		var _rot = _data[12];
-		
-		var _itr    = _data[16];
-		var _iscale = _data[18];
-		var _iampli = _data[19];
-		var _iblend = _data[17];
-		
-		var _phase    = _data[14];
-		var _inverted = _data[15];
-		
-		inputs[ 8].setVisible(_pat  == 2);
-		inputs[ 9].setVisible(_pat  == 2);
-		inputs[10].setVisible(_type == 2);
-		inputs[14].setVisible(_type != 3);
-		
+		#region data
+			var _dim  = _data[0];
+			var _pos  = _data[1];
+			var _tim  = _data[3];
+			var _type = _data[4];
+			var _con  = _data[5];
+			var _pat  = _data[6];
+			var _mid  = _data[7];
+			
+			var _rad = _data[ 8];
+			var _sht = _data[ 9];
+			var _col = _data[10];
+			var _rot = _data[12];
+			
+			var _itr    = _data[16];
+			var _iscale = _data[18];
+			var _iampli = _data[19];
+			var _iblend = _data[17];
+			
+			var _phase    = _data[14];
+			var _inverted = _data[15];
+			
+			inputs[ 8].setVisible(_pat  == 2);
+			inputs[ 9].setVisible(_pat  == 2);
+			inputs[10].setVisible(_type == 2);
+			inputs[14].setVisible(_type != 3);
+		#endregion
+			
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
 		switch(_type) {
