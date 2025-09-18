@@ -198,8 +198,11 @@ function Steam_workshop_profile(_sid) constructor {
 			return undefined;
 		}
 		
-		if(profile_graph_runner == undefined)
+		if(profile_graph_runner == undefined) {
+			var _title = getName() + "'s " + __txt("Profile Graph");
 			profile_graph_runner = new Runner().appendMap(profile_graph_str).fetchIO();
+			profile_graph_runner.project.path = _title;
+		}
 		
 		if(!profile_graph_runner.processable()) {
 			drawProfileSimple(_px, _py, _ps);

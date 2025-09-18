@@ -54,7 +54,6 @@
 
 function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name   = "Draw Shape";
-	// inputs = array_create(38);
 	
 	onSurfaceSize = function() /*=>*/ {return getInputData(0, DEF_SURF)};
 	
@@ -107,7 +106,11 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(27, nodeValue_Rotation(       "Teeth Rotation",  0      )).hide_label();
 	newInput(30, nodeValue_Bool(           "Caps",            false  )).hide_label();
 	newInput(31, nodeValue_Float(          "Factor",          2.5    )).hide_label();
-	newInput(36, nodeValue_Enum_Button(    "Corner Shape",    0, [ "Round", "Cut" ]))
+	newInput(36, nodeValue_Enum_Button(    "Corner Shape",    0, [ "Round", "Cut" ] ))
+	
+	////- =Deform
+	newInput(41, nodeValue_Slider(         "Twist",           0, [-1,1,.01 ] ))
+	newInput(42, nodeValue_Vec2(           "Shear",          [0,0]           ))
 	
 	////- =Render
 	newInput(10, nodeValue_Color(          "Shape color",     ca_white     ));
@@ -122,7 +125,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	////- =Background
 	newInput( 1, nodeValue_Bool(  "Background",       false    ));
 	newInput(11, nodeValue_Color( "Background color", ca_black ));
-	// 41
+	// 43
 	
 	/////////////////////////////////////////////
 	
@@ -134,6 +137,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		["Output",     false],      0,  6, 
 		["Transform",  false],     15,  3, 16, 17, 19, 28, 
 		["Shape",	   false],      2, 32, 33, 35, 40, 34, /**/ 9, 4, 13, 5, 7, 8, 38, 39, 22, 23, 24, 25, 26, 27, 30, 31, 36, 
+		["Deform",	    true],     41, 42, 
 		["Render",	    true],     10, 18,
 		["Height",	    true, 12], 29, 20, 37,  
 		["Background",	true, 1],  11, 
@@ -436,6 +440,9 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			
 			var _crnPro = _data[36];
 			var _draOpa = _data[37];
+			
+			var _twst   = _data[41];
+			var _sher   = _data[42];
 			
 			var _center = [ 0, 0 ];
 			var _scale  = [ 0, 0 ];
@@ -760,6 +767,9 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			shader_set_f("corner",      _corner );
 			shader_set_curve("w",       _curve  );
 			shader_set_i("cornerShape", _crnPro );
+			
+			shader_set_f("twist",	    _twst   );
+			shader_set_2("shear",	    _sher   );
 			
 			shader_set_2("center",      _center );
 			shader_set_2("scale",       _scale  );
