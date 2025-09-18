@@ -171,6 +171,7 @@ uniform int   endcap;
 uniform int   teeth;
 uniform vec2  teethSize;
 uniform float teethAngle;
+uniform float teethTaper;
 
 uniform float twist;
 uniform vec2  shear;
@@ -325,35 +326,6 @@ float sdDonut(vec2 p, float s) {
 	return max(o, -i);
 }
 
-float sdGear(vec2 p, float s, int teeth, vec2 teethSize, float teethAngle, float corner) {
-	float teeth_w = teethSize.y;
-	float teeth_h = teethSize.x;
-	float s1;
-	vec2  _p;
-	
-	float rad  = 1. - teeth_w;
-	float dist = length(p);
-	float outer_ring = dist / rad - 1.;
-	float inner_ring = dist / (rad * s) - 1.;
-	float d = outer_ring;
-	
-	float _angSt = TAU / float(teeth);
-	float irad   = corner / max(dimension.x, dimension.y) * 16.;
-	float tang   = radians(teethAngle);
-	
-	for(int i = 0; i < teeth; i++) {
-		_p =  p * rot(tang + float(i) * _angSt);
-		_p = _p - vec2(1. - teeth_w, .0);
-		
-		s1 = sdRoundBox(_p, vec2(teeth_w, teeth_h), vec4(corner / 2., corner / 2., 0., 0.));
-		d  = smin(d, s1, irad);
-	}
-	
-	d = max(d, -inner_ring);
-	
-	return d;
-}
-
 float sdRhombus( in vec2 p, in vec2 b )  {
     p = abs(p);
 
@@ -480,6 +452,40 @@ float sdHalf(vec2 p, vec2 point, float angle) {
     return -p.y;
 }
 
+float sdGear(vec2 p, float s, int teeth, vec2 teethSize, float teethAngle, float teethTaper, float corner) {
+	float teeth_w = teethSize.y;
+	float teeth_h = teethSize.x;
+	float s1;
+	vec2  _p;
+	
+	float rad  = 1. - teeth_w;
+	float dist = length(p);
+	float outer_ring = dist / rad - 1.;
+	float inner_ring = dist / (rad * s) - 1.;
+	float d = outer_ring;
+	
+	float _angSt = TAU / float(teeth);
+	float irad   = corner / max(dimension.x, dimension.y) * 16.;
+	float tang   = radians(teethAngle);
+	
+	for(int i = 0; i < teeth; i++) {
+		_p  = p * rot(tang + float(i) * _angSt);
+		_p -= vec2(1. - teeth_w, .0);
+		
+		// s1 = sdRoundBox(_p, vec2(teeth_w, teeth_h), vec4(corner / 2., corner / 2., 0., 0.));
+		
+		_p /= vec2(teeth_w, teeth_h);
+		_p  = _p.yx;
+		s1  = sdTrapezoid(_p, 1. - corner, 1. - teethTaper - corner, 1. - corner) - corner;
+		
+		d  = smin(d, s1, irad);
+	}
+	
+	d = max(d, -inner_ring);
+	
+	return d;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void main() {
@@ -516,7 +522,7 @@ void main() {
 	else if(shape == 14) { d = sdCutDisk( 		coord, 1., inner );                                             		                 }
 	else if(shape == 15) { d = sdPie( 			coord, vec2(sin(angle), cos(angle)), angle_range, 1. );                          	     }
 	else if(shape == 16) { d = sdRoundedCross( 	coord, 1. - corner ) - corner;                              			                 }
-	else if(shape == 18) { d = sdGear(          coord, inner, teeth, teethSize, teethAngle, corner);                        	         }
+	else if(shape == 18) { d = sdGear(          coord, inner, teeth, teethSize, teethAngle, teethTaper, corner);                         }
 	else if(shape == 19) { d = pow(pow(abs(coord.x), squircle_factor) + pow(abs(coord.y), squircle_factor), 1. / squircle_factor) - 1.;  }
 	else if(shape == 17) { d = sdArrow(  v_vTexcoord, p1, p2, thickness, arrow, arrow_head);                               	             }
 	else if(shape == 20) { d = sdSegment(center + coordUni, p1, p2) - thickness;                                                         }

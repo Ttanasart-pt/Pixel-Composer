@@ -104,6 +104,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(25, nodeValue_Int(            "Teeth Amount",    6      )).hide_label();
 	newInput(26, nodeValue_Vec2(           "Teeth Size",    [.2,.2] , { slideSpeed : 0.01 })).hide_label();
 	newInput(27, nodeValue_Rotation(       "Teeth Rotation",  0      )).hide_label();
+	newInput(43, nodeValue_Slider(         "Teeth Taper",     0      ))
 	newInput(30, nodeValue_Bool(           "Caps",            false  )).hide_label();
 	newInput(31, nodeValue_Float(          "Factor",          2.5    )).hide_label();
 	newInput(36, nodeValue_Enum_Button(    "Corner Shape",    0, [ "Round", "Cut" ] ))
@@ -125,7 +126,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	////- =Background
 	newInput( 1, nodeValue_Bool(  "Background",       false    ));
 	newInput(11, nodeValue_Color( "Background color", ca_black ));
-	// 43
+	// 44
 	
 	/////////////////////////////////////////////
 	
@@ -136,7 +137,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	input_display_list = [
 		["Output",     false],      0,  6, 
 		["Transform",  false],     15,  3, 16, 17, 19, 28, 
-		["Shape",	   false],      2, 32, 33, 35, 40, 34, /**/ 9, 4, 13, 5, 7, 8, 38, 39, 22, 23, 24, 25, 26, 27, 30, 31, 36, 
+		["Shape",	   false],      2, 32, 33, 35, 40, 34, /**/ 9, 4, 13, 5, 7, 8, 38, 39, 22, 23, 24, 25, 26, 27, 43, 30, 31, 36, 
 		["Deform",	    true],     41, 42, 
 		["Render",	    true],     10, 18,
 		["Height",	    true, 12], 29, 20, 37,  
@@ -487,6 +488,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			inputs[34].setVisible(false);
 			inputs[35].setVisible(false);
 			inputs[36].setVisible(false);
+			inputs[43].setVisible(false);
 			
 			inputs[ 4].setVisible(false);
 			inputs[ 5].setVisible(false);
@@ -743,6 +745,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 					inputs[25].setVisible(true);
 					inputs[26].setVisible(true);
 					inputs[27].setVisible(true);
+					inputs[43].setVisible(true);
 					
 					inputs[13].name = "Inner Radius";
 					
@@ -752,6 +755,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 					shader_set_i("teeth",		_data[25]);
 					shader_set_2("teethSize",	_data[26]);
 					shader_set_f("teethAngle",	_data[27]);
+					shader_set_f("teethTaper",	_data[43]);
 					break;
 					
 			}
