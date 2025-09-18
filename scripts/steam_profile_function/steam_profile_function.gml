@@ -169,7 +169,7 @@ function Steam_workshop_profile(_sid) constructor {
 		var _ava = getAvatar();
 		
 		gpu_set_stencil_enable(true);
-			
+		
 		draw_clear_stencil(0);
 		gpu_set_stencil_pass(stencilop_replace);
 		

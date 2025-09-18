@@ -17,7 +17,7 @@ uniform float iteration;
 uniform float maxIteration;
 
 uniform int blend;
-uniform int fadeDistance;
+uniform int skipFirst;
 uniform int fadeIteration;
 
 #define PI 3.14159265359
@@ -38,6 +38,7 @@ void main() {
 	vec4 base = texture2D(gm_BaseTexture, v_vTexcoord);
 	float bas = (base.r + base.g + base.b) / 3. * base.a;
 	float col = bas;
+	if(skipFirst == 1 && iteration == 1.) col = 0.;
 	
 	vec2 tx = floor(v_vTexcoord * dimension);
 	vec2 st = floor(tx / detail) * detail;
@@ -66,8 +67,6 @@ void main() {
 		
 		if(dist >= depth) continue;
 		
-		// if(fadeDistance == 1) sam *= 1. - dist / depth;
-		
 		if(dist < min_dist) {
 			if(blend == 1) col = sam;
 			min_dist = dist;
@@ -76,7 +75,7 @@ void main() {
 		if(blend == 0) col = max(col, sam);
     }
     
-    if(fadeIteration == 1) col = bas + (col - bas) * clamp(iteration / maxIteration, 0., 1.);
-	gl_FragColor = vec4(col, col, col, 1.);
+    if(fadeIteration == 1) col = bas + (col - bas) * (1. - clamp(iteration / maxIteration, 0., 1.));
+	gl_FragColor = vec4(col, col, col, col == 0.? 0. : 1.);
 	
 }

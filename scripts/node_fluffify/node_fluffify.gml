@@ -23,8 +23,11 @@ function Node_Fluffify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	////- =Rendering
 	newInput(13, nodeValue_Enum_Scroll( "Blend Mode", 0, [ "Maximum", "Override" ] ));
-	newInput(14, nodeValue_Bool( "Fade by Iteration", false ));
-	//input 16
+	newInput(14, nodeValue_Bool(    "Fade by Iteration",    false   ));
+	newInput(17, nodeValue_Bool(    "Skip First Iteration", false   ));
+	newInput(18, nodeValue_Palette( "Iteration Blend", [ ca_white ] ));
+	newInput(19, nodeValue_Int(     "Blend Period",         1       ));
+	//input 20
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -32,7 +35,7 @@ function Node_Fluffify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		["Surfaces",   true],  0,  1,  2,  3,  4,  
 		["Fluff",     false], 16,  6,  8,  9, 15, 
 		["Iteration", false], 10, 11, 12, 
-		["Rendering", false], 13, 14, 
+		["Rendering", false], 13, 14, 17, 18, 19, 
 	];
 	
 	temp_surface = [0,0];
@@ -58,27 +61,40 @@ function Node_Fluffify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		var _blnd = _data[13];
 		var _fItr = _data[14];
+		var _skpf = _data[17];
+		
+		var _iBlnd = _data[18];
+		var _pBlnd = _data[19];
 		
 		var _dim  = surface_get_dimension(_surf);
 		for( var i = 0, n = array_length(temp_surface); i < n; i++ ) 
 			temp_surface[i] = surface_verify(temp_surface[i], _dim[0], _dim[1]);
 		
 		var bg = 0;
-		var _i = 1;
+		var _i = 0;
 		var _mulp = 1;
 		
 		surface_set_shader(temp_surface[bg]);
 			draw_surface_safe(_surf);
 		surface_reset_shader();
-			
-		while(_itr > 0) {
+		
+		if(!surface_has_depth(_outSurf)) {
+			surface_depth_disable(false);
+			surface_free(_outSurf);
+			_outSurf = surface_create(_dim[0], _dim[1]);
+			surface_depth_disable(true);
+		}
+		
+		surface_clear(_outSurf);
+		
+		while(_itr >= 0) {
 			bg = !bg;
 			
 			surface_set_shader(temp_surface[bg], sh_fluffify);
 				shader_set_dim( "dimension", _surf );
 				shader_set_f(   "seed",      _seed );
 				
-				shader_set_f(   "iteration",    _i   );
+				shader_set_f(   "iteration",    _i + 1 );
 				shader_set_f(   "maxIteration", ceil(_itr));
 				
 				shader_set_i(     "shape",       _shap );
@@ -87,10 +103,17 @@ function Node_Fluffify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				shader_set_f_map( "size",        _size, _data[15], inputs[9]);
 				shader_set_f(     "sizeMultiply", _mulp * min(_itr, 1));
 				
-				shader_set_i(   "blend",     _blnd );
+				shader_set_i(   "blend",         _blnd );
 				shader_set_i(   "fadeIteration", _fItr );
+				shader_set_i(   "skipFirst",     _skpf );
 				
 				draw_surface_safe(temp_surface[!bg]);
+			surface_reset_shader();
+			
+			surface_set_shader(_outSurf, sh_sample, false);
+				var cc = _iBlnd[floor(_i / _pBlnd) % array_length(_iBlnd)];
+				gpu_set_blendmode_ext(bm_inv_dest_alpha, bm_one);
+				draw_surface_ext_safe(temp_surface[bg], 0, 0, 1, 1, 0, cc);
 			surface_reset_shader();
 			
 			_detl *= _idet;
@@ -100,10 +123,6 @@ function Node_Fluffify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			_itr--;
 			_i++;
 		}
-		
-		surface_set_shader(_outSurf);
-			draw_surface_safe(temp_surface[bg]);
-		surface_reset_shader();
 			
 		__process_mask_modifier(_data);
 		_outSurf = mask_apply(_surf, _outSurf, _data[1], _data[2]);

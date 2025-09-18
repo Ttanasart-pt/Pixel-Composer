@@ -49,8 +49,7 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	//// inputs 21
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
-	
-	newOutput(1, nodeValue_Output("Outline", VALUE_TYPE.surface, noone));
+	newOutput(1, nodeValue_Output("Outline",     VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 11, 
 		["Surfaces", true],    0, 9, 10, 13, 14, 
@@ -93,36 +92,32 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var hh   = surface_get_height_safe(surf);
 		var samp = getAttribute("oversample");
 		
-		inputs[12].setVisible(side == 0);
+		// inputs[12].setVisible(side == 0);
 		
-		for( var i = 0, n = array_length(_outData); i < n; i++ ) {
-			var _outSurf = _outData[i];
+		surface_set_shader(_outData, sh_outline);
+			shader_set_f("dimension",       ww, hh);
+			shader_set_f_map("borderSize",  _data[1], _data[15], inputs[1]);
+			shader_set_f_map("borderStart", _data[8], _data[17], inputs[8]);
+			shader_set_f_map("blend_alpha", _data[4], _data[16], inputs[4]);
+			shader_set_i("filter",          attributes.filter);
 			
-			surface_set_shader(_outSurf, sh_outline);
-				shader_set_f("dimension",       ww, hh);
-				shader_set_f_map("borderSize",  _data[1], _data[15], inputs[1]);
-				shader_set_f_map("borderStart", _data[8], _data[17], inputs[8]);
-				shader_set_f_map("blend_alpha", _data[4], _data[16], inputs[4]);
-				shader_set_i("filter",          attributes.filter);
-				
-				shader_set_i("highRes",         hres);
-				shader_set_c("borderColor",     colr);
-				shader_set_i("profile",         prof);
-				shader_set_i("side",            side);
-				shader_set_i("is_aa",           alis);
-				shader_set_i("outline_only",    i);
-				shader_set_i("is_blend",        blnd);
-				shader_set_i("sampleMode",      samp);
-				shader_set_i("crop_border",     crop);
-				shader_set_f("alphaThers",      thrs);
-				
-				draw_surface_safe(_data[0]);
-			surface_reset_shader();
+			shader_set_i("highRes",         hres);
+			shader_set_c("borderColor",     colr);
+			shader_set_i("profile",         prof);
+			shader_set_i("side",            side);
+			shader_set_i("is_aa",           alis);
+			shader_set_i("is_blend",        blnd);
+			shader_set_i("sampleMode",      samp);
+			shader_set_i("crop_border",     crop);
+			shader_set_f("alphaThers",      thrs);
 			
-			__process_mask_modifier(_data);
-			_outSurf = mask_apply(_data[0], _outSurf, _data[9], _data[10]);
-			_outData[i] = _outSurf;
-		}
+			draw_surface_safe(surf);
+		surface_reset_shader();
+		
+		__process_mask_modifier(_data);
+		
+		_outData[0] = mask_apply(surf, _outData[0], _data[9], _data[10]);
+		_outData[1] = mask_apply(surf, _outData[1], _data[9], _data[10]);
 		
 		return _outData;
 	}

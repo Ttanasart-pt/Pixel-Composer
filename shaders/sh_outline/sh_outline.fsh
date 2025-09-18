@@ -45,7 +45,6 @@ uniform vec2      blend_alpha;
 uniform int       blend_alphaUseSurf;
 uniform sampler2D blend_alphaSurf;
 
-uniform int outline_only;
 uniform int highRes;
 
 vec2 round(in vec2 v) { 
@@ -145,16 +144,21 @@ void main() {
 	
 	vec2 pixelPosition = v_vTexcoord * dimension;
 	vec4 baseColor = texture2D( gm_BaseTexture, v_vTexcoord );
-	vec4 col = outline_only == 0? baseColor : vec4(0.);
-	gl_FragColor = col;
 	
-	#region filter out filled ot empty pixel
+	vec4 resultColor   = baseColor;
+	vec4 resultOutline = vec4(0.);
+	
+	gl_FragData[0] = resultColor;
+	gl_FragData[1] = resultOutline;
+	
+	#region filter out filled / empty pixel
 		bool isBorder = false;
 		     if(side == 0) isBorder = baseColor.a >= alphaThers;
 		else if(side == 1) isBorder = baseColor.a <  alphaThers;
 	
 		if(!isBorder) {
-			gl_FragColor = col;
+			gl_FragData[0] = resultColor;
+			gl_FragData[1] = resultOutline;
 			return;
 		}
 	#endregion
@@ -233,11 +237,18 @@ void main() {
 	
 	if(_aa == 0.) return;
 	
-	if(is_blend == 0) col = blendColor(baseColor, borderColor, _aa);
-	else {
-		col = blendColor(side == 0? baseColor : closetColor, borderColor, _aa * bld);
-		col.a = _aa;
+	if(is_blend == 0) {
+		resultColor   = blendColor(baseColor, borderColor, _aa);
+		resultOutline = borderColor;
+		
+	} else {
+		resultColor = blendColor(side == 0? baseColor : closetColor, borderColor, _aa * bld);
+		resultColor.a = _aa;
+		
+		resultOutline = blendColor(side == 0? vec4(0.) : closetColor, borderColor, _aa * bld);
+		resultOutline.a = _aa;
 	}
 	
-    gl_FragColor = col;
+    gl_FragData[0] = resultColor;
+    gl_FragData[1] = resultOutline;
 }

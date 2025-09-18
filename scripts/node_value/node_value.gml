@@ -479,8 +479,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			attributes.mapped = !attributes.mapped;
 			
 			if(type == VALUE_TYPE.integer || type == VALUE_TYPE.float) {
+				var _currValue = getValue();
+				
 				if(attributes.mapped) {
-					var _currValue = getValue();
 					var _mappValue = [];
 					
 					if(mapped_vec4) {
@@ -496,7 +497,19 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					
 					setValue(_mappValue);
 					
-				} else setValue(def_val);
+				} else {
+					var _mappValue;
+					
+					if(mapped_vec4) {
+						_mappValue[0] = array_safe_get_fast(_currValue, 0, 0);
+						_mappValue[1] = array_safe_get_fast(_currValue, 1, 0);
+						
+					} else {
+						_mappValue = array_safe_get_fast(_currValue, 0, 0);
+					}
+					
+					setValue(_mappValue);
+				}
 				
 				setArrayDepth(attributes.mapped);
 			}
