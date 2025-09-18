@@ -1159,6 +1159,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			selection.drawing_surface    = drawing_surface;
 			selection.canvas_surface     = _canvas_surface;
 			selection.apply_draw_surface = apply_draw_surface;
+			selection.was_selected       = selection.is_selected;
+			selection.selection_hovering = false;
 			
 			if(selection.is_selected) {
 				selection.step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
@@ -1757,7 +1759,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(!surface_exists(_surf)) return;
 		
 		selection.createSelectionFromSurface(_surf);
-		surface_free(_surf);
+		surface_free_safe(_surf);
 		
 		var _sel_x = 0;
 		var _sel_y = 0;

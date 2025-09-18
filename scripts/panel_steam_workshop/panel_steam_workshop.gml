@@ -1000,7 +1000,7 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 		#region profile
 			_author.drawProfile(_px, _py, _ps, true);
 			
-			if(_myPage) {
+			if(_myPage && IS_PATREON) {
 				var _gx = _px + _ps - ui(10);
 				var _gy = _py + ui(10);
 				var _hv = _hhov && point_in_circle(_m[0], _m[1], _gx, _gy, ui(10));

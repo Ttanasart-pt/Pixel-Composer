@@ -1029,7 +1029,11 @@ function Panel_Preview() : PanelContent() constructor {
     function resetTool() {
     	if(tool_current == noone) return;
     	var _tobj = tool_current.getToolObject();
-		if(_tobj) _tobj.disable();
+    	
+		if(_tobj) {
+    		if(!_tobj.escapable()) return;
+			_tobj.disable();
+		}
 		
         tool_current = noone;
     }

@@ -156,7 +156,8 @@ function ToolObject() constructor {
 	static initKeyboard = function() /*=>*/ {}
 	
 	////- Disable
-		
+	
+	static escapable = function() /*=>*/ {return true}
 	static disable   = function() /*=>*/ {}
 	static onDisable = function() /*=>*/ {}
 	

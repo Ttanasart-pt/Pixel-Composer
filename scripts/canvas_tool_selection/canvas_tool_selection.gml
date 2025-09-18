@@ -10,6 +10,7 @@ function canvas_selection() : canvas_tool() constructor {
 	selection_sampler   = new Surface_Sampler_Grey();
 	
 	is_selected    = false;
+	was_selected   = false;
 	hover_index    = noone;
 	is_select_drag = 0;
 	is_select_scal = 0; is_select_scal_anchor = 0;
@@ -94,8 +95,7 @@ function canvas_selection() : canvas_tool() constructor {
 		surface_reset_shader();
 		
 		surface_set_shader(selection_mask, noone, true, BLEND.over);
-			draw_clear(c_white)
-			// draw_surface_safe(surface);
+			draw_clear(c_white);
 		surface_reset_shader();
 		
 		selection_position = [ sel_x0, sel_y0 ];
@@ -256,9 +256,7 @@ function canvas_selection() : canvas_tool() constructor {
 	}
 	
 	function onSelected(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		selection_hovering = false;
 		if(!is_surface(selection_surface)) { is_selected = false; return; } 
-		
 		if(key_mod_press(SHIFT)) { CURSOR_SPRITE = THEME.cursor_add;    return; }
 		if(key_mod_press(ALT))   { CURSOR_SPRITE = THEME.cursor_remove; return; }
 		
@@ -296,32 +294,16 @@ function canvas_selection() : canvas_tool() constructor {
 			var ph = selection_ey - selection_sy;
 					
 			switch(is_select_scal_anchor) {
-				case 1 : 
-					px += _dx;
-					py += _dy;
-					
-					pw -= _dx;
-					ph -= _dy;
-					break;
+				case 1 : px += _dx; py += _dy;
+					     pw -= _dx; ph -= _dy; break;
 				
-				case 2 : 
-					py += _dy;
-					
-					pw += _dx;
-					ph -= _dy;
-					break;
+				case 2 : py += _dy;
+					     pw += _dx; ph -= _dy; break;
 				
-				case 3 : 
-					px += _dx;
+				case 3 : px += _dx;
+				         pw -= _dx; ph += _dy; break;
 					
-					pw -= _dx;
-					ph += _dy;
-					break;
-					
-				case 4 : 
-					pw += _dx;
-					ph += _dy;
-					break;
+				case 4 : pw += _dx; ph += _dy; break;
 					
 			}
 			
@@ -364,7 +346,7 @@ function canvas_selection() : canvas_tool() constructor {
 			
 			var sw = surface_get_width(selection_surface_base);
 			var sh = surface_get_height(selection_surface_base);
-			var pd = max(sw, sh) - min(sw, sh);
+			var pd = floor(sqrt(sw * sw + sh * sh)) - min(sw, sh);
 			var pw = sw + pd * 2;
 			var ph = sh + pd * 2;
 			
@@ -457,8 +439,8 @@ function canvas_selection() : canvas_tool() constructor {
 	}
 	
 	function step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		mouse_cur_x = round((_mx - _x) / _s - 0.5);
-		mouse_cur_y = round((_my - _y) / _s - 0.5);
+		mouse_cur_x  = round((_mx - _x) / _s - 0.5);
+		mouse_cur_y  = round((_my - _y) / _s - 0.5);
 		
 		if(!is_selected && is_surface(selection_surface))
 			apply();
@@ -611,4 +593,6 @@ function canvas_tool_selection(_selector) : canvas_tool() constructor {
 	}
 	
 	function drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}
+
+	static escapable = function() /*=>*/ {return !selector.was_selected};
 }
