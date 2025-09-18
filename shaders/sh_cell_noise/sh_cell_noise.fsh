@@ -27,9 +27,8 @@ uniform float middle;
 #define PI 3.14159265359
 #define TAU 6.283185307179586
 
-vec2 random2( vec2 p ) { return fract(sin(vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)))) * 43758.5453); }
-
-float random(in vec2 st) { return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123); }
+vec2 random2( in vec2 st ) { return fract(sin(vec2(dot(st, vec2(127.1, 311.7)), dot(st, vec2(269.5, 183.3)))) * 43758.5453); }
+float random( in vec2 st ) { return fract(sin(dot(st, vec2(12.9898, 78.233))) * 43758.5453123); }
 
 float cellNoise(vec2 ntx, vec2 pos, float sca, float scaMax, float ang) {
 	vec2  st     = (ntx - pos) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca;
