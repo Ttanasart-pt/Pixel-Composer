@@ -2,61 +2,51 @@ gml_release_mode(true);
 gml_pragma("UnityBuild", "true");
 
 #region save
-	globalvar LOADING, CLONING, CLONING_GROUP;
-	globalvar CONNECTION_CONFLICT, LOADING_VERSION;
-	globalvar MESSAGE;
+	globalvar LOADING; LOADING		  = false;
+	globalvar LOADING_VERSION; LOADING_VERSION = 0;
 	
-	globalvar APPENDING, APPEND_MAP, APPEND_LIST;
-	APPEND_MAP      = ds_map_create();
-	APPEND_LIST     = [];
+	globalvar CLONING; CLONING		  = false;
+	globalvar CLONING_GROUP; CLONING_GROUP   = noone;
 	
-	LOADING		    = false;
-	LOADING_VERSION = 0;
-	CLONING_GROUP   = noone;
-	CLONING		    = false;
-	APPENDING	    = false;
-	MESSAGE         = noone;
+	globalvar APPENDING; APPENDING	      = false;
+	globalvar APPEND_MAP; APPEND_MAP      = ds_map_create();
+	globalvar APPEND_LIST; APPEND_LIST     = [];
 	
-	CONNECTION_CONFLICT = ds_queue_create();
+	globalvar CONNECTION_CONFLICT; CONNECTION_CONFLICT = ds_queue_create();
 	
+	globalvar MESSAGE; MESSAGE         = noone;
 	randomize();
 #endregion
 
 #region // MAIN
-	globalvar OS, DEBUG, RUN_IDE;
-	globalvar CMD, CMDIN, CMDPRG;
-	globalvar FPS_REAL;
-	
+	globalvar OS; OS = os_type;
 	#macro MAC (OS == os_macosx)
-	
-	OS       = os_type;
-	CMD      = [];
-	CMDIN    = [];
-	CMDPRG   = noone;
-	
 	window_set_showborder(OS != os_windows);
 	
-	FPS_REAL = 0;
-	RUN_IDE  = GM_build_type == "run";
-	DEBUG    = false;
-	COLOR_KEY_ARRAY = [];
+	globalvar CMD; CMD      = [];
+	globalvar CMDIN; CMDIN    = [];
+	globalvar CMDPRG; CMDPRG   = noone;
 	
-	globalvar LATEST_VERSION;  LATEST_VERSION = 1_19_00_0;
-	globalvar VERSION;         VERSION        = 1_19_09_0;
-	globalvar SAVE_VERSION;    SAVE_VERSION   = 1_19_10_0;
-	globalvar VERSION_STRING;  VERSION_STRING = MAC? "1.18.003m" : "1.19.9.005";
-	globalvar RELEASE_STRING;  RELEASE_STRING = "1.19.9";
-	globalvar BUILD_NUMBER;    BUILD_NUMBER   = 1_19_09_0.005;
-	globalvar PREF_VERSION;    PREF_VERSION   = 1_17_1;
+	globalvar FPS_REAL; FPS_REAL = 0;
+	globalvar RUN_IDE; RUN_IDE  = GM_build_type == "run";
+	globalvar DEBUG; DEBUG    = false;
+	globalvar COLOR_KEY_ARRAY; COLOR_KEY_ARRAY = [];
+	
+	globalvar LATEST_VERSION; LATEST_VERSION = 1_19_00_0;
+	globalvar VERSION; VERSION        = 1_19_09_0;
+	globalvar SAVE_VERSION; SAVE_VERSION   = 1_19_10_0;
+	globalvar VERSION_STRING; VERSION_STRING = MAC? "1.18.003m" : "1.19.9.006";
+	globalvar RELEASE_STRING; RELEASE_STRING = "1.19.9";
+	globalvar BUILD_NUMBER; BUILD_NUMBER   = 1_19_09_0.006;
+	globalvar PREF_VERSION; PREF_VERSION   = 1_17_1;
 	
 	var _versions = string_split(VERSION_STRING, ".");
 	
-	globalvar VERSION_MAJOR;   VERSION_MAJOR  = toNumber(_versions[1]);
-	globalvar NIGHTLY;         NIGHTLY        = string_length(array_last(_versions)) == 3;
+	globalvar VERSION_MAJOR; VERSION_MAJOR  = toNumber(_versions[1]);
+	globalvar NIGHTLY; NIGHTLY        = string_length(array_last(_versions)) == 3;
 	
-	globalvar HOTKEYS, HOTKEY_CONTEXT;
-	HOTKEYS        = {};
-	HOTKEY_CONTEXT = [0];
+	globalvar HOTKEYS; HOTKEYS        = {};
+	globalvar HOTKEY_CONTEXT; HOTKEY_CONTEXT = [0];
 	
 	globalvar TOOLTIP, DRAGGING, DIALOG_DEPTH_HOVER;
 	global.DOWNLOAD_LINKS = "";
@@ -65,30 +55,23 @@ gml_pragma("UnityBuild", "true");
 #endregion
 
 #region input
-	globalvar FOCUS, FOCUS_STR, FOCUS_CONTENT, FOCUS_STACK, HOVER, HOVERING_ELEMENT, _HOVERING_ELEMENT;
-	globalvar DOUBLE_CLICK;
-	globalvar DIALOG_CLICK;
-	globalvar TOOLTIP_WINDOW;
+	globalvar FOCUS; FOCUS	          = noone;
+	globalvar FOCUS_CONTENT; FOCUS_CONTENT   = noone;
+	globalvar FOCUS_STR; FOCUS_STR	      = "";
+	globalvar FOCUS_STACK; FOCUS_STACK     = ds_stack_create();
 	
-	FOCUS	          = noone;
-	FOCUS_CONTENT     = noone;
-	FOCUS_STR	      = "";
-	FOCUS_STACK       = ds_stack_create();
+	globalvar DOUBLE_CLICK; DOUBLE_CLICK    = false;
 	
-	DOUBLE_CLICK      = false;
+	globalvar HOVER; HOVER             = noone;
+	globalvar HOVERING_ELEMENT; HOVERING_ELEMENT  = noone;
+	globalvar _HOVERING_ELEMENT; _HOVERING_ELEMENT = noone;
 	
-	HOVER             = noone;
-	HOVERING_ELEMENT  = noone;
-	_HOVERING_ELEMENT = noone;
+	globalvar DIALOG_CLICK; DIALOG_CLICK      = true;
 	
-	DIALOG_CLICK      = true;
-	
-	globalvar ADD_NODE_PAGE, ADD_NODE_SCROLL, ADD_NODE_SUBPAGE;
-	
-	ADD_NODE_PAGE    = 0;
-	ADD_NODE_SUBPAGE = 0;
-	ADD_NODE_SCROLL  = 0;
-	TOOLTIP_WINDOW   = noone;
+	globalvar ADD_NODE_PAGE; ADD_NODE_PAGE    = 0;
+	globalvar ADD_NODE_SUBPAGE; ADD_NODE_SUBPAGE = 0;
+	globalvar ADD_NODE_SCROLL; ADD_NODE_SCROLL  = 0;
+	globalvar TOOLTIP_WINDOW; TOOLTIP_WINDOW   = noone;
 #endregion
 
 #region macro
@@ -127,9 +110,8 @@ gml_pragma("UnityBuild", "true");
 	function  __is_instanceof(a,b) { return is_struct(a) && is_instanceof(a,b) };
 	
 	#macro CONF_TESTING false
-	globalvar TESTING, TEST_ERROR;
-	TESTING = CONF_TESTING;
-	TEST_ERROR = false;
+	globalvar TESTING; TESTING    = CONF_TESTING;
+	globalvar TEST_ERROR; TEST_ERROR = false;
 	
 	#macro DEMO	false
 	#macro ItchDemo:DEMO  true
@@ -185,9 +167,8 @@ gml_pragma("UnityBuild", "true");
 #endregion
 
 #region default
-	globalvar DEF_SURFACE, USE_DEF;
-	DEF_SURFACE = noone;
-	USE_DEF = -10;
+	globalvar DEF_SURFACE; DEF_SURFACE = noone;
+	globalvar USE_DEF; USE_DEF     = -10;
 	
 	function DEF_SURFACE_RESET() {
 		if(is_surface(DEF_SURFACE)) return;

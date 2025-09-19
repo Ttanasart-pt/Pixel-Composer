@@ -1,3 +1,10 @@
+#region create
+	FN_NODE_CONTEXT_INVOKE {
+		addHotkey("Node_Shadow", "Grow",     "G", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS_NUMBER _n.inputs[4].setValue(KEYBOARD_NUMBER); });
+		addHotkey("Node_Shadow", "Sharpen",  "S", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS        _n.inputs[5].setValue(0);               });
+	});
+#endregion
+
 function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Shadow";
 	
@@ -11,14 +18,14 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	////- =Surfaces
 	newInput( 1, nodeValue_Color(       "Color",           ca_black ));
-	newInput( 2, nodeValue_Slider(      "Strength",       .5, [ 0, 2, 0.01] )).setHotkey("S");
-	newInput(11, nodeValue_Enum_Scroll( "Positioning",     0, [ "Shift", "Light" ] ));
-	newInput( 3, nodeValue_Vec2(        "Shift",          [4,4] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
-	newInput(12, nodeValue_Vec2(        "Light Position", [0,0] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput( 2, nodeValue_Slider(      "Strength",       .5, [ 0, 2, 0.01] )).setHotkey("S").hide_label();
+	newInput(11, nodeValue_Enum_Button( "Positioning",     0, [ "Shift", "Light" ] ));
+	newInput( 3, nodeValue_Vec2(        "Shift",          [4,4] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}).hide_label();
+	newInput(12, nodeValue_Vec2(        "Light Position", [0,0] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}).hide_label();
 	newInput( 4, nodeValue_Slider(      "Grow", 3, [0, 16, 0.1] ));
 	newInput( 5, nodeValue_Slider(      "Blur", 3, [1, 16, 0.1] ));
 	// input 13
-		
+	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 8, 
@@ -32,26 +39,36 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	temp_surface = [ noone ];
 		
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		var _surf = outputs[0].getValue();
-		
-		if(is_array(_surf)) {
-			if(array_length(_surf) == 0) return w_hovering;
-			_surf = _surf[preview_index];
-		}
-		
-		var ww = surface_get_width_safe(_surf) * _s;
-		var hh = surface_get_height_safe(_surf) * _s;
+		var _dim = getDimension();
+		var ww   = _s * _dim[0];
+		var hh   = _s * _dim[1];
+		var cx   = _x + ww / 2;
+		var cy   = _y + ww / 2;
 		
 		var _typ = getSingleValue(11);
 		
-			 if(_typ == 0) InputDrawOverlay(inputs[ 3].drawOverlay(w_hoverable, active, _x + ww / 2, _y + hh / 2, _s, _mx, _my, _snx, _sny));
-		else if(_typ == 1) InputDrawOverlay(inputs[12].drawOverlay(w_hoverable, active, _x,          _y,          _s, _mx, _my, _snx, _sny));
+		if(_typ == 0) {
+			var shf = getSingleValue(3);
+			var sx  = cx + shf[0] * _s;
+			var sy  = cy + shf[1] * _s;
+			
+			draw_set_color(COLORS._main_accent);
+			draw_line_dashed(cx, cy, sx, sy);
+			
+	 		InputDrawOverlay(inputs[ 3].drawOverlay(w_hoverable, active, cx, cy, _s, _mx, _my, _snx, _sny, 1));
+	 		
+		} else if(_typ == 1) {
+			var shf = getSingleValue(12);
+			var sx  = _x + shf[0] * _s;
+			var sy  = _y + shf[1] * _s;
+			
+			draw_set_color(COLORS._main_accent);
+			draw_line_dashed(cx, cy, sx, sy);
+			
+			InputDrawOverlay(inputs[12].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, 1));
+		}
 		
-		var _dim = getDimension();
-		var _cx = _x + _dim[0] / 2 * _s;
-		var _cy = _y + _dim[1] / 2 * _s;
-		
-		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s * _dim[0], _mx, _my, _snx, _sny));
 		
 		return w_hovering;
 	}

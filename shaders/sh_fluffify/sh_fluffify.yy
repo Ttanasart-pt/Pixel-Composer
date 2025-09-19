@@ -3,8 +3,8 @@
   "%Name":"sh_fluffify",
   "name":"sh_fluffify",
   "parent":{
-    "name":"effects",
-    "path":"folders/nodes/data/filter/effects.yy",
+    "name":"flufflfy",
+    "path":"folders/nodes/data/filter/effects/flufflfy.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

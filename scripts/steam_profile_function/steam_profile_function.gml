@@ -225,8 +225,8 @@ function Steam_workshop_profile(_sid) constructor {
 			var _frame = floor(current_time / 1000 * _anSpd) % _anLen;
 			var _surf  = profile_graph_runner.process(profile_graph_surfaces[0], _frame);
 			
-			var _sw = surface_get_width_safe(_surf);
-			var _sh = surface_get_height_safe(_surf);
+			var _sw = min(_ps * 2, surface_get_width_safe(_surf));
+			var _sh = min(_ps * 2, surface_get_height_safe(_surf));
 			
 			profile_graph_surfaces[1] = surface_verify(profile_graph_surfaces[1], _sw, _sh);
 			

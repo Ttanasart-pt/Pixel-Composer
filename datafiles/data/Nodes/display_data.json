@@ -1,7 +1,7 @@
 [
     {
         "name": "Home", "nodes": []
-    },
+    }, //Home
     {
         "name": "Group", "nodes": [
             { "label": "Groups" },
@@ -11,7 +11,7 @@
         ],
         "context": ["Node_Group"],
         "color": "node_blend_collection"
-    },
+    }, //Group
     {
         "name": "Loop",
         "iname": "Iterate", "nodes": [
@@ -29,7 +29,7 @@
         ],
         "context": ["Node_Iterate"],
         "color": "node_blend_loop"
-    },
+    }, //Loop
     {
         "name": "Loop",
         "iname": "Iterate_Inline", "nodes": [
@@ -39,7 +39,7 @@
         ],
         "context": ["Node_Iterate_Inline"],
         "color": "node_blend_loop"
-    },
+    }, //Loop inline
     {
         "name": "Loop",
         "iname": "Iterate_Each", "nodes": [
@@ -54,7 +54,7 @@
         ],
         "context": ["Node_Iterate_Each"],
         "color": "node_blend_loop"
-    },
+    }, //Loop each
     {
         "name": "Loop",
         "iname": "Iterate_Each_Inline", "nodes": [
@@ -64,7 +64,7 @@
         ],
         "context": ["Node_Iterate_Each_Inline"],
         "color": "node_blend_loop"
-    },
+    }, //Loop each inline
     {
         "name": "Filter",
         "iname": "Iterate_Filter", "nodes": [
@@ -79,7 +79,7 @@
         ],
         "context": ["Node_Iterate_Filter"],
         "color": "node_blend_loop"
-    },
+    }, //Loop filter
     {
         "name": "Filter",
         "iname": "Iterate_Filter_Inline", "nodes": [
@@ -89,7 +89,7 @@
         ],
         "context": ["Node_Iterate_Filter_Inline"],
         "color": "node_blend_loop"
-    },
+    }, //Loop filter inline
     {
         "name": "Feedback", "nodes": [
             { "label": "Groups" },
@@ -99,7 +99,7 @@
         ],
         "context": ["Node_Feedback"],
         "color": "node_blend_feedback"
-    },
+    }, //Feedback
     {
         "name": "VFX", "nodes": [
             { "label": "Groups" },
@@ -132,7 +132,7 @@
         ],
         "context": ["Node_VFX_Group", "Node_VFX_Group_Inline"],
         "color": "node_blend_vfx"
-    },
+    }, //VFX
     {
         "name": "pSystem", "nodes": [
             { "label": "System" },
@@ -179,7 +179,7 @@
         ],
         "context": ["Node_pSystem_Inline"],
         "color": "node_blend_vfx"
-    },
+    }, //pSystem
     {
         "name": "pSystem 3D", "nodes": [
             { "label": "System" },
@@ -220,7 +220,7 @@
         ],
         "context": ["Node_pSystem_3D_Inline"],
         "color": "node_blend_vfx"
-    },
+    }, //pSystem 3D
     {
         "name": "RigidSim", "nodes": [
             { "label": "Groups" },
@@ -256,7 +256,7 @@
         ],
         "context": ["Node_Rigid_Group_Inline"],
         "color": "node_blend_simulation"
-    },
+    }, //Rigidsim
     {
         "name": "SmokeSim", "nodes": [
             { "label": "Groups" },
@@ -280,7 +280,7 @@
         ],
         "context": ["Node_Smoke_Group", "Node_Smoke_Group_Inline"],
         "color": "node_blend_smoke"
-    },
+    }, //Smokesim
     {
         "name": "FLIP Fluid", "nodes": [
             { "label": "Domain" },
@@ -303,7 +303,7 @@
         ],
         "context": ["Node_FLIP_Group_Inline"],
         "color": "node_blend_fluid"
-    },
+    }, //FLIP
     {
         "name": "StrandSim", "nodes": [
             { "label": "Group" },
@@ -325,7 +325,7 @@
         ],
         "context": ["Node_Strand_Group", "Node_Strand_Group_Inline"],
         "color": "node_blend_strand"
-    },
+    }, //StrandSim
     {
         "name": "VerletSim", "nodes": [
             { "label": "Objects" },
@@ -351,7 +351,7 @@
         ],
         "context": ["", "Node_VerletSim_Inline"],
         "color": "node_blend_strand"
-    },
+    }, //VerletSim
     {
         "name": "MK Tree", "nodes": [
             { "label": "Builder" },
@@ -372,7 +372,7 @@
         ],
         "context": ["Node_MK_Tree_Inline"],
         "color": "node_blend_mktree"
-    },
+    }, //MK Tree
     {
         "name": "Pixel Builder", "nodes": [
             { "label": "Group" },
@@ -421,7 +421,7 @@
         ],
         "context": ["Node_Pixel_Builder"],
         "color": "node_blend_feedback"
-    },
+    }, //Pixel Builder
     
     {
         "name": "IO", "nodes": [
@@ -493,7 +493,7 @@
             { "label": "Gamemaker" },
             "Node_GMRoom"
         ]
-    },
+    }, //IO
     {
         "name": "Transform", "nodes": [
             { "label": "Transforms" },
@@ -526,7 +526,7 @@
             "Node_Tile",
             "Node_Tile_Random",
         ]
-    },
+    }, //Transform
     {
         "name": "Filter", "nodes": [
             { "label": "Combines" },
@@ -648,7 +648,7 @@
             "Node_De_Stray",
             "Node_Gap_Contract",
         ]
-    },
+    }, //Filter
     {
         "name": "3D", "nodes": [
             { "label": "2D Operations" },
@@ -726,7 +726,7 @@
             "Node_RM_Terrain",
             "Node_RM_Cloud"
         ]
-    },
+    }, //3D
     {
         "name": "Generate", "nodes": [
             { "label": "Colors" },
@@ -792,6 +792,7 @@
             "Node_Quasicrystal",
             "Node_Pixel_Sampler",
             "Node_Julia_Set",
+            "Node_Maze_Pattern",
             
             { "label": "Populate" },
             "Node_Repeat",
@@ -838,7 +839,7 @@
             "Node_MK_Dialog", 
             "Node_MK_Pile", 
         ]
-    },
+    }, //Generate
     {
         "name": "Compose", "nodes": [
             { "label": "Composes" },
@@ -879,7 +880,7 @@
             "Node_Separate", 
             "Node_Seperate_Shape", 
         ]
-    },
+    }, //Compose
     {
         "name": "Values", "nodes": [
             { "label": "Raw data" },
@@ -1099,7 +1100,7 @@
             "Node_Surface_To_Buffer",
             "Node_Buffer_to_String"
         ]
-    },
+    }, //Values
     {
         "name": "Color", "nodes": [
             { "label": "Colors" },
@@ -1140,7 +1141,7 @@
             "Node_Gradient_Extract",
             "Node_Gradient_Sample"
         ]
-    },
+    }, //Color
     {
         "name": "Animation", "nodes": [
             { "label": "Animations" },
@@ -1171,7 +1172,7 @@
             { "label": "/Renders" },
             "Node_Plot_Linear"
         ]
-    },
+    }, //Animation
     {
         "name": "Misc", "nodes": [
             { "label": "Control" },
@@ -1232,14 +1233,14 @@
             "Node_Image_Grid_Patreon",
             "Node_Image_List_Bug",
         ]
-    },
+    }, //Misc
     {
         "iname": "pcx_Variable",
         "globalContext": "pcx", "name": "Variable", "nodes": [
             "Node_PCX_var",
             "Node_PCX_fn_var"
         ]
-    },
+    }, //pcx_Variable
     {
         "iname": "pcx_Functions",
         "globalContext": "pcx", "name": "Functions", "nodes": [
@@ -1257,11 +1258,11 @@
             "Node_PCX_Array_Get",
             "Node_PCX_Array_Set"
         ]
-    },
+    }, //pcx_Functions
     {
         "iname": "pcx_Flow_Control",
         "globalContext": "pcx", "name": "Flow Control", "nodes": [
             "Node_PCX_Condition"
         ]
-    }
+    } //pcx_Flow_Control
 ]

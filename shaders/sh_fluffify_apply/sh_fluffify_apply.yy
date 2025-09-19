@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_fluffify_apply",
+  "name":"sh_fluffify_apply",
+  "parent":{
+    "name":"flufflfy",
+    "path":"folders/nodes/data/filter/effects/flufflfy.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

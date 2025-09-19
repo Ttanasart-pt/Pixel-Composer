@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_maze_render",
+  "name":"sh_maze_render",
+  "parent":{
+    "name":"maze",
+    "path":"folders/nodes/data/generator/pattern/maze.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

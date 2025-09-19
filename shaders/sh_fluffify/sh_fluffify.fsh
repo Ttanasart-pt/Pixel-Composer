@@ -7,6 +7,7 @@ uniform int   shape;
 uniform float seed;
 uniform float detail;
 uniform float phase;
+uniform vec2  offset;
 
 uniform vec2      size;
 uniform int       sizeUseSurf;
@@ -16,9 +17,10 @@ uniform float     sizeMultiply;
 uniform float iteration;
 uniform float maxIteration;
 
-uniform int blend;
-uniform int skipFirst;
-uniform int fadeIteration;
+uniform int   blend;
+uniform float substract;
+uniform int   skipFirst;
+uniform int   fadeIteration;
 
 #define PI 3.14159265359
 #define TAU 6.283185307179586
@@ -40,24 +42,22 @@ void main() {
 	float col = bas;
 	if(skipFirst == 1 && iteration == 1.) col = 0.;
 	
-	vec2 tx = floor(v_vTexcoord * dimension);
-	vec2 st = floor(tx / detail) * detail;
-	vec2 fr = fract(tx / detail);
+	float detl = detail / 10.;
+	vec2  tx = floor(v_vTexcoord * dimension) - offset / dimension;
+	vec2  st = floor(tx / detl) * detl;
 	
 	float min_dist = 99999.;
 	
-    for (int y = -1; y <= 1; y++)
-    for (int x = -1; x <= 1; x++) {
+    for (int y = -2; y <= 2; y++)
+    for (int x = -2; x <= 2; x++) {
 		
         vec2 neighbor = vec2(float(x),float(y));
-        vec2 point    = st + detail * neighbor;
-		     point   += random2(point) * detail;
+        vec2 point    = st + detl * neighbor;
+		     point   += random2(point) * detl;
 		
 		vec4 _sam = texture2D(gm_BaseTexture, point / dimension);
 		float sam = (_sam.r + _sam.g + _sam.b) / 3. * _sam.a;
-		if(sam == .0) continue;
-		
-		float depth = random(point) * detail * str * sam;
+		float depth = random(point) * detl * str;
 		float dist  = 0.;
 		vec2  dx = point - tx;
 		
@@ -65,6 +65,20 @@ void main() {
 		else if(shape == 1) dist = abs(dx.x) + abs(dx.y);
 		else if(shape == 2) dist = max(abs(dx.x), abs(dx.y));
 		
+		if(sam == .0) {
+			if(random(point) >= substract) continue;
+			if(dist >= depth) continue;
+			
+			if(dist < min_dist) {
+				if(blend == 1) col = 0.;
+				min_dist = dist;
+			}
+			
+			if(blend == 0) col = 0.;	
+			continue;
+		}
+		
+		depth *= sam;
 		if(dist >= depth) continue;
 		
 		if(dist < min_dist) {
