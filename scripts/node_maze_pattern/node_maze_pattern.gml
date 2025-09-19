@@ -11,17 +11,20 @@ function Node_Maze_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput( 2, nodeValue_EScroll( "Algorithm",      0, [ "Backtrack", "Prim" ] ));
 	newInput( 4, nodeValue_Int(     "Max Iteration", -1 ));
 	newInput( 5, nodeValue_Vec2(    "Origin",   [.5,.5] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput( 9, nodeValue_EButton( "Bias",           0, [ "None", "X", "Y" ] ));
+	newInput(10, nodeValue_Slider(  "Bias Weight",   .5 ));
 	
 	////- =Rendering
 	newInput( 6, nodeValue_Color(    "BG Color",       ca_black ));
 	newInput( 7, nodeValue_Gradient( "Path Color",     new gradientObject(ca_white) ));
 	newInput( 8, nodeValue_Int(      "Path Iteration", 100 ));
+	// input 10
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 3, 
 		[ "Output",    false ], 0, 1, 
-		[ "Maze",      false ], 2, 4, 5, 
+		[ "Maze",      false ], 2, 4, 5, 9, 10, 
 		[ "Rendering", false ], 6, 7, 8, 
 	];
 	
@@ -34,18 +37,22 @@ function Node_Maze_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	static step = function() {}
 	
 	static processData = function(_outSurf, _data, _array_index = 0) { 
-		var _seed = _data[3];
+		var _seed = _data[ 3];
 		
-		var _dim  = _data[0];
-		var _mask = _data[1];
+		var _dim  = _data[ 0];
+		var _mask = _data[ 1];
 		
-		var _algo = _data[2];
-		var _iter = _data[4];
-		var _orig = _data[5];
+		var _algo = _data[ 2];
+		var _iter = _data[ 4];
+		var _orig = _data[ 5];
+		var _bias = _data[ 9];
+		var _wigh = _data[10];
 		
-		var _cbg  = _data[6];
-		var _cwal = _data[7]; _cwal.cache();
-		var _psca = _data[8]; _psca = max(1, _psca);
+		var _cbg  = _data[ 6];
+		var _cwal = _data[ 7]; _cwal.cache();
+		var _psca = _data[ 8]; _psca = max(1, _psca);
+		
+		inputs[10].setVisible(_bias > 0);
 		
 		var ww = _dim[0];
 		var hh = _dim[1];
@@ -87,10 +94,18 @@ function Node_Maze_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 						draw_point(_x, _y);
 					}
 					
-					var _dir   = (_d + choose(3, 4, 5)) % 4;
+					var _dir = _d;
+					switch(_bias) {
+						case 0 : _dir = (_d + choose(3, 4, 5)) % 4; break;
+						case 1 : _dir = choose_weight(_wigh, choose(1, 3), irandom(3)); break;
+						case 2 : _dir = choose_weight(_wigh, choose(0, 2), irandom(3)); break;
+					}
+					
+					var _dirr  = choose(-1, 1);
+					var _add   = 1;
 					var _moved = false;
 					
-					repeat(4) {
+					repeat(4 - bool(_bias)) {
 						switch(_dir) {
 							case 0 : if(_y >= 2 && _grid[# _x, _y - 2] == 0) {
 								ds_stack_push(_path, [ _x, _y,       -1, _p + 1 ]);
@@ -118,7 +133,8 @@ function Node_Maze_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 						}
 						
 						if(_moved) { _i++; break; }
-						_dir = (_dir + 1) % 4;
+						_dir = (_dir + (1 + _add) * _dirr + 4) % 4;
+						_add = !_add;
 					}
 				}
 				
@@ -156,11 +172,18 @@ function Node_Maze_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 					_grid[# _x, _y] = 1;
 					draw_point(_x, _y);
 					
-					var _dir   = (_d + choose(3, 4, 5)) % 4;
+					var _dir = _d;
+					switch(_bias) {
+						case 0 : _dir = (_d + choose(3, 4, 5)) % 4; break;
+						case 1 : _dir = choose_weight(_wigh, choose(1, 3), irandom(3)); break;
+						case 2 : _dir = choose_weight(_wigh, choose(0, 2), irandom(3)); break;
+					}
+					
 					var _dirr  = choose(-1, 1);
+					var _add   = 1;
 					var _moved = false;
 					
-					repeat(4) {
+					repeat(4 - bool(_bias)) {
 						switch(_dir) {
 							case 0 : if(_y >= 2 && _grid[# _x, _y - 2] == 0) {
 								_grid[# _x, _y - 2] = 1;
@@ -192,7 +215,8 @@ function Node_Maze_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 						}
 						
 						if(_moved) { _i++; break; }
-						_dir = (_dir + _dirr + 4) % 4;
+						_dir = (_dir + (1 + _add) * _dirr + 4) % 4;
+						_add = !_add;
 					}
 				}
 				

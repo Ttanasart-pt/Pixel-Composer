@@ -1665,7 +1665,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				break;
 				
 			case COMPOSE_OUTPUT_SCALING.largest :
-				for(var i = input_fix_len; i < array_length(_data) - data_length; i += data_length) {
+				for(var i = input_fix_len; i < array_length(inputs) - data_length; i += data_length) {
 					var _s = getSingleValue(i, arr);
 					ww = max(ww, surface_get_width_safe(_s));
 					hh = max(hh, surface_get_height_safe(_s));

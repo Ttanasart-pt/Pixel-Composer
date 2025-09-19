@@ -139,3 +139,5 @@ function random_gaussian(_mean = 0, _var = 1) {
 	var z  = sqrt(-2 * ln(u1)) * cos(2 * pi * u2);
 	return _mean + z * _var;
 }
+
+function choose_weight(w, v0, v1) { return random(1) > w? v0 : v1; }
