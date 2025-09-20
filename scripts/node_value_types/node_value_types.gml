@@ -563,7 +563,7 @@ function isGraphable(prop) {
 function nodeValueUnit(__nodeValue) constructor {
 	INLINE
 	
-	self._nodeValue = __nodeValue;
+	_nodeValue = __nodeValue;
 	
 	mode      = VALUE_UNIT.constant;
 	reference = noone;

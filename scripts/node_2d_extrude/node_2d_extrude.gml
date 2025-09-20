@@ -127,8 +127,8 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	    surface_set_shader(_outData, sh_2d_extrude_apply);
 	    	shader_set_dim( "dimension",    _surf           );
 	    	shader_set_s(   "extrudeMap",   temp_surface[0] );
-	    	shader_set_s(   "mask",       _mask     );
-	        shader_set_i(   "useMask",    _use_mask );
+	    	shader_set_s(   "mask",         _mask           );
+	        shader_set_i(   "useMask",      _use_mask       );
 	        
 	    	shader_set_f(   "angle",        degtorad(_ang)  );
 			shader_set_f(   "extDistance",  _dist           );

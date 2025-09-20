@@ -48,6 +48,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	////- =Pattern
 	newInput( 3, nodeValue_Enum_Scroll(    "Pattern",          0, __enum_array_gen([ "Linear", "Grid", "Circular"], s_node_repeat_axis) ));
 	newInput( 9, nodeValue_Vec2(           "Start Position",  [.5,.5] )).setHotkey("G").setUnitRef(function() /*=>*/ {return getInputData(1)}, VALUE_UNIT.reference);
+	newInput(22, nodeValue_Anchor(         "Global Anchor",   [ 0, 0] ));
 	newInput(32, nodeValue_Rotation(       "Start Rotation",   0      )).setHotkey("R");
 	newInput( 2, nodeValue_Int(            "Amount",           2      )).rejectArray();
 	newInput(18, nodeValue_Int(            "Column",           4      ));
@@ -82,7 +83,6 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	/* deprecated */ newInput(15, nodeValue_Curve(    "Alpha over copy",    CURVE_DEF_11      ));
 	/* deprecated */ newInput(20, nodeValue_Slider(   "Animator midpoint",  .5, [-1, 2, 0.01] ));
 	/* deprecated */ newInput(21, nodeValue_Slider(   "Animator range",     .1                ));
-	/* deprecated */ newInput(22, nodeValue_Vec2(     "Animator position",  [0,0]             ));
 	/* deprecated */ newInput(23, nodeValue_Rotation( "Animator rotation",   0                ));
 	/* deprecated */ newInput(24, nodeValue_Vec2(     "Animator scale",     [0,0]             ));
 	/* deprecated */ newInput(25, nodeValue_Curve(    "Animator falloff",   CURVE_DEF_10      ));
@@ -198,7 +198,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	input_display_list = [
 		["Surfaces",  true],  0, 35, 36, 37,  1, 16, 17,
-		["Pattern",	 false],  3,  9, 32,  2, 18,  7,  8, 
+		["Pattern",	 false],  3,  9, 22, 32,  2, 18,  7,  8, 
 		["Path",	  true], 11, 12, 13, 40, 
 		["Position", false],  4, 39, 26, 19, 38, 
 		["Rotation", false], 33,  5, 
@@ -374,6 +374,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _pat  = _data[ 3];
 								  
 			var _spos = _data[ 9];
+			var _fanc = _data[22];
 			var _srot = _data[32];
 			
 			var _rpos = _data[ 4], _rpos_curved = inputs[4].attributes.curved, shift_curve = new curveMap(_data[38]);
@@ -453,9 +454,10 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			}
 		#endregion
 			
-		var _surf, posx, posy, scax, scay, rot;
-		var _dim, _sdim = [ 1, 1 ], _dims = [];
-		var _surf = _iSrf;
+		var _surf, posx, posy, scax, scay, rot, _dim, 
+		var _dims        = [];
+		var _sdim        = [ 1, 1 ]
+		var _surf        = _iSrf;
 		var _baseSurface = _surf;
 		var _use_array   = is_array(_surf);
 		var _arr_length  = _use_array? array_length(_surf) : 1;
@@ -606,6 +608,12 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			
 			if(_rsta == 1)	runx += _sw / 2;
 			if(_rsta == 2)	runy += _sh / 2;
+			
+			minx = min(minx, posx);
+			miny = min(miny, posy);
+			maxx = max(maxx, posx);
+			maxy = max(maxy, posy);
+			
 		}
 		
 		if(_ani_amo > 0)
@@ -765,7 +773,9 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		output_dimension[_array_index] = [_dim[0], _dim[1]];
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
-		var _x, _y;
+		
+		var _offset_x = -_fanc[0] * (maxx - minx);
+		var _offset_y = -_fanc[1] * (maxy - miny);
 		
 		////- RENDERING
 		
@@ -778,8 +788,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			
 			var _i = 0;
 			repeat( atlas_i ) {
-				var _x = atlases[_i + ATLAS_ARRAY.x];
-				var _y = atlases[_i + ATLAS_ARRAY.y];
+				var _x = atlases[_i + ATLAS_ARRAY.x] + _offset_x;
+				var _y = atlases[_i + ATLAS_ARRAY.y] + _offset_y;
 				
 				if(_dimt == OUTPUT_SCALING.scale) {
 					_x += _padd[2] - minx;
