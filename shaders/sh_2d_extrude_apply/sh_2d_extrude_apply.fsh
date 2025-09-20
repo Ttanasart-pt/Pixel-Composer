@@ -177,7 +177,7 @@ void main() {
 	    
 	    if(e1 > 0. || e2 > 0.) {
 	        gl_FragData[0] = mix(gl_FragData[0], vec4(highlightColor.rgb, gl_FragData[0].a), highlightColor.a);
-	        gl_FragData[1] = vec4(vec3(highlightColor.a), 1.);
+	        gl_FragData[1] = vec4(vec3(0.), 1.);
 	    }
 	    return;
 	}

@@ -854,6 +854,7 @@
             "Node_Surface_Tag",
             "Node_Composite_Tag",
             "Node_Blend_Height",
+            "Node_Blend_Depth",
             
             { "label": "Armature" },
             { "label": "/Build" },

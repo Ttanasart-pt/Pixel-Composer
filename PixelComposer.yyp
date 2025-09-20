@@ -1565,11 +1565,7 @@
     {"$GMIncludedFile":"","%Name":"Canvas.png","CopyToMask":-1,"filePath":"datafiles/data/Welcome files/Templates","name":"Canvas.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Canvas.pxc","CopyToMask":-1,"filePath":"datafiles/data/Welcome files/Templates","name":"Canvas.pxc","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Welcome files.zip","CopyToMask":-1,"filePath":"datafiles/data/Welcome files","name":"Welcome files.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"dllcredits.txt","ConfigValues":{
-        "Itch":{
-          "CopyToMask":"0",
-        },
-      },"CopyToMask":0,"filePath":"datafiles","name":"dllcredits.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"dllcredits.txt","ConfigValues":{"Itch":{"CopyToMask":"0",},},"CopyToMask":0,"filePath":"datafiles","name":"dllcredits.txt","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"dlltest1.dll","CopyToMask":-1,"filePath":"datafiles","name":"dlltest1.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"ffmpeg.exe","CopyToMask":-1,"filePath":"datafiles/ffmpeg/bin","name":"ffmpeg.exe","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"LICENSE","CopyToMask":-1,"filePath":"datafiles/ffmpeg","name":"LICENSE","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
@@ -1596,11 +1592,7 @@
     {"$GMIncludedFile":"","%Name":"mf.dll","CopyToMask":-1,"filePath":"datafiles","name":"mf.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"mfcore.dll","CopyToMask":-1,"filePath":"datafiles","name":"mfcore.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"mfplat.dll","CopyToMask":-1,"filePath":"datafiles","name":"mfplat.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"PixelComposer_profile-2.provisionprofile","ConfigValues":{
-        "Itch":{
-          "CopyToMask":"2",
-        },
-      },"CopyToMask":2,"filePath":"datafiles","name":"PixelComposer_profile-2.provisionprofile","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"PixelComposer_profile-2.provisionprofile","ConfigValues":{"Itch":{"CopyToMask":"2",},},"CopyToMask":2,"filePath":"datafiles","name":"PixelComposer_profile-2.provisionprofile","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"data.win","CopyToMask":-1,"filePath":"datafiles/report","name":"data.win","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"execute_shell_simple_ext_x64.dll","CopyToMask":-1,"filePath":"datafiles/report","name":"execute_shell_simple_ext_x64.dll","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"options.ini","CopyToMask":-1,"filePath":"datafiles/report","name":"options.ini","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
@@ -2277,6 +2269,7 @@
     {"id":{"name":"node_bend","path":"scripts/node_bend/node_bend.yy",},},
     {"id":{"name":"node_bevel","path":"scripts/node_bevel/node_bevel.yy",},},
     {"id":{"name":"node_bit_reduce","path":"scripts/node_bit_reduce/node_bit_reduce.yy",},},
+    {"id":{"name":"node_blend_depth","path":"scripts/node_blend_depth/node_blend_depth.yy",},},
     {"id":{"name":"node_blend_edge","path":"scripts/node_blend_edge/node_blend_edge.yy",},},
     {"id":{"name":"node_blend","path":"scripts/node_blend/node_blend.yy",},},
     {"id":{"name":"node_blobify","path":"scripts/node_blobify/node_blobify.yy",},},
@@ -3276,6 +3269,7 @@
     {"id":{"name":"sh_blend_color_burn","path":"shaders/sh_blend_color_burn/sh_blend_color_burn.yy",},},
     {"id":{"name":"sh_blend_color_dodge","path":"shaders/sh_blend_color_dodge/sh_blend_color_dodge.yy",},},
     {"id":{"name":"sh_blend_contrast","path":"shaders/sh_blend_contrast/sh_blend_contrast.yy",},},
+    {"id":{"name":"sh_blend_depth","path":"shaders/sh_blend_depth/sh_blend_depth.yy",},},
     {"id":{"name":"sh_blend_difference","path":"shaders/sh_blend_difference/sh_blend_difference.yy",},},
     {"id":{"name":"sh_blend_divide","path":"shaders/sh_blend_divide/sh_blend_divide.yy",},},
     {"id":{"name":"sh_blend_edge_blend","path":"shaders/sh_blend_edge_blend/sh_blend_edge_blend.yy",},},
