@@ -1,7 +1,7 @@
 
-function buffer_verify(buffer, _size, buffer_kind = buffer_fixed) {
-	if(buffer <= 0)            return buffer_create(_size, buffer_kind, 1);
-	if(!buffer_exists(buffer)) return buffer_create(_size, buffer_kind, 1);
+function buffer_verify(buffer, _size, buffer_kind = buffer_fixed, alignment = 1) {
+	if(buffer <= 0)            return buffer_create(_size, buffer_kind, alignment);
+	if(!buffer_exists(buffer)) return buffer_create(_size, buffer_kind, alignment);
 	
 	var _s = buffer_get_size(buffer);
 	if(_s != _size) buffer_resize(buffer, _size);

@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_mk_panel_higlight",
+  "name":"sh_mk_panel_higlight",
+  "parent":{
+    "name":"mkpanels",
+    "path":"folders/nodes/data/MKFX/mkpanels.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

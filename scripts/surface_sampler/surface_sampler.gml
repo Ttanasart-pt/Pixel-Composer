@@ -44,25 +44,27 @@ function Surface_sampler(s = noone) constructor {
 }
 
 function Surface_Sampler_Grey(s = noone, _rng = [0,1]) constructor {
-    active = false;
-    buffer = noone;
-    range  = _rng;
+    active  = false;
+    buffer  = noone;
+    range   = _rng;
+    
+    surface     = undefined;
+    surfaceBase = undefined;
     
     sw = 1;
     sh = 1;
         
     static setSurface = function(s) {
-        if(buffer != noone) buffer_delete(buffer);
-        
-        buffer  = noone;
         active  = is_surface(s);
         if(!active) return;
         
         sw = surface_get_width(s);
         sh = surface_get_height(s);
-        var _surf = surface_create(sw, sh, surface_r16float);
         
-        surface_set_shader(_surf, sh_greyscale);
+        surfaceBase = s;
+        surface     = surface_verify(surface, sw, sh, surface_r16float);
+        
+        surface_set_shader(surface, sh_greyscale);
             shader_set_2("brightness",        [0,0]);
             shader_set_i("brightnessUseSurf",  0);
             
@@ -72,18 +74,14 @@ function Surface_Sampler_Grey(s = noone, _rng = [0,1]) constructor {
             draw_surface(s,0,0);
         surface_reset_shader();
         
-        buffer = buffer_create(sw * sh * 2, buffer_fixed, 1);
-        buffer_get_surface(buffer, _surf, 0);
+        buffer = buffer_verify(buffer, sw * sh * 2, buffer_fixed, 2);
+        buffer_get_surface(buffer, surface, 0);
         
-        surface_free(_surf);
     }
     
     setSurface(s);
     
-    static getPixelDirect = function(_x,_y) /*=>*/ {
-        if(!active) return 0;
-        return buffer_read_at(buffer, (_y * sw + _x) * 2, buffer_f16);
-    }
+    static getPixelDirect = function(_x,_y) /*=>*/ { return buffer_read_at(buffer, (_y * sw + _x) * 2, buffer_f16); }
     
     static getPixel = function(_u,_v) /*=>*/ {
         if(!active) return range[0];
@@ -93,5 +91,8 @@ function Surface_Sampler_Grey(s = noone, _rng = [0,1]) constructor {
         return lerp(range[0], range[1], buffer_read_at(buffer, (_y * sw + _x) * 2, buffer_f16));
     }
     
-    static free = function() /*=>*/ { buffer_delete_safe(buffer); }
+    static free = function() /*=>*/ { 
+        surface_free_safe(surface);
+        buffer_delete_safe(buffer);
+    }
 }

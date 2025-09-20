@@ -17,18 +17,21 @@ function Node_Maze_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	////- =Rendering
 	newInput( 6, nodeValue_Color(    "BG Color",       ca_black ));
 	newInput( 7, nodeValue_Gradient( "Path Color",     new gradientObject(ca_white) ));
+	newInput(11, nodeValue_Slider(   "Color Shift",    0   ));
 	newInput( 8, nodeValue_Int(      "Path Iteration", 100 ));
-	// input 10
+	// input 12
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 3, 
 		[ "Output",    false ], 0, 1, 
 		[ "Maze",      false ], 2, 4, 5, 9, 10, 
-		[ "Rendering", false ], 6, 7, 8, 
+		[ "Rendering", false ], 6, 7, 11, 8, 
 	];
 	
 	////- Nodes
+	
+	mask_samp = new Surface_Sampler_Grey();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		InputDrawOverlay(inputs[5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
@@ -40,7 +43,7 @@ function Node_Maze_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _seed = _data[ 3];
 		
 		var _dim  = _data[ 0];
-		var _mask = _data[ 1];
+		var _mask = _data[ 1]; if(_mask != mask_samp.surfaceBase || inputs[1].isAnimated()) mask_samp.setSurface(_mask);
 		
 		var _algo = _data[ 2];
 		var _iter = _data[ 4];
@@ -50,6 +53,7 @@ function Node_Maze_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		var _cbg  = _data[ 6];
 		var _cwal = _data[ 7]; _cwal.cache();
+		var _cshf = _data[11];
 		var _psca = _data[ 8]; _psca = max(1, _psca);
 		
 		inputs[10].setVisible(_bias > 0);
@@ -80,19 +84,26 @@ function Node_Maze_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 					var _d = _curr_pos[2];
 					var _p = _curr_pos[3];
 					
-					draw_set_color(_cwal.evalFast(frac(_p / _psca)));
+					_grid[# _x, _y] = 1;
+					
+					if(mask_samp.active) {
+						var _weig = mask_samp.getPixelDirect(_x, _y);
+						if(random(1) > _weig) {
+							_grid[# _x, _y] = -1;
+							continue;
+						}
+					}
+					
+					draw_set_color(_cwal.caches[frac(_cshf + _p / _psca) * _cwal.cacheRes]);
 					
 					switch(_d) {
-						case 0 : if(_grid[# _x, _y + 1] == 0) { draw_point(_x, _y + 1); _grid[# _x, _y + 1] = 1; } break;
-						case 1 : if(_grid[# _x - 1, _y] == 0) { draw_point(_x - 1, _y); _grid[# _x - 1, _y] = 1; } break;
-						case 2 : if(_grid[# _x, _y - 1] == 0) { draw_point(_x, _y - 1); _grid[# _x, _y - 1] = 1; } break;
-						case 3 : if(_grid[# _x + 1, _y] == 0) { draw_point(_x + 1, _y); _grid[# _x + 1, _y] = 1; } break;
+						case 0 : draw_point(_x, _y + 1); break;
+						case 1 : draw_point(_x - 1, _y); break;
+						case 2 : draw_point(_x, _y - 1); break;
+						case 3 : draw_point(_x + 1, _y); break;
 					}
 					
-					if(_grid[# _x, _y] == 0) {
-						_grid[# _x, _y] = 1;
-						draw_point(_x, _y);
-					}
+					draw_point(_x, _y);
 					
 					var _dir = _d;
 					switch(_bias) {
@@ -104,29 +115,30 @@ function Node_Maze_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 					var _dirr  = choose(-1, 1);
 					var _add   = 1;
 					var _moved = false;
+					_curr_pos[3]++;
 					
 					repeat(4 - bool(_bias)) {
 						switch(_dir) {
 							case 0 : if(_y >= 2 && _grid[# _x, _y - 2] == 0) {
-								ds_stack_push(_path, [ _x, _y,       -1, _p + 1 ]);
+								ds_stack_push(_path, _curr_pos);
 								ds_stack_push(_path, [ _x, _y - 2, _dir, _p + 1 ]);
 								_moved = true;
 							} break;
 
 							case 1 : if(_x < ww - 2 && _grid[# _x + 2, _y] == 0) {
-								ds_stack_push(_path, [ _x, _y,       -1, _p + 1 ]);
+								ds_stack_push(_path, _curr_pos);
 								ds_stack_push(_path, [ _x + 2, _y, _dir, _p + 1 ]);
 								_moved = true;
 							} break;
 
 							case 2 : if(_y < hh - 2 && _grid[# _x, _y + 2] == 0) {
-								ds_stack_push(_path, [ _x, _y,       -1, _p + 1 ]);
+								ds_stack_push(_path, _curr_pos);
 								ds_stack_push(_path, [ _x, _y + 2, _dir, _p + 1 ]);
 								_moved = true;
 							} break;
 
 							case 3 : if(_x >= 2 && _grid[# _x - 2, _y] == 0) {
-								ds_stack_push(_path, [ _x, _y,       -1, _p + 1 ]);
+								ds_stack_push(_path, _curr_pos);
 								ds_stack_push(_path, [ _x - 2, _y, _dir, _p + 1 ]);
 								_moved = true;
 							} break;
@@ -160,16 +172,25 @@ function Node_Maze_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 					var _d = _curr_pos[2];
 					var _p = _curr_pos[3];
 					
-					draw_set_color(_cwal.evalFast(frac(_p / _psca)));
+					_grid[# _x, _y] = 1;
 					
-					switch(_d) {
-						case 0 : draw_point(_x, _y + 1); _grid[# _x, _y + 1] = 1; break;
-						case 1 : draw_point(_x - 1, _y); _grid[# _x - 1, _y] = 1; break;
-						case 2 : draw_point(_x, _y - 1); _grid[# _x, _y - 1] = 1; break;
-						case 3 : draw_point(_x + 1, _y); _grid[# _x + 1, _y] = 1; break;
+					if(mask_samp.active) {
+						var _weig = mask_samp.getPixelDirect(_x, _y);
+						if(random(1) > _weig) {
+							_grid[# _x, _y] = -1;
+							continue;
+						}
 					}
 					
-					_grid[# _x, _y] = 1;
+					draw_set_color(_cwal.caches[frac(_cshf + _p / _psca) * _cwal.cacheRes]);
+					
+					switch(_d) {
+						case 0 : draw_point(_x, _y + 1); break;
+						case 1 : draw_point(_x - 1, _y); break;
+						case 2 : draw_point(_x, _y - 1); break;
+						case 3 : draw_point(_x + 1, _y); break;
+					}
+					
 					draw_point(_x, _y);
 					
 					var _dir = _d;
@@ -182,33 +203,34 @@ function Node_Maze_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 					var _dirr  = choose(-1, 1);
 					var _add   = 1;
 					var _moved = false;
+					_curr_pos[3]++;
 					
 					repeat(4 - bool(_bias)) {
 						switch(_dir) {
 							case 0 : if(_y >= 2 && _grid[# _x, _y - 2] == 0) {
 								_grid[# _x, _y - 2] = 1;
-								ds_list_add(_path, [ _x, _y,       -1, _p + 1 ]);
+								ds_list_add(_path, _curr_pos);
 								ds_list_add(_path, [ _x, _y - 2, _dir, _p + 1 ]);
 								_moved = true;
 							} break;
 
 							case 1 : if(_x < ww - 2 && _grid[# _x + 2, _y] == 0) {
 								_grid[# _x + 2, _y] = 1;
-								ds_list_add(_path, [ _x, _y,       -1, _p + 1 ]);
+								ds_list_add(_path, _curr_pos);
 								ds_list_add(_path, [ _x + 2, _y, _dir, _p + 1 ]);
 								_moved = true;
 							} break;
 
 							case 2 : if(_y < hh - 2 && _grid[# _x, _y + 2] == 0) {
 								_grid[# _x, _y + 2] = 1;
-								ds_list_add(_path, [ _x, _y,       -1, _p + 1 ]);
+								ds_list_add(_path, _curr_pos);
 								ds_list_add(_path, [ _x, _y + 2, _dir, _p + 1 ]);
 								_moved = true;
 							} break;
 
 							case 3 : if(_x >= 2 && _grid[# _x - 2, _y] == 0) {
 								_grid[# _x - 2, _y] = 1;
-								ds_list_add(_path, [ _x, _y,       -1, _p + 1 ]);
+								ds_list_add(_path, _curr_pos);
 								ds_list_add(_path, [ _x - 2, _y, _dir, _p + 1 ]);
 								_moved = true;
 							} break;

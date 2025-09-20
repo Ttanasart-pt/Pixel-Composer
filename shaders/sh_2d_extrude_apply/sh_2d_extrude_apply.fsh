@@ -14,6 +14,9 @@ uniform int   wrap;
 uniform int   highlight;
 uniform vec4  highlightColor;
 
+uniform sampler2D mask;
+uniform int    useMask;
+
 #region //////////////////////////////////// GRADIENT ////////////////////////////////////
 	#define GRADIENT_LIMIT 128
 	
@@ -149,7 +152,15 @@ uniform vec4  highlightColor;
 void main() {
 	vec2 tx  = 1. / dimension;
 	vec2 shf = vec2(cos(angle), -sin(angle)) * tx;
-	vec2 vt  = v_vTexcoord - shift * shf * extDistance;
+	
+	float dist = extDistance;
+	if(useMask == 1) {
+		vec4  mm = texture2D(mask, v_vTexcoord);	
+		float ms = (mm.x + mm.y + mm.z) / 3. * mm.a;
+		dist = floor(dist * ms + .5);
+	}
+	
+	vec2 vt  = v_vTexcoord - shift * shf * dist;
 	
 	vec4  baseColor = texture2D(gm_BaseTexture, vt);
 	vec4  extData   = texture2D(extrudeMap, v_vTexcoord);
@@ -173,7 +184,7 @@ void main() {
 	
 	if(extrude <= 0.) return;
 	
-	float prog = extrude / extDistance;
+	float prog = extrude / dist;
 	gl_FragData[0] = gradientEval(prog);
 	gl_FragData[1] = vec4(vec3(prog), 1.);
 	
@@ -185,6 +196,4 @@ void main() {
 	vec4 cColor = texture2D(gm_BaseTexture, pos);
 	if(cloneColor == 1) gl_FragData[0] *= cColor;
 	if(cloneColor == 2) gl_FragData[0] += cColor;
-	
-	// gl_FragData[0] = vec4(pos, 0., 1.);
 }

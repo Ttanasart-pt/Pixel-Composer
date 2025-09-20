@@ -13,18 +13,6 @@ void main() {
 	vec4 cc = texture2D(gm_BaseTexture, v_vTexcoord);
 	gl_FragColor = cc;
 	
-	// if(light(cc) > 0.) return;
-	
-	// vec4 c0 = texture2D(gm_BaseTexture, v_vTexcoord + direction * tx);
-	// vec4 c1 = texture2D(gm_BaseTexture, v_vTexcoord - direction * tx);
-	// vec4 c2 = texture2D(gm_BaseTexture, v_vTexcoord - (direction + direction.yx) * tx);
-	// vec4 c3 = texture2D(gm_BaseTexture, v_vTexcoord - (direction - direction.yx) * tx);
-	
-	// if(light(c0) > 0. && light(c1) == 0. && light(c2) == 0. && light(c3) == 0.) 
-	// 	gl_FragColor = vec4(1., 1., 1., 1.);
-	
-	//// Zhang-Suen thinning algorithm
-	
 	float p1 = bw(cc);
 	
 	float p9 = bw(texture2D(gm_BaseTexture, v_vTexcoord + vec2(-tx.x, -tx.y)));

@@ -383,7 +383,7 @@ function canvas_selection() : canvas_tool() constructor {
 			if(point_in_rectangle(mouse_cur_x, mouse_cur_y, pos_x0, pos_y0, pos_x1 - 1, pos_y1 - 1)) {
 				var _msx  = mouse_cur_x - pos_x0;
 				var _msy  = mouse_cur_y - pos_y0;
-				var _mask = selection_sampler.getPixelDirect(_msx, _msy);
+				var _mask = selection_sampler.active? selection_sampler.getPixelDirect(_msx, _msy) : 0;
 				selection_hovering = _mask > 0;
 				
 				hover_index = 0;

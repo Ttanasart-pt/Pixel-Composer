@@ -729,7 +729,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static getAnim = function() { return instanceBase != noone? instanceBase.is_anim : is_anim; }
-		
+	
+	static isAnimated = function() {
+		if(value_from_loop)       return true;
+		if(value_from != noone)   return value_from.node.isAnimated();
+		if(instanceBase != noone) return instanceBase.isAnimated();
+		return is_anim;
+	}
+	
 	////- DISPLAY
 	
 	static setVisibleManual = function(v) {

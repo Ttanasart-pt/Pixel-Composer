@@ -2,12 +2,13 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	name = "2D Extrude";
 	
 	////- =Surface
-	newInput( 0, nodeValue_Surface(  "Surface In"));
+	newInput( 0, nodeValue_Surface(  "Surface In" ));
+	newInput( 9, nodeValue_Surface(  "Mask"       ));
 	
 	////- =Extrude
 	newInput( 1, nodeValue_Rotation( "Angle",     0 ));
 	newInput( 2, nodeValue_Float(    "Distance", .5 )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput( 8, nodeValue_Slider(    "Shift",    0, [-1,1,.01] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput( 8, nodeValue_Slider(   "Shift",    0, [-1,1,.01] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	newInput( 7, nodeValue_Bool(     "Wrap",      false ));
 	
 	////- =Render
@@ -17,13 +18,13 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	////- =Highlight
 	newInput( 5, nodeValue_Bool(     "Highlight",           false));
 	newInput( 6, nodeValue_Color(    "Highlight Color",     ca_white));
-	// input 9
+	// input 10
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	newOutput(1, nodeValue_Output("Depth",       VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
-	    ["Surface",    false   ], 0, 
+	    ["Surface",    false   ], 0, 9, 
 	    ["Extrude",    false   ], 1, 2, 8, 7, 
 	    ["Render",     false   ], 3, 4, 
 	    ["Highlight",  false, 5], 6, 
@@ -92,6 +93,7 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	static processData = function(_outData, _data, _array_index = 0) { 
 		#region data
 		    var _surf = _data[0];
+		    var _mask = _data[9], _use_mask = is_surface(_mask);
 		    
 		    var _ang  = _data[1];
 		    var _dist = _data[2];
@@ -110,28 +112,33 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	    temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1], surface_r16float);
 	    
 	    surface_set_shader(temp_surface[0], sh_2d_extrude);
-	        shader_set_dim("dimension",  _surf);
-			shader_set_f("shift",        _shft / _dim[0]);
-			shader_set_f("angle",        degtorad(_ang));
-			shader_set_f("extDistance",  _dist);
-			shader_set_i("wrap",         _wrap);
+	        shader_set_dim( "dimension",  _surf     );
+	        shader_set_s(   "mask",       _mask     );
+	        shader_set_i(   "useMask",    _use_mask );
+	        
+			shader_set_f(   "shift",       _shft / _dim[0] );
+			shader_set_f(   "angle",       degtorad(_ang)  );
+			shader_set_f(   "extDistance", _dist           );
+			shader_set_i(   "wrap",        _wrap           );
 			
 	        draw_surface_safe(_surf);
 	    surface_reset_shader();
 	    
 	    surface_set_shader(_outData, sh_2d_extrude_apply);
-	    	shader_set_surface("extrudeMap", temp_surface[0]);
-	    	shader_set_dim("dimension",  _surf);
-	    	shader_set_f("angle",        degtorad(_ang));
-			shader_set_f("extDistance",  _dist);
-			shader_set_f("shift",        _shft / _dim[0]);
-			shader_set_i("wrap",         _wrap);
+	    	shader_set_dim( "dimension",    _surf           );
+	    	shader_set_s(   "extrudeMap",   temp_surface[0] );
+	    	shader_set_s(   "mask",       _mask     );
+	        shader_set_i(   "useMask",    _use_mask );
+	        
+	    	shader_set_f(   "angle",        degtorad(_ang)  );
+			shader_set_f(   "extDistance",  _dist           );
+			shader_set_f(   "shift",        _shft / _dim[0] );
+			shader_set_i(   "wrap",         _wrap           );
 			
 			_grad.shader_submit();
-			shader_set_i("cloneColor",   _clne);
-	        
-			shader_set_i("highlight",      _high);
-	        shader_set_c("highlightColor", _hgcl);
+			shader_set_i( "cloneColor",     _clne );
+	        shader_set_i( "highlight",      _high );
+	        shader_set_c( "highlightColor", _hgcl );
 	        
 	    	draw_surface_safe(_surf);
 	    surface_reset_shader();
