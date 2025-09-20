@@ -3,6 +3,7 @@ varying vec4 v_vColour;
 
 uniform sampler2D extrudeMap;
 uniform vec2  dimension;
+uniform vec2  depth;
 
 uniform float angle;
 uniform float extDistance;
@@ -177,7 +178,7 @@ void main() {
 	    
 	    if(e1 > 0. || e2 > 0.) {
 	        gl_FragData[0] = mix(gl_FragData[0], vec4(highlightColor.rgb, gl_FragData[0].a), highlightColor.a);
-	        gl_FragData[1] = vec4(vec3(0.), 1.);
+	        gl_FragData[1] = vec4(vec3(mix(depth.x, depth.y, 0.)), 1.);
 	    }
 	    return;
 	}
@@ -186,7 +187,7 @@ void main() {
 	
 	float prog = extrude / dist;
 	gl_FragData[0] = gradientEval(prog);
-	gl_FragData[1] = vec4(vec3(prog), 1.);
+	gl_FragData[1] = vec4(vec3(mix(depth.x, depth.y, prog)), 1.);
 	
 	if(cloneColor == 0) return;
 	

@@ -2373,6 +2373,7 @@
     {"name":"s_node_bend","order":21,"path":"sprites/s_node_bend/s_node_bend.yy",},
     {"name":"s_node_bevel","order":17,"path":"sprites/s_node_bevel/s_node_bevel.yy",},
     {"name":"s_node_bit_reduce","order":87,"path":"sprites/s_node_bit_reduce/s_node_bit_reduce.yy",},
+    {"name":"s_node_blend_depth","order":33,"path":"sprites/s_node_blend_depth/s_node_blend_depth.yy",},
     {"name":"s_node_blend_edge","order":79,"path":"sprites/s_node_blend_edge/s_node_blend_edge.yy",},
     {"name":"s_node_blend_height","order":91,"path":"sprites/s_node_blend_height/s_node_blend_height.yy",},
     {"name":"s_node_blend","order":18,"path":"sprites/s_node_blend/s_node_blend.yy",},

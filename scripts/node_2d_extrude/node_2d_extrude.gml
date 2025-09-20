@@ -12,13 +12,14 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput( 7, nodeValue_Bool(     "Wrap",      false ));
 	
 	////- =Render
-	newInput( 3, nodeValue_Gradient(    "Color",       new gradientObject(ca_white)));
-	newInput( 4, nodeValue_Enum_Scroll( "Clone Color", 0, [ "None", "Multiply", "Additive" ]));
+	newInput( 3, nodeValue_Gradient(    "Color",        new gradientObject(ca_white)));
+	newInput( 4, nodeValue_Enum_Scroll( "Clone Color",  0, [ "None", "Multiply", "Additive" ]));
+	newInput(10, nodeValue_Range(       "Depth Range", [0,1] ));
 	
 	////- =Highlight
 	newInput( 5, nodeValue_Bool(     "Highlight",           false));
 	newInput( 6, nodeValue_Color(    "Highlight Color",     ca_white));
-	// input 10
+	// input 11
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	newOutput(1, nodeValue_Output("Depth",       VALUE_TYPE.surface, noone));
@@ -26,7 +27,7 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	input_display_list = [
 	    ["Surface",    false   ], 0, 9, 
 	    ["Extrude",    false   ], 1, 2, 8, 7, 
-	    ["Render",     false   ], 3, 4, 
+	    ["Render",     false   ], 3, 4, 10, 
 	    ["Highlight",  false, 5], 6, 
     ];
 	
@@ -92,19 +93,20 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	static processData = function(_outData, _data, _array_index = 0) { 
 		#region data
-		    var _surf = _data[0];
-		    var _mask = _data[9], _use_mask = is_surface(_mask);
+		    var _surf = _data[ 0];
+		    var _mask = _data[ 9], _use_mask = is_surface(_mask);
 		    
-		    var _ang  = _data[1];
-		    var _dist = _data[2];
-		    var _shft = _data[8];
-		    var _wrap = _data[7];
+		    var _ang  = _data[ 1];
+		    var _dist = _data[ 2];
+		    var _shft = _data[ 8];
+		    var _wrap = _data[ 7];
 		    
-		    var _grad = _data[3];
-		    var _clne = _data[4];
+		    var _grad = _data[ 3];
+		    var _clne = _data[ 4];
+		    var _deth = _data[10];
 		    
-		    var _high = _data[5];
-		    var _hgcl = _data[6];
+		    var _high = _data[ 5];
+		    var _hgcl = _data[ 6];
 		    
 		    var _dim  = surface_get_dimension(_surf);
 	    #endregion
@@ -130,6 +132,7 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	    	shader_set_s(   "mask",         _mask           );
 	        shader_set_i(   "useMask",      _use_mask       );
 	        
+	    	shader_set_2(   "depth",        _deth  );
 	    	shader_set_f(   "angle",        degtorad(_ang)  );
 			shader_set_f(   "extDistance",  _dist           );
 			shader_set_f(   "shift",        _shft / _dim[0] );
