@@ -2930,36 +2930,40 @@ function Panel_Preview() : PanelContent() constructor {
     		var _x1 = (selection_mx - canvas_x) / canvas_s;
 	    	var _y1 = (selection_my - canvas_y) / canvas_s;
     		
+    		var _px0 = min(_x0, _x1);
+			var _py0 = min(_y0, _y1);
+			var _px1 = max(_x0, _x1);
+			var _py1 = max(_y0, _y1);
+
     		if(prevS) {
-    			_x0 = round(_x0); _y0 = round(_y0);
-				_x1 = round(_x1); _y1 = round(_y1);
+    			_px0 = floor( _px0 );
+    			_py0 = floor( _py0 );
+				_px1 = ceil(  _px1 );
+				_py1 = ceil(  _py1 );
     		}
     		
-    		var _xx0 = canvas_x + _x0 * canvas_s;
-        	var _yy0 = canvas_y + _y0 * canvas_s;
-        	var _xx1 = canvas_x + _x1 * canvas_s;
-        	var _yy1 = canvas_y + _y1 * canvas_s;
+    		var _xx0 = canvas_x + _px0 * canvas_s;
+        	var _yy0 = canvas_y + _py0 * canvas_s;
+        	var _xx1 = canvas_x + _px1 * canvas_s;
+        	var _yy1 = canvas_y + _py1 * canvas_s;
         	
-        	selecting_w  = _x1 - _x0;
-    		selecting_h  = _y1 - _y0;
+        	selecting_w  = _px1 - _px0;
+    		selecting_h  = _py1 - _py0;
         	
-        	selection_x0 = min(_x0, _x1);
-	    	selection_y0 = min(_y0, _y1);
-	    	selection_x1 = max(_x0, _x1);
-	    	selection_y1 = max(_y0, _y1);
+        	selection_x0 = _px0;
+	    	selection_y0 = _py0;
+	    	selection_x1 = _px1;
+	    	selection_y1 = _py1;
 	    	
-        	if(_x0 != _x1 && _y0 != _y1) {
+	    	var _dragDist = point_distance(selection_sx, selection_sy, selection_mx, selection_my);
+        	if(_dragDist > canvas_s) selection_selecting = max(selection_selecting, 2);
+        	
+    		if(selection_selecting)
     			draw_sprite_stretched_points_clamp(THEME.ui_selection, 0, _xx0, _yy0, _xx1, _yy1, COLORS._main_accent);
-    			selection_selecting = max(selection_selecting, 2);
-        	}
-    		
+        	
     		if(mouse_lrelease()) {
+    			if(prevS && selection_selecting > 1) selection_active = true;
     			selection_selecting = 0;
-    			
-    			if(prevS) {
-			    	if(selection_x0 != selection_x1 && selection_y0 != selection_y1)
-	    				selection_active = true;
-    			}
     		}
         }
         

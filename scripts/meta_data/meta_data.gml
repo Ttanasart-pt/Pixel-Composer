@@ -23,9 +23,10 @@ function MetaDataManager() constructor {
 	isDefault   = false;
 	
 	author_steam_id = 0;
-	file_id		= 0;
-	tags		= [];
-	version		= SAVE_VERSION;
+	file_id     = 0;
+	tags        = [];
+	version     = SAVE_VERSION;
+	hidden      = false;
 	
 	static displays = [
 		[ "Description",  function(m) /*=>*/ {return m.description}, 5],

@@ -171,6 +171,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		in_cache_len      = -4;
 		inputDisplayList  = [];
 		inputDisplayGroup = [];
+		inputDisplayBuilding = false;
 		
 		outputDisplayList = [];
 		
@@ -1659,6 +1660,19 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 					_curr_group[2] = max(_curr_group[2], jun.y);
 			}
 			
+			if(jun.draw_group != undefined) {
+				if(jun.draw_group != _curr_index || _curr_group == noone) {
+					_curr_index = jun.draw_group;
+					_curr_group = [ jun.x, jun.y, undefined, 0 ];
+					
+				} else if(_curr_group[2] == undefined) {
+					_curr_group[2] = jun.y;
+					array_push(inputDisplayGroup, _curr_group);
+					
+				} else 
+					_curr_group[2] = max(_curr_group[2], jun.y);
+			}
+			
 			_riy += junction_draw_hei_y;
 			_iy  += junction_draw_hei_y * __s;
 		});
@@ -1667,6 +1681,19 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			jun = outputs[jun]; 
 			jun.x = _ox; jun.rx = _rox; 
 			jun.y = _oy; jun.ry = _roy; 
+			
+			if(jun.draw_group != undefined) {
+				if(jun.draw_group != _curr_index || _curr_group == noone) {
+					_curr_index = jun.draw_group;
+					_curr_group = [ jun.x, jun.y, undefined, 0 ];
+					
+				} else if(_curr_group[2] == undefined) {
+					_curr_group[2] = jun.y;
+					array_push(inputDisplayGroup, _curr_group);
+					
+				} else 
+					_curr_group[2] = max(_curr_group[2], jun.y);
+			}
 			
 			var __vis = jun.isVisible();
 			_roy += junction_outp_hei_y * __vis 
@@ -1865,25 +1892,31 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static drawJunctions = function(_draw, _x, _y, _mx, _my, _s, _fast = false) {
 		var hover = noone;
 		
-		if(!array_empty(inputDisplayGroup)) {
-			var _scs = gpu_get_scissor();
-			gpu_set_scissor(_x, _y, w * _s, h * _s);
+		var _scs = gpu_get_scissor();
+		gpu_set_scissor(_x, _y, w * _s, h * _s);
+		draw_set_circle_precision(_fast? 16 : 64);
+		
+		var _js = 14 * _s;
+		for( var i = 0, n = array_length(inputDisplayGroup); i < n; i++ ) {
+			var _gr  = inputDisplayGroup[i];
 			
-			var _js = 16 * _s;
-			for( var i = 0, n = array_length(inputDisplayGroup); i < n; i++ ) {
-				var _gr  = inputDisplayGroup[i];
-				var _gx  = _gr[0] - 1;
-				var _gy0 = _gr[1] - 1;
-				var _gy1 = _gr[2] - 1;
+			var _gx  = _gr[0] - 1;
+			var _gx0 = _gx - _js/2;
+			var _gx1 = _gx + _js/2;
+			
+			var _gy0 = _gr[1] - 1 - _js/2;
+			var _gy1 = _gr[2] - 1 + _js/2;
 				
-				_gr[3] = key_mod_press(CTRL) && point_in_rectangle(_mx, _my, _gx - _js/2, _gy0 - _js/2, _gx + _js/2, _gy1 + _js/2);
-					
-				draw_set_color_alpha(_gr[3]? CDEF.main_dkgrey : CDEF.main_mdblack, .75);
-					draw_roundrect_ext(_gx - _js/2, _gy0 - _js/2, _gx + _js/2, _gy1 + _js/2, _js, _js, false);
-				draw_set_alpha(1);
-			}
-			gpu_set_scissor(_scs);
+			_gr[3] = key_mod_press(CTRL) && point_in_rectangle(_mx, _my, _gx0, _gy0, _gx1, _gy1);
+				
+			draw_set_color_alpha(_gr[3]? CDEF.main_dkgrey : CDEF.main_mdblack, .75);
+			draw_roundrect_ext(_gx0, _gy0, _gx1, _gy1, _js, _js, false);
+			draw_set_alpha(1);
+			
+			draw_set_color(_gr[3]? CDEF.main_grey : CDEF.main_dark);
+			draw_roundrect_ext(_gx0, _gy0, _gx1, _gy1, _js, _js, true);
 		}
+		gpu_set_scissor(_scs);
 			
 		if(_fast) draw_set_circle_precision(4);
 		else      gpu_set_texfilter(true);

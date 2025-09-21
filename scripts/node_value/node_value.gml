@@ -127,6 +127,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	#endregion
 	
 	#region ---- Draw ----
+		draw_group = undefined; static setDrawGroup = function(g) /*=>*/ { draw_group = g; return self; }
+		
 		draw_line_shift_x = 0;
 		draw_line_shift_y = 0;
 		draw_line_shift_e = -1;

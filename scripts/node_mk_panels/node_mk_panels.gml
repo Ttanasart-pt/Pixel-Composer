@@ -10,34 +10,37 @@ function Node_MK_Panels(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 - v[n]: Split Y axis [n] parts equally";
 	tooltip_shape_pattern = @"Defines set of shapes to draw:
 - r: Rectangle
-- c: Cornered Rectangle
-- *s: Add split";
+- d: Cut cornered Rectangle
+- c: Round cornered Rectangle
+- *s: Add slots";
 	
 	newInput( 1, nodeValue_Dimension());
 	newInput( 2, nodeValueSeed());
 	
 	////- =Panels
-	newInput( 0, nodeValue_Area(    "Area",         DEF_AREA_REF  )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
-	newInput( 3, nodeValue_Text(    "Panel Pattern",  "xxyyi"     )).setDisplay(VALUE_DISPLAY.text_box).setTooltip(tooltip_panel_pattern);
-	newInput(16, nodeValue_Int(     "Max Iteration",  -1          ));
-	newInput( 4, nodeValue_Int(     "Min Size",        3          ));
-	newInput(10, nodeValue_Range(   "Padding",        [0,0], true ));
-	newInput( 5, nodeValue_Palette( "Panel Colors",   [ca_white]  )).setOptions("Select by:", "array_select", [ "Index Loop", "Index Ping-pong", "Random" ], THEME.array_select_type).iconPad();
+	newInput( 0, nodeValue_Area(    "Area",         DEF_AREA_REF, { useShape : false } )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
+	newInput( 3, nodeValue_Text(    "Panel Pattern",  "xxyyh3v4i-" )).setDisplay(VALUE_DISPLAY.text_box).setTooltip(tooltip_panel_pattern);
+	newInput(27, nodeValue_Int(     "Min Iteration",  -1           ));
+	newInput(16, nodeValue_Int(     "Max Iteration",  -1           ));
+	newInput( 4, nodeValue_Slider(  "Min Size",       .1           ));
+	newInput(10, nodeValue_Range(   "Padding",        [0,0], true  ));
+	newInput( 5, nodeValue_Palette( "Panel Colors",   DEF_PALETTE  )).setOptions("Select by:", "array_select", [ "Index Loop", "Index Ping-pong", "Random" ], THEME.array_select_type).iconPad();
 	
 	////- =Split
 	newInput(17, nodeValue_Range(   "Split Ratio",   [.2,.8]     ));
 	newInput(20, nodeValue_Range(   "Split Width",   [0,0], true ));
-	newInput(23, nodeValue_Bool(    "Split Alternate", false     ));
+	newInput(23, nodeValue_Bool(    "Split Alternate", false     )).setTooltip("Force next split to be in the opposite axis as the previous one.");
+	newInput(26, nodeValue_Range(   "Inset Range",   [.1,.2]     ));
 	
 	newInput(18, nodeValue_Slider(  "Split Draw",       0        ));
 	newInput( 6, nodeValue_EScroll( "Split Draw Color", 0, [ "Next Color" ] ));
 	newInput(19, nodeValue_Slider(  "Split Length",    .75       ));
 	
 	////- =Shapes
-	newInput( 7, nodeValue_Text(   "Shape Pattern", "rc-"        )).setDisplay(VALUE_DISPLAY.text_box).setTooltip(tooltip_shape_pattern);
-	newInput( 9, nodeValue_Corner( "Corner",        [.5,0,0,0]   ));
+	newInput( 7, nodeValue_Text(   "Shape Pattern", "rsrd-"      )).setDisplay(VALUE_DISPLAY.text_box).setTooltip(tooltip_shape_pattern);
+	newInput( 9, nodeValue_Corner( "Corner",        [.25,0,0,0]  ));
 	newInput(24, nodeValue_Bool(   "Corner Shuffle", false       ));
-	newInput(25, nodeValue_Bool(   "Corner Offset",  true        ));
+	newInput(25, nodeValue_Slider( "Corner Offset",  0           ));
 	
 	////- =Slot
 	newInput(15, nodeValueSeed(,   "Slot Seed"));
@@ -50,11 +53,11 @@ function Node_MK_Panels(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput( 8, nodeValue_Vec4(    "Highlight",    [0,.5,.5,0]  ));
 	newInput(21, nodeValue_Slider(  "Highlight Chance", 1        ));
 	newInput(22, nodeValue_Slider(  "Highlight Invert", 0        ));
-	// inputs 25
+	// inputs 28
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 1, 2, 
-		[ "Panels",    false ], 0, 3, 16, 4, 10, 5, 
-		[ "Split",     false ], 17, 20, 23, 18, 6, 19, 
+		[ "Panels",    false ], 0, 3, 27, 16, 4, 10, 5, 
+		[ "Split",     false ], 17, 20, 23, 26, new Inspector_Spacer(ui(4), true), 18, 6, 19, 
 		[ "Shapes",    false ], 7, 9, 24, 25, 
 		[ "Slot",      false ], 15, 11, 14, 13, 12, 
 		[ "Highlight", false ], 8, 21, 22, 
@@ -77,8 +80,9 @@ function Node_MK_Panels(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		random_set_seed(__seed_iter++);
 		
 		var _pattern  = __temp_data[ 3];
+		var _minItr   = __temp_data[27]; 
 		var _maxItr   = __temp_data[16]; 
-		var _minSize  = __temp_data[ 4]; _minSize = max(2, _minSize);
+		var _minSize  = __temp_data[ 4], _minW = max(2, _minSize * _dimens[0]), _minH = max(2, _minSize * _dimens[1]);
 		var _padding  = __temp_data[10]; _padding = max(0, irandom_range(_padding[0], _padding[1]));
 		
 		var _highl    = __temp_data[ 8];
@@ -88,6 +92,7 @@ function Node_MK_Panels(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _split    = __temp_data[17];
 		var _splitWid = __temp_data[20];
 		var _splitInv = __temp_data[23];
+		var _inset    = __temp_data[26];
 		
 		var _splitDrw = __temp_data[18];
 		var _splitRen = __temp_data[ 6];
@@ -148,28 +153,29 @@ function Node_MK_Panels(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				shader_reset();
 				break;
 			
+			case "d" :
 			case "c" :
 				if(_cornRan) _corn = array_shuffle(_corn);
 				shader_set(sh_mk_panels);
 					shader_set_2("position",     [_x0, _y0]    );
 					shader_set_2("dimension",    [_w, _h]      );
 					shader_set_4("corner",       _corn         );
+					shader_set_i("style",        _dchr == "c"  );
 					
 					draw_sprite_stretched_ext(s_fx_pixel, 0, _x0, _y0, _w, _h, _c);
 				shader_reset();
 							
-				if(_cornOff) {
-					var cr0 = floor(min(_w, _h) * _corn[0] / 2);
-					var cr1 = floor(min(_w, _h) * _corn[1] / 2);
-					var cr2 = floor(min(_w, _h) * _corn[2] / 2);
-					var cr3 = floor(min(_w, _h) * _corn[3] / 2);
-					
-					_x0 += max(cr0, cr2) + 1;
-					_y0 += max(cr0, cr1) + 1;
-					_x1 -= max(cr1, cr3) + 1;
-					_y1 -= max(cr2, cr3) + 1;
-				}
+				var cr0 = floor(min(_w, _h) * _corn[0] / 2) * _cornOff;
+				var cr1 = floor(min(_w, _h) * _corn[1] / 2) * _cornOff;
+				var cr2 = floor(min(_w, _h) * _corn[2] / 2) * _cornOff;
+				var cr3 = floor(min(_w, _h) * _corn[3] / 2) * _cornOff;
+				
+				_x0 += max(cr0, cr2) + 1;
+				_y0 += max(cr0, cr1) + 1;
+				_x1 -= max(cr1, cr3) + 1;
+				_y1 -= max(cr2, cr3) + 1;
 				break;
+				
 		}
 		
 		switch(_dchr1) {
@@ -277,7 +283,7 @@ function Node_MK_Panels(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		_w  = _x1 - _x0;
 		_h  = _y1 - _y0;
-		if(_w < _minSize || _h < _minSize) return;
+		if(_w < _minW || _h < _minH) return;
 		
 		random_set_seed(__seed_iter + 10);		
 		var _pind  = irandom_range(1, string_length(_pattern));
@@ -290,11 +296,11 @@ function Node_MK_Panels(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			_pchr  = string_char_at(_pattern, _pind - 1);
 		}
 		
-		if(_splitInv) switch(_box[4]) {
-			case "x" : if (_pchr != _box[4]) _pchr = "y"; break;
-			case "y" : if (_pchr != _box[4]) _pchr = "x"; break;
-			case "v" : if (_pchr != _box[4]) _pchr = "h"; break;
-			case "h" : if (_pchr != _box[4]) _pchr = "v"; break;
+		if(_splitInv) switch(_pchr) {
+			case "x" : if (_box[4] == "y" || _box[4] == "v") _pchr = "y"; break;
+			case "y" : if (_box[4] == "x" || _box[4] == "h") _pchr = "x"; break;
+			case "v" : if (_box[4] == "y" || _box[4] == "v") _pchr = "h"; break;
+			case "h" : if (_box[4] == "x" || _box[4] == "h") _pchr = "v"; break;
 		}
 		
 		switch(_pchr) {
@@ -349,17 +355,19 @@ function Node_MK_Panels(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				break;
 			
 			case "i" : // inset
-				var _si = irandom_range(1, min(_w, _h) * .2);
+				var _si = round(max(1, min(_w, _h) * random_range(_inset[0], _inset[1])));
 				
 				boxProcess([ _x0 + _si, _y0 + _si, _x1 - _si, _y1 - _si, _pchr ], _itr + 1);
 				break;
 				
 			case "p" : // padding
-				var _sw = irandom_range(1, _w * .2);
-				var _sh = irandom_range(1, _h * .2);
+				var _sw = round(max(1, _w * random_range(_inset[0], _inset[1])));
+				var _sh = round(max(1, _h * random_range(_inset[0], _inset[1])));
 				
 				boxProcess([ _x0 + _sw, _y0 + _sh, _x1 - _sw, _y1 - _sh, _pchr ], _itr + 1);
 				break;
+				
+			default : if(_minItr != -1 && _itr < _minItr) boxProcess(_box, _itr + 1);
 		}
 	}
 	

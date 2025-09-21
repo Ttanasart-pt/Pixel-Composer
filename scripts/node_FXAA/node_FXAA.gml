@@ -13,14 +13,22 @@ function Node_FXAA(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	name = "FXAA";
 	
 	newActiveInput(1);
-	newInput(0, nodeValue_Surface("Surface In"));
+	newInput(4, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
+	
+	////- =Surfaces
+	newInput(0, nodeValue_Surface( "Surface In"));
+	newInput(5, nodeValue_Surface( "Mask"));
+	newInput(6, nodeValue_Slider(  "Mix", 1));
+	__init_mask_modifier(5, 7); // inputs 7, 8, 
 	
 	////- =Effect
 	newInput(2, nodeValue_Slider( "Distance", .5 )).setHotkey("S");
 	newInput(3, nodeValue_Slider( "Mix",       1 ));
+	// input 9
 	
-	input_display_list = [ 1, 0,
-		["Effect", false], 2, 3, 
+	input_display_list = [ 1, 4, 
+		["Surfaces", false], 0, 5, 6, 7, 8, 
+		["Effect",   false], 2, 3, 
 	]
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -42,6 +50,8 @@ function Node_FXAA(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	}
 	
 	static processData = function(_outData, _data, _array_index) {
+		var _mask  = _data[5];
+		var _mix   = _data[6];
 		
 		var _dim = surface_get_dimension(_data[0]);
 		_outData[0] = surface_verify(_outData[0], _dim[0], _dim[1]);
@@ -62,6 +72,10 @@ function Node_FXAA(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		BLEND_NORMAL
 		shader_reset();
 		surface_reset_target();
+		
+		__process_mask_modifier(_data);
+		_outData[0] = mask_apply(_data[0], _outData[0], _mask, _mix);
+		_outData[0] = channel_apply(_data[0], _outData[0], _data[4]);
 		
 		return _outData;
 	}
