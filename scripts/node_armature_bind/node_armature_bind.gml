@@ -469,7 +469,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				var binded = array_safe_get(boneIDMap, _ind, "") != "";
 				
 				var _bx = _x + _w - ui(24);
-				var _cy = ly + _ind * (lh + ui(4));
+				var _cy = ly + i * (lh + ui(4));
 				
 				if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, ui(16))) {
 					draw_sprite_ui_uniform(THEME.icon_delete, 3, _bx, _cy + lh / 2, 1, COLORS._main_value_negative);
@@ -575,8 +575,8 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 					
 					if(layer_dragging != noone) {
 						draw_set_color(COLORS._main_accent);
-							 if(layer_dragging < _ind) draw_line_width(_x + ui(16), _cy + lh + 2, _x + _w - ui(16), _cy + lh + 2, 2);
-						else if(layer_dragging > _ind) draw_line_width(_x + ui(16), _cy - 2,      _x + _w - ui(16), _cy - 2,      2);
+							 if(layer_dragging > _ind) draw_line_width(_x + ui(16), _cy + lh + 2, _x + _w - ui(16), _cy + lh + 2, 2);
+						else if(layer_dragging < _ind) draw_line_width(_x + ui(16), _cy - 2,      _x + _w - ui(16), _cy - 2,      2);
 					}
 				}
 			}
