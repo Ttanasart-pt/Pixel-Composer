@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_mk_panel_posterize",
+  "name":"sh_mk_panel_posterize",
+  "parent":{
+    "name":"mkpanels",
+    "path":"folders/nodes/data/MKFX/mkpanels.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

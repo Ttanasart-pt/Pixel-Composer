@@ -119,21 +119,6 @@ function Panel_Menu() : PanelContent() constructor {
     else       action_buttons = ["exit", "minimize", "maximize", "fullscreen"];
     
     #region ++++++++ Menu Items ++++++++
-        menu_file_nondemo = [
-            "new_file",
-            "open",
-                
-            "save",
-            "save_as",
-            "save_all",
-            "recent_files",
-            
-            "autosave_folder",
-            "import_menu",
-            "export_menu",
-            -1,
-        ];
-        
         menu_file_content = [
             "preference",
             "splash_screen",
@@ -148,7 +133,22 @@ function Panel_Menu() : PanelContent() constructor {
         ]; 
         
         global.menuItems_main_file = menu_file_content;
-        if(!DEMO) global.menuItems_main_file = array_append(menu_file_nondemo, menu_file_content);
+        if(!DEMO) {
+            global.menuItems_main_file = array_append([
+                "new_file",
+                "open",
+                    
+                "save",
+                "save_as",
+                "save_all",
+                "recent_files",
+                
+                "autosave_folder",
+                "import_menu",
+                "export_menu",
+                -1,
+            ], menu_file_content);
+        }
         menu_file = [ __txt("File"), "main_file" ];
         
         global.menuItems_main_edit      = [
@@ -783,6 +783,7 @@ function Panel_Menu() : PanelContent() constructor {
             var _xx1 = _right? x1 : w - ui(40);
             
             var txt = $"v. {VERSION_STRING}";
+            if(DEMO) txt += " DEMO";
             
             version_name_copy = lerp_float(version_name_copy, 0, 10);
             var tc  = merge_color(COLORS._main_text_sub, COLORS._main_value_positive, min(1, version_name_copy));

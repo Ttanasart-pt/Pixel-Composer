@@ -40,7 +40,7 @@ function __node_cache() {
 	
 	static cacheCurrentFrame = function(_surface) {
 		cacheArrayCheck();
-		var _frame = CURRENT_FRAME;
+		var _frame = NODE_CURRENT_FRAME;
 		
 		if(_frame < 0) return;
 		if(_frame >= array_length(cached_output)) return;
@@ -65,7 +65,7 @@ function __node_cache() {
 		return cached_output[_frame];
 	}
 	
-	static cacheExist = function(frame = CURRENT_FRAME) {
+	static cacheExist = function(frame = NODE_CURRENT_FRAME) {
 		if(frame < 0) return false;
 		
 		if(frame >= array_length(cached_output)) return false;
@@ -76,7 +76,7 @@ function __node_cache() {
 		return is_array(s) || surface_exists(s);
 	}
 	
-	static getCacheFrame = function(frame = CURRENT_FRAME) {
+	static getCacheFrame = function(frame = NODE_CURRENT_FRAME) {
 		if(frame < 0) return false;
 		
 		if(!cacheExist(frame)) return noone;
@@ -84,10 +84,10 @@ function __node_cache() {
 		return surf;
 	}
 	
-	static recoverCache = function(frame = CURRENT_FRAME) {
+	static recoverCache = function(frame = NODE_CURRENT_FRAME) {
 		if(!cacheExist(frame)) return false;
 		
-		var _s = cached_output[CURRENT_FRAME];
+		var _s = cached_output[NODE_CURRENT_FRAME];
 		outputs[0].setValue(_s);
 			
 		return true;

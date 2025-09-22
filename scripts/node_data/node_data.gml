@@ -31,9 +31,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		if(NOT_LOAD) array_push(_group == noone? project.nodes : _group.getNodeList(), self);
 		
-		active_index = -1;
-		active_range = [ 0, TOTAL_FRAMES - 1 ];
-		
 		array_push(project.allNodes, self);
 		
 		inline_input         = true;
@@ -137,6 +134,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		outputMap        = {};
 		input_value_map  = {};
 		dimension_index  = 0;
+		active_index     = -1;
 		
 		use_display_list		= true;
 		input_display_list		= -1;
@@ -281,8 +279,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		auto_render_time = true;
 		updated			 = false;
 		passiveDynamic   = false;
-		temp_surface     = [];
 		force_requeue    = false;
+		
+		temp_surface     = [];
 		
 		is_simulation    = false;
 		is_group_io      = false;
@@ -290,8 +289,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		use_trigger      = false;
 		loopable         = true;
 		renderAll        = false;
-		
-		shaderProp       = {};
 	#endregion
 	
 	#region ---- Timeline ------
@@ -301,7 +298,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	#endregion
 	
 	#region ---- Notification ----
-		value_validation = array_create(3);
+		value_validation = [0,0,0];
 		manual_updated   = false;
 	#endregion
 	

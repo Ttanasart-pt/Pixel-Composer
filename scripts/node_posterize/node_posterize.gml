@@ -11,8 +11,7 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newActiveInput(5);
 	newInput(0, nodeValue_Surface("Surface In"));
 	
-	////- Palette
-	
+	////- =Palette
 	newInput(2, nodeValue_Bool(        "Use Palette", true));
 	newInput(1, nodeValue_Palette(     "Palette", array_clone(DEF_PALETTE)));
 	newInput(9, nodeValue_Bool(        "Use Global Range", true));
@@ -20,16 +19,13 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(4, nodeValue_Slider(      "Gamma", 1, [0, 2, 0.01])).setMappable(7);
 	newInput(8, nodeValue_Enum_Button( "Space", 0, [ "RGB", "LAB" ]));
 	
-	////- Bias
-	
+	////- =Bias
 	newInput(11, nodeValue_Surface( "Reference"));
 	newInput(10, nodeValue_Slider(  "Hue Bias", 0));
 	
-	////- Alpha
-		
+	////- =Alpha
 	newInput(6, nodeValue_Bool( "Posterize alpha", true));
-	
-	//// inputs 12
+	// inputs 12
 	
 	input_display_list = [ 5, 0, 
 		["Palette", false, 2], 1, 9, 3, 4, 7, 8, 

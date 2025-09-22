@@ -2,7 +2,6 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform vec2 dimension;
-
 uniform vec4 highlight;
 
 bool sample(vec2 px) {

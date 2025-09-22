@@ -148,12 +148,8 @@
         registerFunction("Graph", "Search Wiki",         vk_f1, MOD_KEY.none,                    panel_graph_searchWiki          ).setMenu("graph_search_wiki")
         registerFunction("Graph", "Swap Connections",      "S", MOD_KEY.alt,                     panel_graph_swapConnection      ).setMenu("graph_swap_connection")
         registerFunction("Graph", "Transfer Connections",  "T", MOD_KEY.alt,                     panel_graph_transferConnection  ).setMenu("graph_transfer_connection")
-                                                                                    
-        if(!DEMO) {
-            // registerFunction("Graph", "Export Selected Node",   "E", MOD_KEY.ctrl,               panel_graph_export              ).setMenu("graph_export_selected")
-            registerFunction("Graph", "Export Hovering Node",   "",  MOD_KEY.none,               panel_graph_send_to_export      ).setMenu("graph_export_hover")
-        }
-        
+		
+		registerFunction("Graph", "Export Hovering Node",   "",  MOD_KEY.none,               panel_graph_send_to_export      ).setMenu("graph_export_hover")
         registerFunction("Graph", "Export As Image...",     "",  MOD_KEY.none,    function() /*=>*/ { dialogPanelCall(new Panel_Graph_Export_Image(PANEL_GRAPH)) }).setMenu("graph_export_image")
         registerFunction("Graph", "Connection Settings...", "",  MOD_KEY.none,    function() /*=>*/ { dialogPanelCall(new Panel_Graph_Connection_Setting())      }).setMenu("graph_connection_settings")
         registerFunction("Graph", "Grid Settings...",       "",  MOD_KEY.none,    function() /*=>*/ { dialogPanelCall(new Panel_Graph_Grid_Setting())            }).setMenu("graph_grid_settings")
@@ -204,7 +200,7 @@
     	__fnGraph_BuildNode("Node_Composite", "B", MOD_KEY.ctrl | MOD_KEY.shift);
     	__fnGraph_BuildNode("Node_Array",     "A", MOD_KEY.ctrl | MOD_KEY.shift);
     	__fnGraph_BuildNode("Node_Frame",     "F", MOD_KEY.shift);
-    	if(!DEMO) __fnGraph_BuildNode("Node_Export",    "E", MOD_KEY.ctrl);
+    	__fnGraph_BuildNode("Node_Export",    "E", MOD_KEY.ctrl);
     	
         if(struct_has(HOTKEYS_DATA, "graph")) {
         	var _grps = HOTKEYS_DATA.graph;
@@ -3581,7 +3577,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     } 
 	
     function doExport(_node = getFocusingNode()) {
-        if(DEMO)   return noone;
         if(!_node) return noone;
     
         var _outp = -1;

@@ -6,6 +6,10 @@
 
     "Node_Path_L_System": {
         "Starting rule": { "note": "Lindenmayer system reference.md" }
-    }
+    },
 
+    "Node_MK_Panels": {
+        "Panel Pattern": { "note": "MK Panels reference.md" },
+        "Shape Pattern": { "note": "MK Panels reference.md" }
+    },
 }

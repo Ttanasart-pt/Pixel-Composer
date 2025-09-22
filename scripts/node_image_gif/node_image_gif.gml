@@ -286,7 +286,7 @@ function timelineItemNode_Image_gif(_node) : timelineItemNode(_node) constructor
 		var _aa;
 		
 		for (var i = 0, n = sprite_get_number(_spr); i < n; i++) {
-			if(i >= TOTAL_FRAMES) break;
+			if(i >= NODE_TOTAL_FRAMES) break;
 			
 			_rx = _x + (i + 1) * _s;
 			_ry = h / 2 + _y;

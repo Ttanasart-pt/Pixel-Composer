@@ -189,7 +189,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	////- VFX
 	
-	static spawn = function(_time = CURRENT_FRAME, _pos = -1) {
+	static spawn = function(_time = NODE_CURRENT_FRAME, _pos = -1) {
 		var _inSurf     	= getInputData( 0);
 		var _arr_type   	= getInputData(22);
 		var _anim_speed 	= getInputData(23);
@@ -504,7 +504,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		}
 	}
 	
-	static runVFX = function(_time = CURRENT_FRAME, _render = true) {
+	static runVFX = function(_time = NODE_CURRENT_FRAME, _render = true) {
 		var _spawn_delay    = inputs[ 1].getValue(_time);
 		var _spawn_type     = inputs[16].getValue(_time);
 		var _spawn_active   = inputs[27].getValue(_time);
@@ -571,7 +571,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	static getDimension = function() /*=>*/ {return DEF_SURF};
 	
-	static update = function(frame = CURRENT_FRAME) {
+	static update = function(frame = NODE_CURRENT_FRAME) {
 		
 		#region visiblity
 			var _inSurf = getInputData(0);
@@ -651,7 +651,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		onUpdate(frame);
 	}
 	
-	static onUpdate = function(frame = CURRENT_FRAME) {}
+	static onUpdate = function(frame = NODE_CURRENT_FRAME) {}
 	
 	static render = function() {}
 	
