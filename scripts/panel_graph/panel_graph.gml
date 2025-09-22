@@ -1264,7 +1264,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     		
     		if(_from) {
 	        	if(node_hovering != noone) {
-	        		_to = node_hovering.getInput(0, noone,, true);
+	        		_to = node_hovering.getInput(mouse_graph_y, _from, 0, true);
 	        		
 	        		if(_to && _to.isConnectable(_from)) {
 	        			node_hovering.drawActive(2);
