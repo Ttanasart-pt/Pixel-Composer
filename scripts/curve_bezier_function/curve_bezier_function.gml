@@ -342,16 +342,13 @@ function ease_cubic_in(rat)    { return power(rat, 3); }
 function ease_cubic_out(rat)   { return 1 - power(1 - rat, 3); }
 function ease_cubic_inout(rat) { return rat < 0.5 ? 4 * power(rat, 3) : 1 - power(-2 * rat + 2, 3) / 2; }
 
-function curveMap(_bz, _prec = 32, _tolr = 0.00001) constructor {
+function curveMap(_bz = undefined, _prec = 32, _tolr = 0.00001) constructor {
 	bz   = _bz;
 	prec = _prec;
 	size = 1 / _prec;
 	tolr = _tolr;
-	 
-	map = array_create(_prec);
-	for( var i = 0; i < _prec; i++ ) 
-		map[i] = eval_curve_x(bz, i * size, tolr);
-		
+	map  = array_create(prec);
+	
 	static get = function(i) {
 		INLINE
 		
@@ -363,6 +360,18 @@ function curveMap(_bz, _prec = 32, _tolr = 0.00001) constructor {
 		if(_indL == _indH) return map[_ind];
 		return lerp(map[_indL], map[_indH], _indF);
 	}
+	
+	static set = function(_bz) {
+		if(_bz == undefined) return;
+		if(array_equals(bz, _bz)) return;
+		
+		bz = array_clone(_bz, 1);
+		for( var i = 0; i < prec; i++ ) 
+			map[i] = eval_curve_x(bz, i * size, tolr);
+		
+	}
+	
+	set(_bz);
 }
 
 function draw_curve_bezier(x0, y0, cx0, cy0, cx1, cy1, x1, y1, prec = 32) {

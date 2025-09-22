@@ -72,8 +72,9 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput( 5, nodeValue_Rotation_Range( "Repeat Rotation",  [0,0]       ));
 	
 	////- =Scale
-	newInput( 6, nodeValue_Range(          "Scale Multiply",   [1,1], true )).setCurvable(10, CURVE_DEF_11, "Over Copy")
-	newInput(29, nodeValue_Bool(           "Uniform Scale",    true        ))
+	newInput(29, nodeValue_Bool(           "Uniform Scale",    true  ))
+	newInput( 6, nodeValue_Float(          "Scale X",          1,    )).setCurvable(10, CURVE_DEF_11, "Over Copy")
+	newInput(41, nodeValue_Float(          "Scale Y",          1,    )).setCurvable(42, CURVE_DEF_11, "Over Copy")
 	
 	////- =Render
 	newInput(34, nodeValue_Enum_Scroll(    "Blend Mode",        0, [ "Normal", "Additive", "Maximum" ] ));
@@ -90,7 +91,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	/* deprecated */ newInput(27, nodeValue_Color(    "Animator blend",     ca_white          ));
 	/* deprecated */ newInput(28, nodeValue_Slider(   "Animator alpha",     1                 ));
 	
-	// input 41
+	// input 43
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -202,7 +203,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		["Path",	  true], 11, 12, 13, 40, 
 		["Position", false],  4, 39, 26, 19, 38, 
 		["Rotation", false], 33,  5, 
-		["Scale",	 false],  6, 10, 29, 
+		["Scale",	 false], 29,  6, 10, 41, 42, 
 		["Render",	 false], 34, 14, 30, 
 		new Inspector_Spacer(8, true),
 		new Inspector_Spacer(2, false, false),
@@ -217,6 +218,11 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	surface_atlases  = [];
 	grad_sampler = new Surface_sampler();
 	anim_sampler = [];
+	
+	shift_curve  = new curveMap();
+	scalex_curve = new curveMap();
+	scaley_curve = new curveMap();
+	anim_fall_curves = [];
 	
 	__temp_p   = [0,0];
 	__temp_pth = new __vec2P();
@@ -377,15 +383,16 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _fanc = _data[22];
 			var _srot = _data[32];
 			
-			var _rpos = _data[ 4], _rpos_curved = inputs[4].attributes.curved, shift_curve = new curveMap(_data[38]);
+			var _rpos = _data[ 4], _rpos_curved = inputs[4].attributes.curved; shift_curve.set(_data[38]);
 			var _panc = _data[39];
 			
 			var _rsta = _data[26];
 			var _rrot = _data[ 5];
 			var _rots = _data[33];
 			
-			var _rsca   = _data[ 6], _rsca_curved = inputs[6].attributes.curved, scale_curve = new curveMap(_data[10]);
 			var _scaUni = _data[29];
+			var _rscaX  = _data[ 6], _rscaX_curved = inputs[ 6].attributes.curved; scalex_curve.set(_data[10]);
+			var _rscaY  = _data[41], _rscaY_curved = inputs[41].attributes.curved; scaley_curve.set(_data[42]);
 			
 			var _aran = _data[ 7];
 			var _arad = _data[ 8];
@@ -408,6 +415,11 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _bld_md = _data[34];
 			
 			inputs[3].editWidget.side_button = _pat == 1? b_gridFill : noone;
+			
+			inputs[41].setVisible(!_scaUni);
+			inputs[42].setVisible(!_scaUni && _rscaY_curved);
+			inputs[ 6].name = _scaUni? "Scale" : "Scale X";
+			inputs[10].name = _scaUni? "Scale Over Copy" : "Scale X Over Copy";
 			
 			var _ani_amo = getInputAmount();
 			if(_ani_amo > 0) { // animator visibility
@@ -441,12 +453,16 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				grad_sampler.setSurface(_grad_map);
 			}
 			
-			var _anim_fall_curves = array_create(_ani_amo);
-			anim_sampler = array_verify(anim_sampler, _ani_amo);
+			anim_fall_curves = array_verify_min(anim_fall_curves, _ani_amo);
+			anim_sampler     = array_verify(anim_sampler, _ani_amo);
 			
 			for( var j = 0; j < _ani_amo; j++ ) {
 				var _ii = input_fix_len + j * data_length;
-				_anim_fall_curves[j] = new curveMap(_data[_ii + 13], amo);
+				
+				if(!is(anim_fall_curves[j], curveMap)) 
+					anim_fall_curves[j] = new curveMap();
+				anim_fall_curves[j].set(_data[_ii + 13]);
+				
 				if(!is(anim_sampler[j], Surface_Sampler_Grey))
 					anim_sampler[j] = new Surface_Sampler_Grey();
 					
@@ -551,9 +567,9 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 					break;
 			}
 			
-			var _scaCurve = _rsca_curved? scale_curve.get(_prg) : 1;
-			scax = _rsca[0] * _scaCurve;
-			scay = _scaUni? scax : _rsca[1] * _scaCurve;
+			scax =                  _rscaX * (_rscaX_curved? scalex_curve.get(_prg) : 1);
+			scay = _scaUni? scax : (_rscaY * (_rscaY_curved? scaley_curve.get(_prg) : 1));
+			
 			rot += lerp(_rrot[0], _rrot[1], st);
 			
 			var _surface = _iSrf;
@@ -587,6 +603,11 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				cc = grad_sampler.getPixel(_grad_sx, _grad_sy);
 			} else 
 				cc = _grad.evalFast(_prg);
+			
+			minx = min(minx, posx);
+			miny = min(miny, posy);
+			maxx = max(maxx, posx);
+			maxy = max(maxy, posy);
 				
 			var aa  = _color_get_alpha(cc);
 			point_rotate(sw * _panc[0], sh * _panc[1], 0, 0, rot, __temp_p);
@@ -611,11 +632,6 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			
 			if(_rsta == 1)	runx += _sw / 2;
 			if(_rsta == 2)	runy += _sh / 2;
-			
-			minx = min(minx, posx + sw / 2);
-			miny = min(miny, posy + sh / 2);
-			maxx = max(maxx, posx + sw / 2);
-			maxy = max(maxy, posy + sh / 2);
 			
 		}
 		
@@ -671,7 +687,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 						_inf = 1 - anim_sampler[j].getPixel(round(_x), round(_y));
 				}
 				
-				_inf = _anim_fall_curves[j].get(_inf);
+				_inf = anim_fall_curves[j].get(_inf);
 				if(_inf == 0) continue;
 				
 				switch(_an_prop) {
