@@ -72,7 +72,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput( 5, nodeValue_Rotation_Range( "Repeat Rotation",  [0,0]       ));
 	
 	////- =Scale
-	newInput( 6, nodeValue_Float(          "Scale Multiply",    1          )).setCurvable(10, CURVE_DEF_11, "Over Copy")
+	newInput( 6, nodeValue_Range(          "Scale Multiply",   [1,1], true )).setCurvable(10, CURVE_DEF_11, "Over Copy")
+	newInput(29, nodeValue_Bool(           "Uniform Scale",    true        ))
 	
 	////- =Render
 	newInput(34, nodeValue_Enum_Scroll(    "Blend Mode",        0, [ "Normal", "Additive", "Maximum" ] ));
@@ -88,7 +89,6 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	/* deprecated */ newInput(25, nodeValue_Curve(    "Animator falloff",   CURVE_DEF_10      ));
 	/* deprecated */ newInput(27, nodeValue_Color(    "Animator blend",     ca_white          ));
 	/* deprecated */ newInput(28, nodeValue_Slider(   "Animator alpha",     1                 ));
-	/* deprecated */ newInput(29, nodeValue_Bool(     "Animator",           false             ))
 	
 	// input 41
 	
@@ -202,7 +202,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		["Path",	  true], 11, 12, 13, 40, 
 		["Position", false],  4, 39, 26, 19, 38, 
 		["Rotation", false], 33,  5, 
-		["Scale",	 false],  6, 10, 
+		["Scale",	 false],  6, 10, 29, 
 		["Render",	 false], 34, 14, 30, 
 		new Inspector_Spacer(8, true),
 		new Inspector_Spacer(2, false, false),
@@ -383,7 +383,9 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _rsta = _data[26];
 			var _rrot = _data[ 5];
 			var _rots = _data[33];
-			var _rsca = _data[ 6], _rsca_curved = inputs[6].attributes.curved, scale_curve = new curveMap(_data[10]);
+			
+			var _rsca   = _data[ 6], _rsca_curved = inputs[6].attributes.curved, scale_curve = new curveMap(_data[10]);
+			var _scaUni = _data[29];
 			
 			var _aran = _data[ 7];
 			var _arad = _data[ 8];
@@ -549,8 +551,9 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 					break;
 			}
 			
-			scax = _rsca * (_rsca_curved? scale_curve.get(_prg) : 1);
-			scay = scax;
+			var _scaCurve = _rsca_curved? scale_curve.get(_prg) : 1;
+			scax = _rsca[0] * _scaCurve;
+			scay = _scaUni? scax : _rsca[1] * _scaCurve;
 			rot += lerp(_rrot[0], _rrot[1], st);
 			
 			var _surface = _iSrf;
@@ -609,10 +612,10 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			if(_rsta == 1)	runx += _sw / 2;
 			if(_rsta == 2)	runy += _sh / 2;
 			
-			minx = min(minx, posx);
-			miny = min(miny, posy);
-			maxx = max(maxx, posx);
-			maxy = max(maxy, posy);
+			minx = min(minx, posx + sw / 2);
+			miny = min(miny, posy + sh / 2);
+			maxx = max(maxx, posx + sw / 2);
+			maxy = max(maxy, posy + sh / 2);
 			
 		}
 		
