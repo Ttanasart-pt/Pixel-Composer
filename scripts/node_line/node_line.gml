@@ -799,8 +799,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 								_d = _dir + 180;
 								
 								draw_primitive_end();
-								drawCaps( _cap, c_grey, _ox * _aa, _oy * _aa, _ow / 2 * _aa, _d - 90, _d, _capP );
-								drawCaps( _cap, c_grey, _ox * _aa, _oy * _aa, _ow / 2 * _aa, _d, _d + 90, _capP );
+								drawCaps( _cap, c_grey, _ox * _aa, _oy * _aa, _ow / 2 * _aa, _d - 90, _d, _capP, true );
+								drawCaps( _cap, c_grey, _ox * _aa, _oy * _aa, _ow / 2 * _aa, _d, _d + 90, _capP, true );
 								draw_primitive_begin(pr_trianglestrip);
 							}
 							
@@ -808,8 +808,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 								_d = _dir;
 								
 								draw_primitive_end();
-								drawCaps( _cap, c_grey, _nx * _aa, _ny * _aa, _nw / 2 * _aa, _d - 90, _d, _capP );
-								drawCaps( _cap, c_grey, _nx * _aa, _ny * _aa, _nw / 2 * _aa, _d, _d + 90, _capP );
+								drawCaps( _cap, c_grey, _nx * _aa, _ny * _aa, _nw / 2 * _aa, _d - 90, _d, _capP, true );
+								drawCaps( _cap, c_grey, _nx * _aa, _ny * _aa, _nw / 2 * _aa, _d, _d + 90, _capP, true );
 								draw_primitive_begin(pr_trianglestrip);
 							}
 						}
@@ -855,18 +855,25 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		return [ _colorPass, _widthPass ];
 	}
 	
-	static drawCaps = function(_typ, _cpc, _cpx, _cpy, _cpr, _a0, _a1, _prec = 32) {
+	static drawCaps = function(_typ, _cpc, _cpx, _cpy, _cpr, _a0, _a1, _prec = 32, _widthPass = false) {
 		draw_set_color(_cpc);
 		
 		switch(_typ) {
-			case 1 : draw_circle_angle(_cpx, _cpy, _cpr, _a0, _a1, _prec); break;
+			case 1 : 
+				if(_widthPass) draw_circle_angle(_cpx, _cpy, _cpr, _a0, _a1, _prec, c_white, c_black); 
+				else           draw_circle_angle(_cpx, _cpy, _cpr, _a0, _a1, _prec); 
+				break;
+				
 			case 2 : 
 				var _x0 = _cpx + lengthdir_x(_cpr, _a0);
 				var _y0 = _cpy + lengthdir_y(_cpr, _a0);
 				var _x2 = _cpx + lengthdir_x(_cpr, _a1);
 				var _y2 = _cpy + lengthdir_y(_cpr, _a1);
 				
-				draw_triangle(_cpx - 1, _cpy - 1, _x0 - 1, _y0 - 1, _x2 - 1, _y2 - 1, false);
+				if(_widthPass)
+					draw_triangle_color(_cpx - 1, _cpy - 1, _x0 - 1, _y0 - 1, _x2 - 1, _y2 - 1, c_white, c_black, c_black, false);
+				else
+					draw_triangle(_cpx - 1, _cpy - 1, _x0 - 1, _y0 - 1, _x2 - 1, _y2 - 1, false);
 				break;
 		}
 	}
