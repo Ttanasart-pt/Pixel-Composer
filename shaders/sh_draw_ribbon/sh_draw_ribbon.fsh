@@ -92,12 +92,22 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform vec2  position;
-uniform vec2  scale;
+uniform vec2 position;
+uniform vec2 scale;
+
+uniform int useThickness;
+uniform int shadeSide;
+uniform int passes;
 
 void main() {
 	vec2 pos = v_vTexcoord * scale - position;
 	     pos = fract(fract(pos) + 1.);
 	
-    gl_FragColor = v_vColour * texture2Dintp( gm_BaseTexture, pos );
+	vec4 _col  = v_vColour * texture2Dintp( gm_BaseTexture, pos );
+	if(shadeSide == 1) _col.rgb *= 1. - abs(pos.x - .5) * 2.;
+	gl_FragData[passes] = _col;
+	
+	if(useThickness == 1) gl_FragData[passes + 2] = vec4(pos.x, 0., 0., 1.);
+	
+	
 }

@@ -1,13 +1,12 @@
 {
   "$GMShader":"",
-  "%Name":"sh_draw_ribbon",
-  "name":"sh_draw_ribbon",
+  "%Name":"sh_draw_ribbon_merge",
+  "name":"sh_draw_ribbon_merge",
   "parent":{
     "name":"ribbon",
     "path":"folders/nodes/data/generator/drawer/ribbon.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",
-  "tags":[],
   "type":1,
 }

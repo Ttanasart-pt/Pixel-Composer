@@ -2,13 +2,13 @@
 	function ShaderUniform(_index) constructor {
 		index = _index;
 		
-		static setF = function(a) /*=>*/ {return shader_set_uniform_f(index, a)};
-		static setI = function(a) /*=>*/ {return shader_set_uniform_f(index, a)};
+		static setF = function(a) /*=>*/ { shader_set_uniform_f(index, a); }
+		static setI = function(a) /*=>*/ { shader_set_uniform_f(index, a); }
 		
-		static setA = function(a)       /*=>*/ {return shader_set_uniform_f_array(index, a)};
-		static set2 = function(a,b)     /*=>*/ {return shader_set_uniform_f(index, a,b)};
-		static set3 = function(a,b,c)   /*=>*/ {return shader_set_uniform_f(index, a,b,c)};
-		static set4 = function(a,b,c,d) /*=>*/ {return shader_set_uniform_f(index, a,b,c,d)};
+		static setA = function(a)       /*=>*/ { shader_set_uniform_f_array(index, a); }
+		static set2 = function(a,b)     /*=>*/ { shader_set_uniform_f(index, a,b);     }
+		static set3 = function(a,b,c)   /*=>*/ { shader_set_uniform_f(index, a,b,c);   }
+		static set4 = function(a,b,c,d) /*=>*/ { shader_set_uniform_f(index, a,b,c,d); }
 	}
 	
 	function ShaderSampler(_index) constructor {
@@ -46,6 +46,8 @@
 #endregion
 
 #region shader functions
+	globalvar SHADER_UNIFORM_CACHE; SHADER_UNIFORM_CACHE = {};
+
 	function shader_set_i(uniform, value) {
 		
 		var shader = shader_current();
@@ -71,10 +73,16 @@
 	function shader_set_i_array(shader, uniform, array) { shader_set_uniform_i_array(shader_get_uniform(shader, uniform), array); }
 	
 	function shader_u(u) { return shader_get_uniform(shader_current(),u); }
+	
 	function shader_set_a(u,v) { shader_set_uniform_f_array(shader_u(u), v); } 
-	function shader_set_2(u,v) { shader_set_uniform_f(shader_u(u), toNumber(aGetF(v, 0)), toNumber(aGetF(v, 1)));                                               } 
-	function shader_set_3(u,v) { shader_set_uniform_f(shader_u(u), toNumber(aGetF(v, 0)), toNumber(aGetF(v, 1)), toNumber(aGetF(v, 2)));                        } 
-	function shader_set_4(u,v) { shader_set_uniform_f(shader_u(u), toNumber(aGetF(v, 0)), toNumber(aGetF(v, 1)), toNumber(aGetF(v, 2)), toNumber(aGetF(v, 3))); } 
+	
+	// function shader_set_2(u,v) { shader_set_uniform_f(shader_u(u), toNumber(aGetF(v, 0)), toNumber(aGetF(v, 1)));                                               } 
+	// function shader_set_3(u,v) { shader_set_uniform_f(shader_u(u), toNumber(aGetF(v, 0)), toNumber(aGetF(v, 1)), toNumber(aGetF(v, 2)));                        } 
+	// function shader_set_4(u,v) { shader_set_uniform_f(shader_u(u), toNumber(aGetF(v, 0)), toNumber(aGetF(v, 1)), toNumber(aGetF(v, 2)), toNumber(aGetF(v, 3))); } 
+	
+	function shader_set_2(u,v) { shader_set_uniform_f_array(shader_u(u), array_verify(v,2)); } 
+	function shader_set_3(u,v) { shader_set_uniform_f_array(shader_u(u), array_verify(v,3)); } 
+	function shader_set_4(u,v) { shader_set_uniform_f_array(shader_u(u), array_verify(v,4)); } 
 	
 	function shader_set_f_array(uniform, value, max_length = 128) {
 		var shader = shader_current();
