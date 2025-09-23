@@ -5,22 +5,22 @@ enum DRIVER_TYPE { none, linear, wiggle, sine }
 function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 	#region ---- main ----
 		time	= _time;
-		ratio	= time / (GLOBAL_TOTAL_FRAMES - 1);
 		value	= _value;
 		anim	= _anim;
+		ratio	= 0;
 	
 		ease_y_lock = true;
-		ease_in	 = is_array(_in)? _in : [_in, 1];
-		ease_out = is_array(_ot)? _ot : [_ot, 0];
+		ease_in	    = is_array(_in)? _in : [_in, 1];
+		ease_out    = is_array(_ot)? _ot : [_ot, 0];
 		
 		var _int = anim? anim.prop.key_inter : CURVE_TYPE.linear;
 		ease_in_type  = _int;
 		ease_out_type = _int;
 		
-		dopesheet_x = 0;
+		dopesheet_x   = 0;
 		
 		drivers = {
-			seed      : irandom_range(100000, 999999),
+			seed      : seed_random(6),
 			type      : DRIVER_TYPE.none,
 			speed     : 1,
 			octave    : 2,
@@ -31,10 +31,8 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 		};
 	#endregion
 	
-	static setTime = function(_time) {
-		time  = _time;
-		ratio = _time / (anim.node.project.animator.frames_total - 1);
-	}
+	static calcRatio = function( ) /*=>*/ { ratio = time / (anim.node.project.animator.frames_total - 1); return self; }
+	static setTime   = function(t) /*=>*/ { time  = t; return self; }
 	
 	static clone = function(target = noone) {
 		var key = new valueKey(time, value, target);
@@ -73,14 +71,9 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 	}
 	
 	static getDrawIndex = function() {
-		if(anim.prop.type == VALUE_TYPE.trigger)
-			return 1;
-		
-		if(drivers.type) 
-			return 2;
-			
-		if(ease_in_type == CURVE_TYPE.cut) 
-			return 1;
+		if(anim.prop.type == VALUE_TYPE.trigger) return 1;
+		if(drivers.type)                         return 2;
+		if(ease_in_type == CURVE_TYPE.cut)       return 1;
 		
 		return 0;
 	}
@@ -356,17 +349,17 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	
 	static processDriver = function(_time, _key, _val = undefined, _intp = 0) {
 		
-		static _processDriver = function(val, drivers, _t, _index = 0, _intp = 0) {
-			switch(drivers.type) {
+		static _processDriver = function(val, _drivers, _t, _index = 0, _intp = 0) {
+			switch(_drivers.type) {
 				case DRIVER_TYPE.linear : 
-					return val + _t * drivers.speed;
+					return val + _t * _drivers.speed;
 					
 				case DRIVER_TYPE.wiggle : 
-					var w = perlin1D(_t, drivers.seed + _index, drivers.frequency / 10, drivers.octave, -1, 1) * drivers.amplitude;
+					var w = perlin1D(_t, _drivers.seed + _index, _drivers.frequency / 10, _drivers.octave, -1, 1) * _drivers.amplitude;
 					return val + w;
 					
 				case DRIVER_TYPE.sine : 
-					var w = sin((drivers.phase * (_index + 1) + _t * drivers.frequency / NODE_TOTAL_FRAMES) * pi * 2) * drivers.amplitude;
+					var w = sin((_drivers.phase * (_index + 1) + _t * _drivers.frequency / NODE_TOTAL_FRAMES) * pi * 2) * _drivers.amplitude;
 					return val + w;
 			}
 			
@@ -644,8 +637,8 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			_value_list[6] = _v.ease_y_lock;
 			_value_list[7] = _v.drivers.type == DRIVER_TYPE.none? 0 : _v.drivers;
 			
-			if(_v.drivers.type != DRIVER_TYPE.none) _comp = false;
-			if(prop.type == VALUE_TYPE.trigger)     _comp = false;
+			if(_v.drivers.type)                 _comp = false;
+			if(prop.type == VALUE_TYPE.trigger) _comp = false;
 			
 			array_push(_data, _value_list);
 		}
@@ -764,7 +757,6 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			vk.ease_y_lock   = ease_y_lock;
 			
 			if(is_struct(driver)) struct_override(vk.drivers, driver);
-			
 			array_push(values, vk);
 		}
 		

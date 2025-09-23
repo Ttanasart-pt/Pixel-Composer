@@ -2928,8 +2928,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			repeat(amo) { i = _i++; junc_meta[i].applyDeserialize(_outMeta[i], load_scale, preset); }
 		}
 		
-		//print($"Applying deserialzie for {name} complete");
-		
 		postApplyDeserialize();
 		
 	}

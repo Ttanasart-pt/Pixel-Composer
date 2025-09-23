@@ -1,4 +1,3 @@
-# %% 
 import os
 import re
 
@@ -13,8 +12,6 @@ for path, dirList, fileList in os.walk(srcDir):
             filePath = os.path.join(path, fileName)
             notes.append(filePath)
 
-print(f"Release notes found:{notes}")
-# %%
 def isVersionName(name):
     # check if name only contains digits and dots
     if re.match(r'^[0-9.]+$', name):
@@ -22,12 +19,16 @@ def isVersionName(name):
     return False
 
 def getVersionName(path):
-    _dir = path
-    patch = None
+    parent = path
+    patch  = None
 
-    while _dir != "":
-        _dir = os.path.dirname(_dir)
-        bname = os.path.basename(_dir)
+    while parent != "":
+        _parent = os.path.dirname(parent)
+        if _parent == parent:
+            return None
+
+        parent = _parent
+        bname = os.path.basename(parent)
 
         if "patch" in bname.lower() or bname.startswith("p"):
             patch = re.sub(r'[^0-9]', '', bname)
@@ -47,10 +48,7 @@ print("\n==== Updating release notes... ====\n")
 for note in notes:
     v = getVersionName(note)
     if v is None:
-        print(f"Version name not found in path: {note}")
         continue
-
-    print(f"{v}: {note}")
 
     trgFile = os.path.join(trgDir, f"{v}.md")
     
@@ -59,4 +57,3 @@ for note in notes:
     
     with open(trgFile, "w", encoding="utf-8") as trg:
         trg.write(content)
-# %%

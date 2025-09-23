@@ -66,11 +66,7 @@ function PXC_Login(uid) {
 	}
 	
 	asyncCallGroup("social", FirebaseFirestore($"user").Where("userId", "==", ACCOUNT_ID).Query(), function(_params, _data) /*=>*/ {
-		if (_data[? "status"] != 200) {
-	    	var _errorMessage = _data[? "errorMessage"];
-	    	noti_warning(_errorMessage);
-	    	return;
-	    }
+		if (_data[? "status"] != 200) { noti_warning(_data[? "errorMessage"]); return; }
 	    
 	    var res  = _data[? "value"];
 	    var resJ = json_try_parse(res, undefined);

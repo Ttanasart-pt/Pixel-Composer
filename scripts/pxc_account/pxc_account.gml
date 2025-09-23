@@ -60,12 +60,7 @@ function UserAccount() constructor {
 			
 		asyncCallGroup("social", FirebaseFirestore($"steam/{steamid}").Update(_sdata), function(_params, _data) /*=>*/ {
 			var _type = _data[? "type"];
-			
-		    if (_data[? "status"] != 200) {
-		    	var _errorMessage = _data[? "errorMessage"];
-		    	print($"update user data error {_errorMessage}");
-		    	return;
-		    }
+		    if (_data[? "status"] != 200) { print($"update user data error {_data[? "errorMessage"]}"); return; }
 		});
 	}
 }
@@ -82,11 +77,7 @@ function __initUser() {
 	
 	if(STEAM_ENABLED) {
 		asyncCallGroup("social", FirebaseFirestore($"steam").Where("steamid", "==", string(STEAM_ID)).Query(), function(_params, _data) /*=>*/ {
-			if (_data[? "status"] != 200) {
-		    	var _errorMessage = _data[? "errorMessage"];
-		    	print("get user data error", res);
-		    	return;
-		    }
+			if (_data[? "status"] != 200) { print("get user data error", _data[? "errorMessage"]); return; }
 		    
 		    USER_DATA = new UserAccount();
 		    

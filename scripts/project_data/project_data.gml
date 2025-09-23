@@ -462,6 +462,8 @@ function Project() constructor {
 		
 		bind_gamemaker = Binder_Gamemaker(attributes.bind_gamemaker_path);
 		if(bind_gamemaker == noone) attributes.bind_gamemaker_path = "";
+		
+		globalNode.update();
 	}
 	
 	static postDeserialize = function(_map) {

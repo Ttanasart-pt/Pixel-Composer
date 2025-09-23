@@ -430,6 +430,25 @@ function Panel_Animation_Dopesheet() {
                     timeline_stretch_sx = GLOBAL_TOTAL_FRAMES;
                 }
                 
+                if(timeline_stretch == 2) {
+                	for (var m = 0, n = array_length(PROJECT.allNodes); m < n; m++) {
+	                    var _node = PROJECT.allNodes[m];
+	                    if(!_node || !_node.active) continue;
+	                    
+	                    for(var i = 0; i < array_length(_node.inputs); i++) {
+	                        var in = _node.inputs[i];
+	                        if(!in.is_anim) continue;
+	                        
+	                        for(var j = 0; j < array_length(in.animator.values); j++)
+	                            in.animator.values[j].calcRatio();
+	                        
+	                        for(var k = 0; k < array_length(in.animators); k++ )
+	                        for(var j = 0; j < array_length(in.animators[k].values); j++)
+	                            in.animators[k].values[j].calcRatio();
+	                    }
+	                }
+                }
+                
             } else if(key_mod_press(CTRL)) {
                 TOOLTIP = __txtx("panel_animation_adjust_length", "Adjust animation length");
         		

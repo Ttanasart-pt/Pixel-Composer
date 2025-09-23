@@ -36,6 +36,7 @@ function Panel_Animation_Scaler() : Panel_Linear_Setting() constructor {
 				
 				for(var k = 0, p = array_length(in.animator.values); k < p; k++) {
 					var t = in.animator.values[k];
+					t.calcRatio();
 					t.time = t.ratio * scale_to;
 					if(quantize) t.time = round(t.time);
 				}

@@ -22,7 +22,7 @@ function Panel_Test() : PanelContent() constructor {
 	test_files  = [];
 	start_index = 0;
 	end_index   = 0;
-	test_amount = 100;
+	test_amount = 200;
 	test_index  = start_index;
 	test_step   = 0;
 	test_result = [];
@@ -51,12 +51,16 @@ function Panel_Test() : PanelContent() constructor {
 	
 	sc_content = new scrollPane(content_w, h - padding * 2 - ui(8 * 2) - ui(24), function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
-		var _h = 0;
-		var yy = _y;
 		var ww = sc_content.surface_w;
+		var hh = sc_content.surface_h;
 		var wh = ui(20);
+		var _h = array_length(test_files) * wh + wh;
 		
 		for( var i = 0, n = array_length(test_files); i < n; i++ ) {
+			var yy = _y + wh * i;
+			if(yy < -wh) continue;
+			if(yy >  hh) break;
+			
 			var _f = test_files[i];
 			var _d = test_files[i][1];
 			var _n = filename_name_only(_f[0]);
@@ -102,11 +106,7 @@ function Panel_Test() : PanelContent() constructor {
 			draw_text_add(ww - ui(100), yy + wh / 2, _d);
 			draw_set_alpha(1);
 			
-			_h += wh;
-			yy += wh;
 		}
-		
-		_h += wh;
 		
 		return _h;
 	});
