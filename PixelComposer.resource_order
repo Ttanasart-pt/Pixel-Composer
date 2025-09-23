@@ -1326,7 +1326,7 @@
     {"name":"node_repeat","order":12,"path":"scripts/node_repeat/node_repeat.yy",},
     {"name":"node_revert","order":34,"path":"scripts/node_revert/node_revert.yy",},
     {"name":"node_rgb_channel","order":2,"path":"scripts/node_rgb_channel/node_rgb_channel.yy",},
-    {"name":"node_ribbon","order":10,"path":"scripts/node_ribbon/node_ribbon.yy",},
+    {"name":"node_ribbon","order":11,"path":"scripts/node_ribbon/node_ribbon.yy",},
     {"name":"node_rigid_activate","order":2,"path":"scripts/node_rigid_activate/node_rigid_activate.yy",},
     {"name":"node_rigid_explode","order":1,"path":"scripts/node_rigid_explode/node_rigid_explode.yy",},
     {"name":"node_rigid_fracture","order":7,"path":"scripts/node_rigid_fracture/node_rigid_fracture.yy",},

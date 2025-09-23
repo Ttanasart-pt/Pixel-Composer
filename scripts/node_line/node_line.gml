@@ -42,7 +42,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(25, nodeValue_Bool(         "Invert",        false ));
 	newInput( 9, nodeValue_Float(        "Shift",         0     ));
 	newInput(26, nodeValue_Bool(         "Clamp Range",   false ));
-	newInput(13, nodeValue_Enum_Button(  "End Cap",       0, __enum_array_gen([ "None", "Round", "Tri" ], s_node_line_cap)));
+	newInput(13, nodeValue_Enum_Button(  "End Cap",       0, __enum_array_gen([ "None", "Round", "Tri", "Square" ], s_node_line_cap)));
 	newInput(14, nodeValue_ISlider(      "Round Segment", 8, [2, 32, 0.1] ));
 	
 	////- =Wiggle
@@ -855,25 +855,43 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		return [ _colorPass, _widthPass ];
 	}
 	
-	static drawCaps = function(_typ, _cpc, _cpx, _cpy, _cpr, _a0, _a1, _prec = 32, _widthPass = false) {
-		draw_set_color(_cpc);
+	static drawCaps = function(_typ, _cpc, _cpx, _cpy, _cpr, _a0, _a1, _prec = 32, w = false) {
+		var _0 = c_black;
+		var _1 = c_white;
+		var _c = _cpc;
+		draw_set_color(_c);
 		
 		switch(_typ) {
 			case 1 : 
-				if(_widthPass) draw_circle_angle(_cpx, _cpy, _cpr, _a0, _a1, _prec, c_white, c_black); 
-				else           draw_circle_angle(_cpx, _cpy, _cpr, _a0, _a1, _prec); 
+				if(w) draw_circle_angle(_cpx, _cpy, _cpr, _a0, _a1, _prec, _1, _0); 
+				else  draw_circle_angle(_cpx, _cpy, _cpr, _a0, _a1, _prec, _c, _c); 
 				break;
 				
 			case 2 : 
-				var _x0 = _cpx + lengthdir_x(_cpr, _a0);
-				var _y0 = _cpy + lengthdir_y(_cpr, _a0);
-				var _x2 = _cpx + lengthdir_x(_cpr, _a1);
-				var _y2 = _cpy + lengthdir_y(_cpr, _a1);
+				var _x0 = _cpx + lengthdir_x(_cpr, _a0) - 1;
+				var _y0 = _cpy + lengthdir_y(_cpr, _a0) - 1;
+				var _x2 = _cpx + lengthdir_x(_cpr, _a1) - 1;
+				var _y2 = _cpy + lengthdir_y(_cpr, _a1) - 1;
 				
-				if(_widthPass)
-					draw_triangle_color(_cpx - 1, _cpy - 1, _x0 - 1, _y0 - 1, _x2 - 1, _y2 - 1, c_white, c_black, c_black, false);
-				else
-					draw_triangle(_cpx - 1, _cpy - 1, _x0 - 1, _y0 - 1, _x2 - 1, _y2 - 1, false);
+				if(w) draw_triangle_color(_cpx - 1, _cpy - 1, _x0, _y0, _x2, _y2, _1, _0, _0, false);
+				else  draw_triangle_color(_cpx - 1, _cpy - 1, _x0, _y0, _x2, _y2, _c, _c, _c, false);
+				break;
+				
+			case 3 : 
+				var _x0 = _cpx + lengthdir_x(_cpr, _a0) - 1;
+				var _y0 = _cpy + lengthdir_y(_cpr, _a0) - 1;
+				var _x1 = _cpx + lengthdir_x(_cpr * sqrt(2), lerp_angle_direct(_a0, _a1, .5)) - 1;
+				var _y1 = _cpy + lengthdir_y(_cpr * sqrt(2), lerp_angle_direct(_a0, _a1, .5)) - 1;
+				var _x2 = _cpx + lengthdir_x(_cpr, _a1) - 1;
+				var _y2 = _cpy + lengthdir_y(_cpr, _a1) - 1;
+				
+				if(w) {
+					draw_triangle_color(_cpx - 1, _cpy - 1, _x0, _y0, _x1, _y1, _1, _0, _0, false);
+					draw_triangle_color(_cpx - 1, _cpy - 1, _x1, _y1, _x2, _y2, _1, _0, _0, false);
+				} else {
+					draw_triangle_color(_cpx - 1, _cpy - 1, _x0, _y0, _x1, _y1, _c, _c, _c, false);
+					draw_triangle_color(_cpx - 1, _cpy - 1, _x1, _y1, _x2, _y2, _c, _c, _c, false);
+				}
 				break;
 		}
 	}
