@@ -440,6 +440,7 @@
 		
 		var ww = PREFERENCES.window_fix? PREFERENCES.window_fix_width  : PREFERENCES.window_width;
 		var hh = PREFERENCES.window_fix? PREFERENCES.window_fix_height : PREFERENCES.window_height;
+		
 		window_minimize_size = [ ww, hh ];
 		
 		var cx = display_get_width()  / 2;

@@ -292,6 +292,10 @@ function Project() constructor {
 	
 	////- Render
 	
+	static preRender = function() {
+		globalNode.update();
+	}
+	
 	static postRender = function() {
 		globalLayer_compose();
 		if(attributes.auto_organize) node_auto_organize(nodes);
@@ -444,9 +448,10 @@ function Project() constructor {
 		}
 		
 		globalNode = new Node_Global();
+		globalNode.project = self;
+		
 		     if(struct_has(_map, "global"))      globalNode.deserialize(_map.global);
 		else if(struct_has(_map, "global_node")) globalNode.deserialize(_map.global_node);
-		
 		
 		addons = {};
 		if(struct_has(_map, "addon")) {

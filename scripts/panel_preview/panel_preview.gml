@@ -2550,9 +2550,9 @@ function Panel_Preview() : PanelContent() constructor {
         
         draw_sprite_stretched_ext(THEME.toolbar, 0, 0, ty, w, toolbar_height, c_white, aa);
         
-        var toolbar_right = w - ui(6);
+        var toolbar_right = w - ui(4);
         var scs = gpu_get_scissor();
-        var tbx = w - ui(6);
+        var tbx = w - ui(4);
         var tby = ty + toolbar_height / 2;
         var _m  = [ mx, my ];
         
@@ -2562,7 +2562,7 @@ function Panel_Preview() : PanelContent() constructor {
         
         if(toolbar_right < ui(6)) return;
         
-        var tbx = ui(6);
+        var tbx = ui(4);
         var bs  = toolbar_height - ui(8);
         var bsc = 1;
         
@@ -2632,7 +2632,7 @@ function Panel_Preview() : PanelContent() constructor {
         
         if(toolbar_right < toolbar_left) return;
         
-        tbx = toolbar_right - ui(2) - bs;
+        tbx = toolbar_right - bs;
         gpu_set_scissor(toolbar_left, ty, w - toolbar_left, toolbar_height);
         var hov = pHOVER && point_in_rectangle(mx, my, toolbar_left, ty, w, h);
         

@@ -33,7 +33,7 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 	
 	static setTime = function(_time) {
 		time  = _time;
-		ratio = _time / (GLOBAL_TOTAL_FRAMES - 1);
+		ratio = _time / (anim.node.project.animator.frames_total - 1);
 	}
 	
 	static clone = function(target = noone) {
@@ -46,28 +46,28 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 		return key;
 	}
 	
-	static cloneAnimator = function(shift = 0, anim = noone, removeDup = true) {
-		if(anim != noone) { //check value compat between animator
-			if(value_bit(self.anim.prop.type) & value_bit(anim.prop.type) == 0) {
+	static cloneAnimator = function(shift = 0, _anim = noone, removeDup = true) {
+		if(_anim != noone) { //check value compat between animator
+			if(value_bit(anim.prop.type) & value_bit(_anim.prop.type) == 0) {
 				noti_warning("Type incompatible");
 				return noone;
 			}
 			
-			if(typeArray(self.anim.prop) != typeArray(anim.prop)) {
+			if(typeArray(anim.prop) != typeArray(_anim.prop)) {
 				noti_warning("Type incompatible");
 				return noone;
 			}
 		}
 		
-		if(anim == noone) anim = self.anim;
+		if(_anim == noone) _anim = anim;
 		
-		var key = new valueKey(time + shift, value, anim);
+		var key = new valueKey(time + shift, value, _anim);
 		key.ease_in			= ease_in;
 		key.ease_out		= ease_out;
 		key.ease_in_type	= ease_in_type;
 		key.ease_out_type	= ease_out_type;
-		array_push(anim.values, key);
-		anim.setKeyTime(key, time + shift, removeDup);
+		array_push(_anim.values, key);
+		_anim.setKeyTime(key, time + shift, removeDup);
 		
 		return key;
 	}

@@ -23,7 +23,7 @@
 #endregion
 
 function Panel_Collection() : PanelContent() constructor {
-	title = __txt("Collections");
+	title      = __txt("Collections");
 	expandable = false;
 	
 	group_w          = ui(140);
@@ -31,7 +31,7 @@ function Panel_Collection() : PanelContent() constructor {
 	group_w_sx       = false;
 	group_w_mx       = false;
 	
-	top_h     = ui(40);
+	top_h     = ui(36);
 	content_w = w - ui( 8) - group_w;
 	content_h = h - top_h - ui(8);
 	
@@ -281,7 +281,7 @@ function Panel_Collection() : PanelContent() constructor {
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	contentView = 0;
-	contentPane = new scrollPane(content_w - ui(8), content_h - ui(4), function(_y, _m) {
+	contentPane = new scrollPane(1, 1, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		
 		var content;
@@ -507,7 +507,7 @@ function Panel_Collection() : PanelContent() constructor {
 		return hh;
 	});
 	
-	folderPane = new scrollPane(group_w - ui(8), content_h, function(_y, _m) {
+	folderPane = new scrollPane(1, 1, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		var hh = ui(8);
 		_y += ui(8);
@@ -572,7 +572,7 @@ function Panel_Collection() : PanelContent() constructor {
 		menuCall("add_node_window_menu", menu, 0, 0, fa_left);
 	}
 	
-	nodeListPane = new scrollPane(group_w - ui(8), content_h, function(_y, _m) {
+	nodeListPane = new scrollPane(1, 1, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		var hh = ui(8);
 		   _y += ui(8);
@@ -609,7 +609,7 @@ function Panel_Collection() : PanelContent() constructor {
 		return hh + ui(16);
 	});
 	
-	nodecontentPane = new scrollPane(content_w - ui(8), content_h - ui(4), function(_y, _m) {
+	nodecontentPane = new scrollPane(1, 1, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		var hh    = ui(0);
 		var _cat  = NODE_CATEGORY[nodeListPane_page];
@@ -841,21 +841,21 @@ function Panel_Collection() : PanelContent() constructor {
 		
 		////- Title bar
 		
-		var _x = ui(10);
-		var _y = ui(10);
-		var _w = ui(160);
-		var _h = line_get_height(f_p0b, 4);
-		var bh = line_get_height(f_p0b, 4);
-		var rootx = _x;
+		var _sx = ui(10);
+		var _sy = ui(6);
+		var _sw = ui(160);
+		var _sh = line_get_height(f_p0b, 4);
+		var rootx = _sx;
 		
 		sc_pages.setFocusHover(foc, hov);
-		sc_pages.draw(_x, _y, _w, _h, pageS, m, x, y);
-		rootx = _x + _w + ui(8);
+		sc_pages.draw(_sx, _sy, _sw, _sh, pageS, m, x, y);
+		rootx = _sx + _sw + ui(8);
 		
 		var bSpr = THEME.button_hide_fill;
+		var pd = ui(4);
 		var bs = ui(28);
-		var bx = w - (bs + ui(6));
-		var by = ui(6);
+		var bx = w - (bs + pd);
+		var by = pd;
 		var bc = searching? COLORS._main_accent : COLORS._main_icon;
 		
 		if(buttonInstant(bSpr, bx, by, bs, bs, m, hov, foc, __txt("Search"), THEME.search_24, 0, bc, 1, .9) == 2)

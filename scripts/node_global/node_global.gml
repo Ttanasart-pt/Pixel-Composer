@@ -240,7 +240,7 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 		return value[? key];
 	}
 	
-	static step = function() {
+	static update = function() {
 		ds_map_clear(value);
 		
 		for( var i = 0, n = array_length(inputs); i < n; i++ ) {

@@ -164,6 +164,8 @@ function Render(_project = PROJECT, partial = false, runAction = false) {
 	LOG_BLOCK_START();
 	LOG_IF(global.FLAG.render, $"============================== RENDER START [{partial? "PARTIAL" : "FULL"}] [frame {GLOBAL_CURRENT_FRAME}] ==============================");
 	
+	_project.preRender();
+	
 	try {
 		var t  = get_timer();
 		var t1 = get_timer();

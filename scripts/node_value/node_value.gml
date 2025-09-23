@@ -1503,13 +1503,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(!expUse || expTree == noone || !expTree.validate()) return;
 			
-		if(global.EVALUATE_HEAD == self)  {
-			noti_warning($"Expression evaluation error : recursive call detected.");
-			return;
-		} 
+		if(global.EVALUATE_HEAD == self) { noti_warning($"Expression evaluation error : recursive call detected."); return; } 
 		
 		if(global.EVALUATE_HEAD == noone) {
-			
 			global.EVALUATE_HEAD = self;
 			expContext = { 
 				name :        name,

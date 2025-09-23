@@ -3,6 +3,7 @@ function __Node_Base(x, y) constructor {
 	self.y = y;
 	
 	node_id = 0;
+	project = PROJECT;
 	
 	display_name    = "";
 	inputs          = [];

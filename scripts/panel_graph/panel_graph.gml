@@ -2541,7 +2541,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
         var bs  = toolbar_height - ui(8);
         var bsc = 1;
-        var tbx = w - ui(6) - bs;
+        var tbx = w - ui(4) - bs;
         var tby = ty + th / 2;
         var _m  = [ mx, my ];
         
