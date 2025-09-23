@@ -681,9 +681,12 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             new panel_toolbar_icon("Distribute Y", THEME.obj_distribute_v, function() /*=>*/ {return 0}, function() /*=>*/ {return ""}, function(p) /*=>*/ { node_vdistribute(nodes_selecting); } ),
         ];
         
+        hk_autoalign = new tooltipHotkey(__txt("Auto Align"), "Graph", "Auto Align");
+        hk_autoorgan = new tooltipHotkey(__txt("Auto Organize"), "Graph", "Auto Organize...");
+        
         toolbars_auto_arrange = [
-            new panel_toolbar_icon("Auto Align",    THEME.obj_auto_align,    function() /*=>*/ {return 0}, function() /*=>*/ {return "Auto Align"},    function(p) /*=>*/ { node_auto_align(nodes_selecting); } ),
-            new panel_toolbar_icon("Auto Organize", THEME.obj_auto_organize, function() /*=>*/ {return 0}, function() /*=>*/ {return "Auto Organize"}, 
+            new panel_toolbar_icon("Auto Align",    THEME.obj_auto_align,    function() /*=>*/ {return 0}, hk_autoalign, function(p) /*=>*/ { node_auto_align(nodes_selecting); } ),
+            new panel_toolbar_icon("Auto Organize", THEME.obj_auto_organize, function() /*=>*/ {return 0}, hk_autoorgan, 
             	function(p) /*=>*/ { dialogPanelCall(new Panel_Graph_Auto_Organize(PANEL_GRAPH.nodes_selecting), p.x, p.y, { anchor: ANCHOR.bottom | ANCHOR.left }) } ),
         ];
         

@@ -42,38 +42,28 @@ function Node_HLSL(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	name   = "HLSL";
 	shader = { vs: -1, fs: -1 };
 	
-	newInput(0, nodeValue_Text("Vertex"))
-		.setDisplay(VALUE_DISPLAY.codeHLSL)
-		.rejectArray();
+	defHLSL = @"float4 surfaceColor = gm_BaseTextureObject.Sample(gm_BaseTexture, input.uv);
+output.color = surfaceColor;"
 	
-	newInput(1, nodeValue_Text("Main", 
-@"float4 surfaceColor = gm_BaseTextureObject.Sample(gm_BaseTexture, input.uv);
-output.color = surfaceColor;"))
-		.setDisplay(VALUE_DISPLAY.codeHLSL)
-		.rejectArray();
-	
-	newInput(2, nodeValue_Surface("Base Texture"));
-	
-	newInput(3, nodeValue_Text("Libraries"))
-		.setDisplay(VALUE_DISPLAY.codeHLSL)
-		.rejectArray();
-	
-	newInput(4, nodeValue_Text("Global"))
-		.setDisplay(VALUE_DISPLAY.codeHLSL)
-		.rejectArray();
+	newInput(2, nodeValue_Surface( "Base Texture" ));
+	newInput(3, nodeValue_Text( "Libraries"       ));
+	newInput(0, nodeValue_Text( "Vertex"          ));
+	newInput(4, nodeValue_Text( "Global"          ));
+	newInput(1, nodeValue_Text( "Main", defHLSL   ));
+	// 5
 	
 	newOutput(0, nodeValue_Output("Surface", VALUE_TYPE.surface, noone ));
+	array_foreach(inputs, function(n) /*=>*/ { n.rejectArray(); if(n.type == VALUE_TYPE.text) n.setDisplay(VALUE_DISPLAY.codeHLSL); });
 	
 	function createNewInput(index = array_length(inputs)) {
+		static shader_vartype = [ "Float", "Int", "Vec2", "Vec3", "Vec4", "Mat3", "Mat4", "Sampler2D", "Color" ];
 		var inAmo = array_length(inputs);
 		
-		newInput(index + 0, nodeValue_Text("Argument name"));
+		newInput(index + 0, nodeValue_Text(    "Argument name" ));
+		newInput(index + 1, nodeValue_EScroll( "Argument type",  0, { data: shader_vartype, update_hover: false }));
+		newInput(index + 2, nodeValue(         "Argument value", self, CONNECT_TYPE.input, VALUE_TYPE.float, 0 )).setVisible(true, true);
 		
-		newInput(index + 1, nodeValue_Enum_Scroll("Argument type",  0 , { data: [ "Float", "Int", "Vec2", "Vec3", "Vec4", "Mat3", "Mat4", "Sampler2D", "Color" ], update_hover: false }));
 		inputs[index + 1].editWidget.interactable = false;
-		
-		newInput(index + 2, nodeValue("Argument value", self, CONNECT_TYPE.input, VALUE_TYPE.float, 0 ))
-			.setVisible(true, true);
 		inputs[index + 2].editWidget.interactable = false;
 							
 		array_push(input_display_list, inAmo, inAmo + 1, inAmo + 2);

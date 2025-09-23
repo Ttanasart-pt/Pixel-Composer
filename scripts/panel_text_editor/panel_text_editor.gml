@@ -16,8 +16,8 @@ function Panel_Text_Editor(_textArea, _inputFunc, _context) : PanelContent() con
 	editor.function_guide_server  = _textArea.function_guide_server;
 	editor.select_on_click        = false;
 	
-	self.inputFunc = method(self, _inputFunc);
-	self.context   = _context;
+	inputFunc = method(self, _inputFunc);
+	context   = _context;
 	
 	shift_new_line  = false;
 	
@@ -25,37 +25,41 @@ function Panel_Text_Editor(_textArea, _inputFunc, _context) : PanelContent() con
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
 		var bx = ui(8);
-		var by = ui(4);
-		var bs = ui(32);
+		var by = in_dialog? ui(4) : ui(8);
+		var bs = ui(28);
+		var bp = THEME.button_hide_fill;
+		var cc = COLORS._main_icon_light;
+		var m  = [mx,my];
 		
 		var txt = shift_new_line? "New line with Shift + Enter" : "New line with Enter";
-		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [ mx, my ], pHOVER, pFOCUS, txt, THEME.new_line_shift, shift_new_line) == 2)
+		if(buttonInstant_Pad(bp, bx, by, bs, bs, m, pHOVER, pFOCUS, txt, THEME.new_line_shift, shift_new_line, cc, 1, ui(8)) == 2)
 			shift_new_line = !shift_new_line;
 		bx += bs + ui(4);
 		
 		var txt = editor.show_line_number? "Hide line number" : "Show line number";
-		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [ mx, my ], pHOVER, pFOCUS, txt, THEME.code_show_line, editor.show_line_number) == 2)
+		if(buttonInstant_Pad(bp, bx, by, bs, bs, m, pHOVER, pFOCUS, txt, THEME.code_show_line, editor.show_line_number, cc, 1, ui(8)) == 2)
 			editor.show_line_number = !editor.show_line_number;
 		bx += bs + ui(4);
 		
 		var txt = editor.use_autocomplete? "Disable Autocomplete" : "Enable Autocomplete";
-		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [ mx, my ], pHOVER, pFOCUS, txt, THEME.code_show_auto, editor.use_autocomplete) == 2)
+		if(buttonInstant_Pad(bp, bx, by, bs, bs, m, pHOVER, pFOCUS, txt, THEME.code_show_auto, editor.use_autocomplete, cc, 1, ui(8)) == 2)
 			editor.use_autocomplete = !editor.use_autocomplete;
 		bx += bs + ui(4);
 		
 		var txt = "Syntax Highlight";
-		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [ mx, my ], pHOVER, pFOCUS, txt, THEME.code_syntax_highlight, editor.syntax_highlight) == 2)
+		if(buttonInstant_Pad(bp, bx, by, bs, bs, m, pHOVER, pFOCUS, txt, THEME.code_syntax_highlight, editor.syntax_highlight, cc, 1, ui(8)) == 2)
 			editor.syntax_highlight = !editor.syntax_highlight;
 		bx += bs + ui(4);
 		
 		var bx = w - ui(8) - bs;
-		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [ mx, my ], pHOVER, pFOCUS, "Apply", THEME.accept,, COLORS._main_value_positive) == 2) 
+		var txt = "Apply";
+		if(buttonInstant_Pad(bp, bx, by, bs, bs, m, pHOVER, pFOCUS, txt, THEME.accept_16, 0, COLORS._main_value_positive, 1, ui(8)) == 2) 
 			editor.apply();
 		bx -= bs + ui(4);
 		
-		var pd = ui(8 - in_dialog * 6);
+		var pd = in_dialog? ui(8) : ui(4);
 		var tx = pd;
-		var ty = ui(4 + 36);
+		var ty = by + bs + ui(4);
 		var tw = w - pd * 2;
 		var th = h - pd - ty;
 		

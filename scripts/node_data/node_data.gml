@@ -644,7 +644,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var _targ = noone;
 		var _dy   = infinity;
 		
-		for( var i = _shft; i < array_length(inputs); i++ ) {
+		for( var i = _shft, n = array_length(inputs); i < n; i++ ) {
 			var _inp = inputs[i];
 			
 			if(!_inp.isVisible()) continue;
@@ -665,9 +665,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		if(_targ == noone && _over) {
-			var _dy   = 9999;
+			var _dy = infinity;
 			
-			for( var i = _shft; i < array_length(inputs); i++ ) {
+			for( var i = _shft, n = array_length(inputs); i < n; i++ ) {
 				var _inp = inputs[i];
 				
 				if(!_inp.isVisible()) continue;

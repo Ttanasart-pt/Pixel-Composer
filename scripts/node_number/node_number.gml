@@ -21,13 +21,14 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	newInput( 1, nodeValue_Bool(  "Integer", false ));
 	
 	////- =Display
-	newInput( 2, nodeValue_Enum_Scroll(    "Display Type",      0, { data: [ "Number", "Slider", "Rotator", "Increment" ], update_hover: false } ));
+	newInput( 2, nodeValue_Enum_Scroll(    "Display Type",      0, { data: [ "Number", "Slider", "Rotator", "Increment", "Seed" ], update_hover: false } ));
 	newInput( 6, nodeValue_Enum_Button(    "Style",             0, { data: [ "Blob", "Flat" ] } ));
 	newInput(15, nodeValue_Rotation_Range( "Knob Range",      [ 0, 360 ] ));
 	newInput( 3, nodeValue_Range(          "Range",           [ 0, 1 ]   ));
 	newInput( 5, nodeValue_Bool(           "Clamp to range",   false     ));
 	newInput( 4, nodeValue_Float(          "Step",            .01        ));
 	newInput( 7, nodeValue_Float(          "Rotate speed",     1         ));
+	newInput(16, nodeValue_Int(            "Seed Digits",      5         ));
 	
 	////- =Gizmo
 	newInput( 8, nodeValue_Bool( "Show on global", false, "Whether to show overlay gizmo when not selecting any nodes." ));
@@ -37,12 +38,12 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	newInput(14, nodeValue_Vec2(        "Gizmo size",   [ 32, 32 ] ));
 	newInput( 9, nodeValue_Vec2(        "Gizmo offset", [  0,  0 ] ));
 	newInput(10, nodeValue_Float(       "Gizmo scale",     1       ));
-	// input 16
+	// input 17
 	
 	newOutput(0, nodeValue_Output("Number", VALUE_TYPE.float, 0));
 	
 	input_display_list = [ 0, 1, 
-		["Display",  false], 2, 6, 15, 3, 5, 4, 7,
+		["Display",  false], 2, 6, 15, 3, 5, 4, 7, 16, 
 		["Gizmo",    true], 8, 11, 12, 13, 14, 9, 10,
 	];
 	
@@ -67,6 +68,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	draw_cmp      = 0;
 	draw_sty      = 0;
 	draw_spd      = 0;
+	draw_seed_dig = 5;
 	draw_knob_rng = [ 0, 360 ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
@@ -163,12 +165,13 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		var _ww = 96, _hh = 48;
 		
-		inputs[ 3].setVisible(disp > 0);
-		inputs[ 4].setVisible(disp > 0);
-		inputs[ 5].setVisible(disp > 0);
-		inputs[ 6].setVisible(disp > 0);
-		inputs[ 7].setVisible(disp == 2);
+		inputs[ 6].setVisible(disp == 1 || disp == 2);
 		inputs[15].setVisible(disp == 2);
+		inputs[ 3].setVisible(disp == 1 || disp == 2 || disp == 3);
+		inputs[ 5].setVisible(disp == 1 || disp == 2 || disp == 3);
+		inputs[ 4].setVisible(disp == 1 || disp == 2 || disp == 3);
+		inputs[ 7].setVisible(disp == 2);
+		inputs[16].setVisible(disp == 4);
 		
 		switch(disp) {
 			case 1 : 
@@ -178,7 +181,8 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				break;
 				
 			case 2 : _ww = 128; _hh = 128; break;
-			case 3 : _ww = 160; _hh =  64; break;
+			case 3 : 
+			case 4 : _ww = 160; _hh =  64; break;
 		}
 		
 		setDimension(_ww, _hh, _pw != _ww || _ph != _hh);
@@ -209,6 +213,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		draw_cmp       = getInputData(5);
 		draw_sty       = getInputData(6);
 		draw_spd       = getInputData(7);
+		draw_seed_dig  = getInputData(16);
 		draw_knob_rng  = getInputData(15);
 		
 		isGizmoGlobal = getInputData( 8);
@@ -231,6 +236,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		outputs[0].setValue(_res);
 	}
 	
+	__m = [0,0];
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var raw  = draw_raw;
 		var _int = draw_int;
@@ -243,6 +249,9 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _col = getColor();
 		
 		var val  = outputs[0].getValue();
+		
+		__m[0] = _mx;
+		__m[1] = _my;
 		
 		var bbox = drawGetBbox(xx, yy, _s);
 		if(disp == 0 || inputs[0].value_from != noone) {
@@ -432,9 +441,10 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				var bh = bbox.h  - 8 * _s;
 				var bx = bbox.x0 + 4 * _s;
 				var by = bbox.y0 + 4 * _s;
-				var cc = colorMultiply(CDEF.main_white, _col);
+				var cc = _col;
 				
-				var b = buttonInstant(THEME.button_def, bx, by, bw, bh, [ _mx, _my ], _hover, _focus, "", THEME.minus, 0, COLORS._main_value_negative, 1, .75 * _s, cc);
+				var bc = COLORS._main_value_negative;
+				var b  = buttonInstant(THEME.button_def, bx, by, bw, bh, __m, _hover, _focus, "", THEME.minus_b, 0, bc, 1, .75 * _s, cc);
 				if(b) draggable = false;
 				if(b == 2) {
 					val -= stp;
@@ -443,7 +453,8 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				}
 				
 				var bx = bbox.x1 - 4 * _s - bw;
-				var b = buttonInstant(THEME.button_def, bx, by, bw, bh, [ _mx, _my ], _hover, _focus, "", THEME.add, 0, COLORS._main_value_positive, 1, .75 * _s, cc);
+				var bc = COLORS._main_value_positive;
+				var b  = buttonInstant(THEME.button_def, bx, by, bw, bh, __m, _hover, _focus, "", THEME.add_b, 0, bc, 1, .75 * _s, cc);
 				if(b) draggable = false;
 				if(b == 2) {
 					val += stp;
@@ -452,7 +463,27 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				}
 				
 				draw_set_text(f_sdf, fa_center, fa_center, _col);
-				draw_text_transformed(bbox.xc, bbox.yc + 2, string_real(val), _s * 0.5, _s * 0.5, 0);
+				draw_text_transformed(bbox.xc, bbox.yc, string_real(val), _s * 0.5, _s * 0.5, 0);
+				break;
+			
+			case 4 :
+				var bw = 32 * _s;
+				var bh = bbox.h  - 8 * _s;
+				var bx = bbox.x0 + 4 * _s;
+				var by = bbox.y0 + 4 * _s;
+				var cc = _col;
+				
+				var bx = bbox.x1 - 4 * _s - bw;
+				var bc = CDEF.white;
+				var b  = buttonInstant(THEME.button_def, bx, by, bw, bh, __m, _hover, _focus, "", THEME.icon_random, 0, bc, 1, .75 * _s, cc);
+				if(b) draggable = false;
+				if(b == 2) {
+					val = seed_random(draw_seed_dig);
+					inputs[0].setValue(val);
+				}
+				
+				draw_set_text(f_sdf, fa_center, fa_center, _col);
+				draw_text_transformed(bbox.xc - bw / 2, bbox.yc, string_real(val), _s * 0.5, _s * 0.5, 0);
 				break;
 				
 		}
