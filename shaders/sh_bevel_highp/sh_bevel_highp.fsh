@@ -59,9 +59,10 @@ void main() {
 	
 	float b1 = b0;
 	float added_distance, _b1;
-	vec2 shf, pxs;
+	vec2  shf, pxs;
+	float stp = 1. / 4.;
 	
-	for(float i = 1.; i < heiMax; i++) {
+	for(float i = 1.; i < heiMax; i += stp) {
 		if(i >= hei) break;
 		
 		float base = 1.;

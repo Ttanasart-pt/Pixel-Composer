@@ -43,12 +43,11 @@ void main() {
 	
 	vec2 pixelStep = 1. / dimension;
     
-    vec4 col = texture2D(gm_BaseTexture, v_vTexcoord);
-	vec4 col1;
+    vec4 col = texture2D(gm_BaseTexture, v_vTexcoord), col1;
 	gl_FragColor = col;
-	bool done = false;
 	
-	vec2 shiftPx         = -shift / dimension;
+	bool  done = false;
+	vec2  shiftPx        = -shift / dimension;
 	float b0             = bright(col);
 	float shift_angle    = atan(shiftPx.y, shiftPx.x);
 	float shift_distance = length(shiftPx);
@@ -60,8 +59,9 @@ void main() {
 	float b1 = b0;
 	float added_distance, _b1;
 	vec2 shf, pxs;
+	float stp = 1. / 4.;
 	
-	for(float i = 1.; i < heiMax; i++) {
+	for(float i = 1.; i < heiMax; i += stp) {
 		if(i >= hei) break;
 		
 		float base = 1.;
@@ -84,7 +84,7 @@ void main() {
 				
 			if(_b1 < b1) {
 				slope_distance = min(slope_distance, i);
-				max_distance = min(max_distance, (b0 - _b1) * hei);
+				max_distance   = min(max_distance, (b0 - _b1) * hei);
 				b1 = min(b1, _b1);
 				
 				i = hei;
