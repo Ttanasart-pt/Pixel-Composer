@@ -29,6 +29,49 @@
 	ALT   = KEY_STAT.idle;
 	SHIFT = KEY_STAT.idle;
 	
+	function key_mod_init() {
+		kb_time  = 0;
+		kb_hold  = false;
+		kb_hkey  = 0;
+		
+		kd_ctrl  = 0;
+		kd_shift = 0;
+		kd_alt   = 0;
+	}
+	
+	function key_mod_step() {
+		var _d = PREFERENCES.double_click_delay;
+		
+		kd_ctrl  += DELTA_TIME;
+		var _hold = CTRL == KEY_STAT.pressing || CTRL  == KEY_STAT.down;
+		if(CTRL  == KEY_STAT.up) 										CTRL  = KEY_STAT.idle;
+		if(CTRL  == KEY_STAT.down || CTRL  == KEY_STAT.double)			CTRL  = KEY_STAT.pressing;
+		if(_hold && !keyboard_check(vk_control))	                    CTRL  = KEY_STAT.up;
+		if(keyboard_check_pressed(vk_control))						  { CTRL  = kd_ctrl < _d?  KEY_STAT.double : KEY_STAT.down;  kd_ctrl  = 0; }
+		if(keyboard_check_released(vk_control)) 						CTRL  = KEY_STAT.up;
+		
+		kd_shift += DELTA_TIME;
+		var _hold = SHIFT == KEY_STAT.pressing || SHIFT  == KEY_STAT.down;
+		if(SHIFT == KEY_STAT.up)                                     	SHIFT = KEY_STAT.idle;
+		if(SHIFT == KEY_STAT.down || SHIFT == KEY_STAT.double)         	SHIFT = KEY_STAT.pressing;
+		if(_hold && !keyboard_check(vk_shift))   	                    SHIFT = KEY_STAT.up;
+		if(keyboard_check_pressed(vk_shift))                          { SHIFT = kd_shift < _d? KEY_STAT.double : KEY_STAT.down;  kd_shift = 0; }
+		if(keyboard_check_released(vk_shift))                       	SHIFT = KEY_STAT.up;
+		
+		kd_alt   += DELTA_TIME;
+		var _hold = ALT == KEY_STAT.pressing || ALT  == KEY_STAT.down;
+		if(ALT   == KEY_STAT.up)                                     	ALT   = KEY_STAT.idle;
+		if(ALT   == KEY_STAT.down || ALT   == KEY_STAT.double)          ALT   = KEY_STAT.pressing;
+		if(_hold && !keyboard_check(vk_alt))    	                    ALT   = KEY_STAT.up;
+		if(keyboard_check_pressed(vk_alt))                            { ALT   = kd_alt < _d?   KEY_STAT.double : KEY_STAT.down;  kd_alt   = 0; }
+		if(keyboard_check_released(vk_alt))                         	ALT   = KEY_STAT.up;	
+		
+		HOTKEY_MOD = 0;
+		if(CTRL  == KEY_STAT.pressing)									HOTKEY_MOD |= MOD_KEY.ctrl;
+		if(SHIFT == KEY_STAT.pressing)									HOTKEY_MOD |= MOD_KEY.shift;
+		if(ALT   == KEY_STAT.pressing)									HOTKEY_MOD |= MOD_KEY.alt;
+	}
+	
 	function key_release() {
 		INLINE
 		
@@ -79,7 +122,8 @@
 		return false;
 	}
 	
-	#macro KEYBOARD_RESET keyboard_lastchar = ""; keyboard_lastkey = -1; KEYBOARD_PRESSED_STRING = ""; KEYBOARD_STRING = "";
+	#macro KEYBOARD_RESET keyboard_lastchar = ""; keyboard_lastkey = -1; KEYBOARD_PRESSED_STRING = ""; KEYBOARD_STRING = ""; \
+		CTRL = KEY_STAT.up; ALT = KEY_STAT.up; SHIFT = KEY_STAT.up;	
 #endregion
 
 #region widget

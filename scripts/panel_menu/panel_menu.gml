@@ -726,56 +726,60 @@ function Panel_Menu() : PanelContent() constructor {
                     draw_line_width(x1, ui(8), x1, h - ui(8), 2);
                     x1 -= ui(8);
                 }
+            }
+        #endregion
+        
+        #region profile
+            if(os_is_network_connected()) {
+                var _sts = h - ui(20);
+                var _stx = x1 - _sts;
+                var _sty = ui(10);
+                var _hv = pHOVER && point_in_rectangle(mx, my, _stx, _sty, _stx + _sts, _sty + _sts);
                 
-                if(os_is_network_connected()) {
-                    var _sts = h - ui(20);
-                    var _stx = x1 - _sts;
-                    var _sty = ui(10);
-                    var _hv = pHOVER && point_in_rectangle(mx, my, _stx, _sty, _stx + _sts, _sty + _sts);
+                if(STEAM_AVATAR > 0 && sprite_exists(STEAM_AVATAR)) {
+                    draw_sprite_stretched(STEAM_AVATAR, 0, _stx, _sty, _sts, _sts);
                     
-                    if(sprite_exists(STEAM_AVATAR)) {
-                        draw_sprite_stretched(STEAM_AVATAR, 0, _stx, _sty, _sts, _sts);
+                } else {
+                    draw_sprite_stretched_ext(THEME.box_r2, 0, _stx, _sty, _sts, _sts, COLORS._main_icon_dark);
+                    draw_sprite_ui(THEME.steam_creator, 0, _stx + _sts / 2, _sty + _sts / 2, 1, 1, 0, COLORS._main_icon, .5);
+                }
+                
+                draw_sprite_stretched_add(THEME.box_r2, 1, _stx, _sty, _sts, _sts, c_white, .35 + _hv * .25);
+                if(_hv) {
+                    if(ACCOUNT_ID == undefined) {
+                        TOOLTIP = __txt("Online Accounts");
+                        
+                        if(mouse_lpress(true)) {
+                            var _menu = array_clone(profile_menu, 1);
+                            if(!array_empty(_menu)) array_push(_menu, -1);
+                            array_push(_menu, 
+                                menuItem(__txt("PXC Login"), function() /*=>*/ {return dialogPanelCall(new Panel_Account_Sign_In())} )
+                            );
+                            
+                            menuCall("pxc_logout", _menu);
+                        }
                         
                     } else {
-                        draw_sprite_stretched_ext(THEME.box_r2, 0, _stx, _sty, _sts, _sts, COLORS._main_icon_dark);
-                        draw_sprite_ui(THEME.steam_creator, 0, _stx + _sts / 2, _sty + _sts / 2, 1, 1, 0, COLORS._main_icon, .5);
-                    }
-                    
-                    draw_sprite_stretched_add(THEME.box_r2, 1, _stx, _sty, _sts, _sts, c_white, .35 + _hv * .25);
-                    if(_hv) {
-                        if(ACCOUNT_ID == undefined) {
-                            TOOLTIP = __txt("Online Accounts");
+                        TOOLTIP = __txt($"PXC Account: {ACCOUNT_DATA.displayName}");
+                        
+                        if(mouse_lpress(true)) {
+                            var _menu = array_clone(profile_menu, 1);
+                            if(!array_empty(_menu)) array_push(_menu, -1);
+                            array_push(_menu,
+                                // menuItem(__txt("PXC Hub"),          () => {}),
+                                // menuItem(__txt("Your Page"),        () => {}),
+                                // menuItem(__txt("Subscribed Items"), () => {}),
+                                menuItem(__txt("Account Setting"),  function() /*=>*/ {return dialogPanelCall(new Panel_Account_Settings())} ),
+                                -1,
+                                menuItem(__txt("PXC Logout"), function() /*=>*/ {return PXC_Logout()}, THEME.cross_12)
+                            );
                             
-                            if(mouse_lpress(true)) {
-                                var _menu = array_clone(profile_menu, 1);
-                                array_push(_menu, -1,
-                                    menuItem(__txt("PXC Login"), function() /*=>*/ {return dialogPanelCall(new Panel_Account_Sign_In())} )
-                                );
-                                
-                                menuCall("pxc_logout", _menu);
-                            }
-                            
-                        } else {
-                            TOOLTIP = __txt($"PXC Account: {ACCOUNT_DATA.displayName}");
-                            
-                            if(mouse_lpress(true)) {
-                                var _menu = array_clone(profile_menu, 1);
-                                array_push(_menu, -1,
-                                    // menuItem(__txt("PXC Hub"),          () => {}),
-                                    // menuItem(__txt("Your Page"),        () => {}),
-                                    // menuItem(__txt("Subscribed Items"), () => {}),
-                                    menuItem(__txt("Account Setting"),  function() /*=>*/ {return dialogPanelCall(new Panel_Account_Settings())} ),
-                                    -1,
-                                    menuItem(__txt("PXC Logout"), function() /*=>*/ {return PXC_Logout()}, THEME.cross_12)
-                                );
-                                
-                                menuCall("pxc_user", _menu);
-                            }
+                            menuCall("pxc_user", _menu);
                         }
                     }
-                    
-                    x1 -= _sts + ui(4);
                 }
+                
+                x1 -= _sts + ui(4);
             }
         #endregion
         

@@ -23,6 +23,8 @@ _FILE_DROPPED     = false;
 	
 	var s = string_decimal(KEYBOARD_STRING, false);
 	KEYBOARD_NUMBER = s == ""? undefined : toNumber(s);
+	
+	key_mod_step();
 #endregion
 
 #region minimize
@@ -36,7 +38,9 @@ _FILE_DROPPED     = false;
 		window_set_rectangle(window_preminimize_rect[0], window_preminimize_rect[1], window_preminimize_rect[2], window_preminimize_rect[3]);
 		minimized = false;
 	}
+#endregion
 	
+#region fps
 	var  foc     = window_has_focus();
 	var _fps_cur = game_get_speed(gamespeed_fps);
 	var _fps_tar = foc || GLOBAL_IS_PLAYING? PREFERENCES.ui_framerate : PREFERENCES.ui_framerate_non_focus;
@@ -46,9 +50,7 @@ _FILE_DROPPED     = false;
 		display_set_timing_method(tm_countvsyncs);
 		game_set_speed(_fps_tar, gamespeed_fps);
 	}
-#endregion
 
-#region fpss
 	if(fpsr++ % 5 == 0) {
 		var ff = 0;
 		for( var i = 1; i < 10; i++ ) {
@@ -58,6 +60,15 @@ _FILE_DROPPED     = false;
 		fpss[0] = fps_real;
 		ff     += fps_real;
 		FPS_REAL = round(ff / 10);
+	}
+	
+	if(keyboard_check(vk_alt) && keyboard_check(vk_tab))
+		KEYBOARD_RESET
+	
+	if(foc != windows_focused) {
+		windows_focused = foc;
+		KEYBOARD_RESET 
+		io_clear();
 	}
 #endregion
 
@@ -222,37 +233,6 @@ _FILE_DROPPED     = false;
 		ds_stack_clear(REDO_STACK);
 	}
 	action_last_frame = [];
-#endregion
-
-#region modifiers
-	var _d = PREFERENCES.double_click_delay;
-	
-	kd_ctrl  += DELTA_TIME;
-	if(CTRL  == KEY_STAT.up) 										CTRL  = KEY_STAT.idle;
-	if(CTRL  == KEY_STAT.pressing && !keyboard_check(vk_control))	CTRL  = KEY_STAT.up;
-	if(CTRL  == KEY_STAT.down || CTRL  == KEY_STAT.double)			CTRL  = KEY_STAT.pressing;
-	if(keyboard_check_pressed(vk_control))						  { CTRL  = kd_ctrl < _d?  KEY_STAT.double : KEY_STAT.down;  kd_ctrl  = 0; }
-	if(keyboard_check_released(vk_control)) 						CTRL  = KEY_STAT.up;
-	
-	kd_shift += DELTA_TIME;
-	if(SHIFT == KEY_STAT.up)                                     	SHIFT = KEY_STAT.idle;
-	if(SHIFT == KEY_STAT.pressing && !keyboard_check(vk_shift))  	SHIFT = KEY_STAT.up;
-	if(SHIFT == KEY_STAT.down || SHIFT == KEY_STAT.double)         	SHIFT = KEY_STAT.pressing;
-	if(keyboard_check_pressed(vk_shift))                          { SHIFT = kd_shift < _d? KEY_STAT.double : KEY_STAT.down;  kd_shift = 0; }
-	if(keyboard_check_released(vk_shift))                       	SHIFT = KEY_STAT.up;
-	
-	kd_alt   += DELTA_TIME;
-	if(ALT   == KEY_STAT.up)                                     	ALT   = KEY_STAT.idle;
-	if(ALT   == KEY_STAT.pressing && !keyboard_check(vk_alt))    	ALT   = KEY_STAT.up;
-	if(ALT   == KEY_STAT.down || ALT   == KEY_STAT.double)          ALT   = KEY_STAT.pressing;
-	if(keyboard_check_pressed(vk_alt))                            { ALT   = kd_alt < _d?   KEY_STAT.double : KEY_STAT.down;  kd_alt   = 0; }
-	if(keyboard_check_released(vk_alt))                         	ALT   = KEY_STAT.up;	
-	
-	HOTKEY_MOD = 0;
-	if(CTRL  == KEY_STAT.pressing)									HOTKEY_MOD |= MOD_KEY.ctrl;
-	if(SHIFT == KEY_STAT.pressing)									HOTKEY_MOD |= MOD_KEY.shift;
-	if(ALT   == KEY_STAT.pressing)									HOTKEY_MOD |= MOD_KEY.alt;
-	
 #endregion
 
 #region mouse wrap

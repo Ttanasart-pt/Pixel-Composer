@@ -42,13 +42,7 @@
 	globalvar AUTO_SAVE_TIMER;
 	AUTO_SAVE_TIMER = 0;
 	
-	kb_time  = 0;
-	kb_hold  = false;
-	kb_hkey  = 0;
-	
-	kd_ctrl  = 0;
-	kd_shift = 0;
-	kd_alt   = 0;
+	key_mod_init();
 	
 	_cursor	 = CURSOR;
 	dc_check = 0;
@@ -59,6 +53,7 @@
 	
 	_cursor_lock    = false;
 	watcher_surface = surface_create(1, 1);
+	windows_focused = true;
 	
 	panelInit();
 	
