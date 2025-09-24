@@ -343,7 +343,7 @@ function ease_cubic_out(rat)   { return 1 - power(1 - rat, 3); }
 function ease_cubic_inout(rat) { return rat < 0.5 ? 4 * power(rat, 3) : 1 - power(-2 * rat + 2, 3) / 2; }
 
 function curveMap(_bz = undefined, _prec = 32, _tolr = 0.00001) constructor {
-	bz   = _bz;
+	bz   = undefined;
 	prec = _prec;
 	size = 1 / _prec;
 	tolr = _tolr;
@@ -362,7 +362,7 @@ function curveMap(_bz = undefined, _prec = 32, _tolr = 0.00001) constructor {
 	}
 	
 	static set = function(_bz) {
-		if(_bz == undefined) return;
+		if(_bz == undefined)      return;
 		if(array_equals(bz, _bz)) return;
 		
 		bz = array_clone(_bz, 1);

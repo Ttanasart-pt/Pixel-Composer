@@ -24,6 +24,8 @@ _FILE_DROPPED     = false;
 	KEYBOARD_NUMBER = s == ""? undefined : toNumber(s);
 	
 	key_mod_step();
+	
+	if(keyboard_check(vk_alt) && keyboard_check(vk_tab)) { KEYBOARD_RESET } // Dirty hack for Alt+Tab bug in linux
 #endregion
 
 #region minimize
@@ -60,10 +62,6 @@ _FILE_DROPPED     = false;
 		fpss[0] = fps_real;
 		ff     += fps_real;
 		FPS_REAL = round(ff / 10);
-	}
-	
-	if(keyboard_check(vk_alt) && keyboard_check(vk_tab)) {
-		KEYBOARD_RESET
 	}
 	
 	if(foc != windows_focused) {

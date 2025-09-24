@@ -11,7 +11,7 @@ if !ready exit;
 	doDrag();
 	
 	if(sFOCUS && WIDGET_CURRENT == undefined) {
-		if(keyboard_check_pressed(vk_enter)) {
+		if(KEYBOARD_ENTER) {
 			onApply(gradient);
 			instance_destroy();
 		}

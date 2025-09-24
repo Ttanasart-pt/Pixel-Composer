@@ -37,7 +37,7 @@ draw_set_alpha(1);
 		if(buttonIndex == i) draw_sprite_stretched_ext(THEME.button_def, 3, bx0, by0, bw, bh, COLORS._main_accent);
 		draw_text(bx0 + bw / 2, by0 + bh / 2, _b[0]);
 		
-		var _trg = b == 2 || (buttonIndex == i && keyboard_check_pressed(vk_enter));
+		var _trg = b == 2 || (buttonIndex == i && KEYBOARD_ENTER);
 		if(_trg) { _b[1](); _des = true; }
 		
 		bx0 -= bw + ui(12);

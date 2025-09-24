@@ -250,7 +250,7 @@ function canvas_tool_resize(_node) : canvas_tool() constructor {
 		dimension[0] = _sw;
 		dimension[1] = _sh;
 		
-		     if(keyboard_check_pressed(vk_enter))  apply();
+		     if(KEYBOARD_ENTER)  apply();
 		else if(keyboard_check_pressed(vk_escape)) cancel();
 	}
 	

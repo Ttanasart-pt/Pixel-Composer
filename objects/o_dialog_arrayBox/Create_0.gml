@@ -69,7 +69,7 @@ sc_content = new scrollPane(0, 0, function(_y, _m) {
 			draw_sprite_stretched_ext(THEME.textbox, 3, ui(4), _ly, _dw - ui(4), hght, COLORS.dialog_menubox_highlight, 1);
 			ind = 1;
 			
-			if(_focus && (!adding && (mouse_press(mb_left) || keyboard_check_pressed(vk_enter)))) {
+			if(_focus && (!adding && (mouse_press(mb_left) || KEYBOARD_ENTER))) {
 				if(mode == 0) {
 					if(exists)	array_remove(arraySet, data[i]);
 					else		array_push(arraySet, data[i]);
@@ -121,7 +121,7 @@ sc_content = new scrollPane(0, 0, function(_y, _m) {
 			draw_set_text(font, fa_left, fa_center, COLORS._main_text_accent);
 			draw_text_add(ui(40), yc, _str);
 			
-			if(keyboard_check_pressed(vk_enter)) {
+			if(KEYBOARD_ENTER) {
 				if(KEYBOARD_STRING != "") array_push(arraySet, KEYBOARD_STRING);
 				if(onModify) onModify();
 				adding = false;

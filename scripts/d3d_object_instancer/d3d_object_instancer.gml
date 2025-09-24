@@ -79,8 +79,10 @@ function __3dObjectInstancer() : __3dObject() constructor {
 	}
 	
 	static submitCbuffer = function(b = 0) {
-		if(OS == os_windows) d3d11_shader_set_cbuffer_vs(10, instance_data[b]);
-		else {
+		if(OS == os_windows) {
+			d3d11_shader_set_cbuffer_vs(10, instance_data[b]);
+			
+		} else {
 			var _uniId = shader_get_uniform(shader_current(), "InstanceTransforms");
 			shader_set_uniform_f_buffer(_uniId, instance_data[b], 0, INSTANCE_BATCH_SIZE * 4 * 4);
 		}

@@ -21,7 +21,7 @@ draw_clear(COLORS.bg);
 			else                     widget_next();
 		}
 		
-		if(keyboard_check_pressed(vk_enter))
+		if(KEYBOARD_ENTER)
 			widget_trigger();
 		
 		if(keyboard_check_pressed(vk_escape))

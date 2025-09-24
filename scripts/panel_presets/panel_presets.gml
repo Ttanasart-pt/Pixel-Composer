@@ -296,7 +296,7 @@ function Panel_Presets(_node) : PanelContent() constructor {
 		}
 		
 		if(hk_editing != noone) {
-			if(keyboard_check_pressed(vk_enter))  hk_editing = noone;
+			if(KEYBOARD_ENTER)  hk_editing = noone;
 			else hotkey_editing(hk_editing);
 				
 			if(keyboard_check_pressed(vk_escape)) hk_editing = noone;

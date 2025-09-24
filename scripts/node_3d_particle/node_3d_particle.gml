@@ -468,7 +468,7 @@ function Node_3D_Particle(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 				
 				switch(_spawn_sour) {
 					case 0 : // Shape
-					
+						
 						_px = _spawn_orig[0];
 						_py = _spawn_orig[1];
 						_pz = _spawn_orig[2];

@@ -6,7 +6,7 @@ DIALOG_WINCLEAR1
 
 #region draw
 	var yy = dialog_y;
-	var _lclick = sFOCUS && (!mouse_init_inside && mouse_release(mb_left)) || (keyboard_check_pressed(vk_enter) && hk_editing == noone);
+	var _lclick = sFOCUS && (!mouse_init_inside && mouse_release(mb_left)) || (KEYBOARD_ENTER && hk_editing == noone);
 	var _rclick = sFOCUS && !mouse_init_inside && !mouse_init_r_pressed && mouse_release(mb_right);
 	if(!mouse_init_inside && mouse_press(mb_right) && item_sel_submenu) {
 		if(instance_exists(item_sel_submenu))
@@ -295,7 +295,7 @@ DIALOG_WINCLEAR1
 	}
 	
 	if(hk_editing != noone) {
-		if(keyboard_check_pressed(vk_enter))  hk_editing = noone;
+		if(KEYBOARD_ENTER)  hk_editing = noone;
 		else hotkey_editing(hk_editing.hoykeyObject);
 			
 		if(keyboard_check_pressed(vk_escape)) hk_editing = noone;

@@ -336,7 +336,7 @@ function Panel_Animation_Dopesheet() {
             	focusTimeline();
         	}
         	
-        	if(keyboard_check_pressed(vk_enter) || keyboard_check_pressed(vk_escape) || mouse_lpress()) {
+        	if(KEYBOARD_ENTER || keyboard_check_pressed(vk_escape) || mouse_lpress()) {
         		timeline_stretch      = 0; 
         		timeline_frame_typing = false;
         	}

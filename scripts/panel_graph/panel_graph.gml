@@ -2879,7 +2879,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         var by = y0 + pd;
         if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [ mx, my ], pHOVER, pFOCUS, "", THEME.cross_16) == 2
         || keyboard_check_pressed(vk_escape)
-        || keyboard_check_pressed(vk_enter))
+        || KEYBOARD_ENTER)
             is_searching = false;
         
         bx -= bs + ui(4);

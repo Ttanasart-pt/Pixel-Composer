@@ -1176,7 +1176,7 @@ function Panel_Preview() : PanelContent() constructor {
             	_tool_show_key = true;
             	draw_sprite_stretched_ext(THEME.button_hide, 3, _bx, _by, _bs, _bs, COLORS._main_accent, 1);
             	
-            	if(keyboard_check_pressed(vk_enter))  hk_editing = noone;
+            	if(KEYBOARD_ENTER)  hk_editing = noone;
 				else hotkey_editing(tool.hk_object);
 					
 				if(keyboard_check_pressed(vk_escape)) hk_editing = noone;
@@ -1376,7 +1376,7 @@ function Panel_Preview() : PanelContent() constructor {
             	_tool_show_key = true;
             	draw_sprite_stretched_ext(THEME.button_hide, 3, _bx, _by, _bs, _bs, COLORS._main_accent, 1);
             	
-            	if(keyboard_check_pressed(vk_enter))  hk_editing = noone;
+            	if(KEYBOARD_ENTER)  hk_editing = noone;
 				else hotkey_editing(tool.hk_object);
 					
 				if(keyboard_check_pressed(vk_escape)) hk_editing = noone;

@@ -164,8 +164,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 	}
 	
 	static keyboardEnter = function() {
-		if(!keyboard_check_pressed(vk_enter)) 
-			return 0;
+		if(!KEYBOARD_ENTER) return 0;
 		
 		var aut = o_dialog_textbox_autocomplete;
 		if(use_autocomplete && aut.active && aut.textbox == self && array_length(aut.data)) 

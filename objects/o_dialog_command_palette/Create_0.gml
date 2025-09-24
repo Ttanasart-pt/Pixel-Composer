@@ -108,7 +108,7 @@ event_inherited();
 				draw_sprite_stretched_ext(THEME.textbox, 3, 0, _ly, _dw, hght, COLORS.dialog_menubox_highlight, 1);
 				
 				if(sc_content.active) {
-					if((!keyboard_trigger && mouse_press(mb_left)) || (hk_editing == noone && keyboard_check_pressed(vk_enter))) {
+					if((!keyboard_trigger && mouse_press(mb_left)) || (hk_editing == noone && KEYBOARD_ENTER)) {
 						call(_menu.action, _menu.params);
 						array_push(RECENT_COMMANDS, _menu);
 						instance_destroy();
@@ -213,7 +213,7 @@ event_inherited();
 		if(hk_editing != noone) {
 			edit_block = 2;
 			
-			if(keyboard_check_pressed(vk_enter))
+			if(KEYBOARD_ENTER)
 				hk_editing = noone;
 			else 
 				hotkey_editing(hk_editing);

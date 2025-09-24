@@ -1,5 +1,5 @@
 function Node_pSystem_3D_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x, _y, _group) constructor {
-	name  = "Particle System 3D";
+	name  = "3D Particle System";
 	color = COLORS.node_blend_vfx;
 	icon  = THEME.vfx;
 	is_simulation      = true;

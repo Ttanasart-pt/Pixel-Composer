@@ -54,7 +54,7 @@ event_inherited();
 			if(selecting == i) {
 				WIDGET_TAB_BLOCK = true;
 				draw_sprite_stretched_ext(THEME.textbox, 3, 0, _ly, _dw, hght, COLORS.dialog_menubox_highlight, 1);
-				if(keyboard_check_pressed(vk_tab) || keyboard_check_pressed(vk_enter)) { applyAutoComplete(_dat[3]); break; }
+				if(keyboard_check_pressed(vk_tab) || KEYBOARD_ENTER) { applyAutoComplete(_dat[3]); break; }
 			}
 			
 			var icn = _dat[0][0];

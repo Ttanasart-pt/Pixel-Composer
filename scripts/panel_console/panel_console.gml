@@ -117,7 +117,7 @@ function Panel_Console() : PanelContent() constructor {
 				setCommand(clipboard_get_text());
 			}
 			
-		} else if(keyboard_check_pressed(vk_enter)) { 
+		} else if(KEYBOARD_ENTER) { 
 			if(CMDPRG) {
 				var res = CMDPRG.submit(command);
 				if(res) CMDPRG = noone;

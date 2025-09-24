@@ -36,5 +36,5 @@
 		update();
 	}
 	
-	if(keyboard_check_pressed(vk_enter)) update();
+	if(KEYBOARD_ENTER) update();
 #endregion
