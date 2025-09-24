@@ -1,5 +1,4 @@
 /// @description init
-
 global.__debug_runner++;
 global.cache_call = 0;
 global.cache_hit  = 0;
@@ -57,13 +56,15 @@ _FILE_DROPPED     = false;
 			fpss[i] = fpss[i - 1]
 			ff += fpss[i];
 		}
+		
 		fpss[0] = fps_real;
 		ff     += fps_real;
 		FPS_REAL = round(ff / 10);
 	}
 	
-	if(keyboard_check(vk_alt) && keyboard_check(vk_tab))
+	if(keyboard_check(vk_alt) && keyboard_check(vk_tab)) {
 		KEYBOARD_RESET
+	}
 	
 	if(foc != windows_focused) {
 		windows_focused = foc;

@@ -306,10 +306,10 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					    _ctxt = string_replace_all(_ctxt, "\t", "    ");
 					    
 					KEYBOARD_PRESSED_STRING = _ctxt;
-					modified        = true;
+					modified = true;
 				}
 				
-				if(keyboard_check_pressed(vk_escape) || keyboard_check_pressed(vk_enter)) {
+				if(keyboard_check_pressed(vk_escape) || KEYBOARD_ENTER) {
 				} else if(KEYBOARD_PRESSED == vk_backspace) {
 					if(cursor_select == -1) {
 						var str_before, str_after;
@@ -427,7 +427,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		} else if(keyboard_check_pressed(vk_escape)) {
 			reset();
 			
-		} else if(keyboard_check_pressed(vk_enter)) {
+		} else if(KEYBOARD_ENTER) {
 			deactivate();
 			
 		} else if(auto_update && (modified || keyboard_check_pressed(vk_anykey))) {

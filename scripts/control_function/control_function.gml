@@ -7,6 +7,10 @@
 #endregion
 
 #region keyboard
+	#macro KEYBOARD_ENTER ENTER
+	#macro KEYBOARD_RESET keyboard_lastchar = ""; keyboard_lastkey = -1; KEYBOARD_PRESSED_STRING = ""; KEYBOARD_STRING = ""; \
+		CTRL = KEY_STAT.up; ALT = KEY_STAT.up; SHIFT = KEY_STAT.up;	
+		
 	enum KEY_STAT {
 		idle,
 		down,
@@ -18,7 +22,7 @@
 	
 	globalvar KEYBOARD_STRING, KEYBOARD_NUMBER;
 	globalvar KEYBOARD_PRESSED_STRING, KEYBOARD_PRESSED;
-	globalvar CTRL, ALT, SHIFT;
+	globalvar CTRL, ALT, SHIFT, ENTER;
 	
 	KEYBOARD_STRING = "";
 	KEYBOARD_NUMBER = 0;
@@ -28,6 +32,7 @@
 	CTRL  = KEY_STAT.idle;
 	ALT   = KEY_STAT.idle;
 	SHIFT = KEY_STAT.idle;
+	ENTER = 0;
 	
 	function key_mod_init() {
 		kb_time  = 0;
@@ -37,6 +42,8 @@
 		kd_ctrl  = 0;
 		kd_shift = 0;
 		kd_alt   = 0;
+		
+		ENTER    = false;
 	}
 	
 	function key_mod_step() {
@@ -70,6 +77,9 @@
 		if(CTRL  == KEY_STAT.pressing)									HOTKEY_MOD |= MOD_KEY.ctrl;
 		if(SHIFT == KEY_STAT.pressing)									HOTKEY_MOD |= MOD_KEY.shift;
 		if(ALT   == KEY_STAT.pressing)									HOTKEY_MOD |= MOD_KEY.alt;
+		
+		if(ENTER && !keyboard_check(vk_enter)) keyboard_lastchar = "";
+		ENTER = keyboard_check_pressed(vk_enter) || ord(keyboard_lastchar) == 13;
 	}
 	
 	function key_release() {
@@ -122,8 +132,6 @@
 		return false;
 	}
 	
-	#macro KEYBOARD_RESET keyboard_lastchar = ""; keyboard_lastkey = -1; KEYBOARD_PRESSED_STRING = ""; KEYBOARD_STRING = ""; \
-		CTRL = KEY_STAT.up; ALT = KEY_STAT.up; SHIFT = KEY_STAT.up;	
 #endregion
 
 #region widget

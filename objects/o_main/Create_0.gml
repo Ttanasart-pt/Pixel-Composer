@@ -86,6 +86,7 @@
 #region file drop
 	if(OS == os_windows) {
 		file_dropper_init();
+		
 	} else if(OS == os_macosx) {
 		file_dnd_set_hwnd(window_handle());
 		file_dnd_set_enabled(true);

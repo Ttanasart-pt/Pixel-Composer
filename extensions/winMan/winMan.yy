@@ -15,6 +15,9 @@
     "Steam":{
       "copyToTargets":"64",
     },
+    "Itch":{
+      "copyToTargets":"64",
+    },
   },
   "copyToTargets":-1,
   "description":"",
@@ -30,7 +33,7 @@
       ],"origname":"","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
   ],
   "gradleinject":null,
-  "hasConvertedCodeInjection":false,
+  "hasConvertedCodeInjection":true,
   "helpfile":"",
   "HTML5CodeInjection":"",
   "html5Props":false,

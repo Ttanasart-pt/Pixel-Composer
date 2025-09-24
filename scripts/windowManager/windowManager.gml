@@ -67,9 +67,8 @@ function winMan_setRect(_x, _y, _w, _h) {
 }
 
 function winMan_isMinimized() {
-	INLINE
-	if(OS == os_macosx) return false;
-	return winMan_is_minimized_ext(window_handle());
+	if(OS == os_windows) return winMan_is_minimized_ext(window_handle());
+	return false;
 }
 
 function winMan_Maximize() { 
