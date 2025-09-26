@@ -8,8 +8,8 @@
 
 #region keyboard
 	#macro KEYBOARD_ENTER ENTER
-	#macro KEYBOARD_RESET keyboard_lastchar = ""; keyboard_lastkey = -1; KEYBOARD_PRESSED_STRING = ""; KEYBOARD_STRING = ""; \
-		CTRL = KEY_STAT.up; ALT = KEY_STAT.up; SHIFT = KEY_STAT.up;	
+	#macro KEYBOARD_RESET keyboard_lastchar = ""; keyboard_lastkey = -1; KEYBOARD_PRESSED_STRING = ""; KEYBOARD_STRING = "";
+	#macro KEYBOARD_MOD_RESET CTRL = KEY_STAT.idle; ALT = KEY_STAT.idle; SHIFT = KEY_STAT.idle;	
 		
 	enum KEY_STAT {
 		idle,
@@ -50,33 +50,61 @@
 		var _d = PREFERENCES.double_click_delay;
 		
 		kd_ctrl  += DELTA_TIME;
-		var _hold = CTRL == KEY_STAT.pressing || CTRL  == KEY_STAT.down;
-		if(CTRL  == KEY_STAT.up) 										CTRL  = KEY_STAT.idle;
-		if(CTRL  == KEY_STAT.down || CTRL  == KEY_STAT.double)			CTRL  = KEY_STAT.pressing;
-		if(_hold && !keyboard_check(vk_control))	                    CTRL  = KEY_STAT.up;
-		if(keyboard_check_pressed(vk_control))						  { CTRL  = kd_ctrl < _d?  KEY_STAT.double : KEY_STAT.down;  kd_ctrl  = 0; }
-		if(keyboard_check_released(vk_control)) 						CTRL  = KEY_STAT.up;
-		
 		kd_shift += DELTA_TIME;
-		var _hold = SHIFT == KEY_STAT.pressing || SHIFT  == KEY_STAT.down;
-		if(SHIFT == KEY_STAT.up)                                     	SHIFT = KEY_STAT.idle;
-		if(SHIFT == KEY_STAT.down || SHIFT == KEY_STAT.double)         	SHIFT = KEY_STAT.pressing;
-		if(_hold && !keyboard_check(vk_shift))   	                    SHIFT = KEY_STAT.up;
-		if(keyboard_check_pressed(vk_shift))                          { SHIFT = kd_shift < _d? KEY_STAT.double : KEY_STAT.down;  kd_shift = 0; }
-		if(keyboard_check_released(vk_shift))                       	SHIFT = KEY_STAT.up;
-		
 		kd_alt   += DELTA_TIME;
-		var _hold = ALT == KEY_STAT.pressing || ALT  == KEY_STAT.down;
-		if(ALT   == KEY_STAT.up)                                     	ALT   = KEY_STAT.idle;
-		if(ALT   == KEY_STAT.down || ALT   == KEY_STAT.double)          ALT   = KEY_STAT.pressing;
-		if(_hold && !keyboard_check(vk_alt))    	                    ALT   = KEY_STAT.up;
-		if(keyboard_check_pressed(vk_alt))                            { ALT   = kd_alt < _d?   KEY_STAT.double : KEY_STAT.down;  kd_alt   = 0; }
-		if(keyboard_check_released(vk_alt))                         	ALT   = KEY_STAT.up;	
+		
+		switch(CTRL) {
+			case KEY_STAT.idle : 
+				if(keyboard_check_pressed(vk_control)) { 
+					CTRL = kd_ctrl < _d? KEY_STAT.double : KEY_STAT.down;  
+					kd_ctrl = 0; 
+				}
+				break;
+			
+			case KEY_STAT.down : case KEY_STAT.double : case KEY_STAT.pressing :
+				CTRL = KEY_STAT.pressing;
+				if(!keyboard_check(vk_control)) CTRL = KEY_STAT.up;
+				break;
+				
+			case KEY_STAT.up : CTRL = KEY_STAT.idle; break;
+		}
+		
+		switch(SHIFT) {
+			case KEY_STAT.idle : 
+				if(keyboard_check_pressed(vk_shift)) { 
+					SHIFT = kd_shift < _d? KEY_STAT.double : KEY_STAT.down;  
+					kd_shift = 0; 
+				}
+				break;
+			
+			case KEY_STAT.down : case KEY_STAT.double : case KEY_STAT.pressing :
+				SHIFT = KEY_STAT.pressing;
+				if(!keyboard_check(vk_shift)) SHIFT = KEY_STAT.up;
+				break;
+				
+			case KEY_STAT.up : CTRL = KEY_STAT.idle; break;
+		}
+		
+		switch(ALT) {
+			case KEY_STAT.idle : 
+				if(keyboard_check_pressed(vk_alt)) { 
+					ALT = kd_alt < _d? KEY_STAT.double : KEY_STAT.down;  
+					kd_alt = 0; 
+				}
+				break;
+			
+			case KEY_STAT.down : case KEY_STAT.double : case KEY_STAT.pressing :
+				ALT = KEY_STAT.pressing;
+				if(!keyboard_check(vk_alt)) ALT = KEY_STAT.up;
+				break;
+				
+			case KEY_STAT.up : CTRL = KEY_STAT.idle; break;
+		}
 		
 		HOTKEY_MOD = 0;
-		if(CTRL  == KEY_STAT.pressing)									HOTKEY_MOD |= MOD_KEY.ctrl;
-		if(SHIFT == KEY_STAT.pressing)									HOTKEY_MOD |= MOD_KEY.shift;
-		if(ALT   == KEY_STAT.pressing)									HOTKEY_MOD |= MOD_KEY.alt;
+		if(CTRL  == KEY_STAT.pressing) HOTKEY_MOD |= MOD_KEY.ctrl;
+		if(SHIFT == KEY_STAT.pressing) HOTKEY_MOD |= MOD_KEY.shift;
+		if(ALT   == KEY_STAT.pressing) HOTKEY_MOD |= MOD_KEY.alt;
 		
 		if(ENTER && !keyboard_check(vk_enter)) keyboard_lastchar = "";
 		ENTER = keyboard_check_pressed(vk_enter) || ord(keyboard_lastchar) == 13;
