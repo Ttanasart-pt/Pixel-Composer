@@ -371,12 +371,6 @@ event_inherited();
 				
 				draw_set_text(f_p2, fa_left, fa_center, CDEF.main_ltgrey);
 				draw_text_add(pd + ui(32), _yy + ui(12), string_titlecase(lb.text));
-				
-				if(lb.text == "Sample Projects") {
-					draw_set_text(f_p2, fa_right, fa_center, CDEF.main_grey);
-					draw_text_add(pd + ww - ui(20), _yy + ui(12), __txt("Art by Kenney"));
-
-				}
 			}
 			
 			if(_cAll !=  0) PREFERENCES.welcome_file_closed = [];

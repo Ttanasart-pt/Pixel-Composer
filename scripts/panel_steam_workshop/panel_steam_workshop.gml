@@ -497,7 +497,7 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 	function sortFiles() {
 		switch(sort_type) {
 			case 0 : array_sort(allFiles, function(a,b) /*=>*/ {return sign(b.getVotesUp() - a.getVotesUp())}); break;
-			case 2 : array_sort(allFiles, function(a,b) /*=>*/ {return sign(b.time_created - a.time_created)}); break;
+			case 2 : array_sort(allFiles, function(a,b) /*=>*/ {return sign((b[$ "time_created"] ?? 0) - (a[$ "time_created"] ?? 0))}); break;
 		}
 	}
 	
@@ -704,7 +704,7 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 				    var resJ = json_try_parse(res, undefined);
 				    if(resJ == undefined) return;
 				    
-				    var _files = _params.allFiles;
+				    var _files = _params.files;
 				    var _keys  = struct_get_names(resJ);
 				    
 				    for( var i = 0, n = array_length(_keys); i < n; i++ ) {
@@ -3045,7 +3045,7 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 			navigate({ type: "author", author: doViewAuthor });
 			doViewAuthor = undefined;
 		}
-	
+		
 		if(file_dragging != undefined) {
 			var _dist = point_distance(file_drag_x, file_drag_y, mouse_mx, mouse_my);
 			if(_dist > ui(16)) {

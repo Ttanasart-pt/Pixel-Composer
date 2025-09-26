@@ -175,11 +175,18 @@ function Patreon_project_item(_file) constructor {
 			}
 		#endregion
 			
-		if(_hov && _own) {
+		if(_hov) {
 			if(mouse_rpress(_focus)) {
-				menuCall("patreon_project_item", [
-					menuItem(__txt("Open in Explorer"), function() /*=>*/ {return shellOpenExplorer(content_fpath)} )
-				]);
+				if(_own) {
+					menuCall("patreon_project_item", [ 
+						menuItem(__txt("Download"), function() /*=>*/ {return downloadContent()} )
+					]);
+					
+				} else {
+					menuCall("patreon_project_item", [
+						menuItem(__txt("Open in Explorer"), function() /*=>*/ {return shellOpenExplorer(content_fpath)} )
+					]);
+				}
 				
 				_panel.hold_tooltip = true;
 			}
@@ -514,13 +521,13 @@ function Steam_workshop_item() constructor {
 				_panel.hold_tooltip = true;
 			}
 			
+			if(mouse_lpress(_focus)) {
+				_panel.file_dragging  = self;
+				_panel.file_drag_x    = mouse_mx;
+				_panel.file_drag_y    = mouse_my;
+			}
+			
 			if(_own) {
-				if(mouse_lpress(_focus)) {
-					_panel.file_dragging  = self;
-					_panel.file_drag_x    = mouse_mx;
-					_panel.file_drag_y    = mouse_my;
-				}
-				
 				if(DOUBLE_CLICK && type == FILE_TYPE.project) {
 					var _map  = ds_map_create();
 					var _info = steam_ugc_get_item_install_info(_fid, _map);

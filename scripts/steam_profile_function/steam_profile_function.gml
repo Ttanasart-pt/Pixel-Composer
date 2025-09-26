@@ -75,6 +75,7 @@ function Steam_workshop_profile(_sid) constructor {
 		asyncCallGroup("steam", steam_get_user_persona_name(int64(account_steam_id)), function(_params, _data) /*=>*/ { 
 			name = ds_map_try_get(_data, "persona_name", undefined);
 		});
+		
 	} getName();
 	
 	static getAvatar = function() {
