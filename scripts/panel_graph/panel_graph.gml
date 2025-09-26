@@ -3727,8 +3727,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	
         var _map = { version: SAVE_VERSION, nodes: [] };
         
-        for(var i = 0; i < array_length(nodes_selecting); i++)
-            SAVE_NODE(_map.nodes, nodes_selecting[i],,,, getCurrentContext());
+        for( var i = 0, n = array_length(nodes_selecting); i < n; i++ )
+            SAVE_NODE(_map.nodes, nodes_selecting[i], 0, 0, false, getCurrentContext());
         
         clipboard_set_text(json_stringify_minify(_map));
     } 
@@ -3745,51 +3745,52 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		return true;
     }
     
+    function doPasteNode(_map) {
+    	ds_map_clear(APPEND_MAP);
+        CLONING  = true;
+        var _app = __APPEND_MAP(_map, getCurrentContext(), [], true);
+        recordAction(ACTION_TYPE.collection_loaded, array_clone(_app));
+        CLONING  = false;
+        
+        if(_app == noone || array_empty(_app)) return;
+    	
+        for( var i = 0, n = array_length(_app); i < n; i++ ) {
+            var _sel = _app[i];
+            
+            var _inline_ctx_id = _sel[$ "ictx"] ?? "";
+            if(_inline_ctx_id == "") continue;
+            
+            _inline_ctx_id  = ds_map_try_get(APPEND_MAP, _inline_ctx_id, _inline_ctx_id);
+            var _inline_ctx = ds_map_try_get(project.nodeMap, _inline_ctx_id, noone);
+            
+        	if(_inline_ctx == noone) continue;
+            _inline_ctx.addNode(_sel);
+        }
+        
+        var x0 = infinity, y0 = infinity;
+        for(var i = 0; i < array_length(_app); i++) {
+            var _node = _app[i];
+        
+            x0 = min(x0, _node.x);
+            y0 = min(y0, _node.y);
+        }
+		
+        node_dragging = _app[0];
+        node_drag_mx  = x0; node_drag_my  = y0;
+        node_drag_sx  = x0; node_drag_sy  = y0;
+        node_drag_ox  = x0; node_drag_oy  = y0;
+    
+        nodes_selecting = _app;
+    }
+    
     function doPaste() {
     	if(doPasteSurface()) return;
     	
         var txt  = clipboard_get_text();
         var _map = json_try_parse(txt, noone);
-        
         if(txt == "") return;
         
-        if(is_struct(_map)) {
-            ds_map_clear(APPEND_MAP);
-            CLONING   = true;
-            var _app  = __APPEND_MAP(_map, getCurrentContext(), [], true);
-            CLONING   = false;
-            
-            if(_app == noone || array_empty(_app)) return;
-        	
-	        for( var i = 0, n = array_length(_app); i < n; i++ ) {
-	            var _sel = _app[i];
-	            
-	            var _inline_ctx_id = _sel[$ "ictx"] ?? "";
-	            if(_inline_ctx_id == "") continue;
-	            
-	            _inline_ctx_id  = ds_map_try_get(APPEND_MAP, _inline_ctx_id, _inline_ctx_id);
-	            var _inline_ctx = ds_map_try_get(project.nodeMap, _inline_ctx_id, noone);
-	            
-            	if(_inline_ctx == noone) continue;
-	            _inline_ctx.addNode(_sel);
-	        }
-	        
-            var x0 = 99999999, y0 = 99999999;
-            for(var i = 0; i < array_length(_app); i++) {
-                var _node = _app[i];
-            
-                x0 = min(x0, _node.x);
-                y0 = min(y0, _node.y);
-            }
-    		
-            node_dragging = _app[0];
-            node_drag_mx  = x0; node_drag_my  = y0;
-            node_drag_sx  = x0; node_drag_sy  = y0;
-            node_drag_ox  = x0; node_drag_oy  = y0;
-        
-            nodes_selecting = _app;
-            return;
-        }
+        if(is_struct(_map)) { doPasteNode(_map); return; }
         
         var _ext = filename_ext_raw(string_trim(txt, ["\""]));
         
