@@ -82,7 +82,7 @@
 				if(!keyboard_check(vk_shift)) SHIFT = KEY_STAT.up;
 				break;
 				
-			case KEY_STAT.up : CTRL = KEY_STAT.idle; break;
+			case KEY_STAT.up : SHIFT = KEY_STAT.idle; break;
 		}
 		
 		switch(ALT) {
@@ -98,7 +98,7 @@
 				if(!keyboard_check(vk_alt)) ALT = KEY_STAT.up;
 				break;
 				
-			case KEY_STAT.up : CTRL = KEY_STAT.idle; break;
+			case KEY_STAT.up : ALT = KEY_STAT.idle; break;
 		}
 		
 		HOTKEY_MOD = 0;
@@ -108,6 +108,7 @@
 		
 		if(ENTER && !keyboard_check(vk_enter)) keyboard_lastchar = "";
 		ENTER = keyboard_check_pressed(vk_enter) || ord(keyboard_lastchar) == 13;
+		
 	}
 	
 	function key_release() {

@@ -3368,10 +3368,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         }
         
         if(is(connect_related, NodeValue)) {
-        	for( var i = 0, n = array_length(node.inputs); i < n; i++ ) {
-        		var _in = node.inputs[i];
-        		if(_in.setFrom(connect_related)) break;
-        	}
+        	var _inp = node.getInput(0, connect_related);
+        	if(_inp) _inp.setFrom(connect_related);
         	
         	selectDragNode(node, true);
         }
