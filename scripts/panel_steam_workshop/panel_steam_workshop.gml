@@ -158,6 +158,11 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 		history_redo = [];
 		
 		static navigate = function(_page, _undo = false) {
+			current_page.pageTotal    = pageTotal;
+			current_page.pageIndex    = pageIndex;
+			current_page.allFiles     = allFiles;
+			current_page.displayFiles = displayFiles;
+			
 			if(!_undo) {
 				array_push(history_undo, current_page);
 				history_redo = [];
@@ -183,7 +188,14 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 					if(has(_page, "type_filter")) type_filter = _page.type_filter;
 					
 					if(contentPage == 2) queryAuthorPage();
-					queryFiles();
+					
+					if(has(_page, "allFiles")) {
+						allFiles = _page[$ "allFiles"] ?? allFiles;
+						filterFiles();
+						
+					} else 
+						queryFiles();
+						
 					break;
 					
 				case "author" :
@@ -202,7 +214,14 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 					
 					sc_content_author.setScroll(0);
 					queryAuthorPage();
-					queryFiles();
+					
+					if(has(_page, "allFiles")) {
+						allFiles = _page[$ "allFiles"] ?? allFiles;
+						filterFiles();
+						
+					} else 
+						queryFiles();
+						
 					break;
 					
 				case "file"   : 
@@ -501,7 +520,7 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 		}
 	}
 	
-	function filterFiles(_reset = true, _offset = 0) {
+	function filterFiles(_files = allFiles, _reset = true, _offset = 0) {
 		if(_reset) {
 			sc_content.setScroll(0);
 			displayFiles = [];
@@ -513,8 +532,8 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 		var _ver_use  = !array_empty(ver_filter);
 		var _search   = string_lower(search_string);
 		
-		for( var i = _offset, n = array_length(allFiles); i < n; i++ ) {
-			var _file = allFiles[i];
+		for( var i = _offset, n = array_length(_files); i < n; i++ ) {
+			var _file = _files[i];
 			
 			if(contentPage == 2) {
 				var _match = STEAM_ID == _file.owner_steam_id;
@@ -609,7 +628,7 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 			
 			if(_total_matching == 0 || _num_results == 0) {
 				sortFiles();
-				filterFiles(_page == 1, (_page - 1) * 50);
+				filterFiles(_files, _page == 1, (_page - 1) * 50);
 				querying = false;
 				return;
 			}
@@ -632,7 +651,7 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 				run_in_s(1, function(p,f) /*=>*/ {return queryAllFiles(p,f)}, [_page + 1, _files]);
 			
 			sortFiles();
-			filterFiles(_page == 1, (_page - 1) * 50);
+			filterFiles(_files, _page == 1, (_page - 1) * 50);
 			
 		}, { page: _page, allFiles: _files });
 	}
@@ -683,14 +702,14 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 						array_push(_files, _item);
 						
 						if(queryingFiles == 0 && contentPage == 1) sortFiles();
-						filterFiles(false, array_length(_files) - 1);
+						filterFiles(_files, false, array_length(_files) - 1);
 					}, { allFiles });
 				}
 				
 				ds_list_destroy(_l);
 				
 				if(contentPage == 1) sortFiles();
-				filterFiles(true, 0);
+				filterFiles(allFiles, true, 0);
 				break;
 				
 			case 3 : 

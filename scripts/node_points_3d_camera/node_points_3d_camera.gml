@@ -83,10 +83,6 @@ function Node_Point_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _
 			tool_pos_object.drawOverlay3D(in_d3d + 5, noone, _lkvpos, active, _mx, _my, _snx, _sny, _params);
 		}
 		
-		if(drag_axis != noone && mouse_release(mb_left)) {
-			drag_axis = noone;
-			UNDO_HOLDING = false;
-		}
 	}
 	
 	static onValueUpdate = function(index) { if(index == in_d3d + 4) PANEL_PREVIEW.tool_current = noone; }
