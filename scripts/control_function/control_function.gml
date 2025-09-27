@@ -54,51 +54,51 @@
 		kd_alt   += DELTA_TIME;
 		
 		switch(CTRL) {
-			case KEY_STAT.idle : 
+			case KEY_STAT.idle: 
 				if(keyboard_check_pressed(vk_control)) { 
 					CTRL = kd_ctrl < _d? KEY_STAT.double : KEY_STAT.down;  
 					kd_ctrl = 0; 
 				}
 				break;
 			
-			case KEY_STAT.down : case KEY_STAT.double : case KEY_STAT.pressing :
+			case KEY_STAT.down: case KEY_STAT.double: case KEY_STAT.pressing:
 				CTRL = KEY_STAT.pressing;
 				if(!keyboard_check(vk_control)) CTRL = KEY_STAT.up;
 				break;
 				
-			case KEY_STAT.up : CTRL = KEY_STAT.idle; break;
+			case KEY_STAT.up: CTRL = KEY_STAT.idle; break;
 		}
 		
 		switch(SHIFT) {
-			case KEY_STAT.idle : 
+			case KEY_STAT.idle: 
 				if(keyboard_check_pressed(vk_shift)) { 
 					SHIFT = kd_shift < _d? KEY_STAT.double : KEY_STAT.down;  
 					kd_shift = 0; 
 				}
 				break;
 			
-			case KEY_STAT.down : case KEY_STAT.double : case KEY_STAT.pressing :
+			case KEY_STAT.down: case KEY_STAT.double: case KEY_STAT.pressing:
 				SHIFT = KEY_STAT.pressing;
 				if(!keyboard_check(vk_shift)) SHIFT = KEY_STAT.up;
 				break;
 				
-			case KEY_STAT.up : SHIFT = KEY_STAT.idle; break;
+			case KEY_STAT.up: SHIFT = KEY_STAT.idle; break;
 		}
 		
 		switch(ALT) {
-			case KEY_STAT.idle : 
+			case KEY_STAT.idle: 
 				if(keyboard_check_pressed(vk_alt)) { 
 					ALT = kd_alt < _d? KEY_STAT.double : KEY_STAT.down;  
 					kd_alt = 0; 
 				}
 				break;
 			
-			case KEY_STAT.down : case KEY_STAT.double : case KEY_STAT.pressing :
+			case KEY_STAT.down: case KEY_STAT.double: case KEY_STAT.pressing:
 				ALT = KEY_STAT.pressing;
 				if(!keyboard_check(vk_alt)) ALT = KEY_STAT.up;
 				break;
 				
-			case KEY_STAT.up : ALT = KEY_STAT.idle; break;
+			case KEY_STAT.up: ALT = KEY_STAT.idle; break;
 		}
 		
 		HOTKEY_MOD = 0;

@@ -1,6 +1,6 @@
-function __Node_Base(x, y) constructor {
-	self.x = x;
-	self.y = y;
+function __Node_Base(_x, _y) constructor {
+	x = _x;
+	y = _y;
 	
 	node_id = 0;
 	project = PROJECT;

@@ -16,7 +16,6 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 		var _int = anim? anim.prop.key_inter : CURVE_TYPE.linear;
 		ease_in_type  = _int;
 		ease_out_type = _int;
-		
 		dopesheet_x   = 0;
 		
 		drivers = {
@@ -90,7 +89,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		length   = 1;
 		sep_axis = _sep_axis;
 		
-		index   = 0;      static setIndex = function(i) /*=>*/ { index = i; return self; }
+		index   = 0;           static setIndex = function(i) /*=>*/ { index = i; return self; }
 		prop    = _prop;
 		node    = prop.node;
 		y       = 0;
@@ -100,6 +99,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		animate_frames = [];
 		
 		if(_prop.type != VALUE_TYPE.trigger) array_push(values, new valueKey(0, _val, self));
+		
 	#endregion
 	
 	////- Getters

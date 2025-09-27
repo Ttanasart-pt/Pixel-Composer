@@ -38,6 +38,7 @@ function Project() constructor {
 	composer        = noone;
 	animator	    = new AnimationManager();
 	globalNode	    = new Node_Global();
+	globalNode.project = self;
 	
 	load_layout     = false;
 	previewNode     = "";

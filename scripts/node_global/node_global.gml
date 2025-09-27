@@ -215,12 +215,12 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 		while(inputExist($"NewValue{_ind}")) _ind++;
 		var _key   = $"NewValue{_ind}";
 		
-		var _in    = nodeValue_Float(_key, 0);
-		_in.editor = new variable_editor(_in);
-		array_push(inputs, _in);
+		var _inp    = nodeValue_Float(_key, 0);
+		_inp.editor = new variable_editor(_inp);
+		array_push(inputs, _inp);
 		valueUpdate();
 		
-		return _in;
+		return _inp;
 	}
 	
 	static inputExist = function(key) { return ds_map_exists(value, key); }
