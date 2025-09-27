@@ -25,7 +25,8 @@ _FILE_DROPPED     = false;
 	
 	key_mod_step();
 	
-	if(keyboard_check(vk_alt) && keyboard_check(vk_tab)) { KEYBOARD_MOD_RESET } // Dirty hack for Alt+Tab bug in linux
+	var _altTab = (keyboard_check_pressed(vk_alt) || keyboard_check(vk_alt)) && (keyboard_check_pressed(vk_tab) || keyboard_check(vk_tab));
+	if(_altTab) { KEYBOARD_MOD_RESET } // Dirty hack for Alt+Tab bug in linux
 #endregion
 
 #region minimize

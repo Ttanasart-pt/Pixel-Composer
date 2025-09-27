@@ -9,7 +9,7 @@
 #region keyboard
 	#macro KEYBOARD_ENTER ENTER
 	#macro KEYBOARD_RESET keyboard_lastchar = ""; keyboard_lastkey = -1; KEYBOARD_PRESSED_STRING = ""; KEYBOARD_STRING = "";
-	#macro KEYBOARD_MOD_RESET CTRL = KEY_STAT.idle; ALT = KEY_STAT.idle; SHIFT = KEY_STAT.idle;	
+	#macro KEYBOARD_MOD_RESET CTRL = KEY_STAT.idle; SHIFT = KEY_STAT.idle; ALT = KEY_STAT.idle; 
 		
 	enum KEY_STAT {
 		idle,
@@ -109,6 +109,7 @@
 		if(ENTER && !keyboard_check(vk_enter)) keyboard_lastchar = "";
 		ENTER = keyboard_check_pressed(vk_enter) || ord(keyboard_lastchar) == 13;
 		
+		if(os_is_paused()) { KEYBOARD_MOD_RESET }
 	}
 	
 	function key_release() {
