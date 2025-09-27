@@ -357,7 +357,7 @@ function Project() constructor {
 	
 	////- Serialize
 
-	static serialize = function() {
+	static serialize = function(_addon = true) {
 		var _map = {};
 		_map.version    = SAVE_VERSION;
 		_map.versions   = VERSION_STRING;
@@ -404,12 +404,16 @@ function Project() constructor {
 		if(!is_surface(prev)) _map.preview = "";
 		else				  _map.preview = surface_encode(surface_size_lim(prev, 128, 128));
 		
-		var _addon = {};
-		with(_addon_custom) {
-			var _ser = lua_call(thread, "serialize");
-			_addon[$ name] = PREFERENCES.save_file_minify? json_stringify_minify(_ser) : json_stringify(_ser);
+		if(_addon) {
+			__addon = {};
+			with(_addon_custom) {
+				try {
+					var _ser = lua_call(thread, "serialize");
+					other.__addon[$ name] = PREFERENCES.save_file_minify? json_stringify_minify(_ser) : json_stringify(_ser);
+				} catch(e) { noti_warning($"Serialize error: {exception_print(e)}") }
+			}
+			_map.addon = __addon;
 		}
-		_map.addon = _addon;
 		
 		return _map;
 	}
@@ -454,11 +458,9 @@ function Project() constructor {
 		     if(struct_has(_map, "global"))      globalNode.deserialize(_map.global);
 		else if(struct_has(_map, "global_node")) globalNode.deserialize(_map.global_node);
 		
-		addons = {};
 		if(struct_has(_map, "addon")) {
-			var _addon = _map.addon;
-			addons = _addon;
-			struct_foreach(_addon, function(_name, _value) /*=>*/ { addonLoad(_name, false); });
+			addons = _map.addon;
+			struct_foreach(addons, function(_name, _value) /*=>*/ { addonLoad(_name, false); });
 		}
 		
 		bind_gamemaker = Binder_Gamemaker(attributes.bind_gamemaker_path);

@@ -13,13 +13,6 @@ function NEW() {
 	PANEL_GRAPH = graph;
 }
 
-function SERIALIZE_PROJECT(project = PROJECT) {
-	if(!is(project, Project)) return "";
-	
-	var _map = project.serialize();
-	return PREFERENCES.save_file_minify? json_stringify_minify(_map) : json_stringify(_map, true);
-}
-
 function SET_PATH(project, path) {
 	if(ASSERTING) return;
 	
@@ -74,9 +67,16 @@ function SAVE_AS(project = PROJECT) {
 	return true;
 }
 
-function SAVE_AT(project = PROJECT, path = "", log = "save at ", _thum = true) {
+function save_param(_thumbnail = true, _log_prefix = "Save at", _save_addon = true) constructor {
+	thumbnail  = _thumbnail;
+	log_prefix = _log_prefix;
+	save_addon = _save_addon;
+}
+
+function SAVE_AT(project = PROJECT, path = "", _param = new save_param()) {
 	CALL("save");
 	
+	if(!is(project, Project)) return false;
 	if(DEMO) return false;
 	
 	IS_SAVING = true;
@@ -93,7 +93,9 @@ function SAVE_AT(project = PROJECT, path = "", log = "save at ", _thum = true) {
 	
 	if(file_exists_empty(path)) file_delete(path);
 	var _ext = filename_ext_raw(path);
-	var _prj = SERIALIZE_PROJECT(project);
+	
+	var _map = project.serialize(_param.save_addon);
+	var _prj = PREFERENCES.save_file_minify? json_stringify_minify(_map) : json_stringify(_map, true);
 	var _raw = buffer_compress_string(_prj);
 	var _buf = buffer_create(1, buffer_grow, 1);
 	
@@ -107,7 +109,7 @@ function SAVE_AT(project = PROJECT, path = "", log = "save at ", _thum = true) {
 		var _thumbSize = PREFERENCES.save_thumbnail_size;
 		var _thumbLeng = 0;
 		var _thumbData = 0;
-		var _thumb     = _thum && PREFERENCES.save_thumbnail && is_surface(_thumbSurf);
+		var _thumb     = _param.thumbnail && PREFERENCES.save_thumbnail && is_surface(_thumbSurf);
 		
 		if(_thumb) {
 			var _thumbDrawSurf = surface_create(_thumbSize, _thumbSize);
@@ -136,7 +138,7 @@ function SAVE_AT(project = PROJECT, path = "", log = "save at ", _thum = true) {
 		buffer_write(_buf, buffer_text, "PXCX");
 		buffer_write(_buf, buffer_u32,  0);
 		
-		if(_thumb) {
+		if(_param.thumbnail) {
 			buffer_write(_buf, buffer_text, "THMB");
 			buffer_write(_buf, buffer_u32,  _thumbLeng);
 			buffer_copy(_thumbData, 0, _thumbLeng, _buf, buffer_tell(_buf));
@@ -167,7 +169,7 @@ function SAVE_AT(project = PROJECT, path = "", log = "save at ", _thum = true) {
 	project.readonly  = false;
 	project.modified  = false;
 	
-	log_message("FILE", log + path, THEME.noti_icon_file_save);
+	log_message("FILE", _param.log_prefix + " " + path, THEME.noti_icon_file_save);
 	PANEL_MENU.setNotiIcon(THEME.noti_icon_file_save);
 	
 	return true;

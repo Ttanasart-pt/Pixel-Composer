@@ -28,7 +28,6 @@ event_inherited();
 	}
 	
 	function update() {
-		SAVE_AT(PROJECT, PROJECT.path);
     	steam_ugc_update_project(update_thumbnail, text);
     	PANEL_INSPECTOR.workshop_uploading = 2;
     	

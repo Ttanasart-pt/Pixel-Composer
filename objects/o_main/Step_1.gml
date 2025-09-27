@@ -143,7 +143,7 @@ _FILE_DROPPED     = false;
 			+ string_lead_zero(current_second, 2) 
 			+ filename_ext(PROJECT.path);
 		
-		try		 { SAVE_AT(PROJECT, loc + fname, "Autosaved ", false); }
+		try		 { SAVE_AT(PROJECT, loc + fname, new save_param(false, "Autosaved")); }
 		catch(e) { print(exception_print(e)); }
 	}
 #endregion
