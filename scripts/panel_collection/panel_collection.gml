@@ -516,7 +516,7 @@ function Panel_Collection() : PanelContent() constructor {
 		
 		folderPane.hover_content = true;
 		if(pHOVER && folderPane.hover && point_in_rectangle(_m[0], _m[1], 0, _y - ui(2), _ww, _y + ui(24))) {
-			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, ui(8), _y - ui(2), _ww - ui(16), ui(24), CDEF.main_white, 1);
+			draw_sprite_stretched_ext(THEME.button_hide_fill, 1, ui(8), _y - ui(2), _ww - ui(16), ui(24), CDEF.main_white, 1);
 			if(mouse_press(mb_left, pFOCUS))
 				setContext(root);
 		}
@@ -535,7 +535,7 @@ function Panel_Collection() : PanelContent() constructor {
 			font: f_p3, 
 		};
 		
-		for(var i = 0; i < array_length(root.subDir); i++) {
+		for( var i = 0, n = array_length(root.subDir); i < n; i++ ) {
 			var hg = root.subDir[i].draw(self, _x, _y, _m, ww, hov, foc, root, _params);
 			hh += hg;
 			_y += hg;

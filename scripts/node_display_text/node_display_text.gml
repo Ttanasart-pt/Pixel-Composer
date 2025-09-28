@@ -6,25 +6,22 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	newInput(1, nodeValue_Text("Text", "Text"));
 	
-	////- Styling
-	
+	////- =Styling
 	newInput(2, nodeValue_Enum_Scroll( "Style", 2, [ "Header", "Sub header", "Normal" ]));
 	newInput(0, nodeValue_Color(       "Color", ca_white ));
 	newInput(3, nodeValue_Slider(      "Alpha", 0.75));
 	newInput(4, nodeValue_Float(       "Line width", -1));
 	newInput(6, nodeValue_Float(       "Line height", 0));
 	
-	////- Display
-	
+	////- =Display
 	newInput(5, nodeValue_Vec2( "Position", [ x, y ]));
-	
-	//// inputs 7
+	// inputs 7
 	
 	array_foreach(inputs, function(i) /*=>*/ {return i.rejectArray()});
 		
-	input_display_list = [1, 
-		["Styling", false], 2, 0, 4, 6, 
-		["Display", false], 5, 
+	input_display_list = [ 1, 
+		[ "Styling", false ], 2, 0, 4, 6, 
+		[ "Display", false ], 5, 
 	];
 	
 	size_dragging    = false;
@@ -476,28 +473,27 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				case 1 : ta_editor.font = f_h5; break;
 				case 2 : ta_editor.font = f_p1; break;
 			}
-			
 			ta_editor.draw(tx, ty, wid * _s, 0, txt, [ mx, my ] );
+			
 		} else {
 			if(_prev_text != txt) line_update(txt, wid);
 			
 			draw_set_alpha(alp);
 			draw_set_text(font, fa_left, fa_top, color);
+			var _lh = line_get_height(font) * fsize + line_h;
+			
 			for( var i = 0, n = array_length(_lines); i < n; i++ ) {
 				var _line = _lines[i];
-				if(_line == "/") {
-					hh += 8;
-					ty += 8 * _s;
-					continue;
-				}
+				if(_line == "/") { hh += 8; ty += 8 * _s; continue; }
 				
-				var _h = line_get_height(font) * fsize + line_h;
 				var _w = draw_text_style(tx, ty, _line, _s, mx, my);
 				
 				ww = max(ww, _w);
-				hh += _h;
-				ty += _h * _s;
+				hh += _lh;
+				ty += _lh * _s;
 			}
+			
+			hh -= line_h;
 			draw_set_alpha(1);
 			
 			if(inputs[1].value_from == noone && PANEL_GRAPH.node_hovering == self && PANEL_GRAPH.getFocusingNode() == self) {

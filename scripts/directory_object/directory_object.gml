@@ -224,7 +224,8 @@ function DirectoryObject(_path) constructor {
 		var hh   = 0;
 		
 		if(!array_empty(subDir) && _hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + ui(32), _y + hg - 1)) {
-			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _x, _y, ui(32), hg, CDEF.main_white, 1);
+			draw_sprite_stretched_ext(THEME.button_hide_fill, 1, _x + ui(4), _y, ui(32 - 8), hg, CDEF.main_white, 1);
+			
 			if(mouse_press(mb_left, _focus)) {
 				open = !open;
 				MOUSE_BLOCK = true;
@@ -235,7 +236,7 @@ function DirectoryObject(_path) constructor {
 		var _bw = _w - ui(36);
 		
 		if(_hover && point_in_rectangle(_m[0], _m[1], _bx, _y, _bx + _bw, _y + hg - 1)) {
-			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _bx - ui(4), _y, _bw + ui(4), hg, CDEF.main_white, 1);
+			draw_sprite_stretched_ext(THEME.button_hide_fill, 1, _bx - ui(4), _y, _bw + ui(4), hg, CDEF.main_white, 1);
 			if(!triggered && mouse_press(mb_left, _focus)) {
 				if(!array_empty(subDir) && !open) {
 					open = true;

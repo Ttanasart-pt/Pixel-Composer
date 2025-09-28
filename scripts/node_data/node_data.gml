@@ -41,9 +41,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		search_match  = -9999;
 		onDoubleClick = -1;
 		is_controller = false;
-		
-		is_instancer = false;
-		instanceBase = noone;
+		is_instancer  = false;
+		instanceBase  = noone;
 		
 		static setParam = function() /*=>*/ {return false};
 	#endregion

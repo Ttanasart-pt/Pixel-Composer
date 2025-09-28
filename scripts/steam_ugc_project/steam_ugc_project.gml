@@ -36,7 +36,7 @@ function steam_ugc_create_project() {
 			
 			var _fid = _params.fileid;
 			
-			noti_status($"Steam Workshop: Project uploaded {_fid}", THEME.workshop_upload, true);
+			noti_status($"Steam Workshop: Project uploaded [id: {_fid}]", THEME.workshop_upload, true);
 			PANEL_MENU.setNotiIcon(THEME.workshop_upload);
 			UGC_subscribe_item(_fid);
 			HUB_link_file_id(_fid);

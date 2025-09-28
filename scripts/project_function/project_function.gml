@@ -51,6 +51,7 @@ function project_get_thumbnail(_path) {
 	var thumbBuf = buffer_create(thumbLen, buffer_fixed, 1);
 	buffer_copy(rawBuff, buffer_tell(rawBuff), thumbLen, thumbBuf, 0);
 	thumbBuf = buffer_decompress(thumbBuf);
+	if(thumbBuf < 0) return noone;
 	
 	var thumbSiz = sqrt(buffer_get_size(thumbBuf) / 4);
 	global.project_get_thumbnail_surface = surface_verify(global.project_get_thumbnail_surface, thumbSiz, thumbSiz);

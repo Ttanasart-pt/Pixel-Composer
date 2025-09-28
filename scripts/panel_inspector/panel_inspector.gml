@@ -218,15 +218,16 @@ function Panel_Inspector() : PanelContent() constructor {
     #endregion
     
     #region ---- Metadata ----
-        current_meta = -1;
-        meta_tb[0] = textArea_Text( function(s) /*=>*/ { current_meta.description = s; } ).setVAlign(ui(4));
-        meta_tb[1] = textArea_Text( function(s) /*=>*/ { current_meta.author      = s; } ).setVAlign(ui(4));
-        meta_tb[2] = textArea_Text( function(s) /*=>*/ { current_meta.contact     = s; } ).setVAlign(ui(4));
-        meta_tb[3] = textArea_Text( function(s) /*=>*/ { current_meta.alias       = s; } ).setVAlign(ui(4));
+        current_meta = -1; 
+        meta_tb[0] = textArea_Text( function(s) /*=>*/ { current_meta.description = s; PROJECT.modified = true; } ).setVAlign(ui(4));
+        meta_tb[1] = textArea_Text( function(s) /*=>*/ { current_meta.author      = s; PROJECT.modified = true; } ).setVAlign(ui(4));
+        meta_tb[2] = textArea_Text( function(s) /*=>*/ { current_meta.contact     = s; PROJECT.modified = true; } ).setVAlign(ui(4));
+        meta_tb[3] = textArea_Text( function(s) /*=>*/ { current_meta.alias       = s; PROJECT.modified = true; } ).setVAlign(ui(4));
         meta_tb[4] = new textArrayBox(noone, META_TAGS).setAddable(true);
         
         if(STEAM_ENABLED) meta_tb[1].setSideButton(button(function() /*=>*/ { current_meta.author = STEAM_USERNAME; })
-        								.setIcon(THEME.steam, 0, COLORS._main_icon).iconPad(ui(12)).setTooltip("Use Steam username"));
+        								.setIcon(THEME.steam, 0, COLORS._main_icon).iconPad(ui(12))
+        								.setTooltip("Use Steam username"));
         
         meta_display = [ 
             [ __txt("Project Settings"),    false, "settings"   ], 
@@ -240,10 +241,10 @@ function Panel_Inspector() : PanelContent() constructor {
         
         global_button_edit = button(function() /*=>*/ { meta_display[3][1] = false; global_drawer.editing = !global_drawer.editing; })
 			.setIcon(THEME.gear_16, 0, COLORS._main_icon_light);
-                                    
+		
         global_button_new  = button(function() /*=>*/ { meta_display[3][1] = false; PROJECT.globalNode.createValue();               })
 			.setIcon(THEME.add_16,  0, COLORS._main_value_positive);
-                                
+        
         global_buttons         = [ global_button_edit ];
         global_buttons_editing = [ global_button_edit, global_button_new ];
         global_drawer          = new GlobalVarDrawer();
