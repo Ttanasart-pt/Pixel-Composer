@@ -6,8 +6,20 @@
 		name  = "New Layer";
 		nodes = [];
 	}
+	
+	globalvar PROJECT_ATTRIBUTES; PROJECT_ATTRIBUTES = {
+		strict            : false,
+		surface_dimension : [ 32, 32 ],
+		palette           : [ ca_white, ca_black ],
+		palette_fix       : false,
+		export_dir        : "",
+	}
+	
+	#macro DEF_SURF_W  PROJECT.attributes.surface_dimension[0]
+	#macro DEF_SURF_H  PROJECT.attributes.surface_dimension[1]
+	#macro DEF_SURF    PROJECT.attributes.surface_dimension
+	#macro DEF_PALETTE PROJECT.attributes.palette
 #endregion
-
 
 function Project() constructor {
 	active	= true;

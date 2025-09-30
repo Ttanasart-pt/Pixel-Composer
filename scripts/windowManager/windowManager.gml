@@ -95,11 +95,7 @@ function winMan_Unmaximize() {
 	);
 }
 
-function winMan_Minimize() {
-	INLINE
-	if(winMan_is_minimized_ext(window_handle())) return;
-	winMan_minimize_ext(window_handle());
-}
+function winMan_Minimize() { window_minimize(); }
 
 function winMan_initDrag(_index) {
 	window_drag_status = _index;

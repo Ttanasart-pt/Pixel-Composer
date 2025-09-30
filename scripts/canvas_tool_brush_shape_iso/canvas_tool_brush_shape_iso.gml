@@ -147,10 +147,8 @@ function canvas_draw_iso_cube(brush, _p, _fill = false) {
 	var _simp = true;
 	
 	if(w > 0) {
-		
 		if(round(h2) < 0) {
 			if(round(w1) > 0) {
-				
 				p0x = floor(p1px);
 				p0y = floor(p1py);
 				p1x = ceil(p0px) + 1;
@@ -162,7 +160,6 @@ function canvas_draw_iso_cube(brush, _p, _fill = false) {
 			
 		} else if(round(h2) > 0) {
 			if(round(w1) < 0) {
-				
 				p0x = floor(p0px);
 				p0y = floor(p0py);
 				p1x = ceil(p1px) + 1;
@@ -237,10 +234,11 @@ function canvas_draw_iso_cube(brush, _p, _fill = false) {
 			} else {
 				
 				draw_set_color(brush.colors[1]);
-				canvas_draw_triangle(p0px, p0py - 1, p1x, p1y + d, p1x,  p1y,      false);
+				canvas_draw_triangle(p0px, p0py - 1, p1x, p1y + d, p1x,  p1y - 1,  false);
 				canvas_draw_triangle(p0px, p0py - 1, p1x, p1y + d, p0px, p0py + d, false);
 				canvas_draw_line(p0px,     p0py + 1 + d, p1x,  p1y + 1 + d);
 				canvas_draw_line(p0px,     p0py,         p1x,  p1y);
+				canvas_draw_line(p1x,      p1y,          p1x,  p1y  + d);
 				canvas_draw_line(p0px,     p0py - 1,     p0px, p0py + d);
      if(d < -1) canvas_draw_line(p0px,     p0py - 1,     p1x,  p1y - 1);
 				
@@ -255,7 +253,6 @@ function canvas_draw_iso_cube(brush, _p, _fill = false) {
 				draw_set_color(cc);
 				canvas_draw_triangle(p0x,     p0y + d, p0px - 1, p0py + d,     p1x - 1, p1y + d, false);
 				canvas_draw_triangle(p1x - 1, p1y + d, p1px,     p1py + d - 1, p0x,     p0y + d, false);
-				
 				canvas_draw_line(p0x,  p0y  + d, p0px - 1, p0py + d);
 				canvas_draw_line(p0px, p0py + d, p1x,      p1y  + d);
 				canvas_draw_line(p1x,  p1y  + d, p1px + 1, p1py + d);

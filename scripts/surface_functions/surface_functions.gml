@@ -186,7 +186,7 @@
 		__channel_pos(surface);
 	}
 
-	function draw_surface_stretched_safe(surface, _x, _y, _w, _h) {
+	function draw_surface_stretched_safe(surface, _x, _y, _w, _h, _col = c_white, _alpha = 1) {
 		INLINE
 	
 		if(is_struct(surface)) {
@@ -199,7 +199,7 @@
 		if(is_array(surface) || !surface_exists(surface)) return;
 	
 		__channel_pre(surface);
-			draw_surface_stretched(surface, _x, _y, _w, _h);
+			draw_surface_stretched_ext(surface, _x, _y, _w, _h, _col, _alpha);
 		__channel_pos(surface);
 	}
 

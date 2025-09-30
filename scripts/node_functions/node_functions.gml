@@ -1,8 +1,3 @@
-#macro DEF_SURF_W		PROJECT.attributes.surface_dimension[0]
-#macro DEF_SURF_H		PROJECT.attributes.surface_dimension[1]
-#macro DEF_SURF			PROJECT.attributes.surface_dimension
-
-#macro DEF_PALETTE		PROJECT.attributes.palette
 #macro NODE_NEW_MANUAL  !LOADING && !APPENDING && !CLONING
 
 #region 

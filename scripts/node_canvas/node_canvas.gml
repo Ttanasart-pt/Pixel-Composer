@@ -50,25 +50,25 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	////- =Brush
 	newInput( 6, nodeValue_Surface(         "Brush" )).setVisible(true, false);
-	newInput(15, nodeValue_Range(           "Brush Distance",                    [1,1], { linked : true } ));
-	newInput(17, nodeValue_Rotation_Random( "Random Direction",                  [0,0,0,0,0]  ));
-	newInput(16, nodeValue_Bool(            "Rotate Brush by Direction",         false        ));
+	newInput(15, nodeValue_Range(           "Brush Distance",            [1,1], { linked : true } ));
+	newInput(17, nodeValue_Rotation_Random( "Random Direction",          [0,0,0,0,0]  ));
+	newInput(16, nodeValue_Bool(            "Rotate Brush by Direction", false        ));
 	
 	////- =Background
-	newInput(10, nodeValue_Bool(    "Render Background",        true ));
-	newInput( 8, nodeValue_Surface( "Background"                     ));
-	newInput(14, nodeValue_Bool(    "Use Background Dimension", true ));
-	newInput( 9, nodeValue_Slider(  "Background Alpha",         1    ));
+	newInput(10, nodeValue_Bool(    "Render Background",        true     ));
+	newInput( 4, nodeValue_EScroll( "Background Type",          0, ["Surface", "Solid Color"] ));
+	newInput( 1, nodeValue_Color(   "Background Color",         ca_black ));
+	newInput( 8, nodeValue_Surface( "Background"                         ));
+	newInput(14, nodeValue_Bool(    "Use Background Dimension", true     ));
+	newInput( 9, nodeValue_Slider(  "Background Alpha",         1        ));
 	
 	////- =Data Transfer
 	newInput(19, nodeValue_Surface( "Data Source" ));
 	newInput(20, nodeValue_Bool(    "Transfer Dimension", true ));
 	
-	/* deprecated */ newInput( 1, nodeValue_Color(       "Color",                ca_white     ));
-	/* deprecated */ newInput( 2, nodeValue_ISlider(     "Brush Size",           1, [1,32,.1] ));
-	/* deprecated */ newInput( 3, nodeValue_Slider(      "Fill Threshold",       0            ));
-	/* deprecated */ newInput( 4, nodeValue_Enum_Scroll( "Fill Type",            0, ["4 connect", "8 connect", "Entire canvas"] ));
-	/* deprecated */ newInput(11, nodeValue_Slider(      "Alpha",                1            ));
+	/* deprecated */ newInput( 2, nodeValue_ISlider( "Brush Size",     1, [1,32,.1] ));
+	/* deprecated */ newInput( 3, nodeValue_Slider(  "Fill Threshold", 0            ));
+	/* deprecated */ newInput(11, nodeValue_Slider(  "Alpha",          1            ));
 	
 	// input 21
 	
@@ -246,7 +246,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	input_display_list = [ 
 		["Frames",       false    ],  0, frame_renderer, 
 		["Output",       false,   ], 12,  5,  7, 13, 18, 
-		["Background",    true, 10],  8, 14,  9, 
+		["Background",    true, 10],  4,  1,  8, 14,  9, 
 		["Brush",         true    ],  6, 15, 17, 16, 
 		["Data Transfer", true, noone, b_transferData], 19, 20, button(function() /*=>*/ {return transferData()}).setText("Transfer Data"), 
 	];
@@ -1429,9 +1429,11 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var _brush = getInputData( 6), _brushSurf = is_surface(_brush);
 			
 			var _bgr   = getInputData(10);
-			var _bg    = getInputData( 8);
+			var _bgTyp = getInputData( 4);
+			var _bgCol = getInputData( 1);
+			var _bgSrf = getInputData( 8);
 			var _bgDim = getInputData(14);
-			var _bga   = getInputData( 9);
+			var _bgAlp = getInputData( 9);
 			
 			var cDep   = attrDepth();
 			
@@ -1440,14 +1442,18 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			inputs[15].setVisible(_brushSurf);
 			inputs[16].setVisible(_brushSurf);
+			
+			inputs[ 1].setVisible(_bgTyp == 1);
+			inputs[ 8].setVisible(_bgTyp == 0);
+			inputs[14].setVisible(_bgTyp == 0);
 		#endregion
 		
 		#region dimension
 			attributes.useBGDim  = false;
 			
-			if(_bgDim) {
-				var _bgDim = _bg;
-				if(is_array(_bgDim) && !array_empty(_bgDim)) _bgDim = _bg[0];
+			if(_bgTyp == 0 && _bgDim) {
+				var _bgDim = _bgSrf;
+				if(is_array(_bgDim) && !array_empty(_bgDim)) _bgDim = _bgSrf[0];
 				if(is_surface(_bgDim)) {
 					attributes.useBGDim = true;
 					_dim = surface_get_dimension(_bgDim);
@@ -1467,25 +1473,38 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			if(_frames == 1) {
 				var _canvas_surface = getCanvasSurface(0);
-				if(is_array(_bg) && !array_empty(_bg)) _bg = _bg[0];
-				
 				output_surface[0] = surface_verify(output_surface[0], _dim[0], _dim[1], cDep);
 				
 				surface_set_shader(output_surface[0], noone,, BLEND.alpha);
-					if(_bgr && is_surface(_bg))
-						draw_surface_stretched_ext(_bg, 0, 0, _dim[0], _dim[1], c_white, _bga);
+					if(_bgr) {
+						if(_bgTyp == 0) {
+							if(is_array(_bgSrf) && !array_empty(_bgSrf)) _bgSrf = _bgSrf[0];
+							if(is_surface(_bgSrf)) 
+								draw_surface_stretched_safe(_bgSrf, 0, 0, _dim[0], _dim[1], c_white, _bgAlp);
+							
+						} else if(_bgTyp == 1) {
+							draw_clear_alpha(_bgCol, _bgAlp);
+						}
+					}
 					draw_surface_safe(_canvas_surface);
 				surface_reset_shader();
 				
 			} else {
 				for( var i = 0; i < _frames; i++ ) {
 					var _canvas_surface = getCanvasSurface(i);
-					var _bgArray        = is_array(_bg)? array_safe_get_fast(_bg, i, 0) : _bg;
 					output_surface[i]   = surface_verify(output_surface[i], _dim[0], _dim[1], cDep);
 					
 					surface_set_shader(output_surface[i], noone,, BLEND.alpha);
-						if(_bgr && is_surface(_bgArray))
-							draw_surface_stretched_ext(_bgArray, 0, 0, _dim[0], _dim[1], c_white, _bga);
+						if(_bgr) {
+							if(_bgTyp == 0) {
+								var _bgArray = is_array(_bgSrf)? array_safe_get_fast(_bgSrf, i, 0) : _bgSrf;
+								if(is_surface(_bgArray))
+									draw_surface_stretched_ext(_bgArray, 0, 0, _dim[0], _dim[1], c_white, _bgAlp);
+								
+							} else if(_bgTyp == 1) {
+								draw_clear_alpha(_bgCol, _bgAlp);
+							}
+						}
 						draw_surface_safe(_canvas_surface);
 					surface_reset_shader();
 				}

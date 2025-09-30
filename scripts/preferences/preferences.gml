@@ -249,18 +249,6 @@
 	PREFERENCES_DEF = variable_clone(PREFERENCES);
 #endregion
 
-#region project attributes
-	globalvar PROJECT_ATTRIBUTES;
-	
-	PROJECT_ATTRIBUTES = {}
-	
-	PROJECT_ATTRIBUTES.strict            = false;
-	PROJECT_ATTRIBUTES.surface_dimension = [ 32, 32 ];
-	PROJECT_ATTRIBUTES.palette           = [ ca_white, ca_black ];
-	PROJECT_ATTRIBUTES.palette_fix       = false;
-	PROJECT_ATTRIBUTES.export_dir        = "";
-#endregion
-
 #region recent files
 	globalvar RECENT_FILES, RECENT_FILE_DATA;
 	RECENT_FILES	 = ds_list_create();
@@ -406,6 +394,7 @@
 		
 		var f = json_load_struct(PREFERENCES_DIR + "default_project.json");
 		struct_override(PROJECT_ATTRIBUTES, f);
+		PROJECT_ATTRIBUTES.surface_dimension = array_verify(PROJECT_ATTRIBUTES.surface_dimension, 2);
 		
 		hotkey_deserialize();
 		

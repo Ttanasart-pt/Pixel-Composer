@@ -1,15 +1,13 @@
 #region colors
-	globalvar CDEF, COLORS, COLOR_KEY_ARRAY, COLORS_KEYS;
-	globalvar COLORS_DEF, COLORS_OVERRIDE;
-	globalvar THEME_VALUE, THEME_SCALE;
+	globalvar CDEF; CDEF            = new ThemeColorDef();
+	globalvar COLORS; COLORS          = new ThemeColor();
+	globalvar COLOR_KEY_ARRAY; COLOR_KEY_ARRAY = [];
+	globalvar COLORS_KEYS; COLORS_KEYS     = {};
+	globalvar COLORS_DEF; COLORS_DEF      = {};
+	globalvar COLORS_OVERRIDE; COLORS_OVERRIDE = {};
 	
-	CDEF		    = new ThemeColorDef();
-	COLORS		    = new ThemeColor();
-	THEME_VALUE     = new ThemeValue();
-	THEME_SCALE     = 1;
-	COLORS_KEYS     = {};
-	COLORS_OVERRIDE = {};
-	COLORS_DEF      = {};
+	globalvar THEME_VALUE; THEME_VALUE     = new ThemeValue();
+	globalvar THEME_SCALE; THEME_SCALE     = 1;
 	
 	global.palette_keys = [
 		"main_dkblack", 

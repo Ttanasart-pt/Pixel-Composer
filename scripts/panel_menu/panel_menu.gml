@@ -453,13 +453,6 @@ function Panel_Menu() : PanelContent() constructor {
             }
             
             var _menus = menus;
-            // var _menus = array_clone(menus, 1);
-            
-            // var _fcon = getFocusContent();
-            // if(_fcon == PANEL_GRAPH)     array_push(_menus, menu_graph);
-            // if(_fcon == PANEL_PREVIEW)   array_push(_menus, menu_preview);
-            // if(_fcon == PANEL_ANIMATION) array_push(_menus, menu_animation);
-            
             var xc, x0, x1, yc, y0, y1;
             var  sx = xx;
             var _mx = xx;
