@@ -43,9 +43,10 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		array_push(input_display_list, inAmo);
 		return inputs[index];
-	}
+		
+	} setDynamicInput(1);
 	
-	setDynamicInput(1);
+	////- =Nodes
 	
 	static getType = function() {
 		var _type = getInputData(0);
@@ -143,6 +144,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var res  = [];
 		var ind  = 0;
 		
+		updateType(false);
 		var _set  = _typ == VALUE_TYPE.any;
 		var _setT = VALUE_TYPE.any;
 		
@@ -169,6 +171,8 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	static postConnect = function() { updateType(false); }
 	
+	////- =Draw
+	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		var jh   = (junction_draw_hei_y - 4) * _s;
@@ -176,7 +180,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var x0 = bbox.x0 + 6 * _s;
 		var ww = bbox.w - 12 * _s;
 		
-		for(var i = input_fix_len; i < array_length(inputs); i += data_length) {
+		for(var i = input_fix_len, n = array_length(inputs); i < n; i += data_length) {
 			var val = inputs[i];
 			if(!val.isVisible()) continue;
 			
@@ -189,7 +193,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				case VALUE_TYPE.text :
 				case VALUE_TYPE.path :
 					draw_set_text(f_sdf, fa_left, fa_center, value_color(val.type));
-					var _ss = min(_s * .4, string_scale(key, ww, 9999));
+					var _ss = min(_s * .4, string_scale(key, ww, junction_draw_hei_y * _s));
 					draw_text_transformed(x0, val.y, key, _ss, _ss, 0);
 					break;
 				

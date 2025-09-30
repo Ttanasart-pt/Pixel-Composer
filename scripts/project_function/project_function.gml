@@ -50,12 +50,14 @@ function project_get_thumbnail(_path) {
 	var thumbLen = buffer_read(rawBuff, buffer_u32);
 	var thumbBuf = buffer_create(thumbLen, buffer_fixed, 1);
 	buffer_copy(rawBuff, buffer_tell(rawBuff), thumbLen, thumbBuf, 0);
-	thumbBuf = buffer_decompress(thumbBuf);
-	if(thumbBuf < 0) return noone;
+	var thumbBufDecomp = buffer_decompress(thumbBuf);
+	buffer_delete_safe(thumbBuf);
+	if(thumbBufDecomp < 0) return undefined;
 	
-	var thumbSiz = sqrt(buffer_get_size(thumbBuf) / 4);
+	var thumbSiz = sqrt(buffer_get_size(thumbBufDecomp) / 4);
 	global.project_get_thumbnail_surface = surface_verify(global.project_get_thumbnail_surface, thumbSiz, thumbSiz);
-	buffer_set_surface(thumbBuf, global.project_get_thumbnail_surface, 0);
+	buffer_set_surface(thumbBufDecomp, global.project_get_thumbnail_surface, 0);
+	buffer_delete_safe(thumbBufDecomp);
 	
 	var _spr = sprite_create_from_surface(global.project_get_thumbnail_surface, 0, 0, thumbSiz, thumbSiz, false, false, thumbSiz/2, thumbSiz/2);
 	return _spr;

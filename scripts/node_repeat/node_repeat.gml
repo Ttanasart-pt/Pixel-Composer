@@ -277,7 +277,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		PROCESSOR_OVERLAY_CHECK
 		
 		var _hov = false;
-		InputDrawOverlay(inputs[9].hide_label().drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[9].hideLabel().drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		
 		var _pat  = current_data[3];
 		var _spos = current_data[9];
@@ -294,8 +294,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				var _ry = py + _rpos[1] * _s;
 				
 				draw_line_dashed(px, py, _rx, _ry);
-				InputDrawOverlay(inputs[ 4].hide_label().drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
-				InputDrawOverlay(inputs[33].hide_label().drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
+				InputDrawOverlay(inputs[ 4].hideLabel().drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
+				InputDrawOverlay(inputs[33].hideLabel().drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
 				break;
 				
 			case 1 :
@@ -309,9 +309,9 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				draw_line_dashed(px, py,  _rx,  _ry);
 				draw_line_dashed(px, py, _clx, _cly);
 				
-				InputDrawOverlay(inputs[ 4].hide_label().drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
-				InputDrawOverlay(inputs[19].hide_label().drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
-				InputDrawOverlay(inputs[33].hide_label().drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
+				InputDrawOverlay(inputs[ 4].hideLabel().drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
+				InputDrawOverlay(inputs[19].hideLabel().drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
+				InputDrawOverlay(inputs[33].hideLabel().drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
 				break;
 				
 			case 2 :
@@ -322,14 +322,14 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				
 				draw_line_dashed(px, py, _rx, _ry);
 				
-				InputDrawOverlay(inputs[ 8].hide_label().drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny, _srot));
-				InputDrawOverlay(inputs[32].hide_label().drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
-				InputDrawOverlay(inputs[33].hide_label().drawOverlay(w_hoverable, active,_rx,_ry, _s, _mx, _my, _snx, _sny));
+				InputDrawOverlay(inputs[ 8].hideLabel().drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny, _srot));
+				InputDrawOverlay(inputs[32].hideLabel().drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
+				InputDrawOverlay(inputs[33].hideLabel().drawOverlay(w_hoverable, active,_rx,_ry, _s, _mx, _my, _snx, _sny));
 				break;
 		}
 		
-		InputDrawOverlay(inputs[31].hide_label().drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[1]));
-		InputDrawOverlay(inputs[11].hide_label().drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, _params));
+		InputDrawOverlay(inputs[31].hideLabel().drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[1]));
+		InputDrawOverlay(inputs[11].hideLabel().drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, _params));
 		
 		var _ani_amo = getInputAmount();
 		if(_ani_amo == 0) return w_hovering;
@@ -340,7 +340,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _prop = current_data[_ind + 0];
 		var _selc = current_data[_ind + 1];
 		
-		if(_selc == 1) InputDrawOverlay(inputs[_ind + 9].hide_label().drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		if(_selc == 1) InputDrawOverlay(inputs[_ind + 9].hideLabel().drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		
 		return w_hovering;
 	}

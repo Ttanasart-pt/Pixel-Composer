@@ -85,28 +85,28 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(32, nodeValue_Vec2(           "Point 1",       [ 0, 0]   )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
 	newInput(33, nodeValue_Vec2(           "Point 2",       [ 1, 1]   )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
 	newInput(35, nodeValue_Vec2(           "Point 3",       [ 1, 0]   )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
-	newInput(40, nodeValue_Vec2(           "Half Point",    [.5,.5]   )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference).hide_label();
-	newInput(34, nodeValue_Slider(         "Thickness",      .1       )).hide_label();
+	newInput(40, nodeValue_Vec2(           "Half Point",    [.5,.5]   )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference).hideLabel();
+	newInput(34, nodeValue_Slider(         "Thickness",      .1       )).hideLabel();
 	
-	newInput( 9, nodeValue_Slider(         "Corner radius",   0, [0, 0.5, 0.001] )).hide_label().setValidator(VV_clamp(0, .5));
-	newInput( 4, nodeValue_Int(            "Sides",           3       )).hide_label().setVisible(false);
-	newInput(13, nodeValue_Slider(         "Start radius",   .1       )).hide_label().setVisible(false);
-	newInput( 5, nodeValue_Slider(         "Inner radius",   .5       )).hide_label().setVisible(false);
-	newInput( 7, nodeValue_Rotation(       "Rotation",        0       )).hide_label();
-	newInput( 8, nodeValue_Rotation_Range( "Angle range",    [0,180]  )).hide_label();
+	newInput( 9, nodeValue_Slider(         "Corner radius",   0, [0, 0.5, 0.001] )).hideLabel().setValidator(VV_clamp(0, .5));
+	newInput( 4, nodeValue_Int(            "Sides",           3       )).hideLabel().setVisible(false);
+	newInput(13, nodeValue_Slider(         "Start radius",   .1       )).hideLabel().setVisible(false);
+	newInput( 5, nodeValue_Slider(         "Inner radius",   .5       )).hideLabel().setVisible(false);
+	newInput( 7, nodeValue_Rotation(       "Rotation",        0       )).hideLabel();
+	newInput( 8, nodeValue_Rotation_Range( "Angle range",    [0,180]  )).hideLabel();
 	newInput(14, nodeValue_PathNode(       "Shape path"               ));
-	newInput(21, nodeValue_Slider_Range(   "Angles",         [.5, 1.] )).hide_label();
-	newInput(38, nodeValue_Slider(         "Top Side",        .5      )).hide_label();
-	newInput(39, nodeValue_Slider(         "Botton Side",      1      )).hide_label();
-	newInput(22, nodeValue_Slider(         "Skew",            .5      )).hide_label();
-	newInput(23, nodeValue_Float(          "Arrow Sizes",     .3      )).hide_label();
-	newInput(24, nodeValue_Float(          "Arrow Head",       1      )).hide_label();
-	newInput(25, nodeValue_Int(            "Teeth Amount",     6      )).hide_label();
-	newInput(26, nodeValue_Vec2(           "Teeth Size",     [.2,.2] , { slideSpeed : 0.01 })).hide_label();
-	newInput(27, nodeValue_Rotation(       "Teeth Rotation",   0      )).hide_label();
+	newInput(21, nodeValue_Slider_Range(   "Angles",         [.5, 1.] )).hideLabel();
+	newInput(38, nodeValue_Slider(         "Top Side",        .5      )).hideLabel();
+	newInput(39, nodeValue_Slider(         "Botton Side",      1      )).hideLabel();
+	newInput(22, nodeValue_Slider(         "Skew",            .5      )).hideLabel();
+	newInput(23, nodeValue_Float(          "Arrow Sizes",     .3      )).hideLabel();
+	newInput(24, nodeValue_Float(          "Arrow Head",       1      )).hideLabel();
+	newInput(25, nodeValue_Int(            "Teeth Amount",     6      )).hideLabel();
+	newInput(26, nodeValue_Vec2(           "Teeth Size",     [.2,.2] , { slideSpeed : 0.01 })).hideLabel();
+	newInput(27, nodeValue_Rotation(       "Teeth Rotation",   0      )).hideLabel();
 	newInput(43, nodeValue_Slider(         "Teeth Taper",      0      ))
-	newInput(30, nodeValue_Bool(           "Caps",             false  )).hide_label();
-	newInput(31, nodeValue_Float(          "Factor",           2.5    )).hide_label();
+	newInput(30, nodeValue_Bool(           "Caps",             false  )).hideLabel();
+	newInput(31, nodeValue_Float(          "Factor",           2.5    )).hideLabel();
 	newInput(36, nodeValue_Enum_Button(    "Corner Shape",     0, [ "Round", "Cut" ] ))
 	
 	////- =Deform

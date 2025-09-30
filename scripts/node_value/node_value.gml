@@ -163,7 +163,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		draw_blend_color = 1;
 		
 		__overlay_hover     = [];
-		overlay_draw_text   = true;   hide_label  = function() /*=>*/ { overlay_draw_text = false; return self; }
+		overlay_draw_text   = true;   hideLabel  = function() /*=>*/ { overlay_draw_text = false; return self; }
 		overlay_text_valign = fa_top;
 		
 		graph_selecting   = false;

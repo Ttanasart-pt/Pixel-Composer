@@ -18,10 +18,10 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	////- =Surfaces
 	newInput( 1, nodeValue_Color(       "Color",           ca_black ));
-	newInput( 2, nodeValue_Slider(      "Strength",       .5, [ 0, 2, 0.01] )).setHotkey("S").hide_label();
+	newInput( 2, nodeValue_Slider(      "Strength",       .5, [ 0, 2, 0.01] )).setHotkey("S").hideLabel();
 	newInput(11, nodeValue_Enum_Button( "Positioning",     0, [ "Shift", "Light" ] ));
-	newInput( 3, nodeValue_Vec2(        "Shift",          [4,4] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}).hide_label();
-	newInput(12, nodeValue_Vec2(        "Light Position", [0,0] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}).hide_label();
+	newInput( 3, nodeValue_Vec2(        "Shift",          [4,4] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}).hideLabel();
+	newInput(12, nodeValue_Vec2(        "Light Position", [0,0] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}).hideLabel();
 	newInput( 4, nodeValue_Slider(      "Grow", 3, [0, 16, 0.1] ));
 	newInput( 5, nodeValue_Slider(      "Blur", 3, [1, 16, 0.1] ));
 	// input 13

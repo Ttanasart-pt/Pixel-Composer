@@ -52,9 +52,9 @@ function Node_Liquefy(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		newInput(i+ 2, nodeValue_Vec2(     "Position 2",  [ 1, 0] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 		newInput(i+ 8, nodeValue_PathNode( "Push path"            ))
 		newInput(i+ 9, nodeValue_Int(      "Push resolution",  16 ));
-		newInput(i+ 3, nodeValue_Float(    "Radius",            8 )).hide_label();
+		newInput(i+ 3, nodeValue_Float(    "Radius",            8 )).hideLabel();
 		newInput(i+10, nodeValue_Float(    "Radius 2",          8 ));
-		newInput(i+ 5, nodeValue_Float(    "Falloff",           0 )).hide_label();
+		newInput(i+ 5, nodeValue_Float(    "Falloff",           0 )).hideLabel();
 		newInput(i+ 6, nodeValue_Curve(    "Falloff Curve", CURVE_DEF_10 ));
 		
 		////- =Effect

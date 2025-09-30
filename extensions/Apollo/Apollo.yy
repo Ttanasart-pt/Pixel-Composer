@@ -117,14 +117,14 @@
         {"$GMProxyFile":"","%Name":"Apollo.so","name":"Apollo.so","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":7,},
         {"$GMProxyFile":"","%Name":"Apollo.dylib","name":"Apollo.dylib","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":1,},
       ],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
-    {"$GMExtensionFile":"","%Name":"","constants":[],"copyToTargets":-1,"filename":"apollo_buffer.gml","final":"","functions":[
+    {"$GMExtensionFile":"","%Name":"","constants":[],"copyToTargets":64,"filename":"apollo_buffer.gml","final":"","functions":[
         {"$GMExtensionFunction":"","%Name":"lua_buffer_write","argCount":2,"args":[2,2,],"documentation":"","externalName":"lua_buffer_write","help":"","hidden":true,"kind":11,"name":"lua_buffer_write","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"lua_buffer_read","argCount":1,"args":[2,],"documentation":"","externalName":"lua_buffer_read","help":"","hidden":true,"kind":11,"name":"lua_buffer_read","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
       ],"init":"","kind":2,"name":"","order":[
         {"name":"lua_buffer_write","path":"extensions/Apollo/Apollo.yy",},
         {"name":"lua_buffer_read","path":"extensions/Apollo/Apollo.yy",},
       ],"origname":"","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
-    {"$GMExtensionFile":"","%Name":"","constants":[],"copyToTargets":-1,"filename":"apollo_call.gml","final":"","functions":[
+    {"$GMExtensionFile":"","%Name":"","constants":[],"copyToTargets":64,"filename":"apollo_call.gml","final":"","functions":[
         {"$GMExtensionFunction":"","%Name":"lua_call","argCount":-1,"args":[],"documentation":"","externalName":"lua_call","help":"lua_call(state_id, func_name, ...args)->result","hidden":false,"kind":2,"name":"lua_call","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"lua_call_w","argCount":3,"args":[2,2,2,],"documentation":"","externalName":"lua_call_w","help":"lua_call_w(state_id, func_name, args_array)->result","hidden":false,"kind":2,"name":"lua_call_w","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"lua_call_m","argCount":-1,"args":[],"documentation":"","externalName":"lua_call_m","help":"lua_call_m(state_id, func_name, ...args)->results_array","hidden":false,"kind":2,"name":"lua_call_m","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
@@ -149,7 +149,7 @@
         {"name":"lua_call_start","path":"extensions/Apollo/Apollo.yy",},
         {"name":"lua_call_next","path":"extensions/Apollo/Apollo.yy",},
       ],"origname":"","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
-    {"$GMExtensionFile":"","%Name":"","constants":[],"copyToTargets":-1,"filename":"apollo_script_execute.gml","final":"","functions":[
+    {"$GMExtensionFile":"","%Name":"","constants":[],"copyToTargets":64,"filename":"apollo_script_execute.gml","final":"","functions":[
         {"$GMExtensionFunction":"","%Name":"lua_script_execute","argCount":3,"args":[2,2,2,],"documentation":"","externalName":"lua_script_execute","help":"","hidden":true,"kind":11,"name":"lua_script_execute","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"lua_script_execute_0","argCount":1,"args":[],"documentation":"","externalName":"lua_script_execute_0","help":"","hidden":true,"kind":11,"name":"lua_script_execute_0","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"lua_script_execute_1","argCount":2,"args":[],"documentation":"","externalName":"lua_script_execute_1","help":"","hidden":true,"kind":11,"name":"lua_script_execute_1","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
@@ -227,7 +227,7 @@
         {"$GMExtensionConstant":"","%Name":"lua_current","hidden":false,"name":"lua_current","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"global.g_lua_current",},
         {"$GMExtensionConstant":"","%Name":"lua_error_handler","hidden":false,"name":"lua_error_handler","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"global.g_lua_error_handler",},
         {"$GMExtensionConstant":"","%Name":"lua_call_result","hidden":false,"name":"lua_call_result","resourceType":"GMExtensionConstant","resourceVersion":"2.0","value":"global.g_lua_call_result",},
-      ],"copyToTargets":-1,"filename":"apollo_core.gml","final":"","functions":[
+      ],"copyToTargets":64,"filename":"apollo_core.gml","final":"","functions":[
         {"$GMExtensionFunction":"","%Name":"lua_init","argCount":0,"args":[],"documentation":"","externalName":"lua_init","help":"","hidden":true,"kind":11,"name":"lua_init","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"lua_update","argCount":0,"args":[],"documentation":"","externalName":"lua_update","help":"","hidden":true,"kind":11,"name":"lua_update","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"lua_bool","argCount":1,"args":[2,],"documentation":"","externalName":"lua_bool","help":"lua_bool(value)","hidden":false,"kind":2,"name":"lua_bool","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
@@ -254,7 +254,7 @@
         {"name":"lua_global_typeof","path":"extensions/Apollo/Apollo.yy",},
         {"name":"lua_global_type","path":"extensions/Apollo/Apollo.yy",},
       ],"origname":"","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
-    {"$GMExtensionFile":"","%Name":"","constants":[],"copyToTargets":-1,"filename":"apollo_ref.gml","final":"","functions":[
+    {"$GMExtensionFile":"","%Name":"","constants":[],"copyToTargets":64,"filename":"apollo_ref.gml","final":"","functions":[
         {"$GMExtensionFunction":"","%Name":"lua_byref","argCount":-1,"args":[],"documentation":"","externalName":"lua_byref","help":"lua_byref(value, recursive = false)->marked_value","hidden":false,"kind":2,"name":"lua_byref","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"lua_script","argCount":1,"args":[2,],"documentation":"","externalName":"lua_script","help":"lua_script(script_id)->marked_script","hidden":false,"kind":2,"name":"lua_script","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"lua_internal_array_get","argCount":3,"args":[],"documentation":"","externalName":"lua_internal_array_get","help":"","hidden":true,"kind":11,"name":"lua_internal_array_get","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},

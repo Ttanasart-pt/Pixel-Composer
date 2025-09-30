@@ -16,7 +16,7 @@ _FILE_DROPPED     = false;
 			keyboard_string = "";
 		}
 		
-		if(keyboard_check_pressed(vk_backspace))
+		if(keyboard_check_pressed(vk_backspace)) 
 			KEYBOARD_STRING = string_copy(KEYBOARD_STRING, 1, string_length(KEYBOARD_STRING) - 1);
 	}
 	

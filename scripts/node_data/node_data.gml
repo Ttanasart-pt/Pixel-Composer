@@ -1787,8 +1787,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			tx += 16 * _s;
 		}
 		
-		var _ts  = _s * .275 / UI_SCALE;
-		var _tx  = round(tx);
+		var _tx   = round(tx);
+		var _ts   = _s * .275 / UI_SCALE;
 		var _scis = gpu_get_scissor();
 		
 		gpu_set_scissor(xx, yy, w * _s - 4, nh);

@@ -1,3 +1,10 @@
+function __enum_array_gen(arr, spr, col = COLORS._main_icon) { 
+	__spr = spr;
+	__c   = col;
+	
+	return array_map(arr, function(v,i) /*=>*/ {return new scrollItem(v, __spr, i).setBlend(__c)}); 
+}
+
 function scrollItem(_name, _spr = noone, _spr_ind = 0, _spr_blend = COLORS._main_icon) constructor {
 	name = _name;
 	data = _name;

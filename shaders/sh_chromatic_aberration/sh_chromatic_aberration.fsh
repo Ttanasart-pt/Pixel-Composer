@@ -108,7 +108,7 @@ vec3  saturate (vec3  x) { return min(vec3(1.,1.,1.), max(vec3(0.,0.,0.),x)); }
 
 vec3 bump3y (vec3 x, vec3 yoffset) {
 	vec3 y = vec3(1.,1.,1.) - x * x;
-	y = saturate(y-yoffset);
+	y = saturate(y - yoffset);
 	return y;
 }
 
@@ -130,7 +130,6 @@ vec3 spectral_zucconi6 (float w) {
 		bump3y(c2 * (x - x2), y2) ;
 }
 
-
 vec4 chroma_scaling(vec2 uv, float str) {
 	vec2 tx = 1.0 / dimension;
     vec2 co = (uv - center * tx) * 2.0;
@@ -142,9 +141,9 @@ vec4 chroma_scaling(vec2 uv, float str) {
     uvR = uv - pp;
     uvB = uv + pp;
     
-    vec4 cr = texture2Dintp(gm_BaseTexture, uvR);
-    vec4 cb = texture2Dintp(gm_BaseTexture, uvB);
-    vec4 cv = texture2Dintp(gm_BaseTexture, uv);
+    vec4 cr = texture2Dintp(gm_BaseTexture, uvR); cr.rgb *= cr.a;
+    vec4 cb = texture2Dintp(gm_BaseTexture, uvB); cb.rgb *= cb.a;
+    vec4 cv = texture2Dintp(gm_BaseTexture, uv ); cv.rgb *= cv.a;
     
     return vec4(cr.r, cv.g, cb.b, cv.a + cr.a + cb.a);
 }
@@ -156,8 +155,10 @@ vec4 chroma_continuous(vec2 uv, float str) {
 	vec2  cuv  = (uv - center * tx) * 2.0;
     vec3  o    = vec3(0.);
     
-    for (float i = 0.; i <= 1.; i += 1. / stp)
-        o += pow(texture2Dintp(gm_BaseTexture, uv - cuv * strr * i).xyz, vec3(2.2)) * spectral_zucconi6(400. + i * 300.);
+    for (float i = 0.; i <= 1.; i += 1. / stp) {
+    	vec4 sam = texture2Dintp(gm_BaseTexture, uv - cuv * strr * i); sam.rgb *= sam.a;
+        o += pow(sam.rgb, vec3(2.2)) * spectral_zucconi6(400. + i * 300.);
+    }
     
     o /= stp * vec3(.386, .372, .23);
     o  = pow(o, vec3(1. / 2.2));
