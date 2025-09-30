@@ -306,10 +306,15 @@ function Panel_Preference() : PanelContent() constructor {
     	ds_list_add(pref_global, __txt("Cleanups"));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item(
+    			__txtx("pref_clear_recents", "Recents"),
+    			button(function() /*=>*/ { file_delete_safe(DIRECTORY + "recent.json"); }).setText($"Clear Recent Files"),
+    		));
+    		
+    		ds_list_add(pref_global, new __Panel_Linear_Setting_Item(
     			__txtx("pref_clear_temp", "Temp File"),
     			button(function() /*=>*/ { directory_clear(TEMPDIR); }).setText($"Clear Temp Folder"),
     		));
-    	
+    		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item(
     			__txtx("pref_clear_theme", "Autosaves"),
     			button(function() /*=>*/ { directory_destroy(DIRECTORY + "Autosave"); }).setText($"Clear Autosaves"),

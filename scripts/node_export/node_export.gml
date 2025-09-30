@@ -576,7 +576,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			case ".jpg": 
 				surface_save_safe(_surf, _pathTemp);
 					
-				_pathOut = $"\"{filename_change_ext(_path, ".jpg")}\"";
+				_pathOut = $"{filename_change_ext(_path, ".jpg")}";
 				var shell_cmd = $"{string_quote(_pathTemp)} -quality {qual} {string_quote(_pathOut)}";
 				
 				shell_execute_async(magick, shell_cmd, self);
@@ -585,7 +585,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			case ".webp":
 				surface_save_safe(_surf, _pathTemp);
 				
-				_pathOut = $"\"{filename_change_ext(_path, ".webp")}\"";
+				_pathOut = $"{filename_change_ext(_path, ".webp")}";
 				var shell_cmd = $"{string_quote(_pathTemp)} -quality {qual} -define webp:lossless=true {string_quote(_pathOut)}";
 				
 				shell_execute_async(magick, shell_cmd, self);
