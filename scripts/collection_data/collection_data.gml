@@ -20,12 +20,12 @@ function refreshCollections() {
 	COLLECTIONS.open = true;
 }
 
-function searchCollection(_list, _search_str, _toList = true) {
+function searchCollection(_arr, _search_str, _inputArray = true) {
 	if(_search_str == "") return;
 	var search_lower = string_lower(_search_str);
 	
 	var st = ds_stack_create();
-	var ll = _toList? ds_priority_create() : _list;
+	var ll = _inputArray? ds_priority_create() : _arr;
 	
 	ds_stack_push(st, COLLECTIONS);
 		
@@ -43,9 +43,9 @@ function searchCollection(_list, _search_str, _toList = true) {
 			ds_stack_push(st, _st.subDir[i]);
 	}
 	
-	if(_toList) {
+	if(_inputArray) {
 		repeat(ds_priority_size(ll))
-			ds_list_add(_list, ds_priority_delete_max(ll));
+			array_push(_arr, ds_priority_delete_max(ll));
 		
 		ds_priority_destroy(ll);
 	}

@@ -150,7 +150,10 @@ function Panel_Collection() : PanelContent() constructor {
 		
 		function search_toggle() {
 			searching = !searching;
-			if(searching) { doSearch(); tb_search.activate(); }
+			if(!searching) return;
+			
+			doSearch(); 
+			tb_search.activate(); 
 		}
 	#endregion
 	
@@ -274,7 +277,7 @@ function Panel_Collection() : PanelContent() constructor {
 		}
 	}
 	
-	tb_search     = textBox_Text(function(str) /*=>*/ { search_string = string(str); doSearch(); }).setAutoupdate();
+	tb_search     = textBox_Text(function(str) /*=>*/ { search_string = string(str); doSearch(); }).setAutoupdate().setFont(f_p3);
 	grid_size     = ui(52);
 	grid_size_to  = grid_size;
 	
@@ -866,10 +869,10 @@ function Panel_Collection() : PanelContent() constructor {
 		if(searching) {
 			var tb_w = ui(200);
 			var tb_x = bx - tb_w + ui(28);
-			var tb_y = ui(11);
+			var tb_y = by;
 			
 			tb_search.setFocusHover(foc, hov);
-			tb_search.draw(tb_x, tb_y, tb_w, ui(28), search_string, m);
+			tb_search.draw(tb_x, tb_y, tb_w, bs, search_string, m);
 			return;
 		}
 		

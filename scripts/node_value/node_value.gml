@@ -1400,11 +1400,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			return applyUnit? unit.apply(value, arrIndex) : value;
 		}
 		
-		// if(type == VALUE_TYPE.text) return display_type == VALUE_DISPLAY.text_array? value : string_real(value);
-		
 		if(typeNumeric(typeFrom) && type == VALUE_TYPE.color) return value;
-		
-		if(typeFrom == VALUE_TYPE.boolean && type == VALUE_TYPE.text) return value? "true" : "false";
 		
 		if(type == VALUE_TYPE.integer || type == VALUE_TYPE.float) {
 			if(typeFrom == VALUE_TYPE.text) value = toNumber(value);
