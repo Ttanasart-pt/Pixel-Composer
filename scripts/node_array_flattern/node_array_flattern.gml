@@ -2,8 +2,7 @@ function Node_Array_Flattern(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	name = "Array Flatten";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue("Array in", self, CONNECT_TYPE.input, VALUE_TYPE.any, []))
-		.setVisible(true, true);
+	newInput(0, nodeValue("Array in", self, CONNECT_TYPE.input, VALUE_TYPE.any, [])).setVisible(true, true);
 	
 	newOutput(0, nodeValue_Output("Flattened Array", VALUE_TYPE.any, []));
 	
@@ -12,11 +11,11 @@ function Node_Array_Flattern(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		inputs[0].setType(type);
 		outputs[0].setType(type);
 		
-		var arr = getInputData(0);
-		if(!is_array(arr)) return;
+		var _arr = getInputData(0);
+		if(!is_array(_arr)) return;
 		
-		var _arr = array_spread(arr);
-		outputs[0].setValue(_arr);
+		var _arrSpr = array_spread(_arr);
+		outputs[0].setValue(_arrSpr);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

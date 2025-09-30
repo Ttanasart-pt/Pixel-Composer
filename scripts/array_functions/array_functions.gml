@@ -460,16 +460,10 @@
 	}
 
 	function array_spread(arr, _arr = [], _minDepth = 0) {
-		INLINE
-		
-		if(array_get_depth(arr) == _minDepth) {
-			array_push(_arr, arr);
-			return _arr;
-		}
+		if(array_get_depth(arr) == _minDepth) { array_push(_arr, arr); return _arr; }
 		
 		for( var i = 0, n = array_length(arr); i < n; i++ ) 
 			array_spread(arr[i], _arr, _minDepth);
-			
 		return _arr;
 	}
 	

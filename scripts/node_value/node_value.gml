@@ -1400,7 +1400,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			return applyUnit? unit.apply(value, arrIndex) : value;
 		}
 		
-		if(type == VALUE_TYPE.text) return display_type == VALUE_DISPLAY.text_array? value : string_real(value);
+		// if(type == VALUE_TYPE.text) return display_type == VALUE_DISPLAY.text_array? value : string_real(value);
 		
 		if(typeNumeric(typeFrom) && type == VALUE_TYPE.color) return value;
 		
@@ -1445,7 +1445,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(type == VALUE_TYPE.surface || type == VALUE_TYPE.any) {
 			var _sval = array_valid(val)? val[0] : val;
 				
-			if(is_instanceof(_sval, SurfaceAtlas)) 
+			if(is(_sval, SurfaceAtlas)) 
 				draw_junction_index = VALUE_TYPE.atlas;
 		}
 		
