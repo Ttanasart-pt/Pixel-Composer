@@ -188,7 +188,7 @@ _FILE_DROPPED       = false;
 					PROJECT.animator.frame_progress = false;
 					
 				} else {
-					if(UPDATE & RENDER_TYPE.full)
+					if(UPDATE & RENDER_TYPE.full) 
 						Render(PROJECT, false);
 						
 					else if(UPDATE & RENDER_TYPE.partial)

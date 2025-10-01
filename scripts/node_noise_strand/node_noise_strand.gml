@@ -27,7 +27,7 @@ function Node_Noise_Strand(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	newInput( 8, nodeValue_Float(        "Curve shift",  0 )).setShaderProp("curveShift");
 	
 	////- =Render
-	newInput(10, nodeValue_Enum_Button(  "Mode",         0 , [ "Line", "Area" ] )).setShaderProp("mode");
+	newInput(10, nodeValue_Enum_Button(  "Mode",         0 , [ "Line", "Band", "Area" ] )).setShaderProp("mode");
 	newInput( 7, nodeValue_Slider(       "Thickness",    0    )).setShaderProp("thickness");
 	newInput(11, nodeValue_Slider_Range( "Opacity",     [0,1] )).setShaderProp("alpha");
 	// input 13
@@ -41,8 +41,7 @@ function Node_Noise_Strand(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
-		
+		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, 1));
 		return w_hovering;
 	}
 

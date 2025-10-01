@@ -23,7 +23,6 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(10, nodeValueSeed());
 	
 	////- =Surfaces
-	
 	newInput( 0, nodeValue_Surface(     "Surface In" ));
 	newInput( 1, nodeValue_Dimension());
 	newInput(15, nodeValue_Int(         "Array", 0, @"What to do when input array of surface.
@@ -37,7 +36,6 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(27, nodeValue_Enum_Scroll( "Animated Array End", 0, [ "Loop", "Ping Pong", "Hide" ] ));
 	
 	////- =Scatter
-	
 	onSurfaceSize = function() /*=>*/ {return getInputData(1, DEF_SURF)}; 
 	
 	newInput( 6, nodeValue_Enum_Scroll(    "Distribution",  5, [ "Area", "Border", "Map", "Direct Data", "Path", "Full image + Tile" ] ));
@@ -56,7 +54,6 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(44, nodeValue_Float(          "Distance",        8      )).setValidator(VV_min(0));
 	
 	////- =Path
-	
 	newInput(19, nodeValue_PathNode(    "Path" ));
 	newInput(38, nodeValue_Enum_Button( "Spacing",           0, [ "After", "Between", "Around" ] ));
 	newInput(20, nodeValue_Bool(        "Rotate Along Path", true ));
@@ -65,7 +62,6 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(22, nodeValue_Float(       "Scatter Distance",  0    ));
 	
 	////- =Position
-	
 	newInput(40, nodeValue_Anchor());
 	newInput(33, nodeValue_Vec2_Range( "Random Position", [0,0,0,0] ));
 	newInput(36, nodeValue_Vec2(       "Shift Position",  [0,0]     ));
@@ -73,20 +69,17 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(39, nodeValue_Range(      "Shift Radial",    [0,0]     ));
 	
 	////- =Rotation
-	
 	newInput( 7, nodeValue_Bool(            "Point at Center",    false, "Rotate each copy to face the spawn center."));
 	newInput( 4, nodeValue_Rotation_Random( "Angle",             [0,0,0,0,0] ));
 	newInput(32, nodeValue_Rotation(        "Rotate per Radius",  0          ));
 	
 	////- =Scale
-	
 	newInput( 3, nodeValue_Vec2_Range( "Scale",             [1,1,1,1] , { linked : true }));
 	newInput( 8, nodeValue_Bool(       "Uniform Scaling",    true ));
 	newInput(34, nodeValue_Vec2(       "Scale per Radius",  [0,0] ));
 	newInput(43, nodeValue_Surface(    "Scale Surface" ));
 	
 	////- =Color
-	
 	newInput(11, nodeValue_Gradient(     "Random Blend",    new gradientObject(ca_white) )).setMappable(28);
 	newInput(12, nodeValue_Slider_Range( "Alpha",             [1,1] ));
 	newInput(16, nodeValue_Bool(         "Multiply Alpha",     true ));
@@ -94,7 +87,6 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(42, nodeValue_Vec2_Range(   "Sample Wiggle",     [0,0,0,0] ));
 	
 	////- =Render
-	
 	newInput(18, nodeValue_Enum_Scroll( "Blend Mode", 0, [ "Normal", "Add", "Max" ] ));
 	newInput(23, nodeValue_Bool(        "Sort Y",     false ));
 	
@@ -371,7 +363,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			
 			var _alpUni = alpha[0] == alpha[1];
 			
-			var _clrUni = !inputs[11].attributes.mapped && color.keyLength == 1;
+			var _clrMap = inputs[11].attributes.mapped;
+			var _clrUni = color.keyLength == 1;
 			var _clrSin = color.evalFast(0);
 			
 			var _useAtl = outputs[1].visible;
@@ -665,8 +658,11 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				
 				var grSamp = random_seed(1, _sed++);
 				
-				var clr = _clrUni? _clrSin  : evaluate_gradient_map(grSamp, color, clr_map, clr_rng, inputs[11], true);
-				var alp  = _alpUni? alpha[0] : random_range_seed(alpha[0], alpha[1], _csed++);
+				var clr = _clrSin;
+				     if( _clrMap) clr = evaluate_gradient_map(grSamp, color, clr_map, clr_rng, inputs[11], true);
+				else if(!_clrUni) clr = color.evalFast(random(1));
+				
+				var alp = _alpUni? alpha[0] : random_range_seed(alpha[0], alpha[1], _csed++);
 				
 				if(iCol > 1 && _v != noone) 
 					clr = colorMultiply(clr, array_safe_get_fast(_v, iCol, cola(c_white, 1)));

@@ -50,6 +50,10 @@ void main() {
 			w = max(w, st);
 			
 		} else if(mode == 1) {
+			float st = (1. - step(thickness / 2., abs(1. - abs(pos.x - _x) - mt))) * _a;
+			w = max(w, st);
+			
+		} else if(mode == 2) {
 			float st = smoothstep(mt - thickness, mt + thickness, 1. - max(0., pos.x - _x)) * (1. / float(amo));
 			w += st;
 		}
