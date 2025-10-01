@@ -52,6 +52,8 @@ function Patreon_project_item(_file) constructor {
 	preview_fpath  = $"{DIRECTORY}Cache/{_file}.png";
 	preview_sprite = undefined;
 	
+	tags_content   = [];
+	
 	static getPreviewSprite = function() {
 		if(preview_sprite != undefined) return preview_sprite;
 		

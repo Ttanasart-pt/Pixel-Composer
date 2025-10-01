@@ -17,16 +17,16 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	__init_mask_modifier(5, 9); // inputs 9, 10
 	
 	////- =Bloom
-	newInput(1, nodeValue_Slider(  "Size",        3,   [1, 32, 0.1] )).setHotkey("S").setTooltip("Bloom blur radius.");
-	newInput(2, nodeValue_Slider(  "Tolerance",  .50                )).setTooltip("How bright a pixel should be to start blooming.");
-	newInput(3, nodeValue_Slider(  "Strength",   .25, [0, 2, 0.01]  )).setTooltip("Blend intensity.");
+	newInput(1, nodeValue_Slider(  "Size",        3,  [1, 32, 0.1] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}).setHotkey("S").setTooltip("Bloom blur radius.");
+	newInput(2, nodeValue_Slider(  "Tolerance",  .50               )).setTooltip("How bright a pixel should be to start blooming.");
+	newInput(3, nodeValue_Slider(  "Strength",   .25, [0, 2, 0.01] )).setTooltip("Blend intensity.");
 	newInput(4, nodeValue_Surface( "Bloom mask"));
 	
 	////- =Blur
-	newInput(13, nodeValue_Enum_Scroll( "Type",          0, [ "Gaussian", "Zoom", "Directional" ]));
-	newInput(11, nodeValue_Slider(      "Aspect Ratio",  1 ));
-	newInput(12, nodeValue_Rotation(    "Direction",     0 ));
-	newInput(14, nodeValue_Vec2(        "Zoom Origin", [.5,.5] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(13, nodeValue_EScroll(  "Type",          0, [ "Gaussian", "Zoom", "Directional" ]));
+	newInput(11, nodeValue_Slider(   "Aspect Ratio",  1     ));
+	newInput(12, nodeValue_Rotation( "Direction",     0     ));
+	newInput(14, nodeValue_Vec2(     "Zoom Origin", [.5,.5] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	
 	////- =Blend
 	newInput(15, nodeValue_Color(  "Blend",      ca_white));
@@ -39,9 +39,8 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		["Blend",    false], 15, 16, 
 	]
 	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
-	
-	newOutput(1, nodeValue_Output("Bloom Mask", VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
+	newOutput(1, nodeValue_Output( "Bloom Mask", VALUE_TYPE.surface,  noone ));
 	
 	temp_surface = [ noone ];
 	

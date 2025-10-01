@@ -363,12 +363,17 @@ function Panel_Menu() : PanelContent() constructor {
             profile_menu = [
                 menuItem(__txt("Steam Workshop"),      function() /*=>*/ {return dialogPanelCall(new Panel_Steam_Workshop())} ),
                 menuItem(__txt("Your Workshop Page"),  function() /*=>*/ {
-                    var _p = new Panel_Steam_Workshop();
-                    _p.navigate({ type: 2, page: 0 });
+                    var _p = new Panel_Steam_Workshop(2, 0);
                     dialogPanelCall(_p);
-                    
                 }),
             ];
+            
+            if(IS_PATREON) {
+                array_push(profile_menu, menuItem(__txt("Patreon Bonus Projects"), function() /*=>*/ {
+                    var _p = new Panel_Steam_Workshop(3, 1);
+                    dialogPanelCall(_p);
+                }));
+            }
         }
     #endregion
         

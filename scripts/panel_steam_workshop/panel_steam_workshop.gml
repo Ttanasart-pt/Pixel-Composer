@@ -77,12 +77,12 @@
 	}        
 #endregion
 
-function Panel_Steam_Workshop() : PanelContent() constructor {
+function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() constructor {
 	title     = "Steam Workshop";
 	auto_pin  = true;
 	
 	ds_map_info = ds_map_create();
-	contentPage = 0;
+	contentPage = _contentPage;
 	current_url = "";
 	
 	PXC_HUB_get_data();
@@ -133,7 +133,7 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 		querying    = false;
 		
 		item_per_page = 30;
-		page       = 0;
+		page       = _page;
 		pageTotal  = 1;
 		pageIndex  = [];
 		
@@ -152,7 +152,7 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 		hold_tooltip   = false;
 	#endregion 
 	
-	#region page navigation
+	#region page
 		current_page = { type: 0, page: 0 };
 		history_undo = [];
 		history_redo = [];
@@ -742,6 +742,8 @@ function Panel_Steam_Workshop() : PanelContent() constructor {
 				    array_sort(_files, function(a,b) /*=>*/ {return sign((b.data[$ "creation_time"] ?? 0) - (a.data[$ "creation_time"] ?? 0))}); 
 				    for( var i = 0, n = array_length(_files); i < n; i++ ) 
 				    	displayFiles[i] = _files[i];
+				    	
+				    filterFiles(_files, true, 0);
 				}, { files: allFiles });
 				break;
 		}
