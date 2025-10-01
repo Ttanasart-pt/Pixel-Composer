@@ -560,12 +560,14 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 						var shell_cmd = $"convert {string_quote(_pathTemp)} {string_quote(_pathOut)}";
 						shell_execute_async(magick, shell_cmd, self);
 						break;
+						
 					case 1 : 
 						surface_save_safe(_surf, _pathTemp);
 					
 						var shell_cmd = $"convert {string_quote(_pathTemp)} PNG8:{string_quote(_pathOut)}";
 						shell_execute_async(magick, shell_cmd, self);
 						break;
+						
 					case 2 : 
 						surface_save_safe(_surf, _pathOut);
 						break;

@@ -11,8 +11,16 @@ if !ready exit;
 	}
 	doDrag();
 	
-	if(sFOCUS && WIDGET_CURRENT == undefined) {
-		if(KEYBOARD_ENTER)  { onApply(selector.current_color); instance_destroy(); }
-		if(keyboard_check_pressed(vk_escape)) { onApply(previous_color); instance_destroy(); }
+	if(sFOCUS && WIDGET_CURRENT_PREV == undefined) {
+		if(KEYBOARD_ENTER) { 
+			onApply(selector.current_color); 
+			instance_destroy();
+		}
+		
+		if(keyboard_check_pressed(vk_escape)) { 
+			onApply(previous_color); 
+			instance_destroy(); 
+		}
 	}
+	
 #endregion

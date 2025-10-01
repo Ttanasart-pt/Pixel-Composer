@@ -11,7 +11,7 @@ if !ready exit;
 		doDrag();
 	}
 	
-	if(sFOCUS && WIDGET_CURRENT == undefined) {
+	if(sFOCUS && WIDGET_CURRENT_PREV == undefined) {
 		if(KEYBOARD_ENTER) {
 			onApply(palette);
 			instance_destroy();

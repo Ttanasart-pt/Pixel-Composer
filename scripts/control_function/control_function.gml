@@ -165,9 +165,10 @@
 #endregion
 
 #region widget
-	globalvar WIDGET_CURRENT, WIDGET_ACTIVE, WIDGET_CURRENT_SCROLL;
-	WIDGET_CURRENT        = undefined;
-	WIDGET_CURRENT_SCROLL = undefined;
+	globalvar WIDGET_CURRENT_SCROLL; WIDGET_CURRENT_SCROLL = undefined;
+	globalvar WIDGET_CURRENT; WIDGET_CURRENT        = undefined;
+	globalvar WIDGET_CURRENT_PREV; WIDGET_CURRENT_PREV   = undefined;
+	globalvar WIDGET_ACTIVE; WIDGET_ACTIVE         = [];
 	
 	function widget_start() {
 		INLINE

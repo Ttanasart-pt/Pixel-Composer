@@ -3,10 +3,11 @@ global.__debug_runner++;
 global.cache_call = 0;
 global.cache_hit  = 0;
 
-HOVERING_ELEMENT  = _HOVERING_ELEMENT;
-_HOVERING_ELEMENT = noone;
-FILE_DROPPED      = _FILE_DROPPED;
-_FILE_DROPPED     = false;
+WIDGET_CURRENT_PREV = WIDGET_CURRENT;
+HOVERING_ELEMENT    = _HOVERING_ELEMENT;
+_HOVERING_ELEMENT   = noone;
+FILE_DROPPED        = _FILE_DROPPED;
+_FILE_DROPPED       = false;
 
 #region keybord captures
 	if(PREFERENCES.keyboard_capture_raw) {
