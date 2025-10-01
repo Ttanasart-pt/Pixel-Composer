@@ -6,6 +6,7 @@
 
 function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group) constructor {
 	name = "3D Camera";
+	w = 128;
 	
 	dimension_index = in_d3d + 2;
 	object   = new __3dCamera_object();
@@ -14,10 +15,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	lookLine = noone;
 	lookRad  = new __3dGizmoCircleZ(0.5, c_yellow, 0.5);
 	
-	w = 128;
-	
-	scene      = new __3dScene(camera);
-	scene.name = "Camera";
+	scene      = new __3dScene(camera, "Camera");
 	deferData  = noone;
 	
 	global.SKY_SPHERE = new __3dUVSphere(0.5, 16, 8, true);
@@ -348,10 +346,13 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 			for( var i = 0, n = array_length(_outData); i < n; i++ ) {
 				if(is_surface(_outData[i]) && !surface_has_depth(_outData[i])) surface_free(_outData[i]);
 				_outData[i] = surface_verify(_outData[i], _dim[0], _dim[1]);
+				surface_clear(_outData[i]);
 			}
 			
 			temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1]);
 			temp_surface[1] = surface_verify(temp_surface[1], _dim[0], _dim[1]);
+			for( var i = 0, n = array_length(temp_surface); i < n; i++ ) 
+				surface_clear(temp_surface[i]);
 			
 			var _render = temp_surface[0];
 			var _bgSurf = _dbg? scene.renderBackground(temp_surface[1]) : noone;
@@ -370,15 +371,18 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 				
 				gpu_set_zwriteenable(true);
 				gpu_set_cullmode(_back); 
-				gpu_set_ztestenable(_blend == 0);
-				if(_blend == 1) BLEND_ADD
+				
+				switch(_blend) {
+					case 0 : gpu_set_ztestenable( true);           break;
+					case 1 : gpu_set_ztestenable(false); BLEND_ADD break;	
+				}
 				
 				camera.applyCamera();
 				scene.reset();
+				scene.apply(deferData);
 				scene.submitShader(_sobj);
 				submitShader();
 				
-				scene.apply(deferData);
 				scene.submit(_sobj);
 				
 				BLEND_NORMAL
@@ -393,8 +397,11 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 				
 				gpu_set_zwriteenable(true);
 				gpu_set_cullmode(_back); 
-				gpu_set_ztestenable(_blend == 0);
-				if(_blend == 1) BLEND_ADD
+				
+				switch(_blend) {
+					case 0 : gpu_set_ztestenable( true);           break;
+					case 1 : gpu_set_ztestenable(false); BLEND_ADD break;	
+				}
 				
 				camera.applyCamera();
 				scene.submitShader(_sobj, sh_d3d_unlit);
@@ -410,11 +417,15 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		#region render
 			surface_set_target(_outData[0]);
 				DRAW_CLEAR
-				BLEND_ALPHA
+				BLEND_OVERRIDE
 				
-				if(_dbg) draw_surface_safe(_bgSurf);
+				if(_dbg) {
+					draw_surface_safe(_bgSurf);
+					BLEND_ALPHA
+				}
+				
 				draw_surface_safe(_render);
-
+				
 				if(deferData && _aoEn) {
 					BLEND_MULTIPLY
 					draw_surface_safe(deferData.ssao);

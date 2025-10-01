@@ -189,7 +189,7 @@ _FILE_DROPPED       = false;
 					
 				} else {
 					if(UPDATE & RENDER_TYPE.full)
-						Render(PROJECT);
+						Render(PROJECT, false);
 						
 					else if(UPDATE & RENDER_TYPE.partial)
 						Render(PROJECT, true);
