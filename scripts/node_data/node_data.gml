@@ -1432,11 +1432,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		var _p = previewable;
 		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
-			var _inp = inputs[i];
-			if(is(_inp, NodeValue) && _inp.isVisible()) {
-				if(_p) _hi += junction_draw_hei_y;
-				_p = true;
-			}
+			if(!inputs[i].isVisible()) continue;
+			
+			if(_p) _hi += junction_draw_hei_y;
+			_p = true;
 		}
 		
 		if(auto_input && dummy_input) _hi += junction_draw_hei_y;
@@ -1444,23 +1443,24 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		for( var i = 0, n = array_length(outputs); i < n; i++ ) {
 			if(!outputs[i].isVisible()) continue;
+			
 			if(_p) _ho += junction_draw_hei_y;
 			_p = true;
 		}
 		
 		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
-			var _inp = inputs[i];
-			if(!is(_inp, NodeValue)) continue;
+			if(!inputs[i].bypass_junc.visible) continue;
 			
-			var _byp = _inp.bypass_junc;
-			_ho += junction_outp_hei_y * _byp.visible;
+			if(_p) _ho += junction_outp_hei_y;
+			_p = true;
 		}
 		
-		if(attributes.outp_meta) {
-			for( var i = 0, n = array_length(junc_meta); i < n; i++ ) {
-				if(!junc_meta[i].isVisible()) continue;
-				_ho += junction_draw_hei_y;
-			}
+		if(attributes.outp_meta) 
+		for( var i = 0, n = array_length(junc_meta); i < n; i++ ) {
+			if(!junc_meta[i].isVisible()) continue;
+			
+			if(_p) _ho += junction_draw_hei_y;
+			_p = true;
 		}
 		
 		h = max(previewable? attributes.preview_size : name_height, _prev_surf * surf_h, _hi, _ho);
