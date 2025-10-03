@@ -278,7 +278,7 @@ event_inherited();
 					draw_sprite_stretched_ext(THEME.node_bg, 1, gridX, gridY, gridW, gridH, COLORS._main_accent, 1);
 					if(mouse_press(mb_left, sFOCUS)) {
 						LOAD_PATH(_project.path, true);
-						PROJECT.thumbnail = array_safe_get_fast(_project.spr_path, 0);
+						PROJECT.thumbnail = array_safe_get_fast(_project.spr_data, 0);
 						instance_destroy();
 					}
 				}

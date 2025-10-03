@@ -16,10 +16,10 @@ function steam_ugc_create_collection(file) {
 		file_copy(file.path,      $"{_dir}/{filename_name(file.path     )}");
 		file_copy(file.meta_path, $"{_dir}/{filename_name(file.meta_path)}");
 		
-		if(array_safe_get_fast(file.spr_path, 0) != 0)
-			file_copy(file.spr_path[0], $"{_dir}/{filename_name(file.spr_path[0])}");
+		if(array_safe_get_fast(file.spr_data, 0) != 0)
+			file_copy(file.spr_data[0], $"{_dir}/{filename_name(file.spr_data[0])}");
 		
-		steam_ugc_generate_thumbnail(array_safe_get_fast(file.spr_path, 0), UGC_TYPE.collection);
+		steam_ugc_generate_thumbnail(array_safe_get_fast(file.spr_data, 0), UGC_TYPE.collection);
 		
 		var _han = steam_ugc_start_item_update(STEAM_APP_ID, _fid);
 		steam_ugc_set_item_title(       _han, file.meta.name                    );
@@ -59,8 +59,8 @@ function steam_ugc_update_collection(file, update_preview = false, update_note =
 	file_copy(file.path,      $"{_dir}/{filename_name(file.path     )}");
 	file_copy(file.meta_path, $"{_dir}/{filename_name(file.meta_path)}");
 	
-	if(array_safe_get_fast(file.spr_path, 0) != 0)
-		file_copy(file.spr_path[0], $"{_dir}/{filename_name(file.spr_path[0])}");
+	if(array_safe_get_fast(file.spr_data, 0) != 0)
+		file_copy(file.spr_data[0], $"{_dir}/{filename_name(file.spr_data[0])}");
 	
 	var _fid = file.meta.file_id;
 	var _han = steam_ugc_start_item_update(STEAM_APP_ID, _fid);
@@ -74,7 +74,7 @@ function steam_ugc_update_collection(file, update_preview = false, update_note =
 	steam_ugc_set_item_tags(_han, tgs);
 	
 	if(update_preview) {
-		steam_ugc_generate_thumbnail(array_safe_get_fast(file.spr_path, 0), UGC_TYPE.collection);
+		steam_ugc_generate_thumbnail(array_safe_get_fast(file.spr_data, 0), UGC_TYPE.collection);
 		if(file_exists_empty(TEMPDIR + "steamUGCthumbnail.png")) steam_ugc_set_item_preview(_han, TEMPDIR + "steamUGCthumbnail.png");
 	}
 	

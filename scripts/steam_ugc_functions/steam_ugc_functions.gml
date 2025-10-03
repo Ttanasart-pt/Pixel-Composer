@@ -68,7 +68,7 @@ function __loadSteamUGCCollection(file_id, f, path) {
 			var hh    = sprite_get_height(_temp);
 			var amo   = safe_mod(ww, hh) == 0? ww / hh : 1;
 			sprite_delete(_temp);
-			file.spr_path = [ icon_path, amo, false ];
+			file.spr_data = [ icon_path, amo, false ];
 		}
 	}
 	
@@ -96,7 +96,7 @@ function __loadSteamUGCProject(file_id, f, path) {
 			var amo   = safe_mod(ww, hh) == 0? ww / hh : 1;
 			sprite_delete(_temp);
 			
-			file.spr_path = [ icon_path, amo, false ];
+			file.spr_data = [ icon_path, amo, false ];
 		}
 	}
 	

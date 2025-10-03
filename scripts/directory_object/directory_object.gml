@@ -1,26 +1,30 @@
 function FileObject(_path) constructor {
 	static loadThumbnailAsync = true;
 	
-	name = filename_name_only(_path);
 	path = _path;
+	name = filename_name_only(path);
+	ext  = filename_ext_raw(path);
 	
-	spr_path   = [];
 	spr        = -1;
+	spr_path   = filename_ext_verify(path, ".png");
+	spr_data   = undefined;
 	sprFetchID = noone;
 	
 	size    = file_size(path);
 	content = -1;
 	
-	var _mdir  = filename_dir(path);
-	var _mname = filename_name_only(path);
-	meta_path  = $"{_mdir}/{_mname}.meta";	
+	meta_path  = filename_ext_verify(path, ".meta");
 	meta	   = noone;
 	type	   = FILE_TYPE.assets;
 	
-	switch(filename_ext_raw(path)) {
-		case "png" :	
-		case "jpg" :	
-		case "gif" :	
+	retrive_data	= false;
+	thumbnail_data	= -1;
+	thumbnail		= noone;
+	
+	switch(ext) {
+		case "png" :
+		case "jpg" :
+		case "gif" :
 			type = FILE_TYPE.assets;
 			break;
 			
@@ -30,18 +34,35 @@ function FileObject(_path) constructor {
 			break;
 			
 		case "pxcc" : 
-		case "pxz"  : 
 			type = FILE_TYPE.collection;
+			break;
+			
+		case "pxz"  : 
+			type    = FILE_TYPE.collection;
+			pxz_dir = $"{TEMPDIR}{name}_{seed_random(5)}_unzip";
 			break;
 	}
 	
-	retrive_data	= false;
-	thumbnail_data	= -1;
-	thumbnail		= noone;
+	if(ext == "png") {
+		var amo = 1;
+		var spl = string_pos("strip", path);
+		if(spl) {
+			var _amo = string_copy(path, spl, string_length(path) - spl + 1);
+				_amo = string_digits(_amo);
+			     amo = toNumber(_amo);
+		}
+		
+		spr_data = [ path, amo, false ];
+		
+	} else {
+		if(file_exists_empty(spr_path))
+			spr_data = [ spr_path, sprite_get_splices(spr_path), true ];
+	}
 	
 	static getName  = function() /*=>*/ {return name};
 	
 	static getThumbnail = function() {
+		if(!retrive_data) getMetadata();									// Metadata not loaded
 		if(thumbnail != noone && is_surface(thumbnail)) return thumbnail;	// Thumbnail loaded
 		if(thumbnail == undefined) return thumbnail;
 		
@@ -49,9 +70,6 @@ function FileObject(_path) constructor {
 			thumbnail = project_get_thumbnail_surface(path);
 			return thumbnail;
 		}
-		
-		if(size > 100000) return noone;										// File too large
-		if(!retrive_data) getMetadata();									// Metadata not loaded
 		
 		if(thumbnail_data == -1) return noone;								// Metadata does not contains thumbnail
 		if(!is_struct(thumbnail_data)) return noone;
@@ -61,48 +79,48 @@ function FileObject(_path) constructor {
 	}
 	
 	static getSpr = function() {
+		if(!retrive_data) getMetadata();									// Metadata not loaded
 		if(spr != -1 && sprite_exists(spr))	return spr;
 		if(sprFetchID != noone) return -1;
 		
 		if(type == FILE_TYPE.project) {
-			
 			var s = project_get_thumbnail(path);
 			if(sprite_exists(s)) { spr = s; return spr; }
 		}
 		
-		if(array_empty(spr_path)) {
-			var _spath = filename_ext_verify(path, ".png");
+		if(spr_data == undefined) {
+			spr_path = filename_ext_verify(path, ".png");
 			
 			if(loadThumbnailAsync) {
-				sprFetchID = sprite_add_ext(_spath, 0, 0, 0, true);
+				sprFetchID = sprite_add_ext(spr_path, 0, 0, 0, true);
 				IMAGE_FETCH_MAP[? sprFetchID] = function(_res) /*=>*/ {
 					spr = _res[? "id"];
-					if(spr) sprite_set_offset(spr, sprite_get_width(spr) / 2, sprite_get_height(spr) / 2);
+					if(spr) sprite_set_center(spr);
 				}
 				
 			} else {
-				spr = sprite_add(_spath, 0, 0, 0, 0, 0);
-				if(spr) sprite_set_offset(spr, sprite_get_width(spr) / 2, sprite_get_height(spr) / 2);
+				spr = sprite_add(spr_path, 0, 0, 0, 0, 0);
+				if(spr) sprite_set_center(spr);
 			}
 			
 			return spr;
 		}
 		
-		var _path = array_safe_get_fast(spr_path, 0);
-		var _amo  = array_safe_get_fast(spr_path, 1);
-		if(!file_exists_empty(_path)) return -1;
+		spr_path  = array_safe_get_fast(spr_data, 0);
+		var _amo  = array_safe_get_fast(spr_data, 1);
+		if(!file_exists_empty(spr_path)) return -1;
 		
 		if(loadThumbnailAsync) {
-			sprFetchID = sprite_add_ext(_path, _amo, 0, 0, true);
+			sprFetchID = sprite_add_ext(spr_path, _amo, 0, 0, true);
 			IMAGE_FETCH_MAP[? sprFetchID] = function(load_result) {
 				spr = load_result[? "id"];
-				if(spr && array_safe_get_fast(spr_path, 2))
-					sprite_set_offset(spr, sprite_get_width(spr) / 2, sprite_get_height(spr) / 2);
+				if(spr && array_safe_get_fast(spr_data, 2))
+					sprite_set_center(spr);
 			}
 		} else {
-			spr = sprite_add(_path, _amo, 0, 0, 0, 0);
-			if(spr && array_safe_get_fast(spr_path, 2))
-				sprite_set_offset(spr, sprite_get_width(spr) / 2, sprite_get_height(spr) / 2);
+			spr = sprite_add(spr_path, _amo, 0, 0, 0, 0);
+			if(spr && array_safe_get_fast(spr_data, 2))
+				sprite_set_center(spr);
 		}
 		
 		return spr;
@@ -116,6 +134,17 @@ function FileObject(_path) constructor {
 		if(!file_exists_empty(path)) return noone;
 		
 		meta = new MetaDataManager();
+		
+		if(ext == "pxz") {
+			directory_verify(pxz_dir);
+			directory_clear(pxz_dir);
+			zip_unzip(path, pxz_dir);
+			
+			meta_path  = filename_combine(pxz_dir, $"{name}.meta");
+			var _spath = filename_combine(pxz_dir, $"{name}.png");
+			if(file_exists_empty(_spath)) 
+				spr_data = [ _spath, sprite_get_splices(_spath), true ];
+		}
 		
 		if(file_exists_empty(meta_path)) {
 			meta.deserialize(json_load_struct(meta_path));
@@ -188,30 +217,6 @@ function DirectoryObject(_path) constructor {
 			} else if(array_exists(file_type, filename_ext(file))) {
 				var f = new FileObject(_path);
 				array_push(content, f);
-				
-				if(string_lower(filename_ext(file)) == ".png") {
-					var icon_path = _path;
-					var amo = 1;
-					var p = string_pos("strip", icon_path);
-					if(p) {
-						var _amo = string_copy(icon_path, p, string_length(icon_path) - p + 1);
-							_amo = string_digits(_amo);
-						     amo = toNumber(_amo);
-					}
-					f.spr_path = [icon_path, amo, false];
-					
-				} else {
-					var icon_path = path + "/" + filename_change_ext(file, ".png");
-					if(!file_exists_empty(icon_path)) continue;
-					
-					var _temp = sprite_add(icon_path, 0, false, false, 0, 0);
-					var ww    = sprite_get_width(_temp);
-					var hh    = sprite_get_height(_temp);
-					var amo   = safe_mod(ww, hh) == 0? ww / hh : 1;
-					sprite_delete(_temp);
-					
-					f.spr_path = [icon_path, amo, true];
-				}
 			}
 		}
 		

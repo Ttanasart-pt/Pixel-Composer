@@ -29,6 +29,18 @@ function sprite_add_center(path) {
 	return _s;
 }
 
+function sprite_set_center(spr) { sprite_set_offset(spr, sprite_get_width(spr) / 2, sprite_get_height(spr) / 2); }
+
+function sprite_get_splices(path) {
+	var _temp = sprite_add(path, 0, false, false, 0, 0);
+	var ww    = sprite_get_width(_temp);
+	var hh    = sprite_get_height(_temp);
+	var amo   = safe_mod(ww, hh) == 0? ww / hh : 1;
+	sprite_delete(_temp);
+	
+	return amo;
+}
+
 function sprite_path_check_depth(_path, noti = true) {
 	static path_convert = filepath_resolve(PREFERENCES.ImageMagick_path) + "convert.exe";
 	static path_magick  = filepath_resolve(PREFERENCES.ImageMagick_path) + "magick.exe";

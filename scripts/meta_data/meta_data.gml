@@ -28,6 +28,8 @@ function MetaDataManager() constructor {
 	version     = SAVE_VERSION;
 	hidden      = false;
 	
+	preview_frames = 1;
+	
 	static displays = [
 		[ "Description",  function(m) /*=>*/ {return m.description}, 5],
 		[ "Author",       function(m) /*=>*/ {return m.author},      1],
@@ -46,6 +48,7 @@ function MetaDataManager() constructor {
 			tags, 
 			version, 
 			isDefault, 
+			preview_frames,
 		};
 		
 		m.aut_id = author_steam_id;
@@ -63,6 +66,7 @@ function MetaDataManager() constructor {
 		tags            = m[$ "tags"]        ?? tags;
 		version         = m[$ "version"]     ?? version;
 		isDefault       = m[$ "isDefault"]   ?? isDefault;
+		preview_frames  = m[$ "preview_frames"] ?? preview_frames;
 		
 		return self;
 	}

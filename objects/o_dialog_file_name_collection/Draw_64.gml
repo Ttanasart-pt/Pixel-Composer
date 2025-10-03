@@ -69,6 +69,7 @@
 			
 			if(updating == noone && node != noone) {
 				saveCollection(node, filename_combine(data_path, meta.name), true, meta);
+				
 			} else {
 				var _map     = json_load_struct(updating.path);
 				var _meta    = meta.serialize();
@@ -89,7 +90,7 @@
 				
 				updating.path        = _newPath;
 				updating.meta_path   = _newMeta;
-				updating.spr_path[0] = _newSpr;
+				updating.spr_data[0] = _newSpr;
 				updating.meta        = meta;
 				
 				PANEL_COLLECTION.refreshContext();

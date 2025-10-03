@@ -5,11 +5,7 @@ function APPEND(_path, context = PANEL_GRAPH.getCurrentContext()) {
 	
 	if(_path == "") return noone;
 	var _map = json_load_struct(_path);
-	
-	if(_map == -1) {
-		printIf(log, "Decode error");
-		return noone;
-	}
+	if(_map == -1) { printIf(log, "Decode error"); return noone; }
 	
 	var node_create = __APPEND_MAP(_map, context);
 	recordAction(ACTION_TYPE.collection_loaded, array_clone(node_create), _path);
@@ -80,7 +76,7 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext(), appended_
 		for(var i = 0; i < _append_len; i++)
 			appended_list[i].applyDeserialize();
 	} catch(e) {
-		log_warning("LOAD, apply deserialize", exception_print(e));
+		log_warning("APPEND, apply deserialize", exception_print(e));
 	}
 	printIf(log, $"Apply deserialize time: {current_time - t}"); t = current_time;
 	

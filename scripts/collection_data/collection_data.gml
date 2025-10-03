@@ -16,7 +16,7 @@ function refreshCollections() {
 	printDebug("COLLECTION: refreshing collection base folder.");
 	
 	COLLECTIONS = new DirectoryObject(DIRECTORY + "Collections");
-	COLLECTIONS.scan([".json", ".pxcc"]);
+	COLLECTIONS.scan([".json", ".pxcc", ".pxz"]);
 	COLLECTIONS.open = true;
 }
 
@@ -56,19 +56,10 @@ function searchCollection(_arr, _search_str, _inputArray = true) {
 function saveCollection(_node, _path, save_surface = true, metadata = noone) {
 	if(_node == noone) return;
 		
-	var _pxz   = false;
-	var _fpath = string_replace(_path, filename_ext(_path), "");
+	var _outpath = filename_ext_verify(_path, ".pxcc");
+	SAVE_COLLECTION(_node, _outpath, save_surface, metadata, _node.group);
 	
-	if(_pxz) {
-		_fpath += ".pxz";
-		SAVE_PXZ_COLLECTION(_node, _fpath, PANEL_PREVIEW.getNodePreviewSurface(), metadata, _node.group);
-		
-	} else {
-		_fpath += ".pxcc";
-		SAVE_COLLECTION(_node, _fpath, save_surface, metadata, _node.group);
-	}
-	
-	PANEL_COLLECTION.updated_path = _fpath;
+	PANEL_COLLECTION.updated_path = _outpath;
 	PANEL_COLLECTION.updated_prog = 1;
 	PANEL_COLLECTION.refreshContext();
 }
@@ -87,7 +78,7 @@ function clearDefaultCollection() {
 			if(!_meta.isDefault) continue;
 			
 			var _path = _file.path;
-			var _spth = array_safe_get(_file.spr_path, 0);
+			var _spth = array_safe_get(_file.spr_data, 0);
 			var _mpth = _file.meta_path;
 			
 			file_delete_safe(_path);

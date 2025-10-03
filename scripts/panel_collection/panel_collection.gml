@@ -57,7 +57,6 @@ function Panel_Collection() : PanelContent() constructor {
 	#region ++++++++++++ Actions ++++++++++++
 		function replace() { 
 			if(_menu_node == noone) return;
-			
 			saveCollection(PANEL_INSPECTOR.getInspecting(), _menu_node.path, false, _menu_node.meta);
 		}
 		

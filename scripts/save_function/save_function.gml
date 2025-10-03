@@ -278,15 +278,18 @@ function SAVE_COLLECTION(_node, _path, save_surface = true, metadata = noone, co
 	PANEL_MENU.setNotiIcon(THEME.noti_icon_file_save);
 }
 
-function SAVE_PXZ_COLLECTION(_node, _path, _surf = noone, metadata = noone, context = PANEL_GRAPH.getCurrentContext()) {
+function SAVE_PXZ_COLLECTION(_node, _path, _prev_surface = noone, metadata = noone, context = PANEL_GRAPH.getCurrentContext()) {
 	var _name = filename_name_only(_path);
 	var _path_icon = "";
 	var _path_node = "";
 	var _path_meta = "";
 	
-	if(is_surface(_surf)) {
+	if(is_string(_prev_surface)) {
+		_path_icon = _prev_surface;
+		
+	} else if(is_surface(_prev_surface)) {
 		_path_icon = $"{TEMPDIR}{_name}.png";
-		surface_save_safe(_surf, _path_icon);
+		surface_save_safe(_prev_surface, _path_icon);
 	}
 	
 	var _content = {};
@@ -308,8 +311,6 @@ function SAVE_PXZ_COLLECTION(_node, _path, _surf = noone, metadata = noone, cont
 		_meta.version = SAVE_VERSION;
 		json_save_struct(_path_meta, _meta, true);
 	}
-	
-	print(_path_node);
 	
 	var _z = zip_create();
 	if(_path_icon != "") zip_add_file(_z, $"{_name}.png",  _path_icon);
