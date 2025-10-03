@@ -2647,7 +2647,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var _nodeid = con_node;
 		if(APPENDING) {
 			_nodeid = GetAppendID(con_node);
-			if(_nodeid == noone || !ds_map_exists(node.project.nodeMap, _nodeid)) return true;
+			// if(_nodeid == noone || !ds_map_exists(node.project.nodeMap, _nodeid)) return true;
 		}
 		
 		if(!ds_map_exists(node.project.nodeMap, _nodeid)) {

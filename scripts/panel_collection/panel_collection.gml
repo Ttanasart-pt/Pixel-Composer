@@ -407,7 +407,7 @@ function Panel_Collection() : PanelContent() constructor {
 							draw_sprite_ui_uniform(THEME.group, 0, _boxx + grid_size / 2, yy + grid_size / 2, 1, c_white);
 					
 						if(meta != noone && page == 0) {
-							if(struct_try_get(meta, "steam")) {
+							if(meta.file_id != 0) {
 								draw_sprite_ui_uniform(THEME.steam, 0, _nx + ui(12), yy + ui(12), 1, COLORS._main_icon_dark, 1);
 								if(meta.author_steam_id == STEAM_USER_ID)
 									draw_sprite_ui_uniform(THEME.steam_creator, 0, _nx + grid_width - ui(8), yy + ui(12), 1, COLORS._main_icon_dark, 1);

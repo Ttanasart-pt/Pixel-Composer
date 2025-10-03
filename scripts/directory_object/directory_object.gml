@@ -169,6 +169,11 @@ function FileObject(_path) constructor {
 		
 		return meta;
 	}
+
+	static free = function() {
+		sprite_delete_safe(spr);
+		surface_free_safe(thumbnail);
+	}
 }
 
 function DirectoryObject(_path) constructor {
@@ -286,7 +291,15 @@ function DirectoryObject(_path) constructor {
 		return hh;
 	}
 	
-	static destroy = function() /*=>*/ {  }
+	static destroy = function() {  }
+	
+	static free = function() {
+		for( var i = 0, n = array_length(subDir); i < n; i++ ) 
+			subDir[i].free();
+			
+		for( var i = 0, n = array_length(content); i < n; i++ ) 
+			content[i].free();
+	}
 }
 
 function readFolder(path, arr = []) {
