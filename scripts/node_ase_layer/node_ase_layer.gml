@@ -69,7 +69,7 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		ase_data = _data;
 		if(_data == noone) return;
-		if(layer_object != noone) return;
+		if(layer_object != noone && layer_object.name == _lname) return;
 		
 		layer_object    = noone;
 		update_on_frame = false;
