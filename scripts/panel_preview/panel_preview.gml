@@ -2088,7 +2088,7 @@ function Panel_Preview() : PanelContent() constructor {
                 var _cur_frame = GLOBAL_CURRENT_FRAME + 1;
                 draw_set_color(frac(_cur_frame) == 0? COLORS._main_text_sub : COLORS._main_value_negative);
                 draw_text(right_menu_x, right_menu_y, $"{__txt("Frame")} {_cur_frame}/{GLOBAL_TOTAL_FRAMES}");
-            
+            	
                 if(d3_active == NODE_3D.none) {
                     right_menu_y += _lh;
                     

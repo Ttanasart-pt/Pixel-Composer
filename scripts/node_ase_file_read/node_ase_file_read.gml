@@ -66,18 +66,20 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		for( var i = 0, n = array_length(layers); i < n; i++ ) {
 			var _yy = _y + ui(8) + i * hh;
 			var _bx = _x + ui(24);
-			var _layer = layers[i];
+			
+			var _index = n - i - 1;
+			var _layer = layers[_index];
 			
 			if(_layer.type == 0) {
-				var vis = array_safe_get_fast(_vis, i, true);
+				var vis = array_safe_get_fast(_vis, _index, true);
 				if(point_in_circle(_m[0], _m[1], _bx, _yy + hh / 2, ui(8))) {
 					draw_sprite_ui_uniform(THEME.junc_visible, vis, _bx, _yy + hh / 2, 1, c_white);
 					
 					if(mouse_press(mb_left, _focus))
-						hold_visibility = !_vis[i];
+						hold_visibility = !_vis[_index];
 						
-					if(mouse_click(mb_left, _focus) && _vis[i] != hold_visibility) {
-						_vis[@ i] = hold_visibility;
+					if(mouse_click(mb_left, _focus) && _vis[_index] != hold_visibility) {
+						_vis[@ _index] = hold_visibility;
 						triggerRender();
 					}
 				} else 
@@ -85,15 +87,15 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				
 				_bx += ui(16 + 4);
 				
-				var lop = array_safe_get_fast(_lop, i, true);
+				var lop = array_safe_get_fast(_lop, _index, true);
 				if(point_in_circle(_m[0], _m[1], _bx, _yy + hh / 2, ui(8))) {
 					draw_sprite_ui_uniform(THEME.prop_on_end, lop, _bx, _yy + hh / 2, 1, c_white);
 					
 					if(mouse_press(mb_left, _focus))
-						hold_loop = !_lop[i];
+						hold_loop = !_lop[_index];
 						
-					if(mouse_click(mb_left, _focus) && _lop[i] != hold_loop) {
-						_lop[@ i] = hold_loop;
+					if(mouse_click(mb_left, _focus) && _lop[_index] != hold_loop) {
+						_lop[@ _index] = hold_loop;
 						triggerRender();
 					}
 				} else 
@@ -199,12 +201,14 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	attributes.file_checker = true;
 	array_push(attributeEditors, [ "File Watcher", function() /*=>*/ {return attributes.file_checker}, new checkBox(function() /*=>*/ {return toggleAttribute("file_checker")}) ]);
 	
-	content      = noone;
-	layers       = [];
-	tags         = [];
-	_tag_delay   = 0;
 	path_current = "";
 	first_update = false;
+	
+	content      = noone;
+	layers       = [];
+	layerMap     = {};
+	tags         = [];
+	_tag_delay   = 0;
 	
 	on_drop_file = function(path) { inputs[0].setValue(path); doUpdate(); return true; } 
 	
@@ -274,6 +278,8 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		if(content == noone) return false;
 		
 		layers     = [];
+		layerMap   = {};
+		
 		var vis    = attributes.layer_visible;
 		var lop    = attributes.layer_loop;
 		var frames = content[$ "Frames"];
@@ -312,7 +318,10 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 						var name = chunk[$ "Name"];
 						var type = chunk[$ "Layer type"];
 						
-						array_push(layers, new ase_layer(name, type));
+						var _layer = new ase_layer(name, type);
+						array_push(layers, _layer);
+						layerMap[$ name] = _layer;
+						
 						array_push(vis, true);
 						array_push(lop, true);
 						break;
