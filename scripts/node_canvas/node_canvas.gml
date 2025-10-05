@@ -675,7 +675,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		rightTools_brush = [ 
 			-1,
-			new NodeTool( "Make/Reset Brush", THEME.canvas_tools_pencil ).setToolFn( __action_make_brush ),
+			rtool_brush,
 		];
 		
 		rightTools = rightTools_general;
@@ -1414,6 +1414,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			if(_atype == 0)  preview_index = safe_mod(CURRENT_FRAME * _anims, _fram);
 			else			 preview_index = min(CURRENT_FRAME * _anims, _fram - 1);
 		}
+		
+		rtool_brush.spr = brush.brush_use_surface? THEME.canvas_tools_pencil_surface : THEME.canvas_tools_pencil;
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {

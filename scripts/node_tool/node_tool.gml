@@ -1,9 +1,9 @@
-function NodeTool(name = "", spr = noone, contextString = instanceof(other)) constructor {
-	ctx         = contextString;
-	context     = noone;
+function NodeTool(_name = "", _spr = noone, _contextString = instanceof(other)) constructor {
+	ctx       = _contextString;
+	context   = noone;
 	
-	self.name   = name;
-	self.spr    = spr;
+	name      = _name;
+	spr       = _spr;
 	
 	subtools  = is_array(spr)? array_length(spr) : 0;
 	selecting = 0;
@@ -41,7 +41,7 @@ function NodeTool(name = "", spr = noone, contextString = instanceof(other)) con
 	static setSettings = function(_s) { for(var i = 0; i < array_length(_s); i++) array_push(settings, _s[i]);    return self; }
 	static setSetting  = function(_s) { for(var i = 0; i < argument_count; i++) array_push(settings, argument[i]); return self; }
 	
-	static addSetting = function(name, type, onEdit, keyAttr, val) {
+	static addSetting = function(_name, type, onEdit, keyAttr, val) {
 		var w;
 		
 		switch(type) {
@@ -49,12 +49,13 @@ function NodeTool(name = "", spr = noone, contextString = instanceof(other)) con
 				w = new textBox(TEXTBOX_INPUT.number, onEdit);
 				w.font = f_p3;
 				break;
+				
 			case VALUE_TYPE.boolean : 
 				w = new checkBox(onEdit);
 				break;
 		}
 		
-		array_push(settings, [ name, w, keyAttr, attribute ]);
+		array_push(settings, [ _name, w, keyAttr, attribute ]);
 		attribute[$ keyAttr] = val;
 		
 		return self;
