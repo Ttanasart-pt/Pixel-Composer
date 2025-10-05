@@ -5,13 +5,15 @@ function Node_Anim_Curve(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue_Curve("Curve", CURVE_DEF_01));
+	////- =X
+	newInput(4, nodeValue_Bool("Animated", false));
 	newInput(1, nodeValue_Slider("Progress", 0));
 	
+	////- =Y
 	newInput(2, nodeValue_Float("Minimum", 0));
 	newInput(3, nodeValue_Float("Maximum", 1));
 	
-	newInput(4, nodeValue_Bool("Animated", false));
-	
+	////- =Display
 	newInput(5, nodeValue_Enum_Scroll("Display Type", 0, { data: [ "Number", "Curve" ], update_hover: false }));
 	
 	newOutput(0, nodeValue_Output("Curve", VALUE_TYPE.float, []));
@@ -27,16 +29,26 @@ function Node_Anim_Curve(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	disp_prog = 0;
 	
 	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {  		
-		var curve = _data[0];
-		var _anim = _data[4];
-		var time  = _anim? CURRENT_FRAME / (TOTAL_FRAMES - 1) : _data[1];
-		var _min  = _data[2];
-		var _max  = _data[3];
+		#region data
+			var curve = _data[0];
+			
+			var _anim = _data[4];
+			var _prog = _data[1];
+			
+			var _min  = _data[2];
+			var _max  = _data[3];
+			
+			var _disp = _data[5];
+			
+			inputs[1].setVisible(!_anim);
+		#endregion
+		
+		var time = _anim? CURRENT_FRAME / (TOTAL_FRAMES - 1) : _prog;
 		var val   = eval_curve_x(curve, time) * (_max - _min) + _min;
 		
-		var _disp = _data[5];
 		disp_type = _disp;
 		disp_prog = time;
+		update_on_frame = _anim;
 		
 		var _ww = 96, _hh = 48;
 		switch(_disp) {
@@ -44,8 +56,6 @@ function Node_Anim_Curve(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			case 1 : _ww = 128; _hh = 128; break;
 		}
 		setDimension(_ww, _hh);
-		
-		inputs[1].setVisible(!_anim);
 		
 		curveBox_obj.progress_draw = time;
 		curveBox_obj.display_min   = _min;
