@@ -53,6 +53,7 @@ function Patreon_project_item(_file) constructor {
 	preview_sprite = undefined;
 	
 	tags_content   = [];
+	tags           = [];
 	
 	static getPreviewSprite = function() {
 		if(preview_sprite != undefined) return preview_sprite;

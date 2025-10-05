@@ -532,50 +532,55 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 		var _ver_use  = !array_empty(ver_filter);
 		var _search   = string_lower(search_string);
 		
-		for( var i = _offset, n = array_length(_files); i < n; i++ ) {
-			var _file = _files[i];
+		if(contentPage == 3) {
+			displayFiles = array_clone(_files, 1);
 			
-			if(contentPage == 2) {
-				var _match = STEAM_ID == _file.owner_steam_id;
-				if(!_match) continue;
-			}
-			
-			if(_tag_use) {
-				var _match = array_overlap(tag_filter, _file.tags);
-				if(!_match) continue;
-			}
-			
-			if(_type_use) {
-				var _match = array_overlap(type_filter, _file.tags);
-				if(!_match) continue;
-			}
-			
-			if(_ver_use) {
-				var _match = false;
-				for( var j = 0, m = array_length(ver_filter); j < m; j++ ) {
-					if(string_starts_with(_file.tag_version, ver_filter[j]))
-						_match = true;
+		} else {
+			for( var i = _offset, n = array_length(_files); i < n; i++ ) {
+				var _file = _files[i];
+				
+				if(contentPage == 2) {
+					var _match = STEAM_ID == _file.owner_steam_id;
+					if(!_match) continue;
 				}
-				if(!_match) continue;
+				
+				if(_tag_use) {
+					var _match = array_overlap(tag_filter, _file.tags);
+					if(!_match) continue;
+				}
+				
+				if(_type_use) {
+					var _match = array_overlap(type_filter, _file.tags);
+					if(!_match) continue;
+				}
+				
+				if(_ver_use) {
+					var _match = false;
+					for( var j = 0, m = array_length(ver_filter); j < m; j++ ) {
+						if(string_starts_with(_file.tag_version, ver_filter[j]))
+							_match = true;
+					}
+					if(!_match) continue;
+				}
+				
+				if(search_string != "") {
+					var _match = string_pos(_search, string_lower(_file.title)) != 0;
+					if(!_match) continue;
+				}
+				
+				if(author_search_id != undefined) {
+					var _match = _file.owner_steam_id == author_search_id;
+					if(!_match) continue;
+				}
+				
+				if(!own_filter) {
+					var _owned = struct_has(STEAM_SUBS_IDS, _file.file_id);
+					if(_owned) continue;
+				}
+				
+				custom_tags = array_union(custom_tags, _file.tags_content);
+				array_push(displayFiles, _file);
 			}
-			
-			if(search_string != "") {
-				var _match = string_pos(_search, string_lower(_file.title)) != 0;
-				if(!_match) continue;
-			}
-			
-			if(author_search_id != undefined) {
-				var _match = _file.owner_steam_id == author_search_id;
-				if(!_match) continue;
-			}
-			
-			if(!own_filter) {
-				var _owned = struct_has(STEAM_SUBS_IDS, _file.file_id);
-				if(_owned) continue;
-			}
-			
-			custom_tags = array_union(custom_tags, _file.tags_content);
-			array_push(displayFiles, _file);
 		}
 		
 		custom_tags = array_substract(custom_tags, META_TAGS);
