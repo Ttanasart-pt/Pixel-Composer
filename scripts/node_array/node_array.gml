@@ -2,13 +2,10 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Array";
 	setDimension(96, 32);
 	
-	attributes.spread_value = false;
+	newInput(0, nodeValue_Enum_Scroll("Type", 0, { data: [ "Any", "Surface", "Number", "Color", "Text" ], update_hover: false })).rejectArray();
+	newInput(1, nodeValue_Bool("Spread array", false, "Unpack array and push the contents into the output one by one." )).rejectArray();
 	
-	newInput(0, nodeValue_Enum_Scroll("Type", 0, { data: [ "Any", "Surface", "Number", "Color", "Text" ], update_hover: false }))
-		.rejectArray();
-	
-	newInput(1, nodeValue_Bool("Spread array", false, "Unpack array and push the contents into the output one by one." ))
-		.rejectArray();
+	newOutput(0, nodeValue_Output("Array", VALUE_TYPE.any, []));
 	
 	array_adjust_tool = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		var _h = ui(48);
@@ -31,9 +28,9 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		return _h;
 	});
 	
-	input_display_list = [ 0, 1, ["Contents", false], array_adjust_tool, ];
-	
-	newOutput(0, nodeValue_Output("Array", VALUE_TYPE.any, []));
+	input_display_list = [ 0, 1, 
+		["Contents", false], array_adjust_tool
+	];
 	
 	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
@@ -89,8 +86,8 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	}
 	
 	static updateType = function(resetVal = false) {
-		var _typ = getType();
 		if(getInputAmount() <= 0) return;
+		var _typ = getType();
 		
 		if(_typ == VALUE_TYPE.any && inputs[input_fix_len].value_from)
 			outputs[0].setType(inputs[input_fix_len].value_from.type);
@@ -99,14 +96,17 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		for( var i = array_length(inputs) - 1; i >= input_fix_len; i-- ) {
 			if(resetVal) inputs[i].resetValue();
+			var _ctyp = inputs[i].type;
 			
 			if(inputs[i].value_from == noone) {
-				inputs[i].setType(_typ);
-				inputs[i].resetDisplay();
+				if(_ctyp != _typ) 
+					inputs[i].setType(_typ);
+				// inputs[i].resetDisplay();
 				
 			} else if (value_bit(inputs[i].value_from.type) & value_bit(_typ) != 0) {
-				inputs[i].setType(inputs[i].value_from.type);
-				inputs[i].resetDisplay();
+				if(_ctyp != inputs[i].value_from.type) 
+					inputs[i].setType(inputs[i].value_from.type);
+				// inputs[i].resetDisplay();
 				
 			} else {
 				inputs[i].removeFrom();
@@ -144,15 +144,12 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var res  = [];
 		var ind  = 0;
 		
-		updateType(false);
 		var _set  = _typ == VALUE_TYPE.any;
 		var _setT = VALUE_TYPE.any;
 		
-		for( var i = input_fix_len; i < array_length(inputs); i++ ) {
-			var val = getInputData(i);
-			
-			if(is_array(val) && spd) array_append(res, val);
-			else                     array_push(res, val);
+		for( var i = input_fix_len, n = array_length(inputs); i < n; i++ ) {
+			if(spd) array_append(res, getInputData(i));
+			else    array_push(res, getInputData(i));
 			
 			if(inputs[i].value_from == noone) continue;
 			
