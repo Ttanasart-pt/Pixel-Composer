@@ -32,25 +32,15 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	skipDefault();
 	
 	__dummy_input = nodeValue("Add to group", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0);
-	__dummy_input.setDummy(function() /*=>*/ { var input = nodeBuild("Node_Group_Input", 0, 0, self); return input.inParent; }, function(_junc) /*=>*/ { _junc.from.destroy() } );
-	
-	__dummy_input.onSetFrom = function(juncFrom) {
-		array_remove(juncFrom.value_to, __dummy_input);
-		__dummy_input.value_from = noone;
-		
-		var input = nodeBuild("Node_Group_Input", 0, 0, self);
-		var _type = juncFrom.type;
-		var _tind = array_find(GROUP_IO_TYPE_MAP, _type);
+	__dummy_input.setDummy(function(juncFrom) /*=>*/ { 
+		var input = nodeBuild("Node_Group_Input", 0, 0, self); 
+		var _tind = array_find(GROUP_IO_TYPE_MAP, juncFrom.type);
 		
 		input.attributes.inherit_type = false;
 		if(_tind != -1) input.inputs[2].setValue(_tind);
-			
-		input.inParent.setFrom(juncFrom);
 		
-		if(onNewInputFromGraph != noone) onNewInputFromGraph(juncFrom);
-	}
-	
-	onNewInputFromGraph = noone;
+		return input.inParent; 
+	}, function(_junc) /*=>*/ { _junc.from.destroy() } );
 	
 	////- Attributes
 	

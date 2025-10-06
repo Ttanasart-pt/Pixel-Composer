@@ -248,7 +248,6 @@ function Panel_Release_Note() : PanelContent() constructor {
 		if (_id == note_get) {
 		    if (_status == 0) {
 		        note   = ds_map_find_value(async_load, "result");
-		        print($"raw note: {note}");
 		        noteMd = markdown_parse(note);
 				alarm[0] = 1;
 			}
@@ -256,7 +255,6 @@ function Panel_Release_Note() : PanelContent() constructor {
 		} else if (_id == note_issues_get) {
 		    if (_status == 0) {
 		        note_issues   = ds_map_find_value(async_load, "result");
-		        print($"raw issue: {note_issues}");
 		        note_issuesMd = markdown_parse(note_issues);
 				alarm[0] = 1;
 			}

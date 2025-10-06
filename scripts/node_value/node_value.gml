@@ -1918,7 +1918,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			var conn = isConnectable(_valueFrom, checkRecur, log);
 			if(conn < 0) return conn;
 			
-			var _targ    = dummy_get();
+			var _targ    = dummy_get(_valueFrom);
 			dummy_target = _targ;
 			UNDO_HOLDING = true;
 			var _res     = _targ.setFrom(_valueFrom, _update, checkRecur, log);
