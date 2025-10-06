@@ -7,9 +7,9 @@ function Node_Caustic(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y, _g
 	
 	////- =Noise
 	newInput(3, nodeValueSeed()).setShaderProp("seed");
-	newInput(4, nodeValue_Float(  "Progress",  0               )).setShaderProp("progress");
-	newInput(5, nodeValue_Slider( "Detail",    1.24, [0,2,.01] )).setShaderProp("detail");
-	newInput(6, nodeValue_Slider( "Intensity", 1,    [0,4,.01] )).setShaderProp("intensity");
+	newInput(4, nodeValue_Float(  "Progress",  0            )).setShaderProp("progress");
+	newInput(5, nodeValue_Int(    "Detail",    1            )).setShaderProp("detail");
+	newInput(6, nodeValue_Slider( "Intensity", 1, [0,4,.01] )).setShaderProp("intensity");
 	
 	////- =Transform
 	newInput(1, nodeValue_Vec2(   "Position", [0,0]   )).setHotkey("G").setShaderProp("position").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);

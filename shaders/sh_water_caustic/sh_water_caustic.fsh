@@ -4,8 +4,8 @@ varying vec4 v_vColour;
 
 uniform float seed;
 uniform float progress;
-uniform float detail;
 uniform float intensity;
+uniform int   detail;
 
 uniform vec2  dimension;
 uniform vec2  position;
@@ -85,16 +85,22 @@ void main() {
 	     p.x *= (dimension.x / dimension.y);
          p    = (p - position / dimension) * dimension / scale;
 	
-    vec3 pos = vec3(p.x, progress, p.y);
-    vec4 n   = snoise( pos );
-        
-    pos -= 0.07 * n.xyz;
-    n = snoise( pos );
-
-    pos -= 0.07 * n.xyz;
-    n = snoise( pos );
-
-    // noise [-1..+1] -> color
-    float i = exp(n.w * 3. - 1.5) * intensity;
-	gl_FragColor = vec4(vec3(i), 1.);
+    float amp = pow(2., float(detail) - 1.) / (pow(2., float(detail)) - 1.);
+    float cc  = 0.;
+    
+    for(int i = 0; i < detail; i++) {
+    	vec3 pos = vec3(p.x, progress, p.y);
+	    vec4 n   = snoise( pos );
+	    pos -= 0.07 * n.xyz;
+	    n = snoise( pos );
+	
+	    pos -= 0.07 * n.xyz;
+	    n = snoise( pos );
+	    cc += exp(n.w * 3. - 1.5) * intensity * amp;
+	    
+		amp *= .5;
+		p   *= 2.;
+    }
+	
+	gl_FragColor = vec4(vec3(cc), 1.);
 }
