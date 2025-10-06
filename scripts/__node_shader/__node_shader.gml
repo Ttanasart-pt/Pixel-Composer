@@ -48,6 +48,14 @@ function Node_Shader(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				
 				case "__NodeValue_Color":        shader_set_c(_key, _val); break;
 				case "__NodeValue_Surface":      shader_set_surface(_key, _val); break;
+				
+				default : 
+					if(is(_inp, NodeValue))
+					switch(_inp.type) {
+						case VALUE_TYPE.float   : shader_set_f(_key, _val); break;
+						case VALUE_TYPE.integer : shader_set_i(_key, _val); break;
+					}
+					break;
 			}
 		}
 	}
