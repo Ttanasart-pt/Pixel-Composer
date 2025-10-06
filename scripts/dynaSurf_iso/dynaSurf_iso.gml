@@ -21,7 +21,6 @@ function dynaSurf_iso() : dynaSurf() constructor {
 	}
 	
 	static draw = function(_x = 0, _y = 0, _xs = 1, _ys = 1, _rot = 0, _col = c_white, _alp = 1) {
-		
 		var _ind  = getIndex(_rot);
 		var _surf = array_get(surfaces, _ind);
 		var _offx = array_get(offsetx,  _ind) * _xs;

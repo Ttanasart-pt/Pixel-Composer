@@ -817,7 +817,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	}
 	
 	static processData = function(_outData, _data, _array_index) {
-		var ins = _data[0];
+		var surf = _data[0];
 		
 		var out_type  = _data[9];
 		var dim		  = _data[1];
@@ -838,12 +838,12 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		var cDep = attrDepth();
 		
-		var  ww = surface_get_width_safe(ins);
-		var  hh = surface_get_height_safe(ins);
+		var  ww = surface_get_width_safe(surf);
+		var  hh = surface_get_height_safe(surf);
 		var _ww = ww;
 		var _hh = hh;
 		
-		if(!is_surface(ins)) {
+		if(!is_surface(surf)) {
 			surface_free_safe(_outSurf);
 			_outSurf = noone;
 		}
@@ -913,15 +913,15 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 		if(mode == 1) { // Tile
 			surface_set_shader(_outSurf);
-			shader_set_interpolation(ins);
+			shader_set_interpolation(surf);
 			
-				draw_surface_tiled_ext_safe(ins, draw_x, draw_y, sca[0], sca[1], rot, c_white, alp);
+				draw_surface_tiled_ext_safe(surf, draw_x, draw_y, sca[0], sca[1], rot, c_white, alp);
 				
 			surface_reset_shader();
 			
 		} else { // Normal or wrap
 			surface_set_shader(_outSurf);
-			shader_set_interpolation(ins);
+			shader_set_interpolation(surf);
 			
 			if(echo && CURRENT_FRAME && prev_data != noone) {
 				var _pre = prev_data[_array_index];
@@ -939,22 +939,22 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 						_py = round(_py);
 					}
 					
-					draw_surface_ext_safe(ins, _px, _py, _sx, _sy, _rt, c_white, alp);
+					draw_surface_ext_safe(surf, _px, _py, _sx, _sy, _rt, c_white, alp);
 				}
 			} else 
-				draw_surface_ext_safe(ins, draw_x, draw_y, sca[0], sca[1], rot, c_white, alp);
+				draw_surface_ext_safe(surf, draw_x, draw_y, sca[0], sca[1], rot, c_white, alp);
 			
 			if(mode == 2) {
-				draw_surface_ext_safe(ins, draw_x - _ww, draw_y - _hh, sca[0], sca[1], rot, c_white, alp);
-				draw_surface_ext_safe(ins, draw_x,       draw_y - _hh, sca[0], sca[1], rot, c_white, alp);
-				draw_surface_ext_safe(ins, draw_x + _ww, draw_y - _hh, sca[0], sca[1], rot, c_white, alp);
+				draw_surface_ext_safe(surf, draw_x - _ww, draw_y - _hh, sca[0], sca[1], rot, c_white, alp);
+				draw_surface_ext_safe(surf, draw_x,       draw_y - _hh, sca[0], sca[1], rot, c_white, alp);
+				draw_surface_ext_safe(surf, draw_x + _ww, draw_y - _hh, sca[0], sca[1], rot, c_white, alp);
 				
-				draw_surface_ext_safe(ins, draw_x - _ww, draw_y, sca[0], sca[1], rot, c_white, alp);
-				draw_surface_ext_safe(ins, draw_x + _ww, draw_y, sca[0], sca[1], rot, c_white, alp);
+				draw_surface_ext_safe(surf, draw_x - _ww, draw_y, sca[0], sca[1], rot, c_white, alp);
+				draw_surface_ext_safe(surf, draw_x + _ww, draw_y, sca[0], sca[1], rot, c_white, alp);
 				
-				draw_surface_ext_safe(ins, draw_x - _ww, draw_y + _hh, sca[0], sca[1], rot, c_white, alp);
-				draw_surface_ext_safe(ins, draw_x,       draw_y + _hh, sca[0], sca[1], rot, c_white, alp);
-				draw_surface_ext_safe(ins, draw_x + _ww, draw_y + _hh, sca[0], sca[1], rot, c_white, alp);
+				draw_surface_ext_safe(surf, draw_x - _ww, draw_y + _hh, sca[0], sca[1], rot, c_white, alp);
+				draw_surface_ext_safe(surf, draw_x,       draw_y + _hh, sca[0], sca[1], rot, c_white, alp);
+				draw_surface_ext_safe(surf, draw_x + _ww, draw_y + _hh, sca[0], sca[1], rot, c_white, alp);
 			}
 			surface_reset_shader();
 		

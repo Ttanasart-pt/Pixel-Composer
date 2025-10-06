@@ -22,7 +22,7 @@ function Node_Caustic(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y, _g
 	];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		var _pos = current_data[1];
+		var _pos = inputs[1].getValue();
 	    var _px  = _x + _pos[0] * _s;
 	    var _py  = _y + _pos[1] * _s;
 	    

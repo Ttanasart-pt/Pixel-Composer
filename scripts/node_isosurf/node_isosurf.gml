@@ -93,6 +93,7 @@ function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		return hh;
 	});
 	
+	offsetEditing = false;
 	offsetRenderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		var _surfs = getInputData(1);
 		var _offs  = getInputData(4);
@@ -122,10 +123,10 @@ function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		ui_fill_rect_wh(sx, sy, srw * ss, srh * ss, CDEF.main_dkblack);
 		draw_surface_ext(surf, sx, sy, ss, ss, 0, c_white, 1);
 		
-		if(point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh)) {
-			var _mx = clamp(value_snap((_m[0] - sx) / ss, 0.5), 0, srw);
-			var _my = clamp(value_snap((_m[1] - sy) / ss, 0.5), 0, srh);
-			
+		var _mx = clamp(value_snap((_m[0] - sx) / ss, 0.5), 0, srw);
+		var _my = clamp(value_snap((_m[1] - sy) / ss, 0.5), 0, srh);
+		
+		if(offsetEditing || point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh)) {
 			draw_set_text(f_p3, fa_right, fa_bottom, COLORS._main_text_sub);
 			draw_text(_x + _w - 4, _y + hh - 4, $"{_mx}, {_my}");
 			
@@ -136,12 +137,19 @@ function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			draw_line(sx, _oy, sx + srw * ss, _oy);
 			draw_line(_ox, sy, _ox, sy + srh * ss);
 			
-			if(mouse_click(mb_left, _focus)) {
-				_offs[knob_select][0] = _mx;
-				_offs[knob_select][1] = _my;
-				
-				inputs[4].setValue(_offs);
-			}
+			if(mouse_lpress(_focus))
+				offsetEditing = true;
+		}
+		
+		if(offsetEditing) {
+			_offs[knob_select][0] = _mx;
+			_offs[knob_select][1] = _my;
+			
+			inputs[4].setValue(_offs);
+			triggerRender();
+			
+			if(mouse_lrelease())
+				offsetEditing = false;
 		}
 		
 		ui_rect_wh(sx, sy, srw * ss, srh * ss, COLORS._main_icon);
@@ -149,6 +157,10 @@ function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		if(!is_array(_off)) return hh;
 		var _ox = sx + _off[0] * ss - 1;
 		var _oy = sy + _off[1] * ss - 1;
+		
+		draw_set_color(c_black);
+		draw_line_width(_ox - 5, _oy, _ox + 5, _oy, 4);
+		draw_line_width(_ox, _oy - 5, _ox, _oy + 5, 4);
 		
 		draw_set_color(c_white);
 		draw_line_width(_ox - 4, _oy, _ox + 4, _oy, 2);
@@ -190,31 +202,24 @@ function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		inputs[4].setValue(_off);
 	}
 	
-	static processData = function(_outSurf, _data, _array_index) {
+	static processData = function(_outData, _data, _array_index) {
 		var _amo    = _data[0];
 		var _surf   = _data[1];
 		var _ashft  = _data[2];
 		var _angle  = _data[3];
 		var _offset = _data[4];
-		var _iso    = new dynaSurf_iso();
+		var _iso    = is(_outData, dynaSurf_iso)? _outData : new dynaSurf_iso();
 		
-		_iso.offsetx = array_create(_amo);
-		_iso.offsety = array_create(_amo);
+		_iso.offsetx = array_verify(_iso.offsetx, _amo);
+		_iso.offsety = array_verify(_iso.offsety, _amo);
 		
 		for( var i = 0; i < _amo; i++ ) {
 			var _s = array_safe_get_fast(_surf, i, noone);
 			_iso.surfaces[i] = _s;
 			
 			var _off = array_safe_get_fast(_offset, i);
-			if(is_array(_off)) {
-				_iso.offsetx[i] = array_safe_get_fast(_off, 0);
-				_iso.offsety[i] = array_safe_get_fast(_off, 1);
-				
-			} else {
-				_iso.offsetx[i] = surface_get_width_safe(_s)  / 2;
-				_iso.offsety[i] = surface_get_height_safe(_s) / 2;
-				
-			}
+			_iso.offsetx[i] = array_safe_get_fast(_off, 0);
+			_iso.offsety[i] = array_safe_get_fast(_off, 1);
 		}
 		
 		_iso.angles      = _angle;
