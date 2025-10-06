@@ -1,5 +1,4 @@
 //Caustic noise by jaybird
-
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -82,9 +81,9 @@ vec4 snoise(vec3 v) {
 #endregion
 
 void main() {
-	vec2 p    = v_vTexcoord - .5;
+	vec2 p    = v_vTexcoord;
 	     p.x *= (dimension.x / dimension.y);
-         p    = (p + position) * scale / 2.;
+         p    = (p - position / dimension) * dimension / scale;
 	
     vec3 pos = vec3(p.x, progress, p.y);
     vec4 n   = snoise( pos );

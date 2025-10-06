@@ -596,10 +596,18 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			if(brush.brush_use_surface) {
 				brush.brush_surface     = noone;
 				brush.brush_use_surface = false;
+				
+				rtool_brush.spr = THEME.canvas_tools_pencil;
+				tool_brush.rightTools     = rightTools_empty;
+				tool_eraser.rightTools    = rightTools_empty;
+				tool_rectangle.rightTools = rightTools_empty;
+				tool_ellipse.rightTools   = rightTools_empty;
 				return;
 			}
 			
 			var _surf  = selection.selection_surface;
+			if(!is_surface(_surf)) return;
+			
 			var _bsurf = surface_create(surface_get_width(_surf) + 2, surface_get_height(_surf) + 2);
 			
 			surface_set_shader(_bsurf, noone);
@@ -611,6 +619,12 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			selection.apply();
 			
 			PANEL_PREVIEW.tool_current = tools[2];
+			
+			rtool_brush.spr = THEME.canvas_tools_pencil_surface;
+			tool_brush.rightTools     = rightTools_brush;
+			tool_eraser.rightTools    = rightTools_brush;
+			tool_rectangle.rightTools = rightTools_brush;
+			tool_ellipse.rightTools   = rightTools_brush;
 		});
 		
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -673,17 +687,14 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			new NodeTool( "Corner",  THEME.canvas_tools_corner ).setContext(self).setToolObject( new canvas_tool_with_selector(rtool_corner)  ).setSettings(tool_settings),
 		];
 		
-		rightTools_brush = [ 
-			-1,
-			rtool_brush,
-		];
+		rightTools_empty = [  ];
+		rightTools_brush = [ -1, rtool_brush ];
 		
 		rightTools = rightTools_general;
-		
-		tool_brush.rightTools     = rightTools_brush;
-		tool_eraser.rightTools    = rightTools_brush;
-		tool_rectangle.rightTools = rightTools_brush;
-		tool_ellipse.rightTools   = rightTools_brush;
+		tool_brush.rightTools     = rightTools_empty;
+		tool_eraser.rightTools    = rightTools_empty;
+		tool_rectangle.rightTools = rightTools_empty;
+		tool_ellipse.rightTools   = rightTools_empty;
 		
 		selection_tool_after = noone;
 	#endregion
@@ -1415,7 +1426,6 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			else			 preview_index = min(CURRENT_FRAME * _anims, _fram - 1);
 		}
 		
-		rtool_brush.spr = brush.brush_use_surface? THEME.canvas_tools_pencil_surface : THEME.canvas_tools_pencil;
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
