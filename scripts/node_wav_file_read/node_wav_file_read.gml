@@ -42,7 +42,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	b_sync = button(function() /*=>*/ {
 		if(content == noone) return;
-		TOTAL_FRAMES = max(1, ceil(content.duration * PROJECT.animator.framerate));
+		TOTAL_FRAMES = max(1, ceil(content.duration * project.animator.framerate) + 1);
 	}).setText("Sync");
 	
 	input_display_list  = [ 0, b_sync, 2 ];
@@ -89,7 +89,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		path_current = path;
 		edit_time    = max(edit_time, file_get_modify_s(path_current));
 		
-		var ext = string_lower(filename_ext(path));
+		var  ext  = string_lower(filename_ext(path));
 		var _name = string_replace(filename_name(path), filename_ext(path), "");
 		
 		if(ext != ".wav") return false;
@@ -112,7 +112,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		printIf(global.FLAG.wav_import, "-- Creating preview buffer...");
 		
-		var frm = ceil(content.duration * PROJECT.animator.framerate);
+		var frm = ceil(content.duration * project.animator.framerate);
 		inputs[1].editWidget.text = $"Sync ({frm} frames)";
 		
 		var bufferId = buffer_create(content.packet * 2, buffer_fixed, 1);
@@ -127,6 +127,8 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var surf = content.checkPreview(320, 128, true);
 	}
 	
+	////- Nodes
+	
 	#region ++++ inspector ++++
 		setTrigger(1, __txt("Refresh"), [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() /*=>*/ { 
 			var path = getInputData(0); 
@@ -135,7 +137,8 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			update(); 
 		});
 		
-		setTrigger(2, __txtx("play_with_timeline", "Play with timeline"), [ THEME.play_sound, 1, COLORS._main_icon_light ], function() /*=>*/ { attributes.play = !attributes.play; });
+		setTrigger(2, __txtx("play_with_timeline", "Play with timeline"), [ THEME.play_sound, 1, COLORS._main_icon_light ], 
+			function() /*=>*/ { attributes.play = !attributes.play; });
 		attributes.play = true;
 	#endregion
 	
@@ -145,39 +148,36 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			readSoundComplete();
 			
 			if(content != noone) {
-				var frm = max(1, ceil(content.duration * PROJECT.animator.framerate));
-				inputs[1].editWidget.text = $"Sync ({frm} frames)";
+				var frm = max(1, ceil(content.duration * project.animator.framerate) + 1);
+				b_sync.text = $"Sync ({frm} frames)";
 			}
 			
 			RENDER_ALL_REORDER
+		}
+		
+		if(attributes.file_checker && file_exists_empty(path_current)) {
+			var _modi = file_get_modify_s(path_current);
+			
+			if(_modi > edit_time) {
+				edit_time = _modi;
+				run_in(2, function() /*=>*/ { updatePaths(); triggerRender(); });
+			}
 		}
 		
 		insp2UpdateIcon[1] = attributes.play;
 		insp2UpdateIcon[2] = attributes.play? COLORS._main_icon_light : COLORS._main_icon;
 		if(preview_audio == -1) return;
 		
-		if(audio_is_playing(preview_audio) && !PROJECT.animator.is_playing)
-			audio_stop_sound(preview_audio);
-		
-		if(!attributes.play) return;
-		
-		if(IS_FIRST_FRAME) { audio_stop_sound(preview_audio); }
-		
-		if(PROJECT.animator.is_playing) {
-			var dur = CURRENT_FRAME / PROJECT.animator.framerate - attributes.preview_shift;
-				
-			if(!audio_is_playing(preview_audio))
-				preview_id = audio_play_sound(preview_audio, 1, false, attributes.preview_gain, dur);
+		if(!attributes.play) {
+			if(audio_is_playing(preview_audio)) audio_stop_sound(preview_audio);
+			return;
 		}
-			   
-		if(attributes.file_checker && file_exists_empty(path_current)) {
-			var _modi = file_get_modify_s(path_current);
-			
-			if(_modi > edit_time) {
-				edit_time = _modi;
-				
-				run_in(2, function() { updatePaths(); triggerRender(); });
-			}
+		
+		if((!IS_PLAYING || IS_FIRST_FRAME) && audio_is_playing(preview_audio)) { audio_stop_sound(preview_audio); }
+		
+		if(IS_PLAYING && !audio_is_playing(preview_audio)) {
+			var dur = CURRENT_FRAME / project.animator.framerate - attributes.preview_shift;
+			preview_id = audio_play_sound(preview_audio, 1, false, attributes.preview_gain, dur); 
 		}
 	}
 	
@@ -186,7 +186,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var mono = getInputData(2);
 		
 		if(path_current != path) updatePaths(path);
-		if(!is_instanceof(content, audioObject)) return;
+		if(!is(content, audioObject)) return;
 		
 		content.mono = mono;
 	}
@@ -204,6 +204,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			draw_set_color(COLORS._main_icon);
 			draw_arc(cx, cy, rr, 90, 90 - 360 * wav_file_prg / content.packet, 4 * _s, 180);
 			return;
+			
 		} else if(is_surface(surf)) {
 			var sw = surface_get_width_safe(surf);
 			var sh = surface_get_height_safe(surf);
@@ -214,17 +215,21 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 			draw_surface_ext_safe(surf, dx, dy, ss, ss,,, 0.50);
 				
-			var wd = clamp((CURRENT_FRAME / PROJECT.animator.framerate) / content.duration, 0, 1) * sw;
+			var wd = clamp((CURRENT_FRAME / project.animator.framerate) / content.duration, 0, 1) * sw;
 			draw_surface_part_ext_safe(surf, 0, 0, min(wd, sw), sh, dx, dy, ss, ss,, attributes.play? COLORS._main_accent : c_white);
 			
 			draw_set_color(attributes.play? COLORS._main_accent : c_white);
-			draw_line(dx + wd * ss, bbox.yc - 16 * _s, dx + wd * ss, bbox.yc + 16 * _s);
+			draw_line(dx + wd * ss, bbox.yc - sh * ss / 2, dx + wd * ss, bbox.yc + sh * ss / 2);
 		}
 		
 		var str = filename_name(path_current);
 		draw_set_text(f_sdf, fa_center, fa_bottom, COLORS._main_text);
 		var ss	= string_scale(str, bbox.w, bbox.h);
 		draw_text_transformed(bbox.xc, bbox.y1, str, ss, ss, 0);
+		
+		gpu_set_tex_filter(true);
+		draw_sprite_ext(THEME.play_sound, attributes.play, bbox.xc , bbox.y0 + 8 * _s, _s*.4, _s*.4, 0, attributes.play? COLORS._main_accent : COLORS._main_icon);
+		gpu_set_tex_filter(false);
 	}
 	
 	static drawAnimationTimeline = function(_shf, _w, _h, _s) {
@@ -232,7 +237,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		draw_set_color(COLORS._main_icon_dark);
 		draw_set_alpha(1);
 		
-		var _st = round(content.sample / PROJECT.animator.framerate); //sample per frame
+		var _st = round(content.sample / project.animator.framerate); //sample per frame
 		var _am = content.packet / _st;
 		var ox, oy, nx, ny;
 		
@@ -251,6 +256,13 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 		
 		draw_set_alpha(1);
+	}
+	
+	////- Actions
+	
+	static onDestroy = function() {
+		if(preview_audio && audio_is_playing(preview_audio) && !IS_PLAYING)
+			audio_stop_sound(preview_audio);
 	}
 	
 	static dropPath = function(path) { 
