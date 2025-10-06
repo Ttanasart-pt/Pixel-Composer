@@ -172,6 +172,7 @@ void main() {
 		vec4 _vMap = texture2D( scaleSurf, ntx );
 		sca = vec2(mix(scale.x, scale.y, (_vMap.r + _vMap.g + _vMap.b) / 3.));
 	}
+	sca = dimension / sca;
 	
 	itr    = iteration.x;
 	itrMax = max(iteration.x, iteration.y);

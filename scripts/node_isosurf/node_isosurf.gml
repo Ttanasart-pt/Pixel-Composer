@@ -33,37 +33,48 @@ function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			
 			var _knx = _kx + lengthdir_x(ui(22), _ang);
 			var _kny = _ky + lengthdir_y(ui(22), _ang);
+			
+			var _tx = _kx + lengthdir_x(ui(44), _ang);
+			var _ty = _ky + lengthdir_y(ui(44), _ang);
+			
+			var _sx = _kx + lengthdir_x(ui(84), _ang);
+			var _sy = _ky + lengthdir_y(ui(84), _ang);
+			
 			var _ind = (knob_dragging == noone && i == knob_hover) || knob_dragging == i;
 			var _cc  = knob_dragging == i? COLORS._main_accent : COLORS._main_icon;
+			
+			draw_circle_ui(_knx, _kny, ui(6), 1, COLORS.panel_bg_clear_inner);
+			
+			draw_set_color(_cc);
+			draw_set_alpha(.5);
+			draw_line(_knx, _kny, _sx, _sy);
+			draw_set_alpha(1);
 			
 			draw_circle_ui(_knx, _kny, ui(4), 1, _cc);
 			
 			if(point_in_circle(_m[0], _m[1], _knx, _kny, ui(10)))
 				_khover = i;
 			
-			var _knx = _kx + lengthdir_x(ui(44), _ang);
-			var _kny = _ky + lengthdir_y(ui(44), _ang);
 			draw_set_text(f_p3, fa_center, fa_center, COLORS._main_text_sub);
-			draw_text_add(_knx, _kny, _ang);
+			draw_text_add(_tx, _ty, _ang);
 			
-			var _knx = _kx + lengthdir_x(ui(84), _ang);
-			var _kny = _ky + lengthdir_y(ui(84), _ang);
+			ui_fill_rect_wh(_sx - 20, _sy - 20, 40, 40, COLORS.panel_bg_clear_inner);
 			
 			var _surf = array_safe_get_fast(_surfs, i, noone);
 			if(is_surface(_surf)) {
 				var _sw = surface_get_width(_surf);
 				var _sh = surface_get_height(_surf);
 				var _ss = min(32 / _sw, 32 / _sh);
-				draw_surface_ext(_surf, _knx - _sw * _ss / 2, _kny - _sh * _ss / 2, _ss, _ss, 0, c_white, 1);
+				draw_surface_ext(_surf, _sx - _sw * _ss / 2, _sy - _sh * _ss / 2, _ss, _ss, 0, c_white, 1);
 			}
 			
 			var cc = COLORS._main_icon;
 			if(i == knob_hover)  cc = COLORS._main_icon_light;
 			if(i == knob_select) cc = COLORS._main_accent;
 			
-			ui_rect_wh(_knx - 20, _kny - 20, 40, 40, cc);
+			ui_rect_wh(_sx - 20, _sy - 20, 40, 40, cc);
 			
-			if(point_in_rectangle(_m[0], _m[1], _knx - 20, _kny - 20, _knx + 20, _kny + 20))
+			if(point_in_rectangle(_m[0], _m[1], _sx - 20, _sy - 20, _sx + 20, _sy + 20))
 				_khover = i;
 		}
 		
@@ -119,6 +130,9 @@ function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		var sx  = _x + _w / 2 - srw * ss / 2;
 		var sy  = _y + hh / 2 - srh * ss / 2;
+		
+		var sx1 = sx + srw * ss;
+		var sy1 = sy + srh * ss;
 		
 		ui_fill_rect_wh(sx, sy, srw * ss, srh * ss, CDEF.main_dkblack);
 		draw_surface_ext(surf, sx, sy, ss, ss, 0, c_white, 1);

@@ -2370,7 +2370,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		w_hovering     = false; 
 		w_hoverable    = hover;
 		w_active       = active;
-		__preview_bbox = getPreviewBoundingBox()
+		__preview_bbox = getPreviewBoundingBox();
 		
 		try {
 			var _hv = drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params);
