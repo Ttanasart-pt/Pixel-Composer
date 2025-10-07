@@ -70,9 +70,12 @@
 #endregion
 
 function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name		= "Math";
-	color		= COLORS.node_blend_number;
+	name     = "Math";
+	color    = COLORS.node_blend_number;
+	doUpdate = doUpdateLite;
 	setDimension(96, 48);
+	
+	__mode   = noone;
 	
 	newInput(0, nodeValue_Enum_Scroll("Type", 0, global.node_math_scroll)).rejectArray();
 	
@@ -170,8 +173,6 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		return val;
 	}
 	
-	__mode   = noone;
-	doUpdate = doUpdateLite;
 	static update = function(frame = CURRENT_FRAME) { 
 		
 		use_mod = inputs[0].getValue();
@@ -220,7 +221,7 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			case MATH_OPERATOR.ceiling :
 				inputs[4].setVisible(true);
 				
-				var int = getInputData(4);
+				var int = inputs[4].getValue();
 				if(int) outputs[0].setType(VALUE_TYPE.integer);
 				else	outputs[0].setType(VALUE_TYPE.float);
 				break;
@@ -282,7 +283,7 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
 		var str = "";
-		var typ = getInputData(0);
+		var typ = use_mod;
 		
 		switch(typ) {
 			case MATH_OPERATOR.add :		str = "+"; break;

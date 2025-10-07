@@ -310,6 +310,11 @@ function Project() constructor {
 	}
 	
 	static postRender = function() {
+		array_foreach(allNodes, function(n) /*=>*/ { 
+			if(!n.active) return; 
+			n.postRender(); 
+		});
+		
 		globalLayer_compose();
 		if(attributes.auto_organize) node_auto_organize(nodes);
 	}

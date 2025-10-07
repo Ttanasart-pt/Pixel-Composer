@@ -6,7 +6,8 @@
 #endregion
 
 function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name = "Condition";
+	name     = "Condition";
+	doUpdate = doUpdateLite;
 	setDimension(96, 48);
 	
 	cond_array = __enum_array_gen([ "Equal", "Not equal", "Less ", "Less or equal ", "Greater ", "Greater or equal" ], s_node_condition_type);
@@ -25,15 +26,14 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	newInput(3, nodeValue_Any( "True"  )).setVisible(true, true);
 	newInput(4, nodeValue_Any( "False" )).setVisible(true, true);
 		
+	newOutput(0, nodeValue_Output("Result", VALUE_TYPE.any, []));
+	newOutput(1, nodeValue_Output("Bool", VALUE_TYPE.boolean, false));
+	
 	input_display_list = [ 5,
 		[ "Condition", false ], 0, 1, 2, 6, 7, 8, 
 		[ "Result",    true  ], 3, 4
 	]
 	
-	newOutput(0, nodeValue_Output("Result", VALUE_TYPE.any, []));
-	newOutput(1, nodeValue_Output("Bool", VALUE_TYPE.boolean, false));
-	
-	doUpdate = doUpdateLite;
 	static update = function(frame = CURRENT_FRAME) {
 		var _true = inputs[3].getValue();
 		var _fals = inputs[4].getValue();

@@ -197,7 +197,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var _anim_end   	= getInputData(26);
 		
 		var _spawn_amount	= getInputData( 2);
-		var _spawn_area 	= getInputDataForce(3);
+		var _spawn_area 	= inputs[3].getValue();
 		var _distrib    	= getInputData( 4);
 		var _dist_map   	= getInputData(30);
 		var _dist_path   	= getInputData(55);
@@ -561,11 +561,6 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	}
 	 
 	static onDrawOverlay = -1;
-	
-	////- Step
-	
-	static onStep = function() /*=>*/ {}
-	static step   = function() /*=>*/ {return onStep()};
 	
 	////- Update
 	

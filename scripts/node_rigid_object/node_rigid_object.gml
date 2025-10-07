@@ -19,7 +19,6 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	update_on_frame    = true;
 	manual_ungroupable = false;
-	getInputData       = getInputDataForce;
 	
 	worldIndex      = undefined;
 	worldScale      = 100;
@@ -83,7 +82,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	];
 	
 	static newMesh = function(_index) {
-		var _tex  = getInputData(6);
+		var _tex  = inputs[6].getValue();
 		if(is_array(_tex)) _tex = array_safe_get(_tex, _index);
 		
 		var _sw = surface_get_width_safe(_tex);
@@ -113,10 +112,10 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	////- Mesh
 	
-	static getPreviewValues = function() { return getInputData(6); }
+	static getPreviewValues = function() { return inputs[6].getValue(); }
 	
 	static generateAllMesh = function() {
-		var _tex = getInputData(6);
+		var _tex = inputs[6].getValue();
 			
 		if(is_array(_tex)) {
 			for( var i = 0, n = array_length(_tex); i < n; i++ ) 
@@ -127,9 +126,9 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static generateMesh = function(index = 0) {
-		var _tex = getInputData(6);
-		var _exp = getInputData(10);
-		var _pix = getInputData(11);
+		var _tex = inputs[6].getValue();
+		var _exp = inputs[10].getValue();
+		var _pix = inputs[11].getValue();
 		
 		if(is_array(_tex)) _tex = array_safe_get_fast(_tex, index);
 		
@@ -365,16 +364,16 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		if(worldIndex == undefined) return;
 		
-		var pos = getInputData(7);
+		var pos = inputs[7].getValue();
 		var px  = _x + pos[0] * _s;
 		var py  = _y + pos[1] * _s;
 		
 		InputDrawOverlay(inputs[ 7].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		InputDrawOverlay(inputs[17].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
 		
-		var _shp = getInputData(5);
-		var _tex = getInputData(6);
-		var _pos = getInputData(7);
+		var _shp = inputs[5].getValue();
+		var _tex = inputs[6].getValue();
+		var _pos = inputs[7].getValue();
 		var _dim = surface_get_dimension(_tex);
 		var hovering = false;
 		
@@ -497,10 +496,10 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	static spawn = function(_index = 0, _position = undefined) {
 		if(worldIndex == undefined) return undefined;
 		
-		var _shp  = getInputData( 5);
-		var _tex  = getInputData( 6);
-		var _spos = getInputData( 7);
-		var _srot = getInputData(17);
+		var _shp  = inputs[ 5].getValue();
+		var _tex  = inputs[ 6].getValue();
+		var _spos = inputs[ 7].getValue();
+		var _srot = inputs[17].getValue();
 		var _spx, _spy;
 		
 		if(_position == undefined) {
@@ -554,18 +553,18 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var objId  = gmlBox2D_Object_Create_Complete(); 
 		var boxObj = new __Box2DObject(objId, _tex);
 		
-		var _mov	  = getInputData(0);
-		var _weig     = getInputData(1);
-		var _cnt_frc  = getInputData(2);
-		var _air_res  = getInputData(3);
-		var _rot_frc  = getInputData(4);
-		var _bouncy   = getInputData(13);
-		var collIndex = getInputData(12);
-		var _conti    = getInputData(14);
-		var _fixRot   = getInputData(15);
-		var _sleep    = getInputData(16);
-		var _activate = getInputData(21);
-		var _gravSca  = getInputData(22);
+		var _mov	  = inputs[0].getValue();
+		var _weig     = inputs[1].getValue();
+		var _cnt_frc  = inputs[2].getValue();
+		var _air_res  = inputs[3].getValue();
+		var _rot_frc  = inputs[4].getValue();
+		var _bouncy   = inputs[13].getValue();
+		var collIndex = inputs[12].getValue();
+		var _conti    = inputs[14].getValue();
+		var _fixRot   = inputs[15].getValue();
+		var _sleep    = inputs[16].getValue();
+		var _activate = inputs[21].getValue();
+		var _gravSca  = inputs[22].getValue();
 		
 		gmlBox2D_Object_Set_Enable(       objId, _activate);
 		gmlBox2D_Object_Set_Rotation(     objId, _srot);
@@ -580,8 +579,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		gmlBox2D_Shape_Set_Friction(     objId, _cnt_frc);
 		gmlBox2D_Shape_Set_Restitution(  objId, _bouncy);
 		
-		var _useInitV = getInputData(18);
-		var _initV    = getInputData(19);
+		var _useInitV = inputs[18].getValue();
+		var _initV    = inputs[19].getValue();
 		
 		if(_useInitV) gmlBox2D_Object_Set_Velocity(objId, _initV[0], _initV[1]);
 		
@@ -589,7 +588,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static step = function() {
-		var _shp = getInputData(5);
+		var _shp = inputs[5].getValue();
 		
 		inputs[ 9].setVisible(_shp == 2);
 		inputs[10].setVisible(_shp == 2);
@@ -597,7 +596,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		tools = _shp == 2? mesh_tools : -1;
 		
-		var _tex  = getInputData(6);
+		var _tex  = inputs[6].getValue();
 		
 		if(is_array(_tex)) {
 			var meshes = attributes.mesh;
@@ -614,9 +613,9 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(IS_FIRST_FRAME) objects = [];
 		outputs[0].setValue(objects);
 		
-		var _tex  = getInputData( 6);
-		var _spwn = getInputData( 8);
-		var _spfr = getInputData(20);
+		var _tex  = inputs[ 6].getValue();
+		var _spwn = inputs[ 8].getValue();
+		var _spfr = inputs[20].getValue();
 		
 		if(!_spwn) return;
 		
@@ -627,7 +626,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 	}
 	
-	static getGraphPreviewSurface = function() /*=>*/ {return getInputData(6)};
+	static getGraphPreviewSurface = function() /*=>*/ {return inputs[6].getValue()};
 	
 	////- Serialize
 	

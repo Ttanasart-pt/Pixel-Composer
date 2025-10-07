@@ -63,8 +63,8 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	layer_object = undefined;
 	
 	static findLayer = function() {
-		var _data  = getInputDataForce(0);
-		var _lname = getInputDataForce(2);
+		var _data  = inputs[0].getValue();
+		var _lname = inputs[2].getValue();
 		setDisplayName(_lname, false);
 		
 		if(!is(_data, Node)) return;

@@ -61,7 +61,7 @@ function Node_ORA_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static findLayer = function() {
 		layer_object = noone;
 		
-		var data = getInputDataForce(0);
+		var data = inputs[0].getValue();
 		content  = data;
 		if(!is(content, ORA_File)) return;
 		

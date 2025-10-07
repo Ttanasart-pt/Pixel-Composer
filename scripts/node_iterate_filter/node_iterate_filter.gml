@@ -16,7 +16,7 @@ function Node_Iterate_Filter(_x, _y, _group = noone) : Node_Iterator(_x, _y, _gr
 		output.inputs[0].setFrom(input.outputs[0]);
 	}
 	
-	static onStep = function() {
+	static step = function() {
 		var type = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;
 		inputs[0].setType(type);
 	}

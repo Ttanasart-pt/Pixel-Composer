@@ -970,9 +970,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return targ.setFrom(junctionFrom);
 	}
 	
-	static getInputDataFull  = function(i,d=0) /*=>*/ {return array_safe_get_fast(inputs_data, i, d)};
-	static getInputDataForce = function(i,d=0) /*=>*/ {return inputs[i].getValue()};
-	
 	static getInputs = function(frame = CURRENT_FRAME) {
 		inputs_data	= array_verify_min(inputs_data, array_length(inputs));
 		__frame     = frame;
@@ -1008,8 +1005,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(frameInput.value_from != noone) frame = frameInput.getValue() - 1;
 		
 		if(attributes.update_graph) {
-			getInputs(frame);
-			
 			try      { preUpdate(frame); update(frame); } 
 			catch(e) { log_warning("RENDER", exception_print(e), self); }
 		}
@@ -1081,7 +1076,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	doUpdate     = doUpdateFull;
-	getInputData = getInputDataFull;
+	getInputData = function(i,d=0) /*=>*/ {return array_safe_get_fast(inputs_data, i, d)};
 	
 	static valueUpdate = function(index) {
 		onValueUpdate(index);
@@ -1394,6 +1389,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static onAnimationStart = function() {
 		if(use_cache == CACHE_USE.auto && !isAllCached()) clearCache();
 	}
+	
+	static postRender = function() {}
 	
 	////- DRAW
 	

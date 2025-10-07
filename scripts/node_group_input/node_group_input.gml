@@ -73,6 +73,10 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	preview_draw = false;
 	is_group_io  = true;
 	inParent     = undefined;
+	doUpdate     = doUpdateLite;
+	
+	__dstype = noone;
+	__data   = noone;
 	
 	destroy_when_upgroup = true;
 	
@@ -80,19 +84,19 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	setDimension(96, 48);
 	
 	////- =Visibility
-	
-	newInput(9, nodeValue_Enum_Scroll("Visible Condition",  0, [ "Always Show", "Always Hide", /* 2 */ new scrollItem("Equal",              s_node_condition_type, 0), 
-												        		                               /* 3 */ new scrollItem("Not equal",          s_node_condition_type, 1), 
-												        		                               /* 4 */ new scrollItem("Greater ",           s_node_condition_type, 4), 
-												        		                               /* 5 */ new scrollItem("Greater or equal",   s_node_condition_type, 5), 
-												        		                               /* 6 */ new scrollItem("Lesser",             s_node_condition_type, 2), 
-												        		                               /* 7 */ new scrollItem("Lesser or equal",    s_node_condition_type, 3), ]));
-	
+	__visible_condition = [ "Always Show", "Always Hide", 
+		/* 2 */ new scrollItem("Equal",              s_node_condition_type, 0), 
+		/* 3 */ new scrollItem("Not equal",          s_node_condition_type, 1), 
+		/* 4 */ new scrollItem("Greater ",           s_node_condition_type, 4), 
+		/* 5 */ new scrollItem("Greater or equal",   s_node_condition_type, 5), 
+		/* 6 */ new scrollItem("Lesser",             s_node_condition_type, 2), 
+		/* 7 */ new scrollItem("Lesser or equal",    s_node_condition_type, 3), ]
+		
+	newInput( 9, nodeValue_Enum_Scroll("Visible Condition",  0, __visible_condition));
 	newInput(10, nodeValue_Float(      "Visible Check",    0 ));
 	newInput(11, nodeValue_Float(      "Visible Check To", 0 ));
 	
 	////- =Data
-	
 	newInput(0, nodeValue_Enum_Scroll( "Subtype",        0, { data: GROUP_IO_DISPLAY[11], update_hover: false })).setUnclamp();
 	newInput(2, nodeValue_Enum_Scroll( "Input Type",    11, { data: GROUP_IO_TYPE_NAME,   update_hover: false })).setUnclamp();
 	newInput(4, nodeValue_Enum_Button( "Vector Size",    0, [ "2", "3", "4" ] ));
@@ -103,7 +107,6 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput(5, nodeValue_Int(         "Order",         0));
 	
 	////- =Gizmo
-	
 	newInput( 6, nodeValue_Bool(       "Display Preview Gizmo",  true ));
 	newInput(12, nodeValue_Vec2(       "Gizmo Position",        [0,0] ));
 	newInput(13, nodeValue_Float(      "Gizmo Scale",            1    ));
@@ -208,10 +211,13 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	////- Render
 	
 	static updateGroupInput = function() {
-		var _dstype = getInputData(0);
-		var _data   = getInputData(2);
+		var _dstype = inputs[0].getValue();
+		var _data   = inputs[2].getValue();
 		var _dsList = array_safe_get_fast(GROUP_IO_DISPLAY, _data);
 		if(!is_array(_dsList)) _dsList = [ "Default" ];
+		
+		__dstype = _dstype;
+		__data   = _data;
 		
 		inputs[0].display_data.data    = _dsList;
 		inputs[0].editWidget.data_list = _dsList;
@@ -251,10 +257,10 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	}
 	
 	static refreshWidget = function() {
-		var _type  = getInputData(2);
+		var _type  = inputs[2].getValue();
 		var _vtype = array_safe_get_fast(GROUP_IO_TYPE_MAP, _type, VALUE_TYPE.any);
 		
-		var _disp  = getInputData(0);
+		var _disp  = inputs[0].getValue();
 		var _dtype = array_safe_get_fast(array_safe_get_fast(GROUP_IO_DISPLAY, _vtype), _disp);
 		
 		inParent.setType(_vtype);
@@ -271,8 +277,8 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				break;
 			
 			case "Slider" :	
-				var _range = getInputData(1);
-				var _step  = getInputData(7);
+				var _range = inputs[1].getValue();
+				var _step  = inputs[7].getValue();
 				
 				if(is_array(_val)) inParent.animator = new valueAnimator(0, inParent);
 				
@@ -281,8 +287,8 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				break;
 				
 			case "Slider range" :
-				var _range = getInputData(1);
-				var _step  = getInputData(7);
+				var _range = inputs[1].getValue();
+				var _step  = inputs[7].getValue();
 					
 				if(!is_array(_val) || array_length(_val) != 2) 
 					inParent.animator = new valueAnimator([0, 0], inParent);
@@ -324,7 +330,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				
 			case "Vector" :
 			case "Vector range" :
-				var _vsize = getInputData(4) + 2;
+				var _vsize = inputs[4].getValue() + 2;
 				
 				if(!is_array(_val) || array_length(_val) != _vsize) {
 					inParent.animator = new valueAnimator(array_create(_vsize), inParent);
@@ -336,7 +342,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				break;
 			
 			case "Enum button" : 
-				var _elabel = getInputData(3);
+				var _elabel = inputs[3].getValue();
 				
 				if(is_array(_val)) inParent.animator = new valueAnimator(0, inParent);
 				
@@ -345,7 +351,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				break;
 				
 			case "Menu scroll" : 
-				var _elabel = getInputData(3);
+				var _elabel = inputs[3].getValue();
 				
 				if(is_array(_val)) inParent.animator = new valueAnimator(0, inParent);
 				
@@ -410,7 +416,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		switch(_vtype) {
 			case VALUE_TYPE.trigger : 
-				var bname = getInputData(8);
+				var bname = inputs[8].getValue();
 				inParent.setDisplay(VALUE_DISPLAY.button, { name: bname, onClick: function() /*=>*/ { doTrigger = 1; } });
 				break;
 		}
@@ -426,19 +432,18 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static visibleCheck = function() {
 		var _vty = inputs[9].getValue();
-		    _vty = is_array(_vty)? 0 : _vty;
 		
 		inputs[10].setVisible(_vty >= 2, _vty >= 2);
 		inputs[11].setVisible(_vty >= 2);
+		
+		     if(_vty == 0) { inParent.setVisible( true,  true); return; }
+		else if(_vty == 1) { inParent.setVisible(false, false); return; }
 		
 		var _val = inputs[10].getValue();
 		var _vto = inputs[11].getValue();
 		var _vis = true;
 		
 		switch(_vty) {
-			case 0 : _vis =  true; break;
-			case 1 : _vis = false; break;
-				
 			case 2 : _vis = _val == _vto; break;
 			case 3 : _vis = _val != _vto; break;
 			
@@ -455,7 +460,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static onValueUpdate = function(index = 0) {
 		if(is_undefined(inParent)) return;
 		
-		var _type		= getInputData(2);
+		var _type		= inputs[2].getValue();
 		var _val_type   = array_safe_get_fast(GROUP_IO_TYPE_MAP, _type, VALUE_TYPE.any);
 		
 		if(index == 2) {
@@ -481,40 +486,23 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			group.inputMap[$ string_replace_all(display_name, " ", "_")] = inParent;
 		}
 		
-		if(inParent.type != VALUE_TYPE.trigger) return;
-		
+		if(inParent.type != VALUE_TYPE.trigger)
 		switch(doTrigger) {
-			case 1 : 
-				outputs[0].setValue(true);
-				doTrigger = -1;
-				break;
-			
-			case -1 : 
-				outputs[0].setValue(false);
-				doTrigger = 0;
-				break;
+			case  1 : outputs[0].setValue(true); doTrigger = -1; break;
+			case -1 : outputs[0].setValue(false); doTrigger = 0; break;
 		}
 	}
 	
-	doUpdate = doUpdateLite;
-	__dstype = noone;
-	__data   = noone;
-	
 	static update = function(frame = CURRENT_FRAME) {
-		visibleCheck();
-		
 		if(!is(inParent, NodeValue)) return;
 		outputs[0].setValue(inParent.getValue());
 		
+		visibleCheck();
+		
 		var _data   = inputs[2].getValue();
 		var _dstype = inputs[0].getValue();
-		
-		if(_dstype == __dstype && _data == __data) return;
-		updateGroupInput();
-		
-		__dstype = _dstype;
-		__data   = _data;
-		
+		if(_dstype != __dstype || _data != __data)
+			updateGroupInput();
 	}
 	
 	////- Draw

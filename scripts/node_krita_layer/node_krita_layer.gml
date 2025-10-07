@@ -62,7 +62,7 @@ function Node_Krita_layer(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static findLayer = function() {
 		layer_object = noone;
 		
-		var data = getInputDataForce(0);
+		var data = inputs[0].getValue();
 		content  = data;
 		if(!is(content, Krita_File)) return;
 		

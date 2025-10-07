@@ -1,6 +1,7 @@
 function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name  = "Number";
-	color = COLORS.node_blend_number;
+	name     = "Number";
+	color    = COLORS.node_blend_number;
+	doUpdate = doUpdateLite;
 	setDimension(96, 48);
 	
 	slider_value    = -1;
@@ -72,8 +73,8 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	draw_knob_rng = [ 0, 360 ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		var _val = getInputData(0);
-		var _dsp = getInputData(2);
+		var _val = inputs[0].getValue();
+		var _dsp = inputs[2].getValue();
 		if(is_array(_val)) return false;
 		
 		if(_dsp == 0 || _dsp == 1) inputs[0].display_type = VALUE_DISPLAY._default;
@@ -156,9 +157,9 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	static setType = function() {
-		var int  = getInputData(1);
-		var disp = getInputData(2);
-		var styl = getInputData(6);
+		var int  = inputs[1].getValue();
+		var disp = inputs[2].getValue();
+		var styl = inputs[6].getValue();
 		
 		var _pw = min_w;
 		var _ph = attributes.preview_size;
@@ -201,37 +202,33 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		return _val;
 	}
 	
-	doUpdate = doUpdateLite;
 	static update = function() {
 		setType();
 		
-		draw_raw       = getInputData(0);
-		draw_int       = getInputData(1);
-		draw_disp      = getInputData(2);
-		draw_rang      = getInputData(3);
-		draw_stp       = getInputData(4);
-		draw_cmp       = getInputData(5);
-		draw_sty       = getInputData(6);
-		draw_spd       = getInputData(7);
-		draw_seed_dig  = getInputData(16);
-		draw_knob_rng  = getInputData(15);
+		draw_raw       = inputs[0].getValue();
+		draw_int       = inputs[1].getValue();
+		draw_disp      = inputs[2].getValue();
+		draw_rang      = inputs[3].getValue();
+		draw_stp       = inputs[4].getValue();
+		draw_cmp       = inputs[5].getValue();
+		draw_sty       = inputs[6].getValue();
+		draw_spd       = inputs[7].getValue();
+		draw_seed_dig  = inputs[16].getValue();
+		draw_knob_rng  = inputs[15].getValue();
 		
-		isGizmoGlobal = getInputData( 8);
-		gz_pos        = getInputData( 9);
-		gz_scale      = getInputData(10);
-		gz_style      = getInputData(11);
-		gz_shape      = getInputData(12);
-		gz_sprite     = getInputData(13);
-		gz_size       = getInputData(14);
+		isGizmoGlobal = inputs[8].getValue();
+		gz_pos        = inputs[9].getValue();
+		gz_scale      = inputs[10].getValue();
+		gz_style      = inputs[11].getValue();
+		gz_shape      = inputs[12].getValue();
+		gz_sprite     = inputs[13].getValue();
+		gz_size       = inputs[14].getValue();
 		
 		inputs[12].setVisible(gz_style == 1);
 		inputs[13].setVisible(gz_style == 2, gz_style == 2);
 		inputs[14].setVisible(gz_style != 0);
 		
-		var _dat = getInputData(0);
-		var _int = getInputData(1);
-		
-		var _res = processNumber(_dat, _int);
+		var _res = processNumber(draw_raw, draw_int);
 		
 		outputs[0].setValue(_res);
 	}

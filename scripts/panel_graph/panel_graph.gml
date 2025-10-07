@@ -3367,7 +3367,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         	if(pFOCUS) FOCUS_STR = instanceof(node);
         }
         
-        if(is(connect_related, NodeValue)) {
+        if(is(connect_related, NodeValue) && connect_related.node.group == getCurrentContext()) {
         	var _inp = node.getInput(0, connect_related);
         	if(_inp) _inp.setFrom(connect_related);
         	

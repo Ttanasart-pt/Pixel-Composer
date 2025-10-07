@@ -43,7 +43,7 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 	
 	static getNextNodes = function(checkLoop = false) { return getNextNodesExternal(); }
 	
-	static onStep = function() {
+	static step = function() {
 		var type = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;
 		inputs[0].setType(type);
 	}
