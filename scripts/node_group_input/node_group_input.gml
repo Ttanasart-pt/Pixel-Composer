@@ -75,8 +75,8 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	inParent     = undefined;
 	doUpdate     = doUpdateLite;
 	
-	__dstype = noone;
-	__data   = noone;
+	__inType = noone;
+	__dsType = noone;
 	
 	destroy_when_upgroup = true;
 	
@@ -92,13 +92,13 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		/* 6 */ new scrollItem("Lesser",             s_node_condition_type, 2), 
 		/* 7 */ new scrollItem("Lesser or equal",    s_node_condition_type, 3), ]
 		
-	newInput( 9, nodeValue_Enum_Scroll("Visible Condition",  0, __visible_condition));
-	newInput(10, nodeValue_Float(      "Visible Check",    0 ));
-	newInput(11, nodeValue_Float(      "Visible Check To", 0 ));
+	newInput( 9, nodeValue_Enum_Scroll("Visible Condition", 0, __visible_condition));
+	newInput(10, nodeValue_Float(      "Visible Check",     0 ));
+	newInput(11, nodeValue_Float(      "Visible Check To",  0 ));
 	
 	////- =Data
-	newInput(0, nodeValue_Enum_Scroll( "Subtype",        0, { data: GROUP_IO_DISPLAY[11], update_hover: false })).setUnclamp();
 	newInput(2, nodeValue_Enum_Scroll( "Input Type",    11, { data: GROUP_IO_TYPE_NAME,   update_hover: false })).setUnclamp();
+	newInput(0, nodeValue_Enum_Scroll( "Subtype",        0, { data: GROUP_IO_DISPLAY[11], update_hover: false })).setUnclamp();
 	newInput(4, nodeValue_Enum_Button( "Vector Size",    0, [ "2", "3", "4" ] ));
 	newInput(1, nodeValue_Range(       "Range",         [0,1] ));
 	newInput(7, nodeValue_Float(       "Step",           0.01 ));
@@ -210,20 +210,20 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	////- Render
 	
-	static updateGroupInput = function() {
-		var _dstype = inputs[0].getValue();
-		var _data   = inputs[2].getValue();
-		var _dsList = array_safe_get_fast(GROUP_IO_DISPLAY, _data);
+	static updateGroupInput = function(_get = true) {
+		var _inType = _get? inputs[2].getValue() : __inType;
+		var _dsType = _get? inputs[0].getValue() : __dsType;
+		var _dsList = array_safe_get_fast(GROUP_IO_DISPLAY, _inType);
 		if(!is_array(_dsList)) _dsList = [ "Default" ];
 		
-		__dstype = _dstype;
-		__data   = _data;
-		
+		__inType = _inType;
+		__dsType = _dsType;
+			
 		inputs[0].display_data.data    = _dsList;
 		inputs[0].editWidget.data_list = _dsList;
 		
-		var _dstype = array_safe_get_fast(_dsList, _dstype);
-		var _datype = array_safe_get_fast(GROUP_IO_TYPE_MAP, _data, VALUE_TYPE.any);
+		var _dsType = array_safe_get_fast(_dsList, _dsType);
+		var _datype = array_safe_get_fast(GROUP_IO_TYPE_MAP, _inType, VALUE_TYPE.any);
 		
 		inputs[1].setVisible(false);
 		inputs[3].setVisible(false);
@@ -231,8 +231,8 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		inputs[7].setVisible(false);
 		inputs[8].setVisible(_datype == VALUE_TYPE.trigger);
 		
-		switch(_dstype) {
-			case "Slider" :
+		switch(_dsType) {
+			case "Slider" : 
 			case "Slider range" :
 				inputs[7].setVisible(true);
 				inputs[1].setVisible(true);
@@ -253,12 +253,11 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				break;
 		}
 		
-		visibleCheck();
 	}
 	
 	static refreshWidget = function() {
-		var _type  = inputs[2].getValue();
-		var _vtype = array_safe_get_fast(GROUP_IO_TYPE_MAP, _type, VALUE_TYPE.any);
+		var _inType = inputs[2].getValue();
+		var _vtype  = array_safe_get_fast(GROUP_IO_TYPE_MAP, _inType, VALUE_TYPE.any);
 		
 		var _disp  = inputs[0].getValue();
 		var _dtype = array_safe_get_fast(array_safe_get_fast(GROUP_IO_DISPLAY, _vtype), _disp);
@@ -460,8 +459,8 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static onValueUpdate = function(index = 0) {
 		if(is_undefined(inParent)) return;
 		
-		var _type		= inputs[2].getValue();
-		var _val_type   = array_safe_get_fast(GROUP_IO_TYPE_MAP, _type, VALUE_TYPE.any);
+		var _inType		= inputs[2].getValue();
+		var _val_type   = array_safe_get_fast(GROUP_IO_TYPE_MAP, _inType, VALUE_TYPE.any);
 		
 		if(index == 2) {
 			if(outputs[0].type != _val_type) {
@@ -499,10 +498,14 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		visibleCheck();
 		
-		var _data   = inputs[2].getValue();
-		var _dstype = inputs[0].getValue();
-		if(_dstype != __dstype || _data != __data)
-			updateGroupInput();
+		var _inType = inputs[2].getValue();
+		var _dsType = inputs[0].getValue();
+		if(_inType != __inType || _dsType != __dsType) {
+			__inType = _inType;
+			__dsType = _dsType;
+			
+			updateGroupInput(false);
+		}
 	}
 	
 	////- Draw

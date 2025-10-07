@@ -3370,7 +3370,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         if(is(connect_related, NodeValue) && connect_related.node.group == getCurrentContext()) {
         	var _inp = node.getInput(0, connect_related);
         	if(_inp) _inp.setFrom(connect_related);
-        	
         	selectDragNode(node, true);
         }
         
