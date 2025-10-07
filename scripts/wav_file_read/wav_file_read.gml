@@ -47,11 +47,11 @@ function file_read_wav(path) {
 		return noone;
 	}
 	
-	var ch = buffer_read(wav_file_reader, buffer_u16);	debug_str += $"Channels: {ch}\n";
-	var sm = buffer_read(wav_file_reader, buffer_u32);	debug_str += $"Sample:   {sm}\n";
-	var l  = buffer_read(wav_file_reader, buffer_u32);	debug_str += $"BPS:   {l}\n";
-	var br = buffer_read(wav_file_reader, buffer_u16);	debug_str += $"Byterate: {br}\n";
-	var l  = buffer_read(wav_file_reader, buffer_u16);	debug_str += $"Bit/Sam:  {l}\n";
+	var ch = buffer_read(wav_file_reader, buffer_u16);	debug_str += $"Channels:    {ch}\n";
+	var sm = buffer_read(wav_file_reader, buffer_u32);	debug_str += $"Sample rate: {sm}\n";
+	var dt = buffer_read(wav_file_reader, buffer_u32);	debug_str += $"Data rate:   {dt}\n";
+	var br = buffer_read(wav_file_reader, buffer_u16);	debug_str += $"Block size:  {br}\n";
+	var bs = buffer_read(wav_file_reader, buffer_u16);	debug_str += $"Bit/Sam:     {bs}\n";
 	
 	//DATA
 	debug_str += "-- DATA --\n";
@@ -82,16 +82,19 @@ function file_read_wav(path) {
 	}
 	
 	content = new audioObject(sm, ch);
-	content.sound     = data;
-	content.soundF    = dataF;
-	content.bit_depth = bpc * 8;
-	content.duration  = real(bits) / real(sm);
-	content.packet 	  = bits;
+	content.sound      = data;
+	content.soundMono  = dataF;
+	content.duration   = real(bits) / real(sm);
+	content.packet 	   = bits;
+	
+	content.bit_depth  = bpc * 8;
+	content.bit_sample = bs;
+	content.bit_range  = power(2, content.bit_sample - 1);
 	
 	printIf(global.FLAG.wav_import, debug_str);
 	logNode(debug_str);
 	
-	print($"Reading buffer {bits} pack from data length {l} with remaining data {_buffer_left}");
+	// print($"Reading buffer {bits} pack from data length {l} with remaining data {_buffer_left}");
 	
 	return content;
 }
@@ -100,13 +103,14 @@ function file_read_wav_step() {
 	if(!wav_file_reading) return false;
 	if(!content)          return false;
 	
-	var t = current_time;
-	var bf_type = undefined, lim;
+	var t       = current_time;
+	var norm    = content.bit_range;
+	var bf_type = undefined;
 	
 	switch(content.bit_depth) {
-		case  8 : bf_type = buffer_u8;  lim =           255; break;
-		case 16 : bf_type = buffer_s16; lim =        32_768; break;
-		case 32 : bf_type = buffer_s32; lim = 2_147_483_648; break;
+		case  8 : bf_type = buffer_u8;  break;
+		case 16 : bf_type = buffer_s16; break;
+		case 32 : bf_type = buffer_s32; break;
 		
 		default :
 			noti_warning($"Bit depth {content.bit_depth} not supported, the audio file need to be 8, 16, 32 bit uncompressed PCM wav with no extension.");
@@ -117,16 +121,15 @@ function file_read_wav_step() {
 	while(wav_file_prg < content.packet) {
 		var ch  = 0;
 		var cha = content.channels;
-		var j   = 0;
+		var i   = 0;
 		
 		repeat( cha ) {
-			var b = buffer_read(wav_file_reader, bf_type) / lim;
+			var b = buffer_read(wav_file_reader, bf_type);
+			content.sound[i++][wav_file_prg] = b / norm;
 			ch += b;
-			content.sound[j][wav_file_prg] = b;
-			j++;
 		}
 		
-		content.soundF[0][wav_file_prg] = ch / content.channels;
+		content.soundMono[0][wav_file_prg] = ch / content.channels / norm;
 		wav_file_prg++;
 		
 		if(current_time - t > 1000 / 30) return false;

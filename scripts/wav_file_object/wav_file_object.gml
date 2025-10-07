@@ -1,12 +1,15 @@
-function audioObject(sample = 8, channel = 2) constructor {
-	self.sound     = [];
-	self.soundF    = [];
-	self.sample    = sample;
-	self.channels  = channel;
-	self.bit_depth = 32;
-	self.duration  = 0;
-	self.packet    = 0;
-	self.mono      = false;
+function audioObject(_sample = 8, _channel = 2) constructor {
+	sound      = [];
+	soundMono  = [];
+	sample     = _sample;
+	channels   = _channel;
+	duration   = 0;
+	packet     = 0;
+	mono       = false;
+	
+	bit_depth  = 32;
+	bit_sample = 16;
+	bit_range  = 1;
 	
 	preview_surface = noone;
 	
@@ -48,7 +51,7 @@ function audioObject(sample = 8, channel = 2) constructor {
 	}
 	
 	static getChannel = function() { return mono? 1 : channels; }
-	static getData    = function() { return mono? soundF : sound; }
+	static getData    = function() { return mono? soundMono : sound; }
 	
 	static toString = function() { return $"\{duration:{duration}, channels:{channels}\}"; }
 }

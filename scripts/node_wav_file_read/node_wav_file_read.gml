@@ -118,12 +118,13 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var bufferId = buffer_create(content.packet * 2, buffer_fixed, 1);
 		buffer_seek(bufferId, buffer_seek_start, 0);
 		
-		var val_to_write = 1;
-
-		for (var i = 0; i < content.packet; i++)
-			buffer_write(bufferId, buffer_s16, round(content.sound[0][i] / 4 * 65535));
+		var val_to_write = 1, i = 0;
+		var bf_type  = buffer_s16;
+		var bf_limit = 32_768;
 		
-		preview_audio = audio_create_buffer_sound(bufferId, buffer_s16, content.sample, 0, content.packet * 2, audio_mono);
+		repeat(content.packet) buffer_write(bufferId, bf_type, round(content.sound[0][i++] / 2 * bf_limit));
+		
+		preview_audio = audio_create_buffer_sound(bufferId, bf_type, content.sample, 0, content.packet * 2, audio_mono);
 		var surf = content.checkPreview(320, 128, true);
 	}
 	
