@@ -379,10 +379,10 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 				
 				camera.applyCamera();
 				scene.reset();
-				scene.apply(deferData);
 				scene.submitShader(_sobj);
 				submitShader();
 				
+				scene.apply(deferData);
 				scene.submit(_sobj);
 				
 				BLEND_NORMAL
