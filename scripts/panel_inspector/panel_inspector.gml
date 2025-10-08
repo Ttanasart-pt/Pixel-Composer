@@ -697,8 +697,8 @@ function Panel_Inspector() : PanelContent() constructor {
             } else if(is_array(jun)) { // Section
                 
                 _colsp   = false;
-                var txt  = __txt(jun[0]);
-                var coll = _colMap[$ jun[0]] ?? jun[1];
+                var _key = array_safe_get_fast(jun, 0, "");
+                var coll = _colMap[$ _key] ?? array_safe_get_fast(jun, 1, false);
                 
                 var fnt = viewMode == INSP_VIEW_MODE.spacious? f_p1 : f_p3;
                 var lbh = viewMode == INSP_VIEW_MODE.spacious? ui(26) : ui(22);
@@ -771,7 +771,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 var ltx = lbx + ui(32);
                 
                 draw_set_text(fnt, fa_left, fa_center, COLORS._main_text, aa);
-                draw_text_add(ltx, yy + lbh / 2, txt);
+                draw_text_add(ltx, yy + lbh / 2, __txt(_key));
                 draw_set_alpha(1);
                 
                 hh += lbh + padd;
