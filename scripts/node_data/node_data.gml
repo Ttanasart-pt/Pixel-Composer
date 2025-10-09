@@ -1136,13 +1136,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		for( var i = 0, n = array_length(outputs); i < n; i++ ) {
 			var _outp = outputs[i];
 			
-			for(var j = 0, m = array_length(_outp.value_to); j < m; j++) {
-				var _to = _outp.value_to[j];
-				if(!_to.node.active || _to.value_from != _outp) continue; 
-				
-				_to.node.passiveDynamic = true;
-				_to.node.rendered       = false;
-			}
+			array_foreach(_outp.getJunctionTo(), function(_t) /*=>*/ {
+				_t.node.passiveDynamic = true;
+				_t.node.rendered       = false;
+			});
 		}
 	}
 	
@@ -2446,8 +2443,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(_tool == noone) //not using any tool
 			return false;
 		
-		if(_tool.ctx != instanceof(self))
-			return false;
+		// if(_tool.ctx != instanceof(self))
+		// 	return false;
 		
 		if(index == undefined) //using any tool
 			return true;

@@ -1,5 +1,4 @@
 #region Tools
-
 	function d3d_transform_tool_position(_node) : ToolObject() constructor {
 		activeKeyboard = false;
 		setNode(_node);
@@ -458,7 +457,7 @@
 						drag_axis = activeKeyboard? 2 : _hover;
 						drag_prev = undefined;
 						
-						drag_original = node.inputs[index].getValue(CURRENT_FRAME, false);
+						drag_original = node.inputs[index].getValue(, false);
 						drag_val  = array_clone(drag_original);
 						drag_dist = 0;
 					}
@@ -802,7 +801,6 @@
 			}
 		}
 	}
-	
 #endregion
 
 function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {

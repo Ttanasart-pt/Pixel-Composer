@@ -44,7 +44,7 @@ function SAVE(project = PROJECT) {
 	
 	if(project.path == "" || project.freeze || project.readonly || path_is_backup(project.path))
 		return SAVE_AS(project);
-		
+	
 	return SAVE_AT(project, project.path);
 }
 
