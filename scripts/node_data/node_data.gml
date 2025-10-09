@@ -1136,13 +1136,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		for( var i = 0, n = array_length(outputs); i < n; i++ ) {
 			var _outp = outputs[i];
 			
-			for(var j = 0; j < array_length(_outp.value_to); j++) {
+			for(var j = 0, m = array_length(_outp.value_to); j < m; j++) {
 				var _to = _outp.value_to[j];
 				if(!_to.node.active || _to.value_from != _outp) continue; 
 				
-				//LOG_IF(global.FLAG.render == 1, $"|| Forwarding dynamic to {_to.node.name} ||");
 				_to.node.passiveDynamic = true;
-				_to.node.rendered = false;
+				_to.node.rendered       = false;
 			}
 		}
 	}
@@ -1152,16 +1151,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(_clearCache) clearInputCache();
 	}
 	
-	static isLeaf = function() {
-		INLINE 
-		
-		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
-			var _inp = inputs[i];
-			if(!_inp.value_from == noone) return false;
-		}
-		
-		return true;
-	}
+	static isLeaf = function(frame = CURRENT_FRAME) { return array_all(inputs, function(inp) /*=>*/ {return inp.value_from == noone}); }
 	
 	static isLeafList = function(list = noone) {
 		INLINE 

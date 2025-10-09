@@ -2,12 +2,12 @@ function Node_Cache_Array(_x, _y, _group = noone) : __Node_Cache(_x, _y, _group)
 	name	  = "Cache Array";
 	use_cache = CACHE_USE.manual;
 	
+	////- =Surfaces
 	newInput(0, nodeValue_Surface("Surface In"));
 	
+	////- =Range
 	newInput(1, nodeValue_Int("Start frame", -1, "Frame index to start caching, set to -1 to start at the first frame."));
-	
 	newInput(2, nodeValue_Int("Stop frame", -1, "Frame index to stop caching (inclusive), set to -1 to stop at the last frame."));
-	
 	newInput(3, nodeValue_Int("Step", 1, "Cache every N frames, set to 1 to cache every frame."));
 	
 	newOutput(0, nodeValue_Output("Cache array", VALUE_TYPE.surface, []));
@@ -16,6 +16,8 @@ function Node_Cache_Array(_x, _y, _group = noone) : __Node_Cache(_x, _y, _group)
 		["Surfaces",  true], 0, 
 		["Range",    false], 1, 2, 3,
 	];
+	
+	////- Node
 	
 	cache_loading			= false;
 	cache_content			= "";
@@ -43,38 +45,42 @@ function Node_Cache_Array(_x, _y, _group = noone) : __Node_Cache(_x, _y, _group)
 	
 		if(!inputs[0].value_from) return;
 		if(!inputs[0].value_from.node.renderActive) {
-			if(!cacheExist(CURRENT_FRAME))
-				enableNodeGroup();
+			enableNodeGroup();
 			return;
 		}
 		
-		var ss  = [];
-		var str = getInputData(1);
-		var lst = getInputData(2);
-		var stp = getInputData(3);
+		var surf = getInputData(0);
+		var str  = getInputData(1);
+		var lst  = getInputData(2);
+		var stp  = getInputData(3);
 		
 		if(str < 0) str = 1;
 		if(lst < 0) lst = TOTAL_FRAMES;
-		
 		str -= 1;
 		
-		if(CURRENT_FRAME <  str) return;
-		if(CURRENT_FRAME >= lst) return;
+		if(lst < str || stp <= 0) return;
+		if(CURRENT_FRAME <  str || CURRENT_FRAME >= lst) return;
 		
-		cacheCurrentFrame(getInputData(0));
+		cacheCurrentFrame(surf);
 		
-		if(lst > str && stp > 0) 
-		for( var i = str; i <= lst; i += stp )
-			if(cacheExist(i)) array_push(ss, cached_output[i]);
+		var ss   = outputs[0].getValue();
+		var _len = 0;
+		 
+		for( var i = str; i <= lst; i += stp ) {
+			if(!cacheExist(i)) continue;
+			ss[_len++] = cached_output[i];
+		}
 		
+		array_resize(ss, _len);
 		outputs[0].setValue(ss);
-		
-		disableNodeGroup();
+		if(IS_LAST_FRAME) disableNodeGroup();
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		if(cache_loading) draw_sprite_ui(THEME.loading, 0, xx + w * _s / 2, yy + h * _s / 2, _s, _s, current_time / 2, COLORS._main_icon, 1);
 	}
+	
+	////- Serialize
 	
 	static doSerialize = function(_map) {
 		_map.cache = surface_array_serialize(cached_output);

@@ -138,18 +138,18 @@ function __nodeLeafList(_arr) {
 }
 
 function __nodeIsRenderLeaf(_node) {
-	if(is_undefined(_node))									 { LOG_IF(global.FLAG.render == 1, $"Skip undefiend		  [{_node}]"); return false; }
-	if(!is_instanceof(_node, Node))							 { LOG_IF(global.FLAG.render == 1, $"Skip non-node		  [{_node}]"); return false; }
+	if(is_undefined(_node)) { LOG_IF(global.FLAG.render == 1, $"Skip undefiend		  [{_node}]"); return false; }
+	if(!is(_node, Node))    { LOG_IF(global.FLAG.render == 1, $"Skip non-node		  [{_node}]"); return false; }
 	
-	if(_node.is_group_io)									 { LOG_IF(global.FLAG.render == 1, $"Skip group IO		  [{_node.internalName}]"); return false; }
+	if(_node.is_group_io)   { LOG_IF(global.FLAG.render == 1, $"Skip group IO		  [{_node.internalName}]"); return false; }
 	
-	if(!_node.active)										 { LOG_IF(global.FLAG.render == 1, $"Skip inactive         [{_node.internalName}]"); return false; }
-	if(!_node.isRenderActive())								 { LOG_IF(global.FLAG.render == 1, $"Skip render inactive  [{_node.internalName}]"); return false; }
-	if(!_node.attributes.update_graph)						 { LOG_IF(global.FLAG.render == 1, $"Skip non-auto update  [{_node.internalName}]"); return false; }
+	if(!_node.active)				   { LOG_IF(global.FLAG.render == 1, $"Skip inactive         [{_node.internalName}]"); return false; }
+	if(!_node.isRenderActive())		   { LOG_IF(global.FLAG.render == 1, $"Skip render inactive  [{_node.internalName}]"); return false; }
+	if(!_node.attributes.update_graph) { LOG_IF(global.FLAG.render == 1, $"Skip non-auto update  [{_node.internalName}]"); return false; }
 			
 	if(_node.passiveDynamic) { _node.forwardPassiveDynamic();  LOG_IF(global.FLAG.render == 1, $"Skip passive dynamic  [{_node.internalName}]"); return false; }
 	
-	if(!_node.isActiveDynamic())							 { LOG_IF(global.FLAG.render == 1, $"Skip rendered static  [{_node.internalName}]"); return false; }
+	if(!_node.isLeaf())                { LOG_IF(global.FLAG.render == 1, $"Skip connected  [{_node.internalName}]"); return false; }
 	if(_node.inline_context != noone && _node.inline_context.managedRenderOrder) return false;
 	
 	return true;

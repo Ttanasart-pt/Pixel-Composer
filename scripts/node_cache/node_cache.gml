@@ -1,7 +1,9 @@
 function Node_Cache(_x, _y, _group = noone) : __Node_Cache(_x, _y, _group) constructor {
 	name	  = "Cache";
 	use_cache = CACHE_USE.auto;
+	doUpdate  = doUpdateLite;
 	
+	////- =Surfaces
 	newInput(0, nodeValue_Surface("Surface In"));
 	
 	newOutput(0, nodeValue_Output("Cache surface", VALUE_TYPE.surface, noone));
@@ -9,6 +11,8 @@ function Node_Cache(_x, _y, _group = noone) : __Node_Cache(_x, _y, _group) const
 	input_display_list = [
 		["Surfaces",  true], 0, 
 	];
+	
+	////- Node
 	
 	cache_loading			= false;
 	cache_content			= "";
@@ -38,14 +42,18 @@ function Node_Cache(_x, _y, _group = noone) : __Node_Cache(_x, _y, _group) const
 			return;
 		}
 		
-		var _surf  = getInputData(0);
+		var _surf  = inputs[0].getValue();
 		cacheCurrentFrame(_surf);
-		disableNodeGroup();
+		if(IS_LAST_FRAME) disableNodeGroup();
+		
+		outputs[0].setValue(_surf);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		if(cache_loading) draw_sprite_ui(THEME.loading, 0, xx + w * _s / 2, yy + h * _s / 2, _s, _s, current_time / 2, COLORS._main_icon, 1);
 	}
+	
+	////- Serialize
 	
 	static doSerialize = function(_map) {
 		_map.cache = surface_array_serialize(cached_output);
