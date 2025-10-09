@@ -61,6 +61,7 @@ function SAVE_AS(project = PROJECT) {
 	
 	if(file_exists_empty(path))
 		log_warning("SAVE", "Overrided file : " + path);
+	
 	SAVE_AT(project, path);
 	SET_PATH(project, path);
 	

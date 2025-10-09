@@ -41,7 +41,7 @@ function Node_Cache_Array(_x, _y, _group = noone) : __Node_Cache(_x, _y, _group)
 	}
 	
 	static update = function() {
-		if(cache_loading) return;
+		if(cache_loading || !IS_PLAYING) return;
 	
 		if(!inputs[0].value_from) return;
 		if(!inputs[0].value_from.node.renderActive) {
@@ -59,21 +59,19 @@ function Node_Cache_Array(_x, _y, _group = noone) : __Node_Cache(_x, _y, _group)
 		str -= 1;
 		
 		if(lst < str || stp <= 0) return;
+		if(IS_LAST_FRAME) disableNodeGroup();
 		if(CURRENT_FRAME <  str || CURRENT_FRAME >= lst) return;
 		
 		cacheCurrentFrame(surf);
 		
 		var ss   = outputs[0].getValue();
 		var _len = 0;
-		 
-		for( var i = str; i <= lst; i += stp ) {
-			if(!cacheExist(i)) continue;
-			ss[_len++] = cached_output[i];
-		}
+		
+		for( var i = str; i < lst; i += stp )
+			ss[_len++] = cacheExist(i)? cached_output[i] : -1;
 		
 		array_resize(ss, _len);
 		outputs[0].setValue(ss);
-		if(IS_LAST_FRAME) disableNodeGroup();
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

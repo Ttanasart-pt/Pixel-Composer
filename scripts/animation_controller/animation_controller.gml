@@ -22,6 +22,7 @@
 	#macro NODE_TOTAL_FRAMES     node.project.animator.frames_total
 	
 	#macro IS_PLAYING            project.animator.is_playing
+	#macro IS_FRAME_PROGRESS     project.animator.frame_progress
 	#macro IS_RENDERING          project.animator.is_rendering
 	#macro CURRENT_FRAME         project.animator.current_frame
 	

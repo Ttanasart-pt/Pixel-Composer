@@ -46,7 +46,10 @@ function Node_pSystem_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 		
 		array_foreach(nodes, function(n) /*=>*/ { if(struct_has(n, "reset")) n.reset(); });
 		
-		if(!IS_PLAYING) { array_foreach(nodes, function(n) /*=>*/ { if(struct_has(n, "resetSeed")) n.resetSeed(); }); return; }
+		if(!IS_PLAYING && !IS_FRAME_PROGRESS) {
+			array_foreach(nodes, function(n) /*=>*/ { if(struct_has(n, "resetSeed")) n.resetSeed(); }); 
+			return; 
+		}
 		
 		prerendering = true;
 		

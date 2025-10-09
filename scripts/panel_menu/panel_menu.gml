@@ -26,9 +26,9 @@
         registerFunction("", "New file",            "N",    MOD_KEY.ctrl,                                 NEW                      ).setMenu("new_file",       THEME.new_file)
         
         if(!DEMO) {
-            registerFunction("", "Save",            "S",    MOD_KEY.ctrl,                                 SAVE                     ).setMenu("save",           THEME.save)
-            registerFunction("", "Save as",         "S",    MOD_KEY.ctrl | MOD_KEY.shift,                 SAVE_AS                  ).setMenu("save_as",        THEME.save)
-            registerFunction("", "Save at",         "",     MOD_KEY.none,                                 SAVE_AT                  ).setMenu("save_at",        THEME.save)
+            registerFunction("", "Save",            "S",    MOD_KEY.ctrl,                                 function() /*=>*/ { SAVE(); }        ).setMenu("save",           THEME.save)
+            registerFunction("", "Save as",         "S",    MOD_KEY.ctrl | MOD_KEY.shift,                 function() /*=>*/ { SAVE_AS(); }     ).setMenu("save_as",        THEME.save)
+            registerFunction("", "Save at",         "",     MOD_KEY.none,                                 function() /*=>*/ { SAVE_AT(); }     ).setMenu("save_at",        THEME.save)
                 .setArg([ ARG("project", function() /*=>*/ {return PROJECT}, true), ARG("path", ""), ARG("log", "save at ") ])
             
             registerFunction("", "Save all",        "S",    MOD_KEY.ctrl | MOD_KEY.alt,                   SAVE_ALL                 ).setMenu("save_all",       THEME.icon_save_all)
