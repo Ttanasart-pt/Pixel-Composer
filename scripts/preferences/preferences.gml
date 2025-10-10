@@ -63,24 +63,25 @@
 	
 	#region DIALOG
 		
-		PREFERENCES.node_recents_amount				= 20;
+		PREFERENCES.node_recents_amount         = 20;
 			
-		PREFERENCES.show_splash						= true;
-		PREFERENCES.splash_expand_recent			= false;
-		PREFERENCES.splash_show_thumbnail			= false;
+		PREFERENCES.show_splash                 = true;
+		PREFERENCES.splash_expand_recent        = false;
+		PREFERENCES.splash_show_thumbnail       = false;
 	
-		PREFERENCES.dialog_add_node_grouping		= true;
-		PREFERENCES.dialog_add_node_view			= 0;
+		PREFERENCES.dialog_add_node_grouping    = true;
+		PREFERENCES.dialog_add_node_view        = 0;
 	
-		PREFERENCES.dialog_add_node_w				= 532;
-		PREFERENCES.dialog_add_node_h				= 400;
-		PREFERENCES.dialog_add_node_search_high		= true;
+		PREFERENCES.dialog_add_node_w           = 532;
+		PREFERENCES.dialog_add_node_h           = 400;
+		PREFERENCES.dialog_add_node_search_high = true;
 		
-		PREFERENCES.add_node_remember				= true;
+		PREFERENCES.add_node_page               = 0;
+		PREFERENCES.add_node_subpage            = 0;
+		PREFERENCES.add_node_remember           = true;
 		
-		PREFERENCES.file_explorer_view				= FILE_EXPLORER_VIEW.list;
-		PREFERENCES.use_native_file_browser			= os_type == os_windows;
-	
+		PREFERENCES.file_explorer_view          = FILE_EXPLORER_VIEW.list;
+		PREFERENCES.use_native_file_browser     = os_type == os_windows;
 	#endregion
 	
 	#region PANEL
@@ -352,10 +353,13 @@
 		directory_verify($"{DIRECTORY}Preferences");
 		directory_verify($"{DIRECTORY}Preferences/{PREF_VERSION}");
 		
-		PREFERENCES.window_maximize	= window_is_maximized;
-		PREFERENCES.window_width	= max(960, window_minimize_size[0]);
-		PREFERENCES.window_height	= max(600, window_minimize_size[1]);
-		PREFERENCES.window_monitor  = window_monitor;
+		PREFERENCES.window_maximize	 = window_is_maximized;
+		PREFERENCES.window_width	 = max(960, window_minimize_size[0]);
+		PREFERENCES.window_height	 = max(600, window_minimize_size[1]);
+		PREFERENCES.window_monitor   = window_monitor;
+		
+		PREFERENCES.add_node_page    = ADD_NODE_PAGE;
+		PREFERENCES.add_node_subpage = ADD_NODE_SUBPAGE;
 		
 		json_save_struct(PREFERENCES_DIR + "keys.json",             PREFERENCES);
 		json_save_struct(PREFERENCES_DIR + "menu_items.json",       PREFERENCES_MENUITEMS);
@@ -411,6 +415,11 @@
 			var fsPref = json_load_struct(fsPath);
 			fsPref.ui_scale = UI_SCALE;
 			json_save_struct(fsPath, fsPref);
+		}
+	
+		if(RUN_IDE) {
+			ADD_NODE_PAGE    = PREFERENCES.add_node_page;
+			ADD_NODE_SUBPAGE = PREFERENCES.add_node_subpage;
 		}
 	}
 	

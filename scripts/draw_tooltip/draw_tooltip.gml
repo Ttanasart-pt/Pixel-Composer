@@ -133,16 +133,8 @@ function draw_tooltip_surface_array(surf) {
 }
 
 function draw_tooltip_surface(surf) {
-	if(is_array(surf)) {
-		draw_tooltip_surface_array(array_spread(surf))
-		return;
-	}
-	
-	if(is(surf, SurfaceAtlas)) {
-		draw_tooltip_atlas(surf);
-		return;
-	}
-	
+	if(is_array(surf))         { draw_tooltip_surface_array(array_spread(surf)); return; }
+	if(is(surf, SurfaceAtlas)) { draw_tooltip_atlas(surf);                       return; }
 	if(!is_surface(surf)) return;
 	
 	var sw = surface_get_width_safe(surf);
@@ -199,10 +191,19 @@ function draw_tooltip_atlas(atlas) {
 	if(!is_array(atlas)) atlas = [ atlas ];
 	
 	var amo = array_length(atlas);
-	var ww  = ui(160);
-	var hh  = amo * ui(48 + 8) - ui(8);
-	
 	if(amo && is_array(atlas[0])) return;
+	
+	var wwd = ui(100);
+	var wd  = wwd + ui(8);
+	
+	var hhg = ui(32);
+	var hg  = hhg + ui(8);
+	
+	var row = min(amo, floor((WIN_H - ui(16)) / hg));
+	var col = ceil(amo / row);
+	
+	var ww  = col * wd - ui(8);
+	var hh  = row * hg - ui(8);
 	
 	var pd = ui(4);
 	var mx = min(mouse_mxs + ui(16), WIN_W - (ww + pd * 2));
@@ -215,7 +216,11 @@ function draw_tooltip_atlas(atlas) {
 	var sy = my + pd;
 	
 	for( var i = 0; i < amo; i++ ) {
-		var _y = sy + i * ui(48 + 8);
+		var _c = floor(i / row);
+		var _r = i % row;
+		
+		var _x = sx + _c * wd;
+		var _y = sy + _r * hg;
 		
 		var atl  = atlas[i];
 		if(!is_instanceof(atl, SurfaceAtlas)) continue;
@@ -226,21 +231,21 @@ function draw_tooltip_atlas(atlas) {
 		var sw = surface_get_width_safe(surf);
 		var sh = surface_get_height_safe(surf);
 		
-		var ss = min(ui(48) / sw, ui(48) / sh);
-		draw_surface_ext_safe(surf, sx, _y, ss, ss);
+		var ss = min(hhg / sw, hhg / sh);
+		draw_surface_ext_safe(surf, _x, _y, ss, ss);
 		
 		draw_set_color(COLORS._main_icon);
-		draw_rectangle(sx, _y, sx + ui(48), _y + ui(48), 1);
+		draw_rectangle(_x, _y, _x + hhg, _y + hhg, 1);
 		
-		draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text_sub);
-		draw_text_add(sx + ui( 56), _y + ui( 0), __txt("Position"));
-		draw_text_add(sx + ui( 56), _y + ui(16), __txt("Rotation"));
-		draw_text_add(sx + ui( 56), _y + ui(32), __txt("Scale"));
+		draw_set_text(f_p4, fa_left, fa_top, COLORS._main_text_sub);
+		draw_text_add(_x + hhg + ui(4), _y + ui(-4), __txt("Pos"));
+		draw_text_add(_x + hhg + ui(4), _y + ui( 8), __txt("Rot"));
+		draw_text_add(_x + hhg + ui(4), _y + ui(20), __txt("Sca"));
 		
-		draw_set_text(f_p3, fa_right, fa_top, COLORS._main_text);
-		draw_text_add(sx + ui(160), _y + ui( 0), $"{atl.x}, {atl.y}");
-		draw_text_add(sx + ui(160), _y + ui(16), atl.rotation);
-		draw_text_add(sx + ui(160), _y + ui(32), $"{atl.sx}, {atl.sy}");
+		draw_set_text(f_p4, fa_right, fa_top, COLORS._main_text);
+		draw_text_add(_x + wwd, _y + ui(-4), $"{atl.x}, {atl.y}");
+		draw_text_add(_x + wwd, _y + ui( 8), atl.rotation);
+		draw_text_add(_x + wwd, _y + ui(20), $"{atl.sx}, {atl.sy}");
 	}
 }
 
