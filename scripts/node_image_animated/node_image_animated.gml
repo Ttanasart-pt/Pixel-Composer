@@ -34,7 +34,7 @@ enum ANIMATION_END {
 }
 
 function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name  = "Animation";
+	name  = "Image Sequence";
 	spr   = [];
 	color = COLORS.node_blend_input;
 	setAlwaysTimeline(new timelineItemNode_Image_Animated(self));
