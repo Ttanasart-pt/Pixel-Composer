@@ -294,12 +294,11 @@ function SVG_path(svgObj = noone) : SVGElement(svgObj) constructor {
 			if((_och >= _oa && _och <= _oz) || (_och >= _oA && _och <= _oZ)) {
 				
 				if(_chr == "Z" || _chr == "z") {
-					// array_push(anchors, [ parent.mapX(_sx), parent.mapY(_sy) ]);
+					array_push(anchors, [ parent.mapX(_sx), parent.mapY(_sy) ]);
 					
 					if(!array_empty(anchors)) 
 						array_push(segments, anchors);
-						
-					print(anchors)
+					
 					anchors = [];
 					
 				} else if(_chr == "M" || _chr == "m") {
@@ -328,7 +327,6 @@ function SVG_path(svgObj = noone) : SVGElement(svgObj) constructor {
 				
 				switch(_mode) {
 					case "M" : //Move to absolute
-						
 						if(array_length(_par) >= 2) {
 							_tx = _par[0];
 							_ty = _par[1];
@@ -337,13 +335,12 @@ function SVG_path(svgObj = noone) : SVGElement(svgObj) constructor {
 							
 							array_push(anchors, [ parent.mapX(_tx), 
 												  parent.mapY(_ty) ]);
-							_par = [];
+							_par  = [];
+							_mode = "L";
 						}
-						_mode = "L";
 						break;
 						
 					case "m" : //Move to relative
-					
 						if(array_length(_par) >= 2) {
 							_tx += _par[0];
 							_ty += _par[1];
@@ -352,9 +349,9 @@ function SVG_path(svgObj = noone) : SVGElement(svgObj) constructor {
 							
 							array_push(anchors, [ parent.mapX(_tx), 
 												  parent.mapY(_ty) ]);
-							_par = [];
+							_par  = [];
+							_mode = "l";
 						}
-						_mode = "l";
 						break;
 						
 					case "L" : //Line to absolute
