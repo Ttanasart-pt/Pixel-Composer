@@ -6,7 +6,20 @@ MATRIX_IDENTITY = matrix_build_identity();
 	vertex_format_begin();
 	vertex_format_add_position();
 	vertex_format_add_color();
-	global.format_pc = vertex_format_end();
+	globalvar VF_PC; VF_PC = vertex_format_end();
+	
+	vertex_format_begin();
+	vertex_format_add_position();
+	vertex_format_add_color();
+	vertex_format_add_texcoord();
+	globalvar VF_PCT; VF_PCT = vertex_format_end();
+	
+	vertex_format_begin();
+	vertex_format_add_position_3d();
+	vertex_format_add_color();
+	vertex_format_add_texcoord();
+	globalvar VF_P3CT; VF_P3CT = vertex_format_end();
+	
 #endregion
 
 function vertex_add_pt(buffer, position, texture) {

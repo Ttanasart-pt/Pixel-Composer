@@ -7,8 +7,6 @@ void main() {
     vec4 _bc = texture2D(bg, v_vTexcoord);
     vec4 _fc = texture2D(fg, v_vTexcoord);
     
-    // gl_FragColor = _fc; return;
-    
     gl_FragColor = _bc;
     if(_fc.a == 0.) return;
     

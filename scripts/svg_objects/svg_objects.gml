@@ -1,4 +1,4 @@
-function SVGElement(svgObj = noone) constructor {
+function SVGElement(svgObj = noone) : dynaSurf() constructor {
 	parent = svgObj;
 	
 	x = 0;
@@ -13,6 +13,11 @@ function SVGElement(svgObj = noone) constructor {
 	stroke       = undefined;
 	stroke_width = undefined;
 	
+	static getWidth     = function() /*=>*/ {return width};
+	static getHeight    = function() /*=>*/ {return height};
+	static getFormat    = function() /*=>*/ {return surface_rgba8unorm};
+	static getDimension = function() /*=>*/ {return [ width, height ]};
+	
 	static attrColor = function(attr, key) {
 		if(!struct_has(attr, key)) return undefined;
 		
@@ -23,7 +28,7 @@ function SVGElement(svgObj = noone) constructor {
 		return c_black;
 	}
 	
-	static attrReal = function(str, def = 0) {
+	static attrReal  = function(str, def = 0) {
 		if(is_undefined(str)) return str;
 		if(is_real(str))      return str;
 		
@@ -36,7 +41,7 @@ function SVGElement(svgObj = noone) constructor {
 		return def;
 	}
 	
-	static setAttr = function(attr) {
+	static setAttr   = function(attr) /*=>*/ {
 		
 		var box  = struct_try_get(attr, "viewBox", "");
 		var ww   = struct_try_get(attr, "width",   "");
@@ -62,10 +67,9 @@ function SVGElement(svgObj = noone) constructor {
 		
 		return self;
 	}
+	static onSetAttr = function(attr) /*=>*/ {}
 	
-	static onSetAttr = function(attr) {}
-	
-	static draw = function(scale = 1) {}
+	static draw = function(dx=0, dy=0, sx=1, sy=1, _ang=0, _col=c_white, _alp=1) {}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { }
 }
@@ -77,11 +81,12 @@ function SVG(svgObj = noone) : SVGElement(svgObj) constructor {
 	fill_opacity = 1;
 	
 	contents = [];
+	surfaces = [ noone ];
 	
-	static mapX = function(px) { return lerp_invert(px, bbox[0], bbox[0] + bbox[2]) *  width; }
-	static mapY = function(py) { return lerp_invert(py, bbox[1], bbox[1] + bbox[3]) * height; }
+	static mapX = function(px) /*=>*/ {return lerp_invert(px, bbox[0], bbox[0] + bbox[2]) *  width};
+	static mapY = function(py) /*=>*/ {return lerp_invert(py, bbox[1], bbox[1] + bbox[3]) * height};
 	
-	static onSetAttr = function(attr) {
+	static onSetAttr = function(attr) /*=>*/ {
 		if(struct_has(attr, "viewBox")) {
 			var _bbox = attr.viewBox;
 			_bbox = string_splice(_bbox);
@@ -113,15 +118,14 @@ function SVG(svgObj = noone) : SVGElement(svgObj) constructor {
 		return self;
 	}
 	
-	static getSurface = function(scale = 1) { return surface_create(width * scale, height * scale); }
+	static getSurface = function(sx=1, sy=1) /*=>*/ {return surface_verify(surfaces[0], width * sx, height * sy)};
 	
-	static draw = function(scale = 1) {
-		
+	static draw = function(dx=0, dy=0, sx=1, sy=1, _ang=0, _col=c_white, _alp=1) {
 		for (var i = 0, n = array_length(contents); i < n; i++) {
 			if(!is_undefined(fill)) 		draw_set_color(fill);
 			if(!is_undefined(fill_opacity)) draw_set_alpha(fill_opacity);
 			
-			contents[i].draw(scale);
+			contents[i].draw(dx, dy, sx, sy, _ang, _col, _alp);
 		}
 	}
 	
@@ -135,8 +139,9 @@ function SVG_path(svgObj = noone) : SVGElement(svgObj) constructor {
 	
 	segments = [];
 	shapes   = [];
+	surfaces = [ noone, noone, noone ];
 	
-	static setTris = function() {
+	static setTris = function() /*=>*/ {
 		shapes = [];
 		var ox, oy, nx, ny, x0, y0, x1, y1;
 		
@@ -148,6 +153,7 @@ function SVG_path(svgObj = noone) : SVGElement(svgObj) constructor {
 				_p[j] = new __vec2(_seg[j][0], _seg[j][1]);
 			
 			var _pTri = polygon_triangulate(_p);
+			shapes[i] = _pTri;
 			var _ctri = [];
 			
 			for (var j = 0, m = array_length(_seg); j < m; j++) {
@@ -161,7 +167,6 @@ function SVG_path(svgObj = noone) : SVGElement(svgObj) constructor {
 						y0 = _s[3];
 						
 						array_push(_ctri, [ ox, oy, x0, y0, nx, ny ]);
-						
 					}
 				}
 				
@@ -170,12 +175,34 @@ function SVG_path(svgObj = noone) : SVGElement(svgObj) constructor {
 			}
 			
 			_pTri[3]  = _ctri;
-			shapes[i] = _pTri;
+			
+			var _tri = _pTri[0];
+			var _vb  = vertex_create_buffer();
+			vertex_begin(_vb, VF_P3CT);
+			for (var j = 0, m = array_length(_tri); j < m; j++) {
+				vertex_position_3d(_vb, _tri[j][0].x, _tri[j][0].y, 0); vertex_color(_vb, c_white, 1); vertex_texcoord(_vb, 0, 0);
+				vertex_position_3d(_vb, _tri[j][1].x, _tri[j][1].y, 0); vertex_color(_vb, c_white, 1); vertex_texcoord(_vb, 0, 0);
+				vertex_position_3d(_vb, _tri[j][2].x, _tri[j][2].y, 0); vertex_color(_vb, c_white, 1); vertex_texcoord(_vb, 0, 0);
+			}
+			vertex_end(_vb);
+			_pTri[4]  = _vb;
+			
+			var _ctr = _pTri[3];
+			var _vb  = vertex_create_buffer();
+			vertex_begin(_vb, VF_P3CT);
+			for (var j = 0, m = array_length(_ctr); j < m; j++) {
+				vertex_position_3d(_vb, _ctr[j][0], _ctr[j][1], 0); vertex_color(_vb, c_white, 1); vertex_texcoord(_vb, 0.0, 0);
+				vertex_position_3d(_vb, _ctr[j][2], _ctr[j][3], 0); vertex_color(_vb, c_white, 1); vertex_texcoord(_vb, 0.5, 0);
+				vertex_position_3d(_vb, _ctr[j][4], _ctr[j][5], 0); vertex_color(_vb, c_white, 1); vertex_texcoord(_vb, 1.0, 1);
+			}
+			vertex_end(_vb);
+			_pTri[5]  = _vb;
+			
 		}
 		
 	}
 	
-	static bezierCubicApprox = function(anchors, x1, y1, x2, y2, x3, y3, x4, y4) {
+	static bezierCubicApprox = function(anchors, x1, y1, x2, y2, x3, y3, x4, y4) /*=>*/ {
 		var _len = point_distance(x1, y1, x2, y2)
 		         + point_distance(x2, y2, x3, y3)
 		         + point_distance(x3, y3, x4, y4);
@@ -190,7 +217,7 @@ function SVG_path(svgObj = noone) : SVGElement(svgObj) constructor {
 		}
 	}
 	
-	static arcToBezier = function(anchors, _x1, _y1, _x2, _y2, _rx, _ry, _a, _fa, _fs) {
+	static arcToBezier = function(anchors, _x1, _y1, _x2, _y2, _rx, _ry, _a, _fa, _fs) /*=>*/ {
 		
 		// var x1p = (_x1 - _x2) / 2 *   dcos(_a)  + (_y1 - _y2) / 2 * dsin(_a);
 		// var y1p = (_x1 - _x2) / 2 * (-dsin(_a)) + (_y1 - _y2) / 2 * dcos(_a);
@@ -230,7 +257,7 @@ function SVG_path(svgObj = noone) : SVGElement(svgObj) constructor {
 		// }
 	}
 	
-	static onSetAttr = function(attr) {
+	static onSetAttr = function(attr) /*=>*/ {
 		
 		var def   = struct_try_get(attr, "d", "");
 		var _mode = "";
@@ -267,10 +294,12 @@ function SVG_path(svgObj = noone) : SVGElement(svgObj) constructor {
 			if((_och >= _oa && _och <= _oz) || (_och >= _oA && _och <= _oZ)) {
 				
 				if(_chr == "Z" || _chr == "z") {
-					array_push(anchors, [ parent.mapX(_sx), parent.mapY(_sy) ]);
+					// array_push(anchors, [ parent.mapX(_sx), parent.mapY(_sy) ]);
 					
 					if(!array_empty(anchors)) 
 						array_push(segments, anchors);
+						
+					print(anchors)
 					anchors = [];
 					
 				} else if(_chr == "M" || _chr == "m") {
@@ -289,8 +318,7 @@ function SVG_path(svgObj = noone) : SVGElement(svgObj) constructor {
 			
 			if(_och == _os || _och == _oc || _chrn == _om || (_chrn >= _oa && _chrn <= _oz) || (_chrn >= _oA && _chrn <= _oZ)) {
 				
-				if(_val != "")
-					array_push(_par, real(_val));
+				if(_val != "") array_push(_par, real(_val));
 				_val  = "";
 				_eval = true;
 			} 
@@ -311,6 +339,7 @@ function SVG_path(svgObj = noone) : SVGElement(svgObj) constructor {
 												  parent.mapY(_ty) ]);
 							_par = [];
 						}
+						_mode = "L";
 						break;
 						
 					case "m" : //Move to relative
@@ -325,6 +354,7 @@ function SVG_path(svgObj = noone) : SVGElement(svgObj) constructor {
 												  parent.mapY(_ty) ]);
 							_par = [];
 						}
+						_mode = "l";
 						break;
 						
 					case "L" : //Line to absolute
@@ -604,73 +634,92 @@ function SVG_path(svgObj = noone) : SVGElement(svgObj) constructor {
 		return self;
 	}
 
-	static draw = function(scale = 1) {
-		if(!is_undefined(fill)) 			draw_set_color(fill);
-		if(!is_undefined(fill_opacity)) 	draw_set_alpha(fill_opacity);
+	static draw = function(dx=0, dy=0, sx=1, sy=1, _ang=0, _col=c_white, _alp=1) {
+		if(!is_undefined(fill)) 		draw_set_color(fill);
+		if(!is_undefined(fill_opacity)) draw_set_alpha(fill_opacity);
 		
-		var _temp = [
-			parent.getSurface(scale),
-			parent.getSurface(scale),
-		];
+		var _sw = parent.width;
+		var _sh = parent.height;
+		var _bg = 0;
+		var a = -degtorad(_ang);
 		
-		var _sw = surface_get_width_safe(_temp[0]);
-		var _sh = surface_get_height_safe(_temp[0]);
+		// for( var i = 0, n = array_length(surfaces); i < n; i++ ) {
+		// 	surfaces[i] = surface_verify(surfaces[i], _sw, _sh); 
+		// 	surface_clear(surfaces[i]);
+		// }
 		
-		surface_clear(_temp[0]);
-		surface_clear(_temp[1]);
+		var _sw = surface_get_width(surface_get_target());
+		var _sh = surface_get_height(surface_get_target());
 		
-		var _surf = parent.getSurface(scale);
+		gpu_set_blendmode_ext(bm_inv_dest_alpha, bm_inv_dest_alpha);
 		
 		for (var i = 0, n = array_length(shapes); i < n; i++) {
 			var shp  = shapes[i];
-			var _tri = shp[0];
-			var _sid = shp[2];
-			var _ctr = shp[3];
 			
-			surface_set_target(_surf);
-			DRAW_CLEAR
-			BLEND_OVERRIDE
+			var _vbf = shp[4];
+			var _cbf = shp[5];
 			
-				draw_primitive_begin(pr_trianglelist);
-					for (var j = 0, m = array_length(_tri); j < m; j++) {
-						draw_vertex(_tri[j][0].x * scale, _tri[j][0].y * scale);
-						draw_vertex(_tri[j][1].x * scale, _tri[j][1].y * scale);
-						draw_vertex(_tri[j][2].x * scale, _tri[j][2].y * scale);
-					}
-				draw_primitive_end();
+			// surface_set_target(surfaces[2]);
+			// DRAW_CLEAR
+			// BLEND_OVERRIDE
+				
+				matrix_stack_clear();
+				
+				matrix_stack_push([
+					 1,  0, 0, 0, 
+					 0,  1, 0, 0, 
+					 0,  0, 1, 0, 
+					dx, dy, 0, 1, 
+				]);
+				
+				matrix_stack_push([
+					 1,  0, 0, 0, 
+					 0,  1, 0, 0, 
+					 0,  0, 1, 0, 
+					-_sw/2, -_sh/2, 0, 1, 
+				]);
+				
+				matrix_stack_push([
+					 cos(a), sin(a), 0, 0, 
+					-sin(a), cos(a), 0, 0, 
+					 0, 0, 1, 0, 
+					 0, 0, 0, 1, 
+				]);
+				
+				matrix_stack_push([
+					sx,  0, 0, 0, 
+					 0, sy, 0, 0, 
+					 0,  0, 1, 0, 
+					 0,  0, 0, 1, 
+				]);
+				
+				camera_set_view_mat(camera_get_active(), matrix_stack_top());
+				camera_apply(camera_get_active());
+				vertex_submit(_vbf, pr_trianglelist, -1);
 				
 				shader_set(sh_svg_curve_quad);
-				draw_primitive_begin(pr_trianglelist);
-					for (var j = 0, m = array_length(_ctr); j < m; j++) {
-						if(array_length(_ctr[j]) == 6) {
-							draw_vertex_texture(_ctr[j][0] * scale, _ctr[j][1] * scale, 0.0, 0);
-							draw_vertex_texture(_ctr[j][2] * scale, _ctr[j][3] * scale, 0.5, 0);
-							draw_vertex_texture(_ctr[j][4] * scale, _ctr[j][5] * scale, 1.0, 1);
-							
-						}
-					}
-				draw_primitive_end();
+				vertex_submit(_cbf, pr_trianglelist, -1);
 				shader_reset();
 			
-			BLEND_NORMAL
-			surface_reset_target();
+				camera_set_view_mat(camera_get_active(), MATRIX_IDENTITY);
+				matrix_stack_clear();
+				
+			// BLEND_NORMAL
+			// surface_reset_target();
 			
-			surface_set_shader(_temp[i % 2], sh_svg_fill);
+			// _bg = !_bg;
+			// surface_set_shader(surfaces[_bg], sh_svg_fill);
+			// 	shader_set_surface("bg", surfaces[!_bg]);
+			// 	shader_set_surface("fg", surfaces[2]);
 				
-				shader_set_surface("bg", _temp[!(i % 2)]);
-				shader_set_surface("fg", _surf);
+			// 	draw_sprite_stretched_ext(s_fx_pixel, 0, 0, 0, _sw, _sh, draw_get_color(), draw_get_alpha());
 				
-				draw_sprite_stretched_ext(s_fx_pixel, 0, 0, 0, _sw, _sh, draw_get_color(), draw_get_alpha());
-				
-			surface_reset_shader();
-			
+			// surface_reset_shader();
 		}
 		
-		draw_surface_safe(_temp[!(i % 2)]);
+		BLEND_NORMAL
 		
-		surface_free(_surf);
-		surface_free(_temp[0]);
-		surface_free(_temp[1]);
+		// draw_surface_safe(surfaces[_bg], dx, dy);
 	}
 
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
@@ -721,7 +770,7 @@ function SVG_path(svgObj = noone) : SVGElement(svgObj) constructor {
 
 function SVG_rect(svgObj = noone) : SVGElement(svgObj) constructor {
 	
-	static onSetAttr = function(attr) {
+	static onSetAttr = function(attr) /*=>*/ {
 		x = struct_try_get(attr, "x", 0);
 		y = struct_try_get(attr, "y", 0);
 		
@@ -729,21 +778,21 @@ function SVG_rect(svgObj = noone) : SVGElement(svgObj) constructor {
 		height = struct_try_get(attr, "height", 0);
 	}
 	
-	static draw = function(scale = 1) {
+	static draw = function(dx=0, dy=0, sx=1, sy=1, _ang=0, _col=c_white, _alp=1) {
 		if(!is_undefined(fill)) 			draw_set_color(fill);
 		if(!is_undefined(fill_opacity)) 	draw_set_alpha(fill_opacity);
 		
-		var _x = x * scale;
-		var _y = y * scale;
-		var _w = width  * scale;
-		var _h = height * scale;
+		var _x = dx * sx;
+		var _y = dy * sy;
+		var _w = width  * sx;
+		var _h = height * sy;
 		
 		draw_rectangle(_x, _y, _x + _w, _y + _h, false);
 		
 		if(is_undefined(stroke) || is_undefined(stroke_width)) 
 			return;
 		
-		if(!is_undefined(stroke)) 			draw_set_color(stroke);
+		if(!is_undefined(stroke)) draw_set_color(stroke);
 		
 		if(is_undefined(stroke_width) || stroke_width == 1)
 			draw_rectangle(_x, _y, _x + _w, _y + _h, true);
@@ -768,32 +817,43 @@ function SVG_circle(svgObj = noone) : SVGElement(svgObj) constructor {
 	cy = 0;
 	r  = 0;
 	
-	static onSetAttr = function(attr) {
+	static onSetAttr = function(attr) /*=>*/ {
 		cx = struct_try_get(attr, "cx", 0);
 		cy = struct_try_get(attr, "cy", 0);
 		
 		r  = struct_try_get(attr, "r", 0);
 	}
 	
-	static draw = function(scale = 1) {
+	static draw = function(dx=0, dy=0, sx=1, sy=1, _ang=0, _col=c_white, _alp=1) {
 		if(!is_undefined(fill)) 			draw_set_color(fill);
 		if(!is_undefined(fill_opacity)) 	draw_set_alpha(fill_opacity);
 		
-		var _cx = cx * scale;
-		var _cy = cy * scale;
-		var _r  = r  * scale;
+		var _cx = dx + cx * sx;
+		var _cy = dy + cy * sy;
+		var _rx = r  * sx;
+		var _ry = r  * sy;
 		
-		draw_circle(_cx, _cy, _r, false);
+		if(sx == sy) draw_circle(  _cx, _cy, _rx, false);
+		else         draw_ellipse( _cx - _rx, _cy - _ry, _cx + _rx, _cy + _ry, false);
 		
 		if(is_undefined(stroke) || is_undefined(stroke_width)) 
 			return;
 		
-		if(!is_undefined(stroke)) 			draw_set_color(stroke);
+		if(!is_undefined(stroke)) draw_set_color(stroke);
 		
-		if(is_undefined(stroke_width) || stroke_width == 1)
-			draw_circle(_cx, _cy, _r, true);
-		else 
-			draw_circle_border(_cx, _cy, _r, stroke_width);
+		if(sx == sy) {
+			if(is_undefined(stroke_width) || stroke_width == 1)
+				draw_circle(_cx, _cy, r * sx, true);
+			else 
+				draw_circle_border(_cx, _cy, r * sx, stroke_width);
+				
+		} else {
+			if(is_undefined(stroke_width) || stroke_width == 1)
+				draw_ellipse(_cx - _rx, _cy - _ry, _cx + _rx, _cy + _ry, true);
+			else 
+				draw_ellipse_border(_cx - _rx, _cy - _ry, _cx + _rx, _cy + _ry, stroke_width);
+				
+		}
 	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
@@ -813,7 +873,7 @@ function SVG_ellipse(svgObj = noone) : SVGElement(svgObj) constructor {
 	rx = 0;
 	ry = 0;
 	
-	static onSetAttr = function(attr) {
+	static onSetAttr = function(attr) /*=>*/ {
 		cx = struct_try_get(attr, "cx", 0);
 		cy = struct_try_get(attr, "cy", 0);
 		
@@ -821,14 +881,14 @@ function SVG_ellipse(svgObj = noone) : SVGElement(svgObj) constructor {
 		ry  = struct_try_get(attr, "ry", 0);
 	}
 	
-	static draw = function(scale = 1) {
+	static draw = function(dx=0, dy=0, sx=1, sy=1, _ang=0, _col=c_white, _alp=1) {
 		if(!is_undefined(fill)) 			draw_set_color(fill);
 		if(!is_undefined(fill_opacity)) 	draw_set_alpha(fill_opacity);
 		
-		var _cx = cx * scale;
-		var _cy = cy * scale;
-		var _rx = rx * scale;
-		var _ry = ry * scale;
+		var _cx = dx + cx * sx;
+		var _cy = dy + cy * sy;
+		var _rx = rx * sx;
+		var _ry = ry * sy;
 		
 		draw_ellipse(_cx - _rx, _cy - _ry, _cx + _rx, _cy + _ry, false);
 		
@@ -861,7 +921,7 @@ function SVG_line(svgObj = noone) : SVGElement(svgObj) constructor {
 	x1 = 0;
 	y1 = 0;
 	
-	static onSetAttr = function(attr) {
+	static onSetAttr = function(attr) /*=>*/ {
 		x0 = struct_try_get(attr, "x0", 0);
 		y0 = struct_try_get(attr, "y0", 0);
 		
@@ -869,16 +929,16 @@ function SVG_line(svgObj = noone) : SVGElement(svgObj) constructor {
 		y1 = struct_try_get(attr, "y1", 0);
 	}
 	
-	static draw = function(scale = 1) {
+	static draw = function(dx=0, dy=0, sx=1, sy=1, _ang=0, _col=c_white, _alp=1) {
 		if(!is_undefined(stroke)) 			draw_set_color(stroke);
 		
 		if(is_undefined(stroke) && is_undefined(stroke_width)) 
 			return;
 		
-		var _x0 = x0 * scale;
-		var _y0 = y0 * scale;
-		var _x1 = x1 * scale;
-		var _y1 = y1 * scale;
+		var _x0 = dx + x0 * sx;
+		var _y0 = dy + y0 * sy;
+		var _x1 = dx + x1 * sx;
+		var _y1 = dy + y1 * sy;
 		
 		if(is_undefined(stroke_width) || stroke_width == 1)
 			draw_line(_x0, _y0, _x1, _y1);
@@ -901,11 +961,11 @@ function SVG_line(svgObj = noone) : SVGElement(svgObj) constructor {
 function SVG_polyline(svgObj = noone) : SVGElement(svgObj) constructor {
 	points = [];
 	
-	static onSetAttr = function(attr) {
+	static onSetAttr = function(attr) /*=>*/ {
 		points = struct_try_get(attr, "points", []);
 	}
 	
-	static draw = function(scale = 1) {
+	static draw = function(dx=0, dy=0, sx=1, sy=1, _ang=0, _col=c_white, _alp=1) {
 		if(!is_undefined(stroke)) 			draw_set_color(stroke);
 		
 		if(is_undefined(stroke) && is_undefined(stroke_width)) 
@@ -914,8 +974,8 @@ function SVG_polyline(svgObj = noone) : SVGElement(svgObj) constructor {
 		var _ox, _oy, _nx, _ny;
 		
 		for (var i = 0, n = floor(array_length(points) / 2); i < n; i++) {
-			_nx = points[i * 2 + 0] * scale;
-			_ny = points[i * 2 + 1] * scale;
+			_nx = dx + points[i * 2 + 0] * sx;
+			_ny = dy + points[i * 2 + 1] * sy;
 			
 			if(i) {
 				if(is_undefined(stroke_width) || stroke_width == 1)
@@ -956,11 +1016,11 @@ function SVG_polyline(svgObj = noone) : SVGElement(svgObj) constructor {
 function SVG_polygon(svgObj = noone) : SVGElement(svgObj) constructor {
 	points = [];
 	
-	static onSetAttr = function(attr) {
+	static onSetAttr = function(attr) /*=>*/ {
 		points = struct_try_get(attr, "points", []);
 	}
 	
-	static draw = function(scale = 1) {
+	static draw = function(dx=0, dy=0, sx=1, sy=1, _ang=0, _col=c_white, _alp=1) {
 		if(!is_undefined(stroke)) 			draw_set_color(stroke);
 		
 		if(is_undefined(stroke) && is_undefined(stroke_width)) 
@@ -969,8 +1029,8 @@ function SVG_polygon(svgObj = noone) : SVGElement(svgObj) constructor {
 		var _ox, _oy, _nx, _ny;
 		
 		for (var i = 0, n = floor(array_length(points) / 2); i < n; i++) {
-			_nx = points[i * 2 + 0] * scale;
-			_ny = points[i * 2 + 1] * scale;
+			_nx = dx + points[i * 2 + 0] * sx;
+			_ny = dy + points[i * 2 + 1] * sy;
 			
 			if(i) {
 				if(is_undefined(stroke_width) || stroke_width == 1)

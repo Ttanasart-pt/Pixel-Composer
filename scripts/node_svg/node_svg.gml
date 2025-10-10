@@ -12,11 +12,17 @@ function Node_SVG(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "SVG";
 	color = COLORS.node_blend_input;
 	
-	newInput(0, nodeValue_Path("Path")).setDisplay(VALUE_DISPLAY.path_load, { filter: "Scalable Vector Graphics|*.svg" });
-	newInput(1, nodeValue_Float("Scale", 1));
+	newInput(0, nodeValue_Path(    "Path")).setDisplay(VALUE_DISPLAY.path_load, { filter: "Scalable Vector Graphics|*.svg" });
+	newInput(2, nodeValue_EButton( "Type",      0, [ "Scale", "Constant" ] ));
+	newInput(1, nodeValue_Float(   "Scale",     1        ));
+	newInput(3, nodeValue_Dimension());
 		
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
-	newOutput(1, nodeValue_Output("SVG Struct", VALUE_TYPE.struct, {}));
+	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface,  noone ));
+	newOutput(1, nodeValue_Output( "SVG Object",  VALUE_TYPE.dynaSurface, {} ));
+	
+	input_display_list = [ 0, 
+		[ "Dimension", false ], 2, 1, 3, 
+	];
 	
 	attribute_surface_depth();
 	
@@ -27,19 +33,25 @@ function Node_SVG(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	edit_time  = 0;
 	curr_path  = "";
 	
-	attributes.check_splice = true;
 	attributes.file_checker = true;
 	array_push(attributeEditors, [ "File Watcher", function() /*=>*/ {return attributes.file_checker}, new checkBox(function() /*=>*/ {return toggleAttribute("file_checker")}) ]);
 	
 	on_drop_file = function(path) {
 		inputs[0].setValue(path);
-		
-		if(readFile(path)) {
-			doUpdate();
-			return true;
-		}
-		
+		if(readFile(path)) { doUpdate(); return true; }
 		return false;
+	}
+	
+	setTrigger(1, __txt("Refresh"), [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() /*=>*/ { readFile(path_get(getInputData(0))); triggerRender(); });
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+		if(!is(content, SVG)) return;
+		
+		var _stype = getInputData(2);
+		if(_stype == 0) {
+			var _scale = getInputData(1);
+			content.drawOverlay(hover, active, _x, _y, _s * _scale, _mx, _my, _snx, _sny);
+		}
 	}
 	
 	function readFile(path) {
@@ -64,27 +76,15 @@ function Node_SVG(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		content    = svg_parse(rawContent);
 		
 		logNode($"Loaded file: {path}", false);
-		
 		return;
 	}
 	
-	setTrigger(1, __txt("Refresh"), [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() /*=>*/ { readFile(path_get(getInputData(0))); triggerRender(); });
-	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		var _scale   = getInputData(1);
-		if(!is(content, SVG)) return;
-		
-		content.drawOverlay(hover, active, _x, _y, _s * _scale, _mx, _my, _snx, _sny);
-	}
-	
 	static step = function() {
-		var path = path_get(getInputData(0));
-		if(!file_exists_empty(path)) return;
+		if(!attributes.file_checker)      return;
+		if(!file_exists_empty(curr_path)) return;
 		
-		var _modi = file_get_modify_s(path);
-		if(attributes.file_checker && _modi > edit_time) {
-			readFile(path);
-			triggerRender();
+		if(file_get_modify_s(curr_path) > edit_time) {
+			run_in_s(PREFERENCES.file_watcher_delay, function() /*=>*/ { readFile(curr_path); triggerRender(); });
 		}
 	}
 	
@@ -92,23 +92,44 @@ function Node_SVG(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var path = path_get(getInputData(0));
 		if(path != curr_path) readFile(path);
 		
-		if(!is_instanceof(content, SVG)) return;
+		if(!is(content, SVG)) return;
 		outputs[1].setValue(path);
 		
-		var _scale   = getInputData(1);
 		var _outsurf = outputs[0].getValue();
 		
-		var ww = content.width  * _scale;
-		var hh = content.height * _scale;
+		var _stype = getInputData(2);
+		var _sx = 1, _sy = 1;
 		
+		switch(_stype) {
+			case 0 : 
+				inputs[1].setVisible(true);
+				inputs[3].setVisible(false);
+				
+				var _scale = getInputData(1);
+				_sx = _scale;
+				_sy = _scale;
+				break;
+			
+			case 1 : 
+				inputs[1].setVisible(false);
+				inputs[3].setVisible(true);
+				
+				var _tdim = getInputData(3);
+				_sx = _tdim[0] / content.width;
+				_sy = _tdim[1] / content.height;
+				break;
+		}
+		
+		var ww = content.width  * _sx;
+		var hh = content.height * _sy;
 	    _outsurf = surface_verify(_outsurf, ww, hh, attrDepth());
 		
 		surface_set_shader(_outsurf, noone);
-			content.draw(_scale);
+			content.draw(0, 0, _sx, _sy);
 		surface_reset_shader();
 		
 		outputs[0].setValue(_outsurf);
-		outputs[1].setValue(rawContent);
+		outputs[1].setValue(content);
 	}
 	
 	static dropPath = function(path) {

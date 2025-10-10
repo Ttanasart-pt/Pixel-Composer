@@ -3,5 +3,6 @@ varying vec4 v_vColour;
 
 void main() {
     float inner  = step(v_vTexcoord.x * v_vTexcoord.x, v_vTexcoord.y);
-    gl_FragColor = v_vColour * inner;
+    if(inner == 0.) discard;
+    gl_FragColor = v_vColour;
 }

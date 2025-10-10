@@ -900,11 +900,10 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		pos[0] -= anc[0];
 		pos[1] -= anc[1];
 		
-		pos = point_rotate(pos[0], pos[1], pos[0] + anc[0], pos[1] + anc[1], rot);
+		pos = point_rotate(pos[0], pos[1], pos[0] + anc[0], pos[1] + anc[1], rot, __p);
 		
-		var draw_x, draw_y;
-		draw_x = pos[0];
-		draw_y = pos[1];
+		var draw_x = pos[0];
+		var draw_y = pos[1];
 				
 		if(pos_exact) {
 			draw_x = round(draw_x);
