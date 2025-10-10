@@ -1906,17 +1906,19 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		preview_channel_temp = undefined;
-		for(var i = 0; i < array_length(outputs); i++) {
+		for(var i = 0, n = array_length(outputs); i < n; i++) {
 			var jun = outputs[i];
 			
 			if(!jun.isVisible()) continue;
 			if(jun.drawJunction(_draw, _s, _mx, _my, _fast)) {
 				hover = jun;
-				preview_channel_temp = i;
+				
+				if(jun.type == VALUE_TYPE.surface)
+					preview_channel_temp = i;
 			}
 		}
 		
-		for( var i = 0; i < array_length(inputs); i++ ) {
+		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
 			var _inp = inputs[i];
 			var jun = _inp.bypass_junc;
 			
@@ -2445,7 +2447,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		// if(_tool.ctx != instanceof(self))
 		// 	return false;
 		
-		if(index == undefined) //using any tool
+		if(index == undefined) // Using any tool
 			return true;
 		
 		if(is_real(index) && _tool != tools[index])
