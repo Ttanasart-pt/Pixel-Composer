@@ -12,16 +12,15 @@ function Node_SVG(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "SVG";
 	color = COLORS.node_blend_input;
 	
-	newInput(0, nodeValue_Path("Path"))
-		.setDisplay(VALUE_DISPLAY.path_load, { filter: "Scalable Vector Graphics|*.svg" });
-		
+	newInput(0, nodeValue_Path("Path")).setDisplay(VALUE_DISPLAY.path_load, { filter: "Scalable Vector Graphics|*.svg" });
 	newInput(1, nodeValue_Float("Scale", 1));
 		
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
-	
 	newOutput(1, nodeValue_Output("SVG Struct", VALUE_TYPE.struct, {}));
 	
 	attribute_surface_depth();
+	
+	////- Nodes
 	
 	rawContent = noone;
 	content    = {};
@@ -60,7 +59,9 @@ function Node_SVG(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		_rawContent     = string_copy(_rawContent, _st, _end - _st + 1);
 		
 		rawContent = SnapFromXML(_rawContent);
+		if(is_array(rawContent) && array_length(rawContent)) rawContent = rawContent[0];
 		content    = svg_parse(rawContent);
+		
 		logNode($"Loaded file: {path}", false);
 		
 		return;
@@ -70,9 +71,9 @@ function Node_SVG(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _scale   = getInputData(1);
+		if(!is(content, SVG)) return;
 		
-		if(is_instanceof(content, SVG)) 
-			content.drawOverlay(hover, active, _x, _y, _s * _scale, _mx, _my, _snx, _sny);
+		content.drawOverlay(hover, active, _x, _y, _s * _scale, _mx, _my, _snx, _sny);
 	}
 	
 	static step = function() {
@@ -88,8 +89,7 @@ function Node_SVG(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var path = path_get(getInputData(0));
-		if(path != curr_path)
-			readFile(path);
+		if(path != curr_path) readFile(path);
 		
 		if(!is_instanceof(content, SVG)) return;
 		outputs[1].setValue(path);

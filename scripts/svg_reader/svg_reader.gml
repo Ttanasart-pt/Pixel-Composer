@@ -1,5 +1,4 @@
 function svg_parse(xmlStr) {
-	
 	if(!is_struct(xmlStr))							return noone;
 	if(!struct_has(xmlStr, "children")) 			return noone;
 	if(struct_try_get(xmlStr, "type") != "root")	return noone;

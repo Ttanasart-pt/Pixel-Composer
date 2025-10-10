@@ -2436,8 +2436,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	////- TOOLS
 	
 	static isUsingTool = function(index = undefined, subtool = noone) {
-		if(tools == -1) 
-			return false;
+		if(tools == -1) return false;
 		
 		var _tool = PANEL_PREVIEW.tool_current;
 		if(_tool == noone) //not using any tool
