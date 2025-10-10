@@ -38,8 +38,8 @@ function NodeTool(_name = "", _spr = noone, _contextString = instanceof(other)) 
 	
 	////- Settings
 	
-	static setSettings = function(_s) { for(var i = 0; i < array_length(_s); i++) array_push(settings, _s[i]);    return self; }
-	static setSetting  = function(_s) { for(var i = 0; i < argument_count; i++) array_push(settings, argument[i]); return self; }
+	static setSettings = function(_s) { for(var i = 0; i < array_length(_s); i++) array_push(settings, _s[i]);       return self; }
+	static setSetting  = function(_s) { for(var i = 0; i < argument_count; i++)   array_push(settings, argument[i]); return self; }
 	
 	static addSetting = function(_name, type, onEdit, keyAttr, val) {
 		var w;

@@ -23,7 +23,7 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput( 3, nodeValue_Vec2(        "Shift",          [4,4] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}).hideLabel();
 	newInput(12, nodeValue_Vec2(        "Light Position", [0,0] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}).hideLabel();
 	newInput( 4, nodeValue_Slider(      "Grow", 3, [0, 16, 0.1] ));
-	newInput( 5, nodeValue_Slider(      "Blur", 3, [1, 16, 0.1] ));
+	newInput( 5, nodeValue_ISlider(     "Blur", 3, [1, 16, 0.1] ));
 	// input 13
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));

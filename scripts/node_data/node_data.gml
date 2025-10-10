@@ -2454,11 +2454,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 		if(is_string(index) && _tool.getName(_tool.selecting) != index)
 			return false;
-			
-		if(subtool == noone)
-			return true;
-			
-		return _tool.selecting == subtool;
+		
+		return subtool == noone || _tool.selecting == subtool;
 	}
 	
 	static getUsingToolName = function() { 
