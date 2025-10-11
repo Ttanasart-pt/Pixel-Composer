@@ -21,8 +21,10 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
     newInput( 0, nodeValue_Tileset()).setVisible(true, true);
     
     ////- =Animation
-    newInput( 2, nodeValue_Bool(  "Animated", false ));
-    // 4
+    newInput( 2, nodeValue_Bool(  "Animated",     false ));
+    newInput( 4, nodeValue_Float( "Animation Speed",  1 ));
+    newInput( 5, nodeValue_Float( "Animation Offset", 0 ));
+    // 6
     
 	newOutput(2, nodeValue_Output( "Tileset",   VALUE_TYPE.tileset, noone ));
 	newOutput(1, nodeValue_Output( "Tilemap",   VALUE_TYPE.surface, noone ));
@@ -325,15 +327,18 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			input_display_list_tileset,      tileset.tile_selector, 
 			input_display_list_autoterrains, tileset.autoterrain_selector, 
 			input_display_list_palette,      tileset.palette_viewer,
-			input_display_list_animated,     tileset.animated_viewer,
+			input_display_list_animated,     4, 5, tileset.animated_viewer,
 			input_display_list_rule,         tileset.rules,
 		]
 		
 		var _tileSet    = tileset.texture;
 		var _tileSiz    = tileset.tileSize;
-	    var _mapSize    = _data[1];
-	    var _animated   = _data[2];
 	    var _seed       = _data[3];
+	    var _mapSize    = _data[1];
+	    
+	    var _animated = _data[2];
+	    var _animSped = _data[4];
+	    var _animOffs = _data[5];
 	    update_on_frame = _animated;
 	    
 	    if(!is_surface(canvas_surface) && buffer_exists(canvas_buffer)) { 
@@ -371,13 +376,15 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	        draw_surface(_applied, 0, 0);
 	    surface_reset_shader();
 	    
+	    var _frame = floor(CURRENT_FRAME * _animSped - _animOffs);
+	    
 	    surface_set_shader(_tileOut, sh_draw_tile_map, true, BLEND.over);
 	        shader_set_2("dimension", _outDim);
 	        
 	        shader_set_surface("indexTexture", _tileMap);
 	        shader_set_2("indexTextureDim", surface_get_dimension(_tileMap));
 	        
-			shader_set_f("frame", CURRENT_FRAME);
+			shader_set_f("frame", _frame);
 	        tileset.shader_submit();
 			
 	        draw_empty();
