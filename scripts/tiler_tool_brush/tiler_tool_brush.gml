@@ -1,6 +1,6 @@
 function tiler_tool_brush(_node, _brush, eraser = false) : tiler_tool(_node) constructor {
-    self.brush = _brush;
-    isEraser   = eraser;
+    brush    = _brush;
+    isEraser = eraser;
 	brush_resizable = true;
 	
 	mouse_cur_x = 0;
@@ -102,7 +102,7 @@ function tiler_tool_brush(_node, _brush, eraser = false) : tiler_tool(_node) con
 				
 			mouse_pre_draw_x = mouse_cur_x;
 			mouse_pre_draw_y = mouse_cur_y;	
-				
+			
 			if(mouse_release(mb_left)) {
 				mouse_holding   = false;
 				apply_draw_surface();

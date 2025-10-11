@@ -200,8 +200,7 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
     	var _currTool = PANEL_PREVIEW.tool_current;
     	var _tool     = _currTool == noone? noone : _currTool.getToolObject();
     	
-    	if(!is(_tool, tiler_tool))
-    		_tool = noone;
+    	if(!is(_tool, tiler_tool)) _tool = noone;
     	
 		if(_tool) { // tool action
 			var brush = tileset.brush;
@@ -276,9 +275,9 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				
 				if(is_array(_cc)) {
 					params.panel.sample_data = {
-						type: "tileset",
-						drawFn: tileset.drawTile,
-						index: _cc[0] - 1,
+						type   : "tileset",
+						drawFn : tileset.drawTile,
+						index  : _cc[0] - 1,
 					};
 					
 					if(mouse_click(mb_left, active)) {

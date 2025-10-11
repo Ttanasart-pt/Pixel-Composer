@@ -797,7 +797,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				
 				if(icn != noone) {
 					draw_sprite_ui(icn, 0, tc - !_left, _tby + ui(8 + 8), 1, 1, 0, cc);
-					_tbx += ui(20);
+					_tby += ui(20);
 				}
 				
 				draw_set_text(f_p3, _left? fa_right : fa_left, fa_center, foc? COLORS.panel_tab_text : COLORS._main_text_sub);
@@ -833,7 +833,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				
 				if(icn != noone) {
 					draw_sprite_ui(icn, 0, tc - !_left, _tby + ui(8 + 8), 1, 1, 0, COLORS._main_text_sub);
-					_tbx += ui(20);
+					_tby += ui(20);
 				}
 				
 				draw_set_text(f_p3, _left? fa_right : fa_left, fa_center, fa_center, COLORS.panel_tab_text);
