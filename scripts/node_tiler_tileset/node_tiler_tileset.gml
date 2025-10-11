@@ -147,6 +147,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					
 					draw_sprite_stretched_ext(THEME.textbox, 3, _zx0, _zy, _zw,  _zh, c_white, 1);
 					draw_sprite_stretched_ext(THEME.textbox, 4, _zx0, _zy, _zcw, _zh, c_white, 1);
+					draw_sprite_ui(THEME.search, 0, _zx0 - ui(12), _zy + _zh / 2, .75, .75, 0, COLORS._main_icon);
 					
 					if(_hover && point_in_rectangle(_m[0], _m[1], _zx0, _zy, _zx0 + _zw, _zy + _zh)) {
 						draw_sprite_stretched_ext(THEME.textbox, 1, _zx0, _zy, _zw,  _zh, c_white, 1);
@@ -374,6 +375,8 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		    	}
 		    	
 		    	if(_hov) {
+		    		if(tile_selector.parent) tile_selector.parent.scroll_dragable = false;
+		    		
 		    		if(mouse_press(mb_middle, _focus)) {
 			    		tile_dragging = true;
 			    		tile_drag_sx  = tile_selector_x;
@@ -493,7 +496,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _ty, _w, _th, COLORS.node_composite_bg_blend, 1);
 				
-				//////////////////
+				////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				
 				var _shov = _hover && point_in_rectangle(_m[0], _m[1], _sx, _sy, _sx + _sw, _sy + _sh);
 				var _aa   = .75 + .25 * _shov;
@@ -524,7 +527,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					}
 				}
 				
-				//////////////////
+				////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				
 				var _fpx  = bool(tile_selector_vm);
 				var _shov = _hover && point_in_rectangle(_m[0], _m[1], _sx, _sy, _sx + _sw, _sy + _sh);
@@ -542,7 +545,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					}
 				}
 				
-				//////////////////
+				////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				
 				if(brush.brush_width * brush.brush_height != 1) return _h;
 				
@@ -659,7 +662,6 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    	var del = -1;
 	    	
 	    	draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _yy, _w, autoterrain_selector_h, COLORS.node_composite_bg_blend, 1);
-	    	
 	    	_yy += _pd;
 	    	
 	    	for( var i = 0, n = array_length(autoterrain); i < n; i++ ) {
@@ -668,18 +670,24 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    		
 	    		var _pw = ui(24);
 	    		var _ph = ui(24);
-	    		var _px = _x + ui(8);
+	    		var _px = _x  + ui(8);
 	    		var _py = _yy + ui(4);
 	    		
 	    		#region header
 	    		var _prin = array_safe_get(_at.index, _at.prevInd, undefined);
 	    		
-	    		if(_prin == undefined) draw_sprite_stretched_ext(THEME.ui_panel, 1, _px, _py, _pw, _ph, COLORS._main_icon);
-	    		else drawTile(_prin, _px, _py, _pw, _ph);
+	    		var _hov = _hover && point_in_rectangle(_m[0], _m[1], _px, _yy, _px + _pw, _yy + _hg - 1);
+	    		var _cc  = _hov? COLORS._main_icon_light : COLORS._main_icon;
+	    		draw_sprite_ui(THEME.arrow, _at.open? 3 : 0, _px + _pw/2, _py + _pw/2, 1, 1, 0, _cc);
+	    		if(_hov && mouse_lpress(_focus)) _at.open = !_at.open;
+	    		_px += _pw + ui(8);
 	    		
 	    		var _tx  = _px + _pw + ui(8);
-	    		var _hov = _hover && point_in_rectangle(_m[0], _m[1], _x, _yy, _x + _w, _yy + _hg - 1);
+	    		var _hov = _hover && point_in_rectangle(_m[0], _m[1], _px, _yy, _x + _w - ui(36), _yy + _hg - 1);
 	    		var _cc  = object_selecting == _at? COLORS._main_accent : (_hov? COLORS._main_text : COLORS._main_text_sub);
+	    		
+	    		if(_prin) drawTile(_prin, _px, _py, _pw, _ph);
+	    		draw_sprite_stretched_ext(THEME.ui_panel, 1, _px, _py, _pw, _ph, _cc);
 	    		
 	    		if(renaming == _at) {
 					tb_rename.setFocusHover(_focus, _hover);
@@ -692,13 +700,13 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		    		var bs = ui(24);
 					var bx = _w  - bs - ui(4);
 					var by = _yy + _hg / 2 - bs / 2;
-					var bc = _hov? COLORS._main_value_negative : COLORS._main_icon;
+					var bc = [ COLORS._main_icon, COLORS._main_value_negative ];
 					
 					if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, "", THEME.minus_16, 0, bc) == 2) 
 						del = i;
 				}
 				
-	    		if(_hov && _m[0] < _x + _w - ui(32)) {
+	    		if(_hov) {
 	    			if(is(object_selecting, tiler_rule)) {
 	    				TOOLTIP = "Set Rule selector";
 	    				
@@ -711,14 +719,14 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    				
 	    			} else if(is(object_selecting, tilemap_convert_object)) {
 	    				TOOLTIP = "Set Replacement target";
-	    			
+	    				
 	    				if(mouse_press(mb_left, _focus)) {
 		    				object_selecting.target = [ "terrain", i ];
 							object_selecting = noone;
 							if(node_edit) node_edit.triggerRender();
 	    				}
 	    				
-	    			} else if(_m[0] > _tx) {
+	    			} else {
 		    			if(DOUBLE_CLICK && _focus) {
 							renaming    = _at;
 							rename_text = _at.name;
@@ -726,7 +734,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 							tb_rename._current_text = _at.name;
 							tb_rename.activate();
 		    				
-		    			} else if(mouse_press(mb_left, _focus)) {
+		    			} else if(mouse_lpress(_focus)) {
 		    				object_selecting = object_selecting == _at? noone : _at;
 			    			object_select_id = noone;
 			    			
@@ -737,11 +745,6 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		    				
 		    				setPencil();
 		    			}
-	    			} else {
-	    				draw_set_color(COLORS._main_accent); draw_rectangle(_px, _py, _px + _pw - 1, _py + _ph - 1, 1);
-		    			
-		    			if(mouse_press(mb_left, _focus))
-		    				_at.open = !_at.open;
 	    			}
 	    		}
 	    		
@@ -758,7 +761,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    		var _atWid = _at.sc_type;
 	    		var _scx = _x + ui(8);
 	    		var _scy = _yy;
-	    		var _scw = ui(200);
+	    		var _scw = _w - ui(16);
 	    		var _sch = ui(24);
 	    		
 	    		_atWid.setFocusHover(_focus, _hover);
@@ -780,12 +783,13 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
     				case AUTOTERRAIN_TYPE.top55  : _coll = 11; _roww = 5; _over = s_autoterrain_11x5; break;
     			}
     			
-    			var _pre_sx = _x + ui(8);
-    			var _pre_sy = _yy;
     			var _pre_sw = _coll * _tileSiz[0];
     			var _pre_sh = _roww * _tileSiz[1];
+    			var _ss = min((_w - ui(16)) / _pre_sw, ui(48) / _tileSiz[1]);
     			
-    			var _ss = min((_w - ui(16)) / _pre_sw, ui(64) / _tileSiz[1]);
+    			// var _pre_sx = _x + ui(8);
+    			var _pre_sx = _x + _w / 2 - _pre_sw * _ss / 2;
+    			var _pre_sy = _yy;
     			
     			var _bw = power(2, ceil(log2(_coll)));
 				var _bh = power(2, ceil(log2(_roww)));
@@ -1016,6 +1020,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					
 					draw_sprite_stretched_ext(THEME.textbox, 3, _zx0, _zy, _zw,  _zh, c_white, 1);
 					draw_sprite_stretched_ext(THEME.textbox, 4, _zx0, _zy, _zcw, _zh, c_white, 1);
+					draw_sprite_ui(THEME.search, 0, _zx0 - ui(12), _zy + _zh / 2, .75, .75, 0, COLORS._main_icon);
 					
 					if(_hover && point_in_rectangle(_m[0], _m[1], _zx0, _zy, _zx0 + _zw, _zy + _zh)) {
 						draw_sprite_stretched_ext(THEME.textbox, 1, _zx0, _zy, _zw,  _zh, c_white, 1);
@@ -1206,6 +1211,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    	}
 	    	
 	    	if(_hov) {
+	    		if(palette_viewer.parent) palette_viewer.parent.scroll_dragable = false;
 	    		if(mouse_press(mb_middle, _focus)) {
 		    		palette_dragging = true;
 		    		palette_drag_sx  = palette_selector_x;
