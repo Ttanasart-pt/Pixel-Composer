@@ -4,7 +4,9 @@
 	globalvar SUPPORTER_NODES, NEW_NODES;
 	globalvar CUSTOM_NODES, CUSTOM_NODES_POSITION;
 	
-	globalvar NODE_PAGE_DEFAULT, NODE_PAGE_LAST;
+	globalvar NODE_PAGE_DEFAULT;
+	globalvar NODE_PAGE_LAST;
+	
 	globalvar NODE_ACTION_LIST;
 	globalvar NODE_ALIAS; NODE_ALIAS = {};
 	
@@ -576,7 +578,6 @@ function __initNodes(unzip = true) {
 	global.FAV_NODES      = {};
 	
 	NODE_PAGE_DEFAULT = 0;
-	ADD_NODE_PAGE     = 0;
 	NODE_PAGE_LAST    = 0;
 	
 	////- DATA

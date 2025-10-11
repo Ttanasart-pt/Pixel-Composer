@@ -16,7 +16,7 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(0, nodeValue_Surface( "Surface In" ));
 	
 	////- =Crop
-	newInput(3, nodeValue_Enum_Scroll( "Aspect Ratio",   0, [ "None", "Manual", "1:1", "3:2", "4:3", "16:9" ]));
+	newInput(3, nodeValue_Enum_Scroll( "Aspect Ratio",   0, [ "Any", "Manual", "1:1", "3:2", "4:3", "16:9" ]));
 	newInput(4, nodeValue_Vec2(        "Ratio",         [1,1]     ));
 	newInput(1, nodeValue_Padding(     "Crop",          [0,0,0,0] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
 	
@@ -93,7 +93,6 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, params) {
-
 		PROCESSOR_OVERLAY_CHECK
 		
 		var _inSurf	= current_data[0];
@@ -147,6 +146,7 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						drag_side    = noone;
 						UNDO_HOLDING = false;
 					}
+					
 				} else {
 					var _mxs = _x + value_snap(round((_mx - _x) / _s), _snx) * _s;
 					var _mys = _y + value_snap(round((_my - _y) / _s), _sny) * _s;

@@ -14,7 +14,7 @@ function Node_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	////- =Mirror
 	newInput(1, nodeValue_Vec2(     "Position", [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput(2, nodeValue_Rotation( "Angle",     0      )).setHotkey("R");
+	newInput(2, nodeValue_Rotation( "Angle",     0      )).setHotkey("R").hideLabel();
 	newInput(4, nodeValue_Bool(     "Both Side", false  ));
 	// input 5
 	
@@ -38,12 +38,17 @@ function Node_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _posy = _pos[1] * _s + _y;
 		
 		var dx0 = _posx + lengthdir_x(1000, _ang);
-		var dx1 = _posx + lengthdir_x(1000, _ang + 180);
 		var dy0 = _posy + lengthdir_y(1000, _ang);
+		
+		var dx1 = _posx + lengthdir_x(1000, _ang + 180);
 		var dy1 = _posy + lengthdir_y(1000, _ang + 180);
+		
+		var dxp = _posx + lengthdir_x(ui(64), _ang - 90);
+		var dyp = _posy + lengthdir_y(ui(64), _ang - 90);
 		
 		draw_set_color(COLORS._main_accent);
 		draw_line(dx0, dy0, dx1, dy1);
+		draw_arrow(_posx, _posy, dxp, dyp, ui(16));
 		
 		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _posx, _posy, _s, _mx, _my, _snx, _sny));

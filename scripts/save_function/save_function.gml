@@ -38,6 +38,7 @@ function SAVE_ALL() {
 
 function SAVE(project = PROJECT) {
 	if(DEMO) return false;
+	if(RUN_IDE) PREF_SAVE();
 	
 	if(!is(project, Project)) project = PROJECT;
 	if(!is(project, Project)) { noti_warning($"Invalid save project: {project}"); return false; }

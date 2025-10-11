@@ -1540,7 +1540,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
         if(node_dragging) {
             addKeyOverlay("Dragging node(s)", [[ "Ctrl", "Disable snapping" ]]);
-			connection_draw_update = true;
+			connection_draw_update = 2;
 			node_surface_update    = true;
             
             var _mgx = mouse_graph_x;
@@ -1607,7 +1607,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
         var _node = getFocusingNode();
         
-        // lmao what is this coding style
         if(!_focus || !mouse_on_graph
                    || _node == noone
     	           || cache_group_edit != noone
@@ -1925,32 +1924,31 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		#region draw connections
 	        var aa = floor(min(8192 / w, 8192 / h, project.graphConnection.line_aa));
 	        
-	        connection_draw_update = connection_draw_update || !surface_valid(connection_surface_cc, w * aa, h * aa);
-	        
+	        connection_draw_update |= !surface_valid(connection_surface_cc, w * aa, h * aa);
 	        connection_surface    = surface_verify(connection_surface,    w * aa, h * aa);
 	        connection_surface_cc = surface_verify(connection_surface_cc, w * aa, h * aa);
 	        connection_surface_aa = surface_verify(connection_surface_aa, w,      h     );
 	        
-	        hov = noone;
+	        __hov = noone;
 	        
 	        connection_param.setPos(gr_x, gr_y, graph_s, mx, my);
 	        connection_param.setBoundary(-64, -64, w + 64, h + 64);
 	        connection_param.setDraw(aa, bg_color);
 	        
 	        if(connection_draw_update || pHOVER) {
+				connection_param.active    = pHOVER && (node_dragging == noone || node_drag_add);
+				connection_param.checkNode = node_dragging != noone && node_drag_add? node_dragging : noone;
+		        connection_param.setProp(array_length(_node_active), project.graphDisplay.highlight);
+		        
 		        surface_set_target(connection_surface_cc);
-		        	if(connection_draw_update) { DRAW_CLEAR }
+		        	if(connection_draw_update) DRAW_CLEAR
 			    	
-					connection_param.active    = pHOVER && (node_dragging == noone || node_drag_add);
-					connection_param.checkNode = node_dragging != noone && node_drag_add? node_dragging : noone;
-			        connection_param.setProp(array_length(_node_active), project.graphDisplay.highlight);
-			        
 			        array_foreach(_node_active, function(n) /*=>*/ {
 			        	var _hov = n.drawConnections(connection_param, connection_draw_update);
-			            if(is_struct(_hov)) hov = _hov;
+			            if(is_struct(_hov)) __hov = _hov;
 			        });
 			        
-			        connection_draw_update = false;
+			        connection_draw_update--;
 			    surface_reset_target();
 	        }
 	        
@@ -1958,7 +1956,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		        DRAW_CLEAR
 		    	
 		    	draw_surface(connection_surface_cc, 0, 0);
-		        if(hov) drawJuncConnection(hov.value_from, hov, connection_param, 1 + (node_drag_add && node_dragging));
+		        if(__hov) drawJuncConnection(__hov.value_from, __hov, connection_param, 1 + (node_drag_add && node_dragging));
 		        
 		        if(value_dragging && connection_draw_mouse != noone && !key_mod_press(SHIFT)) {
 		            var _cmx = connection_draw_mouse[0];
@@ -2010,7 +2008,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        	draw_surface_safe(connection_surface_aa);
 	        BLEND_NORMAL
 	        
-	        junction_hovering = hov;
+	        junction_hovering = __hov;
 	        if(node_hovering != noone && node_hovering != node_dragging)
 	        	junction_hovering = noone;
         #endregion

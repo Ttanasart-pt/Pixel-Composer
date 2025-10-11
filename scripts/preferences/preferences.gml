@@ -349,7 +349,6 @@
 	
 	function PREF_SAVE() {
 		if(IS_CMD) return;
-		// print("PREF_SAVE")
 		
 		directory_verify($"{DIRECTORY}Preferences");
 		directory_verify($"{DIRECTORY}Preferences/{PREF_VERSION}");
@@ -422,6 +421,7 @@
 			ADD_NODE_PAGE    = PREFERENCES.add_node_page;
 			ADD_NODE_SUBPAGE = PREFERENCES.add_node_subpage;
 		}
+		
 	}
 	
 	function PREF_APPLY() {

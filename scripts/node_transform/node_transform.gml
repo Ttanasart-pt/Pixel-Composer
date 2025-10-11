@@ -476,7 +476,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			draw_anchor(hov_corner == 2, _trx, _try, ui(8), 2);
 			draw_anchor(hov_corner == 3, _brx, _bry, ui(8), 2);
 			
-			draw_anchor_cross(a_index * .5, bax, bay, ui(8), 1, rot);
+			draw_anchor_cross(a_index * .5, bax, bay, ui(8 + a_index * 2), 1, rot);
 		#endregion
 		
 		if(drag_type != noone) {

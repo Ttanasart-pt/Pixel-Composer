@@ -10,19 +10,16 @@ function Node_Checker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	name = "Checker";
 	
 	////- =Output
-	
 	newInput( 0, nodeValue_Dimension());
 	newInput(10, nodeValue_Surface( "Mask" ));
 	
 	////- =Pattern
-	
 	newInput(9, nodeValue_Bool(     "Diagonal",  false ));
 	newInput(1, nodeValue_Slider(   "Amount",    2, [1, 16, 0.1] )).setMappable(6);
 	newInput(2, nodeValue_Rotation( "Angle",     0     )).setHotkey("R").setMappable(7);
-	newInput(3, nodeValue_Vec2(     "Position", [0,0]  )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput(3, nodeValue_Vec2(     "Position", [0,0]  )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	
 	////- =Render
-	
 	newInput(8, nodeValue_Enum_Button( "Type",    0, [ "Solid", "Smooth", "AA" ]));
 	newInput(4, nodeValue_Color(       "Color 1", ca_white ));
 	newInput(5, nodeValue_Color(       "Color 2", ca_black ));

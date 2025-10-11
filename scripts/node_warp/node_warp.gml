@@ -17,10 +17,10 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput( 9, nodeValue_Vec2( "Relative Dimension", [ 1, 1 ] ));
 	
 	////- =Warp
-	newInput(1, nodeValue_Vec2( "Top Left",     [ 0, 0 ] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput(2, nodeValue_Vec2( "Top Right",    [ 1, 0 ] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput(3, nodeValue_Vec2( "Bottom Left",  [ 0, 1 ] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput(4, nodeValue_Vec2( "Bottom Right", [ 1, 1 ] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(1, nodeValue_Vec2( "Top Left",     [ 0, 0 ] )).hideLabel().setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(2, nodeValue_Vec2( "Top Right",    [ 1, 0 ] )).hideLabel().setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(3, nodeValue_Vec2( "Bottom Left",  [ 0, 1 ] )).hideLabel().setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(4, nodeValue_Vec2( "Bottom Right", [ 1, 1 ] )).hideLabel().setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	
 	////- =Render
 	newInput(8, nodeValue_Bool("Tile", false));
@@ -47,7 +47,6 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	warp_surface = array_create(2);
 	
 	static getDimension = function(arr = 0) {
-		
 		var _surfF  = getSingleValue(0);
 		var _dimTyp = getSingleValue(6);
 		var _dim    = getSingleValue(7);
@@ -303,7 +302,8 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _surfB  = is_surface(_data[10])? _data[10] : _surfF;
 			
 			inputs[7].setVisible(_dimTyp == 1);
-			inputs[8].setVisible(_dimTyp == 2);
+			inputs[8].setVisible(true);
+			inputs[9].setVisible(_dimTyp == 2);
 			
 			if(!is_surface(_surfF)) return _outSurf;
 		#endregion

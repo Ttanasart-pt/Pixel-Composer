@@ -2363,7 +2363,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static drawConnections = function(params = {}, _draw = true) {
 		if(value_from == noone || !value_from.node.active || !isVisible()) return noone;
-		if(_draw) drawJuncConnection(value_from, self, params); 
+		if(_draw) drawJuncConnection(value_from, self, params);
+		
 		return checkJuncConnection(value_from, self, params);
 	}
 	

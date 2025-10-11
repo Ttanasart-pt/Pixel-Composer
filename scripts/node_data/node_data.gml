@@ -2052,9 +2052,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		for( var i = 0; i < __draw_inputs_len; i++ ) {
 			var _jun = __draw_inputs[i];
-			
 			if(_jun.bypass_junc.visible) _jun.bypass_junc.drawBypass(params);
-			_hov = _jun.drawConnections(params, _draw); if(_hov) hovering = _hov;
+			
+			_hov = _jun.drawConnections(params, _draw); 
+			if(_hov) hovering = _hov;
 		}
 		
 		if(attributes.show_update_trigger) {
@@ -3007,6 +3008,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		x = _x;
 		y = _y; 
 		moved = true;
+		
 		if(!LOADING) project.setModified();
 	}
 	
