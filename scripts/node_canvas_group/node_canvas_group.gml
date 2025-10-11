@@ -319,11 +319,15 @@ function Node_Canvas_Group(_x, _y, _group) : Node_Collection(_x, _y, _group) con
 		if(canvas_sel) canvas_sel.dropPath(path);
 	}
 		
+	static onDestroy = function() { timeline_item_group.active = false; }
+	static onRestore = function() { timeline_item_group.active = true;  }
+	static onCleanUp = function() { timeline_item_group.removeSelf();   }
+	
 	sortIO();
 }
 
-function timelineItemGroup_Canvas(node = noone) : timelineItemGroup() constructor {
-	self.node = node;
+function timelineItemGroup_Canvas(_node = noone) : timelineItemGroup() constructor {
+	node = _node;
 	
 	static onSerialize = function(_map) {
 		_map.node_id = is_struct(node)? node.node_id : -4;

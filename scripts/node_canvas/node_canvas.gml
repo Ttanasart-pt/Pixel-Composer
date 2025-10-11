@@ -1056,6 +1056,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			setCanvasSurface(_drawnSurface);
 			surface_store_buffer();
 		}
+		
+		project.setModified();
 	}
 	
 	static storeAction = function() {

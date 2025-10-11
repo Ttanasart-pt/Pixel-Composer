@@ -204,8 +204,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		attributes.annotation_size   = .4;
 		attributes.annotation_color  = COLORS._main_text_sub;
 		
-		setAttribute = function(k, v, r = false) /*=>*/ { attributes[$ k] = v;                if(r) triggerRender(); project.setModified(); }
-		toggleAttribute = function(k, r = false) /*=>*/ { attributes[$ k] = !attributes[$ k]; if(r) triggerRender(); project.setModified(); }
+		setAttribute = function(k, v, r = false) /*=>*/ { attributes[$ k] = v;                if(r) triggerRender(); project.modified = true; }
+		toggleAttribute = function(k, r = false) /*=>*/ { attributes[$ k] = !attributes[$ k]; if(r) triggerRender(); project.modified = true; }
 		
 		array_append(attributeEditors, [
 			"Display",  
