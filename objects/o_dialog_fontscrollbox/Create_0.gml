@@ -20,11 +20,6 @@ event_inherited();
 		var hght = line_get_height(f_p0, 8);
 		var data = curr_data;
 		var amo  = array_length(data);
-		if(search_string != "" && amo == 0) {
-			draw_set_text(f_p3, fa_center, fa_center, COLORS._main_text_sub);
-			draw_text_add(sc_content.surface_w / 2, ui(8), __txt("no result"));
-			return ui(24);
-		}
 		
 		var _h   = amo * hght;
 		var _dw  = sc_content.surface_w;
@@ -83,6 +78,12 @@ event_inherited();
 			
 			if(keyboard_check_pressed(vk_escape))
 				instance_destroy();
+		}
+		
+		if(search_string != "") {
+			draw_set_text(f_p3, fa_center, fa_center, COLORS._main_text_sub);
+			draw_text_add(sc_content.surface_w / 2, _y + amo * hght + ui(8), amo == 0? __txt("no result") : $"{amo} {__txt("results")}");
+			_h += ui(24);
 		}
 		
 		return _h;

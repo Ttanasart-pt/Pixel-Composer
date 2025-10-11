@@ -57,7 +57,6 @@ function fontScrollBox(_onModify) : widget() constructor {
 		
 		if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
 			draw_sprite_stretched(THEME.textbox, 1, _x, _y, _w, _h);
-			
 			if(mouse_press(mb_left, active)) trigger();
 			if(mouse_click(mb_left, active)) draw_sprite_stretched_ext(THEME.textbox, 2, _x, _y, _w, _h, COLORS._main_accent, 1);	
 			
