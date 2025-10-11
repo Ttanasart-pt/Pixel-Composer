@@ -82,6 +82,8 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    tile_zoom_mx   = noone;
 	    tile_zoom_sx   = noone;
 	    
+	    tile_selector_zoom_tooltip = 0;
+	    
 	    object_selecting = noone;
 	    object_select_id = noone;
 	    
@@ -381,8 +383,12 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		    		}
 		    		
 		    		var _s = tile_selector_s;
-		    		if(key_mod_press(CTRL) || tile_selector.popupPanel != noone && MOUSE_WHEEL != 0)
-			    		tile_selector_s_to = clamp(tile_selector_s_to * (1 + .2 * MOUSE_WHEEL), 0.5, 4);
+		    		if(MOUSE_WHEEL != 0) {
+			    		if(key_mod_press(CTRL) || tile_selector.popupPanel != noone)
+				    		tile_selector_s_to = clamp(tile_selector_s_to * (1 + .2 * MOUSE_WHEEL), 0.5, 4);
+				    	else
+				    		tile_selector_zoom_tooltip = 3;
+		    		}
 		    		
 		    		tile_selector_s = lerp_float(tile_selector_s, tile_selector_s_to, 2);
 		    		
@@ -407,9 +413,25 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			    tile_selector_y = clamp(tile_selector_y, _miny, _maxy);
 		    #endregion
 			    
-	    	draw_surface(tile_selector_surface, _sx, _sy);
+	    	#region draw
+	    		draw_surface(tile_selector_surface, _sx, _sy);
+	    		
+	    		if(tile_selector_zoom_tooltip > 0) {
+	    			tile_selector_zoom_tooltip -= DELTA_TIME;
+	    			
+	    			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
+	    			var _zt = __txt("Ctrl + Wheel to zoom");
+	    			var _zw = string_width(_zt)  + ui(8);
+	    			var _zh = string_height(_zt) + ui(8);
+	    			var _zx = _sx + _sw - ui(8) - _zw;
+	    			var _zy = _sy + _sh - ui(8) - _zh;
+	    			
+	    			draw_sprite_stretched_ext(THEME.textbox, 3, _zx, _zy, _zw, _zh);
+					draw_text(_zx + ui(4), _zy + ui(4), _zt);
+	    		}
+	    	#endregion
 		    	
-		    #region misc
+		    #region outlines
 				shader_set(sh_brush_outline);
 					var _brush_tiles = brush.brush_width * brush.brush_height;
 					var _cc = c_white;
@@ -929,6 +951,8 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    palette_tool_using = false;
 	    palette_using      = false;
 	    
+	    palette_selector_zoom_tooltip = 0;
+	    
     	palette_viewer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus, _panel = noone) { 
     		var _yy = _y;
     		var _h  = 0;
@@ -1191,8 +1215,12 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    		}
 	    		
 	    		var _s = palette_selector_s;
-	    		if(key_mod_press(CTRL) || palette_viewer.popupPanel != noone && MOUSE_WHEEL != 0)
-		    		palette_selector_s_to = clamp(palette_selector_s_to * (1 + .2 * MOUSE_WHEEL), 0.5, 4);
+	    		if(MOUSE_WHEEL != 0) {
+		    		if(key_mod_press(CTRL) || palette_viewer.popupPanel != noone)
+			    		palette_selector_s_to = clamp(palette_selector_s_to * (1 + .2 * MOUSE_WHEEL), 0.5, 4);
+			    	else
+			    		palette_selector_zoom_tooltip = 3;
+	    		}
 	    		
 	    		palette_selector_s = lerp_float(palette_selector_s, palette_selector_s_to, 2);
 	    		
@@ -1350,8 +1378,24 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			    surface_reset_shader();
 			}
 			
-			draw_surface(palette_selector_surface, _sx, _sy);
-    		
+	    	#region draw
+	    		draw_surface(palette_selector_surface, _sx, _sy);
+	    		
+	    		if(palette_selector_zoom_tooltip > 0) {
+	    			palette_selector_zoom_tooltip -= DELTA_TIME;
+	    			
+	    			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
+	    			var _zt = __txt("Ctrl + Wheel to zoom");
+	    			var _zw = string_width(_zt)  + ui(8);
+	    			var _zh = string_height(_zt) + ui(8);
+	    			var _zx = _sx + _sw - ui(8) - _zw;
+	    			var _zy = _sy + _sh - ui(8) - _zh;
+	    			
+	    			draw_sprite_stretched_ext(THEME.textbox, 3, _zx, _zy, _zw, _zh);
+					draw_text(_zx + ui(4), _zy + ui(4), _zt);
+	    		}
+	    	#endregion
+		    	
 			shader_set(sh_brush_outline);
 				shader_set_f("dimension", _sw, _sh);
 				draw_surface_ext(palette_selector_mask, _sx, _sy, 1, 1, 0, c_white, 1);
