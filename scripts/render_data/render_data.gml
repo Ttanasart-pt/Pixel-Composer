@@ -149,8 +149,14 @@ function __nodeIsRenderLeaf(_node) {
 			
 	if(_node.passiveDynamic) { _node.forwardPassiveDynamic();  LOG_IF(global.FLAG.render == 1, $"Skip passive dynamic  [{_node.internalName}]"); return false; }
 	
-	if(!_node.isLeaf())                { LOG_IF(global.FLAG.render == 1, $"Skip connected  [{_node.internalName}]"); return false; }
-	if(_node.inline_context != noone && _node.inline_context.managedRenderOrder) return false;
+	if(!_node.isActiveDynamic()) { LOG_IF(global.FLAG.render == 1, $"Skip rendered static  [{_node.internalName}]"); return false; }
+	// if(!_node.isLeaf())          { LOG_IF(global.FLAG.render == 1, $"Skip connected  [{_node.internalName}]");       return false; }
+	
+	if(_node.inline_context != noone && _node.inline_context.managedRenderOrder) {
+		LOG_IF(global.FLAG.render == 1, $"Skip managedRenderOrder  [{_node.internalName}]"); 
+		_node.forwardPassiveDynamic(); 
+		return false;
+	}
 	
 	return true;
 }
@@ -180,18 +186,13 @@ function Render(_project = PROJECT, partial = false, runAction = false) {
 		
 		if(reset_all) {
 			LOG_IF(global.FLAG.render == 1, $"xxxxxxxxxx Resetting {array_length(_project.nodeTopo)} nodes xxxxxxxxxx");
-			
-			for (var i = 0, n = array_length(_project.allNodes); i < n; i++) {
-				var _node = _project.allNodes[i];
-				_node.setRenderStatus(false);
-			}
+			array_foreach(_project.allNodes, function(n) /*=>*/ {return n.setRenderStatus(false)});
 		}
 		
 		// get leaf node
 		LOG_IF(global.FLAG.render == 1, $"----- Finding leaf from {array_length(_project.nodeTopo)} nodes -----");
 		RENDER_QUEUE.clear();
 		array_foreach(_project.nodeTopo, function(n) /*=>*/ { 
-			// n.__nextNodes    = noone;
 			n.passiveDynamic = false;
 			n.render_time    = 0;
 		});
@@ -202,6 +203,13 @@ function Render(_project = PROJECT, partial = false, runAction = false) {
 			LOG_IF(global.FLAG.render == 1, $"    Found leaf [{n.internalName}]");
 			RENDER_QUEUE.enqueue(n);
 			n.forwardPassiveDynamic();
+		});
+		
+		if(PROFILER_STAT) array_push(PROFILER_DATA, {
+			type  : "message",
+			level : 1, 
+			node  : undefined,
+			text  : $"---- {RENDER_QUEUE.size()} leaves ----",
 		});
 		
 		_leaf_time = get_timer() - t;

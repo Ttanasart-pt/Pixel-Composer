@@ -4,16 +4,16 @@ PROFILER_STAT = 0;
 PROFILER_DATA = [];
 
 function Panel_Profile_Render() : PanelContent() constructor {
-    title = __txt("Render Profiler");
+    title      = __txt("Render Profiler");
 	showHeader = true;
 	auto_pin   = true;
 	
 	w = ui(800);
 	h = ui(500);
 	
-	list_w    = ui(300);
-	detail_w  = w - list_w - padding * 2 - ui(8);
-	content_h = h - ui(40) - padding;
+	list_w     = ui(300);
+	detail_w   = w - list_w - padding * 2 - ui(8);
+	content_h  = h - ui(40) - padding;
 	io_label_y = 0;
 	
 	run = 0;
@@ -31,15 +31,11 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	
 	filter_list_string = "";
 	tb_list = new textBox( TEXTBOX_INPUT.text, function(str) /*=>*/ { filter_list_string = str; searchData(); })
-		.setFont(f_p3)
-		.setAutoUpdate()
-		.setEmpty()
+		.setFont(f_p3).setAutoUpdate().setEmpty()
 	
 	filter_content_string = "";
 	tb_content = new textBox( TEXTBOX_INPUT.text, function(str) /*=>*/ { filter_content_string = str; })
-		.setFont(f_p3)
-		.setAutoUpdate()
-		.setEmpty()
+		.setFont(f_p3).setAutoUpdate().setEmpty()
 	
 	function draw_surface_debug(surf, xx, yy, w, h, color = c_white, alpha = 1) {
 		if(!is_surface(surf)) {
@@ -555,7 +551,6 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	        
 	    } else if(_rtype == "message") {
 	    	var _mesg = _report.text;
-	    	var _node = _report.node;
 	    	
 	    	var _tx   = ui(8);
 	    	var _ty   = ui(8);
@@ -563,9 +558,13 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	    	draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
 	        draw_text_ext_add(ui(8), _ty, _mesg, -1, _ww - ui(16));
 	        
-	        _ty += ui(24);
-	        draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
-	        draw_text_add(_tx, _ty, $"From : {_node.getFullName()}");
+	        if(is(_report.node, Node)) {
+	        	var _node = _report.node;
+	        	
+		        _ty += ui(24);
+		        draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
+		        draw_text_add(_tx, _ty, $"From : {_node.getFullName()}");
+	        }
 	        
 	    }
 	    
@@ -645,6 +644,11 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		if(buttonInstant(THEME.button_hide_fill, _bx, _by, _bs, _bs, [ mx, my ], pHOVER, pFOCUS, "Match selecting", 
 			s_filter_node_inspector, 0, set_selecting_node? COLORS._main_accent : COLORS._main_icon, 1, UI_SCALE) == 2)
 		    set_selecting_node = !set_selecting_node;
+		_bx -= _bs + ui(4);
+		
+		if(buttonInstant(THEME.button_hide_fill, _bx, _by, _bs, _bs, [ mx, my ], pHOVER, pFOCUS, "Render Print Flag", 
+			s_filter_log_level, 0, global.FLAG.render? COLORS._main_accent : COLORS._main_icon, 1, UI_SCALE) == 2)
+		    global.FLAG.render = !global.FLAG.render;
 		
 		_bx -= ui(4);
 		var _tw = _bx - _bxl;

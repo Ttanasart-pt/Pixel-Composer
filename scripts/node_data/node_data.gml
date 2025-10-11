@@ -331,11 +331,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			LOG_IF(global.FLAG.render >= level, text);
 			if(PROFILER_STAT == 0) return;
 			
-			_report = {};
-			_report.type  = "message";
+			_report = {
+				type : "message",
+				text, level,	
+			};
 			_report.node  = self;
-			_report.text  = text;
-			_report.level = level;
 			array_push(PROFILER_DATA, _report); 
 		}
 	#endregion
@@ -1137,6 +1137,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var _outp = outputs[i];
 			
 			array_foreach(_outp.getJunctionTo(), function(_t) /*=>*/ {
+				// print($"Propagate passive dynamic to {_t.node}")
+				
 				_t.node.passiveDynamic = true;
 				_t.node.rendered       = false;
 			});

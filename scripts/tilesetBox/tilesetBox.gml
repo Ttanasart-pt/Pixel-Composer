@@ -1,5 +1,5 @@
 function tilesetBox(_junction) : widget() constructor {
-	self.junction = _junction;
+	junction = _junction;
 	
     b_newTileset = button(function() /*=>*/ { 
     	var b = nodeBuild("Node_Tile_Tileset", junction.node.x - 160, junction.ry - 32);
@@ -30,10 +30,14 @@ function tilesetBox(_junction) : widget() constructor {
             b_newTileset.drawParam(param);
             
         } else {
-           var ic = s_node_tile_tileset;
+			var ic = s_node_tile_tileset;
+			var ss = undefined;
         	
         	switch(instanceof(_tileset)) {
-        		case "Node_Tile_Tileset" : ic = s_node_tile_tileset; break;
+        		case "Node_Tile_Tileset" : 
+        			ic = s_node_tile_tileset; 
+        			ss = _tileset.tileSize;
+        			break;
         	}
         	
         	var iw = ui(24);
@@ -52,12 +56,14 @@ function tilesetBox(_junction) : widget() constructor {
         	}
         	
         	draw_sprite_stretched_ext(THEME.button_def, bi, x, y, iw, h);
-        	
             draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, x + iw + ui(4), y, w - iw - ui(4), h, COLORS._main_icon_light);
             draw_sprite_ext(ic, 0, x + iw / 2, y + h / 2, _s, _s);
             
+            var _txt = _tileset.getDisplayName();
+            if(ss != undefined) _txt += $" {ss}";
+            
             draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text_sub);
-	        draw_text_add(x + iw + ui(4 + 8), y + h / 2, _tileset.getDisplayName());
+	        draw_text_add(x + iw + ui(4 + 8), y + h / 2, _txt);
         }
         
 		return h;

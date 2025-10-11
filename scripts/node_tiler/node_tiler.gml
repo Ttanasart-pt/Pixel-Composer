@@ -19,6 +19,8 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
     newInput( 3, nodeValueSeed());
     newInput( 1, nodeValue_IVec2( "Map size", [ 16, 16 ] ));
     newInput( 0, nodeValue_Tileset()).setVisible(true, true);
+    
+    ////- =Animation
     newInput( 2, nodeValue_Bool(  "Animated", false ));
     // 4
     
@@ -311,10 +313,7 @@ function Node_Tile_Drawer(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	    tileset = _data[0];
 	    _outData[2] = tileset;
 	    
-	    if(tileset == noone) {
-			input_display_list = [ 3, 1, 0 ];
-			return _outData;
-	    }
+	    if(tileset == noone) { input_display_list = [ 3, 1, 0 ]; return _outData; }
 		 
 	    input_display_list_tileset[3]      = tileset.tile_selector.b_toggle;
 		input_display_list_autoterrains[3] = tileset.autoterrain_selector.b_toggle;

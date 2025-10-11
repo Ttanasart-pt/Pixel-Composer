@@ -21,7 +21,6 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	rules      = new Tileset_Rule(self);
     
     newInput( 0, nodeValue_Surface("Texture"));
-    
     newInput( 1, nodeValue_Vec2("Tile size", [ 16, 16 ]));
     
 	newOutput(0, nodeValue_Output("Tileset", VALUE_TYPE.tileset, self));
@@ -1498,16 +1497,22 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    		var _px = _x + ui(8);
 	    		var _py = _yy + ui(4);
 	    		
-	    		var _prin = array_safe_get(_at.index, safe_mod(current_time / 1000 * 2, array_length(_at.index)), undefined);
+	    		var _atIdx = _at.index;
+	    		var _animl = array_length(_at.index);
+	    		var _prin  = array_safe_get(_atIdx, safe_mod(current_time / 1000 * 2, _animl), undefined);
 	    		
-	    		if(_prin == undefined)
-		    		draw_sprite_stretched_ext(THEME.ui_panel, 1, _px, _py, _pw, _ph, COLORS._main_icon);
-	    		else
-	    			drawTile(_prin, _px, _py, _pw, _ph);
+	    		var _hov = _hover && point_in_rectangle(_m[0], _m[1], _px, _yy, _px + _pw, _yy + _hg - 1);
+	    		var _cc  = _hov? COLORS._main_icon_light : COLORS._main_icon;
+	    		draw_sprite_ui(THEME.arrow, _at.open? 3 : 0, _px + _pw/2, _py + _pw/2, 1, 1, 0, _cc);
+	    		if(_hov && mouse_lpress(_focus)) _at.open = !_at.open;
+	    		_px += _pw + ui(8);
 	    		
 	    		var _tx  = _px + _pw + ui(8);
-	    		var _hov = _hover && point_in_rectangle(_m[0], _m[1], _x, _yy, _x + _w, _yy + _hg - 1);
+	    		var _hov = _hover && point_in_rectangle(_m[0], _m[1], _px, _yy, _x + _w - ui(36), _yy + _hg - 1);
 	    		var _cc  = object_selecting == _at? COLORS._main_accent : (_hov? COLORS._main_text : COLORS._main_text_sub);
+	    		
+	    		if(_prin) drawTile(_prin, _px, _py, _pw, _ph);
+	    		draw_sprite_stretched_ext(THEME.ui_panel, 1, _px, _py, _pw, _ph, _cc);
 	    		
 	    		if(renaming == _at) {
 					tb_rename.setFocusHover(_focus, _hover);
@@ -1515,16 +1520,17 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				
 				} else {
 		    		draw_set_text(f_p2, fa_left, fa_center, _cc);
-		    		draw_text_add(_tx, _yy + _hg / 2, _at.name);
+		    		draw_text_add(_tx, _yy + _hg / 2, $"{_at.name} [{_animl}]");
 		    		
 		    		var bs = ui(24);
 					var bx = _w  - bs - ui(4);
 					var by = _yy + _hg / 2 - bs / 2;
-					if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, "", THEME.minus_16, 0, _hov? COLORS._main_value_negative : COLORS._main_icon) == 2) 
+					var bc = [COLORS._main_icon, COLORS._main_value_negative];
+					if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, "", THEME.minus_16, 0, bc) == 2) 
 						del = i;	
 				}
 				
-	    		if(_hov && _m[0] < _x + _w - ui(32)) {
+	    		if(_hov) {
 	    			if(is(object_selecting, tiler_rule)) {
 	    				TOOLTIP = "Set Rule selector";
 	    				
@@ -1551,7 +1557,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 							if(node_edit) node_edit.triggerRender();
 	    				}
 	    				
-	    			} else if(_m[0] > _tx) {
+	    			} else {
 		    			if(DOUBLE_CLICK && _focus) {
 							renaming    = _at;
 							rename_text = _at.name;
@@ -1570,11 +1576,6 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		    				
 		    				setPencil();
 		    			}
-	    			} else {
-	    				draw_set_color(COLORS._main_accent); draw_rectangle(_px, _py, _px + _pw - 1, _py + _ph - 1, 1);
-		    			
-		    			if(mouse_press(mb_left, _focus))
-		    				_at.open = !_at.open;
 	    			}
 	    		}
 	    		
@@ -1589,7 +1590,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    		_ah += ui(4);
 	    		
     			var _atIdx = _at.index;
-    			var _coll  = floor(_w - ui(16)) / max(32, _tileSiz[0]);
+    			var _coll  = floor(_w - ui(16)) / max(ui(32), _tileSiz[0]);
     			var _roww  = ceil(array_length(_atIdx) / _coll);
     			
     			var _pre_sx = _x + ui(8);
