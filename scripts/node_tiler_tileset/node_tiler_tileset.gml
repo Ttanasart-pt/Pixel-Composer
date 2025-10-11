@@ -56,7 +56,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			_n.node_tool_pencil.toggle();
 	}
 	
-	////- Tile selector
+	////- =Tile selector
 	#region Tile selector
 	    tile_selector_surface = 0;
 	    tile_selector_mask    = 0;
@@ -600,7 +600,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    tile_selector.setName("Tileset");
 	#endregion
     
-    ////- Auto terrain
+    ////- =Auto terrain
     #region Auto terrain
     	autoterrain = [];
 		autoterrain_selector_h = 0;
@@ -919,7 +919,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
     	autoterrain_selector.setName("Autoterrain");
     #endregion
     
-    ////- Brush palette
+    ////- =Brush palette
     #region Brush palette
     	brush_palette_h    = ui(320);
     	
@@ -1413,7 +1413,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
     	palette_viewer.setName("Tile Palette");
     #endregion
     
-    ////- Animated tiles
+    ////- =Animated tiles
     #region Animated tiles
     	animatedTiles = [];
 		animated_selector_h = 0;
@@ -1448,15 +1448,12 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    	var _tileAmo = [ floor(_tdim[0] / _tileSiz[0]), floor(_tdim[1] / _tileSiz[1]) ];
 	    	
 	    	#region top bar
-	    	
 			var bx = _x;
 			var by = _yy;
 			var bs = ui(24);
 			var _brush_tiles = brush.brush_width * brush.brush_height;
 			
-			if(_brush_tiles < 1) 
-			    draw_sprite_uniform(THEME.add_16, 0, bx + bs / 2, by + bs / 2, 1, COLORS._main_icon);
-			    
+			if(_brush_tiles < 1) draw_sprite_ui(THEME.add_16, 0, bx + bs / 2, by + bs / 2, 1, 1, 0, COLORS._main_icon);
 			else if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, "New animated tiles", THEME.add_16, 0, COLORS._main_value_positive) == 2) {
 				var _new_at = noone;
 				var _indx   = array_create(brush.brush_width * brush.brush_height);
@@ -1466,7 +1463,6 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    			_indx[i * brush.brush_width + j] = brush.brush_indices[i][j][0];
 	    		
 	    		_new_at = new tiler_brush_animated(_indx);
-	    		
 				if(_new_at != noone) {
 					object_selecting = _new_at;
 					object_select_id = noone;

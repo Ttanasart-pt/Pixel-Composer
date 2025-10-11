@@ -1,4 +1,4 @@
-function tiler_tool(_node) constructor {
+function tiler_tool(_node) : ToolObject() constructor {
     node    = _node;
     subtool = 0;
     brush_resizable = true;
