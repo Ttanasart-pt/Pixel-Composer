@@ -1810,7 +1810,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(fullUpdate) RENDER_ALL
 		
-		if(!LOADING) node.project.modified = true;
+		if(!LOADING) node.project.setModified();
 					
 		cache_value[0] = false;
 		onValidate();
@@ -1967,7 +1967,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(NOT_LOAD && !CLONING) {
 			draw_line_shift_x = 0;
 			draw_line_shift_y = 0;
-			node.project.modified = true;
+			node.project.setModified();
 		}
 		
 		RENDER_PARTIAL_REORDER
@@ -2000,7 +2000,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		node.clearCacheForward();
 		node.refreshNodeDisplay();
 		
-		node.project.modified = true;
+		node.project.setModified();
 		if(PANEL_GRAPH) PANEL_GRAPH.connection_draw_update = true;
 						
 		RENDER_ALL_REORDER
@@ -2012,7 +2012,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(value_from_loop != noone)
 			value_from_loop.destroy();
 		
-		node.project.modified = true;
+		node.project.setModified();
 	}
 	
 	static checkConnection = function(_remove_list = true) {

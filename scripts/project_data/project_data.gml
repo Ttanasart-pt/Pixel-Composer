@@ -346,6 +346,17 @@ function Project() constructor {
 	}
 	
 	////- Action
+	
+	autosave_ts = undefined;
+	static setModified = function() {
+		modified = true;
+		
+		if(path != "" && PREFERENCES.save_auto) {
+			if(autosave_ts && time_source_get_state(autosave_ts) == time_source_state_active)
+				time_source_destroy(autosave_ts);
+			autosave_ts = run_in_s(1, function(pr) /*=>*/ {return SAVE(pr)}, [self]);
+		}
+	}
 
 	static cleanup = function() {
 		array_foreach(allNodes, function(_n) /*=>*/ { 

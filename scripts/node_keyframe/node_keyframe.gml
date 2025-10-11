@@ -422,7 +422,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		if(!array_exists(values, _key))	    return 0;
 		if(_key.time == _time && !_replace)	return 0;
 		
-		if(!LOADING) node.project.modified = true;
+		if(!LOADING) node.project.setModified();
 		
 		var _prevTime = _key.time;
 		_time = max(_time, 0);

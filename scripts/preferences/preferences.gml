@@ -152,6 +152,7 @@
 		PREFERENCES.save_thumbnail_size             = 64;
 		PREFERENCES.save_layout						= false;
 		PREFERENCES.save_compress                   = true;
+		PREFERENCES.save_auto                       = false;
 	
 	#endregion
 	

@@ -1049,8 +1049,8 @@ event_inherited();
 			for( var j = 0, m = array_length(_content); j < m; j++ ) {
 				var _node = _content[j];
 				
-				if(is_string(_node))					continue;
-				if(ds_map_exists(search_map, _node))	continue;
+				if(is_string(_node))                 continue;
+				if(ds_map_exists(search_map, _node)) continue;
 				
 				var match = string_partial_match_res(string_lower(_node.getName()), search_lower, search_split);
 								
@@ -1063,7 +1063,7 @@ event_inherited();
 				var param = "";
 				for( var k = 0, p = array_length(_node.tags); k < p; k++ ) {
 					var mat = string_partial_match_res(_node.tags[k], search_lower, search_split);
-					mat[0] -= 10;
+					mat[0] -= 100;
 					
 					if(mat[0] > match[0]) {
 						match = mat;

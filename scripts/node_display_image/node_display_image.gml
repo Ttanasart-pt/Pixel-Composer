@@ -60,7 +60,7 @@ function Node_Display_Image(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	static move = function(_x, _y, _s) {
 		if(x == _x && y == _y) return;
-		if(!LOADING) PROJECT.modified = true;
+		if(!LOADING) PROJECT.setModified();
 		
 		x = _x;
 		y = _y;

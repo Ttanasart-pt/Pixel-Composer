@@ -12,12 +12,11 @@ function Panel_Preference() : PanelContent() constructor {
 	min_w    = ui(640);
 	min_h    = ui(480);
 	auto_pin = true;
+	font     = f_p2;
 	
 	page_width     = ui(128);
 	should_restart = false;
 	
-	font = f_p2;
-    
 	panel_width   = w - padding * 2 - page_width;
 	panel_height  = h - padding * 2;
 	
@@ -174,6 +173,12 @@ function Panel_Preference() : PanelContent() constructor {
     			__txtx("pref_auto_save_time", "Autosave delay (-1 to disable)"),
     			"auto_save_time",
     			textBox_Number(function(val) /*=>*/ {return prefSet("auto_save_time", val)})
+    		));
+    		
+    		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
+    			__txtx("pref_save_auto", "File autosave"),
+    			"save_auto",
+    			new checkBox(function() /*=>*/ {return prefToggle("save_auto")})
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(

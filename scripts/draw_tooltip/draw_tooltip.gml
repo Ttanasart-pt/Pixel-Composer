@@ -193,13 +193,13 @@ function draw_tooltip_atlas(atlas) {
 	var amo = array_length(atlas);
 	if(amo && is_array(atlas[0])) return;
 	
-	var wwd = ui(100);
+	var wwd = ui(96);
 	var wd  = wwd + ui(8);
 	
 	var hhg = ui(32);
 	var hg  = hhg + ui(8);
 	
-	var row = min(amo, floor((WIN_H - ui(16)) / hg));
+	var row = min(floor(sqrt(amo) * 1.5), floor((WIN_H - ui(16)) / hg));
 	var col = ceil(amo / row);
 	
 	var ww  = col * wd - ui(8);

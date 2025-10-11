@@ -219,10 +219,10 @@ function Panel_Inspector() : PanelContent() constructor {
     
     #region ---- Metadata ----
         current_meta = -1; 
-        meta_tb[0] = textArea_Text( function(s) /*=>*/ { current_meta.description = s; PROJECT.modified = true; } ).setVAlign(ui(4));
-        meta_tb[1] = textArea_Text( function(s) /*=>*/ { current_meta.author      = s; PROJECT.modified = true; } ).setVAlign(ui(4));
-        meta_tb[2] = textArea_Text( function(s) /*=>*/ { current_meta.contact     = s; PROJECT.modified = true; } ).setVAlign(ui(4));
-        meta_tb[3] = textArea_Text( function(s) /*=>*/ { current_meta.alias       = s; PROJECT.modified = true; } ).setVAlign(ui(4));
+        meta_tb[0] = textArea_Text( function(s) /*=>*/ { current_meta.description = s; PROJECT.setModified(); } ).setVAlign(ui(4));
+        meta_tb[1] = textArea_Text( function(s) /*=>*/ { current_meta.author      = s; PROJECT.setModified(); } ).setVAlign(ui(4));
+        meta_tb[2] = textArea_Text( function(s) /*=>*/ { current_meta.contact     = s; PROJECT.setModified(); } ).setVAlign(ui(4));
+        meta_tb[3] = textArea_Text( function(s) /*=>*/ { current_meta.alias       = s; PROJECT.setModified(); } ).setVAlign(ui(4));
         meta_tb[4] = new textArrayBox(noone, META_TAGS).setAddable(true);
         
         if(STEAM_ENABLED) meta_tb[1].setSideButton(button(function() /*=>*/ { current_meta.author = STEAM_USERNAME; })

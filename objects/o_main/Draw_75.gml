@@ -24,16 +24,16 @@ if(winMan_isMinimized()) exit;
 				case VALUE_TYPE.integer  : 
 				case VALUE_TYPE.text     :
 				case VALUE_TYPE.struct   :
-				case VALUE_TYPE.path     : draw_tooltip_text(content);            break;
+				case VALUE_TYPE.path     : draw_tooltip_text(content);                                                          break;
 				
-				case VALUE_TYPE.boolean  : draw_tooltip_text(printBool(content)); break;
-				case VALUE_TYPE.curve    : draw_tooltip_curve(content);           break;
-				case VALUE_TYPE.color    : draw_tooltip_color(content);           break;
-				case VALUE_TYPE.gradient : draw_tooltip_gradient(content);        break;
+				case VALUE_TYPE.boolean  : draw_tooltip_text(printBool(content));                                               break;
+				case VALUE_TYPE.curve    : draw_tooltip_curve(content);                                                         break;
+				case VALUE_TYPE.color    : draw_tooltip_color(content);                                                         break;
+				case VALUE_TYPE.gradient : draw_tooltip_gradient(content);                                                      break;
 				case VALUE_TYPE.atlas    : 
-				case VALUE_TYPE.surface  : draw_tooltip_surface(content);         break;
-				case VALUE_TYPE.buffer   : draw_tooltip_buffer(content);          break;
-				case VALUE_TYPE.pathnode : draw_tooltip_path(content);            break;
+				case VALUE_TYPE.surface  : draw_tooltip_surface(content);                                                       break;
+				case VALUE_TYPE.buffer   : draw_tooltip_buffer(content);                                                        break;
+				case VALUE_TYPE.pathnode : draw_tooltip_path(content);                                                          break;
 				
 				case VALUE_TYPE.d3object : draw_tooltip_text($"[{__txt("3D Object")}]");                                        break;
 				case VALUE_TYPE.object   : draw_tooltip_text($"[{__txt("Object")}]");                                           break;

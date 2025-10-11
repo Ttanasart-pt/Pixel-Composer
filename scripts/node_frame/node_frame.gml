@@ -77,7 +77,7 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			_n.move(_nx, _ny);
 		}
 		
-		if(!LOADING) project.modified = true;
+		if(!LOADING) project.setModified();
 	}
 	
 	static setCoveringNodes = function(node_list) {
