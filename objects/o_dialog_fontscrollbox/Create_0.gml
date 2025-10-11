@@ -12,12 +12,14 @@ event_inherited();
 	scrollbox = noone;
 	curr_data = FONT_INTERNAL;
 	
+	font = f_p2;
+	
 	setScrollBox = function(_box) /*=>*/ { scrollbox = _box; return self; }
 	
 	sc_content = new scrollPane(0, 0, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
-		var hght = line_get_height(f_p0, 8);
+		var hght = line_get_height(font, 8);
 		var data = curr_data;
 		var amo  = array_length(data);
 		
@@ -25,19 +27,22 @@ event_inherited();
 		var _dw  = sc_content.surface_w;
 		var _dh  = sc_content.surface_h;
 		
+		var hover = sc_content.hover;
+		var focus = hover && sc_content.active;
+		
 		sc_content.hover_content = true;
 		
 		for( var i = 0; i < amo; i++ ) {
 			var _ly = _y + i * hght;	
 			var fullpath = data[i];
 			
-			if(sc_content.hover && MOUSE_MOVED && point_in_rectangle(_m[0], _m[1], 0, _ly + 1, _dw, _ly + hght - 1))
+			if(hover && MOUSE_MOVED && point_in_rectangle(_m[0], _m[1], 0, _ly + 1, _dw, _ly + hght - 1))
 				selecting = i;
 			
 			if(selecting == i) {
 				draw_sprite_stretched_ext(THEME.textbox, 3, 0, _ly, _dw, hght, COLORS.dialog_menubox_highlight, 1);
 				
-				if(sFOCUS && (mouse_press(mb_left) || KEYBOARD_ENTER)) {
+				if(focus && (mouse_press(mb_left) || KEYBOARD_ENTER)) {
 					scrollbox.onModify(fullpath);
 					instance_destroy();
 				}
@@ -45,7 +50,7 @@ event_inherited();
 			
 			if(_ly + hght < 0 || _ly > _dh) continue;
 					
-			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
+			draw_set_text(font, fa_left, fa_center, COLORS._main_text);
 			
 			var _scis = gpu_get_scissor();
 			gpu_set_scissor(ui(8), _ly, _dw, hght);
@@ -68,20 +73,15 @@ event_inherited();
 		}
 		
 		if(sFOCUS) {
-			if(KEYBOARD_PRESSED == vk_up) {
-				selecting--;
-				if(selecting < 0) selecting = array_length(data) - 1;
-			}
+			if(KEYBOARD_PRESSED == vk_up)   selecting = safe_mod(selecting + amo - 1, amo);
+			if(KEYBOARD_PRESSED == vk_down) selecting = safe_mod(selecting + amo + 1, amo);
 			
-			if(KEYBOARD_PRESSED == vk_down)
-				selecting = safe_mod(selecting + 1, array_length(data));
-			
-			if(keyboard_check_pressed(vk_escape))
+			if(keyboard_check_pressed(vk_escape)) 
 				instance_destroy();
 		}
 		
 		if(search_string != "") {
-			draw_set_text(f_p3, fa_center, fa_center, COLORS._main_text_sub);
+			draw_set_text(font, fa_center, fa_center, COLORS._main_text_sub);
 			draw_text_add(sc_content.surface_w / 2, _y + amo * hght + ui(8), amo == 0? __txt("no result") : $"{amo} {__txt("results")}");
 			_h += ui(24);
 		}
@@ -91,7 +91,7 @@ event_inherited();
 #endregion
 
 #region search
-	search_string	= "";
+	search_string = "";
 	KEYBOARD_RESET
 	tb_search = new textBox(TEXTBOX_INPUT.text, function(s) /*=>*/ { search_string = string(s); filterSearch(); })
 					.setFont(f_p2).setAutoUpdate().setEmpty().setAlign(fa_left);
@@ -99,8 +99,11 @@ event_inherited();
 	WIDGET_CURRENT  = tb_search;
 	
 	function filterSearch() {
-		curr_data = FONT_INTERNAL;
-		if(search_string == "") return;
+		if(search_string == "") {
+			curr_data = array_clone(FONT_INTERNAL);
+			sortSearch();
+			return;
+		}
 		
 		curr_data = [];
 		for( var i = 0, n = array_length(FONT_INTERNAL); i < n; i++ ) {
@@ -111,5 +114,17 @@ event_inherited();
 				array_push(curr_data, val);
 		}
 		
+		sortSearch();
 	}
 #endregion
+	
+#region sort
+	sort_type   = "alpha";
+	sort_invert = true;
+	
+	function sortSearch() {
+		array_sort(curr_data, function(a, b) /*=>*/ {return string_compare(a, b) * (sort_invert? 1 : -1)});
+	}
+#endregion
+	
+filterSearch();

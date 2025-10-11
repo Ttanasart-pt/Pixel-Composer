@@ -10,9 +10,21 @@
 #region draw
 	draw_sprite_stretched(THEME.textbox, 3, dialog_x, dialog_y, dialog_w, dialog_h);
 	
+	var _tx = dialog_x + ui(8);
+	var _ty = dialog_y + ui(8);
+	var _tw = dialog_w - ui(16);
+	var _th = ui(24);
+	
+	var _txt = __txt("Sort by Name");
+	if(buttonInstant_Pad(THEME.button_hide, _tx + _tw - _th, _ty, _th, _th, mouse_ui, sHOVER, sFOCUS, _txt, THEME.text) == 2) {
+		sort_invert = !sort_invert;
+		sortSearch();
+	}
+	_tw -= _th + ui(4);
+	
 	WIDGET_CURRENT = tb_search;
 	tb_search.setFocusHover(true, true);
-	tb_search.draw(dialog_x + ui(8), dialog_y + ui(8), dialog_w - ui(16), ui(24), search_string);
+	tb_search.draw(_tx, _ty, _tw, _th, search_string);
 	tb_search.sprite_index = 0;
 	
 	sc_content.verify(dialog_w - ui(6), dialog_h - ui(40));
