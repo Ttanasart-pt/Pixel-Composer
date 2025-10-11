@@ -265,7 +265,6 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	}
 	
 	static warpSurface = function(surfBase, surfWarp, surfBack, sw, sh, tl, tr, bl, br, tile = false) {
-		
 		var _wdim = surface_get_dimension(surfWarp);
 		
 		surface_set_shader(surfBase, sh_warp_4points);
@@ -320,7 +319,6 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				
 			case 2 : sw = _sdim[0] * surface_get_width_safe(_surfF);
 				     sh = _sdim[1] * surface_get_height_safe(_surfF); break;
-				
 		}
 		
 		_outSurf = surface_verify(_outSurf, sw, sh);
