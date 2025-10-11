@@ -1,26 +1,21 @@
 function fontScrollBox(_onModify) : widget() constructor {
-	onModify  = _onModify;	
-	
-	open = false;
-	open_rx = 0;
-	open_ry = 0;
-	
-	show_folder = true;
+	onModify = _onModify;
+	open     = false;
+	open_rx  = 0;
+	open_ry  = 0;
 	
 	align = fa_center;
 	side_button = button(function() /*=>*/ {return shellOpenExplorer(DIRECTORY + "Fonts")})
 						.setTooltip(__txtx("widget_font_open_folder", "Open font folder"))
 						.setIcon(THEME.folder_content, 0, COLORS._main_icon).iconPad();
-			
-	static setFolder = function(v) /*=>*/ { show_folder = v; return self; }
-						
+	
+	refresh_button = button(function() /*=>*/ {return __initFontFolder(true)})
+						.setTooltip(__txt("Refresh"))
+						.setIcon(THEME.refresh_icon, 0, COLORS._main_icon).iconPad();
+	
 	static trigger = function() {
+		dialogCall(o_dialog_fontscrollbox, x + open_rx, y + open_ry).setScrollBox(self);
 		open = true;
-		
-		with(dialogCall(o_dialog_fontscrollbox, x + open_rx, y + open_ry)) {
-			scrollbox = other;	
-			align     = other.align;
-		}
 	}
 	
 	static setInteract = function(i = noone) { 
@@ -43,12 +38,17 @@ function fontScrollBox(_onModify) : widget() constructor {
 		
 		var _bs = min(_h, ui(32));
 		
-		if(show_folder) {
-			if(_w - _bs > ui(100) && side_button != noone) {
-				side_button.setFocusHover(active, hover);
-				side_button.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
-				_w -= _bs + ui(4);
-			}
+		if(_w - _bs > ui(100) && side_button != noone) {
+			side_button.setFocusHover(active, hover);
+			side_button.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
+			_w -= _bs + ui(4);
+		}
+		
+		if(_w - _bs > ui(100) && refresh_button != noone) {
+			refresh_button.setFocusHover(active, hover);
+			refresh_button.draw(_x, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
+			_x += _bs + ui(4);
+			_w -= _bs + ui(4);
 		}
 		
 		if(open) { resetFocus(); return h; }
@@ -63,7 +63,6 @@ function fontScrollBox(_onModify) : widget() constructor {
 			
 		} else {
 			draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, c_white, 0.5 + 0.5 * interactable);
-			
 			if(mouse_press(mb_left)) deactivate();
 		}
 		

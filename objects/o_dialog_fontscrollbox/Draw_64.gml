@@ -2,6 +2,7 @@
 #region pos
 	var hght = line_get_height(f_p0, 8);
 	var hh   = array_length(curr_data) * hght + ui(40);
+	if(search_string != "" && array_length(curr_data) == 0) hh = ui(24) + ui(40);
 	
 	dialog_h = min(max_h, hh);
 #endregion

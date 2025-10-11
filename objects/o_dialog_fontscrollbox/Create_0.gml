@@ -1,7 +1,7 @@
 /// @description init
 event_inherited();
 
-#region 
+#region data
 	destroy_on_click_out = true;
 	
 	dialog_w  = 560;
@@ -10,21 +10,29 @@ event_inherited();
 	selecting = -1;
 	anchor    = ANCHOR.top | ANCHOR.left;
 	scrollbox = noone;
-	
 	curr_data = FONT_INTERNAL;
+	
+	setScrollBox = function(_box) /*=>*/ { scrollbox = _box; return self; }
 	
 	sc_content = new scrollPane(0, 0, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
 		var hght = line_get_height(f_p0, 8);
 		var data = curr_data;
-		var _h   = array_length(data) * hght;
+		var amo  = array_length(data);
+		if(search_string != "" && amo == 0) {
+			draw_set_text(f_p3, fa_center, fa_center, COLORS._main_text_sub);
+			draw_text_add(sc_content.surface_w / 2, ui(8), __txt("no result"));
+			return ui(24);
+		}
+		
+		var _h   = amo * hght;
 		var _dw  = sc_content.surface_w;
 		var _dh  = sc_content.surface_h;
 		
 		sc_content.hover_content = true;
 		
-		for( var i = 0, n = array_length(data); i < n; i++ ) {
+		for( var i = 0; i < amo; i++ ) {
 			var _ly = _y + i * hght;	
 			var fullpath = data[i];
 			
@@ -39,7 +47,7 @@ event_inherited();
 					instance_destroy();
 				}
 			}
-					
+			
 			if(_ly + hght < 0 || _ly > _dh) continue;
 					
 			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
@@ -85,10 +93,7 @@ event_inherited();
 	search_string	= "";
 	KEYBOARD_RESET
 	tb_search = new textBox(TEXTBOX_INPUT.text, function(s) /*=>*/ { search_string = string(s); filterSearch(); })
-					.setFont(f_p2)
-					.setAutoUpdate()
-					.setEmpty()
-					.setAlign(fa_left);
+					.setFont(f_p2).setAutoUpdate().setEmpty().setAlign(fa_left);
 	
 	WIDGET_CURRENT  = tb_search;
 	

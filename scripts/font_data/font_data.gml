@@ -1,8 +1,12 @@
-globalvar FONT_MAP, FONT_INTERNAL, FONT_SPRITES;
+globalvar FONT_MAP;
+globalvar FONT_INTERNAL;
+globalvar FONT_SPRITES;
 
 FONT_SPRITES = ds_map_create();
 
-function readFontFolder(dirPath) {
+function readFontFolder(dirPath, _log = false) {
+	if(_log) print($"Reading font folder {dirPath}")
+	
 	var filter = [ ".ttf", ".otf" ];
 	var _files = directory_get_files_ext(dirPath, filter);
 	
@@ -10,6 +14,7 @@ function readFontFolder(dirPath) {
 		var fil = _files[i];
 		var ful = dirPath + fil;
 		var nam = filename_name_only(fil);
+		if(_log) print($" > Found font {nam}")
 		
 		FONT_MAP[$ nam] = ful;
 		array_push(FONT_INTERNAL, ful);
@@ -17,25 +22,20 @@ function readFontFolder(dirPath) {
 	
 }
 
-function __initFontFolder() {
-	var root = DIRECTORY + "Fonts";
-	directory_verify(root);
-	
+function __initFontFolder(_log = false) {
+	var root = $"{DIRECTORY}Fonts";
 	FONT_MAP      = {};
 	FONT_INTERNAL = [];
 	
-	readFontFolder(DIRECTORY + "Fonts/");
-	
+	directory_verify(root);
+	readFontFolder($"{root}/", _log);
 	for (var i = 0, n = array_length(PREFERENCES.path_fonts); i < n; i++)
-		readFontFolder(string_trim_end(PREFERENCES.path_fonts[i], ["/"]) + "/");
+		readFontFolder(string_trim_end(PREFERENCES.path_fonts[i], ["/"]) + "/", _log);
 }
 
 function loadFontSprite(path) {
 	var f = _font_add(path, 32);
-	if(!font_exists(f)) {
-		FONT_SPRITES[? path] = noone;
-		return;
-	}
+	if(!font_exists(f)) { FONT_SPRITES[? path] = noone; return; }
 	
 	draw_set_text(f, fa_left, fa_top, c_white);
 	var name = "ABCabc123";
