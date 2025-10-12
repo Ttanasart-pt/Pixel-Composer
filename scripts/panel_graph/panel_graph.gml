@@ -2034,8 +2034,13 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		                var val = _n.drawNode(node_surface_update, __gr_x, __gr_y, __mx, __my, __gr_s, project.graphDisplay, __self);
 		                if(val) {
 		                    value_focus = val;
-		                    if(key_mod_press(SHIFT)) TOOLTIP = [ val.getValue(), val.type ];
+		                    if(key_mod_press(SHIFT)) {
+		                    	TOOLTIP = [ val.getValue(), val.type ];
+		                    	if(pFOCUS && DOUBLE_CLICK)
+		                    		val.drawValue = !val.drawValue;
+		                    }
 		                }
+		                
 		            } catch(e) { log_warning("NODE DRAW", exception_print(e)); }
 		        });
 		        

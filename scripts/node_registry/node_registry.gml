@@ -649,6 +649,10 @@ function nodeBuild(_name, _x, _y, _group = PANEL_GRAPH.getCurrentContext()) {
 	return _bnode;
 }
 
+function nodeDestroy(_node, _merge = false) {
+	_node.destroy(_merge);
+}
+
 function panelFocusNode(_node = noone) {
 	PANEL_GRAPH.nodes_selecting = _node == noone? [] : [ _node ];
 	PANEL_PREVIEW.setNodePreview(_node);

@@ -223,7 +223,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput( 7, nodeValue_Bool(        "Full Mesh",   false ));
 	newInput(10, nodeValue_Slider(      "Randomness", .5     ));
 	newInput( 3, nodeValue_Trigger(     "Mesh" ));
-	b_gen_mesh = button(function() /*=>*/ {return Mesh_build()}).setText("Generate Mesh");
+	b_gen = button(function() /*=>*/ {return Mesh_build()}).setIcon(THEME.verletSim, 0, COLORS._main_value_positive).iconPad().setTooltip("Generate Mesh");
 	
 	////- =Link
 	newInput(2, nodeValue_Slider( "Spring Force",  .5     ));
@@ -236,9 +236,9 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newOutput(1, nodeValue_Output( "Mesh data", VALUE_TYPE.mesh, new Mesh()));
 	
 	input_display_list = [ 5, 9, 
-		["Mesh",			false],	0, 8, 1, 7, 10, b_gen_mesh, 
-		["Link",			false],	4, 6,
-		["Control points",	false], 
+		["Mesh", false, noone, b_gen], 0, 8, 1, 7, 10, 
+		["Link", false], 4, 6,
+		["Control points", false], 
 	];
 	
 	control_index = array_length(inputs);

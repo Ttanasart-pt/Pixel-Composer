@@ -170,6 +170,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		custom_icon  = noone;
 		custom_color = noone;
+		
+		drawValue    = false;
 	#endregion
 	
 	#region ---- Inspector ----
@@ -2307,6 +2309,34 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			gpu_set_blendmode(bm_normal);
 		}
 		
+		if(drawValue) {
+			var _val = string(getValue());
+			draw_set_text(f_p3, fa_left, fa_center);
+			
+			var tw = string_width(_val) + 16;
+			var th = string_height(_val) + 16;
+			
+			if(connect_type == CONNECT_TYPE.input) {
+				var tx = x - 16 - 16 * _s;
+				var ty = y;
+				
+				draw_set_halign(fa_right);
+				draw_sprite_stretched_ext(THEME.textbox, 3, tx - tw - 8, ty - th / 2, tw, th);
+				draw_sprite_stretched(THEME.textbox, 1, tx - tw - 8, ty - th / 2, tw, th);
+				draw_text_add(tx, ty, _val);
+				
+			} else {
+				var tx = x + 16 + 16 * _s;
+				var ty = y;
+				
+				draw_set_halign(fa_left);
+				draw_sprite_stretched_ext(THEME.textbox, 3, tx - 8, ty - th / 2, tw, th);
+				draw_sprite_stretched(THEME.textbox, 1, tx - 8, ty - th / 2, tw, th);
+				draw_text_add(tx, ty, _val);
+					
+			}
+		}
+		
 		return _hov;
 	}
 	
@@ -2490,8 +2520,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var _map = {};
 		
 		if(visible != visible_def) _map.v = real(visible);
-		if(visible_manual != 0) _map.visible_manual = visible_manual;
-		if(color != -1)         _map.color          = color;
+		if(visible_manual != 0)    _map.visible_manual = visible_manual;
+		if(color != -1)            _map.color          = color;
+		if(drawValue)              _map.drawValue      = drawValue;
 		
 		if(connect_type == CONNECT_TYPE.output) return _map;
 		
@@ -2566,6 +2597,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			show_graphs    = array_clone(_map[$ "graph_shs"] ?? show_graphs);
 		}
 		
+		drawValue	= _map[$ "drawValue"] ?? false;
+		
 		if(connect_type == CONNECT_TYPE.output) return;
 		
 		on_end		= _map[$ "on_end"]     ?? KEYFRAME_END.hold;
@@ -2575,7 +2608,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		expression	= _map[$ "global_key"] ?? "";
 		expTree     = evaluateFunctionList(expression); 
 		
-		sep_axis	= _map[$ "sep_axis"] ?? false;
+		sep_axis	= _map[$ "sep_axis"]  ?? false;
 		setAnim(_map[$ "anim"] ?? false);
 		
 		draw_line_shift_x = _map[$ "shift_x"]     ??  0;

@@ -139,17 +139,18 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		var spd  = getInputData(1);
-		var _typ = getType();
-		var res  = [];
-		var ind  = 0;
+		var spd = getInputData(1);
+		var typ = getType();
+		var res = [];
+		var ind = 0;
 		
-		var _set  = _typ == VALUE_TYPE.any;
+		var _set  = typ == VALUE_TYPE.any;
 		var _setT = VALUE_TYPE.any;
 		
 		for( var i = input_fix_len, n = array_length(inputs); i < n; i++ ) {
-			if(spd) array_append(res, getInputData(i));
-			else    array_push(res, getInputData(i));
+			var _idat = getInputData(i);
+			if(spd) array_append( res, _idat );
+			else    array_push(   res, _idat );
 			
 			if(inputs[i].value_from == noone) continue;
 			
@@ -161,7 +162,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				_setT = VALUE_TYPE.any;
 		}
 		
-		if(_typ == VALUE_TYPE.any) outputs[0].setType(_setT);
+		if(typ == VALUE_TYPE.any) outputs[0].setType(_setT);
 		
 		outputs[0].setValue(res);
 	}
