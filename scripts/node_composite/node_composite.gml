@@ -420,6 +420,10 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(1, nodeValue_Enum_Scroll( "Output dimension", COMPOSE_OUTPUT_SCALING.first, [ "First surface", "Largest surface", "Constant" ]));
 	newInput(2, nodeValue_Dimension()).setVisible(false);
 	
+	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
+	newOutput(1, nodeValue_Output( "Atlas data",  VALUE_TYPE.atlas,   []    ));
+	newOutput(2, nodeValue_Output( "Dimension",   VALUE_TYPE.integer, [1,1] )).setVisible(false).setDisplay(VALUE_DISPLAY.vector);
+	
 	////- Attributes
 	
 	attribute_surface_depth();
@@ -842,10 +846,6 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	];
 	
 	setDynamicInput(7, true, VALUE_TYPE.surface);
-	
-	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
-	newOutput(1, nodeValue_Output( "Atlas data",  VALUE_TYPE.atlas,   []    ));
-	newOutput(2, nodeValue_Output( "Dimension",   VALUE_TYPE.integer, [1,1] )).setVisible(false).setDisplay(VALUE_DISPLAY.vector);
 	
 	////- Tools
 	

@@ -318,16 +318,19 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	// input 16
 	
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone    ));
+	newOutput(2, nodeValue_Output( "Atlas data",  VALUE_TYPE.atlas,   []       ));
 	newOutput(1, nodeValue_Output( "Dimension",   VALUE_TYPE.integer, [ 1, 1 ] )).setDisplay(VALUE_DISPLAY.vector).setVisible(false);
 	
 	input_display_list = [ 11, 0,  
-		["Output",		 true],	9, 1, 15, 7,
-		["Position",	false], 2, 10, 3, 
-		["Rotation",	false], 5, 8, 
-		["Scale",		false], 6, 
-		["Render",		false], 14, 
-		["Echo",		 true, 12], 13, 
+		["Output",   true    ], 9, 1, 15, 7,
+		["Position", false   ], 2, 10, 3, 
+		["Rotation", false   ], 5, 8, 
+		["Scale",    false   ], 6, 
+		["Render",   false   ], 14, 
+		["Echo",     true, 12], 13, 
 	];
+	
+	output_display_list = [ 0, 2, 1 ];
 	
 	////- Tool
 	
@@ -819,16 +822,16 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	static processData = function(_outData, _data, _array_index) {
 		var surf = _data[0];
 		
-		var out_type  = _data[9];
-		var dim		  = _data[1];
+		var out_type  = _data[ 9];
+		var dim		  = _data[ 1];
 		var dimScal   = _data[15];
-		var pos		  = [ _data[2][0], _data[2][1] ];
+		var pos		  = _data[ 2]; pos = [ pos[0], pos[1] ];
 		var pos_exact = _data[10];
-		var anc       = [ _data[3][0], _data[3][1] ];
-		var rot_vel   = vel * _data[8];
-		var rot		  = _data[5] + rot_vel;
-		var sca       = _data[6];
-		var mode      = _data[7];
+		var anc		  = _data[ 3]; anc = [ anc[0], anc[1] ];
+		var rot_vel   = _data[ 8] * vel;
+		var rot		  = _data[ 5] + rot_vel;
+		var sca       = _data[ 6];
+		var mode      = _data[ 7];
 		
 		var echo      = _data[12];
 		var echo_amo  = _data[13];
@@ -964,6 +967,8 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			rot,
 			[ sca[0], sca[1] ],
 		];
+		
+		_outData[2] = new SurfaceAtlas(surf, pos[0], pos[1], rot, sca[0], sca[1]);
 		
 		return _outData;
 	}
