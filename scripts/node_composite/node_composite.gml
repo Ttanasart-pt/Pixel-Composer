@@ -439,13 +439,13 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	////- Layers
 	
 	renaming        = noone;
-	rename_text     = "";
 	renaming_index  = noone;
+	rename_text     = "";
 	tb_rename       = textBox_Text(function(_n) /*=>*/ { 
 		if(renaming == noone) return;
 		
-		     if(is_real(renaming))  inputs[renaming].setName(_n);
-		else if(is(renaming, Node)) renaming.setDisplayName(_n, false) 
+		     if(is_real(renaming))  inputs[renaming].setName( _n, true  );
+		else if(is(renaming, Node)) renaming.setDisplayName(  _n, false ) 
 		
 		renaming       = noone;
 		renaming_index = noone;

@@ -15,16 +15,14 @@ function Node_Atlas_Get(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	static processData = function(_outData, _data, _array_index = 0) {
 		var atl = _data[0];
-		
 		if(!is(atl, Atlas)) return _outData;
-
+		
 		_outData[0] = atl.getSurface();
 		_outData[1] = [ atl.x, atl.y ];
 		_outData[2] = atl.rotation;
 		_outData[3] = [ atl.sx, atl.sy ];
 		_outData[4] = atl.blend;
 		_outData[5] = atl.alpha;
-		
 		return _outData;
 	}
 	

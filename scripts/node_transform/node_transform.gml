@@ -820,7 +820,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	}
 	
 	static processData = function(_outData, _data, _array_index) {
-		var surf = _data[0];
+		var surf      = _data[ 0];
 		
 		var out_type  = _data[ 9];
 		var dim		  = _data[ 1];
@@ -837,14 +837,14 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var echo_amo  = _data[13];
 		var alp       = _data[14];
 		
-		var _outSurf  = _outData[0];
-		
 		var cDep = attrDepth();
 		
 		var  ww = surface_get_width_safe(surf);
 		var  hh = surface_get_height_safe(surf);
 		var _ww = ww;
 		var _hh = hh;
+		
+		var _outSurf  = _outData[0];
 		
 		if(!is_surface(surf)) {
 			surface_free_safe(_outSurf);
@@ -890,9 +890,8 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				break;
 		}
 		
-		_outData[1] = [ ww, hh ];
-		
-		if(_ww <= 0 || _hh <= 0) return _outData;
+		if(_ww <= 1 || _hh <= 1) return _outData;
+		_outData[1] = [ _ww, _hh ];
 		
 		_outSurf = surface_verify(_outSurf, _ww, _hh, cDep);
 		_outData[0] = _outSurf;
@@ -962,12 +961,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		}
 		
-		prev_data[_array_index] = [
-			[ draw_x, draw_y ],
-			rot,
-			[ sca[0], sca[1] ],
-		];
-		
+		prev_data[_array_index] = [ [ draw_x, draw_y ], rot, [ sca[0], sca[1] ] ];
 		_outData[2] = new SurfaceAtlas(surf, pos[0], pos[1], rot, sca[0], sca[1]);
 		
 		return _outData;

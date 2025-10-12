@@ -363,7 +363,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static getName = function() /*=>*/ {return name_custom? name : __txt_junction_name(instanceof(node), connect_type, lIndex, name)};
 	
-	static setName = function(_name) /*=>*/ { name = _name; return self; }
+	static setName = function(_name, _custom = false) /*=>*/ { name = _name; name_custom = name_custom || _custom; return self; }
 	
 	////- VALUE
 	
