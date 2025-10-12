@@ -445,7 +445,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		if(renaming == noone) return;
 		
 		     if(is_real(renaming))  inputs[renaming].setName( _n, true  );
-		else if(is(renaming, Node)) renaming.setDisplayName(  _n, false ) 
+		else if(is(renaming, Node)) renaming.setDisplayName(  _n, false );
 		
 		renaming       = noone;
 		renaming_index = noone;

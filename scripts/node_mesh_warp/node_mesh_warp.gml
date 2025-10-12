@@ -130,7 +130,7 @@ function MeshedLink(_p0, _p1, _k = 1) constructor {
 	static draw = function(_x, _y, _s) {
 		INLINE
 		
-		draw_set_color(COLORS._main_accent);
+		draw_set_color(COLORS._main_icon);
 		draw_line(_x + p0.x * _s, _y + p0.y * _s, _x + p1.x * _s, _y + p1.y * _s);
 	}
 	
@@ -162,17 +162,10 @@ function MeshedTriangle(_p0, _p1, _p2) constructor {
 		p2.mapTexture(surface_get_width_safe(surf), surface_get_height_safe(surf));	
 	}
 	
-	static drawSurface = function(surf) {
-		INLINE
-		
-		draw_set_color(c_white);
-		draw_set_alpha(1);
-		
-		draw_primitive_begin_texture(pr_trianglelist, surface_get_texture(surf));
+	static drawSurface = function() {
 		draw_vertex_texture(p0.x, p0.y, p0.u, p0.v);
 		draw_vertex_texture(p1.x, p1.y, p1.u, p1.v);
 		draw_vertex_texture(p2.x, p2.y, p2.u, p2.v);
-		draw_primitive_end();
 	}
 	
 	static drawPoints = function(_x, _y, _s) {
@@ -282,9 +275,13 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	#endregion
 	
 	setTrigger(1, "Generate", [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() /*=>*/ {return Mesh_build()});
-	will_triangluate   = false;
+	will_tri = false;
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+		__x = _x;
+		__y = _y;
+		__s = _s;
+		
 		var mx = (_mx - _x) / _s;
 		var my = (_my - _y) / _s;
 		var hovering = false;
@@ -382,12 +379,9 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			}
 		}
 		
-		for(var i = 0; i < array_length(mesh_data.links); i++)
-			mesh_data.links[i].draw(_x, _y, _s);
+		array_foreach(mesh_data.links, function(m) /*=>*/ {return m.draw(__x, __y, __s)});
+		array_foreach(mesh_data.tris,  function(m) /*=>*/ {return m.drawPoints(__x, __y, __s)});
 			
-		for(var i = 0; i < array_length(mesh_data.tris); i++)
-			mesh_data.tris[i].drawPoints(_x, _y, _s);
-		
 		var _hover = -1;
 		for(var i = control_index; i < array_length(inputs); i++) {
 			var hv = InputDrawOverlay(inputs[i].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
@@ -445,10 +439,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	////- Mesh
 	
-	static reset = function() {
-		for(var i = 0; i < array_length(mesh_data.tris); i++)
-			mesh_data.tris[i].reset(mesh_data);
-	}
+	static reset = function() { array_foreach(mesh_data.tris, function(t) /*=>*/ {return t.reset(mesh_data)}); }
 	
 	static Mesh_build_RegularTri = function(surf) {
 		if(is_array(surf)) surf = array_safe_get_fast(surf, 0);
@@ -466,7 +457,8 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		var gw   = ww / sample;
 		var gh   = hh / sample;
-		var cont = noone;
+		var cont = undefined;
+		var samp = undefined;
 		
 		if(!fullmh) { // alpha filter
 			cont = surface_create_valid(ww, hh);
@@ -481,6 +473,8 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				draw_surface_safe(surf);
 				shader_reset();
 			surface_reset_target();
+			
+			samp = new Surface_Sampler_Grey(surf);
 		}
 		
 		var _sam = sample + 1;
@@ -494,21 +488,22 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			if(fullmh) {
 				fill = true;
+				
 			} else {
 				var _i = i * gh;
 				var _j = j * gw;
 				
-				fill = fill || surface_get_pixel(cont, _j - 1, _i - 1);
-				fill = fill || surface_get_pixel(cont, _j - 1, _i);
-				fill = fill || surface_get_pixel(cont, _j - 1, _i + 1);
+				fill = fill || samp.getPixelDirectClamp(_j - 1, _i - 1);
+				fill = fill || samp.getPixelDirectClamp(_j - 1, _i    );
+				fill = fill || samp.getPixelDirectClamp(_j - 1, _i + 1);
 				
-				fill = fill || surface_get_pixel(cont, _j, _i - 1);
-				fill = fill || surface_get_pixel(cont, _j, _i);
-				fill = fill || surface_get_pixel(cont, _j, _i + 1);
+				fill = fill || samp.getPixelDirectClamp(_j,     _i - 1);
+				fill = fill || samp.getPixelDirectClamp(_j,     _i    );
+				fill = fill || samp.getPixelDirectClamp(_j,     _i + 1);
 				
-				fill = fill || surface_get_pixel(cont, _j + 1, _i - 1);
-				fill = fill || surface_get_pixel(cont, _j + 1, _i);
-				fill = fill || surface_get_pixel(cont, _j + 1, _i + 1);
+				fill = fill || samp.getPixelDirectClamp(_j + 1, _i - 1);
+				fill = fill || samp.getPixelDirectClamp(_j + 1, _i    );
+				fill = fill || samp.getPixelDirectClamp(_j + 1, _i + 1);
 			}
 			
 			if(!fill) continue;
@@ -545,7 +540,12 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			}
 		}
 		
-		if(is_surface(cont)) surface_free(cont);
+		mesh_data.points = array_filter(mesh_data.points, function(p) /*=>*/ {return p != 0});
+		
+		if(is_surface(cont)) {
+			surface_free(cont);
+			samp.free();
+		}
 	}
 	
 	static Mesh_build_Triangulate = function(surf) {
@@ -620,6 +620,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			mesh_data.points[_i] = new MeshedPoint(_i, _p[i][0], _p[i][1]); _i++;
 		}
 		
+		mesh_data.points = array_filter(mesh_data.points, function(p) /*=>*/ {return p != 0});
 		var _t = delaunay_triangulation_c(mesh_data.points, _m);
 		
 		for( var i = 0, n = array_length(_t); i < n; i++ ) {
@@ -666,38 +667,6 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 	}
 	
-	static control_affectPoint = function(c, p) {
-		var mode = c[PUPPET_CONTROL.mode];
-		var cx   = c[PUPPET_CONTROL.cx];
-		var cy   = c[PUPPET_CONTROL.cy];
-		var fx   = c[PUPPET_CONTROL.fx];
-		var fy   = c[PUPPET_CONTROL.fy];
-		var cw   = c[PUPPET_CONTROL.width];
-		var ch   = c[PUPPET_CONTROL.height];
-		
-		switch(mode) {
-			case PUPPET_FORCE_MODE.move:
-				var dis = point_distance(cx, cy, p.x, p.y);
-				var inf = clamp(1 - dis / cw, 0, 1);
-				inf = ease_cubic_inout(inf);
-				
-				p.planMove(fx * inf, fy * inf);
-				break;
-			case PUPPET_FORCE_MODE.wind:
-				var lx0 = cx + lengthdir_x(1000, fy);
-				var ly0 = cy + lengthdir_y(1000, fy);
-				var lx1 = cx - lengthdir_x(1000, fy);
-				var ly1 = cy - lengthdir_y(1000, fy);
-				
-				var dist = distance_to_line(p.x, p.y, lx0, ly0, lx1, ly1);
-				var inf = clamp(1 - dist / cw, 0, 1);
-				inf = ease_cubic_inout(inf);
-				
-				p.planMove(lengthdir_x(fx * inf, fy), lengthdir_y(fx * inf, fy));
-				break;
-		}
-	}
-	
 	static control = function() {
 		var lStr = getInputData(6);
 		
@@ -705,19 +674,35 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var c = getInputData(i);
 			
 			for( var j = 0, m = array_length(mesh_data.points); j < m; j++ ) {
-				if(mesh_data.points[j] == 0) continue;
-				control_affectPoint(c, mesh_data.points[j]);
+				var p = mesh_data.points[j];
+				
+				switch(c[PUPPET_CONTROL.mode]) {
+					case PUPPET_FORCE_MODE.move:
+						var dis = point_distance(c[PUPPET_CONTROL.cx], c[PUPPET_CONTROL.cy], p.x, p.y);
+						var inf = ease_cubic_inout(clamp(1 - dis / c[PUPPET_CONTROL.width], 0, 1));
+						
+						p.planMove(c[PUPPET_CONTROL.fx] * inf, c[PUPPET_CONTROL.fy] * inf);
+						break;
+						
+					case PUPPET_FORCE_MODE.wind:
+						var fy  = c[PUPPET_CONTROL.fy];
+						var dis = abs(distance_to_line_angle_signed(p.x, p.y, c[PUPPET_CONTROL.cx], c[PUPPET_CONTROL.cy], fy));
+						var inf = ease_cubic_inout(clamp(1 - dis / c[PUPPET_CONTROL.width], 0, 1));
+						
+						p.planMove(lengthdir_x(c[PUPPET_CONTROL.fx] * inf, fy), lengthdir_y(c[PUPPET_CONTROL.fx] * inf, fy));
+						break;
+				}
 			}
 		}
 		
+		if(array_length(mesh_data.controls))
 		for( var i = 0, n = array_length(mesh_data.points); i < n; i++ ) {
-			var _p = mesh_data.points[i]; if(_p == 0) continue;
+			var _p  = mesh_data.points[i]; 
 			var _dx = 0;
 			var _dy = 0;
 			
 			for( var j = 0, m = array_length(mesh_data.controls); j < m; j++ ) {
 				var _c = mesh_data.controls[j];
-				
 				_dx += _c[PUPPET_CONTROL.fx] * _p.controlWeights[j];
 				_dy += _c[PUPPET_CONTROL.fy] * _p.controlWeights[j];
 			}
@@ -725,26 +710,20 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			_p.planMove(_dx, _dy);
 		}
 		
-		var it    = attributes.iteration;
-		var _rat  = 1 / it;
+		var it = attributes.iteration;
+		var rt = 1 / it;
 		
 		repeat(it) {
-			for( var j = 0; j < array_length(mesh_data.points); j++ ) {
-				if(mesh_data.points[j] == 0) continue;
-				mesh_data.points[j].stepMove(_rat);
-			}
+			for( var i = 0, n = array_length(mesh_data.points); i < n; i++ )
+				mesh_data.points[i].stepMove(rt);
 			
 			if(lStr > 0)
-			repeat(it) {
-				for(var i = 0; i < array_length(mesh_data.links); i++)
-					mesh_data.links[i].resolve(lStr);
-			}
+			for(var i = 0, n = array_length(mesh_data.links); i < n; i++)
+				mesh_data.links[i].resolve(lStr);
 		}
 		
-		for( var j = 0; j < array_length(mesh_data.points); j++ ) {
-			if(mesh_data.points[j] == 0) continue;
-			mesh_data.points[j].clearMove();
-		}
+		for( var i = 0, n = array_length(mesh_data.points); i < n; i++ )
+			mesh_data.points[i].clearMove();
 	}
 	
 	////- Update
@@ -769,19 +748,17 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	}
 	
 	static processData = function(_outData, _data, _array_index) {
-		if(will_triangluate) {
-			Mesh_build(false);
-			will_triangluate = false;
-		}
+		if(will_tri) { Mesh_build(false); will_tri = false; }
 		
 		var _outSurf = _outData[0];
 		var _inSurf  = _data[0];
+		_outData[1]  = mesh_data;
 		
 		mesh_data.surface = inputs_data[0];
-		if(!is_surface(_inSurf)) return [ _outSurf, mesh_data ];
+		if(!is_surface(_inSurf)) return _outData;
 		
 		mesh_data.controls = [];
-		for(var i = control_index; i < array_length(inputs); i++) {
+		for(var i = control_index, n = array_length(inputs); i < n; i++) {
 			var c = getInputData(i);
 			
 			if(c[0] == PUPPET_FORCE_MODE.puppet)
@@ -794,28 +771,41 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _sw  = surface_get_width_safe(_inSurf);
 		var _sh  = surface_get_height_safe(_inSurf);
 		_outSurf = surface_verify(_outSurf, _sw, _sh, attrDepth());
+		_outData[0] = _outSurf;
 		
 		surface_set_shader(_outSurf);
 		shader_set_interpolation(_outSurf);
 		
-			if(array_length(mesh_data.tris) == 0) {
+			if(array_empty(mesh_data.tris))
 				draw_surface_safe(_inSurf);
-			} else {
-				for(var i = 0; i < array_length(mesh_data.tris); i++)
-					mesh_data.tris[i].drawSurface(_inSurf);
+			else {
+				var _tex = surface_get_texture(_inSurf);
+				draw_set_color_alpha(c_white, 1);
+				draw_primitive_begin_texture(pr_trianglelist, _tex);
+				
+				for( var i = 0, n = array_length(mesh_data.tris); i < n; i++ ) {
+					var _t = mesh_data.tris[i];
+					
+					draw_vertex_texture(_t.p0.x, _t.p0.y, _t.p0.u, _t.p0.v);
+					draw_vertex_texture(_t.p1.x, _t.p1.y, _t.p1.u, _t.p1.v);
+					draw_vertex_texture(_t.p2.x, _t.p2.y, _t.p2.u, _t.p2.v);
+					
+					if(i && i % 64 == 0) {
+						draw_primitive_end();
+						draw_primitive_begin_texture(pr_trianglelist, _tex);
+					}
+				}
+				
+				draw_primitive_end();
 			}
-		
+			
 		surface_reset_shader();	
 		
 		var _tris = array_length(mesh_data.tris), _t;
 		mesh_data.triangles = array_verify(mesh_data.triangles, _tris);
+		array_foreach(mesh_data.tris, function(t, i) /*=>*/ { mesh_data.triangles[i] = [ t.p0.index, t.p1.index, t.p2.index ]; })
 		
-		for(var i = 0; i < _tris; i++) {
-			_t = mesh_data.tris[i];
-			mesh_data.triangles[i] = [ _t.p0.index, _t.p1.index, _t.p2.index ];
-		}
-		
-		return [ _outSurf, mesh_data ];
+		return _outData;
 	}
 	
 	////- Serialize
@@ -854,6 +844,6 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	}
 	
 	static postLoad = function() {
-		will_triangluate = true;
+		will_tri = true;
 	}
 }

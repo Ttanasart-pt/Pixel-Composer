@@ -62,10 +62,13 @@ function point_closer(_p, _dist, _px, _py, _x0, _y0, _x1, _y1) {
 }
 
 function distance_to_line_angle_signed(px, py, lx, ly, aa) { 
-	var x0 = lx - lengthdir_x(.5, aa);
-	var y0 = ly - lengthdir_y(.5, aa);
-	var x1 = lx + lengthdir_x(.5, aa);
-	var y1 = ly + lengthdir_y(.5, aa);
+	var dx = lengthdir_x(.5, aa);
+	var dy = lengthdir_y(.5, aa);
+	
+	var x0 = lx - dx;
+	var y0 = ly - dy;
+	var x1 = lx + dx;
+	var y1 = ly + dy;
 	
 	return (x1 - x0) * (y0 - py) - (x0 - px) * (y1 - y0);
 }

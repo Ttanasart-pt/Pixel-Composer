@@ -53,13 +53,15 @@ function Surface_Sampler_Grey(s = noone, _rng = [0,1]) constructor {
     
     sw = 1;
     sh = 1;
+    size = 0;
         
     static setSurface = function(s) {
         active  = is_surface(s);
         if(!active) return;
         
-        sw = surface_get_width(s);
-        sh = surface_get_height(s);
+        sw   = surface_get_width(s);
+        sh   = surface_get_height(s);
+        size = sw * sh * 2;
         
         surfaceBase = s;
         surface     = surface_verify(surface, sw, sh, surface_r16float);
@@ -74,14 +76,16 @@ function Surface_Sampler_Grey(s = noone, _rng = [0,1]) constructor {
             draw_surface(s,0,0);
         surface_reset_shader();
         
-        buffer = buffer_verify(buffer, sw * sh * 2, buffer_fixed, 2);
+        buffer = buffer_verify(buffer, size, buffer_fixed, 2);
         buffer_get_surface(buffer, surface, 0);
         
+        size -= 2;
     }
     
     setSurface(s);
     
-    static getPixelDirect = function(_x,_y) /*=>*/ { return buffer_read_at(buffer, (_y * sw + _x) * 2, buffer_f16); }
+    static getPixelDirect      = function(_x,_y) /*=>*/ { return buffer_read_at(buffer, (_y * sw + _x) * 2, buffer_f16); }
+    static getPixelDirectClamp = function(_x,_y) /*=>*/ { return buffer_read_at(buffer, clamp((_y * sw + _x) * 2, 0, size), buffer_f16); }
     
     static getPixel = function(_u,_v) /*=>*/ {
         if(!active) return range[0];

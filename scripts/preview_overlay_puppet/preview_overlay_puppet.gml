@@ -23,7 +23,7 @@ function preview_overlay_puppet(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 			draw_circle_prec(_ax, _ay, __wd * _s, true);
 			
 			draw_sprite_colored(THEME.anchor_selector, 0, _ax, _ay);
-			draw_sprite_colored(THEME.anchor_selector, 2, _ax1, _ay1);
+			draw_anchor(0, _ax1, _ay1,, 2);
 			
 			if(point_in_circle(_mx, _my, _ax + __wd * _s, _ay, ui(8))) {
 				hover = 3;
@@ -49,19 +49,13 @@ function preview_overlay_puppet(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 			var _l0y = _ay + lengthdir_y(rad, dir + 90);
 			var _l1x = _ax + lengthdir_x(rad, dir - 90);
 			var _l1y = _ay + lengthdir_y(rad, dir - 90);
-								
-			var _l0x0 = _l0x + lengthdir_x(1000, dir);
-			var _l0y0 = _l0y + lengthdir_y(1000, dir);
-			var _l0x1 = _l0x + lengthdir_x(1000, dir + 180);
-			var _l0y1 = _l0y + lengthdir_y(1000, dir + 180);
-								
-			var _l1x0 = _l1x + lengthdir_x(1000, dir);
-			var _l1y0 = _l1y + lengthdir_y(1000, dir);
-			var _l1x1 = _l1x + lengthdir_x(1000, dir + 180);
-			var _l1y1 = _l1y + lengthdir_y(1000, dir + 180);
+				
+			var dx = lengthdir_x(1000, dir);
+			var dy = lengthdir_y(1000, dir);
 			
-			draw_line(_l0x0, _l0y0, _l0x1, _l0y1);
-			draw_line(_l1x0, _l1y0, _l1x1, _l1y1);
+			draw_line_dashed(_ax + dx, _ay + dy, _ax - dx, _ay - dy);
+			draw_line(_l0x + dx, _l0y + dy, _l0x - dx, _l0y - dy);
+			draw_line(_l1x + dx, _l1y + dy, _l1x - dx, _l1y - dy);
 			draw_sprite_colored(THEME.anchor_selector, 0, _ax, _ay);
 			
 			if(point_in_circle(_mx, _my, _l0x, _l0y, ui(8))) {
@@ -107,62 +101,47 @@ function preview_overlay_puppet(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 			draw_line_width2(_ax, _ay, _ax1, _ay1, 6, 1);
 			
 			draw_sprite_colored(THEME.anchor_selector, 0, _ax, _ay);
-			draw_sprite_colored(THEME.anchor_selector, 2, _ax1, _ay1);
+			draw_anchor(0, _ax1, _ay1,, 2);
 			break;
 	}
+		
+	var _rnd = key_mod_press(CTRL);
 						
 	if(drag_type == 1) {
 		draw_sprite_colored(THEME.anchor_selector, 1, _ax, _ay);
 		var _nx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
 		var _ny = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
-							
-		if(key_mod_press(CTRL)) {
-			_val[PUPPET_CONTROL.cx] = round(_nx);
-			_val[PUPPET_CONTROL.cy] = round(_ny);
-		} else {
-			_val[PUPPET_CONTROL.cx] = _nx;
-			_val[PUPPET_CONTROL.cy] = _ny;
-		}
+		
+		_val[PUPPET_CONTROL.cx] = _rnd? round(_nx) : _nx;
+		_val[PUPPET_CONTROL.cy] = _rnd? round(_ny) : _ny;
+			
 	} else if(drag_type == 2) {
-		draw_sprite_colored(THEME.anchor_selector, 0, _ax1, _ay1);
+		draw_anchor(0, _ax1, _ay1, ui(12), 2);
 		var _nx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
 		var _ny = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
-							
-		if(key_mod_press(CTRL)) {
-			_val[PUPPET_CONTROL.fx] = round(_nx);
-			_val[PUPPET_CONTROL.fy] = round(_ny);
-		} else {
-			_val[PUPPET_CONTROL.fx] = _nx;
-			_val[PUPPET_CONTROL.fy] = _ny;
-		}
+		
+		_val[PUPPET_CONTROL.fx] = _rnd? round(_nx) : _nx;
+		_val[PUPPET_CONTROL.fy] = _rnd? round(_ny) : _ny;
+		
 	} else if(drag_type == 3) {
 		var _nx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
 			
-		if(key_mod_press(CTRL))
-			_val[PUPPET_CONTROL.width] = round(_nx);
-		else
-			_val[PUPPET_CONTROL.width] = _nx;
+		_val[PUPPET_CONTROL.width] = _rnd? round(_nx) : _nx;
+			
 	} else if(drag_type == 4) {
 		var _nx = value_snap(point_distance(_mx, _my, drag_sx, drag_sy) / _s, _snx);
 			
-		if(key_mod_press(CTRL))
-			_val[PUPPET_CONTROL.width] = round(_nx);
-		else
-			_val[PUPPET_CONTROL.width] = _nx;
+		_val[PUPPET_CONTROL.width] = _rnd? round(_nx) : _nx;
+			
 	} else if(drag_type == 5) {
 		var _nx = value_snap(point_distance(_mx, _my, drag_sx, drag_sy) / _s, _snx);
 			
-		if(key_mod_press(CTRL))
-			_val[PUPPET_CONTROL.fx] = round(_nx);
-		else
-			_val[PUPPET_CONTROL.fx] = _nx;
+		_val[PUPPET_CONTROL.fx] = _rnd? round(_nx) : _nx;
+			
 	} else if(drag_type == 6) {
 		var _nx = point_direction(drag_sx, drag_sy, _mx, _my) - 45;
 			
-		if(key_mod_press(CTRL))
-			_val[PUPPET_CONTROL.fy] = round(_nx);
-		else
-			_val[PUPPET_CONTROL.fy] = _nx;
+		_val[PUPPET_CONTROL.fy] = _rnd? round(_nx) : _nx;
 	}
 	
 	if(drag_type > 0) {
@@ -192,7 +171,7 @@ function preview_overlay_puppet(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 	if(interact && active && (_mode == PUPPET_FORCE_MODE.move || _mode == PUPPET_FORCE_MODE.puppet) && point_in_circle(_mx, _my, _ax1, _ay1, ui(8))) {
 		
 		hover = 2;
-		draw_sprite_colored(THEME.anchor_selector, 0, _ax1, _ay1);
+		draw_anchor(0, _ax1, _ay1, ui(12), 2);
 		if(mouse_press(mb_left, active)) {
 			drag_type = 2;
 			drag_mx   = _mx;
