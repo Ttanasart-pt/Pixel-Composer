@@ -34,13 +34,12 @@ function Node_Blur_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, _params));
-		
 		return w_hovering;
 	}
 	
 	static getTool = function() { 
 		var _path = getInputData(1);
-		return is_instanceof(_path, Node)? _path : self; 
+		return is(_path, Node)? _path : self; 
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
