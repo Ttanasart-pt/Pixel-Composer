@@ -154,11 +154,14 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 			if(inputs[i].value_from == noone) continue;
 			
+			var _fromT = inputs[i].value_from.type;
+			inputs[i].type = _fromT;
+			
 			if(_set) {
-				_setT = inputs[i].value_from.type;
+				_setT = _fromT;
 				_set  = false;
 				
-			} else if(_setT != inputs[i].value_from.type)
+			} else if(_setT != _fromT)
 				_setT = VALUE_TYPE.any;
 		}
 		

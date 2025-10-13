@@ -360,7 +360,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var hovering = false;
 		for(var i = custom_input_index; i < array_length(inputs); i++) {
 			var _in = inputs[i];
-			var _hv = _in.from.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+			var _hv = _in.from.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params);
 			if(_hv != undefined) {
 				active   = active && !_hv;
 				hovering = hovering || _hv;
@@ -645,24 +645,21 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 }
 
 #region Actions
-	
 	function groupNodes(nodeArray, _group = noone, record = true, check_connect = true) {
 		#region check inline
 			var _ctx_nodes = [];
-		
-			for(var i = 0; i < array_length(nodeArray); i++) { 
-				var node = nodeArray[i];
-				var ctx  = node.inline_context;
+			for(var i = 0, n = array_length(nodeArray); i < n; i++)
+				if(nodeArray[i].inline_context != noone) array_push(_ctx_nodes, nodeArray[i].inline_context);
+			_ctx_nodes = array_unique(_ctx_nodes);
 			
-				if(ctx == noone) continue;
-				array_push_unique(_ctx_nodes, ctx);
+			for( var i = 0, n = array_length(_ctx_nodes); i < n; i++ ) {
+				var ictx = _ctx_nodes[i];
+				var intx = array_intersection(nodeArray, ictx.nodes);
+				if(array_length(intx) == array_length(ictx.nodes)) continue;
 				
-				for( var k = 0, n = array_length(ctx.nodes); k < n; k++ ) {
-					if(array_exists(nodeArray, ctx.nodes[k])) continue;
-					noti_warning("Grouping incomplete inline group is not allowed.");
-					return;
-				}
-			} 
+				noti_warning("Grouping incomplete inline group is not allowed.");
+				return;
+			}
 		#endregion
 		
 		UNDO_HOLDING = true;
@@ -839,5 +836,4 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			});
 		}
 	}
-
 #endregion

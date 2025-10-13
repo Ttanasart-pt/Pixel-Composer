@@ -2,14 +2,9 @@ function Node_Array_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	name = "Array Get";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue("Array", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0))
-		.setVisible(true, true);
-	
-	newInput(1, nodeValue_Int("Index", 0))
-		.setVisible(true, true);
-	
-	newInput(2, nodeValue_Enum_Scroll("Overflow", 0, [ "Clamp", "Loop", "Ping Pong" ]))
-		.rejectArray();
+	newInput(0, nodeValue_Any(     "Array",    0 )).setVisible(true, true);
+	newInput(1, nodeValue_Int(     "Index",    0 ));
+	newInput(2, nodeValue_EScroll( "Overflow", 0, [ "Clamp", "Loop", "Ping Pong" ] )).rejectArray();
 	
 	newOutput(0, nodeValue_Output("Value", VALUE_TYPE.any, 0));
 	
@@ -64,14 +59,27 @@ function Node_Array_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
+		var type = outputs[0].type;
+		var show = true;
 		
-		if(outputs[0].type == VALUE_TYPE.color) {
+		if(type == VALUE_TYPE.color) {
 			var pal = outputs[0].getValue();
 			if(is_array(pal)) drawPaletteBBOX(pal, bbox);
 			else              drawColorBBOX(pal, bbox);
+			show = false;
+			
+		} else if(type == VALUE_TYPE.surface) {
+			show = false;
 		}
 		
-		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
-		draw_text_bbox(bbox, string(getInputData(1)));
+		if(show) {
+			draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
+			draw_text_bbox(bbox, string(getInputData(1)));
+			
+		} else {
+			draw_set_text(f_sdf, fa_left, fa_bottom, COLORS._main_text_sub);
+			draw_text_add(bbox.x0 + 6 * _s, bbox.y1, string(getInputData(1)), .25 * _s);
+		}
+		
 	}
 }
