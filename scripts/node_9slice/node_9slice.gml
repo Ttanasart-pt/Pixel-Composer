@@ -14,7 +14,8 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(2, nodeValue_Padding(     "Splice",       [0,0,0,0] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
 	newInput(3, nodeValue_Enum_Scroll( "Filling modes", 0, [ "Scale", "Repeat" ] ));
 	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface,     noone ));
+	newOutput(1, nodeValue_Output("DynaSurf",    VALUE_TYPE.dynaSurface, noone ));
 	
 	attribute_surface_depth();
 	attribute_interpolation();
@@ -23,6 +24,8 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		["Surface", false], 0, 
 		["Slices",  false], 1, 2, 3, 
 	]
+	
+	////- Node
 	
 	drag_side = -1;
 	drag_mx   = 0;
@@ -144,81 +147,133 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 	}
 	
-	static processData = function(_outSurf, _data, _array_index) {
-		var _inSurf		= _data[0];
-		var _dim		= _data[1];
-		var _splice		= _data[2];
-		var _fill		= _data[3];
+	static processData = function(_outData, _data, _array_index) {
+		var _inSurf	= _data[0];
+		var _dim	= _data[1];
+		var _splice	= _data[2];
+		var _fill	= _data[3];
 		
-		if(!surface_exists(_inSurf)) return;
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
+		if(!surface_exists(_inSurf)) return _outData;
+		var _outSurf = surface_verify(_outData[0], _dim[0], _dim[1], attrDepth());
+		_outData[0]  = _outSurf;
+		_outData[1]  = new nineSliceSurf(_inSurf, _splice, _fill);
+		
+		var ww   = _dim[0];
+		var hh   = _dim[1];
+		var in_w = surface_get_width_safe(_inSurf);
+		var in_h = surface_get_height_safe(_inSurf);
 		
 		surface_set_shader(_outSurf);
 		shader_set_interpolation(_inSurf);
-			var ww   = _dim[0];
-			var hh   = _dim[1];
-			var in_w = surface_get_width_safe(_inSurf);
-			var in_h = surface_get_height_safe(_inSurf);
-			var sp_r = _splice[0];
-			var sp_t = _splice[1];
-			var sp_l = _splice[2];
-			var sp_b = _splice[3];
-			
-			var cw = max(in_w - sp_l - sp_r, 1);
-			var ch = max(in_h - sp_t - sp_b, 1);
-			
-			var sw = (ww - sp_l - sp_r) / cw;
-			var sh = (hh - sp_t - sp_b) / ch;
-
-			draw_surface_part_ext_safe(_inSurf,           0,           0, sp_l, sp_t,         0,         0, 1, 1, 0, c_white, 1);
-			draw_surface_part_ext_safe(_inSurf, in_w - sp_r,           0, sp_r, sp_t, ww - sp_r,         0, 1, 1, 0, c_white, 1);
-			draw_surface_part_ext_safe(_inSurf,           0, in_h - sp_b, sp_l, sp_b,         0, hh - sp_b, 1, 1, 0, c_white, 1);
-			draw_surface_part_ext_safe(_inSurf, in_w - sp_r, in_h - sp_b, sp_r, sp_b, ww - sp_r, hh - sp_b, 1, 1, 0, c_white, 1);
-			
-			if(_fill == 0) {
-				draw_surface_part_ext_safe(_inSurf, sp_l,           0, cw, sp_t, sp_l,         0, sw, 1, 0, c_white, 1);
-				draw_surface_part_ext_safe(_inSurf, sp_l, in_h - sp_b, cw, sp_b, sp_l, hh - sp_b, sw, 1, 0, c_white, 1);
-	
-				draw_surface_part_ext_safe(_inSurf,           0, sp_t, sp_l, ch,         0, sp_t, 1, sh, 0, c_white, 1);
-				draw_surface_part_ext_safe(_inSurf, in_w - sp_r, sp_t, sp_r, ch, ww - sp_r, sp_t, 1, sh, 0, c_white, 1);
-    
-				draw_surface_part_ext_safe(_inSurf, sp_l, sp_t, cw, ch, sp_l, sp_t, sw, sh, 0, c_white, 1);
-			} else if(_fill == 1) {
-				var _cw_max = ww - sp_r;
-				var _ch_max = hh - sp_b;
-				
-				var _x = sp_l;
-				while(_x < _cw_max) {
-					draw_surface_part_ext_safe(_inSurf, sp_l,           0, min(cw, _cw_max - _x), sp_t, _x,         0, 1, 1, 0, c_white, 1);
-					draw_surface_part_ext_safe(_inSurf, sp_l, in_h - sp_b, min(cw, _cw_max - _x), sp_b, _x, hh - sp_b, 1, 1, 0, c_white, 1);
-					_x += cw;
-				}
-				
-				var _y = sp_t;
-				while(_y < _ch_max) {
-					draw_surface_part_ext_safe(_inSurf,           0, sp_t, sp_l, min(ch, _ch_max - _y),         0, _y, 1, 1, 0, c_white, 1);
-					draw_surface_part_ext_safe(_inSurf, in_w - sp_r, sp_t, sp_r, min(ch, _ch_max - _y), ww - sp_r, _y, 1, 1, 0, c_white, 1);
-					_y += ch;
-				}
-				
-				_x = sp_l;
-				_y = sp_t;
-				while(_x < _cw_max) {
-					_y = sp_t;
-					while(_y < _ch_max) {
-						draw_surface_part_ext_safe(_inSurf, sp_l, sp_t, min(cw, _cw_max - _x), min(ch, _ch_max - _y), _x, _y, 1, 1, 0, c_white, 1);
-						_y += ch;
-					}
-					_x += cw;
-				}
-			}
+		_outData[1].draw(0, 0, ww / in_w, hh / in_h);
 		surface_reset_shader();
 		
-		return _outSurf;
+		return _outData;
 	}
 
 	static getPreviewValues = function() { 
 		if(isUsingTool("Preview Original")) return inputs[0].getValue();
 		return outputs[0].getValue(); 
 	}
+}
+
+function nineSliceSurf(_surf, _splice, _fill) : dynaSurf() constructor {
+	surfaces = [ _surf, noone ];
+	splice   = _splice;
+	fill     = _fill;
+	surfw    = surface_get_width_safe(_surf);
+	surfh    = surface_get_height_safe(_surf);
+	
+	static getWidth     = function() /*=>*/ {return surfw};
+	static getHeight    = function() /*=>*/ {return surfh};
+	
+	static draw = function(_x = 0, _y = 0, _sx = 1, _sy = 1, _ang = 0, _col = c_white, _alp = 1) {
+		var ww = surfw * _sx;
+		var hh = surfh * _sy;
+		
+		var sp_r = splice[0];
+		var sp_t = splice[1];
+		var sp_l = splice[2];
+		var sp_b = splice[3];
+		
+		var _surf   = surfaces[0];
+		surfaces[1] = surface_verify(surfaces[1], ww, hh);
+		
+		surface_set_target(surfaces[1]);
+			DRAW_CLEAR
+			BLEND_OVERRIDE
+			
+			var cw = max(surfw - sp_l - sp_r, 1);
+			var ch = max(surfh - sp_t - sp_b, 1);
+			
+			var sw = (ww - sp_l - sp_r) / cw;
+			var sh = (hh - sp_t - sp_b) / ch;
+	
+			draw_surface_part_ext_safe(_surf,            0,            0, sp_l, sp_t,         0,         0, 1, 1, _ang, _col, _alp);
+			draw_surface_part_ext_safe(_surf, surfw - sp_r,            0, sp_r, sp_t, ww - sp_r,         0, 1, 1, _ang, _col, _alp);
+			draw_surface_part_ext_safe(_surf,            0, surfh - sp_b, sp_l, sp_b,         0, hh - sp_b, 1, 1, _ang, _col, _alp);
+			draw_surface_part_ext_safe(_surf, surfw - sp_r, surfh - sp_b, sp_r, sp_b, ww - sp_r, hh - sp_b, 1, 1, _ang, _col, _alp);
+			
+			if(fill == 0) {
+				draw_surface_part_ext_safe(_surf, sp_l,            0, cw, sp_t, sp_l,         0, sw, 1, _ang, _col, _alp);
+				draw_surface_part_ext_safe(_surf, sp_l, surfh - sp_b, cw, sp_b, sp_l, hh - sp_b, sw, 1, _ang, _col, _alp);
+	
+				draw_surface_part_ext_safe(_surf,            0, sp_t, sp_l, ch,         0, sp_t, 1, sh, _ang, _col, _alp);
+				draw_surface_part_ext_safe(_surf, surfw - sp_r, sp_t, sp_r, ch, ww - sp_r, sp_t, 1, sh, _ang, _col, _alp);
+	
+				draw_surface_part_ext_safe(_surf, sp_l, sp_t, cw, ch, sp_l, sp_t, sw, sh, _ang, _col, _alp);
+				
+			} else if(fill == 1) {
+				var _cw_max = ww - sp_r;
+				var _ch_max = hh - sp_b;
+				
+				var _xx = sp_l;
+				var _c = ceil((ww - sp_r - sp_l) / cw);
+				repeat(_c) {
+					var _dx = min(cw, _cw_max - _xx);
+					
+					draw_surface_part_ext_safe(_surf, sp_l,            0, _dx, sp_t, _xx,         0, 1, 1, _ang, _col, _alp);
+					draw_surface_part_ext_safe(_surf, sp_l, surfh - sp_b, _dx, sp_b, _xx, hh - sp_b, 1, 1, _ang, _col, _alp);
+					_xx += cw;
+				}
+				
+				var _yy = sp_t;
+				var _r = ceil((hh - sp_b - sp_t) / ch);
+				repeat(_r) {
+					var _dy = min(ch, _ch_max - _yy);
+					
+					draw_surface_part_ext_safe(_surf,            0, sp_t, sp_l, _dy,         0, _yy, 1, 1, _ang, _col, _alp);
+					draw_surface_part_ext_safe(_surf, surfw - sp_r, sp_t, sp_r, _dy, ww - sp_r, _yy, 1, 1, _ang, _col, _alp);
+					_yy += ch;
+				}
+				
+				_xx = sp_l;
+				_yy = sp_t;
+				
+				repeat(_c) {
+					_yy = sp_t;
+					repeat(_r) {
+						var _dx = min(cw, _cw_max - _xx);
+						var _dy = min(ch, _ch_max - _yy);
+						
+						draw_surface_part_ext_safe(_surf, sp_l, sp_t, _dx, _dy, _xx, _yy, 1, 1, _ang, _col, _alp);
+						_yy += ch;
+					}
+					_xx += cw;
+				}
+			}
+			BLEND_NORMAL
+		surface_reset_target();
+		
+		draw_surface_ext(surfaces[1], _x, _y, 1, 1, _ang, c_white, 1)
+	}
+	
+	static drawTile = function(_x = 0, _y = 0, _xs = 1, _ys = 1, _col = c_white, _alp = 1) {
+		
+	}
+	
+	static drawPart = function(_l, _t, _w, _h, _x, _y, _xs = 1, _ys = 1, _rot = 0, _col = c_white, _alp = 1) {
+		
+	}
+	
 }

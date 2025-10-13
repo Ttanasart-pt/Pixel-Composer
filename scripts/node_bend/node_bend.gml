@@ -67,7 +67,7 @@ function Node_Bend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _dw = _sw / _gw;
 		var _dh = _sh / _gh;
 		
-		var _cach = $"{_typ}_{_axs}_{_amo}_{_sca}_{_shf}";
+		var _cach = $"{_sw}_{_sh}_{_typ}_{_axs}_{_amo}_{_sca}_{_shf}";
 		
 		if(vb == undefined || _cach != vb_cache) {
 			var _minx =  infinity, _miny =  infinity;

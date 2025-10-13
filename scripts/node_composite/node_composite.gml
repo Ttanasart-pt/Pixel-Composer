@@ -1762,7 +1762,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			surface_set_shader(selection_surf, sh_selection_mask, false, BLEND.maximum);
 				shader_set_f("index", i + 1);
-				draw_surface_ext(_s, _d0[0], _d0[1], _sca[0], _sca[1], _rot, c_white, 1);
+				draw_surface_ext_safe(_s, _d0[0], _d0[1], _sca[0], _sca[1], _rot, c_white, 1);
 			surface_reset_shader();
 			
 			_bg = !_bg;
