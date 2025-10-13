@@ -190,20 +190,12 @@ function Panel_Inspector() : PanelContent() constructor {
     drawWidgetInit();
     
     #region ---- Header Tabs ----
-        tb_node_name = new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { if(inspecting) inspecting.setDisplayName(txt); })
-                             .setFont(f_h5)
-                             .setHide(1)
-                             .setAlign(fa_center);
-                             
+        tb_node_name = textBox_Text(function(txt) /*=>*/ { if(inspecting) inspecting.setDisplayName(txt); })
+                             .setFont(f_h5).setHide(1).setAlign(fa_center);
         tb_node_name.format = TEXT_AREA_FORMAT.node_title;
         
-        tb_prop_filter = new textBox(TEXTBOX_INPUT.text, function(txt) /*=>*/ { filter_text = txt; })
-                             .setFont(f_p0)
-                             .setHide(1)
-                             .setAlign(fa_center)
-                             .setColor(COLORS._main_text_sub)
-                             .setEmpty(false)
-                             .setAutoUpdate()
+        tb_prop_filter = textBox_Text(function(txt) /*=>*/ { filter_text = txt; }).setEmpty(false).setAutoUpdate()
+                             .setFont(f_p0).setHide(1).setAlign(fa_center).setColor(COLORS._main_text_sub);
         filter_text = "";
     	
         prop_page   = 0;
@@ -515,6 +507,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 var _att_h    = viewMode == INSP_VIEW_MODE.spacious? hg : line_get_height(font, 8);
                 
                 _att_wid.font = font;
+                _att_wid.register(contentPane);
                 _att_wid.setFocusHover(pFOCUS, pHOVER);
                 
                 if(is(_att_wid, buttonClass)) {
