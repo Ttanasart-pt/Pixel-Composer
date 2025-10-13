@@ -27,12 +27,12 @@ uniform sampler2D strengthSurf;
 
 uniform float iteration;
 
-const float phi = 2.39996323;
-// const float ite = 400.0;
+uniform float contrast;
+uniform float contrastFactor;
+uniform float smooth;
+uniform float rotation;
 
-const float ContrastAmount = 150.0;
-const vec3  ContrastFactor = vec3(9.0);
-const float Smooth = 2.0;
+const float phi = 2.39996323;
 
 void main() {
 	float str = strength.x;
@@ -41,23 +41,26 @@ void main() {
 		str = mix(strength.x, strength.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 	}
 	
-	vec3 num, weight;
+	vec3  confactor = vec3(contrastFactor);
 	
+	vec3 num, weight;
 	float alpha = 0.;
     float rec   = 1.0; // reciprocal 
     vec2  hang  = vec2(0.0, str * 0.01 / sqrt(iteration));
     vec2  asp   = vec2(dimension.y / dimension.x, 1.0);
-	mat2  rot   = mat2( cos(phi), sin(phi), -sin(phi), cos(phi) );
-
+    
+    float ang   = phi * pow(rotation, 8.);
+	mat2  rot   = mat2( cos(ang), sin(ang), -sin(ang), cos(ang) );
+	
 	for (float i; i < iteration; i++) {
-        rec += 1.0 / rec;
+        rec += 1. / rec;
 	    hang = hang * rot;
         
         vec2 off = (rec - 1.0) * hang;
         vec2 suv = v_vTexcoord + asp * off;
 		vec4 sam = sampleTexture(gm_BaseTexture, suv);
         vec3 col = sam.rgb * sam.a;
-		vec3 bok = Smooth + pow(col, ContrastFactor) * ContrastAmount;
+		vec3 bok = smooth + pow(col, confactor) * contrast;
 		
 		num		+= col * bok;
 		alpha	+= sam.a * (bok.r + bok.g + bok.b) / 3.;

@@ -19,6 +19,11 @@ function Node_Blur_Bokeh(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	////- =Blur
 	newInput(1, nodeValue_Float( "Strength", .2   )).setHotkey("S").setMappable(8);
 	newInput(9, nodeValue_Int(   "Iteration", 512 ));
+	
+	newInput(10, nodeValue_Float( "Contrast",      150 ));
+	newInput(11, nodeValue_Float( "Contrast Factor", 9 ));
+	newInput(12, nodeValue_Float( "Smoothness",      2 ));
+	newInput(13, nodeValue_Float( "Rotation",        1 ));
 	// input 10
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -26,6 +31,7 @@ function Node_Blur_Bokeh(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	input_display_list = [ 4, 5, 
 		[ "Surfaces",  true ], 0, 2, 3, 6, 7, 
 		[ "Blur",     false ], 1, 8, 9, 
+		[ "Colors",   false ], 10, 11, 12, 13, 
 	];
 	
 	attribute_surface_depth();
@@ -48,6 +54,11 @@ function Node_Blur_Bokeh(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var _surf = _data[0];
 		var _itr  = _data[9];
 		
+		var _cont = _data[10];
+		var _cfac = _data[11];
+		var _smot = _data[12];
+		var _rota = _data[13];
+		
 		if(!is_surface(_surf)) return _outSurf;
 		
 		var _dim  = surface_get_dimension(_surf);
@@ -57,6 +68,11 @@ function Node_Blur_Bokeh(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			shader_set_f_map( "strength", _data[1], _data[8], inputs[1]);
 			shader_set_2( "dimension", _dim );
 			shader_set_f( "iteration", _itr );
+			
+			shader_set_f( "contrast",       _cont );
+			shader_set_f( "contrastFactor", max(_cfac, 1) );
+			shader_set_f( "smooth",         _smot );
+			shader_set_f( "rotation",       _rota );
 			
 			draw_surface_safe(_surf);
 		surface_reset_shader();
