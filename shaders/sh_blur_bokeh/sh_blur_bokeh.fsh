@@ -1,3 +1,21 @@
+#pragma use(sampler_simple)
+
+#region -- sampler_simple -- [1729740692.1417658]
+    uniform int  sampleMode;
+    
+    vec4 sampleTexture( sampler2D texture, vec2 pos) {
+        if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
+            return texture2D(texture, pos);
+        
+             if(sampleMode <= 1) return vec4(0.);
+        else if(sampleMode == 2) return texture2D(texture, clamp(pos, 0., 1.));
+        else if(sampleMode == 3) return texture2D(texture, fract(pos));
+        else if(sampleMode == 4) return vec4(vec3(0.), 1.);
+        
+        return vec4(0.);
+    }
+#endregion -- sampler_simple --
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -7,44 +25,14 @@ uniform vec2      strength;
 uniform int       strengthUseSurf;
 uniform sampler2D strengthSurf;
 
-const float GoldenAngle = 2.39996323;
-const float Iterations  = 400.0;
+uniform float iteration;
+
+const float phi = 2.39996323;
+// const float ite = 400.0;
 
 const float ContrastAmount = 150.0;
 const vec3  ContrastFactor = vec3(9.0);
 const float Smooth = 2.0;
-
-vec4 bokeh(sampler2D tex, vec2 uv, float radius) {
-	vec3 num, weight;
-	float alpha = 0.;
-    float rec = 1.0; // reciprocal 
-    vec2 horizontalAngle = vec2(0.0, radius * 0.01 / sqrt(Iterations));
-    vec2 aspect = vec2(dimension.y / dimension.x, 1.0);
-    
-	mat2 Rotation = mat2(
-	    cos(GoldenAngle), sin(GoldenAngle),
-	   -sin(GoldenAngle), cos(GoldenAngle)
-	);
-
-	for (float i; i < Iterations; i++) {
-        rec += 1.0 / rec;
-	    horizontalAngle = horizontalAngle * Rotation;
-        
-        vec2 offset	  = (rec - 1.0) * horizontalAngle;
-        vec2 sampleUV = uv + aspect * offset;
-		vec4 sam = texture2D(tex, sampleUV);
-        vec3 col = sam.rgb * sam.a;
-        
-        // increase contrast and smooth
-		vec3 bokeh = Smooth + pow(col, ContrastFactor) * ContrastAmount;
-		
-		num		+= col * bokeh;
-		alpha	+= sam.a * (bokeh.r + bokeh.g + bokeh.b) / 3.;
-		weight	+= bokeh;
-	}
-	
-	return vec4(num / weight, alpha / ((weight.r + weight.g + weight.b) / 3.));
-}
 
 void main() {
 	float str = strength.x;
@@ -53,5 +41,28 @@ void main() {
 		str = mix(strength.x, strength.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 	}
 	
-	gl_FragColor = bokeh(gm_BaseTexture, v_vTexcoord, str);
+	vec3 num, weight;
+	
+	float alpha = 0.;
+    float rec   = 1.0; // reciprocal 
+    vec2  hang  = vec2(0.0, str * 0.01 / sqrt(iteration));
+    vec2  asp   = vec2(dimension.y / dimension.x, 1.0);
+	mat2  rot   = mat2( cos(phi), sin(phi), -sin(phi), cos(phi) );
+
+	for (float i; i < iteration; i++) {
+        rec += 1.0 / rec;
+	    hang = hang * rot;
+        
+        vec2 off = (rec - 1.0) * hang;
+        vec2 suv = v_vTexcoord + asp * off;
+		vec4 sam = sampleTexture(gm_BaseTexture, suv);
+        vec3 col = sam.rgb * sam.a;
+		vec3 bok = Smooth + pow(col, ContrastFactor) * ContrastAmount;
+		
+		num		+= col * bok;
+		alpha	+= sam.a * (bok.r + bok.g + bok.b) / 3.;
+		weight	+= bok;
+	}
+	
+	gl_FragColor = vec4(num / weight, alpha / ((weight.r + weight.g + weight.b) / 3.));
 }

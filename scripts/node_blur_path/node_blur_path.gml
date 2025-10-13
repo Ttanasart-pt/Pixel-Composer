@@ -21,13 +21,15 @@ function Node_Blur_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(10, nodeValue_Curve( "Intensity Along Path", CURVE_DEF_11 ));
 	// input 13
 	
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	
 	input_display_list = [ 5, 6, 
 		["Surfaces", true],	0, 3, 4, 7, 8, 
 		["Path",	false],	1, 12, 11, 
 		["Blur",	false],	2, 9, 10, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	////- Node
 	
 	attribute_surface_depth();
 	attribute_oversample();
@@ -45,7 +47,6 @@ function Node_Blur_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	static processData = function(_outSurf, _data, _array_index) {
 		if(!is_surface(_data[0])) return _outSurf;
 		
-		var _samp = getAttribute("oversample");
 		var _surf = _data[0];
 		var _path = _data[1];
 		var _reso = _data[2];
@@ -80,8 +81,8 @@ function Node_Blur_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 		
 		surface_set_shader(_outSurf, sh_blur_path);
+			shader_set_i("sampleMode", getAttribute("oversample"));
 			shader_set_f("dimension",  _dim);
-			shader_set_i("sampleMode", _samp);
 			
 			shader_set_i("resolution",  _pntc);
 			shader_set_i("pointAmount", _pntc);
