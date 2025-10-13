@@ -166,47 +166,47 @@ uniform int useGradient;
 	
 #endregion //////////////////////////////////// GRADIENT ////////////////////////////////////
 
-float sampleMask() { #region
+float sampleMask() {
 	if(useMask == 0) return 1.;
 	vec4 m = texture2D( mask, v_vTexcoord );
 	return (m.r + m.g + m.b) / 3. * m.a;
-} #endregion
+}
 
-void main() { #region
-	vec4 clr = vec4(0.);
-	float totalWeight = 0.;
-	vec2 texel = 1. / dimension;
+void main() {
 	float realSize = size;
+	vec2  texel    = 1. / dimension;
+	vec4  clr      = vec4(0.);
 	
 	realSize *= sampleMask();
+	clr = sampleTexture( gm_BaseTexture, v_vTexcoord );
 	
-	if(realSize < 1.) {
-		gl_FragColor = sampleTexture( gm_BaseTexture, v_vTexcoord );
-		return;
-	} else if(realSize < 2.)
-		realSize = 1.;
-		
-	float cel      = ceil(realSize);
-	float frac     = fract(realSize);
-	float weiTotal = 0.;
+	float totalWeight = 1.;
+	float weiTotal    = (clr.r + clr.g + clr.b) / 3. * clr.a;
 	
-	for( float i = -cel; i <= cel; i++ )
-	for( float j = -cel; j <= cel; j++ ) {
-		if(abs(i + j) >= cel * 2.) continue;
+	if(realSize > 0.) {
+		// realSize  = max(realSize, 1.);
+		float cel = ceil(realSize);
 		
-		vec4  sam = sampleTexture( gm_BaseTexture, v_vTexcoord + vec2(i, j) * texel );
-		if(gamma == 1) sam.rgb = pow(sam.rgb, vec3(2.2));
+		for( float i = -cel; i <= cel; i++ )
+		for( float j = -cel; j <= cel; j++ ) {
+			if(i == 0. && j == 0.)    continue;
+			if(abs(i + j) > cel * 2.) continue;
+			
+			vec4 sam = sampleTexture( gm_BaseTexture, v_vTexcoord + vec2(i, j) * texel );
+			if(gamma == 1) sam.rgb = pow(sam.rgb, vec3(2.2));
+			
+			float wei = 1. - clamp((abs(i) + abs(j)) / (realSize * 2.), 0., 1.);
+			wei *= clamp(abs(i + j - floor(realSize) * 2.), 0., 1.);
+			
+			totalWeight += wei;
+			weiTotal    += wei * (sam.r + sam.g + sam.b) / 3. * sam.a;
+			
+			clr += sam * wei;
+		}
 		
-		float wei = 1. - (abs(i) + abs(j)) / (realSize * 2.);
-		wei *= clamp(abs(i + j - floor(realSize) * 2.), 0., 1.);
-		
-		totalWeight += wei;
-		weiTotal    += wei * (sam.r + sam.g + sam.b) / 3. * sam.a;
-		
-		clr += sam * wei;
+		clr /= totalWeight;
 	}
 	
-	clr /= totalWeight;
 	if(gamma == 1) clr.rgb = pow(clr.rgb, vec3(1. / 2.2));
 	
 	if(overrideColor == 1) {
@@ -218,4 +218,4 @@ void main() { #region
 		clr *= gradientEval(1. - weiTotal / totalWeight);
 	
 	gl_FragColor = clr;
-} #endregion
+}

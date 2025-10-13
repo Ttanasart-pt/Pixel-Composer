@@ -11,7 +11,6 @@ function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(9, nodeValue_Toggle( "Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surfaces
-	
 	newInput(2, nodeValue_Enum_Scroll("Oversample mode",  0, [ "Empty", "Clamp", "Repeat" ]));
 	newInput(0, nodeValue_Surface( "Surface In" ));
 	newInput(6, nodeValue_Surface( "Mask"       ));
@@ -19,7 +18,6 @@ function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	__init_mask_modifier(6, 10); // inputs 10, 11, 
 	
 	////- =Blur
-	
 	newInput( 1, nodeValue_Float(   "Size",   3 )).setHotkey("S").setValidator(VV_min(0)).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
 	newInput( 3, nodeValue_Surface( "Blur mask" ));
 	newInput( 4, nodeValue_Bool(    "Override color",   false, "Replace all color while keeping the alpha. Used to\nfix grey outline when bluring transparent pixel."));
@@ -27,7 +25,6 @@ function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(16, nodeValue_Bool(    "Gamma Correction", false    ));
 	
 	////- =Effect
-	
 	newInput(15, nodeValue_Bool(     "Use Gradient", false ));
 	newInput(12, nodeValue_Gradient( "Gradient", new gradientObject([ ca_black, ca_white ]) )).setMappable(13);
 	
