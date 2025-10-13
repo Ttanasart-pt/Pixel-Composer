@@ -2226,23 +2226,21 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		drawNodeBase(xx, yy, _s);
 		draggable = true;
 		
-		if(_panel != noone) {
-			var _hover = _panel.node_hovering     == self;
-			var _focus = _panel.getFocusingNode() == self;
-					
-			if(previewable) {
-				if(preview_draw) drawPreview(xx, yy, _s);
-				if(node_draw_icon != noone) {
-					var bbox = drawGetBbox(xx, yy, _s);
-					draw_sprite_bbox_uniform(node_draw_icon, 0, bbox);
-				}
-				
-				try { onDrawNode(xx, yy, _mx, _my, _s, _hover, _focus); }
-				catch(e) { log_warning("NODE onDrawNode", exception_print(e)); }
-			} 
+		var _hover = _panel == noone? false : _panel.node_hovering     == self;
+		var _focus = _panel == noone? false : _panel.getFocusingNode() == self;
+		
+		if(previewable) {
+			if(preview_draw) drawPreview(xx, yy, _s);
+			if(node_draw_icon != noone) {
+				var bbox = drawGetBbox(xx, yy, _s);
+				draw_sprite_bbox_uniform(node_draw_icon, 0, bbox);
+			}
 			
-			if(SHOW_PARAM) drawJunctionWidget(xx, yy, _mx, _my, _s, _hover, _focus, _display_parameter, _panel);
-		}
+			try { onDrawNode(xx, yy, _mx, _my, _s, _hover, _focus); }
+			catch(e) { log_warning("NODE onDrawNode", exception_print(e)); }
+		} 
+		
+		if(SHOW_PARAM) drawJunctionWidget(xx, yy, _mx, _my, _s, _hover, _focus, _display_parameter, _panel);
 		
 		draw_name = false;
 		if((previewable && _s >= 0.5) || (!previewable && h * _s >= name_height * .5)) drawNodeName(xx, yy, _s, _panel);

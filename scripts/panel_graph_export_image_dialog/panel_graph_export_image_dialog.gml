@@ -1,62 +1,57 @@
 function Panel_Graph_Export_Image(_panel) : PanelContent() constructor {
 	title   = __txtx("panel_export_graph", "Export Graph");
 	
-	w       = min(WIN_W, ui(800));
-	h       = ui(400);
-	
-	min_w   = ui(640);
-	min_h   = ui(320);
-	
-	set_w   = min(w / 2, ui(320));
-	set_h   = h - padding * 2 - ui(32) - padding;
-	
-	surf_w  = w - set_w - padding * 2 - ui(16);
-	surf_h  = h - padding * 2;
-	
-	targetPanel = _panel;
-	nodeList    = targetPanel.nodes_list;
-	surface     = noone;
-	bg_surface  = noone;
-	
-	settings = {
-		scale		: 1,
-		padding		: 64,
+	#region panel dimension
+		padding = ui(6);
+		w       = min(WIN_W - ui(80), ui(1000));
+		h       = ui(432);
 		
-		bgEnable	: false,
-		bgColor		: cola(COLORS.panel_bg_clear),
+		min_w   = ui(640);
+		min_h   = ui(320);
 		
-		gridEnable  : false,
-		gridColor   : cola(targetPanel.project.graphGrid.color),
-		gridAlpha   : targetPanel.project.graphGrid.opacity,
+		set_w   = min(w / 2, ui(320));
+		set_h   = h - padding * 2 - ui(32) - padding;
 		
-		borderPad	: 0,
-		borderColor	: ca_white,
-		borderAlpha	: 0.05,
-	};
+		surf_w  = w - set_w - padding * 2 - ui(16);
+		surf_h  = h - padding * 2;
+	#endregion
 	
-	sel          = 0;
-	nodes_select = [ "All nodes", "Selected" ];
-	widgets      = [];
+	#region graph
+		targetPanel = _panel;
+		nodeList    = targetPanel.nodes_list;
+		surface     = noone;
+		bg_surface  = noone;
+		
+		settings = new graph_export_settings();
+		settings.gridColor = cola(targetPanel.project.graphGrid.color);
+		settings.gridAlpha = targetPanel.project.graphGrid.opacity;
+	#endregion
 	
-	widgets[0] = [ "Nodes", new scrollBox(nodes_select, 
-		function(val) /*=>*/ { 
-			sel      = val; 
-			nodeList = val? targetPanel.nodes_selecting : targetPanel.nodes_list; 
-			refresh(); 
-		}, false),
-		function() /*=>*/ {return nodes_select[sel]}  
-	];
-	
-	widgets[1]  = [ "Scale",			new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { settings.scale       = val; refresh(); }),                  function() /*=>*/ {return settings.scale}       ];
-	widgets[2]  = [ "Padding",			new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { settings.padding     = val; refresh(); }),                  function() /*=>*/ {return settings.padding}     ];
-	widgets[3]  = [ "Solid Background",	new checkBox(                     function()    /*=>*/ { settings.bgEnable    = !settings.bgEnable; refresh(); }),   function() /*=>*/ {return settings.bgEnable}    ];
-	widgets[4]  = [ "Background Color",	new buttonColor(                  function(val) /*=>*/ { settings.bgColor     = val; refresh(); }),                  function() /*=>*/ {return settings.bgColor}     ];
-	widgets[5]  = [ "Render Grid",		new checkBox(                     function()    /*=>*/ { settings.gridEnable  = !settings.gridEnable; refresh(); }), function() /*=>*/ {return settings.gridEnable}  ];
-	widgets[6]  = [ "Grid Color",		new buttonColor(                  function(val) /*=>*/ { settings.gridColor   = val; refresh(); }),                  function() /*=>*/ {return settings.gridColor}   ];
-	widgets[7]  = [ "Grid Opacity",		new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { settings.gridAlpha   = val; refresh(); }),                  function() /*=>*/ {return settings.gridAlpha}   ];
-	widgets[8]  = [ "Border",			new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { settings.borderPad   = val; refresh(); }),                  function() /*=>*/ {return settings.borderPad}   ];
-	widgets[9]  = [ "Border Color",		new buttonColor(                  function(val) /*=>*/ { settings.borderColor = val; refresh(); }),                  function() /*=>*/ {return settings.borderColor} ];
-	widgets[10] = [ "Border Opacity",	new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { settings.borderAlpha = val; refresh(); }),                  function() /*=>*/ {return settings.borderAlpha} ];
+	#region settings
+		sel          = 0;
+		nodes_select = [ "All nodes", "Selected" ];
+		widgets      = [];
+		
+		widgets[0] = [ "Nodes", new scrollBox(nodes_select, 
+			function(val) /*=>*/ { 
+				sel      = val; 
+				nodeList = val? targetPanel.nodes_selecting : targetPanel.nodes_list; 
+				refresh(); 
+			}, false),
+			function() /*=>*/ {return nodes_select[sel]}  
+		];
+		
+		widgets[ 1] = [ "Scale",            textBox_Number( function(v) /*=>*/ { settings.scale       = v; refresh(); }),                   function() /*=>*/ {return settings.scale}       ];
+		widgets[ 2] = [ "Padding",          textBox_Number( function(v) /*=>*/ { settings.padding     = v; refresh(); }),                   function() /*=>*/ {return settings.padding}     ];
+		widgets[ 3] = [ "Solid Background", new checkBox(   function( ) /*=>*/ { settings.bgEnable    = !settings.bgEnable; refresh(); }),  function() /*=>*/ {return settings.bgEnable}    ];
+		widgets[ 4] = [ "Background Color", new buttonColor(function(v) /*=>*/ { settings.bgColor     = v; refresh(); }),                   function() /*=>*/ {return settings.bgColor}     ];
+		widgets[ 5] = [ "Render Grid",      new checkBox(   function( ) /*=>*/ { settings.gridEnable  = !settings.gridEnable; refresh(); }),function() /*=>*/ {return settings.gridEnable}  ];
+		widgets[ 6] = [ "Grid Color",       new buttonColor(function(v) /*=>*/ { settings.gridColor   = v; refresh(); }),                   function() /*=>*/ {return settings.gridColor}   ];
+		widgets[ 7] = [ "Grid Opacity",     textBox_Number( function(v) /*=>*/ { settings.gridAlpha   = v; refresh(); }),                   function() /*=>*/ {return settings.gridAlpha}   ];
+		widgets[ 8] = [ "Border",           textBox_Number( function(v) /*=>*/ { settings.borderPad   = v; refresh(); }),                   function() /*=>*/ {return settings.borderPad}   ];
+		widgets[ 9] = [ "Border Color",     new buttonColor(function(v) /*=>*/ { settings.borderColor = v; refresh(); }),                   function() /*=>*/ {return settings.borderColor} ];
+		widgets[10] = [ "Border Opacity",   textBox_Number( function(v) /*=>*/ { settings.borderAlpha = v; refresh(); }),                   function() /*=>*/ {return settings.borderAlpha} ];
+	#endregion
 	
 	b_export = button(function() /*=>*/ {
 		if(!is_surface(surface)) return;
@@ -67,9 +62,8 @@ function Panel_Graph_Export_Image(_panel) : PanelContent() constructor {
 		if(filename_ext(path) != ".png") path += ".png";
 		surface_save(surface, path);
 		noti_status($"Graph image exported at {path}");
-	});
-	
-	b_export.text = __txt("Export") + "...";
+		
+	}).setText(__txt("Export") + "...").setFont(f_p2);
 	
 	sc_settings = new scrollPane(set_w, set_h, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
@@ -171,7 +165,9 @@ function Panel_Graph_Export_Image(_panel) : PanelContent() constructor {
 			draw_set_alpha(1);
 		}
 		
-		
+		set_w = min(w / 2, ui(320));
+		set_h = h - padding * 2 - ui(24) - padding;
+	
 		var sx = w - padding - set_w;
 		var sy = ty;
 		
@@ -183,9 +179,9 @@ function Panel_Graph_Export_Image(_panel) : PanelContent() constructor {
 		
 		draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
 		var _bw = ui(96);
-		var _bh = ui(32);
-		bx = w - padding - ui(8) - _bw;
-		by = h - padding - ui(8) - _bh;
+		var _bh = ui(24);
+		var  bx = w - padding - ui(8) - _bw;
+		var  by = h - padding - ui(8) - _bh;
 		
 		b_export.setInteract(is_surface(surface));
 		b_export.setFocusHover(pFOCUS, pHOVER);

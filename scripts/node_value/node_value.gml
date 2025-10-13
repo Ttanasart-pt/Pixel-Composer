@@ -209,24 +209,20 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		expression = "";
 		expTree    = noone;
 		expContext = { 
-			name: name,
-			node_name: node.display_name,
-			value: 0,
-			node_values: node.input_value_map,
+			name        : name,
+			node_name   : node.display_name,
+			value       : 0,
+			node_values : node.input_value_map,
 		};
 		
-		express_edit = new textArea(TEXTBOX_INPUT.text, function(str) { 
-			expression = str;
-			expressionUpdate();
-		});
-		express_edit.autocomplete_server	= pxl_autocomplete_server;
-		express_edit.autocomplete_context	= expContext;
-		express_edit.function_guide_server	= pxl_function_guide_server;
-		express_edit.parser_server			= pxl_document_parser;
-		express_edit.format   = TEXT_AREA_FORMAT.codeLUA;
-		express_edit.font     = f_code;
-		express_edit.boxColor = COLORS._main_value_positive;
-		express_edit.align    = fa_left;
+		express_edit = textArea_Text(function(str) /*=>*/ { expression = str; expressionUpdate(); })
+			.setFont(f_code).setBoxColor(COLORS._main_value_positive);
+		
+		express_edit.format                = TEXT_AREA_FORMAT.codeLUA;
+		express_edit.autocomplete_server   = pxl_autocomplete_server;
+		express_edit.autocomplete_context  = expContext;
+		express_edit.function_guide_server = pxl_function_guide_server;
+		express_edit.parser_server         = pxl_document_parser;
 	#endregion
 	
 	#region ---- Serialization ----
@@ -1340,37 +1336,37 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static getEditWidget = function() /*=>*/ {return editWidget};
 	
-	static valueProcess = function(value, nodeFrom = undefined, applyUnit = true, arrIndex = 0) {
+	static valueProcess = function(_value, nodeFrom = undefined, applyUnit = true, arrIndex = 0) {
 		var typeFrom = nodeFrom == undefined? VALUE_TYPE.any : nodeFrom.type;
 		
 		if(applyUnit && display_type == VALUE_DISPLAY.d3quarternion && attributes.angle_display == QUARTERNION_DISPLAY.euler)
-			return quarternionFromEuler(value[0], value[1], value[2]);
+			return quarternionFromEuler(_value[0], _value[1], _value[2]);
 		
 		if(type == VALUE_TYPE.gradient && typeFrom == VALUE_TYPE.color) { // color compatibility [ color, palette, gradient ]
-			if(is_instanceof(value, gradientObject)) return value;
+			if(is_instanceof(_value, gradientObject)) return _value;
 				
-			if(is_array(value)) {
-				var amo  = array_length(value);
+			if(is_array(_value)) {
+				var amo  = array_length(_value);
 				var grad = array_create(amo);
 				
 				for( var i = 0; i < amo; i++ )
-					grad[i] = new gradientKey(i / amo, value[i]);
+					grad[i] = new gradientKey(i / amo, _value[i]);
 					
 				var g = new gradientObject();
 				g.keys = grad;
 				return g;
 			} 
 			
-			return is_real(value)? new gradientObject(value) : new gradientObject(ca_black);
+			return is_real(_value)? new gradientObject(_value) : new gradientObject(ca_black);
 		}
 	
-		if(display_type == VALUE_DISPLAY.palette && !is_array(value)) return [ value ];
+		if(display_type == VALUE_DISPLAY.palette && !is_array(_value)) return [ _value ];
 		
 		if(display_type == VALUE_DISPLAY.area) {
 			
 			if(!is_undefined(nodeFrom) && struct_has(nodeFrom.display_data, "onSurfaceSize")) {
 				var surf     = nodeFrom.display_data.onSurfaceSize();
-				var dispType = array_safe_get_fast(value, 5, AREA_MODE.area);
+				var dispType = array_safe_get_fast(_value, 5, AREA_MODE.area);
 				
 				switch(dispType) {
 					case AREA_MODE.area : 
@@ -1380,43 +1376,43 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						var ww = unit.mode == VALUE_UNIT.reference? 1 : surf[0];
 						var hh = unit.mode == VALUE_UNIT.reference? 1 : surf[1];
 						
-						var cx = (ww - value[0] + value[2]) / 2
-						var cy = (value[1] + hh - value[3]) / 2;
-						var sw = abs((ww - value[0]) - value[2]) / 2;
-						var sh = abs(value[1] - (hh - value[3])) / 2;
+						var cx = (ww - _value[0] + _value[2]) / 2
+						var cy = (_value[1] + hh - _value[3]) / 2;
+						var sw = abs((ww - _value[0]) - _value[2]) / 2;
+						var sh = abs(_value[1] - (hh - _value[3])) / 2;
 						
-						value = [cx, cy, sw, sh, value[4], value[5]];
+						_value = [cx, cy, sw, sh, _value[4], _value[5]];
 						break;
 					
 					case AREA_MODE.two_point : 
-						var cx = (value[0] + value[2]) / 2
-						var cy = (value[1] + value[3]) / 2;
-						var sw = abs(value[0] - value[2]) / 2;
-						var sh = abs(value[1] - value[3]) / 2;
+						var cx = (_value[0] + _value[2]) / 2
+						var cy = (_value[1] + _value[3]) / 2;
+						var sw = abs(_value[0] - _value[2]) / 2;
+						var sh = abs(_value[1] - _value[3]) / 2;
 					
-						value = [cx, cy, sw, sh, value[4], value[5]];
+						_value = [cx, cy, sw, sh, _value[4], _value[5]];
 						break;
 				}
 			}
 			
-			return applyUnit? unit.apply(value, arrIndex) : value;
+			return applyUnit? unit.apply(_value, arrIndex) : _value;
 		}
 		
-		if(typeNumeric(typeFrom) && type == VALUE_TYPE.color) return value;
+		if(typeNumeric(typeFrom) && type == VALUE_TYPE.color) return _value;
 		
 		if(type == VALUE_TYPE.integer || type == VALUE_TYPE.float) {
-			if(typeFrom == VALUE_TYPE.text) value = toNumber(value);
+			if(typeFrom == VALUE_TYPE.text) _value = toNumber(_value);
 			
-			value = applyUnit? unit.apply(value, arrIndex) : value;
-			if(validator != noone) value = validator.validate(value);
+			_value = applyUnit? unit.apply(_value, arrIndex) : _value;
+			if(validator != noone) _value = validator.validate(_value);
 			
-			return value;
+			return _value;
 		}
 		
-		if(type == VALUE_TYPE.surface && connect_type == CONNECT_TYPE.input && !is_surface(value) && def_val == USE_DEF)
+		if(type == VALUE_TYPE.surface && connect_type == CONNECT_TYPE.input && !is_surface(_value) && def_val == USE_DEF)
 			return DEF_SURFACE;
 		
-		return value;
+		return _value;
 	}
 	
 	static getStaticValue = function() { INLINE return array_empty(animator.values)? 0 : animator.values[0].value; } 
@@ -1505,6 +1501,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(global.EVALUATE_HEAD == noone) {
 			global.EVALUATE_HEAD = self;
+			
 			expContext = { 
 				name :        name,
 				node_name :   node.display_name,
@@ -1512,7 +1509,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				node_values : node.input_value_map,
 			};
 			
-			var _exp_res = expTree.eval(variable_clone(expContext));
+			var _exp_res = expTree.eval({
+				name :        name,
+				node_name :   node.display_name,
+				value :       arr[0],
+				node_values : node.input_value_map,
+			});
 			
 			printIf(global.LOG_EXPRESSION, $">>>> Result = {_exp_res}");
 			
@@ -2489,12 +2491,15 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static setUseExpression = function(useExp) {
 		INLINE
+		
 		if(expUse == useExp) return;
 		expUse = useExp;
 		node.triggerRender();
 	}
 	
 	static setExpression = function(_expression) {
+		INLINE
+		
 		expUse = true;
 		expression = _expression;
 		expressionUpdate();

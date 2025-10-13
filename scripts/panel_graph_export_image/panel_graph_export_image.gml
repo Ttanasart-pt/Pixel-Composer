@@ -1,9 +1,27 @@
+function graph_export_settings() constructor {
+	scale		= 1;
+	padding		= 64;
+	margin		= 64;
+	
+	bgEnable	= false;
+	bgColor		= cola(COLORS.panel_bg_clear);
+	
+	gridEnable  = false;
+	gridColor   = cola(PROJECT.graphGrid.color);
+	gridAlpha   = PROJECT.graphGrid.opacity;
+	
+	borderPad	= 0;
+	borderColor	= ca_white;
+	borderAlpha	= 0.05;
+}
+
 function graph_export_image(allList, nodeList, settings = {}) {
 	var amo = array_length(nodeList);
 	if(amo < 1) return;
 	
 	var scale       = settings[$ "scale"]       ?? 1;
 	var padding     = settings[$ "padding"]     ?? 0;
+	var margin      = settings[$ "margin"]      ?? 0;
 	
 	var bgEnable    = settings[$ "bgEnable"]    ?? false;
 	var bgColor     = settings[$ "bgColor"]     ?? c_black;
@@ -21,7 +39,7 @@ function graph_export_image(allList, nodeList, settings = {}) {
 	var bbox_x1 = bbox_x0 + nodeList[0].w * scale;
 	var bbox_y1 = bbox_y0 + nodeList[0].h * scale;
 	
-	for( var i = 0; i < array_length(nodeList); i++ ) {
+	for( var i = 0, n = array_length(nodeList); i < n; i++ ) {
 		var _node = nodeList[i];
 		_node.draw_graph_culled = false;
 		
@@ -30,14 +48,18 @@ function graph_export_image(allList, nodeList, settings = {}) {
 		var _w = _node.w * scale;
 		var _h = _node.h * scale;
 		
-		bbox_x0 = min(bbox_x0, _x - padding);
-		bbox_y0 = min(bbox_y0, _y - padding);
-		bbox_x1 = max(bbox_x1, _x + _w + padding);
-		bbox_y1 = max(bbox_y1, _y + _h + padding);
+		bbox_x0 = min(bbox_x0, _x);
+		bbox_y0 = min(bbox_y0, _y);
+		bbox_x1 = max(bbox_x1, _x + _w);
+		bbox_y1 = max(bbox_y1, _y + _h);
 	}
 	
-	var _lim_s = 16384 - borderPad * 2;
+	bbox_x0 -= padding;
+	bbox_y0 -= padding;
+	bbox_x1 += padding;
+	bbox_y1 += padding;
 	
+	var _lim_s = 16384 - borderPad * 2;
 	var bbox_w = min(_lim_s, bbox_x1 - bbox_x0);
 	var bbox_h = min(_lim_s, bbox_y1 - bbox_y0);
 	
