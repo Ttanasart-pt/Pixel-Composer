@@ -37,37 +37,22 @@ vec4 dirBlur(vec2 angle) {
     vec4 acc     = vec4(0.);
     float delta  = 1. / size;
 	float weight = 0.;
+	float itrr   = 0.;
     
-	if(singleDirect == 0) {
-	    for(float i = -1.0; i <= 1.0; i += delta) {
-	    	float dist = fadeDistance == 1? 1. - abs(i) : 1.;
-			vec4  col  = sampleTexture( gm_BaseTexture, v_vTexcoord - angle * i);
-			if(gamma == 1) col.rgb = pow(col.rgb, vec3(2.2));
-			
-			col.rgb *= dist;
-	        acc      += col;
-			weight   += col.a * dist;
-	    }
+    for(float i = singleDirect == 0? -1. : 0.; i <= 1.0; i += delta) {
+    	float dist = fadeDistance == 1? 1. - abs(i) : 1.;
+		vec4  col  = sampleTexture( gm_BaseTexture, v_vTexcoord - angle * i);
+		if(gamma == 1) col.rgb = pow(col.rgb, vec3(2.2));
 		
-		acc.rgb /= weight;
-		acc.a   /= size * 2.;
-	} else {
-		for(float i = 0.; i <= 1.0; i += delta) {
-			float dist = fadeDistance == 1? 1. - abs(i) : 1.;
-			vec4  col  = sampleTexture( gm_BaseTexture, v_vTexcoord - angle * i);
-			if(gamma == 1) col.rgb = pow(col.rgb, vec3(2.2));
-			
-			col.rgb *= dist;
-	        acc      += col;
-			weight   += col.a * dist;
-	    }
-		
-		acc.rgb /= weight;
-		acc.a   /= size - 1.;
-		
-		acc += sampleTexture( gm_BaseTexture, v_vTexcoord );
-	}
+		col.rgb *= dist;
+        acc      += col;
+		weight   += col.a * dist;
+		itrr++;
+    }
 	
+	acc.rgb /= weight;
+	acc.a   /= itrr;
+		
 	if(gamma == 1) acc.rgb = pow(acc.rgb, vec3(1. / 2.2));
     return acc;
 }
