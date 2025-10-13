@@ -18,9 +18,7 @@ float getD(vec2 pos)   { return length(texture2D( gm_BaseTexture, pos / dimensio
 vec2 grad( vec2 pos, float delta) {
     vec2  e = vec2(1., 0.) * delta;
     float o = getD(pos);
-    
-    return vec2(getD(pos + e.xy) - o,
-                getD(pos + e.yx) - o) / delta;
+    return vec2(getD(pos + e.xy) - o, getD(pos + e.yx) - o) / delta;
 }
 
 void main() {

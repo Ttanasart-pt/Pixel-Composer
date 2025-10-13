@@ -146,7 +146,7 @@ function Node_Flow_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _tile = _data[14];
 		var _blur = _data[15];
 		
-		if(!is_path(_path)) return _outSurf; 
+		if(!is_path(_path) || !is_surface(_surf)) return _outSurf; 
 		
 		var _dim = surface_get_dimension(_surf);
 		temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1], surface_rgba16float);

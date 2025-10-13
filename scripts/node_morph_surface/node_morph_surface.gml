@@ -7,7 +7,7 @@ function Node_Morph_Surface(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	////- =Morph
 	newInput(2, nodeValue_Slider( "Morph Amount", 0 )).setHotkey("S");
-	newInput(3, nodeValue_Slider( "Threshold",   .5 )).setHotkey("T");
+	newInput(3, nodeValue_Slider( "Threshold",   .1 )).setHotkey("T");
 	// input 4
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
