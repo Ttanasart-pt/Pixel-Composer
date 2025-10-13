@@ -303,6 +303,10 @@ function gradientObject(color = ca_black) constructor {
 	}
 }
 
+function gradientCache(    grad, res ) { if(is(grad, gradientObject)) grad.cache(res);               }
+function gradientEval(     grad, pos ) { return is(grad, gradientObject)? grad.eval(pos)     : grad; }
+function gradientEvalFast( grad, pos ) { return is(grad, gradientObject)? grad.evalFast(pos) : grad; }
+
 function loadGradient(path) {
 	if(path == "") return noone;
 	if(!file_exists_empty(path)) return noone;

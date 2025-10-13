@@ -592,7 +592,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				} else 
 					draw_primitive_begin(pr_trianglestrip);
 				
-				var _col_base = dat == noone? _colb.eval(random(1)) : dat.color;
+				var _col_base = dat == noone? gradientEval(_colb, random(1)) : dat.color;
 				_ow = 1;
 				
 				var _stx = 0, _sty = 0, _sta = 0;
@@ -623,8 +623,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					
 					_np = _colP? prog : prgc;
 					_nc = _col_base;
-					_nc = colorMultiply(_nc, _color.eval(_np));
-					_nc = colorMultiply(_nc, _wg2clr.eval((_ww - _wg2clrR[0]) / _wg2clrRng));
+					_nc = colorMultiply(_nc, gradientEval(_color, _np));
+					_nc = colorMultiply(_nc, gradientEval(_wg2clr, (_ww - _wg2clrR[0]) / _wg2clrRng));
 					
 					if(_cap) {
 						if(j == 1) {
@@ -774,7 +774,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					var pxs = [];
 					var dat = array_safe_get_fast(_pathData, i, noone);
 					
-					var _col_base = dat == noone? _colb.eval(random(1)) : dat.color;
+					var _col_base = dat == noone? gradientEval(_colb, random(1)) : dat.color;
 					
 					for( var j = 0, m = array_length(points); j < m; j++ ) {
 						var p0   = points[j];

@@ -529,7 +529,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		_s *= _sca;
 		
 		inParent.overlay_draw_text = inputs[15].getValue();
-		return inParent.drawOverlay(hover, active, _px, _py, _s, _mx, _my, _snx, _sny, _rot);
+		return inParent.drawOverlay(hover, active, _px, _py, _s, _mx, _my, _snx, _sny, _params);
 	}
 	
 	static drawNode = function(_draw, _x, _y, _mx, _my, _s, display_parameter = noone, _panel = noone) { 
