@@ -84,7 +84,7 @@
 		attr_depth_array[0].setActive(!array_empty(inputs) && inputs[0].type == VALUE_TYPE.surface);
 		
 		color_depth_selector = new scrollBox(attr_depth_array, function(val) /*=>*/ { attribute_set("color_depth", val); }, false);
-		color_depth_editor   = [ "Color depth", function() /*=>*/ {return attributes.color_depth}, color_depth_selector, "color_depth" ];
+		color_depth_editor   = [ "Color depth", function() /*=>*/ {return attributes.color_depth}, color_depth_selector ];
 		
 		if(label) array_push(attributeEditors, "Surface");
 		array_push(attributeEditors, color_depth_editor);
@@ -98,14 +98,11 @@
 		attr_interpolate_array = variable_clone(global.SURFACE_INTERPOLATION);
 		
 		interpolate_selector   = new scrollBox(attr_interpolate_array, function(val) /*=>*/ { attribute_set("interpolate", val); }, false);
-		interpolate_editor     = [ "Texture interpolation", function() /*=>*/ {return attributes.interpolate}, interpolate_selector, "interpolate" ];
+		interpolate_editor     = [ "Texture interpolation", function() /*=>*/ {return attributes.interpolate}, interpolate_selector, new KeyCombination("I", MOD_KEY.alt) ];
 		
 		if(label) array_push(attributeEditors, "Surface");
 		array_push(attributeEditors, interpolate_editor);
 		checkGroupAttribute(interpolate_editor);
-		
-		attrKey_interpolate = new KeyCombination("I", MOD_KEY.alt);
-		attrKey_oversample  = new KeyCombination("O", MOD_KEY.alt);
 	}
 	
 	function attribute_oversample(label = false) {
@@ -114,14 +111,11 @@
 		
 		attr_oversample_array  = variable_clone(global.SURFACE_OVERSAMPLE);
 		oversample_selector    = new scrollBox(attr_oversample_array, function(val) /*=>*/ { attribute_set("oversample", val); }, false);
-		oversample_editor      = [ "Oversample", function() /*=>*/ {return attributes.oversample}, oversample_selector, "oversample" ];
+		oversample_editor      = [ "Oversample", function() /*=>*/ {return attributes.oversample}, oversample_selector, new KeyCombination("O", MOD_KEY.alt) ];
 		
 		if(label) array_push(attributeEditors, "Surface");
 		array_push(attributeEditors, oversample_editor);
 		checkGroupAttribute(oversample_editor);
-		
-		attrKey_interpolate = new KeyCombination("I", MOD_KEY.alt);
-		attrKey_oversample  = new KeyCombination("O", MOD_KEY.alt);
 	}
 	
 	function attribute_auto_execute(label = false) {
@@ -133,20 +127,18 @@
 	}
 	
 	function attribute_drawOverlay(hover, active) {
-		if(!active) return;
-		
-		if(has(attributes, "oversample") && attrKey_oversample.isPressing()) {
-			attributes.oversample = (attributes.oversample + 1) % array_length(global.SURFACE_OVERSAMPLE);
-			triggerRender();
-			
-			PANEL_PREVIEW.setActionTooltip($"Set Oversample: {global.SURFACE_OVERSAMPLE[attributes.oversample].name}");
-		}
-		
-		if(has(attributes, "interpolate") && attrKey_interpolate.isPressing()) {
+		if(has(self, "interpolate_editor") && interpolate_editor[3].isPressing()) {
 			attributes.interpolate = (attributes.interpolate + 1) % array_length(global.SURFACE_INTERPOLATION);
 			triggerRender();
 			
 			PANEL_PREVIEW.setActionTooltip($"Set Interpolate: {global.SURFACE_INTERPOLATION[attributes.interpolate].name}");
+		}
+		
+		if(has(self, "oversample_editor") && oversample_editor[3].isPressing()) {
+			attributes.oversample = (attributes.oversample + 1) % array_length(global.SURFACE_OVERSAMPLE);
+			triggerRender();
+			
+			PANEL_PREVIEW.setActionTooltip($"Set Oversample: {global.SURFACE_OVERSAMPLE[attributes.oversample].name}");
 		}
 		
 	}

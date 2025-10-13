@@ -504,6 +504,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 var _att_name = __txt(edt[0]);
                 var _att_val  = edt[1]();
                 var _att_wid  = edt[2];
+                var _att_key  = array_safe_get(edt, 3, 0);
                 var _att_h    = viewMode == INSP_VIEW_MODE.spacious? hg : line_get_height(font, 8);
                 
                 _att_wid.font = font;
@@ -522,6 +523,11 @@ function Panel_Inspector() : PanelContent() constructor {
                 
                 draw_set_text(font, fa_left, fa_center, COLORS._main_text);
                 draw_text_add(ui(8), yy + _att_h / 2, _att_name);
+                
+                if(_att_key != 0) {
+	                draw_set_text(font, fa_right, fa_center, COLORS._main_text_sub);
+	                draw_text_add(wx0 - ui(8), yy + _att_h / 2, _att_key.toString());
+                }
                 
                 var _param = new widgetParam(wx0, yy, ww, _att_h, _att_val, {}, _m, x + contentPane.x, y + contentPane.y);
                     _param.s    = _att_h;
