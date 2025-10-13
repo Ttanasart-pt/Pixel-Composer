@@ -11,7 +11,6 @@ function Node_Blur_Radial(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(7, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surfaces
-	
 	newInput(3, nodeValue_Enum_Scroll("Oversample mode", 0, [ "Empty", "Clamp", "Repeat" ]));
 	newInput(0, nodeValue_Surface( "Surface In" ));
 	newInput(4, nodeValue_Surface( "Mask"       ));
@@ -19,7 +18,6 @@ function Node_Blur_Radial(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	__init_mask_modifier(4, 8); // inputs 8, 9
 	
 	////- =Blur
-	
 	newInput( 1, nodeValue_Rotation( "Strength",          45     )).setHotkey("R").setMappable(10);
 	newInput( 2, nodeValue_Vec2(     "Center",           [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	newInput(11, nodeValue_Bool(     "Gamma Correction",  false  ));

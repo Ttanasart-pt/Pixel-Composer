@@ -109,6 +109,10 @@ void main() {
 		str = mix(strength.x, strength.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 	}
 	
+	float _sign = sign(str);
+	str    = abs(str);
+	strMax = abs(strMax);
+	
 	vec2 pxPos = v_vTexcoord * dimension;
 	vec2 pxCen = center * dimension;
 	vec2 vecPc = pxPos - pxCen;
