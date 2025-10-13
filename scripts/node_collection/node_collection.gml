@@ -659,8 +659,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 				
 				for( var k = 0, n = array_length(ctx.nodes); k < n; k++ ) {
 					if(array_exists(nodeArray, ctx.nodes[k])) continue;
-					
-					noti_warning("Grouping incomplete inline group is not allowed.", noone, self);
+					noti_warning("Grouping incomplete inline group is not allowed.");
 					return;
 				}
 			} 

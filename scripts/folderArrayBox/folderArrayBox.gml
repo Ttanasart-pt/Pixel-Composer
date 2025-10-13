@@ -22,11 +22,7 @@ function folderArrayBox(_arr, _onApply) : widget() constructor {
 	
 	_hovering = false;
 	
-	static setFont = function(font) { 
-		self.font    = font;
-		tb_edit.font = font;
-		return self; 
-	}
+	static setFont = function(_font) { font = _font; tb_edit.font = _font; return self;  }
 	
 	static drawParam = function(params) {
 		setParam(params);

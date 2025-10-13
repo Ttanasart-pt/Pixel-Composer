@@ -481,32 +481,45 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		mesh_data.points = array_create(_sam * _sam);
 		
+		if(!fullmh) {
+			var _filled = [];
+			 
+			for(var j = 0; j < _sam; j++) {
+				_filled[j] = [];
+				
+				for(var i = 0; i < _sam; i++) { 
+					var _j = clamp(round(j * gw), 0, ww-1);
+					var _i = clamp(round(i * gh), 0, hh-1);
+					_filled[j][i] = samp.getPixelDirect(_j, _i) > 0;
+				}
+			}
+		}
+		
 		var ind = 0;
 		for(var i = 0; i < _sam; i++) 
 		for(var j = 0; j < _sam; j++) { // mesh
-			var fill = false;
 			
-			if(fullmh) {
-				fill = true;
+			if(!fullmh) {
+				var fill = false;
 				
-			} else {
-				var _i = i * gh;
-				var _j = j * gw;
+				if(j > 0) {
+					if(i > 0)      fill = fill || _filled[j-1][i-1];
+					               fill = fill || _filled[j-1][i  ];
+					if(i < _sam-1) fill = fill || _filled[j-1][i+1];
+				}
+					
+					if(i > 0)      fill = fill || _filled[j  ][i-1];
+					               fill = fill || _filled[j  ][i  ];
+					if(i < _sam-1) fill = fill || _filled[j  ][i+1];
+					
+				if(j < _sam-1) {
+					if(i > 0)      fill = fill || _filled[j+1][i-1];
+					               fill = fill || _filled[j+1][i  ];
+					if(i < _sam-1) fill = fill || _filled[j+1][i+1];
+				}
 				
-				fill = fill || samp.getPixelDirectClamp(_j - 1, _i - 1);
-				fill = fill || samp.getPixelDirectClamp(_j - 1, _i    );
-				fill = fill || samp.getPixelDirectClamp(_j - 1, _i + 1);
-				
-				fill = fill || samp.getPixelDirectClamp(_j,     _i - 1);
-				fill = fill || samp.getPixelDirectClamp(_j,     _i    );
-				fill = fill || samp.getPixelDirectClamp(_j,     _i + 1);
-				
-				fill = fill || samp.getPixelDirectClamp(_j + 1, _i - 1);
-				fill = fill || samp.getPixelDirectClamp(_j + 1, _i    );
-				fill = fill || samp.getPixelDirectClamp(_j + 1, _i + 1);
+				if(!fill) continue;
 			}
-			
-			if(!fill) continue;
 			
 			var px = min(j * gw, ww);
 			var py = min(i * gh, hh);

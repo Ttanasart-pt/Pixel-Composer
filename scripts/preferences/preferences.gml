@@ -497,59 +497,58 @@
 #endregion
 
 #region command palette
-	//!#mfunc __regFnPref {"args":["name"," key"],"order":[0,1]}
-#macro __regFnPref_mf0  { registerFunction("Preference", 
-#macro __regFnPref_mf1 , "", 0, function() { dialogPanelCall(new Panel_Preference().goto(
-#macro __regFnPref_mf2 )); }); }
+	function prefOpenKey(key)       { dialogPanelCall(new Panel_Preference().goto(key));                       }
+	function __regFnPref(name, key) { registerFunction("Preference", name, "", 0, function(k) /*=>*/ {return prefOpenKey(k)}, key); }
 	
 	function __fnInit_Preference() {
-		__regFnPref_mf0 __txtx("pref_double_click_delay",              "Double click delay") __regFnPref_mf1       		     "double_click_delay"               __regFnPref_mf2
-		__regFnPref_mf0 __txtx("pref_mouse_wheel_speed",               "Scroll speed") __regFnPref_mf1             		     "mouse_wheel_speed"                __regFnPref_mf2
-		__regFnPref_mf0 __txtx("pref_keyboard_hold_start",             "Keyboard hold start") __regFnPref_mf1      		     "keyboard_repeat_start"            __regFnPref_mf2
-		__regFnPref_mf0 __txtx("pref_keyboard_repeat_delay",           "Keyboard repeat delay") __regFnPref_mf1    		     "keyboard_repeat_speed"            __regFnPref_mf2
-		__regFnPref_mf0 __txtx("pref_expand_hovering_panel",           "Expand hovering panel") __regFnPref_mf1    		     "expand_hover"                     __regFnPref_mf2
-		__regFnPref_mf0 __txtx("pref_expand_lock_mouse_slider",        "Lock mouse when sliding") __regFnPref_mf1  		     "slider_lock_mouse"                __regFnPref_mf2
-		__regFnPref_mf0 __txtx("pref_pen_pool_delay",                  "Pen leave delay") __regFnPref_mf1          		     "pen_pool_delay"                   __regFnPref_mf2
+		__regFnPref(__txtx("pref_double_click_delay",              "Double click delay"),      		     "double_click_delay"              )
+		__regFnPref(__txtx("pref_mouse_wheel_speed",               "Scroll speed"),            		     "mouse_wheel_speed"               )
+		__regFnPref(__txtx("pref_keyboard_hold_start",             "Keyboard hold start"),     		     "keyboard_repeat_start"           )
+		__regFnPref(__txtx("pref_keyboard_repeat_delay",           "Keyboard repeat delay"),   		     "keyboard_repeat_speed"           )
+		__regFnPref(__txtx("pref_expand_hovering_panel",           "Expand hovering panel"),   		     "expand_hover"                    )
+		__regFnPref(__txtx("pref_expand_lock_mouse_slider",        "Lock mouse when sliding"), 		     "slider_lock_mouse"               )
+		__regFnPref(__txtx("pref_pen_pool_delay",                  "Pen leave delay"),         		     "pen_pool_delay"                  )
 		
-		__regFnPref_mf0 __txtx("pref_auto_save_time",   		       "Autosave delay (-1 to disable)") __regFnPref_mf1     "auto_save_time"                   __regFnPref_mf2
-		__regFnPref_mf0 __txtx("pref_save_layout",      		       "Save layout") __regFnPref_mf1                        "save_layout"                      __regFnPref_mf2
-		__regFnPref_mf0 __txtx("pref_save_file_minify", 		       "Minify save file") __regFnPref_mf1                   "save_file_minify"                 __regFnPref_mf2
-		__regFnPref_mf0 __txtx("pref_save_backups",     		       "Backup saves") __regFnPref_mf1                       "save_backup"                      __regFnPref_mf2
-		__regFnPref_mf0 __txtx("pref_legacy_exception", 		       "Use legacy exception handler") __regFnPref_mf1       "use_legacy_exception"             __regFnPref_mf2
-		__regFnPref_mf0 __txtx("pref_crash_dialog",     		       "Show dialog after crash") __regFnPref_mf1            "show_crash_dialog"                __regFnPref_mf2
-		__regFnPref_mf0 __txtx("pref_clear_temp",       		       "Clear temp file on close") __regFnPref_mf1           "clear_temp_on_close"              __regFnPref_mf2
-		__regFnPref_mf0 __txtx("pref_enable_test_mode", 		       "Enable developer mode*") __regFnPref_mf1             "test_mode"                        __regFnPref_mf2
-		__regFnPref_mf0 __txtx("pref_exp_popup_dialog", 		       "Pop-up Dialog") __regFnPref_mf1                      "multi_window"                     __regFnPref_mf2
+		__regFnPref(__txtx("pref_auto_save_time",   		       "Autosave delay (-1 to disable)"),    "auto_save_time"                  )
+		__regFnPref(__txtx("pref_save_auto",                       "File autosave"),                     "save_auto"                       )
+		__regFnPref(__txtx("pref_save_layout",      		       "Save layout"),                       "save_layout"                     )
+		__regFnPref(__txtx("pref_save_file_minify", 		       "Minify save file"),                  "save_file_minify"                )
+		__regFnPref(__txtx("pref_save_backups",     		       "Backup saves"),                      "save_backup"                     )
+		__regFnPref(__txtx("pref_legacy_exception", 		       "Use legacy exception handler"),      "use_legacy_exception"            )
+		__regFnPref(__txtx("pref_crash_dialog",     		       "Show dialog after crash"),           "show_crash_dialog"               )
+		__regFnPref(__txtx("pref_clear_temp",       		       "Clear temp file on close"),          "clear_temp_on_close"             )
+		__regFnPref(__txtx("pref_enable_test_mode", 		       "Enable developer mode*"),            "test_mode"                       )
+		__regFnPref(__txtx("pref_exp_popup_dialog", 		       "Pop-up Dialog"),                     "multi_window"                    )
 		
-		__regFnPref_mf0 __txtx("pref_gui_scaling",                     "GUI scaling") __regFnPref_mf1 						 "ui_scale"						    __regFnPref_mf2
-		__regFnPref_mf0 __txtx("pref_ui_frame_rate",                   "UI frame rate") __regFnPref_mf1                      "ui_framerate"                     __regFnPref_mf2
-		__regFnPref_mf0 __txtx("pref_ui_frame_rate",                   "UI inactive frame rate") __regFnPref_mf1             "ui_framerate_non_focus"           __regFnPref_mf2
-		__regFnPref_mf0 __txtx("pref_interface_language",              "Interface Language*") __regFnPref_mf1                "local"                            __regFnPref_mf2
-		__regFnPref_mf0 __txtx("pref_ui_font",                         "Overwrite UI font") + "*" __regFnPref_mf1            "font_overwrite"                   __regFnPref_mf2
-		__regFnPref_mf0 __txtx("pref_windows_control",                 "Use Windows style window control.") __regFnPref_mf1  "panel_menu_right_control"         __regFnPref_mf2
-		__regFnPref_mf0 __txtx("pref_ui_fix_window_size",              "Fix Window size on start") __regFnPref_mf1           "window_fix"                       __regFnPref_mf2
-		__regFnPref_mf0 __txtx("pref_ui_fix_width",                    "Fix width") __regFnPref_mf1                          "window_fix_width"                 __regFnPref_mf2
-		__regFnPref_mf0 __txtx("pref_ui_fix_height",                   "Fix height") __regFnPref_mf1                         "window_fix_height"                __regFnPref_mf2
-		__regFnPref_mf0 __txtx("pref_supporter_icon",                  "Show supporter icon") __regFnPref_mf1                "show_supporter_icon"              __regFnPref_mf2
+		__regFnPref(__txtx("pref_gui_scaling",                     "GUI scaling"),						 "ui_scale"						   )
+		__regFnPref(__txtx("pref_ui_frame_rate",                   "UI frame rate"),                     "ui_framerate"                    )
+		__regFnPref(__txtx("pref_ui_frame_rate",                   "UI inactive frame rate"),            "ui_framerate_non_focus"          )
+		__regFnPref(__txtx("pref_interface_language",              "Interface Language*"),               "local"                           )
+		__regFnPref(__txtx("pref_ui_font",                         "Overwrite UI font") + "*",           "font_overwrite"                  )
+		__regFnPref(__txtx("pref_windows_control",                 "Use Windows style window control."), "panel_menu_right_control"        )
+		__regFnPref(__txtx("pref_ui_fix_window_size",              "Fix Window size on start"),          "window_fix"                      )
+		__regFnPref(__txtx("pref_ui_fix_width",                    "Fix width"),                         "window_fix_width"                )
+		__regFnPref(__txtx("pref_ui_fix_height",                   "Fix height"),                        "window_fix_height"               )
+		__regFnPref(__txtx("pref_supporter_icon",                  "Show supporter icon"),               "show_supporter_icon"             )
 		
-		__regFnPref_mf0 __txtx("pref_add_node_remember",               "Remember add node position") __regFnPref_mf1         "add_node_remember"                __regFnPref_mf2
+		__regFnPref(__txtx("pref_add_node_remember",               "Remember add node position"),        "add_node_remember"               )
 		
-		__regFnPref_mf0 __txtx("pref_graph_group_in_tab",              "Open group in new tab") __regFnPref_mf1              "graph_open_group_in_tab"          __regFnPref_mf2
-		__regFnPref_mf0 __txtx("pref_graph_zoom_smoothing",            "Graph zoom smoothing") __regFnPref_mf1               "graph_zoom_smoooth"               __regFnPref_mf2
-		__regFnPref_mf0 __txtx("panel_graph_group_require_shift",      "Hold Shift to enter group") __regFnPref_mf1          "panel_graph_group_require_shift"  __regFnPref_mf2
-		__regFnPref_mf0 __txtx("pref_use_alt",                         "Use ALT for") __regFnPref_mf1                        "alt_picker"                       __regFnPref_mf2
-		__regFnPref_mf0 __txtx("pref_preview_show_real_fps",           "Show real fps") __regFnPref_mf1                      "panel_preview_show_real_fps"      __regFnPref_mf2
-		__regFnPref_mf0 __txtx("pref_inspector_focus_on_double_click", "Focus on double click") __regFnPref_mf1              "inspector_focus_on_double_click"  __regFnPref_mf2
-		__regFnPref_mf0 __txtx("pref_collection_preview_speed",        "Collection preview speed") __regFnPref_mf1           "collection_preview_speed"         __regFnPref_mf2
-		__regFnPref_mf0 __txtx("pref_warning_notification_time",       "Warning notification time") __regFnPref_mf1          "notification_time"                __regFnPref_mf2
-		__regFnPref_mf0 __txtx("pref_widget_autocomplete_delay",       "Code Autocomplete delay") __regFnPref_mf1            "widget_autocomplete_delay"        __regFnPref_mf2
-		__regFnPref_mf0 __txtx("pref_widget_textbox_shake",            "Textbox shake") __regFnPref_mf1                      "textbox_shake"                    __regFnPref_mf2
-		__regFnPref_mf0 __txtx("pref_widget_textbox_particles",        "Textbox particles") __regFnPref_mf1                  "textbox_particle"                 __regFnPref_mf2
+		__regFnPref(__txtx("pref_graph_group_in_tab",              "Open group in new tab"),             "graph_open_group_in_tab"         )
+		__regFnPref(__txtx("pref_graph_zoom_smoothing",            "Graph zoom smoothing"),              "graph_zoom_smoooth"              )
+		__regFnPref(__txtx("panel_graph_group_require_shift",      "Hold Shift to enter group"),         "panel_graph_group_require_shift" )
+		__regFnPref(__txtx("pref_use_alt",                         "Use ALT for"),                       "alt_picker"                      )
+		__regFnPref(__txtx("pref_preview_show_real_fps",           "Show real fps"),                     "panel_preview_show_real_fps"     )
+		__regFnPref(__txtx("pref_inspector_focus_on_double_click", "Focus on double click"),             "inspector_focus_on_double_click" )
+		__regFnPref(__txtx("pref_collection_preview_speed",        "Collection preview speed"),          "collection_preview_speed"        )
+		__regFnPref(__txtx("pref_warning_notification_time",       "Warning notification time"),         "notification_time"               )
+		__regFnPref(__txtx("pref_widget_autocomplete_delay",       "Code Autocomplete delay"),           "widget_autocomplete_delay"       )
+		__regFnPref(__txtx("pref_widget_textbox_shake",            "Textbox shake"),                     "textbox_shake"                   )
+		__regFnPref(__txtx("pref_widget_textbox_particles",        "Textbox particles"),                 "textbox_particle"                )
 		
-		__regFnPref_mf0 __txtx("pref_node_param_show",                 "Show paramater on new node") __regFnPref_mf1         "node_param_show"                  __regFnPref_mf2
-		__regFnPref_mf0 __txtx("pref_node_param_width",                "Default param width") __regFnPref_mf1                "node_param_width"                 __regFnPref_mf2
-		__regFnPref_mf0 __txtx("pref_node_3d_preview",                 "Preview surface size") __regFnPref_mf1               "node_3d_preview_size"             __regFnPref_mf2
-		__regFnPref_mf0 __txtx("pref_file_watcher_delay",              "File watcher delay (s)") __regFnPref_mf1             "file_watcher_delay"               __regFnPref_mf2
+		__regFnPref(__txtx("pref_node_param_show",                 "Show paramater on new node"),        "node_param_show"                 )
+		__regFnPref(__txtx("pref_node_param_width",                "Default param width"),               "node_param_width"                )
+		__regFnPref(__txtx("pref_node_3d_preview",                 "Preview surface size"),              "node_3d_preview_size"            )
+		__regFnPref(__txtx("pref_file_watcher_delay",              "File watcher delay (s)"),            "file_watcher_delay"              )
 	}
 #endregion
 

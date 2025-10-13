@@ -78,14 +78,12 @@ function Surface_Sampler_Grey(s = noone, _rng = [0,1]) constructor {
         
         buffer = buffer_verify(buffer, size, buffer_fixed, 2);
         buffer_get_surface(buffer, surface, 0);
-        
-        size -= 2;
     }
     
     setSurface(s);
     
     static getPixelDirect      = function(_x,_y) /*=>*/ { return buffer_read_at(buffer, (_y * sw + _x) * 2, buffer_f16); }
-    static getPixelDirectClamp = function(_x,_y) /*=>*/ { return buffer_read_at(buffer, clamp((_y * sw + _x) * 2, 0, size), buffer_f16); }
+    static getPixelDirectClamp = function(_x,_y) /*=>*/ { return buffer_read_at(buffer, (clamp(_y, 0, sh-1) * sw + clamp(_x, 0, sw-1)) * 2, buffer_f16); }
     
     static getPixel = function(_u,_v) /*=>*/ {
         if(!active) return range[0];

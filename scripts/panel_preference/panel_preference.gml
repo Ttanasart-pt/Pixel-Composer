@@ -12,7 +12,7 @@ function Panel_Preference() : PanelContent() constructor {
 	min_w    = ui(640);
 	min_h    = ui(480);
 	auto_pin = true;
-	font     = f_p2;
+	font     = f_p3;
 	
 	page_width     = ui(128);
 	should_restart = false;
@@ -1475,12 +1475,16 @@ function Panel_Preference() : PanelContent() constructor {
     	sp_pref = new scrollPane(panel_width, panel_height, function(_y, _m) {
     		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
     		var ww   = sp_pref.surface_w;
+    		var sh	 = sp_pref.surface_h;
     		var hh	 = 0;
-    		var th	 = line_get_height(font, 6);
-    		var x1	 = sp_pref.surface_w;
+    		
+    		var x1	 = ww;
+    		var th	 = line_get_height(font, 4);
     		var yy	 = _y + ui(8);
+    		
     		var padx = ui(8);
-    		var pady = ui(6);
+    		var pady = ui(2);
+    		
     		var ind	 = 0;
     		var rx   = x + sp_pref.x;
     		var ry   = y + sp_pref.y;
@@ -1520,16 +1524,25 @@ function Panel_Preference() : PanelContent() constructor {
     			if(struct_try_get(collapsed, psect, 0)) continue;
     			
     			var name = _pref.name;
+    			var widg = _pref.editWidget;
     			
+    			var _bbx = padx;
+				var _bby = yy - pady;
+				var _bbw = ww - padx * 2;
+				var _bbh = max(widg.h, th) + pady * 2;
+				
     			if(search_text != "" && string_pos(_search_text, string_lower(name)) == 0) continue;
     			
-    			if(ind % 2) draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, padx, yy - pady, ww - padx * 2, max(_pref.editWidget.h, th) + pady * 2, COLORS.dialog_preference_prop_bg, .75);
+    			if(ind % 2) draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _bbx, _bby, _bbw, _bbh, COLORS.dialog_preference_prop_bg, .75);
     			
     			if(goto_item == _pref) {
-    				if(goto_item_highlight == 2) sp_pref.setScroll(-hh);
+    				if(goto_item_highlight == 2) sp_pref.setScroll(-hh + sh/2);
     				if(goto_item_highlight == 0) goto_item = noone;
     				
-    				draw_sprite_stretched_add(THEME.ui_panel_bg, 0, padx, yy - pady, ww - padx * 2, max(_pref.editWidget.h, th) + pady * 2, COLORS._main_accent, min(1, goto_item_highlight) * 0.5);
+    				var _hga = sin(goto_item_highlight * pi * 8) * .5 + .5;
+    				
+    				draw_sprite_stretched_add( THEME.ui_panel_bg, 0, _bbx, _bby, _bbw, _bbh, COLORS._main_accent, _hga    );
+    				draw_sprite_stretched_add( THEME.ui_panel,    1, _bbx, _bby, _bbw, _bbh, COLORS._main_accent, _hga*.5 );
     			}
     				
     			draw_set_text(font, fa_left, fa_center, COLORS._main_text);
@@ -1548,14 +1561,15 @@ function Panel_Preference() : PanelContent() constructor {
     				draw_sprite_ui(THEME.patreon_supporter, 1, spr_x, spr_y, -1, 1, 0, COLORS._main_accent, 1);
     			}
     			
-    			_pref.editWidget.setFocusHover(pFOCUS, pHOVER && sp_pref.hover); 
+    			widg.setFont(font);
+    			widg.setFocusHover(pFOCUS, pHOVER && sp_pref.hover); 
     			
     			var widget_w = ui(260);
     			var widget_h = th;
     			
-    				 if(is(_pref.editWidget, textBox))         widget_w = _pref.editWidget.input == TEXTBOX_INPUT.text? ui(400) : widget_w;
-    			else if(is(_pref.editWidget, folderArrayBox))  widget_w = ui(400);
-    			else if(is(_pref.editWidget, buttonClass))     widget_w = ui(400);
+    				 if(is(widg, textBox))         widget_w = widg.input == TEXTBOX_INPUT.text?  ww / 2 : widget_w;
+    			else if(is(widg, folderArrayBox))  widget_w = ww / 2;
+    			else if(is(widg, buttonClass))     widget_w = ww / 2;
     			
     			var widget_x = x1 - padx - ui(4) - widget_w;
     			var widget_y = yy;
@@ -1568,9 +1582,9 @@ function Panel_Preference() : PanelContent() constructor {
     			params.s    = th;
     			params.font = font;
     			
-    			if(instanceof(_pref.editWidget) == "checkBox") params.halign = fa_center;
-    			var wdh = _pref.editWidget.drawParam(params) ?? 0;
-    			if(_pref.editWidget.inBBOX(_m)) sp_pref.hover_content = true;
+    			if(instanceof(widg) == "checkBox") params.halign = fa_center;
+    			var wdh = widg.drawParam(params) ?? 0;
+    			if(widg.inBBOX(_m)) sp_pref.hover_content = true;
     			
     			if(_pref.getDefault != noone) {
     				var _defVal = is_method(_pref.getDefault)? _pref.getDefault() : _pref.getDefault;
@@ -1639,18 +1653,14 @@ function Panel_Preference() : PanelContent() constructor {
     			sections[page_current] = sect;
     		#endregion
     		
-    		goto_item_highlight    = lerp_float(goto_item_highlight, 0, 30);
+    		goto_item_highlight = max(goto_item_highlight - DELTA_TIME, 0);
     		
     		return hh;
     	});
     #endregion
     
     #region Search
-    	tb_search = new textBox(TEXTBOX_INPUT.text, function(str) /*=>*/ { search_text = str; })
-    	                    .setFont(f_p2)
-    	                    .setAlign(fa_left)
-    	                    .setEmpty()
-    	                    .setAutoupdate();
+    	tb_search = textBox_Text(function(str) /*=>*/ { search_text = str; }).setFont(f_p2).setAlign(fa_left).setEmpty().setAutoupdate();
     	
     	search_text = "";
     	contents    = {};
@@ -1668,13 +1678,13 @@ function Panel_Preference() : PanelContent() constructor {
     	}
     
     	function goto(_tag) {
-    		if(!struct_has(contents, _tag)) return self;
+    		if(!has(contents, _tag)) return self;
     		var _it = contents[$ _tag];
     		
     		if(page_current != _it.page)
     			page_current = _it.page;
     		goto_item = _it.item;
-    		goto_item_highlight = 2;
+    		goto_item_highlight = 1;
     		
     		return self;
     	}
@@ -1694,8 +1704,14 @@ function Panel_Preference() : PanelContent() constructor {
 	function drawContent(panel) {
 	    draw_clear_alpha(COLORS.panel_bg_clear, 1);
 	    
+	    var tbx = padding;
+	    var tby = padding;
+	    var tbw = page_width - padding * 2 - ui(4);
+	    var tbh = ui(24);
+	    
     	tb_search.setFocusHover(pFOCUS, pHOVER);
-    	tb_search.draw(padding, padding, page_width - padding * 2 - ui(4), ui(24), search_text, [ mx, my ]);
+    	tb_search.draw(tbx, tby, tbw, tbh, search_text, [ mx, my ]);
+    	draw_sprite_ui(THEME.search, 0, tbx + tbw - tbh/2, tby + tbh/2, .75, .75, 0, COLORS._main_icon, .5);
     	
     	sp_page.verify(page_width - padding, panel_height - padding - ui(32));
     	sp_page.setFocusHover(pFOCUS, pHOVER);
