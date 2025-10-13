@@ -15,8 +15,8 @@ function Node_Average(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		["Surfaces", false], 0, 1, 2, 5, 6, 
 	]
 	
-	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
-	newOutput(1, nodeValue_Output( "Color",       VALUE_TYPE.color, c_black ));
+	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface,  noone ));
+	newOutput(1, nodeValue_Output( "Color",       VALUE_TYPE.color, ca_black ));
 	
 	attribute_surface_depth();
 	
@@ -51,10 +51,10 @@ function Node_Average(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				side /= 2;
 			}
 			
-			cc = surface_get_pixel(temp_surface[!_ind], 0, 0);
+			cc = surface_get_pixel_ext(temp_surface[!_ind], 0, 0);
 			
 		} else 
-			cc = surface_get_pixel(inSurf, 0, 0);
+			cc = surface_get_pixel_ext(inSurf, 0, 0);
 		
 		surface_set_target(_outSurf);
 			draw_clear(cc);
