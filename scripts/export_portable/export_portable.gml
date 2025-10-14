@@ -15,37 +15,37 @@ function exportPortable(project = PROJECT) {
 	
 	var raw_name = filename_name_only(path);
 	var raw_path = filename_path(path) + raw_name;
-	var _proj    = project.serialize();
 	
-	var zip = zip_create();
+	var proj = project.serialize();
+	var zip  = zip_create();
 	
-	for( var i = 0, n = array_length(_proj.nodes); i < n; i++ ) {
-		var _node = _proj.nodes[i];
+	for( var i = 0, n = array_length(proj.nodes); i < n; i++ )
+	for( var j = 0, m = array_length(proj.nodes[i].inputs); j < m; j++ ) {
+		var _input = proj.nodes[i].inputs[j];
+		if(!has(_input, "r")) continue;
 		
-		for( var j = 0, m = array_length(_node.inputs); j < m; j++ ) {
-			var _input = _node.inputs[j];
+		var r = _input.r;
+		for( var k = 0, o = array_length(r); k < o; k++ ) {
+			var v = r[k][1];
 			
-			for( var k = 0, o = array_length(_input.raw_value); k < o; k++ ) {
-				var _val = _input.raw_value[k][1];
-				
-				if(is_string(_val) && file_exists_empty(_val))
-					_input.raw_value[k][1] = __pack_file_strip(zip, _val);
-				else if(is_array(_val)) {
-					for( var l = 0, p = array_length(_val); l < p; l++ ) {
-						if(is_string(_val[l]) && file_exists_empty(_val[l]))
-							_input.raw_value[k][1][l] = __pack_file_strip(zip, _val[l]);	
-					}
-				}
+			if(file_exists_empty(v))
+				r[k][1] = __pack_file_strip(zip, v);
+			
+			if(is_array(v))
+			for( var l = 0, p = array_length(v); l < p; l++ ) {
+				if(file_exists_empty(v[l])) 
+					r[k][1][l] = __pack_file_strip(zip, v[l]);
 			}
 		}
 	}
 	
-	var pro_path = TEMPDIR + raw_name + ".pxc";
-	var file = file_text_open_write(pro_path);
-	file_text_write_string(file, PREFERENCES.save_file_minify? json_stringify_minify(_proj) : json_stringify(_proj, true));
-	file_text_close(file);
-	zip_add_file(zip, raw_name + ".pxc", pro_path);
-	zip_save(zip, raw_path + ".zip");
+	var ppath = $"{TEMPDIR}{raw_name}.pxc";
+	var file  = file_text_open_write(ppath);
 	
-	log_message("EXPORT", $"Export package to {raw_path}.zip succeed.", THEME.noti_icon_file_save);
+	file_text_write_string(file, PREFERENCES.save_file_minify? json_stringify_minify(proj) : json_stringify(proj, true));
+	file_text_close(file);
+	zip_add_file(zip, $"{raw_name}.pxc", ppath);
+	zip_save(zip, $"{raw_path}.zip");
+	
+	log_message("EXPORT", $"Export package to {raw_path}.zip succeed.", THEME.noti_icon_file_save).setRef(filename_dir(raw_path));
 }
