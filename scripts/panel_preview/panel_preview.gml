@@ -265,23 +265,19 @@ function Panel_Preview() : PanelContent() constructor {
         
         resetViewOnDoubleClick = true;
         
+        tb_zoom_param = undefined;
         tb_zoom_level = new textBox(TEXTBOX_INPUT.number, function(z) /*=>*/ { 
         	var _s = canvas_s;
-        	canvas_s = clamp(z, 0.10, 64); 
+        	canvas_s = clamp(z, 0.10, 64);
+            if(_s == canvas_s) return;
         	
-            if(_s != canvas_s) {
-                var dx = (canvas_s - _s) * ((w / 2 - canvas_x) / _s);
-                var dy = (canvas_s - _s) * ((h / 2 - canvas_y) / _s);
-                canvas_x -= dx;
-                canvas_y -= dy;
-            }
-        });
-        tb_zoom_level.color  = c_white;
-        tb_zoom_level.align  = fa_right;
-        tb_zoom_level.hide   = 3;
-        tb_zoom_level.font   = f_p2;
+            var dx = (canvas_s - _s) * ((w / 2 - canvas_x) / _s);
+            var dy = (canvas_s - _s) * ((h / 2 - canvas_y) / _s);
+            canvas_x -= dx;
+            canvas_y -= dy;   
+        }).setColor(c_white).setAlign(fa_right).setHide(3).setFont(f_p2);
         
-	    tb_framerate = new textBox(TEXTBOX_INPUT.number, function(val) { preview_rate = real(val); });
+	    tb_framerate = new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { preview_rate = real(val); });
 	    
 	    tooltip_action      = "";
         tooltip_action_time = 0;
@@ -2097,15 +2093,16 @@ function Panel_Preview() : PanelContent() constructor {
                     var _zmw  = string_width(_zms) + ui(16);
                     var _zmx  = right_menu_x + ui(8);
                     var _zmc  = _zmsl? COLORS._main_text : COLORS._main_text_sub;
-                    if(tb_zoom_level.hovering) mouse_on_preview = false;
+                    if(tb_zoom_level.hovering) {
+                    	mouse_on_preview = false;
+                    	CURSOR_SPRITE    = THEME.view_zoom;
+                    }
                     
                     if(_zmsl) draw_sprite_stretched(THEME.textbox, 3, _zmx - _zmw + ui(4), right_menu_y + ui(2), _zmw - ui(10), _lh - ui(2));
                     
-                    tb_zoom_level.rx = x;
-                    tb_zoom_level.ry = y;
-                    tb_zoom_level.setFocusHover(pFOCUS, pHOVER);
                     tb_zoom_level.postBlend = _zmc;
-                    tb_zoom_level.draw(_zmx, right_menu_y, _zmw, _lh, string(canvas_s), [ mx, my ], fa_right);
+                    tb_zoom_level.setFocusHover(pFOCUS, pHOVER);
+                    tb_zoom_level.draw(_zmx, right_menu_y, _zmw, _lh, string(canvas_s), [mx,my], fa_right);
                     
                 	draw_set_text(f_p2, fa_right, fa_top, _zmc);
                     if(!tb_zoom_level.selecting && !tb_zoom_level.sliding)
@@ -3023,11 +3020,10 @@ function Panel_Preview() : PanelContent() constructor {
             draw_set_alpha(1);
         }
         
-        drawPreviewOverlay();
-        
         var inspect_node = PANEL_INSPECTOR.getInspecting();
         var toolNode = noone;
         
+        drawPreviewOverlay();
         drawViewController();
         
         hoveringGizmo    = false;

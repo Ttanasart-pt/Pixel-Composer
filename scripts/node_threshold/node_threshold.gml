@@ -24,6 +24,7 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput( 3, nodeValue_Slider(      "Smoothness",       0     )).setInternalName("Brightness Smoothness");
 	newInput(16, nodeValue_Int(         "Adaptive Radius",  4     ));
 	newInput(17, nodeValue_Bool(        "Invert",           false )).setInternalName("Brightness Invert");
+	newInput(20, nodeValue_Bool(        "Multiply",         false ));
 	newInput(19, nodeValue_Bool(        "Apply to Alpha",   false ));
 	
 	////- =Alpha
@@ -31,16 +32,17 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput( 8, nodeValue_Slider( "Threshold",  .5     )).setHotkey("A").setInternalName("Alpha Threshold").setMappable(14);
 	newInput( 9, nodeValue_Slider( "Smoothness",  0     )).setInternalName("Alpha Smoothness");
 	newInput(18, nodeValue_Bool(   "Invert",      false )).setInternalName("Alpha Invert");
-	
-	// input 20
+	// input 21
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 6, 10, 
 		["Surfaces",   true    ], 0, 4, 5, 11, 12, 
-		["Brightness", true, 1 ], 15, 2, 13, 3, 16, 17, 19, 
+		["Brightness", true, 1 ], 15, 2, 13, 3, 16, 17, 20, 19, 
 		["Alpha",      true, 7 ], 8, 14, 9, 18, 
 	];
+	
+	////- Nodes
 	
 	attribute_surface_depth();
 	
@@ -72,9 +74,10 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _algo      = _data[15];
 		var _adap_size = _data[16]; _adap_size = min(_adap_size, 32);
 		
-		var _brightInv = _data[17];
-		var _alhpaInv  = _data[18];
-		var _brightAlp = _data[19];
+		var _brightInv  = _data[17];
+		var _alhpaInv   = _data[18];
+		var _brightAlp  = _data[19];
+		var _brightMulp = _data[20];
 		
 		inputs[16].setVisible(_algo == 1);
 		
@@ -91,6 +94,7 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			shader_set_f("adaptiveRadius",	    _adap_size);
 			shader_set_f("gaussianCoeff",	    __gaussian_get_kernel(_adap_size));
 			shader_set_i("brightAlpha",		    _brightAlp);
+			shader_set_i("brightMulp",		    _brightMulp);
 			
 			shader_set_i("alpha",			    _alph);
 			shader_set_i("alphaInvert",			_alhpaInv);

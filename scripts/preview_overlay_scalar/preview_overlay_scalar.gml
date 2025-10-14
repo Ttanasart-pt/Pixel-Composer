@@ -55,11 +55,9 @@ function preview_overlay_scalar(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 						
 	if(drag_type) {
 		index = 1;
-		var _dist = point_distance(_mx, _my, _x, _y) / (_s * _scale);
-		var _sign = abs(angle_difference(point_direction(_mx, _my, _x, _y), _angle)) > 90? 1 : -1;
 		
+		var _dist = point_project_distance_line_angle(_mx, _my, _x, _y, _angle) / (_s * _scale);
 		if(key_mod_press(CTRL)) _dist = round(_dist);
-		_dist *= _sign;
 		
 		if(setValueInspector( unit.invApply(_dist) ))
 			UNDO_HOLDING = true;

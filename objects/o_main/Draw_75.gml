@@ -149,7 +149,10 @@ if(winMan_isMinimized()) exit;
 	PANEL_MAIN.drawGUI();
 	
 	if(CURSOR_SPRITE != noone) {
-		draw_sprite_ui(CURSOR_SPRITE, 0, mouse_x + ui(4), mouse_y + ui(4));
+		var ox = sprite_get_xoffset(CURSOR_SPRITE);
+		var oy = sprite_get_yoffset(CURSOR_SPRITE);
+		
+		draw_sprite_ui(CURSOR_SPRITE, 0, mouse_x + ox + ui(4), mouse_y + oy + ui(4));
 		CURSOR_SPRITE = noone;
 	}
 	

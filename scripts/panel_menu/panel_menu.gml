@@ -58,8 +58,8 @@
                     return submenuCall(_dat, arr, "recent_files").setTooltip(tip);
                 }).setMenu("recent_files",, true);
                 
-            registerFunction("", "Import .zip",     "",     MOD_KEY.none, __IMPORT_ZIP             ).setMenu("import_zip")
-            registerFunction("", "Export .zip",     "",     MOD_KEY.none, __EXPORT_ZIP             ).setMenu("export_zip")
+            registerFunction("", "Import project .zip", "",     MOD_KEY.none, __IMPORT_ZIP             ).setMenu("import_zip")
+            registerFunction("", "Export project .zip", "",     MOD_KEY.none, __EXPORT_ZIP             ).setMenu("export_zip")
             
             registerFunction("", "Import",          "",     MOD_KEY.none, function(_dat) /*=>*/ {return submenuCall(_dat, [ MENU_ITEMS.import_zip ])} ).setMenu("import_menu",, true);
             registerFunction("", "Export",          "",     MOD_KEY.none, function(_dat) /*=>*/ {return submenuCall(_dat, [ MENU_ITEMS.export_zip ])} ).setMenu("export_menu",, true);

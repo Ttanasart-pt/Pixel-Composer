@@ -8,6 +8,7 @@ uniform int       brightThresholdUseSurf;
 uniform sampler2D brightThresholdSurf;
 uniform float     brightSmooth;
 uniform int       brightAlpha;
+uniform int       brightMulp;
 
 uniform int       alpha;
 uniform int       alphaInvert;
@@ -31,7 +32,8 @@ void main() {
 		alp = mix(alphaThreshold.x, alphaThreshold.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 	}
 	
-	vec4 col  = v_vColour * texture2D( gm_BaseTexture, v_vTexcoord );
+	vec4 base = texture2D( gm_BaseTexture, v_vTexcoord );
+	vec4 col  = base;
 	
 	if(bright == 1) {
 		float cbright = dot(col.rgb, vec3(0.2126, 0.7152, 0.0722));
@@ -40,6 +42,8 @@ void main() {
 		
 		if(brightAlpha == 0) col.rgb = vec3(vBright);
 		else                 col     = vec4(col.rgb, vBright);
+		
+		if(brightMulp   == 1) col *= base;
 	}
 	
 	if(alpha == 1) {

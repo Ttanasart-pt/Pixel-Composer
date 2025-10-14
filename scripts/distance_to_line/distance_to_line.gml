@@ -84,6 +84,13 @@ function point_project_line(px, py, l0x, l0y, l1x, l1y) {
 	return [l0x + lengthdir_x(dt, dir), l0y + lengthdir_y(dt, dir)];
 }
 
+function point_project_distance_line_angle(px, py, lx, ly, ang) {
+	var dx = lengthdir_x(1, ang);
+	var dy = lengthdir_y(1, ang);
+	var dt  = dot_product(px - lx, py - ly, dx, dy);
+	return dt;
+}
+
 function point_project_curve(mx, my, x0, y0, x1, y1) {
 	var xc = (x0 + x1) / 2;
 	var sample = ceil((abs(x0 - x1) + abs(y0 - y1)) / 16 * PROJECT.graphConnection.line_sample);

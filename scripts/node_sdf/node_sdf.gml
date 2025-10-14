@@ -11,22 +11,18 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	
 	newActiveInput(1);
 	
-	////- Surface
-	
+	////- =Surface
 	newInput(0, nodeValue_Surface("Surface In"));
 	
-	////- SDF
-	
+	////- =SDF
 	newInput(2, nodeValue_Enum_Button( "Side",         2, [ "Inside", "Outside", "Both" ]));
 	newInput(3, nodeValue_Slider(      "Max distance", 1, [ 0, 2, 0.01 ]));
 	newInput(6, nodeValue_Bool(        "Angle",        false));
 	
-	////- Render
-	
+	////- =Render
 	newInput(4, nodeValue_Bool( "Keep Alpha", false));
 	newInput(5, nodeValue_Bool( "Invert",     false));
-	
-	//// input 6
+	// input 6
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -36,10 +32,22 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 		["Render",	 false], 4, 5, 6, 
 	]
 	
+	////- Nodes
+	
 	attribute_surface_depth();
 	attribute_oversample();
 	
 	temp_surface = [ noone, noone ];
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+		var _dim = getDimension();
+		var ww   = _s * _dim[0];
+		var hh   = _s * _dim[1];
+		
+		InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _x, _y, ww, _mx, _my, _snx, _sny));
+		
+		return w_hovering;
+	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		var inSurf = _data[0];
