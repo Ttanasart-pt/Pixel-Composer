@@ -81,6 +81,9 @@ function preview_overlay_scalar(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 		}
 	} 
 	
+	draw_set_color(COLORS._main_accent);
+	draw_line_dashed(_x, _y, _ax, _ay);
+	
 	__overlay_hover = array_verify(__overlay_hover, 1);
 	__overlay_hover[0] = lerp_float(__overlay_hover[0], index, 4);
 	draw_anchor(__overlay_hover[0], _ax, _ay, _r, _type);

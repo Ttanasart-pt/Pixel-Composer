@@ -54,7 +54,9 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var cx = _x + _dim[0] / 2 * _s;
 		var cy = _y + _dim[1] / 2 * _s;
 		
-		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, cx, cy, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y,         _s, _mx, _my, _snx, _sny));
+		// InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y +  6*_s, _s, _mx, _my, _snx, _sny, 0, _dim[0]));
+		// InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _x, _y + 12*_s, _s, _mx, _my, _snx, _sny, 0, _dim[0]));
 		
 		if(_typ == 1) InputDrawOverlay(inputs[14].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		if(_typ == 2) InputDrawOverlay(inputs[12].drawOverlay(w_hoverable, active, cx, cy, _s, _mx, _my, _snx, _sny));

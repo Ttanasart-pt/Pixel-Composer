@@ -99,6 +99,10 @@ uniform int       type;
 uniform vec2      dimension;
 uniform vec2      center;
 
+uniform vec2      intensity;
+uniform int       intensityUseSurf;
+uniform sampler2D intensitySurf;
+
 uniform vec2      strength;
 uniform int       strengthUseSurf;
 uniform sampler2D strengthSurf;
@@ -130,30 +134,29 @@ vec3 spectral_zucconi6 (float w) {
 		bump3y(c2 * (x - x2), y2) ;
 }
 
-vec4 chroma_scaling(vec2 uv, float str) {
+vec4 chroma_scaling(vec2 uv, float str, float itns) {
 	vec2 tx = 1.0 / dimension;
     vec2 co = (uv - center * tx) * 2.0;
-    vec2 pp = vec2(0.), uvR, uvB;
+    vec2 pp = vec2(0.);
 	
 	pp = dot(co, co) * co;
 	pp *= str * tx;
 	
-    uvR = uv - pp;
-    uvB = uv + pp;
+    vec4 cr = texture2Dintp(gm_BaseTexture, uv-pp); cr.rgb *= cr.a;
+    vec4 cb = texture2Dintp(gm_BaseTexture, uv+pp); cb.rgb *= cb.a;
+    vec4 cv = texture2Dintp(gm_BaseTexture, uv   ); cv.rgb *= cv.a;
+    vec4 res = vec4(cr.r, cv.g, cb.b, cv.a + cr.a + cb.a);
     
-    vec4 cr = texture2Dintp(gm_BaseTexture, uvR); cr.rgb *= cr.a;
-    vec4 cb = texture2Dintp(gm_BaseTexture, uvB); cb.rgb *= cb.a;
-    vec4 cv = texture2Dintp(gm_BaseTexture, uv ); cv.rgb *= cv.a;
-    
-    return vec4(cr.r, cv.g, cb.b, cv.a + cr.a + cb.a);
+    return mix(cv, res, itns);
 }
 
-vec4 chroma_continuous(vec2 uv, float str) {
+vec4 chroma_continuous(vec2 uv, float str, float itns) {
 	float stp  = 64.;
 	vec2  tx   = 1.0 / dimension;
 	float strr = str / 16. * .2;
 	vec2  cuv  = (uv - center * tx) * 2.0;
     vec3  o    = vec3(0.);
+    vec4  cv   = texture2Dintp(gm_BaseTexture, uv   );
     
     for (float i = 0.; i <= 1.; i += 1. / stp) {
     	vec4 sam = texture2Dintp(gm_BaseTexture, uv - cuv * strr * i); sam.rgb *= sam.a;
@@ -162,8 +165,9 @@ vec4 chroma_continuous(vec2 uv, float str) {
     
     o /= stp * vec3(.386, .372, .23);
     o  = pow(o, vec3(1. / 2.2));
+    vec4 res = vec4(o, 1.);
     
-    return vec4(o, 1.);
+    return mix(cv, res, itns);
 }
 
 void main() {
@@ -173,8 +177,14 @@ void main() {
 		str = mix(strength.x, strength.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 	}
 	
+	float itns = intensity.x;
+	if(intensityUseSurf == 1) {
+		vec4 _vMap = texture2Dintp( intensitySurf, v_vTexcoord );
+		itns = mix(intensity.x, intensity.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	}
+	
 	gl_FragColor = vec4(0.);
 	
-	if(type == 0) gl_FragColor = chroma_scaling(v_vTexcoord, str);
-	if(type == 1) gl_FragColor = chroma_continuous(v_vTexcoord, str);
+	if(type == 0) gl_FragColor = chroma_scaling(v_vTexcoord, str, itns);
+	if(type == 1) gl_FragColor = chroma_continuous(v_vTexcoord, str, itns);
 }
