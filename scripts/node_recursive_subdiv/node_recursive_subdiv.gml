@@ -14,7 +14,7 @@ function Node_Recursive_Subdiv(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	////- =Render
 	newInput(4, nodeValue_Enum_Button(  "Color Source", 0, [ "Palette", "Random HSV" ]));
 	newInput(9, nodeValueSeed(VALUE_TYPE.integer, "Color Seed"));
-	newInput(5, nodeValue_Palette(      "Palette", array_clone(DEF_PALETTE)));
+	newInput(5, nodeValue_Palette(      "Palette" ));
 	newInput(6, nodeValue_Slider_Range( "H Range", [0, 255], [ 0, 255, 1 ]));
 	newInput(7, nodeValue_Slider_Range( "S Range", [0, 255], [ 0, 255, 1 ]));
 	newInput(8, nodeValue_Slider_Range( "V Range", [0, 255], [ 0, 255, 1 ]));

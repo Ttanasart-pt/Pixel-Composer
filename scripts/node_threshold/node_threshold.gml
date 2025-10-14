@@ -49,12 +49,15 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		PROCESSOR_OVERLAY_CHECK
 		
+		var _b = current_data[1];
+		var _a = current_data[7];
+		
 		var _dim = getDimension();
 		var _cx = _x + _dim[0] / 2 * _s;
 		var _cy = _y + _dim[1] / 2 * _s;
 		
-		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _cx, _cy - ui(16), _s, _mx, _my, _snx, _sny, 0, _dim[0] / 2));
-		InputDrawOverlay(inputs[8].drawOverlay(w_hoverable, active, _cx, _cy + ui(16), _s, _mx, _my, _snx, _sny, 0, _dim[0] / 2));
+		if(_b) InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _cy - ui(16), _s, _mx, _my, _snx, _sny, 0, _dim[0]));
+		if(_a) InputDrawOverlay(inputs[8].drawOverlay(w_hoverable, active, _x, _cy + ui(16), _s, _mx, _my, _snx, _sny, 0, _dim[0]));
 		
 		return w_hovering;
 	}

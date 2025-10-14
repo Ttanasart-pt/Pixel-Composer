@@ -5,7 +5,7 @@ function Node_Color_Separate(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	newInput(1, nodeValue_Bool("All Colors", true));
 	
-	newInput(2, nodeValue_Palette("Colors", array_clone(DEF_PALETTE)));
+	newInput(2, nodeValue_Palette("Colors" ));
 	
 	newInput(3, nodeValue_Bool("Match All", true, "If false, only match pixels with the exact same color."));
 	

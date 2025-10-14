@@ -8,31 +8,32 @@
 function Node_Normalize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Normalize";
 	
-	newInput(0, nodeValue_Surface("Surface In"));
+	newInput(0, nodeValue_Surface( "Surface In"  ));
+	newInput(1, nodeValue_EButton( "Channels", 0, [ "BW", "RGB" ]       ));
 	
-	newInput(1, nodeValue_Enum_Button("Channels", 0, [ "BW", "RGB" ]));
+	////- =Normalize
+	newInput(2, nodeValue_EButton( "Modes",    0, [ "Global", "Local" ] ));
+	newInput(3, nodeValue_Int(     "Radius",   4 ));
 	
-	newInput(2, nodeValue_Enum_Button("Modes", 0, [ "Global", "Local" ]));
-	
-	newInput(3, nodeValue_Int("Radius", 4));
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0, 1, 
 		["Normalize", false], 2, 3, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	////- Node
 	
 	attribute_surface_depth();
 	
 	temp_surface = [ noone, noone, noone, noone ];
-	
-	static step = function() {}
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		var _surf = _data[0];
 		var _chan = _data[1];
 		var _mode = _data[2];
 		var _lrad = _data[3];
+		
+		inputs[3].setVisible(_mode == 1);
 		
 		var _sw  = surface_get_width(_surf);
 		var _sh  = surface_get_height(_surf);

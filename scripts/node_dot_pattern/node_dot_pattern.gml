@@ -22,7 +22,7 @@ function Node_Dotted(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput( 6, nodeValue_Enum_Button( "Render Mode",     0, [ "Step", "AA", "Smooth" ] ));
 	newInput(16, nodeValue_Enum_Button( "Dot Color Mode",  0, [ "Solid", "Palette", "Random", "Texture" ] ));
 	newInput( 8, nodeValue_Color(       "Dot Color",       ca_white ));
-	newInput(17, nodeValue_Palette(     "Palette",         array_clone(DEF_PALETTE) ));
+	newInput(17, nodeValue_Palette(     "Palette" ));
 	newInput(18, nodeValue_Gradient(    "Gradient",        new gradientObject([ca_black, ca_white]) ));
 	newInput(19, nodeValue_Surface(     "Texture" ));
 	newInput(12, nodeValue_Slider(      "Smoothness",     .1))

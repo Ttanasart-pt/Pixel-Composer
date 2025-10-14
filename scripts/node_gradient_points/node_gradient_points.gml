@@ -17,7 +17,7 @@ function Node_Gradient_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	
 	newInput(9, nodeValue_Bool("Use palette", false ));
 	
-	newInput(10, nodeValue_Palette("Palette", array_clone(DEF_PALETTE)));
+	newInput(10, nodeValue_Palette("Palette" ));
 	
 	newInput(11, nodeValue_Slider("Falloff 1", 6, [ 0, 32, 0.1 ] ));
 	newInput(12, nodeValue_Slider("Falloff 2", 6, [ 0, 32, 0.1 ] ));

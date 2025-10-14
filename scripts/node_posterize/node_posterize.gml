@@ -13,7 +13,7 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	////- =Palette
 	newInput(2, nodeValue_Bool(        "Use Palette", true));
-	newInput(1, nodeValue_Palette(     "Palette", array_clone(DEF_PALETTE)));
+	newInput(1, nodeValue_Palette(     "Palette" ));
 	newInput(9, nodeValue_Bool(        "Use Global Range", true));
 	newInput(3, nodeValue_ISlider(     "Steps", 4, [2, 16, 0.1]));
 	newInput(4, nodeValue_Slider(      "Gamma", 1, [0, 2, 0.01])).setMappable(7);

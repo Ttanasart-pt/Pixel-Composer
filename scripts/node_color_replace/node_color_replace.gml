@@ -11,8 +11,8 @@ function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	__init_mask_modifier(7, 11);
 	
 	////- =Palettes
-	newInput(1, nodeValue_Palette( "From", array_clone(DEF_PALETTE) ));
-	newInput(2, nodeValue_Palette( "To",   array_clone(DEF_PALETTE) ));
+	newInput(1, nodeValue_Palette( "From" ));
+	newInput(2, nodeValue_Palette( "To"   ));
 	
 	////- =Comparison
 	newInput(13, nodeValue_Enum_Scroll( "Mode", 0, [ "Closest", "Random" ] ));

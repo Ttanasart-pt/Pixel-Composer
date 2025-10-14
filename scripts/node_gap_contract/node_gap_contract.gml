@@ -19,11 +19,14 @@ function Node_Gap_Contract(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	input_display_list = [ 1, 
 		["Surfaces", false], 0, 2, 3, 4, 5, 7, 
 		["Gap",      false], 6, 
-	]
+	];
+	
+	////- Node
 	
 	temp_surface = [ noone, noone ];
 	
 	attribute_surface_depth();
+	attribute_oversample();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		PROCESSOR_OVERLAY_CHECK
@@ -62,6 +65,7 @@ function Node_Gap_Contract(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		repeat(abs(_itr)) {
 			surface_set_shader(temp_surface[_bg], sh_gap_contract);
+				shader_set_i("sampleMode", getAttribute("oversample"));
 				shader_set_2("dimension", _dim);
 				shader_set_i("process",   _bg);
 				shader_set_i("inverted",  _itr < 0);

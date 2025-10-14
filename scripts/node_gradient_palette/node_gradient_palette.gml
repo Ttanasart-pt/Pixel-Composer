@@ -2,7 +2,7 @@ function Node_Gradient_Palette(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	name = "Palette to Gradient";
 	setDimension(96);
 	
-	newInput(0, nodeValue_Palette("Palette", array_clone(DEF_PALETTE)))
+	newInput(0, nodeValue_Palette("Palette" ))
 		.setVisible(true, true);
 	
 	newInput(1, nodeValue_Bool("Custom positions", false));

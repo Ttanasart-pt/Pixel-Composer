@@ -2,7 +2,7 @@ function Node_Palette_Sort(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	name = "Sort Palette";	
 	setDimension(96);
 	
-	newInput(0, nodeValue_Palette("Palette in", array_clone(DEF_PALETTE)))
+	newInput(0, nodeValue_Palette("Palette in" ))
 		.setVisible(true, true);
 	
 	newInput(1, nodeValue_Enum_Button("Order",  0, [ "Brightness", -1, "Hue (HSV)", "Saturation (SHV)", "Value (VHS)", -1, "Red (RGB)", "Green (GBR)", "Blue (BRG)", -1, "Custom" ]))

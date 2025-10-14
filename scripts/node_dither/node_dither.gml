@@ -44,7 +44,7 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(5, nodeValue_Surface(     "Contrast map" ));
 	
 	////- =Palette
-	newInput( 1, nodeValue_Palette( "Palette",     array_clone(DEF_PALETTE) ));
+	newInput( 1, nodeValue_Palette( "Palette" ));
 	newInput(14, nodeValue_Bool(    "Use palette", true ));
 	newInput(15, nodeValue_ISlider( "Steps",       4, [2, 16, 0.1] ));
 	// input 16

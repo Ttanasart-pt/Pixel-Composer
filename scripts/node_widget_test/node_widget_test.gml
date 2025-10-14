@@ -26,7 +26,7 @@ function Node_Widget_Test(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput(19, nodeValue_Bool("checkBox", false)                               .setDisplay(VALUE_DISPLAY._default))
 
 	newInput(20, nodeValue_Color("buttonColor", 0)                                  .setDisplay(VALUE_DISPLAY._default))
-	newInput(21, nodeValue_Palette("buttonPalette", array_clone(DEF_PALETTE))                     .setDisplay(VALUE_DISPLAY.palette))
+	newInput(21, nodeValue_Palette("buttonPalette" )                     .setDisplay(VALUE_DISPLAY.palette))
 	newInput(22, nodeValue_Gradient("buttonGradient", new gradientObject(ca_white))  .setDisplay(VALUE_DISPLAY._default))
 
 	newInput(23, nodeValue("pathArrayBox", self, CONNECT_TYPE.input, VALUE_TYPE.path, [])                                 .setDisplay(VALUE_DISPLAY.path_array, { filter: [ "image|*.png;*.jpg", "" ] }))

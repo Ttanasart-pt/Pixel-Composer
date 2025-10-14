@@ -59,7 +59,8 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		draw_set_color(COLORS._main_accent);
 		draw_circle(_px, _py, ui(4), false);
 		draw_line_dashed(_px, _py, _ax, _ay);
-		draw_anchor(anchor_index, _ax, _ay);
+		draw_sprite_ui(THEME.arrow4_24, 0, _ax, _ay, 1, 1, 0, COLORS._main_accent);
+		draw_anchor(anchor_index, _ax, _ay, ui(10), 1);
 		
 		if(anchor_dragging) {
 			var _dir = point_direction( _px, _py, _mx, _my);

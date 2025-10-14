@@ -50,9 +50,8 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _cx = _x + _dim[0] / 2 * _s;
 		var _cy = _y + _dim[1] / 2 * _s;
 		
-		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _cx, _cy - ui(24), _s, _mx, _my, _snx, _sny, 0, _dim[0] / 2));
-		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _cx, _cy,          _s, _mx, _my, _snx, _sny, 0, _dim[0] / 2));
-		InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _cx, _cy + ui(24), _s, _mx, _my, _snx, _sny, 0, _dim[0] / 2));
+		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my, _snx, _sny,   0, _dim[0] / 16));
+		InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my, _snx, _sny,  90, _dim[1] /  2));
 		
 		return w_hovering;
 	}

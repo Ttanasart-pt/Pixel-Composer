@@ -21,11 +21,25 @@ function Node_De_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	input_display_list = [ 1, 
 		["Surfaces",  true], 0, 5, 6, 7, 8, 
 		["Effect",	 false], 4, 9, 2, 3, 
-	]
+	];
+	
+	////- Node
 	
 	attribute_surface_depth();
 	
 	temp_surface = [ noone, noone ];
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+		PROCESSOR_OVERLAY_CHECK
+		
+		var _dim = getDimension();
+		var _cx = _x + _dim[0] / 2 * _s;
+		var _cy = _y + _dim[1] / 2 * _s;
+		
+		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _cy, _s, _mx, _my, _snx, _sny, 0, _dim[0]));
+		
+		return w_hovering;
+	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		var surf = _data[0];

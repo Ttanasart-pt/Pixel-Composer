@@ -11,26 +11,25 @@ function Node_Color_Remove(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput(7, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surfaces
-	
 	newInput(0, nodeValue_Surface( "Surface In" ));
 	newInput(3, nodeValue_Surface( "Mask"       ));
 	newInput(4, nodeValue_Slider(  "Mix", 1     ));
 	__init_mask_modifier(3, 8); // inputs 8, 9, 
 	
 	////- =Remove
-	
-	newInput(1, nodeValue_Palette( "Colors",    array_clone(DEF_PALETTE)));
+	newInput(1, nodeValue_Palette( "Colors",    [ ca_black ] ));
 	newInput(2, nodeValue_Slider(  "Threshold", .1 )).setMappable(10);
 	newInput(6, nodeValue_Bool(    "Invert",    false, "Keep the selected colors and remove the rest."));
-	
 	// input 11
+	
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 5, 7, 
 		["Surfaces", true], 0, 3, 4, 8, 9, 
 		["Remove",	false], 1, 2, 10, 6, 
-	]
+	];
 	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	////- Node
 	
 	attribute_surface_depth();
 	

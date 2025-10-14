@@ -13,7 +13,7 @@ function Node_MK_Panels(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(16, nodeValue_Int(     "Max Iteration",  -1           ));
 	newInput( 4, nodeValue_Slider(  "Min Size",       .1           ));
 	newInput(10, nodeValue_Range(   "Padding",        [0,0], true  ));
-	newInput( 5, nodeValue_Palette( "Panel Colors",   DEF_PALETTE  )).setOptions("Select by:", "array_select", [ "Index Loop", "Index Ping-pong", "Random" ], THEME.array_select_type).iconPad();
+	newInput( 5, nodeValue_Palette( "Panel Colors" )).setOptions("Select by:", "array_select", [ "Index Loop", "Index Ping-pong", "Random" ], THEME.array_select_type).iconPad();
 	
 	////- =Split
 	newInput(26, nodeValue_Range(   "Inset Range",   [.05,.1]    ));

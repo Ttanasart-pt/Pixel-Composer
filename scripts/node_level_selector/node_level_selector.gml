@@ -5,20 +5,17 @@ function Node_Level_Selector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	newInput(6, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surfaces
-	
 	newInput(0, nodeValue_Surface( "Surface In" ));
 	newInput(3, nodeValue_Surface( "Mask"       ));
 	newInput(4, nodeValue_Slider(  "Mix", 1     ));
 	__init_mask_modifier(3, 7); // inputs 7, 8, 
 	
 	////- =Level
-	
 	newInput( 1, nodeValue_Slider( "Midpoint",    0 )).setHotkey("M").setMappable(9);
 	newInput( 2, nodeValue_Slider( "Range",      .1 )).setHotkey("R").setMappable(10);
 	newInput(12, nodeValue_Slider( "Smoothness",  0 ));
 	
 	////- =Output
-	
 	newInput(11, nodeValue_Bool( "Keep Original", false ));
 	
 	// input 13
@@ -81,8 +78,9 @@ function Node_Level_Selector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		var _cx = _x + _dim[0] / 2 * _s;
 		var _cy = _y + _dim[1] / 2 * _s;
 		
-		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _cx, _cy - ui(16), _s, _mx, _my, _snx, _sny, 0, _dim[0] / 2));
-		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _cx, _cy + ui(16), _s, _mx, _my, _snx, _sny, 0, _dim[0] / 2));
+		InputDrawOverlay(inputs[ 1].drawOverlay(w_hoverable, active,  _x, _cy, _s, _mx, _my, _snx, _sny,   0, _dim[0]    ));
+		InputDrawOverlay(inputs[ 2].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my, _snx, _sny,  90, _dim[1] / 2));
+		InputDrawOverlay(inputs[12].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my, _snx, _sny, -90, _dim[1] / 2));
 		
 		return w_hovering;
 	}
