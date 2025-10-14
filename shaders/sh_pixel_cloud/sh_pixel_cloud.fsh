@@ -1,3 +1,20 @@
+#pragma use(sampler_simple)
+
+#region -- sampler_simple -- [1729740692.1417658]
+    uniform int  sampleMode;
+    
+    vec4 sampleTexture( sampler2D texture, vec2 pos) {
+        if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
+            return texture2D(texture, pos);
+        
+             if(sampleMode <= 1) return vec4(0.);
+        else if(sampleMode == 2) return texture2D(texture, clamp(pos, 0., 1.));
+        else if(sampleMode == 3) return texture2D(texture, fract(pos));
+        else if(sampleMode == 4) return vec4(vec3(0.), 1.);
+        
+        return vec4(0.);
+    }
+#endregion -- sampler_simple --
 #pragma use(curve)
 
 #region -- curve -- [1742009781.2228172]
@@ -306,12 +323,12 @@ void main() {
 	vec2 _new_pos = _pos - _vec;
 	vec4 _col = vec4(0.);
 	
-	if(_new_pos.x >= 0. && _new_pos.x <= 1. && _new_pos.y >= 0. && _new_pos.y <= 1.) {
-		_col = texture2D( gm_BaseTexture, _new_pos );
+	// if(_new_pos.x >= 0. && _new_pos.x <= 1. && _new_pos.y >= 0. && _new_pos.y <= 1.) {
+		_col = sampleTexture( gm_BaseTexture, _new_pos );
 		vec4 cc = gradientEval(str + frandom(_pos, 1.235) * randomAmount);
 		_col.rgb *= cc.rgb;
 		_col.a   *= cc.a   * curveEval(alpha_curve, alpha_amount, str + frandom(_pos, 2.984) * randomAmount);
-	}
+	// }
 	
     gl_FragColor = _col;
 }

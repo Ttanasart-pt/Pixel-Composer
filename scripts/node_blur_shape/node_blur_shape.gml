@@ -30,7 +30,6 @@ function Node_Blur_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	static processData = function(_outSurf, _data, _array_index) {	
 		if(!is_surface(_data[0])) return _outSurf;
 		
-		var _samp = getAttribute("oversample");
 		var _blur = _data[1];
 		var _mask = _data[2];
 		var _mode = _data[7];
@@ -40,7 +39,7 @@ function Node_Blur_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			shader_set_f("dimension",         surface_get_dimension(_data[0]));
 			shader_set_f("blurMaskDimension", surface_get_dimension(_blur));
 			var b = shader_set_surface("blurMask",    _blur);
-			shader_set_i("sampleMode", _samp);
+			shader_set_i("sampleMode", getAttribute("oversample"));
 			shader_set_i("mode",       _mode);
 			shader_set_i("mode",       _mode);
 			shader_set_i("gamma",      _gam);

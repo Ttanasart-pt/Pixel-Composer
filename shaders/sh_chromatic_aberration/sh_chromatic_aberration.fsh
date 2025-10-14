@@ -156,7 +156,7 @@ vec4 chroma_continuous(vec2 uv, float str, float itns) {
 	float strr = str / 16. * .2;
 	vec2  cuv  = (uv - center * tx) * 2.0;
     vec3  o    = vec3(0.);
-    vec4  cv   = texture2Dintp(gm_BaseTexture, uv   );
+    vec4  cv   = texture2Dintp(gm_BaseTexture, uv);
     
     for (float i = 0.; i <= 1.; i += 1. / stp) {
     	vec4 sam = texture2Dintp(gm_BaseTexture, uv - cuv * strr * i); sam.rgb *= sam.a;
