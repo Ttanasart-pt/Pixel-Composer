@@ -9,7 +9,7 @@ function Node_PB_FX_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	////- =Colors
 	newInput(2, nodeValue_Gradient( "Color Over Height", new gradientObject( ca_white )))
 	newInput(3, nodeValue_Gradient( "Color Over Angles", new gradientObject( [ ca_black, ca_white ] )))
-	newInput(4, nodeValue_Rotation( "Shift Angle", 0));
+	newInput(4, nodeValue_Rotation( "Shift Angle", 0 )).hideLabel();
 	
 	////- =Highlight
 	newInput(5, nodeValue_Bool(     "Highlight",           false    ));
@@ -26,9 +26,25 @@ function Node_PB_FX_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	    ["Highlight",  false, 5], 8, 7, 6, 
     ];
 	
+	////- Node
+	
 	temp_surface = [ noone, noone, noone ];
 	
-	static step = function() {}
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+		PROCESSOR_OVERLAY_CHECK
+		
+		var _surf = current_data[0];
+		if(!is_surface(_surf)) return false;
+		
+		var _dim = surface_get_dimension(_surf);
+		var _cx = _x + _dim[0] * _s / 2;
+		var _cy = _y + _dim[1] * _s / 2;
+		
+		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my, _snx, _sny, 0, 2));
+		InputDrawOverlay(inputs[4].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my, _snx, _sny));
+		
+		return w_hovering;
+	}
 	
 	static processData = function(_outData, _data, _array_index = 0) { 
 	    var _surf  = _data[0];

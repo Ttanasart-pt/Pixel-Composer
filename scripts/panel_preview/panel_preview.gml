@@ -1766,7 +1766,7 @@ function Panel_Preview() : PanelContent() constructor {
         
         _node.previewing = 1;
         
-        d3_scene_preview        = _node[$ "scene"]     ?? d3_scene;
+        d3_scene_preview = _node[$ "scene"] ?? d3_scene;
         d3_scene_preview.camera = d3_camera;
         
         #region view

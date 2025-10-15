@@ -2,41 +2,34 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	name = "Sprite Stack";
 	dimension_index = 1;
 	
-	newInput(0, nodeValue_Surface("Base shape"));
+	__output_dim_enum = [
+		new scrollItem("Same as input"),
+		new scrollItem("Constant"),
+		new scrollItem("Relative to input").setTooltip("Set dimension as a multiple of input surface."),
+		new scrollItem("Fit content").setTooltip("Automatically set dimension to fit content."),
+	];
 	
-	newInput(1, nodeValue_Dimension());
+	////- =Surface
+	newInput( 0, nodeValue_Surface( "Base shape" ));
+	newInput(13, nodeValue_EScroll( "Output dimension type", OUTPUT_SCALING.constant, __output_dim_enum ));
+	newInput( 1, nodeValue_Dimension());
+	newInput(14, nodeValue_Vec2(    "Relative dimension", [1,1] ));
+	newInput(12, nodeValue_EScroll( "Array process",       1, [ "Individual", "Combined" ] ));
 	
-	newInput(2, nodeValue_Int("Stack amount", 4));
+	////- =Stack
+	newInput( 2, nodeValue_Int(      "Stack amount",  4    ));
+	newInput( 3, nodeValue_Vec2(     "Stack shift",  [0,1] ));
+	newInput( 8, nodeValue_Bool(     "Move base",    false, "Make each copy move the original image." ));
+	newInput( 4, nodeValue_Vec2(     "Position",     [0,0] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput( 5, nodeValue_Rotation( "Rotation",      0    )).hideLabel();
 	
-	newInput(3, nodeValue_Vec2("Stack shift", [ 0, 1 ] ));
-	
-	newInput(4, nodeValue_Vec2("Position", [ 0, 0 ] ))
-		.setUnitRef(function(index) { return getDimension(index); });
-		
-	newInput(5, nodeValue_Rotation("Rotation", 0));
-	
-	newInput(6, nodeValue_Color("Stack blend", ca_white ));
-	
-	newInput(7, nodeValue_Slider("Alpha end", 1)).setTooltip("Alpha value for the last copy." );
-	
-	newInput(8, nodeValue_Bool("Move base", false, "Make each copy move the original image." ));
-	
-	newInput(9, nodeValue_Enum_Scroll("Highlight",  0, [ "None", "Color", "Inner pixel" ]));
-	
-	newInput(10, nodeValue_Color("Highlight color", ca_white));
-	
-	newInput(11, nodeValue_Slider("Highlight alpha", 1));
-	
-	newInput(12, nodeValue_Enum_Scroll("Array process", 1, [ "Individual", "Combined" ]));
-	
-	newInput(13, nodeValue_Enum_Scroll("Output dimension type", OUTPUT_SCALING.constant, [
-																			new scrollItem("Same as input"),
-																			new scrollItem("Constant"),
-																			new scrollItem("Relative to input").setTooltip("Set dimension as a multiple of input surface."),
-																			new scrollItem("Fit content").setTooltip("Automatically set dimension to fit content."),
-																		]));
-	
-	newInput(14, nodeValue_Vec2("Relative dimension", [ 1, 1 ]));
+	////- =Render
+	newInput( 6, nodeValue_Color(    "Stack blend",     ca_white ));
+	newInput( 7, nodeValue_Slider(   "Alpha end",       1        )).setTooltip("Alpha value for the last copy." );
+	newInput( 9, nodeValue_EScroll(  "Highlight",       0, [ "None", "Color", "Inner pixel" ] ));
+	newInput(10, nodeValue_Color(    "Highlight color", ca_white ));
+	newInput(11, nodeValue_Slider(   "Highlight alpha", 1        ));
+	// 15
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -46,24 +39,30 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		["Render",  false], 6, 7, 9, 10, 
 	];
 	
+	////- Node
+	
 	attribute_surface_depth();
 	
 	preview_custom         = false;
 	preview_custom_surface = -1;
 	preview_custom_index   = noone;
 	
-	preview_custom_x     = 0;
-	preview_custom_x_to  = 0;
-	preview_custom_x_max = 0;
+	preview_custom_x       = 0;
+	preview_custom_x_to    = 0;
+	preview_custom_x_max   = 0;
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		PROCESSOR_OVERLAY_CHECK
 		
+		var dim = getDimension()
 		var pos = current_data[4];
 		var sck = current_data[3];
 		
-		var px = _x + pos[0] * _s;
-		var py = _y + pos[1] * _s;
+		var cx = _x + dim[0] / 2 * _s;
+		var cy = _y + dim[1] / 2 * _s;
+		
+		var px = cx + pos[0] * _s;
+		var py = cy + pos[1] * _s;
 		var sx = px + sck[0] * _s * 4;
 		var sy = py + sck[1] * _s * 4;
 		
@@ -71,7 +70,7 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		draw_line(px, py, sx, sy);
 		
 		InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, px, py, _s * 4, _mx, _my, _snx, _sny, 1));
-		InputDrawOverlay(inputs[4].drawOverlay(w_hoverable, active, _x, _y, _s,     _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[4].drawOverlay(w_hoverable, active, cx, cy, _s,     _mx, _my, _snx, _sny));
 		InputDrawOverlay(inputs[5].drawOverlay(w_hoverable, active, px, py, _s,     _mx, _my, _snx, _sny));
 		
 		return w_hovering;

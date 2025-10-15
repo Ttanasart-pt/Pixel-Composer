@@ -2,21 +2,21 @@ function Node_Gradient_Cos(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	name = "Draw Cos Gradient";
 	
 	////- Output
-	newInput(0, nodeValue_Dimension());
-	newInput(1, nodeValue_Surface( "Mask" ));
+	newInput( 0, nodeValue_Dimension());
+	newInput( 1, nodeValue_Surface( "Mask" ));
 	
 	////- Coefficients
-	newInput( 2, nodeValue_Vec3(    "a",     [ .5,  .5,  .5  ] )).setMappableConst(4);
-	newInput( 3, nodeValue_Vec3(    "a Max", [ .5,  .5,  .5  ] ));
+	newInput( 2, nodeValue_Vec3( "a",     [ .5,  .5,  .5  ] )).setMappableConst(4);
+	newInput( 3, nodeValue_Vec3( "a Max", [ .5,  .5,  .5  ] ));
 	
-	newInput( 5, nodeValue_Vec3(    "b",     [ .5,  .5,  .5  ] )).setMappableConst(7);
-	newInput( 6, nodeValue_Vec3(    "b Max", [ .5,  .5,  .5  ] ));
+	newInput( 5, nodeValue_Vec3( "b",     [ .5,  .5,  .5  ] )).setMappableConst(7);
+	newInput( 6, nodeValue_Vec3( "b Max", [ .5,  .5,  .5  ] ));
 	
-	newInput( 8, nodeValue_Vec3(    "c",     [ .8,  .8,  .8  ] )).setMappableConst(10);
-	newInput( 9, nodeValue_Vec3(    "c Max", [ .8,  .8,  .8  ] ));
+	newInput( 8, nodeValue_Vec3( "c",     [ .8,  .8,  .8  ] )).setMappableConst(10);
+	newInput( 9, nodeValue_Vec3( "c Max", [ .8,  .8,  .8  ] ));
 	
-	newInput(11, nodeValue_Vec3(    "d",     [ .21, .54, .88 ] )).setMappableConst(13);
-	newInput(12, nodeValue_Vec3(    "d Max", [ .21, .54, .88 ] ));
+	newInput(11, nodeValue_Vec3( "d",     [ .21, .54, .88 ] )).setMappableConst(13);
+	newInput(12, nodeValue_Vec3( "d Max", [ .21, .54, .88 ] ));
 	
 	////- Gradient
 	newInput(20, nodeValue_Float(  "Shift",  0 ));
@@ -34,14 +34,35 @@ function Node_Gradient_Cos(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
+	b_random = button(function() /*=>*/ {return randomGradient()}).setIcon(THEME.icon_random, 0, COLORS._main_icon).iconPad();
+	
 	input_display_list = [
 		[ "Output",		   true ], 0, 1, 
-		[ "Coefficients", false ], 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 
+		[ "Coefficients", false, noone, b_random ], 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 
 		[ "Gradient",     false ], 20, 21, 
 		[ "Shape",        false ], 14, 15, 16, 17, 18, 19, 
 	];
 	
+	////- Node
+	
 	attribute_surface_depth();
+	
+	static rand3 = function() /*=>*/ {return [ random_range(0,1), random_range(0,1), random_range(0,1) ]};
+	
+	static randomGradient = function() {
+		inputs[ 2].setValue(rand3());
+		inputs[ 3].setValue(rand3());
+		
+		inputs[ 5].setValue(rand3());
+		inputs[ 6].setValue(rand3());
+		
+		inputs[ 8].setValue(rand3());
+		inputs[ 9].setValue(rand3());
+		
+		inputs[11].setValue(rand3());
+		inputs[12].setValue(rand3());
+		
+	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		PROCESSOR_OVERLAY_CHECK

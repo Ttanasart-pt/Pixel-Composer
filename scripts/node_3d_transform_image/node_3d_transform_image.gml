@@ -86,7 +86,7 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 		var _asp = _dim[0] / _dim[1];
 		
 		#region gizmo 
-			camGizmo.transform.position.set(new __vec3(0, 0, 2));
+			camGizmo.transform.position.set(new __vec3(0, 0, 1));
 			camGizmo.transform.rotation = new BBMOD_Quaternion().FromEuler(0, -90, 180);
 			camGizmo.transform.scale.set(.5, .5, .5);
 			camGizmo.transform.applyMatrix();

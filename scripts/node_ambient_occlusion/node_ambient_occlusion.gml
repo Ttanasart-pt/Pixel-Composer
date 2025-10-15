@@ -4,22 +4,39 @@ function Node_Ambient_Occlusion(_x, _y, _group = noone) : Node_Processor(_x, _y,
 	newActiveInput(2);
 	newInput(0, nodeValue_Surface("Height Map"));
 	
-	newInput(3, nodeValue_Float(  "Height", 8));
-	newInput(1, nodeValue_Slider( "Intensity", 4, [ 0, 8, 0.1 ] ));
-	newInput(4, nodeValue_Bool(   "Pixel Sweep", true));
+	////- =Effect
+	newInput(3, nodeValue_Float(  "Height",      8    )).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput(1, nodeValue_Slider( "Intensity",   4, [ 0, 8, 0.1 ] ));
+	newInput(4, nodeValue_Bool(   "Pixel Sweep", true ));
 	
-	newInput(5, nodeValue_Bool(        "Blend Original", false));
-	newInput(6, nodeValue_Enum_Scroll( "Blendmode", 0, [ "Multiply", "Subtract" ]));
-	newInput(7, nodeValue_Slider(      "Blend Strength", 1 ));
+	////- =Blend
+	newInput(5, nodeValue_Bool(    "Blend Original", false ));
+	newInput(6, nodeValue_EScroll( "Blendmode",      0, [ "Multiply", "Subtract" ] ));
+	newInput(7, nodeValue_Slider(  "Blend Strength", 1     ));
 	
 	input_display_list = [ 2, 0, 
-		["Effect", false], 3, 1, 4, 
-		["Blend Original", false, 5], 6, 7, 
+		[ "Effect",         false    ], 3, 1, 4, 
+		[ "Blend Original", false, 5 ], 6, 7, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
+	////- Node
+	
 	attribute_surface_depth();
+	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+		PROCESSOR_OVERLAY_CHECK
+		
+		var _dim = getDimension();
+		var _cx = _x + _dim[0] / 2 * _s;
+		var _cy = _y + _dim[1] / 2 * _s;
+		
+		InputDrawOverlay(inputs[ 1].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my, _snx, _sny,  90, _dim[1] / 16 ));
+		InputDrawOverlay(inputs[ 3].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my, _snx, _sny,   0, 1 ));
+		
+		return w_hovering;
+	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		var _map = _data[0];

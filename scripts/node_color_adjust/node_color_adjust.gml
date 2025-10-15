@@ -2,9 +2,9 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	name = "Color Adjust";
 	
 	newActiveInput(11);
-	newInput(12, nodeValue_Enum_Button( "Input Type", 0, [ "Surface", "Color" ] ));
-	newInput(15, nodeValue_Toggle(      "Channel",    0b1111, { data: array_create(4, THEME.inspector_channel) } ));
-	newInput( 9, nodeValue_Slider(      "Alpha",      1 )).setMappable(24);
+	newInput(12, nodeValue_EButton( "Input Type", 0, [ "Surface", "Color" ] ));
+	newInput(15, nodeValue_Toggle(  "Channel",    0b1111, { data: array_create(4, THEME.inspector_channel) } ));
+	newInput( 9, nodeValue_Slider(  "Alpha",      1 )).setMappable(24);
 	
 	////- =Input
 	newInput( 0, nodeValue_Surface( "Surface In" ));
@@ -24,10 +24,9 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput( 5, nodeValue_Slider(  "Value",      0, [ -1, 1, 0.01 ]  )).setMappable(22);
 	
 	////- =Color
-	newInput( 6, nodeValue_Color(       "Blend",        ca_white       ));
-	newInput(14, nodeValue_Enum_Scroll( "Blend mode",   0, BLEND_TYPES ));
-	newInput( 7, nodeValue_Slider(      "Blend amount", 0              )).setMappable(23);
-	
+	newInput( 6, nodeValue_Color(   "Blend",        ca_white       ));
+	newInput(14, nodeValue_EScroll( "Blend mode",   0, BLEND_TYPES ));
+	newInput( 7, nodeValue_Slider(  "Blend amount", 0              )).setMappable(23);
 	// inputs 26
 	
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone));
