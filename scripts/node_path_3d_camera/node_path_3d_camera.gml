@@ -249,6 +249,11 @@ function Node_Path_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _g
 		}
 		
 		#region camera view project
+			object.proj = curr_proj;
+			object.fov  = curr_fov;
+			object.asp  = curr_scal[0] / curr_scal[1];
+			object.setMesh();
+			
 			object.transform.position.set(camera.position);
 			object.transform.rotation = camera.rotation.Clone();
 			object.transform.applyMatrix();

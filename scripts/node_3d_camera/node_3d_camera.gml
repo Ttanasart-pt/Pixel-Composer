@@ -307,6 +307,11 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		preProcessData(_data);
 		
 		#region camera view project
+			object.proj = _proj;
+			object.fov  = _fov;
+			object.asp  = _dim[0] / _dim[1];
+			object.setMesh();
+			
 			camera.projection = _proj;
 			camera.setViewFov(_fov, _clip[0], _clip[1]);
 			

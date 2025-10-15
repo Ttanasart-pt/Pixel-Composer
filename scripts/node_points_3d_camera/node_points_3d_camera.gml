@@ -191,6 +191,11 @@ function Node_Point_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _
 		}
 		
 		#region camera view project
+			object.proj = _proj;
+			object.fov  = _fov;
+			object.asp  = _scal[0] / _scal[1];
+			object.setMesh();
+			
 			object.transform.position.set(camera.position);
 			object.transform.rotation = camera.rotation.Clone();
 			object.transform.applyMatrix();

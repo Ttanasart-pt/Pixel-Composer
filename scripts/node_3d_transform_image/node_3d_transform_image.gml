@@ -97,12 +97,13 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 			camGizmo.setMesh();
 		#endregion
 		
+		var _tAsp = _proj == CAMERA_PROJECTION.perspective? _asp : 1;
 		object.materials = [ new __d3dMaterial(_surf) ];
-		setTransform(object, _data, _proj == CAMERA_PROJECTION.perspective? _asp : 1);
+		setTransform(object, _data, _tAsp);
 		
 		if(_array_index == preview_index) {
 			materialPreview.surface = _surf;
-			setTransform(objectPreview, _data);
+			setTransform(objectPreview, _data, _asp);
 		}
 		
 		#region camera
