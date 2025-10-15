@@ -11,14 +11,14 @@ function __3dCamera() constructor {
 	
 	raw = camera_create();
 	
-	useFocus = true;
+	useFocus      = true;
 	focus_angle_x = 0;
 	focus_angle_y = 0;
 	focus_dist    = 1;
 	
 	projection = CAMERA_PROJECTION.perspective;
 	
-	fov = 60;
+	fov       =  60;
 	view_near = .01;
 	view_far  =  50;
 	
@@ -64,6 +64,7 @@ function __3dCamera() constructor {
 		
 		if(useFocus)
 			viewMat.setRaw(matrix_build_lookat(position.x, position.y, position.z, focus.x, focus.y, focus.z, up.x, up.y, up.z));
+			
 		else {
 			var _for = rotation.Rotate(new BBMOD_Vec3( 1.0,  0.0,  0.0));
 			var _up  = rotation.Rotate(new BBMOD_Vec3( 0.0,  0.0, -1.0));
@@ -86,11 +87,10 @@ function __3dCamera() constructor {
 		return self;
 	}
 	
-	static setViewFov = function(fov, near, far) {
-		self.fov = fov;
-		self.view_near = near;
-		self.view_far  = far;
-		
+	static setViewFov = function(_fov, _near, _far) {
+		fov       = _fov;
+		view_near = _near;
+		view_far  = _far;
 		return self;
 	}
 	

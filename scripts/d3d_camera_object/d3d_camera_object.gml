@@ -1,34 +1,54 @@
 function __3dCamera_object() : __3dObject() constructor {
-	ivw = 0.2; //innerViewWidth
-	ivh = 0.2; //innerViewHeight
-	ovw = 0.5; //outerViewWidth
-	ovh = 0.5; //outerViewHeight
-	len = 0.5; //cameraLength
-	
-	vertex = [[
-		new __vertex( -len, -ivw,  ivh ), new __vertex( -len,  ivw,  ivh ),
-		new __vertex( -len,  ivw,  ivh ), new __vertex( -len,  ivw, -ivh ),
-		new __vertex( -len,  ivw, -ivh ), new __vertex( -len, -ivw, -ivh ),
-		new __vertex( -len, -ivw, -ivh ), new __vertex( -len, -ivw,  ivh ),
-									 
-		new __vertex(  len, -ovw,  ovh ), new __vertex(  len,  ovw,  ovh ),
-		new __vertex(  len,  ovw,  ovh ), new __vertex(  len,  ovw, -ovh ),
-		new __vertex(  len,  ovw, -ovh ), new __vertex(  len, -ovw, -ovh ),
-		new __vertex(  len, -ovw, -ovh ), new __vertex(  len, -ovw,  ovh ),
-								 	 
-		new __vertex( -len, -ivw,  ivh ), new __vertex(  len, -ovw,  ovh ),  
-		new __vertex( -len,  ivw,  ivh ), new __vertex(  len,  ovw,  ovh ),  
-		new __vertex( -len,  ivw, -ivh ), new __vertex(  len,  ovw, -ovh ),  
-		new __vertex( -len, -ivw, -ivh ), new __vertex(  len, -ovw, -ovh ),  
-		
-		new __vertex(  len, -ovw * 0.5, ovh + 0.2 ), new __vertex(  len,  ovw * 0.5, ovh + 0.2 ),  
-		new __vertex(  len, 0, ovh + 0.6 ),	  	   new __vertex(  len,  ovw * 0.5, ovh + 0.2 ),  
-		new __vertex(  len, -ovw * 0.5, ovh + 0.2 ), new __vertex(  len,  0, ovh + 0.6 ),  
-	]];
+	width  = .35;
+	height = .4;
+	proj   = CAMERA_PROJECTION.perspective;
+	fov    = 45;
+	asp    = 1;
 	
 	VF = global.VF_POS_COL;
 	render_type = pr_linelist;
-	VB = build();
+	
+	static setMesh = function() {
+		if(proj == CAMERA_PROJECTION.perspective) {
+			var ofs = clamp(fov / 90, 0, 1) * height / 2;
+			var ivw = width * asp - ofs;
+			var ivh = width       - ofs;
+			var ovw = width * asp + ofs;
+			var ovh = width       + ofs;
+			
+		} else {
+			var ivw = width * asp;
+			var ivh = width;
+			var ovw = width * asp;
+			var ovh = width;
+			
+		}
+		
+		vertex = [[
+			new __vertex( -height, -ivw,  ivh ), new __vertex( -height,  ivw,  ivh ),
+			new __vertex( -height,  ivw,  ivh ), new __vertex( -height,  ivw, -ivh ),
+			new __vertex( -height,  ivw, -ivh ), new __vertex( -height, -ivw, -ivh ),
+			new __vertex( -height, -ivw, -ivh ), new __vertex( -height, -ivw,  ivh ),
+										 
+			new __vertex(  height, -ovw,  ovh ), new __vertex(  height,  ovw,  ovh ),
+			new __vertex(  height,  ovw,  ovh ), new __vertex(  height,  ovw, -ovh ),
+			new __vertex(  height,  ovw, -ovh ), new __vertex(  height, -ovw, -ovh ),
+			new __vertex(  height, -ovw, -ovh ), new __vertex(  height, -ovw,  ovh ),
+									 	 
+			new __vertex( -height, -ivw,  ivh ), new __vertex(  height, -ovw,  ovh ),  
+			new __vertex( -height,  ivw,  ivh ), new __vertex(  height,  ovw,  ovh ),  
+			new __vertex( -height,  ivw, -ivh ), new __vertex(  height,  ovw, -ovh ),  
+			new __vertex( -height, -ivw, -ivh ), new __vertex(  height, -ovw, -ovh ),  
+			
+			new __vertex(  height, -ovw * .5, ovh + .2 ), new __vertex( height,  ovw * .5, ovh + .2 ),  
+			new __vertex(  height,         0, ovh + .6 ), new __vertex( height,  ovw * .5, ovh + .2 ),  
+			new __vertex(  height, -ovw * .5, ovh + .2 ), new __vertex( height,         0, ovh + .6 ),  
+		]];
+		
+		VB = build();
+	}
+	
+	setMesh();
 	
 	transform.position.set(-5, -5, 5);
 	transform.rotation.FromEuler(0, 30, 135);

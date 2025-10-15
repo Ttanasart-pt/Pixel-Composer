@@ -3,15 +3,15 @@
 	globalvar D3D_LIGHT_MAX;     D3D_LIGHT_MAX = 16;
 	
 	function set3DGlobalPreview() {
-		var d3_view_camera = new __3dCamera();
-		d3_view_camera.setViewSize(2, 2);
-		d3_view_camera.setFocusAngle(135, 45, 8);
-		d3_view_camera.position.set(d3d_PolarToCart(0, 0, 0, d3_view_camera.focus_angle_x, d3_view_camera.focus_angle_y, d3_view_camera.focus_dist));
+		var d3_camera = new __3dCamera();
+		d3_camera.setViewSize(2, 2);
+		d3_camera.setFocusAngle(135, 45, 8);
+		d3_camera.position.set(d3d_PolarToCart(0, 0, 0, d3_camera.focus_angle_x, d3_camera.focus_angle_y, d3_camera.focus_dist));
 		
-		d3_view_camera.projection = CAMERA_PROJECTION.orthograph;
-		d3_view_camera.setMatrix();
+		d3_camera.projection = CAMERA_PROJECTION.orthograph;
+		d3_camera.setMatrix();
 		
-		D3D_GLOBAL_PREVIEW = new __3dScene(d3_view_camera, "Global node preview");
+		D3D_GLOBAL_PREVIEW = new __3dScene(d3_camera, "Global node preview");
 		D3D_GLOBAL_PREVIEW.apply_transform = true;
 		D3D_GLOBAL_PREVIEW.defer_normal    = false;
 	

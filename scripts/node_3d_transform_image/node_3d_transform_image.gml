@@ -10,20 +10,26 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 	objectPreview.checkParameter({ normal: 2 });
 	objectPreview.materials[0] = materialPreview;
 	
-	camObj  = new __3dCamera_object();
-	camera  = camera_create();
+	camGizmo  = new __3dCamera_object();
+	d3_camera = new __3dCamera();
 	
+	////- =Material
 	var i = in_mesh;
-	
 	newInput(i+0, nodeValue_Surface( "Surface" )).setVisible(true, true);
-	newInput(i+3, nodeValue_Vec2(    "Texture Tiling", [ 1, 1 ] ));
+	newInput(i+3, nodeValue_Vec2(    "Texture Tiling", [1,1] ));
 	
-	newInput(i+1, nodeValue_Enum_Button( "Projection", 0, [ "Orthographic", "Perspective" ] ));
-	newInput(i+2, nodeValue_Float( "FOV", 45 ));
-	newInput(i+4, nodeValue_Vec2(  "View Range",  [ 0.001, 10 ] ));
+	////- =Camera
+	newInput(i+1, nodeValue_EButton( "Projection",  1, [ "Perspective", "Orthographic" ] ));
+	newInput(i+2, nodeValue_Float(   "FOV",        45        ));
+	newInput(i+4, nodeValue_Vec2(    "View Range", [.001,10] ));
 	
-	newInput(i+5, nodeValue_Vec2(  "Depth Range", [ 0, 1 ] ));
+	////- =Render
+	newInput(i+5, nodeValue_Vec2( "Depth Range", [0,1] ));
 	// i+6
+	
+	outputs[0].setVisible(false);
+	newOutput(1, nodeValue_Output("Rendered", VALUE_TYPE.surface, noone ));
+	newOutput(2, nodeValue_Output("Depth",    VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [
 		["Material", false], i+0, i+3, 
@@ -32,13 +38,9 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 		["Render",	 false], i+5, 
 	]
 	
-	outputs[0].setVisible(false);
-	
-	newOutput(1, nodeValue_Output("Rendered", VALUE_TYPE.surface, noone));
-	
-	newOutput(2, nodeValue_Output("Depth", VALUE_TYPE.surface, noone));
-	
 	output_display_list = [ 1, 2 ]
+	
+	////- Node
 	
 	attribute_interpolation();
 	
@@ -66,33 +68,54 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 	}
 	
 	static processData = function(_outData, _data, _array_index = 0) {
-		var _surf = _data[in_mesh + 0];
-		var _proj = _data[in_mesh + 1];
-		var _fov  = _data[in_mesh + 2];
-		var _tile = _data[in_mesh + 3];
-		var _view = _data[in_mesh + 4];
-		var _dept = _data[in_mesh + 5];
-		
-		camObj.transform.position.set(new __vec3(0, 0, 2));
-		camObj.transform.rotation = new BBMOD_Quaternion().FromEuler(0, -90, 180);
-		camObj.transform.scale.set(.5, .5, .5);
-		camObj.transform.applyMatrix();
+		#region data
+			var i = in_mesh;
+			var _surf = _data[i+0];
+			var _proj = _data[i+1];
+			var _fov  = _data[i+2];
+			var _tile = _data[i+3];
+			var _view = _data[i+4];
+			var _dept = _data[i+5];
+			
+			inputs[i+2].setVisible(_proj == 0);
+		#endregion
 		
 		if(!is_surface(_surf)) return noone;
 		
+		var _dim = surface_get_dimension(_surf);
+		var _asp = _dim[0] / _dim[1];
+		
+		#region gizmo 
+			camGizmo.transform.position.set(new __vec3(0, 0, 2));
+			camGizmo.transform.rotation = new BBMOD_Quaternion().FromEuler(0, -90, 180);
+			camGizmo.transform.scale.set(.5, .5, .5);
+			camGizmo.transform.applyMatrix();
+			
+			camGizmo.proj = _proj;
+			camGizmo.fov  = _fov;
+			camGizmo.asp  = _asp;
+			camGizmo.setMesh();
+		#endregion
+		
 		object.materials = [ new __d3dMaterial(_surf) ];
-		setTransform(object, _data);
+		setTransform(object, _data, _proj == CAMERA_PROJECTION.perspective? _asp : 1);
 		
 		if(_array_index == preview_index) {
 			materialPreview.surface = _surf;
 			setTransform(objectPreview, _data);
 		}
 		
-		var _dim    = surface_get_dimension(_surf);
-		var projMat = _proj? matrix_build_projection_perspective_fov(_fov, _dim[0] / _dim[1], _view[0], _view[1]) : matrix_build_projection_ortho(1, 1, _view[0], _view[1]);
-		var viewMat = matrix_build_lookat(0, 0, 1, 
-                            		      0, 0, 0,
-									      1, 0, 0);
+		#region camera
+			d3_camera.projection = _proj;
+			d3_camera.setViewFov(_fov, _view[0], _view[1]);
+			if(_proj == CAMERA_PROJECTION.perspective)
+				 d3_camera.setViewSize(_dim[0], _dim[1]);
+			else d3_camera.setViewSize(1, 1);
+			
+			d3_camera.setMatrix();
+			d3_camera.viewMat.setRaw(matrix_build_lookat(0, 0, 1, /**/ 0, 0, 0, /**/ 1, 0, 0));
+			
+		#endregion
 		
 		var _outSurf = surface_verify(_outData[1], _dim[0], _dim[1]);
 		var _dptSurf = surface_verify(_outData[2], _dim[0], _dim[1]);
@@ -102,13 +125,10 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 		shader_set(sh_d3d_3d_transform);
 		DRAW_CLEAR
 		BLEND_OVERRIDE
-		
 			shader_set_2("tiling",    _tile);
 			shader_set_f("viewPlane", _dept);
 			
-			camera_set_view_mat(camera, viewMat);
-			camera_set_proj_mat(camera, projMat);
-			camera_apply(camera);
+			d3_camera.applyCamera();
 			gpu_set_texfilter(getAttribute("interpolate") > 1);
 			
 			object.transform.submitMatrix();
@@ -126,11 +146,13 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 		return [ object, _outSurf, _dptSurf ];
 	}
 	
-	static getPreviewObject  = function() { return objectPreview; }
-	static getPreviewObjects = function() { return [ camObj, objectPreview ]; }
-	static getPreviewValues  = function() { return outputs[1].getValue(); }
+	////- =Preview
 	
-	static getGraphPreviewSurface = function() { return getSingleValue(1, preview_index, true); }
+	static getPreviewObject  = function() /*=>*/ {return objectPreview};
+	static getPreviewObjects = function() /*=>*/ {return [ camGizmo, objectPreview ]};
+	static getPreviewValues  = function() /*=>*/ {return outputs[1].getValue()};
+	
+	static getGraphPreviewSurface = function() /*=>*/ {return getSingleValue(1, preview_index, true)};
 	
 	// static onDrawNode = function(xx, yy, _mx, _my, _s, _hover = false, _focus = false) {
 	// 	if(!previewable) return;

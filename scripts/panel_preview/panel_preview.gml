@@ -347,12 +347,14 @@ function Panel_Preview() : PanelContent() constructor {
         global.SKY_SPHERE    = new __3dUVSphere(0.5, 16, 8, true);
         
         #region camera
-            d3_view_camera   = new __3dCamera();
+            d3_camera            = new __3dCamera();
+        	d3_camera.projection = CAMERA_PROJECTION.perspective;
+            d3_camera_preview    = d3_camera;
+            d3_camera.setFocusAngle(135, 45, 4);
+            
             d3_camW          = 1;
             d3_camH          = 1;
         
-        	d3_view_camera.projection = CAMERA_PROJECTION.perspective;
-            d3_view_camera.setFocusAngle(135, 45, 4);
             d3_camLerp       = 0;
             d3_camLerp_x     = 0;
             d3_camLerp_y     = 0;
@@ -365,11 +367,11 @@ function Panel_Preview() : PanelContent() constructor {
             
             d3_zoom_speed    = 0.2;
             d3_pan_speed     = 2;
-            d3_cam_projection_lock = d3_view_camera.projection;
+            d3_cam_projection_lock = d3_camera.projection;
         #endregion
         
         #region scene
-            d3_scene               = new __3dScene(d3_view_camera, "Preview panel");
+            d3_scene               = new __3dScene(d3_camera, "Preview panel");
             d3_scene.lightAmbient  = $404040;
             d3_scene.cull_mode     = cull_counterclockwise;
             d3_scene_preview       = d3_scene;
@@ -587,15 +589,15 @@ function Panel_Preview() : PanelContent() constructor {
             ).setHotkey("Preview", "Popup"),
         ];
         
-        static d3_view_action_front  = function() /*=>*/ { d3_camLerp = 1; d3_camLerp_x =   0; d3_camLerp_y =   0; d3_view_camera.projection = 1; }
-        static d3_view_action_back   = function() /*=>*/ { d3_camLerp = 1; d3_camLerp_x = 180; d3_camLerp_y =   0; d3_view_camera.projection = 1; }
-        static d3_view_action_right  = function() /*=>*/ { d3_camLerp = 1; d3_camLerp_x =  90; d3_camLerp_y =   0; d3_view_camera.projection = 1; }
-        static d3_view_action_left   = function() /*=>*/ { d3_camLerp = 1; d3_camLerp_x = -90; d3_camLerp_y =   0; d3_view_camera.projection = 1; }
-        static d3_view_action_bottom = function() /*=>*/ { d3_camLerp = 1; d3_camLerp_x =   0; d3_camLerp_y = -89; d3_view_camera.projection = 1; }
-        static d3_view_action_top    = function() /*=>*/ { d3_camLerp = 1; d3_camLerp_x =   0; d3_camLerp_y =  89; d3_view_camera.projection = 1; }
+        static d3_view_action_front  = function() /*=>*/ { d3_camLerp = 1; d3_camLerp_x =   0; d3_camLerp_y =   0; d3_camera.projection = 1; }
+        static d3_view_action_back   = function() /*=>*/ { d3_camLerp = 1; d3_camLerp_x = 180; d3_camLerp_y =   0; d3_camera.projection = 1; }
+        static d3_view_action_right  = function() /*=>*/ { d3_camLerp = 1; d3_camLerp_x =  90; d3_camLerp_y =   0; d3_camera.projection = 1; }
+        static d3_view_action_left   = function() /*=>*/ { d3_camLerp = 1; d3_camLerp_x = -90; d3_camLerp_y =   0; d3_camera.projection = 1; }
+        static d3_view_action_bottom = function() /*=>*/ { d3_camLerp = 1; d3_camLerp_x =   0; d3_camLerp_y = -89; d3_camera.projection = 1; }
+        static d3_view_action_top    = function() /*=>*/ { d3_camLerp = 1; d3_camLerp_x =   0; d3_camLerp_y =  89; d3_camera.projection = 1; }
         static d3_view_projection    = function() /*=>*/ { 
-        	d3_view_camera.projection = !d3_view_camera.projection;
-        	d3_cam_projection_lock = d3_view_camera.projection;
+        	d3_camera.projection = !d3_camera.projection;
+        	d3_cam_projection_lock = d3_camera.projection;
         }
         
 		function view_control_toggle() { PROJECT.previewSetting.show_view_control = !PROJECT.previewSetting.show_view_control; }
@@ -842,10 +844,10 @@ function Panel_Preview() : PanelContent() constructor {
     
     function dragCanvas3D() {
         if(d3_camLerp) {
-            d3_view_camera.focus_angle_x = lerp_float(d3_view_camera.focus_angle_x, d3_camLerp_x, 3, 1);
-            d3_view_camera.focus_angle_y = lerp_float(d3_view_camera.focus_angle_y, d3_camLerp_y, 3, 1);
+            d3_camera.focus_angle_x = lerp_float(d3_camera.focus_angle_x, d3_camLerp_x, 3, 1);
+            d3_camera.focus_angle_y = lerp_float(d3_camera.focus_angle_y, d3_camLerp_y, 3, 1);
             
-            if(d3_view_camera.focus_angle_x == d3_camLerp_x && d3_view_camera.focus_angle_y == d3_camLerp_y)
+            if(d3_camera.focus_angle_x == d3_camLerp_x && d3_camera.focus_angle_y == d3_camLerp_y)
                 d3_camLerp = false;
         }
         
@@ -854,14 +856,14 @@ function Panel_Preview() : PanelContent() constructor {
                 var dx = mx - d3_camPan_mx;
                 var dy = my - d3_camPan_my;
                 
-                var px = d3_view_camera.focus_angle_x;
-                var py = d3_view_camera.focus_angle_y;
+                var px = d3_camera.focus_angle_x;
+                var py = d3_camera.focus_angle_y;
                 var ax = px + dx * 0.2 * d3_pan_speed;
                 var ay = py + dy * 0.1 * d3_pan_speed;
                 
-                d3_view_camera.focus_angle_x = ax;
-                d3_view_camera.focus_angle_y = ay;
-                d3_view_camera.projection = d3_cam_projection_lock;
+                d3_camera.focus_angle_x = ax;
+                d3_camera.focus_angle_y = ay;
+                d3_camera.projection = d3_cam_projection_lock;
             }
             
             d3_camPan_mx = mx;
@@ -877,7 +879,7 @@ function Panel_Preview() : PanelContent() constructor {
         if(canvas_zooming) {
             if(!MOUSE_WRAPPING) {
                 var dy = -(my - canvas_zoom_m) / 200;
-                d3_view_camera.focus_dist = clamp(d3_view_camera.focus_dist + dy, 1, 1000);
+                d3_camera.focus_dist = clamp(d3_camera.focus_dist + dy, 1, 1000);
             }
                 
             canvas_zoom_m = my;
@@ -918,7 +920,7 @@ function Panel_Preview() : PanelContent() constructor {
                 canvas_zoom_m   = my;
             }
             
-            if(MOUSE_WHEEL != 0) d3_view_camera.focus_dist = clamp(d3_view_camera.focus_dist * (1 - d3_zoom_speed * MOUSE_WHEEL), 1, 1000);
+            if(MOUSE_WHEEL != 0) d3_camera.focus_dist = clamp(d3_camera.focus_dist * (1 - d3_zoom_speed * MOUSE_WHEEL), 1, 1000);
         }
         
         canvas_dragging_key = false;
@@ -1764,24 +1766,23 @@ function Panel_Preview() : PanelContent() constructor {
         
         _node.previewing = 1;
         
-        d3_scene_preview = has(_node, "scene")? _node.scene : d3_scene;
-        // d3_scene_preview = d3_scene;
-        d3_scene_preview.camera = d3_view_camera;
+        d3_scene_preview        = _node[$ "scene"]     ?? d3_scene;
+        d3_scene_preview.camera = d3_camera;
         
         #region view
             var _pos, targ, _blend = 1;
             
             targ = d3_camTarget;
-            _pos = d3d_PolarToCart(targ.x, targ.y, targ.z, d3_view_camera.focus_angle_x, d3_view_camera.focus_angle_y, d3_view_camera.focus_dist);
+            _pos = d3d_PolarToCart(targ.x, targ.y, targ.z, d3_camera.focus_angle_x, d3_camera.focus_angle_y, d3_camera.focus_dist);
             
             if(d3_active_transition == 1) {
                 var _up  = new __vec3(0, 0, -1);
                 
-                d3_view_camera.position._lerp_float(_pos, 5, 0.1);
-                d3_view_camera.focus._lerp_float(   targ, 5, 0.1);
-                d3_view_camera.up._lerp_float(       _up, 5, 0.1);
+                d3_camera.position._lerp_float(_pos, 5, 0.1);
+                d3_camera.focus._lerp_float(   targ, 5, 0.1);
+                d3_camera.up._lerp_float(       _up, 5, 0.1);
                 
-                if(d3_view_camera.position.equal(_pos) && d3_view_camera.focus.equal(targ))
+                if(d3_camera.position.equal(_pos) && d3_camera.focus.equal(targ))
                     d3_active_transition = 0;
                     
             } else if(d3_active_transition == -1) {
@@ -1789,29 +1790,30 @@ function Panel_Preview() : PanelContent() constructor {
                 var targ = new __vec3(0, 0, 0);
                 var _up  = new __vec3(0, 1, 0);
                 
-                d3_view_camera.position._lerp_float(_pos, 5, 0.1);
-                d3_view_camera.focus._lerp_float(   targ, 5, 0.1);
-                d3_view_camera.up._lerp_float(       _up, 5, 0.1);
+                d3_camera.position._lerp_float(_pos, 5, 0.1);
+                d3_camera.focus._lerp_float(   targ, 5, 0.1);
+                d3_camera.up._lerp_float(       _up, 5, 0.1);
                 
-                _blend = d3_view_camera.position.distance(_pos) / 2;
+                _blend = d3_camera.position.distance(_pos) / 2;
                 _blend = clamp(_blend, 0, 1);
                 
-                if(d3_view_camera.position.equal(_pos) && d3_view_camera.focus.equal(targ))
+                if(d3_camera.position.equal(_pos) && d3_camera.focus.equal(targ))
                     d3_active_transition = 0;
                     
             } else {
-                d3_view_camera.position.set(_pos);
-                d3_view_camera.focus.set(targ);
+                d3_camera.position.set(_pos);
+                d3_camera.focus.set(targ);
             }
             
-            if(d3_view_camera.projection == CAMERA_PROJECTION.perspective)
-            	d3_view_camera.setViewSize(w, h);
-            else if(d3_view_camera.projection == CAMERA_PROJECTION.orthograph) {
-            	var _orth = d3_view_camera.focus_dist;
-            	d3_view_camera.setViewSize(1 * _orth, h / w * _orth);
+            if(d3_camera.projection == CAMERA_PROJECTION.perspective)
+            	d3_camera.setViewSize(w, h);
+            	
+            else if(d3_camera.projection == CAMERA_PROJECTION.orthograph) {
+            	var _orth = d3_camera.focus_dist;
+            	d3_camera.setViewSize(1 * _orth, h / w * _orth);
             }
             	
-            d3_view_camera.setMatrix();
+            d3_camera.setMatrix();
         #endregion
         
         #region background
@@ -1821,7 +1823,7 @@ function Panel_Preview() : PanelContent() constructor {
      
         #region shadow
             if(d3_scene_preview == d3_scene) {
-                d3_scene_light0.shadow_map_scale = d3_view_camera.focus_dist * 2;
+                d3_scene_light0.shadow_map_scale = d3_camera.focus_dist * 2;
                 
                 var _prev_obj = _node.getPreviewObject();
                 if(_prev_obj != noone) {
@@ -1848,16 +1850,16 @@ function Panel_Preview() : PanelContent() constructor {
             
             draw_clear_alpha(bg_color, 0);
             
-            d3_view_camera.applyCamera();
+            d3_camera_preview.applyCamera();
             
             gpu_set_ztestenable(true);
             gpu_set_zwriteenable(false);
             gpu_set_cullmode(cull_noculling); 
             
             shader_set(sh_d3d_grid_view);
-                var _dist = round(d3_view_camera.focus.distance(d3_view_camera.position));
-                var _tx   = round(d3_view_camera.focus.x);
-                var _ty   = round(d3_view_camera.focus.y);
+                var _dist = round(d3_camera_preview.focus.distance(d3_camera_preview.position));
+                var _tx   = round(d3_camera_preview.focus.x);
+                var _ty   = round(d3_camera_preview.focus.y);
             
                 var _scale = _dist * 2;
                 while(_scale > 32) _scale /= 2;
@@ -1961,54 +1963,56 @@ function Panel_Preview() : PanelContent() constructor {
         var _obj = _node.object; 
         
         d3_scene_preview = d3_scene;
-        d3_scene_preview.camera = d3_view_camera;
+        d3_scene_preview.camera = d3_camera;
         
         #region view
-            d3_view_camera.fov = max(1, _env.fov * 1.23);
+            d3_camera.fov = max(1, _env.fov * 1.23);
             var _pos, targ, _blend = 1;
             
             targ = d3_camTarget;
-            _pos = d3d_PolarToCart(targ.x, targ.y, targ.z, d3_view_camera.focus_angle_x, d3_view_camera.focus_angle_y, d3_view_camera.focus_dist);
+            _pos = d3d_PolarToCart(targ.x, targ.y, targ.z, d3_camera.focus_angle_x, d3_camera.focus_angle_y, d3_camera.focus_dist);
             
             if(d3_active_transition == 1) {
                 var _up  = new __vec3(0, 0, -1);
                 
-                d3_view_camera.position._lerp_float(_pos, 5, 0.1);
-                d3_view_camera.focus._lerp_float(   targ, 5, 0.1);
-                d3_view_camera.up._lerp_float(       _up, 5, 0.1);
+                d3_camera.position._lerp_float(_pos, 5, 0.1);
+                d3_camera.focus._lerp_float(   targ, 5, 0.1);
+                d3_camera.up._lerp_float(       _up, 5, 0.1);
                 
-                if(d3_view_camera.position.equal(_pos) && d3_view_camera.focus.equal(targ))
+                if(d3_camera.position.equal(_pos) && d3_camera.focus.equal(targ))
                     d3_active_transition = 0;
+                    
             } else if(d3_active_transition == -1) {
                 var _pos = new __vec3(0, 0, 8);
                 var targ = new __vec3(0, 0, 0);
                 var _up  = new __vec3(0, 1, 0);
                 
-                d3_view_camera.position._lerp_float(_pos, 5, 0.1);
-                d3_view_camera.focus._lerp_float(   targ, 5, 0.1);
-                d3_view_camera.up._lerp_float(       _up, 5, 0.1);
+                d3_camera.position._lerp_float(_pos, 5, 0.1);
+                d3_camera.focus._lerp_float(   targ, 5, 0.1);
+                d3_camera.up._lerp_float(       _up, 5, 0.1);
                 
-                _blend = d3_view_camera.position.distance(_pos) / 2;
+                _blend = d3_camera.position.distance(_pos) / 2;
                 _blend = clamp(_blend, 0, 1);
                 
-                if(d3_view_camera.position.equal(_pos) && d3_view_camera.focus.equal(targ))
+                if(d3_camera.position.equal(_pos) && d3_camera.focus.equal(targ))
                     d3_active_transition = 0;
+                    
             } else {
-                d3_view_camera.position.set(_pos);
-                d3_view_camera.focus.set(targ);
+                d3_camera.position.set(_pos);
+                d3_camera.focus.set(targ);
             }
             
-            d3_view_camera.setViewSize(w, h);
-            d3_view_camera.setMatrix();
+            d3_camera.setViewSize(w, h);
+            d3_camera.setMatrix();
         #endregion
         
         draw_clear(bg_color);
             
         gpu_set_texfilter(true);
         shader_set(sh_rm_primitive);
-            var zm = 4 / d3_view_camera.focus_dist;
+            var zm = 4 / d3_camera.focus_dist;
             
-            shader_set_f("camRotation", [ d3_view_camera.focus_angle_y, -d3_view_camera.focus_angle_x, 0 ]);
+            shader_set_f("camRotation", [ d3_camera.focus_angle_y, -d3_camera.focus_angle_x, 0 ]);
             shader_set_f("camScale",    zm);
             shader_set_f("camRatio",    w / h);
             shader_set_i("shapeAmount", 0);
@@ -2030,7 +2034,7 @@ function Panel_Preview() : PanelContent() constructor {
             shader_set_f("gridStep",    _step);
             shader_set_f("gridScale",   zm / 2);
             shader_set_f("axisBlend",   1);
-            shader_set_f("viewRange",   [ d3_view_camera.view_near, d3_view_camera.view_far ]);
+            shader_set_f("viewRange",   [ d3_camera.view_near, d3_camera.view_far ]);
             
             draw_sprite_stretched(s_fx_pixel, 0, 0, 0, w, h);
         shader_reset();
@@ -2264,7 +2268,7 @@ function Panel_Preview() : PanelContent() constructor {
             
             draw_circle_ui(_d3x, _d3y, d3_view_wr, _hv? 0 : 0.01, COLORS._main_icon, 0.3);
             
-            var _qview = new BBMOD_Quaternion().FromEuler(d3_view_camera.focus_angle_y, -d3_view_camera.focus_angle_x, 0);
+            var _qview = new BBMOD_Quaternion().FromEuler(d3_camera.focus_angle_y, -d3_camera.focus_angle_x, 0);
             var _as = [
                 new BBMOD_Vec3(-1, 0, 0),
                 new BBMOD_Vec3(0,  0, 1),
