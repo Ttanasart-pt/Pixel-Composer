@@ -32,11 +32,11 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	// input 15
 	
 	input_display_list = [
-		["Output",      true], 0, 13, 
-		["Noise",      false], 14, 3, 9, 
-		["Transform",  false], 1, 10, 2, 8, 
+		["Output",      true],  0, 13, 
+		["Noise",      false], 14,  3,  9, 
+		["Transform",  false],  1, 10,  2,  8, 
 		["Iteration",   true], 11, 12, 
-		["Render",     false], 4, 5, 6, 7, 
+		["Render",     false],  4,  5,  6,  7, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));

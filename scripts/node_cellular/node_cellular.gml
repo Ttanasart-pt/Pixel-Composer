@@ -43,12 +43,12 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	// input 19
 	
 	input_display_list = [
-		["Output",    false], 0, 13, 
-		["Noise",     false], 4, 6, 3, 14, 
+		["Output",    false],  0, 13, 
+		["Noise",     false],  4,  6,  3, 14, 
 		["Iteration", false], 16, 18, 19, 17, 
-		["Transform", false], 1, 12, 2, 11, 
-		["Radial",    false], 8, 9,
-		["Rendering", false], 15, 5, 7, 10, 
+		["Transform", false],  1, 12,  2, 11, 
+		["Radial",    false],  8,  9,
+		["Rendering", false], 15,  5,  7, 10, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));

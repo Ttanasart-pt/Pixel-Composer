@@ -158,7 +158,7 @@ function gradientObject(color = ca_black) constructor {
 		return keys[_len - 1].value; //after last color
 	}
 	
-	static evalFast = function(position) { INLINE return caches[position * cacheRes]; }
+	static evalFast = function(position) { return caches[position * cacheRes]; }
 	
 	////- Draw
 	

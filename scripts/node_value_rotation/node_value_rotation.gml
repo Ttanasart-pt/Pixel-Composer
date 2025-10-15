@@ -3,6 +3,7 @@ function nodeValue_Rotation(_name, _value, _tooltip = "") { return new __NodeVal
 function __NodeValue_Rotation(_name, _node, _value, _tooltip = "") : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.float, _value, _tooltip) constructor {
 	setDisplay(VALUE_DISPLAY.rotation);
 	preview_hotkey_spr = THEME.tools_2d_rotate;
+	hideLabel();
 	
 	////- GET
 	

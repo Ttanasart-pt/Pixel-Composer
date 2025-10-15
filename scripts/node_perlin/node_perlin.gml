@@ -18,7 +18,7 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput( 4, nodeValue_Bool(     "Tile",      true ));
 	
 	////- =Transform
-	newInput( 1, nodeValue_Vec2(     "Position",  [0,0] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput( 1, nodeValue_Vec2(     "Position",  [0,0] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	newInput(11, nodeValue_Rotation( "Rotation",   0    )).setHotkey("R");
 	newInput( 2, nodeValue_Vec2(     "Scale",     [5,5] )).setHotkey("S").setMappable(10);
 	
@@ -34,11 +34,11 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	// input 16
 	
 	input_display_list = [
-		["Output", 	   true], 0, 12, 
-		["Noise",	  false], 5, 13, 3, 4, 
-		["Transform", false], 1, 11, 2, 10, 
+		["Output", 	   true],  0, 12, 
+		["Noise",	  false],  5, 13,  3,  4, 
+		["Transform", false],  1, 11,  2, 10, 
 		["Iteration",  true], 14, 15, 
-		["Render",	  false], 6, 7, 8, 9, 
+		["Render",	  false],  6,  7,  8,  9, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -47,14 +47,15 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	attribute_surface_depth();
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) {
+		var _dim = getDimension();
 		var _pos = getSingleValue(1);
 		var  px  = _x + _pos[0] * _s;
 		var  py  = _y + _pos[1] * _s;
 		
-		InputDrawOverlay(inputs[ 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
-		InputDrawOverlay(inputs[11].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
-		InputDrawOverlay(inputs[ 2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[ 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny ));
+		InputDrawOverlay(inputs[11].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny ));
+		InputDrawOverlay(inputs[ 2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny ));
 		
 		return w_hovering;
 	}

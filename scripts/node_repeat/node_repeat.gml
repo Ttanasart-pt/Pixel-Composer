@@ -63,9 +63,9 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	////- =Position
 	newInput( 4, nodeValue_Vec2(           "Shift Position",  [.5,0]       )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference).setCurvable(38, CURVE_DEF_11, "Over Copy");
-	newInput(39, nodeValue_Anchor(         "Anchor" ));
 	newInput(26, nodeValue_Enum_Button(    "Stack",             0,         )).setChoices([ "None", "X", "Y" ]).setTooltip("Place each copy next to each other, taking surface dimension into account.");
 	newInput(19, nodeValue_Vec2(           "Shift Column",     [0,.5]      )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
+	newInput(39, nodeValue_Anchor(         "Anchor" ));
 	
 	////- =Rotation
 	newInput(33, nodeValue_Rotation(       "Base Rotation",     0          ));
@@ -201,7 +201,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		["Surfaces",  true],  0, 35, 36, 37,  1, 16, 17,
 		["Pattern",	 false],  3,  9, 22, 32,  2, 18,  7,  8, 
 		["Path",	  true], 11, 12, 13, 40, 
-		["Position", false],  4, 39, 26, 19, 38, 
+		["Position", false],  4, 26, 19, 38, 39, 
 		["Rotation", false], 33,  5, 
 		["Scale",	 false], 29,  6, 10, 41, 42, 
 		["Render",	 false], 34, 14, 30, 
@@ -511,6 +511,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _prg;
 		var _st = 1 / _amo;
 		var ii = 0, _i = 0;
+		var cc;
 		
 		repeat(_amo) {
 			var i = ii++;
@@ -518,7 +519,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			posx = runx;
 			posy = runy;
 			
-			_prg = i / (_amo - 1);
+			_prg = i / max(1, _amo - 1);
 			rot  = _rots;
 			
 			var st = i * _st;
