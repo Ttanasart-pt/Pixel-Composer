@@ -96,9 +96,15 @@
 		var pd3x = _x + (p3[0] + _pos[0]) * _s; 
 		var pd3y = _y + (p3[1] + _pos[1]) * _s;
 		
-		var pr = point_rotate(       0, -_sca[1] - 1, 0, 0, _rot);
+		var pr = point_rotate(       0, -_sca[1] - 24 / _s, 0, 0, _rot);
 		var prx  = _x + (pr[0] + _pos[0]) * _s; 
 		var pry  = _y + (pr[1] + _pos[1]) * _s;
+		
+		var prcx = (pd0x + pd1x) / 2;
+		var prcy = (pd0y + pd1y) / 2;
+		
+		var psx = pd3x + lengthdir_x(16, _rot - 45);
+		var psy = pd3y + lengthdir_y(16, _rot - 45);
 		
 		var hovering = -1;
 		
@@ -119,8 +125,11 @@
 		draw_line_width(pd3x, pd3y, pd1x, pd1y, hovering == 0? 2 : 1);
 		draw_line_width(pd3x, pd3y, pd2x, pd2y, hovering == 0? 2 : 1);
 		
-		draw_sprite_colored(THEME.anchor_rotate, hovering == 1,  prx,  pry, 1, _rot);
-		draw_sprite_colored(THEME.anchor_scale,  hovering == 2, pd3x, pd3y, 1, _rot);
+		draw_line(prcx, prcy, prx, pry);
+		draw_anchor(hovering == 1, prx, pry, ui(8), 1);
+		
+		draw_line(pd3x, pd3y, psx, psy);
+		draw_anchor(hovering == 2, psx, psy, ui(8), 1);
 		
 		w_hovering = w_hovering || hovering != -1;
 		if(hovering == -1) return;

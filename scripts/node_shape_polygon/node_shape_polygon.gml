@@ -109,37 +109,39 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	}
 	
 	static processData = function(_outData, _data, _array_index) {
-		var _dim  = _data[0];
-		var _bg   = _data[1];
-		var _bgc  = _data[2];
-		var _shc  = _data[3];
-		var _shp  = _data[4];
-		var _pos  = _data[5];
-		var _rot  = _data[6];
-		var _sca  = _data[7];
-		var _mesh = _data[16];
-		var _prot = _data[18];
-		var _psca = _data[22];
-		var _pall = _data[23];
-		var _aa   = power(2, _data[24]);
-		
-		outputs[2].setVisible(!is(_mesh, Mesh));
-		
-		var data = {
-			scale:    _data[ 7],
-			side:	  _data[ 8],
-			inner:	  _data[ 9],
-			radius:   _data[10],
-			radRan:   _data[14],
-			teeth:	  _data[11],
-			teethH:   _data[12],
-			teethT:   _data[13],
-			cap:      _data[15],
-			explode:  _data[17],
-			trep:     _data[25], 
-			palAng:   _data[26], 
-			factor:   _data[27], 
-		};
+		#region data
+			var _dim  = _data[0];
+			var _bg   = _data[1];
+			var _bgc  = _data[2];
+			var _shc  = _data[3];
+			var _shp  = _data[4];
+			var _pos  = _data[5];
+			var _rot  = _data[6];
+			var _sca  = _data[7];
+			var _mesh = _data[16];
+			var _prot = _data[18];
+			var _psca = _data[22];
+			var _pall = _data[23];
+			var _aa   = power(2, _data[24]);
+			
+			outputs[2].setVisible(!is(_mesh, Mesh));
+			
+			var data = {
+				scale:    _data[ 7],
+				side:	  _data[ 8],
+				inner:	  _data[ 9],
+				radius:   _data[10],
+				radRan:   _data[14],
+				teeth:	  _data[11],
+				teethH:   _data[12],
+				teethT:   _data[13],
+				cap:      _data[15],
+				explode:  _data[17],
+				trep:     _data[25], 
+				palAng:   _data[26], 
+				factor:   _data[27], 
+			};
+		#endregion
 		
 		var _shapeHide = [8, 9, 10, 11, 12, 13, 14, 15, 17, 25, 26, 27];
 		var _shapeShow = [];
