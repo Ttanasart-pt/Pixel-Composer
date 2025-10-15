@@ -137,7 +137,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		if(!_hide) {
 			var node_list = getNodeList();
-			var list = group == noone? PANEL_GRAPH.nodes_list : group.getNodeList();
+			var list = group == noone? project.nodes : group.getNodeList();
 			
 			array_remove(node_list, _node);
 			array_push(list, _node);

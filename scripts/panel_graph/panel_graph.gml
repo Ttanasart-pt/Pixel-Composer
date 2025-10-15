@@ -3181,7 +3181,13 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         graph_cy = (h / 2) / graph_s - graph_y;
         
         var context = getCurrentContext();
-        if(context != noone) title_raw += " > " + (context.renamed? context.display_name : context.name);
+        if(context != noone) {
+        	title_raw += " > " + (context.renamed? context.display_name : context.name);
+        	if(!context.active) {
+        		resetContext();
+        		context = noone;
+        	}
+        }
         
         bg_color = context == noone? COLORS.panel_bg_clear : merge_color(COLORS.panel_bg_clear, context.getColor(), 0.05);
         drawBGBase();
