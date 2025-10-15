@@ -29,8 +29,8 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput( 7, nodeValue_Slider(  "Blend amount", 0              )).setMappable(23);
 	// inputs 26
 	
-	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone));
-	newOutput(1, nodeValue_Output( "Color out", VALUE_TYPE.color, [])).setDisplay(VALUE_DISPLAY.palette);
+	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
+	newOutput(1, nodeValue_Output( "Color Out",   VALUE_TYPE.color,   []    )).setDisplay(VALUE_DISPLAY.palette);
 	
 	input_display_list = [ 11, 12, 15, 9, 24, 
 		["Input",		false], 0, 8, 16, 17, 13, 
@@ -38,6 +38,8 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		["HSV",			false], 3, 20, 4, 21, 5, 22, 
 		["Color blend", false], 6, 14, 7, 23, 
 	];
+	
+	////- Node
 	
 	temp_surface = [ noone, noone ];
 	

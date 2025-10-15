@@ -17,6 +17,8 @@
 		var _sca = getInputData(_scaInd);
 		
 		if(drag_type > -1) {
+			w_hovering = true;
+			
 			if(drag_type == 0) {
 				var _dx = (_mx - dragging_mx) / _s;
 				var _dy = (_my - dragging_my) / _s;
@@ -120,6 +122,7 @@
 		draw_sprite_colored(THEME.anchor_rotate, hovering == 1,  prx,  pry, 1, _rot);
 		draw_sprite_colored(THEME.anchor_scale,  hovering == 2, pd3x, pd3y, 1, _rot);
 		
+		w_hovering = w_hovering || hovering != -1;
 		if(hovering == -1) return;
 		if(drag_type > -1) return;
 		
