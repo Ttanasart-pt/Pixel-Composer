@@ -31,8 +31,8 @@ function Node_Path_Profile(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newOutput(0, nodeValue_Output("Output", VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [ 0,
-		[ "Profile",    false ], 1, 2, 
-		[ "Render",     false ], 9, 3, 5, 4, 6, 
+		[ "Profile",    false    ], 1, 2, 
+		[ "Render",     false    ], 9, 3, 5, 4, 6, 
 		[ "Background", false, 7 ], 8, 
 	];
 	
@@ -42,6 +42,25 @@ function Node_Path_Profile(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	temp_surface = [ noone ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+		PROCESSOR_OVERLAY_CHECK
+		
+		var _dim  = getDimension();
+		var _side = current_data[3];
+		var _mirr = current_data[4];
+		
+		if(_mirr) {
+			var _x0 = _x;
+			var _y0 = _y;
+			var _x1 = _x + _dim[0] * _s;
+			var _y1 = _y + _dim[1] * _s;
+			var _xc = _x + _dim[0] * _s / 2;
+			var _yc = _y + _dim[1] * _s / 2;
+			
+			draw_set_color(COLORS._main_accent);
+			if(_side < 2) draw_line_dashed(_xc, _y0, _xc, _y1);
+			else          draw_line_dashed(_x0, _yc, _x1, _yc);
+		}
+		
 		InputDrawOverlay(inputs[1].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params));
 	}
 	

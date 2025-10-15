@@ -37,8 +37,7 @@ function Node_Cross_Section(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var _surf = getSingleValue(0);
 		var _iaxs = getSingleValue(1);
 		var _posi = getSingleValue(2);
-		
-		var _dim  = surface_get_dimension(_surf);
+		var _dim  = getDimension();
 		
 		if(_iaxs == 0) {
 			var _x0 = _x;
@@ -56,7 +55,7 @@ function Node_Cross_Section(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		draw_set_color(COLORS._main_accent);
 		draw_line(_x0, _y0, _x1, _y1);
 		
-		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, _snx, _sny, _iaxs? 0:-90, _dim[_iaxs]));
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
