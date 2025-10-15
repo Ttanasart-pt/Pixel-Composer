@@ -49,8 +49,8 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	////- =Shape
 	newInput( 7, nodeValue_Float(    "Graph Thickness",   1      ));
 	newInput(18, nodeValue_Float(    "Bar Width",         4      ));
-	newInput(19, nodeValue_Bool(     "Rounded Bar",       false  ));
 	newInput(17, nodeValue_Float(    "Spacing",           1      ));
+	newInput(19, nodeValue_Bool(     "Rounded Bar",       false  ));
 	
 	////- =Color
 	b_setRange = button(function() /*=>*/ {setDataRange()}).setIcon(THEME.value_range, 1, COLORS._main_icon).iconPad().setTooltip(__txt("Use data range"));
@@ -59,11 +59,11 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(13, nodeValue_Gradient( "Color Over Sample", new gradientObject(ca_white) )).setMappable(27);
 	newInput(24, nodeValue_Gradient( "Color Over Value",  new gradientObject(ca_white) )).setMappable(29);
 	newInput(25, nodeValue_Range(    "Value range",      [0,1]                         )).setSideButton(b_setRange);
-	newInput(26, nodeValue_Bool(     "Absolute",          false                        ));
+	newInput(26, nodeValue_Bool(     "Absolute",         false, "Use absolute value to calculate color." ));
 	
 	////- =Background
-	newInput( 8, nodeValue_Bool(     "Background",        false                        ));
-	newInput( 9, nodeValue_Color(    "Background Color",  ca_black                     ));
+	newInput( 8, nodeValue_Bool(     "Background",        false    ));
+	newInput( 9, nodeValue_Color(    "Background Color",  ca_black ));
 	// inputs 31
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -71,7 +71,7 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	input_display_list = [ 0, 
 		[ "Data", 	    true    ],  1, 12, 21, 14,  2,  3, 15, 16, 
 		[ "Plot",	   false    ], 11,  4, 10, 20,  5, 22, 23, 
-		[ "Shape",	   false    ],  7, 18, 19, 17, 
+		[ "Shape",	   false    ],  7, 18, 17, 19, 
 		[ "Color",	   false    ],  6, 13, 27, 24, 29, 25, 26, 
 		[ "Background",	true, 8 ],  9, 
 	];
