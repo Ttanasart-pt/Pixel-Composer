@@ -46,16 +46,20 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(22, nodeValue_Bool(     "Loop",              false  ));
 	newInput(23, nodeValue_Slider(   "Smooth",            0      ));
 	
-	////- =Render
+	////- =Shape
+	newInput( 7, nodeValue_Float(    "Graph Thickness",   1      ));
+	newInput(18, nodeValue_Float(    "Bar Width",         4      ));
+	newInput(19, nodeValue_Bool(     "Rounded Bar",       false  ));
+	newInput(17, nodeValue_Float(    "Spacing",           1      ));
+	
+	////- =Color
+	b_setRange = button(function() /*=>*/ {setDataRange()}).setIcon(THEME.value_range, 1, COLORS._main_icon).iconPad().setTooltip(__txt("Use data range"));
+	
 	newInput( 6, nodeValue_Color(    "Base Color",        ca_white                     ));
 	newInput(13, nodeValue_Gradient( "Color Over Sample", new gradientObject(ca_white) )).setMappable(27);
 	newInput(24, nodeValue_Gradient( "Color Over Value",  new gradientObject(ca_white) )).setMappable(29);
-	newInput(25, nodeValue_Range(    "Value range",      [0,1]                         ));
+	newInput(25, nodeValue_Range(    "Value range",      [0,1]                         )).setSideButton(b_setRange);
 	newInput(26, nodeValue_Bool(     "Absolute",          false                        ));
-	newInput( 7, nodeValue_Float(    "Graph Thickness",   1                            ));
-	newInput(17, nodeValue_Float(    "Spacing",           1                            ));
-	newInput(18, nodeValue_Float(    "Bar Width",         4                            ));
-	newInput(19, nodeValue_Bool(     "Rounded Bar",       false                        ));
 	
 	////- =Background
 	newInput( 8, nodeValue_Bool(     "Background",        false                        ));
@@ -65,43 +69,38 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0, 
-		["Data", 	    true],    1, 12, 21, 14, 2, 3, 15, 16, 
-		["Plot",	   false],    11, 4, 10, 20, 5, 22, 23, 
-		["Render",	   false],    6, 13, 27, 24, 29, 25, 26, 7, 17, 18, 19, 
-		["Background",	true, 8], 9, 
+		[ "Data", 	    true    ],  1, 12, 21, 14,  2,  3, 15, 16, 
+		[ "Plot",	   false    ], 11,  4, 10, 20,  5, 22, 23, 
+		[ "Shape",	   false    ],  7, 18, 19, 17, 
+		[ "Color",	   false    ],  6, 13, 27, 24, 29, 25, 26, 
+		[ "Background",	true, 8 ],  9, 
 	];
 	
 	////- Nodes
 	
 	attribute_surface_depth();
 	
-	static step = function() {
-		var _ubg = getSingleValue(8);
-		var _typ = getSingleValue(11);
-		var _trim_mode = getSingleValue(14);
+	static setDataRange = function() {
+		var _data = getInputData(1);
+		var _minn =  infinity;
+		var _maxx = -infinity;
+		if(!is_array(_data) || array_empty(_data)) return;
 		
-		var _use_path = getSingleValue(20) != noone;
+		for( var i = 0, n = array_length(_data); i < n; i++ ) {
+			var _d = _data[i];
+			if(!is_numeric(_d)) continue;
+			
+			_minn = min(_minn, _d);
+			_maxx = max(_maxx, _d);
+		}
 		
-		inputs[ 2].setVisible(_trim_mode == 0);
-		inputs[15].setVisible(_trim_mode == 1);
-		inputs[16].setVisible(_trim_mode == 1);
-		
-		inputs[ 9].setVisible(_ubg);
-		inputs[ 7].setVisible(_typ == 1);
-		inputs[18].setVisible(_typ == 0);
-		inputs[19].setVisible(_typ == 0);
-		inputs[22].setVisible(_typ == 1);
-		inputs[23].setVisible(_typ == 1);
-		
-		inputs[ 4].setVisible(!_use_path);
-		inputs[10].setVisible(!_use_path);
+		inputs[25].setValue([_minn, _maxx]);
 	}
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		PROCESSOR_OVERLAY_CHECK
 		
 		var _use_path = current_data[20] != noone;
-		
 		if(!_use_path) InputDrawOverlay(inputs[4].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		
 		InputDrawOverlay(inputs[20].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, _params));
@@ -111,48 +110,59 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		return w_hovering;
 	}
 	
-	static getTool = function() { 
-		var _path = getInputData(20);
-		return is(_path, Node)? _path : self; 
-	}
+	static getTool = function() { var _path = getInputData(20); return is(_path, Node)? _path : self; }
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _dim = _data[ 0];
-		var _dat = _data[ 1];
-		var _ran = _data[ 2];
-		var _sam = _data[ 3]; _sam = max(1, _sam);
-		var _ori = _data[ 4];
-		var _amp = _data[ 5];
-		var _lth = _data[ 7];
-		var _ubg = _data[ 8];
-		var _bgc = _data[ 9];
-		var _ang = _data[10];
-		var _typ = _data[11];
-		var _off = _data[12];
-		
-		var _trim_mode = _data[14];
-		var _win_size  = _data[15];
-		var _win_offs  = _data[16]; _win_offs = max(0, _win_offs);
-		
-		var _pnt_spac = _data[17];
-		
-		var _bar_wid = _data[18];
-		var _bar_rnd = _data[19];
-		
-		var _path = _data[20];
-		var _flip = _data[21];
-		var _loop = _data[22];
-		var _smt  = _data[23];
-		
-		var _lcl     = _data[ 6];
-		var _cls     = _data[13];
-		var _cls_map = _data[27];
-		var _cls_rng = _data[28];
-		var _clv     = _data[24];
-		var _clv_map = _data[29];
-		var _clv_rng = _data[30];
-		var _clv_r   = _data[25];
-		var _clv_a   = _data[26];
+		#region data
+			var _dim  = _data[ 0];
+			
+			var _dat  = _data[ 1];
+			var _off  = _data[12];
+			var _flip = _data[21];
+			var _trim = _data[14];
+			var _ran  = _data[ 2];
+			var _samp = _data[ 3]; _samp = max(1,  _samp);
+			var _wsiz = _data[15];
+			var _woff = _data[16]; _woff = max(0, _woff);
+			
+			var _typ  = _data[11];
+			var _ori  = _data[ 4];
+			var _ang  = _data[10];
+			var _path = _data[20];
+			var _amp  = _data[ 5];
+			var _loop = _data[22];
+			var _smt  = _data[23];
+			
+			var _lineth   = _data[ 7];
+			var _bar_wid  = _data[18];
+			var _bar_rnd  = _data[19];
+			var _pnt_spac = _data[17];
+			
+			var _lcl     = _data[ 6];
+			var _cls     = _data[13], _cls_map = _data[27], _cls_rng = _data[28];
+			var _clv     = _data[24], _clv_map = _data[29], _clv_rng = _data[30];
+			var _clv_r   = _data[25];
+			var _clv_a   = _data[26];
+			
+			var _ubg = _data[ 8];
+			var _bgc = _data[ 9];
+			
+			var _use_path = _path != noone;
+			
+			inputs[ 2].setVisible(_trim == 0);
+			inputs[15].setVisible(_trim == 1);
+			inputs[16].setVisible(_trim == 1);
+			
+			inputs[ 9].setVisible(_ubg);
+			inputs[ 7].setVisible(_typ == 1);
+			inputs[18].setVisible(_typ == 0);
+			inputs[19].setVisible(_typ == 0);
+			inputs[22].setVisible(_typ == 1);
+			inputs[23].setVisible(_typ == 1);
+			
+			inputs[ 4].setVisible(!_use_path);
+			inputs[10].setVisible(!_use_path);
+		#endregion
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
@@ -172,12 +182,13 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			var _smp_data = [];
 			var _ind = 0;
 			
-			if(_trim_mode == 0) {
-				for( var i = _st; i < _ed; i += _sam )
+			if(_trim == 0) {
+				for( var i = _st; i < _ed; i += _samp )
 					_smp_data[_ind++] = _dat[i];
-			} else if(_trim_mode == 1) {
-				for( var i = 0; i < _win_size; i++ ) {
-					_ind = _win_offs + i * _sam;
+					
+			} else if(_trim == 1) {
+				for( var i = 0; i < _wsiz; i++ ) {
+					_ind = _woff + i *  _samp;
 					
 					if(_ind >= _dat_amo) break;
 					if(frac(_ind) != 0 && floor(_ind) + 1 < _dat_amo)
@@ -197,10 +208,7 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			var _oc;
 			
 			for( var i = 0; i < amo; i++ ) {
-				if(_path == noone) {
-					_px = _ori[0] + lengthdir_x(i * _bar_spc, _ang);
-					_py = _ori[1] + lengthdir_y(i * _bar_spc, _ang);
-				} else {
+				if(_use_path) {
 					_pnt    = _path.getPointRatio(i / amo);
 					_ppnt ??= _path.getPointRatio(i / amo - 0.001);
 					
@@ -209,6 +217,10 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 					_ang = point_direction(_ppnt.x, _ppnt.y, _pnt.x, _pnt.y)
 					
 					_ppnt = _pnt;
+					
+				} else {
+					_px = _ori[0] + lengthdir_x(i * _bar_spc, _ang);
+					_py = _ori[1] + lengthdir_y(i * _bar_spc, _ang);
 				}
 				
 				_ang_nor = _ang + 90;
@@ -249,14 +261,14 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 									_nx = ox * power(_t, 3) + 3 * _b0x * power(_t, 2) * (1 - _t) + 3 * _b1x * (_t) * power(1 - _t, 2) + nx * power(1 - _t, 3);
 									_ny = oy * power(_t, 3) + 3 * _b0y * power(_t, 2) * (1 - _t) + 3 * _b1y * (_t) * power(1 - _t, 2) + ny * power(1 - _t, 3);
 									
-									if(_lth > 1) draw_line_round(_ox, _oy, _nx, _ny, _lth);
+									if(_lineth > 1) draw_line_round(_ox, _oy, _nx, _ny, _lineth);
 									else		 draw_line(_ox, _oy, _nx, _ny);
 									
 									_ox = _nx;
 									_oy = _ny;
 								}
 							} else {
-								if(_lth > 1) draw_line_round_color(ox, oy, nx, ny, _lth, _oc, _col_final);
+								if(_lineth > 1) draw_line_round_color(ox, oy, nx, ny, _lineth, _oc, _col_final);
 								else		 draw_line_color(ox, oy, nx, ny, _oc, _col_final);
 							}
 						}
@@ -274,7 +286,7 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			}
 			
 			if(_loop && amo > 1 && _typ == 1)
-				draw_line_round(fx, fy, nx, ny, _lth);
+				draw_line_round(fx, fy, nx, ny, _lineth);
 			
 			draw_set_circle_precision(64);
 		surface_reset_target();
