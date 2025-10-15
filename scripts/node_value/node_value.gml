@@ -2550,10 +2550,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(!preset && value_from) {
 			_map.from_node  = value_from.node.node_id;
 			_map.from_index = value_from.index;
-			if(value_from.tags != 0) 
-				_map.from_tag   = value_from.tags;
+			if(value_from.tags != 0) _map.from_tag = value_from.tags;
 		}
-		
+			
 		if(expUse)           _map.global_use = expUse;
 		if(expression != "") _map.global_key = expression;
 		if(is_anim)          _map.anim       = is_anim;
@@ -2623,7 +2622,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(has(_map, "m"))           is_modified = bool(_map.m);
 		if(has(_map, "is_modified")) is_modified = bool(_map.is_modified);
 		
-		#region attributse
+		#region attributes
 			if(has(_map, "attri")) struct_append(attributes, _map.attri);
 			
 			// wtf?
@@ -2686,7 +2685,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var _nodeid = con_node;
 		if(APPENDING) {
 			_nodeid = GetAppendID(con_node);
-			if(_nodeid == noone || !ds_map_exists(node.project.nodeMap, _nodeid)) return true;
+			
+			if(_nodeid == noone || !ds_map_exists(node.project.nodeMap, _nodeid)) {
+				var txt = $"Node connect error : Node ID {_nodeid} not found.";
+				log_warning("APPEND", $"[Connect] {txt}", node);
+				return true;
+			}
 		}
 		
 		if(!ds_map_exists(node.project.nodeMap, _nodeid)) {
@@ -2699,9 +2703,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var _ol = array_length(_nd.outputs);
 		
 		if(_nd.group != node.group) return true;
-		if(_nodeGroup != undefined) {
-			if(!struct_has(_nodeGroup, _nodeid)) return true;
-		}
+		if(_nodeGroup != undefined && !struct_has(_nodeGroup, _nodeid)) return true;
 		
 		// if(log) log_warning("LOAD", $"    [Connect] Connecting {node.name} to {_nd.name}", node);
 		

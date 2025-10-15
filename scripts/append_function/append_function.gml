@@ -65,16 +65,20 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext(), appended_
 	printIf(log, $"Load group time: {current_time - t}"); t = current_time;
 	
 	try {
-		for(var i = 0; i < _append_len; i++)
-			appended_list[i].postDeserialize();
+		for(var i = 0; i < _append_len; i++) {
+			var _node = appended_list[i];
+			_node.postDeserialize();
+		}
 	} catch(e) {
 		log_warning("APPEND, deserialize", exception_print(e));
 	}
 	printIf(log, $"Deserialize time: {current_time - t}"); t = current_time;
 	
 	try {
-		for(var i = 0; i < _append_len; i++)
-			appended_list[i].applyDeserialize();
+		for(var i = 0; i < _append_len; i++) {
+			var _node = appended_list[i];
+			_node.applyDeserialize();
+		}
 	} catch(e) {
 		log_warning("APPEND, apply deserialize", exception_print(e));
 	}
@@ -84,7 +88,8 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext(), appended_
 		var _nodeGroup = undefined;
 		if(!_connect_outside) {
 			_nodeGroup = {};
-			for(var i = 0; i < _append_len; i++) _nodeGroup[$ appended_list[i].node_id] = appended_list[i];
+			for(var i = 0; i < _append_len; i++) 
+				_nodeGroup[$ appended_list[i].node_id] = appended_list[i];
 		}
 		
 		for(var i = 0; i < _append_len; i++) appended_list[i].preConnect();

@@ -663,15 +663,11 @@ function nodeClone(_nodes, _ctx = PANEL_GRAPH.getCurrentContext()) {
 	if(array_empty(_nodes)) return;
 	
     var _map  = {};
-    var _pmap = {};
     var _node = [];
     
     for( var i = 0, n = array_length(_nodes); i < n; i++ ) {
         var _n = _nodes[i];
         
-        if(_n.inline_parent_object != "")
-            _pmap[$ _n.inline_context.node_id] = _n.inline_parent_object;
-            
         SAVE_NODE(_node, _n, 0, 0, false, _ctx);
     }
     
@@ -682,17 +678,6 @@ function nodeClone(_nodes, _ctx = PANEL_GRAPH.getCurrentContext()) {
     LOADING_VERSION = SAVE_VERSION;
     
     CLONING    = true;
-        var _pmap_keys = variable_struct_get_names(_pmap);
-        for( var i = 0, n = array_length(_pmap_keys); i < n; i++ ) {
-            var _pkey     = _pmap_keys[i];
-            var _original = PROJECT.nodeMap[? _pkey];
-            var _nodeS    = _pmap[$ _pkey];
-            
-            CLONING_GROUP = _original;
-            var _newGroup = nodeBuild(_nodeS, _original.x, _original.y).skipDefault();
-            APPEND_MAP[? _pkey] = _newGroup;
-        }
-        
         APPEND_LIST = __APPEND_MAP(_map, _ctx, APPEND_LIST, false);
         recordAction(ACTION_TYPE.collection_loaded, array_clone(APPEND_LIST));
     CLONING    = false;

@@ -228,7 +228,7 @@ function SAVE_COLLECTIONS(_list, _path, save_surface = true, metadata = noone, c
 
 function SAVE_NODE(_arr, _node, dx = 0, dy = 0, scale = false, context = PANEL_GRAPH.getCurrentContext()) {
 	
-	if(has(_node, "nodes")) {
+	if(is(_node, Node_Collection)) {
 		for( var i = 0, n = array_length(_node.nodes); i < n; i++ )
 			SAVE_NODE(_arr, _node.nodes[i], dx, dy, scale, context);
 	}

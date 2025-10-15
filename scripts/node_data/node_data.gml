@@ -341,9 +341,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	#endregion
 	
 	#region ---- Serialization ----
-		load_scale = false;
-		load_map   = -1;
-		load_group = noone;
+		load_scale  = false;
+		load_map    = -1;
+		load_inst   = noone;
+		load_group  = noone;
+		load_igroup = noone;
 	#endregion
 	
 	////- NAME
@@ -2643,7 +2645,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(!active) return;
 		
 		var _map = {};
-		//print(" > Serializing: " + name);
 		
 		_map.version = SAVE_VERSION;
 		if(!visible)     _map.visible      = visible;
@@ -2757,7 +2758,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			internalName = load_map[$ "iname"] ?? internalName;
 			if(internalName == "") resetInternalName();
 			
-			load_group = load_map[$ "group"] ?? noone;
+			load_inst  = load_map[$ "instanceBase"] ?? noone;
+			load_group = load_map[$ "group"]        ?? noone;
 			if(load_group == -1) load_group = noone;
 			
 			x = load_map[$ "x"] ?? 0;
@@ -2766,7 +2768,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			previewable    = load_map[$ "previewable"]    ?? true;
 			isTool         = load_map[$ "tool"]           ?? false;
 			show_parameter = load_map[$ "show_parameter"] ?? false;
-			ictx           = load_map[$ "ictx"]           ?? "";
+			load_igroup    = load_map[$ "ictx"]           ?? "";
 			
 			inspector_scroll = load_map[$ "insp_scr"] ?? inspector_scroll;
 			if(struct_has(load_map, "insp_col")) inspector_collapse = variable_clone(load_map[$ "insp_col"]);
@@ -2810,6 +2812,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		anim_timeline = attributes[$ "show_timeline"] ?? false;
 		if(anim_timeline) refreshTimeline();
+		
 	}
 	
 	static inputBalance = function() { // Cross-version compatibility for dynamic input nodes
@@ -2875,10 +2878,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var _inputs = load_map.inputs;
 		var amo = min(array_length(inputs), array_length(_inputs));
 		
-		var _i = 0, i;
-		repeat(amo) { i = _i++;
-			if(inputs[i] == noone || _inputs[i] == noone) continue;
-			if(preset == 2 && !inputs[i].set_default)     continue;
+		var i = -1;
+		repeat(amo) { i++;
+			if(_inputs[i] == noone) continue;
+			if(preset == 2 && !inputs[i].set_default) continue;
+			
 			inputs[i].applyDeserialize(_inputs[i], load_scale, preset);
 		}
 		
@@ -2886,11 +2890,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var _outputs = load_map.outputs;
 			var amo = min(array_length(outputs), array_length(_outputs));
 			
-			var _i = 0, i;
-			repeat(amo) { i = _i++;
-				if(outputs[i] == noone) continue;
-				outputs[i].applyDeserialize(_outputs[i], load_scale, preset);
-			}
+			var i = -1;
+			repeat(amo) { i++; outputs[i].applyDeserialize(_outputs[i], load_scale, preset); }
 		}
 		
 		if(struct_has(load_map, "inspectInputs")) {
@@ -2906,8 +2907,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(struct_has(load_map, "outputMeta")) {
 			var _outMeta = load_map.outputMeta;
 			var _amo = min(array_length(_outMeta), array_length(junc_meta));
-			var _i = 0, i;
-			repeat(amo) { i = _i++; junc_meta[i].applyDeserialize(_outMeta[i], load_scale, preset); }
+			var i = -1;
+			repeat(amo) { i++; junc_meta[i].applyDeserialize(_outMeta[i], load_scale, preset); }
 		}
 		
 		postApplyDeserialize();
@@ -2919,29 +2920,35 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static onLoadGroup = function() /*=>*/ {}
 	static loadGroup   = function(ctx = noone) { 
+		if(load_igroup != noone) {
+			load_igroup = GetAppendID(load_igroup);
+			
+			if(ds_map_exists(project.nodeMap, load_igroup)) {
+				var _grp = project.nodeMap[? load_igroup];
+				if(is(_grp, Node_Collection_Inline))
+					_grp.addNode(self);
+			}
+		}
+		
 		if(load_group == noone) {
 			if(ctx) ctx.add(self);
 			else    array_push(project.nodes, self);
-			onLoadGroup();
-			return;
-		}
-		
-		var load_instance = struct_try_get(load_map, "instanceBase", noone);
-		
-		if(APPENDING) {
-			load_group    = GetAppendID(load_group);
-			load_instance = GetAppendID(load_instance);
-		}
-		
-		if(ds_map_exists(project.nodeMap, load_group)) {
-			var _grp = project.nodeMap[? load_group];
 			
-			if(struct_has(_grp, "add")) _grp.add(self);
-			else throw($"Group load failed. Node ID {load_group} is not a group.");
+		} else {
+			if(APPENDING) {
+				load_group = GetAppendID(load_group);
+				load_inst  = GetAppendID(load_inst);
+			}
 			
-		} else throw($"Group load failed. Can't find node ID {load_group}");
-		
-		instanceBase = ds_map_exists(project.nodeMap, load_instance)? project.nodeMap[? load_instance] : noone;
+			if(ds_map_exists(project.nodeMap, load_group)) {
+				var _grp = project.nodeMap[? load_group];
+				if(struct_has(_grp, "add")) _grp.add(self);
+				else throw($"Group load failed. Node ID {load_group} is not a group.");
+				
+			} else throw($"Group load failed. Can't find node ID {load_group}");
+			
+			instanceBase = ds_map_exists(project.nodeMap, load_inst)? project.nodeMap[? load_inst] : noone;
+		}
 		
 		onLoadGroup();
 	}
