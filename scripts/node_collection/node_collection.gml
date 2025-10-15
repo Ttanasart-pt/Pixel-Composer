@@ -646,25 +646,54 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 
 #region Actions
 	function groupNodes(nodeArray, _group = noone, record = true, check_connect = true) {
+		var amo = array_length(nodeArray);
+		if(amo == 0) return;
+		
 		#region check inline
 			var _ctx_nodes = [];
-			for(var i = 0, n = array_length(nodeArray); i < n; i++)
-				if(nodeArray[i].inline_context != noone) array_push(_ctx_nodes, nodeArray[i].inline_context);
+			var _idmap     = {};
+			var _selIO     = false;
+			
+			for(var i = 0; i < amo; i++) {
+				var _n = nodeArray[i];
+				
+				_idmap[$ _n.node_id] = _n;
+				array_push(_ctx_nodes, _n.inline_context);
+				
+				_selIO = _selIO || !_n.inline_input || !_n.inline_output;
+			}
+			
 			_ctx_nodes = array_unique(_ctx_nodes);
 			
-			for( var i = 0, n = array_length(_ctx_nodes); i < n; i++ ) {
+			var _ctx_all = true;
+			var _ctx_amo = array_length(_ctx_nodes);
+			
+			for( var i = 0; i < _ctx_amo; i++ ) {
 				var ictx = _ctx_nodes[i];
-				var intx = array_intersection(nodeArray, ictx.nodes);
-				if(array_length(intx) == array_length(ictx.nodes)) continue;
+				if(ictx == noone) continue;
 				
-				noti_warning("Grouping incomplete inline group is not allowed.");
+				for( var j = 0, m = array_length(ictx.nodes); j < m; j++ ) {
+					var _n = ictx.nodes[j];
+					if(!_n.active) continue;
+					
+					if(!has(_idmap, _n.node_id)) { // doesn't select every node in the inline group
+						_ctx_all = false;
+						if(_ctx_amo == 1) continue;
+						
+						noti_warning("Grouping nodes from multiple partial inline groups is not allowed.");
+						return;
+					}
+				}
+				
+			}
+			
+			if(!_ctx_all && _ctx_nodes[0] != noone && _selIO) {
+				noti_warning("Grouping incomplete inline group IO is not allowed.");
 				return;
 			}
 		#endregion
 		
 		UNDO_HOLDING = true;
-		
-		var amo = array_length(nodeArray);
 		
 		if(_group == noone) {
 			var cx  = 0;
@@ -685,13 +714,22 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var _content = [];
 		
 		for(var i = 0; i < amo; i++) {
-			_group.add(nodeArray[i]);
-			_content[i] = nodeArray[i];
+			var _n = nodeArray[i];
+			
+			_group.add(_n);
+			_content[i] = _n;
+			
+			if(_n.inline_context != noone && !_ctx_all) 
+				_n.inline_context.removeNode(_n);
 		}
 		
+		if(_ctx_all)
 		for( var i = 0, n = array_length(_ctx_nodes); i < n; i++ ) {
-			_group.add(_ctx_nodes[i]);
-			_content[i] = _ctx_nodes[i];
+			var ictx = _ctx_nodes[i];
+			if(ictx == noone) continue;
+			
+			_group.add(ictx);
+			_content[i] = ictx;
 		}
 		
 		if(check_connect) { // IO creation

@@ -122,7 +122,7 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		
 		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
 			var _node = nodes[i];
-			if(!_node.active) continue;
+			if(!_node.active || _node.group != group) continue;
 			_hash += $"{_node.x},{_node.y},{_node.w},{_node.h}|";
 			_ind++;
 		}
@@ -146,7 +146,7 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		var _ind = 0;
 		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
 			var _node = nodes[i];
-			if(!_node.active) continue;
+			if(!_node.active || _node.group != group) continue;
 			_ind = getNodeBorder(_ind, _vtrx, _node);
 		}
 		
@@ -224,6 +224,9 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		}
 		
 		bbox = [ minx, miny, maxx, maxy ];
+		
+		x = (minx + maxx) / 2;
+		y = (miny + maxy) / 2;
 	}
 	
 	static groupCheck = function(_x, _y, _s, _mx, _my) {
