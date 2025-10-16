@@ -108,6 +108,8 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		return project.tunnels_in[? _key].node.rendered;
 	}
 	
+	static isActiveDynamic = function(frame = CURRENT_FRAME) { return false; }
+	
 	////- Draw
 	
 	static pointIn = function(_x, _y, _mx, _my, _s) {

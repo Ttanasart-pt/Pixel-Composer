@@ -43,26 +43,32 @@ function Node_Array_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	}
 	
 	static pointIn = function(_x, _y, _mx, _my, _s) {
-		var xx = x * _s + _x;
-		var yy = y * _s + _y;
+		var xx =  x      * _s + _x;
+		var yy = (y + 8) * _s + _y;
 		
 		return point_in_circle(_mx, _my, xx, yy, _s * 24);
 	}
 	
 	static preDraw = function(_x, _y, _mx, _my, _s) {
-		var xx = x * _s + _x;
-		var yy = y * _s + _y;
+		var xx =  x      * _s + _x;
+		var yy = (y + 8) * _s + _y;
 		
 		for( var i = input_fix_len; i < array_length(inputs); i++ ) {
 			inputs[i].x = xx;
 			inputs[i].y = yy;
+			inputs[i].rx = x;
+			inputs[i].ry = y + 8;
 		}
 		
 		dummy_input.x = xx;
 		dummy_input.y = yy;
+		dummy_input.rx = x;
+		dummy_input.ry = y + 8;
 		
 		outputs[0].x = xx;
 		outputs[0].y = yy;
+		outputs[0].rx = x;
+		outputs[0].ry = y + 8;
 	}
 	
 	static drawBadge = function(_x, _y, _s) {}
@@ -71,8 +77,8 @@ function Node_Array_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static drawJunctions = function(_draw, _x, _y, _mx, _my, _s) {
 		var _dval = PANEL_GRAPH.value_dragging;
 		var hover = _dval == noone || _dval.connect_type == CONNECT_TYPE.input? outputs[0] : dummy_input;
-		var xx	  = x * _s + _x;
-		var yy	  = y * _s + _y;
+		var xx =  x      * _s + _x;
+		var yy = (y + 8) * _s + _y;
 		isHovering = point_in_circle(_mx, _my, xx, yy, _s * 24);
 		
 		var jhov = hover.drawJunction(_draw, _s, _mx, _my);
@@ -84,8 +90,8 @@ function Node_Array_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	}
 	
 	static drawNode = function(_draw, _x, _y, _mx, _my, _s) {
-		var xx = x * _s + _x;
-		var yy = y * _s + _y;
+		var xx =  x      * _s + _x;
+		var yy = (y + 8) * _s + _y;
 		
 		hover_alpha = 0.5;
 		if(active_draw_index > -1) {

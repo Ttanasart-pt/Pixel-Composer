@@ -67,7 +67,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		color          = c_white;
 		icon           = noone;
 		icon_24        = noone;
-		icon_blend     = c_white;
+		icon_blend     = undefined;
 		node_draw_icon = noone;
 		bg_spr         = THEME.node_bg;
 		bg_spr_add     = 0.1;
@@ -1145,10 +1145,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 	}
 	
-	static resetRender = function(_clearCache = false) { 
-		setRenderStatus(false); 
-		if(_clearCache) clearInputCache();
-	}
+	static resetRender = function(_clearCache = false) { setRenderStatus(false); if(_clearCache) clearInputCache(); }
 	
 	static isLeaf = function(frame = CURRENT_FRAME) { return array_all(inputs, function(inp) /*=>*/ {return inp.value_from == noone}); }
 	
@@ -1172,11 +1169,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static isRenderable = function(log = false) { //Check if every input is ready (updated)
 		if(!active || !isRenderActive()) return false;
 		
-		for(var j = 0; j < array_length(inputs); j++) {
-			if(!inputs[j].isRendered()) {
-				LOG_IF(global.FLAG.render == 1, $"→→ x Node {internalName} {inputs[j]} not rendered.");
-				return false;
-			}
+		for(var i = 0, n = array_length(inputs); i < n; i++) {
+			if(inputs[i].isRendered()) continue;
+			
+			LOG_IF(global.FLAG.render == 1, $"→→ x Node {internalName} {inputs[i]} not rendered.");
+			return false;
 		}
 		
 		return true;
@@ -1243,12 +1240,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	__nextNodesToLoop = noone;
 	
 	static getNextNodes = function(checkLoop = false) {
-		if(checkLoop) {
-			if(__nextNodesToLoop != noone && __nextNodesToLoop.bypassNextNode()) __nextNodesToLoop.getNextNodes();
-			return;
-		}
-		
+		if(checkLoop) { if(__nextNodesToLoop != noone && __nextNodesToLoop.bypassNextNode()) __nextNodesToLoop.getNextNodes(); return; }
 		__nextNodesToLoop = noone;
+		
 		for( var i = 0, n = array_length(outputs); i < n; i++ ) {
 			var _ot = outputs[i];
 			if(is(_ot, NodeValue) && !_ot.forward) continue;
@@ -1298,7 +1292,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			}
 		}
 		
-		array_unique_ext(nodes);
+		nodes = array_unique(nodes);
 		__nextNodes = nodes;
 		
 		return nodes;
@@ -1750,7 +1744,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var ba = aa;
 		
 		if(_panel && _panel.node_hovering == self) ba = .1;
-		draw_sprite_stretched_ext(THEME.node_bg, 2, xx, yy, w * _s, nh, nodeC, ba);
+		draw_sprite_stretched_ext(bg_spr, 2, xx, yy, w * _s, nh, nodeC, ba);
 		
 		var cc = renderActive? COLORS._main_text : COLORS._main_text_sub;
 		if(PREFERENCES.node_show_render_status && !rendered)
@@ -1767,7 +1761,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(icon) {
 			var _ics = _s / THEME_SCALE * .8;
 			gpu_set_texfilter(true);
-			draw_sprite_ext(icon, 0, tx + 6 * _s, ty, _ics, _ics, 0, nodeC, .6);
+			draw_sprite_ext(icon, 0, tx + 6 * _s, ty, _ics, _ics, 0, icon_blend ?? nodeC, .6);
 			gpu_set_texfilter(false);
 			
 			tx += 16 * _s;
@@ -3245,7 +3239,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		return _report;
 	}
-	
 	static summarizeReport = function(_startTime) {
 		var _srcstr = $"{getFullName()}";
 		var _report = generateNodeRenderReport();

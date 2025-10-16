@@ -17,8 +17,9 @@ function Node_Iterator_Each_Inline_Output(_x, _y, _group = noone) : Node(_x, _y,
 	newOutput(0, nodeValue_Output("Array out", VALUE_TYPE.any, [] ));
 	
 	static getNextNodes = function(checkLoop = false) {
-		if(loop.bypassNextNode())
-			return loop.getNextNodes();
+		if(loop.bypassNextNode()) return loop.getNextNodes();
+		
+		logNodeDebug($"Loop complete");
 		return getNextNodesRaw();
 	}
 	

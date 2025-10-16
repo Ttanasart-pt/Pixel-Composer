@@ -51,7 +51,7 @@ function Node_Iterate_Each_Inline(_x, _y, _group = noone) : Node_Collection_Inli
 		
 		resetRender();
 		var _nodes = __nodeLeafList(nodes);
-		LOG_IF(global.FLAG.render == 1, $"Loop restart: iteration {iterated} : leaf {_nodes}");
+		logNodeDebug($"Loop restart: iteration {iterated} : {array_length(_nodes)} leaf", 2);
 		
 		array_push_unique(_nodes, input_node);
 		iterated++;

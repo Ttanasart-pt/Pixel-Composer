@@ -998,7 +998,6 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 			if(mouse_release(mb_left)) {
 				drag_point = -1;
-				RENDER_ALL
 				UNDO_HOLDING = false;
 			}
 			

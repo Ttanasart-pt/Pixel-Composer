@@ -57,8 +57,10 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	draw_input_overlay = true;
 	
 	array_push(attributeEditors, "Group");
-	array_push(attributeEditors, ["Pure Function",       function() /*=>*/ {return attributes.pure_function}, new checkBox(function() /*=>*/ {return toggleAttribute("pure_function")}) ]);
-	array_push(attributeEditors, ["Lock Input",          function() /*=>*/ {return attributes.lock_input},    new checkBox(function() /*=>*/ {return toggleAttribute("lock_input")})    ]);
+	array_push(attributeEditors, ["Pure Function", function() /*=>*/ {return attributes.pure_function}, new checkBox(function() /*=>*/ {
+		toggleAttribute("pure_function"); checkPureFunction(); }) ]);
+		
+	array_push(attributeEditors, ["Lock Input",          function() /*=>*/ {return attributes.lock_input}, new checkBox(function() /*=>*/ {return toggleAttribute("lock_input")})    ]);
 	array_push(attributeEditors, ["Edit Input Display",  function() /*=>*/ {return 0}, button(function() /*=>*/ { dialogCall(o_dialog_group_input_order).setNode(self, CONNECT_TYPE.input);  }) ]);
 	array_push(attributeEditors, ["Edit Output Display", function() /*=>*/ {return 0}, button(function() /*=>*/ { dialogCall(o_dialog_group_input_order).setNode(self, CONNECT_TYPE.output); }) ]);
 	
@@ -98,17 +100,17 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			hasInsp1 = hasInsp1 || _node.hasInspector1Update();
 			hasInsp2 = hasInsp2 || _node.hasInspector2Update();
 			
-			p = p && !is(_node, Node_Collection_Inline);
-			p = p && !is(_node, Node_Collection);
+			p = p && !is(_node, Node_Collection_Inline) && !is(_node, Node_Collection);
 			p = p && !_node.isAnimated();
+			if(!p) break;
 		}
 		
-		icon_blend = p? COLORS._main_value_positive : c_white;
+		icon_blend = p? COLORS._main_value_positive : undefined;
 		
 		if(updateTopo || !isPure && p) nodeTopo = NodeListSort(nodes, project);
 		isPure = p;
 		
-		if(group) group.checkPureFunction(updateTopo);
+		// if(group) group.checkPureFunction(updateTopo);
 	}
 	
 	static getNodeList = function() /*=>*/ {return nodes};
@@ -242,8 +244,12 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static renderTopo = function(frame) {
-		for( var i = 0, n = array_length(nodeTopo); i < n; i++ )
-			nodeTopo[i].doUpdate(frame);
+		for( var i = 0, n = array_length(nodeTopo); i < n; i++ ) {
+			var _n = nodeTopo[i];
+			if(_n.rendered) continue;
+			
+			_n.doUpdate(frame);
+		}
 	}
 	
 	static postRender = function() {
@@ -265,7 +271,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 				if(!_in.isRenderActive()) continue;
 			
 				if(!_in.isRenderable()) {
-					LOG_IF(global.FLAG.render == 1, $"Node {_in.internalName} not ready, loop skip.");
+					LOG_IF(global.FLAG.render == 1, $"Node {_in.internalName} not ready, group skip.");
 					LOG_BLOCK_END();
 					return [];
 				}

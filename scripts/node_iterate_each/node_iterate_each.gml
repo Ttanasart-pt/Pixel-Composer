@@ -42,7 +42,6 @@ function Node_Iterate_Each(_x, _y, _group = noone) : Node_Iterator(_x, _y, _grou
 	
 	static update = function(frame = CURRENT_FRAME) { 
 		inputs[0].setType(inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type);
-		
 		initLoop(); 
 	}
 	

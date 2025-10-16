@@ -69,6 +69,14 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	////- Render
 	
+	static resetNodeRender = function(_node, _clearCache = false) {
+		_node.resetRender(_clearCache);
+		
+		if(is(_node, Node_Collection))
+		for(var i = 0, n = array_length(_node.nodes); i < n; i++)
+			resetNodeRender(_node.nodes[i], _clearCache);
+	}
+	
 	static resetRender = function(_clearCache = false) {
 		LOG_LINE_IF(global.FLAG.render == 1, $"Reset Render for {getInternalName()}");
 		
@@ -76,7 +84,7 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		if(_clearCache) clearInputCache();
 		
 		for( var i = 0; i < array_length(nodes); i++ )
-			nodes[i].resetRender(_clearCache);
+			resetNodeRender(nodes[i], _clearCache);
 	}
 	
 	////- Draw

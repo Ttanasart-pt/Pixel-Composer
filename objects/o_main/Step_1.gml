@@ -150,7 +150,7 @@ _FILE_DROPPED       = false;
 #endregion
 
 #region animation & render
-	if(RENDERING != undefined) RENDERING.Rendering();
+	if(RENDERING != undefined) RENDERING.render();
 	else if(WILL_RENDERING != undefined) Render(WILL_RENDERING.project, WILL_RENDERING.partial);
 	
 	if(!surface_exists(watcher_surface)) {

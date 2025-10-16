@@ -824,7 +824,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         _blend.inputs[1].setFrom(_canvas.outputs[0]);
     }
     
-    function setFocusingNode(_node) { nodes_selecting = [ _node ]; return self; }
+    function setFocusingNode(_node) { nodes_selecting = [ _node ]; draw_refresh = true; return self; }
     
     function getFocusingNode() { return array_empty(nodes_selecting)? noone : nodes_selecting[0]; }
     
@@ -1692,6 +1692,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        
 	        array_foreach(_node_draw, function(_n) /*=>*/ { 
 	        	if(is(_n, Node_Frame)) return;
+	        	
+	        	_n.active_draw_index = -1;
 	        	if(_n.drawNodeBG(__gr_x, __gr_y, __mx, __my, __gr_s, project.graphDisplay, __self)) 
 	        		frame_hovering = _n; 
 	        });
