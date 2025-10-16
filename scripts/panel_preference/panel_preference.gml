@@ -589,6 +589,14 @@ function Panel_Preference() : PanelContent() constructor {
     #region Node
     	pref_node = ds_list_create();
 	
+		ds_list_add(pref_node, __txt("Rendering"));
+			
+			ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
+				__txtx("pref_render_max_time", "Render time per frame"),
+				"render_max_time",
+				textBox_Number(function(val) /*=>*/ {return prefSet("render_max_time", val)})
+			));
+				
 		ds_list_add(pref_node, __txt("Defaults"));
 			
 			ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(

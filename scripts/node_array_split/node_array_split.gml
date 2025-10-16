@@ -4,8 +4,8 @@ function Node_Array_Split(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	draw_padding = 4;
 	
-	newInput(0, nodeValue("Array", self, CONNECT_TYPE.input, VALUE_TYPE.any, []))
-		.setVisible(true, true);
+	newInput(0, nodeValue_Any( "Array", [])).setVisible(true, true);
+	newInput(1, nodeValue_Int( "Minimum Outputs", 0 ));
 	
 	newOutput(0, nodeValue_Output("val 0", VALUE_TYPE.any, 0));
 	
@@ -15,15 +15,15 @@ function Node_Array_Split(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static update = function() {
 		var _inp = getInputData(0);
+		var _min = getInputData(1);
+		
 		var type = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;
 		inputs[0].setType(type);
 		
-		if(!is_array(_inp)) {
-			attributes.output_amount = 0;
-			return;
-		}
+		var amo = max(_min, array_safe_length(_inp));
+		attributes.output_amount = amo;
 		
-		var amo = array_length(_inp);
+		if(amo == 0) return;
 		
 		for (var i = 0; i < amo; i++) {
 			if(i >= array_length(outputs)) {
@@ -35,7 +35,7 @@ function Node_Array_Split(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			}
 			
 			outputs[i].setType(type);
-			outputs[i].setValue(_inp[i]);
+			outputs[i].setValue(array_safe_get(_inp, i, 0));
 		}
 		
 		var _rem = array_length(outputs);
@@ -55,7 +55,6 @@ function Node_Array_Split(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		}
 		
 		__preDraw_data.force = true;
-		attributes.output_amount = amo;
 	}
 	
 	static preApplyDeserialize = function() {

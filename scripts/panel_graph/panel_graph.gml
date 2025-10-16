@@ -1568,6 +1568,11 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                 
                 for( var i = 0, n = array_length(nodes_selecting); i < n; i++ ) {
                     var _node = nodes_selecting[i];
+                    _node.moved = false;
+                }
+                
+                for( var i = 0, n = array_length(nodes_selecting); i < n; i++ ) {
+                    var _node = nodes_selecting[i];
                     var _nx   = _node.x + dx;
                     var _ny   = _node.y + dy;
                     
@@ -1576,7 +1581,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		                _ny = value_snap(_ny, _grd);
 		            }
                     
-                    _node.move(_nx, _ny);
+                    if(!_node.moved) _node.move(_nx, _ny);
                 }
                    
                 node_drag_ox = nx;
@@ -2022,7 +2027,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        
 	        node_surface_update = node_surface_update
 	        	|| !surface_valid(node_surface, w, h)
-	        	|| (node_hovering != noone && node_hovering.reactive_on_hover);
+	        	|| (node_hovering != noone && (node_hovering.reactive_on_hover || node_hovering.show_parameter));
 	        // node_surface_update = true;
 	        node_surface = surface_verify(node_surface, w, h);
 	        

@@ -1790,7 +1790,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static drawJunctionWidget = function(_x, _y, _mx, _my, _s, _hover, _focus, _display_parameter = noone, _panel = noone) {
-		
 		var hover = noone;
 		
 		var _m = [ _mx, _my ];
@@ -3005,6 +3004,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static move = function(_x, _y) {
+		moved = true;
 		if(x == _x && y == _y) return;
 		
 		x = _x;

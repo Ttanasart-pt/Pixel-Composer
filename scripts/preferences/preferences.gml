@@ -159,6 +159,7 @@
 	#region MISC
 		
 		PREFERENCES.render_all_export				= true;
+		PREFERENCES.render_max_time					= 1/50;
 		PREFERENCES.clear_temp_on_close				= true;
 	
 		PREFERENCES.show_supporter_icon				= true;

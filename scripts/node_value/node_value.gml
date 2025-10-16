@@ -1745,7 +1745,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static onSetValueDirect = undefined;
-	static setValueDirect = function(val = 0, _index = noone, record = true, time = NODE_CURRENT_FRAME, _update = true) {
+	static setValueDirect = function(val = 0, _index = noone, record = true, time = NODE_CURRENT_FRAME, _render = true) {
 		is_modified = true;
 		var updated = false;
 		var _val    = val;
@@ -1771,8 +1771,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			updated = animator.setValue(_val, record, time);
 		}
 		
-		if(type == VALUE_TYPE.gradient)				updated = true;
-		if(display_type == VALUE_DISPLAY.palette)   updated = true;
+		if(connect_type == CONNECT_TYPE.output)   updated = false;
+		if(type == VALUE_TYPE.gradient)	          updated = true;
+		if(display_type == VALUE_DISPLAY.palette) updated = true;
 		
 		if(!updated) return false; /////////////////////////////////////////////////////////////////////////////////
 		
@@ -1806,7 +1807,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(tags == VALUE_TAG.updateInTrigger || tags == VALUE_TAG.updateOutTrigger) return true;
 		
-		if(_update) { // This part used to have !IS_PLAYING
+		if(_render) { // This part used to have !IS_PLAYING
 			node.doUpdate();
 			node.triggerRender();
 			node.valueUpdate(index);

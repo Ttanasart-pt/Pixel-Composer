@@ -10,11 +10,30 @@ enum RENDER_TYPE {
 	globalvar UPDATE_RENDER_ORDER; UPDATE_RENDER_ORDER = false;
 	globalvar LIVE_UPDATE; LIVE_UPDATE         = false;
 	globalvar RENDERING; RENDERING           = undefined;
+	globalvar WILL_RENDERING; WILL_RENDERING      = undefined;
 	
-	#macro RENDER_ALL                                         UPDATE |= RENDER_TYPE.full;
-	#macro RENDER_ALL_REORDER	  UPDATE_RENDER_ORDER = true; UPDATE |= RENDER_TYPE.full;
-	#macro RENDER_PARTIAL		   						      UPDATE |= RENDER_TYPE.partial;
-	#macro RENDER_PARTIAL_REORDER UPDATE_RENDER_ORDER = true; UPDATE |= RENDER_TYPE.partial;
+	#macro RENDER_ALL             RenderAll();
+	#macro RENDER_ALL_REORDER     RenderAllReorder();
+	#macro RENDER_PARTIAL         RenderPartial();
+	#macro RENDER_PARTIAL_REORDER RenderPartialReorder();
+	
+	function RenderAll() { 
+		UPDATE |= RENDER_TYPE.full; 
+	}
+	
+	function RenderAllReorder() { 
+		UPDATE |= RENDER_TYPE.full;    
+		UPDATE_RENDER_ORDER = true; 
+	}
+	
+	function RenderPartial() { 
+		UPDATE |= RENDER_TYPE.partial; 
+	}
+	
+	function RenderPartialReorder() { 
+		UPDATE |= RENDER_TYPE.partial; 
+		UPDATE_RENDER_ORDER = true; 
+	}
 	
 	global.getvalue_hit = 0;
 #endregion
@@ -163,7 +182,13 @@ function __nodeIsRenderLeaf(_node) {
 }
 
 function Render(_project = PROJECT, _partial = false, _runAction = false) { 
-	return RENDERING == undefined? new RenderObject(_project, _partial, _runAction) : noone; 
+	if(RENDERING == undefined) {
+		WILL_RENDERING = undefined;
+		return new RenderObject(_project, _partial, _runAction);
+	}
+	
+	WILL_RENDERING = { project: _project, partial: _partial };
+	return noone; 
 }
 
 function RenderSync(_project = PROJECT, _partial = false, _runAction = false) {
@@ -225,7 +250,7 @@ function RenderObject(_project = PROJECT, _partial = false, _runAction = false) 
 	LOG_IF(global.FLAG.render >= 1, $"Get leaf complete: found {RENDER_QUEUE.size()} leaves in {(get_timer() - t) / 1000} ms."); t = get_timer();
 	LOG_IF(global.FLAG.render == 1,  "================== Start rendering ==================");
 	
-	function Rendering(_maxDuration = 1/50) {
+	function Rendering(_maxDuration = PREFERENCES.render_max_time) {
 		var _time_frame = get_timer();
 		var _rendered   = 0;
 		
@@ -296,6 +321,7 @@ function RenderObject(_project = PROJECT, _partial = false, _runAction = false) 
 		
 		LOG_END();
 		RENDERING = undefined;
+		PANEL_GRAPH.draw_refresh = true;
 		
 		return true;
 	}
