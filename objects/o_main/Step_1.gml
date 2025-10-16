@@ -150,6 +150,8 @@ _FILE_DROPPED       = false;
 #endregion
 
 #region animation & render
+	if(RENDERING != undefined) RENDERING.Rendering();
+	
 	if(!surface_exists(watcher_surface)) {
 		RENDER_ALL
 		watcher_surface = surface_create(1, 1);
@@ -163,7 +165,7 @@ _FILE_DROPPED       = false;
 	if(!LOADING) {
 		if(!PROJECT.safeMode) PROJECT.stepBegin();
 		
-		if(LIVE_UPDATE) Render(PROJECT);
+		if(LIVE_UPDATE) RenderSync(PROJECT);
 		else if(!PROJECT.safeMode) {
 			UPDATE_RENDER_ORDER = false;
 			
@@ -180,19 +182,16 @@ _FILE_DROPPED       = false;
 					if(PROJECT.animator.frame_progress) {
 						__addon_preAnim();
 						
-						if(IS_CMD) Render(PROJECT, false);
-						else       Render(PROJECT, true);
+						if(IS_CMD) RenderSync(PROJECT, false);
+						else       RenderSync(PROJECT, true);
 						
 						__addon_postAnim();
 					}
 					PROJECT.animator.frame_progress = false;
 					
 				} else {
-					if(UPDATE & RENDER_TYPE.full) 
-						Render(PROJECT, false);
-						
-					else if(UPDATE & RENDER_TYPE.partial)
-						Render(PROJECT, true);
+					     if(UPDATE & RENDER_TYPE.full)    Render(PROJECT, false);
+					else if(UPDATE & RENDER_TYPE.partial) Render(PROJECT, true);
 				}
 			}
 		}

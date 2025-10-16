@@ -107,7 +107,7 @@ switch(load_process) {
         			log_message("LOAD", $"[Connect] {size} Connection conflict(s) detected (pass: {pass})");
         			repeat(size) ds_queue_dequeue(CONNECTION_CONFLICT).connect();
         			repeat(size) ds_queue_dequeue(CONNECTION_CONFLICT).postConnect();
-        			Render(PROJECT);
+        			RenderSync(PROJECT);
         		}
         		
         		if(!ds_queue_empty(CONNECTION_CONFLICT))

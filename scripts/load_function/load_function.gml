@@ -28,7 +28,7 @@ function TEST_PATH(path) {
 	PROJECT = new Project();
 	
 	LOAD_AT(path);
-	Render(PROJECT);
+	RenderSync(PROJECT);
 	closeProject(PROJECT);
 }
 

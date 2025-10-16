@@ -590,7 +590,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		    setReport(noone);
 		    
 		    var _t = get_timer();
-		        Render(PROJECT);
+		        RenderSync(PROJECT);
 	        render_time = get_timer() - _t;
 		    
 		    summarize();
@@ -607,7 +607,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		    setReport(noone);
 		    
 		    var _t = get_timer();
-		        Render(PROJECT, true);
+		        RenderSync(PROJECT, true);
 	        render_time = get_timer() - _t;
 		    
 		    summarize();

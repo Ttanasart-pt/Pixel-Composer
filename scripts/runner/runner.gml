@@ -30,7 +30,7 @@ function Runner() constructor {
 		// project.step();
 		// project.postStep();
 		
-		try { Render(project); }
+		try { RenderSync(project); }
 		catch(e) { log_warning("UPDATE: profile", exception_print(e)); }
 		
 		curr_frame = _frame;

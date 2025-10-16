@@ -546,10 +546,8 @@ function Panel_Menu() : PanelContent() constructor {
         #endregion
         
         #region notification
-            var warning_amo = ds_list_size(WARNING);
-            var error_amo   = ds_list_size(ERRORS);
             var nx0, ny0;
-            
+                
             if(hori) {
                 nx0 = _mx + ui(8);
                 ny0 = h / 2;
@@ -559,68 +557,83 @@ function Panel_Menu() : PanelContent() constructor {
                 ny0 = yy + ui(16);
             }
             
-            draw_set_text(font, fa_left, fa_center);
-            var wr_w = ui(20) + ui(8) + string_width(string(warning_amo));
-            var er_w = ui(20) + ui(8) + string_width(string(error_amo));
-            
-            if(noti_icon_time > 0) {
-                noti_icon_show = lerp_float(noti_icon_show, 1, 4);
-                noti_icon_time--;
-            } else 
-                noti_icon_show = lerp_float(noti_icon_show, 0, 4);
-            
-            var nw = hori? ui(16) + wr_w + ui(16) + er_w + noti_icon_show * ui(32) : w - ui(16);
-            var nh = ui(28);
-            
-            noti_flash = lerp_linear(noti_flash, 0, 0.02);
-            var ev = animation_curve_eval(ac_flash, noti_flash);
-            var cc = merge_color(c_white, noti_flash_color, ev);
-            
-            if(pHOVER && point_in_rectangle(mx, my, nx0, ny0 - nh / 2, nx0 + nw, ny0 + nh / 2)) {
-                _draggable = false;
-                draw_sprite_stretched_ext(THEME.box_r2_clr, 0, nx0, ny0 - nh / 2, nw, nh, cc, 1);
-                if(mouse_press(mb_left, pFOCUS)) {
-                    var dia = dialogPanelCall(new Panel_Notification(), nx0, ny0 + nh / 2 + ui(4));
-                    dia.anchor = ANCHOR.left | ANCHOR.top;
-                }
+            if(RENDERING != undefined) {
+                var nw = hori? ui(96) : w - ui(16);
+                var nh = ui(24);
                 
-                TOOLTIP = $"{warning_amo} {__txt("Warnings")} {error_amo} {__txt("Errors")}";
-            } else
-                draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, nx0, ny0 - nh / 2, nw, nh, cc, 1);
-            
-            gpu_set_blendmode(bm_add);
-            draw_sprite_stretched_ext(THEME.box_r2, 0, nx0, ny0 - nh / 2, nw, nh, cc, ev / 2);
-            gpu_set_blendmode(bm_normal);
-            
-            var _prg = noone;
-            for( var i = 0, n = array_length(STATS_PROGRESS); i < n; i++ ) _prg = max(_prg, STATS_PROGRESS[i].progress);
-            if(_prg > noone) draw_sprite_stretched_ext(THEME.box_r2, 0, nx0, ny0 - nh / 2, nw * clamp(_prg, 0, 1), nh, COLORS._main_value_positive, .5);
-            
-            if(noti_icon_show > 0)
-                draw_sprite_ui(noti_icon, 0, nx0 + nw - ui(16), ny0,,,,, noti_icon_show);
-            
-            draw_set_color(COLORS._main_text_inner);
-            var wr_x = hori? nx0 + ui(8) : w / 2 - (wr_w + er_w + ui(16)) / 2;
-            draw_sprite_ui_uniform(THEME.noti_icon_warning, warning_amo? 1 : 0, wr_x + ui(10), ny0);
-            draw_text_add(wr_x + ui(28), ny0, warning_amo);
-            
-            wr_x += wr_w + ui(16);
-            draw_sprite_ui_uniform(THEME.noti_icon_error, error_amo? 1 : 0, wr_x + ui(10), ny0);
-            draw_text_add(wr_x + ui(28), ny0, error_amo);
+                draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, nx0, ny0 - nh / 2, nw, nh);
+                
+                draw_set_text(f_p3, fa_center, fa_center, COLORS._main_value_positive);
+                draw_text_add(nx0 + nw / 2, ny0 - ui(1), __txt("Rendering..."));
+                
+            } else {
+                var warning_amo = ds_list_size(WARNING);
+                var error_amo   = ds_list_size(ERRORS);
+                draw_set_text(font, fa_left, fa_center);
+                
+                var wr_w = ui(20) + ui(8) + string_width(string(warning_amo));
+                var er_w = ui(20) + ui(8) + string_width(string(error_amo));
+                
+                if(noti_icon_time > 0) {
+                    noti_icon_show = lerp_float(noti_icon_show, 1, 4);
+                    noti_icon_time--;
+                    
+                } else 
+                    noti_icon_show = lerp_float(noti_icon_show, 0, 4);
+                
+                var nw = hori? ui(8) + wr_w + ui(4) + er_w + noti_icon_show * ui(32) : w - ui(16);
+                var nh = ui(24);
+                
+                noti_flash = lerp_linear(noti_flash, 0, 0.02);
+                var ev = animation_curve_eval(ac_flash, noti_flash);
+                var cc = merge_color(c_white, noti_flash_color, ev);
+                
+                if(pHOVER && point_in_rectangle(mx, my, nx0, ny0 - nh / 2, nx0 + nw, ny0 + nh / 2)) {
+                    _draggable = false;
+                    draw_sprite_stretched_ext(THEME.box_r2_clr, 0, nx0, ny0 - nh / 2, nw, nh, cc, 1);
+                    if(mouse_press(mb_left, pFOCUS)) {
+                        var dia = dialogPanelCall(new Panel_Notification(), nx0, ny0 + nh / 2 + ui(4));
+                        dia.anchor = ANCHOR.left | ANCHOR.top;
+                    }
+                    
+                    TOOLTIP = $"{warning_amo} {__txt("Warnings")} {error_amo} {__txt("Errors")}";
+                } else
+                    draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, nx0, ny0 - nh / 2, nw, nh, cc, 1);
+                
+                gpu_set_blendmode(bm_add);
+                draw_sprite_stretched_ext(THEME.box_r2, 0, nx0, ny0 - nh / 2, nw, nh, cc, ev / 2);
+                gpu_set_blendmode(bm_normal);
+                
+                var _prg = noone;
+                for( var i = 0, n = array_length(STATS_PROGRESS); i < n; i++ ) _prg = max(_prg, STATS_PROGRESS[i].progress);
+                if(_prg > noone) draw_sprite_stretched_ext(THEME.box_r2, 0, nx0, ny0 - nh / 2, nw * clamp(_prg, 0, 1), nh, COLORS._main_value_positive, .5);
+                
+                if(noti_icon_show > 0) draw_sprite_ui_uniform(noti_icon, 0, nx0 + nw - ui(16), ny0, .75, c_white, noti_icon_show);
+                
+                draw_set_color(COLORS._main_text_inner);
+                var wr_x = hori? nx0 + ui(4) : w / 2 - (wr_w + er_w + ui(16)) / 2;
+                draw_sprite_ui_uniform(THEME.noti_icon_warning, warning_amo? 1 : 0, wr_x + ui(10), ny0, .75);
+                draw_text_add(wr_x + ui(24), ny0 - ui(1), warning_amo);
+                
+                wr_x += wr_w + ui(4);
+                draw_sprite_ui_uniform(THEME.noti_icon_error, error_amo? 1 : 0, wr_x + ui(10), ny0, .75);
+                draw_text_add(wr_x + ui(24), ny0 - ui(1), error_amo);
+                
+            }
             
             if(hori) nx0 += nw + ui(8);
             else     ny0 += nh + ui(8);
         #endregion
         
         #region addons 
-            var wh = ui(28);
+            var wh = ui(24);
             if(!hori) nx0 = ui(8);
             
             if(instance_exists(addon)) {
                 draw_set_text(font, fa_left, fa_center, COLORS._main_text);
                 
                 var name = string(instance_number(addon)) + " ";
-                var ww = hori? string_width(name) + ui(40) : w - ui(16);
+                var ww = hori? string_width(name) + ui(34) : w - ui(16);
                 
                 if(pHOVER && point_in_rectangle(mx, my, nx0, ny0 - wh / 2, nx0 + ww, ny0 + wh / 2)) {
                     _draggable = false;
@@ -630,8 +643,9 @@ function Panel_Menu() : PanelContent() constructor {
                         dialogPanelCall(new Panel_Addon());
                 } else 
                     draw_sprite_stretched(THEME.ui_panel_bg, 1, nx0, ny0 - wh / 2, ww, wh);
-                draw_text_add(nx0 + ui(8), ny0, name);
-                draw_sprite_ui(THEME.addon_icon, 0, nx0 + ui(20) + string_width(name), ny0 + ui(1),,,, COLORS._main_icon);
+                    
+                draw_text_add(nx0 + ui(8), ny0 - ui(1), name);
+                draw_sprite_ui_uniform(THEME.addon_icon, 0, nx0 + ui(18) + string_width(name), ny0, .75, COLORS._main_icon);
                 
                 if(hori) nx0 += ww + ui(4);
                 else     ny0 += hh + ui(4);

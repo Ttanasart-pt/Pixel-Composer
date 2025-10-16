@@ -265,7 +265,7 @@ function Panel_Test() : PanelContent() constructor {
 				case 3 : 
 					if(!instance_exists(project_loader)) {
 						ASSERTING = true;
-						Render(PROJECT);
+						RenderSync(PROJECT);
 						ASSERTING = false;
 						test_step++;
 					}

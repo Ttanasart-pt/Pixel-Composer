@@ -5,10 +5,11 @@ enum RENDER_TYPE {
 }
 
 #region globalvar
-	globalvar UPDATE, RENDER_QUEUE, RENDER_ORDER, UPDATE_RENDER_ORDER, LIVE_UPDATE;
+	globalvar UPDATE, RENDER_QUEUE, RENDER_ORDER;
 	
-	LIVE_UPDATE            = false;
-	UPDATE_RENDER_ORDER    = false;
+	globalvar UPDATE_RENDER_ORDER; UPDATE_RENDER_ORDER = false;
+	globalvar LIVE_UPDATE; LIVE_UPDATE         = false;
+	globalvar RENDERING; RENDERING           = undefined;
 	
 	#macro RENDER_ALL                                         UPDATE |= RENDER_TYPE.full;
 	#macro RENDER_ALL_REORDER	  UPDATE_RENDER_ORDER = true; UPDATE |= RENDER_TYPE.full;
@@ -161,7 +162,20 @@ function __nodeIsRenderLeaf(_node) {
 	return true;
 }
 
-function Render(_project = PROJECT, partial = false, runAction = false) {
+function Render(_project = PROJECT, _partial = false, _runAction = false) { 
+	return RENDERING == undefined? new RenderObject(_project, _partial, _runAction) : noone; 
+}
+
+function RenderSync(_project = PROJECT, _partial = false, _runAction = false) {
+	var _ = new RenderObject(_project, _partial, _runAction).Rendering(infinity);
+}
+
+function RenderObject(_project = PROJECT, _partial = false, _runAction = false) constructor {
+	project   = _project;
+	partial   = _partial;
+	runAction = _runAction;
+	
+	RENDERING = self;
 	// node_auto_organize(_project.nodes);
 	// print($"======================== RENDER {GLOBAL_CURRENT_FRAME} ========================")
 	
@@ -170,121 +184,127 @@ function Render(_project = PROJECT, partial = false, runAction = false) {
 	LOG_BLOCK_START();
 	LOG_IF(global.FLAG.render, $"============================== RENDER START [{partial? "PARTIAL" : "FULL"}] [frame {GLOBAL_CURRENT_FRAME}] ==============================");
 	
-	_project.preRender();
+	project.preRender();
+	t  = get_timer();
+	t1 = get_timer();
 	
-	try {
-		var t  = get_timer();
-		var t1 = get_timer();
+	render_time = 0;
+	leaf_time   = 0;
+	error       = 0;
+	reset_all   = !partial;
+	
+	if(reset_all) {
+		LOG_IF(global.FLAG.render == 1, $"xxxxxxxxxx Resetting {array_length(project.nodeTopo)} nodes xxxxxxxxxx");
+		array_foreach(project.allNodes, function(n) /*=>*/ {return n.setRenderStatus(false)});
+	}
+	
+	// get leaf node
+	LOG_IF(global.FLAG.render == 1, $"----- Finding leaf from {array_length(project.nodeTopo)} nodes -----");
+	RENDER_QUEUE.clear();
+	array_foreach(project.nodeTopo, function(n) /*=>*/ { 
+		n.passiveDynamic = false;
+		n.render_time    = 0;
+	});
+	
+	array_foreach(project.nodeTopo, function(n) /*=>*/ { 
+		if(!__nodeIsRenderLeaf(n)) return;
 		
-		var _render_time = 0;
-		var _leaf_time   = 0;
+		LOG_IF(global.FLAG.render == 1, $"    Found leaf [{n.internalName}]");
+		RENDER_QUEUE.enqueue(n);
+		n.forwardPassiveDynamic();
+	});
+	
+	if(PROFILER_STAT) array_push(PROFILER_DATA, {
+		type  : "message",
+		level : 1, 
+		node  : undefined,
+		text  : $"---- {RENDER_QUEUE.size()} leaves ----",
+	});
+	
+	leaf_time = get_timer() - t;
+	LOG_IF(global.FLAG.render >= 1, $"Get leaf complete: found {RENDER_QUEUE.size()} leaves in {(get_timer() - t) / 1000} ms."); t = get_timer();
+	LOG_IF(global.FLAG.render == 1,  "================== Start rendering ==================");
+	
+	function Rendering(_maxDuration = 1/50) {
+		var _time_frame = get_timer();
+		var _rendered   = 0;
 		
-		var rendering = noone;
-		var error     = 0;
-		var reset_all = !partial;
-		var renderable;
-		
-		if(reset_all) {
-			LOG_IF(global.FLAG.render == 1, $"xxxxxxxxxx Resetting {array_length(_project.nodeTopo)} nodes xxxxxxxxxx");
-			array_foreach(_project.allNodes, function(n) /*=>*/ {return n.setRenderStatus(false)});
-		}
-		
-		// get leaf node
-		LOG_IF(global.FLAG.render == 1, $"----- Finding leaf from {array_length(_project.nodeTopo)} nodes -----");
-		RENDER_QUEUE.clear();
-		array_foreach(_project.nodeTopo, function(n) /*=>*/ { 
-			n.passiveDynamic = false;
-			n.render_time    = 0;
-		});
-		
-		array_foreach(_project.nodeTopo, function(n) /*=>*/ { 
-			if(!__nodeIsRenderLeaf(n)) return;
-			
-			LOG_IF(global.FLAG.render == 1, $"    Found leaf [{n.internalName}]");
-			RENDER_QUEUE.enqueue(n);
-			n.forwardPassiveDynamic();
-		});
-		
-		if(PROFILER_STAT) array_push(PROFILER_DATA, {
-			type  : "message",
-			level : 1, 
-			node  : undefined,
-			text  : $"---- {RENDER_QUEUE.size()} leaves ----",
-		});
-		
-		_leaf_time = get_timer() - t;
-		LOG_IF(global.FLAG.render >= 1, $"Get leaf complete: found {RENDER_QUEUE.size()} leaves in {(get_timer() - t) / 1000} ms."); t = get_timer();
-		LOG_IF(global.FLAG.render == 1,  "================== Start rendering ==================");
-		
-		// render forward
-		while(!RENDER_QUEUE.empty()) {
-			LOG_BLOCK_START();
-			// LOG_IF(global.FLAG.render == 1, $"➤➤➤➤➤➤ CURRENT RENDER QUEUE {RENDER_QUEUE} [{RENDER_QUEUE.size()}] ");
-			
-			rendering  = RENDER_QUEUE.dequeue();
-			renderable = rendering.isRenderable();
-			
-			// LOG_IF(global.FLAG.render == 1, $"Rendering {rendering.internalName} ({rendering.display_name}) : {renderable? "Update" : "Pass"} ({rendering.rendered})");
-			
-			if(renderable) {
-				var render_pt = get_timer();
+		try {
+			// render forward
+			while(!RENDER_QUEUE.empty()) {
+				LOG_BLOCK_START();
+				// LOG_IF(global.FLAG.render == 1, $"➤➤➤➤➤➤ CURRENT RENDER QUEUE {RENDER_QUEUE} [{RENDER_QUEUE.size()}] ");
 				
-				// print($" >>> Rendering: {rendering.name}");
-				rendering.doUpdate(); 
-				_render_time += get_timer() - render_pt;
+				var rendering  = RENDER_QUEUE.dequeue();
+				var renderable = rendering.isRenderable();
 				
-				var nextNodes = rendering.getNextNodes();
+				// LOG_IF(global.FLAG.render == 1, $"Rendering {rendering.internalName} ({rendering.display_name}) : {renderable? "Update" : "Pass"} ({rendering.rendered})");
 				
-				for( var i = 0, n = array_length(nextNodes); i < n; i++ ) {
-					var nextNode = nextNodes[i];
-					if(!is(nextNode, __Node_Base) || !nextNode.isRenderable()) continue;
+				if(renderable) {
+					var render_pt = get_timer();
 					
-					// LOG_IF(global.FLAG.render == 1, $"→→ Push {nextNode.internalName} to queue.");
-					RENDER_QUEUE.enqueue(nextNode);
+					// print($" >>> Rendering: {rendering.name}");
+					rendering.doUpdate(); 
+					render_time += get_timer() - render_pt;
+					_rendered++;
 					
-					if(PROFILER_STAT) array_push(rendering.nextn, nextNode);
+					var nextNodes = rendering.getNextNodes();
+					
+					for( var i = 0, n = array_length(nextNodes); i < n; i++ ) {
+						var nextNode = nextNodes[i];
+						if(!is(nextNode, __Node_Base) || !nextNode.isRenderable()) continue;
+						
+						// LOG_IF(global.FLAG.render == 1, $"→→ Push {nextNode.internalName} to queue.");
+						RENDER_QUEUE.enqueue(nextNode);
+						
+						if(PROFILER_STAT) array_push(rendering.nextn, nextNode);
+					}
+					
+					// if(runAction && rendering.hasInspector1Update()) rendering.inspector1Update();
+						
+					if(PROFILER_STAT) rendering.summarizeReport(render_pt);
+					
+				} else if(rendering.force_requeue)
+					RENDER_QUEUE.enqueue(rendering);
+				
+				LOG_BLOCK_END();
+				
+				if(_maxDuration != infinity && (get_timer() - _time_frame) / 1_000_000 >= _maxDuration) {
+					// print($"Break rendering midframe after {_rendered} nodes.")
+					return false;
 				}
-				
-				// if(runAction && rendering.hasInspector1Update()) rendering.inspector1Update();
-					
-				if(PROFILER_STAT) rendering.summarizeReport(render_pt);
-				
-			} else if(rendering.force_requeue)
-				RENDER_QUEUE.enqueue(rendering);
-			
-			LOG_BLOCK_END();
+			}
+		
+		} catch(e) {
+			noti_warning(exception_print(e));
 		}
 		
-		_render_time /= 1000;
-		
+		render_time /= 1000;
+			
 		LOG_IF(global.FLAG.renderTime || global.FLAG.render >= 1, $"=== RENDER FRAME {GLOBAL_CURRENT_FRAME} COMPLETE IN {(get_timer() - t1) / 1000} ms ===\n");
 		LOG_IF(global.FLAG.render >  1, $"=== RENDER SUMMARY STA ===");
 		LOG_IF(global.FLAG.render >  1, $"  total time:  {(get_timer() - t1) / 1000} ms");
-		LOG_IF(global.FLAG.render >  1, $"  leaf:        {_leaf_time / 1000} ms");
+		LOG_IF(global.FLAG.render >  1, $"  leaf:        {leaf_time / 1000} ms");
 		LOG_IF(global.FLAG.render >  1, $"  render loop: {(get_timer() - t) / 1000} ms");
-		LOG_IF(global.FLAG.render >  1, $"  render only: {_render_time} ms");
+		LOG_IF(global.FLAG.render >  1, $"  render only: {render_time} ms");
 		LOG_IF(global.FLAG.render >  1, $"=== RENDER SUMMARY END ===");
 		
-	} catch(e) {
-		noti_warning(exception_print(e));
+		// print("\n============== render stat ==============");
+		// print($"Get value hit: {global.getvalue_hit}");
+		
+		project.postRender();
+		
+		LOG_END();
+		RENDERING = undefined;
+		
+		return true;
 	}
 	
-	// print("\n============== render stat ==============");
-	// print($"Get value hit: {global.getvalue_hit}");
-	
-	_project.postRender();
-	
-	LOG_END();
-	
+	Rendering();
 }
 
-function __renderListReset(arr) {
-	for( var i = 0; i < array_length(arr); i++ ) {
-		arr[i].setRenderStatus(false);
-		
-		if(struct_has(arr[i], "nodes"))
-			__renderListReset(arr[i].nodes);
-	}
+function __renderListReset(arr) { 
+	array_foreach(arr, function(a) /*=>*/ { a.setRenderStatus(false); if(has(a, "nodes")) __renderListReset(a.nodes); });
 }
 
 function RenderList(arr) {

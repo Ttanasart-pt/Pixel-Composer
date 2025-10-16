@@ -817,7 +817,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var form = getInputData(3);
 		
 		if(form == NODE_EXPORT_FORMAT.single) {
-			Render(project);
+			RenderSync(project);
 			export();
 			updatedOutTrigger.setValue(true);
 			return;

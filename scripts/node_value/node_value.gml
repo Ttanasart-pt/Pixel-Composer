@@ -1807,6 +1807,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(tags == VALUE_TAG.updateInTrigger || tags == VALUE_TAG.updateOutTrigger) return true;
 		
 		if(_update) { // This part used to have !IS_PLAYING
+			node.doUpdate();
 			node.triggerRender();
 			node.valueUpdate(index);
 			node.clearCacheForward();

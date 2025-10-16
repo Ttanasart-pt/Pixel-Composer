@@ -109,7 +109,7 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext(), appended_
 	}
 	printIf(log, $"Update time: {current_time - t}"); t = current_time;
 	
-	Render(PROJECT, true);
+	RenderSync(PROJECT, true);
 	
 	if(!ds_queue_empty(CONNECTION_CONFLICT)) {
 		var pass = 0;
@@ -124,7 +124,7 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext(), appended_
 					
 					log_message("APPEND", $"[Connect] Reconnecting {junc.name} {res? "SUCCESS" : "FAILED"}");
 				}
-				Render(PROJECT, true);
+				RenderSync(PROJECT, true);
 			}
 		
 			if(!ds_queue_empty(CONNECTION_CONFLICT))
