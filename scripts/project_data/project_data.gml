@@ -195,6 +195,7 @@ function Project() constructor {
 			"json_asset_dir": "-",
 		};
 			
+		attributes.autosave            = false;
 		attributes.auto_organize       = false;
 		
 		attributeEditor = [
@@ -254,6 +255,8 @@ function Project() constructor {
 					}).setIcon(THEME.button_path_icon, 0, COLORS._main_icon)
 				) ],
 			
+			[ "Autosave", "autosave", new checkBox(function() /*=>*/ { attributes.autosave = !attributes.autosave; return true; }) ],
+			
 		];
 		
 		static setPalette = function(pal = noone) { 
@@ -276,6 +279,10 @@ function Project() constructor {
 	
 	////- Step
 
+	static stepBegin = function() { 
+		array_foreach(allNodes, function(n) /*=>*/ { if(n.active) n.stepBegin(); });
+	}
+	
 	static step = function() {
 		slideShowPreStep();
 		
@@ -284,7 +291,7 @@ function Project() constructor {
 		
 		try {
 			array_foreach(allNodes, function(n) /*=>*/ { 
-				if(!n.active) return; 
+				if(!n.active || n.step == undefined) return; 
 				
 				n.triggerCheck(); 
 				n.doStep(); 
@@ -292,13 +299,6 @@ function Project() constructor {
 		} catch(e) {
 			noti_warning("Node Step error: " + exception_print(e));
 		}
-	}
-	
-	static stepBegin = function() { 
-		array_foreach(allNodes, function(n) /*=>*/ { 
-			if(!n.active) return; 
-			n.stepBegin(); 
-		});
 	}
 	
 	static postStep = function() { slideShowPostStep(); }
@@ -351,7 +351,7 @@ function Project() constructor {
 	static setModified = function() {
 		modified = true;
 		
-		if(path != "" && PREFERENCES.save_auto) {
+		if(path != "" && attributes.autosave) {
 			if(autosave_ts && time_source_get_state(autosave_ts) == time_source_state_active)
 				time_source_destroy(autosave_ts);
 			autosave_ts = run_in_s(1, function(pr) /*=>*/ {return SAVE(pr)}, [self]);

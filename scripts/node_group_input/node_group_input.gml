@@ -477,23 +477,13 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		visibleCheck();
 	}
 	
-	static step = function() {
-		if(is_undefined(inParent)) return;
-		
+	static update = function(frame = CURRENT_FRAME) {
+		if(!is(inParent, NodeValue)) return;
 		if(inParent.name != display_name) {
 			inParent.name = display_name;
 			group.inputMap[$ string_replace_all(display_name, " ", "_")] = inParent;
 		}
 		
-		if(inParent.type != VALUE_TYPE.trigger)
-		switch(doTrigger) {
-			case  1 : outputs[0].setValue(true); doTrigger = -1; break;
-			case -1 : outputs[0].setValue(false); doTrigger = 0; break;
-		}
-	}
-	
-	static update = function(frame = CURRENT_FRAME) {
-		if(!is(inParent, NodeValue)) return;
 		outputs[0].setValue(inParent.getValue());
 		
 		visibleCheck();

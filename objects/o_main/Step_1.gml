@@ -115,7 +115,7 @@ _FILE_DROPPED       = false;
 	
 	HOVER = noone;
 	with(_p_dialog) checkMouse();
-		if(PANEL_MAIN != 0) PANEL_MAIN.stepBegin();
+	if(PANEL_MAIN != 0) PANEL_MAIN.stepBegin();
 	
 	DIALOG_DEPTH_HOVER = 0;
 	
@@ -265,13 +265,10 @@ _FILE_DROPPED       = false;
 #endregion
 
 #region depth
-
 	if(_use_depth != USE_DEPTH) {
 		_use_depth = USE_DEPTH;
 		surface_depth_disable(!USE_DEPTH);
 	}
-	
-	USE_DEPTH = false;
 #endregion
 
 #region cmd

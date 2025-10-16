@@ -252,7 +252,7 @@ function __PaletteColor(_color = c_black) constructor {
 		refreshPalette();
 	}
 	
-	function setDefault(pal) { setPalette(pal); previous_palette = array_clone(pal); }
+	function setDefault(pal) { setPalette(pal); previous_palette = array_clone(pal); return self; }
 	
 	function setPalette(pal, _reset_select = true) {
 		palette = pal;	

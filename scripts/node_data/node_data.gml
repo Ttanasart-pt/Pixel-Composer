@@ -83,7 +83,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		w = 128;
 		h = 128;
 		
-		moved       = false;
 		min_w       = w;
 		h_param     = h;
 		name_height = 16;
@@ -267,6 +266,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		inspector_scroll   = 0;
 		inspector_collapse = {};
+		
+		reactive_on_hover  = false;
 	#endregion
 	
 	#region ---- Rendering ------
@@ -396,22 +397,17 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	////- STEP
 	
 	static stepBegin = function() {
-		moved = false;
-		
 		if(use_cache) cacheArrayCheck();
 		
 		if(attributes.show_update_trigger) {
 			if(updatedInTrigger.getValue()) { 
-				
 				getInputs();
 				update();
-				
 				updatedInTrigger.setValue(false);
 			}
 			updatedOutTrigger.setValue(false);
 		}
 		
-		if(is_3D == NODE_3D.polygon) USE_DEPTH = true;
 		if(is_simulation) project.animator.is_simulating = true;
 		
 		if(attributes.outp_meta) {
@@ -476,10 +472,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		for( var i = 0, n = array_length(inputMappable); i < n; i++ )
 			inputMappable[i].mappableStep();
 		
-		step();
+		if(step != undefined) step();
 	}
 	
-	static step          = function() /*=>*/ {}
+	static step          = undefined
 	static focusStep     = function() /*=>*/ {}
 	static inspectorStep = function() /*=>*/ {}
 	
@@ -1001,6 +997,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static postUpdate = function(frame = CURRENT_FRAME) {}
 	
 	static doUpdateLite = function(frame = CURRENT_FRAME) {
+		if(is_3D == NODE_3D.polygon) USE_DEPTH = true;
 		render_timer = get_timer();
 		setRenderStatus(true);
 		
@@ -1015,6 +1012,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static doUpdateFull = function(frame = CURRENT_FRAME) {
+		if(is_3D == NODE_3D.polygon) USE_DEPTH = true;
 		if(project.safeMode) return;
 		
 		render_timer = get_timer();
@@ -2217,7 +2215,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
-		if(!_draw) return drawJunctions(_draw, xx, yy, _mx, _my, _s, _s <= 0.5);
 		
 		preview_mx = _mx;
 		preview_my = _my;
@@ -2279,7 +2276,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(bg_spr_add > 0) draw_sprite_stretched_add(bg_spr, 1, xx, yy, w * _s, h * _s, bg_spr_add_clr, bg_spr_add);
 		
 		drawNodeOverlay(xx, yy, _mx, _my, _s);
-		return drawJunctions(_draw, xx, yy, _mx, _my, _s, _s <= 0.5 || !previewable);
 	}
 	
 	static drawNodeBehind = function(_x, _y, _mx, _my, _s) {
@@ -3009,12 +3005,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static move = function(_x, _y) {
-		if(moved) return;
 		if(x == _x && y == _y) return;
 		
 		x = _x;
 		y = _y; 
-		moved = true;
 		
 		if(!LOADING) project.setModified();
 	}

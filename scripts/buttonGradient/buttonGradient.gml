@@ -13,15 +13,11 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 	
 	hover_index = 0;
 	
-	function apply(value) {
-		if(!interactable) return;
-		onApply(value);
-	}
+	function apply(value) { if(!interactable) return; onApply(value); }
 	
 	static trigger = function() {
-		var dialog = dialogCall(o_dialog_gradient, WIN_W / 2, WIN_H / 2);
-		
-		dialog.setDefault(current_gradient.clone());
+		var dialog = dialogCall(o_dialog_gradient, WIN_W / 2, WIN_H / 2)
+						.setDefault(current_gradient.clone());
 		dialog.onApply      = apply;
 		dialog.interactable = interactable;
 		dialog.drop_target  = self;
@@ -74,14 +70,14 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 			
 			h = ui(4) + array_length(_gradient) * _gh;
 			current_gradient = _gradient[0];
+			
 		} else {
 			h = _h;
 		}
 		
-		if(!is_instanceof(current_gradient, gradientObject)) 
-			return 0;
+		if(!is(current_gradient, gradientObject)) return 0;
 		
-		var _drawSingle = !is_array(_gradient) && is_instanceof(_gradient, gradientObject);
+		var _drawSingle = !is_array(_gradient) && is(_gradient, gradientObject);
 		var _ggw = _drawSingle? _gw - ui(24) : _w;
 		var _ggx = _drawSingle? _x + ui(2) + ui(24) : _x;
 		
@@ -236,7 +232,7 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 				var _gx   = _x + ui(2);
 				var _gy   = _y + ui(2) + i * _gh;
 				
-				if(is_instanceof(_grad, gradientObject))
+				if(is(_grad, gradientObject))
 					_grad.draw(_gx, _gy, _gw, _gh);
 			}
 		}
@@ -254,8 +250,5 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 		return h;
 	}
 	
-	static clone = function() {
-		var cln = new buttonGradient(onApply, parentDialog);
-		return cln;
-	}
+	static clone = function() { return new buttonGradient(onApply, parentDialog); }
 }

@@ -59,7 +59,6 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	attributes.h = 0;
 	
 	static move = function(_x, _y) {
-		if(moved) return;
 		if(x == _x && y == _y) return;
 		
 		var _dx = _x - x;
@@ -67,7 +66,6 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		x = _x; 
 		y = _y; 
-		moved = true;
 		
 		for( var i = 0, n = array_length(__nodes); i < n; i++ ) {
 			var _n  = __nodes[i];

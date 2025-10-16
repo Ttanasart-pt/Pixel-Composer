@@ -48,6 +48,7 @@ event_inherited();
 	function setDefault(grad) {
 		setGradient(grad);
 		previous_gradient = grad.clone();
+		return self;
 	}
 	
 	b_cancel = button(function() /*=>*/ { onApply(previous_gradient); instance_destroy(); })

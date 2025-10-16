@@ -456,6 +456,9 @@ function Panel_Inspector() : PanelContent() constructor {
     });
     
     static drawNodeProperties = function(_y, _m, _inspecting = inspecting) {
+    	var surfw = contentPane.surface_w;
+    	var surfh = contentPane.surface_h;
+    	
         var con_w  = contentPane.surface_w - ui(4); 
         var _hover = pHOVER && contentPane.hover;
         var _focus = pFOCUS || PANEL_GRAPH.pFOCUS/* || PANEL_PREVIEW.pFOCUS*/;
@@ -1075,6 +1078,7 @@ function Panel_Inspector() : PanelContent() constructor {
                         
                         var _param = new widgetParam(_wdx, _wdy, _wdw, _wdh, _data, {}, _m, rx, ry)
                         					.setFont(_font).setScrollpane(contentPane);
+					    if(is(editW, checkBox)) _param.setHalign(fa_center);
 					    					
                         editW.setFocusHover(pFOCUS, _hover);
                         wh = editW.drawParam(_param);

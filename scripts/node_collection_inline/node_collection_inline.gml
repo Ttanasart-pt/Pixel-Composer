@@ -27,7 +27,7 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	is_root = true;
 	
-	static topoSortable = function() { return false; }
+	static topoSortable = function() /*=>*/ {return false};
 	
 	////- Nodes
 	

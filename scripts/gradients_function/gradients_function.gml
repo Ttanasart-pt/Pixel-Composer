@@ -30,7 +30,6 @@ function gradientObject(color = ca_black) constructor {
 	if(is_array(color)) keys = [ new gradientKey(0, cola(color[0])), new gradientKey(1, cola(color[1])) ];
 	else				keys = [ new gradientKey(0, cola(color)) ];
 	type  = GRADIENT_INTER.smooth;
-	surf  = noone;
 	
 	cacheRes  = 128;
 	caches    = array_create(cacheRes);
@@ -187,47 +186,40 @@ function gradientObject(color = ca_black) constructor {
 			if(_grad_color[i * 4 + 3] != 1) aa = true;
 		}
 		
-		surf = surface_verify(surf, _w, _h);
+		var _gh = aa? _h - ui(8) : _h;
+		draw_sprite_stretched_ext(THEME.ui_panel_bg, 4, _x, _y, _w, _gh, c_white, _a)
 		
-		surface_set_target(surf);
-			DRAW_CLEAR
-			var _gh = aa? _h - ui(8) : _h;
-			draw_sprite_stretched_ext(THEME.ui_panel_bg, 4, 0, 0, _w, _gh, c_white, _a)
+		if(len) {
+			BLEND_MULTIPLY
 			
-			if(len) {
-				BLEND_MULTIPLY
-				
-				shader_set(sh_gradient_display);
-				shader_set_uniform_i(uniform_grad_blend, type);
-				shader_set_uniform_f_array_safe(uniform_grad, _grad_color, GRADIENT_LIMIT * 4);
-				shader_set_uniform_f_array_safe(uniform_grad_time, _grad_time);
-				shader_set_uniform_i(uniform_grad_key, len);
-				
-				draw_sprite_stretched_ext(s_fx_pixel, 0, 0, 0, _w, _gh, c_white, 1);
-				shader_reset();
-				
-				BLEND_NORMAL
-			}
+			shader_set(sh_gradient_display);
+			shader_set_uniform_i(uniform_grad_blend, type);
+			shader_set_uniform_f_array_safe(uniform_grad, _grad_color, GRADIENT_LIMIT * 4);
+			shader_set_uniform_f_array_safe(uniform_grad_time, _grad_time);
+			shader_set_uniform_i(uniform_grad_key, len);
 			
-			if(aa) {
-				draw_sprite_stretched_ext(THEME.ui_panel_bg, 4, 0, _h - ui(6), _w, ui(6), c_white, _a)
-				
-				BLEND_MULTIPLY
-				
-				shader_set(sh_gradient_display_alpha);
-				shader_set_uniform_i(uniform_grad_blend, type);
-				shader_set_uniform_f_array_safe(uniform_grad, _grad_color, GRADIENT_LIMIT * 4);
-				shader_set_uniform_f_array_safe(uniform_grad_time, _grad_time);
-				shader_set_uniform_i(uniform_grad_key, len);
-				
-				draw_sprite_stretched_ext(s_fx_pixel, 0, 0, _h - ui(6), _w, ui(6), c_white, 1);
-				shader_reset();
-				
-				BLEND_NORMAL
-			}
-		surface_reset_target();
+			draw_sprite_stretched_ext(s_fx_pixel, 0, _x, _y, _w, _gh, c_white, 1);
+			shader_reset();
+			
+			BLEND_NORMAL
+		}
 		
-		draw_surface(surf, _x, _y);
+		if(aa) {
+			draw_sprite_stretched_ext(THEME.ui_panel_bg, 4, _x, _y + _h - ui(6), _w, ui(6), c_white, _a)
+			
+			BLEND_MULTIPLY
+			
+			shader_set(sh_gradient_display_alpha);
+			shader_set_uniform_i(uniform_grad_blend, type);
+			shader_set_uniform_f_array_safe(uniform_grad, _grad_color, GRADIENT_LIMIT * 4);
+			shader_set_uniform_f_array_safe(uniform_grad_time, _grad_time);
+			shader_set_uniform_i(uniform_grad_key, len);
+			
+			draw_sprite_stretched_ext(s_fx_pixel, 0, _x, _y + _h - ui(6), _w, ui(6), c_white, 1);
+			shader_reset();
+			
+			BLEND_NORMAL
+		}
 	}
 	
 	static cache = function(res = 128) {

@@ -9,10 +9,10 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	newInput(0, nodeValue_Text("Name", LOADING || APPENDING? "" : ds_map_find_first(project.tunnels_in) )).rejectArray();
 	
 	////- =Display
-	newInput(1, nodeValue_Enum_Button( "Label Position", 0, [ "T", "B", "L", "R" ] ));
-	newInput(2, nodeValue_Float(       "Label Scale",    1 ));
-	newInput(3, nodeValue_Color(       "Label Color",    cola(COLORS._main_text) ));
-	newInput(4, nodeValue_Slider(      "Label Alpha",    1 ));
+	newInput(1, nodeValue_EButton( "Label Position", 0, [ "T", "B", "L", "R" ] ));
+	newInput(2, nodeValue_Float(   "Label Scale",    1 ));
+	newInput(3, nodeValue_Color(   "Label Color",    cola(COLORS._main_text) ));
+	newInput(4, nodeValue_Slider(  "Label Alpha",    1 ));
 	
 	// input 5
 	
@@ -170,7 +170,7 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		gpu_set_tex_filter(false);
 		
 		if(!isHovering) return noone;
-		if(!junction_hover) draw_sprite_ui(THEME.view_pan, 0, _mx + ui(16), _my + ui(24), 1, 1, 0, COLORS._main_accent);
+		if(!junction_hover) CURSOR_SPRITE = THEME.view_pan;
 		
 		hover_scale_to = 1;
 		return junction_hover? outputs[0] : noone;
@@ -259,7 +259,7 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static onClone = function() { onValueUpdate(0); }
 	
-	static postConnect = function() { step(); onValueUpdate(0); }
+	static postConnect = function() { onValueUpdate(0); }
 	
 	static onRestore = function() {
 		resetMap();

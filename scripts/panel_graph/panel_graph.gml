@@ -1498,7 +1498,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		
 		connection_draw_update = connection_draw_update || _upd;
 		
-		_upd = _upd || connection_cache[$ "frame"]     != GLOBAL_CURRENT_FRAME;     connection_cache[$ "frame"]     = GLOBAL_CURRENT_FRAME;
+		_upd = _upd || connection_cache[$ "frame"]     != GLOBAL_CURRENT_FRAME;
+				connection_cache[$ "frame"]     = GLOBAL_CURRENT_FRAME;
 		node_surface_update    = node_surface_update || _upd;
     }
     
@@ -2019,19 +2020,38 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        
 	        var t = get_timer();
 	        
-	        // node_surface_update = node_surface_update || !surface_valid(node_surface, w, h);
-	        node_surface_update = true;
-	        // node_surface = surface_verify(node_surface, w, h);
+	        node_surface_update = node_surface_update
+	        	|| !surface_valid(node_surface, w, h)
+	        	|| (node_hovering != noone && node_hovering.reactive_on_hover);
+	        // node_surface_update = true;
+	        node_surface = surface_verify(node_surface, w, h);
 	        
-	        // surface_set_target(node_surface);
-	        	// if(node_surface_update) draw_clear_alpha(bg_color, 0.);
+	        if(node_surface_update) {
+		        surface_set_target(node_surface);
+		        	draw_clear_alpha(bg_color, 0.);
+		        	
+		        	array_foreach(_node_draw, function(_n) /*=>*/ { _n.drawNodeBehind(__gr_x, __gr_y, __mx, __my, __gr_s); });
+			        array_foreach(value_draggings, function(_v) /*=>*/ { _v.graph_selecting = true; });
+			        
+			        array_foreach(_node_draw, function(_n) /*=>*/ {
+			            try { _n.drawNode(node_surface_update, __gr_x, __gr_y, __mx, __my, __gr_s, project.graphDisplay, __self); }
+			            catch(e) { log_warning("NODE DRAW", exception_print(e)); }
+			        });
+			        
+			        array_foreach(_node_draw, function(_n) /*=>*/ { _n.drawBadge(__gr_x, __gr_y, __gr_s); });
+			        array_foreach(_node_draw, function(_n) /*=>*/ { _n.drawNodeFG(__gr_x, __gr_y, __mx, __my, __gr_s, project.graphDisplay, __self); });
+				surface_reset_target();
+	        }
+	        
+	        BLEND_ALPHA_MULP
+	        	draw_surface_safe(node_surface);
 	        	
-	        	if(node_surface_update) array_foreach(_node_draw, function(_n) /*=>*/ { _n.drawNodeBehind(__gr_x, __gr_y, __mx, __my, __gr_s); });
-		        array_foreach(value_draggings, function(_v) /*=>*/ { _v.graph_selecting = true; });
-		        
 		        array_foreach(_node_draw, function(_n) /*=>*/ {
 		            try {
-		                var val = _n.drawNode(node_surface_update, __gr_x, __gr_y, __mx, __my, __gr_s, project.graphDisplay, __self);
+		                var _xx = __gr_x + _n.x * __gr_s;
+		                var _yy = __gr_y + _n.y * __gr_s;
+		                var val = _n.drawJunctions(true, _xx, _yy, __mx, __my, __gr_s, __gr_s <= 0.5 || !_n.previewable);
+		                
 		                if(val) {
 		                    value_focus = val;
 		                    if(key_mod_press(SHIFT)) {
@@ -2044,18 +2064,11 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		            } catch(e) { log_warning("NODE DRAW", exception_print(e)); }
 		        });
 		        
-		        if(node_surface_update) array_foreach(_node_draw, function(_n) /*=>*/ { _n.drawBadge(__gr_x, __gr_y, __gr_s); });
-		        if(node_surface_update) array_foreach(_node_draw, function(_n) /*=>*/ { _n.drawNodeFG(__gr_x, __gr_y, __mx, __my, __gr_s, project.graphDisplay, __self); });
-			// surface_reset_target();
-		       
-			node_surface_update = false;
-		       
-	        if(PANEL_INSPECTOR && PANEL_INSPECTOR.prop_hover != noone)
-	            value_focus = PANEL_INSPECTOR.prop_hover;
-	    
-	        // BLEND_ALPHA_MULP
-	        // 	draw_surface_safe(node_surface);
-	        // BLEND_NORMAL
+		        if(PANEL_INSPECTOR && PANEL_INSPECTOR.prop_hover != noone)
+	            	value_focus = PANEL_INSPECTOR.prop_hover;
+	        BLEND_NORMAL
+	        
+	        node_surface_update = false;
 	    #endregion
 	        
         #region draw selection frame

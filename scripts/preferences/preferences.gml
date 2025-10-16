@@ -510,7 +510,6 @@
 		__regFnPref(__txtx("pref_pen_pool_delay",                  "Pen leave delay"),         		     "pen_pool_delay"                  )
 		
 		__regFnPref(__txtx("pref_auto_save_time",   		       "Autosave delay (-1 to disable)"),    "auto_save_time"                  )
-		__regFnPref(__txtx("pref_save_auto",                       "File autosave"),                     "save_auto"                       )
 		__regFnPref(__txtx("pref_save_layout",      		       "Save layout"),                       "save_layout"                     )
 		__regFnPref(__txtx("pref_save_file_minify", 		       "Minify save file"),                  "save_file_minify"                )
 		__regFnPref(__txtx("pref_save_backups",     		       "Backup saves"),                      "save_backup"                     )

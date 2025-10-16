@@ -176,12 +176,6 @@ function Panel_Preference() : PanelContent() constructor {
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_save_auto", "File autosave"),
-    			"save_auto",
-    			new checkBox(function() /*=>*/ {return prefToggle("save_auto")})
-    		));
-    		
-    		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_save_layout", "Save layout"),
     			"save_layout",
     			new checkBox(function() /*=>*/ {return prefToggle("save_layout")})

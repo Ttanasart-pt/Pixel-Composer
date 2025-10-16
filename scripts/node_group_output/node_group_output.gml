@@ -71,12 +71,9 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 	} if(!LOADING && !APPENDING) createOutput();
 	
-	static step = function() {
-		if(is_undefined(outParent)) return;
-		outParent.name = display_name; 
-	}
-	
 	static update = function() {
+		outParent.name = display_name; 
+		
 		var _in0 = inputs[0];
 		var _pty = _in0.type;
 		var _typ = _in0.value_from == noone? VALUE_TYPE.any         : _in0.value_from.type;

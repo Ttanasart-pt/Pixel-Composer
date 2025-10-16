@@ -841,86 +841,11 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		insp1UpdateActive  = !IS_RENDERING;
 		insp2UpdateActive  = !IS_RENDERING;
 		
-		var surf = getSurface();
-		var pngf = getInputData(13);
 		var expo = getInputData(16);
-		
-		if(is_array(surf)) {
-			inputs[3].display_data.data	   = format_array;
-			inputs[3].editWidget.data_list = format_array;
-		} else {
-			inputs[3].display_data.data    = format_single;
-			inputs[3].editWidget.data_list = format_single;
-		}
-		
-		outputs[0].setValue(surf);
-		
-		var anim = getInputData(3); // single, sequence, animation
-		var extn = getInputData(9);
-		var user = getInputData(15);
+		var anim = getInputData( 3); // single, sequence, animation
 		
 		if(expo && anim == NODE_EXPORT_FORMAT.single && IS_SAVING)
 			doInspectorAction();
-		
-		inputs[11].setVisible(anim == 1);
-		inputs[16].setVisible(anim == 0);
-		
-		inputs[12].editWidget.minn = FIRST_FRAME + 1;
-		inputs[12].editWidget.maxx = LAST_FRAME + 1;
-		
-		inputs[14].setVisible(anim >  0);
-		
-		if(anim == NODE_EXPORT_FORMAT.animation) {
-			var _enc = getInputData(17);
-			var _fmt = array_safe_get_fast(format_animation, extn);
-			
-			inputs[ 5].setVisible(_fmt == ".gif");
-			
-			inputs[17].setVisible(_fmt == ".gif");
-			inputs[ 6].setVisible(_fmt == ".gif" && !_enc);
-			inputs[ 7].setVisible(_fmt == ".gif" && !_enc);
-			inputs[18].setVisible(_fmt == ".gif" &&  _enc);
-			inputs[ 8].setVisible(true);
-		
-			inputs[ 9].display_data.data	  = format_animation;
-			inputs[ 9].editWidget.data_list = format_animation;
-			
-			inputs[13].setVisible(false);
-			
-			if(_fmt == ".mp4") {
-				inputs[10].setName("CRF value");
-				inputs[10].tooltip = "Quality of the output, with 0 being the highest (and largest file size), and 51 being the lowest.";
-				
-				inputs[10].setVisible(true);
-				inputs[10].editWidget.minn =  0;
-				inputs[10].editWidget.maxx = 51;
-			} else 
-				inputs[10].setVisible(false);
-		} else {
-			var _fmt = array_safe_get_fast(format_image, extn);
-			
-			inputs[ 5].setVisible(false);
-			inputs[ 6].setVisible(false);
-			inputs[ 7].setVisible(false);
-			inputs[17].setVisible(false);
-			inputs[18].setVisible(false);
-			inputs[ 8].setVisible(false);
-		
-			inputs[ 9].display_data.data	= format_image;
-			inputs[ 9].editWidget.data_list = format_image;
-			
-			inputs[13].setVisible(_fmt == ".png");
-			
-			if(_fmt == ".jpg" || _fmt == ".webp") {
-				inputs[10].setName("Quality");
-				inputs[10].tooltip = "Quality of the output.";
-				
-				inputs[10].setVisible(true);
-				inputs[10].editWidget.minn =   0;
-				inputs[10].editWidget.maxx = 100;
-			} else 
-				inputs[10].setVisible(false);
-		}
 		
 		if(render_process_id != 0) {
 			var res = ProcIdExists(render_process_id);
@@ -958,23 +883,92 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				render_process_batch = [];
 			}
 		}
-	
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
+		
+		var surf = getSurface();
 		var anim = getInputData( 3);
+		var extn = getInputData( 9);
 		var expt = getInputData(22);
 		
+		#region visiblity
+			outputs[0].setValue(surf);
+			
+			if(is_array(surf)) {
+				inputs[3].display_data.data	   = format_array;
+				inputs[3].editWidget.data_list = format_array;
+			} else {
+				inputs[3].display_data.data    = format_single;
+				inputs[3].editWidget.data_list = format_single;
+			}
+			
+			inputs[11].setVisible(anim == 1);
+			inputs[16].setVisible(anim == 0);
+			
+			inputs[12].editWidget.minn = FIRST_FRAME + 1;
+			inputs[12].editWidget.maxx = LAST_FRAME + 1;
+			
+			inputs[14].setVisible(anim >  0);
+			
+			if(anim == NODE_EXPORT_FORMAT.animation) {
+				var _enc = getInputData(17);
+				var _fmt = array_safe_get_fast(format_animation, extn);
+				
+				inputs[ 5].setVisible(_fmt == ".gif");
+				
+				inputs[17].setVisible(_fmt == ".gif");
+				inputs[ 6].setVisible(_fmt == ".gif" && !_enc);
+				inputs[ 7].setVisible(_fmt == ".gif" && !_enc);
+				inputs[18].setVisible(_fmt == ".gif" &&  _enc);
+				inputs[ 8].setVisible(true);
+			
+				inputs[ 9].display_data.data	  = format_animation;
+				inputs[ 9].editWidget.data_list = format_animation;
+				
+				inputs[13].setVisible(false);
+				
+				if(_fmt == ".mp4") {
+					inputs[10].setName("CRF value");
+					inputs[10].tooltip = "Quality of the output, with 0 being the highest (and largest file size), and 51 being the lowest.";
+					
+					inputs[10].setVisible(true);
+					inputs[10].editWidget.minn =  0;
+					inputs[10].editWidget.maxx = 51;
+				} else 
+					inputs[10].setVisible(false);
+					
+			} else {
+				var _fmt = array_safe_get_fast(format_image, extn);
+				
+				inputs[ 5].setVisible(false);
+				inputs[ 6].setVisible(false);
+				inputs[ 7].setVisible(false);
+				inputs[17].setVisible(false);
+				inputs[18].setVisible(false);
+				inputs[ 8].setVisible(false);
+			
+				inputs[ 9].display_data.data	= format_image;
+				inputs[ 9].editWidget.data_list = format_image;
+				
+				inputs[13].setVisible(_fmt == ".png");
+				
+				if(_fmt == ".jpg" || _fmt == ".webp") {
+					inputs[10].setName("Quality");
+					inputs[10].tooltip = "Quality of the output.";
+					
+					inputs[10].setVisible(true);
+					inputs[10].editWidget.minn =   0;
+					inputs[10].editWidget.maxx = 100;
+				} else 
+					inputs[10].setVisible(false);
+			}
+			
+		#endregion
+		
 		if(expt && !IS_RENDERING) export(false);
-		
-		if(anim == NODE_EXPORT_FORMAT.single)
-			return;
-		
-		if(!PROJECT.animator.is_playing) {
-			playing = false;
-			return;
-		}
-		
+		if(anim == NODE_EXPORT_FORMAT.single) return;
+		if(!PROJECT.animator.is_playing) { playing = false; return; }
 		if(!playing) return;
 		
 		export();
