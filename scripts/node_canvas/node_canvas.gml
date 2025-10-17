@@ -1411,6 +1411,10 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		return hovering;
 	}
 	
+	static drawToolOutline = function() {
+		
+	}
+	
 	////- Nodes
 	
 	static step = function() {

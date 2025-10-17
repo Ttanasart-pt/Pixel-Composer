@@ -642,7 +642,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			if(_jun_layer) { // modifiers
 				var _modis = _jun_layer.modifier;
-				var _mdx   = _sx0;
+				var _mdx   = _x + ui(16 + 24 + 12);
 				var _mdy   = _cy + _lh;
 				var mh     = ui(24);
 				
