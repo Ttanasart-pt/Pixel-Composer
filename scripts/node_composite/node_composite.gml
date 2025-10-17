@@ -1308,11 +1308,15 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		if(attributes.select_object && selection_sampler.active)
 			hovering = hovering_con;
 		
+		var _a = noone;
+		
 		if(dynamic_input_inspecting >= 0) {
 			var _index = dynamic_input_inspecting;
-			var _i = input_fix_len + dynamic_input_inspecting * data_length;
-			var _a = anchors[_i];
+			var _ancid = input_fix_len + dynamic_input_inspecting * data_length;
+			_a = anchors[_ancid];
+		}
 			
+		if(is_struct(_a)) {
 			var p0x = _a.d0[0], p0y = _a.d0[1];
 			var p1x = _a.d1[0], p1y = _a.d1[1];
 			var p2x = _a.d2[0], p2y = _a.d2[1];
