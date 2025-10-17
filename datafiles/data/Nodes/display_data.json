@@ -740,6 +740,7 @@
             "Node_Line",
             "Node_Text",
             "Node_Shape",
+            "Node_Shape_Fast",
             "Node_Shape_Polygon",
             "Node_Random_Shape",
             "Node_Plot_Linear",

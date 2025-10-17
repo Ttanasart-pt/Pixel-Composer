@@ -24,7 +24,7 @@ function Node_Iterator_Each_Inline_Output(_x, _y, _group = noone) : Node(_x, _y,
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		if(!is_instanceof(loop, Node_Iterate_Each_Inline)) return;
+		if(!is(loop, Node_Iterate_Each_Inline)) return;
 		
 		var _typ = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;
 		inputs[0].setType(_typ);
@@ -33,11 +33,9 @@ function Node_Iterator_Each_Inline_Output(_x, _y, _group = noone) : Node(_x, _y,
 		var val = getInputData(0);
 		var arr = outputs[0].getValue();
 		var itr = max(0, loop.iterated - 1);
-		
 		if(!is_array(arr)) return;
 		
-		if(_typ == VALUE_TYPE.surface)
-			val = surface_array_clone(val);
+		if(_typ == VALUE_TYPE.surface) val = surface_array_clone(val);
 		
 		arr[@ itr] = val;
 		outputs[0].setValue(arr);

@@ -986,7 +986,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	////- UPDATE
 	
-	static preUpdate = function() /*=>*/ {}
+	static preUpdate = undefined
 	static update    = function() /*=>*/ {}
 	
 	static forceUpdate = function() {
@@ -1004,7 +1004,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(frameInput.value_from != noone) frame = frameInput.getValue() - 1;
 		
 		if(attributes.update_graph) {
-			try      { preUpdate(frame); update(frame); } 
+			try      { if(preUpdate) preUpdate(frame); update(frame);   } 
 			catch(e) { log_warning("RENDER", exception_print(e), self); }
 		}
 		
@@ -1034,12 +1034,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			var sBase = surface_get_target();	
 			
-			try {
-				if(attributes.update_graph) {
-					preUpdate(frame); 
-					update(frame);
-				}
-			} catch(exception) {
+			try { if(attributes.update_graph) { if(preUpdate) preUpdate(frame); update(frame); } }
+			catch(exception) {
 				var sCurr = surface_get_target();
 				while(surface_get_target() != sBase)
 					surface_reset_target();
@@ -1078,13 +1074,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	doUpdate     = doUpdateFull;
 	getInputData = function(i,d=0) /*=>*/ {return array_safe_get_fast(inputs_data, i, d)};
 	
-	static valueUpdate = function(index) {
-		onValueUpdate(index);
-		
-		cacheCheck();
-	}
-	
-	static valueFromUpdate = function(index) {
+	static valueUpdate     = function(index=0) { onValueUpdate(index); cacheCheck(); }
+	static valueFromUpdate = function(index=0) {
 		onValueFromUpdate(index);
 		onValueUpdate(index);
 		
@@ -1094,8 +1085,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		cacheCheck();
 	}
 	
-	static onValueUpdate = function(index = 0) {}
-	static onValueFromUpdate = function(index) {}
+	static onValueUpdate     = function(index=0) {}
+	static onValueFromUpdate = function(index=0) {}
+	
+	static getDimension = function() /*=>*/ {return inputs[dimension_index].getValue()};
 	
 	////- RENDER
 	
@@ -1862,9 +1855,57 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		h_param = h;
 	}
 	
-	static drawJunctions = function(_draw, _x, _y, _mx, _my, _s, _fast = false) {
+	static checkJunctions = function(_x, _y, _mx, _my, _s, _fast = false) {
 		var hover = noone;
 		
+		var _dy = junction_draw_hei_y * _s / 2;
+		var _dx = _fast? 6  * _s : _dy;
+		
+		for(var i = 0, n = array_length(inputDisplayList); i < n; i++) {
+			jun = inputDisplayList[i];
+			if(jun.isHovering(_s, _dx, _dy, _mx, _my)) hover = jun;
+		}
+		
+		preview_channel_temp = undefined;
+		for(var i = 0, n = array_length(outputs); i < n; i++) {
+			jun = outputs[i];
+			if(!jun.isVisible()) continue;
+			
+			if(jun.isHovering(_s, _dx, _dy, _mx, _my)) {
+				hover = jun;
+				
+				if(jun.type == VALUE_TYPE.surface)
+					preview_channel_temp = i;
+			}
+		}
+		
+		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
+			jun = inputs[i].bypass_junc;
+			if(jun == noone || !jun.visible) continue;
+			
+			if(jun.isHovering(_s, _dx, _dy, _mx, _my)) hover = jun;
+		}
+		
+		if(hasInspector1Update() && inspectInput1.isHovering(_s, _dx, _dy, _mx, _my)) hover = inspectInput1;
+		if(hasInspector2Update() && inspectInput2.isHovering(_s, _dx, _dy, _mx, _my)) hover = inspectInput2;
+		
+		if(attributes.show_update_trigger) {
+			if(updatedInTrigger.isHovering(_s, _dx, _dy, _mx, _my))  hover = updatedInTrigger;
+			if(updatedOutTrigger.isHovering(_s, _dx, _dy, _mx, _my)) hover = updatedOutTrigger;
+		}
+		
+		if(attributes.outp_meta) {
+			for( var i = 0, n = array_length(junc_meta); i < n; i++ ) {
+				jun = junc_meta[i];
+				if(!jun.isVisible()) continue;
+				if(jun.isHovering(_s, _dx, _dy, _mx, _my)) hover = jun;
+			}
+		}
+		
+		return hover;
+	}
+	
+	static drawJunctions = function(_x, _y, _mx, _my, _s, _fast = false) {
 		var _scs = gpu_get_scissor();
 		gpu_set_scissor(_x, _y, w * _s, h * _s);
 		draw_set_circle_precision(_fast? 16 : 64);
@@ -1894,53 +1935,46 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(_fast) draw_set_circle_precision(4);
 		else      gpu_set_texfilter(true);
 		
+		var jun;
+		
 		for(var i = 0, n = array_length(inputDisplayList); i < n; i++) {
-			var jun = inputDisplayList[i];
-			
-			if(jun.drawJunction(_draw, _s, _mx, _my, _fast)) hover = jun;
+			jun = inputDisplayList[i];
+			jun.drawJunction(_s, _mx, _my, _fast);
 		}
 		
 		preview_channel_temp = undefined;
 		for(var i = 0, n = array_length(outputs); i < n; i++) {
-			var jun = outputs[i];
-			
+			jun = outputs[i];
 			if(!jun.isVisible()) continue;
-			if(jun.drawJunction(_draw, _s, _mx, _my, _fast)) {
-				hover = jun;
-				
-				if(jun.type == VALUE_TYPE.surface)
-					preview_channel_temp = i;
-			}
+			
+			jun.drawJunction(_s, _mx, _my, _fast);
 		}
 		
 		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
-			var _inp = inputs[i];
-			var jun = _inp.bypass_junc;
-			
+			jun = inputs[i].bypass_junc;
 			if(jun == noone || !jun.visible) continue;
-			if(jun.drawJunction(_draw, _s, _mx, _my, _fast)) hover = jun;
+			
+			jun.drawJunction(_s, _mx, _my, _fast);
 		}
 		
-		if(hasInspector1Update() && inspectInput1.drawJunction(_draw, _s, _mx, _my, _fast)) hover = inspectInput1;
-		if(hasInspector2Update() && inspectInput2.drawJunction(_draw, _s, _mx, _my, _fast)) hover = inspectInput2;
+		if(hasInspector1Update()) inspectInput1.drawJunction(_s, _mx, _my, _fast);
+		if(hasInspector2Update()) inspectInput2.drawJunction(_s, _mx, _my, _fast);
 		
 		if(attributes.show_update_trigger) {
-			if(updatedInTrigger.drawJunction(_draw, _s, _mx, _my, _fast))  hover = updatedInTrigger;
-			if(updatedOutTrigger.drawJunction(_draw, _s, _mx, _my, _fast)) hover = updatedOutTrigger;
+			updatedInTrigger.drawJunction(_s, _mx, _my, _fast);
+			updatedOutTrigger.drawJunction(_s, _mx, _my, _fast);
 		}
 		
 		if(attributes.outp_meta) {
 			for( var i = 0, n = array_length(junc_meta); i < n; i++ ) {
-				var jun = junc_meta[i];
-				
+				jun = junc_meta[i];
 				if(!jun.isVisible()) continue;
-				if(jun.drawJunction(_draw, _s, _mx, _my, _fast)) hover = jun;
+				
+				jun.drawJunction(_s, _mx, _my, _fast);
 			}
 		}
 		
 		if(!_fast) gpu_set_texfilter(false);
-			
-		return hover;
 	}
 	
 	static drawJunctionNames = function(_x, _y, _mx, _my, _s, _panel = noone) {
@@ -2181,10 +2215,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static groupCheck = function(_x, _y, _s, _mx, _my) {}
 	
-	static drawNodeBG = function(_x, _y, _mx, _my, _s, _display_parameter = noone, _panel = noone) { 
-		var xx = x * _s + _x;
-		var yy = y * _s + _y;
-		
+	static drawInputGroup = function(_x, _y, _mx, _my, _s) { 
 		var _js = 16 * _s;
 		for( var i = 0, n = array_length(inputDisplayGroup); i < n; i++ ) {
 			var _gr  = inputDisplayGroup[i];
@@ -2196,10 +2227,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				draw_roundrect_ext(_gx - _js/2, _gy0 - _js/2, _gx + _js/2, _gy1 + _js/2, _js, _js, false);
 			draw_set_alpha(1);
 		}
-		
-		drawDimension(xx, yy, _s);
-		return false; 
 	}
+	
+	static drawNodeBG = undefined;
 	
 	static drawNodeFG = function(_x, _y, _mx, _my, _s, _display_parameter = noone, _panel = noone) { }
 	

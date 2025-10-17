@@ -70,7 +70,7 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 	author  = "";
 	license = "";
 	
-	buildFn = registerFunction("Add node", name, "", 0, function(n) /*=>*/ {return PANEL_GRAPH.createNodeHotkey(n)}, nodeName)
+	buildFn = registerFunction("Add node", name, "", 0, function(n) /*=>*/ { PANEL_GRAPH.createNodeHotkey(n, true, true) }, nodeName)
 				.setMenuName($"graph_add_{nodeName}", getName(), spr);
 	buildFn.nodeName = nodeName;
 	
@@ -683,4 +683,71 @@ function nodeClone(_nodes, _ctx = PANEL_GRAPH.getCurrentContext()) {
     CLONING    = false;
     
     return APPEND_LIST;
+}
+
+function nodeReplace(_old, _new) {
+	var _inputs  = _new.inputs;
+	var _outputs = _new.outputs;
+	
+	_new.renderActive   = _old.renderActive;
+	_new.previewable    = _old.previewable;
+	_new.show_parameter = _old.show_parameter;
+	
+	var _oil = array_length(_old.inputs);
+	var _ool = array_length(_old.outputs);
+	
+	var _nil = array_length(_new.inputs);
+	var _nol = array_length(_new.outputs);
+	
+	var _ii = 0;
+	for( var i = 0; i < _oil; i++ ) {
+		var _inp = _old.inputs[i];
+		if(_inp.value_from == noone) continue;
+		
+		for(; _ii < _nil; _ii++) {
+			var _newIn = _inputs[_ii];
+			
+			if(_newIn.type == _inp.type) {
+				_newIn.visible_manual = _inp.visible_manual;
+				_newIn.setFrom(_inp.value_from);
+				break;
+			}
+		}
+	}
+	
+	var _ii = 0;
+	for( var i = 0; i < _oil; i++ ) {
+		var _inp = _old.inputs[i];
+		
+		for(; _ii < _nil; _ii++) {
+			var _newIn = _inputs[_ii];
+			if(_newIn.value_from != noone) continue;
+			
+			if(_newIn.type == _inp.type && _newIn.name == _inp.name) {
+				_newIn.visible_manual = _inp.visible_manual;
+				_newIn.setValue(_inp.getValue());
+				break;
+			}
+		}
+	}
+	
+	var _oo = 0;
+	for( var i = 0; i < _ool; i++ ) {
+		var _out = _old.outputs[i];
+		var _to  = _out.getJunctionTo();
+		if(array_empty(_to)) continue;
+		
+		for(; _oo < _nol; _oo++) {
+			var _newOut = _outputs[_oo];
+			
+			if(_newOut.type == _out.type) {
+				_newOut.visible_manual = _out.visible_manual;
+				
+				for( var j = 0, m = array_length(_to); j < m; j++ )
+					if(_to[j].setFrom(_newOut)) break;
+			}
+		}
+	}
+	
+	_old.destroy(false);
 }

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_shape_rectangle",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_shape_rectangle",
+  "parent":{
+    "name":"shape",
+    "path":"folders/nodes/data/generator/drawer/shape.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

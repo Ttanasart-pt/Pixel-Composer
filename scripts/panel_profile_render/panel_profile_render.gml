@@ -112,6 +112,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		count_render_event    = 0;
 		count_message_event   = 0;
 		node_render_time      = 0;
+		node_render_rtime     = 0;
 		node_render_time_type = {};
 		node_render_rtim_type = {};
 		node_render_time_amo  = {};
@@ -125,14 +126,16 @@ function Panel_Profile_Render() : PanelContent() constructor {
 				case "render"  : 
 				    var _node = _report.node;
 				    var _time = _report.time;
-				    node_render_time += _time;
+				    
+				    node_render_time  += _report.time;
+				    node_render_rtime += _report.renderTime;
 					
 					count_render_event++;
 					
 					var _typ = instanceof(_node);
 					node_render_time_type[$ _typ] = struct_try_get(node_render_time_type, _typ, 0) + _time;
 					node_render_rtim_type[$ _typ] = struct_try_get(node_render_rtim_type, _typ, 0) + _report.renderTime;
-					node_render_time_amo[$ _typ]  = struct_try_get(node_render_time_amo, _typ, 0) + 1;
+					node_render_time_amo[$ _typ]  = struct_try_get(node_render_time_amo,  _typ, 0) + 1;
 					break;
 					
 				case "message" : count_message_event++; break;
@@ -142,9 +145,18 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		var _pr = ds_priority_create();
 		var _nods = variable_struct_get_names(node_render_time_type);
 		for( var i = 0, n = array_length(_nods); i < n; i++ ) {
-			var _typ = _nods[i];
+			var _t = _nods[i];
 			var _c = make_color_hsv(random(255), 160, 160);
-			ds_priority_add(_pr, [_typ, node_render_time_type[$ _typ], _c], node_render_time_type[$ _typ]);
+			var _d = {
+				node   : _t, 
+				color  : _c,
+				
+				amount : node_render_time_amo[$  _t],
+				time   : node_render_time_type[$ _t], 
+				rtime  : node_render_rtim_type[$ _t],
+			};
+			
+			ds_priority_add(_pr, _d, node_render_time_type[$ _t]);
 		}
 		
 		var sz = ds_priority_size(_pr);
@@ -242,6 +254,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	    var _ww  = sc_profile_detail.surface_w;
 	    var _hh  = sc_profile_detail.surface_h;
 	    var _hov = sc_profile_detail.hover;
+	    var _foc = sc_profile_detail.active;
 	    
 	    if(report_selecting == noone) {
 	        if(run == 0) {
@@ -268,10 +281,11 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	        
 	        var tx_amo  = px + pr + ui(32);
 	        var tx_name = tx_amo  + ui(40);
-	        var tx_time = tx_name + ui(200);
-	        var tx_per  = tx_time + ui(80);
+	        var tx_time = tx_name + ui(180);
+	        var tx_per  = tx_time + ui(64);
 	        var tx_pern = tx_per  + ui(80);
 	        var tx_rtim = tx_pern + ui(80);
+	        var tx_last = tx_rtim + ui(80);
 	        
 	        draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text_sub);
         	draw_text_add(tx_name, _ty, "type");
@@ -282,22 +296,47 @@ function Panel_Profile_Render() : PanelContent() constructor {
         	draw_text_add(tx_pern + ui(80 - 8), _ty, "time/node");
         	draw_text_add(tx_rtim + ui(80 - 8), _ty, "render");
         	
-        	if(_hov && point_in_rectangle(_m[0], _m[1], tx_name, _ty, tx_time,          _ty + ui(19))) TOOLTIP = "Node type";
-        	if(_hov && point_in_rectangle(_m[0], _m[1], tx_time, _ty, tx_per,           _ty + ui(19))) TOOLTIP = "Total processing time (including graph propagation, debug data collection)";
-        	if(_hov && point_in_rectangle(_m[0], _m[1], tx_per,  _ty, tx_pern,          _ty + ui(19))) TOOLTIP = "Total time as percentage";
-        	if(_hov && point_in_rectangle(_m[0], _m[1], tx_pern, _ty, tx_rtim,          _ty + ui(19))) TOOLTIP = "Total time per node";
-        	if(_hov && point_in_rectangle(_m[0], _m[1], tx_rtim, _ty, tx_rtim + ui(80), _ty + ui(19))) TOOLTIP = "Processing time";
+        	if(_hov) {
+        		var _ty1 = _ty + ui(19);
+        		
+	        	if(point_in_rectangle(_m[0], _m[1], tx_name, _ty, tx_time, _ty1)) {
+	        		TOOLTIP = "Node type";
+	        	}
+	        	
+	        	if(point_in_rectangle(_m[0], _m[1], tx_time, _ty, tx_per,  _ty1)) {
+	        		TOOLTIP = "Total processing time (including graph propagation, debug data collection)";
+	        		if(mouse_lpress(_foc)) array_sort(node_render_time_type_sorted, function(a,b) /*=>*/ {return b.time - a.time});
+	        	}
+	        	
+	        	if(point_in_rectangle(_m[0], _m[1], tx_per,  _ty, tx_pern, _ty1)) {
+	        		TOOLTIP = "Total time as percentage";
+	        		if(mouse_lpress(_foc)) array_sort(node_render_time_type_sorted, function(a,b) /*=>*/ {return b.time - a.time});
+	        	}
+	        	
+	        	if(point_in_rectangle(_m[0], _m[1], tx_pern, _ty, tx_rtim, _ty1)) {
+	        		TOOLTIP = "Average time per node";
+	        		if(mouse_lpress(_foc)) array_sort(node_render_time_type_sorted, function(a,b) /*=>*/ {return b.time/b.amount - a.time/a.amount});
+	        	}
+	        	
+	        	if(point_in_rectangle(_m[0], _m[1], tx_rtim, _ty, tx_last, _ty1)) {
+	        		TOOLTIP = "Processing time";
+	        		if(mouse_lpress(_foc)) array_sort(node_render_time_type_sorted, function(a,b) /*=>*/ {return b.rtime - a.rtime});
+	        	}
+	        	
+        	}
         	_ty += ui(20); _h += ui(20);
 	        
 	        var _pie_selecting = noone;
 	        
 	        for( var i = 0, n = array_length(node_render_time_type_sorted); i < n; i++ ) {
 	        	var _timn = node_render_time_type_sorted[i];
-	        	var _node = _timn[0];
-	        	var _time = _timn[1];
-	        	var _colr = _timn[2];
+	        	var _node = _timn.node;
+	        	var _colr = _timn.color;
+	        	var _amo  = _timn.amount;
+	        	var _time = _timn.time;
+	        	var _rtm  = _timn.rtime;
 	        	
-	        	var _as = _time / node_render_time * 360;
+	        	var _as = _rtm / node_render_rtime * 360;
 	        	var _at = _a + _as;
 	        	draw_set_color(_colr);
 	        	if(pie_selecting != noone) draw_set_alpha(0.25 + 0.75 * (_node == pie_selecting));
@@ -306,9 +345,6 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	        	_a = _at;
 	        	
 	        	if(_ty >= -16 && _ty <= _hh + 16) {
-	        		var _amo = node_render_time_amo[$ _node];
-	        		var _rtm = node_render_rtim_type[$ _node];
-	        		
 		        	draw_set_text(f_p3, fa_right, fa_top, COLORS._main_text_sub);
 		        	draw_text_add(tx_amo + ui(40 - 8),  _ty, _amo);
 		        	
@@ -322,7 +358,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		        	draw_text_add(tx_pern + ui(80 - 8), _ty, round(_time / _amo));
 		        	draw_text_add(tx_rtim + ui(80 - 8), _ty, _rtm);
 		        	
-		        	if(_hov && point_in_rectangle(_m[0], _m[1], tx_amo, _ty, _ww, _ty + ui(19)))
+		        	if(_hov && point_in_rectangle(_m[0], _m[1], tx_amo, _ty, _ww, _ty + ui(20) - 1))
 		        		_pie_selecting = _node;
 	        	}
 	        	

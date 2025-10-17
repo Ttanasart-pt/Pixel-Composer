@@ -338,54 +338,7 @@ event_inherited();
 		}
 		
 		if(node_replace != noone) { // Replace Nodes
-			
-			var _ii = 0;
-			for( var i = 0, n = array_length(node_replace.inputs); i < n; i++ ) {
-				var _inp = node_replace.inputs[i];
-				if(_inp.value_from == noone) continue;
-				
-				for(; _ii < array_length(_inputs); _ii++) {
-					var _newIn = _inputs[_ii];
-					
-					if(_newIn.type == _inp.type) {
-						_newIn.setFrom(_inp.value_from);
-						break;
-					}
-				}
-			}
-			
-			var _ii = 0;
-			for( var i = 0, n = array_length(node_replace.inputs); i < n; i++ ) {
-				var _inp = node_replace.inputs[i];
-				
-				for(; _ii < array_length(_inputs); _ii++) {
-					var _newIn = _inputs[_ii];
-					if(_newIn.value_from != noone) continue;
-					
-					if(_newIn.type == _inp.type && _newIn.name == _inp.name) {
-						_newIn.setValue(_inp.getValue());
-						break;
-					}
-				}
-			}
-			
-			var _oo = 0;
-			for( var i = 0, n = array_length(node_replace.outputs); i < n; i++ ) {
-				var _out = node_replace.outputs[i];
-				var _to  = _out.getJunctionTo();
-				if(array_empty(_to)) continue;
-				
-				for(; _oo < array_length(_outputs); _oo++) {
-					var _newOut = _outputs[_oo];
-					
-					if(_newOut.type == _out.type) {
-						for( var j = 0, m = array_length(_to); j < m; j++ )
-							if(_to[j].setFrom(_newOut)) break;
-					}
-				}
-			}
-			
-			node_replace.destroy(false);
+			nodeReplace(node_replace, _new_node);
 			return;
 		}
 		

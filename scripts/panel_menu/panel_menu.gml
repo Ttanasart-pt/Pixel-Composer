@@ -558,13 +558,15 @@ function Panel_Menu() : PanelContent() constructor {
             }
             
             if(RENDERING != undefined) {
-                var nw = hori? ui(96) : w - ui(16);
+                var nw = hori? ui(104) : w - ui(16);
                 var nh = ui(24);
                 
-                draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, nx0, ny0 - nh / 2, nw, nh);
+                draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, nx0, ny0 - nh/2, nw, nh);
                 
-                draw_set_text(f_p3, fa_center, fa_center, COLORS._main_value_positive);
-                draw_text_add(nx0 + nw / 2, ny0 - ui(1), __txt("Rendering..."));
+                draw_sprite_ui(THEME.loading_s, 0, nx0 + nh/2, ny0, .65, .65, current_time / 2, COLORS._main_icon, .8);
+                
+                draw_set_text(f_p3, fa_left, fa_center, COLORS._main_value_positive);
+                draw_text_add(nx0 + nh, ny0 - ui(1), __txt("Rendering..."));
                 
             } else {
                 var warning_amo = ds_list_size(WARNING);

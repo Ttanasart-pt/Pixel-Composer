@@ -18,7 +18,6 @@ function Node_Number_Simple(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		nodeDestroy(self, false);
 		PANEL_GRAPH.setFocusingNode(_n);
-		
 	}).setText("Switch to Advance mode");
 	
 	input_display_list = [ 0, b_advance ];

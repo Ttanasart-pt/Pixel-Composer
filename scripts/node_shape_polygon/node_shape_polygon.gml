@@ -110,15 +110,19 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	static processData = function(_outData, _data, _array_index) {
 		#region data
-			var _dim  = _data[0];
-			var _bg   = _data[1];
-			var _bgc  = _data[2];
-			var _shc  = _data[3];
-			var _shp  = _data[4];
-			var _pos  = _data[5];
-			var _rot  = _data[6];
-			var _sca  = _data[7];
 			var _mesh = _data[16];
+			
+			var _dim  = _data[ 0];
+			
+			var _pos  = _data[ 5];
+			var _rot  = _data[ 6];
+			var _sca  = _data[ 7];
+			
+			var _bg   = _data[ 1];
+			var _bgc  = _data[ 2];
+			var _shc  = _data[ 3];
+			var _shp  = _data[ 4];
+			
 			var _prot = _data[18];
 			var _psca = _data[22];
 			var _pall = _data[23];

@@ -259,26 +259,25 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		draw_set_alpha(1);
 	}
 	
-	static drawJunctions = function(_draw, _x, _y, _mx, _my, _s) {
-		var xx =  x      * _s + _x;
-		var yy = (y + 8) * _s + _y;
-		isHovering = point_in_circle(_mx, _my, xx, yy, _s * 24);
-		
-		gpu_set_tex_filter(true);
-		junction_hover = inputs[1].drawJunction(_draw, _s, _mx, _my);
-		gpu_set_tex_filter(false);
-		
+	static checkJunctions = function(_x, _y, _mx, _my, _s, _fast = false) {
+		isHovering = point_in_circle(_mx, _my, _x, _y, _s * 24);
 		if(!isHovering) return noone;
-		if(!junction_hover) CURSOR_SPRITE = THEME.view_pan;
-		
 		hover_scale_to = 1;
 		
-		return junction_hover? inputs[1] : noone;
+		CURSOR_SPRITE = THEME.view_pan;
+		var _dy = junction_draw_hei_y * _s / 2;
+		var _dx = _fast? 6  * _s : _dy;
+		if(inputs[1].isHovering(_s, _dx, _dy, _mx, _my)) return inputs[1];
+		return noone;
+	}
+	
+	static drawJunctions = function(_x, _y, _mx, _my, _s) {
+		gpu_set_tex_filter(true);
+		junction_hover = inputs[1].drawJunction(_s, _mx, _my);
+		gpu_set_tex_filter(false);
 	}
 	
 	static drawNode = function(_draw, _x, _y, _mx, _my, _s) {
-		if(!_draw) return drawJunctions(_draw, _x, _y, _mx, _my, _s);
-		
 		var xx =  x      * _s + _x;
 		var yy = (y + 8) * _s + _y;
 		
@@ -351,8 +350,6 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 		
 		draw_set_alpha(1);
-		
-		return drawJunctions(_draw, _x, _y, _mx, _my, _s);
 	}
 	
 	////- Actions

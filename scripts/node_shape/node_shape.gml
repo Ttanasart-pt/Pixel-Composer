@@ -124,8 +124,8 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(37, nodeValue_Bool(           "Opacity",          false          ));
 	
 	////- =Background
-	newInput( 1, nodeValue_Bool(           "Background",       false    ));
-	newInput(11, nodeValue_Color(          "Background color", ca_black ));
+	newInput( 1, nodeValue_Bool(           "Background",       false          ));
+	newInput(11, nodeValue_Color(          "Background color", ca_black       ));
 	// 44
 	
 	/////////////////////////////////////////////
@@ -134,7 +134,13 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newOutput(1, nodeValue_Output( "Mask",    VALUE_TYPE.surface, noone ));
 	newOutput(2, nodeValue_Output( "Height",  VALUE_TYPE.surface, noone ));
 	
-	input_display_list = [
+	b_replace_fast = button(function() /*=>*/ {
+		var _n = nodeBuild("Node_Shape_Fast", x, y, group);
+		nodeReplace(self, _n);
+		PANEL_GRAPH.setFocusingNode(_n);
+	}).setText("Switch to Fast version");
+	
+	input_display_list = [ b_replace_fast, 
 		[ "Output",    false     ],  0,  6, 
 		[ "Transform", false     ], 15,  3, 16, 17, 19, 28, 
 		[ "Shape",	   false     ],  2, 32, 33, 35, 40, 34, 9, 4, 13, 5, 7, 8, 38, 39, 22, 23, 24, 25, 26, 27, 43, 30, 31, 36, 

@@ -1,5 +1,6 @@
 function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name = "Pin";
+	name     = "Pin";
+	doUpdate = doUpdateLite;
 	setDimension(32, 32);
 	
 	auto_height      = false;
@@ -9,9 +10,9 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	////- =Display
 	
-	newInput(1, nodeValue_Enum_Button( "Label Position", 0, [ "T", "B", "L", "R" ] ));
-	newInput(2, nodeValue_Float(       "Label Scale",    1 ));
-	newInput(3, nodeValue_Color(       "Label Color",    COLORS._main_text ));
+	newInput(1, nodeValue_Enum_Button( "Label Position", 0, [ "T", "B", "L", "R" ] )).rejectArray();
+	newInput(2, nodeValue_Float(       "Label Scale",    1 )).rejectArray();
+	newInput(3, nodeValue_Color(       "Label Color",    COLORS._main_text )).rejectArray();
 	
 	// input 4
 	
@@ -54,22 +55,23 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	////- Nodes
 	
-	static update = function() {
-		if(inputs[0].value_from != noone) {
+	static onValueFromUpdate = function() { onValueUpdate(); }
+	static onValueUpdate     = function() {
+		label_ori   = inputs[1].getValue();
+		label_scale = inputs[2].getValue();
+		label_color = inputs[3].getValue();
 		
+		if(inputs[0].value_from != noone) {
 			inputs[0].setType(inputs[0].value_from.type);
 			outputs[0].setType(inputs[0].value_from.type);
 			
 			inputs[0].color_display  = inputs[0].value_from.color_display;
 			outputs[0].color_display = inputs[0].color_display;
 		}
-		
-		var _val    = getInputData(0);
-		label_ori   = getInputData(1);
-		label_scale = getInputData(2);
-		label_color = getInputData(3);
-		
-		outputs[0].setValue(_val);
+	}
+	
+	static update = function() {
+		outputs[0].setValue(inputs[0].getValue());
 	}
 	
 	////- Draw
@@ -99,29 +101,28 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static drawBadge = function(_x, _y, _s) {}
 	static drawJunctionNames = function(_x, _y, _mx, _my, _s, _panel = noone) {}
 	
-	static drawJunctions = function(_draw, _x, _y, _mx, _my, _s) {
-		var _dval = PANEL_GRAPH.value_dragging;
-		var hover = _dval == noone || _dval.connect_type == CONNECT_TYPE.input? outputs[0] : inputs[0];
-		var xx =  x      * _s + _x;
-		var yy = (y + 8) * _s + _y;
-		
-		isHovering     = point_in_circle(_mx, _my, xx, yy, _s * 24);
-		hover_junction = noone;
-		
-		var jhov = hover.drawJunction(_draw, _s, _mx, _my);
-		
+	static checkJunctions = function(_x, _y, _mx, _my, _s, _fast = false) {
+		isHovering = point_in_circle(_mx, _my, _x, _y, _s * 24);
 		if(!isHovering) return noone;
-		if(!jhov) draw_sprite_ui(THEME.view_pan, 0, _mx + ui(16), _my + ui(24), 1, 1, 0, COLORS._main_accent);
 		
-		hover_junction = jhov? hover : noone; 
+		CURSOR_SPRITE = THEME.view_pan;
+		var _dy = junction_draw_hei_y * _s / 2;
+		var _dx = _fast? 6  * _s : _dy;
+		
 		hover_scale_to = 1;
+		var dval = PANEL_GRAPH.value_dragging;
+		var junc = dval == noone || dval.connect_type == CONNECT_TYPE.input? outputs[0] : inputs[0];
 		
-		return hover_junction;
+		if(junc.isHovering(_s, _dx, _dy, _mx, _my)) return junc;
+		return noone;
+	}
+	
+	static drawJunctions = function(_x, _y, _mx, _my, _s) {
+		var junc = isHovering? inputs[0] : outputs[0];
+		junc.drawJunction(_s, _mx, _my);
 	}
 	
 	static drawNode = function(_draw, _x, _y, _mx, _my, _s) {
-		if(!_draw) return drawJunctions(_draw, _x, _y, _mx, _my, _s);
-		
 		var xx =  x      * _s + _x;
 		var yy = (y + 8) * _s + _y;
 		
@@ -176,7 +177,5 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			draw_set_alpha(1);
 		
 		}
-		
-		return drawJunctions(_draw, _x, _y, _mx, _my, _s);
 	}
 }

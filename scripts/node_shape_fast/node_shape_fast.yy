@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_shape_fast",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_shape_fast",
+  "parent":{
+    "name":"shape",
+    "path":"folders/nodes/data/generator/drawer/shape.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -3,8 +3,8 @@
   "%Name":"sh_shape",
   "name":"sh_shape",
   "parent":{
-    "name":"drawer",
-    "path":"folders/nodes/data/generator/drawer.yy",
+    "name":"shape",
+    "path":"folders/nodes/data/generator/drawer/shape.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

@@ -227,8 +227,20 @@ function gradientObject(color = ca_black) constructor {
 		caches    = array_verify(caches, cacheRes + 1);
 		keyLength = array_length(keys);
 		
-		for( var i = 0; i <= cacheRes; i++ )
-			caches[i] = eval(i / cacheRes);
+		switch(keyLength) {
+			case 0 : return;
+			case 1 :
+				var c = keys[0].value, i = -1;
+				repeat( cacheRes + 1 ) caches[++i] = c;
+				break;
+				
+			default : 
+				var i = -1;
+				repeat( cacheRes + 1 ) caches[++i] = eval(i / cacheRes);
+				break;
+			
+		}
+		
 	}
 	
 	static shader_submit = function(_key = "gradient") {

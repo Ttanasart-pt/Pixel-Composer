@@ -222,6 +222,7 @@ function draw_circle_dash(_x, _y, rad, th = 1, dash = 8, ang = 0) { draw_ellipse
 
 function draw_circle_angle(_x, _y, _r, _angSt, _angEd, precision = 32, cin = draw_get_color(), cout = draw_get_color()) {
 	var ox, oy, nx, ny, oa, na;
+	var _aa = draw_get_alpha();
 		
 	draw_primitive_begin(pr_trianglelist);
 	
@@ -231,9 +232,9 @@ function draw_circle_angle(_x, _y, _r, _angSt, _angEd, precision = 32, cin = dra
 		ny = _y + lengthdir_y(_r, na);
 		
 		if(i) {
-			draw_vertex_color(_x, _y,  cin, 1);
-			draw_vertex_color(ox, oy, cout, 1);
-			draw_vertex_color(nx, ny, cout, 1);
+			draw_vertex_color(_x, _y,  cin, _aa);
+			draw_vertex_color(ox, oy, cout, _aa);
+			draw_vertex_color(nx, ny, cout, _aa);
 		}
 		
 		oa = na;

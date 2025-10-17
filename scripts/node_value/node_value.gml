@@ -2235,15 +2235,15 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		draw_text_bbox(_bbox, _txt);
 	}
 	
-	static drawJunction = function(_draw, _s, _mx, _my, _fast = false) {
-		if(_fast) {
-			var hov  = PANEL_GRAPH.pHOVER && (PANEL_GRAPH.node_hovering == noone || PANEL_GRAPH.node_hovering == node);
-			var _d   = node.junction_draw_hei_y * _s;
-			var _hov = hov && point_in_rectangle(_mx, _my, x - 6 * _s, y - _d / 2, x + 6 * _s, y + _d / 2 - 1);
-			if(!_draw) return _hov;
-			
+	static isHovering = function(_s, _dx, _dy, _mx, _my) { 
+		INLINE
+		hover_in_graph = point_in_rectangle(_mx, _my, x - _dx, y - _dy, x + _dx - 1, y + _dy - 1);
+		return hover_in_graph;
+	}
+	
+	static drawJunction = function(_s, _mx, _my, _fast = false) { 
+		if(_fast) { 
 			var _aa  = 0.75 + (!is_dummy * 0.25);
-			hover_in_graph = _hov;
 			
 			draw_set_color(custom_color == noone? draw_fg : custom_color);
 			draw_set_alpha(_aa);
@@ -2252,23 +2252,15 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				draw_circle(x, y, _s * 6, false);
 				
 			else if(index == -1)
-				draw_rectangle(	x - _s * 4, y - _s * 1.5, 
-								x + _s * 4, y + _s * 1.5, false);
+				draw_rectangle(	x - _s * 4, y - _s * 1.5, x + _s * 4, y + _s * 1.5, false);
 			else
-				draw_rectangle(	x - _s * 1.5, y - _s * 4, 
-								x + _s * 1.5, y + _s * 4, false);
+				draw_rectangle(	x - _s * 1.5, y - _s * 4, x + _s * 1.5, y + _s * 4, false);
 			
 			draw_set_alpha(1);
-			
-			return _hov;
+			return;
 		}
 		
-		var hov  = PANEL_GRAPH.pHOVER && (PANEL_GRAPH.node_hovering == noone || PANEL_GRAPH.node_hovering == node);
-		var _d   = node.junction_draw_hei_y * _s / 2;
-		var _hov = hov && point_in_rectangle(_mx, _my, x - _d, y - _d, x + _d - 1, y + _d - 1);
-		hover_in_graph = _hov;
-		if(!_draw) return _hov;
-		
+		var _hov = hover_in_graph;
 		_s /= 2 * THEME_SCALE;
 		
 		if(custom_icon != noone) {
@@ -2303,8 +2295,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			var _bgS = THEME.node_junctions_bg;
 			var _fgS = _hov? THEME.node_junctions_outline_hover : THEME.node_junctions_outline;
 			
-			if(graph_selecting) __draw_sprite_ext(THEME.node_junction_selecting, 0, x, y, _s * THEME_SCALE, _s * THEME_SCALE, 0, _cfg, .8);
-			graph_selecting = false;
+			if(graph_selecting) {
+				var ss = _s * THEME_SCALE;
+				__draw_sprite_ext(THEME.node_junction_selecting, 0, x, y, ss, ss, 0, _cfg, .8);
+				graph_selecting = false;
+			}
 			
 			__draw_sprite_ext(_bgS, draw_junction_index, x, y, _s, _s, 0, _cbg, 1);
 			
@@ -2341,7 +2336,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			}
 		}
 		
-		return _hov;
 	}
 	
 	static drawNameBG = function(_s) {
@@ -2366,7 +2360,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static drawName = function(_s, _mx, _my) {
-		
 		var _draw_cc = COLORS._main_text;
 		var _draw_aa = 0.6 + hover_in_graph * 0.4;
 		

@@ -10,6 +10,8 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(0, nodeValue("Value", self, CONNECT_TYPE.input, VALUE_TYPE.any, -1)).uncache().setVisible(true, true);
 	inputs[0].onSetFrom = function(juncFrom) /*=>*/ { if(attributes.inherit_name && !LOADING && !APPENDING) setDisplayName(juncFrom.name); }
 	
+	////- Nodes
+	
 	attributes.inherit_name = true;
 	outParent   			= undefined;
 	output_index			= -1;
@@ -71,6 +73,8 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 	} if(!LOADING && !APPENDING) createOutput();
 	
+	////- Render
+	
 	static update = function() {
 		outParent.name = display_name; 
 		
@@ -98,7 +102,7 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		outParent.setValue(inputs[0].getValue());
 	}
 	
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	////- Draw
 
 	static getGraphPreviewSurface = function() { var _in = array_safe_get(inputs, 0, noone); return _in == noone? noone : _in.getValue(); }
 	static getPreviewValues       = function() { var _in = array_safe_get(inputs, 0, noone); return _in == noone? noone : _in.getValue(); }
@@ -124,13 +128,15 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		BLEND_NORMAL
 		
-		return drawJunctions(_draw, xx, yy, _mx, _my, _s, _s <= 0.5);
+		// return drawJunctions(xx, yy, _mx, _my, _s, _s <= 0.5);
 	}
 	
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+	////- Serialize
+	
 	static postDeserialize		  = function() { if(group == noone) return; createOutput(false); }
 	static postApplyDeserialize	  = function() {}
+	
+	////- Actions
 	
 	static onDestroy = function() {
 		if(is_undefined(outParent)) return;

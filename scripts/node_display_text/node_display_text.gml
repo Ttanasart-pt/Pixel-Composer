@@ -509,25 +509,36 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		h = hh + 8;
 	}
 	
-	static drawJunctions = function(_draw, _x, _y, _mx, _my, _s) {
-		if(!active) return;
-		
+	static checkJunctions = function(_x, _y, _mx, _my, _s, _fast = false) {
 		var hover = noone;
-		draw_set_circle_precision(16);
+		var _dy = junction_draw_hei_y * _s / 2;
+		var _dx = _fast? 6  * _s : _dy;
+		
+		junction_hover = inputs[1].isHovering(_s, _dx, _dy, _mx, _my);
 		
 		for(var i = 0, n = array_length(inputDisplayList); i < n; i++) {
 			var jun = inputDisplayList[i];
-			
-			if(jun.drawJunction(_draw, _s, _mx, _my, true))
+			if(jun.isHovering(_s, _dx, _dy, _mx, _my, true))
 				hover = jun;
 		}
 		
 		return hover;
 	}
 	
-	static drawNode = function(_draw, _x, _y, _mx, _my, _s) {
-		if(!_draw) return drawJunctions(_draw, _x, _y, _mx, _my, _s);
+	static drawJunctions = function(_x, _y, _mx, _my, _s) {
+		gpu_set_tex_filter(true);
+		draw_set_circle_precision(16);
 		
+		inputs[1].drawJunction(_s, _mx, _my, true);
+		for(var i = 0, n = array_length(inputDisplayList); i < n; i++)
+			inputDisplayList[i].drawJunction(_s, _mx, _my, true);
+		
+		gpu_set_tex_filter(false);
+		
+		return hover;
+	}
+	
+	static drawNode = function(_draw, _x, _y, _mx, _my, _s) {
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
@@ -538,7 +549,5 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			draw_sprite_stretched_ext(bg_spr, 1, xx, yy, w * _s, h * _s, COLORS._main_accent, 1);
 			active_draw_index = -1;
 		}
-		
-		return drawJunctions(_draw, xx, yy, _mx, _my, _s);
 	}
 }

@@ -74,19 +74,24 @@ function Node_Array_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static drawBadge = function(_x, _y, _s) {}
 	static drawJunctionNames = function(_x, _y, _mx, _my, _s, _panel = noone) {}
 	
-	static drawJunctions = function(_draw, _x, _y, _mx, _my, _s) {
-		var _dval = PANEL_GRAPH.value_dragging;
-		var hover = _dval == noone || _dval.connect_type == CONNECT_TYPE.input? outputs[0] : dummy_input;
-		var xx =  x      * _s + _x;
-		var yy = (y + 8) * _s + _y;
-		isHovering = point_in_circle(_mx, _my, xx, yy, _s * 24);
-		
-		var jhov = hover.drawJunction(_draw, _s, _mx, _my);
-		
+	static checkJunctions = function(_x, _y, _mx, _my, _s, _fast = false) {
+		isHovering = point_in_circle(_mx, _my, _x, _y, _s * 24);
 		if(!isHovering) return noone;
 		
+		var _dy = junction_draw_hei_y * _s / 2;
+		var _dx = _fast? 6  * _s : _dy;
+		
 		hover_scale_to = 1;
-		return jhov? hover : noone;
+		var dval = PANEL_GRAPH.value_dragging;
+		var junc = dval == noone || dval.connect_type == CONNECT_TYPE.input? outputs[0] : dummy_input;
+		
+		if(junc.isHovering(_s, _dx, _dy, _mx, _my)) return junc;
+		return noone;
+	}
+	
+	static drawJunctions = function(_x, _y, _mx, _my, _s) {
+		var junc = isHovering? dummy_input : outputs[0];
+		junc.drawJunction(_s, _mx, _my);
 	}
 	
 	static drawNode = function(_draw, _x, _y, _mx, _my, _s) {

@@ -244,12 +244,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static renderTopo = function(frame) {
-		for( var i = 0, n = array_length(nodeTopo); i < n; i++ ) {
-			var _n = nodeTopo[i];
-			if(_n.rendered) continue;
-			
-			_n.doUpdate(frame);
-		}
+		__frame = frame;
+		array_foreach(nodeTopo, function(n) /*=>*/ { n.doUpdate(__frame); });
 	}
 	
 	static postRender = function() {

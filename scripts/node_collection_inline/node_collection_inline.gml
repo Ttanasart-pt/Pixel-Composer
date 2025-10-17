@@ -235,6 +235,9 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		
 		x = (minx + maxx) / 2;
 		y = (miny + maxy) / 2;
+		
+		junction_x -= x;
+		junction_y -= y;
 	}
 	
 	static groupCheck = function(_x, _y, _s, _mx, _my) {
@@ -340,32 +343,53 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	}
 	
 	static drawNode = function(_draw, _x, _y, _mx, _my, _s, display_parameter = noone) {
-		return drawJunctions(_draw, _x, _y, _mx, _my, _s)
+		// return drawJunctions(_x, _y, _mx, _my, _s)
 	}
 	
 	static drawBadge = function(_x, _y, _s) {}
 	
-	static drawJunctions = function(_draw, _x, _y, _mx, _my, _s) {
+	static checkJunctions = function(_x, _y, _mx, _my, _s, _fast = false) {
 		var hover = noone;
+		var _dy = junction_draw_hei_y * _s / 2;
+		var _dx = _fast? 6  * _s : _dy;
 		
+		var jx = junction_x;
+		var jy = junction_y;
+		
+		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
+			var jun = inputs[i];
+			if(!jun.isVisible()) continue;
+			
+		    jun.rx = jx;
+		    jun.ry = jy;
+		    jun.x  = _x + jx * _s;
+		    jun.y  = _y + jy * _s;
+			
+			if(jun.isHovering(_s, _dx, _dy, _mx, _my)) hover = jun;
+			jy += junction_draw_hei_y;
+		}
+		
+		return hover;
+	}
+	
+	static drawJunctions = function(_x, _y, _mx, _my, _s) {
 		var jx = junction_x;
 		var jy = junction_y;
 		
 		gpu_set_tex_filter(true);
 		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
 			var jun = inputs[i];
-		    jun.rx  = jx;
-		    jun.ry  = jy;
-		    jun.x   = _x + jx * _s;
-		    jun.y   = _y + jy * _s;
-			
 			if(!jun.isVisible()) continue;
-			if(jun.drawJunction(_draw, _s, _mx, _my)) hover = jun;
+			
+		    jun.rx = jx;
+		    jun.ry = jy;
+		    jun.x  = _x + jx * _s;
+		    jun.y  = _y + jy * _s;
+			
+			jun.drawJunction(_s, _mx, _my);
 			jy += junction_draw_hei_y;
 		}
 		gpu_set_tex_filter(false);
-		
-		return hover;
 	}
 	
 	////- Serialize
