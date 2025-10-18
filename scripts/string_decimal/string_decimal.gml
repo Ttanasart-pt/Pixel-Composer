@@ -45,7 +45,8 @@ function toNumberFull(str) {
 	var expo = 0;
 	if(string_pos("e", str)) {
 		var pos = string_pos("e", str);
-		expo = real(string_copy(str, pos + 1, string_length(str) - pos));
+		var exs = string_copy(str, pos + 1, string_length(str) - pos)
+		if(exs != "") expo = real(exs);
 		str  = string_copy(str, 1, pos - 1);
 	}
 	

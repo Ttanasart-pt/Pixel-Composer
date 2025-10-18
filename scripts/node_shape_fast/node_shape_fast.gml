@@ -133,12 +133,9 @@ function Node_Shape_Fast(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	newOutput(1, nodeValue_Output( "Mask",    VALUE_TYPE.surface, noone ));
 	newOutput(2, nodeValue_Output( "Height",  VALUE_TYPE.surface, noone ));
 	
-	b_replace_full = button(function() /*=>*/ {
-		var _n = nodeBuild("Node_Shape", x, y, group);
-		nodeReplace(self, _n);
-		PANEL_GRAPH.setFocusingNode(_n);
-	}).setText("Switch to Array version");
-	
+	b_replace_full = button(function() /*=>*/ { nodeReplace(self, nodeBuild("Node_Shape", x, y, group), true); })
+		.setText("Switch to Array version");
+		
 	input_display_list = [ b_replace_full, 
 		[ "Output",    false     ],  0,  6, 
 		[ "Transform", false     ], 15,  3, 16, 17, 19, 28, 

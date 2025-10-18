@@ -44,7 +44,10 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	newOutput(0, nodeValue_Output("Number", VALUE_TYPE.float, 0));
 	
-	input_display_list = [ 0, 1, 
+	b_fast = button(function() /*=>*/ { nodeReplace(self, nodeBuild("Node_Number_Simple", x, y, group), true); })
+		.setText("Switch to Fast mode");
+		
+	input_display_list = [ b_fast, 0, 1, 
 		["Display",  false], 2, 6, 15, 3, 5, 4, 7, 16, 
 		["Gizmo",    true], 8, 11, 12, 13, 14, 9, 10,
 	];

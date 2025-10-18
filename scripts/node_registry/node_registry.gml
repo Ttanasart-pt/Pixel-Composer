@@ -685,7 +685,7 @@ function nodeClone(_nodes, _ctx = PANEL_GRAPH.getCurrentContext()) {
     return APPEND_LIST;
 }
 
-function nodeReplace(_old, _new) {
+function nodeReplace(_old, _new, _select = false) {
 	var _inputs  = _new.inputs;
 	var _outputs = _new.outputs;
 	
@@ -750,4 +750,5 @@ function nodeReplace(_old, _new) {
 	}
 	
 	_old.destroy(false);
+	if(_select) PANEL_GRAPH.setFocusingNode(_new);
 }

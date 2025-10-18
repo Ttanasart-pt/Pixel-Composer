@@ -901,6 +901,7 @@
             { "label": "Numbers" },
             { "label": "/Creators" },
             "Node_Number",
+            "Node_Number_Simple",
             "Node_To_Number",
             "Node_Random",
             "Node_Transform_Array",

@@ -8,22 +8,25 @@ function Node_Boolean(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	wd_checkBox = new checkBox( function() { inputs[0].setValue(!getInputData(0)); } );
 	
-	newInput(0, nodeValue_Bool("Value", false))
-		.setVisible(true, true);
-	
+	newInput(0, nodeValue_Bool("Value", false)).setVisible(true, true);
+		
+	////- =Display
 	newInput(1, nodeValue_Bool("Hide Background", false));
-	
 	newInput(2, nodeValue_Enum_Button("Name location",  1, [ "Top", "Bottom" ]));
 	
 	newOutput(0, nodeValue_Output("Boolean", VALUE_TYPE.boolean, false));
 	
 	input_display_list = [ 0, 
 		["Display",	false], 1, 2, 
-	]
+	];
+	
+	////- Node
 	
 	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {  
 		return _data[0]; 
 	}
+	
+	////- Draw
 	
 	static pointIn = function(_x, _y, _mx, _my, _s) {
 		var align = getInputData(2);
