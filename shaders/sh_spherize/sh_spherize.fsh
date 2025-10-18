@@ -95,7 +95,8 @@ varying vec4 v_vColour;
 uniform vec2  dimension;
 uniform vec2  center;
 uniform vec2  position;
-uniform vec2  offset;
+uniform vec2  uvoffset;
+uniform vec2  uvscale;
 
 uniform vec2      radius;
 uniform int       radiusUseSurf;
@@ -128,7 +129,7 @@ void main() {
 	float dist = sqrt(abs(d));
 	
 	vec2  sptx = cen + mix(uv, uv / dist, str);
-	      sptx = fract(sptx - offset);
+	      sptx = fract((.5 + (sptx - .5) / uvscale) - uvoffset);
 	vec4  c    = sampleTexture(gm_BaseTexture, sptx);
 	
 	gl_FragColor = vec4(0.);

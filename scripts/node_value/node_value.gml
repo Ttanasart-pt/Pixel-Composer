@@ -1807,11 +1807,16 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(tags == VALUE_TAG.updateInTrigger || tags == VALUE_TAG.updateOutTrigger) return true;
 		
-		if(_render && node.active) { // This part used to have !IS_PLAYING
-			node.doUpdate();
-			node.triggerRender();
-			node.valueUpdate(index);
-			node.clearCacheForward();
+		if(_render) { // This part used to have !IS_PLAYING
+			if(is(node, Node_Global)) {
+				RENDER_ALL
+				
+			} else {
+				node.doUpdate();
+				node.triggerRender();
+				node.valueUpdate(index);
+				node.clearCacheForward();
+			}
 		}
 		
 		if(fullUpdate) RENDER_ALL

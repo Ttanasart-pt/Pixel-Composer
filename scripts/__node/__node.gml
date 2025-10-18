@@ -4,6 +4,7 @@ function __Node_Base(_x, _y) constructor {
 	
 	node_id = 0;
 	project = PROJECT;
+	active  = true;
 	
 	display_name    = "";
 	inputs          = [];

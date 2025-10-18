@@ -26,7 +26,8 @@ function Node_Spherize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(13, nodeValue_Slider(   "Trim Edge",  0     ));
 	
 	////- =Rendering
-	newInput(16, nodeValue_Vec2(     "UV Offset", [0,0]  ));
+	newInput(16, nodeValue_Vec2( "Texture Offset", [0,0]  ));
+	newInput(17, nodeValue_Vec2( "Texture Scale",  [1,1]  ));
 	// input 17
 		
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -34,7 +35,7 @@ function Node_Spherize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	input_display_list = [ 7, 8, 
 		[ "Surfaces",   true ], 0, 5, 6, 9, 10, 
 		[ "Spherize",  false ], 1, 15, 14, 2, 11, 3, 12, 13, 
-		[ "Rendering", false ], 16, 
+		[ "Rendering", false ], 16, 17, 
 	];
 	
 	attribute_surface_depth();
@@ -57,7 +58,6 @@ function Node_Spherize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		InputDrawOverlay(inputs[ 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		InputDrawOverlay(inputs[15].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
-		// InputDrawOverlay(inputs[16].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		InputDrawOverlay(inputs[ 2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny, rot, _dim[0]/2, 2));
 		InputDrawOverlay(inputs[14].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
 		
@@ -72,9 +72,11 @@ function Node_Spherize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		var _cent = _data[ 1];
 		var _posi = _data[15];
-		var _offs = _data[16];
 		var _trim = _data[13];
 		var _rota = _data[14];
+		
+		var _uoff = _data[16];
+		var _usca = _data[17];
 		
 		surface_set_shader(_outSurf, sh_spherize);
 		shader_set_interpolation(_surf);
@@ -82,9 +84,11 @@ function Node_Spherize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			shader_set_i("sampleMode",   _samp);
 			shader_set_2("center",       _cent);
 			shader_set_2("position",     _posi);
-			shader_set_2("offset",       _offs);
 			shader_set_f("rotation",     degtorad(_rota));
 			shader_set_f("trim",         _trim);
+			
+			shader_set_2("uvoffset",     _uoff);
+			shader_set_2("uvscale",      _usca);
 			
 			shader_set_f_map("strength", _data[2], _data[11], inputs[2]);
 			shader_set_f_map("radius",   _data[3], _data[12], inputs[3]);

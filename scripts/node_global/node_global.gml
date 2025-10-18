@@ -208,14 +208,14 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 	anim_priority      = -999;
 	
 	static isActiveDynamic = function(frame = CURRENT_FRAME) /*=>*/ {return true}
-	static valueUpdate = function(index) /*=>*/ { RENDER_ALL }
+	static valueUpdate     = function(index) /*=>*/ { RENDER_ALL }
 	
-	static createValue = function() {
+	function createValue() {
 		var _ind   = array_length(inputs);
 		while(inputExist($"NewValue{_ind}")) _ind++;
 		var _key   = $"NewValue{_ind}";
 		
-		var _inp    = nodeValue_Float(_key, 0);
+		var _inp    = new NodeValue(_key, self, CONNECT_TYPE.input, VALUE_TYPE.float, 0);
 		_inp.editor = new variable_editor(_inp);
 		array_push(inputs, _inp);
 		valueUpdate();
