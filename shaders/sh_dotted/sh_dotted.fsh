@@ -247,7 +247,7 @@ void main() {
 			amo = mix(amount.x, amount.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 		}
 		
-		amoVec = vec2(amo) / spacing;
+		amoVec = (dimension / vec2(amo)) / spacing;
 	#endregion
 	
 	vec2 asp  = vec2(dimension.x / dimension.y, 1.);

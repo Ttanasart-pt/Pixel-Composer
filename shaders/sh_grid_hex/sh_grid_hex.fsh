@@ -234,12 +234,11 @@ void main() {
 		}
 	#endregion
 	
+    mat2  rot = mat2(cos(ang), - sin(ang), sin(ang), cos(ang));
 	vec2  asp = vec2(dimension.x / dimension.y, 1.);
-	vec2  pos = (v_vTexcoord - position) * asp * sca, _pos;
-	
-	_pos.x = pos.x * cos(ang) - pos.y * sin(ang);
-	_pos.y = pos.x * sin(ang) + pos.y * cos(ang);
-	
+	vec2  pos = (v_vTexcoord - position) * asp;
+	vec2 _pos = pos * rot * sca;
+	     
     vec4 hc = HexCoords(_pos);
 	vec4 colr;
 	

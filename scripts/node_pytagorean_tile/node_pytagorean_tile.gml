@@ -12,10 +12,10 @@ function Node_Pytagorean_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	newInput(22, nodeValue_Surface( "Mask" ));
 	
 	////- =Pattern
-	newInput( 1, nodeValue_Vec2(     "Position",  [0,0] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
-	newInput( 3, nodeValue_Rotation( "Rotation",   0    )).setHotkey("R").setMappable(12);
-	newInput( 2, nodeValue_Vec2(     "Scale",     [1,1] )).setHotkey("S").setMappable(11);
-	newInput(17, nodeValue_Rotation( "Phase",      90   ));
+	newInput( 1, nodeValue_Vec2(     "Position",  [.5,.5]   )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, UNIT_REF);
+	newInput( 3, nodeValue_Rotation( "Rotation",   0        )).setHotkey("R").setMappable(12);
+	newInput( 2, nodeValue_Vec2(     "Scale",     [.25,.25] )).setHotkey("S").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, UNIT_REF).setMappable(11);
+	newInput(17, nodeValue_Rotation( "Phase",      90       ));
 	newInput( 4, nodeValue_Slider(   "Gap",       .25, [0, 0.5, 0.001] )).setMappable(13);
 	
 	////- =Render
@@ -47,14 +47,15 @@ function Node_Pytagorean_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	attribute_oversample();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+		var _rot = getSingleValue(3);
 		var _pos = getSingleValue(1);
 		var  px  = _x + _pos[0] * _s;
 		var  py  = _y + _pos[1] * _s;
 		
-		InputDrawOverlay(inputs[ 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
-		InputDrawOverlay(inputs[19].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, getSingleValue(0)));
-		InputDrawOverlay(inputs[ 3].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
-		InputDrawOverlay(inputs[ 2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[ 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny                    ));
+		InputDrawOverlay(inputs[ 3].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny                    ));
+		InputDrawOverlay(inputs[ 2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny, 1, [1,1], _rot    ));
+		InputDrawOverlay(inputs[19].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, getSingleValue(0) ));
 		
 		return w_hovering;
 	}

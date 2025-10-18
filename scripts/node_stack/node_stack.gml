@@ -8,34 +8,29 @@
 function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Stack";
 	
-	newInput(0, nodeValue_Enum_Scroll("Axis",  0, [ new scrollItem("Horizontal", s_node_alignment, 0), 
-												          new scrollItem("Vertical",   s_node_alignment, 1), 
-												          new scrollItem("On top",     s_node_alignment, 3), ]))
-		.rejectArray();
+	////- =Stack
+	_axis_enum = [ new scrollItem("Horizontal", s_node_alignment, 0), 
+			       new scrollItem("Vertical",   s_node_alignment, 1), 
+			       new scrollItem("On top",     s_node_alignment, 3), ];
+			       
+	newInput(0, nodeValue_EScroll( "Axis",     0, _axis_enum                  ));
+	newInput(1, nodeValue_EButton( "Align",    1, [ "Start", "Middle", "End"] ));
+	newInput(2, nodeValue_Int(     "Spacing",  0                              ));
+	newInput(3, nodeValue_Padding( "Padding", [0,0,0,0]                       ));
 	
-	newInput(1, nodeValue_Enum_Button("Align",  1, [ "Start", "Middle", "End"]))
-		.rejectArray();
+	////- =Render
+	newInput(4, nodeValue_Enum_Scroll( "Blend Mode", 0, BLEND_TYPES ));
+	array_foreach(inputs, function(i) /*=>*/ {return i.rejectArray()});
+	// 5
 	
-	newInput(2, nodeValue_Int("Spacing", 0))
-		.rejectArray();
-	
-	newInput(3, nodeValue_Padding("Padding", [ 0, 0, 0, 0 ]))
-		.rejectArray();
-	
-	newInput(4, nodeValue_Enum_Scroll("Blend Mode",  0, BLEND_TYPES))
-		.rejectArray();
-	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
-	
-	newOutput(1, nodeValue_Output("Atlas data", VALUE_TYPE.atlas, []));
+	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
+	newOutput(1, nodeValue_Output( "Atlas data",  VALUE_TYPE.atlas,   []    ));
 	
 	input_display_list = [
 		["Stack",    false], 0, 1, 2, 3, 
 		["Render",   false], 4, 
 		["Surfaces", false], 
-	]
-	
-	temp_surface = [ noone, noone, noone ];
+	];
 	
 	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
@@ -48,7 +43,24 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	setDynamicInput(1, true, VALUE_TYPE.surface);
 	
+	////- Node
+	
+	temp_surface = [ noone, noone, noone ];
+	
 	attribute_surface_depth();
+	
+	draw_transforms = [];
+	static drawOverlayTransform = function(_node) { 
+		var _df  = draw_transforms;
+		var _amo = getInputAmount();
+		
+		for( var i = 0; i < _amo; i++ ) {
+			if(_node == inputs[input_fix_len + i].getNodeFrom())
+				return _df[i];
+		}
+		
+		return noone;
+	}
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var _axis = getInputData(0);
@@ -64,7 +76,6 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var hh = 0;
 		
 		for( var i = input_fix_len; i < array_length(inputs); i++ ) {
-			
 			var _surf = getInputData(i);
 			if(!is_array(_surf)) _surf = [ _surf ];
 			
@@ -76,9 +87,11 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				if(_axis == 0) {
 					ww += sw + _spac;
 					hh = max(hh, sh + _spac);
+					
 				} else if(_axis == 1) {
 					ww = max(ww, sw + _spac);
 					hh += sh + _spac;
+					
 				} else if(_axis == 2) {
 					ww = max(ww, sw);
 					hh = max(hh, sh);
@@ -104,7 +117,9 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		var atlas = [];
 		var ppind = 0;
-		var sx = 0, sy = 0;
+		var sx = 0; 
+		var sy = 0;
+		var ai = 0;
 		
 		for( var i = input_fix_len; i < array_length(inputs); i++ ) {
 			var _surf = getInputData(i);
@@ -138,6 +153,7 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				var py = sy + _padd[PADDING.top]
 					
 				array_push(atlas, new SurfaceAtlas(_surf[j], sx, sy));
+				draw_transforms[ai++] = [ px, py, 1, 1, 0];
 				
 				surface_set_shader(temp_surface[!ppind], noone, true, BLEND.over);
 					draw_surface_blend_ext(temp_surface[ppind], _surf[j], px, py, 1, 1, 0, c_white, 1, _blnd);

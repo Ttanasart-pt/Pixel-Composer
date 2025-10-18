@@ -6,13 +6,13 @@ function Node_Quasicrystal(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput(11, nodeValue_Surface( "Mask" ));
 	
 	////- =Pattern
-	newInput( 1, nodeValue_Slider(         "Scale",        16, [1, 64, 0.1] )).setHotkey("S").setMappable(6);
-	newInput( 2, nodeValue_Rotation(       "Angle",        0      )).setHotkey("R").setMappable(7);
-	newInput( 8, nodeValue_Slider(         "Phase",        0      )).setMappable(9);
+	newInput( 3, nodeValue_Vec2(      "Position", [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, UNIT_REF);
+	newInput( 2, nodeValue_Rotation(  "Angle",      0     )).setHotkey("R").setMappable(7);
+	newInput( 1, nodeValue_Slider(    "Scale",     .25    )).setHotkey("S").setMappable(6).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, UNIT_REF);
+	newInput( 8, nodeValue_Slider(    "Phase",      0     )).setMappable(9);
 	newInput(10, nodeValue_Rotation_Range( "Angle Range", [0,180] ));
 	
 	////- =Colors
-	newInput( 3, nodeValue_Vec2(  "Position", [ 0, 0 ] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
 	newInput( 4, nodeValue_Color( "Color 1", ca_white));
 	newInput( 5, nodeValue_Color( "Color 2", ca_black));
 	
@@ -22,20 +22,21 @@ function Node_Quasicrystal(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	input_display_list = [ 
 		["Output",	 true],	0, 11, 
-		["Pattern",	false], 1, 6, 2, 7, 8, 9, 10, 
+		["Pattern",	false], 3, 2, 7, 1, 6, 8, 9, 10, 
 		["Colors",  false], 4, 5, 
 	];
 	
 	attribute_surface_depth();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+		var rot  = getInputData(2);
 		var pos  = getInputData(3);
 		var px   = _x + pos[0] * _s;
 		var py   = _y + pos[1] * _s;
 		
-		InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
-		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
-		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny            ));
+		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny            ));
+		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny, rot, 1, 2 ));
 		
 		return w_hovering;
 	}

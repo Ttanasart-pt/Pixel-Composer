@@ -26,7 +26,7 @@ int julia(in vec2 z) {
 }
 
 void main() {
-    vec2 px  = (v_vTexcoord - position / dimension - .5) * 4. / scale;
+    vec2 px  = (v_vTexcoord - position / dimension) * 4. / scale;
          px *= mat2(cos(rotation), -sin(rotation), sin(rotation), cos(rotation));
     
     float j = float(julia(px)) / float(iteration);

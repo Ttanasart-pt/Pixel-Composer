@@ -462,17 +462,15 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 	}
 	
-	static doStep = function() {
-		if(__mask_index != undefined) {
-			var _msk = is_surface(getSingleValue(__mask_index));
-			inputs[__mask_mod_index + 0].setVisible(_msk);
-			inputs[__mask_mod_index + 1].setVisible(_msk);
-		}
-		
+	static checkMask = function() {
+		var _msk = is_surface(getSingleValue(__mask_index));
+		inputs[__mask_mod_index + 0].setVisible(_msk);
+		inputs[__mask_mod_index + 1].setVisible(_msk);
+	}
+	
+	static checkMap = function() {
 		for( var i = 0, n = array_length(inputMappable); i < n; i++ )
 			inputMappable[i].mappableStep();
-		
-		if(step != undefined) step();
 	}
 	
 	static step          = undefined

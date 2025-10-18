@@ -182,6 +182,7 @@ void main() {
 			vec4 _vMap = texture2D( amountSurf, v_vTexcoord );
 			amo = mix(amount.x, amount.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 		}
+		amo = dimension.x / amo;
 		
 		float ang = angle.x;
 		if(angleUseSurf == 1) {

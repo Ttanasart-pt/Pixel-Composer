@@ -114,8 +114,11 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 				draw_sprite_stretched_ext(spr, 3, _x, _y, _w, _h, COLORS._main_accent, 1);
 			}
 			if(tooltip != "") {
-				var _ind = is_method(tooltipIndexFn)? tooltipIndexFn(params) : 0;
-				if(is(tooltip, tooltipSelector)) tooltip.index = _ind;
+				if(is_method(tooltipIndexFn)) {
+					if(is(tooltip, tooltipSelector)) 
+						tooltip.index = tooltipIndexFn(params);
+				}
+				
 				TOOLTIP = tooltip;
 			}
 			

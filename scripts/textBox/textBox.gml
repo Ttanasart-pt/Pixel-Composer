@@ -114,6 +114,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		}, THEME.paste),
 	];
 	
+	////- Setters
+	
 	static modifyValue  = function(value) {
 		if(input == TEXTBOX_INPUT.number) {
 			if(use_range) value = clamp(value, range_min, range_max);
@@ -142,6 +144,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	static setFormat     = function(_f) /*=>*/ { format      = _f;    return self; }
 	static setAutoupdate = function(  ) /*=>*/ { auto_update = true;  return self; }
 	static setDeactivate = function(_d) /*=>*/ { onDeactivate = _d;   return self; }
+	
+	////- Actives
 	
 	static activate = function(_def_str = _current_text) {
 		WIDGET_CURRENT = self;
@@ -186,6 +190,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		_input_text = _last_text;
 		deactivate();
 	}
+	
+	////- Edit
 	
 	static onKey = function(key) {
 		if(KEYBOARD_PRESSED == vk_left) {
@@ -435,6 +441,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		}
 	}
 	
+	////- Draw
+	
 	static display_text = function(_x, _y, _text, _w, _m = -1) {
 		draw_set_alpha(0.5 + 0.5 * interactable);
 		switch(yalign) {
@@ -572,16 +580,18 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			_w -= _bs + ui(4);
 		}
 		
-		if(unit != noone && unit.reference != noone) {
-			unit.triggerButton.setFocusHover(iactive, ihover);
-			unit.draw(_bx, _by, _bs, _bs, _m);
-			_w -= _bs + ui(4);
-		}
-		
 		if((_w - _bs > ui(100) || always_side_button) && side_button) {
 			side_button.setFocusHover(active, hover);
 			side_button.draw(_bx, _by, _bs, _bs, _m, THEME.button_hide_fill);
-			_w -= _bs + ui(4);
+			_bx -= _bs + ui(4);
+			_w  -= _bs + ui(4);
+		}
+		
+		if(unit != noone && unit.reference != noone) {
+			unit.triggerButton.setFocusHover(iactive, ihover);
+			unit.draw(_bx, _by, _bs, _bs, _m);
+			_bx -= _bs + ui(4);
+			_w  -= _bs + ui(4);
 		}
 		
 		if(format == TEXT_AREA_FORMAT.password) {
@@ -996,6 +1006,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		sprite_index = -1;
 		return _h;
 	}
+	
+	////- Actions
 	
 	static clone = function() { 
 		return new textBox(input, onModify);

@@ -291,10 +291,13 @@ function Project() constructor {
 		
 		try {
 			array_foreach(allNodes, function(n) /*=>*/ { 
-				if(!n.active || n.step == undefined) return; 
+				if(!n.active) return; 
 				
 				n.triggerCheck(); 
-				n.doStep(); 
+				
+				if(n.__mask_index != undefined)   n.checkMask();
+				if(!array_empty(n.inputMappable)) n.checkMap();
+				if(n.step != undefined)           n.step();
 			});
 		} catch(e) {
 			noti_warning("Node Step error: " + exception_print(e));

@@ -8,12 +8,12 @@ function Node_Dotted(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(1, nodeValue_Surface( "Mask" ));
 	
 	////- =Transform
-	newInput(14, nodeValue_Vec2(     "Position", [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput( 4, nodeValue_Rotation( "Angle",     0      )).setHotkey("R").setMappable(5);
+	newInput(14, nodeValue_Vec2(     "Position", [0,0] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, UNIT_REF);
+	newInput( 4, nodeValue_Rotation( "Angle",     0    )).setHotkey("R").setMappable(5);
 	
 	////- =Pattern
 	newInput(13, nodeValue_Enum_Button( "Pattern",   0, [ "Grid", "Hexagonal" ]));
-	newInput( 2, nodeValue_Float(       "Size",      4            )).setHotkey("S").setMappable(3);
+	newInput( 2, nodeValue_Float(       "Size",     .25           )).setHotkey("S").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, UNIT_REF).setMappable(3);
 	newInput(15, nodeValue_Vec2(        "Spacing",  [1,1]         ));
 	newInput( 9, nodeValue_Slider(      "Dot Size", .5, [0,2,.01] )).setMappable(10);
 	
@@ -47,12 +47,13 @@ function Node_Dotted(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		PROCESSOR_OVERLAY_CHECK
 		
 		var _pos = getSingleValue(14);
+		var _rot = getSingleValue( 4);
 		var _px  = _x + _pos[0] * _s;
 		var _py  = _y + _pos[1] * _s;
 		
-		InputDrawOverlay(inputs[14].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, _snx, _sny));
-		InputDrawOverlay(inputs[ 4].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny));
-		InputDrawOverlay(inputs[ 2].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[14].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, _snx, _sny             ));
+		InputDrawOverlay(inputs[ 4].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny             ));
+		InputDrawOverlay(inputs[ 2].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny, _rot, 1, 2 ));
 		
 		return w_hovering;
 	}

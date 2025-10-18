@@ -5,14 +5,14 @@ function Node_Julia_Set(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(7, nodeValue_Surface( "Mask" ));
 	
 	////- =Julia
-	newInput(1, nodeValue_Vec2(  "C", [ -1, 0 ] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(1, nodeValue_Vec2(  "C", [ -1, 0 ] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, UNIT_REF);
 	newInput(5, nodeValue_Int(   "Max Iteration",     128  ));
 	newInput(6, nodeValue_Float( "Diverge Threshold", 4    ));
 	
 	////- =Transform
-	newInput(2, nodeValue_Vec2(     "Position",  [0,0] )).setHotkey("G");
-	newInput(4, nodeValue_Rotation( "Rotation",   0    )).setHotkey("R");
-	newInput(3, nodeValue_Vec2(     "Scale",     [1,1] ));
+	newInput(2, nodeValue_Vec2(     "Position", [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, UNIT_REF);
+	newInput(4, nodeValue_Rotation( "Rotation",   0     )).setHotkey("R");
+	newInput(3, nodeValue_Vec2(     "Scale",     [1,1]  ));
 	// input 8
 	
 	newOutput(0, nodeValue_Output("Surface", VALUE_TYPE.surface, noone));
@@ -24,22 +24,18 @@ function Node_Julia_Set(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		
-	    var _pos = current_data[2];
+	    var _pos = getSingleValue(2);
 	    var _px  = _x + _pos[0] * _s;
 	    var _py  = _y + _pos[1] * _s;
 	    InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, _snx, _sny));
 	    InputDrawOverlay(inputs[4].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny));
 	    
-	    var _dim = current_data[0];
+	    var _dim = getSingleValue(0);
 	    var _px  = _x + _dim[0] / 2 * _s;
 	    var _py  = _y + _dim[1] / 2 * _s;
 	    InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _px, _py, _s, _mx, _my, _snx, _sny));
 	    
 	    return w_hovering;
-	}
-	
-	static step = function() {
-	    
 	}
 	
 	static processData = function(_outSurf, _data, _array_index = 0) { 

@@ -195,9 +195,7 @@ vec3 triGrid(vec2 p) {
     float sth  = abs(fract(p.y * c30) - 0.5);
     float sm   = 1.;
     
-	float n = min(smoothstep(sm, -sm, stx), 
-				min(smoothstep(sm, -sm, sty), smoothstep(sm, -sm, sth))
-			  );
+	float n = min(smoothstep(sm, -sm, stx), min(smoothstep(sm, -sm, sty), smoothstep(sm, -sm, sth)));
 	n = (n - .16) / (.35 - .16);
 	
     return vec3((floor(_stx) + floor(_sty) + 1.) / 2., floor(p.y * c30), n);
@@ -226,10 +224,10 @@ void main() {
 		}
 	#endregion
 	
+    mat2  rot = mat2(cos(ang), - sin(ang), sin(ang), cos(ang));
 	vec2  asp = vec2(dimension.x / dimension.y, 1.);
-    vec2  pos = (v_vTexcoord - position) * asp * sca, _pos;
-	_pos.x = pos.x * cos(ang) - pos.y * sin(ang);
-	_pos.y = pos.x * sin(ang) + pos.y * cos(ang);
+    vec2  pos = (v_vTexcoord - position) * asp;
+    vec2 _pos = pos * rot * sca;
 	
 	vec3  tri  = triGrid(_pos);
 	float dist = max(0., tri.z);

@@ -13,16 +13,15 @@ function Node_Zigzag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput( 9, nodeValue_Surface( "Mask" ));
 	
 	////- =Pattern
-	newInput( 1, nodeValue_Slider(   "Amount",      1, [1, 16, 0.1] )).setMappable(6);
-	newInput( 2, nodeValue_Vec2(     "Position",   [0,0] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
-	newInput( 8, nodeValue_Rotation( "Angle",       0    )).setHotkey("R").setMappable(7);
-	newInput(10, nodeValue_Slider(   "Threshold",  .5    ));
+	newInput( 1, nodeValue_Slider(   "Amount",      1     )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, UNIT_REF).setMappable(6);
+	newInput( 2, nodeValue_Vec2(     "Position",  [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, UNIT_REF);
+	newInput( 8, nodeValue_Rotation( "Angle",       0     )).setHotkey("R").setMappable(7);
+	newInput(10, nodeValue_Slider(   "Threshold",  .5     ));
 	
 	////- =Render
 	newInput( 5, nodeValue_Enum_Button( "Type",    0, [ "Solid", "Smooth", "AA" ]));
 	newInput( 3, nodeValue_Color(       "Color 1", ca_white));
 	newInput( 4, nodeValue_Color(       "Color 2", ca_black));
-	
 	// input 11
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -40,12 +39,14 @@ function Node_Zigzag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		PROCESSOR_OVERLAY_CHECK
 		
-		var pos  = current_data[2];
-		var px   = _x + pos[0] * _s;
-		var py   = _y + pos[1] * _s;
+		var pos = current_data[2];
+		var rot = current_data[8];
+		var px  = _x + pos[0] * _s;
+		var py  = _y + pos[1] * _s;
 		
-		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
-		InputDrawOverlay(inputs[8].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny ));
+		InputDrawOverlay(inputs[8].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny ));
+		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny, rot, 1, 2 ));
 		
 		return w_hovering;
 	}

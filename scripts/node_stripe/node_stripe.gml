@@ -17,19 +17,19 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(20, nodeValue_Surface( "Mask" ));
 	
 	////- =Pattern
-	newInput( 1, nodeValue_Slider(   "Amount",        1, [1, 16, 0.1] )).setHotkey("S").setMappable(11);
+	newInput( 1, nodeValue_Slider(   "Amount",       .25    )).setHotkey("S").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, UNIT_REF).setMappable(11);
 	newInput(10, nodeValue_Slider(   "Strip Ratio",  .5     )).setMappable(14);
 	newInput( 2, nodeValue_Rotation( "Angle",         0     )).setHotkey("R").setMappable(12);
-	newInput( 4, nodeValue_Vec2(     "Position",    [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput( 4, nodeValue_Vec2(     "Position",    [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, UNIT_REF);
 	newInput( 5, nodeValue_Slider(   "Random",        0     )).setMappable(13);
 	newInput(17, nodeValue_Slider(   "Progress",     .5     ));
 	
 	////- =Render
 	newInput( 3, nodeValue_Enum_Button( "Type",       0, [ "Solid", "Smooth", "AA" ] ));
 	newInput( 6, nodeValue_Enum_Button( "Coloring",   0, [ "Alternate", "Palette", "Random" ] ));
-	newInput( 7, nodeValue_Gradient(    "Colors",     new gradientObject(ca_white) )).setMappable(15);
-	newInput( 8, nodeValue_Color(       "Color 1",    ca_white ));
-	newInput( 9, nodeValue_Color(       "Color 2",    ca_black ));
+	newInput( 7, nodeValue_Gradient(    "Colors",     gra_white )).setMappable(15);
+	newInput( 8, nodeValue_Color(       "Color 1",    ca_white  ));
+	newInput( 9, nodeValue_Color(       "Color 2",    ca_black  ));
 	newInput(18, nodeValue_Palette(     "Colors",  [ c_black, c_white ] ));
 	
 	// input 21
@@ -47,14 +47,15 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		PROCESSOR_OVERLAY_CHECK
 		
-		var pos  = current_data[4];
-		var px   = _x + pos[0] * _s;
-		var py   = _y + pos[1] * _s;
+		var rot = current_data[2];
+		var pos = current_data[4];
+		var px  = _x + pos[0] * _s;
+		var py  = _y + pos[1] * _s;
 		
-		InputDrawOverlay(inputs[ 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
-		InputDrawOverlay(inputs[ 4].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
-		InputDrawOverlay(inputs[ 2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
-		InputDrawOverlay(inputs[16].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[0]));
+		InputDrawOverlay(inputs[ 4].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny ));
+		InputDrawOverlay(inputs[ 2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny ));
+		InputDrawOverlay(inputs[ 1].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny, rot, 1, 2       ));
+		InputDrawOverlay(inputs[16].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[0] ));
 		
 		return w_hovering;
 	}
@@ -104,4 +105,5 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		_outSurf = mask_apply_empty(_outSurf, _data[input_mask_index]);
 		return _outSurf;
 	}
+
 }

@@ -15,15 +15,14 @@ function Node_Checker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	////- =Pattern
 	newInput(9, nodeValue_Bool(     "Diagonal",  false  ));
-	newInput(1, nodeValue_Slider(   "Amount",    2, [1, 16, 0.1] )).setMappable(6);
+	newInput(1, nodeValue_Slider(   "Amount",   .5,     )).setMappable(6).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, UNIT_REF);
 	newInput(2, nodeValue_Rotation( "Angle",     0      )).setHotkey("R").setMappable(7);
-	newInput(3, nodeValue_Vec2(     "Position", [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(3, nodeValue_Vec2(     "Position", [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, UNIT_REF);
 	
 	////- =Render
-	newInput(8, nodeValue_Enum_Button( "Type",    0, [ "Solid", "Smooth", "AA" ]));
+	newInput(8, nodeValue_Enum_Button( "Type",    0, [ "Solid", "Smooth", "AA" ] ));
 	newInput(4, nodeValue_Color(       "Color 1", ca_white ));
 	newInput(5, nodeValue_Color(       "Color 2", ca_black ));
-	
 	// input 11
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -37,12 +36,14 @@ function Node_Checker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	attribute_surface_depth();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		var pos  = getInputData(3);
-		var px   = _x + pos[0] * _s;
-		var py   = _y + pos[1] * _s;
+		var pos = getInputData(3);
+		var rot = getInputData(2);
+		var px  = _x + pos[0] * _s;
+		var py  = _y + pos[1] * _s;
 		
-		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
-		InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny            ));
+		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny            ));
+		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny, rot, 1, 2 ));
 		
 		return w_hovering;
 	}

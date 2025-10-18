@@ -249,6 +249,7 @@ void main() {
 			vec4 _vMap = texture2D( scaleSurf, v_vTexcoord );
 			sca = vec2(mix(scale.x, scale.y, (_vMap.r + _vMap.g + _vMap.b) / 3.));
 		}
+		sca = dimension / sca;
 		
 		float ang = angle.x;
 		if(angleUseSurf == 1) {
@@ -266,10 +267,10 @@ void main() {
 		wid -= 0.05;
 	#endregion
 	
+	mat2 rot = mat2(cos(ang), - sin(ang), sin(ang), cos(ang));
 	vec2 asp = vec2(dimension.x / dimension.y, 1.);
-	vec2 pos = (v_vTexcoord - position) * asp * sca, _pos;
-	_pos.x = pos.x  * cos(ang) - pos.y * sin(ang);
-	_pos.y = pos.x  * sin(ang) + pos.y * cos(ang);
+	vec2 pos = (v_vTexcoord - position) * asp;
+	vec2 _pos = pos * rot * sca;
 	
 	vec2  coord = pentacoords(_pos);
 	float dist  = pentagrid(_pos);
