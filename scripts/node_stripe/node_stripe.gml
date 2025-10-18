@@ -17,19 +17,19 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(20, nodeValue_Surface( "Mask" ));
 	
 	////- =Pattern
-	newInput( 1, nodeValue_Slider(   "Amount",         1, [1, 16, 0.1] )).setHotkey("S").setMappable(11);
-	newInput(10, nodeValue_Slider(   "Strip Ratio",   .5    )).setMappable(14);
-	newInput( 2, nodeValue_Rotation( "Angle",          0    )).setHotkey("R").setMappable(12);
-	newInput( 4, nodeValue_Vec2(     "Position",      [0,0] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
-	newInput( 5, nodeValue_Slider(   "Random",         0    )).setMappable(13);
-	newInput(17, nodeValue_Slider(   "Progress",      .5    ));
+	newInput( 1, nodeValue_Slider(   "Amount",        1, [1, 16, 0.1] )).setHotkey("S").setMappable(11);
+	newInput(10, nodeValue_Slider(   "Strip Ratio",  .5     )).setMappable(14);
+	newInput( 2, nodeValue_Rotation( "Angle",         0     )).setHotkey("R").setMappable(12);
+	newInput( 4, nodeValue_Vec2(     "Position",    [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput( 5, nodeValue_Slider(   "Random",        0     )).setMappable(13);
+	newInput(17, nodeValue_Slider(   "Progress",     .5     ));
 	
 	////- =Render
-	newInput( 3, nodeValue_Enum_Button( "Type",      0, [ "Solid", "Smooth", "AA" ] ));
-	newInput( 6, nodeValue_Enum_Button( "Coloring",  0, [ "Alternate", "Palette", "Random" ] ));
-	newInput( 7, nodeValue_Gradient(    "Colors",    new gradientObject(ca_white) )).setMappable(15);
-	newInput( 8, nodeValue_Color(       "Color 1",   ca_white ));
-	newInput( 9, nodeValue_Color(       "Color 2",   ca_black ));
+	newInput( 3, nodeValue_Enum_Button( "Type",       0, [ "Solid", "Smooth", "AA" ] ));
+	newInput( 6, nodeValue_Enum_Button( "Coloring",   0, [ "Alternate", "Palette", "Random" ] ));
+	newInput( 7, nodeValue_Gradient(    "Colors",     new gradientObject(ca_white) )).setMappable(15);
+	newInput( 8, nodeValue_Color(       "Color 1",    ca_white ));
+	newInput( 9, nodeValue_Color(       "Color 2",    ca_black ));
 	newInput(18, nodeValue_Palette(     "Colors",  [ c_black, c_white ] ));
 	
 	// input 21

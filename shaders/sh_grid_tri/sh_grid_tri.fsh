@@ -203,13 +203,14 @@ vec3 triGrid(vec2 p) {
     return vec3((floor(_stx) + floor(_sty) + 1.) / 2., floor(p.y * c30), n);
 }
 
-void main() { #region
+void main() {
 	#region params
 		vec2 sca = scale;
 		if(scaleUseSurf == 1) {
 			vec4 _vMap = texture2D( scaleSurf, v_vTexcoord );
 			sca = vec2(mix(scale.x, scale.y, (_vMap.r + _vMap.g + _vMap.b) / 3.));
 		}
+		sca = dimension / sca;
 		
 		float ang = angle.x;
 		if(angleUseSurf == 1) {
@@ -271,4 +272,4 @@ void main() { #region
 	
 	float _aa = 3. / max(dimension.x, dimension.y);
 	gl_FragColor = mix(gapCol, colr, aa == 1? smoothstep(wid * 2. - _aa, wid * 2., dist) : step(wid * 2., dist));
-} #endregion
+}

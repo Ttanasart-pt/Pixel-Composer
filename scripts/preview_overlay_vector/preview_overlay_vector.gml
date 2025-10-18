@@ -1,4 +1,6 @@
-function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _type = 0, _scale = [ 1, 1 ]) {
+function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _type = 0, _scale = [ 1, 1 ], _angle = 0) {
+	static __p = [0,0];
+	
 	var _val  = array_clone(getValue());
 	var hover = -1;
 	if(!is_array(_val) || array_empty(_val)) return hover;
@@ -8,19 +10,27 @@ function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 	var __ay = _val[1];
 	var _r   = ui(10);
 						
-	var _ax    = __ax * _s * _scale[0] + _x;
-	var _ay    = __ay * _s * _scale[1] + _y;
-	var _index = 0;
+	var _ax = __ax * _s * _scale[0] + _x;
+	var _ay = __ay * _s * _scale[1] + _y;
+	__p = point_rotate(_ax, _ay, _x, _y, _angle, __p);
+	
+	var _ax = __p[0];
+	var _ay = __p[1];
+	var _in = 0;
 						
 	if(drag_type) {
-		_index = 1;
+		_in = 1;
 		
 		_val[0] = drag_sx;
 		_val[1] = drag_sy;
 		
 		var _nx = drag_sx + ((_mx - drag_mx) / _s / _scale[0]);
 		var _ny = drag_sy + ((_my - drag_my) / _s / _scale[1]);
+		__p = point_rotate(_nx, _ny, drag_sx, drag_sy, -_angle, __p);
 		
+		var _nx = __p[0];
+		var _ny = __p[1];
+
 		_nx = value_snap(_nx, _snx);
 		_ny = value_snap(_ny, _sny);
 		
@@ -56,7 +66,7 @@ function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 						
 	if(interact && point_in_circle(_mx, _my, _ax, _ay, _r)) {
 		hover  = 1;
-		_index = 1;
+		_in = 1;
 		
 		if(mouse_press(mb_left, active)) {
 			drag_type = 1;
@@ -73,11 +83,9 @@ function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 	} 
 	
 	__overlay_hover = array_verify(__overlay_hover, 1);
-	__overlay_hover[0] = lerp_float(__overlay_hover[0], _index, 4);
+	__overlay_hover[0] = lerp_float(__overlay_hover[0], _in, 4);
 	if(_type == 1) draw_sprite_ui(THEME.arrow4_24, 0, _ax, _ay, 1, 1, 0, COLORS._main_accent);
 	
-	// draw_set_color(COLORS._main_accent);
-	// draw_line_dashed(_x, _y, _ax, _ay);
 	draw_anchor(__overlay_hover[0], _ax, _ay, _r, _type);
 	
 	if(overlay_draw_text) {

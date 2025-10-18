@@ -195,6 +195,8 @@ function canvas_tool_brush(brush, eraser = false) : canvas_tool() constructor {
 		
 	}
 	
+	////- Preview
+	
 	function drawPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(isEraser) draw_set_color(c_white);
 		
@@ -231,4 +233,5 @@ function canvas_tool_brush(brush, eraser = false) : canvas_tool() constructor {
 		draw_text(_x1 + 8, (_y0 + _y1) / 2, _h);
 		draw_set_alpha(1);
 	}
+
 }

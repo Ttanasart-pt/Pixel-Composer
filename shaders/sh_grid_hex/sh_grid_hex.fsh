@@ -218,6 +218,7 @@ void main() {
 			vec4 _vMap = texture2D( scaleSurf, v_vTexcoord );
 			sca = vec2(mix(scale.x, scale.y, (_vMap.r + _vMap.g + _vMap.b) / 3.));
 		}
+		sca = dimension / sca;
 		
 		float ang = angle.x;
 		if(angleUseSurf == 1) {

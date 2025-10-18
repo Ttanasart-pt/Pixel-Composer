@@ -58,7 +58,7 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 
 	////- DRAW
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _typ = 0, _sca = [ 1, 1 ]) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _typ = 0, _sca = [ 1, 1 ], _rot = 0) {
 		if(expUse || value_from != noone) return false;
 		
 		if(!is_array(_sca)) _sca = [ _sca, _sca ];
@@ -154,7 +154,7 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 			
 		}
 		
-		_hovering = _hovering || preview_overlay_vector(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _typ, _sca);
+		_hovering = _hovering || preview_overlay_vector(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _typ, _sca, _rot);
 		return _hovering;
 	}
 	

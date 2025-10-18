@@ -12,7 +12,7 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(35, nodeValue_Surface( "Mask" ));
 	
 	////- =Pattern
-	newInput( 1, nodeValue_Vec2(     "Position",      [0,0]  )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput( 1, nodeValue_Vec2(     "Position",      [0,0]  )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, UNIT_REF);
 	newInput( 4, nodeValue_Rotation( "Angle",          0     )).setHotkey("R").setMappable(15);
 	newInput(36, nodeValue_Bool(     "Invert Size",    false ));
 	newInput( 2, nodeValue_Vec2(     "Grid Size",     [8,8]  )).setHotkey("S").setMappable(13);
@@ -53,12 +53,12 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	// input 37
 	
 	input_display_list = [
-		["Output",    false],  0, 35, 
-		["Pattern",	  false],  1,  4, 15, 36,  2, 13, 28,  3, 26, 27, 14, 
-		["Shift",	  false],  9,  8, 16, 31, 32, 30, 
-		["Scale",     false], 33, 34, 29, 
-		["Render",	  false], 10, 11,  5, 20,  6,  7, 25, 12, 24, 
-		["Truchet",    true, 17], 18, 19, 22, 23, 
+		[ "Output",  false     ],  0, 35, 
+		[ "Pattern", false     ],  1,  4, 15, 36,  2, 13, 28,  3, 26, 27, 14, 
+		[ "Shift",   false     ],  9,  8, 16, 31, 32, 30, 
+		[ "Scale",   false     ], 33, 34, 29, 
+		[ "Render",  false     ], 10, 11,  5, 20,  6,  7, 25, 12, 24, 
+		[ "Truchet",  true, 17 ], 18, 19, 22, 23, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -71,11 +71,15 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var pos = getSingleValue(1);
+		var rot = getSingleValue(4);
 		
-		InputDrawOverlay(inputs[ 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
-		InputDrawOverlay(inputs[ 2].drawOverlay(w_hoverable, active, _x + pos[0] * _s, _y + pos[1] * _s, _s, _mx, _my, _snx, _sny, 1));
-		InputDrawOverlay(inputs[ 4].drawOverlay(w_hoverable, active, _x + pos[0] * _s, _y + pos[1] * _s, _s, _mx, _my, _snx, _sny));
-		InputDrawOverlay(inputs[21].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, getSingleValue(0)));
+		var px  = _x + pos[0] * _s;
+		var py  = _y + pos[1] * _s;
+		
+		InputDrawOverlay(inputs[ 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny                    ));
+		InputDrawOverlay(inputs[ 2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny, 1, [1,1], rot     ));
+		InputDrawOverlay(inputs[ 4].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny                    ));
+		InputDrawOverlay(inputs[21].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, getSingleValue(0) ));
 		
 		return w_hovering;
 	}

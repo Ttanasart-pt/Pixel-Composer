@@ -8,8 +8,8 @@ function Node_Dotted(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(1, nodeValue_Surface( "Mask" ));
 	
 	////- =Transform
-	newInput(14, nodeValue_Vec2(     "Position", [0,0] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput( 4, nodeValue_Rotation( "Angle",     0    )).setHotkey("R").setMappable(5);
+	newInput(14, nodeValue_Vec2(     "Position", [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput( 4, nodeValue_Rotation( "Angle",     0      )).setHotkey("R").setMappable(5);
 	
 	////- =Pattern
 	newInput(13, nodeValue_Enum_Button( "Pattern",   0, [ "Grid", "Hexagonal" ]));

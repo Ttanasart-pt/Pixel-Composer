@@ -136,6 +136,7 @@ enum VALIDATION {
 	error
 }
 
+#macro UNIT_REF VALUE_UNIT.reference
 enum VALUE_UNIT {
 	constant,
 	reference

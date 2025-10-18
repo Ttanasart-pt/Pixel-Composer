@@ -22,6 +22,7 @@ function canvas_draw_point_brush(brush, _x, _y, _randomize = false) {
 	}
 }
 
+global.canvas_brush_surface = undefined;
 function canvas_draw_point_brush_ext(brush, _x, _y, _s = 1, _randomize = false) {
 	if(is_surface(brush.brush_surface)) {
 		var _sw = surface_get_width_safe(brush.brush_surface);

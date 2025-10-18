@@ -1203,10 +1203,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					_tool.drawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 				surface_reset_shader();
 				
-				shader_set(sh_brush_outline);
-					shader_set_f("dimension", _sw, _sh);
-					draw_surface_ext_safe(preview_draw_mask);
-				shader_reset();
+				drawToolOutline();
 				
 				_tool.drawPostOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 				return hovering;
@@ -1250,6 +1247,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			if(_tool_sel) _tool_sel.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 			if(_tool)     _tool.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 			
+			var _drawToolPreview = _params[$ "drawToolPreview"] ?? true;
+			
 			surface_set_shader(preview_draw_surface, noone, true, BLEND.alpha);
 				draw_surface_safe(_drawing_surface);
 				
@@ -1277,10 +1276,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				
 				draw_set_color(CURRENT_COLOR);
 				
-				if(brush.brush_sizing) 
-					canvas_draw_point_brush(brush, brush.brush_sizing_dx, brush.brush_sizing_dy);
-				else if(_tool)
-					_tool.drawPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+				if(brush.brush_sizing) canvas_draw_point_brush(brush, brush.brush_sizing_dx, brush.brush_sizing_dy);
+				if(_tool) _tool.drawPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 					
 				draw_set_alpha(1);
 			surface_reset_shader();
@@ -1289,7 +1286,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var _paa = isUsingTool("Eraser")? .2 : _color_get_alpha(CURRENT_COLOR);
 			
 			switch(_panel.tileMode) {
-				case 0 : draw_surface_ext_safe(getPreviewValues(), _x, _y, _s, _s, 0, c_white, 1); break;
+				case 0 : 
+					draw_surface_ext_safe(getPreviewValues(_drawToolPreview), _x, _y, _s, _s, 0, c_white, 1); 
+					break;
 				
 				case 1 : 
                     preview_draw_tile = surface_verify(preview_draw_tile, _panel.w, _dim[1] * _s);
@@ -1309,21 +1308,32 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
                     draw_surface_safe(preview_draw_tile, _x, 0);
                     break;
                     
-                case 3 : draw_surface_tiled_ext_safe(preview_draw_surface, _x, _y, _s, _s, 0, _pcc, _paa); break;
+                case 3 : 
+                	draw_surface_tiled_ext_safe(preview_draw_surface, _x, _y, _s, _s, 0, _pcc, _paa); 
+                	break;
 			}
+			
+			var bs = brush.brush_size;
+			global.canvas_brush_surface = surface_verify(global.canvas_brush_surface, bs+1, bs+1);
+			surface_set_target(global.canvas_brush_surface);
+				DRAW_CLEAR
+				draw_set_color(c_white);
+				canvas_draw_point_brush(brush, floor(bs/2), floor(bs/2));
+			surface_reset_target();
 			
 			surface_set_target(preview_draw_mask);
 				DRAW_CLEAR
 				if(selection.is_selected) selection.drawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-				if(_tool) _tool.drawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
-				
-				if(key_mod_press(CTRL)) canvas_draw_point_brush_ext(brush, _x + mouse_cur_x * _s, _y + mouse_cur_y * _s, _s);
+				if(_tool) {
+					_tool.drawMask(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+					
+					var _dx = _x + (mouse_cur_x - floor(bs/2)) * _s;
+					var _dy = _y + (mouse_cur_y - floor(bs/2)) * _s;
+					draw_surface_ext(global.canvas_brush_surface, _dx, _dy, _s, _s, 0, c_white, 1);
+				}
 			surface_reset_target();
 			
-			shader_set(sh_brush_outline);
-				shader_set_f("dimension", _sw, _sh);
-				draw_surface_ext_safe(preview_draw_mask, 0, 0, 1, 1, 0, c_white, 1);
-			shader_reset();
+			drawToolOutline();
 			
 			draw_set_color(COLORS._main_accent);
 			if(selection.is_selected) {
@@ -1412,7 +1422,14 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	static drawToolOutline = function() {
+		var __s  = surface_get_target();
+		var _sw  = surface_get_width(__s);
+		var _sh  = surface_get_height(__s);
 		
+		shader_set(sh_brush_outline);
+			shader_set_f("dimension", _sw, _sh);
+			draw_surface_ext_safe(preview_draw_mask);
+		shader_reset();
 	}
 	
 	////- Nodes
@@ -1610,7 +1627,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		#endregion
 	}
 	
-	static getPreviewValues = function() {
+	static getPreviewValues = function(_drawBG = true) {
 		var _dim = attributes.dimension;
 		preview_draw_final[0] = surface_verify(preview_draw_final[0], _dim[0], _dim[1]);
 		preview_draw_final[1] = surface_verify(preview_draw_final[1], _dim[0], _dim[1]);
@@ -1625,7 +1642,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var bg  = 0;
 		
 		surface_set_shader(preview_draw_final[!bg], noone, true, BLEND.over);
-			draw_surface_safe(val);
+			if(_drawBG) draw_surface_safe(val);
 		surface_reset_shader();
 		
 		if(nodeTool == noone && selection.is_selected) {

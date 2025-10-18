@@ -955,10 +955,11 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     ////- Project
     
     static setProject = function(_project) {
-        project    = _project;
-        nodes_list = _project.nodes;
-        connection_draw_update = true;
+        project         = _project;
+        nodes_list      = _project.nodes;
+        draw_refresh    = 1;
         connect_related = noone;
+        connection_draw_update = true;
         
         setTitle();
         run_in(10, function() /*=>*/ { setSlideShow(0); });
