@@ -32,10 +32,7 @@ function string_decimal(str, _strict = true) {
 
 function toNumber(str) {
 	if(is_numeric(str)) return str;
-	
-	try { return real(str); } 
-	catch(e) {}
-	
+	try { return real(str); } catch(e) {}
 	return 0;
 }
 

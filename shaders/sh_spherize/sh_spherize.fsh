@@ -94,6 +94,8 @@ varying vec4 v_vColour;
 
 uniform vec2  dimension;
 uniform vec2  center;
+uniform vec2  position;
+uniform vec2  offset;
 
 uniform vec2      radius;
 uniform int       radiusUseSurf;
@@ -119,11 +121,15 @@ void main() {
 		str = mix(strength.x, strength.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 	}
 	
+	vec2  tx   = v_vTexcoord - position / dimension;
 	vec2  cen  = center / dimension;
-	vec2  uv   = (v_vTexcoord - cen) * mat2(cos(rotation), - sin(rotation), sin(rotation), cos(rotation));
+	vec2  uv   = (tx - cen) * mat2(cos(rotation), - sin(rotation), sin(rotation), cos(rotation));
 	float d    = 1. - dot(uv, uv) / rad;
 	float dist = sqrt(abs(d));
-	vec4  c    = sampleTexture(gm_BaseTexture, mix(uv, cen + uv / dist, str));
+	
+	vec2  sptx = cen + mix(uv, uv / dist, str);
+	      sptx = fract(sptx - offset);
+	vec4  c    = sampleTexture(gm_BaseTexture, sptx);
 	
 	gl_FragColor = vec4(0.);
 	if(d > trim) gl_FragColor = c;

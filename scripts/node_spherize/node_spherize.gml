@@ -18,18 +18,23 @@ function Node_Spherize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	__init_mask_modifier(5, 9); // inputs 9, 10
 	
 	////- =Spherize
-	newInput( 1, nodeValue_Vec2(     "Center",   [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput( 1, nodeValue_Vec2(     "Center",    [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, UNIT_REF);
+	newInput(15, nodeValue_Vec2(     "Position",  [0,0]  )).setHotkey("P").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, UNIT_REF);
 	newInput(14, nodeValue_Rotation( "Rotation",   0     )).setHotkey("R");
 	newInput( 2, nodeValue_Slider(   "Strength",   1     )).setHotkey("S").setMappable(11);
 	newInput( 3, nodeValue_Slider(   "Radius",    .2     )).setMappable(12);
 	newInput(13, nodeValue_Slider(   "Trim Edge",  0     ));
-	// input 15
+	
+	////- =Rendering
+	newInput(16, nodeValue_Vec2(     "UV Offset", [0,0]  ));
+	// input 17
 		
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 7, 8, 
-		["Surfaces",  true], 0, 5, 6, 9, 10, 
-		["Spherize", false], 1, 14, 2, 11, 3, 12, 13, 
+		[ "Surfaces",   true ], 0, 5, 6, 9, 10, 
+		[ "Spherize",  false ], 1, 15, 14, 2, 11, 3, 12, 13, 
+		[ "Rendering", false ], 16, 
 	];
 	
 	attribute_surface_depth();
@@ -41,7 +46,8 @@ function Node_Spherize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		PROCESSOR_OVERLAY_CHECK
 		
-		var pos  = current_data[1];
+		var pos  = current_data[ 1];
+		var rot  = current_data[14];
 		var px   = _x + pos[0] * _s;
 		var py   = _y + pos[1] * _s;
 		
@@ -49,9 +55,11 @@ function Node_Spherize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var _cx = _x + _dim[0] / 2 * _s;
 		var _cy = _y + _dim[1] / 2 * _s;
 		
-		InputDrawOverlay(inputs[ 1].drawOverlay(w_hoverable, active,  _x,  _y, _s, _mx, _my, _snx, _sny));
-		InputDrawOverlay(inputs[ 2].drawOverlay(w_hoverable, active, _cx, _cy, _s, _mx, _my, _snx, _sny, 0, _dim[0] / 2));
-		InputDrawOverlay(inputs[14].drawOverlay(w_hoverable, active,  px,  py, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[ 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[15].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		// InputDrawOverlay(inputs[16].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		InputDrawOverlay(inputs[ 2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny, rot, _dim[0]/2, 2));
+		InputDrawOverlay(inputs[14].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
 		
 		return w_hovering;
 	}
@@ -63,6 +71,8 @@ function Node_Spherize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var _surf = _data[0];
 		
 		var _cent = _data[ 1];
+		var _posi = _data[15];
+		var _offs = _data[16];
 		var _trim = _data[13];
 		var _rota = _data[14];
 		
@@ -71,6 +81,8 @@ function Node_Spherize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			shader_set_dim("dimension",  _surf);
 			shader_set_i("sampleMode",   _samp);
 			shader_set_2("center",       _cent);
+			shader_set_2("position",     _posi);
+			shader_set_2("offset",       _offs);
 			shader_set_f("rotation",     degtorad(_rota));
 			shader_set_f("trim",         _trim);
 			

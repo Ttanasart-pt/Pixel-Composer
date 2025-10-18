@@ -263,15 +263,17 @@ function Panel_Test() : PanelContent() constructor {
 					break;
 				
 				case 3 : 
-					if(!instance_exists(project_loader)) {
-						ASSERTING = true;
-						RenderSync(PROJECT);
-						ASSERTING = false;
-						test_step++;
-					}
+					if(instance_exists(project_loader)) break;
+					
+					ASSERTING = true;
+					RenderSync(PROJECT);
+					ASSERTING = false;
+					test_step++;
 					break;
 					
 				case 4 : 
+					if(RENDERING != undefined) break;
+				
 					if(save_file && PROJECT.path != "") SAVE_AT(PROJECT, PROJECT.path);
 					
 					closeProject(PROJECT);

@@ -1,16 +1,14 @@
 function Node_Wiggler(_x, _y, _group = noone) : Node_Fn(_x, _y, _group) constructor {
 	name = "Wiggler";
 	
-	newInput(inl + 0, nodeValue_Vec2("Range", [ 0, 1 ]));
-	
-	newInput(inl + 1, nodeValue_ISlider("Frequency", 4, [1, 32, 0.1] ));
-	
-	newInput(inl + 2, nodeValueSeed());
-	
-	newInput(inl + 3, nodeValue_Toggle("Clip", 0b11 , { data : [ "Start", "End" ] }));
+	newInput(inl+2, nodeValueSeed());
+	newInput(inl+0, nodeValue_Vec2(   "Range",     [0,1]          ));
+	newInput(inl+1, nodeValue_Slider( "Frequency",  4, [1,16,.01] ));
+	newInput(inl+3, nodeValue_Toggle( "Clip",       0b11, { data : [ "Start", "End" ] }));
+	// inl+4
 	
 	array_append(input_display_list, [
-		["Wiggle",	false], inl + 2, inl + 0, inl + 1, inl + 3, 
+		["Wiggle",	false], inl+2, inl+0, inl+1, inl+3, 
 	]);
 	
 	range_min    = 0;
