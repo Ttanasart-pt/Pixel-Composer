@@ -41,7 +41,7 @@ function Node_pSystem_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 		array_foreach(nodes, function(n) /*=>*/ { if(struct_has(n, "reset")) n.reset(); });
 		
 		var _loop = getInputData(0);
-		var _prer = getInputData(2); if(_prer == -1) _prer = TOTAL_FRAMES;
+		var _prer = getInputData(2); if(_prer == -1) _prer = TOTAL_FRAMES - 1;
 		if(!_loop) return;
 		
 		array_foreach(nodes, function(n) /*=>*/ { if(struct_has(n, "reset")) n.reset(); });
