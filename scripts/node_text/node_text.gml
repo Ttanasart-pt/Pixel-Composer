@@ -19,6 +19,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	////- =Output
 	newInput( 9, nodeValue_Enum_Scroll(  "Output Dimension", 1, [ "Fixed", "Dynamic" ]));
 	newInput( 6, nodeValue_Vec2(         "Fixed Dimension",  DEF_SURF  )).setVisible(true, false);
+	newInput(34, nodeValue_Vec2(         "Offset",           [0,0]     ));
 	newInput(10, nodeValue_Padding(      "Padding",          [0,0,0,0] ));
 	newInput(33, nodeValue_Bool(         "Atlas",            false     ));
 	
@@ -62,11 +63,11 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(24, nodeValue_Slider_Range( "Range",             [0,1]  ));
 	newInput(26, nodeValue_Bool(         "Use Full Text Size", false ));
 		
-	// inputs 34
+	// inputs 35
 		
 	input_display_list = [ 
 		["Text",	    false    ],  0, 32, 
-		["Output",		 true    ],	 9,  6, 10, 33, 
+		["Output",		 true    ],	 9,  6, 34, 10, 33, 
 		["Alignment",	false    ], 13, 14, 27,  7,  8, 30, 
 		["Font",		false    ],  1,  2, 15,  3, 11, 12, 
 		["Rendering",	false    ],  5, 31, 
@@ -146,6 +147,8 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _hov = false;
 		
 		InputDrawOverlay(inputs[13].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params));
+		InputDrawOverlay(inputs[34].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny));
+		
 		if(isNotUsingTool()) return _hov;
 		
 		var _dat = array_safe_get(draw_data,      preview_index, 0);
@@ -296,6 +299,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			var _dimt  = _data[ 9];
 			var _dim   = _data[ 6];
+			var _off   = _data[34];
 			var _padd  = _data[10];
 			var _atls  = _data[33];
 			
@@ -333,6 +337,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _use_path = _path != noone && struct_has(_path, "getPointDistance");
 			
 			inputs[ 6].setVisible(_dimt == 0 || _lineW > 0 || _use_path);
+			inputs[34].setVisible(_dimt == 0 || _lineW > 0 || _use_path);
 			inputs[ 9].setVisible(!_use_path);
 			inputs[14].setVisible( _use_path);
 			inputs[15].setVisible(_dimt == 0 && !_use_path && _font != "");
@@ -538,6 +543,9 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		__outAtlas  = _atls;
 		__atlas     = [];
 		
+		__offx      = _off[0];
+		__offy      = _off[1];
+		
 		if(_use_path) {
 			var _pthl = _path.getLength(0);
 			
@@ -589,6 +597,9 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						case 1  : clti = pingpong_value(__dwDataI, __colLtLen); break;
 						case 2  : clti = irandom(__colLtLen - 1);               break;
 					}
+					
+					_tx += __offx;
+					_ty += __offy;
 					
 					var _clt  = __colLt[clti];
 					var _c    = colorMultiply(__col, _clt);
@@ -651,6 +662,9 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					var _clt = array_safe_get_fast(__colLt, clti);
 					var _c   = colorMultiply(__col, _clt);
 					draw_set_color(_c);
+					
+					_tx += __offx;
+					_ty += __offy;
 					
 					draw_text_transformed(_tx, _ty, _chr, __temp_ss, __temp_ss, 0);
 					__dwData[__dwDataI++] = [_tx, _ty, _chr, __temp_ss, __temp_ss, 0];
