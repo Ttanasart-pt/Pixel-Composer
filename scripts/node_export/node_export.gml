@@ -193,6 +193,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		["Animation",	 false    ],  8,  5, 11, 14, 21, 
 	];
 	
+	attributes.clear_directory = true;
+	array_push(attributeEditors, [ "Delete temp Folder", function() /*=>*/ {return attributes.clear_directory}, new checkBox(function() /*=>*/ {return toggleAttribute("clear_directory")}) ]);
+	
 	////- Paths
 	
 	render_process_id    = 0;
@@ -207,7 +210,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	gif_encoder       = [];
 	gif_frames        = 0;
 	
-	directory = TEMPDIR + string(irandom_range(100000, 999999));
+	directory = "";
 	converter = filepath_resolve(PREFERENCES.ImageMagick_path) + "convert.exe";
 	magick    = filepath_resolve(PREFERENCES.ImageMagick_path) + "magick.exe";
 	webp      = filepath_resolve(PREFERENCES.webp_path)		   + "webpmux.exe";
@@ -677,7 +680,6 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				
 				var noti  = log_message("EXPORT", _txt, THEME.noti_icon_tick, COLORS._main_value_positive, false)
 								.setRef(filename_dir(p))
-								// .setColor(COLORS._main_value_positive)
 								.setOnClick(function() /*=>*/ {return shellOpenExplorer(self.reference)}, "Open in explorer", THEME.explorer);
 				
 				PANEL_MENU.setNotiIcon(THEME.noti_icon_tick);
@@ -831,9 +833,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		if(IS_CMD) array_push(PROGRAM_ARGUMENTS._exporting, node_id);
 		
-		if(directory_exists(directory))
-			directory_destroy(directory);
-		directory_create(directory);
+		directory_clear(directory);
 	}
 	
 	static step = function() {
@@ -848,6 +848,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		if(render_process_id != 0) {
 			var res = ProcIdExists(render_process_id);
+			PANEL_GRAPH.draw_refresh = 1;
 			
 			if(res == 0 || OS == os_macosx) {
 				var msg = ExecutedProcessReadFromStandardOutput(render_process_id);
@@ -866,6 +867,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				}
 				
 				render_process_id = 0;
+				if(attributes.clear_directory) directory_destroy(directory);
 				if(IS_CMD) array_remove(PROGRAM_ARGUMENTS._exporting, node_id);
 			}
 		}
@@ -972,8 +974,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		export();
 		
-		if(IS_LAST_FRAME && anim == NODE_EXPORT_FORMAT.animation)
+		if(IS_LAST_FRAME && anim == NODE_EXPORT_FORMAT.animation) {
 			renderCompleted();
+		}
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
@@ -981,7 +984,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		if(render_process_id != 0 || !array_empty(render_process_batch)) {
 			graph_preview_alpha = 0.5;
-			draw_sprite_ui(THEME.loading, 0, xx + w * _s / 2, yy + h * _s / 2, _s, _s, current_time / 2, COLORS._main_icon, 1);
+			var cx = xx + w * _s / 2;
+			var cy = yy + h * _s / 2;
+			draw_sprite_ui(THEME.loading, 0, cx, cy, _s, _s, current_time / 2, COLORS._main_icon, 1);
 		}
 	}
 	
