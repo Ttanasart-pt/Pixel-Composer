@@ -297,8 +297,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		path = string_replace_all(path, "\\", "/");
 		
-		if(fnam == "" && !string_ends_with(path, "/"))
-			fnam = filename_name_only(path);
+		if(fnam != "") fnam = filename_name_only(fnam);
 		
 		var s = _array? [] : "";
 		var i = 1;

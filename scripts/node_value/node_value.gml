@@ -1783,7 +1783,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(connect_type == CONNECT_TYPE.input && index >= 0) {
 			var _val = getValue(time);
 			
-			node.inputs_data[index]         = _val; // setInputData(index, _val);
+			node.inputs_data[index] = _val; // setInputData(index, _val);
 			node.input_value_map[$ internalName] = _val;
 		}
 		
