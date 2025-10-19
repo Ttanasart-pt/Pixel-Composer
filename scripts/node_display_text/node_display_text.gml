@@ -534,8 +534,6 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			inputDisplayList[i].drawJunction(_s, _mx, _my, true);
 		
 		gpu_set_tex_filter(false);
-		
-		return hover;
 	}
 	
 	static drawNode = function(_draw, _x, _y, _mx, _my, _s) {

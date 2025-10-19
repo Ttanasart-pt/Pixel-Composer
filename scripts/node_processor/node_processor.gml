@@ -179,15 +179,16 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			
 			if(_os == 1) {
 				data = processData(_out[0], inputs_data, 0, frame);
-				if(data == noone) return;
+				if(data == undefined || data == noone) return;
 				
 				outputs[0].setValue(data);
 				
 			} else {
 				data = processData(_out, inputs_data, 0, frame);
-				if(data == noone) return;
+				if(data == undefined || data == noone) return;
 				
-				for(var i = 0; i < min(_os, array_length(data)); i++) outputs[i].setValue(data[i]);
+				var _amo = min(_os, array_length(data));
+				for(var i = 0; i < _amo; i++) outputs[i].setValue(data[i]);
 			}
 			
 			return;

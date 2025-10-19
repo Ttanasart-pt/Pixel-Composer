@@ -5,13 +5,13 @@ function Node_Assert(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	draw_padding = 8;
 	
 	newInput(0, nodeValue_Text("Name"));
+	newInput(1, nodeValue( "Value",   self, CONNECT_TYPE.input, VALUE_TYPE.any, 0)).setVisible(true, true);
 	
-	newInput(1, nodeValue("Value", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0))
-		.setVisible(true, true);
+	b_cache = button(function() /*=>*/ {return cacheSurface()}).setText("Store Correct Surface");
+	cached_output = undefined;
 	
-	newInput(2, nodeValue("Target", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0))
-		.setVisible(true, true);
-		
+	input_display_list = [ 0, 1, b_cache ];
+	
 	function checkSurface(s1, s2) {
 		if(!is_surface(s1)) return false;
 		if(!is_surface(s2)) return false;
@@ -43,14 +43,19 @@ function Node_Assert(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		return eq;
 	}
 	
+	function cacheSurface() {
+		var val = getInputData(1);
+		cached_output = surface_array_serialize(val);
+	}
+	
 	static update = function() { 
+		if(cached_output == undefined) return;
+		
 		var name = getInputData(0);
 		var val  = getInputData(1);
-		var tar  = getInputData(2);
 		
-		var _typ  = inputs[2].value_from != noone? inputs[2].value_from.type : VALUE_TYPE.any;
+		var _typ  = inputs[1].value_from != noone? inputs[1].value_from.type : VALUE_TYPE.any;
 		inputs[1].setType(_typ);
-		inputs[2].setType(_typ);
 		
 		if(!ASSERTING) return;
 		ASSERT_AMOUNT++;
@@ -58,27 +63,26 @@ function Node_Assert(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _pass = false;
 		var _ast  = {
 			type : -1,
-			text : $"Assertion {name} failed: get {val} instead of target {tar}.",
+			text : $"Assertion {name} failed: get {val} instead of target {cached_output}.",
 			tooltip : -1,
 		}
 		
 		switch(_typ) {
 			case VALUE_TYPE.surface :
-				if(is_array(tar)) {
-					for( var i = 0, n = array_length(tar); i < n; i++ ) {
-						if(checkSurface(array_safe_get(val, i), tar[i])) continue;
+				if(is_array(cached_output)) {
+					for( var i = 0, n = array_length(cached_output); i < n; i++ ) {
+						if(checkSurface(array_safe_get(val, i), cached_output[i])) continue;
 						_pass = false;
 						break;
 					}
 					
-				} else 
-					_pass = checkSurface(val, tar);
+				} else _pass = checkSurface(val, cached_output);
 					
 				_ast.text    = $"Assertion {name} failed: surface not match the target.";
-				_ast.tooltip = new tooltipSurfaceAssetion(surface_array_clone(tar), surface_array_clone(val));
+				_ast.tooltip = new tooltipSurfaceAssetion(surface_array_clone(cached_output), surface_array_clone(val));
 				break;
 				
-			default : _pass = isEqual(val, tar);
+			default : _pass = isEqual(val, cached_output);
 		}
 		
 		if(_pass) ASSERT_PASSED++;
@@ -92,6 +96,18 @@ function Node_Assert(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
 		draw_text_bbox(bbox, name);
+	}
+
+	
+	////- Serialize
+	
+	static doSerialize = function(_map) {
+		_map.cache = cached_output;
+	}
+	
+	static postDeserialize = function() {
+		if(!struct_has(load_map, "cache")) return;
+		cached_output = surface_array_deserialize(load_map.cache);
 	}
 }
 

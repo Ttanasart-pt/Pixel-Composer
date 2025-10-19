@@ -704,25 +704,19 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static newOutput = function(i, j) /*=>*/ { outputs[i] = j; j.setIndex(i); return j; }
 	
-	static getInputJunctionAmount = function() { return (input_display_list == -1 || !use_display_list)? array_length(inputs) : array_length(input_display_list); }
-	static getInputJunctionIndex  = function(index) {
-		INLINE 
+	static getInputJunctionAmount  = function( ) /*=>*/ {return (input_display_list == -1 || !use_display_list)? array_length(inputs) : array_length(input_display_list)};
+	static getInputJunctionIndex   = function(i) /*=>*/ { INLINE 
+		if(input_display_list == -1 || !use_display_list) return i;
 		
-		if(input_display_list == -1 || !use_display_list)
-			return index;
-		
-		var jun_list_arr = input_display_list[index];
-		if(is_array(jun_list_arr))  return noone;
-		if(is_struct(jun_list_arr)) return noone;
-		
-		return jun_list_arr;
+		var _junci = input_display_list[i];
+		return is_numeric(_junci)? _junci : noone;
 	}
 	
-	static getOutputJunctionAmount = function()      { return output_display_list == -1? array_length(outputs) : array_length(output_display_list); }
-	static getOutputJunctionIndex  = function(index) { return output_display_list == -1? index : output_display_list[index]; }
+	static getOutputJunctionAmount = function( ) /*=>*/ {return output_display_list == -1? array_length(outputs) : array_length(output_display_list)};
+	static getOutputJunctionIndex  = function(i) /*=>*/ {return output_display_list == -1? i : output_display_list[i]};
 	
-	static getOutputChannelAmount = function( ) /*=>*/ {return array_length(outputs)};
-	static getOutputChannelName   = function(i) /*=>*/ {return outputs[i].name};
+	static getOutputChannelAmount  = function( ) /*=>*/ {return array_length(outputs)};
+	static getOutputChannelName    = function(i) /*=>*/ {return outputs[i].name};
 	
 	static updateIO = function() {
 		

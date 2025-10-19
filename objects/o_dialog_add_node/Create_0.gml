@@ -53,6 +53,8 @@ event_inherited();
 	subgroups_size = [];
 	subgroup_index = 0;
 	
+	menuDialog     = undefined;
+	
 	view_tooltip = new tooltipSelector("View", [
 		__txtx("view_grid", "Grid view"),
 		__txtx("view_list", "List view"),

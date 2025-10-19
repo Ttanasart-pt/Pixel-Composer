@@ -1542,8 +1542,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
         if(node_dragging) {
             addKeyOverlay("Dragging node(s)", [[ "Ctrl", "Disable snapping" ]]);
-			connection_draw_update = 2;
-			node_surface_update    = true;
+            draw_refresh = 2;
             
             var _mgx = mouse_graph_x;
             var _mgy = mouse_graph_y;
@@ -2476,7 +2475,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        	var _dy  = o_dialog_add_node.dialog_y + ui(4);
 	        	var _dme = menuCall("graph_connection_releated", menu, _dx, _dy, fa_right );
 	        	if(_dme) _dme.passthrough = true;
-	            
+	        	
 	            setFocus(_dia, "Dialog");
 	        }
 	        
@@ -3364,8 +3363,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 			_preset   = _sp[1];
     	}
     	
-    	var node = noone;
-    	
+    	var node  = noone;
+        var _drag = false;
+        
     	switch(_nodeType) {
 	    	case "Node_Blend" :     node = doBlend();                   break;
 	    	case "Node_Math" :      node = doBlend("Node_Math");        break;
@@ -3386,10 +3386,13 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	    				_nodeType = "Node_3D_Transform";
 	    		}
 	    		
-	    		node = doNewNode(_nodeType);
+	    		node  = doNewNode(_nodeType);
 	    		break;
 	    	
-	    	default : node = doNewNode(_nodeType); break;
+	    	default : 
+	    		node  = doNewNode(_nodeType); 
+	    		_drag = _select; 
+	    		break;
     	}
     	
         if(!is(node, Node)) return undefined;
@@ -3407,9 +3410,11 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         if(_connect && is(connect_related, NodeValue) && connect_related.node.group == getCurrentContext()) {
         	var _inp = node.getInput(0, connect_related);
         	if(_inp) _inp.setFrom(connect_related);
-        	selectDragNode(node, true);
+        	
+        	_drag = false;
         }
         
+        if(_drag) selectDragNode(node, true);
         connect_related = noone;
         return node;
     }
@@ -3439,8 +3444,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        var _blend = nodeBuild(_ty, _nodex, _nodey, getCurrentContext()).skipDefault();
             
             switch(_ty) {
-            	case "Node_Blend" :    _blend.inputs[0].setFrom(_jj); break;
-            	case "Node_Math" :     _blend.inputs[1].setFrom(_jj); break;
+            	case "Node_Blend" : _blend.inputs[0].setFrom(_jj); break;
+            	case "Node_Math" :  _blend.inputs[1].setFrom(_jj); break;
             }
         	
         	return _blend;
