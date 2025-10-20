@@ -174,7 +174,6 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	}
 	
 	static update = function(frame = CURRENT_FRAME) { 
-		
 		use_mod = inputs[0].getValue();
 		use_deg = inputs[3].getValue();
 		
