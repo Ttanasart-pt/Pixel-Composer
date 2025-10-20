@@ -10,6 +10,7 @@ function sprite_add_os(path, imagenumb = 1, removeback = false, smooth = false, 
 }
 
 function sprite_add_map(path, imagenumb = 1, removeback = false, smooth = false, xorig = 0, yorig = 0) {
+	if(!file_exists_empty(path)) return noone;
 	var _path = sprite_path_check_depth(filename_os(path));
 	var _sprs = __sprite_add(filename_os(_path), imagenumb, removeback, smooth, xorig, yorig);
 	SPRITE_PATH_MAP[$ path] = _sprs;

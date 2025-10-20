@@ -848,7 +848,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		if(render_process_id != 0) {
 			var res = ProcIdExists(render_process_id);
-			PANEL_GRAPH.draw_refresh = 1;
+			PANEL_GRAPH.refreshDraw(1);
 			
 			if(res == 0 || OS == os_macosx) {
 				var msg = ExecutedProcessReadFromStandardOutput(render_process_id);

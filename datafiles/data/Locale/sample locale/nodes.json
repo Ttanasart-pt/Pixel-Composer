@@ -34,6 +34,12 @@
       },
       {
         "name":"Shift"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Depth Range"
       }
     ],
     "outputs":[
@@ -1227,6 +1233,9 @@
       },
       {
         "name":"Path Scale"
+      },
+      {
+        "name":"Use Path Color"
       }
     ],
     "outputs":[
@@ -1700,7 +1709,7 @@
         "name":"Acceleration"
       },
       {
-        "name":"Velocity Over Life"
+        "name":"Velocity Over Lifespan"
       },
       {
         "name":"Follow Spawn Shape"
@@ -1712,7 +1721,7 @@
         "name":"Rotational Speed"
       },
       {
-        "name":"Rotational Speed Over Life"
+        "name":"Rotational Speed Over Lifespan"
       },
       {
         "name":"Snap Rotation"
@@ -1724,7 +1733,7 @@
         "name":"Size"
       },
       {
-        "name":"Size Over Life"
+        "name":"Size Over Lifespan"
       },
       {
         "name":"Color Over Lifetime"
@@ -1831,7 +1840,7 @@
         "name":"Scale Wiggle"
       },
       {
-        "name":"Alpha Over Life"
+        "name":"Alpha Over Lifespan"
       },
       {
         "name":"Follow Velocity"
@@ -1844,6 +1853,9 @@
       },
       {
         "name":"Spawn Rotation"
+      },
+      {
+        "name":"Pre-Render"
       }
     ],
     "outputs":[
@@ -2114,8 +2126,8 @@
       {
         "name":"Projection",
         "display_data":[
-          "Orthographic",
-          "Perspective"
+          "Perspective",
+          "Orthographic"
         ]
       },
       {
@@ -2244,6 +2256,9 @@
     "outputs":[
       {
         "name":"Surface Out"
+      },
+      {
+        "name":"DynaSurf"
       }
     ]
   },
@@ -3108,7 +3123,7 @@
     ]
   },
   "Node_Array_Flattern":{
-    "name":"Array Flattern",
+    "name":"Array Flatten",
     "tooltip":"Flattern higher dimension array into 1 dimension linear array.",
     "inputs":[
       {
@@ -3117,7 +3132,7 @@
     ],
     "outputs":[
       {
-        "name":"Flatterned Array"
+        "name":"Flattened Array"
       }
     ]
   },
@@ -3413,6 +3428,9 @@
     "inputs":[
       {
         "name":"Array"
+      },
+      {
+        "name":"Minimum Outputs"
       }
     ],
     "outputs":[
@@ -3541,7 +3559,10 @@
         "name":"Crop Output"
       },
       {
-        "name":"Layer name"
+        "name":"Layer Name"
+      },
+      {
+        "name":"Loop"
       }
     ],
     "outputs":[
@@ -3582,9 +3603,6 @@
       },
       {
         "name":"Value"
-      },
-      {
-        "name":"Target"
       }
     ],
     "outputs":[]
@@ -4082,6 +4100,9 @@
       },
       {
         "name":"Height Map"
+      },
+      {
+        "name":"Highres"
       }
     ],
     "outputs":[
@@ -4213,17 +4234,17 @@
       {
         "name":"Horizontal Align",
         "display_data":[
-          "@ref sprite(__newsprite1158)",
-          "@ref sprite(__newsprite1158)",
-          "@ref sprite(__newsprite1158)"
+          "@ref sprite(__newsprite974)",
+          "@ref sprite(__newsprite974)",
+          "@ref sprite(__newsprite974)"
         ]
       },
       {
         "name":"Vertical Align",
         "display_data":[
-          "@ref sprite(__newsprite1159)",
-          "@ref sprite(__newsprite1159)",
-          "@ref sprite(__newsprite1159)"
+          "@ref sprite(__newsprite975)",
+          "@ref sprite(__newsprite975)",
+          "@ref sprite(__newsprite975)"
         ]
       },
       {
@@ -4239,6 +4260,38 @@
     "outputs":[
       {
         "name":"Surface Out"
+      }
+    ]
+  },
+  "Node_Blend_Depth":{
+    "name":"Blend Depth",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Surface 1"
+      },
+      {
+        "name":"Depth 1"
+      },
+      {
+        "name":"Surface 2"
+      },
+      {
+        "name":"Depth 2"
+      },
+      {
+        "name":"Depth Range 1"
+      },
+      {
+        "name":"Depth Range 2"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Surface Out"
+      },
+      {
+        "name":"Depth Out"
       }
     ]
   },
@@ -4505,6 +4558,21 @@
       },
       {
         "name":"Strength Map"
+      },
+      {
+        "name":"Iteration"
+      },
+      {
+        "name":"Contrast"
+      },
+      {
+        "name":"Contrast Factor"
+      },
+      {
+        "name":"Smoothness"
+      },
+      {
+        "name":"Rotation"
       }
     ],
     "outputs":[
@@ -5350,7 +5418,7 @@
         "name":"Dimension"
       },
       {
-        "name":"Color"
+        "name":"Background Color"
       },
       {
         "name":"Brush Size"
@@ -5359,21 +5427,20 @@
         "name":"Fill Threshold"
       },
       {
-        "name":"Fill Type",
+        "name":"Background Type",
         "display_data":[
-          "4 connect",
-          "8 connect",
-          "Entire canvas"
+          "Surface",
+          "Solid Color"
         ]
       },
       {
-        "name":"Draw Preview Overlay"
+        "name":"Auto Frame"
       },
       {
         "name":"Brush"
       },
       {
-        "name":"Surface Amount"
+        "name":"Frame Index"
       },
       {
         "name":"Background"
@@ -5388,7 +5455,12 @@
         "name":"Alpha"
       },
       {
-        "name":"Frames Animation"
+        "name":"Output Type",
+        "display_data":[
+          "Array",
+          "Animation",
+          "Outputs"
+        ]
       },
       {
         "name":"Animation Speed"
@@ -5406,7 +5478,7 @@
         "name":"Random Direction"
       },
       {
-        "name":"Animation Type",
+        "name":"On End",
         "display_data":[
           "Loop",
           "Hold",
@@ -5530,6 +5602,26 @@
       },
       {
         "name":"Phase"
+      },
+      {
+        "name":"Inverted"
+      },
+      {
+        "name":"Iteration"
+      },
+      {
+        "name":"Blend Mode",
+        "display_data":[
+          "Additive",
+          "Maximum",
+          "Minimum"
+        ]
+      },
+      {
+        "name":"Iter Scale"
+      },
+      {
+        "name":"Iter Amplitude"
       }
     ],
     "outputs":[
@@ -5612,6 +5704,12 @@
           "RGB",
           "Continuous"
         ]
+      },
+      {
+        "name":"Intensity"
+      },
+      {
+        "name":"Intensity Map"
       }
     ],
     "outputs":[
@@ -5756,7 +5854,7 @@
         "name":"Surface Out"
       },
       {
-        "name":"Color out"
+        "name":"Color Out"
       }
     ]
   },
@@ -6607,7 +6705,7 @@
       {
         "name":"Aspect Ratio",
         "display_data":[
-          "None",
+          "Any",
           "Manual",
           "1:1",
           "3:2",
@@ -8543,6 +8641,104 @@
       }
     ]
   },
+  "Node_Fluffify":{
+    "name":"Fluffify",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Surface In"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Mix"
+      },
+      {
+        "name":"Invert mask"
+      },
+      {
+        "name":"Mask feather"
+      },
+      {
+        "name":"Active"
+      },
+      {
+        "name":"Size"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Phase"
+      },
+      {
+        "name":"Radius"
+      },
+      {
+        "name":"Iteration"
+      },
+      {
+        "name":"Size Modify"
+      },
+      {
+        "name":"Span Modify"
+      },
+      {
+        "name":"Blend Mode",
+        "display_data":[
+          "Maximum",
+          "Override"
+        ]
+      },
+      {
+        "name":"Fade by Iteration"
+      },
+      {
+        "name":"Radius Map"
+      },
+      {
+        "name":"Shape",
+        "display_data":[
+          "Circle",
+          "Diamond",
+          "Square"
+        ]
+      },
+      {
+        "name":"Skip First Iteration"
+      },
+      {
+        "name":"Iteration Blend"
+      },
+      {
+        "name":"Blend Period"
+      },
+      {
+        "name":"Offset"
+      },
+      {
+        "name":"Substractive"
+      },
+      {
+        "name":"Blend Original"
+      },
+      {
+        "name":"Stretch Palette"
+      },
+      {
+        "name":"Use Decorner"
+      },
+      {
+        "name":"Tolerance"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Surface Out"
+      }
+    ]
+  },
   "Node_Fn_Ease":{
     "name":"Ease",
     "tooltip":"Create easing function.",
@@ -8773,6 +8969,21 @@
       },
       {
         "name":"Mix"
+      },
+      {
+        "name":"Channel"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Mix"
+      },
+      {
+        "name":"Invert mask"
+      },
+      {
+        "name":"Mask feather"
       }
     ],
     "outputs":[
@@ -9271,6 +9482,13 @@
       },
       {
         "name":"Normalize weight"
+      },
+      {
+        "name":"Color Space",
+        "display_data":[
+          "RGB",
+          "OKLAB"
+        ]
       }
     ],
     "outputs":[
@@ -10442,7 +10660,7 @@
     ]
   },
   "Node_Image_Animated":{
-    "name":"Animation",
+    "name":"Image Sequence",
     "tooltip":"Load multiple images from your computer as animation.",
     "inputs":[
       {
@@ -10735,6 +10953,9 @@
       },
       {
         "name":"Filtered Color"
+      },
+      {
+        "name":"Flatten Array"
       }
     ],
     "outputs":[
@@ -11466,6 +11687,46 @@
       }
     ]
   },
+  "Node_Krita_File_Read":{
+    "name":"Krita File In",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Path"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Merged Image"
+      },
+      {
+        "name":"Content"
+      },
+      {
+        "name":"Path"
+      }
+    ]
+  },
+  "Node_Krita_layer":{
+    "name":"Krita Layer",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Data"
+      },
+      {
+        "name":"Layer name"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Surface Out"
+      },
+      {
+        "name":"Layer name"
+      }
+    ]
+  },
   "Node_Kuwahara":{
     "name":"Kuwahara",
     "tooltip":"Apply Kuwahara filter. Creating a watercolor-like effect.",
@@ -11696,7 +11957,8 @@
         "display_data":[
           "None",
           "Round",
-          "Tri"
+          "Tri",
+          "Square"
         ]
       },
       {
@@ -12325,6 +12587,62 @@
       }
     ]
   },
+  "Node_Maze_Pattern":{
+    "name":"Maze Pattern",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Dimension"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Algorithm",
+        "display_data":[
+          "Backtrack",
+          "Prim"
+        ]
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Max Iteration"
+      },
+      {
+        "name":"Origin"
+      },
+      {
+        "name":"BG Color"
+      },
+      {
+        "name":"Path Color"
+      },
+      {
+        "name":"Path Iteration"
+      },
+      {
+        "name":"Bias",
+        "display_data":[
+          "None",
+          "X",
+          "Y"
+        ]
+      },
+      {
+        "name":"Bias Weight"
+      },
+      {
+        "name":"Color Shift"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Surface Out"
+      }
+    ]
+  },
   "Node_Mesh_Create_Lattice":{
     "name":"Lattice Mesh",
     "tooltip":"",
@@ -12866,17 +13184,17 @@
       {
         "name":"H Align",
         "display_data":[
-          "@ref sprite(__newsprite1115)",
-          "@ref sprite(__newsprite1115)",
-          "@ref sprite(__newsprite1115)"
+          "@ref sprite(__newsprite947)",
+          "@ref sprite(__newsprite947)",
+          "@ref sprite(__newsprite947)"
         ]
       },
       {
         "name":"V Align",
         "display_data":[
-          "@ref sprite(__newsprite1116)",
-          "@ref sprite(__newsprite1116)",
-          "@ref sprite(__newsprite1116)"
+          "@ref sprite(__newsprite948)",
+          "@ref sprite(__newsprite948)",
+          "@ref sprite(__newsprite948)"
         ]
       },
       {
@@ -13498,6 +13816,158 @@
     "outputs":[
       {
         "name":"Surface Out"
+      }
+    ]
+  },
+  "Node_MK_Panels":{
+    "name":"MK Panels",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Area"
+      },
+      {
+        "name":"Dimension"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Panel Pattern",
+        "tooltip":{}
+      },
+      {
+        "name":"Min Size"
+      },
+      {
+        "name":"Panel Colors"
+      },
+      {
+        "name":"Split Draw Color",
+        "display_data":[
+          "Next Color"
+        ]
+      },
+      {
+        "name":"Shape Pattern",
+        "tooltip":{}
+      },
+      {
+        "name":"Highlight"
+      },
+      {
+        "name":"Corner"
+      },
+      {
+        "name":"Padding"
+      },
+      {
+        "name":"Slot Size"
+      },
+      {
+        "name":"Slot Spacing"
+      },
+      {
+        "name":"Slot Count"
+      },
+      {
+        "name":"Slot Width"
+      },
+      {
+        "name":"Slot Seed"
+      },
+      {
+        "name":"Max Iteration"
+      },
+      {
+        "name":"Split Ratio"
+      },
+      {
+        "name":"Split Draw"
+      },
+      {
+        "name":"Split Length"
+      },
+      {
+        "name":"Split Width"
+      },
+      {
+        "name":"Highlight Chance"
+      },
+      {
+        "name":"Highlight Invert"
+      },
+      {
+        "name":"Split Alternate",
+        "tooltip":"Force next split to be in the opposite axis as the previous one."
+      },
+      {
+        "name":"Corner Shuffle"
+      },
+      {
+        "name":"Shape Offset"
+      },
+      {
+        "name":"Inset Range"
+      },
+      {
+        "name":"Min Iteration"
+      },
+      {
+        "name":"Pipe Size"
+      },
+      {
+        "name":"Shade Darken"
+      },
+      {
+        "name":"Shape Seed"
+      },
+      {
+        "name":"Posterize"
+      },
+      {
+        "name":"Glowbar Color"
+      },
+      {
+        "name":"Use Glow"
+      },
+      {
+        "name":"Glowbar Size"
+      },
+      {
+        "name":"Glowbar Chance"
+      },
+      {
+        "name":"Shine Use"
+      },
+      {
+        "name":"Shine Width"
+      },
+      {
+        "name":"Shine Intensity"
+      },
+      {
+        "name":"Shine Speed"
+      },
+      {
+        "name":"Shine Chance"
+      },
+      {
+        "name":"Shine Invert"
+      },
+      {
+        "name":"Shine Shift"
+      },
+      {
+        "name":"Corner Deco"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Surface Out"
+      },
+      {
+        "name":"Glow Mask"
       }
     ]
   },
@@ -14972,6 +15442,7 @@
         "name":"Mode",
         "display_data":[
           "Line",
+          "Band",
           "Area"
         ]
       },
@@ -15153,7 +15624,8 @@
           "Number",
           "Slider",
           "Rotator",
-          "Increment"
+          "Increment",
+          "Seed"
         ]
       },
       {
@@ -15209,6 +15681,23 @@
       },
       {
         "name":"Knob Range"
+      },
+      {
+        "name":"Seed Digits"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Number"
+      }
+    ]
+  },
+  "Node_Number_Simple":{
+    "name":"Number Simple",
+    "tooltip":"Generate number data with less control for better performance.",
+    "inputs":[
+      {
+        "name":"Value"
       }
     ],
     "outputs":[
@@ -15270,6 +15759,46 @@
     "outputs":[
       {
         "name":"Output"
+      }
+    ]
+  },
+  "Node_ORA_File_Read":{
+    "name":"ORA File In",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Path"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Merged Image"
+      },
+      {
+        "name":"Content"
+      },
+      {
+        "name":"Path"
+      }
+    ]
+  },
+  "Node_ORA_layer":{
+    "name":"ORA Layer",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Data"
+      },
+      {
+        "name":"Layer name"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Surface Out"
+      },
+      {
+        "name":"Layer name"
       }
     ]
   },
@@ -15352,6 +15881,9 @@
       },
       {
         "name":"Threshold"
+      },
+      {
+        "name":"High res"
       }
     ],
     "outputs":[
@@ -15468,17 +16000,17 @@
       {
         "name":"Horizontal Alignment",
         "display_data":[
-          "@ref sprite(__newsprite1158)",
-          "@ref sprite(__newsprite1158)",
-          "@ref sprite(__newsprite1158)"
+          "@ref sprite(__newsprite974)",
+          "@ref sprite(__newsprite974)",
+          "@ref sprite(__newsprite974)"
         ]
       },
       {
         "name":"Vertical Alignment",
         "display_data":[
-          "@ref sprite(__newsprite1159)",
-          "@ref sprite(__newsprite1159)",
-          "@ref sprite(__newsprite1159)"
+          "@ref sprite(__newsprite975)",
+          "@ref sprite(__newsprite975)",
+          "@ref sprite(__newsprite975)"
         ]
       }
     ],
@@ -17404,12 +17936,12 @@
       {
         "name":"Type",
         "display_data":[
-          "@ref sprite(__newsprite1185)",
-          "@ref sprite(__newsprite1185)",
-          "@ref sprite(__newsprite1185)",
-          "@ref sprite(__newsprite1185)",
-          "@ref sprite(__newsprite1185)",
-          "@ref sprite(__newsprite1185)"
+          "@ref sprite(__newsprite1105)",
+          "@ref sprite(__newsprite1105)",
+          "@ref sprite(__newsprite1105)",
+          "@ref sprite(__newsprite1105)",
+          "@ref sprite(__newsprite1105)",
+          "@ref sprite(__newsprite1105)"
         ]
       },
       {
@@ -17510,16 +18042,16 @@
       {
         "name":"Position",
         "display_data":[
-          "@ref sprite(__newsprite1203)",
-          "@ref sprite(__newsprite1203)",
-          "@ref sprite(__newsprite1203)"
+          "@ref sprite(__newsprite1121)",
+          "@ref sprite(__newsprite1121)",
+          "@ref sprite(__newsprite1121)"
         ]
       },
       {
         "name":"Corner",
         "display_data":[
-          "@ref sprite(__newsprite1205)",
-          "@ref sprite(__newsprite1205)"
+          "@ref sprite(__newsprite1123)",
+          "@ref sprite(__newsprite1123)"
         ]
       },
       {
@@ -17699,16 +18231,16 @@
       {
         "name":"Position",
         "display_data":[
-          "@ref sprite(__newsprite1203)",
-          "@ref sprite(__newsprite1203)",
-          "@ref sprite(__newsprite1203)"
+          "@ref sprite(__newsprite1121)",
+          "@ref sprite(__newsprite1121)",
+          "@ref sprite(__newsprite1121)"
         ]
       },
       {
         "name":"Corner",
         "display_data":[
-          "@ref sprite(__newsprite1205)",
-          "@ref sprite(__newsprite1205)"
+          "@ref sprite(__newsprite1123)",
+          "@ref sprite(__newsprite1123)"
         ]
       },
       {
@@ -17881,16 +18413,16 @@
       {
         "name":"Position",
         "display_data":[
-          "@ref sprite(__newsprite1203)",
-          "@ref sprite(__newsprite1203)",
-          "@ref sprite(__newsprite1203)"
+          "@ref sprite(__newsprite1121)",
+          "@ref sprite(__newsprite1121)",
+          "@ref sprite(__newsprite1121)"
         ]
       },
       {
         "name":"Corner",
         "display_data":[
-          "@ref sprite(__newsprite1205)",
-          "@ref sprite(__newsprite1205)"
+          "@ref sprite(__newsprite1123)",
+          "@ref sprite(__newsprite1123)"
         ]
       },
       {
@@ -17980,12 +18512,12 @@
       {
         "name":"Type",
         "display_data":[
-          "@ref sprite(__newsprite1185)",
-          "@ref sprite(__newsprite1185)",
-          "@ref sprite(__newsprite1185)",
-          "@ref sprite(__newsprite1185)",
-          "@ref sprite(__newsprite1185)",
-          "@ref sprite(__newsprite1185)"
+          "@ref sprite(__newsprite1105)",
+          "@ref sprite(__newsprite1105)",
+          "@ref sprite(__newsprite1105)",
+          "@ref sprite(__newsprite1105)",
+          "@ref sprite(__newsprite1105)",
+          "@ref sprite(__newsprite1105)"
         ]
       },
       {
@@ -18083,16 +18615,16 @@
       {
         "name":"Position",
         "display_data":[
-          "@ref sprite(__newsprite1203)",
-          "@ref sprite(__newsprite1203)",
-          "@ref sprite(__newsprite1203)"
+          "@ref sprite(__newsprite1121)",
+          "@ref sprite(__newsprite1121)",
+          "@ref sprite(__newsprite1121)"
         ]
       },
       {
         "name":"Corner",
         "display_data":[
-          "@ref sprite(__newsprite1205)",
-          "@ref sprite(__newsprite1205)"
+          "@ref sprite(__newsprite1123)",
+          "@ref sprite(__newsprite1123)"
         ]
       },
       {
@@ -18274,16 +18806,16 @@
       {
         "name":"Position",
         "display_data":[
-          "@ref sprite(__newsprite1203)",
-          "@ref sprite(__newsprite1203)",
-          "@ref sprite(__newsprite1203)"
+          "@ref sprite(__newsprite1121)",
+          "@ref sprite(__newsprite1121)",
+          "@ref sprite(__newsprite1121)"
         ]
       },
       {
         "name":"Corner",
         "display_data":[
-          "@ref sprite(__newsprite1205)",
-          "@ref sprite(__newsprite1205)"
+          "@ref sprite(__newsprite1123)",
+          "@ref sprite(__newsprite1123)"
         ]
       },
       {
@@ -18462,16 +18994,16 @@
       {
         "name":"Position",
         "display_data":[
-          "@ref sprite(__newsprite1203)",
-          "@ref sprite(__newsprite1203)",
-          "@ref sprite(__newsprite1203)"
+          "@ref sprite(__newsprite1121)",
+          "@ref sprite(__newsprite1121)",
+          "@ref sprite(__newsprite1121)"
         ]
       },
       {
         "name":"Corner",
         "display_data":[
-          "@ref sprite(__newsprite1205)",
-          "@ref sprite(__newsprite1205)"
+          "@ref sprite(__newsprite1123)",
+          "@ref sprite(__newsprite1123)"
         ]
       },
       {
@@ -18656,16 +19188,16 @@
       {
         "name":"Position",
         "display_data":[
-          "@ref sprite(__newsprite1203)",
-          "@ref sprite(__newsprite1203)",
-          "@ref sprite(__newsprite1203)"
+          "@ref sprite(__newsprite1121)",
+          "@ref sprite(__newsprite1121)",
+          "@ref sprite(__newsprite1121)"
         ]
       },
       {
         "name":"Corner",
         "display_data":[
-          "@ref sprite(__newsprite1205)",
-          "@ref sprite(__newsprite1205)"
+          "@ref sprite(__newsprite1123)",
+          "@ref sprite(__newsprite1123)"
         ]
       },
       {
@@ -18838,16 +19370,16 @@
       {
         "name":"Position",
         "display_data":[
-          "@ref sprite(__newsprite1203)",
-          "@ref sprite(__newsprite1203)",
-          "@ref sprite(__newsprite1203)"
+          "@ref sprite(__newsprite1121)",
+          "@ref sprite(__newsprite1121)",
+          "@ref sprite(__newsprite1121)"
         ]
       },
       {
         "name":"Corner",
         "display_data":[
-          "@ref sprite(__newsprite1205)",
-          "@ref sprite(__newsprite1205)"
+          "@ref sprite(__newsprite1123)",
+          "@ref sprite(__newsprite1123)"
         ]
       },
       {
@@ -19033,16 +19565,16 @@
       {
         "name":"Position",
         "display_data":[
-          "@ref sprite(__newsprite1203)",
-          "@ref sprite(__newsprite1203)",
-          "@ref sprite(__newsprite1203)"
+          "@ref sprite(__newsprite1121)",
+          "@ref sprite(__newsprite1121)",
+          "@ref sprite(__newsprite1121)"
         ]
       },
       {
         "name":"Corner",
         "display_data":[
-          "@ref sprite(__newsprite1205)",
-          "@ref sprite(__newsprite1205)"
+          "@ref sprite(__newsprite1123)",
+          "@ref sprite(__newsprite1123)"
         ]
       },
       {
@@ -19234,16 +19766,16 @@
       {
         "name":"Position",
         "display_data":[
-          "@ref sprite(__newsprite1203)",
-          "@ref sprite(__newsprite1203)",
-          "@ref sprite(__newsprite1203)"
+          "@ref sprite(__newsprite1121)",
+          "@ref sprite(__newsprite1121)",
+          "@ref sprite(__newsprite1121)"
         ]
       },
       {
         "name":"Corner",
         "display_data":[
-          "@ref sprite(__newsprite1205)",
-          "@ref sprite(__newsprite1205)"
+          "@ref sprite(__newsprite1123)",
+          "@ref sprite(__newsprite1123)"
         ]
       },
       {
@@ -19466,16 +19998,16 @@
       {
         "name":"Position",
         "display_data":[
-          "@ref sprite(__newsprite1203)",
-          "@ref sprite(__newsprite1203)",
-          "@ref sprite(__newsprite1203)"
+          "@ref sprite(__newsprite1121)",
+          "@ref sprite(__newsprite1121)",
+          "@ref sprite(__newsprite1121)"
         ]
       },
       {
         "name":"Corner",
         "display_data":[
-          "@ref sprite(__newsprite1205)",
-          "@ref sprite(__newsprite1205)"
+          "@ref sprite(__newsprite1123)",
+          "@ref sprite(__newsprite1123)"
         ]
       },
       {
@@ -19676,16 +20208,16 @@
       {
         "name":"Position",
         "display_data":[
-          "@ref sprite(__newsprite1203)",
-          "@ref sprite(__newsprite1203)",
-          "@ref sprite(__newsprite1203)"
+          "@ref sprite(__newsprite1121)",
+          "@ref sprite(__newsprite1121)",
+          "@ref sprite(__newsprite1121)"
         ]
       },
       {
         "name":"Corner",
         "display_data":[
-          "@ref sprite(__newsprite1205)",
-          "@ref sprite(__newsprite1205)"
+          "@ref sprite(__newsprite1123)",
+          "@ref sprite(__newsprite1123)"
         ]
       },
       {
@@ -20639,7 +21171,7 @@
         "name":"Background"
       },
       {
-        "name":"Background color"
+        "name":"Background Color"
       },
       {
         "name":"Direction"
@@ -20698,7 +21230,8 @@
         "name":"Value range"
       },
       {
-        "name":"Absolute"
+        "name":"Absolute",
+        "tooltip":"Use absolute value to calculate color."
       },
       {
         "name":"Color Over Sample Map"
@@ -21033,6 +21566,2084 @@
     "outputs":[
       {
         "name":"Surface Out"
+      }
+    ]
+  },
+  "Node_pSystem_3D_Acceleration":{
+    "name":"Accelerate",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Acceleration"
+      },
+      {
+        "name":"Acceleration Over Lifespan"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Particles"
+      }
+    ]
+  },
+  "Node_pSystem_3D_Align_to_Velocity":{
+    "name":"Align Velocity",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Axis",
+        "display_data":[
+          "X",
+          "Y",
+          "Z"
+        ]
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Particles"
+      }
+    ]
+  },
+  "Node_pSystem_3D_Attract":{
+    "name":"Attract",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Strength"
+      },
+      {
+        "name":"Strength Over Lifespan"
+      },
+      {
+        "name":"Target"
+      },
+      {
+        "name":"Vortex"
+      },
+      {
+        "name":"Vortex Over Lifespan"
+      },
+      {
+        "name":"Vortex Angle"
+      },
+      {
+        "name":"Vortex Angle Over Lifespan"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Particles"
+      }
+    ]
+  },
+  "Node_pSystem_3D_Blend":{
+    "name":"Blend",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Blend Mode",
+        "display_data":[
+          "Mix",
+          "Multiply",
+          "Add",
+          "Screen"
+        ]
+      },
+      {
+        "name":"Color by Lifespan"
+      },
+      {
+        "name":"Color by Index"
+      },
+      {
+        "name":"Color by Index Over Lifespan"
+      },
+      {
+        "name":"Blend Mode",
+        "display_data":[
+          "Mix",
+          "Multiply",
+          "Add",
+          "Screen"
+        ]
+      },
+      {
+        "name":"Blend by Lifespan"
+      },
+      {
+        "name":"Blend by Index"
+      },
+      {
+        "name":"Alpha"
+      },
+      {
+        "name":"Alpha by Lifespan"
+      },
+      {
+        "name":"Blend Color"
+      },
+      {
+        "name":"Color"
+      },
+      {
+        "name":"Blend Mode",
+        "display_data":[
+          "Mix",
+          "Multiply",
+          "Add",
+          "Screen"
+        ]
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Particles"
+      }
+    ]
+  },
+  "Node_pSystem_3D_Boids":{
+    "name":"Boids",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Separate"
+      },
+      {
+        "name":"Radius"
+      },
+      {
+        "name":"Influence"
+      },
+      {
+        "name":"Align"
+      },
+      {
+        "name":"Radius"
+      },
+      {
+        "name":"Influence"
+      },
+      {
+        "name":"Group"
+      },
+      {
+        "name":"Radius"
+      },
+      {
+        "name":"Influence"
+      },
+      {
+        "name":"Follow point"
+      },
+      {
+        "name":"Point"
+      },
+      {
+        "name":"Influence"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Particles"
+      }
+    ]
+  },
+  "Node_pSystem_3D_Clone":{
+    "name":"Clone",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Seed"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Original"
+      },
+      {
+        "name":"Cloned"
+      }
+    ]
+  },
+  "Node_pSystem_3D_Collision":{
+    "name":"Collide",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Position"
+      },
+      {
+        "name":"Rotation"
+      },
+      {
+        "name":"Scale"
+      },
+      {
+        "name":"Anchor"
+      },
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Shape",
+        "display_data":[
+          "Ground",
+          "Ellipse"
+        ]
+      },
+      {
+        "name":"Chance"
+      },
+      {
+        "name":"Bounciness"
+      },
+      {
+        "name":"Friction"
+      },
+      {
+        "name":"Threshold"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"On Collide"
+      },
+      {
+        "name":"Collision Mask"
+      }
+    ]
+  },
+  "Node_pSystem_3D_Destroy":{
+    "name":"Destroy",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Chance"
+      },
+      {
+        "name":"Chance Over Lifespan"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"On Destroy"
+      }
+    ]
+  },
+  "Node_pSystem_3D_Follow_Path":{
+    "name":"Follow Path",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Path"
+      },
+      {
+        "name":"Path Range"
+      },
+      {
+        "name":"Path Influence"
+      },
+      {
+        "name":"Use Start Position"
+      },
+      {
+        "name":"Stride"
+      },
+      {
+        "name":"Stride Over Lifespan"
+      },
+      {
+        "name":"Spiral"
+      },
+      {
+        "name":"Spiral Over Lifespan"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Particles"
+      }
+    ]
+  },
+  "Node_pSystem_3D_Gravity":{
+    "name":"Gravity",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Strength"
+      },
+      {
+        "name":"Strength Over Lifespan"
+      },
+      {
+        "name":"Direction"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Particles"
+      }
+    ]
+  },
+  "Node_pSystem_3D_Inline":{
+    "name":"3D Particle System",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Loop"
+      },
+      {
+        "name":"Pre-Render"
+      }
+    ],
+    "outputs":[]
+  },
+  "Node_pSystem_3D_Mask":{
+    "name":"Mask",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Position"
+      },
+      {
+        "name":"Rotation"
+      },
+      {
+        "name":"Scale"
+      },
+      {
+        "name":"Anchor"
+      },
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Type",
+        "display_data":[
+          "Shape"
+        ]
+      },
+      {
+        "name":"Shape",
+        "display_data":[
+          "Sphere",
+          "Plane"
+        ]
+      },
+      {
+        "name":"Mesh"
+      },
+      {
+        "name":"Falloff Distance"
+      },
+      {
+        "name":"Falloff Distance Curve"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      }
+    ]
+  },
+  "Node_pSystem_3D_Mask_Data":{
+    "name":"Mask Data",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Data",
+        "display_data":[
+          "Position X",
+          "Position Y",
+          "Position Z",
+          "Rotation X (degree)",
+          "Rotation Y (degree)",
+          "Rotation Z (degree)",
+          "Scale X",
+          "Scale Y",
+          "Scale Z",
+          "Velocity X",
+          "Velocity Y",
+          "Velocity Z",
+          "Speed",
+          -1.0,
+          "Life (frame)",
+          "Max life (frame)",
+          "Life Progress (ratio)",
+          -1.0,
+          "Blending Red (0-255)",
+          "Blending Green (0-255)",
+          "Blending Blue (0-255)",
+          "Blending Alpha (0-255)",
+          "Blending Brightness (0-1)",
+          -1.0
+        ]
+      },
+      {
+        "name":"Remap From"
+      },
+      {
+        "name":"Remap To"
+      },
+      {
+        "name":"Modifier Curve"
+      },
+      {
+        "name":"Curve X Range"
+      },
+      {
+        "name":"Use Curve"
+      },
+      {
+        "name":"Use Clamp"
+      },
+      {
+        "name":"Clamp"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      }
+    ]
+  },
+  "Node_pSystem_3D_Render_Model":{
+    "name":"Render Model",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Mesh"
+      },
+      {
+        "name":"Blend Mode",
+        "display_data":[
+          "Normal",
+          "Alpha",
+          "Additive",
+          "Maximum"
+        ]
+      },
+      {
+        "name":"Billboard"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Mesh"
+      }
+    ]
+  },
+  "Node_pSystem_3D_Snap_Transform":{
+    "name":"Snap Transform",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Angle Snap"
+      },
+      {
+        "name":"Angle Snap Over Lifespan"
+      },
+      {
+        "name":"Angle Shift"
+      },
+      {
+        "name":"Angle Shift Over Lifespan"
+      },
+      {
+        "name":"Override Angle"
+      },
+      {
+        "name":"Position Snap"
+      },
+      {
+        "name":"Position Snap Over Lifespan"
+      },
+      {
+        "name":"Position Shift"
+      },
+      {
+        "name":"Scale Snap"
+      },
+      {
+        "name":"Scale Snap Over Lifespan"
+      },
+      {
+        "name":"Scale Shift"
+      },
+      {
+        "name":"Override Position"
+      },
+      {
+        "name":"Override Scale"
+      },
+      {
+        "name":"Snap Position"
+      },
+      {
+        "name":"Snap Angle"
+      },
+      {
+        "name":"Snap Scale"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Particles"
+      }
+    ]
+  },
+  "Node_pSystem_3D_Spawn":{
+    "name":"Spawn",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Spawn Type",
+        "display_data":[
+          "Stream",
+          "Burst",
+          "Trigger"
+        ]
+      },
+      {
+        "name":"Spawn Trigger"
+      },
+      {
+        "name":"Spawn Delay",
+        "tooltip":"Frames delay between each particle spawn."
+      },
+      {
+        "name":"Burst Duration"
+      },
+      {
+        "name":"Spawn Amount",
+        "tooltip":"Amount of particle spawn in that frame."
+      },
+      {
+        "name":"Lifespan"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Type",
+        "display_data":[
+          "Shape",
+          "Path",
+          "Mesh Vertices",
+          "Direct Data"
+        ]
+      },
+      {
+        "name":"Shape",
+        "display_data":[
+          "Box",
+          "Sphere",
+          "Circle"
+        ]
+      },
+      {
+        "name":"Origin"
+      },
+      {
+        "name":"Span"
+      },
+      {
+        "name":"Rotation"
+      },
+      {
+        "name":"Path"
+      },
+      {
+        "name":"Mesh"
+      },
+      {
+        "name":"Data"
+      },
+      {
+        "name":"Inherit Velocity"
+      },
+      {
+        "name":"Velocity"
+      },
+      {
+        "name":"Rotation"
+      },
+      {
+        "name":"Scale"
+      },
+      {
+        "name":"Base Color"
+      },
+      {
+        "name":"Color by Index"
+      },
+      {
+        "name":"Alpha"
+      },
+      {
+        "name":"Step Period"
+      },
+      {
+        "name":"Step Period Over Lifespan"
+      },
+      {
+        "name":"Follow Spawn Shape"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"On Spawn"
+      },
+      {
+        "name":"On Step"
+      },
+      {
+        "name":"On Destroy"
+      }
+    ]
+  },
+  "Node_pSystem_3D_Trail":{
+    "name":"Trail Path",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Frames"
+      },
+      {
+        "name":"Frames Over Lifespan"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Path"
+      }
+    ]
+  },
+  "Node_pSystem_3D_Trail_Mesh":{
+    "name":"Trail Mesh",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Frames"
+      },
+      {
+        "name":"Frames Over Lifespan"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Path"
+      }
+    ]
+  },
+  "Node_pSystem_3D_Transform":{
+    "name":"Transform",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Move"
+      },
+      {
+        "name":"Move Over Lifespan"
+      },
+      {
+        "name":"Rotate"
+      },
+      {
+        "name":"Rotate Over Lifespan"
+      },
+      {
+        "name":"Scale"
+      },
+      {
+        "name":"Scale Over Lifespan"
+      },
+      {
+        "name":"Speed"
+      },
+      {
+        "name":"Speed Over Lifespan"
+      },
+      {
+        "name":"Direction"
+      },
+      {
+        "name":"Mode",
+        "display_data":[
+          "Add",
+          "Multiply",
+          "Override"
+        ]
+      },
+      {
+        "name":"Mode",
+        "display_data":[
+          "Add",
+          "Multiply",
+          "Override"
+        ]
+      },
+      {
+        "name":"Do Move"
+      },
+      {
+        "name":"Do Vector Move"
+      },
+      {
+        "name":"Do Rotate"
+      },
+      {
+        "name":"Do Scae"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Particles"
+      }
+    ]
+  },
+  "Node_pSystem_3D_Wiggle":{
+    "name":"Wiggle",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Use Wiggle"
+      },
+      {
+        "name":"Amplitude"
+      },
+      {
+        "name":"Period"
+      },
+      {
+        "name":"Octave"
+      },
+      {
+        "name":"Use Wiggle"
+      },
+      {
+        "name":"Amplitude"
+      },
+      {
+        "name":"Period"
+      },
+      {
+        "name":"Octave"
+      },
+      {
+        "name":"Use Wiggle"
+      },
+      {
+        "name":"Amplitude"
+      },
+      {
+        "name":"Period"
+      },
+      {
+        "name":"Octave"
+      },
+      {
+        "name":"Use Wiggle"
+      },
+      {
+        "name":"Amplitude"
+      },
+      {
+        "name":"Period"
+      },
+      {
+        "name":"Octave"
+      },
+      {
+        "name":"Amplitude Over Lifespan"
+      },
+      {
+        "name":"Amplitude Over Lifespan"
+      },
+      {
+        "name":"Amplitude Over Lifespan"
+      },
+      {
+        "name":"Amplitude Over Lifespan"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Particles"
+      }
+    ]
+  },
+  "Node_pSystem_Acceleration":{
+    "name":"Accelerate",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Acceleration"
+      },
+      {
+        "name":"Acceleration Over Lifespan"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Particles"
+      }
+    ]
+  },
+  "Node_pSystem_Align_to_Velocity":{
+    "name":"Align Velocity",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Offset Rotation"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Particles"
+      }
+    ]
+  },
+  "Node_pSystem_Attract":{
+    "name":"Attract",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Strength"
+      },
+      {
+        "name":"Strength Over Lifespan"
+      },
+      {
+        "name":"Target"
+      },
+      {
+        "name":"Vortex"
+      },
+      {
+        "name":"Vortex Over Lifespan"
+      },
+      {
+        "name":"Vortex Angle"
+      },
+      {
+        "name":"Vortex Angle Over Lifespan"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Particles"
+      }
+    ]
+  },
+  "Node_pSystem_Blend":{
+    "name":"Blend",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Blend Mode",
+        "display_data":[
+          "Mix",
+          "Multiply",
+          "Add",
+          "Screen"
+        ]
+      },
+      {
+        "name":"Color by Lifespan"
+      },
+      {
+        "name":"Color by Index"
+      },
+      {
+        "name":"Color by Index Over Lifespan"
+      },
+      {
+        "name":"Blend Mode",
+        "display_data":[
+          "Mix",
+          "Multiply",
+          "Add",
+          "Screen"
+        ]
+      },
+      {
+        "name":"Blend by Lifespan"
+      },
+      {
+        "name":"Blend by Index"
+      },
+      {
+        "name":"Alpha"
+      },
+      {
+        "name":"Alpha by Lifespan"
+      },
+      {
+        "name":"Blend Color"
+      },
+      {
+        "name":"Color"
+      },
+      {
+        "name":"Blend Mode",
+        "display_data":[
+          "Mix",
+          "Multiply",
+          "Add",
+          "Screen"
+        ]
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Particles"
+      }
+    ]
+  },
+  "Node_pSystem_Boids":{
+    "name":"Boids",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Separate"
+      },
+      {
+        "name":"Radius"
+      },
+      {
+        "name":"Influence"
+      },
+      {
+        "name":"Align"
+      },
+      {
+        "name":"Radius"
+      },
+      {
+        "name":"Influence"
+      },
+      {
+        "name":"Group"
+      },
+      {
+        "name":"Radius"
+      },
+      {
+        "name":"Influence"
+      },
+      {
+        "name":"Follow point"
+      },
+      {
+        "name":"Point"
+      },
+      {
+        "name":"Influence"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Particles"
+      }
+    ]
+  },
+  "Node_pSystem_Clone":{
+    "name":"Clone",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Seed"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Original"
+      },
+      {
+        "name":"Cloned"
+      }
+    ]
+  },
+  "Node_pSystem_Collision":{
+    "name":"Collide",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Shape",
+        "display_data":[
+          "Ground",
+          "Rectangle",
+          "Ellipse"
+        ]
+      },
+      {
+        "name":"Position"
+      },
+      {
+        "name":"Size"
+      },
+      {
+        "name":"Rotation"
+      },
+      {
+        "name":"Chance"
+      },
+      {
+        "name":"Bounciness"
+      },
+      {
+        "name":"Friction"
+      },
+      {
+        "name":"Threshold"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"On Collide"
+      },
+      {
+        "name":"Collision Mask"
+      }
+    ]
+  },
+  "Node_pSystem_Destroy":{
+    "name":"Destroy",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Chance"
+      },
+      {
+        "name":"Chance Over Lifespan"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"On Destroy"
+      }
+    ]
+  },
+  "Node_pSystem_Follow_Path":{
+    "name":"Follow Path",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Path"
+      },
+      {
+        "name":"Path Range"
+      },
+      {
+        "name":"Path Influence"
+      },
+      {
+        "name":"Use Start Position"
+      },
+      {
+        "name":"Stride"
+      },
+      {
+        "name":"Stride Over Lifespan"
+      },
+      {
+        "name":"Spiral"
+      },
+      {
+        "name":"Spiral Over Lifespan"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Particles"
+      }
+    ]
+  },
+  "Node_pSystem_Gravity":{
+    "name":"Gravity",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Strength"
+      },
+      {
+        "name":"Strength Over Lifespan"
+      },
+      {
+        "name":"Direction"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Particles"
+      }
+    ]
+  },
+  "Node_pSystem_Inline":{
+    "name":"Particle System",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Loop"
+      },
+      {
+        "name":"Dimension"
+      },
+      {
+        "name":"Pre-Render"
+      }
+    ],
+    "outputs":[]
+  },
+  "Node_pSystem_Mask":{
+    "name":"Mask",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Type",
+        "display_data":[
+          "Area",
+          "Linear",
+          "Map"
+        ]
+      },
+      {
+        "name":"Area"
+      },
+      {
+        "name":"Falloff Distance"
+      },
+      {
+        "name":"Falloff Distance Curve"
+      },
+      {
+        "name":"Center"
+      },
+      {
+        "name":"Angle"
+      },
+      {
+        "name":"Map"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      }
+    ]
+  },
+  "Node_pSystem_Mask_Data":{
+    "name":"Mask Data",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Data",
+        "display_data":[
+          "Position X",
+          "Position Y",
+          "Rotation (degree)",
+          "Scale X",
+          "Scale Y",
+          "Velocity X",
+          "Velocity Y",
+          "Speed",
+          "Direction",
+          -1.0,
+          "Life (frame)",
+          "Max life (frame)",
+          "Life Progress (ratio)",
+          -1.0,
+          "Blending Red (0-255)",
+          "Blending Green (0-255)",
+          "Blending Blue (0-255)",
+          "Blending Alpha (0-255)",
+          "Blending Brightness (0-1)",
+          -1.0
+        ]
+      },
+      {
+        "name":"Remap From"
+      },
+      {
+        "name":"Remap To"
+      },
+      {
+        "name":"Modifier Curve"
+      },
+      {
+        "name":"Curve X Range"
+      },
+      {
+        "name":"Use Curve"
+      },
+      {
+        "name":"Use Clamp"
+      },
+      {
+        "name":"Clamp"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      }
+    ]
+  },
+  "Node_pSystem_Oscillate":{
+    "name":"Oscillate",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Strength"
+      },
+      {
+        "name":"Strength Over Lifespan"
+      },
+      {
+        "name":"Amplitude"
+      },
+      {
+        "name":"Amplitude Over Lifespan"
+      },
+      {
+        "name":"Frequency"
+      },
+      {
+        "name":"Frequency Over Lifespan"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Particles"
+      }
+    ]
+  },
+  "Node_pSystem_Render":{
+    "name":"Render",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Surfaces"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Rendered"
+      }
+    ]
+  },
+  "Node_pSystem_Render_Trail":{
+    "name":"Render Trail",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Frames"
+      },
+      {
+        "name":"Frames Over Lifespan"
+      },
+      {
+        "name":"End Trail",
+        "tooltip":"Render trail for dead particles."
+      },
+      {
+        "name":"Thickness",
+        "tooltip":"This value then multiply by particle X scale for the final thickness."
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Rendered"
+      }
+    ]
+  },
+  "Node_pSystem_Sample_Color":{
+    "name":"Sample Color",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Sample Surface"
+      },
+      {
+        "name":"Dimension"
+      },
+      {
+        "name":"On Spawn"
+      },
+      {
+        "name":"Override Color"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Particles"
+      }
+    ]
+  },
+  "Node_pSystem_Snap_Transform":{
+    "name":"Snap Transform",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Angle Snap"
+      },
+      {
+        "name":"Angle Snap Over Lifespan"
+      },
+      {
+        "name":"Angle Shift"
+      },
+      {
+        "name":"Angle Shift Over Lifespan"
+      },
+      {
+        "name":"Override Angle"
+      },
+      {
+        "name":"Position Snap"
+      },
+      {
+        "name":"Position Snap Over Lifespan"
+      },
+      {
+        "name":"Position Shift"
+      },
+      {
+        "name":"Scale Snap"
+      },
+      {
+        "name":"Scale Snap Over Lifespan"
+      },
+      {
+        "name":"Scale Shift"
+      },
+      {
+        "name":"Override Position"
+      },
+      {
+        "name":"Override Scale"
+      },
+      {
+        "name":"Snap Position"
+      },
+      {
+        "name":"Snap Angle"
+      },
+      {
+        "name":"Snap Scale"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Particles"
+      }
+    ]
+  },
+  "Node_pSystem_Spawn":{
+    "name":"Spawn",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Spawn Type",
+        "display_data":[
+          "Stream",
+          "Burst",
+          "Trigger"
+        ]
+      },
+      {
+        "name":"Spawn Trigger"
+      },
+      {
+        "name":"Spawn Delay",
+        "tooltip":"Frames delay between each particle spawn."
+      },
+      {
+        "name":"Burst Duration"
+      },
+      {
+        "name":"Spawn Amount",
+        "tooltip":"Amount of particle spawn in that frame."
+      },
+      {
+        "name":"Lifespan"
+      },
+      {
+        "name":"Type",
+        "display_data":[
+          "Area",
+          "Border",
+          "Path",
+          "Mesh",
+          "Map",
+          "Data"
+        ]
+      },
+      {
+        "name":"Shape",
+        "display_data":[
+          "Rectangle",
+          "Ellipse"
+        ]
+      },
+      {
+        "name":"Area"
+      },
+      {
+        "name":"Path"
+      },
+      {
+        "name":"Mesh"
+      },
+      {
+        "name":"Spawn Map"
+      },
+      {
+        "name":"Spawn Data"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Rotation"
+      },
+      {
+        "name":"Scale"
+      },
+      {
+        "name":"Base Color"
+      },
+      {
+        "name":"Color by Index"
+      },
+      {
+        "name":"Alpha"
+      },
+      {
+        "name":"Direction"
+      },
+      {
+        "name":"Velocity"
+      },
+      {
+        "name":"Step Period"
+      },
+      {
+        "name":"Step Period Over Lifespan"
+      },
+      {
+        "name":"Distribution",
+        "display_data":[
+          "Random",
+          "Uniform Burst",
+          "Uniform Period"
+        ]
+      },
+      {
+        "name":"Inherit Velocity"
+      },
+      {
+        "name":"Border Shape",
+        "display_data":[
+          "Rectangle",
+          "Ellipse",
+          "Line"
+        ]
+      },
+      {
+        "name":"Line Start"
+      },
+      {
+        "name":"Line End"
+      },
+      {
+        "name":"Period"
+      },
+      {
+        "name":"Shift"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"On Spawn"
+      },
+      {
+        "name":"On Step"
+      },
+      {
+        "name":"On Destroy"
+      }
+    ]
+  },
+  "Node_pSystem_Trail":{
+    "name":"Trail",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Frames"
+      },
+      {
+        "name":"Frames Over Lifespan"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Rendered"
+      }
+    ]
+  },
+  "Node_pSystem_Transform":{
+    "name":"Transform",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Move"
+      },
+      {
+        "name":"Move Over Lifespan"
+      },
+      {
+        "name":"Rotate"
+      },
+      {
+        "name":"Rotate Over Lifespan"
+      },
+      {
+        "name":"Scale"
+      },
+      {
+        "name":"Scale Over Lifespan"
+      },
+      {
+        "name":"Speed"
+      },
+      {
+        "name":"Speed Over Lifespan"
+      },
+      {
+        "name":"Direction"
+      },
+      {
+        "name":"Mode",
+        "display_data":[
+          "Add",
+          "Multiply",
+          "Override"
+        ]
+      },
+      {
+        "name":"Mode",
+        "display_data":[
+          "Add",
+          "Multiply",
+          "Override"
+        ]
+      },
+      {
+        "name":"Do Move"
+      },
+      {
+        "name":"Do Vector Move"
+      },
+      {
+        "name":"Do Rotate"
+      },
+      {
+        "name":"Do Scae"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Particles"
+      }
+    ]
+  },
+  "Node_pSystem_Triangulate":{
+    "name":"Triangulate",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Thickness",
+        "tooltip":"This value then multiply by particle X scale for final thickness."
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Rendered"
+      }
+    ]
+  },
+  "Node_pSystem_Trigger_Event":{
+    "name":"Trigger",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Step Period"
+      },
+      {
+        "name":"Step Period Over Lifespan"
+      },
+      {
+        "name":"Chance"
+      },
+      {
+        "name":"Chance Over Lifespan"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"On Event"
+      }
+    ]
+  },
+  "Node_pSystem_Wiggle":{
+    "name":"Wiggle",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Particles"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Seed"
+      },
+      {
+        "name":"Use Wiggle"
+      },
+      {
+        "name":"Amplitude"
+      },
+      {
+        "name":"Period"
+      },
+      {
+        "name":"Octave"
+      },
+      {
+        "name":"Use Wiggle"
+      },
+      {
+        "name":"Amplitude"
+      },
+      {
+        "name":"Period"
+      },
+      {
+        "name":"Octave"
+      },
+      {
+        "name":"Use Wiggle"
+      },
+      {
+        "name":"Amplitude"
+      },
+      {
+        "name":"Period"
+      },
+      {
+        "name":"Octave"
+      },
+      {
+        "name":"Use Wiggle"
+      },
+      {
+        "name":"Amplitude"
+      },
+      {
+        "name":"Period"
+      },
+      {
+        "name":"Octave"
+      },
+      {
+        "name":"Amplitude Over Lifespan"
+      },
+      {
+        "name":"Amplitude Over Lifespan"
+      },
+      {
+        "name":"Amplitude Over Lifespan"
+      },
+      {
+        "name":"Amplitude Over Lifespan"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Particles"
       }
     ]
   },
@@ -21746,7 +24357,7 @@
         "name":"Repeat Rotation"
       },
       {
-        "name":"Scale Multiply"
+        "name":"Scale X"
       },
       {
         "name":"Angle Range"
@@ -21758,7 +24369,7 @@
         "name":"Start Position"
       },
       {
-        "name":"Scale Over Copy"
+        "name":"Scale X Over Copy"
       },
       {
         "name":"Path",
@@ -21802,7 +24413,7 @@
         "name":"Animator range"
       },
       {
-        "name":"Animator position"
+        "name":"Global Anchor"
       },
       {
         "name":"Animator rotation"
@@ -21829,7 +24440,7 @@
         "name":"Animator alpha"
       },
       {
-        "name":"Animator"
+        "name":"Uniform Scale"
       },
       {
         "name":"Color Over Copy Map"
@@ -21867,13 +24478,19 @@
         "name":"Padding"
       },
       {
-        "name":"Shift per Copy"
+        "name":"Shift Position Over Copy"
       },
       {
         "name":"Anchor"
       },
       {
         "name":"Rotate Along Path"
+      },
+      {
+        "name":"Scale Y"
+      },
+      {
+        "name":"Scale Y Over Copy"
       },
       {
         "name":"Animator type",
@@ -22070,6 +24687,9 @@
       },
       {
         "name":"Texture Scale"
+      },
+      {
+        "name":"Thickness"
       }
     ],
     "outputs":[
@@ -24203,11 +26823,221 @@
       },
       {
         "name":"Opacity"
+      },
+      {
+        "name":"Top Side"
+      },
+      {
+        "name":"Botton Side"
+      },
+      {
+        "name":"Half Point"
+      },
+      {
+        "name":"Twist"
+      },
+      {
+        "name":"Shear"
+      },
+      {
+        "name":"Teeth Taper"
       }
     ],
     "outputs":[
       {
-        "name":"Surface Out"
+        "name":"Colored"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Height"
+      }
+    ]
+  },
+  "Node_Shape_Fast":{
+    "name":"Draw Shape Fast",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Dimension"
+      },
+      {
+        "name":"Background"
+      },
+      {
+        "name":"Shape",
+        "display_data":[
+          "Rectangle",
+          "Diamond",
+          "Trapezoid",
+          "Parallelogram",
+          "Half",
+          -1.0,
+          "Ellipse",
+          "Arc",
+          "Donut",
+          "Crescent",
+          "Disk Segment",
+          "Pie",
+          "Squircle",
+          -1.0,
+          "Regular polygon",
+          "Star",
+          "Cross",
+          "Rounded Cross",
+          -1.0,
+          "Line",
+          "Arrow",
+          -1.0,
+          "Teardrop",
+          "Leaf",
+          "Heart",
+          "Gear"
+        ]
+      },
+      {
+        "name":"Position"
+      },
+      {
+        "name":"Sides"
+      },
+      {
+        "name":"Inner radius"
+      },
+      {
+        "name":"Anti-aliasing"
+      },
+      {
+        "name":"Rotation"
+      },
+      {
+        "name":"Angle range"
+      },
+      {
+        "name":"Corner radius"
+      },
+      {
+        "name":"Shape color"
+      },
+      {
+        "name":"Background color"
+      },
+      {
+        "name":"Height"
+      },
+      {
+        "name":"Start radius"
+      },
+      {
+        "name":"Shape path"
+      },
+      {
+        "name":"Positioning Mode",
+        "display_data":[
+          "Area",
+          "Center + Scale",
+          "Full Image"
+        ]
+      },
+      {
+        "name":"Center"
+      },
+      {
+        "name":"Half Size"
+      },
+      {
+        "name":"Tile"
+      },
+      {
+        "name":"Shape Rotation"
+      },
+      {
+        "name":"Level"
+      },
+      {
+        "name":"Angles"
+      },
+      {
+        "name":"Skew"
+      },
+      {
+        "name":"Arrow Sizes"
+      },
+      {
+        "name":"Arrow Head"
+      },
+      {
+        "name":"Teeth Amount"
+      },
+      {
+        "name":"Teeth Size"
+      },
+      {
+        "name":"Teeth Rotation"
+      },
+      {
+        "name":"Shape Scale"
+      },
+      {
+        "name":"Curve"
+      },
+      {
+        "name":"Caps"
+      },
+      {
+        "name":"Factor"
+      },
+      {
+        "name":"Point 1"
+      },
+      {
+        "name":"Point 2"
+      },
+      {
+        "name":"Thickness"
+      },
+      {
+        "name":"Point 3"
+      },
+      {
+        "name":"Corner Shape",
+        "display_data":[
+          "Round",
+          "Cut"
+        ]
+      },
+      {
+        "name":"Opacity"
+      },
+      {
+        "name":"Top Side"
+      },
+      {
+        "name":"Botton Side"
+      },
+      {
+        "name":"Half Point"
+      },
+      {
+        "name":"Twist"
+      },
+      {
+        "name":"Shear"
+      },
+      {
+        "name":"Teeth Taper"
+      }
+    ],
+    "outputs":[
+      {
+        "name":"Colored"
+      },
+      {
+        "name":"Mask"
+      },
+      {
+        "name":"Height"
       }
     ]
   },
@@ -24915,6 +27745,57 @@
       }
     ]
   },
+  "Node_Smoke_Group":{
+    "name":"SmokeSim",
+    "tooltip":"Create group for fluid simulation.",
+    "inputs":[
+      {
+        "name":"Dimension"
+      },
+      {
+        "name":"Collision"
+      },
+      {
+        "name":"Material dissipation type",
+        "display_data":[
+          "Multiply",
+          "Subtract"
+        ]
+      },
+      {
+        "name":"Material dissipation"
+      },
+      {
+        "name":"Velocity dissipation type",
+        "display_data":[
+          "Multiply",
+          "Subtract"
+        ]
+      },
+      {
+        "name":"Velocity dissipation"
+      },
+      {
+        "name":"Acceleration"
+      },
+      {
+        "name":"Material intertia"
+      },
+      {
+        "name":"Initial pressure"
+      },
+      {
+        "name":"Material Maccormack weight"
+      },
+      {
+        "name":"Velocity Maccormack weight"
+      },
+      {
+        "name":"Wrap"
+      }
+    ],
+    "outputs":[]
+  },
   "Node_Smoke_Group_Inline":{
     "name":"SmokeSim",
     "tooltip":"Create group for smoke simulation.",
@@ -25155,6 +28036,15 @@
       },
       {
         "name":"Rotation"
+      },
+      {
+        "name":"Position"
+      },
+      {
+        "name":"Texture Offset"
+      },
+      {
+        "name":"Texture Scale"
       }
     ],
     "outputs":[
@@ -25593,6 +28483,12 @@
         "name":"Strand"
       }
     ]
+  },
+  "Node_Strand_Group":{
+    "name":"StrandSim",
+    "tooltip":"Create group for hair simulation.",
+    "inputs":[],
+    "outputs":[]
   },
   "Node_Strand_Group_Inline":{
     "name":"StrandSim",
@@ -26358,6 +29254,16 @@
       },
       {
         "name":"Scale"
+      },
+      {
+        "name":"Type",
+        "display_data":[
+          "Scale",
+          "Constant"
+        ]
+      },
+      {
+        "name":"Dimension"
       }
     ],
     "outputs":[
@@ -26365,7 +29271,7 @@
         "name":"Surface Out"
       },
       {
-        "name":"SVG Struct"
+        "name":"SVG Object"
       }
     ]
   },
@@ -26430,17 +29336,17 @@
       {
         "name":"H Align",
         "display_data":[
-          "@ref sprite(__newsprite1115)",
-          "@ref sprite(__newsprite1115)",
-          "@ref sprite(__newsprite1115)"
+          "@ref sprite(__newsprite947)",
+          "@ref sprite(__newsprite947)",
+          "@ref sprite(__newsprite947)"
         ]
       },
       {
         "name":"V Align",
         "display_data":[
-          "@ref sprite(__newsprite1116)",
-          "@ref sprite(__newsprite1116)",
-          "@ref sprite(__newsprite1116)"
+          "@ref sprite(__newsprite948)",
+          "@ref sprite(__newsprite948)",
+          "@ref sprite(__newsprite948)"
         ]
       },
       {
@@ -26536,6 +29442,9 @@
       },
       {
         "name":"Atlas"
+      },
+      {
+        "name":"Offset"
       }
     ],
     "outputs":[
@@ -26678,6 +29587,9 @@
       },
       {
         "name":"Apply to Alpha"
+      },
+      {
+        "name":"Multiply"
       }
     ],
     "outputs":[
@@ -26757,6 +29669,12 @@
       },
       {
         "name":"Seed"
+      },
+      {
+        "name":"Animation Speed"
+      },
+      {
+        "name":"Animation Offset"
       }
     ],
     "outputs":[
@@ -26796,7 +29714,7 @@
   },
   "Node_Tile_Render":{
     "name":"Render Tilemap",
-    "tooltip":"Render tilemap to image.",
+    "tooltip":"Render raw tilemap data to an image.",
     "inputs":[
       {
         "name":"Tileset"
@@ -26842,7 +29760,7 @@
   },
   "Node_Tile_Tilemap_Export":{
     "name":"Export Tilemap",
-    "tooltip":"Export tilemap to file.",
+    "tooltip":"Export tilemap data to a file.",
     "inputs":[
       {
         "name":"Tilemap"
@@ -27088,6 +30006,9 @@
       },
       {
         "name":"Dimension"
+      },
+      {
+        "name":"Atlas data"
       }
     ]
   },
@@ -28069,22 +30990,22 @@
         "name":"Particles"
       },
       {
-        "name":"Sep. radius"
+        "name":"Radius"
       },
       {
-        "name":"Sep. influence"
+        "name":"Influence"
       },
       {
-        "name":"Ali. radius"
+        "name":"Radius"
       },
       {
-        "name":"Ali. influence"
+        "name":"Influence"
       },
       {
-        "name":"Grp. radius"
+        "name":"Radius"
       },
       {
-        "name":"Grp. influence"
+        "name":"Influence"
       },
       {
         "name":"Speed amplification"
@@ -28096,7 +31017,7 @@
         "name":"Point"
       },
       {
-        "name":"Fol. influence"
+        "name":"Influence"
       },
       {
         "name":"Separate"
@@ -28151,6 +31072,16 @@
         "name":"Particles"
       }
     ]
+  },
+  "Node_VFX_Group":{
+    "name":"VFX",
+    "tooltip":"",
+    "inputs":[
+      {
+        "name":"Loop"
+      }
+    ],
+    "outputs":[]
   },
   "Node_VFX_Group_Inline":{
     "name":"VFX",

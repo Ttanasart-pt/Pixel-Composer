@@ -437,6 +437,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static drawNodeBase = function(xx, yy, mx, my, _s) {
 		if(draw_graph_culled) return;
+		PANEL_GRAPH.refreshDraw(2);
 		
 		_s /= UI_SCALE;
 		
@@ -529,7 +530,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		gpu_set_tex_filter(true);
 		draw_set_circle_precision(16);
 		
-		inputs[1].drawJunction(_s, _mx, _my, true);
+		if(inputs[1].isVisible()) inputs[1].drawJunction(_s, _mx, _my, true);
 		for(var i = 0, n = array_length(inputDisplayList); i < n; i++)
 			inputDisplayList[i].drawJunction(_s, _mx, _my, true);
 		

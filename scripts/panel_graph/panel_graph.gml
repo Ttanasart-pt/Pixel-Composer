@@ -385,6 +385,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         graph_autopan   = false;
         graph_pan_x_to  = 0;
         graph_pan_y_to  = 0;
+        graph_pan_s_to  = 0;
         graph_pan_speed = 32;
         
         scale      = [ 0.01, 0.02, 0.05, 0.10, 0.15, 0.20, 0.25, 0.33, 0.50, 0.65, 0.80, 1, 1.2, 1.35, 1.5, 2.0, 2.5, 3.0, 4.0 ];
@@ -479,7 +480,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         add_node_draw_x      = 0;
         add_node_draw_y      = 0;
         
-        draw_refresh           = true;
+        draw_refresh           = true;   static refreshDraw = function(t) /*=>*/ { draw_refresh = max(draw_refresh, t); }
         node_surface           = noone;
         node_surface_update    = true;
         
@@ -826,7 +827,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         _blend.inputs[1].setFrom(_canvas.outputs[0]);
     }
     
-    function setFocusingNode(_node) { nodes_selecting = [ _node ]; draw_refresh = true; return self; }
+    function setFocusingNode(_node) { nodes_selecting = [ _node ]; refreshDraw(1); return self; }
     
     function getFocusingNode() { return array_empty(nodes_selecting)? noone : nodes_selecting[0]; }
     
@@ -959,7 +960,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     static setProject = function(_project) {
         project         = _project;
         nodes_list      = _project.nodes;
-        draw_refresh    = 1;
+        refreshDraw(1);
         connect_related = noone;
         connection_draw_update = true;
         
@@ -995,6 +996,18 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         if(graph_autopan) {
             graph_x = lerp_float(graph_x, graph_pan_x_to, graph_pan_speed, 1);
             graph_y = lerp_float(graph_y, graph_pan_y_to, graph_pan_speed, 1);
+            
+            if(graph_pan_s_to > 0) {
+            	var _s = graph_s;
+            	var cx = w/2;
+            	var cy = h/2;
+            	
+            	graph_s  = lerp_float(graph_s, graph_pan_s_to, graph_pan_speed);
+            	graph_x += (cx - graph_x * graph_s) / graph_s - (cx - graph_x * _s) / _s;
+            	graph_y += (cy - graph_y * graph_s) / graph_s - (cy - graph_y * _s) / _s;
+            	
+            	graph_s_to = graph_pan_s_to;
+            }
             
             if(graph_x == graph_pan_x_to && graph_y == graph_pan_y_to)
                 graph_autopan = false;
@@ -1127,10 +1140,11 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         graph_draggable = true;
     }
     
-    function autoPanTo(_x, _y, _speed = 32) {
+    function autoPanTo(_x, _y, _speed = 32, _zoom = 0) {
         graph_autopan   = true;
         graph_pan_x_to  = _x;
         graph_pan_y_to  = _y;
+        graph_pan_s_to  = _zoom;
         graph_pan_speed = _speed;
     }
     
@@ -1140,8 +1154,10 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
         setContext(_targ);
         
-        var _gx = w / 2 / graph_s;
-        var _gy = h / 2 / graph_s;
+        var _tz = _targ.slide_zoom;
+        var _gs = _tz > 0? _tz : graph_s;
+        var _gx = w / 2 / _gs;
+        var _gy = h / 2 / _gs;
         
         var _tx = _gx;
         var _ty = _gy;
@@ -1153,8 +1169,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                 break;
                 
             case 1 :
-                _tx = 64 * graph_s - _targ.x;
-                _ty = 64 * graph_s - _targ.y;
+                _tx = 64 * _gs - _targ.x;
+                _ty = 64 * _gs - _targ.y;
                 break;
                 
         }
@@ -1164,7 +1180,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             graph_y = _ty;
             
         } else
-            autoPanTo(_tx, _ty, _targ.slide_speed);
+            autoPanTo(_tx, _ty, _targ.slide_speed, _tz);
     }
     
     ////- Context
@@ -1178,7 +1194,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
         node_context = [];
         nodes_list   = project.nodes;
-        draw_refresh = true;
+        refreshDraw(1);
         
         var _ctxs = [];
         var _ctx  = context;
@@ -1195,7 +1211,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     function resetContext() {
         node_context = [];
         nodes_list   = project.nodes;
-        draw_refresh = true;
+        refreshDraw(1);
         
         toCenterNode();
     }
@@ -1547,7 +1563,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
         if(node_dragging) {
             addKeyOverlay("Dragging node(s)", [[ "Ctrl", "Disable snapping" ]]);
-            draw_refresh = 2;
+            refreshDraw(2);
             
             var _mgx = mouse_graph_x;
             var _mgy = mouse_graph_y;
@@ -2091,7 +2107,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             	if(pFOCUS && DOUBLE_CLICK) value_focus.drawValue = !value_focus.drawValue;
             }
             
-            if(_value_focus != value_focus) draw_refresh = 1;
+            if(_value_focus != value_focus) refreshDraw(1);
 	        	
 	        if(PANEL_INSPECTOR && PANEL_INSPECTOR.prop_hover != noone)
             	value_focus = PANEL_INSPECTOR.prop_hover;

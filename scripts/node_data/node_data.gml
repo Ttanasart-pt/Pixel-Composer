@@ -1482,7 +1482,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		getJunctionList();
 		setJunctionIndex();
 		
-		PANEL_GRAPH.draw_refresh = true;
+		PANEL_GRAPH.refreshDraw(1);
 		__preDraw_data.force     = true;
 	} 
 	
@@ -1509,7 +1509,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			if(_dummy || _dummy_add_index != dummy_add_index) {
 				getJunctionList();
-				PANEL_GRAPH.draw_refresh = true;
+				PANEL_GRAPH.refreshDraw(1);
 			}
 			_dummy_add_index = dummy_add_index;
 			dummy_add_index  = noone;
@@ -3043,7 +3043,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(!active) return;
 		disable();
 		
-		PANEL_GRAPH.draw_refresh = true;
+		PANEL_GRAPH.refreshDraw(1);
 		array_remove(group == noone? project.nodes : group.getNodeList(), self);
 		
 		if(PANEL_GRAPH.node_hover == self) PANEL_GRAPH.node_hover = noone;
@@ -3095,7 +3095,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(active) return;
 		enable();
 		
-		PANEL_GRAPH.draw_refresh = true;
+		PANEL_GRAPH.refreshDraw(1);
 		array_push(group == noone? project.nodes : group.getNodeList(), self);
 		
 		onRestore();

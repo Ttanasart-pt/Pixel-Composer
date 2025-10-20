@@ -156,6 +156,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			
 		var _sprs = attributes.cache_use? cache_spr : spr;
 		if(array_length(_sprs) == 0) return;
+		if(!sprite_exists(_sprs[0])) return;
 		
 		var _pad = getInputData(1);
 		
@@ -264,7 +265,7 @@ function timelineItemNode_Image_Animated(_node) : timelineItemNode(_node) constr
 		var _aa;
 		
 		for (var i = 0, n = array_length(_sprs); i < n; i++) {
-			if(i >= TOTAL_FRAMES) break;
+			if(i >= NODE_TOTAL_FRAMES) break;
 			
 			_spr = _sprs[i];
 			if(!sprite_exists(_spr)) continue;

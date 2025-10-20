@@ -1123,5 +1123,32 @@
     "uninstance":                    "Uninstance",
     "view_settings...":              "View Settings...",
 
+    // 1.19.10
+    "autosave":                      "Autosave",
+    "capture_project":               "Capture Project",
+    "create_default_zip":            "Create default Zip",
+    "debugger":                      "Debugger",
+    "export_directory":              "Export Directory",
+    "export_project_.zip":           "Export project .zip",
+    "generate_ugc_thumbnail":        "Generate UGC Thumbnail",
+    "generate_ugc":                  "Generate UGC",
+    "import_project_.zip":           "Import project .zip",
+    "octahedral":                    "Octahedral",
+    "patreon_bonus_projects":        "Patreon Bonus Projects",
+    "pref_clear_recents":            "Recents",
+    "pref_render_max_time":          "Render time per frame",
+    "pref_ui_native_file_selector":  "Use native file selector",
+    "single":                        "Single",
+    "steam_workshop_panel":          "Steam Workshop Panel",
+    "steam_workshop":                "Steam Workshop",
+    "stick":                         "Stick",
+    "tools":                         "Tools",
+    "unassigned":                    "Unassigned",
+    "update_content_to_workshop":    "Update Content to Workshop",
+    "update_group":                  "Update Group",
+    "upload_to_workshop":            "Upload To Workshop",
+    "use_data_range":                "Use data range",
+    "your_workshop_page":            "Your Workshop Page",
+
     "": ""
 }

@@ -1,22 +1,25 @@
 function Node_Slideshow(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name    = "Slideshow";
 	project = PROJECT;
-	
-	is_controller = true;
-	
+	color   = COLORS._main_accent;
 	setDimension(128, 32);
 	
-	newInput(0, nodeValue_Int("Order", 0));
+	is_controller = true;
+	slide_title   = "";
+	slide_anchor  = 0;
+	slide_speed   = 32;
+	slide_zoom    = 0;
 	
-	newInput(1, nodeValue_Text("Title"));
+	newInput(2, nodeValue_EScroll( "Anchor",        0, [ "Center", "Top left" ]));
 	
-	newInput(2, nodeValue_Enum_Scroll("Anchor",  0, [ "Center", "Top left" ]));
+	newInput(0, nodeValue_Int(     "Order",         0 ));
+	newInput(1, nodeValue_Text(    "Title"            ));
+	newInput(3, nodeValue_Float(   "Arrival Speed", 4 ));
+	newInput(4, nodeValue_Float(   "Zoom Level",    0 ));
 	
-	newInput(3, nodeValue_Float("Arrival Speed", 4));
-	
-	slide_title  = "";
-	slide_anchor = 0;
-	slide_speed  = 32;
+	input_display_list = [ 2, 
+		0, 1, 3, 4, 
+	];
 	
 	static step = function() {
 		var _ord = inputs[0].getValue();
@@ -25,6 +28,7 @@ function Node_Slideshow(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		slide_title  = inputs[1].getValue();
 		slide_anchor = inputs[2].getValue();
 		slide_speed  = max(1, 100 / inputs[3].getValue());
+		slide_zoom   = inputs[4].getValue();
 		
 		setDisplayName($"Slide-{slide_title}", false);
 	}

@@ -161,6 +161,8 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 		for(var i = 0; i < amo; i++) {
 			var _spr = _sprs[i];
+			if(!sprite_exists(_spr)) continue;
+			
 			var _w = sprite_get_width(_spr);
 			var _h = sprite_get_height(_spr);
 			
@@ -176,6 +178,8 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 					break;
 			}
 		}
+		
+		if(ww == -1) return;
 		
 		_ww = ww;
 		_hh = hh;

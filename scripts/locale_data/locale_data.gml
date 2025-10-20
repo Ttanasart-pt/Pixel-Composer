@@ -1,12 +1,10 @@
 #region data
-	globalvar LOCALE, TEST_LOCALE, LOCALE_DEF;
-	globalvar LOCALE_NOTE_DATA, LOCALE_NOTE_JUNC;
+	globalvar LOCALE; LOCALE       = { fontDir: "", config: { per_character_line_break: false } }
+	globalvar TEST_LOCALE; TEST_LOCALE  = 0;
+	globalvar LOCALE_DEF; LOCALE_DEF   = 1;
 	
-	TEST_LOCALE  = 0;
-	LOCALE_DEF   = 1;
-	LOCALE       = { fontDir: "", config: { per_character_line_break: false } }
-	LOCALE_NOTE_DATA = {};
-	LOCALE_NOTE_JUNC = {};
+	globalvar LOCALE_NOTE_DATA; LOCALE_NOTE_DATA = {};
+	globalvar LOCALE_NOTE_JUNC; LOCALE_NOTE_JUNC = {};
 	
 	global.missing_locale     = {}
 	global.missing_lfile      = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/data/Locale/missing.txt";

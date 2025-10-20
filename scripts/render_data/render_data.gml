@@ -312,7 +312,7 @@ enum RENDER_TYPE {
 			
 			LOG_END();
 			RENDERING = undefined;
-			PANEL_GRAPH.draw_refresh = true;
+			PANEL_GRAPH.refreshDraw(1);
 			
 			return true;
 		}
