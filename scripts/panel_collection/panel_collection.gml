@@ -927,10 +927,14 @@ function Panel_Collection() : PanelContent() constructor {
 		
 		if(TESTING) {
 			var txt = __txt("Collection Manager");
-			if(buttonInstant(bb, bx, by, bs, bs, m, hov, foc, txt, THEME.gear, 0, COLORS._main_icon, 1, .9) == 2)
+			if(buttonInstant(bb, bx, by, bs, bs, m, hov, foc, txt, THEME.gear, 0, COLORS._main_icon, .75, .9) == 2)
 				dialogPanelCall(new Panel_Collection_Manager()); 
 			bx -= bs + ui(4); if(bx < rootx) return;
 			
+			var txt = __txt("Create default Zip");
+			if(buttonInstant(bb, bx, by, bs, bs, m, hov, foc, txt, THEME.gear, 0, COLORS._main_icon, .75, .9) == 2)
+				__test_zip_collection(COLLECTIONS);
+			bx -= bs + ui(4); if(bx < rootx) return;
 		}
 	}
 	

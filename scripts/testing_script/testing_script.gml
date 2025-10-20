@@ -240,4 +240,6 @@ function __test_zip_collection(dir = COLLECTIONS) {
 	
 	ds_stack_destroy(st);
 	zip_save(_zip, _targ);
+	
+	print("---------- COLLECTION ZIP ----------");
 }

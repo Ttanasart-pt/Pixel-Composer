@@ -1962,6 +1962,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		node.valueUpdate(index, _o);
+		_valueFrom.node.resetRender(false);
+		
 		if(_update && connect_type == CONNECT_TYPE.input) {
 			node.valueFromUpdate(index);
 			node.refreshNodeDisplay();
@@ -1969,7 +1971,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			node.clearCacheForward();
 			
 			if(PANEL_GRAPH) PANEL_GRAPH.connection_draw_update = true;
-			UPDATE |= RENDER_TYPE.partial;
 		}
 		
 		cache_array[0] = false;

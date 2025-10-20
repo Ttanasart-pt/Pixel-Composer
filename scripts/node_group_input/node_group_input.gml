@@ -187,10 +187,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		if(!is_undefined(inParent))
 			array_remove(group.inputs, inParent);
 		
-		inParent = nodeValue("Value", group, CONNECT_TYPE.input, VALUE_TYPE.any, -1)
-			.uncache()
-			.setVisible(true, true);
-		
+		inParent = nodeValue("Value", group, CONNECT_TYPE.input, VALUE_TYPE.any, -1).uncache().setVisible(true, true);
 		inParent.from  = self;
 		inParent.index = array_length(group.inputs);
 		
