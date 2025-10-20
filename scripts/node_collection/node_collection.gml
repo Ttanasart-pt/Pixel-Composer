@@ -1,48 +1,51 @@
 function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) constructor { 
-	doUpdate    = doUpdateLite;
-	
-	nodes       = [];
-	node_length = 0;
-	modifiable  = true;
-	
-	ungroupable			= true;
-	auto_render_time	= false;
-	combine_render_time = true;
-	previewable         = true;
-	
-	isPure    = false;
-	nodeTopo  = [];
-	nodeTree  = noone;
-	thumbnail = noone;
-	
-	reset_all_child = false;
-	isInstancer		= false;
-	
-	input_display_list_def = [];
-	custom_input_index     = 0;
-	custom_output_index    = 0;
-	
-	metadata = new MetaDataManager();
-	
-	group_input_display_list		= [];
-	group_output_display_list		= [];
-	attributes.input_display_list   = [];
-	attributes.output_display_list  = [];
-	
+	doUpdate = doUpdateLite;
 	managedRenderOrder = false;
-	
 	skipDefault();
 	
-	__dummy_input = nodeValue("Add to group", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0);
-	__dummy_input.setDummy(function(juncFrom) /*=>*/ { 
-		var input = nodeBuild("Node_Group_Input", 0, 0, self); 
-		var _tind = array_find(GROUP_IO_TYPE_MAP, juncFrom.type);
+	#region group
+		nodes       = [];
+		node_length = 0;
+		modifiable  = true;
 		
-		input.attributes.inherit_type = false;
-		if(_tind != -1) input.inputs[2].setValue(_tind);
+		ungroupable			= true;
+		auto_render_time	= false;
+		combine_render_time = true;
+		previewable         = true;
+	
+		isPure    = false;
+		nodeTopo  = [];
+		nodeTree  = noone;
+		thumbnail = noone;
+	
+		reset_all_child = false;
+		isInstancer		= false;
 		
-		return input.inParent; 
-	}, function(_junc) /*=>*/ { _junc.from.destroy() } );
+		metadata = new MetaDataManager();
+		collPath = "";
+	#endregion
+	
+	#region io
+		input_display_list_def = [];
+		custom_input_index     = 0;
+		custom_output_index    = 0;
+		
+		group_input_display_list		= [];
+		group_output_display_list		= [];
+		attributes.input_display_list   = [];
+		attributes.output_display_list  = [];
+	
+		__dummy_input = nodeValue("Add to group", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0);
+		__dummy_input.setDummy(function(juncFrom) /*=>*/ { 
+			var input = nodeBuild("Node_Group_Input", 0, 0, self); 
+			var _tind = array_find(GROUP_IO_TYPE_MAP, juncFrom.type);
+			
+			input.attributes.inherit_type = false;
+			if(_tind != -1) input.inputs[2].setValue(_tind);
+			
+			return input.inParent; 
+		}, function(_junc) /*=>*/ { _junc.from.destroy() } );
+	#endregion
 	
 	////- Attributes
 	

@@ -23,36 +23,130 @@
 #endregion
 
 function Panel_Collection() : PanelContent() constructor {
-	title      = __txt("Collections");
-	expandable = false;
-	
-	group_w          = ui(140);
-	group_w_dragging = false;
-	group_w_sx       = false;
-	group_w_mx       = false;
-	
-	top_h     = ui(36);
-	content_w = w - ui( 8) - group_w;
-	content_h = h - top_h - ui(8);
-	
-	min_w = group_w + ui(40);
-	min_h = ui(40);
-	
-	roots    = [ ["Collections", COLLECTIONS], ["Assets", global.ASSETS], ["Projects", STEAM_PROJECTS], ["Nodes", ALL_NODES] ];
-	pageStr  = array_create_ext(array_length(roots), function(i) /*=>*/ {return roots[i][0]});
-	sc_pages = new scrollBox(pageStr, function(i) /*=>*/ { setPage(i); }).setType(1).setAlign(fa_left);
-	
-	page     = 0;
-	root     = roots[page][1];
-	context  = root;
-	
-	file_dragging = noone;
-	_menu_node    = noone;
-	updated_path  = noone;
-	updated_prog  = 0;
-	data_path     = "";
-	
+	title = __txt("Collections");
 	PANEL_COLLECTION = self;
+	
+	#region dimension
+		expandable = false;
+		
+		group_w          = ui(140);
+		group_w_dragging = false;
+		group_w_sx       = false;
+		group_w_mx       = false;
+		
+		top_h     = ui(36);
+		content_w = w - ui( 8) - group_w;
+		content_h = h - top_h - ui(8);
+		
+		min_w = group_w + ui(40);
+		min_h = ui(40);
+	#endregion
+	
+	#region pages
+		roots    = [ ["Collections", COLLECTIONS], ["Assets", global.ASSETS], ["Projects", STEAM_PROJECTS], ["Nodes", ALL_NODES] ];
+		pageStr  = array_create_ext(array_length(roots), function(i) /*=>*/ {return roots[i][0]});
+		sc_pages = new scrollBox(pageStr, function(i) /*=>*/ { setPage(i); }).setType(1).setAlign(fa_left);
+		
+		page     = 0;
+		root     = roots[page][1];
+		context  = root;
+		
+		file_dragging = noone;
+		_menu_node    = noone;
+		updated_path  = noone;
+		updated_prog  = 0;
+		data_path     = "";
+			
+		grid_size     = ui(52);
+		grid_size_to  = grid_size;
+		
+	#endregion
+	
+	#region search
+		searching     = false;
+		search_string = "";
+		search_list   = [];
+		
+		function doSearch() {
+			var search_lower = string_lower(search_string);
+			search_list = [];
+			
+			switch(pageStr[page]) {
+				case "Collections" :
+				case "Assets" : 
+					searchCollection(search_list, search_string);
+					break;
+					
+				case "Projects" : 
+					var st = ds_stack_create();
+					var ll = ds_priority_create();
+					
+					for( var i = 0, n = array_length(STEAM_PROJECTS); i < n; i++ ) {
+						var _nd = STEAM_PROJECTS[i];
+							
+						var match = string_partial_match(string_lower(_nd.name), search_lower);
+						if(match == -9999) continue;
+						
+						ds_priority_add(ll, _nd, match);
+					}
+					
+					repeat(ds_priority_size(ll))
+						array_push(search_list, ds_priority_delete_max(ll));
+					
+					ds_priority_destroy(ll);
+					ds_stack_destroy(st);
+					break;
+					
+				case "Nodes" : 
+					var pr_list    = ds_priority_create();
+					var search_map = ds_map_create();
+					
+					for(var i = 0; i < array_length(NODE_CATEGORY); i++) {
+						var cat = NODE_CATEGORY[i];
+						
+						if(!struct_has(cat, "list")) continue;
+						if(!array_empty(cat[$ "filter"])) continue;
+						
+						var _content = cat.list;
+						for(var j = 0; j < array_length(_content); j++) {
+							var _node = _content[j];
+							
+							if(is_string(_node))				      continue;
+							if(ds_map_exists(search_map, _node))      continue;
+							if(!is(_node, NodeObject))     continue;
+							if(_node.patreon && !IS_PATREON)          continue;
+							if(_node.deprecated)					  continue;
+							
+							var match = string_partial_match(string_lower(_node.getName()), search_lower);
+							var param = "";
+							
+							for( var k = 0; k < array_length(_node.tags); k++ ) {
+								var mat = string_partial_match(_node.tags[k], search_lower) - 10;
+								if(mat > match) {
+									match = mat;
+									param = _node.tags[k];
+								}
+							}
+							
+							if(match == -9999) continue;
+							
+							ds_priority_add(pr_list, _node, match);
+							search_map[? _node] = 1;
+						}
+					}
+					
+					ds_map_destroy(search_map);
+					
+					repeat(ds_priority_size(pr_list))
+						array_push(search_list, ds_priority_delete_max(pr_list));
+					
+					ds_priority_destroy(pr_list);
+					break;
+			}
+		}
+		
+		tb_search     = textBox_Text(function(str) /*=>*/ { search_string = string(str); doSearch(); }).setAutoupdate().setFont(f_p3);
+	#endregion
 	
 	#region ++++++++++++ Actions ++++++++++++
 		function replace() { 
@@ -191,94 +285,7 @@ function Panel_Collection() : PanelContent() constructor {
 				}, THEME.steam_invert_24).setParam(meta.file_id) );
 			}
 		}
-	}
-	initMenu();
-	
-	searching     = false;
-	search_string = "";
-	search_list   = [];
-	
-	function doSearch() {
-		var search_lower = string_lower(search_string);
-		search_list = [];
-		
-		switch(pageStr[page]) {
-			case "Collections" :
-			case "Assets" : 
-				searchCollection(search_list, search_string);
-				break;
-				
-			case "Projects" : 
-				var st = ds_stack_create();
-				var ll = ds_priority_create();
-				
-				for( var i = 0, n = array_length(STEAM_PROJECTS); i < n; i++ ) {
-					var _nd = STEAM_PROJECTS[i];
-						
-					var match = string_partial_match(string_lower(_nd.name), search_lower);
-					if(match == -9999) continue;
-					
-					ds_priority_add(ll, _nd, match);
-				}
-				
-				repeat(ds_priority_size(ll))
-					array_push(search_list, ds_priority_delete_max(ll));
-				
-				ds_priority_destroy(ll);
-				ds_stack_destroy(st);
-				break;
-				
-			case "Nodes" : 
-				var pr_list    = ds_priority_create();
-				var search_map = ds_map_create();
-				
-				for(var i = 0; i < array_length(NODE_CATEGORY); i++) {
-					var cat = NODE_CATEGORY[i];
-					
-					if(!struct_has(cat, "list")) continue;
-					if(!array_empty(cat[$ "filter"])) continue;
-					
-					var _content = cat.list;
-					for(var j = 0; j < array_length(_content); j++) {
-						var _node = _content[j];
-						
-						if(is_string(_node))				      continue;
-						if(ds_map_exists(search_map, _node))      continue;
-						if(!is(_node, NodeObject))     continue;
-						if(_node.patreon && !IS_PATREON)          continue;
-						if(_node.deprecated)					  continue;
-						
-						var match = string_partial_match(string_lower(_node.getName()), search_lower);
-						var param = "";
-						
-						for( var k = 0; k < array_length(_node.tags); k++ ) {
-							var mat = string_partial_match(_node.tags[k], search_lower) - 10;
-							if(mat > match) {
-								match = mat;
-								param = _node.tags[k];
-							}
-						}
-						
-						if(match == -9999) continue;
-						
-						ds_priority_add(pr_list, _node, match);
-						search_map[? _node] = 1;
-					}
-				}
-				
-				ds_map_destroy(search_map);
-				
-				repeat(ds_priority_size(pr_list))
-					array_push(search_list, ds_priority_delete_max(pr_list));
-				
-				ds_priority_destroy(pr_list);
-				break;
-		}
-	}
-	
-	tb_search     = textBox_Text(function(str) /*=>*/ { search_string = string(str); doSearch(); }).setAutoupdate().setFont(f_p3);
-	grid_size     = ui(52);
-	grid_size_to  = grid_size;
+	} initMenu();
 	
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -853,17 +860,19 @@ function Panel_Collection() : PanelContent() constructor {
 		sc_pages.draw(_sx, _sy, _sw, _sh, pageS, m, x, y);
 		rootx = _sx + _sw + ui(8);
 		
-		var bSpr = THEME.button_hide_fill;
+		var bb = THEME.button_hide_fill;
 		var pd = ui(4);
 		var bs = ui(28);
 		var bx = w - (bs + pd);
 		var by = pd;
 		var bc = searching? COLORS._main_accent : COLORS._main_icon;
 		
-		if(buttonInstant(bSpr, bx, by, bs, bs, m, hov, foc, __txt("Search"), THEME.search_24, 0, bc, 1, .9) == 2)
+		if(buttonInstant(bb, bx, by, bs, bs, m, hov, foc, __txt("Search"), THEME.search_24, 0, bc, 1, .9) == 2)
 			search_toggle();
 			
 		bx -= bs + ui(4);
+		
+		////- =Topbar
 		
 		if(searching) {
 			var tb_w = ui(200);
@@ -876,10 +885,9 @@ function Panel_Collection() : PanelContent() constructor {
 		}
 		
 		if(pageS == "Collections" && !DEMO) {
-			if(bx < rootx) return;
 			if(context != root) {
 				var txt = __txtx("panel_collection_add_node", "Add selecting node as collection");
-				if(buttonInstant(bSpr, bx, by, bs, bs, m, hov, foc, txt, THEME.add_20, 0, COLORS._main_value_positive, 1, .9) == 2) {
+				if(buttonInstant(bb, bx, by, bs, bs, m, hov, foc, txt, THEME.add_20, 0, COLORS._main_value_positive, 1, .9) == 2) {
 					if(PANEL_INSPECTOR.getInspecting() != noone) {
 						data_path = context.path;
 						var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(8));
@@ -892,37 +900,40 @@ function Panel_Collection() : PanelContent() constructor {
 				}
 			} else
 				draw_sprite_ui_uniform(THEME.add, 0, bx + bs / 2, by + bs / 2, 1, COLORS._main_icon_dark);	
-			bx -= bs + ui(4);
+			bx -= bs + ui(4); if(bx < rootx) return;
 			
-			if(bx < rootx) return;
 			var txt = __txtx("panel_collection_add_folder", "Add folder");
-			if(buttonInstant(bSpr, bx, by, bs, bs, m, hov, foc, txt, THEME.dFolder_add, 0, COLORS._main_icon, 1, .9) == 2) 
+			if(buttonInstant(bb, bx, by, bs, bs, m, hov, foc, txt, THEME.dFolder_add, 0, COLORS._main_icon, 1, .9) == 2) 
 				fileNameCall(context.path, function(txt) /*=>*/ { directory_create(txt); refreshContext(); });
-			bx -= bs + ui(4);
+			bx -= bs + ui(4); if(bx < rootx) return;
 		}
 	
 		if(pageS != "Nodes") {
-			if(bx < rootx) return;
 			var txt = __txtx("panel_collection_open_file", "Open in file explorer");
-			if(buttonInstant(bSpr, bx, by, bs, bs, m, hov, foc, txt, THEME.dPath_open, 0, COLORS._main_icon, 1, .9) == 2)
+			if(buttonInstant(bb, bx, by, bs, bs, m, hov, foc, txt, THEME.dPath_open, 0, COLORS._main_icon, 1, .9) == 2)
 				shellOpenExplorer(context.path);
-			bx -= bs + ui(4);
+			bx -= bs + ui(4); if(bx < rootx) return;
 			
-			if(bx < rootx) return;
 			var txt = __txt("Refresh");
-			if(buttonInstant(bSpr, bx, by, bs, bs, m, hov, foc, txt, THEME.refresh_icon, 0, COLORS._main_icon, 1, .9) == 2)
+			if(buttonInstant(bb, bx, by, bs, bs, m, hov, foc, txt, THEME.refresh_icon, 0, COLORS._main_icon, 1, .9) == 2)
 				refreshContext();
-			bx -= bs + ui(4);
-		
+			bx -= bs + ui(4); if(bx < rootx) return;
 		}
 		
-		if(bx < rootx) return;
 		var txt = __txt("Settings");
-		if(buttonInstant(bSpr, bx, by, bs, bs, m, hov, foc, txt, THEME.gear, 0, COLORS._main_icon, 1, .9) == 2)
+		if(buttonInstant(bb, bx, by, bs, bs, m, hov, foc, txt, THEME.gear, 0, COLORS._main_icon, 1, .9) == 2)
 			dialogPanelCall(new Panel_Collections_Setting(), x + bx, y + by - 8, { anchor: ANCHOR.bottom | ANCHOR.left }); 
-		bx -= bs + ui(4);
-	}
+		bx -= bs + ui(4); if(bx < rootx) return;
 		
+		if(TESTING) {
+			var txt = __txt("Collection Manager");
+			if(buttonInstant(bb, bx, by, bs, bs, m, hov, foc, txt, THEME.gear, 0, COLORS._main_icon, 1, .9) == 2)
+				dialogPanelCall(new Panel_Collection_Manager()); 
+			bx -= bs + ui(4); if(bx < rootx) return;
+			
+		}
+	}
+	
 	////- Serialize
 		
     static serialize = function() { 

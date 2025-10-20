@@ -1,16 +1,18 @@
 globalvar PROFILER_STAT; PROFILER_STAT = 0;
 globalvar PROFILER_DATA; PROFILER_DATA = [];
 
-function profile_log(_level, _text) { 
+function profile_log(_level, _text, _desc = "") { 
 	if(!PROFILER_STAT) return;
-	array_push(PROFILER_DATA, new profile_message(_level, _text));
+	array_push(PROFILER_DATA, new profile_message(_level, _text, _desc));
 }
 
-function profile_message(_level, _text) constructor {
+function profile_message(_level, _text, _desc = "") constructor {
 	type  = "message";
 	node  = undefined;
 	level = _level; 
 	text  = _text;
+	
+	desc  = _desc;
 }
 
 function Panel_Profile_Render() : PanelContent() constructor {

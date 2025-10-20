@@ -191,7 +191,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			.uncache()
 			.setVisible(true, true);
 		
-		inParent.from = self;
+		inParent.from  = self;
 		inParent.index = array_length(group.inputs);
 		
 		array_push(group.inputs, inParent);
@@ -514,12 +514,12 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _sca = inputs[13].getValue();
 		var _rot = inputs[14].getValue();
 		
-		var _px  = _x + _pos[0] * _s;
-		var _py  = _y + _pos[1] * _s;
-		_s *= _sca;
+		var _px = _x + _pos[0] * _s;
+		var _py = _y + _pos[1] * _s;
+		    _s *= _sca;
 		
 		inParent.overlay_draw_text = inputs[15].getValue();
-		return inParent.drawOverlay(hover, active, _px, _py, _s, _mx, _my, _snx, _sny, _params);
+		return inParent.drawOverlay(hover, active, _px, _py, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static drawNode = function(_draw, _x, _y, _mx, _my, _s, display_parameter = noone, _panel = noone) { 

@@ -1122,8 +1122,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var _outp = outputs[i];
 			
 			array_foreach(_outp.getJunctionTo(), function(_t) /*=>*/ {
-				// print($"Propagate passive dynamic to {_t.node}")
+				if(has(_t, "from") && is(_t.from, Node_Group_Input)) {
+					profile_log(3, $"Propagate passive dynamic to group io {_t.from}");
+					_t.from.passiveDynamic = true;
+					_t.from.rendered       = false;
+				}
 				
+				profile_log(3, $"Propagate passive dynamic to {_t.node}");
 				_t.node.passiveDynamic = true;
 				_t.node.rendered       = false;
 			});

@@ -8,7 +8,7 @@ function __initCollection() {
 	
 	if(check_version($"{root}/version")) {
 		COLLECTIONS = new DirectoryObject(DIRECTORY + "Collections");
-		clearDefaultCollection();
+		// clearDefaultCollection();
 		COLLECTIONS.free();
 		
 		zip_unzip($"{working_directory}data/collections.zip", root);

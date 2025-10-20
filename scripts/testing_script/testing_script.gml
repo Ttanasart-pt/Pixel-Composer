@@ -1,11 +1,8 @@
-function __test_update_current_collections(dir = COLLECTIONS) {
+function __test_update_collections(dir = COLLECTIONS) {
 	var st = ds_stack_create();
 	ds_stack_push(st, dir);
 	
 	print("---------- COLLECTION UPDATING STARTED ----------");
-	
-	var sel = PANEL_GRAPH.getFocusingNode(), outj = noone;
-	if(sel != noone) outj = sel.outputs[0];
 	
 	while(!ds_stack_empty(st)) {
 		var _st = ds_stack_pop(st);
@@ -50,7 +47,7 @@ function __test_update_sample_projects() {
 	print("---------- PROJECT UPDATING ENDED ----------");
 }
 
-function __test_load_current_collections(dir = COLLECTIONS) {
+function __test_load_collections(dir = COLLECTIONS) {
 	var st = ds_stack_create();
 	ds_stack_push(st, dir);
 	
@@ -167,7 +164,7 @@ function __test_load_all_nodes() {
 	noti_status("Node test completed.");
 }
 
-function __test_metadata_current_collections(dir = COLLECTIONS) {
+function __test_update_collections_meta(dir = COLLECTIONS) {
 	var st = ds_stack_create();
 	ds_stack_push(st, dir);
 	
@@ -207,4 +204,40 @@ function __test_generate_theme() {
 	_txt += "}";
 	
 	clipboard_set_text(_txt);
+}
+
+function __test_zip_collection(dir = COLLECTIONS) {
+	var _dirr = dir.path + "/";
+	var _targ = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/data/Collections.zip"
+	var _zip  = zip_create();
+	
+	var st = ds_stack_create();
+	ds_stack_push(st, dir);
+	
+	while(!ds_stack_empty(st)) {
+		var _st = ds_stack_pop(st);
+		for( var i = 0; i < array_length(_st.content); i++ ) {
+			var _node = _st.content[i];
+			var _meta = _node.getMetadata();
+			if(_meta == noone || !_meta.isDefault) continue;
+			
+			var _cpath = _node.path;
+			var _spath = _node.spr_path;
+			var _mpath = _node.meta_path;
+			
+			var zcpath = string_replace(_cpath, _dirr, "");
+			var zspath = string_replace(_spath, _dirr, "");
+			var zmpath = string_replace(_mpath, _dirr, "");
+			
+			zip_add_file(_zip, zcpath, _cpath); 
+			zip_add_file(_zip, zspath, _spath); 
+			zip_add_file(_zip, zmpath, _mpath); 
+		}
+		
+		for( var i = 0; i < array_length(_st.subDir); i++ )
+			ds_stack_push(st, _st.subDir[i]);
+	}
+	
+	ds_stack_destroy(st);
+	zip_save(_zip, _targ);
 }

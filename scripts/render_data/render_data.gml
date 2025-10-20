@@ -53,13 +53,15 @@ enum RENDER_TYPE {
 			array_push(_parents, _in);
 		}
 		
-		if(is(_node, Node_Collection) && !_node.managedRenderOrder)
-			__topoSort(_arr, _node.nodes, _sorted, _project);
-		
 		for( var i = 0, n = array_length(_parents); i < n; i++ ) 
 			__sortNode(_arr, _parents[i], _sorted, _nodeMap, _project);
 		
+		if(is(_node, Node_Collection) && !_node.managedRenderOrder)
+			__topoSort(_arr, _node.nodes, _sorted, _project);
+		
 		if(struct_has(_sorted, _node.node_id)) return;
+		
+		// print($" Push: {_node}")
 		array_push(_arr, _node);
 		_sorted[$ _node.node_id] = 1;
 		_node.__nextNodes        = noone;
@@ -71,7 +73,7 @@ enum RENDER_TYPE {
 		var _leftOver = [];
 		var _global   = _nodeArr == _project.nodes;
 		var _nodeMap  = _global? undefined : {};
-		__temp_nodeList = _nodeArr;
+		__temp_nodes  = _nodeArr;
 		
 		for( var i = 0, n = array_length(_nodeArr); i < n; i++ ) {
 			var _node   = _nodeArr[i];
@@ -89,7 +91,7 @@ enum RENDER_TYPE {
 					var _to = _node.outputs[j].getJunctionTo();
 					
 					if(_global) _isLeaf = _isLeaf &&  array_empty(_to);
-					else        _isLeaf = _isLeaf && !array_any(_to, function(_val) /*=>*/ {return array_exists(__temp_nodeList, _val.node)});
+					else        _isLeaf = _isLeaf && !array_any(_to, function(_val) /*=>*/ {return array_exists(__temp_nodes, _val.node)});
 					
 					if(!_isLeaf) break;
 				}
@@ -97,6 +99,9 @@ enum RENDER_TYPE {
 			
 			if(_isLeaf) array_push(_leaf, _node);
 		}
+		
+		// print(">>>> TOPO <<<<")
+		// print("Leaves", _nodeArr, "->", _leaf);
 		
 		for( var i = 0, n = array_length(_leaf); i < n; i++ ) 
 			__sortNode(_arr, _leaf[i], _sorted, _nodeMap, _project);
@@ -106,21 +111,25 @@ enum RENDER_TYPE {
 				array_insert(_arr, 0, _leftOver[i]);
 		}
 		
-		__temp_nodeList = [];
+		// print(">>>> TOPO END <<<<")
+		
+		__temp_nodes = [];
 		return _arr;
 	}
 	
 	function NodeTopoSort(_project = PROJECT) {
 		LOG_IF(global.FLAG.render == 1, $"======================= RESET TOPO =======================")
 		
-		var amo  = array_length(_project.allNodes);
-		var _t   = get_timer();
+		var amo = array_length(_project.allNodes);
+		var _t  = get_timer();
 		
 		array_foreach(_project.allNodes, function(n) /*=>*/ { if(is(n, Node_Collection)) n.refreshNodes(); });
 		
+		// print("========== NodeTopoSort ==========")
 		_project.nodeTopo = [];
 		__topoSort(_project.nodeTopo, _project.nodes, {}, _project);
 		_project.nodeTopo = array_unique(_project.nodeTopo);
+		// print($"Node TOPO:\n{_project.nodeTopo}")
 		
 		array_foreach(_project.allNodes, function(n) /*=>*/ { if(is(n, Node_Group)) n.updateInstance(); });
 		
@@ -156,16 +165,14 @@ enum RENDER_TYPE {
 		if(is_undefined(_node)) { LOG_IF(global.FLAG.render == 1, $"Skip undefiend		  [{_node}]"); return false; }
 		if(!is(_node, Node))    { LOG_IF(global.FLAG.render == 1, $"Skip non-node		  [{_node}]"); return false; }
 		
+		if(!_node.active)		{ LOG_IF(global.FLAG.render == 1, $"Skip inactive         [{_node.internalName}]"); return false; }
 		if(_node.is_group_io)   { LOG_IF(global.FLAG.render == 1, $"Skip group IO		  [{_node.internalName}]"); return false; }
 		
-		if(!_node.active)				   { LOG_IF(global.FLAG.render == 1, $"Skip inactive         [{_node.internalName}]"); return false; }
+		if(_node.passiveDynamic)           { LOG_IF(global.FLAG.render == 1, $"Skip passive dynamic  [{_node.internalName}]"); return false; }
 		if(!_node.isRenderActive())		   { LOG_IF(global.FLAG.render == 1, $"Skip render inactive  [{_node.internalName}]"); return false; }
 		if(!_node.attributes.update_graph) { LOG_IF(global.FLAG.render == 1, $"Skip non-auto update  [{_node.internalName}]"); return false; }
-				
-		if(_node.passiveDynamic) { _node.forwardPassiveDynamic();  LOG_IF(global.FLAG.render == 1, $"Skip passive dynamic  [{_node.internalName}]"); return false; }
 		
 		if(!_node.isActiveDynamic()) { LOG_IF(global.FLAG.render == 1, $"Skip rendered static  [{_node.internalName}]"); return false; }
-		// if(!_node.isLeaf())          { LOG_IF(global.FLAG.render == 1, $"Skip connected  [{_node.internalName}]");       return false; }
 		
 		if(_node.inline_context != noone && _node.inline_context.managedRenderOrder) {
 			LOG_IF(global.FLAG.render == 1, $"Skip managedRenderOrder  [{_node.internalName}]"); 
@@ -174,20 +181,6 @@ enum RENDER_TYPE {
 		}
 		
 		return true;
-	}
-	
-	function Render(_project = PROJECT, _partial = false, _runAction = false) { 
-		if(RENDERING == undefined) {
-			WILL_RENDERING = undefined;
-			return new RenderObject(_project, _partial, _runAction);
-		}
-		
-		WILL_RENDERING = { project: _project, partial: _partial };
-		return noone; 
-	}
-	
-	function RenderSync(_project = PROJECT, _partial = false, _runAction = false) {
-		var _ = new RenderObject(_project, _partial, _runAction).render(infinity);
 	}
 	
 	function RenderObject(_project = PROJECT, _partial = false, _runAction = false) constructor {
@@ -229,7 +222,11 @@ enum RENDER_TYPE {
 			});
 			
 			array_foreach(project.nodeTopo, function(n) /*=>*/ { 
-				if(!__nodeIsRenderLeaf(n)) return;
+				if(!__nodeIsRenderLeaf(n)) { 
+					profile_log(2, $"Not leaf: {n.getFullName()} ({n.passiveDynamic})"); 
+					if(n.passiveDynamic) n.forwardPassiveDynamic();
+					return; 
+				}
 				
 				profile_log(2, $"Leaf: {n.getFullName()}");
 				RENDER_QUEUE.enqueue(n);
@@ -321,6 +318,20 @@ enum RENDER_TYPE {
 		
 		init();
 		render();
+	}
+	
+	function Render(_project = PROJECT, _partial = false, _runAction = false) { 
+		if(RENDERING == undefined) {
+			WILL_RENDERING = undefined;
+			return new RenderObject(_project, _partial, _runAction);
+		}
+		
+		WILL_RENDERING = { project: _project, partial: _partial };
+		return noone; 
+	}
+	
+	function RenderSync(_project = PROJECT, _partial = false, _runAction = false) {
+		var _ = new RenderObject(_project, _partial, _runAction).render(infinity);
 	}
 	
 	function __renderListReset(arr) { 
