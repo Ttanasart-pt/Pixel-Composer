@@ -175,7 +175,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		outputs_draw_index  = [];
 		out_cache_len       = -4;
 		
-		toRefreshNodeDisplay = false;
+		toRefreshNodeDisplay = true;
 		input_mask_index     = -1;
 		__mask_index         = undefined;
 		__mask_mod_index     = undefined;

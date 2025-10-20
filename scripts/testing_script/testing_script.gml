@@ -211,6 +211,8 @@ function __test_zip_collection(dir = COLLECTIONS) {
 	var _targ = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/data/Collections.zip"
 	var _zip  = zip_create();
 	
+	print("---------- ZIP COLLECTION STARTED ----------");
+	
 	var st = ds_stack_create();
 	ds_stack_push(st, dir);
 	
@@ -221,15 +223,15 @@ function __test_zip_collection(dir = COLLECTIONS) {
 			var _meta = _node.getMetadata();
 			if(_meta == noone || !_meta.isDefault) continue;
 			
-			var _cpath = _node.path;
-			var _spath = _node.spr_path;
-			var _mpath = _node.meta_path;
+			var _cpath = _node.path;      if(!file_exists(_cpath)) continue;
+			var _spath = _node.spr_path;  if(!file_exists(_spath)) continue;
+			var _mpath = _node.meta_path; if(!file_exists(_mpath)) continue;
 			
 			var zcpath = string_replace(_cpath, _dirr, "");
 			var zspath = string_replace(_spath, _dirr, "");
 			var zmpath = string_replace(_mpath, _dirr, "");
 			
-			zip_add_file(_zip, zcpath, _cpath); 
+			zip_add_file(_zip, zcpath, _cpath); print($" > Adding {zcpath}")
 			zip_add_file(_zip, zspath, _spath); 
 			zip_add_file(_zip, zmpath, _mpath); 
 		}
@@ -241,5 +243,5 @@ function __test_zip_collection(dir = COLLECTIONS) {
 	ds_stack_destroy(st);
 	zip_save(_zip, _targ);
 	
-	print("---------- COLLECTION ZIP ----------");
+	print("---------- ZIP COLLECTION ENDED ----------");
 }

@@ -56,9 +56,6 @@ enum RENDER_TYPE {
 		for( var i = 0, n = array_length(_parents); i < n; i++ ) 
 			__sortNode(_arr, _parents[i], _sorted, _nodeMap, _project);
 		
-		if(is(_node, Node_Collection) && !_node.managedRenderOrder)
-			__topoSort(_arr, _node.nodes, _sorted, _project);
-		
 		if(struct_has(_sorted, _node.node_id)) return;
 		
 		// print($" Push: {_node}")
@@ -66,6 +63,10 @@ enum RENDER_TYPE {
 		_sorted[$ _node.node_id] = 1;
 		_node.__nextNodes        = noone;
 		_node.__nextNodesToLoop  = noone;
+		
+		if(is(_node, Node_Collection) && !_node.managedRenderOrder)
+			__topoSort(_arr, _node.nodes, _sorted, _project);
+		
 	}
 	
 	function __topoSort(_arr = [], _nodeArr = [], _sorted = {}, _project = PROJECT) {

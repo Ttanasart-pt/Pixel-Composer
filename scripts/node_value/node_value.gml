@@ -1814,8 +1814,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			} else {
 				node.doUpdate();
 				node.triggerRender();
+				
 				node.valueUpdate(index);
 				node.clearCacheForward();
+				
+				if(is(from, Node)) {
+					from.doUpdate();
+					from.triggerRender();
+				}
 			}
 		}
 		
@@ -2690,8 +2696,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			_nodeid = GetAppendID(con_node);
 			
 			if(_nodeid == noone || !ds_map_exists(node.project.nodeMap, _nodeid)) {
-				var txt = $"Node connect error : Node ID {_nodeid} not found.";
-				log_warning("APPEND", $"[Connect] {txt}", node);
+				// var txt = $"Node connect error : Node ID {_nodeid} not found.";
+				// log_warning("APPEND", $"[Connect] {txt}", node);
 				return true;
 			}
 		}
