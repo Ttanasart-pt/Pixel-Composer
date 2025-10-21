@@ -25,6 +25,8 @@ function ExpFile(path) constructor {
 	th_w = 1;
 	th_h = 1;
 	
+	type = FILE_TYPE.others;
+	
 	static getThumbnail = function() {
 		if(thumbnail == -1) return noone;
 		else if(thumbnail != noone && sprite_exists(thumbnail)) return thumbnail;
@@ -33,6 +35,7 @@ function ExpFile(path) constructor {
 		switch(ext) {
 			case "png" :
 			case "jpg" :
+				type = FILE_TYPE.assets;
 				thumbnail = sprite_add(path, 0, 0, 0, 0, 0);
 				if(thumbnail) {
 					load_thumb = true;
@@ -45,7 +48,11 @@ function ExpFile(path) constructor {
 			case "cpxc":
 			case "pxc":
 			case "pxcc":
+				type = FILE_TYPE.project;
 				thumbnail = THEME.icon_64;
+				var s = project_get_thumbnail(path);
+				if(sprite_exists(s)) thumbnail = s;
+				
 				th_w = sprite_get_width(thumbnail);
 				th_h = sprite_get_height(thumbnail);
 				break;
@@ -170,6 +177,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 	
 	item_height  = ui(20);
 	grid_size    = ui(64);
+	list_size    = line_get_height(f_p2) + ui(4)
 	tb_root      = textBox_Text(function(v) /*=>*/ {return setRoot(v)});
 	
 	current_ext  = {};
@@ -257,10 +265,16 @@ function Panel_File_Explorer() : PanelContent() constructor {
 		var _sy = _y;
 		
 		draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text);
-		var _ith = line_get_height() + ui(4);
+		var _ith = list_size;
 		
 		var _graph_x = PANEL_GRAPH.graph_cx;
 		var _graph_y = PANEL_GRAPH.graph_cy;
+		
+		var hov = contentPane.hover;
+		var foc = contentPane.active;
+		
+		var _selc = merge_color(COLORS._main_icon_dark, COLORS._main_icon, 0.2);
+		var _butc = [ COLORS._main_icon, c_white ];
 		
 		for (var i = 0, n = array_length(dirObject.directories); i < n; i++) {
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text);
@@ -275,11 +289,11 @@ function Panel_File_Explorer() : PanelContent() constructor {
 			var _ppw = _pw;
 			
 			if(point_in_rectangle(_m[0], _m[1], _px, _py, _px + _pw, _py + _ph)) {
-				if(buttonInstant(THEME.button_hide_fill, _px + _ppw - _ph, _py, _ph, _ph, _m, pHOVER, pFOCUS, "Set as root", THEME.path_open_20) == 2)
+				if(buttonInstant(THEME.button_hide_fill, _px + _ppw - _ph, _py, _ph, _ph, _m, hov, foc, "Set as root", THEME.path_open_20) == 2)
 					setRoot(_dir.path);
 				_ppw -= _ph + ui(2);
 				
-				if(buttonInstant(THEME.button_hide_fill, _px + _ppw - _ph, _py, _ph, _ph, _m, pHOVER, pFOCUS, "Copy path", THEME.copy_20) == 2)
+				if(buttonInstant(THEME.button_hide_fill, _px + _ppw - _ph, _py, _ph, _ph, _m, hov, foc, "Copy path", THEME.copy_20) == 2)
 					clipboard_set_text(_dir.path);
 				_ppw -= _ph + ui(2);
 				
@@ -338,22 +352,18 @@ function Panel_File_Explorer() : PanelContent() constructor {
 					array_push(file_selectings, _fil);
 				
 				var _sel = array_exists(file_selectings, _fil);
-				var _tx = _px + ui(2);
-				var _ty = _py + ui(2);
-				var _th = _fil.getThumbnail();
-				
-				if(_sel) draw_sprite_stretched_ext(THEME.ui_panel_bg, 4, _px, _py, _tw, _ph, merge_color(COLORS._main_icon_dark, COLORS._main_icon, 0.2), 1);
+				if(_sel) draw_sprite_stretched_ext(THEME.ui_panel_bg, 4, _px, _py, _tw, _ph, _selc, 1);
 				
 				if(point_in_rectangle(_m[0], _m[1], _px, _py, _px + _pw, _py + _ph)) {
 					var _bx = _px + _tw + ui(4);
 					
-					if(path_is_image(_fil.path)) {
-						if(buttonInstant(noone, _bx, _py, _ph, _ph, _m, pHOVER, pFOCUS, "Import as Image", THEME.image_20, 0, [ COLORS._main_icon, c_white ]) == 2) {
+					if(_fil.type == FILE_TYPE.assets) {
+						if(buttonInstant(noone, _bx, _py, _ph, _ph, _m, hov, foc, "Import as Image", THEME.image_20, 0, _butc) == 2) {
 							Node_create_Image_path(_graph_x, _graph_y, _fil.path);
 							draggable = false;
 						} _bx += _ph + ui(2);
 						
-						if(buttonInstant(noone, _bx, _py, _ph, _ph, _m, pHOVER, pFOCUS, "Import as Canvas", THEME.canvas_20, 0, [ COLORS._main_icon, c_white ]) == 2) {
+						if(buttonInstant(noone, _bx, _py, _ph, _ph, _m, hov, foc, "Import as Canvas", THEME.canvas_20, 0, _butc) == 2) {
 							var node = nodeBuild("Node_Canvas", _graph_x, _graph_y).loadImagePath(_fil.path);
 							PANEL_PREVIEW.setNodePreview(node);
 							PANEL_INSPECTOR.inspecting = node;
@@ -361,8 +371,8 @@ function Panel_File_Explorer() : PanelContent() constructor {
 							draggable = false;
 						} _bx += _ph + ui(2);
 						
-					} else if(path_is_project(_fil.path)) {
-						if(buttonInstant(noone, _bx, _py, _ph, _ph, _m, pHOVER, pFOCUS, "Open Project", THEME.path_open_20, 0, [ COLORS._main_icon, c_white ]) == 2) {
+					} else if(_fil.type == FILE_TYPE.project) {
+						if(buttonInstant(noone, _bx, _py, _ph, _ph, _m, hov, foc, "Open Project", THEME.path_open_20, 0, _butc) == 2) {
 							LOAD_AT(_fil.path);
 							draggable = false;
 						} _bx += _ph + ui(2);
@@ -370,11 +380,15 @@ function Panel_File_Explorer() : PanelContent() constructor {
 					}
 				}
 				
+				var _thm = _fil.getThumbnail();
+				
 				if(contentPane.hover && point_in_rectangle(_m[0], _m[1], _px, _py, _px + _tw, _py + _ph)) {
 					if(!mouse_click(mb_left)) {
 						draw_sprite_stretched_ext(THEME.ui_panel, 1, _px, _py, _tw, _ph, COLORS._main_icon, .75);
-						if(!instance_exists(o_dialog_menubox))
-							TOOLTIP = [ _th, "sprite" ];
+						if(!instance_exists(o_dialog_menubox)) {
+							if(_fil.type == FILE_TYPE.assets)       TOOLTIP = [ _thm, "sprite"  ];
+							else if(_fil.type == FILE_TYPE.project) TOOLTIP = [ _fil, "project" ];
+						}
 					}
 					
 					file_hovering = _fil;
@@ -387,8 +401,8 @@ function Panel_File_Explorer() : PanelContent() constructor {
 					if(pFOCUS && mouse_press(mb_right)) {
 						__menu_file_selecting = _fil;
 						
-							 if(path_is_image(_fil.path))   menuCall("", menu_file_image);
-						else if(path_is_project(_fil.path)) menuCall("", menu_file_project);
+						if(_fil.type == FILE_TYPE.assets)       menuCall("", menu_file_image);
+						else if(_fil.type == FILE_TYPE.project) menuCall("", menu_file_project);
 					}
 					
 					if(pFOCUS && DOUBLE_CLICK) {
@@ -397,19 +411,23 @@ function Panel_File_Explorer() : PanelContent() constructor {
 					}
 				}
 				
-				if(sprite_exists(_th)) {
+				var _tx = _px + ui(2);
+				var _ty = _py + _ph / 2;
+				
+				if(sprite_exists(_thm)) {
 					gpu_set_texfilter(true);
 					var _ths = min(1, (_ph - ui(4)) / _fil.th_w, (_ph - ui(4)) / _fil.th_h);
-					draw_sprite_ext(_th, 0, _tx + _ph / 2, _py + _ph / 2, _ths, _ths, 0, c_white, 1);
+					draw_sprite_ext(_thm, 0, _tx + _ph / 2, _py + _ph / 2, _ths, _ths, 0, c_white, 1);
 					gpu_set_texfilter(false);
 				}
+				
 				_tx += _ph + ui(4);
 				
 				var _cc = COLORS._main_text;
 				if(_fil == file_focus)        _cc = COLORS._main_value_positive;
 				if(_fil.path == PROJECT.path) _cc = COLORS._main_accent;
 				
-				draw_set_text(f_p3, fa_left, fa_top, _cc);
+				draw_set_text(f_p3, fa_left, fa_center, _cc);
 				draw_text_add(_tx, _ty, _fil.name);
 				
 				_h  += _ith + ui(2);
@@ -470,8 +488,8 @@ function Panel_File_Explorer() : PanelContent() constructor {
 					if(pFOCUS && mouse_press(mb_right)) {
 						__menu_file_selecting = _fil;
 						
-							 if(path_is_image(_fil.path))   menuCall("", menu_file_image);
-						else if(path_is_project(_fil.path)) menuCall("", menu_file_project);
+							 if(_fil.type == FILE_TYPE.assets)  menuCall("", menu_file_image);
+						else if(_fil.type == FILE_TYPE.project) menuCall("", menu_file_project);
 					}
 					
 					if(pFOCUS && DOUBLE_CLICK) {
@@ -632,8 +650,13 @@ function Panel_File_Explorer() : PanelContent() constructor {
 			}
 		}
 		
-		if(view_mode == FILE_EXPLORER_VIEW.grid && pHOVER && key_mod_press(CTRL) && MOUSE_WHEEL != 0)
-			grid_size = clamp(grid_size + MOUSE_WHEEL, ui(32), ui(128));
+		if(pHOVER && key_mod_press(CTRL) && MOUSE_WHEEL != 0) {
+			if(view_mode == FILE_EXPLORER_VIEW.grid)
+				grid_size = clamp(grid_size + MOUSE_WHEEL, ui(32), ui(128));
+				
+			if(view_mode == FILE_EXPLORER_VIEW.list)
+				list_size = clamp(list_size + MOUSE_WHEEL, ui(24), ui(128));
+		}
 		
 		return _h;
 		

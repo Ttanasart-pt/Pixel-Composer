@@ -5,6 +5,39 @@ function __loadParams(readonly = false, override = false, apply_layout = false) 
 	self.apply_layout = apply_layout;
 }
 
+function readProjectFileContent(path) {
+	var _ext    = filename_ext_raw(path), s;
+	var rawBuff = buffer_load(path);
+	var offset  = 0;
+	buffer_to_start(rawBuff);
+	
+	var _id = buffer_read_text(rawBuff, 4);
+	var contBuff = rawBuff;
+	
+	if(_id == "PXCX") {
+		offset   = buffer_read(rawBuff, buffer_u32);
+		contBuff = buffer_create(1, buffer_grow, 1);
+		buffer_copy(rawBuff, offset, buffer_get_size(rawBuff) - offset, contBuff, 0);
+	}
+	
+	var compBuff = buffer_decompress(contBuff);
+	if(compBuff == -1) {
+		buffer_to_start(contBuff);
+		s = buffer_read(contBuff, buffer_string);
+		
+	} else {
+		buffer_to_start(compBuff);
+		s = buffer_read(compBuff, buffer_string);
+		buffer_delete(compBuff);
+	}
+	
+	buffer_delete_safe(rawBuff);
+	buffer_delete_safe(contBuff);
+	
+	var content = json_try_parse(s);
+	return content;
+}
+
 function LOAD_SAFE() { LOAD(true); }
 
 function LOAD(safe = false) {
@@ -125,37 +158,12 @@ function LOAD_AT(path, params = new __loadParams()) {
 	return instance_create(0, 0, project_loader, { path, content, log, params, t0, t1 });
 }
 
-function readProjectFileContent(path) {
-	var _ext    = filename_ext_raw(path), s;
-	var rawBuff = buffer_load(path);
-	var offset  = 0;
-	buffer_to_start(rawBuff);
+function LOAD_METADATA(path) {
+	var _content = readProjectFileContent(path);
+	if(!has(_content, "metadata")) return;
 	
-	var _id = buffer_read_text(rawBuff, 4);
-	var contBuff = rawBuff;
-	
-	if(_id == "PXCX") {
-		offset   = buffer_read(rawBuff, buffer_u32);
-		contBuff = buffer_create(1, buffer_grow, 1);
-		buffer_copy(rawBuff, offset, buffer_get_size(rawBuff) - offset, contBuff, 0);
-	}
-	
-	var compBuff = buffer_decompress(contBuff);
-	if(compBuff == -1) {
-		buffer_to_start(contBuff);
-		s = buffer_read(contBuff, buffer_string);
-		
-	} else {
-		buffer_to_start(compBuff);
-		s = buffer_read(compBuff, buffer_string);
-		buffer_delete(compBuff);
-	}
-	
-	buffer_delete_safe(rawBuff);
-	buffer_delete_safe(contBuff);
-	
-	var content = json_try_parse(s);
-	return content;
+	var _meta = new MetaDataManager().deserialize(_content.metadata);
+	return _meta;
 }
 
 function __EXPORT_ZIP()	{ exportPortable(PROJECT); }

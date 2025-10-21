@@ -14,7 +14,7 @@ function FileObject(_path) constructor {
 	
 	meta_path  = filename_ext_verify(path, ".meta");
 	meta	   = noone;
-	type	   = FILE_TYPE.assets;
+	type	   = FILE_TYPE.others;
 	
 	retrive_data	= false;
 	thumbnail_data	= -1;

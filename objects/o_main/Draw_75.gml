@@ -55,7 +55,8 @@ if(winMan_isMinimized()) exit;
 					draw_tooltip_text($"[{txt}]");
 					break;
 				
-				case "sprite" : draw_tooltip_sprite(content); break;
+				case "sprite"  : draw_tooltip_sprite(content);  break;
+				case "project" : draw_tooltip_project(content); break;
 				
 				default :
 					var tt = "";

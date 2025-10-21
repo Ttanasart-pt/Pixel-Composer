@@ -8,7 +8,8 @@
 	enum FILE_TYPE {
 		project,
 		collection,
-		assets
+		assets,
+		others, 
 	}
 	
 #endregion

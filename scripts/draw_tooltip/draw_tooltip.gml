@@ -187,6 +187,42 @@ function draw_tooltip_sprite(spr) {
 	draw_text(mx + (ww + pd * 2) / 2, my + hh + pd * 2 - ui(4), $"{sw} x {sh} px");
 }
 
+function draw_tooltip_project(pObj) {
+	if(!has(pObj, "path") || !has(pObj, "getThumbnail")) return;
+	
+	var pth = pObj.path;
+	var spr = pObj.getThumbnail();
+	
+	draw_set_font(f_p3);
+	var txt = filename_name(pth);
+	var tw  = string_width(txt) + ui(16);
+	
+	var ox = sprite_get_xoffset(spr);
+	var oy = sprite_get_yoffset(spr);
+	
+	var sw = sprite_get_width(spr);
+	var sh = sprite_get_height(spr);
+	var ss = max(2, tw / sw);
+	
+	var ww = sw * ss;
+	var hh = sh * ss + ui(16);
+	
+	var pd = ui(4);
+	var mx = min(mouse_mxs + ui(16), WIN_W - (ww + pd * 2));
+	var my = min(mouse_mys + ui(16), WIN_H - (hh + pd * 2));
+		
+	draw_sprite_stretched(THEME.textbox, 3, mx, my, ww + pd * 2, hh + pd * 2);
+	draw_sprite_stretched(THEME.textbox, 0, mx, my, ww + pd * 2, hh + pd * 2);
+	
+	var sx = mx + pd + ox * ss;
+	var sy = my + pd + oy * ss;
+	
+	draw_sprite_ext(spr, 0, sx, sy, ss, ss, 0, c_white, 1);
+	
+	draw_set_text(f_p3, fa_center, fa_bottom, COLORS._main_text_sub);
+	draw_text(mx + (ww + pd * 2) / 2, my + hh + pd * 2 - ui(4), txt);
+}
+
 function draw_tooltip_atlas(atlas) {
 	if(!is_array(atlas)) atlas = [ atlas ];
 	
