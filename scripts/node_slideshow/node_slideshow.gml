@@ -10,15 +10,18 @@ function Node_Slideshow(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	slide_speed   = 32;
 	slide_zoom    = 0;
 	
-	newInput(2, nodeValue_EScroll( "Anchor",        0, [ "Center", "Top left" ]));
-	
-	newInput(0, nodeValue_Int(     "Order",         0 ));
+	////- =Display
 	newInput(1, nodeValue_Text(    "Title"            ));
+	newInput(0, nodeValue_Int(     "Order",         0 ));
+	
+	////- =Transition
+	newInput(2, nodeValue_EScroll( "Anchor",        0, [ "Center", "Top left" ]));
 	newInput(3, nodeValue_Float(   "Arrival Speed", 4 ));
 	newInput(4, nodeValue_Float(   "Zoom Level",    0 ));
 	
-	input_display_list = [ 2, 
-		0, 1, 3, 4, 
+	input_display_list = [ 
+		[ "Display",    false ], 0, 1, 
+		[ "Transition", false ], 2, 3, 4, 
 	];
 	
 	static step = function() {

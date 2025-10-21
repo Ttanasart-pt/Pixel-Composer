@@ -194,17 +194,6 @@ function __test_update_collections_meta(dir = COLLECTIONS) {
 	
 	print("---------- COLLECTION UPDATING ENDED ----------");
 }
-	
-function __test_generate_theme() {
-	var _txt = "function Theme() constructor {\n";
-	var _spr = struct_get_names(THEME);
-	
-	for( var i = 0, n = array_length(_spr); i < n; i++ )
-		_txt += $"\t{_spr[i]} = noone;\n";
-	_txt += "}";
-	
-	clipboard_set_text(_txt);
-}
 
 function __test_zip_collection(dir = COLLECTIONS) {
 	var _dirr = dir.path + "/";
@@ -221,11 +210,11 @@ function __test_zip_collection(dir = COLLECTIONS) {
 		for( var i = 0; i < array_length(_st.content); i++ ) {
 			var _node = _st.content[i];
 			var _meta = _node.getMetadata();
-			if(_meta == noone || !_meta.isDefault) continue;
+			if(_meta == noone || !_meta.isDefault || _node.spr_data == undefined) continue;
 			
-			var _cpath = _node.path;      if(!file_exists(_cpath)) continue;
-			var _spath = _node.spr_path;  if(!file_exists(_spath)) continue;
-			var _mpath = _node.meta_path; if(!file_exists(_mpath)) continue;
+			var _cpath = _node.path;        if(!file_exists(_cpath)) continue;
+			var _spath = _node.spr_data[0]; if(!file_exists(_spath)) continue;
+			var _mpath = _node.meta_path;   if(!file_exists(_mpath)) continue;
 			
 			var zcpath = string_replace(_cpath, _dirr, "");
 			var zspath = string_replace(_spath, _dirr, "");
@@ -244,4 +233,29 @@ function __test_zip_collection(dir = COLLECTIONS) {
 	zip_save(_zip, _targ);
 	
 	print("---------- ZIP COLLECTION ENDED ----------");
+	noti_status("ZIP collection complete", noone, true);
+}
+	
+function __test_generate_theme() {
+	var _txt = "function Theme() constructor {\n";
+	var _spr = struct_get_names(THEME);
+	
+	for( var i = 0, n = array_length(_spr); i < n; i++ )
+		_txt += $"\t{_spr[i]} = noone;\n";
+	_txt += "}";
+	
+	clipboard_set_text(_txt);
+}
+
+function __test_update_theme() {
+	var _p = "D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/default/meta.json"
+	var _d = json_load_struct(_p);
+	_d.version = BUILD_NUMBER;
+	json_save_struct(_p, _d, true);
+	
+	var _p = "D:/Project/MakhamDev/LTS-PixelComposer/RESOURCE/data/default HQ/meta.json"
+	var _d = json_load_struct(_p);
+	_d.version = BUILD_NUMBER;
+	json_save_struct(_p, _d, true);
+	
 }

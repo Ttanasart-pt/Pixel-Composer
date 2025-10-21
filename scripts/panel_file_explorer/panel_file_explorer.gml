@@ -686,9 +686,12 @@ function Panel_File_Explorer() : PanelContent() constructor {
 			
 			bc = array_empty(filter_ext)? COLORS._main_icon : COLORS._main_accent;
 			if(buttonInstant(bspr, bx1 - bs, by, bs, bs, m, pHOVER, pFOCUS, "Filter...", THEME.filter, 1, bc, 1, .8) == 2) {
+				var _exts = struct_get_names(current_ext);
+				var _fext = filter_ext;
+				
 				with(dialogCall(o_dialog_arrayBox, x + bx1 - bs, y + by)) {
-					data     = other.struct_get_names(current_ext);
-					arraySet = other.filter_ext;
+					data     = _exts;
+					arraySet = _fext;
 					dialog_w = ui(160);
 					font     = f_p3;
 					mode     = 0;

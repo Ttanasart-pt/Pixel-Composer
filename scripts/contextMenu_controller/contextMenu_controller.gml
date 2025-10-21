@@ -45,7 +45,7 @@ function MenuItem(_name, _func, _spr = noone, _hotkey = noone, _toggle = noone, 
     static setParam     = function(_param)     /*=>*/ { params    = _param;     return self; }
     static setToggle    = function(_toggle)    /*=>*/ { toggle    = _toggle;    return self; }
 	
-	static getSpr       = function() /*=>*/ {return spr};
+	static getSpr       = function() /*=>*/ {return spr == noone? THEME.pxc_hub : spr};
 	static getSprInd    = function() /*=>*/ {return 0};
 }
 

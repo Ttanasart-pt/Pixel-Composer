@@ -6,7 +6,6 @@ function FileObject(_path) constructor {
 	ext  = filename_ext_raw(path);
 	
 	spr        = -1;
-	spr_path   = filename_ext_verify(path, ".png");
 	spr_data   = undefined;
 	sprFetchID = noone;
 	
@@ -55,6 +54,8 @@ function FileObject(_path) constructor {
 		spr_data = [ path, amo, false ];
 		
 	} else {
+		var spr_path   = filename_ext_verify(path, ".png");
+		
 		if(file_exists_empty(spr_path))
 			spr_data = [ spr_path, sprite_get_splices(spr_path), true ];
 	}
@@ -83,44 +84,29 @@ function FileObject(_path) constructor {
 		if(spr != -1 && sprite_exists(spr))	return spr;
 		if(sprFetchID != noone) return -1;
 		
-		if(type == FILE_TYPE.project) {
-			var s = project_get_thumbnail(path);
-			if(sprite_exists(s)) { spr = s; return spr; }
-		}
-		
-		if(spr_data == undefined) {
-			spr_path = filename_ext_verify(path, ".png");
+		if(spr_data != undefined) {
+			spr_path = array_safe_get_fast(spr_data, 0);
+			var _amo = array_safe_get_fast(spr_data, 1);
 			
 			if(loadThumbnailAsync) {
-				sprFetchID = sprite_add_ext(spr_path, 0, 0, 0, true);
-				IMAGE_FETCH_MAP[? sprFetchID] = function(_res) /*=>*/ {
-					spr = _res[? "id"];
-					if(spr) sprite_set_center(spr);
+				sprFetchID = sprite_add_ext(spr_path, _amo, 0, 0, true);
+				IMAGE_FETCH_MAP[? sprFetchID] = function(load_result) {
+					spr = load_result[? "id"];
+					if(spr && array_safe_get_fast(spr_data, 2))
+						sprite_set_center(spr);
 				}
-				
 			} else {
-				spr = sprite_add(spr_path, 0, 0, 0, 0, 0);
-				if(spr) sprite_set_center(spr);
+				spr = sprite_add(spr_path, _amo, 0, 0, 0, 0);
+				if(spr && array_safe_get_fast(spr_data, 2))
+					sprite_set_center(spr);
 			}
 			
 			return spr;
 		}
 		
-		spr_path  = array_safe_get_fast(spr_data, 0);
-		var _amo  = array_safe_get_fast(spr_data, 1);
-		if(!file_exists_empty(spr_path)) return -1;
-		
-		if(loadThumbnailAsync) {
-			sprFetchID = sprite_add_ext(spr_path, _amo, 0, 0, true);
-			IMAGE_FETCH_MAP[? sprFetchID] = function(load_result) {
-				spr = load_result[? "id"];
-				if(spr && array_safe_get_fast(spr_data, 2))
-					sprite_set_center(spr);
-			}
-		} else {
-			spr = sprite_add(spr_path, _amo, 0, 0, 0, 0);
-			if(spr && array_safe_get_fast(spr_data, 2))
-				sprite_set_center(spr);
+		if(type == FILE_TYPE.project) {
+			var s = project_get_thumbnail(path);
+			if(sprite_exists(s)) { spr = s; return spr; }
 		}
 		
 		return spr;

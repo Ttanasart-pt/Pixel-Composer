@@ -154,35 +154,36 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		insp2UpdateTooltip = __txtx("panel_inspector_execute", "Execute node");
 		insp2UpdateIcon    = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
 		
-		is_dynamic_input  = false;
-		auto_input		  = false;
-		input_display_len = 0;
-		input_fix_len	  = 0;
-		data_length       = 1;
-		inputs_data		  = [];
-		input_hash		  = "";
-		input_hash_raw	  = "";
+		is_dynamic_input   = false;
+		auto_input		   = false;
+		input_display_len  = 0;
+		input_fix_len	   = 0;
+		data_length        = 1;
+		inputs_data		   = [];
+		input_hash		   = "";
+		input_hash_raw	   = "";
 		
-		inputs_amount     = 0;
-		in_cache_len      = -4;
-		inputDisplayList  = [];
-		inputDisplayGroup = [];
+		inputs_amount        = 0;
+		in_cache_len         = -4;
+		inputDisplayList     = [];
+		inputDisplayGroup    = [];
 		inputDisplayBuilding = false;
 		
-		outputDisplayList = [];
+		outputDisplayList    = [];
 		
-		inputs_draw_index   = [];
-		outputs_draw_index  = [];
-		out_cache_len       = -4;
+		inputs_draw_index    = [];
+		outputs_draw_index   = [];
+		out_cache_len        = -4;
 		
 		toRefreshNodeDisplay = true;
 		input_mask_index     = -1;
 		__mask_index         = undefined;
 		__mask_mod_index     = undefined;
 		
-		junc_meta = [
-			nodeValue_Output("Name", VALUE_TYPE.text,  ""),
-			nodeValue_Output("Position", VALUE_TYPE.float, [ 0, 0 ]).setDisplay(VALUE_DISPLAY.vector),
+		current_data = [];
+		junc_meta    = [
+			nodeValue_Output( "Name",     VALUE_TYPE.text,  ""    ),
+			nodeValue_Output( "Position", VALUE_TYPE.float, [0,0] ).setDisplay(VALUE_DISPLAY.vector),
 		];
 		
 		for( var i = 0, n = array_length(junc_meta); i < n; i++ ) {

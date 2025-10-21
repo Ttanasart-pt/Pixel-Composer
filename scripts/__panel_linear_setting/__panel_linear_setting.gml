@@ -1,25 +1,25 @@
-function __Panel_Linear_Setting_Item(name, editWidget, data = noone, onEdit = noone, getDefault = noone, action = noone, prefKey = noone) constructor {
-	self.name       = name;
-	self.editWidget = editWidget;
-	self.data       = data;
+function __Panel_Linear_Setting_Item(_name, _editWidget, _data = noone, _onEdit = noone, _getDefault = noone, _action = noone, _prefKey = noone) constructor {
+	name       = _name;
+	editWidget = _editWidget;
+	data       = _data;
 	
-	self.onEdit     = onEdit;
-	self.getDefault = getDefault;
-	self.action     = action == noone? noone : struct_try_get(FUNCTIONS, string_to_var2(action[0], action[1]), noone);
+	onEdit     = _onEdit;
+	getDefault = _getDefault;
+	action     = _action == noone? noone : struct_try_get(FUNCTIONS, string_to_var2(_action[0], _action[1]), noone);
 	
-	self.prefKey    = prefKey;
-	self.key        = "";
-	self.is_patreon = false;
+	prefKey    = _prefKey;
+	key        = "";
+	is_patreon = false;
 	
 	static setKey  = function(k) /*=>*/ { key = k;           return self; }
 	static patreon = function( ) /*=>*/ { is_patreon = true; return self; }
 }
 
-function __Panel_Linear_Setting_Label(name, sprite, _index = 0, _color = c_white) constructor {
-	self.name    = name;
-	self.sprite  = sprite;
-	self.index   = _index;
-	self.color   = _color;
+function __Panel_Linear_Setting_Label(_name, _sprite, _index = 0, _color = c_white) constructor {
+	name    = _name;
+	sprite  = _sprite;
+	index   = _index;
+	color   = _color;
 }
 
 function Panel_Linear_Setting() : PanelContent() constructor {

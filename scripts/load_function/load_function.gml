@@ -86,22 +86,13 @@ function LOAD_PATH(path, readonly = false, safe_mode = false) {
 
 function LOAD_AT(path, params = new __loadParams()) {
 	static log = 0;
-	
 	CALL("load");
 	
-	printIf(log, $"========== Loading {path} =========="); var t0 = get_timer(), t1 = get_timer();
-	
 	if(DEMO) return false;
+	if(!file_exists_empty(path)) { log_warning("LOAD", $"File not found: {path}");     return false; }
+	if(!path_is_project(path))   { log_warning("LOAD", "File is not a valid PROJECT"); return false; }
 	
-	if(!file_exists_empty(path)) {
-		log_warning("LOAD", $"File not found: {path}");
-		return false;
-	}
-	
-	if(!path_is_project(path)) {
-		log_warning("LOAD", "File not a valid PROJECT");
-		return false;
-	}
+	printIf(log, $"========== Loading {path} =========="); var t0 = get_timer(), t1 = get_timer();
 	
 	LOADING = true;
 	
@@ -109,8 +100,7 @@ function LOAD_AT(path, params = new __loadParams()) {
 		nodeCleanUp();
 		clearPanel();
 		setPanel();
-		if(!TESTING)
-			instance_destroy(_p_dialog);
+		if(!TESTING) instance_destroy(_p_dialog);
 		ds_list_clear(ERRORS);
 	}
 	
@@ -129,40 +119,43 @@ function LOAD_AT(path, params = new __loadParams()) {
 	
 	printIf(log, $" > Create temp : {(get_timer() - t1) / 1000} ms"); t1 = get_timer();
 	
-	#region read 
-		var _ext    = filename_ext_raw(path), s;
-		var rawBuff = buffer_load(path);
-		var offset  = 0;
-		buffer_to_start(rawBuff);
-		
-		var _id = buffer_read_text(rawBuff, 4);
-		var contBuff = rawBuff;
-		
-		if(_id == "PXCX") {
-			offset   = buffer_read(rawBuff, buffer_u32);
-			contBuff = buffer_create(1, buffer_grow, 1);
-			buffer_copy(rawBuff, offset, buffer_get_size(rawBuff) - offset, contBuff, 0);
-		}
-		
-		var compBuff = buffer_decompress(contBuff);
-		if(compBuff == -1) {
-			buffer_to_start(contBuff);
-			s = buffer_read(contBuff, buffer_string);
-			
-		} else {
-			buffer_to_start(compBuff);
-			s = buffer_read(compBuff, buffer_string);
-			buffer_delete(compBuff);
-		}
-		
-		buffer_delete_safe(rawBuff);
-		buffer_delete_safe(contBuff);
-	#endregion
-	
-	var content = json_try_parse(s);
+	var content = readProjectFileContent(path);
 	printIf(log, $" > Load struct : {(get_timer() - t1) / 1000} ms");
 	
 	return instance_create(0, 0, project_loader, { path, content, log, params, t0, t1 });
+}
+
+function readProjectFileContent(path) {
+	var _ext    = filename_ext_raw(path), s;
+	var rawBuff = buffer_load(path);
+	var offset  = 0;
+	buffer_to_start(rawBuff);
+	
+	var _id = buffer_read_text(rawBuff, 4);
+	var contBuff = rawBuff;
+	
+	if(_id == "PXCX") {
+		offset   = buffer_read(rawBuff, buffer_u32);
+		contBuff = buffer_create(1, buffer_grow, 1);
+		buffer_copy(rawBuff, offset, buffer_get_size(rawBuff) - offset, contBuff, 0);
+	}
+	
+	var compBuff = buffer_decompress(contBuff);
+	if(compBuff == -1) {
+		buffer_to_start(contBuff);
+		s = buffer_read(contBuff, buffer_string);
+		
+	} else {
+		buffer_to_start(compBuff);
+		s = buffer_read(compBuff, buffer_string);
+		buffer_delete(compBuff);
+	}
+	
+	buffer_delete_safe(rawBuff);
+	buffer_delete_safe(contBuff);
+	
+	var content = json_try_parse(s);
+	return content;
 }
 
 function __EXPORT_ZIP()	{ exportPortable(PROJECT); }
