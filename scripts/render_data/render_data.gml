@@ -163,22 +163,21 @@ enum RENDER_TYPE {
 	}
 	
 	function __nodeIsRenderLeaf(_node) {
-		if(is_undefined(_node)) { LOG_IF(global.FLAG.render == 1, $"Skip undefiend		  [{_node}]"); return false; }
-		if(!is(_node, Node))    { LOG_IF(global.FLAG.render == 1, $"Skip non-node		  [{_node}]"); return false; }
+		if(is_undefined(_node)) { LOG_IF(global.FLAG.render == 1, $"Skip undefiend		  [{_node}]"); return -1; }
+		if(!is(_node, Node))    { LOG_IF(global.FLAG.render == 1, $"Skip non-node		  [{_node}]"); return -2; }
 		
-		if(!_node.active)		{ LOG_IF(global.FLAG.render == 1, $"Skip inactive         [{_node.internalName}]"); return false; }
-		if(_node.is_group_io)   { LOG_IF(global.FLAG.render == 1, $"Skip group IO		  [{_node.internalName}]"); return false; }
+		if(!_node.active)		{ LOG_IF(global.FLAG.render == 1, $"Skip inactive         [{_node.internalName}]"); return -3; }
+		if(_node.is_group_io)   { LOG_IF(global.FLAG.render == 1, $"Skip group IO		  [{_node.internalName}]"); return -4; }
 		
-		if(_node.passiveDynamic)           { LOG_IF(global.FLAG.render == 1, $"Skip passive dynamic  [{_node.internalName}]"); return false; }
-		if(!_node.isRenderActive())		   { LOG_IF(global.FLAG.render == 1, $"Skip render inactive  [{_node.internalName}]"); return false; }
-		if(!_node.attributes.update_graph) { LOG_IF(global.FLAG.render == 1, $"Skip non-auto update  [{_node.internalName}]"); return false; }
+		if(_node.passiveDynamic)           { LOG_IF(global.FLAG.render == 1, $"Skip passive dynamic  [{_node.internalName}]"); return -5; }
+		if(!_node.isRenderActive())		   { LOG_IF(global.FLAG.render == 1, $"Skip render inactive  [{_node.internalName}]"); return -6; }
+		if(!_node.attributes.update_graph) { LOG_IF(global.FLAG.render == 1, $"Skip non-auto update  [{_node.internalName}]"); return -7; }
 		
-		if(!_node.isActiveDynamic()) { LOG_IF(global.FLAG.render == 1, $"Skip rendered static  [{_node.internalName}]"); return false; }
+		if(!_node.isActiveDynamic()) { LOG_IF(global.FLAG.render == 1, $"Skip rendered static  [{_node.internalName}]"); return -8; }
 		
 		if(_node.inline_context != noone && _node.inline_context.managedRenderOrder) {
 			LOG_IF(global.FLAG.render == 1, $"Skip managedRenderOrder  [{_node.internalName}]"); 
-			_node.forwardPassiveDynamic(); 
-			return false;
+			return -9;
 		}
 		
 		return true;
@@ -223,8 +222,10 @@ enum RENDER_TYPE {
 			});
 			
 			array_foreach(project.nodeTopo, function(n) /*=>*/ { 
-				if(!__nodeIsRenderLeaf(n)) { 
-					profile_log(2, $"Not leaf: {n.getFullName()} ({n.passiveDynamic})"); 
+				var _isLeaf = __nodeIsRenderLeaf(n);
+				
+				if(!_isLeaf) { 
+					profile_log(3, $"Not Leaf: {n.getFullName()} [{_isLeaf}]");
 					if(n.passiveDynamic) n.forwardPassiveDynamic();
 					return; 
 				}

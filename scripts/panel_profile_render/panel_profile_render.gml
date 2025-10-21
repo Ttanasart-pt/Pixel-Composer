@@ -23,7 +23,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	w = ui(800);
 	h = ui(500);
 	
-	list_w     = ui(400);
+	list_w     = ui(320);
 	detail_w   = w - list_w - padding * 2 - ui(8);
 	content_h  = h - ui(40) - padding;
 	io_label_y = 0;

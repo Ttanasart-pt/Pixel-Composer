@@ -354,10 +354,10 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 				surface_clear(_outData[i]);
 			}
 			
-			temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1]);
-			temp_surface[1] = surface_verify(temp_surface[1], _dim[0], _dim[1]);
-			for( var i = 0, n = array_length(temp_surface); i < n; i++ ) 
+			for( var i = 0, n = array_length(temp_surface); i < n; i++ ) {
+				temp_surface[i] = surface_verify(temp_surface[i], _dim[0], _dim[1]);
 				surface_clear(temp_surface[i]);
+			}
 			
 			var _render = temp_surface[0];
 			var _bgSurf = _dbg? scene.renderBackground(temp_surface[1]) : noone;
@@ -368,55 +368,49 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 				
 				deferData = scene.deferPass(_sobj, _dim[0], _dim[1], deferData);
 				
+				//////////////////////////////////////////////////////////////////////////////////////////////////
+				
+				gpu_set_zwriteenable(true);
+				gpu_set_cullmode(_back); 
+				
+				switch(_blend) {
+					case 0 : gpu_set_ztestenable(1);           break;
+					case 1 : gpu_set_ztestenable(0); BLEND_ADD break;	
+				}
+				
 				surface_set_target_ext(0, _render);
 				surface_set_target_ext(1, _outData[1]);
 				surface_set_target_ext(2, _outData[2]);
 				surface_set_target_ext(3, _outData[3]);
 				DRAW_CLEAR
-				
-				gpu_set_zwriteenable(true);
-				gpu_set_cullmode(_back); 
-				
-				switch(_blend) {
-					case 0 : gpu_set_ztestenable( true);           break;
-					case 1 : gpu_set_ztestenable(false); BLEND_ADD break;	
-				}
-				
-				camera.applyCamera();
-				scene.reset();
-				scene.submitShader(_sobj);
-				submitShader();
-				
-				scene.apply(deferData);
-				scene.submit(_sobj);
-				
+					camera.applyCamera();
+					scene.reset();
+					scene.submitShader(_sobj);
+					submitShader();
+					
+					scene.apply(deferData);
+					scene.submit(_sobj);
 				BLEND_NORMAL
 				surface_reset_target();
 				
 				camera.resetCamera();
 				
-				////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				//////////////////////////////////////////////////////////////////////////////////////////////////
+				
+				gpu_set_cullmode(_back); 
 				
 				surface_set_target_ext(0, _outData[5]);
 				DRAW_CLEAR
-				
-				gpu_set_zwriteenable(true);
-				gpu_set_cullmode(_back); 
-				
-				switch(_blend) {
-					case 0 : gpu_set_ztestenable( true);           break;
-					case 1 : gpu_set_ztestenable(false); BLEND_ADD break;	
-				}
-				
-				camera.applyCamera();
-				scene.submitShader(_sobj, sh_d3d_unlit);
-				
+					camera.applyCamera();
+					scene.submit(_sobj, sh_d3d_unlit);
 				BLEND_NORMAL
 				surface_reset_target();
 				
 				camera.resetCamera();
 				
+				gpu_set_ztestenable(1);
 			}
+			
 		#endregion
 		
 		#region render

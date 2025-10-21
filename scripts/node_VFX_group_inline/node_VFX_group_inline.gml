@@ -19,7 +19,6 @@ function Node_VFX_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inline(
 	
 	is_simulation      = true;
 	update_on_frame    = true;
-	managedRenderOrder = true;
 	loopable           = true;
 	
 	dimension  = DEF_SURF;

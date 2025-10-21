@@ -31,6 +31,9 @@ function NodeFileObject(_path) : FileObject(_path) constructor {
     	if(struct_has(info, "show_in_recent"))
 		_str += $"    \"show_in_recent\": {info.show_in_recent? "true" : "false"},\n";
     	
+    	if(struct_has(info, "deprecated"))
+		_str += $"    \"deprecated\":     {info.deprecated? "true" : "false"},\n";
+    	
     	_str += "}\n";
     	
     	file_text_write_all(infoPath, _str);

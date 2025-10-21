@@ -32,7 +32,6 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 			var _ntTrig = inputs[input_len + 0].value_from == noone;
 			
 			inputs[16].setVisible(_ntTrig);
-			inputs[ 1].setVisible(_ntTrig);
 			
 			if(_ntTrig) {
 				inputs[51].setVisible(false);

@@ -258,7 +258,7 @@ void main() {
 		colr = gradientEval(random(uv));
 		
 	} else if(mode == 2) {
-		vec2 uv = (pos - hc.zw) + vec2(0.5, 0.5);
+		vec2 uv = fract(_pos - hc.zw + vec2(0.5, 0.5));
 		
 		if(textureTruchet == 1) { // lmao wtf is this code?
 			float rx = random(hc.zw + truchetSeed / 100.);

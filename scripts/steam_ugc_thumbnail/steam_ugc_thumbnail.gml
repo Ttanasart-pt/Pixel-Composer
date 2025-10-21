@@ -12,6 +12,7 @@ function steam_ugc_generate_thumbnail(_data, _type, _dest_path = TEMPDIR + "stea
 	
 	var _surface  = _data;
 	var _clear    = false;
+	var spr       = noone;
 	
 	if(is_string(_data)) {
 		var spr = sprite_add(_data, 0, false, false, 0, 0);
@@ -31,8 +32,8 @@ function steam_ugc_generate_thumbnail(_data, _type, _dest_path = TEMPDIR + "stea
 	var _surfUse  = surface_exists(_surface);
 	var _avarUse  = STEAM_UGC_ITEM_AVATAR && sprite_exists(STEAM_AVATAR);
 	var _ico      = undefined;
-	
 	var _padd     = _type == UGC_TYPE.patreon? 32 : 80;
+	if(!_surfUse && spr == noone) return;
 	
 	switch(_type) {
 		case UGC_TYPE.project :    _ico = THEME.workshop_project;    break;

@@ -1,6 +1,6 @@
 #pragma use(d3d_default_fragment)
 
-#region -- d3d_default_fragment -- [1755735844.5561614]
+#region -- d3d_default_fragment -- [1761031018.0704248]
 #ifdef _YY_HLSL11_
 	#extension GL_OES_standard_derivatives : enable
 #endif
@@ -379,7 +379,7 @@ void main() {
 	#endregion
 	
 	if(show_wireframe == 1 && wireframe_shade == 0) final_color = wireframeCalc(final_color);
-	if(final_color.a < 0.1) discard;
+	if(final_color.a == 0.) discard;
 	
 	gl_FragData[0] = final_color;
 	gl_FragData[1] = vec4(0.5 + normal * 0.5, final_color.a);

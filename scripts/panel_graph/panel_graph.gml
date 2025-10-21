@@ -2488,8 +2488,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        		var _r = _rel[i]
 	        		var _k = $"graph_add_{_r}";
 	        		
-	        		if(struct_has(MENU_ITEMS, _k))
-	        			array_push(menu, MENU_ITEMS[$ _k]);
+	        		if(struct_has(MENU_ITEMS, _k)) array_push(menu, MENU_ITEMS[$ _k]);
 	        	}
 	        	
 	        	var _dx  = o_dialog_add_node.dialog_x - ui(8);
@@ -2761,9 +2760,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 			
 			var _name = _menu.name;
 			var _spr  = _menu.getSpr();
-			var _sca  = (_mus - ui(6)) / sprite_get_height(_spr) * (THEME_SCALE / UI_SCALE);
+			if(!sprite_exists(_spr)) _spr = THEME.pxc_hub;
 			
-			if(buttonInstant(THEME.button_hide_fill, _mux, _muy, _mus, _mus, _m, pHOVER, pFOCUS, _name, _spr, 0, _cc, 1, _sca) == 2) {
+			if(buttonInstant_Pad(THEME.button_hide_fill, _mux, _muy, _mus, _mus, _m, pHOVER, pFOCUS, _name, _spr, 0, _cc, 1, ui(6)) == 2) {
 				var _res = _menu.toggleFunction();
 				if(is(_res, Node)) selectDragNode(_res, true);
 			}

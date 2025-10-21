@@ -1,12 +1,14 @@
 function Panel_Nodes_Manager() : PanelContent() constructor {
-	w = ui(800);
+	w = ui(1200);
 	h = ui(640);
+	
+	edit_w = ui(400);
 	
 	title      = "Nodes Manager";
 	auto_pin   = true;
 	stack      = ds_stack_create();
 	selectDir  = noone;
-	selectNode = noone;
+	selectNode = noone; static update = function() /*=>*/ {return selectNode.updateInfo()};
 	
 	toSelectDir  = "";
 	toSelectNode = "";
@@ -22,25 +24,27 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 	
 	tb_root  = textBox_Text(function(t) /*=>*/ { setRootDir(t); }).setFont(f_p2).setColor(COLORS._main_text_sub);
 	
-	tb_inode = textBox_Text(   function(t) /*=>*/ { selectNode.info[$ "baseNode"]         = t;  selectNode.updateInfo(); });
-	tb_name  = textBox_Text(   function(t) /*=>*/ { selectNode.info[$ "name"]             = t;  selectNode.updateInfo(); });
-	tb_tips  = textArea_Text(  function(t) /*=>*/ { selectNode.info[$ "tooltip"]          = t;  selectNode.updateInfo(); });
-	tb_spr   = textBox_Text(   function(t) /*=>*/ { selectNode.info[$ "spr"]              = t;  selectNode.updateInfo(); });
-	tb_vers  = textBox_Number( function(t) /*=>*/ { selectNode.info[$ "pxc_version"]      = t;  selectNode.updateInfo(); });
-	tb_io    = textBox_Text(   function(t) /*=>*/ { selectNode.info[$ "io"]    = parseArray(t); selectNode.updateInfo(); });
-	tb_alias = textBox_Text(   function(t) /*=>*/ { selectNode.info[$ "alias"] = parseArray(t); selectNode.updateInfo(); });
+	tb_inode = textBox_Text(   function(t) /*=>*/ { selectNode.info[$ "baseNode"]         = t;  update(); });
+	tb_name  = textBox_Text(   function(t) /*=>*/ { selectNode.info[$ "name"]             = t;  update(); });
+	tb_tips  = textArea_Text(  function(t) /*=>*/ { selectNode.info[$ "tooltip"]          = t;  update(); });
+	tb_spr   = textBox_Text(   function(t) /*=>*/ { selectNode.info[$ "spr"]              = t;  update(); });
+	tb_vers  = textBox_Number( function(t) /*=>*/ { selectNode.info[$ "pxc_version"]      = t;  update(); });
+	tb_io    = textBox_Text(   function(t) /*=>*/ { selectNode.info[$ "io"]    = parseArray(t); update(); }).setEmpty();
+	tb_alias = textBox_Text(   function(t) /*=>*/ { selectNode.info[$ "alias"] = parseArray(t); update(); }).setEmpty();
 	
-	tb_show_recent = new checkBox(function(t) /*=>*/ { selectNode.info[$ "show_in_recent"] = !(selectNode.info[$ "show_in_recent"] ?? true); selectNode.updateInfo(); });
+	cb_recent = new checkBox(function(t) /*=>*/ { selectNode.info[$ "show_in_recent"] = !(selectNode.info[$ "show_in_recent"] ?? true); update(); });
+	cb_dep    = new checkBox(function(t) /*=>*/ { selectNode.info[$ "deprecated"]     = !(selectNode.info[$ "deprecated"] ?? false);    update(); });
 	
 	editWidgets = [ 
-		[ "inode",   tb_inode,       function() /*=>*/ {return selectNode.info[$ "baseNode"]       ?? ""}    ], 
-		[ "name",    tb_name,        function() /*=>*/ {return selectNode.info[$ "name"]           ?? ""}    ], 
-		[ "tips",    tb_tips,        function() /*=>*/ {return selectNode.info[$ "tooltip"]        ?? ""}    ], 
-		[ "spr",     tb_spr,         function() /*=>*/ {return selectNode.info[$ "spr"]            ?? ""}    ], 
-		[ "version", tb_vers,        function() /*=>*/ {return selectNode.info[$ "pxc_version"]    ?? 0}     ], 
-		[ "recent",  tb_show_recent, function() /*=>*/ {return selectNode.info[$ "show_in_recent"] ?? true}  ], 
-		[ "io",      tb_io,          function() /*=>*/ {return selectNode.info[$ "io"]             ?? []}    ], 
-		[ "alias",   tb_alias,       function() /*=>*/ {return selectNode.info[$ "alias"]          ?? []}    ], 
+		[ "inode",      tb_inode,  function() /*=>*/ {return selectNode.info[$ "baseNode"]       ?? ""}    ], 
+		[ "name",       tb_name,   function() /*=>*/ {return selectNode.info[$ "name"]           ?? ""}    ], 
+		[ "tips",       tb_tips,   function() /*=>*/ {return selectNode.info[$ "tooltip"]        ?? ""}    ], 
+		[ "spr",        tb_spr,    function() /*=>*/ {return selectNode.info[$ "spr"]            ?? ""}    ], 
+		[ "version",    tb_vers,   function() /*=>*/ {return selectNode.info[$ "pxc_version"]    ?? 0}     ], 
+		[ "recent",     cb_recent, function() /*=>*/ {return selectNode.info[$ "show_in_recent"] ?? true}  ], 
+		[ "io",         tb_io,     function() /*=>*/ {return selectNode.info[$ "io"]             ?? []}    ], 
+		[ "alias",      tb_alias,  function() /*=>*/ {return selectNode.info[$ "alias"]          ?? []}    ], 
+		[ "deprecated", cb_dep,    function() /*=>*/ {return selectNode.info[$ "deprecated"]     ?? false} ], 
 	];
 	
 	array_foreach(editWidgets, function(e) /*=>*/ {return e[1].setFont(f_p2)});
@@ -149,11 +153,9 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 		tb_root.draw(_pd, _pd, w - _pd * 2, wdh, rootDir, [ mx, my ] );
 		
 		// Editor
-		var _edit_w = ui(320);
-		
-		var bw = _edit_w;
+		var bw = edit_w;
 		var bh = TEXTBOX_HEIGHT;
-		var bx = w - _edit_w - _pd;
+		var bx = w - edit_w - _pd;
 		var by = ndy;
 		
 		if(buttonInstant(THEME.button_def, bx, by, bw, bh, [ mx, my ], pHOVER, pFOCUS) == 2)
@@ -221,7 +223,7 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 				var _wdg   = _editw[1];
 				var _dat   = _editw[2]();
 				
-				var _tw = ui(64);
+				var _tw = ui(96);
 				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text_sub);
 				draw_text(bx, by + bh / 2, _tit);
 				
@@ -233,7 +235,7 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 					
 					if(buttonInstant(THEME.button_hide_fill, wgx + wgw + ui(4), by, ui(28), bh, [ mx, my ], pHOVER, pFOCUS, "", THEME.icon_default) == 2) {
 						selectNode.info[$ "pxc_version"] = 1_18_09_0;
-						selectNode.updateInfo();
+						update();
 					}
 				}
 				
@@ -247,7 +249,7 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 			
 			by += ui(4);
 			if(buttonInstant(THEME.button_def, bx, by, bw, bh, [ mx, my ], pHOVER, pFOCUS) == 2)
-				selectNode.updateInfo();
+				update();
 			
 			draw_set_text(f_p2, fa_center, fa_center, COLORS._main_text);
 			draw_text_add(bx + bw / 2, by + bh / 2, "Update");
@@ -255,7 +257,7 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 		}
 		
 		// Lists
-		var con_w = w - _edit_w - _pd * 2 - ui(16) - ui(8);
+		var con_w = w - edit_w - _pd * 2 - ui(16) - ui(8);
 		var con_h = h - _pd - ndy - ui(16);
 		
 		var ndw = con_w + ui(16);

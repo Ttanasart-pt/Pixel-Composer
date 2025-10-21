@@ -376,7 +376,7 @@ void main() {
 	#endregion
 	
 	if(show_wireframe == 1 && wireframe_shade == 0) final_color = wireframeCalc(final_color);
-	if(final_color.a < 0.1) discard;
+	if(final_color.a == 0.) discard;
 	
 	gl_FragData[0] = final_color;
 	gl_FragData[1] = vec4(0.5 + normal * 0.5, final_color.a);

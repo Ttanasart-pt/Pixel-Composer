@@ -81,6 +81,9 @@ function SAVE_AT(project = PROJECT, path = "", _param = new save_param()) {
 	if(!is(project, Project)) return false;
 	if(DEMO) return false;
 	
+	if(RUN_IDE && string_pos("PROMOTIONAL MATERIALS", path))
+		generate_UGC_patreon();
+	
 	IS_SAVING = true;
 	SAVING    = true;
 	
