@@ -101,6 +101,8 @@ function Mesh() constructor {
 		}
 		
 		var _spath = connect_index_pairs(_smap);
+		if(array_empty(_spath)) return [];
+		
 		if(_spath[0] == array_last(_spath)) array_pop(_spath);
 		
 		var   path = array_create(array_length(_spath));

@@ -79,6 +79,8 @@ function Project() constructor {
 	tunnels_in_map = ds_map_create();
 	tunnels_out    = ds_map_create();
 	
+	immediate_render = undefined;
+	
 	#region ===================== GLOBAL LAYER ====================
 		globalLayer_surface   = noone;
 		globalLayer_nodes     = [];
@@ -280,6 +282,11 @@ function Project() constructor {
 	////- Step
 
 	static stepBegin = function() { 
+		if(immediate_render != undefined) {
+			immediate_render.doUpdate();
+			immediate_render = undefined;
+		}
+		
 		array_foreach(allNodes, function(n) /*=>*/ { if(n.active) n.stepBegin(); });
 	}
 	

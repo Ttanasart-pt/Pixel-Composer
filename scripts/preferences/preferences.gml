@@ -62,17 +62,16 @@
 	#endregion
 	
 	#region DIALOG
-		
 		PREFERENCES.node_recents_amount         = 20;
 			
 		PREFERENCES.show_splash                 = true;
 		PREFERENCES.splash_expand_recent        = false;
 		PREFERENCES.splash_show_thumbnail       = false;
-	
-		PREFERENCES.dialog_add_node_grouping    = true;
-		PREFERENCES.dialog_add_node_view        = 0;
-	
-		PREFERENCES.dialog_add_node_w           = 532;
+		
+		PREFERENCES.dialog_add_node_view        = 1;
+		PREFERENCES.dialog_add_node_grouping    = 2;
+		
+		PREFERENCES.dialog_add_node_w           = 640;
 		PREFERENCES.dialog_add_node_h           = 400;
 		PREFERENCES.dialog_add_node_search_high = true;
 		

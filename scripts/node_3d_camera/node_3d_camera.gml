@@ -319,7 +319,6 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 			else if(_proj == CAMERA_PROJECTION.orthograph)  camera.setViewSize(1 / _orts, _dim[1] / _dim[0] / _orts);
 			
 			camera.setMatrix();
-			
 		#endregion
 		
 		#region scene setting

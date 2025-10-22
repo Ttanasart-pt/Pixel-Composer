@@ -155,7 +155,7 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		
 		use_normal    = obj_raw.use_normal;
 		materialNames = [ "Material" ];
-		materialIndex = obj_raw.material_index;
+		materialIndex = array_empty(obj_raw.material_index)? undefined : obj_raw.material_index;
 		materials     = [ new MTLmaterial("Material") ];
 		
 		if(obj_raw.use_material) {

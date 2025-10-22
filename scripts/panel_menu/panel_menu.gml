@@ -98,7 +98,6 @@
         registerFunction("", "Generate UGC",        "",     MOD_KEY.none, generate_UGC_patreon     ).setMenu("generate_ugc"    )
         
     }
-    
 #endregion
 
 function Panel_Menu() : PanelContent() constructor {
@@ -782,9 +781,6 @@ function Panel_Menu() : PanelContent() constructor {
                             var _menu = array_clone(profile_menu, 1);
                             if(!array_empty(_menu)) array_push(_menu, -1);
                             array_push(_menu,
-                                // menuItem(__txt("PXC Hub"),          () => {}),
-                                // menuItem(__txt("Your Page"),        () => {}),
-                                // menuItem(__txt("Subscribed Items"), () => {}),
                                 menuItem(__txt("Account Setting"),  function() /*=>*/ {return dialogPanelCall(new Panel_Account_Settings())} ),
                                 -1,
                                 menuItem(__txt("PXC Logout"), function() /*=>*/ {return PXC_Logout()}, THEME.cross_12)

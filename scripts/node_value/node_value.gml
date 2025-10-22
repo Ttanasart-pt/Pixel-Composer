@@ -1812,7 +1812,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				RENDER_ALL
 				
 			} else {
-				node.doUpdate();
+				node.project.immediate_render = node;
 				node.triggerRender();
 				
 				node.valueUpdate(index);

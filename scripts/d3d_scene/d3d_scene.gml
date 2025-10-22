@@ -305,7 +305,11 @@ function __3dScene(_camera, _name = "New scene") constructor {
 	static setRendering = function() {
 		switch(blend) {
 			case BLEND.normal : gpu_set_ztestenable(1);           break;
-			case BLEND.add    : gpu_set_ztestenable(0); BLEND_ADD break;	
+			
+			case BLEND.add    : 
+				gpu_set_ztestenable(0);
+				BLEND_ADD
+				break;	
 		}
 		
 		gpu_set_cullmode(cull_mode); 
@@ -313,7 +317,7 @@ function __3dScene(_camera, _name = "New scene") constructor {
 	
 	static resetRendering = function() {
 		BLEND_NORMAL
-		gpu_set_cullmode(cull_noculling); 
+		gpu_set_cullmode(cull_noculling);
 		gpu_set_ztestenable(false);
 		gpu_set_alphatestenable(false);
 	}

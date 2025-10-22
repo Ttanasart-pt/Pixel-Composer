@@ -272,19 +272,19 @@ function __3dObject() : __3dInstance() constructor {
 			if(_shader == sh_d3d_geometry) {
 				if(_uMat) _mat.submitGeometry();
 				else {
-					shader_set_i("use_normal",   0);
-					shader_set_f("mat_texScale", [ 1, 1 ] );
+					shader_set_i("use_normal",    0    );
+					shader_set_f("mat_texScale", [1,1] );
 				}
 				
 			} else {
 				if(_uMat) _mat.submitShader();
 				else {
-					shader_set_f("mat_diffuse",    1);
-					shader_set_f("mat_specular",   0);
-					shader_set_f("mat_shine",      1);
-					shader_set_i("mat_metalic",    0);
-					shader_set_f("mat_reflective", 0);
-					shader_set_f("mat_texScale",   [ 1, 1 ] );
+					shader_set_f("mat_diffuse",     1    );
+					shader_set_f("mat_specular",    0    );
+					shader_set_f("mat_shine",       1    );
+					shader_set_i("mat_metalic",     0    );
+					shader_set_f("mat_reflective",  0    );
+					shader_set_f("mat_texScale",   [1,1] );
 				}
 			}
 			
