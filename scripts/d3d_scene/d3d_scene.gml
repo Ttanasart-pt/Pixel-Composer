@@ -48,6 +48,7 @@ function __3dScene(_camera, _name = "New scene") constructor {
 	lightPnt_shadow_max = 4;
 	
 	cull_mode           = cull_noculling;
+	blend               = BLEND.normal;
 	enviroment_map      = noone;
 	gammaCorrection     = true;
 	
@@ -164,7 +165,7 @@ function __3dScene(_camera, _name = "New scene") constructor {
 		camera.setMatrix();
 		camera.applyCamera();
 		
-		gpu_set_cullmode(cull_mode);
+		setRendering();
 		
 		shader_set(sh_d3d_geometry);
 		shader_set_f("planeNear", camera.view_near);
@@ -174,8 +175,7 @@ function __3dScene(_camera, _name = "New scene") constructor {
 		
 		submit(object, sh_d3d_geometry);
 		
-		gpu_set_ztestenable(false);
-		gpu_set_alphatestenable(false);
+		resetRendering();
 		surface_reset_target();
 		
 		if(defer_normal_radius && is_struct(deferData)) { 
@@ -301,6 +301,22 @@ function __3dScene(_camera, _name = "New scene") constructor {
 	}
 	
 	static reApply = function(_shader) { apply(noone, _shader); }
+	
+	static setRendering = function() {
+		switch(blend) {
+			case BLEND.normal : gpu_set_ztestenable(1);           break;
+			case BLEND.add    : gpu_set_ztestenable(0); BLEND_ADD break;	
+		}
+		
+		gpu_set_cullmode(cull_mode); 
+	}
+	
+	static resetRendering = function() {
+		BLEND_NORMAL
+		gpu_set_cullmode(cull_noculling); 
+		gpu_set_ztestenable(false);
+		gpu_set_alphatestenable(false);
+	}
 	
 	////- Data
 	

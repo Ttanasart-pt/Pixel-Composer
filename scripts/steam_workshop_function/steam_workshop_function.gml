@@ -17,24 +17,18 @@
 	}
 
 	if(RUN_IDE) {
-		debug_promodirs  = directory_listdir("D:/Project/MakhamDev/LTS-PixelComposer/PROMOTIONAL MATERIALS/Projects");
+		debug_promodirs  = directory_listdir("D:/Project/MakhamDev/LTS-PixelComposer/PROMOTIONAL MATERIALS/Projects/1.20.0", 0);
 		globalvar debug_promofiles; debug_promofiles = {};
 		
 		for( var i = 0, n = array_length(debug_promodirs); i < n; i++ ) {
-			var _dir =  debug_promodirs[i];
-			var _fil = directory_listdir(_dir, 0);
+			var _f = debug_promodirs[i];
 			
-			for( var j = 0, m = array_length(_fil); j < m; j++ ) {
-				var _f = _fil[j];
-				
-				var _d = {
-					name : filename_name_only(_f), 
-					pack : i, 
-					create_time : file_get_create_s(_f), 
-				};
-				
-				debug_promofiles[$ _d.name] = _d;
-			}
+			var _d = {
+				name : filename_name_only(_f), 
+				create_time : file_get_create_s(_f), 
+			};
+			
+			debug_promofiles[$ _d.name] = _d;
 		}
 		
 	}
@@ -42,18 +36,63 @@
 
 function Patreon_project_item(_file) constructor {
 	title = _file;
+	data  = undefined;
 	
-	var _url = string_replace_all(_file, " ", "%20");
+	pack          = 0;
+	creation_time = 0;
+	
+	_url = string_replace_all(title, " ", "%20");
 	content_path   = $"{FIREBASE_STORE_PATH}/{_url}.pxc";
-	content_fpath  = $"{DIRECTORY}Projects/{_file}.pxc";
+	content_fpath  = $"{DIRECTORY}Projects/{title}.pxc";
 	content_dl     = false;
 	
 	preview_path   = $"{FIREBASE_STORE_PATH}/{_url}.png";
-	preview_fpath  = $"{DIRECTORY}Cache/{_file}.png";
+	preview_fpath  = $"{DIRECTORY}Cache/{title}.png";
 	preview_sprite = undefined;
 	
 	tags_content   = [];
 	tags           = [];
+	
+	version        = [];
+	latest_version = 0;
+	version_dir    = "";
+	
+	static setData = function(_data) {
+		data = json_try_parse(_data);
+		
+		if(has(data, "version")) {
+			version = json_try_parse(data.version);
+			array_sort(version, false);
+			latest_version = SAVE_VERSION;
+			
+			for( var i = 0, n = array_length(version); i < n; i++ ) {
+				if(round(version[i]) <= latest_version) {
+					latest_version = round(version[i]);
+					break;
+				}
+			}
+			
+			if(latest_version > 0) {
+				var _v_str = string(latest_version);
+				var _v_maj = real(string_copy(_v_str, 1, 1));
+				var _v_min = real(string_copy(_v_str, 2, 2));
+				var _v_bet = real(string_copy(_v_str, 4, 2));
+					
+				version_dir =  $"{_v_maj}.{_v_min}.{_v_bet}";
+				
+				content_path   = $"{FIREBASE_STORE_PATH}/{version_dir}%2F{_url}.pxc";
+				content_fpath  = $"{DIRECTORY}Projects/{version_dir}%2F{title}.pxc";
+				
+				preview_path   = $"{FIREBASE_STORE_PATH}/{version_dir}%2F{_url}.png";
+				preview_fpath  = $"{DIRECTORY}Cache/{version_dir}%2F{title}.png";
+			}
+			
+			pack = data[$ "pack"] ?? 0;
+			creation_time = data[$ "creation_time"] ?? 0;
+		}
+		
+		return self;
+	}
 	
 	static getPreviewSprite = function() {
 		if(preview_sprite != undefined) return preview_sprite;
@@ -64,7 +103,7 @@ function Patreon_project_item(_file) constructor {
 		}
 		
 		preview_sprite = -1;
-		directory_verify($"{DIRECTORY}Cache");
+		directory_verify(filename_dir(preview_fpath));
 		asyncCallGroup("http", http_get(preview_path), function(_params, _data) /*=>*/ {
 			var _status = _data[? "status"];
 		    if (_status < 0) { preview_sprite = -4; return; }
@@ -90,7 +129,7 @@ function Patreon_project_item(_file) constructor {
 	static downloadContent = function() {
 		content_dl = true;
 		
-		directory_verify($"{DIRECTORY}Projects");
+		directory_verify(filename_dir(content_fpath));
 		asyncCallGroup("http", http_get(content_path), function(_params, _data) /*=>*/ {
 			var _status = _data[? "status"];
 		    if (_status < 0) return;
@@ -233,15 +272,15 @@ function Patreon_project_item(_file) constructor {
 		
 		var _res = {
 			path : title,
-			pack : _prm.pack,
-			creation_time : _prm.create_time,	
+			creation_time : _prm.create_time,
+			version : json_stringify([ 1_20_00_0 ]),
 		};
 		
-		asyncCallGroup("social", FirebaseFirestore($"patreon_projects/{title}").Set(json_stringify(_res)), function(_params, _data) /*=>*/ {
+		asyncCallGroup("social", FirebaseFirestore($"patreon_projects/{title}").Update(json_stringify(_res)), function(_params, _data) /*=>*/ {
 			if (_data[? "status"] != 200) { print(_data[? "errorMessage"]); return; }
+	    	print($"Update {title}");
 	    });
-	}
-	// if(RUN_IDE) updateDB();
+	} //if(RUN_IDE) updateDB();
 }
 
 function Steam_workshop_item() constructor {

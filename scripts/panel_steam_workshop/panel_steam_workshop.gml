@@ -735,16 +735,17 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 				    	var _file = _keys[i];
 				    	
 				    	if(!has(FIREBASE_FILE_CACHE, _file)) {
-				    		var _item = new Patreon_project_item(_file);
-				    		_item.data = json_try_parse(resJ[$ _file]);
-				    		
+				    		var _item = new Patreon_project_item(_file).setData(resJ[$ _file]);
 				    		FIREBASE_FILE_CACHE[$ _file] = _item;
 				    	}
 				    	
 				    	array_push(_files, FIREBASE_FILE_CACHE[$ _file]);
 				    }
 				    
-				    array_sort(_files, function(a,b) /*=>*/ {return sign((b.data[$ "creation_time"] ?? 0) - (a.data[$ "creation_time"] ?? 0))}); 
+				    array_sort(_files, function(a,b) /*=>*/ {
+				    	return a.pack == b.pack? sign(b.creation_time - a.creation_time) : sign(b.pack - a.pack);
+			    	}); 
+				    
 				    for( var i = 0, n = array_length(_files); i < n; i++ ) 
 				    	displayFiles[i] = _files[i];
 				    	
@@ -933,6 +934,8 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 			
 		});
 	} 
+	
+	////- Contents
 	
 	sc_content_author = new scrollPane(1, 1, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
@@ -2789,6 +2792,8 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 		return y0 - _y;
 	});
 	sc_filter.show_scroll = false;
+	
+	////- Draw
 	
 	function drawContent(panel) {
 		if(MOUSE_MOVED) hold_tooltip = false;

@@ -319,6 +319,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 			else if(_proj == CAMERA_PROJECTION.orthograph)  camera.setViewSize(1 / _orts, _dim[1] / _dim[0] / _orts);
 			
 			camera.setMatrix();
+			
 		#endregion
 		
 		#region scene setting
@@ -345,6 +346,11 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 			scene.ssao_blur_radius    = _aoBlur;
 			
 			scene.backface_blending   = _bckBln;
+			
+			switch(_blend) {
+				case 0 : scene.blend = BLEND.normal; break;
+				case 1 : scene.blend = BLEND.add;    break;	
+			}
 		#endregion
 		
 		#region submit
@@ -373,11 +379,6 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 				gpu_set_zwriteenable(true);
 				gpu_set_cullmode(_back); 
 				
-				switch(_blend) {
-					case 0 : gpu_set_ztestenable(1);           break;
-					case 1 : gpu_set_ztestenable(0); BLEND_ADD break;	
-				}
-				
 				surface_set_target_ext(0, _render);
 				surface_set_target_ext(1, _outData[1]);
 				surface_set_target_ext(2, _outData[2]);
@@ -385,11 +386,13 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 				DRAW_CLEAR
 					camera.applyCamera();
 					scene.reset();
+					scene.setRendering();
 					scene.submitShader(_sobj);
 					submitShader();
 					
 					scene.apply(deferData);
 					scene.submit(_sobj);
+					scene.resetRendering();
 				BLEND_NORMAL
 				surface_reset_target();
 				
@@ -401,14 +404,14 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 				
 				surface_set_target_ext(0, _outData[5]);
 				DRAW_CLEAR
+					scene.setRendering();
 					camera.applyCamera();
 					scene.submit(_sobj, sh_d3d_unlit);
+					scene.resetRendering();
 				BLEND_NORMAL
 				surface_reset_target();
 				
 				camera.resetCamera();
-				
-				gpu_set_ztestenable(1);
 			}
 			
 		#endregion

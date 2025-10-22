@@ -1875,7 +1875,7 @@ function Panel_Preview() : PanelContent() constructor {
         
         #region draw
             d3_scene_preview.reset();
-            gpu_set_cullmode(d3_scene_preview.cull_mode); 
+            d3_scene_preview.setRendering();
             
             var _prev_obj = _node.getPreviewObjects();
             
@@ -1902,7 +1902,7 @@ function Panel_Preview() : PanelContent() constructor {
                 _prev.submit(d3_scene_preview);
             }
             
-            gpu_set_cullmode(cull_noculling); 
+            d3_scene_preview.resetRendering();
             surface_reset_target();
             
             draw_clear(bg_color);

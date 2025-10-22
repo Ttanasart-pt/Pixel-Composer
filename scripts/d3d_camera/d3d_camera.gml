@@ -4,30 +4,36 @@ enum CAMERA_PROJECTION {
 }
 
 function __3dCamera() constructor {
-	position = new __vec3();
-	rotation = new BBMOD_Quaternion();
-	focus    = new __vec3();
-	up       = new __vec3(0, 0, -1);
+	#region tranform
+		position = new __vec3();
+		rotation = new BBMOD_Quaternion();
+		focus    = new __vec3();
+		up       = new __vec3(0, 0, -1);
+	#endregion
 	
-	raw = camera_create();
+	#region camera
+		raw = camera_create();
+		
+		useFocus      = true;
+		focus_angle_x = 0;
+		focus_angle_y = 0;
+		focus_dist    = 1;
+	#endregion
 	
-	useFocus      = true;
-	focus_angle_x = 0;
-	focus_angle_y = 0;
-	focus_dist    = 1;
-	
-	projection = CAMERA_PROJECTION.perspective;
-	
-	fov       =  60;
-	view_near = .01;
-	view_far  =  50;
-	
-	view_w = 1;
-	view_h = 1;
-	view_aspect = 1;
-	
-	viewMat = new __mat4();
-	projMat = new __mat4();
+	#region view
+		projection = CAMERA_PROJECTION.perspective;
+		
+		fov       =  60;
+		view_near = .01;
+		view_far  =  50;
+		
+		view_w = 1;
+		view_h = 1;
+		view_aspect = 1;
+		
+		viewMat = new __mat4();
+		projMat = new __mat4();
+	#endregion
 	
 	static getUp = function(_x = 1, _y = 1, _z = 1) {
 		var upVector = new __vec3(0, 0, -1);
@@ -53,7 +59,6 @@ function __3dCamera() constructor {
 	
 	static resetCamera = function() {
 		camera_apply(0);
-		gpu_set_cullmode(cull_noculling); 
 	}
 	
 	static setMatrix = function() {

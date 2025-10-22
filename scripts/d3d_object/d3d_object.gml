@@ -204,8 +204,8 @@ function __3dObject() : __3dInstance() constructor {
 	static getBBOX   = function() /*=>*/ {return new __bbox3D(size.multiplyVec(transform.scale).multiply(-0.5), size.multiplyVec(transform.scale).multiply(0.5))};
 	
 	static submitShadow = function(_sc = noone, _ob = noone) /*=>*/ {}
-	static submitSel	= function(_sc = noone, _sh = noone) /*=>*/ { submitVertex(_sc, sh_d3d_silhouette, true);  }
 	static submitShader = function(_sc = noone, _sh = noone) /*=>*/ {}
+	static submitSel	= function(_sc = noone, _sh = noone) /*=>*/ { submitVertex(_sc, sh_d3d_silhouette, true);  }
 	static submit		= function(_sc = noone, _sh = noone) /*=>*/ { 
 		if(!is(_sc, __3dScene)) return submitVertex(_sc, _sh);
 		
