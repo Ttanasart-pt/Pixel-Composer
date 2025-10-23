@@ -15,10 +15,10 @@ function Node_Maze_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput(10, nodeValue_Slider(  "Bias Weight",   .5 ));
 	
 	////- =Rendering
-	newInput( 6, nodeValue_Color(    "BG Color",       ca_black ));
-	newInput( 7, nodeValue_Gradient( "Path Color",     new gradientObject(ca_white) ));
-	newInput(11, nodeValue_Slider(   "Color Shift",    0   ));
-	newInput( 8, nodeValue_Int(      "Path Iteration", 100 ));
+	newInput( 6, nodeValue_Color(    "BG Color",       ca_black  ));
+	newInput( 7, nodeValue_Gradient( "Path Color",     gra_white ));
+	newInput(11, nodeValue_Slider(   "Color Shift",    0         ));
+	newInput( 8, nodeValue_Int(      "Path Iteration", 100       ));
 	// input 12
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -36,8 +36,6 @@ function Node_Maze_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		InputDrawOverlay(inputs[5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 	}
-	
-	static step = function() {}
 	
 	static processData = function(_outSurf, _data, _array_index = 0) { 
 		var _seed = _data[ 3];
@@ -58,11 +56,11 @@ function Node_Maze_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		inputs[10].setVisible(_bias > 0);
 		
-		var ww = ceil(_dim[0]);
-		var hh = ceil(_dim[1]);
+		var ww = max(1, ceil(_dim[0]));
+		var hh = max(1, ceil(_dim[1]));
 		
-		var ox = clamp(round(_orig[0]), 1, _dim[0] - 1);
-		var oy = clamp(round(_orig[1]), 1, _dim[1] - 1);
+		var ox = clamp(round(_orig[0]), 1, ww - 1);
+		var oy = clamp(round(_orig[1]), 1, hh - 1);
 		
 		random_set_seed(_seed);
 		surface_set_target(_outSurf);

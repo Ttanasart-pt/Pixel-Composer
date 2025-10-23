@@ -218,29 +218,25 @@
 #endregion
 
 #region prebuild
-	enum BLEND {
-		normal,
-		add,
-		over,
-		alpha,
-		alphamulp,
-		subtract,
-		maximum
+	enum BLEND { normal, add, over, alpha, alphamulp, subtract, maximum }
+	
+	#macro gpu_set_tex_filter gpu_set_tex_filter_override
+	#macro __gpu_set_tex_filter gpu_set_tex_filter
+	function gpu_set_tex_filter_override(_filter) {
+		if(OS == os_linux) __gpu_set_tex_filter(false);
+		else __gpu_set_tex_filter(_filter);
 	}
 
 	function shader_preset_interpolation(shader = sh_sample) {
-		
 		shader_set_uniform_i(shader_get_uniform(shader, "interpolation"),	getAttribute("interpolate"));
 		shader_set_uniform_i(shader_get_uniform(shader, "sampleMode"),		getAttribute("oversample"));
 	}
 
 	function shader_postset_interpolation() {
-		
 		gpu_set_tex_filter(false);
 	}
 	
 	function shader_set_interpolation_surface(surface) {
-		
 		shader_set_f("sampleDimension", surface_get_width_safe(surface), surface_get_height_safe(surface));
 	}
 	
@@ -248,7 +244,7 @@
 		if(is(surface, Atlas)) surface = surface.getSurface();
 		var intp = getAttribute("interpolate");
 		
-		gpu_set_tex_filter(intp > 1);
+		__gpu_set_tex_filter(intp > 1);
 		shader_set_i("interpolation",	intp);
 		shader_set_f("sampleDimension", _dim == noone? surface_get_dimension(surface) : _dim);
 		shader_set_i("sampleMode",		getAttribute("oversample"));
