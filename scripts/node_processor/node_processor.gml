@@ -172,7 +172,6 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				var _dim = getDimension();
 				for(var i = 0; i < _os; i++) {
 					if(outputs[i].type != VALUE_TYPE.surface) continue;
-					
 					_out[i] = surface_verify(_out[i], _dim[0], _dim[1], attrDepth());
 				}
 			}

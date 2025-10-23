@@ -58,8 +58,8 @@ function Node_Maze_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		inputs[10].setVisible(_bias > 0);
 		
-		var ww = _dim[0];
-		var hh = _dim[1];
+		var ww = ceil(_dim[0]);
+		var hh = ceil(_dim[1]);
 		
 		var ox = clamp(round(_orig[0]), 1, _dim[0] - 1);
 		var oy = clamp(round(_orig[1]), 1, _dim[1] - 1);

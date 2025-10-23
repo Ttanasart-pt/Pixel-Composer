@@ -2136,7 +2136,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var _ps = preview_surface;
 		if(is_struct(_ps) && is(_ps, dynaSurf))
 			_ps = array_safe_get_fast(_ps.surfaces, 0, noone);
-			
+		
 		draw_surface_ext_safe(_ps, bbox.xc - _sw * _ss / 2, bbox.yc - _sh * _ss / 2, _ss, _ss);
 	}
 	

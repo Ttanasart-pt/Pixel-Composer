@@ -173,8 +173,6 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 				noti_warning("Load mtl error: Material amount defined in .mtl file not match the .obj file.", noone, self);
 		}
 			
-		print(materials)
-			
 		var _overflow = input_fix_len + array_length(materialNames);
 		while(array_length(inputs) > _overflow)
 			array_delete(inputs, _overflow, 1);
