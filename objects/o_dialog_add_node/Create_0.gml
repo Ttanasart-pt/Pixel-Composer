@@ -139,17 +139,18 @@ event_inherited();
 		subgroup_index = 0;
 		node_list      = [];
 		
-		if(ADD_NODE_PAGE == -2) {
-			for(var i = 0; i < array_length(category); i++) {
+		if(ADD_NODE_PAGE == -2) { // All
+			for( var i = 0, n = array_length(category); i < n; i++ ) {
 				var cat = category[i];			
-				if(struct_has(cat, "filter") && !array_exists(cat.filter, instanceof(context)))
+				
+				if(cat[$ "filter"] != undefined && !array_exists(cat.filter, instanceof(context)))
 					continue;
 				
-				for( var j = 0; j < array_length(cat.list); j++ )
+				for( var j = 0, m = array_length(cat.list); j < m; j++ )
 					array_push(node_list, cat.list[j]);
 			}
 	
-		} else if(ADD_NODE_PAGE == -1) {
+		} else if(ADD_NODE_PAGE == -1) { // New
 			for( var i = 0, n = array_length(NEW_NODES); i < n; i++ )
 				array_push(node_list, NEW_NODES[i]);
 	
