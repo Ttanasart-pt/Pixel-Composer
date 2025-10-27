@@ -113,7 +113,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		if(array_empty(preObj)) return;
 		preObj = preObj[0];
 		
-		var _panel = _params.panel;
+		var _panel = _params[$ "panel"] ?? noone;
 		var _pos   = inputs[0].getValue(,,, true);
 		var _vpos  = new __vec3( _pos[0], _pos[1], _pos[2] );
 		

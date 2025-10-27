@@ -1735,9 +1735,14 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        if(node_hovering != noone) {
 	            _HOVERING_ELEMENT = node_hovering;
 	            
-	        	if(_focus && DOUBLE_CLICK && node_hovering.onDoubleClick != -1 && node_hovering.onDoubleClick(self)) {
-	                DOUBLE_CLICK  = false;
-	                node_hovering = noone;
+	            if(_focus && node_hovering.onDoubleClick != -1) {
+	            	if(PREFERENCES.panel_graph_group_require_shift && key_mod_press(SHIFT))
+	            		CURSOR_SPRITE = THEME.cursor_select;
+	            	
+		        	if(DOUBLE_CLICK && node_hovering.onDoubleClick(self)) {
+		                DOUBLE_CLICK  = false;
+		                node_hovering = noone;
+		            }
 	            }
 	        }
 	        
@@ -1925,12 +1930,11 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	                    setFocus(_diaAdd, "Dialog");
 	                }
 	            } 
-	                
+	            
 	            if(is(frame_hovering, Node_Collection_Inline) && DOUBLE_CLICK && array_empty(nodes_selecting)) { //
 	                nodes_selecting = [ frame_hovering ];
 	                
-	                if(frame_hovering.onDoubleClick != -1) frame_hovering.onDoubleClick(self)
-	                if(frame_hovering.previewable)         PANEL_PREVIEW.setNodePreview(frame_hovering);
+	                if(frame_hovering.previewable) PANEL_PREVIEW.setNodePreview(frame_hovering);
 	            } 
 	        }
 	        

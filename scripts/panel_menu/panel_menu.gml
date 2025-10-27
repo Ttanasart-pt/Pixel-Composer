@@ -745,10 +745,23 @@ function Panel_Menu() : PanelContent() constructor {
         #endregion
         
         #region profile
-            if(os_is_network_connected()) {
-                var _sts = h - ui(20);
-                var _stx = x1 - _sts;
-                var _sty = ui(10);
+            if(PREFERENCES.panel_menu_show_profile && os_is_network_connected()) {
+                if(hori) {
+                    var _sts = h - ui(20);
+                    var _stx = x1 - _sts;
+                    var _sty = ui(10);
+                    
+                } else {
+                    var _sts = ui(24);
+                    var _stx = ui(8);
+                    var _sty = h - ui(32 + 6);
+                    
+                    draw_set_color(COLORS._main_icon_dark);
+                    draw_line_round(ui(8), _sty, w - ui(8), _sty, 2);
+                    
+                    _sty -= _sts + ui(6);
+                }
+                
                 var _hv = pHOVER && point_in_rectangle(mx, my, _stx, _sty, _stx + _sts, _sty + _sts);
                 
                 if(STEAM_AVATAR > 0 && sprite_exists(STEAM_AVATAR)) {
@@ -789,6 +802,11 @@ function Panel_Menu() : PanelContent() constructor {
                             menuCall("pxc_user", _menu);
                         }
                     }
+                }
+                
+                if(!hori) { // draw name
+                    draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_sub);
+                    draw_text_add(_stx + _sts + ui(6), _sty + _sts / 2, STEAM_USERNAME);
                 }
                 
                 x1 -= _sts + ui(4);

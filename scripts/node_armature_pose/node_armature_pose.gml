@@ -536,7 +536,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		var _hov  = noone;
 		var _bhov = anchor_selecting;
-		var panel = _params.panel;
+		var panel = _params[$ "panel"] ?? noone;
 		var hovering = false;
 		
 		for( var i = 0, n = array_length(bonePose.constrains); i < n; i++ ) bonePose.constrains[i].drawBone(bonePose, _x, _y, _s);

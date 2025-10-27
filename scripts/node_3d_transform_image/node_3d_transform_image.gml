@@ -49,7 +49,7 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 		if(is_array(_outSurf)) _outSurf = array_safe_get_fast(_outSurf, preview_index);
 		if(!is_surface(_outSurf)) return;
 		
-		var _panel = _params.panel;
+		var _panel = _params[$ "panel"] ?? noone;
 		var _w  = _panel.w;
 		var _h  = _panel.h - _panel.toolbar_height;
 		var _pw = surface_get_width_safe(_outSurf);

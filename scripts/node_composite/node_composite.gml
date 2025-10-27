@@ -897,7 +897,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var outs  = getSingleValue(0, preview_index, true);
 		var ww    = surface_get_width_safe(outs);
 		var hh    = surface_get_height_safe(outs);
-		var panel = _params.panel;
+		var panel = _params[$ "panel"] ?? noone;
 		
 		var x0 = _x +       pad[2]  * _s;
 		var x1 = _x + (ww - pad[0]) * _s;

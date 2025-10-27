@@ -872,7 +872,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		
 		var smx = value_snap(mx, _snx);
 		var smy = value_snap(my, _sny);
-		var panel = _params.panel;
+		var panel = _params[$ "panel"] ?? noone;
 		
 		var _b = bones;
 		var hovering = false;

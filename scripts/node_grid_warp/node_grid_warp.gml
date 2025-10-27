@@ -448,7 +448,7 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _grid  = getInputData(2);
 		var _gridW = _grid[0];
 		var _gridH = _grid[1];
-		var panel  = _params.panel;
+		var panel  = _params[$ "panel"] ?? noone;
 		
 		var _aamo = (_gridW + 1) * (_gridH + 1);
 		var _iamo = getInputAmount();

@@ -1094,7 +1094,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		#region parameters
 			var hovering = isUsingTool();
-			var _panel   = _params.panel;
+			var _panel   = _params[$ "panel"] ?? noone;
 			
 			if(palette_picking) {
 				hover  = false; 

@@ -551,7 +551,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var ansize = array_length(inputs) - input_fix_len;
 		var edited = false;
 		var _tooln = getUsingToolName();
-		var panel  = struct_try_get(_params, "panel", noone);
+		var panel  = _params[$ "panel"] ?? noone;
 		
 		var pos = outputs[0].getValue();
 		var p/*:_ANCHOR*/;

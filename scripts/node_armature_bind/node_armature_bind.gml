@@ -754,7 +754,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var dim   = getInputData(0);
-		var panel = _params.panel;
+		var panel = _params[$ "panel"] ?? noone;
 		
 		if(isUsingTool("Pose")) { 
 			var _x0 = _x;

@@ -67,7 +67,7 @@
 				var _qinv = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), 90);
 				
 				var _camera = _params.scene.camera;
-				var _panel  = _params.panel;
+				var _panel  = _params[$ "panel"] ?? noone;
 				var _qview  = new BBMOD_Quaternion().FromEuler(_camera.focus_angle_y, -_camera.focus_angle_x, 0);
 				
 				var _hover     = noone;
@@ -386,7 +386,7 @@
 				var _qinv = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), 90);
 				
 				var _camera = _params.scene.camera;
-				var _panel  = _params.panel;
+				var _panel  = _params[$ "panel"] ?? noone;
 				var _qview  = new BBMOD_Quaternion().FromEuler(_camera.focus_angle_y, -_camera.focus_angle_x, 0);
 				
 				var _hover     = noone;
@@ -613,7 +613,7 @@
 				var _qinv = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), 90);
 				
 				var _camera = _params.scene.camera;
-				var _panel  = _params.panel;
+				var _panel  = _params[$ "panel"] ?? noone;
 				var _qview  = new BBMOD_Quaternion().FromEuler(_camera.focus_angle_y, -_camera.focus_angle_x, 0);
 				
 				var _hover     = noone;
@@ -1342,7 +1342,7 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		}
 		
 		if(_show_selecting) {
-			var panel  = _params.panel;
+			var panel  = _params[$ "panel"] ?? noone;
 			
 			if(anchor_freeze == 0 && panel.selection_selecting && anchor_hover == -1) {
 				var sx0 = panel.canvas_x + panel.selection_x0 * panel.canvas_s;

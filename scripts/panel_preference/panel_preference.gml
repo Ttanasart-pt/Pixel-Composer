@@ -444,6 +444,12 @@ function Panel_Preference() : PanelContent() constructor {
     		));
     		
     		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
+    			__txtx("pref_menu_profile", "Show online account."),
+    			"panel_menu_show_profile",
+    			new checkBox(function() /*=>*/ {return prefToggle("panel_menu_show_profile")})
+    		));
+    		
+    		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
     			__txtx("pref_ui_fix_window_size", "Fix Window size on start"),
     			"window_fix",
     			new checkBox(function() /*=>*/ {return prefToggle("window_fix")})
