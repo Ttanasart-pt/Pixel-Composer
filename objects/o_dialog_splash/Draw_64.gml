@@ -11,12 +11,17 @@ if !ready exit;
 	draw_sprite_ui_uniform(s_title, 0, dialog_x + ui(56 + 48 - 4), dialog_y + ui(56 + 4 - 32), .4 * THEME_SCALE);
 	
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_sub);
+	var bhf = THEME.button_hide_fill;
+	var m   = mouse_ui;
+	var foc = sFOCUS;
+	var hov = sHOVER;
+	
 	var bx  = dialog_x + ui(56 + 48);
 	var by  = dialog_y + ui(56 + 4);
 	var txt = VERSION_STRING;
 	var ww  = string_width(txt) + ui(8);
 	var hh  = line_get_height(, 4);
-	if(buttonInstant(THEME.button_hide_fill, bx - ui(4), by - ui(2), ww, hh, mouse_ui, sHOVER, sFOCUS) == 2)
+	if(buttonInstant(bhf, bx - ui(4), by - ui(2), ww, hh, m, hov, foc) == 2)
 		dialogCall(o_dialog_release_note, WIN_W / 2, WIN_H / 2);
 	
 	draw_text(bx, by, txt);
@@ -24,11 +29,11 @@ if !ready exit;
 	var bs = ui(32);
 	var bx = dialog_x + dialog_w - ui(16) - bs;
 	var by = dialog_y + ui(16);
-	if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Preferences"), THEME.gear) == 2)
+	if(buttonInstant(bhf, bx, by, bs, bs, m, hov, foc, __txt("Preferences"), THEME.gear) == 2)
 		dialogPanelCall(new Panel_Preference());
 	
 	bx -= bs + ui(4);
-	if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Show on startup"), THEME.icon_splash_show_on_start, PREFERENCES.show_splash) == 2) {
+	if(buttonInstant(bhf, bx, by, bs, bs, m, hov, foc, __txt("Show on startup"), THEME.icon_splash_show_on_start, PREFERENCES.show_splash) == 2) {
 		PREFERENCES.show_splash = !PREFERENCES.show_splash;
 		PREF_SAVE();
 	}
@@ -47,23 +52,42 @@ if !ready exit;
 	sp_recent.draw(x0 + ui(6), y0);
 	draw_sprite_stretched_ext(THEME.ui_panel, 1, x0, y0, x1 - x0, y1 - y0, COLORS.panel_frame);
 	
-	var bx  = x1 - ui(28);
-	var by  = y0 - ui(28 + 4);
+	var bs  = ui(28);
+	var bx  = x1 - bs;
+	var by  = y0 - bs - ui(4);
+	var cc  = COLORS._main_value_negative;
 	var txt = __txtx("splash_clear_recent", "Clear recent files");
-	if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, sFOCUS, txt, THEME.icon_delete, 0, COLORS._main_value_negative) == 2) {
+	if(buttonInstant(bhf, bx, by, bs, bs, m, hov, foc, txt, THEME.icon_delete, 0, cc) == 2) {
 		ds_list_clear(RECENT_FILES);
 		RECENT_SAVE();
 	}
 	
-	bx -= ui(28 + 1);
+	bx -= bs + ui(1);
+	cc  = crashed? COLORS._main_accent : COLORS._main_icon;
 	txt = __txtx("splash_open_autosave", "Open autosave folder");
-	if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, sFOCUS, txt, THEME.save_auto, 0, COLORS._main_icon, 1, .75) == 2) {
+	if(buttonInstant(bhf, bx, by, bs, bs, m, hov, foc, txt, THEME.save_auto, 0, cc, 1, .75) == 2) {
 		shellOpenExplorer(DIRECTORY + "autosave");
 	}
 	
-	bx -= ui(28 + 1);
+	if(crashed) {
+		draw_set_text(f_p2, fa_center, fa_bottom, COLORS._main_text);
+		
+		var crw = string_width(txt) + ui(12);
+		var crh = string_height(txt) + ui(8);
+		var crc = bx + bs / 2;
+		var crx = crc - crw / 2;
+		var cry = by - ui(6) - crh + sin(current_time / 250) * 4;
+		
+		draw_sprite_stretched(THEME.textbox, 3, crx, cry, crw, crh);
+		draw_sprite_stretched(THEME.textbox, 0, crx, cry, crw, crh);
+		draw_sprite_ui(THEME.textbox_arrow, 0,  crc, cry + crh - 1);
+		draw_text_add(crc, cry + crh - ui(4), txt);
+	}
+	
+	bx -= bs + ui(1);
+	cc  = COLORS._main_icon;
 	txt = __txtx("splash_show_thumbnail", "Toggle thumbnail");
-	if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, sFOCUS, txt, THEME.image_20, PREFERENCES.splash_show_thumbnail, COLORS._main_icon, 1, .8) == 2) {
+	if(buttonInstant(bhf, bx, by, bs, bs, m, hov, foc, txt, THEME.image_20, PREFERENCES.splash_show_thumbnail, cc, 1, .8) == 2) {
 		PREFERENCES.splash_show_thumbnail = !PREFERENCES.splash_show_thumbnail;
 		PREF_SAVE();
 	}

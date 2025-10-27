@@ -250,8 +250,7 @@
 		if(string_starts_with(param, "-")) {
 			switch(param) {
 				case "-c" : case "--crashed" : 
-					if(PREFERENCES.show_crash_dialog) 
-						run_in(1, function() { dialogCall(o_dialog_crashed); });
+					if(PREFERENCES.show_crash_dialog) run_in(1, function() /*=>*/ {return dialogCall(o_dialog_crashed)});
 					break;
 				
 				case "-h" : case "--headless" : 

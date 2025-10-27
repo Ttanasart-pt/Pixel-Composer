@@ -19,6 +19,14 @@ event_inherited();
 	clip_surf = noone;
 #endregion
 
+#region crashed
+	var path_crashed = $"{env_user()}log/crashed.txt";
+	var path_log     = $"{env_user()}log/crash_log.txt";
+	
+	crashed = file_exists(path_crashed) && file_exists(path_log);
+	if(crashed) file_delete(path_crashed);
+#endregion
+
 #region recent files
 	var x0 = dialog_x + ui(16);
 	var x1 = x0 + recent_width;
