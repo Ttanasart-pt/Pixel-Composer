@@ -551,7 +551,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var ansize = array_length(inputs) - input_fix_len;
 		var edited = false;
 		var _tooln = getUsingToolName();
-		var panel  = _params.panel;
+		var panel  = struct_try_get(_params, "panel", noone);
 		
 		var pos = outputs[0].getValue();
 		var p/*:_ANCHOR*/;
@@ -1617,7 +1617,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		}
 		
 		if(_show_selecting) {
-			if(anchor_freeze == 0 && panel.selection_selecting && anchor_hover == -1) {
+			if(panel != noone && anchor_freeze == 0 && panel.selection_selecting && anchor_hover == -1) {
 				var sx0 = panel.selection_x0;
 				var sy0 = panel.selection_y0;
 				var sx1 = panel.selection_x1;

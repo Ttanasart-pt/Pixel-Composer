@@ -1313,7 +1313,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         }
         
         if(node_drag_removing) {
-        	draw_circle_ui(mx, my, ui(8), .1, COLORS._main_value_negative);
+        	draw_circle_ui(mx, my, ui(8), 0, COLORS._main_value_negative, .25);
         	
         	if(junction_hovering != noone)
         		junction_hovering.removeFrom();
