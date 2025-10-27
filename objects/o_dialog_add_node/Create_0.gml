@@ -97,7 +97,7 @@ event_inherited();
 		PREF_SAVE();
 	}
 	
-	registerFunction("Add Node", "Trigger Favourite",	"",	   MOD_KEY.none,	trigger_favourite);
+	registerFunction( "Add Node", "Trigger Favourite", "", MOD_KEY.none, trigger_favourite );
 	
 	function rightClick(node) {
 		if(!is(node, NodeObject)) return;
@@ -149,11 +149,11 @@ event_inherited();
 				for( var j = 0, m = array_length(cat.list); j < m; j++ )
 					array_push(node_list, cat.list[j]);
 			}
-	
+		
 		} else if(ADD_NODE_PAGE == -1) { // New
 			for( var i = 0, n = array_length(NEW_NODES); i < n; i++ )
 				array_push(node_list, NEW_NODES[i]);
-	
+		
 		} else if(ADD_NODE_PAGE == NODE_PAGE_DEFAULT && category == NODE_CATEGORY) { // page 0 global context
 			var sug = [];
 			
@@ -184,7 +184,9 @@ event_inherited();
 				if(!struct_has(ALL_NODES, _nodeIndex)) continue;
 				
 				var _node = ALL_NODES[$ _nodeIndex];
-				if(_node.show_in_recent) array_push(_fvnd, _node);
+				if(!_node.show_in_recent) continue;
+				
+				array_push(_fvnd, _node);
 			}
 			array_sort(_fvnd, function(v1, v2) /*=>*/ {return string_compare(v1.name, v2.name)});
 			for( var i = 0, n = array_length(_fvnd); i < n; i++ ) array_push(node_list, _fvnd[i]);
@@ -196,9 +198,11 @@ event_inherited();
 				if(!struct_has(ALL_NODES, _nodeIndex)) continue;
 				
 				var _node = ALL_NODES[$ _nodeIndex];
-				if(_node.show_in_recent) 
-					array_push(node_list, _node);
+				if(!_node.show_in_recent) continue;
+				
+				array_push(node_list, _node);
 			}
+			
 		} else {
 			var _l = category[ADD_NODE_PAGE].list;
 			for( var i = 0, n = array_length(_l); i < n; i++ ) 

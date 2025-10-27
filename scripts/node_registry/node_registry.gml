@@ -499,7 +499,7 @@ function __read_node_display(_list) {
 					var _node = ALL_NODES[$ _n];
 					
 					if(_node.new_node) {
-						if(_currLab != _head)
+						if(_currLab != _head) 
 							array_push(NEW_NODES, _head);
 						_currLab = _head;
 						array_push(NEW_NODES, _node);
@@ -519,7 +519,10 @@ function __read_node_display(_list) {
 			}
 			
 			if(is_struct(_n) && struct_has(_n, "label")) {
-				var _k = _kname; if(_head != "") _k += "/" + _head; if(_lab != "") _k += "/" + _lab;
+				var _k = _kname; 
+				if(_head != "") _k += "/" + _head; 
+				if(_lab  != "") _k += "/" + _lab;
+				
 				array_append(_l, CUSTOM_NODES_POSITION[$ _k]);
 				
 				if(!string_starts_with(_n.label, "/")) _head = _n.label; 
@@ -529,7 +532,10 @@ function __read_node_display(_list) {
 			}
 		}
 		
-		var _k = _kname; if(_head != "") _k += "/" + _head; if(_lab != "") _k += "/" + _lab;
+		var _k = _kname; 
+		if(_head != "") _k += "/" + _head; 
+		if(_lab  != "") _k += "/" + _lab;
+		
 		array_append(_l, CUSTOM_NODES_POSITION[$ _k]);
 	}
 	

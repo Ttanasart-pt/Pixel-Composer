@@ -44,7 +44,7 @@ function surface_apply_gaussian(surface, size, bg = false, bg_c = c_white, sampl
 		draw_clear_alpha(bg_c, bg);
 		
 		shader_set(sh_blur_gaussian);
-		shader_set_f("dimension", [ _sw, _sh ]);
+		shader_set_2("dimension", [_sw,_sh]);
 		shader_set_f("weight",    gau_array);
 		
 		shader_set_i("sampleMode", sampleMode);
@@ -107,11 +107,12 @@ function surface_apply_blur_zoom(outputSurf, args) {
 	outputSurf = surface_verify(outputSurf, _sw, _sh, format);
 	
 	var _sizeArr   = is_array(args.size);
-	var _size      = min(_sizeArr? args.size[0] : args.size, _ss) / _ss;
-	var _sizeSurf  =  _sizeArr? args.size[1] : noone;
-	var _sizeJunc  =  _sizeArr? args.size[2] : noone;
+	var _size      = _sizeArr? args.size[0] : args.size;
+	var _sizeSurf  = _sizeArr? args.size[1] : noone;
+	var _sizeJunc  = _sizeArr? args.size[2] : noone;
 	
 	surface_set_shader(outputSurf, args.mode? sh_blur_zoom_step : sh_blur_zoom);
+		shader_set_2("dimension",   [_sw,_sh] );
 		shader_set_f("center",       args.origin_x / _sw, args.origin_y / _sh);
 		shader_set_f_map("strength", _size,  _sizeSurf,  _sizeJunc);
 		shader_set_i("blurMode",     args.blurMode);

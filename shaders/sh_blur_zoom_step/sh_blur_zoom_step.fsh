@@ -20,6 +20,8 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 uniform int  samples;
 
+uniform vec2  dimension;
+
 uniform vec2  center;
 uniform int   blurMode;
 uniform int   gamma;
@@ -57,11 +59,13 @@ float sampleMask() {
 }
 
 void main() {
+	float ss = max(dimension.x, dimension.y) / 2.;
+	
 	float str = strength.x;
 	if(strengthUseSurf == 1) {
 		vec4 _vMap = texture2D( strengthSurf, v_vTexcoord );
 		str = mix(strength.x, strength.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
-	}
+	} str /= ss;
 	
     vec2 uv = v_vTexcoord - center;
 	
