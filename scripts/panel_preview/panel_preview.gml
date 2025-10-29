@@ -412,6 +412,10 @@ function Panel_Preview() : PanelContent() constructor {
     #endregion
     
     #region ++++ Toolbars & Actions ++++
+    	function subDialogCall(_dia) {
+	    	dialogPanelCall(_dia, x + w - ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.right });
+	    }
+	    
         static set_tile_off        = function() /*=>*/ { tileMode = 0; }
         static set_tile_horizontal = function() /*=>*/ { tileMode = 1; }
         static set_tile_vertical   = function() /*=>*/ { tileMode = 2; }
@@ -485,54 +489,48 @@ function Panel_Preview() : PanelContent() constructor {
             new panel_toolbar_icon("Grid",  
                 THEME.icon_grid_setting,
                 function() /*=>*/ {return 0},
-                function() /*=>*/ {return new tooltipHotkey(__txtx("grid_title", "Grid settings") + "...", "Preview", "Grid Settings")}, 
-                function(data) /*=>*/ { dialogPanelCall(new Panel_Preview_Grid_Setting(), 
-                									x + ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.left }); }, 
-            ).setHotkey("Preview", "Grid Settings"),
+                new tooltipHotkey(__txtx("grid_title", "Grid settings") + "...", "Preview", "Grid Settings..."), 
+                function(data) /*=>*/ { subDialogCall(new Panel_Preview_Grid_Setting()); }, 
+            ).setHotkey("Preview", "Grid Settings..."),
             
             new panel_toolbar_icon("Onion Skin",   
                 THEME.onion_skin,
                 function() /*=>*/ {return 0},
-                function() /*=>*/ {return new tooltipHotkey(__txt("Onion Skin") + "...", "Preview", "Onion Skin Settings")}, 
-                function(data) /*=>*/ { dialogPanelCall(new Panel_Preview_Onion_Setting(), 
-                									x + ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.left }); }, 
-            ).setHotkey("Preview", "Onion Skin Settings"),
+                new tooltipHotkey(__txt("Onion Skin") + "...", "Preview", "Onion Skin Settings..."), 
+                function(data) /*=>*/ { subDialogCall(new Panel_Preview_Onion_Setting()); }, 
+            ).setHotkey("Preview", "Onion Skin Settings..."),
         ];
     	
         toolbars_3d = [
             new panel_toolbar_icon("3D Preview Settings",  
                 THEME.d3d_preview_settings,
                 function() /*=>*/ {return 0},
-                function() /*=>*/ {return new tooltipHotkey(__txt("3D Preview Settings") + "...", "Preview", "3D View Settings")},
-                function(data) /*=>*/ { dialogPanelCall(new Panel_Preview_3D_Setting(), 
-                									x - ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.left }); }, 
-            ).setHotkey("Preview", "3D View Settings"),
+                new tooltipHotkey(__txt("3D Preview Settings") + "...", "Preview", "3D View Settings..."),
+                function(data) /*=>*/ { subDialogCall(new Panel_Preview_3D_Setting()); }, 
+            ).setHotkey("Preview", "3D View Settings..."),
             
             new panel_toolbar_icon("3D Snap Settings",
                 THEME.d3d_snap_settings,
                 function() /*=>*/ {return 0},
-                function() /*=>*/ {return new tooltipHotkey(__txt("3D Snap Settings") + "...", "Preview", "3D Snap Settings")},
-                function(data) /*=>*/ { dialogPanelCall(new Panel_Preview_Snap_Setting(), 
-                									x - ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.left }); }, 
-            ).setHotkey("Preview", "3D Snap Settings"),
+                new tooltipHotkey(__txt("3D Snap Settings") + "...", "Preview", "3D Snap Settings..."),
+                function(data) /*=>*/ { subDialogCall(new Panel_Preview_Snap_Setting()); }, 
+            ).setHotkey("Preview", "3D Snap Settings..."),
         ];
         
         toolbars_3d_sdf = [
             new panel_toolbar_icon("SDF Preview",
                 THEME.d3d_preview_settings,
                 function() /*=>*/ {return 0},
-                function() /*=>*/ {return new tooltipHotkey(__txt("3D SDF Preview Settings") + "...", "Preview", "3D SDF View Settings")},
-                function(data) /*=>*/ { dialogPanelCall(new Panel_Preview_3D_SDF_Setting(), 
-                									x - ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.left }); }, 
-            ).setHotkey("Preview", "3D SDF View Settings"),
+                new tooltipHotkey(__txt("3D SDF Preview Settings") + "...", "Preview", "3D SDF View Settings..."),
+                function(data) /*=>*/ { subDialogCall(new Panel_Preview_3D_SDF_Setting()); }, 
+            ).setHotkey("Preview", "3D SDF View Settings..."),
             
             new panel_toolbar_icon("3D Snap Settings",
                 THEME.d3d_snap_settings,
                 function() /*=>*/ {return 0},
-                function() /*=>*/ {return new tooltipHotkey(__txt("3D Snap Settings") + "...", "Preview", "3D Snap Settings")},
-                function(data) /*=>*/ { dialogPanelCall(new Panel_Preview_Snap_Setting(), 
-                									x - ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.left }); }, 
-            ).setHotkey("Preview", "3D Snap Settings"),
+                new tooltipHotkey(__txt("3D Snap Settings") + "...", "Preview", "3D Snap Settings..."),
+                function(data) /*=>*/ { subDialogCall(new Panel_Preview_Snap_Setting()); }, 
+            ).setHotkey("Preview", "3D Snap Settings..."),
         ];
         
         global.menuItems_preview_actions = [
@@ -550,7 +548,7 @@ function Panel_Preview() : PanelContent() constructor {
                 function() /*=>*/ {return 0},
                 new tooltipHotkey(__txtx("panel_preview_export_canvas", "Export canvas"), "Preview", "Save current frame"), 
                 function() /*=>*/ {return saveCurrentFrame()},
-            ).setHotkey("Preview", "Save current frame"),
+            ).setHotkey("Preview", "Save Current Frame"),
             
             new panel_toolbar_icon("Lock Preview",
                 THEME.lock,
@@ -576,10 +574,9 @@ function Panel_Preview() : PanelContent() constructor {
             new panel_toolbar_icon("Visibility Settings",
                 THEME.icon_visibility,
                 function() /*=>*/ {return 0},
-                new tooltipHotkey(__txtx("graph_visibility_title", "Visibility settings") + "...", "Preview", "View Settings"), 
-                function(param) /*=>*/ { dialogPanelCall(new Panel_Preview_View_Setting(self), 
-                									x + w - ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.right }); }, 
-            ).setHotkey("Preview", "View Settings"),
+                new tooltipHotkey(__txtx("graph_visibility_title", "Visibility settings") + "...", "Preview", "View Settings..."), 
+                function(param) /*=>*/ { subDialogCall(new Panel_Preview_View_Setting(self)); }, 
+            ).setHotkey("Preview", "View Settings..."),
             
             new panel_toolbar_icon("Popup",
                 THEME.node_goto_thin,
@@ -1214,7 +1211,7 @@ function Panel_Preview() : PanelContent() constructor {
         	var _hov = thov && point_in_rectangle(_mx, _my, _x0, _y0 + 1, _x1, _y1 - 1);
         	
         	if(_hov) {
-        		TOOLTIP = new tooltipHotkey($"Set {_in.name}").setKey(_key.toString());
+        		TOOLTIP = new tooltipKey($"Set {_in.name}", _key.toString());
         		
         		if(_in.drawOverlayToggle != noone) {
 	        		draw_sprite_stretched(THEME.button_hide_fill, 1, _bx, _by, _bs, _bs);

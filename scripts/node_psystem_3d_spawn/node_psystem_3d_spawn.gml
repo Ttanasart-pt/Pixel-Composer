@@ -263,13 +263,12 @@ function Node_pSystem_3D_Spawn(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 					var _path_prog = random(1);
 					_sh_path.getPointRatio(_path_prog, 0, __path_temp);
 					
-					_px = __path_temp.x + _sh_span[0] * random_range(-1, 1);
-					_py = __path_temp.y + _sh_span[1] * random_range(-1, 1);
-					_pz = __path_temp.z + _sh_span[2] * random_range(-1, 1);
+					_px = __path_temp.x;// + _sh_span[0] * random_range(-1, 1);
+					_py = __path_temp.y;// + _sh_span[1] * random_range(-1, 1);
+					_pz = __path_temp.z;// + _sh_span[2] * random_range(-1, 1);
 					break;
 				
 				case 2 : // Vert
-					if(!is(_sh_mesh, __3dObject))    return;
 					if(array_empty(_sh_mesh.vertex)) return;
 					
 					var _vi = irandom(array_length(_sh_mesh.vertex) - 1);
@@ -278,18 +277,18 @@ function Node_pSystem_3D_Spawn(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 					
 					var _v = _vs[_vi];
 					
-					_px = _v.x + _sh_span[0] * random_range(-1, 1);
-					_py = _v.y + _sh_span[1] * random_range(-1, 1);
-					_pz = _v.z + _sh_span[2] * random_range(-1, 1);
+					_px = _v.x;// + _sh_span[0] * random_range(-1, 1);
+					_py = _v.y;// + _sh_span[1] * random_range(-1, 1);
+					_pz = _v.z;// + _sh_span[2] * random_range(-1, 1);
 					break;
 					
 				case 3 : // Data
 					if(array_empty(_sh_data)) return;
 					var _spwn_data = _sh_data[irandom(array_length(_sh_data) - 1)];
 					
-					_px = _spwn_data[0] + _sh_span[0] * random_range(-1, 1);
-					_py = _spwn_data[1] + _sh_span[1] * random_range(-1, 1);
-					_pz = _spwn_data[2] + _sh_span[2] * random_range(-1, 1);
+					_px = _spwn_data[0];// + _sh_span[0] * random_range(-1, 1);
+					_py = _spwn_data[1];// + _sh_span[1] * random_range(-1, 1);
+					_pz = _spwn_data[2];// + _sh_span[2] * random_range(-1, 1);
 					break;
 					
 			}

@@ -81,6 +81,7 @@
 	function panel_graph_topbar_show()             { PANEL_GRAPH.topbar_show();   }
 	function panel_graph_topbar_hide()             { PANEL_GRAPH.topbar_hide();   }
 	function panel_graph_topbar_edit()             { PANEL_GRAPH.topbar_edit();   }
+	function panel_graph_topbar_reset()            { PANEL_GRAPH.topbar_reset();  }
 	                                                         
 	function panel_graph_view_control_toggle()     { PANEL_GRAPH.view_control_toggle(); }
 	function panel_graph_view_control_show()       { PANEL_GRAPH.view_control_show();   }
@@ -161,6 +162,7 @@
 		registerFunction("Graph", "Show Topbar",         "", MOD_KEY.none, panel_graph_topbar_show    ).setMenu("graph_topbar_show");
 		registerFunction("Graph", "Hide Topbar",         "", MOD_KEY.none, panel_graph_topbar_hide    ).setMenu("graph_topbar_hide");
 		registerFunction("Graph", "Edit Topbar",         "", MOD_KEY.none, panel_graph_topbar_edit    ).setMenu("graph_topbar_edit");
+		registerFunction("Graph", "Reset Topbar",        "", MOD_KEY.none, panel_graph_topbar_reset   ).setMenu("graph_topbar_reset", THEME.refresh_20);
 		
 		registerFunction("Graph", "Toggle View Control", "", MOD_KEY.none, panel_graph_view_control_toggle  ).setMenu("graph_view_control_toggle", noone, false, function() /*=>*/ {return PROJECT.graphDisplay.show_view_control});
 		registerFunction("Graph", "Show View Control",   "", MOD_KEY.none, panel_graph_view_control_show    ).setMenu("graph_view_control_show");
@@ -611,60 +613,61 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     function initSize() { toCenterNode(); }
     
     #region // ++++ toolbars ++++
+	    function subDialogCall(_dia) {
+	    	dialogPanelCall(_dia, x + w - ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.right });
+	    }
+	    
         hk_editing = noone;
         
         toolbars_general = [
             new panel_toolbar_icon("Export Graph",
                 THEME.icon_preview_export,
                 function()  /*=>*/ {return 0}, 
-                function()  /*=>*/ {return new tooltipHotkey(__txtx("panel_graph_export_image", "Export graph as image"), "Graph", "Export As Image")},
+                new tooltipHotkey(__txtx("panel_graph_export_image", "Export graph as image"), "Graph", "Export As Image..."),
                 function(p) /*=>*/ { dialogPanelCall(new Panel_Graph_Export_Image(self)); }
-            ).setHotkey("Graph", "Export As Image"),
+            ).setHotkey("Graph", "Export As Image..."),
             
             new panel_toolbar_icon("Search",
                 THEME.search_24,
                 function()  /*=>*/ {return 0}, 
-                function()  /*=>*/ {return new tooltipHotkey(__txt("Search"), "Graph", "Search")}, 
+                new tooltipHotkey(__txt("Search"), "Graph", "Search"), 
                 function(p) /*=>*/ { toggleSearch(); }
             ).setHotkey("Graph", "Search"),
             
             new panel_toolbar_icon("Focus Content",
                 THEME.icon_center_canvas,
                 function()  /*=>*/ {return 0}, 
-                function()  /*=>*/ {return new tooltipHotkey(__txtx("panel_graph_center_to_nodes", "Center to nodes"), "Graph", "Focus Content")}, 
+                new tooltipHotkey(__txtx("panel_graph_center_to_nodes", "Center to nodes"), "Graph", "Focus Content"), 
                 function(p) /*=>*/ { toCenterNode(); } 
             ).setHotkey("Graph", "Focus Content"),
             
             new panel_toolbar_icon("Minimap",
                 THEME.icon_minimap,
                 function()  /*=>*/ {return minimap_show}, 
-                function()  /*=>*/ {return new tooltipHotkey(__txtx("panel_graph_toggle_minimap", "Toggle minimap"), "Graph", "Toggle Minimap")}, 
+                new tooltipHotkey(__txtx("panel_graph_toggle_minimap", "Toggle minimap"), "Graph", "Toggle Minimap"), 
                 function(p) /*=>*/ { minimap_show = !minimap_show; } 
             ).setHotkey("Graph", "Toggle Minimap"),
             
             new panel_toolbar_icon("Connection Settings",
                 THEME.icon_curve_connection,
                 function()  /*=>*/ {return project.graphConnection.type}, 
-                function()  /*=>*/ {return new tooltipHotkey(__txtx("panel_graph_connection_line", "Connection render settings") + "...", "Graph", "Connection Settings")}, 
-                function(p) /*=>*/ { dialogPanelCall(new Panel_Graph_Connection_Setting(), 
-                								x + w - ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.right }); } 
-            ).setHotkey("Graph", "Connection Settings"),
+                new tooltipHotkey(__txtx("panel_graph_connection_line", "Connection render settings") + "...", "Graph", "Connection Settings..."), 
+                function(p) /*=>*/ { subDialogCall(new Panel_Graph_Connection_Setting()); } 
+            ).setHotkey("Graph", "Connection Settings..."),
             
             new panel_toolbar_icon("Grid Settings",
                 THEME.icon_grid_setting,
                 function()  /*=>*/ {return 0}, 
-                function()  /*=>*/ {return new tooltipHotkey(__txtx("grid_title", "Grid settings") + "...", "Graph", "Grid Settings")}, 
-                function(p) /*=>*/ { dialogPanelCall(new Panel_Graph_Grid_Setting(), 
-                								x + w - ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.right }); } 
-            ).setHotkey("Graph", "Grid Settings"),
+                new tooltipHotkey(__txtx("grid_title", "Grid settings") + "...", "Graph", "Grid Settings..."), 
+                function(p) /*=>*/ { subDialogCall(new Panel_Graph_Grid_Setting()); } 
+            ).setHotkey("Graph", "Grid Settings..."),
             
             new panel_toolbar_icon("View Settiings",
                 THEME.icon_visibility,
                 function()  /*=>*/ {return 0}, 
-                function()  /*=>*/ {return new tooltipHotkey(__txtx("graph_visibility_title", "Visibility settings") + "...", "Graph", "View Settings")}, 
-                function(p) /*=>*/ { dialogPanelCall(new Panel_Graph_View_Setting(self, project.graphDisplay), 
-                								x + w - ui(8), y + h - toolbar_height - ui(8), { anchor: ANCHOR.bottom | ANCHOR.right }); } 
-            ).setHotkey("Graph", "View Settings"),
+                new tooltipHotkey(__txtx("graph_visibility_title", "Visibility settings") + "...", "Graph", "View Settings..."), 
+                function(p) /*=>*/ { subDialogCall(new Panel_Graph_View_Setting(self, project.graphDisplay)); } 
+            ).setHotkey("Graph", "View Settings..."),
         ]; 
         
         toolbars_halign = [
@@ -705,11 +708,13 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	    global.menuItems_graph_topbar_context_menu = [
 	    	"graph_topbar_hide", 
 	    	"graph_topbar_edit", 
+	    	"graph_topbar_reset", 
 		];
 		function topbar_toggle() { project.graphDisplay.show_topbar = !project.graphDisplay.show_topbar; }
 		function topbar_show()   { project.graphDisplay.show_topbar =  true; }
 		function topbar_hide()   { project.graphDisplay.show_topbar = false; }
 		function topbar_edit()   { dialogPanelCall(new Panel_MenuItems_Editor("graph_topbar_menu")); }
+		function topbar_reset()  { variable_struct_remove(PREFERENCES_MENUITEMS, "graph_topbar_menu"); PREF_SAVE(); }
 		
 		function view_control_toggle() { project.graphDisplay.show_view_control = !project.graphDisplay.show_view_control; }
 		function view_control_show()   { project.graphDisplay.show_view_control =  true; }
@@ -2605,7 +2610,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         var hov = pHOVER && point_in_rectangle(mx, my, cont_x, ty, w, h);
         
         for( var i = 0, n = array_length(toolbars); i < n; i++ ) {
-            var tbs   = toolbars[i];
+            var tbs = toolbars[i];
             
             for (var j = 0, m = array_length(tbs); j < m; j++) {
                 var tb = tbs[j];

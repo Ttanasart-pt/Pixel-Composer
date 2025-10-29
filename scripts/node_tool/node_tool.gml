@@ -33,7 +33,7 @@ function NodeTool(_name = "", _spr = noone, _contextString = instanceof(other)) 
 		var _key = checkHotkey();
 		
 		if(_key == noone) return _nme;
-		return new tooltipHotkey(_nme).setKey(_key.getName());
+		return new tooltipKey(_nme, _key.getName());
 	}
 	
 	////- Settings
