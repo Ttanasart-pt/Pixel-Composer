@@ -258,10 +258,10 @@ function Node_pSystem_3D_Spawn(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 					break;
 					
 				case 1 : // Path
-					if(!is_path(_spawn_path)) return;
+					if(!is_path(_sh_path)) return;
 					
 					var _path_prog = random(1);
-					_spawn_path.getPointRatio(_path_prog, 0, __path_temp);
+					_sh_path.getPointRatio(_path_prog, 0, __path_temp);
 					
 					_px = __path_temp.x + _sh_span[0] * random_range(-1, 1);
 					_py = __path_temp.y + _sh_span[1] * random_range(-1, 1);
@@ -269,11 +269,11 @@ function Node_pSystem_3D_Spawn(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 					break;
 				
 				case 2 : // Vert
-					if(!is(_spawn_mesh, __3dObject))    return;
-					if(array_empty(_spawn_mesh.vertex)) return;
+					if(!is(_sh_mesh, __3dObject))    return;
+					if(array_empty(_sh_mesh.vertex)) return;
 					
-					var _vi = irandom(array_length(_spawn_mesh.vertex) - 1);
-					var _vs = _spawn_mesh.vertex[_vi];
+					var _vi = irandom(array_length(_sh_mesh.vertex) - 1);
+					var _vs = _sh_mesh.vertex[_vi];
 					var _vi = irandom(array_length(_vs) - 1);
 					
 					var _v = _vs[_vi];
@@ -284,8 +284,8 @@ function Node_pSystem_3D_Spawn(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 					break;
 					
 				case 3 : // Data
-					if(array_empty(_spawn_data)) return;
-					var _spwn_data = _spawn_data[irandom(array_length(_spawn_data) - 1)];
+					if(array_empty(_sh_data)) return;
+					var _spwn_data = _sh_data[irandom(array_length(_sh_data) - 1)];
 					
 					_px = _spwn_data[0] + _sh_span[0] * random_range(-1, 1);
 					_py = _spwn_data[1] + _sh_span[1] * random_range(-1, 1);
