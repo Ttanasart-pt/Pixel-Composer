@@ -35,7 +35,7 @@ function Panel_History() : PanelContent() constructor {
 		
 		var ww  = sc_history.surface_w;
 		var lw  = sc_history.surface_w - ui(32 + 2);
-		var spc = ui(4);
+		var spc = ui(2);
 		var pad = ui(2);
 		var lh  = line_get_height() + spc;
 		

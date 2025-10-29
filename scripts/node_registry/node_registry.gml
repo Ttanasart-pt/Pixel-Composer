@@ -173,6 +173,7 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		
 		_node.name = name;
 		_node.postBuild();
+		recordAction(ACTION_TYPE.node_added, _node).setRef(_node);
 		
 		return _node;
 	}
@@ -645,13 +646,13 @@ function nodeBuild(_name, _x, _y, _group = PANEL_GRAPH.getCurrentContext()) {
 	
 	var _node  = ALL_NODES[$ _name];
 	var _bnode = _node.build(_x, _y, _group, {}, _skipc);
-	
-	if(_bnode) {
-		if(!APPENDING && !LOADING && _bnode.set_default) _bnode.resetDefault();
-		recordAction(ACTION_TYPE.node_added, _bnode).setRef(_bnode);
-	}
-	
 	KEYBOARD_RESET
+	
+	if(!is(_bnode, Node)) return _bnode;
+	
+	if(!APPENDING && !LOADING && _bnode.set_default) 
+		_bnode.resetDefault();
+	
 	return _bnode;
 }
 

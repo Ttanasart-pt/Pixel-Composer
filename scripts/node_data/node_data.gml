@@ -105,9 +105,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		draw_boundary       = [ 0, 0, 0, 0 ];
 		draw_graph_culled   = false;
 		
-		badgePreview        = 0;
-		badgeInspect        = 0;
-		
 		active_drawing      = false;
 		active_draw_index   = -1;
 		active_draw_anchor  = false;
@@ -2315,33 +2312,33 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static drawPreviewBackground = undefined;
 	
 	static drawBadge = function(_x, _y, _s) {
-		badgePreview = bool(previewing);
-		badgeInspect = bool(inspecting);
+		var bPreview = bool(previewing);
+		var bInspect = bool(inspecting);
 		
-		var _si   = UI_SCALE;
-		var _full = previewable && w * _s > 64;
+		var _full    = previewable && w * _s > 64;
+		var _scale   = UI_SCALE;
 		
 		if(_full) {
 			var xx = x * _s + _x + w * _s;
 			var yy = y * _s + _y;
-			var xw = 28 * _si;
+			var xw = 28 * _scale;
 			
-			if(badgePreview > 0) { draw_sprite_ui_uniform(THEME.node_state, is_3D? 3 : 0, xx, yy, badgePreview); xx -= xw * badgePreview; }
-			if(badgeInspect > 0) { draw_sprite_ui_uniform(THEME.node_state, 1,            xx, yy, badgeInspect); xx -= xw * badgeInspect; }
-			if(isTool)           { draw_sprite_ui_uniform(THEME.node_state, 2,            xx, yy, 1);            xx -= xw;                }
+			if(bPreview) { draw_sprite_ui_uniform(THEME.node_state, bool(is_3D) * 3, xx, yy, bPreview); xx -= xw * bPreview; }
+			if(bInspect) { draw_sprite_ui_uniform(THEME.node_state, 1,               xx, yy, bInspect); xx -= xw * bInspect; }
+			if(isTool)   { draw_sprite_ui_uniform(THEME.node_state, 2,               xx, yy, 1);        xx -= xw;            }
 			
 		} else {
 			var xx = _x + _s * (x + w - 10);
 			var yy = _y + _s *  y;
 			
 			var ss = .5 * _s;
-			var xw = 12 * _s * _si;
+			var xw = 12 * _s * _scale;
 			
 			gpu_set_tex_filter(true);
 			
-			if(badgePreview > 0) { draw_sprite_ui_uniform(THEME.circle_16, 0, xx, yy, ss, CDEF.orange); xx -= xw; }
-			if(badgeInspect > 0) { draw_sprite_ui_uniform(THEME.circle_16, 0, xx, yy, ss, CDEF.lime);   xx -= xw; }
-			if(isTool)           { draw_sprite_ui_uniform(THEME.circle_16, 0, xx, yy, ss, CDEF.blue);   xx -= xw; }
+			if(bPreview) { draw_sprite_ui_uniform(THEME.circle_16, 0, xx, yy, ss, CDEF.orange); xx -= xw; }
+			if(bInspect) { draw_sprite_ui_uniform(THEME.circle_16, 0, xx, yy, ss, CDEF.lime);   xx -= xw; }
+			if(isTool)   { draw_sprite_ui_uniform(THEME.circle_16, 0, xx, yy, ss, CDEF.blue);   xx -= xw; }
 			
 			gpu_set_tex_filter(false);
 		}
