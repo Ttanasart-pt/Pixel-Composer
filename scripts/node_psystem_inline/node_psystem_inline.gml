@@ -4,7 +4,7 @@ function Node_pSystem_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	icon  = THEME.vfx;
 	is_simulation      = true;
 	update_on_frame    = true;
-	managedRenderOrder = true;
+	// managedRenderOrder = true;
 	
 	is_root  = false;
 	topoList = [];

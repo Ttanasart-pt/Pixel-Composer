@@ -2,7 +2,8 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name  = "Spawn";
 	icon  = THEME.vfx;
 	color = COLORS.node_blend_vfx;
-	node_draw_icon = s_node_psystem_spawn;
+	update_on_frame = true;
+	node_draw_icon  = s_node_psystem_spawn;
 	
 	setDimension(96, 0);
 	update_on_frame = true;

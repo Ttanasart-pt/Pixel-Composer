@@ -9,7 +9,8 @@ function Node_pSystem_3D_Spawn(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 	name  = "Spawn";
 	icon  = THEME.vfx;
 	color = COLORS.node_blend_vfx;
-	node_draw_icon = s_node_psystem_3d_spawn;
+	update_on_frame = true;
+	node_draw_icon  = s_node_psystem_3d_spawn;
 	
 	setDimension(96, 0);
 	update_on_frame = true;
