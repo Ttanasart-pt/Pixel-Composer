@@ -630,29 +630,36 @@ function Panel_Menu() : PanelContent() constructor {
         
         #region addons 
             var wh = ui(24);
-            if(!hori) nx0 = ui(8);
             
             if(instance_exists(addon)) {
                 draw_set_text(font, fa_left, fa_center, COLORS._main_text);
-                
                 var name = string(instance_number(addon)) + " ";
-                var ww = hori? string_width(name) + ui(34) : w - ui(16);
+                var tw   = string_width(name) + ui(34);
+                var tx   = nx0;
+                var ww   = tw;
+                
+                if(!hori) {
+                    nx0 = ui(8);
+                    tx  = w / 2 - tw / 2;   
+                    ww  = w - ui(16);
+                }
                 
                 if(pHOVER && point_in_rectangle(mx, my, nx0, ny0 - wh / 2, nx0 + ww, ny0 + wh / 2)) {
                     _draggable = false;
                     TOOLTIP = __txt("Addons");
                     draw_sprite_stretched(THEME.box_r2_clr, 0, nx0, ny0 - wh / 2, ww, wh);
-                    if(mouse_press(mb_left, pFOCUS))
-                        dialogPanelCall(new Panel_Addon());
+                    if(mouse_lpress(pFOCUS)) dialogPanelCall(new Panel_Addon());
+                    
                 } else 
                     draw_sprite_stretched(THEME.ui_panel_bg, 1, nx0, ny0 - wh / 2, ww, wh);
                     
-                draw_text_add(nx0 + ui(8), ny0 - ui(1), name);
-                draw_sprite_ui_uniform(THEME.addon_icon, 0, nx0 + ui(18) + string_width(name), ny0, .75, COLORS._main_icon);
-                
+                draw_text_add(tx + ui(8), ny0 - ui(1), name);
+                draw_sprite_ui_uniform(THEME.addon_icon, 0, tx + ui(18) + string_width(name), ny0, .75, COLORS._main_icon);
+                    
                 if(hori) nx0 += ww + ui(4);
                 else     ny0 += hh + ui(4);
             }
+            
         #endregion
         
         var x1 = _right? w - ui(6) : ui(8 + 28);
