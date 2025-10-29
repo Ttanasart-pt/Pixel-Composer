@@ -16,6 +16,8 @@ function Panel_History() : PanelContent() constructor {
 	sep_y    = 0;
 	sep_y_to = 0;
 	
+	font = f_p4;
+	
 	function refreshList() {
 		redo_list = ds_stack_to_array(REDO_STACK);
 		undo_list = array_reverse(ds_stack_to_array(UNDO_STACK));
@@ -28,7 +30,7 @@ function Panel_History() : PanelContent() constructor {
 		if((array_length(redo_list) != ds_stack_size(REDO_STACK)) || (array_length(undo_list) != ds_stack_size(UNDO_STACK)))
 			refreshList();
 		
-		draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text);
+		draw_set_text(font, fa_left, fa_center, COLORS._main_text);
 		
 		var _h = 0, hh;
 		var yy = _y + ui(8);
@@ -36,7 +38,7 @@ function Panel_History() : PanelContent() constructor {
 		var ww  = sc_history.surface_w;
 		var lw  = sc_history.surface_w - ui(32 + 2);
 		var spc = ui(2);
-		var pad = ui(2);
+		var pad = ui(4);
 		var lh  = line_get_height() + spc;
 		
 		var red = array_length(redo_list);
@@ -100,12 +102,12 @@ function Panel_History() : PanelContent() constructor {
 			for( var j = 0; j < amoDisp; j++ ) {
 				var _ty = yy + lh * (j + 0.5);
 				if(j == 3) {
-					draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_sub, .5);
+					draw_set_text(font, fa_left, fa_center, COLORS._main_text_sub, .5);
 					draw_text_add(ui(32 + 12), _ty, string(array_length(item) - 3) + __txtx("more_actions", " more actions..."));
 					draw_set_alpha(1);
 					
 				} else {
-					draw_set_text(f_p3, fa_left, fa_center, i == hovering? COLORS._main_text : COLORS._main_text_sub);
+					draw_set_text(font, fa_left, fa_center, i == hovering? COLORS._main_text : COLORS._main_text_sub);
 					draw_text_add(ui(32 + 12), _ty, item[j].toString());
 				}
 			}
@@ -132,12 +134,12 @@ function Panel_History() : PanelContent() constructor {
 		sep_y = lerp_float(sep_y, sep_y_to, 2);
 		
 		if(red < amo - 1) {
-			draw_set_text(f_p3, fa_right, fa_top, COLORS._main_text_sub);
+			draw_set_text(font, fa_right, fa_top, COLORS._main_text_sub);
 			draw_text_transformed(ui(0), sep_y + ui(2 + 8), __txt("Past"), 1, 1, 90);
 		}
 		
 		if(red > 0) {
-			draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text_sub);
+			draw_set_text(font, fa_left, fa_top, COLORS._main_text_sub);
 			draw_text_transformed(ui(0), sep_y + ui(2 - 8), __txt("Future"), 1, 1, 90);
 		}
 		

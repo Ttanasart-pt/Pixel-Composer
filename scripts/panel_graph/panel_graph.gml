@@ -919,7 +919,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	    	"graph_toggle_render", 
 	    	"graph_toggle_parameters", 
 	    	"graph_hide_disconnected",
-	    	{ cond : "graph_select_group",    items : [ -1, "graph_enter_group", "graph_open_in_new_tab", "graph_group", "graph_update" ] },
+	    	{ cond : "graph_select_group",    items : [ -1, "graph_enter_group", "graph_open_in_new_tab", "graph_ungroup", "graph_update" ] },
 	    	{ cond : "graph_select_instance", items : [     "graph_uninstance"  ] },
 	    	{ cond : "graph_select_in_group", items : [     "graph_set_as_tool" ] },
 	    	{ cond : "graph_select_multiple", items : [ -1, "graph_group", "graph_add_Node_Frame" ] },
