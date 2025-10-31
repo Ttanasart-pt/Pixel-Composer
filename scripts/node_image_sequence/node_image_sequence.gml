@@ -1,3 +1,17 @@
+#region globals
+	enum CANVAS_SIZE {
+		individual,
+		minimum,
+		maximum
+	}
+	
+	enum CANVAS_SIZING {
+		padding,
+		scale
+	}
+
+#endregion
+
 function Node_create_Image_Sequence(_x, _y, _group = noone) {
 	var path = "";
 	if(NODE_NEW_MANUAL) {
@@ -26,34 +40,24 @@ function Node_create_Image_Sequence_path(_x, _y, _path) {
 	return node;
 }
 
-enum CANVAS_SIZE {
-	individual,
-	minimum,
-	maximum
-}
-
-enum CANVAS_SIZING {
-	padding,
-	scale
-}
-
 function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Image Array";
 	spr   = [];
 	color = COLORS.node_blend_input;
 	
-	newInput(0, nodeValue_Path("Paths", [])).setDisplay(VALUE_DISPLAY.path_array, { filter: ["image|*.png;*.jpg", ""] });
-	newInput(1, nodeValue_Padding("Padding", [0, 0, 0, 0])).rejectArray();
-	newInput(2, nodeValue_Enum_Scroll("Canvas size",  0, [ "Individual", "Minimum", "Maximum" ])).rejectArray();
-	newInput(3, nodeValue_Enum_Scroll("Sizing method",  0, [ "Padding / Crop", "Scale" ])).rejectArray();
+	newInput(0, nodeValue_Path(    "Paths",        []        )).setDisplay(VALUE_DISPLAY.path_array, { filter: ["image|*.png;*.jpg", ""] });
+	newInput(1, nodeValue_Padding( "Padding",      [0,0,0,0] )).rejectArray();
+	newInput(2, nodeValue_EScroll( "Canvas size",   0, [ "Individual", "Minimum", "Maximum" ] )).rejectArray();
+	newInput(3, nodeValue_EScroll( "Sizing method", 0, [ "Padding / Crop", "Scale" ]          )).rejectArray();
+	
+	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, [] ));
+	newOutput(1, nodeValue_Output( "Paths",       VALUE_TYPE.path,    [] )).setVisible(true, true);
 	
 	input_display_list = [
-		["Array settings",	false], 0, 1, 2, 3
+		["Array settings", false], 0, 1, 2, 3
 	];
 	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, []));
-	newOutput(1, nodeValue_Output("Paths", VALUE_TYPE.path, [] )).
-		setVisible(true, true);
+	////- Nodes
 	
 	attribute_surface_depth();
 	
@@ -104,7 +108,10 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			edit_time = max(edit_time, file_get_modify_s(path));
 			
 			var _spr = sprite_add_map(path);
-			if(_spr == -1) { noti_warning($"Image node: {path} is not a valid image.", noone, self); continue; }
+			if(_spr == -1) { 
+				noti_warning($"Image node: {path} is not a valid image.", noone, self); 
+				continue;
+			}
 			
 			array_push(spr, _spr);
 			logNode($"Loaded file: {path}", false);
@@ -132,62 +139,63 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		insp2UpdateTooltip = attributes.cache_use? __txt("Remove Cache") : __txt("Cache");
-		insp2UpdateIcon[0] = attributes.cache_use? THEME.cache : THEME.cache_group;
-		insp2UpdateIcon[2] = attributes.cache_use? c_white : COLORS._main_icon;
-		
-		var path = inputs[0].getValue();
-		
-		if(!array_equals(path_current, path)) 
-			updatePaths();
-		
-		var pad = getInputData(1);
-		var can = getInputData(2);
-		inputs[3].setVisible(can != CANVAS_SIZE.individual);
-		
-		var siz = getInputData(3);
+		#region data
+			insp2UpdateTooltip = attributes.cache_use? __txt("Remove Cache") : __txt("Cache");
+			insp2UpdateIcon[0] = attributes.cache_use? THEME.cache : THEME.cache_group;
+			insp2UpdateIcon[2] = attributes.cache_use? c_white : COLORS._main_icon;
+			
+			var path = inputs[0].getValue();
+			var pad  = getInputData(1);
+			var can  = getInputData(2);
+			var siz  = getInputData(3);
+			inputs[3].setVisible(can != CANVAS_SIZE.individual);
+			
+			if(!array_equals(path_current, path)) updatePaths();
+		#endregion
 		
 		var  ww = -1,  hh = -1;
 		var _ww = -1, _hh = -1;
 		
 		var surfs = outputs[0].getValue();
-		
 		var _sprs = attributes.cache_use? cache_spr : spr;
 		var amo   = array_length(_sprs);
 		for(var i = amo; i < array_length(surfs); i++)
 			surface_free(surfs[i]);
-			
+		
 		array_resize(surfs, amo);
+		
+		if(can != CANVAS_SIZE.individual) {
+			for(var i = 0; i < amo; i++) {
+				var _spr = _sprs[i];
+				if(!sprite_exists(_spr)) continue;
+				
+				var _w = sprite_get_width(_spr);
+				var _h = sprite_get_height(_spr);
+				
+				switch(can) {
+					case CANVAS_SIZE.minimum :
+						ww = ww == -1? _w : min(ww, _w);
+						hh = hh == -1? _h : min(hh, _h);
+						break;
+						
+					case CANVAS_SIZE.maximum :
+						ww = ww == -1? _w : max(ww, _w);
+						hh = hh == -1? _h : max(hh, _h);
+						break;
+				}
+			}
+			
+			if(ww == -1) return;
+		
+			_ww = ww;
+			_hh = hh;
+			ww += pad[0] + pad[2];
+			hh += pad[1] + pad[3];
+		}
 		
 		for(var i = 0; i < amo; i++) {
 			var _spr = _sprs[i];
-			if(!sprite_exists(_spr)) continue;
 			
-			var _w = sprite_get_width(_spr);
-			var _h = sprite_get_height(_spr);
-			
-			switch(can) {
-				case CANVAS_SIZE.minimum :
-					ww = ww == -1? _w : min(ww, _w);
-					hh = hh == -1? _h : min(hh, _h);
-					break;
-					
-				case CANVAS_SIZE.maximum :
-					ww = ww == -1? _w : max(ww, _w);
-					hh = hh == -1? _h : max(hh, _h);
-					break;
-			}
-		}
-		
-		if(ww == -1) return;
-		
-		_ww = ww;
-		_hh = hh;
-		ww += pad[0] + pad[2];
-		hh += pad[1] + pad[3];
-		
-		for(var i = 0; i < array_length(_sprs); i++) {
-			var _spr = _sprs[i];
 			switch(can) {
 				case CANVAS_SIZE.individual :
 					ww = sprite_get_width(_spr)  + pad[0] + pad[2];
