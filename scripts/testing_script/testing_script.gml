@@ -258,4 +258,5 @@ function __test_update_theme() {
 	_d.version = BUILD_NUMBER;
 	json_save_struct(_p, _d, true);
 	
+	noti_status($"Update theme to version {VERSION_STRING}.", noone, true);
 }

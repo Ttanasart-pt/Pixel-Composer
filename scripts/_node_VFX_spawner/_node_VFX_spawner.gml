@@ -97,7 +97,12 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput(48, nodeValue_Trigger(  "Reset Seed"                   ))
 	// inputs 67
 	
-	array_foreach(inputs, function(inp, i) /*=>*/ { if(i == 6 || i == 8) return; inp.rejectArray(); }, 1);
+	array_foreach(inputs, function(inp, i) /*=>*/ { 
+		if(i == 6 || i == 8) return; 
+		if(inp.type == VALUE_TYPE.gradient) return; 
+		
+		inp.rejectArray(); 
+	}, 1);
 	
 	input_len = array_length(inputs);
 	
