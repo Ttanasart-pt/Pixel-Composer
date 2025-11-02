@@ -166,9 +166,8 @@ function resetException() { exception_unhandled_handler(undefined); }
 
 function printCallStack(maxDepth = 32) {
 	var stack = debug_get_callstack(maxDepth);
-	var text  = "";
+	var text  = $"Call Stack:\n";
 	
-	print($"Call Stack:");
 	for( var i = 2, n = array_length(stack) - 1; i < n; i++ ) {
 		var call = stack[i];
 		var sp   = string_splice(call, ":");

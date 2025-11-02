@@ -621,6 +621,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		array_foreach(getNodeList(), function(node) { node.disable(); });
 	}
 	
+	static ononDoubleClick = noone;
 	function onDoubleClick(panel) {
 		if(PREFERENCES.panel_graph_group_require_shift && !key_mod_press(SHIFT)) return false;
 		
@@ -633,14 +634,13 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static panelSetContext = function(panel) {
+		var _targ = getNodeBase();
 		
 		if(PREFERENCES.graph_open_group_in_tab) 
-			run_in(1, function(panel) /*=>*/ { panel.open_group_tab(getNodeBase()) }, [panel]);
+			run_in(1, function(panel) /*=>*/ { panel.open_group_tab(_targ) }, [panel]);
 		else
-			panel.addContext(getNodeBase());
+			panel.addContext(_targ);
 	}
-	
-	static ononDoubleClick = noone;
 	
 	static enable = function() {
 		active = true; timeline_item.active = true;

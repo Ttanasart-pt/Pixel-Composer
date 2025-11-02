@@ -40,6 +40,7 @@ function Node_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) co
 		var checkList = array_create(currAmo, 0);
 		var addList   = [];
 		
+		// Match nodes
 		for(var instInd = 0; instInd < instAmo; instInd++ ) {
 			var instNod = instTopo[instInd];
 			var matched = noone;
@@ -60,15 +61,16 @@ function Node_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) co
 			
 			if(matched == noone) { array_push(addList, instNod); continue; } 
 			
-			matched.move(instNod.x, instNod.y);
+			matched.x = instNod.x;
+			matched.y = instNod.y;
 			
 			_insMap[$ instNod.node_id] = matched;
 			_curMap[$ matched.node_id] = instNod;
 		}
 		
+		// Delete nodes that doesn't exists in the main group
 		for(var currInd = 0; currInd < currAmo; currInd++ ) {
 			if(checkList[currInd]) continue;
-			
 			var currNod = currTopo[currInd];
 			
 			if(is(currNod, Node_Group_Input))  continue;
@@ -77,6 +79,7 @@ function Node_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) co
 			currNod.destroy(false, false);
 		}
 		
+		// Add nodes missing from the main group
 		for( var i = 0, n = array_length(addList); i < n; i++ ) {
 			var _addNode = addList[i];
 			var _newNode = _addNode.clone(self);
@@ -86,7 +89,6 @@ function Node_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) co
 		}
 		
 		// io
-		
 		var _iamo = array_length(instanceBase.inputs);
 		for( var i = 0; i < _iamo; i++ ) {
 			var _ins_inp = instanceBase.inputs[i];
@@ -136,7 +138,6 @@ function Node_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) co
 		}
 		
 		// connect
-		
 		for( var i = 0; i < instAmo; i++ ) {
 			var _ins_nod = instTopo[i];
 			var _cur_nod = _insMap[$ _ins_nod.node_id];

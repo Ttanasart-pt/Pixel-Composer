@@ -135,7 +135,8 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	attributes.inherit_type = true;
 	doTrigger = 0;
 	
-	dtype = -1;
+	curr_type = -1;
+	curr_disp = -1;
 	range = 0;
 	
 	onSetDisplayName = function() /*=>*/ { attributes.inherit_name = false; }
@@ -253,14 +254,17 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	}
 	
 	static refreshWidget = function() {
-		printCallStack();
-		
 		var _inType = inputs[2].getValue();
+		var _inDisp = inputs[0].getValue();
+		if(curr_type == _inType && curr_disp == _inDisp) return;
+		
+		curr_type = _inType;
+		curr_disp = _inDisp;
+	
 		var _vtype  = array_safe_get_fast(GROUP_IO_TYPE_MAP,  _inType, VALUE_TYPE.any);
 		var _stype  = array_safe_get_fast(GROUP_IO_TYPE_NAME, _inType, VALUE_TYPE.any);
 		
-		var _disp  = inputs[0].getValue();
-		var _dtype = array_safe_get_fast(array_safe_get_fast(GROUP_IO_DISPLAY, _inType), _disp);
+		var _dtype = array_safe_get_fast(array_safe_get_fast(GROUP_IO_DISPLAY, _inType), _inDisp);
 		
 		inParent.setType(_vtype);
 		outputs[0].setType(_vtype);
