@@ -14,7 +14,7 @@ event_inherited();
 	content_h = ui(132);
 	
 	dialog_w  = ui(50 + 80 * array_length(nodes));
-	dialog_h  = title_h + content_h + ui(8);
+	dialog_h  = title_h + content_h + ui(12);
 	
 	paths	      = "";
 	is_dir	      = false;

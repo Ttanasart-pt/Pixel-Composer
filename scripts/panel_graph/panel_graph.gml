@@ -884,6 +884,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         function set_as_tool() {
             if(node_hover == noone || node_hover.group == noone) return;
             node_hover.group.setTool(node_hover);
+            refreshDraw(1);
         }
     #endregion
     
@@ -1709,7 +1710,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        _node_frames     = array_filter(_node_draw, function(_n) /*=>*/ {return is(_n, Node_Frame)});
 	        
 	        array_foreach(_node_frames, function(_n) /*=>*/ { 
-	        	if(_n.drawNodeBG(__gr_x, __gr_y, __mx, __my, __gr_s)) {
+	        	if(_n.drawNodeBG(__gr_x, __gr_y, __mx, __my, __gr_s, project.graphDisplay, __self)) {
 	        		frame_hovering = _n; 
 	        		array_push(frame_hoverings, _n);
 	        	}
@@ -1775,6 +1776,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                 	
                 	for( var i = 0, n = array_length(frame_hoverings); i < n; i++ ) 
                 		frame_hoverings[i].getCoveringNodes(nodes_list);
+                	
+                	if(is(node_hovering, Node_Frame)) 
+                		node_hovering.getCoveringNodes(nodes_list);
                 	
                     if(key_mod_press(SHIFT)) {
                         if(node_hovering) array_toggle(nodes_selecting, node_hovering);

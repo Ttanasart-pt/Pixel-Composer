@@ -25,7 +25,9 @@ if !ready exit;
 		var nx = PANEL_GRAPH.graph_cx;
 		var ny = PANEL_GRAPH.graph_cy;
 		
-		draw_sprite_stretched(THEME.node_bg, 0, xx, yy, grid_size, grid_size);
+		draw_sprite_stretched_ext(THEME.node_bg, 0, xx, yy, grid_size, grid_size, COLORS.node_base_bg);
+		draw_sprite_stretched_ext(THEME.node_bg, 1, xx, yy, grid_size, grid_size, CDEF.main_dark);
+		
 		if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, xx, yy, xx + grid_width, yy + grid_size)) {
 			draw_sprite_stretched_ext(THEME.node_bg, 1, xx, yy, grid_size, grid_size, COLORS._main_accent, 1);
 			

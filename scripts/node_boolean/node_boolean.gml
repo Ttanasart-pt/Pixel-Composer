@@ -51,7 +51,7 @@ function Node_Boolean(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			hover_state = 1;
 			
 		var aa = (0.25 + 0.5 * renderActive) * hover_state;
-		draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, h * _s, color, aa);
+		draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, h * _s, colorMultiply(color, COLORS.node_base_bg), aa);
 	}
 	
 	static drawNodeName = function(xx, yy, _s) {

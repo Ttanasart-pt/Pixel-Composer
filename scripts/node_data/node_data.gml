@@ -1677,10 +1677,16 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return !high || _selc;
 	}
 	
-	static getColor = function() { INLINE return attributes.color == -1? color : attributes.color; }
+	static getColor = function() {
+		var cc = attributes.color == -1? color : attributes.color; 
+		return cc;
+	}
 	
 	static drawNodeBase = function(xx, yy, _s) { 
-		draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, h * _s, getColor(), .75 * (.25 + .75 * isHighlightingInGraph())); 
+		var cc = colorMultiply(getColor(), COLORS.node_base_bg);
+		var aa = .75 * (.25 + .75 * isHighlightingInGraph());
+		
+		draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, h * _s, cc, aa); 
 	}
 	
 	static drawNodeOverlay = function(xx, yy, _mx, _my, _s) {}
@@ -1725,7 +1731,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		draw_name = true;
 		
-		var nodeC = getColor();
+		var nodeC = colorMultiply(getColor(), COLORS.node_name_bg);
 		var aa = (.25 + .5 * renderActive) * (.25 + .75 * isHighlightingInGraph());
 		var nh = previewable? name_height * _s : h * _s;
 		var ba = aa;
@@ -1746,9 +1752,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			aa *= .15;
 				
 		if(icon) {
+			var _icx = tx + 6 * _s;
 			var _ics = _s / THEME_SCALE * .8;
 			gpu_set_texfilter(true);
-			draw_sprite_ext(icon, 0, tx + 6 * _s, ty, _ics, _ics, 0, icon_blend ?? nodeC, .6);
+			draw_sprite_ext(icon, 0, _icx, ty, _ics, _ics, 0, icon_blend ?? getColor(), .75);
+			if(sprite_get_number(icon) > 1) draw_sprite_ext(icon, 1, _icx, ty, _ics, _ics, 0, c_white, .8);
 			gpu_set_texfilter(false);
 			
 			tx += 16 * _s;
@@ -2313,6 +2321,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static drawBadge = function(_x, _y, _s) {
 		var bPreview = bool(previewing);
 		var bInspect = bool(inspecting);
+		var bTool    = group != noone && group.toolNode == self;
 		
 		var _full    = previewable && w * _s > 64;
 		var _scale   = UI_SCALE;
@@ -2322,8 +2331,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var yy = y * _s + _y;
 			var xw = 28 * _scale;
 			
-			if(bPreview) { draw_sprite_ui_uniform(THEME.node_state, bool(is_3D) * 3, xx, yy, bPreview); xx -= xw * bPreview; }
-			if(bInspect) { draw_sprite_ui_uniform(THEME.node_state, 1,               xx, yy, bInspect); xx -= xw * bInspect; }
+			if(bPreview) { draw_sprite_ui_uniform(THEME.node_state, bool(is_3D) * 3, xx, yy); xx -= xw; }
+			if(bInspect) { draw_sprite_ui_uniform(THEME.node_state, 1,               xx, yy); xx -= xw; }
+			if(bTool)    { draw_sprite_ui_uniform(THEME.node_state, 2,               xx, yy); xx -= xw; }
 			
 		} else {
 			var xx = _x + _s * (x + w - 10);
@@ -2333,10 +2343,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var xw = 12 * _s * _scale;
 			
 			gpu_set_tex_filter(true);
-			
 			if(bPreview) { draw_sprite_ui_uniform(THEME.circle_16, 0, xx, yy, ss, CDEF.orange); xx -= xw; }
 			if(bInspect) { draw_sprite_ui_uniform(THEME.circle_16, 0, xx, yy, ss, CDEF.lime);   xx -= xw; }
-			
+			if(bTool)    { draw_sprite_ui_uniform(THEME.circle_16, 0, xx, yy, ss, CDEF.blue);   xx -= xw; }
 			gpu_set_tex_filter(false);
 		}
 		

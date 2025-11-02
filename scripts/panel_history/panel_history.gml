@@ -74,12 +74,13 @@ function Panel_History() : PanelContent() constructor {
 			hh = amoDisp * lh + pad;
 			
 			BLEND_OVERRIDE
-			draw_sprite_stretched_ext(THEME.node_bg, 0, ui(32), yy, lw, hh, COLORS._main_icon, 1);
+			draw_sprite_stretched_ext(THEME.box_r5, 0, ui(32), yy, lw, hh, CDEF.main_mdblack, 1);
 			BLEND_NORMAL
+			draw_sprite_stretched_ext(THEME.box_r5, 1, ui(32), yy, lw, hh, CDEF.main_dkgrey, 1);
 			
 			if(pHOVER && sc_history.hover && point_in_rectangle(_m[0], _m[1], ui(32), yy - spc / 2, ww, yy + hh + spc / 2 - 1)) {
 				sc_history.hover_content = true;
-				draw_sprite_stretched_ext(THEME.node_bg, 1, ui(32), yy, lw, hh, COLORS._main_icon, 1);
+				draw_sprite_stretched_ext(THEME.box_r5, 1, ui(32), yy, lw, hh, COLORS._main_icon, 1);
 				_hover = i;
 				
 				if(array_length(item) > itamo) {

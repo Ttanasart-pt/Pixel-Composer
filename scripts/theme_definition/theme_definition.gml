@@ -78,6 +78,8 @@ function ThemeColor() constructor {
     add_node_blend_action               = CDEF.lime;
     add_node_blend_generic              = CDEF.yellow;
 
+    node_base_bg                        = CDEF.main_dkgrey;
+    node_name_bg                        = CDEF.main_dark;
     node_composite_bg                   = CDEF.main_dkgrey;
     node_composite_bg_blend             = CDEF.main_white;
     node_composite_separator            = CDEF.main_black;

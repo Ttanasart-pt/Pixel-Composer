@@ -113,7 +113,7 @@ event_inherited();
 				var xx = grid_space + (grid_size + grid_space) * j;
 				
 				BLEND_OVERRIDE
-				draw_sprite_stretched(THEME.node_bg, 0, xx, yy, grid_size, grid_size);
+				draw_sprite_stretched_ext(THEME.node_bg, 0, xx, yy, grid_size, grid_size, COLORS.node_base_bg);
 				BLEND_NORMAL
 				
 				var spr = -1;

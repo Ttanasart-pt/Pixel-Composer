@@ -267,14 +267,13 @@ event_inherited();
 					gridW = gridH;
 					gridX = gridX + grid_width / 2 - gridW / 2;
 				}
-					
-				draw_sprite_stretched(THEME.node_bg, 0, gridX, gridY, gridW, gridH);
 				
-				if(_project.path == PROJECT.path) {
-					draw_sprite_stretched_ext(THEME.node_bg, 0, gridX, gridY, gridW, gridH, COLORS._main_accent, 1);
+				draw_sprite_stretched_ext(THEME.node_bg, 0, gridX, gridY, gridW, gridH, COLORS.node_base_bg);
+				draw_sprite_stretched_ext(THEME.node_bg, 1, gridX, gridY, gridW, gridH, CDEF.main_dark);
+				
+				if(_project.path == PROJECT.path)
 					draw_sprite_stretched_add(THEME.node_bg, 1, gridX, gridY, gridW, gridH, COLORS._main_accent, 0.25);
-				}
-					
+				
 				if(sHOVER && sp_sample.hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_heigh)) {
 					sp_sample.hover_content = true;
 					
@@ -462,7 +461,8 @@ event_inherited();
 				hh = max(hh, ty + grid_heigh + grid_hspac + grid_space + ui(32));
 				ty = _y + ty;
 			
-				draw_sprite_stretched(THEME.node_bg, 0, tx, ty, grid_width, grid_heigh);
+				draw_sprite_stretched_ext(THEME.node_bg, 0, tx, ty, grid_width, grid_heigh, COLORS.node_base_bg);
+				draw_sprite_stretched_ext(THEME.node_bg, 1, tx, ty, grid_width, grid_heigh, CDEF.main_dark);
 			
 				var att = contest.title.attachments;
 				if(att != noone) {
@@ -472,7 +472,7 @@ event_inherited();
 						var _sw = sprite_get_width(attSurf);
 						var _sh = sprite_get_height(attSurf);
 						var  ss = max(grid_width / _sw, grid_heigh / _sh);
-					
+						
 						surface_set_target(grid_surface);
 							DRAW_CLEAR
 							draw_sprite_stretched(THEME.node_bg, 0, 0, 0, grid_width, grid_heigh);
@@ -565,7 +565,9 @@ event_inherited();
 			}
 			
 			var txt_y = ty + pad;
-			draw_sprite_stretched_ext(THEME.node_bg, 0, tx, ty, tw, th, c_white, 0.8);
+			draw_sprite_stretched_ext(THEME.node_bg, 0, tx, ty, tw, th, COLORS.node_base_bg, .8);
+			draw_sprite_stretched_ext(THEME.node_bg, 1, tx, ty, tw, th, CDEF.main_dark, .8);
+			
 			draw_text_ext_add(tx + pad, txt_y, con_title.content, -1, tw - pad * 2);
 			txt_y += string_height_ext(con_title.content, -1, tw - pad * 2) + pad;
 			
@@ -618,7 +620,9 @@ event_inherited();
 					var grid_y = grid_ys[_col];
 					var grid_h = spr_h + ui(8) * 2;
 					
-					draw_sprite_stretched_ext(THEME.node_bg, 0, grid_x, grid_y, grid_width, grid_h, c_white, 0.8);
+					draw_sprite_stretched_ext(THEME.node_bg, 0, grid_x, grid_y, grid_width, grid_h, COLORS.node_base_bg, .8);
+					draw_sprite_stretched_ext(THEME.node_bg, 1, grid_x, grid_y, grid_width, grid_h, CDEF.main_dark, .8);
+					
 					draw_sprite_ext(sub, 0, grid_x + grid_width / 2, grid_y + grid_h / 2, ss, ss, 0, c_white, 1);
 					
 					var label_h = ui(32);

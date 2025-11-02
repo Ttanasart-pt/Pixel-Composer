@@ -388,10 +388,11 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static drawNodeBase = function(xx, yy, _s) {
-		var _hv = PANEL_GRAPH.pHOVER && PANEL_GRAPH.node_hovering == self && (!PREFERENCES.panel_graph_group_require_shift || key_mod_press(SHIFT));
-		var _aa = (.25 + .5 * renderActive) * (.25 + .75 * isHighlightingInGraph()) + _hv * 0.1;
+		var cc = colorMultiply(getColor(), COLORS.node_base_bg);
+		var hv = PANEL_GRAPH.pHOVER && PANEL_GRAPH.node_hovering == self && (!PREFERENCES.panel_graph_group_require_shift || key_mod_press(SHIFT));
+		var aa = (.25 + .5 * renderActive) * (.25 + .75 * isHighlightingInGraph()) + hv * 0.1;
 		
-		draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, h * _s, getColor(), _aa);
+		draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, h * _s, cc, aa);
 	}
 	
 	static drawNodeOverlay = function(xx, yy, _mx, _my, _s) {

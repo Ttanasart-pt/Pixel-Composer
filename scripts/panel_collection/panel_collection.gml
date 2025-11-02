@@ -356,8 +356,9 @@ function Panel_Collection() : PanelContent() constructor {
 					
 					if(yy + grid_size >= 0 && yy <= contentPane.surface_h) {
 						BLEND_OVERRIDE
-						draw_sprite_stretched(THEME.node_bg, 0, _nx, yy, grid_width, grid_size);
+						draw_sprite_stretched_ext(THEME.node_bg, 0, _nx, yy, grid_width, grid_size, CDEF.main_black);
 						BLEND_NORMAL
+						draw_sprite_stretched_ext(THEME.node_bg, 1, _nx, yy, grid_width, grid_size, CDEF.main_dkgrey);
 						
 						var meta = noone;
 						if(variable_struct_exists(_node, "getMetadata")) 
@@ -465,7 +466,7 @@ function Panel_Collection() : PanelContent() constructor {
 				if(yy + list_height >= 0 && yy <= contentPane.surface_h) {
 					if(i % 2) {
 						BLEND_OVERRIDE
-						draw_sprite_stretched_ext(THEME.node_bg, 0, ui(4), yy, list_width - 8, list_height, c_white, 0.2);
+						draw_sprite_stretched_ext(THEME.node_bg, 0, ui(4), yy, list_width - 8, list_height, CDEF.main_black, 0.2);
 						BLEND_NORMAL
 					}
 				
@@ -687,13 +688,14 @@ function Panel_Collection() : PanelContent() constructor {
 			
 			if(yy + grid_size >= 0 && yy <= nodecontentPane.surface_h) {
 				BLEND_OVERRIDE
-				draw_sprite_stretched(THEME.node_bg, 0, _nx, yy, grid_width, grid_size);
+				draw_sprite_stretched_ext(THEME.node_bg, 0, _nx, yy, grid_width, grid_size, CDEF.main_black);
 				BLEND_NORMAL
+				draw_sprite_stretched_ext(THEME.node_bg, 1, _nx, yy, grid_width, grid_size, CDEF.main_dkgrey);
 				
 				if(_hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
 					TOOLTIP = _node.name;
 					nodecontentPane.hover_content = true;
-					draw_sprite_stretched_ext(THEME.node_bg, 1, _nx, yy, grid_width, grid_size, COLORS._main_accent, 1);
+					draw_sprite_stretched_ext(THEME.node_bg, 1, _nx, yy, grid_width, grid_size, COLORS._main_accent);
 					
 					if(pFOCUS) {
 						if(mouse_press(mb_left))  DRAGGING = { type : "Node", data : _node };

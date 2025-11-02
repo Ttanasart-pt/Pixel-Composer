@@ -108,7 +108,6 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
             if(rectangle_in_rectangle(nx0, ny0, nx1, ny1, fx0, fy0, fx1, fy1) == 1)
                 array_push(__nodes, _node);
         }
-        
 	}
 	
 	static reFrame = function() {
@@ -207,9 +206,10 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		var _dw = x1 - x0;
 		var _dh = y1 - y0;
-		var alp = _color_get_alpha(color);
+		var alp = _color_get_alpha(color) * .25;
 		
-		draw_sprite_stretched_ext(bg_spr, 0, x0, y0, _dw, _dh, color, alp);
+		draw_sprite_stretched_ext(bg_spr, 0, x0, y0, _dw, _dh, colorMultiply(color, COLORS.node_base_bg), alp);
+		draw_sprite_stretched_ext(bg_spr, 1, x0, y0, _dw, _dh, colorMultiply(color, CDEF.main_dark), alp);
 	}
 	
 	static drawNodeFG = function(_x, _y, _mx, _my, _s, _dparam, _panel = noone) {
@@ -220,7 +220,7 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var txt = renamed? display_name : name;
 		var alp = _color_get_alpha(color);
 		
-		draw_sprite_stretched_ext(bg_spr, 1, draw_x0, draw_y0, _w, _h, color, alp * .3);
+		draw_sprite_stretched_ext(bg_spr, 1, draw_x0, draw_y0, _w, _h, colorMultiply(color, COLORS.node_name_bg), alp * .3);
 		
 		if(WIDGET_CURRENT == tb_name) {
 			var nh = 24;

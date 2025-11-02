@@ -630,7 +630,7 @@ event_inherited();
 				
 				if(!struct_try_get(_node, "hide_bg", false)) {
 					BLEND_OVERRIDE
-					draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size, cc, 1);
+					draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size, colorMultiply(cc, COLORS.node_base_bg), 1);
 					BLEND_NORMAL
 				}
 				
@@ -813,7 +813,7 @@ event_inherited();
 				
 				if(is(_node, NodeAction_create) && array_empty(PANEL_GRAPH.nodes_selecting)) continue;
 				
-				if(++bg_ind % 2) draw_sprite_stretched_add(THEME.node_bg, 0, pd, yy, list_width - pd * 2, list_height, c_white, 0.1);
+				if(++bg_ind % 2) draw_sprite_stretched_add(THEME.node_bg, 0, pd, yy, list_width - pd * 2, list_height, COLORS.node_base_bg, 0.1);
 				
 				if(_hoverContent && point_in_rectangle(_m[0], _m[1], pd + ui(16 * 2), yy, list_width, yy + list_height - 1)) {
 					content_pane.hover_content = true;
@@ -1118,11 +1118,11 @@ event_inherited();
 						 if(is(_node, NodeObject))	cc = c_white;
 					else if(is(_node, NodeAction))	cc = COLORS.add_node_blend_action;
 					else if(is(_node, AddNodeItem))	cc = COLORS.add_node_blend_generic;
-					else										cc = COLORS.dialog_add_node_collection;
+					else							cc = COLORS.dialog_add_node_collection;
 					
 					if(!struct_try_get(_node, "hide_bg", false)) {
 						BLEND_OVERRIDE
-						draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size, cc, 1);
+						draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size, colorMultiply(cc, COLORS.node_base_bg), 1);
 						BLEND_NORMAL
 					}
 					
@@ -1263,7 +1263,7 @@ event_inherited();
 				_param.query = _query;
 				_param.range = _mrng;
 				
-				if(i % 2) draw_sprite_stretched_add(THEME.node_bg, 0, pd, yy, list_width - pd * 2, list_height, c_white, 0.1);
+				if(i % 2) draw_sprite_stretched_add(THEME.node_bg, 0, pd, yy, list_width - pd * 2, list_height, COLORS.node_base_bg, 0.1);
 				
 				var _minput  = _hover && (MOUSE_MOVED || mouse_release(mb_any));
 				var _mouseOn = point_in_rectangle(_m[0], _m[1], pd + ui(16 * 2), yy, list_width, yy + list_height - 1);

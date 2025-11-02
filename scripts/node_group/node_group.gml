@@ -13,19 +13,7 @@ function Node_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) co
 		
 	static setInstance = function(n, _upd = true) /*=>*/ { 
 		icon = THEME.group_linked_s;
-		
-		if(n.instanceBase == noone)  {
-			// var _c = nodeClone([n]);
-			// var _newBase = _c[0];
-			// _newBase.visible      = false;
-			// _newBase.is_instancer = true;
-			
-			instanceBase   = n;
-			// n.instanceBase = _newBase;
-			// n.icon = THEME.group_linked_s;
-			// n.updateInstance();
-			
-		} else instanceBase = n.instanceBase;
+		instanceBase = n.instanceBase == noone? n : n.instanceBase;
 		
 		if(_upd) {
 			updateInstance();

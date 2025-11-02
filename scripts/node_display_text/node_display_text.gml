@@ -158,8 +158,8 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 								_tw  = _bw * _ss;
 								_th  = string_height(_bch) * _ss;
 								
-								draw_sprite_stretched_ext(THEME.node_bg, 0, _tx - 4, _y - 4, _tw + 8, _th + 8, c_white, .75);
-								draw_sprite_stretched_add(THEME.node_bg, 0, _tx - 4, _y - 4, _tw + 8, _th + 8, c_white, .10);
+								draw_sprite_stretched_ext(THEME.node_bg, 0, _tx - 4, _y - 4, _tw + 8, _th + 8, COLORS.node_base_bg, .75);
+								draw_sprite_stretched_add(THEME.node_bg, 0, _tx - 4, _y - 4, _tw + 8, _th + 8, COLORS.node_base_bg, .10);
 								
 								draw_set_color(_cc);
 								draw_text_add_float(_tx, _y, _bch, _ss);
