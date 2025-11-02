@@ -305,7 +305,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		rightTools	= -1;
 		toolShow    = false;
 		
-		isTool			= false;
 		isGizmoGlobal   = false;
 		tool_settings	= [];
 		tool_attribute	= {};
@@ -2325,7 +2324,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			if(bPreview) { draw_sprite_ui_uniform(THEME.node_state, bool(is_3D) * 3, xx, yy, bPreview); xx -= xw * bPreview; }
 			if(bInspect) { draw_sprite_ui_uniform(THEME.node_state, 1,               xx, yy, bInspect); xx -= xw * bInspect; }
-			if(isTool)   { draw_sprite_ui_uniform(THEME.node_state, 2,               xx, yy, 1);        xx -= xw;            }
 			
 		} else {
 			var xx = _x + _s * (x + w - 10);
@@ -2338,7 +2336,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			if(bPreview) { draw_sprite_ui_uniform(THEME.circle_16, 0, xx, yy, ss, CDEF.orange); xx -= xw; }
 			if(bInspect) { draw_sprite_ui_uniform(THEME.circle_16, 0, xx, yy, ss, CDEF.lime);   xx -= xw; }
-			if(isTool)   { draw_sprite_ui_uniform(THEME.circle_16, 0, xx, yy, ss, CDEF.blue);   xx -= xw; }
 			
 			gpu_set_tex_filter(false);
 		}
@@ -2456,26 +2453,21 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	////- TOOLS
 	
-	static isUsingTool = function(index = undefined, subtool = noone) {
+	static isNotUsingTool = function() { var t = PANEL_PREVIEW.tool_current; return t == noone || t.ctx != instanceof(self); }
+	static isUsingTool    = function(i = undefined, subt = noone) {
 		if(tools == -1) return false;
 		
-		var _tool = PANEL_PREVIEW.tool_current;
-		if(_tool == noone) //not using any tool
-			return false;
+		var t = PANEL_PREVIEW.tool_current;
+		if(t == noone)     return false; // not using any tool
+		if(i == undefined) return true;  // check for any tool
 		
-		// if(_tool.ctx != instanceof(self))
-		// 	return false;
-		
-		if(index == undefined) // Using any tool
-			return true;
-		
-		if(is_real(index) && _tool != tools[index])
+		if(is_real(i) && t != tools[i]) 
 			return false;
 			
-		if(is_string(index) && _tool.getName(_tool.selecting) != index)
+		if(is_string(i) && t.getName(t.selecting) != i) 
 			return false;
 		
-		return subtool == noone || _tool.selecting == subtool;
+		return subt == noone || t.selecting == subt;
 	}
 	
 	static getUsingToolName = function() { 
@@ -2483,23 +2475,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return _tool == noone? "" : _tool.getName(_tool.selecting);
 	}
 	
-	static isNotUsingTool = function() { return PANEL_PREVIEW.tool_current == noone || PANEL_PREVIEW.tool_current.ctx != instanceof(self); }
-	
-	static getTool = function() { return self; }
-	
-	static getToolSettings = function() { return tool_settings; }
-	
-	static setTool = function(tool) {
-		if(!tool) {
-			isTool = false;
-			return;
-		}
-		
-		for( var i = 0; i < array_length(group.nodes); i++ )
-			group.nodes[i].isTool = false;
-		
-		isTool = true;
-	}
+	static getTool = undefined;
+	static getToolSettings = function() /*=>*/ {return tool_settings};
 	
 	static showTool = function() { return tools != -1 || toolShow; }
 	
@@ -2672,7 +2649,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			_map.y		 = y;
 			_map.type    = itype == noone? instanceof(self) : itype;
 			
-			if(isTool)                  _map.tool  = isTool;
 			if(group != noone)          _map.group = group.node_id;
 			if(inline_context != noone) _map.ictx  = inline_context.node_id;
 			
@@ -2780,7 +2756,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			y = load_map[$ "y"] ?? 0;
 			renderActive   = load_map[$ "render"]         ?? true;
 			previewable    = load_map[$ "previewable"]    ?? true;
-			isTool         = load_map[$ "tool"]           ?? false;
 			show_parameter = load_map[$ "show_parameter"] ?? false;
 			load_igroup    = load_map[$ "ictx"]           ?? "";
 			
@@ -2814,7 +2789,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			inputGenerate();
 		}
 		
-		processDeserialize();
+		doDeserialize(_map);
 		
 		if(preset) {
 			postDeserialize();
@@ -2882,9 +2857,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			attributes.color_depth = PREFERENCES.node_default_depth;
 	}
 	
-	static processDeserialize = function() /*=>*/ {}
-	static preDeserialize     = function() /*=>*/ {}
-	static postDeserialize    = function() /*=>*/ {}
+	static doDeserialize   = function(_map) /*=>*/ {}
+	static preDeserialize  = function() /*=>*/ {}
+	static postDeserialize = function() /*=>*/ {}
 	
 	static applyDeserialize = function(preset = false) {
 		preApplyDeserialize();

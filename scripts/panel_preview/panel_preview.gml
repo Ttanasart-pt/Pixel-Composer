@@ -3037,7 +3037,8 @@ function Panel_Preview() : PanelContent() constructor {
         
         if(PANEL_PREVIEW == self) { //only draw overlay once
             if(inspect_node) {
-                toolNode = inspect_node.getTool();
+                toolNode = inspect_node; 
+                if(inspect_node.getTool) toolNode = inspect_node.getTool();
                 if(toolNode) drawNodeActions(pFOCUS, toolNode);
                 
             } else {

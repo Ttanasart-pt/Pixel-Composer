@@ -110,8 +110,6 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		return w_hovering;
 	}
 	
-	static getTool = function() { var _path = getInputData(20); return is(_path, Node)? _path : self; }
-	
 	static processData = function(_outSurf, _data, _array_index) {
 		#region data
 			var _dim  = _data[ 0];

@@ -345,11 +345,6 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		return w_hovering;
 	}
 	
-	static getTool = function() { 
-		var _path = getInputData(11);
-		return is_instanceof(_path, Node)? _path : self; 
-	}
-	
 	static preGetInputs = function() {
 		var _arr = getSingleValue(16);
 		var _pat = getSingleValue(3);

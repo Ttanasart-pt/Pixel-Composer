@@ -132,11 +132,6 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		return w_hovering;
 	}
 	
-	static getTool = function() { 
-		var _path = getInputData(7);
-		return is(_path, Node)? _path : self; 
-	}
-	
 	static onValueUpdate = function(index = 0) {
 		if(index == 11) ds_map_clear(widthMap);
 	}

@@ -882,8 +882,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         }
         
         function set_as_tool() {
-            if(node_hover == noone) return;
-            node_hover.setTool(!node_hover.isTool);
+            if(node_hover == noone || node_hover.group == noone) return;
+            node_hover.group.setTool(node_hover);
         }
     #endregion
     

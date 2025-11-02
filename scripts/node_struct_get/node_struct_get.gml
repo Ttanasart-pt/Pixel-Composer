@@ -6,7 +6,7 @@ function Node_Struct_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	newInput(1, nodeValue_Text(    "Key"    ));
 	newInput(2, nodeValue_EScroll( "Type", 0, [ "Auto", "Number", "Text", "Surface", "Buffer", "Struct" ] ));
 	
-	newOutput(0, nodeValue_Output("Value", VALUE_TYPE.struct, {}));
+	newOutput(0, nodeValue_Output("Value", VALUE_TYPE.any, noone ));
 	
 	input_display_list = [ 0, 
 		1, 2 

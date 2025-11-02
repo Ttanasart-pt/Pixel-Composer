@@ -23,6 +23,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		metadata = new MetaDataManager();
 		collPath = "";
+		
+		toolNode = undefined;
 	#endregion
 	
 	#region io
@@ -409,15 +411,9 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			panelSetContext(PANEL_GRAPH);
 	}
 	
-	static getTool = function() {
-		for(var i = 0, n = array_length(nodes); i < n; i++) { 
-			var _node = nodes[i];
-			if(!_node.active) continue;
-			if(_node.isTool) return _node.getTool();
-		}
-		
-		return self;
-	} 
+	static getTool = function() { return toolNode ?? self; } 
+	
+	static setTool = function(tool) { toolNode = toolNode == tool? undefined : tool; }
 	
 	////- PREVIEW
 	
@@ -472,6 +468,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	////- SERIALIZATION
 	
+	// toolNode
+	
 	static attributeSerialize = function() {
 		sortIO();
 		
@@ -490,6 +488,9 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		}
 		
 		return _attr;
+	}
+	static doSerialize		  = function(_map) {
+		_map.tool = toolNode == undefined? -4 : toolNode.node_id;
 	}
 	
 	static preApplyDeserialize = function() {
@@ -579,6 +580,13 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			
 		}
 		
+	}
+	static doDeserialize       = function(_map) {
+		var _toolNode = _map[$ "tool"] ?? -4;
+		if(_toolNode != -4) {
+			if(APPENDING) _toolNode = GetAppendID(_toolNode);
+			toolNode = project.nodeMap[? _toolNode];
+		}
 	}
 	
 	////- ACTION
