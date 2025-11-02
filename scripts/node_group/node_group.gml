@@ -23,10 +23,7 @@ function Node_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) co
 	}
 	
 	static updateInstance = function() {
-		if(!is(instanceBase, Node) || !instanceBase.active) {
-			resetInstance(); 
-			return;
-		}
+		if(!is(instanceBase, Node) || !instanceBase.active) { resetInstance(); return; }
 		
 		var instTopo = instanceBase.nodeTopo;
 		var currTopo = nodeTopo;

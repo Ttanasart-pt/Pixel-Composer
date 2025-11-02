@@ -260,10 +260,9 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		curr_type = _inType;
 		curr_disp = _inDisp;
-	
-		var _vtype  = array_safe_get_fast(GROUP_IO_TYPE_MAP,  _inType, VALUE_TYPE.any);
-		var _stype  = array_safe_get_fast(GROUP_IO_TYPE_NAME, _inType, VALUE_TYPE.any);
 		
+		var _vtype = array_safe_get_fast(GROUP_IO_TYPE_MAP,  _inType, VALUE_TYPE.any);
+		var _stype = array_safe_get_fast(GROUP_IO_TYPE_NAME, _inType, VALUE_TYPE.any);
 		var _dtype = array_safe_get_fast(array_safe_get_fast(GROUP_IO_DISPLAY, _inType), _inDisp);
 		
 		inParent.setType(_vtype);
@@ -425,7 +424,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		}
 	}
 	
-	static isRenderable = function(log = false) { //Check if every input is ready (updated)
+	static isRenderable = function(log = false) { // Check if every input is ready (updated)
 		if(!active)	return false;
 		if(!isRenderActive()) return false;
 		
@@ -508,8 +507,6 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 
 	static getGraphPreviewSurface = function() { var _in = array_safe_get(inputs, 0, noone); return _in == noone? noone : _in.getValue(); }
 	
-	static drawNodeDef = drawNode;
-	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		if(inParent.isArray()) return false;
 		
@@ -528,26 +525,25 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		return inParent.drawOverlay(hover, active, _px, _py, _s, _mx, _my, _snx, _sny);
 	}
 	
+	static drawNodeDef = drawNode;
+	
 	static drawNode = function(_draw, _x, _y, _mx, _my, _s, display_parameter = noone, _panel = noone) { 
+		draw_metadata = _s >= .75;
 		if(_s >= .75) return drawNodeDef(_draw, _x, _y, _mx, _my, _s, display_parameter, _panel);
 		
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
 		var _name = renamed? display_name : name;
-		var _ts   = _s * .5 / UI_SCALE;
+		var _ts   = _s * .4 / UI_SCALE;
 		var _tx   = round(xx + (w - 6) * _s - 2);
 		var _ty   = round(outputs[0].y);
 		
 		draw_set_text(f_sdf, fa_right, fa_center);
 		BLEND_ALPHA_MULP
-		
 		draw_set_color(c_black);			draw_text_transformed(_tx+1, _ty+1, _name, _ts, _ts, 0);
 		draw_set_color(COLORS._main_text);	draw_text_transformed(_tx,   _ty,   _name, _ts, _ts, 0);
-		
 		BLEND_NORMAL
-		
-		// return drawJunctions(xx, yy, _mx, _my, _s, _s <= 0.5);
 	}
 	
 	////- Serialize

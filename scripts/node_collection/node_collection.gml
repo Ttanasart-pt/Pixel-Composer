@@ -25,6 +25,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		collPath = "";
 		
 		toolNode = undefined;
+		show_instance = false;
 	#endregion
 	
 	#region io
@@ -635,6 +636,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static panelSetContext = function(panel) {
 		var _targ = getNodeBase();
+		_targ.show_instance = _targ != self;
 		
 		if(PREFERENCES.graph_open_group_in_tab) 
 			run_in(1, function(panel) /*=>*/ { panel.open_group_tab(_targ) }, [panel]);

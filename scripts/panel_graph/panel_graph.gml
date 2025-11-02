@@ -1725,7 +1725,12 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        	
 	        	if(_n.drawNodeBG != undefined && _n.drawNodeBG(__gr_x, __gr_y, __mx, __my, __gr_s)) 
 	        		frame_hovering = _n; 
-	        		
+	        	
+				if(CAPTURING) return;
+	        	if(!_n.active || !_n.previewable || !_n.draw_metadata) return;
+				if(_n.draw_graph_culled) return;
+				if(__gr_s * _n.w < 64)   return;
+				
 	        	_n.drawDimension(_n.x * __gr_s + __gr_x, _n.y * __gr_s + __gr_y, __gr_s);
 	        });
         #endregion
@@ -2542,22 +2547,24 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         var xx  = ui(16), tt, tw, th;
         var bh  = toolbar_height - ui(12);
         var tbh = h - toolbar_height / 2;
+        var cnt = noone;
         
         for(var i = -1, n = array_length(node_context); i < n; i++) {
             if(i == -1) {
-                tt = __txt("Global");
+            	cnt = noone;
+                tt  = __txt("Global");
                 
             } else {
-                var _cnt = node_context[i];
-                tt = _cnt.renamed? _cnt.display_name : _cnt.name;
+                cnt = node_context[i];
+                tt  = cnt.getDisplayName();
             }
             
             tw = string_width(tt);
             th = string_height(tt);
             
-            if(i < array_length(node_context) - 1) {
+            if(i < n - 1) {
                 if(buttonInstant(THEME.button_hide_fill, xx - ui(6), tbh - bh / 2, tw + ui(12), bh, [mx, my], pHOVER, pFOCUS) == 2) {
-                    node_hover          = noone;
+                    node_hover      = noone;
                     nodes_selecting = [];
                     PANEL_PREVIEW.resetNodePreview();
                     
@@ -2580,12 +2587,22 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                 draw_sprite_ui_uniform(THEME.arrow, 0, xx + tw + ui(12), tbh + ui(1), .75, COLORS._main_icon);
             }
             
-            var _aa = i < array_length(node_context) - 1? 0.33 : 1;
+            var _aa = i < n - 1? 0.33 : 1;
             draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text, _aa);
             draw_text_add(xx, tbh, tt);
             draw_set_alpha(1);
+            xx += tw + ui(4);
             
-            xx += tw + ui(24);
+            if(is(cnt, Node_Collection) && cnt.show_instance) {
+            	draw_set_text(f_p2b, fa_left, fa_center, COLORS._main_text_accent);
+            	tt = __txt("[base]");
+            	tw = string_width(tt);
+            	
+            	draw_text_add(xx, tbh, tt);
+            	xx += tw + ui(4);
+            }
+            
+            xx += ui(20);
         }
         
         return xx;
@@ -3255,7 +3272,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
         node_bg_hovering = drawBasePreview();
         
-        var ovy = ui(8);
+        var ovy = ui(2);
         if(project.graphDisplay.show_view_control == 2) ovy += ui(36);
         if(project.graphDisplay.show_topbar)            ovy += topbar_height;
         

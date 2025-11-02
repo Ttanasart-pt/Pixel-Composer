@@ -8,11 +8,11 @@ function Node_Boolean(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	wd_checkBox = new checkBox( function() { inputs[0].setValue(!getInputData(0)); } );
 	
-	newInput(0, nodeValue_Bool("Value", false)).setVisible(true, true);
+	newInput(0, nodeValue_Bool( "Value", false )).setVisible(true, true);
 		
 	////- =Display
-	newInput(1, nodeValue_Bool("Hide Background", false));
-	newInput(2, nodeValue_Enum_Button("Name location",  1, [ "Top", "Bottom" ]));
+	newInput(1, nodeValue_Bool(    "Hide Background", false ));
+	newInput(2, nodeValue_EButton( "Label Position",  0, [ "Top", "Bottom" ] ));
 	
 	newOutput(0, nodeValue_Output("Boolean", VALUE_TYPE.boolean, false));
 	
@@ -45,8 +45,9 @@ function Node_Boolean(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var hid = getInputData(1);
 		
 		if(hid) {
-			hover_state = lerp_float(hover_state, hover_state_to, 3);
+			hover_state    = lerp_float(hover_state, hover_state_to, 1);
 			hover_state_to = 0;
+			
 		} else 
 			hover_state = 1;
 			
@@ -64,15 +65,15 @@ function Node_Boolean(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		var hid   = getInputData(1);
 		var align = getInputData(2);
+		var ts = _s * .275 / UI_SCALE;
+		var cx = xx + w * _s / 2;
+		var oy = hid * ((1 - hover_state) * 8);
 		
-		if(align == 0) {
-			draw_set_text(f_p2, fa_center, fa_bottom, COLORS._main_text);
-			draw_text_ext_add(xx + w * _s / 2, yy - 2 + hid * ((1 - hover_state) * 8), _name, -1, 128 * _s);
-			
-		} else if(align == 1) {
-			draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
-			draw_text_ext_add(xx + w * _s / 2, yy + h * _s - hid * ((1 - hover_state) * 8), _name, -1, 128 * _s);
-		}
+		draw_set_text(f_sdf, fa_center, align == 0? fa_bottom : fa_top, COLORS._main_text);
+		
+		     if(align == 0) draw_text_ext_add(cx, yy - 2 + oy,      _name, -1, 128 * _s, ts);
+		else if(align == 1) draw_text_ext_add(cx, yy + h * _s - oy, _name, -1, 128 * _s, ts);
+		
 	}
 	
 	static drawDimension = function(xx, yy, _s) {}
