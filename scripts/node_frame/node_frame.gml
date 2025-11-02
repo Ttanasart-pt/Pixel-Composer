@@ -209,7 +209,7 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var alp = _color_get_alpha(color) * .25;
 		
 		draw_sprite_stretched_ext(bg_spr, 0, x0, y0, _dw, _dh, colorMultiply(color, COLORS.node_base_bg), alp);
-		draw_sprite_stretched_ext(bg_spr, 1, x0, y0, _dw, _dh, colorMultiply(color, CDEF.main_dark), alp);
+		draw_sprite_stretched_add(bg_spr, 1, x0, y0, _dw, _dh, color, bg_spr_add);
 	}
 	
 	static drawNodeFG = function(_x, _y, _mx, _my, _s, _dparam, _panel = noone) {

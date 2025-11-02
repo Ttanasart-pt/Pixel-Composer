@@ -382,9 +382,6 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		__dummy_input.x = xx;
 		__dummy_input.y = _iny;
-		
-		var _hv = PANEL_GRAPH.pHOVER && PANEL_GRAPH.node_hovering == self && (!PREFERENCES.panel_graph_group_require_shift || key_mod_press(SHIFT));
-		bg_spr_add = 0.1 + (0.1 * _hv);
 	}
 	
 	static drawNodeBase = function(xx, yy, _s) {

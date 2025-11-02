@@ -253,11 +253,14 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	}
 	
 	static refreshWidget = function() {
+		printCallStack();
+		
 		var _inType = inputs[2].getValue();
-		var _vtype  = array_safe_get_fast(GROUP_IO_TYPE_MAP, _inType, VALUE_TYPE.any);
+		var _vtype  = array_safe_get_fast(GROUP_IO_TYPE_MAP,  _inType, VALUE_TYPE.any);
+		var _stype  = array_safe_get_fast(GROUP_IO_TYPE_NAME, _inType, VALUE_TYPE.any);
 		
 		var _disp  = inputs[0].getValue();
-		var _dtype = array_safe_get_fast(array_safe_get_fast(GROUP_IO_DISPLAY, _vtype), _disp);
+		var _dtype = array_safe_get_fast(array_safe_get_fast(GROUP_IO_DISPLAY, _inType), _disp);
 		
 		inParent.setType(_vtype);
 		outputs[0].setType(_vtype);
@@ -453,7 +456,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		inParent.setVisible(_vis, _vis);
 	}
 	
-	static onValueUpdate = function(index = 0) {
+	static onValueUpdate = function(index = noone) {
 		if(is_undefined(inParent)) return;
 		
 		var _inType		= inputs[2].getValue();
@@ -470,8 +473,10 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			attributes.inherit_type = false;
 		}
 		
-		refreshWidget();
-		visibleCheck();
+		if(index != noone) {
+			refreshWidget();
+			visibleCheck();
+		}
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {

@@ -70,7 +70,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		icon_blend     = undefined;
 		node_draw_icon = noone;
 		bg_spr         = THEME.node_bg;
-		bg_spr_add     = 0.1;
+		bg_spr_add     = .25;
 		bg_spr_add_clr = c_white;
 		
 		name             = "";
@@ -1063,8 +1063,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	doUpdate     = doUpdateFull;
 	getInputData = function(i,d=0) /*=>*/ {return array_safe_get_fast(inputs_data, i, d)};
 	
-	static valueUpdate     = function(index=0) { onValueUpdate(index); cacheCheck(); }
-	static valueFromUpdate = function(index=0) {
+	static valueUpdate     = function(index = noone) { onValueUpdate(index); cacheCheck(); }
+	static valueFromUpdate = function(index = noone) {
 		onValueFromUpdate(index);
 		onValueUpdate(index);
 		
@@ -1074,8 +1074,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		cacheCheck();
 	}
 	
-	static onValueUpdate     = function(index=0) {}
-	static onValueFromUpdate = function(index=0) {}
+	static onValueUpdate     = function(index = noone) {}
+	static onValueFromUpdate = function(index = noone) {}
 	
 	static getDimension = function() /*=>*/ {return inputs[dimension_index].getValue()};
 	
@@ -2278,6 +2278,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			BLEND_NORMAL
 		}
 		
+		if(bg_spr_add > 0) draw_sprite_stretched_add(bg_spr, 1, xx, yy, w * _s, h * _s, getColor(), bg_spr_add);
+		
 		active_drawing = active_draw_index > -1;
 		if(active_draw_index > -1) {
 			var cc = COLORS._main_accent;
@@ -2286,8 +2288,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				case 2 : cc = COLORS.node_border_file_drop; break;
 			}
 			
-			draw_sprite_stretched_ext(bg_spr, 1, xx, yy, round(w * _s), round(h * _s), cc, 1);
-			if(active_draw_anchor) draw_sprite_stretched_add(bg_spr, 1, xx, yy, round(w * _s), round(h * _s), COLORS._main_accent, 0.5);
+			draw_sprite_stretched_ext(bg_spr, 1, xx, yy, w * _s, h * _s, cc, 1);
+			if(active_draw_anchor) draw_sprite_stretched_add(bg_spr, 1, xx, yy, w * _s, h * _s, COLORS._main_accent, 0.5);
 			
 			active_draw_anchor = false;
 			active_draw_index  = -1;
@@ -2297,8 +2299,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			draw_sprite_stretched_ext(THEME.color_picker_box, 0, xx - 2 * _s, yy - 2 * _s, w * _s + 4 * _s, h * _s + 4 * _s, COLORS._main_value_positive, 1);
 			draw_droppable = false;
 		}
-		
-		if(bg_spr_add > 0) draw_sprite_stretched_add(bg_spr, 1, xx, yy, w * _s, h * _s, bg_spr_add_clr, bg_spr_add);
 		
 		drawNodeOverlay(xx, yy, _mx, _my, _s);
 	}

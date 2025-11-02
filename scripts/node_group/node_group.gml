@@ -153,7 +153,12 @@ function Node_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) co
 				_cin.animator  = _inp.animator;
 				_cin.animators = _inp.animators;
 				
-				if(_inp.value_from == noone) { _cin.removeFrom(); continue; }
+				if(_inp.value_from == noone) { 
+					if(_cin.value_from != noone) 
+						_cin.removeFrom(); 
+					continue; 
+				}
+				
 				var _con_nod = _insMap[$ _inp.value_from.node.node_id];
 				var _con_ind = _inp.value_from.index;
 				var _con_tag = _inp.value_from.tags;
