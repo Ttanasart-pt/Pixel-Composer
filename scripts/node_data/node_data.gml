@@ -379,6 +379,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		display_name = _name;
 		internalName = string_replace_all(display_name, " ", "_");
 		refreshNodeMap();
+		PANEL_GRAPH.refreshDraw(1);
 		
 		if(onSetDisplayName != noone) onSetDisplayName();
 		return self;

@@ -1500,7 +1500,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     function drawCacheCheck(_x, _y, _s, _w, _h) {
     	var _upd = false;
     	
-    	_upd = _upd || (pFOCUS && (mouse_click(mb_any) || keyboard_check_pressed(vk_anykey)));
+    	_upd = _upd || (pFOCUS && (mouse_click(mb_any) || mouse_release(mb_any) || keyboard_check_pressed(vk_anykey)));
     	_upd = _upd || draw_refresh; if(draw_refresh) draw_refresh--;
     	
     	_upd = _upd || connection_cache[$ "_x"] != _x; connection_cache[$ "_x"] = _x;
@@ -1510,24 +1510,24 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		_upd = _upd || connection_cache[$ "_h"] != _h; connection_cache[$ "_h"] = _h;
 		
 		_upd = _upd || connection_cache[$ "type"]        != project.graphConnection.type;
-		        connection_cache[$ "type"]        =  project.graphConnection.type;
+		               connection_cache[$ "type"]        =  project.graphConnection.type;
 		        
 		_upd = _upd || connection_cache[$ "line_width"]  != project.graphConnection.line_width;
-		        connection_cache[$ "line_width"]  =  project.graphConnection.line_width;
+		               connection_cache[$ "line_width"]  =  project.graphConnection.line_width;
 		        
 		_upd = _upd || connection_cache[$ "line_corner"] != project.graphConnection.line_corner;
-		        connection_cache[$ "line_corner"] =  project.graphConnection.line_corner;
+		               connection_cache[$ "line_corner"] =  project.graphConnection.line_corner;
 		        
 		_upd = _upd || connection_cache[$ "line_extend"] != project.graphConnection.line_extend;
-		        connection_cache[$ "line_extend"] =  project.graphConnection.line_extend;
+		               connection_cache[$ "line_extend"] =  project.graphConnection.line_extend;
 		        
 		_upd = _upd || connection_cache[$ "line_aa"]     != project.graphConnection.line_aa;
-		        connection_cache[$ "line_aa"]     =  project.graphConnection.line_aa;
+		               connection_cache[$ "line_aa"]     =  project.graphConnection.line_aa;
 		
 		connection_draw_update = connection_draw_update || _upd;
 		
 		_upd = _upd || connection_cache[$ "frame"]     != GLOBAL_CURRENT_FRAME;
-				connection_cache[$ "frame"]     = GLOBAL_CURRENT_FRAME;
+				       connection_cache[$ "frame"]     = GLOBAL_CURRENT_FRAME;
 		node_surface_update    = node_surface_update || _upd;
     }
     

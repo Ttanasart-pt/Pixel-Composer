@@ -681,7 +681,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		////- Slide
 		
 		var hoverRect = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h);
-	
+		
 		if(sliding > 0) { 
 			slide_delta += PEN_USE? PEN_X_DELTA : window_mouse_get_delta_x();
 			slide_delta += PEN_USE? PEN_Y_DELTA : window_mouse_get_delta_y();
