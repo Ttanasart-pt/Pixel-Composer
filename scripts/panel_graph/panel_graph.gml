@@ -909,7 +909,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     
     #region ++++++++++++++++ Menus +++++++++++++++++
 	    MENUITEM_CONDITIONS[$ "graph_select_group"]    = function() /*=>*/ {return is(PANEL_GRAPH.node_hover, Node_Collection)};
-	    MENUITEM_CONDITIONS[$ "graph_select_instance"] = function() /*=>*/ {return is(PANEL_GRAPH.node_hover, Node_Collection) && PANEL_GRAPH.node_hover.instanceBase != noone};
+	    MENUITEM_CONDITIONS[$ "graph_select_instance"] = function() /*=>*/ {return is(PANEL_GRAPH.node_hover, Node_Collection) && PANEL_GRAPH.node_hover.instanceBase != undefined};
     	MENUITEM_CONDITIONS[$ "graph_select_in_group"] = function() /*=>*/ {return PANEL_GRAPH.node_hover.group != noone};
     	MENUITEM_CONDITIONS[$ "graph_select_multiple"] = function() /*=>*/ {return array_length(PANEL_GRAPH.nodes_selecting) > 1};
     	
@@ -2571,7 +2571,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                     var _ctx = node_context[i + 1];
                     var _nodeFocus = _ctx;
                     
-                    if(i == -1)
+                    if(i == -1) 
                         resetContext();
                     else {
                         array_resize(node_context, i + 1);

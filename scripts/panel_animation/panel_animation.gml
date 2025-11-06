@@ -382,7 +382,7 @@ function Panel_Animation() : PanelContent() constructor {
             if(is(_cont, timelineItemNode)) {
                 var _node = _cont.node;
                 if(!is_struct(_node)) continue;
-                if(_node.instanceBase != noone) continue;
+                if(_node.instanceBase != undefined) continue;
                 
                 var _anim = [];
                 var _prop = [];

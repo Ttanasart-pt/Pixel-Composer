@@ -1,12 +1,12 @@
 function rotator(_onModify, _step = -1) : widget() constructor {
 	onModify = _onModify;
 	valStep	 = _step;
+	side_button = noone;
 	
 	scale    = 1;
+	hoverRot = false;
 	dragging = noone;
 	drag_sv  = 0;
-	real_val = 0;
-	side_button = noone;
 	
 	tb_value = new textBox(TEXTBOX_INPUT.number, onModify);
 	tb_value.hide = true;
@@ -22,7 +22,7 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 		tb_value.register(parent);
 	}
 	
-	static isHovering = function() { return dragging || tb_value.hovering; }
+	static isHovering = function() { return hoverRot || tb_value.hovering; }
 	
 	static drawParam = function(params) {
 		setParam(params);
@@ -63,7 +63,8 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 			var _ky = _y + _r / 2;
 			var _kr = (_r - ui(12)) / 2;
 			var _kc = COLORS._main_icon;
-		
+			hoverRot = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _r, _y + _r);
+			
 			if(dragging) {
 				_kc = COLORS._main_icon_light;
 			
@@ -89,7 +90,7 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 					UNDO_HOLDING = false;
 				}
 			
-			} else if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _r, _y + _r)) {
+			} else if(hover && hoverRot) {
 				_kc = COLORS._main_icon_light;
 			
 				if(mouse_press(mb_left, active)) {

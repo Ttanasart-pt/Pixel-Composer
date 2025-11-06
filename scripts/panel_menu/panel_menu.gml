@@ -77,7 +77,7 @@
         
         registerFunction("", "Close file",          "Q",    MOD_KEY.ctrl, global_project_close     ).setMenu("close_file"      )
         registerFunction("", "Close all files",     "",     MOD_KEY.none, global_project_close_all ).setMenu("close_all_files" )
-        registerFunction("", "Close program",       vk_f4,  MOD_KEY.alt,  window_close             ).setMenu("close_software"  )
+        registerFunction("", "Close program",       vk_f4,  MOD_KEY.alt,  window_close             ).setMenu("close_software", THEME.window_exit_icon )
         registerFunction("", "Close project",       "",     MOD_KEY.none, closeProject             ).setMenu("close_project"   ).setArg([ ARG("project", function() /*=>*/ {return PROJECT}, true) ])
             
         registerFunction("", "Reload theme",        vk_f10, MOD_KEY.ctrl | MOD_KEY.shift,           global_theme_reload        ).setMenu("reload_theme")
@@ -100,6 +100,15 @@
     }
 #endregion
 
+#region global
+    enum WINDOW_ACTION {
+        Exit,
+        Minimize, 
+        Maximize,
+        Fullscreen,
+    }
+#endregion
+
 function Panel_Menu() : PanelContent() constructor {
     title     = __txt("Menu");
     auto_pin  = true;
@@ -114,8 +123,8 @@ function Panel_Menu() : PanelContent() constructor {
     version_name_copy = 0;
     
     var _right = PREFERENCES.panel_menu_right_control;
-    if(_right) action_buttons = ["exit", "maximize", "minimize", "fullscreen"];
-    else       action_buttons = ["exit", "minimize", "maximize", "fullscreen"];
+    if(_right) action_buttons = [ WINDOW_ACTION.Exit, WINDOW_ACTION.Maximize, WINDOW_ACTION.Minimize, WINDOW_ACTION.Fullscreen ];
+    else       action_buttons = [ WINDOW_ACTION.Exit, WINDOW_ACTION.Minimize, WINDOW_ACTION.Maximize, WINDOW_ACTION.Fullscreen ];
     
     #region ++++++++ Menu Items ++++++++
         menu_file_content = [
@@ -662,9 +671,8 @@ function Panel_Menu() : PanelContent() constructor {
             
         #endregion
         
-        var x1 = _right? w - ui(6) : ui(8 + 28);
-        
         #region actions
+            var x1 = _right? w - ui(6) : ui(8 + 28);
             var bs = ui(28);
             var bspr = THEME.button_hide_fill;
             
@@ -673,16 +681,15 @@ function Panel_Menu() : PanelContent() constructor {
                     var action = action_buttons[i];
                     
                     switch(action) {
-                        case "exit":
+                        case WINDOW_ACTION.Exit:
                             var b = buttonInstant(bspr, x1 - bs, ui(6), bs, bs, m, pHOVER, true,, THEME.window_exit_icon, 0, COLORS._main_accent);
                             if(b) _draggable = false;
                             if(b == 2) window_close();
                             break;
                             
-                        case "maximize":
+                        case WINDOW_ACTION.Maximize:
                             var win_max = window_is_maximized || window_is_fullscreen;
-                            if(OS == os_macosx)
-                                win_max = __win_is_maximized;
+                            if(OS == os_macosx) win_max = __win_is_maximized;
                             
                             var bc = [ COLORS._main_icon, CDEF.lime ];
                             var b  = buttonInstant(bspr, x1 - bs, ui(6), bs, bs, m, pHOVER, true,, THEME.window_maximize_icon, win_max, bc);
@@ -709,7 +716,7 @@ function Panel_Menu() : PanelContent() constructor {
                             }
                             break;
                             
-                        case "minimize":
+                        case WINDOW_ACTION.Minimize:
                             var bc = [ COLORS._main_icon, CDEF.yellow ];
                             var b  = buttonInstant(bspr, x1 - bs, ui(6), bs, bs, m, pHOVER, true,, THEME.window_minimize_icon, 0, bc);
                             if(b) _draggable = false;
@@ -719,7 +726,7 @@ function Panel_Menu() : PanelContent() constructor {
                             }
                             break;
                             
-                        case "fullscreen":
+                        case WINDOW_ACTION.Fullscreen:
                             var win_full = window_is_fullscreen;
                             var bc = [ COLORS._main_icon, CDEF.cyan ];
                             var b  = buttonInstant(bspr, x1 - bs, ui(6), bs, bs, m, pHOVER, true,, THEME.window_fullscreen_icon, win_full, bc);
@@ -891,6 +898,8 @@ function Panel_Menu() : PanelContent() constructor {
             var txt = PROJECT.path == ""? __txt("Untitled") : filename_name_only(PROJECT.path);
             if(PROJECT.modified) txt += "*";
             
+            if(TEST_DATA[$ "video_title"] != undefined) txt = TEST_DATA[$ "video_title"];
+            
             var tx0, tx1, tcx;
             var ty0, ty1;
             var tbx0, tby0;
@@ -1044,15 +1053,21 @@ function Panel_Menu() : PanelContent() constructor {
                 var _b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, m, pHOVER, pFOCUS, __txt("Explore Folder"), THEME.folder, 0, COLORS._main_icon, .5);
                 if(_b) _draggable = false;
                 if(_b == 2) {
-                    var dx  = hori? x + tcx : x + w;
-                    var dy  = hori? y + h : y + tby0;
-                
+                    var dx = hori? x + tcx : x + w;
+                    var dy = hori? y + h   : y + tby0;
+                    
                     var _pan = panelAdd("Panel_File_Explorer", true);
                     var _dir = filename_dir(PROJECT.path);
                     _pan.content.setRoot(_dir);
                 }
             }
             
+            if(TEST_DATA[$ "video"]) {
+                _cx = tcx - _tw / 2 - ui(16);
+                _cy = (ty0 + ty1) / 2;
+                
+                draw_sprite_ui(THEME.video, 0, _cx, _cy, .8, .8, 0, COLORS._main_icon);
+            }
         #endregion
         
         #region drag

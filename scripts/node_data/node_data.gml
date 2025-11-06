@@ -42,7 +42,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		onDoubleClick = -1;
 		is_controller = false;
 		is_instancer  = false;
-		instanceBase  = noone;
+		instanceBase  = undefined;
 		
 		static setParam = function() /*=>*/ {return false};
 	#endregion
@@ -244,6 +244,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		preview_channel_temp = undefined;
 		preview_alpha	 = 1;
 		
+		__preview_surf = false;
+		__preview_sw   = noone;
+		__preview_sh   = noone;
+		
 		preview_surface_sample = true;
 		preview_select_surface = true;
 		
@@ -380,7 +384,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return self;
 	}
 	
-	static getNodeBase = function() /*=>*/ {return instanceBase == noone? self : instanceBase};
+	static getNodeBase = function() /*=>*/ {return instanceBase ?? self};
 	
 	////- INSPECTOR
 	
@@ -1088,9 +1092,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static isActiveDynamic = function(frame = CURRENT_FRAME) {
-		if(update_on_frame)       return true;
-		if(!rendered)             return true;
-		if(instanceBase != noone) return true;
+		if(update_on_frame)           return true;
+		if(!rendered)                 return true;
+		if(instanceBase != undefined) return true;
 		
 		force_requeue = false;
 		__temp_frame  = frame;
@@ -2096,10 +2100,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return hovering;
 	}
 	
-	__preview_surf = false;
-	__preview_sw   = noone;
-	__preview_sh   = noone;
-	
 	static setPreview = function(_surf) {
 		preview_surface = _surf;
 		__preview_surf  = is_surface(_surf);
@@ -2479,32 +2479,26 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return _tool == noone? "" : _tool.getName(_tool.selecting);
 	}
 	
-	static getTool = undefined;
+	static getTool         = undefined;
 	static getToolSettings = function() /*=>*/ {return tool_settings};
-	
-	static showTool = function() { return tools != -1 || toolShow; }
-	
-	static drawTools = noone;
+	static showTool        = function() /*=>*/ {return tools != -1 || toolShow};
+	static drawTools       = noone;
 	
 	static selectAll   = undefined;
 	static selectClear = undefined;
 	
 	////- INSTANCE
 	
-	static setInstance = function(n) /*=>*/ { 
-		instanceBase = n.instanceBase == noone? n : n.instanceBase;
-		return self; 
-	}
+	static setInstance = function(n) /*=>*/ { instanceBase = n.instanceBase ?? n; return self; }
 	
 	////- CACHE
 	
-	use_cache		= CACHE_USE.none;
-	cached_manual	= false;
-	cached_output	= [];
-	cache_result	= [];
-	cache_group     = noone;
-	
-	clearCacheOnChange	= true;
+	use_cache     = CACHE_USE.none;
+	cached_manual = false;
+	cached_output = [];
+	cache_result  = [];
+	cache_group   = noone;
+	clearCacheOnChange = true;
 	
 	static isAllCached = function() {
 		for( var i = 0; i < TOTAL_FRAMES; i++ )
@@ -2519,7 +2513,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(group != noone) group.cacheCheck();
 	}
 	
-	static getAnimationCacheExist = function(frame) { return cacheExist(frame); }
+	static getAnimationCacheExist = function(f) /*=>*/ {return cacheExist(f)};
 	
 	static clearInputCache = function() {
 		for( var i = 0; i < array_length(inputs); i++ )
@@ -2720,7 +2714,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(!array_empty(_outMeta)) _map.outputMeta = _outMeta;
 		if(renamed)                _map.renamed    = renamed;
 		
-		if(instanceBase != noone)  _map.instanceBase = instanceBase.node_id;
+		if(instanceBase)  _map.instanceBase = instanceBase.node_id;
 		
 		doSerialize(_map);
 		processSerialize(_map);
@@ -2940,7 +2934,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				
 			} else throw($"Group load failed. Can't find node ID {load_group}");
 			
-			instanceBase = ds_map_exists(project.nodeMap, load_inst)? project.nodeMap[? load_inst] : noone;
+			instanceBase = ds_map_exists(project.nodeMap, load_inst)? project.nodeMap[? load_inst] : undefined;
 		}
 		
 		onLoadGroup();
@@ -3128,7 +3122,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		CLONING = false;
 		refreshTimeline();
 		
-		if(instanceBase != noone) _node.setInstance(instanceBase);
+		if(instanceBase) _node.setInstance(instanceBase);
 		
 		onClone(_node, target);
 		
@@ -3151,7 +3145,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static getAttribute = function(_key) {
-		if(instanceBase != noone) return instanceBase.getAttribute(_key);
+		if(instanceBase) return instanceBase.getAttribute(_key);
 		
 		var _val = struct_try_get(attributes, _key, 0);
 		
@@ -3166,7 +3160,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static attrDepth = function() {
-		if(instanceBase != noone) return instanceBase.attrDepth();
+		if(instanceBase) return instanceBase.attrDepth();
 		
 		var form = -1;
 		

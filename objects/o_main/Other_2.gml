@@ -2,12 +2,14 @@
 //print("===== Game Start Begin =====");
 
 #region directory
-	globalvar DIRECTORY, APP_DIRECTORY, APP_LOCATION, PRESIST_PREF, FS_PATH, WORKING_DIRECTORY, ROAMING_DIRECTORY;
-	ROAMING_DIRECTORY = "";
-	DIRECTORY    = "";
-	FS_PATH      = "";
-	PRESIST_PREF = { path: "" };
-	WORKING_DIRECTORY = working_directory;
+	globalvar APP_DIRECTORY, APP_LOCATION; 
+	
+	globalvar WORKING_DIRECTORY; WORKING_DIRECTORY = working_directory;
+	globalvar ROAMING_DIRECTORY; ROAMING_DIRECTORY = "";
+	globalvar DIRECTORY; DIRECTORY         = "";
+	globalvar FS_PATH; FS_PATH           = "";
+	globalvar PRESIST_PREF; PRESIST_PREF      = { path: "" };
+	globalvar TEST_DATA; TEST_DATA         = {};
 	
 	if(OS == os_linux) {
 		APP_DIRECTORY = working_directory;
@@ -85,7 +87,14 @@
 		directory_verify($"{DIRECTORY}log");
 		
 		APP_LOCATION = working_directory;
-		// if(RUN_IDE) APP_LOCATION = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/";
+		
+		if(RUN_IDE) {
+			// APP_LOCATION = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/";
+			var _testdir = $"{DIRECTORY}test";
+			directory_verify(_testdir);
+			
+			TEST_DATA = json_load_struct($"{_testdir}/test_data.json");
+		}
 	}
 	
 	printDebug($"===================== WORKING DIRECTORIES =====================\n");
@@ -164,14 +173,14 @@
 		// shell_execute_async("reg", $"DELETE HKCU\\Software\\Classes\\pxc\\shell\\open\\command");
 		// shell_execute_async("reg", $"ADD HKCU\\Software\\Classes\\pxc\\shell\\open\\command /t REG_SZ /d \"{_prg_path} -m %1\"");
 	}
-	
-	directory_set_current_working(DIRECTORY);
 
+#region post init
+	directory_set_current_working(DIRECTORY);
+	
 	print($"working: {working_directory}");
 	print($"project: {program_directory}");
 	
-#region lua
-	// lua_error_handler = _lua_error;
+	if(RUN_IDE) {
+		__test_update_theme();
+	}
 #endregion
-
-//print("===== Game Start End =====");

@@ -1177,8 +1177,12 @@ function PanelContent() constructor {
 	static onStepBegin = function() {
 		mx = mouse_mx - x;
 		my = mouse_my - y;
-		
 		stepBegin();
+		
+		if(TEST_DATA[$ "video"]) {
+			if(pFOCUS && key_press(ord("P"), MOD_KEY.shift, true))
+				FOCUSING_PANEL = self;
+		}
 	}
 	static stepBegin   = function() {}
 	

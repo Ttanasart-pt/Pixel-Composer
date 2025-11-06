@@ -200,7 +200,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static sortIO = function() {
-		if(instanceBase != noone) {
+		if(instanceBase != undefined) {
 			attributes.input_display_list  = array_clone(instanceBase.attributes.input_display_list);
 			attributes.output_display_list = array_clone(instanceBase.attributes.output_display_list);
 		} 

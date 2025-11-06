@@ -7,13 +7,13 @@ function Node_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) co
 	
 	static resetInstance = function() /*=>*/ { 
 		icon = THEME.group_s;
-		instanceBase = noone;
+		instanceBase = undefined;
 		return self; 
 	}
 		
 	static setInstance = function(n, _upd = true) /*=>*/ { 
 		icon = THEME.group_linked_s;
-		instanceBase = n.instanceBase == noone? n : n.instanceBase;
+		instanceBase = n.instanceBase == undefined? n : n.instanceBase;
 		
 		if(_upd) {
 			updateInstance();

@@ -47,7 +47,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		dummy_undo     = -1;
 		dummy_redo     = -1;
 		
-		instanceBase   = noone;
+		instanceBase   = undefined;
 	#endregion
 	
 	#region ---- Tooltip ----
@@ -678,7 +678,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static setAnimable = function(_anim) { animable = _anim; return self; }
 	
 	static isAnimable = function() {
-		if(instanceBase != noone) return instanceBase.isAnimable();
+		if(instanceBase != undefined) return instanceBase.isAnimable();
 		
 		if(type == VALUE_TYPE.PCXnode)				 return false;
 		if(display_type == VALUE_DISPLAY.text_array) return false;
@@ -728,12 +728,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(onSetAnim != undefined) onSetAnim();
 	}
 	
-	static getAnim = function() { return instanceBase != noone? instanceBase.is_anim : is_anim; }
+	static getAnim = function() { return instanceBase != undefined? instanceBase.is_anim : is_anim; }
 	
 	static isAnimated = function() {
 		if(value_from_loop)       return true;
 		if(value_from != noone)   return value_from.node.isAnimated();
-		if(instanceBase != noone) return instanceBase.isAnimated();
+		if(instanceBase != undefined) return instanceBase.isAnimated();
 		return is_anim;
 	}
 	
@@ -1281,7 +1281,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(value_from_loop)       return true;
 		if(value_from != noone)   return false;
-		if(instanceBase != noone) return instanceBase.isActiveDynamic();
+		if(instanceBase != undefined) return instanceBase.isActiveDynamic();
 		
 		if(expUse) {
 			if(!is_struct(expTree)) return false;
@@ -1307,7 +1307,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(!node.project.animator.is_playing) return true;
 		if(value_from_loop)       return true;
 		if(value_from != noone)   return true;
-		if(instanceBase != noone) return instanceBase.isDynamic();
+		if(instanceBase != undefined) return instanceBase.isDynamic();
 		
 		if(expUse) {
 			if(!is_struct(expTree)) return false;

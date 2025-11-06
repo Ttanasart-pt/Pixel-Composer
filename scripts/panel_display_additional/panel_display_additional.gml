@@ -11,12 +11,9 @@ function panelDisplayInit() {
 }
 
 function panelDisplayDraw() {
-	if(FOCUSING_PANEL != noone && is_instanceof(FOCUSING_PANEL, PanelContent)) {
+	if(FOCUSING_PANEL != noone && is(FOCUSING_PANEL, PanelContent)) {
 		var _p = FOCUSING_PANEL;
-		FOCUSING_AREA = [ _p.x, 
-		                  _p.y, 
-						  _p.w, 
-						  _p.h ];
+		FOCUSING_AREA = [ _p.x, _p.y, _p.w, _p.h ];
 	}
 	
 	if(FOCUSING_AREA != noone) {
