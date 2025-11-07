@@ -1643,7 +1643,7 @@ function Panel_Animation_Dopesheet() {
         
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         
-        var _tool_a = 0.5 + hov * 0.5;
+        var _tool_a = .75 + hov * .25;
         
         var _on_end_disp = prop.on_end || hov;
         var _tool_x0 = tool_width - ui(20 + 16 * (3 + _on_end_disp * 1.5) + 12);

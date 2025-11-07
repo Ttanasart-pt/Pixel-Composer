@@ -37,12 +37,8 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static getDisplayName = function() /*=>*/ {return string(inputs[0].getValue())};
 	
 	isHovering     = false;
-	hover_scale    = 0;
-	hover_scale_to = 0;
-	hover_alpha    = 0;
 	
 	preview_connecting = false;
-	preview_scale      = 1;
 	junction_hover     = false;
 	error_notification = noone;
 	
@@ -223,13 +219,12 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static drawBadge = function(_x, _y, _s) {}
 	static drawJunctionNames = function(_x, _y, _mx, _my, _s, _panel = noone) {}
 	
-	static onDrawNodeBehind = function(_x, _y, _mx, _my, _s) {
+	static drawNodeBehind = function(_x, _y, _mx, _my, _s) {
 		var xx =  x      * _s + _x;
 		var yy = (y + 8) * _s + _y;
 		
-		var hover = isHovering || hover_alpha == 1;
 		var tun   = findPanel("Panel_Tunnels");
-		hover = hover || (tun && tun.tunnel_hover == self);
+		var hover = isHovering || (tun && tun.tunnel_hover == self);
 		if(!hover) return;
 		
 		var _key  = inputs[0].getValue();
@@ -253,22 +248,22 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			
 			var tox = _x +  node.x      * _s;
 			var toy = _y + (node.y + 8) * _s;
-			draw_line_dotted(xx, yy, tox, toy, 2 * _s, current_time / 10, 3);
+			draw_line_dotted(xx, yy, tox, toy, 2 * _s, 0, 3);
 		}
 		
 		draw_set_alpha(1);
 	}
 	
 	static checkJunctions = function(_x, _y, _mx, _my, _s, _fast = false) {
-		isHovering = point_in_circle(_mx, _my, _x, _y, _s * 24);
-		if(!isHovering) return noone;
-		hover_scale_to = 1;
+		var _hov = point_in_circle(_mx, _my, _x, _y, _s * 24);
+		if(!_hov) { isHovering = false; return noone; }
 		
 		CURSOR_SPRITE = THEME.view_pan;
 		var _dy = junction_draw_hei_y * _s / 2;
 		var _dx = _fast? 6  * _s : _dy;
-		if(inputs[1].isHovering(_s, _dx, _dy, _mx, _my)) return inputs[1];
-		return noone;
+		
+		isHovering = inputs[1].isHovering(_s, _dx, _dy, _mx, _my);
+		return isHovering? inputs[1] : noone;
 	}
 	
 	static drawJunctions = function(_x, _y, _mx, _my, _s) {
@@ -281,47 +276,36 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var xx =  x      * _s + _x;
 		var yy = (y + 8) * _s + _y;
 		
-		hover_alpha = 0.5;
-		if(active_draw_index > -1) {
-			hover_alpha		  =  1;
-			hover_scale_to	  =  1;
-			active_draw_index = -1;
-		}
-		
 		#region draw arc
-			var prev_s = preview_connecting? 1 + sin(current_time / 100) * 0.1 : 1;
-			preview_scale      = lerp_float(preview_scale, prev_s, 5);
 			preview_connecting = false;
 			
 			shader_set(sh_node_arc);
-				shader_set_color("color", inputs[1].color_display, hover_alpha);
+				shader_set_color("color", inputs[1].color_display, .5);
 				shader_set_f("angle", degtorad(90));
 				
-				var _r = preview_scale * _s * 20;
+				var _r = _s * 20;
 				shader_set_f("amount", 0.4, 0.5);
 				draw_sprite_stretched(s_fx_pixel, 0, xx - _r, yy - _r, _r * 2, _r * 2);
 				
-				var _r = preview_scale * _s * 30;
+				var _r = _s * 30;
 				shader_set_f("amount", 0.45, 0.525);
 				draw_sprite_stretched(s_fx_pixel, 0, xx - _r, yy - _r, _r * 2, _r * 2);
 				
-				var _r = preview_scale * _s * 40;
+				var _r = _s * 40;
 				shader_set_f("amount", 0.475, 0.55);
 				draw_sprite_stretched(s_fx_pixel, 0, xx - _r, yy - _r, _r * 2, _r * 2);
 				
 			shader_reset();
 		#endregion
 			
-		if(hover_scale > 0) {
-			var _r = hover_scale * _s * 16;
+		if(active_draw_index > -1) {
+			var _r = _s * 16;
 			shader_set(sh_node_circle);
-				shader_set_color("color", COLORS._main_accent, hover_alpha);
+				shader_set_color("color", COLORS._main_accent, 1);
 				draw_sprite_stretched(s_fx_pixel, 0, xx - _r, yy - _r, _r * 2, _r * 2);
 			shader_reset();
+			active_draw_index = -1;
 		}
-		
-		hover_scale    = lerp_float(hover_scale, hover_scale_to && !junction_hover, 3);
-		hover_scale_to = 0;
 		
 		var aa = label_alpha * _color_get_alpha(label_color);
 		var ss = _s * .3 * label_scale;

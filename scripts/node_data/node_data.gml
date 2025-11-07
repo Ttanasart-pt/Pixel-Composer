@@ -2299,14 +2299,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		drawNodeOverlay(xx, yy, _mx, _my, _s);
 	}
 	
-	static drawNodeBehind = function(_x, _y, _mx, _my, _s) {
-		var xx = x * _s + _x;
-		var yy = y * _s + _y;
-		
-		onDrawNodeBehind(_x, _y, _mx, _my, _s);
-	}
-	
-	static onDrawNodeBehind = function(_x, _y, _mx, _my, _s) {}
+	static drawNodeBehind = undefined
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover = false, _focus = false) {}
 	

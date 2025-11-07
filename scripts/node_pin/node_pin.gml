@@ -43,9 +43,6 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	}
 	
 	isHovering       = false;
-	hover_scale      = 0;
-	hover_scale_to   = 0;
-	hover_alpha      = 0;
 	hover_junction   = noone;
 	
 	bg_spr_add  = 0;
@@ -109,12 +106,15 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var _dy = junction_draw_hei_y * _s / 2;
 		var _dx = _fast? 6  * _s : _dy;
 		
-		hover_scale_to = 1;
 		var dval = PANEL_GRAPH.value_dragging;
 		var junc = dval == noone || dval.connect_type == CONNECT_TYPE.input? outputs[0] : inputs[0];
 		
-		if(junc.isHovering(_s, _dx, _dy, _mx, _my)) return junc;
-		return noone;
+		var _hov = junc.isHovering(_s, _dx, _dy, _mx, _my);
+		inputs[0].hover_in_graph  = _hov;
+		outputs[0].hover_in_graph = _hov;
+		
+		return _hov? junc : noone;
+		
 	}
 	
 	static drawJunctions = function(_x, _y, _mx, _my, _s) {
@@ -126,26 +126,16 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var xx =  x      * _s + _x;
 		var yy = (y + 8) * _s + _y;
 		
-		hover_alpha = 0.5;
-		
 		if(active_draw_index > -1) {
-			hover_alpha		  =  1;
-			hover_scale_to	  =  1;
-			active_draw_index = -1;
-		} 
-		
-		if(hover_scale > 0) {
 			var _r = _s * 16;
 			shader_set(sh_node_circle);
-				shader_set_color("color", COLORS._main_accent, hover_alpha);
-				shader_set_f("radius", .5 * hover_scale);
+				shader_set_color("color", COLORS._main_accent, 1);
+				shader_set_f("radius", .5);
 				draw_sprite_stretched(s_fx_pixel, 0, xx - _r, yy - _r, _r * 2, _r * 2);
 				shader_set_f("radius", 0);
 			shader_reset();
+			active_draw_index = -1;
 		}
-		
-		hover_scale    = lerp_float(hover_scale, hover_scale_to, 3);
-		hover_scale_to = 0;
 		
 		if(renamed && display_name != "" && display_name != "Pin") {
 			var aa = _color_get_alpha(label_color);

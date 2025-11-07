@@ -130,7 +130,7 @@ function graph_export_image(allList, nodeList, settings = {}) {
 			
 		#region draw node
 			for( var i = 0, n = array_length(nodeList); i < n; i++ )
-				nodeList[i].onDrawNodeBehind(gr_x, gr_y, mx, my, scale);
+				if(nodeList[i].drawNodeBehind) nodeList[i].drawNodeBehind(gr_x, gr_y, mx, my, scale);
 			
 			for( var i = 0, n = array_length(nodeList); i < n; i++ )
 				nodeList[i].drawNode(true, gr_x, gr_y, mx, my, scale, param);
