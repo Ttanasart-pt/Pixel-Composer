@@ -2061,11 +2061,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	////- DRAW
 	
-	static setColor = function(_color) {
-		color = color_real(_color);
-		updateColor();
-		return self;
-	}
+	static setColor = function(_color) { color = _color >= 0? color_real(_color) : _color; updateColor(); return self; }
 	
 	static updateColor = function(val = undefined) {
 		INLINE

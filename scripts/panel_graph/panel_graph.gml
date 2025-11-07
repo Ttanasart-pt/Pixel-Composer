@@ -891,19 +891,19 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     #region ++++++++++++ Colors Setters ++++++++++++
     	__junction_hovering = noone;
         
-        function setSelectingNodeColor(color) { 
-            __temp_color = color;
+        function setSelectingNodeColor(c) { 
+            __temp_color = c;
             
             if(node_hover) node_hover.attributes.color = __temp_color;
-            array_foreach(nodes_selecting, function(node) { node.attributes.color = __temp_color; });
+            array_foreach(nodes_selecting, function(node) /*=>*/ { node.attributes.color = __temp_color; });
         }
         
-        function setSelectingJuncColor(color) {
+        function setSelectingJuncColor(c) {
             if(__junction_hovering == noone) return; 
-            __junction_hovering.setColor(color);
+            __junction_hovering.setColor(c);
             
             if(__junction_hovering.value_from != noone)
-            	__junction_hovering.value_from.setColor(color);
+            	__junction_hovering.value_from.setColor(c);
         }
     #endregion
     

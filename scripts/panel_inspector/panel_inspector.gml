@@ -319,14 +319,14 @@ function Panel_Inspector() : PanelContent() constructor {
             var b = __dialog_junction.bypass_junc; b.visible = !b.visible; __dialog_junction.node.refreshNodeDisplay(); }
         
         __dialog_junction = noone;
-        function setSelectingItemColor(color) { 
+        function setSelectingItemColor(c) { 
             if(__dialog_junction == noone) return; 
             
-            __dialog_junction.setColor(color);
+            __dialog_junction.setColor(c);
             
             var _val_to = __dialog_junction.getJunctionTo();
             for( var i = 0, n = array_length(_val_to); i < n; i++ ) 
-                _val_to[i].setColor(color);
+                _val_to[i].setColor(c);
         }
         
         group_menu = [
