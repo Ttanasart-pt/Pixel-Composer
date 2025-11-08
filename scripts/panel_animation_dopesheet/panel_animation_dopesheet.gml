@@ -199,10 +199,26 @@ function Panel_Animation_Dopesheet() {
 	        function separate_axis()         { context_selecting_prop.separateAxis();         }
 	        function combine_axis()          { context_selecting_prop.combineAxis();          }
 	        
-	        function range_reset()     { GLOBAL_FRAME_RANGE_START = undefined; 
-	                                     GLOBAL_FRAME_RANGE_END   = undefined;         }
-	        function range_set_start() { GLOBAL_FRAME_RANGE_START = __selecting_frame; }
-	        function range_set_end()   { GLOBAL_FRAME_RANGE_END   = __selecting_frame; }
+	        function range_reset()     { 
+            	recordAction_variable_change(PROJECT.animator, "frame_range_start", PROJECT.animator.frame_range_start);
+            	recordAction_variable_change(PROJECT.animator, "frame_range_end",   PROJECT.animator.frame_range_end);
+	        	PROJECT.animator.frame_range_start = undefined; 
+            	PROJECT.animator.frame_range_end   = undefined;
+	        }
+	        
+	        function range_set_start() { 
+	        	recordAction_variable_change(PROJECT.animator, "frame_range_start", PROJECT.animator.frame_range_start);
+	        	recordAction_variable_change(PROJECT.animator, "frame_range_end",   PROJECT.animator.frame_range_end);
+	        	PROJECT.animator.frame_range_start = __selecting_frame; 
+	        	PROJECT.animator.frame_range_end   = PROJECT.animator.frame_range_end ?? PROJECT.animator.frames_total;
+	        }
+	        
+	        function range_set_end()   { 
+	        	recordAction_variable_change(PROJECT.animator, "frame_range_start", PROJECT.animator.frame_range_start);
+	        	recordAction_variable_change(PROJECT.animator, "frame_range_end",   PROJECT.animator.frame_range_end);
+	        	PROJECT.animator.frame_range_start = PROJECT.animator.frame_range_start ?? 0; 
+	        	PROJECT.animator.frame_range_end   = __selecting_frame; 
+	        }
 	        
 		    context_selecting_item = noone;
 		    context_selecting_prop = noone;
