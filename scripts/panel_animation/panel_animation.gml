@@ -497,9 +497,9 @@ function Panel_Animation() : PanelContent() constructor {
 	            	
 	            draw_set_alpha(1);
 	            
-	            if(GLOBAL_FRAME_RANGE != noone) {
-	                var _fr_x0 = GLOBAL_FRAME_RANGE[0] * timeline_scale + timeline_shift - 6;
-	                var _fr_x1 = GLOBAL_FRAME_RANGE[1] * timeline_scale + timeline_shift + 2;
+	            if(GLOBAL_FRAME_RANGE_START || GLOBAL_FRAME_RANGE_END) {
+	                var _fr_x0 = GLOBAL_FRAME_RANGE_START * timeline_scale + timeline_shift - 6;
+	                var _fr_x1 = GLOBAL_FRAME_RANGE_END   * timeline_scale + timeline_shift + 2;
 	                var _rng_spr = PROJECT.animator.is_simulating? THEME.ui_selection_range_sim_hori : THEME.ui_selection_range_hori;
 	                var _rng_clr = PROJECT.animator.is_simulating? COLORS.panel_animation_range_sim  : COLORS.panel_animation_range;
 	                

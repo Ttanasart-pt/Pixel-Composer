@@ -199,9 +199,10 @@ function Panel_Animation_Dopesheet() {
 	        function separate_axis()         { context_selecting_prop.separateAxis();         }
 	        function combine_axis()          { context_selecting_prop.combineAxis();          }
 	        
-	        function range_set_start()       { if(GLOBAL_FRAME_RANGE == noone) GLOBAL_FRAME_RANGE = [ __selecting_frame, GLOBAL_TOTAL_FRAMES ]; else GLOBAL_FRAME_RANGE[0] = __selecting_frame; }
-	        function range_set_end()         { if(GLOBAL_FRAME_RANGE == noone) GLOBAL_FRAME_RANGE = [ 0, __selecting_frame ];            else GLOBAL_FRAME_RANGE[1] = __selecting_frame; }
-	        function range_reset()           { GLOBAL_FRAME_RANGE = noone; }
+	        function range_reset()     { GLOBAL_FRAME_RANGE_START = undefined; 
+	                                     GLOBAL_FRAME_RANGE_END   = undefined;         }
+	        function range_set_start() { GLOBAL_FRAME_RANGE_START = __selecting_frame; }
+	        function range_set_end()   { GLOBAL_FRAME_RANGE_END   = __selecting_frame; }
 	        
 		    context_selecting_item = noone;
 		    context_selecting_prop = noone;

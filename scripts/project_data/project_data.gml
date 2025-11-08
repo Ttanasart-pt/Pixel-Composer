@@ -405,8 +405,11 @@ function Project() constructor {
 		var _anim_map = {};
 		_anim_map.frames_total = animator.frames_total;
 		_anim_map.framerate    = animator.framerate;
-		_anim_map.frame_range  = animator.frame_range;
 		_anim_map.playback     = animator.playback;
+		
+		_anim_map.frame_range_start  = animator.frame_range_start;
+		_anim_map.frame_range_end    = animator.frame_range_end;
+		
 		_map.animator		   = _anim_map;
 		
 		_map.metadata    = meta.serialize();
@@ -463,8 +466,17 @@ function Project() constructor {
 			var _anim_map = _map.animator;
 			animator.frames_total	= struct_try_get(_anim_map, "frames_total",   30);
 			animator.framerate		= struct_try_get(_anim_map, "framerate",      30);
-			animator.frame_range	= struct_try_get(_anim_map, "frame_range", noone);
 			animator.playback   	= struct_try_get(_anim_map, "playback",    ANIMATOR_END.loop);
+			
+			if(has(_anim_map, "frame_range")) {
+				_anim_map.frame_range_start  = _anim_map.frame_range == noone? undefined : _anim_map.frame_range[0];
+				_anim_map.frame_range_end    = _anim_map.frame_range == noone? undefined : _anim_map.frame_range[1];
+				
+			} else {
+				_anim_map.frame_range_start  = animator.frame_range_start;
+				_anim_map.frame_range_end    = animator.frame_range_end;
+			}
+			
 		}
 		
 		if(struct_has(_map, "onion_skin"))	    struct_override(onion_skin,      _map.onion_skin);
