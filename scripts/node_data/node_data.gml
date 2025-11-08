@@ -3002,9 +3002,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static enable  = function() { INLINE active = true;  timeline_item.active = true;  }
 	static disable = function() { INLINE active = false; timeline_item.active = false; }
 	
-	static onDestroy = function() {}
-	
-	static destroy = function(_merge = false, record = true) {
+	static onDestroy = undefined
+	static destroy   = function(_merge = false, record = true) {
 		if(!active) return;
 		disable();
 		
@@ -3019,14 +3018,15 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		PANEL_PREVIEW.removeNodePreview(self);
 		
 		var val_from_map = {};
-		for( var i = 0; i < array_length(inputs); i++ ) {
+		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
 			var _i = inputs[i];
-			if(_i.value_from == noone) continue;
+			if(_i.value_from == noone)     continue;
+			if(has(val_from_map, _i.type)) continue;
 			
 			val_from_map[$ _i.type] = _i.value_from;
 		}
 		
-		for(var i = 0; i < array_length(outputs); i++) {
+		for( var i = 0, n = array_length(outputs); i < n; i++ ) {
 			var jun = outputs[i];
 			
 			for(var j = array_length(jun.value_to) - 1; j >= 0; j--) {
@@ -3047,7 +3047,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		for( var i = 0; i < array_length( inputs); i++ )  inputs[i].destroy();
 		for( var i = 0; i < array_length(outputs); i++ ) outputs[i].destroy();
 		
-		onDestroy();
+		if(onDestroy) onDestroy();
 		if(group)  group.refreshNodes();
 		if(record) recordAction(ACTION_TYPE.node_delete, self).setRef(self);
 		
@@ -3077,14 +3077,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return false;
 	}
 	
-	on_drop_file = noone;
+	on_drop_file = undefined;
 	static onDrop = function(dragObj) {
 		if(dragObj.type == "Asset" && is_callable(on_drop_file)) {
 			on_drop_file(dragObj.data.path);
 			return;
 		}
 		
-		for( var i = 0; i < array_length(inputs); i++ ) {
+		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
 			if(dragObj.type == inputs[i].drop_key) {
 				inputs[i].setValue(dragObj.data);
 				return;
