@@ -81,4 +81,11 @@ if(APP_SURF_OVERRIDE) {
 	surface_reset_target();
 }
 
+#region zoom area
+	if(PREFERENCES.video_mode) {
+		zoom_area_draw();
+		zoom_area_draw_gui();
+	}
+#endregion
+
 DROPPER_DROPPING = false;

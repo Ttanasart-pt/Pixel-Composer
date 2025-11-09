@@ -64,7 +64,7 @@ function GlobalVarDrawer() constructor {
 			gpu_set_texfilter(false);
 			
 			if(buttonInstant(noone, _wd_x + wd_w - _wd_h, _yy, _wd_h, _wd_h, _m, _hov, _foc, "", 
-				THEME.icon_delete, 0, [ COLORS._main_icon, COLORS._main_value_negative ]) == 2) del = j;
+				THEME.icon_delete, 0, CARRAY.button_negative) == 2) del = j;
 			
 			var _hg = 0;
 			var _hh = _wd_h + ui(4);

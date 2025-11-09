@@ -1748,7 +1748,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	            
 	            if(_focus && node_hovering.onDoubleClick != -1) {
 	            	if(PREFERENCES.panel_graph_group_require_shift && key_mod_press(SHIFT))
-	            		CURSOR_SPRITE = THEME.cursor_select;
+	            		CURSOR_SPRITE = THEME.group_s;
 	            	
 		        	if(DOUBLE_CLICK && node_hovering.onDoubleClick(self)) {
 		                DOUBLE_CLICK  = false;
@@ -1757,7 +1757,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	            }
 	        }
 	        
-	        if(node_hovering) node_hovering.onDrawHover(gr_x, gr_y, mx, my, graph_s);
+	        if(node_hovering && node_hovering.onDrawHover) node_hovering.onDrawHover(gr_x, gr_y, mx, my, graph_s);
         #endregion
         
         #region ++++++++++++ interaction ++++++++++++

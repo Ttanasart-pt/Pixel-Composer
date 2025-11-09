@@ -16,8 +16,6 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	outParent   			= undefined;
 	output_index			= -1;
 	
-	onSetDisplayName = function() /*=>*/ { attributes.inherit_name = false; }
-	
 	static setRenderStatus = function(result) {
 		if(rendered == result) return;
 		LOG_LINE_IF(global.FLAG.render == 1, $"Set render status for {getInternalName()} : {result}");
@@ -74,6 +72,11 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	} if(!LOADING && !APPENDING) createOutput();
 	
 	////- Render
+	
+	static onSetDisplayName = function() {
+		attributes.inherit_name = false;
+		outParent.name = display_name; 
+	}
 	
 	static update = function() {
 		outParent.name = display_name; 

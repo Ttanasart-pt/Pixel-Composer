@@ -699,7 +699,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		    		var bs = ui(24);
 					var bx = _w  - bs - ui(4);
 					var by = _yy + _hg / 2 - bs / 2;
-					var bc = [ COLORS._main_icon, COLORS._main_value_negative ];
+					var bc = CARRAY.button_negative;
 					
 					if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, "", THEME.minus_16, 0, bc) == 2) 
 						del = i;
@@ -1525,7 +1525,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		    		var bs = ui(24);
 					var bx = _w  - bs - ui(4);
 					var by = _yy + _hg / 2 - bs / 2;
-					var bc = [COLORS._main_icon, COLORS._main_value_negative];
+					var bc = CARRAY.button_negative;
 					if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, "", THEME.minus_16, 0, bc) == 2) 
 						del = i;	
 				}

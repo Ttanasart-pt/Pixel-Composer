@@ -64,7 +64,7 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 	}
 	
 	static setToolRect = function(_tools) { 
-		tool_w = ui(24 + 2) * _tools - ui(2) + ui(12);
+		tool_w = ui(24 + 2) * _tools - ui(2) + ui(8);
 		tool_h = ui(24 + 6);
 		return self; 
 	}

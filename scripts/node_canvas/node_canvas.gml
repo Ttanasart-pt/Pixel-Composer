@@ -211,7 +211,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _bx = _x1 + _aw / 2 - _bs / 2;
 		var _by = _y + _h / 2  - _bs / 2;
 		
-		if(buttonInstant(noone, _bx, _by, _bs, _bs, _m, _hover, _focus, "", THEME.add_16, 0, [ COLORS._main_icon, COLORS._main_value_positive ]) == 2)
+		if(buttonInstant(noone, _bx, _by, _bs, _bs, _m, _hover, _focus, "", THEME.add_16, 0, CARRAY.button_positive) == 2)
 			addFrame(true);
 		
 		if(frame_dragging != noone) {

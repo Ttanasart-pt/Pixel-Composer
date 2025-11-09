@@ -396,21 +396,26 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, h * _s, cc, aa);
 	}
 	
+	__gox = undefined;
+	__goy = undefined;
 	static drawNodeOverlay = function(xx, yy, _mx, _my, _s) {
 		if(_s < 0.75) return;
 		
-		var _bx = (xx + w * _s) - 10;
-		var _by = previewable? (yy + h * _s) - 10 : yy + h / 2 * _s;
+		__gox = (xx + w * _s) - 12;
+		__goy = previewable? (yy + h * _s) - 12 : yy + h / 2 * _s;
+		draw_sprite_ext_add(THEME.animate_node_go, 0, __gox, __goy, 1/THEME_SCALE, 1/THEME_SCALE, 0, c_white, .4);
+	}
+	
+	static onDrawHover = function(xx, yy, _mx, _my, _s) {	
+		if(__gox == undefined || __goy == undefined) return;
+		if(_s < 0.75) return;
 		
-		var _hv = PANEL_GRAPH.pHOVER && PANEL_GRAPH.node_hovering == self && PANEL_GRAPH._value_focus == noone;
-		    _hv = _hv && point_in_circle(_mx, _my, _bx, _by, 8);
-		
-		var _ss = 1 / THEME_SCALE;
-		
-		draw_sprite_ext_add(THEME.animate_node_go, 0, _bx, _by, _ss, _ss, 0, _hv? COLORS._main_accent : c_white, 0.3 + _hv * 0.7);
-		
-		if(_hv && PANEL_GRAPH.pFOCUS && mouse_press(mb_left))
-			panelSetContext(PANEL_GRAPH);
+		var _hv = PANEL_GRAPH.pHOVER && PANEL_GRAPH.node_hovering == self && point_in_circle(_mx, _my, __gox, __goy, 8);
+		if(_hv) {
+			CURSOR_SPRITE = THEME.group_s;
+			if(mouse_press(mb_left, PANEL_GRAPH.pFOCUS))
+				panelSetContext(PANEL_GRAPH);
+		}
 	}
 	
 	static getTool = function() { return toolNode ?? self; } 

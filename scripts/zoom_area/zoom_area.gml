@@ -1,14 +1,26 @@
-globalvar ZOOM_AREA; ZOOM_AREA         = false;
+globalvar ZOOM_AREA; ZOOM_AREA         = 0;
 globalvar ZOOM_AREA_REGION; ZOOM_AREA_REGION  = [0,0,WIN_W,WIN_H];
 globalvar ZOOM_AREA_ZOOM; ZOOM_AREA_ZOOM    = 2;
+globalvar ZOOM_AREA_ZOOM_LV; ZOOM_AREA_ZOOM_LV = 2;
 globalvar ZOOM_AREA_SURFACE; ZOOM_AREA_SURFACE = undefined;
 
 globalvar ZOOM_AREA_MX; ZOOM_AREA_MX = 0;
 globalvar ZOOM_AREA_MY; ZOOM_AREA_MY = 0;
 
 function zoom_area_draw() {
+	if(key_press(ord("Z"), MOD_KEY.shift | MOD_KEY.alt, true)) {
+		ZOOM_AREA = 2;
+		ZOOM_AREA_REGION = [ clamp(mouse_mx - 64, 0, WIN_W), clamp(mouse_my - 64, 0, WIN_H),
+		                     clamp(mouse_mx + 64, 0, WIN_W), clamp(mouse_my + 64, 0, WIN_H) ];
+		                     
+		ZOOM_AREA_ZOOM_LV = clamp(ZOOM_AREA_ZOOM_LV + MOUSE_WHEEL, 2, 16);
+		
+	} else {
+		if(ZOOM_AREA == 2) ZOOM_AREA = 0;
+	}
+	
 	if(key_press(ord("Z"), MOD_KEY.alt, false)) {
-		ZOOM_AREA = false;
+		ZOOM_AREA = 0;
 	}
 	
 	if(key_press(ord("Z"), MOD_KEY.alt, true)) {
@@ -27,12 +39,11 @@ function zoom_area_draw() {
 		
 		if(mouse_check_button_released(mb_left)) {
 			if(_ww > 5 && _hh > 5) {
-				ZOOM_AREA         = true;
+				ZOOM_AREA         = 1;
 				ZOOM_AREA_REGION  = [_x0,_y0,_x1,_y1];
 				
-				
 			} else {
-				ZOOM_AREA = false;
+				ZOOM_AREA = 0;
 			}
 		}
 		
@@ -45,14 +56,14 @@ function zoom_area_draw() {
 function zoom_area_draw_gui() {
 	if(!surface_exists(PRE_APP_SURF)) return;
 	if(ZOOM_AREA) {
-		ZOOM_AREA_ZOOM = lerp_float(ZOOM_AREA_ZOOM, 2, 3);
+		ZOOM_AREA_ZOOM = lerp_float(ZOOM_AREA_ZOOM, ZOOM_AREA_ZOOM_LV, 3);
 		
 	} else {
 		ZOOM_AREA_ZOOM = lerp_float(ZOOM_AREA_ZOOM, 1, 3);
 		if(ZOOM_AREA_ZOOM == 1) return;
 	}
 	
-	var _pp = ZOOM_AREA_ZOOM - 1;
+	var _pp = (ZOOM_AREA_ZOOM - 1) / (ZOOM_AREA_ZOOM_LV - 1);
 	
 	var _px = ZOOM_AREA_REGION[0];
 	var _py = ZOOM_AREA_REGION[1];
@@ -76,7 +87,10 @@ function zoom_area_draw_gui() {
 	
 	surface_set_target(ZOOM_AREA_SURFACE);
 		draw_clear(COLORS.bg);
+		
+		// gpu_set_texfilter(true);
 		draw_surface_ext(PRE_APP_SURF, -_px * ZOOM_AREA_ZOOM, -_py * ZOOM_AREA_ZOOM, ZOOM_AREA_ZOOM, ZOOM_AREA_ZOOM, 0, c_white, 1);
+		// gpu_set_texfilter(false);
 		
 		BLEND_MULTIPLY
 			draw_sprite_stretched(THEME.ui_panel, 0, 0, 0, _ww, _hh);

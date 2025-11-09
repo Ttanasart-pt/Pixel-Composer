@@ -62,7 +62,7 @@ function Panel_Tunnels() : PanelContent() constructor {
 		var arr = search_string == ""? tunnel_ins : search_res;
 		tunnel_hover  = noone;
 		
-		var _delc = [ COLORS._main_icon, COLORS._main_value_negative ];
+		var _delc = CARRAY.button_negative;
 		var _hov  = sc_tunnel.hover;
 		var _foc  = sc_tunnel.active;
 		var _delNode = noone;

@@ -24,6 +24,7 @@
 	} else
 		alpha = lerp_linear(alpha, 0, 0.01);
 	
+	var win_x = WIN_W;
 	var win_y = WIN_H;
 	
 	#region mouse graph
@@ -97,7 +98,7 @@
 	#endregion
 	
 	#region mouse
-		var mxs = WIN_W - ui(16);
+		var mxs = win_x - ui(16);
 		var mys = win_y - ui(16);
 		
 		if(show_doubleclick) {
@@ -131,7 +132,7 @@
 		var ww = string_width(disp_text)  + pd * 3;
 		var hh = string_height(disp_text) + pd * 2;
 		
-		var x1 = WIN_W - ui(32 + sprite_get_width(s_key_display_mouse));
+		var x1 = win_x - ui(32 + sprite_get_width(s_key_display_mouse));
 		var y1 = win_y - ui(8);
 		var x0 = x1 - ww;
 		var y0 = y1 - hh;

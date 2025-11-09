@@ -30,7 +30,13 @@ function Panel_Group_IO_Edit(_node, _type) : PanelContent() constructor {
 		var _ind = 0;
 		var _lst = node.attributes.input_display_list;
 		
-		while(array_exists(_lst, $"{_txt}{_ind}")) _ind++;
+		var _keys = ds_map_create();
+		for( var i = 0, n = array_length(_lst); i < n; i++ ) {
+			if(is_array(_lst[i])) _keys[? array_safe_get(_lst[i], 0)] = 1;
+		}
+		
+		while(ds_map_exists(_keys, $"{_txt}{_ind}")) _ind++;
+		ds_map_destroy(_keys);
 		
 		array_push(node.attributes.input_display_list, [ $"{_txt}{_ind}", false ]);
 		node.sortIO();
@@ -40,22 +46,22 @@ function Panel_Group_IO_Edit(_node, _type) : PanelContent() constructor {
 		draw_clear_alpha(CDEF.main_mdblack, 1);
 		if(node == noone) return 0;
 		
-		var _h    = 0;
-		var hg    = ui(28);
-		var con_w = sp_content.surface_w;
-		var hovr  = 0;
-		var padd  = ui(4);
-		var bs    = ui(24);
-		var _del  = noone;
+		var _h   = 0;
+		var hovr = 0;
+		var hg   = ui(28);
+		var padd = ui(4);
+		var bs   = ui(24);
+		var _del = noone;
 		
+		var con_w = sp_content.surface_w;
 		var hov = sp_content.hover;
 		var foc = sp_content.active;
 		
 		for( var i = 0, n = array_length(display_list); i < n; i++ ) {
 			var disp = display_list[i];
 			
-			var _y0 = _y;
-			var _y1 = _y + hg + padd;
+			var _y0   = _y;
+			var _y1   = _y + hg + padd;
 			
 			if(dragging == noone) {
 				var aa = 0.5;
@@ -66,6 +72,10 @@ function Panel_Group_IO_Edit(_node, _type) : PanelContent() constructor {
 				}
 				
 				draw_sprite_ui(THEME.hamburger_s, 0, hg / 2, _y + hg / 2,,,, COLORS._main_icon_light, aa);
+				
+			} else if(dragging == disp) {
+				draw_sprite_ui(THEME.hamburger_s, 0, hg / 2, _y + hg / 2,,,, COLORS._main_accent, 1);
+				draw_sprite_stretched_ext(THEME.button_hide_fill, 3, 0, _y0, con_w, hg, COLORS._main_icon, 1);
 			}
 			
 			if((i == n - 1 && _m[1] > _y0) || (_m[1] > _y0 && _m[1] <= _y1) || (i == 0 && _m[1] < _y1))
@@ -73,8 +83,11 @@ function Panel_Group_IO_Edit(_node, _type) : PanelContent() constructor {
 			
 			if(is_array(disp)) {
 				var ed_x = hg + ui(4);
-				if(hov && point_in_rectangle(_m[0], _m[1], ed_x, _y, con_w - bs - ui(8), _y + hg)) {
-					draw_sprite_stretched_ext(THEME.button_def, 1, ed_x, _y, con_w - ed_x, hg, COLORS._main_icon_light, 1);
+				var secw = con_w - ui(20);
+				var seca = dragging == noone || dragging == disp? 1 : .5;
+				
+				if(hov && point_in_rectangle(_m[0], _m[1], ed_x, _y, secw - bs - ui(8), _y + hg)) {
+					draw_sprite_stretched_ext(THEME.button_def, 1, ed_x, _y, secw - ed_x, hg, COLORS._main_icon_light, seca);
 					
 					if(sep_editing == -1 && mouse_press(mb_left, foc)) {
 						sep_editing = i;
@@ -82,19 +95,22 @@ function Panel_Group_IO_Edit(_node, _type) : PanelContent() constructor {
 						tb_edit.activate();
 					}
 				} else
-					draw_sprite_stretched_ext(THEME.button_def, 0, ed_x, _y, con_w - ed_x, hg, COLORS._main_icon_light, 1);
+					draw_sprite_stretched_ext(THEME.button_def, 0, ed_x, _y, secw - ed_x, hg, COLORS._main_icon_light, seca);
 				
 				if(sep_editing == i) {
 					WIDGET_CURRENT = tb_edit;
 					tb_edit.setFocusHover(foc, hov);
-					tb_edit.draw(ed_x, _y, con_w - ed_x, hg, disp[0], _m);
+					tb_edit.draw(ed_x, _y, secw - ed_x, hg, disp[0], _m);
 					
 				} else {
-					draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
+					draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text, seca);
 					draw_text_add(ed_x + ui(8), _y + hg / 2 - 1, disp[0]);
+					draw_set_alpha(1);
 					
-					if(buttonInstant(noone, con_w - ui(4) - bs, _y + hg / 2 - bs / 2 , bs, bs, _m, hov, foc, "", 
-						THEME.icon_delete, 0, [ COLORS._main_icon, COLORS._main_value_negative ]) == 2)
+					var _dx = secw - ui(4) - bs;
+					var _dy = _y + hg / 2 - bs / 2;
+					
+					if(buttonInstant(noone, _dx, _dy, bs, bs, _m, hov, foc, "", THEME.icon_delete, 0, CARRAY.button_negative) == 2)
 						_del = i;
 				}
 				
@@ -102,11 +118,6 @@ function Panel_Group_IO_Edit(_node, _type) : PanelContent() constructor {
 				var ind = junction_list[disp];
 				draw_set_text(f_p2, fa_left, fa_center, ind.color_display);
 				draw_text_add(hg + ui(8), _y + hg / 2 - 1, ind.name);
-			}
-			
-			if(dragging == disp) {
-				draw_sprite_ui(THEME.hamburger_s, 0, hg / 2, _y + hg / 2,,,, COLORS._main_accent, 1);
-				draw_sprite_stretched_ext(THEME.button_hide_fill, 3, 0, _y0, con_w, hg, COLORS._main_icon, 1);
 			}
 			
 			_y += hg + padd;

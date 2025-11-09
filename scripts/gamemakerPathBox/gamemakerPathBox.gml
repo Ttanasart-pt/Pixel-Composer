@@ -43,7 +43,7 @@ function gamemakerPathBox(project) : widget() constructor {
     		draw_set_text(f_p2, fa_center, fa_center, COLORS._main_text);
     		draw_text_add(_x + _w / 2, _y + _h / 2, _gm.projectName);
     		
-    		if(buttonInstant(THEME.button_def, _x + _w - ui(32), _y, ui(32), _h, _m, hover, active, "Disconnect", THEME.cross_12, 0, [ COLORS._main_icon, COLORS._main_value_negative ]) == 2) {
+    		if(buttonInstant(THEME.button_def, _x + _w - ui(32), _y, ui(32), _h, _m, hover, active, "Disconnect", THEME.cross_12, 0, CARRAY.button_negative) == 2) {
 				project.attributes.bind_gamemaker_path = "";
 				project.bind_gamemaker = noone;
     		}

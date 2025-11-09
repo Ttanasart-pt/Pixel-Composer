@@ -416,7 +416,7 @@ function Panel_MenuItems_Editor(_menuId) : PanelContent() constructor {
 		tx += th + ui(4); tw -= th + ui(4);
 		
 		var bx = tx + tw - th;
-		var bc = [COLORS._main_icon, COLORS._main_value_negative];
+		var bc = CARRAY.button_negative;
 		if(buttonInstant(THEME.button_hide, bx, ty, th, th, [mx,my], pHOVER, pFOCUS, "Reset", THEME.refresh_16, 0, bc) == 2) 
 			resetDefault()
 		tw -= th + ui(4);

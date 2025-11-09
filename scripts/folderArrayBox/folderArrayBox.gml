@@ -88,7 +88,7 @@ function folderArrayBox(_arr, _onApply) : widget() constructor {
 			var _bs = ui(24);
 			var _bx = _x + _w - _bs;
 			var _by = _ty + _h / 2 - _bs / 2;
-			var _b  = buttonInstant(noone, _bx, _by, _bs, _bs, _m, hover, active, "", THEME.minus_16, 0, [COLORS._main_icon, COLORS._main_value_negative]);
+			var _b  = buttonInstant(noone, _bx, _by, _bs, _bs, _m, hover, active, "", THEME.minus_16, 0, CARRAY.button_negative);
 			if(_b == 2) _del = i;
 		}
 		

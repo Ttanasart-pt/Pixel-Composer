@@ -139,8 +139,6 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	curr_disp = -1;
 	range = 0;
 	
-	onSetDisplayName = function() /*=>*/ { attributes.inherit_name = false; }
-	
 	outputs[0].onSetTo = function(juncTo) {
 		if(attributes.inherit_name && !LOADING && !APPENDING)
 			setDisplayName(juncTo.name);
@@ -482,12 +480,17 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		}
 	}
 	
+	static onSetDisplayName = function() {
+		attributes.inherit_name = false;
+		inParent.name = display_name;
+		if(display_name != "") group.inputMap[$ string_replace_all(display_name, " ", "_")] = inParent;
+	}
+	
 	static update = function(frame = CURRENT_FRAME) {
 		if(!is(inParent, NodeValue)) return;
-		if(display_name != "" && inParent.name != display_name) {
-			inParent.name = display_name;
-			group.inputMap[$ string_replace_all(display_name, " ", "_")] = inParent;
-		}
+		
+		inParent.name = display_name;
+		if(display_name != "") group.inputMap[$ string_replace_all(display_name, " ", "_")] = inParent;
 		
 		outputs[0].setValue(inParent.getValue());
 		

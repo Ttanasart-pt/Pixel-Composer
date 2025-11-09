@@ -106,7 +106,7 @@ event_inherited();
 					draw_text_add(ed_x + ui(8), _y + hg / 2 - 1, disp[0]);
 					
 					if(buttonInstant(noone, con_w - ui(4) - bs, _y + hg / 2 - bs / 2 , bs, bs, _m, sHOVER, sFOCUS, "", 
-						THEME.icon_delete, 0, [ COLORS._main_icon, COLORS._main_value_negative ]) == 2)
+						THEME.icon_delete, 0, CARRAY.button_negative) == 2)
 						_del = i;
 				}
 				

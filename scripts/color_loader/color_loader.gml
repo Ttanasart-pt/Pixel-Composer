@@ -5,6 +5,7 @@
 	globalvar COLORS_KEYS; COLORS_KEYS     = {};
 	globalvar COLORS_DEF; COLORS_DEF      = {};
 	globalvar COLORS_OVERRIDE; COLORS_OVERRIDE = {};
+	globalvar CARRAY; CARRAY          = {};
 	
 	globalvar THEME_VALUE; THEME_VALUE     = new ThemeValue();
 	globalvar THEME_SCALE; THEME_SCALE     = 1;
@@ -52,6 +53,9 @@ function loadColor(theme = "default") {
 	
 	_loadColor(theme);
 	_loadThemeParameter(theme);
+	
+	CARRAY.button_positive = [COLORS._main_icon, COLORS._main_value_positive];
+	CARRAY.button_negative = [COLORS._main_icon, COLORS._main_value_negative];
 }
 
 function _loadColorStringParse(str) {

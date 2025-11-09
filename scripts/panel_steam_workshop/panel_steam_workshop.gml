@@ -1919,7 +1919,7 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 				var _edx = _x0 + _lw + ui(8);
 				var _edy = _yy;
 				
-				var cc = [ COLORS._main_icon, COLORS._main_value_negative ];
+				var cc = CARRAY.button_negative;
 				if(buttonInstant(noone, _edx, _edy, _lh, _lh, _m, _hover, _focus, __txt("Cancel"), THEME.cross, 0, cc) == 2) {
 					item_title_editing = false;
 					tb_item_title.reset();

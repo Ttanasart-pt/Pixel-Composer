@@ -65,7 +65,7 @@ function Node_Surface_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	        var _bx = _w - ui(24);
 	        var _by = _yy + _hg / 2 - _bs / 2;
 	        
-	        if(buttonInstant(noone, _bx, _by, _bs, _bs, _m, _hover, _focus, "", THEME.minus, 0, [ COLORS._main_icon, COLORS._main_value_negative ]) == 2) 
+	        if(buttonInstant(noone, _bx, _by, _bs, _bs, _m, _hover, _focus, "", THEME.minus, 0, CARRAY.button_negative) == 2) 
 	            _del = i;
 	        
     		_yy += _hg + ui(10);

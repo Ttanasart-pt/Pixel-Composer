@@ -76,7 +76,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		name             = "";
 		display_name     = "";
 		internalName     = "";
-		onSetDisplayName = noone;
 		renamed          = false;
 		tooltip          = "";
 		
@@ -367,6 +366,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		project.nodeNameMap[? internalName] = self;
 	}
 	
+	static onSetDisplayName  = noone;
 	static setDisplayName    = function(_name, _rec = true) {
 		if(NOT_LOAD && _rec && display_name != _name) 
 			recordAction(ACTION_TYPE.custom, function(data) /*=>*/ { 
@@ -381,7 +381,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		refreshNodeMap();
 		PANEL_GRAPH.refreshDraw(1);
 		
-		if(onSetDisplayName != noone) onSetDisplayName();
+		if(onSetDisplayName) onSetDisplayName();
 		return self;
 	}
 	
@@ -1695,7 +1695,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, h * _s, cc, aa); 
 	}
 	
-	static drawNodeOverlay = function(xx, yy, _mx, _my, _s) {}
+	static drawNodeOverlay = undefined;
 	
 	__draw_bbox = BBOX();
 	static drawGetBbox = function(xx, yy, _s, label = true) {
@@ -2296,15 +2296,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			draw_droppable = false;
 		}
 		
-		drawNodeOverlay(xx, yy, _mx, _my, _s);
+		if(drawNodeOverlay) drawNodeOverlay(xx, yy, _mx, _my, _s);
 	}
 	
 	static drawNodeBehind = undefined
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover = false, _focus = false) {}
 	
-	static onDrawHover = function(_x, _y, _mx, _my, _s) {}
-	
+	static onDrawHover = undefined;
 	static drawPreviewBackground = undefined;
 	
 	static drawBadge = function(_x, _y, _s) {
@@ -2318,7 +2317,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(_full) {
 			var xx = x * _s + _x + w * _s;
 			var yy = y * _s + _y;
-			var xw = 28 * _scale;
+			var xw = 22 * _scale;
 			
 			if(bPreview) { draw_sprite_ui_uniform(THEME.node_state, bool(is_3D) * 3, xx, yy); xx -= xw; }
 			if(bInspect) { draw_sprite_ui_uniform(THEME.node_state, 1,               xx, yy); xx -= xw; }

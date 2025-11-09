@@ -153,7 +153,7 @@ if(winMan_isMinimized()) exit;
 		var ox = sprite_get_xoffset(CURSOR_SPRITE);
 		var oy = sprite_get_yoffset(CURSOR_SPRITE);
 		
-		draw_sprite_ui(CURSOR_SPRITE, 0, mouse_x + ox + ui(4), mouse_y + oy + ui(4));
+		draw_sprite_ui(CURSOR_SPRITE, 0, mouse_x + ui(ox + 4), mouse_y + ui(oy + 4));
 		CURSOR_SPRITE = noone;
 	}
 	
@@ -168,14 +168,7 @@ if(winMan_isMinimized()) exit;
 	panelDisplayDraw();
 	dialogGUIDraw();
 	
-	if(PREFERENCES.video_mode) draw_sprite(THEME.cursor_video, 0, mouse_mx, mouse_my);
-#endregion
-
-#region zoom area
-	if(PREFERENCES.video_mode) {
-		zoom_area_draw();
-		zoom_area_draw_gui();
-	}
+	if(PREFERENCES.video_mode && !ZOOM_AREA) draw_sprite(THEME.cursor_video, 0, mouse_mx, mouse_my);
 #endregion
 
 #region debug
