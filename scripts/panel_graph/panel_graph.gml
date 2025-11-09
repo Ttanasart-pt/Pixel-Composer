@@ -2102,7 +2102,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        	draw_clear_alpha(bg_color, 0.);
 	        	
 	        	array_foreach(_node_draw, function(_n) /*=>*/ { if(_n.drawNodeBehind) _n.drawNodeBehind(__gr_x, __gr_y, __mx, __my, __gr_s); });
-		        array_foreach(value_draggings, function(_v) /*=>*/ { _v.graph_selecting = true; });
+	        	if(array_length(value_draggings) > 1) array_foreach(value_draggings, function(_v) /*=>*/ { _v.graph_selecting = true; });
 		        
 		        array_foreach(_node_draw, function(_n) /*=>*/ {
 		            try { 
