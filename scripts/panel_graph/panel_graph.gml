@@ -2276,6 +2276,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                         for( var i = 0, n = array_length(value_draggings); i < n; i++ ) {
                         	if(_indx < 0 || _indx > array_length(_node.inputs)) break;
                         	_node.inputs[_indx].setFrom(value_draggings[i]);
+                        	_indx++;
                         }
                     }
                 }
