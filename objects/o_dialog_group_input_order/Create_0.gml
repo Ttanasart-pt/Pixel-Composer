@@ -13,7 +13,7 @@ event_inherited();
 	drag_shift  = 0;
 	
 	sep_editing = -1;
-	tb_edit = new textBox(TEXTBOX_INPUT.text, function(str) /*=>*/ {
+	tb_edit     = textBox_Text(function(str) /*=>*/ {
 		if(sep_editing == -1) return;
 		
 		display_list[sep_editing][0] = str;
@@ -28,18 +28,31 @@ event_inherited();
 	display_list  = [];
 	type          = 1;
 	junction_list = noone;
-	
+#endregion
+
+#region function
 	function setNode(_node, _type) {
 		node = _node;
 		type = _type;
 		display_list  = type == CONNECT_TYPE.input? node.attributes.input_display_list : node.attributes.output_display_list;
 		junction_list = type == CONNECT_TYPE.input? node.inputs : node.outputs;
 	}
+	
+	function addSection() {
+		var _txt = "Separator";
+		var _ind = 0;
+		var _lst = node.attributes.input_display_list;
+		
+		while(array_exists(_lst, $"{_txt}{_ind}")) _ind++;
+		
+		array_push(node.attributes.input_display_list, [ $"{_txt}{_ind}", false ]);
+		node.sortIO();
+	}
 #endregion
 
 #region content
 	sc_group = new scrollPane(dialog_w - ui(padding * 2), dialog_h - ui(title_height + padding), function(_y, _m) {
-		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
+		draw_clear(COLORS.panel_bg_clear_inner);
 		if(node == noone) return 0;
 		
 		var _h    = 0;

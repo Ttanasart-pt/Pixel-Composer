@@ -67,8 +67,11 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		toggleAttribute("pure_function"); checkPureFunction(); }) ]);
 		
 	array_push(attributeEditors, ["Lock Input",          function() /*=>*/ {return attributes.lock_input}, new checkBox(function() /*=>*/ {return toggleAttribute("lock_input")})    ]);
-	array_push(attributeEditors, ["Edit Input Display",  function() /*=>*/ {return 0}, button(function() /*=>*/ { dialogCall(o_dialog_group_input_order).setNode(self, CONNECT_TYPE.input);  }) ]);
-	array_push(attributeEditors, ["Edit Output Display", function() /*=>*/ {return 0}, button(function() /*=>*/ { dialogCall(o_dialog_group_input_order).setNode(self, CONNECT_TYPE.output); }) ]);
+	array_push(attributeEditors, ["Edit Input Display",  function() /*=>*/ {return 0}, button(function() /*=>*/ {return editInput()})  ]);
+	array_push(attributeEditors, ["Edit Output Display", function() /*=>*/ {return 0}, button(function() /*=>*/ {return editOutput()}) ]);
+	
+	function editInput()  { var _self = self; dialogPanelCall(new Panel_Group_IO_Edit(_self, CONNECT_TYPE.input));  }
+	function editOutput() { var _self = self; dialogPanelCall(new Panel_Group_IO_Edit(_self, CONNECT_TYPE.output)); }
 	
 	////- INSPECTOR
 	

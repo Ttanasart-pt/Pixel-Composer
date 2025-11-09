@@ -25,9 +25,7 @@ if !ready exit;
 	
 	if(type == CONNECT_TYPE.input) { 
 		var _txt = __txtx("dialog_group_order_add", "Add separator");
-		if(buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(32), mouse_ui, sHOVER, sFOCUS, _txt, THEME.add_16, 1, COLORS._main_value_positive) == 2) {
-			array_push(node.attributes.input_display_list, [ "Separator", false ]);
-			node.sortIO();
-		}
+		if(buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(32), mouse_ui, sHOVER, sFOCUS, _txt, THEME.add_16, 1, COLORS._main_value_positive) == 2)
+			addSection();
 	}
 #endregion

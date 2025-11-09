@@ -1615,6 +1615,7 @@
     {"name":"panel_graph_export_image","order":5,"path":"scripts/panel_graph_export_image/panel_graph_export_image.yy",},
     {"name":"panel_graph_grid_settings","order":8,"path":"scripts/panel_graph_grid_settings/panel_graph_grid_settings.yy",},
     {"name":"panel_graph_view_settings","order":9,"path":"scripts/panel_graph_view_settings/panel_graph_view_settings.yy",},
+    {"name":"panel_group_io_edit","order":7,"path":"scripts/panel_group_io_edit/panel_group_io_edit.yy",},
     {"name":"panel_history","order":10,"path":"scripts/panel_history/panel_history.yy",},
     {"name":"panel_hlsl_libraries","order":3,"path":"scripts/panel_hlsl_libraries/panel_hlsl_libraries.yy",},
     {"name":"panel_image_array_editor","order":1,"path":"scripts/panel_image_array_editor/panel_image_array_editor.yy",},

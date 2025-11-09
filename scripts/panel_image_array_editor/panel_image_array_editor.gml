@@ -42,9 +42,8 @@ function Panel_Image_Array_Editor(_junction) : PanelContent() constructor {
 	}
 	
 	sp_content = new scrollPane(w - padding * 2, h - padding * 2, function(_y, _m) {
-		if(!target) return 0;
-		
 		draw_clear_alpha(CDEF.main_mdblack, 1);
+		if(!target) return 0;
 		
 		var _h = ui(8);
 		var itw, ith, its, pad, padT, padS;

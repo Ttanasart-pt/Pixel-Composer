@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"panel_group_io_edit",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"panel_group_io_edit",
+  "parent":{
+    "name":"inspectors",
+    "path":"folders/panels/inspectors.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
