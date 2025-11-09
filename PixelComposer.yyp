@@ -3290,6 +3290,7 @@
     {"id":{"name":"widget","path":"scripts/widget/widget.yy",},},
     {"id":{"name":"window_functions","path":"scripts/window_functions/window_functions.yy",},},
     {"id":{"name":"windowManager","path":"scripts/windowManager/windowManager.yy",},},
+    {"id":{"name":"zoom_area","path":"scripts/zoom_area/zoom_area.yy",},},
     {"id":{"name":"sh_2d_extrude_apply","path":"shaders/sh_2d_extrude_apply/sh_2d_extrude_apply.yy",},},
     {"id":{"name":"sh_2d_extrude","path":"shaders/sh_2d_extrude/sh_2d_extrude.yy",},},
     {"id":{"name":"sh_2d_light_apply","path":"shaders/sh_2d_light_apply/sh_2d_light_apply.yy",},},

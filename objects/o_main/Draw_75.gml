@@ -167,6 +167,15 @@ if(winMan_isMinimized()) exit;
 		
 	panelDisplayDraw();
 	dialogGUIDraw();
+	
+	if(PREFERENCES.video_mode) draw_sprite(THEME.cursor_video, 0, mouse_mx, mouse_my);
+#endregion
+
+#region zoom area
+	if(PREFERENCES.video_mode) {
+		zoom_area_draw();
+		zoom_area_draw_gui();
+	}
 #endregion
 
 #region debug

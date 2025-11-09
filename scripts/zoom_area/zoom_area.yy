@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"zoom_area",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"zoom_area",
+  "parent":{
+    "name":"debug",
+    "path":"folders/functions/debug.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

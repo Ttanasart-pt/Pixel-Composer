@@ -3,6 +3,7 @@ if(winMan_isMinimized()) exit;
 
 _MOUSE_BLOCK = MOUSE_BLOCK;
 if(MOUSE_BLOCK) MOUSE_BLOCK--;
+if(PREFERENCES.video_mode && key_press(ord("Z"), MOD_KEY.alt, true)) MOUSE_BLOCK = 1;
 
 if(APP_SURF_OVERRIDE || DROPPER_DROPPING) {
 	APP_SURF      = surface_verify(APP_SURF,      WIN_W, WIN_H);

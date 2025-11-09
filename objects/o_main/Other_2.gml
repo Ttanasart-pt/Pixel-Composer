@@ -9,7 +9,6 @@
 	globalvar DIRECTORY; DIRECTORY         = "";
 	globalvar FS_PATH; FS_PATH           = "";
 	globalvar PRESIST_PREF; PRESIST_PREF      = { path: "" };
-	globalvar TEST_DATA; TEST_DATA         = {};
 	
 	if(OS == os_linux) {
 		APP_DIRECTORY = working_directory;
@@ -88,13 +87,12 @@
 		
 		APP_LOCATION = working_directory;
 		
-		if(RUN_IDE) {
+		var _testdir = $"{DIRECTORY}test";
+		directory_verify(_testdir);
+		
+		// if(RUN_IDE) {
 			// APP_LOCATION = "D:/Project/MakhamDev/LTS-PixelComposer/PixelComposer/datafiles/";
-			var _testdir = $"{DIRECTORY}test";
-			directory_verify(_testdir);
-			
-			TEST_DATA = json_load_struct($"{_testdir}/test_data.json");
-		}
+		// }
 	}
 	
 	printDebug($"===================== WORKING DIRECTORIES =====================\n");
@@ -180,7 +178,9 @@
 	print($"working: {working_directory}");
 	print($"project: {program_directory}");
 	
-	if(RUN_IDE) {
-		__test_update_theme();
+	if(RUN_IDE) __test_update_theme();
+	
+	if(PREFERENCES.video_mode) {
+		APP_SURF_OVERRIDE = true;
 	}
 #endregion

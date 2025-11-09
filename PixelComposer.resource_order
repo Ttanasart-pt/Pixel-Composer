@@ -1760,6 +1760,7 @@
     {"name":"wav_file_object","order":2,"path":"scripts/wav_file_object/wav_file_object.yy",},
     {"name":"widget","order":11,"path":"scripts/widget/widget.yy",},
     {"name":"window_functions","order":2,"path":"scripts/window_functions/window_functions.yy",},
+    {"name":"zoom_area","order":3,"path":"scripts/zoom_area/zoom_area.yy",},
     {"name":"sh_2d_extrude_apply","order":1,"path":"shaders/sh_2d_extrude_apply/sh_2d_extrude_apply.yy",},
     {"name":"sh_2d_light_apply","order":1,"path":"shaders/sh_2d_light_apply/sh_2d_light_apply.yy",},
     {"name":"sh_3d_depth","order":6,"path":"shaders/sh_3d_depth/sh_3d_depth.yy",},

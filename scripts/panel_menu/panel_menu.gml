@@ -898,7 +898,7 @@ function Panel_Menu() : PanelContent() constructor {
             var txt = PROJECT.path == ""? __txt("Untitled") : filename_name_only(PROJECT.path);
             if(PROJECT.modified) txt += "*";
             
-            if(TEST_DATA[$ "video_title"] != undefined) txt = TEST_DATA[$ "video_title"];
+            if(PREFERENCES.video_title != "") txt = PREFERENCES.video_title;
             
             var tx0, tx1, tcx;
             var ty0, ty1;
@@ -1062,7 +1062,7 @@ function Panel_Menu() : PanelContent() constructor {
                 }
             }
             
-            if(TEST_DATA[$ "video"]) {
+            if(PREFERENCES.video_mode) {
                 _cx = tcx - _tw / 2 - ui(16);
                 _cy = (ty0 + ty1) / 2;
                 

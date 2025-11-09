@@ -1179,7 +1179,7 @@ function PanelContent() constructor {
 		my = mouse_my - y;
 		stepBegin();
 		
-		if(TEST_DATA[$ "video"]) {
+		if(PREFERENCES.video_mode) {
 			if(pFOCUS && key_press(ord("P"), MOD_KEY.shift, true))
 				FOCUSING_PANEL = self;
 		}

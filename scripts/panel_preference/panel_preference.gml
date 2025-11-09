@@ -222,10 +222,25 @@ function Panel_Preference() : PanelContent() constructor {
     		));
     		
     		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
-    			__txtx("pref_enable_test_mode", "Enable developer mode*"),
+    			__txtx("pref_enable_test_mode", "Developer mode*"),
     			"test_mode",
     			new checkBox(function() /*=>*/ {return prefToggle("test_mode", false, true)})
     		));
+    		
+		if(TESTING) {
+    		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
+    			__txt("Video mode"),
+    			"video_mode",
+    			new checkBox(function() /*=>*/ {return prefToggle("video_mode", false, true)})
+    		));
+    		
+    		ds_list_add(pref_global, new __Panel_Linear_Setting_Item_Preference(
+    			__txt("Video title"),
+    			"video_title",
+    			textBox_Text(function(txt) /*=>*/ {return prefSet("video_title", txt)})
+    		));
+    		
+		}
     	
     	ds_list_add(pref_global, __txt("Paths"));
     		
@@ -476,7 +491,7 @@ function Panel_Preference() : PanelContent() constructor {
     		
     		if(TESTING) {
 	    		ds_list_add(pref_appr, new __Panel_Linear_Setting_Item_Preference(
-	    			__txtx("pref_ui_window_shadoe", "Shadow"),
+	    			__txtx("pref_ui_window_shadow", "Shadow"),
 	    			"window_shadow",
 	    			new checkBox(function() /*=>*/ {return prefToggle("window_shadow", true)})
 	    		));

@@ -733,7 +733,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 } else
                     draw_sprite_stretched_ext(THEME.box_r5_clr, 0, lbx, yy, con_w - lbx, lbh, COLORS.panel_inspector_group_bg, 1);
             
-                _colMap[$ jun[0]] = coll;
+                _colMap[$ _key] = coll;
                 
                 if(righ != noone) {
                     var _bx = lbx + lbw;
