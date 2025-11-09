@@ -230,7 +230,6 @@ function SAVE_COLLECTIONS(_list, _path, save_surface = true, metadata = noone, c
 }
 
 function SAVE_NODE(_arr, _node, dx = 0, dy = 0, scale = false, context = PANEL_GRAPH.getCurrentContext()) {
-	
 	if(is(_node, Node_Collection)) {
 		for( var i = 0, n = array_length(_node.nodes); i < n; i++ )
 			SAVE_NODE(_arr, _node.nodes[i], dx, dy, scale, context);
@@ -250,11 +249,11 @@ function SAVE_NODE(_arr, _node, dx = 0, dy = 0, scale = false, context = PANEL_G
 
 function SAVE_COLLECTION(_node, _path, save_surface = true, metadata = noone, context = PANEL_GRAPH.getCurrentContext()) {
 	if(save_surface) {
-		var preview_surface = PANEL_PREVIEW.getNodePreviewSurface();
-		if(surface_exists(preview_surface)) {
-			var icon_path = string_replace(_path, filename_ext(_path), "") + ".png";
-			surface_save_safe(preview_surface, icon_path);
-		}
+		var icon_path = string_replace(_path, filename_ext(_path), "") + ".png";
+		var prev_surf = PANEL_PREVIEW.getNodePreviewSurface();
+		
+		if(!surface_exists(prev_surf)) prev_surf = _node.getGraphPreviewSurface();
+		if( surface_exists(prev_surf)) surface_save_safe(prev_surf, icon_path);
 	}
 	
 	var _content = {};

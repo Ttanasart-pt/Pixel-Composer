@@ -887,19 +887,17 @@ function Panel_Collection() : PanelContent() constructor {
 		}
 		
 		if(pageS == "Collections" && !DEMO) {
-			if(context != root) {
-				var txt = __txtx("panel_collection_add_node", "Add selecting node as collection");
+			if(context != root && PANEL_INSPECTOR.getInspecting() != noone) {
+				var txt = __txtx("panel_collection_add_node", "Add inspecting node as a collection");
 				if(buttonInstant(bb, bx, by, bs, bs, m, hov, foc, txt, THEME.add_20, 0, COLORS._main_value_positive, 1, .9) == 2) {
-					if(PANEL_INSPECTOR.getInspecting() != noone) {
-						data_path = context.path;
-						var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(8));
-						if(PANEL_INSPECTOR.getInspecting()) {
-							dia.meta.name = PANEL_INSPECTOR.getInspecting().display_name;
-							dia.node	  = PANEL_INSPECTOR.getInspecting();
-							dia.data_path = data_path;
-						}
-					}
+					data_path = context.path;
+					
+					var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(8));
+					dia.meta.name = PANEL_INSPECTOR.getInspecting().display_name;
+					dia.node	  = PANEL_INSPECTOR.getInspecting();
+					dia.data_path = data_path;
 				}
+				
 			} else
 				draw_sprite_ui_uniform(THEME.add, 0, bx + bs / 2, by + bs / 2, 1, COLORS._main_icon_dark);	
 			bx -= bs + ui(4); if(bx < rootx) return;
