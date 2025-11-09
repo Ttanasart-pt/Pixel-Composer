@@ -1760,9 +1760,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(icon) {
 			var _icx = tx + 6 * _s;
 			var _ics = _s / THEME_SCALE * .8;
+			BLEND_ALPHA_MULP
 			gpu_set_texfilter(true);
 			draw_sprite_ext(icon, 0, _icx, ty, _ics, _ics, 0, icon_blend ?? getColor(), .75);
 			if(sprite_get_number(icon) > 1) draw_sprite_ext(icon, 1, _icx, ty, _ics, _ics, 0, c_white, .8);
+			BLEND_NORMAL
 			gpu_set_texfilter(false);
 			
 			tx += 16 * _s;
@@ -2234,8 +2236,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static drawNode = function(_draw, _x, _y, _mx, _my, _s, _display_parameter = noone, _panel = noone) { 
 		if(_display_parameter != noone) display_parameter = _display_parameter;
 		
-		var xx = x * _s + _x;
-		var yy = y * _s + _y;
+		var xx = x * _s + _x + 1;
+		var yy = y * _s + _y + 1;
 		
 		preview_mx = _mx;
 		preview_my = _my;

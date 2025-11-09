@@ -243,7 +243,9 @@
             ];
         }
 
-        array_push(_item, [ [ THEME.timeline_color, 2 ], function() /*=>*/ { colorSelectorCall(PANEL_GRAPH.node_hover? PANEL_GRAPH.node_hover.attributes.color : c_white, PANEL_GRAPH.setSelectingNodeColor); } ]);
+        array_push(_item, [ [ THEME.timeline_color, 2 ], function() /*=>*/ { 
+        	colorSelectorCall(PANEL_GRAPH.node_hover? PANEL_GRAPH.node_hover.attributes.color : c_white, PANEL_GRAPH.setSelectingNodeColor); 
+        }]);
         
         MENU_ITEMS.graph_group_node_color = menuItemGroup(__txt("Node Color"), _item, ["Graph", "Set Node Color"]).setSpacing(ui(24));
         registerFunction("Graph", "Set Node Color", "",  MOD_KEY.none, function() /*=>*/ { menuCall("", [ MENU_ITEMS.graph_group_node_color ]); });
@@ -260,7 +262,9 @@
             ];
         }
 
-        array_push(_item, [ [ THEME.timeline_color, 2 ], function() /*=>*/ { colorSelectorCall(PANEL_GRAPH.__junction_hovering? PANEL_GRAPH.__junction_hovering.color : c_white, PANEL_GRAPH.setSelectingJuncColor); } ]);
+        array_push(_item, [ [ THEME.timeline_color, 2 ], function() /*=>*/ { 
+        	colorSelectorCall(PANEL_GRAPH.__junction_hovering? PANEL_GRAPH.__junction_hovering.color : c_white, PANEL_GRAPH.setSelectingJuncColor); 
+        }]);
         
         MENU_ITEMS.graph_group_junction_color = menuItemGroup(__txt("Connection Color"), _item, ["Graph", "Set Junction Color"]).setSpacing(ui(24));
         registerFunction("Graph", "Set Junction Color", "",  MOD_KEY.none, function() /*=>*/ { menuCall("", [ MENU_ITEMS.graph_group_junction_color ]); });
@@ -896,6 +900,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             
             if(node_hover) node_hover.attributes.color = __temp_color;
             array_foreach(nodes_selecting, function(node) /*=>*/ { node.attributes.color = __temp_color; });
+            
+            refreshDraw(1);
         }
         
         function setSelectingJuncColor(c) {
@@ -904,6 +910,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             
             if(__junction_hovering.value_from != noone)
             	__junction_hovering.value_from.setColor(c);
+            	
+            refreshDraw(1);
         }
     #endregion
     
