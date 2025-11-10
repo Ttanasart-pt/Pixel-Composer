@@ -39,7 +39,7 @@
         registerFunction(i, "Toggle Bypass",         "",  MOD_KEY.none, panel_inspector_junction_bypass_toggle ).setMenu("inspector_bypass_toggle")
         registerFunction(i, "Toggle Visible",        "",  MOD_KEY.none, panel_inspector_visible_bypass_toggle  ).setMenu("inspector_visible_toggle")
         
-        registerFunction("Property", "Extract To...",         "",  MOD_KEY.none, function(_dat) /*=>*/ {
+        registerFunction("Property", "Extract To...", "",  MOD_KEY.none, function(_dat) /*=>*/ {
         	var jun = PANEL_INSPECTOR.prop_hover;
         	if(jun == noone) jun = PANEL_INSPECTOR.__dialog_junction;
         	if(jun == noone) return;
@@ -60,7 +60,7 @@
 	        return array_empty(arr)? noone : submenuCall(_dat, arr);
         }).setMenu("inspector_extract", noone, true);
         
-        registerFunction("Property", "Quick Anim...",         "Q", MOD_KEY.shift, function(_dat) /*=>*/ {
+        registerFunction("Property", "Quick Anim...", "Q", MOD_KEY.shift, function(_dat) /*=>*/ {
         	var jun = PANEL_INSPECTOR.prop_hover;
         	if(jun == noone) jun = PANEL_INSPECTOR.__dialog_junction;
         	if(jun == noone) return;

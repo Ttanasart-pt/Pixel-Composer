@@ -5,6 +5,11 @@ function __NodeValue_Rotation(_name, _node, _value, _tooltip = "") : NodeValue(_
 	preview_hotkey_spr = THEME.tools_2d_rotate;
 	hideLabel();
 	
+	static anim_presets = [
+		[ "0, 360",  [[ 0, 0 ], [ 1, 360 ]] ], 
+		[ "360, 0",  [[ 0, 360 ], [ 1, 0 ]] ], 
+	];
+	
 	////- GET
 	
 	static getValue = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { //// Get value

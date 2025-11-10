@@ -2114,7 +2114,7 @@ function Panel_Animation_Dopesheet() {
 	            if(key_mod_press(CTRL)) {
 	                var _fr = round((mx - bar_x - timeline_shift) / timeline_scale) - 1;
 	                
-	            	if(key_hover == noone && value_hovering != noone) {
+	            	if(value_hovering != noone && key_hover == noone) {
 		                var _kx = (_fr + 1) * timeline_scale + timeline_shift;
 		                var _ky = value_hovering.y;
 		                draw_sprite_ui_uniform(THEME.add, 0, _kx, _ky, .5, COLORS._main_value_positive, 1);
@@ -2135,10 +2135,9 @@ function Panel_Animation_Dopesheet() {
 		                	if(!_add) array_push(value_hovering.values, _nk);
 		                	value_hovering.updateKeyMap();
 		                }
-		                
-	            	} else {
-	            		if(mouse_click(mb_left, pFOCUS)) PROJECT.animator.setFrame(_fr);
-	            	}
+            		}
+	            	
+	            	if(value_hovering == noone && mouse_click(mb_left, pFOCUS)) PROJECT.animator.setFrame(_fr);
 	            	
 	            } else if(mouse_press(mb_left, pFOCUS)) {
 	                     if(key_hover == noone)                           keyframe_selecting = [];

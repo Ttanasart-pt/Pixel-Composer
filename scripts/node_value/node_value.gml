@@ -2827,6 +2827,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			animator.values[i] = new valueKey(a[0] * GLOBAL_TOTAL_FRAMES, a[1], animator);
 		}
 		
+		animator.updateKeyMap();
 		node.triggerRender();
 	}
 	

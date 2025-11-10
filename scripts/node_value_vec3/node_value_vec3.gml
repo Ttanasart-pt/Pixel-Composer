@@ -3,6 +3,12 @@ function nodeValue_IVec3( _name, _value, _data = {} ) { return new __NodeValue_I
 
 function __NodeValue_Vec3(_name, _node, _value, _data = {}) : __NodeValue_Array(_name, _node, _value, "", 3) constructor {
 	setDisplay(VALUE_DISPLAY.vector, _data);
+	
+	static anim_presets = [
+		[ "0, 1",  [ [ 0, [ 0, 0, 0 ] ], [ 1, [ 1, 1, 1 ] ]] ], 
+		[ "1, 0",  [ [ 0, [ 1, 1, 1 ] ], [ 1, [ 0, 0, 0 ] ]] ], 
+	];
+	
 }
 
 function __NodeValue_IVec3(_name, _node, _value, _data = {}) : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.integer, _value, "") constructor {

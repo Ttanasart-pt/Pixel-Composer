@@ -119,13 +119,7 @@ function find_hotkey(_context, _name) {
 	__name = string_lower(_name);
 	var hk = HOTKEYS[$ _context];
 	var i  = array_find_index(hk, function(h) /*=>*/ {return string_lower(h.name) == __name});
-	if(i == -1) {
-		printCallStack();
-		print($"Hotkey not found: {_name}");
-		return noone;
-	}
-	
-	return hk[i];
+	return i == -1? noone : hk[i];
 }
 
 function getToolHotkey(_group, _key) {
