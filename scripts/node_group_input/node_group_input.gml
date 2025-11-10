@@ -482,6 +482,8 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static onSetDisplayName = function() {
 		attributes.inherit_name = false;
+		if(inParent == undefined) return;
+		
 		inParent.name = display_name;
 		if(display_name != "") group.inputMap[$ string_replace_all(display_name, " ", "_")] = inParent;
 	}

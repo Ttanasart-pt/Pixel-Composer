@@ -63,13 +63,21 @@ if(content.showHeader) {
 	var _bs = ui(20);
 	
 	if(instanceof(content) != "Panel_Menu" && array_empty(content.title_actions)) {
-		if(buttonInstant(THEME.button_hide_fill, _bx - _bs, _by, _bs, _bs, [ mouse_mx, mouse_my ], sHOVER, sFOCUS, "", THEME.window_exit_icon) == 2) {
+		var bb = THEME.button_hide_fill;
+		
+		if(buttonInstant(bb, _bx-_bs, _by, _bs, _bs, mouse_ui, sHOVER, sFOCUS, "", THEME.window_exit_icon, 0, CARRAY.button_negative) == 2) {
 			DIALOG_POSTDRAW
 			onDestroy();
 			instance_destroy();
-		}
+		} _bx -= _bs + ui(2);
 		
-		_bx -= _bs + ui(4);
+		if(buttonInstant(bb, _bx-_bs, _by, _bs, _bs, mouse_ui, sHOVER, sFOCUS, "", THEME.window_pan_icon) == 2) {
+			content.dragSurface = surface_clone(panel);
+			o_main.panel_dragging = content;
+			content.in_dialog = false;
+			instance_destroy();
+		} _bx -= _bs + ui(4);
+		
 	}
 	
 	for (var i = 0, n = array_length(content.title_actions); i < n; i++) {

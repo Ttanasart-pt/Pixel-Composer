@@ -105,8 +105,8 @@ function loadGraphic(theme = "default") {
 		THEME[$ key] = _sprite_load_from_struct(str, theme, key);
 	}
 	
-	THEME.dPath_open    = new sprite_drawer_white(THEME.path_open);
-	THEME.dPath_open_20 = new sprite_drawer_white(THEME.path_open_20);
+	THEME.dPath_open    = new sprite_drawer_white(THEME.path_open,    CDEF.blue);
+	THEME.dPath_open_20 = new sprite_drawer_white(THEME.path_open_20, CDEF.blue);
 	
 	THEME.dFile_save    = new sprite_drawer_white(THEME.file_save);
 	THEME.dFile_load    = new sprite_drawer_white(THEME.file_load);

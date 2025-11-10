@@ -693,7 +693,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		var tab_h   = h - padding * 2 + 1;
 		
 		var tsx     = _left? x + padding - 2 : x + w - tab_w;
-		var tsy     = y + ui(2);
+		var tsy     = y + ui(1);
 		var msx     = mouse_x - tsx;
 		var msy     = mouse_y - tsy;
 		

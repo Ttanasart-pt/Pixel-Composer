@@ -4,7 +4,7 @@ event_inherited();
 #region data
 	dialog_w = ui(360);
 	dialog_h = ui(48);
-	padding  = ui(12);
+	padding  = ui(6);
 	
 	dialog_w_expand = ui(480);
 	dialog_h_expand = ui(570);
@@ -38,6 +38,7 @@ event_inherited();
 	
 	function doExpand() {
 		meta_expand = true;
+		padding     = ui(12)
 		
 		dialog_w = dialog_w_expand;
 		dialog_h = dialog_h_expand;

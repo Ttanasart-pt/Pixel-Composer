@@ -171,9 +171,9 @@ function submenuCall(_data = undefined, menu = [], menu_id = "") {
 }
 
 function fileNameCall(path, onModify, _x = mouse_mx + 8, _y = mouse_my + 8) {
-	var dia = dialogCall(o_dialog_file_name, _x, _y);
-	dia.onModify = onModify;
-	dia.path     = string_trim_end(path, [ "\\", "/" ]) + "/";
+	var dia = dialogCall(o_dialog_file_name, _x, _y)
+		.setModify(onModify)
+		.setPath(string_trim_end(path, [ "\\", "/" ]) + "/");
 	
 	return dia;
 }

@@ -75,6 +75,8 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static onSetDisplayName = function() {
 		attributes.inherit_name = false;
+		
+		if(outParent == undefined) return;
 		outParent.name = display_name; 
 	}
 	

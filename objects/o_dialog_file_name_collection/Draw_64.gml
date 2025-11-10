@@ -22,14 +22,14 @@
 #region draw TB
 	var th = ui(28);
 	var tx = ui(64);
-	var tw = ui(108) - meta_expand * ui(32);
+	var tw = dialog_w - tx - padding - (th + ui(4)) * (3 - meta_expand);
 	
 	draw_set_text(font, fa_left, fa_center, COLORS._main_icon);
-	draw_text_add(dialog_x + padding, dialog_y + padding + th / 2, __txt("Name"));
+	draw_text_add(dialog_x + ui(12), dialog_y + padding + th / 2, __txt("Name"));
 	
 	tb_name.setFocusHover(sFOCUS, sHOVER);
 	tb_name.register();
-	tb_name.draw(dialog_x + tx, dialog_y + padding, dialog_w - tx - tw, th, meta.name, mouse_ui);
+	tb_name.draw(dialog_x + tx, dialog_y + padding, tw, th, meta.name, mouse_ui);
 	
 	var bs = th;
 	var bx = dialog_x + dialog_w - padding - bs;

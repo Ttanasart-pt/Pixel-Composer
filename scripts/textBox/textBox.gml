@@ -19,6 +19,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	base_index = 3;
 	
 	unit   = noone;
+	prefix = "";
 	suffix = "";
 	
 	no_empty    = true;
@@ -131,6 +132,9 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	static setSlideStep  = function(_v=0) /*=>*/ { slide_snap  = _v; return self; }
 	static setSlideRange = function(_min = 0, _max = 1) /*=>*/ { slide_range = [_min, _max]; return self; }
 	static setRange      = function(_rng_min, _rng_max) /*=>*/ { use_range   = true; range_min = _rng_min; range_max = _rng_max; return self; }
+	
+	static setPrefix     = function(_v) /*=>*/ { prefix      = _v;    return self; }
+	static setSuffix     = function(_v) /*=>*/ { suffix      = _v;    return self; }
 	
 	static setColor      = function(_v) /*=>*/ { color       = _v;    return self; }
 	static setAlign      = function(_v) /*=>*/ { align       = _v;    return self; }
@@ -449,6 +453,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			case fa_top : _y += ui(1); break;
 		}
 		
+		var xx = _x + disp_x;
 		var cc = sliding == 2? COLORS._main_accent : color;
 		draw_set_text(font, fa_left, fa_top, cc);
 		
@@ -462,7 +467,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				var _wh_w = string_width(_wh);
 				var _dt_w = string_width(".");
 				
-				var _tx = _x + disp_x;
+				var _tx = xx;
 				if(sliding == 2) 
 					_tx = _w / 2 - _wh_w - padding;
 				
@@ -476,10 +481,10 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				draw_text_add(_tx, _y, _dc);
 				
 			} else
-				draw_text_add(_x + disp_x, _y, $"{_text}{suffix}");
+				draw_text_add(xx, _y, $"{_text}{suffix}");
 			
 		} else if(format == TEXT_AREA_FORMAT.password && !password_show) {
-			var _tx = _x + disp_x;
+			var _tx = xx;
 			var _ty = _y;
 			
 			for( var i = 1; i <= string_length(_text); i++ ) {
@@ -491,14 +496,19 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				_tx += _chw;
 			}
 			
-		} else 
-			draw_text_add(_x + disp_x, _y, $"{_text}{suffix}");
+		} else {
+			draw_set_color(COLORS._main_text_sub);
+			draw_text_add(xx, _y, prefix);
+			xx += string_width(prefix);
+			
+			draw_set_color(cc);
+			draw_text_add(xx, _y, $"{_text}{suffix}");
+		}
 		
 		draw_set_alpha(1);
 		
 		_disp_text = _text;
 		
-		var _xx    = _x + disp_x;
 		var _mm    = _m;
 		var target = -999;
 		
@@ -507,21 +517,23 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				var _ch  = string_char_at(_text, i);
 				var _chw = string_width(_ch);
 						
-				if(_mm < _xx + _chw / 2) {
+				if(_mm < xx + _chw / 2) {
 					target = i - 1;
 					break;
-				} else if(_mm < _xx + _chw) {
+					
+				} else if(_mm < xx + _chw) {
 					target = i;
 					break;
 				}
 				
-				_xx += _chw;
+				xx += _chw;
 			}
 			
 			if(target != -999 && !click_block) {
 				if(mouse_press(mb_left, active)) {
 					cursor_select = target;
 					cursor		  = target;	
+					
 				} else if(mouse_click(mb_left, active) && cursor != target)
 					cursor = target;
 			}
@@ -836,6 +848,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				var tw   = string_width(txt);
 				var th   = string_height(txt == ""? "l" : txt);
 				
+				var p_w  = string_width(prefix);
 				var cs   = string_copy(txt, 1, cursor);
 				var c_w  = string_width(cs);
 				var c_y0 = _y + _h / 2 - th / 2;
@@ -861,7 +874,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 						
 				}
 				
-				cursor_pos_to = disp_x + tx + c_w;
+				cursor_pos_to = disp_x + tx + c_w + p_w;
 				if(cursor_pos_to < _x) 
 					disp_x_to += _w - padding * 2;
 					
@@ -876,7 +889,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					draw_set_color(highlight_color);
 					draw_set_alpha(highlight_alpha);
 					
-					var c_x1 = tx + disp_x + string_width(string_copy(txt, 1, cursor_select));
+					var c_x1 = tx + disp_x + string_width(string_copy(txt, 1, cursor_select)) + p_w;
 					var _rx0 = clamp(min(cursor_pos, c_x1), tx, tx + _w);
 					var _rx1 = clamp(max(cursor_pos, c_x1), tx, tx + _w);
 					

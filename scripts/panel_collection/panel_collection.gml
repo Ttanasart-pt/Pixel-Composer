@@ -904,7 +904,8 @@ function Panel_Collection() : PanelContent() constructor {
 			
 			var txt = __txtx("panel_collection_add_folder", "Add folder");
 			if(buttonInstant(bb, bx, by, bs, bs, m, hov, foc, txt, THEME.dFolder_add, 0, COLORS._main_icon, 1, .9) == 2) 
-				fileNameCall(context.path, function(txt) /*=>*/ { directory_create(txt); refreshContext(); });
+				fileNameCall(context.path, function(txt) /*=>*/ { directory_create(txt); refreshContext(); })
+					.setLabel(__txt("Folder name")).setPrefix(string_replace(context.path, $"{DIRECTORY}Collections", "") + "/");
 			bx -= bs + ui(4); if(bx < rootx) return;
 		}
 	
