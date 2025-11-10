@@ -538,12 +538,11 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 
 					case VALUE_DISPLAY.vector :
 						return inParent.drawOverlay(hover, active, _px, _py, _s, _mx, _my, _snx, _sny, 0, [1,1], _rot);
-						
-					default : return inParent.drawOverlay(hover, active, _px, _py, _s, _mx, _my, _snx, _sny);
 				}
 				
-			
 		}
+		
+		return inParent.drawOverlay(hover, active, _px, _py, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static drawNodeDef = drawNode;

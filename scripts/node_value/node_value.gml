@@ -660,7 +660,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		animator.values = [];
 		
 		for( var i = 0, n = array_length(_keyTimes); i < n; i++ ) {
-			var _val = getValue(_keyTimes[i]);
+			var _val = getValue(_keyTimes[i], false);
 			animator.values[i] = new valueKey(_keyTimes[i], _val, animator);
 		}
 		
