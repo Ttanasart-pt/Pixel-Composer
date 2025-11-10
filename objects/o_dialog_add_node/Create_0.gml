@@ -97,8 +97,6 @@ event_inherited();
 		PREF_SAVE();
 	}
 	
-	registerFunction( "Add Node", "Trigger Favourite", "", MOD_KEY.none, trigger_favourite );
-	
 	function rightClick(node) {
 		if(!is(node, NodeObject)) return;
 		

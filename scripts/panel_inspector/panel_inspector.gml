@@ -39,6 +39,48 @@
         registerFunction(i, "Toggle Bypass",         "",  MOD_KEY.none, panel_inspector_junction_bypass_toggle ).setMenu("inspector_bypass_toggle")
         registerFunction(i, "Toggle Visible",        "",  MOD_KEY.none, panel_inspector_visible_bypass_toggle  ).setMenu("inspector_visible_toggle")
         
+        registerFunction("Property", "Extract To...",         "",  MOD_KEY.none, function(_dat) /*=>*/ {
+        	var jun = PANEL_INSPECTOR.prop_hover;
+        	if(jun == noone) jun = PANEL_INSPECTOR.__dialog_junction;
+        	if(jun == noone) return;
+        	
+        	PANEL_INSPECTOR.__dialog_junction = jun;
+            var ext = jun.extract_node;
+            if(ext == "") return;
+            if(!is_array(ext)) ext = [ext];
+            
+            var arr = [];
+            for( var i = 0, n = array_length(ext); i < n; i++ ) {
+            	var _nod = ext[i];
+            	var _nam = ALL_NODES[$ _nod].name;
+            	
+                array_push(arr, menuItem(_nam, method(jun, jun.extractNode),,,, _nod));
+            }
+                
+	        return array_empty(arr)? noone : submenuCall(_dat, arr);
+        }).setMenu("inspector_extract", noone, true);
+        
+        registerFunction("Property", "Quick Anim...",         "Q", MOD_KEY.shift, function(_dat) /*=>*/ {
+        	var jun = PANEL_INSPECTOR.prop_hover;
+        	if(jun == noone) jun = PANEL_INSPECTOR.__dialog_junction;
+        	if(jun == noone) return;
+        	
+        	PANEL_INSPECTOR.__dialog_junction = jun;
+            var anim = jun.anim_presets;
+            if(!is_array(anim)) return;
+            
+            var arr = [];
+        	for( var i = 0, n = array_length(jun.anim_presets); i < n; i++ ) {
+        		var _pres = jun.anim_presets[i];
+        		var _name = _pres[0];
+        		var _data = _pres[1];
+        		
+        		array_push(arr, menuItem(_name, method(jun, jun.setQuickAnim),,,, _data));
+        	}
+            
+	        return array_empty(arr)? noone : submenuCall(_dat, arr);
+        }).setMenu("inspector_quick_anim", noone, true);
+        
         __fnGroupInit_Inspector();
     }
     
@@ -349,8 +391,8 @@ function Panel_Inspector() : PanelContent() constructor {
         	"inspector_copy_property", 
         	"inspector_paste_property", 
         	-1,
-        	
     	];
+        	
         global.menuItems_inspector_value_output = [
         	"inspector_group_set_color", 
         	-1, 
@@ -426,20 +468,11 @@ function Panel_Inspector() : PanelContent() constructor {
         	array_push(_menuItem, MENU_ITEMS.inspector_extract_global);
         }
         
-        if(jun.extract_node != "") {
-            if(is_array(jun.extract_node)) {
-                array_push(_menuItem, menuItemShelf(__txtx("panel_inspector_extract_multiple", "Extract to..."), function(_dat) /*=>*/ { 
-                    var arr = [];
-                    for(var i = 0; i < array_length(__dialog_junction.extract_node); i++)  {
-                        var _rec = __dialog_junction.extract_node[i];
-                        array_push(arr, menuItem(ALL_NODES[$ _rec].name, 
-                        	function(d) /*=>*/ { __dialog_junction.extractNode(d.name); }, noone, noone, noone, { name : _rec }));
-                    }
-                        
-                    return submenuCall(_dat, arr);
-                }));
-                
-            } else array_push(_menuItem, MENU_ITEMS.inspector_extract_value);
+        array_push(_menuItem, MENU_ITEMS.inspector_extract);
+        
+        if(is_array(jun.anim_presets)) {
+        	array_push(_menuItem, -1);
+        	array_push(_menuItem, MENU_ITEMS.inspector_quick_anim);
         }
         
         return menuCall("inspector_value_input", _menuItem);
@@ -1525,6 +1558,9 @@ function Panel_Inspector() : PanelContent() constructor {
         
         contentPane.setFocusHover(pFOCUS, pHOVER);
         contentPane.draw(ui(16), top_bar_h, mx - ui(16), my - top_bar_h);
+        
+        if(prop_hover != noone)
+        	ds_stack_push(FOCUS_STACK, "Property");
         
         /// focus 
         var _foc = PANEL_GRAPH.getFocusingNode();

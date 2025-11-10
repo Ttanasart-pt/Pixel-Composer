@@ -1269,6 +1269,7 @@ function Panel_Preference() : PanelContent() constructor {
 	    	
 	    	for( var i = 0, n = array_length(HOTKEY_CONTEXT); i < n; i++ ) {
 	    		var ctx  = HOTKEY_CONTEXT[i];
+	    		if(ctx == "_") continue;
 	    		
 	    		var _title = ctx == 0? "Global" : ctx;
 	    		    _title = string_replace_all(_title, "_", " ");
@@ -1288,8 +1289,8 @@ function Panel_Preference() : PanelContent() constructor {
 	    		array_push(hotkeyContext, { context: ctx, list: _lst });
 	    		
 	    		if(_title == "Graph") {
-	    			array_push(hotkeyArray, "Add Nodes");
 	    			array_push(hotkeyContext, { list: GRAPH_ADD_NODE_KEYS });
+	    			array_push(hotkeyArray, "Add Node");
 	    		}
 	    	}
 	    	

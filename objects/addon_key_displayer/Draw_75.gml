@@ -1,29 +1,29 @@
 /// @description 
-#region draw 
+#region key detection
 	var key = "";
 	
-	for( var i = 0, n = array_length(extra_keys); i < n; i++ ) {
-		if(keyboard_check(extra_keys[i][0]))
-			key += key == ""? extra_keys[i][1] : (" + " + extra_keys[i][1]);
-	}
+	if(keyboard_check(vk_control)) key += key == ""? "Ctrl"  : " + " + "Ctrl";
+	if(keyboard_check(vk_shift))   key += key == ""? "Shift" : " + " + "Shift";
+	if(keyboard_check(vk_alt))     key += key == ""? "Alt"   : " + " + "Alt";
 	
-	if(keyboard_check(vk_anykey)) {
-		var pres = last_key;
+	for( var i = 0, n = array_length(KEY_STRING_KEY); i < n; i++ ) {
+		var _k = KEY_STRING_KEY[i];
+		var _s = KEY_STRING_MAP[$ _k];
 		
-		if(pres >= 32 && pres <= 126) {
-			pres = string_upper(ansi_char(pres));
-			if(pres == " ") pres = "space";
-			key += key == ""? pres : " + " + pres;
-		}
+		if(keyboard_check(_k)) key += key == ""? _s : " + " + _s;
 	}
 	
 	var pressing = key != "";
 	if(key != "") {
-		disp_text = key;
+		if(keyboard_check_pressed(vk_anykey) && key != "") array_push(disp_keys, key);
+		disp_key = key;
 		alpha = 2;
+		
 	} else
 		alpha = lerp_linear(alpha, 0, 0.01);
-	
+#endregion
+
+#region draw 
 	var win_x = WIN_W;
 	var win_y = WIN_H;
 	
@@ -126,20 +126,34 @@
 		draw_sprite_ext_add(s_key_display_mouse, 0, mxs, mys, 1, 1, 0, cc, 0.5);
 	#endregion
 	
+	draw_set_text(_f_h5, fa_right, fa_bottom, COLORS._main_icon_dark);
+	var pd = ui(4);
+	var ww = string_width(disp_key)  + pd * 3;
+	var hh = string_height(disp_key) + pd * 2;
+	
+	var x1 = win_x - ui(32) - sprite_get_width(s_key_display_mouse);
+	var y1 = win_y - ui(8);
+	var x0 = x1 - ww;
+	var y0 = y1 - hh;
+	
 	if(alpha > 0) {
-		draw_set_text(_f_h5, fa_right, fa_bottom, COLORS._main_icon_dark);
-		var pd = ui(4);
-		var ww = string_width(disp_text)  + pd * 3;
-		var hh = string_height(disp_text) + pd * 2;
-		
-		var x1 = win_x - ui(32 + sprite_get_width(s_key_display_mouse));
-		var y1 = win_y - ui(8);
-		var x0 = x1 - ww;
-		var y0 = y1 - hh;
-		
 		draw_sprite_stretched_ext(THEME.key_display, 0, x0, y0, ww, hh, pressing? COLORS._main_accent : COLORS._main_icon, alpha);
 		draw_set_alpha(alpha);
-		draw_text(x1 - pd * 1.5, y1 - pd, disp_text);
+		draw_text(x1 - pd * 1.5, y1 - pd, disp_key);
 		draw_set_alpha(1);
 	}
+		
+	draw_set_text(f_p2, fa_right, fa_bottom, COLORS._main_text_sub);
+	var tx = x1;
+	var ty = y1 - pd - hh;
+	var a  = 0;
+	for( var i = array_length(disp_keys) - 1; i >= 0; i-- ) {
+		if(a++ >= 5) break;
+		
+		draw_set_alpha(lerp(.3, 1, (5-a)/5));
+		draw_text(tx, ty, disp_keys[i]);
+		ty -= line_get_height();
+	}
+	
+	draw_set_alpha(1);
 #endregion

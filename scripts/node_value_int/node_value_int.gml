@@ -1,6 +1,5 @@
 function nodeValue_Int(_name, _value, _tooltip = "") { return new __NodeValue_Int(_name, self, _value, _tooltip); }
-
-function __NodeValue_Int(_name, _node, _value, _tooltip = "") : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.integer, _value, _tooltip) constructor {
+function __NodeValue_Int(_name, _node, _value, _tooltip = "") : __NodeValue_Number(_name, _node, VALUE_TYPE.integer, _value, _tooltip) constructor {
 	
 	////- GET
 	

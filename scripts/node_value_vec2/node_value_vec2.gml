@@ -6,6 +6,14 @@ function __NodeValue_Vec2(_name, _node, _value, _data = {}) : NodeValue(_name, _
 	preview_hotkey_spr = THEME.tools_2d_move;
 	def_length = 2;
 	
+	static anim_presets = [
+		[ "0, 1",  [ [ 0, [ 0,   0  ] ], [ 1, [ 1,   1  ] ]] ], 
+		[ "Left",  [ [ 0, [ 1.5, 0.5] ], [ 1, [-0.5, 0.5] ]] ], 
+		[ "Right", [ [ 0, [-0.5, 0.5] ], [ 1, [ 1.5, 0.5] ]] ], 
+		[ "Up",    [ [ 0, [ 0.5, 1.5] ], [ 1, [ 0.5,-0.5] ]] ], 
+		[ "Down",  [ [ 0, [ 0.5,-0.5] ], [ 1, [ 0.5, 1.5] ]] ], 
+	];
+	
 	////- GET
 	
 	static valueProcess = function(value, nodeFrom = undefined, applyUnit = true, arrIndex = 0) {

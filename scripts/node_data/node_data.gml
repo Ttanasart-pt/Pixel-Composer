@@ -944,10 +944,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	} 
 	
 	static setPreset = function(pName) {
-		var _fName = $"{instanceof(self)}>{pName}";
-		if(!ds_map_exists(global.PRESETS_MAP_NODE, _fName)) return false;
+		var _key = instanceof(self);
+		if(!has(PRESETS_MAP, _key)) return false;
 		
-		var _preset = global.PRESETS_MAP_NODE[? _fName];
+		var _pres  = PRESETS_MAP[$ _key];
+		if(!has(_pres, pName)) return false;
+		
+		var _preset = _pres[$ pName];
 		if(_preset.content == -1) _preset.content = json_load_struct(_preset.path);
 		
 		deserialize(_preset.content, true, 1 + (pName == "_default"));

@@ -202,6 +202,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		error_notification = noone;
 		
 		extract_node = "";
+		
+		static anim_presets = undefined;
 	#endregion
 	
 	#region ---- Expression ----
@@ -2815,6 +2817,17 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		ext.triggerRender();
+	}
+	
+	static setQuickAnim = function(_qanim) {
+		setAnim(true);
+		animator.values = [];
+		for( var i = 0, n = array_length(_qanim); i < n; i++ ) {
+			var a = _qanim[i];
+			animator.values[i] = new valueKey(a[0] * GLOBAL_TOTAL_FRAMES, a[1], animator);
+		}
+		
+		node.triggerRender();
 	}
 	
 	static dragValue = function() {

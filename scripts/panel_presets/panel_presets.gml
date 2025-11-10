@@ -98,12 +98,13 @@ function Panel_Presets(_node) : PanelContent() constructor {
 		var _h  = 0;
 		if(node == noone) return _h;
 		
-		if(!ds_map_exists(global.PRESETS_MAP, nodeType)) return 0;
+		if(!has(PRESETS_MAP, nodeType)) return 0;
 		
 		draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 		
-		var pres = global.PRESETS_MAP[? nodeType];
-		var amo  = array_length(pres);
+		var pres = PRESETS_MAP[$ nodeType];
+		var keys = struct_get_names(pres);
+		var amo  = array_length(keys);
 		var _hh  = line_get_height() + ui(10);
 		    _h  += amo * (_hh + ui(4)) + ui(32);
 		
@@ -161,7 +162,7 @@ function Panel_Presets(_node) : PanelContent() constructor {
 		defPres = noone;
 		
 		for( var i = 0; i < amo; i++ ) {
-			var preset = pres[i];
+			var preset = pres[$ keys[i]];
 			var _name  = preset.name;
 			var fName  = $"{nodeType}>{_name}";
 			

@@ -180,12 +180,9 @@
     	if(struct_has(GRAPH_ADD_NODE_MAPS, _k)) 
     		return GRAPH_ADD_NODE_MAPS[$ _k];
     	
-    	var _h = new Hotkey("_graph_add_node", _k, _key, _mod, function(k) /*=>*/ {return PANEL_GRAPH.createNodeHotkey(k)}).setParam(_k);
+    	var _h = new Hotkey("Add Node", _k, _key, _mod, function(k) /*=>*/ { PANEL_GRAPH.createNodeHotkey(k) }).setParam(_k);
 		array_push(GRAPH_ADD_NODE_KEYS, _h);
 		GRAPH_ADD_NODE_MAPS[$ _k] = _h;
-		
-		if(struct_has(ALL_NODES, _k)) 
-			ALL_NODES[$ _k].buildFn.hotkey = _h;
 		
 		return _h;
     }

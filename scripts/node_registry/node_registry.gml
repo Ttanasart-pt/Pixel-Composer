@@ -70,19 +70,14 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 	author  = "";
 	license = "";
 	
-	buildFn = registerFunction("Add node", name, "", 0, function(n) /*=>*/ { PANEL_GRAPH.createNodeHotkey(n, true, true) }, nodeName)
+	buildFn = registerFunction("_", nodeName, "", 0, function(n) /*=>*/ { PANEL_GRAPH.createNodeHotkey(n, true, true) }, nodeName)
 				.setMenuName($"graph_add_{nodeName}", getName(), spr);
 	buildFn.nodeName = nodeName;
 	
-	static setSpr = function(_spr)  { 
-		spr = _spr; 
-		buildFn.setSpr(spr);  
-		return self; 
-	}
-	
-	static setTags    = function(_t) /*=>*/ { array_append(tags, _t); return self; }
-	static setTooltip = function(_t) /*=>*/ { tooltip     = _t;       return self; }
-	static setParam   = function(_p) /*=>*/ { createParam = _p;       return self; }
+	static setSpr     = function(_s) /*=>*/ { spr = _s; buildFn.setSpr(_s); return self; }
+	static setTags    = function(_t) /*=>*/ { array_append(tags, _t);       return self; }
+	static setTooltip = function(_t) /*=>*/ { tooltip     = _t;             return self; }
+	static setParam   = function(_p) /*=>*/ { createParam = _p;             return self; }
     static setBuild   = function(_f) /*=>*/ { createFn    = method(self, _f); usecreateFn = true; return self; }
 	
 	static setIO = function(t) { 
@@ -391,13 +386,6 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 					CUSTOM_NODES_POSITION[$ pos] = [ self ];
 			}
 		}
-		
-		if(struct_has(GRAPH_ADD_NODE_MAPS, nodeName)) {
-			var _hot  = GRAPH_ADD_NODE_MAPS[$ nodeName]
-			buildFn.hotkey = _hot;
-	    	
-		} else 
-			buildFn.hotkey = noone;
 		
 		return self;
 	}
