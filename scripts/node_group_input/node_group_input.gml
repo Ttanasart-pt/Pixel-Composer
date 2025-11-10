@@ -527,7 +527,23 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		    _s *= _sca;
 		
 		inParent.overlay_draw_text = inputs[15].getValue();
-		return inParent.drawOverlay(hover, active, _px, _py, _s, _mx, _my, _snx, _sny);
+		
+		switch(inParent.type) {
+			case VALUE_TYPE.integer :
+			case VALUE_TYPE.float :
+				switch(inParent.display_type) {
+					case VALUE_DISPLAY._default :
+					case VALUE_DISPLAY.slider :
+						return inParent.drawOverlay(hover, active, _px, _py, _s, _mx, _my, _snx, _sny, _rot);
+
+					case VALUE_DISPLAY.vector :
+						return inParent.drawOverlay(hover, active, _px, _py, _s, _mx, _my, _snx, _sny, 0, [1,1], _rot);
+						
+					default : return inParent.drawOverlay(hover, active, _px, _py, _s, _mx, _my, _snx, _sny);
+				}
+				
+			
+		}
 	}
 	
 	static drawNodeDef = drawNode;

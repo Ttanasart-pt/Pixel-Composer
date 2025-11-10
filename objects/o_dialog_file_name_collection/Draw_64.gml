@@ -20,7 +20,7 @@
 #endregion
 
 #region draw TB
-	var th = ui(28);
+	var th = ui(24);
 	var tx = ui(64);
 	var tw = dialog_w - tx - padding - (th + ui(4)) * (3 - meta_expand);
 	

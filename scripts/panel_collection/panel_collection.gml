@@ -882,7 +882,7 @@ function Panel_Collection() : PanelContent() constructor {
 			var tb_y = by;
 			
 			tb_search.setFocusHover(foc, hov);
-			tb_search.draw(tb_x, tb_y, tb_w, bs, search_string, m);
+			tb_search.draw(tb_x, tb_y + ui(2), tb_w, bs - ui(4), search_string, m);
 			return;
 		}
 		

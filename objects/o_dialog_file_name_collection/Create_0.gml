@@ -3,8 +3,8 @@ event_inherited();
 
 #region data
 	dialog_w = ui(360);
-	dialog_h = ui(48);
-	padding  = ui(6);
+	dialog_h = ui(40);
+	padding  = ui(8);
 	
 	dialog_w_expand = ui(480);
 	dialog_h_expand = ui(570);

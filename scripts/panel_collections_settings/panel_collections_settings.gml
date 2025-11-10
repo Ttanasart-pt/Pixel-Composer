@@ -16,12 +16,6 @@ function Panel_Collections_Setting() : Panel_Linear_Setting() constructor {
 		),
 		
 		new __Panel_Linear_Setting_Item_Preference(
-			__txt("Force Cut"),
-			"collection_name_force_cut",
-			new checkBox(function() /*=>*/ { PREFERENCES.collection_name_force_cut = !PREFERENCES.collection_name_force_cut; PREF_SAVE(); }),
-		),
-		
-		new __Panel_Linear_Setting_Item_Preference(
 			__txtx("coll_animated", "Animated thumbnail"),
 			"collection_animated",
 			new checkBox(function() /*=>*/ { PREFERENCES.collection_animated = !PREFERENCES.collection_animated; PREF_SAVE(); }),
