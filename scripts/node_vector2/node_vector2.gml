@@ -1,6 +1,7 @@
 function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor { 
 	name  = "Vector2";
 	color = COLORS.node_blend_number;
+	always_pad = true;
 	
 	setDimension(96, 32 + 24 * 2);
 	
@@ -32,6 +33,8 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		["Display", false], 3, 
 		["Gizmo",   false], 4, 5, 6, 7, 8, 9, 10, 
 	];
+	
+	////- Node
 	
 	wd_dragging = false;
 	wd_minx		= -1;
@@ -140,43 +143,41 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		return _hov;
 	} 
 	
-	static step = function() { 
-		var int  = getInputData(2);
-		var disp = getInputData(3);
-		
-		for( var i = 0; i < 2; i++ ) 
-			inputs[i].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
-		
-		outputs[0].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
-		
-		setDimension(96, 80, false);
-				
-		if(disp == 1 && inputs[0].value_from == noone && inputs[1].value_from == noone)
-			setDimension(160, 160, false);
-	} 
-	
 	static processData = function(_outData, _data, _array_index = 0) { 
-		var _x   = _data[0];
-		var _y   = _data[1];
-		var _int = _data[2];
+		#region data
+			var _x   = _data[0];
+			var _y   = _data[1];
+			var _int = _data[2];
+			var _dsp = _data[3];
+			
+			isGizmoGlobal = _data[4];
+			gz_pos        = _data[5];
+			gz_scale      = _data[6];
+			gz_style      = _data[7];
+			gz_shape      = _data[8];
+			gz_sprite     = _data[9];
+			gz_size       = _data[10];
+			
+			inputs[ 8].setVisible(gz_style == 1);
+			inputs[ 9].setVisible(gz_style == 2, gz_style == 2);
+			inputs[10].setVisible(gz_style != 0);
 		
-		isGizmoGlobal = _data[4];
-		gz_pos        = _data[5];
-		gz_scale      = _data[6];
-		gz_style      = _data[7];
-		gz_shape      = _data[8];
-		gz_sprite     = _data[9];
-		gz_size       = _data[10];
-		
-		inputs[ 8].setVisible(gz_style == 1);
-		inputs[ 9].setVisible(gz_style == 2, gz_style == 2);
-		inputs[10].setVisible(gz_style != 0);
+			var _type = _int? VALUE_TYPE.integer : VALUE_TYPE.float;
+			inputs[0].setType(_type);
+			inputs[1].setType(_type);
+			
+			outputs[0].setType(_type);
+		#endregion
 		
 		_outData[0][0] = _int? round(_x) : _x;
 		_outData[0][1] = _int? round(_y) : _y;
 		
 		_outData[1] = _outData[0][0];
 		_outData[2] = _outData[0][1];
+		
+		if(_dsp == 1 && inputs[0].value_from == noone && inputs[1].value_from == noone)
+			 setDimension(160, 160, false);
+		else setDimension( 96,  80, false);
 		
 		return _outData;
 	} 

@@ -167,7 +167,12 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static getInputsSimple = function(frame) {
 		var _len = array_length(inputs);
 		inputs_data = array_verify(inputs_data, _len);
-		for( var i = 0; i < _len; i++ ) inputs_data[i] = inputs[i].getValue(frame);
+		
+		for( var i = 0; i < _len; i++ ) {
+			if(inputs[i].isDynamic()) 
+				inputs_data[i] = inputs[i].getValue(frame);
+		}
+		
 	}
 	
 	static processData   = function(_outSurf, _data, _array_index = 0, _frame = CURRENT_FRAME) { return _outSurf; }

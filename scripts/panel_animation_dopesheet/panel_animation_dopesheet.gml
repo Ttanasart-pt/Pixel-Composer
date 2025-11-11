@@ -95,6 +95,8 @@ function Panel_Animation_Dopesheet() {
     
         value_hovering = noone;
         value_focusing = noone;
+        
+        show_value = false;
     #endregion
     
     #region ---- Display ---- 
@@ -1483,7 +1485,6 @@ function Panel_Animation_Dopesheet() {
         var anim_set   = true;
         var key_hover  = noone;
         
-        var show_value = false;//key_mod_press(ALT);
         var _scaling   = key_mod_press(ALT) && array_length(keyframe_selecting) > 1;
         
         for(var k = 0; k < array_length(animator.values); k++) {
@@ -1554,20 +1555,40 @@ function Panel_Animation_Dopesheet() {
                 cc = key_hover == keyframe? COLORS.panel_animation_keyframe_selected : COLORS._main_accent;
             
             var ind = keyframe.getDrawIndex();
-            if(show_value) {
-            	draw_set_text(f_p4, fa_center, fa_center, COLORS._main_text_on_accent);
-            	
-            	var _val = string(keyframe.value);
-            	var _kw = max(ui(14), string_width(_val) + ui(8));
-            	var _kh = ui(14);
-            	var _kx = t;
-            	var _ky = prop_y;
-            	
-            	draw_sprite_stretched_ext(THEME.box_r2, 0, _kx - _kw/2, _ky - _kh/2, _kw, _kh, cc);
-            	draw_text(_kx, _ky, _val);
-            	
-            } else 
+            if(!show_value) {
             	draw_sprite_ui_uniform(THEME.timeline_keyframe, ind, t, prop_y, 1, cc);
+            	
+        	} else {
+        		draw_set_text(f_p4, fa_center, fa_center, COLORS._main_text_on_accent);
+            	
+            	switch(animator.prop.type) {
+            		case VALUE_TYPE.integer : 
+            		case VALUE_TYPE.float : 
+            		case VALUE_TYPE.text : 
+		            	var _val = string(keyframe.value);
+		            	var _kw = max(ui(14), string_width(_val) + ui(8));
+		            	var _kh = ui(14);
+		            	var _kx = t;
+		            	var _ky = prop_y;
+		            	
+		            	draw_sprite_stretched_ext(THEME.box_r2, 0, _kx - _kw/2, _ky - _kh/2, _kw, _kh, cc);
+		            	draw_text(_kx, _ky, _val);
+            			break;
+            			
+            		case VALUE_TYPE.color : 
+		            	var _val = keyframe.value;
+		            	var _kw = ui(14);
+		            	var _kh = ui(14);
+		            	var _kx = t;
+		            	var _ky = prop_y;
+		            	
+		            	draw_sprite_stretched_ext(THEME.box_r2, 0, _kx - _kw/2, _ky - _kh/2, _kw, _kh, _val);
+		            	draw_sprite_stretched_ext(THEME.box_r2, 1, _kx - _kw/2, _ky - _kh/2, _kw, _kh, cc);
+            			break;
+            		
+            	}
+            	
+            } 
             
             if(_select) {
             	if(_keyframe_selecting_f == noone) _keyframe_selecting_f = keyframe;
@@ -1936,6 +1957,7 @@ function Panel_Animation_Dopesheet() {
         
         bar_total_w     = GLOBAL_TOTAL_FRAMES * timeline_scale;
         bar_total_shift = bar_total_w + timeline_shift;
+        if(pFOCUS && key_mod_double(ALT)) show_value = !show_value;
         
         #region Scroll
             dopesheet_y = lerp_float(dopesheet_y, dopesheet_y_to, 4);

@@ -1474,7 +1474,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				_val[i] = valueProcess(val[i], nod, applyUnit, arrIndex);
 			
 			return _val;
-			
 		}
 		
 		var _val = valueProcess(val, nod, applyUnit, arrIndex);
@@ -1487,6 +1486,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		else if(value_from && value_from != self)
 			value_from.getValueRecursive(arr, _time);
+			
 		else {
 			arr[0] = __getAnimValue(_time);
 			arr[1] = self;

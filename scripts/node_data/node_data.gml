@@ -96,8 +96,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		draw_pad_w   = 0;
 		draw_pad_h   = 0;
 		
-		draw_name = true;
-		draggable = true;
+		draw_name  = true;
+		always_pad = false;
+		draggable  = true;
 		
 		draw_bbox           = BBOX();
 		draw_boundary       = [0,0,0,0];
@@ -977,7 +978,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			inputs_data[i] = val;
 			input_value_map[$ _inp.internalName] = val;
 		});
-		
 	}
 	
 	////- UPDATE
@@ -1695,7 +1695,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static drawNodeOverlay = undefined;
 	
 	static drawSetBbox = function(xx, yy, _s) {
-		var pad_label = (project.graphDisplay.avoid_label) && draw_name;
+		var pad_label = (project.graphDisplay.avoid_label && draw_name) || always_pad;
 		
 		var x0 = xx;
 		var x1 = xx + w * _s;

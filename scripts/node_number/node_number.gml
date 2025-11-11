@@ -1,7 +1,8 @@
 function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name     = "Number";
-	color    = COLORS.node_blend_number;
-	doUpdate = doUpdateLite;
+	name       = "Number";
+	color      = COLORS.node_blend_number;
+	doUpdate   = doUpdateLite;
+	always_pad = true;
 	reactive_on_hover  = true;
 	setDimension(96, 48);
 	
