@@ -297,7 +297,13 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput( 7, nodeValue_Enum_Button( "Render Mode",  0, [ "Normal", "Tile", "Wrap" ] ));
 	
 	////- =Position
-	newInput( 2, nodeValue_Vec2( "Position",       [.5,.5] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput( 2, nodeValue_Vec2( "Position", [.5,.5] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference)
+		.setAnimPreset([
+			[ "Left",  [ [ 0, [ 1.5, 0.5] ], [ 1, [-0.5, 0.5] ]], THEME.apreset_left  ], 
+			[ "Right", [ [ 0, [-0.5, 0.5] ], [ 1, [ 1.5, 0.5] ]], THEME.apreset_right ], 
+			[ "Up",    [ [ 0, [ 0.5, 1.5] ], [ 1, [ 0.5,-0.5] ]], THEME.apreset_up    ], 
+			[ "Down",  [ [ 0, [ 0.5,-0.5] ], [ 1, [ 0.5, 1.5] ]], THEME.apreset_down  ], 
+		]);
 	newInput(10, nodeValue_Bool( "Round Position",  false, "Round position to the nearest integer value to avoid jittering."));
 	newInput( 3, nodeValue_Anchor());
 	

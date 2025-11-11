@@ -60,7 +60,7 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 	newOutput(1, nodeValue_Output("Light only", VALUE_TYPE.surface, noone));
 	
-	static __frame = function(_x, _y, _w, _h, _m, _hover) {  
+	static draw_ui_frame = function(_x, _y, _w, _h, _m, _hover) {  
 		var _hv = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h) && _hover;
 		
 		draw_sprite_stretched_ext(THEME.ui_panel, 0, _x, _y, _w, _h, _hv? CDEF.main_black : CDEF.main_mdblack,  1);
@@ -142,7 +142,7 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 			draw_sprite_stretched_ext(THEME.ui_panel, 0, _fx, _fy, _w,  _fh, CDEF.main_dkblack, 1);
 			
-			var _hov = __frame(_ffx, _ffy, _ffw, _ffh, _m, _hover);
+			var _hov = draw_ui_frame(_ffx, _ffy, _ffw, _ffh, _m, _hover);
 			draw_sprite_stretched_ext(THEME.ui_panel, 0, _ffx, _ffy, _ffw * _flare.a, _ffh, CDEF.main_dkgrey, 1);
 			draw_sprite_ext(s_flare_type, _flare.type, _ffx + _ffh / 2, _ffy + _ffh / 2, 1, 1, 0, c_white, 1);
 			if(_hov && mouse_press(mb_left, _focus)) {
@@ -159,7 +159,7 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			_ffx += _ffw + ui(4);
 			
 			_ffw  = ui(16);
-			var _hov = __frame(_ffx, _ffy, _ffw, _ffh, _m, _hover);
+			var _hov = draw_ui_frame(_ffx, _ffy, _ffw, _ffh, _m, _hover);
 			draw_sprite_stretched_ext(THEME.palette_mask, 1, _ffx + ui(4), _ffy + ui(4), _ffw - ui(8), _ffh - ui(8), _flare.blend, 1);
 			if(_hov && mouse_press(mb_left, _focus)) {
 				flare_color_editing = i;
@@ -172,7 +172,7 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 			_ffw  = ui(40);
 			
-			var _hov = __frame(_ffx, _ffy, _ffw, _ffh, _m, _hover);
+			var _hov = draw_ui_frame(_ffx, _ffy, _ffw, _ffh, _m, _hover);
 			draw_sprite_stretched_ext(THEME.ui_panel, 0, _ffx, _ffy, _ffw * clamp(_flare.t, 0., 2.) / 2, _ffh, CDEF.main_dkgrey, 1);
 			draw_text_add(_ffx + _ffw / 2, _ffy + _ffh / 2, string(_flare.t));
 			if(_hov && mouse_press(mb_left, _focus)) {
@@ -183,7 +183,7 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			}
 			_ffx += _ffw + ui(4);
 			
-			var _hov = __frame(_ffx, _ffy, _ffw, _ffh, _m, _hover);
+			var _hov = draw_ui_frame(_ffx, _ffy, _ffw, _ffh, _m, _hover);
 			draw_text_add(_ffx + _ffw / 2, _ffy + _ffh / 2, string(_flare.r));
 			if(_hov && mouse_press(mb_left, _focus)) {
 				flare_editing = i;
@@ -194,7 +194,7 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			_ffx += _ffw + ui(4);
 			
 			_ffw  = _ffh;
-			var _hov = __frame(_ffx, _ffy, _ffw, _ffh, _m, _hover);
+			var _hov = draw_ui_frame(_ffx, _ffy, _ffw, _ffh, _m, _hover);
 			draw_set_color(CDEF.main_dkgrey);
 			draw_polygon(_ffx + _ffw / 2, _ffy + _ffh / 2, _ffh / 2 - ui(2), _flare.seg);
 			
@@ -209,7 +209,7 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			_ffx += _ffw + ui(4);
 			
 			_ffw  = ui(80);
-			var _hov = __frame(_ffx, _ffy, _ffw, _ffh, _m, _hover);
+			var _hov = draw_ui_frame(_ffx, _ffy, _ffw, _ffh, _m, _hover);
 			draw_sprite_stretched_ext(THEME.ui_panel, 0, _ffx + _ffw * _flare.shade[0], _ffy, _ffw * (_flare.shade[1] - _flare.shade[0]), _ffh, CDEF.main_dkgrey, 1);
 			draw_text_add(_ffx + _ffw / 4,     _ffy + _ffh / 2, string(_flare.shade[0]));
 			draw_text_add(_ffx + _ffw / 4 * 3, _ffy + _ffh / 2, string(_flare.shade[1]));
@@ -225,7 +225,7 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				case FLARE_TYPE.ring :
 				case FLARE_TYPE.line :
 					_ffw  = ui(80);
-					var _hov = __frame(_ffx, _ffy, _ffw, _ffh, _m, _hover);
+					var _hov = draw_ui_frame(_ffx, _ffy, _ffw, _ffh, _m, _hover);
 					draw_text_add(_ffx + _ffw / 4,     _ffy + _ffh / 2, string(_flare.th[0]));
 					draw_text_add(_ffx + _ffw / 4 * 3, _ffy + _ffh / 2, string(_flare.th[1]));
 					if(_hov && mouse_press(mb_left, _focus)) {
@@ -239,7 +239,7 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 					
 				case FLARE_TYPE.star :
 					_ffw  = ui(40);
-					var _hov = __frame(_ffx, _ffy, _ffw, _ffh, _m, _hover);
+					var _hov = draw_ui_frame(_ffx, _ffy, _ffw, _ffh, _m, _hover);
 					draw_text_add(_ffx + _ffw / 2, _ffy + _ffh / 2, string(_flare.ir));
 					if(_hov && mouse_press(mb_left, _focus)) {
 						flare_editing = i;

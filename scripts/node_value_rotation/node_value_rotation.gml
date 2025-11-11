@@ -5,9 +5,9 @@ function __NodeValue_Rotation(_name, _node, _value, _tooltip = "") : NodeValue(_
 	preview_hotkey_spr = THEME.tools_2d_rotate;
 	hideLabel();
 	
-	static anim_presets = [
-		[ "0, 360",  [[ 0, 0 ], [ 1, 360 ]] ], 
-		[ "360, 0",  [[ 0, 360 ], [ 1, 0 ]] ], 
+	anim_presets = [
+		[ "0, 360",  [[ 0, 0 ], [ 1, 360 ]], THEME.apreset_01 ], 
+		[ "360, 0",  [[ 0, 360 ], [ 1, 0 ]], THEME.apreset_10 ], 
 	];
 	
 	////- GET

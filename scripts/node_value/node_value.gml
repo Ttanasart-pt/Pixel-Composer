@@ -203,7 +203,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		extract_node = "";
 		
-		static anim_presets = undefined;
+		anim_presets = []; static setAnimPreset = function(_pres) /*=>*/ { array_append(anim_presets, _pres); return self; }
 	#endregion
 	
 	#region ---- Expression ----
