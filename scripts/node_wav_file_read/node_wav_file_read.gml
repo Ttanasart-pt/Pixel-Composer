@@ -194,7 +194,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		if(content == noone) return;
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		var surf = content.checkPreview(320, 128);
 		
 		if(wav_file_reading) {

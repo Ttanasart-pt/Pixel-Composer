@@ -143,7 +143,7 @@ function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox    = drawGetBbox(xx, yy, _s);
+		var bbox    = draw_bbox;
 		var network = ds_map_try_get(NETWORK_CLIENTS, port, noone);
 		
 		var cc = CDEF.lime, aa = 1;

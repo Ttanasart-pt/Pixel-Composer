@@ -10,6 +10,13 @@ function __init_mask_modifier(_mask_index, _ind = undefined) {
 	__mask_feather   = 0;
 	
 	__mask_surface   = noone;
+	__temp_mask      = noone;
+	surface_blur_init();
+}
+
+function __init_mask_simple() {
+	__temp_mask      = noone;
+	surface_blur_init();
 }
 
 function __process_mask_modifier(data) {
@@ -18,22 +25,17 @@ function __process_mask_modifier(data) {
 }
 
 function mask_modify(mask, invert = false, feather = 0) {
-	if(!is_surface(mask)) return mask; 
-	if(!invert && feather == 0) return mask;
+	if(!is_surface(mask) || (!invert && feather == 0)) return mask;
 	
-	if(!struct_has(self, "__temp_mask")) __temp_mask = noone;
-	
-	__temp_mask = surface_verify(__temp_mask, surface_get_width_safe(mask), surface_get_height_safe(mask));
+	__temp_mask = surface_verify(__temp_mask, surface_get_width(mask), surface_get_height(mask));
 	
 	surface_set_shader(__temp_mask, sh_mask_invert);
 		shader_set_i("invert", invert);
 		draw_surface_safe(mask);
 	surface_reset_shader();
 	
-	if(feather > 0) {
-		surface_blur_init();
+	if(feather > 0) 
 		__temp_mask = surface_apply_gaussian(__temp_mask, feather, false, c_white, 1, noone);
-	}
 	
 	return __temp_mask;
 }
@@ -47,10 +49,8 @@ function mask_apply(original, edited, mask, mix = 1) {
 	
 	__mask_surface = surface_verify(__mask_surface, _w, _h, _f);
 	
-	if(is_surface(mask) && __mask_feather > 0) {
-		surface_blur_init();
+	if(is_surface(mask) && __mask_feather > 0)
 		mask = surface_apply_gaussian(mask, __mask_feather, false, c_white, 1, noone);
-	}
 	
 	surface_set_shader(__mask_surface, sh_mask);
 		shader_set_surface("original", original);

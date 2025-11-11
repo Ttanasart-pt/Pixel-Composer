@@ -162,7 +162,7 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 	// 	if(is_array(_surf)) _surf = array_safe_get_fast(_surf, preview_index);
 	// 	if(!is_surface(_surf)) return;
 		
-	// 	var bbox = drawGetBbox(xx, yy, _s);
+	// 	var bbox = draw_bbox;
 	// 	var aa   = 0.5 + 0.5 * renderActive;
 	// 	if(!isHighlightingInGraph()) aa *= 0.25;
 		

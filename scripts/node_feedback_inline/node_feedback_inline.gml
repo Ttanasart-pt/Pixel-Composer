@@ -88,7 +88,7 @@ function Node_Feedback_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		return noone;
 	}
 	
-	static drawNode = function(_draw, _x, _y, _mx, _my, _s, display_parameter = noone) {}
+	static drawNode = function(_draw, _x, _y, _mx, _my, _s) {}
 	
 	static pointIn = function(_x, _y, _mx, _my, _s) { return false; }
 	

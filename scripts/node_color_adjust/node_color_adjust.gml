@@ -43,6 +43,7 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	temp_surface = [ noone, noone ];
 	
+	__init_mask_simple();
 	attribute_surface_depth();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
@@ -234,7 +235,7 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var type = getInputData(12);
 		if(type == 0) return;
 		
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		if(bbox.h < 1) return;
 		
 		var pal = outputs[1].getValue();

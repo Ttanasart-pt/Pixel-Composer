@@ -92,7 +92,7 @@ function Node_Assert(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var name = getInputData(0);
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		
 		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
 		draw_text_bbox(bbox, name);

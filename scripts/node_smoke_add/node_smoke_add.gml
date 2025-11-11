@@ -191,7 +191,7 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		var _typ = getInputData(8);
 		
 		if(_typ == 0) {

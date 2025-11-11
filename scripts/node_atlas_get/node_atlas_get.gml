@@ -27,7 +27,7 @@ function Node_Atlas_Get(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		var _ss  = _s * .5;
 		draw_sprite_ext_filter(s_node_atlas_get, 0, bbox.x0 + 24 * _ss, bbox.y1 - 24 * _ss, _ss, _ss, 0, c_white, 1);
 	}

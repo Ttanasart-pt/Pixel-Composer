@@ -188,7 +188,7 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		draw_set_alpha(1);
 		
 		draw_set_text(f_sdf, fa_left, fa_center);
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		
 		var _sw = bbox.w - 16 * _s;
 		var _sh = junction_draw_hei_y * _s;

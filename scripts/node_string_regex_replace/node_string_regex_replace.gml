@@ -23,7 +23,7 @@ function Node_String_Regex_Replace(_x, _y, _group = noone) : Node_Processor(_x, 
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var str  = outputs[0].getValue();
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		
 		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
 		draw_text_bbox(bbox, str);

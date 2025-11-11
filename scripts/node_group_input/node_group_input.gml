@@ -547,9 +547,9 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static drawNodeDef = drawNode;
 	
-	static drawNode = function(_draw, _x, _y, _mx, _my, _s, display_parameter = noone, _panel = noone) { 
+	static drawNode = function(_draw, _x, _y, _mx, _my, _s, _panel = noone) { 
 		draw_metadata = _s >= .75;
-		if(_s >= .75) return drawNodeDef(_draw, _x, _y, _mx, _my, _s, display_parameter, _panel);
+		if(_s >= .75) return drawNodeDef(_draw, _x, _y, _mx, _my, _s, _panel);
 		
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;

@@ -58,7 +58,7 @@ function Node_Array_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		var type = outputs[0].type;
 		var show = true;
 		

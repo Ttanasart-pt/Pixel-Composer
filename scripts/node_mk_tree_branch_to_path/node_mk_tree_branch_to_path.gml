@@ -164,7 +164,7 @@ function Node_MK_Tree_Branch_To_Path(_x, _y, _group = noone) : Node(_x, _y, _gro
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		draw_sprite_bbox_uniform(s_node_mk_tree_branch_to_path, 0, bbox);
 	}
 }

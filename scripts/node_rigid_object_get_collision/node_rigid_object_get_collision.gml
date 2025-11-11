@@ -133,7 +133,7 @@ function Node_Rigid_Object_Get_Collision(_x, _y, _group = noone) : Node(_x, _y, 
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		draw_sprite_bbox_uniform(s_node_rigid_object_get_collision, 0, bbox);
 	}
 }

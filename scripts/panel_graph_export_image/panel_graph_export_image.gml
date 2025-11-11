@@ -105,7 +105,7 @@ function graph_export_image(allList, nodeList, settings = {}) {
 			allList[i].preDraw(gr_x, gr_y, mx, my, scale);
 		
 		for( var i = 0, n = array_length(nodeList); i < n; i++ )
-			nodeList[i].drawNodeBG(gr_x, gr_y, mx, my, scale);
+			if(nodeList[i].drawNodeBG) nodeList[i].drawNodeBG(gr_x, gr_y, mx, my, scale);
 		
 		#region draw conneciton
 			surface_set_target(cs);
@@ -133,10 +133,10 @@ function graph_export_image(allList, nodeList, settings = {}) {
 				if(nodeList[i].drawNodeBehind) nodeList[i].drawNodeBehind(gr_x, gr_y, mx, my, scale);
 			
 			for( var i = 0, n = array_length(nodeList); i < n; i++ )
-				nodeList[i].drawNode(true, gr_x, gr_y, mx, my, scale, param);
+				nodeList[i].drawNode(true, gr_x, gr_y, mx, my, scale);
 				
 			for( var i = 0, n = array_length(nodeList); i < n; i++ )
-				nodeList[i].drawNodeFG(gr_x, gr_y, mx, my, scale, param);
+				if(nodeList[i].drawNodeFG) nodeList[i].drawNodeFG(gr_x, gr_y, mx, my, scale, param);
 		#endregion
 		
 	surface_reset_target();

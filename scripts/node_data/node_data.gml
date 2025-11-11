@@ -96,11 +96,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		draw_pad_w   = 0;
 		draw_pad_h   = 0;
 		
-		display_parameter = new connectionParameter();
-		
 		draw_name = true;
 		draggable = true;
 		
+		draw_bbox           = BBOX();
 		draw_boundary       = [0,0,0,0];
 		draw_graph_culled   = false;
 		
@@ -237,13 +236,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		preview_amount   = 0;
 		previewable		 = true;
 		preview_draw     = true;
-		preview_speed	 = 0;
 		preview_index	 = 0;
 		preview_channel  = 0;
 		preview_channel_temp = undefined;
 		preview_alpha	 = 1;
 		
-		__preview_surf = false;
+		preview_is_surface = false;
 		__preview_sw   = noone;
 		__preview_sh   = noone;
 		
@@ -1521,12 +1519,15 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			dummy_add_index  = noone;
 			dummy_insert     = noone;
 			
-			if(!_upd && !_dummy) {
-				if(SHOW_PARAM) h = h_param;
-				onPreDraw(_x, _y, _s, _iy, _oy);
-				return;
-			}
 		#endregion
+		
+		if(!_upd && !_dummy) { // cache
+			if(SHOW_PARAM) h = h_param;
+			onPreDraw(_x, _y, _s, _iy, _oy);
+			return;
+		}
+		
+		drawSetBbox(xx, yy, _s);
 		
 		var jun;
 		var inspCount = hasInspector1Update() + hasInspector2Update();
@@ -1680,16 +1681,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static onPreDraw = function(_x, _y, _s, _iny, _outy) {}
 	
-	static isHighlightingInGraph = function() {
-		var  high = display_parameter.highlight;
-		var _selc = active_draw_index == 0 || branch_drawing;
-		return !high || _selc;
-	}
+	static isHighlightingInGraph = function() { return !project.graphDisplay.highlight || active_draw_index == 0 || branch_drawing; }
 	
-	static getColor = function() {
-		var cc = attributes.color == -1? color : attributes.color; 
-		return cc;
-	}
+	static getColor = function() { return attributes.color == -1? color : attributes.color; }
 	
 	static drawNodeBase = function(xx, yy, _s) { 
 		var cc = colorMultiply(getColor(), COLORS.node_base_bg);
@@ -1700,9 +1694,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static drawNodeOverlay = undefined;
 	
-	__draw_bbox = BBOX();
-	static drawGetBbox = function(xx, yy, _s, label = true) {
-		var pad_label = ((display_parameter.avoid_label || label) && draw_name) || label == 2;
+	static drawSetBbox = function(xx, yy, _s) {
+		var pad_label = (project.graphDisplay.avoid_label) && draw_name;
 		
 		var x0 = xx;
 		var x1 = xx + w * _s;
@@ -1723,15 +1716,15 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var _xc = (x0 + x1) / 2;
 		var _yc = (y0 + y1) / 2;
 		
-		_w *= display_parameter.preview_scale / 100;
-		_h *= display_parameter.preview_scale / 100;
+		_w *= project.graphDisplay.preview_scale / 100;
+		_h *= project.graphDisplay.preview_scale / 100;
 		
 		x0 = _xc - _w / 2;
 		x1 = _xc + _w / 2;
 		y0 = _yc - _h / 2;
 		y1 = _yc + _h / 2;
 		
-		return __draw_bbox.fromPoints(x0, y0, x1, y1);
+		return draw_bbox.fromPoints(x0, y0, x1, y1);
 	}
 	
 	static drawNodeName = function(xx, yy, _s, _panel = noone) {
@@ -1789,7 +1782,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		gpu_set_scissor(_scis);
 	}
 	
-	static drawJunctionWidget = function(_x, _y, _mx, _my, _s, _hover, _focus, _display_parameter = noone, _panel = noone) {
+	static drawJunctionWidget = function(_x, _y, _mx, _my, _s, _hover, _focus, _panel = noone) {
 		var hover = noone;
 		
 		var _m = [ _mx, _my ];
@@ -2106,53 +2099,35 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return hovering;
 	}
 	
-	static setPreview = function(_surf) {
-		preview_surface = _surf;
-		__preview_surf  = is_surface(_surf);
-	}
-	
 	static drawPreview = function(xx, yy, _s) {
 		var surf = getGraphPreviewSurface();
 		if(surf == noone) return;
 		
-		preview_amount = 0;
+		preview_amount = array_safe_length(surf);
 		if(is_array(surf)) {
-			if(array_length(surf) == 0) return;
-			preview_amount = array_length(surf);
-			
-			if(preview_speed != 0) {
-				preview_index += preview_speed;
-				if(preview_index <= 0)
-					preview_index = array_length(surf) - 1;
-			}
-			
-			if(floor(preview_index) > array_length(surf) - 1) preview_index = 0;
-			surf = surf[preview_index];
+			if(preview_amount == 0) return;
+			surf = array_safe_get(surf, preview_index);
 		}
 		
-		setPreview(surf);
-		if(!__preview_surf) return;
+		preview_surface    = surf;
+		preview_is_surface = is_just_surface(surf);
+		if(!preview_is_surface) return;
 		
-		__preview_sw   = surface_get_width_safe(preview_surface);
-		__preview_sh   = surface_get_height_safe(preview_surface);
+		__preview_sw = surface_get_width_safe(preview_surface);
+		__preview_sh = surface_get_height_safe(preview_surface);
 		
-		var bbox = drawGetBbox(xx, yy, _s, false);
-		var aa   = 0.5 + 0.5 * renderActive;
+		var bbox = draw_bbox;
+		var aa   = .5 + .5 * renderActive;
 		if(!isHighlightingInGraph()) aa *= 0.25;
 		
 		var _sw = __preview_sw;
 		var _sh = __preview_sh;
 		var _ss = min(bbox.w / _sw, bbox.h / _sh);
-		
-		var _ps = preview_surface;
-		if(is_struct(_ps) && is(_ps, dynaSurf))
-			_ps = array_safe_get_fast(_ps.surfaces, 0, noone);
-		
-		draw_surface_ext_safe(_ps, bbox.xc - _sw * _ss / 2, bbox.yc - _sh * _ss / 2, _ss, _ss);
+		draw_surface_ext(preview_surface, bbox.xc - _sw * _ss / 2, bbox.yc - _sh * _ss / 2, _ss, _ss, 0, c_white, 1);
 	}
 	
 	static getNodeDimension = function(showFormat = true) {
-		if(!__preview_surf) return preview_array;
+		if(!preview_is_surface) return preview_array;
 		
 		var pw = surface_get_width_safe(preview_surface);
 		var ph = surface_get_height_safe(preview_surface);
@@ -2181,13 +2156,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var tx = xx + w * _s / 2;
 		var ty = yy + (h + 4) * _s - 2;
 		
-		if(struct_get(display_parameter, "show_dimension")) {
+		if(struct_get(project.graphDisplay, "show_dimension")) {
 			var txt = string(getNodeDimension(_s > 0.65));
 			draw_text(round(tx), round(ty), txt);
 			ty += string_height(txt) - 2;
 		}
 		
-		if(struct_get(display_parameter, "show_compute")) {
+		if(struct_get(project.graphDisplay, "show_compute")) {
 			var rt = 0, unit = "";
 			
 			if(render_time == 0) {
@@ -2233,12 +2208,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static drawNodeBG = undefined;
-	
-	static drawNodeFG = function(_x, _y, _mx, _my, _s, _display_parameter = noone, _panel = noone) { }
-	
-	static drawNode = function(_draw, _x, _y, _mx, _my, _s, _display_parameter = noone, _panel = noone) { 
-		if(_display_parameter != noone) display_parameter = _display_parameter;
-		
+	static drawNodeFG = undefined;
+	static drawNode   = function(_draw, _x, _y, _mx, _my, _s, _panel = noone) { 
 		var xx = x * _s + _x + 1;
 		var yy = y * _s + _y + 1;
 		
@@ -2257,7 +2228,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(previewable) {
 			if(preview_draw) drawPreview(xx, yy, _s);
 			if(node_draw_icon != noone) {
-				var bbox = drawGetBbox(xx, yy, _s);
+				var bbox = draw_bbox;
 				draw_sprite_bbox_uniform(node_draw_icon, 0, bbox);
 			}
 			
@@ -2265,7 +2236,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			catch(e) { log_warning("NODE onDrawNode", exception_print(e)); }
 		} 
 		
-		if(SHOW_PARAM) drawJunctionWidget(xx, yy, _mx, _my, _s, _hover, _focus, _display_parameter, _panel);
+		if(SHOW_PARAM) drawJunctionWidget(xx, yy, _mx, _my, _s, _hover, _focus, _panel);
 		
 		draw_name = false;
 		if((previewable && _s >= 0.5) || (!previewable && h * _s >= name_height * .5)) drawNodeName(xx, yy, _s, _panel);
@@ -2360,7 +2331,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static drawActive = function(ind = 0) {
 		active_draw_index = max(active_draw_index, ind);
-		if(display_parameter.highlight) drawBranch();
+		if(project.graphDisplay.highlight) drawBranch();
 	}
 	
 	static InputDrawOverlay = function(hv) {

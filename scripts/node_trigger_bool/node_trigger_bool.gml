@@ -37,7 +37,7 @@ function Node_Trigger_Bool(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		draw_sprite_fit(THEME.node_trigger_icon, preview, bbox.xc, bbox.yc, bbox.w, bbox.h, preview? COLORS._main_accent : COLORS._main_icon);
 	}
 }

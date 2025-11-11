@@ -35,7 +35,7 @@ function Node_Array_Copy(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		if(bbox.h < 1) return;
 		
 		if(outputs[0].type == VALUE_TYPE.color) {

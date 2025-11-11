@@ -73,6 +73,7 @@ function SurfaceAtlas(    _surface, _x = 0, _y = 0, _rot = 0, _sx = 1, _sy = 1, 
 		surface.set(_surface);
 		w = surface_get_width_safe(_surface);
 		h = surface_get_height_safe(_surface);
+		return self;
 	}
 	
 	static clone = function(_cloneSurf = false) {

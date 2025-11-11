@@ -48,31 +48,26 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newActiveInput(8);
 	
 	////- =Surfaces
-	
 	newInput( 0, nodeValue_Surface(     "Background" ));
 	newInput( 1, nodeValue_Surface(     "Foreground" ));
-	newInput( 4, nodeValue_Surface(     "Mask" ));
-	newInput(12, nodeValue_Bool(        "Invert mask",        false ));
-	newInput(13, nodeValue_Slider(      "Mask feather",       1, [1, 16, 0.1] ));
+	newInput( 4, nodeValue_Surface(     "Mask"       ));
+	newInput(12, nodeValue_Bool(        "Invert mask",        false        ));
+	newInput(13, nodeValue_Slider(      "Mask feather",       1, [1,16,.1] ));
 	newInput( 6, nodeValue_Enum_Scroll( "Output dimension",   0, [ "Background", "Forground", "Mask", "Maximum", "Constant" ])).rejectArray();
-	newInput( 7, nodeValue_Vec2(        "Constant dimension", DEF_SURF ));
+	newInput( 7, nodeValue_Vec2(        "Constant dimension", DEF_SURF     ));
 	
 	////- =Blend
-	
 	newInput(2, nodeValue_Enum_Scroll( "Blend mode",     0, BLEND_TYPES ))
 		.setHistory([ BLEND_TYPES, { cond: function() /*=>*/ {return LOADING_VERSION < 1_18_00_0}, list: global.BLEND_TYPES_18 } ]);
-	
-	newInput(3, nodeValue_Slider(      "Opacity",        1 ));
-	newInput(9, nodeValue_Bool(        "Preserve alpha", false));
+	newInput(3, nodeValue_Slider(      "Opacity",        1     ));
+	newInput(9, nodeValue_Bool(        "Preserve alpha", false ));
 	
 	////- =Transform
-	
 	newInput( 5, nodeValue_Enum_Scroll( "Fill mode",         0, [ "None", "Stretch", "Tile" ]));
 	newInput(14, nodeValue_Vec2(        "Position",        [.5,.5] ));
 	newInput(10, nodeValue_Enum_Button( "Horizontal Align",  0, array_create(3, THEME.inspector_surface_halign)));
 	newInput(11, nodeValue_Enum_Button( "Vertical Align",    0, array_create(3, THEME.inspector_surface_valign)));
-	
-	//- inputs 15
+	// inputs 15
 		
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -84,6 +79,7 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	////- Nodes
 	
+	__init_mask_simple();
 	attribute_surface_depth();
 	
 	temp_surface	   = [ noone, noone ];
@@ -167,7 +163,7 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _fill = getSingleValue(5);
 		var _outp = getSingleValue(6);
 		
-		var _atlas  = is_instanceof(_fore, SurfaceAtlas);
+		var _atlas  = is(_fore, SurfaceAtlas);
 		
 		inputs[5].setVisible(!_atlas);
 		inputs[6].editWidget.data_list = _atlas? [ "Background", "Forground" ] : [ "Background", "Forground", "Mask", "Maximum", "Constant" ];
@@ -177,31 +173,32 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _back	 = _data[0];
-		var _fore	 = _data[1];
-		var _type	 = _data[2];
-		var _opacity = _data[3];
-		var _mask	 = _data[4];
-		var _fill	 = _data[5];
-		
-		var _outp	 = _data[6];
-		var _out_dim = _data[7];
-		var _pre_alp = _data[9];
-		
-		var _halign = _data[10];
-		var _valign = _data[11];
-		var _posit  = _data[14];
-		
-		var _mskInv = _data[12];
-		var _mskFea = _data[13];
-		
-		var cDep    = attrDepth();
+		#region data
+			var _back	 = _data[ 0];
+			var _fore	 = _data[ 1];
+			var _mask	 = _data[ 4];
+			var _mskInv  = _data[12];
+			var _mskFea  = _data[13];
+			var _outp	 = _data[ 6];
+			var _out_dim = _data[ 7];
+			
+			var _type	 = _data[ 2];
+			var _opacity = _data[ 3];
+			var _pre_alp = _data[ 9];
+			
+			var _fill	 = _data[ 5];
+			var _posit   = _data[14];
+			var _halign  = _data[10];
+			var _valign  = _data[11];
+			
+			var cDep    = attrDepth();
+		#endregion
 		
 		#region dimension
 			var ww = 1;
 			var hh = 1;
-			var _atlas  = is_instanceof(_fore, SurfaceAtlas);
-		
+			var _atlas = is(_fore, SurfaceAtlas);
+			
 			switch(_outp) {
 				case NODE_BLEND_OUTPUT.background :
 					ww = surface_get_width_safe(_back);
@@ -230,7 +227,8 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			}
 		#endregion
 		
-		for( var i = 0; i < 2; i++ ) temp_surface[i] = surface_verify(temp_surface[i], ww, hh, cDep);
+		temp_surface[0] = surface_verify(temp_surface[0], ww, hh, cDep);
+		temp_surface[1] = surface_verify(temp_surface[1], ww, hh, cDep);
 		
 		var _backDraw = temp_surface[0];
 		var _foreDraw = temp_surface[1];
@@ -241,7 +239,6 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		surface_reset_shader();
 		
 		if(_fill == NODE_BLEND_FILL.none || _atlas) {
-			
 			if(_atlas) {
 				if(_outp == NODE_BLEND_OUTPUT.background) {
 					surface_set_shader(_foreDraw, noone,, BLEND.over);
@@ -289,7 +286,8 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			surface_reset_shader();
 		}
 		
-		var _osurf  = is_instanceof(_outSurf, SurfaceAtlas)? _outSurf.surface.surface : _outSurf;
+		var _oatl   = is(_outSurf, SurfaceAtlas);
+		var _osurf  = _oatl? _outSurf.getSurface() : _outSurf;
 		var _output = surface_verify(_osurf, ww, hh, cDep);
 		
 		_mask = mask_modify(_mask, _mskInv, _mskFea);
@@ -314,8 +312,8 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			return _newAtl;
 		}
 		
-		if(is_instanceof(_outSurf, SurfaceAtlas)) _outSurf.surface.surface = _output;
-		else _outSurf = _output;
+		if(_oatl) _outSurf.setSurface(_output);
+		else      _outSurf = _output;
 		
 		return _outSurf;
 	}

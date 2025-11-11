@@ -32,7 +32,7 @@ function Node_3D_Light(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group) 
 		PROCESSOR_OVERLAY_CHECK
 		
 		var _colr = current_data[in_d3d + 1];
-		var bbox  = drawGetBbox(xx, yy, _s);
+		var bbox  = draw_bbox;
 		draw_set_color(_colr);
 		
 		draw_set_circle_precision(32);

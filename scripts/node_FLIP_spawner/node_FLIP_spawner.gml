@@ -188,7 +188,7 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox   = drawGetBbox(xx, yy, _s, false);
+		var bbox   = draw_bbox;
 		var _shape = getInputData(1);
 		var _surf  = getInputData(7);
 		

@@ -184,7 +184,7 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { 
 		var disp = getInputData(3);
 		var vec  = getSingleValue(0,, true);
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		
 		var v0 = array_safe_get_fast(vec, 0);
 		var v1 = array_safe_get_fast(vec, 1);

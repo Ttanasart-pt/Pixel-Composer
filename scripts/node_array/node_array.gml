@@ -175,7 +175,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	////- =Draw
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		var jh   = (junction_draw_hei_y - 4) * _s;
 		
 		var x0 = bbox.x0 + 6 * _s;

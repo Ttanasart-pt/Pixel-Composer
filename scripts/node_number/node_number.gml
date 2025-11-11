@@ -254,7 +254,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		__m[0] = _mx;
 		__m[1] = _my;
 		
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		if(disp == 0 || inputs[0].value_from != noone) {
 			draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
 			draw_text_bbox(bbox, string_real(val));
@@ -272,7 +272,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					slider_value = slider_value == -1? raw : lerp_float(slider_value, raw, 2.5);
 					var _prog = clamp((slider_value - _minn) / (_maxx - _minn), 0., 1.);
 					
-					bbox = drawGetBbox(xx, yy, _s, 2);
+					bbox = draw_bbox;
 					draw_set_text(f_sdf, fa_center, fa_center, _col);
 					draw_text_transformed(bbox.xc, bbox.y0 + 16 * _s, string_real(val), _s * 0.5, _s * 0.5, 0);
 				

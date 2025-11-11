@@ -292,7 +292,7 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			default: str = string_lower(global.node_math_names[typ]);
 		}
 		
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		var ss	= string_scale(str, bbox.w, bbox.h);
 		draw_text_transformed(bbox.xc, bbox.yc, str, ss * 0.8, ss * 0.8, 0);
 	}

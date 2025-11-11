@@ -101,7 +101,7 @@ function Node_Audio_Window(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _aud = getInputData(0);
 		if(!is_instanceof(_aud, audioObject)) return;
 		
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		var surf = _aud.checkPreview(320, 128);
 		
 		if(!is_surface(surf)) return;

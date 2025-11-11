@@ -113,7 +113,7 @@ function Node_Compare(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			default: return;
 		}
 		
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		var ss	= string_scale(str, bbox.w, bbox.h);
 		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
 	}

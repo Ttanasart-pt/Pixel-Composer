@@ -365,7 +365,7 @@ function Node_3D_Mesh_Stack_Slice(_x, _y, _group = noone) : Node(_x, _y, _group)
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		if(!splicing) return;
 		
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		var rr   = min(bbox.w - 16, bbox.h - 16) / 2;
 		var ast  = current_time / 5;
 		var prg  = (splice_progress + splice_pixel / (dimensions[0] * dimensions[1])) / splice_prog_tot;

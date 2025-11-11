@@ -35,7 +35,7 @@ function Node_Vector_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			if(outputs[i].visible) str += $"{outputs[i].getValue()}\n";
 		
 		str = string_trim(str);
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		var ss	 = string_scale(str, bbox.w, bbox.h);
 		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
 	}

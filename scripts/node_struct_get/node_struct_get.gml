@@ -90,7 +90,7 @@ function Node_Struct_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		var str  = getInputData(1);
 		
 		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);

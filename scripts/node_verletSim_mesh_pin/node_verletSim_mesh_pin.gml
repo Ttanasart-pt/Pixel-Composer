@@ -91,7 +91,7 @@ function Node_VerletSim_Mesh_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		draw_sprite_bbox_uniform(s_node_verletsim_mesh_pin, 0, bbox);
 	}
 }

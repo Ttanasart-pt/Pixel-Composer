@@ -19,7 +19,7 @@ function Node_Trigger(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		var trg  = outputs[0].getValue();
 		
 		var cc = trg? COLORS._main_accent : COLORS._main_icon;

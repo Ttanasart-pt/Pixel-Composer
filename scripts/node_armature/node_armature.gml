@@ -1428,7 +1428,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	} 
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { 
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		
 		var _ss = _s * .5;
 		draw_sprite_ext_filter(s_node_armature, 0, bbox.x0 + 24 * _ss, bbox.y1 - 24 * _ss, _ss, _ss, 0, c_white, 0.5);

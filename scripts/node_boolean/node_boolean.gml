@@ -81,7 +81,7 @@ function Node_Boolean(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
 		var val	 = getInputData(0);
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		
 		wd_checkBox.setFocusHover(_focus, _hover);
 		wd_checkBox.draw(bbox.xc, bbox.yc, val, [ _mx, _my ], bbox.h - 8 * _s, fa_center, fa_center);

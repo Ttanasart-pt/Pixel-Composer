@@ -42,7 +42,7 @@ function Node_Json_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	setTrigger(1,,, function() /*=>*/ {return writeFile()});
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		
 		var str = filename_name(getInputData(0));
 		if(filename_ext(str) != ".json")

@@ -570,7 +570,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		draw_sprite_fit(s_node_strand_create, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 	

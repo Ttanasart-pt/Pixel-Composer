@@ -50,7 +50,7 @@ function Node_Cache_Value_Array(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		draw_sprite_fit(s_node_cache_value_array, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

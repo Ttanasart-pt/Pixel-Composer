@@ -26,7 +26,7 @@ function Node_Base_Convert(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var baseFrom = array_safe_get_fast(current_data, 1);
 		var baseTo   = array_safe_get_fast(current_data, 2);
 		
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		var b1   = BBOX().fromPoints(bbox.x0, bbox.y0, bbox.xc - _s * 8, bbox.y1);
 		var b2   = BBOX().fromPoints(bbox.xc + _s * 8, bbox.y0, bbox.x1, bbox.y1);
 		

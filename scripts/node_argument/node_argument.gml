@@ -40,7 +40,7 @@ function Node_Argument(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	} #endregion
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		var tag  = getInputData(0);
 		
 		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);

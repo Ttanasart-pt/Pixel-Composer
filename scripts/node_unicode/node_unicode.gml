@@ -13,7 +13,7 @@ function Node_Unicode(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		var str  = outputs[0].getValue();
 		
 		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);

@@ -83,7 +83,7 @@ function Node_Array_Convolute(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		draw_sprite_fit(s_node_array_convolute, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

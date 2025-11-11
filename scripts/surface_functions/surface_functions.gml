@@ -293,6 +293,8 @@
 		
 	}
 
+	function is_just_surface(s) { INLINE return is_numeric(s) && s > 0 && surface_exists(s); }
+	
 	function surface_verify(surf, w, h, format = surface_rgba8unorm) {
 		INLINE
 		

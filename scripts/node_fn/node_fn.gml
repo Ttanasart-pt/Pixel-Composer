@@ -42,7 +42,7 @@ function Node_Fn(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) { }
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		
 		var disp = array_safe_get_fast(current_data, 0);
 		var time = CURRENT_FRAME;

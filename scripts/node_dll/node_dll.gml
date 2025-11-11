@@ -172,7 +172,7 @@ function Node_DLL(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		var _fn  = getInputData(1);
 		
 		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);

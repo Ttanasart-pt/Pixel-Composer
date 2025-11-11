@@ -27,7 +27,7 @@ function Node_Project_Data(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		var txt  = outputs[0].getValue();
 		
 		draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text);

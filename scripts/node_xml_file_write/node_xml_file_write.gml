@@ -29,7 +29,7 @@ function Node_XML_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	static update = function(frame = CURRENT_FRAME) { writeFile(); }
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		
 		var str = filename_name(getInputData(0));
 		if(filename_ext(str) != ".xml")

@@ -157,7 +157,7 @@ function Node_Array_CSV_Parse(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		
 		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
 		draw_text_bbox(bbox, "CSV");

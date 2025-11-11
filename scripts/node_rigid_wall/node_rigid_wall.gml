@@ -92,7 +92,7 @@ function Node_Rigid_Wall(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox  = drawGetBbox(xx, yy, _s);
+		var bbox  = draw_bbox;
 		var _sids = getInputData(0);
 		var spr   = s_rigid_walls;
 		

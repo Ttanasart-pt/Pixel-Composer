@@ -1715,7 +1715,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        _node_frames     = array_filter(_node_draw, function(_n) /*=>*/ {return is(_n, Node_Frame)});
 	        
 	        array_foreach(_node_frames, function(_n) /*=>*/ { 
-	        	if(_n.drawNodeBG(__gr_x, __gr_y, __mx, __my, __gr_s, project.graphDisplay, __self)) {
+	        	if(_n.drawNodeBG != undefined && _n.drawNodeBG(__gr_x, __gr_y, __mx, __my, __gr_s, __self)) {
 	        		frame_hovering = _n; 
 	        		array_push(frame_hoverings, _n);
 	        	}
@@ -2103,20 +2103,18 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		        
 		        array_foreach(_node_draw, function(_n) /*=>*/ {
 		            try { 
-		            	_n.drawNode(node_surface_update, __gr_x, __gr_y, __mx, __my, __gr_s, project.graphDisplay, __self); 
+		            	_n.drawNode(node_surface_update, __gr_x, __gr_y, __mx, __my, __gr_s, __self); 
 		            	
 		            	var _xx = __gr_x + _n.x * __gr_s;
 		                var _yy = __gr_y + _n.y * __gr_s;
 		                var val = _n.drawJunctions(_xx, _yy, __mx, __my, __gr_s, __gr_s <= 0.5 || !_n.previewable);
-		                
 		                if(val) value_focus = val;
-		                
 		            }
 		            catch(e) { log_warning("NODE DRAW", exception_print(e)); }
 		        });
 		        
 		        array_foreach(_node_draw, function(_n) /*=>*/ { _n.drawBadge(__gr_x, __gr_y, __gr_s); });
-		        array_foreach(_node_draw, function(_n) /*=>*/ { _n.drawNodeFG(__gr_x, __gr_y, __mx, __my, __gr_s, project.graphDisplay, __self); });
+		        array_foreach(_node_draw, function(_n) /*=>*/ { if(_n.drawNodeFG) _n.drawNodeFG(__gr_x, __gr_y, __mx, __my, __gr_s, __self); });
 				surface_reset_target();
 	        }
 	        

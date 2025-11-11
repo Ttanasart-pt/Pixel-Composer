@@ -175,7 +175,7 @@ function Node_MIDI_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	static onDestroy = function() { rtmidi_deinit(); }
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		var bx   = bbox.xc;
 		var by   = bbox.y0 + bbox.h * 0.55;
 		

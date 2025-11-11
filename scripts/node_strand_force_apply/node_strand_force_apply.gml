@@ -48,7 +48,7 @@ function Node_Strand_Force_Apply(_x, _y, _group = noone) : _Node_Strand_Affector
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		draw_sprite_fit(s_node_strand_force_apply, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

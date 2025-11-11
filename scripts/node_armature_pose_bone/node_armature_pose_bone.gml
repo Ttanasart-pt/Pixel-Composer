@@ -133,7 +133,7 @@ function Node_Armature_Pose_Bone(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	static getPreviewBoundingBox = function() /*=>*/ {return BBOX().fromPoints(bone_bbox[0], bone_bbox[1], bone_bbox[2], bone_bbox[3])};
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		if(!is(bonePose, __Bone)) { draw_sprite_bbox_uniform(s_node_armature_pose_bone, 0, bbox, c_white, 1, true); return; }
 		
 		var _ss = _s * .5;

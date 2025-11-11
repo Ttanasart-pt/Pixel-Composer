@@ -236,7 +236,7 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 	static onDrawNodeOver = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		if(!obj_reading) return;
 		
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		var rr   = min(bbox.w - 16, bbox.h - 16) / 2;
 		var ast  = current_time / 5;
 		var prg  = obj_read_progress / obj_read_prog_tot;

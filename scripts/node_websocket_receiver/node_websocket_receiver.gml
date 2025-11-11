@@ -122,7 +122,7 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var _active = getInputData(1);
-		var bbox    = drawGetBbox(xx, yy, _s);
+		var bbox    = draw_bbox;
 		var network = ds_map_try_get(NETWORK_SERVERS, port, noone);
 		
 		var cc = CDEF.red, aa = 1;

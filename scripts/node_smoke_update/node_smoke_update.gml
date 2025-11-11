@@ -30,7 +30,7 @@ function Node_Smoke_Update(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		var _act = getInputData(1);
 		draw_sprite_fit(_act? s_node_smoke_update : s_node_smoke_update_paused, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}

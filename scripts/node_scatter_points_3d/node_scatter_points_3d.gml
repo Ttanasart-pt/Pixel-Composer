@@ -172,7 +172,7 @@ function Node_Scatter_Points_3D(_x, _y, _group = noone) : Node_Processor(_x, _y,
 	////- Preview
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = drawGetBbox(xx, yy, _s);
+		var bbox = draw_bbox;
 		draw_sprite_bbox_uniform(s_node_scatter_points_3d, 0, bbox);
 	}
 	
