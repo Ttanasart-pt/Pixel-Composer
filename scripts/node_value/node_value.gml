@@ -1457,7 +1457,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static _getValue = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, log = false) {
-		
 		getValueRecursive(self.__curr_get_val, _time);
 		var val = __curr_get_val[0];
 		var nod = __curr_get_val[1]; if(!is(nod, NodeValue)) return val;
@@ -1483,18 +1482,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static getValueRecursive = function(arr = __curr_get_val, _time = NODE_CURRENT_FRAME) {
-		
-		if(value_from_loop && value_from_loop.bypassConnection() && value_from_loop.junc_out) {
+		if(value_from_loop && value_from_loop.bypassConnection() && value_from_loop.junc_out)
 			value_from_loop.getValue(arr);
-			arr[@ 0] = arr[0];
-		}
 		
 		else if(value_from && value_from != self)
 			value_from.getValueRecursive(arr, _time);
-		
 		else {
-			arr[@ 0] = __getAnimValue(_time);
-			arr[@ 1] = self;
+			arr[0] = __getAnimValue(_time);
+			arr[1] = self;
 		}
 		
 		if(!expUse || expTree == noone || !expTree.validate()) return;

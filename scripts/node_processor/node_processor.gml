@@ -8,7 +8,6 @@ enum ARRAY_PROCESS {
 #macro PROCESSOR_OVERLAY_CHECK if(array_length(current_data) != array_length(inputs)) return 0;
 
 function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	attributes.array_process = ARRAY_PROCESS.loop;
 	current_data	= [];
 	inputs_is_array = [];
 	inputs_index    = [];
@@ -22,8 +21,12 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	icon = THEME.node_processor_icon;
 	
+	attributes.process       = true;
+	attributes.array_process = ARRAY_PROCESS.loop;
+	
 	array_push(attributeEditors, "Array processor");
-	array_push(attributeEditors, [ "Array process type", function() /*=>*/ {return attributes.array_process}, 
+	array_push(attributeEditors, ["Array Process", function() /*=>*/ {return attributes.process}, new checkBox(function() /*=>*/ {return setProcess(!attributes.process)})]);
+	array_push(attributeEditors, ["Array Process Type", function() /*=>*/ {return attributes.array_process}, 
 		new scrollBox([ "Loop", "Hold", "Expand", "Expand inverse" ], function(v) /*=>*/ {return setAttribute("array_process", v, true)}, false) ]);
 	
 	////- Getters
@@ -76,8 +79,24 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	////- Process
 	
+	static setProcess = function(_process = attributes.process) {
+		attributes.process = _process;
+		icon = attributes.process? THEME.node_processor_icon : noone;
+		
+		if(_process) {
+			update    = updateProcess;
+			getInputs = getInputsProcess;
+			
+		} else {
+			update    = updateSimple;
+			getInputs = getInputsSimple;
+		}
+		
+		triggerRender();
+	}
+	
 	static preGetInputs  = undefined;
-	static getInputs     = function(frame = CURRENT_FRAME) {
+	static getInputsProcess = function(frame = CURRENT_FRAME) {
 		if(preGetInputs != undefined) preGetInputs();
 		
 		var _len = array_length(inputs);
@@ -143,6 +162,12 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			
 			inputs_index[i][l] = _index;
 		}
+	}
+	
+	static getInputsSimple = function(frame) {
+		var _len = array_length(inputs);
+		inputs_data = array_verify(inputs_data, _len);
+		for( var i = 0; i < _len; i++ ) inputs_data[i] = inputs[i].getValue(frame);
 	}
 	
 	static processData   = function(_outSurf, _data, _array_index = 0, _frame = CURRENT_FRAME) { return _outSurf; }
@@ -240,14 +265,34 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static postProcess           = undefined;
 	static postPostProcess       = undefined;
 	
-	static update = function(frame = CURRENT_FRAME) { 
+	static updateProcess = function(frame = CURRENT_FRAME) { 
 		if(processData_prebatch  != undefined) processData_prebatch(frame);
-			
+		
 		processOutput(frame);
 			
 		if(processData_postbatch != undefined) processData_postbatch(frame);
 		if(postProcess           != undefined) postProcess(frame);
 		if(postPostProcess       != undefined) postPostProcess(frame);
+	}
+	
+	static updateSimple = function(frame = CURRENT_FRAME) { 
+		var _outputs = undefined;
+		
+		if(array_length(outputs) == 1) {
+			_outputs = outputs[0].getValue(frame);
+			var _res = processData(_outputs, inputs_data, 0, frame);
+			outputs[0].setValue(_res);
+			
+		} else {
+			_outputs = [];
+			for( var i = 0, n = array_length(outputs); i < n; i++ ) 
+				_outputs[i] = outputs[i].getValue(frame);
+			
+			var _res = processData(_outputs, inputs_data, 0, frame);
+			for( var i = 0, n = array_length(_res); i < n; i++ ) 
+				outputs[i].setValue(_res[i]);
+		}
+		
 	}
 	
 	////- CACHE
@@ -291,5 +336,13 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var surf = array_safe_get_fast(cached_output, _frame);
 		return array_safe_get_fast(surf, _aindex, noone);
 	}
-
+	
+	////- Serialize
+	
+	static attributeDeserialize = function(attr) {
+		struct_override(attributes, attr, true); 
+		setProcess();
+	}
+	
+	setProcess();
 }

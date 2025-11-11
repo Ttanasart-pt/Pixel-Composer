@@ -1911,7 +1911,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return hover;
 	}
 	
-	static drawJunctions = function(_x, _y, _mx, _my, _s, _fast = false) {
+	static drawJunctionGroups = function(_x, _y, _mx, _my, _s, _fast = false) {
 		var _scs = gpu_get_scissor();
 		gpu_set_scissor(_x, _y, w * _s, h * _s);
 		draw_set_circle_precision(_fast? 16 : 64);
@@ -1926,7 +1926,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			var _gy0 = _gr[1] - 1 - _js/2;
 			var _gy1 = _gr[2] - 1 + _js/2;
-				
+			
 			_gr[3] = key_mod_press(CTRL) && point_in_rectangle(_mx, _my, _gx0, _gy0, _gx1, _gy1);
 				
 			draw_set_color_alpha(_gr[3]? CDEF.main_dkgrey : CDEF.main_mdblack, .75);
@@ -1937,12 +1937,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			draw_roundrect_ext(_gx0, _gy0, _gx1, _gy1, _js, _js, true);
 		}
 		gpu_set_scissor(_scs);
-			
+	}
+	
+	static drawJunctions = function(_x, _y, _mx, _my, _s, _fast = false) {
 		if(_fast) draw_set_circle_precision(4);
-		else      gpu_set_texfilter(true);
 		
 		var jun;
-		
 		for(var i = 0, n = array_length(inputDisplayList); i < n; i++) {
 			jun = inputDisplayList[i];
 			jun.drawJunction(_s, _mx, _my, _fast);
@@ -1971,16 +1971,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			updatedOutTrigger.drawJunction(_s, _mx, _my, _fast);
 		}
 		
-		if(attributes.outp_meta) {
-			for( var i = 0, n = array_length(junc_meta); i < n; i++ ) {
-				jun = junc_meta[i];
-				if(!jun.isVisible()) continue;
-				
-				jun.drawJunction(_s, _mx, _my, _fast);
-			}
+		if(attributes.outp_meta)
+		for( var i = 0, n = array_length(junc_meta); i < n; i++ ) {
+			jun = junc_meta[i];
+			if(!jun.isVisible()) continue;
+			
+			jun.drawJunction(_s, _mx, _my, _fast);
 		}
 		
-		if(!_fast) gpu_set_texfilter(false);
 	}
 	
 	static drawJunctionNames = function(_x, _y, _mx, _my, _s, _panel = noone) {
@@ -2817,7 +2815,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(struct_has(attributes, "color_depth")) attributes.color_depth += (!array_empty(inputs) && inputs[0].type == VALUE_TYPE.surface)? 1 : 2;
 			if(struct_has(attributes, "interpolate")) attributes.interpolate++;
 			if(struct_has(attributes, "oversample"))  attributes.oversample++;
-			
 		}
 		
 		if(struct_has(attributes, "color_depth") && !global.SURFACE_FORMAT_SUPP[attributes[$ "color_depth"]])

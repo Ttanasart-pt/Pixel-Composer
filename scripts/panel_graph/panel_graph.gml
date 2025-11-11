@@ -2107,8 +2107,15 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		            	
 		            	var _xx = __gr_x + _n.x * __gr_s;
 		                var _yy = __gr_y + _n.y * __gr_s;
-		                var val = _n.drawJunctions(_xx, _yy, __mx, __my, __gr_s, __gr_s <= 0.5 || !_n.previewable);
+		                var _fs = __gr_s <= 0.5 || !_n.previewable;
+		                
+		                gpu_set_texfilter(true);
+		                if(!array_empty(_n.inputDisplayGroup)) 
+		                	_n.drawJunctionGroups(_xx, _yy, __mx, __my, __gr_s, _fs);
+		                	
+		                var val = _n.drawJunctions(_xx, _yy, __mx, __my, __gr_s, _fs);
 		                if(val) value_focus = val;
+		                gpu_set_texfilter(false);
 		            }
 		            catch(e) { log_warning("NODE DRAW", exception_print(e)); }
 		        });
