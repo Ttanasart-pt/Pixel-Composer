@@ -48,13 +48,6 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	newInput(13, nodeValue_Float(   "Animation Speed",  1                                    ));
 	newInput(18, nodeValue_EScroll( "On End",           0, ["Loop", "Hold", "Clear"]         ));
 	
-	////- =Brush
-	newInput(21, nodeValue_EScroll( "Brush Type",          0, ["Line", "Stamp"]                ));
-	newInput( 6, nodeValue_Surface( "Brush Surface"                                            )).setVisible(true, false);
-	newInput(15, nodeValue_Range(   "Brush Distance",      [1,1], { linked : true }            ));
-	newInput(17, nodeValue_RotRand( "Random Direction",    [0,0,0,0,0]                         ));
-	newInput(16, nodeValue_Bool(    "Rotate by Direction",  false                              ));
-	
 	////- =Background
 	newInput(10, nodeValue_Bool(    "Render Background",        true                          ));
 	newInput( 4, nodeValue_EScroll( "Background Type",          0, ["Surface", "Solid Color"] ));
@@ -63,15 +56,25 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	newInput(14, nodeValue_Bool(    "Use Background Dimension", true                          ));
 	newInput( 9, nodeValue_Slider(  "Background Alpha",         1                             ));
 	
+	////- =Brush
+	newInput(21, nodeValue_EScroll( "Brush Type",          0, ["Line", "Stamp"]                ));
+	newInput( 6, nodeValue_Surface( "Brush Surface"                                            )).setVisible(true, false);
+	newInput(15, nodeValue_Range(   "Brush Distance",      [1,1], { linked : true }            ));
+	newInput(17, nodeValue_RotRand( "Random Direction",    [0,0,0,0,0]                         ));
+	newInput(16, nodeValue_Bool(    "Rotate by Direction",  false                              ));
+	
+	////- =Scatter
+	newInput(22, nodeValue_Bool(    "Scatter",            false ));
+	newInput( 2, nodeValue_Float(   "Scatter Amount",     1     ));
+	newInput( 3, nodeValue_Float(   "Scatter Radius",     4     ));
+	
 	////- =Data Transfer
-	newInput(19, nodeValue_Surface( "Data Source"              ));
-	newInput(20, nodeValue_Bool(    "Transfer Dimension", true ));
+	newInput(19, nodeValue_Surface( "Data Source"               ));
+	newInput(20, nodeValue_Bool(    "Transfer Dimension", true  ));
+	 
+	/* deprecated */ newInput(11, nodeValue_Slider(  "Alpha", 1 ));
 	
-	/* deprecated */ newInput( 2, nodeValue_ISlider( "Brush Size",     1, [1,32,.1] ));
-	/* deprecated */ newInput( 3, nodeValue_Slider(  "Fill Threshold", 0            ));
-	/* deprecated */ newInput(11, nodeValue_Slider(  "Alpha",          1            ));
-	
-	// input 22
+	// input 23
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -244,11 +247,13 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	b_transferData = button(function() /*=>*/ {return transferData()}).setIcon(THEME.arrow, 0, COLORS._main_value_positive);
 	
+	sp_bsurface = new Inspector_Spacer(ui(8), true);
+	
 	input_display_list = [ 
 		["Frames",       false    ],  0, frame_renderer, 
 		["Output",       false,   ], 12,  5,  7, 13, 18, 
 		["Background",    true, 10],  4,  1,  8, 14,  9, 
-		["Brush",         true    ], 21,  6, 15, 17, 16, 
+		["Brush",        false    ], 21,  6, sp_bsurface, 15, 17, 16, sp_bsurface, 22,  2,  3, 
 		["Data Transfer", true, noone, b_transferData], 19, 20, button(function() /*=>*/ {return transferData()}).setText("Transfer Data"), 
 	];
 	
@@ -292,7 +297,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	////- Tools
 	
 	#region ++++ tool object ++++
-		brush     = new canvas_brush();
+		brush         = new canvas_brush();
+		current_brush = brush;
+		
 		selection = new canvas_selection().setNode(self);
 		
 		tool_brush          = new canvas_tool_brush(false).setNode(self);
@@ -712,10 +719,13 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		];
 	#endregion
 	
-	function getToolColor() { return !use_color_3d || color_3d_selected == 0? CURRENT_COLOR : brush.colors[color_3d_selected - 1]; }
+	function getToolColor() { 
+		return !use_color_3d || color_3d_selected == 0? CURRENT_COLOR : current_brush.colors[color_3d_selected - 1]; 
+	}
+	
 	function setToolColor(color) { 
 		if(!use_color_3d || color_3d_selected == 0) CURRENT_COLOR = color;
-		else                                        brush.colors[color_3d_selected - 1] = color;
+		else          current_brush.colors[color_3d_selected - 1] = color;
 	}
 	
 	static drawTools = function(_mx, _my, xx, yy, _tool_size, hover, focus) {
@@ -742,12 +752,12 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var _3y =  yy + _cw / 2;
 			
 			draw_sprite_ui(THEME.color_3d, 0, _3x, _3y, 1, 1, 0, CURRENT_COLOR  );
-			draw_sprite_ui(THEME.color_3d, 1, _3x, _3y, 1, 1, 0, brush.colors[0]);
-			draw_sprite_ui(THEME.color_3d, 2, _3x, _3y, 1, 1, 0, brush.colors[1]);
+			draw_sprite_ui(THEME.color_3d, 1, _3x, _3y, 1, 1, 0, current_brush.colors[0]);
+			draw_sprite_ui(THEME.color_3d, 2, _3x, _3y, 1, 1, 0, current_brush.colors[1]);
 			
 			draw_sprite_ui(THEME.color_3d_selected, color_3d_selected, _3x, _3y);
 			
-			if(color_3d_selected) _currc = brush.colors[color_3d_selected - 1];
+			if(color_3d_selected) _currc = current_brush.colors[color_3d_selected - 1];
 			
 			if(point_in_circle(_mx, _my, _3x, _3y, ui(16))) {
 				var dir = point_direction(_3x, _3y, _mx, _my);
@@ -757,7 +767,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				else if(dir > 270 || dir < 30) sel = 2;
 				
 				if(mouse_press(mb_left, focus)) { 
-					if(color_3d_selected == sel) colorSelectorCall(sel == 0? CURRENT_COLOR : brush.colors[sel - 1], setToolColor);
+					if(color_3d_selected == sel) colorSelectorCall(sel == 0? CURRENT_COLOR : current_brush.colors[sel - 1], setToolColor);
 					else color_3d_selected = sel;
 				}
 			}
@@ -1107,11 +1117,11 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		#endregion
 		
 		#region brush
-			brush.node     = self;
-			brush.tileMode = _panel.tileMode
-			brush.step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+			current_brush.node     = self;
+			current_brush.tileMode = _panel.tileMode
+			current_brush.step(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 			
-			tool_size_edit.setInteract(!is_surface(brush.surface));
+			tool_size_edit.setInteract(!is_surface(current_brush.surface));
 		#endregion
 		
 		#region surfaces
@@ -1166,7 +1176,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					_tool = noone;
 			}
 			
-			if(is(_tool, canvas_tool)) _tool.setBrush(brush);
+			if(is(_tool, canvas_tool)) _tool.setBrush(current_brush);
 			tool_mirror_edit.sprs = tool_attribute.mirror[0]? THEME.canvas_mirror_diag : THEME.canvas_mirror;
 			
 		#endregion
@@ -1239,7 +1249,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					if(_panel.pHOVER && key_mod_press(CTRL) && MOUSE_WHEEL != 0)
 						tool_attribute.size = clamp(tool_attribute.size + sign(MOUSE_WHEEL), 1, 64);
 					
-					brush.doResize(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
+					current_brush.doResize(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 				} 
 			}
 		#endregion
@@ -1277,7 +1287,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				
 				draw_set_color(CURRENT_COLOR);
 				
-				if(brush.sizing) brush.drawPoint(brush.sizing_dx, brush.sizing_dy);
+				if(current_brush.sizing) current_brush.drawPoint(current_brush.sizing_dx, current_brush.sizing_dy);
 				if(_tool) _tool.drawPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny);
 					
 				draw_set_alpha(1);
@@ -1314,12 +1324,12 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
                 	break;
 			}
 			
-			var bs = brush.size;
+			var bs = current_brush.size;
 			global.canvas_brush_surface = surface_verify(global.canvas_brush_surface, bs+1, bs+1);
 			surface_set_target(global.canvas_brush_surface);
 				DRAW_CLEAR
 				draw_set_color(c_white);
-				brush.drawPoint(floor(bs/2), floor(bs/2));
+				current_brush.drawPoint(floor(bs/2), floor(bs/2));
 			surface_reset_target();
 			
 			surface_set_target(preview_draw_mask);
@@ -1486,12 +1496,23 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var _brRotR = getInputData(17);
 			var _brRotD = getInputData(16);
 			
+			var _scatt  = getInputData(22);
+			var _scAmo  = getInputData( 2);
+			var _scRad  = getInputData( 3);
+			
 			var _brIsSurf = _brType == 1 && is_surface(_brSurf);
 			
 			inputs[ 6].setVisible(_brType == 1);
 			inputs[15].setVisible(_brType == 1);
 			inputs[17].setVisible(_brType == 1);
 			inputs[16].setVisible(_brType == 1);
+			
+			inputs[22].setVisible(_brType == 1);
+			inputs[ 2].setVisible(_brType == 1);
+			inputs[ 3].setVisible(_brType == 1);
+			sp_bsurface.active = _brType == 1;
+			
+			current_brush     = brush;
 			
 			brush.draw_type   = _brType;
 			brush.setSurface(_brType == 1? _brSurf : noone);
@@ -1501,6 +1522,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			brush.random_dir  = _brRotR;
 			brush.auto_rotate = _brRotD;
+			
+			brush.scatter     = _scatt? _scAmo : 0;
+			brush.scatt_range = _scRad;
 		#endregion
 		
 		#region dimension

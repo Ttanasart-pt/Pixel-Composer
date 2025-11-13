@@ -1,55 +1,61 @@
 function canvas_brush() constructor {
-	draw_type   = 0;
-	use_surface = false;
-	surface     = noone;
-	surface_w   = 1;
-	surface_h   = 1;
-	size        = 1;
+	#region data
+		seed        = irandom_range(100000, 999999);
+		node        = noone;
+		draw_type   = 0;
+		tileMode    = 0;
+		colors      = [ c_white, c_black ];
+	#endregion
 	
-	dist_min  = 1;
-	dist_max  = 1;
+	#region surface
+		use_surface = false;
+		surface     = noone;
+		surface_w   = 1;
+		surface_h   = 1;
+		size        = 1;
+		range       = 0;
+	#endregion
 	
-	direction   = 0;
-	auto_rotate = false;
-	random_dir  = [ 0, 0, 0, 0, 0 ];
-	
-	seed      = irandom_range(100000, 999999);
-	next_dist = 0;
-	range     = 0;
-	
-	sizing    = false;
-	sizing_s  = 0;
-	sizing_mx = 0;
-	sizing_my = 0;
-	sizing_dx = 0;
-	sizing_dy = 0;
-	
-	mouse_pre_dir_x = undefined;
-	mouse_pre_dir_y = undefined;
-	
-	tileMode = 0;
-	node     = noone;
-	
-	colors = [ c_white, c_black ];
-	
-	static setSurface = function(_s) {
-		surface   = _s;
-		surface_w = surface_get_width_safe(surface);
-		surface_h = surface_get_height_safe(surface);
+	#region draw
+		next_dist   = 0;
+		dist_min    = 1;
+		dist_max    = 1;
 		
+		direction   = 0;
+		auto_rotate = false;
+		random_dir  = [ 0, 0, 0, 0, 0 ];
+		
+		scatter     = 0;
+		scatt_range = 0;
+	#endregion
+	
+	#region actions
+		sizing      = false;
+		sizing_s    = 0;
+		sizing_mx   = 0;
+		sizing_my   = 0;
+		sizing_dx   = 0;
+		sizing_dy   = 0;
+		
+		mouse_pre_dir_x = undefined;
+		mouse_pre_dir_y = undefined;
+	#endregion
+		
+	static setSurface = function(_s) {
+		surface     = _s;
+		surface_w   = surface_get_width_safe(surface);
+		surface_h   = surface_get_height_safe(surface);
 		use_surface = is_surface(_s);
+		
+		range = use_surface? max(surface_w, surface_h) / 2 : ceil(size / 2);
 	}
 	
 	static step = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var attr = node.tool_attribute;
-		var _siz = attr.size;
-		
-		size = _siz;
+		size = attr.size;
 		
 		if(PEN_USE && attr.pressure) 
 			size = round(lerp(attr.pressure_size[0], attr.pressure_size[1], power(PEN_PRESSURE / 1024, 2)));
-		
-		range = surface == noone? ceil(size / 2) : max(surface_w, surface_h) / 2;
 		
 		if(!auto_rotate) 
 			direction = 0;
@@ -91,13 +97,12 @@ function canvas_brush() constructor {
 	
 	////- Draw
 	
-	static drawPoint = function(_x, _y, _randomize = false) {
+	static drawPixel = function(_x, _y, _randomize = false) {
 		if(use_surface) {
 			var _r  = direction + rotation_random_eval(random_dir, seed);
 			var _p  = point_rotate(-surface_w / 2, -surface_h / 2, 0, 0, _r);
 				
 			draw_surface_ext_safe(surface, round(_x + _p[0]), round(_y + _p[1]), 1, 1, _r, draw_get_color(), draw_get_alpha());
-			if(_randomize) seed = irandom_range(100000, 999999);
 			return;
 		} 
 		
@@ -111,6 +116,26 @@ function canvas_brush() constructor {
 					
 		} else
 			draw_circle_prec(_x, _y, size / 2, 0);
+	}
+	
+	static drawPoint = function(_x, _y, _randomize = false) {
+		if(_randomize) seed = irandom_range(100000, 999999);
+		random_set_seed(seed);
+		
+		if(scatter == 0) {
+			drawPixel(_x, _y, _randomize);
+			return;
+		}
+		
+		var _amo = scatter >= 1? scatter : random(1) < scatter;
+		repeat(_amo) {
+			var _dis = random(scatt_range);
+			var _dir = random(360);
+			var _xx  = _x + lengthdir_x(_dis, _dir);
+			var _yy  = _y + lengthdir_y(_dis, _dir);
+			
+			drawPixel(_xx, _yy, _randomize);
+		}
 	}
 	
 	static drawPointExt = function(_x, _y, _s = 1, _randomize = false) {

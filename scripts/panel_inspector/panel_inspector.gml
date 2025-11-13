@@ -177,10 +177,11 @@
 	
 	function __inspc(_h, _line = false, _coll = true, _shf = ui(2)) { return new Inspector_Spacer(_h, _line, _coll, _shf); }
 	function Inspector_Spacer(_h, _line = false, _coll = true, _shf = ui(2)) constructor { 
-	    h    = _h;  
-	    line = _line;
-	    coll = _coll;
-	    lshf = _shf;
+		active = true;
+	    h      = _h;  
+	    line   = _line;
+	    coll   = _coll;
+	    lshf   = _shf;
 	}
 #endregion
 
@@ -667,6 +668,7 @@ function Panel_Inspector() : PanelContent() constructor {
             }
             
             if(is(jun, Inspector_Spacer)) {                    // SPACER
+            	if(!jun.active) continue;
                 var _hh = ui(jun.h);
                 var _yy = yy + _hh / 2 - jun.lshf;
                 
