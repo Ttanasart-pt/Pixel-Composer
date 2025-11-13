@@ -1585,7 +1585,6 @@ function Panel_Animation_Dopesheet() {
 		            	draw_sprite_stretched_ext(THEME.box_r2, 0, _kx - _kw/2, _ky - _kh/2, _kw, _kh, _val);
 		            	draw_sprite_stretched_ext(THEME.box_r2, 1, _kx - _kw/2, _ky - _kh/2, _kw, _kh, cc);
             			break;
-            		
             	}
             	
             } 

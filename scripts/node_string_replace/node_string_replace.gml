@@ -1,5 +1,6 @@
 function Node_String_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Replace Text";
+	always_pad = true;
 	setDimension(96, 48);
 	
 	////- =Text

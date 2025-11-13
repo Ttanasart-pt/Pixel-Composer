@@ -126,10 +126,11 @@
 		draw_sprite_ext_add(s_key_display_mouse, 0, mxs, mys, 1, 1, 0, cc, 0.5);
 	#endregion
 	
-	draw_set_text(_f_h5, fa_right, fa_bottom, COLORS._main_icon_dark);
+	draw_set_text(_f_sdf, fa_right, fa_bottom, COLORS._main_icon_dark);
+	var ts = .75;
 	var pd = ui(4);
-	var ww = string_width(disp_key)  + pd * 3;
-	var hh = string_height(disp_key) + pd * 2;
+	var ww = ts * string_width(disp_key)  + pd * 3;
+	var hh = ts * string_height(disp_key) + pd * 2;
 	
 	var x1 = win_x - ui(32) - sprite_get_width(s_key_display_mouse);
 	var y1 = win_y - ui(8);
@@ -139,20 +140,22 @@
 	if(alpha > 0) {
 		draw_sprite_stretched_ext(THEME.key_display, 0, x0, y0, ww, hh, pressing? COLORS._main_accent : COLORS._main_icon, alpha);
 		draw_set_alpha(alpha);
-		draw_text(x1 - pd * 1.5, y1 - pd, disp_key);
+		draw_text_transformed(x1 - pd * 1.5, y1 - pd, disp_key, ts, ts, 0);
 		draw_set_alpha(1);
 	}
 		
-	draw_set_text(f_p2, fa_right, fa_bottom, COLORS._main_text_sub);
+	draw_set_text(_f_sdf_medium, fa_right, fa_bottom, COLORS._main_text_sub);
 	var tx = x1;
 	var ty = y1 - pd - hh;
+	var ts = .9;
 	var a  = 0;
+	
 	for( var i = array_length(disp_keys) - 1; i >= 0; i-- ) {
 		if(a++ >= 5) break;
 		
 		draw_set_alpha(lerp(.3, 1, (5-a)/5));
-		draw_text(tx, ty, disp_keys[i]);
-		ty -= line_get_height();
+		draw_text_transformed(tx, ty, disp_keys[i], ts, ts, 0);
+		ty -= line_get_height() * ts;
 	}
 	
 	draw_set_alpha(1);

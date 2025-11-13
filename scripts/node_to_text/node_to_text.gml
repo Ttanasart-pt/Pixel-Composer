@@ -1,6 +1,6 @@
 function Node_To_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
-	name		= "To Text";
-	
+	name = "To Text";
+	always_pad = true;
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue("Value", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0))

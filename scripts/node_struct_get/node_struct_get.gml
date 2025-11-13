@@ -1,5 +1,6 @@
 function Node_Struct_Get(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Struct Get";
+	always_pad = true;
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue_Struct(  "Struct" )).setVisible(true, true);

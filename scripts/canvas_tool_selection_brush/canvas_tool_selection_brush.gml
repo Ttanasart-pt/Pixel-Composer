@@ -1,5 +1,4 @@
-function canvas_tool_selection_brush(_selector, _brush) : canvas_tool_selection(_selector) constructor {
-	brush = _brush;
+function canvas_tool_selection_brush(_selector) : canvas_tool_selection(_selector) constructor {
 	brush_resizable = true;
 	
 	mouse_cur_x = 0;
@@ -17,7 +16,7 @@ function canvas_tool_selection_brush(_selector, _brush) : canvas_tool_selection(
 			selection_mask = surface_verify(selection_mask, _dim[0], _dim[1]);
 			
 			surface_set_shader(selection_mask, noone);
-				canvas_draw_point_brush(brush, mouse_cur_x, mouse_cur_y, true);
+				brush.drawPoint(mouse_cur_x, mouse_cur_y, true);
 			surface_reset_shader();
 				
 			is_selecting = true;
@@ -28,13 +27,13 @@ function canvas_tool_selection_brush(_selector, _brush) : canvas_tool_selection(
 			
 		if(is_selecting) {
 			var _move = mouse_pre_draw_x != mouse_cur_x || mouse_pre_draw_y != mouse_cur_y;
-			var _1stp = brush.brush_dist_min == brush.brush_dist_max && brush.brush_dist_min == 1;
+			var _1stp = brush.dist_min == brush.dist_max && brush.dist_min == 1;
 				
 			if(_move || !_1stp) {
 				surface_set_target(selection_mask);
 					BLEND_ADD
-					if(_1stp) canvas_draw_point_brush(brush, mouse_cur_x, mouse_cur_y, true);
-					canvas_draw_line_brush(brush, mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y, true);
+					if(_1stp) brush.drawPoint(mouse_cur_x, mouse_cur_y, true);
+					brush.drawLine(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y, true);
 					BLEND_NORMAL
 				surface_reset_target();
 			}
@@ -74,7 +73,7 @@ function canvas_tool_selection_brush(_selector, _brush) : canvas_tool_selection(
 		var _dx = _x + mouse_cur_x * _s;
 		var _dy = _y + mouse_cur_y * _s;
 		
-		canvas_draw_point_brush_ext(brush, _dx, _dy, _s);
+		brush.drawPointExt(_dx, _dy, _s);
 	}
 	
 	function drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {}

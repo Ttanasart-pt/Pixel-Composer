@@ -1,21 +1,13 @@
 function Node_Project_Data(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Project Data";
+	always_pad = true;
 	setDimension(96, 48);
 	
-	newOutput(0, nodeValue_Output("Name", VALUE_TYPE.text, ""))
-		.setVisible(false);
-	
-	newOutput(1, nodeValue_Output("Description", VALUE_TYPE.text, ""))
-		.setVisible(false);
-	
-	newOutput(2, nodeValue_Output("Author", VALUE_TYPE.text, ""))
-		.setVisible(false);
-	
-	newOutput(3, nodeValue_Output("Contact", VALUE_TYPE.text, ""))
-		.setVisible(false);
-	
-	newOutput(4, nodeValue_Output("Path", VALUE_TYPE.path, ""))
-		.setVisible(false);
+	newOutput(0, nodeValue_Output( "Name",        VALUE_TYPE.text, "" )).setVisible(false);
+	newOutput(1, nodeValue_Output( "Description", VALUE_TYPE.text, "" )).setVisible(false);
+	newOutput(2, nodeValue_Output( "Author",      VALUE_TYPE.text, "" )).setVisible(false);
+	newOutput(3, nodeValue_Output( "Contact",     VALUE_TYPE.text, "" )).setVisible(false);
+	newOutput(4, nodeValue_Output( "Path",        VALUE_TYPE.path, "" )).setVisible(false);
 	
 	static update = function() { 
 		outputs[0].setValue(filename_name_only(PROJECT.path));

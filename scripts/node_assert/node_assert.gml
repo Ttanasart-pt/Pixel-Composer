@@ -1,5 +1,6 @@
 function Node_Assert(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Assert";
+	always_pad = true;
 	setDimension(96, 48); 
 	
 	draw_padding = 8;

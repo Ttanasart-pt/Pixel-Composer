@@ -1,5 +1,6 @@
 function Node_Array_Range(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Array Range";
+	always_pad = true;
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue_Float("Start", 0))

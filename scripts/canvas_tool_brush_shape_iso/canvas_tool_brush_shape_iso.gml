@@ -2,10 +2,9 @@ enum CANVAS_TOOL_SHAPE_ISO {
 	cube,
 }
 
-function canvas_tool_shape_iso(brush, shape, toolAttr) : canvas_tool() constructor {
-	self.brush   = brush;
-	self.shape   = shape;
-	self.tool_attribute = toolAttr;
+function canvas_tool_shape_iso(_shape, _toolAttr) : canvas_tool() constructor {
+	shape   = _shape;
+	tool_attribute = _toolAttr;
 	
 	use_color_3d    = true;
 	brush_resizable = true;
@@ -94,13 +93,13 @@ function canvas_tool_shape_iso(brush, shape, toolAttr) : canvas_tool() construct
 	}
 	
 	function drawPreview(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		if(mouse_holding == 0) { canvas_draw_point_brush(brush, mouse_cur_x, mouse_cur_y); return; }
+		if(mouse_holding == 0) { brush.drawPoint(mouse_cur_x, mouse_cur_y); return; }
 		
 	}
 	
 	function drawPostOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(mouse_holding == 0)  return;
-		if(brush.brush_sizing)  return;
+		if(brush.sizing)        return;
 		if(!node.attributes.show_slope_check)  return;
 		
 	}
@@ -186,13 +185,13 @@ function canvas_draw_iso_cube(brush, _p, _fill = false) {
 			}
 			
 		} else {
-			canvas_draw_line_brush(brush, p0x, p0y, p1x, p1y);
+			brush.drawLine(p0x, p0y, p1x, p1y);
 				
 			if(d != 0) {
-				canvas_draw_line_brush(brush, p0x, p0y + d, p1x, p1y + d);
+				brush.drawLine(p0x, p0y + d, p1x, p1y + d);
 				
-				canvas_draw_line_brush(brush,  p0x,  p0y,  p0x,  p0y + d);
-				canvas_draw_line_brush(brush,  p1x,  p1y,  p1x,  p1y + d);
+				brush.drawLine( p0x,  p0y,  p0x,  p0y + d);
+				brush.drawLine( p1x,  p1y,  p1x,  p1y + d);
 			} 
 		}
 	} else {
@@ -261,30 +260,30 @@ function canvas_draw_iso_cube(brush, _p, _fill = false) {
 			}
 			
 		} else {
-			canvas_draw_line_brush(brush, p0x,  p0y,  p0px - 1, p0py);
-			canvas_draw_line_brush(brush, p0px, p0py, p1x,      p1y);
+			brush.drawLine(p0x,  p0y,  p0px - 1, p0py);
+			brush.drawLine(p0px, p0py, p1x,      p1y);
 			
 			if(_fill == 1) {
-				canvas_draw_line_brush(brush, p1x,  p1y,  p1px + 1, p1py);
-				canvas_draw_line_brush(brush, p1px, p1py, p0x,      p0y);
+				brush.drawLine(p1x,  p1y,  p1px + 1, p1py);
+				brush.drawLine(p1px, p1py, p0x,      p0y);
 			}
 			
 			if(d != 0) {
-				canvas_draw_line_brush(brush, p0x,  p0y  + d, p0px - 1, p0py + d);
-				canvas_draw_line_brush(brush, p0px, p0py + d, p1x,      p1y  + d);
-				canvas_draw_line_brush(brush, p1x,  p1y  + d, p1px + 1, p1py + d);
-				canvas_draw_line_brush(brush, p1px, p1py + d, p0x,      p0y  + d);
+				brush.drawLine(p0x,  p0y  + d, p0px - 1, p0py + d);
+				brush.drawLine(p0px, p0py + d, p1x,      p1y  + d);
+				brush.drawLine(p1x,  p1y  + d, p1px + 1, p1py + d);
+				brush.drawLine(p1px, p1py + d, p0x,      p0y  + d);
 				
-				canvas_draw_line_brush(brush, p0x,      p0y,  p0x,      p0y + d);
-				canvas_draw_line_brush(brush, p1x,      p1y,  p1x,      p1y + d);
-				canvas_draw_line_brush(brush, p0px - 1, p0py, p0px - 1, p0py + d);
+				brush.drawLine(p0x,      p0y,  p0x,      p0y + d);
+				brush.drawLine(p1x,      p1y,  p1x,      p1y + d);
+				brush.drawLine(p0px - 1, p0py, p0px - 1, p0py + d);
 				
 				if(_fill == 1)
-					canvas_draw_line_brush(brush, p1px, p1py - 1, p1px, p1py + d);
+					brush.drawLine(p1px, p1py - 1, p1px, p1py + d);
 				
 			} else if(_fill == 0) {
-				canvas_draw_line_brush(brush, p1x,  p1y,  p1px + 1, p1py);
-				canvas_draw_line_brush(brush, p1px, p1py, p0x,      p0y);
+				brush.drawLine(p1x,  p1y,  p1px + 1, p1py);
+				brush.drawLine(p1px, p1py, p0x,      p0y);
 			}
 		}
 	}
@@ -369,13 +368,13 @@ function canvas_draw_diag_cube(brush, _p, _fill = false) {
 			}
 			
 		} else {
-			canvas_draw_line_brush(brush, p0x, p0y, p1x, p1y);
+			brush.drawLine(p0x, p0y, p1x, p1y);
 				
 			if(d != 0) {
-				canvas_draw_line_brush(brush, p0x, p0y + d, p1x, p1y + d);
+				brush.drawLine(p0x, p0y + d, p1x, p1y + d);
 				
-				canvas_draw_line_brush(brush,  p0x,  p0y,  p0x,  p0y + d);
-				canvas_draw_line_brush(brush,  p1x,  p1y,  p1x,  p1y + d);
+				brush.drawLine( p0x,  p0y,  p0x,  p0y + d);
+				brush.drawLine( p1x,  p1y,  p1x,  p1y + d);
 			} 
 		}
 	} else {
@@ -444,30 +443,30 @@ function canvas_draw_diag_cube(brush, _p, _fill = false) {
 			}
 			
 		} else {
-			canvas_draw_line_brush(brush, p0x,  p0y,  p0px - 1, p0py);
-			canvas_draw_line_brush(brush, p0px, p0py, p1x,      p1y);
+			brush.drawLine(p0x,  p0y,  p0px - 1, p0py);
+			brush.drawLine(p0px, p0py, p1x,      p1y);
 			
 			if(_fill == 1) {
-				canvas_draw_line_brush(brush, p1x,  p1y,  p1px + 1, p1py);
-				canvas_draw_line_brush(brush, p1px, p1py, p0x,      p0y);
+				brush.drawLine(p1x,  p1y,  p1px + 1, p1py);
+				brush.drawLine(p1px, p1py, p0x,      p0y);
 			}
 			
 			if(d != 0) {
-				canvas_draw_line_brush(brush, p0x,  p0y  + d, p0px - 1, p0py + d);
-				canvas_draw_line_brush(brush, p0px, p0py + d, p1x,      p1y  + d);
-				canvas_draw_line_brush(brush, p1x,  p1y  + d, p1px + 1, p1py + d);
-				canvas_draw_line_brush(brush, p1px, p1py + d, p0x,      p0y  + d);
+				brush.drawLine(p0x,  p0y  + d, p0px - 1, p0py + d);
+				brush.drawLine(p0px, p0py + d, p1x,      p1y  + d);
+				brush.drawLine(p1x,  p1y  + d, p1px + 1, p1py + d);
+				brush.drawLine(p1px, p1py + d, p0x,      p0y  + d);
 				
-				canvas_draw_line_brush(brush, p0x,      p0y,  p0x,      p0y + d);
-				canvas_draw_line_brush(brush, p1x,      p1y,  p1x,      p1y + d);
-				canvas_draw_line_brush(brush, p0px - 1, p0py, p0px - 1, p0py + d);
+				brush.drawLine(p0x,      p0y,  p0x,      p0y + d);
+				brush.drawLine(p1x,      p1y,  p1x,      p1y + d);
+				brush.drawLine(p0px - 1, p0py, p0px - 1, p0py + d);
 				
 				if(_fill == 1)
-					canvas_draw_line_brush(brush, p1px, p1py, p1px, p1py + d);
+					brush.drawLine(p1px, p1py, p1px, p1py + d);
 				
 			} else if(_fill == 0) {
-				canvas_draw_line_brush(brush, p1x,  p1y,  p1px + 1, p1py);
-				canvas_draw_line_brush(brush, p1px, p1py, p0x,      p0y);
+				brush.drawLine(p1x,  p1y,  p1px + 1, p1py);
+				brush.drawLine(p1px, p1py, p0x,      p0y);
 			}
 		}
 	}

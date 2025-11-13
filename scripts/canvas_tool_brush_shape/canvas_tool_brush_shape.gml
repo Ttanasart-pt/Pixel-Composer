@@ -3,9 +3,8 @@ enum CANVAS_TOOL_SHAPE {
 	ellipse
 }
 
-function canvas_tool_shape(brush, shape) : canvas_tool() constructor {
-	self.brush   = brush;
-	self.shape   = shape;
+function canvas_tool_shape(_shape) : canvas_tool() constructor {
+	shape = _shape;
 	
 	brush_resizable = true;
 	mouse_holding   = false;
@@ -30,30 +29,30 @@ function canvas_tool_shape(brush, shape) : canvas_tool() constructor {
 	}
 	
 	function draw_point_wrap(_draw = true) {
-		var _oxn = mouse_cur_tx - brush.brush_range < 0;
-		var _oxp = mouse_cur_tx + brush.brush_range > draw_w;
-		var _oyn = mouse_cur_ty - brush.brush_range < 0;
-		var _oyp = mouse_cur_ty + brush.brush_range > draw_h;
+		var _oxn = mouse_cur_tx - brush.range < 0;
+		var _oxp = mouse_cur_tx + brush.range > draw_w;
+		var _oyn = mouse_cur_ty - brush.range < 0;
+		var _oyp = mouse_cur_ty + brush.range > draw_h;
 		
 		if(brush.tileMode & 0b01) {
-			     if(_oxn) canvas_draw_point_brush(brush, draw_w + mouse_cur_tx, mouse_cur_ty, _draw);
-			else if(_oxp) canvas_draw_point_brush(brush, mouse_cur_tx - draw_w, mouse_cur_ty, _draw);
+			     if(_oxn) brush.drawPoint(draw_w + mouse_cur_tx, mouse_cur_ty, _draw);
+			else if(_oxp) brush.drawPoint(mouse_cur_tx - draw_w, mouse_cur_ty, _draw);
 		}
 		
 		if(brush.tileMode & 0b10) {
-			     if(_oyn) canvas_draw_point_brush(brush, mouse_cur_tx, draw_h + mouse_cur_ty, _draw);
-			else if(_oyp) canvas_draw_point_brush(brush, mouse_cur_tx, mouse_cur_ty - draw_h, _draw);
+			     if(_oyn) brush.drawPoint(mouse_cur_tx, draw_h + mouse_cur_ty, _draw);
+			else if(_oyp) brush.drawPoint(mouse_cur_tx, mouse_cur_ty - draw_h, _draw);
 		}
 		
 		if(brush.tileMode == 0b11) {
-			     if(_oxn && _oyn) canvas_draw_point_brush(brush, draw_w + mouse_cur_tx, draw_h + mouse_cur_ty, _draw);
-			else if(_oxn && _oyp) canvas_draw_point_brush(brush, draw_w + mouse_cur_tx, mouse_cur_ty - draw_h, _draw);
+			     if(_oxn && _oyn) brush.drawPoint(draw_w + mouse_cur_tx, draw_h + mouse_cur_ty, _draw);
+			else if(_oxn && _oyp) brush.drawPoint(draw_w + mouse_cur_tx, mouse_cur_ty - draw_h, _draw);
 			
-			else if(_oxp && _oyn) canvas_draw_point_brush(brush, mouse_cur_tx - draw_w, draw_h + mouse_cur_ty, _draw);
-			else if(_oxp && _oyp) canvas_draw_point_brush(brush, mouse_cur_tx - draw_w, mouse_cur_ty - draw_h, _draw);
+			else if(_oxp && _oyn) brush.drawPoint(mouse_cur_tx - draw_w, draw_h + mouse_cur_ty, _draw);
+			else if(_oxp && _oyp) brush.drawPoint(mouse_cur_tx - draw_w, mouse_cur_ty - draw_h, _draw);
 		}
 		
-		canvas_draw_point_brush(brush, mouse_cur_tx, mouse_cur_ty, _draw);
+		brush.drawPoint(mouse_cur_tx, mouse_cur_ty, _draw);
 	}
 	
 	function draw_shape() {
@@ -62,25 +61,25 @@ function canvas_tool_shape(brush, shape) : canvas_tool() constructor {
 		var _y0 = min(mouse_pre_y, mouse_cur_y);
 		var _y1 = max(mouse_pre_y, mouse_cur_y);
 		
-		var _x0b = _x0 - brush.brush_range;
-		var _x1b = _x1 + brush.brush_range;
-		var _y0b = _y0 - brush.brush_range;
-		var _y1b = _y1 + brush.brush_range;
+		var _x0b = _x0 - brush.range;
+		var _x1b = _x1 + brush.range;
+		var _y0b = _y0 - brush.range;
+		var _y1b = _y1 + brush.range;
 		
 		var _bx0 = floor(_x0b / draw_w);
 		var _bx1 = floor(_x1b / draw_w);
 		var _by0 = floor(_y0b / draw_h);
 		var _by1 = floor(_y1b / draw_h);
 		
-		var _drawFn = canvas_draw_rect_brush;
+		var _drawFn = brush.drawRect;
 		
 		switch(shape) {
-			case CANVAS_TOOL_SHAPE.rectangle : _drawFn = canvas_draw_rect_brush; break;
-			case CANVAS_TOOL_SHAPE.ellipse   : _drawFn = canvas_draw_ellp_brush; break;
+			case CANVAS_TOOL_SHAPE.rectangle : _drawFn = brush.drawRect;    break;
+			case CANVAS_TOOL_SHAPE.ellipse   : _drawFn = brush.drawEllipse; break;
 		}
 		
 		if(brush.tileMode == 0) {
-			_drawFn(brush, _x0, _y0, _x1, _y1, subtool);
+			_drawFn(_x0, _y0, _x1, _y1, subtool);
 			return;
 		}
 		
@@ -90,28 +89,28 @@ function canvas_tool_shape(brush, shape) : canvas_tool() constructor {
 		var _y1t = _y1 + (_y0t - _y0); 
 		
 		if(_bx0 == _bx1 && _by0 == _by1) {
-			_drawFn(brush, _x0t, _y0t, _x1t, _y1t, subtool); 
+			_drawFn(_x0t, _y0t, _x1t, _y1t, subtool); 
 			return;
 		}
 		
-		_drawFn(brush, _x0t, _y0t, _x1t, _y1t, subtool); 
+		_drawFn(_x0t, _y0t, _x1t, _y1t, subtool); 
 		
 		if(brush.tileMode & 0b01) {
-			_drawFn(brush, _x0t + draw_w, _y0t, _x1t + draw_w, _y1t, subtool); 
-			_drawFn(brush, _x0t - draw_w, _y0t, _x1t - draw_w, _y1t, subtool); 
+			_drawFn(_x0t + draw_w, _y0t, _x1t + draw_w, _y1t, subtool); 
+			_drawFn(_x0t - draw_w, _y0t, _x1t - draw_w, _y1t, subtool); 
 		}
 		
 		if(brush.tileMode & 0b10) {
-			_drawFn(brush, _x0t, _y0t + draw_h, _x1t, _y1t + draw_h, subtool); 
-			_drawFn(brush, _x0t, _y0t - draw_h, _x1t, _y1t - draw_h, subtool); 
+			_drawFn(_x0t, _y0t + draw_h, _x1t, _y1t + draw_h, subtool); 
+			_drawFn(_x0t, _y0t - draw_h, _x1t, _y1t - draw_h, subtool); 
 		}
 		
 		if(brush.tileMode & 0b11) {
-			_drawFn(brush, _x0t + draw_w, _y0t + draw_h, _x1t + draw_w, _y1t + draw_h, subtool); 
-			_drawFn(brush, _x0t + draw_w, _y0t - draw_h, _x1t + draw_w, _y1t - draw_h, subtool); 
+			_drawFn(_x0t + draw_w, _y0t + draw_h, _x1t + draw_w, _y1t + draw_h, subtool); 
+			_drawFn(_x0t + draw_w, _y0t - draw_h, _x1t + draw_w, _y1t - draw_h, subtool); 
 			
-			_drawFn(brush, _x0t - draw_w, _y0t + draw_h, _x1t - draw_w, _y1t + draw_h, subtool); 
-			_drawFn(brush, _x0t - draw_w, _y0t - draw_h, _x1t - draw_w, _y1t - draw_h, subtool); 
+			_drawFn(_x0t - draw_w, _y0t + draw_h, _x1t - draw_w, _y1t + draw_h, subtool); 
+			_drawFn(_x0t - draw_w, _y0t - draw_h, _x1t - draw_w, _y1t - draw_h, subtool); 
 		}
 	}
 	
@@ -168,7 +167,7 @@ function canvas_tool_shape(brush, shape) : canvas_tool() constructor {
 	
 	function drawPostOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(!mouse_holding)      return;
-		if(brush.brush_sizing)  return;
+		if(brush.sizing)  return;
 		if(!node.attributes.show_slope_check)  return;
 		
 		var mx0 = min(mouse_cur_x, mouse_pre_x);

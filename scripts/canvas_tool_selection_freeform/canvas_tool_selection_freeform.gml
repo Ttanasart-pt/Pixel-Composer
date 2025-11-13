@@ -1,6 +1,4 @@
-function canvas_tool_selection_freeform(_selector, _brush) : canvas_tool_selection(_selector) constructor {
-	brush = _brush;
-	
+function canvas_tool_selection_freeform(_selector) : canvas_tool_selection(_selector) constructor {
 	mouse_pre_x = 0;
 	mouse_pre_y = 0;
 	freeform_shape = [];

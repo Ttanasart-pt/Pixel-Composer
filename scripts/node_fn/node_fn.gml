@@ -2,6 +2,7 @@ function Node_Fn(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 	name			= "Fn";
 	time_based      = true;
 	update_on_frame = true;
+	always_pad = true;
 	setDimension(96, 96);
 	
 	newInput(0, nodeValue_Enum_Scroll("Display",  1 , [ "Number", "Graph" ]));

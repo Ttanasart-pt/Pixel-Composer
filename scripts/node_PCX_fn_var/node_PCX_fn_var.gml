@@ -1,6 +1,7 @@
 function Node_PCX_fn_var(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) constructor {
 	name = "Fn Variable";
 	w    = 64;
+	always_pad = true;
 	
 	newInput(0, nodeValue("Default Value", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0));
 	

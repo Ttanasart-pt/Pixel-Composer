@@ -297,7 +297,7 @@ function Panel_Animation() : PanelContent() constructor {
         if(point_in_rectangle(mx, my, bar_x, ui(16), bar_x + bar_w, bar_y + bar_h)) {
             var sca = timeline_scale;
             
-            if(MOUSE_WHEEL != 0) timeline_scale = clamp(timeline_scale + MOUSE_WHEEL, 1, 24);
+            if(MOUSE_WHEEL != 0) timeline_scale = clamp(timeline_scale + MOUSE_WHEEL, 1, 100);
             
             timeline_separate = 5;
             timeline_sep_line = 1;

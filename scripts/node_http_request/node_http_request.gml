@@ -1,11 +1,10 @@
 function Node_HTTP_request(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "HTTP";
+	always_pad = true;
 	setDimension(96, 72);
 	
 	newInput(0, nodeValue_Text("Address"));
-	
 	newInput(1, nodeValue_Enum_Scroll("Type",  0, [ "Get", "Post" ]));
-	
 	newInput(2, nodeValue_Text("Content"))
 	
 	newOutput(0, nodeValue_Output("Result", VALUE_TYPE.text, ""));

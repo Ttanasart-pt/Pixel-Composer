@@ -1,5 +1,6 @@
 function Node_Counter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Frame Index";
+	always_pad = true;
 	update_on_frame = true;
 	
 	setDimension(96, 48);
@@ -25,17 +26,19 @@ function Node_Counter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	];
 	
 	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {  
-		var _time = CURRENT_FRAME;
-		var _mode = _data[2];
-		var _star = _data[0];
-		var _sped = _data[1];
-		
-		var _asyn = _data[3];
-		var _rest = _data[4];
-		
-		inputs[0].setVisible( _mode == 0 );
-		inputs[2].setVisible(!_asyn);
-		inputs[4].setVisible( true, _asyn);
+		#region data
+			var _time = CURRENT_FRAME;
+			var _mode = _data[2];
+			var _star = _data[0];
+			var _sped = _data[1];
+			
+			var _asyn = _data[3];
+			var _rest = _data[4];
+			
+			inputs[0].setVisible( _mode == 0 );
+			inputs[2].setVisible(!_asyn);
+			inputs[4].setVisible( true, _asyn);
+		#endregion
 		
 		if(_asyn) {
 			if(IS_FIRST_FRAME || _rest) return _star;

@@ -1,5 +1,6 @@
 function Node_Argument(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Argument";
+	always_pad = true;
 	setDimension(96, 48);
 	
 	draw_padding = 8;

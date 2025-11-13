@@ -1,5 +1,6 @@
 function Node_Struct_JSON_Parse(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "JSON Parse";
+	always_pad = true;
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue_Text("JSON string"))

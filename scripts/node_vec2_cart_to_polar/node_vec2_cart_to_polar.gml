@@ -1,6 +1,7 @@
 function Node_Vector_Cart_To_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name  = "Cart. to Polar";
 	color = COLORS.node_blend_number;
+	always_pad = true;
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue_Vec2("Cartesian Coord", [ 0, 0 ]))

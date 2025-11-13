@@ -1,5 +1,6 @@
 function Node_Surface_Is_Empty(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Surface is Empty";
+	always_pad = true;
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue_Surface("Surface In"));

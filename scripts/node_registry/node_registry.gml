@@ -78,6 +78,7 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 	static setTags    = function(_t) /*=>*/ { array_append(tags, _t);       return self; }
 	static setTooltip = function(_t) /*=>*/ { tooltip     = _t;             return self; }
 	static setParam   = function(_p) /*=>*/ { createParam = _p;             return self; }
+	static notTest    = function(  ) /*=>*/ { testable    = false;          return self; }
     static setBuild   = function(_f) /*=>*/ { createFn    = method(self, _f); usecreateFn = true; return self; }
 	
 	static setIO = function(t) { 
@@ -125,8 +126,6 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		variable_struct_remove(FUNCTIONS, _fn.fnName);
 		return self;
 	}
-	
-	static notTest = function() { testable = false; return self; }
 	
 	static hideGlobal = function() {
 		INLINE 

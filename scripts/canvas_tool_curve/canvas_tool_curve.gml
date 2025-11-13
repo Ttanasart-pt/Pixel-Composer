@@ -1,5 +1,4 @@
-function canvas_tool_curve_bezier(brush) : canvas_tool() constructor {
-	self.brush = brush;
+function canvas_tool_curve_bezier() : canvas_tool() constructor {
 	brush_resizable = true;
 	
 	anchors = [];
@@ -98,7 +97,7 @@ function canvas_tool_curve_bezier(brush) : canvas_tool() constructor {
 				nax0 = nx + anchors[i][0];
 				nay0 = ny + anchors[i][1];
 			
-				if(i) canvas_draw_curve_brush(brush, ox, oy, oax1, oay1, nax0, nay0, nx, ny);
+				if(i) brush.drawCurve(ox, oy, oax1, oay1, nax0, nay0, nx, ny);
 				
 				oax1 = nx + anchors[i][4];
 				oay1 = ny + anchors[i][5];

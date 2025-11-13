@@ -1,6 +1,7 @@
 function Node_Byte_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Byte File In";
 	color = COLORS.node_blend_input;
+	always_pad = true;
 	
 	w = 128;
 	

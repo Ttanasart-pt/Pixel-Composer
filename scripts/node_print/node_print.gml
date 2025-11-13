@@ -1,8 +1,9 @@
 function Node_Print(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Print";
+	always_pad = true;
+	draw_padding = 8;
 	setDimension(96, 48); 
 	
-	draw_padding = 8;
 	
 	newActiveInput(0);
 	

@@ -2,6 +2,7 @@ function Node_Number_Simple(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name     = "Number Simple";
 	color    = COLORS.node_blend_number;
 	doUpdate = doUpdateLite;
+	always_pad = true;
 	setDimension(96, 48);
 	
 	newInput( 0, nodeValue_Float( "Value", 0 )).setVisible(true, true);

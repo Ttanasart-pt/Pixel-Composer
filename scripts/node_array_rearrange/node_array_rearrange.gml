@@ -1,7 +1,7 @@
 function Node_Array_Rearrange(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Array Rearrange";
-	
-	draw_pad_w  = 10;
+	always_pad = true;
+	draw_pad_w = 10;
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue("Array", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0))

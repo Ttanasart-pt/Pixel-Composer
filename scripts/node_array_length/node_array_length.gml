@@ -1,5 +1,6 @@
 function Node_Array_Length(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Array Length";
+	always_pad = true;
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue("Array", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0))

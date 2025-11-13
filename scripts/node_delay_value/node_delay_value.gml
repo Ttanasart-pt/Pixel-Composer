@@ -6,6 +6,7 @@
 
 function Node_Delay_Value(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Delay Value";
+	always_pad = true;
 	is_simulation = true;
 	setDimension(96, 48);
 	

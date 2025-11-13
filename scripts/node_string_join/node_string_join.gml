@@ -1,5 +1,6 @@
 function Node_String_Join(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Join Text Array";
+	always_pad = true;
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue_Text("Text array", []))

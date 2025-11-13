@@ -17,7 +17,10 @@ function canvas_tool() : ToolObject() constructor {
 	
 	subtool = 0;
 	
-	function getTool() { return self; }
+	brush = noone;
+	
+	function setBrush(b) { brush = b;  return self; }
+	function getTool()   { return self; }
 	
 	function disable() { 
 		PANEL_PREVIEW.tool_current = noone; 
