@@ -338,8 +338,6 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	////- Actions
 	
-	static onClone = function() { onValueUpdate(0); }
-	
 	static postConnect = function() { 
 		onValueUpdate(0); 
 		onValueFromUpdate(0);

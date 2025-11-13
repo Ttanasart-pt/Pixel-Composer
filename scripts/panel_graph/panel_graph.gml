@@ -2315,22 +2315,12 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                 _connect[1].value_from_loop.destroy();
 			
             var menu = [
-                menuItem("Feedback", function(data) {
-                    var junc_in  = data.junc_in;
-                    var junc_out = data.junc_out;
-                    
-                    var feed = nodeBuild("Node_Feedback_Inline", 0, 0).skipDefault();
-                    feed.connectJunctions(junc_in, junc_out);
-                    
+                menuItem("Feedback", function(d) /*=>*/ { 
+                    nodeBuild("Node_Feedback_Inline", 0, 0).skipDefault().connectJunctions(d.junc_in, d.junc_out);
                 }, THEME.feedback_24, noone, noone, { junc_in : _connect[1], junc_out : _connect[2] }),
                 
-                menuItem("Loop", function(data) {
-                    var junc_in  = data.junc_in;
-                    var junc_out = data.junc_out;
-                    
-                    var loop = nodeBuild("Node_Iterate_Inline", 0, 0).skipDefault();
-                    loop.connectJunctions(junc_in, junc_out);
-                    
+                menuItem("Loop", function(d) /*=>*/ {
+                    nodeBuild("Node_Iterate_Inline", 0, 0).skipDefault().connectJunctions(d.junc_in, d.junc_out);
                 }, THEME.loop_24, noone, noone, { junc_in : _connect[1], junc_out : _connect[2] }),
             ];
             
@@ -3793,7 +3783,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         }
         
         var x0 = infinity, y0 = infinity;
-        for(var i = 0; i < array_length(APPEND_LIST); i++) {
+        for(var i = 0, n = array_length(APPEND_LIST); i < n; i++) {
             var _node = APPEND_LIST[i];
             
             x0 = min(x0, _node.x);

@@ -241,8 +241,6 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	////- Actions
 	
-	static onClone = function() { onValueUpdate(0); }
-	
 	static postConnect = function() { onValueUpdate(0); }
 	
 	static onRestore = function() {

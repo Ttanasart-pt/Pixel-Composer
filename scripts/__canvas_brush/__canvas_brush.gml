@@ -97,7 +97,7 @@ function canvas_brush() constructor {
 	
 	////- Draw
 	
-	static drawPixel = function(_x, _y, _randomize = false) {
+	function drawPixel(_x, _y, _draw = false) {
 		if(use_surface) {
 			var _r  = direction + rotation_random_eval(random_dir, seed);
 			var _p  = point_rotate(-surface_w / 2, -surface_h / 2, 0, 0, _r);
@@ -118,14 +118,11 @@ function canvas_brush() constructor {
 			draw_circle_prec(_x, _y, size / 2, 0);
 	}
 	
-	static drawPoint = function(_x, _y, _randomize = false) {
-		if(_randomize) seed = irandom_range(100000, 999999);
+	function drawPoint(_x, _y, _draw = false) {
+		if(_draw) seed = irandom_range(100000, 999999);
 		random_set_seed(seed);
 		
-		if(scatter == 0) {
-			drawPixel(_x, _y, _randomize);
-			return;
-		}
+		if(!_draw || scatter == 0) { drawPixel(_x, _y, _draw); return; }
 		
 		var _amo = scatter >= 1? scatter : random(1) < scatter;
 		repeat(_amo) {
@@ -134,11 +131,11 @@ function canvas_brush() constructor {
 			var _xx  = _x + lengthdir_x(_dis, _dir);
 			var _yy  = _y + lengthdir_y(_dis, _dir);
 			
-			drawPixel(_xx, _yy, _randomize);
+			drawPixel(_xx, _yy, _draw);
 		}
 	}
 	
-	static drawPointExt = function(_x, _y, _s = 1, _randomize = false) {
+	function drawPointExt(_x, _y, _s = 1, _draw = false) {
 		if(use_surface) {
 			var _sw = surface_get_width_safe(surface);
 			var _sh = surface_get_height_safe(surface);
@@ -146,7 +143,7 @@ function canvas_brush() constructor {
 			var _p  = point_rotate(-_sw / 2, -_sh / 2, 0, 0, _r);
 				
 			draw_surface_ext_safe(surface, round(_x + _p[0]), round(_y + _p[1]), _s, _s, _r, draw_get_color(), draw_get_alpha());
-			if(_randomize) seed = irandom_range(100000, 999999);
+			if(_draw) seed = irandom_range(100000, 999999);
 			return;
 		}
 		
@@ -167,7 +164,7 @@ function canvas_brush() constructor {
 		
 	}
 	
-	static drawLine = function(_x0, _y0, _x1, _y1, _draw = false, _cap = false) { 
+	function drawLine(_x0, _y0, _x1, _y1, _draw = false, _cap = false) { 
 		if(use_surface || draw_type == 1) {
 			var diss  = point_distance(_x0, _y0, _x1, _y1);
 			var dirr  = point_direction(_x0, _y0, _x1, _y1);
@@ -225,21 +222,21 @@ function canvas_brush() constructor {
 		}
 	}
 			
-	static drawRect = function(_x0, _y0, _x1, _y1, _fill) {
+	function drawRect(_x0, _y0, _x1, _y1, _fill, _draw = false) {
 		if(_x0 == _x1 && _y0 == _y1) {
-			drawPoint(_x0, _y0);
+			drawPoint(_x0, _y0, _draw);
 			return;
 			
 		} else if(_x0 == _x1) {
-			drawPoint(_x0, _y0);
-			drawPoint(_x1, _y1);
-			drawLine(_x0, _y0, _x0, _y1);
+			drawPoint(_x0, _y0, _draw);
+			drawPoint(_x1, _y1, _draw);
+			drawLine(_x0, _y0, _x0, _y1, _draw);
 			return;
 			
 		} else if(_y0 == _y1) {
-			drawPoint(_x0, _y0);
-			drawPoint(_x1, _y1);
-			drawLine(_x0, _y0, _x1, _y0);
+			drawPoint(_x0, _y0, _draw);
+			drawPoint(_x1, _y1, _draw);
+			drawLine(_x0, _y0, _x1, _y0, _draw);
 			return;
 		}
 			
@@ -250,31 +247,31 @@ function canvas_brush() constructor {
 			
 		if(_fill) draw_rectangle(_min_x, _min_y, _max_x, _may_y, 0);
 			
-		if(size == 1 && !use_surface)
+		if(size == 1 && !use_surface && draw_type == 0)
 			draw_rectangle(_min_x + 1, _min_y + 1, _max_x - 1, _may_y - 1, 1);
 		else {
-			drawLine(_min_x, _min_y, _max_x, _min_y);
-			drawLine(_min_x, _min_y, _min_x, _may_y);
-			drawLine(_max_x, _may_y, _max_x, _min_y);
-			drawLine(_max_x, _may_y, _min_x, _may_y);
+			drawLine(_min_x, _min_y, _max_x, _min_y, _draw);
+			drawLine(_min_x, _min_y, _min_x, _may_y, _draw);
+			drawLine(_max_x, _may_y, _max_x, _min_y, _draw);
+			drawLine(_max_x, _may_y, _min_x, _may_y, _draw);
 		}
 	}
 		
-	static drawEllipse = function(_x0, _y0, _x1, _y1,  _fill) {
+	function drawEllipse(_x0, _y0, _x1, _y1, _fill, _draw = false) {
 		if(_x0 == _x1 && _y0 == _y1) {
-			drawPoint(_x0, _y0);
+			drawPoint(_x0, _y0, _draw);
 			return;
 			
 		} else if(_x0 == _x1) {
-			drawPoint(_x0, _y0);
-			drawPoint(_x1, _y1);
-			drawLine(_x0, _y0, _x0, _y1);
+			drawPoint(_x0, _y0, _draw);
+			drawPoint(_x1, _y1, _draw);
+			drawLine(_x0, _y0, _x0, _y1, _draw);
 			return;
 			
 		} else if(_y0 == _y1) {
-			drawPoint(_x0, _y0);
-			drawPoint(_x1, _y1);
-			drawLine(_x0, _y0, _x1, _y0);
+			drawPoint(_x0, _y0, _draw);
+			drawPoint(_x1, _y1, _draw);
+			drawLine(_x0, _y0, _x1, _y0, _draw);
 			return;
 		}
 			
@@ -284,7 +281,7 @@ function canvas_brush() constructor {
 		var _min_y = min(_y0, _y1) - 0.5;
 		var _max_y = max(_y0, _y1) - 0.5;
 		
-		if(!use_surface) {
+		if(!use_surface && draw_type == 0) {
 			if(_fill) draw_ellipse(_min_x, _min_y, _max_x, _max_y, 0);
 			
 			if(size == 1) {
@@ -316,14 +313,14 @@ function canvas_brush() constructor {
 			nx = round(cx + lengthdir_x(rx, 360 / samp * i));
 			ny = round(cy + lengthdir_y(ry, 360 / samp * i));
 					
-			if(i) drawLine(ox, oy, nx, ny);
+			if(i) drawLine(ox, oy, nx, ny, _draw);
 					
 			ox = nx;
 			oy = ny;
 		}
 	}
 	
-	static drawCurve = function(x0, y0, cx0, cy0, cx1, cy1, x1, y1, prec = 32) { 
+	function drawCurve(x0, y0, cx0, cy0, cx1, cy1, x1, y1, _draw = false, prec = 32) { 
 		var ox, oy, nx, ny;
 		
 		var _st = 1 / prec;
@@ -342,7 +339,7 @@ function canvas_brush() constructor {
 			     3 * (_t1 * _t  * _t) * cy1 + 
 			     _t * _t * _t * y1;
 			     
-		     if(i) drawLine(ox, oy, nx, ny, true, true);
+		     if(i) drawLine(ox, oy, nx, ny, _draw, true);
 			     
 			ox = nx;
 			oy = ny;

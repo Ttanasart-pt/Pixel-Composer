@@ -1241,7 +1241,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			var _ot = outputs[i];
 			if(is(_ot, NodeValue) && !_ot.forward) continue;
 			
-			for( var j = 0, n = array_length(_ot.value_to_loop); j < n; j++ ) {
+			for( var j = 0, m = array_length(_ot.value_to_loop); j < m; j++ ) {
 				var _to = _ot.value_to_loop[j];
 				if(!_to.active) continue;
 				
@@ -3066,36 +3066,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static dropPath = noone;  
 	 
-	static clone = function(target = PANEL_GRAPH.getCurrentContext()) {
-		CLONING = true;
-		var _type = instanceof(self);
-		var _node = nodeBuild(_type, x, y, target).skipDefault();
-		CLONING = false;
-		
-		LOADING_VERSION = SAVE_VERSION;
-		
-		if(!_node) return undefined;
-		
-		CLONING = true;
-		var _nid = _node.node_id;
-		_node.deserialize(serialize());
-		_node.postDeserialize();
-		_node.applyDeserialize();
-		_node.node_id = _nid;
-		
-		project.nodeMap[? node_id] = self;
-		project.nodeMap[? _nid] = _node;
-		CLONING = false;
-		refreshTimeline();
-		
-		if(instanceBase) _node.setInstance(instanceBase);
-		
-		onClone(_node, target);
-		
-		return _node;
-	}
-	
-	static onClone = function(_NewNode, target = PANEL_GRAPH.getCurrentContext()) {}
+	static onClone = undefined
 	
 	////- MISC
 	

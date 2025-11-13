@@ -121,7 +121,15 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	static refreshMember = function() {
 		nodes = [];
-		array_foreach(attributes.members, function(m) /*=>*/ { if(ds_map_exists(PROJECT.nodeMap, m)) addNode(PROJECT.nodeMap[? m]); })
+		// print(array_length(attributes.members), attributes.members)
+		
+		array_foreach(attributes.members, function(m) /*=>*/ { 
+			var _id = m;
+			
+			if(CLONING) _id = GetAppendID(_id);
+			if(ds_map_exists(PROJECT.nodeMap, _id)) 
+				addNode(PROJECT.nodeMap[? _id]); 
+		})
 	}
 	
 	static refreshGroupBG = function() {

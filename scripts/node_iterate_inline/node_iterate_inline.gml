@@ -19,9 +19,9 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	iteration_count = 0;
 	iterated        = 0;
 	
-	static getIterationCount = function() { return getInputData(0); }
-	static bypassConnection  = function() { return iterated > 1 && !is_undefined(value_buffer); }
-	static bypassNextNode    = function() { return iterated < getIterationCount(); }
+	static getIterationCount = function() /*=>*/ {return getInputData(0)};
+	static bypassConnection  = function() /*=>*/ {return iterated > 1 && !is_undefined(value_buffer)};
+	static bypassNextNode    = function() /*=>*/ {return iterated < getIterationCount()};
 	
 	static getNextNodes = function(checkLoop = false) {
 		LOG_BLOCK_START();	
@@ -44,11 +44,17 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 		
 		attributes.junc_in  = [ junc_in .node.node_id, junc_in .index ];
 		attributes.junc_out = [ junc_out.node.node_id, junc_out.index ];
-		
 		scanJunc();
+		
+		return self;
 	}
 	
 	static scanJunc = function() {
+		if(CLONING) {
+			attributes.junc_in[0]  = GetAppendID(attributes.junc_in[0]);
+			attributes.junc_out[0] = GetAppendID(attributes.junc_out[0]);
+		}
+		
 		var node_in  = PROJECT.nodeMap[? attributes.junc_in[0]];
 		var node_out = PROJECT.nodeMap[? attributes.junc_out[0]];
 		
@@ -104,6 +110,10 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 		value_buffer    = undefined;
 	}
 	
+	////- Draw
+	
+	static drawDimension = function(xx, yy, _s) {}
+	
 	static drawConnections = function(params = {}, _draw = true) {
 		var hovering = noone;
 		
@@ -115,6 +125,12 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 		var _hov = jun.drawConnections(params, _draw); if(_hov) hovering = _hov;
 		
 		return hovering;
+	}
+	
+	////- Action
+	
+	static onClone = function() {
+		attributes.members = [];
 	}
 	
 	static postDeserialize = function() {

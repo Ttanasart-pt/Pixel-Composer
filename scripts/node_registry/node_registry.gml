@@ -658,21 +658,37 @@ function nodeClone(_nodes, _ctx = PANEL_GRAPH.getCurrentContext()) {
     var _node = [];
     
     for( var i = 0, n = array_length(_nodes); i < n; i++ ) {
-        var _n = _nodes[i];
-        
-        SAVE_NODE(_node, _n, 0, 0, false, _ctx);
+    	var n = _nodes[i];
+    	
+    	for( var j = 0, m = array_length(n.inputs); j < m; j++ ) {
+    		var jn = n.inputs[j];
+    		if(jn.value_from_loop) 
+    			array_push(_nodes, jn.value_from_loop);
+    	}
+    	
+    	for( var j = 0, m = array_length(n.outputs); j < m; j++ ) {
+    		var jn = n.inputs[j];
+    		array_append(_nodes, jn.value_to_loop);
+    	}
     }
     
+    _nodes = array_unique(_nodes);
+    
+    for( var i = 0, n = array_length(_nodes); i < n; i++ ) {
+    	var nd = _nodes[i];
+    	if(nd.onClone != undefined) nd.onClone();
+        SAVE_NODE(_node, nd, 0, 0, false, _ctx);
+    }
     _map.nodes = _node;
     
     ds_map_clear(APPEND_MAP);
-    APPEND_LIST = [];
+    APPEND_LIST     = [];
     LOADING_VERSION = SAVE_VERSION;
     
-    CLONING    = true;
-        APPEND_LIST = __APPEND_MAP(_map, _ctx, APPEND_LIST, false);
-        recordAction(ACTION_TYPE.collection_loaded, array_clone(APPEND_LIST));
-    CLONING    = false;
+    CLONING     = true;
+    APPEND_LIST = __APPEND_MAP(_map, _ctx, APPEND_LIST, false);
+    recordAction(ACTION_TYPE.collection_loaded, array_clone(APPEND_LIST));
+    CLONING     = false;
     
     return APPEND_LIST;
 }

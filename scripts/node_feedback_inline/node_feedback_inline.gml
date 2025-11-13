@@ -30,11 +30,17 @@ function Node_Feedback_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		
 		attributes.junc_in  = [ junc_in .node.node_id, junc_in .index ];
 		attributes.junc_out = [ junc_out.node.node_id, junc_out.index ];
-		
 		scanJunc();
+		
+		return self;
 	}
 	
 	static scanJunc = function() {
+		if(CLONING) {
+			attributes.junc_in[0]  = GetAppendID(attributes.junc_in[0]);
+			attributes.junc_out[0] = GetAppendID(attributes.junc_out[0]);
+		}
+		
 		var node_i = PROJECT.nodeMap[? attributes.junc_in[0]];
 		var node_o = PROJECT.nodeMap[? attributes.junc_out[0]];
 		
@@ -77,6 +83,10 @@ function Node_Feedback_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		arr[@ 1] = junc_out;
 	}
 	
+	////- Draw
+	
+	static drawDimension = function(xx, yy, _s) {}
+	
 	static drawConnections = function(params = {}) {
 		if( junc_out == noone    ||  junc_in == noone)    return noone;
 		if(!junc_out.node.active || !junc_in.node.active) return noone;
@@ -91,6 +101,8 @@ function Node_Feedback_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	static drawNode = function(_draw, _x, _y, _mx, _my, _s) {}
 	
 	static pointIn = function(_x, _y, _mx, _my, _s) { return false; }
+	
+	////- Action
 	
 	static postDeserialize = function() { scanJunc(); }
 		

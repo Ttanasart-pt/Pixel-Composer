@@ -598,28 +598,6 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	////- ACTION
 	
-	static onClone = function(_newNode, target = PANEL_GRAPH.getCurrentContext()) {
-		var dups = ds_list_create();
-		
-		for(var i = 0, n = array_length(nodes); i < n; i++) { 
-			var _node = nodes[i];
-			var _cnode = _node.clone(target);
-			
-			ds_list_add(dups, _cnode);
-			
-			APPEND_MAP[? _node.node_id] = _cnode.node_id;
-		}
-		
-		APPENDING = true;
-		for(var i = 0; i < ds_list_size(dups); i++) {
-			var _node = dups[| i];
-			_node.connect();
-		}
-		APPENDING = false;
-		
-		ds_list_destroy(dups);
-	}
-	
 	static enable = function() {
 		active = true;
 		array_foreach(getNodeList(), function(node) { node.enable(); });

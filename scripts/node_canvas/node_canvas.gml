@@ -57,11 +57,11 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	newInput( 9, nodeValue_Slider(  "Background Alpha",         1                             ));
 	
 	////- =Brush
-	newInput(21, nodeValue_EScroll( "Brush Type",          0, ["Line", "Stamp"]                ));
-	newInput( 6, nodeValue_Surface( "Brush Surface"                                            )).setVisible(true, false);
-	newInput(15, nodeValue_Range(   "Brush Distance",      [1,1], { linked : true }            ));
-	newInput(17, nodeValue_RotRand( "Random Direction",    [0,0,0,0,0]                         ));
-	newInput(16, nodeValue_Bool(    "Rotate by Direction",  false                              ));
+	newInput(21, nodeValue_EButton( "Brush Type",          0, ["Line", "Stamp"]     ));
+	newInput( 6, nodeValue_Surface( "Brush Surface"                                 )).setVisible(true, false);
+	newInput(15, nodeValue_Range(   "Brush Distance",      [1,1], { linked : true } ));
+	newInput(17, nodeValue_RotRand( "Random Direction",    [0,0,0,0,0]              ));
+	newInput(16, nodeValue_Bool(    "Rotate by Direction", false                    ));
 	
 	////- =Scatter
 	newInput(22, nodeValue_Bool(    "Scatter",            false ));
