@@ -34,7 +34,7 @@
 function variable_editor(nodeVal) constructor {
 	value = nodeVal;
 	
-	tb_name  = new textBox(TEXTBOX_INPUT.text, function(s) /*=>*/ { 
+	tb_name  = textBox_Text(function(s) /*=>*/ { 
 		if(string_pos(" ", s)) { noti_warning("Global variable name can't have space."); return; }
 		
 		var _node = value.node;
@@ -53,7 +53,7 @@ function variable_editor(nodeVal) constructor {
 	}).setHide(1).setSlide(false);
 	
 	vb_range = new vectorBox(2, function(v, i) /*=>*/ { slider_range[i] = v; refreshInput(); }).setLinkable(false);
-	tb_step  = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ { slider_step = v; refreshInput(); });
+	tb_step  = textBox_Number(function(v) /*=>*/ { slider_step = v; refreshInput(); });
 	
 	sc_type  = new scrollBox(global.GLOBALVAR_TYPES_NAME, function(v) /*=>*/ {
 		sc_disp.data_list = global.GLOBALVAR_DISPLAY[v];
@@ -91,6 +91,7 @@ function variable_editor(nodeVal) constructor {
 	
 	static refreshInput = function() {
 		value.setType(global.GLOBALVAR_TYPES[type_index]);
+		sc_disp.data_list = global.GLOBALVAR_DISPLAY[type_index];
 		
 		if(_type_index != type_index || _disp_index != disp_index) {
 			switch(value.type) {
@@ -290,7 +291,6 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 			var _in   = createValue();
 			
 			_in.editor.type_index = struct_try_get(_des, "global_type", 0);
-			_in.editor.disp_index = struct_try_get(_des, "global_disp", 0);
 			_in.editor.disp_index = struct_try_get(_des, "global_disp", 0);
 			
 			_in.editor.slider_range = _des.global_s_range;
