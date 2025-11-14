@@ -9,7 +9,6 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	newInput(0, nodeValue( "In", self, CONNECT_TYPE.input, VALUE_TYPE.any, 0 )).setVisible(true, true);
 	
 	////- =Display
-	
 	newInput(1, nodeValue_Enum_Button( "Label Position", 0, [ "T", "B", "L", "R" ] )).rejectArray();
 	newInput(2, nodeValue_Float(       "Label Scale",    1 )).rejectArray();
 	newInput(3, nodeValue_Color(       "Label Color",    COLORS._main_text )).rejectArray();

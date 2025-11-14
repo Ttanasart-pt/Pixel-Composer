@@ -328,15 +328,19 @@ function __node_auto_organize(node, param, _x = 0, _y = 0, _cap = false) {
 	var maxy = 0; 
 	
 	for( var i = 0, n = array_length(node.children); i < n; i++ ) {
-		var _n = node.children[i];
+		var _n  = node.children[i];
+		var _nx = _sx;
+		var _ny = _sy;
+		
 		__node_auto_organize(_n, param, _sx, _sy, _cap);
 		
 		if(!_n.node.__organize_sorted) {
-			_n.node.x = _sx;
-			_n.node.y = _sy;
+			_n.node.x = _nx;
+			_n.node.y = _ny;
+			
 		} else {
-			_n.node.x = min(_n.node.x, _sx);
-			_n.node.y = min(_n.node.y, _sy);
+			_n.node.x = min(_n.node.x, _nx);
+			_n.node.y = min(_n.node.y, _ny);
 		}
 		
 		miny = i == 0? _n.node.y             : min(miny, _n.node.y);
@@ -361,12 +365,23 @@ function __node_bbox_recal(node, param) {
 	if(array_empty(node.children)) {
 		if(node.node == noone) return node;
 		
-		node.bbox[0] = node.node.x;
-		node.bbox[1] = node.node.y;
-		node.bbox[2] = node.node.x + node.node.w;
-		node.bbox[3] = node.node.y + node.node.h;
+		if(is(node.node, Node_Pin) || is(_n, Node_Array_Pin)) {
+			node.bbox[0] = node.node.x;
+			node.bbox[1] = node.node.y;
+			node.bbox[2] = node.node.x;
+			node.bbox[3] = node.node.y;
+			
+			node.h = 0;
+			
+		} else {
+			node.bbox[0] = node.node.x;
+			node.bbox[1] = node.node.y;
+			node.bbox[2] = node.node.x + node.node.w;
+			node.bbox[3] = node.node.y + node.node.h;
+			
+			node.h = node.bbox[3] - node.bbox[1];
+		}
 		
-		node.h = node.bbox[3] - node.bbox[1];
 		return node;
 	}
 	
@@ -417,6 +432,12 @@ function node_auto_organize(nodeList, param = new node_auto_organize_parameter()
 	var ncx = 0, ncy = 0;
 	for( var i = 0, n = array_length(nodeList); i < n; i++ ) {
 		var _n = nodeList[i];
+		
+		 if(is(_n, Node_Pin) || is(_n, Node_Array_Pin)) {
+		 	_n.x += 16;
+		 	_n.y += 16;
+		 }
+		 
 		ncx += _n.x + _n.w / 2;
 		ncy += _n.y + _n.h / 2;
 	}

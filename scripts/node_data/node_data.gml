@@ -73,11 +73,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		bg_spr_add     = .25;
 		bg_spr_add_clr = c_white;
 		
-		name             = "";
-		display_name     = "";
-		internalName     = "";
-		renamed          = false;
-		tooltip          = "";
+		name           = "";
+		display_name   = "";
+		internalName   = "";
+		renamed        = false;
+		tooltip        = "";
 		
 		w = 128;
 		h = 128;
