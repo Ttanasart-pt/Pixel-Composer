@@ -104,7 +104,7 @@ function canvas_tool_brush(_eraser = false) : canvas_tool() constructor {
 		mouse_line_drawing = false;
 		
 		if(mouse_pre_draw_x != undefined && mouse_pre_draw_y != undefined && key_mod_press(SHIFT)) {
-			if(key_mod_presses(CTRL)) {
+			if(key_mod_press(CTRL)) {
 				var _dx = mouse_cur_x - mouse_pre_draw_x;
 				var _dy = mouse_cur_y - mouse_pre_draw_y;
 				

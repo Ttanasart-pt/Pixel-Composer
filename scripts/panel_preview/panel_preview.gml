@@ -2413,7 +2413,7 @@ function Panel_Preview() : PanelContent() constructor {
     function drawNodeActions(active, _node) {
         var _mx = mx;
         var _my = my;
-        var overHover = pHOVER && mouse_on_preview == 1;
+        var overHover = pHOVER && mouse_on_preview == 1, overActive;
         
         var cx = canvas_x + _node.preview_x * canvas_s;
         var cy = canvas_y + _node.preview_y * canvas_s;
@@ -2429,11 +2429,11 @@ function Panel_Preview() : PanelContent() constructor {
         overHover = overHover && tool_hovering == noone && !overlay_hovering;
         overHover = overHover && !canvas_dragging && !canvas_zooming;
         overHover = overHover && point_in_rectangle(mx, my, (_node.showTool()) * toolbar_width, toolbar_height, w, h - toolbar_height);
-        overHover = overHover && !key_mod_press(CTRL);
         
+        overActive = active && overHover;
+        overHover  = overHover && !key_mod_press(CTRL);
         hoveringContent = overHover;
         
-        var overActive = active && overHover;
         var _params = { w, h, toolbar_height };
             _params.panel = self;
             _params.scene = d3_scene;

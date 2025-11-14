@@ -110,19 +110,18 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		process_running = array_verify(process_running,	_len);
 		
 		array_foreach(inputs, function(_in, i) /*=>*/ {
-			var raw = _in.getValue(__frame);
+			if(_in.isDynamic()) inputs_data[i] = _in.getValue(__frame);
+			var raw = inputs_data[i];
 			var amo = _in.arrayLength(raw);
 			var val = raw;
 			
 			_in.bypass_junc.setValue(val);
 				 if(amo == 0) val = noone;		//empty array
 			else if(amo == 1) val = raw[0];		//spread single array
-			inputs_is_array[i] = amo > 1;
-			
 			amo = max(1, amo);
 			
+			inputs_is_array[i] = amo > 1;
 			input_value_map[$ _in.internalName] = val;
-			inputs_data[i] = val;				//setInputData(i, val);
 			
 			switch(attributes.array_process) {
 				case ARRAY_PROCESS.loop : 
