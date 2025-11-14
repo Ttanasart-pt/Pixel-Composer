@@ -96,9 +96,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		draw_pad_w   = 0;
 		draw_pad_h   = 0;
 		
-		draw_name  = true;
-		always_pad = false;
-		draggable  = true;
+		draw_name    = true;
+		always_pad   = false;
+		draggable    = true;
 		
 		draw_bbox           = BBOX();
 		draw_boundary       = [0,0,0,0];

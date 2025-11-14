@@ -36,6 +36,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	def_surface    = -1;
 	curr_dimension = [ 0, 0 ];
 	render_amount  = 0;
+	render_frame   = 0;
 	
 	setTrigger(2, "Clear cache", [ THEME.cache, 0, COLORS._main_icon ]);
 	
@@ -81,6 +82,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	
 	static onUpdate = function(frame = CURRENT_FRAME) {
 		use_cache = attributes.cache? CACHE_USE.auto : CACHE_USE.none;
+		if(frame != render_frame && !IS_FIRST_FRAME) return;
 		
 		var _inSurf  = getInputData(0);
 		var _dim	 = getInputData(input_len + 0);
@@ -97,9 +99,14 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		
 		outputs[0].setValue(_outSurf);
 		
-		if(IS_FIRST_FRAME) { reset(); reLoop(); }
+		if(IS_FIRST_FRAME) { 
+			reset(); 
+			reLoop();
+			render_frame = 0;
+		}
 		
 		runVFX(frame);
+		render_frame++;
 	}
 	
 	function render(_time = CURRENT_FRAME) {
