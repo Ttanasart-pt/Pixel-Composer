@@ -661,8 +661,8 @@ function colorSelector(_onApply = noone) constructor {
 				setHSV();
 				
 				if(discr) {
-					current_color = disp_mode == 0? surface_getpixel(content_surface, sat, 256 - val) : 
-													surface_getpixel(content_surface, hue, 256 - sat);
+					current_color = disp_mode == 0? surface_getpixel(content_surface, ui(sat), ui(256 - val)) : 
+													surface_getpixel(content_surface, ui(hue), ui(256 - sat));
 					current_color = cola(current_color, 1);
 					
 					if(onApply != noone) {
@@ -693,8 +693,8 @@ function colorSelector(_onApply = noone) constructor {
 				setHSV();
 				
 				if(discr) {
-					current_color = disp_mode == 0? surface_getpixel(content_surface, sat, 256 - val) : 
-													surface_getpixel(content_surface, hue, 256 - sat);
+					current_color = disp_mode == 0? surface_getpixel(content_surface, ui(sat), ui(256 - val)) : 
+													surface_getpixel(content_surface, ui(hue), ui(256 - sat));
 					current_color = cola(current_color, 1);
 					
 					if(onApply != noone) {
