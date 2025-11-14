@@ -1,49 +1,40 @@
-#region channels
+#macro merge_color merge_color_ext
+#macro __merge_color merge_color
+//!#mfunc __clamp255 {"args":["v"],"order":[0]}
+#macro __clamp255_mf0  clamp(round(
+#macro __clamp255_mf1 ), 0, 255)
+
+#region alpha
+	#macro color_get_a color_get_alpha
+	#macro _color_get_a _color_get_alpha
+	
 	function cola(color, alpha = 1) { INLINE return int64((color & 0xFFFFFF) + (round(alpha * 255) << 24)); }
 	function _cola(color, alpha)    { INLINE return int64((color & 0xFFFFFF) + (alpha << 24)); }
 	
+	function color_get_alpha(color) { INLINE return (color & (0xFF << 24)) >> 24; }
+#endregion
+
+#region RGB
 	function color_real(color)      { INLINE return make_color_rgb(color_get_red(color), color_get_green(color), color_get_blue(color)); }
 	
-	function color_get_alpha(color)  { INLINE return (color & (0xFF << 24)) >> 24; }
+	#macro color_get_r color_get_red
+	#macro color_get_g color_get_green
+	#macro color_get_b color_get_blue
 	
 	#macro _color_get_r _color_get_red
 	#macro _color_get_g _color_get_green
 	#macro _color_get_b _color_get_blue
-	#macro _color_get_a _color_get_alpha
 	
 	function _color_get_red(color)   { INLINE return color_get_red(color)   / 255; }
 	function _color_get_green(color) { INLINE return color_get_green(color) / 255; }
 	function _color_get_blue(color)  { INLINE return color_get_blue(color)  / 255; }
 	function _color_get_alpha(color) { INLINE return color_get_alpha(color) / 255; }
 	
-	function _color_get_hue(color)        { INLINE return color_get_hue(color)        / 255; }
-	function _color_get_saturation(color) { INLINE return color_get_saturation(color) / 255; }
-	function _color_get_value(color)      { INLINE return color_get_value(color)      / 255; }
+	function color_rgb(col)  { return [ color_get_red(col) / 255,             color_get_green(col) / 255,             color_get_blue(col) / 255 ];             }
+	function color_srgb(col) { return [ power(color_get_red(col) / 255, 2.2), power(color_get_green(col) / 255, 2.2), power(color_get_blue(col) / 255, 2.2) ]; }
 	
-	function _color_get_light(color) { INLINE return 0.299 * _color_get_red(color) + 0.587 * _color_get_green(color) + 0.114 * _color_get_blue(color); }
-#endregion
-
-#region creation
 	function _make_color_rgb(r, g, b)    { INLINE return make_color_rgb(r * 255, g * 255, b * 255); }
-	function make_color_grey(g)          { INLINE return int64(round(g*255) + (round(g*255) << 8) + (round(g*255) << 16) + (255 << 24)); }
 	function make_color_rgba(r, g, b, a) { INLINE return int64(round(r) + (round(g) << 8) + (round(b) << 16) + (round(a) << 24)); }
-	function make_color_hsva(h, s, v, a) { INLINE return _cola(make_color_hsv(h, s, v), a); }
-	
-	function make_color_oklab(ok, a = 1) {
-		INLINE 
-		var k   = new __vec3(ok[0], ok[1], ok[2]);
-		    k.x = power(k.x, 3);
-		    k.y = power(k.y, 3);
-		    k.z = power(k.z, 3);
-			
-		var rg   = global.CVTMAT_OKLAB_RGB.multiplyVector(k);
-			rg.x = __clamp255_mf0 power(rg.x, 1 / 2.2) * 255 __clamp255_mf1;
-		    rg.y = __clamp255_mf0 power(rg.y, 1 / 2.2) * 255 __clamp255_mf1;
-		    rg.z = __clamp255_mf0 power(rg.z, 1 / 2.2) * 255 __clamp255_mf1;
-			
-		return make_color_rgba(rg.x, rg.y, rg.z, a * 255);
-	}
-	
 	function make_color_srgba(rgb, a) {
 		INLINE 
 		var r = power(rgb[0], 1 / 2.2) * 255;
@@ -59,13 +50,11 @@
 		var b = round(real(arr[2]) * 255);
 		return make_color_rgb(r, g, b);
 	}
-	
 	function colorToArray(clr, alpha = false) {
 		INLINE
 		if(alpha) return [ _color_get_red(clr), _color_get_green(clr), _color_get_blue(clr), _color_get_alpha(clr) ];	
 		return [ _color_get_red(clr), _color_get_green(clr), _color_get_blue(clr) ];	
 	}
-
 	function paletteToArray(_pal) {
 		var _colors = array_create(array_length(_pal) * 4);
 		for(var i = 0; i < array_length(_pal); i++) {
@@ -80,13 +69,88 @@
 	
 		return _colors;
 	}
+	
+	function merge_color_ext(c0, c1, t) {
+		INLINE
+		if(is_real(c0) && is_real(c1)) return __merge_color(c0, c1, t);
+		
+		return make_color_rgba(
+			__clamp255_mf0 lerp(color_get_red(c0),   color_get_red(c1),   t) __clamp255_mf1,
+			__clamp255_mf0 lerp(color_get_green(c0), color_get_green(c1), t) __clamp255_mf1,
+			__clamp255_mf0 lerp(color_get_blue(c0),  color_get_blue(c1),  t) __clamp255_mf1,
+			__clamp255_mf0 lerp(color_get_alpha(c0), color_get_alpha(c1), t) __clamp255_mf1,
+		);
+	}
+	function merge_color_rgba(c0, c1, t) {
+		INLINE
+		return make_color_rgba(
+			__clamp255_mf0 lerp(color_get_red(c0),   color_get_red(c1),   t) __clamp255_mf1,
+			__clamp255_mf0 lerp(color_get_green(c0), color_get_green(c1), t) __clamp255_mf1,
+			__clamp255_mf0 lerp(color_get_blue(c0),  color_get_blue(c1),  t) __clamp255_mf1,
+			__clamp255_mf0 lerp(color_get_alpha(c0), color_get_alpha(c1), t) __clamp255_mf1,
+		);
+	}
+	function merge_color_srgb(c0, c1, t) {
+		INLINE
+		
+		var sr0 = color_srgb(c0);
+		var sr1 = color_srgb(c1);
+		
+		var sr = [
+			lerp(sr0[0], sr1[0], t),
+			lerp(sr0[1], sr1[1], t),
+			lerp(sr0[2], sr1[2], t),
+		];
+		
+		var a = __clamp255_mf0 lerp(color_get_alpha(c0), color_get_alpha(c1), t) __clamp255_mf1;
+		
+		return make_color_srgba(sr, a);
+	} 
 #endregion
 
-#region conversion
-	function color_rgb(col)  { return [ color_get_red(col) / 255,             color_get_green(col) / 255,             color_get_blue(col) / 255 ];             }
-	function color_srgb(col) { return [ power(color_get_red(col) / 255, 2.2), power(color_get_green(col) / 255, 2.2), power(color_get_blue(col) / 255, 2.2) ]; }
+#region HSV
+	#macro color_get_h color_get_hue
+	#macro color_get_s color_get_saturation
+	#macro color_get_v color_get_value
+	
+	#macro _color_get_h _color_get_hue
+	#macro _color_get_s _color_get_saturation
+	#macro _color_get_v _color_get_value
+	
+	function _color_get_hue(color)        { INLINE return color_get_h(color) / 255; }
+	function _color_get_saturation(color) { INLINE return color_get_s(color) / 255; }
+	function _color_get_value(color)      { INLINE return color_get_v(color) / 255; }
+	
 	function color_hsv(col)  { return [ color_get_hue(col) / 255,             color_get_saturation(col) / 255,        color_get_value(col) / 255 ];            }
 	
+	function make_color_hsva(h, s, v, a) { INLINE return _cola(make_color_hsv(h, s, v), a); }
+	
+	function merge_color_hsva(c0, c1, t) {
+		return make_color_hsva(
+			__clamp255_mf0 lerp(color_get_hue(c0),        color_get_hue(c1),        t) __clamp255_mf1,
+			__clamp255_mf0 lerp(color_get_saturation(c0), color_get_saturation(c1), t) __clamp255_mf1,
+			__clamp255_mf0 lerp(color_get_value(c0),      color_get_value(c1),      t) __clamp255_mf1,
+			__clamp255_mf0 lerp(color_get_alpha(c0),      color_get_alpha(c1),      t) __clamp255_mf1,
+		);
+	}
+	function merge_color_hsv(c0, c1, t) {
+		INLINE
+		if(is_real(c0)) return make_color_hsv(
+			__clamp255_mf0 lerp(color_get_hue(c0),        color_get_hue(c1),        t) __clamp255_mf1,
+			__clamp255_mf0 lerp(color_get_saturation(c0), color_get_saturation(c1), t) __clamp255_mf1,
+			__clamp255_mf0 lerp(color_get_value(c0),      color_get_value(c1),      t) __clamp255_mf1,
+		);
+	
+		return make_color_hsva(
+			__clamp255_mf0 lerp(color_get_hue(c0),        color_get_hue(c1),        t) __clamp255_mf1,
+			__clamp255_mf0 lerp(color_get_saturation(c0), color_get_saturation(c1), t) __clamp255_mf1,
+			__clamp255_mf0 lerp(color_get_value(c0),      color_get_value(c1),      t) __clamp255_mf1,
+			__clamp255_mf0 lerp(color_get_alpha(c0),      color_get_alpha(c1),      t) __clamp255_mf1,
+		);
+	}
+#endregion
+
+#region ok
 	global.CVTMAT_RGB_OKLAB = new __mat3([ 0.4121656120,  0.2118591070,  0.0883097947,
                                            0.5362752080,  0.6807189584,  0.2818474174,
                                            0.0514575653,  0.1074065790,  0.6302613616 ]);
@@ -94,6 +158,31 @@
 	global.CVTMAT_OKLAB_RGB = new __mat3([ 4.0767245293, -1.2681437731, -0.0041119885,
 										  -3.3072168827,  2.6093323231, -0.7034763098,
 										   0.2307590544, -0.3411344290,  1.7068625689 ]);
+	
+	function make_color_oklab(ok, a = 1) {
+		INLINE 
+		var k   = new __vec3(ok[0], ok[1], ok[2]);
+		    k.x = power(k.x, 3);
+		    k.y = power(k.y, 3);
+		    k.z = power(k.z, 3);
+			
+		var rg   = global.CVTMAT_OKLAB_RGB.multiplyVector(k);
+			rg.x = __clamp255_mf0 power(max(0, rg.x), 1 / 2.2) * 255 __clamp255_mf1;
+		    rg.y = __clamp255_mf0 power(max(0, rg.y), 1 / 2.2) * 255 __clamp255_mf1;
+		    rg.z = __clamp255_mf0 power(max(0, rg.z), 1 / 2.2) * 255 __clamp255_mf1;
+			
+		return make_color_rgba(rg.x, rg.y, rg.z, a * 255);
+	}
+	
+	function make_color_oklch(ok, a = 1) {
+		INLINE
+		var L = ok[0];
+		var C = ok[1];
+		var h = ok[2];
+		var a_ = C * dcos(h);
+		var b_ = C * dsin(h);
+		return make_color_oklab([ L, a_, b_ ], a);
+	}
 	
 	function color_oklab(col) {
 		INLINE
@@ -109,9 +198,38 @@
 			
 		return [ ok.x, ok.y, ok.z ];
 	}
+	
+	function color_oklch(col) {
+		INLINE
+		var ok = color_oklab(col);
+		var C = sqrt(ok[1] * ok[1] + ok[2] * ok[2]);
+		var h = darctan2(ok[2], ok[1]);
+		if (h < 0) h += 360;
+		return [ ok[0], C, h ];
+	}
+	
+	function merge_color_oklab(c0, c1, t) {
+		INLINE
+		
+		var ok0 = color_oklab(c0);
+		var ok1 = color_oklab(c1);
+		
+		var ok = [
+			lerp(ok0[0], ok1[0], t),
+			lerp(ok0[1], ok1[1], t),
+			lerp(ok0[2], ok1[2], t),
+		];
+		
+		var a = __clamp255_mf0 lerp(color_get_alpha(c0), color_get_alpha(c1), t) __clamp255_mf1;
+		
+		return make_color_oklab(ok, a);
+	} 
 #endregion
 
-#region data
+#region grey
+	function make_color_grey(g)      { INLINE return int64(round(g*255) + (round(g*255) << 8) + (round(g*255) << 16) + (255 << 24)); }
+	function _color_get_light(color) { INLINE return 0.299 * _color_get_red(color) + 0.587 * _color_get_green(color) + 0.114 * _color_get_blue(color); }
+	
 	function colorBrightness(clr, normalize = true) {
 		INLINE
 		var r2 = color_get_red(clr)   /	(normalize? 255 : 1);
@@ -119,7 +237,9 @@
 		var b2 = color_get_blue(clr)  /	(normalize? 255 : 1);
 		return 0.299 * r2 + 0.587 * g2 + 0.224 * b2;
 	}
-
+#endregion
+	
+#region actions
 	function colorMultiplyRGB(c1, c2) {
 		INLINE 
 		
@@ -176,121 +296,34 @@
 	}
 #endregion
 
-function color_diff_fast(c1, c2) {
-	INLINE
-	
-	return (abs(_color_get_red(c1)   - _color_get_red(c2)) + 
-	        abs(_color_get_green(c1) - _color_get_green(c2)) + 
-	        abs(_color_get_blue(c1)  - _color_get_blue(c2))
-	        ) / 3;
-}
-
-function color_diff_alpha(c1, c2) {
-	INLINE
-	
-	return sqrt(sqr(_color_get_red(c1)   - _color_get_red(c2)) + 
-	            sqr(_color_get_green(c1) - _color_get_green(c2)) + 
-	            sqr(_color_get_blue(c1)  - _color_get_blue(c2)) + 
-	            sqr(_color_get_alpha(c1) - _color_get_alpha(c2))
-	            );
-}
-
-function color_diff(c1, c2) {
-	INLINE 
-	
-	return sqrt(sqr(_color_get_red(c1)   - _color_get_red(c2)) + 
-	            sqr(_color_get_green(c1) - _color_get_green(c2)) + 
-	            sqr(_color_get_blue(c1)  - _color_get_blue(c2))
-	            );
-}
-
-#region merge
-	#macro merge_color merge_color_ext
-	#macro __merge_color merge_color
-	//!#mfunc __clamp255 {"args":["v"],"order":[0]}
-#macro __clamp255_mf0  clamp(round(
-#macro __clamp255_mf1 ), 0, 255)
-
-	function merge_color_ext(c0, c1, t) {
+#region diff
+	function color_diff_fast(c1, c2) {
 		INLINE
-		if(is_real(c0) && is_real(c1)) return __merge_color(c0, c1, t);
 		
-		return make_color_rgba(
-			__clamp255_mf0 lerp(color_get_red(c0),   color_get_red(c1),   t) __clamp255_mf1,
-			__clamp255_mf0 lerp(color_get_green(c0), color_get_green(c1), t) __clamp255_mf1,
-			__clamp255_mf0 lerp(color_get_blue(c0),  color_get_blue(c1),  t) __clamp255_mf1,
-			__clamp255_mf0 lerp(color_get_alpha(c0), color_get_alpha(c1), t) __clamp255_mf1,
-		);
+		return (abs(_color_get_red(c1)   - _color_get_red(c2)) + 
+		        abs(_color_get_green(c1) - _color_get_green(c2)) + 
+		        abs(_color_get_blue(c1)  - _color_get_blue(c2))
+		        ) / 3;
 	}
 	
-	function merge_color_rgba(c0, c1, t) {
+	function color_diff_alpha(c1, c2) {
 		INLINE
-		return make_color_rgba(
-			__clamp255_mf0 lerp(color_get_red(c0),   color_get_red(c1),   t) __clamp255_mf1,
-			__clamp255_mf0 lerp(color_get_green(c0), color_get_green(c1), t) __clamp255_mf1,
-			__clamp255_mf0 lerp(color_get_blue(c0),  color_get_blue(c1),  t) __clamp255_mf1,
-			__clamp255_mf0 lerp(color_get_alpha(c0), color_get_alpha(c1), t) __clamp255_mf1,
-		);
-	}
-
-	function merge_color_hsva(c0, c1, t) {
-		return make_color_hsva(
-			__clamp255_mf0 lerp(color_get_hue(c0),        color_get_hue(c1),        t) __clamp255_mf1,
-			__clamp255_mf0 lerp(color_get_saturation(c0), color_get_saturation(c1), t) __clamp255_mf1,
-			__clamp255_mf0 lerp(color_get_value(c0),      color_get_value(c1),      t) __clamp255_mf1,
-			__clamp255_mf0 lerp(color_get_alpha(c0),      color_get_alpha(c1),      t) __clamp255_mf1,
-		);
+		
+		return sqrt(sqr(_color_get_red(c1)   - _color_get_red(c2)) + 
+		            sqr(_color_get_green(c1) - _color_get_green(c2)) + 
+		            sqr(_color_get_blue(c1)  - _color_get_blue(c2)) + 
+		            sqr(_color_get_alpha(c1) - _color_get_alpha(c2))
+		            );
 	}
 	
-	function merge_color_hsv(c0, c1, t) {
-		INLINE
-		if(is_real(c0)) return make_color_hsv(
-			__clamp255_mf0 lerp(color_get_hue(c0),        color_get_hue(c1),        t) __clamp255_mf1,
-			__clamp255_mf0 lerp(color_get_saturation(c0), color_get_saturation(c1), t) __clamp255_mf1,
-			__clamp255_mf0 lerp(color_get_value(c0),      color_get_value(c1),      t) __clamp255_mf1,
-		);
-	
-		return make_color_hsva(
-			__clamp255_mf0 lerp(color_get_hue(c0),        color_get_hue(c1),        t) __clamp255_mf1,
-			__clamp255_mf0 lerp(color_get_saturation(c0), color_get_saturation(c1), t) __clamp255_mf1,
-			__clamp255_mf0 lerp(color_get_value(c0),      color_get_value(c1),      t) __clamp255_mf1,
-			__clamp255_mf0 lerp(color_get_alpha(c0),      color_get_alpha(c1),      t) __clamp255_mf1,
-		);
+	function color_diff(c1, c2) {
+		INLINE 
+		
+		return sqrt(sqr(_color_get_red(c1)   - _color_get_red(c2)) + 
+		            sqr(_color_get_green(c1) - _color_get_green(c2)) + 
+		            sqr(_color_get_blue(c1)  - _color_get_blue(c2))
+		            );
 	}
-	
-	function merge_color_oklab(c0, c1, t) {
-		INLINE
-		
-		var ok0 = color_oklab(c0);
-		var ok1 = color_oklab(c1);
-		
-		var ok = [
-			lerp(ok0[0], ok1[0], t),
-			lerp(ok0[1], ok1[1], t),
-			lerp(ok0[2], ok1[2], t),
-		];
-		
-		var a = __clamp255_mf0 lerp(color_get_alpha(c0), color_get_alpha(c1), t) __clamp255_mf1;
-		
-		return make_color_oklab(ok, a);
-	} 
-	
-	function merge_color_srgb(c0, c1, t) {
-		INLINE
-		
-		var sr0 = color_srgb(c0);
-		var sr1 = color_srgb(c1);
-		
-		var sr = [
-			lerp(sr0[0], sr1[0], t),
-			lerp(sr0[1], sr1[1], t),
-			lerp(sr0[2], sr1[2], t),
-		];
-		
-		var a = __clamp255_mf0 lerp(color_get_alpha(c0), color_get_alpha(c1), t) __clamp255_mf1;
-		
-		return make_color_srgba(sr, a);
-	} 
 #endregion
 
 #region sorting functions

@@ -1873,6 +1873,7 @@
     {"name":"sh_color_replace","order":10,"path":"shaders/sh_color_replace/sh_color_replace.yy",},
     {"name":"sh_color_select_side","order":1,"path":"shaders/sh_color_select_side/sh_color_select_side.yy",},
     {"name":"sh_color_selector_mix","order":8,"path":"shaders/sh_color_selector_mix/sh_color_selector_mix.yy",},
+    {"name":"sh_color_selector_tb","order":9,"path":"shaders/sh_color_selector_tb/sh_color_selector_tb.yy",},
     {"name":"sh_colorize","order":15,"path":"shaders/sh_colorize/sh_colorize.yy",},
     {"name":"sh_colours_replace","order":13,"path":"shaders/sh_colours_replace/sh_colours_replace.yy",},
     {"name":"sh_combine_hsv","order":3,"path":"shaders/sh_combine_hsv/sh_combine_hsv.yy",},

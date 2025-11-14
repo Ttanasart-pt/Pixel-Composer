@@ -25,11 +25,9 @@ function __mat3(raw = [ 0, 0, 0, 0, 0, 0, 0, 0, 0 ]) constructor {
     static multiplyVector = function(vector) {
         var result = new __vec3();
         
-        for (var i = 0; i < 3; i++) {
-            result.setIndex(i,	raw[i * 3 + 0] * vector.x +
-								raw[i * 3 + 1] * vector.y +
-								raw[i * 3 + 2] * vector.z);
-        }
+        result.x = raw[0 * 3 + 0] * vector.x + raw[0 * 3 + 1] * vector.y + raw[0 * 3 + 2] * vector.z;
+        result.y = raw[1 * 3 + 0] * vector.x + raw[1 * 3 + 1] * vector.y + raw[1 * 3 + 2] * vector.z;
+        result.z = raw[2 * 3 + 0] * vector.x + raw[2 * 3 + 1] * vector.y + raw[2 * 3 + 2] * vector.z;
         
         return result;
     };

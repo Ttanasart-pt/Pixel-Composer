@@ -645,23 +645,21 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		
 		var _scis = gpu_get_scissor();
 			
-		if(hide <= 0) {
-			draw_sprite_stretched_ext(THEME.textbox, base_index, _x, _y, _w, _h, boxColor, 1);
+		if(hide <= 0) draw_sprite_stretched_ext(THEME.textbox, base_index, _x, _y, _w, _h, boxColor, 1);
 			
-			if(slide_range != noone) {
-				var _minn    = slide_range[0];
-				var _maxx    = slide_range[1];
-				var _rang    = abs(_maxx - _minn);
-				var _currVal = toNumber(_current_text);
-			
-				if(sliding != 2) {
-					curr_range[0] = (_currVal >= _minn)? _minn : _minn - ceil(abs(_currVal - _minn) / _rang) * _rang; 
-					curr_range[1] = (_currVal <= _maxx)? _maxx : _maxx + ceil(abs(_currVal - _maxx) / _rang) * _rang;
-				}
-			
-				var lw = _w * (_currVal - curr_range[0]) / (curr_range[1] - curr_range[0]);
-				draw_sprite_stretched_ext(THEME.textbox, 4, _x, _y, lw, _h, boxColor, 1);
+		if(slide_range != noone) {
+			var _minn    = slide_range[0];
+			var _maxx    = slide_range[1];
+			var _rang    = abs(_maxx - _minn);
+			var _currVal = toNumber(_current_text);
+		
+			if(sliding != 2) {
+				curr_range[0] = (_currVal >= _minn)? _minn : _minn - ceil(abs(_currVal - _minn) / _rang) * _rang; 
+				curr_range[1] = (_currVal <= _maxx)? _maxx : _maxx + ceil(abs(_currVal - _maxx) / _rang) * _rang;
 			}
+		
+			var lw = _w * (_currVal - curr_range[0]) / (curr_range[1] - curr_range[0]);
+			if(hide <= 0) draw_sprite_stretched_ext(THEME.textbox, 4, _x, _y, lw, _h, boxColor, 1);
 		}
 		
 		if(_w > ui(48)) {

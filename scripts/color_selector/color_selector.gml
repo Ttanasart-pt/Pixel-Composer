@@ -2,102 +2,110 @@ globalvar DROPPER_DROPPING, DROPPER_SURFACE;
 DROPPER_DROPPING = false;
 DROPPER_SURFACE  = noone;
 
-function colorSelector(onApply = noone) constructor {
-	self.onApply = onApply;
+function colorSelector(_onApply = noone) constructor {
+	onApply = _onApply;
 	
-	current_color  = c_white;
-	current_colors = noone;
+	focus = noone;
+	hover = noone;
 	
-	hue = 1;
-	sat = 0;
-	val = 0;
+	#region color
+		current_color  = c_white;
+		current_colors = noone;
+		
+		hue = 1;
+		sat = 0;
+		val = 0;
+	#endregion
 	
-	area_dragging = false;
-	side_dragging = false;
-	mix_dragging  = false;
+	#region interaction
+		area_dragging = false;
+		side_dragging = false;
+		mix_dragging  = false;
+		
+		dropper_active = false;
+		dropper_close  = true;
+		dropper_color  = c_white;
+		interactable   = true;
+	#endregion
 	
-	dropper_active = false;
-	dropper_close  = true;
-	dropper_color  = c_white;
-	interactable   = true;
+	#region display
+		disp_mode     = 0;
+		draw_selector = true;
 	
-	disp_mode     = 0;
-	draw_selector = true;
+		palette = PROJECT.attributes.palette;
+		discretize_pal = true;
+		
+		tt_view = new tooltipSelector("Display Type", [ "Hue", "Value" ]);
+		tt_barr = new tooltipSelector("Slider Type",  [ "Smooth", "Quantized" ]);
+		tt_rang = new tooltipSelector("Slider Range", [ "All", "Around" ]);
+	#endregion
 	
-	palette = PROJECT.attributes.palette;
-	discretize_pal = true;
+	#region surfaces
+		content_surface = noone;
+		side_surface    = noone;
+		textbox_surface = noone;
+		mix_surface     = noone;
+		mixing_colors   = noone;
+	#endregion
 	
-	content_surface = noone;
-	side_surface    = noone;
-	mix_surface     = noone;
-	mixing_colors   = noone;
+	#region data
+		slot_amount     = 7;
+		slot_spacing    = 32;
+		value_dragging  = noone;
+		
+		tb_quantize = textBox_Number(function(n) /*=>*/ { slot_spacing = clamp(round(n), 1, 64); }).setFont(f_p4);
+		tb_slotamo  = textBox_Number(function(n) /*=>*/ { slot_amount  = clamp(round(n), 3, 15); }).setFont(f_p4);
+	#endregion
 	
 	#region widgets
+		tb_hue = slider(0, 255, 1, function(v) /*=>*/ { if(!interactable) return; hue = clamp(v, 0, 255); setHSV(); });
+		tb_sat = slider(0, 255, 1, function(v) /*=>*/ { if(!interactable) return; sat = clamp(v, 0, 255); setHSV(); });
+		tb_val = slider(0, 255, 1, function(v) /*=>*/ { if(!interactable) return; val = clamp(v, 0, 255); setHSV(); });
 		
-		tb_hue = slider(0, 255, 1, function(_val) /*=>*/ { if(!interactable) return; hue = clamp(_val, 0, 255); setHSV(); }).setSlideType(1);
-		tb_sat = slider(0, 255, 1, function(_val) /*=>*/ { if(!interactable) return; sat = clamp(_val, 0, 255); setHSV(); }).setSlideType(1);
-		tb_val = slider(0, 255, 1, function(_val) /*=>*/ { if(!interactable) return; val = clamp(_val, 0, 255); setHSV(); }).setSlideType(1);
-		
-		tb_red = slider(0, 255, 1, function(_val) /*=>*/ {
+		tb_red = slider(0, 255, 1, function(v) /*=>*/ {
 			if(!interactable) return;
-			var r = clamp(_val, 0, 255);
-			var g = color_get_green(current_color);
-			var b = color_get_blue(current_color);
-			var a = color_get_alpha(current_color);
+			
+			var r = clamp(v, 0, 255);
+			var g = color_get_g(current_color);
+			var b = color_get_b(current_color);
+			var a = color_get_a(current_color);
 			
 			current_color = make_color_rgba(r, g, b, a);
 			resetHSV();
-		}).setSlideType(1);
+		});
 		
-		tb_green = slider(0, 255, 1, function(_val) /*=>*/ {
+		tb_grn = slider(0, 255, 1, function(v) /*=>*/ {
 			if(!interactable) return;
-			var r = color_get_red(current_color);
-			var g = clamp(_val, 0, 255);
-			var b = color_get_blue(current_color);
-			var a = color_get_alpha(current_color);
+			
+			var r = color_get_r(current_color);
+			var g = clamp(v, 0, 255);
+			var b = color_get_b(current_color);
+			var a = color_get_a(current_color);
 			
 			current_color = make_color_rgba(r, g, b, a);
 			resetHSV();
-		}).setSlideType(1);
+		});
 		
-		tb_blue = slider(0, 255, 1, function(_val) /*=>*/ {
+		tb_blu = slider(0, 255, 1, function(v) /*=>*/ {
 			if(!interactable) return;
-			var r = color_get_red(current_color);
-			var g = color_get_green(current_color);
-			var b = clamp(_val, 0, 255);
-			var a = color_get_alpha(current_color);
+			
+			var r = color_get_r(current_color);
+			var g = color_get_g(current_color);
+			var b = clamp(v, 0, 255);
+			var a = color_get_a(current_color);
 			
 			current_color = make_color_rgba(r, g, b, a);
 			resetHSV();
-		}).setSlideType(1);
+		});
 		
-		tb_alpha = slider(0, 255, 1, function(_val) /*=>*/ {
+		tb_alp = slider(0, 255, 1, function(v) /*=>*/ {
 			if(!interactable) return;
-			var alp = clamp(_val, 0, 255);
-			
-			current_color = _cola(current_color, alp);
+			current_color = _cola(current_color, clamp(v, 0, 255));
 			resetHSV();
-		}).setSlideType(1);
+		});
 		
-		tb_hue.hdw   = ui(16);
-		tb_sat.hdw   = ui(16);
-		tb_val.hdw   = ui(16);
-		tb_red.hdw   = ui(16);
-		tb_green.hdw = ui(16);
-		tb_blue.hdw  = ui(16);
-		tb_alpha.hdw = ui(16);
-		
-		tb_hue.font   = f_p1;
-		tb_sat.font   = f_p1;
-		tb_val.font   = f_p1;
-		tb_red.font   = f_p1;
-		tb_green.font = f_p1;
-		tb_blue.font  = f_p1;
-		tb_alpha.font = f_p1;
-		
-		tb_hex = new textBox(TEXTBOX_INPUT.text, function(str) {
-			if(!interactable) return;
-			if(str == "") return;
+		tb_hex = textBox_Text(function(str) /*=>*/ {
+			if(!interactable || str == "") return;
 			if(string_char_at(str, 1) == "#") str = string_replace(str, "#", "");
 			
 			var _r = string_hexadecimal(string_copy(str, 1, 2));
@@ -109,8 +117,9 @@ function colorSelector(onApply = noone) constructor {
 			resetHSV();
 		});
 		
-		scr_disp = new buttonGroup(__txts(["Hue", "Value"]), function(mode) { disp_mode = mode; } );
-	
+		tbs = [ tb_hue, tb_sat, tb_val, tb_red, tb_grn, tb_blu, tb_alp ];
+		for( var i = 0, n = array_length(tbs); i < n; i++ )
+			tbs[i].setFont(f_p3).setSlideType(1);
 	#endregion
 	
 	function resetHSV(_apply = true) {
@@ -151,6 +160,222 @@ function colorSelector(onApply = noone) constructor {
 		dropper_color = int64(cola(draw_getpixel(mouse_mx, mouse_my)));
 		MOUSE_BLOCK   = true;
 		DROPPER_DROPPING = true;
+	}
+	
+	function drawValueBox(_label, _type, dtx, dty, tb, _range = [0,255], _int = true) {
+		var wdw = ui(40);
+		var wdx = dtx + ui(24 + 160) - wdw;
+		var wdh = ui(27);
+			
+		var bgw = ui(160 - 4) - wdw;
+		var bgh = wdh - ui(8);
+		var bgx = dtx + ui(20);
+			
+		textbox_surface = surface_verify(textbox_surface, bgw, bgh);
+		surface_set_shader(textbox_surface);
+			draw_sprite_stretched_ext(THEME.box_r2, 0, 0, 0, bgw, bgh, c_white, 1);
+		surface_reset_shader();
+		
+		draw_set_text(f_p2b, fa_left, fa_center, COLORS._main_text_sub);
+		draw_text(dtx, dty + wdh / 2, _label);
+		
+		var r = color_get_r(current_color);
+		var g = color_get_g(current_color);
+		var b = color_get_b(current_color);
+		var a = color_get_a(current_color);
+	
+		var defv = 0;
+		switch(_type) {
+			case 0 : defv = hue; break;
+			case 1 : defv = sat; break;
+			case 2 : defv = val; break;
+			
+			case 3 : defv = r; break;
+			case 4 : defv = g; break;
+			case 5 : defv = b; break;
+			
+			case 6 : defv = color_oklch(current_color)[0]; break;
+			case 7 : defv = color_oklch(current_color)[1]; break;
+			case 8 : defv = color_oklch(current_color)[2]; break;
+			
+			case 99 : defv = a; break;
+		}
+		
+		defv = clamp(defv, _range[0], _range[1]);
+		var _val = _int? round(defv) : defv;
+		tb.draw(wdx, dty, wdw, wdh, _int? round(_val) : _val, mouse_ui);
+		
+		var sp = slot_spacing / 256 * (_range[1] + 1); 
+		if(_type == 0) sp /= 2;
+		sp = min(sp, _int? round(_range[1] / slot_amount) : _range[1] / slot_amount);
+		
+		var _wid = sp * 3;
+		
+		if(PREFERENCES.color_selector_slider_type == 0) {
+			var _range_s = defv;
+			var _range_e = defv;
+			
+			switch(PREFERENCES.color_selector_range_type) {
+				case 0 : 
+					_range_s = _range[0];
+					_range_e = _range[1];
+					break;
+					
+				case 1 : 
+					_range_s = defv - _wid;
+					_range_e = defv + _wid;
+					
+					if(_range_s < _range[0]) {
+						_range_s = _range[0];
+						_range_e = _wid * 2;
+						
+					} else if(_range_e > _range[1]) {
+						_range_s = _range[1] - _wid * 2;
+						_range_e = _range[1];
+					}
+					break;
+					
+			}
+			
+			_range_s /= _range[1] - _range[0];
+			_range_e /= _range[1] - _range[0];
+			
+			shader_set(sh_color_selector_tb); 
+				shader_set_i("type",  _type); 
+				shader_set_2("range", [_range_s, _range_e]); 
+				draw_surface(textbox_surface, bgx, dty+ui(4)); 
+			shader_reset();
+			
+			draw_sprite_stretched_add(THEME.box_r2, 1, bgx, dty + ui(4), bgw, bgh, c_white, .2);
+			
+			var _vv = (_val / _range[1] - _range_s) / (_range_e - _range_s);
+			var _bx = bgx + bgw * _vv;
+			var _cc = COLORS._main_icon;
+			
+			var _hovBar = interactable && hover && point_in_rectangle(mouse_mx, mouse_my, bgx, dty, bgx + bgw, dty + wdh);
+			if(_hovBar) {
+				_cc = COLORS._main_icon_light;
+				
+				if(value_dragging == noone && mouse_lpress(focus))
+					value_dragging = _type;
+			}
+			
+			if(value_dragging == _type) {
+				_cc = COLORS._main_accent;
+				var v = clamp((mouse_mx - bgx) / bgw, 0, 1) * _range[1];
+				if(_int) v = round(v);
+				
+				switch(_type) {
+					case 0 : hue = clamp(v, _range[0], _range[1]); setHSV(); break;
+					case 1 : sat = clamp(v, _range[0], _range[1]); setHSV(); break;
+					case 2 : val = clamp(v, _range[0], _range[1]); setHSV(); break;
+					
+					case 3 : current_color = make_color_rgba(v, g, b, a); resetHSV(); break;
+					case 4 : current_color = make_color_rgba(r, v, b, a); resetHSV(); break;
+					case 5 : current_color = make_color_rgba(r, g, v, a); resetHSV(); break;
+					
+					case 6 : 
+						var _lch = color_oklch(current_color); _lch[0] = v;
+						current_color = make_color_oklch(_lch, a / 255); 
+						resetHSV(); 
+						break;
+					case 7 : 
+						var _lch = color_oklch(current_color); _lch[1] = v;
+						current_color = make_color_oklch(_lch, a / 255); 
+						resetHSV(); 
+						break;
+					case 8 : 
+						var _lch = color_oklch(current_color); _lch[2] = v;
+						current_color = make_color_oklch(_lch, a / 255); 
+						resetHSV(); 
+						break;
+						
+					case 99 : current_color = _cola(current_color, v);    resetHSV(); break;
+				}
+				
+				if(mouse_lrelease()) value_dragging = noone;
+			}
+		
+			draw_set_color(CDEF.main_black); draw_line_round(_bx, dty,       _bx, dty + wdh,       ui(7));
+			draw_set_color(_cc);             draw_line_round(_bx, dty+ui(2), _bx, dty + wdh-ui(2), ui(3));
+			
+		} else if(PREFERENCES.color_selector_slider_type == 1) {
+			var _amo = slot_amount;
+			
+			var aw = bgw / _amo;
+			var ah = bgh;
+			
+			var ax = bgx;
+			var ay = dty + ui(4);
+			
+			var cInd = (_amo - 1) / 2;
+			var inS  = floor(defv / sp);
+			var inE  = ceil((_range[1] - defv) / sp);
+			
+			if(inS < cInd) cInd = inS;
+			else if(inE < cInd) cInd = _amo - inE - 1;
+						
+			for( var i = 0; i < _amo; i++ ) {
+				var cc = c_white;
+				var v  = 0;
+				
+				switch(PREFERENCES.color_selector_range_type) {
+					case 0 : 
+						v = i / (_amo - 1) * (_range[1] + 1);
+						if(abs(defv - v) <= (_range[1] + 1) / 2 / (_amo - 1)) cInd = i;
+						break;
+						
+					case 1 : v = defv + (i - cInd) * sp; break;
+				}
+				
+				v = clamp(v, _range[0], _range[1]);
+				
+				switch(_type) {
+					case 0 : cc = make_color_hsva(  v, sat, val, a); break;
+					case 1 : cc = make_color_hsva(hue,   v, val, a); break;
+					case 2 : cc = make_color_hsva(hue, sat,   v, a); break;
+					
+					case 3 : cc = make_color_rgba(v, g, b, a); break;
+					case 4 : cc = make_color_rgba(r, v, b, a); break;
+					case 5 : cc = make_color_rgba(r, g, v, a); break;
+					
+					case 6 : 
+						var _lch = color_oklch(current_color); _lch[0] = v;
+						cc = make_color_oklch(_lch, a / 255); 
+						break;
+					case 7 : 
+						var _lch = color_oklch(current_color); _lch[1] = v;
+						cc = make_color_oklch(_lch, a / 255); 
+						break;
+					case 8 : 
+						var _lch = color_oklch(current_color); _lch[2] = v;
+						cc = make_color_oklch(_lch, a / 255); 
+						break;
+						
+					case 99 : cc = make_color_rgba(r, g, b, v); break;
+				}
+				
+				var _i = 0;
+				if(i == 0)      _i = 2;
+				if(i == _amo-1) _i = 3;
+				
+				draw_sprite_stretched_ext(THEME.palette_mask, _i, ax, ay, aw, ah, cc, _color_get_alpha(cc));
+				
+				var _hovBar = interactable && hover && point_in_rectangle(mouse_mx, mouse_my, ax, ay, ax + aw, ay + ah);
+				if(_hovBar) {
+					if((PREFERENCES.color_selector_range_type == 0 && mouse_lclick(focus)) || (PREFERENCES.color_selector_range_type == 1 && mouse_lpress(focus))) setColor(cc);
+				}
+				
+				ax += aw;
+			}
+			
+			draw_sprite_stretched_add(THEME.palette_mask_outline, 1, bgx, ay, bgw, ah, c_white, .3);
+			
+			var cx = bgx + aw * cInd;
+			draw_sprite_stretched_ext(THEME.palette_mask,         1, cx - ui(2), ay - ui(2), aw + ui(4), ah + ui(4), current_color);
+			draw_sprite_stretched_add(THEME.palette_mask_outline, 1, cx - ui(2), ay - ui(2), aw + ui(4), ah + ui(4), c_white, .5);
+			
+		}
 	}
 	
 	static drawDropper = function(instance) {
@@ -217,12 +442,15 @@ function colorSelector(onApply = noone) constructor {
 		}
 	}
 	
-	static draw = function(_x, _y, focus, hover) {
+	static draw = function(_x, _y, _focus, _hover) {
 		var cont_x = _x + ui(8);
 		var cont_y = _y + ui(8);
 		
 		var cont_w = ui(256);
 		var cont_h = ui(256);
+		
+		focus = _focus;
+		hover = _hover;
 		
 		if(mixing_colors != noone) {
 			var mix_x = _x + ui(8);
@@ -306,55 +534,57 @@ function colorSelector(onApply = noone) constructor {
 		var sel_h = cont_h;
 		var discr = NODE_COLOR_SHOW_PALETTE && discretize_pal;
 		
-		content_surface = surface_verify(content_surface, cont_w, cont_h);
-		surface_set_target(content_surface);			
-			DRAW_CLEAR
+		#region content
+			content_surface = surface_verify(content_surface, cont_w, cont_h);
+			surface_set_target(content_surface);			
+				DRAW_CLEAR
+				
+				draw_sprite_stretched(THEME.box_r2, 0, 0, 0, cont_w, cont_h);
+				gpu_set_colorwriteenable(1, 1, 1, 0);
+				shader_set(sh_color_select_content);
+					shader_set_i("mode", disp_mode);
+					shader_set_f("hue",  hue / 256);
+					shader_set_f("sat",  sat / 256);
+					shader_set_f("val",  val / 256);
+					
+					shader_set_i("discretize",	  discr);
+					shader_set_palette(palette);
+					
+					draw_empty();
+				shader_reset();
+				gpu_set_colorwriteenable(1, 1, 1, 1);
+			surface_reset_target();
 			
-			draw_sprite_stretched(THEME.box_r2, 0, 0, 0, cont_w, cont_h);
-			gpu_set_colorwriteenable(1, 1, 1, 0);
-			shader_set(sh_color_select_content);
-				shader_set_i("mode", disp_mode);
-				shader_set_f("hue",  hue / 256);
-				shader_set_f("sat",  sat / 256);
-				shader_set_f("val",  val / 256);
+			side_surface = surface_verify(side_surface,    sel_w,  sel_h);
+			surface_set_target(side_surface);
+				DRAW_CLEAR
 				
-				shader_set_i("discretize",	  discr);
-				shader_set_palette(palette);
+				draw_sprite_stretched(THEME.box_r2, 0, 0, 0, sel_w, sel_h);
+				gpu_set_colorwriteenable(1, 1, 1, 0);
+				shader_set(sh_color_select_side);
+					shader_set_i("mode", disp_mode);
+					shader_set_f("hue",  hue / 256);
+					shader_set_f("sat",  sat / 256);
+					shader_set_f("val",  val / 256);
+					
+					shader_set_i("discretize", discr);
+					shader_set_palette(palette);
+					
+					draw_empty();
+				shader_reset();
+				gpu_set_colorwriteenable(1, 1, 1, 1);
 				
-				draw_empty();
-			shader_reset();
-			gpu_set_colorwriteenable(1, 1, 1, 1);
-		surface_reset_target();
-		
-		side_surface = surface_verify(side_surface,    sel_w,  sel_h);
-		surface_set_target(side_surface);
-			DRAW_CLEAR
+			surface_reset_target();
 			
-			draw_sprite_stretched(THEME.box_r2, 0, 0, 0, sel_w, sel_h);
-			gpu_set_colorwriteenable(1, 1, 1, 0);
-			shader_set(sh_color_select_side);
-				shader_set_i("mode", disp_mode);
-				shader_set_f("hue",  hue / 256);
-				shader_set_f("sat",  sat / 256);
-				shader_set_f("val",  val / 256);
-				
-				shader_set_i("discretize", discr);
-				shader_set_palette(palette);
-				
-				draw_empty();
-			shader_reset();
-			gpu_set_colorwriteenable(1, 1, 1, 1);
+			draw_sprite_stretched(THEME.ui_panel_bg, 1, cont_x - ui(8), cont_y - ui(8), cont_w + ui(16), cont_h + ui(16));
+			draw_sprite_stretched(THEME.ui_panel_bg, 1, sel_x  - ui(8), sel_y  - ui(8), sel_w  + ui(16), sel_h  + ui(16));
 			
-		surface_reset_target();
-		
-		draw_sprite_stretched(THEME.ui_panel_bg, 1, cont_x - ui(8), cont_y - ui(8), cont_w + ui(16), cont_h + ui(16));
-		draw_sprite_stretched(THEME.ui_panel_bg, 1, sel_x  - ui(8), sel_y  - ui(8), sel_w  + ui(16), sel_h  + ui(16));
-		
-		draw_surface(content_surface, cont_x, cont_y);
-		draw_surface(side_surface,    sel_x,  sel_y);
-		
-		draw_sprite_stretched_add(THEME.box_r2, 1, cont_x, cont_y, cont_w, cont_h, c_white, 0.2);
-		draw_sprite_stretched_add(THEME.box_r2, 1, sel_x,  sel_y,  sel_w,  sel_h,  c_white, 0.2);
+			draw_surface(content_surface, cont_x, cont_y);
+			draw_surface(side_surface,    sel_x,  sel_y);
+			
+			draw_sprite_stretched_add(THEME.box_r2, 1, cont_x, cont_y, cont_w, cont_h, c_white, 0.2);
+			draw_sprite_stretched_add(THEME.box_r2, 1, sel_x,  sel_y,  sel_w,  sel_h,  c_white, 0.2);
+		#endregion
 	
 		#region control
 			var _cs = ui(12);
@@ -480,69 +710,96 @@ function colorSelector(onApply = noone) constructor {
 			}
 		#endregion
 		
-		#region type
-			var tx = sel_x + ui(36);
-			var ty = _y + ui(4);
-			
-			scr_disp.setFocusHover(focus, hover);
-			scr_disp.draw(tx, ty, ui(190), ui(32), disp_mode, mouse_ui);
-		#endregion
-		
 		#region register
-			scr_disp.register();
-			
-			tb_hue.register();
-			tb_sat.register();
-			tb_val.register();
-			
-			tb_red.register();
-			tb_green.register();
-			tb_blue.register();
+			for( var i = 0, n = array_length(tbs); i < n; i++ ) {
+				tbs[i].register();
+				tbs[i].setFocusHover(focus, hover);
+			}
 			
 			tb_hex.register();
+			tb_hex.setFocusHover(focus, hover);
 		#endregion
 		
 		#region data
-			var data_x = sel_x + ui(40);
-			var data_y = _y + ui(48);
-			var wdw = ui(160);
-			var wdh = ui( 27);
-			var txh = wdh + ui(4);
-	
-			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
-			draw_text(data_x, data_y + txh * 0 + ui(15), "H");
-			draw_text(data_x, data_y + txh * 1 + ui(15), "S")
-			draw_text(data_x, data_y + txh * 2 + ui(15), "V");
+			var tx = sel_x + ui(36);
+			var ty = _y;
+			var x1 = tx + ui(188);
+			var th = ui(24);
+			var bb = THEME.button_hide;
 			
-			tb_hue.setFocusHover(focus, hover);
-			tb_sat.setFocusHover(focus, hover);
-			tb_val.setFocusHover(focus, hover);
+			draw_set_color(CDEF.main_dkblack);
+			draw_line_round(tx, ty + th + ui(4), x1, ty + th + ui(4), ui(2));
 			
-			tb_hue.draw(data_x + ui(28), data_y + txh * 0, wdw, wdh, round(color_get_hue(current_color)),			mouse_ui);
-			tb_sat.draw(data_x + ui(28), data_y + txh * 1, wdw, wdh, round(color_get_saturation(current_color)),	mouse_ui);
-			tb_val.draw(data_x + ui(28), data_y + txh * 2, wdw, wdh, round(color_get_value(current_color)),			mouse_ui);
+			var ic = THEME.color_selector_view;
+			if(buttonInstant_Pad(bb, tx, ty, th, th, mouse_ui, hover, focus, tt_view, ic, disp_mode, c_white, 1, ui(6)) == 2)
+				disp_mode = (disp_mode + 1) % 2;
+			tt_view.index = disp_mode;
+			tx += th + ui(4);
 			
-			data_y = data_y + txh * 3 + ui(8);
+			var ic = THEME.color_selector_slide;
+			var ii = PREFERENCES.color_selector_slider_type;
+			if(buttonInstant_Pad(bb, tx, ty, th, th, mouse_ui, hover, focus, tt_barr, ic, ii, COLORS._main_icon, 1, ui(6)) == 2)
+				PREFERENCES.color_selector_slider_type = (PREFERENCES.color_selector_slider_type + 1) % 2;
+			tt_barr.index = PREFERENCES.color_selector_slider_type;
+			tx += th + ui(4);
 			
-			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
-			draw_text(data_x, data_y + txh * 0 + ui(15), "R");
-			draw_text(data_x, data_y + txh * 1 + ui(15), "G");
-			draw_text(data_x, data_y + txh * 2 + ui(15), "B");
-			draw_text(data_x, data_y + txh * 3 + ui(15), "A");
+			var ic = THEME.color_selector_range;
+			var ii = PREFERENCES.color_selector_range_type;
+			if(buttonInstant_Pad(bb, tx, ty, th, th, mouse_ui, hover, focus, tt_rang, ic, ii, COLORS._main_icon, 1, ui(6)) == 2)
+				PREFERENCES.color_selector_range_type = (PREFERENCES.color_selector_range_type + 1) % 2;
+			tt_rang.index = PREFERENCES.color_selector_range_type;
+			tx += th + ui(4);
 			
-			tb_red.setFocusHover  (focus, hover);
-			tb_green.setFocusHover(focus, hover);
-			tb_blue.setFocusHover (focus, hover);
-			tb_alpha.setFocusHover(focus, hover);
+			var _qw = ui(32);
+			var _qx = x1 - _qw;
 			
-			tb_red.draw  (data_x + ui(28), data_y + txh * 0, wdw, wdh, round(color_get_red(current_color)),   mouse_ui);
-			tb_green.draw(data_x + ui(28), data_y + txh * 1, wdw, wdh, round(color_get_green(current_color)), mouse_ui);
-			tb_blue.draw (data_x + ui(28), data_y + txh * 2, wdw, wdh, round(color_get_blue(current_color)),  mouse_ui);
-			tb_alpha.draw(data_x + ui(28), data_y + txh * 3, wdw, wdh, round(color_get_alpha(current_color)), mouse_ui);
+			if(PREFERENCES.color_selector_range_type == 1) {
+				tb_quantize.setFocusHover(focus, hover);
+				tb_quantize.draw(_qx, ty, _qw, th, slot_spacing, mouse_ui);
+				_qx -= _qw + ui(4);
+			}
 			
-			//////////////////////////////////////////////////////////////////
+			if(PREFERENCES.color_selector_slider_type == 1) {
+				tb_slotamo.setFocusHover(focus, hover);
+				tb_slotamo.draw(_qx, ty, _qw, th, slot_amount, mouse_ui);
+				_qx -= _qw + ui(4);
+			}
 			
-			tb_hex.active  = focus;  tb_hex.hover  = hover;
+			////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			
+			var dtx = sel_x + ui(40);
+			var dty = ty + th + ui(12);
+			var txh = ui(32);
+			
+			shader_set(sh_color_selector_tb);
+				shader_set_f("hue",   hue / 255);
+				shader_set_f("sat",   sat / 255);
+				shader_set_f("val",   val / 255);
+				shader_set_f("red",   _color_get_r(current_color));
+				shader_set_f("green", _color_get_g(current_color));
+				shader_set_f("blue",  _color_get_b(current_color));
+			shader_reset();
+			
+			drawValueBox("H", 0, dtx, dty + txh*0, tb_hue);
+			drawValueBox("S", 1, dtx, dty + txh*1, tb_sat);
+			drawValueBox("V", 2, dtx, dty + txh*2, tb_val);
+			
+			// drawValueBox("L", 6, dtx, dty + txh*0, tb_hue, [0, 1],  false);
+			// drawValueBox("C", 7, dtx, dty + txh*1, tb_sat, [0, 1],  false);
+			// drawValueBox("H", 8, dtx, dty + txh*2, tb_val, [0, 43], false);
+			
+			////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			
+			dty = dty + txh*3 + ui(8);
+			
+			drawValueBox("R", 3, dtx, dty + txh*0, tb_red);
+			drawValueBox("G", 4, dtx, dty + txh*1, tb_grn);
+			drawValueBox("B", 5, dtx, dty + txh*2, tb_blu);
+			
+			drawValueBox("A", 99, dtx, dty + txh*3, tb_alp);
+			
+			////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			
 			tb_hex.draw(sel_x - ui(128), cont_y + cont_h + ui(24), ui(108), TEXTBOX_HEIGHT, color_get_hex(current_color),  mouse_ui);
 		#endregion
 		
@@ -557,5 +814,11 @@ function colorSelector(onApply = noone) constructor {
 		if(interactable)
 		if(buttonInstant(THEME.button_hide_fill, cx - ui(18), cy - ui(18), ui(36), ui(36), mouse_ui, focus, hover, "", THEME.color_picker_dropper, 0, c_white) == 2)
 			dropper_active = true;
+	}
+	
+	static free = function() {
+		surface_free_safe(content_surface);
+		surface_free_safe(side_surface);
+		surface_free_safe(textbox_surface);
 	}
 }

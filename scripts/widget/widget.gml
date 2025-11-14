@@ -56,10 +56,11 @@ function widget() constructor {
 	static setInteract = function(_i = noone) /*=>*/ { interactable = _i; return self; }
 	
 	static register = function(_p = noone) {
-		if(!interactable) return;
+		if(!interactable) return self;
 		
 		array_push(WIDGET_ACTIVE, self); 
 		parent = _p;
+		return self;
 	}
 	
 	static setParam = function(params) {
@@ -115,6 +116,7 @@ function widget() constructor {
 		hover   = interactable && _hover;
 		iactive = _active;
 		ihover  = _hover;
+		return self;
 	}
 	
 	static resetFocus = function() {

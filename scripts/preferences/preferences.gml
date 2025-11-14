@@ -81,6 +81,9 @@
 		
 		PREFERENCES.file_explorer_view          = FILE_EXPLORER_VIEW.list;
 		PREFERENCES.use_native_file_browser     = os_type == os_windows;
+		
+		PREFERENCES.color_selector_slider_type  = 0;
+		PREFERENCES.color_selector_range_type   = 0;
 	#endregion
 	
 	#region PANEL
