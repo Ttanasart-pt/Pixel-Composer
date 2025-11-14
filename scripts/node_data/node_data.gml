@@ -869,12 +869,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return _vto;
 	}
 	
-	static getNodeFrom = function() {
+	static getNodeFrom = function(_includePin = false) { 
 		var _nodes = [];
 		
 		for(var i = 0, n = array_length(inputDisplayList); i < n; i++) { //inputs
 			var jun = inputDisplayList[i];
-			var _fr = jun.getNodeFrom();
+			var _fr = jun.getNodeFrom(_includePin);
 			if(_fr != noone) array_push(_nodes, _fr);
 		}
 		
@@ -884,11 +884,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static getNodeTo = function() {
 		var _nodes = [];
 		
-		for (var j = 0; j < array_length(outputs); j++) {
-			var _to = outputs[j].value_to;
+		for( var i = 0, n = array_length(outputs); i < n; i++ ) {
+			var _to = outputs[i].value_to;
 			
-			for( var i = 0, n = array_length(_to); i < n; i++ )
-				if(_to[i].node.active) array_push(_nodes, _to[i].node);
+			for( var j = 0, m = array_length(_to); j < m; j++ )
+				array_push(_nodes, _to[j].node);
 		}
 		
 		return array_unique(_nodes);

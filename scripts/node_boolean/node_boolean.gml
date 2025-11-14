@@ -76,7 +76,7 @@ function Node_Boolean(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 	}
 	
-	static drawDimension = function(xx, yy, _s) {}
+	static drawDimension = undefined
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);

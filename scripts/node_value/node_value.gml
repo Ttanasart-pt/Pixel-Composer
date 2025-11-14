@@ -1992,12 +1992,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return true;
 	}
 	
-	static getNodeFrom = function() { 
+	static getNodeFrom = function(_includePin = false) { 
 		if(value_from == noone)  return noone;
 		
 		var _node = value_from.node;
 		if(!_node.active)        return noone;
-		if(!is(_node, Node_Pin)) return _node;
+		if(_includePin || !is(_node, Node_Pin)) return _node;
 		return _node.inputs[0].getNodeFrom(); 
 	}
 	

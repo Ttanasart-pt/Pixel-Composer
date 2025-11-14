@@ -112,7 +112,7 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	
 	////- Draw
 	
-	static drawDimension = function(xx, yy, _s) {}
+	static drawDimension = undefined
 	
 	static drawConnections = function(params = {}, _draw = true) {
 		var hovering = noone;

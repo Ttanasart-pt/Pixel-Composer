@@ -85,7 +85,7 @@ function Node_Feedback_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	////- Draw
 	
-	static drawDimension = function(xx, yy, _s) {}
+	static drawDimension = undefined
 	
 	static drawConnections = function(params = {}) {
 		if( junc_out == noone    ||  junc_in == noone)    return noone;

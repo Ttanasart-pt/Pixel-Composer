@@ -279,7 +279,7 @@ function node_auto_organize_parameter() constructor {
 
 function __node_auto_organize_graph(node) {
 	var children = [];
-	var froms    = node.getNodeFrom();
+	var froms    = node.getNodeFrom(true);
 	node.__organize_sorted = false;
 	
 	for( var i = 0, n = array_length(froms); i < n; i++ )
@@ -389,22 +389,20 @@ function node_auto_organize(nodeList, param = new node_auto_organize_parameter()
 	if(array_empty(nodeList)) return;
 	
 	var cx = 0, cy = 0;
-	for( var i = 0, n = array_length(nodeList); i < n; i++ ) {
-		var _n = nodeList[i];
-		cx += _n.x + _n.w / 2;
-		cy += _n.y + _n.h / 2;
-	}
-	cx /= n; cy /= n;
-	
 	var root = { node: noone, children: [], w: 0, h: 0, depth: 0 };
 	
 	for( var i = 0, n = array_length(nodeList); i < n; i++ ) {
 		var _n   = nodeList[i];
 		var _nto = _n.getNodeTo();
 		
+		cx += _n.x + _n.w / 2;
+		cy += _n.y + _n.h / 2;
+		
 		var _isRoot = array_empty(_nto) || array_empty(array_union(_nto, nodeList));
 		if(_isRoot) array_push(root.children, __node_auto_organize_graph(_n));
 	}
+	
+	cx /= n; cy /= n;
 	
 	array_sort(root.children, function(a, b) /*=>*/ {return a.node.y - b.node.y});
 	

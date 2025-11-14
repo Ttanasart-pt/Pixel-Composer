@@ -1736,7 +1736,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 				if(_n.draw_graph_culled) return;
 				if(__gr_s * _n.w < 64)   return;
 				
-	        	_n.drawDimension(_n.x * __gr_s + __gr_x, _n.y * __gr_s + __gr_y, __gr_s);
+				if(_n.drawDimension) _n.drawDimension(_n.x * __gr_s + __gr_x, _n.y * __gr_s + __gr_y, __gr_s);
 	        });
         #endregion
         
