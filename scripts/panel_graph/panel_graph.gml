@@ -2110,11 +2110,15 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		                var _fs = __gr_s <= 0.5 || !_n.previewable;
 		                
 		                gpu_set_texfilter(true);
-		                if(!array_empty(_n.inputDisplayGroup)) 
-		                	_n.drawJunctionGroups(_xx, _yy, __mx, __my, __gr_s, _fs);
-		                	
-		                var val = _n.drawJunctions(_xx, _yy, __mx, __my, __gr_s, _fs);
-		                if(val) value_focus = val;
+		                if(_fs) {
+		                	_n.drawJunctionsFast(_xx, _yy, __mx, __my, __gr_s);
+			                
+		                } else {
+		                	if(!array_empty(_n.inputDisplayGroup)) 
+		                		_n.drawJunctionGroups(_xx, _yy, __mx, __my, __gr_s);
+			                _n.drawJunctions(_xx, _yy, __mx, __my, __gr_s);
+		                }
+		                
 		                gpu_set_texfilter(false);
 		            }
 		            catch(e) { log_warning("NODE DRAW", exception_print(e)); }

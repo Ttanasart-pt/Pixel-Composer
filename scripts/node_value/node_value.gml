@@ -773,8 +773,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static isVisible = function() { 
-		if(!node.active) return false;
-		
 		if(connect_type == CONNECT_TYPE.output) {
 			if(!array_empty(value_to)) return true;
 			if(visible_manual != 0)    return visible_manual == 1;
@@ -1704,6 +1702,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static setValue = function(val = 0, record = true, time = NODE_CURRENT_FRAME, _update = true) { ////Set value
 		val = unit.invApply(val);
 		var _set = setValueDirect(val, noone, record, time, _update);
+		
 		if(onSetValue != undefined) onSetValue(val);
 		
 		return _set;
@@ -2248,25 +2247,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return hover_in_graph;
 	}
 	
-	static drawJunction = function(_s, _mx, _my, _fast = false) { 
-		if(_fast) { 
-			var _aa  = 0.75 + (!is_dummy * 0.25);
-			
-			draw_set_color(custom_color == noone? draw_fg : custom_color);
-			draw_set_alpha(_aa);
-			
-			if(node.previewable)
-				draw_circle(x, y, _s * 6, false);
-				
-			else if(index == -1)
-				draw_rectangle(	x - _s * 4, y - _s * 1.5, x + _s * 4, y + _s * 1.5, false);
-			else
-				draw_rectangle(	x - _s * 1.5, y - _s * 4, x + _s * 1.5, y + _s * 4, false);
-			
-			draw_set_alpha(1);
-			return;
-		}
-		
+	static drawJunctionFast = function(_s, _mx, _my) { 
+		draw_set_color(custom_color == noone? draw_fg : custom_color);
+		if(index == -1) draw_rectangle( x - _s * 4.0, y - _s * 1.5, x + _s * 4.0, y + _s * 1.5, false);
+		else            draw_rectangle( x - _s * 1.5, y - _s * 4.0, x + _s * 1.5, y + _s * 4.0, false);
+		return;
+	}
+	
+	static drawJunction = function(_s, _mx, _my) { 
 		var _hov = hover_in_graph;
 		_s /= 2 * THEME_SCALE;
 		

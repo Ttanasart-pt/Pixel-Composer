@@ -778,6 +778,9 @@ function colorSelector(_onApply = noone) constructor {
 				shader_set_f("red",   _color_get_r(current_color));
 				shader_set_f("green", _color_get_g(current_color));
 				shader_set_f("blue",  _color_get_b(current_color));
+				
+				shader_set_i("discretize",	  discr);
+				shader_set_palette(palette);
 			shader_reset();
 			
 			drawValueBox("H", 0, dtx, dty + txh*0, tb_hue);

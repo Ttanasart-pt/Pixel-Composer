@@ -73,10 +73,6 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		return w_hovering;
 	}
 	
-	static step = function() {
-		filter_button.index = attributes.filter;
-	}
-	
 	static processData = function(_outData, _data, _array_index) {
 		var surf = _data[ 0];
 		var colr = _data[ 2];
@@ -88,11 +84,11 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var thrs = _data[19];
 		var hres = _data[20];
 		
+		filter_button.index = attributes.filter;
+		
 		var ww   = surface_get_width_safe(surf);
 		var hh   = surface_get_height_safe(surf);
 		var samp = getAttribute("oversample");
-		
-		// inputs[12].setVisible(side == 0);
 		
 		surface_set_shader(_outData, sh_outline);
 			shader_set_f("dimension",       ww, hh);

@@ -169,8 +169,9 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		inputs_data = array_verify(inputs_data, _len);
 		
 		for( var i = 0; i < _len; i++ ) {
-			if(inputs[i].isDynamic()) 
-				inputs_data[i] = inputs[i].getValue(frame);
+			var _inp = inputs[i];
+			if(_inp.isDynamic()) inputs_data[i] = _inp.getValue(frame);
+			if(_inp.bypass_junc.visible) _inp.bypass_junc.setValue(inputs_data[i]);
 		}
 		
 	}
@@ -289,9 +290,15 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			outputs[0].setValue(_res);
 			
 		} else {
+			var _dim = getDimension();
+			
 			_outputs = [];
-			for( var i = 0, n = array_length(outputs); i < n; i++ ) 
-				_outputs[i] = outputs[i].getValue(frame);
+			for( var i = 0, n = array_length(outputs); i < n; i++ ) {
+				var _out = outputs[i];
+				_outputs[i] = _out.getValue(frame);
+				if(_out.type == VALUE_TYPE.surface)
+					_outputs[i] = surface_verify(_outputs[i], _dim[0], _dim[1]);
+			}
 			
 			var _res = processData(_outputs, inputs_data, 0, frame);
 			for( var i = 0, n = array_length(_res); i < n; i++ ) 

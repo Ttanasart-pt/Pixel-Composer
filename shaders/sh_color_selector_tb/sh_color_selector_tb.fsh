@@ -1,3 +1,9 @@
+#ifdef _YY_HLSL11_ 
+	#define PALETTE_LIMIT 1024 
+#else 
+	#define PALETTE_LIMIT 256 
+#endif
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -10,6 +16,10 @@ uniform float val;
 uniform float red;
 uniform float green;
 uniform float blue;
+
+uniform int  discretize;
+uniform vec4 palette[PALETTE_LIMIT];
+uniform int  paletteAmount;
 
 #region =========================================== COLORS SPACES ===========================================
 	vec3 rgb2hsv(vec3 c) {
@@ -155,7 +165,22 @@ void main() {
 	else if(type == 7) cc = oklch2rgb(vec3(lch.r,     v, lch.b));
 	else if(type == 8) cc = oklch2rgb(vec3(lch.r, lch.g,     v));
 	
-	gl_FragColor = vec4(cc, base.a);
+	vec4 c = type == 99? vec4(red, green, blue, v) : vec4(cc, base.a);
 	
-	if(type == 99) gl_FragColor = vec4(red, green, blue, v);
+	if(discretize == 1) {
+		int index = 0;
+		float minDist = 999.;
+		for(int i = 0; i < paletteAmount; i++) {
+			float dist = distance(c.rgb, palette[i].rgb);
+			
+			if(dist < minDist) {
+				minDist = dist;
+				index = i;
+			}
+		}
+		
+		c = palette[index];
+	}
+	
+	gl_FragColor = c;
 }

@@ -163,6 +163,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		inputs_amount        = 0;
 		in_cache_len         = -4;
 		inputDisplayList     = [];
+		inputDisplayBypass   = [];
 		inputDisplayGroup    = [];
 		inputDisplayBuilding = false;
 		
@@ -744,7 +745,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static getJunctionList = function() {
-		inputDisplayList = [];
+		inputDisplayList   = [];
+		inputDisplayBypass = [];
 		
 		var iamo = getInputAmount();
 		if(input_display_dynamic != -1 && iamo) {
@@ -792,7 +794,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			}
 			
 		} else {
-			
 			for( var i = 0, n = array_length(inputs); i < n; i++ ) {
 				var jun = inputs[i];
 				if(!is(jun, NodeValue) || !jun.isVisible()) continue;
@@ -894,7 +895,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static checkConnectGroup = function(_io) {
-		
 		var _y  = y;
 		var _n  = noone;
 		
@@ -996,6 +996,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(is_3D == NODE_3D.polygon) USE_DEPTH = true;
 		render_timer = get_timer();
 		setRenderStatus(true);
+		
+		__frame = frame;
+		array_foreach(inputs, function(_inp, i) /*=>*/ {
+			if(!is(_inp, NodeValue) || !_inp.bypass_junc.visible || !_inp.isDynamic()) return;
+			_inp.bypass_junc.setValue(_inp.getValue(__frame));
+		});
 		
 		if(frameInput.value_from != noone) frame = frameInput.getValue() - 1;
 		
@@ -1911,10 +1917,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return hover;
 	}
 	
-	static drawJunctionGroups = function(_x, _y, _mx, _my, _s, _fast = false) {
+	static drawJunctionGroups = function(_x, _y, _mx, _my, _s) {
 		var _scs = gpu_get_scissor();
 		gpu_set_scissor(_x, _y, w * _s, h * _s);
-		draw_set_circle_precision(_fast? 16 : 64);
+		draw_set_circle_precision(64);
 		
 		var _js = 14 * _s;
 		for( var i = 0, n = array_length(inputDisplayGroup); i < n; i++ ) {
@@ -1939,36 +1945,82 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		gpu_set_scissor(_scs);
 	}
 	
-	static drawJunctions = function(_x, _y, _mx, _my, _s, _fast = false) {
-		if(_fast) draw_set_circle_precision(4);
+	static drawJunctionsFast = function(_x, _y, _mx, _my, _s) {
+		draw_set_circle_precision(4);
 		
+		var s1 = _s * 1.5, s4 = _s * 4.0;
 		var jun;
-		for(var i = 0, n = array_length(inputDisplayList); i < n; i++) {
-			jun = inputDisplayList[i];
-			jun.drawJunction(_s, _mx, _my, _fast);
+		
+		var i = 0, n = array_length(inputDisplayList);
+		repeat(n) {
+			jun = inputDisplayList[i++];
+			
+			draw_set_color(jun.custom_color == noone? jun.draw_fg : jun.custom_color);
+			draw_rectangle(jun.x - s1, jun.y - s4, jun.x + s1, jun.y + s4, false);
 		}
 		
 		preview_channel_temp = undefined;
-		for(var i = 0, n = array_length(outputs); i < n; i++) {
-			jun = outputs[i];
-			if(!jun.isVisible()) continue;
+		var i = 0, n = array_length(outputDisplayList);
+		repeat(n) {
+			jun = outputDisplayList[i++];
 			
-			jun.drawJunction(_s, _mx, _my, _fast);
+			draw_set_color(jun.custom_color == noone? jun.draw_fg : jun.custom_color);
+			draw_rectangle(jun.x - s1, jun.y - s4, jun.x + s1, jun.y + s4, false);
 		}
 		
-		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
-			jun = inputs[i].bypass_junc;
-			if(jun == noone || !jun.visible) continue;
-			
-			jun.drawJunction(_s, _mx, _my, _fast);
+		if(hasInspector1Update()) {
+			jun = inspectInput1;
+			draw_set_color(jun.draw_fg);
+			draw_rectangle(jun.x - s4, jun.y - s1, jun.x + s4, jun.y + s1, false);
 		}
 		
-		if(hasInspector1Update()) inspectInput1.drawJunction(_s, _mx, _my, _fast);
-		if(hasInspector2Update()) inspectInput2.drawJunction(_s, _mx, _my, _fast);
+		if(hasInspector2Update()) {
+			jun = inspectInput2;
+			draw_set_color(jun.draw_fg);
+			draw_rectangle(jun.x - s4, jun.y - s1, jun.x + s4, jun.y + s1, false);
+		}
 		
 		if(attributes.show_update_trigger) {
-			updatedInTrigger.drawJunction(_s, _mx, _my, _fast);
-			updatedOutTrigger.drawJunction(_s, _mx, _my, _fast);
+			jun = updatedInTrigger;
+			draw_set_color(jun.draw_fg);
+			draw_rectangle(jun.x - s1, jun.y - s1, jun.x + s1, jun.y + s1, false);
+			
+			jun = updatedOutTrigger;
+			draw_set_color(jun.draw_fg);
+			draw_rectangle(jun.x - s1, jun.y - s1, jun.x + s1, jun.y + s1, false);
+		}
+		
+		if(attributes.outp_meta) {
+			var i = 0, n = array_length(junc_meta);
+			repeat(n) {
+				jun = junc_meta[i++];
+				if(!jun.isVisible()) continue;
+				
+				draw_set_color(jun.draw_fg);
+				draw_rectangle(jun.x - s1, jun.y - s4, jun.x + s1, jun.y + s4, false);
+			}
+		}
+	}
+		
+	static drawJunctions = function(_x, _y, _mx, _my, _s) {
+		var jun;
+		for(var i = 0, n = array_length(inputDisplayList); i < n; i++) {
+			jun = inputDisplayList[i];
+			jun.drawJunction(_s, _mx, _my);
+		}
+		
+		preview_channel_temp = undefined;
+		for(var i = 0, n = array_length(outputDisplayList); i < n; i++) {
+			jun = outputDisplayList[i];
+			jun.drawJunction(_s, _mx, _my);
+		}
+		
+		if(hasInspector1Update()) inspectInput1.drawJunction(_s, _mx, _my);
+		if(hasInspector2Update()) inspectInput2.drawJunction(_s, _mx, _my);
+		
+		if(attributes.show_update_trigger) {
+			updatedInTrigger.drawJunction(_s, _mx, _my);
+			updatedOutTrigger.drawJunction(_s, _mx, _my);
 		}
 		
 		if(attributes.outp_meta)
@@ -1976,7 +2028,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			jun = junc_meta[i];
 			if(!jun.isVisible()) continue;
 			
-			jun.drawJunction(_s, _mx, _my, _fast);
+			jun.drawJunction(_s, _mx, _my);
 		}
 		
 	}

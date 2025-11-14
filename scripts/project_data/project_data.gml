@@ -301,10 +301,7 @@ function Project() constructor {
 				if(!n.active) return; 
 				
 				n.triggerCheck(); 
-				
-				if(n.__mask_index != undefined)   n.checkMask();
-				if(!array_empty(n.inputMappable)) n.checkMap();
-				if(n.step != undefined)           n.step();
+				if(n.step != undefined) n.step();
 			});
 		} catch(e) {
 			noti_warning("Node Step error: " + exception_print(e));
@@ -317,6 +314,12 @@ function Project() constructor {
 	
 	static preRender = function() {
 		globalNode.update();
+		
+		array_foreach(allNodes, function(n) /*=>*/ { 
+			if(!n.active) return; 
+			if(n.__mask_index != undefined)  n.checkMask();
+			if(!array_empty(n.inputMappable)) n.checkMap();
+		});
 	}
 	
 	static postRender = function() {

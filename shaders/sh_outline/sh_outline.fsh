@@ -47,14 +47,7 @@ uniform sampler2D blend_alphaSurf;
 
 uniform int highRes;
 
-vec2 round(in vec2 v) { 
-	v.x = fract(v.x) > 0.5? ceil(v.x) : floor(v.x);	
-	v.y = fract(v.y) > 0.5? ceil(v.y) : floor(v.y);	
-	return v;
-}
-
 vec4 blendColor(vec4 base, vec4 colr, float alpha) {
-	
 	float blend = base.a + colr.a * alpha * (1. - base.a);
 	
 	vec4 col = (colr * alpha + base * base.a * ( 1. - alpha )) / blend;
@@ -64,30 +57,17 @@ vec4 blendColor(vec4 base, vec4 colr, float alpha) {
 }
 
 bool angleFiltered(float angle) {
-	float _dg  = mod((degrees(angle) + 360. + ((side == 0)? 180. : 0.)), 360.);
-	
+	float _dg = mod((degrees(angle) + 360. + ((side == 0)? 180. : 0.)), 360.);
 	int  _ind = 0;
 	
 	     if(_dg ==   0.) _ind = 3;
 	else if(_dg ==  90.) _ind = 1;
 	else if(_dg == 180.) _ind = 5;
 	else if(_dg == 270.) _ind = 7;
-	else {
-		     if(_dg <  90.) _ind = 0;
-		else if(_dg < 180.) _ind = 2;
-		else if(_dg < 270.) _ind = 8;
-		else if(_dg < 360.) _ind = 6;
-	}
-	
-	// 	 if(_dg <= 22.5 + 45. * 0.) _ind = 3;
-	// else if(_dg <= 22.5 + 45. * 1.) _ind = 0;
-	// else if(_dg <= 22.5 + 45. * 2.) _ind = 1;
-	// else if(_dg <= 22.5 + 45. * 3.) _ind = 2;
-	// else if(_dg <= 22.5 + 45. * 4.) _ind = 5;
-	// else if(_dg <= 22.5 + 45. * 5.) _ind = 8;
-	// else if(_dg <= 22.5 + 45. * 6.) _ind = 7;
-	// else if(_dg <= 22.5 + 45. * 7.) _ind = 6;
-	// else                            _ind = 3;
+	else if(_dg <   90.) _ind = 0;
+	else if(_dg <  180.) _ind = 2;
+	else if(_dg <  270.) _ind = 8;
+	else if(_dg <  360.) _ind = 6;
 	
 	return filter[_ind] == 0;
 }
@@ -143,7 +123,7 @@ void main() {
 	#endregion
 	
 	vec2 pixelPosition = v_vTexcoord * dimension;
-	vec4 baseColor = texture2D( gm_BaseTexture, v_vTexcoord );
+	vec4 baseColor     = texture2D( gm_BaseTexture, v_vTexcoord );
 	
 	vec4 resultColor   = baseColor;
 	vec4 resultOutline = vec4(0.);
@@ -167,11 +147,12 @@ void main() {
 		float itr = bStr + bSiz + float(is_aa);
 		
 		if(profile == 0) {
-			float atr = highRes == 1? 512. : 64.;
+			// float atr = highRes == 1? 512. : 64.;
 			
 			for(float i = 1.; i <= itr; i++) {
 				float base = 1.;
 				float top  = 0.;
+				float atr = highRes == 1? i * 16. : i * 4.;
 				
 				for(float j = 0.; j <= atr; j++) {
 					float ang = top / base * TAU;
@@ -183,7 +164,7 @@ void main() {
 					
 					if(angleFiltered(ang)) continue;
 					
-					vec2 pxs = pixelPosition + vec2( cos(ang),  sin(ang)) * i;
+					vec2 pxs = pixelPosition + vec2(cos(ang), sin(ang)) * i;
 					checkPixel(pixelPosition, pxs);
 				}
 			}

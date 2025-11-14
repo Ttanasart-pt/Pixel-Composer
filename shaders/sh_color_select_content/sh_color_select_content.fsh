@@ -29,7 +29,7 @@ void main() {
     	 if(mode == 0) c = vec4(hsv2rgb(vec3(hue, v_vTexcoord.x, 1. - v_vTexcoord.y)), col.a);
 	else if(mode == 1) c = vec4(hsv2rgb(vec3(v_vTexcoord.x, 1. - v_vTexcoord.y, val)), col.a);
 	else if(mode == 2) c = vec4(hsv2rgb(vec3(v_vTexcoord.x, sat, 1. - v_vTexcoord.y)), col.a);
-		
+	
 	if(discretize == 1) {
 		int index = 0;
 		float minDist = 999.;
