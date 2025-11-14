@@ -328,6 +328,7 @@ function __Bone(_parent = noone, _distance = 0, _direction = 0, _angle = 0, _len
 	}
 	
 	static drawThumbnail = function(_s, _bbox, _bone_bbox = undefined) {
+		_bbox = _bbox.clone();
 		_bone_bbox ??= bbox();
 		
 		if(!is_main && is_array(_bone_bbox)) {
