@@ -316,6 +316,7 @@
 						dialogPanelCall(panel);
 					} else 
 						panel_hovering.setContent(panel_dragging, true);
+						
 				} else if(panel_hovering == PANEL_MAIN) { //split main panel
 					var panel = new Panel(noone, ui(2), ui(2), WIN_SW - ui(4), WIN_SH - ui(4));
 					var main  = PANEL_MAIN;
@@ -332,7 +333,8 @@
 					panel.parent.childs[(panel_split + 0) % 2].setContent(panel_dragging);
 					
 					PANEL_MAIN.refreshSize();
-				} else {
+					
+				} else if(panel_hovering != noone) {
 					var c = panel_hovering.content;
 					panel_hovering.content = [];
 					

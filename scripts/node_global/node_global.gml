@@ -64,20 +64,16 @@ function variable_editor(nodeVal) constructor {
 		disp_index = 0;
 		refreshInput();
 		RENDER_ALL
-		
 	}).setTextColor(CDEF.main_mdwhite).setUpdateHover(false);
+		
 	sc_disp  = new scrollBox(global.GLOBALVAR_DISPLAY[0], function(v) /*=>*/ {
 		disp_index = v;
 		refreshInput();
 		RENDER_ALL
-		
 	}).setTextColor(CDEF.main_mdwhite).setUpdateHover(false);
 	
-	 type_index = 0;
-	_type_index = 0;
-	
-	 disp_index = 0;
-	_disp_index = 0;
+	type_index = 0; _type_index = 0;
+	disp_index = 0; _disp_index = 0;
 	
 	slider_range = [ 0, 1 ];
 	slider_step  = 0.01;

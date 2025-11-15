@@ -551,6 +551,21 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return self;
 	}
 	
+	static setGradable = function(_index, _val = gra_white, _suf = "Curve") {
+		attributes.curved    = false;
+		parameters.map_index = _index;
+		mapped_type = 2;
+		array_push(node.inputMappable, self);
+		
+		with(node) { newInput(_index, nodeValue_Gradient( $"{other.name} {_suf}", _val )).setVisible(false, false); }
+		
+		curveButton = button(function() /*=>*/ { attributes.curved = !attributes.curved; node.triggerRender(); })
+			.setIcon( THEME.curvable, [ function() /*=>*/ {return attributes.curved} ], COLORS._main_icon ).iconPad().setTooltip("Toggle Curve");
+		
+		editWidget.setSideButton(curveButton);
+		return self;
+	}
+	
 	static setMappableConst = function(_index, _suf = "Map") {
 		attributes.mapped    = false;
 		parameters.map_index = _index;

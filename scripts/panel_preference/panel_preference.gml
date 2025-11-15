@@ -647,7 +647,7 @@ function Panel_Preference() : PanelContent() constructor {
 		ds_list_add(pref_node, __txt("Display"));
 		
 			ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
-				__txtx("pref_node_param_show", "Show paramater on new node"),
+				__txtx("pref_node_param_show", "Show parameter on new node"),
 				"node_param_show",
 				new checkBox(function() /*=>*/ {return prefToggle("node_param_show")})
 			));

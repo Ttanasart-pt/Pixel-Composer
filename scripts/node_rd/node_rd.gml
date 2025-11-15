@@ -28,7 +28,7 @@ function Node_RD(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	input_display_list = [ 
 		["Surfaces",	false], 0, 7, 
 		["Diffusion",	false], 13, 5, 11, 6, 12, 
-		["Paramaters",	false], 1, 8, 2, 9, 
+		["Parameters",	false], 1, 8, 2, 9, 
 		["Simulation",	false], 3, 10, 4, 
 	];
 	

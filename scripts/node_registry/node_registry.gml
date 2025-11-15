@@ -661,9 +661,8 @@ function nodeClone(_nodes, _ctx = PANEL_GRAPH.getCurrentContext()) {
     	var n = _nodes[i];
     	
     	for( var j = 0, m = array_length(n.inputs); j < m; j++ ) {
-    		var jn = n.inputs[j];
-    		if(jn.value_from_loop) 
-    			array_push(_nodes, jn.value_from_loop);
+    		var jn = n.inputs[j].value_from_loop;
+    		if(jn) array_push(_nodes, jn);
     	}
     	
     	for( var j = 0, m = array_length(n.outputs); j < m; j++ ) {

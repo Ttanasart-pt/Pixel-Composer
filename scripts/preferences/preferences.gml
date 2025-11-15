@@ -552,7 +552,7 @@
 		__regFnPref(__txtx("pref_widget_textbox_shake",            "Textbox shake"),                     "textbox_shake"                   )
 		__regFnPref(__txtx("pref_widget_textbox_particles",        "Textbox particles"),                 "textbox_particle"                )
 		
-		__regFnPref(__txtx("pref_node_param_show",                 "Show paramater on new node"),        "node_param_show"                 )
+		__regFnPref(__txtx("pref_node_param_show",                 "Show parameter on new node"),        "node_param_show"                 )
 		__regFnPref(__txtx("pref_node_param_width",                "Default param width"),               "node_param_width"                )
 		__regFnPref(__txtx("pref_node_3d_preview",                 "Preview surface size"),              "node_3d_preview_size"            )
 		__regFnPref(__txtx("pref_file_watcher_delay",              "File watcher delay (s)"),            "file_watcher_delay"              )

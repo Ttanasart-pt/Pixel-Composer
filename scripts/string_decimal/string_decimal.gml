@@ -1,9 +1,15 @@
-function string_variable_valid(str) {
-	static valid_char = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789";
+globalvar VALID_VAR; VALID_VAR     = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789";
+globalvar VALID_VAR_MAP; VALID_VAR_MAP = {};
 	
+for( var i = 1; i <= string_length(VALID_VAR); i++ ) {
+	var cch = string_char_at(VALID_VAR, i);
+	VALID_VAR_MAP[$ cch] = 1;
+}
+	
+function string_variable_valid(str) {
 	for( var i = 1; i <= string_length(str); i++ ) {
 		var cch = string_char_at(str, i);
-		if(string_pos(cch, valid_char) == 0) return false;
+		if(!has(VALID_VAR_MAP, cch)) return false;
 	}
 	
 	return true;
