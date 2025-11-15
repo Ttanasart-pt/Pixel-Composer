@@ -35,16 +35,19 @@ function variable_editor(nodeVal) constructor {
 	value = nodeVal;
 	
 	tb_name  = textBox_Text(function(s) /*=>*/ { 
-		if(string_pos(" ", s)) { noti_warning("Global variable name can't have space."); return; }
+		if(!string_variable_valid(s)) { 
+			noti_warning("Invalid globalvar name."); 
+			return; 
+		}
 		
 		var _node = value.node;
 		for( var i = 0, n = array_length(_node.inputs); i < n; i++ ) {
 			var _in = _node.inputs[i];
 			if(_in == value) continue;
 			
-			if(_in.name == s) {
-				noti_warning("Duplicate variable name."); 
-				return;
+			if(_in.name == s) { 
+				noti_warning("Duplicate globalvar name."); 
+				break; 
 			}
 		}
 		
@@ -262,15 +265,16 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 		var _map = {};
 		
 		var _inputs = [];
-		for(var i = 0; i < array_length(inputs); i++) {
-			if(!is(inputs[i], NodeValue)) continue;
+		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
+			var _inp = inputs[i];
+			if(!is(_inp, NodeValue)) continue;
 			
-			var _ser = inputs[i].serialize();
-			
-			_ser.global_type    = inputs[i].editor.type_index;
-			_ser.global_disp    = inputs[i].editor.disp_index;
-			_ser.global_s_range = inputs[i].editor.slider_range;
-			_ser.global_s_step  = inputs[i].editor.slider_step;
+			var _ser = _inp.serialize();
+			_ser.global_name    = _inp.name;
+			_ser.global_type    = _inp.editor.type_index;
+			_ser.global_disp    = _inp.editor.disp_index;
+			_ser.global_s_range = _inp.editor.slider_range;
+			_ser.global_s_step  = _inp.editor.slider_step;
 			
 			array_push(_inputs, _ser);
 		}
@@ -284,11 +288,11 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 	static deserialize = function(_map) {
 		var _inputs = _map.inputs;
 		
-		for(var i = 0; i < array_length(_inputs); i++) {
+		for( var i = 0, n = array_length(_inputs); i < n; i++ ) {
 			var _des  = _inputs[i];
 			if(!is_struct(_des)) continue;
 			
-			var _in   = createValue();
+			var _in = createValue();
 			
 			_in.editor.type_index = struct_try_get(_des, "global_type", 0);
 			_in.editor.disp_index = struct_try_get(_des, "global_disp", 0);
