@@ -613,7 +613,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(dynamic_visibility != -1) dynamic_visibility();
 	}
 	
-	static getInputAmount = function() { return (array_length(inputs) - input_fix_len) / data_length; }
+	static getInputAmount = function() /*=>*/ {return (array_length(inputs) - input_fix_len) / data_length};
 	
 	static onInputResize = function() { refreshDynamicInput(); triggerRender(); }
 	

@@ -49,7 +49,7 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var px   = _x + pos[0] * _s;
 		var py   = _y + pos[1] * _s;
 		
-		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny, 0, _dim[0] / 2));
+		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny, 0, .5));
 		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		
 		return w_hovering;
