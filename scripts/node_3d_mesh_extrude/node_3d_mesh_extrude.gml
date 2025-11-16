@@ -33,7 +33,7 @@ function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 		["Texture",	 false], in_mesh+9,  in_mesh+10, in_mesh+11, 
 	]
 	
-	temp_surface = [ noone, noone ];
+	temp_surface = [ noone ];
 	
 	setTrigger(1, "Refresh", [ THEME.refresh_20, 0, COLORS._main_value_positive ], function() /*=>*/ { 
 		for(var i = 0; i < process_amount; i++) getObject(i).initModel(); 
@@ -69,11 +69,23 @@ function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 			if(!is_surface(_surf)) return noone;
 		#endregion
 		
+		var ww = surface_get_width(_surf);
+		var hh = surface_get_height(_surf);
+		var ss = max(ww, hh);
+		
+		temp_surface[0] = surface_verify(temp_surface[0], ss, ss);
+		surface_set_target(temp_surface[0]);
+			DRAW_CLEAR
+			BLEND_OVERRIDE
+			draw_surface(_surf, floor(ss / 2 - ww / 2), floor(ss / 2 - hh / 2));
+			BLEND_NORMAL
+		surface_reset_target();
+		
 		var _object = getObject(_array_index);
 		_object.checkParameter( { 
 			smooth  : _smt,
 			
-			surface : _surf, 
+			surface : temp_surface[0], 
 			height  : _hght, 
 			
 			back     : _back,
