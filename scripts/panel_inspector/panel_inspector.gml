@@ -1486,14 +1486,12 @@ function Panel_Inspector() : PanelContent() constructor {
             
             if(sav) {
 	            if(PROJECT.meta.file_id != 0) {
-	            	if(buttonInstant_Icon(sx0, ty, ui(10), [mx,my], pHOVER, pFOCUS, __txt("View on Workshop..."), THEME.steam_invert_24, 0, .8) == 2) {
-	                	var _p = new Panel_Steam_Workshop();
-	                    _p.navigate({ type: "fileid", fileid: PROJECT.meta.file_id });
-	                    dialogPanelCall(_p);
-	                }
+	            	var _stxt = __txt("View on Workshop...");
+	            	if(buttonInstant_Icon(sx0, ty, ui(10), mse, pHOVER, pFOCUS, _stxt, THEME.steam_invert_24, 0, .8) == 2)
+	                	dialogPanelCall(new Panel_Steam_Workshop().navigate({ type: "fileid", fileid: PROJECT.meta.file_id }));
 	            }
 	            
-	            if(buttonInstant_Icon(sx1, ty, ui(10), [mx,my], pHOVER, pFOCUS, __txt("Rename"), THEME.rename, 0, .8) == 2) {
+	            if(buttonInstant_Icon(sx1, ty, ui(10), mse, pHOVER, pFOCUS, __txt("Rename"), THEME.rename, 0, .8) == 2) {
 	            	textboxCall(txt, function(t) /*=>*/ {
 	            		if(t == "") return;
 	            		

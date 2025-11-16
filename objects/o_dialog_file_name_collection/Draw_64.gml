@@ -121,7 +121,8 @@
 #region display
 	dialog_h = th + padding * 2;
 	
-	var spc_h = ui(4);
+	var sh = ui(4);
+	var lh = line_get_height(font, 4);
 	
 	if(meta_expand) {
 		var dx = dialog_x + padding;
@@ -131,35 +132,35 @@
 		if(ugc == 2) {
 			draw_set_text(font, fa_left, fa_top, COLORS._main_icon);
 			draw_text(dx, yy, __txt("Update note"));
-			yy		 += line_get_height() + ui(4);
-			dialog_h += line_get_height() + ui(4);
+			yy		 += lh;
+			dialog_h += lh;
 			
 			var wd_h = ui(80);
 			t_update.setFocusHover(sFOCUS, sHOVER);
 			t_update.register();
 			t_update.draw(dx, yy, dw, wd_h, update_note, mouse_ui);
-			yy		 += wd_h + spc_h;
-			dialog_h += wd_h + spc_h;
+			yy		 += wd_h + sh;
+			dialog_h += wd_h + sh;
 		}
 		
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		draw_set_text(font, fa_left, fa_top, COLORS._main_icon);
 		draw_text(dx, yy, __txt("Description"));
-		yy		 += line_get_height() + ui(4);
-		dialog_h += line_get_height() + ui(4);
+		yy		 += lh;
+		dialog_h += lh;
 		
 		var wd_h = ugc == 2? ui(100) : ui(200);
 		t_desc.setFocusHover(sFOCUS, sHOVER);
 		t_desc.register();
 		t_desc.draw(dx, yy, dw, wd_h, meta.description, mouse_ui);
-		yy		 += wd_h + spc_h;
-		dialog_h += wd_h + spc_h;
+		yy		 += wd_h + sh;
+		dialog_h += wd_h + sh;
 		
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		draw_set_text(font, fa_left, fa_top, COLORS._main_icon);
 		draw_text(dx, yy, __txt("Author"));
-		yy		 += line_get_height() + ui(4);
-		dialog_h += line_get_height() + ui(4);
+		yy		 += lh;
+		dialog_h += lh;
 		
 		var wd_w = dw;
 		var wd_h = th;
@@ -176,49 +177,49 @@
 		t_auth.setFocusHover(sFOCUS, sHOVER);
 		t_auth.register();
 		t_auth.draw(dx, yy, wd_w, wd_h, meta.author, mouse_ui);
-		yy		 += wd_h + spc_h;
-		dialog_h += wd_h + spc_h;
+		yy		 += wd_h + sh;
+		dialog_h += wd_h + sh;
 		
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		draw_set_text(font, fa_left, fa_top, COLORS._main_icon);
 		draw_text(dx, yy, __txt("Contact info"));
-		yy		 += line_get_height() + ui(4);
-		dialog_h += line_get_height() + ui(4);
+		yy		 += lh;
+		dialog_h += lh;
 		
 		var wd_h = th;
 		t_cont.setFocusHover(sFOCUS, sHOVER);
 		t_cont.register();
 		t_cont.draw(dx, yy, dw, wd_h, meta.contact, mouse_ui);
-		yy		 += wd_h + spc_h;
-		dialog_h += wd_h + spc_h;
+		yy		 += wd_h + sh;
+		dialog_h += wd_h + sh;
 		
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		draw_set_text(font, fa_left, fa_top, COLORS._main_icon);
 		draw_text(dx, yy, __txt("Alias"));
-		yy		 += line_get_height() + ui(4);
-		dialog_h += line_get_height() + ui(4);
+		yy		 += lh;
+		dialog_h += lh;
 		
 		var wd_h = th;
 		t_alias.setFocusHover(sFOCUS, sHOVER);
 		t_alias.register();
 		t_alias.draw(dx, yy, dw, wd_h, meta.alias, mouse_ui);
-		yy		 += wd_h + spc_h;
-		dialog_h += wd_h + spc_h;
+		yy		 += wd_h + sh;
+		dialog_h += wd_h + sh;
 		
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		draw_set_text(font, fa_left, fa_top, COLORS._main_icon);
 		draw_text(dx, yy, __txt("Tags"));
-		yy		 += line_get_height() + ui(4);
-		dialog_h += line_get_height() + ui(4);
+		yy		 += lh;
+		dialog_h += lh;
 		
 		var wd_h = th;
 		t_tags.setFocusHover(sFOCUS, sHOVER);
 		t_tags.register();
 		var hh = t_tags.draw(dx, yy, dw, wd_h, mouse_ui);
-		yy		 += hh + spc_h;
-		dialog_h += hh + spc_h;
+		yy		 += hh + sh;
+		dialog_h += hh + sh;
 		
-		dialog_h -= spc_h;
+		dialog_h -= sh;
 		dialog_h += padding;
 	}
 	

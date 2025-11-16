@@ -233,7 +233,7 @@ function __test_zip_collection(dir = COLLECTIONS) {
 	zip_save(_zip, _targ);
 	
 	print("---------- ZIP COLLECTION ENDED ----------");
-	noti_status("ZIP collection complete", noone, true);
+	noti_status("ZIP collection complete", noone, COLORS._main_value_positive);
 }
 	
 function __test_generate_theme() {
@@ -258,5 +258,5 @@ function __test_update_theme() {
 	_d.version = BUILD_NUMBER;
 	json_save_struct(_p, _d, true);
 	
-	noti_status($"Update theme to version {VERSION_STRING}.", noone, true);
+	noti_status($"Update theme to version {VERSION_STRING}.", noone, COLORS._main_value_positive);
 }

@@ -234,6 +234,8 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 					sc_content_item.setScroll(0);
 					break;
 			}
+		
+			return self;
 		}
 		
 		static historyBackward = function() {

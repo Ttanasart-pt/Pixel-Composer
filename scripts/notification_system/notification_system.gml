@@ -27,6 +27,7 @@
 		life     = _life;
 		
 		onClick  = noone;
+		param    = undefined;
 		tooltip  = "";
 		icon_end = noone;
 		
@@ -39,10 +40,11 @@
 		static setColor = function(_c) /*=>*/ { color     = _c; return self; }
 		static setRef   = function(_r) /*=>*/ { reference = _r; return self; }
 		
-		static setOnClick = function(_onClick, _tooltip = "", _icon_end = noone) {
+		static setOnClick = function(_onClick, _tooltip = "", _icon_end = noone, _param = undefined) {
 			onClick  = method(self, _onClick);
 			tooltip  = _tooltip;
 			icon_end = _icon_end;
+			param    = _param;
 			
 			return self;
 		}
@@ -71,17 +73,12 @@
 			PANEL_MENU.noti_flash_color = flash;
 			
 			dialogCall(o_dialog_warning, mouse_mx + ui(16), mouse_my + ui(16))
-				.setText(str)
-				.setColor(flash)
-				.setIcon(icon);
+				.setText(str).setColor(flash).setIcon(icon);
 		}
 		
 		if(ref) {
 			ref.logNode(str);
-			
-			var onClick = function() /*=>*/ { PANEL_GRAPH.focusNode(self.ref); };
-			noti.ref = ref;
-			noti.onClick = method(noti, onClick);
+			noti.setOnClick(function(r) /*=>*/ {return PANEL_GRAPH.focusNode(r)}, "", noone, ref);
 		}
 		
 		return noti;
@@ -115,10 +112,7 @@
 		
 		if(ref) {
 			ref.logNode(str);
-			
-			var onClick = function() /*=>*/ { PANEL_GRAPH.focusNode(self.ref); };
-			noti.ref = ref;
-			noti.onClick = method(noti, onClick);
+			noti.setOnClick(function(r) /*=>*/ {return PANEL_GRAPH.focusNode(r)}, "", noone, ref);
 		}
 		
 		return noti;
@@ -136,11 +130,9 @@
 		
 		if(ref) {
 			ref.logNode(str);
-			
-			var onClick = function() /*=>*/ { PANEL_GRAPH.focusNode(self.ref); };
-			noti.ref = ref;
-			noti.onClick = method(noti, onClick);
+			noti.setOnClick(function(r) /*=>*/ {return PANEL_GRAPH.focusNode(r)}, "", noone, ref);
 		}
+		
 		return noti;
 	}
 	

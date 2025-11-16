@@ -217,13 +217,13 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 				if(cursor_line == 0) 
 					_target = 0;
 				else {
-					var _l = cursor_line - 1;
-					var _str = _input_text_line[_l];
+					var _l   = cursor_line - 1;
+					var _str = array_safe_get_fast(_input_text_line, _l, "");
 					var _run = cursor_tx;
 					var _char = 0;
 						
 					for( var i = 0; i < _l; i++ )
-						_char += string_length(_input_text_line[i]);
+						_char += string_length(array_safe_get_fast(_input_text_line, i, ""));
 						
 					for( var i = 1; i < string_length(_str); i++ ) {
 						var _chr = string_char_at(_str, i);
@@ -253,12 +253,12 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 					_target = string_length(_input_text);
 				else {
 					var _l = cursor_line + 1;
-					var _str = _input_text_line[_l];
+					var _str = array_safe_get_fast(_input_text_line, _l, "");
 					var _run = cursor_tx;
 					var _char = 0;
 						
 					for( var i = 0; i < _l; i++ )
-						_char += string_length(_input_text_line[i]);
+						_char += string_length(array_safe_get_fast(_input_text_line, i, ""));
 						
 					for( var i = 1; i < string_length(_str); i++ ) {
 						var _chr = string_char_at(_str, i);
@@ -558,7 +558,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			if(cursor_line == 0) 
 				move_cursor(-cursor);
 			else {
-				var _str = _input_text_line[cursor_line];
+				var _str = array_safe_get_fast(_input_text_line, cursor_line, "");
 				while(string_char_at(_input_text, cursor) != "\n") {
 					if(cursor <= 0) break;
 					cursor--;
@@ -576,7 +576,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			} else 
 				cursor_select	= -1;
 			
-			var _str = _input_text_line[cursor_line];
+			var _str = array_safe_get_fast(_input_text_line, cursor_line, "");
 			while(string_char_at(_input_text, cursor + 1) != "\n" && cursor < string_length(_input_text)) {
 				cursor++;
 			}
@@ -818,7 +818,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			
 				var lx = ui(code_line_width - 8);
 				
-				for( var i = 0; i < array_length(_input_text_line_index); i++ ) {
+				for( var i = 0, n = array_length(_input_text_line_index); i < n; i++ ) {
 					var ly = text_y + padding_v + i * c_h;
 					draw_text_add(lx, ly, _input_text_line_index[i]);
 				}
@@ -834,8 +834,9 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			draw_set_text(font, fa_left, fa_top, COLORS._main_text);
 			editText();
 			
-			if(!typing && undoable && (ds_stack_empty(undo_stack) || ds_stack_top(undo_stack)[0] != _input_text)) {
-				ds_stack_push(undo_stack, [_input_text, cursor, cursor_select]);
+			var _undoTop = ds_stack_top(undo_stack);
+			if(!typing && undoable && (is_array(_undoTop) && array_safe_get(_undoTop, 0) != _input_text)) {
+				ds_stack_push(undo_stack, [ _input_text, cursor, cursor_select ]);
 				ds_stack_clear(redo_stack);
 			}
 			
@@ -882,6 +883,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 								var x2 = tx + string_width(_hstr2);
 							
 								draw_roundrect_ext(x1, ch_y, x2, ch_y + c_h, THEME_VALUE.highlight_corner_radius, THEME_VALUE.highlight_corner_radius, 0);
+								
 							} else if(char_line >= ch_sel_min && char_line + _l < ch_sel_max) {
 								var _hstr = _str;
 							
@@ -891,6 +893,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 								var x2 = tx + string_width(_hstr);
 							
 								draw_roundrect_ext(tx, ch_y, x2, ch_y + c_h, THEME_VALUE.highlight_corner_radius, THEME_VALUE.highlight_corner_radius, 0);
+								
 							} else if(char_line > ch_sel_min && char_line <= ch_sel_max && char_line + _l >= ch_sel_max) {
 								var _hstr = string_copy(_str, 1, ch_sel_max - char_line);
 							

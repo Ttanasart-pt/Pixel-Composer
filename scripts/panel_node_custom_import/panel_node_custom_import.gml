@@ -161,7 +161,7 @@ function Panel_Node_Custom_Import(_dirs) : PanelContent() constructor {
     		
     		if(import_step >= import_full) {
                 __initNodes(false);
-                noti_status($"Import {import_full} nodes complete.", noone, true);
+                noti_status($"Import {import_full} nodes complete.", noone, COLORS._main_value_positive);
                 close();
     		}
     		

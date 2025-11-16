@@ -9,36 +9,32 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	name = "Palette Extract";
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Surface("Surface In"));
+	////- =Surfaces
+	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput(5, nodeValue_Surface( "Mask" ));
 	
-	newInput(1, nodeValue_Int("Max colors", 5, "Amount of color in a palette."))
-		.rejectArray();
+	////- =Palette
+	newInput(3, nodeValue_EScroll( "Algorithm",   0, { data: [ "K-mean", "Frequency", "All Colors" ], update_hover: false } ));
+	newInput(4, nodeValue_EScroll( "Color Space", 1, { data: [ "RGB", "HSV" ], update_hover: false } ));
+	newInput(1, nodeValue_Int(     "Max Colors",  5, "Amount of color in a palette." ));
+	newInput(2, nodeValueSeed());
+	newInput(6, nodeValue_Slider(  "Radius",    .25 ));
+	// 7
 	
-	newInput(2, nodeValueSeed())
-		.rejectArray();
+	newOutput(0, nodeValue_Output("Palette", VALUE_TYPE.color, [] )).setDisplay(VALUE_DISPLAY.palette);
 	
-	newInput(3, nodeValue_Enum_Scroll("Algorithm",  0, { data: [ "K-mean", "Frequency", "All Colors" ], update_hover: false }))
-		.rejectArray();
-	
-	newInput(4, nodeValue_Enum_Scroll("Color Space",  1, { data: [ "RGB", "HSV" ], update_hover: false }))
-		.rejectArray();
-	
-	newInput(5, nodeValue_Surface("Mask"));
-	
-	newInput(6, nodeValue_Slider("Radius", .25))
-		.rejectArray();
-		
-	newOutput(0, nodeValue_Output("Palette", VALUE_TYPE.color, [ ]))
-		.setDisplay(VALUE_DISPLAY.palette);
-	
-	static getPreviewValues = function() { return getInputData(0); }
+	array_foreach(inputs, function(i) /*=>*/ {return i.rejectArray()}, 1);
 	
 	input_display_list = [
-		["Surfaces", true],	0, 5, 
-		["Palette",	false],	3, 4, 1, 2, 6, 
-	]
+		[ "Surfaces", true ], 0, 5, 
+		[ "Palette", false ], 3, 4, 1, 2, 6, 
+	];
 	
-	temp_surface    = [ noone ];
+	////- Node
+	
+	attribute_surface_depth();
+	
+	temp_surface    = [ noone, noone ];
 	
 	current_palette = [];
 	current_color   = 0;
@@ -47,11 +43,7 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	extraction_total   = 0;
 	extraction_current = 0;
 	
-	attribute_surface_depth();
-	
-	static processData_prebatch = function() {
-		setDimension(96, process_length[0] * 32);
-	}
+	////- Palette Extraction
 	
 	function sortPalette(pal) {
 		array_sort(pal, function(c0, c1) {
@@ -210,12 +202,18 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	}
 	
 	function extractAll(_surfFull) {
-		var ww = surface_get_width_safe(_surfFull);
-		var hh = surface_get_height_safe(_surfFull);
+		var _dim = surface_get_dimension(_surfFull);
+		temp_surface[1] = surface_verify(temp_surface[1], _dim[0], _dim[1]);
+		surface_set_shader(temp_surface[1]);
+			draw_surface(_surfFull, 0, 0);
+		surface_reset_shader();
+		
+		var ww = surface_get_width_safe(temp_surface[1]);
+		var hh = surface_get_height_safe(temp_surface[1]);
 		
 		var c_buffer = buffer_create(ww * hh * 4, buffer_fixed, 4);
 		
-		buffer_get_surface(c_buffer, _surfFull, 0);
+		buffer_get_surface(c_buffer, temp_surface[1], 0);
 		buffer_seek(c_buffer, buffer_seek_start, 0);
 		
 		var amo     = ww * hh;
@@ -372,17 +370,26 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		return [];
 	}
 	
+	////- Update
+	
+	static processData_prebatch = function() {
+		setDimension(96, process_length[0] * 32);
+	}
+	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _surf = _data[0];
-		var _size = _data[1];
-		var _seed = _data[2];
-		var _algo = _data[3];
-		var _mask = _data[5];
-		
-		inputs[1].setVisible(_algo <  2);
-		inputs[2].setVisible(_algo == 0);
-		inputs[4].setVisible(_algo == 0);
-		inputs[6].setVisible(_algo == 3);
+		#region data
+			var _surf = _data[0];
+			var _mask = _data[5];
+			
+			var _algo = _data[3];
+			var _size = _data[1];
+			var _seed = _data[2];
+			
+			inputs[1].setVisible(_algo <  2);
+			inputs[2].setVisible(_algo == 0);
+			inputs[4].setVisible(_algo == 0);
+			inputs[6].setVisible(_algo == 3);
+		#endregion
 		
 		if(!is_surface(_surf)) return;
 		if(!is_surface(_mask)) return extractPalette(_surf, _algo, _size, _seed);

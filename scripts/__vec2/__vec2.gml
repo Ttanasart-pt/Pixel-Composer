@@ -1,12 +1,12 @@
 function __vec2(_x = 0, _y = _x) constructor {
 	static set = function(_x = 0, _y = _x) {
-		if(is_struct(_x) && is_instanceof(_x, __vec2)) {
+		if(is(_x, __vec2)) {
 			x = _x.x;
 			y = _x.y;
 			return self;
 		}
 		
-		if(is_struct(_x) && is_instanceof(_x, BBMOD_Vec2)) {
+		if(is(_x, BBMOD_Vec2)) {
 			x = _x.X;
 			y = _x.Y;
 			return self;

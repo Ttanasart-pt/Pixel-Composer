@@ -20,7 +20,7 @@ function Panel_Account_Sign_In() : PanelContent() constructor {
 				logging_in = false;
 				
 				if (_data[? "status"] == 200) {
-			        noti_status("Login successfully!", noone, true);
+			        noti_status("Login successfully!", noone, COLORS._main_value_positive);
 			        loginAccount(login_email, login_password);
 			        close();
 			        
@@ -106,7 +106,7 @@ function Panel_Account_Sign_In() : PanelContent() constructor {
 				signing_up = false;
 				
 				if (_data[? "status"] == 200) {
-			        noti_status("Signed up successfully!", true);
+			        noti_status("Signed up successfully!", COLORS._main_value_positive);
 			        createAccount(_data[? "value"], signup_email);
 			        page = 0;
 			        

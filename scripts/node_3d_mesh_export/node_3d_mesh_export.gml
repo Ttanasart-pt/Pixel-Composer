@@ -264,8 +264,7 @@ function Node_3D_Mesh_Export(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		// log
 		var _txt  = $"Export model complete.";
 		var noti  = log_message("EXPORT", _txt, THEME.noti_icon_tick, COLORS._main_value_positive, false);
-		noti.path = filename_dir(_path);
-		noti.setOnClick(function() /*=>*/ {return shellOpenExplorer(self.path)}, "Open in explorer", THEME.explorer);
+		noti.setOnClick(function(p) /*=>*/ {return shellOpenExplorer(p)}, "Open in explorer", THEME.explorer, _path);
 		logNode(_txt);
 	}
 	

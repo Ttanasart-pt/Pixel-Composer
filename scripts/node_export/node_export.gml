@@ -678,9 +678,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				var _txt = $"Export {array_length(surf)} images complete.";
 				logNode(_txt);
 				
-				var noti  = log_message("EXPORT", _txt, THEME.noti_icon_tick, COLORS._main_value_positive, false)
-								.setRef(filename_dir(p))
-								.setOnClick(function() /*=>*/ {return shellOpenExplorer(self.reference)}, "Open in explorer", THEME.explorer);
+				var path = filename_dir(p);
+				var noti = log_message("EXPORT", _txt, THEME.noti_icon_tick, COLORS._main_value_positive, false)
+								.setOnClick(function(p) /*=>*/ {return shellOpenExplorer(p)}, "Open in explorer", THEME.explorer, path);
 				
 				PANEL_MENU.setNotiIcon(THEME.noti_icon_tick);
 			}
@@ -709,9 +709,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				var _txt = $"Export image as {p}";
 				logNode(_txt);
 				
-				var noti  = log_message("EXPORT", _txt, THEME.noti_icon_tick, COLORS._main_value_positive, false)
-								.setRef(filename_dir(p))
-								.setOnClick(function() /*=>*/ {return shellOpenExplorer(self.reference)}, "Open in explorer", THEME.explorer);
+				var path = filename_dir(p);
+				var noti = log_message("EXPORT", _txt, THEME.noti_icon_tick, COLORS._main_value_positive, false)
+								.setOnClick(function(p) /*=>*/ {return shellOpenExplorer(p)}, "Open in explorer", THEME.explorer, path);
 					
 				PANEL_MENU.setNotiIcon(THEME.noti_icon_tick);
 			}
@@ -855,9 +855,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				
 				if(!IS_CMD) {
 					if(msg == "") {
-						var noti  = log_message("EXPORT", $"Export {render_type} as {render_target}", THEME.noti_icon_tick, COLORS._main_value_positive, false);
-						noti.path = filename_dir(render_target);
-						noti.setOnClick(function() /*=>*/ { shellOpenExplorer(self.path); }, "Open in explorer", THEME.explorer);
+						var noti = log_message("EXPORT", $"Export {render_type} as {render_target}", THEME.noti_icon_tick, COLORS._main_value_positive, false);
+						var path = filename_dir(render_target);
+						noti.setOnClick(function(p) /*=>*/ { shellOpenExplorer(p); }, "Open in explorer", THEME.explorer, path);
 						PANEL_MENU.setNotiIcon(THEME.noti_icon_tick);
 						
 					} else {

@@ -39,7 +39,9 @@ function steam_ugc_create_collection(file) {
 			
 			var _fid = _params.fileid;
 			
-			noti_status($"Steam Workshop: Collection uploaded [id: {_fid}]", THEME.workshop_upload, true);
+			noti_status($"Steam Workshop: Collection uploaded [id: {_fid}]", THEME.workshop_upload, COLORS._main_value_positive)
+				.setOnClick(function(fid) /*=>*/ { dialogPanelCall(new Panel_Steam_Workshop().navigate({ type: "fileid", fileid: fid })) },
+					"View in Workshop...", THEME.steam_invert_24, _fid);
 			PANEL_MENU.setNotiIcon(THEME.workshop_upload);
 			UGC_subscribe_item(_fid);
 			HUB_link_file_id(_fid);
@@ -83,7 +85,7 @@ function steam_ugc_update_collection(file, update_preview = false, update_note =
 		if(_data[? "result"] != ugc_result_success) { noti_warning($"Steam: {steam_ugc_get_error(_data[? "result"])}"); return; } 
 		
 		var _fid = _data[$ "fileid"] ?? 0;
-		noti_status($"Steam Workshop: Collection updated", THEME.workshop_upload, true);
+		noti_status($"Steam Workshop: Collection updated", THEME.workshop_upload, COLORS._main_value_positive);
 		PANEL_MENU.setNotiIcon(THEME.workshop_upload);
 		
 	}, { fileid: _fid });

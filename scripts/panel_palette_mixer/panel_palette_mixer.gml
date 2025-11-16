@@ -237,9 +237,8 @@ function Panel_Palette_Mixer(_selector = noone) : PanelContent() constructor {
 								var _str = palette_string_hex(palette, false);
 								file_text_write_all(_path, _str);
 								
-								var noti  = log_message("PALETTE", $"Export palette complete.", THEME.noti_icon_tick, COLORS._main_value_positive, false);
-								noti.path = _path;
-								noti.setOnClick(function() { shellOpenExplorer(self.path); }, "Open in explorer", THEME.explorer);
+								var noti = log_message("PALETTE", $"Export palette complete.", THEME.noti_icon_tick, COLORS._main_value_positive, false);
+								noti.setOnClick(function(p) /*=>*/ {return shellOpenExplorer(p)}, "Open in explorer", THEME.explorer, _path);
 							}
 						}), 
 					]);

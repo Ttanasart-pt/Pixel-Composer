@@ -4,14 +4,14 @@ globalvar __vec3_up;      __vec3_up      = new __vec3(0.0, 0.0, 1.0);
 
 function __vec3(_x = 0, _y = _x, _z = _x) constructor {
 	static set = function(_x = 0, _y = _x, _z = _x) {
-		if(is_struct(_x) && is_instanceof(_x, __vec3)) {
+		if(is(_x, __vec3)) {
 			x = _x.x;
 			y = _x.y;
 			z = _x.z;
 			return self;
 		}
 		
-		if(is_struct(_x) && is_instanceof(_x, BBMOD_Vec3)) {
+		if(is(_x, BBMOD_Vec3)) {
 			x = _x.X;
 			y = _x.Y;
 			z = _x.Z;

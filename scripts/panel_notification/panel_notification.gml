@@ -94,7 +94,7 @@ function Panel_Notification() : PanelContent() constructor {
 						TOOLTIP = noti.tooltip;
 				
 					if(noti.onClick != noone && mouse_press(mb_left, pFOCUS))
-						noti.onClick();
+						noti.onClick(noti.param);
 				
 					if(mouse_press(mb_right, pFOCUS))
 						noti_selecting = noti;

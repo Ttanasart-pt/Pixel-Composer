@@ -37,7 +37,7 @@ if(PALETTE_LOSPEC && _id == PALETTE_LOSPEC) {
     file_text_close(_f);
     __initPalette();
     
-    noti_status($"Loaded palette: {_name} by {_auth} completed.", noone, true);
+    noti_status($"Loaded palette: {_name} by {_auth} completed.", noone, COLORS._main_value_positive);
     
     with(o_dialog_palette)  { initPalette(); }
     with(o_dialog_gradient) { initPalette(); }

@@ -122,7 +122,7 @@ function Panel_Dev_Project_Manager() : PanelContent() constructor {
 				
 				if(++update_index >= _total - 1) {
 					updating = false;
-					noti_status("Update complete", noone, true);
+					noti_status("Update complete", noone, COLORS._main_value_positive);
 				}
 				break;
 		}
@@ -220,5 +220,5 @@ function __test_zip_project(dir) {
 	zip_save(_zip, _targ);
 	
 	print("---------- ZIP PROJECT ENDED ----------");
-	noti_status("ZIP project complete", noone, true);
+	noti_status("ZIP project complete", noone, COLORS._main_value_positive);
 }

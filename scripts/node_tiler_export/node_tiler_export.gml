@@ -92,8 +92,7 @@ function Node_Tile_Tilemap_Export(_x, _y, _group = noone) : Node(_x, _y, _group)
     				logNode(_txt);
     				
     	            var noti  = log_message("EXPORT", _txt, THEME.noti_icon_tick, COLORS._main_value_positive, false);
-    				noti.path = filename_dir(path);
-    				noti.setOnClick(function() /*=>*/ { shellOpenExplorer(self.path); }, "Open in explorer", THEME.explorer);
+    				noti.setOnClick(function(p) /*=>*/ { shellOpenExplorer(p); }, "Open in explorer", THEME.explorer, path);
     				
             	}
 	            break;
@@ -146,8 +145,7 @@ function Node_Tile_Tilemap_Export(_x, _y, _group = noone) : Node(_x, _y, _group)
     				logNode(_txt);
     				
     	            var noti  = log_message("EXPORT", _txt, THEME.noti_icon_tick, COLORS._main_value_positive, false);
-    				noti.path = filename_dir(path);
-    				noti.setOnClick(function() /*=>*/ { shellOpenExplorer(self.path); }, "Open in explorer", THEME.explorer);
+    				noti.setOnClick(function(p) /*=>*/ { shellOpenExplorer(p); }, "Open in explorer", THEME.explorer, path);
         		} 
         		
         		break;
