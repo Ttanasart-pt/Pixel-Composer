@@ -576,9 +576,7 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
         var _map  = {};
         
 		current_bone = _bones;
-        bone_posed   = _bones.clone()
-							 .connect()
-							 .resetPose();
+        bone_posed   = _bones.clone().connect().resetPose();
 		bone_posed.constrains = _bones.constrains;
 		
 		bone_array = bone_posed.toArray();

@@ -19,6 +19,7 @@ function MeshedSurface() : Mesh() constructor {
 		msh.controls = controls;
 		
 		p = array_create_ext(array_length(points), function(i) /*=>*/ { return is(points[i], __vec2)? points[i].clone() : points[i]; });
+		
 		msh.points = p;
 		msh.links  = array_create_ext(array_length(links), function(i) /*=>*/ {return links[i].clone(p)});
 		msh.tris   = array_create_ext(array_length(tris),  function(i) /*=>*/ {return tris[i].clone(p)});
@@ -554,6 +555,8 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 		
 		mesh_data.points = array_filter(mesh_data.points, function(p) /*=>*/ {return p != 0});
+		for( var i = 0, n = array_length(mesh_data.points); i < n; i++ ) 
+			mesh_data.points[i].index = i;
 		
 		if(is_surface(cont)) {
 			surface_free(cont);
