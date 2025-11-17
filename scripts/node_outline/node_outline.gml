@@ -30,7 +30,7 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	////- =Outline
 	newInput(18, nodeValue_Enum_Scroll( "Profile",     0, [ "Circle", "Square", "Diamond" ] ));
-	newInput( 1, nodeValue_Int(         "Width",       0 )).setHotkey("S").setDisplay(VALUE_DISPLAY._default, { front_button : filter_button }).setValidator(VV_min(0)).setMappable(15);
+	newInput( 1, nodeValue_Float(       "Width",       0 )).setHotkey("S").setDisplay(VALUE_DISPLAY._default, { front_button : filter_button }).setValidator(VV_min(0)).setMappable(15);
 	newInput( 5, nodeValue_Enum_Button( "Position",    1, ["Inside", "Outside"] ));
 	newInput( 8, nodeValue_Int(         "Start",       0, "Shift outline inside, outside the shape." )).setMappable(17);
 	newInput(12, nodeValue_Bool(        "Crop border", false ));
@@ -83,6 +83,8 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var prof = _data[18];
 		var thrs = _data[19];
 		var hres = _data[20];
+		
+		inputs[1].setType(alis? VALUE_TYPE.float : VALUE_TYPE.integer);
 		
 		filter_button.index = attributes.filter;
 		

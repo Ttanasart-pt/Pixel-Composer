@@ -3,15 +3,15 @@
   "%Name":"Windows",
   "ConfigValues":{
     "Itch":{
-      "option_windows_version":"1.20.0.6",
-      "option_windows_display_name":"Pixel Composer 1.20.0.6 itch",
+      "option_windows_version":"1.20.0.7",
+      "option_windows_display_name":"Pixel Composer 1.20.0.7 itch",
       "option_windows_copyright_info":"(c) 2025 MakhamDev",
       "option_windows_sleep_margin":"10",
       "option_windows_texture_page":"8192x8192",
     },
     "Steam":{
-      "option_windows_version":"1.20.0.6",
-      "option_windows_display_name":"Pixel Composer 1.20.0.602 steam",
+      "option_windows_version":"1.20.0.7",
+      "option_windows_display_name":"Pixel Composer 1.20.0.7 steam",
       "option_windows_copyright_info":"(c) 2025 MakhamDev",
       "option_windows_save_location":"1",
       "option_windows_texture_page":"8192x8192",
