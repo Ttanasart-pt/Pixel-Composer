@@ -603,8 +603,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	static export = function(log = true) {
-		print($">>>>>>>>>>>>>>>>>>>> export {CURRENT_FRAME} <<<<<<<<<<<<<<<<<<<<");
-		printCallStack();
+		// print($">>>>>>>>>>>>>>>>>>>> export {CURRENT_FRAME} <<<<<<<<<<<<<<<<<<<<");
+		// printCallStack();
 		
 		randomize();
 		exportLog = log;
@@ -960,15 +960,22 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					inputs[10].setVisible(true);
 					inputs[10].editWidget.minn =   0;
 					inputs[10].editWidget.maxx = 100;
+					
 				} else 
 					inputs[10].setVisible(false);
 			}
-			
 		#endregion
 		
-		if(expt && !IS_RENDERING) export(false);
-		if(anim == NODE_EXPORT_FORMAT.single) return;
-		if(!PROJECT.animator.is_playing) { playing = false; return; }
+		if(anim == NODE_EXPORT_FORMAT.single) {
+			if(expt && !IS_RENDERING) export(false);
+			return;
+		}
+		
+		if(!PROJECT.animator.is_playing) { 
+			playing = false; 
+			return; 
+		}
+		
 		if(!playing) return;
 		
 		export();

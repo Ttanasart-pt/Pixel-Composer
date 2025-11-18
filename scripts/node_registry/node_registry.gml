@@ -654,9 +654,6 @@ function panelFocusNode(_node = noone) {
 function nodeClone(_nodes, _ctx = PANEL_GRAPH.getCurrentContext()) {
 	if(array_empty(_nodes)) return;
 	
-    var _map  = {};
-    var _node = [];
-    
     for( var i = 0, n = array_length(_nodes); i < n; i++ ) {
     	var node = _nodes[i];
     	
@@ -672,6 +669,9 @@ function nodeClone(_nodes, _ctx = PANEL_GRAPH.getCurrentContext()) {
     }
     
     _nodes = array_unique(_nodes);
+    
+    var _map  = {};
+    var _node = [];
     
     for( var i = 0, n = array_length(_nodes); i < n; i++ ) {
     	var node = _nodes[i];

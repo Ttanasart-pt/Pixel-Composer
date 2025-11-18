@@ -183,7 +183,7 @@ enum RENDER_TYPE {
 		return true;
 	}
 	
-	function RenderObject(_project = PROJECT, _partial = false, _runAction = false) constructor {
+	function RenderObject(_project = PROJECT, _partial = false, _runAction = false, _renderAll = false) constructor {
 		project   = _project;
 		partial   = _partial;
 		runAction = _runAction;
@@ -247,7 +247,6 @@ enum RENDER_TYPE {
 			var _rendered   = 0;
 			
 			try {
-				// render forward
 				while(!RENDER_QUEUE.empty()) {
 					LOG_BLOCK_START();
 					// LOG_IF(global.FLAG.render == 1, $"➤➤➤➤➤➤ CURRENT RENDER QUEUE {RENDER_QUEUE} [{RENDER_QUEUE.size()}] ");
@@ -319,7 +318,7 @@ enum RENDER_TYPE {
 		}
 		
 		init();
-		render();
+		render(_renderAll? infinity : PREFERENCES.render_max_time);
 	}
 	
 	function Render(_project = PROJECT, _partial = false, _runAction = false) { 
@@ -333,7 +332,7 @@ enum RENDER_TYPE {
 	}
 	
 	function RenderSync(_project = PROJECT, _partial = false, _runAction = false) {
-		var _ = new RenderObject(_project, _partial, _runAction).render(infinity);
+		var _ = new RenderObject(_project, _partial, _runAction, true);
 	}
 	
 	function __renderListReset(arr) { 
