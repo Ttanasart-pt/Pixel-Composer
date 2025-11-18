@@ -112,8 +112,7 @@ void main() {
 		if(borderSizeUseSurf == 1) {
 			vec4 _vMap = texture2D( borderSizeSurf, v_vTexcoord );
 			bSiz = mix(borderSize.x, borderSize.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
-		}
-		if(is_aa == 0) bSiz = floor(bSiz);
+		} if(is_aa == 0) bSiz = floor(bSiz);
 	
 		float bld = blend_alpha.x;
 		if(blend_alphaUseSurf == 1) {
@@ -146,21 +145,26 @@ void main() {
 	
 	if(bSiz + bStr > 0.) {
 		float itr = bStr + bSiz + float(is_aa);
+		float iir = (highRes == 1? 16. : 6.) + float(is_aa) * 2.;
+		float ang;
 		
 		if(profile == 0) {
-			// float atr = highRes == 1? 512. : 64.;
 			
 			for(float i = 1.; i <= itr; i++) {
 				float base = 1.;
 				float top  = 0.;
-				float atr = highRes == 1? i * 16. : i * 4.;
+				float atr  = i * iir;
 				
 				for(float j = 0.; j <= atr; j++) {
-					float ang = top / base * TAU;
-					top += 2.;
-					if(top >= base) {
-						top   = 1.;
-						base *= 2.;
+					if(highRes == 1) {
+						ang = top / base * TAU;
+						top += 2.;
+						if(top >= base) {
+							top   = 1.;
+							base *= 2.;
+						}
+					} else {
+						ang = j / atr * TAU;
 					}
 					
 					if(angleFiltered(ang)) continue;

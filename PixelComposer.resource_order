@@ -1652,6 +1652,7 @@
     {"name":"panel_steam_link_edit","order":1,"path":"scripts/panel_steam_link_edit/panel_steam_link_edit.yy",},
     {"name":"panel_test","order":2,"path":"scripts/panel_test/panel_test.yy",},
     {"name":"panel_text_editor","order":14,"path":"scripts/panel_text_editor/panel_text_editor.yy",},
+    {"name":"panel_timer","order":18,"path":"scripts/panel_timer/panel_timer.yy",},
     {"name":"panel_toolbar_icon","order":17,"path":"scripts/panel_toolbar_icon/panel_toolbar_icon.yy",},
     {"name":"panel_tunnels","order":2,"path":"scripts/panel_tunnels/panel_tunnels.yy",},
     {"name":"panel_workspace","order":9,"path":"scripts/panel_workspace/panel_workspace.yy",},

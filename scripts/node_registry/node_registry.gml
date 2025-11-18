@@ -658,15 +658,15 @@ function nodeClone(_nodes, _ctx = PANEL_GRAPH.getCurrentContext()) {
     var _node = [];
     
     for( var i = 0, n = array_length(_nodes); i < n; i++ ) {
-    	var n = _nodes[i];
+    	var node = _nodes[i];
     	
-    	for( var j = 0, m = array_length(n.inputs); j < m; j++ ) {
-    		var jn = n.inputs[j].value_from_loop;
+    	for( var j = 0, m = array_length(node.inputs); j < m; j++ ) {
+    		var jn = node.inputs[j].value_from_loop;
     		if(jn) array_push(_nodes, jn);
     	}
     	
-    	for( var j = 0, m = array_length(n.outputs); j < m; j++ ) {
-    		var jn = n.inputs[j];
+    	for( var j = 0, m = array_length(node.outputs); j < m; j++ ) {
+    		var jn = node.inputs[j];
     		array_append(_nodes, jn.value_to_loop);
     	}
     }
@@ -674,9 +674,9 @@ function nodeClone(_nodes, _ctx = PANEL_GRAPH.getCurrentContext()) {
     _nodes = array_unique(_nodes);
     
     for( var i = 0, n = array_length(_nodes); i < n; i++ ) {
-    	var nd = _nodes[i];
-    	if(nd.onClone != undefined) nd.onClone();
-        SAVE_NODE(_node, nd, 0, 0, false, _ctx);
+    	var node = _nodes[i];
+    	if(node.onClone != undefined) node.onClone();
+        SAVE_NODE(_node, node, 0, 0, false, _ctx);
     }
     _map.nodes = _node;
     

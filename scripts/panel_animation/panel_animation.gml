@@ -651,6 +651,12 @@ function Panel_Animation() : PanelContent() constructor {
         
         var bx = tool_width / 2 - ui(36) * amo / 2 + ui(8);
         var by = h - ui(40);
+        var bs = ui(32);
+        var ss = THEME.button_hide_fill;
+        var m  = [mx, my];
+        
+        var focus = pFOCUS && !GLOBAL_IS_RENDERING;
+        var hover = pHOVER && !GLOBAL_IS_RENDERING;
         
         for( var i = 0; i < row; i++ ) {
             var colAmo = min(amo - i * col, col);
@@ -664,8 +670,8 @@ function Panel_Animation() : PanelContent() constructor {
                 var ind = but[1]();
                 var cc  = GLOBAL_IS_RENDERING? COLORS._main_icon_dark : but[2]();
                 var fnc = but[3];
-            
-                if(buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(32), [mx, my], pHOVER && !GLOBAL_IS_RENDERING, pFOCUS && !GLOBAL_IS_RENDERING, txt, THEME.sequence_control, ind, cc) == 2)
+            	
+                if(buttonInstant(ss, bx, by, bs, bs, m, hover, focus, txt, THEME.sequence_control, ind, cc) == 2)
                     fnc();
             
                 bx += ui(36);

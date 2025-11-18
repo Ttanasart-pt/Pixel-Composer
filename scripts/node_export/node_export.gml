@@ -603,7 +603,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	static export = function(log = true) {
-		// print($">>>>>>>>>>>>>>>>>>>> export {CURRENT_FRAME} <<<<<<<<<<<<<<<<<<<<");
+		print($">>>>>>>>>>>>>>>>>>>> export {CURRENT_FRAME} <<<<<<<<<<<<<<<<<<<<");
+		printCallStack();
 		
 		randomize();
 		exportLog = log;
@@ -816,7 +817,6 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(path == "") { noti_warning("Export: Path is empty"); return; }
 		
 		var form = getInputData(3);
-		
 		if(form == NODE_EXPORT_FORMAT.single) {
 			RenderSync(project);
 			export();
@@ -828,12 +828,11 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		playing			= true;
 		played			= 0;
 		
-		PROJECT.animator.render();
+		directory_clear(directory);
 		renderStarted();
+		PROJECT.animator.render();
 		
 		if(IS_CMD) array_push(PROGRAM_ARGUMENTS._exporting, node_id);
-		
-		directory_clear(directory);
 	}
 	
 	static step = function() {

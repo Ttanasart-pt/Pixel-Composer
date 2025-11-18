@@ -79,26 +79,22 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		renamed        = false;
 		tooltip        = "";
 		
-		w = 128;
-		h = 128;
-		
-		min_w       = w;
-		h_param     = h;
-		name_height = 16;
-		custom_grid = 0;
+		w = 128; min_w   = w;
+		h = 128; h_param = h;
 		
 		preserve_height_for_preview = false;
+		name_height    = 16;
+		auto_height    = true;
 		
-		selectable   = true;
-		clonable     = true;
-		auto_height  = true;
-		draw_padding = 4;
-		draw_pad_w   = 0;
-		draw_pad_h   = 0;
+		selectable     = true;
+		clonable       = true;
+		draw_padding   = 4;
+		draw_pad_w     = 0;
+		draw_pad_h     = 0;
 		
-		draw_name    = true;
-		always_pad   = false;
-		draggable    = true;
+		draw_name      = true;
+		always_pad     = false;
+		draggable      = true;
 		
 		draw_bbox           = BBOX();
 		draw_boundary       = [0,0,0,0];
@@ -116,6 +112,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		branch_drawing      = false;
 		draw_metadata       = true;
+		
+		__draw_inputs       = [];
+		__draw_inputs_len   = 0;
 	#endregion
 	
 	#region ---- Junctions ----
@@ -1698,7 +1697,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, h * _s, cc, aa); 
 	}
 	
-	static drawNodeOverlay = undefined;
+	static drawNodeOverlay = undefined; //static drawNodeOverlay = function(xx, yy, _mx, _my, _s) {
 	
 	static drawSetBbox = function(xx, yy, _s) {
 		var pad_label = (project.graphDisplay.avoid_label && draw_name) || always_pad;
@@ -2080,9 +2079,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 	}
 	
-	__draw_inputs     = [];
-	__draw_inputs_len = 0;
-	
 	static setJunctionIndex = function() {
 		var drawLineIndex  = 1;
 		__draw_outputs_len = 0;
@@ -2241,7 +2237,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 	}
 	
-	static groupCheck = function(_x, _y, _s, _mx, _my) {}
+	static groupCheck = undefined;//function(_x, _y, _s, _mx, _my) {}
 	
 	static drawInputGroup = function(_x, _y, _mx, _my, _s) { 
 		var _js = 16 * _s;
@@ -2257,8 +2253,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 	}
 	
-	static drawNodeBG = undefined;
-	static drawNodeFG = undefined;
+	static drawNodeBG = undefined; //static drawNodeBG = function(_x, _y, _mx, _my, _s) {
+	static drawNodeFG = undefined; //static drawNodeFG = function(_x, _y, _mx, _my, _s, _dparam, _panel = noone) {
 	static drawNode   = function(_draw, _x, _y, _mx, _my, _s, _panel = noone) { 
 		var xx = x * _s + _x + 1;
 		var yy = y * _s + _y + 1;
@@ -2282,8 +2278,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				draw_sprite_bbox_uniform(node_draw_icon, 0, bbox);
 			}
 			
-			try { onDrawNode(xx, yy, _mx, _my, _s, _hover, _focus); }
-			catch(e) { log_warning("NODE onDrawNode", exception_print(e)); }
+			if(onDrawNode) {
+				try { onDrawNode(xx, yy, _mx, _my, _s, _hover, _focus); }
+				catch(e) { log_warning("NODE onDrawNode", exception_print(e)); }
+			}
 		} 
 		
 		if(SHOW_PARAM) drawJunctionWidget(xx, yy, _mx, _my, _s, _hover, _focus, _panel);
@@ -2325,12 +2323,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(drawNodeOverlay) drawNodeOverlay(xx, yy, _mx, _my, _s);
 	}
 	
-	static drawNodeBehind = undefined
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover = false, _focus = false) {}
-	
-	static onDrawHover = undefined;
-	static drawPreviewBackground = undefined;
+	static drawNodeBehind = undefined; //static drawNodeBehind = function(_x, _y, _mx, _my, _s) {
+	static onDrawNode     = undefined; //static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawHover    = undefined; //static onDrawHover = function(xx, yy, _mx, _my, _s, _hover = false, _focus = false) {
+	static drawPreviewBackground = undefined; //static drawPreviewBackground = function(_x, _y, _mx, _my, _s) {
 	
 	static drawBadge = function(_x, _y, _s) {
 		var bPreview = bool(previewing);

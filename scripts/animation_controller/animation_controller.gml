@@ -38,10 +38,11 @@
 
 #region animation class
 	function AnimationManager() constructor {
-		frames_total	= PREFERENCES.project_animation_duration;
-		current_frame	= 0;
-		real_frame		= 0;
-		time_since_last_frame = 0;
+		frames_total  = PREFERENCES.project_animation_duration;
+		current_frame = 0;
+		real_frame    = 0;
+		real_time     = 0;
+		last_time     = 0;
 		
 		framerate		= PREFERENCES.project_animation_framerate;
 		is_playing		= false;
@@ -60,14 +61,13 @@
 		
 		static setFrame = function(_frame, _round = true) {
 			var _c        = current_frame;
-			// _frame        = clamp(_frame, 0, frames_total);
 			real_frame    = _frame;
 			current_frame = _round? round(_frame) : _frame;
 			
 			frame_progress = _c != current_frame;
 			
 			if(frame_progress) {
-				time_since_last_frame = 0;
+				last_time = 0;
 				RENDER_ALL
 			}
 		}
@@ -84,15 +84,15 @@
 		static animationStart = function() /*=>*/ {return array_foreach(PROJECT.allNodes, function(n) /*=>*/ {return n.onAnimationStart()})};
 		
 		static toggle = function() {
-			is_playing			  = !is_playing;
-			frame_progress		  = true;
-			time_since_last_frame = 0;
+			is_playing     = !is_playing;
+			frame_progress = true;
+			last_time      = 0;
 		}
 		
 		static pause = function() {
-			is_playing			  = false;
-			frame_progress		  = true;
-			time_since_last_frame = 0;
+			is_playing     = false;
+			frame_progress = true;
+			last_time      = 0;
 		}
 		
 		static play = function() {
@@ -100,10 +100,11 @@
 			else				firstFrame();
 			
 			animationStart();
-			is_playing			  = true;
-			frame_progress		  = true;
-			time_since_last_frame = 0;
-			play_direction        = 1;
+			is_playing     = true;
+			frame_progress = true;
+			last_time      = 0;
+			play_direction = 1;
+			real_time      = 0;
 			
 			RENDER_ALL
 		}
@@ -112,23 +113,24 @@
 			if(is_simulating)	setFrame(0);
 			else				firstFrame();
 			
-			is_playing			  = true;
-			is_rendering		  = true;
-			frame_progress		  = true;
-			time_since_last_frame = 0;
+			is_playing     = true;
+			is_rendering   = true;
+			frame_progress = true;
+			last_time      = 0;
+			real_time      = 0;
 		}
 		
 		static resume = function() {
-			is_playing			  = true;
-			frame_progress		  = true;
-			time_since_last_frame = 0;
+			is_playing     = true;
+			frame_progress = true;
+			last_time      = 0;
 		}
 		
 		static stop = function() {
 			firstFrame();
 			
-			is_playing			  = false;
-			time_since_last_frame = 0;
+			is_playing = false;
+			last_time  = 0;
 		}
 		
 		static step = function() {
@@ -149,13 +151,14 @@
 			if(!is_playing) return;
 			
 			var _frTime = 1 / framerate;
-			time_since_last_frame += delta_time / 1_000_000;
-				
-			if(time_since_last_frame < _frTime) return;
+			last_time += DELTA_TIME;
+			real_time += delta_time;
 			
-			var dt = time_since_last_frame - _frTime;
+			if(last_time < _frTime) return;
+			
+			var dt = last_time - _frTime;
 			setFrame(real_frame + play_direction);
-			time_since_last_frame = dt;
+			last_time = dt;
 			
 			var _maxFrame = frame_range_end ?? frames_total;
 			
@@ -165,7 +168,7 @@
 				if(playback == ANIMATOR_END.stop || is_rendering) {
 					is_playing   = false;
 					is_rendering = false;
-					time_since_last_frame = 0;
+					last_time    = 0;
 					
 				} else if(playback == ANIMATOR_END.pingpong) {
 					setFrame(max(0, frames_total - 2));
