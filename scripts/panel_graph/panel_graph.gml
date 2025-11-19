@@ -62,6 +62,7 @@
     function panel_graph_toggle_render()           { CALL("graph_toggle_render");       PANEL_GRAPH.setTriggerRender();                       }
     function panel_graph_toggle_parameter()        { CALL("graph_toggle_parameter");    PANEL_GRAPH.setTriggerParameter();                    }
     function panel_graph_enter_group()             { CALL("graph_enter_group");         PANEL_GRAPH.enter_group();                            }
+    function panel_graph_exit_group()              { CALL("graph_exit_group");          PANEL_GRAPH.exitContext();                            }
     function panel_graph_hide_disconnected()       { CALL("graph_hide_disconnected");   PANEL_GRAPH.hide_disconnected();                      }
     
     function panel_graph_open_group_tab()          { CALL("graph_open_group_tab");      PANEL_GRAPH.open_group_tab();                         }
@@ -135,6 +136,7 @@
         registerFunction("Graph", "Hide Disconnected",     "",  MOD_KEY.none,                    panel_graph_hide_disconnected   ).setMenu("graph_hide_disconnected")
         
         registerFunction("Graph", "Enter Group",           "",  MOD_KEY.none,                    panel_graph_enter_group         ).setMenu("graph_enter_group",     THEME.group)
+        registerFunction("Graph", "Exit Group",           192,  MOD_KEY.none,                    panel_graph_exit_group          ).setMenu("graph_exit_group",      THEME.group)
         registerFunction("Graph", "Open Group In New Tab", "",  MOD_KEY.none,                    panel_graph_open_group_tab      ).setMenu("graph_open_in_new_tab", THEME.group)
         registerFunction("Graph", "Group",                 "G", MOD_KEY.ctrl,                    panel_graph_group               ).setMenu("graph_group",           THEME.group)
         registerFunction("Graph", "Ungroup",               "G", MOD_KEY.ctrl | MOD_KEY.shift,    panel_graph_ungroup             ).setMenu("graph_ungroup",         THEME.group)

@@ -1035,12 +1035,17 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			var sBase = surface_get_target();	
 			
-			try { if(attributes.update_graph) { if(preUpdate) preUpdate(frame); update(frame); } }
-			catch(exception) {
+			try { 
+				if(attributes.update_graph) { 
+					if(preUpdate) preUpdate(frame); 
+					update(frame); 
+				} 
+				
+			} catch(exception) {
 				var sCurr = surface_get_target();
 				while(surface_get_target() != sBase)
 					surface_reset_target();
-			
+				
 				log_warning("RENDER", exception_print(exception), self);
 			}
 		}
