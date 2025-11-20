@@ -211,8 +211,8 @@ function __initLua() {
 			[["string", "text", "Text to display"], ]],
 	];
 	
-	globalvar LUA_API;
-	LUA_API = ds_map_create();
+	globalvar LUA_API; LUA_API = ds_map_create();
+	lua_error_handler = _lua_error;
 	
 	for( var i = 0, n = array_length(global.lua_functions); i < n; i++ ) {
 		if(is_string(global.lua_functions[i])) continue;
@@ -249,4 +249,4 @@ Project.fps		   = " + string(PROJECT.animator.framerate) + @";
 ");
 }
 
-function _lua_error(msg, state) { noti_warning($"Lua error: {msg}\n{state}"); }
+function _lua_error(state, msg) { noti_warning($"Lua error: {msg}"); }

@@ -92,15 +92,17 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform vec2 position;
-uniform vec2 scale;
+uniform vec2  position;
+uniform float rotation;
+uniform vec2  scale;
 
 uniform int useThickness;
 uniform int shadeSide;
 uniform int passes;
 
 void main() {
-	vec2 pos = v_vTexcoord * scale - position;
+	vec2 pos = (v_vTexcoord - .5) * mat2(cos(rotation), -sin(rotation), sin(rotation), cos(rotation)) + .5;
+	     pos = pos * scale - position;
 	     pos = fract(fract(pos) + 1.);
 	
 	vec4 _col  = v_vColour * texture2Dintp( gm_BaseTexture, pos );

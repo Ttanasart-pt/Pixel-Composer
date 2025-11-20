@@ -24,9 +24,10 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput( 7, nodeValue_Gradient( "Color Weight",      new gradientObject(ca_white) ));
 	newInput(12, nodeValue_Surface(  "Texture",           noone ));
 	newInput(13, nodeValue_Vec2(     "Texture Position",  [0,0] ));
+	newInput(16, nodeValue_Rotation( "Texture Rotation",   0    ));
 	newInput(14, nodeValue_Vec2(     "Texture Scale",     [1,1] ));
 	newInput( 9, nodeValue_Bool(     "Shade Side",        false ));
-	// input 16
+	// input 17
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -34,7 +35,7 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		["Output", false], 1, 
 		["Path",   false], 2, 11, 3, 10, 
 		["Ribbon", false], 4, 8, 15, 5, 
-		["Render", false], 6, 7, 12, 13, 14, 9, 
+		["Render", false], 6, 7, 12, 13, 16, 14, 9, 
 	];
 	
 	////- Nodes
@@ -76,6 +77,7 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _colWei  = _data[ 7];
 			var _surface = _data[12]; var _texture = surface_get_texture_safe(_surface);
 			var _textPos = _data[13];
+			var _textRot = _data[16];
 			var _textSca = _data[14];
 			var _shdSid  = _data[ 9];
 		#endregion
@@ -110,6 +112,7 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			shader_set_interpolation( _surface );
 			shader_set_a("position",  _textPos );
 			shader_set_a("scale",     _textSca );
+			shader_set_f("rotation",  degtorad(_textRot) );
 			
 			shader_set_i( "shadeSide", _shdSid );
 			shader_set_i( "useThickness",    0 );
