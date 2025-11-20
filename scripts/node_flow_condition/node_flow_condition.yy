@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_flow_condition",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_flow_condition",
+  "parent":{
+    "name":"flow",
+    "path":"folders/nodes/data/misc/flow.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

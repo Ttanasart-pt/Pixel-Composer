@@ -18,10 +18,11 @@ MPEG-4 (.mp4)|*.mp4";
 		
 		var _dirr = filename_dir(path) + "\\";
 		var _namm = filename_name(path);
+		var _extt = filename_ext(path);
 		
 		node.inputs[ 1].setValue(_dirr);
 		node.inputs[20].setValue(_namm);
-		node.extensionCheck();
+		node.extensionCheck(_extt);
 	}
 	
 	return node;
@@ -266,30 +267,19 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 	}
 	
-	static extensionCheck = function() {
-		var _path = getInputData(1);
-		var _ext  = filename_ext(_path);
+	static extensionCheck = function(_extt) {
+		var _ext  = string_lower(_extt);
 			
 		switch(_ext) {
-			case ".png" : 
-				inputs[3].setValue(0);
-				inputs[9].setValue(0);
-				break;
-				
-			case ".jpg" : 
-				inputs[3].setValue(0);
-				inputs[9].setValue(1);
-				break;
-				
-			case ".gif" : 
-				inputs[3].setValue(2);
-				inputs[9].setValue(0);
-				break;
-				
-			case ".webp" : 
-				inputs[3].setValue(2);
-				inputs[9].setValue(1);
-				break;
+			case ".png"  : inputs[3].setValue(0); inputs[9].setValue(0); break;
+			case ".jpg"  : inputs[3].setValue(0); inputs[9].setValue(1); break;
+			case ".webp" : inputs[3].setValue(0); inputs[9].setValue(2); break;
+			case ".exr"  : inputs[3].setValue(0); inputs[9].setValue(3); break;
+			case ".bmp"  : inputs[3].setValue(0); inputs[9].setValue(4); break;
+			
+			case ".gif"  : inputs[3].setValue(2); inputs[9].setValue(0); break;
+			case ".apng" : inputs[3].setValue(2); inputs[9].setValue(2); break;
+			case ".mp4"  : inputs[3].setValue(2); inputs[9].setValue(3); break;
 		}
 	}
 	

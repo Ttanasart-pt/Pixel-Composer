@@ -240,6 +240,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			var _rtStr = min(_rangeMin, _rangeMax);
 			var _rtMax = max(_rangeMin, _rangeMax);
+			var _rtRng = _rtMax - _rtStr;
 			
 			var _useTex = !_1px && is_surface(_tex);
 			if(_useTex) { _cap = false; _1px = false; }
@@ -282,37 +283,49 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					var _d = point_direction(x0, y0, x1, y1);
 					var _od = _d, _nd = _d;
 						
-					var ww          = _rtMax / _seg;
-					var _total		= _rtMax;
-					var _prog_curr	= frac(_shift) - ww;
-					var _prog		= _prog_curr + 1;
+					var ww          = _rtRng / _seg;
+					var _total		= _rtRng;
 					var _prog_total	= 0;
+					var _prog_curr	= frac(_rtStr + _shift);
+					var _prog_prev	= undefined;
 					var points = [];
-						
+					
+					lines     = [ points ];
+					line_data = [ { length: 1 } ];
+					
 					while(_total > 0) {
-						if(_prog_curr >= 1) _prog_curr = 0;
-						else _prog_curr = min(_prog_curr + min(_total, ww), 1);
-						_prog_total += min(_total, ww);
-							
+						
+						if(_prog_prev != undefined) {
+							var stepSize = min(_total, ww, 1 - _prog_curr);
+							_prog_curr  += stepSize;
+							_prog_total += stepSize;
+							_total      -= stepSize;
+						}
+						
 						_nx = x0 + lengthdir_x(_l * _prog_curr, _d);
 						_ny = y0 + lengthdir_y(_l * _prog_curr, _d);
 							
-						var wgLen = random1D(_sed + _sedIndex, -_wig, _wig); _sedIndex++;
+						var wgLen = random1D(_sed + _prog_curr, -_wig, _wig);
 						_nx += lengthdir_x(wgLen, _d + 90); 
 						_ny += lengthdir_y(wgLen, _d + 90);
 							
-						if(_prog_total > _rtStr) //prevent drawing point before range start.
-							array_push(points, { x: _nx, y: _ny, prog: _prog_total / _rtMax, progCrop: _prog_curr, weight: 1 });
+						array_push(points, { x: _nx, y: _ny, prog: _prog_total / _rtMax, progCrop: _prog_curr, weight: 1 });
+						
+						if(_prog_curr == 1) {
+							_prog_curr = 0;
+							_prog_prev = undefined;
+							points = [];
 							
-						if(_prog_curr > _prog)
-							_total -= (_prog_curr - _prog);
-						_prog = _prog_curr;
+							array_push(lines, points);
+							array_push(line_data, { length: 1 });
+							
+						} else
+							_prog_prev = _prog_curr;
+						
 						_ox = _nx;
 						_oy = _ny;
 					}
-						
-					lines     = [ points ];
-					line_data = [ { length: 1 } ];
+					
 					break;
 					
 				case 1 :

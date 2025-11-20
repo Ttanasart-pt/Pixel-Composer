@@ -110,6 +110,4 @@ void main() {
 	gl_FragData[passes] = _col;
 	
 	if(useThickness == 1) gl_FragData[passes + 2] = vec4(pos.x, 0., 0., 1.);
-	
-	
 }

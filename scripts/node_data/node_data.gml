@@ -213,10 +213,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			["Params Width",   function() /*=>*/ {return attributes.node_param_width}, textBox_Number(function(v) /*=>*/ { setAttribute("node_param_width", v); refreshNodeDisplay(); }) ],
 			
 			"Node",
-			["Auto Update",       function() /*=>*/ {return attributes.update_graph},        new checkBox(function() /*=>*/ { toggleAttribute("update_graph");            }) ],
-			["Render Frame Input",function() /*=>*/ {return attributes.show_render_frame},   new checkBox(function() /*=>*/ { toggleAttribute("show_render_frame"); refreshNodeDisplay(); }) ],
-			["Update Trigger",    function() /*=>*/ {return attributes.show_update_trigger}, new checkBox(function() /*=>*/ { toggleAttribute("show_update_trigger");     }) ],
-			["Output Metadata",   function() /*=>*/ {return attributes.outp_meta},           new checkBox(function() /*=>*/ { toggleAttribute("outp_meta"); setHeight();  }) ],
+			["Auto Update",       function() /*=>*/ {return attributes.update_graph},        new checkBox(function() /*=>*/ { toggleAttribute("update_graph");        refreshNodeDisplay(); }) ],
+			["Render Frame Input",function() /*=>*/ {return attributes.show_render_frame},   new checkBox(function() /*=>*/ { toggleAttribute("show_render_frame");   refreshNodeDisplay(); }) ],
+			["Update Trigger",    function() /*=>*/ {return attributes.show_update_trigger}, new checkBox(function() /*=>*/ { toggleAttribute("show_update_trigger"); refreshNodeDisplay(); }) ],
+			["Output Metadata",   function() /*=>*/ {return attributes.outp_meta},           new checkBox(function() /*=>*/ { toggleAttribute("outp_meta");           refreshNodeDisplay(); }) ],
 			["Show In Timeline",  function() /*=>*/ {return attributes.show_timeline},       new checkBox(function() /*=>*/ { toggleAttribute("show_timeline"); 
 				anim_timeline = attributes.show_timeline;
 				refreshTimeline();
@@ -1554,11 +1554,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			ind++;
 		}
 		
-		updatedInTrigger.x = xx;
-		updatedInTrigger.y = yy + 10;
+		updatedInTrigger.x  = xx;
+		updatedInTrigger.y  = yy + name_height / 2 * _s;
 		
 		updatedOutTrigger.x = xx + w * _s;
-		updatedOutTrigger.y = yy + 10;
+		updatedOutTrigger.y = yy + name_height / 2 * _s;
 		
 		if(in_cache_len != array_length(inputDisplayList) || out_cache_len != array_length(outputs)) {
 			refreshNodeDisplay();
