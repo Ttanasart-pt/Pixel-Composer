@@ -42,7 +42,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(25, nodeValue_Bool(         "Invert",        false ));
 	newInput( 9, nodeValue_Float(        "Shift",         0     ));
 	newInput(26, nodeValue_Bool(         "Clamp Range",   false ));
-	newInput(13, nodeValue_Enum_Button(  "End Cap",       0, __enum_array_gen([ "None", "Round", "Tri", "Square" ], s_node_line_cap)));
+	newInput(13, nodeValue_Enum_Button(  "Start Cap",     0, __enum_array_gen([ "None", "Round", "Tri", "Square" ], s_node_line_cap)));
+	newInput(43, nodeValue_Enum_Button(  "End Cap",       0, __enum_array_gen([ "None", "Round", "Tri", "Square" ], s_node_line_cap)));
 	newInput(14, nodeValue_ISlider(      "Round Segment", 8, [2, 32, 0.1] ));
 	
 	////- =Wiggle
@@ -70,14 +71,13 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	////- =Render
 	newInput(34, nodeValue_Enum_Scroll( "SSAA", 0, [ "None", "2x", "4x", "8x" ] ));
-	
-	// Inputs 43
+	// Inputs 44
 	
 	input_display_list = [ 39, 
 		["Output",         true], 0, 1, 30, 31, 16, 
 		["Line data",     false], 27, 6, 7, 28, 32, 33, 35, 19, 2, 20, 
 		["Width",         false], 17, 3, 11, 12, 36, 
-		["Line settings", false], 8, 25, 9, 26, 13, 14, 
+		["Line settings", false], 8, 25, 9, 26, 13, 43, 14, 
 		["Wiggle",        false], 4, 5, 
 		["Color",         false], 10, 24, 15, 37, 38, 
 		["Texture",       false], 18, 21, 22, 23, 29, 
@@ -167,7 +167,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _ratInv   = _data[25];
 			var _shift    = _data[ 9];
 			var _clamp    = _data[26];
-			var _cap      = _data[13];
+			var _capS     = _data[13];
+			var _capE     = _data[43];
 			var _capP     = _data[14];
 			
 			var _wig      = _data[ 4];
@@ -243,10 +244,13 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _rtRng = _rtMax - _rtStr;
 			
 			var _useTex = !_1px && is_surface(_tex);
-			if(_useTex) { _cap = false; _1px = false; }
+			if(_useTex) { 
+				_capS = false; 
+				_capE = false; 
+				_1px  = false; 
+			}
 			
 			random_set_seed(_sed);
-			var _sedIndex = 0;
 			
 			var p = new __vec2P();
 			var _pathData = [];
@@ -305,7 +309,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						_nx = x0 + lengthdir_x(_l * _prog_curr, _d);
 						_ny = y0 + lengthdir_y(_l * _prog_curr, _d);
 							
-						var wgLen = random1D(_sed + _prog_curr, -_wig, _wig);
+						var wgLen = random1D(_sed + _l * _prog_curr, -_wig, _wig);
 						_nx += lengthdir_x(wgLen, _d + 90); 
 						_ny += lengthdir_y(wgLen, _d + 90);
 							
@@ -428,8 +432,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							
 							if(_total < _pathEnd) { // Do not wiggle the last point.
 								var _d = point_direction(_ox, _oy, _nx, _ny);
-								_nx   += lengthdir_x(random1D(_sed + _sedIndex, -_wig, _wig), _d + 90); _sedIndex++;
-								_ny   += lengthdir_y(random1D(_sed + _sedIndex, -_wig, _wig), _d + 90); _sedIndex++;
+								_nx   += lengthdir_x(random1D(_sed + _l * _prog_curr, -_wig, _wig), _d + 90);
+								_ny   += lengthdir_y(random1D(_sed + _l * _prog_curr, -_wig, _wig), _d + 90);
 							}
 								
 							if(_prog_total >= _pathStr) { // Do not add point before range start. Do this instead of starting at _rtStr to prevent wiggle. 
@@ -634,24 +638,22 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					_nc = colorMultiply(_nc, gradientEval(_color, _np));
 					_nc = colorMultiply(_nc, gradientEval(_wg2clr, (_ww - _wg2clrR[0]) / _wg2clrRng));
 					
-					if(_cap) {
-						if(j == 1) {
-							_d = _dir + 180;
-							
-							draw_primitive_end();
-							drawCaps( _cap, _oc, _ox * _aa, _oy * _aa, _ow / 2 * _aa, _d - 90, _d, _capP );
-							drawCaps( _cap, _oc, _ox * _aa, _oy * _aa, _ow / 2 * _aa, _d, _d + 90, _capP );
-							if(_useTex) draw_primitive_begin_texture(pr_trianglestrip, tex); else draw_primitive_begin(pr_trianglestrip);
-						}
+					if(_capS && j == 1) {
+						_d = _dir + 180;
 						
-						if(j == m - 1) {
-							_d = _dir;
-							
-							draw_primitive_end();
-							drawCaps( _cap, _nc, _nx * _aa, _ny * _aa, _nw / 2 * _aa, _d - 90, _d, _capP );
-							drawCaps( _cap, _nc, _nx * _aa, _ny * _aa, _nw / 2 * _aa, _d, _d + 90, _capP );
-							if(_useTex) draw_primitive_begin_texture(pr_trianglestrip, tex); else draw_primitive_begin(pr_trianglestrip);
-						}
+						draw_primitive_end();
+						drawCaps( _capS, _oc, _ox * _aa, _oy * _aa, _ow / 2 * _aa, _d - 90, _d, _capP );
+						drawCaps( _capS, _oc, _ox * _aa, _oy * _aa, _ow / 2 * _aa, _d, _d + 90, _capP );
+						if(_useTex) draw_primitive_begin_texture(pr_trianglestrip, tex); else draw_primitive_begin(pr_trianglestrip);
+					}
+					
+					if(_capE && j == m - 1) {
+						_d = _dir;
+						
+						draw_primitive_end();
+						drawCaps( _capE, _nc, _nx * _aa, _ny * _aa, _nw / 2 * _aa, _d - 90, _d, _capP );
+						drawCaps( _capE, _nc, _nx * _aa, _ny * _aa, _nw / 2 * _aa, _d, _d + 90, _capP );
+						if(_useTex) draw_primitive_begin_texture(pr_trianglestrip, tex); else draw_primitive_begin(pr_trianglestrip);
 					}
 					
 					if(_1px) { 
@@ -802,24 +804,22 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						_nw *= widthMap[? widProg];
 						if(_wg2wid) _nw *= _ww / 2;
 						
-						if(_cap) {
-							if(j == 1) {
-								_d = _dir + 180;
-								
-								draw_primitive_end();
-								drawCaps( _cap, c_grey, _ox * _aa, _oy * _aa, _ow / 2 * _aa, _d - 90, _d, _capP, true );
-								drawCaps( _cap, c_grey, _ox * _aa, _oy * _aa, _ow / 2 * _aa, _d, _d + 90, _capP, true );
-								draw_primitive_begin(pr_trianglestrip);
-							}
+						if(_capS && j == 1) {
+							_d = _dir + 180;
 							
-							if(j == m - 1) {
-								_d = _dir;
-								
-								draw_primitive_end();
-								drawCaps( _cap, c_grey, _nx * _aa, _ny * _aa, _nw / 2 * _aa, _d - 90, _d, _capP, true );
-								drawCaps( _cap, c_grey, _nx * _aa, _ny * _aa, _nw / 2 * _aa, _d, _d + 90, _capP, true );
-								draw_primitive_begin(pr_trianglestrip);
-							}
+							draw_primitive_end();
+							drawCaps( _capS, c_grey, _ox * _aa, _oy * _aa, _ow / 2 * _aa, _d - 90, _d, _capP, true );
+							drawCaps( _capS, c_grey, _ox * _aa, _oy * _aa, _ow / 2 * _aa, _d, _d + 90, _capP, true );
+							draw_primitive_begin(pr_trianglestrip);
+						}
+						
+						if(_capE && j == m - 1) {
+							_d = _dir;
+							
+							draw_primitive_end();
+							drawCaps( _capE, c_grey, _nx * _aa, _ny * _aa, _nw / 2 * _aa, _d - 90, _d, _capP, true );
+							drawCaps( _capE, c_grey, _nx * _aa, _ny * _aa, _nw / 2 * _aa, _d, _d + 90, _capP, true );
+							draw_primitive_begin(pr_trianglestrip);
 						}
 						
 						if(j) {
