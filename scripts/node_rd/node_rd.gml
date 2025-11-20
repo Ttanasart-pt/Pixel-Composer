@@ -11,8 +11,8 @@ function Node_RD(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	newInput( 6, nodeValue_Slider(  "Diffusion B", .2 )).setMappable(12);
 	
 	////- =Parameter
-	newInput( 1, nodeValue_Slider(  "Kill rate", 0.058, [ 0, 0.1, 0.001] )).setMappable(8);
-	newInput( 2, nodeValue_Slider(  "Feed rate", 0.043, [ 0, 0.1, 0.001] )).setMappable(9);
+	newInput( 1, nodeValue_Slider(  "Kill rate", 0.058, [ 0, 0.1, 0.0001] )).setMappable(8);
+	newInput( 2, nodeValue_Slider(  "Feed rate", 0.043, [ 0, 0.1, 0.0001] )).setMappable(9);
 	
 	////- =Simulation
 	newInput( 3, nodeValue_Float(   "Timestep",  1  )).setMappable(10);
@@ -37,15 +37,15 @@ function Node_RD(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	temp_surface = [ noone, noone ];
 	
 	static update = function() {
-		var _surf = getInputData(0);
-		var _k    = getInputData(1);
-		var _f    = getInputData(2);
-		var _dt   = getInputData(3);
-		var _it   = getInputData(4);
+		var _surf = getInputData( 0);
+		var _k    = getInputData( 1);
+		var _f    = getInputData( 2);
+		var _dt   = getInputData( 3);
+		var _it   = getInputData( 4);
 		var _dd   = getInputData(13);
-		var _da   = getInputData(5);
-		var _db   = getInputData(6);
-		var _b    = getInputData(7);
+		var _da   = getInputData( 5);
+		var _db   = getInputData( 6);
+		var _b    = getInputData( 7);
 		
 		var _outp = outputs[0].getValue();
 		var _rend = outputs[1].getValue();

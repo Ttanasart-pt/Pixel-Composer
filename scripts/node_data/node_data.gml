@@ -1033,7 +1033,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			LOG_BLOCK_START();
 			LOG_IF(global.FLAG.render == 1, $">>>>>>>>>> DoUpdate called from {getInternalName()} <<<<<<<<<<");
 			
-			var sBase = surface_get_target();	
+			var sBase = surface_get_target();
 			
 			try { 
 				if(attributes.update_graph) { 

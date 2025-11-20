@@ -20,7 +20,7 @@ function pxl_document_parser(prompt) {
 	return params;
 }
 
-function pxl_autocomplete_server_node(prompt, pr_list) {
+function pxl_autocomplete_server_node(prompt, pr_list, context = {}) {
 	var sp = string_splice(prompt, ".");
 	if(array_length(sp) <= 1) return;
 	
@@ -90,7 +90,7 @@ function pxl_autocomplete_server_node(prompt, pr_list) {
 	}
 }
 
-function pxl_autocomplete_server(prompt, params = [], context = {}) { 
+function pxl_autocomplete_server(prompt, params = [], context = {}) {
 	if(isNumber(prompt)) return [];
 	
 	var res = [];
@@ -168,7 +168,7 @@ function pxl_autocomplete_server(prompt, params = [], context = {}) {
 	//////////////////////////////////
 	ds_priority_clear(pr_list);
 	
-	pxl_autocomplete_server_node(prompt, pr_list);
+	pxl_autocomplete_server_node(prompt, pr_list, context);
 	
 	repeat(ds_priority_size(pr_list))
 		array_push(res, ds_priority_delete_max(pr_list));
