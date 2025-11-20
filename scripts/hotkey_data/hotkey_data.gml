@@ -114,6 +114,7 @@ function addHotkey(_context, _name, _key, _mod, _action) {
 }
 
 function find_hotkey(_context, _name) {
+	if(_context == "") _context = 0;
 	if(!struct_has(HOTKEYS, _context)) return getToolHotkey(_context, _name);
 	
 	__name = string_lower(_name);

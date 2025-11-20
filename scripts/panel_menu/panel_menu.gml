@@ -8,11 +8,17 @@
     function global_export_all()        { 
         for (var i = 0, n = array_length(PROJECT.allNodes); i < n; i++) {
             var node = PROJECT.allNodes[i];
-            
-            if(!node.active) continue;
-            if(instanceof(node) != "Node_Export") continue;
+            if(!node.active || !is(node, Node_Export)) continue;
             
             node.doInspectorAction();
+        }
+    }
+    function global_clear_cache_all()   {
+        for (var i = 0, n = array_length(PROJECT.allNodes); i < n; i++) {
+            var node = PROJECT.allNodes[i];
+            if(!node.active) continue;
+            
+            node.clearCache();
         }
     }
     
@@ -23,7 +29,7 @@
     }
     
     function __fnInit_Global() {
-        registerFunction("", "New file",            "N",    MOD_KEY.ctrl,                                 NEW                      ).setMenu("new_file",       THEME.new_file)
+        registerFunction("", "New file", "N", MOD_KEY.ctrl, NEW ).setMenu("new_file", THEME.new_file)
         
         if(!DEMO) {
             registerFunction("", "Save",            "S",    MOD_KEY.ctrl,                                 function() /*=>*/ { SAVE(); }        ).setMenu("save",           THEME.save)
@@ -73,10 +79,11 @@
         
         registerFunction("", "Fullscreen",          vk_f11, MOD_KEY.none, global_fullscreen        ).setMenu("fullscreen"      )
         registerFunction("", "Render all",          vk_f5,  MOD_KEY.none, global_render_all        ).setMenu("render_all", [ THEME.sequence_control, 1 ])
-        registerFunction("", "Export all",          "",     MOD_KEY.none, global_export_all        ).setMenu("export_all"      )
+        registerFunction("", "Export all",          vk_f6,  MOD_KEY.none, global_export_all        ).setMenu("export_all",   THEME.play_all )
+        registerFunction("", "Clear all cache",     vk_f7,  MOD_KEY.none, global_clear_cache_all   ).setMenu("clear_cache_all", THEME.cache )
         
         registerFunction("", "Close file",          "Q",    MOD_KEY.ctrl, global_project_close     ).setMenu("close_file"      )
-        registerFunction("", "Close all files",     "",     MOD_KEY.none, global_project_close_all ).setMenu("close_all_files" )
+        registerFunction("", "Close all files",     "Q",    MOD_KEY.ctrl | MOD_KEY.shift, global_project_close_all ).setMenu("close_all_files" )
         registerFunction("", "Close program",       vk_f4,  MOD_KEY.alt,  window_close             ).setMenu("close_software", THEME.window_exit_icon )
         registerFunction("", "Close project",       "",     MOD_KEY.none, closeProject             ).setMenu("close_project"   ).setArg([ ARG("project", function() /*=>*/ {return PROJECT}, true) ])
             
@@ -96,7 +103,6 @@
         }).setMenu("addon_menu", THEME.addon_icon, true)
         
         registerFunction("", "Generate UGC",        "",     MOD_KEY.none, generate_UGC_patreon     ).setMenu("generate_ugc"    )
-        
     }
 #endregion
 
@@ -235,6 +241,7 @@ function Panel_Menu() : PanelContent() constructor {
         global.menuItems_main_rendering = [
             "render_all",
             "export_all",
+            "clear_cache_all",
         ]; menu_rendering = [ __txt("Rendering"), "main_rendering" ];
         
         menu_panels = [ __txt("Panels"), [

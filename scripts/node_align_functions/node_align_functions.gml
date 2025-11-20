@@ -365,7 +365,7 @@ function __node_bbox_recal(node, param) {
 	if(array_empty(node.children)) {
 		if(node.node == noone) return node;
 		
-		if(is(node.node, Node_Pin) || is(_n, Node_Array_Pin)) {
+		if(is(node.node, Node_Pin) || is(node.node, Node_Array_Pin)) {
 			node.bbox[0] = node.node.x;
 			node.bbox[1] = node.node.y;
 			node.bbox[2] = node.node.x;

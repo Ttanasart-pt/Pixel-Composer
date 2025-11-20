@@ -18,6 +18,9 @@
     function panel_inspector_junction_bypass_toggle()    { CALL("inspector_junc_bypass");            PANEL_INSPECTOR.junction_bypass_toggle();         }
     function panel_inspector_visible_bypass_toggle()     { CALL("inspector_junc_visible");           PANEL_INSPECTOR.junction_visible_toggle();        }
     
+    function panel_inspector_trigger_1()                 { CALL("inspector_trigger_1");              PANEL_INSPECTOR.triggerInspectingNode(1);        }
+    function panel_inspector_trigger_2()                 { CALL("inspector_trigger_2");              PANEL_INSPECTOR.triggerInspectingNode(2);        }
+    
     function __fnInit_Inspector() {
     	var i = "Inspector";
     	
@@ -38,6 +41,8 @@
         registerFunction(i, "Extract Value",         "",  MOD_KEY.none, panel_inspector_extract_single         ).setMenu("inspector_extract_value")
         registerFunction(i, "Toggle Bypass",         "",  MOD_KEY.none, panel_inspector_junction_bypass_toggle ).setMenu("inspector_bypass_toggle")
         registerFunction(i, "Toggle Visible",        "",  MOD_KEY.none, panel_inspector_visible_bypass_toggle  ).setMenu("inspector_visible_toggle")
+        registerFunction("", "Primary Action",    vk_f3,  MOD_KEY.none, panel_inspector_trigger_1              ).setMenu("inspector_trigger_1")
+        registerFunction("", "Secondary Action",  vk_f4,  MOD_KEY.none, panel_inspector_trigger_2              ).setMenu("inspector_trigger_2")
         
         registerFunction("Property", "Extract To...", "",  MOD_KEY.none, function(_dat) /*=>*/ {
         	var jun = PANEL_INSPECTOR.prop_hover;
@@ -251,6 +256,9 @@ function Panel_Inspector() : PanelContent() constructor {
         proj_prop_page_b = new buttonGroup([ "PXC", "GM" ], function(val) /*=>*/ { proj_prop_page = val; })
         					.setButton([ THEME.button_hide_left, THEME.button_hide_middle, THEME.button_hide_right ])
         					.setFont(f_p2, COLORS._main_text_sub)
+        
+        tooltip_primary   = new tooltipHotkey("", "", "Primary Action");
+        tooltip_secondary = new tooltipHotkey("", "", "Secondary Action");
     #endregion
     
     #region ---- Metadata ----
@@ -402,6 +410,8 @@ function Panel_Inspector() : PanelContent() constructor {
     	];
     #endregion
     
+    ////- Actions
+    
     function setInspecting(_inspecting, _lock = false, _focus = true, _record = true) {
         if(locked) return;
         if(inspecting == _inspecting) return;
@@ -436,6 +446,32 @@ function Panel_Inspector() : PanelContent() constructor {
     function onResize() {
         initSize();
         contentPane.resize(content_w, content_h);
+    }
+    
+    function triggerInspectingNode(index = 1) {
+    	if(index == 1) {
+	        if(inspectGroup) {
+                for( var i = 0, n = array_length(inspectings); i < n; i++ ) {
+                	if(inspectings[i].hasInspector1Update())
+                		inspectings[i].inspector1Update();
+                }
+                
+            } else if(inspecting.hasInspector1Update())
+                inspecting.inspector1Update();
+            return;
+    	}
+        
+    	if(index == 2) {
+	        if(inspectGroup) {
+                for( var i = 0, n = array_length(inspectings); i < n; i++ ) {
+                	if(inspectings[i].hasInspector2Update())
+                		inspectings[i].inspector2Update();
+                }
+                
+            } else if(inspecting.hasInspector2Update())
+                inspecting.inspector2Update();
+	        return;
+    	}
     }
     
     ////- Property actions
@@ -1394,10 +1430,13 @@ function Panel_Inspector() : PanelContent() constructor {
             var icon = inspecting.insp1UpdateIcon;
             var ac = inspecting.insp1UpdateActive;
             var cc = ac? icon[2] : COLORS._main_icon_dark;
-            var tt = inspecting.insp1UpdateTooltip;
+            var tt = inspecting.insp1UpdateTooltip; 
             if(inspectGroup) tt += " [All]";
             
-            if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, m, pHOVER && ac, pFOCUS && ac, tt, icon[0], icon[1], cc) == 2) {
+            var tl  = tooltip_primary;
+            tl.text = tt;
+            
+            if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, m, pHOVER && ac, pFOCUS && ac, tl, icon[0], icon[1], cc) == 2) {
                 if(inspectGroup == 1) {
                     for( var i = 0, n = array_length(inspectings); i < n; i++ ) {
                     	if(inspectings[i].hasInspector1Update())
@@ -1419,7 +1458,10 @@ function Panel_Inspector() : PanelContent() constructor {
             var tt = inspecting.insp2UpdateTooltip;
             if(inspectGroup) tt += " [All]";
             
-            if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, m, pHOVER && ac, pFOCUS && ac, tt, icon[0], icon[1], cc) = 2) {
+            var tl  = tooltip_secondary;
+            tl.text = tt;
+            
+            if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, m, pHOVER && ac, pFOCUS && ac, tl, icon[0], icon[1], cc) = 2) {
                 if(inspectGroup) {
                     for( var i = 0, n = array_length(inspectings); i < n; i++ ) {
                     	if(inspectings[i].hasInspector2Update())

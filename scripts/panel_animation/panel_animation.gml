@@ -1,5 +1,4 @@
 #region funtion calls
-	#region
     function panel_animation_settings_call()           { var dia = dialogPanelCall(new Panel_Animation_Setting()); dia.anchor = ANCHOR.none;                                                             }
     function panel_animation_scale_call()              { dialogPanelCall(new Panel_Animation_Scaler());                                                                                                  }
     
@@ -50,7 +49,15 @@
     function panel_animation_range_set_end()           { CALL("animation_range_set_end");           PANEL_ANIMATION.range_set_end();         }
     function panel_animation_range_reset()             { CALL("animation_range_reset");             PANEL_ANIMATION.range_reset();           }
     
-    function panel_animation_reset_view()              { CALL("animation_view_reset");             PANEL_ANIMATION.resetView();              }
+    function panel_animation_reset_view()              { CALL("animation_view_reset");              PANEL_ANIMATION.resetView();             }
+    
+    function panel_animation_new_folder()               { CALL("animation_new_folder");               PANEL_ANIMATION.newFolder();              }
+    function panel_animation_toggle_NodeNameType(d=1)   { CALL("animation_toggle_NodeNameType");      PANEL_ANIMATION.toggleNodeNameType(d);    }
+    function panel_animation_toggle_NodeLabel()         { CALL("animation_toggle_NodeLabel");         PANEL_ANIMATION.toggleNodeLabel();        }
+    function panel_animation_toggle_KeyframeOverride()  { CALL("animation_toggle_KeyframeOverride");  PANEL_ANIMATION.toggleKeyframeOverride(); }
+    function panel_animation_toggle_OnionSkin()         { CALL("animation_toggle_OnionSkin");         PANEL_ANIMATION.toggleOnionSkin();        }
+    
+    function panel_animation_edit_sidebar()             { PANEL_ANIMATION.edit_sidebar();    }
     
 	function __fnInit_Animation() {
         registerFunction("",          "Play/Pause",         vk_space,   MOD_KEY.none,  panel_animation_play_pause     ).setMenu("play_pause")
@@ -106,6 +113,22 @@
         
         registerFunction("Animation", "Reset View",        "F", MOD_KEY.none, panel_animation_reset_view            ).setMenu("animation_reset_view",          )
         
+        registerFunction("Animation", "Node Name Display", "", MOD_KEY.none, panel_animation_toggle_NodeNameType    )
+        	.setMenu("animation_toggle_NodeNameType",     THEME.node_name_type    ).setSpriteInd(function() /*=>*/ {return PANEL_ANIMATION.node_name_type} )
+        	.setTooltip(new tooltipSelector("Name Display", [
+	            __txtx("panel_animation_name_full", "Full name"),
+	            __txtx("panel_animation_name_type", "Node type"),
+	            __txtx("panel_animation_name_only", "Node name"),
+	        ])).setScroll()
+        registerFunction("Animation", "Show Node Name",    "", MOD_KEY.none, panel_animation_toggle_NodeLabel       )
+        	.setMenu("animation_toggle_NodeLabel",        THEME.visible           ).setSpriteInd(function() /*=>*/ {return PANEL_ANIMATION.show_nodes}     )
+        registerFunction("Animation", "Override Keyframe", "", MOD_KEY.none, panel_animation_toggle_KeyframeOverride)
+        	.setMenu("animation_toggle_KeyframeOverride", THEME.keyframe_override ).setSpriteInd(function() /*=>*/ {return global.FLAG.keyframe_override}  )
+        registerFunction("Animation", "Onion Skin",        "", MOD_KEY.none, panel_animation_toggle_OnionSkin       )
+        	.setMenu("animation_toggle_OnionSkin",        THEME.onion_skin        ).setSpriteInd(function() /*=>*/ {return PROJECT.onion_skin.enabled}     )
+        
+        registerFunction("Animation", "Edit Sidebar",      "", MOD_KEY.none, panel_animation_edit_sidebar           ).setMenu("animation_edit_sidebar");
+        
         __fnGroupInit_Animation();
     }
     
@@ -151,7 +174,6 @@
         MENU_ITEMS.animation_group_label_color = menuItemGroup(__txt("Color"), _item, ["Animation", "Label Color"]).setSpacing(ui(24));
         registerFunction("Animation", "Label Color", "", MOD_KEY.none, function() /*=>*/ { menuCall("", [ MENU_ITEMS.animation_group_label_color ]); });
     }
-	#endregion
 #endregion
 
 function Panel_Animation() : PanelContent() constructor {
@@ -193,6 +215,8 @@ function Panel_Animation() : PanelContent() constructor {
         timeline_preview    = noone;
         
         timeline_contents   = [];
+        
+        node_name_type    = 0;
     #endregion
     
     #region ++++ Control Buttons ++++
@@ -249,8 +273,19 @@ function Panel_Animation() : PanelContent() constructor {
     		"animation_set_range_start",
 			"animation_set_range_end",
 			"animation_reset_range",
-		]
-    
+		];
+    	
+    	global.menuItems_animation_sidebar = [
+    		"animation_new_folder",
+			"animation_toggle_NodeNameType",
+			"animation_toggle_NodeLabel",
+			"animation_toggle_KeyframeOverride",
+			"animation_toggle_OnionSkin",
+		];
+		
+    	global.menuItems_animation_sidebar_context = [
+    		"animation_edit_sidebar", 
+		];
     #endregion
     
     function onFocusBegin() { PANEL_ANIMATION = self; }
@@ -602,7 +637,7 @@ function Panel_Animation() : PanelContent() constructor {
         
         }
         
-        var max_y = by - ui(4);
+        var max_y = by - ui(4); 
         if(by < bs) return;
         
         var scis = gpu_get_scissor();
@@ -610,34 +645,37 @@ function Panel_Animation() : PanelContent() constructor {
         hov = hov && point_in_rectangle(mx, my, bx, 0, w, max_y);
         by  = ui(8);
         
-        var txt = __txt("New folder");
-        if(buttonInstant(bSpr, bx, by, bs, bs, m, hov, foc, txt, THEME.folder, 0, bc, 1, .9) == 2) {
-            var _dir = new timelineItemGroup();
-            PROJECT.timelines.addItem(_dir);
-        }
+        var _side_b = menuItems_gen("animation_sidebar");
         
-        by += bs + ui(2);
-        node_name_tooltip.index = node_name_type;
-        var b = buttonInstant(bSpr, bx, by, bs, bs, m, hov, foc, node_name_tooltip, THEME.node_name_type, node_name_type, bc, 1, .9);
-        if(b == 1 && MOUSE_WHEEL != 0 && key_mod_press(SHIFT))
-        	node_name_type = (node_name_type + sign(MOUSE_WHEEL) + 3) % 3;
-        if(b == 2) mod_inc_mf0 node_name_type mod_inc_mf1 node_name_type mod_inc_mf2  3 mod_inc_mf3;
-        
-        by += bs + ui(2);
-        if(buttonInstant(bSpr, bx, by, bs, bs, m, hov, foc, tooltip_toggle_nodes, THEME.icon_visibility, show_nodes, bc, 1, .9) == 2)
-            show_nodes = !show_nodes;
-        
-        by += bs + ui(2);
-        txt = __txtx("panel_animation_keyframe_override", "Override Keyframe");
-        if(buttonInstant(bSpr, bx, by, bs, bs, m, hov, foc, txt, THEME.keyframe_override, global.FLAG.keyframe_override, bc, 1, .9) == 2)
-            global.FLAG.keyframe_override = !global.FLAG.keyframe_override;
-        
-        by += bs + ui(2);
-        txt = __txt("Onion skin");
-        var cc = PROJECT.onion_skin.enabled? c_white : COLORS._main_icon;
-        if(buttonInstant(bSpr, bx, by, bs, bs, m, hov, foc, txt, THEME.onion_skin, 0, cc, 1, .9) == 2)
-            PROJECT.onion_skin.enabled = !PROJECT.onion_skin.enabled;
-            
+        for( var i = 0, n = array_length(_side_b); i < n; i++ ) {
+			var _menu = _side_b[i];
+			if(_menu == -1) {
+				draw_set_color(CDEF.main_mdblack);
+				draw_line_width(bx, by + ui(3), bx + bs, by + ui(3), 2);
+				
+				by += ui(8);
+				continue;
+			} 
+			
+			var _name = _menu.name;
+			var _tool = _menu.getTooltip();
+			var _spr  = _menu.getSpr();
+			var _spri = _menu.getSprInd();
+			var _cc   = COLORS._main_icon;
+			var _sca  = bs / sprite_get_height(_spr);
+			
+			var b = buttonInstant(THEME.button_hide, bx, by, bs, bs, m, hov, foc, _tool, _spr, _spri, _cc, 1, _sca);
+			
+			if(b == 1 && _menu.scrollable && key_mod_press(SHIFT) && MOUSE_WHEEL != 0) _menu.toggleFunction(-sign(MOUSE_WHEEL));
+			if(b == 2) _menu.toggleFunction();
+			
+			by += bs + ui(2);
+		}
+		
+		if(mouse_press(mb_right, hov && foc)) {
+			menuCall("animation_sidebar_context", menuItems_gen("animation_sidebar_context"));
+		}
+		
 		gpu_set_scissor(scis);
     }
     
@@ -766,4 +804,12 @@ function Panel_Animation() : PanelContent() constructor {
     	}
     }
     
+    function newFolder() { PROJECT.timelines.addItem(new timelineItemGroup()); }
+    
+    function toggleNodeNameType(_d = 1) { node_name_type = (node_name_type + _d + 3) % 3; }
+    function toggleNodeLabel()          { show_nodes = !show_nodes; }
+    function toggleKeyframeOverride()   { global.FLAG.keyframe_override = !global.FLAG.keyframe_override; }
+    function toggleOnionSkin()          { PROJECT.onion_skin.enabled = !PROJECT.onion_skin.enabled; }
+    
+	function edit_sidebar()   { dialogPanelCall(new Panel_MenuItems_Editor("animation_sidebar")); }
 }

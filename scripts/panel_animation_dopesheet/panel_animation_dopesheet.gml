@@ -123,13 +123,6 @@ function Panel_Animation_Dopesheet() {
         
         hovering_folder   = noone;
         hovering_order    = noone;
-        
-        node_name_type    = 0;
-        node_name_tooltip = new tooltipSelector("Name Display", [
-            __txtx("panel_animation_name_full", "Full name"),
-            __txtx("panel_animation_name_type", "Node type"),
-            __txtx("panel_animation_name_only", "Node name"),
-        ]);
     #endregion
     
     #region ---- Actions ----

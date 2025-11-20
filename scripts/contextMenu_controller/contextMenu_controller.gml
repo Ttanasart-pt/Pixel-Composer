@@ -22,31 +22,40 @@ function MenuItem(_name, _func, _spr = noone, _hotkey = noone, _toggle = noone, 
 	toggle	= _toggle;
 	params	= _params;
 	color	= c_white;
+	tooltip = noone;
 	
 	isShelf      = false;
 	shelfObject  = noone;
 	shiftMenu	 = noone;
 	hoykeyObject = noone;
 	
+	scrollable   = false;
+	
 	static toggleFunction = function(_dat = undefined) /*=>*/ {
-
 		if(!is_undefined(_dat)) return func(_dat);
 		if(params != noone)     return func(params);
 			
-		return func(params);
+		return func();
 	}
 	
     static deactivate   = function() /*=>*/ { active = false; return self; }
 	
-    static setIsShelf   = function()           /*=>*/ { isShelf   = true;       return self; }
-    static setActive    = function(_active)    /*=>*/ { active    = _active;    return self; }
-    static setColor     = function(_color)     /*=>*/ { color     = _color;     return self; }
-    static setShiftMenu = function(_shiftMenu) /*=>*/ { shiftMenu = _shiftMenu; return self; }
-    static setParam     = function(_param)     /*=>*/ { params    = _param;     return self; }
-    static setToggle    = function(_toggle)    /*=>*/ { toggle    = _toggle;    return self; }
+    static setIsShelf   = function()           /*=>*/ { isShelf    = true;       return self; }
+    static setActive    = function(_active)    /*=>*/ { active     = _active;    return self; }
+    static setColor     = function(_color)     /*=>*/ { color      = _color;     return self; }
+    static setShiftMenu = function(_shiftMenu) /*=>*/ { shiftMenu  = _shiftMenu; return self; }
+    static setParam     = function(_param)     /*=>*/ { params     = _param;     return self; }
+    static setToggle    = function(_toggle)    /*=>*/ { toggle     = _toggle;    return self; }
+    static setTooltip   = function(_t)         /*=>*/ { tooltip    = _t;         return self; }
+    static setScroll    = function()           /*=>*/ { scrollable = true;       return self; }
 	
 	static getSpr       = function() /*=>*/ {return spr};
 	static getSprInd    = function() /*=>*/ {return 0};
+	static getTooltip   = function() {
+		if(tooltip == noone) return name;
+		tooltip.index = getSprInd();
+		return tooltip;
+	}
 }
 
 function menuItemGroup(_name, _group, _hotkey = noone) { return new MenuItemGroup(_name, _group, _hotkey); }

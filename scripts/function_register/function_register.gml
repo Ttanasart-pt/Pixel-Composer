@@ -96,6 +96,10 @@ function functionObject(_context, _name, _key, _mod, _action, _param = noone) co
 		return self;
 	}
 	
+	static setSpriteInd = function(sprIndFn) { if(menu) menu.getSprInd = sprIndFn; return self; }
+	static setTooltip   = function(_tool)    { if(menu) menu.setTooltip(_tool);    return self; }
+	static setScroll    = function()         { if(menu) menu.setScroll();          return self; }
+	
 	static hidePalette = function() { hide = true; return self; }
 }
 
