@@ -631,6 +631,7 @@
             "Node_Alpha_Grey",
             "Node_Grey_Alpha",
             { "label": "/Adjustments" },
+            "Node_Color_Select",
             "Node_Color_adjust",
             "Node_Level",
             "Node_Level_Selector",

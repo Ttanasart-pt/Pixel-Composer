@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_select_color",
+  "name":"sh_select_color",
+  "parent":{
+    "name":"sh_color_select",
+    "path":"folders/nodes/data/filter/colors/sh_color_select.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

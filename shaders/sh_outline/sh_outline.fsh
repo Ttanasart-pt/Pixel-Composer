@@ -153,7 +153,7 @@ void main() {
 			for(float i = 1.; i <= itr; i++) {
 				float base = 1.;
 				float top  = 0.;
-				float atr  = i * iir;
+				float atr  = 4. + i * iir;
 				
 				for(float j = 0.; j <= atr; j++) {
 					if(highRes == 1) {

@@ -4,15 +4,13 @@ function Node_Curve_HSV(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newActiveInput(6);
 	newInput(7, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
-	////- Surfaces
-	
+	////- =Surfaces
 	newInput(0, nodeValue_Surface("Surface In"));
 	newInput(4, nodeValue_Surface("Mask"));
 	newInput(5, nodeValue_Slider("Mix", 1));
 	__init_mask_modifier(4, 8); // inputs 8, 9, 
 	
-	////- Curve
-	
+	////- =Curve
 	newInput(1, nodeValue_Curve("Hue", CURVE_DEF_01));
 	newInput(2, nodeValue_Curve("Saturation", CURVE_DEF_01));
 	newInput(3, nodeValue_Curve("Value", CURVE_DEF_01));

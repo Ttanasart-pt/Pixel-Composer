@@ -115,10 +115,10 @@ function Node_Pack_Sprites(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			for( var i = 0, n = array_length(rect); i < n; i++ ) {
 				var r = rect[i];
 				
-				draw_set_color(c_red);
-				draw_set_alpha(.5);
-				draw_rectangle(r.x, r.y, r.x+r.w-1, r.y+r.h-1, false);
-				draw_set_alpha(1);
+				// draw_set_color(c_red);
+				// draw_set_alpha(.5);
+				// draw_rectangle(r.x, r.y, r.x+r.w-1, r.y+r.h-1, false);
+				// draw_set_alpha(1);
 				
 				array_push(atlas, new SurfaceAtlas(r.surface.surface, r.x + _spac, r.y + _spac));
 				draw_surface_safe(r.surface.surface, r.x + _spac, r.y + _spac);

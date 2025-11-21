@@ -128,7 +128,8 @@
         registerFunction("Animation", "Onion Skin",        "", MOD_KEY.none, panel_animation_toggle_OnionSkin       )
         	.setMenu("animation_toggle_OnionSkin",        THEME.onion_skin        ).setSpriteInd(function() /*=>*/ {return PROJECT.onion_skin.enabled}     )
         
-        registerFunction("Animation", "Edit Sidebar...",   "", MOD_KEY.none, function() /*=>*/ {return menuItemEdit("animation_sidebar")}).setMenu("animation_edit_sidebar");
+        registerFunction("Animation", "Edit Sidebar...",   "", MOD_KEY.none, function() /*=>*/ {return menuItemEdit("animation_sidebar")}  ).setMenu("animation_edit_sidebar");
+        registerFunction("Animation", "Reset Sidebar",     "", MOD_KEY.none, function() /*=>*/ {return menuItemReset("animation_sidebar")} ).setMenu("animation_reset_sidebar", THEME.refresh_20);
         
         __fnGroupInit_Animation();
     }
@@ -286,6 +287,7 @@ function Panel_Animation() : PanelContent() constructor {
 		
     	global.menuItems_animation_sidebar_context = [
     		"animation_edit_sidebar", 
+    		"animation_reset_sidebar", 
 		];
     #endregion
     

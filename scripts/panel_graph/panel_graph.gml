@@ -44,16 +44,16 @@
     function panel_graph_copy()                    { CALL("graph_copy");                PANEL_GRAPH.doCopy();                 }
     function panel_graph_paste()                   { CALL("graph_paste");               PANEL_GRAPH.doPaste();                }
     
-	function panel_graph_halign_right()            { node_halign(PANEL_GRAPH.nodes_selecting, fa_right);  }
-	function panel_graph_halign_center()           { node_halign(PANEL_GRAPH.nodes_selecting, fa_center); }
-	function panel_graph_halign_left()             { node_halign(PANEL_GRAPH.nodes_selecting, fa_left);   }
+	function panel_graph_halign_right()            { CALL("graph_halign_right");        node_halign(PANEL_GRAPH.nodes_selecting, fa_right);  }
+	function panel_graph_halign_center()           { CALL("graph_halign_center");       node_halign(PANEL_GRAPH.nodes_selecting, fa_center); }
+	function panel_graph_halign_left()             { CALL("graph_halign_left");         node_halign(PANEL_GRAPH.nodes_selecting, fa_left);   }
 	                                    
-	function panel_graph_valign_bottom()           { node_valign(PANEL_GRAPH.nodes_selecting, fa_bottom); }
-	function panel_graph_valign_middle()           { node_valign(PANEL_GRAPH.nodes_selecting, fa_middle); }
-	function panel_graph_valign_top()              { node_valign(PANEL_GRAPH.nodes_selecting, fa_top);    }
+	function panel_graph_valign_bottom()           { CALL("graph_valign_bottom");       node_valign(PANEL_GRAPH.nodes_selecting, fa_bottom); }
+	function panel_graph_valign_middle()           { CALL("graph_valign_middle");       node_valign(PANEL_GRAPH.nodes_selecting, fa_middle); }
+	function panel_graph_valign_top()              { CALL("graph_valign_top");          node_valign(PANEL_GRAPH.nodes_selecting, fa_top);    }
 	
-	function panel_graph_hdistribute()             { node_hdistribute(PANEL_GRAPH.nodes_selecting);       }
-	function panel_graph_vdistribute()             { node_vdistribute(PANEL_GRAPH.nodes_selecting);       }
+	function panel_graph_hdistribute()             { CALL("graph_hdistribute");         node_hdistribute(PANEL_GRAPH.nodes_selecting);       }
+	function panel_graph_vdistribute()             { CALL("graph_vdistribute");         node_vdistribute(PANEL_GRAPH.nodes_selecting);       }
 	
     function panel_graph_auto_organize_all()       { CALL("graph_auto_organize_al");    node_auto_organize(PANEL_GRAPH.nodes_list);      }
     function panel_graph_auto_organize()           { CALL("graph_auto_organize");       node_auto_organize(PANEL_GRAPH.nodes_selecting); }
@@ -138,7 +138,7 @@
         registerFunction(g, "Auto Align",            "L", n, panel_graph_auto_align          ).setMenu("graph_auto_align", THEME.obj_auto_align)
         registerFunction(g, "Auto Organize...",      "L", c, function() /*=>*/ { dialogPanelCall(new Panel_Graph_Auto_Organize(PANEL_GRAPH.nodes_selecting)) } ).setMenu("graph_auto_organize", THEME.obj_auto_organize)
         registerFunction(g, "Auto Organize All",     "",  n, panel_graph_auto_organize_all   ).setMenu("graph_auto_organize_all", THEME.obj_auto_organize)
-        registerFunction(g, "Snap Nodes",            "",  n, panel_graph_snap_nodes          ).setMenu("graph_snap_nodes")
+        registerFunction(g, "Snap Nodes to Grid",    "",  n, panel_graph_snap_nodes          ).setMenu("graph_snap_nodes")
         registerFunction(g, "Search",                "F", c, panel_graph_search              ).setMenu("graph_search", THEME.search_24)
         registerFunction(g, "Toggle Minimap",        "M", c, panel_graph_toggle_minimap      ).setMenu("graph_toggle_minimap", THEME.icon_minimap).setSpriteInd(function() /*=>*/ {return PANEL_GRAPH.minimap_show} )
         
