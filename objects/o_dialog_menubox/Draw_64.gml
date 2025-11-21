@@ -5,6 +5,8 @@ DIALOG_PREDRAW
 DIALOG_WINCLEAR1
 
 #region draw
+	menu_building = false;
+	
 	var yy = dialog_y;
 	var _lclick = sFOCUS && (!mouse_init_inside && mouse_release(mb_left)) || (KEYBOARD_ENTER && hk_editing == noone);
 	var _rclick = sFOCUS && !mouse_init_inside && !mouse_init_r_pressed && mouse_release(mb_right);

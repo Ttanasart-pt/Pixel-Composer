@@ -1004,7 +1004,6 @@
     {"name":"node_FLIP_wall","order":10,"path":"scripts/node_FLIP_wall/node_FLIP_wall.yy",},
     {"name":"node_flip","order":22,"path":"scripts/node_flip/node_flip.yy",},
     {"name":"node_flood_fill","order":4,"path":"scripts/node_flood_fill/node_flood_fill.yy",},
-    {"name":"node_flow_condition","order":0,"path":"scripts/node_flow_condition/node_flow_condition.yy",},
     {"name":"node_flow_noise","order":40,"path":"scripts/node_flow_noise/node_flow_noise.yy",},
     {"name":"node_flow_path","order":21,"path":"scripts/node_flow_path/node_flow_path.yy",},
     {"name":"node_fluffify","order":60,"path":"scripts/node_fluffify/node_fluffify.yy",},

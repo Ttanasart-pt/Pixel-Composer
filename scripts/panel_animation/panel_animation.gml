@@ -1,4 +1,4 @@
-#region funtion calls
+#region ___function calls
     function panel_animation_settings_call()           { var dia = dialogPanelCall(new Panel_Animation_Setting()); dia.anchor = ANCHOR.none;                                                             }
     function panel_animation_scale_call()              { dialogPanelCall(new Panel_Animation_Scaler());                                                                                                  }
     
@@ -56,8 +56,6 @@
     function panel_animation_toggle_NodeLabel()         { CALL("animation_toggle_NodeLabel");         PANEL_ANIMATION.toggleNodeLabel();        }
     function panel_animation_toggle_KeyframeOverride()  { CALL("animation_toggle_KeyframeOverride");  PANEL_ANIMATION.toggleKeyframeOverride(); }
     function panel_animation_toggle_OnionSkin()         { CALL("animation_toggle_OnionSkin");         PANEL_ANIMATION.toggleOnionSkin();        }
-    
-    function panel_animation_edit_sidebar()             { PANEL_ANIMATION.edit_sidebar();    }
     
 	function __fnInit_Animation() {
         registerFunction("",          "Play/Pause",         vk_space,   MOD_KEY.none,  panel_animation_play_pause     ).setMenu("play_pause")
@@ -120,14 +118,17 @@
 	            __txtx("panel_animation_name_type", "Node type"),
 	            __txtx("panel_animation_name_only", "Node name"),
 	        ])).setScroll()
+	        
         registerFunction("Animation", "Show Node Name",    "", MOD_KEY.none, panel_animation_toggle_NodeLabel       )
         	.setMenu("animation_toggle_NodeLabel",        THEME.visible           ).setSpriteInd(function() /*=>*/ {return PANEL_ANIMATION.show_nodes}     )
+        	
         registerFunction("Animation", "Override Keyframe", "", MOD_KEY.none, panel_animation_toggle_KeyframeOverride)
         	.setMenu("animation_toggle_KeyframeOverride", THEME.keyframe_override ).setSpriteInd(function() /*=>*/ {return global.FLAG.keyframe_override}  )
+        	
         registerFunction("Animation", "Onion Skin",        "", MOD_KEY.none, panel_animation_toggle_OnionSkin       )
         	.setMenu("animation_toggle_OnionSkin",        THEME.onion_skin        ).setSpriteInd(function() /*=>*/ {return PROJECT.onion_skin.enabled}     )
         
-        registerFunction("Animation", "Edit Sidebar",      "", MOD_KEY.none, panel_animation_edit_sidebar           ).setMenu("animation_edit_sidebar");
+        registerFunction("Animation", "Edit Sidebar...",   "", MOD_KEY.none, function() /*=>*/ {return menuItemEdit("animation_sidebar")}).setMenu("animation_edit_sidebar");
         
         __fnGroupInit_Animation();
     }
@@ -645,8 +646,9 @@ function Panel_Animation() : PanelContent() constructor {
         hov = hov && point_in_rectangle(mx, my, bx, 0, w, max_y);
         by  = ui(8);
         
-        var _side_b = menuItems_gen("animation_sidebar");
+        if(mouse_press(mb_right, hov && foc)) menuCallGen("animation_sidebar_context");
         
+        var _side_b = menuItems_gen("animation_sidebar");
         for( var i = 0, n = array_length(_side_b); i < n; i++ ) {
 			var _menu = _side_b[i];
 			if(_menu == -1) {
@@ -657,23 +659,8 @@ function Panel_Animation() : PanelContent() constructor {
 				continue;
 			} 
 			
-			var _name = _menu.name;
-			var _tool = _menu.getTooltip();
-			var _spr  = _menu.getSpr();
-			var _spri = _menu.getSprInd();
-			var _cc   = COLORS._main_icon;
-			var _sca  = bs / sprite_get_height(_spr);
-			
-			var b = buttonInstant(THEME.button_hide, bx, by, bs, bs, m, hov, foc, _tool, _spr, _spri, _cc, 1, _sca);
-			
-			if(b == 1 && _menu.scrollable && key_mod_press(SHIFT) && MOUSE_WHEEL != 0) _menu.toggleFunction(-sign(MOUSE_WHEEL));
-			if(b == 2) _menu.toggleFunction();
-			
+			_menu.draw(bx, by, bs, bs, m, hov, foc);
 			by += bs + ui(2);
-		}
-		
-		if(mouse_press(mb_right, hov && foc)) {
-			menuCall("animation_sidebar_context", menuItems_gen("animation_sidebar_context"));
 		}
 		
 		gpu_set_scissor(scis);
@@ -811,5 +798,4 @@ function Panel_Animation() : PanelContent() constructor {
     function toggleKeyframeOverride()   { global.FLAG.keyframe_override = !global.FLAG.keyframe_override; }
     function toggleOnionSkin()          { PROJECT.onion_skin.enabled = !PROJECT.onion_skin.enabled; }
     
-	function edit_sidebar()   { dialogPanelCall(new Panel_MenuItems_Editor("animation_sidebar")); }
 }

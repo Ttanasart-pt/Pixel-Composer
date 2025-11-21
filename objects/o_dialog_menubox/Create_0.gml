@@ -12,10 +12,12 @@ event_inherited();
 	
 	menu_id   = "";
 	menu      = 1;
+	align     = fa_left;
 	tooltips  = [];
 	show_icon = false;
 	font      = f_p3;
 	hght      = line_get_height(font, 8);
+	menu_building = true;
 	
 	submenu   = noone;
 	submenuIt = noone;
@@ -34,11 +36,18 @@ event_inherited();
 	selecting_menu   = noone;
 	hk_editing       = noone;
 	
+	function addMenu(_menu) {
+		array_append(menu, _menu);
+		setMenu(menu, align);
+		return self;
+	}
+	
 	function setMenu(_menu, _align = fa_left) {
 		with(_p_dialog) { if(on_top) continue; other.depth = min(depth - 1, other.depth); }
 		
 		title    = menu_id;
 		menu     = _menu;
+		align    = _align;
 		dialog_x = x;
 		dialog_y = y;
 		

@@ -27,6 +27,7 @@ function MenuItem(_name, _func, _spr = noone, _hotkey = noone, _toggle = noone, 
 	isShelf      = false;
 	shelfObject  = noone;
 	shiftMenu	 = noone;
+	contextMenu  = [];
 	hoykeyObject = noone;
 	
 	scrollable   = false;
@@ -46,15 +47,41 @@ function MenuItem(_name, _func, _spr = noone, _hotkey = noone, _toggle = noone, 
     static setShiftMenu = function(_shiftMenu) /*=>*/ { shiftMenu  = _shiftMenu; return self; }
     static setParam     = function(_param)     /*=>*/ { params     = _param;     return self; }
     static setToggle    = function(_toggle)    /*=>*/ { toggle     = _toggle;    return self; }
-    static setTooltip   = function(_t)         /*=>*/ { tooltip    = _t;         return self; }
+    static setTooltip   = function(_t)         /*=>*/ { tooltip    = _t; scrollable = true; return self; }
+    static setContext   = function(_c)         /*=>*/ { contextMenu = _c;        return self; }
     static setScroll    = function()           /*=>*/ { scrollable = true;       return self; }
 	
 	static getSpr       = function() /*=>*/ {return spr};
 	static getSprInd    = function() /*=>*/ {return 0};
-	static getTooltip   = function() {
+	static getTooltip   = function() /*=>*/ {
 		if(tooltip == noone) return name;
 		tooltip.index = getSprInd();
 		return tooltip;
+	}
+	
+	static draw = function(bx, by, bw, bh, m, hov, foc, con = "") {
+		var _tool = getTooltip();
+		var _spr  = getSpr();
+		var _spri = getSprInd();
+		var _cc   = COLORS._main_icon;
+		
+		var b = buttonInstant_Pad(THEME.button_hide, bx, by, bw, bh, m, hov, foc, _tool, _spr, _spri, _cc, 1, ui(6));
+		
+		if(b == 2) toggleFunction();
+		if(b == 3) {
+			var _cont = array_clone(contextMenu, 1);
+			if(con != "") {
+				if(!array_empty(_cont)) array_push(_cont, -1);
+				array_append(_cont, menuItems_gen($"{con}_context")); 
+			}
+			
+			menuCall("", _cont);
+		}
+		
+		if(scrollable) {
+			if(b == 1 && key_mod_press(SHIFT) && MOUSE_WHEEL != 0) 
+				toggleFunction(-sign(MOUSE_WHEEL));
+		}
 	}
 }
 
@@ -129,7 +156,6 @@ function menuItems_gen(strs) {
 function menuCallGen(menu_id, _x = 0, _y = 0, align = fa_left) { return menuCall(menu_id, menuItems_gen(menu_id), _x, _y, align); }
 function menuCall(menu_id = "", menu = [], _x = 0, _y = 0, align = fa_left) {
 	if(array_empty(menu)) return noone;
-		
 	FOCUS_BEFORE = FOCUS;
 	
 	_x = _x == 0? mouse_mx + ui(4) : _x;

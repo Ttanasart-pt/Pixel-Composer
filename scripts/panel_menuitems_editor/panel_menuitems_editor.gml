@@ -1,3 +1,6 @@
+function menuItemEdit(_mid)  { dialogPanelCall(new Panel_MenuItems_Editor(_mid)); }
+function menuItemReset(_mid) { variable_struct_remove(PREFERENCES_MENUITEMS, _mid); PREF_SAVE(); }
+
 function Panel_MenuItems_Editor(_menuId) : PanelContent() constructor {
 	title  = __txt("Editing") + ": " + _menuId;
 	menuId = _menuId;

@@ -26,3 +26,9 @@ function safe_mod(numb, modd, _neg = MOD_NEG._default) {
 #macro mod_dec_mf2  - 1 + 
 #macro mod_dec_mf3 ) % 
 #macro mod_dec_mf4 ;
+//!#mfunc mod_del {"args":["val"," range"],"order":[0,0,1,1]}
+#macro mod_del_mf0  //
+#macro mod_del_mf1  = (
+#macro mod_del_mf2  + d + 
+#macro mod_del_mf3 ) % 
+#macro mod_del_mf4 ;

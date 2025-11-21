@@ -1,4 +1,4 @@
-#region function calls
+#region ___function calls
 	globalvar GRAPH_ADD_NODE_KEYS, GRAPH_ADD_NODE_MAPS;
 	
     #macro PANEL_GRAPH_PROJECT_CHECK if(PANEL_GRAPH.project == noone || !PANEL_GRAPH.project.active) return;
@@ -44,6 +44,17 @@
     function panel_graph_copy()                    { CALL("graph_copy");                PANEL_GRAPH.doCopy();                 }
     function panel_graph_paste()                   { CALL("graph_paste");               PANEL_GRAPH.doPaste();                }
     
+	function panel_graph_halign_right()            { node_halign(PANEL_GRAPH.nodes_selecting, fa_right);  }
+	function panel_graph_halign_center()           { node_halign(PANEL_GRAPH.nodes_selecting, fa_center); }
+	function panel_graph_halign_left()             { node_halign(PANEL_GRAPH.nodes_selecting, fa_left);   }
+	                                    
+	function panel_graph_valign_bottom()           { node_valign(PANEL_GRAPH.nodes_selecting, fa_bottom); }
+	function panel_graph_valign_middle()           { node_valign(PANEL_GRAPH.nodes_selecting, fa_middle); }
+	function panel_graph_valign_top()              { node_valign(PANEL_GRAPH.nodes_selecting, fa_top);    }
+	
+	function panel_graph_hdistribute()             { node_hdistribute(PANEL_GRAPH.nodes_selecting);       }
+	function panel_graph_vdistribute()             { node_vdistribute(PANEL_GRAPH.nodes_selecting);       }
+	
     function panel_graph_auto_organize_all()       { CALL("graph_auto_organize_al");    node_auto_organize(PANEL_GRAPH.nodes_list);      }
     function panel_graph_auto_organize()           { CALL("graph_auto_organize");       node_auto_organize(PANEL_GRAPH.nodes_selecting); }
     function panel_graph_auto_align()              { CALL("graph_auto_align");          node_auto_align(PANEL_GRAPH.nodes_selecting);    }
@@ -81,94 +92,114 @@
 	function panel_graph_topbar_toggle()           { PANEL_GRAPH.topbar_toggle(); }
 	function panel_graph_topbar_show()             { PANEL_GRAPH.topbar_show();   }
 	function panel_graph_topbar_hide()             { PANEL_GRAPH.topbar_hide();   }
-	function panel_graph_topbar_edit()             { PANEL_GRAPH.topbar_edit();   }
-	function panel_graph_topbar_reset()            { PANEL_GRAPH.topbar_reset();  }
 	                                                         
 	function panel_graph_view_control_toggle()     { PANEL_GRAPH.view_control_toggle(); }
 	function panel_graph_view_control_show()       { PANEL_GRAPH.view_control_show();   }
 	function panel_graph_view_control_hide()       { PANEL_GRAPH.view_control_hide();   }
-	                                                         
+	
     function __fnInit_Graph() {
-    	registerFunction("",      "Add Node",              "A", MOD_KEY.shift,                   panel_graph_add_node            ).setMenu("graph_add_node", THEME.add_20)
-        registerFunction("Graph", "Replace Node",          "R", MOD_KEY.ctrl,                    panel_graph_replace_node        ).setMenu("graph_replace_node")
-        registerFunction("Graph", "Focus Content",         "F", MOD_KEY.none,                    panel_graph_focus_content       ).setMenu("graph_focus_content")
-        registerFunction("Graph", "Preview Focusing Node", "P", MOD_KEY.none,                    panel_graph_preview_focus       ).setMenu("graph_preview_focusing_node")
+    	var g = "Graph";
+    	var n = MOD_KEY.none;
+    	var c = MOD_KEY.ctrl;
+    	var s = MOD_KEY.shift;
+    	var a = MOD_KEY.alt;
+    	
+    	registerFunction("", "Add Node",             "A", s, panel_graph_add_node      ).setMenu("graph_add_node", THEME.add_20)
+        registerFunction(g, "Replace Node",          "R", c, panel_graph_replace_node  ).setMenu("graph_replace_node")
+        registerFunction(g, "Focus Content",         "F", n, panel_graph_focus_content ).setMenu("graph_focus_content", THEME.icon_center_canvas)
+        registerFunction(g, "Preview Focusing Node", "P", n, panel_graph_preview_focus ).setMenu("graph_preview_focusing_node")
 		
-        registerFunction("Graph", "Select All",            "A", MOD_KEY.ctrl,                    panel_graph_select_all          ).setMenu("graph_select_all")
-        registerFunction("Graph", "Select None",           vk_escape, MOD_KEY.none,              panel_graph_select_none         ).setMenu("graph_select_none")
+        registerFunction(g, "Select All",            "A", c, panel_graph_select_all          ).setMenu("graph_select_all")
+        registerFunction(g, "Select None",     vk_escape, n, panel_graph_select_none         ).setMenu("graph_select_none")
         
-        registerFunction("Graph", "Toggle Grid",           "G", MOD_KEY.none,                    panel_graph_toggle_grid         ).setMenu("graph_toggle_grid")
-        registerFunction("Graph", "Toggle Dimension",      "",  MOD_KEY.none,                    panel_graph_toggle_dimension    ).setMenu("graph_toggle_dimension")
-        registerFunction("Graph", "Toggle Compute",        "",  MOD_KEY.none,                    panel_graph_toggle_compute      ).setMenu("graph_toggle_compute")
-        registerFunction("Graph", "Toggle Control",        "",  MOD_KEY.none,                    panel_graph_toggle_control      ).setMenu("graph_toggle_control")
-        registerFunction("Graph", "Toggle Avoid Label",    "",  MOD_KEY.none,                    panel_graph_toggle_avoid_label  ).setMenu("graph_toggle_avoid_label")
+        registerFunction(g, "Toggle Grid",           "G", n, panel_graph_toggle_grid         ).setMenu("graph_toggle_grid")
+        registerFunction(g, "Toggle Dimension",      "",  n, panel_graph_toggle_dimension    ).setMenu("graph_toggle_dimension")
+        registerFunction(g, "Toggle Compute",        "",  n, panel_graph_toggle_compute      ).setMenu("graph_toggle_compute")
+        registerFunction(g, "Toggle Control",        "",  n, panel_graph_toggle_control      ).setMenu("graph_toggle_control")
+        registerFunction(g, "Toggle Avoid Label",    "",  n, panel_graph_toggle_avoid_label  ).setMenu("graph_toggle_avoid_label")
         
-        registerFunction("Graph", "Copy to Canvas",        "C", MOD_KEY.ctrl | MOD_KEY.shift,    panel_graph_canvas_copy         ).setMenu("graph_canvas_copy")
-        registerFunction("Graph", "Blend Canvas",          "C", MOD_KEY.ctrl | MOD_KEY.alt,      panel_graph_canvas_blend        ).setMenu("graph_canvas_blend")
-        registerFunction("Graph", "Canvas",                "",  MOD_KEY.none,                    
+        registerFunction(g, "Copy to Canvas",        "C", c|s, panel_graph_canvas_copy       ).setMenu("graph_canvas_copy")
+        registerFunction(g, "Blend Canvas",          "C", c|a, panel_graph_canvas_blend      ).setMenu("graph_canvas_blend")
+        registerFunction(g, "Canvas",                "",  n,                    
         	function(d) /*=>*/ {return submenuCall(d, [ MENU_ITEMS.graph_canvas_copy, MENU_ITEMS.graph_canvas_blend ])}).setMenu("graph_canvas", noone, true)
 		
-        registerFunction("Graph", "Rename",                vk_f2, MOD_KEY.none,                  panel_graph_rename              ).setMenu("graph_rename")
-        registerFunction("Graph", "Delete (break)",        vk_delete, MOD_KEY.shift,             panel_graph_delete_break        ).setMenu("graph_delete_break",    THEME.cross)
-        registerFunction("Graph", "Delete (merge)",        vk_delete, MOD_KEY.none,              panel_graph_delete_merge        ).setMenu("graph_delete_merge",    THEME.cross)
+        registerFunction(g, "Rename",                vk_f2,     n, panel_graph_rename        ).setMenu("graph_rename")
+        registerFunction(g, "Delete (break)",        vk_delete, s, panel_graph_delete_break  ).setMenu("graph_delete_break",    THEME.cross)
+        registerFunction(g, "Delete (merge)",        vk_delete, n, panel_graph_delete_merge  ).setMenu("graph_delete_merge",    THEME.cross)
     
-        registerFunction("Graph", "Duplicate",             "D", MOD_KEY.ctrl,                    panel_graph_duplicate           ).setMenu("graph_duplicate",       THEME.duplicate)
-        registerFunction("Graph", "Instance",              "D", MOD_KEY.alt,                     panel_graph_instance            ).setMenu("graph_instance",        THEME.duplicate)
-        registerFunction("Graph", "Copy",                  "C", MOD_KEY.ctrl,                    panel_graph_copy                ).setMenu("graph_copy",            THEME.copy)
-        registerFunction("Graph", "Paste",                 "V", MOD_KEY.ctrl,                    panel_graph_paste               ).setMenu("graph_paste",           THEME.paste)
+        registerFunction(g, "Duplicate",             "D", c, panel_graph_duplicate           ).setMenu("graph_duplicate",       THEME.duplicate)
+        registerFunction(g, "Instance",              "D", a, panel_graph_instance            ).setMenu("graph_instance",        THEME.duplicate)
+        registerFunction(g, "Copy",                  "C", c, panel_graph_copy                ).setMenu("graph_copy",            THEME.copy)
+        registerFunction(g, "Paste",                 "V", c, panel_graph_paste               ).setMenu("graph_paste",           THEME.paste)
         
-        registerFunction("Graph", "Pan",                   "", MOD_KEY.ctrl,                     panel_graph_pan                 ).setMenu("graph_pan")
-        registerFunction("Graph", "Zoom",                  "", MOD_KEY.alt | MOD_KEY.ctrl,       panel_graph_zoom                ).setMenu("graph_zoom")
+        registerFunction(g, "Pan",                   "", c,  panel_graph_pan                 ).setMenu("graph_pan")
+        registerFunction(g, "Zoom",                  "", a|c,panel_graph_zoom                ).setMenu("graph_zoom")
         
-        registerFunction("Graph", "Auto Align",            "L", MOD_KEY.none,                    panel_graph_auto_align          ).setMenu("graph_auto_align")
-        registerFunction("Graph", "Auto Organize...",      "L", MOD_KEY.ctrl, function() /*=>*/ { dialogPanelCall(new Panel_Graph_Auto_Organize(PANEL_GRAPH.nodes_selecting)) } ).setMenu("graph_auto_organize", THEME.obj_auto_organize)
-        registerFunction("Graph", "Auto Organize All",     "",  MOD_KEY.none,                    panel_graph_auto_organize_all   ).setMenu("graph_auto_organize_all", THEME.obj_auto_organize)
-        registerFunction("Graph", "Snap Nodes",            "",  MOD_KEY.none,                    panel_graph_snap_nodes          ).setMenu("graph_snap_nodes")
-        registerFunction("Graph", "Search",                "F", MOD_KEY.ctrl,                    panel_graph_search              ).setMenu("graph_search")
-        registerFunction("Graph", "Toggle Minimap",        "M", MOD_KEY.ctrl,                    panel_graph_toggle_minimap      ).setMenu("graph_toggle_minimap")
+        registerFunction(g, "Auto Align",            "L", n, panel_graph_auto_align          ).setMenu("graph_auto_align", THEME.obj_auto_align)
+        registerFunction(g, "Auto Organize...",      "L", c, function() /*=>*/ { dialogPanelCall(new Panel_Graph_Auto_Organize(PANEL_GRAPH.nodes_selecting)) } ).setMenu("graph_auto_organize", THEME.obj_auto_organize)
+        registerFunction(g, "Auto Organize All",     "",  n, panel_graph_auto_organize_all   ).setMenu("graph_auto_organize_all", THEME.obj_auto_organize)
+        registerFunction(g, "Snap Nodes",            "",  n, panel_graph_snap_nodes          ).setMenu("graph_snap_nodes")
+        registerFunction(g, "Search",                "F", c, panel_graph_search              ).setMenu("graph_search", THEME.search_24)
+        registerFunction(g, "Toggle Minimap",        "M", c, panel_graph_toggle_minimap      ).setMenu("graph_toggle_minimap", THEME.icon_minimap).setSpriteInd(function() /*=>*/ {return PANEL_GRAPH.minimap_show} )
         
-        registerFunction("Graph", "Send To Preview",       "",  MOD_KEY.none,                    panel_graph_send_to_preview     ).setMenu("graph_preview_hovering_node")
-        registerFunction("Graph", "Send To Preview Window","P", MOD_KEY.ctrl,                    panel_graph_preview_window      ).setMenu("graph_preview_window")
-        registerFunction("Graph", "Send To Inspector",     "",  MOD_KEY.none,                    panel_graph_inspector_panel     ).setMenu("graph_inspect")
-        registerFunction("Graph", "Toggle Preview",        "H", MOD_KEY.none,                    panel_graph_toggle_preview      ).setMenu("graph_toggle_preview")
-        registerFunction("Graph", "Toggle Render",         "R", MOD_KEY.none,                    panel_graph_toggle_render       ).setMenu("graph_toggle_render")
-        registerFunction("Graph", "Toggle Parameters",     "M", MOD_KEY.none,                    panel_graph_toggle_parameter    ).setMenu("graph_toggle_parameters")
-        registerFunction("Graph", "Hide Disconnected",     "",  MOD_KEY.none,                    panel_graph_hide_disconnected   ).setMenu("graph_hide_disconnected")
+        registerFunction(g, "Align Horizontal Right", "", n, panel_graph_halign_right        ).setMenu("graph_halign_right",  THEME.object_halign ).setSpriteInd(function() /*=>*/ {return 2})
+        registerFunction(g, "Align Horizontal Center","", n, panel_graph_halign_center       ).setMenu("graph_halign_center", THEME.object_halign ).setSpriteInd(function() /*=>*/ {return 1})
+        registerFunction(g, "Align Horizontal Left",  "", n, panel_graph_halign_left         ).setMenu("graph_halign_left",   THEME.object_halign ).setSpriteInd(function() /*=>*/ {return 0})
         
-        registerFunction("Graph", "Enter Group",           "",  MOD_KEY.none,                    panel_graph_enter_group         ).setMenu("graph_enter_group",     THEME.group)
-        registerFunction("Graph", "Exit Group",           192,  MOD_KEY.none,                    panel_graph_exit_group          ).setMenu("graph_exit_group",      THEME.group)
-        registerFunction("Graph", "Open Group In New Tab", "",  MOD_KEY.none,                    panel_graph_open_group_tab      ).setMenu("graph_open_in_new_tab", THEME.group)
-        registerFunction("Graph", "Group",                 "G", MOD_KEY.ctrl,                    panel_graph_group               ).setMenu("graph_group",           THEME.group)
-        registerFunction("Graph", "Ungroup",               "G", MOD_KEY.ctrl | MOD_KEY.shift,    panel_graph_ungroup             ).setMenu("graph_ungroup",         THEME.group)
-        registerFunction("Graph", "Uninstance",            "",  MOD_KEY.none,                    panel_graph_uninstance          ).setMenu("graph_uninstance")
-        registerFunction("Graph", "Set As Group Tool",     "",  MOD_KEY.none,                    panel_graph_set_as_tool         ).setMenu("graph_set_as_tool")
-        registerFunction("Graph", "Update Group",          "",  MOD_KEY.none,                    panel_graph_update              ).setMenu("graph_update")
+        registerFunction(g, "Align Vertical Top",    "",  n, panel_graph_valign_bottom       ).setMenu("graph_valign_bottom", THEME.object_valign ).setSpriteInd(function() /*=>*/ {return 2})
+        registerFunction(g, "Align Vertical Middle", "",  n, panel_graph_valign_middle       ).setMenu("graph_valign_middle", THEME.object_valign ).setSpriteInd(function() /*=>*/ {return 1})
+        registerFunction(g, "Align Vertical Bottom", "",  n, panel_graph_valign_top          ).setMenu("graph_valign_top",    THEME.object_valign ).setSpriteInd(function() /*=>*/ {return 0})
         
-        registerFunction("Graph", "Copy Value",            "",  MOD_KEY.none,                    panel_graph_doCopyProp          ).setMenu("graph_copy_value")
-        registerFunction("Graph", "Paste Value",           "",  MOD_KEY.none,                    panel_graph_doPasteProp         ).setMenu("graph_paste_value")
-        registerFunction("Graph", "Create Tunnel",         "",  MOD_KEY.none,                    panel_graph_createTunnel        ).setMenu("graph_create_tunnel")
+        registerFunction(g, "Distribute Horizontal", "",  n, panel_graph_hdistribute         ).setMenu("graph_hdistribute",   THEME.obj_distribute_h ).setSpriteInd(function() /*=>*/ {return 0})
+        registerFunction(g, "Distribute Vertical",   "",  n, panel_graph_vdistribute         ).setMenu("graph_vdistribute",   THEME.obj_distribute_v ).setSpriteInd(function() /*=>*/ {return 0})
         
-        registerFunction("Graph", "Toggle Grid Snap",      "",  MOD_KEY.none,                    panel_graph_grid_snap           ).setMenu("graph_grid_snap")
-        registerFunction("Graph", "Toggle Show Origin",    "",  MOD_KEY.none,                    panel_graph_show_origin         ).setMenu("graph_show_origin")
-        registerFunction("Graph", "Search Wiki",         vk_f1, MOD_KEY.none,                    panel_graph_searchWiki          ).setMenu("graph_search_wiki")
-        registerFunction("Graph", "Swap Connections",      "S", MOD_KEY.alt,                     panel_graph_swapConnection      ).setMenu("graph_swap_connection")
-        registerFunction("Graph", "Transfer Connections",  "T", MOD_KEY.alt,                     panel_graph_transferConnection  ).setMenu("graph_transfer_connection")
+        registerFunction(g, "Send To Preview",       "",  n, panel_graph_send_to_preview     ).setMenu("graph_preview_hovering_node")
+        registerFunction(g, "Send To Preview Window","P", c, panel_graph_preview_window      ).setMenu("graph_preview_window")
+        registerFunction(g, "Send To Inspector",     "",  n, panel_graph_inspector_panel     ).setMenu("graph_inspect")
+        registerFunction(g, "Toggle Preview",        "H", n, panel_graph_toggle_preview      ).setMenu("graph_toggle_preview")
+        registerFunction(g, "Toggle Render",         "R", n, panel_graph_toggle_render       ).setMenu("graph_toggle_render")
+        registerFunction(g, "Toggle Parameters",     "M", n, panel_graph_toggle_parameter    ).setMenu("graph_toggle_parameters")
+        registerFunction(g, "Hide Disconnected",     "",  n, panel_graph_hide_disconnected   ).setMenu("graph_hide_disconnected")
+        
+        registerFunction(g, "Enter Group",           "",  n, panel_graph_enter_group         ).setMenu("graph_enter_group",     THEME.group)
+        registerFunction(g, "Exit Group",           192,  n, panel_graph_exit_group          ).setMenu("graph_exit_group",      THEME.group)
+        registerFunction(g, "Open Group In New Tab", "",  n, panel_graph_open_group_tab      ).setMenu("graph_open_in_new_tab", THEME.group)
+        registerFunction(g, "Group",                 "G", c, panel_graph_group               ).setMenu("graph_group",           THEME.group)
+        registerFunction(g, "Ungroup",               "G", c|s,panel_graph_ungroup            ).setMenu("graph_ungroup",         THEME.group)
+        registerFunction(g, "Uninstance",            "",  n, panel_graph_uninstance          ).setMenu("graph_uninstance")
+        registerFunction(g, "Set As Group Tool",     "",  n, panel_graph_set_as_tool         ).setMenu("graph_set_as_tool")
+        registerFunction(g, "Update Group",          "",  n, panel_graph_update              ).setMenu("graph_update")
+        
+        registerFunction(g, "Copy Value",            "",  n, panel_graph_doCopyProp          ).setMenu("graph_copy_value")
+        registerFunction(g, "Paste Value",           "",  n, panel_graph_doPasteProp         ).setMenu("graph_paste_value")
+        registerFunction(g, "Create Tunnel",         "",  n, panel_graph_createTunnel        ).setMenu("graph_create_tunnel")
+        
+        registerFunction(g, "Toggle Grid Snap",      "",  n, panel_graph_grid_snap           ).setMenu("graph_grid_snap")
+        registerFunction(g, "Toggle Show Origin",    "",  n, panel_graph_show_origin         ).setMenu("graph_show_origin")
+        registerFunction(g, "Search Wiki",         vk_f1, n, panel_graph_searchWiki          ).setMenu("graph_search_wiki")
+        registerFunction(g, "Swap Connections",      "S", a, panel_graph_swapConnection      ).setMenu("graph_swap_connection")
+        registerFunction(g, "Transfer Connections",  "T", a, panel_graph_transferConnection  ).setMenu("graph_transfer_connection")
 		
-		registerFunction("Graph", "Export Hovering Node",   "",  MOD_KEY.none,               panel_graph_send_to_export      ).setMenu("graph_export_hover")
-        registerFunction("Graph", "Export As Image...",     "",  MOD_KEY.none,    function() /*=>*/ { dialogPanelCall(new Panel_Graph_Export_Image(PANEL_GRAPH)) }).setMenu("graph_export_image")
-        registerFunction("Graph", "Connection Settings...", "",  MOD_KEY.none,    function() /*=>*/ { dialogPanelCall(new Panel_Graph_Connection_Setting())      }).setMenu("graph_connection_settings")
-        registerFunction("Graph", "Grid Settings...",       "",  MOD_KEY.none,    function() /*=>*/ { dialogPanelCall(new Panel_Graph_Grid_Setting())            }).setMenu("graph_grid_settings")
-        registerFunction("Graph", "View Settings...",       "",  MOD_KEY.none,    function() /*=>*/ { dialogPanelCall(new Panel_Graph_View_Setting(PANEL_GRAPH, PROJECT.graphDisplay)) }).setMenu("graph_view_settings")
+		registerFunction(g, "Export Hovering Node",   "",  n, panel_graph_send_to_export ).setMenu("graph_export_hover")
+        registerFunction(g, "Export As Image...",     "",  n, function() /*=>*/ { PANEL_GRAPH.subDialogCall(new Panel_Graph_Export_Image(PANEL_GRAPH)) }).setMenu("graph_export_image",        THEME.icon_preview_export   )
+        registerFunction(g, "Connection Settings...", "",  n, function() /*=>*/ { PANEL_GRAPH.subDialogCall(new Panel_Graph_Connection_Setting())      }).setMenu("graph_connection_settings", THEME.icon_curve_connection ).setSpriteInd(function() /*=>*/ {return PANEL_GRAPH.project.graphConnection.type})
+        registerFunction(g, "Grid Settings...",       "",  n, function() /*=>*/ { PANEL_GRAPH.subDialogCall(new Panel_Graph_Grid_Setting())            }).setMenu("graph_grid_settings",       THEME.icon_grid_setting     )
+        registerFunction(g, "View Settings...",       "",  n, function() /*=>*/ { PANEL_GRAPH.subDialogCall(new Panel_Graph_View_Setting(PANEL_GRAPH, PROJECT.graphDisplay)) }).setMenu("graph_view_settings", THEME.icon_visibility )
         
-		registerFunction("Graph", "Toggle Topbar",       "", MOD_KEY.none, panel_graph_topbar_toggle  ).setMenu("graph_topbar_toggle", noone, false, function() /*=>*/ {return PROJECT.graphDisplay.show_topbar});
-		registerFunction("Graph", "Show Topbar",         "", MOD_KEY.none, panel_graph_topbar_show    ).setMenu("graph_topbar_show");
-		registerFunction("Graph", "Hide Topbar",         "", MOD_KEY.none, panel_graph_topbar_hide    ).setMenu("graph_topbar_hide");
-		registerFunction("Graph", "Edit Topbar",         "", MOD_KEY.none, panel_graph_topbar_edit    ).setMenu("graph_topbar_edit");
-		registerFunction("Graph", "Reset Topbar",        "", MOD_KEY.none, panel_graph_topbar_reset   ).setMenu("graph_topbar_reset", THEME.refresh_20);
+		registerFunction(g, "Toggle Topbar",       "", n, panel_graph_topbar_toggle  ).setMenu("graph_topbar_toggle", noone, false, function() /*=>*/ {return PROJECT.graphDisplay.show_topbar});
+		registerFunction(g, "Show Topbar",         "", n, panel_graph_topbar_show    ).setMenu("graph_topbar_show");
+		registerFunction(g, "Hide Topbar",         "", n, panel_graph_topbar_hide    ).setMenu("graph_topbar_hide");
+		registerFunction(g, "Edit Topbar...",      "", n, function() /*=>*/ {return menuItemEdit("graph_topbar_menu")}  ).setMenu("graph_topbar_edit");
+		registerFunction(g, "Reset Topbar",        "", n, function() /*=>*/ {return menuItemReset("graph_topbar_menu")} ).setMenu("graph_topbar_reset", THEME.refresh_20);
 		
-		registerFunction("Graph", "Toggle View Control", "", MOD_KEY.none, panel_graph_view_control_toggle  ).setMenu("graph_view_control_toggle", noone, false, function() /*=>*/ {return PROJECT.graphDisplay.show_view_control});
-		registerFunction("Graph", "Show View Control",   "", MOD_KEY.none, panel_graph_view_control_show    ).setMenu("graph_view_control_show");
-		registerFunction("Graph", "Hide View Control",   "", MOD_KEY.none, panel_graph_view_control_hide    ).setMenu("graph_view_control_hide");
+		registerFunction(g, "Toggle View Control", "", n, panel_graph_view_control_toggle  ).setMenu("graph_view_control_toggle", noone, false, function() /*=>*/ {return PROJECT.graphDisplay.show_view_control});
+		registerFunction(g, "Show View Control",   "", n, panel_graph_view_control_show    ).setMenu("graph_view_control_show");
+		registerFunction(g, "Hide View Control",   "", n, panel_graph_view_control_hide    ).setMenu("graph_view_control_hide");
+		
+		registerFunction(g, "Edit Graph Toolbar...",       "", n, function() /*=>*/ {return menuItemEdit("graph_toolbars_general")}  ).setMenu("graph_edit_toolbar"                          );
+		registerFunction(g, "Edit Graph Align Toolbar...", "", n, function() /*=>*/ {return menuItemEdit("graph_toolbars_align")}    ).setMenu("graph_edit_toolbar_align"                    );
+		registerFunction(g, "Reset Graph Toolbar",         "", n, function() /*=>*/ {return menuItemReset("graph_toolbars_general")} ).setMenu("graph_reset_toolbar",       THEME.refresh_20 );
+		registerFunction(g, "Reset Graph Align Toolbar",   "", n, function() /*=>*/ {return menuItemReset("graph_toolbars_align")}   ).setMenu("graph_reset_toolbar_align", THEME.refresh_20 );
 		
         __fnGroupInit_Graph();
         
@@ -622,91 +653,35 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	    
         hk_editing = noone;
         
-        toolbars_general = [
-            new panel_toolbar_icon("Export Graph",
-                THEME.icon_preview_export,
-                function()  /*=>*/ {return 0}, 
-                new tooltipHotkey(__txtx("panel_graph_export_image", "Export graph as image"), "Graph", "Export As Image..."),
-                function(p) /*=>*/ { dialogPanelCall(new Panel_Graph_Export_Image(self)); }
-            ).setHotkey("Graph", "Export As Image..."),
-            
-            new panel_toolbar_icon("Search",
-                THEME.search_24,
-                function()  /*=>*/ {return 0}, 
-                new tooltipHotkey(__txt("Search"), "Graph", "Search"), 
-                function(p) /*=>*/ { toggleSearch(); }
-            ).setHotkey("Graph", "Search"),
-            
-            new panel_toolbar_icon("Focus Content",
-                THEME.icon_center_canvas,
-                function()  /*=>*/ {return 0}, 
-                new tooltipHotkey(__txtx("panel_graph_center_to_nodes", "Center to nodes"), "Graph", "Focus Content"), 
-                function(p) /*=>*/ { toCenterNode(); } 
-            ).setHotkey("Graph", "Focus Content"),
-            
-            new panel_toolbar_icon("Minimap",
-                THEME.icon_minimap,
-                function()  /*=>*/ {return minimap_show}, 
-                new tooltipHotkey(__txtx("panel_graph_toggle_minimap", "Toggle minimap"), "Graph", "Toggle Minimap"), 
-                function(p) /*=>*/ { minimap_show = !minimap_show; } 
-            ).setHotkey("Graph", "Toggle Minimap"),
-            
-            new panel_toolbar_icon("Connection Settings",
-                THEME.icon_curve_connection,
-                function()  /*=>*/ {return project.graphConnection.type}, 
-                new tooltipHotkey(__txtx("panel_graph_connection_line", "Connection render settings") + "...", "Graph", "Connection Settings..."), 
-                function(p) /*=>*/ { subDialogCall(new Panel_Graph_Connection_Setting()); } 
-            ).setHotkey("Graph", "Connection Settings..."),
-            
-            new panel_toolbar_icon("Grid Settings",
-                THEME.icon_grid_setting,
-                function()  /*=>*/ {return 0}, 
-                new tooltipHotkey(__txtx("grid_title", "Grid settings") + "...", "Graph", "Grid Settings..."), 
-                function(p) /*=>*/ { subDialogCall(new Panel_Graph_Grid_Setting()); } 
-            ).setHotkey("Graph", "Grid Settings..."),
-            
-            new panel_toolbar_icon("View Settiings",
-                THEME.icon_visibility,
-                function()  /*=>*/ {return 0}, 
-                new tooltipHotkey(__txtx("graph_visibility_title", "Visibility settings") + "...", "Graph", "View Settings..."), 
-                function(p) /*=>*/ { subDialogCall(new Panel_Graph_View_Setting(self, project.graphDisplay)); } 
-            ).setHotkey("Graph", "View Settings..."),
-        ]; 
+        global.menuItems_graph_toolbars_general_context = ["graph_edit_toolbar", "graph_reset_toolbar"];
+        global.menuItems_graph_toolbars_general = [
+        	"graph_export_image", 
+        	"graph_search",
+        	"graph_focus_content",
+        	"graph_toggle_minimap",
+        	"graph_connection_settings",
+        	"graph_grid_settings",
+        	"graph_view_settings",
+    	];
         
-        toolbars_halign = [
-            new panel_toolbar_icon("HAlign Right",  THEME.object_halign, function() /*=>*/ {return 2}, function() /*=>*/ {return ""}, function(p) /*=>*/ { node_halign(nodes_selecting, fa_right);  } ),
-            new panel_toolbar_icon("HAlign Center", THEME.object_halign, function() /*=>*/ {return 1}, function() /*=>*/ {return ""}, function(p) /*=>*/ { node_halign(nodes_selecting, fa_center); } ),
-            new panel_toolbar_icon("HAlign Left",   THEME.object_halign, function() /*=>*/ {return 0}, function() /*=>*/ {return ""}, function(p) /*=>*/ { node_halign(nodes_selecting, fa_left);   } ),
+        global.menuItems_graph_toolbars_align_context = ["graph_edit_toolbar_align", "graph_reset_toolbar_align"];
+        global.menuItems_graph_toolbars_align = [
+            "graph_halign_right",
+            "graph_halign_center",
+            "graph_halign_left",
+            -1, 
+            "graph_valign_bottom",
+            "graph_valign_middle",
+            "graph_valign_top",
+            -1, 
+            "graph_hdistribute",
+            "graph_vdistribute",
+            -1, 
+            "graph_auto_align",
+            "graph_auto_organize",
         ];
         
-        toolbars_valign = [
-            new panel_toolbar_icon("VAlign Bottom", THEME.object_valign, function() /*=>*/ {return 2}, function() /*=>*/ {return ""}, function(p) /*=>*/ { node_valign(nodes_selecting, fa_bottom); } ),
-            new panel_toolbar_icon("VAlign Middle", THEME.object_valign, function() /*=>*/ {return 1}, function() /*=>*/ {return ""}, function(p) /*=>*/ { node_valign(nodes_selecting, fa_middle); } ),
-            new panel_toolbar_icon("VAlign Top",    THEME.object_valign, function() /*=>*/ {return 0}, function() /*=>*/ {return ""}, function(p) /*=>*/ { node_valign(nodes_selecting, fa_top);    } ),
-        ];
-        
-        toolbars_distrib = [
-            new panel_toolbar_icon("Distribute X", THEME.obj_distribute_h, function() /*=>*/ {return 0}, function() /*=>*/ {return ""}, function(p) /*=>*/ { node_hdistribute(nodes_selecting); } ),
-            new panel_toolbar_icon("Distribute Y", THEME.obj_distribute_v, function() /*=>*/ {return 0}, function() /*=>*/ {return ""}, function(p) /*=>*/ { node_vdistribute(nodes_selecting); } ),
-        ];
-        
-        hk_autoalign = new tooltipHotkey(__txt("Auto Align"), "Graph", "Auto Align");
-        hk_autoorgan = new tooltipHotkey(__txt("Auto Organize"), "Graph", "Auto Organize...");
-        
-        toolbars_auto_arrange = [
-            new panel_toolbar_icon("Auto Align",    THEME.obj_auto_align,    function() /*=>*/ {return 0}, hk_autoalign, function(p) /*=>*/ { node_auto_align(nodes_selecting); } ),
-            new panel_toolbar_icon("Auto Organize", THEME.obj_auto_organize, function() /*=>*/ {return 0}, hk_autoorgan, 
-            	function(p) /*=>*/ { dialogPanelCall(new Panel_Graph_Auto_Organize(PANEL_GRAPH.nodes_selecting), p.x, p.y, { anchor: ANCHOR.bottom | ANCHOR.left }) } ),
-        ];
-        
-        distribution_spacing   = 0;
-        toolbars_distrib_space = [
-            new panel_toolbar_icon("", THEME.obj_distribute_h, function() /*=>*/ {return 0}, function() /*=>*/ {return ""}, function(p) /*=>*/ { node_hdistribute_dist(nodes_selecting, nodes_select_anchor, distribution_spacing); } ),
-            new panel_toolbar_icon("", THEME.obj_distribute_v, function() /*=>*/ {return 0}, function() /*=>*/ {return ""}, function(p) /*=>*/ { node_vdistribute_dist(nodes_selecting, nodes_select_anchor, distribution_spacing); } ),
-            [ textBox_Number(function(val) /*=>*/ { distribution_spacing = val; } ).setPadding(4), function() /*=>*/ {return distribution_spacing} ],
-        ];
-        
-        toolbars = [ toolbars_general ];
+        toolbars = [ "graph_toolbars_general" ];
         
 	    global.menuItems_graph_topbar_context_menu = [
 	    	"graph_topbar_hide", 
@@ -716,8 +691,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		function topbar_toggle() { project.graphDisplay.show_topbar = !project.graphDisplay.show_topbar; }
 		function topbar_show()   { project.graphDisplay.show_topbar =  true; }
 		function topbar_hide()   { project.graphDisplay.show_topbar = false; }
-		function topbar_edit()   { dialogPanelCall(new Panel_MenuItems_Editor("graph_topbar_menu")); }
-		function topbar_reset()  { variable_struct_remove(PREFERENCES_MENUITEMS, "graph_topbar_menu"); PREF_SAVE(); }
 		
 		function view_control_toggle() { project.graphDisplay.show_view_control = !project.graphDisplay.show_view_control; }
 		function view_control_show()   { project.graphDisplay.show_view_control =  true; }
@@ -2632,101 +2605,39 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         var tbx = w - ui(4) - bs;
         var tby = ty + th / 2;
         var _m  = [ mx, my ];
+        var _lh = toolbar_height / 2 - ui(8);
         
         var scs = gpu_get_scissor();
         gpu_set_scissor(cont_x, ty, w - cont_x, th);
         var hov = pHOVER && point_in_rectangle(mx, my, cont_x, ty, w, h);
+        var foc = pFOCUS;
         
         for( var i = 0, n = array_length(toolbars); i < n; i++ ) {
             var tbs = toolbars[i];
             
-            for (var j = 0, m = array_length(tbs); j < m; j++) {
-                var tb = tbs[j];
-                
-                if(is(tb, panel_toolbar_icon)) {
-		            var tbSpr     = tb.sprite;
-		            var tbInd     = tb.index();
-		            var tbTooltip = is_method(tb.tooltip)? tb.tooltip() : tb.tooltip;
-		            var tbClick   = tb.onCilck;
-		            var tbRight   = tb.onRClick;
-		            var onWUp     = tb.onWUp;
-		            var onWDown   = tb.onWDown;
-		        	var hKey      = tb.hotkey;
-		            
-		            var tbData  = { x: x + tbx - ui(14), y: y + tby - ui(14) };
-		            
-		            if(is(tbTooltip, tooltipSelector))
-		                tbTooltip.index = tbInd;
-		            
-		            var tooltip = instance_exists(o_dialog_menubox)? "" : tbTooltip;
-		            var _bx = tbx;
-		            var _by = tby - bs / 2;
-            		var _bc = COLORS._main_icon;
-		            var  b  = buttonInstant(THEME.button_hide_fill, _bx, _by, bs, bs, _m, hov, pFOCUS, tooltip, tbSpr, tbInd, _bc, bsc);
-		            
-		            switch(b) { 
-		            	case 1 : 
-		            		if(onWUp   != 0 && key_mod_press(SHIFT) && MOUSE_WHEEL > 0) onWUp();
-		            		if(onWDown != 0 && key_mod_press(SHIFT) && MOUSE_WHEEL < 0) onWDown();
-		            		break;
-		            		
-		            	case 2 : tbClick(tbData); break;
-		            	case 3 : 
-		            		if(tbRight != 0) tbRight(tbData); 
-		            		else if(hKey != noone) {
-		            			hk_selecting = hKey;
-		            			
-		            			menuCall("", [
-									hKey.getNameFull(),
-									menuItem(__txt("Edit Hotkey"), function() /*=>*/ { hk_editing = hk_selecting.modify(); }),
-									menuItem(__txt("Reset Hotkey"), function() /*=>*/ {return hk_selecting.reset(true)}, THEME.refresh_20).setActive(hKey.isModified()),
-								]);
-		            		}
-		            		break;
-		            }
-		            
-		            if(hKey != noone && hKey == hk_editing)
-		            	draw_sprite_stretched_ext(THEME.ui_panel, 1, _bx, _by, bs, bs, COLORS._main_text_accent);
-		            
-		            tbx -= bs + ui(4);
-                	
-                } else if(is_array(tb) && is(tb[0], widget)) {
-                	var tbObj = tb[0];
-                    tbObj.setFocusHover(pFOCUS, hov);
-                    
-                    var _wdw = ui(32);
-                    var _wdx = tbx + bs - _wdw;
-                    if(_wdx < cont_x) break;
-                    
-                    var _param = new widgetParam(_wdx, ty + ui(8), _wdw, toolbar_height - ui(16), tb[1](), {}, _m, x, y)
-                    	.setFont(f_p3)
-                    	.setHalign(fa_left);
-                    
-                    tbObj.color = COLORS._main_text_sub;
-                    tbObj.drawParam(_param);
-                    
-                    tbx -= _wdw + ui(4);
-                    
-                } else if(is_array(tb)) {
-                    var tbInd     = tb[1]();
-                    var tbTooltip = tb[2]();
-                    if(tbx - (bs + ui(4)) < cont_x) break;
-                    
-                    var b = buttonInstant(THEME.button_hide_fill, tbx - bs, tby - bs / 2, bs, bs, _m, hov, pFOCUS, tbTooltip, tbObj, tbInd);
-                    if(b == 2) tb[3]( { x: x + tbx - bs, y: y + tby - bs / 2 } );
-                    tbx -= bs + ui(4);
-                }
-                
-            }
+            var tbb = menuItems_gen(tbs);
+	        for( var j = 0, m = array_length(tbb); j < m; j++ ) {
+	        	var _menu = tbb[j];
+				if(_menu == -1) {
+					draw_set_color(COLORS.panel_toolbar_separator);
+					draw_line_width(tbx + bs - ui(2), tby - _lh, tbx + bs - ui(2), tby + _lh, 2);
+					
+					tbx -= ui(8);
+					continue;
+				} 
+				
+				var bx = tbx;
+	            var by = tby - bs / 2;
+	            
+				_menu.draw(bx, by, bs, bs, _m, hov, foc, tbs);
+				tbx -= bs + ui(4);
+	        }
             
             tbx -= ui(2);
-	            
 	        var _lx = max(cont_x - ui(4), tbx + bs - ui(2));
-	        var _ly = tby;
-	        var _lh = toolbar_height / 2 - ui(8);
-        
+	        
             draw_set_color(COLORS.panel_toolbar_separator);
-            draw_line_width(_lx, _ly - _lh, _lx, _ly + _lh, 2);
+            draw_line_width(_lx, tby - _lh, _lx, tby + _lh, 2);
             
             tbx -= ui(6);
         }
@@ -3254,13 +3165,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
         dragGraph();
         
-        toolbars = [ toolbars_general ];
-        if(array_length(nodes_selecting) > 1) {
-            if(array_exists(nodes_selecting, nodes_select_anchor))
-                array_push(toolbars, toolbars_halign, toolbars_valign, toolbars_distrib_space, toolbars_auto_arrange);
-            else 
-                array_push(toolbars, toolbars_halign, toolbars_valign, toolbars_distrib, toolbars_auto_arrange);
-        }
+        toolbars = [ "graph_toolbars_general" ];
+        if(array_length(nodes_selecting) > 1)
+            array_push(toolbars, "menuItems_graph_toolbars_align");
         
         graph_cx = (w / 2) / graph_s - graph_x;
         graph_cy = (h / 2) / graph_s - graph_y;
