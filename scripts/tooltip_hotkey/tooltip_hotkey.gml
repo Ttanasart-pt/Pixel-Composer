@@ -1,6 +1,6 @@
-function tooltipHotkey(text, context = "", name = "") constructor {
-	self.text   = text;
-	self.hotkey = find_hotkey(context, name);
+function tooltipHotkey(_text, context = "", name = "") constructor {
+	text   = _text;
+	hotkey = context == undefined? noone : find_hotkey(context, name);
 	
 	static drawTooltip = function() {
 		var keyStr = hotkey? key_get_name(hotkey.key, hotkey.modi) : "";
@@ -31,9 +31,9 @@ function tooltipHotkey(text, context = "", name = "") constructor {
 	}
 }
 
-function tooltipKey(text, keyStr) constructor {
-	self.text   = text;
-	self.keyStr = keyStr;
+function tooltipKey(_text, _keyStr) constructor {
+	text   = _text;
+	keyStr = _keyStr;
 	
 	static drawTooltip = function() {
 		if(keyStr == "") { draw_tooltip_text(text); return; }
@@ -63,9 +63,9 @@ function tooltipKey(text, keyStr) constructor {
 	}
 }
 
-function tooltipHotkey_assign(text, hotkey = "") constructor {
-	self.text   = text;
-	self.hotkey = hotkey;
+function tooltipHotkey_assign(_text, _hotkey = "") constructor {
+	text   = _text;
+	hotkey = _hotkey;
 	
 	static drawTooltip = function() {
 		var _uns = text == noone;

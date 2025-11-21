@@ -197,9 +197,7 @@
 		registerFunction(g, "Hide View Control",   "", n, panel_graph_view_control_hide    ).setMenu("graph_view_control_hide");
 		
 		registerFunction(g, "Edit Graph Toolbar...",       "", n, function() /*=>*/ {return menuItemEdit("graph_toolbars_general")}  ).setMenu("graph_edit_toolbar"                          );
-		registerFunction(g, "Edit Graph Align Toolbar...", "", n, function() /*=>*/ {return menuItemEdit("graph_toolbars_align")}    ).setMenu("graph_edit_toolbar_align"                    );
 		registerFunction(g, "Reset Graph Toolbar",         "", n, function() /*=>*/ {return menuItemReset("graph_toolbars_general")} ).setMenu("graph_reset_toolbar",       THEME.refresh_20 );
-		registerFunction(g, "Reset Graph Align Toolbar",   "", n, function() /*=>*/ {return menuItemReset("graph_toolbars_align")}   ).setMenu("graph_reset_toolbar_align", THEME.refresh_20 );
 		
         __fnGroupInit_Graph();
         
@@ -662,26 +660,23 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         	"graph_connection_settings",
         	"graph_grid_settings",
         	"graph_view_settings",
+        	{ cond : "graph_select_multiple", items : [ 
+        		-1, 
+        		"graph_halign_right",
+	            "graph_halign_center",
+	            "graph_halign_left",
+	            -1, 
+	            "graph_valign_bottom",
+	            "graph_valign_middle",
+	            "graph_valign_top",
+	            -1, 
+	            "graph_hdistribute",
+	            "graph_vdistribute",
+	            -1, 
+	            "graph_auto_align",
+	            "graph_auto_organize"
+            ] },
     	];
-        
-        global.menuItems_graph_toolbars_align_context = ["graph_edit_toolbar_align", "graph_reset_toolbar_align"];
-        global.menuItems_graph_toolbars_align = [
-            "graph_halign_right",
-            "graph_halign_center",
-            "graph_halign_left",
-            -1, 
-            "graph_valign_bottom",
-            "graph_valign_middle",
-            "graph_valign_top",
-            -1, 
-            "graph_hdistribute",
-            "graph_vdistribute",
-            -1, 
-            "graph_auto_align",
-            "graph_auto_organize",
-        ];
-        
-        toolbars = [ "graph_toolbars_general" ];
         
 	    global.menuItems_graph_topbar_context_menu = [
 	    	"graph_topbar_hide", 
@@ -2612,35 +2607,32 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         var hov = pHOVER && point_in_rectangle(mx, my, cont_x, ty, w, h);
         var foc = pFOCUS;
         
-        for( var i = 0, n = array_length(toolbars); i < n; i++ ) {
-            var tbs = toolbars[i];
-            
-            var tbb = menuItems_gen(tbs);
-	        for( var j = 0, m = array_length(tbb); j < m; j++ ) {
-	        	var _menu = tbb[j];
-				if(_menu == -1) {
-					draw_set_color(COLORS.panel_toolbar_separator);
-					draw_line_width(tbx + bs - ui(2), tby - _lh, tbx + bs - ui(2), tby + _lh, 2);
-					
-					tbx -= ui(8);
-					continue;
-				} 
+        var tbs = "graph_toolbars_general";
+        var tbb = menuItems_gen(tbs);
+        for( var i = 0, n = array_length(tbb); i < n; i++ ) {
+        	var _menu = tbb[i];
+			if(_menu == -1) {
+				draw_set_color(COLORS.panel_toolbar_separator);
+				draw_line_width(tbx + bs - ui(2), tby - _lh, tbx + bs - ui(2), tby + _lh, 2);
 				
-				var bx = tbx;
-	            var by = tby - bs / 2;
-	            
-				_menu.draw(bx, by, bs, bs, _m, hov, foc, tbs);
-				tbx -= bs + ui(4);
-	        }
+				tbx -= ui(8);
+				continue;
+			} 
+			
+			var bx = tbx;
+            var by = tby - bs / 2;
             
-            tbx -= ui(2);
-	        var _lx = max(cont_x - ui(4), tbx + bs - ui(2));
-	        
-            draw_set_color(COLORS.panel_toolbar_separator);
-            draw_line_width(_lx, tby - _lh, _lx, tby + _lh, 2);
-            
-            tbx -= ui(6);
+			_menu.draw(bx, by, bs, bs, _m, hov, foc, tbs);
+			tbx -= bs + ui(4);
         }
+        
+        tbx -= ui(2);
+        var _lx = max(cont_x - ui(4), tbx + bs - ui(2));
+        
+        draw_set_color(COLORS.panel_toolbar_separator);
+        draw_line_width(_lx, tby - _lh, _lx, tby + _lh, 2);
+        
+        tbx -= ui(6);
         
         gpu_set_scissor(scs);
         
@@ -3164,10 +3156,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         if(!project.active) return;
         
         dragGraph();
-        
-        toolbars = [ "graph_toolbars_general" ];
-        if(array_length(nodes_selecting) > 1)
-            array_push(toolbars, "menuItems_graph_toolbars_align");
         
         graph_cx = (w / 2) / graph_s - graph_x;
         graph_cy = (h / 2) / graph_s - graph_y;

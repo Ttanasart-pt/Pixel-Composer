@@ -22,7 +22,9 @@ function MenuItem(_name, _func, _spr = noone, _hotkey = noone, _toggle = noone, 
 	toggle	= _toggle;
 	params	= _params;
 	color	= c_white;
-	tooltip = noone;
+	
+	tooltip      = noone;
+	tooltipName  = new tooltipHotkey(name, undefined);
 	
 	isShelf      = false;
 	shelfObject  = noone;
@@ -54,7 +56,11 @@ function MenuItem(_name, _func, _spr = noone, _hotkey = noone, _toggle = noone, 
 	static getSpr       = function() /*=>*/ {return spr};
 	static getSprInd    = function() /*=>*/ {return 0};
 	static getTooltip   = function() /*=>*/ {
-		if(tooltip == noone) return name;
+		if(tooltip == noone) {
+			tooltipName.hotkey = hoykeyObject;
+			return tooltipName;
+		}
+		
 		tooltip.index = getSprInd();
 		return tooltip;
 	}

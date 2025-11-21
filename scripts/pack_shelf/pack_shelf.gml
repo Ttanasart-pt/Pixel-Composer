@@ -1,7 +1,5 @@
 function sprite_pack_shelf(rectangles, width) {
-	array_sort(rectangles, function(rect1, rect2) {
-        return rect2.h - rect1.h;
-    });
+	array_sort(rectangles, function(r1, r2) /*=>*/ {return sign(r2.h - r1.h)});
 	
     var shelfY = 0;
     var shelfWidth = 0;
@@ -12,10 +10,10 @@ function sprite_pack_shelf(rectangles, width) {
 	var maxWidth  = 0;
 	var maxHeight = 0;
 	
-	for (var i = 0; i < array_length(rectangles); i++) //make sure the width is larger than largest rectangle
+	for( var i = 0, n = array_length(rectangles); i < n; i++ ) //make sure the width is larger than largest rectangle
 		width = max(width, rectangles[i].w);
 	
-    for (var i = 0; i < array_length(rectangles); i++) {
+    for( var i = 0, n = array_length(rectangles); i < n; i++ ) {
         var rect = rectangles[i];
         
         if (shelfWidth + rect.w <= width) { // Add the rectangle to the current shelf

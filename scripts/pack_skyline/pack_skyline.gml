@@ -2,17 +2,17 @@ function sprite_pack_skyline(rectangles, width, height) {
 	var maxw = 0;
 	var maxh = 0;
     
-    array_sort(rectangles, function(a, b) { return b.w - a.w; });
+    array_sort(rectangles, function(a, b) /*=>*/ {return sign(b.w - a.w)});
     
     var skyline = [ new Rectangle(0, 0, width, height) ];
     var packed  = [];
 	
-    for (var i = 0; i < array_length(rectangles); i++) {
+    for( var i = 0, n = array_length(rectangles); i < n; i++ ) {
         var rect = rectangles[i];
         var bestStrip  = noone;
         var bestWasted = width * height;
         
-        for (var j = 0; j < array_length(skyline); j++) {
+        for( var j = 0, m = array_length(skyline); j < m; j++ ) {
             var strip = skyline[j];
             if (strip.w >= rect.w && strip.h >= rect.h) {
                 var wasted = strip.w * strip.h;

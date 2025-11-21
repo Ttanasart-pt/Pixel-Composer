@@ -3,20 +3,20 @@ function sprite_pack_best_fit(rectangles) {
 	var area = new Rectangle(0, 0, 0, 0);
 	if(array_length(rectangles) <= 1) return [ area, rectangles ];
 	
-    array_sort(rectangles, function(rect1, rect2) { return rect2.w * rect2.h - rect1.w * rect1.h; });
+    array_sort(rectangles, function(r1, r2) /*=>*/ {return sign(r2.w * r2.h - r1.w * r1.h)});
 	
 	var grW  = rectangles[0].w;
 	var grH  = rectangles[0].h;
 	var _or, _nr;
 	
-    for (var i = 1; i < array_length(rectangles); i++) {
+	for( var i = 1, n = array_length(rectangles); i < n; i++ ) {
         _nr = rectangles[i];
 		
 		grW = gcd(_nr.w, grW);
 		grH = gcd(_nr.h, grH);
 	}
 	
-    for (var i = 0; i < array_length(rectangles); i++) {
+    for( var i = 0, n = array_length(rectangles); i < n; i++ ) {
         var rect = rectangles[i];
 
         var bestSpace = noone;
