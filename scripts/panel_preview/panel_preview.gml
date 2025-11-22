@@ -236,7 +236,9 @@ function Panel_Preview() : PanelContent() constructor {
         sample_color        = noone;
         sample_x            = noone;
         sample_y            = noone;
-    	
+   #endregion
+    
+    #region ---- selection ----
     	selection_selecting = 0;
     	selection_mx = 0;
     	selection_my = 0;
@@ -253,7 +255,6 @@ function Panel_Preview() : PanelContent() constructor {
     	
     	hoveringContent = false;
         hoveringGizmo   = false;
-        
     #endregion
     
     #region ---- preview ----
@@ -287,12 +288,10 @@ function Panel_Preview() : PanelContent() constructor {
         tileMode            = 0;
         bg_color            = COLORS.panel_bg_clear;
         
-        mouse_pos_string    = "";
-        
         resetViewOnDoubleClick = true;
         
-        tb_zoom_param = undefined;
-        tb_zoom_level = new textBox(TEXTBOX_INPUT.number, function(z) /*=>*/ { 
+	    tb_framerate  = textBox_Number(function(v) /*=>*/ { preview_rate = real(v); });
+        tb_zoom_level = textBox_Number(function(z) /*=>*/ { 
         	var _s = canvas_s;
         	canvas_s = clamp(z, 0.10, 64);
             if(_s == canvas_s) return;
@@ -301,12 +300,29 @@ function Panel_Preview() : PanelContent() constructor {
             var dy = (canvas_s - _s) * ((h / 2 - canvas_y) / _s);
             canvas_x -= dx;
             canvas_y -= dy;   
+            
         }).setColor(c_white).setAlign(fa_right).setHide(3).setFont(f_p2);
         
-	    tb_framerate = new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { preview_rate = real(val); });
-	    
+	    mouse_pos_string    = "";
 	    tooltip_action      = "";
         tooltip_action_time = 0;
+        
+        preview_shader  = 0;
+        preview_shaders = [
+        	new scrollItem( "Raw"   ).setData(undefined), 
+        	-1,
+        	new scrollItem( "Red"   ).setData(sh_channel_R), 
+        	new scrollItem( "Green" ).setData(sh_channel_G), 
+        	new scrollItem( "Blue"  ).setData(sh_channel_B), 
+        	-1,
+        	new scrollItem( "Hue"   ).setData(sh_channel_H), 
+        	new scrollItem( "Sat"   ).setData(sh_channel_S), 
+        	new scrollItem( "Value" ).setData(sh_channel_V), 
+        	-1,
+        	new scrollItem( "Alpha" ).setData(sh_channel_A), 
+    	];
+    	
+    	sb_shader = new scrollBox(preview_shaders, function(i) /*=>*/ { preview_shader = i; }).setFont(f_p3);
     #endregion
     
     #region ---- tool ----
@@ -1290,7 +1306,6 @@ function Panel_Preview() : PanelContent() constructor {
     }
     
     function drawToolSettings(_node) {
-    	if(tool_current == noone) return;
     	var settings = array_merge(_node.getToolSettings(), tool_current.settings);
     	
     	var _toolObj = tool_current.getToolObject();
@@ -1471,7 +1486,13 @@ function Panel_Preview() : PanelContent() constructor {
         if(_node) title = _node.renamed? _node.display_name : _node.name;
         
 		#region >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Draw Surfaces <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-			
+	    	var _shader_data = array_safe_get_fast(preview_shaders, preview_shader);
+	    	var _shader_prev = struct_try_get(_shader_data, "data");
+    		if(_shader_prev) {
+    			shader_set(_shader_prev);
+    			shader_set_i("keepAlpha", 1);
+    		}
+    	
 	        if(!_ps0 && !_ps1) {
 	        	draw_surface_ext_safe(PROJECT.getOutputSurface(), canvas_x, canvas_y, canvas_s, canvas_s); 
 	        	draw_set_color_alpha(COLORS.panel_preview_surface_outline, .75);
@@ -1563,6 +1584,8 @@ function Panel_Preview() : PanelContent() constructor {
             	preview_junction.drawPreviewOverlay(canvas_x, canvas_y, canvas_s, self);
             	preview_junction.node.previewing = 1;
             }
+        	
+        	if(_shader_prev) shader_reset();
         #endregion
         
         if(!instance_exists(o_dialog_menubox)) { // color sample
@@ -2439,8 +2462,18 @@ function Panel_Preview() : PanelContent() constructor {
 				draw_text(tx, cy + ch / 2, $"Tile {_in}");
             }
             
-        } else if(_node)
+        } else if(_node && tool_current) {
             drawToolSettings(_node);
+            
+		} else {
+            var cw = ui(80);
+            var ch = topbar_height - ui(10);
+			var cx = w - ui(6) - cw;
+            var cy = ui(6);
+            
+            sb_shader.setFocusHover(pFOCUS, pHOVER);
+			sb_shader.draw(cx, cy, cw, ch, preview_shader, [mx,my], x, y);
+		}
         
         sample_data = noone;
         

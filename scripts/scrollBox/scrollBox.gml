@@ -16,11 +16,13 @@ function scrollItem(_name, _spr = noone, _spr_ind = 0, _spr_blend = COLORS._main
 	
 	active  = true;
 	tooltip = "";
+	data    = undefined;
 	
 	static setSpriteScale = function( ) /*=>*/ { spr_scale = false; return self; }
 	static setBlend       = function(c) /*=>*/ { spr_blend = c;     return self; }
 	static setActive      = function(a) /*=>*/ { active    = a;     return self; }
 	static setTooltip     = function(t) /*=>*/ { tooltip   = t;     return self; }
+	static setData        = function(d) /*=>*/ { data      = d;     return self; }
 }
 
 function scrollBox(_data, _onModify, _update_hover = true) : widget() constructor {
