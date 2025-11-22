@@ -29,8 +29,6 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		var dispName  = _name;
 		var wid       = jun.editWidget;
 		
-		if(!is(wid, widget)) return [ 0, true, cHov ];
-		
 		if(_ID != undefined) {
 			var _map = jun.editWidgetMap;
 			if(!struct_has(_map, _ID)) 
@@ -40,12 +38,13 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		
 		if(global_var) dispName = string_title(string_replace_all(_name, "_", " "));
 		
-		breakLine = breakLine || wid.always_break_line;
+		if(is(wid, widget)) {
+			breakLine = breakLine || wid.always_break_line;
 		
-		switch(instanceof(wid)) {
-			case "matrixGrid"      : breakLine = breakLine || wid.size[0] > 5; break;
-			case "outputStructBox" : breakLine = breakLine || wid.expand;      break;
-				
+			switch(instanceof(wid)) {
+				case "matrixGrid"      : breakLine = breakLine || wid.size[0] > 5; break;
+				case "outputStructBox" : breakLine = breakLine || wid.expand;      break;
+			}
 		}
 	#endregion
 	
@@ -336,6 +335,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			}
 		}
 	#endregion
+	
+	if(!is(wid, widget)) return [ 0, true, cHov ];
 	
 	#region draw widget
 		var labelWidth = max(lb_w, min(ww * 0.4, ui(200)));
