@@ -2,7 +2,7 @@
 event_inherited();
 
 #region data
-	dialog_w = ui(360);
+	dialog_w = ui(400);
 	dialog_h = ui(40);
 	padding  = ui(8);
 	
@@ -19,8 +19,8 @@ event_inherited();
 	update_note = "Updated";
 	onModify    = -1;
 	
-	node      = noone;
-	data_path = "";
+	node        = noone; function setNode(n) { node = n; meta.name = n.display_name; return self; }
+	data_path   = "";    function setPath(s) { data_path = s; return self; }
 	
 	font = f_p2;
 	ugc  = 0;
@@ -36,11 +36,14 @@ event_inherited();
 	t_alias  = textBox_Text(  function(str) /*=>*/ { meta.alias       = str; }).setAutoUpdate();
 	t_tags   = new textArrayBox(function() /*=>*/ {return meta.tags}, META_TAGS).setAddable(true);
 	
-	function doExpand() {
-		meta_expand = true;
-		padding     = ui(12)
-		
-		dialog_w = dialog_w_expand;
-		dialog_h = dialog_h_expand;
-	}
+	function setPrefix( _l ) { tb_name.setPrefix(_l); return self; }
+	
 #endregion
+	
+function doExpand() {
+	meta_expand = true;
+	padding     = ui(12)
+	
+	dialog_w = dialog_w_expand;
+		dialog_h = dialog_h_expand;
+}

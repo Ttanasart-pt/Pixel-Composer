@@ -4,17 +4,16 @@ function FileObject(_path) constructor {
 	path = _path;
 	name = filename_name_only(path);
 	ext  = filename_ext_raw(path);
+	type = FILE_TYPE.others;
+	size = file_size(path);
+	content    = -1;
 	
 	spr        = -1;
 	spr_data   = undefined;
 	sprFetchID = noone;
 	
-	size    = file_size(path);
-	content = -1;
-	
 	meta_path  = filename_ext_verify(path, ".meta");
 	meta	   = noone;
-	type	   = FILE_TYPE.others;
 	
 	retrive_data	= false;
 	thumbnail_data	= -1;
@@ -155,7 +154,9 @@ function FileObject(_path) constructor {
 		
 		return meta;
 	}
-
+	
+	////- Actions
+	
 	static free = function() {
 		sprite_delete_safe(spr);
 		surface_free_safe(thumbnail);
@@ -218,8 +219,9 @@ function DirectoryObject(_path) constructor {
 		var font = struct_try_get(_params, "font", f_p2);
 		var hg   = line_get_height(font, 5);
 		var hh   = 0;
+		var empt = array_empty(subDir);
 		
-		if(!array_empty(subDir) && _hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + ui(32), _y + hg - 1)) {
+		if(!empt && _hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + ui(32), _y + hg - 1)) {
 			draw_sprite_stretched_ext(THEME.button_hide_fill, 1, _x + ui(4), _y, ui(32 - 8), hg, CDEF.main_white, 1);
 			
 			if(mouse_press(mb_left, _focus)) {
@@ -233,24 +235,34 @@ function DirectoryObject(_path) constructor {
 		
 		if(_hover && point_in_rectangle(_m[0], _m[1], _bx, _y, _bx + _bw, _y + hg - 1)) {
 			draw_sprite_stretched_ext(THEME.button_hide_fill, 1, _bx - ui(4), _y, _bw + ui(4), hg, CDEF.main_white, 1);
-			if(!triggered && mouse_press(mb_left, _focus)) {
-				if(!array_empty(subDir) && !open) {
-					open = true;
-					MOUSE_BLOCK = true;
+			if(!triggered) {
+				if(mouse_lpress(_focus)) {
+					if(!empt && !open) {
+						open = true;
+						MOUSE_BLOCK = true;
+					}
+					
+					parent.setContext(parent.context == self? _homedir : self);
+					triggered = true;
 				}
 				
-				parent.setContext(parent.context == self? _homedir : self);
-				triggered = true;
+				if(mouse_rpress(_focus)) {
+					menuCall("directory_context", [
+						new MenuItem("Open in Explorer", function(p) /*=>*/ { shellOpenExplorer(p); },,,, path),
+						new MenuItem("Delete", function(p) /*=>*/ { directory_destroy(p); PANEL_COLLECTION.refreshContext() }, THEME.cross,,, path),
+					]);
+					triggered = true;
+				}
 			}
+			
 		} else if(_hover)
 			triggered = false;
 			
-		if(triggered && mouse_release(mb_left))
-			triggered = false;
+		if(triggered && mouse_release(mb_any)) triggered = false;
 		
 		gpu_set_texfilter(true);
-		var _spr_ind = array_empty(subDir)? parent.context == self : open;
-		var _spr_bld = array_empty(subDir)? COLORS.collection_folder_empty : COLORS.collection_folder_nonempty;
+		var _spr_ind = empt? parent.context == self : open;
+		var _spr_bld = empt? COLORS.collection_folder_empty : COLORS.collection_folder_nonempty;
 		if(icon_blend != undefined) _spr_bld = icon_blend;
 		
 		var _spr_sca = (hg - ui(5)) / ui(24);
@@ -262,14 +274,14 @@ function DirectoryObject(_path) constructor {
 		hh += hg;
 		_y += hg;
 		
-		if(open && !array_empty(subDir)) {
+		if(open && !empt) {
 			var l_y = _y;
-			for(var i = 0; i < array_length(subDir); i++) {
+			for( var i = 0, n = array_length(subDir); i < n; i++ ) {
 				var _hg = subDir[i].draw(parent, _x + ui(16), _y, _m, _w - ui(16), _hover, _focus, _homedir, _params);
-				
 				hh += _hg;
 				_y += _hg;
 			}
+				
 			draw_set_color(COLORS.collection_tree_line);
 			draw_line(_x + ui(12), l_y, _x + ui(12), _y - ui(4));
 		}
@@ -277,7 +289,9 @@ function DirectoryObject(_path) constructor {
 		return hh;
 	}
 	
-	static destroy = function() {  }
+	////- Actions
+	
+	static destroy = function() { }
 	
 	static free = function() {
 		for( var i = 0, n = array_length(subDir); i < n; i++ ) 

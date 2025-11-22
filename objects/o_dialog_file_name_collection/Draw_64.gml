@@ -30,12 +30,16 @@
 	tb_name.setFocusHover(sFOCUS, sHOVER);
 	tb_name.register();
 	tb_name.draw(dialog_x + tx, dialog_y + padding, tw, th, meta.name, mouse_ui);
-	
+#endregion
+
+#region buttons
 	var bs = th;
 	var bx = dialog_x + dialog_w - padding - bs;
 	var by = dialog_y + padding;
+	var bb = THEME.button_hide_fill;
+	var bc = COLORS._main_value_negative;
 	
-	if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Close"), THEME.cross_16, 0, COLORS._main_value_negative) == 2)
+	if(buttonInstant(bb, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Close"), THEME.cross_16, 0, bc) == 2)
 		instance_destroy();
 	bx -= bs + ui(4);
 		

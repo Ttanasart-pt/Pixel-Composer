@@ -947,10 +947,10 @@ function Panel_Collection() : PanelContent() constructor {
 				if(buttonInstant(bb, bx, by, bs, bs, m, hov, foc, txt, THEME.add_20, 0, COLORS._main_value_positive, 1, .9) == 2) {
 					data_path = context.path;
 					
-					var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(8));
-					dia.meta.name = PANEL_INSPECTOR.getInspecting().display_name;
-					dia.node	  = PANEL_INSPECTOR.getInspecting();
-					dia.data_path = data_path;
+					var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(8))
+						.setNode(PANEL_INSPECTOR.getInspecting())
+						.setPath(data_path)
+						.setPrefix(string_replace(data_path, $"{DIRECTORY}Collections", "") + "/");
 				}
 				
 			} else
@@ -960,7 +960,8 @@ function Panel_Collection() : PanelContent() constructor {
 			var txt = __txtx("panel_collection_add_folder", "Add folder");
 			if(buttonInstant(bb, bx, by, bs, bs, m, hov, foc, txt, THEME.dFolder_add, 0, COLORS._main_icon, 1, .9) == 2) 
 				fileNameCall(context.path, function(txt) /*=>*/ { directory_create(txt); refreshContext(); })
-					.setLabel(__txt("Folder name")).setPrefix(string_replace(context.path, $"{DIRECTORY}Collections", "") + "/");
+					.setLabel(__txt("Folder name"))
+					.setPrefix(string_replace(context.path, $"{DIRECTORY}Collections", "") + "/");
 			bx -= bs + ui(4); if(bx < rootx) return;
 		}
 	

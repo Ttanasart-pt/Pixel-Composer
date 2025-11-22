@@ -12,9 +12,32 @@
 #endregion
 
 #region draw TB
+	var tx = dialog_x + lbw + ui(8);
+	var ty = dialog_y + padding;
+	var tw = tb_width;
+	var th = dialog_h - padding * 2;
+	
+	var bs = th;
+	var bx = dialog_x + dialog_w - padding - bs;
+	var by = dialog_y + padding;
+	var bb = THEME.button_hide_fill;
+	
+	var bc = COLORS._main_value_negative;
+	if(buttonInstant(bb, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Close"), THEME.cross_16, 0, bc) == 2)
+		instance_destroy();
+	bx -= bs + ui(4); tw -= bs + ui(4);
+	
+	var bc = COLORS._main_value_positive;
+	if(buttonInstant(bb, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Accept"), THEME.accept_16, 0, bc) == 2) {
+		onModify(path + filename_name_validate(name)); 
+		instance_destroy();
+	}
+	bx -= bs + ui(4); tw -= bs + ui(4);
+	
+	tw -= ui(4);
 	draw_set_text(f_p1, fa_left, fa_center, COLORS._main_icon);
 	draw_text(dialog_x + padding, dialog_y + dialog_h / 2, label);
 	
 	tb_name.setFocusHover(sFOCUS, sHOVER);
-	tb_name.draw(dialog_x + lbw + ui(8), dialog_y + padding, tb_width, dialog_h - padding * 2, name, mouse_ui);
+	tb_name.draw(tx, ty, tw, th, name, mouse_ui);
 #endregion

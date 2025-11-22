@@ -20,7 +20,7 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	////- =Transform
 	newInput( 1, nodeValue_Vec2(     "Position",  [0,0] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	newInput(11, nodeValue_Rotation( "Rotation",   0    )).setHotkey("R");
-	newInput( 2, nodeValue_Vec2(     "Scale",     [5,5], true )).setHotkey("S").setMappable(10);
+	newInput( 2, nodeValue_Vec2(     "Scale",     [5,5] )).setHotkey("S").setMappable(10);
 	
 	////- =Iteration
 	newInput(14, nodeValue_Float(  "Scaling",    2 ));

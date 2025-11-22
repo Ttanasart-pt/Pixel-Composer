@@ -3,7 +3,7 @@ event_inherited();
 
 #region data
 	draggable = false;
-	dialog_w  = ui(240);
+	dialog_w  = ui(280);
 	dialog_h  = ui(40);
 	padding   = ui(8);
 	
@@ -16,8 +16,8 @@ event_inherited();
 
 #region text
 	onModify = -1;
-	tb_width = ui(200);
-	tb_name  = textBox_Text(function(t) /*=>*/ { onModify(path + filename_name_validate(t)); instance_destroy(); });
+	tb_width = ui(280);
+	tb_name  = textBox_Text(function(t) /*=>*/ { name = t; onModify(path + filename_name_validate(t)); instance_destroy(); });
 	
 	function setLabel(  _l ) { label    = _l; return self; }
 	function setName(   _n ) { name     = _n; return self; }

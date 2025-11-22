@@ -2634,16 +2634,14 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             
 			_menu.draw(bx, by, bs, bs, _m, hov, foc, tbs);
 			tbx -= bs + ui(4);
+			
+			if(i == n - 1) {
+				draw_set_color(COLORS.panel_toolbar_separator);
+				draw_line_width(tbx + bs - ui(2), tby - _lh, tbx + bs - ui(2), tby + _lh, 2);
+			}
         }
         
-        tbx -= ui(2);
-        var _lx = max(cont_x - ui(4), tbx + bs - ui(2));
-        
-        draw_set_color(COLORS.panel_toolbar_separator);
-        draw_line_width(_lx, tby - _lh, _lx, tby + _lh, 2);
-        
-        tbx -= ui(6);
-        
+        tbx -= ui(8);
         gpu_set_scissor(scs);
         
         if(hk_editing != noone) { 
