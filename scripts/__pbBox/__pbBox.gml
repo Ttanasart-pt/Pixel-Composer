@@ -88,6 +88,8 @@ function __pbBox() constructor {
 				drag_anchor_sv = variable_clone(_bbox);
 				drag_anchor_mx = _mx;
 				drag_anchor_my = _my;
+				
+				_node.w_hovering = true;
 			}
 			return;
 		}
@@ -162,6 +164,7 @@ function __pbBox() constructor {
 			}
 		}
 		
+		_node.w_hovering = true;
 		_node.triggerRender();
 		if(mouse_release(mb_left)) drag_anchor = noone;
 	}
