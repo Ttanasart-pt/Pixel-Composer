@@ -52,8 +52,10 @@
     function panel_preview_set_reset_view_on()          { CALL("preview_set_reset_view_on");         PANEL_PREVIEW.set_reset_view_on();                }
     function panel_preview_toggle_reset_view(d=1)       { CALL("preview_toggle_reset_view");         mod_del_mf0 PANEL_PREVIEW.resetViewOnDoubleClick mod_del_mf1 PANEL_PREVIEW.resetViewOnDoubleClick mod_del_mf2  2 mod_del_mf3  2 mod_del_mf4; }
     
-    function panel_preview_toggle_lock()                { CALL("preview_toggle_lock");               PANEL_PREVIEW.toggle_lock();                                             }
-    function panel_preview_toggle_mini()                { CALL("preview_toggle_mini");               PANEL_PREVIEW.toggle_mini();                                             }
+    function panel_preview_toggle_lock()                { CALL("preview_toggle_lock");               PANEL_PREVIEW.toggle_lock(); }
+    function panel_preview_toggle_mini()                { CALL("preview_toggle_mini");               PANEL_PREVIEW.toggle_mini(); }
+    
+    function panel_preview_toggle_tool_lock()           { CALL("preview_toggle_tool_lock");          PANEL_PREVIEW.tool_always = !PANEL_PREVIEW.tool_always; }
     
 	function panel_preview_view_control_toggle()        { PANEL_PREVIEW.view_control_toggle(); }
 	function panel_preview_view_control_show()          { PANEL_PREVIEW.view_control_show();   }
@@ -152,6 +154,7 @@
         registerFunction(p, "Toggle Onion Skin view",   "", n, panel_preview_onion_on_top              ).setMenu("preview_onion_on_top")
         registerFunction(p, "Toggle Lock",              "", n, panel_preview_toggle_lock               ).setMenu("preview_toggle_lock",  THEME.lock).setSpriteInd(function() /*=>*/ {return !PANEL_PREVIEW.locked} )
         registerFunction(p, "Toggle Minimap",           "", n, panel_preview_toggle_mini               ).setMenu("preview_toggle_mini",  THEME.icon_minimap).setSpriteInd(function() /*=>*/ {return PANEL_PREVIEW.minimap_show} )
+        registerFunction(p, "Toggle Toolbar",           "", n, panel_preview_toggle_tool_lock          ).setMenu("preview_toggle_tool",  THEME.lock).setSpriteInd(function() /*=>*/ {return !PANEL_PREVIEW.tool_always} )
         
         registerFunction(p, "Popup",            		"", n, function() /*=>*/ { create_preview_window(PANEL_PREVIEW.getNodePreview());         }).setMenu("preview_popup",          THEME.node_goto_thin    )
         registerFunction(p, "Grid Settings...",         "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_Grid_Setting())  }).setMenu("preview_grid_settings",  THEME.icon_grid_setting )
@@ -326,22 +329,23 @@ function Panel_Preview() : PanelContent() constructor {
     #endregion
     
     #region ---- tool ----
-        tool_x              = 0;
-        tool_x_to           = 0;
-        tool_x_max          = 0;
+    	tool_always  = false;
+    	
+        tool_x       = 0;
+        tool_x_to    = 0;
+        tool_x_max   = 0;
         
-        tool_y              = 0;
-        tool_y_to           = 0;
-        tool_y_max          = 0;
+        tool_y       = 0;
+        tool_y_to    = 0;
+        tool_y_max   = 0;
         
-        tool_ry             = 0;
-        tool_ry_to          = 0;
-        tool_ry_max         = 0;
+        tool_ry      = 0;
+        tool_ry_to   = 0;
+        tool_ry_max  = 0;
         
-        tool_current        = noone;
-        
-        toolbar_width       = ui(40);
-        toolbar_height      = ui(40);
+        tool_current   = noone;
+        toolbar_width  = ui(40);
+        toolbar_height = ui(40);
         
         tool_hovering       = noone;
         tool_side_draw_l    = false;
@@ -967,7 +971,7 @@ function Panel_Preview() : PanelContent() constructor {
         tool_clearable = true;
         tool_hovering  = noone;
         
-        if(!_node.showTool()) { tool_current = noone; return; } 
+        if(!tool_always && !_node.showTool()) { tool_current = noone; return; } 
         
         var aa = d3_active? 0.8 : 1;
         draw_sprite_stretched_ext(THEME.tool_side, 0, 0, ui(32), toolbar_width, h - toolbar_height - ui(32), c_white, aa);
@@ -981,6 +985,8 @@ function Panel_Preview() : PanelContent() constructor {
         if(thov) {
         	canvas_hover = false;
         	mouse_on_preview = 0;
+        	
+        	if(mouse_rpress(pFOCUS)) menuCall("", [ MENU_ITEMS.preview_toggle_tool ]);
         }
         
         if(pFOCUS && key_mod_double(ALT)) tool_show_key = !tool_show_key;
@@ -989,6 +995,16 @@ function Panel_Preview() : PanelContent() constructor {
         
         ////- Left tools
         
+        var bs = ui(16);
+        var bx = toolbar_width / 2 - bs / 2;
+        var by = yy - ui(12);
+        if(buttonInstant_Pad(THEME.button_hide, bx, by, bs, bs, [mx, my], thov, pFOCUS, "", THEME.lock, !tool_always) == 2)
+        	tool_always = !tool_always;
+        yy         += bs + ui(8);
+        tool_y_max += bs + ui(8);
+        
+        var _draw_sep = true;
+       
         for( var i = 0, n = array_length(_node.tools); i < n; i++ ) {
             var tool = _node.tools[i];
             
@@ -1033,8 +1049,8 @@ function Panel_Preview() : PanelContent() constructor {
                         TOOLTIP = tool.getDisplayName(j);
                         draw_sprite_stretched(THEME.button_hide_fill, 1, _sx0 + pd, _sy0 + pd, ts - pd * 2, ts - pd * 2);
                             
-                        if(mouse_press(mb_left, pFOCUS))  tool.toggle(j);
-                    	if(mouse_press(mb_right, pFOCUS)) tool.rightClick();
+                        if(mouse_lpress(pFOCUS)) tool.toggle(j);
+                    	if(mouse_rpress(pFOCUS)) tool.rightClick();
                     } 
                             
                     if(tool_current == tool && tool.selecting == j) {
@@ -1053,8 +1069,8 @@ function Panel_Preview() : PanelContent() constructor {
                     draw_sprite_stretched(THEME.button_hide_fill, 1, _bx, _by, _bs, _bs);
                     TOOLTIP = tool.getDisplayName();
                     
-                    if(mouse_press(mb_left, pFOCUS))  tool.toggle();
-                    if(mouse_press(mb_right, pFOCUS)) tool.rightClick();
+                    if(mouse_lpress(pFOCUS)) tool.toggle();
+                    if(mouse_rpress(pFOCUS)) tool.rightClick();
                 }
                 
                 if(tool_current == tool) {
@@ -1098,10 +1114,10 @@ function Panel_Preview() : PanelContent() constructor {
             
             yy         += ts;
             tool_y_max += ts;
+            
+            _draw_sep = false;
         }
         
-        var _draw_sep = false;
-       
         for( var i = 0, n = array_length(_node.inputs); i < n; i++ ) {
         	var _in = _node.inputs[i];
         	if(_in.preview_hotkey == undefined) continue;
@@ -1134,7 +1150,7 @@ function Panel_Preview() : PanelContent() constructor {
         		
         		if(_in.drawOverlayToggle != noone) {
 	        		draw_sprite_stretched(THEME.button_hide_fill, 1, _bx, _by, _bs, _bs);
-	        		if(mouse_press(mb_left, pFOCUS)) _in.drawOverlayToggle();
+	        		if(mouse_lpress(pFOCUS)) _in.drawOverlayToggle();
         		}
         	}
         	
@@ -1231,8 +1247,8 @@ function Panel_Preview() : PanelContent() constructor {
                         TOOLTIP = tool.getDisplayName(_sind);
                         draw_sprite_stretched(THEME.button_hide_fill, 1, _sx0 + pd, _sy0 + pd, ts - pd * 2, ts - pd * 2);
                         
-                        if(mouse_press(mb_left, pFOCUS))  tool.toggle(_sind);
-                    	if(mouse_press(mb_right, pFOCUS)) tool.rightClick();
+                        if(mouse_lpress(pFOCUS)) tool.toggle(_sind);
+                    	if(mouse_rpress(pFOCUS)) tool.rightClick();
                     }
                         
                     if(tool_current == tool && tool.selecting == _sind) {
@@ -1252,8 +1268,8 @@ function Panel_Preview() : PanelContent() constructor {
                     draw_sprite_stretched(THEME.button_hide_fill, 1, _bx, _by, _bs, _bs);
                     TOOLTIP = tool.getDisplayName();
                 	
-                    if(mouse_press(mb_left, pFOCUS))  tool.toggle();
-                    if(mouse_press(mb_right, pFOCUS)) tool.rightClick();
+                    if(mouse_lpress(pFOCUS)) tool.toggle();
+                    if(mouse_rpress(pFOCUS)) tool.rightClick();
                 }
                 
                 if(tool_current == tool) {
@@ -2345,7 +2361,7 @@ function Panel_Preview() : PanelContent() constructor {
         var cy = canvas_y + _node.preview_y * canvas_s;
         var _snx = 0, _sny = 0;
         
-        tool_side_draw_l = _node.showTool();
+        tool_side_draw_l = _node.showTool() || tool_always;
         tool_side_draw_r = _node.rightTools != -1;
         
         if(_node.showTool() && point_in_rectangle(_mx, _my, 0, 0, toolbar_width, h))
@@ -2913,6 +2929,12 @@ function Panel_Preview() : PanelContent() constructor {
         
         canvas_mx = (mx - canvas_x) / canvas_s;
         canvas_my = (my - canvas_y) / canvas_s;
+        
+        if(tool_always) {
+        	tool_side_draw_l = true;
+        	var aa = d3_active? .8 : 1;
+        	draw_sprite_stretched_ext(THEME.tool_side, 0, 0, ui(32), toolbar_width, h - toolbar_height - ui(32), c_white, aa);
+        }
         
         if(PANEL_PREVIEW == self) { //only draw overlay once
             if(inspect_node) {
