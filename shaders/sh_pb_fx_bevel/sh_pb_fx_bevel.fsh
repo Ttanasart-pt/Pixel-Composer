@@ -144,12 +144,14 @@ uniform sampler2D edgeSurf;
 	
 #endregion //////////////////////////////////// GRADIENT ////////////////////////////////////
 
+float val(vec4 v) { return (v.r + v.g + v.b) / 3. * v.a; }
+
 void main() {
     vec2 tx = 1. / dimension;
     vec4 cc = texture2D( gm_BaseTexture, v_vTexcoord );
     gl_FragData[0] = cc;
     gl_FragData[1] = vec4(0.);
-    if(cc.a == 0.) return;
+    if(val(cc) == 0.) return;
     
     vec4 s;
     vec2 p, op;
@@ -165,7 +167,14 @@ void main() {
             a = j * TAU;
             p = v_vTexcoord + vec2( cos(a), sin(a)) * i * tx;
             s = texture2D( gm_BaseTexture, p );
-            if(s.a == 0.) { inside = false; edgPos = p; edgeDist = i; edgeInv = j >= .5; break; }
+            
+            if(val(s) == 0.) { 
+            	inside   = false; 
+            	edgPos   = p; 
+            	edgeDist = i; 
+            	edgeInv  = j >= .5; 
+            	break; 
+            }
         }
         
         if(!inside) break;

@@ -61,8 +61,8 @@ void main() {
 	vec2 shf, pxs;
 	float stp = 1. / 4.;
 	
-	for(float i = 1.; i < heiMax; i += stp) {
-		if(i >= hei) break;
+	for(float i = 0.; i < heiMax; i += stp) {
+		if(i > hei) break;
 		
 		float base = 1.;
 		float top  = 0.;

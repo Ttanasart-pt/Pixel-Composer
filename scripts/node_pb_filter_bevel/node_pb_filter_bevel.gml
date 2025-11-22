@@ -94,7 +94,7 @@ function Node_PB_FX_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	    surface_reset_shader();
 	    
 	    surface_set_shader(_outSurf, sh_pb_fx_bevel_apply);
-	        shader_set_dim("dimension", _surf);
+	        shader_set_2("dimension", _dim);
 	        
 			shader_set_i("highlight",      _high);
 	        shader_set_c("highlightColor", _hgcl);
