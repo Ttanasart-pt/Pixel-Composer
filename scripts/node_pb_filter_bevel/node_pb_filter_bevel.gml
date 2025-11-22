@@ -21,9 +21,9 @@ function Node_PB_FX_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newOutput(1, nodeValue_Output( "Inner Area",  VALUE_TYPE.surface, noone)).setVisible(false);
 	
 	input_display_list = [ 0,
-	    ["Bevel",  false], 1, 
-	    ["Colors", false], 2, 3, 4, 
-	    ["Highlight",  false, 5], 8, 7, 6, 
+	    [ "Bevel",      false    ], 1, 
+	    [ "Colors",     false    ], 2, 3, 4, 
+	    [ "Highlight",  false, 5 ], 8, 7, 6, 
     ];
 	
 	////- Node
@@ -65,12 +65,12 @@ function Node_PB_FX_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	        temp_surface[i] = surface_verify(temp_surface[i], _dim[0], _dim[1]);
 	    
 	    surface_set_shader(temp_surface[0], sh_pb_fx_bevel_edge);
-	        shader_set_dim("dimension", _surf);
+	        shader_set_2("dimension", _dim);
 	        draw_surface_safe(_surf);
 	    surface_reset_shader();
 	    
 	    surface_set_shader(temp_surface[1], sh_pb_fx_bevel_angle);
-	        shader_set_dim("dimension", _surf);
+	        shader_set_2("dimension", _dim);
 	        draw_surface_safe(temp_surface[0]);
 	    surface_reset_shader();
 	    
@@ -82,9 +82,9 @@ function Node_PB_FX_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
     	    surface_set_target_ext(1, _innerSurf);
 	        DRAW_CLEAR
 	        
-	        shader_set_dim("dimension",    _surf);
-	        shader_set_f("height",         _heigh);
-	        shader_set_f("shiftAngle",     _radsh / 360);
+	        shader_set_2("dimension",  _dim);
+	        shader_set_f("height",     _heigh);
+	        shader_set_f("shiftAngle", _radsh / 360);
 	        shader_set_surface("edgeSurf", temp_surface[1]);
 			
 			_grHig.shader_submit("height");
