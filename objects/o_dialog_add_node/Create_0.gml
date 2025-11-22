@@ -70,7 +70,7 @@ event_inherited();
 		category = NODE_CATEGORY;
 		
 		switch(instanceof(context)) {
-			case "Node_DynaSurf" :      category = NODE_PCX_CATEGORY; break;
+			case "Node_DynaSurf" : category = NODE_PCX_CATEGORY; break;
 		}
 		
 		draw_set_font(f_p0);
@@ -239,7 +239,7 @@ event_inherited();
 		var _outputs  = [];
 		
 		if(is(_node, NodeObject)) {
-			var _context = PANEL_GRAPH.getCurrentContext();
+			var _context = context ?? PANEL_GRAPH.getCurrentContext();
 			var _skipc   = false;
 			
 			if(is(context, Node_Collection_Inline)) {

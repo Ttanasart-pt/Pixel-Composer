@@ -1102,7 +1102,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 }
 
 function PanelContent() constructor {
-	title		= "";
+	title		= "";             function setTitle(t) { title = t; return self; }
 	icon		= noone;
 	context_str = "";
 	draggable   = true;

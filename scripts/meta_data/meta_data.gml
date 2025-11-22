@@ -84,9 +84,11 @@ function MetaDataManager() constructor {
 	}
 	
 	static drawTooltip = function() {
-		var _pd = ui(10);
+		var _pdx = ui(10);
+		var _pdy = ui(8);
 		
-		var ww = ui(320), _w = 0;
+		var ww = ui(320);
+		var _w = 0;
 		var _h = 0;
 		
 		if(type == FILE_TYPE.assets) {
@@ -94,14 +96,14 @@ function MetaDataManager() constructor {
 			_h = string_height(name);
 			_w = string_width(name);
 			
-			var mx = min(mouse_mxs + _pd * 2, WIN_W - (_w + _pd * 2));
-			var my = min(mouse_mys + _pd * 2, WIN_H - (_h + _pd * 2));
+			var mx = min(mouse_mxs + _pdx * 2, WIN_W - (_w + _pdx * 2));
+			var my = min(mouse_mys + _pdy * 2, WIN_H - (_h + _pdy * 2));
 			
-			draw_sprite_stretched(THEME.textbox, 3, mx, my, _w + _pd * 2, _h + _pd * 2);
-			draw_sprite_stretched(THEME.textbox, 0, mx, my, _w + _pd * 2, _h + _pd * 2);
+			draw_sprite_stretched(THEME.textbox, 3, mx, my, _w + _pdx * 2, _h + _pdx * 2);
+			draw_sprite_stretched(THEME.textbox, 0, mx, my, _w + _pdy * 2, _h + _pdy * 2);
 			
 			draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
-			draw_text(mx + _pd, my + _pd, name);
+			draw_text(mx + _pdx, my + _pdy, name);
 			return;
 		}
 		
@@ -111,7 +113,7 @@ function MetaDataManager() constructor {
 		var _ver = floor(version) < floor(SAVE_VERSION)? __txtx("meta_old_version", "Created on an older version") : __txtx("meta_new_version", "Created on a newer version");
 		
 		draw_set_font(f_h5);
-		_h += string_height_ext(name, -1, ww) - ui(4);
+		_h += string_height_ext(name, -1, ww) - ui(2);
 		_w = max(_w, string_width_ext(name, -1, ww) + isDefault * ui(6 + 56));
 		
 		draw_set_font(f_p1);
@@ -162,15 +164,15 @@ function MetaDataManager() constructor {
 			_h += th;
 		}
 		
-		var mx = min(mouse_mxs + _pd * 2, WIN_W - (_w + _pd * 2));
-		var my = min(mouse_mys + _pd * 2, WIN_H - (_h + _pd * 2));
+		var mx = min(mouse_mxs + _pdx * 2, WIN_W - (_w + _pdx * 2));
+		var my = min(mouse_mys + _pdy * 2, WIN_H - (_h + _pdy * 2));
 		
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		
-		draw_sprite_stretched(THEME.textbox, 3, mx, my, _w + _pd * 2, _h + _pd * 2);
-		draw_sprite_stretched(THEME.textbox, 0, mx, my, _w + _pd * 2, _h + _pd * 2);
+		draw_sprite_stretched(THEME.textbox, 3, mx, my, _w + _pdx * 2, _h + _pdy * 2);
+		draw_sprite_stretched(THEME.textbox, 0, mx, my, _w + _pdx * 2, _h + _pdy * 2);
 		
-		var tx = mx + _pd;
+		var tx = mx + _pdx;
 		var ty = my + ui(8);
 		
 		draw_set_text(f_h5, fa_left, fa_top, COLORS._main_text);
@@ -187,7 +189,7 @@ function MetaDataManager() constructor {
 			draw_set_font(f_h5);
 		}
 		
-		ty += string_height_ext(name, -1, _w) - ui(4);
+		ty += string_height_ext(name, -1, _w) - ui(2);
 		
 		draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);
 		draw_text_line(tx, ty, _aut, -1, _w);

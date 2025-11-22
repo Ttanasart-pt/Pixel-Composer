@@ -1,25 +1,32 @@
-#region funtion calls
-	function __fnInit_Collection() {
-		registerFunction("Collection", "Toggle Search",		"F",  MOD_KEY.ctrl,	panel_collection_search_toggle		).setMenu("collection_search_toggle")
-		registerFunction("Collection", "Replace",			"",   MOD_KEY.none,	panel_collection_replace			).setMenu("collection_replace")
-		registerFunction("Collection", "Edit Meta",			"",   MOD_KEY.none,	panel_collection_edit_meta			).setMenu("collection_edit_meta")
-		registerFunction("Collection", "Update Thumbnail",	"",   MOD_KEY.none,	panel_collection_update_thumbnail	).setMenu("collection_update_thumbnail")
-		registerFunction("Collection", "Delete Collection",	"",   MOD_KEY.none,	panel_collection_delete_collection	).setMenu("collection_delete_collection",	THEME.cross)
-		
-		registerFunction("Collection", "Upload To Workshop",	     "", MOD_KEY.none, panel_collection_steam_file_upload ).setMenu("collection_upload_to_steam", 	THEME.workshop_upload)
-		registerFunction("Collection", "Update Content to Workshop", "", MOD_KEY.none, panel_collection_steam_file_update ).setMenu("collection_update_steam",    	THEME.workshop_update)
-		registerFunction("Collection", "Unsubscribe",		         "", MOD_KEY.none, panel_collection_steam_unsubscribe ).setMenu("collection_unsubscribe")
-	}
-	
+#region ___funtion calls
 	function panel_collection_search_toggle()		{ CALL("collection_search_toggle");		PANEL_COLLECTION.search_toggle();		}
 	function panel_collection_replace()				{ CALL("collection_replace");			PANEL_COLLECTION.replace();				}
 	function panel_collection_edit_meta()			{ CALL("collection_edit_meta");			PANEL_COLLECTION.edit_meta();			}
 	function panel_collection_update_thumbnail()	{ CALL("collection_update_thumbnail");	PANEL_COLLECTION.update_thumbnail();	}
 	function panel_collection_delete_collection()	{ CALL("collection_delete_collection");	PANEL_COLLECTION.delete_collection();	}
+	function panel_collection_edit_default()        { CALL("collection_edit_collection");   PANEL_COLLECTION.edit_collection();     }
 	
 	function panel_collection_steam_file_upload()	{ CALL("collection_steam_file_upload");	PANEL_COLLECTION.steam_file_upload();	}
 	function panel_collection_steam_file_update()	{ CALL("collection_steam_file_update");	PANEL_COLLECTION.steam_file_update();	}
 	function panel_collection_steam_unsubscribe()	{ CALL("collection_steam_unsubscribe");	PANEL_COLLECTION.steam_unsubscribe();	}
+	
+	function panel_collection_toggle_default()      { CALL("collection_toggle_default");    PANEL_COLLECTION.toggle_default();      }
+	
+	function __fnInit_Collection() {
+		registerFunction("Collection", "Toggle Search",     "F", MOD_KEY.ctrl, panel_collection_search_toggle     ).setMenu("collection_search_toggle")
+		registerFunction("Collection", "Replace",           "",  MOD_KEY.none, panel_collection_replace           ).setMenu("collection_replace")
+		registerFunction("Collection", "Edit Meta",         "",  MOD_KEY.none, panel_collection_edit_meta         ).setMenu("collection_edit_meta")
+		registerFunction("Collection", "Edit Collection",   "",  MOD_KEY.none, panel_collection_edit_default      ).setMenu("collection_edit_collection",   THEME.group_s)
+		registerFunction("Collection", "Update Thumbnail",  "",  MOD_KEY.none, panel_collection_update_thumbnail  ).setMenu("collection_update_thumbnail")
+		registerFunction("Collection", "Delete Collection", "",  MOD_KEY.none, panel_collection_delete_collection ).setMenu("collection_delete_collection",	THEME.cross)
+		
+		registerFunction("Collection", "Upload To Workshop",	     "", MOD_KEY.none, panel_collection_steam_file_upload ).setMenu("collection_upload_to_steam", 	THEME.workshop_upload)
+		registerFunction("Collection", "Update Content to Workshop", "", MOD_KEY.none, panel_collection_steam_file_update ).setMenu("collection_update_steam",    	THEME.workshop_update)
+		registerFunction("Collection", "Unsubscribe",		         "", MOD_KEY.none, panel_collection_steam_unsubscribe ).setMenu("collection_unsubscribe")
+		
+		registerFunction("Collection", "Toggle Default",    "", MOD_KEY.none, panel_collection_toggle_default ).setMenu("collection_toggle_default")
+	}
+	
 #endregion
 
 function Panel_Collection() : PanelContent() constructor {
@@ -66,6 +73,8 @@ function Panel_Collection() : PanelContent() constructor {
 		searching     = false;
 		search_string = "";
 		search_list   = [];
+		
+		tb_search = textBox_Text(function(str) /*=>*/ { search_string = string(str); doSearch(); }).setAutoupdate().setFont(f_p3);
 		
 		function doSearch() {
 			var search_lower = string_lower(search_string);
@@ -145,7 +154,14 @@ function Panel_Collection() : PanelContent() constructor {
 			}
 		}
 		
-		tb_search     = textBox_Text(function(str) /*=>*/ { search_string = string(str); doSearch(); }).setAutoupdate().setFont(f_p3);
+		function search_toggle() {
+			searching = !searching;
+			if(!searching) return;
+			
+			doSearch(); 
+			tb_search.activate(); 
+		}
+	
 	#endregion
 	
 	#region ++++++++++++ Actions ++++++++++++
@@ -184,11 +200,48 @@ function Panel_Collection() : PanelContent() constructor {
 			refreshContext();
 		}
 		
+		function toggle_default() { 
+			if(_menu_node == noone) return;
+			
+			var _meta = _menu_node.meta;
+			var _path = _menu_node.meta_path;
+			
+			_meta.isDefault = !_meta.isDefault;
+			json_save_struct(_path, _meta, true);
+			
+			refreshContext();
+		}
+		
 		function delete_collection() {
 			if(_menu_node == noone) return;
 			
 			file_delete(_menu_node.path);
 			refreshContext();
+		}
+		
+		function edit_collection() {
+			if(_menu_node == noone) return;
+			
+			var _cont = json_load_struct(_menu_node.path);
+			var _proj = new Runner().appendMap(_cont).fetchIO();
+			    _proj.project.path = _menu_node.path;
+			
+			var _graph = new Panel_Graph(_proj.project);
+			    _graph.setSize(ui(800), ui(480));
+			    _graph.setTitle(_menu_node.name);
+			    _graph.addContext(_proj.io_node);
+			
+			var _dia = dialogPanelCall(_graph);
+			
+			_graph.title_actions = [
+				[ "Save and Close", [ THEME.toolbar_check, 0, c_white ], function(d) /*=>*/ {
+					saveCollection(d.project.io_node, d.path, false);
+					instance_destroy(d.dialog);
+				}, { project: _proj, path: _menu_node.path, dialog: _dia}  ], 
+				
+				[ "Cancel", [ THEME.toolbar_check, 1, c_white ], function(d) /*=>*/ {return instance_destroy(d)}, _dia ], 
+			];
+			
 		}
 		
 		function steam_file_upload() { 
@@ -241,13 +294,6 @@ function Panel_Collection() : PanelContent() constructor {
 			steam_ugc_unsubscribe_item(del_id);
 		}
 		
-		function search_toggle() {
-			searching = !searching;
-			if(!searching) return;
-			
-			doSearch(); 
-			tb_search.activate(); 
-		}
 	#endregion
 	
 	static initMenu = function() {
@@ -258,6 +304,7 @@ function Panel_Collection() : PanelContent() constructor {
 		
 		if(meta == noone || meta.file_id == 0) {
 			contentMenu = [
+				MENU_ITEMS.collection_edit_collection,
 				MENU_ITEMS.collection_replace,
 				MENU_ITEMS.collection_edit_meta,
 				MENU_ITEMS.collection_update_thumbnail,
@@ -265,6 +312,10 @@ function Panel_Collection() : PanelContent() constructor {
 				MENU_ITEMS.collection_delete_collection,
 			];
 		} 
+		
+		if(TESTING) {
+			array_push(contentMenu, MENU_ITEMS.collection_toggle_default);
+		}
 		
 		if(STEAM_ENABLED) {
 			if(!array_empty(contentMenu)) array_push(contentMenu, -1);

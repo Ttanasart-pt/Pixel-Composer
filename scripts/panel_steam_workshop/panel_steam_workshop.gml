@@ -1050,9 +1050,10 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 					TOOLTIP = __txt("View Graph...");
 					
 					if(mouse_lpress(_focus)) {
-						var _graph = new Panel_Graph(_author.profile_graph_runner.project).setSize(ui(800), ui(480));
-						_graph.title = _name + "'s " + __txt("Profile Graph");
-						_graph.applyGlobal = false;
+						var _graph = new Panel_Graph(_author.profile_graph_runner.project);
+						    _graph.setSize(ui(800), ui(480));
+						    _graph.setTitle($"{_name}'s {__txt("Profile Graph")}");
+						    _graph.setLocalOnly();
 						
 						if(_author.profile_graph_runner.io_node != undefined)
 							_graph.addContext(_author.profile_graph_runner.io_node);

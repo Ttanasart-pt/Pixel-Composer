@@ -82,12 +82,13 @@ if(content.showHeader) {
 	
 	for (var i = 0, n = array_length(content.title_actions); i < n; i++) {
 		var _b   = content.title_actions[i];
-		var _txt = _b[0];
-		var _spr = _b[1];
-		var _act = _b[2];
+		var _txt = array_safe_get(_b, 0);
+		var _spr = array_safe_get(_b, 1);
+		var _act = array_safe_get(_b, 2);
+		var _par = array_safe_get(_b, 3);
 		
 		if(buttonInstant(THEME.button_hide_fill, _bx - _bs, _by, _bs, _bs, [ mouse_mx, mouse_my ], sHOVER, sFOCUS, _txt, _spr[0], _spr[1], _spr[2]) == 2)
-			_act();
+			_act(_par);
 		
 		_bx -= _bs + ui(4);
 	}

@@ -355,7 +355,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     context_str = "Graph";
     icon        = THEME.panel_graph_icon;
     pause_when_rendering = true;
-    applyGlobal = true;
+    
+    applyGlobal = true; function setLocalOnly() { applyGlobal = false; return self; }
     
     w = ui(800);
     h = ui(640);
@@ -678,18 +679,19 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             ] },
     	];
         
-	    global.menuItems_graph_topbar_context_menu = [
-	    	"graph_topbar_hide", 
-	    	"graph_topbar_edit", 
-	    	"graph_topbar_reset", 
-		];
-		function topbar_toggle() { project.graphDisplay.show_topbar = !project.graphDisplay.show_topbar; }
+        function topbar_toggle() { project.graphDisplay.show_topbar = !project.graphDisplay.show_topbar; }
 		function topbar_show()   { project.graphDisplay.show_topbar =  true; }
 		function topbar_hide()   { project.graphDisplay.show_topbar = false; }
 		
 		function view_control_toggle() { project.graphDisplay.show_view_control = !project.graphDisplay.show_view_control; }
 		function view_control_show()   { project.graphDisplay.show_view_control =  true; }
 		function view_control_hide()   { project.graphDisplay.show_view_control = false; }
+		
+	    global.menuItems_graph_topbar_context_menu = [
+	    	"graph_topbar_hide", 
+	    	"graph_topbar_edit", 
+	    	"graph_topbar_reset", 
+		];
 		
         global.menuItems_graph_topbar_menu = [	
 			"graph_auto_organize_all",
@@ -709,6 +711,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	    	"graph_add_Node_Colorize",
 	    	"graph_add_Node_Posterize",
 	    	"graph_add_Node_Dither", 
+	    	{ cond : "graph_context_group",    items : [ -1, "graph_add_Node_Group_Input", "graph_add_Node_Group_Output" ] },
+	    	{ cond : "graph_context_group_pb", items : [ "graph_add_Node_PB_Output", -1, "graph_add_Node_PB_Box" ] },
 		];
     #endregion
     
@@ -887,6 +891,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	    MENUITEM_CONDITIONS[$ "graph_select_instance"] = function() /*=>*/ {return is(PANEL_GRAPH.node_hover, Node_Collection) && PANEL_GRAPH.node_hover.instanceBase != undefined};
     	MENUITEM_CONDITIONS[$ "graph_select_in_group"] = function() /*=>*/ {return PANEL_GRAPH.node_hover.group != noone};
     	MENUITEM_CONDITIONS[$ "graph_select_multiple"] = function() /*=>*/ {return array_length(PANEL_GRAPH.nodes_selecting) > 1};
+    	
+    	MENUITEM_CONDITIONS[$ "graph_context_group"]    = function() /*=>*/ {return is(PANEL_GRAPH.getCurrentContext(), Node_Collection)};
+    	MENUITEM_CONDITIONS[$ "graph_context_group_pb"] = function() /*=>*/ {return is(PANEL_GRAPH.getCurrentContext(), Node_Pixel_Builder)};
     	
 	    global.menuItems_graph_node_select = [
 	    	"graph_group_node_color", 
@@ -1207,6 +1214,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
         setContextFrame(false, _node);
         toCenterNode();
+        
+        return self;
     }
     
     function setContextFrame(dirr, node) {

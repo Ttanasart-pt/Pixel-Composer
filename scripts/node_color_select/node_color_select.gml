@@ -75,6 +75,7 @@ function Node_Color_Select(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _col  = make_color_hsv(frac(_Min + _Shf) * 255, 255, 255);
 		var _spn  = ui(3 + _hov * 5);
 		draw_sprite_stretched_ext(THEME.box_r2, 0, _MinX - _spn, _y - ui(2), _spn*2, hh + ui(4), _col);
+		draw_sprite_stretched_add(THEME.box_r2, 1, _MinX - _spn+1, _y - ui(2)+1, _spn*2-2, hh + ui(4)-2, c_white, .4);
 		draw_sprite_stretched_ext(THEME.box_r2, 1, _MinX - _spn, _y - ui(2), _spn*2, hh + ui(4), _hov? COLORS._main_accent : CDEF.main_mdblack);
 		
 		if(_hov && mouse_lpress(_focus)) dragging_index = 7;
@@ -85,6 +86,7 @@ function Node_Color_Select(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _col  = make_color_hsv(frac(_Max + _Shf) * 255, 255, 255);
 		var _spn  = ui(3 + _hov * 5);
 		draw_sprite_stretched_ext(THEME.box_r2, 0, _MaxX - _spn, _y - ui(2), _spn*2, hh + ui(4), _col);
+		draw_sprite_stretched_add(THEME.box_r2, 1, _MaxX - _spn+1, _y - ui(2)+1, _spn*2-2, hh + ui(4)-2, c_white, .4);
 		draw_sprite_stretched_ext(THEME.box_r2, 1, _MaxX - _spn, _y - ui(2), _spn*2, hh + ui(4), _hov? COLORS._main_accent : CDEF.main_mdblack);
 		
 		if(_hov && mouse_lpress(_focus)) dragging_index = 9;
@@ -126,6 +128,7 @@ function Node_Color_Select(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _col  = make_color_hsv(255, _Min * 255, 255);
 		var _spn  = ui(3 + _hov * 5);
 		draw_sprite_stretched_ext(THEME.box_r2, 0, _MinX - _spn, _y - ui(2), _spn*2, hh + ui(4), _col);
+		draw_sprite_stretched_add(THEME.box_r2, 1, _MinX - _spn+1, _y - ui(2)+1, _spn*2-2, hh + ui(4)-2, c_white, .4);
 		draw_sprite_stretched_ext(THEME.box_r2, 1, _MinX - _spn, _y - ui(2), _spn*2, hh + ui(4), _hov? COLORS._main_accent : CDEF.main_mdblack);
 		
 		if(_hov && mouse_lpress(_focus)) dragging_index = 12;
@@ -136,6 +139,7 @@ function Node_Color_Select(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _col  = make_color_hsv(255, _Max * 255, 255);
 		var _spn  = ui(3 + _hov * 5);
 		draw_sprite_stretched_ext(THEME.box_r2, 0, _MaxX - _spn, _y - ui(2), _spn*2, hh + ui(4), _col);
+		draw_sprite_stretched_add(THEME.box_r2, 1, _MaxX - _spn+1, _y - ui(2)+1, _spn*2-2, hh + ui(4)-2, c_white, .4);
 		draw_sprite_stretched_ext(THEME.box_r2, 1, _MaxX - _spn, _y - ui(2), _spn*2, hh + ui(4), _hov? COLORS._main_accent : CDEF.main_mdblack);
 		
 		if(_hov && mouse_lpress(_focus)) dragging_index = 14;
@@ -177,6 +181,7 @@ function Node_Color_Select(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _col  = make_color_hsv(255, 0, _Min * 255);
 		var _spn  = ui(3 + _hov * 5);
 		draw_sprite_stretched_ext(THEME.box_r2, 0, _MinX - _spn, _y - ui(2), _spn*2, hh + ui(4), _col);
+		draw_sprite_stretched_add(THEME.box_r2, 1, _MinX - _spn+1, _y - ui(2)+1, _spn*2-2, hh + ui(4)-2, c_white, .4);
 		draw_sprite_stretched_ext(THEME.box_r2, 1, _MinX - _spn, _y - ui(2), _spn*2, hh + ui(4), _hov? COLORS._main_accent : CDEF.main_mdblack);
 		
 		if(_hov && mouse_lpress(_focus)) dragging_index = 16;
@@ -187,6 +192,7 @@ function Node_Color_Select(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _col  = make_color_hsv(255, 0, _Max * 255);
 		var _spn  = ui(3 + _hov * 5);
 		draw_sprite_stretched_ext(THEME.box_r2, 0, _MaxX - _spn, _y - ui(2), _spn*2, hh + ui(4), _col);
+		draw_sprite_stretched_add(THEME.box_r2, 1, _MaxX - _spn+1, _y - ui(2)+1, _spn*2-2, hh + ui(4)-2, c_white, .4);
 		draw_sprite_stretched_ext(THEME.box_r2, 1, _MaxX - _spn, _y - ui(2), _spn*2, hh + ui(4), _hov? COLORS._main_accent : CDEF.main_mdblack);
 		
 		if(_hov && mouse_lpress(_focus)) dragging_index = 18;
