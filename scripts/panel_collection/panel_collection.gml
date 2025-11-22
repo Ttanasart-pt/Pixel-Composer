@@ -14,7 +14,7 @@
 	
 	function __fnInit_Collection() {
 		registerFunction("Collection", "Toggle Search",     "F", MOD_KEY.ctrl, panel_collection_search_toggle     ).setMenu("collection_search_toggle")
-		registerFunction("Collection", "Replace",           "",  MOD_KEY.none, panel_collection_replace           ).setMenu("collection_replace")
+		registerFunction("Collection", "Replace with Selecting","",MOD_KEY.none, panel_collection_replace         ).setMenu("collection_replace")
 		registerFunction("Collection", "Edit Meta",         "",  MOD_KEY.none, panel_collection_edit_meta         ).setMenu("collection_edit_meta")
 		registerFunction("Collection", "Edit Collection",   "",  MOD_KEY.none, panel_collection_edit_default      ).setMenu("collection_edit_collection",   THEME.group_s)
 		registerFunction("Collection", "Update Thumbnail",  "",  MOD_KEY.none, panel_collection_update_thumbnail  ).setMenu("collection_update_thumbnail")
@@ -229,6 +229,7 @@ function Panel_Collection() : PanelContent() constructor {
 			var _graph = new Panel_Graph(_proj.project);
 			    _graph.setSize(ui(800), ui(480));
 			    _graph.setTitle(_menu_node.name);
+			    _graph.noGlobal();
 			    _graph.addContext(_proj.io_node);
 			
 			var _dia = dialogPanelCall(_graph);
@@ -405,16 +406,15 @@ function Panel_Collection() : PanelContent() constructor {
 					var gr_x1 = _boxx + grid_size;
 					var gr_y1 = yy + grid_size;
 					
+					if(has(_node, "getSpr")) _node.getSpr();
+					
 					if(yy + grid_size >= 0 && yy <= contentPane.surface_h) {
 						BLEND_OVERRIDE
 						draw_sprite_stretched_ext(THEME.node_bg, 0, _nx, yy, grid_width, grid_size, CDEF.main_black);
 						BLEND_NORMAL
 						draw_sprite_stretched_ext(THEME.node_bg, 1, _nx, yy, grid_width, grid_size, CDEF.main_dkgrey);
 						
-						var meta = noone;
-						if(variable_struct_exists(_node, "getMetadata")) 
-							meta = _node.getMetadata();
-						
+						var meta = has(_node, "getMetadata")? _node.getMetadata() : noone;
 						if(_hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
 							contentPane.hover_content = true;
 							draw_sprite_stretched_ext(THEME.node_bg, 1, _nx, yy, grid_width, grid_size, COLORS._main_accent, 1);
@@ -436,14 +436,14 @@ function Panel_Collection() : PanelContent() constructor {
 								menuCall("collection_menu", contentMenu);	
 							}
 							
-							if(!instance_exists(o_dialog_menubox) && meta != noone && meta != undefined)
+							if(!instance_exists(o_dialog_menubox) && meta != noone && meta != undefined) {
+								meta.thumbnail = _node.spr;
 								TOOLTIP = meta;
+							}
 						}
 						
 						if(_node.path == updated_path && updated_prog > 0) 
 							draw_sprite_stretched_ext(THEME.node_bg, 1, _nx, yy, grid_width, grid_size, COLORS._main_value_positive, updated_prog * 2);
-						
-						if(variable_struct_exists(_node, "getSpr")) _node.getSpr();
 						
 						if(sprite_exists(_node.spr)) {
 							var sw = sprite_get_width(_node.spr);

@@ -15,6 +15,8 @@
 #endregion
 
 function MetaDataManager() constructor {
+	static previewSurface = undefined;
+	
 	name		= "";
 	description = "";
 	author		= "";
@@ -22,6 +24,7 @@ function MetaDataManager() constructor {
 	alias		= "";
 	type		= FILE_TYPE.collection;
 	isDefault   = false;
+	thumbnail   = undefined;
 	
 	author_steam_id = 0;
 	file_id     = 0;
@@ -164,13 +167,29 @@ function MetaDataManager() constructor {
 			_h += th;
 		}
 		
-		var mx = min(mouse_mxs + _pdx * 2, WIN_W - (_w + _pdx * 2));
-		var my = min(mouse_mys + _pdy * 2, WIN_H - (_h + _pdy * 2));
+		var ww = _w + _pdx * 2
+		var hh = _h + _pdy * 2
+		var mx = min(mouse_mxs + _pdx * 2, WIN_W - ww);
+		var my = min(mouse_mys + _pdy * 2, WIN_H - hh);
 		
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		
-		draw_sprite_stretched(THEME.textbox, 3, mx, my, _w + _pdx * 2, _h + _pdy * 2);
-		draw_sprite_stretched(THEME.textbox, 0, mx, my, _w + _pdx * 2, _h + _pdy * 2);
+		if(thumbnail && sprite_exists(thumbnail)) {
+			previewSurface = surface_verify(previewSurface, ww, hh);
+			
+			surface_set_target(previewSurface);
+				DRAW_CLEAR
+				draw_sprite_stretched(THEME.textbox, 3, 0, 0, ww, hh);
+				gpu_set_colorwriteenable(1,1,1,0);
+				draw_sprite_tiled_ext(thumbnail, 0, -mx/2, -my/2, 4, 4, c_white, .1);
+				gpu_set_colorwriteenable(1,1,1,1);
+			surface_reset_target();
+			draw_surface(previewSurface, mx, my);
+			
+		} else 
+			draw_sprite_stretched(THEME.textbox, 3, mx, my, ww, hh);
+			
+		draw_sprite_stretched(THEME.textbox, 0, mx, my, ww, hh);
 		
 		var tx = mx + _pdx;
 		var ty = my + ui(8);

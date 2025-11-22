@@ -1,3 +1,21 @@
+#pragma use(sampler_simple)
+
+#region -- sampler_simple -- [1729740692.1417658]
+    uniform int  sampleMode;
+    
+    vec4 sampleTexture( sampler2D texture, vec2 pos) {
+        if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
+            return texture2D(texture, pos);
+        
+             if(sampleMode <= 1) return vec4(0.);
+        else if(sampleMode == 2) return texture2D(texture, clamp(pos, 0., 1.));
+        else if(sampleMode == 3) return texture2D(texture, fract(pos));
+        else if(sampleMode == 4) return vec4(vec3(0.), 1.);
+        
+        return vec4(0.);
+    }
+#endregion -- sampler_simple --
+
 #define TAU 6.283185307179586
 
 varying vec2 v_vTexcoord;
@@ -37,7 +55,7 @@ void main() {
 	    for(float i = 0.; i <= height; i++) {
         	
     		vec2 txs = v_vTexcoord + vec2(cos(ang), sin(ang)) * i * tx;
-    		float hh = h(texture2D( gm_BaseTexture, txs ));
+    		float hh = h(sampleTexture( gm_BaseTexture, txs ));
     		
     		float dh = (hh - ch) * height;
     		float di = (dh - i) / dh;

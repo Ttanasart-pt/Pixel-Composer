@@ -357,6 +357,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     pause_when_rendering = true;
     
     applyGlobal = true; function setLocalOnly() { applyGlobal = false; return self; }
+    hasGlobal   = true; function noGlobal()     { hasGlobal   = false; return self; }
     
     w = ui(800);
     h = ui(640);
@@ -2533,7 +2534,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         var tbh = h - toolbar_height / 2;
         var cnt = noone;
         
-        for(var i = -1, n = array_length(node_context); i < n; i++) {
+        for(var i = hasGlobal? -1 : 0, n = array_length(node_context); i < n; i++) {
             if(i == -1) {
             	cnt = noone;
                 tt  = __txt("Global");

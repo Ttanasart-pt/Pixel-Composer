@@ -24,6 +24,7 @@ function Node_Ambient_Occlusion(_x, _y, _group = noone) : Node_Processor(_x, _y,
 	////- Node
 	
 	attribute_surface_depth();
+	attribute_oversample();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		PROCESSOR_OVERLAY_CHECK
@@ -49,6 +50,7 @@ function Node_Ambient_Occlusion(_x, _y, _group = noone) : Node_Processor(_x, _y,
 		var _bls = _data[7];
 		
 		surface_set_shader(_outSurf, sh_sao);
+			shader_set_interpolation(_map);
 			shader_set_dim("dimension", _map);
 			shader_set_f("intensity",   _int);
 			shader_set_f("height",      _hei);
