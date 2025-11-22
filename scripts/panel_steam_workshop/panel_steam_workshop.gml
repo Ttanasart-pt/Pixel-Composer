@@ -157,7 +157,7 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 		history_undo = [];
 		history_redo = [];
 		
-		static navigate = function(_page, _undo = false) {
+		function navigate(_page, _undo = false) {
 			current_page.pageTotal    = pageTotal;
 			current_page.pageIndex    = pageIndex;
 			current_page.allFiles     = allFiles;

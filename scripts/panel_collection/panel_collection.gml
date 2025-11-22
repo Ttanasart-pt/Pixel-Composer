@@ -240,7 +240,7 @@ function Panel_Collection() : PanelContent() constructor {
 					instance_destroy(d.dialog);
 				}, { project: _proj, path: _menu_node.path, dialog: _dia}  ], 
 				
-				[ "Cancel", [ THEME.toolbar_check, 1, c_white ], function(d) /*=>*/ {return instance_destroy(d)}, _dia ], 
+				[ "Cancel", [ THEME.toolbar_check, 1, c_white ], function(d) /*=>*/ { instance_destroy(d); }, _dia ], 
 			];
 			
 		}
@@ -306,17 +306,18 @@ function Panel_Collection() : PanelContent() constructor {
 		if(meta == noone || meta.file_id == 0) {
 			contentMenu = [
 				MENU_ITEMS.collection_edit_collection,
-				MENU_ITEMS.collection_replace,
 				MENU_ITEMS.collection_edit_meta,
+				MENU_ITEMS.collection_replace,
 				MENU_ITEMS.collection_update_thumbnail,
+			];
+			
+			if(TESTING) array_push(contentMenu, MENU_ITEMS.collection_toggle_default);
+			
+			array_append(contentMenu, [
 				-1,
 				MENU_ITEMS.collection_delete_collection,
-			];
+			]);
 		} 
-		
-		if(TESTING) {
-			array_push(contentMenu, MENU_ITEMS.collection_toggle_default);
-		}
 		
 		if(STEAM_ENABLED) {
 			if(!array_empty(contentMenu)) array_push(contentMenu, -1);
@@ -330,8 +331,7 @@ function Panel_Collection() : PanelContent() constructor {
 					
 				array_push(contentMenu, MENU_ITEMS.collection_unsubscribe, -1);
 				array_push(contentMenu, menuItem( __txt("View on Workshop..."), function(_fid) /*=>*/ {
-					var _p = new Panel_Steam_Workshop();
-                    _p.navigate({ type: "fileid", fileid: _fid });
+					var _p = new Panel_Steam_Workshop().navigate({ type: "fileid", fileid: _fid });
                     dialogPanelCall(_p);
                     
 				}, THEME.steam_invert_24).setParam(meta.file_id) );

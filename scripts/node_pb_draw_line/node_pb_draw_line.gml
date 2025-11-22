@@ -41,7 +41,6 @@ function Node_PB_Draw_Line(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group
 			
 			if(_thck == 1) draw_line(_px0, _py0, _px1, _py1); 
 			else draw_line_width(_px0, _py0, _px1, _py1, _thck);
-			
 		}
 		
 		if(_type & 1 << 1) {
@@ -50,7 +49,6 @@ function Node_PB_Draw_Line(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group
 			
 			if(_thck == 1) draw_line(_px0, _py0, _px1, _py1); 
 			else draw_line_width(_px0, _py0, _px1, _py1, _thck);
-			
 		}
 		
 		if(_type & 1 << 2) {
@@ -59,7 +57,6 @@ function Node_PB_Draw_Line(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group
 			
 			if(_thck == 1) draw_line(_px0, _py0, _px1, _py1); 
 			else draw_line_width(_px0, _py0, _px1, _py1, _thck);
-			
 		}
 		
 		if(_type & 1 << 3) {
@@ -68,7 +65,6 @@ function Node_PB_Draw_Line(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group
 			
 			if(_thck == 1) draw_line(_px0, _py0, _px1, _py1); 
 			else draw_line_width(_px0, _py0, _px1, _py1, _thck);
-			
 		}
 		
 		if(_type & 1 << 4) {
@@ -79,7 +75,6 @@ function Node_PB_Draw_Line(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group
 			
 			if(_thck == 1) draw_line(_px0, _py0, _px1, _py1); 
 			else draw_line_width(_px0, _py0, _px1, _py1, _thck);
-			
 		}
 		
 		if(_type & 1 << 5) {

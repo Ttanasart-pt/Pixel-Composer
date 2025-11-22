@@ -70,6 +70,9 @@ function __part(_node) : __particleObject() constructor {
 	life_incr  = 0;
 	step_int   = 0;
 	
+	bound_w    = 1;
+	bound_h    = 1;
+	
 	////-  Transforms
 	
 	startx  = 0; starty  = 0;
@@ -101,6 +104,9 @@ function __part(_node) : __particleObject() constructor {
 	rot_base = 0;
 	rot_s	 = 0;
 	rot_snap = 0;
+	
+	wrap_x = false;
+	wrap_y = false;
 	
 	////- Path
 	
@@ -171,7 +177,7 @@ function __part(_node) : __particleObject() constructor {
 		prevy  = undefined;
 	}
 	
-	static create = function(_surf, _x, _y, _life) {
+	static create = function(_surf, _x, _y, _life, _wx = false, _wy = false) {
 		INLINE
 		
 		active = true;
@@ -190,6 +196,9 @@ function __part(_node) : __particleObject() constructor {
 		life_total = _life;
 		life       = _life;
 		
+		wrap_x = _wx;
+		wrap_y = _wy;
+	
 		if(node.onPartCreate != noone) node.onPartCreate(self);
 		
 		trailLife     = 0;
@@ -313,6 +322,16 @@ function __part(_node) : __particleObject() constructor {
 					speedx *= ground_friction;
 			} else
 				y += speedy * spdCurve;
+				
+			if(wrap_x) {
+				if(x < 0)       x += bound_w;
+				if(x > bound_w) x -= bound_w;
+			}
+			
+			if(wrap_y) {
+				if(y < 0)       y += bound_h;
+				if(y > bound_h) y -= bound_h;
+			}
 		#endregion
 		
 		#region physics
@@ -500,10 +519,23 @@ function __part(_node) : __particleObject() constructor {
 		if(_useS && (x0 > surf_w || y0 > surf_h || x1 < 0 || y1 < 0))
 			return;
 		
+		var bw = bound_w;
+		var bh = bound_h;
+		
 		switch(render_type) {
 			case PARTICLE_RENDER_TYPE.surface : 
 				if(surface_exists(_surf)) {
 					draw_surface_ext_safe(_surf, _xx, _yy, scx, scy, _rr, currColor, alp_draw);
+					
+					if(wrap_x) {
+						if(x0 < 0)  draw_surface_ext_safe(_surf, _xx + bw, _yy, scx, scy, _rr, currColor, alp_draw);
+						if(x1 > bw) draw_surface_ext_safe(_surf, _xx - bw, _yy, scx, scy, _rr, currColor, alp_draw);
+					}
+					
+					if(wrap_y) {
+						if(y0 < 0)  draw_surface_ext_safe(_surf, _xx, _yy + bh, scx, scy, _rr, currColor, alp_draw);
+						if(y1 > bh) draw_surface_ext_safe(_surf, _xx, _yy - bh, scx, scy, _rr, currColor, alp_draw);
+					}
 					
 				} else {
 					var ss = round(min(scx, scy));
@@ -529,6 +561,17 @@ function __part(_node) : __particleObject() constructor {
 							}
 							
 							_surf.draw(_xx, _yy, ss, ss, drawrot, currColor, alp_draw);
+							
+							if(wrap_x) {
+								if(x0 < 0)  _surf.draw(_xx - bw, _yy, ss, ss, drawrot, currColor, alp_draw);
+								if(x1 > bw) _surf.draw(_xx + bw, _yy, ss, ss, drawrot, currColor, alp_draw);
+							}
+							
+							if(wrap_y) {
+								if(y0 < 0)  _surf.draw(_xx, _yy - bh, ss, ss, drawrot, currColor, alp_draw);
+								if(y1 > bh) _surf.draw(_xx, _yy + bh, ss, ss, drawrot, currColor, alp_draw);
+							}
+							
 						} else DYNADRAW_DEFAULT.draw(_xx, _yy, ss, ss, 0, currColor, alp_draw);
 					shader_set(_s);
 				}

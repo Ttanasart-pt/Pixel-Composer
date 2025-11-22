@@ -1592,7 +1592,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 		}
 		
-		__s = _s;
+		__s  = _s;
 		__mx = _mx;
 		__my = _my;
 		
@@ -1681,9 +1681,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			_oy  += junction_outp_hei_y * __vis * __s; 
 		});
 		
-		array_foreach(inputs,           function(jun) /*=>*/ { jun   = jun.bypass_junc; if(!jun.visible) return; 
-		                                           jun.x = _ox; jun.y = _oy; _oy += junction_draw_hei_y * jun.visible * __s; });
-		array_foreach(junc_meta,        function(jun) /*=>*/ { jun.x = _ox; jun.y = _oy; _oy += junction_draw_hei_y * jun.isVisible() * __s; });
+		array_foreach(inputs,    function(jun) /*=>*/ { jun   = jun.bypass_junc; if(!jun.visible) return; 
+		                                    jun.x = _ox; jun.y = _oy; _oy += junction_draw_hei_y * jun.visible * __s; });
+		array_foreach(junc_meta, function(jun) /*=>*/ { jun.x = _ox; jun.y = _oy; _oy += junction_draw_hei_y * jun.isVisible() * __s; });
 		
 		if(SHOW_PARAM) h = h_param;
 		onPreDraw(_x, _y, _s, _iy, _oy);

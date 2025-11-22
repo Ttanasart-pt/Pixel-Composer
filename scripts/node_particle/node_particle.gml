@@ -12,7 +12,6 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	newInput(i+5, nodeValue_Int(         "Line Life",      4 ));
 	newInput(i+1, nodeValue_Bool(        "Round Position", true, "Round position to the closest integer value to avoid jittering."));
 	newInput(i+2, nodeValue_Enum_Scroll( "Blend Mode",     0, [ "Normal", "Alpha", "Additive", "Maximum" ]));
-	
 	//input i+6
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -85,7 +84,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		if(frame != render_frame && !IS_FIRST_FRAME) return;
 		
 		var _inSurf  = getInputData(0);
-		var _dim	 = getInputData(input_len + 0);
+		var _dim	 = getInputData(input_len + 0); __dim = _dim;
 		var _bg 	 = getInputData(input_len + 3);
 		var _typ     = getInputData(input_len + 4);
 		var _outSurf = outputs[0].getValue();
@@ -98,6 +97,11 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		render_amount = 0;		
 		
 		outputs[0].setValue(_outSurf);
+		
+		array_foreach(parts, function(p) /*=>*/ {
+			p.bound_w = __dim[0];
+			p.bound_h = __dim[1];
+		});
 		
 		if(IS_FIRST_FRAME) { 
 			reset(); 

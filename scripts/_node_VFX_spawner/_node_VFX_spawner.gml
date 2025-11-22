@@ -40,6 +40,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	newInput(29, nodeValue_Bool(            "Directed From Center",       false              )).setTooltip("Make particle move away from the spawn center.");
 	newInput(53, nodeValue_Rotation_Range(  "Angle Range",                [0,360]            ));
+	newInput(67, nodeValue_Toggle(          "Wrap",                       0, [ "X", "Y" ]    ))
 	
 	////- =Rotation
 	newInput(15, nodeValue_Bool(            "Rotate by Direction",        false              )).setTooltip("Make the particle rotates to follow its movement.");
@@ -52,9 +53,9 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput(17, nodeValue_Range(      "Size",         [1,1],     { linked : true }  )).setCurvable(11, CURVE_DEF_11, "Over Lifespan");
 	
 	////- =Color
-	newInput(12, nodeValue_Gradient( "Color Over Lifetime",    new gradientObject(ca_white)  ));
-	newInput(28, nodeValue_Gradient( "Random Blend",           new gradientObject(ca_white)  ));
+	newInput(28, nodeValue_Gradient( "Color on Spawn",         new gradientObject(ca_white)  ));
 	newInput(50, nodeValue_Palette(  "Color by Index",         [ca_white]                    )).setOptions("Select by:", "array_select", [ "Index Loop", "Index Ping-pong", "Random" ], THEME.array_select_type).iconPad();
+	newInput(12, nodeValue_Gradient( "Color Over Lifetime",    new gradientObject(ca_white)  ));
 	newInput(13, nodeValue_Range(    "Alpha",                  [1,1], { linked : true }      )).setCurvable(14, CURVE_DEF_11, "Over Lifespan");
 	newInput(56, nodeValue_Surface(  "Sample Surface"                                        ));
 	
@@ -95,7 +96,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput(25, nodeValue_Int(      "Boundary Data",          []   )).setArrayDepth(1).setVisible(false, true);
 	newInput(31, nodeValue_Surface(  "Atlas",                  []   )).setArrayDepth(1);
 	newInput(48, nodeValue_Trigger(  "Reset Seed"                   ))
-	// inputs 67
+	// inputs 68
 	
 	array_foreach(inputs, function(inp, i) /*=>*/ { 
 		if(i == 6 || i == 8) return; 
@@ -141,10 +142,10 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		[ "Sprite",       true ],  0, dynaDraw_parameter, 22, 23, 49, 26,
 		[ "Spawn",        true ], 27, 16, 44,  1, 51,  2, __inspc(ui(6), true),  5, 
 		[ "Spawn Source", true ],  4,  3, 30, 55, 62, 24, 52, 
-		[ "Movement",     true ], 64,  6, 18, 60, 29, 53, 
+		[ "Movement",     true ], 64,  6, 18, 60, 29, 53, 67, 
 		[ "Rotation",     true ], 15,  8,  9, 59, 61, 
 		[ "Scale",        true ], 10, 17, 11, 
-		[ "Color",        true ], 12, 28, 50, 13, 14, 56, 
+		[ "Color",        true ], 28, 50, 12, 13, 14, 56, 
 		__inspc(ui(6), true, false, ui(3)), 
 		
 		[ "Follow path", true, 45 ], 46, 66, 47, 
@@ -215,6 +216,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var _direction  	= getInputData( 6);
 		var _directCenter	= getInputData(29);
 		var _directRange	= getInputData(53);
+		var _warp           = getInputData(67);
 		var _velocity   	= getInputData(18);
 		
 		var _rotation   	= getInputData( 8);
@@ -372,7 +374,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			
 			var _path_range = [ random_range(_pathRange[0], _pathRange[1]), random_range(_pathRange[2], _pathRange[3]) ];
 			
-			part.create(_spr, xx, yy, _lif);
+			part.create(_spr, xx, yy, _lif, _warp & 0b01, _warp & 0b10);
 			
 			part.seed       = irandom_range(100000, 999999);
 			part.anim_speed = random_range(_anim_speed[0], _anim_speed[1]);

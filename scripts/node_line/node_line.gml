@@ -398,9 +398,9 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							wght = 1;
 							_segIndexPrev = _segIndex;
 							
-							if(_useDistance) {
-								var segmentLength = array_safe_get_fast(_segLength, _segIndex, _pathLength);
+							var segmentLength = array_safe_get_fast(_segLength, _segIndex, _pathLength);
 								
+							if(_useDistance) {
 								var _next_step = _prog_curr + _stepLen;
 								if(_next_step > _pathLength)   _next_step = _next_step - _pathLength;
 								
@@ -432,10 +432,10 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							_wmin = min(_wmin, wght);
 							_wmax = max(_wmax, wght);
 							
-							if(_total < _pathEnd) { // Do not wiggle the last point.
+							if(_total < _pathEnd && _wig != 0) { // Do not wiggle the last point.
 								var _d = point_direction(_ox, _oy, _nx, _ny);
-								_nx   += lengthdir_x(random1D(_sed + _l * _prog_curr, -_wig, _wig), _d + 90);
-								_ny   += lengthdir_y(random1D(_sed + _l * _prog_curr, -_wig, _wig), _d + 90);
+								_nx   += lengthdir_x(random1D(_sed + segmentLength * _prog_curr, -_wig, _wig), _d + 90);
+								_ny   += lengthdir_y(random1D(_sed + segmentLength * _prog_curr, -_wig, _wig), _d + 90);
 							}
 								
 							if(_prog_total >= _pathStr) { // Do not add point before range start. Do this instead of starting at _rtStr to prevent wiggle. 
