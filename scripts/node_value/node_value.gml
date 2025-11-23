@@ -1097,10 +1097,17 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 						
 					case VALUE_DISPLAY.path_load :
-						editWidget = new textBox(TEXTBOX_INPUT.text, function(str) /*=>*/ { if(NOT_LOAD) check_directory_redirector(str); setValueInspector(str); });
-						editWidget.align = fa_left;
+						var _type = display_data[$ "type"] ?? "box";
+						var _edFn = function(str) /*=>*/ { if(NOT_LOAD) check_directory_redirector(str); setValueInspector(str); };
+						
+						switch(_type) {
+							case "box"  : editWidget = textBox_Text(_edFn);  break;
+							case "area" : editWidget = textArea_Text(_edFn); break;
+						}
+						
 						if(!is(node, Node_Global)) array_append(node.project.pathInputs, self);
 						
+						editWidget.align = fa_left;
 						editWidget.side_button = button(function() /*=>*/ { 
 							var path = display_data.filter == "dir"? get_open_directory_compat(PREFERENCES.dialog_path) : get_open_filename_compat(display_data.filter, "");
 							key_release();
@@ -1129,7 +1136,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 						
 					case VALUE_DISPLAY.path_save :
-						editWidget = new textBox(TEXTBOX_INPUT.text, function(str) /*=>*/ {return setValueInspector(str)});
+						var _type = display_data[$ "type"] ?? "box";
+						var _edFn = function(str) /*=>*/ {return setValueInspector(str)};
+						
+						switch(_type) {
+							case "box"  : editWidget = textBox_Text(_edFn);  break;
+							case "area" : editWidget = textArea_Text(_edFn); break;
+						}
 						
 						editWidget.align = fa_left;
 						editWidget.side_button = button(function() { 
@@ -1275,6 +1288,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} 
 	
 	static setSideButton = function(b, s = false) { if(is(editWidget, widget)) editWidget.setSideButton(b, s); return self; } 
+	
+	static widgetBreakLine = function() { if(is(editWidget, widget)) editWidget.always_break_line = true; return self; } 
 	
 	resetDisplay();
 	

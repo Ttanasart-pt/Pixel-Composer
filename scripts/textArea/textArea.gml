@@ -760,9 +760,12 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		var c_h = line_get_height();
 		
 		w  = _w;
-		var _bw = min(c_h + padding_v * 2, ui(32));
-		var _drawB = is(side_button, buttonClass) && _w - _bw > ui(100);
-		if(_drawB) _w -= _bw + ui(4);
+		var bw = min(c_h + padding_v * 2, ui(32));
+		var bh = c_h + padding_v * 2;
+		
+		var _drawB = is(side_button, buttonClass)  && _w - bw > ui(100);
+		var _drawF = is(front_button, buttonClass) && _w - bw > ui(100);
+		_w -= (bw + ui(4)) * (_drawB + _drawF);
 		
 		var tx = ui(8);
 		var hh = _h;
@@ -791,9 +794,15 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		}
 		
 		if(_drawB) {
-			var bh = c_h + padding_v * 2;
 			side_button.setFocusHover(active, hover);
-			side_button.draw(_x + w - _bw, _y, _bw, bh, _m, THEME.button_hide_fill);
+			side_button.draw(_x + w - bw, _y, bw, bh, _m, THEME.button_hide_fill);
+		}
+		
+		if(_drawF) {
+			front_button.setFocusHover(active, hover);
+			front_button.draw(_x, _y, bw, bh, _m, THEME.button_hide_fill);
+			
+			_x += bw + ui(4);
 		}
 		
 		////- Draw

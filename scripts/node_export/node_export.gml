@@ -64,7 +64,12 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	////- =Export
 	newInput( 0, nodeValue_Surface( "Surface"   ));
-	newInput( 1, nodeValue_Path(    "Directory" )).setDisplay(VALUE_DISPLAY.path_save, { filter: "dir", default_dir: function() /*=>*/ {return PROJECT.attributes.export_dir} }).setVisible(true);
+	newInput( 1, nodeValue_Path(    "Directory" )).setDisplay(VALUE_DISPLAY.path_save, { 
+		type        : "area", 
+		filter      : "dir", 
+		default_dir : function() /*=>*/ {return PROJECT.attributes.export_dir} 
+	}).setVisible(true).widgetBreakLine();
+	
 	newInput(20, nodeValue_Text(    "File name" ));
 	newInput( 4, nodeValue_Int(     "Template guides", 0      ));
 	newInput( 2, nodeValue_Text(    "Template",        "%d%n" )).rejectArray();
