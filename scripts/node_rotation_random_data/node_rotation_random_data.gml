@@ -1,6 +1,7 @@
 function Node_Rotation_Random_Data(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name  = "Rotation Random";
 	color = COLORS.node_blend_number;
+	setDrawIcon(s_node_rotation_random_data);
 	setDimension(96, 48);
 	
 	types = [
@@ -75,8 +76,4 @@ function Node_Rotation_Random_Data(_x, _y, _group = noone) : Node_Processor(_x, 
 		return [ _type, _rn1s, _rn1e, _rn2s, _rn2e ];
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_bbox_uniform(s_node_rotation_random_data, 0, bbox);
-	}
 }

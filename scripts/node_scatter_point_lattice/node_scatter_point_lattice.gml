@@ -7,6 +7,7 @@
 function Node_Scatter_Point_Lattice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name  = "Lattice Point";
 	color = COLORS.node_blend_number;
+	setDrawIcon(s_node_scatter_point_lattice);
 	setDimension(96, 48);
 	
 	////- =Base
@@ -87,11 +88,6 @@ function Node_Scatter_Point_Lattice(_x, _y, _group = noone) : Node_Processor(_x,
 		}
 		
 		return pos;
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_bbox_uniform(s_node_scatter_point_lattice, 0, bbox);
 	}
 	
 }

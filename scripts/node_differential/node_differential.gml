@@ -1,7 +1,7 @@
 function Node_Differential(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
-    name		= "Differential";
-    color		= COLORS.node_blend_number;
-    
+    name  = "Differential";
+    color = COLORS.node_blend_number;
+    setDrawIcon(s_node_differential);
     setDimension(96, 48);
     
     newInput(0, nodeValue_Float("Value", 0))
@@ -27,8 +27,4 @@ function Node_Differential(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
         return _dt == 0? 0 : _dx / _dt;
     }
     
-    static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-        var bbox = draw_bbox;
-        draw_sprite_bbox_uniform(s_node_differential, 0, bbox);
-    }
 }

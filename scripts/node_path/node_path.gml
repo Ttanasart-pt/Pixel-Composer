@@ -393,7 +393,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Path";
 	preview_channel = 1;
 	preview_select_surface = false;
-	
+	setDrawIcon(s_node_path);
 	setDimension(96, 48);
 	
 	////- =Path
@@ -1955,11 +1955,6 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			outputs[0].setValue(_out.toArray());
 		}
 		
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_bbox_uniform(s_node_path, 0, bbox, c_white, 1, true);
 	}
 	
 	static getPreviewBoundingBox = function() { 

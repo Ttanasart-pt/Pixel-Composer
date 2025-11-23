@@ -3,6 +3,7 @@ function Node_Rigid_Joint_Fix(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	color = COLORS.node_blend_simulation;
 	icon  = THEME.rigidSim;
 	manual_ungroupable	 = false;
+	setDrawIcon(s_node_rigid_joint_fix);
 	setDimension(96, 48);
 	
 	worldIndex = undefined;
@@ -53,8 +54,4 @@ function Node_Rigid_Joint_Fix(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		outputs[0].setValue([_o1[0], _o2[0]]);
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_bbox_uniform(s_node_rigid_joint_fix, 0, bbox);
-	}
 }

@@ -2,7 +2,7 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	name  = "Tree Leaves";
 	color = COLORS.node_blend_mktree;
 	icon  = THEME.mkTree;
-	// renderAll = true;
+	setDrawIcon(s_node_mk_tree_leaf);
 	setDimension(96, 48);
 	
 	newInput(5, nodeValueSeed());
@@ -256,8 +256,4 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		outputs[0].setValue(_tree);
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_bbox_uniform(s_node_mk_tree_leaf, 0, bbox);
-	}
 }

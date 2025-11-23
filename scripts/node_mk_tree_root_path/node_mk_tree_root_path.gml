@@ -2,6 +2,7 @@ function Node_MK_Tree_Path_Root(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	name  = "Tree Trunk Path";
 	color = COLORS.node_blend_mktree;
 	icon  = THEME.mkTree;
+	setDrawIcon(s_node_mk_tree_path_root);
 	setDimension(96, 48);
 	
 	newInput( 0, nodeValueSeed());
@@ -184,10 +185,5 @@ function Node_MK_Tree_Path_Root(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		_t.getLength();
 		
 		outputs[0].setValue([_t]);
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_bbox_uniform(s_node_mk_tree_path_root, 0, bbox);
 	}
 }

@@ -2,6 +2,7 @@ function Node_VerletSim_Mesh_Cache_Lerp(_x, _y, _group = noone) : Node(_x, _y, _
 	name  = "Mesh Mix Cache";
 	color = COLORS.node_blend_verlet;
 	icon  = THEME.verletSim;
+	setDrawIcon(s_node_verletsim_mesh_cache_lerp);
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue_Mesh(   "Mesh"       )).setVisible(true, true);
@@ -40,11 +41,6 @@ function Node_VerletSim_Mesh_Cache_Lerp(_x, _y, _group = noone) : Node(_x, _y, _
 			_mp[i].dx = lerp(_mp[i].x, _cp[i][0], _lerp);
 			_mp[i].dy = lerp(_mp[i].y, _cp[i][1], _lerp);
 		}
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_bbox_uniform(s_node_verletsim_mesh_cache_lerp, 0, bbox);
 	}
 	
 }

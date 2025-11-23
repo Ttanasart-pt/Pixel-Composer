@@ -8,6 +8,7 @@ function Node_Scatter_Points_3D(_x, _y, _group = noone) : Node_Processor(_x, _y,
 	name  = "Scatter Points 3D";
 	color = COLORS.node_blend_number;
 	is_3D = NODE_3D.polygon;
+	setDrawIcon(s_node_scatter_points_3d);
 	setDimension(96, 48);
 	
 	////- =Base
@@ -170,11 +171,6 @@ function Node_Scatter_Points_3D(_x, _y, _group = noone) : Node_Processor(_x, _y,
 	}
 	
 	////- Preview
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_bbox_uniform(s_node_scatter_points_3d, 0, bbox);
-	}
 	
 	static getPreviewObject 		= function() /*=>*/ {return noone};
 	static getPreviewObjects		= function() /*=>*/ {return []};

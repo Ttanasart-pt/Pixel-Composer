@@ -833,7 +833,7 @@
 function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Path 3D";
 	is_3D = NODE_3D.polygon;
-	
+	setDrawIcon(s_node_path_3d);
 	setDimension(96, 48);
 	
 	////- =Path
@@ -1652,11 +1652,6 @@ function Node_Path_3D(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	}
 	
 	////- Preview
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_bbox_uniform(s_node_path_3d, 0, bbox);
-	}
 	
 	static getPreviewObject 		= function() /*=>*/ {return noone};
 	static getPreviewObjects		= function() /*=>*/ {return []};

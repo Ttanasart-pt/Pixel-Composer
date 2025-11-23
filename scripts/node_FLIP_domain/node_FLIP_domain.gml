@@ -2,6 +2,7 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	name  = "Domain";
 	color = COLORS.node_blend_fluid;
 	icon  = THEME.fluid_sim;
+	setDrawIcon(s_node_flip_domain);
 	
 	manual_ungroupable = false;
 	update_on_frame    = true;
@@ -127,11 +128,6 @@ function Node_FLIP_Domain(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		outputs[0].setValue(domain);
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { 
-		var bbox = draw_bbox;
-		draw_sprite_bbox_uniform(s_node_flip_domain, 0, bbox);
-	} 
-		
 	static getPreviewValues = function() { return domain.domain_preview; }
 	
 }

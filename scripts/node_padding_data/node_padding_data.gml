@@ -1,6 +1,7 @@
 function Node_Padding_Data(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name  = "Padding Data";
 	color = COLORS.node_blend_number;
+	setDrawIcon(s_node_padding_data);
 	setDimension(96, 48);
 	
 	////- Fractional
@@ -47,8 +48,4 @@ function Node_Padding_Data(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		return [ _r, _t, _l, _b ];
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_bbox_uniform(s_node_padding_data, 0, bbox);
-	}
 }

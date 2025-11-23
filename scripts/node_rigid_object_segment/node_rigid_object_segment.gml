@@ -2,9 +2,9 @@ function Node_Rigid_Object_Segment(_x, _y, _group = noone) : Node(_x, _y, _group
 	name  = "Segment";
 	color = COLORS.node_blend_simulation;
 	icon  = THEME.rigidSim;
+	manual_ungroupable = false;
+	setDrawIcon(s_node_rigid_object_segment);
 	setDimension(96, 48);
-	
-	manual_ungroupable	 = false;
 	
 	worldIndex = undefined;
 	worldScale = 100;
@@ -82,8 +82,4 @@ function Node_Rigid_Object_Segment(_x, _y, _group = noone) : Node(_x, _y, _group
 		outputs[0].setValue(objects);
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_bbox_uniform(s_node_rigid_object_segment, 0, bbox);
-	}
 }

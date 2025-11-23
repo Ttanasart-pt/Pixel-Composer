@@ -1,5 +1,6 @@
 function Node_Atlas_Struct(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Atlas to Struct";
+	setDrawIcon(s_node_atlas_struct);
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue_Atlas())
@@ -25,8 +26,4 @@ function Node_Atlas_Struct(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		return str;
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_bbox_uniform(s_node_atlas_struct, 0, bbox);
-	}
 }

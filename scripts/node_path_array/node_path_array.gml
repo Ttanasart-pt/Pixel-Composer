@@ -1,5 +1,6 @@
 function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Path Combine";
+	setDrawIcon(s_node_path_array);
 	setDimension(96, 48);
 	
 	newOutput(0, nodeValue_Output("Combined Path", VALUE_TYPE.pathnode, self));
@@ -129,9 +130,4 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		curr_path_amo = array_length(curr_path);
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_bbox_uniform(s_node_path_array, 0, bbox);
-	}
-
 }

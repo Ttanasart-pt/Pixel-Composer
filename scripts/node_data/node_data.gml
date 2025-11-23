@@ -68,7 +68,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		icon           = noone;
 		icon_24        = noone;
 		icon_blend     = undefined;
-		node_draw_icon = noone;
+		node_draw_icon = noone;           function setDrawIcon(s) { node_draw_icon = s; always_pad = true; return self; }
 		bg_spr         = THEME.node_bg;
 		bg_spr_add     = .25;
 		bg_spr_add_clr = c_white;
@@ -2278,10 +2278,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		if(previewable) {
 			if(preview_draw) drawPreview(xx, yy, _s);
-			if(node_draw_icon != noone) {
-				var bbox = draw_bbox;
-				draw_sprite_bbox_uniform(node_draw_icon, 0, bbox);
-			}
+			if(node_draw_icon != noone) draw_sprite_bbox_uniform(node_draw_icon, 0, draw_bbox);
 			
 			if(onDrawNode) {
 				try { onDrawNode(xx, yy, _mx, _my, _s, _hover, _focus); }

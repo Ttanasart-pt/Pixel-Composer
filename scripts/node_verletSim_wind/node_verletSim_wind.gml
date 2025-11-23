@@ -3,6 +3,7 @@ function Node_VerletSim_Wind(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	color = COLORS.node_blend_verlet;
 	icon  = THEME.verletSim;
 	update_on_frame = true;
+	setDrawIcon(s_node_verletsim_wind);
 	setDimension(96, 48);
 	
 	newActiveInput(7);
@@ -102,8 +103,4 @@ function Node_VerletSim_Wind(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_bbox_uniform(s_node_verletsim_wind, 0, bbox);
-	}
 }

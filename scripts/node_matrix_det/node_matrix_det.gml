@@ -1,6 +1,7 @@
 function Node_Matrix_Det(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name  = "Matrix Det";
 	color = COLORS.node_blend_number;
+	setDrawIcon(s_node_matrix_det);
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue_Matrix("Matrix", new Matrix(3)))
@@ -20,8 +21,4 @@ function Node_Matrix_Det(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		return _mat.det();
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_bbox_uniform(s_node_matrix_det, 0, bbox);
-	}
 }

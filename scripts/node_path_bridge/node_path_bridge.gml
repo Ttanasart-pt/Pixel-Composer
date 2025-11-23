@@ -1,5 +1,6 @@
 function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Bridge Path";
+	setDrawIcon(s_node_path_bridge);
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue_PathNode( "Path" ));
@@ -271,8 +272,4 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_bbox_uniform(s_node_path_bridge, 0, bbox);
-	}
 } 

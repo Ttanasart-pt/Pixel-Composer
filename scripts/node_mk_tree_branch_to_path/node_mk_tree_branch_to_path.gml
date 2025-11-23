@@ -3,7 +3,7 @@ function Node_MK_Tree_Branch_To_Path(_x, _y, _group = noone) : Node(_x, _y, _gro
 	color = COLORS.node_blend_mktree;
 	icon  = THEME.mkTree;
 	update_on_frame = true;
-	
+	setDrawIcon(s_node_mk_tree_branch_to_path);
 	setDimension(96, 48);
 	
 	newInput( 0, nodeValue_Struct("Branch", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
@@ -163,8 +163,4 @@ function Node_MK_Tree_Branch_To_Path(_x, _y, _group = noone) : Node(_x, _y, _gro
 		
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_bbox_uniform(s_node_mk_tree_branch_to_path, 0, bbox);
-	}
 }

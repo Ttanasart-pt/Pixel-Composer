@@ -1,5 +1,6 @@
 function Node_Points_Triangulate(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Triangulate Points";
+	setDrawIcon(s_node_points_triangulate);
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue_Vec2("Points", [ 0, 0 ])).setVisible(true, true).setArrayDepth(1);
@@ -59,8 +60,4 @@ function Node_Points_Triangulate(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		outputs[0].setValue(_segOut);
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_bbox_uniform(s_node_points_triangulate, 0, bbox);
-	}
 }

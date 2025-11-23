@@ -1,6 +1,7 @@
 function Node_Corner_Data(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name  = "Corner Data";
 	color = COLORS.node_blend_number;
+	setDrawIcon(s_node_corner_data);
 	setDimension(96, 48);
 	
 	////- Corner
@@ -27,8 +28,4 @@ function Node_Corner_Data(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		return [ _tl, _tr, _bl, _br ];
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_bbox_uniform(s_node_corner_data, 0, bbox);
-	}
 }

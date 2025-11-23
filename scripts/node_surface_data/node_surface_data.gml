@@ -1,5 +1,6 @@
 function Node_Surface_data(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
-	name	= "Surface data";
+	name = "Surface data";
+	setDrawIcon(s_node_surface_data);
 	
 	newInput(0, nodeValue_Surface("Surface"));
 	
@@ -40,8 +41,4 @@ function Node_Surface_data(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		return _outData;
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_bbox_uniform(s_node_surface_data, 0, bbox);
-	}
 }

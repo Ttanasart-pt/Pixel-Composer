@@ -2,6 +2,7 @@ function Node_VerletSim_Mesh_Pleat(_x, _y, _group = noone) : Node(_x, _y, _group
 	name  = "Pleat Mesh";
 	color = COLORS.node_blend_verlet;
 	icon  = THEME.verletSim;
+	setDrawIcon(s_node_verletsim_mesh_pleat);
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue_Mesh( "Mesh" )).setVisible(true, true);
@@ -90,8 +91,4 @@ function Node_VerletSim_Mesh_Pleat(_x, _y, _group = noone) : Node(_x, _y, _group
 		
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_bbox_uniform(s_node_verletsim_mesh_pleat, 0, bbox);
-	}
 }

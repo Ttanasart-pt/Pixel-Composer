@@ -1,5 +1,6 @@
 function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Bake Path";
+	setDrawIcon(THEME.node_draw_path);
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue_PathNode( "Path" ));
@@ -96,8 +97,4 @@ function Node_Path_Bake(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		outputs[0].setValue(_segs);
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_bbox_uniform(THEME.node_draw_path, 0, bbox);
-	}
 }

@@ -1,6 +1,6 @@
 function Node_Segment_Filter(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Filter Segment";
-	
+	setDrawIcon(s_node_segment_filter);
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue_Vector("Segment"))
@@ -103,8 +103,4 @@ function Node_Segment_Filter(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		outputs[0].setValue(_segOut);
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_bbox_uniform(s_node_segment_filter, 0, bbox);
-	}
 }

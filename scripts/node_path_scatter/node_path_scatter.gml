@@ -1,5 +1,6 @@
 function Node_Path_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Scatter Path";
+	setDrawIcon(s_node_path_scatter);
 	setDimension(96, 48);
 	
 	newInput( 5, nodeValueSeed());
@@ -225,8 +226,4 @@ function Node_Path_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		return _scattered;
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_bbox_uniform(s_node_path_scatter, 0, bbox);
-	}
 }

@@ -4,6 +4,7 @@ function Node_Rigid_Sensor(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	icon  = THEME.rigidSim;
 	update_on_frame    = true;
 	manual_ungroupable = false;
+	setDrawIcon(s_node_rigid_sensor);
 	setDimension(96, 48);
 	
 	worldIndex  = undefined;
@@ -123,8 +124,4 @@ function Node_Rigid_Sensor(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		outputs[0].setValue(_res);
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_bbox_uniform(s_node_rigid_sensor, 0, bbox);
-	}
 }

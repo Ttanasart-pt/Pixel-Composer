@@ -2,6 +2,7 @@ function Node_3D_Mesh_Vertex_Points(_x, _y, _group = noone) : Node_Processor(_x,
 	name  = "Mesh Vertices";
 	color = COLORS.node_blend_number;
 	is_3D = NODE_3D.polygon;
+	setDrawIcon(s_node_3d_mesh_vertex_points);
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue_D3Mesh( "Mesh", noone )).setVisible(true, true);
@@ -156,11 +157,6 @@ function Node_3D_Mesh_Vertex_Points(_x, _y, _group = noone) : Node_Processor(_x,
 	}
 	
 	////- Preview
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_bbox_uniform(s_node_3d_mesh_vertex_points, 0, bbox);
-	}
 	
 	static getPreviewObject 		= function() /*=>*/ {return noone};
 	static getPreviewObjects		= function() /*=>*/ {return []};

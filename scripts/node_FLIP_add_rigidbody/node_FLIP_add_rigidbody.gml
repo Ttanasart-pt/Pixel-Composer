@@ -2,6 +2,7 @@ function Node_FLIP_Add_Rigidbody(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	name  = "Add Rigidbody";
 	color = COLORS.node_blend_fluid;
 	icon  = THEME.fluid_sim;
+	setDrawIcon(s_node_flip_add_collider);
 	setDimension(96, 96);
 	
 	manual_ungroupable = false;
@@ -65,11 +66,6 @@ function Node_FLIP_Add_Rigidbody(_x, _y, _group = noone) : Node(_x, _y, _group) 
 			
 			FLIP_setObstracle_rectangle(domain.domain, index, px, py, _obj.width, _obj.height);
 		}
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_bbox_uniform(s_node_flip_add_collider, 0, bbox);
 	}
 	
 	static getPreviewValues = function() { var domain = getInputData(0); return instance_exists(domain)? domain.domain_preview : noone; }

@@ -3,7 +3,7 @@ function Node_MK_Tree_Add_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	color = COLORS.node_blend_mktree;
 	icon  = THEME.mkTree;
 	update_on_frame = true;
-	
+	setDrawIcon(s_node_mk_tree_add_branch);
 	setDimension(96, 48);
 	
 	newInput( 0, nodeValue_Struct("Tree", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
@@ -60,8 +60,4 @@ function Node_MK_Tree_Add_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		outputs[0].setValue(_ntree);
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_bbox_uniform(s_node_mk_tree_add_branch, 0, bbox);
-	}
 }

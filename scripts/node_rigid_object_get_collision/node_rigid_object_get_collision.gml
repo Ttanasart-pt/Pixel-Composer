@@ -3,6 +3,7 @@ function Node_Rigid_Object_Get_Collision(_x, _y, _group = noone) : Node(_x, _y, 
 	color = COLORS.node_blend_simulation;
 	icon  = THEME.rigidSim;
 	update_on_frame = true;
+	setDrawIcon(s_node_rigid_object_get_collision);
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue("Objects", self, CONNECT_TYPE.input, VALUE_TYPE.rigid, noone )).setVisible(true, true);
@@ -132,8 +133,4 @@ function Node_Rigid_Object_Get_Collision(_x, _y, _group = noone) : Node(_x, _y, 
 		outputs[5].setValue(cnorms_new);
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_bbox_uniform(s_node_rigid_object_get_collision, 0, bbox);
-	}
 }

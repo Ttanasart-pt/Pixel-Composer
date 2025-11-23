@@ -2,6 +2,7 @@ function Node_FLIP_Wall(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	name  = "Wall";
 	color = COLORS.node_blend_fluid;
 	icon  = THEME.fluid_sim;
+	setDrawIcon(s_node_flip_wall);
 	setDimension(96, 96);
 	
 	manual_ungroupable = false;
@@ -34,8 +35,4 @@ function Node_FLIP_Wall(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		FLIP_setSolid_rectangle(domain.domain, _area[0], _area[1], _area[2], _area[3]);
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_bbox_uniform(s_node_flip_wall, 0, bbox);
-	}
 }

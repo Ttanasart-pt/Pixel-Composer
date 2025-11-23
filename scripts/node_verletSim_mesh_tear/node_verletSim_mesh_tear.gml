@@ -2,6 +2,7 @@ function Node_VerletSim_Mesh_Tear(_x, _y, _group = noone) : Node(_x, _y, _group)
 	name  = "Tear Mesh";
 	color = COLORS.node_blend_verlet;
 	icon  = THEME.verletSim;
+	setDrawIcon(s_node_verletsim_mesh_tear);
 	setDimension(96, 48);
 	
 	newActiveInput(4);
@@ -75,8 +76,4 @@ function Node_VerletSim_Mesh_Tear(_x, _y, _group = noone) : Node(_x, _y, _group)
 		
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_bbox_uniform(s_node_verletsim_mesh_tear, 0, bbox);
-	}
 }

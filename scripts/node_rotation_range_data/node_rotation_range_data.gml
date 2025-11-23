@@ -1,6 +1,7 @@
 function Node_Rotation_Range_Data(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name  = "Rotation Range";
 	color = COLORS.node_blend_number;
+	setDrawIcon(s_node_rotation_range_data);
 	setDimension(96, 48);
 	
 	////- Rotation
@@ -23,8 +24,4 @@ function Node_Rotation_Range_Data(_x, _y, _group = noone) : Node_Processor(_x, _
 		return [ _st, _ed ];
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_bbox_uniform(s_node_rotation_range_data, 0, bbox);
-	}
 }

@@ -2,7 +2,7 @@ function Node_VerletSim_Mesh(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	name  = "Mesh";
 	color = COLORS.node_blend_verlet;
 	icon  = THEME.verletSim;
-	
+	setDrawIcon(s_node_verletsim_mesh);
 	setDimension(96, 48);
 	
 	////- =Mesh
@@ -133,11 +133,6 @@ function Node_VerletSim_Mesh(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		}
 		
 		outputs[0].setValue(mesh);
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_bbox_uniform(s_node_verletsim_mesh, 0, bbox);
 	}
 	
 }

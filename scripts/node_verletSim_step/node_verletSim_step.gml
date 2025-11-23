@@ -3,6 +3,7 @@ function Node_VerletSim_Step(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	color = COLORS.node_blend_verlet;
 	icon  = THEME.verletSim;
 	update_on_frame = true;
+	setDrawIcon(s_node_verletsim_step);
 	
 	newInput(0, nodeValue_Mesh( "Mesh" )).setVisible(true, true);
 	
@@ -34,11 +35,6 @@ function Node_VerletSim_Step(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		if(!is(_msh, __verlet_Mesh)) return;
 		inline_context.verletStep(_msh);
 		
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_bbox_uniform(s_node_verletsim_step, 0, bbox);
 	}
 	
 }

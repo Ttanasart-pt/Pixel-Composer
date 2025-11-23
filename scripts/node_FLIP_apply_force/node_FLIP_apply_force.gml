@@ -18,6 +18,7 @@ function Node_FLIP_Apply_Force(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	name  = "Add Collider";
 	color = COLORS.node_blend_fluid;
 	icon  = THEME.fluid_sim;
+	setDrawIcon(s_node_flip_add_collider);
 	setDimension(96, 96);
 	
 	manual_ungroupable = false;
@@ -113,11 +114,6 @@ function Node_FLIP_Apply_Force(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		     if(_shp == 0) FLIP_setObstracle_circle(domain.domain, index, _posit[0], _posit[1], _rad);
 		else if(_shp == 1) FLIP_setObstracle_rectangle(domain.domain, index, _posit[0], _posit[1], _siz[0], _siz[1]);
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_bbox_uniform(s_node_flip_add_collider, 0, bbox);
 	}
 	
 	static getPreviewValues = function() { var domain = getInputData(0); return instance_exists(domain)? domain.domain_preview : noone; }

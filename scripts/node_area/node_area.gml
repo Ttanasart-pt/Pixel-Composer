@@ -1,6 +1,7 @@
 function Node_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name  = "Area";
 	color = COLORS.node_blend_number;
+	setDrawIcon(THEME.node_draw_area);
 	setDimension(96, 48);
 	
 	newInput(3, nodeValue_Enum_Scroll( "Type", 0, [ "Center Span", "Two Point" ]));
@@ -93,8 +94,4 @@ function Node_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		return [ _v0[0], _v0[1], _v1[0], _v1[1], _shap ];
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_bbox_uniform(THEME.node_draw_area, 0, bbox);
-	}
 }

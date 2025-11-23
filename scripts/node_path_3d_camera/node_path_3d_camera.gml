@@ -6,6 +6,7 @@
 
 function Node_Path_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group) constructor {
 	name = "3D Path Camera";
+	setDrawIcon(s_node_path_3d_camera);
 	
 	object   = new __3dCamera_object();
 	camera   = new __3dCamera();
@@ -274,11 +275,6 @@ function Node_Path_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _g
 	////- Draw
 	
 	static getGraphPreviewSurface = function() { return noone; }
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_bbox_uniform(s_node_path_3d_camera, 0, bbox);
-	}
 	
 	static getPreviewObject = function() { return noone; }
 	

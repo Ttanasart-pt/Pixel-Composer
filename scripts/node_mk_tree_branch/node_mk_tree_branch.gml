@@ -2,7 +2,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	name  = "Tree Branch";
 	color = COLORS.node_blend_mktree;
 	icon  = THEME.mkTree;
-	// renderAll = true;
+	setDrawIcon(s_node_mk_tree_branch);
 	setDimension(96, 48);
 	
 	newInput(14, nodeValueSeed());
@@ -199,8 +199,4 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		outputs[1].setValue(_branches);
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_bbox_uniform(s_node_mk_tree_branch, 0, bbox);
-	}
 }

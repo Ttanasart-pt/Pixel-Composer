@@ -513,18 +513,22 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		var target = -999;
 		
 		if(!sliding && selecting) {
-			for( var i = 1; i <= string_length(_text); i++ ) {
+			for( var i = 1, n = string_length(_text); i <= n; i++ ) {
 				var _ch  = string_char_at(_text, i);
 				var _chw = string_width(_ch);
 						
 				if(_mm < xx + _chw / 2) {
 					target = i - 1;
 					break;
-					
-				} else if(_mm < xx + _chw) {
+				} 
+				
+				if(_mm < xx + _chw) {
 					target = i;
 					break;
 				}
+				
+				if(_mm > xx + _chw)
+					target = i + 1;
 				
 				xx += _chw;
 			}
@@ -895,12 +899,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					draw_set_alpha(1);
 				}
 				
-				var _mx = -1;
-				var _my = -1;
-				if(hover && hoverRect) {
-					_mx = _m[0];
-					_my = _m[1];
-				}
+				var _mx = _m[0];
+				var _my = _m[1];
 				
 				var _display_text = string_real(txt);
 				surface_set_shader(text_surface, noone, true, BLEND.add);

@@ -2,6 +2,7 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	name  = "Tree Trunk";
 	color = COLORS.node_blend_mktree;
 	icon  = THEME.mkTree;
+	setDrawIcon(s_node_mk_tree_root);
 	setDimension(96, 48);
 	
 	newInput(14, nodeValueSeed());
@@ -14,14 +15,14 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput( 2, nodeValue_Vec2_Range(   "Origin Wiggle",   [0,0,0,0]   )).setUnitRef(function(i) /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
 	
 	////- =Segment
-	newInput( 7, nodeValue_Range(  "Segments", [4,8]       ));
-	newInput( 3, nodeValue_Range(  "Length",   [16,32]     ));
+	newInput( 7, nodeValue_Range(  "Segments", [8,8],   true ));
+	newInput( 3, nodeValue_Range(  "Length",   [24,24], true ));
 	/* UNUSED */ newInput(13, nodeValue_Curve(  "Length Curve", CURVE_DEF_11 ));
 	
 	////- =Direction
-	newInput( 4, nodeValue_Rotation_Random( "Direction", [0,80,100,0,0] ));
-	newInput(10, nodeValue_Range(  "Direction Wiggle",   [0,0], true    ));
-	newInput( 9, nodeValue_Range(  "Gravity",            [0,0] )).setCurvable(15, CURVE_DEF_11);
+	newInput( 4, nodeValue_RotRand( "Direction", [0,80,100,0,0]       ));
+	newInput(10, nodeValue_Range(   "Direction Wiggle",   [0,0], true ));
+	newInput( 9, nodeValue_Range(   "Gravity",            [0,0], true )).setCurvable(15, CURVE_DEF_11);
 	
 	////- =Spiral
 	newInput(22, nodeValue_Range(  "Frequency", [4,4], true ));
@@ -30,13 +31,13 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(20, nodeValue_Range(  "Curl",      [0,0], true )).setCurvable(21, CURVE_DEF_11);
 	
 	////- =Rendering
-	newInput( 6, nodeValue_Range(    "Thickness",       [4,4]     )).setCurvable(11, CURVE_DEF_11);
-	newInput(12, nodeValue_Gradient( "Base Color",      gra_white ));
-	newInput(24, nodeValue_EButton(  "Length Blending", 0         )).setChoices([ "None", "Override", "Multiply", "Screen" ]);
-	newInput(25, nodeValue_Gradient( "Length Color",    gra_white ));
-	newInput(16, nodeValue_EButton(  "Edge Blending",   0         )).setChoices([ "None", "Override", "Multiply", "Screen" ]);
-	newInput(17, nodeValue_Gradient( "L Edge Color",    gra_white ));
-	newInput(26, nodeValue_Gradient( "R Edge Color",    gra_white ));
+	newInput( 6, nodeValue_Range(    "Thickness",       [4,4], true )).setCurvable(11, CURVE_DEF_11);
+	newInput(12, nodeValue_Gradient( "Base Color",      gra_white   ));
+	newInput(24, nodeValue_EButton(  "Length Blending", 0           )).setChoices([ "None", "Override", "Multiply", "Screen" ]);
+	newInput(25, nodeValue_Gradient( "Length Color",    gra_white   ));
+	newInput(16, nodeValue_EButton(  "Edge Blending",   0           )).setChoices([ "None", "Override", "Multiply", "Screen" ]);
+	newInput(17, nodeValue_Gradient( "L Edge Color",    gra_white   ));
+	newInput(26, nodeValue_Gradient( "R Edge Color",    gra_white   ));
 	newInput(27, nodeValue_Surface(  "Texture" ));
 	// input 28
 	
@@ -160,8 +161,4 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_bbox_uniform(s_node_mk_tree_root, 0, bbox);
-	}
 }
