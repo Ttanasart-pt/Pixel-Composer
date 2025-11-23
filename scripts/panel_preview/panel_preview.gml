@@ -2513,14 +2513,16 @@ function Panel_Preview() : PanelContent() constructor {
 				var bs = topbar_height - ui(10);
 				var bx = w - ui(6) - bs;
 				var by = cy;
+				var bb = THEME.button_hide;
 				
-				if(buttonInstant_Pad(THEME.button_hide, bx, by, bs, bs, m, pHOVER, pFOCUS, "Apply Alpha", THEME.shader_alpha, preview_shader_alpha) == 2)
+				if(buttonInstant_Pad(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "Apply Alpha", THEME.shader_alpha, preview_shader_alpha) == 2)
 					preview_shader_alpha = !preview_shader_alpha;
 					
 				cw -= bs + ui(4);
 			}
 			
             sb_shader.setFocusHover(pFOCUS, pHOVER);
+            sb_shader.setTextColor(preview_shader? COLORS._main_accent : COLORS._main_text);
 			sb_shader.draw(cx, cy, cw, ch, preview_shader, m, x, y);
 		}
         

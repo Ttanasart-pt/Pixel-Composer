@@ -1,30 +1,38 @@
 #region ___funtion calls
-	function panel_collection_search_toggle()		{ CALL("collection_search_toggle");		PANEL_COLLECTION.search_toggle();		}
-	function panel_collection_replace()				{ CALL("collection_replace");			PANEL_COLLECTION.replace();				}
-	function panel_collection_edit_meta()			{ CALL("collection_edit_meta");			PANEL_COLLECTION.edit_meta();			}
-	function panel_collection_update_thumbnail()	{ CALL("collection_update_thumbnail");	PANEL_COLLECTION.update_thumbnail();	}
-	function panel_collection_delete_collection()	{ CALL("collection_delete_collection");	PANEL_COLLECTION.delete_collection();	}
-	function panel_collection_edit_default()        { CALL("collection_edit_collection");   PANEL_COLLECTION.edit_collection();     }
+	function panel_collection_search_toggle()       { CALL("collection_search_toggle");     PANEL_COLLECTION.search_toggle();     }
 	
-	function panel_collection_steam_file_upload()	{ CALL("collection_steam_file_upload");	PANEL_COLLECTION.steam_file_upload();	}
-	function panel_collection_steam_file_update()	{ CALL("collection_steam_file_update");	PANEL_COLLECTION.steam_file_update();	}
-	function panel_collection_steam_unsubscribe()	{ CALL("collection_steam_unsubscribe");	PANEL_COLLECTION.steam_unsubscribe();	}
+	function panel_collection_load()                { CALL("collection_load");              PANEL_COLLECTION.loadCollection();    }
+	function panel_collection_replace()             { CALL("collection_replace");           PANEL_COLLECTION.replace();           }
+	function panel_collection_edit_meta()           { CALL("collection_edit_meta");         PANEL_COLLECTION.edit_meta();         }
+	function panel_collection_update_thumbnail()    { CALL("collection_update_thumbnail");  PANEL_COLLECTION.update_thumbnail();  }
+	function panel_collection_delete_collection()   { CALL("collection_delete_collection"); PANEL_COLLECTION.delete_collection(); }
+	function panel_collection_edit_default()        { CALL("collection_edit_collection");   PANEL_COLLECTION.edit_collection();   }
 	
-	function panel_collection_toggle_default()      { CALL("collection_toggle_default");    PANEL_COLLECTION.toggle_default();      }
+	function panel_collection_steam_file_upload()   { CALL("collection_steam_file_upload"); PANEL_COLLECTION.steam_file_upload(); }
+	function panel_collection_steam_file_update()   { CALL("collection_steam_file_update"); PANEL_COLLECTION.steam_file_update(); }
+	function panel_collection_steam_unsubscribe()   { CALL("collection_steam_unsubscribe"); PANEL_COLLECTION.steam_unsubscribe(); }
+	
+	function panel_collection_toggle_default()      { CALL("collection_toggle_default");    PANEL_COLLECTION.toggle_default();    }
 	
 	function __fnInit_Collection() {
-		registerFunction("Collection", "Toggle Search",     "F", MOD_KEY.ctrl, panel_collection_search_toggle     ).setMenu("collection_search_toggle")
-		registerFunction("Collection", "Replace with Selecting","",MOD_KEY.none, panel_collection_replace         ).setMenu("collection_replace")
-		registerFunction("Collection", "Edit Meta",         "",  MOD_KEY.none, panel_collection_edit_meta         ).setMenu("collection_edit_meta")
-		registerFunction("Collection", "Edit Collection",   "",  MOD_KEY.none, panel_collection_edit_default      ).setMenu("collection_edit_collection",   THEME.group_s)
-		registerFunction("Collection", "Update Thumbnail",  "",  MOD_KEY.none, panel_collection_update_thumbnail  ).setMenu("collection_update_thumbnail")
-		registerFunction("Collection", "Delete Collection", "",  MOD_KEY.none, panel_collection_delete_collection ).setMenu("collection_delete_collection",	THEME.cross)
+		var o = "Collection";
+		var n = MOD_KEY.none;
+		var c = MOD_KEY.ctrl;
 		
-		registerFunction("Collection", "Upload To Workshop",	     "", MOD_KEY.none, panel_collection_steam_file_upload ).setMenu("collection_upload_to_steam", 	THEME.workshop_upload)
-		registerFunction("Collection", "Update Content to Workshop", "", MOD_KEY.none, panel_collection_steam_file_update ).setMenu("collection_update_steam",    	THEME.workshop_update)
-		registerFunction("Collection", "Unsubscribe",		         "", MOD_KEY.none, panel_collection_steam_unsubscribe ).setMenu("collection_unsubscribe")
+		registerFunction(o, "Toggle Search",             "F", c, panel_collection_search_toggle     ).setMenu("collection_search_toggle")
 		
-		registerFunction("Collection", "Toggle Default",    "", MOD_KEY.none, panel_collection_toggle_default ).setMenu("collection_toggle_default")
+		registerFunction(o, "Load Collection",            "", n, panel_collection_load              ).setMenu("collection_load")
+		registerFunction(o, "Replace with Selecting",     "", n, panel_collection_replace           ).setMenu("collection_replace")
+		registerFunction(o, "Edit Collection...",         "", n, panel_collection_edit_default      ).setMenu("collection_edit_collection",   THEME.group_s)
+		registerFunction(o, "Edit Meta...",               "", n, panel_collection_edit_meta         ).setMenu("collection_edit_meta")
+		registerFunction(o, "Update Thumbnail",           "", n, panel_collection_update_thumbnail  ).setMenu("collection_update_thumbnail")
+		registerFunction(o, "Delete Collection",          "", n, panel_collection_delete_collection ).setMenu("collection_delete_collection",	THEME.cross)
+		
+		registerFunction(o, "Upload To Workshop",	      "", n, panel_collection_steam_file_upload ).setMenu("collection_upload_to_steam", 	THEME.workshop_upload)
+		registerFunction(o, "Update Content to Workshop", "", n, panel_collection_steam_file_update ).setMenu("collection_update_steam",    	THEME.workshop_update)
+		registerFunction(o, "Unsubscribe",		          "", n, panel_collection_steam_unsubscribe ).setMenu("collection_unsubscribe")
+		
+		registerFunction(o, "Toggle Default",    "", n, panel_collection_toggle_default ).setMenu("collection_toggle_default")
 	}
 	
 #endregion
@@ -165,6 +173,11 @@ function Panel_Collection() : PanelContent() constructor {
 	#endregion
 	
 	#region ++++++++++++ Actions ++++++++++++
+		function loadCollection() {
+			if(_menu_node == noone) return;
+			APPEND(_menu_node.path);
+		}
+		
 		function replace() { 
 			if(_menu_node == noone) return;
 			saveCollection(PANEL_INSPECTOR.getInspecting(), _menu_node.path, false, _menu_node.meta);
@@ -294,22 +307,24 @@ function Panel_Collection() : PanelContent() constructor {
 			
 			steam_ugc_unsubscribe_item(del_id);
 		}
-		
 	#endregion
 	
 	static initMenu = function() {
 		if(_menu_node == noone) return;
 		var meta = _menu_node.getMetadata();
 		
-		contentMenu = [];
+		contentMenu = [
+			MENU_ITEMS.collection_load,
+		];
 		
 		if(meta == noone || meta.file_id == 0) {
-			contentMenu = [
+			array_append(contentMenu, [
+				-1,
 				MENU_ITEMS.collection_edit_collection,
 				MENU_ITEMS.collection_edit_meta,
 				MENU_ITEMS.collection_replace,
 				MENU_ITEMS.collection_update_thumbnail,
-			];
+			]);
 			
 			if(TESTING) array_push(contentMenu, MENU_ITEMS.collection_toggle_default);
 			
@@ -320,7 +335,7 @@ function Panel_Collection() : PanelContent() constructor {
 		} 
 		
 		if(STEAM_ENABLED) {
-			if(!array_empty(contentMenu)) array_push(contentMenu, -1);
+			array_push(contentMenu, -1);
 			
 			if(meta.file_id == 0) {
 				array_push(contentMenu, MENU_ITEMS.collection_upload_to_steam);

@@ -243,9 +243,10 @@ function Panel_Inspector() : PanelContent() constructor {
                              .setFont(f_h5).setHide(1).setAlign(fa_center);
         tb_node_name.format = TEXT_AREA_FORMAT.node_title;
         
-        tb_prop_filter = textBox_Text(function(txt) /*=>*/ { filter_text = txt; }).setEmpty(false).setAutoUpdate()
-                             .setFont(f_p0).setHide(1).setAlign(fa_center).setColor(COLORS._main_text_sub);
         filter_text = "";
+        filtering   = false;
+        tb_prop_filter = textBox_Text(function(txt) /*=>*/ { filter_text = txt; }).setEmpty(false).setAutoUpdate()
+                             .setFont(f_p2).setAlign(fa_center);
     	
         prop_page   = 0;
         prop_page_b = new buttonGroup(__txts([ "Properties", "Settings", THEME.message_16 ]), function(val) /*=>*/ { prop_page = val; })
@@ -537,11 +538,6 @@ function Panel_Inspector() : PanelContent() constructor {
         _inspecting.inspecting       = true;
         _inspecting.inspector_scroll = contentPane.scroll_y_to;
         
-        //tb_prop_filter.register(contentPane);
-        //tb_prop_filter.setFocusHover(pHOVER, pFOCUS);
-        //tb_prop_filter.draw(ui(32), _y + ui(4), con_w - ui(64), ui(28), filter_text, _m);
-        //draw_sprite_ui(THEME.search, 0, ui(32 + 16), _y + ui(4 + 14), 1, 1, 0, COLORS._main_icon, 1);
-        
         var hh = 0;
         var xc = con_w / 2;
         
@@ -817,7 +813,7 @@ function Panel_Inspector() : PanelContent() constructor {
                     righ.draw(_bx + ui(2), _by + ui(2), _bw - ui(4), _bh - ui(4), _m, THEME.button_hide_fill);
                 }
                 
-                if(filter_text == "") 
+                if(!filtering || filter_text == "") 
                     draw_sprite_ui(THEME.arrow, 0, lbx + ui(16), yy + lbh / 2, 1, 1, -90 + coll * 90, COLORS.panel_inspector_group_bg, 1);
                 
                 var cc, aa = 1;
@@ -850,7 +846,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 
                 hh += lbh + padd;
                 
-                if(coll) { // skip 
+                if(!filtering && coll) { // skip 
                     _colsp   = true;
                     var j    = i + 1;
                     var _len = array_length(_inspecting.input_display_list);
@@ -872,8 +868,8 @@ function Panel_Inspector() : PanelContent() constructor {
             if(!is(jun, NodeValue)) continue;
             
             if(!jun.show_in_inspector) continue;
-            if(filter_text != "") {
-                var pos = string_pos(filter_text, string_lower(jun.getName()));
+            if(filtering && filter_text != "") {
+                var pos = string_pos(string_lower(filter_text), string_lower(jun.getName()));
                 if(pos == 0) continue;
             }
             
@@ -1298,16 +1294,37 @@ function Panel_Inspector() : PanelContent() constructor {
         if(point_in_rectangle(_m[0], _m[1], 0, 0, con_w, content_h) && mouse_press(mb_left, pFOCUS))
             prop_selecting = noone;
         
-        var _tab_width = min(contentPane.w - ui(32), ui(280));
-    	var _tab_x     = (contentPane.w - ui(12)) / 2 - _tab_width / 2;
+        var _hh = 0;
+        var tw = min(contentPane.w - ui(32), ui(280));
+        var th = ui(24);
+    	var tx = contentPane.w / 2 - tw / 2 + th / 2;
+    	var ty = _y + ui(4);
     	
-        prop_page_b.data[2] = inspecting.messages_bub? THEME.message_16_grey_bubble : THEME.message_16_grey;
-        prop_page_b.setFocusHover(pFOCUS, pHOVER);
-        prop_page_b.draw(_tab_x, _y + ui(4), _tab_width, ui(24), prop_page, _m, x + contentPane.x, y + contentPane.y);
-        
-        var _hh = ui(40);
-        _y += _hh;
-        
+    	var bs = th;
+    	var bx = tx - bs - ui(4);
+    	var by = ty;
+    	var cc = filtering? COLORS._main_value_positive : COLORS._main_icon;
+    	
+    	if(filtering) {
+	        tb_prop_filter.register(contentPane);
+	        tb_prop_filter.setFocusHover(pHOVER, pFOCUS);
+	        tb_prop_filter.draw(tx, ty, tw, th, filter_text, _m);
+	        
+    	} else {
+	        prop_page_b.data[2] = inspecting.messages_bub? THEME.message_16_grey_bubble : THEME.message_16_grey;
+	        prop_page_b.setFocusHover(pFOCUS, pHOVER);
+	        prop_page_b.draw(tx, ty, tw, th, prop_page, _m, x + contentPane.x, y + contentPane.y);
+    	}
+    	
+    	if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, _m, pHOVER, pFOCUS, "", THEME.search, 0, cc, 1, ui(6)) == 2) {
+    		filtering = !filtering;
+    		if(filtering) tb_prop_filter.activate();
+    		else          tb_prop_filter.deactivate();
+    	}
+    	
+    	_hh += th + ui(16);
+        _y  += th + ui(16);
+	    
         if(inspectGroup >= 0 || is(inspecting, Node_Frame)) return _hh + drawNodeProperties(_y, _m, inspecting);
         
         for( var i = 0, n = min(10, array_length(inspectings)); i < n; i++ ) {

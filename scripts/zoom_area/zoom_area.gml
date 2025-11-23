@@ -8,7 +8,9 @@ globalvar ZOOM_AREA_MX; ZOOM_AREA_MX = 0;
 globalvar ZOOM_AREA_MY; ZOOM_AREA_MY = 0;
 
 function zoom_area_draw() {
-	if(key_press(ord("Z"), MOD_KEY.shift | MOD_KEY.alt, true)) {
+	var _zoomMouse = key_press(ord("Z"), MOD_KEY.shift | MOD_KEY.alt, true) || gamepad_button_check(0, gp_face1);
+	
+	if(_zoomMouse) {
 		ZOOM_AREA = 2;
 		ZOOM_AREA_REGION = [ clamp(mouse_mx - 64, 0, WIN_W), clamp(mouse_my - 64, 0, WIN_H),
 		                     clamp(mouse_mx + 64, 0, WIN_W), clamp(mouse_my + 64, 0, WIN_H) ];
@@ -19,11 +21,11 @@ function zoom_area_draw() {
 		if(ZOOM_AREA == 2) ZOOM_AREA = 0;
 	}
 	
-	if(key_press(ord("Z"), MOD_KEY.alt, false)) {
-		ZOOM_AREA = 0;
-	}
+	var _zoomStart = key_press(ord("Z"), MOD_KEY.alt, false) || gamepad_button_check_pressed(0, gp_face2);
+	var _zoomHold  = key_press(ord("Z"), MOD_KEY.alt, true)  || gamepad_button_check(0, gp_face2);
 	
-	if(key_press(ord("Z"), MOD_KEY.alt, true)) {
+	if(_zoomStart) ZOOM_AREA = 0;
+	if(_zoomHold) {
 		if(mouse_check_button_pressed(mb_left)) {
 			ZOOM_AREA_MX = mouse_mx;
 			ZOOM_AREA_MY = mouse_my;

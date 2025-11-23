@@ -400,6 +400,8 @@ function Node_Collection_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		gpu_set_tex_filter(false);
 	}
 	
+	static drawDimension = undefined;
+	
 	////- Serialize
 	
 	static postDeserialize = function() {

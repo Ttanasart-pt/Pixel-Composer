@@ -14,23 +14,23 @@ function Node_pSystem_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	newInput( 1, nodeValue_Buffer(   "Mask"      ));
 	
 	////- =Direct Move
-	newInput(14, nodeValue_Bool(       "Do Move", false ));
-	newInput( 3, nodeValue_Vec2_Range( "Move", [0,0,0,0] )).setCurvable( 4, CURVE_DEF_11, "Over Lifespan"); 
+	newInput(14, nodeValue_Bool(       "Do Move", false     ));
+	newInput( 3, nodeValue_Vec2_Range( "Move",    [0,0,0,0] )).setCurvable( 4, CURVE_DEF_11, "Over Lifespan"); 
 	
 	////- =Vector Move
-	newInput(15, nodeValue_Bool(       "Do Vector Move", false ));
-	newInput( 9, nodeValue_Range( "Speed", [0,0], true )).setCurvable(10, CURVE_DEF_11, "Over Lifespan"); 
+	newInput(15, nodeValue_Bool(  "Do Vector Move", false       ));
+	newInput( 9, nodeValue_Range( "Speed",          [0,0], true )).setCurvable(10, CURVE_DEF_11, "Over Lifespan"); 
 	newInput(11, nodeValue_Rotation_Random( "Direction", ROTATION_RANDOM_DEF_0_360 ));
 	
 	////- =Rotation
-	newInput(16, nodeValue_Bool(       "Do Rotate", false ));
-	newInput(13, nodeValue_Enum_Scroll( "Mode",    0, [ "Add", "Multiply", "Override" ] )).setInternalName("scale_mode");
-	newInput( 5, nodeValue_Range(       "Rotate", [0, 0], true )).setCurvable(6, CURVE_DEF_11, "Over Lifespan"); 
+	newInput(16, nodeValue_Bool(        "Do Rotate", false ));
+	newInput(13, nodeValue_Enum_Scroll( "Mode",      0, [ "Add", "Multiply", "Override" ] )).setInternalName("scale_mode");
+	newInput( 5, nodeValue_Range(       "Rotate",   [0,0], true )).setCurvable(6, CURVE_DEF_11, "Over Lifespan"); 
 	
 	////- =Scale
-	newInput(17, nodeValue_Bool(       "Do Scae", false ));
-	newInput(12, nodeValue_Enum_Scroll( "Mode",   1, [ "Add", "Multiply", "Override" ] )).setInternalName("scale_mode");
-	newInput( 7, nodeValue_Vec2_Range(  "Scale", [1,1,1,1], true )).setCurvable(8, CURVE_DEF_11, "Over Lifespan"); 
+	newInput(17, nodeValue_Bool(        "Do Scale", false ));
+	newInput(12, nodeValue_Enum_Scroll( "Mode",     1, [ "Add", "Multiply", "Override" ] )).setInternalName("scale_mode");
+	newInput( 7, nodeValue_Vec2_Range(  "Scale",   [1,1,1,1], true )).setCurvable(8, CURVE_DEF_11, "Over Lifespan"); 
 	// 18
 	
 	newOutput(0, nodeValue_Output("Particles", VALUE_TYPE.particle, noone ));

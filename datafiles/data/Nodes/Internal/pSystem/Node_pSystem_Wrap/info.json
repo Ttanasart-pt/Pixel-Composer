@@ -1,0 +1,6 @@
+{
+    "name":          "Wrap",
+    "spr":           "s_node_psystem_wrap",
+    "baseNode":      "Node_pSystem_Wrap",
+    "pxc_version":    120007,
+}

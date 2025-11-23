@@ -158,6 +158,7 @@
             "Node_pSystem_Wiggle",
             "Node_pSystem_Follow_Path",
             "Node_pSystem_Align_to_Velocity",
+            "Node_pSystem_Wrap",
             
             { "label": "/Relations" },
             "Node_pSystem_Boids",
