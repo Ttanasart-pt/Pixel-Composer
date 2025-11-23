@@ -1186,16 +1186,16 @@ function Panel_Preview() : PanelContent() constructor {
         var  ts2  = ts / 2;
         var  pd   = 2;
         
-        right_menu_x = w - toolbar_width - ui(8);
-        tool_ry_max  = 0; 
-        tool_ry      = lerp_float(tool_ry, tool_ry_to, 5);
-        
         if(!tool_always_r) {
         	if(_node.rightTools == -1) return;
         	
 	        var aa = d3_active? 0.8 : 1;
 	        draw_sprite_stretched_ext(THEME.tool_side, 1, w + 1 - toolbar_width, ui(32), toolbar_width, h - toolbar_height - ui(32), c_white, aa);
         }
+        
+        right_menu_x = w - toolbar_width - ui(8);
+        tool_ry_max  = 0; 
+        tool_ry      = lerp_float(tool_ry, tool_ry_to, 5);
         
         var tbx  = w - toolbar_width;
         var xx   = tbx + toolbar_width / 2;

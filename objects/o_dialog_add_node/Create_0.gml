@@ -398,12 +398,13 @@ event_inherited();
 		
 		for(var i = start, n = array_length(category); i < n; i++) {
 			var name  = "";
+			var cat   = undefined;
 			
 			     if(i == -2) name = "All";
 			else if(i == -1) name = "New";
 			else {
-				var cat = category[i];
-				name    = cat.name;
+				cat  = category[i];
+				name = cat.name;
 				
 				if(cat[$ "filter"] != undefined) {
 					if(!array_exists(cat.filter, instanceof(context))) {
@@ -412,12 +413,6 @@ event_inherited();
 						continue;
 					}
 					draw_set_color(COLORS._main_text_accent);
-				}
-				
-				if(cat[$ "color"] != undefined) {
-					BLEND_OVERRIDE
-					draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, _y + hh, ww, hg, merge_color(c_white, cat.color, 0.5), 1);
-					BLEND_NORMAL
 				}
 			}
 			
@@ -476,6 +471,12 @@ event_inherited();
 				gpu_set_colorwriteenable(1, 1, 1, 1);
 				
 				draw_sprite_ui(THEME.patreon_supporter, 1, _cx, _cy, 1, 1, 0, i == ADD_NODE_PAGE? COLORS._main_text_accent : cc, 1);
+			}
+			
+			if(cat && cat[$ "color"] != undefined) {
+				var cc = merge_color(COLORS._main_icon_dark, cat.color, .5);
+				draw_sprite_stretched_ext(THEME.ui_panel, 0, 0, _y + hh, ui(4), hg, cc, 1);
+				// draw_sprite_stretched_ext(THEME.ui_panel, 1, 0, _y + hh, ww,    hg, cc, 1);
 			}
 			
 			hh += hg;

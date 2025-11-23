@@ -95,7 +95,7 @@ function __MK_Tree_Segment(_x, _y, _t) constructor {
 	y = _y;
 	thickness = _t;
 	
-	color = c_white;
+	color      = c_white;
 	colorEdgeL = c_white;
 	colorEdgeR = c_white;
 }
@@ -247,7 +247,7 @@ function __MK_Tree() constructor {
 		var _gy = lengthdir_y(1, _gravD);
 		var _gg;
 		
-		var _cc  = _cBase.evalFast(random(1));
+		var _cc = _cBase.evalFast(random(1));
 		
 		for( var i = 0; i <= amount; i++ ) {
 			var p = i / amount;

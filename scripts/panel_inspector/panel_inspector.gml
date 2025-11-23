@@ -1,4 +1,4 @@
-#region funtion calls
+#region ___function calls
     
     function panel_inspector_copy_prop()                 { CALL("inspector_copy_property");          PANEL_INSPECTOR.propSelectCopy();                 }
     function panel_inspector_paste_prop()                { CALL("inspector_paste_property");         PANEL_INSPECTOR.propSelectPaste();                }
@@ -21,6 +21,12 @@
     function panel_inspector_trigger_1()                 { CALL("inspector_trigger_1");              PANEL_INSPECTOR.triggerInspectingNode(1);        }
     function panel_inspector_trigger_2()                 { CALL("inspector_trigger_2");              PANEL_INSPECTOR.triggerInspectingNode(2);        }
     
+    function panel_inspector_search_toggle()             { CALL("inspector_search_toggle");
+    	PANEL_INSPECTOR.filtering = !PANEL_INSPECTOR.filtering;
+		if(PANEL_INSPECTOR.filtering) PANEL_INSPECTOR.tb_prop_filter.activate();
+		else                          PANEL_INSPECTOR.tb_prop_filter.deactivate();
+    }
+    
     function __fnInit_Inspector() {
     	var i = "Inspector";
     	
@@ -33,6 +39,7 @@
         registerFunction(i, "Expand All Sections",   "",  MOD_KEY.none, panel_inspector_section_expand_all     ).setMenu("inspector_expand_all_sections")
         registerFunction(i, "Collapse All Sections", "",  MOD_KEY.none, panel_inspector_section_collapse_all   ).setMenu("inspector_collapse_all_sections")
         
+        registerFunction(i, "Search Toggle",        "F",  MOD_KEY.ctrl, panel_inspector_search_toggle          ).setMenu("inspector_search_toggle")
         registerFunction(i, "Reset",                 "",  MOD_KEY.none, panel_inspector_reset                  ).setMenu("inspector_reset")
         registerFunction(i, "Toggle Animation",      "",  MOD_KEY.none, panel_inspector_animation_toggle       ).setMenu("inspector_animate_toggle")
         registerFunction(i, "Separate/Combine Axis", "",  MOD_KEY.none, panel_inspector_axis_toggle            ).setMenu("inspector_axis_toggle")
@@ -794,9 +801,18 @@ function Panel_Inspector() : PanelContent() constructor {
                     draw_sprite_stretched_ext(THEME.box_r5_clr, 0, lbx, yy, con_w - lbx, lbh, COLORS.panel_inspector_group_hover, 1);
                 	
                 	if(pFOCUS) {
-	                		if(DOUBLE_CLICK) _cAll = jun[@ 1]? -1 : 1;
-                       else if(mouse_press(mb_left)) { jun[@ 1] = !coll; coll = !coll; }
-		               else if(mouse_press(mb_right, pFOCUS)) menuCall("inspector_group_menu", group_menu, 0, 0, fa_left);
+						if(DOUBLE_CLICK) _cAll = jun[@ 1]? -1 : 1;
+						else if(mouse_press(mb_left)) { 
+							if(key_mod_press(CTRL)) {
+								_cAll = jun[@ 1]? 1 : -1;
+								
+							} else {
+		                       	jun[@ 1] = !coll; 
+		                       	coll = !coll; 
+							}
+	                       	
+						} else if(mouse_press(mb_right, pFOCUS)) 
+							menuCall("inspector_group_menu", group_menu, 0, 0, fa_left);
                 	}
                 } else
                     draw_sprite_stretched_ext(THEME.box_r5_clr, 0, lbx, yy, con_w - lbx, lbh, COLORS.panel_inspector_group_bg, 1);
@@ -813,8 +829,8 @@ function Panel_Inspector() : PanelContent() constructor {
                     righ.draw(_bx + ui(2), _by + ui(2), _bw - ui(4), _bh - ui(4), _m, THEME.button_hide_fill);
                 }
                 
-                if(!filtering || filter_text == "") 
-                    draw_sprite_ui(THEME.arrow, 0, lbx + ui(16), yy + lbh / 2, 1, 1, -90 + coll * 90, COLORS.panel_inspector_group_bg, 1);
+                if(!filtering) 
+                	draw_sprite_ui(THEME.arrow, 0, lbx + ui(16), yy + lbh / 2, 1, 1, -90 + coll * 90, COLORS.panel_inspector_group_bg, 1);
                 
                 var cc, aa = 1;
                 
@@ -1316,7 +1332,7 @@ function Panel_Inspector() : PanelContent() constructor {
 	        prop_page_b.draw(tx, ty, tw, th, prop_page, _m, x + contentPane.x, y + contentPane.y);
     	}
     	
-    	if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, _m, pHOVER, pFOCUS, "", THEME.search, 0, cc, 1, ui(6)) == 2) {
+    	if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, _m, pHOVER, pFOCUS, "", THEME.search, 0, cc, 1, ui(8)) == 2) {
     		filtering = !filtering;
     		if(filtering) tb_prop_filter.activate();
     		else          tb_prop_filter.deactivate();

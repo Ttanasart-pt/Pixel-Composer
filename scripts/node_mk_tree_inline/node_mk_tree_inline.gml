@@ -9,7 +9,7 @@ function Node_MK_Tree_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	
 	if(NODE_NEW_MANUAL) {
 		var _branch = nodeBuild("Node_MK_Tree_Root",   x,       y, self);
-		var _render = nodeBuild("Node_MK_Tree_Render", x + 160, y, self);
+		var _render = nodeBuild("Node_MK_Tree_Render", x + 256, y, self);
 		
 		_render.inputs[0].setFrom(_branch.outputs[0]);
 		

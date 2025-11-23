@@ -10,7 +10,7 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	////- =Origin
 	newInput( 5, nodeValue_Range(        "Amount",          [4,8]     ));
-	newInput(19, nodeValue_Enum_Button(  "Distribution",     0,       )).setChoices([ "Random", "Uniform" ]);
+	newInput(19, nodeValue_EButton(      "Distribution",     0,       )).setChoices([ "Random", "Uniform" ]);
 	newInput( 8, nodeValue_Slider_Range( "Origin Ratio",    [.5,1]    ));
 	/* UNUSED */ newInput( 1, nodeValue_Vec2(         "Origin Position", [.5,1]    ));
 	/* UNUSED */ newInput( 2, nodeValue_Vec2_Range(   "Origin Wiggle",   [0,0,0,0] ));
@@ -20,11 +20,11 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput( 3, nodeValue_Range(  "Length",     [16,32]   )).setCurvable(13, CURVE_DEF_11);
 	
 	////- =Direction
-	newInput(31, nodeValue_Enum_Button(     "Direction Type",   0, [ "Random", "Uniform" ] ));
-	newInput( 4, nodeValue_Rotation_Random( "Direction",        [0,80,100,0,0] ));
-	newInput(10, nodeValue_Range(           "Direction Wiggle", [0,0], true    ));
-	newInput(15, nodeValue_Enum_Scroll(     "Reflect",           0,            )).setChoices([ "None", "Randomize", "Ordered" ]);
-	newInput( 9, nodeValue_Range(           "Gravity",          [0,0], true    )).setCurvable(16, CURVE_DEF_11);
+	newInput(31, nodeValue_EButton( "Direction Type",   0, [ "Random", "Uniform" ] ));
+	newInput( 4, nodeValue_RotRand( "Direction",        [0,80,100,0,0] ));
+	newInput(10, nodeValue_Range(   "Direction Wiggle", [0,0], true    ));
+	newInput(15, nodeValue_EScroll( "Reflect",           0,            )).setChoices([ "None", "Randomize", "Ordered" ]);
+	newInput( 9, nodeValue_Range(   "Gravity",          [0,0], true    )).setCurvable(16, CURVE_DEF_11);
 	
 	////- =Spiral
 	newInput(25, nodeValue_Range(  "Frequency", [4,4], true ));
@@ -33,14 +33,14 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(23, nodeValue_Range(  "Curl",      [0,0], true )).setCurvable(24, CURVE_DEF_11);
 	
 	////- =Rendering
-	newInput( 6, nodeValue_Range(       "Thickness",       [2,2] )).setCurvable(11, CURVE_DEF_11);
-	newInput(12, nodeValue_Gradient(    "Base Color",      new gradientObject(ca_white) ));
-	newInput(27, nodeValue_Enum_Button( "Length Blending", 0, [ "None", "Override", "Multiply", "Screen" ] ));
-	newInput(28, nodeValue_Gradient(    "Length Color",    new gradientObject(ca_white) ));
-	newInput(17, nodeValue_Enum_Button( "Edge Blending",   0,   )).setChoices([ "None", "Override", "Multiply", "Screen" ]);
-	newInput(18, nodeValue_Gradient(    "L Edge Color",    new gradientObject(ca_white) ));
-	newInput(29, nodeValue_Gradient(    "R Edge Color",    new gradientObject(ca_white) ));
-	newInput(30, nodeValue_Surface(     "Texture" ));
+	newInput( 6, nodeValue_Range(    "Thickness",       [2,2], true )).setCurvable(11, CURVE_DEF_11);
+	newInput(12, nodeValue_Gradient( "Base Color",      gra_white   ));
+	newInput(27, nodeValue_EButton(  "Length Blending", 0,          )).setChoices([ "None", "Override", "Multiply", "Screen" ]);
+	newInput(28, nodeValue_Gradient( "Length Color",    gra_white   ));
+	newInput(17, nodeValue_EButton(  "Edge Blending",   0,          )).setChoices([ "None", "Override", "Multiply", "Screen" ]);
+	newInput(18, nodeValue_Gradient( "L Edge Color",    gra_white   ));
+	newInput(29, nodeValue_Gradient( "R Edge Color",    gra_white   ));
+	newInput(30, nodeValue_Surface(  "Texture" ));
 	
 	////- =Growth
 	newInput(20, nodeValue_Range( "Grow Delay", [0,0], true ));
@@ -63,7 +63,6 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	static getDimension = function() /*=>*/ {return is(inline_context, Node_MK_Tree_Inline)? inline_context.dimension : [1,1]};
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		
 		var _resT = outputs[0].getValue();
 		if(is_array(_resT)) 
 		for( var i = 0, n = array_length(_resT); i < n; i++ ) {

@@ -30,14 +30,14 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(20, nodeValue_Range(  "Curl",      [0,0], true )).setCurvable(21, CURVE_DEF_11);
 	
 	////- =Rendering
-	newInput( 6, nodeValue_Range(       "Thickness",        [4,4] )).setCurvable(11, CURVE_DEF_11);
-	newInput(12, nodeValue_Gradient(    "Base Color",       new gradientObject(ca_white) ));
-	newInput(24, nodeValue_Enum_Button( "Length Blending",  0, [ "None", "Override", "Multiply", "Screen" ] ));
-	newInput(25, nodeValue_Gradient(    "Length Color",     new gradientObject(ca_white) ));
-	newInput(16, nodeValue_Enum_Button( "Edge Blending",    0, [ "None", "Override", "Multiply", "Screen" ] ));
-	newInput(17, nodeValue_Gradient(    "L Edge Color",     new gradientObject(ca_white) ));
-	newInput(26, nodeValue_Gradient(    "R Edge Color",     new gradientObject(ca_white) ));
-	newInput(27, nodeValue_Surface(     "Texture" ));
+	newInput( 6, nodeValue_Range(    "Thickness",       [4,4]     )).setCurvable(11, CURVE_DEF_11);
+	newInput(12, nodeValue_Gradient( "Base Color",      gra_white ));
+	newInput(24, nodeValue_EButton(  "Length Blending", 0         )).setChoices([ "None", "Override", "Multiply", "Screen" ]);
+	newInput(25, nodeValue_Gradient( "Length Color",    gra_white ));
+	newInput(16, nodeValue_EButton(  "Edge Blending",   0         )).setChoices([ "None", "Override", "Multiply", "Screen" ]);
+	newInput(17, nodeValue_Gradient( "L Edge Color",    gra_white ));
+	newInput(26, nodeValue_Gradient( "R Edge Color",    gra_white ));
+	newInput(27, nodeValue_Surface(  "Texture" ));
 	// input 28
 	
 	newOutput(0, nodeValue_Output("Trunk", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
@@ -68,42 +68,49 @@ function Node_MK_Tree_Root(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	static update = function() {
 		if(!is(inline_context, Node_MK_Tree_Inline)) return;
 		
-		var _seed = inline_context.seed + getInputData(14);
-		var _gDir = inline_context.gravityDir;
-		
-		var _bran = getInputData( 5);
-		var _ori  = getInputData( 1);
-		var _oriW = getInputData( 2);
-		
-		var _segs = getInputData( 7);
-		var _len  = getInputData( 3);
-		
-		var _sprS = getInputData(22);
-		var _sprP = getInputData(23);
-		var _wav  = getInputData(18);
-		var _wavC = getInputData(19),     curve_wave  = inputs[18].attributes.curved? new curveMap(_wavC)  : undefined;
-		
-		var _cur  = getInputData(20);
-		var _curC = getInputData(21),     curve_curl  = inputs[20].attributes.curved? new curveMap(_curC)  : undefined;
-		
-		var _ang  = getInputData( 4);
-		var _angW = getInputData(10);
-		var _grv  = getInputData( 9);
-		var _grvC = getInputData(15),     curve_grav  = inputs[ 9].attributes.curved? new curveMap(_grvC)  : undefined;
-		
-		var _thk      = getInputData( 6);
-		var _thkC     = getInputData(11), curve_thick = inputs[ 6].attributes.curved? new curveMap(_thkC) : undefined;
-		
-		var _baseGrad = getInputData(12);
-		var _lenc     = getInputData(24);
-		var _lencGrad = getInputData(25); inputs[25].setVisible(_lenc > 0);
-		var _edge     = getInputData(16);
-		var _edgeLGrd = getInputData(17); inputs[17].setVisible(_edge > 0);
-		var _edgeRGrd = getInputData(26); inputs[26].setVisible(_edge > 0);
-		var _tex      = getInputData(27);
+		#region data
+			var _seed = inline_context.seed + getInputData(14);
+			var _gDir = inline_context.gravityDir;
 			
-		random_set_seed(_seed);
-		
+			var _bran = getInputData( 5);
+			var _ori  = getInputData( 1);
+			var _oriW = getInputData( 2);
+			
+			var _segs = getInputData( 7);
+			var _len  = getInputData( 3);
+			
+			var _sprS = getInputData(22);
+			var _sprP = getInputData(23);
+			var _wav  = getInputData(18);
+			var _wavC = getInputData(19),     curve_wave  = inputs[18].attributes.curved? new curveMap(_wavC)  : undefined;
+			
+			var _cur  = getInputData(20);
+			var _curC = getInputData(21),     curve_curl  = inputs[20].attributes.curved? new curveMap(_curC)  : undefined;
+			
+			var _ang  = getInputData( 4);
+			var _angW = getInputData(10);
+			var _grv  = getInputData( 9);
+			var _grvC = getInputData(15),     curve_grav  = inputs[ 9].attributes.curved? new curveMap(_grvC)  : undefined;
+			
+			var _thk      = getInputData( 6);
+			var _thkC     = getInputData(11), curve_thick = inputs[ 6].attributes.curved? new curveMap(_thkC) : undefined;
+			
+			var _baseGrad = getInputData(12);
+			var _lenc     = getInputData(24);
+			var _lencGrad = getInputData(25); inputs[25].setVisible(_lenc > 0);
+			var _edge     = getInputData(16);
+			var _edgeLGrd = getInputData(17); inputs[17].setVisible(_edge > 0);
+			var _edgeRGrd = getInputData(26); inputs[26].setVisible(_edge > 0);
+			var _tex      = getInputData(27);
+				
+			_baseGrad.cache();
+			_lencGrad.cache();
+			_edgeLGrd.cache();
+			_edgeRGrd.cache();
+			
+			random_set_seed(_seed);
+		#endregion
+			
 		var _amo   = irandom_range(_bran[0], _bran[1]);
 		var _roots = array_create(_amo);
 		
