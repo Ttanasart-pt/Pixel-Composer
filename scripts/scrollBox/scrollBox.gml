@@ -163,12 +163,19 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 			if(mouse_click(mb_left, active))
 				draw_sprite_stretched_ext(THEME.textbox, 2, _x, _y, w, h, COLORS._main_accent, 1);	
 			
-			if(is_array(data_list) && key_mod_press(SHIFT)) {
+			if(is_array(data_list) && !array_empty(data_list) && MOUSE_WHEEL != 0 && key_mod_press(SHIFT)) {
 				var len = array_length(data_list);
-				var ind = safe_mod(_val + sign(MOUSE_WHEEL) + len, len);
-				if(len && MOUSE_WHEEL != 0) onModify(ind);
+				var dir = sign(MOUSE_WHEEL);
+				var ind = _val;
 				
+				do {
+					ind = safe_mod(ind - dir + len, len);
+					
+				} until(data_list[ind] != -1);
+				
+				onModify(ind);
 			}
+			
 		} else {
 			if(type == 0 && hide == 0) draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, w, h, c_white, 0.5 + 0.5 * interactable);
 			if(mouse_press(mb_left)) deactivate();
