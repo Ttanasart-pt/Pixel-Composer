@@ -661,53 +661,50 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		
 		var target = undefined;
 		
-		if(_hover) {
-			target = 0;
-			var char_run = 0, _l, _ch_w, _ch_h, _str, _chr;
-			var sx     = _x;
-			var ch_x   = sx;
-			var ch_cxo = sx;
-			var ch_cxn = sx;
-			var ch_y   = _y;
-			var _found_char = false;
-					
-			for( var i = 0, n = array_length(_input_text_line); i < n; i++ ) {
-				_str = string_trim_end(_input_text_line[i]);
-				_l   = string_length(_str);
-				_ch_h  = line_get_height();
-				ch_cxo = sx;
-				ch_x   = sx;
+		var char_run = 0, _l, _ch_w, _ch_h, _str, _chr;
+		var sx     = _x;
+		var ch_x   = sx;
+		var ch_cxo = sx;
+		var ch_cxn = sx;
+		var ch_y   = _y;
+		var _found_char = false;
 				
-				if((i == 0 || ch_y <= _my) && (i == n - 1 || _my < ch_y + _ch_h)) {
-					for( var j = 0; j < _l; j++ ) {
-						_chr = string_char_at(_str, j + 1);
-						_ch_w = string_width(_chr);
-						ch_cxn = ch_x + _ch_w / 2;
-						
-						if(_mx <= ch_cxn) {
-							target = char_run + j;
-							_found_char = true;
-							break;
-						}
-						
-						ch_x  += _ch_w;
-						ch_cxo = ch_cxn;
+		for( var i = 0, n = array_length(_input_text_line); i < n; i++ ) {
+			_str = string_trim_end(_input_text_line[i]);
+			_l   = string_length(_str);
+			_ch_h  = line_get_height();
+			ch_cxo = sx;
+			ch_x   = sx;
+			
+			if((i == 0 || ch_y <= _my) && (i == n - 1 || _my < ch_y + _ch_h)) {
+				for( var j = 0; j < _l; j++ ) {
+					_chr = string_char_at(_str, j + 1);
+					_ch_w = string_width(_chr);
+					ch_cxn = ch_x + _ch_w / 2;
+					
+					if(_mx <= ch_cxn) {
+						target = char_run + j;
+						_found_char = true;
+						break;
 					}
 					
-					if(!_found_char) target = char_run + _l;
-					_found_char = true;
-					break;
+					ch_x  += _ch_w;
+					ch_cxo = ch_cxn;
 				}
 				
-				char_run += string_length(_input_text_line[i]);	
-				ch_y += _ch_h;
+				if(!_found_char) target = char_run + _l;
+				_found_char = true;
+				break;
 			}
 			
-			if(ch_y <= _my && !_found_char) target = char_run - 1;
-			
-			if(mouse_press(mb_right, active))
-				menuCall("textbox_context", context_menu_selecting);
+			char_run += string_length(_input_text_line[i]);	
+			ch_y += _ch_h;
 		}
+		
+		if(ch_y <= _my && !_found_char) target = char_run - 1;
+		
+		if(mouse_press(mb_right, active))
+			menuCall("textbox_context", context_menu_selecting);
 		
 		if(target != undefined && !click_block) {
 			if(mouse_press(mb_left, active) && HOVER != o_dialog_textbox_autocomplete.id) {

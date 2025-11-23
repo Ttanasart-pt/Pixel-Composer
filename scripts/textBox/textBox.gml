@@ -235,7 +235,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	
 	static apply = function(release = false) {
 		var _val = _input_text;
-		disp_x_to = 0;
+		// disp_x_to = 0;
 		
 		if(input == TEXTBOX_INPUT.number)
 			_val = evaluateFunction(_input_text);
@@ -266,6 +266,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	static move_cursor = function(delta) {
 		var ll = string_length(_input_text) + 1;
 		cursor = safe_mod(cursor + delta + ll, ll);
+		typing = 100;
 	}
 	
 	static editText = function() {
@@ -821,28 +822,26 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				ds_stack_clear(redo_stack);
 			}
 			
-			#region multiplier
-				if(_w > ui(80) && input == TEXTBOX_INPUT.number) {
-					draw_set_alpha(0.5);
-				
-					if(hover && point_in_rectangle(_m[0], _m[1], _x + _w - ui(32), _y, _x + _w, _y + _h)) {
-						draw_set_alpha(1);
-					
-						if(mouse_press(mb_left, active)) {
-							if(key_mod_press(ALT))	_input_text	= string_real(toNumber(_input_text) / 2);
-							else					_input_text	= string_real(toNumber(_input_text) * 2);
-							apply();
-							
-							if(IS_PATREON) shake_amount = PREFERENCES.textbox_shake;
-						}
-					}
-					
-					draw_set_text(font, fa_center, fa_center, COLORS._main_text_sub);
-					if(key_mod_press(ALT)) draw_text_add(_x + _w - ui(16), _y + _h / 2, "/2");
-					else                   draw_text_add(_x + _w - ui(16), _y + _h / 2, "x2");
+			if(_w > ui(80) && input == TEXTBOX_INPUT.number) { // multiplier
+				draw_set_alpha(0.5);
+			
+				if(hover && point_in_rectangle(_m[0], _m[1], _x + _w - ui(32), _y, _x + _w, _y + _h)) {
 					draw_set_alpha(1);
+				
+					if(mouse_press(mb_left, active)) {
+						if(key_mod_press(ALT))	_input_text	= string_real(toNumber(_input_text) / 2);
+						else					_input_text	= string_real(toNumber(_input_text) * 2);
+						apply();
+						
+						if(IS_PATREON) shake_amount = PREFERENCES.textbox_shake;
+					}
 				}
-			#endregion
+				
+				draw_set_text(font, fa_center, fa_center, COLORS._main_text_sub);
+				if(key_mod_press(ALT)) draw_text_add(_x + _w - ui(16), _y + _h / 2, "/2");
+				else                   draw_text_add(_x + _w - ui(16), _y + _h / 2, "x2");
+				draw_set_alpha(1);
+			}
 			
 			#region draw
 				draw_set_text(font, fa_left, fa_top);
@@ -884,19 +883,23 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					disp_x_to -= _w - padding * 2;
 				
 				cursor_pos_y = c_y0;
-				cursor_pos   = cursor_pos == 0? cursor_pos_to : lerp_float(cursor_pos, cursor_pos_to, 1);
+				cursor_pos   = cursor_pos == 0? cursor_pos_to : lerp_float(cursor_pos, cursor_pos_to, 3);
+				
+				var scis = gpu_get_scissor();
 				
 				if(cursor_select > -1) { //draw highlight
 					if(highlight_color == -1) highlight_color = COLORS.widget_text_highlight;
+					gpu_set_scissor(_x + 1, _y + 1, _w - 2, _h - 2);
 					draw_set_color(highlight_color);
 					draw_set_alpha(highlight_alpha);
 					
 					var c_x1 = tx + disp_x + string_width(string_copy(txt, 1, cursor_select)) + p_w;
-					var _rx0 = clamp(min(cursor_pos, c_x1), tx, tx + _w);
-					var _rx1 = clamp(max(cursor_pos, c_x1), tx, tx + _w);
+					var _rx0 = min(cursor_pos, c_x1);
+					var _rx1 = max(cursor_pos, c_x1);
 					
 					draw_roundrect_ext(_rx0, c_y0, _rx1, c_y1, THEME_VALUE.highlight_corner_radius, THEME_VALUE.highlight_corner_radius, 0);
 					draw_set_alpha(1);
+					gpu_set_scissor(scis);
 				}
 				
 				var _mx = _m[0];
@@ -912,10 +915,12 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				draw_surface_ext(text_surface, tb_surf_x, tb_surf_y, 1, 1, 0, postBlend, postAlpha);
 				BLEND_NORMAL
 				
+				gpu_set_scissor(_x + 1, _y + 1, _w - 2, _h - 2);
 				draw_set_color(COLORS._main_text_accent);
 				draw_set_alpha((typing || current_time % (PREFERENCES.caret_blink * 2000) > PREFERENCES.caret_blink * 1000) * 0.8 + 0.2);
 				draw_line_width(cursor_pos, c_y0, cursor_pos, c_y1, 2);
 				draw_set_alpha(1);
+				gpu_set_scissor(scis);
 				
 				if(typing) typing--;
 			#endregion

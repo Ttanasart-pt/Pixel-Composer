@@ -16,7 +16,7 @@ MPEG-4 (.mp4)|*.mp4";
 		path = get_save_filename_compat(_ext, "export", "Export to", _dir);
 		key_release();
 		
-		var _dirr = filename_dir(path) + "\\";
+		var _dirr = filename_dir(path) + "/";
 		var _namm = filename_name(path);
 		var _extt = filename_ext(path);
 		
@@ -283,12 +283,13 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 	}
 	
-	static pathString = function(path, fnam = "", index = 0, _array = false) {
+	static pathString = function(dirr, fnam = "", index = 0, _array = false) {
 		var suff = getInputData( 2);
 		var form = getInputData( 3);
 		var strt = getInputData(11);
 		
-		path = string_replace_all(path, "\\", "/");
+		dirr = string_replace_all(dirr, "\\", "/");
+		if(dirr != "" && !string_ends_with(dirr, "/")) dirr += "/";
 		
 		if(fnam != "") fnam = filename_name_only(fnam);
 		
@@ -368,7 +369,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 						break;
 						
 					case "d" : 
-						var dir  = filename_dir(path) + "/";
+						var dir  = filename_dir(dirr) + "/";
 						
 						if(par) {
 							var dir_s = "";
