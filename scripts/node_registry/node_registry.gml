@@ -10,6 +10,9 @@
 	globalvar NODE_ACTION_LIST;
 	globalvar NODE_ALIAS; NODE_ALIAS = {};
 	
+	globalvar NODE_FAV; NODE_FAV     = [];
+	globalvar NODE_FAV_MAP; NODE_FAV_MAP = {};
+	
 	global.PATREON_NODES = [
 		Node_Brush_Linear, 
 		Node_Ambient_Occlusion, 
@@ -74,11 +77,11 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 				.setMenuName($"graph_add_{nodeName}", getName(), spr);
 	buildFn.nodeName = nodeName;
 	
-	static setSpr     = function(_s) /*=>*/ { spr = _s; buildFn.setSpr(_s); return self; }
-	static setTags    = function(_t) /*=>*/ { array_append(tags, _t);       return self; }
-	static setTooltip = function(_t) /*=>*/ { tooltip     = _t;             return self; }
-	static setParam   = function(_p) /*=>*/ { createParam = _p;             return self; }
-	static notTest    = function(  ) /*=>*/ { testable    = false;          return self; }
+	static setSpr     = function(_s) /*=>*/ { spr = _s; buildFn.setSpr(_s);                       return self; }
+	static setTags    = function(_t) /*=>*/ { array_append(tags, _t);                             return self; }
+	static setTooltip = function(_t) /*=>*/ { tooltip     = _t;                                   return self; }
+	static setParam   = function(_p) /*=>*/ { createParam = _p;                                   return self; }
+	static notTest    = function(  ) /*=>*/ { testable    = false;                                return self; }
     static setBuild   = function(_f) /*=>*/ { createFn    = method(self, _f); usecreateFn = true; return self; }
 	
 	static setIO = function(t) { 
@@ -194,7 +197,7 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 			draw_sprite_ui_uniform(THEME.node_deprecated_badge, 1, _x + grid_size - ui(12), _y + ui(6));
 		}
 		
-		var fav = struct_exists(global.FAV_NODES, nodeName);
+		var fav = struct_exists(NODE_FAV_MAP, nodeName);
 		if(fav) {
 			gpu_set_tex_filter(true);
 			draw_sprite_ui_uniform(THEME.star, 0, _x + grid_size - ui(10), _y + grid_size - ui(10), .8, COLORS._main_accent, 1.);
@@ -220,7 +223,7 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 	}
 	
 	static drawList = function(_x, _y, _mx, _my, _h, _w, _param = {}) {
-		var fav = struct_exists(global.FAV_NODES, nodeName);
+		var fav = struct_exists(NODE_FAV_MAP, nodeName);
 		if(fav) {
 			gpu_set_tex_filter(true);
 			draw_sprite_ui_uniform(THEME.star, 0, _x + ui(16), _y + _h / 2, .8, COLORS._main_accent, 1.);
@@ -569,7 +572,8 @@ function __initNodes(unzip = true) {
 	CUSTOM_NODES	      = [];
 	CUSTOM_NODES_POSITION = {};
 	
-	global.FAV_NODES      = {};
+	NODE_FAV     = [];
+	NODE_FAV_MAP = {};
 	
 	NODE_PAGE_DEFAULT = 0;
 	NODE_PAGE_LAST    = 0;
@@ -606,9 +610,8 @@ function __initNodes(unzip = true) {
 	
 	var favPath = $"{DIRECTORY}Nodes/fav.json";
 	if(file_exists_empty(favPath)) {
-		var favs = json_load_struct(favPath);
-		for (var i = 0, n = array_length(favs); i < n; i++)
-			global.FAV_NODES[$ favs[i]] = 1;
+		NODE_FAV = json_load_struct(favPath);
+		refreshNodeFavourite();
 	}
 	
 	var recPath = $"{DIRECTORY}Nodes/recent.json";
@@ -621,6 +624,15 @@ function __initNodes(unzip = true) {
 }
 
 	////- Actions
+	
+function refreshNodeFavourite() {
+	NODE_FAV_MAP = {};
+	
+	for (var i = 0, n = array_length(NODE_FAV); i < n; i++) {
+		var f = NODE_FAV[i];
+		if(is_string(f)) NODE_FAV_MAP[$ f] = 1;
+	}
+}
 
 function nodeBuild(_name, _x, _y, _group = PANEL_GRAPH.getCurrentContext()) {
 	if(!struct_has(ALL_NODES, _name)) {

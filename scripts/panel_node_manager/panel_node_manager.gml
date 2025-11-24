@@ -12,6 +12,7 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 	
 	toSelectDir  = "";
 	toSelectNode = "";
+	searchText   = "";
 	
 	static setRootDir = function(d) /*=>*/ { 
 		internalDir = new DirectoryObject(d).scan(["NodeObject"]); 
@@ -22,7 +23,8 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 	
 	parseArray = function(t) /*=>*/ {return (t != "" && !string_pos(",", t))? [ t ] : json_try_parse(t, [])};
 	
-	tb_root  = textBox_Text(function(t) /*=>*/ { setRootDir(t); }).setFont(f_p2).setColor(COLORS._main_text_sub);
+	tb_root   = textBox_Text(function(t) /*=>*/ { setRootDir(t);    }).setFont(f_p2);
+	tb_search = textBox_Text(function(t) /*=>*/ { searchContent(t); }).setFont(f_p2);
 	
 	tb_inode = textBox_Text(   function(t) /*=>*/ { selectNode.info[$ "baseNode"]         = t;  update(); });
 	tb_name  = textBox_Text(   function(t) /*=>*/ { selectNode.info[$ "name"]             = t;  update(); });
@@ -49,55 +51,86 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 	
 	array_foreach(editWidgets, function(e) /*=>*/ {return e[1].setFont(f_p2)});
 	
-	sc_folder = new scrollPane(ui(8), h, function(_y, _m) {
-		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
-		
-		var ww = sc_folder.surface_w;
-		var _h = 0;
-		var hg = ui(20);
-		var yy = _y;
-		var xx = 0;
+	function drawDirectory(_ind, _dir, yy, _m) {
 		
 		var _hover = sc_folder.hover;
 		var _focus = sc_folder.active;
 		
-		ds_stack_clear(stack);
+		var _list = _dir.subDir;
 		
-		var _list = internalDir.subDir;
-	    for( var i = array_length(_list) - 1; i >= 0; i-- ) 
-	        ds_stack_push(stack, [ _list[i], 0]);
-        
-		while(!ds_stack_empty(stack)) {
-		    var _stack = ds_stack_pop(stack);
-		    var st = _stack[0];
-		    var ly = _stack[1]; 
+		var col = 1;
+		var cl  = 0;
+		
+		var sw = sc_folder.surface_w;
+		var ww = sw / col;
+		var hg = ui(20);
+		var hh = hg;
+		
+	    for( var i = 0, n = array_length(_list); i < n; i++ ) {
+	        var dr = _list[i];
+	        
+	        if(!array_empty(dr.subDir) && cl) {
+	        	cl  = 0;
+            	hh += hg;
+		    	yy += hg;
+	        }
+	        
+		    var xx = ww * cl;
+		    var _h = hg;
 		    
-		    var _list = st.subDir;
-		    for( var i = 0, n = array_length(_list); i < n; i++ ) 
-		        ds_stack_push(stack, [ _list[i], ly + 1]);
-		        
 	        var cc = COLORS._main_text_sub;
-	        if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, ww, yy + hg - 1)) {
+	        if(_hover && point_in_rectangle(_m[0], _m[1], xx, yy, xx + ww, yy + hg - 1)) {
 	            cc = COLORS._main_text;
 	            
 	            if(mouse_press(mb_left, _focus)) {
-	            	selectDir = selectDir == st? noone : st;
+	            	selectDir  = selectDir == dr? noone : dr;
 	            	selectNode = noone;
 	            }
 	        }
 	        
-	        if(toSelectDir == st.path) selectDir = st;
-	        if(selectDir == st) cc = COLORS._main_accent;
-		        
+	        if(toSelectDir == dr.path) selectDir = dr;
+	        if(selectDir == dr) cc = COLORS._main_accent;
+		    
 		    draw_set_text(f_p2, fa_left, fa_center, cc);
-    		draw_text_add(xx + ui(ly * 16 + 8), yy + hg / 2, st.name);
+    		draw_text_add(xx + ui(8 + 8 * _ind), yy + hg / 2, dr.name);
             
-	        _h += hg;
-		    yy += hg;
+            if(!array_empty(dr.subDir)) {
+	        	hh += _h;
+		    	yy += _h;
+	            
+            	var sh = drawDirectory(_ind + 1, dr, yy, _m);
+            	// draw_sprite_stretched_ext(THEME.ui_panel, 1, 0, yy - _h + ui(2), sw, sh + _h - ui(2), COLORS._main_icon, .5);
+            	
+            	cl  = 0;
+            	hh += sh;
+		    	yy += sh;
+		    	
+            } else {
+            	cl++;
+	            if(cl >= col) {
+	            	cl = 0;
+		        	hh += _h;
+			    	yy += _h;
+	            }
+	            
+            }
+            
 		}
 		
+		if(cl == 0) {
+			hh -= hg;
+		}
+		
+		return hh;
+	}
+	
+	sc_folder = new scrollPane(ui(8), h, function(_y, _m) {
+		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
+		
+		var hh = drawDirectory(0, internalDir, _y, _m);
 		toSelectDir = "";
-		return _h;
+		
+		return hh;
 	});
 	
 	sc_content = new scrollPane(ui(8), h, function(_y, _m) {
@@ -140,32 +173,46 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 		return _h;
 	});
 	
+	function searchContent(_str) {
+		searchText = _str;
+	}
+	
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		var _pd = padding;
+		var m = [ mx, my ];
 		
 		// Root
+		var wx  = _pd;
+		var wy  = _pd;
+		var sdw = ui(240);
+		var wdw = w - _pd * 2 - sdw - ui(8);
 		var wdh = TEXTBOX_HEIGHT;
+		
 		var ndx = _pd;
 		var ndy = _pd + wdh + ui(8);
 		
 		tb_root.setFocusHover(pFOCUS, pHOVER);
-		tb_root.draw(_pd, _pd, w - _pd * 2, wdh, rootDir, [ mx, my ] );
+		tb_root.draw(wx, wy, wdw, wdh, rootDir, m );
+		
+		tb_search.setFocusHover(pFOCUS, pHOVER);
+		tb_search.draw(wx + wdw + ui(8), wy, sdw, wdh, searchText, m );
 		
 		// Editor
+		
 		var bw = edit_w;
 		var bh = TEXTBOX_HEIGHT;
 		var bx = w - edit_w - _pd;
 		var by = ndy;
 		
-		if(buttonInstant(THEME.button_def, bx, by, bw, bh, [ mx, my ], pHOVER, pFOCUS) == 2)
+		if(buttonInstant(THEME.button_def, bx, by, bw, bh, m, pHOVER, pFOCUS) == 2)
 			__test_load_all_nodes();
 		draw_set_text(f_p2, fa_center, fa_center, COLORS._main_text);
 		draw_text_add(bx + bw / 2, by + bh / 2, "Load All Nodes");
 		by += bh + ui(4);
 		
 		if(selectDir != noone) {
-			if(buttonInstant(THEME.button_def, bx, by, bw, bh, [ mx, my ], pHOVER, pFOCUS) == 2) {
+			if(buttonInstant(THEME.button_def, bx, by, bw, bh, m, pHOVER, pFOCUS) == 2) {
 				fileNameCall("", function(txt) /*=>*/ {
 					if(txt == "") return;
 					var _inode = string_trim(txt, ["/"])
@@ -233,14 +280,14 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 				if(_tit == "version") {
 					wgw -= ui(32);
 					
-					if(buttonInstant(THEME.button_hide_fill, wgx + wgw + ui(4), by, ui(28), bh, [ mx, my ], pHOVER, pFOCUS, "", THEME.icon_default) == 2) {
+					if(buttonInstant(THEME.button_hide_fill, wgx + wgw + ui(4), by, ui(28), bh, m, pHOVER, pFOCUS, "", THEME.icon_default) == 2) {
 						selectNode.info[$ "pxc_version"] = 1_18_09_0;
 						update();
 					}
 				}
 				
 				_wdg.setFocusHover(pFOCUS, pHOVER);
-				var _pa = new widgetParam(wgx, by, wgw, bh, _dat, {}, [ mx, my ])
+				var _pa = new widgetParam(wgx, by, wgw, bh, _dat, {}, m)
 				           .setFont(f_p2);
 				var _wh = _wdg.drawParam(_pa);
 				
@@ -248,7 +295,7 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 			}
 			
 			by += ui(4);
-			if(buttonInstant(THEME.button_def, bx, by, bw, bh, [ mx, my ], pHOVER, pFOCUS) == 2)
+			if(buttonInstant(THEME.button_def, bx, by, bw, bh, m, pHOVER, pFOCUS) == 2)
 				update();
 			
 			draw_set_text(f_p2, fa_center, fa_center, COLORS._main_text);

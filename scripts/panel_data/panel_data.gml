@@ -332,6 +332,38 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		return [_panelT, _panelB];
 	}
 	
+	function resplit_h(l = undefined, r = undefined) {
+		if(array_length(childs) != 2) return;
+		
+		var _panelL = childs[0].anchor == ANCHOR.left? childs[0] : childs[1];
+		var _panelR = childs[0].anchor == ANCHOR.left? childs[1] : childs[0];
+		var dw = 0;
+		
+		if(l != undefined) dw =   l - _panelL.w;
+		if(r != undefined) dw = -(r - _panelR.w);
+		
+		_panelL.resize( dw, 0);
+		_panelR.resize(-dw, 0);
+		
+		_panelR.move(dw, 0);
+	}
+	
+	function resplit_v(t = undefined, b = undefined) {
+		if(array_length(childs) != 2) return;
+		
+		var _panelT = childs[0].anchor == ANCHOR.top? childs[0] : childs[1];
+		var _panelB = childs[0].anchor == ANCHOR.top? childs[1] : childs[0];
+		var dh = 0;
+		
+		if(t != undefined) dh =   t - _panelT.h;
+		if(b != undefined) dh = -(b - _panelB.h);
+		
+		_panelT.resize(0,  dh);
+		_panelB.resize(0, -dh);
+		
+		_panelB.move(0, dh);
+	}
+	
 	////- Step
 	
 	function stepBegin() {

@@ -58,60 +58,67 @@
     function panel_animation_toggle_OnionSkin()         { CALL("animation_toggle_OnionSkin");         PANEL_ANIMATION.toggleOnionSkin();        }
     
 	function __fnInit_Animation() {
-        registerFunction("",          "Play/Pause",         vk_space,   MOD_KEY.none,  panel_animation_play_pause     ).setMenu("play_pause")
-        registerFunction("",          "Resume/Pause",       vk_space,   MOD_KEY.shift, panel_animation_resume         ).setMenu("resume_pause")
+		var an = "Animation";
+		var n  = MOD_KEY.none;
+		var c  = MOD_KEY.ctrl;
+		var s  = MOD_KEY.shift;
+		var a  = MOD_KEY.alt;
+		
+        registerFunction("", "Toggle Dopesheet",   vk_tab,     c,  function() /*=>*/ { PANEL_ANIMATION.toggleDopesheet(); } ).setMenu("animation_dopesheet_toggle")
+        registerFunction("", "Play/Pause",         vk_space,   n,  panel_animation_play_pause     ).setMenu("play_pause")
+        registerFunction("", "Play/Pause",         vk_space,   n,  panel_animation_play_pause     ).setMenu("play_pause")
                                 
-        registerFunction("",          "First Frame",        vk_home,    MOD_KEY.none,  panel_animation_first_frame    ).setMenu("first_frame")
-        registerFunction("",          "Last Frame",         vk_end,     MOD_KEY.none,  panel_animation_last_frame     ).setMenu("last_frame")
-        registerFunction("",          "Previous Frame",     vk_left,    MOD_KEY.none,  panel_animation_prev_frame     ).setMenu("previous_frame")
-        registerFunction("",          "Next Frame",         vk_right,   MOD_KEY.none,  panel_animation_next_frame     ).setMenu("next_frame")
-        registerFunction("",          "Previous Keyframe",  vk_pageup,  MOD_KEY.none,  panel_animation_prev_keyframe  ).setMenu("previous_keyframe")
-        registerFunction("",          "Next Keyframe",      vk_pagedown,MOD_KEY.none,  panel_animation_next_keyframe  ).setMenu("next_keyframe")
+        registerFunction("", "First Frame",        vk_home,    n,  panel_animation_first_frame    ).setMenu("first_frame")
+        registerFunction("", "Last Frame",         vk_end,     n,  panel_animation_last_frame     ).setMenu("last_frame")
+        registerFunction("", "Previous Frame",     vk_left,    n,  panel_animation_prev_frame     ).setMenu("previous_frame")
+        registerFunction("", "Next Frame",         vk_right,   n,  panel_animation_next_frame     ).setMenu("next_frame")
+        registerFunction("", "Previous Keyframe",  vk_pageup,  n,  panel_animation_prev_keyframe  ).setMenu("previous_keyframe")
+        registerFunction("", "Next Keyframe",      vk_pagedown,n,  panel_animation_next_keyframe  ).setMenu("next_keyframe")
     
-        registerFunction("Animation", "Delete keys",        vk_delete,  MOD_KEY.none,  panel_animation_delete_key     ).setMenu("animation_delete_keys")
-        registerFunction("Animation", "Duplicate",          "D",        MOD_KEY.ctrl,  panel_animation_duplicate      ).setMenu("animation_duplicate", THEME.duplicate)
-        registerFunction("Animation", "Copy",               "C",        MOD_KEY.ctrl,  panel_animation_copy           ).setMenu("animation_copy",      THEME.copy)
-        registerFunction("Animation", "Paste",              "V",        MOD_KEY.ctrl,  panel_animation_paste          ).setMenu("animation_paste",     THEME.paste)
-        registerFunction("Animation", "Collapse Toggle",    "C",        MOD_KEY.none,  panel_animation_collapseToggle ).setMenu("animation_collapse_toggle")
-        registerFunction("Animation", "Toggle Nodes",       "H",        MOD_KEY.none,  panel_animation_show_nodes     ).setMenu("animation_toggle_nodes")
+        registerFunction(an, "Delete keys",        vk_delete,  n,  panel_animation_delete_key     ).setMenu("animation_delete_keys")
+        registerFunction(an, "Duplicate",          "D",        c,  panel_animation_duplicate      ).setMenu("animation_duplicate", THEME.duplicate)
+        registerFunction(an, "Copy",               "C",        c,  panel_animation_copy           ).setMenu("animation_copy",      THEME.copy)
+        registerFunction(an, "Paste",              "V",        c,  panel_animation_paste          ).setMenu("animation_paste",     THEME.paste)
+        registerFunction(an, "Collapse Toggle",    "C",        n,  panel_animation_collapseToggle ).setMenu("animation_collapse_toggle")
+        registerFunction(an, "Toggle Nodes",       "H",        n,  panel_animation_show_nodes     ).setMenu("animation_toggle_nodes")
         
-        registerFunction("Animation", "Animation Settings...", "S",    MOD_KEY.ctrl | MOD_KEY.shift, panel_animation_settings_call ).setMenu("animation_settings", THEME.animation_setting )
-        registerFunction("Animation", "Animation Scaler...",   "",     MOD_KEY.none,                 panel_animation_scale_call    ).setMenu("animation_scaler",   THEME.animation_timing  )
+        registerFunction(an, "Animation Settings...", "S",    c|s, panel_animation_settings_call  ).setMenu("animation_settings", THEME.animation_setting )
+        registerFunction(an, "Animation Scaler...",   "",     n,   panel_animation_scale_call     ).setMenu("animation_scaler",   THEME.animation_timing  )
         
-        registerFunction("Animation", "Edit Keyframe Value","",  MOD_KEY.none, panel_animation_edit_keyframe_value    ).setMenu("animation_edit_keyframe_value", )
-        registerFunction("Animation", "Toggle Keyframe Y",  "",  MOD_KEY.none, panel_animation_edit_keyframe_lock_y   ).setMenu("animation_lock_keyframe_y",     )
-        registerFunction("Animation", "Driver...",          "",  MOD_KEY.none, panel_animation_keyframe_driver        ).setMenu("animation_driver",              )
+        registerFunction(an, "Edit Keyframe Value","",  n, panel_animation_edit_keyframe_value    ).setMenu("animation_edit_keyframe_value", )
+        registerFunction(an, "Toggle Keyframe Y",  "",  n, panel_animation_edit_keyframe_lock_y   ).setMenu("animation_lock_keyframe_y",     )
+        registerFunction(an, "Driver...",          "",  n, panel_animation_keyframe_driver        ).setMenu("animation_driver",              )
         
-        registerFunction("Animation", "Align Left",         "A", MOD_KEY.none, panel_animation_keyframe_align_left    ).setMenu("animation_align_left"   )
-        registerFunction("Animation", "Align Center",       "",  MOD_KEY.none, panel_animation_keyframe_align_center  ).setMenu("animation_align_center" )
-        registerFunction("Animation", "Align Right",        "",  MOD_KEY.none, panel_animation_keyframe_align_right   ).setMenu("animation_align_right"  )
+        registerFunction(an, "Align Left",         "A", n, panel_animation_keyframe_align_left    ).setMenu("animation_align_left"   )
+        registerFunction(an, "Align Center",       "",  n, panel_animation_keyframe_align_center  ).setMenu("animation_align_center" )
+        registerFunction(an, "Align Right",        "",  n, panel_animation_keyframe_align_right   ).setMenu("animation_align_right"  )
         
-        registerFunction("Animation", "Quantize Keys",      "Q", MOD_KEY.none, panel_animation_quantize               ).setMenu("animation_quantize")
-        registerFunction("Animation", "Stagger Keys",       "",  MOD_KEY.none, panel_animation_edit_keyframe_stagger  ).setMenu("animation_stagger",     )
-        registerFunction("Animation", "Repeat Keys",        "R", MOD_KEY.none, panel_animation_keyframe_repeat        ).setMenu("animation_repeat"       )
-        registerFunction("Animation", "Distribute Keys",    "D", MOD_KEY.none, panel_animation_keyframe_distribute    ).setMenu("animation_distribute"   )
-        registerFunction("Animation", "Reverse Keys",       "I", MOD_KEY.none, panel_animation_keyframe_reverse       ).setMenu("animation_reverse"      )
-        registerFunction("Animation", "Envelope Keys",      "",  MOD_KEY.none, panel_animation_keyframe_envelope      ).setMenu("animation_envelope"     )
-        registerFunction("Animation", "Randomize Keys",     "",  MOD_KEY.none, panel_animation_keyframe_randomize     ).setMenu("animation_randomize"    )
+        registerFunction(an, "Quantize Keys",      "Q", n, panel_animation_quantize               ).setMenu("animation_quantize")
+        registerFunction(an, "Stagger Keys",       "",  n, panel_animation_edit_keyframe_stagger  ).setMenu("animation_stagger",     )
+        registerFunction(an, "Repeat Keys",        "R", n, panel_animation_keyframe_repeat        ).setMenu("animation_repeat"       )
+        registerFunction(an, "Distribute Keys",    "D", n, panel_animation_keyframe_distribute    ).setMenu("animation_distribute"   )
+        registerFunction(an, "Reverse Keys",       "I", n, panel_animation_keyframe_reverse       ).setMenu("animation_reverse"      )
+        registerFunction(an, "Envelope Keys",      "",  n, panel_animation_keyframe_envelope      ).setMenu("animation_envelope"     )
+        registerFunction(an, "Randomize Keys",     "",  n, panel_animation_keyframe_randomize     ).setMenu("animation_randomize"    )
         
-        registerFunction("Animation", "New Folder",                "", MOD_KEY.none, panel_animation_dopesheet_folder        ).setMenu("animation_new_folder",          THEME.folder)
-        registerFunction("Animation", "New Folder From Selection", "", MOD_KEY.none, panel_animation_dopesheet_folder_select ).setMenu("animation_new_folder_select",   THEME.folder)
-        registerFunction("Animation", "Dopesheet Expand",          "", MOD_KEY.none, panel_animation_dopesheet_expand        ).setMenu("animation_dopesheet_expand",    )
-        registerFunction("Animation", "Dopesheet Collapse",        "", MOD_KEY.none, panel_animation_dopesheet_collapse      ).setMenu("animation_dopesheet_collapse",  )
+        registerFunction(an, "New Folder",                "", n, panel_animation_dopesheet_folder        ).setMenu("animation_new_folder",          THEME.folder)
+        registerFunction(an, "New Folder From Selection", "", n, panel_animation_dopesheet_folder_select ).setMenu("animation_new_folder_select",   THEME.folder)
+        registerFunction(an, "Dopesheet Expand",          "", n, panel_animation_dopesheet_expand        ).setMenu("animation_dopesheet_expand",    )
+        registerFunction(an, "Dopesheet Collapse",        "", n, panel_animation_dopesheet_collapse      ).setMenu("animation_dopesheet_collapse",  )
         
-        registerFunction("Animation", "Rename Group",       "", MOD_KEY.none, panel_animation_group_rename          ).setMenu("animation_rename_group",        )
-        registerFunction("Animation", "Remove Group",       "", MOD_KEY.none, panel_animation_group_remove          ).setMenu("animation_remove_group",        THEME.cross)
-        registerFunction("Animation", "Separate/Combine Axis",        "", MOD_KEY.none, panel_animation_toggle_axis           ).setMenu("animation_toggle_axis",         )
-        registerFunction("Animation", "Separate Axis",      "", MOD_KEY.none, panel_animation_separate_axis         ).setMenu("animation_separate_axis",       )
-        registerFunction("Animation", "Combine Axis",       "", MOD_KEY.none, panel_animation_combine_axis          ).setMenu("animation_combine_axis",        )
+        registerFunction(an, "Rename Group",          "", n, panel_animation_group_rename         ).setMenu("animation_rename_group",        )
+        registerFunction(an, "Remove Group",          "", n, panel_animation_group_remove         ).setMenu("animation_remove_group",        THEME.cross)
+        registerFunction(an, "Separate/Combine Axis", "", n, panel_animation_toggle_axis          ).setMenu("animation_toggle_axis",         )
+        registerFunction(an, "Separate Axis",         "", n, panel_animation_separate_axis        ).setMenu("animation_separate_axis",       )
+        registerFunction(an, "Combine Axis",          "", n, panel_animation_combine_axis         ).setMenu("animation_combine_axis",        )
         
-        registerFunction("Animation", "Set Range Start",    "", MOD_KEY.none, panel_animation_range_set_start       ).setMenu("animation_set_range_start",     [ THEME.frame_range, 0 ])
-        registerFunction("Animation", "Set Range End",      "", MOD_KEY.none, panel_animation_range_set_end         ).setMenu("animation_set_range_end",       [ THEME.frame_range, 1 ])
-        registerFunction("Animation", "Reset Range",        "", MOD_KEY.none, panel_animation_range_reset           ).setMenu("animation_reset_range",         )
+        registerFunction(an, "Set Range Start",       "", n, panel_animation_range_set_start      ).setMenu("animation_set_range_start",     [ THEME.frame_range, 0 ])
+        registerFunction(an, "Set Range End",         "", n, panel_animation_range_set_end        ).setMenu("animation_set_range_end",       [ THEME.frame_range, 1 ])
+        registerFunction(an, "Reset Range",           "", n, panel_animation_range_reset          ).setMenu("animation_reset_range",         )
+        registerFunction(an, "Reset View",           "F", n, panel_animation_reset_view           ).setMenu("animation_reset_view",          )
         
-        registerFunction("Animation", "Reset View",        "F", MOD_KEY.none, panel_animation_reset_view            ).setMenu("animation_reset_view",          )
         
-        registerFunction("Animation", "Node Name Display", "", MOD_KEY.none, panel_animation_toggle_NodeNameType    )
+        registerFunction(an, "Node Name Display", "", n, panel_animation_toggle_NodeNameType    )
         	.setMenu("animation_toggle_NodeNameType",     THEME.node_name_type    ).setSpriteInd(function() /*=>*/ {return PANEL_ANIMATION.node_name_type} )
         	.setTooltip(new tooltipSelector("Name Display", [
 	            __txtx("panel_animation_name_full", "Full name"),
@@ -119,24 +126,25 @@
 	            __txtx("panel_animation_name_only", "Node name"),
 	        ])).setScroll()
 	        
-        registerFunction("Animation", "Show Node Name",    "", MOD_KEY.none, panel_animation_toggle_NodeLabel       )
+        registerFunction(an, "Show Node Name",    "", n, panel_animation_toggle_NodeLabel       )
         	.setMenu("animation_toggle_NodeLabel",        THEME.visible           ).setSpriteInd(function() /*=>*/ {return PANEL_ANIMATION.show_nodes}     )
         	
-        registerFunction("Animation", "Override Keyframe", "", MOD_KEY.none, panel_animation_toggle_KeyframeOverride)
+        registerFunction(an, "Override Keyframe", "", n, panel_animation_toggle_KeyframeOverride)
         	.setMenu("animation_toggle_KeyframeOverride", THEME.keyframe_override ).setSpriteInd(function() /*=>*/ {return global.FLAG.keyframe_override}  )
         	
-        registerFunction("Animation", "Onion Skin",        "", MOD_KEY.none, panel_animation_toggle_OnionSkin       )
+        registerFunction(an, "Onion Skin",        "", n, panel_animation_toggle_OnionSkin       )
         	.setMenu("animation_toggle_OnionSkin",        THEME.onion_skin        ).setSpriteInd(function() /*=>*/ {return PROJECT.onion_skin.enabled}     )
         
-        registerFunction("Animation", "Edit Sidebar...",   "", MOD_KEY.none, function() /*=>*/ {return menuItemEdit("animation_sidebar")}  ).setMenu("animation_edit_sidebar");
-        registerFunction("Animation", "Reset Sidebar",     "", MOD_KEY.none, function() /*=>*/ {return menuItemReset("animation_sidebar")} ).setMenu("animation_reset_sidebar", THEME.refresh_20);
+        registerFunction(an, "Edit Sidebar...",   "", n, function() /*=>*/ {return menuItemEdit("animation_sidebar")}  ).setMenu("animation_edit_sidebar");
+        registerFunction(an, "Reset Sidebar",     "", n, function() /*=>*/ {return menuItemReset("animation_sidebar")} ).setMenu("animation_reset_sidebar", THEME.refresh_20);
         
         __fnGroupInit_Animation();
     }
     
     function __fnGroupInit_Animation() {
-    	var s = THEME.timeline_ease;
-        var t = "panel_animation_ease";
+    	var an = "Animation";
+    	var s  = THEME.timeline_ease;
+        var t  = "panel_animation_ease";
         
         MENU_ITEMS.animation_group_ease_in = menuItemGroup(__txtx($"{t}_in", "Ease in"),  [ 
 			[ [s,0], function() /*=>*/ { array_foreach(PANEL_ANIMATION.keyframe_selecting, function(k) /*=>*/ { k.ease_in_type = CURVE_TYPE.linear; k.ease_in = [0, 1]; }) }, __txtx($"{t}_linear",    "Linear")    ],
@@ -145,7 +153,7 @@
 			[ [s,3], function() /*=>*/ { array_foreach(PANEL_ANIMATION.keyframe_selecting, function(k) /*=>*/ { k.ease_in_type = CURVE_TYPE.bezier; k.ease_in = [0, 0]; }) }, __txtx($"{t}_sharp",     "Sharp")     ],
 			[ [s,4], function() /*=>*/ { array_foreach(PANEL_ANIMATION.keyframe_selecting, function(k) /*=>*/ { k.ease_in_type = CURVE_TYPE.cut;    k.ease_in = [0, 0]; }) }, __txtx($"{t}_hold",      "Hold")      ],
         ], [ "Animation", "Ease In" ]);
-        registerFunction("Animation", "Ease In", "", MOD_KEY.none, function() /*=>*/ { menuCall("", [ MENU_ITEMS.animation_group_ease_in ]); });
+        registerFunction(an, "Ease In",  "", MOD_KEY.none, function() /*=>*/ { menuCall("", [ MENU_ITEMS.animation_group_ease_in ]); });
         
         MENU_ITEMS.animation_group_ease_out = menuItemGroup(__txtx($"{t}_out", "Ease out"),  [ 
             [ [s,0], function() /*=>*/ { array_foreach(PANEL_ANIMATION.keyframe_selecting, function(k) /*=>*/ { k.ease_out_type = CURVE_TYPE.linear; k.ease_out = [0, 0]; }) }, __txtx($"{t}_linear",    "Linear")    ],
@@ -153,14 +161,14 @@
             [ [s,2], function() /*=>*/ { array_foreach(PANEL_ANIMATION.keyframe_selecting, function(k) /*=>*/ { k.ease_out_type = CURVE_TYPE.bezier; k.ease_out = [1,-1]; }) }, __txtx($"{t}_overshoot", "Overshoot") ],
             [ [s,3], function() /*=>*/ { array_foreach(PANEL_ANIMATION.keyframe_selecting, function(k) /*=>*/ { k.ease_out_type = CURVE_TYPE.bezier; k.ease_out = [0, 1]; }) }, __txtx($"{t}_sharp",     "Sharp")     ],
         ], [ "Animation", "Ease Outs" ]);
-        registerFunction("Animation", "Ease Out", "", MOD_KEY.none, function() /*=>*/ { menuCall("", [ MENU_ITEMS.animation_group_ease_out ]); });
+        registerFunction(an, "Ease Out", "", MOD_KEY.none, function() /*=>*/ { menuCall("", [ MENU_ITEMS.animation_group_ease_out ]); });
         
         MENU_ITEMS.animation_group_align = menuItemGroup(__txt("Align"),  [ 
             [ [THEME.object_halign, 0], function() /*=>*/ { PANEL_ANIMATION.alignKeys(fa_left);   } ],
             [ [THEME.object_halign, 1], function() /*=>*/ { PANEL_ANIMATION.alignKeys(fa_center); } ],
             [ [THEME.object_halign, 2], function() /*=>*/ { PANEL_ANIMATION.alignKeys(fa_right);  } ],
         ], [ "Animation", "Align" ]);
-        registerFunction("Animation", "Align", "", MOD_KEY.none, function() /*=>*/ { menuCall("", [ MENU_ITEMS.animation_group_align ]); });
+        registerFunction(an, "Align",    "", MOD_KEY.none, function() /*=>*/ { menuCall("", [ MENU_ITEMS.animation_group_align ]); });
         
         var _clrs = COLORS.labels;
         var _item = array_create(array_length(_clrs));
@@ -174,7 +182,7 @@
         ]);
         
         MENU_ITEMS.animation_group_label_color = menuItemGroup(__txt("Color"), _item, ["Animation", "Label Color"]).setSpacing(ui(24));
-        registerFunction("Animation", "Label Color", "", MOD_KEY.none, function() /*=>*/ { menuCall("", [ MENU_ITEMS.animation_group_label_color ]); });
+        registerFunction(an, "Label Color", "", MOD_KEY.none, function() /*=>*/ { menuCall("", [ MENU_ITEMS.animation_group_label_color ]); });
     }
 #endregion
 
@@ -186,6 +194,8 @@ function Panel_Animation() : PanelContent() constructor {
 	#region ---- Dimension ----
 	    min_w = ui(40);
 	    min_h = ui(48);
+	    
+	    expands_h  = ui(240);
 	    
 	    tool_width = ui(224);
 	    timeline_w = w - tool_width - ui(68);
@@ -772,6 +782,17 @@ function Panel_Animation() : PanelContent() constructor {
     }
     
     ////- Actions
+    
+    function toggleDopesheet() {
+    	if(in_dialog) {
+    		
+    		
+    	} else if(panel.parent) {
+    		var pd = panel.padding * 2;
+    		var hh = h > min_h + pd? min_h + pd : expands_h + pd;
+    		panel.parent.resplit_v(undefined, hh);
+    	}
+    }
     
 	function resetView() {
 		var _sca = timeline_w / (GLOBAL_TOTAL_FRAMES + 2);

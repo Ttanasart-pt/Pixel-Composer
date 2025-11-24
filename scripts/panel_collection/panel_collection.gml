@@ -634,8 +634,8 @@ function Panel_Collection() : PanelContent() constructor {
 		if(node_menu_selecting == noone) return;
 		
 		var _node = node_menu_selecting.node;
-		if(struct_exists(global.FAV_NODES, _node))	struct_remove(global.FAV_NODES, _node);
-		else										global.FAV_NODES[$ _node] = 1;
+		array_toggle(NODE_FAV, _node);
+		refreshNodeFavourite();
 		
 		PREF_SAVE();
 	}
@@ -644,7 +644,7 @@ function Panel_Collection() : PanelContent() constructor {
 		if(!is(node, NodeObject)) return;
 		
 		node_menu_selecting = node;
-		var fav  = struct_exists(global.FAV_NODES, node.node);
+		var fav  = struct_exists(NODE_FAV_MAP, node.node);
 		var menu = [
 			menuItem(fav? __txtx("add_node_remove_favourite", "Remove from favourite") : __txtx("add_node_add_favourite", "Add to favourite"), trigger_favourite, THEME.star)
 		];
@@ -701,7 +701,7 @@ function Panel_Collection() : PanelContent() constructor {
 		} else if(nodeListPane_page == 0) {
 			ds_list_clear(node_temp_list);
 			
-			var _favs = struct_get_names(global.FAV_NODES);
+			var _favs = struct_get_names(NODE_FAV_MAP);
 			for( var i = 0, n = array_length(_favs); i < n; i++ ) {
 				var _nodeIndex = _favs[i];
 				if(!struct_has(ALL_NODES, _nodeIndex)) continue;
@@ -783,7 +783,7 @@ function Panel_Collection() : PanelContent() constructor {
 					BLEND_NORMAL
 				gpu_set_texfilter(false);
 				
-				var fav = struct_exists(global.FAV_NODES, _node.node);
+				var fav = struct_exists(NODE_FAV_MAP, _node.node);
 				if(fav) draw_sprite_ui_uniform(THEME.star, 0, _boxx + grid_size - ui(8), yy + grid_size - ui(8), 0.7, COLORS._main_accent, 1.);
 				
 			}

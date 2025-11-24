@@ -90,10 +90,14 @@ event_inherited();
 	
 	function isTop() { return true; }
 	
-	function trigger_favourite() {
-		if(node_menu_selecting == noone) return;
+	function trigger_favourite(nodeName = undefined) {
+		if(nodeName == undefined) {
+			if(node_menu_selecting == noone) return;
+			nodeName = node_menu_selecting.nodeName;
+		}
 		
-		struct_toggle(global.FAV_NODES, node_menu_selecting.nodeName);
+		array_toggle(NODE_FAV, nodeName);
+		refreshNodeFavourite();
 		PREF_SAVE();
 	}
 	
@@ -101,7 +105,7 @@ event_inherited();
 		if(!is(node, NodeObject)) return;
 		
 		node_menu_selecting = node;
-		var fav = struct_exists(global.FAV_NODES, node.nodeName);
+		var fav = struct_exists(NODE_FAV_MAP, node.nodeName);
 		var fvt = fav? __txtx("add_node_remove_favourite", "Remove from favourite") : __txtx("add_node_add_favourite", "Add to favourite");
 		hk_selecting = struct_try_get(GRAPH_ADD_NODE_MAPS, node.nodeName, noone);
 		
@@ -175,13 +179,13 @@ event_inherited();
 			}
 			
 			array_push(node_list, "Favourites");
-			var _favs = struct_get_names(global.FAV_NODES);
 			var _fvnd = [];
-			for( var i = 0, n = array_length(_favs); i < n; i++ ) {
-				var _nodeIndex = _favs[i];
-				if(!struct_has(ALL_NODES, _nodeIndex)) continue;
+			
+			for( var i = 0, n = array_length(NODE_FAV); i < n; i++ ) {
+				var _nodeFav = NODE_FAV[i];
+				if(!struct_has(ALL_NODES, _nodeFav)) continue;
 				
-				var _node = ALL_NODES[$ _nodeIndex];
+				var _node = ALL_NODES[$ _nodeFav];
 				if(!_node.show_in_recent) continue;
 				
 				array_push(_fvnd, _node);
@@ -862,7 +866,7 @@ event_inherited();
 					draw_sprite_ui_uniform(THEME.star, 0, pd + ui(16), yy + list_height / 2, .8, c_white, .5);
 					gpu_set_tex_filter(false); BLEND_NORMAL
 					
-					if(mouse_press(mb_left, sFOCUS)) struct_toggle(global.FAV_NODES, _node.nodeName);
+					if(mouse_press(mb_left, sFOCUS)) trigger_favourite(_node.nodeName);
 				}
 				
 				var _hinfo = _hoverContent && point_in_circle(_m[0], _m[1], tx + ui(12), yy + list_height / 2, list_height / 2);
@@ -1015,7 +1019,7 @@ event_inherited();
 								
 				if(is(_node, NodeObject)) {
 					if(_node.deprecated) continue;
-					if(match[0] > -9000 && struct_exists(global.FAV_NODES, _node.nodeName)) 
+					if(match[0] > -9000 && struct_exists(NODE_FAV_MAP, _node.nodeName)) 
 						match[0] += 10000;
 				}
 				
@@ -1348,7 +1352,7 @@ event_inherited();
 					draw_sprite_ui_uniform(THEME.star, 0, pd + ui(16), yc, .8, c_white, .5);
 					gpu_set_tex_filter(false); BLEND_NORMAL
 					
-					if(mouse_press(mb_left, sFOCUS)) struct_toggle(global.FAV_NODES, _node.nodeName);
+					if(mouse_press(mb_left, sFOCUS)) trigger_favourite(_node.nodeName);
 				}
 				
 				var _hinfo = _hover && point_in_circle(_m[0], _m[1], tx + ui(12), yc, list_height / 2);

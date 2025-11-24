@@ -306,7 +306,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				if(b == 2) NODE_DROPPER_TARGET = NODE_DROPPER_TARGET == jun? noone : jun;
 			}
 			
-			if(jun.expUse || jun.type == VALUE_TYPE.text) {
+			if(jun.expUse || is(jun.editWidget, textArea)) {
 				bx -= bs + ui(4);
 				var cc = jun.popup_dialog == noone? COLORS._main_icon : COLORS._main_value_positive;
 				var t  = __txtx("panel_inspector_pop_text", "Pop up Editor");

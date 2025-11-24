@@ -2273,8 +2273,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		drawNodeBase(xx, yy, _s);
 		draggable = true;
 		
-		var _hover = _panel == noone? false : _panel.node_hovering     == self;
-		var _focus = _panel == noone? false : _panel.getFocusingNode() == self;
+		var _hover = false, _focus = false;
+		if(_panel) {
+			_hover = _panel.node_hovering     == self;
+			_focus = _panel.getFocusingNode() == self;
+		}
 		
 		if(previewable) {
 			if(preview_draw) drawPreview(xx, yy, _s);
