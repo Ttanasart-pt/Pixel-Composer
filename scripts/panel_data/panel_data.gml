@@ -55,6 +55,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	border_rb_menu = [
 		menuItem(__txt("Move"),    function() /*=>*/ { extract(); panel_mouse = 1; }),
 		menuItem(__txt("Pop out"), function() /*=>*/ { popWindow(); }, THEME.node_goto),
+		menuItem(__txt("Centralize Split"), function() /*=>*/ { if(parent) parent.centralize_split(); }),
+		-1,
 		border_rb_close,
 	];
 	
@@ -362,6 +364,13 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		_panelB.resize(0, -dh);
 		
 		_panelB.move(0, dh);
+	}
+	
+	function centralize_split() {
+		if(array_length(childs) != 2) return;
+		
+		     if(split == "h") resplit_h(w / 2);
+		else if(split == "v") resplit_v(h / 2);
 	}
 	
 	////- Step

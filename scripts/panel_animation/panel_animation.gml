@@ -193,7 +193,7 @@ function Panel_Animation() : PanelContent() constructor {
     
 	#region ---- Dimension ----
 	    min_w = ui(40);
-	    min_h = ui(48);
+	    min_h = ui(40);
 	    
 	    expands_h  = ui(240);
 	    
@@ -205,6 +205,8 @@ function Panel_Animation() : PanelContent() constructor {
     Panel_Animation_Dopesheet();
     
     #region ---- Timeline ----
+    	dopesheet_show   = true;
+    	
     	timeline_surface = noone;
 	    timeline_mask    = noone;
 	    
@@ -394,20 +396,10 @@ function Panel_Animation() : PanelContent() constructor {
     
     ////- Draw
     
-    function resetTimelineMask() {
+    function setDimension() {
     	timeline_w = w - tool_width - ui(64);
-	    timeline_h = ui(28);
-	    
-        timeline_mask    = surface_verify(timeline_mask, timeline_w, timeline_h);
-        timeline_surface = surface_verify(timeline_surface, timeline_w, timeline_h);
-            
-        surface_set_target(timeline_mask);
-        draw_clear(c_black);
-    	BLEND_SUBTRACT
-        	draw_sprite_stretched(THEME.ui_panel_bg, 0, 0, 0, timeline_w, timeline_h);
-		BLEND_NORMAL
-        surface_reset_target();
-    } 
+    	// timeline_h = ui(28);
+    }
     
     function getTimelineContentFolder(folder, _context = [], _depth = 0, _show = true) {
         var _ind = 0;
@@ -476,8 +468,11 @@ function Panel_Animation() : PanelContent() constructor {
     }
     
     function drawTimeline() { // Draw summary
+    	var padd   = dopesheet_show? ui(10) : ui(6);
+    	timeline_h = dopesheet_show? ui(28) : h - padd * 2;
+    
     	var bar_x       = tool_width + ui(16);
-        var bar_y       = h - timeline_h - ui(10);
+        var bar_y       = h - timeline_h - padd;
         var bar_w       = timeline_w;
         var bar_h       = timeline_h;
         var bar_total_w = GLOBAL_TOTAL_FRAMES * timeline_scale;
@@ -486,8 +481,15 @@ function Panel_Animation() : PanelContent() constructor {
         var msx = mx - bar_x;
         var msy = my - bar_y;
         
-        resetTimelineMask();
+        timeline_mask    = surface_verify(timeline_mask, timeline_w, timeline_h);
         timeline_surface = surface_verify(timeline_surface, timeline_w, timeline_h);
+        
+        surface_set_target(timeline_mask);
+        draw_clear(c_black);
+    	BLEND_SUBTRACT
+        	draw_sprite_stretched(THEME.ui_panel_bg, 0, 0, 0, timeline_w, timeline_h);
+		BLEND_NORMAL
+        surface_reset_target();
             
         surface_set_target(timeline_surface);    
 	        draw_clear_alpha(COLORS.panel_bg_clear, 0);
@@ -620,16 +622,27 @@ function Panel_Animation() : PanelContent() constructor {
     function drawAnimationSettings() {
     	var bSpr = THEME.button_hide_fill;
     	
-        var bs = ui(28);
-    	var by = h - (bs + ui(8));
-        var bx = w - (bs + ui(8));
-        var bc = COLORS._main_icon;
-        var m  = [mx, my];
-        
+        var m   = [mx, my];
+        var bc  = COLORS._main_icon;
 		var foc = pFOCUS;
 		var hov = pHOVER;
         
         var bt = __txtx("panel_animation_animation_settings", "Animation settings");
+        if(!dopesheet_show) {
+	        var bw = ui(32);
+	        var bh = h - ui(12);
+	        var bx = w - (bw + ui(6));
+	    	var by = h - (bh + ui(6));
+	        
+        	var b  = buttonInstant(bSpr, bx, by, bw, bh, m, hov, foc, bt, THEME.gear, 2, bc, 1, .9);
+        	if(b == 2) dialogPanelCall(new Panel_Animation_Setting(), x + bx + bs, y + by - ui(8), { anchor: ANCHOR.right | ANCHOR.bottom }); 
+        	return;
+        }
+        
+        var bs = ui(28);
+    	var by = h - (bs + ui(8));
+        var bx = w - (bs + ui(8));
+        
         var b  = buttonInstant(bSpr, bx, by, bs, bs, m, hov, foc, bt, THEME.gear, 2, bc, 1, .9);
         if(b == 2) dialogPanelCall(new Panel_Animation_Setting(), x + bx + bs, y + by - ui(8), { anchor: ANCHOR.right | ANCHOR.bottom }); 
         
@@ -688,7 +701,14 @@ function Panel_Animation() : PanelContent() constructor {
         
         var bx = tool_width / 2 - ui(36) * amo / 2 + ui(8);
         var by = h - ui(40);
-        var bs = ui(32);
+        var bw = ui(32);
+        var bh = ui(32);
+        
+        if(!dopesheet_show) {
+        	bh = h - ui(12);
+        	by = h - (bh + ui(6));
+        }
+        
         var ss = THEME.button_hide_fill;
         var m  = [mx, my];
         
@@ -708,7 +728,7 @@ function Panel_Animation() : PanelContent() constructor {
                 var cc  = GLOBAL_IS_RENDERING? COLORS._main_icon_dark : but[2]();
                 var fnc = but[3];
             	
-                if(buttonInstant(ss, bx, by, bs, bs, m, hover, focus, txt, THEME.sequence_control, ind, cc) == 2)
+                if(buttonInstant(ss, bx, by, bw, bh, m, hover, focus, txt, THEME.sequence_control, ind, cc) == 2)
                     fnc();
             
                 bx += ui(36);
@@ -760,16 +780,15 @@ function Panel_Animation() : PanelContent() constructor {
         draw_clear_alpha(COLORS.panel_bg_clear, 1);
         if(!PROJECT.active) return;
         
-        resetTimelineMask();
-        drawDopesheet_ResetTimelineMask();
-        
+        setDimension();
+        drawDopesheet_setDimension();
         getTimelineContent();
         
         if(w >= ui(348)) {
             drawTimeline();
             timelineScrub();
             
-            if(dopesheet_h > ui(8)) drawDopesheet();
+            if(dopesheet_show) drawDopesheet();
         	drawAnimationSettings();
         }
         

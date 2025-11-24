@@ -535,11 +535,14 @@ function Panel_Animation_Dopesheet() {
     	draw_set_alpha(1);
     }
     
+    function drawDopesheet_setDimension() {
+    	dopesheet_w    = timeline_w;
+        dopesheet_h    = h - ui(52);
+        dopesheet_show = dopesheet_h > ui(8);
+    }
+    
     function drawDopesheet_ResetTimelineMask() {
-    	dopesheet_w = timeline_w;
-        dopesheet_h = h - timeline_h - ui(24);
-        
-        dopesheet_mask         = surface_verify(dopesheet_mask,    dopesheet_w, dopesheet_h);
+    	dopesheet_mask         = surface_verify(dopesheet_mask,    dopesheet_w, dopesheet_h);
         dopesheet_surface      = surface_verify(dopesheet_surface, dopesheet_w, dopesheet_h);
         
         dopesheet_name_mask    = surface_verify(dopesheet_name_mask,    tool_width, dopesheet_h);
@@ -1925,6 +1928,8 @@ function Panel_Animation_Dopesheet() {
     ////- Draw
     
     function drawDopesheet() { 
+    	drawDopesheet_ResetTimelineMask();
+    	
     	if(tool_width_drag) {
             CURSOR = cr_size_we;
             
