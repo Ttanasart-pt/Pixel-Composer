@@ -83,6 +83,40 @@ function draw_circle_border(xx, yy, r, w) {
 	draw_primitive_end();
 }
 
+function draw_circle_dash(_x, _y, rad, th = 1, dash = 8, ang = 0) { draw_ellipse_dash(_x, _y, rad, rad, th, dash, ang); }
+
+function draw_circle_angle(_x, _y, _r, _angSt, _angEd, precision = 32, cin = draw_get_color(), cout = draw_get_color()) {
+	var ox, oy, nx, ny, oa, na;
+	var _aa = draw_get_alpha();
+		
+	draw_primitive_begin(pr_trianglelist);
+	
+	for( var i = 0; i <= precision; i++ ) {
+		na = lerp(_angSt, _angEd, i / precision);
+		nx = _x + lengthdir_x(_r, na);
+		ny = _y + lengthdir_y(_r, na);
+		
+		if(i) {
+			draw_vertex_color(_x, _y,  cin, _aa);
+			draw_vertex_color(ox, oy, cout, _aa);
+			draw_vertex_color(nx, ny, cout, _aa);
+		}
+		
+		oa = na;
+		ox = nx;
+		oy = ny;
+	}
+	
+	draw_primitive_end();
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function draw_ellipse_prec(x0, y0, x1, y1, border, precision = 32) {
+	draw_set_circle_precision(precision);
+	draw_ellipse(x0, y0, x1, y1, border);
+}
+
 function draw_ellipse_border(x0, y0, x1, y1, w) {
 	var step = 32;
 	var angle_step = 360 / step;
@@ -153,40 +187,6 @@ function draw_ellipse_width(x0, y0, x1, y1, th = 1) {
 	}
 }
 
-// function draw_ellipse_dash(cx, cy, ww, hh, th = 1, dash = 8, ang = 0) {
-// 	var rd = max(ww, hh);
-	
-// 	var dash_dist = 0, is_dash = true;
-// 	var samp = min(64, dash * max(cx, cy));
-// 	var ox, oy, nx, ny;
-// 	var p0 = [ 0, 0 ];
-	
-// 	for( var i = 0; i < samp; i++ ) {
-// 		nx = cx + lengthdir_x(ww, i * 360 / samp);
-// 		ny = cy + lengthdir_y(hh, i * 360 / samp);
-		
-// 		if(ang != 0) {
-// 	        point_rotate(nx, ny, cx, cy, ang, p0);
-// 	        nx = p0[0];
-// 	        ny = p0[1];
-// 		}
-        
-// 		if(i) {
-// 			dash_dist += point_distance(ox, oy, nx, ny);
-// 			if(dash_dist >= dash) {
-// 				dash_dist -= dash;
-// 				is_dash = !is_dash;
-// 			}
-			
-// 			if(is_dash)
-// 				draw_line_width(ox, oy, nx, ny, th);
-// 		}
-		
-// 		ox = nx;
-// 		oy = ny;
-// 	}
-// }
-
 function draw_ellipse_dash(cx, cy, ww, hh, th = 1, dash = 8, ang = 0, shift = 0) {
 	var step = 64;
 	var astp = 360 / step;
@@ -217,33 +217,7 @@ function draw_ellipse_dash(cx, cy, ww, hh, th = 1, dash = 8, ang = 0, shift = 0)
 	shader_reset();
 }
 
-
-function draw_circle_dash(_x, _y, rad, th = 1, dash = 8, ang = 0) { draw_ellipse_dash(_x, _y, rad, rad, th, dash, ang); }
-
-function draw_circle_angle(_x, _y, _r, _angSt, _angEd, precision = 32, cin = draw_get_color(), cout = draw_get_color()) {
-	var ox, oy, nx, ny, oa, na;
-	var _aa = draw_get_alpha();
-		
-	draw_primitive_begin(pr_trianglelist);
-	
-	for( var i = 0; i <= precision; i++ ) {
-		na = lerp(_angSt, _angEd, i / precision);
-		nx = _x + lengthdir_x(_r, na);
-		ny = _y + lengthdir_y(_r, na);
-		
-		if(i) {
-			draw_vertex_color(_x, _y,  cin, _aa);
-			draw_vertex_color(ox, oy, cout, _aa);
-			draw_vertex_color(nx, ny, cout, _aa);
-		}
-		
-		oa = na;
-		ox = nx;
-		oy = ny;
-	}
-	
-	draw_primitive_end();
-}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function draw_arc_width(_x, _y, _r, _th, _angSt, _angEd) {
 	draw_primitive_begin(pr_trianglelist);

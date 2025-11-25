@@ -3,6 +3,17 @@ function Panel_Animation_Setting() : Panel_Linear_Setting() constructor {
 	w = ui(380);
 	
 	properties = [
+		
+		new __Panel_Linear_Setting_Item(
+			__txt("Show Frames"),
+			new checkBox(function() /*=>*/ { PANEL_ANIMATION.timeline_frame = !PANEL_ANIMATION.timeline_frame; }),
+			function( ) /*=>*/   {return PANEL_ANIMATION.timeline_frame},
+			function(v) /*=>*/ { PANEL_ANIMATION.timeline_frame = v; },
+			PREFERENCES.panel_animation_frame,
+			noone,
+			"panel_animation_frame", 
+		),
+		
 		new __Panel_Linear_Setting_Item(
 			__txtx("anim_length", "Animation length"),
 			new textBox(TEXTBOX_INPUT.number, function(str) /*=>*/ { PROJECT.animator.frames_total = round(real(str)); }),

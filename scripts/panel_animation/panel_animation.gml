@@ -656,7 +656,7 @@ function Panel_Animation() : PanelContent() constructor {
 	    		var hov = pHOVER && point_in_rectangle(msx, msy, _x0, 0, _x0 + size - 1, bar_h);
 	    		var hig = (keyy + 1) % timeline_separate == 0;
 	    		var cc  = hig? COLORS._main_icon_light : COLORS._main_icon;
-	    		var ii  = 1 + hig;
+	    		var ii  = 1 + (hig || keyy == GLOBAL_CURRENT_FRAME);
 	    		
 	    		if(is(inspecting, Node)) {
 		    		var _surf = array_safe_get(inspecting.preview_cache, keyy);
@@ -705,7 +705,7 @@ function Panel_Animation() : PanelContent() constructor {
 	    	var by = h - (bh + ui(6));
 	        
         	var b  = buttonInstant(bSpr, bx, by, bw, bh, m, hov, foc, bt, THEME.gear, 2, bc, 1, .9);
-        	if(b == 2) dialogPanelCall(new Panel_Animation_Setting(), x + bx + bs, y + by - ui(8), { anchor: ANCHOR.right | ANCHOR.bottom }); 
+        	if(b == 2) dialogPanelCall(new Panel_Animation_Setting(), x + bx + bw, y + by - ui(8), { anchor: ANCHOR.right | ANCHOR.bottom }); 
         	return;
         }
         

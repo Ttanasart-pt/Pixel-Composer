@@ -279,9 +279,8 @@ function preview_overlay_area_two_point(hover, active, _x, _y, _s, _mx, _my, _sn
 }
 
 function preview_overlay_area_span(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag) {
-	var _val  = array_clone(getValue());
-	var hovering = -1;
-	var _ref  = unit.mode == VALUE_UNIT.reference? unit.reference() : [ 1, 1 ];
+	var _val = array_clone(getValue());
+	var _ref = unit.mode == VALUE_UNIT.reference? unit.reference() : [ 1, 1 ];
 
 	var __ax = array_safe_get_fast(_val, 0);
 	var __ay = array_safe_get_fast(_val, 1);
@@ -293,111 +292,175 @@ function preview_overlay_area_span(hover, active, _x, _y, _s, _mx, _my, _snx, _s
 	var _ay = __ay * _s + _y;
 	var _aw = __aw * _s;
 	var _ah = __ah * _s;
-					
+	
+	var __x0 = __ax - __aw, __x1 = __ax + __aw;
+	var __y0 = __ay - __ah, __y1 = __ay + __ah;
+	
+	var x0 = _ax - _aw, x1 = _ax + _aw;
+	var y0 = _ay - _ah, y1 = _ay + _ah;
+	var xs = x1 + 16 * sign(_aw);
+	var ys = y1 + 16 * sign(_ah);
+			
+	var _hov = -1;
+	var _r   = ui(10);
+			
 	var drawPos  = _flag & 0b0001;
 	var drawSize = _flag & 0b0010;
 		
 	if(drawSize) {
 		draw_set_color(COLORS._main_accent);
-		draw_set_circle_precision(32);
 		switch(__at) {
-			case AREA_SHAPE.rectangle :	draw_rectangle(_ax - _aw, _ay - _ah, _ax + _aw, _ay + _ah, true); break;
-			case AREA_SHAPE.elipse :	draw_ellipse(_ax - _aw, _ay - _ah, _ax + _aw, _ay + _ah, true); break;
-		}
-	}
-	
-	var _hov = [ 0, 0 ];
-	var _r   = ui(10);
-	
-	if(point_in_circle(_mx, _my, _ax + _aw, _ay + _ah, _r))
-		_hov[1] = 1;
-	else if(point_in_rectangle(_mx, _my, _ax - _aw, _ay - _ah, _ax + _aw, _ay + _ah))
-		_hov[0] = 1;
-	
-	__overlay_hover[0] = lerp_float(__overlay_hover[0], _hov[0], 4);
-	__overlay_hover[1] = lerp_float(__overlay_hover[1], _hov[1], 4);
-	
-	if((drag_type == 0 || drag_type == 1) && drawPos)  draw_anchor_cross(__overlay_hover[0], _ax, _ay, _r + ui(4));
-	if((drag_type == 0 || drag_type == 2) && drawSize) draw_anchor(__overlay_hover[1], _ax + _aw, _ay + _ah, _r);
-	
-	if(drag_type == 1) {
-		var _xx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
-		var _yy = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
-							
-		if(key_mod_press(CTRL)) {
-			_val[0] = round(_xx);
-			_val[1] = round(_yy);
-		} else {
-			_val[0] = _xx;
-			_val[1] = _yy;
+			case AREA_SHAPE.rectangle :	draw_rectangle(    x0, y0, x1, y1, true ); break;
+			case AREA_SHAPE.elipse :	
+				draw_rectangle_dashed( x0, y0, x1, y1 ); 
+				draw_ellipse_prec(     x0, y0, x1, y1, true ); 
+				break;
 		}
 		
+		draw_line(x1, y1, xs, ys);
+	}
+	
+	if(drawPos  && point_in_rectangle(_mx, _my, x0, y0, x1, y1)) _hov = 1;
+	if(drawSize) {
+		if(point_in_circle(_mx, _my, xs, ys, _r)) _hov = 2;
+		if(point_in_circle(_mx, _my, x0, y0, _r)) _hov = 3;
+		if(point_in_circle(_mx, _my, x1, y0, _r)) _hov = 4;
+		if(point_in_circle(_mx, _my, x0, y1, _r)) _hov = 5;
+		if(point_in_circle(_mx, _my, x1, y1, _r)) _hov = 6;
+	}
+	
+	if(drawPos)  draw_anchor_cross(_hov == 1, _ax, _ay, ui(8), 1);
+	if(drawSize) {
+		draw_anchor(_hov == 2, xs, ys, ui(8), 1);
+		draw_anchor(_hov == 3, x0, y0, ui(8), 2);
+		draw_anchor(_hov == 4, x1, y0, ui(8), 2);
+		draw_anchor(_hov == 5, x0, y1, ui(8), 2);
+		draw_anchor(_hov == 6, x1, y1, ui(8), 2);
+	}
+	
+	switch(drag_type) {
+		case 1: // Move
+			var _xx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
+			var _yy = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
+								
+			if(key_mod_press(CTRL)) {
+				_val[0] = round(_xx);
+				_val[1] = round(_yy);
+				
+			} else {
+				_val[0] = _xx;
+				_val[1] = _yy;
+			}
+			break;
+			
+		case 2: // Scale
+			var _xx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
+			var _yy = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
+								
+			if(key_mod_press(CTRL)) {
+				_val[2] = round(_xx);
+				_val[3] = round(_yy);
+				
+			} else {
+				_val[2] = _xx;
+				_val[3] = _yy;
+			}
+								
+			if(key_mod_press(SHIFT)) {
+				_val[2] = max(_xx, _yy);
+				_val[3] = max(_xx, _yy);
+			}
+			break;
+			
+		case 3 : // top-left
+			var _xx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
+			var _yy = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
+			
+			_val[0] = (__x1 + _xx) / 2;
+			_val[1] = (__y1 + _yy) / 2;
+			_val[2] = abs(__x1 - _xx) / 2;
+			_val[3] = abs(__y1 - _yy) / 2;
+			break;
+			
+		case 4 : // top-right
+			var _xx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
+			var _yy = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
+			
+			_val[0] = (__x0 + _xx) / 2;
+			_val[1] = (__y1 + _yy) / 2;
+			_val[2] = abs(__x0 - _xx) / 2;
+			_val[3] = abs(__y1 - _yy) / 2;
+			break;
+			
+		case 5 : // bottom-left
+			var _xx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
+			var _yy = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
+			
+			_val[0] = (__x1 + _xx) / 2;
+			_val[1] = (__y0 + _yy) / 2;
+			_val[2] = abs(__x1 - _xx) / 2;
+			_val[3] = abs(__y0 - _yy) / 2;
+			break;
+			
+		case 6 : // bottom-right
+			var _xx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
+			var _yy = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
+			
+			_val[0] = (__x0 + _xx) / 2;
+			_val[1] = (__y0 + _yy) / 2;
+			_val[2] = abs(__x0 - _xx) / 2;
+			_val[3] = abs(__y0 - _yy) / 2;
+			break;
+	}
+	
+	if(drag_type) {
 		_val[0] /= _ref[0];
 		_val[1] /= _ref[1];
 		_val[2] /= _ref[0];
 		_val[3] /= _ref[1];
 		
-		if(setValueInspector(_val))
-			UNDO_HOLDING = true;
-							
-		if(mouse_release(mb_left)) {
-			drag_type = 0;
-			UNDO_HOLDING = false;
-		}
-	} else if(drag_type == 2) {
-		var _dx = value_snap((_mx - drag_mx) / _s, _snx);
-		var _dy = value_snap((_my - drag_my) / _s, _sny);
-							
-		if(key_mod_press(CTRL)) {
-			_val[2] = round(_dx);
-			_val[3] = round(_dy);
-		} else {
-			_val[2] = _dx;
-			_val[3] = _dy;
-		}
-							
-		if(key_mod_press(SHIFT)) {
-			_val[2] = max(_dx, _dy);
-			_val[3] = max(_dx, _dy);
-		}
-				
-		_val[0] /= _ref[0];
-		_val[1] /= _ref[1];
-		_val[2] /= _ref[0];
-		_val[3] /= _ref[1];
-					
-		if(setValueInspector(_val))
+		if(setValueInspector(_val)) 
 			UNDO_HOLDING = true;
 			
 		if(mouse_release(mb_left)) {
-			drag_type = 0;
+			drag_type    = 0;
 			UNDO_HOLDING = false;
 		}
 	}
 				
-	if(!hover) return -1;
+	if(hover && _hov && mouse_press(mb_left, active)) {
+		drag_type = _hov;
+		drag_mx   = _mx;
+		drag_my   = _my;
+		
+		if(_hov == 1) {
+			drag_sx = __ax;
+			drag_sy = __ay;
 			
-	if(drawSize && point_in_circle(_mx, _my, _ax + _aw, _ay + _ah, ui(8))) {
-		hovering = 2;
-		
-		if(mouse_press(mb_left, active)) {
-			drag_type = 2;
-			drag_mx   = _ax;
-			drag_my   = _ay;
-		}
-	} else if(drawPos && point_in_rectangle(_mx, _my, _ax - _aw, _ay - _ah, _ax + _aw, _ay + _ah)) {
-		hovering = 1;
-		
-		if(mouse_press(mb_left, active)) {
-			drag_type = 1;	
-			drag_sx   = __ax;
-			drag_sy   = __ay;
-			drag_mx   = _mx;
-			drag_my   = _my;
+		} else if(_hov == 2) {
+			drag_sx = __aw;
+			drag_sy = __ah;
+			
+		} else if(_hov == 3) {
+			drag_sx = __x0;
+			drag_sy = __y0;
+			
+		} else if(_hov == 4) {
+			drag_sx = __x1;
+			drag_sy = __y0;
+			
+		} else if(_hov == 5) {
+			drag_sx = __x0;
+			drag_sy = __y1;
+			
+		} else if(_hov == 6) {
+			drag_sx = __x1;
+			drag_sy = __y1;
+			
 		}
 	}
 	
-	return hovering;
+	return _hov;
 }
 
 function preview_overlay_area(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _flag, display_data) {

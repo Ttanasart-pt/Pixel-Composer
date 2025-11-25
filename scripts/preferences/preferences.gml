@@ -123,6 +123,8 @@
 		
 		PREFERENCES.pan_mouse_key					= mb_middle;
 		PREFERENCES.panel_outline_accent			= true;
+		
+		PREFERENCES.panel_animation_frame			= true;
 	#endregion
 	
 	#region WIDGET
