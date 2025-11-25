@@ -399,8 +399,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	////- STEP
 	
 	static stepBegin = function() {
-		if(use_cache) cacheArrayCheck();
-		
 		if(attributes.show_update_trigger) {
 			if(updatedInTrigger.getValue()) { 
 				getInputs();
@@ -981,6 +979,25 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	////- UPDATE
 	
+	static projectPreUpdate = function() {
+		cacheArrayCheck();
+	}
+	
+	static projectPostUpdate = function() {
+		if(CURRENT_FRAME < 0 || CURRENT_FRAME >= array_length(preview_cache)) 
+			return;
+			
+		var _prev = getGraphPreviewSurface();
+		var _size = 32;
+		if(!is_surface(_prev)) return;
+		
+		preview_cache[CURRENT_FRAME] = surface_verify(preview_cache[CURRENT_FRAME], _size, _size);
+		surface_set_shader(preview_cache[CURRENT_FRAME]);
+			draw_surface_fit(_prev, _size/2, _size/2, _size, _size);
+		surface_reset_shader();
+		
+	}
+	
 	static preUpdate = undefined
 	static update    = function() /*=>*/ {}
 	
@@ -989,11 +1006,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		doUpdate();
 	}
 	
-	static postUpdate = function(frame = CURRENT_FRAME) {}
-	
 	static doUpdateLite = function(frame = CURRENT_FRAME) {
 		if(is_3D == NODE_3D.polygon) USE_DEPTH = true;
 		render_timer = get_timer();
+		
 		setRenderStatus(true);
 		
 		__frame = frame;
@@ -1055,7 +1071,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			array_foreach(outputs, function(in, i) /*=>*/ { in.updateColor(in.getValue());   });
 		}
 		
-		postUpdate(frame);
 		cached_manual = false;
 		
 		if(!use_cache && project.onion_skin.enabled) {
@@ -2517,6 +2532,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	cached_manual = false;
 	cached_output = [];
 	cache_result  = [];
+	preview_cache = [];
 	cache_group   = noone;
 	clearCacheOnChange = true;
 	
@@ -2543,10 +2559,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static cacheArrayCheck = function() {
 		cached_output = array_verify(cached_output, TOTAL_FRAMES + 1);
 		cache_result  = array_verify(cache_result,  TOTAL_FRAMES + 1);
+		preview_cache = array_verify(preview_cache, TOTAL_FRAMES + 1);
 	}
 	
 	static cacheCurrentFrame = function(_surface) {
-		cacheArrayCheck();
 		var _frame = CURRENT_FRAME;
 		
 		if(_frame < 0) return;
@@ -2994,6 +3010,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		surface_array_free(temp_surface);
+		surface_array_free(cache_result);
+		surface_array_free(preview_cache);
 		onCleanUp();
 	}
 	

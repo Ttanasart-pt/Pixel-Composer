@@ -339,10 +339,14 @@
 		if(!is_array(arr))     return arr;
 		if(!is_array(arr0))  { array_push(arr, arr0); return arr; }
 		
-		for( var i = 0, n = array_length(arr0); i < n; i++ )
-			array_push(arr, arr0[i]);
+		array_copy(arr, array_length(arr), arr0, 0, array_length(arr0));
+		
+		// for( var i = 0, n = array_length(arr0); i < n; i++ )
+		// 	array_push(arr, arr0[i]);
 		return arr;
 	}
+	
+	show_debug_message($"APPEND {array_append([0,1,2], [3,4,5])}");
 	
 	function array_append_unique(arr, arr0) {
 		INLINE

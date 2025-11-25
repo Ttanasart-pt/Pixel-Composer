@@ -1693,6 +1693,7 @@
     {"name":"quarternionBox","order":8,"path":"scripts/quarternionBox/quarternionBox.yy",},
     {"name":"random_function","order":3,"path":"scripts/random_function/random_function.yy",},
     {"name":"rangeBox","order":9,"path":"scripts/rangeBox/rangeBox.yy",},
+    {"name":"recording_manager","order":1,"path":"scripts/recording_manager/recording_manager.yy",},
     {"name":"regex","order":8,"path":"scripts/regex/regex.yy",},
     {"name":"render_data","order":3,"path":"scripts/render_data/render_data.yy",},
     {"name":"rotatorRandom","order":1,"path":"scripts/rotatorRandom/rotatorRandom.yy",},

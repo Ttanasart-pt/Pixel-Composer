@@ -20,8 +20,6 @@ draw_clear(COLORS.bg);
 		if(keyboard_check_pressed(vk_tab)) {
 			if(key_mod_check(MOD_KEY.shift)) widget_previous();
 			if(key_mod_check(MOD_KEY.none))  widget_next();
-			
-			if(key_mod_check(MOD_KEY.ctrl))  PANEL_INSPECTOR.prop_page = !bool(PANEL_INSPECTOR.prop_page);
 		}
 		
 		if(KEYBOARD_ENTER)

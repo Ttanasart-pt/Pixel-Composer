@@ -3209,6 +3209,7 @@
     {"id":{"name":"random_function","path":"scripts/random_function/random_function.yy",},},
     {"id":{"name":"rangeBox","path":"scripts/rangeBox/rangeBox.yy",},},
     {"id":{"name":"real_number_functions","path":"scripts/real_number_functions/real_number_functions.yy",},},
+    {"id":{"name":"recording_manager","path":"scripts/recording_manager/recording_manager.yy",},},
     {"id":{"name":"rectangle_collision","path":"scripts/rectangle_collision/rectangle_collision.yy",},},
     {"id":{"name":"regex","path":"scripts/regex/regex.yy",},},
     {"id":{"name":"render_data","path":"scripts/render_data/render_data.yy",},},

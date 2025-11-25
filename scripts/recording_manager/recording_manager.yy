@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"recording_manager",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"recording_manager",
+  "parent":{
+    "name":"test",
+    "path":"folders/functions/test.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

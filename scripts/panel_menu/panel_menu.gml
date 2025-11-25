@@ -103,6 +103,8 @@
         }).setMenu("addon_menu", THEME.addon_icon, true)
         
         registerFunction("", "Generate UGC",        "",     MOD_KEY.none, generate_UGC_patreon     ).setMenu("generate_ugc"    )
+        
+        registerFunction("", "Toggle Recording",   "R", MOD_KEY.shift | MOD_KEY.alt, toggleRecording          ).setMenu("toggle_recording")
     }
 #endregion
 
@@ -641,8 +643,8 @@ function Panel_Menu() : PanelContent() constructor {
                 
             }
             
-            if(hori) nx0 += nw + ui(8);
-            else     ny0 += nh + ui(8);
+            if(hori) nx0 += nw + ui(6);
+            else     ny0 += nh + ui(6);
         #endregion
         
         #region addons 
@@ -673,8 +675,8 @@ function Panel_Menu() : PanelContent() constructor {
                 draw_text_add(tx + ui(8), ny0 - ui(1), name);
                 draw_sprite_ui_uniform(THEME.addon_icon, 0, tx + ui(18) + string_width(name), ny0, .75, COLORS._main_icon);
                     
-                if(hori) nx0 += ww + ui(4);
-                else     ny0 += hh + ui(4);
+                if(hori) nx0 += ww + ui(6);
+                else     ny0 += hh + ui(6);
             }
             
         #endregion
@@ -1074,7 +1076,7 @@ function Panel_Menu() : PanelContent() constructor {
                 _cx = tcx - _tw / 2 - ui(16);
                 _cy = (ty0 + ty1) / 2;
                 
-                draw_sprite_ui(THEME.video, 0, _cx, _cy, .8, .8, 0, COLORS._main_icon);
+                if(RECORDING) draw_sprite_ui(THEME.video, 0, _cx, _cy, .8, .8, 0, COLORS._main_icon);
             }
         #endregion
         

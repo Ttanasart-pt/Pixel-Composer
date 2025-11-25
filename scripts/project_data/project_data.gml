@@ -317,6 +317,8 @@ function Project() constructor {
 		
 		array_foreach(allNodes, function(n) /*=>*/ { 
 			if(!n.active) return; 
+			n.projectPreUpdate();
+			
 			if(n.__mask_index != undefined)  n.checkMask();
 			if(!array_empty(n.inputMappable)) n.checkMap();
 		});
@@ -325,6 +327,7 @@ function Project() constructor {
 	static postRender = function() {
 		array_foreach(allNodes, function(n) /*=>*/ { 
 			if(!n.active) return; 
+			n.projectPostUpdate();
 			n.postRender(); 
 		});
 		
