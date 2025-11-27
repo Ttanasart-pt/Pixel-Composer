@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_mk_isoextrude_apply_height",
+  "name":"sh_mk_isoextrude_apply_height",
+  "parent":{
+    "name":"isoextrude",
+    "path":"folders/nodes/data/MKFX/isoextrude.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

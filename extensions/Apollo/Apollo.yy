@@ -275,6 +275,19 @@
         {"name":"lua_internal_struct_len","path":"extensions/Apollo/Apollo.yy",},
         {"name":"lua_internal_struct_keys","path":"extensions/Apollo/Apollo.yy",},
       ],"origname":"","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
+    {"$GMExtensionFile":"","%Name":"","ConfigValues":{
+        "Steam":{
+          "copyToTargets":"192",
+        },
+      },"constants":[],"copyToTargets":-1,"filename":"apollo_log.gml","final":"","functions":[
+        {"$GMExtensionFunction":"","%Name":"lua_register_log","argCount":0,"args":[],"documentation":"","externalName":"lua_register_log","help":"","hidden":false,"kind":2,"name":"lua_register_log","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":1,},
+      ],"init":"","kind":2,"name":"","order":[],"origname":"","ProxyFiles":[
+        {"$GMProxyFile":"","%Name":"apollo_log_linux.gml","ConfigValues":{
+            "Steam":{
+              "TargetMask":"7",
+            },
+          },"name":"apollo_log_linux.gml","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":0,},
+      ],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
   ],
   "gradleinject":"",
   "hasConvertedCodeInjection":true,

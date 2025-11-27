@@ -89,7 +89,16 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _gy = _y + gz_pos[1] * _s;
 		
 		if(gz_style == 0) {
-			InputDrawOverlay(inputs[0].drawOverlay(w_hoverable, active, _gx, _gy, _s, _mx, _my, _snx, _sny, 0, gz_scale));
+			switch(_dsp) {
+				case 0 : 
+				case 1 : 
+					InputDrawOverlay(inputs[0].drawOverlay(w_hoverable, active, _gx, _gy, _s, _mx, _my, _snx, _sny, 0, gz_scale));
+					break;
+				
+				case 2 : 
+					InputDrawOverlay(inputs[0].drawOverlay(w_hoverable, active, _gx, _gy, _s, _mx, _my, _snx, _sny));
+					break;
+			}
 			
 		} else {
 			var val = inputs[0].getValue();

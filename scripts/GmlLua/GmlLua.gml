@@ -1,35 +1,37 @@
-function __lua_noti(txt) { noti_status(txt); }
-
-function __lua_draw_surface_general(  ss, xx, yy, xs=1, ys=1,  rot=0, color=c_white, alpha=1) { draw_surface_ext_safe(ss, xx, yy, xs, ys, rot, color, alpha); }
-function __lua_draw_surface_transform(ss, xx, yy, xs=1, ys=xs, rot=0)     { draw_surface_ext_safe(ss, xx, yy, xs, ys, rot, c_white, 1); }
-function __lua_draw_surface_colored(  ss, xx, yy, color=c_white, alpha=1) { draw_surface_ext_safe(ss, xx, yy, 1, 1, 0, color, alpha);   }
-function __lua_draw_surface(ss, xx, yy) { draw_surface_safe(ss, xx, yy); }
-
-function __lua_draw_rectangle(         x0, y0, x1, y1)            { draw_rectangle(x0, y0, x1, y1, false);        }
-function __lua_draw_rectangle_outline( x0, y0, x1, y1, thick = 1) { draw_rectangle_border(x0, y0, x1, y1, thick); }
-function __lua_draw_circle(            x0, y0, r)                 { draw_circle(x0, y0, r, false);                }
-function __lua_draw_circle_outline(    x0, y0, r, thick = 1)      { draw_circle_border(x0, y0, r, thick);         }
-function __lua_draw_ellipse(           x0, y0, x1, y1)            { draw_ellipse(x0, y0, x1, y1, false);          }
-function __lua_draw_ellipse_outline(   x0, y0, x1, y1, thick = 1) { draw_ellipse_border(x0, y0, x1, y1, thick);   }
-function __lua_draw_line(              x0, y0, x1, y1, thick = 1) { draw_line_width(x0, y0, x1, y1, thick);       }
-function __lua_draw_line_round(        x0, y0, x1, y1, thick = 1) { draw_line_round(x0, y0, x1, y1, thick);       }
-function __lua_draw_pixel(             x0, y0)                    { draw_point(x0, y0);                           }
-function __lua_blendmode_set(          mode)                      { gpu_set_blendmode(mode);                      }
-function __lua_blendmode_reset()                                  { gpu_set_blendmode(bm_normal);                 }
-
-function __lua_set_color(      color = c_white)            { draw_set_color(color);                        }
-function __lua_set_alpha(      alpha = 1)                  { draw_set_alpha(alpha);                        }
-function __lua_set_color_alpha(color = c_white, alpha = 1) { draw_set_color(color); draw_set_alpha(alpha); }
-
-function __lua_get_color(         _x, _y)     { var ss = surface_get_target(); return is_surface(ss)? surface_get_pixel_ext(ss, _x, _y) : 0; }
-function __lua_get_color_surface( ss, _x, _y) { return is_surface(ss)? surface_get_pixel_ext(ss, _x, _y) : 0;                                }
-
-function __lua_color_make_rgb(r, g, b, normalize = false) { return normalize? make_color_rgb(r * 255, g * 255, b * 255) : make_color_rgb(r, g, b); }
-function __lua_color_make_hsv(h, s, v, normalize = false) { return normalize? make_color_hsv(h * 255, s * 255, v * 255) : make_color_hsv(h, s, v); }
-function __lua_random(        from = 0, to = 1)           { return random_range(from, to);    }
-function __lua_irandom(       from = 0, to = 1)           { return irandom_range(from, to);   }
-function __lua_clamp(         number, minn = 0, maxx = 1) { return clamp(number, minn, maxx); }
-function __lua_string_search( str, sch)                   { return string_pos(sch, str);      }
+#region libs
+	function __lua_noti(txt) { noti_status(txt); }
+	
+	function __lua_draw_surface_general(  ss, xx, yy, xs=1, ys=1,  rot=0, color=c_white, alpha=1) { draw_surface_ext_safe(ss, xx, yy, xs, ys, rot, color, alpha); }
+	function __lua_draw_surface_transform(ss, xx, yy, xs=1, ys=xs, rot=0)     { draw_surface_ext_safe(ss, xx, yy, xs, ys, rot, c_white, 1); }
+	function __lua_draw_surface_colored(  ss, xx, yy, color=c_white, alpha=1) { draw_surface_ext_safe(ss, xx, yy, 1, 1, 0, color, alpha);   }
+	function __lua_draw_surface(ss, xx, yy) { draw_surface_safe(ss, xx, yy); }
+	
+	function __lua_draw_rectangle(         x0, y0, x1, y1)            { draw_rectangle(x0, y0, x1, y1, false);        }
+	function __lua_draw_rectangle_outline( x0, y0, x1, y1, thick = 1) { draw_rectangle_border(x0, y0, x1, y1, thick); }
+	function __lua_draw_circle(            x0, y0, r)                 { draw_circle(x0, y0, r, false);                }
+	function __lua_draw_circle_outline(    x0, y0, r, thick = 1)      { draw_circle_border(x0, y0, r, thick);         }
+	function __lua_draw_ellipse(           x0, y0, x1, y1)            { draw_ellipse(x0, y0, x1, y1, false);          }
+	function __lua_draw_ellipse_outline(   x0, y0, x1, y1, thick = 1) { draw_ellipse_border(x0, y0, x1, y1, thick);   }
+	function __lua_draw_line(              x0, y0, x1, y1, thick = 1) { draw_line_width(x0, y0, x1, y1, thick);       }
+	function __lua_draw_line_round(        x0, y0, x1, y1, thick = 1) { draw_line_round(x0, y0, x1, y1, thick);       }
+	function __lua_draw_pixel(             x0, y0)                    { draw_point(x0, y0);                           }
+	function __lua_blendmode_set(          mode)                      { gpu_set_blendmode(mode);                      }
+	function __lua_blendmode_reset()                                  { gpu_set_blendmode(bm_normal);                 }
+	
+	function __lua_set_color(      color = c_white)            { draw_set_color(color);                        }
+	function __lua_set_alpha(      alpha = 1)                  { draw_set_alpha(alpha);                        }
+	function __lua_set_color_alpha(color = c_white, alpha = 1) { draw_set_color(color); draw_set_alpha(alpha); }
+	
+	function __lua_get_color(         _x, _y)     { var ss = surface_get_target(); return is_surface(ss)? surface_get_pixel_ext(ss, _x, _y) : 0; }
+	function __lua_get_color_surface( ss, _x, _y) { return is_surface(ss)? surface_get_pixel_ext(ss, _x, _y) : 0;                                }
+	
+	function __lua_color_make_rgb(r, g, b, normalize = false) { return normalize? make_color_rgb(r * 255, g * 255, b * 255) : make_color_rgb(r, g, b); }
+	function __lua_color_make_hsv(h, s, v, normalize = false) { return normalize? make_color_hsv(h * 255, s * 255, v * 255) : make_color_hsv(h, s, v); }
+	function __lua_random(        from = 0, to = 1)           { return random_range(from, to);    }
+	function __lua_irandom(       from = 0, to = 1)           { return irandom_range(from, to);   }
+	function __lua_clamp(         number, minn = 0, maxx = 1) { return clamp(number, minn, maxx); }
+	function __lua_string_search( str, sch)                   { return string_pos(sch, str);      }
+#endregion
 
 function __initLua() {
 	global.lua_functions = [
@@ -212,7 +214,7 @@ function __initLua() {
 	];
 	
 	globalvar LUA_API; LUA_API = ds_map_create();
-	lua_error_handler = _lua_error;
+	if(OS == os_windows) lua_register_log();
 	
 	for( var i = 0, n = array_length(global.lua_functions); i < n; i++ ) {
 		if(is_string(global.lua_functions[i])) continue;
