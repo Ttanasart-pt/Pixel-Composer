@@ -25,22 +25,22 @@ function Node_MK_IsoCube(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput(11, nodeValue_Color( "Color Right", ca_white ));
 	
 	////- =Outline
-	newInput(12, nodeValue_Bool(    "Outline",           false    ));
-	newInput(13, nodeValue_Int(     "Top Thickness",     1        ));
-	newInput(14, nodeValue_Color(   "Top Color",         ca_white ));
-	newInput(15, nodeValue_Int(     "Front Thickness",   1        ));
-	newInput(16, nodeValue_Color(   "Front Color",       ca_white ));
-	newInput(17, nodeValue_Int(     "Outside Thickness", 0        ));
-	newInput(18, nodeValue_Color(   "Outside Color",     ca_white ));
+	newInput(12, nodeValue_Bool(  "Outline",           false    ));
+	newInput(13, nodeValue_Int(   "Top Thickness",     1        ));
+	newInput(14, nodeValue_Color( "Top Color",         ca_white ));
+	newInput(15, nodeValue_Int(   "Front Thickness",   1        ));
+	newInput(16, nodeValue_Color( "Front Color",       ca_white ));
+	newInput(17, nodeValue_Int(   "Outside Thickness", 0        ));
+	newInput(18, nodeValue_Color( "Outside Color",     ca_white ));
 	// inputs 19
 		
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 
-		["Ouptut",  false ], 7, 
+		["Output",  false ], 7, 
 		["Shape",   false ], 0, 8, 
 		["Depth",   false ], 1, 2, 3, 
 		["Texture", false ], 6, 4, 5, 
 		["Colors",  false ], 9, 10, 11, 
-		["Outline",  true, 12 ], 13, 14, 15, 16, 17, 18, 
+		["Outlines", true, 12 ], 13, 14, 15, 16, 17, 18, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));

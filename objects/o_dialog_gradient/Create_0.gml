@@ -220,7 +220,7 @@ event_inherited();
 		
 		var _height, pre_amo, _palRes;
 		var _hover = sHOVER && sp_palettes.hover;
-		var col = max(1, floor(_ww / _gs)), row;
+		var col = max(1, floor(_ww / _gs)), row, _exp;
 		
 		for(var i = -1; i < array_length(paletePresets); i++) {
 			var pal = i == -1? {
@@ -229,9 +229,9 @@ event_inherited();
 				path    : ""
 			} : paletePresets[i];
 			
-			var _exp = preset_expands[$ i];
 			pre_amo  = array_length(pal.palette);
 			row      = ceil(pre_amo / col);
+			_exp     = preset_expands[$ i] || row <= 1;
 			_height  = _exp? nh + row * _gs + pd : _bh;
 			
 			var isHover = _hover && point_in_rectangle(_m[0], _m[1], 0, yy, ww, yy + _height);
@@ -254,7 +254,7 @@ event_inherited();
 			var _hoverColor = noone;
 			var _hoverIndex = noone;
 			
-			if(_exp || row == 1) {
+			if(_exp) {
 				_palRes = drawPaletteGrid(pal.palette, pd, yy + nh, _ww, _gs, { color : selector.current_color, mx : _m[0], my : _m[1] });
 				_hoverColor = _palRes.hoverIndex > noone? _palRes.hoverColor : noone;
 				_hoverIndex = _palRes.hoverIndex;

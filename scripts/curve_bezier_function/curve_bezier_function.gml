@@ -16,7 +16,11 @@
 //////////////////////////////////////////////////////////////////////////////////////////// DRAW ////////////////////////////////////////////////////////////////////////////////////////////
 
 function draw_curve(x0, y0, _w, _h, _bz, minx = 0, maxx = 1, miny = 0, maxy = 1, _shift = 0, _scale = 1) {
+	if(!is_array(_bz)) return;
+	
 	var _amo  = array_length(_bz);
+	if(_amo < CURVE_PADD) return;
+	
 	var _type = _bz[2];
 	
 	var segments = (_amo - CURVE_PADD) / 6;
@@ -184,9 +188,13 @@ function eval_curve_segment_t(_bz, t) {
 }
 
 function eval_curve_x(_bz, _x, _tolr = 0.00001) {
+	
 	static _CURVE_DEF_01 = [0, 1, 0, 0, 0, 0, /**/ 0, 0, 0, 0, 1/3,  1/3, /**/ -1/3, -1/3, 1, 1, 0, 0];
 	static _CURVE_DEF_10 = [0, 1, 0, 0, 0, 0, /**/ 0, 0, 0, 1, 1/3, -1/3, /**/ -1/3,  1/3, 1, 0, 0, 0];
 	static _CURVE_DEF_11 = [0, 1, 0, 0, 0, 0, /**/ 0, 0, 0, 1, 1/3,    0, /**/ -1/3,    0, 1, 1, 0, 0];
+	
+	if(!is_array(_bz)) return 0;
+	if(array_length(_bz) < CURVE_PADD) return 0;
 	
 	var _shift = _bz[0];
 	var _scale = _bz[1];

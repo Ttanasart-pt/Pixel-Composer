@@ -18,14 +18,16 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		dynamic_input_inspecting = getInputAmount();
 		
 		newInput(index+0, nodeValue_Enum_Scroll("Type", 0, typeList ));
-		newInput(index+1, nodeValue_Vec3(  "Position",     [0,0,1]  )).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
-		newInput(index+5, nodeValue_Vec3(  "End Position", [0,0,1]  )).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+		newInput(index+1, nodeValue_Vec2(  "Position",     [0,0]    )).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+		newInput(index+7, nodeValue_Float( "Distance",      0       ));
+		newInput(index+5, nodeValue_Vec2(  "End Position", [0,0]    )).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+		newInput(index+8, nodeValue_Float( "End Distance",  0       ));
 		newInput(index+2, nodeValue_Float( "Range",         16      ));
 		
 		newInput(index+3, nodeValue_Float( "Intensity", 4        ));
 		newInput(index+4, nodeValue_Color( "Color",     ca_white ));
 		newInput(index+6, nodeValue_Color( "End Color", ca_white ));
-		// input 7
+		// input 9
 		
 		inputs[index + 2].overlay_text_valign = fa_bottom;
 		
@@ -94,7 +96,7 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	});
 	
 	input_display_dynamic = [ // 14, 
-		0, 1, 5, 2, 
+		0, 1, 7, 5, 8, 2, 
 		3, 4, 6, 
 	];
 	
@@ -106,7 +108,7 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		["Lights", false], 
 	];
 	
-	setDynamicInput(7, false);
+	setDynamicInput(9, false);
 	if(!LOADING && !APPENDING) createNewInput();
 	
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
@@ -163,11 +165,16 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _hmap = _data[4];
 		
 		var _light_typ = _data[_ind + 0];
+		
 		var _light_pos = _data[_ind + 1];
+		var _light_dis = _data[_ind + 7];
+		
+		var _light_ps2 = _data[_ind + 5];
+		var _light_ds2 = _data[_ind + 8];
+		
 		var _light_ran = _data[_ind + 2];
 		var _light_int = _data[_ind + 3];
 		var _light_col = _data[_ind + 4];
-		var _light_ps2 = _data[_ind + 5];
 		var _light_cl2 = _data[_ind + 6];
 		
 		surface_set_shader(_ligSurf, sh_normal_light, false, BLEND.add);
@@ -178,8 +185,8 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			shader_set_f("dimension",       _dim);
 			
 			shader_set_i("lightType",      _light_typ);
-			shader_set_f("lightPosition",  _light_pos[0], _light_pos[1], -_light_pos[2] / 100, _light_ran );
-			shader_set_f("lightPosition2", _light_ps2[0], _light_ps2[1], -_light_ps2[2] / 100, _light_ran );
+			shader_set_f("lightPosition",  _light_pos[0], _light_pos[1], -_light_dis / 100, _light_ran );
+			shader_set_f("lightPosition2", _light_ps2[0], _light_ps2[1], -_light_ds2 / 100, _light_ran );
 			
 			shader_set_f("lightIntensity",  _light_int);
 			shader_set_color("lightColor",  _light_col);
@@ -204,6 +211,7 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			var _ltype = _data[_ind + 0];
 			
 			inputs[_ind + 5].setVisible(_ltype == 2 || _ltype == 3);
+			inputs[_ind + 8].setVisible(_ltype == 2 || _ltype == 3);
 			inputs[_ind + 6].setVisible(_ltype == 2);
 		}
 		

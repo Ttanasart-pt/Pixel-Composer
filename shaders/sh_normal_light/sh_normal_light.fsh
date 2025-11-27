@@ -53,6 +53,7 @@ void main() {
 		
 	} else if(lightType == 1) {
 		lightDir = normalize(lightPos - vec3(0.5, 0.5, 0.)); 
+		lightDir.x *= -1.;
 		
 	} else if(lightType == 2) {
 		float t = 0.;

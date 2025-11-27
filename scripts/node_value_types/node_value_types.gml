@@ -628,17 +628,15 @@ function nodeValueUnit(__nodeValue) constructor {
 		}
 		
 		if(is_array(value)) {
+			base = [
+				array_safe_get(base, 0),
+				array_safe_get(base, 1)
+			];
+			
 			if(inv) {
-				base = [
-					base[0] == 0? 0 : 1 / array_safe_get(base, 0),
-					base[1] == 0? 0 : 1 / array_safe_get(base, 1),	
-				];
-			} else {
-				base = [
-					array_safe_get(base, 0),
-					array_safe_get(base, 1)
-				];
-			}
+				base[0] = safe_div(1, base[0]);
+				base[1] = safe_div(1, base[1]);
+			} 
 			
 			var _len = array_length(value);
 			

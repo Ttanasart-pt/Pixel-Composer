@@ -3,6 +3,8 @@ enum MOD_NEG {
 	wrap
 }
 
+function safe_div(numb, divv) { return divv == 0? 0 : numb / divv; }
+
 function safe_mod(numb, modd, _neg = MOD_NEG._default) {
 	INLINE
 	
