@@ -34,7 +34,7 @@ gml_pragma("UnityBuild", "true");
 	globalvar LATEST_VERSION; LATEST_VERSION = 1_20_00_0;
 	globalvar VERSION; VERSION        = 1_20_00_8;
 	globalvar SAVE_VERSION; SAVE_VERSION   = 1_20_00_0;
-	globalvar VERSION_STRING; VERSION_STRING = MAC? "1.18.003m" : "1.20.0.8";
+	globalvar VERSION_STRING; VERSION_STRING = MAC? "1.18.003m" : "1.20.0.802";
 	globalvar RELEASE_STRING; RELEASE_STRING = "1.20.0";
 	globalvar BUILD_NUMBER; BUILD_NUMBER   = 1_20_00_8;
 	globalvar PREF_VERSION; PREF_VERSION   = 1_17_1;
@@ -53,12 +53,12 @@ gml_pragma("UnityBuild", "true");
 #endregion
 
 #region input
-	globalvar FOCUS; FOCUS	          = noone;
-	globalvar FOCUS_CONTENT; FOCUS_CONTENT   = noone;
-	globalvar FOCUS_STR; FOCUS_STR	      = "";
-	globalvar FOCUS_STACK; FOCUS_STACK     = ds_stack_create();
+	globalvar FOCUS; FOCUS	            = noone;
+	globalvar FOCUS_CONTENT; FOCUS_CONTENT     = noone;
+	globalvar FOCUS_STR; FOCUS_STR	        = "";
+	globalvar FOCUS_STACK; FOCUS_STACK       = ds_stack_create();
 	
-	globalvar DOUBLE_CLICK; DOUBLE_CLICK    = false;
+	globalvar DOUBLE_CLICK; DOUBLE_CLICK      = false;
 	
 	globalvar HOVER; HOVER             = noone;
 	globalvar HOVERING_ELEMENT; HOVERING_ELEMENT  = noone;
@@ -66,10 +66,10 @@ gml_pragma("UnityBuild", "true");
 	
 	globalvar DIALOG_CLICK; DIALOG_CLICK      = true;
 	
-	globalvar ADD_NODE_PAGE; ADD_NODE_PAGE    = 0;
-	globalvar ADD_NODE_SUBPAGE; ADD_NODE_SUBPAGE = 0;
-	globalvar ADD_NODE_SCROLL; ADD_NODE_SCROLL  = 0;
-	globalvar TOOLTIP_WINDOW; TOOLTIP_WINDOW   = noone;
+	globalvar ADD_NODE_PAGE; ADD_NODE_PAGE     = 0;
+	globalvar ADD_NODE_SUBPAGE; ADD_NODE_SUBPAGE  = 0;
+	globalvar ADD_NODE_SCROLL; ADD_NODE_SCROLL   = 0;
+	globalvar TOOLTIP_WINDOW; TOOLTIP_WINDOW    = noone;
 #endregion
 
 #region macro

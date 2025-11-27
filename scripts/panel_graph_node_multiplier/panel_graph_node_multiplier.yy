@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"panel_graph_node_multiplier",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"panel_graph_node_multiplier",
+  "parent":{
+    "name":"graph",
+    "path":"folders/panels/graph.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

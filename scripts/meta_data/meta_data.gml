@@ -1,6 +1,6 @@
 #region tags
 	globalvar META_TAGS; META_TAGS = [ "3D", "Animation", "Disappear", "Effect", "Filter", "Generator", "Transform", "Transition", "Utility" ];
-	globalvar VERSIONS;  VERSIONS  = [];
+	globalvar VERSIONS; VERSIONS  = [];
 	
 	for( var i = 14; i <= VERSION_MAJOR; i++ )
 		array_insert(VERSIONS, 0, i);
@@ -15,8 +15,6 @@
 #endregion
 
 function MetaDataManager() constructor {
-	static previewSurface = undefined;
-	
 	name		= "";
 	description = "";
 	author		= "";
@@ -113,7 +111,8 @@ function MetaDataManager() constructor {
 		var _own = author_steam_id == STEAM_USER_ID;
 		var _ont = "Your creation";
 		var _aut = $"{__txt("By")} {author}";
-		var _ver = floor(version) < floor(SAVE_VERSION)? __txtx("meta_old_version", "Created on an older version") : __txtx("meta_new_version", "Created on a newer version");
+		var _ver = floor(version) < floor(SAVE_VERSION)? __txtx("meta_old_version", "Created on an older version") : 
+		                                                 __txtx("meta_new_version", "Created on a newer version");
 		
 		draw_set_font(f_h5);
 		_h += string_height_ext(name, -1, ww) - ui(2);
@@ -174,21 +173,7 @@ function MetaDataManager() constructor {
 		
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		
-		if(thumbnail && sprite_exists(thumbnail)) {
-			previewSurface = surface_verify(previewSurface, ww, hh);
-			
-			surface_set_target(previewSurface);
-				DRAW_CLEAR
-				draw_sprite_stretched(THEME.textbox, 3, 0, 0, ww, hh);
-				gpu_set_colorwriteenable(1,1,1,0);
-				draw_sprite_tiled_ext(thumbnail, 0, -mx/2, -my/2, 4, 4, c_white, .1);
-				gpu_set_colorwriteenable(1,1,1,1);
-			surface_reset_target();
-			draw_surface(previewSurface, mx, my);
-			
-		} else 
-			draw_sprite_stretched(THEME.textbox, 3, mx, my, ww, hh);
-			
+		draw_sprite_stretched(THEME.textbox, 3, mx, my, ww, hh);
 		draw_sprite_stretched(THEME.textbox, 0, mx, my, ww, hh);
 		
 		var tx = mx + _pdx;

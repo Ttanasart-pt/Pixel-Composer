@@ -15,8 +15,20 @@ function Panel_Animation_Setting() : Panel_Linear_Setting() constructor {
 		),
 		
 		new __Panel_Linear_Setting_Item(
+			__txt("Frame Separator"),
+			textBox_Number(function(str) /*=>*/ { PANEL_ANIMATION.timeline_sep_base = max(1, round(real(str))); }),
+			function( ) /*=>*/   {return PANEL_ANIMATION.timeline_sep_base},
+			function(v) /*=>*/ { PANEL_ANIMATION.timeline_sep_base = v; },
+			PREFERENCES.panel_animation_separate,
+			noone,
+			"panel_animation_separate",
+		),
+		
+		-1, 
+		
+		new __Panel_Linear_Setting_Item(
 			__txtx("anim_length", "Animation length"),
-			new textBox(TEXTBOX_INPUT.number, function(str) /*=>*/ { PROJECT.animator.frames_total = round(real(str)); }),
+			textBox_Number(function(str) /*=>*/ { PROJECT.animator.frames_total = round(real(str)); }),
 			function( ) /*=>*/   {return PROJECT.animator.frames_total},
 			function(v) /*=>*/ { PROJECT.animator.frames_total = v; },
 			PREFERENCES.project_animation_duration,
@@ -26,7 +38,7 @@ function Panel_Animation_Setting() : Panel_Linear_Setting() constructor {
 		
 		new __Panel_Linear_Setting_Item(
 			__txtx("anim_frame_rate", "Preview frame rate"),
-			new textBox(TEXTBOX_INPUT.number, function(str) /*=>*/ { PROJECT.animator.framerate = real(str); }),
+			textBox_Number(function(str) /*=>*/ { PROJECT.animator.framerate = real(str); }),
 			function( ) /*=>*/   {return PROJECT.animator.framerate},
 			function(v) /*=>*/ { PROJECT.animator.framerate = v; },
 			PREFERENCES.project_animation_framerate,

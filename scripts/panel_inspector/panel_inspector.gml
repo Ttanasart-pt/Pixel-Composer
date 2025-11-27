@@ -3,6 +3,7 @@
     function panel_inspector_copy_prop()                 { CALL("inspector_copy_property");          PANEL_INSPECTOR.propSelectCopy();                 }
     function panel_inspector_paste_prop()                { CALL("inspector_paste_property");         PANEL_INSPECTOR.propSelectPaste();                }
     function panel_inspector_toggle_animation()          { CALL("inspector_toggle_animation");       PANEL_INSPECTOR.anim_toggling = true;             }
+    function panel_inspector_toggle_array()              { CALL("inspector_toggle_animation");       PANEL_INSPECTOR.junction_array_toggle();          }
     
     function panel_inspector_color_pick()                { CALL("color_picker"); if(!PREFERENCES.alt_picker&& !MOUSE_BLOCK) return; PANEL_INSPECTOR.color_picking = true; }
     
@@ -35,6 +36,7 @@
         registerFunction(i, "Copy Value",            "C", MOD_KEY.ctrl, panel_inspector_copy_prop              ).setMenu("inspector_copy_property",  THEME.copy)
         registerFunction(i, "Paste Value",           "V", MOD_KEY.ctrl, panel_inspector_paste_prop             ).setMenu("inspector_paste_property", THEME.paste)
         registerFunction(i, "Toggle Animation",      "I", MOD_KEY.none, panel_inspector_toggle_animation       ).setMenu("inspector_toggle_animation")
+        registerFunction(i, "Toggle Array Process",  "",  MOD_KEY.none, panel_inspector_toggle_array           ).setMenu("inspector_toggle_array")
         
         registerFunction(i, "Expand All Sections",   "",  MOD_KEY.none, panel_inspector_section_expand_all     ).setMenu("inspector_expand_all_sections")
         registerFunction(i, "Collapse All Sections", "",  MOD_KEY.none, panel_inspector_section_collapse_all   ).setMenu("inspector_collapse_all_sections")
@@ -375,6 +377,7 @@ function Panel_Inspector() : PanelContent() constructor {
         function junction_extract_global()     { if(__dialog_junction == noone) return; __dialog_junction.extractGlobal();                                     }
         function junction_extract_single()     { if(__dialog_junction == noone) return; __dialog_junction.extractNode();                                       }
         function junction_visible_toggle()     { if(__dialog_junction == noone) return; __dialog_junction.setVisibleManual(!__dialog_junction.visible_manual); }
+        function junction_array_toggle()       { if(__dialog_junction == noone) return; __dialog_junction.toggleArray();                                       }
         function junction_bypass_toggle()      { if(__dialog_junction == noone || __dialog_junction.bypass_junc == noone) return; 
             var b = __dialog_junction.bypass_junc; b.visible = !b.visible; __dialog_junction.node.refreshNodeDisplay(); }
         
@@ -404,6 +407,7 @@ function Panel_Inspector() : PanelContent() constructor {
         	"inspector_visible_toggle",
         	"inspector_bypass_toggle",
         	"inspector_expression_toggle", 
+        	"inspector_toggle_array", 
         	-1,
         	"inspector_reset", 
         	"inspector_copy_property", 
@@ -493,13 +497,15 @@ function Panel_Inspector() : PanelContent() constructor {
     function propSelectPaste() { if(prop_selecting) prop_selecting.setString(clipboard_get_text()); }
     
     function propRightClick(jun) {
+    	if(!is(jun, NodeValue)) return noone;
+    	
           prop_selecting  = jun;
         __dialog_junction = jun;
         
         if(jun.connect_type == CONNECT_TYPE.output) return menuCall("inspector_value_output", menuItems_gen("inspector_value_output"));
         
         var _menuItem = menuItems_gen("inspector_value_input");
-        
+       
         if(jun.globalExtractable()) {
     		array_push(_menuItem, menuItemShelf(__txtx("panel_inspector_use_global", "Use Globalvar"), function(_dat) /*=>*/ { 
     			var arr = [];

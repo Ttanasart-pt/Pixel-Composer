@@ -43,6 +43,7 @@
     function panel_graph_instance()                { CALL("graph_instance");            PANEL_GRAPH.doInstance();             }
     function panel_graph_copy()                    { CALL("graph_copy");                PANEL_GRAPH.doCopy();                 }
     function panel_graph_paste()                   { CALL("graph_paste");               PANEL_GRAPH.doPaste();                }
+    function panel_graph_mass_connect()            { CALL("graph_mass_connect");        PANEL_GRAPH.doMassConnect();          }
     
 	function panel_graph_halign_right()            { CALL("graph_halign_right");        node_halign(PANEL_GRAPH.nodes_selecting, fa_right);  }
 	function panel_graph_halign_center()           { CALL("graph_halign_center");       node_halign(PANEL_GRAPH.nodes_selecting, fa_center); }
@@ -131,6 +132,7 @@
         registerFunction(g, "Instance",              "D", a, panel_graph_instance            ).setMenu("graph_instance",        THEME.duplicate)
         registerFunction(g, "Copy",                  "C", c, panel_graph_copy                ).setMenu("graph_copy",            THEME.copy)
         registerFunction(g, "Paste",                 "V", c, panel_graph_paste               ).setMenu("graph_paste",           THEME.paste)
+        registerFunction(g, "Mass Connect",          "",  n, panel_graph_mass_connect        ).setMenu("graph_mass_connect",    THEME.obj_auto_organize)
         
         registerFunction(g, "Pan",                   "", c,  panel_graph_pan                 ).setMenu("graph_pan")
         registerFunction(g, "Zoom",                  "", a|c,panel_graph_zoom                ).setMenu("graph_zoom")
@@ -139,9 +141,14 @@
         registerFunction(g, "Auto Organize...",      "L", c, function() /*=>*/ { 
         	var l = array_empty(PANEL_GRAPH.nodes_selecting)? PANEL_GRAPH.nodes_list : PANEL_GRAPH.nodes_selecting;
         	dialogPanelCall(new Panel_Graph_Auto_Organize(l)) 
-        } ).setMenu("graph_auto_organize", THEME.obj_auto_organize)
+        } ).setMenu("graph_auto_organize", THEME.obj_auto_organize);
         registerFunction(g, "Auto Organize All",     "",  n, panel_graph_auto_organize_all   ).setMenu("graph_auto_organize_all", THEME.obj_auto_organize)
         registerFunction(g, "Snap Nodes to Grid",    "",  n, panel_graph_snap_nodes          ).setMenu("graph_snap_nodes")
+        registerFunction(g, "Node Multiplier...",    "",  n, function() /*=>*/ { 
+        	if(array_empty(PANEL_GRAPH.nodes_selecting)) return;
+        	dialogPanelCall(new Panel_Graph_Node_Multiplier(PANEL_GRAPH.nodes_selecting[0]));
+    	} ).setMenu("graph_node_multiply", THEME.obj_auto_organize);
+        
         registerFunction(g, "Search",                "F", c, panel_graph_search              ).setMenu("graph_search", THEME.search_24)
         registerFunction(g, "Toggle Minimap",        "M", c, panel_graph_toggle_minimap      ).setMenu("graph_toggle_minimap", THEME.icon_minimap).setSpriteInd(function() /*=>*/ {return PANEL_GRAPH.minimap_show} )
         
@@ -891,6 +898,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     #endregion
     
     #region ++++++++++++++++ Menus +++++++++++++++++
+	    MENUITEM_CONDITIONS[$ "graph_select_node"]     = function() /*=>*/ {return array_length(PANEL_GRAPH.nodes_selecting) > 0};
 	    MENUITEM_CONDITIONS[$ "graph_select_group"]    = function() /*=>*/ {return is(PANEL_GRAPH.node_hover, Node_Collection)};
 	    MENUITEM_CONDITIONS[$ "graph_select_instance"] = function() /*=>*/ {return is(PANEL_GRAPH.node_hover, Node_Collection) && PANEL_GRAPH.node_hover.instanceBase != undefined};
     	MENUITEM_CONDITIONS[$ "graph_select_in_group"] = function() /*=>*/ {return PANEL_GRAPH.node_hover.group != noone};
@@ -1754,7 +1762,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	    			     if(value_focus)   addKeyOverlay("Select junction(s)", [[ "Shift", "Peek content"     ]]);
 	        		else if(node_hovering) addKeyOverlay("Select node(s)",     [[ "Shift", "Toggle selection" ]]);
 	        	}
-	            	
+            	
 	            // select
                 var _anc = nodes_select_anchor;
                 if(mouse_press(mb_left, _focus)) _anc = noone;
@@ -1943,15 +1951,13 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        dragNodes();
 	        nodeWrangler();
 	        
-	        if(mouse_on_graph && _focus) {
-	            if(DOUBLE_CLICK && junction_hovering != noone) {
-	                var _mx = value_snap(mouse_graph_x, project.graphGrid.size);
-	                var _my = value_snap(mouse_graph_y - 8, project.graphGrid.size);
-	                        
-	                var _pin = nodeBuild("Node_Pin", _mx, _my).skipDefault();
-	                _pin.inputs[0].setFrom(junction_hovering.value_from);
-	                junction_hovering.setFrom(_pin.outputs[0]);
-	            }
+	        if(_focus && mouse_on_graph && junction_hovering != noone && DOUBLE_CLICK) {
+                var _mx = value_snap(mouse_graph_x,   project.graphGrid.size);
+                var _my = value_snap(mouse_graph_y-8, project.graphGrid.size);
+                
+                var _pin = nodeBuild("Node_Pin", _mx, _my).skipDefault();
+                _pin.inputs[0].setFrom(junction_hovering.value_from);
+                junction_hovering.setFrom(_pin.outputs[0]);
 	        } 
         #endregion
         
@@ -3903,6 +3909,25 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     	
     	__renaming_node = nodes_selecting[0];
     	textboxCall(__renaming_node.getDisplayName(), function(txt) /*=>*/ {return __renaming_node.setDisplayName(txt)});
+    }
+    
+    function doMassConnect() {
+    	if(nodes_select_anchor == noone) return;
+    	
+    	var anc = nodes_select_anchor;
+    	if(array_empty(anc.outputs)) return;
+    	
+    	var out = anc.outputs[0];
+    	
+    	for( var i = 0, n = array_length(nodes_selecting); i < n; i++ ) {
+    		var node = nodes_selecting[i];
+    		if(node == anc) continue;
+    		
+    		var inp = node.getInput(0, out);
+    		if(inp == noone) continue;
+    		
+    		inp.setFrom(out);
+    	}
     }
     
     function dropFile(path) { //

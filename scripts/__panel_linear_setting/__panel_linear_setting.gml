@@ -38,7 +38,7 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 	properties    = [];
 	
 	font = PANEL_INSPECTOR.viewMode? f_p2 : f_p3;
-	prop_height   = PANEL_INSPECTOR.viewMode? ui(32) : ui(26);
+	prop_height   = line_get_height(font, 12);
 	curr_height   = 0;
 	shift_height  = true;
 	

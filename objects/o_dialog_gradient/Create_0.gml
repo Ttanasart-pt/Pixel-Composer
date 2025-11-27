@@ -101,7 +101,7 @@ event_inherited();
 		var _gs = ui(16);
 		var hh  = ui(24);
 		var nh  = ui(20);
-		var pd  = ui(6);
+		var pd  = ui(4);
 		var _ww = ww - pd * 2;
 		var hg  = nh + _gs + pd;
 		var yy  = _y;
@@ -118,7 +118,7 @@ event_inherited();
 				draw_sprite_stretched_ext(THEME.node_bg, 1, 0, yy, ww, hg, COLORS._main_accent, 1);
 			}
 				
-			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
+			draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text_sub);
 			draw_text_add(pd, yy + ui(2), _gradient.name);
 			_gradient.gradient.draw(pd, yy + nh, _ww, _gs);
 			
@@ -212,7 +212,7 @@ event_inherited();
 		var ww  = sp_palettes.surface_w;
 		var _gs = sp_palette_size;
 		var hh  = ui(24);
-		var pd  = preset_show_name? ui(6) : ui(4);
+		var pd  = ui(4);
 		var nh  = preset_show_name? ui(20) : pd;
 		var _ww = ww - pd * 2;
 		var _bh = nh + _gs + pd;
@@ -244,8 +244,9 @@ event_inherited();
 			
 			if(preset_show_name) {
 				var cc = i == palette_selecting? COLORS._main_accent : COLORS._main_text_sub;
-				draw_set_text(f_p2, fa_left, fa_top, cc);
-				draw_text_add(pd, yy + ui(2), pal.name);
+				draw_sprite_ui(THEME.arrow, _exp * 3, ui(8), yy + nh / 2, .75, .75, 0, COLORS._main_text_sub);
+				draw_set_text(f_p3, fa_left, fa_top, cc);
+				draw_text_add(ui(16), yy + ui(2), pal.name);
 				
 				if(i == -1) { draw_set_color(cc); draw_circle_prec(ww - ui(10), yy + ui(10), ui(4), false); }
 			}

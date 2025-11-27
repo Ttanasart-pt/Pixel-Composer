@@ -538,7 +538,7 @@ function Panel_Animation_Dopesheet() {
     function drawDopesheet_setDimension() {
     	dopesheet_w    = timeline_w;
         dopesheet_h    = h - ui(52);
-        dopesheet_show = dopesheet_h > ui(8);
+        dopesheet_show = dopesheet_h > ui(24);
     }
     
     function drawDopesheet_ResetTimelineMask() {
@@ -1930,22 +1930,38 @@ function Panel_Animation_Dopesheet() {
     function drawDopesheet() { 
     	drawDopesheet_ResetTimelineMask();
     	
-    	if(tool_width_drag) {
-            CURSOR = cr_size_we;
-            
-            tool_width = tool_width_start + (mx - tool_width_mx);
-            tool_width = clamp(tool_width, ui(224), w - ui(128));
-            if(mouse_release(mb_left)) tool_width_drag = false;
-        }
-        
-        if(pHOVER && point_in_rectangle(mx, my, tool_width + ui(8), ui(8), tool_width + ui(12), ui(8) + dopesheet_h)) {
-            CURSOR = cr_size_we;
-            if(mouse_press(mb_left, pFOCUS)) {
-                tool_width_drag  = true;
-                tool_width_start = tool_width;
-                tool_width_mx    = mx;
-            }
-        }
+    	#region Tool width
+    		var cc = COLORS._main_icon;
+    		var aa = .5;
+    		
+	    	if(tool_width_drag) {
+	            CURSOR = cr_size_we;
+	            cc = COLORS._main_icon_light;
+				aa = 1;
+				
+	            tool_width = tool_width_start + (mx - tool_width_mx);
+	            tool_width = clamp(tool_width, ui(224), w - ui(128));
+	            if(mouse_release(mb_left)) tool_width_drag = false;
+	        }
+	        
+	        if(pHOVER && point_in_rectangle(mx, my, tool_width + ui(8), ui(8), tool_width + ui(16), ui(8) + dopesheet_h)) {
+	            CURSOR = cr_size_we;
+	            aa = 1;
+	            
+	            if(mouse_press(mb_left, pFOCUS)) {
+	                tool_width_drag  = true;
+	                tool_width_start = tool_width;
+	                tool_width_mx    = mx;
+	            }
+	            
+	        } 
+	        
+            var cy = ui(8) + dopesheet_h / 2;
+	        draw_set_alpha(aa);
+            draw_set_color(cc);
+            draw_line_round(tool_width + ui(12), cy - ui(12), tool_width + ui(12), cy + ui(12), ui(3));
+            draw_set_alpha(1);
+        #endregion
         
         bar_x = tool_width + ui(16);
         bar_y = h - timeline_h - ui(10);

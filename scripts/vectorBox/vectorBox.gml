@@ -41,20 +41,16 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 	onModifySingle[2] = function(v) /*=>*/ {return onModifyIndex(v, 2)};
 	onModifySingle[3] = function(v) /*=>*/ {return onModifyIndex(v, 3)};
 	
-	for(var i = 0; i < 4; i++) {
-		tb[i] = new textBox(TEXTBOX_INPUT.number, onModifySingle[i]);
-		tb[i].slidable = true;
-	}
+	for(var i = 0; i < 4; i++) tb[i] = textBox_Number(onModifySingle[i]).setSlide(true);
 	
-	static setLinkable = function(_l = noone) { linkable = _l; return self; }
+	////- Setters
 	
+	static setLinkable = function(_l) /*=>*/ { linkable = _l; return self; }
 	static setBoxColor = function(_v) /*=>*/ { for(var i = 0; i < 4; i++) tb[i].setBoxColor(_v); return self; }
+	static setFont     = function(_f) /*=>*/ { for(var i = 0; i < 4; i++) tb[i].setFont(_f);     return self; }
+	static setLinkInactiveColor = function(_c) /*=>*/ { link_inactive_color = _c;                return self; }
 	
-	static setFont = function(_f = noone) { 
-		for( var i = 0; i < size; i++ ) 
-			tb[i].setFont(_f);
-		return self; 
-	}
+	////- Draw
 	
 	static apply = function() {
 		for( var i = 0; i < size; i++ ) {
@@ -63,19 +59,14 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		}
 	}
 	
-	static setLinkInactiveColor = function(color) {
-		link_inactive_color = color;
-		return self;
-	}
-	
-	static setInteract = function(interactable) {
-		self.interactable = interactable;
+	static setInteract = function(_interactable) {
+		interactable = _interactable;
 		
 		if(side_button) 
-			side_button.interactable = interactable;
+			side_button.interactable = _interactable;
 			
 		for( var i = 0; i < size; i++ ) 
-			tb[i].interactable = interactable;
+			tb[i].interactable = _interactable;
 	}
 	
 	static register = function(parent = noone) {
@@ -193,6 +184,8 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		
 		return h;
 	}
+	
+	////- Actions
 	
 	static clone = function() {
 		var cln = new vectorBox(size, onModify, unit);

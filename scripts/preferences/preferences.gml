@@ -89,7 +89,7 @@
 	#region PANEL
 	
 		PREFERENCES.panel_layout_file				= "Vertical";
-	
+		
 		PREFERENCES.panel_graph_dragging			= MOD_KEY.alt;
 		PREFERENCES.panel_graph_group_require_shift	= true;
 	
@@ -124,6 +124,7 @@
 		PREFERENCES.pan_mouse_key					= mb_middle;
 		PREFERENCES.panel_outline_accent			= true;
 		
+		PREFERENCES.panel_animation_separate        = 5;
 		PREFERENCES.panel_animation_frame			= true;
 	#endregion
 	

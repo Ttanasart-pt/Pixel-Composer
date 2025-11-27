@@ -123,6 +123,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			inputs_is_array[i] = amo > 1;
 			input_value_map[$ _in.internalName] = val;
 			
+			if(!_in.ign_array)
 			switch(attributes.array_process) {
 				case ARRAY_PROCESS.loop : 
 				case ARRAY_PROCESS.hold :   
@@ -139,27 +140,34 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			process_running[i] = process_amount;
 		});
 		
-		var amoMax = process_amount;
-		for( var i = 0; i < _len; i++ ) {
-			amoMax /= process_length[i];
+		var amoMax = process_amount, i = 0;
+		repeat(_len) {
+			amoMax /= inputs[i].ign_array? 1 : process_length[i];
 			process_running[i] = amoMax;
 			inputs_index[i]    = array_verify(inputs_index[i], process_amount);
+			i++;
 		}
 		
-		for(var l = 0; l < process_amount; l++) // input preparation
-		for(var i = 0; i < _len; i++) { 
-			inputs_index[i][l] = -1;
-			if(!inputs_is_array[i]) continue;
-			
-			var _index = 0;
-			switch(attributes.array_process) {
-				case ARRAY_PROCESS.loop :		_index = safe_mod(l, process_length[i]); break;
-				case ARRAY_PROCESS.hold :		_index = min(l, process_length[i] - 1);  break;
-				case ARRAY_PROCESS.expand :		_index = floor(l / process_running[i]) % process_length[i]; break;
-				case ARRAY_PROCESS.expand_inv : _index = floor(l / process_running[array_length(inputs) - 1 - i]) % process_length[i]; break;
+		var l = 0;
+		repeat(process_amount) { // input preparation
+			var i = -1;
+			repeat(_len) { 
+				i++;
+				inputs_index[i][l] = -1;
+				if(!inputs_is_array[i]) continue;
+				
+				var _index = 0;
+				switch(attributes.array_process) {
+					case ARRAY_PROCESS.loop :		_index = safe_mod(l, process_length[i]);                               break;
+					case ARRAY_PROCESS.hold :		_index = min(l, process_length[i] - 1);                                break;
+					case ARRAY_PROCESS.expand :		_index = floor(l / process_running[i]) % process_length[i];            break;
+					case ARRAY_PROCESS.expand_inv : _index = floor(l / process_running[_len - 1 - i]) % process_length[i]; break;
+				}
+				
+				inputs_index[i][l] = _index;
 			}
 			
-			inputs_index[i][l] = _index;
+			l++;
 		}
 	}
 	

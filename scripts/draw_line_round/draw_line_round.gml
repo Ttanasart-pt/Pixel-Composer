@@ -1,4 +1,5 @@
 function draw_line_round(x1, y1, x2, y2, w, stCap = true, edCap = true, sample = 8) {
+	if(w == 1) { draw_line(x1, y1, x2, y2); return; }
 	draw_line_width(x1, y1, x2, y2, w);
 	
 	draw_set_circle_precision(sample);

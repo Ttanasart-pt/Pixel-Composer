@@ -4,8 +4,12 @@ function draw_sprite_fit(spr, ind, xx, yy, w, h, color = c_white, alpha = 1) {
 }
 
 function draw_surface_fit(surf, xx, yy, w, h, color = c_white, alpha = 1) {
-	var ss = min(w / surface_get_width_safe(surf), h / surface_get_height_safe(surf));
-	draw_surface_ext_safe(surf, xx - surface_get_width_safe(surf) * ss / 2, yy - surface_get_height_safe(surf) * ss / 2, ss, ss,, color, alpha);
+	if(!is_just_surface(surf)) return;
+	var sw = surface_get_width(surf);
+	var sh = surface_get_height(surf);
+	
+	var ss = min(w / sw, h / sh);
+	draw_surface_ext_safe(surf, xx - sw * ss / 2, yy - sh * ss / 2, ss, ss,, color, alpha);
 }
 
 function draw_surface_stretch_fit(surf, xx, yy, w, h, sw = 1, sh = 1) {

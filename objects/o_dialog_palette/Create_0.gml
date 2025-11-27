@@ -100,6 +100,7 @@ function __PaletteColor(_color = c_black) constructor {
 	
 	hovering_name    = "";
 	preset_show_name = true;
+	preset_expands   = {};
 	
 	pal_padding = ui(9);
 	sp_preset_w = ui(240) - pal_padding * 2 - ui(8);
@@ -108,51 +109,89 @@ function __PaletteColor(_color = c_black) constructor {
 		
 		var _hov = sp_presets.hover && sHOVER;
 		var _foc = interactable && sFOCUS;
-		var ww   = sp_presets.surface_w;
-		var _gs  = ui(20);
-		var hh   = ui(24);
-		var pd   = preset_show_name? ui(6) : ui(4);
-		var nh   = preset_show_name? ui(20) : pd;
-		var _ww  = ww - pd * 2;
-		var hg   = nh + _gs + pd;
-		var yy   = _y;
 		
-		for(var i = 0; i < array_length(paletePresets); i++) {
-			var pal = paletePresets[i];
+		var ww = sp_presets.surface_w;
+		var pd = ui(4);
+		var nh = preset_show_name? ui(20) : pd;
+		
+		var gs = ui(20);
+		var hh = ui(24);
+		var yy = _y;
+		
+		var pw  = ww - pd * 2;
+		var ph  = nh + gs + pd;
+		var col = max(1, floor(pw / gs)), row;
+		
+		var _exp, _height, pre_amo, _palRes;
+		
+		for( var i = 0, n = array_length(paletePresets); i < n; i++ ) {
+			var pal  = paletePresets[i];
 			
-			var isHover = _hov && point_in_rectangle(_m[0], _m[1], 0, yy, ww, yy + hg);
-			draw_sprite_stretched(THEME.ui_panel_bg, 3, 0, yy, ww, hg);
+			pre_amo  = array_length(pal.palette);
+			row      = ceil(pre_amo / col);
+			_exp     = preset_expands[$ i] || row <= 1;
+			_height  = _exp? nh + row * gs + pd : ph;
+			
+			var isHover = _hov && point_in_rectangle(_m[0], _m[1], 0, yy, ww, yy + _height);
+			var select  = isHover;
+			draw_sprite_stretched(THEME.ui_panel_bg, 3, 0, yy, ww, _height);
 			
 			if(isHover) {
+				draw_sprite_stretched_ext(THEME.node_bg, 1, 0, yy, ww, _height, COLORS._main_accent, 1);
 				sp_presets.hover_content = true;
-				draw_sprite_stretched_ext(THEME.node_bg, 1, 0, yy, ww, hg, COLORS._main_accent, 1);
 			}
 			
 			if(preset_show_name) {
-				draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
-				draw_text_add(pd, yy + ui(2), pal.name);
-			}
+				draw_sprite_ui(THEME.arrow, _exp * 3, ui(8), yy + nh / 2, .75, .75, 0, COLORS._main_text_sub);
+				draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text_sub);
+				draw_text_add(ui(16), yy + ui(2), pal.name);
 				
-			drawPalette(pal.palette, pd, yy + nh, _ww, _gs);
-			
-			if(isHover) {
-				if(mouse_press(mb_left, _foc)) {
-					setPalette(array_clone(pal.palette));
+				var bs = nh - ui(4);
+				var bx = ww - bs - ui(2);
+				var by = yy + ui(2);
+				var b  = buttonInstant_Pad(THEME.button_hide, bx, by, bs, bs, _m, _hov, _foc, "Set Palette", THEME.node_goto_16);
+				
+				if(b) select = false;
+				if(b == 2) {
+					setPalette(array_clone(pal.palette)); 
 					onApply(palette);
 				}
-				
-				if(mouse_press(mb_right, _foc)) {
-					hovering = pal;
-					
-					menuCall("palette_window_preset_menu", [
-						menuItem(__txtx("palette_editor_set_default", "Set as default"), function() /*=>*/ { PROJECT.setPalette(array_clone(hovering.palette)); }),
-						menuItem(__txtx("palette_editor_delete", "Delete palette"),      function() /*=>*/ { file_delete(hovering.path); __initPalette();       }),
-					]);
-				}
 			}
 			
-			yy += hg + ui(4);
-			hh += hg + ui(4);
+			var _hoverColor = noone;
+			if(_exp) {
+				_palRes     = drawPaletteGrid(pal.palette, pd, yy + nh, pw, gs, { mx : _m[0], my : _m[1] });
+				_hoverColor = _palRes.hoverIndex > noone? _palRes.hoverColor : noone;
+			} else drawPalette(pal.palette, pd, yy + nh, pw, gs);
+			
+			if(_hoverColor != noone) {
+				var _box = _palRes.hoverBBOX;
+				draw_sprite_stretched_ext(THEME.box_r2, 1, _box[0], _box[1], _box[2], _box[3], c_white);
+				
+				if(mouse_lpress(_foc))
+					selector.setColor(_hoverColor);
+				
+				select = false;
+			}
+			
+			if(select && mouse_lpress(_foc)) {
+				preset_expands[$ i] = !_exp;
+				click_block = true;
+				onApply(palette);
+			}
+			
+			if(isHover && mouse_rpress(_foc)) {
+				hovering = pal;
+				
+				menuCall("palette_window_preset_menu", [
+					menuItem(__txt("Set Palette"), function() /*=>*/ { setPalette(array_clone(hovering.palette)); onApply(palette); }),
+					menuItem(__txtx("palette_editor_set_default", "Set as default"), function() /*=>*/ { PROJECT.setPalette(array_clone(hovering.palette)); }),
+					menuItem(__txtx("palette_editor_delete", "Delete palette"),      function() /*=>*/ { file_delete(hovering.path); __initPalette();       }),
+				]);
+			}
+			
+			yy += _height + ui(4);
+			hh += _height + ui(4);
 		}
 		
 		return hh;

@@ -10,8 +10,9 @@ function Panel_Workspace() : PanelContent() constructor {
 	title      = "Workspace";
 	workspaces = [];
 	w = ui(480);
-	h = ui(32);
+	h = ui(24);
 	
+	font       = f_p3;
 	scroll     = 0;
 	scroll_to  = 0;
 	scroll_max = 0;
@@ -21,6 +22,8 @@ function Panel_Workspace() : PanelContent() constructor {
 	registerFunction( "Workspace", "Apply",   "", MOD_KEY.none, panel_workspace_apply   );
 	registerFunction( "Workspace", "Replace", "", MOD_KEY.none, panel_workspace_replace );
 	registerFunction( "Workspace", "Delete",  "", MOD_KEY.none, panel_workspace_delete  );
+	
+	////- Workspace
 	
 	function apply_space() {
 		if(layout_selecting == "") return;
@@ -53,6 +56,8 @@ function Panel_Workspace() : PanelContent() constructor {
 		
 	} refreshContent();
 	
+	////- Draw
+	
 	function onFocusBegin() { refreshContent(); }
 	
 	function drawContent(panel) {
@@ -68,16 +73,16 @@ function Panel_Workspace() : PanelContent() constructor {
 		var hh = 0;
 		var amo = array_length(workspaces);
 		
-		draw_set_font(f_p1);
+		draw_set_font(font);
 		var currW = string_width(PREFERENCES.panel_layout_file) + ui(24)
 		x0 += currW;
 		ww += currW;
 		
-		draw_set_text(f_p1, fa_center, fa_center);
+		draw_set_text(font, fa_center, fa_center);
 		
 		for( var i = 0; i <= amo; i++ ) {
 			var str = i == amo? "+" : workspaces[i];
-			var tw  = string_width(str)  + ui(16);
+			var tw  = string_width(str)  + ui(12);
 			var th  = string_height(str) + ui(8);
 			var sel = PREFERENCES.panel_layout_file == str;
 			
@@ -91,16 +96,15 @@ function Panel_Workspace() : PanelContent() constructor {
 				
 				if(mouse_press(mb_left, pFOCUS)) {
 					if(i == amo) {
-						var dia = dialogCall(o_dialog_file_name, mouse_mx + ui(8), mouse_my + ui(8));
-						dia.name = PREFERENCES.panel_layout_file;
-						dia.onModify = function(name) { 
+						fileNameCall(str, function(name) /*=>*/ { 
 							var cont = panelSerialize();
 							json_save_struct($"{DIRECTORY}layouts/{name}.json", cont);
 							
 							PREFERENCES.panel_layout_file = name;
 							PREF_SAVE();
 							refreshContent();
-						};
+						}).setName(PREFERENCES.panel_layout_file);
+						
 					} else {
 						PREFERENCES.panel_layout_file = str;
 						PREF_SAVE();
@@ -124,14 +128,14 @@ function Panel_Workspace() : PanelContent() constructor {
 			draw_set_color(sel? CDEF.main_mdwhite : CDEF.main_grey);
 			draw_text_add(_tx, _ty, str);
 			
-			x0 += tw + ui(4);
-			ww += tw + ui(4);
+			x0 += tw + ui(1);
+			ww += tw + ui(1);
 		}
 		
 		draw_set_color(COLORS.panel_bg_clear);
 		draw_rectangle(0, 0, currW, h, false);
 		
-		draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
+		draw_set_text(font, fa_left, fa_center, COLORS._main_text);
 		draw_text_add(ui(12), cy, PREFERENCES.panel_layout_file);
 		
 		draw_set_color(COLORS._main_icon_dark);

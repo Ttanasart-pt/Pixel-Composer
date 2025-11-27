@@ -124,6 +124,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		validator      = noone;
 		
 		bypass_junc    = connect_type == CONNECT_TYPE.input? new __NodeValue_Input_Bypass(self, name, node, type) : noone;
+		
+		ign_array      = false; function toggleArray() { ign_array = !ign_array; node.triggerRender(); return self; }
 	#endregion
 	
 	#region ---- Draw ----
@@ -2576,6 +2578,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(expUse)           _map.global_use = expUse;
 		if(expression != "") _map.global_key = expression;
 		if(is_anim)          _map.anim       = is_anim;
+		if(ign_array)        _map.ign_array  = ign_array;
 		
 		if(is_modified) _map.r  = animator.serialize(scale);
 		
@@ -2625,14 +2628,16 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(connect_type == CONNECT_TYPE.output) return;
 		
-		on_end		= _map[$ "on_end"]     ?? KEYFRAME_END.hold;
-		loop_range	= _map[$ "loop_range"] ?? -1;
-		unit.mode	= _map[$ "unit"]       ?? 0;
-		expUse    	= _map[$ "global_use"] ?? false;
-		expression	= _map[$ "global_key"] ?? "";
-		expTree     = evaluateFunctionList(expression); 
+		on_end     = _map[$ "on_end"]     ?? KEYFRAME_END.hold;
+		loop_range = _map[$ "loop_range"] ?? -1;
+		unit.mode  = _map[$ "unit"]       ?? 0;
+		ign_array  = _map[$ "ign_array"]  ?? false;
 		
-		sep_axis	= _map[$ "sep_axis"]  ?? false;
+		expUse     = _map[$ "global_use"] ?? false;
+		expression = _map[$ "global_key"] ?? "";
+		expTree    = evaluateFunctionList(expression); 
+		
+		sep_axis   = _map[$ "sep_axis"]  ?? false;
 		setAnim(_map[$ "anim"] ?? false);
 		
 		draw_line_shift_x = _map[$ "shift_x"]     ??  0;

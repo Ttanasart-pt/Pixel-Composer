@@ -212,11 +212,14 @@ function Panel_Animation() : PanelContent() constructor {
     #region ---- Timeline ----
     	timeline_surface  = noone;
 	    
-        timeline_scubbing = false;
-        timeline_scub_st  = 0;
-        timeline_scale    = 20;
+        timeline_scubbing  = false;
+        timeline_scub_st   = 0;
+        timeline_scale     = 20;
+        timeline_scale_min = 1;
+        timeline_scale_max = 100;
+        
+        timeline_sep_base = 5;
         timeline_separate = 5;
-        timeline_sep_line = 1;
         _scrub_frame      = -1;
         
         timeline_shift      = 0;
@@ -233,12 +236,9 @@ function Panel_Animation() : PanelContent() constructor {
         timeline_contents   = [];
         timeline_keys       = [];
         
-        node_name_type    = 0;
-        
-        do_resetView = true;
-    #endregion
+        node_name_type      = 0;
+        do_resetView        = true;
     
-    #region frame
     	timeline_frame       = true;
     #endregion
     
@@ -353,17 +353,15 @@ function Panel_Animation() : PanelContent() constructor {
                 timeline_dragging = false;
         }
         
+        timeline_separate = timeline_sep_base;
+             if(timeline_scale <=  1) { timeline_separate = timeline_sep_base * 10; }
+        else if(timeline_scale <=  3) { timeline_separate = timeline_sep_base *  4; }
+        else if(timeline_scale <= 10) { timeline_separate = timeline_sep_base *  2; }
+        
     	if(pHOVER && point_in_rectangle(mx, my, bar_x, ui(16), bar_x + bar_w, bar_y + bar_h)) {
             var sca = timeline_scale;
             
-            if(MOUSE_WHEEL != 0) timeline_scale = clamp(timeline_scale + MOUSE_WHEEL, 1, 100);
-            
-            timeline_separate = 5;
-            timeline_sep_line = 1;
-            
-                 if(timeline_scale <=  1) { timeline_separate =  50; timeline_sep_line = 10; }
-            else if(timeline_scale <=  3) { timeline_separate =  20; timeline_sep_line =  5; }
-            else if(timeline_scale <= 10) { timeline_separate =  10; timeline_sep_line =  2; }
+            if(MOUSE_WHEEL != 0) timeline_scale = clamp(timeline_scale + MOUSE_WHEEL, timeline_scale_min, timeline_scale_max);
             
             if(sca != timeline_scale) {
                 var mfb = (mx - bar_x - timeline_shift) / timeline_scale;
@@ -650,27 +648,28 @@ function Panel_Animation() : PanelContent() constructor {
     		var _y1 = _y0 + _hh;
     		var  ta = .5;
     		
+    		var hov = pHOVER && point_in_rectangle(msx, msy, _x0, 0, _x0 + size - 1, bar_h);
+    		var hig = (keyy + 1) % timeline_separate == 0;
+    		var cc  = hig? COLORS._main_icon_light : COLORS._main_icon;
+    		var ii  = 1 + (hig || keyy == GLOBAL_CURRENT_FRAME);
+    		
     		if(keyy >= 0 && keyy < GLOBAL_TOTAL_FRAMES) {
 	    		ta = 1;
 	    		
-	    		var hov = pHOVER && point_in_rectangle(msx, msy, _x0, 0, _x0 + size - 1, bar_h);
-	    		var hig = (keyy + 1) % timeline_separate == 0;
-	    		var cc  = hig? COLORS._main_icon_light : COLORS._main_icon;
-	    		var ii  = 1 + (hig || keyy == GLOBAL_CURRENT_FRAME);
-	    		
 	    		if(is(inspecting, Node)) {
 		    		var _surf = array_safe_get(inspecting.preview_cache, keyy);
-		    		draw_surface_fit(_surf, _x0 + _ww / 2, _y0 + _hh / 2, _ww, _hh);
+		    		draw_surface_fit(_surf, _x0 + _ww / 2, _y0 + _hh / 2, _ww - ui(4), _hh - ui(4));
 	    		}
 	    		
-	    		if(keyy != GLOBAL_CURRENT_FRAME) {
+	    		if(keyy != GLOBAL_CURRENT_FRAME)
 	    			draw_sprite_stretched_ext(THEME.ui_panel, ii, _x0, _y0, _ww, _hh, cc, .5);
 	    			
-	    		} else 
-	    			draw_sprite_stretched_ext(THEME.ui_panel, ii, _x0, _y0, _ww, _hh, COLORS._main_accent, 1);
-	    			
-	    		if(hov) draw_sprite_stretched_add(THEME.ui_panel, ii, _x0, _y0, _ww, _hh, c_white, .3);
-    		}
+    		} 
+    		
+    		if(keyy == GLOBAL_CURRENT_FRAME)
+    			draw_sprite_stretched_ext(THEME.ui_panel, ii, _x0, _y0, _ww, _hh, COLORS._main_accent, 1);
+    		
+    		if(hov) draw_sprite_stretched_add(THEME.ui_panel, ii, _x0, _y0, _ww, _hh, c_white, ta * .3);
     		
     		draw_set_text(f_p4, fa_right, fa_bottom, COLORS._main_text_sub, ta);
     		draw_text(_x1 - ui(3), _y1 - ui(2), keyy + 1);
@@ -855,7 +854,7 @@ function Panel_Animation() : PanelContent() constructor {
         getTimelineContent();
         
         if(w >= ui(348)) {
-            if(!timeline_frame || timeline_scale < ui(20)) drawTimeline();
+            if(!timeline_frame || timeline_scale < ui(24)) drawTimeline();
             else drawFrames();
             timelineScrub();
             
@@ -890,7 +889,8 @@ function Panel_Animation() : PanelContent() constructor {
     }
     
 	function resetView() {
-		var _sca = timeline_w / (GLOBAL_TOTAL_FRAMES + 2);
+		var _sca = timeline_w / (GLOBAL_TOTAL_FRAMES + 3);
+		    _sca = clamp(_sca, timeline_scale_min, timeline_scale_max);
 		var _shf = _sca;
 		
 		timeline_scale    = _sca;
@@ -911,8 +911,8 @@ function Panel_Animation() : PanelContent() constructor {
     
     function newFolder() { PROJECT.timelines.addItem(new timelineItemGroup()); }
     
-    function toggleNodeNameType(_d = 1) { node_name_type = (node_name_type + _d + 3) % 3; }
-    function toggleNodeLabel()          { show_nodes = !show_nodes; }
-    function toggleKeyframeOverride()   { global.FLAG.keyframe_override = !global.FLAG.keyframe_override; }
-    function toggleOnionSkin()          { PROJECT.onion_skin.enabled = !PROJECT.onion_skin.enabled; }
+    function toggleNodeNameType(_d=1) { node_name_type = (node_name_type + _d + 3) % 3; }
+    function toggleNodeLabel()        { show_nodes = !show_nodes; }
+    function toggleKeyframeOverride() { global.FLAG.keyframe_override = !global.FLAG.keyframe_override; }
+    function toggleOnionSkin()        { PROJECT.onion_skin.enabled = !PROJECT.onion_skin.enabled; }
 }

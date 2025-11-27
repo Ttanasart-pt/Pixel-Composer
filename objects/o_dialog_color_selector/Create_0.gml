@@ -44,7 +44,7 @@ event_inherited();
 		var _gs = sp_preset_size;
 		var hh  = ui(24);
 		var nh  = ui(20);
-		var pd  = ui(6);
+		var pd  = ui(4);
 		var _ww = ww - pd * 2;
 		var _bh = nh + _gs + pd;
 		
@@ -75,8 +75,9 @@ event_inherited();
 			}
 			
 			var cc = i == preset_selecting? COLORS._main_accent : COLORS._main_text_sub;
-			draw_set_text(f_p2, fa_left, fa_top, cc);
-			draw_text_add(pd, yy + ui(2), pal.name);
+			draw_sprite_ui(THEME.arrow, _exp * 3, ui(8), yy + nh / 2, .75, .75, 0, COLORS._main_text_sub);
+			draw_set_text(f_p3, fa_left, fa_top, cc);
+			draw_text_add(ui(16), yy + ui(2), pal.name);
 			
 			if(i == -1) { draw_set_color(cc); draw_circle_prec(ww - ui(10), yy + ui(10), ui(4), false); }
 			

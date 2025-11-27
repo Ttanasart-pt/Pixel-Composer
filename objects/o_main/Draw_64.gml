@@ -64,9 +64,8 @@ draw_clear(COLORS.bg);
 if(DROPPER_DROPPING) {
 	surface_reset_target();
 	draw_surface(APP_SURF, 0, 0);
-}
-
-if(APP_SURF_OVERRIDE) {
+	
+} else if(APP_SURF_OVERRIDE) {
 	surface_reset_target();
 	draw_surface(POST_APP_SURF, 0, 0);
 	
