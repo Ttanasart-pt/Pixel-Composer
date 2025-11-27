@@ -2,7 +2,8 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	name = "MK Isoextrude";
 	
 	////- =Surface
-	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput(0, nodeValue_Surface( "Surface In"  ));
+	newInput(3, nodeValue_Surface( "Surface Top" ));
 	
 	////- =Depth
 	newInput(1, nodeValue_Int( "Depth", 8 ));
@@ -14,14 +15,14 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 
-		["Surface",   false ], 0, 
+		["Surface",   false ], 0, 3, 
 		["Depth",     false ], 1, 
 		["Rendering", false ], 2, 
 	];
 	
 	////- Nodes
 	
-	temp_surface = [ noone ];
+	temp_surface = [ noone, noone ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		
@@ -29,7 +30,8 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	static processData = function(_outSurf, _data, _array_index = 0) { 
 		#region data
-			var _surf = _data[0]; 
+			var _surf  = _data[0]; 
+			var _surfT = _data[3], _surfTu = is_surface(_surfT);
 			
 			var _dept = _data[1]; 
 			
@@ -40,7 +42,8 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 		var sw = surface_get_width_safe(  _surf );
 		var sh = surface_get_height_safe( _surf );
-		temp_surface[0] = surface_verify(temp_surface[0], sw, sh);
+		for( var i = 0, n = array_length(temp_surface); i < n; i++ ) 
+			temp_surface[i] = surface_verify(temp_surface[i], sw, sh);
 		
 		var cx = sw / 2;
 		var cy = sh / 2;
@@ -55,20 +58,14 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 		surface_set_target(temp_surface[0]);
 			DRAW_CLEAR
-			
-			draw_primitive_begin_texture(pr_trianglelist, surface_get_texture(_surf));
-			
-			draw_vertex_texture_color(x0, y0, 0, 0, c_white, 1);
-			draw_vertex_texture_color(x1, y1, 1, 0, c_white, 1);
-			draw_vertex_texture_color(x2, y2, 0, 1, c_white, 1);
-			
-			draw_vertex_texture_color(x1, y1, 1, 0, c_white, 1);
-			draw_vertex_texture_color(x2, y2, 0, 1, c_white, 1);
-			draw_vertex_texture_color(x3, y3, 1, 1, c_white, 1);
-			
-			draw_primitive_end();
+			draw_rectangle_pr_surf(x0, y0, x1, y1, x2, y2, x3, y3, _surf);
 		surface_reset_target();
 		
+		surface_set_target(temp_surface[1]);
+			DRAW_CLEAR
+			draw_rectangle_pr_surf(x0, y0, x1, y1, x2, y2, x3, y3, _surfTu? _surfT : _surf);
+		surface_reset_target();
+				
 		surface_set_target(_outSurf);
 			DRAW_CLEAR
 			
@@ -77,8 +74,10 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var ii = 0;
 			
 			repeat(_dept) {
-				var cc = ii == _dept - 1? c_white : _colr;
-				draw_surface_ext(temp_surface[0], xx, yy, 1, 1, 0, cc, 1);
+				if(ii == _dept - 1)
+					draw_surface_ext(temp_surface[1], xx, yy, 1, 1, 0, c_white, 1);
+				else 
+					draw_surface_ext(temp_surface[0], xx, yy, 1, 1, 0, _colr, 1);
 				
 				yy--;
 				ii++;

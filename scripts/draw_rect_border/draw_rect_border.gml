@@ -9,6 +9,20 @@ function draw_rectangle_points(x0, y0, x1, y1, x2, y2, x3, y3, _out = false) {
 	draw_triangle(x1, y1, x2, y2, x3, y3, _out);
 }
 
+function draw_rectangle_pr_surf(x0, y0, x1, y1, x2, y2, x3, y3, _surf) {
+	draw_primitive_begin_texture(pr_trianglelist, surface_get_texture(_surf));
+			
+	draw_vertex_texture_color(x0, y0, 0, 0, c_white, 1);
+	draw_vertex_texture_color(x1, y1, 1, 0, c_white, 1);
+	draw_vertex_texture_color(x2, y2, 0, 1, c_white, 1);
+	
+	draw_vertex_texture_color(x1, y1, 1, 0, c_white, 1);
+	draw_vertex_texture_color(x2, y2, 0, 1, c_white, 1);
+	draw_vertex_texture_color(x3, y3, 1, 1, c_white, 1);
+	
+	draw_primitive_end();
+}
+
 function draw_rectangle_border(x0, y0, x1, y1, thick) {
 	INLINE
 	draw_line_width(x0 - thick / 2, y0, x1 + thick / 2, y0, thick);
