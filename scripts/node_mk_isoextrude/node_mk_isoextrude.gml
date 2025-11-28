@@ -2,24 +2,25 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	name = "MK Isoextrude";
 	
 	////- =Surface
-	newInput(0, nodeValue_Surface( "Surface In"  ));
-	newInput(3, nodeValue_Surface( "Surface Top" ));
-	newInput(5, nodeValue_Surface( "Height Map"  ));
+	newInput(0, nodeValue_Surface( "Surface In"   ));
+	newInput(6, nodeValue_Surface( "Surface Side" ));
+	newInput(3, nodeValue_Surface( "Surface Top"  ));
+	newInput(5, nodeValue_Surface( "Height Map"   ));
 	
 	////- =Isoextrude
 	newInput(4, nodeValue_EButton( "Side",  0, [ "Top", "Left", "Right" ] ));
-	newInput(1, nodeValue_Int(     "Depth", 8 ));
+	newInput(1, nodeValue_Int(     "Depth", 8 )).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
 	
 	////- =Rendering
 	newInput(2, nodeValue_Color( "Blending", ca_white ));
-	// input 6
+	// input 7
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 
-		["Surface",   false ], 0, 3, 5, 
-		["Depth",     false ], 4, 1, 
-		["Rendering", false ], 2, 
+		[ "Surface",   false ], 0, 6, 3, 5, 
+		[ "Depth",     false ], 4, 1, 
+		[ "Rendering", false ], 2, 
 	];
 	
 	////- Nodes
@@ -33,6 +34,7 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	static processData = function(_outSurf, _data, _array_index = 0) { 
 		#region data
 			var _surf  = _data[0]; 
+			var _surfS = _data[6], _surfSu = is_surface(_surfS);
 			var _surfT = _data[3], _surfTu = is_surface(_surfT);
 			var _surfH = _data[5], _surfHu = is_surface(_surfH);
 			
@@ -125,12 +127,15 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			surface_reset_target();
 		}
 		
-		surface_set_shader(_outSurf, sh_mk_isoextrude_apply_height);
+		surface_set_shader(_outSurf, sh_mk_isoextrude_apply_height, true, BLEND.normal);
 			DRAW_CLEAR
 			
 			shader_set_i("useHeight",  _surfHu);
 			shader_set_s("heightmap",  temp_surface[2]);
 			shader_set_s("topmap",     temp_surface[1]);
+			
+			shader_set_i("useSide",     _surfSu);
+			shader_set_s("sideTexture", _surfS);
 			
 			shader_set_f("maxDepth",   _dept - 1);
 			

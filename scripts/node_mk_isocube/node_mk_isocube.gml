@@ -8,6 +8,7 @@ function Node_MK_IsoCube(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	////- =Shape
 	newInput( 0, nodeValue_Vec2( "Base",           [8,8]     ));
 	newInput( 8, nodeValue_Vec4( "Base Offset",    [0,0,0,0] ));
+	newInput(19, nodeValue_Bool( "Base Expand",    true      ));
 	
 	////- =Depth
 	newInput( 1, nodeValue_Int(  "Depth",           6        ));
@@ -32,15 +33,15 @@ function Node_MK_IsoCube(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput(16, nodeValue_Color( "Front Color",       ca_white ));
 	newInput(17, nodeValue_Int(   "Outside Thickness", 0        ));
 	newInput(18, nodeValue_Color( "Outside Color",     ca_white ));
-	// inputs 19
+	// inputs 20
 		
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 
-		["Output",  false ], 7, 
-		["Shape",   false ], 0, 8, 
-		["Depth",   false ], 1, 2, 3, 
-		["Texture", false ], 6, 4, 5, 
-		["Colors",  false ], 9, 10, 11, 
-		["Outlines", true, 12 ], 13, 14, 15, 16, 17, 18, 
+		[ "Output",  false ], 7, 
+		[ "Shape",   false ], 0, 8, 19, 
+		[ "Depth",   false ], 1, 2, 3, 
+		[ "Texture", false ], 6, 4, 5, 
+		[ "Colors",  false ], 9, 10, 11, 
+		[ "Outlines", true, 12 ], 13, 14, 15, 16, 17, 18, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -214,18 +215,19 @@ function Node_MK_IsoCube(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	static processData = function(_outSurf, _data, _array_index) {
 		#region data
-			var _padd  = _data[7];
+			var _padd  = _data[ 7];
 			
-			var _base  = _data[0];
-			var _basOf = _data[8];
+			var _base  = _data[ 0];
+			var _basOf = _data[ 8];
+			var _basEx = _data[19];
 			
-			var _dept  = _data[1];
-			var _depOf = _data[2];
-			var _depRf = _data[3];
+			var _dept  = _data[ 1];
+			var _depOf = _data[ 2];
+			var _depRf = _data[ 3];
 			
-			var _texT  = _data[6]; 
-			var _texL  = _data[4];
-			var _texR  = _data[5]; 
+			var _texT  = _data[ 6]; 
+			var _texL  = _data[ 4];
+			var _texR  = _data[ 5]; 
 			
 			var _colT  = _data[ 9]; 
 			var _colL  = _data[10]; 
@@ -306,7 +308,36 @@ function Node_MK_IsoCube(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			
 			draw_rectangle_primitive(b0x, b0y, t0x, t0y, b2x, b2y, t2x, t2y, ox, oy, _texL, _colL);
 			draw_rectangle_primitive(b2x, b2y, t2x, t2y, b3x, b3y, t3x, t3y, ox, oy, _texR, _colR);
-			draw_rectangle_primitive(t0x, t0y, t1x, t1y, t2x, t2y, t3x, t3y, ox, oy, _texT, _colT);
+			
+			if(_basEx && _base[0] % 2 == 0 && _base[1] % 2 == 0) {
+				var _alpha = color_get_alpha(_colT);
+				draw_primitive_begin_texture(pr_trianglelist, surface_get_texture(_texT));
+				
+				draw_vertex_texture_color(t0x + ox, t0y + oy, 0, 1, _colT, _alpha);
+				draw_vertex_texture_color(t1x + ox, t1y + oy, 0, 0, _colT, _alpha);
+				draw_vertex_texture_color(t2x + ox, t2y + oy, 1, 1, _colT, _alpha);
+				
+				draw_vertex_texture_color(t0x + ox - 1, t0y + oy, 0, 1, _colT, _alpha);
+				draw_vertex_texture_color(t1x + ox - 1, t1y + oy, 0, 0, _colT, _alpha);
+				draw_vertex_texture_color(t2x + ox - 1, t2y + oy, 1, 1, _colT, _alpha);
+				
+				draw_vertex_texture_color(t1x + ox, t1y + oy, 0, 0, _colT, _alpha);
+				draw_vertex_texture_color(t2x + ox, t2y + oy, 1, 1, _colT, _alpha);
+				draw_vertex_texture_color(t3x + ox, t3y + oy, 1, 0, _colT, _alpha);
+				
+				draw_vertex_texture_color(t1x + ox + 1, t1y + oy, 0, 0, _colT, _alpha);
+				draw_vertex_texture_color(t2x + ox + 1, t2y + oy, 1, 1, _colT, _alpha);
+				draw_vertex_texture_color(t3x + ox + 1, t3y + oy, 1, 0, _colT, _alpha);
+				
+				draw_primitive_end();
+				
+				// draw_set_color_alpha(_colT, _alpha);
+				// draw_line(t1x+ox - 1, t1y+oy - 1, t2x+ox - 1, t2y+oy - 1);
+				// draw_line(t1x+ox,     t1y+oy - 1, t2x+ox,     t2y+oy - 1);
+				// draw_set_alpha(1);
+				
+			} else 
+				draw_rectangle_primitive(t0x, t0y, t1x, t1y, t2x, t2y, t3x, t3y, ox, oy, _texT, _colT);
 			
 			if(_out) {
 				gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_one, bm_one);
