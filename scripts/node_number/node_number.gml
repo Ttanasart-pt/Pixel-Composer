@@ -24,24 +24,27 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	newInput( 1, nodeValue_Bool(  "Integer", false ));
 	
 	////- =Display
-	newInput( 2, nodeValue_Enum_Scroll(    "Display Type",      0, { data: [ "Number", "Slider", "Rotator", "Increment", "Seed" ], update_hover: false } ));
-	newInput( 6, nodeValue_Enum_Button(    "Style",             0, { data: [ "Blob", "Flat" ] } ));
-	newInput(15, nodeValue_Rotation_Range( "Knob Range",      [ 0, 360 ] ));
-	newInput( 3, nodeValue_Range(          "Range",           [ 0, 1 ]   ));
-	newInput( 5, nodeValue_Bool(           "Clamp to range",   false     ));
-	newInput( 4, nodeValue_Float(          "Step",            .01        ));
-	newInput( 7, nodeValue_Float(          "Rotate speed",     1         ));
-	newInput(16, nodeValue_Int(            "Seed Digits",      5         ));
+	newInput( 2, nodeValue_EScroll(  "Display Type",      0, { data: [ "Number", "Slider", "Rotator", "Increment", "Seed" ], update_hover: false } ));
+	newInput( 6, nodeValue_EButton(  "Style",             0, { data: [ "Blob", "Flat" ] } ));
+	newInput(15, nodeValue_RotRange( "Knob Range",       [0,360] ));
+	newInput( 3, nodeValue_Range(    "Range",            [0,1]   ));
+	newInput( 5, nodeValue_Bool(     "Clamp to Range",   false   ));
+	newInput( 4, nodeValue_Float(    "Step",            .01      ));
+	newInput( 7, nodeValue_Float(    "Rotate Speed",     1       ));
+	newInput(16, nodeValue_Int(      "Seed Digits",      5       ));
 	
 	////- =Gizmo
-	newInput( 8, nodeValue_Bool( "Show on global", false, "Whether to show overlay gizmo when not selecting any nodes." ));
-	newInput(11, nodeValue_Enum_Scroll( "Gizmo style",     0, [ "Default", "Shapes", "Sprite" ]   ));
-	newInput(12, nodeValue_Enum_Scroll( "Gizmo shape",     0, [ "Rectangle", "Ellipse", "Arrow" ] ));
-	newInput(13, nodeValue_Surface(     "Gizmo sprite"             ));
-	newInput(14, nodeValue_Vec2(        "Gizmo size",   [ 32, 32 ] ));
-	newInput( 9, nodeValue_Vec2(        "Gizmo offset", [  0,  0 ] ));
-	newInput(10, nodeValue_Float(       "Gizmo scale",     1       ));
-	// input 17
+	newInput( 8, nodeValue_Bool(    "Show on Global",    false, "Whether to show overlay gizmo when not selecting any nodes." ));
+	newInput(11, nodeValue_EScroll( "Style",       0, [ "Default", "Shapes", "Surface" ]  ));
+	newInput(19, nodeValue_EScroll( "Sub-Style",   0, [ "Default", "Small", "Inverted" ]  ));
+	newInput(12, nodeValue_EScroll( "Shape",       0, [ "Rectangle", "Ellipse", "Arrow" ] ));
+	newInput(13, nodeValue_Surface( "Sprite"               ));
+	newInput(14, nodeValue_Vec2(    "Size",       [32,32]  ));
+	newInput( 9, nodeValue_Vec2(    "Offset",     [0,0]    )).setUnitRef(function(i) /*=>*/ {return DEF_SURF});
+	newInput(10, nodeValue_Float(   "Scale",       1       ));
+	newInput(17, nodeValue_Bool(    "Show Label",  0       ));
+	newInput(18, nodeValue_Text(    "Label",       "Value" ));
+	// input 20
 	
 	newOutput(0, nodeValue_Output("Number", VALUE_TYPE.float, 0));
 	
@@ -49,13 +52,14 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		.setText("Switch to Fast mode");
 		
 	input_display_list = [ b_fast, 0, 1, 
-		["Display",  false], 2, 6, 15, 3, 5, 4, 7, 16, 
-		["Gizmo",    true], 8, 11, 12, 13, 14, 9, 10,
+		[ "Display",  false ], 2, 6, 15, 3, 5, 4, 7, 16, 
+		[ "Gizmo",    true  ], 8, 11, 19, 12, 13, 14, 9, 10, __inspc(ui(6), true), 17, 18, 
 	];
 	
-	////- NOdes
+	////- Nodes
 	
 	gz_style  = 0;
+	gz_style1 = 0;
 	gz_shape  = 0;
 	gz_sprite = 0;
 	gz_pos    = [ 0, 0 ];
@@ -67,7 +71,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	gz_drag_mx  = 0;
 	
 	draw_raw      = 0;
-	draw_int      = 0;
+	draw_int      = 0; curr_int = undefined;
 	draw_disp     = 0;
 	draw_rang     = [ 0, 1 ];
 	draw_stp      = 0;
@@ -78,31 +82,25 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	draw_knob_rng = [ 0, 360 ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		var _val = inputs[0].getValue();
-		var _dsp = inputs[2].getValue();
+		var _val = draw_raw;
 		if(is_array(_val)) return false;
-		
-		if(_dsp == 0 || _dsp == 1) inputs[0].display_type = VALUE_DISPLAY._default;
-		else if(_dsp == 2)	       inputs[0].display_type = VALUE_DISPLAY.rotation;
 		
 		var _gx = _x + gz_pos[0] * _s;
 		var _gy = _y + gz_pos[1] * _s;
 		
 		if(gz_style == 0) {
-			switch(_dsp) {
+			var h  = w_hoverable;
+			var f  = active;
+			var gs = gz_scale;
+			var gt = gz_style1;
+			
+			switch(draw_disp) {
 				case 0 : 
-				case 1 : 
-					InputDrawOverlay(inputs[0].drawOverlay(w_hoverable, active, _gx, _gy, _s, _mx, _my, _snx, _sny, 0, gz_scale));
-					break;
-				
-				case 2 : 
-					InputDrawOverlay(inputs[0].drawOverlay(w_hoverable, active, _gx, _gy, _s, _mx, _my, _snx, _sny));
-					break;
+				case 1 : InputDrawOverlay(inputs[0].drawOverlay(h, f, _gx, _gy, _s, _mx, _my, _snx, _sny, 0,   gs, gt)); break;
+				case 2 : InputDrawOverlay(inputs[0].drawOverlay(h, f, _gx, _gy, _s, _mx, _my, _snx, _sny, 64 * gs, gt)); break;
 			}
 			
 		} else {
-			var val = inputs[0].getValue();
-			
 			if(gz_dragging) {
 				var _nv = gz_drag_sx + (_mx - gz_drag_mx) / (_s * gz_scale);
 				
@@ -110,12 +108,12 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					UNDO_HOLDING = true;
 				
 				if(mouse_release(mb_left)) {
-					gz_dragging = false;
+					gz_dragging  = false;
 					UNDO_HOLDING = false;
 				}
 			}
 			
-			var _rx  = _gx + val * (_s * gz_scale);
+			var _rx  = _gx + _val * (_s * gz_scale);
 			var _ry  = _gy;
 			var _rw  = gz_size[0] * _s;
 			var _rh  = gz_size[1] * _s;
@@ -160,90 +158,132 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			if(w_hovering && mouse_press(mb_left, active)) {
 				gz_dragging = true;
 				
-				gz_drag_sx = val;
+				gz_drag_sx = _val;
 				gz_drag_mx = _mx;
 			}
 		}
 		
-		inputs[0].display_type = VALUE_DISPLAY._default;
-		
 		return w_hovering;
-	}
-	
-	static setType = function() {
-		var int  = inputs[1].getValue();
-		var disp = inputs[2].getValue();
-		var styl = inputs[6].getValue();
-		
-		var _pw = min_w;
-		var _ph = attributes.preview_size;
-		
-		var _ww = 96, _hh = 48;
-		
-		inputs[ 6].setVisible(disp == 1 || disp == 2);
-		inputs[15].setVisible(disp == 2);
-		inputs[ 3].setVisible(disp == 1 || disp == 2 || disp == 3);
-		inputs[ 5].setVisible(disp == 1 || disp == 2 || disp == 3);
-		inputs[ 4].setVisible(disp == 1 || disp == 2 || disp == 3);
-		inputs[ 7].setVisible(disp == 2);
-		inputs[16].setVisible(disp == 4);
-		
-		switch(disp) {
-			case 1 : 
-				_ww = 160; 
-					 if(styl == 0) _hh = 96;
-				else if(styl == 1) _hh = 64;
-				break;
-				
-			case 2 : _ww = 128; _hh = 128; break;
-			case 3 : 
-			case 4 : _ww = 160; _hh =  64; break;
-		}
-		
-		setDimension(_ww, _hh, _pw != _ww || _ph != _hh);
-		inputs[0].setType( int? VALUE_TYPE.integer : VALUE_TYPE.float);
-		outputs[0].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
 	}
 	
 	static processNumber = function(_val, _int) { 
 		if(is_numeric(_val)) return _int? round(_val) : _val;
 		
-		if(is_array(_val)) {
-			for (var i = 0, n = array_length(_val); i < n; i++)
-				_val[i] = processNumber(_val[i], _int);
-		}
+		if(is_array(_val))
+		for (var i = 0, n = array_length(_val); i < n; i++)
+			_val[i] = processNumber(_val[i], _int);
 		
 		return _val;
 	}
 	
 	static update = function() {
-		setType();
-		
-		draw_raw       = inputs[0].getValue();
-		draw_int       = inputs[1].getValue();
-		draw_disp      = inputs[2].getValue();
-		draw_rang      = inputs[3].getValue();
-		draw_stp       = inputs[4].getValue();
-		draw_cmp       = inputs[5].getValue();
-		draw_sty       = inputs[6].getValue();
-		draw_spd       = inputs[7].getValue();
-		draw_seed_dig  = inputs[16].getValue();
-		draw_knob_rng  = inputs[15].getValue();
-		
-		isGizmoGlobal = inputs[8].getValue();
-		gz_pos        = inputs[9].getValue();
-		gz_scale      = inputs[10].getValue();
-		gz_style      = inputs[11].getValue();
-		gz_shape      = inputs[12].getValue();
-		gz_sprite     = inputs[13].getValue();
-		gz_size       = inputs[14].getValue();
-		
-		inputs[12].setVisible(gz_style == 1);
-		inputs[13].setVisible(gz_style == 2, gz_style == 2);
-		inputs[14].setVisible(gz_style != 0);
+		#region data
+			draw_raw  = inputs[ 0].getValue();
+			draw_int  = inputs[ 1].getValue();
+			draw_disp = inputs[ 2].getValue();
+			
+			switch(draw_disp) {
+				case 1 : 
+					draw_sty       = inputs[ 6].getValue();
+					draw_rang      = inputs[ 3].getValue();
+					draw_cmp       = inputs[ 5].getValue();
+					draw_stp       = inputs[ 4].getValue();
+					break;
+				
+				case 2 : 
+					draw_sty       = inputs[ 6].getValue();
+					draw_knob_rng  = inputs[15].getValue();
+					draw_rang      = inputs[ 3].getValue();
+					draw_cmp       = inputs[ 5].getValue();
+					draw_stp       = inputs[ 4].getValue();
+					draw_spd       = inputs[ 7].getValue();
+					break;
+					
+				case 3 : 
+					draw_rang      = inputs[ 3].getValue();
+					draw_cmp       = inputs[ 5].getValue();
+					draw_stp       = inputs[ 4].getValue();
+					break;
+					
+				case 4 : 
+					draw_seed_dig  = inputs[16].getValue();
+					break;
+					
+			}
+			
+			isGizmoGlobal = inputs[ 8].getValue();
+			gz_style      = inputs[11].getValue();
+			gz_style1     = inputs[19].getValue();
+			
+			switch(gz_style) {
+				case 0 : 
+					gz_size   = inputs[14].getValue();
+					break;
+				
+				case 1 : 	
+					gz_shape  = inputs[12].getValue();
+					break;
+					
+				case 2 : 	
+					gz_sprite = inputs[13].getValue();
+					break;
+			}
+			
+			gz_pos        = inputs[ 9].getValue();
+			gz_scale      = inputs[10].getValue();
+			gz_label_show = inputs[17].getValue();
+			gz_label      = inputs[18].getValue();
+			
+			inputs[ 6].setVisible(draw_disp == 1 || draw_disp == 2);
+			inputs[15].setVisible(draw_disp == 2);
+			inputs[ 3].setVisible(draw_disp == 1 || draw_disp == 2 || draw_disp == 3);
+			inputs[ 5].setVisible(draw_disp == 1 || draw_disp == 2 || draw_disp == 3);
+			inputs[ 4].setVisible(draw_disp == 1 || draw_disp == 2 || draw_disp == 3);
+			inputs[ 7].setVisible(draw_disp == 2);
+			inputs[16].setVisible(draw_disp == 4);
+			
+			inputs[19].setVisible(gz_style == 0 && (draw_disp == 0 || draw_disp == 1 || draw_disp == 2));
+			inputs[12].setVisible(gz_style == 1);
+			inputs[13].setVisible(gz_style == 2, gz_style == 2);
+			inputs[14].setVisible(gz_style != 0);
+			
+			inputs[18].setVisible(gz_label_show);
+			
+			var _pw = min_w;
+			var _ph = attributes.preview_size;
+			var _ww = 96, _hh = 48;
+			
+			switch(draw_disp) {
+				case 1 : 
+					_ww = 160; 
+						 if(draw_sty == 0) _hh = 96;
+					else if(draw_sty == 1) _hh = 64;
+					break;
+					
+				case 2 : _ww = 128; _hh = 128; break;
+				case 3 : 
+				case 4 : _ww = 160; _hh =  64; break;
+			}
+			
+			setDimension(_ww, _hh, _pw != _ww || _ph != _hh);
+			
+			if(curr_int != draw_int) {
+				inputs[0].setType( draw_int? VALUE_TYPE.integer : VALUE_TYPE.float);
+				outputs[0].setType(draw_int? VALUE_TYPE.integer : VALUE_TYPE.float);
+				curr_int = draw_int;
+			}
+			
+			switch(draw_disp) {
+				case 0 : 
+				case 1 : inputs[0].display_type = VALUE_DISPLAY._default; break;
+				case 2 : inputs[0].display_type = VALUE_DISPLAY.rotation; break;
+			}
+			
+			inputs[0].overlay_draw_text = gz_label_show;
+			inputs[0].overlay_label     = gz_label;
+		#endregion
 		
 		var _res = processNumber(draw_raw, draw_int);
-		
 		outputs[0].setValue(_res);
 	}
 	

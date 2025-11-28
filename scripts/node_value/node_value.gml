@@ -166,6 +166,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		__overlay_hover     = [];
 		overlay_draw_text   = true;   hideLabel  = function() /*=>*/ { overlay_draw_text = false; return self; }
+		overlay_label       = "";
 		overlay_text_valign = fa_top;
 		
 		graph_selecting   = false;
@@ -2123,12 +2124,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					case VALUE_DISPLAY.slider :
 						var _angle = argument_count > argc + 0? argument[argc + 0] : 0;
 						var _scale = argument_count > argc + 1? argument[argc + 1] : 1;
-						var _spr   = argument_count > argc + 2? argument[argc + 2] : 0;
-						return preview_overlay_scalar(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _angle, _scale, _spr);
+						var _type  = argument_count > argc + 2? argument[argc + 2] : 0;
+						return preview_overlay_scalar(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _angle, _scale, _type);
 								
 					case VALUE_DISPLAY.rotation :
-						var _rad = argument_count >  argc + 0? argument[ argc + 0] : 64;
-						return preview_overlay_rotation(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _rad);
+						var _rad  = argument_count > argc + 0? argument[argc + 0] : 64;
+						var _type = argument_count > argc + 1? argument[argc + 1] : 0;
+						return preview_overlay_rotation(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _rad, _type);
 								
 					case VALUE_DISPLAY.rotation_range :
 						var _rad = argument_count >  argc + 0? argument[ argc + 0] : 64;

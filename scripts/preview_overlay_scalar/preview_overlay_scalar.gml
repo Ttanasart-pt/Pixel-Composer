@@ -91,11 +91,11 @@ function preview_overlay_scalar(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 	if(overlay_draw_text) {
 		if(overlay_text_valign == fa_top) {
 			draw_set_text(f_p2b, fa_center, fa_bottom, COLORS._main_accent);
-			draw_text_add(round(_ax), round(_ay - ui(4)), name);
+			draw_text_add(round(_ax), round(_ay - ui(4)), overlay_label == ""? name : overlay_label);
 			
 		} else if(overlay_text_valign == fa_bottom) {
 			draw_set_text(f_p2b, fa_center, fa_top, COLORS._main_accent);
-			draw_text_add(round(_ax), round(_ay + ui(4)), name);
+			draw_text_add(round(_ax), round(_ay + ui(4)), overlay_label == ""? name : overlay_label);
 			
 		}
 	}

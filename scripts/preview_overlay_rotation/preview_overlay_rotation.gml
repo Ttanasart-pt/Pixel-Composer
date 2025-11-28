@@ -1,4 +1,4 @@
-function preview_overlay_rotation(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _rad) {
+function preview_overlay_rotation(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _rad, _type = 0) {
 	var _val  = getValue();
 	var hover = -1;
 	if(is_array(_val)) return hover;
@@ -86,6 +86,7 @@ function preview_overlay_rotation(interact, active, _x, _y, _s, _mx, _my, _snx, 
 	
 	shader_set(sh_node_widget_rotator);
 		shader_set_color("color", COLORS._main_accent);
+		shader_set_i("type",      _type);
 		shader_set_f("index",     __overlay_hover[0]);
 		shader_set_f("angle",     degtorad(_val + 90));
 		
@@ -96,13 +97,13 @@ function preview_overlay_rotation(interact, active, _x, _y, _s, _mx, _my, _snx, 
 	
 	if(overlay_draw_text) {
 		draw_set_text(f_p2b, fa_center, fa_bottom, COLORS._main_accent);
-		draw_text_add(round(_ax), round(_ay - ui(4)), name);
+		draw_text_add(round(_ax), round(_ay - ui(4)), overlay_label == ""? name : overlay_label);
 	}
 	
 	return hover;
 }
 
-function preview_overlay_rotation_range(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _rad) {
+function preview_overlay_rotation_range(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _rad, _type = 0) {
 	var _val  = getValue();
 	var hover = -1;
 	

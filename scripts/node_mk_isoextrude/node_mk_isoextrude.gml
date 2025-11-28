@@ -12,7 +12,7 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	////- =Rendering
 	newInput(2, nodeValue_Color( "Blending", ca_white ));
-	// input 5
+	// input 6
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
