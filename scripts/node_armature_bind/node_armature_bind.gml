@@ -1205,6 +1205,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		_mesh = _s.mesh;
 		_rmap = _s.rigMap;
 		_surf = _s.getSurface();
+		
 		if(!is_surface(_surf)) return;
 		
 		_rbon  = _s.boneMap == noone? boneMap : _s.boneMap;
@@ -1244,15 +1245,16 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			_p.y = _py;
 		});
 		
-		surface_set_shader(temp_surface[!_bg], sh_sample, false, BLEND.alphamulp);
-			draw_set_color(c_white);
-			draw_set_alpha(1);
+		surface_set_shader(temp_surface[_bg], noone, false, BLEND.alphamulp);
+			draw_set_color_alpha(c_white, 1);
 			
-			array_foreach(_mesh.tris, function(_t) /*=>*/ { _t.drawSurface(_surf); });
+			draw_primitive_begin_texture(pr_trianglelist, surface_get_texture(_surf));
+			array_foreach(_mesh.tris, function(_t) /*=>*/ { _t.drawSurface(); });
+			draw_primitive_end();
 		surface_reset_shader();
 		
-		surface_set_shader(temp_surface[_bg], noone, true, BLEND.over);
-			draw_surface(temp_surface[!_bg], 0, 0);
+		surface_set_shader(temp_surface[!_bg], noone, true, BLEND.over);
+			draw_surface(temp_surface[_bg], 0, 0);
 		surface_reset_shader();
 	}
 	
@@ -1313,6 +1315,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			if(is(_s, RiggedMeshedSurface)) {
 				meshBind(_s, _bg);
 				array_push(bind_data, new __armature_bind_data(_s));
+				_bg = !_bg;
 				continue;
 			}
 			

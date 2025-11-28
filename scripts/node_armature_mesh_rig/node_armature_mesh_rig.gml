@@ -12,8 +12,8 @@ function RiggedMeshedSurface() : dynaSurf() constructor {
 	boneMap = noone;
 	rigMap  = {};
 	
-	static getSurface        = function() { return mesh == noone? noone : mesh.surface; }
-	static getSurfacePreview = function() { return getSurface(); }
+	static getSurface        = function() /*=>*/ {return mesh == noone? noone : mesh.surface};
+	static getSurfacePreview = function() /*=>*/ {return getSurface()};
 }
 
 function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
