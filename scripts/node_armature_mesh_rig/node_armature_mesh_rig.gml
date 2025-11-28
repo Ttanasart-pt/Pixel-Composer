@@ -598,12 +598,13 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
         if(!attributes.baked && rigdata == noone)
         	AutoWeightPaint(false);
         
-        var _rdata          = attributes.baked? attributes.bakeData : rigdata;
-        var _meshRigged     = new RiggedMeshedSurface();
-        _meshRigged.rigMap  = _rdata;
-        _meshRigged.mesh    = _mesh.clone();
-        _meshRigged.bone    = bone_posed;
-        _meshRigged.boneMap = _map;
+        var _rdata           = attributes.baked? attributes.bakeData : rigdata;
+        var _meshRigged      = new RiggedMeshedSurface();
+        _meshRigged.rigMap   = _rdata;
+        _meshRigged.mesh     = _mesh.clone();
+        _meshRigged.bone     = bone_posed;
+        _meshRigged.boneMap  = _map;
+        _meshRigged.surfaces = [_mesh.surface];
         
         outputs[0].setValue(_meshRigged);
     }

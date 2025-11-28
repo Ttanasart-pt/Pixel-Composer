@@ -39,15 +39,10 @@ function surfaceBox(_onModify, _def_path = "") : widget() constructor {
 		display_data = _display_data;
 		
 		var hoverRect = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h);
-		var _type = VALUE_TYPE.surface;
 		
 		var _surf_single = _surface;
 		if(is_array(_surf_single) && !array_empty(_surf_single))
 			_surf_single = _surf_single[0];
-			
-		     if(is_instanceof(_surf_single, dynaSurf))		_type = VALUE_TYPE.dynaSurface;
-		else if(is_instanceof(_surf_single, SurfaceAtlas))	_type = VALUE_TYPE.atlas;
-		else if(is_instanceof(_surf_single, __d3dMaterial))	_type = VALUE_TYPE.d3Material;
 		
 		draw_sprite_stretched(THEME.textbox, 3, _x, _y, _w, _h);
 		
