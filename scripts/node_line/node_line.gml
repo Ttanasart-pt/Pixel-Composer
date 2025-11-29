@@ -4,6 +4,17 @@
 		addHotkey("Node_Line", "Fix Length > Toggle", "F", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[19].setValue((_n.inputs[19].getValue() + 1) % 2); });
 		addHotkey("Node_Line", "1px Mode > Toggle",   "1", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[17].setValue((_n.inputs[17].getValue() + 1) % 2); });
 	});
+	
+	function __LinePoint(x, y, prog, progCrop, weight = 1) constructor {
+		self.x        = x;
+		self.y        = y;
+		self.prog     = prog;
+		self.progCrop = progCrop;
+		self.weight   = weight;
+		
+		function toString() { return $"({x},{y})"; }
+	}
+	
 #endregion
 
 function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {	
@@ -46,9 +57,15 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(43, nodeValue_Enum_Button(  "End Cap",       0, __enum_array_gen([ "None", "Round", "Tri", "Square" ], s_node_line_cap)));
 	newInput(14, nodeValue_ISlider(      "Round Segment", 8, [2, 32, 0.1] ));
 	
+	////- =Dash Line
+	newInput(46, nodeValue_Bool(  "Dash",       false ));
+	newInput(44, nodeValue_Float( "Dash Line",    [0] )).setDisplay(VALUE_DISPLAY.number_array);
+	newInput(45, nodeValue_Float( "Dash Shift",    0  ));
+	
 	////- =Wiggle
-	newInput(4, nodeValue_Slider( "Wiggle",      0, [0, 16, 0.01] ));
-	newInput(5, nodeValue_Float(  "Random Seed", 0 ));
+	newInput(47, nodeValue_Bool(   "Use Wiggle",  false                ));
+	newInput( 4, nodeValue_Slider( "Wiggle",          0, [0, 16, 0.01] ));
+	newInput( 5, nodeValue_Float(  "Random Seed",     0                ));
 	
 	////- =Color
 	newInput(10, nodeValue_Gradient( "Color over Length",    new gradientObject(ca_white) ));
@@ -71,17 +88,18 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	////- =Render
 	newInput(34, nodeValue_Enum_Scroll( "SSAA", 0, [ "None", "2x", "4x", "8x" ] ));
-	// Inputs 44
+	// Inputs 48
 	
 	input_display_list = [ 39, 
 		["Output",         true], 0, 1, 30, 31, 16, 
-		["Line data",     false], 27, 6, 7, 28, 32, 33, 35, 19, 2, 20, 
+		["Line Data",     false], 27, 6, 7, 28, 32, 33, 35, 19, 2, 20, 
 		["Width",         false], 17, 3, 11, 12, 36, 
-		["Line settings", false], 8, 25, 9, 26, 13, 43, 14, 
-		["Wiggle",        false], 4, 5, 
+		["Line Settings", false], 8, 25, 9, 26, 13, 43, 14, 
+		["Dash",          false, 46], 44, 45, 
+		["Wiggle",        false, 47], 4, 5, 
 		["Color",         false], 10, 24, 15, 37, 38, 
 		["Texture",       false], 18, 21, 22, 23, 29, 
-		["Line Cap",      false], 40, 41, 42, 
+		["Textured Cap",  false], 40, 41, 42, 
 		["Render",        false], 34, 
 	];
 	
@@ -99,23 +117,18 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	attribute_interpolation();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		draw_set_color(COLORS._main_accent);
+		draw_set_color(COLORS._main_icon);
 		for( var i = 0, n = array_length(lines); i < n; i++ ) {
 			var points = lines[i];
 			if(array_length(points) < 2) continue;
 				
 			for( var j = 1; j < array_length(points); j++ ) {
-				var x0 = points[j - 1].x;
-				var y0 = points[j - 1].y;
-				var x1 = points[j].x;
-				var y1 = points[j].y;
+				var x0 = _x + points[j-1].x * _s;
+				var y0 = _y + points[j-1].y * _s;
+				var x1 = _x + points[j  ].x * _s;
+				var y1 = _y + points[j  ].y * _s;
 				
-				x0 = _x + x0 * _s;
-				y0 = _y + y0 * _s;
-				x1 = _x + x1 * _s;
-				y1 = _y + y1 * _s;
-				
-				draw_line(x0, y0, x1, y1);
+				draw_line_width(x0, y0, x1, y1, 4);
 			}
 		}
 		
@@ -171,6 +184,11 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _capE     = _data[43];
 			var _capP     = _data[14];
 			
+			var _dashUse  = _data[46];
+			var _dashPat  = _data[44];
+			var _dashShf  = _data[45];
+			
+			var _wigUse   = _data[47];
 			var _wig      = _data[ 4];
 			var _sed      = _data[ 5];
 			
@@ -182,7 +200,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			var _tex      = _data[18];
 			var _texPos   = _data[21];
-			var _texRot   = _data[22];
+			var _texRot   = _data[22]; _texRot = degtorad(_texRot);
 			var _texSca   = _data[23];
 			var _scaleTex = _data[29];
 			
@@ -311,11 +329,13 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						_nx = x0 + lengthdir_x(_l * _prog_curr, _d);
 						_ny = y0 + lengthdir_y(_l * _prog_curr, _d);
 							
-						var wgLen = random1D(_sed + _l * _prog_curr, -_wig, _wig);
-						_nx += lengthdir_x(wgLen, _d + 90); 
-						_ny += lengthdir_y(wgLen, _d + 90);
+						if(_wigUse) {
+							var wgLen = random1D(_sed + _l * _prog_curr, -_wig, _wig);
+							_nx += lengthdir_x(wgLen, _d + 90); 
+							_ny += lengthdir_y(wgLen, _d + 90);
+						}
 							
-						array_push(points, { x: _nx, y: _ny, prog: _prog_total / _rtMax, progCrop: _prog_curr, weight: 1 });
+						array_push(points, new __LinePoint(_nx, _ny, _prog_total / _rtMax, _prog_curr));
 						
 						if(_prog_curr == 1) {
 							_prog_curr = 0;
@@ -432,20 +452,19 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							_wmin = min(_wmin, wght);
 							_wmax = max(_wmax, wght);
 							
-							if(_total < _pathEnd && _wig != 0) { // Do not wiggle the last point.
+							if(_wigUse && _total < _pathEnd && _wig != 0) { // Do not wiggle the last point.
 								var _d = point_direction(_ox, _oy, _nx, _ny);
 								_nx   += lengthdir_x(random1D(_sed + segmentLength * _prog_curr, -_wig, _wig), _d + 90);
 								_ny   += lengthdir_y(random1D(_sed + segmentLength * _prog_curr, -_wig, _wig), _d + 90);
 							}
 								
 							if(_prog_total >= _pathStr) { // Do not add point before range start. Do this instead of starting at _rtStr to prevent wiggle. 
-								points[pointAmo++] = { 
-									x:        _nx, 
-									y:        _ny, 
-									prog:     (_prog_total - _pathStr) / (_pathEnd - _pathStr), 
-									progCrop: _prog_curr / _pathLength, 
-									weight:   wght,
-								}
+								points[pointAmo++] = new __LinePoint(
+									_nx, _ny, 
+									(_prog_total - _pathStr) / (_pathEnd - _pathStr), 
+									_prog_curr / _pathLength, 
+									wght,
+								);
 								
 								minx = min(minx, _nx);
 								miny = min(miny, _ny);
@@ -522,26 +541,12 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						}
 						
 						if(_uselen) {
-							for (var j = 0; j < m; j++) {
-								_lin[j] = { 
-									x :        _seg[j][0], 
-									y :        _seg[j][1], 
-									prog :     _seg[j][2], 
-									progCrop : _seg[j][2], 
-									weight :   1,
-								};
-							}
-								
+							for (var j = 0; j < m; j++)
+								_lin[j] = new __LinePoint( _seg[j][0],  _seg[j][1],  _seg[j][2],  _seg[j][2] );
+							
 						} else {
-							for (var j = 0; j < m; j++) {
-								_lin[j] = { 
-									x :        _seg[j][0],
-									y :        _seg[j][1],
-									prog :     _len[j] / _lenTotal,
-									progCrop : _len[j] / _lenTotal,
-									weight :   1,
-								};
-							}
+							for (var j = 0; j < m; j++)
+								_lin[j] = new __LinePoint( _seg[j][0], _seg[j][1], _len[j] / _lenTotal, _len[j] / _lenTotal );
 						}
 						
 						if(_loop) _lin[m] = _lin[0];
@@ -562,6 +567,124 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					
 					
 			}
+			
+		#endregion
+			
+		#region dash
+			if(_dashUse) {
+				if(array_length(_dashPat) == 1)
+					_dashPat = [ _dashPat[0], _dashPat[0] ];
+				
+				var _dashAmo   = array_length(_dashPat);
+				var _dashTotal = array_sum(_dashPat);
+				
+				if(_dashAmo >= 2 && _dashTotal >= 2) {
+					var _dashed     = [];
+					var _dashedData = [];
+					var dash_index  = 0;
+					var dash_left   = 0;
+					
+					var dash_shift = _dashShf;
+					    dash_shift = dash_shift % _dashTotal;
+					
+					if(dash_shift < 0) 
+						dash_shift = (dash_shift + _dashTotal) % _dashTotal;
+					
+					for( var i = 0, n = array_length(_dashPat); i < n; i++ ) {
+						if(dash_shift < _dashPat[i]) break;
+							
+						dash_shift -= _dashPat[i];
+						dash_index++;
+					}
+					
+					for( var i = 0, n = array_length(lines); i < n; i++ ) {
+						if(array_length(lines[i]) < 2) continue;
+						var points  = lines[i];
+						var ldata   = line_data[i];
+						var dpoints = [];
+						
+						var op = points[0];
+						var ox = op.x;
+						var oy = op.y;
+						
+						for( var j = 1, m = array_length(points); j < m; j++ ) {
+							var np = points[j];
+							var nx = np.x;
+							var ny = np.y;
+							
+							var dash_draw = !(dash_index % 2);
+							var _lRaw = point_distance(ox, oy, nx, ny);
+							var _l    = _lRaw;
+							var _rat  = 0;
+							
+							dash_left = _dashPat[dash_index] - dash_shift;
+							// print(op, np, "|", dash_index, dash_left, dash_shift);
+								
+							if(dash_draw) array_push(dpoints, op);
+							while(_l > 0) {
+								
+								var dash_step = min(_l, dash_left);
+								var dash_offs = dash_left - dash_step;
+								
+								_l   -= dash_step;
+								_rat += dash_step / _lRaw;
+								
+								var rp = new __LinePoint(
+									lerp(ox,          nx,          _rat), 
+									lerp(oy,          ny,          _rat), 
+									lerp(op.prog,     np.prog,     _rat), 
+									lerp(op.progCrop, np.progCrop, _rat), 
+									lerp(op.weight,   np.weight,   _rat)
+								);
+								
+								// print(" > ", _rat, rp, dash_draw);
+								
+								if(!dash_draw) {
+									if(array_length(dpoints) >= 2) {
+										array_push(_dashed, dpoints);
+										array_push(_dashedData, { length: 1 });
+									} 
+									
+									dpoints = [rp];
+									
+								} else 
+									array_push(dpoints, rp);
+								
+								if(dash_offs == 0) {
+									dash_index =  (dash_index + 1) % _dashAmo;
+									dash_draw  = !(dash_index % 2);
+									dash_left  = _dashPat[dash_index];
+									
+								} else 
+									dash_left -= dash_step;
+							}
+							
+							dash_shift = _dashPat[dash_index] - dash_left;
+							// print(dash_shift, dash_left)
+							
+							op = np;
+							ox = nx;
+							oy = ny;
+						}
+						
+						if(array_length(dpoints) >= 2) {
+							array_push(_dashed, dpoints);
+							array_push(_dashedData, { length: 1 });
+						}
+					}
+					
+					for( var i = 0, n = array_length(_dashed); i < n; i++ ) {
+						var d = _dashed[i];
+						for( var j = array_length(d) - 1; j >= 1; j-- ) {
+							if(abs(d[j].x - d[j-1].x) < 1.5 && abs(d[j].y - d[j-1].y) < 1.5)
+								array_delete(d, j, 1);
+						}
+					}
+					
+					lines     = _dashed;
+					line_data = _dashedData;
+				}
+			}
 		#endregion
 			
 		////- Draw
@@ -581,8 +704,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			else	DRAW_CLEAR
 			
 			for( var i = 0, n = array_length(lines); i < n; i++ ) {
+				if(array_length(lines[i]) < 2) continue;
 				var points = lines[i];
-				if(array_length(points) < 2) continue;
 				random_set_seed(_sed + i);
 				
 				var _ldata = line_data[i];
@@ -595,7 +718,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				
 					shader_set(sh_draw_mapping);
 					shader_set_2("position", _texPos);
-					shader_set_f("rotation", degtorad(_texRot));
+					shader_set_f("rotation", _texRot);
 					shader_set_2("scale",    _texSca);
 					shader_set_i("flipAxis", true);
 					
@@ -617,9 +740,12 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					var _nx  = p0.x - 0.5 * _1px + _padx;
 					var _ny  = p0.y - 0.5 * _1px + _pady;
 					
+					if(j && point_distance(_ox, _oy, _nx, _ny) < 1) continue;
+					
 					var prog = p0.prog;
 					var prgc = p0.progCrop;
-					var _dir = j? point_direction(_ox, _oy, _nx, _ny) : 0;
+					var _dir = j? point_direction(_ox, _oy, _nx, _ny) : 
+					              point_direction(_nx, _ny, points[j+1].x + _padx, points[j+1].y + _pady);
 					
 					     if(j ==     0) { _stx = _nx; _sty = _ny;              }
 					else if(j ==     1) { _sta = _dir;                         }
@@ -639,6 +765,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					_nc = _col_base;
 					_nc = colorMultiply(_nc, gradientEval(_color, _np));
 					_nc = colorMultiply(_nc, gradientEval(_wg2clr, (_ww - _wg2clrR[0]) / _wg2clrRng));
+					_nd = _dir;
 					
 					if(_capS && j == 1) {
 						_d = _dir + 180;
@@ -664,10 +791,6 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							if(dst <= 1 && i < m - 1) continue;
 							draw_line_color(_ox * _aa, _oy * _aa, _nx * _aa, _ny * _aa, _oc, _nc);
 						}
-						
-						_ox = _nx;
-						_oy = _ny;
-						_oc = _nc;
 					
 					} else { 
 						if(j) {
@@ -707,20 +830,20 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 								draw_vertex_texture_color(nx0 * _aa, ny0 * _aa, _u0, _v1, _nc, 1);
 								draw_vertex_texture_color(nx1 * _aa, ny1 * _aa, _u1, _v1, _nc, 1);
 								
-							} else
-								draw_line_width2_angle(_ox * _aa, _oy * _aa, _nx * _aa, _ny * _aa, _ow * _aa, _nw * _aa, _od + 90, _nd + 90, _oc, _nc);
-						} else {
-							var p1   = points[j + 1];
-							_nd = point_direction(_nx, _ny, p1.x + _padx, p1.y + _pady);
+							} else {
+								draw_line_width2_angle(_ox * _aa, _oy * _aa, _nx * _aa, _ny * _aa, 
+								                       _ow * _aa, _nw * _aa, _od +  90, _nd +  90, _oc, _nc);
+							}
 						}
-					
-						_ox = _nx;
-						_oy = _ny;
-						_od = _nd;
-						_ow = _nw;
-						_oc = _nc;
-						_op = _np;
 					}
+					
+					_ox = _nx;
+					_oy = _ny;
+					_oc = _nc;
+				
+					_od = _nd;
+					_ow = _nw;
+					_op = _np;
 					
 					if(j % 120 == 0) {
 						draw_primitive_end();
@@ -762,7 +885,6 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				}
 				
 			}
-			
 		surface_reset_target();
 		
 		surface_set_shader(_colorPass, sh_downsample, true, BLEND.over);
@@ -777,8 +899,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				else	DRAW_CLEAR
 				
 				for( var i = 0, n = array_length(lines); i < n; i++ ) {
+					if(array_length(lines[i]) < 2) continue;
 					var points = lines[i];
-					if(array_length(points) < 2) continue;
 					
 					draw_primitive_begin(pr_trianglestrip);
 					
@@ -793,6 +915,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						var _nx  = p0.x - 0.5 * _1px + _padx;
 						var _ny  = p0.y - 0.5 * _1px + _pady;
 						
+						if(j && point_distance(_ox, _oy, _nx, _ny) < 1) continue;
+					
 						var prog = p0.prog;
 						var prgc = p0.progCrop;
 						var _dir = j? point_direction(_ox, _oy, _nx, _ny) : 0;

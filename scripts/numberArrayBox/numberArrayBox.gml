@@ -5,7 +5,7 @@ function numberArrayBox(_onModify) : widget() constructor {
 	
 	editing = noone;
 	
-	tb = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ {
+	tb = textBox_Number(function(v) /*=>*/ {
 	    if(editing == noone) return;
 	    
 	    current_value = array_clone(current_value);
@@ -13,24 +13,15 @@ function numberArrayBox(_onModify) : widget() constructor {
 	    onModify(current_value);
 	});
 	
-	tb.onDeactivate = function() /*=>*/ {
-	    editing = noone;
-	}
+	tb.onDeactivate = function() /*=>*/ { editing = noone; }
 	
-	static setFont = function(_f = noone) { tb.setFont(_f); return self; }
+	static setFont    = function(_f) /*=>*/ { tb.setFont(_f); return self; }
+	static isHovering = function() /*=>*/ {return tb.isHovering()};
 	
-	static setInteract = function(i) { 
-	    interactable    = i; 
-	    tb.interactable = i; 
-	}
+	////- Draw
 	
-	static register = function(parent = noone) {
-		tb.register(parent);
-	}
-	
-	static isHovering = function() {
-		return tb.isHovering();
-	}
+	static setInteract = function(i) /*=>*/ { interactable = i; tb.interactable = i; }
+	static register    = function(parent = noone) /*=>*/ { tb.register(parent); }
 	
 	static drawParam = function(params) {
 		setParam(params);
@@ -81,24 +72,28 @@ function numberArrayBox(_onModify) : widget() constructor {
 		    _tx += _tw;
 		}
 		
-		var _bx = _x + _ww;
+		var  bb = THEME.button_hide;
+		var _bx = _x + _w - _bww;
 		var _by = _y;
 		var _bw = _bww / 2;
 		var _bh = _h;
 		
-		if(buttonInstant(THEME.button_hide, _bx, _by, _bw, _bh, _m, hover, active, "", THEME.add, 0, COLORS._main_value_positive, 1, .5) == 2) {
+		if(buttonInstant(bb, _bx, _by, _bw, _bh, _m, hover, active, "", THEME.add, 0, COLORS._main_value_positive, 1, .5) == 2) {
 		    current_value = array_clone(current_value);
     	    array_push(current_value, 0);
     	    onModify(current_value);
 		}
 		
 		_bx += _bw;
-		if(_amo > 1)
-		if(buttonInstant(THEME.button_hide, _bx, _by, _bw, _bh, _m, hover, active, "", THEME.minus, 0, COLORS._main_value_negative, 1, .5) == 2) {
-		    current_value = array_clone(current_value);
-    	    array_pop(current_value);
-    	    onModify(current_value);
-		}
+		if(_amo > 1) {
+			var b = buttonInstant(bb, _bx, _by, _bw, _bh, _m, hover, active, "", THEME.minus, 0, COLORS._main_value_negative, 1, .5);
+			if(b == 2) {
+			    current_value = array_clone(current_value);
+	    	    array_pop(current_value);
+	    	    onModify(current_value);
+			}
+			
+		} else draw_sprite_ui_uniform(THEME.minus, 0, _bx + _bw / 2, _by + _bh / 2, .5, COLORS._main_icon, .5);
 		
 		resetFocus();
 		return h;

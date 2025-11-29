@@ -12,8 +12,7 @@ function RiggedMeshedSurface() : dynaSurf() constructor {
 	boneMap = noone;
 	rigMap  = {};
 	
-	static getSurface        = function() /*=>*/ {return mesh == noone? noone : mesh.surface};
-	static getSurfacePreview = function() /*=>*/ {return getSurface()};
+	static getSurface = function() /*=>*/ {return array_safe_get_fast(surfaces, 0)};
 }
 
 function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
@@ -31,12 +30,16 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	newOutput(0, nodeValue_Output("Rigged Surface", VALUE_TYPE.dynaSurface, noone));
 	
+	////- Data
+	
 	bone_posed       = noone;
 	bone_array       = [];
 	rigdata          = noone;
 	anchor_selecting = noone;
 	bone_bbox        = undefined;
 	preview_alpha    = .5;
+	
+	////- Attributes
 	
 	attributes.bonePoseData = {};
 	attributes.rigBones     = noone;
@@ -45,16 +48,18 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	attributes.display_mesh_size = 2;
 	
-	tool_attribute.size = 48;
-	tool_size_edit      = new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { tool_attribute.size = max(1, round(val)); }).setFont(f_p3)
-	tool_size           = [ "Size", tool_size_edit, "size", tool_attribute ];
-	
-	tool_attribute.weight = .5;
-	tool_weight_edit      = new textBox(TEXTBOX_INPUT.number, function(val) /*=>*/ { tool_attribute.weight = clamp(val, 0, 1); }).setFont(f_p3)
-	tool_weight           = [ "Weight", tool_weight_edit, "weight", tool_attribute ];
-	
 	__node_bone_attributes();
 	array_push(attributeEditors, ["Vertex size",  function() /*=>*/ {return attributes.display_mesh_size}, textBox_Number(function(i) /*=>*/ {return setAttribute("display_mesh_size", i)})]);
+	
+	////- Tools
+	
+	tool_attribute.size   = 48;
+	tool_size_edit        = textBox_Number(function(val) /*=>*/ { tool_attribute.size = max(1, round(val)); }).setFont(f_p3)
+	tool_size             = [ "Size", tool_size_edit, "size", tool_attribute ];
+	
+	tool_attribute.weight = .5;
+	tool_weight_edit      = textBox_Number(function(val) /*=>*/ { tool_attribute.weight = clamp(val, 0, 1); }).setFont(f_p3)
+	tool_weight           = [ "Weight", tool_weight_edit, "weight", tool_attribute ];
 	
 	tools_dynamic = [
 		new NodeTool( "Pose",          THEME.bone_tool_pose      ),
@@ -74,6 +79,8 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	tools = tools_dynamic;
 	
+	////- Inspector
+	
 	layer_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { 
 		var _b = inputs[0].getValue();
 		if(_b == noone) return 0;
@@ -89,8 +96,6 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		var hovering = noone;
 		var _bst = ds_stack_create();
 		ds_stack_push(_bst, [ _b, _x, _w ]);
-		
-		anchor_selecting = noone;
 		
 		while(!ds_stack_empty(_bst)) {
 			var _st   = ds_stack_pop(_bst);
@@ -113,7 +118,6 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			if(brush_bone_target == _bone.ID) cc = COLORS._main_value_positive;
 			
 			var _hov = _hover && point_in_rectangle(_m[0], _m[1], _x, ty, _x + _w, ty + _hh - 1);
-				
 			if(_hov) {
 				cc = COLORS._main_accent;
 				anchor_selecting = [ _bone, 2 ];
@@ -180,6 +184,8 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		["Armature", false], layer_renderer, 
 		["Weight",   false], 3, auto_button, new Inspector_Spacer(ui(8)), bake_button, normalize_button, 
 	];
+	
+	////- Draw Overlay
 	
 	anchor_selecting = noone;
 	posing_bone  = noone;
@@ -270,7 +276,6 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 					draw_circle(_p.drx, _p.dry, attributes.display_mesh_size, false);
 				});
 			}
-			
 		}
 		
 		if(bone_posed == noone) return _hovering;
@@ -427,15 +432,23 @@ function Node_Armature_Mesh_Rig(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			return _hovering;
 		}
 		
+		var _anchor_hovering = noone;
+		var _edit = isNotUsingTool()? BONE_EDIT.body : false;
+		
         for( var i = 0, n = array_length(bone_array); i < n; i++ ) {
         	var _b = bone_array[i];
         	var _l = attributes.rigBones == noone || array_exists(attributes.rigBones, _b.ID);
-			_b.drawBone(attributes, false, _x, _y, _s, _mx, _my, anchor_selecting, noone, c_white, 0.25 + _l * 0.75);
+			var _h = _b.drawBone(attributes, _edit, _x, _y, _s, _mx, _my, anchor_selecting, noone, c_white, 0.25 + _l * 0.75);
+			if(_h != noone) _anchor_hovering = _h;
         }
         
         _hovering = _hovering || anchor_selecting != noone;
+        anchor_selecting = _anchor_hovering;
+        
         return _hovering;
 	}
+	
+	////- Update
 	
 	static AutoWeightPaint = function(_render = true) {
         var _mesh  = inputs[1].getValue();
