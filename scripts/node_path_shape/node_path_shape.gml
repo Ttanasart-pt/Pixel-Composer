@@ -581,7 +581,8 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
                 
                 break;
         }
-
+		
+		_pth.points = array_filter(_pth.points, function(p) /*=>*/ {return is_array(p)});
 		array_map_ext(_pth.points, function(p) /*=>*/ {return point_rotate(p[0], p[1], _pth.posx, _pth.posy, _pth.rot, p)});
 		
         var n   = array_length(_pth.points);
