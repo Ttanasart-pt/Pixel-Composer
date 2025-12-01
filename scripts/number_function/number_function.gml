@@ -32,7 +32,8 @@ function convertBase(str, fromBase, toBase) {
 
 function saturate(_x) { return clamp(_x, 0, 1); }
 
-function smoothstep(t) { return t * t * (3.0 - 2.0 * t); }
+function smoothstep(t)       { return t * t * (3.0 - 2.0 * t); }
+function smoothstep_cubic(t) { return t < 0.5? 4 * t * t * t : 1 - power(-2 * t + 2, 3) / 2; }
 
 function min_index() {
 	var _min = infinity;

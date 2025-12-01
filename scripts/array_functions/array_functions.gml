@@ -346,8 +346,6 @@
 		return arr;
 	}
 	
-	show_debug_message($"APPEND {array_append([0,1,2], [3,4,5])}");
-	
 	function array_append_unique(arr, arr0) {
 		INLINE
 		

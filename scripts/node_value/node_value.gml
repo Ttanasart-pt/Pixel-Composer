@@ -1367,6 +1367,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	////- GET
 	
+	__tempValue = undefined;
+	
 	static getEditWidget = function() /*=>*/ {return editWidget};
 	
 	static valueProcess = function(_value, nodeFrom = undefined, applyUnit = true, arrIndex = 0) {
@@ -1450,7 +1452,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static getStaticValue = function() { INLINE return array_empty(animator.values)? 0 : animator.values[0].value; } 
 	
-	static getValue = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { //// Get value
+	static getValueTemp = function() /*=>*/ {return __tempValue};
+	static getValueReal = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { //// Get value
 		draw_junction_index = type;
 		if(type == VALUE_TYPE.trigger) return _getValue(_time, false, 0, false);
 		
@@ -1486,6 +1489,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		return val;
 	}
+	
+	getValue = getValueReal;
 	
 	static _getValue = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, log = false) {
 		getValueRecursive(self.__curr_get_val, _time);
@@ -1643,10 +1648,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return false;
 	}
 	
-	static isArray = function(val = undefined) {
-		val ??= getValue();
-		return __array_get_depth(val) > array_depth + type_array;
-	}
+	static isArray = function(val) { return __array_get_depth(val) > array_depth + type_array; }
 	
 	__is_array     = false;
 	__array_length = -1;

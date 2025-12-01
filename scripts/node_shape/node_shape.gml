@@ -157,11 +157,11 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	static processData = function(_outData, _data, _array_index) {
 		#region data
-			var _dim	= _data[0];
-			var _bg		= _data[1];
-			var _shape	= _data[2];
-			var _aa		= _data[6];
-			var _corner = _data[9];  _corner = clamp(_corner, 0, .9);
+			var _dim	= _data[ 0];
+			var _bg		= _data[ 1];
+			var _shape	= _data[ 2];
+			var _aa		= _data[ 6];
+			var _corner = _data[ 9]; _corner = clamp(_corner, 0, .9);
 			var _color  = _data[10];
 			var _hegiht = _data[12];
 			var _bgcol  = _bg? colToVec4(_data[11]) : [0, 0, 0, 0];

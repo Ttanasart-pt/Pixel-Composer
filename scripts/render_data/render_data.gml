@@ -183,7 +183,7 @@ enum RENDER_TYPE {
 		return true;
 	}
 	
-	function RenderObject(_project = PROJECT, _partial = false, _runAction = false, _renderAll = false) constructor {
+	function RenderObject(_project = PROJECT, _partial = false, _runAction = false) constructor {
 		project   = _project;
 		partial   = _partial;
 		runAction = _runAction;
@@ -317,14 +317,65 @@ enum RENDER_TYPE {
 			return true;
 		}
 		
+		static renderTo = function(_node) {
+			var _time_frame = get_timer();
+			var _rendered   = 0;
+			var _completed  = false;
+			
+			try {
+				while(!RENDER_QUEUE.empty()) {
+					var rendering  = RENDER_QUEUE.dequeue();
+					var renderable = rendering.isRenderable();
+					
+					if(renderable) {
+						var render_pt = get_timer();
+						rendering.doUpdate(); 
+						render_time += get_timer() - render_pt;
+						_rendered++;
+						
+						var nextNodes = rendering.getNextNodes();
+						
+						for( var i = 0, n = array_length(nextNodes); i < n; i++ ) {
+							var nextNode = nextNodes[i];
+							if(!is(nextNode, __Node_Base) || !nextNode.isRenderable()) continue;
+							
+							RENDER_QUEUE.enqueue(nextNode);
+							if(PROFILER_STAT) array_push(rendering.nextn, nextNode);
+						}
+						
+						if(PROFILER_STAT) rendering.summarizeReport(render_pt);
+						
+						if(rendering == _node) {
+							_completed = true;
+							break;
+						}
+						
+					} else if(rendering.force_requeue)
+						RENDER_QUEUE.enqueue(rendering);
+				}
+			
+			} catch(e) {
+				noti_warning(exception_print(e));
+			}
+			
+			if(_completed) {
+				render_time /= 1000;
+				project.postRender();
+				
+				RENDERING = undefined;
+				PANEL_GRAPH.refreshDraw(1);
+			}
+		}
+		
 		init();
-		render(_renderAll? infinity : PREFERENCES.render_max_time);
 	}
 	
 	function Render(_project = PROJECT, _partial = false, _runAction = false) { 
 		if(RENDERING == undefined) {
 			WILL_RENDERING = undefined;
-			return new RenderObject(_project, _partial, _runAction);
+			var _renderObj = new RenderObject(_project, _partial, _runAction);
+			    _renderObj.render(PREFERENCES.render_max_time);
+			return _renderObj;
 		}
 		
 		WILL_RENDERING = { project: _project, partial: _partial };
@@ -332,7 +383,9 @@ enum RENDER_TYPE {
 	}
 	
 	function RenderSync(_project = PROJECT, _partial = false, _runAction = false) {
-		var _ = new RenderObject(_project, _partial, _runAction, true);
+		var _renderObj = new RenderObject(_project, _partial, _runAction);
+		    _renderObj.render(infinity);
+		return _renderObj;
 	}
 	
 	function __renderListReset(arr) { 

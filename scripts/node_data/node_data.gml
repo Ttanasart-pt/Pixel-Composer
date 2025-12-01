@@ -2448,6 +2448,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static drawAnimationTimeline = function(_w, _h, _s) {}
 	
+	static drawProcessShort = undefined;
+	
 	////- PREVIEW
 	
 	static getPreviewValues = function() {
@@ -2528,12 +2530,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	////- CACHE
 	
-	use_cache     = CACHE_USE.none;
-	cached_manual = false;
-	cached_output = [];
-	cache_result  = [];
-	preview_cache = [];
-	cache_group   = noone;
+	use_cache          = CACHE_USE.none;
+	cached_manual      = false;
+	cached_output      = [];
+	cache_result       = [];
+	preview_cache      = [];
+	cache_group        = noone;
 	clearCacheOnChange = true;
 	
 	static isAllCached = function() {

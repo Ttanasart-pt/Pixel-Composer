@@ -178,7 +178,7 @@
 	print($"working: {working_directory}");
 	print($"project: {program_directory}");
 	
-	if(RUN_IDE) __test_update_theme();
+	// if(RUN_IDE) __test_update_theme();
 	
 	if(PREFERENCES.video_mode) {
 		APP_SURF_OVERRIDE = true;

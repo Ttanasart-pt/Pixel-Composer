@@ -62,25 +62,14 @@
 			case "Panel_Graph"      : var p = (create || findPanel(name))? new Panel_Graph()	 : PANEL_GRAPH;		if(focus) { PANEL_GRAPH		 = p; } return p;
 			case "Panel_Collection"	: var p = (create || findPanel(name))? new Panel_Collection(): PANEL_COLLECTION;if(focus) { PANEL_COLLECTION = p; } return p;
 			
-			case "Panel_Preview_Histogram"	: return new Panel_Preview_Histogram();
+			case "Panel_File_Explorer"	: 
+				var p = (create || findPanel(name))? new Panel_File_Explorer() : PANEL_FILE; 	
+				PANEL_FILE 	= p; 
+				return p;
 			
-			case "Panel_Workspace"		: return new Panel_Workspace();
-			case "Panel_Tunnels"		: return new Panel_Tunnels();
-			case "Panel_History"		: return new Panel_History();
-			case "Panel_Notification"   : return new Panel_Notification();
-			case "Panel_Nodes"			: return new Panel_Nodes();
-			case "Panel_Globalvar"		: return new Panel_Globalvar();
-			case "Panel_Node_Align"		: return new Panel_Node_Align();
-			case "Panel_File_Explorer"	: var p = (create || findPanel(name))? new Panel_File_Explorer() : PANEL_FILE; 	PANEL_FILE 	= p; return p;
-			
-			case "Panel_Color"			: return new Panel_Color();
-			case "Panel_Palette"		: return new Panel_Palette();
-			case "Panel_Palette_Mixer"	: return new Panel_Palette_Mixer();
-			case "Panel_Gradient"		: return new Panel_Gradient();
-			case "Panel_Console"		: return new Panel_Console();
-			
-			case "Panel_Profile_Render"		: return new Panel_Profile_Render();
-			case "Panel_Resource_Monitor"	: return new Panel_Resource_Monitor();
+			default : 
+				var fn = asset_get_index(name);
+				if(is_callable(fn)) return new fn();
 		}
 		
 		return noone;

@@ -149,7 +149,7 @@ _FILE_DROPPED       = false;
 	}
 #endregion
 
-#region animation & render
+#region animation & RENDER
 	if(RENDERING != undefined) RENDERING.render();
 	else if(WILL_RENDERING != undefined) Render(WILL_RENDERING.project, WILL_RENDERING.partial);
 	

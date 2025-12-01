@@ -1,4 +1,4 @@
-#region function registers
+#region ___function registers
     function global_fullscreen()        { CALL("fullscreen");        winMan_setFullscreen(!window_is_fullscreen);                                        }
     function global_project_close()     { CALL("close_project");     PANEL_GRAPH.close();                                                                }
     function global_project_close_all() { CALL("close_project_all"); for( var i = array_length(PROJECTS) - 1; i >= 0; i-- ) closeProject(PROJECTS[i]);   }
@@ -108,7 +108,7 @@
     }
 #endregion
 
-#region global
+#region ___global
     enum WINDOW_ACTION {
         Exit,
         Minimize, 
@@ -356,6 +356,7 @@ function Panel_Menu() : PanelContent() constructor {
             -1,
             menuItem(__txt("Save frozen"),     function() /*=>*/ { PROJECT.freeze = true; SAVE();     }),
             menuItem(__txt("Capture Project"), function() /*=>*/ { dialogPanelCall(new Panel_Capture_Project());  }),
+            menuItem(__txt("Process Maker"),   function() /*=>*/ { dialogPanelCall(new Panel_Process_Maker());    }),
             -1,
             menuItemShelf(__txt("Misc."), function(_dat) /*=>*/ {return submenuCall(_dat, [ 
                 menuItem("Timer",              function() /*=>*/ {return dialogPanelCall(new Panel_Timer())}     ), 

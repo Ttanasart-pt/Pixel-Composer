@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"panel_process_maker",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"panel_process_maker",
+  "parent":{
+    "name":"process_maker",
+    "path":"folders/panels/_others/process_maker.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

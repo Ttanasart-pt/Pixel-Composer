@@ -276,11 +276,9 @@ function Project() constructor {
 	#endregion
 	
 	timelines = new timelineItemGroup();
+	trackAnim = new Process_Anim();
+	notes     = [];
 	
-	notes = [];
-	
-	////- Step
-
 	static stepBegin = function() { 
 		if(immediate_render != undefined) {
 			immediate_render.doUpdate();
@@ -435,7 +433,8 @@ function Project() constructor {
 		_map.data            = variable_clone(data);
 		
 		_map.timelines   = timelines.serialize();
-		_map.notes       = array_map(notes, function(note) { return note.serialize(); } );
+		_map.notes       = array_map(notes,  function(n) /*=>*/ {return n.serialize()} );
+		_map.trackAnim   = trackAnim.serialize();
 		
 		_map.composer    = composer;
 		_map.load_layout = load_layout;
@@ -468,7 +467,7 @@ function Project() constructor {
 	static deserialize = function(_map) {
 		if(!is_struct(_map)) return;
 		
-		if(struct_has(_map, "animator")) {
+		if(has(_map, "animator")) {
 			var _anim_map = _map.animator;
 			animator.frames_total	= struct_try_get(_anim_map, "frames_total",   30);
 			animator.framerate		= struct_try_get(_anim_map, "framerate",      30);
@@ -485,36 +484,38 @@ function Project() constructor {
 			
 		}
 		
-		if(struct_has(_map, "onion_skin"))	    struct_override(onion_skin,      _map.onion_skin);
-		if(struct_has(_map, "previewGrid"))     struct_override(previewGrid,     _map.previewGrid);
-		if(struct_has(_map, "graphGrid"))	    struct_override(graphGrid,	     _map.graphGrid);
-		if(struct_has(_map, "graphConnection"))	struct_override(graphConnection, _map.graphConnection);
-		if(struct_has(_map, "attributes"))	    struct_override(attributes,      _map.attributes);
-		if(struct_has(_map, "metadata"))	meta.deserialize(_map.metadata);
-		if(struct_has(_map, "composer"))	composer = _map.composer;
-		if(struct_has(_map, "freeze"))	    freeze   = _map.freeze;
-		if(struct_has(_map, "data"))	    data     = variable_clone(_map.data);
+		if(has(_map, "onion_skin"))      struct_override(onion_skin,      _map.onion_skin);
+		if(has(_map, "previewGrid"))     struct_override(previewGrid,     _map.previewGrid);
+		if(has(_map, "graphGrid"))       struct_override(graphGrid,       _map.graphGrid);
+		if(has(_map, "graphConnection")) struct_override(graphConnection, _map.graphConnection);
+		if(has(_map, "attributes"))      struct_override(attributes,      _map.attributes);
+		if(has(_map, "metadata"))        meta.deserialize(_map.metadata);
+		if(has(_map, "composer"))        composer = _map.composer;
+		if(has(_map, "freeze"))          freeze   = _map.freeze;
+		if(has(_map, "data"))            data     = variable_clone(_map.data);
 		
-		if(struct_has(_map, "graph_display_parameter"))	struct_override(graphDisplay,  _map.graph_display_parameter);
+		if(has(_map, "graph_display_parameter"))	struct_override(graphDisplay,  _map.graph_display_parameter);
 		
 		is_nightly	= _map[$ "is_nightly"]  ?? is_nightly;
 		load_layout	= _map[$ "load_layout"] ?? load_layout;
 		
 		setPalette();
 		
-		if(struct_has(_map, "notes")) {
+		if(has(_map, "notes")) {
 			notes = array_create(array_length(_map.notes));
 			for( var i = 0, n = array_length(_map.notes); i < n; i++ )
-				notes[i] = new Note.deserialize(_map.notes[i]);
+				notes[i] = new Note().deserialize(_map.notes[i]);
 		}
+		
+		if(has(_map, "trackAnim")) trackAnim = new Process_Anim().deserialize(_map.trackAnim);
 		
 		globalNode = new Node_Global();
 		globalNode.project = self;
 		
-		     if(struct_has(_map, "global"))      globalNode.deserialize(_map.global);
-		else if(struct_has(_map, "global_node")) globalNode.deserialize(_map.global_node);
+		     if(has(_map, "global"))      globalNode.deserialize(_map.global);
+		else if(has(_map, "global_node")) globalNode.deserialize(_map.global_node);
 		
-		if(struct_has(_map, "addon")) {
+		if(has(_map, "addon")) {
 			addons = _map.addon;
 			struct_foreach(addons, function(_name, _value) /*=>*/ { addonLoad(_name, false); });
 		}

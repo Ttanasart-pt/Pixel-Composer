@@ -132,6 +132,11 @@ function compress_string(str) {
     return result;
 }
 
+function char_is_upper(ch) {
+	var ascii_code = ord(ch);
+    return (ascii_code >= ord("A") && ascii_code <= ord("Z"));
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function string_partial_match(str, key) {

@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_process_maker_ending_trans",
+  "name":"sh_process_maker_ending_trans",
+  "parent":{
+    "name":"process_maker",
+    "path":"folders/panels/_others/process_maker.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

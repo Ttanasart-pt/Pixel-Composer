@@ -513,7 +513,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static getGraphPreviewSurface = function() { var _in = array_safe_get(inputs, 0, noone); return _in == noone? noone : _in.getValue(); }
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		if(inParent.isArray()) return false;
+		if(inParent.isArray(inParent.getValue())) return false;
 		
 		var _vis = inputs[ 6].getValue();
 		if(!_vis) return false;

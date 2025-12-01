@@ -159,4 +159,32 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		return _outSurf;
 	}
+
+	static drawProcessShort = function(_x, _y, _prog) {
+		var _usepal = getSingleValue(2);
+		if(!_usepal) return;
+		
+		var _pal    = getSingleValue(1);
+		var _pname = attributes.annotation;
+		
+		var ww = 480
+		var hh = lerp(68, 112, clamp(_prog * 3, 0, 1));
+		
+		var x0 = _x - ww / 2;
+		var y0 = _y - 32 - hh;
+		
+		draw_sprite_stretched(THEME.ui_panel_bg, 3, x0, y0, ww, hh);
+		var py = y0 + 8;
+		var ph = hh - 16;
+		
+		if(_pname != "") {
+			draw_set_text(f_pixel, fa_center, fa_top, COLORS._main_text_sub);
+			draw_text_transformed(_x, y0 + 8, _pname, 3, 3, 0);
+			
+			py += 52;
+			ph -= 52;
+		}
+		
+		drawPalette(_pal, x0 + 8, py, ww - (8+8), ph);
+	}
 }

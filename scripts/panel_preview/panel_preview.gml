@@ -268,6 +268,7 @@ function Panel_Preview() : PanelContent() constructor {
         preview_surfaces    = [ 0, 0 ];
         preview_junction    = noone;
         tile_surface        = noone;
+        __temp_preview      = undefined;
         
         preview_x           = 0;
         preview_x_to        = 0;
@@ -2910,9 +2911,29 @@ function Panel_Preview() : PanelContent() constructor {
         }
     }
     
+    function drawTemp() {
+    	draw_clear(c_black);
+    	
+    	var surf = __temp_preview;
+    	var sw = surface_get_width_safe(surf);
+    	var sh = surface_get_height_safe(surf);
+    	var ss = min((w - ui(32)) / sw, (h - ui(32)) / sh);
+    	
+    	var x0 = w / 2 - sw * ss / 2;
+    	var y0 = h / 2 - sh * ss / 2;
+    	
+    	draw_surface_ext(surf, x0, y0, ss, ss, 0, c_white, 1);
+    }
+    
     ////- DRAW MAIN
     
     function drawContent(panel) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> MAIN DRAW <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    	if(__temp_preview != undefined) { 
+    		drawTemp(); 
+    		if(pHOVER && pFOCUS && mouse_lpress()) __temp_preview = undefined; 
+    		return; 
+    	}
+		
     	mouse_on_preview = pHOVER && point_in_rectangle(mx, my, 0, topbar_height, w, h - toolbar_height);
         
         if(do_fullView) run_in(1, fullView);

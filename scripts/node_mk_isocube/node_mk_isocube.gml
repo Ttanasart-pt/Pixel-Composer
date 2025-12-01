@@ -45,6 +45,7 @@ function Node_MK_IsoCube(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	newOutput(1, nodeValue_Output("Depth",       VALUE_TYPE.surface, noone));
 	
 	////- Nodes
 	
@@ -197,10 +198,12 @@ function Node_MK_IsoCube(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	}
 	
 	static draw_rectangle_primitive = function(x0, y0, x1, y1, x2, y2, x3, y3, ox, oy, _surf, _blend) {
-		if(!surface_exists(_surf)) return;
 		var _alpha = color_get_alpha(_blend);
 		
-		draw_primitive_begin_texture(pr_trianglelist, surface_get_texture(_surf));
+		if(surface_exists(_surf)) 
+			draw_primitive_begin_texture(pr_trianglelist, surface_get_texture(_surf));
+		else 
+			draw_primitive_begin(pr_trianglelist);
 		
 		draw_vertex_texture_color(x0 + ox, y0 + oy, 0, 1, _blend, _alpha);
 		draw_vertex_texture_color(x1 + ox, y1 + oy, 0, 0, _blend, _alpha);
@@ -213,7 +216,21 @@ function Node_MK_IsoCube(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		draw_primitive_end();
 	}
 	
-	static processData = function(_outSurf, _data, _array_index) {
+	static draw_rectangle_primitive_color = function(x0, y0, x1, y1, x2, y2, x3, y3, ox, oy, c0, c1, c2, c3) {
+		draw_primitive_begin(pr_trianglelist);
+		
+		draw_vertex_texture_color(x0 + ox, y0 + oy, 0, 1, c0, 1);
+		draw_vertex_texture_color(x1 + ox, y1 + oy, 0, 0, c1, 1);
+		draw_vertex_texture_color(x2 + ox, y2 + oy, 1, 1, c2, 1);
+		
+		draw_vertex_texture_color(x1 + ox, y1 + oy, 0, 0, c1, 1);
+		draw_vertex_texture_color(x2 + ox, y2 + oy, 1, 1, c2, 1);
+		draw_vertex_texture_color(x3 + ox, y3 + oy, 1, 0, c3, 1);
+		
+		draw_primitive_end();
+	}
+	
+	static processData = function(_outData, _data, _array_index) {
 		#region data
 			var _padd  = _data[ 7];
 			
@@ -301,9 +318,10 @@ function Node_MK_IsoCube(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var ox = _padd[2];
 		var oy = _padd[1];
 		
-		_outSurf = surface_verify(_outSurf, ssw, ssh);
+		_outData[0] = surface_verify(_outData[0], ssw, ssh);
+		_outData[1] = surface_verify(_outData[1], ssw, ssh);
 		
-		surface_set_target(_outSurf);
+		surface_set_target(_outData[0]);
 			DRAW_CLEAR
 			
 			draw_rectangle_primitive(b0x, b0y, t0x, t0y, b2x, b2y, t2x, t2y, ox, oy, _texL, _colL);
@@ -330,11 +348,6 @@ function Node_MK_IsoCube(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 				draw_vertex_texture_color(t3x + ox + 1, t3y + oy, 1, 0, _colT, _alpha);
 				
 				draw_primitive_end();
-				
-				// draw_set_color_alpha(_colT, _alpha);
-				// draw_line(t1x+ox - 1, t1y+oy - 1, t2x+ox - 1, t2y+oy - 1);
-				// draw_line(t1x+ox,     t1y+oy - 1, t2x+ox,     t2y+oy - 1);
-				// draw_set_alpha(1);
 				
 			} else 
 				draw_rectangle_primitive(t0x, t0y, t1x, t1y, t2x, t2y, t3x, t3y, ox, oy, _texT, _colT);
@@ -368,6 +381,38 @@ function Node_MK_IsoCube(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			}
 		surface_reset_target();
 		
-		return _outSurf;
+		surface_set_target(_outData[1]);
+			draw_clear(c_white);
+			
+			draw_rectangle_primitive_color(b0x, b0y, t0x, t0y, b2x, b2y, t2x, t2y, ox, oy, c_white, c_black, c_white, c_black);
+			draw_rectangle_primitive_color(b2x, b2y, t2x, t2y, b3x, b3y, t3x, t3y, ox, oy, c_white, c_black, c_white, c_black);
+			
+			if(_basEx && _base[0] % 2 == 0 && _base[1] % 2 == 0) {
+				draw_primitive_begin(pr_trianglelist);
+				
+				draw_vertex_texture_color(t0x + ox, t0y + oy, 0, 1, c_black, 1);
+				draw_vertex_texture_color(t1x + ox, t1y + oy, 0, 0, c_black, 1);
+				draw_vertex_texture_color(t2x + ox, t2y + oy, 1, 1, c_black, 1);
+				
+				draw_vertex_texture_color(t0x + ox - 1, t0y + oy, 0, 1, c_black, 1);
+				draw_vertex_texture_color(t1x + ox - 1, t1y + oy, 0, 0, c_black, 1);
+				draw_vertex_texture_color(t2x + ox - 1, t2y + oy, 1, 1, c_black, 1);
+				
+				draw_vertex_texture_color(t1x + ox, t1y + oy, 0, 0, c_black, 1);
+				draw_vertex_texture_color(t2x + ox, t2y + oy, 1, 1, c_black, 1);
+				draw_vertex_texture_color(t3x + ox, t3y + oy, 1, 0, c_black, 1);
+				
+				draw_vertex_texture_color(t1x + ox + 1, t1y + oy, 0, 0, c_black, 1);
+				draw_vertex_texture_color(t2x + ox + 1, t2y + oy, 1, 1, c_black, 1);
+				draw_vertex_texture_color(t3x + ox + 1, t3y + oy, 1, 0, c_black, 1);
+				
+				draw_primitive_end();
+				
+			} else 
+				draw_rectangle_primitive_color(t0x, t0y, t1x, t1y, t2x, t2y, t3x, t3y, ox, oy, 0, 0, 0, 0);
+			
+		surface_reset_target();
+		
+		return _outData;
 	}
 }
