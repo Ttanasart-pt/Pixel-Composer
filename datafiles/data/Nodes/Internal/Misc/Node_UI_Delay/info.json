@@ -1,0 +1,6 @@
+{
+    "name":          "UI Lagger",
+    "spr":           "s_node_delay",
+    "baseNode":      "Node_UI_Delay",
+    "pxc_version":    120009,
+}

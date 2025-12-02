@@ -369,6 +369,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			}
 		
 		} else if(wid && jun.display_type != VALUE_DISPLAY.none) {
+			wid.setInteract(!GLOBAL_IS_PLAYING);
 			wid.setFocusHover(_focus, _hover);
 			
 			if(jun.connect_type == CONNECT_TYPE.input) {

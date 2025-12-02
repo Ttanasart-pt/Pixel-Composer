@@ -1467,6 +1467,7 @@
     {"name":"node_trigger_bool","order":1,"path":"scripts/node_trigger_bool/node_trigger_bool.yy",},
     {"name":"node_tunnel_out","order":1,"path":"scripts/node_tunnel_out/node_tunnel_out.yy",},
     {"name":"node_twirl","order":8,"path":"scripts/node_twirl/node_twirl.yy",},
+    {"name":"node_ui_delay","order":35,"path":"scripts/node_ui_delay/node_ui_delay.yy",},
     {"name":"node_value_anchor","order":25,"path":"scripts/node_value_anchor/node_value_anchor.yy",},
     {"name":"node_value_any","order":12,"path":"scripts/node_value_any/node_value_any.yy",},
     {"name":"node_value_area","order":12,"path":"scripts/node_value_area/node_value_area.yy",},

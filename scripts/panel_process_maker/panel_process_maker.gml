@@ -937,6 +937,7 @@ function Panel_Process_Maker() : PanelContent() constructor {
 				track_sel = currtr;
 				
 				if(PROJECT.trackAnim.animated) {
+					PROJECT.animator.frame_progress = false;
 					var _renderObj = new RenderObject(PROJECT, false);
 					_renderObj.render(infinity);
 					
