@@ -721,6 +721,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		use_gif_encoder = false;
 		
 		var extd   = getInputData( 9);
+		var scal   = getInputData(19);
 		gif_frames = 0;
 		
 		if(format_animation[extd] == ".gif") {
@@ -735,7 +736,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				var _s = surf[i];
 				var _d = surface_get_dimension(_s);
 				
-				gif_encoder[i] = gif_open(_d[0], _d[1], 0);
+				gif_encoder[i] = gif_open(_d[0] * scal, _d[1] * scal, 0);
 			}
 		}
 		
