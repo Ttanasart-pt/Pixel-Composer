@@ -53,7 +53,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		if(object == noone || array_empty(object)) return;
 		object = object[0];
 		
-		var _rpos = inputs[0].getValue(,,, true);
+		var _rpos = inputs[0].getValue();
 		var _vpos = new __vec3( _rpos[0], _rpos[1], _rpos[2] );
 		
 		if(isUsingTool("Transform")) tool_object_pos.drawOverlay3D(0, object, _vpos, active, _mx, _my, _snx, _sny, _params);

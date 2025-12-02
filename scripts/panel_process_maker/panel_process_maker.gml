@@ -13,6 +13,8 @@ function Process_Anim_Track(_node = undefined) constructor {
 	store    = false;
 	receive  = false;
 	
+	shadow   = true;
+	
 	if(node != undefined) {
 		values = array_create(array_length(node.inputs), noone);
 		color  = choose(CDEF.blue, CDEF.yellow, CDEF.orange, CDEF.pink, CDEF.purple, CDEF.lime);
@@ -44,7 +46,6 @@ function Process_Anim_Track(_node = undefined) constructor {
 				vv = lerp(ky.valueStart, ky.valueEnd, _t);
 			
 			in.__tempValue = vv;
-			in.getValue    = in.getValueTemp;
 		}
 		
 	}
@@ -57,7 +58,7 @@ function Process_Anim_Track(_node = undefined) constructor {
 			if(ky == noone) continue;
 			
 			var in = node.inputs[i];
-			in.getValue = in.getValueReal;
+			in.__tempValue = undefined;
 		}
 	}
 	
@@ -72,6 +73,7 @@ function Process_Anim_Track(_node = undefined) constructor {
 		_m.duration  = duration;
 		_m.trans     = trans;
 		_m.store     = store;
+		_m.shadow    = shadow;
 		
 		return _m;
 	}
@@ -86,6 +88,7 @@ function Process_Anim_Track(_node = undefined) constructor {
 		duration = _m[$ "duration"] ?? duration;
 		trans    = _m[$ "trans"]    ?? trans;
 		store    = _m[$ "store"]    ?? store;
+		shadow   = _m[$ "shadow"]   ?? shadow;
 		
 		return self;
 	}
@@ -94,6 +97,7 @@ function Process_Anim_Track(_node = undefined) constructor {
 function Process_Anim() constructor {
 	tracks = [];
 	title  = "";
+	titleColor = COLORS._main_accent;
 	
 	outputNode   = undefined;
 	outputNodeID = -1;
@@ -118,7 +122,9 @@ function Process_Anim() constructor {
 		
 		_m.tracks = array_map(tracks, function(t) /*=>*/ {return t.serialize()} );
 		_m.onode  = getOutputNode() == undefined? -1 : outputNode.node_id;
-		_m.title  = title;
+		
+		_m.title           = title;
+		_m.titleColor      = titleColor;
 		
 		_m.intro_duration  = intro_duration;
 		_m.outro_duration  = outro_duration;
@@ -137,8 +143,9 @@ function Process_Anim() constructor {
 		for( var i = 0, n = array_length(_m.tracks); i < n; i++ )
 			tracks[i] = new Process_Anim_Track().deserialize(_m.tracks[i]);
 			
-		title           = _m[$ "title"] ?? title;
 		outputNodeID    = _m[$ "onode"] ?? -1;
+		title           = _m[$ "title"] ?? title;
+		titleColor      = _m[$ "titleColor"] ?? titleColor;
 		
 		intro_duration  = _m[$ "intro_duration"]  ?? intro_duration;
 		outro_duration  = _m[$ "outro_duration"]  ?? outro_duration;
@@ -185,8 +192,13 @@ function Panel_Process_Maker() : PanelContent() constructor {
 		preview_speed = 1/30;
 		
 		output_preview = false;
+		
 		prev_output    = noone;
+		prev_surface   = noone;
 		curr_output    = noone;
+		
+		prev_track     = noone;
+		curr_track     = noone;
 		
 		total_length  = 0;
 		track_len     = 0; 
@@ -208,7 +220,8 @@ function Panel_Process_Maker() : PanelContent() constructor {
 		export_dir    = "";
 		
 		view_thumbnail = false;
-	
+		show_all_prop  = false;
+		
 		editing       = undefined;
 		editing_type  = 0;
 		tb_value_edit = textBox_Number(function(v) /*=>*/ {
@@ -229,6 +242,7 @@ function Panel_Process_Maker() : PanelContent() constructor {
 			else                      track_sel.duration = t; 
 			
 		}).setFont(f_p3).setEmpty();
+		cl_title_color    = new buttonColor(function(c) /*=>*/ { PROJECT.trackAnim.titleColor = c; }).isSimple();
 		
 		sp_transition  = new scrollBox([ 
 			"None", "Wipe Diagonal", "Wipe Diagonal Inv", "Wipe Hori", "Wipe Hori Inv", "Wipe Vert", "Wipe Vert Inv",  
@@ -255,7 +269,7 @@ function Panel_Process_Maker() : PanelContent() constructor {
 		var bs = hg;
 		var _c = [ COLORS._main_icon, COLORS._main_icon_light ];
 		
-		var dsp = is_array(_node.input_display_list);
+		var dsp = !show_all_prop && is_array(_node.input_display_list);
 		var amo = dsp? array_length(_node.input_display_list) : array_length(_node.inputs);
 		var _inp, _ind;
 		
@@ -270,7 +284,7 @@ function Panel_Process_Maker() : PanelContent() constructor {
 				_inp = _node.inputs[_ind];
 			}
 			
-			if(!is(_inp, NodeValue) || !_inp.show_in_inspector) continue;
+			if(!is(_inp, NodeValue) || (!show_all_prop && !_inp.show_in_inspector)) continue;
 			
 			var _name = _inp.getName();
 			
@@ -336,7 +350,7 @@ function Panel_Process_Maker() : PanelContent() constructor {
 		var bs = hg;
 		var _c = [ COLORS._main_icon, COLORS._main_icon_light ];
 		
-		var dsp = is_array(_node.input_display_list);
+		var dsp = !show_all_prop && is_array(_node.input_display_list);
 		var amo = dsp? array_length(_node.input_display_list) : array_length(_node.inputs);
 		
 		for( var i = 0; i < amo; i++ ) {
@@ -350,7 +364,7 @@ function Panel_Process_Maker() : PanelContent() constructor {
 				_inp = _node.inputs[_ind];
 			}
 			
-			if(!is(_inp, NodeValue) || !_inp.show_in_inspector) continue;
+			if(!is(_inp, NodeValue) || (!show_all_prop && !_inp.show_in_inspector)) continue;
 			
 			var _name = _inp.getName();
 			
@@ -466,8 +480,8 @@ function Panel_Process_Maker() : PanelContent() constructor {
 			temp_surface[2] = surface_verify(temp_surface[2], text_w, text_h);
 			
 			surface_set_shader(temp_surface[1]);
-				draw_clear_alpha(COLORS._main_accent, 0);
-				draw_set_text(f_pixel, fa_center, fa_center, COLORS._main_accent);
+				DRAW_CLEAR
+				draw_set_text(f_pixel, fa_center, fa_center, PROJECT.trackAnim.titleColor);
 				draw_text_ext_transformed(text_w/2, text_h/2, tt, -1, lw, 6, 6, 0);
 			surface_reset_shader();
 			
@@ -476,8 +490,9 @@ function Panel_Process_Maker() : PanelContent() constructor {
 				shader_set_f("size",          64 );
 				shader_set_i("useMask",       0  );
 				shader_set_i("gamma",         0  );
-				shader_set_i("overrideColor", 0  );
 				shader_set_i("useGradient",   0  );
+				shader_set_i("overrideColor", 1  );
+				shader_set_c("overColor",     PROJECT.trackAnim.titleColor  );
 				
 				draw_surface(temp_surface[1], 0, 0);
 			surface_reset_shader();
@@ -502,7 +517,7 @@ function Panel_Process_Maker() : PanelContent() constructor {
 					
 					var prg = clamp(play_frame / (PROJECT.trackAnim.intro_duration * .6), 0, 1);
 					    prg = smoothstep_cubic(prg);
-					var ds  = ss * lerp(.6, 1, prg);
+					var ds  = ss// * lerp(.6, 1, prg);
 					
 					var x0 = cx - sw * ds / 2;
 					var y0 = cy - sh * ds / 2;
@@ -524,14 +539,19 @@ function Panel_Process_Maker() : PanelContent() constructor {
 					if(!is(_node, Node)) break;
 					
 					var _outp = _node.outputs[_data.output];
-					if(_outp.type != VALUE_TYPE.surface) break;
+					var _outv = undefined;
 					
-					var _outv = _outp.getValue();
-					
+					if(_outp.type == VALUE_TYPE.surface)
+						 _outv = _outp.getValue();
+					else _outv = _node.getGraphPreviewSurface();
+						
 					if(is_surface(_outv)) {
 						if(curr_output != _outp) {
 							prev_output = curr_output;
 							curr_output = _outp;
+							
+							prev_track  = curr_track;
+							curr_track  = _data;
 						}
 						
 						var sw = surface_get_width(_outv);
@@ -541,18 +561,48 @@ function Panel_Process_Maker() : PanelContent() constructor {
 						var x0 = cx - sw * ss / 2;
 						var y0 = cy - sh * ss / 2;
 						
+						if(!_data.shadow) {
+							draw_sprite_stretched(THEME.box_r5, 0, x0, y0, sw * ss, sh * ss);
+							gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_zero, bm_one);
+							draw_sprite_stretched_ext(THEME.box_r5, 0, x0, y0, sw * ss, sh * ss, CDEF.main_mdblack, 1);
+							draw_sprite_tiled_ext(s_transparent, 0, x0, y0, 4, 4, CDEF.main_black, 1);
+							BLEND_NORMAL
+						}
+						
 						if(_data.trans) {
-							var prev_surface = prev_output? prev_output.getValue() : noone;
+							var _prev_surface = noone;
+							if(prev_output) {
+								_prev_surface = prev_output.getValue();
+								if(!is_surface(_prev_surface))
+									_prev_surface = prev_output.node.getGraphPreviewSurface();
+									
+								if(is_surface(_prev_surface) && !prev_track.shadow) {
+									prev_surface = surface_verify(prev_surface, sw * ss, sh * ss);
+									
+									surface_set_target(prev_surface);
+										draw_sprite_stretched(THEME.box_r5, 0, 0, 0, sw * ss, sh * ss);
+										gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_zero, bm_one);
+										draw_sprite_stretched_ext(THEME.box_r5, 0, 0, 0, sw * ss, sh * ss, CDEF.main_mdblack, 1);
+										draw_sprite_tiled_ext(s_transparent, 0, 0, 0, 4, 4, CDEF.main_black, 1);
+										draw_surface_ext(_prev_surface, 0, 0, ss, ss, 0, c_white, 1);
+										BLEND_NORMAL
+									surface_reset_target();
+									
+									_prev_surface = prev_surface;
+								}
+							}
 							
 							shader_set(sh_process_maker_transition);
 								shader_set_i("type",     _data.trans);
 								shader_set_f("progress", _trans);
-								shader_set_s("prevSurf", prev_surface);
+								shader_set_s("prevSurf", _prev_surface);
 								
 								draw_surface_ext(_outv, x0, y0, ss, ss, 0, c_white, 1);
 							shader_reset();
 							
 						} else draw_surface_ext(_outv, x0, y0, ss, ss, 0, c_white, 1);
+						
+						BLEND_NORMAL
 						
 						var stsx = 112;
 						var stsy = 448;
@@ -601,7 +651,6 @@ function Panel_Process_Maker() : PanelContent() constructor {
 					var _name = _data.title == ""? _node.getDisplayName() : _data.title;
 					draw_set_text(f_pixel, fa_center, fa_top, COLORS._main_text);
 					draw_text_transformed(nx, ny, _name, 4, 4, 0);
-					
 					break;
 			
 				case 2 :
@@ -611,8 +660,9 @@ function Panel_Process_Maker() : PanelContent() constructor {
 					var ss = min((output_width - 192) / sw, (output_height - 192) / sh);
 					var s2 = min((output_width -  64) / sw, (output_height -  64) / sh);
 					
-					var prg = smoothstep_cubic(clamp(_trans * 4, 0, 1));
-					var ds  = lerp(ss, s2, prg);
+					var pss = smoothstep_bounce(clamp(_trans * 6, 0, 1));
+					var prg = smoothstep_bounce(clamp(_trans * 4, 0, 1));
+					var ds  = lerp(ss, s2, pss);
 					var x0 = cx - sw * ds / 2;
 					var y0 = cy - sh * ds / 2;
 					
@@ -658,10 +708,12 @@ function Panel_Process_Maker() : PanelContent() constructor {
 					break;
 			}
 			
+			var _intensity = .5;
+			
 			shader_set(sh_process_maker_shadow);
 				shader_set_2("dimension", [ output_width, output_height ] );
 				shader_set_f("shadow",     48 );
-				shader_set_f("intensity",  .5 );
+				shader_set_f("intensity",  _intensity );
 				shader_set_c("color",      c_black );//#1e1e2b );
 				
 				draw_surface(temp_surface[3], 0, 0);
@@ -676,10 +728,10 @@ function Panel_Process_Maker() : PanelContent() constructor {
 			
 			draw_surface(temp_surface[1], _ttx, _tty);
 			BLEND_ADD 
-			draw_surface(temp_surface[2], _ttx, _tty);
+			draw_surface_ext(temp_surface[2], _ttx, _tty, 1, 1, 0, c_white, .75);
+			draw_surface_ext(temp_surface[2], _ttx, _tty, 1, 1, 0, c_white, .75);
 			
 			if(_step == 2) {
-				draw_surface_ext(temp_surface[1], _ttx, _tty, 1, 1, 0, c_white, prg);
 				draw_surface_ext(temp_surface[2], _ttx, _tty, 1, 1, 0, c_white, prg);
 			}
 			BLEND_NORMAL
@@ -744,18 +796,18 @@ function Panel_Process_Maker() : PanelContent() constructor {
 					i++;
 				}
 				
-				var aa = 1 - clamp((play_frame - 60) / 30, 0, 1);
+				var aa = 1 - clamp((play_frame - 45) / 30, 0, 1);
 				draw_set_alpha(aa);
 				
 				var tx = output_width - 16;
 				var ty = 16;
 				
-				draw_sprite_ui(THEME.play_sound, 1, tx - 24, ty + 24, 1, 1, 0, COLORS._main_text, aa);
-				tx -= 48;
-				
 				draw_set_text(f_pixel, fa_right, fa_top, COLORS._main_text);
-				draw_text_transformed(tx, ty, s, 3, 3, 0);
-				ty += string_height(s) * 3;
+				draw_text_transformed(tx, ty, s, 2.5, 2.5, 0);
+				tx -= string_width(s) * 2.5 + 8;
+				
+				draw_sprite_ui(THEME.play_sound, 1, tx - 24, ty + 16, 1, 1, 0, COLORS._main_text, aa * .8);
+				ty += string_height(s) * 2.5;
 				
 				draw_set_text(f_pixel, fa_right, fa_top, COLORS._main_text_sub);
 				draw_text_transformed(output_width - 16, ty, _authr, 2, 2, 0);
@@ -833,14 +885,14 @@ function Panel_Process_Maker() : PanelContent() constructor {
 	function PlayFrame(_fr) {
 		play_frame = _fr;
 		
-		if(PROJECT.trackAnim.animated) {
-			var fr = play_frame % PROJECT.animator.frames_total;
-			PROJECT.animator.setFrame(fr);
-		}
-		
 		if(output_preview && play_frame <= PROJECT.trackAnim.intro_duration) {
 			var _outNode = PROJECT.trackAnim.getOutputNode();
 			var _prec    = _outNode.getPreviewValues();
+			
+			if(PROJECT.trackAnim.animated) {
+				var fr = floor(play_frame % GLOBAL_TOTAL_FRAMES);
+				PROJECT.animator.setFrame(fr);
+			}
 			RenderOutput(0, _prec);
 			
 			if(play_frame == PROJECT.trackAnim.intro_duration) {
@@ -864,7 +916,7 @@ function Panel_Process_Maker() : PanelContent() constructor {
 				t.apply(rt);
 				if(play_frame >= ts && play_frame < te) {
 					if(PROJECT.trackAnim.animated) {
-						var fr = floor((play_frame - ts) / t.duration * PROJECT.animator.frames_total);
+						var fr = floor((play_frame - ts) / t.duration * GLOBAL_TOTAL_FRAMES);
 						PROJECT.animator.setFrame(fr);
 					}
 					
@@ -901,7 +953,7 @@ function Panel_Process_Maker() : PanelContent() constructor {
 			var _prec    = _outNode.getPreviewValues();
 			
 			if(PROJECT.trackAnim.animated) {
-				var fr = (play_frame - track_len) % PROJECT.animator.frames_total;
+				var fr = floor((play_frame - track_len) % GLOBAL_TOTAL_FRAMES);
 				PROJECT.animator.setFrame(fr);
 			}
 			RenderOutput(2, _prec, (play_frame - track_len) / PROJECT.trackAnim.outro_duration);
@@ -929,11 +981,11 @@ function Panel_Process_Maker() : PanelContent() constructor {
 		var target_path = string_quote(filename_combine(parent_path, $"{target_name}.mp4"));
 		
 		var	shell_cmd  = $"-hide_banner -loglevel quiet -framerate {rate} ";
-		    shell_cmd += $"-i {temp_path} ";
+		    shell_cmd += $"-i {temp_path} -map 0:v:0 ";
 		    
 		if(PROJECT.trackAnim.audio_loop != "") {
 			var _aloop = string_quote(PROJECT.trackAnim.audio_loop);
-			shell_cmd += $"-stream_loop -1 -i {_aloop} -shortest -map 0:v:0 -map 1:a:0 ";
+			shell_cmd += $"-stream_loop -1 -i {_aloop} -shortest -map 1:a:0 ";
 		}
 		
 		    shell_cmd += $"-c:v libx264 -r {rate} -pix_fmt yuv420p -crf {qual} ";
@@ -989,11 +1041,21 @@ function Panel_Process_Maker() : PanelContent() constructor {
 				}
 			} bx += bs + ui(2);
 			
-			var bw = ui(128);
+			var bw = ui(96);
 			tb_title.setFocusHover(pFOCUS, pHOVER);
 			tb_title.draw(bx, by, bw, bs, PROJECT.trackAnim.title, m);
-			bx += bw + ui(4);
+			bx += bw + ui(2);
 			
+			cl_title_color.setFocusHover(pFOCUS, pHOVER);
+			cl_title_color.draw(bx, by, bs, bs, PROJECT.trackAnim.titleColor, m);
+			bx += bs + ui(2);
+			
+			var ii = PROJECT.trackAnim.animated;
+			if(buttonInstant(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "Animated", THEME.sequence_control, ii, COLORS._main_icon, 1, .75) == 2) {
+				PROJECT.trackAnim.animated = !PROJECT.trackAnim.animated;
+			} bx += bs + ui(2);
+			
+			bx += ui(2);
 			var ii = PROJECT.trackAnim.audio_loop != "";
 			var b  = buttonInstant(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "Set Audio", THEME.play_sound, ii, COLORS._main_icon, 1, .75)
 			if(b == 3) PROJECT.trackAnim.audio_loop = "";
@@ -1007,6 +1069,7 @@ function Panel_Process_Maker() : PanelContent() constructor {
 				var aname = filename_name_only(PROJECT.trackAnim.audio_loop);
 				draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_sub);
 				draw_text(bx, by + bs / 2, aname);
+				bx += string_width(aname) + ui(4);
 			}
 			
 			///////////////////////////////
@@ -1022,15 +1085,15 @@ function Panel_Process_Maker() : PanelContent() constructor {
 				if(_n) PROJECT.trackAnim.outputNode = _n;
 			} bx -= bs + ui(2); 
 			
-			var cc = view_thumbnail? COLORS._main_icon : COLORS._main_icon_dark;
-			if(buttonInstant(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "Thumbnail", THEME.splash_thumbnail, !view_thumbnail, cc, 1, .8) == 2) {
+			var cc = COLORS._main_icon;
+			if(buttonInstant(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "Thumbnail", THEME.splash_thumbnail, 0, cc, 1, .8) == 2) {
 				view_thumbnail = !view_thumbnail;
 			} bx -= bs + ui(2); 
 			
-			var ii = PROJECT.trackAnim.animated;
-			if(buttonInstant(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "Animated", THEME.sequence_control, ii, COLORS._main_icon, 1, .75) == 2) {
-				PROJECT.trackAnim.animated = !PROJECT.trackAnim.animated;
-			} bx -= bs + ui(2);
+			var cc = COLORS._main_icon;
+			if(buttonInstant(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "Show all inputs", THEME.visible_12, show_all_prop, cc, 1, 1.25) == 2) {
+				show_all_prop = !show_all_prop;
+			} bx -= bs + ui(2); 
 			
 		#endregion
 	    
@@ -1078,12 +1141,16 @@ function Panel_Process_Maker() : PanelContent() constructor {
 	        
 	    	for( var i = 0; i <= track_w; i += 30 ) {
 	    		var lx = tsx + i * tss;
-	    		var hl = (i/30) % 2 == 0;
+	    		var ss = i / 30
+	    		var hl = ss % 2 == 0;
     			draw_set_color(COLORS._main_icon);
     			draw_set_alpha(.6 + .4 * hl);
 	    		draw_line_width(lx, _try, lx, _try + _tlh - 1, 1);
+				draw_set_alpha(1);
+	    		
+	    		draw_set_text(f_p4, fa_center, fa_top, COLORS._main_icon);
+	    		draw_text_transform_add(lx, _try, ss, .65, 0);
 	    	}
-			draw_set_alpha(1);
 	    	
 	        var hovETrck   = undefined;
 	        var hovETrck_x = undefined;
@@ -1198,8 +1265,8 @@ function Panel_Process_Maker() : PanelContent() constructor {
 	        track_x     = lerp_float(track_x, track_x_to, 4);
 	        track_x_max = trw;
 	        track_w     = trw / tss;
-	        if(hover && MOUSE_WHEEL != 0)
-	        	track_x_to = clamp(track_x_to - MOUSE_WHEEL * 32, -_trw/2, track_x_max - _trw/2);
+	        if(hover) track_x_to -= MOUSE_WHEEL * 32;
+        	track_x_to = clamp(track_x_to, -_trw/2, track_x_max - _trw/2);
 	        
 	        if(del != undefined) {
 	        	array_delete(PROJECT.trackAnim.tracks, del, 1);
@@ -1235,6 +1302,12 @@ function Panel_Process_Maker() : PanelContent() constructor {
 				var cc = track_sel.store? COLORS._main_value_positive : COLORS._main_icon;
 				if(buttonInstant(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "Store Output", THEME.save, 0, cc, 1, .75) == 2) {
 					track_sel.store = !track_sel.store;
+				} bx -= bs + ui(4); tw -= bs + ui(4); 
+				
+				var spr = THEME.node_junction_selecting;
+				var aa  = track_sel.shadow? 1 : .5;
+				if(buttonInstant(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "Shadow", spr, 0, COLORS._main_icon, aa, .75) == 2) {
+					track_sel.shadow = !track_sel.shadow;
 				} bx -= bs + ui(4); tw -= bs + ui(4); 
 				
 				var spw = ui(160);

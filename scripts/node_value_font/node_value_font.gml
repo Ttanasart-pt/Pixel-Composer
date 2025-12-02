@@ -14,7 +14,9 @@ function __NodeValue_Font(_name, _node, _value = "", _tooltip = "") : NodeValue(
 		return _path;
 	}
 	
-	static getValue = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { //// Get value
+	static getValue = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { 
+		if(__tempValue != undefined) return __tempValue;
+		
 		getValueRecursive(self.__curr_get_val, _time);
 		var val = __curr_get_val[0];
 		

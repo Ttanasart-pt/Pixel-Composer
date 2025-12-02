@@ -8,6 +8,8 @@ function __NodeValue_Output(_name, _node, _type, _value, _tooltip = "") : NodeVa
 	output_value = _value;
 	
 	static getValue = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { 
+		if(__tempValue != undefined) return __tempValue;
+		
 		return output_value;
 	}
 	

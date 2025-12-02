@@ -10,7 +10,9 @@ function __NodeValue_Enum_Button(_name, _node, _value, _data) : NodeValue(_name,
 	
 	/////============== GET =============
 	
-	static getValue = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { //// Get value
+	static getValue = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { 
+		if(__tempValue != undefined) return __tempValue;
+		
 		getValueRecursive(self.__curr_get_val, _time);
 		var val = __curr_get_val[0];
 		var nod = __curr_get_val[1]; if(!is(nod, NodeValue)) return val;

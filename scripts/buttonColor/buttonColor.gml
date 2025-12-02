@@ -4,6 +4,7 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 	current_value = 0;
 	triggered     = false;
 	show_alpha    = true;
+	simple        = false;
 	
 	hover_hex     = 0;
 	hover_wid     = ui(24);
@@ -35,6 +36,7 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 		onApply(value);
 	}
 	
+	static isSimple  = function() /*=>*/ { simple = true; show_alpha = false; return self; };
 	static hideAlpha = function() /*=>*/ { show_alpha = false; return self; };
 	
 	static isTriggered = function() {
@@ -131,7 +133,7 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 			
 		else if(is_numeric(current_color)) {
 			var _hvb  = ihover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _cw, _y + _h);
-			hover_hex = lerp_float(hover_hex, _hvb, 4);
+			hover_hex = isSimple? 0 : lerp_float(hover_hex, _hvb, 4);
 			
 			var _bs  = min(_bh, ui(24));
 			var _bcx = _bx + _bw - _bs - ui(4);

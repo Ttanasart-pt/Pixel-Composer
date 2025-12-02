@@ -19,6 +19,8 @@ function __NodeValue_Float(_name, _node, _value, _tooltip = "") : __NodeValue_Nu
 	}
 	
 	static getValue = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) {
+		if(__tempValue != undefined) return __tempValue;
+		
 		getValueRecursive(self.__curr_get_val, _time);
 		var val = __curr_get_val[0];
 		var nod = __curr_get_val[1]; if(!is(nod, NodeValue)) return val;
@@ -51,6 +53,8 @@ function __NodeValue_Float_Simple(_name, _node, _value, _tooltip = "") : NodeVal
 	////- GET
 	
 	static getValue = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) {
+		if(__tempValue != undefined) return __tempValue;
+		
 		getValueRecursive(self.__curr_get_val, _time);
 		return __curr_get_val[0];
 	}

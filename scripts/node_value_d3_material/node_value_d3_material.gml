@@ -7,17 +7,19 @@ function __NodeValue_D3Material(_name, _node, _value, _tooltip = "") : NodeValue
 	
 	static valueProcess = function(value, nodeFrom = undefined, applyUnit = true, arrIndex = 0) { return value; }
 	
-	static getValue = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { //// Get value
+	static getValue = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { 
+		if(__tempValue != undefined) return __tempValue;
+		
 		getValueRecursive(self.__curr_get_val, _time);
 		var val = __curr_get_val[0];
-		var nod = __curr_get_val[1]; if(!is(nod, NodeValue)) return val;
+		var nod = __curr_get_val[1]; 
+		
+		if(!is(nod, NodeValue)) return val;
+		if(nod == self) return def_val;
 		
 		var typ = nod.type;
 		var dis = nod.display_type;
 		
-		if(nod == self)
-			return def_val;
-			
 		if(typ == VALUE_TYPE.surface) {
 			if(!is_array(val)) return def_val.clone(val);
 			

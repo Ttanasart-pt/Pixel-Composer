@@ -1452,8 +1452,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static getStaticValue = function() { INLINE return array_empty(animator.values)? 0 : animator.values[0].value; } 
 	
-	static getValueTemp = function() /*=>*/ {return __tempValue};
-	static getValueReal = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { //// Get value
+	static getValue = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, useCache = false, log = false) { 
+		if(__tempValue != undefined) return __tempValue;
+		
 		draw_junction_index = type;
 		if(type == VALUE_TYPE.trigger) return _getValue(_time, false, 0, false);
 		
@@ -1489,8 +1490,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		return val;
 	}
-	
-	getValue = getValueReal;
 	
 	static _getValue = function(_time = NODE_CURRENT_FRAME, applyUnit = true, arrIndex = 0, log = false) {
 		getValueRecursive(self.__curr_get_val, _time);

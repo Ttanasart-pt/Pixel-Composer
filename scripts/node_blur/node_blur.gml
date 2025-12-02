@@ -67,6 +67,8 @@ function Node_Blur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _aspc  = _data[12];
 		var _dirr  = _data[13];
 		
+		_size = round(_size);
+		
 		inputs[4].setVisible(_isovr);
 		
 		if(!is_surface(_surf)) return _outSurf;
