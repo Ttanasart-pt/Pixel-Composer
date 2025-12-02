@@ -91,7 +91,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		
 		inputs[input_len + 5].setVisible(_typ == PARTICLE_RENDER_TYPE.line);
 		
-		if(is_surface(_bg)) _dim = surface_get_dimension(_bg)
+		if(is_surface(_bg)) _dim = surface_get_dimension(_bg);
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		render_amount = 0;		

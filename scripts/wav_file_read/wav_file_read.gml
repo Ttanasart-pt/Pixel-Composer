@@ -37,25 +37,42 @@ function file_read_wav(path) {
 	
 	//FORMAT
 	debug_str += "-- FORMAT --\n";
-	var b  = file_read_ASCII(wav_file_reader, 4);		debug_str += $"{b}\n";
-	var l  = buffer_read(wav_file_reader, buffer_u32);	debug_str += $"Length:   {l}\n";
-	var f  = buffer_read(wav_file_reader, buffer_u16);	debug_str += $"Linear quantize: {f}\n";
+	var format = false;
+	var b  = file_read_ASCII(wav_file_reader, 4);		debug_str += $"{b}\n"; 
+	while(b != "data") {
+		if(b == "fmt ") {
+			format = true;
+			var l  = buffer_read(wav_file_reader, buffer_u32);	debug_str += $"Length:   {l}\n";
+			var f  = buffer_read(wav_file_reader, buffer_u16);	debug_str += $"Linear quantize: {f}\n";
+			
+			if(l != 16 || f != 1) {
+				printIf(global.FLAG.wav_import, debug_str);
+				noti_warning("File format not supported, the audio file need to be 8, 16, 32 bit uncompressed PCM wav with no extension.");
+				return noone;
+			}
+			
+			var ch = buffer_read(wav_file_reader, buffer_u16);	debug_str += $"Channels:    {ch}\n";
+			var sm = buffer_read(wav_file_reader, buffer_u32);	debug_str += $"Sample rate: {sm}\n";
+			var dt = buffer_read(wav_file_reader, buffer_u32);	debug_str += $"Data rate:   {dt}\n";
+			var br = buffer_read(wav_file_reader, buffer_u16);	debug_str += $"Block size:  {br}\n";
+			var bs = buffer_read(wav_file_reader, buffer_u16);	debug_str += $"Bit/Sam:     {bs}\n";
+			
+		} else {
+			var o  = buffer_read(wav_file_reader, buffer_u32);	debug_str += $"Offset:   {o}\n";
+			repeat(o) buffer_read(wav_file_reader, buffer_u8);
+		}
+		
+		var b = file_read_ASCII(wav_file_reader, 4);		debug_str += $"{b}\n";
+	}
 	
-	if(l != 16 || f != 1) {
+	if(!format) { 
 		printIf(global.FLAG.wav_import, debug_str);
-		noti_warning("File format not supported, the audio file need to be 8, 16, 32 bit uncompressed PCM wav with no extension.");
+		noti_warning("Canot find format data");
 		return noone;
 	}
 	
-	var ch = buffer_read(wav_file_reader, buffer_u16);	debug_str += $"Channels:    {ch}\n";
-	var sm = buffer_read(wav_file_reader, buffer_u32);	debug_str += $"Sample rate: {sm}\n";
-	var dt = buffer_read(wav_file_reader, buffer_u32);	debug_str += $"Data rate:   {dt}\n";
-	var br = buffer_read(wav_file_reader, buffer_u16);	debug_str += $"Block size:  {br}\n";
-	var bs = buffer_read(wav_file_reader, buffer_u16);	debug_str += $"Bit/Sam:     {bs}\n";
-	
 	//DATA
 	debug_str += "-- DATA --\n";
-	var b = file_read_ASCII(wav_file_reader, 4);		debug_str += $"{b}\n";
 	var l = buffer_read(wav_file_reader, buffer_u32);	debug_str += $"Length:   {l}\n";
 	
 	var bpc  = br / ch;
@@ -141,4 +158,61 @@ function file_read_wav_step() {
 	wav_file_reading = false;
 	buffer_delete(wav_file_reader);
 	return true;
+}
+
+function WAV_get_length(path) {
+	var _wav = buffer_load(path);
+	if(_wav == -1) return -1; 
+	
+	var _buffer_size   = buffer_get_size(_wav);
+	
+	//RIFF
+	var debug_str = $">> READING WAV [{path}] <<\n";
+	debug_str += $"Buffer size: {_buffer_size}\n\n";
+	
+	debug_str += "-- RIFF --\n";
+	var b = file_read_ASCII(_wav, 4);		debug_str += $"{b}\n";
+	var l = buffer_read(_wav, buffer_u32);	debug_str += $"Packages: {l}\n";
+	var w = file_read_ASCII(_wav, 4);		debug_str += $"{w}\n";
+	if(b != "RIFF" || w != "WAVE") { print(debug_str); return -2; }
+	
+	if(buffer_get_size(_wav) != l + 8)
+		noti_warning(".wav file has different size than the package header. This may cause reading error.");
+	
+	//FORMAT
+	debug_str += "-- FORMAT --\n";
+	var format = false;
+	var b  = file_read_ASCII(_wav, 4);		debug_str += $"{b}\n"; 
+	while(b != "data") {
+		if(b == "fmt ") {
+			format = true;
+			var l  = buffer_read(_wav, buffer_u32);	debug_str += $"Length:   {l}\n";
+			var f  = buffer_read(_wav, buffer_u16);	debug_str += $"Linear quantize: {f}\n";
+			
+			if(l != 16 || f != 1) { print(debug_str); return -3; }
+			
+			var ch = buffer_read(_wav, buffer_u16);	debug_str += $"Channels:    {ch}\n";
+			var sm = buffer_read(_wav, buffer_u32);	debug_str += $"Sample rate: {sm}\n";
+			var dt = buffer_read(_wav, buffer_u32);	debug_str += $"Data rate:   {dt}\n";
+			var br = buffer_read(_wav, buffer_u16);	debug_str += $"Block size:  {br}\n";
+			var bs = buffer_read(_wav, buffer_u16);	debug_str += $"Bit/Sam:     {bs}\n";
+			
+		} else {
+			var o  = buffer_read(_wav, buffer_u32);	debug_str += $"Offset:   {o}\n";
+			repeat(o) buffer_read(_wav, buffer_u8);
+		}
+		
+		var b = file_read_ASCII(_wav, 4);		debug_str += $"{b}\n";
+	}
+	
+	if(!format) { print(debug_str); return -3; }
+		
+	//DATA
+	debug_str += "-- DATA --\n";
+	var l = buffer_read(_wav, buffer_u32);	debug_str += $"Length:   {l}\n";
+	
+	var bits = l / br;
+	
+	var _duration = real(bits) / real(sm);
+	return _duration;
 }

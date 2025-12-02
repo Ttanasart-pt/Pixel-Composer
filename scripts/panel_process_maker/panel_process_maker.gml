@@ -188,8 +188,10 @@ function Panel_Process_Maker() : PanelContent() constructor {
 		play_frame    = 0;
 		play_time     = 0;
 		play_speed    = 1;
-		scrubbing     = false;
 		preview_speed = 1/30;
+		
+		scrubbing     = false;
+		scrub_frame   = undefined;
 		
 		output_preview = false;
 		
@@ -221,7 +223,14 @@ function Panel_Process_Maker() : PanelContent() constructor {
 		
 		view_thumbnail = false;
 		show_all_prop  = false;
-		
+	#endregion
+	
+	#region audio
+		audio_loop_curr = "";
+		audio_loop_dura = 0;
+	#endregion
+	
+	#region widgets
 		editing       = undefined;
 		editing_type  = 0;
 		tb_value_edit = textBox_Number(function(v) /*=>*/ {
@@ -252,7 +261,7 @@ function Panel_Process_Maker() : PanelContent() constructor {
 			"Fade", "Morph", 
 		], function(i) /*=>*/ { if(is(track_sel, Process_Anim_Track)) track_sel.trans = i; }).setFont(f_p3);
 	#endregion
-		
+	
 	sc_prop_start = new scrollPane(1, 1, function(_y, _m) /*=>*/ {
 		draw_clear_alpha(#20202f, 1);
 		
@@ -454,11 +463,14 @@ function Panel_Process_Maker() : PanelContent() constructor {
 			PROJECT.trackAnim.tracks[i].reset();
 	}
 	
-	function togglePlay(_reset = true) {
+	function togglePlay(_reset = true, _speed = 1, _export = false) {
 		playing   = !playing;
 		play_time = 0;
 		if(_reset) play_frame = 0;
 		
+		play_speed = _speed;
+		exporting  = _export;
+				
 		refreshTracks();
 		
 		if(!playing) resetTracks();
@@ -1005,6 +1017,16 @@ function Panel_Process_Maker() : PanelContent() constructor {
 		var pd = ui(8);
 		var m  = [mx,my];
 		
+		#region audio
+			var _aud = PROJECT.trackAnim.audio_loop;
+			if(audio_loop_curr != _aud && file_exists(_aud)) {
+				audio_loop_dura = WAV_get_length(_aud);
+				audio_loop_curr = _aud;
+				
+				print(audio_loop_dura);
+			}
+		#endregion
+		
 		#region header
 			var bb = THEME.button_hide;
 			var bs = ui(24);
@@ -1015,18 +1037,18 @@ function Panel_Process_Maker() : PanelContent() constructor {
 			var bx = pd;
 			var cc = playing? COLORS._main_value_positive : COLORS._main_icon;
 			var ii = playing? 0 : 1;
-			if(buttonInstant(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "", THEME.sequence_control, ii, cc, 1, .75) == 2) {
-				play_speed = 1;
-				exporting  = false;
-				togglePlay(!key_mod_press(SHIFT));
-			} bx += bs + ui(2);
+			var b  = buttonInstant(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "", THEME.sequence_control, ii, cc, 1, .75);
+			     if(b == 2) togglePlay(true,  1, false);
+			else if(b == 3) togglePlay(false, 1, false);
+			
+			bx += bs + ui(2);
 			
 			var cc = playing && play_speed > 1? COLORS._main_value_positive : COLORS._main_icon;
-			if(buttonInstant(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "", THEME.play_all, 0, cc, 1, .75) == 2) {
-				play_speed = 5;
-				exporting  = false;
-				togglePlay(!key_mod_press(SHIFT));
-			} bx += bs + ui(2);
+			var b  = buttonInstant(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "", THEME.play_all, 0, cc, 1, .75);
+			     if(b == 2) togglePlay(true,  5, false);
+			else if(b == 3) togglePlay(false, 5, false);
+			
+			bx += bs + ui(2);
 			
 			var cc = playing && play_speed == 3? COLORS._main_value_positive : COLORS._main_icon;
 			if(buttonInstant(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "", THEME.save, 0, cc, 1, .75) == 2) {
@@ -1034,11 +1056,10 @@ function Panel_Process_Maker() : PanelContent() constructor {
 				var path   = get_open_directory_compat(tt);
 				if(path != "") {
 					play_speed = infinity;
-					exporting  = true;
 					export_dir = path;
 					
 					if(directory_exists(export_dir)) directory_destroy(export_dir);
-					togglePlay();
+					togglePlay(true, 5, true);
 				}
 			} bx += bs + ui(2);
 			
@@ -1048,8 +1069,8 @@ function Panel_Process_Maker() : PanelContent() constructor {
 			bx += bw + ui(2);
 			
 			cl_title_color.setFocusHover(pFOCUS, pHOVER);
-			cl_title_color.draw(bx, by, bs, bs, PROJECT.trackAnim.titleColor, m);
-			bx += bs + ui(2);
+			cl_title_color.draw(bx, by, ui(12), bs, PROJECT.trackAnim.titleColor, m);
+			bx += ui(12) + ui(2);
 			
 			var ii = PROJECT.trackAnim.animated;
 			if(buttonInstant(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "Animated", THEME.sequence_control, ii, COLORS._main_icon, 1, .75) == 2) {
@@ -1120,11 +1141,13 @@ function Panel_Process_Maker() : PanelContent() constructor {
 	    	}
 	    	
 	    	if(scrubbing) {
-	    		var _frame = (track_x + mx - _trx) / track_scale;
+	    		var _frame = round((track_x + mx - _trx) / track_scale);
 	    		PlayFrame(_frame);
+	    		scrub_frame = _frame;
 	    		
 	    		if(mouse_lrelease()) {
-	    			scrubbing = false;
+	    			scrubbing   = false;
+	    			scrub_frame = undefined;
 	    			resetTracks();
 	    		}
 	    	}
