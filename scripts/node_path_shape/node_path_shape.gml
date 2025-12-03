@@ -129,7 +129,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		}
 	}
 	
-	////- Nodes
+	////- Draw
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _pth = outputs[0].getValue();
@@ -163,6 +163,40 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	    
 	    return w_hovering;
 	}
+	
+	static drawProcessShort = function(cx, cy, cw, ch, _prog) {
+		var _pth = outputs[0].getValue();
+		if(!is(_pth, _pathShapeObject)) return undefined;
+	    if(array_empty(_pth.points))    return undefined;
+		
+		var rw = DEF_SURF_W;
+		var rh = DEF_SURF_H;
+		var ss = min(cw / rw, ch / rh);
+		var _x = cx - rw * ss / 2;
+		var _y = cy - rh * ss / 2;
+		
+	    var ox = _x + ss * _pth.points[0][0], x0 = ox;
+	    var oy = _y + ss * _pth.points[0][1], y0 = oy;
+	    var nx, ny;
+	    var amo = round(array_length(_pth.points) * _prog);
+	    
+	    draw_set_color(COLORS._main_accent);
+	    for( var i = 1; i < amo; i++ ) {
+	        nx = _x + ss * _pth.points[i][0];
+	        ny = _y + ss * _pth.points[i][1];
+	        
+            draw_line_round(ox, oy, nx, ny, 4);
+	        
+	        ox = nx;
+	        oy = ny;
+	    }
+	    
+	    if(_pth.loop && _prog >= 1) draw_line(ox, oy, x0, y0);
+	    
+	    return rh * ss;
+	}
+	
+	////- Nodes
 	
 	static update = function(frame = CURRENT_FRAME) {
 		#region data

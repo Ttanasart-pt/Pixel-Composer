@@ -39,8 +39,11 @@ function Hotkey(_context, _name, _key = "", _mod = MOD_KEY.none, _action = noone
 	rawAction = _action;
 	param     = _param;
 	
-	static setParam  = function(p) /*=>*/ { param = p;     return self; }
-	static setAction = function(a) /*=>*/ { rawAction = a; return self; }
+	interrupt = false;
+	
+	static setParam     = function(p) /*=>*/ { param = p;        return self; }
+	static setAction    = function(a) /*=>*/ { rawAction = a;    return self; }
+	static setInterrupt = function( ) /*=>*/ { interrupt = true; return self; }
 	
 	static action = function() {
 		if(param == noone) rawAction();

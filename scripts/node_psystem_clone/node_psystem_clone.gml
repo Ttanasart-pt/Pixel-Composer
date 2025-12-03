@@ -15,8 +15,8 @@ function Node_pSystem_Clone(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	// 2
 	
-	newOutput(0, nodeValue_Output("Original", VALUE_TYPE.particle, noone )).setVisible(false);
-	newOutput(1, nodeValue_Output("Cloned",   VALUE_TYPE.particle, noone ));
+	newOutput(0, nodeValue_Output("Original", VALUE_TYPE.particle, noone )).setVisible(true);
+	newOutput(1, nodeValue_Output("Cloned",   VALUE_TYPE.particle, noone )).setVisible(true);
 	
 	input_display_list = [ 2, 
 		[ "Particles", false ], 0, 1, 

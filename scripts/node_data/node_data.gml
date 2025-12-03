@@ -878,6 +878,23 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return array_unique(_nodes);
 	}
 	
+	static getAllNodeFrom = function(_nodes = []) { 
+		var _cnodes = [];
+		
+		for(var i = 0, n = array_length(inputDisplayList); i < n; i++) { //inputs
+			var jun = inputDisplayList[i];
+			var _fr = jun.getNodeFrom(false);
+			if(_fr != noone) array_push(_cnodes, _fr);
+		}
+		
+		for( var i = 0, n = array_length(_cnodes); i < n; i++ ) {
+			array_push(_nodes, _cnodes[i]);
+			array_append(_nodes, _cnodes[i].getAllNodeFrom(_nodes));
+		}
+		
+		return _nodes;
+	}
+	
 	static getNodeTo = function() {
 		var _nodes = [];
 		

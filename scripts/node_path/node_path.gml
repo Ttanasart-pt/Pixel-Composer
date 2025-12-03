@@ -1663,6 +1663,10 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		return anchor_hover != -1 || hovering;
 	}
 	
+	static drawProcessShort = function(cx, cy, cw, ch, _prog) {
+		
+	}
+	
 	////- Path
 	
 	function _pathObject(_node) : Path(_node) constructor {

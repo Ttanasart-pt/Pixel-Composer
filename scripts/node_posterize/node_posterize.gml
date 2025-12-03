@@ -160,31 +160,33 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		return _outSurf;
 	}
 
-	static drawProcessShort = function(_x, _y, _prog) {
+	static drawProcessShort = function(cx, cy, cw, ch, _prog) {
 		var _usepal = getSingleValue(2);
-		if(!_usepal) return;
+		if(!_usepal) return undefined;
 		
-		var _pal    = getSingleValue(1);
+		var _pal   = getSingleValue(1);
 		var _pname = attributes.annotation;
+		var  un    = _pname != "";
 		
 		var ww = 480
-		var hh = lerp(68, 112, clamp(_prog * 3, 0, 1));
+		var hh = lerp(16 + un * 42, 60 + un * 42, clamp(_prog * 3, 0, 1));
 		
-		var x0 = _x - ww / 2;
-		var y0 = _y - 32 - hh;
+		var x0 = cx - ww / 2;
+		var y0 = cy + ch / 2 + 32 - hh;
 		
 		draw_sprite_stretched(THEME.ui_panel_bg, 3, x0, y0, ww, hh);
 		var py = y0 + 8;
 		var ph = hh - 16;
 		
-		if(_pname != "") {
+		if(un) {
 			draw_set_text(f_pixel, fa_center, fa_top, COLORS._main_text_sub);
-			draw_text_transformed(_x, y0 + 8, _pname, 3, 3, 0);
+			draw_text_transformed(cx, y0 + 8, _pname, 2.5, 2.5, 0);
 			
-			py += 52;
-			ph -= 52;
+			py += 42;
+			ph -= 42;
 		}
 		
 		drawPalette(_pal, x0 + 8, py, ww - (8+8), ph);
+		return undefined;
 	}
 }

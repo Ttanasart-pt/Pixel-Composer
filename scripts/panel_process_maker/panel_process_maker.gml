@@ -6,13 +6,14 @@ function Process_Anim_Track(_node = undefined) constructor {
 	title   = "";
 	color   = c_white;
 	
+	animated = true;
 	start    = 0;
 	duration = 30;
 	trans    = 0;
+	tranRat  = .8;
 	
 	store    = false;
 	receive  = false;
-	
 	shadow   = true;
 	
 	if(node != undefined) {
@@ -74,6 +75,7 @@ function Process_Anim_Track(_node = undefined) constructor {
 		_m.trans     = trans;
 		_m.store     = store;
 		_m.shadow    = shadow;
+		_m.animated  = animated;
 		
 		return _m;
 	}
@@ -89,6 +91,7 @@ function Process_Anim_Track(_node = undefined) constructor {
 		trans    = _m[$ "trans"]    ?? trans;
 		store    = _m[$ "store"]    ?? store;
 		shadow   = _m[$ "shadow"]   ?? shadow;
+		animated = _m[$ "animated"] ?? animated;
 		
 		return self;
 	}
@@ -103,7 +106,7 @@ function Process_Anim() constructor {
 	outputNodeID = -1;
 	
 	intro_duration = 60;
-	outro_duration = 90;
+	outro_duration = 120;
 		
 	audio_intro   = "";
 	audio_loop    = "";
@@ -175,6 +178,7 @@ function Process_Stored_Surface(_node, _surf) constructor {
 }
 
 function Panel_Process_Maker() : PanelContent() constructor {
+	context_str  = "Shorts";
 	title    = "Process Maker";
 	auto_pin = true;
 	min_w    = ui(160)
@@ -183,15 +187,11 @@ function Panel_Process_Maker() : PanelContent() constructor {
 	h        = ui(160);
 	
 	#region data
-		track_sel     = undefined;
 		playing       = false;
 		play_frame    = 0;
 		play_time     = 0;
 		play_speed    = 1;
 		preview_speed = 1/30;
-		
-		scrubbing     = false;
-		scrub_frame   = undefined;
 		
 		output_preview = false;
 		
@@ -199,8 +199,26 @@ function Panel_Process_Maker() : PanelContent() constructor {
 		prev_surface   = noone;
 		curr_output    = noone;
 		
-		prev_track     = noone;
-		curr_track     = noone;
+		temp_surface   = array_create(4, noone);
+		output_surface = noone;
+		output_width   = 900;
+		output_height  = 1600;
+		
+		stored_surface = [];
+		stored_map     = {};
+		
+		exporting     = false;
+		export_dir    = "";
+		
+		view_thumbnail = false;
+		show_all_prop  = false;
+	#endregion
+	
+	#region track
+		track_sel     = undefined;
+		
+		prev_track    = noone;
+		curr_track    = noone;
 		
 		total_length  = 0;
 		track_len     = 0; 
@@ -209,20 +227,11 @@ function Panel_Process_Maker() : PanelContent() constructor {
 		track_x_to    = 0;
 		track_x_max   = 0;
 		track_w       = 0;
-		track_scale   = 2;
+		track_scale   = 2.5;
 		
-		temp_surface   = array_create(4, noone);
-		output_surface = noone;
-		output_width   = 900;
-		output_height  = 1600;
+		scrubbing     = false;
+		scrub_frame   = undefined;
 		
-		stored_surface = [];
-		
-		exporting     = false;
-		export_dir    = "";
-		
-		view_thumbnail = false;
-		show_all_prop  = false;
 	#endregion
 	
 	#region audio
@@ -260,6 +269,22 @@ function Panel_Process_Maker() : PanelContent() constructor {
 			-1,
 			"Fade", "Morph", 
 		], function(i) /*=>*/ { if(is(track_sel, Process_Anim_Track)) track_sel.trans = i; }).setFont(f_p3);
+	#endregion
+	
+	#region hotkey
+		var t = "Shorts";
+		var n = MOD_KEY.none;
+		var c = MOD_KEY.ctrl;
+		var s = MOD_KEY.shift;
+		var a = MOD_KEY.alt;
+		
+		registerFunction(t, "Play/Pause", vk_space, n, function() /*=>*/ { 
+			if(!playing) togglePlay(true, 1); 
+			else if(play_speed == 1) play_speed = 5;
+			else togglePlay(false, 1); 
+		} ).hotkey.setInterrupt();
+		
+		registerFunction(t, "Resume", vk_space, s, function() /*=>*/ { togglePlay(false, 1); } ).hotkey.setInterrupt();
 	#endregion
 	
 	sc_prop_start = new scrollPane(1, 1, function(_y, _m) /*=>*/ {
@@ -452,13 +477,15 @@ function Panel_Process_Maker() : PanelContent() constructor {
 			track_len += t.duration;
 		}
 		
-		total_length = track_len + PROJECT.trackAnim.outro_duration;
+		total_length = track_len + output_preview * PROJECT.trackAnim.outro_duration;
 		
 		if(_render) RenderAll();
 	}
 	
 	function resetTracks() {
 		stored_surface = [];
+		stored_map     = {};
+		
 		for( var i = 0, n = array_length(PROJECT.trackAnim.tracks); i < n; i++ )
 			PROJECT.trackAnim.tracks[i].reset();
 	}
@@ -616,49 +643,15 @@ function Panel_Process_Maker() : PanelContent() constructor {
 						
 						BLEND_NORMAL
 						
-						var stsx = 112;
-						var stsy = 448;
-						var stss = 192;
-						var stos;
-						
-						for( var i = 0, n = array_length(stored_surface); i < n; i++ ) {
-							stos   = stored_surface[i];
-							stos.x = stos.x ?? cx;
-							stos.y = stos.y ?? cy;
-							stos.s = stos.s ?? ss;
-							
-							if(stos.process) {
-								stos.a = lerp(stos.a,  1,     .2);
-								var _x = lerp(stos.x, cx, stos.a);
-								var _y = lerp(stos.y, cy, stos.a);
-								var _s = lerp(stos.s, ss, stos.a);
-								
-								var _sxx = _x - stos.w * _s / 2;
-								var _syy = _y - stos.h * _s / 2;
-								
-								draw_surface_ext(stos.surface, _sxx, _syy, _s, _s, 0, c_white, 1 - stos.a);
-								continue;
-							}
-							
-							var _stsx = stsx;
-							var _stsy = stsy; stsy += stss + 4;
-							var _stss = (stss - 32) / stos.h;
-							
-							stos.x = lerp(stos.x, _stsx, .2);
-							stos.y = lerp(stos.y, _stsy, .2);
-							stos.s = lerp(stos.s, _stss, .2);
-							
-							var _sxx = stos.x - stos.w * stos.s / 2;
-							var _syy = stos.y - stos.h * stos.s / 2;
-							
-							draw_surface_ext(stos.surface, _sxx, _syy, stos.s, stos.s, 0, c_white, 1);
-							
-						}
-						
 						ny = y0 + sh * ss + 64;
 					}
 					
-					if(_node.drawProcessShort != undefined) _node.drawProcessShort(nx, ny, _trans);
+					if(_node.drawProcessShort != undefined) {
+						var size = output_width - 192;
+						var cush = _node.drawProcessShort(cx, cy, size, size, _trans);
+						
+						if(cush != undefined) ny = cy + cush / 2 + 64;
+					}
 					
 					var _name = _data.title == ""? _node.getDisplayName() : _data.title;
 					draw_set_text(f_pixel, fa_center, fa_top, COLORS._main_text);
@@ -673,7 +666,7 @@ function Panel_Process_Maker() : PanelContent() constructor {
 					var s2 = min((output_width -  64) / sw, (output_height -  64) / sh);
 					
 					var pss = smoothstep_bounce(clamp(_trans * 6, 0, 1));
-					var prg = smoothstep_bounce(clamp(_trans * 4, 0, 1));
+					var prg = smoothstep_bounce(clamp(_trans * 2, 0, 1));
 					var ds  = lerp(ss, s2, pss);
 					var x0 = cx - sw * ds / 2;
 					var y0 = cy - sh * ds / 2;
@@ -731,6 +724,55 @@ function Panel_Process_Maker() : PanelContent() constructor {
 				draw_surface(temp_surface[3], 0, 0);
 			shader_reset();
 			
+			if(_step == 1) {
+				var stsx = 112;
+				var stsy = 448;
+				var stss = 192;
+				var stos;
+				
+				for( var i = 0, n = array_length(stored_surface); i < n; i++ ) {
+					stos   = stored_surface[i];
+					var _surf = stos.surface;
+					if(!is_surface(_surf)) continue;
+					
+					var sw = surface_get_width(_surf);
+					var sh = surface_get_height(_surf);
+					var ss = min((output_width - 256) / sw, (output_height - 256) / sh);
+					
+					stos.x = stos.x ?? cx;
+					stos.y = stos.y ?? cy;
+					stos.s = stos.s ?? ss;
+					
+					if(stos.process) {
+						stos.a = lerp(stos.a,  1,     .2);
+						var _x = lerp(stos.x, cx, stos.a);
+						var _y = lerp(stos.y, cy, stos.a);
+						var _s = lerp(stos.s, ss, stos.a);
+						
+						var _sxx = _x - stos.w * _s / 2;
+						var _syy = _y - stos.h * _s / 2;
+						
+						draw_surface_ext(stos.surface, _sxx, _syy, _s, _s, 0, c_white, 1 - stos.a);
+						
+					} else {
+						
+						var _stsx = stsx;
+						var _stsy = stsy; stsy += stss + 4;
+						var _stss = (stss - 32) / stos.h;
+						
+						stos.x = lerp(stos.x, _stsx, .2);
+						stos.y = lerp(stos.y, _stsy, .2);
+						stos.s = lerp(stos.s, _stss, .2);
+						
+						var _sxx = stos.x - stos.w * stos.s / 2;
+						var _syy = stos.y - stos.h * stos.s / 2;
+						
+						draw_surface_ext(stos.surface, _sxx, _syy, stos.s, stos.s, 0, c_white, 1);
+					}
+					
+				}
+			}
+			
 			var _ttx = output_width/2 - text_w/2;
 			var _tty = 200 - text_h/2;
 			
@@ -742,10 +784,7 @@ function Panel_Process_Maker() : PanelContent() constructor {
 			BLEND_ADD 
 			draw_surface_ext(temp_surface[2], _ttx, _tty, 1, 1, 0, c_white, .75);
 			draw_surface_ext(temp_surface[2], _ttx, _tty, 1, 1, 0, c_white, .75);
-			
-			if(_step == 2) {
-				draw_surface_ext(temp_surface[2], _ttx, _tty, 1, 1, 0, c_white, prg);
-			}
+			if(_step == 2) draw_surface_ext(temp_surface[2], _ttx, _tty, 1, 1, 0, c_white, prg);
 			BLEND_NORMAL
 			
 			#region track list
@@ -860,12 +899,10 @@ function Panel_Process_Maker() : PanelContent() constructor {
 		for( var i = 0, n = array_length(_from); i < n; i++ ) {
 			var fn = _from[i].node_id;
 			
-			for( var j = 0, m = array_length(stored_surface); j < m; j++ ) {
-				var nd = stored_surface[j].node;
-				if(nd.node_id == fn) {
-					stored_surface[j].process = 1;
-					_t.receive = true;
-				}
+			if(has(stored_map, fn)) {
+				var sr = stored_map[$ fn];
+				sr.process = 1;
+				_t.receive = true;
 			}
 		}
 	}
@@ -879,6 +916,7 @@ function Panel_Process_Maker() : PanelContent() constructor {
 		var _st   = new Process_Stored_Surface(_node, _surf);
 		_st.index = array_length(stored_surface);
 		array_push(stored_surface, _st);
+		stored_map[$ _node.node_id] = _st;
 	}
 	
 	function Player() {
@@ -922,12 +960,12 @@ function Panel_Process_Maker() : PanelContent() constructor {
 				var ts = t.start;
 				var te = t.start + t.duration;
 				
-				var rt = (play_frame - ts) / (t.duration * .8);
+				var rt = (play_frame - ts) / (t.duration * t.tranRat);
 				    rt = smoothstep_cubic(clamp(rt, 0, 1));
 				
 				t.apply(rt);
 				if(play_frame >= ts && play_frame < te) {
-					if(PROJECT.trackAnim.animated) {
+					if(PROJECT.trackAnim.animated && t.animated) {
 						var fr = floor((play_frame - ts) / t.duration * GLOBAL_TOTAL_FRAMES);
 						PROJECT.animator.setFrame(fr);
 					}
@@ -948,7 +986,7 @@ function Panel_Process_Maker() : PanelContent() constructor {
 			if(currtr != noone) {
 				track_sel = currtr;
 				
-				if(PROJECT.trackAnim.animated) {
+				if(PROJECT.trackAnim.animated && currtr.animated) {
 					PROJECT.animator.frame_progress = false;
 					var _renderObj = new RenderObject(PROJECT, false);
 					_renderObj.render(infinity);
@@ -960,6 +998,11 @@ function Panel_Process_Maker() : PanelContent() constructor {
 			}
 			
 			RenderOutput(1, currtr, _currTrans);
+			
+		} else if(!output_preview) {
+			playing = false;
+			resetTracks();
+			if(exporting) Export();
 			
 		} else {
 			var _outNode = PROJECT.trackAnim.getOutputNode();
@@ -980,7 +1023,10 @@ function Panel_Process_Maker() : PanelContent() constructor {
 		
 		for( var i = array_length(stored_surface) - 1; i >= 0; i-- ) {
 			var stos = stored_surface[i];
-			if(stos.process == 1 && stos.a == 1) array_delete(stored_surface, i, 1);
+			if(stos.process == 1 && stos.a == 1) {
+				array_delete(stored_surface, i, 1);
+				struct_remove(stored_map, stos.node.node_id);
+			}
 		}
 	}
 	
@@ -994,11 +1040,11 @@ function Panel_Process_Maker() : PanelContent() constructor {
 		var target_path = string_quote(filename_combine(parent_path, $"{target_name}.mp4"));
 		
 		var	shell_cmd  = $"-hide_banner -loglevel quiet -framerate {rate} ";
-		    shell_cmd += $"-i {temp_path} -map 0:v:0 ";
+		    shell_cmd += $"-i {temp_path} ";
 		    
 		if(PROJECT.trackAnim.audio_loop != "") {
 			var _aloop = string_quote(PROJECT.trackAnim.audio_loop);
-			shell_cmd += $"-stream_loop -1 -i {_aloop} -shortest -map 1:a:0 ";
+			shell_cmd += $"-stream_loop -1 -i {_aloop} -shortest -map 0:v:0 -map 1:a:0 ";
 		}
 		
 		    shell_cmd += $"-c:v libx264 -r {rate} -pix_fmt yuv420p -crf {qual} ";
@@ -1019,11 +1065,9 @@ function Panel_Process_Maker() : PanelContent() constructor {
 		
 		#region audio
 			var _aud = PROJECT.trackAnim.audio_loop;
-			if(audio_loop_curr != _aud && file_exists(_aud)) {
-				audio_loop_dura = WAV_get_length(_aud);
+			if(audio_loop_curr != _aud) {
+				audio_loop_dura = file_exists(_aud)? WAV_get_length(_aud) : 0;
 				audio_loop_curr = _aud;
-				
-				print(audio_loop_dura);
 			}
 		#endregion
 		
@@ -1079,7 +1123,9 @@ function Panel_Process_Maker() : PanelContent() constructor {
 			
 			bx += ui(2);
 			var ii = PROJECT.trackAnim.audio_loop != "";
-			var b  = buttonInstant(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "Set Audio", THEME.play_sound, ii, COLORS._main_icon, 1, .75)
+			var cc = COLORS._main_icon;
+			if(PROJECT.trackAnim.audio_loop != "" && !file_exists(PROJECT.trackAnim.audio_loop)) cc = COLORS._main_value_negative;
+			var b  = buttonInstant(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "Set Audio", THEME.play_sound, ii, cc, 1, .75)
 			if(b == 3) PROJECT.trackAnim.audio_loop = "";
 			if(b == 2) {
 				var _path  = get_open_filename_compat("WAV Audio|*.wav", "");
@@ -1089,26 +1135,26 @@ function Panel_Process_Maker() : PanelContent() constructor {
 			if(PROJECT.trackAnim.audio_loop != "") {
 				bx += ui(2);
 				var aname = filename_name_only(PROJECT.trackAnim.audio_loop);
-				draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_sub);
-				draw_text(bx, by + bs / 2, aname);
+				draw_set_text(f_p4, fa_left, fa_center, COLORS._main_text_sub);
+				draw_text_add(bx, by + bs / 2, aname);
 				bx += string_width(aname) + ui(4);
 			}
 			
 			///////////////////////////////
 			
-			var cc = _n == noone? COLORS._main_icon : COLORS._main_value_positive;
+			var cc = _n? COLORS._main_value_positive : COLORS._main_icon;
 			var bx = w - pd - bs;
 			if(buttonInstant(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "Add Node Track", THEME.add_16, 0, cc) == 2) {
 				if(_n) addNodeTrack(_n);
 			} bx -= bs + ui(2);
 			
-			var cc = _n? COLORS._main_icon : merge_color(COLORS._main_icon_dark, COLORS._main_icon, .5);
+			var cc = _n? COLORS._main_icon_light : COLORS._main_icon;
 			if(buttonInstant(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "Set Output", THEME.node_goto_16, 0, cc) == 2) {
 				if(_n) PROJECT.trackAnim.outputNode = _n;
 			} bx -= bs + ui(2); 
 			
 			var cc = COLORS._main_icon;
-			if(buttonInstant(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "Thumbnail", THEME.splash_thumbnail, 0, cc, 1, .8) == 2) {
+			if(buttonInstant(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "Show Thumbnail", THEME.splash_thumbnail, 0, cc, 1, .8) == 2) {
 				view_thumbnail = !view_thumbnail;
 			} bx -= bs + ui(2); 
 			
@@ -1163,6 +1209,12 @@ function Panel_Process_Maker() : PanelContent() constructor {
 	        var hover = pHOVER && point_in_rectangle(mx, my, _trx, _try, _trx + _trw, _try + _trh);
 	        var trw = 0;
 	        
+	        // if(audio_loop_dura > 0) {
+	        // 	var _audF = audio_loop_dura * 30;
+	        // 	var _audW = _audF * tss;
+	        // 	draw_sprite_stretched_ext(THEME.ui_panel, 0, tsx, _try + ui(1), _audW, _tlh - ui(2), COLORS._main_accent, .25);
+	        // }
+	        
 	    	for( var i = 0; i <= track_w; i += 30 ) {
 	    		var lx = tsx + i * tss;
 	    		var ss = i / 30
@@ -1172,15 +1224,15 @@ function Panel_Process_Maker() : PanelContent() constructor {
 	    		draw_line_width(lx, _try, lx, _try + _tlh - 1, 1);
 				draw_set_alpha(1);
 	    		
-	    		draw_set_text(f_p4, fa_center, fa_top, COLORS._main_icon);
-	    		draw_text_transform_add(lx, _try, ss, .65, 0);
+	    		draw_set_text(f_p4, fa_left, fa_top, COLORS._main_icon);
+	    		draw_text_transform_add(lx + 3, _try, ss, .65, 0);
 	    	}
 	    	
 	        var hovETrck   = undefined;
 	        var hovETrck_x = undefined;
 	        var hovETrck_y = undefined;
 	        
-        	var tr, tw, cc;
+        	var tr, tw, cc, otr = undefined;
         	var _node;
 
 	        for( var i = -1, n = array_length(PROJECT.trackAnim.tracks); i <= n; i++ ) {
@@ -1208,6 +1260,7 @@ function Panel_Process_Maker() : PanelContent() constructor {
 	        	
 	        	if(!is(_node, Node)) continue;
 	        	
+	        	var trk = is(tr, Process_Anim_Track);
 	        	var tx = tsx + ui(1);
 	        	var ty = tsy + ui(1);
 	        	var ww = tw  - ui(2)
@@ -1216,7 +1269,7 @@ function Panel_Process_Maker() : PanelContent() constructor {
 	        	var hov = hover && point_in_rectangle(mx, my, tx, ty, tx + ww, ty + hh);
 	        	var sel = track_sel == tr;
 	        	
-	        	if(is(tr, Process_Anim_Track)) {
+	        	if(trk) {
 		        	if(tr.store)   draw_sprite_ui(THEME.arrow, 1, tx + ww - ui(4), _try + _tlh / 2 + ui(2), .5, .5, 0, COLORS._main_value_positive);
 		        	if(tr.receive) draw_sprite_ui(THEME.arrow, 3, tx + ww + ui(4), _try + _tlh / 2 + ui(2), .5, .5, 0, COLORS._main_value_negative);
 	        	}
@@ -1229,6 +1282,18 @@ function Panel_Process_Maker() : PanelContent() constructor {
 	        	}
 	        	draw_sprite_stretched_add(THEME.ui_panel, 1, tx, ty, ww, hh, c_white, .1 + hov * .3);
 	        	
+	        	// if(trk) {
+	        	// 	if(i && tr.trans) {
+	        	// 		var _tnw = ui(6) + tr.duration * tr.tranRat * tss;
+	        	// 		var _tnh = ui(6);
+	        	// 		var _tnx = tx - ui(6);
+	        	// 		var _tny = ty// + hh / 2 - _tnh / 2;
+	        	// 		var cc = otr.color;
+	        			
+	        	// 		draw_sprite_stretched_ext(THEME.ui_panel, 0, _tnx, _tny, _tnw, _tnh, cc);
+	        	// 	}
+	        	// }
+				
 	        	if(view_thumbnail == 0) {
 		        	var _ndata = ALL_NODES[$ instanceof(_node)];
 					if(_ndata != undefined) {
@@ -1250,31 +1315,32 @@ function Panel_Process_Maker() : PanelContent() constructor {
 	        		}
 	        		
 	        	}
+	        	
+	        	if(trk) {
+	        		if(!tr.animated) draw_sprite_ui(THEME.sequence_control, 0, tx + ui(8), ty + ui(8), .4, .4, 0, COLORS._main_accent);
+	        	}
 				
 	        	if(hov) {
 	        		if(mouse_lpress(pFOCUS)) track_sel = track_sel == tr? undefined : tr;
-	        		if(is(tr, Process_Anim_Track)) 
-	        			if(mouse_rpress(pFOCUS)) del = i;
+	        		if(mouse_rpress(pFOCUS) && trk) del = i;
 	        	}
 	        	
-	        	if(i == 0) {
-		        	if(hover && point_in_circle(mx, my, tx - ui(1), ty + hh/2, ui(8))) {
-		        		hovETrck   = -1;
-		        		hovETrck_x = tx - ui(1);
-		        		hovETrck_y = ty + hh/2;
-		        	}
+	        	if(i == 0 && hover && point_in_circle(mx, my, tx - ui(1), ty + hh/2, ui(6))) {
+	        		hovETrck   = -1;
+	        		hovETrck_x = tx - ui(1);
+	        		hovETrck_y = ty + hh/2;
 	        	} 
 	        	
-	        	if(is(tr, Process_Anim_Track)) {
-		        	if(hover && point_in_circle(mx, my, tx + ww + ui(1), ty + hh/2, ui(8))) {
-		        		hovETrck   = i;
-		        		hovETrck_x = tx + ww + ui(1);
-		        		hovETrck_y = ty + hh/2;
-		        	}
+	        	if(trk && hover && point_in_circle(mx, my, tx + ww + ui(1), ty + hh/2, ui(6))) {
+	        		hovETrck   = i;
+	        		hovETrck_x = tx + ww + ui(1);
+	        		hovETrck_y = ty + hh/2;
 	        	}
 	        	
 	        	tsx += tw;
 	        	trw += tw;
+	        	
+	        	otr = tr;
 	        }
 	        
 	        if(_n && hovETrck != undefined) {
@@ -1318,8 +1384,17 @@ function Panel_Process_Maker() : PanelContent() constructor {
 			var bx = w - pd - bs;
 			var by = ty;
 			var cc = is(track_sel, Process_Anim_Track)? COLORS._main_icon : merge_color(COLORS._main_icon_dark, COLORS._main_icon, .5);
-			if(buttonInstant(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "Apply Output Channel", THEME.panel_preview_icon, 0, cc) == 2) {
-				if(is(track_sel, Process_Anim_Track)) track_sel.output = track_sel.getNode().preview_channel;
+			if(buttonInstant(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "Output Channel...", THEME.panel_preview_icon, 0, cc) == 2) {
+				if(is(track_sel, Process_Anim_Track)) {
+					var _outs = [];
+					var _node = track_sel.node;
+					for( var i = 0, n = array_length(_node.outputs); i < n; i++ ) {
+						var _outp = _node.outputs[i];
+						array_push(_outs, new MenuItem(_outp.name, function(p) /*=>*/ { track_sel.output = p; }).setParam(i));
+					}
+					
+					menuCall("", _outs);
+				}
 			} bx -= bs + ui(4); tw -= bs + ui(4); 
 			
 			if(is(track_sel, Process_Anim_Track)) {
@@ -1332,6 +1407,12 @@ function Panel_Process_Maker() : PanelContent() constructor {
 				var aa  = track_sel.shadow? 1 : .5;
 				if(buttonInstant(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "Shadow", spr, 0, COLORS._main_icon, aa, .75) == 2) {
 					track_sel.shadow = !track_sel.shadow;
+				} bx -= bs + ui(4); tw -= bs + ui(4); 
+				
+				var spr = THEME.sequence_control;
+				var ii  = track_sel.animated;
+				if(buttonInstant(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "Animated", spr, ii, COLORS._main_icon, 1, .75) == 2) {
+					track_sel.animated = !track_sel.animated;
 				} bx -= bs + ui(4); tw -= bs + ui(4); 
 				
 				var spw = ui(160);

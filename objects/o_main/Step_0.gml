@@ -22,7 +22,8 @@ if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 		HOTKEY_ACT = false;
 		
 		if(hotkey_use) {
-			var _toAct = [];
+			var _toAct   = [];
+			var _toActIn = undefined;
 			
 			repeat(ds_stack_size(FOCUS_STACK)) {
 				var _focus_ctx = ds_stack_pop(FOCUS_STACK);
@@ -33,7 +34,8 @@ if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 						var h = list[i];
 						
 						if(h.isPressing()) {
-							if(h.key == noone) h.action();
+							if(h.key == noone) h.action(); // Modifier action trigger immediately
+							else if(h.interrupt) _toActIn = h;
 							else array_push(_toAct, h);
 						}
 					}
@@ -42,20 +44,24 @@ if(!LOADING && PROJECT.active && !PROJECT.safeMode) { //node step
 				if(_focus_ctx == "Graph" || _focus_ctx == "Nodes") {
 					for( var i = 0, n = array_length(GRAPH_ADD_NODE_KEYS); i < n; i++ ) {
 		        		var h = GRAPH_ADD_NODE_KEYS[i];
-		        		
 		        		if(h.isPressing()) array_push(_toAct, h);
 		        	}
 				}
 			}
 			
-			var _l = array_length(_toAct);
-			if(_l == 1) {
-				_toAct[0].action();
-				HOTKEY_ACT = true;
+			if(_toActIn) {
+				_toActIn.action();
 				
-			} else if(_l > 1) {
-				menuCall($"hotkey.multi", array_map(_toAct, function(h) /*=>*/ {return new MenuItem(h.name, function(h) /*=>*/ {return h.action()}).setParam(h)}));
-				HOTKEY_ACT = true;
+			} else {
+				var _l = array_length(_toAct);
+				if(_l == 1) {
+					_toAct[0].action();
+					HOTKEY_ACT = true;
+					
+				} else if(_l > 1) {
+					menuCall($"hotkey.multi", array_map(_toAct, function(h) /*=>*/ {return new MenuItem(h.name, function(h) /*=>*/ {return h.action()}).setParam(h)}));
+					HOTKEY_ACT = true;
+				}
 			}
 		}
 		
