@@ -556,7 +556,7 @@ function Panel_Process_Maker() : PanelContent() constructor {
 					
 					var prg = clamp(play_frame / (PROJECT.trackAnim.intro_duration * .6), 0, 1);
 					    prg = smoothstep_cubic(prg);
-					var ds  = ss// * lerp(.6, 1, prg);
+					var ds  = PROJECT.trackAnim.animated? ss : ss * lerp(.6, 1, prg);
 					
 					var x0 = cx - sw * ds / 2;
 					var y0 = cy - sh * ds / 2;

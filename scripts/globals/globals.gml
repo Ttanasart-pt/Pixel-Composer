@@ -32,11 +32,11 @@ gml_pragma("UnityBuild", "true");
 	globalvar DEBUG; DEBUG    = false;
 	
 	globalvar LATEST_VERSION; LATEST_VERSION = 1_20_00_0;
-	globalvar VERSION; VERSION        = 1_20_00_9;
+	globalvar VERSION; VERSION        = 1_20_01_0;
 	globalvar SAVE_VERSION; SAVE_VERSION   = 1_20_00_0;
-	globalvar VERSION_STRING; VERSION_STRING = MAC? "1.18.003m" : "1.20.0.903";
-	globalvar RELEASE_STRING; RELEASE_STRING = "1.20.0";
-	globalvar BUILD_NUMBER; BUILD_NUMBER   = 1_20_00_9;
+	globalvar VERSION_STRING; VERSION_STRING = "1.20.1";
+	globalvar RELEASE_STRING; RELEASE_STRING = "1.20.1";
+	globalvar BUILD_NUMBER; BUILD_NUMBER   = 1_20_01_0;
 	globalvar PREF_VERSION; PREF_VERSION   = 1_17_1;
 	
 	var _versions = string_split(VERSION_STRING, ".");

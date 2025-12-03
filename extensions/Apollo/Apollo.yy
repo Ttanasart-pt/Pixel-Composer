@@ -279,11 +279,17 @@
         "Steam":{
           "copyToTargets":"192",
         },
-      },"constants":[],"copyToTargets":-1,"filename":"apollo_log.gml","final":"","functions":[
+        "Itch":{
+          "copyToTargets":"64",
+        },
+      },"constants":[],"copyToTargets":64,"filename":"apollo_log.gml","final":"","functions":[
         {"$GMExtensionFunction":"","%Name":"lua_register_log","argCount":0,"args":[],"documentation":"","externalName":"lua_register_log","help":"","hidden":false,"kind":2,"name":"lua_register_log","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":1,},
       ],"init":"","kind":2,"name":"","order":[],"origname":"","ProxyFiles":[
         {"$GMProxyFile":"","%Name":"apollo_log_linux.gml","ConfigValues":{
             "Steam":{
+              "TargetMask":"7",
+            },
+            "Itch":{
               "TargetMask":"7",
             },
           },"name":"apollo_log_linux.gml","resourceType":"GMProxyFile","resourceVersion":"2.0","TargetMask":0,},
