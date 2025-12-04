@@ -8,10 +8,10 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	newInput(i+0, nodeValue_Dimension());
 	
 	////- =Render
-	newInput(i+4, nodeValue_Enum_Button( "Render Type",    PARTICLE_RENDER_TYPE.surface , [ "Surface", "Line" ]));
+	newInput(i+4, nodeValue_Enum_Button( "Render Type",    PARTICLE_RENDER_TYPE.surface , [ "Surface", "Line" ] ));
 	newInput(i+5, nodeValue_Int(         "Line Life",      4 ));
-	newInput(i+1, nodeValue_Bool(        "Round Position", true, "Round position to the closest integer value to avoid jittering."));
-	newInput(i+2, nodeValue_Enum_Scroll( "Blend Mode",     0, [ "Normal", "Alpha", "Additive", "Maximum" ]));
+	newInput(i+1, nodeValue_Bool(        "Round Position", true, "Round position to the closest integer value to avoid jittering." ));
+	newInput(i+2, nodeValue_Enum_Scroll( "Blend Mode",     0, [ "Normal", "Alpha", "Additive", "Maximum" ] ));
 	//input i+6
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -81,7 +81,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	
 	static onUpdate = function(frame = CURRENT_FRAME) {
 		use_cache = attributes.cache? CACHE_USE.auto : CACHE_USE.none;
-		// if(frame != render_frame && !IS_FIRST_FRAME) return;
+		if(frame != render_frame && !IS_FIRST_FRAME) return;
 		
 		var _inSurf  = getInputData(0);
 		var _dim	 = getInputData(input_len + 0); __dim = _dim;

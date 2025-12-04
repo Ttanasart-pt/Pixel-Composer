@@ -1,7 +1,6 @@
 function Node_Vector_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name  = "Vector Split";
 	color = COLORS.node_blend_number;
-	draw_padding = 4;
 	
 	setDimension(96, 0);
 	
