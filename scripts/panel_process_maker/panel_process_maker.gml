@@ -686,7 +686,6 @@ function Panel_Process_Maker() : PanelContent() constructor {
 					draw_text_transformed(nx, ny, $"Success!!", 4, 4, 0);
 					break;
 			}
-			
 		surface_reset_target();
 		
 		surface_set_target(temp_surface[0]);

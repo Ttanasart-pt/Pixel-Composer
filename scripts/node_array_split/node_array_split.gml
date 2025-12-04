@@ -19,14 +19,13 @@ function Node_Array_Split(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var type = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;
 		inputs[0].setType(type);
 		
-		var amo  = max(_min, array_safe_length(_inp));
+		var iamo = max(_min, array_safe_length(_inp));
 		var oamo = array_length(outputs);
-		attributes.output_amount = amo;
+		attributes.output_amount = iamo;
 		
-		if(amo == 0) return;
-		
-		if(amo == oamo) {
-			for (var i = 0; i < amo; i++) {
+		if(iamo == 0) return;
+		if(iamo == oamo) {
+			for (var i = 0; i < iamo; i++) {
 				if(outputs[i].type != type) {
 					outputs[i].setType(type);
 					outputs[i].resetDisplay();
@@ -37,7 +36,7 @@ function Node_Array_Split(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			return;
 		}
 		
-		for (var i = 0; i < amo; i++) {
+		for (var i = 0; i < iamo; i++) {
 			if(i >= oamo) {
 				var _pl = array_safe_get(io_pool, i, 0);
 				if(_pl == 0) _pl = nodeValue_Output($"val {i}", type, 0);
@@ -55,13 +54,13 @@ function Node_Array_Split(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			outputs[i].setValue(array_safe_get(_inp, i, 0));
 		}
 		
-		for(var i = amo; i < oamo; i++) {
+		for(var i = iamo; i < oamo; i++) {
 			var _to = outputs[i].getJunctionTo();
 			for( var j = 0, m = array_length(_to); j < m; j++ ) 
 				_to[j].removeFrom();
 		}
 		
-		array_resize(outputs, amo);
+		array_resize(outputs, iamo);
 		__preDraw_data.force = true;
 	}
 	

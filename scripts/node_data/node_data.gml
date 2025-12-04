@@ -1529,7 +1529,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		setJunctionIndex();
 		
 		PANEL_GRAPH.refreshDraw(1);
-		__preDraw_data.force     = true;
+		__preDraw_data.force = true;
 	} 
 	
 	__preDraw_data = { _x: undefined, _y: undefined, _w: undefined, _h: undefined, _s: undefined, _p: undefined, sp: undefined, force: false };

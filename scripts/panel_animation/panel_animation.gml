@@ -633,8 +633,8 @@ function Panel_Animation() : PanelContent() constructor {
         
     	var size = timeline_scale;
     	var amou = ceil(timeline_w / size) + 1;
-    	var keyy = floor(-timeline_shift / size);
-    	var kx   = (keyy + .5) * timeline_scale + timeline_shift;
+    	var fram = floor(-timeline_shift / size);
+    	var kx   = (fram + .5) * timeline_scale + timeline_shift;
     	
     	var pd  = ui(2)
     	var _ww = size - pd * 2;
@@ -648,34 +648,38 @@ function Panel_Animation() : PanelContent() constructor {
     		var  ta = .5;
     		
     		var hov = pHOVER && point_in_rectangle(msx, msy, _x0, 0, _x0 + size - 1, bar_h);
-    		var hig = (keyy + 1) % timeline_separate == 0;
+    		var hig = (fram + 1) % timeline_separate == 0;
     		var cc  = hig? COLORS._main_icon_light : COLORS._main_icon;
-    		var ii  = 1 + (hig || keyy == GLOBAL_CURRENT_FRAME);
+    		var ii  = 1 + (hig || fram == GLOBAL_CURRENT_FRAME);
     		
-    		if(keyy >= 0 && keyy < GLOBAL_TOTAL_FRAMES) {
+    		if(fram >= 0 && fram < GLOBAL_TOTAL_FRAMES) {
 	    		ta = 1;
 	    		
 	    		if(is(inspecting, Node)) {
-		    		var _surf = array_safe_get(inspecting.preview_cache, keyy);
+		    		var _surf = array_safe_get(inspecting.preview_cache, fram);
 		    		draw_surface_fit(_surf, _x0 + _ww / 2, _y0 + _hh / 2, _ww - ui(4), _hh - ui(4));
 	    		}
 	    		
-	    		if(keyy != GLOBAL_CURRENT_FRAME)
+	    		if(fram != GLOBAL_CURRENT_FRAME)
 	    			draw_sprite_stretched_ext(THEME.ui_panel, ii, _x0, _y0, _ww, _hh, cc, .5);
-	    			
+	    		
+	    		if(is(inspecting, Node) && inspecting.use_cache) { // cache
+	                var cachcol = inspecting.getAnimationCacheExist(fram)? c_lime : c_red;
+	                draw_sprite_stretched_add(THEME.ui_panel, ii, _x0, _y0, _ww, _hh, cachcol, .2);
+		        }
     		} 
     		
-    		if(keyy == GLOBAL_CURRENT_FRAME)
+    		if(fram == GLOBAL_CURRENT_FRAME)
     			draw_sprite_stretched_ext(THEME.ui_panel, ii, _x0, _y0, _ww, _hh, COLORS._main_accent, 1);
     		
     		if(hov) draw_sprite_stretched_add(THEME.ui_panel, ii, _x0, _y0, _ww, _hh, c_white, ta * .3);
     		
     		draw_set_text(f_p4, fa_right, fa_bottom, COLORS._main_text_sub, ta);
-    		draw_text(_x1 - ui(3), _y1 - ui(2), keyy + 1);
+    		draw_text(_x1 - ui(3), _y1 - ui(2), fram + 1);
     		draw_set_alpha(1);
     		
     		kx += size;
-    		keyy++;
+    		fram++;
     	}
     	
         BLEND_MULTIPLY
