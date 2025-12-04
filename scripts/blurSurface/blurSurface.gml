@@ -1,17 +1,18 @@
-globalvar GAUSSIAN_COEFF;
-GAUSSIAN_COEFF = {};
+globalvar GAUSSIAN_COEFF; GAUSSIAN_COEFF = {};
 
 function surface_blur_init() {
 	__blur_pass = [ 0, 0 ];
 }
+
+	////- Gaussian blur
 
 function __gaussian_get_kernel(size) {
 	size = max(1, round(size));
 	if(struct_has(GAUSSIAN_COEFF, size)) return GAUSSIAN_COEFF[$ size];
 	
 	var gau_array = array_create(size);
-	var we        = 0;
-	var b         = 0.3 * ((size - 1) * 0.5 - 1) + 0.8;
+	var we = 0;
+	var b  = 0.3 * ((size - 1) * 0.5 - 1) + 0.8;
 	
 	for(var i = 0; i < size; i++) {
 		var _x = i * .5;
@@ -89,14 +90,15 @@ function blur_zoom_args(_surface, _size, _origin_x, _origin_y, _blurMode = 0, _s
 	sampleMode = _sampleMode;
 	samples    = _samples;
 	
-	UVmap        = noone;
+	UVmap        = noone; 
 	UVmapMix     = 0;     static setUVMap        = function(s,m) /*=>*/ { UVmap = s; UVmapMix = m; return self; }
 	
 	mode         = 0;     static setMode         = function(i) /*=>*/ { mode = i;         return self; }
 	fadeDistance = true;  static setFadeDistance = function(i) /*=>*/ { fadeDistance = i; return self; }
 	gamma        = false; static setGamma        = function(i) /*=>*/ { gamma = i;        return self; }
-	useMask      = false; static setMask         = function(i) /*=>*/ { mask = i; useMask = is_surface(mask); return self; }
-	mask         = noone;
+	
+	useMask      = false; 
+	mask         = noone; static setMask         = function(i) /*=>*/ { mask = i; useMask = is_surface(mask); return self; }
 }
 
 function surface_apply_blur_zoom(outputSurf, args) {
@@ -160,10 +162,10 @@ function surface_apply_blur_directional(outputSurf, args) {
 	
 	outputSurf = surface_verify(outputSurf, _sw, _sh, format);
 	
-	var _sizeArr   = is_array(args.size);
-	var _size      = (_sizeArr? args.size[0] : args.size) / 128;
-	var _sizeSurf  =  _sizeArr? args.size[1] : noone;
-	var _sizeJunc  =  _sizeArr? args.size[2] : noone;
+	var _sizeArr   = is_array(args.size); 
+	var _size      = _sizeArr? args.size[0] : args.size;
+	var _sizeSurf  = _sizeArr? args.size[1] : noone;
+	var _sizeJunc  = _sizeArr? args.size[2] : noone;
 	
 	var _angleArr  = is_array(args.angle);
 	var _angle     = _angleArr? args.angle[0] : args.angle;
@@ -179,7 +181,7 @@ function surface_apply_blur_directional(outputSurf, args) {
 		shader_set_i("singleDirect",  args.singleDirect);
 		shader_set_i("gamma",         args.gamma);
 		shader_set_i("sampleMode",	  args.sampleMode);
-		shader_set_i("fadeDistance", args.fadeDistance);
+		shader_set_i("fadeDistance",  args.fadeDistance);
 		
 		draw_surface_safe(args.surface);
 	surface_reset_shader();

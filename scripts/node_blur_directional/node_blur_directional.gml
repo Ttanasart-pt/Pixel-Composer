@@ -65,7 +65,9 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		var _gamm = _data[12];
 		var _fade = _data[13];
 		
-		var _args = new blur_directional_args(_surf, [_strn, _data[9], inputs[1]], [_dirc, _data[10], inputs[2]])
+		var _asiz = [_strn, _data[9], inputs[1]];
+		
+		var _args = new blur_directional_args(_surf, _asiz, [_dirc, _data[10], inputs[2]])
 						.setSingleDirect(_sing)
 						.setGamma(_gamm)
 						.setFadeDistance(_fade)

@@ -198,9 +198,14 @@
 	function shader_set_color(uniform, col, alpha = 1) { shader_set_f(uniform, colToVec4(col, alpha)); }
 	
 	function shader_set_curve(uniform, curve) { 
-		shader_set_i($"curve_offset",      CURVE_PADD);
-		shader_set_f($"{uniform}_curve",   curve);
-		shader_set_i($"{uniform}_amount",  array_length(curve));
+		var _isCurv = is_array(curve);
+		
+		shader_set_i($"curve_offset",        CURVE_PADD);
+		shader_set_i($"{uniform}_curve_use", _isCurv);
+		if(!_isCurv) return;
+		
+		shader_set_f($"{uniform}_curve",     curve);
+		shader_set_i($"{uniform}_amount",    array_length(curve));
 		
 	}
 	
