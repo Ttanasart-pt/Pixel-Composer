@@ -536,6 +536,9 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 		
 		if(contentPage == 3) {
 			displayFiles = array_clone(_files, 1);
+			array_sort(displayFiles, function(a,b) /*=>*/ {
+				return a.pack == b.pack? sign(a.creation_time - b.creation_time) : sign(b.pack - a.pack);
+			});
 			
 		} else {
 			for( var i = _offset, n = array_length(_files); i < n; i++ ) {
@@ -2882,6 +2885,11 @@ function Panel_Steam_Workshop(_contentPage = 0, _page = 0) : PanelContent() cons
 				bx += bw + ui(4);
 			}
 			
+			if(RUN_IDE) {
+				if(buttonInstant(noone, bx, by, bs, bs, [mx, my], pHOVER, pFOCUS, __txt("Update DB"), THEME.refresh_16, 0, bc) == 2)
+					PXC_Patreon_Update();
+				bx += bs + ui(4);
+			}
 		#endregion
 		
 		#region content

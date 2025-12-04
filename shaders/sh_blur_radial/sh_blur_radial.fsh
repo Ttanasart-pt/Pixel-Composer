@@ -117,10 +117,11 @@ void main() {
 	vec2 pxCen = center * dimension;
 	vec2 vecPc = pxPos - pxCen;
 	
-	float angle  = atan(vecPc.y, vecPc.x);
-	float dist   = length(vecPc);
-	vec4  clr    = vec4(0.);
-	float weight = 0.;
+	float angle     = atan(vecPc.y, vecPc.x);
+	float dist      = length(vecPc);
+	vec4  clr       = vec4(0.);
+	float weight    = 0.;
+	float aweight   = 0.;
 	float maxBright = 0.;
 	
 	for(float i = -strMax; i <= strMax; i++) {
@@ -128,15 +129,16 @@ void main() {
 		if(i >  str) break;
 		
 		float ang = angle + i / 100.;
-		vec4 col = sampleTexture( gm_BaseTexture, (pxCen + vec2(cos(ang), sin(ang)) * dist) / dimension);
+		vec4  col = sampleTexture( gm_BaseTexture, (pxCen + vec2(cos(ang), sin(ang)) * dist) / dimension);
 		
 		if(gamma == 1) col.rgb = pow(col.rgb, vec3(2.2));
 		
-		clr += col;
+		clr    += col;
 		weight += col.a;
+		aweight++;
 	}
 	
-    vec4 res = clr / weight;
+    vec4 res = vec4(clr.rgb / weight, clr.a / aweight);
     if(gamma == 1) res.rgb = pow(res.rgb, vec3(1. / 2.2));
     
     gl_FragColor = res;

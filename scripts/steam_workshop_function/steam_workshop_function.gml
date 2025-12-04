@@ -4,6 +4,7 @@
 	
 	globalvar WORKSHOP_FILE_CACHE; WORKSHOP_FILE_CACHE = {};
 	globalvar FIREBASE_FILE_CACHE; FIREBASE_FILE_CACHE = {};
+	globalvar PATREON_PROJECTS; PATREON_PROJECTS    = {};
 	
 	function PXC_HUB_get_data() {
 		asyncCallGroup("social", FirebaseFirestore($"workshops").Query(), function(_params, _data) /*=>*/ {
@@ -21,22 +22,44 @@
 		globalvar debug_promofiles; debug_promofiles = {};
 		
 		for( var i = 0, n = array_length(debug_promodirs); i < n; i++ ) {
-			var _f = debug_promodirs[i];
+			var _f   = debug_promodirs[i];
+			var _ext = string_trim(string_lower(filename_ext(_f)));
+			if(_ext != ".pxc") continue;
 			
 			var _d = {
-				name : filename_name_only(_f), 
-				create_time : file_get_create_s(_f), 
+				pack:        4, 
+				name:        filename_name_only(_f), 
+				version:     json_stringify([ VERSION ]),
+				create_time: file_get_create_s(_f), 
 			};
 			
 			debug_promofiles[$ _d.name] = _d;
 		}
+	}
+	
+	function PXC_Patreon_Update() {
+		var _names = struct_get_names(debug_promofiles);
 		
+		for( var i = 0, n = array_length(_names); i < n; i++ ) {
+			var _n = _names[i];
+			if(has(PATREON_PROJECTS, _n)) continue;
+			
+			var _d = debug_promofiles[$ _n];
+			var _j = json_stringify(_d);
+			
+			print($"Updating {_n}");
+			asyncCallGroup("social", FirebaseFirestore($"patreon_projects/{_n}").Update(_j), function(_params, _data) /*=>*/ {
+				if (_data[? "status"] != 200) { print(_data[? "errorMessage"]); return; }
+		    });
+		}
 	}
 #endregion
 
 function Patreon_project_item(_file) constructor {
 	title = _file;
 	data  = undefined;
+	
+	PATREON_PROJECTS[$ title] = self;
 	
 	pack          = 0;
 	creation_time = 0;
@@ -273,14 +296,14 @@ function Patreon_project_item(_file) constructor {
 		var _res = {
 			path : title,
 			creation_time : _prm.create_time,
-			version : json_stringify([ 1_20_00_0 ]),
+			version : json_stringify([ VERSION ]),
 		};
 		
 		asyncCallGroup("social", FirebaseFirestore($"patreon_projects/{title}").Update(json_stringify(_res)), function(_params, _data) /*=>*/ {
 			if (_data[? "status"] != 200) { print(_data[? "errorMessage"]); return; }
 	    	print($"Update {title}");
 	    });
-	} //if(RUN_IDE) updateDB();
+	} 
 }
 
 function Steam_workshop_item() constructor {

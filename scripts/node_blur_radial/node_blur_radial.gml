@@ -47,25 +47,27 @@ function Node_Blur_Radial(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {		
-		var _cen  = _data[2];
+		var _surf = _data[ 0];
+		var _cen  = _data[ 2];
+		var _gam  = _data[11];
 		
-		_cen = array_clone(_cen);
-		_cen[0] /= surface_get_width_safe(_outSurf);
-		_cen[1] /= surface_get_height_safe(_outSurf);
+		var sw = surface_get_width_safe(_surf);
+		var sh = surface_get_height_safe(_surf);
+		_cen = [_cen[0] / sw, _cen[1] / sh];
 		
 		surface_set_shader(_outSurf, sh_blur_radial);
-			shader_set_interpolation(_data[0]);
-			shader_set_f("dimension", surface_get_width_safe(_outSurf), surface_get_height_safe(_outSurf));
+			shader_set_interpolation(_surf);
+			shader_set_f("dimension",    sw, sh);
 			shader_set_f_map("strength", _data[1], _data[10], inputs[1]);
 			shader_set_2("center",       _cen);
-			shader_set_f("gamma",        _data[11]);
+			shader_set_f("gamma",        _gam);
 			
-			draw_surface_safe(_data[0]);
+			draw_surface_safe(_surf);
 		surface_reset_shader();
 		
 		__process_mask_modifier(_data);
-		_outSurf = mask_apply(_data[0], _outSurf, _data[4], _data[5]);
-		_outSurf = channel_apply(_data[0], _outSurf, _data[7]);
+		_outSurf = mask_apply(_surf, _outSurf, _data[4], _data[5]);
+		_outSurf = channel_apply(_surf, _outSurf, _data[7]);
 		
 		return _outSurf;
 	}

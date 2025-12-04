@@ -42,6 +42,7 @@ gml_pragma("UnityBuild", "true");
 	var _versions = string_split(VERSION_STRING, ".");
 	globalvar VERSION_MAJOR; VERSION_MAJOR  = toNumber(_versions[1]);
 	globalvar NIGHTLY; NIGHTLY        = string_length(array_last(_versions)) == 3;
+	globalvar VERSION_STRING_BETA; VERSION_STRING_BETA = NIGHTLY? string_join(".", _versions[0], _versions[1], _versions[2]) : VERSION_STRING;
 	
 	globalvar HOTKEYS; HOTKEYS        = {};
 	globalvar HOTKEY_CONTEXT; HOTKEY_CONTEXT = [0];

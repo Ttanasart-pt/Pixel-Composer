@@ -344,19 +344,20 @@ function Panel_Menu() : PanelContent() constructor {
             ])}),
             
             menuItemShelf(__txt("Tools"), function(_dat) /*=>*/ {return submenuCall(_dat, [ 
+                menuItem(__txt("Process Maker"),      function() /*=>*/ {return dialogPanelCall(new Panel_Process_Maker())}),
+                -1,
                 menuItem(__txt("Nodes Manager"),      function() /*=>*/ {return dialogPanelCall(new Panel_Nodes_Manager())}),
                 menuItem(__txt("Collection Manager"), function() /*=>*/ {return dialogPanelCall(new Panel_Collection_Manager())}),
                 menuItem(__txt("Projects Manager"),   function() /*=>*/ {return dialogPanelCall(new Panel_Dev_Project_Manager())}),
                 menuItem(__txtx("panel_menu_test_gen_guide", "Generate Node Locale"), function() /*=>*/ {return dialogPanelCall(new Panel_Node_Data_Gen())}),
                 -1, 
                 menuItem(__txt("Update resource version"), function() /*=>*/ { __test_update_theme(); }),
-                menuItem(__txt("Generate UGC Thumbnail"),  function() /*=>*/ {return generate_UGC_patreon()}),
+                menuItem(__txt("Generate UGC Thumbnail"),  function() /*=>*/ {return generate_patreon_thumbnail()}),
             ])}),
             
             -1,
             menuItem(__txt("Save frozen"),     function() /*=>*/ { PROJECT.freeze = true; SAVE();     }),
             menuItem(__txt("Capture Project"), function() /*=>*/ { dialogPanelCall(new Panel_Capture_Project());  }),
-            menuItem(__txt("Process Maker"),   function() /*=>*/ { dialogPanelCall(new Panel_Process_Maker());    }),
             -1,
             menuItemShelf(__txt("Misc."), function(_dat) /*=>*/ {return submenuCall(_dat, [ 
                 menuItem("Timer",              function() /*=>*/ {return dialogPanelCall(new Panel_Timer())}     ), 

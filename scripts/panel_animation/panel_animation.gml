@@ -506,7 +506,7 @@ function Panel_Animation() : PanelContent() constructor {
                 var x0 = (i + 0) * timeline_scale + timeline_shift;
                 var x1 = (i + 1) * timeline_scale + timeline_shift;
                 
-                draw_set_color(inspecting.getAnimationCacheExist(i)? c_lime : c_red);
+                draw_set_color(inspecting.getAnimationCacheExist(i)? COLORS._main_value_positive : COLORS._main_value_negative);
                 draw_rectangle(x0, 0, x1 - 1, bar_h, false);
             }
             draw_set_alpha(1);
@@ -664,7 +664,7 @@ function Panel_Animation() : PanelContent() constructor {
 	    			draw_sprite_stretched_ext(THEME.ui_panel, ii, _x0, _y0, _ww, _hh, cc, .5);
 	    		
 	    		if(is(inspecting, Node) && inspecting.use_cache) { // cache
-	                var cachcol = inspecting.getAnimationCacheExist(fram)? c_lime : c_red;
+	                var cachcol = inspecting.getAnimationCacheExist(fram)? COLORS._main_value_positive : COLORS._main_value_negative;
 	                draw_sprite_stretched_add(THEME.ui_panel, ii, _x0, _y0, _ww, _hh, cachcol, .2);
 		        }
     		} 

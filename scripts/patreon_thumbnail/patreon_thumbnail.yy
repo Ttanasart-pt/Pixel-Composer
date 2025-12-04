@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"patreon_thumbnail",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"patreon_thumbnail",
+  "parent":{
+    "name":"patreon",
+    "path":"folders/__extensions/patreon.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
