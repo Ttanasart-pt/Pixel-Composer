@@ -89,6 +89,9 @@ function blur_zoom_args(_surface, _size, _origin_x, _origin_y, _blurMode = 0, _s
 	sampleMode = _sampleMode;
 	samples    = _samples;
 	
+	UVmap        = noone;
+	UVmapMix     = 0;     static setUVMap        = function(s,m) /*=>*/ { UVmap = s; UVmapMix = m; return self; }
+	
 	mode         = 0;     static setMode         = function(i) /*=>*/ { mode = i;         return self; }
 	fadeDistance = true;  static setFadeDistance = function(i) /*=>*/ { fadeDistance = i; return self; }
 	gamma        = false; static setGamma        = function(i) /*=>*/ { gamma = i;        return self; }
@@ -112,6 +115,8 @@ function surface_apply_blur_zoom(outputSurf, args) {
 	var _sizeJunc  = _sizeArr? args.size[2] : noone;
 	
 	surface_set_shader(outputSurf, args.mode? sh_blur_zoom_step : sh_blur_zoom);
+		shader_set_uv(args.UVmap, args.UVmapMix);
+		
 		shader_set_2("dimension",   [_sw,_sh] );
 		shader_set_f("center",       args.origin_x / _sw, args.origin_y / _sh);
 		shader_set_f_map("strength", _size,  _sizeSurf,  _sizeJunc);
@@ -136,6 +141,9 @@ function blur_directional_args(_surface, _size, _angle) constructor {
 	surface = _surface;
 	size    = _size;
 	angle   = _angle;
+	
+	UVmap        = noone;
+	UVmapMix     = 0;     static setUVMap        = function(s,m) /*=>*/ { UVmap = s; UVmapMix = m; return self; }
 	
 	singleDirect = false; static setSingleDirect = function(i) /*=>*/ { singleDirect = i; return self; }
 	fadeDistance = false; static setFadeDistance = function(i) /*=>*/ { fadeDistance = i; return self; }
@@ -162,7 +170,9 @@ function surface_apply_blur_directional(outputSurf, args) {
 	var _angleSurf = _angleArr? args.angle[1] : noone;
 	var _angleJunc = _angleArr? args.angle[2] : noone;
 	
-	surface_set_shader(outputSurf, sh_blur_directional);
+	surface_set_shader(outputSurf, sh_blur_directional, true, BLEND.over);
+		shader_set_uv(args.UVmap, args.UVmapMix);
+		
 		shader_set_f("size",          max(_sw, _sh));
 		shader_set_f_map("strength",  _size,  _sizeSurf,  _sizeJunc);
 		shader_set_f_map("direction", _angle, _angleSurf, _angleJunc);

@@ -11,9 +11,11 @@ function Node_Blur_Bokeh(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput(5, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surfaces
-	newInput(0, nodeValue_Surface( "Surface In" ));
-	newInput(2, nodeValue_Surface( "Mask"       ));
-	newInput(3, nodeValue_Slider(  "Mix", 1     ));
+	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput(14, nodeValue_Surface( "UV Map"     ));
+	newInput(15, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput( 2, nodeValue_Surface( "Mask"       ));
+	newInput( 3, nodeValue_Slider(  "Mix",    1  ));
 	__init_mask_modifier(2, 6); // inputs 6, 7
 	
 	////- =Blur
@@ -24,12 +26,12 @@ function Node_Blur_Bokeh(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput(11, nodeValue_Float( "Contrast Factor", 9 ));
 	newInput(12, nodeValue_Float( "Smoothness",      2 ));
 	newInput(13, nodeValue_Float( "Rotation",        1 ));
-	// input 10
+	// input 16
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 4, 5, 
-		[ "Surfaces",  true ], 0, 2, 3, 6, 7, 
+		[ "Surfaces",  true ], 0, 14, 15, 2, 3, 6, 7, 
 		[ "Blur",     false ], 1, 8, 9, 
 		[ "Colors",   false ], 10, 11, 12, 13, 
 	];
@@ -64,6 +66,8 @@ function Node_Blur_Bokeh(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var _dim  = surface_get_dimension(_surf);
 		
 		surface_set_shader(_outSurf, sh_blur_bokeh);
+			shader_set_uv(_data[14], _data[15]);
+		
 			shader_set_i("sampleMode", getAttribute("oversample"));
 			shader_set_f_map( "strength", _data[1], _data[8], inputs[1]);
 			shader_set_2( "dimension", _dim );

@@ -3,10 +3,14 @@
 
 #pragma use(sampler)
 
-#region -- sampler -- [1730686036.7372286]
+#region -- sampler -- [1764837296.5436046]
 	uniform int  interpolation;
 	uniform vec2 sampleDimension;
 	uniform int  sampleMode;
+
+    uniform sampler2D uvMap;
+    uniform int   useUvMap;
+    uniform float uvMapMix;
 
 	const float PI = 3.14159265358979323846;
 	float sinc ( float x ) { return x == 0.? 1. : sin(x * PI) / (x * PI); }
@@ -79,7 +83,22 @@
 		return texture2D( texture, uv );
 	}
 
-	vec4 sampleTexture( sampler2D texture, vec2 pos) {
+    vec2 getUV(vec2 tx) {
+        if(useUvMap == 1) {
+            vec2 map = texture2D(uvMap, tx).xy;
+            map.y    = 1.0 - map.y;
+            tx       = mix(tx, map, uvMapMix);
+        }
+        return tx;
+    }
+
+	vec4 sampleTexture( sampler2D texture, vec2 pos, float mapBlend) {
+        if(useUvMap == 1) {
+            vec2 map = texture2D(uvMap, pos).xy;
+            map.y    = 1.0 - map.y;
+            pos      = mix(pos, map, mapBlend * uvMapMix);
+        }
+
 		if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
 			return texture2Dintp(texture, pos);
 		
@@ -90,10 +109,13 @@
 		
 		return vec4(0.);
 	}
+	vec4 sampleTexture( sampler2D texture, vec2 pos) { return sampleTexture(texture, pos, 0.); }
 #endregion -- sampler --
 
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
+
+uniform float     resolution;
 
 uniform int       type;
 uniform vec2      dimension;
@@ -129,9 +151,8 @@ vec3 spectral_zucconi6 (float w) {
 	const vec3 x2 = vec3(0.11748627, 0.86755042, 0.66077860);
 	const vec3 y2 = vec3(0.84897130, 0.88445281, 0.73949448);
 
-	return
-		bump3y(c1 * (x - x1), y1) +
-		bump3y(c2 * (x - x2), y2) ;
+	return bump3y(c1 * (x - x1), y1) +
+		   bump3y(c2 * (x - x2), y2) ;
 }
 
 vec4 chroma_scaling(vec2 uv, float str, float itns) {
@@ -142,24 +163,25 @@ vec4 chroma_scaling(vec2 uv, float str, float itns) {
 	pp = dot(co, co) * co;
 	pp *= str * tx;
 	
-    vec4 cr = texture2Dintp(gm_BaseTexture, uv-pp); cr.rgb *= cr.a;
-    vec4 cb = texture2Dintp(gm_BaseTexture, uv+pp); cb.rgb *= cb.a;
-    vec4 cv = texture2Dintp(gm_BaseTexture, uv   ); cv.rgb *= cv.a;
+    vec4 cr = sampleTexture(gm_BaseTexture, uv-pp, .5 ); cr.rgb *= cr.a;
+    vec4 cb = sampleTexture(gm_BaseTexture, uv+pp, 1. ); cb.rgb *= cb.a;
+    vec4 cv = sampleTexture(gm_BaseTexture, uv        ); cv.rgb *= cv.a;
     vec4 res = vec4(cr.r, cv.g, cb.b, cv.a + cr.a + cb.a);
     
     return mix(cv, res, itns);
 }
 
 vec4 chroma_continuous(vec2 uv, float str, float itns) {
-	float stp  = 64.;
+	float stp  = resolution;
 	vec2  tx   = 1.0 / dimension;
 	float strr = str / 16. * .2;
 	vec2  cuv  = (uv - center * tx) * 2.0;
     vec3  o    = vec3(0.);
-    vec4  cv   = texture2Dintp(gm_BaseTexture, uv);
+    vec4  cv   = sampleTexture(gm_BaseTexture, uv);
     
     for (float i = 0.; i <= 1.; i += 1. / stp) {
-    	vec4 sam = texture2Dintp(gm_BaseTexture, uv - cuv * strr * i); sam.rgb *= sam.a;
+    	vec4 sam = sampleTexture(gm_BaseTexture, uv - cuv * strr * i, i); 
+    	sam.rgb *= sam.a;
         o += pow(sam.rgb, vec3(2.2)) * spectral_zucconi6(400. + i * 300.);
     }
     
@@ -173,13 +195,13 @@ vec4 chroma_continuous(vec2 uv, float str, float itns) {
 void main() {
 	float str = strength.x;
 	if(strengthUseSurf == 1) {
-		vec4 _vMap = texture2Dintp( strengthSurf, v_vTexcoord );
+		vec4 _vMap = sampleTexture( strengthSurf, v_vTexcoord );
 		str = mix(strength.x, strength.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 	}
 	
 	float itns = intensity.x;
 	if(intensityUseSurf == 1) {
-		vec4 _vMap = texture2Dintp( intensitySurf, v_vTexcoord );
+		vec4 _vMap = sampleTexture( intensitySurf, v_vTexcoord );
 		itns = mix(intensity.x, intensity.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 	}
 	

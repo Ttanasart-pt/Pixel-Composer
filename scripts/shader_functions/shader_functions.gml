@@ -76,10 +76,6 @@
 	
 	function shader_set_a(u,v) { shader_set_uniform_f_array(shader_u(u), v); } 
 	
-	// function shader_set_2(u,v) { shader_set_uniform_f(shader_u(u), toNumber(aGetF(v, 0)), toNumber(aGetF(v, 1)));                                               } 
-	// function shader_set_3(u,v) { shader_set_uniform_f(shader_u(u), toNumber(aGetF(v, 0)), toNumber(aGetF(v, 1)), toNumber(aGetF(v, 2)));                        } 
-	// function shader_set_4(u,v) { shader_set_uniform_f(shader_u(u), toNumber(aGetF(v, 0)), toNumber(aGetF(v, 1)), toNumber(aGetF(v, 2)), toNumber(aGetF(v, 3))); } 
-	
 	function shader_set_2(u,v) { shader_set_uniform_f_array(shader_u(u), array_verify(v,2)); } 
 	function shader_set_3(u,v) { shader_set_uniform_f_array(shader_u(u), array_verify(v,3)); } 
 	function shader_set_4(u,v) { shader_set_uniform_f_array(shader_u(u), array_verify(v,4)); } 
@@ -184,6 +180,12 @@
 		th = 2048;
 		
 		shader_set_uniform_f(shader_get_uniform(shader, uniform), tw, th);
+	}
+	
+	function shader_set_uv(_surface, _mix = 1) {
+		shader_set_i("useUvMap", is_surface(_surface));
+		shader_set_s("uvMap",    _surface);
+		shader_set_f("uvMapMix", _mix);
 	}
 	
 	function shader_set_dim(uniform = "dimension", surf = noone) {

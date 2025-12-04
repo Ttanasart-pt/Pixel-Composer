@@ -1,9 +1,13 @@
 #pragma use(sampler)
 
-#region -- sampler -- [1730686036.7372286]
+#region -- sampler -- [1764837296.5436046]
 	uniform int  interpolation;
 	uniform vec2 sampleDimension;
 	uniform int  sampleMode;
+
+    uniform sampler2D uvMap;
+    uniform int   useUvMap;
+    uniform float uvMapMix;
 
 	const float PI = 3.14159265358979323846;
 	float sinc ( float x ) { return x == 0.? 1. : sin(x * PI) / (x * PI); }
@@ -76,7 +80,22 @@
 		return texture2D( texture, uv );
 	}
 
-	vec4 sampleTexture( sampler2D texture, vec2 pos) {
+    vec2 getUV(vec2 tx) {
+        if(useUvMap == 1) {
+            vec2 map = texture2D(uvMap, tx).xy;
+            map.y    = 1.0 - map.y;
+            tx       = mix(tx, map, uvMapMix);
+        }
+        return tx;
+    }
+
+	vec4 sampleTexture( sampler2D texture, vec2 pos, float mapBlend) {
+        if(useUvMap == 1) {
+            vec2 map = texture2D(uvMap, pos).xy;
+            map.y    = 1.0 - map.y;
+            pos      = mix(pos, map, mapBlend * uvMapMix);
+        }
+
 		if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
 			return texture2Dintp(texture, pos);
 		
@@ -87,6 +106,7 @@
 		
 		return vec4(0.);
 	}
+	vec4 sampleTexture( sampler2D texture, vec2 pos) { return sampleTexture(texture, pos, 0.); }
 #endregion -- sampler --
 
 #define MAX_STRENGTH 64.
@@ -110,14 +130,14 @@ vec2 txMap;
 
 float sampleBright(vec2 pos) { vec4 c = sampleTexture(slopeMap, pos); return (c.r + c.g + c.b) / 3.;  }
 
-vec2 sampleSlope(vec2 pos) { #region 
+vec2 sampleSlope(vec2 pos) { 
 	float h0 = sampleBright(clamp(pos + vec2(-txMap.x, 0.), 0., 1.));
 	float h1 = sampleBright(clamp(pos + vec2( txMap.x, 0.), 0., 1.));
 	float h2 = sampleBright(clamp(pos + vec2(0., -txMap.y), 0., 1.));
 	float h3 = sampleBright(clamp(pos + vec2(0.,  txMap.y), 0., 1.));
 	
 	return vec2(h1 - h0, h3 - h2);
-} #endregion
+}
 
 void main() {
 	float str = strength.x;
@@ -136,12 +156,12 @@ void main() {
 	for(float i = 0.; i < MAX_STRENGTH; i++) {
 		if(i > str) break;
 		
-		float str = 1. - (i / str);
-		vec4  c = sampleTexture(gm_BaseTexture, pos);
+		float s = 1. - (i / str);
+		vec4  c = sampleTexture(gm_BaseTexture, pos, i / str);
 		if(gamma == 1) c.rgb = pow(c.rgb, vec3(2.2));
 		
-		colr  += c * str;
-		alpha += str;
+		colr  += c * s;
+		alpha += s;
 		
 		vec2 slp = sampleSlope(pos);
 		pos += slp * stepSize;

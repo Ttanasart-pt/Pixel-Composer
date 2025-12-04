@@ -16,9 +16,11 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(12, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surfaces
-	newInput(0, nodeValue_Surface( "Surface In" ));
-	newInput(8, nodeValue_Surface( "Mask"       ));
-	newInput(9, nodeValue_Slider(  "Mix",     1 ));
+	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput(22, nodeValue_Surface( "UV Map"     ));
+	newInput(23, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput( 8, nodeValue_Surface( "Mask"       ));
+	newInput( 9, nodeValue_Slider(  "Mix",     1 ));
 	__init_mask_modifier(8, 13); // inputs 13, 14
 	newInput(7, nodeValue_Enum_Scroll("Oversample Mode",  0, [ "Empty", "Clamp", "Repeat" ]));
 	
@@ -46,17 +48,18 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(19, nodeValue_Bool(        "Fade Distance", false ));
 	newInput(20, nodeValue_Bool(        "Reposition",    false ));
 	newInput(21, nodeValue_Int(         "Repeat",        1     ));
-	
-	// inputs 22
+	// inputs 24
 	
 	input_display_list = [ 10, 12, 
-		["Surfaces",	  true], 0, 8, 9, 13, 14, 
+		["Surfaces",	  true], 0, 22, 23, 8, 9, 13, 14, 
 		["Strength",	 false], 1, 17, 3, 15, 4,
 		["Displacement", false], 5, 16, 2, 
 		["Iterate",	      true, 6], 11, 18, 19, 20, 21, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	
+	////- Node
 	
 	temp_surface = [ noone, noone ];
 	
@@ -76,37 +79,37 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		return w_hovering;
 	}
 	
-	static step = function() {
-		var _mode = getInputData(5);
-		var _sep  = getInputData(16);
-		
-		var _dsp2 = (_mode == 1 || _mode == 2) && _sep;
-		
-		inputs[ 2].setVisible(_mode == 0);
-		inputs[16].setVisible(_mode == 1 || _mode == 2);
-		inputs[17].setVisible(_dsp2, _dsp2);
-		
-		if(_mode == 1 && _sep) {
-			inputs[ 1].setName("Displace X");
-			inputs[17].setName("Displace Y");
-			
-		} else if(_mode == 2 && _sep) {
-			inputs[ 1].setName("Displace angle");
-			inputs[17].setName("Displace amount");
-			
-		} else {
-			inputs[ 1].setName("Displace map");
-		}
-	}
-	
 	static processData = function(_outSurf, _data, _array_index) {
 		var _surf = _data[ 0];
+		
 		var _map  = _data[ 1];
-		var _sep  = _data[16];
 		var _map2 = _data[17];
+		
+		var _mode = _data[ 5];
+		var _sep  = _data[16];
+		
 		var _rept = _data[21]; _rept = max(1, _rept);
 		
-		var _mode = _data[5];
+		#region visible
+			var _dsp2 = (_mode == 1 || _mode == 2) && _sep;
+			
+			inputs[ 2].setVisible(_mode == 0);
+			inputs[16].setVisible(_mode == 1 || _mode == 2);
+			inputs[17].setVisible(_dsp2, _dsp2);
+			
+			if(_mode == 1 && _sep) {
+				inputs[ 1].setName("Displace X");
+				inputs[17].setName("Displace Y");
+				
+			} else if(_mode == 2 && _sep) {
+				inputs[ 1].setName("Displace angle");
+				inputs[17].setName("Displace amount");
+				
+			} else {
+				inputs[ 1].setName("Displace map");
+			}
+		#endregion
+		
 		if(!is_surface(_map) || (_sep && !is_surface(_map2))) {
 			surface_set_shader(_outSurf); 
 				draw_surface_safe(_surf);
@@ -129,7 +132,9 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var bg = 0;
 		repeat(_rept) {
 			surface_set_shader(temp_surface[bg], sh_displace);
-			shader_set_interpolation(_surf);
+				shader_set_interpolation(_surf);
+				shader_set_uv(_data[22], _data[23]);
+				
 				shader_set_surface("map",  _map);
 				shader_set_surface("map2", _data[17]);
 				

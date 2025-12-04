@@ -13,9 +13,11 @@ function Node_Kuwahara(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 6, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surfaces
-	newInput(0, nodeValue_Surface( "Surface In" ));
-	newInput(3, nodeValue_Surface( "Mask"       ));
-	newInput(4, nodeValue_Slider(  "Mix",     1 ));
+	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput(14, nodeValue_Surface( "UV Map"     ));
+	newInput(15, nodeValue_Slider(  "UV Mix",  1 ));
+	newInput( 3, nodeValue_Surface( "Mask"       ));
+	newInput( 4, nodeValue_Slider(  "Mix",     1 ));
 	__init_mask_modifier(3, 7); // inputs 7, 8
 	
 	////- =Surfaces
@@ -25,12 +27,12 @@ function Node_Kuwahara(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(11, nodeValue_Slider(      "Zero crossing", .58 ));
 	newInput(12, nodeValue_Float(       "Hardness",       8  ));
 	newInput(13, nodeValue_Float(       "Sharpness",      8  ));
-	// input 14
+	// input 16
 		
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 1, 6, 
-		["Surfaces",  true], 0, 3, 4, 7, 8, 
+		["Surfaces",  true], 0, 14, 15, 3, 4, 7, 8, 
 		["Effects",  false], 9, 2, 10, 11, 12, 13, 
 	];
 	
@@ -65,8 +67,10 @@ function Node_Kuwahara(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			case 0 : 
 				surface_set_shader(_outSurf, sh_kuwahara);
 					shader_set_interpolation(_surf);
+					shader_set_uv(_data[14], _data[15]);
+					
 					shader_set_2("dimension", _dim);
-					shader_set_i("radius",      _data[2]);
+					shader_set_i("radius",    _data[2]);
 					
 					draw_surface_safe(_surf);
 				surface_reset_shader();
@@ -77,6 +81,8 @@ function Node_Kuwahara(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				
 				surface_set_shader(temp_surface[0], sh_kuwahara_ani_pass1);
 					shader_set_interpolation(_surf);
+					shader_set_uv(_data[14], _data[15]);
+					
 					shader_set_2("dimension", _dim);
 					
 					draw_surface_safe(_surf);
@@ -84,6 +90,8 @@ function Node_Kuwahara(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				
 				surface_set_shader(temp_surface[1], sh_kuwahara_ani_pass2);
 					shader_set_interpolation(_surf);
+					shader_set_uv(_data[14], _data[15]);
+					
 					shader_set_2("dimension", _dim);
 					
 					draw_surface_safe(temp_surface[0]);
@@ -91,6 +99,8 @@ function Node_Kuwahara(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				
 				surface_set_shader(temp_surface[2], sh_kuwahara_ani_pass3);
 					shader_set_interpolation(_surf);
+					shader_set_uv(_data[14], _data[15]);
+					
 					shader_set_2("dimension", _dim);
 					
 					draw_surface_safe(temp_surface[1]);
@@ -98,6 +108,8 @@ function Node_Kuwahara(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				
 				surface_set_shader(_outSurf, sh_kuwahara_ani_pass4);
 					shader_set_interpolation(_surf);
+					shader_set_uv(_data[14], _data[15]);
+					
 					shader_set_surface("tfm", temp_surface[2]);
 					shader_set_2("dimension", _dim);
 					
@@ -115,6 +127,8 @@ function Node_Kuwahara(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			case 2 : 
 				surface_set_shader(_outSurf, sh_kuwahara_gen);
 					shader_set_interpolation(_surf);
+					shader_set_uv(_data[14], _data[15]);
+					
 					shader_set_2("dimension", _dim);
 					shader_set_i("kernelSize",   _data[2]);
 					shader_set_f("zeroCrossing", _data[11]);

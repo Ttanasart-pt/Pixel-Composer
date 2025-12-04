@@ -11,23 +11,27 @@ function Node_Blur_Box(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(5, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surfaces
-	newInput(0, nodeValue_Surface( "Surface In" ));
-	newInput(2, nodeValue_Surface( "Mask"       ));
-	newInput(3, nodeValue_Slider(  "Mix",     1 ));
+	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput(10, nodeValue_Surface( "UV Map"     ));
+	newInput(11, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput( 2, nodeValue_Surface( "Mask"       ));
+	newInput( 3, nodeValue_Slider(  "Mix",     1 ));
 	__init_mask_modifier(2, 6); // inputs 6, 7, 
 	
 	////- =Blur
 	newInput(1, nodeValue_Int(  "Size",           3     )).setHotkey("S").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
 	newInput(8, nodeValue_Bool( "Separate Axis",  false ));
 	newInput(9, nodeValue_Vec2( "2D Size",       [3,3]  ));
-	// input 10
+	// input 12
 	
 	input_display_list = [ 4, 5, 
-		["Surfaces", true], 0, 2, 3, 6, 7, 
+		["Surfaces", true], 0, 10, 11, 2, 3, 6, 7, 
 		["Blur",	false], 8, 1, 9, 
 	]
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	
+	////- Node
 	
 	temp_surface = [ noone ];
 	
@@ -65,6 +69,8 @@ function Node_Blur_Box(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		surface_set_shader(temp_surface[0], sh_blur_box);
 			shader_set_interpolation(_data[0]);
+			shader_set_uv(_data[10], _data[11]);
+			
 			shader_set_i("sampleMode", getAttribute("oversample"));
 			shader_set_2("dimension", [ ww, hh ]);
 			shader_set_f("size",      max(0, round(_sepa? _siz2[0] : _size)));

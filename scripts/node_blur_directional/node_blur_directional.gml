@@ -11,9 +11,11 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	newInput(6, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surfaces
-	newInput(0, nodeValue_Surface( "Surface In" ));
-	newInput(3, nodeValue_Surface( "Mask"       ));
-	newInput(4, nodeValue_Slider(  "Mix", 1     ));
+	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput(14, nodeValue_Surface( "UV Map"     ));
+	newInput(15, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput( 3, nodeValue_Surface( "Mask"       ));
+	newInput( 4, nodeValue_Slider(  "Mix", 1     ));
 	__init_mask_modifier(3, 7); // inputs 7, 8
 	
 	////- =Blur
@@ -22,15 +24,16 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	newInput(11, nodeValue_Bool(     "Single Direction", false ));
 	newInput(13, nodeValue_Bool(     "Fade Distance",    false ));
 	newInput(12, nodeValue_Bool(     "Gamma Correction", false ));
-	
-	// inputs 14
+	// inputs 16
 	
 	input_display_list = [ 5, 6, 
-		["Surfaces", true], 0, 3, 4, 7, 8, 
+		["Surfaces", true], 0, 14, 15, 3, 4, 7, 8, 
 		["Blur",	false], 1, 9, 2, 10, 11, 13, 12, 
 	]
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	
+	////- Node
 	
 	attribute_surface_depth();
 	attribute_oversample();
@@ -67,6 +70,7 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 						.setGamma(_gamm)
 						.setFadeDistance(_fade)
 						.setSampleMode(getAttribute("oversample"))
+						.setUVMap(_data[14], _data[15])
 		
 		_outSurf  = surface_apply_blur_directional(_outSurf, _args);
 		

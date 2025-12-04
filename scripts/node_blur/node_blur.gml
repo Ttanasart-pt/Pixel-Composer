@@ -11,9 +11,11 @@ function Node_Blur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(8, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surfaces
-	newInput(0, nodeValue_Surface( "Surface In"));
-	newInput(5, nodeValue_Surface( "Mask"));
-	newInput(6, nodeValue_Slider(  "Mix", 1));
+	newInput( 0, nodeValue_Surface( "Surface In"));
+	newInput(14, nodeValue_Surface( "UV Map"     ));
+	newInput(15, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput( 5, nodeValue_Surface( "Mask"));
+	newInput( 6, nodeValue_Slider(  "Mix", 1));
 	__init_mask_modifier(5, 9); // inputs 9, 10
 	
 	////- =Blur
@@ -26,16 +28,17 @@ function Node_Blur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	////- =Directional
 	newInput(12, nodeValue_Slider(   "Aspect Ratio", 1));
 	newInput(13, nodeValue_Rotation( "Direction",    0));
-	
-	// inputs 14
+	// inputs 16
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	input_display_list = [ 7, 8, 
-		["Surfaces",	 true],	0, 5, 6, 9, 10, 
-		["Blur",		false],	1, 3, 4, 11, 
-		["Directional",	 true],	12, 13, 
+	input_display_list = [  7,  8, 
+		[ "Surfaces",     true ],  0, 14, 15,  5,  6,  9, 10, 
+		[ "Blur",        false ],  1,  3,  4, 11, 
+		[ "Directional",  true ], 12, 13, 
 	];
+	
+	////- Node
 	
 	temp_surface = [ noone, noone ];
 	
@@ -56,12 +59,16 @@ function Node_Blur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {	
-		var _surf  = _data[0];
+		var _surf  = _data[ 0];
+		var _uvm   = _data[14];
+		var _uvmx  = _data[15];
+		var _mask  = _data[ 5];
+		var _mix   = _data[ 6];
+		
 		var _size  = min(128, _data[1]);
 		var _clamp = getAttribute("oversample");
-		var _isovr = _data[3];
-		var _mask  = _data[5];
-		var _mix   = _data[6];
+		var _isovr = _data[ 3];
+		
 		var _overc = _isovr? _data[4] : noone;
 		var _gam   = _data[11];
 		var _aspc  = _data[12];
@@ -86,6 +93,7 @@ function Node_Blur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			draw_clear_alpha(c_white, false);
 			
 			shader_set(sh_blur_gaussian);
+			shader_set_uv(_uvm, _uvmx);
 			shader_set_f("dimension", [ _sw, _sh ]);
 			shader_set_f("weight",    __gaussian_get_kernel(_size));
 			

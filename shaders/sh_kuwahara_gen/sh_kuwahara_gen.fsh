@@ -1,9 +1,28 @@
 #pragma use(sampler_simple)
 
-#region -- sampler_simple -- [1729740692.1417658]
+#region -- sampler_simple -- [1764837291.6127295]
     uniform int  sampleMode;
     
-    vec4 sampleTexture( sampler2D texture, vec2 pos) {
+    uniform sampler2D uvMap;
+    uniform int   useUvMap;
+    uniform float uvMapMix;
+
+    vec2 getUV(vec2 tx) {
+        if(useUvMap == 1) {
+            vec2 map = texture2D(uvMap, tx).xy;
+            map.y    = 1.0 - map.y;
+            tx       = mix(tx, map, uvMapMix);
+        }
+        return tx;
+    }
+
+    vec4 sampleTexture( sampler2D texture, vec2 pos, float mapBlend) {
+        if(useUvMap == 1) {
+            vec2 map = texture2D(uvMap, pos).xy;
+            map.y    = 1.0 - map.y;
+            pos      = mix(pos, map, mapBlend * uvMapMix);
+        }
+
         if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
             return texture2D(texture, pos);
         
@@ -14,6 +33,7 @@
         
         return vec4(0.);
     }
+    vec4 sampleTexture( sampler2D texture, vec2 pos) { return sampleTexture(texture, pos, 0.); }
 #endregion -- sampler_simple --
 
 #define PI 3.14159265358979323846
@@ -47,7 +67,7 @@ void main() {
     for (int y = -kernelRadius; y <= kernelRadius; ++y)
     for (int x = -kernelRadius; x <= kernelRadius; ++x) {
         vec2 v = vec2(x, y) / float(kernelRadius);
-        vec3 c = sampleTexture(gm_BaseTexture, v_vTexcoord + vec2(x, y) * tx).rgb;
+        vec3 c = sampleTexture(gm_BaseTexture, v_vTexcoord + vec2(x, y) * tx, length(v)).rgb;
         c = clamp(c, 0., 1.);
         
         float sum = 0.;

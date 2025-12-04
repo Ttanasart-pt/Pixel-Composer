@@ -2,6 +2,10 @@
 	uniform vec2 sampleDimension;
 	uniform int  sampleMode;
 
+    uniform sampler2D uvMap;
+    uniform int   useUvMap;
+    uniform float uvMapMix;
+
 	const float PI = 3.14159265358979323846;
 	float sinc ( float x ) { return x == 0.? 1. : sin(x * PI) / (x * PI); }
 
@@ -73,7 +77,22 @@
 		return texture2D( texture, uv );
 	}
 
-	vec4 sampleTexture( sampler2D texture, vec2 pos) {
+    vec2 getUV(vec2 tx) {
+        if(useUvMap == 1) {
+            vec2 map = texture2D(uvMap, tx).xy;
+            map.y    = 1.0 - map.y;
+            tx       = mix(tx, map, uvMapMix);
+        }
+        return tx;
+    }
+
+	vec4 sampleTexture( sampler2D texture, vec2 pos, float mapBlend) {
+        if(useUvMap == 1) {
+            vec2 map = texture2D(uvMap, pos).xy;
+            map.y    = 1.0 - map.y;
+            pos      = mix(pos, map, mapBlend * uvMapMix);
+        }
+
 		if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
 			return texture2Dintp(texture, pos);
 		
@@ -84,3 +103,4 @@
 		
 		return vec4(0.);
 	}
+	vec4 sampleTexture( sampler2D texture, vec2 pos) { return sampleTexture(texture, pos, 0.); }

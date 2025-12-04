@@ -8,13 +8,15 @@ function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	name = "Non-Uniform Blur";
 	
 	newActiveInput(8);
-	newInput(9, nodeValue_Toggle( "Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
+	newInput( 9, nodeValue_Toggle( "Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surfaces
-	newInput(2, nodeValue_Enum_Scroll("Oversample mode",  0, [ "Empty", "Clamp", "Repeat" ]));
-	newInput(0, nodeValue_Surface( "Surface In" ));
-	newInput(6, nodeValue_Surface( "Mask"       ));
-	newInput(7, nodeValue_Slider(  "Mix", 1     ));
+	newInput( 2, nodeValue_EScroll( "Oversample mode",  0, [ "Empty", "Clamp", "Repeat" ]));
+	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput(17, nodeValue_Surface( "UV Map"     ));
+	newInput(18, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput( 6, nodeValue_Surface( "Mask"       ));
+	newInput( 7, nodeValue_Slider(  "Mix", 1     ));
 	__init_mask_modifier(6, 10); // inputs 10, 11, 
 	
 	////- =Blur
@@ -27,16 +29,17 @@ function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	////- =Effect
 	newInput(15, nodeValue_Bool(     "Use Gradient", false ));
 	newInput(12, nodeValue_Gradient( "Gradient", new gradientObject([ ca_black, ca_white ]) )).setMappable(13);
-	
 	// input 17
 	
 	input_display_list = [ 8, 9, 
-		["Surfaces", true],	0, 6, 7, 10, 11, 
-		["Blur",	false],	1, 3, 4, 5, 16, 
-		["Effects",	false, 15],	12, 13, 14, 
+		[ "Surfaces", true      ], 0, 17, 18, 6, 7, 10, 11, 
+		[ "Blur",     false     ], 1, 3, 4, 5, 16, 
+		[ "Effects",  false, 15 ], 12, 13, 14, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	
+	////- Node
 	
 	attribute_surface_depth();
 	attribute_oversample();
@@ -68,6 +71,8 @@ function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		inputs[5].setVisible(_isovr);
 		
 		surface_set_shader(_outSurf, sh_blur_simple);
+			shader_set_uv(_data[17], _data[18]);
+			
 			shader_set_i("useGradient", _useGrd);
 			shader_set_gradient(_data[12], _data[13], _data[14], inputs[12]);
 		

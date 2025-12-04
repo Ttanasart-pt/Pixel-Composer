@@ -1,9 +1,28 @@
 #pragma use(sampler_simple)
 
-#region -- sampler_simple -- [1729740692.1417658]
+#region -- sampler_simple -- [1764837291.6127295]
     uniform int  sampleMode;
     
-    vec4 sampleTexture( sampler2D texture, vec2 pos) {
+    uniform sampler2D uvMap;
+    uniform int   useUvMap;
+    uniform float uvMapMix;
+
+    vec2 getUV(vec2 tx) {
+        if(useUvMap == 1) {
+            vec2 map = texture2D(uvMap, tx).xy;
+            map.y    = 1.0 - map.y;
+            tx       = mix(tx, map, uvMapMix);
+        }
+        return tx;
+    }
+
+    vec4 sampleTexture( sampler2D texture, vec2 pos, float mapBlend) {
+        if(useUvMap == 1) {
+            vec2 map = texture2D(uvMap, pos).xy;
+            map.y    = 1.0 - map.y;
+            pos      = mix(pos, map, mapBlend * uvMapMix);
+        }
+
         if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
             return texture2D(texture, pos);
         
@@ -14,6 +33,7 @@
         
         return vec4(0.);
     }
+    vec4 sampleTexture( sampler2D texture, vec2 pos) { return sampleTexture(texture, pos, 0.); }
 #endregion -- sampler_simple --
 
 varying vec2 v_vTexcoord;
@@ -192,11 +212,11 @@ void main() {
 			if(i == 0. && j == 0.)    continue;
 			if(abs(i + j) > cel * 2.) continue;
 			
-			vec4 sam = sampleTexture( gm_BaseTexture, v_vTexcoord + vec2(i, j) * texel );
-			if(gamma == 1) sam.rgb = pow(sam.rgb, vec3(2.2));
+			float wei  = 1. - clamp((abs(i) + abs(j)) / (realSize * 2.), 0., 1.);
+			      wei *= clamp(abs(i + j - floor(realSize) * 2.), 0., 1.);
 			
-			float wei = 1. - clamp((abs(i) + abs(j)) / (realSize * 2.), 0., 1.);
-			wei *= clamp(abs(i + j - floor(realSize) * 2.), 0., 1.);
+			vec4 sam = sampleTexture( gm_BaseTexture, v_vTexcoord + vec2(i, j) * texel, 1. - wei );
+			if(gamma == 1) sam.rgb = pow(sam.rgb, vec3(2.2));
 			
 			totalWeight += wei;
 			weiTotal    += wei * (sam.r + sam.g + sam.b) / 3. * sam.a;

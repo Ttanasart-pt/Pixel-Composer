@@ -5,9 +5,11 @@ function Node_Refract(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(2, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surfaces
-	newInput(0, nodeValue_Surface( "Surface In"  ));
-	newInput(3, nodeValue_Surface( "Mask"        ));
-	newInput(4, nodeValue_Slider(  "Mix", 1      ));
+	newInput( 0, nodeValue_Surface( "Surface In"  ));
+	newInput(16, nodeValue_Surface( "UV Map"     ));
+	newInput(17, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput( 3, nodeValue_Surface( "Mask"        ));
+	newInput( 4, nodeValue_Slider(  "Mix", 1      ));
 	__init_mask_modifier(3, 5); // inputs 5, 6 
 	
 	////- =Refract
@@ -17,12 +19,12 @@ function Node_Refract(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(10, nodeValue_Float(   "Distance",    4   )).setMappable(13);
 	newInput(11, nodeValue_Float(   "IOR",         1.3 )).setMappable(14);
 	newInput(15, nodeValue_Float(   "Perspective", 0   ))
-	// input 16
+	// input 18
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 1, 2, 
-		[ "Surface",   true ], 0, 3, 4, 5, 6, 
+		[ "Surface",   true ], 0, 16, 17, 3, 4, 5, 6, 
 		[ "Refract",  false ], 7, 8, 9, 12, 10, 13, 11, 14, 15, 
 	];
 	
@@ -53,6 +55,7 @@ function Node_Refract(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		surface_set_shader(_outSurf, sh_refract);
 			shader_set_interpolation(_surf);
+			shader_set_uv(_data[16], _data[17]);
 			
 			shader_set_surface( "refNormalSurf", _normS );
 			shader_set_surface( "refDepthSurf",  _deptS );

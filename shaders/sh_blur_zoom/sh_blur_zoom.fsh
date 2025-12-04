@@ -1,9 +1,28 @@
 #pragma use(sampler_simple)
 
-#region -- sampler_simple -- [1729740692.1417658]
+#region -- sampler_simple -- [1764837291.6127295]
     uniform int  sampleMode;
     
-    vec4 sampleTexture( sampler2D texture, vec2 pos) {
+    uniform sampler2D uvMap;
+    uniform int   useUvMap;
+    uniform float uvMapMix;
+
+    vec2 getUV(vec2 tx) {
+        if(useUvMap == 1) {
+            vec2 map = texture2D(uvMap, tx).xy;
+            map.y    = 1.0 - map.y;
+            tx       = mix(tx, map, uvMapMix);
+        }
+        return tx;
+    }
+
+    vec4 sampleTexture( sampler2D texture, vec2 pos, float mapBlend) {
+        if(useUvMap == 1) {
+            vec2 map = texture2D(uvMap, pos).xy;
+            map.y    = 1.0 - map.y;
+            pos      = mix(pos, map, mapBlend * uvMapMix);
+        }
+
         if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
             return texture2D(texture, pos);
         
@@ -14,6 +33,7 @@
         
         return vec4(0.);
     }
+    vec4 sampleTexture( sampler2D texture, vec2 pos) { return sampleTexture(texture, pos, 0.); }
 #endregion -- sampler_simple --
 
 varying vec2 v_vTexcoord;
@@ -88,7 +108,7 @@ void main() {
 		vec2  pos   = uv * scale + center;
 		float dist  = fadeDistance == 1? i / amo : 1.;
 		
-		vec4 col = sampleTexture( gm_BaseTexture, pos );
+		vec4 col = sampleTexture( gm_BaseTexture, pos, i/amo );
 		if(gamma == 1) col.rgb = pow(col.rgb, vec3(2.2));
 		
 		color += col * dist;

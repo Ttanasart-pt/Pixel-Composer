@@ -15,9 +15,11 @@ function Node_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(6, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- Surfaces
-	newInput(0, nodeValue_Surface( "Surface In"));
-	newInput(3, nodeValue_Surface( "Mask"));
-	newInput(4, nodeValue_Slider(  "Mix", 1));
+	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput(18, nodeValue_Surface( "UV Map"     ));
+	newInput(19, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput( 3, nodeValue_Surface( "Mask"       ));
+	newInput( 4, nodeValue_Slider(  "Mix",    1  ));
 	__init_mask_modifier(3, 7); // inputs 7, 8
 	
 	////- Smear
@@ -32,16 +34,17 @@ function Node_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(16, nodeValue_Enum_Scroll( "Render Mode", 0, [ "Distance", "Distance Normalized", "Base Color" ] ));
 	newInput(15, nodeValue_Enum_Scroll( "Blend Mode",  0, [ "Maximum", "Additive" ]));
 	newInput(17, nodeValue_Color(       "Blend Side",  ca_white));
-	
-	//// Inputs 18
+	//// Inputs 20
 	
 	input_display_list = [ 5, 6, 
-		["Surfaces", true], 0, 3, 4, 7, 8, 
+		["Surfaces", true], 0, 18, 19, 3, 4, 7, 8, 
 		["Smear",	false], 11, 14, 1, 9, 2, 10, 13, 12, 
 		["Render",  false], 16, 15, 17, 
 	]
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	
+	////- Node
 	
 	attribute_surface_depth();
 	attribute_oversample();
@@ -68,6 +71,8 @@ function Node_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _dim  = surface_get_dimension(_surf);
 		
 		surface_set_shader(_outSurf, sh_smear);
+			shader_set_uv(_data[18], _data[19]);
+			
 			shader_set_f("dimension",     _dim);
 			shader_set_f("size",          max(_dim[0], _dim[1]));
 			

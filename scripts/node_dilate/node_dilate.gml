@@ -5,25 +5,28 @@ function Node_Dilate(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(8, nodeValue_Toggle( "Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surfaces
-	/* UNUSED */ newInput(4, nodeValue_Enum_Scroll( "Oversample mode",  0, [ "Empty", "Clamp", "Repeat" ]));
-	newInput(0, nodeValue_Surface( "Surface In" ));
-	newInput(5, nodeValue_Surface( "Mask"       ));
-	newInput(6, nodeValue_Slider(  "Mix", 1     ));
+	/* UNUSED */ newInput(4, nodeValue_EScroll( "Oversample mode",  0, [ "Empty", "Clamp", "Repeat" ]));
+	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput(13, nodeValue_Surface( "UV Map"     ));
+	newInput(14, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput( 5, nodeValue_Surface( "Mask"       ));
+	newInput( 6, nodeValue_Slider(  "Mix", 1     ));
 	__init_mask_modifier(5, 9); // inputs 9, 10
 	
 	////- =Dilate
 	newInput(1, nodeValue_Vec2(   "Center",   [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	newInput(2, nodeValue_Slider( "Strength",  1, [-3, 3, 0.01] )).setHotkey("S").setMappable(11);
 	newInput(3, nodeValue_Float(  "Radius",    16 )).setHotkey("R").setMappable(12);
-	
-	// input 13
+	// input 15
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 7, 8, 
-		["Surfaces", true],	0, 5, 6, 9, 10, 
-		["Dilate",	false],	1, 2, 11, 3, 12,
+		["Surfaces", true],	 0, 13, 14,  5,  6,  9, 10, 
+		["Dilate",	false],	 1,  2, 11,  3, 12,
 	];
+	
+	////- Node
 	
 	attribute_surface_depth();
 	attribute_oversample();
@@ -55,7 +58,9 @@ function Node_Dilate(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var sam    = getAttribute("oversample");
 		
 		surface_set_shader(_outSurf, sh_dilate);
-		shader_set_interpolation(_data[0]);
+			shader_set_interpolation(_data[0]);
+			shader_set_uv(_data[13], _data[14]);
+			
 			shader_set_f("dimension", [ surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0]) ]);
 			shader_set_2("center",         _data[1]);
 			shader_set_f_map("strength",   _data[2], _data[11], inputs[2]);

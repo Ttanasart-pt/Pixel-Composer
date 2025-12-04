@@ -1,9 +1,28 @@
 #pragma use(sampler_simple)
 
-#region -- sampler_simple -- [1729740692.1417658]
+#region -- sampler_simple -- [1764837291.6127295]
     uniform int  sampleMode;
     
-    vec4 sampleTexture( sampler2D texture, vec2 pos) {
+    uniform sampler2D uvMap;
+    uniform int   useUvMap;
+    uniform float uvMapMix;
+
+    vec2 getUV(vec2 tx) {
+        if(useUvMap == 1) {
+            vec2 map = texture2D(uvMap, tx).xy;
+            map.y    = 1.0 - map.y;
+            tx       = mix(tx, map, uvMapMix);
+        }
+        return tx;
+    }
+
+    vec4 sampleTexture( sampler2D texture, vec2 pos, float mapBlend) {
+        if(useUvMap == 1) {
+            vec2 map = texture2D(uvMap, pos).xy;
+            map.y    = 1.0 - map.y;
+            pos      = mix(pos, map, mapBlend * uvMapMix);
+        }
+
         if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
             return texture2D(texture, pos);
         
@@ -14,6 +33,7 @@
         
         return vec4(0.);
     }
+    vec4 sampleTexture( sampler2D texture, vec2 pos) { return sampleTexture(texture, pos, 0.); }
 #endregion -- sampler_simple --
 
 varying vec2 v_vTexcoord;
@@ -79,15 +99,14 @@ void main() {
 	else if(blurMode == 2)	blrStart = -nsamples * 2. - 1.;
 	
 	vec4 color = vec4(0.0);
-    for(float i = 0.; i < nsamples * 2. + 1.; i++) {
+	float itr  = nsamples * 2. + 1.;
+	
+    for(float i = 0.; i < itr; i++) {
         float scale = 1.0 + ((blrStart + i) * scale_factor);
 		vec2 pos    = uv * scale + center;
 		
-		vec4 col = sampleTexture( gm_BaseTexture, pos );
-		if(col.a > 0.) {
-			color = col;
-			break;
-		}
+		vec4 col = sampleTexture( gm_BaseTexture, pos, i/itr );
+		if(col.a > 0.) { color = col; break; }
     }
     
 	gl_FragColor = color;

@@ -5,9 +5,11 @@ function Node_Blur_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(6, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surfaces
-	newInput(0, nodeValue_Surface( "Surface In" ));
-	newInput(3, nodeValue_Surface( "Mask"       ));
-	newInput(4, nodeValue_Slider(  "Mix",     1 ));
+	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput(13, nodeValue_Surface( "UV Map"     ));
+	newInput(14, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput( 3, nodeValue_Surface( "Mask"       ));
+	newInput( 4, nodeValue_Slider(  "Mix",     1 ));
 	__init_mask_modifier(3, 7); // inputs 7, 8
 	
 	////- =Path
@@ -19,12 +21,12 @@ function Node_Blur_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput( 2, nodeValue_Int(   "Resolution",   32 ));
 	newInput( 9, nodeValue_Float( "Intensity",    1  ));
 	newInput(10, nodeValue_Curve( "Intensity Along Path", CURVE_DEF_11 ));
-	// input 13
+	// input 15
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 5, 6, 
-		["Surfaces", true],	0, 3, 4, 7, 8, 
+		["Surfaces", true],	0, 13, 14, 3, 4, 7, 8, 
 		["Path",	false],	1, 12, 11, 
 		["Blur",	false],	2, 9, 10, 
 	];
@@ -76,6 +78,7 @@ function Node_Blur_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 		
 		surface_set_shader(_outSurf, sh_blur_path);
+			shader_set_uv(_data[13], _data[14]);
 			shader_set_i("sampleMode", getAttribute("oversample"));
 			shader_set_f("dimension",  _dim);
 			

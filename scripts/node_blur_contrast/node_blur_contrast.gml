@@ -11,24 +11,27 @@ function Node_Blur_Contrast(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput(6, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surfaces
-	newInput(0, nodeValue_Surface( "Surface In" ));
-	newInput(3, nodeValue_Surface( "Mask"       ));
-	newInput(4, nodeValue_Slider(  "Mix", 1     ));
+	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput(10, nodeValue_Surface( "UV Map"     ));
+	newInput(11, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput( 3, nodeValue_Surface( "Mask"       ));
+	newInput( 4, nodeValue_Slider(  "Mix",    1  ));
 	__init_mask_modifier(3, 7); // inputs 7, 8
 	
 	////- =Blur
 	newInput(1, nodeValue_Float(  "Size",        3 )).setHotkey("S").setValidator(VV_min(0)).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
 	newInput(2, nodeValue_Slider( "Threshold",  .2 )).setTooltip("Brightness different to be blur together.");
 	newInput(9, nodeValue_Bool(   "Gamma Correction", false ));
-	
-	// input 10
+	// input 12
 	
 	input_display_list = [ 5, 6, 
-		["Surfaces", true], 0, 3, 4, 7, 8, 
+		["Surfaces", true], 0, 10, 11, 3, 4, 7, 8, 
 		["Blur",	false], 1, 2, 9, 
 	]
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	
+	////- Node
 	
 	temp_surface = [ noone ];
 	
@@ -59,7 +62,9 @@ function Node_Blur_Contrast(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var hh = surface_get_height_safe(_surf);
 		
 		surface_set_shader(_outSurf, sh_blur_box_contrast);
-		shader_set_interpolation(_surf);
+			shader_set_interpolation(_surf);
+			shader_set_uv(_data[10], _data[11]);
+			
 			shader_set_f("dimension", [ ww, hh ]);
 			shader_set_f("size",      _size);
 			shader_set_f("treshold",  _tres);

@@ -1,9 +1,28 @@
 #pragma use(sampler_simple)
 
-#region -- sampler_simple -- [1729740692.1417658]
+#region -- sampler_simple -- [1764837291.6127295]
     uniform int  sampleMode;
     
-    vec4 sampleTexture( sampler2D texture, vec2 pos) {
+    uniform sampler2D uvMap;
+    uniform int   useUvMap;
+    uniform float uvMapMix;
+
+    vec2 getUV(vec2 tx) {
+        if(useUvMap == 1) {
+            vec2 map = texture2D(uvMap, tx).xy;
+            map.y    = 1.0 - map.y;
+            tx       = mix(tx, map, uvMapMix);
+        }
+        return tx;
+    }
+
+    vec4 sampleTexture( sampler2D texture, vec2 pos, float mapBlend) {
+        if(useUvMap == 1) {
+            vec2 map = texture2D(uvMap, pos).xy;
+            map.y    = 1.0 - map.y;
+            pos      = mix(pos, map, mapBlend * uvMapMix);
+        }
+
         if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
             return texture2D(texture, pos);
         
@@ -14,6 +33,7 @@
         
         return vec4(0.);
     }
+    vec4 sampleTexture( sampler2D texture, vec2 pos) { return sampleTexture(texture, pos, 0.); }
 #endregion -- sampler_simple --
 
 varying vec2 v_vTexcoord;
@@ -50,7 +70,7 @@ vec4 smear(vec2 shift) {
 		res  = base;
 		
 		for(float i = 0.; i <= 1.0; i += delta) {
-			col = sampleTexture( gm_BaseTexture, v_vTexcoord - shift * i);
+			col = sampleTexture( gm_BaseTexture, v_vTexcoord - shift * i, i);
 			
 			if(modulateStr != 2) {
 				if(alpha == 0) col.rgb *= 1. - i;
@@ -73,7 +93,7 @@ vec4 smear(vec2 shift) {
 		res  = base;
 		
 		for(float i = 0.; i <= 1.; i += delta) {
-			col    = sampleTexture( gm_BaseTexture, v_vTexcoord + shift * i);
+			col    = sampleTexture( gm_BaseTexture, v_vTexcoord + shift * i, i);
 			bright = (col.r + col.g + col.b) / 3. * col.a;
 			
 			if(bright == 0.) continue;

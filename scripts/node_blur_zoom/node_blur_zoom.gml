@@ -11,11 +11,13 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(9, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surface
-	newInput(0, nodeValue_Surface( "Surface In"));
-	newInput(6, nodeValue_Surface( "Mask"));
-	newInput(7, nodeValue_Slider(  "Mix", 1));
+	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput(17, nodeValue_Surface( "UV Map"     ));
+	newInput(18, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput( 6, nodeValue_Surface( "Mask"       ));
+	newInput( 7, nodeValue_Slider(  "Mix",    1  ));
 	__init_mask_modifier(6, 10);
-	newInput(5, nodeValue_Surface("Blur mask"));
+	newInput( 5, nodeValue_Surface("Blur mask"));
 	
 	////- =Blur
 	newInput(15, nodeValue_Enum_Button( "Mode",         0, [ "Blur", "Step" ]));
@@ -34,10 +36,12 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 8, 9,
-		["Surfaces", true],	0, 6, 7, 10, 11, 5, 
-		["Blur",	false],	15, 4, 1, 12, 2, 
-		["Render",	false],	14, 13, 16, 
+		[ "Surfaces",  true ], 0, 17, 18, 6, 7, 10, 11, 5, 
+		[ "Blur",     false ], 15, 4, 1, 12, 2, 
+		[ "Render",   false ], 14, 13, 16, 
 	];
+	
+	////- Node
 	
 	attribute_surface_depth();
 	attribute_oversample();
@@ -75,7 +79,8 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 							.setMode(_mode)
 							.setFadeDistance(_fade)
 							.setGamma(_gamm)
-							.setMask(_mask);
+							.setMask(_mask)
+							.setUVMap(_data[17], _data[18]);
 			
 		_outSurf = surface_apply_blur_zoom(_outSurf, _args);
 			

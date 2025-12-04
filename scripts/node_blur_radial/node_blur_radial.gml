@@ -8,28 +8,31 @@ function Node_Blur_Radial(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	name = "Radial Blur";
 	
 	newActiveInput(6);
-	newInput(7, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
+	newInput( 7, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surfaces
-	newInput(3, nodeValue_Enum_Scroll("Oversample mode", 0, [ "Empty", "Clamp", "Repeat" ]));
-	newInput(0, nodeValue_Surface( "Surface In" ));
-	newInput(4, nodeValue_Surface( "Mask"       ));
-	newInput(5, nodeValue_Slider(  "Mix", 1     ));
+	newInput( 3, nodeValue_Enum_Scroll("Oversample mode", 0, [ "Empty", "Clamp", "Repeat" ]));
+	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput(12, nodeValue_Surface( "UV Map"     ));
+	newInput(13, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput( 4, nodeValue_Surface( "Mask"       ));
+	newInput( 5, nodeValue_Slider(  "Mix",    1  ));
 	__init_mask_modifier(4, 8); // inputs 8, 9
 	
 	////- =Blur
 	newInput( 1, nodeValue_Rotation( "Strength",          45     )).setHotkey("R").setMappable(10);
 	newInput( 2, nodeValue_Vec2(     "Center",           [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	newInput(11, nodeValue_Bool(     "Gamma Correction",  false  ));
-	
-	// input 12
+	// input 14
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 6, 7, 
-		["Surfaces", true],	0, 4, 5, 8, 9, 
+		["Surfaces", true],	0, 12, 13, 4, 5, 8, 9, 
 		["Blur",	false],	1, 10, 2, 11, 
 	];
+	
+	////- Node
 	
 	attribute_surface_depth();
 	attribute_oversample();
@@ -48,6 +51,7 @@ function Node_Blur_Radial(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	static processData = function(_outSurf, _data, _array_index) {		
 		var _surf = _data[ 0];
+		
 		var _cen  = _data[ 2];
 		var _gam  = _data[11];
 		
@@ -57,6 +61,8 @@ function Node_Blur_Radial(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		
 		surface_set_shader(_outSurf, sh_blur_radial);
 			shader_set_interpolation(_surf);
+			shader_set_uv(_data[12], _data[13]);
+			
 			shader_set_f("dimension",    sw, sh);
 			shader_set_f_map("strength", _data[1], _data[10], inputs[1]);
 			shader_set_2("center",       _cen);

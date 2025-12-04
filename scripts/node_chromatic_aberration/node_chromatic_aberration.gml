@@ -4,27 +4,33 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 	newActiveInput(3);
 	
 	////- =Surface
-	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput( 8, nodeValue_Surface( "UV Map"     ));
+	newInput( 9, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput(10, nodeValue_Surface( "Mask"       ));
+	newInput(11, nodeValue_Slider(  "Mix",    1  ));
+	__init_mask_modifier(10, 12); // inputs 8, 9
 	
 	////- =Effect
 	newInput(5, nodeValue_EButton( "Type",       0, [ "RGB", "Continuous" ] ));
 	newInput(1, nodeValue_Vec2(    "Center",   [.5,.5] )).hideLabel().setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	newInput(2, nodeValue_Slider(  "Strength",   1, [-16, 16, 0.01] )).setHotkey("S").setMappable(4);
 	newInput(6, nodeValue_Slider(  "Intensity",  1, [  0,  4, 0.01] )).setHotkey("I").setMappable(7);
-	// input 8
+	// input 10
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 3, 
-		["Surface",  false], 0, 
+		["Surface",  false], 0, 8, 9, 10, 11, 12, 
 		["Effect",   false], 5, 1, 2, 4, 6, 7, 
 	];
+	
+	////- Node
 	
 	attribute_surface_depth();
 	attribute_interpolation();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		
 		var _dim = getDimension();
 		var _cx = _x + _dim[0] / 2 * _s;
 		var _cy = _y + _dim[1] / 2 * _s;
@@ -43,14 +49,20 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 		
 		surface_set_shader(_outSurf, sh_chromatic_aberration);
 			shader_set_interpolation(_surf);
-			shader_set_dim("dimension",   _surf);
-			shader_set_i("type",          _type);
-			shader_set_2("center",        _cent);
+			shader_set_uv(_data[8], _data[9]);
+			
+			shader_set_f("resolution",       64 );
+			shader_set_dim("dimension",   _surf );
+			shader_set_i("type",          _type );
+			shader_set_2("center",        _cent );
 			shader_set_f_map("strength",  _data[2], _data[4], inputs[2]);
 			shader_set_f_map("intensity", _data[6], _data[7], inputs[6]);
 			
 			draw_surface_safe(_surf);
 		surface_reset_shader();
+		
+		__process_mask_modifier(_data);
+		_outSurf = mask_apply(_surf, _outSurf, _data[10], _data[11]);
 		
 		return _outSurf;
 	}
