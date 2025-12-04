@@ -47,8 +47,6 @@ function __NodeValue_Matrix(_name, _node, _value, _data = {}) : NodeValue(_name,
 			node.clearCacheForward();
 		}
 		
-		if(fullUpdate) RENDER_ALL
-					
 		if(!LOADING) PROJECT.setModified();
 					
 		cache_value[0] = false;

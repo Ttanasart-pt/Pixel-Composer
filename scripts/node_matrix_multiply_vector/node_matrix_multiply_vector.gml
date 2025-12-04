@@ -12,7 +12,7 @@ function Node_Matrix_Multiply_Vector(_x, _y, _group = noone) : Node_Processor(_x
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newOutput(0, nodeValue("Vector", self, CONNECT_TYPE.output, VALUE_TYPE.float, []))
+	newOutput(0, nodeValue_Output("Vector", VALUE_TYPE.float, []))
 		.setArrayDepth(1);
 		
 	input_display_list = [ 0, 1 ];

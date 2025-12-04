@@ -182,12 +182,10 @@ _FILE_DROPPED       = false;
 				} else if(GLOBAL_IS_PLAYING || GLOBAL_IS_RENDERING) {
 					if(PROJECT.animator.frame_progress) {
 						__addon_preAnim();
-						
-						if(IS_CMD) RenderSync(PROJECT, false);
-						else       RenderSync(PROJECT, true);
-						
+						RenderSync(PROJECT, !IS_CMD);
 						__addon_postAnim();
 					}
+						
 					PROJECT.animator.frame_progress = false;
 					
 				} else {

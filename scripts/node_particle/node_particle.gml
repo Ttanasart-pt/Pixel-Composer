@@ -81,7 +81,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	
 	static onUpdate = function(frame = CURRENT_FRAME) {
 		use_cache = attributes.cache? CACHE_USE.auto : CACHE_USE.none;
-		if(frame != render_frame && !IS_FIRST_FRAME) return;
+		// if(frame != render_frame && !IS_FIRST_FRAME) return;
 		
 		var _inSurf  = getInputData(0);
 		var _dim	 = getInputData(input_len + 0); __dim = _dim;
@@ -94,7 +94,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		if(is_surface(_bg)) _dim = surface_get_dimension(_bg);
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
-		render_amount = 0;		
+		render_amount = 0;
 		
 		outputs[0].setValue(_outSurf);
 		

@@ -5,35 +5,36 @@
 		pingpong,
 	}
 	
-	#macro GLOBAL_IS_PLAYING     PROJECT.animator.is_playing
-	#macro GLOBAL_IS_RENDERING   PROJECT.animator.is_rendering
-	#macro GLOBAL_CURRENT_FRAME  PROJECT.animator.current_frame
+	#macro GLOBAL_IS_PLAYING        PROJECT.animator.is_playing
+	#macro GLOBAL_IS_RENDERING      PROJECT.animator.is_rendering
+	#macro GLOBAL_CURRENT_FRAME     PROJECT.animator.current_frame
 	
-	#macro GLOBAL_TOTAL_FRAMES       PROJECT.animator.frames_total
-	#macro GLOBAL_FRAME_RANGE_START  PROJECT.animator.frame_range_start
-	#macro GLOBAL_FRAME_RANGE_END    PROJECT.animator.frame_range_end
+	#macro GLOBAL_TOTAL_FRAMES      PROJECT.animator.frames_total
+	#macro GLOBAL_FRAME_RANGE_START PROJECT.animator.frame_range_start
+	#macro GLOBAL_FRAME_RANGE_END   PROJECT.animator.frame_range_end
 	
-	#macro GLOBAL_FIRST_FRAME    PROJECT.animator.getFirstFrame()
-	#macro GLOBAL_LAST_FRAME     PROJECT.animator.getLastFrame()
+	#macro GLOBAL_FIRST_FRAME       PROJECT.animator.getFirstFrame()
+	#macro GLOBAL_LAST_FRAME        PROJECT.animator.getLastFrame()
 	
-	#macro GLOBAL_IS_FIRST_FRAME PROJECT.animator.isFirstFrame()
-	#macro GLOBAL_IS_LAST_FRAME  PROJECT.animator.isLastFrame()
+	#macro GLOBAL_IS_FIRST_FRAME    PROJECT.animator.isFirstFrame()
+	#macro GLOBAL_IS_LAST_FRAME     PROJECT.animator.isLastFrame()
 	
-	#macro NODE_CURRENT_FRAME    node.project.animator.current_frame
-	#macro NODE_TOTAL_FRAMES     node.project.animator.frames_total
+	#macro NODE_IS_PLAYING          node.project.animator.is_playing
+	#macro NODE_CURRENT_FRAME       node.project.animator.current_frame
+	#macro NODE_TOTAL_FRAMES        node.project.animator.frames_total
 	
-	#macro IS_PLAYING            project.animator.is_playing
-	#macro IS_FRAME_PROGRESS     project.animator.frame_progress
-	#macro IS_RENDERING          project.animator.is_rendering
-	#macro CURRENT_FRAME         project.animator.current_frame
+	#macro IS_PLAYING               project.animator.is_playing
+	#macro IS_FRAME_PROGRESS        project.animator.frame_progress
+	#macro IS_RENDERING             project.animator.is_rendering
+	#macro CURRENT_FRAME            project.animator.current_frame
 	
-	#macro TOTAL_FRAMES          project.animator.frames_total
+	#macro TOTAL_FRAMES             project.animator.frames_total
 	
-	#macro FIRST_FRAME           project.animator.getFirstFrame()
-	#macro LAST_FRAME            project.animator.getLastFrame()
+	#macro FIRST_FRAME              project.animator.getFirstFrame()
+	#macro LAST_FRAME               project.animator.getLastFrame()
 	
-	#macro IS_FIRST_FRAME        project.animator.isFirstFrame()
-	#macro IS_LAST_FRAME         project.animator.isLastFrame()
+	#macro IS_FIRST_FRAME           project.animator.isFirstFrame()
+	#macro IS_LAST_FRAME            project.animator.isLastFrame()
 #endregion
 
 #region animation class

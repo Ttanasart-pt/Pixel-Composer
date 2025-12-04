@@ -9,7 +9,7 @@ function Node_Matrix_Transpose(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newOutput(0, nodeValue("Matrix", self, CONNECT_TYPE.output, VALUE_TYPE.float, new Matrix(3)))
+	newOutput(0, nodeValue_Output("Matrix", VALUE_TYPE.float, new Matrix(3)))
 		.setDisplay(VALUE_DISPLAY.matrix);
 		
 	input_display_list = [ 0 ];

@@ -116,7 +116,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		dynamic_array = false;
 		validateValue = true;
 		
-		fullUpdate    = false;
 		attributes    = {};   // serizlized
 		parameters    = {};   // non-serizlized
 		
@@ -126,6 +125,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		bypass_junc    = connect_type == CONNECT_TYPE.input? new __NodeValue_Input_Bypass(self, name, node, type) : noone;
 		
 		ign_array      = false; function toggleArray() { ign_array = !ign_array; node.triggerRender(); return self; }
+		
+		updateOnSet    = false;
 	#endregion
 	
 	#region ---- Draw ----
@@ -1084,6 +1085,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					case VALUE_DISPLAY.palette :
 						editWidget   = new buttonPalette(function(_color) /*=>*/ {return setValueInspector(_color)});
 						extract_node = "Node_Palette";
+						updateOnSet  = true;
 						break;
 				}
 				break;
@@ -1777,75 +1779,50 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static onSetValueDirect = undefined;
 	static setValueDirect = function(val = 0, _index = noone, record = true, time = NODE_CURRENT_FRAME, _render = true) {
 		is_modified = true;
-		var updated = false;
-		var _val    = val;
-		var _inp    = connect_type == CONNECT_TYPE.input;
-		
-		record = record && record_value & _inp;
+		var _upd = updateOnSet;
+		var _val = val;
+		var _rec = record && record_value;
 		
 		if(sep_axis) {
 			if(_index == noone) {
 				for( var i = 0, n = array_length(animators); i < n; i++ )
-					updated = animators[i].setValue(val[i], record, time) || updated; 
+					_upd = animators[i].setValue(val[i], _rec, time) || _upd; 
 			} else
-				updated = animators[_index].setValue(val, record, time);
+				_upd = animators[_index].setValue(val, _rec, time);
 				
 		} else {
 			if(_index != noone) {
 				_val = animator.getValue(time);
-				if(_inp) _val = variable_clone(_val); 
-				
+				_val = variable_clone(_val); 
 				_val[_index] = val;
 			}
 			
-			updated = animator.setValue(_val, record, time);
+			_upd = animator.setValue(_val, _rec, time);
 		}
 		
-		if(connect_type == CONNECT_TYPE.output)   updated = false;
-		if(type == VALUE_TYPE.gradient)	          updated = true;
-		if(display_type == VALUE_DISPLAY.palette) updated = true;
+		if(!_upd) return false; /////////////////////////////////////////////////////////////////////////////////
 		
-		if(!updated) return false; /////////////////////////////////////////////////////////////////////////////////
-		
-		if(is_instanceof(self, __NodeValue_Dimension))
+		if(is(self, __NodeValue_Dimension)) 
 			attributes.use_project_dimension = false;
 		
-		if(connect_type == CONNECT_TYPE.input && index >= 0) {
+		if(index >= 0) {
 			var _val = getValue(time);
-			
-			node.inputs_data[index] = _val; // setInputData(index, _val);
-			node.input_value_map[$ internalName] = _val;
-		}
-		
-		draw_junction_index = type;
-		if(type == VALUE_TYPE.surface) {
-			var _sval = val;
-			if(is_array(_sval) && !array_empty(_sval))
-				_sval = _sval[0];
-				
-			if(is_instanceof(_sval, SurfaceAtlas))
-				draw_junction_index = VALUE_TYPE.atlas;
-		}
-		
-		if(connect_type == CONNECT_TYPE.output) {
-			if(index == 0) {
-				node.preview_value = getValue();
-				node.preview_array = $"[{array_shape(node.preview_value)}]";
-			}
-			return;
+			node.inputs_data[index]              = _val; // setInputData(index, _val);
+			node.input_value_map[$ internalName] = _val; 
 		}
 		
 		if(tags == VALUE_TAG.updateInTrigger || tags == VALUE_TAG.updateOutTrigger) return true;
 		
-		if(_render) { // This part used to have !IS_PLAYING
+		if(_render) { // This part used to have !NODE_IS_PLAYING
 			if(is(node, Node_Global)) {
 				RENDER_ALL
 				
 			} else {
-				node.project.immediate_render = node;
-				node.triggerRender();
+				if(!NODE_IS_PLAYING)
+					node.project.immediate_render = node;
 				
 				node.valueUpdate(index);
+				node.triggerRender();
 				node.clearCacheForward();
 				
 				if(is(from, Node)) {
@@ -1855,10 +1832,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			}
 		}
 		
-		if(fullUpdate) RENDER_ALL
-		
 		if(!LOADING) node.project.setModified();
-					
 		cache_value[0] = false;
 		onValidate();
 		

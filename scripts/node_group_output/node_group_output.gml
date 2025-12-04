@@ -52,9 +52,7 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(!is_struct(group)) return;
 		if(!is_undefined(outParent)) array_remove(group.outputs, outParent);
 			
-		outParent = nodeValue("Value", group, CONNECT_TYPE.output, VALUE_TYPE.any, -1)
-			.uncache()
-			.setVisible(true, true);
+		outParent = new __NodeValue_Output("Value", group, VALUE_TYPE.any, -1).uncache().setVisible(true, true);
 		
 		outParent.from  = self;
 		outParent.index = array_length(group.outputs);
