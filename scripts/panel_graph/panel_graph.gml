@@ -1655,7 +1655,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		connection_draw_update = connection_draw_update || _upd;
 		
 		_upd = _upd || connection_cache[$ "frame"]     != GLOBAL_CURRENT_FRAME;
-				       connection_cache[$ "frame"]     = GLOBAL_CURRENT_FRAME;
+				       connection_cache[$ "frame"]     =  GLOBAL_CURRENT_FRAME;
 		node_surface_update    = node_surface_update || _upd;
     }
     
@@ -1723,13 +1723,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        	
 	        	if(_n.drawNodeBG != undefined && _n.drawNodeBG(__gr_x, __gr_y, __mx, __my, __gr_s)) 
 	        		frame_hovering = _n; 
-	        	
-				if(CAPTURING) return;
-	        	if(!_n.active || !_n.previewable || !_n.draw_metadata) return;
-				if(_n.draw_graph_culled) return;
-				if(__gr_s * _n.w < 64)   return;
-				
-				if(_n.drawDimension) _n.drawDimension(_n.x * __gr_s + __gr_x, _n.y * __gr_s + __gr_y, __gr_s);
 	        });
         #endregion
         
@@ -2111,6 +2104,9 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		                }
 		                
 		                gpu_set_texfilter(false);
+		                
+		                if(CAPTURING) return;
+						if(_n.drawDimension) _n.drawDimension(_n.x * __gr_s + __gr_x, _n.y * __gr_s + __gr_y, __gr_s);
 		            }
 		            catch(e) { log_warning("NODE DRAW", exception_print(e)); }
 		        });

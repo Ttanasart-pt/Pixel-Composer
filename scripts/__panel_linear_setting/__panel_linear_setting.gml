@@ -42,7 +42,17 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 	curr_height   = 0;
 	shift_height  = true;
 	
-	static setHeight   = function() { h = prop_height * array_length(properties) + ui(16) + hpad; }
+	static setHeight   = function() { 
+		h = ui(16) + hpad; 
+		
+		for( var i = 0, n = array_length(properties); i < n; i++ ) {
+			var _prop = properties[i];
+			
+			if(_prop == -1) h += ui(8)
+			else            h += prop_height;
+		}
+	}
+	
 	static resetHeight = function(_h) { 
 		if(h == _h) return;
 		
@@ -70,6 +80,13 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 		
 		for( var i = 0, n = array_length(properties); i < n; i++ ) {
 			var _prop = properties[i];
+			
+			if(_prop == -1) {
+				draw_set_color(CDEF.main_mdblack);
+				draw_line_round(ui(16), yy + ui(4), w - ui(16), yy + ui(4), 2);
+				yy += ui(8);
+				continue;
+			}
 			
 			if(is_array(_prop)) {
 				yy += bool(i) * ui(4);

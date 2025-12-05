@@ -1532,13 +1532,34 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		__preDraw_data.force = true;
 	} 
 	
-	__preDraw_data = { _x: undefined, _y: undefined, _w: undefined, _h: undefined, _s: undefined, _p: undefined, sp: undefined, force: false };
+	static refreshPreDraw = function() /*=>*/ { __preDraw_data.force = true; return self; }
+	
+	__preDraw_data = { 
+		_x: undefined, 
+		_y: undefined, 
+		_w: undefined, 
+		_h: undefined, 
+		_s: undefined, 
+		_p: undefined, 
+		sp: undefined,
+		av: undefined,
+		force: false, 
+	};
+		
 	static preDraw = function(_x, _y, _mx, _my, _s) {
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
 		var _d   = __preDraw_data;
-		var _upd = _d.force || _d._x != xx || _d._y != yy || _d._s != _s || _d._w != w || _d._h != h || _d._p != previewable || _d.sp != show_parameter 
+		var _upd = _d.force 
+				|| _d._x != xx 
+				|| _d._y != yy 
+				|| _d._s != _s 
+				|| _d._w != w 
+				|| _d._h != h 
+				|| _d._p != previewable 
+				|| _d.sp != show_parameter 
+				|| _d.av != project.graphDisplay.avoid_label 
 		
 		_d._x = xx;
 		_d._y = yy;
@@ -1547,6 +1568,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		_d._s = _s;
 		_d._p = previewable;
 		_d.sp = show_parameter;
+		_d.av = project.graphDisplay.avoid_label;
 		
 		_d.force = false;
 		
@@ -1557,10 +1579,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				getJunctionList();
 				PANEL_GRAPH.refreshDraw();
 			}
+			
 			_dummy_add_index = dummy_add_index;
 			dummy_add_index  = noone;
 			dummy_insert     = noone;
-			
 		#endregion
 		
 		if(!_upd && !_dummy) { // cache
@@ -1730,8 +1752,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static drawNodeBase = function(xx, yy, _s) { 
 		var cc = colorMultiply(getColor(), COLORS.node_base_bg);
 		var aa = .75 * (.25 + .75 * isHighlightingInGraph());
+		var hh = h + project.graphDisplay.node_meta_view * 16;
 		
-		draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, h * _s, cc, aa); 
+		draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, hh * _s, cc, aa); 
 	}
 	
 	static drawNodeOverlay = undefined; //static drawNodeOverlay = function(xx, yy, _mx, _my, _s) {
@@ -2235,7 +2258,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static drawDimension = function(xx, yy, _s) {
-		gpu_set_colorwriteenable(1,1,1,0);
+		if(!project.graphDisplay.show_dimension && !project.graphDisplay.show_compute) return;
+			
 		draw_set_text(f_sdf_medium, fa_center, fa_top);
 		
 		var ts = _s * .275 / UI_SCALE;
@@ -2244,6 +2268,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		var hh = line_get_height() * ts;
 		var vv = project.graphDisplay.node_meta_view;
+		BLEND_ALPHA_MULP
+		
+		if(vv) {
+			draw_set_color(COLORS._main_icon);
+			draw_set_alpha(.3);
+			draw_line(xx + 1, ty - 2 * _s, xx + w * _s - 1, ty - 2 * _s);
+			draw_set_alpha(1);
+		}
 		
 		if(project.graphDisplay.show_dimension) {
 			draw_set_color(COLORS.panel_graph_node_dimension);
@@ -2288,12 +2320,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				draw_set_halign(fa_right);
 				draw_text_transformed(xx + (w - 4) * _s, round(ty), $"{rt} {unit}", ts, ts, 0);
 				
-			} else 
+			} else {
 				draw_text_transformed(round(tx), round(ty), $"{rt} {unit}", ts, ts, 0);
+				
+			}
 			
 		}
 		
-		gpu_set_colorwriteenable(1,1,1,1);
+		BLEND_NORMAL
 	}
 	
 	static groupCheck = undefined;//function(_x, _y, _s, _mx, _my) {}
@@ -2317,6 +2351,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static drawNode   = function(_draw, _x, _y, _mx, _my, _s, _panel = noone) { 
 		var xx = x * _s + _x + 1;
 		var yy = y * _s + _y + 1;
+		var hh = h + project.graphDisplay.node_meta_view * 16;
 		
 		preview_mx = _mx;
 		preview_my = _my;
@@ -2357,7 +2392,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			BLEND_NORMAL
 		}
 		
-		if(bg_spr_add > 0) draw_sprite_stretched_add(bg_spr, 1, xx, yy, w * _s, h * _s, getColor(), bg_spr_add);
+		if(bg_spr_add > 0) draw_sprite_stretched_add(bg_spr, 1, xx, yy, w * _s, hh * _s, getColor(), bg_spr_add);
 		
 		active_drawing = active_draw_index > -1;
 		if(active_draw_index > -1) {
@@ -2367,8 +2402,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				case 2 : cc = COLORS.node_border_file_drop; break;
 			}
 			
-			draw_sprite_stretched_ext(bg_spr, 1, xx, yy, w * _s, h * _s, cc, 1);
-			if(active_draw_anchor) draw_sprite_stretched_add(bg_spr, 1, xx, yy, w * _s, h * _s, COLORS._main_accent, 0.5);
+			draw_sprite_stretched_ext(bg_spr, 1, xx, yy, w * _s, hh * _s, cc, 1);
+			if(active_draw_anchor) draw_sprite_stretched_add(bg_spr, 1, xx, yy, w * _s, hh * _s, COLORS._main_accent, 0.5);
 			
 			active_draw_anchor = false;
 			active_draw_index  = -1;
