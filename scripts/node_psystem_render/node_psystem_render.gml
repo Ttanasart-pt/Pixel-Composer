@@ -13,7 +13,7 @@ function Node_pSystem_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	////- =Texture
 	newInput(3, nodeValue_Surface( "Surfaces" ));
-	// 
+	// 4
 	
 	newOutput(0, nodeValue_Output( "Rendered", VALUE_TYPE.surface, noone ));
 	
@@ -59,12 +59,13 @@ function Node_pSystem_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	array_push(attributeEditors,   "Cache" );
 	array_push(attributeEditors, [ "Cache Data", function() /*=>*/ {return attributes.cache}, new checkBox(function() /*=>*/ {return toggleAttribute("cache")}) ]);
 	
-	custom_parameter_names = undefined;
-	
 	custom_parameter_names       = [];
 	custom_parameter_curves_view = {};
 	custom_parameter_map         = {};
 	attributes.parameter_curves  = {};
+	
+	setTrigger(2, "Clear cache", [ THEME.cache, 0, COLORS._main_icon ]);
+	static onInspector2Update = function() /*=>*/ { clearCache(); }
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) {
 		var _parts = getInputData(0);

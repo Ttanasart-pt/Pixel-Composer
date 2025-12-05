@@ -133,12 +133,6 @@
 		}
 	}
 	
-	function shader_set_f_map_s(uniform, value, surface, junc) {
-		INLINE
-		shader_set_f(uniform, is_array(value)? value : [ value, value ]); 
-		shader_set_i(uniform + "UseSurf", junc.attributes.mapped && is_surface(surface));
-	}
-	
 	function shader_set_uniform_f_array_safe(uniform, array, max_length = 4096) {
 		// if(!is_array(array)) return;
 		

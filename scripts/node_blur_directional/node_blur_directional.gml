@@ -84,10 +84,10 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 			var _sCurve    = _data[16];
 			
 			var _specUse   = _data[18];
-			var _specInt   = _data[19];
-			var _specShf   = _data[20];
-			var _specSca   = _data[22];
 			var _specGrd   = _data[21];
+			var _specInt   = _data[19];
+			var _specSca   = _data[22];
+			var _specShf   = _data[20];
 			
 			inputs[21].setVisible(_specUse == 2);
 		#endregion

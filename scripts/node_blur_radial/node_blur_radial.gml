@@ -23,13 +23,22 @@ function Node_Blur_Radial(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput( 1, nodeValue_Rotation( "Strength",          45     )).setHotkey("R").setMappable(10);
 	newInput( 2, nodeValue_Vec2(     "Center",           [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	newInput(11, nodeValue_Bool(     "Gamma Correction",  false  ));
-	// input 14
+	newInput(19, nodeValue_Bool(     "Fade Distance",    false ));
+	
+	////- =Colorize
+	newInput(14, nodeValue_EScroll(  "Colorize",     0, [ "None", "Spectral", "Gradient" ] ));
+	newInput(15, nodeValue_Gradient( "Gradient",     gra_white     ));
+	newInput(16, nodeValue_Float(    "Intensity",    1             ));
+	newInput(17, nodeValue_Float(    "Scale",        1             ));
+	newInput(18, nodeValue_Slider(   "Shift",        0, [-1,1,.01] ));
+	// input 20
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 6, 7, 
-		["Surfaces", true],	0, 12, 13, 4, 5, 8, 9, 
-		["Blur",	false],	1, 10, 2, 11, 
+		[ "Surfaces",   true  ],  0, 12, 13,  4,  5,  8,  9, 
+		[ "Blur",       false ],  1, 10,  2, 11, 19, 
+		[ "Colorize",   false ], 14, 15, 16, 17, 18, 
 	];
 	
 	////- Node
@@ -50,10 +59,21 @@ function Node_Blur_Radial(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {		
-		var _surf = _data[ 0];
+		#region data
+			var _surf = _data[ 0];
+			
+			var _cen  = _data[ 2];
+			var _gam  = _data[11];
+			var _fad  = _data[19];
 		
-		var _cen  = _data[ 2];
-		var _gam  = _data[11];
+			var _specUse = _data[14];
+			var _specGrd = _data[15];
+			var _specInt = _data[16];
+			var _specSca = _data[17];
+			var _specShf = _data[18];
+			
+			inputs[15].setVisible(_specUse == 2);
+		#endregion
 		
 		var sw = surface_get_width_safe(_surf);
 		var sh = surface_get_height_safe(_surf);
@@ -67,6 +87,13 @@ function Node_Blur_Radial(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			shader_set_f_map("strength", _data[1], _data[10], inputs[1]);
 			shader_set_2("center",       _cen);
 			shader_set_f("gamma",        _gam);
+			shader_set_i("fadeDistance", _fad);
+			
+			shader_set_i("spectralUse",        _specUse);
+			shader_set_f("spectralIntensity",  _specInt);
+			shader_set_f("spectralScale",      _specSca);
+			shader_set_f("spectralShift",      _specShf);
+			_specGrd.shader_submit();
 			
 			draw_surface_safe(_surf);
 		surface_reset_shader();

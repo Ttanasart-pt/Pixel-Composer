@@ -16,9 +16,9 @@ function Node_FXAA(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(4, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surfaces
-	newInput(0, nodeValue_Surface( "Surface In"));
-	newInput(5, nodeValue_Surface( "Mask"));
-	newInput(6, nodeValue_Slider(  "Mix", 1));
+	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput(5, nodeValue_Surface( "Mask"       ));
+	newInput(6, nodeValue_Slider(  "Mix",     1 ));
 	__init_mask_modifier(5, 7); // inputs 7, 8, 
 	
 	////- =Effect
