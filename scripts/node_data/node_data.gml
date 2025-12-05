@@ -378,7 +378,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		display_name = _name;
 		internalName = string_replace_all(display_name, " ", "_");
 		refreshNodeMap();
-		PANEL_GRAPH.refreshDraw(1);
+		PANEL_GRAPH.refreshDraw();
 		
 		if(onSetDisplayName) onSetDisplayName();
 		return self;
@@ -1528,7 +1528,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		getJunctionList();
 		setJunctionIndex();
 		
-		PANEL_GRAPH.refreshDraw(1);
+		PANEL_GRAPH.refreshDraw();
 		__preDraw_data.force = true;
 	} 
 	
@@ -1555,7 +1555,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			if(_dummy || _dummy_add_index != dummy_add_index) {
 				getJunctionList();
-				PANEL_GRAPH.refreshDraw(1);
+				PANEL_GRAPH.refreshDraw();
 			}
 			_dummy_add_index = dummy_add_index;
 			dummy_add_index  = noone;
@@ -2235,17 +2235,31 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static drawDimension = function(xx, yy, _s) {
-		draw_set_text(f_p4, fa_center, fa_top, COLORS.panel_graph_node_dimension);
-		var tx = xx + w * _s / 2;
-		var ty = yy + (h + 4) * _s - 2;
+		gpu_set_colorwriteenable(1,1,1,0);
+		draw_set_text(f_sdf_medium, fa_center, fa_top);
 		
-		if(struct_get(project.graphDisplay, "show_dimension")) {
+		var ts = _s * .275 / UI_SCALE;
+		var tx = xx + w * _s / 2;
+		var ty = yy + (h + 2) * _s;
+		
+		var hh = line_get_height() * ts;
+		var vv = project.graphDisplay.node_meta_view;
+		
+		if(project.graphDisplay.show_dimension) {
+			draw_set_color(COLORS.panel_graph_node_dimension);
 			var txt = string(getNodeDimension(_s > 0.65));
-			draw_text(round(tx), round(ty), txt);
-			ty += string_height(txt) - 2;
+			
+			if(vv) {
+				draw_set_halign(fa_left);
+				draw_text_transformed(xx + 4 * _s, round(ty), txt, ts, ts, 0);
+				
+			} else {
+				draw_text_transformed(round(tx), round(ty), txt, ts, ts, 0);
+				ty += hh - 2;
+			}
 		}
 		
-		if(struct_get(project.graphDisplay, "show_compute")) {
+		if(project.graphDisplay.show_compute) {
 			var rt = 0, unit = "";
 			
 			if(render_time == 0) {
@@ -2253,25 +2267,33 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				unit = "us";
 				
 			} else if(render_time < 1000) {
-				rt = round(render_time / 10) * 10;
+				rt   = round(render_time / 10) * 10;
 				unit = "us";
 				draw_set_color(COLORS.speed[2]);
 				
-			} else if(render_time < 1000000) {
-				rt = string_format(render_time / 1000, -1, 2);
+			} else if(render_time < 1000_000) {
+				rt   = string_format(render_time / 1000, -1, 2);
 				unit = "ms";
 				draw_set_color(COLORS.speed[1]);
 				
 			} else {
-				rt = string_format(render_time / 1000000, -1, 2);
+				rt   = string_format(render_time / 100_0000, -1, 2);
 				unit = "s";
 				draw_set_color(COLORS.speed[0]);
 			}
 			
 			if(render_cached) draw_set_color(COLORS._main_text_sub);
 			
-			draw_text(round(tx), round(ty), $"{rt} {unit}");
+			if(vv) {
+				draw_set_halign(fa_right);
+				draw_text_transformed(xx + (w - 4) * _s, round(ty), $"{rt} {unit}", ts, ts, 0);
+				
+			} else 
+				draw_text_transformed(round(tx), round(ty), $"{rt} {unit}", ts, ts, 0);
+			
 		}
+		
+		gpu_set_colorwriteenable(1,1,1,1);
 	}
 	
 	static groupCheck = undefined;//function(_x, _y, _s, _mx, _my) {}
@@ -3069,7 +3091,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(!active) return;
 		disable();
 		
-		PANEL_GRAPH.refreshDraw(1);
+		PANEL_GRAPH.refreshDraw();
 		array_remove(group == noone? project.nodes : group.getNodeList(), self);
 		
 		if(PANEL_GRAPH.node_hover == self) PANEL_GRAPH.node_hover = noone;
@@ -3122,7 +3144,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(active) return;
 		enable();
 		
-		PANEL_GRAPH.refreshDraw(1);
+		PANEL_GRAPH.refreshDraw();
 		array_push(group == noone? project.nodes : group.getNodeList(), self);
 		
 		onRestore();

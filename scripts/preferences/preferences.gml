@@ -226,9 +226,11 @@
 		
 		PREFERENCES.project_graphDisplay = {
 			show_grid	    : true,
+			show_view_control : 1,
+			
 			show_dimension  : true,
 			show_compute    : true,
-			show_view_control : 1,
+			node_meta_view  : 0, 
 			
 			avoid_label     : false,
 			preview_scale   : 100,

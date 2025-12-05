@@ -1,13 +1,13 @@
-function Panel_Graph_View_Setting(graphPanel, display) : Panel_Linear_Setting() constructor {
+function Panel_Graph_View_Setting(_graphPanel, _display) : Panel_Linear_Setting() constructor {
 	title = __txtx("graph_view_settings", "View Settings");
 	
-	self.graphPanel   = graphPanel;
-	display_parameter = display;
+	graphPanel        = _graphPanel;
+	display_parameter = _display;
 	
 	properties = [
 		new __Panel_Linear_Setting_Item(
 			__txt("Grid"),
-			new checkBox(function() /*=>*/ { display_parameter.show_grid = !display_parameter.show_grid; }),
+			new checkBox(function() /*=>*/ { display_parameter.show_grid = !display_parameter.show_grid; graphPanel.refreshDraw(); }),
 			function()    /*=>*/   {return display_parameter.show_grid},
 			function(val) /*=>*/ { display_parameter.show_grid = val; },
 			PREFERENCES.project_graphDisplay.show_grid,
@@ -16,8 +16,18 @@ function Panel_Graph_View_Setting(graphPanel, display) : Panel_Linear_Setting() 
 		),
 		
 		new __Panel_Linear_Setting_Item(
+			__txt("Meta View"),
+			new buttonGroup(__txts([ "Center", "Compact" ]), function(val) /*=>*/ { display_parameter.node_meta_view = val; graphPanel.refreshDraw(); }),
+			function()    /*=>*/   {return display_parameter.node_meta_view},
+			function(val) /*=>*/ { display_parameter.node_meta_view = val; },
+			PREFERENCES.project_graphDisplay.node_meta_view,
+			[ "Graph", "Toggle Meta View" ],
+			"project_graphDisplay.node_meta_view",
+		),
+		
+		new __Panel_Linear_Setting_Item(
 			__txtx("graph_visibility_dim", "Dimension"),
-			new checkBox(function() /*=>*/ { display_parameter.show_dimension = !display_parameter.show_dimension; }),
+			new checkBox(function() /*=>*/ { display_parameter.show_dimension = !display_parameter.show_dimension; graphPanel.refreshDraw(); }),
 			function()    /*=>*/   {return display_parameter.show_dimension},
 			function(val) /*=>*/ { display_parameter.show_dimension = val; },
 			PREFERENCES.project_graphDisplay.show_dimension,
@@ -27,7 +37,7 @@ function Panel_Graph_View_Setting(graphPanel, display) : Panel_Linear_Setting() 
 		
 		new __Panel_Linear_Setting_Item(
 			__txtx("graph_visibility_compute", "Compute Time"),
-			new checkBox(function() /*=>*/ { display_parameter.show_compute = !display_parameter.show_compute; }),
+			new checkBox(function() /*=>*/ { display_parameter.show_compute = !display_parameter.show_compute; graphPanel.refreshDraw(); }),
 			function()    /*=>*/   {return display_parameter.show_compute},
 			function(val) /*=>*/ { display_parameter.show_compute = val; },
 			PREFERENCES.project_graphDisplay.show_compute,
@@ -37,7 +47,7 @@ function Panel_Graph_View_Setting(graphPanel, display) : Panel_Linear_Setting() 
 		
 		new __Panel_Linear_Setting_Item(
 			__txtx("graph_visibility_avoid_label", "Avoid Label"),
-			new checkBox(function() /*=>*/ { display_parameter.avoid_label = !display_parameter.avoid_label; }),
+			new checkBox(function() /*=>*/ { display_parameter.avoid_label = !display_parameter.avoid_label; graphPanel.refreshDraw(); }),
 			function()    /*=>*/   {return display_parameter.avoid_label},
 			function(val) /*=>*/ { display_parameter.avoid_label = val; },
 			PREFERENCES.project_graphDisplay.avoid_label,
@@ -47,7 +57,7 @@ function Panel_Graph_View_Setting(graphPanel, display) : Panel_Linear_Setting() 
 		
 		new __Panel_Linear_Setting_Item(
 			__txtx("graph_visibility_slideshow", "Show Controller"),
-			new checkBox(function() /*=>*/ { display_parameter.show_control = !display_parameter.show_control; }),
+			new checkBox(function() /*=>*/ { display_parameter.show_control = !display_parameter.show_control; graphPanel.refreshDraw(); }),
 			function()    /*=>*/   {return display_parameter.show_control},
 			function(val) /*=>*/ { display_parameter.show_control = val; },
 			PREFERENCES.project_graphDisplay.show_control,
@@ -59,7 +69,7 @@ function Panel_Graph_View_Setting(graphPanel, display) : Panel_Linear_Setting() 
 		
 		new __Panel_Linear_Setting_Item(
 			__txtx("graph_visibility_preview_scale", "Preview Scale"),
-			slider(50, 100, 1, function(val) /*=>*/ { display_parameter.preview_scale = val; }),
+			slider(50, 100, 1, function(val) /*=>*/ { display_parameter.preview_scale = val; graphPanel.refreshDraw(); }),
 			function()    /*=>*/   {return display_parameter.preview_scale},
 			function(val) /*=>*/ { display_parameter.preview_scale = val; },
 			PREFERENCES.project_graphDisplay.preview_scale,
@@ -69,7 +79,7 @@ function Panel_Graph_View_Setting(graphPanel, display) : Panel_Linear_Setting() 
 		
 		new __Panel_Linear_Setting_Item(
 			__txt("View Control"),
-			new buttonGroup(__txts([ "None", "Left", "Right" ]), function(val) /*=>*/ { display_parameter.show_view_control = val; }),
+			new buttonGroup(__txts([ "None", "Left", "Right" ]), function(val) /*=>*/ { display_parameter.show_view_control = val; graphPanel.refreshDraw(); }),
 			function()    /*=>*/   {return display_parameter.show_view_control},
 			function(val) /*=>*/ { display_parameter.show_view_control = val; },
 			PREFERENCES.project_graphDisplay.show_view_control,
@@ -79,7 +89,7 @@ function Panel_Graph_View_Setting(graphPanel, display) : Panel_Linear_Setting() 
 		
 		new __Panel_Linear_Setting_Item(
 			__txtx("graph_visibility_tooltip", "Show Tooltip"),
-			new checkBox(function() /*=>*/ { display_parameter.show_tooltip = !display_parameter.show_tooltip; }),
+			new checkBox(function() /*=>*/ { display_parameter.show_tooltip = !display_parameter.show_tooltip; graphPanel.refreshDraw(); }),
 			function()    /*=>*/   {return display_parameter.show_tooltip},
 			function(val) /*=>*/ { display_parameter.show_tooltip = val; },
 			PREFERENCES.project_graphDisplay.show_tooltip,

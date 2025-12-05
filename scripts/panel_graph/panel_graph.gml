@@ -23,6 +23,7 @@
                                                                                         PANEL_INSPECTOR.inspecting  = PANEL_GRAPH.getCurrentContext(); }
     
     function panel_graph_toggle_grid()             { CALL("graph_toggle_grid");         PANEL_GRAPH.project.graphDisplay.show_grid      = !PANEL_GRAPH.project.graphDisplay.show_grid;        }
+    function panel_graph_toggle_meta_view()        { CALL("graph_toggle_meta_view");    PANEL_GRAPH.project.graphDisplay.node_meta_view = !PANEL_GRAPH.project.graphDisplay.node_meta_view;   }
     function panel_graph_toggle_dimension()        { CALL("graph_toggle_dimension");    PANEL_GRAPH.project.graphDisplay.show_dimension = !PANEL_GRAPH.project.graphDisplay.show_dimension;   }
     function panel_graph_toggle_compute()          { CALL("graph_toggle_compute");      PANEL_GRAPH.project.graphDisplay.show_compute   = !PANEL_GRAPH.project.graphDisplay.show_compute;     }
     function panel_graph_toggle_control()          { CALL("graph_toggle_control");      PANEL_GRAPH.project.graphDisplay.show_control   = !PANEL_GRAPH.project.graphDisplay.show_control;     }
@@ -114,6 +115,7 @@
         registerFunction(g, "Select None",     vk_escape, n, panel_graph_select_none         ).setMenu("graph_select_none")
         
         registerFunction(g, "Toggle Grid",           "G", n, panel_graph_toggle_grid         ).setMenu("graph_toggle_grid")
+        registerFunction(g, "Toggle Meta View",      "",  n, panel_graph_toggle_meta_view    ).setMenu("graph_toggle_meta_view")
         registerFunction(g, "Toggle Dimension",      "",  n, panel_graph_toggle_dimension    ).setMenu("graph_toggle_dimension")
         registerFunction(g, "Toggle Compute",        "",  n, panel_graph_toggle_compute      ).setMenu("graph_toggle_compute")
         registerFunction(g, "Toggle Control",        "",  n, panel_graph_toggle_control      ).setMenu("graph_toggle_control")
@@ -526,7 +528,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         add_node_draw_x      = 0;
         add_node_draw_y      = 0;
         
-        draw_refresh           = true;   static refreshDraw = function(t) /*=>*/ { draw_refresh = max(draw_refresh, t); }
+        draw_refresh           = true;   static refreshDraw = function(t=1) /*=>*/ { draw_refresh = max(draw_refresh, t); }
         node_surface           = noone;
         node_surface_update    = true;
         
@@ -818,7 +820,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         _blend.inputs[1].setFrom(_canvas.outputs[0]);
     }
     
-    function setFocusingNode(_node) { nodes_selecting = [ _node ]; refreshDraw(1); return self; }
+    function setFocusingNode(_node) { nodes_selecting = [ _node ]; refreshDraw(); return self; }
     
     function getFocusingNode() { return array_empty(nodes_selecting)? noone : nodes_selecting[0]; }
     
@@ -870,7 +872,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         function set_as_tool() {
             if(node_hover == noone || node_hover.group == noone) return;
             node_hover.group.setTool(node_hover);
-            refreshDraw(1);
+            refreshDraw();
         }
     #endregion
     
@@ -883,7 +885,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             if(node_hover) node_hover.attributes.color = __temp_color;
             array_foreach(nodes_selecting, function(node) /*=>*/ { node.attributes.color = __temp_color; });
             
-            refreshDraw(1);
+            refreshDraw();
         }
         
         function setSelectingJuncColor(c) {
@@ -893,7 +895,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             if(__junction_hovering.value_from != noone)
             	__junction_hovering.value_from.setColor(c);
             	
-            refreshDraw(1);
+            refreshDraw();
         }
     #endregion
     
@@ -960,7 +962,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     static setProject = function(_project) {
         project         = _project;
         nodes_list      = _project.nodes;
-        refreshDraw(1);
+        refreshDraw();
         connect_related = noone;
         connection_draw_update = true;
         
@@ -1194,7 +1196,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
         node_context = [];
         nodes_list   = project.nodes;
-        refreshDraw(1);
+        refreshDraw();
         
         var _ctxs = [];
         var _ctx  = context;
@@ -1211,7 +1213,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     function resetContext() {
         node_context = [];
         nodes_list   = project.nodes;
-        refreshDraw(1);
+        refreshDraw();
         
         toCenterNode();
     }
@@ -2128,7 +2130,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             	if(pFOCUS && DOUBLE_CLICK) value_focus.drawValue = !value_focus.drawValue;
             }
             
-            if(_value_focus != value_focus) refreshDraw(1);
+            if(_value_focus != value_focus) refreshDraw();
 	        	
 	        if(PANEL_INSPECTOR && PANEL_INSPECTOR.prop_hover != noone)
             	value_focus = PANEL_INSPECTOR.prop_hover;
@@ -3279,7 +3281,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             	addKeyOverlay("Droping file(s)", [[ "Shift", "Options..." ]]);
                 
             if(DRAGGING) { // file dropping
-            	refreshDraw(1);
+            	refreshDraw();
             	mouse_glow_rad_to = 80;
             	
                 if(_node_hover && _node_hover.droppable(DRAGGING)) {
@@ -3293,7 +3295,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             }
             
             if(FILE_IS_DROPPING && _node_hover && _node_hover.dropPath != noone) {
-            	refreshDraw(1);
+            	refreshDraw();
                 _node_hover.draw_droppable = true;
                 _tip = "Drop on node";
             }

@@ -162,7 +162,7 @@ switch(load_process) {
         
         if(!IS_CMD) {
             PANEL_GRAPH.toCenterNode();
-            PANEL_GRAPH.refreshDraw(1);
+            PANEL_GRAPH.refreshDraw();
         }
         
         log_message("FILE", $"load {path} completed in {(get_timer() - t0) / 1000} ms", THEME.noti_icon_file_load);
@@ -179,6 +179,6 @@ switch(load_process) {
         instance_destroy();
     
     run_in(1, function() /*=>*/ { 
-    	PANEL_GRAPH.refreshDraw(1);
+    	PANEL_GRAPH.refreshDraw();
     });
 }

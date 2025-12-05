@@ -457,5 +457,5 @@ function node_auto_organize(nodeList, param = new node_auto_organize_parameter()
 		_n.y = _n.y - dy;
 	}
 	
-	PANEL_GRAPH.refreshDraw(1);
+	PANEL_GRAPH.refreshDraw();
 }

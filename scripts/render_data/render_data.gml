@@ -312,7 +312,7 @@ enum RENDER_TYPE {
 			
 			LOG_END();
 			RENDERING = undefined;
-			PANEL_GRAPH.refreshDraw(1);
+			PANEL_GRAPH.refreshDraw();
 			
 			return true;
 		}
@@ -363,7 +363,7 @@ enum RENDER_TYPE {
 				project.postRender();
 				
 				RENDERING = undefined;
-				PANEL_GRAPH.refreshDraw(1);
+				PANEL_GRAPH.refreshDraw();
 			}
 		}
 		
