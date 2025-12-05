@@ -31,6 +31,10 @@ uniform vec4  color0;
 uniform vec4  color1;
 uniform sampler2D texture;
 
+uniform sampler2D uvMap;
+uniform int   useUvMap;
+uniform float uvMapMix;
+
 #ifdef _YY_HLSL11_ 
 	#define PALETTE_LIMIT 1024 
 #else 
@@ -250,8 +254,9 @@ void main() {
 		amoVec = (dimension / vec2(amo)) / spacing;
 	#endregion
 	
+	vec2 vtx = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
 	vec2 asp  = vec2(dimension.x / dimension.y, 1.);
-	vec2 pos  = (v_vTexcoord - position / dimension) * asp;
+	vec2 pos  = (vtx - position / dimension) * asp;
 	     pos *= mat2(cos(ang), -sin(ang), sin(ang), cos(ang));
 	      
 	vec4 cbg  = color0;

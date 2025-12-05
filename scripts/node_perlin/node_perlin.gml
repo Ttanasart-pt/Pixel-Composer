@@ -11,7 +11,9 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	////- =Output
 	newInput( 0, nodeValue_Dimension());
-	newInput(12, nodeValue_Surface( "Mask" ));
+	newInput(16, nodeValue_Surface( "UV Map"     ));
+	newInput(17, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput(12, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
 	newInput( 5, nodeValueSeed());
@@ -33,10 +35,10 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput( 7, nodeValue_Slider_Range( "Color R Range", [0,1] ));
 	newInput( 8, nodeValue_Slider_Range( "Color G Range", [0,1] ));
 	newInput( 9, nodeValue_Slider_Range( "Color B Range", [0,1] ));
-	// input 16
+	// input 18
 	
 	input_display_list = [
-		["Output", 	   true],  0, 12, 
+		["Output", 	   true],  0, 16, 17, 12, 
 		["Noise",	  false],  5, 13,  3,  4, 
 		["Transform", false],  1, 11,  2, 10, 
 		["Iteration",  true], 14, 15, 
@@ -98,6 +100,8 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		_outSurf = surface_verify(_outSurf, _sw, _sh, attrDepth());
 		
 		surface_set_shader(_outSurf, sh_perlin_tiled);
+			shader_set_uv(_data[16], _data[17]);
+			
 			shader_set_2("dimension",  _dim);
 			shader_set_2("position",   _pos);
 			shader_set_f("rotation",   degtorad(_rot));

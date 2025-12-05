@@ -3,7 +3,9 @@ function Node_Caustic(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y, _g
 	shader = sh_water_caustic;
 	
 	////- =Output
-	newInput(7, nodeValue_Surface("Mask"));
+	newInput(8, nodeValue_Surface( "UV Map"     ));
+	newInput(9, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput(7, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
 	newInput(3, nodeValueSeed()).setShaderProp("seed");
@@ -16,7 +18,7 @@ function Node_Caustic(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y, _g
 	newInput(2, nodeValue_Vec2(   "Scale",    [.5,.5] )).setHotkey("S").setShaderProp("scale").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	
 	input_display_list = [
-		["Output",     true], 0, 7, 
+		["Output",     true], 0, 8, 9, 7, 
 		["Noise",     false], 6, 4, 5, 
 		["Transform", false], 1, 2, 
 	];

@@ -1,6 +1,3 @@
-//
-// Simple passthrough fragment shader
-//
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -11,6 +8,10 @@ uniform int  colored;
 uniform vec2 colorRanR;
 uniform vec2 colorRanG;
 uniform vec2 colorRanB;
+
+uniform sampler2D uvMap;
+uniform int   useUvMap;
+uniform float uvMapMix;
 
 vec3 hsv2rgb(vec3 c) {
     vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
@@ -27,18 +28,22 @@ float frandom (in vec2 st) {
 }
 
 void main() {
+	vec2 vtx = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
+	
 	if(colored == 0)
-		gl_FragColor = vec4(vec3(frandom(v_vTexcoord)), 1.0);
+		gl_FragColor = vec4(vec3(frandom(vtx)), 1.0);
+		
 	else if(colored == 1) {
-		float randR = colorRanR[0] + frandom(v_vTexcoord) * (colorRanR[1] - colorRanR[0]);
-		float randG = colorRanG[0] + frandom(v_vTexcoord + vec2(1.7227, 4.55529)) * (colorRanG[1] - colorRanG[0]);
-		float randB = colorRanB[0] + frandom(v_vTexcoord + vec2(6.9950, 6.82063)) * (colorRanB[1] - colorRanB[0]);
+		float randR = colorRanR[0] + frandom(vtx) * (colorRanR[1] - colorRanR[0]);
+		float randG = colorRanG[0] + frandom(vtx + vec2(1.7227, 4.55529)) * (colorRanG[1] - colorRanG[0]);
+		float randB = colorRanB[0] + frandom(vtx + vec2(6.9950, 6.82063)) * (colorRanB[1] - colorRanB[0]);
 		
 		gl_FragColor = vec4(randR, randG, randB, 1.0);
+		
 	} else if(colored == 2) {
-		float randH = colorRanR[0] + frandom(v_vTexcoord) * (colorRanR[1] - colorRanR[0]);
-		float randS = colorRanG[0] + frandom(v_vTexcoord + vec2(1.7227, 4.55529)) * (colorRanG[1] - colorRanG[0]);
-		float randV = colorRanB[0] + frandom(v_vTexcoord + vec2(6.9950, 6.82063)) * (colorRanB[1] - colorRanB[0]);
+		float randH = colorRanR[0] + frandom(vtx) * (colorRanR[1] - colorRanR[0]);
+		float randS = colorRanG[0] + frandom(vtx + vec2(1.7227, 4.55529)) * (colorRanG[1] - colorRanG[0]);
+		float randV = colorRanB[0] + frandom(vtx + vec2(6.9950, 6.82063)) * (colorRanB[1] - colorRanB[0]);
 		
 		gl_FragColor = vec4(hsv2rgb(vec3(randH, randS, randV)), 1.0);
 	}

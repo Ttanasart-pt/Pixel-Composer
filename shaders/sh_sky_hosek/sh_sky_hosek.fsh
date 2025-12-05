@@ -55,6 +55,10 @@ uniform vec2  sunPosition;
 uniform vec2  position;
 uniform vec2  scale;
 
+uniform sampler2D uvMap;
+uniform int   useUvMap;
+uniform float uvMapMix;
+
 float kHosekCoeffsX[54];
 float kHosekCoeffsY[54];
 float kHosekCoeffsZ[54];
@@ -384,7 +388,8 @@ vec3 tonemap(vec3 color, float exposure) {
 void main() {
     init();
     
-    vec2 uv  = (v_vTexcoord - position / dimension) * scale;
+    vec2 vtx = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
+    vec2 uv  = (vtx - position / dimension) * scale;
     vec2 sun = (sunPosition - position) * scale / dimension;
     
     uv.y  = 1. - uv.y;

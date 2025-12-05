@@ -2,7 +2,11 @@ function Node_Julia_Set(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	name = "Julia";
 	
 	newInput(0, nodeValue_Dimension());
-	newInput(7, nodeValue_Surface( "Mask" ));
+	
+	////- =Surface
+	newInput(8, nodeValue_Surface( "UV Map"     ));
+	newInput(9, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput(7, nodeValue_Surface( "Mask"       ));
 	
 	////- =Julia
 	newInput(1, nodeValue_Vec2(  "C", [ -1, 0 ] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, UNIT_REF);
@@ -17,7 +21,8 @@ function Node_Julia_Set(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newOutput(0, nodeValue_Output("Surface", VALUE_TYPE.surface, noone));
 	
-	input_display_list = [ 0, 7, 
+	input_display_list = [ 0, 
+		["Surface",    true], 8, 9, 7, 
 	    ["Julia",     false], 1, 5, 6, 
 	    ["Transform", false], 2, 4, 3, 
     ];
@@ -48,6 +53,7 @@ function Node_Julia_Set(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	    var _div = _data[6];
 	    
 	    surface_set_shader(_outSurf, sh_julia_set);
+	    	shader_set_uv(_data[8], _data[9]);
 	        shader_set_2("dimension", _dim);
 	        shader_set_i("iteration", _itr);
 	        shader_set_2("juliaC",    _c);

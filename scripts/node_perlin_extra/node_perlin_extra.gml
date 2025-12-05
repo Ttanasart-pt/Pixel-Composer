@@ -10,7 +10,9 @@ function Node_Perlin_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	shader = sh_perlin_extra;
 	
 	////- =Output
-	newInput(17, nodeValue_Surface("Mask"));
+	newInput(18, nodeValue_Surface( "UV Map"     ));
+	newInput(19, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput(17, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
 	newInput( 5, nodeValueSeed()).setShaderProp("seed");
@@ -30,10 +32,10 @@ function Node_Perlin_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	newInput( 7, nodeValue_Slider_Range( "Color R Range", [0,1] )).setShaderProp("colorRanR");
 	newInput( 8, nodeValue_Slider_Range( "Color G Range", [0,1] )).setShaderProp("colorRanG");
 	newInput( 9, nodeValue_Slider_Range( "Color B Range", [0,1] )).setShaderProp("colorRanB");
-	// input 18
+	// input 20
 	
 	input_display_list = [
-		["Output",     true], 0, 17, 
+		["Output",     true], 0, 18, 19, 17, 
 		["Noise",     false], 5, 10, 3, 4, 11, 14, 12, 15,
 		["Transform", false], 1, 16, 2, 13, 
 		["Render",    false], 6, 7, 8, 9, 

@@ -3,7 +3,9 @@ function Node_Wavelet_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, 
 	shader = sh_noise_wavelet;
 	
 	////- =Output
-	newInput(10, nodeValue_Surface("Mask"));
+	newInput(11, nodeValue_Surface( "UV Map"     ));
+	newInput(12, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput(10, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
 	newInput( 3, nodeValueSeed()).setShaderProp("seed");
@@ -17,7 +19,7 @@ function Node_Wavelet_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, 
 	// input 11
 	
 	input_display_list = [
-		["Output",      true], 0, 10, 
+		["Output",      true], 0, 11, 12, 10, 
 		["Noise",      false], 3, 4, 7, 5, 8, 
 		["Transform",  false], 1, 9, 2, 6, 
 	];

@@ -188,6 +188,10 @@ uniform vec4 bgColor;
 uniform vec4 baseColor;
 uniform int  cornerShape;
 
+uniform sampler2D uvMap;
+uniform int   useUvMap;
+uniform float uvMapMix;
+
 #define PI  3.14159265359
 #define TAU 6.283185307179586
 
@@ -489,9 +493,10 @@ float sdGear(vec2 p, float s, int teeth, vec2 teethSize, float teethAngle, float
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void main() {
-	vec2  coordUni = (v_vTexcoord - center) * mat2(cos(rotation), -sin(rotation), sin(rotation), cos(rotation));
-	vec2  coord = coordUni / scale;
-	vec2  ratio = dimension / dimension.y;
+	vec2 vtx      = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
+	vec2 coordUni = (vtx - center) * mat2(cos(rotation), -sin(rotation), sin(rotation), cos(rotation));
+	vec2 coord    = coordUni / scale;
+	vec2 ratio    = dimension / dimension.y;
 	float d;
 	
 	vec2 p1 = point1 / dimension;
@@ -524,9 +529,9 @@ void main() {
 	else if(shape == 16) { d = sdRoundedCross( 	coord, 1. - corner ) - corner;                              			                 }
 	else if(shape == 18) { d = sdGear(          coord, inner, teeth, teethSize, teethAngle, teethTaper, corner);                         }
 	else if(shape == 19) { d = pow(pow(abs(coord.x), squircle_factor) + pow(abs(coord.y), squircle_factor), 1. / squircle_factor) - 1.;  }
-	else if(shape == 17) { d = sdArrow(  v_vTexcoord, p1, p2, thickness, arrow, arrow_head);                               	             }
+	else if(shape == 17) { d = sdArrow(  vtx, p1, p2, thickness, arrow, arrow_head);                               	             }
 	else if(shape == 20) { d = sdSegment(center + coordUni, p1, p2) - thickness;                                                         }
-	else if(shape == 21) { d = sdHalf(v_vTexcoord, p1, -rotation);                                                                       }
+	else if(shape == 21) { d = sdHalf(vtx, p1, -rotation);                                                                       }
 	
 	float cc;
 	

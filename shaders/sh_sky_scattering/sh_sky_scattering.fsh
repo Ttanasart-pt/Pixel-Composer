@@ -22,6 +22,10 @@ uniform float sunRadiance;
 uniform vec2  position;
 uniform vec2  scale;
 
+uniform sampler2D uvMap;
+uniform int   useUvMap;
+uniform float uvMapMix;
+
 /*uniform*/ float mieG;
 /*uniform*/ float mieHeight;
 /*uniform*/ float rayleighHeight;
@@ -216,7 +220,8 @@ float noise(vec2 uv) {
 }
 
 void main() {
-	vec2 uv  = (v_vTexcoord - position / dimension) * scale;
+	vec2 vtx = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
+	vec2 uv  = (vtx - position / dimension) * scale;
     vec2 sun = (sunPosition - position) * scale / dimension;
     
     uv.y  = 1. - uv.y;

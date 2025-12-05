@@ -9,7 +9,9 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	////- =Output
 	newInput( 0, nodeValue_Dimension());
-	newInput(13, nodeValue_Surface( "Mask" ));
+	newInput(15, nodeValue_Surface( "UV Map"     ));
+	newInput(16, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput(13, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
 	newInput(14, nodeValueSeed());
@@ -29,10 +31,10 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput( 5, nodeValue_Slider_Range( "Color R Range", [0,1] ));
 	newInput( 6, nodeValue_Slider_Range( "Color G Range", [0,1] ));
 	newInput( 7, nodeValue_Slider_Range( "Color B Range", [0,1] ));
-	// input 15
+	// input 17
 	
 	input_display_list = [
-		["Output",      true],  0, 13, 
+		["Output",      true],  0, 15, 16, 13, 
 		["Noise",      false], 14,  3,  9, 
 		["Transform",  false],  1, 10,  2,  8, 
 		["Iteration",   true], 11, 12, 
@@ -86,6 +88,8 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
 		surface_set_shader(_outSurf, sh_simplex);
+			shader_set_uv(_data[15], _data[16]);
+			
 			shader_set_f("seed",      _sed);
 			shader_set_f("dimension", _dim);
 			shader_set_2("position",  _pos);

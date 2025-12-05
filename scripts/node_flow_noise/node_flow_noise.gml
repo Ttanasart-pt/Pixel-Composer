@@ -2,7 +2,9 @@ function Node_Flow_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y,
 	name   = "Flow Noise";
 	shader = sh_noise_flow;
 	
-	newInput(6, nodeValue_Surface("Mask"));
+	newInput( 7, nodeValue_Surface( "UV Map"     ));
+	newInput( 8, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput( 6, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
 	newInput(3, nodeValue_Float(        "Progress",    0    )).setShaderProp("progress");
@@ -15,7 +17,7 @@ function Node_Flow_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y,
 	// input 7
 	
 	input_display_list = [
-		["Output",     true], 0, 6, 
+		["Output",     true], 0, 7, 8, 6, 
 		["Noise",     false], 3, 4, 
 		["Transform", false], 1, 5, 2, 
 	];

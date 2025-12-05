@@ -22,6 +22,10 @@ uniform vec2 colorRanR;
 uniform vec2 colorRanG;
 uniform vec2 colorRanB;
 
+uniform sampler2D uvMap;
+uniform int   useUvMap;
+uniform float uvMapMix;
+
 vec2 sca;
 
 vec3 hsv2rgb(vec3 c) {
@@ -95,13 +99,14 @@ void main() {
 	
 	vec2 st;
 	vec2 pos = position / dimension;
+	vec2 vtx = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
 	
 	if(tile == 1) {
 		sca = floor(sca);
-		st  = fract(v_vTexcoord - pos) * sca;
+		st  = fract(vtx - pos) * sca;
 		
 	} else {
-		st  = (v_vTexcoord - pos) * mat2(cos(rotation), -sin(rotation), sin(rotation), cos(rotation)) * sca;
+		st  = (vtx - pos) * mat2(cos(rotation), -sin(rotation), sin(rotation), cos(rotation)) * sca;
 	}
 	
 	if(colored == 0) {

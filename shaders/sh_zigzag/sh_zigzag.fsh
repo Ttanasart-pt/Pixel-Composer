@@ -17,6 +17,10 @@ uniform sampler2D angleSurf;
 
 uniform vec4 col1, col2;
 
+uniform sampler2D uvMap;
+uniform int   useUvMap;
+uniform float uvMapMix;
+
 void main() {
 	#region params
 		float amo = amount.x;
@@ -35,8 +39,10 @@ void main() {
 	#endregion
 	
 	vec2 asp = vec2(dimension.x / dimension.y, 1.);
-	vec2 vtx = floor(v_vTexcoord * dimension) / dimension;
-	vec2 pos = (vtx - position) * asp;
+	vec2 vtx = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
+	vec2 ptx = floor(vtx * dimension) / dimension;
+	vec2 pos = (ptx - position) * asp;
+	
 	float _cell  = 1. / (amo * 2.); 
 	pos.y -= _cell / 2.;
 	pos   *= mat2(cos(ang), -sin(ang), sin(ang), cos(ang));

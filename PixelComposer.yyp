@@ -1662,6 +1662,7 @@
     {"$GMIncludedFile":"","%Name":"CommonVS.hlsl","CopyToMask":-1,"filePath":"datafiles/Shaders/3dInstance","name":"CommonVS.hlsl","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"curve.glsl","CopyToMask":-1,"filePath":"datafiles/Shaders","name":"curve.glsl","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"d3d_default_fragment.glsl","CopyToMask":-1,"filePath":"datafiles/Shaders","name":"d3d_default_fragment.glsl","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"gradient.glsl","CopyToMask":-1,"filePath":"datafiles/Shaders","name":"gradient.glsl","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"sampler_simple.glsl","CopyToMask":-1,"filePath":"datafiles/Shaders","name":"sampler_simple.glsl","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"sampler.glsl","CopyToMask":-1,"filePath":"datafiles/Shaders","name":"sampler.glsl","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"shader_replace.py","CopyToMask":-1,"filePath":"datafiles/Shaders","name":"shader_replace.py","resourceType":"GMIncludedFile","resourceVersion":"2.0",},

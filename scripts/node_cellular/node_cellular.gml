@@ -12,7 +12,9 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	////- =Output
 	newInput( 0, nodeValue_Dimension());
-	newInput(13, nodeValue_Surface( "Mask" ));
+	newInput(20, nodeValue_Surface( "UV Map"     ));
+	newInput(21, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput(13, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
 	newInput( 4, nodeValue_Enum_Scroll( "Type",    0, [ "Point", "Edge", "Cell", "Crystal" ]));
@@ -40,10 +42,10 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 5, nodeValue_Slider( "Contrast",   1, [0, 4, 0.01] ));
 	newInput( 7, nodeValue_Slider( "Middle",    .5, [0, 1, 0.01] ));
 	newInput(10, nodeValue_Bool(   "Colored",   false ))
-	// input 19
+	// input 22
 	
 	input_display_list = [
-		["Output",    false],  0, 13, 
+		["Output",    false],  0, 20, 21, 13, 
 		["Noise",     false],  4,  6,  3, 14, 
 		["Iteration", false], 16, 18, 19, 17, 
 		["Transform", false],  1, 12,  2, 11, 
@@ -108,6 +110,8 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		}
 		
 		surface_set_shader(_outSurf, shader);
+			shader_set_uv(_data[20], _data[21]);
+			
 			shader_set_f("dimension",     _dim);
 			shader_set_f("seed",          _tim);
 			shader_set_f("phase",         _phase / 360);

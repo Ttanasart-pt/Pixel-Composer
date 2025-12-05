@@ -2,7 +2,9 @@ function Node_Fold_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y,
 	name   = "Fold Noise";
 	shader = sh_noise_fold;
 	
-	newInput(8, nodeValue_Surface("Mask"));
+	newInput( 9, nodeValue_Surface( "UV Map"     ));
+	newInput(10, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput( 8, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
 	newInput(3, nodeValue_ISlider(  "Iteration",   2, [ 0, 6, 0.1 ]    )).setShaderProp("iteration");
@@ -19,7 +21,7 @@ function Node_Fold_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y,
 	// input 9
 	
 	input_display_list = [
-		["Output", 	   true], 0, 8, 
+		["Output", 	   true], 0, 9, 10, 8, 
 		["Noise",	  false], 3, 4, 5, 
 		["Transform", false], 1, 7, 2, 
 		["Render",	  false], 6, 

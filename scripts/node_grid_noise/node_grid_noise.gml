@@ -10,7 +10,9 @@ function Node_Grid_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	////- =Output
 	newInput( 0, nodeValue_Dimension());
-	newInput(11, nodeValue_Surface( "Mask" ));
+	newInput(12, nodeValue_Surface( "UV Map"     ));
+	newInput(13, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput(11, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
 	newInput( 3, nodeValueSeed());
@@ -25,10 +27,10 @@ function Node_Grid_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput( 8, nodeValue_Slider_Range( "Color R Range", [0,1] ));
 	newInput( 9, nodeValue_Slider_Range( "Color G Range", [0,1] ));
 	newInput(10, nodeValue_Slider_Range( "Color B Range", [0,1] ));
-	// input 11
+	// input 14
 	
 	input_display_list = [
-		["Output",	false], 0, 11, 
+		["Output",	false], 0, 12, 13, 11, 
 		["Noise",	false], 3, 1, 2, 6, 4, 
 		["Render",	false], 5, 7, 8, 9, 10, 
 	];
@@ -65,23 +67,25 @@ function Node_Grid_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
 		surface_set_shader(_outSurf, sh_grid_noise);
-		shader_set_f("dimension",  _dim);
-		shader_set_2("position",   _pos);
-		shader_set_2("scale",      _sca);
-		shader_set_i("useSampler", is_surface(_sam));
-		shader_set_f("shift",      _shf);
-		shader_set_i("shiftAxis",  _shfAx);
-		shader_set_f("seed",       _sed);
+			shader_set_uv(_data[12], _data[13]);
 			
-		shader_set_i("colored",    _col);
-		shader_set_2("colorRanR",  _clr);
-		shader_set_2("colorRanG",  _clg);
-		shader_set_2("colorRanB",  _clb);
-		
-		if(is_surface(_sam))
-			draw_surface_stretched_safe(_sam, 0, 0, _dim[0], _dim[1]);
-		else
-			draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
+			shader_set_f("dimension",  _dim);
+			shader_set_2("position",   _pos);
+			shader_set_2("scale",      _sca);
+			shader_set_i("useSampler", is_surface(_sam));
+			shader_set_f("shift",      _shf);
+			shader_set_i("shiftAxis",  _shfAx);
+			shader_set_f("seed",       _sed);
+				
+			shader_set_i("colored",    _col);
+			shader_set_2("colorRanR",  _clr);
+			shader_set_2("colorRanG",  _clg);
+			shader_set_2("colorRanB",  _clb);
+			
+			if(is_surface(_sam))
+				draw_surface_stretched_safe(_sam, 0, 0, _dim[0], _dim[1]);
+			else
+				draw_empty();
 		surface_reset_shader();
 		
 		_outSurf = mask_apply_empty(_outSurf, _data[input_mask_index]);

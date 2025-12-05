@@ -23,7 +23,11 @@ uniform vec2      rangleRange;
 uniform vec4  color0;
 uniform vec4  color1;
 
-void main() { #region
+uniform sampler2D uvMap;
+uniform int   useUvMap;
+uniform float uvMapMix;
+
+void main() {
 	#region params
 		float amo = amount.x;
 		if(amountUseSurf == 1) {
@@ -47,7 +51,8 @@ void main() { #region
 		
 	#endregion
 	
-	vec2 ntx = v_vTexcoord * vec2(1., dimension.y / dimension.x);
+	vec2 vtx = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
+	vec2 ntx = vtx * vec2(1., dimension.y / dimension.x);
 	vec2 pos = (ntx - position) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * amo;
 	
     float value = 0.0;
@@ -65,4 +70,4 @@ void main() { #region
 	
     float _s = 1. + sin(value * PI / 2.0);
 	gl_FragColor = mix(color0, color1, _s); 
-} #endregion
+} 

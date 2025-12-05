@@ -20,6 +20,10 @@ uniform vec2      angle;
 uniform int       angleUseSurf;
 uniform sampler2D angleSurf;
 
+uniform sampler2D uvMap;
+uniform int   useUvMap;
+uniform float uvMapMix;
+
 float random1D (in vec2 st, float _seed) { return fract(sin(dot(st.xy, vec2(12.9898, 78.233)) * mod(_seed + 453.456, 100.) * 12.588) * 43758.5453123); }
 float random   (in vec2 st, float _seed) { return mix(random1D(st, floor(_seed)), random1D(st, floor(_seed) + 1.), fract(_seed)); }
 
@@ -45,7 +49,8 @@ void main() {
 		ang = radians(ang);
 	#endregion
 	
-	vec2 ntx = v_vTexcoord * vec2(1., dimension.y / dimension.x);
+	vec2 vtx = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
+	vec2 ntx = vtx * vec2(1., dimension.y / dimension.x);
 	vec2 pos = (ntx - position) * mat2(cos(ang), - sin(ang), sin(ang), cos(ang));
 	
 	float yy = floor(pos.y * nsy);

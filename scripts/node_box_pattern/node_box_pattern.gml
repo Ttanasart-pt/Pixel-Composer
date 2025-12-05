@@ -10,6 +10,8 @@ function Node_Box_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	////- =Output
 	newInput( 0, nodeValue_Dimension());
+	newInput(14, nodeValue_Surface( "UV Map"     ));
+	newInput(15, nodeValue_Slider(  "UV Mix", 1  ));
 	newInput(13, nodeValue_Surface( "Mask" ));
 	
 	////- =Pattern
@@ -24,16 +26,17 @@ function Node_Box_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput( 8, nodeValue_Enum_Button( "Render Type", 0, [ "Solid", "Smooth", "AA" ] ));
 	newInput( 4, nodeValue_Color(       "Color 1", ca_white ));
 	newInput( 5, nodeValue_Color(       "Color 2", ca_black ));
-	
-	// input 14
+	// input 16
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
-		["Output",	true],	0, 13, 
+		["Output",	true],	0, 14, 15, 13, 
 		["Pattern",	false], 11, 3, 2, 7, 1, 6, 9, 10, 12, 
 		["Render",	false], 8, 4, 5,
 	];
+	
+	////- Nodes
 	
 	attribute_surface_depth();
 	
@@ -63,6 +66,8 @@ function Node_Box_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 			
 		surface_set_shader(_outSurf, sh_box_pattern);
+			shader_set_uv(_data[14], _data[15]);
+			
 			shader_set_f("dimension",   surface_get_width_safe(_outSurf), surface_get_height_safe(_outSurf));
 			shader_set_f("position",   _pos[0] / _dim[0], _pos[1] / _dim[1]);
 			shader_set_f_map("amount", _data[1], _data[ 6], inputs[1]);

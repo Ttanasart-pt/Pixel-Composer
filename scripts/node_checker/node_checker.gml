@@ -11,6 +11,8 @@ function Node_Checker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	////- =Output
 	newInput( 0, nodeValue_Dimension());
+	newInput(11, nodeValue_Surface( "UV Map"     ));
+	newInput(12, nodeValue_Slider(  "UV Mix", 1  ));
 	newInput(10, nodeValue_Surface( "Mask" ));
 	
 	////- =Pattern
@@ -23,15 +25,17 @@ function Node_Checker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(8, nodeValue_Enum_Button( "Type",    0, [ "Solid", "Smooth", "AA" ] ));
 	newInput(4, nodeValue_Color(       "Color 1", ca_white ));
 	newInput(5, nodeValue_Color(       "Color 2", ca_black ));
-	// input 11
+	// input 13
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
-		["Output",	true],	0, 10, 
+		["Output",	true],	0, 11, 12, 10, 
 		["Pattern",	false], 9, 1, 6, 2, 7, 3,
 		["Render",	false], 8, 4, 5,
 	];
+	
+	////- Nodes
 	
 	attribute_surface_depth();
 	
@@ -57,6 +61,8 @@ function Node_Checker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
 		surface_set_shader(_outSurf, sh_checkerboard);
+			shader_set_uv(_data[11], _data[12]);
+			
 			shader_set_2("dimension",  _dim);
 			shader_set_i("diagonal",   _data[9]);
 			shader_set_f("position",   _pos[0] / _dim[0], _pos[1] / _dim[1]);

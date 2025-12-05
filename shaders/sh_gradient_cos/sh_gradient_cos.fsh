@@ -36,6 +36,10 @@ uniform vec3 co_d_max;
 uniform int  co_d_use;
 uniform sampler2D co_d_map;
 
+uniform sampler2D uvMap;
+uniform int   useUvMap;
+uniform float uvMapMix;
+
 #define TAU 6.283185307179586
 
 vec3 pal( in float t, in vec3 a, in vec3 b, in vec3 c, in vec3 d ) {
@@ -77,21 +81,21 @@ void main() {
 		float sca = scale;
 	#endregion
 	
-	
+	vec2  vtx  = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
 	vec2  asp  = dimension / dimension.y;
 	vec2  cent = center / dimension;
 	float prog = 0.;
 	mat2  rot  = mat2(cos(ang), - sin(ang), sin(ang), cos(ang));
 	
 	if(type == 0) { // linear
-		prog = .5 + (v_vTexcoord.x - cent.x) * cos(ang) - (v_vTexcoord.y - cent.y) * sin(ang);
+		prog = .5 + (vtx.x - cent.x) * cos(ang) - (vtx.y - cent.y) * sin(ang);
 		
 	} else if(type == 1) { // circular
 		vec2 _asp = uniAsp == 0? vec2(1.) : asp;
-		prog = length((v_vTexcoord - cent) * _asp / cirScale) / rad;
+		prog = length((vtx - cent) * _asp / cirScale) / rad;
 		
 	} else if(type == 2) { // radial
-		vec2  _p = v_vTexcoord - cent;
+		vec2  _p = vtx - cent;
 		if(uniAsp == 1) _p *= asp;
 		
 		float _a = atan(_p.y, _p.x) + ang;
@@ -99,7 +103,7 @@ void main() {
 		
 	} else if(type == 3) { // diamond
 		vec2 _asp = uniAsp == 0? vec2(1.) : asp;
-		prog = dLength((v_vTexcoord - cent) * rot * _asp / cirScale) / rad;
+		prog = dLength((vtx - cent) * rot * _asp / cirScale) / rad;
 		
 	} 
 	

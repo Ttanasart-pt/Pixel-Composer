@@ -19,6 +19,10 @@ uniform sampler2D angleSurf;
 uniform vec4 col1;
 uniform vec4 col2;
 
+uniform sampler2D uvMap;
+uniform int   useUvMap;
+uniform float uvMapMix;
+
 float check(vec2 c, float amo, float ang) {
 	float _x = c.x * cos(ang) - c.y * sin(ang);
 	float _y = c.x * sin(ang) + c.y * cos(ang);
@@ -48,8 +52,9 @@ void main() {
 		ang = radians(ang);
 	#endregion
 	
-	vec2 a = dimension / dimension.y;
-	vec2 c = (v_vTexcoord - position) * a;
+	vec2 vtx = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
+	vec2 a   = dimension / dimension.y;
+	vec2 c   = (vtx - position) * a;
 	float ch;
 	
 	if(diagonal == 0 || blend != 0) {

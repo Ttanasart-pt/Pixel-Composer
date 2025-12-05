@@ -208,25 +208,25 @@ uniform int   gradient_use;
 
 float random (in vec2 st) {	return fract(sin(dot(st.xy + vec2(85.456034, 64.54065), vec2(12.9898, 78.233))) * (43758.5453123 + seed) ); }
 
-float HexDist(vec2 p) { #region
+float HexDist(vec2 p) {
 	p = abs(p);
     
     float c = dot(p, normalize(vec2(1, 1.73)));
     c = max(c, p.x);
     
     return c;
-} #endregion
+}
 
 mat2 rot2D(float a) { return mat2(cos(a), -sin(a), sin(a), cos(a)); }
 
-vec3 sdBox( in vec2 p, in float b ) { #region
+vec3 sdBox( in vec2 p, in float b ) {
     vec2 d = abs(p) - b;
     return vec3( max(d.x, d.y), step(vec2(0), d) );
-} #endregion
+}
 
 float round(float val) { return fract(val) >= 0.5? ceil(val) : floor(val); }
 
-vec4 PytagoreanCoords(vec2 uv) { #region
+vec4 PytagoreanCoords(vec2 uv) {
 	float a = radians(phase) / 4.;
     float q = mod(round(a / (TAU / 4.)), 2.);
     
@@ -267,9 +267,9 @@ vec4 PytagoreanCoords(vec2 uv) { #region
     float d = min(dp.x, dp.y);
 	
 	return vec4(random(id), d, puv);
-} #endregion
+}
 
-void main() { #region
+void main() {
 	#region params
 		vec2 sca = scale;
 		if(scaleUseSurf == 1) {
@@ -295,9 +295,10 @@ void main() { #region
 	thk = clamp(thk, 0., 1.);
 	thk = pow(thk, 3.);
 	
+	vec2 vtx = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
 	mat2 rot = mat2(cos(ang), - sin(ang), sin(ang), cos(ang));
 	vec2 asp = vec2(dimension.x / dimension.y, 1.);
-	vec2 pos = (v_vTexcoord - position) * asp;
+	vec2 pos = (vtx - position) * asp;
 	vec2 _pos = pos * rot * sca;
 	
     vec4 hc = PytagoreanCoords(_pos);
@@ -330,4 +331,4 @@ void main() { #region
 	
 	float _aa = 3. / max(dimension.x, dimension.y);
 	gl_FragColor = mix(gapCol, colr, aa == 1? smoothstep(thk - _aa, thk, hc.y) : step(thk, hc.y));
-} #endregion
+}

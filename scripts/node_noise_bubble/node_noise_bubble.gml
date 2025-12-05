@@ -10,7 +10,9 @@ function Node_Noise_Bubble(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	shader = sh_noise_bubble;
 	
 	////- =Output
-	newInput(8, nodeValue_Surface("Mask"));
+	newInput( 9, nodeValue_Surface( "UV Map"     ));
+	newInput(10, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput( 8, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
 	newInput(2, nodeValueSeed()).setShaderProp("seed");
@@ -25,7 +27,7 @@ function Node_Noise_Bubble(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	// input 9
 	
 	input_display_list = [ 
-		["Output", 	 true],	0, 8, 
+		["Output", 	 true],	0, 9, 10, 8, 
 		["Noise",	false],	2, 1, 3, 
 		["Render",	false], 5, 4, 6, 7, 
 	];

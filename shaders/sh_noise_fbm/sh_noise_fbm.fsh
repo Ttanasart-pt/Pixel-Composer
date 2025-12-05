@@ -16,6 +16,10 @@ uniform vec2 colorRanR;
 uniform vec2 colorRanG;
 uniform vec2 colorRanB;
 
+uniform sampler2D uvMap;
+uniform int   useUvMap;
+uniform float uvMapMix;
+
 vec3 hsv2rgb(vec3 c) {
     vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
     vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
@@ -56,7 +60,8 @@ float fbm (in vec2 st) {
 }
 
 void main() {
-	vec2 pos = position + v_vTexcoord * scale;
+	vec2 vtx = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
+	vec2 pos = position + vtx * scale;
     
 	if(colored == 0)
 		gl_FragColor = vec4(vec3(fbm(pos)), 1.0);

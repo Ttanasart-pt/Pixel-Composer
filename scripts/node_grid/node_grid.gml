@@ -9,7 +9,9 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	////- =Output
 	newInput( 0, nodeValue_Dimension());
-	newInput(35, nodeValue_Surface( "Mask" ));
+	newInput(37, nodeValue_Surface( "UV Map"     ));
+	newInput(38, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput(35, nodeValue_Surface( "Mask"       ));
 	
 	////- =Pattern
 	newInput( 1, nodeValue_Vec2(     "Position",      [0,0]     )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, UNIT_REF);
@@ -49,11 +51,10 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(19, nodeValue_Slider(         "Flip Horizontal", .5    ));
 	newInput(22, nodeValue_Slider(         "Flip Vertical",   .5    ));
 	newInput(23, nodeValue_Rotation_Range( "Texture Angle",   [0,0] ));
-	
-	// input 37
+	// input 39
 	
 	input_display_list = [
-		[ "Output",  false     ],  0, 35, 
+		[ "Output",  false     ],  0, 37, 38, 35, 
 		[ "Pattern", false     ],  1,  4, 15, 36,  2, 13, 28,  3, 26, 27, 14, 
 		[ "Shift",   false     ],  9,  8, 16, 31, 32, 30, 
 		[ "Scale",   false     ], 33, 34, 29, 
@@ -63,11 +64,11 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
+	////- Nodes
+	
 	attribute_surface_depth();
 	attribute_interpolation();
 	attribute_oversample();
-	
-	////- Node
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var pos = getSingleValue(1);
@@ -119,6 +120,7 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		inputs[25].setVisible(_tex_mode, _tex_mode);
 		
 		surface_set_shader(_outSurf, sh_grid);
+			shader_set_uv(_data[37], _data[38]);
 		    shader_set_interpolation(_sam);
 		    
 			shader_set_f("position",	_pos[0] / _dim[0], _pos[1] / _dim[1]);

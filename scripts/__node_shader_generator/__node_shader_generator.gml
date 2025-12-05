@@ -10,7 +10,10 @@ function Node_Shader_Generator(_x, _y, _group = noone) : Node_Shader(_x, _y, _gr
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
 		surface_set_shader(_outSurf, shader);
+			if(input_uvmap_index != -1)
+				shader_set_uv(_data[input_uvmap_index], _data[input_uvmix_index]);
 			setShader(_data);
+			
 			draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
 		surface_reset_shader();
 		

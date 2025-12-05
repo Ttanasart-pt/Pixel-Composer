@@ -9,7 +9,9 @@ function Node_Pytagorean_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	
 	////- =Output
 	newInput( 0, nodeValue_Dimension());
-	newInput(22, nodeValue_Surface( "Mask" ));
+	newInput(23, nodeValue_Surface( "UV Map"     ));
+	newInput(24, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput(22, nodeValue_Surface( "Mask"       ));
 	
 	////- =Pattern
 	newInput( 1, nodeValue_Vec2(     "Position",  [.5,.5]   )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, UNIT_REF);
@@ -32,15 +34,18 @@ function Node_Pytagorean_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	newInput(15, nodeValue_Int(            "Truchet Seed",       seed_random()));
 	newInput(16, nodeValue_Slider(         "Truchet Threshold", .5));
 	newInput(20, nodeValue_Rotation_Range( "Texture Angle",     [0,0] ));
+	// 25
 	
 	input_display_list = [
-		["Output",  false], 0, 22, 
+		["Output",  false], 0, 23, 24, 22, 
 		["Pattern",	false], 1, 3, 12, 2, 11, 17, 4, 13,
 		["Render",	false], 7, 8, 5, 18, 6, 9, 10, 21, 
 		["Truchet",  true, 14], 15, 16, 20, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	
+	////- Nodes
 	
 	attribute_surface_depth();
 	attribute_interpolation();
@@ -77,6 +82,7 @@ function Node_Pytagorean_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
 		surface_set_shader(_outSurf, sh_pytagorean_tile);
+			shader_set_uv(_data[23], _data[24]);
 		    shader_set_interpolation(_sam);
 		    
 			shader_set_f("dimension", _dim[0], _dim[1]);

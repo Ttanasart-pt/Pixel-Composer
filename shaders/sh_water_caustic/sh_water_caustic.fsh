@@ -11,7 +11,10 @@ uniform vec2  dimension;
 uniform vec2  position;
 uniform vec2  scale;
 
-#region noise
+uniform sampler2D uvMap;
+uniform int   useUvMap;
+uniform float uvMapMix;
+
 vec4 mod289(vec4 x) { return x - floor(x / 289.0) * 289.0; }
 vec4 permute(vec4 x) { return mod289((x * 34.0 + 1.0) * x); }
 
@@ -78,10 +81,10 @@ vec4 snoise(vec3 v) {
     vec4 px = vec4(dot(x0, g0), dot(x1, g1), dot(x2, g2), dot(x3, g3));
     return 42.0 * vec4(grad, dot(m4, px));
 }
-#endregion
 
 void main() {
-	vec2 p    = v_vTexcoord;
+	vec2 vtx  = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
+	vec2 p    = vtx;
 	     p.x *= (dimension.x / dimension.y);
          p    = (p - position / dimension) * dimension / scale;
 	

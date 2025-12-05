@@ -24,6 +24,10 @@ uniform sampler2D widthSurf;
 uniform vec4 col1;
 uniform vec4 col2;
 
+uniform sampler2D uvMap;
+uniform int   useUvMap;
+uniform float uvMapMix;
+
 float pat_cross(vec2 p, float w) {
     vec2 f = fract(abs(p));
     vec2 c = abs(f - 0.5);
@@ -90,8 +94,9 @@ void main() {
 		}
 	#endregion
 	
-	vec2 a = dimension / dimension.y;
-	vec2 c = (v_vTexcoord - position) * a;
+	vec2 vtx = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
+	vec2 a   = dimension / dimension.y;
+	vec2 c   = (vtx - position) * a;
 	c *= mat2(cos(ang), -sin(ang), sin(ang), cos(ang));
 	c *= amo;
 	

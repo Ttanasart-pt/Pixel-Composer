@@ -3,7 +3,9 @@ function Node_Noise_Cristal(_x, _y, _group = noone) : Node_Shader_Generator(_x, 
 	shader = sh_noise_cristal;
 	
 	////- =Output
-	newInput(8, nodeValue_Surface("Mask"));
+	newInput( 9, nodeValue_Surface( "UV Map"     ));
+	newInput(10, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput( 8, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
 	newInput(3, nodeValueSeed()).setShaderProp("seed");
@@ -20,7 +22,7 @@ function Node_Noise_Cristal(_x, _y, _group = noone) : Node_Shader_Generator(_x, 
 	// input 9
 	
 	input_display_list = [ 
-		["Output",     true], 0, 8, 
+		["Output",     true], 0, 9, 10, 8, 
 		["Noise",     false], 3, 7, 4, 
 		["Transform", false], 1, 2, 
 		["Render",    false], 5, 6, 

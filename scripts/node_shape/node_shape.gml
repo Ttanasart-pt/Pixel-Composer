@@ -58,8 +58,10 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	onSurfaceSize = function() /*=>*/ {return getInputData(0, DEF_SURF)};
 	
 	////- =Output
-	newInput(0, nodeValue_Dimension());
-	newInput(6, nodeValue_Bool("Anti-aliasing", false));
+	newInput( 0, nodeValue_Dimension());
+	newInput(44, nodeValue_Surface( "UV Map"     ));
+	newInput(45, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput( 6, nodeValue_Bool(    "Anti-aliasing", false ));
 	
 	////- =Transform
 	newInput(15, nodeValue_Enum_Scroll( "Positioning Mode",    2, [ "Area", "Center + Scale", "Full Image" ]))
@@ -126,7 +128,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	////- =Background
 	newInput( 1, nodeValue_Bool(           "Background",       false          ));
 	newInput(11, nodeValue_Color(          "Background color", ca_black       ));
-	// 44
+	// 46
 	
 	/////////////////////////////////////////////
 	
@@ -138,7 +140,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		.setText("Switch to Fast version");
 	
 	input_display_list = [ b_replace_fast, 
-		[ "Output",    false     ],  0,  6, 
+		[ "Output",    false     ],  0, 44, 45, 6, 
 		[ "Transform", false     ], 15,  3, 16, 17, 19, 28, 
 		[ "Shape",	   false     ],  2, 32, 33, 35, 40, 34, 9, 4, 13, 5, 7, 8, 38, 39, 22, 23, 24, 25, 26, 27, 43, 30, 31, 36, 
 		[ "Deform",	    true     ], 41, 42, 
@@ -252,6 +254,8 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			
 			var _shp = array_safe_get(shape_types, _shape, "");
 			if(is_struct(_shp)) _shp = _shp.data;
+			
+			shader_set_uv(_data[44], _data[45]);
 			
 			switch(_shp) {
 				case "Rectangle" :

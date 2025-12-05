@@ -3,7 +3,9 @@ function Node_Gradient_Cos(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	////- Output
 	newInput( 0, nodeValue_Dimension());
-	newInput( 1, nodeValue_Surface( "Mask" ));
+	newInput(22, nodeValue_Surface( "UV Map"     ));
+	newInput(23, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput( 1, nodeValue_Surface( "Mask"       ));
 	
 	////- Coefficients
 	newInput( 2, nodeValue_Vec3( "a",     [ .5,  .5,  .5  ] )).setMappableConst(4);
@@ -30,14 +32,14 @@ function Node_Gradient_Cos(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput(17, nodeValue_Vec2(        "Center",        [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	newInput(18, nodeValue_Vec2(        "Shape",         [1,1]   ));
 	newInput(19, nodeValue_Bool(        "Uniform ratio",  true   ));
-	// inputs 20
+	// inputs 24
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	b_random = button(function() /*=>*/ {return randomGradient()}).setIcon(THEME.icon_random, 0, COLORS._main_icon).iconPad();
 	
 	input_display_list = [
-		[ "Output",		   true ], 0, 1, 
+		[ "Output",		   true ], 0, 22, 23, 1, 
 		[ "Coefficients", false, noone, b_random ], 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 
 		[ "Gradient",     false ], 20, 21, 
 		[ "Shape",        false ], 14, 15, 16, 17, 18, 19, 
@@ -123,6 +125,8 @@ function Node_Gradient_Cos(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		#endregion
 		
 		surface_set_shader(_outSurf, sh_gradient_cos);
+			shader_set_uv(_data[22], _data[23]);
+			
 			shader_set_surface( "mask", _msk );
 			shader_set_i( "useMask", is_surface(_msk) );
 			

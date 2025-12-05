@@ -20,8 +20,10 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	name = "Draw Gradient";
 	
 	////- Output
-	newInput(0, nodeValue_Dimension());
-	newInput(8, nodeValue_Surface( "Mask" ));
+	newInput( 0, nodeValue_Dimension());
+	newInput(18, nodeValue_Surface( "UV Map"     ));
+	newInput(19, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput( 8, nodeValue_Surface( "Mask"       ));
 	
 	////- Gradient
 	newInput( 1, nodeValue_Gradient(    "Gradient", new gradientObject([ ca_black, ca_white ]))).setMappable(15);
@@ -37,12 +39,12 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 6, nodeValue_Vec2(        "Center",        [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	newInput(17, nodeValue_Vec2(        "Shape",         [1,1]   ));
 	newInput(14, nodeValue_Bool(        "Uniform ratio",  true   ));
-	// inputs 18
+	// inputs 20
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
-		["Output",		true],	0, 8, 
+		["Output",		true],	0, 18, 19, 8, 
 		["Gradient",	false], 1, 15, 5, 12, 9, 13, 7, 
 		["Shape",		false], 2, 3, 10, 4, 11, 6, 17, 14, 
 	];
@@ -90,6 +92,7 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		_outSurf = surface_verify(_outSurf, _sw, _sh, attrDepth());
 		surface_set_shader(_outSurf, sh_gradient);
+			shader_set_uv(_data[18], _data[19]);
 			shader_set_gradient(_data[1], _data[15], _data[16], inputs[1]);
 			
 			shader_set_2("dimension",  _dim);

@@ -2,7 +2,9 @@ function Node_Gradient_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	name = "Draw 4 Points Gradient";
 	
 	////- =Output
-	newInput(0, nodeValue_Dimension());
+	newInput( 0, nodeValue_Dimension());
+	newInput(17, nodeValue_Surface( "UV Map"     ));
+	newInput(18, nodeValue_Slider(  "UV Mix", 1  ));
 	
 	////- =Positions
 	newInput(1, nodeValue_Vec2( "Center 1", [0,0] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
@@ -25,12 +27,12 @@ function Node_Gradient_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	newInput( 6, nodeValue_Color(   "Color 3",  ca_white ));
 	newInput( 8, nodeValue_Color(   "Color 4",  ca_white ));
 	newInput(16, nodeValue_EButton( "Color Space", 0, [ "RGB", "OKLAB" ] ));
-	// 17
+	// 19
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
-		[ "Output",    true  ], 0,
+		[ "Output",    true  ], 0, 17, 18, 
 		[ "Positions", false ], 1, 3, 5, 7,
 		[ "Falloff",   true  ], 11, 12, 13, 14, 15, 
 		[ "Colors",    false ], 9, 10, 2, 4, 6, 8, 16, 
@@ -92,6 +94,8 @@ function Node_Gradient_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 			colArr = array_merge(colorToArray(_1col, 1), colorToArray(_2col, 1), colorToArray(_3col, 1), colorToArray(_4col, 1))
 		
 		surface_set_shader(_outSurf, sh_gradient_points);
+			shader_set_uv(_data[17], _data[18]);
+			
 			shader_set_f("dimension", _dim);
 			shader_set_f("center",    array_merge(_1cen, _2cen, _3cen, _4cen));
 			shader_set_f("color",     colArr);

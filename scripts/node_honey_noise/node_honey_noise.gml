@@ -9,7 +9,9 @@ function Node_Honeycomb_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x
 	shader = sh_noise_honey;
 	
 	////- =Output
-	newInput(7, nodeValue_Surface("Mask"));
+	newInput( 8, nodeValue_Surface( "UV Map"     ));
+	newInput( 9, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput( 7, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
 	newInput(5, nodeValueSeed()).setShaderProp("seed");
@@ -23,7 +25,7 @@ function Node_Honeycomb_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x
 	// input 8
 	
 	input_display_list = [ 
-		["Output",     true], 0, 7, 
+		["Output",     true], 0, 8, 9, 7, 
 		["Noise",     false], 5, 4, 6, 
 		["Transform", false], 1, 3, 2, 
 	];

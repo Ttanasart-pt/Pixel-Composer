@@ -10,7 +10,9 @@ function Node_Noise_Strand(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	shader = sh_noise_strand;
 	
 	////- =Output
-	newInput(12, nodeValue_Surface("Mask"));
+	newInput(13, nodeValue_Surface( "UV Map"     ));
+	newInput(14, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput(12, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
 	newInput( 3, nodeValueSeed()).setShaderProp("seed");
@@ -33,7 +35,7 @@ function Node_Noise_Strand(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	// input 13
 	
 	input_display_list = [ 
-		["Output",      true], 0, 12, 
+		["Output",      true], 0, 13, 14, 12, 
 		["Noise",      false], 3, 9, 2, 4, 
 		["Transform",  false], 1, 
 		["Curve",      false], 5, 6, 8, 

@@ -210,7 +210,7 @@ float random (in vec2 st) {	return fract(sin(dot(st.xy + vec2(85.456034, 64.5406
 
 float round(float val) { return fract(val) >= 0.5? ceil(val) : floor(val); }
 
-vec4 HerringboneCoords(vec2 uv) { #region
+vec4 HerringboneCoords(vec2 uv) {
 	float scale = 20.;
 	
 	float xshifted = (uv.x - floor(uv.y)) * .5;
@@ -236,9 +236,9 @@ vec4 HerringboneCoords(vec2 uv) { #region
     h = min(h, maxH);
 	
 	return vec4(random(id), h / maxH, _uv);
-} #endregion
+}
 
-void main() { #region
+void main() { 
 	#region params
 		vec2 sca = scale;
 		if(scaleUseSurf == 1) {
@@ -261,9 +261,10 @@ void main() { #region
 		}
 	#endregion
 	
+	vec2 vtx = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
 	mat2 rot = mat2(cos(ang), - sin(ang), sin(ang), cos(ang));
 	vec2 asp = vec2(dimension.x / dimension.y, 1.);
-	vec2 pos = (v_vTexcoord - position) * asp;
+	vec2 pos = (vtx - position) * asp;
 	vec2 _pos = pos * rot * sca;
 	
     vec4 hc = HerringboneCoords(_pos);
@@ -296,4 +297,4 @@ void main() { #region
 	
 	float _aa = 3. / max(dimension.x, dimension.y);
 	gl_FragColor = mix(gapCol, colr, aa == 1? smoothstep(thk - _aa, thk, hc.y) : step(thk, hc.y));
-} #endregion
+} 

@@ -2,8 +2,10 @@ function Node_Perlin_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	name = "Smear noise";
 	
 	////- =Output
-	newInput(0, nodeValue_Dimension());
-	newInput(6, nodeValue_Surface(  "Mask"));
+	newInput( 0, nodeValue_Dimension());
+	newInput( 7, nodeValue_Surface( "UV Map"     ));
+	newInput( 8, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput( 6, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
 	newInput(1, nodeValue_Vec2(     "Position",   [0,0] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
@@ -16,9 +18,11 @@ function Node_Perlin_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
-		["Output", false], 0, 6, 
+		["Output", false], 0, 7, 8, 6, 
 		["Noise",  false], 1, 5, 2, 3, 4,
 	];
+	
+	////- Nodes
 	
 	attribute_surface_depth();
 	
@@ -45,6 +49,8 @@ function Node_Perlin_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
 		surface_set_shader(_outSurf, sh_perlin_smear);
+			shader_set_uv(_data[7], _data[8]);
+			
 			shader_set_f("dimension", _dim);
 			shader_set_2("position",  _pos);
 			shader_set_2("scale",	  _sca);

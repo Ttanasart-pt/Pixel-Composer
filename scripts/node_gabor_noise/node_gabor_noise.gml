@@ -2,8 +2,11 @@ function Node_Gabor_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y
 	name   = "Gabor Noise";
 	shader = sh_noise_gabor;
 	
-	newInput(13, nodeValue_Surface("Mask"));
 	newInput( 3, nodeValueSeed()).setShaderProp("seed");
+	
+	newInput(14, nodeValue_Surface( "UV Map"     ));
+	newInput(15, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput(13, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
 	newInput( 4, nodeValue_Slider(   "Density",    2, [ 0, 4, 0.01 ] )).setShaderProp("alignment").setMappable(9);
@@ -15,10 +18,10 @@ function Node_Gabor_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y
 	newInput( 1, nodeValue_Vec2(     "Position",  [0,0] )).setHotkey("G").setShaderProp("position").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
 	newInput(12, nodeValue_Rotation( "Rotation",   0    )).setHotkey("R").setShaderProp("trRotation");
 	newInput( 2, nodeValue_Vec2(     "Scale",     [4,4] )).setHotkey("S").setShaderProp("scale").setMappable(8);
-	// input 14
+	// input 16
 	
-	input_display_list = [
-		["Output",     true], 0, 13, 3, 
+	input_display_list = [ 3, 
+		["Output",     true], 0, 14, 15, 13, 
 		["Noise",     false], 4, 9, 7, 11, 5, 10, 
 		["Transform", false], 1, 12, 2, 8, 
 	];

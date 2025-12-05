@@ -29,6 +29,10 @@ uniform vec4  gapCol;
 uniform int   gradient_use;
 uniform vec2  level;
 
+uniform sampler2D uvMap;
+uniform int   useUvMap;
+uniform float uvMapMix;
+
 float random (in vec2 st) { return fract(sin(dot(st.xy + vec2(85.456034, 64.54065), vec2(12.9898, 78.233))) * (43758.5453123 + seed) ); }
 
 #region //////////////////////////////////// GRADIENT ////////////////////////////////////
@@ -267,9 +271,10 @@ void main() {
 		wid -= 0.05;
 	#endregion
 	
+	vec2 vtx = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
 	mat2 rot = mat2(cos(ang), - sin(ang), sin(ang), cos(ang));
 	vec2 asp = vec2(dimension.x / dimension.y, 1.);
-	vec2 pos = (v_vTexcoord - position) * asp;
+	vec2 pos = (vtx - position) * asp;
 	vec2 _pos = pos * rot * sca;
 	
 	vec2  coord = pentacoords(_pos);

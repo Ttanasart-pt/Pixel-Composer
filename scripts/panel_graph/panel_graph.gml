@@ -1709,7 +1709,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        
 	        array_foreach(_node_frames, function(_n) /*=>*/ { 
 	        	var _hov = _n.drawNodeBG(__gr_x, __gr_y, __mx, __my, __gr_s, __self);
-	        	
 	        	if(_hov) {
 	        		frame_hovering = _n; 
 	        		array_push(frame_hoverings, _n);

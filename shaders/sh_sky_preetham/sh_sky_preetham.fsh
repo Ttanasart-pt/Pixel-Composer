@@ -17,6 +17,10 @@ uniform vec2  position;
 uniform vec2  scale;
 uniform vec2  view;
 
+uniform sampler2D uvMap;
+uniform int   useUvMap;
+uniform float uvMapMix;
+
 float saturatedDot( in vec3 a, in vec3 b ) {
 	return max( dot( a, b ), 0.0 );   
 }
@@ -109,7 +113,8 @@ vec3 calculateSkyLuminanceRGB( in vec3 s, in vec3 e, in float t ) {
 }
 
 void main() {
-    vec2 uv  = (v_vTexcoord - position / dimension) * scale;
+	vec2 vtx = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
+    vec2 uv  = (vtx - position / dimension) * scale;
     vec2 sun = (sunPosition - position) * scale / dimension;
     
     uv.y  = 1. - uv.y;

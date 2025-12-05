@@ -11,6 +11,8 @@ function Node_Sky(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	newInput(0, nodeValue_Dimension());
 	
 	////- =Surface
+	newInput(11, nodeValue_Surface( "UV Map"     ));
+	newInput(12, nodeValue_Slider(  "UV Mix", 1  ));
 	newInput(10, nodeValue_Surface( "Mask" ));
 	
 	////- =Transform
@@ -27,13 +29,12 @@ function Node_Sky(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	newInput(6, nodeValue_Float(       "Sun Radius",     500   ));
 	newInput(7, nodeValue_Float(       "Sun Radiance",   20    ));
 	newInput(9, nodeValue_Enum_Scroll( "Coordinate",     0, [ "Rectangular", "Polar" ] ));
-	// input 11
+	// input 13
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0, 
-		["Surface",    true], 10, 
-		// ["Transform", false], 1, 2, 
+		["Surface",    true], 11, 12, 10, 
 		["Sky",	      false], 3, 4, 8, 
 		["Sun",       false], 5, 6, 7, 
 	];
@@ -66,8 +67,7 @@ function Node_Sky(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 		    inputs[8].setVisible(false);
 		    
     		surface_set_shader(_outSurf, sh_sky_preetham);
-    			DRAW_CLEAR
-    			
+	    		shader_set_uv(_data[11], _data[12]);
     			shader_set_2("dimension",   _dim);
     			shader_set_2("position",    _pos);
     			shader_set_2("scale",       _sca);
@@ -85,8 +85,7 @@ function Node_Sky(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 		    inputs[8].setVisible(false);
 		    
     		surface_set_shader(_outSurf, sh_sky_scattering);
-    			DRAW_CLEAR
-    			
+	    		shader_set_uv(_data[11], _data[12]);
     			shader_set_2("dimension",   _dim);
     			shader_set_2("position",    _pos);
     			shader_set_2("scale",       _sca);
@@ -105,8 +104,7 @@ function Node_Sky(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 		    inputs[8].setVisible(false);
 		    
     		surface_set_shader(_outSurf, sh_sky_hosek);
-    			DRAW_CLEAR
-    			
+	    		shader_set_uv(_data[11], _data[12]);
     			shader_set_2("dimension",   _dim);
     			shader_set_2("position",    _pos);
     			shader_set_2("scale",       _sca);

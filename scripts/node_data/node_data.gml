@@ -174,6 +174,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		toRefreshNodeDisplay = true;
 		input_mask_index     = -1;
+		input_uvmap_index    = -1;
+		input_uvmix_index    = -1;
 		__mask_index         = undefined;
 		__mask_mod_index     = undefined;
 		
@@ -697,7 +699,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		inputs[i] = j; 
 		
 		j.setIndex(i); 
-		if(j.name == "Mask") input_mask_index = i;
+		switch(j.name) {
+			case "Mask"   : input_mask_index  = i; break;
+			case "UV Map" : input_uvmap_index = i; break;
+			case "UV Mix" : input_uvmix_index = i; break;
+		}
 		
 		return j;
 	}

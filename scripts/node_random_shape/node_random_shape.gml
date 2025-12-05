@@ -2,7 +2,9 @@ function Node_Random_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	name = "Draw Random Shape";
 	
 	////- =Output
-	newInput(0, nodeValue_Dimension());
+	newInput( 0, nodeValue_Dimension());
+	newInput( 3, nodeValue_Surface( "UV Map"     ));
+	newInput( 4, nodeValue_Slider(  "UV Mix", 1  ));
 	
 	////- =Shape
 	newInput(1, nodeValueSeed(VALUE_TYPE.integer));
@@ -14,7 +16,7 @@ function Node_Random_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	
 	input_display_list = [ 
-		["Output",	 false], 0,
+		["Output",	 false], 0, 3, 4, 
 		["Shape",	 false], 1,
 		["Render",	 false], 2,
 	];
@@ -143,6 +145,8 @@ function Node_Random_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		surface_free(_prog);
 		
 		surface_set_shader(_corn, sh_downsample, true, BLEND.over);
+			shader_set_uv(_data[3], _data[4]);
+			
 			shader_set_dim("dimension", _cPassAA);
 			shader_set_f("down", _aa);
 			draw_surface(_cPassAA, 0, 0);

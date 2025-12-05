@@ -10,7 +10,9 @@ function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	////- =Output
 	newInput( 0, nodeValue_Dimension());
-	newInput(11, nodeValue_Surface( "Mask" ));
+	newInput(13, nodeValue_Surface( "UV Map"     ));
+	newInput(14, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput(11, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
 	newInput( 2, nodeValueSeed());
@@ -23,12 +25,12 @@ function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	////- =Render
 	newInput( 9, nodeValue_Enum_Scroll( "Render Mode", 0, [ "Blend", "Waterfall" ] ));
 	newInput(10, nodeValueSeed());
-	// input 13
+	// input 15
 	
 	input_display_list = [
-		["Output",	false], 0, 11, 
-		["Noise",	false], 2, 1, 6, 5, 7, 3, 4, 8, 
-		["Render",	false], 9, 10, 
+		[ "Output", false ],  0, 13, 14, 11, 
+		[ "Noise",  false ],  2,  1,  6,  5,  7,  3,  4,  8, 12, 
+		[ "Render", false ],  9, 10, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -56,6 +58,8 @@ function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
 		surface_set_shader(_outSurf, sh_ani_noise);
+			shader_set_uv(_data[13], _data[14]);
+			
 			shader_set_2("dimension",   _dim);
 			shader_set_f("position",	_pos[0] / _dim[0], _pos[1] / _dim[1]);
 			shader_set_f("seed",		_data[2]);

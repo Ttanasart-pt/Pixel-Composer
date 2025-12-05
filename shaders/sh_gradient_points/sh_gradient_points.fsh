@@ -9,6 +9,10 @@ uniform vec4 strength;
 uniform int blend;
 uniform int cspace;
 
+uniform sampler2D uvMap;
+uniform int   useUvMap;
+uniform float uvMapMix;
+
 #define TAU 6.283185307179586
 
 #region //////////////////////////////////// COLOR SPACES ////////////////////////////////////
@@ -58,12 +62,13 @@ uniform int cspace;
 #endregion //////////////////////////////////// COLOR SPACES ////////////////////////////////////
 
 void main() {
-	vec4 distances = vec4(0.);
-	float maxDist = 0.;
+	vec4  distances = vec4(0.);
+	float maxDist   = 0.;
+	vec2  vtx = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
 	int i;
 	
 	for( i = 0; i < 4; i++ ) {
-		float d      = distance(v_vTexcoord, center[i] / dimension);
+		float d      = distance(vtx, center[i] / dimension);
 		distances[i] = d;
 		maxDist      = max(maxDist, d);
 	}

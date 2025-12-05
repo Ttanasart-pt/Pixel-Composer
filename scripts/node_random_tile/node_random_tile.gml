@@ -9,6 +9,8 @@ function Node_Random_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	////- =Output
 	newInput( 0, nodeValue_Dimension());
+	newInput(22, nodeValue_Surface( "UV Map"     ));
+	newInput(23, nodeValue_Slider(  "UV Mix", 1  ));
 	newInput(21, nodeValue_Surface( "Mask" ));
 	
 	////- =Pattern
@@ -31,17 +33,18 @@ function Node_Random_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(15, nodeValue_Int(            "Truchet Seed",      seed_random() ));
 	newInput(16, nodeValue_Slider(         "Truchet Threshold", .5            ));
 	newInput(19, nodeValue_Rotation_Range( "Texture Angle",     [0,0]         ));
-	
-	// input 22
+	// input 24
 	
 	input_display_list = [
-		["Output",  false], 0, 21, 
+		["Output",  false], 0, 22, 23, 21, 
 		["Pattern",	false], 1, 3, 12, 2, 11, 4, 13,
 		["Render",	false], 7, 8, 5, 17, 6, 9, 10, 20, 
 		["Truchet",  true, 14], 15, 16, 19, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	
+	////- Nodes
 	
 	attribute_surface_depth();
 	attribute_interpolation();
@@ -77,6 +80,7 @@ function Node_Random_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
 		surface_set_shader(_outSurf, sh_random_tile);
+			shader_set_uv(_data[22], _data[23]);
 		    shader_set_interpolation(_sam);
 		    
 			shader_set_f("dimension", _dim[0], _dim[1]);

@@ -3,7 +3,9 @@ function Node_Voronoi_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, 
 	shader = sh_voronoi_extra;
 	
 	////- =Output
-	newInput(8, nodeValue_Surface("Mask"));
+	newInput( 9, nodeValue_Surface( "UV Map"     ));
+	newInput(10, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput( 8, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
 	newInput(3, nodeValueSeed()).setShaderProp("seed");
@@ -18,7 +20,7 @@ function Node_Voronoi_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, 
 	// input 9
 	
 	input_display_list = [
-		["Output",      true], 0, 8, 
+		["Output",      true], 0, 9, 10, 8, 
 		["Noise",      false], 3, 5, 4, 6, 
 		["Transform",  false], 1, 7, 2,
 	];

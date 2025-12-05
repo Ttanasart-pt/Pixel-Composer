@@ -18,6 +18,10 @@ uniform vec4  color;
 uniform float gamma;
 uniform float phase;
 
+uniform sampler2D uvMap;
+uniform int   useUvMap;
+uniform float uvMapMix;
+
 mat2 rotMat(in float r){
     r = radians(r);
     float c = cos(r);
@@ -58,9 +62,9 @@ vec3 Oilnoise(in vec2 pos, in vec3 RGB) {
     return clamp( RGB / abs1d(dot(q, vec2(-0.240, 0.))) * .5 / result, vec3(0.), vec3(1.));
 }
 
-
 void main() {
-    vec2 ntx = v_vTexcoord * vec2(1., dimension.y / dimension.x);
+    vec2 vtx = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
+    vec2 ntx = vtx * vec2(1., dimension.y / dimension.x);
     vec2 pos = ntx * scale + position;
     vec3 col = Oilnoise(pos, color.rgb * gamma);
     gl_FragColor = vec4(col, 1.0);

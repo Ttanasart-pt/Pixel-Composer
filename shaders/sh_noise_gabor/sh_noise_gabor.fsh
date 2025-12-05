@@ -32,6 +32,10 @@ uniform float trRotation;
 
 uniform vec2  augment;
 
+uniform sampler2D uvMap;
+uniform int   useUvMap;
+uniform float uvMapMix;
+
 vec2 hash(vec2 p) { return fract(sin(vec2(
 										dot(p, vec2(127.1324, 311.7874)) * (152.6178612 + seed / 10000.), 
 										dot(p, vec2(269.8355, 183.3961)) * (437.5453123 + seed / 10000.)
@@ -97,7 +101,8 @@ void main() {
 	#endregion
 	
 	float r     = radians(trRotation);
-	vec2 pos    = v_vTexcoord;
+	vec2 vtx    = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
+	vec2 pos    = vtx;
 	     pos.x *= (dimension.x / dimension.y);
          pos    = (pos - position / dimension) * mat2(cos(r), -sin(r), sin(r), cos(r)) * scale;
     

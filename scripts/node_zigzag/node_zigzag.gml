@@ -10,7 +10,9 @@ function Node_Zigzag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	////- =Output
 	newInput( 0, nodeValue_Dimension());
-	newInput( 9, nodeValue_Surface( "Mask" ));
+	newInput(11, nodeValue_Surface( "UV Map"     ));
+	newInput(12, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput( 9, nodeValue_Surface( "Mask"       ));
 	
 	////- =Pattern
 	newInput( 1, nodeValue_Slider(   "Amount",      1     )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, UNIT_REF).setMappable(6);
@@ -22,19 +24,19 @@ function Node_Zigzag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput( 5, nodeValue_Enum_Button( "Type",    0, [ "Solid", "Smooth", "AA" ]));
 	newInput( 3, nodeValue_Color(       "Color 1", ca_white));
 	newInput( 4, nodeValue_Color(       "Color 2", ca_black));
-	// input 11
+	// input 13
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
-		["Output",  false], 0, 9, 
+		["Output",  false], 0, 11, 12, 9, 
 		["Pattern",	false], 1, 6, 2, 8, 10,  
 		["Render",	false], 5, 3, 4, 
 	];
 	
-	attribute_surface_depth();
+	////- Nodes
 	
-	////- Node
+	attribute_surface_depth();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		PROCESSOR_OVERLAY_CHECK
@@ -63,6 +65,8 @@ function Node_Zigzag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		inputs[10].setVisible(_bnd != 1);
 		
 		surface_set_shader(_outSurf, sh_zigzag);
+			shader_set_uv(_data[11], _data[12]);
+			
 			shader_set_f("dimension",   _dim);
 			shader_set_f("position",   _pos[0] / _dim[0], _pos[1] / _dim[1]);
 			shader_set_f_map("amount", _data[1], _data[6], inputs[1]);

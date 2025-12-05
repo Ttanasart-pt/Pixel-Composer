@@ -24,6 +24,10 @@ uniform vec2  dimension;
 uniform vec2  position;
 uniform float rotation;
 
+uniform sampler2D uvMap;
+uniform int   useUvMap;
+uniform float uvMapMix;
+
 #define tau 6.283185307179586
 
 vec3 hash(vec3 p) { return fract(sin(vec3(
@@ -77,7 +81,8 @@ void main() {
 		}
 	#endregion
 	
-	vec2  ntx = v_vTexcoord * vec2(1., dimension.y / dimension.x);
+	vec2  vtx = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
+	vec2  ntx = vtx * vec2(1., dimension.y / dimension.x);
 	float ang = radians(rotation);
     vec2  pos = (ntx - position / dimension) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca / 16.;
     

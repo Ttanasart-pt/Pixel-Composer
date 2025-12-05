@@ -17,6 +17,10 @@ uniform float rotation;
 uniform vec2  scale;
 uniform int   mode;
 
+uniform sampler2D uvMap;
+uniform int   useUvMap;
+uniform float uvMapMix;
+
 float PI = 3.14159265359;
 float s3 = sin(PI / 3.);
 
@@ -215,8 +219,8 @@ vec3 squareVoronoi( in vec2 x ) { #region // IQ classic voronoi - shadertoy.com/
 #endregion
 
 void main() {
-	
-	vec2  ntx = v_vTexcoord * vec2(1., dimension.y / dimension.x);
+	vec2  vtx = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
+	vec2  ntx = vtx * vec2(1., dimension.y / dimension.x);
 	float ang = radians(rotation);
     vec2  pos = (ntx - position / dimension) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * scale / 4.;
     

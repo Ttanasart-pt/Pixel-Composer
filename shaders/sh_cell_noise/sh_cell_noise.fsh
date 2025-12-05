@@ -24,6 +24,10 @@ uniform int   inverted;
 uniform float contrast;
 uniform float middle;
 
+uniform sampler2D uvMap;
+uniform int   useUvMap;
+uniform float uvMapMix;
+
 #define PI 3.14159265359
 #define TAU 6.283185307179586
 
@@ -84,8 +88,9 @@ void main() {
 		float ang = rotation;
 	#endregion
 	
-	vec2 ntx  = v_vTexcoord * vec2(1., dimension.y / dimension.x);
-	vec2 pos  = position / dimension;
+	vec2 vtx = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
+	vec2 ntx = vtx * vec2(1., dimension.y / dimension.x);
+	vec2 pos = position / dimension;
 	
     float amp = pow(1. / iterAmpli, float(iteration) - 1.) / (pow(1. / iterAmpli, float(iteration)) - 1.);
     float md  = .0;

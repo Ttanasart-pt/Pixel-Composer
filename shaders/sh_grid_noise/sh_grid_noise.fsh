@@ -17,6 +17,10 @@ uniform vec2 colorRanR;
 uniform vec2 colorRanG;
 uniform vec2 colorRanB;
 
+uniform sampler2D uvMap;
+uniform int   useUvMap;
+uniform float uvMapMix;
+
 vec3 hsv2rgb(vec3 c) {
     vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
     vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
@@ -28,13 +32,15 @@ float randomSeed (in vec2 st, float _seed) { return fract(sin(dot(st.xy + vec2(5
 float random (in vec2 st) { return mix(randomSeed(st, floor(seed)), randomSeed(st, floor(seed) + 1.), fract(seed)); }
 
 void main() {
-	vec2 st = v_vTexcoord - position / dimension;
+	vec2 vtx = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
+	vec2 st  = vtx - position / dimension;
     vec2 pos = vec2(st * scale);
 	
 	if(shiftAxis == 0) {
 		//pos.x += random(vec2(0., floor(pos.y)));
 		if(mod(pos.y, 2.) > 1.)
 			pos.x += shift;
+			
 	} else if(shiftAxis == 1) {
 		//pos.y += random(vec2(0., floor(pos.x)));
 		if(mod(pos.x, 2.) > 1.)

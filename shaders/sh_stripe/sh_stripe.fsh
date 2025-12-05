@@ -38,6 +38,10 @@ uniform vec4  color1;
 uniform vec4  palette[PALETTE_LIMIT];
 uniform int   paletteAmount;
 
+uniform sampler2D uvMap;
+uniform int   useUvMap;
+uniform float uvMapMix;
+
 #region //////////////////////////////////// GRADIENT ////////////////////////////////////
 	#define GRADIENT_LIMIT 128
 	
@@ -204,7 +208,8 @@ void main() {
 		}
 	#endregion
 	
-	vec2  pos     = v_vTexcoord - position;
+	vec2  vtx = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
+	vec2  pos     = vtx - position;
 	float aspect  = dimension.x / dimension.y;
 	float prog    = pos.x * aspect * cos(ang) - pos.y * sin(ang);
     float _a      = 1. / amo;

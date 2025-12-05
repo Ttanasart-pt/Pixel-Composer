@@ -14,7 +14,9 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	////- =Output
 	newInput( 0, nodeValue_Dimension());
-	newInput(20, nodeValue_Surface( "Mask" ));
+	newInput(21, nodeValue_Surface( "UV Map"     ));
+	newInput(22, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput(20, nodeValue_Surface( "Mask"       ));
 	
 	////- =Pattern
 	newInput( 1, nodeValue_Slider(   "Amount",       .25    )).setHotkey("S").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, UNIT_REF).setMappable(11);
@@ -31,16 +33,17 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput( 8, nodeValue_Color(       "Color 1",    ca_white  ));
 	newInput( 9, nodeValue_Color(       "Color 2",    ca_black  ));
 	newInput(18, nodeValue_Palette(     "Colors",  [ c_black, c_white ] ));
-	
-	// input 21
+	// input 23
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 19, 
-		["Output",	true],	0, 20, 
+		["Output",	true],	0, 21, 22, 20, 
 		["Pattern",	false], 1, 11, 10, 14, 2, 12, 4, 5, 13, 17, 
 		["Render",	false], 3, 6, 7, 15, 8, 9, 18, 
 	];
+	
+	////- Nodes
 	
 	attribute_surface_depth();
 	
@@ -80,6 +83,8 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 			
 		surface_set_shader(_outSurf, sh_stripe);
+			shader_set_uv(_data[21], _data[22]);
+			
 			shader_set_f("seed",		 _seed);
 			shader_set_f("dimension",	 _dim[0], _dim[1]);
 			shader_set_f("position",	 _pos[0] / _dim[0], _pos[1] / _dim[1]);

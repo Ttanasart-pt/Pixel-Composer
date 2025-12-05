@@ -4,8 +4,10 @@ function Node_Dotted(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(20, nodeValueSeed());
 	
 	////- =Output
-	newInput(0, nodeValue_Dimension());
-	newInput(1, nodeValue_Surface( "Mask" ));
+	newInput( 0, nodeValue_Dimension());
+	newInput(21, nodeValue_Surface( "UV Map"     ));
+	newInput(22, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput( 1, nodeValue_Surface( "Mask"       ));
 	
 	////- =Transform
 	newInput(14, nodeValue_Vec2(     "Position", [0,0] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, UNIT_REF);
@@ -27,21 +29,20 @@ function Node_Dotted(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(19, nodeValue_Surface(     "Texture" ));
 	newInput(12, nodeValue_Slider(      "Smoothness",     .1))
 	newInput(11, nodeValue_Slider(      "Intensity",       1))
-	
-	// input 21
+	// input 22
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 20, 
-		["Output",     true], 0, 1, 
+		["Output",     true], 0, 21, 22, 1, 
 		["Transform", false], 14, 4, 5, 
 		["Pattern",   false], 13, 2, 3, 15, 9, 10, 
 		["Render",    false], 7, 6, 16, 8, 17, 18, 19, 12, 11, 
 	];
 	
-	attribute_surface_depth();
-	
 	////- Nodes
+	
+	attribute_surface_depth();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		PROCESSOR_OVERLAY_CHECK
@@ -87,6 +88,8 @@ function Node_Dotted(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
 		surface_set_shader(_outSurf, sh_dotted);
+			shader_set_uv(_data[21], _data[22]);
+			
 			shader_set_f("seed",      _seed);
 			shader_set_2("dimension", _dim);
 			shader_set_2("position",  _pposi);

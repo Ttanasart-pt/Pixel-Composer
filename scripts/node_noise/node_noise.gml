@@ -8,8 +8,10 @@ function Node_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	name = "Noise";
 	
 	////- =Output
-	newInput(0, nodeValue_Dimension());
-	newInput(6, nodeValue_Surface( "Mask" ));
+	newInput( 0, nodeValue_Dimension());
+	newInput( 7, nodeValue_Surface( "UV Map"     ));
+	newInput( 8, nodeValue_Slider(  "UV Mix", 1  ));
+	newInput( 6, nodeValue_Surface( "Mask"       ));
 	
 	////- =Moise
 	newInput(1, nodeValueSeed());
@@ -22,7 +24,7 @@ function Node_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	// input 7
 	
 	input_display_list = [
-		["Output",	false], 0, 6, 
+		["Output",	false], 0, 7, 8, 6, 
 		["Noise",	false], 1,  
 		["Color",	false], 2, 3, 4, 5, 
 	];
@@ -53,6 +55,8 @@ function Node_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _clb = _data[5];
 		
 		surface_set_shader(_outSurf, sh_noise);
+			shader_set_uv(_data[7], _data[8]);
+			
 			shader_set_f("seed", _sed);
 			
 			shader_set_i("colored", _col);

@@ -9,6 +9,8 @@ function Node_Grid_Hex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	////- =Output
 	newInput( 0, nodeValue_Dimension());
+	newInput(23, nodeValue_Surface( "UV Map"     ));
+	newInput(24, nodeValue_Slider(  "UV Mix", 1  ));
 	newInput(22, nodeValue_Surface( "Mask" ));
 	
 	////- =Pattern
@@ -32,17 +34,18 @@ function Node_Grid_Hex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(15, nodeValue_Int(            "Truchet Seed",      seed_random() ));
 	newInput(16, nodeValue_Slider(         "Truchet Threshold", .5            ));
 	newInput(19, nodeValue_Rotation_Range( "Texture Angle",     [0,0]         ));
-	
-	// input 23
+	// input 25
 	
 	input_display_list = [
-		["Output",  false], 0, 22, 
+		["Output",  false], 0, 23, 24, 22, 
 		["Pattern",	false], 1, 3, 12, 2, 11, 4, 13,
 		["Render",	false], 7, 8, 5, 17, 6, 9, 21, 10, 20, 
 		["Truchet",  true, 14], 15, 16, 19, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	
+	////- Nodes
 	
 	attribute_surface_depth();
 	attribute_interpolation();
@@ -91,6 +94,7 @@ function Node_Grid_Hex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		inputs[21].setVisible(_tex_mode, _tex_mode);
 		
 		surface_set_shader(_outSurf, sh_grid_hex);
+			shader_set_uv(_data[23], _data[24]);
 		    shader_set_interpolation(_sam);
 		    
 			shader_set_f("dimension", _dim[0], _dim[1]);

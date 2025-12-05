@@ -3,6 +3,8 @@ function Node_Quasicrystal(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	////- =Output
 	newInput( 0, nodeValue_Dimension());
+	newInput(12, nodeValue_Surface( "UV Map"     ));
+	newInput(13, nodeValue_Slider(  "UV Mix", 1  ));
 	newInput(11, nodeValue_Surface( "Mask" ));
 	
 	////- =Pattern
@@ -15,18 +17,19 @@ function Node_Quasicrystal(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	////- =Colors
 	newInput( 4, nodeValue_Color( "Color 1", ca_white));
 	newInput( 5, nodeValue_Color( "Color 2", ca_black));
-	
-	// input 12
+	// input 14
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 
-		["Output",	 true],	0, 11, 
+		["Output",	 true],	0, 12, 13, 11, 
 		["Pattern",	false], 3, 2, 7, 1, 6, 8, 9, 10, 
 		["Colors",  false], 4, 5, 
 	];
 	
 	attribute_surface_depth();
+	
+	////- Nodes
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var rot  = getInputData(2);
@@ -53,6 +56,7 @@ function Node_Quasicrystal(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 			
 		surface_set_shader(_outSurf, sh_quarsicrystal);
+			shader_set_uv(_data[12], _data[13]);
 			shader_set_f("dimension",	 _dim[0], _dim[1]);
 			shader_set_f("position",	 _pos[0] / _dim[0], _pos[1] / _dim[1]);
 			shader_set_2("rangleRange",	 _aran);

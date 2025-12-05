@@ -17,10 +17,15 @@ uniform float curveDetail;
 uniform float curveShift;
 uniform float thickness;
 
+uniform sampler2D uvMap;
+uniform int   useUvMap;
+uniform float uvMapMix;
+
 float random  (in vec2 st) { return fract(sin(dot(st.xy + vec2(1., 6.), vec2(2., 7.))) * (1. + seed / 100.)); }
 
 void main() {
-	vec2 ntx = v_vTexcoord * vec2(1., dimension.y / dimension.x);
+	vec2 vtx = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
+	vec2 ntx = vtx * vec2(1., dimension.y / dimension.x);
 	vec2 tx  = 1. / dimension;
 	vec2 ps  = ntx + position;
 	float w  = 0.;
