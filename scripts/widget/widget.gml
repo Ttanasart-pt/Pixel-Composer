@@ -1,4 +1,14 @@
 function widget() constructor {
+	x = 0; 
+	y = 0;
+	w = 0; 
+	h = 0;
+	
+	rx = 0;
+	ry = 0;
+	
+	minWidth = ui(32);
+	
 	active   = false;
 	hover    = false;
 	hovering = false;
@@ -20,6 +30,7 @@ function widget() constructor {
 	always_break_line  = false;
 	always_side_button = false;
 	side_button  = noone;
+	side_button2 = noone;
 	front_button = noone;
 	
 	hide = false;
@@ -33,22 +44,20 @@ function widget() constructor {
 	
 	boxColor = c_white;
 	
-	x = 0; 
-	y = 0;
-	w = 0; 
-	h = 0;
-	
-	minWidth = ui(32);
-	
-	rx = 0;
-	ry = 0;
-	
 	static setLua = function(_lua_thread, _lua_key, _lua_func) {
 		lua_thread = _lua_thread;
 		lua_thread_key = _lua_key;
 		onModify = method(self, _lua_func);
 	}
-	static setSideButton = function(b,s=false) /*=>*/ { side_button = b; always_side_button = s; return self; } 
+	
+	static setSideButton = function(b,s=false) /*=>*/ { 
+		if(side_button) side_button2 = b; 
+		else            side_button  = b; 
+		
+		always_side_button = s; 
+		return self; 
+	} 
+	
 	static setFont       = function(_f) /*=>*/ { font     = _f; return self; }
 	static setMinWidth   = function(_w) /*=>*/ { minWidth = _w; return self; }
 	static setVisible    = function(_v) /*=>*/ { visible  = _v; return self; }

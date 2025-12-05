@@ -45,7 +45,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 	
 	////- Setters
 	
-	static setLinkable = function(_l) /*=>*/ { linkable = _l; return self; }
+	static setLinkable = function(_l) /*=>*/ { linkable = _l;                                    return self; }
 	static setBoxColor = function(_v) /*=>*/ { for(var i = 0; i < 4; i++) tb[i].setBoxColor(_v); return self; }
 	static setFont     = function(_f) /*=>*/ { for(var i = 0; i < 4; i++) tb[i].setFont(_f);     return self; }
 	static setLinkInactiveColor = function(_c) /*=>*/ { link_inactive_color = _c;                return self; }
@@ -148,7 +148,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 					
 				if(tg) {
 					linked = !linked;
-					_display_data.linked =  linked;
+					_display_data.linked = linked;
 				
 					if(linked) 
 					for( var i = 0; i < _sz; i++ )
@@ -164,7 +164,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		
 		if(!per_line) {
 			draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor, 1);
-			draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor, 0.5 + 0.5 * interactable);	
+			draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor, 0.5 + 0.5 * interactable);
 		}
 			
 		for(var i = 0; i < _sz; i++) {

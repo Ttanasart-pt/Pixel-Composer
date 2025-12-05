@@ -9,20 +9,21 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 	newInput( 9, nodeValue_Slider(  "UV Mix", 1  ));
 	newInput(10, nodeValue_Surface( "Mask"       ));
 	newInput(11, nodeValue_Slider(  "Mix",    1  ));
-	__init_mask_modifier(10, 12); // inputs 8, 9
+	__init_mask_modifier(10, 12); // inputs 12, 13, 
 	
 	////- =Effect
-	newInput(5, nodeValue_EButton( "Type",       0, [ "RGB", "Continuous" ] ));
-	newInput(1, nodeValue_Vec2(    "Center",   [.5,.5] )).hideLabel().setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput(2, nodeValue_Slider(  "Strength",   1, [-16, 16, 0.01] )).setHotkey("S").setMappable(4);
-	newInput(6, nodeValue_Slider(  "Intensity",  1, [  0,  4, 0.01] )).setHotkey("I").setMappable(7);
-	// input 10
+	newInput( 5, nodeValue_EButton( "Type",       0, [ "RGB", "Continuous" ] ));
+	newInput( 1, nodeValue_Vec2(    "Center",   [.5,.5] )).hideLabel().setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput( 2, nodeValue_Slider(  "Strength",   1, [-16, 16, 0.01] )).setHotkey("S").setMappable(4);
+	newInput( 6, nodeValue_Slider(  "Intensity",  1, [  0,  4, 0.01] )).setHotkey("I").setMappable(7);
+	newInput(14, nodeValue_Int(     "Resolution", 64 ));
+	// input 15
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 3, 
-		["Surface",  false], 0, 8, 9, 10, 11, 12, 
-		["Effect",   false], 5, 1, 2, 4, 6, 7, 
+		["Surface",  false], 0, 8, 9, 10, 11, 12, 13, 
+		["Effect",   false], 5, 1, 2, 4, 6, 7, 14, 
 	];
 	
 	////- Node
@@ -43,15 +44,18 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _surf = _data[0];
-		var _cent = _data[1];
-		var _type = _data[5];
+		var _surf = _data[ 0];
+		var _cent = _data[ 1];
+		var _type = _data[ 5];
+		var _reso = _data[14];
+		
+		inputs[14].setVisible(_type == 1);
 		
 		surface_set_shader(_outSurf, sh_chromatic_aberration);
 			shader_set_interpolation(_surf);
 			shader_set_uv(_data[8], _data[9]);
 			
-			shader_set_f("resolution",       64 );
+			shader_set_f("resolution",    _reso );
 			shader_set_dim("dimension",   _surf );
 			shader_set_i("type",          _type );
 			shader_set_2("center",        _cent );

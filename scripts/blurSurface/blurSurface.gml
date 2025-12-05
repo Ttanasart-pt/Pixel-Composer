@@ -84,6 +84,8 @@ function surface_apply_gaussian(surface, size, bg = false, bg_c = c_white, sampl
 function blur_zoom_args(_surface, _size, _origin_x, _origin_y, _blurMode = 0, _sampleMode = 0, _samples = 64) constructor {
 	surface    = _surface;
 	size       = _size;
+	sizeCurve  = noone; static setSizeCurve    = function(i) /*=>*/ { sizeCurve    = i; return self; }
+	
 	origin_x   = _origin_x;
 	origin_y   = _origin_y;
 	blurMode   = _blurMode;
@@ -99,6 +101,20 @@ function blur_zoom_args(_surface, _size, _origin_x, _origin_y, _blurMode = 0, _s
 	
 	useMask      = false; 
 	mask         = noone; static setMask         = function(i) /*=>*/ { mask = i; useMask = is_surface(mask); return self; }
+	
+	spectralUse       = false;
+	spectralIntensity = 0;
+	spectralShift     = 0;
+	spectralScale     = 1;
+	spectralGrad      = noone;
+	static setSpectral    = function(u,i,s,c,d) /*=>*/ { 
+		spectralUse       = u;
+		spectralIntensity = i;
+		spectralShift     = s;
+		spectralScale     = c;
+		spectralGrad      = d;
+		return self; 
+	}
 }
 
 function surface_apply_blur_zoom(outputSurf, args) {
@@ -122,6 +138,8 @@ function surface_apply_blur_zoom(outputSurf, args) {
 		shader_set_2("dimension",   [_sw,_sh] );
 		shader_set_f("center",       args.origin_x / _sw, args.origin_y / _sh);
 		shader_set_f_map("strength", _size,  _sizeSurf,  _sizeJunc);
+		shader_set_curve("s",        args.sizeCurve);
+		
 		shader_set_i("blurMode",     args.blurMode);
 		shader_set_i("sampleMode",   args.sampleMode);
 		shader_set_i("samples",      args.samples);
@@ -130,6 +148,12 @@ function surface_apply_blur_zoom(outputSurf, args) {
 		
 		shader_set_i("useMask",      args.useMask);
 		shader_set_surface("mask",   args.mask);
+		
+		shader_set_i("spectralUse",        args.spectralUse);
+		shader_set_f("spectralIntensity",  args.spectralIntensity);
+		shader_set_f("spectralShift",      args.spectralShift);
+		shader_set_f("spectralScale",      args.spectralScale);
+		if(args.spectralGrad != noone)     args.spectralGrad.shader_submit();
 		
 		draw_surface_safe(args.surface);
 	surface_reset_shader();
@@ -144,6 +168,9 @@ function blur_directional_args(_surface, _size, _angle) constructor {
 	size    = _size;
 	angle   = _angle;
 	
+	sizeCurve    = noone; static setSizeCurve    = function(i) /*=>*/ { sizeCurve    = i; return self; }
+	resolution   = 1;     static setResolution   = function(i) /*=>*/ { resolution   = i; return self; }
+	
 	UVmap        = noone;
 	UVmapMix     = 0;     static setUVMap        = function(s,m) /*=>*/ { UVmap = s; UVmapMix = m; return self; }
 	
@@ -151,6 +178,20 @@ function blur_directional_args(_surface, _size, _angle) constructor {
 	fadeDistance = false; static setFadeDistance = function(i) /*=>*/ { fadeDistance = i; return self; }
 	gamma        = false; static setGamma        = function(i) /*=>*/ { gamma        = i; return self; }
 	sampleMode   = 2;     static setSampleMode   = function(i) /*=>*/ { sampleMode   = i; return self; }
+	
+	spectralUse       = false;
+	spectralIntensity = 0;
+	spectralShift     = 0;
+	spectralScale     = 1;
+	spectralGrad      = noone;
+	static setSpectral    = function(u,i,s,c,d) /*=>*/ { 
+		spectralUse       = u;
+		spectralIntensity = i;
+		spectralShift     = s;
+		spectralScale     = c;
+		spectralGrad      = d;
+		return self; 
+	}
 }
 
 function surface_apply_blur_directional(outputSurf, args) {
@@ -173,17 +214,28 @@ function surface_apply_blur_directional(outputSurf, args) {
 	var _angleJunc = _angleArr? args.angle[2] : noone;
 	
 	surface_set_shader(outputSurf, sh_blur_directional, true, BLEND.over);
+		gpu_set_tex_filter(true);
 		shader_set_uv(args.UVmap, args.UVmapMix);
 		
-		shader_set_f("size",          max(_sw, _sh));
-		shader_set_f_map("strength",  _size,  _sizeSurf,  _sizeJunc);
-		shader_set_f_map("direction", _angle, _angleSurf, _angleJunc);
-		shader_set_i("singleDirect",  args.singleDirect);
-		shader_set_i("gamma",         args.gamma);
-		shader_set_i("sampleMode",	  args.sampleMode);
-		shader_set_i("fadeDistance",  args.fadeDistance);
+		shader_set_f(    "size",         max(_sw, _sh));
+		shader_set_f_map("strength",     _size,  _sizeSurf,  _sizeJunc);
+		shader_set_f(    "resolution",   args.resolution);
+		shader_set_curve("s",            args.sizeCurve);
+		
+		shader_set_f_map("direction",    _angle, _angleSurf, _angleJunc);
+		shader_set_i("singleDirect",     args.singleDirect);
+		shader_set_i("gamma",            args.gamma);
+		shader_set_i("sampleMode",	     args.sampleMode);
+		shader_set_i("fadeDistance",     args.fadeDistance);
+		
+		shader_set_i("spectralUse",        args.spectralUse);
+		shader_set_f("spectralIntensity",  args.spectralIntensity);
+		shader_set_f("spectralShift",      args.spectralShift);
+		shader_set_f("spectralScale",      args.spectralScale);
+		if(args.spectralGrad != noone)     args.spectralGrad.shader_submit();
 		
 		draw_surface_safe(args.surface);
+		gpu_set_tex_filter(false);
 	surface_reset_shader();
 	
 	return outputSurf;

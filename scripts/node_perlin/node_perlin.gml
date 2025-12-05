@@ -1,6 +1,8 @@
 #region
 	FN_NODE_CONTEXT_INVOKE {
-		addHotkey("Node_Perlin", "Color Mode > Toggle", "C", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[6].setValue((_n.inputs[6].getValue() + 1) % 3); });
+		addHotkey("Node_Perlin", "Color Mode > Toggle", "C", 0, function() /*=>*/ { GRAPH_FOCUS _n.inputs[6].setValue((_n.inputs[6].getValue() + 1) % 3); });
+		addHotkey("Node_Perlin", "Iteration > Set", KEY_GROUP.numeric, 0, function() /*=>*/ { 
+			GRAPH_FOCUS_NUMBER _n.inputs[3].setValue(round(KEYBOARD_NUMBER)); KEYBOARD_STRING = ""; });
 	});
 #endregion
 

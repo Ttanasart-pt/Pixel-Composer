@@ -1,5 +1,5 @@
 function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _group) constructor {
-	name = "Particle";
+	name      = "Particle";
 	use_cache = CACHE_USE.auto;
 	var i = input_len;
 	
@@ -98,10 +98,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		
 		outputs[0].setValue(_outSurf);
 		
-		array_foreach(parts, function(p) /*=>*/ {
-			p.bound_w = __dim[0];
-			p.bound_h = __dim[1];
-		});
+		array_foreach(parts, function(p) /*=>*/ { p.bound_w = __dim[0]; p.bound_h = __dim[1]; });
 		
 		if(IS_FIRST_FRAME) { 
 			reset(); 

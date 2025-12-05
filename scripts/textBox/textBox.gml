@@ -126,10 +126,10 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		else onModify(value, onModifyParam);
 	}
 	
-	static setOnRelease  = function(_v)   /*=>*/ { onRelease   = _v; return self; }
-	static setSlide      = function(_v)   /*=>*/ { slidable    = _v; return self; }
-	static setSlideType  = function(_v=0) /*=>*/ { slide_int   = _v; return self; }
-	static setSlideStep  = function(_v=0) /*=>*/ { slide_snap  = _v; return self; }
+	static setOnRelease  = function(_v)   /*=>*/ { onRelease   = _v;  return self; }
+	static setSlide      = function(_v)   /*=>*/ { slidable    = _v;  return self; }
+	static setSlideType  = function(_v=0) /*=>*/ { slide_int   = _v;  return self; }
+	static setSlideStep  = function(_v=0) /*=>*/ { slide_snap  = _v;  return self; }
 	static setSlideRange = function(_min = 0, _max = 1) /*=>*/ { slide_range = [_min, _max]; return self; }
 	static setRange      = function(_rng_min, _rng_max) /*=>*/ { use_range   = true; range_min = _rng_min; range_max = _rng_max; return self; }
 	
@@ -600,6 +600,13 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		if((_w - _bs > ui(100) || always_side_button) && side_button) {
 			side_button.setFocusHover(active, hover);
 			side_button.draw(_bx, _by, _bs, _bs, _m, THEME.button_hide_fill);
+			_bx -= _bs + ui(4);
+			_w  -= _bs + ui(4);
+		}
+		
+		if((_w - _bs > ui(100) || always_side_button) && side_button2) {
+			side_button2.setFocusHover(active, hover);
+			side_button2.draw(_bx, _by, _bs, _bs, _m, THEME.button_hide_fill);
 			_bx -= _bs + ui(4);
 			_w  -= _bs + ui(4);
 		}

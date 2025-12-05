@@ -2,6 +2,7 @@ function Node_pSystem_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	name  = "Render";
 	icon  = THEME.vfx;
 	color = COLORS.node_blend_vfx;
+	use_cache = CACHE_USE.auto;
 	update_on_frame = true;
 	
 	newInput(2, nodeValueSeed());
@@ -54,6 +55,10 @@ function Node_pSystem_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	////- Nodes
 	
+	attributes.cache = true;
+	array_push(attributeEditors,   "Cache" );
+	array_push(attributeEditors, [ "Cache Data", function() /*=>*/ {return attributes.cache}, new checkBox(function() /*=>*/ {return toggleAttribute("cache")}) ]);
+	
 	custom_parameter_names = undefined;
 	
 	custom_parameter_names       = [];
@@ -72,6 +77,14 @@ function Node_pSystem_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	static update = function(_frame = CURRENT_FRAME) {
 		if(!is(inline_context, Node_pSystem_Inline) || inline_context.prerendering) return;
+		use_cache = attributes.cache? CACHE_USE.auto : CACHE_USE.none;
+		if(use_cache) {
+			var surf = getCacheFrame(_frame);
+			if(is_surface(surf)) {
+				outputs[0].setValue(surf);
+				return;
+			}
+		}
 		
 		var _dim   = getDimension();
 		var _sw    = _dim[0];
@@ -191,6 +204,8 @@ function Node_pSystem_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			
 			draw_set_alpha(1);
 		surface_reset_target();
+		
+		if(use_cache) cacheCurrentFrame(_outSurf);
 	}
 	
 	static reset = function() {

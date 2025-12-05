@@ -53,7 +53,7 @@ function Node_pSystem_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 		
 		prerendering = true;
 		
-		for(var i = TOTAL_FRAMES - _prer; i < TOTAL_FRAMES; i++) {
+		for(var i = TOTAL_FRAMES - _prer; i < TOTAL_FRAMES + 4; i++) {
 			for( var j = 0, m = array_length(topoList); j < m; j++ ) {
 				var node = topoList[j];
 				if(!node.active) continue;
@@ -73,18 +73,6 @@ function Node_pSystem_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 			if(IS_PLAYING) topoList = NodeListSort(nodes, project);
 			reset();
 		}
-	}
-	
-	static getPreviewingNode = function() {
-		for( var i = 0, n = array_length(nodes); i < n; i++ ) 
-			if(is(nodes[i], Node_VFX_Renderer)) return nodes[i];
-		return self;
-	}
-	
-	static getPreviewValues = function() {
-		for( var i = 0, n = array_length(nodes); i < n; i++ )
-			if(is(nodes[i], Node_VFX_Renderer)) return nodes[i].getPreviewValues();
-		return noone;
 	}
 	
 }

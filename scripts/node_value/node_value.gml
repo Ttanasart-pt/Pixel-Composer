@@ -461,6 +461,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	mapped_vec4 = false;
 	mapped_type = 0;
 	
+	static setMapped = function(junc) {
+		mappedJunc = junc;
+		isTimelineVisible = function() { INLINE return is_anim && value_from == noone && mappedJunc.attributes.mapped; }
+		return self;
+	}
+	
 	static setMappable = function(_index, _vec4 = false) {
 		with(node) {
 			var vmap = nodeValue_Surface($"{other.name} Map").setVisible(false, false).setMapped(other);
@@ -474,6 +480,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		attributes.mapped     = false;
+		parameters.mapped     = true;
 		parameters.map_index  = _index;
 		mapped_vec4 = _vec4;
 		mapped_type = 1;
@@ -533,16 +540,27 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return self;
 	}
 	
-	static setMapped = function(junc) {
-		mappedJunc = junc;
-		isTimelineVisible = function() { INLINE return is_anim && value_from == noone && mappedJunc.attributes.mapped; }
+	static setMappableConst = function(_index, _suf = "Map") {
+		attributes.mapped    = false;
+		parameters.mapped    = true;
+		parameters.map_index = _index;
+		mapped_type = 2;
+		array_push(node.inputMappable, self);
+		
+		with(node) { newInput(_index, nodeValue_Surface( $"{other.name} {_suf}" )).setVisible(false, false); }
+		
+		mapButton = button(function() /*=>*/ { attributes.mapped = !attributes.mapped; node.triggerRender(); })
+			.setIcon( THEME.mappable_parameter, [ function() /*=>*/ {return attributes.mapped} ], COLORS._main_icon ).iconPad().setTooltip("Toggle Map");
+		
+		editWidget.setSideButton(mapButton);
+		
 		return self;
 	}
 	
 	static setCurvable = function(_index, _val = CURVE_DEF_11, _suf = "Curve") {
 		attributes.curved    = false;
-		parameters.map_index = _index;
-		mapped_type = 2;
+		parameters.curved    = true;
+		parameters.cur_index = _index;
 		array_push(node.inputMappable, self);
 		
 		with(node) { newInput(_index, nodeValue_Curve( $"{other.name} {_suf}", _val )).setVisible(false, false); }
@@ -556,39 +574,23 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static setGradable = function(_index, _val = gra_white, _suf = "Curve") {
-		attributes.curved    = false;
-		parameters.map_index = _index;
-		mapped_type = 2;
+		attributes.graded    = false;
+		parameters.graded    = true;
+		parameters.gra_index = _index;
 		array_push(node.inputMappable, self);
 		
 		with(node) { newInput(_index, nodeValue_Gradient( $"{other.name} {_suf}", _val )).setVisible(false, false); }
 		
-		curveButton = button(function() /*=>*/ { attributes.curved = !attributes.curved; node.triggerRender(); })
-			.setIcon( THEME.curvable, [ function() /*=>*/ {return attributes.curved} ], COLORS._main_icon ).iconPad().setTooltip("Toggle Curve");
+		gradeButton = button(function() /*=>*/ { attributes.graded = !attributes.graded; node.triggerRender(); })
+			.setIcon( THEME.curvable, [ function() /*=>*/ {return attributes.graded} ], COLORS._main_icon ).iconPad().setTooltip("Toggle Curve");
 		
-		editWidget.setSideButton(curveButton);
-		return self;
-	}
-	
-	static setMappableConst = function(_index, _suf = "Map") {
-		attributes.mapped    = false;
-		parameters.map_index = _index;
-		mapped_type = 3;
-		array_push(node.inputMappable, self);
-		
-		with(node) { newInput(_index, nodeValue_Surface( $"{other.name} {_suf}" )).setVisible(false, false); }
-		
-		mapButton = button(function() /*=>*/ { attributes.mapped = !attributes.mapped; node.triggerRender(); })
-			.setIcon( THEME.mappable_parameter, [ function() /*=>*/ {return attributes.mapped} ], COLORS._main_icon ).iconPad().setTooltip("Toggle Map");
-		
-		editWidget.setSideButton(mapButton);
-		
+		editWidget.setSideButton(gradeButton);
 		return self;
 	}
 	
 	static mappableStep = function() {
-		switch(mapped_type) {
-			case 1 : 
+		if(has(parameters, "mapped")) {
+			if(mapped_type == 1) {
 				editWidget = (mapWidget && attributes.mapped)? mapWidget : editWidgetRaw;
 				mapButton.icon_blend = attributes.mapped? c_white : COLORS._main_icon;
 				
@@ -602,21 +604,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					node.refreshNodeDisplay();
 				}
 				
-				break;
-			
-			case 2 : 
-				curveButton.icon_blend = attributes.curved? c_white : COLORS._main_icon;
-				
-				var inp = node.inputs[parameters.map_index];
-				var vis = attributes.curved && show_in_inspector;
-				
-				if(inp.show_in_inspector != vis) {
-					inp.show_in_inspector = vis;
-					node.refreshNodeDisplay();
-				}
-				break;
-			
-			case 3 : 
+			} else {
 				mapButton.icon_blend = attributes.mapped? c_white : COLORS._main_icon;
 				
 				var inp = node.inputs[parameters.map_index];
@@ -626,8 +614,31 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					inp.show_in_inspector = vis;
 					node.refreshNodeDisplay();
 				}
-				break;
+			}
+		}
+		
+		if(has(parameters, "curved")) {
+			curveButton.icon_blend = attributes.curved? c_white : COLORS._main_icon;
+				
+			var inp = node.inputs[parameters.cur_index];
+			var vis = attributes.curved && show_in_inspector;
 			
+			if(inp.show_in_inspector != vis) {
+				inp.show_in_inspector = vis;
+				node.refreshNodeDisplay();
+			}
+		}
+		
+		if(has(parameters, "graded")) {
+			gradeButton.icon_blend = attributes.graded? c_white : COLORS._main_icon;
+				
+			var inp = node.inputs[parameters.gra_index];
+			var vis = attributes.graded && show_in_inspector;
+			
+			if(inp.show_in_inspector != vis) {
+				inp.show_in_inspector = vis;
+				node.refreshNodeDisplay();
+			}
 		}
 	}
 	
@@ -1788,7 +1799,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				for( var i = 0, n = array_length(animators); i < n; i++ )
 					_upd = animators[i].setValue(val[i], _rec, time) || _upd; 
 			} else
-				_upd = animators[_index].setValue(val, _rec, time);
+				_upd = animators[_index].setValue(val, _rec, time) || _upd;
 				
 		} else {
 			if(_index != noone) {
@@ -1797,7 +1808,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				_val[_index] = val;
 			}
 			
-			_upd = animator.setValue(_val, _rec, time);
+			_upd = animator.setValue(_val, _rec, time) || _upd;
 		}
 		
 		if(!_upd) return false; /////////////////////////////////////////////////////////////////////////////////

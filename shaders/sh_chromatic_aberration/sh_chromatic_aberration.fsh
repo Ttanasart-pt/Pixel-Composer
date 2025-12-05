@@ -132,13 +132,13 @@ uniform sampler2D strengthSurf;
 float saturate (float x) { return min(1.0, max(0.0,x)); }
 vec3  saturate (vec3  x) { return min(vec3(1.,1.,1.), max(vec3(0.,0.,0.),x)); }
 
-vec3 bump3y (vec3 x, vec3 yoffset) {
-	vec3 y = vec3(1.,1.,1.) - x * x;
+vec3 bump3y(vec3 x, vec3 yoffset) {
+	vec3 y = vec3(1.) - x * x;
 	y = saturate(y - yoffset);
 	return y;
 }
 
-vec3 spectral_zucconi6 (float w) {
+vec3 spectral_zucconi6(float w) {
 	// w: [400, 700]
 	// x: [0,   1]
 	float x = saturate((w - 400.0)/ 300.0);
