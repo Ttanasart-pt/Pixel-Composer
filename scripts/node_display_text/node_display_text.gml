@@ -549,4 +549,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			active_draw_index = -1;
 		}
 	}
+
+	static drawDimension = undefined
+	
 }

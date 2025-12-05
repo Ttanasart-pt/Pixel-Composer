@@ -1503,8 +1503,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static pointIn = function(_x, _y, _mx, _my, _s) {
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
+		var hh = h + project.graphDisplay.node_meta_view * 16;
 		
-		return point_in_rectangle(_mx, _my, xx, yy, xx + w * _s, yy + h * _s);
+		return point_in_rectangle(_mx, _my, xx, yy, xx + w * _s, yy + hh * _s);
 	}
 	
 	static cullCheck = function(_x, _y, _s, minx, miny, maxx, maxy) {
@@ -1752,7 +1753,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static drawNodeBase = function(xx, yy, _s) { 
 		var cc = colorMultiply(getColor(), COLORS.node_base_bg);
 		var aa = .75 * (.25 + .75 * isHighlightingInGraph());
-		var hh = h + project.graphDisplay.node_meta_view * 16;
+		var hh = h + (drawDimension != undefined && project.graphDisplay.node_meta_view) * 16;
 		
 		draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, hh * _s, cc, aa); 
 	}
@@ -2347,11 +2348,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static drawNodeBG = undefined; //static drawNodeBG = function(_x, _y, _mx, _my, _s) {
-	static drawNodeFG = undefined; //static drawNodeFG = function(_x, _y, _mx, _my, _s, _dparam, _panel = noone) {
+	static drawNodeFG = undefined; //static drawNodeFG = function(_x, _y, _mx, _my, _s, _panel = noone) {
 	static drawNode   = function(_draw, _x, _y, _mx, _my, _s, _panel = noone) { 
 		var xx = x * _s + _x + 1;
 		var yy = y * _s + _y + 1;
-		var hh = h + project.graphDisplay.node_meta_view * 16;
+		var hh = h + (drawDimension != undefined && project.graphDisplay.node_meta_view) * 16;
 		
 		preview_mx = _mx;
 		preview_my = _my;

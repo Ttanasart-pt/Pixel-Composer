@@ -212,7 +212,7 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		draw_sprite_stretched_add(bg_spr, 1, x0, y0, _dw, _dh, color, bg_spr_add);
 	}
 	
-	static drawNodeFG = function(_x, _y, _mx, _my, _s, _dparam, _panel = noone) {
+	static drawNodeFG = function(_x, _y, _mx, _my, _s, _panel = noone) {
 		if(draw_x1 - draw_x0 < 4) return;
 		
 		var _w  = draw_x1 - draw_x0;
@@ -256,7 +256,7 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		drawBadge(_x, _y, _s);
 	}
 	
-	static drawNodeBG = function(_x, _y, _mx, _my, _s, _dparam, _panel = noone) {
+	static drawNodeBG = function(_x, _y, _mx, _my, _s, _panel = noone) {
 		if(size_dragging) {
 			var _dx = (mouse_mx - size_dragging_mx) / _s;
 			var _dy = (mouse_my - size_dragging_my) / _s;
@@ -303,18 +303,18 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		attributes.w = w;
 		attributes.h = h;
 		
-		var xx = x * _s + _x;
-		var yy = y * _s + _y;
-		drawNodeBase(xx, yy, _s, _panel);
+		var x0 = x * _s + _x;
+		var y0 = y * _s + _y;
+		drawNodeBase(x0, y0, _s, _panel);
 		
-		var x1  = xx + w * _s;
-		var y1  = yy + h * _s;
+		var x1  = x0 + w * _s;
+		var y1  = y0 + h * _s;
 		var ics = 0.5;
 		var shf = 8 * ics;
 		
-		if(w * _s < 32 || h * _s < 32) return point_in_rectangle(_mx, _my, xx, yy, x1, y1);
+		if(w * _s < 32 || h * _s < 32) return point_in_rectangle(_mx, _my, x0, y0, x1, y1);
 		
-		var hov = _panel != noone && point_in_rectangle(_mx, _my, xx, yy, x1, y1);
+		var hov = _panel != noone && point_in_rectangle(_mx, _my, x0, y0, x1, y1);
 		if(!hov) return false;
 		
 		var _aa = .15;
@@ -322,9 +322,9 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var _hh = 0;
 		
 		if(!name_hover) {
-			if(point_in_rectangle(_mx, _my, xx, yy, xx + _sz, yy + _sz)) _hh = 1;
-			if(point_in_rectangle(_mx, _my, xx, y1 - _sz, xx + _sz, y1)) _hh = 2;
-			if(point_in_rectangle(_mx, _my, x1 - _sz, yy, x1, yy + _sz)) _hh = 3;
+			if(point_in_rectangle(_mx, _my, x0, y0, x0 + _sz, y0 + _sz)) _hh = 1;
+			if(point_in_rectangle(_mx, _my, x0, y1 - _sz, x0 + _sz, y1)) _hh = 2;
+			if(point_in_rectangle(_mx, _my, x1 - _sz, y0, x1, y0 + _sz)) _hh = 3;
 			if(point_in_rectangle(_mx, _my, x1 - _sz, y1 - _sz, x1, y1)) _hh = 4;
 		}
 		
@@ -341,9 +341,9 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			}
 		}
 		
-		if(_hh == 1 || size_dragging == 1) draw_sprite_ext_add(THEME.node_resize, 0, xx + shf, yy + shf, ics, ics, 180, c_white, .25);
-		if(_hh == 2 || size_dragging == 2) draw_sprite_ext_add(THEME.node_resize, 0, xx + shf, y1 - shf, ics, ics, 270, c_white, .25);
-		if(_hh == 3 || size_dragging == 3) draw_sprite_ext_add(THEME.node_resize, 0, x1 - shf, yy + shf, ics, ics,  90, c_white, .25);
+		if(_hh == 1 || size_dragging == 1) draw_sprite_ext_add(THEME.node_resize, 0, x0 + shf, y0 + shf, ics, ics, 180, c_white, .25);
+		if(_hh == 2 || size_dragging == 2) draw_sprite_ext_add(THEME.node_resize, 0, x0 + shf, y1 - shf, ics, ics, 270, c_white, .25);
+		if(_hh == 3 || size_dragging == 3) draw_sprite_ext_add(THEME.node_resize, 0, x1 - shf, y0 + shf, ics, ics,  90, c_white, .25);
 		if(_hh == 4 || size_dragging == 4) draw_sprite_ext_add(THEME.node_resize, 0, x1 - shf, y1 - shf, ics, ics,   0, c_white, .25);
 		
 		return true;
@@ -360,6 +360,8 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		return hover;
 	}
 
+	static drawDimension = undefined
+	
 	////- Serialize
 	
 	static postApplyDeserialize = function() { 

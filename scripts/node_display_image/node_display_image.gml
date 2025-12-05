@@ -138,4 +138,7 @@ function Node_Display_Image(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 		return noone;
 	}
+	
+	static drawDimension = undefined
+	
 }
