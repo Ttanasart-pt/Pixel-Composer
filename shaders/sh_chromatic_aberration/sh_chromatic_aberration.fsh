@@ -1,3 +1,134 @@
+#pragma use(curve)
+
+#region -- curve -- [1742009781.2228172]
+
+    #ifdef _YY_HLSL11_ 
+        #define CURVE_MAX  512
+    #else 
+        #define CURVE_MAX  256
+    #endif
+
+    uniform int   curve_offset;
+
+    float eval_curve_segment_t(in float _y0, in float ax0, in float ay0, in float bx1, in float by1, in float _y1, in float prog) {
+        float p = prog;
+        float i = 1. - p;
+        
+        return _y0 *      i*i*i + 
+            ay0 * 3. * i*i*p + 
+            by1 * 3. * i*p*p + 
+            _y1 *      p*p*p;
+    }
+
+    float eval_curve_segment_x(in float _y0, in float ax0, in float ay0, in float bx1, in float by1, in float _y1, in float _x) {
+        float st = 0.;
+        float ed = 1.;
+        float _prec = 0.0001;
+        
+        float _xt = _x;
+        int _binRep = 8;
+        
+        if(_x <= 0.) return _y0;
+        if(_x >= 1.) return _y1;
+        if(_y0 == ay0 && _y0 == by1 && _y0 == _y1) return _y0;
+        
+        for(int i = 0; i < _binRep; i++) {
+            float _ftx = 3. * pow(1. - _xt, 2.) * _xt * ax0 
+                    + 3. * (1. - _xt) * pow(_xt, 2.) * bx1
+                    + pow(_xt, 3.);
+            
+            if(abs(_ftx - _x) < _prec)
+                return eval_curve_segment_t(_y0, ax0, ay0, bx1, by1, _y1, _xt);
+            
+            if(_xt < _x) st = _xt;
+            else		 ed = _xt;
+            
+            _xt = (st + ed) / 2.;
+        }
+        
+        int _newRep = 16;
+        
+        for(int i = 0; i < _newRep; i++) {
+            float slope = (  9. * ax0 - 9. * bx1 + 3.) * _xt * _xt
+                        + (-12. * ax0 + 6. * bx1) * _xt
+                        +    3. * ax0;
+            float _ftx = 3. * pow(1. - _xt, 2.) * _xt * ax0 
+                    + 3. * (1. - _xt) * pow(_xt, 2.) * bx1
+                    + pow(_xt, 3.)
+                    - _x;
+            
+            _xt -= _ftx / slope;
+            
+            if(abs(_ftx) < _prec)
+                break;
+        }
+        
+        _xt = clamp(_xt, 0., 1.);
+        return eval_curve_segment_t(_y0, ax0, ay0, bx1, by1, _y1, _xt);
+    }
+
+    float curveEval(in float[CURVE_MAX] curve, in int amo, in float _x) {
+        
+        int   _segs  = (amo - curve_offset) / 6 - 1;
+        float _shift = curve[0];
+        float _scale = curve[1];
+        float _type  = curve[2];
+        
+        _x = _x / _scale - _shift;
+        _x = clamp(_x, 0., 1.);
+        
+        if(_type == 0.) {
+            for( int i = 0; i < _segs; i++ ) {
+                int ind    = curve_offset + i * 6;
+                float _x0  = curve[ind + 2];
+                float _y0  = curve[ind + 3];
+                float _x1  = curve[ind + 6 + 2];
+                float _y1  = curve[ind + 6 + 3];
+
+                float _dx0 = curve[ind + 4];
+                float _dy0 = curve[ind + 5];
+                float _dx1 = curve[ind + 6 + 0];
+                float _dy1 = curve[ind + 6 + 1];
+
+                if(abs(_dx0) + abs(_dx1) > 1.) {
+                    float _total = abs(_dx0) + abs(_dx1);
+                    _dx0 /= _total;
+                    _dx1 /= _total;
+                }
+
+                float ax0  = _x0 + _dx0;
+                float ay0  = _y0 + _dy0;
+                float bx1  = _x1 + _dx1;
+                float by1  = _y1 + _dy1;
+                
+                if(_x < _x0) continue;
+                if(_x > _x1) continue;
+
+                float t = (_x - _x0) / (_x1 - _x0);
+                if(curve[ind + 4] == 0. && curve[ind + 5] == 0. && curve[ind + 6 + 0] == 0. && curve[ind + 6 + 1] == 0.)
+                    return mix(_y0, _y1, t);
+                
+                return eval_curve_segment_x(_y0, ax0, ay0, bx1, by1, _y1, t);
+            }
+
+        } else if(_type == 1.) {
+            float y0 = curve[curve_offset + 3];
+
+            for( int i = 0; i < _segs; i++ ) {
+                int ind   = curve_offset + i * 6;
+                float _x0 = curve[ind + 2];
+
+                if(_x < _x0) return y0;
+                y0 = curve[ind + 3];
+            }
+
+            return y0;
+        }
+
+        return curve[amo - 3];
+    }
+
+#endregion -- curve --
 // continuous chromatic aberration
 // by 01000001
 
@@ -129,6 +260,18 @@ uniform vec2      strength;
 uniform int       strengthUseSurf;
 uniform sampler2D strengthSurf;
 
+uniform vec2      chromaShf;
+uniform int       chromaShfUseSurf;
+uniform sampler2D chromaShfSurf;
+
+uniform vec2      chromaSca;
+uniform int       chromaScaUseSurf;
+uniform sampler2D chromaScaSurf;
+
+uniform float     s_curve[CURVE_MAX];
+uniform int       s_curve_use;
+uniform int       s_amount;
+
 float saturate (float x) { return min(1.0, max(0.0,x)); }
 vec3  saturate (vec3  x) { return min(vec3(1.,1.,1.), max(vec3(0.,0.,0.),x)); }
 
@@ -138,11 +281,7 @@ vec3 bump3y(vec3 x, vec3 yoffset) {
 	return y;
 }
 
-vec3 spectral_zucconi6(float w) {
-	// w: [400, 700]
-	// x: [0,   1]
-	float x = saturate((w - 400.0)/ 300.0);
-
+vec3 spectral_zucconi6(float x) {
 	const vec3 c1 = vec3(3.54585104, 2.93225262, 2.41593945);
 	const vec3 x1 = vec3(0.69549072, 0.49228336, 0.27699880);
 	const vec3 y1 = vec3(0.02312639, 0.15225084, 0.52607955);
@@ -171,7 +310,7 @@ vec4 chroma_scaling(vec2 uv, float str, float itns) {
     return mix(cv, res, itns);
 }
 
-vec4 chroma_continuous(vec2 uv, float str, float itns) {
+vec4 chroma_continuous(vec2 uv, float str, float itns, float offset, float scale) {
 	float stp  = resolution;
 	vec2  tx   = 1.0 / dimension;
 	float strr = str / 16. * .2;
@@ -180,9 +319,10 @@ vec4 chroma_continuous(vec2 uv, float str, float itns) {
     vec4  cv   = sampleTexture(gm_BaseTexture, uv);
     
     for (float i = 0.; i <= 1.; i += 1. / stp) {
-    	vec4 sam = sampleTexture(gm_BaseTexture, uv - cuv * strr * i, i); 
+    	float str = s_curve_use == 1? curveEval(s_curve, s_amount, i) : 1.;
+    	vec4  sam = sampleTexture(gm_BaseTexture, uv - cuv * strr * i * str, i); 
     	sam.rgb *= sam.a;
-        o += pow(sam.rgb, vec3(2.2)) * spectral_zucconi6(400. + i * 300.);
+        o += pow(sam.rgb, vec3(2.2)) * spectral_zucconi6(fract(i * scale + offset));
     }
     
     o /= stp * vec3(.386, .372, .23);
@@ -205,8 +345,20 @@ void main() {
 		itns = mix(intensity.x, intensity.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 	}
 	
+	float chrO = chromaShf.x;
+	if(chromaShfUseSurf == 1) {
+		vec4 _vMap = sampleTexture( chromaShfSurf, v_vTexcoord );
+		chrO = mix(chromaShf.x, chromaShf.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	}
+	
+	float chrS = chromaSca.x;
+	if(chromaScaUseSurf == 1) {
+		vec4 _vMap = sampleTexture( chromaScaSurf, v_vTexcoord );
+		chrS = mix(chromaSca.x, chromaSca.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	}
+	
 	gl_FragColor = vec4(0.);
 	
 	if(type == 0) gl_FragColor = chroma_scaling(v_vTexcoord, str, itns);
-	if(type == 1) gl_FragColor = chroma_continuous(v_vTexcoord, str, itns);
+	if(type == 1) gl_FragColor = chroma_continuous(v_vTexcoord, str, itns, chrO, chrS);
 }

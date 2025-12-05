@@ -34,27 +34,39 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(1, nodeValue_Vec2( "Origin", [ 0, 0] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	newInput(6, nodeValue_Vec2( "Focus",  [.5,.5] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	
-	////- =Render
-	newInput(3, nodeValue_Float( "Scale", 1 ))
-	newInput(4, nodeValue_Slider("Alpha", 1 ));
-	
 	////- =Flare
 	newInput(5, nodeValue_Struct("Flares", [
-		new __FlarePart( FLARE_TYPE.circle,   0,  8,   0.75, 16, false, , [ 0,  1 ] ),
-		new __FlarePart( FLARE_TYPE.circle,   0, 16,   0.5,  16, false, , [ 0,  1 ] ),
+		new __FlarePart( FLARE_TYPE.circle,   0,  8,   0.75, 32, false, , [ 0,  1 ] ),
+		new __FlarePart( FLARE_TYPE.circle,   0, 16,   0.5,  32, false, , [ 0,  1 ] ),
 		new __FlarePart( FLARE_TYPE.star,     0, 14,   0.3,   8, true,  , [.2, .8 ], 2, 0.85 ),
-		new __FlarePart( FLARE_TYPE.ring,     0,  6,   0.25, 16, false, , [ 0, .5 ], 1, 1, [ 1, .1 ] ),
+		new __FlarePart( FLARE_TYPE.ring,     0,  6,   0.25, 32, false, , [ 0, .5 ], 1, 1, [ 1, .1 ] ),
 		
-		new __FlarePart( FLARE_TYPE.circle, 0.7,  2,   0.6,  16, false, , [ 0, .25] ),
+		new __FlarePart( FLARE_TYPE.circle, 0.7,  2,   0.6,  32, false, , [ 0, .25] ),
 		new __FlarePart( FLARE_TYPE.circle, 0.9,  2,   0.6,   6, false, , [ 0, .5 ] ),
 		new __FlarePart( FLARE_TYPE.circle, 1.2,  0.5, 0.5,   4, false, , [ 0,  0 ] ),
 												  			 
-		new __FlarePart( FLARE_TYPE.circle, 1.5,  5,   0.6,  16, false, , [ 0, .7 ] ),
+		new __FlarePart( FLARE_TYPE.circle, 1.5,  5,   0.6,  32, false, , [ 0, .7 ] ),
 		new __FlarePart( FLARE_TYPE.circle, 1.6,  3,   0.4,   6, false, , [ 0,  0 ] ),
-		new __FlarePart( FLARE_TYPE.ring,   1.9,  4,   0.5,  16, false, , [ 0,  0 ], 1, 1, [ 1, 0 ] ),
-		new __FlarePart( FLARE_TYPE.circle, 1.9,  3,   0.5,  16, false, , [ 0, .5 ] ),
+		new __FlarePart( FLARE_TYPE.ring,   1.9,  4,   0.5,  32, false, , [ 0,  0 ], 1, 1, [ 1, 0 ] ),
+		new __FlarePart( FLARE_TYPE.circle, 1.9,  3,   0.5,  32, false, , [ 0, .5 ] ),
 	])).setArrayDepth(1).setArrayDynamic();
-	// 8
+	
+	////- =Blending
+	newInput( 3, nodeValue_Float(  "Scale",     1     ))
+	newInput( 9, nodeValue_Float(  "Intensity", 1     ))
+	newInput( 4, nodeValue_Slider( "Alpha",     1     ));
+	
+	////- =FXAA
+	newInput( 8, nodeValue_Bool(   "FXAA",          false ));
+	newInput(10, nodeValue_Slider( "FXAA Strength", 1     ));
+	
+	////- =Aberration
+	newInput(11, nodeValue_Bool(   "Aberration",    false ));
+	newInput(12, nodeValue_Float(  "Ab. Strength",  16    ));
+	newInput(13, nodeValue_Slider( "Ab. Intensity", 1     ));
+	newInput(14, nodeValue_Slider( "Shift",         0, [ -1,  1, 0.01] ));
+	newInput(15, nodeValue_Slider( "Scale",         1, [  0, 16, 0.01] ));
+	// 16
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	newOutput(1, nodeValue_Output("Light only",  VALUE_TYPE.surface, noone));
@@ -297,15 +309,17 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	#endregion
 		
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 7, 
-		["Surfaces",  false], 0, 2, 
-		["Positions", false], 1, 6, 
-		["Flare",     false], flare_builder,
-		["Render",	  false], 3, 4, 
+		[ "Surfaces",   false ], 0, 2, 
+		[ "Positions",  false ], 1, 6, 
+		[ "Flare",      false ], flare_builder,
+		[ "Blending",   false ], 3, 9, 4, 
+		[ "FXAA",        true,  8 ], 10, 
+		[ "Aberration",  true, 11 ], 12, 13, 14, 15, 
 	]
 	
 	////- Nodes
 	
-	temp_surface = [ noone ];
+	temp_surface = [ noone, noone, noone ];
 	
 	flares = [];
 	
@@ -317,14 +331,14 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	dir = 0;
 	dis = 0;
 		
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+	static drawOverlay    = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		InputDrawOverlay(inputs[6].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		
 		return w_hovering;
 	}
 	
-	static getDimension = function(arr = 0) {
+	static getDimension   = function(arr = 0) {
 		var _sr = getSingleValue(0, arr);
 		var _dm = getSingleValue(2, arr);
 		
@@ -445,6 +459,11 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				draw_vertex_color(cc, cc, c_white, 1);
 				draw_vertex_color(cc + lengthdir_x(_r , a1), cc + lengthdir_y(_r , a1), c_black, 1);
 				draw_vertex_color(cc + lengthdir_x(_ir, a2), cc + lengthdir_y(_ir, a2), c_grey,  1);
+				
+				if(i && i % 32 == 0) {
+					draw_primitive_end();
+					draw_primitive_begin(pr_trianglelist);
+				}
 			}
 			
 			draw_primitive_end();
@@ -496,15 +515,30 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	}
 	
 	static processData = function(_outData, _data, _array_index) {
-		
-		var _surf   = _data[0];
-		var _origin = _data[1];
-		var _dim    = _data[2];
-		var _sca    = _data[3];
-		var _alp    = _data[4];
-		var _flares = _data[5];
-		var _focus  = _data[6];
-		var _seed   = _data[7];
+		#region data
+			var _flares = _data[5];
+			
+			var _seed   = _data[7];
+			
+			var _surf   = _data[0];
+			var _dim    = _data[2];
+			
+			var _origin = _data[1];
+			var _focus  = _data[6];
+			
+			var _sca    = _data[3];
+			var _ints   = _data[9];
+			var _alp    = _data[4];
+			
+			var _fxaa   = _data[ 8];
+			var _fxaaD  = _data[10];
+			
+			var _abbr    = _data[11];
+			var _abbrS   = _data[12];
+			var _abbrI   = _data[13];
+			var _abbrShf = _data[14];
+			var _abbrSca = _data[15];
+		#endregion
 		
 		var _bg = is_surface(_surf);
 		
@@ -565,6 +599,47 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			BLEND_NORMAL
 		surface_reset_target();
 		
+		if(_fxaa) {
+			temp_surface[1] = surface_verify(temp_surface[1], _sw, _sh);
+			
+			surface_set_shader(temp_surface[1], sh_FXAA);
+				gpu_set_tex_filter(true);
+				shader_set_2("dimension", [_sw, _sh] );
+				shader_set_f("cornerDis", _fxaaD     );
+				shader_set_f("mixAmo",    1          );
+				
+				draw_surface_safe(flareSurf);
+				gpu_set_tex_filter(false);
+			surface_reset_shader();
+			
+			flareSurf = temp_surface[1];
+		}
+		
+		if(_abbr) {
+			temp_surface[2] = surface_verify(temp_surface[2], _sw, _sh);
+			
+			surface_set_shader(temp_surface[2], sh_chromatic_aberration);
+				gpu_set_tex_filter(true);
+				shader_set_interpolation(flareSurf);
+				shader_set_uv(noone);
+				
+				shader_set_2("dimension",     [_sw,_sh] );
+				shader_set_f("resolution",    64        );
+				shader_set_i("type",          1         );
+				shader_set_2("center",        _focus    );
+				shader_set_f_map("strength",  _abbrS    );
+				shader_set_f_map("intensity", _abbrI    );
+				shader_set_f_map("chromaShf", _abbrShf  );
+				shader_set_f_map("chromaSca", _abbrSca  );
+				shader_set_i("s_curve_use",   0         );
+				
+				draw_surface_safe(flareSurf);
+				gpu_set_tex_filter(false);
+			surface_reset_shader();
+			
+			flareSurf = temp_surface[2];
+		}
+		
 		surface_set_target(_outSurf);
 			if(_bg) {
 				draw_clear_alpha(c_black, 0);
@@ -573,9 +648,12 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			} else 
 				draw_clear_alpha(c_black, 1);
 			
-			BLEND_ADD
-			draw_surface_safe(flareSurf);
-			BLEND_NORMAL
+			shader_set(sh_mk_flare_multiply);
+				shader_set_f("intensity", _ints);
+				BLEND_ADD
+				draw_surface_safe(flareSurf);
+				BLEND_NORMAL
+			shader_reset();
 		surface_reset_target();
 		
 		return _outData;

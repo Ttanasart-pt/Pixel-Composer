@@ -57,21 +57,15 @@ function Node_FXAA(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		_outData[0] = surface_verify(_outData[0], _dim[0], _dim[1]);
 		_outData[1] = surface_verify(_outData[1], _dim[0], _dim[1]);
 		
-		surface_set_target_ext(0, _outData[0]);
-		surface_set_target_ext(1, _outData[1]);
-		shader_set(sh_FXAA);
-		DRAW_CLEAR
-		BLEND_OVERRIDE
-		gpu_set_tex_filter(true);
+		surface_set_shader(_outData, sh_FXAA);
+			gpu_set_tex_filter(true);
 			shader_set_2("dimension", _dim);
 			shader_set_f("cornerDis", _data[2]);
 			shader_set_f("mixAmo",    _data[3]);
 			
 			draw_surface_safe(_data[0]);
-		gpu_set_tex_filter(false);
-		BLEND_NORMAL
-		shader_reset();
-		surface_reset_target();
+			gpu_set_tex_filter(false);
+		surface_reset_shader();
 		
 		__process_mask_modifier(_data);
 		_outData[0] = mask_apply(_data[0], _outData[0], _mask, _mix);

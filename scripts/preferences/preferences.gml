@@ -230,7 +230,7 @@
 			
 			show_dimension  : true,
 			show_compute    : true,
-			node_meta_view  : 0, 
+			node_meta_view  : 1, 
 			
 			avoid_label     : false,
 			preview_scale   : 100,
