@@ -650,7 +650,13 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	static deserialize = function(_data, scale = false) {
 		values = [];
 		
-		if(is_struct(_data)) _data = [ [ 0, _data.d ] ];
+		if(is_struct(_data)) {
+			var _defval = prop.def_val;
+			var _datval = _data.d;
+			
+			_data = [ [ 0, _datval ] ];
+			if(prop.is_modified && isEqual(_defval, _datval)) prop.is_modified = false;
+		}
 		
 		if(prop.type == VALUE_TYPE.gradient && LOADING_VERSION < 1340 && !CLONING) { //backward compat: Gradient
 			var _val = [];

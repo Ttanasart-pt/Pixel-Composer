@@ -260,15 +260,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		getPreviewingNode = function() /*=>*/ {return self};
 		
-		preview_value = 0;
-		preview_array = "";
-		
 		w_hovering  = false;
 		w_hoverable = false;
 		w_active    = false;
 		
 		inspector_scroll   = 0;
 		inspector_collapse = {};
+		inspector_edited   = {};
 		
 		reactive_on_hover  = false;
 	#endregion
@@ -2245,7 +2243,23 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static getNodeDimension = function() {
-		if(!preview_is_surface) return preview_array;
+		if(!preview_is_surface) {
+			var otp = array_safe_get_fast(outputs, preview_channel);
+			if(!is(otp, NodeValue)) return "";
+			
+			var txt = "";
+			var val = otp.getValue();
+			var pnt = val;
+			
+			if(!is_array(pnt)) return "1";
+			while(is_array(pnt)) {
+				if(txt != "") txt += " x ";
+				txt += string(array_length(pnt));
+				pnt  = array_safe_get(pnt, 0);
+			}
+			
+			return $"[{txt}]";
+		}
 		
 		var pw = surface_get_width_safe(preview_surface);
 		var ph = surface_get_height_safe(preview_surface);

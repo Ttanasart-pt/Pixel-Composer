@@ -676,8 +676,10 @@ function Panel_Inspector() : PanelContent() constructor {
         var pickers = [];
         var _colsp  = false;
         var _colMap = _inspecting.inspector_collapse;
+        var _edtMap = _inspecting.inspector_edited;
         var _cAll   = 0;
         
+        var currSec = "";
         var padd    = ui(6);
         
         for(var i = 0; i < amo; i++) {
@@ -782,6 +784,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 _colsp   = false;
                 var _key = array_safe_get_fast(jun, 0, "");
                 var coll = _colMap[$ _key] ?? array_safe_get_fast(jun, 1, false);
+                currSec  = _key;
                 
                 var fnt = viewMode == INSP_VIEW_MODE.spacious? f_p1 : f_p3;
                 var lbh = viewMode == INSP_VIEW_MODE.spacious? ui(26) : ui(22);
@@ -861,35 +864,48 @@ function Panel_Inspector() : PanelContent() constructor {
                 }
                 
                 var ltx = lbx + ui(32);
+                var edt = _edtMap[$ _key] ?? 0;
                 
                 draw_set_text(fnt, fa_left, fa_center, COLORS._main_text, aa);
                 draw_text_add(ltx, yy + lbh / 2, __txt(_key));
                 draw_set_alpha(1);
                 
+                if(edt > 0) {
+                	draw_set_color(COLORS._main_text_sub);
+                	draw_text_add(ltx + string_width(__txt(_key)) + ui(4), yy + lbh / 2, $"[{edt}*]");
+                }
+                
                 hh += lbh + padd;
+                _edtMap[$ _key] = 0;
                 
                 if(!filtering && coll) { // skip 
                     _colsp   = true;
                     var j    = i + 1;
                     var _len = array_length(_inspecting.input_display_list);
+                    var _edt = 0;
                     
                     while(j < _len) {
                         var j_jun = _inspecting.input_display_list[j];
                         if(is_array(j_jun)) break;
                         if(is(j_jun, Inspector_Spacer) && !j_jun.coll) break;
                         
+                        jun = array_safe_get_fast(_inspecting.inputs, j_jun)
+                        if(is(jun, NodeValue) && jun.show_in_inspector && jun.is_modified) _edt++;
+                        
                         j++;
                     }
                     
                     i = j - 1;
+                    _edtMap[$ _key] = _edt;
                 }
                 
                 continue;
             }
         	
             if(!is(jun, NodeValue)) continue;
-            
             if(!jun.show_in_inspector) continue;
+            
+            if(currSec != "" && jun.is_modified) _edtMap[$ currSec]++;
             if(filtering && filter_text != "") {
                 var pos = string_pos(string_lower(filter_text), string_lower(jun.getName()));
                 if(pos == 0) continue;

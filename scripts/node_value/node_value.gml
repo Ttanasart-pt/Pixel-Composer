@@ -399,6 +399,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		unit.mode = def_unit;
 		setValue(unit.apply(variable_clone(def_val))); 
+		is_modified       = false;
 		attributes.mapped = false;
 	}
 	
@@ -1814,6 +1815,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(!_upd) return false; /////////////////////////////////////////////////////////////////////////////////
 		
+		edited = true;
+		
 		if(is(self, __NodeValue_Dimension)) 
 			attributes.use_project_dimension = false;
 		
@@ -2632,7 +2635,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		draw_line_shift_x = _map[$ "shift_x"]     ??  0;
 		draw_line_shift_y = _map[$ "shift_y"]     ??  0;
 		draw_line_shift_e = _map[$ "shift_e"]     ?? -1;
-		is_modified       = true;
+		is_modified       = false;
 		if(has(_map, "m"))           is_modified = bool(_map.m);
 		if(has(_map, "is_modified")) is_modified = bool(_map.is_modified);
 		

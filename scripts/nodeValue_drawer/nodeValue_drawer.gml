@@ -157,6 +157,11 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	
 	#region draw name
 		draw_text_add(lb_x, lb_y, dispName);
+		if(jun.connect_type == CONNECT_TYPE.input && jun.is_modified) {
+			draw_set_color(COLORS._main_accent);
+			draw_text_add(lb_x + string_width(dispName), lb_y, "*");
+		}
+		
 		var _tip = jun.tooltip;
 				
 		if(_tip != "") { // Tooltip
