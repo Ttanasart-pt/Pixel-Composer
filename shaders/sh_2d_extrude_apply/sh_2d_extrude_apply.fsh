@@ -1,24 +1,6 @@
-varying vec2 v_vTexcoord;
-varying vec4 v_vColour;
+#pragma use(gradient)
 
-uniform sampler2D extrudeMap;
-uniform vec2  dimension;
-uniform vec2  depth;
-
-uniform float angle;
-uniform float extDistance;
-uniform float shift;
-
-uniform int   cloneColor;
-uniform int   wrap;
-
-uniform int   highlight;
-uniform vec4  highlightColor;
-
-uniform sampler2D mask;
-uniform int    useMask;
-
-#region //////////////////////////////////// GRADIENT ////////////////////////////////////
+#region -- gradient -- [1764901316.7213297]
 	#define GRADIENT_LIMIT 128
 	
 	uniform int		  gradient_blend;
@@ -148,7 +130,27 @@ uniform int    useMask;
 		return gradient_color[gradient_keys - 1];
 	}
 	
-#endregion //////////////////////////////////// GRADIENT ////////////////////////////////////
+#endregion -- gradient --
+
+varying vec2 v_vTexcoord;
+varying vec4 v_vColour;
+
+uniform sampler2D extrudeMap;
+uniform vec2  dimension;
+uniform vec2  depth;
+
+uniform float angle;
+uniform float extDistance;
+uniform float shift;
+
+uniform int   cloneColor;
+uniform int   wrap;
+
+uniform int   highlight;
+uniform vec4  highlightColor;
+
+uniform sampler2D mask;
+uniform int    useMask;
 
 void main() {
 	vec2 tx  = 1. / dimension;

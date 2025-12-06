@@ -1,42 +1,15 @@
-//Inigo Quilez 
-//Oh where would I be without you.
+#pragma use(gradient)
 
-varying vec2 v_vTexcoord;
-varying vec4 v_vColour;
-
-const int MAX_MARCHING_STEPS = 200;
-const float EPSILON = 1e-6;
-const float PI = 3.14159265358979323846;
-
-uniform vec2  dimension;
-
-uniform vec3  position;
-uniform vec3  rotation;
-uniform float objectScale;
-
-uniform float fov;
-uniform vec2  viewRange;
-
-uniform int   type;
-uniform float density;
-uniform int   iteration;
-uniform float threshold;
-
-uniform int   adaptiveIteration;
-uniform int   fogUse;
-uniform float detailScale;
-uniform float detailAtten;
-
-mat3 rotMatrix, irotMatrix;
-vec3 eye, dir;
-
-#region //////////////////////////////////// GRADIENT ////////////////////////////////////
+#region -- gradient -- [1764901316.7213297]
 	#define GRADIENT_LIMIT 128
 	
 	uniform int		  gradient_blend;
 	uniform vec4	  gradient_color[GRADIENT_LIMIT];
 	uniform float	  gradient_time[GRADIENT_LIMIT];
 	uniform int		  gradient_keys;
+	uniform int       gradient_use_map;
+	uniform vec4      gradient_map_range;
+	uniform sampler2D gradient_map;
 
 	vec3 linearToGamma(vec3 c) { return pow(c, vec3(     2.2)); }
 	vec3 gammaToLinear(vec3 c) { return pow(c, vec3(1. / 2.2)); }
@@ -114,15 +87,18 @@ vec3 eye, dir;
 	}
 
 	vec4 gradientEval(in float prog) {
-		vec4 col = vec4(0.);
-	
+		if(gradient_use_map == 1) {
+			vec2 samplePos = mix(gradient_map_range.xy, gradient_map_range.zw, prog);
+			return texture2D( gradient_map, samplePos );
+		}
+		
 		for(int i = 0; i < GRADIENT_LIMIT; i++) {
 			if(gradient_time[i] == prog) {
-				col = gradient_color[i];
-				break;
+				return gradient_color[i];
+				
 			} else if(gradient_time[i] > prog) {
 				if(i == 0) 
-					col = gradient_color[i];
+					return gradient_color[i];
 				else {
 					float t  = (prog - gradient_time[i - 1]) / (gradient_time[i] - gradient_time[i - 1]);
 					vec3  c0 = gradient_color[i - 1].rgb;
@@ -130,32 +106,63 @@ vec3 eye, dir;
 					float a  = mix(gradient_color[i - 1].a, gradient_color[i].a, t);
 					
 					if(gradient_blend == 0)
-						col = vec4(mix(c0, c1, t), a);
+						return vec4(mix(c0, c1, t), a);
 						
 					else if(gradient_blend == 1)
-						col = gradient_color[i - 1];
+						return gradient_color[i - 1];
 						
 					else if(gradient_blend == 2)
-						col = vec4(hsvMix(c0, c1, t), a);
+						return vec4(hsvMix(c0, c1, t), a);
 						
 					else if(gradient_blend == 3)
-						col = vec4(oklabMax(c0, c1, t), a);
+						return vec4(oklabMax(c0, c1, t), a);
 					
 					else if(gradient_blend == 4)
-						col = vec4(rgbMix(c0, c1, t), a);
+						return vec4(rgbMix(c0, c1, t), a);
 				}
 				break;
 			}
-			if(i >= gradient_keys - 1) {
-				col = gradient_color[gradient_keys - 1];
-				break;
-			}
+			
+			if(i >= gradient_keys - 1)
+				return gradient_color[gradient_keys - 1];
 		}
 	
-		return col;
+		return gradient_color[gradient_keys - 1];
 	}
 	
-#endregion //////////////////////////////////// GRADIENT ////////////////////////////////////
+#endregion -- gradient --
+
+//Inigo Quilez 
+//Oh where would I be without you.
+
+varying vec2 v_vTexcoord;
+varying vec4 v_vColour;
+
+const int MAX_MARCHING_STEPS = 200;
+const float EPSILON = 1e-6;
+const float PI = 3.14159265358979323846;
+
+uniform vec2  dimension;
+
+uniform vec3  position;
+uniform vec3  rotation;
+uniform float objectScale;
+
+uniform float fov;
+uniform vec2  viewRange;
+
+uniform int   type;
+uniform float density;
+uniform int   iteration;
+uniform float threshold;
+
+uniform int   adaptiveIteration;
+uniform int   fogUse;
+uniform float detailScale;
+uniform float detailAtten;
+
+mat3 rotMatrix, irotMatrix;
+vec3 eye, dir;
 
 #region ////========== Transform ============
     mat3 rotateX(float dg) {

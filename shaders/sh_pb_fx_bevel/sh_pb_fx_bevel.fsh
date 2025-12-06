@@ -138,11 +138,11 @@ uniform sampler2D edgeSurf;
 	
 		return col;
 	}
-	
-	vec4 gradientHeightEval(in float prog) { return gradientEval(prog, height_blend, height_color, height_time, height_keys); }
-	vec4 gradientRadiusEval(in float prog) { return gradientEval(prog, radius_blend, radius_color, radius_time, radius_keys); }
-	
+
 #endregion //////////////////////////////////// GRADIENT ////////////////////////////////////
+
+vec4 gradientHeightEval(in float prog) { return gradientEval(prog, height_blend, height_color, height_time, height_keys); }
+vec4 gradientRadiusEval(in float prog) { return gradientEval(prog, radius_blend, radius_color, radius_time, radius_keys); }
 
 float val(vec4 v) { return (v.r + v.g + v.b) / 3. * v.a; }
 
