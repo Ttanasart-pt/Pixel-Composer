@@ -74,7 +74,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	////- =Shape
 	shape_types = [ 
 		    "Rectangle", "Diamond", "Trapezoid", "Parallelogram", "Half", 
-		-1, "Ellipse", "Arc", "Donut", "Crescent", "Disk Segment", "Pie", "Squircle", 
+		-1, "Ellipse", "Arc", "Donut", "Crescent", "Disk Segment", "Pie", "Squircle", "Superellipse", 
 		-1, "Regular polygon", "Star", "Cross", "Rounded Cross",  
 		-1, "Line", "Arrow", 
 		-1, "Teardrop", "Leaf", "Heart", "Gear", 
@@ -82,7 +82,10 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	__ind = 0; shape_types_str = array_map(shape_types, function(v, i) /*=>*/ {return v == -1? -1 : new scrollItem(v, s_node_shape_type, __ind++)});
 	
 	newInput( 2, nodeValue_Enum_Scroll(    "Shape",  0, { data: shape_types_str, horizontal: true, text_pad: ui(16) }))
-		.setHistory([ shape_types, { cond: function() /*=>*/ {return LOADING_VERSION < 1_18_00_0}, list: global.node_shape_keys_18 } ]);
+		.setHistory([ shape_types, 
+			{ cond: function() /*=>*/ {return LOADING_VERSION < 1_18_00_0}, list: global.node_shape_keys_18 }, 
+			{ cond: function() /*=>*/ {return LOADING_VERSION < 1_20_01_0}, list: global.node_shape_keys_20 }, 
+		]);
 		
 	newInput(32, nodeValue_Vec2(           "Point 1",       [ 0, 0]   )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
 	newInput(33, nodeValue_Vec2(           "Point 2",       [ 1, 1]   )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
@@ -371,6 +374,16 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 					shader_set_f("squircle_factor", abs(_data[31]));
 					break;
 					
+				case "Superellipse" :	
+					inputs[ 4].setVisible(true);
+					inputs[ 9].setVisible(true);
+					inputs[31].setVisible(true);
+				
+					shader_set_i("shape", 22);
+					shader_set_f("super_factor", abs(_data[31]));
+					shader_set_f("super_sides",  _data[4]);
+					break;
+					
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				
 				case "Regular polygon" :
@@ -546,6 +559,14 @@ global.node_shape_keys_18 = [
 	-1, "Ellipse", "Arc", "Donut", "Crescent", "Disk Segment", "Pie", "Squircle", 
 	-1, "Regular polygon", "Star", "Cross", "Rounded Cross",  
 	-1, "Teardrop", "Leaf", "Heart", "Arrow", "Gear", 
+];
+
+global.node_shape_keys_20 = [ 
+    "Rectangle", "Diamond", "Trapezoid", "Parallelogram", "Half", 
+	-1, "Ellipse", "Arc", "Donut", "Crescent", "Disk Segment", "Pie", "Squircle", 
+	-1, "Regular polygon", "Star", "Cross", "Rounded Cross",  
+	-1, "Line", "Arrow", 
+	-1, "Teardrop", "Leaf", "Heart", "Gear", 
 ];
 
 function Node_Shape_drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 

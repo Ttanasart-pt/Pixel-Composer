@@ -179,6 +179,8 @@ uniform vec2  shear;
 uniform float arrow;
 uniform float arrow_head;
 uniform float squircle_factor;
+uniform float super_factor;
+uniform float super_sides;
 
 uniform vec2  point1;
 uniform vec2  point2;
@@ -278,6 +280,12 @@ float sdRoundBox( in vec2 p, in vec2 b, in vec4 r ) {
 
 float sdCircle(in vec2 p) {
 	return length(p) - 1.;
+}
+
+float sdSuperEllipse(in vec2 p, float f, float s) {
+	float theta = atan(p.y, p.x);
+    float rad   = pow(pow(abs(cos(theta * s / 4.)), f) + pow(abs(sin(theta * s / 4.)), f), -1.0 / f);
+    return length(p) - rad;
 }
 
 float sdBox( in vec2 p, in vec2 b ) {
@@ -527,11 +535,12 @@ void main() {
 	else if(shape == 14) { d = sdCutDisk( 		coord, 1., inner );                                             		                 }
 	else if(shape == 15) { d = sdPie( 			coord, vec2(sin(angle), cos(angle)), angle_range, 1. );                          	     }
 	else if(shape == 16) { d = sdRoundedCross( 	coord, 1. - corner ) - corner;                              			                 }
+	else if(shape == 17) { d = sdArrow(  vtx, p1, p2, thickness, arrow, arrow_head);                               	                     }
 	else if(shape == 18) { d = sdGear(          coord, inner, teeth, teethSize, teethAngle, teethTaper, corner);                         }
 	else if(shape == 19) { d = pow(pow(abs(coord.x), squircle_factor) + pow(abs(coord.y), squircle_factor), 1. / squircle_factor) - 1.;  }
-	else if(shape == 17) { d = sdArrow(  vtx, p1, p2, thickness, arrow, arrow_head);                               	             }
 	else if(shape == 20) { d = sdSegment(center + coordUni, p1, p2) - thickness;                                                         }
-	else if(shape == 21) { d = sdHalf(vtx, p1, -rotation);                                                                       }
+	else if(shape == 21) { d = sdHalf(vtx, p1, -rotation);                                                                               }
+	else if(shape == 22) { d = sdSuperEllipse(coord, super_factor, super_sides) - corner;                                                }
 	
 	float cc;
 	
