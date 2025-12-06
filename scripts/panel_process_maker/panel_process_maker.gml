@@ -288,7 +288,7 @@ function Panel_Process_Maker() : PanelContent() constructor {
 	#endregion
 	
 	sc_prop_start = new scrollPane(1, 1, function(_y, _m) /*=>*/ {
-		draw_clear_alpha(#20202f, 1);
+		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		
 		var _node = track_sel.getNode();
 		var _vals = track_sel.values;
@@ -369,7 +369,7 @@ function Panel_Process_Maker() : PanelContent() constructor {
 	});
 	
 	sc_prop_end = new scrollPane(1, 1, function(_y, _m) /*=>*/ {
-		draw_clear_alpha(#20202f, 1);
+		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		
 		var _node = track_sel.getNode();
 		var _vals = track_sel.values;
@@ -1448,13 +1448,8 @@ function Panel_Process_Maker() : PanelContent() constructor {
 			
 			var tx2 = tx + tw + pd / 2;
 			
-	        draw_sprite_stretched(     THEME.ui_panel_bg, 1, tx, ty, tw, th);
-	        draw_sprite_stretched_ext( THEME.ui_panel_bg, 2, tx, ty, tw, th, CDEF.main_white, 1);
-	        draw_sprite_stretched_add( THEME.ui_panel,    1, tx, ty, tw, th, c_white, .1);
-	        
-	        draw_sprite_stretched(     THEME.ui_panel_bg, 1, tx2, ty, tw, th);
-	        draw_sprite_stretched_ext( THEME.ui_panel_bg, 2, tx2, ty, tw, th, CDEF.main_white, 1);
-	        draw_sprite_stretched_add( THEME.ui_panel,    1, tx2, ty, tw, th, c_white, .1);
+	        draw_sprite_stretched( THEME.ui_panel_bg, 1, tx,  ty, tw, th);
+	        draw_sprite_stretched( THEME.ui_panel_bg, 1, tx2, ty, tw, th);
 	        
 			if(is(track_sel, Process_Anim_Track)) {
 				sc_prop_start.verify(tw - ui(6), th - ui(2));

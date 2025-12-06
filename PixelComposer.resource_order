@@ -1657,6 +1657,7 @@
     {"name":"panel_preview","order":2,"path":"scripts/panel_preview/panel_preview.yy",},
     {"name":"panel_profile_render","order":3,"path":"scripts/panel_profile_render/panel_profile_render.yy",},
     {"name":"panel_project_variables","order":18,"path":"scripts/panel_project_variables/panel_project_variables.yy",},
+    {"name":"panel_randomizer","order":4,"path":"scripts/panel_randomizer/panel_randomizer.yy",},
     {"name":"panel_release_note","order":17,"path":"scripts/panel_release_note/panel_release_note.yy",},
     {"name":"panel_resource_monitor","order":4,"path":"scripts/panel_resource_monitor/panel_resource_monitor.yy",},
     {"name":"panel_rogueTD","order":1,"path":"scripts/panel_rogueTD/panel_rogueTD.yy",},

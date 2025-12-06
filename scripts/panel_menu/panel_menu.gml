@@ -298,6 +298,7 @@ function Panel_Menu() : PanelContent() constructor {
             MENU_ITEMS.file_explorer_panel,
             
             menuItemShelf(__txt("Nodes"), function(_dat) /*=>*/ {return submenuCall(_dat, [
+                MENU_ITEMS.randomizer_panel,
                 MENU_ITEMS.align_panel,
                 MENU_ITEMS.nodes_panel,
                 MENU_ITEMS.tunnels_panel,

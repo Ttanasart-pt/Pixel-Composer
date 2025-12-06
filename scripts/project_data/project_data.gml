@@ -275,9 +275,10 @@ function Project() constructor {
 		} setPalette();
 	#endregion
 	
-	timelines = new timelineItemGroup();
-	trackAnim = new Process_Anim();
-	notes     = [];
+	timelines  = new timelineItemGroup();
+	trackAnim  = new Process_Anim();
+	randomizer = new Project_Randomizer();
+	notes      = [];
 	
 	static stepBegin = function() { 
 		if(immediate_render != undefined) {
@@ -435,6 +436,7 @@ function Project() constructor {
 		_map.timelines   = timelines.serialize();
 		_map.notes       = array_map(notes,  function(n) /*=>*/ {return n.serialize()} );
 		_map.trackAnim   = trackAnim.serialize();
+		_map.randomizer  = randomizer.serialize();
 		
 		_map.composer    = composer;
 		_map.load_layout = load_layout;
@@ -507,7 +509,8 @@ function Project() constructor {
 				notes[i] = new Note().deserialize(_map.notes[i]);
 		}
 		
-		if(has(_map, "trackAnim")) trackAnim = new Process_Anim().deserialize(_map.trackAnim);
+		if(has(_map, "trackAnim"))  trackAnim  = new Process_Anim().deserialize(_map.trackAnim);
+		if(has(_map, "randomizer")) randomizer = new Project_Randomizer().deserialize(_map.randomizer);
 		
 		globalNode = new Node_Global();
 		globalNode.project = self;

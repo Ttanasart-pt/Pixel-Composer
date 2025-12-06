@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"panel_randomizer",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"panel_randomizer",
+  "parent":{
+    "name":"nodes",
+    "path":"folders/panels/nodes.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

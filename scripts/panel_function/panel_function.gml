@@ -495,6 +495,8 @@
 	function call_panel_Inspector()         { panelAdd("Panel_Inspector", 		    true);      }
 	function call_panel_Workspace()         { panelAdd("Panel_Workspace", 		    true);      }
 	function call_panel_Animation()         { panelAdd("Panel_Animation", 		    true);      }
+	
+	function call_panel_Randomizer()        { panelAdd("Panel_Randomizer",		    true);      }
 	function call_panel_Node_Align()        { panelAdd("Panel_Node_Align",		    true);      }
 	function call_panel_Nodes()             { panelAdd("Panel_Nodes", 			    true);      }
 	function call_panel_Tunnels()           { panelAdd("Panel_Tunnels",			    true);      }
@@ -531,6 +533,7 @@
         registerFunction("", "Workspace Panel",           "", MOD_KEY.none, call_panel_Workspace              ).setMenuAlt("Workspace",    "workspace_panel")
         registerFunction("", "Animation Panel",           "", MOD_KEY.none, call_panel_Animation              ).setMenuAlt("Animation",    "animation_panel")
         
+        registerFunction("", "Randomizer Panel",          "", MOD_KEY.none, call_panel_Randomizer             ).setMenuAlt("Randomizer",   "randomizer_panel")
         registerFunction("", "Align Panel",               "", MOD_KEY.none, call_panel_Node_Align             ).setMenuAlt("Align",        "align_panel")
         registerFunction("", "Nodes Panel",               "", MOD_KEY.none, call_panel_Nodes                  ).setMenuAlt("Nodes",        "nodes_panel")
         registerFunction("", "Tunnels Panel",             "", MOD_KEY.none, call_panel_Tunnels                ).setMenuAlt("Tunnels",      "tunnels_panel")

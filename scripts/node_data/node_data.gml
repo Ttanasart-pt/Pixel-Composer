@@ -1419,6 +1419,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	////- DRAW
 	
+	static showMeta = function() { 
+		var d = project.graphDisplay;
+		return drawDimension != undefined && d.node_meta_view && (d.show_dimension || d.show_compute); 
+	} 
+	
 	static setHeight = function() {
 		w = attributes.node_width? attributes.node_width : min_w;
 		if(SHOW_PARAM) w = attributes.node_param_width;
@@ -1509,7 +1514,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static pointIn = function(_x, _y, _mx, _my, _s) {
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
-		var hh = h + project.graphDisplay.node_meta_view * 16;
+		var hh = h + showMeta() * 16;
 		
 		return point_in_rectangle(_mx, _my, xx, yy, xx + w * _s, yy + hh * _s);
 	}
@@ -1759,7 +1764,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static drawNodeBase = function(xx, yy, _s) { 
 		var cc = colorMultiply(getColor(), COLORS.node_base_bg);
 		var aa = .75 * (.25 + .75 * isHighlightingInGraph());
-		var hh = h + (drawDimension != undefined && project.graphDisplay.node_meta_view) * 16;
+		var hh = h + showMeta() * 16;
 		
 		draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, hh * _s, cc, aa); 
 	}
@@ -2239,24 +2244,24 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		draw_surface_ext(preview_surface, bbox.xc - _sw * _ss / 2, bbox.yc - _sh * _ss / 2, _ss, _ss, 0, c_white, 1);
 	}
 	
-	static getNodeDimension = function(showFormat = true) {
+	static getNodeDimension = function() {
 		if(!preview_is_surface) return preview_array;
 		
 		var pw = surface_get_width_safe(preview_surface);
 		var ph = surface_get_height_safe(preview_surface);
-		var format = surface_get_format_safe(preview_surface);
+		var fr = surface_get_format_safe(preview_surface);
 		
 		var txt = $"[{pw} x {ph}";
 		if(preview_amount) txt = $"{preview_amount} x {txt}";
 		
-		switch(format) {
+		switch(fr) {
 			case surface_rgba8unorm	 : break;
-			case surface_rgba4unorm	 : txt += showFormat? " 4RGBA"	: " 4R";  break;
-			case surface_rgba16float : txt += showFormat? " 16RGBA"	: " 16R"; break;
-			case surface_rgba32float : txt += showFormat? " 32RGBA"	: " 32R"; break;
-			case surface_r8unorm	 : txt += showFormat? " 8BW"	: " 8B";  break;
-			case surface_r16float	 : txt += showFormat? " 16BW"	: " 16B"; break;
-			case surface_r32float	 : txt += showFormat? " 32BW"	: " 32B"; break;
+			case surface_rgba4unorm  : txt += " 4RGBA";  break;
+			case surface_rgba16float : txt += " 16RGBA"; break;
+			case surface_rgba32float : txt += " 32RGBA"; break;
+			case surface_r8unorm     : txt += " 8BW";    break;
+			case surface_r16float    : txt += " 16BW";   break;
+			case surface_r32float    : txt += " 32BW";   break;
 		}
 		
 		txt += "]";
@@ -2274,7 +2279,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		var ty = yy + (h + 2) * _s;
 		
 		var hh = line_get_height() * ts;
-		var vv = project.graphDisplay.node_meta_view;
+		var vv = showMeta();
 		BLEND_ALPHA_MULP
 		
 		if(vv) {
@@ -2286,7 +2291,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		if(project.graphDisplay.show_dimension) {
 			draw_set_color(COLORS.panel_graph_node_dimension);
-			var txt = string(getNodeDimension(_s > 0.65));
+			var txt = string(getNodeDimension());
 			
 			if(vv) {
 				draw_set_halign(fa_left);
@@ -2358,7 +2363,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	static drawNode   = function(_draw, _x, _y, _mx, _my, _s, _panel = noone) { 
 		var xx = x * _s + _x + 1;
 		var yy = y * _s + _y + 1;
-		var hh = h + (drawDimension != undefined && project.graphDisplay.node_meta_view) * 16;
+		var hh = h + showMeta() * 16;
 		
 		preview_mx = _mx;
 		preview_my = _my;

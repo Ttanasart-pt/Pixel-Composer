@@ -389,7 +389,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static drawNodeBase = function(xx, yy, _s) {
-		var hh = h + project.graphDisplay.node_meta_view * 16;
+		var hh = h + showMeta() * 16;
 		var cc = colorMultiply(getColor(), COLORS.node_base_bg);
 		var hv = PANEL_GRAPH.pHOVER && PANEL_GRAPH.node_hovering == self && (!PREFERENCES.panel_graph_group_require_shift || key_mod_press(SHIFT));
 		var aa = (.25 + .5 * renderActive) * (.25 + .75 * isHighlightingInGraph()) + hv * 0.1;
