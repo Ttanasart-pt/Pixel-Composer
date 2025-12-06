@@ -208,6 +208,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	render_process_batch = [];
 	render_process_batch_merge = "";
 	
+	current_format    = "";
 	render_type       = "";
 	render_target     = "";
 	exportLog         = true;
@@ -718,13 +719,11 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	static renderStarted = function() {
+		var scal        = getInputData(19);
+		gif_frames      = 0;
 		use_gif_encoder = false;
 		
-		var extd   = getInputData( 9);
-		var scal   = getInputData(19);
-		gif_frames = 0;
-		
-		if(format_animation[extd] == ".gif") {
+		if(current_format == ".gif") {
 			var _build_in_gif = getInputData(17);
 			if(!_build_in_gif) return;
 			
@@ -814,6 +813,14 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(path == "") { noti_warning("Export: Path is empty"); return; }
 		
 		var form = getInputData(3);
+		var extd = getInputData(9);
+		
+		switch(form) {
+			case NODE_EXPORT_FORMAT.single    : current_format = format_image[extd];     break;
+			case NODE_EXPORT_FORMAT.sequence  : current_format = format_image[extd];     break;
+			case NODE_EXPORT_FORMAT.animation : current_format = format_animation[extd]; break;
+		}
+		
 		if(form == NODE_EXPORT_FORMAT.single) {
 			RenderSync(project);
 			export();
@@ -920,7 +927,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				inputs[18].setVisible(_fmt == ".gif" &&  _enc);
 				inputs[ 8].setVisible(true);
 			
-				inputs[ 9].display_data.data	  = format_animation;
+				inputs[ 9].display_data.data	= format_animation;
 				inputs[ 9].editWidget.data_list = format_animation;
 				
 				inputs[13].setVisible(false);
