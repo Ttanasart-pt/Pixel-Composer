@@ -2032,7 +2032,6 @@
     {"name":"sh_mirror_polar","order":7,"path":"shaders/sh_mirror_polar/sh_mirror_polar.yy",},
     {"name":"sh_mk_ballGrid","order":2,"path":"shaders/sh_mk_ballGrid/sh_mk_ballGrid.yy",},
     {"name":"sh_mk_flag_shade","order":1,"path":"shaders/sh_mk_flag_shade/sh_mk_flag_shade.yy",},
-    {"name":"sh_mk_flare_multiply","order":0,"path":"shaders/sh_mk_flare_multiply/sh_mk_flare_multiply.yy",},
     {"name":"sh_mk_flipGrid","order":5,"path":"shaders/sh_mk_flipGrid/sh_mk_flipGrid.yy",},
     {"name":"sh_mk_grass_filter","order":1,"path":"shaders/sh_mk_grass_filter/sh_mk_grass_filter.yy",},
     {"name":"sh_mk_grass_grow_apply","order":8,"path":"shaders/sh_mk_grass_grow_apply/sh_mk_grass_grow_apply.yy",},

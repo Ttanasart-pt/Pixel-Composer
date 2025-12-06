@@ -694,6 +694,17 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			
 			if(_typ == VALUE_TYPE.struct) {
 				_val = json_try_parse(value);
+				var _constRef = prop[$ "constructRef"];
+				if(_constRef) {
+					if(is_array(_val)) {
+						for( var j = 0, m = array_length(_val); j < m; j++ ) {
+							if(is_struct(_val[j])) 
+								_val[j] = struct_append(new _constRef(), _val[j]);
+						}
+						
+					} else if(is_struct(_val))
+						_val = struct_append(new _constRef(), _val);
+				}
 			
 			} else if(_typ == VALUE_TYPE.pbBox) {
 				_val = new __pbBox().deserialize(value);

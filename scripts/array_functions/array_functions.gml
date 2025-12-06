@@ -340,9 +340,6 @@
 		if(!is_array(arr0))  { array_push(arr, arr0); return arr; }
 		
 		array_copy(arr, array_length(arr), arr0, 0, array_length(arr0));
-		
-		// for( var i = 0, n = array_length(arr0); i < n; i++ )
-		// 	array_push(arr, arr0[i]);
 		return arr;
 	}
 	

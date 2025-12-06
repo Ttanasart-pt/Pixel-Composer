@@ -1278,7 +1278,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			case VALUE_TYPE.armature :    editWidget = new armatureBox(self); 										break;
 			case VALUE_TYPE.mesh :        editWidget = new meshBox(self); 											break;
 			case VALUE_TYPE.pbBox :       editWidget = new pbBoxBox(self); 											break;
-			case VALUE_TYPE.struct :      editWidget = new outputStructBox(); 										break;
+			case VALUE_TYPE.struct :      editWidget = new outputStructBox();                                       break;
+				
 			case VALUE_TYPE.particle :    editWidget = new particleBox(self); 										break;
 				
 			default : editWidget = new outputBox(); break;
