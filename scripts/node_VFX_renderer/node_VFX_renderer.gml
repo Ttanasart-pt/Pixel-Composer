@@ -47,10 +47,6 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	array_push(attributeEditors, "Cache");
 	array_push(attributeEditors, [ "Cache Data", function() /*=>*/ {return attributes.cache}, new checkBox(function() /*=>*/ {return toggleAttribute("cache")}) ]);
 	
-	setTrigger(2, "Clear cache", [ THEME.cache, 0, COLORS._main_icon ]);
-	
-	static onInspector2Update = function() /*=>*/ {return clearCache()};
-	
 	static step = function() {
 		use_cache = attributes.cache? CACHE_USE.auto : CACHE_USE.none;
 		

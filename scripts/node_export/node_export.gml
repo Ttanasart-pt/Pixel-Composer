@@ -796,14 +796,16 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	////- Nodes
 	
-	setTrigger(1, "Export", [ THEME.sequence_control, 1, COLORS._main_value_positive ], function(_fromValue = false) /*=>*/ {
+	insp1button = button(function(fr) /*=>*/ {
 		if(IS_RENDERING) return;
-		if(_fromValue) { export(); return; }
-		
+		if(fr) { export(); return; }
 		doInspectorAction();
-	});
+		
+	}).setTooltip(__txt("Export"))
+		.setIcon(THEME.sequence_control, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
-	setTrigger(2, "Export All", [ THEME.play_all, 0, COLORS._main_value_positive ], function() /*=>*/ { if(IS_RENDERING) return; exportAll(); });
+	insp2button = button(function() /*=>*/ { if(IS_RENDERING) return; exportAll(); }).setTooltip(__txt("Export All"))
+		.setIcon(THEME.play_all, 0, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
 	static doInspectorAction = function() {
 		if(!IS_CMD && (LOADING || APPENDING)) return;
@@ -840,8 +842,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	static step = function() {
-		insp1UpdateActive  = !IS_RENDERING;
-		insp2UpdateActive  = !IS_RENDERING;
+		insp1button.visible = !IS_RENDERING;
+		insp2button.visible = !IS_RENDERING;
 		
 		var expo = getInputData(16);
 		var anim = getInputData( 3); // single, sequence, animation

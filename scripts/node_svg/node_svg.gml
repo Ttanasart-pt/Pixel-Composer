@@ -42,7 +42,8 @@ function Node_SVG(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		return false;
 	}
 	
-	setTrigger(1, __txt("Refresh"), [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() /*=>*/ { readFile(path_get(getInputData(0))); triggerRender(); });
+	insp1button = button(function() /*=>*/ { readFile(path_get(getInputData(0))); triggerRender(); }).setTooltip(__txt("Refresh"))
+		.setIcon(THEME.refresh_icon, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		if(!is(content, SVG)) return;

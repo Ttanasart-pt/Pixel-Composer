@@ -25,7 +25,8 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	socket = noone;
 	client = noone;
 	
-	setTrigger(1, __txt("Refresh Server"), [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() /*=>*/ {return setPort()});
+	insp1button = button(function() /*=>*/ { setPort(); }).setTooltip(__txt("Refresh Server"))
+		.setIcon(THEME.refresh_icon, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
 	function setPort() {
 		

@@ -75,28 +75,18 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	////- INSPECTOR
 	
-	hasInsp1 = false;
-	setTrigger(1, __txtx("panel_inspector_execute", "Execute node contents"), [ THEME.sequence_control, 1, COLORS._main_value_positive ], function() /*=>*/ {
-		array_foreach(NodeListSort(nodes, project), function(n) /*=>*/ { if(n.hasInspector1Update()) n.inspector1Update(); }); 
-	});
+	insp1button = button(function() /*=>*/ {
+		array_foreach(NodeListSort(nodes, project), function(n) /*=>*/ { if(n.insp1button) n.insp1button.onClick(); }); 
+	}).setTooltip(__txt("Execute"))
+		.setIcon(THEME.sequence_control, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
-	hasInsp2 = false;
-	setTrigger(2, "Clear cache", [ THEME.cache, 0, COLORS._main_icon ], function() /*=>*/ { 
-		array_foreach(NodeListSort(nodes, project), function(n) /*=>*/ { if(n.hasInspector2Update()) n.inspector2Update(); }); 
-	});
-	
-	static hasInspector1Update = function() /*=>*/ {return hasInsp1};
-	static hasInspector2Update = function() /*=>*/ {return hasInsp2};
+	buttonCacheClear.onClick = function() /*=>*/ { array_foreach(nodes, function(n) /*=>*/ {return n.clearCache()} ); };
 	
 	////- GROUP
 	
 	will_refresh = false;
 	static refreshNodes = function() {
 		will_refresh = false; 
-		
-		hasInsp1 = false;
-		hasInsp2 = false;
-		
 		node_length  = array_length(nodes);
 		checkPureFunction();
 	}
@@ -106,8 +96,6 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
 			var _node = nodes[i];
-			hasInsp1 = hasInsp1 || _node.hasInspector1Update();
-			hasInsp2 = hasInsp2 || _node.hasInspector2Update();
 			
 			p = p && !is(_node, Node_Collection_Inline) && !is(_node, Node_Collection);
 			p = p && !_node.isAnimated();

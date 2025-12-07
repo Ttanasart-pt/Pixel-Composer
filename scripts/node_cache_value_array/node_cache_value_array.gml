@@ -16,13 +16,7 @@ function Node_Cache_Value_Array(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		["Range", false], 1, 2,
 	];
 	
-	setTrigger(2, "Clear cache", [ THEME.cache, 0, COLORS._main_icon ], function() /*=>*/ { clearCache(); });
-	
 	cache = [];
-	
-	static step = function() {
-		
-	}
 	
 	static update = function() {
 		if(!inputs[0].value_from) {

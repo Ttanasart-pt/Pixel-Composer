@@ -276,7 +276,9 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		];
 	#endregion
 	
-	setTrigger(1, "Generate", [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() /*=>*/ {return Mesh_build()});
+	insp1button = button(function() /*=>*/ {return Mesh_build()}).setTooltip(__txt("Generate"))
+		.setIcon(THEME.mesh, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
+	
 	will_tri = false;
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 

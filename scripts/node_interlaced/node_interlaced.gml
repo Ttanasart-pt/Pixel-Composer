@@ -43,8 +43,6 @@ function Node_Interlaced(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	attribute_surface_depth();
 	
-	setTrigger(2, "Clear cache", [ THEME.cache, 0, COLORS._main_icon ], function() /*=>*/ { clearCache(); });
-	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		PROCESSOR_OVERLAY_CHECK
 		

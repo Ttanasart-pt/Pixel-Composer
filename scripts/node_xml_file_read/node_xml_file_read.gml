@@ -43,6 +43,9 @@ function Node_XML_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	content      = {};
 	path_current = "";
 	
+	insp1button = button(function() /*=>*/ { updatePaths(getInputData(0)); triggerRender(); }).setTooltip(__txt("Refresh"))
+		.setIcon(THEME.refresh_icon, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
+	
 	edit_time = 0;
 	attributes.file_checker = true;
 	array_push(attributeEditors, [ "File Watcher", function() /*=>*/ {return attributes.file_checker}, new checkBox(function() /*=>*/ {return toggleAttribute("file_checker")}) ]);
@@ -76,8 +79,6 @@ function Node_XML_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		return true;
 	}
-	
-	setTrigger(1, __txt("Refresh"), [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() /*=>*/ { updatePaths(getInputData(0)); triggerRender(); });
 	
 	static step = function() {
 		if(attributes.file_checker && file_exists_empty(path_current)) {

@@ -27,10 +27,11 @@ function Node_3D_Mesh_Extrude_Mesh(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 	
 	temp_surface = [ noone, noone ];
 	
-	setTrigger(1, "Refresh", [ THEME.refresh_20, 0, COLORS._main_value_positive ], function() /*=>*/ { 
+	insp1button = button(function() /*=>*/ { 
 		for(var i = 0; i < process_amount; i++) getObject(i).initModel(); 
 		triggerRender();
-	});
+	}).setTooltip(__txt("Refresh"))
+		.setIcon(THEME.refresh_icon, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
 	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		var _updt = _data[in_mesh + 3];

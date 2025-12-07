@@ -55,11 +55,10 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	////- Update
 	
-	setTrigger(1, "Tunnel Panel", [ THEME.tunnel_panel, 0, c_white ]);
-	static onInspector1Update = function() /*=>*/ { dialogPanelCall(new Panel_Tunnels()); }
+	insp1button = button(function() /*=>*/ { dialogPanelCall(new Panel_Tunnels()); }).setTooltip(__txt("Tunnel Panel"))
+		.setIcon(THEME.tunnel_panel, 0, c_white).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
-	setTrigger(2, "Create Receiver", [ THEME.tunnel, 0, COLORS.node_blend_tunnel ]);
-	static onInspector2Update = function() {
+	insp2button = button(function() /*=>*/ { 
 		var _nx = x + 160;
 		var _ny = PANEL_GRAPH.getFreeY(_nx, y);
 		    
@@ -68,7 +67,9 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		var _key = inputs[0].getValue();
 		_node.inputs[0].setValue(_key);
-	}
+		
+	}).setTooltip(__txt("Create Receiver"))
+		.setIcon(THEME.tunnel, 0, COLORS.node_blend_tunnel).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
 	static update = function(frame = CURRENT_FRAME) {
 		
@@ -229,7 +230,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		var _key  = inputs[0].getValue();
 		var _keys = ds_map_keys_to_array(project.tunnels_out);
-		insp2UpdateIcon[2] = inputs[1].color_display;
+		insp2button.icon_blend = inputs[1].color_display;
 		
 		draw_set_color(inputs[1].color_display);
 		draw_set_alpha(0.5);

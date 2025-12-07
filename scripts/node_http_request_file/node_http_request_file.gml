@@ -15,7 +15,8 @@ function Node_HTTP_Request_File(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	downloaded_size = 0;
 	downloading     = false;
 	
-	setTrigger(1, "Trigger", [ THEME.sequence_control, 1, COLORS._main_value_positive ], function() /*=>*/ {return request()});
+	insp1button = button(function() /*=>*/ {return request()}).setTooltip(__txt("Download"))
+		.setIcon(THEME.sequence_control, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
 	static request = function() {
 		if(project.online) return false;

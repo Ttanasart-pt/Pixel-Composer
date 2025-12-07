@@ -253,9 +253,11 @@ struct PixelShaderOutput {
 		
 	} if(!LOADING && !APPENDING) refreshDynamicInput();
 	
-	setTrigger(1, __txt("Compile"), [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() /*=>*/ { refreshShader(); triggerRender(); });
+	insp1button = button(function() /*=>*/ { refreshShader(); triggerRender(); }).setTooltip(__txt("Compile"))
+		.setIcon(THEME.sequence_control, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
-	setTrigger(2, __txt("Libraries"), [ THEME.libraries, 1, COLORS._main_icon ], function() /*=>*/ { dialogPanelCall(new Panel_HLSL_Libraries()); });
+	insp2button = button(function() /*=>*/ { dialogPanelCall(new Panel_HLSL_Libraries()); }).setTooltip(__txt("Libraries"))
+		.setIcon(THEME.libraries, 1, COLORS._main_icon).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
 	static step = function() { argument_renderer.showValue = inspector_label_values[1]; }
 	

@@ -1544,7 +1544,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(!expUse || expTree == noone || !expTree.validate()) return;
 			
-		if(global.EVALUATE_HEAD == self) { noti_warning($"Expression evaluation error : recursive call detected."); return; } 
+		if(global.EVALUATE_HEAD == self) { 
+			noti_warning($"Expression evaluation error : recursive call detected."); 
+			return; 
+		} 
 		
 		if(global.EVALUATE_HEAD == noone) {
 			global.EVALUATE_HEAD = self;
@@ -1556,12 +1559,17 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				node_values : node.input_value_map,
 			};
 			
-			var _exp_res = expTree.eval({
-				name :        name,
-				node_name :   node.display_name,
-				value :       arr[0],
-				node_values : node.input_value_map,
-			});
+			var _exp_res = undefined;
+			
+			try { 
+				_exp_res = expTree.eval({
+					name :        name,
+					node_name :   node.display_name,
+					value :       arr[0],
+					node_values : node.input_value_map,
+				});
+				
+			} catch(e) noti_warning(e[$ "message"] ?? "");
 			
 			printIf(global.LOG_EXPRESSION, $">>>> Result = {_exp_res}");
 			

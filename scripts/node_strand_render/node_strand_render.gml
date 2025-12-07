@@ -49,10 +49,6 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	array_push(attributeEditors, "Display");
 	array_push(attributeEditors, [ "Draw Strand", function() /*=>*/ {return attributes.show_strand}, new checkBox(function() /*=>*/ {return toggleAttribute("show_strand")}) ]);
 	
-	setTrigger(2, "Clear cache", [ THEME.cache, 0, COLORS._main_icon ]);
-	
-	static onInspector2Update = function() /*=>*/ {return clearCache()};
-	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		if(!attributes.show_strand) return;
 		

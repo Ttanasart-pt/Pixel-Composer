@@ -25,7 +25,8 @@ function Node_WAV_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		[ "Format",	false], 2, 3, 
 	]
 	
-	setTrigger(1, "Export", [ THEME.sequence_control, 1, COLORS._main_value_positive ], function() /*=>*/ {return export()});
+	insp1button = button(function() /*=>*/ { export(); }).setTooltip(__txt("Export"))
+		.setIcon(THEME.sequence_control, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
 	static step = function() {
 		var remap = getInputData(4);

@@ -28,15 +28,6 @@ function Node_VFX_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group
 	
 	static getNextNodes = function(checkLoop = false) { return allCached? getNextNodesExternal() : getNextNodesInternal(); } 
 	
-	setTrigger(2, "Clear cache", [ THEME.cache, 0, COLORS._main_icon ]);
-	
-	static onInspector2Update = function() {
-		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
-			var node = nodes[i];
-			node.clearCache(); 
-		}
-	}
-	
 	static reset = function() {
 		for( var i = 0, n = array_length(nodes); i < n; i++ ) {
 			var node = nodes[i];

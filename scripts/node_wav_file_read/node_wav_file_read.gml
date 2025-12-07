@@ -130,17 +130,20 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	////- Nodes
 	
+	attributes.play = true;
+	
 	#region ++++ inspector ++++
-		setTrigger(1, __txt("Refresh"), [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() /*=>*/ { 
+		insp1button = button(function() /*=>*/ { 
 			var path = getInputData(0); 
 			if(path == "") return; 
 			updatePaths(path); 
 			update(); 
-		});
+			
+		}).setTooltip(__txt("Refresh"))
+			.setIcon(THEME.refresh_icon, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 		
-		setTrigger(2, __txtx("play_with_timeline", "Play with timeline"), [ THEME.play_sound, 1, COLORS._main_icon_light ], 
-			function() /*=>*/ { attributes.play = !attributes.play; });
-		attributes.play = true;
+		insp2button = button(function() /*=>*/ { attributes.play = !attributes.play; }).setTooltip(__txtx("play_with_timeline", "Play with timeline"))
+			.setIcon(THEME.play_sound, 1, COLORS._main_icon_light).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	#endregion
 	
 	static step = function() {
@@ -165,8 +168,8 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			}
 		}
 		
-		insp2UpdateIcon[1] = attributes.play;
-		insp2UpdateIcon[2] = attributes.play? COLORS._main_icon_light : COLORS._main_icon;
+		insp2button.icon_index = attributes.play;
+		insp2button.icon_blend = attributes.play? COLORS._main_icon_light : COLORS._main_icon;
 		if(preview_audio == -1) return;
 		
 		if(!attributes.play) {

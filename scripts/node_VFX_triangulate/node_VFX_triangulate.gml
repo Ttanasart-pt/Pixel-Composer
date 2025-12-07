@@ -29,10 +29,6 @@ function Node_VFX_Triangulate(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		[ "Rendering", false], 3, 5, 8, 
 	]
 	
-	setTrigger(2, "Clear cache", [ THEME.cache, 0, COLORS._main_icon ]);
-	
-	static onInspector2Update = function() /*=>*/ {return clearCache()};
-	
 	function _Point(p) constructor {
 		part = p;
 		x    = p.x;

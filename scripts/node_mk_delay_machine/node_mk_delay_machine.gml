@@ -31,10 +31,6 @@ function Node_MK_Delay_Machine(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		["Render",	false], 3, 5, 6, 4, 8, 9, 
 	];
 	
-	setTrigger(2, "Clear cache", [ THEME.cache, 0, COLORS._main_icon ]);
-	 
-	static onInspector2Update = function() { clearCache(); }
-	
 	surf_indexes = [];
 	
 	static update = function() {  

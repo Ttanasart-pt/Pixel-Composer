@@ -89,7 +89,8 @@ function Node_Krita_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	on_drop_file = function(path) { inputs[0].setValue(path); doUpdate(); return true; } 
 	
-	setTrigger(1, __txt("Refresh"), [THEME.refresh_icon, 1, COLORS._main_value_positive ], function() /*=>*/ { updatePaths(path_get(getInputData(0))); triggerRender(); });
+	insp1button = button(function() /*=>*/ { updatePaths(path_get(getInputData(0))); triggerRender(); }).setTooltip(__txt("Refresh"))
+		.setIcon(THEME.refresh_icon, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
 	function refreshLayers() {
 		if(!is(content, Krita_File)) return;

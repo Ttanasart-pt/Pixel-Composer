@@ -464,24 +464,24 @@ function Panel_Inspector() : PanelContent() constructor {
     	if(index == 1) {
 	        if(inspectGroup) {
                 for( var i = 0, n = array_length(inspectings); i < n; i++ ) {
-                	if(inspectings[i].hasInspector1Update())
-                		inspectings[i].inspector1Update();
+                	if(inspectings[i].insp1button && inspectings[i].insp1button.visible)
+                		inspectings[i].insp1button.onClick();
                 }
                 
-            } else if(inspecting.hasInspector1Update())
-                inspecting.inspector1Update();
+            } else if(inspecting.insp1button && inspecting.insp1button.visible)
+                inspecting.insp1button.onClick();
             return;
     	}
         
     	if(index == 2) {
 	        if(inspectGroup) {
                 for( var i = 0, n = array_length(inspectings); i < n; i++ ) {
-                	if(inspectings[i].hasInspector2Update())
-                		inspectings[i].inspector2Update();
+                	if(inspectings[i].insp2button && inspectings[i].insp2button.visible)
+                		inspectings[i].insp2button.onClick();
                 }
                 
-            } else if(inspecting.hasInspector2Update())
-                inspecting.inspector2Update();
+            } else if(inspecting.insp2button && inspecting.insp2button.visible)
+                inspecting.insp2button.onClick();
 	        return;
     	}
     }
@@ -1476,56 +1476,26 @@ function Panel_Inspector() : PanelContent() constructor {
         
         ////- INSPECTOR ACTIONS
         
-        var bx = w - ui(44);
-        var by = ui(12);
-        var bs = ui(32);
-        var m  = [mx, my];
+        var bx  = w - ui(44);
+        var by  = ui(12);
+        var bs  = ui(32);
+        var hov = pHOVER;
+        var foc = pFOCUS;
+        var m   = [mx, my];
         
-        if(inspecting.hasInspector1Update(true)) {
-            var icon = inspecting.insp1UpdateIcon;
-            var ac = inspecting.insp1UpdateActive;
-            var cc = ac? icon[2] : COLORS._main_icon_dark;
-            var tt = inspecting.insp1UpdateTooltip; 
-            if(inspectGroup) tt += " [All]";
-            
-            var tl  = tooltip_primary;
-            tl.text = tt;
-            
-            if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, m, pHOVER && ac, pFOCUS && ac, tl, icon[0], icon[1], cc) == 2) {
-                if(inspectGroup == 1) {
-                    for( var i = 0, n = array_length(inspectings); i < n; i++ ) {
-                    	if(inspectings[i].hasInspector1Update())
-                    		inspectings[i].inspector1Update();
-                    }
-                    
-                } else 
-                    inspecting.inspector1Update();
-            }
-        } else 
-            draw_sprite_ui(THEME.sequence_control, 1, bx + ui(16), by + ui(16),,,, COLORS._main_icon_dark);
+        var b = inspecting.insp1button;
+        if(b && b.visible) {
+        	b.icon_padd = ui(8);
+        	b.setFocusHover(foc, hov);
+        	b.draw(bx, by, bs, bs, m);
+        }
         
-        if(inspecting.hasInspector2Update()) {
-            by += ui(36);
-            
-            var icon = inspecting.insp2UpdateIcon;
-            var ac = inspecting.insp2UpdateActive;
-            var cc = ac? icon[2] : COLORS._main_icon_dark;
-            var tt = inspecting.insp2UpdateTooltip;
-            if(inspectGroup) tt += " [All]";
-            
-            var tl  = tooltip_secondary;
-            tl.text = tt;
-            
-            if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, m, pHOVER && ac, pFOCUS && ac, tl, icon[0], icon[1], cc) = 2) {
-                if(inspectGroup) {
-                    for( var i = 0, n = array_length(inspectings); i < n; i++ ) {
-                    	if(inspectings[i].hasInspector2Update())
-                    		inspectings[i].inspector2Update();
-                    }
-                    
-                } else 
-                    inspecting.inspector2Update();
-            }
+        by += bs + ui(4);
+        var b = inspecting.insp2button;
+        if(b && b.visible) {
+        	b.icon_padd = ui(8);
+        	b.setFocusHover(foc, hov);
+        	b.draw(bx, by, bs, bs, m);
         }
     }
     

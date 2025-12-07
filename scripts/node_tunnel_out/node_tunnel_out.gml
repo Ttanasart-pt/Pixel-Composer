@@ -50,17 +50,18 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	////- Update
 	
-	setTrigger(1, "Tunnel Panel", [ THEME.tunnel_panel, 0, c_white ]);
-	static onInspector1Update = function() { dialogPanelCall(new Panel_Tunnels()); }
+	insp1button = button(function() /*=>*/ { dialogPanelCall(new Panel_Tunnels()); }).setTooltip(__txt("Tunnel Panel"))
+		.setIcon(THEME.tunnel_panel, 0, c_white).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
-	setTrigger(2, "Goto Sender", [ THEME.tunnel, 1, COLORS.node_blend_tunnel ]);
-	static onInspector2Update = function() {
+	insp2button = button(function() /*=>*/ { 
 		var _key = inputs[0].getValue();
 		if(!ds_map_exists(project.tunnels_in, _key)) return;
 		
 		var _node = project.tunnels_in[? _key].node;
 		graphFocusNode(_node);
-	}
+		
+	}).setTooltip(__txt("Goto Sender"))
+		.setIcon(THEME.tunnel, 1, COLORS.node_blend_tunnel).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
 	static onValueUpdate = function(index = -1) {
 		resetMap();
@@ -145,7 +146,7 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		preview_connecting      = true;
 		node.preview_connecting = true;
-		insp2UpdateIcon[2]      = outputs[0].color_display;
+		insp2button.icon_blend      = outputs[0].color_display;
 		
 		draw_set_color(outputs[0].color_display);
 		draw_set_alpha(0.5);

@@ -35,7 +35,8 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	temp_surface   = [ noone, noone ];
 	
-	setTrigger(1,,, function() /*=>*/ {return separateShape()});
+	insp1button = button(function() /*=>*/ {return separateShape()}).setTooltip(__txt("Separate Shape"))
+		.setIcon(THEME.sequence_control, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
 	static update = function() { separateShape(); }
 	

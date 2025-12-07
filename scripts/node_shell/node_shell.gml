@@ -7,14 +7,12 @@ function Node_Shell(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	newInput(1, nodeValue_Text("Script"));
 	
-	setTrigger(1, "Run", [ THEME.sequence_control, 1, COLORS._main_value_positive ]);
+	insp1button = button(function() /*=>*/ {return update()}).setTooltip(__txt("Run"))
+		.setIcon(THEME.sequence_control, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
 	trusted = PROGRAM_ARGUMENTS._trusted;
 	
 	static onValueUpdate = function() { trusted = false; }
-	
-	setTrigger(1,,, function() /*=>*/ {return update()});
-	
 	static update = function() { 
 		if(project.online) return false;
 		

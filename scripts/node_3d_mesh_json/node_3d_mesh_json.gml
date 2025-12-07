@@ -74,11 +74,13 @@ function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 	
 	invertMatrix = noone;
 	
-	setTrigger(1, __txt("Refresh"), [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() /*=>*/ { 
+	insp1button = button(function() /*=>*/ { 
 		current_path = ""; 
 		outputs[0].setValue(noone);
 		triggerRender();
-	});
+		
+	}).setTooltip(__txt("Refresh"))
+		.setIcon(THEME.refresh_icon, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
 	edit_time = 0;
 	attributes.file_checker = true;

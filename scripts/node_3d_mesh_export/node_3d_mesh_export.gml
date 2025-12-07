@@ -21,7 +21,8 @@ function Node_3D_Mesh_Export(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		["Mesh",   false], 3, 5, 4, 
 	];
 	
-	setTrigger(1, "Export", [ THEME.sequence_control, 1, COLORS._main_value_positive ], function() /*=>*/ {return export()});
+	insp1button = button(function() /*=>*/ {return export()}).setTooltip(__txt("Export"))
+		.setIcon(THEME.sequence_control, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
 	__mat_index   = 0;
 	__mat_texture = {};

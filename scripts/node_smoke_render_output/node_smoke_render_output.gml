@@ -28,10 +28,6 @@ function Node_Smoke_Render_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 	
 	onSetDisplayName = noone;
 	
-	setTrigger(2, "Clear cache", [ THEME.cache, 0, COLORS._main_icon ]);
-	
-	static onInspector2Update = function() { clearCache(); }
-	
 	static createOutput = function() {
 		if(group == noone) return;
 		if(!is_struct(group)) return;

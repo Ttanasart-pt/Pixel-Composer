@@ -142,14 +142,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		updatedInTrigger   = nodeValue("Update",           self, CONNECT_TYPE.input, VALUE_TYPE.trigger, false).setIndex(-1).setTags(VALUE_TAG.updateInTrigger);
 		updatedOutTrigger  = nodeValue_Output("Updated", VALUE_TYPE.trigger, false).setIndex(-1).setTags(VALUE_TAG.updateOutTrigger);
 		
-		insp1UpdateActive  = true;
-		insp1UpdateTooltip = __txtx("panel_inspector_execute", "Execute node");
-		insp1UpdateIcon    = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
-		
-		insp2UpdateActive  = true;
-		insp2UpdateTooltip = __txtx("panel_inspector_execute", "Execute node");
-		insp2UpdateIcon    = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
-		
 		is_dynamic_input   = false;
 		auto_input		   = false;
 		input_display_len  = 0;
@@ -287,7 +279,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		is_simulation    = false;
 		is_group_io      = false;
 		
-		use_trigger      = false;
 		loopable         = true;
 		renderAll        = false;
 	#endregion
@@ -388,14 +379,34 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	////- INSPECTOR
 	
-	static onInspector1Update  = noone;
-	static inspector1Update    = function() /*=>*/ { onInspector1Update(); }
-	static hasInspector1Update = function() /*=>*/ { return onInspector1Update != noone; }
+	buttonCacheClear = button(function() /*=>*/ {return clearCache()}).setTooltip(__txt("Clear cache"))
+		.setIcon(THEME.dCache_clear, 0, COLORS._main_icon).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
-	static onInspector2Update  = noone;
-	static inspector2Update    = function() /*=>*/ { onInspector2Update(); }
-	static hasInspector2Update = function() /*=>*/ { return onInspector2Update != noone; }
+	insp1button = undefined;
+	insp2button = buttonCacheClear;
 	
+	static triggerCheck = function() {
+		buttonCacheClear.visible = use_cache != CACHE_USE.none;
+		
+		if(insp1button && insp1button.visible) {
+			inspectInput1.name = insp1button.tooltip;
+			
+			if(inspectInput1.getStaticValue()) {
+				insp1button.onClick();
+				inspectInput1.setValue(false);
+			}
+		}
+		
+		if(insp2button && insp2button.visible) {
+			inspectInput2.name = insp2button.tooltip;
+			
+			if(inspectInput2.getStaticValue()) {
+				insp2button.onClick();
+				inspectInput2.setValue(false);
+			}
+		}
+	}
+
 	////- STEP
 	
 	static stepBegin = function() {
@@ -418,47 +429,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(toRefreshNodeDisplay) {
 			refreshNodeDisplay();
 			toRefreshNodeDisplay = false;
-		}
-	}
-	
-	static setTrigger = function(index, 
-	                             _tooltip  = __txtx("panel_inspector_execute", "Execute"), 
-	                             _icon     = [ THEME.sequence_control, 1, COLORS._main_value_positive ], 
-	                             _function = undefined) {
-	                             	
-		use_trigger         = true;
-		
-		if(index == 1) {
-			insp1UpdateTooltip  = _tooltip;
-			insp1UpdateIcon     = _icon;
-			if(!is_undefined(_function)) onInspector1Update  = _function;
-			
-		} else if(index == 2) {
-			insp2UpdateTooltip  = _tooltip;
-			insp2UpdateIcon     = _icon;
-			if(!is_undefined(_function)) onInspector2Update  = _function;
-		} 
-	}
-	
-	static triggerCheck = function() {
-		if(!use_trigger) return;
-		
-		if(hasInspector1Update()) {
-			inspectInput1.name = insp1UpdateTooltip;
-			
-			if(inspectInput1.getStaticValue()) {
-				onInspector1Update();
-				inspectInput1.setValue(false);
-			}
-		}
-		
-		if(hasInspector2Update()) {
-			inspectInput2.name = insp2UpdateTooltip;
-			
-			if(inspectInput2.getStaticValue()) {
-				onInspector2Update();
-				inspectInput2.setValue(false);
-			}
 		}
 	}
 	
@@ -1103,8 +1073,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			}
 		}
 		
-		if(hasInspector1Update() && inspectInput1.getValue()) onInspector1Update(true);
-		if(hasInspector2Update() && inspectInput2.getValue()) onInspector2Update(true);
+		if(insp1button && insp1button.visible && inspectInput1.getValue()) insp1button.onClick(true);
+		if(insp2button && insp2button.visible && inspectInput2.getValue()) insp2button.onClick(true);
 		
 		updatedOutTrigger.setValue(true);
 		
@@ -1604,16 +1574,20 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		drawSetBbox(xx, yy, _s);
 		
 		var jun;
-		var inspCount = hasInspector1Update() + hasInspector2Update();
-		var ind = 1;
-		if(hasInspector1Update()) {
-			inspectInput1.x = xx + w * _s * ind / (inspCount + 1);
+		
+		var insp1 = insp1button && insp1button.visible;
+		var insp2 = insp2button && insp2button.visible;
+		var inspc = insp1 + insp2;
+		var ind   = 1;
+		
+		if(insp1) {
+			inspectInput1.x = xx + w * _s * ind / (inspc + 1);
 			inspectInput1.y = yy;
 			ind++;
 		}
 		
-		if(hasInspector2Update()) {
-			inspectInput2.x = xx + w * _s * ind / (inspCount + 1);
+		if(insp2) {
+			inspectInput2.x = xx + w * _s * ind / (inspc + 1);
 			inspectInput2.y = yy;
 			ind++;
 		}
@@ -1967,8 +1941,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(jun.isHovering(_s, _dx, _dy, _mx, _my)) hover = jun;
 		}
 		
-		if(hasInspector1Update() && inspectInput1.isHovering(_s, _dx, _dy, _mx, _my)) hover = inspectInput1;
-		if(hasInspector2Update() && inspectInput2.isHovering(_s, _dx, _dy, _mx, _my)) hover = inspectInput2;
+		if(insp1button && insp1button.visible && inspectInput1.isHovering(_s, _dx, _dy, _mx, _my)) hover = inspectInput1;
+		if(insp2button && insp2button.visible && inspectInput2.isHovering(_s, _dx, _dy, _mx, _my)) hover = inspectInput2;
 		
 		if(attributes.show_update_trigger) {
 			if(updatedInTrigger.isHovering(_s, _dx, _dy, _mx, _my))  hover = updatedInTrigger;
@@ -2037,13 +2011,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			draw_rectangle(jun.x - s1, jun.y - s4, jun.x + s1, jun.y + s4, false);
 		}
 		
-		if(hasInspector1Update()) {
+		if(insp1button && insp1button.visible) {
 			jun = inspectInput1;
 			draw_set_color(jun.draw_fg);
 			draw_rectangle(jun.x - s4, jun.y - s1, jun.x + s4, jun.y + s1, false);
 		}
 		
-		if(hasInspector2Update()) {
+		if(insp2button && insp2button.visible) {
 			jun = inspectInput2;
 			draw_set_color(jun.draw_fg);
 			draw_rectangle(jun.x - s4, jun.y - s1, jun.x + s4, jun.y + s1, false);
@@ -2084,8 +2058,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			jun.drawJunction(_s, _mx, _my);
 		}
 		
-		if(hasInspector1Update()) inspectInput1.drawJunction(_s, _mx, _my);
-		if(hasInspector2Update()) inspectInput2.drawJunction(_s, _mx, _my);
+		if(insp1button && insp1button.visible) inspectInput1.drawJunction(_s, _mx, _my);
+		if(insp2button && insp2button.visible) inspectInput2.drawJunction(_s, _mx, _my);
 		
 		if(attributes.show_update_trigger) {
 			updatedInTrigger.drawJunction(_s, _mx, _my);
@@ -2138,12 +2112,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			array_foreach(outputDisplayList, function(i) /*=>*/ { i.drawName(__s, __mx, __my); });
 		}
 		
-		if(hasInspector1Update() && _panel.pHOVER && point_in_circle(_mx, _my, inspectInput1.x, inspectInput1.y, 10 * _s)) {
+		if(insp1button && insp1button.visible && _panel.pHOVER && point_in_circle(_mx, _my, inspectInput1.x, inspectInput1.y, 10 * _s)) {
 			inspectInput1.drawNameBG(_s);
 			inspectInput1.drawName(_s, _mx, _my);
 		}
 		
-		if(hasInspector2Update() && _panel.pHOVER && point_in_circle(_mx, _my, inspectInput2.x, inspectInput2.y, 10 * _s)) {
+		if(insp2button && insp2button.visible && _panel.pHOVER && point_in_circle(_mx, _my, inspectInput2.x, inspectInput2.y, 10 * _s)) {
 			inspectInput2.drawNameBG(_s);
 			inspectInput2.drawName(_s, _mx, _my);
 		}
@@ -2196,8 +2170,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(!active) return noone;
 		
 		var _hov, hovering = noone;
-		if(hasInspector1Update()) { _hov = inspectInput1.drawConnections(params, _draw); if(_hov) hovering = _hov; }
-		if(hasInspector2Update()) { _hov = inspectInput2.drawConnections(params, _draw); if(_hov) hovering = _hov; }
+		if(insp1button && insp1button.visible) { _hov = inspectInput1.drawConnections(params, _draw); if(_hov) hovering = _hov; }
+		if(insp2button && insp2button.visible) { _hov = inspectInput2.drawConnections(params, _draw); if(_hov) hovering = _hov; }
 		
 		for( var i = 0; i < __draw_inputs_len; i++ ) {
 			var _jun = __draw_inputs[i];

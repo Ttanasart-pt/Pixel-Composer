@@ -20,10 +20,6 @@ function Node_VFX_Renderer_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 	attribute_surface_depth();
 	attribute_interpolation();
 	
-	setTrigger(2, "Clear cache", [ THEME.cache, 0, COLORS._main_icon ]);
-	
-	static onInspector2Update = function() { clearCache(); }
-	
 	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		

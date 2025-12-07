@@ -22,7 +22,8 @@ function Node_Byte_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		buffer_save(cont, path);
 	}
 	
-	setTrigger(1,,, function() /*=>*/ { getInputs(); writeFile(); });
+	insp1button = button(function() /*=>*/ { getInputs(); writeFile(); }).setTooltip(__txt("Export"))
+		.setIcon(THEME.sequence_control, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
 	static update = function(frame = CURRENT_FRAME) { writeFile(); }
 	

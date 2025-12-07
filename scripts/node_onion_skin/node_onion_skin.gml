@@ -24,10 +24,6 @@ function Node_Onion_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		["Render",  false], 2, 3, 4, 6, 
 	];
 	
-	setTrigger(2, "Clear cache", [ THEME.cache, 0, COLORS._main_icon ]);
-	
-	static onInspector2Update = function() { clearCache(); }
-	
 	static update = function() { 
 		if(!inputs[0].value_from) return;
 		

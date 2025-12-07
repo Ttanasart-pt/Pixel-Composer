@@ -12,7 +12,8 @@ function Node_HTTP_request(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	address_domain  = "";
 	downloaded_size = 0;
 	
-	setTrigger(1, "Trigger", [ THEME.sequence_control, 1, COLORS._main_value_positive ], function() /*=>*/ {return request()});
+	insp1button = button(function() /*=>*/ {return request()}).setTooltip(__txt("Send Request"))
+		.setIcon(THEME.sequence_control, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
 	attributes.max_file_size = 10000;
 	array_push(attributeEditors, "HTTP");

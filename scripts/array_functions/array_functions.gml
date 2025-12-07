@@ -101,7 +101,7 @@
 	}
 	
 	#macro aGetF array_safe_get_fast
-	function array_safe_get_fast(arr, index, def = 0) {
+	function array_safe_get_fast(arr, index=0, def=0) {
 		INLINE
 		
 		return is_array(arr) && index >= 0 && index < array_length(arr)? arr[index] : def;

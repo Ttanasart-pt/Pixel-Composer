@@ -276,7 +276,7 @@ enum RENDER_TYPE {
 							if(PROFILER_STAT) array_push(rendering.nextn, nextNode);
 						}
 						
-						// if(runAction && rendering.hasInspector1Update()) rendering.inspector1Update();
+						// if(runAction && rendering.insp1Update) rendering.insp1button.onClick();
 							
 						if(PROFILER_STAT) rendering.summarizeReport(render_pt);
 						

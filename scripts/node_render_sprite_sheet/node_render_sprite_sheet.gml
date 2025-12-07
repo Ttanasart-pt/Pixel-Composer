@@ -56,8 +56,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	
 	attribute_surface_depth();
 
-	setTrigger(1,,, function() /*=>*/ { initSurface(true); PROJECT.animator.render(); anim_rendering = false; });
-	setTrigger(2, "Clear Result", [ THEME.cache, 0, COLORS._main_icon ]);
+	insp1button = button(function() /*=>*/ { initSurface(true); PROJECT.animator.render(); anim_rendering = false; }).setTooltip(__txt("Render"))
+		.setIcon(THEME.sequence_control, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
 	////- Nodes
 	

@@ -53,7 +53,8 @@ function Node_3D_Mesh_Stack_Slice(_x, _y, _group = noone) : Node(_x, _y, _group)
 	start_time = 0;
 	end_time   = 0;
 	
-	setTrigger(1, "Splice", [ THEME.sequence_control, 1, COLORS._main_value_positive ], function() /*=>*/ { meshInit(); spliceInit(true); });
+	insp1button = button(function() /*=>*/ { meshInit(); spliceInit(true); }).setTooltip(__txt("Splice"))
+		.setIcon(THEME.sequence_control, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
 	static meshInit = function() {
 		start_time = get_timer();

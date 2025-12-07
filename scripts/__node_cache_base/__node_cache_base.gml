@@ -12,9 +12,11 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	array_push(attributeEditors, "Cache");
 	array_push(attributeEditors, [ "Serizalize Data", function() /*=>*/ {return attributes.serialize}, new checkBox(function() /*=>*/ {return toggleAttribute("serialize")}) ]);
 	
-	setTrigger(1, "Edit Group", [ THEME.cache_group, 0, COLORS._main_icon ], function() /*=>*/ {
+	insp1button = button(function() /*=>*/ {
 		PANEL_GRAPH.cache_group_edit = PANEL_GRAPH.cache_group_edit == self? noone : self;
-	});
+		PANEL_GRAPH.refreshDraw();
+	}).setTooltip(__txt("Edit Group"))
+		.setIcon(THEME.sequence_control, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
 	if(NOT_LOAD) run_in(1, function() /*=>*/ {return generateGroup()});
 	
@@ -102,7 +104,7 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	////- Update
 	
 	static inspectorStep = function() /*=>*/ {
-		insp1UpdateIcon[2] = PANEL_GRAPH.cache_group_edit == self? COLORS._main_value_positive : COLORS._main_icon;
+		insp1button.icon_blend = PANEL_GRAPH.cache_group_edit == self? COLORS._main_value_positive : COLORS._main_icon;
 	}
 	
 	////- Draw

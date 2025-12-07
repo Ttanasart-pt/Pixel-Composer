@@ -45,12 +45,6 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	attribute_surface_depth();
 	
-	setTrigger(2, "Clear cache", [ THEME.cache, 0, COLORS._main_icon ]);
-	
-	static onInspector2Update = function() { 
-		clearCache(true);
-	}
-	
 	static update = function() {
 		var _surf  = getInputData(0);
 		var _life  = getInputData(1);

@@ -22,6 +22,9 @@ function Node_CSV_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(1, nodeValue("Content", self, CONNECT_TYPE.input, VALUE_TYPE.any, ""))
 		.setVisible(true, true);
 	
+	insp1button = button(function() /*=>*/ {return writeFile()}).setTooltip(__txt("Export"))
+		.setIcon(THEME.sequence_control, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
+	
 	static writeFile = function() {
 		var path = getInputData(0);
 		if(path == "") return;
@@ -49,7 +52,6 @@ function Node_CSV_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	}
 	
 	static update = function(frame = CURRENT_FRAME) { writeFile(); }
-	setTrigger(1,,, function() /*=>*/ {return writeFile()});
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = draw_bbox;

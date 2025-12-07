@@ -32,8 +32,9 @@ function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	array_push(attributeEditors, "Network");
 	array_push(attributeEditors, [ "Connection timeout", function() /*=>*/ {return attributes.network_timeout}, 
 		textBox_Number(function(val) /*=>*/ { setAttribute("network_timeout", val); network_set_config(network_config_connect_timeout, val); }) ]);
-		
-	setTrigger(1, __txt("Resend"), [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() /*=>*/ {return triggerRender()});
+	
+	insp1button = button(function() /*=>*/ {return triggerRender()}).setTooltip(__txt("Resend"))
+		.setIcon(THEME.refresh_icon, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
 	static connectTo = function(newPort, newUrl) {
 		if(project.online) return false;

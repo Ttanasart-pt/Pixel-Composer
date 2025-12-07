@@ -57,7 +57,8 @@ function Node_Text_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		return false;
 	}
 	
-	setTrigger(1, __txt("Refresh"), [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() /*=>*/ { updatePaths(path_get(getInputData(0))); triggerRender(); });
+	insp1button = button(function() /*=>*/ { updatePaths(path_get(getInputData(0))); triggerRender(); }).setTooltip(__txt("Refresh"))
+		.setIcon(THEME.refresh_icon, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
 	function updatePaths(path = path_current) {
 		if(path == -1) return false;

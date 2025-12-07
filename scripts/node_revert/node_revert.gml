@@ -10,12 +10,6 @@ function Node_Revert(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		["Surfaces",  true], 0, 
 	];
 	
-	setTrigger(2, "Clear cache", [ THEME.cache, 0, COLORS._main_icon ]);
-	
-	static onInspector2Update = function() { 
-		clearCache(true); 
-	}
-	
 	static update = function(_frame = CURRENT_FRAME) {
 		if(!inputs[0].value_from) return;
 		if(!inputs[0].value_from.node.renderActive) return;

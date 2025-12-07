@@ -52,8 +52,14 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 		icon_padd = _padd;
 		if(icon == noone) return self;
 		
-		icon_w    = sprite_get_width(icon);
-		icon_h    = sprite_get_height(icon);
+		if(is(icon, sprite_drawer)) {
+			icon_w = sprite_get_width(icon.spr);
+			icon_h = sprite_get_height(icon.spr);
+
+		} else {
+			icon_w = sprite_get_width(icon);
+			icon_h = sprite_get_height(icon);
+		}
 		
 		return self;
 	}
@@ -147,14 +153,25 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 		if(icon) {
 			var ind = icon_index;
 			
-			     if(is_array(ind))    ind = ind[0](params);
+			     if(is_array(ind))  ind = ind[0](params);
 			else if(is_method(ind)) ind = ind(params);
 			
 			gpu_set_tex_filter(true);
-			if(icon_size == 0) {
-				var ics = min(1, (_w - icon_padd) / icon_w, (_h - icon_padd) / icon_h);
-				draw_sprite_ext(icon, ind, bx, _y + _h / 2, ics, ics, 0, icon_blend, aa);
-			} else draw_sprite_ui_uniform(icon, ind, bx, _y + _h / 2, icon_size, icon_blend, aa);
+			if(is(icon, sprite_drawer)) {
+				if(icon_size == 0) {
+					var ics = min(1, (_w - icon_padd) / icon_w, (_h - icon_padd) / icon_h);
+					icon.draw(bx, _y + _h / 2, ics, icon_blend, aa);
+				} else 
+					icon.draw(bx, _y + _h / 2, icon_size, icon_blend, aa);
+				
+			} else {
+				if(icon_size == 0) {
+					var ics = min(1, (_w - icon_padd) / icon_w, (_h - icon_padd) / icon_h);
+					draw_sprite_ext(icon, ind, bx, _y + _h / 2, ics, ics, 0, icon_blend, aa);
+				} else 
+					draw_sprite_ui_uniform(icon, ind, bx, _y + _h / 2, icon_size, icon_blend, aa);
+			}
+			
 			gpu_set_tex_filter(false);
 		}
 		
@@ -250,10 +267,16 @@ function buttonInstant_Pad(spr, _x, _y, _w, _h, _m, _hvr, _act, _tip = "",
 		var icx = _x + _w / 2;
 		var icy = _y + _h / 2;
 		var ica = _icon_alpha == 1 || res == 0? _icon_alpha : 1;
-		var ics = min(1, (_w - _icon_padding) / sprite_get_width(_icon), (_h - _icon_padding) / sprite_get_height(_icon));
 		
 		gpu_set_tex_filter(true);
-		draw_sprite_ext(_icon, _icon_index, icx, icy, ics, ics, 0, cc, ica);
+	    if(is(_icon, sprite_drawer)) {
+	    	var ics = min(1, (_w - _icon_padding) / sprite_get_width(_icon.spr), (_h - _icon_padding) / sprite_get_height(_icon.spr));
+	    	_icon.draw(icx, icy, ics, cc, ica);
+	    	
+		} else if(sprite_exists(_icon)) {
+			var ics = min(1, (_w - _icon_padding) / sprite_get_width(_icon), (_h - _icon_padding) / sprite_get_height(_icon));
+			draw_sprite_uniform(_icon, _icon_index, icx, icy, ics, cc, ica);
+		}
 		gpu_set_tex_filter(false);
 	}
 	

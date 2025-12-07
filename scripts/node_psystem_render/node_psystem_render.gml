@@ -64,9 +64,6 @@ function Node_pSystem_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	custom_parameter_map         = {};
 	attributes.parameter_curves  = {};
 	
-	setTrigger(2, "Clear cache", [ THEME.cache, 0, COLORS._main_icon ]);
-	static onInspector2Update = function() /*=>*/ { clearCache(); }
-	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) {
 		var _parts = getInputData(0);
 		if(!is(_parts, pSystem_Particles)) return;

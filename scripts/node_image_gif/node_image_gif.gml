@@ -87,7 +87,8 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		return false;
 	}
 	
-	setTrigger(1, __txt("Refresh"), [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() /*=>*/ { updatePaths(path_get(getInputData(0))); });
+	insp1button = button(function() /*=>*/ { updatePaths(path_get(getInputData(0))); }).setTooltip(__txt("Refresh"))
+		.setIcon(THEME.refresh_icon, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
 	function read_gif_init(path) {
 		spr_buffer  = buffer_load(path);

@@ -125,7 +125,8 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		return true;
 	}
 	
-	setTrigger(1, __txt("Refresh"), [ THEME.refresh_icon, 1, COLORS._main_value_positive ], function() /*=>*/ { updatePaths(path_get(getInputData(0))); triggerRender(); });
+	insp1button = button(function() /*=>*/ { updatePaths(path_get(getInputData(0))); triggerRender(); }).setTooltip(__txt("Refresh"))
+		.setIcon(THEME.refresh_icon, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
 	static step = function() {
 		var str  = getInputData(2);
@@ -146,9 +147,9 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-		insp2UpdateTooltip = attributes.cache_use? __txt("Remove Cache") : __txt("Cache");
-		insp2UpdateIcon[0] = attributes.cache_use? THEME.cache : THEME.cache_group;
-		insp2UpdateIcon[2] = attributes.cache_use? c_white : COLORS._main_icon;
+		insp2button.tooltip = attributes.cache_use? __txt("Remove Cache") : __txt("Cache");
+		insp2button.icon = attributes.cache_use? THEME.dCache_clear : THEME.cache_group;
+		insp2button.icon_blend = attributes.cache_use? c_white : COLORS._main_icon;
 		
 		var path = path_get(getInputData(0));
 		if(!array_equals(path_current, path)) 
@@ -242,7 +243,8 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		triggerRender();
 	}
 	
-	setTrigger(2, __txt("Cache"), [ THEME.cache_group, 0, COLORS._main_icon ], function() /*=>*/ { if(attributes.cache_use) uncacheData() else cacheData(); });
+	insp2button = button(function() /*=>*/ { if(attributes.cache_use) uncacheData() else cacheData(); }).setTooltip(__txt("Cache"))
+		.setIcon(THEME.cache_group, 0, COLORS._main_icon).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
 	////- Serialize
 

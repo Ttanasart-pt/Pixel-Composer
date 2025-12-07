@@ -60,12 +60,14 @@ function Node_Display_Image(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			UNDO_HOLDING = true;
 	}
 	
-	setTrigger(1,,, function() /*=>*/ {
+	insp1button = button(function() /*=>*/ {
 		var path = getInputData(0);
 		if(path == "") return;
 		updatePaths(path);
 		update(); 
-	});
+		
+	}).setTooltip(__txt("Refresh"))
+		.setIcon(THEME.refresh_icon, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
 	function updatePaths(path) {
 		path = path_get(path);
