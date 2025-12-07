@@ -1,6 +1,6 @@
 function Node_MK_Loop_Machine(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "MK Loop Machine";
-	use_cache = CACHE_USE.manual;
+	setCacheManual();
 	
 	is_simulation = true;
 	

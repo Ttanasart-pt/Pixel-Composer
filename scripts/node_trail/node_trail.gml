@@ -8,9 +8,9 @@
 #endregion
 
 function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name		= "Trail";
-	use_cache   = CACHE_USE.manual;
+	name = "Trail";
 	clearCacheOnChange = false;
+	setCacheManual();
 	
 	////- Surfaces
 	

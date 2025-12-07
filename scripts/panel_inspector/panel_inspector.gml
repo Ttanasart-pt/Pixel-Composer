@@ -21,6 +21,7 @@
     
     function panel_inspector_trigger_1()                 { CALL("inspector_trigger_1");              PANEL_INSPECTOR.triggerInspectingNode(1);        }
     function panel_inspector_trigger_2()                 { CALL("inspector_trigger_2");              PANEL_INSPECTOR.triggerInspectingNode(2);        }
+    function panel_inspector_trigger_cache()             { CALL("inspector_trigger_cache");          PANEL_INSPECTOR.triggerInspectingNode(3);        }
     
     function panel_inspector_search_toggle()             { CALL("inspector_search_toggle");
     	PANEL_INSPECTOR.filtering = !PANEL_INSPECTOR.filtering;
@@ -50,8 +51,9 @@
         registerFunction(i, "Extract Value",         "",  MOD_KEY.none, panel_inspector_extract_single         ).setMenu("inspector_extract_value")
         registerFunction(i, "Toggle Bypass",         "",  MOD_KEY.none, panel_inspector_junction_bypass_toggle ).setMenu("inspector_bypass_toggle")
         registerFunction(i, "Toggle Visible",        "",  MOD_KEY.none, panel_inspector_visible_bypass_toggle  ).setMenu("inspector_visible_toggle")
-        registerFunction("", "Primary Action",    vk_f3,  MOD_KEY.none, panel_inspector_trigger_1              ).setMenu("inspector_trigger_1")
-        registerFunction("", "Secondary Action",  vk_f4,  MOD_KEY.none, panel_inspector_trigger_2              ).setMenu("inspector_trigger_2")
+        registerFunction("", "Primary Action",    vk_f2,  MOD_KEY.none, panel_inspector_trigger_1              ).setMenu("inspector_trigger_1")
+        registerFunction("", "Secondary Action",  vk_f3,  MOD_KEY.none, panel_inspector_trigger_2              ).setMenu("inspector_trigger_2")
+        registerFunction("", "Clear Cache",       vk_f4,  MOD_KEY.none, panel_inspector_trigger_cache          ).setMenu("inspector_trigger_3")
         
         registerFunction("Property", "Extract To...", "",  MOD_KEY.none, function(_dat) /*=>*/ {
         	var jun = PANEL_INSPECTOR.prop_hover;
@@ -269,6 +271,7 @@ function Panel_Inspector() : PanelContent() constructor {
         
         tooltip_primary   = new tooltipHotkey("", "", "Primary Action");
         tooltip_secondary = new tooltipHotkey("", "", "Secondary Action");
+        tooltip_cache     = new tooltipHotkey("", "", "Clear Cache");
     #endregion
     
     #region ---- Metadata ----
@@ -461,29 +464,10 @@ function Panel_Inspector() : PanelContent() constructor {
     }
     
     function triggerInspectingNode(index = 1) {
-    	if(index == 1) {
-	        if(inspectGroup) {
-                for( var i = 0, n = array_length(inspectings); i < n; i++ ) {
-                	if(inspectings[i].insp1button && inspectings[i].insp1button.visible)
-                		inspectings[i].insp1button.onClick();
-                }
-                
-            } else if(inspecting.insp1button && inspecting.insp1button.visible)
-                inspecting.insp1button.onClick();
-            return;
-    	}
-        
-    	if(index == 2) {
-	        if(inspectGroup) {
-                for( var i = 0, n = array_length(inspectings); i < n; i++ ) {
-                	if(inspectings[i].insp2button && inspectings[i].insp2button.visible)
-                		inspectings[i].insp2button.onClick();
-                }
-                
-            } else if(inspecting.insp2button && inspecting.insp2button.visible)
-                inspecting.insp2button.onClick();
-	        return;
-    	}
+    	__index = index;
+    	
+    	array_foreach(inspectings, function(ins) /*=>*/ {return ins.triggerInsp(__index)});
+        if(inspecting) inspecting.triggerInsp(__index);
     }
     
     ////- Property actions
@@ -1391,7 +1375,6 @@ function Panel_Inspector() : PanelContent() constructor {
     }
     
     static drawHeader_Node = function() {
-        
         var txt = inspecting.renamed? inspecting.display_name : inspecting.name;
              if(inspectGroup ==  1) txt = $"[{array_length(PANEL_GRAPH.nodes_selecting)}] {txt}"; 
         else if(inspectGroup == -1) txt = $"[{array_length(PANEL_GRAPH.nodes_selecting)}] Multiple nodes"; 
@@ -1401,8 +1384,15 @@ function Panel_Inspector() : PanelContent() constructor {
         var tb_w = w - ui(128);
         var tb_h = ui(32);
         
-        tb_node_name.setFocusHover(pFOCUS, pHOVER);
-        tb_node_name.draw(tb_x, tb_y, tb_w, tb_h, txt, [ mx, my ]);
+        var pd = ui(8);
+        var bs = ui(24);
+        var m   = [mx, my];
+        
+        var hov = pHOVER;
+        var foc = pFOCUS;
+        
+        tb_node_name.setFocusHover(foc, hov);
+        tb_node_name.draw(tb_x, tb_y, tb_w, tb_h, txt, m);
         
         if(inspectGroup >= 0) {
             draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_sub);
@@ -1420,13 +1410,13 @@ function Panel_Inspector() : PanelContent() constructor {
 	        
 	        var targ     = array_empty(inspect_history_undo)? noone : array_last(inspect_history_undo);
 	        var targName = targ == noone? "Project" : targ.getDisplayName();
-	        var _hov     = pHOVER && point_in_rectangle(mx, my, his_x, his_y, w / 2, his_y + ui(16));
+	        var _hov     = hov && point_in_rectangle(mx, my, his_x, his_y, w / 2, his_y + ui(16));
 	        
 	        var cc = _hov? c_white : COLORS._main_text_sub;
 	        var aa = _hov? 1 : .75;
 	        draw_sprite_ui_uniform(THEME.arrow_wire_16, 2, his_x + ui(8), his_y + ui(8), 1, cc, aa);
 	        
-	        if(_hov && mouse_lpress(pFOCUS)) {
+	        if(_hov && mouse_lpress(foc)) {
 	        	array_pop(inspect_history_undo);
 	        	array_push(inspect_history_redo, inspecting);
 	        	
@@ -1440,13 +1430,13 @@ function Panel_Inspector() : PanelContent() constructor {
 	        if(!array_empty(inspect_history_redo)) {
 	        	var targ     = array_last(inspect_history_redo);
 	        	var targName = targ == noone? "Project" : targ.getDisplayName();
-	        	var _hov     = pHOVER && point_in_rectangle(mx, my, his_x, his_y, w, his_y + ui(16));
+	        	var _hov     = hov && point_in_rectangle(mx, my, his_x, his_y, w, his_y + ui(16));
 	        	
 		        var cc = _hov? c_white : COLORS._main_text_sub;
 		        var aa = _hov? 1 : .75;
 		        draw_sprite_ui_uniform(THEME.arrow_wire_16, 0, his_x + ui(8), his_y + ui(8), 1, cc, aa);
 		        
-		        if(_hov && mouse_lpress(pFOCUS)) {
+		        if(_hov && mouse_lpress(foc)) {
 		        	array_pop(inspect_history_redo);
 		        	
 		        	setInspecting(targ, false, true);
@@ -1458,44 +1448,64 @@ function Panel_Inspector() : PanelContent() constructor {
 	        if(inspecting == noone) return;
         }
         
-        var bx = ui(8);
-        var by = ui(12);
+        var bx = pd;
+        var by = pd;
             
         if(inspectGroup == 0) {
             draw_set_font(f_p1);
             var lx = w / 2 - string_width(inspecting.name) / 2 - ui(10);
             var ly = ui(56 - 8);
-            if(buttonInstant(THEME.button_hide_fill, lx, ly, ui(16), ui(16), [mx, my], pHOVER, pFOCUS, __txt("Lock"), THEME.lock_12, !locked, locked? COLORS._main_icon_light : COLORS._main_icon) == 2)
+            if(buttonInstant(THEME.button_hide_fill, lx, ly, ui(16), ui(16), m, hov, foc, __txt("Lock"), THEME.lock_12, !locked, locked? COLORS._main_icon_light : COLORS._main_icon) == 2)
                 locked = !locked;
             
-            if(buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(32), [mx, my], pHOVER, pFOCUS, __txt("Presets"), THEME.preset, 1) == 2)
+            if(buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, m, hov, foc, __txt("Presets"), THEME.preset, 1,,, ui(8)) == 2)
                 dialogPanelCall(new Panel_Presets(inspecting), x + bx, y + by + ui(36));
+                
         } else {
-            draw_sprite_ui_uniform(THEME.preset, 1, bx + ui(32) / 2, by + ui(32) / 2, 1, COLORS._main_icon_dark);
+            draw_sprite_ui_uniform(THEME.preset, 1, bx + bs / 2, by + bs / 2, 1, COLORS._main_icon_dark);
         }
         
         ////- INSPECTOR ACTIONS
         
-        var bx  = w - ui(44);
-        var by  = ui(12);
-        var bs  = ui(32);
-        var hov = pHOVER;
-        var foc = pFOCUS;
-        var m   = [mx, my];
+        var bx = w - pd - bs;
+        var by = pd;
         
         var b = inspecting.insp1button;
         if(b && b.visible) {
         	b.icon_padd = ui(8);
         	b.setFocusHover(foc, hov);
         	b.draw(bx, by, bs, bs, m);
+        	
+        	if(b.hovering) {
+        		TOOLTIP      = tooltip_primary;
+        		TOOLTIP.text = b.tooltip;
+        	}
         }
         
-        by += bs + ui(4);
+        by += bs + ui(2);
         var b = inspecting.insp2button;
         if(b && b.visible) {
         	b.icon_padd = ui(8);
         	b.setFocusHover(foc, hov);
         	b.draw(bx, by, bs, bs, m);
+        	
+        	if(b.hovering) {
+        		TOOLTIP      = tooltip_secondary;
+        		TOOLTIP.text = b.tooltip;
+        	}
+        }
+        
+        by += bs + ui(2);
+        var b = inspecting.buttonCacheClear;
+        if(b && b.visible) {
+        	b.icon_padd = ui(8);
+        	b.setFocusHover(foc, hov);
+        	b.draw(bx, by, bs, bs, m);
+        	
+        	if(b.hovering) {
+        		TOOLTIP      = tooltip_cache;
+        		TOOLTIP.text = b.tooltip;
+        	}
         }
     }
     
@@ -1505,9 +1515,13 @@ function Panel_Inspector() : PanelContent() constructor {
     	
         if(inspecting && !inspecting.active) inspecting = noone;
         var mse = [mx,my];
+        var pd = ui(8);
+        var bs = ui(24);
+        var bb = THEME.button_hide_fill;
+        var tt = view_mode_tooltip;
         
         view_mode_tooltip.index = viewMode;
-        var b = buttonInstant(THEME.button_hide_fill,  ui(8), ui(48), ui(32), ui(32), mse, pHOVER, pFOCUS, view_mode_tooltip, THEME.inspector_view, viewMode);
+        var b = buttonInstant_Pad(bb, pd, pd + (bs + ui(2)) * 2, bs, bs, mse, pHOVER, pFOCUS, tt, THEME.inspector_view, viewMode,,, ui(8));
         if(b == 2 || (b == 1 && key_mod_press(SHIFT) && MOUSE_WHEEL != 0)) { 
         	viewMode = !viewMode; 
         	PREFERENCES.inspector_view_default = viewMode;

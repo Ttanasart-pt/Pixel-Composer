@@ -793,22 +793,19 @@
 
 	function surface_array_free(arr) {
 		INLINE
-	
-		if(!is_array(arr)) {
-			if(is_surface(arr)) surface_free(arr);
-			return;
-		}
+		if(!is_array(arr)) { if(is_surface(arr)) surface_free(arr); return; }
 	
 		for( var i = 0, n = array_length(arr); i < n; i++ ) 
 			surface_array_free(arr[i]);
 	}
 
 	function surface_array_clone(arr) {
+		INLINE
 		if(!is_array(arr)) return is_surface(arr)? surface_clone(arr) : arr;
 		
-		var _arr = [];
-	
-		for( var i = 0, n = array_length(arr); i < n; i++ ) 
+		var  amo = array_length(arr);
+		var _arr = array_create(amo);
+		for( var i = 0; i < amo; i++ ) 
 			_arr[i] = surface_array_clone(arr[i]);
 	
 		return _arr;

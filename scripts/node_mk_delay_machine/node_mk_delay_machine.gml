@@ -1,6 +1,6 @@
 function Node_MK_Delay_Machine(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "MK Delay Machine";
-	use_cache = CACHE_USE.manual;
+	setCacheManual();
 	
 	is_simulation = true;
 	

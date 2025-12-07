@@ -1,6 +1,6 @@
 function Node_Cache_Array(_x, _y, _group = noone) : __Node_Cache(_x, _y, _group) constructor {
-	name	  = "Cache Array";
-	use_cache = CACHE_USE.manual;
+	name = "Cache Array";
+	setCacheManual();
 	
 	////- =Surfaces
 	newInput(0, nodeValue_Surface("Surface In"));

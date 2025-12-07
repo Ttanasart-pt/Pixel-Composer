@@ -11,7 +11,12 @@ function sprite_drawer_white(_spr, _col = c_white) : sprite_drawer() constructor
 	
 	static draw = function(_x, _y, scale, color, alpha) {
 		draw_sprite_ui_uniform(spr, 0, _x, _y, scale, color, alpha);
-		draw_sprite_ui_uniform(spr, 1, _x, _y, scale, col, alpha);
+		draw_sprite_ui_uniform(spr, 1, _x, _y, scale, col,   alpha);
+	}
+	
+	static drawScale = function(_x, _y, scale, color, alpha) {
+		draw_sprite_uniform(spr, 0, _x, _y, scale, color, alpha);
+		draw_sprite_uniform(spr, 1, _x, _y, scale, col,   alpha);
 	}
 }
 

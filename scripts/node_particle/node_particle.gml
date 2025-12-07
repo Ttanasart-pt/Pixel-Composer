@@ -29,8 +29,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	attribute_interpolation();
 	
 	attributes.cache = true;
-	array_push(attributeEditors,   "Cache" );
-	array_push(attributeEditors, [ "Cache Data", function() /*=>*/ {return attributes.cache}, new checkBox(function() /*=>*/ {return toggleAttribute("cache", true)}) ]);
+	// array_push(attributeEditors, [ "Cache Data", () => attributes.cache, new checkBox(() => toggleAttribute("cache", true)) ]);
 	
 	def_surface    = -1;
 	curr_dimension = [0,0];
@@ -76,7 +75,6 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	}
 	
 	static onUpdate = function(frame = CURRENT_FRAME) {
-		use_cache = attributes.cache? CACHE_USE.auto : CACHE_USE.none;
 		if(frame != render_frame && !IS_FIRST_FRAME) return;
 		
 		var _inSurf  = getInputData(0);
@@ -145,8 +143,6 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 			}
 			
 		surface_reset_shader();	
-		
-		if(GLOBAL_IS_PLAYING) cacheCurrentFrame(_outSurf);
 	}
 	
 }

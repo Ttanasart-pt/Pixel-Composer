@@ -160,7 +160,7 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 			if(is(icon, sprite_drawer)) {
 				if(icon_size == 0) {
 					var ics = min(1, (_w - icon_padd) / icon_w, (_h - icon_padd) / icon_h);
-					icon.draw(bx, _y + _h / 2, ics, icon_blend, aa);
+					icon.drawScale(bx, _y + _h / 2, ics, icon_blend, aa);
 				} else 
 					icon.draw(bx, _y + _h / 2, icon_size, icon_blend, aa);
 				

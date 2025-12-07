@@ -118,18 +118,20 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				}
 			}
 			
-			butx += bs;
-			lb_x += bs;
-			lb_w += bs;
-			draw_sprite_ui_uniform(THEME.node_use_expression, jun.expUse, butx, lb_y, ics, c_white, .8);
-			if(_hover && point_in_circle(_m[0], _m[1], butx, lb_y, bs / 2)) {
-				cHov  = true;
-				
-				draw_sprite_ui_uniform(THEME.node_use_expression, jun.expUse, butx, lb_y, ics,, 1);
-				TOOLTIP = __txtx("panel_inspector_use_expression", "Use expression");
-				
-				if(mouse_press(mb_left, _focus))
-					jun.setUseExpression(!jun.expUse);
+			if(_input) {
+				butx += bs;
+				lb_x += bs;
+				lb_w += bs;
+				draw_sprite_ui_uniform(THEME.node_use_expression, jun.expUse, butx, lb_y, ics, c_white, .8);
+				if(_hover && point_in_circle(_m[0], _m[1], butx, lb_y, bs / 2)) {
+					cHov  = true;
+					
+					draw_sprite_ui_uniform(THEME.node_use_expression, jun.expUse, butx, lb_y, ics,, 1);
+					TOOLTIP = __txtx("panel_inspector_use_expression", "Use expression");
+					
+					if(mouse_press(mb_left, _focus))
+						jun.setUseExpression(!jun.expUse);
+				}
 			}
 			
 		} // Visibility

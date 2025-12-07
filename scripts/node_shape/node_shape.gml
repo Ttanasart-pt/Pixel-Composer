@@ -61,7 +61,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput( 0, nodeValue_Dimension());
 	newInput(44, nodeValue_Surface( "UV Map"     ));
 	newInput(45, nodeValue_Slider(  "UV Mix", 1  ));
-	newInput( 6, nodeValue_Bool(    "Anti-aliasing", false ));
+	newInput( 6, nodeValue_Bool(    "Anti-Aliasing", false ));
 	
 	////- =Transform
 	newInput(15, nodeValue_Enum_Scroll( "Positioning Mode",    2, [ "Area", "Center + Scale", "Full Image" ]))
@@ -93,13 +93,13 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(40, nodeValue_Vec2(           "Half Point",    [.5,.5]   )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference).hideLabel();
 	newInput(34, nodeValue_Slider(         "Thickness",      .1       )).hideLabel();
 	
-	newInput( 9, nodeValue_Slider(         "Corner radius",   0, [0, 0.5, 0.001] )).hideLabel().setValidator(VV_clamp(0, .5));
+	newInput( 9, nodeValue_Slider(         "Corner Radius",   0, [0, 0.5, 0.001] )).hideLabel().setValidator(VV_clamp(0, .5));
 	newInput( 4, nodeValue_Int(            "Sides",           3       )).hideLabel().setVisible(false);
-	newInput(13, nodeValue_Slider(         "Start radius",   .1       )).hideLabel().setVisible(false);
-	newInput( 5, nodeValue_Slider(         "Inner radius",   .5       )).hideLabel().setVisible(false);
+	newInput(13, nodeValue_Slider(         "Start Radius",   .1       )).hideLabel().setVisible(false);
+	newInput( 5, nodeValue_Slider(         "Inner Radius",   .5       )).hideLabel().setVisible(false);
 	newInput( 7, nodeValue_Rotation(       "Rotation",        0       )).hideLabel();
-	newInput( 8, nodeValue_Rotation_Range( "Angle range",    [0,180]  )).hideLabel();
-	newInput(14, nodeValue_PathNode(       "Shape path"               )).hideLabel();
+	newInput( 8, nodeValue_Rotation_Range( "Angle Range",    [0,180]  )).hideLabel();
+	newInput(14, nodeValue_PathNode(       "Shape Path"               )).hideLabel();
 	newInput(21, nodeValue_Slider_Range(   "Angles",         [.5, 1.] )).hideLabel();
 	newInput(38, nodeValue_Slider(         "Top Side",        .5      )).hideLabel();
 	newInput(39, nodeValue_Slider(         "Botton Side",      1      )).hideLabel();
@@ -119,7 +119,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(42, nodeValue_Vec2(           "Shear",           [0,0]           ))
 	
 	////- =Render
-	newInput(10, nodeValue_Color(          "Shape color",      ca_white       ));
+	newInput(10, nodeValue_Color(          "Shape Color",      ca_white       ));
 	newInput(18, nodeValue_Bool(           "Tile",             false          ));
 	
 	////- =Height
@@ -130,7 +130,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	////- =Background
 	newInput( 1, nodeValue_Bool(           "Background",       false          ));
-	newInput(11, nodeValue_Color(          "Background color", ca_black       ));
+	newInput(11, nodeValue_Color(          "Background Color", ca_black       ));
 	// 46
 	
 	/////////////////////////////////////////////

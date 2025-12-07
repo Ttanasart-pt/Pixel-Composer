@@ -4,7 +4,6 @@
 
 function __node_cache() {
 	use_cache		= CACHE_USE.none;
-	cached_manual	= false;
 	cached_output	= [];
 	cache_result	= [];
 	cache_group     = noone;

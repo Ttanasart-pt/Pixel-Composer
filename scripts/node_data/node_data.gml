@@ -190,6 +190,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		attributes.outp_meta         = false;
 		attributes.show_render_frame = false;
 		attributes.preview_size      = 128;
+		attributes.cache             = false;
 		
 		attributes.annotation        = "";
 		attributes.annotation_size   = .4;
@@ -197,6 +198,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		setAttribute = function(k, v, r = false) /*=>*/ { attributes[$ k] = v;                if(r) triggerRender(); project.modified = true; }
 		toggleAttribute = function(k, r = false) /*=>*/ { attributes[$ k] = !attributes[$ k]; if(r) triggerRender(); project.modified = true; }
+		
+		attrCacheEdit = ["Cache Data", function() /*=>*/ {return attributes.cache}, new checkBox(function() /*=>*/ { toggleAttribute("cache", true); checkCache(); }) ];
 		
 		array_append(attributeEditors, [
 			"Display",  
@@ -207,6 +210,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			["Params Width",   function() /*=>*/ {return attributes.node_param_width}, textBox_Number(function(v) /*=>*/ { setAttribute("node_param_width", v); refreshNodeDisplay(); }) ],
 			
 			"Node",
+			attrCacheEdit,
 			["Auto Update",       function() /*=>*/ {return attributes.update_graph},        new checkBox(function() /*=>*/ { toggleAttribute("update_graph");        refreshNodeDisplay(); }) ],
 			["Render Frame Input",function() /*=>*/ {return attributes.show_render_frame},   new checkBox(function() /*=>*/ { toggleAttribute("show_render_frame");   refreshNodeDisplay(); }) ],
 			["Update Trigger",    function() /*=>*/ {return attributes.show_update_trigger}, new checkBox(function() /*=>*/ { toggleAttribute("show_update_trigger"); refreshNodeDisplay(); }) ],
@@ -216,6 +220,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				refreshTimeline();
 			})],
 		]);
+		
 	#endregion
 	
 	#region ---- Preview ----
@@ -383,11 +388,22 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		.setIcon(THEME.dCache_clear, 0, COLORS._main_icon).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
 	insp1button = undefined;
-	insp2button = buttonCacheClear;
+	insp2button = undefined;
+	
+	static triggerInsp = function(i) {
+		var b = undefined;
+		
+		switch(i) {
+			case 1 : b = insp1button;      break;
+			case 2 : b = insp2button;      break;
+			case 3 : b = buttonCacheClear; break;
+			default : return;
+		}
+		
+		if(b.visible) b.onClick();
+	}
 	
 	static triggerCheck = function() {
-		buttonCacheClear.visible = use_cache != CACHE_USE.none;
-		
 		if(insp1button && insp1button.visible) {
 			inspectInput1.name = insp1button.tooltip;
 			
@@ -998,44 +1014,54 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static doUpdateLite = function(frame = CURRENT_FRAME) {
+		if(project.safeMode) return;
 		if(is_3D == NODE_3D.polygon) USE_DEPTH = true;
-		render_timer = get_timer();
 		
+		render_timer = get_timer();
 		setRenderStatus(true);
 		
-		__frame = frame;
-		array_foreach(inputs, function(_inp, i) /*=>*/ {
-			if(!is(_inp, NodeValue) || !_inp.bypass_junc.visible || !_inp.isDynamic()) return;
-			_inp.bypass_junc.setValue(_inp.getValue(__frame));
-		});
-		
-		if(frameInput.value_from != noone) frame = frameInput.getValue() - 1;
-		
-		if(attributes.update_graph) {
-			try      { if(preUpdate) preUpdate(frame); update(frame);   } 
-			catch(e) { log_warning("RENDER", exception_print(e), self); }
+		if(use_cache == CACHE_USE.auto && recoverCache()) {
+			render_cached = true;
+			
+		} else {
+			render_cached = false;
+			
+			if(frameInput.value_from != noone) frame = frameInput.getValue() - 1;
+			__frame = frame;
+			
+			array_foreach(inputs, function(_inp, i) /*=>*/ {
+				if(!is(_inp, NodeValue) || !_inp.bypass_junc.visible || !_inp.isDynamic()) return;
+				_inp.bypass_junc.setValue(_inp.getValue(__frame));
+			});
+			
+			if(attributes.update_graph) {
+				try      { if(preUpdate) preUpdate(frame); update(frame);   } 
+				catch(e) { log_warning("RENDER", exception_print(e), self); }
+			}
+			
+			if(use_cache == CACHE_USE.auto || project.onion_skin.enabled)
+				cacheCurrentFrame(outputs[cache_index].getValue());
 		}
 		
 		render_time = get_timer() - render_timer;
 	}
 	
 	static doUpdateFull = function(frame = CURRENT_FRAME) {
-		if(is_3D == NODE_3D.polygon) USE_DEPTH = true;
 		if(project.safeMode) return;
+		if(is_3D == NODE_3D.polygon) USE_DEPTH = true;
 		
 		render_timer = get_timer();
 		var _updateRender = !is(self, Node_Collection) || !managedRenderOrder;
 		if(_updateRender) setRenderStatus(true);
 		
-		if(frameInput.value_from != noone) frame = frameInput.getValue() - 1;
-		
-		getInputs(frame);
-		
-		if(cached_manual || (use_cache == CACHE_USE.auto && recoverCache())) {
+		if(use_cache == CACHE_USE.auto && recoverCache()) {
 			render_cached = true;
 			
 		} else {
 			render_cached = false;
+			
+			if(frameInput.value_from != noone) frame = frameInput.getValue() - 1;
+			getInputs(frame);
 			
 			LOG_BLOCK_START();
 			LOG_IF(global.FLAG.render == 1, $">>>>>>>>>> DoUpdate called from {getInternalName()} <<<<<<<<<<");
@@ -1055,22 +1081,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				
 				log_warning("RENDER", exception_print(exception), self);
 			}
+			
+			if(use_cache == CACHE_USE.auto || project.onion_skin.enabled)
+				cacheCurrentFrame(outputs[cache_index].getValue());
 		}
 		
 		if(!IS_PLAYING) {
 			array_foreach(inputs,  function(in, i) /*=>*/ { in.updateColor(getInputData(i)); });
 			array_foreach(outputs, function(in, i) /*=>*/ { in.updateColor(in.getValue());   });
-		}
-		
-		cached_manual = false;
-		
-		if(!use_cache && project.onion_skin.enabled) {
-			var _amo = array_length(outputs), _i = 0, i;
-			repeat(_amo) { i = _i++;
-				if(outputs[i].type != VALUE_TYPE.surface) continue;
-				cacheCurrentFrame(outputs[i].getValue());
-				break;
-			}
 		}
 		
 		if(insp1button && insp1button.visible && inspectInput1.getValue()) insp1button.onClick(true);
@@ -2605,12 +2623,25 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	////- CACHE
 	
 	use_cache          = CACHE_USE.none;
-	cached_manual      = false;
 	cached_output      = [];
 	cache_result       = [];
+	cache_index        = 0;
 	preview_cache      = [];
 	cache_group        = noone;
 	clearCacheOnChange = true;
+	
+	static checkCache = function() {
+		if(use_cache == CACHE_USE.manual) return;
+		use_cache = attributes.cache? CACHE_USE.auto : CACHE_USE.none;
+		buttonCacheClear.visible = bool(use_cache);
+		
+		if(!attributes.cache) clearCache();
+	}
+	
+	static setCacheManual = function() {
+		use_cache = CACHE_USE.manual;
+		array_remove(attributeEditors, attrCacheEdit);
+	}
 	
 	static isAllCached = function() {
 		for( var i = 0; i < TOTAL_FRAMES; i++ )
@@ -2638,57 +2669,31 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		preview_cache = array_verify(preview_cache, TOTAL_FRAMES + 1);
 	}
 	
-	static cacheCurrentFrame = function(_surface) {
-		var _frame = CURRENT_FRAME;
+	static cacheCurrentFrame = function(_val, _frame = CURRENT_FRAME) {
+		if(_frame < 0 || _frame >= array_length(cached_output)) return;
 		
-		if(_frame < 0) return;
-		if(_frame >= array_length(cached_output)) return;
-		
-		if(is_array(_surface)) {
-			surface_array_free(cached_output[_frame]);
-			cached_output[_frame] = surface_array_clone(_surface);
-			
-		} else if(surface_exists(_surface)) {
-			var _sw = surface_get_width(_surface);
-			var _sh = surface_get_height(_surface);
-			
-			cached_output[_frame] = surface_verify(cached_output[_frame], _sw, _sh);
-			surface_set_target(cached_output[_frame]);
-				DRAW_CLEAR BLEND_OVERRIDE
-				draw_surface(_surface, 0, 0);
-			surface_reset_target();
-		}
+		surface_array_free(cached_output[_frame]);
+		cached_output[_frame] = surface_array_clone(_val);
 		
 		array_safe_set(cache_result, _frame, true);
-		
 		return cached_output[_frame];
 	}
 	
-	static cacheExist = function(frame = CURRENT_FRAME) {
-		if(frame < 0) return false;
-		
-		if(frame >= array_length(cached_output)) return false;
-		if(frame >= array_length(cache_result))  return false;
-		if(!array_safe_get_fast(cache_result, frame, false)) return false;
-		
-		var s = array_safe_get_fast(cached_output, frame);
-		return is_array(s) || surface_exists(s);
+	static cacheExist = function(_frame = CURRENT_FRAME) {
+		if(_frame < 0 || _frame >= min(array_length(cache_result), array_length(cached_output))) return false;
+		return array_safe_get_fast(cache_result, _frame, false);
 	}
 	
-	static getCacheFrame = function(frame = CURRENT_FRAME) {
-		if(frame < 0) return false;
-		
-		if(!cacheExist(frame)) return noone;
-		var surf = array_safe_get_fast(cached_output, frame);
-		return surf;
+	static getCacheFrame = function(_frame = CURRENT_FRAME) {
+		return cacheExist(_frame)? array_safe_get_fast(cached_output, _frame) : noone;
 	}
 	
-	static recoverCache = function(frame = CURRENT_FRAME) {
-		if(!cacheExist(frame)) return false;
+	static recoverCache = function(_frame = CURRENT_FRAME) {
+		if(!cacheExist(_frame)) return false;
 		
 		var _s = cached_output[CURRENT_FRAME];
-		outputs[0].setValue(_s);
-			
+		outputs[cache_index].setValue(_s);
+		
 		return true;
 	}
 	
@@ -2701,15 +2706,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(!isRenderActive())   return;
 		}
 		
-		if(array_length(cached_output) != TOTAL_FRAMES)
-			array_resize(cached_output, TOTAL_FRAMES);
-		for(var i = 0; i < array_length(cached_output); i++) {
-			var _s = cached_output[i];
-			if(is_surface(_s))
-				surface_free(_s);
-			cached_output[i] = 0;
-			cache_result[i] = false;
-		}
+		surface_array_free(cached_output);
+		array_map_ext(cached_output, function() /*=>*/ {return undefined});
+		array_map_ext(cache_result,  function() /*=>*/ {return false});
 	}
 	
 	static clearCacheForward = function() {
@@ -2912,6 +2911,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		anim_timeline = attributes[$ "show_timeline"] ?? false;
 		if(anim_timeline) refreshTimeline();
 		
+		checkCache();
 	}
 	
 	static inputBalance = function() { // Cross-version compatibility for dynamic input nodes

@@ -7,8 +7,8 @@
 
 function Node_Time_Remap(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name      = "Time Remap";
-	use_cache = CACHE_USE.manual;
 	update_on_frame = true;
+	setCacheManual();
 	
 	////- =Surfaces
 	newInput(0, nodeValue_Surface( "Surface In" )).rejectArray();
