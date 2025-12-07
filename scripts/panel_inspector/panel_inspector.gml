@@ -918,7 +918,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 
                 var lb_h = line_get_height(_font, 4 + viewMode * 2);
                 var lb_w = line_get_width(jun.getName(), _font) + _padx;
-                var lb_x = bs * 2 + ui(16) + (ui(24) * (jun.color != -1)) - _padx / 2;
+                var lb_x = bs * 3 + ui(16) + (ui(24) * (jun.color != -1)) - _padx / 2;
                 
                 var lbHov = point_in_rectangle(_m[0], _m[1], lb_x, yy, lb_x + lb_w, yy + lb_h);
                 if(lbHov) {

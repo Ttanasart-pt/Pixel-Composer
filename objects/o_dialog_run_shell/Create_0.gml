@@ -16,7 +16,7 @@ event_inherited();
 		prog = _prog;
 		cmd  = _cmd;
 		
-		ctxt[0] = $"Do you want {node.name} node to run";
+		ctxt[0] = $"Do you want the [{node.name}] node to run";
 		ctxt[1] = $"{prog} {cmd}";
 		ctxt[2] = $"Running unknown shell script can cause damage to your computer. Make sure you trust the author of the node before running it.";
 		

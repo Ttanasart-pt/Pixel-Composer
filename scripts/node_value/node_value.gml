@@ -39,7 +39,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		graphWidgetH   = 0;
 		graphWidgetP   = new widgetParam(0, 0, 0, 0, 0);
 		mapWidget      = noone;
-		active_tooltip = "";
+		inactive_tooltip = "";
 		
 		is_dummy       = false;
 		ghost_hover    = noone;
@@ -311,7 +311,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static setActive = function(_active, _tooltip) {
 		INLINE
 		active = _active;
-		active_tooltip = _tooltip;
+		inactive_tooltip = _tooltip;
 		
 		return self;
 	}
