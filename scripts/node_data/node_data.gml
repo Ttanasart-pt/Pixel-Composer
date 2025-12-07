@@ -2375,7 +2375,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		preview_my = _my;
 		
 		if(value_validation[VALIDATION.error])
-			draw_sprite_stretched_ext(THEME.node_glow_border, 0, xx - 9, yy - 9, w * _s + 18, h * _s + 18, COLORS._main_value_negative, 1);
+			draw_sprite_stretched_ext(THEME.node_glow_border, 0, xx - 9, yy - 9, w * _s + 18, hh * _s + 18, COLORS._main_value_negative, 1);
 		
 		drawNodeBase(xx, yy, _s);
 		draggable = true;
@@ -2428,7 +2428,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		if(draw_droppable) {
-			draw_sprite_stretched_ext(THEME.color_picker_box, 0, xx - 2 * _s, yy - 2 * _s, w * _s + 4 * _s, h * _s + 4 * _s, COLORS._main_value_positive, 1);
+			var _xx = xx - 2 * _s;
+			var _yy = yy - 2 * _s;
+			var _ww = ( w + 4) * _s;
+			var _hh = (hh + 4) * _s;
+			
+			draw_sprite_stretched_ext(THEME.color_picker_box, 0, _xx, _yy, _ww, _hh, COLORS._main_value_positive, 1);
 			draw_droppable = false;
 		}
 		

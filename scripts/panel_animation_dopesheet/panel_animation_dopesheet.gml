@@ -35,6 +35,7 @@ function Panel_Animation_Dopesheet() {
         
         dopesheet_name_mask    = noone;
         dopesheet_name_surface = noone;
+        dopesheet_name_hover   = false;
     #endregion
 	
 	#region ---- Timeline ----
@@ -1629,7 +1630,7 @@ function Panel_Animation_Dopesheet() {
         var ty1  = ty0 + animator.h;
         var m    = [msx, msy];
         
-        var hov = item_dragging == noone && pHOVER && point_in_rectangle(msx, msy, 0, ty0, w - ui(64), ty1);
+        var hov = item_dragging == noone && dopesheet_name_hover && point_in_rectangle(msx, msy, 0, ty0, w - ui(64), ty1);
         var foc = pFOCUS;
         
         //// Draw Name
@@ -1838,6 +1839,8 @@ function Panel_Animation_Dopesheet() {
     }
 	    
     function drawDopesheet_Label() { 
+    	dopesheet_name_hover = pHOVER && point_in_rectangle(mx, my, ui(8), ui(8), ui(8) + tool_width, ui(8) + dopesheet_h);
+    	
         surface_set_target(dopesheet_name_surface);    
         draw_clear_alpha(COLORS.panel_bg_clear_inner, 0);
         var msx = mx - ui(8);

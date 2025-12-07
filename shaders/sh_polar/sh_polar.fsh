@@ -115,11 +115,15 @@ uniform int   invert;
 uniform int   distMode;
 uniform int   swap;
 uniform vec2  tile;
+uniform vec2  range;
 
 uniform vec2      blend;
 uniform int       blendUseSurf;
 uniform sampler2D blendSurf;
-uniform vec2      range;
+
+uniform vec2      twist;
+uniform int       twistUseSurf;
+uniform sampler2D twistSurf;
 
 void main() {
 	vec2 center = vec2(0.5, 0.5);
@@ -133,6 +137,12 @@ void main() {
 		bld = mix(blend.x, blend.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 	}
 	
+	float tws = twist.x;
+	if(twistUseSurf == 1) {
+		vec4 _vMap = texture2Dintp( twistSurf, v_vTexcoord );
+		tws = mix(twist.x, twist.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	}
+	
 	float rad0 = radians(range.x);
 	float rad1 = radians(range.y);
 	float radr = (range.y - range.x) / 360.;
@@ -141,7 +151,7 @@ void main() {
 	
 	if(invert == 0) {
 		float dist = distance(v_vTexcoord, center) / (sqrt(2.) * .5);
-		if(distMode == 1)      dist = sqrt(dist);
+		     if(distMode == 1) dist = sqrt(dist);
 		else if(distMode == 2) dist = log(dist);
 		
 		vec2  cenPos = v_vTexcoord - center;
@@ -150,6 +160,7 @@ void main() {
 		angle = (angle - rad0) / radr;
 		if(angle < rad0 || angle > rad1) return;
 		
+		angle += tws * dist;
 		angle /= PI * 2.;
 		coord = fract(vec2(dist, angle) * _tile);
 		
@@ -163,6 +174,7 @@ void main() {
 		angle = (angle - rad0) / radr;
 		if(angle < rad0 || angle > rad1) return;
 		
+		angle += tws * dist;
 		coord = fract(center + vec2(cos(angle), sin(angle)) * dist * _tile);
 	}
 	

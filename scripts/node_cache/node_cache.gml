@@ -18,7 +18,7 @@ function Node_Cache(_x, _y, _group = noone) : __Node_Cache(_x, _y, _group) const
 	cache_content			= "";
 	cache_loading_progress  = 0;
 	
-	insp2button = button(function() /*=>*/ { clearCache(true); enableNodeGroup(); }).setTooltip(__txt("Clear cache"))
+	buttonCacheClear = button(function() /*=>*/ { clearCache(true); enableNodeGroup(); }).setTooltip(__txt("Clear cache"))
 		.setIcon(THEME.dCache_clear, 0, COLORS._main_icon).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
 	static step = function() {

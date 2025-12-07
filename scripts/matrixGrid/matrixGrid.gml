@@ -125,14 +125,17 @@ function matrixGrid(_type, _onModify, _unit = noone) : widget() constructor {
 		for(var i = 0; i < size[1]; i++)
 		for(var j = 0; j < size[0]; j++) {
 			var ind = i * size[0] + j;
-			tb[ind].setFocusHover(active, hover);
-			tb[ind].hide = true;
+			var _tb = array_safe_get_fast(tb, ind);
+			if(!is(_tb, widget)) continue;
+			
+			_tb.setFocusHover(active, hover);
+			_tb.hide = true;
 			
 			var bx  = _x + ww * j;
 			var by  = _y + _h * i;
 			var _dat = array_safe_get_fast(_raw, ind);
 			
-			tb[ind].draw(bx, by, ww, _h, _dat, _m);
+			_tb.draw(bx, by, ww, _h, _dat, _m);
 		}
 		
 		resetFocus();
