@@ -727,7 +727,17 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		
 	}
 	
-	static drawParam = function(params) {
+	static fetchHeight = function(params) { 
+		var _h = params.h;
+		var _l = max(min_lines, array_length(_input_text_line));
+		
+		_h = max(_h, padding_v * 2 + line_get_height() * _l);
+		if(max_height) _h = min(_h, max_height);
+		
+		return _h; 
+	}
+	
+	static drawParam   = function(params) {
 		setParam(params);
 		
 		if(format == TEXT_AREA_FORMAT.codeHLSL || format == TEXT_AREA_FORMAT.codeLUA) 

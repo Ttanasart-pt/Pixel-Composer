@@ -68,7 +68,8 @@ function matrixGrid(_type, _onModify, _unit = noone) : widget() constructor {
 		return false;
 	}
 	
-	static drawParam = function(params) {
+	static fetchHeight = function(params) { if(is(params.data, Matrix)) setSize(params.data.size); return params.h * size[1]; }
+	static drawParam   = function(params) {
 		setParam(params);
 		for(var i = 0; i < vsize; i++)
 			tb[i].setParam(params);
@@ -117,8 +118,10 @@ function matrixGrid(_type, _onModify, _unit = noone) : widget() constructor {
 		
 		}
 		
-		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, ww * size[0], _h * size[1], boxColor, 1);
-		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, ww * size[0], _h * size[1], boxColor, 0.5 + 0.5 * interactable);	
+		if(hide == 0) {
+			draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, ww * size[0], _h * size[1], boxColor, 1);
+			draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, ww * size[0], _h * size[1], boxColor, 0.5 + 0.5 * interactable);	
+		}
 		
 		var _raw = is(_data, Matrix)? _data.raw : _data;
 		

@@ -35,7 +35,8 @@ function pbBoxBox(_junction) : widget() constructor {
 			tb_draw[i].register(parent);
 	}
 	
-	static drawParam = function(params) {
+	static fetchHeight = function(params) { return ui(240); }
+	static drawParam   = function(params) {
 		setParam(params);
 		
 		tb_anchor_w.setParam(params);

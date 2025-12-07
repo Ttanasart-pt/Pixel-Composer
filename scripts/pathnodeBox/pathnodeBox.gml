@@ -13,7 +13,8 @@ function pathnodeBox(_junction) : widget() constructor {
     
 	static trigger = function() { }
 	
-	static drawParam = function(params) {
+	static fetchHeight = function(params) { return TEXTBOX_HEIGHT; }
+	static drawParam   = function(params) {
 		setParam(params);
 		return draw(params.x, params.y, params.w, params.data, params.m);
 	}

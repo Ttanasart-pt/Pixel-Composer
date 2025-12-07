@@ -123,8 +123,10 @@ function quarternionBox(_onModify) : widget() constructor {
 		
 		var _dispDat = _data;
 		
-		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor, 1);
-		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor, 0.5 + 0.5 * interactable);	
+		if(hide == 0) {
+			draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor, 1);
+			draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor, 0.5 + 0.5 * interactable);	
+		}
 		
 		for(var i = 0; i < size; i++) {
 			var _a = array_safe_get(_dispDat, i, 0);

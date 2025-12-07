@@ -64,7 +64,12 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 		return false;
 	}
 	
-	static drawParam = function(params) {
+	static fetchHeight = function(params) { 
+		if(has(params.display_data, "ranged")) ranged = params.display_data.ranged;
+		return ranged? params.h * 2 : params.h; 
+	}
+	
+	static drawParam   = function(params) {
 		setParam(params);
 		for(var i = 0; i < size; i++) tb[i].setParam(params);
 		
@@ -78,10 +83,10 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 		
 		_data = array_verify(_data, size);
 		
-		if(struct_has(_display_data, "linked")) linked = _display_data.linked;
-		if(struct_has(_display_data, "ranged")) ranged = _display_data.ranged;
+		if(has(_display_data, "linked")) linked = _display_data.linked;
+		if(has(_display_data, "ranged")) ranged = _display_data.ranged;
 		
-		h = ranged? _h * 2 + ui(4) : _h;
+		h = ranged? _h * 2 : _h;
 		
 		var _bs = min(_h, ui(32));
 		
@@ -132,11 +137,9 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 		
 		var ww = _w / dim;
 		
-		for( var j = 0; j < 1 + ranged; j++ ) {
-			var by = _y + (_h + ui(4)) * j;
-			
-			draw_sprite_stretched_ext(THEME.textbox, 3, _x, by, _w, _h, boxColor, 1);
-			draw_sprite_stretched_ext(THEME.textbox, 0, _x, by, _w, _h, boxColor, 0.5 + 0.5 * interactable);	
+		if(hide == 0) {
+			draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, h, boxColor, 1);
+			draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, h, boxColor, 0.5 + 0.5 * interactable);	
 		}
 		
 		if(linked) {
@@ -147,7 +150,7 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 			for( var i = 0; i < dim; i++ ) {
 				for( var j = 0; j < 2; j++ ) {
 					var bx  = _x + ww * i;
-					var by  = _y + (_h + ui(4)) * j;
+					var by  = _y + _h * j;
 					var ind = i * 2 + j;
 					
 					if(i == 0) tb[ind].label = axis[j];

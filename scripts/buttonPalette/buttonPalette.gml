@@ -41,7 +41,8 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 		apply(current_palette);
 	}
 	
-	static drawParam = function(params) { return draw(params.x, params.y, params.w, params.h, params.data, params.m); }
+	static fetchHeight = function(params) { return params.h + expanded * (array_length(params.data) * ui(16) + ui(2)); }
+	static drawParam   = function(params) { return draw(params.x, params.y, params.w, params.h, params.data, params.m); }
 	
 	static draw = function(_x, _y, _w, _h, _color, _m) {
 		x = _x;

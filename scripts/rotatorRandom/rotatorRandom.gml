@@ -48,16 +48,6 @@ function rotatorRandom(_onModify) : widget() constructor {
 	
 	static isHovering = function() { return dragging || tb_min_0.hovering || tb_max_0.hovering || tb_min_1.hovering || tb_max_1.hovering; }
 	
-	static drawParam = function(params) {
-		setParam(params);
-		tb_min_0.setParam(params);
-		tb_max_0.setParam(params);
-		tb_min_1.setParam(params);
-		tb_max_1.setParam(params);
-		
-		return draw(params.x, params.y, params.w, params.h, params.data, params.m);
-	}
-	
 	static setMode = function(_data, _mode) {
 		onModify(_mode, 0);
 					
@@ -84,21 +74,32 @@ function rotatorRandom(_onModify) : widget() constructor {
 		return _mode;
 	}
 	
+	static fetchHeight = function(params) { return params.h; }
+	
+	static fetchHeight = function(params) { return params.data[0]? params.h * 2 : params.h; }
+	static drawParam   = function(params) {
+		setParam(params);
+		tb_min_0.setParam(params);
+		tb_max_0.setParam(params);
+		tb_min_1.setParam(params);
+		tb_max_1.setParam(params);
+		
+		return draw(params.x, params.y, params.w, params.h, params.data, params.m);
+	}
+	
 	static draw = function(_x, _y, _w, _h, _data, _m) {
 		x = _x;
 		y = _y;
 		w = _w;
+		h = _data[0] > 1? _h * 2 : _h;
 		
 		if(array_any(_data, function(a) /*=>*/ {return !is_real(a)})) return;
 		
-		_data = array_verify(_data, 5);
+		_data    = array_verify(_data, 5);
 		_data[0] = clamp(_data[0], 0, ROTATOR_RANDOM_TYPE.length - 1);
-		
-		mode  = _data[0];
+		mode     = _data[0];
 		
 		var _bs = min(_h, ui(32));
-		var _hh = mode > 1? _h * 2 + ui(4) : _h;
-		h = h == 0? _hh : lerp_float(h, _hh, 5);
 		
 		if(side_button) {
 			side_button.setFocusHover(active, hover);
@@ -114,20 +115,9 @@ function rotatorRandom(_onModify) : widget() constructor {
 		var _tw = _drawRot? _w - _r - ui(4) : _w;
 		var _ty = _y;
 		
-		switch(mode) {
-			case ROTATOR_RANDOM_TYPE.double_range :
-				draw_sprite_stretched_ext(THEME.textbox, 3, _tx, _y + _h + ui(4), _tw, _h, boxColor, 1);
-				draw_sprite_stretched_ext(THEME.textbox, 0, _tx, _y + _h + ui(4), _tw, _h, boxColor, 0.5 + 0.5 * interactable);	
-				
-			case ROTATOR_RANDOM_TYPE.range :
-			case ROTATOR_RANDOM_TYPE.span :
-				draw_sprite_stretched_ext(THEME.textbox, 3, _tx, _y, _tw, _h, boxColor, 1);
-				draw_sprite_stretched_ext(THEME.textbox, 0, _tx, _y, _tw, _h, boxColor, 0.5 + 0.5 * interactable);	
-				break;
-				
-			case ROTATOR_RANDOM_TYPE.double_span :
-				draw_sprite_stretched_ext(THEME.textbox, 3, _tx, _y, _tw, h, boxColor, 1);
-				draw_sprite_stretched_ext(THEME.textbox, 0, _tx, _y, _tw, h, boxColor, 0.5 + 0.5 * interactable);	
+		if(hide == 0) {
+			draw_sprite_stretched_ext(THEME.textbox, 3, _tx, _y, _tw, h, boxColor, 1);
+			draw_sprite_stretched_ext(THEME.textbox, 0, _tx, _y, _tw, h, boxColor, 0.5 + 0.5 * interactable);	
 		}
 		
 		if(_drawRot) {
@@ -301,7 +291,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 			
 			case ROTATOR_RANDOM_TYPE.double_range : 
 				var _ky0 = _y + _r / 2;
-				var _ky1 = _y + _h + ui(4) + _r / 2;
+				var _ky1 = _y + _h + _r / 2;
 				
 				var _kc0 = _kc;
 				var _kc1 = _kc;
@@ -311,10 +301,10 @@ function rotatorRandom(_onModify) : widget() constructor {
 				tb_min_1.setFocusHover(active, hover);
 				tb_max_1.setFocusHover(active, hover);
 				
-				tb_min_0.draw(_tx,        _ty,              _tw, _h, array_safe_get_fast(_data, 1), _m);
-				tb_max_0.draw(_tx + _tw,  _ty,              _tw, _h, array_safe_get_fast(_data, 2), _m);
-				tb_min_1.draw(_tx,        _ty + _h + ui(4), _tw, _h, array_safe_get_fast(_data, 3), _m);
-				tb_max_1.draw(_tx + _tw,  _ty + _h + ui(4), _tw, _h, array_safe_get_fast(_data, 4), _m);
+				tb_min_0.draw(_tx,        _ty,      _tw, _h, array_safe_get_fast(_data, 1), _m);
+				tb_max_0.draw(_tx + _tw,  _ty,      _tw, _h, array_safe_get_fast(_data, 2), _m);
+				tb_min_1.draw(_tx,        _ty + _h, _tw, _h, array_safe_get_fast(_data, 3), _m);
+				tb_max_1.draw(_tx + _tw,  _ty + _h, _tw, _h, array_safe_get_fast(_data, 4), _m);
 				
 				if(_drawRot) {
 					if(dragging_index > -1) {
@@ -372,7 +362,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 							dragging = instance_create(0, 0, rotator_Rotator).init(_m, _kx, _ky0);
 						}
 						
-					} else if(hover && point_in_rectangle(_m[0], _m[1], _x, _y + _h + ui(4), _x + _r, _y + _h + ui(4) + _r)) {
+					} else if(hover && point_in_rectangle(_m[0], _m[1], _x, _y + _h, _x + _r, _y + _h + _r)) {
 						_kc1 = COLORS._main_icon_light;
 							
 						if(DOUBLE_CLICK) {
@@ -402,7 +392,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 						shader_set_color("color",   _kc1);
 						shader_set_f("angle",     degtorad(_data[3]), degtorad(_data[4]));
 			
-						draw_sprite_stretched(s_fx_pixel, 0, _x, _y + _h + ui(4), _r, _r);
+						draw_sprite_stretched(s_fx_pixel, 0, _x, _y + _h, _r, _r);
 					shader_reset();
 				}
 				
@@ -410,7 +400,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 				
 			case ROTATOR_RANDOM_TYPE.double_span : 
 				var _ky0 = _y + _r / 2;
-				var _ky1 = _y + _h + ui(4) + _r / 2;
+				var _ky1 = _y + _h + _r / 2;
 				
 				var _kc0 = _kc;
 				var _kc1 = _kc;
@@ -419,9 +409,9 @@ function rotatorRandom(_onModify) : widget() constructor {
 				tb_max_0.setFocusHover(active, hover);
 				tb_min_1.setFocusHover(active, hover);
 				
-				tb_min_0.draw(_tx,        _ty,              _tw, _h, array_safe_get_fast(_data, 1), _m);
-				tb_max_0.draw(_tx,        _ty + _h + ui(4), _tw, _h, array_safe_get_fast(_data, 2), _m);
-				tb_min_1.draw(_tx + _tw,  _ty,	            _tw,  h, array_safe_get_fast(_data, 3), _m);
+				tb_min_0.draw(_tx,        _ty,      _tw, _h, array_safe_get_fast(_data, 1), _m);
+				tb_max_0.draw(_tx,        _ty + _h, _tw, _h, array_safe_get_fast(_data, 2), _m);
+				tb_min_1.draw(_tx + _tw,  _ty,	    _tw,  h, array_safe_get_fast(_data, 3), _m);
 				
 				if(_drawRot) {
 					var _a0 = _data[1] - _data[3];
@@ -471,7 +461,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 							drag_dat = [ _data[0], _data[1], _data[2], _data[3], _data[4] ];
 							dragging = instance_create(0, 0, rotator_Rotator).init(_m, _kx, _ky0);
 						}
-					} else if(hover && point_in_rectangle(_m[0], _m[1], _x, _y + _h + ui(4), _x + _r, _y + _h + ui(4) + _r)) {
+					} else if(hover && point_in_rectangle(_m[0], _m[1], _x, _y + _h, _x + _r, _y + _h + _r)) {
 						_kc1 = COLORS._main_icon_light;
 							
 						if(DOUBLE_CLICK) {
@@ -499,7 +489,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 						shader_set_color("color", _kc1);
 						shader_set_f("angle",     degtorad(_data[2]));
 			
-						draw_sprite_stretched(s_fx_pixel, 0, _x, _y + _h + ui(4), _r, _r);
+						draw_sprite_stretched(s_fx_pixel, 0, _x, _y + _h, _r, _r);
 					shader_reset();
 				}
 				

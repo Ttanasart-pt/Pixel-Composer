@@ -22,7 +22,8 @@ function checkBox(_onClick) : widget() constructor {
 		return t;
 	}
 	
-	static drawParam = function(params) {
+	static fetchHeight = function(params) { return params.s; }
+	static drawParam   = function(params) {
 		setParam(params);
 		var ss = params.s;
 		var x0, y0;

@@ -1630,8 +1630,9 @@ function Panel_Animation_Dopesheet() {
         var ty1  = ty0 + animator.h;
         var m    = [msx, msy];
         
-        var hov = item_dragging == noone && dopesheet_name_hover && point_in_rectangle(msx, msy, 0, ty0, w - ui(64), ty1);
-        var foc = pFOCUS;
+        var drw  = ty0 < dopesheet_h + ui(16) && ty1 > -ui(16);
+        var hov  = item_dragging == noone && dopesheet_name_hover && point_in_rectangle(msx, msy, 0, ty0, w - ui(64), ty1);
+        var foc  = pFOCUS;
         
         //// Draw Name
         
@@ -1641,24 +1642,25 @@ function Panel_Animation_Dopesheet() {
         draw_set_color(CDEF.main_mdblack);
         draw_rectangle(ui(32), ty - ui(8), tool_width, ty + ui(8), false);
         
-        draw_set_color(cc);
-        
-        var _title_x = ui(32);
-        draw_set_text(f_p3, fa_left, fa_center);
-        
-        if(!show_nodes) {
-            var _txt = animator.prop.node.getDisplayName();
-            
-            draw_set_alpha(aa * 0.5);
-            draw_text_add(_title_x, ty - 2, _txt);
-            _title_x += string_width(_txt) + ui(4);
+        if(drw) {
+	        var _title_x = ui(32);
+	        draw_set_text(f_p4, fa_left, fa_center, cc);
+	        
+        	if(!show_nodes) {
+	            var _txt = animator.prop.node.getDisplayName();
+	            
+	            draw_set_alpha(aa * 0.5);
+	            draw_text_add(_title_x, ty - 2, _txt);
+	            draw_set_alpha(1);
+	            
+	            _title_x += string_width(_txt) + ui(4);
+        	}
+        	
+	        var _txt = animator.getName();
+	        draw_set_alpha(aa);
+	        draw_text_add(_title_x, ty - 2, _txt);
+	        draw_set_alpha(1);
         }
-        
-        var _txt = animator.getName();
-        draw_set_alpha(aa);
-        draw_text_add(_title_x, ty - 2, _txt);
-        draw_set_alpha(1);
-        _title_x += string_width(_txt) + ui(4);
         
         if(hov) {
             value_hovering = animator;
@@ -1671,13 +1673,13 @@ function Panel_Animation_Dopesheet() {
             }
         }
         
-        var tw = ui(17);
+        var tw = ui(15);
         var th = ui(17);
         
         var _gx = ui(20);
         var _gy = ty;
         var  bc = [COLORS._main_icon, COLORS._main_icon_on_inner];
-        if(buttonInstant(noone, _gx - ui(10), _gy - ui(9), tw, th, m, hov, foc, "", THEME.animate_prop_go, 0, bc, 0.75) == 2) {
+        if(drw && buttonInstant(noone, _gx - ui(10), _gy - ui(9), tw, th, m, hov, foc, "", THEME.animate_prop_go, 0, bc, 0.75) == 2) {
             graphFocusNode(_node);
             PANEL_INSPECTOR.highlightProp(prop);
         }
@@ -1686,21 +1688,24 @@ function Panel_Animation_Dopesheet() {
         
         var _tool_a = .75 + hov * .25;
         
-        var _tool_x0 = tool_width - ui(20 + 16 * 4.5 + 12);
-        var _tool_x1 = tool_width;
-        draw_set_color(c_white);
-        BLEND_SUBTRACT
-        draw_rectangle(_tool_x0, ty - ui(8), _tool_x1, ty + ui(8), false);
-        BLEND_NORMAL
+        if(drw) {
+	        var _tool_x0 = tool_width - ui(20 + 16 * 4.5 + 12);
+	        var _tool_x1 = tool_width;
+	        draw_set_color(c_white);
+	        BLEND_SUBTRACT
+	        draw_rectangle(_tool_x0, ty - ui(8), _tool_x1, ty + ui(8), false);
+	        BLEND_NORMAL
+        }
         
         var _graph_show = prop.sep_axis? prop.show_graphs[animator.index] : prop.show_graph;
         var tx = tool_width - ui(16);
         
-        if(isGraphable(prop)) {
+        if(drw && isGraphable(prop)) {
             tx = tool_width - ui(16);
             if(pHOVER && point_in_rectangle(msx, msy, tx - ui(9), ty - ui(10), tx + ui(10), ty + ui(8))) {
                 draw_sprite_ui_uniform(THEME.timeline_graph, 1, tx, ty, 1, COLORS._main_icon_on_inner, _tool_a);
-                TOOLTIP = _graph_show? __txtx("panel_animation_hide_graph", "Hide graph") : __txtx("panel_animation_show_graph", "Show graph");
+                TOOLTIP = _graph_show? __txtx("panel_animation_hide_graph", "Hide graph") : 
+                                       __txtx("panel_animation_show_graph", "Show graph");
                 
                 if(mouse_press(mb_left, pFOCUS)) {
                     if(prop.sep_axis) prop.show_graphs[animator.index] = !_graph_show;
@@ -1713,7 +1718,7 @@ function Panel_Animation_Dopesheet() {
            
         #region keyframe controls
             bc = [COLORS._main_icon, COLORS._main_icon_on_inner];    
-            if(buttonInstant(noone, tx-ui(10), ty-ui(9), tw, th, m, hov, foc, "", THEME.prop_keyframe, 2, bc, _tool_a) == 2) {
+            if(drw && buttonInstant(noone, tx-ui(10), ty-ui(9), tw, th, m, hov, foc, "", THEME.prop_keyframe, 2, bc, _tool_a) == 2) {
                 for(var k = 0; k < array_length(animator.values); k++) {
                     var _key = animator.values[k];
                     if(_key.time > GLOBAL_CURRENT_FRAME) {
@@ -1725,7 +1730,7 @@ function Panel_Animation_Dopesheet() {
             } tx -= tw;
             
             bc = [COLORS._main_accent, COLORS._main_icon_on_inner];
-            if(buttonInstant(noone, tx-ui(10), ty-ui(9), tw, th, m, hov, foc, "", THEME.prop_keyframe, 1, bc, _tool_a) == 2) {
+            if(drw && buttonInstant(noone, tx-ui(10), ty-ui(9), tw, th, m, hov, foc, "", THEME.prop_keyframe, 1, bc, _tool_a) == 2) {
                 var _add = false;
                 for(var k = 0; k < array_length(animator.values); k++) {
                     var _key = animator.values[k];
@@ -1747,7 +1752,7 @@ function Panel_Animation_Dopesheet() {
             } tx -= tw;
             
             bc = [COLORS._main_icon, COLORS._main_icon_on_inner];
-            if(buttonInstant(noone, tx-ui(10), ty-ui(9), tw, th, m, hov, foc, "", THEME.prop_keyframe, 0, bc, _tool_a) == 2) {
+            if(drw && buttonInstant(noone, tx-ui(10), ty-ui(9), tw, th, m, hov, foc, "", THEME.prop_keyframe, 0, bc, _tool_a) == 2) {
                 var _t = -1;
                 for(var k = 0; k < array_length(animator.values); k++) {
                     var _key = animator.values[k];
@@ -1760,7 +1765,8 @@ function Panel_Animation_Dopesheet() {
         #endregion
         
         #region Looping
-	        if(pHOVER && point_in_rectangle(msx, msy, tx - ui(10), ty - ui(9), tx + ui(10), ty + ui(8))) { 
+        	tx -= ui(4);
+	        if(drw && hov && point_in_rectangle(msx, msy, tx - ui(10), ty - ui(9), tx + ui(10), ty + ui(8))) { 
 	            draw_sprite_ui_uniform(THEME.prop_on_end, prop.on_end, tx, ty, 1, COLORS._main_icon_on_inner);
 	            
 	            if(tooltip_loop_prop != prop) tooltip_loop_type.arrow_pos = noone;
@@ -1788,24 +1794,28 @@ function Panel_Animation_Dopesheet() {
         #region editWidget
         	var _edt = prop.timelineWidget;
         	var _wdw = wl * .5;
+    		var _wh  = undefined;
         	
-        	if(is(_edt, widget) && _wdw > ui(64)) {
-	        	var _wdh = ui(16);
+        	if(is(_edt, widget) && _wdw > ui(96)) {
+	        	var _wdh = ui(15);
 	        	var _wdx = tx - _wdw;
 	        	var _wdy = ty - _wdh / 2 - ui(1);
 	        	var _wrx = mouse_mx - msx;
 	        	var _wry = mouse_my - msy;
 	        	
 	        	var _par = new widgetParam(_wdx, _wdy, _wdw, _wdh, prop.showValue(), prop.display_data, m, _wrx, _wry)
-	        		.setS(_wdh).setFont(f_p4)
-	        		// .setHide(1).setColor(COLORS._main_icon)
+	        		.setS(_wdh).setFont(f_p4).setHide(1)
 	        		
         		if(is(_edt, checkBox)) _par.setHalign(fa_center)
         		
-	        	_edt.setFocusHover(foc, hov);
-	        	var _wh = _edt.drawParam(_par);
+        		if(drw) {
+		        	_edt.setFocusHover(foc, hov);
+		        	_wh = _edt.drawParam(_par);
+		        	
+        		} else
+        			_wh = _edt.fetchHeight(_par);
+        		
 	        	if(_wh) wh = max(wh, _wh + ui(2));
-	        	
         	}
         #endregion
         

@@ -42,6 +42,7 @@ function widget() constructor {
 	sep_axis = false;
 	unit     = noone;
 	
+	color    = c_white;
 	boxColor = c_white;
 	
 	static setLua = function(_lua_thread, _lua_key, _lua_func) {
@@ -77,7 +78,9 @@ function widget() constructor {
 		rx   = params.rx;
 		ry   = params.ry;
 		
-		sep_axis = params.sep_axis;
+		sep_axis = params[$ "sep_axis"] ?? sep_axis;
+		hide     = params[$ "hide"]     ?? hide;
+		color    = params[$ "color"]    ?? color;
 		
 		if(!is_undefined(params.interact))
 			setInteract(params.interact);
@@ -136,8 +139,9 @@ function widget() constructor {
 	static inBBOX    = function(_m) /*=>*/ {return point_in_rectangle(_m[0], _m[1], x, y, x + w, y + h)};
 	static clone     = function(  ) /*=>*/ {return variable_clone(self)};
 	
-	static drawParam = function(params) {}
-	static draw      = function() {}
+	static fetchHeight = function(params) { return params.h; }
+	static drawParam   = function(params) {}
+	static draw        = function() {}
 	
 	static free = function() {}
 }

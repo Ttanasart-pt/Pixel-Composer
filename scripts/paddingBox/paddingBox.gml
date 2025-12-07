@@ -64,7 +64,8 @@ function paddingBox(_onModify, _unit = noone) : widget() constructor {
 		return false;
 	}
 	
-	static drawParam = function(params) { 
+	static fetchHeight = function(params) { return params.h * 2; }
+	static drawParam   = function(params) { 
 		setParam(params);
 		for(var i = 0; i < 4; i++) tb[i].setParam(params);
 		
@@ -75,7 +76,7 @@ function paddingBox(_onModify, _unit = noone) : widget() constructor {
 		x = _x;
 		y = _y;
 		w = _w;
-		h = _h + ui(4) + _h;
+		h = _h * 2;
 		
 		for(var i = 0; i < 4; i++) tb[i].setFocusHover(active, hover);
 		
@@ -100,11 +101,10 @@ function paddingBox(_onModify, _unit = noone) : widget() constructor {
 			}
 		}
 		
-		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor, 1);
-		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor, 0.5 + 0.5 * interactable);	
-		
-		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y + _h + ui(4), _w, _h, boxColor, 1);
-		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y + _h + ui(4), _w, _h, boxColor, 0.5 + 0.5 * interactable);	
+		if(hide == 0) {
+			draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, h, boxColor, 1);
+			draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, h, boxColor, 0.5 + 0.5 * interactable);	
+		}
 		
 		var tb_w = _w / 2;
 		var tb_h = _h;
@@ -116,10 +116,10 @@ function paddingBox(_onModify, _unit = noone) : widget() constructor {
 		var tb_ry = _y;
 			
 		var tb_tx = _x;
-		var tb_ty = _y + _h + ui(4);
+		var tb_ty = _y + _h;
 			
 		var tb_bx = _x + tb_w;
-		var tb_by = _y + _h + ui(4);
+		var tb_by = _y + _h;
 		
 		tb[2].draw(tb_lx, tb_ly, tb_w, tb_h, array_safe_get_fast(_data, 2), _m);
 		tb[0].draw(tb_rx, tb_ry, tb_w, tb_h, array_safe_get_fast(_data, 0), _m);

@@ -46,9 +46,11 @@ function numberArrayBox(_onModify) : widget() constructor {
 		var _tw = _ww / _amo;
 		var _th = _h;
 		
-		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _ww, _h, boxColor, 1);
-		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _ww, _h, boxColor, 0.5 + 0.5 * interactable);	
-			
+		if(hide == 0) {
+			draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _ww, _h, boxColor, 1);
+			draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _ww, _h, boxColor, 0.5 + 0.5 * interactable);	
+		}
+		
 		for( var i = 0; i < _amo; i++ ) {
 		    var _v   = _data[i];
 		    var _hov = hover && point_in_rectangle(_m[0], _m[1], _tx, _ty, _tx + _tw - 1, _ty + _th);

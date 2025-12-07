@@ -51,6 +51,7 @@ function transformBox(_onModify) : widget() constructor {
 	
 	static drawParam = function(params) {
 		setParam(params);
+		rot.hide = hide;
         rot.setParam(params);
 		rot.tb_value.setParam(params);
 		
@@ -85,8 +86,10 @@ function transformBox(_onModify) : widget() constructor {
 		 	var _tbh = _h;
 		 	var _tbx = _x;
 		 	
-		 	draw_sprite_stretched_ext(THEME.textbox, 3, _tbx, _y, _tbw * 2, _tbh, boxColor, 1);
-			draw_sprite_stretched_ext(THEME.textbox, 0, _tbx, _y, _tbw * 2, _tbh, boxColor, 0.5 + 0.5 * interactable);	
+		 	if(hide == 0) {
+			 	draw_sprite_stretched_ext(THEME.textbox, 3, _tbx, _y, _tbw * 2, _tbh, boxColor, 1);
+				draw_sprite_stretched_ext(THEME.textbox, 0, _tbx, _y, _tbw * 2, _tbh, boxColor, 0.5 + 0.5 * interactable);	
+		 	}
 		 	
 		 	tb[TRANSFORM.pos_x].draw(_tbx,        _y, _tbw, _tbh, _data[TRANSFORM.pos_x], _m);
 			tb[TRANSFORM.pos_y].draw(_tbx + _tbw, _y, _tbw, _tbh, _data[TRANSFORM.pos_y], _m);
@@ -98,14 +101,18 @@ function transformBox(_onModify) : widget() constructor {
 		 	_tbx += _tbw + _spc;
 		 	
 		 	if(array_length(_data) == 4) {
-			 	draw_sprite_stretched_ext(THEME.textbox, 3, _tbx, _y, _tbw, _tbh, boxColor, 1);
-				draw_sprite_stretched_ext(THEME.textbox, 0, _tbx, _y, _tbw, _tbh, boxColor, 0.5 + 0.5 * interactable);	
+		 		if(hide == 0) {
+				 	draw_sprite_stretched_ext(THEME.textbox, 3, _tbx, _y, _tbw, _tbh, boxColor, 1);
+					draw_sprite_stretched_ext(THEME.textbox, 0, _tbx, _y, _tbw, _tbh, boxColor, 0.5 + 0.5 * interactable);	
+		 		}
 				
 				tb[TRANSFORM.sca_x].draw(_tbx, _y, _tbw, _tbh, _data[TRANSFORM.sca_x], _m);
 		 		
 		 	} else if(array_length(_data) == 5) {
-		 		draw_sprite_stretched_ext(THEME.textbox, 3, _tbx, _y, _tbw * 2, _tbh, boxColor, 1);
-				draw_sprite_stretched_ext(THEME.textbox, 0, _tbx, _y, _tbw * 2, _tbh, boxColor, 0.5 + 0.5 * interactable);	
+		 		if(hide == 0) {
+			 		draw_sprite_stretched_ext(THEME.textbox, 3, _tbx, _y, _tbw * 2, _tbh, boxColor, 1);
+					draw_sprite_stretched_ext(THEME.textbox, 0, _tbx, _y, _tbw * 2, _tbh, boxColor, 0.5 + 0.5 * interactable);	
+		 		}
 				
 				tb[TRANSFORM.sca_x].draw(_tbx,        _y, _tbw, _tbh, _data[TRANSFORM.sca_x], _m);
 				tb[TRANSFORM.sca_y].draw(_tbx + _tbw, _y, _tbw, _tbh, _data[TRANSFORM.sca_y], _m);
@@ -125,8 +132,10 @@ function transformBox(_onModify) : widget() constructor {
 			
 			if(_lab) draw_text_add(_x, _y + tbh / 2, __txt("Position"));
 			
-			draw_sprite_stretched_ext(THEME.textbox, 3, tbx, _y, _w - lbw, tbh, boxColor, 1);
-			draw_sprite_stretched_ext(THEME.textbox, 0, tbx, _y, _w - lbw, tbh, boxColor, 0.5 + 0.5 * interactable);	
+			if(hide == 0) {
+				draw_sprite_stretched_ext(THEME.textbox, 3, tbx, _y, _w - lbw, tbh, boxColor, 1);
+				draw_sprite_stretched_ext(THEME.textbox, 0, tbx, _y, _w - lbw, tbh, boxColor, 0.5 + 0.5 * interactable);	
+			}
 			
 			tb[TRANSFORM.pos_x].draw(tbx,		_y, tbw, tbh, _data[TRANSFORM.pos_x], _m);
 			tb[TRANSFORM.pos_y].draw(tbx + tbw, _y, tbw, tbh, _data[TRANSFORM.pos_y], _m);
@@ -142,8 +151,10 @@ function transformBox(_onModify) : widget() constructor {
 			draw_set_text(font, fa_left, fa_center, CDEF.main_dkgrey);
 			if(_lab) draw_text_add(_x, _y + tbh / 2, __txt("Scale"));
 			
-			draw_sprite_stretched_ext(THEME.textbox, 3, tbx, _y, _w - lbw, tbh, boxColor, 1);
-			draw_sprite_stretched_ext(THEME.textbox, 0, tbx, _y, _w - lbw, tbh, boxColor, 0.5 + 0.5 * interactable);	
+			if(hide == 0) {
+				draw_sprite_stretched_ext(THEME.textbox, 3, tbx, _y, _w - lbw, tbh, boxColor, 1);
+				draw_sprite_stretched_ext(THEME.textbox, 0, tbx, _y, _w - lbw, tbh, boxColor, 0.5 + 0.5 * interactable);
+			}
 			
 			tbw = array_length(_data) > 4? (_w - lbw) / 2 : _w - lbw;
 			

@@ -32,7 +32,8 @@ function pathAnchorBox(_onModify) : widget() constructor {
 		return false;
 	}
 	
-	static drawParam = function(params) {
+	static fetchHeight = function(params) { return params.h * 2 + 6; }
+	static drawParam   = function(params) {
 		setParam(params);
 		for(var i = 0; i < array_length(tb); i++) tb[i].setParam(params);
 		
@@ -67,7 +68,7 @@ function pathAnchorBox(_onModify) : widget() constructor {
 			_tw = _w / 2;
 			_th = _h;
 			
-			draw_sprite_stretched(THEME.textbox, 3, _tx, _ty, _w, _th);
+			if(hide == 0) draw_sprite_stretched(THEME.textbox, 3, _tx, _ty, _w, _th);
 			tb[0].draw(_tx,       _ty, _tw, _th, _data[0], _m);
 			tb[1].draw(_tx + _tw, _ty, _tw, _th, _data[1], _m);
 			
@@ -75,13 +76,13 @@ function pathAnchorBox(_onModify) : widget() constructor {
 			_w2 = _w / 2 - _bw / 2 - 4;
 			_tw = _w2 / 2;
 			
-			draw_sprite_stretched(THEME.textbox, 3, _tx, _ty, _w2, _th);
+			if(hide == 0) draw_sprite_stretched(THEME.textbox, 3, _tx, _ty, _w2, _th);
 			tb[2].draw(_tx + _tw * 0, _ty, _tw, _th, _data[2], _m);
 			tb[3].draw(_tx + _tw * 1, _ty, _tw, _th, _data[3], _m);
 			
 			_tx = _x + _w - _w2;
 			
-			draw_sprite_stretched(THEME.textbox, 3, _tx, _ty, _w2, _th);
+			if(hide == 0) draw_sprite_stretched(THEME.textbox, 3, _tx, _ty, _w2, _th);
 			tb[4].draw(_tx + _tw * 0, _ty, _tw, _th, _data[4], _m);
 			tb[5].draw(_tx + _tw * 1, _ty, _tw, _th, _data[5], _m);
 			
@@ -104,7 +105,7 @@ function pathAnchorBox(_onModify) : widget() constructor {
 			_tw = _w / 3;
 			_th = _h;
 			
-			draw_sprite_stretched(THEME.textbox, 3, _tx, _ty, _w, _th);
+			if(hide == 0) draw_sprite_stretched(THEME.textbox, 3, _tx, _ty, _w, _th);
 			tb[0].draw(_tx + _tw * 0, _ty, _tw, _th, _data[0], _m);
 			tb[1].draw(_tx + _tw * 1, _ty, _tw, _th, _data[1], _m);
 			tb[2].draw(_tx + _tw * 2, _ty, _tw, _th, _data[2], _m);
@@ -113,14 +114,14 @@ function pathAnchorBox(_onModify) : widget() constructor {
 			_w2 = _w / 2 - _bw / 2 - 4;
 			_tw = _w2 / 3;
 			
-			draw_sprite_stretched(THEME.textbox, 3, _tx, _ty, _w2, _th);
+			if(hide == 0) draw_sprite_stretched(THEME.textbox, 3, _tx, _ty, _w2, _th);
 			tb[3].draw(_tx + _tw * 0, _ty, _tw, _th, _data[3], _m);
 			tb[4].draw(_tx + _tw * 1, _ty, _tw, _th, _data[4], _m);
 			tb[5].draw(_tx + _tw * 2, _ty, _tw, _th, _data[5], _m);
 								
 			_tx = _x + _w - _w2;
 			
-			draw_sprite_stretched(THEME.textbox, 3, _tx, _ty, _w2, _th);
+			if(hide == 0) draw_sprite_stretched(THEME.textbox, 3, _tx, _ty, _w2, _th);
 			tb[6].draw(_tx + _tw * 0, _ty, _tw, _th, _data[6], _m);
 			tb[7].draw(_tx + _tw * 1, _ty, _tw, _th, _data[7], _m);
 			tb[8].draw(_tx + _tw * 2, _ty, _tw, _th, _data[8], _m);

@@ -45,8 +45,10 @@ function rotatorRange(_onModify) : widget() constructor {
 		var _tx = _drawRot? _x + _r + ui(4) : _x;
 		var _tw = _drawRot? _w - _r - ui(4) : _w;
 		
-		draw_sprite_stretched_ext(THEME.textbox, 3, _tx, _y, _tw, _h, boxColor, 1);
-		draw_sprite_stretched_ext(THEME.textbox, 0, _tx, _y, _tw, _h, boxColor, 0.5 + 0.5 * interactable);	
+		if(hide == 0) {
+			draw_sprite_stretched_ext(THEME.textbox, 3, _tx, _y, _tw, _h, boxColor, 1);
+			draw_sprite_stretched_ext(THEME.textbox, 0, _tx, _y, _tw, _h, boxColor, 0.5 + 0.5 * interactable);	
+		}
 		
 		_tw /= 2;
 		

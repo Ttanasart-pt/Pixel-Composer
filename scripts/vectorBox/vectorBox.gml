@@ -99,8 +99,10 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		h = per_line? (_h + ui(4)) * size - ui(4) : _h;
 		
 		if(array_invalid(_data) || is_array(_data[0])) {
-			draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor,  1);
-			draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor, .5);	
+			if(hide == 0) {
+				draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor,  1);
+				draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor, .5);	
+			}
 			return _h;
 		}
 		
@@ -160,7 +162,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		
 		var ww = per_line? _w : _w / _sz;
 		
-		if(!per_line) {
+		if(!per_line && hide == 0) {
 			draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor, 1);
 			draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor, 0.5 + 0.5 * interactable);
 		}

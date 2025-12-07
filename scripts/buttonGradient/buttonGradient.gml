@@ -42,7 +42,8 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 		apply(current_gradient);
 	}
 	
-	static drawParam = function(params) { return draw(params.x, params.y, params.w, params.h, params.data, params.m); }
+	static fetchHeight = function(params) { return params.h + expanded * ui(22); }
+	static drawParam   = function(params) { return draw(params.x, params.y, params.w, params.h, params.data, params.m); }
 	
 	static draw = function(_x, _y, _w, _h, _gradient, _m) {
 		x = _x;

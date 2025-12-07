@@ -53,8 +53,8 @@ function curveBox(_onModify) : widget() constructor {
 	cw = 0;
 	ch = 0;
 	
-	tb_shift = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ { var _data = array_clone(curr_data); _data[0] = v; onModify(_data); }).setLabel("Shift");
-	tb_scale = new textBox(TEXTBOX_INPUT.number, function(v) /*=>*/ { var _data = array_clone(curr_data); _data[1] = v; onModify(_data); }).setLabel("Scale");
+	tb_shift = textBox_Number(function(v) /*=>*/ { var _data = array_clone(curr_data); _data[0] = v; onModify(_data); }).setLabel("Shift");
+	tb_scale = textBox_Number(function(v) /*=>*/ { var _data = array_clone(curr_data); _data[1] = v; onModify(_data); }).setLabel("Scale");
 	tb_range = new rangeBox(function(v,i) /*=>*/ { var _data = array_clone(curr_data); _data[3+i] = v; onModify(_data); });
 	
 	static get_x = function(v) /*=>*/ { return cw *      (v - minx) / (maxx - minx) ; }
@@ -90,9 +90,11 @@ function curveBox(_onModify) : widget() constructor {
 		       tb_scale.isHovering();
 	}
 	
-	static drawParam = function(params) {
+	static fetchHeight = function(params) { return h; }
+	static drawParam   = function(params) {
 		rx = params.rx;
 		ry = params.ry;
+		
 		tb_range.setParam(params);
 		tb_shift.setParam(params);
 		tb_scale.setParam(params);
@@ -707,14 +709,13 @@ function curveBox(_onModify) : widget() constructor {
 			tb_shift.setFocusHover(active, hover);
 			tb_scale.setFocusHover(active, hover);
 			
-			tb_shift.setFont(f_p3);
-			tb_scale.setFont(f_p3);
-			
 			tb_shift.hide = true;
 			tb_scale.hide = true;
 				
-			draw_sprite_stretched_ext(THEME.textbox, 3, _x, tby, _w, tbh, c_white, 1);
-			draw_sprite_stretched_ext(THEME.textbox, 0, _x, tby, _w, tbh, c_white, 0.5 + 0.5 * interactable);	
+			if(hide == 0) {
+				draw_sprite_stretched_ext(THEME.textbox, 3, _x, tby, _w, tbh, c_white, 1);
+				draw_sprite_stretched_ext(THEME.textbox, 0, _x, tby, _w, tbh, c_white, 0.5 + 0.5 * interactable);	
+			}
 			
 			tb_shift.draw(_x,       tby, tbw, tbh, _data[0], _m);
 			tb_scale.draw(_x + tbw, tby, tbw, tbh, _data[1], _m);

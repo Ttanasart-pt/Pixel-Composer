@@ -24,7 +24,8 @@ function folderArrayBox(_arr, _onApply) : widget() constructor {
 	
 	static setFont = function(_font) { font = _font; tb_edit.font = _font; return self;  }
 	
-	static drawParam = function(params) {
+	static fetchHeight = function(params) { return (params.h + ui(4)) * (array_length(params.data) + !adding) - ui(4); }
+	static drawParam   = function(params) {
 		setParam(params);
 		tb_edit.setParam(params);
 		

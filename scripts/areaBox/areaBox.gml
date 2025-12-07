@@ -105,13 +105,6 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		return false;
 	}
 	
-	static drawParam = function(params) {
-		setParam(params);
-		for(var i = 0; i < 4; i++) tb[i].setParam(params);
-		
-		return draw(params.x, params.y, params.w, params.h, params.data, params.display_data, params.m);
-	}
-	
 	static setMode = function(_data, _mode) {
 		var x0 = 0, y0 = 0;
 		var x1 = 0, y1 = 0;
@@ -175,6 +168,14 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		
 		onModify(_mode, 5);
 		return _mode;
+	}
+	
+	static fetchHeight = function(params) { return params.h * 2; }
+	static drawParam   = function(params) {
+		setParam(params);
+		for(var i = 0; i < 4; i++) tb[i].setParam(params);
+		
+		return draw(params.x, params.y, params.w, params.h, params.data, params.display_data, params.m);
 	}
 	
 	static draw = function(_x, _y, _w, _h, _data, _display_data, _m) { 
@@ -280,8 +281,10 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 			
 		} 
 		
-		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, h, boxColor, 1);
-		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, h, boxColor, 0.5 + 0.5 * interactable);	
+		if(hide == 0) {
+			draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, h, boxColor, 1);
+			draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, h, boxColor, 0.5 + 0.5 * interactable);	
+		}
 		
 		for(var i = 0; i < 4; i++)
 			tb[i].setFocusHover(active, hover);

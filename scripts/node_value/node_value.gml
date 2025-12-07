@@ -654,7 +654,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(!_setValue) { sep_axis = true; return; }
 		
 		var _vals = animator.values;
-		for( var i = 0, n = array_length(animators); i < n; i++ ) {
+		for( var i = 0, n = animVector; i < n; i++ ) {
 			var _anim = animators[i];
 			_anim.values = [];
 			
@@ -682,7 +682,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(!_setValue) { sep_axis = false; return; }
 		
 		var _keyTimes = []; 
-		for( var i = 0, n = array_length(animators); i < n; i++ ) {
+		for( var i = 0, n = animVector; i < n; i++ ) {
 			var _anim = animators[i];
 			
 			for( var j = 0, m = array_length(_anim.values); j < m; j++ )
@@ -734,7 +734,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			animator.values[0].time = NODE_CURRENT_FRAME;
 			animator.updateKeyMap();
 			
-			for( var i = 0, n = array_length(animators); i < n; i++ ) {
+			for( var i = 0, n = animVector; i < n; i++ ) {
 				if(array_length(animators[i].values))
 					array_push(animators[i].values, new valueKey(NODE_CURRENT_FRAME, animators[i].getValue(), animators[i]));
 				animators[i].values[0].time = NODE_CURRENT_FRAME;
@@ -746,7 +746,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			animator.values[0] = new valueKey(0, _val, animator);
 			animator.updateKeyMap();
 			
-			for( var i = 0, n = array_length(animators); i < n; i++ ) {
+			for( var i = 0, n = animVector; i < n; i++ ) {
 				var _val = animators[i].getValue();
 				animators[i].values = [];
 				animators[i].values[0] = new valueKey(0, _val, animators[i]);
@@ -865,7 +865,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 						if(!struct_has(display_data, "linked")) display_data.linked = false;
 						
-						for( var i = 0, n = array_length(animators); i < n; i++ )
+						for( var i = 0, n = animVector; i < n; i++ )
 							animators[i].suffix = " " + array_safe_get_fast(global.displaySuffix_Range, i);
 						
 						extract_node = "Node_Number";
@@ -890,7 +890,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							}
 						}
 						
-						for( var i = 0, n = array_length(animators); i < n; i++ )
+						for( var i = 0, n = animVector; i < n; i++ )
 							animators[i].suffix = $" {array_safe_get_fast(global.displaySuffix_Axis, i)}";
 						
 						break;
@@ -907,7 +907,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						else if(array_length(val) == 3) extract_node = "Node_Vector3";
 						else if(array_length(val) == 4) extract_node = "Node_Vector4";
 							
-						for( var i = 0, n = array_length(animators); i < n; i++ )
+						for( var i = 0, n = animVector; i < n; i++ )
 							animators[i].suffix = $" {array_safe_get_fast(global.displaySuffix_VecRange, i)}";
 						
 						break;
@@ -923,7 +923,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					case VALUE_DISPLAY.rotation_range :
 						editWidget = new rotatorRange(function(val, i) /*=>*/ {return setValueInspector(val, i)});
 						
-						for( var i = 0, n = array_length(animators); i < n; i++ )
+						for( var i = 0, n = animVector; i < n; i++ )
 							animators[i].suffix = $" {array_safe_get_fast(global.displaySuffix_Range, i)}";
 						
 						extract_node = "Node_Rotation_Range_Data";
@@ -955,7 +955,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 						editWidget = new sliderRange(_rstep, type == VALUE_TYPE.integer, [ _range[0], _range[1] ], function(val, i) /*=>*/ {return setValueInspector(val, i)});
 						
-						for( var i = 0, n = array_length(animators); i < n; i++ )
+						for( var i = 0, n = animVector; i < n; i++ )
 							animators[i].suffix = $" {array_safe_get_fast(global.displaySuffix_Range, i)}";
 						
 						extract_node = "Node_Vector2";
@@ -967,7 +967,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						editWidget.onSurfaceSize = struct_try_get(display_data, "onSurfaceSize", noone);
 						editWidget.showShape     = struct_try_get(display_data, "useShape", true);
 						
-						for( var i = 0, n = array_length(animators); i < n; i++ )
+						for( var i = 0, n = animVector; i < n; i++ )
 							animators[i].suffix = $" {array_safe_get_fast(global.displaySuffix_Area, i, "")}";
 						
 						extract_node = "Node_Area";
@@ -976,7 +976,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					case VALUE_DISPLAY.padding :	
 						editWidget = new paddingBox(function(val, i) /*=>*/ {return setValueInspector(val, i)}, unit);
 						
-						for( var i = 0, n = array_length(animators); i < n; i++ )
+						for( var i = 0, n = animVector; i < n; i++ )
 							animators[i].suffix = $" {array_safe_get_fast(global.displaySuffix_Padding, i)}";
 						
 						extract_node = "Node_Padding";
@@ -985,7 +985,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					case VALUE_DISPLAY.corner :		
 						editWidget = new cornerBox(function(val, i) /*=>*/ {return setValueInspector(val, i)}, unit);
 						
-						for( var i = 0, n = array_length(animators); i < n; i++ )
+						for( var i = 0, n = animVector; i < n; i++ )
 							animators[i].suffix = $" {array_safe_get_fast(global.displaySuffix_Padding, i)}";
 						
 						extract_node = "Node_Corner";
@@ -1029,7 +1029,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						editWidget = new matrixGrid(_txt, function(val, i) /*=>*/ {return setValueInspector(val, i)}, unit );
 						if(struct_has(display_data, "size")) editWidget.setSize(display_data.size);
 						
-						for( var i = 0, n = array_length(animators); i < n; i++ )
+						for( var i = 0, n = animVector; i < n; i++ )
 							animators[i].suffix = $" {i}";
 						
 						extract_node = "";
@@ -1039,7 +1039,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						editWidget = new matrixGrid(_txt, function(val, i) /*=>*/ {return setValueInspector(val, i)}, unit );
 						if(struct_has(display_data, "size")) editWidget.setSize(display_data.size);
 						
-						for( var i = 0, n = array_length(animators); i < n; i++ )
+						for( var i = 0, n = animVector; i < n; i++ )
 							animators[i].suffix = $" {i}";
 						
 						extract_node = "";
@@ -1483,8 +1483,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			cache_hit = cache_hit && !isActiveDynamic(_time) || cache_value[1] == _time;
 			cache_hit = cache_hit && cache_value[2] != undefined;
 			cache_hit = cache_hit && cache_value[3] == applyUnit;
-			cache_hit = cache_hit && connect_type == CONNECT_TYPE.input;
-			cache_hit = cache_hit && unit.reference == noone || unit.mode == VALUE_UNIT.constant;
+			cache_hit = cache_hit && (unit.reference == noone || unit.mode == VALUE_UNIT.constant);
 			
 			if(cache_hit) return cache_value[2];
 		}
@@ -1633,27 +1632,34 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static isTimelineVisible = function() { INLINE return is_anim && value_from == noone; }
 	
 	show_val = [];
-	static __showValue = function() {
+	static showValue = function() {
 		INLINE
 		
 		var val = 0;
 		
-		if(value_from != noone || is_anim || expUse) 
-			val = getValue(NODE_CURRENT_FRAME, false);
+		if(value_from != noone || expUse) 
+			val = getValue(, false);
+		
+		else if(is_anim) {
+			if(sep_axis) {
+				show_val = array_verify(show_val, animVector);
+				for( var i = 0, n = animVector; i < n; i++ )
+					show_val[i] = animators[i].getValue();
+				val = show_val;
+				
+			} else
+				val = animator.getValue();
 			
-		else if(sep_axis) {
-			show_val = array_verify(show_val, array_length(animators));
-			for( var i = 0, n = array_length(animators); i < n; i++ )
+		} else if(sep_axis) {
+			show_val = array_verify(show_val, animVector);
+			for( var i = 0, n = animVector; i < n; i++ )
 				show_val[i] = array_empty(animators[i].values)? 0 : animators[i].processType(animators[i].values[0].value);
 			val = show_val;
+			
 		} else 
 			val = array_empty(animator.values)? 0 : animator.processType(animator.values[0].value);
 		
 		return val;
-	}
-	
-	static showValue = function() { ////showValue
-		return __showValue();
 	}
 	
 	static unitConvert = function(mode) {
@@ -1774,7 +1780,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		animator.values = [];
 		array_push(animator.values, new valueKey(0, _val, animator));
 		
-		for( var i = 0, n = array_length(animators); i < n; i++ ) {
+		for( var i = 0, n = animVector; i < n; i++ ) {
 			animators[i].values = [];
 			array_push(animators[i].values, new valueKey(0, array_safe_get_fast(_val, i), animators[i]));
 		}
@@ -1811,7 +1817,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(sep_axis) {
 			if(_index == noone) {
-				for( var i = 0, n = array_length(animators); i < n; i++ )
+				for( var i = 0, n = animVector; i < n; i++ )
 					_upd = animators[i].setValue(val[i], _rec, time) || _upd; 
 			} else
 				_upd = animators[_index].setValue(val, _rec, time) || _upd;
@@ -2587,10 +2593,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(is_modified) _map.r  = animator.serialize(scale);
 		
-		var _animLen = array_length(animators);
-		if(is_modified && _animLen) {
-			var _anims   = array_create(_animLen);
-			for( var i = 0; i < _animLen; i++ )
+		if(is_modified && animVector) {
+			var _anims   = array_create(animVector);
+			for( var i = 0; i < animVector; i++ )
 				_anims[i] = animators[i].serialize(scale);
 			_map.animators    = _anims;
 		}
@@ -2680,7 +2685,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(has(_map, "animators")) {
 			var anims = _map.animators;
-			var amo = min(array_length(anims), array_length(animators));
+			var amo = min(array_length(anims), animVector);
 			for( var i = 0; i < amo; i++ )
 				animators[i].deserialize(anims[i], scale);
 		}

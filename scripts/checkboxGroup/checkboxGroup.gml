@@ -9,6 +9,7 @@ function checkBoxGroup(sprs, _onClick) : widget() constructor {
 	static trigger     = function(v,i) /*=>*/ { onClick(v, i); return self; }
 	static setTooltips = function(tt)  /*=>*/ { tooltips = tt; return self; } 
 	
+	static fetchHeight = function(params) { return params.s; }
 	static drawParam = function(params) {
 		setParam(params);
 		return draw(params.x, params.y, params.data, params.m, params.s);
