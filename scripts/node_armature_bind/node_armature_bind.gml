@@ -312,6 +312,14 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	layer_remove	= -1;
 	
 	hoverIndex      = noone;
+	renaming        = noone;
+	rename_text     = "";
+	tb_rename       = textBox_Text(function(_n) /*=>*/ { 
+		if(renaming == noone) return;
+		inputs[renaming].setName(_n, true);
+		renaming = noone;
+		
+	}).setHide(1).setFont(f_p1);
 	
 	layer_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { 
 		surfMap = {};
@@ -554,16 +562,26 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 					_tx += ui(22);
 				}
 				
-				var _nam = inputs[_inp].name;
-				if(inputs[_inp].value_from != noone)
-					_nam = inputs[_inp].value_from.node.getDisplayName();
+				var _txt = inputs[_inp].getName();
 				
-				draw_set_text(f_p2, fa_left, fa_center, tc, aa);
-				draw_text_add(_tx, _ty, _nam);
-				draw_set_alpha(1);
+				if(renaming == _inp) {
+					tb_rename.setFocusHover(_focus, _hover);
+					tb_rename.draw(_tx, _cy, _w - ui(172), lh, rename_text, _m);
+				
+				} else {
+					draw_set_text(f_p2, fa_left, fa_center, tc, aa);
+					draw_text_add(_tx, _ty, _txt);
+					draw_set_alpha(1);
+				}
 				
 				if(_hover && point_in_rectangle(_m[0], _m[1], _x, _cy, _x + _w, _cy + lh)) {
 					hoverIndex = _ind;
+					
+					if(DOUBLE_CLICK) {
+						renaming    = _inp;
+						rename_text = _txt;
+						tb_rename.activate(_txt);
+					}
 					
 					if(!_mesh && mouse_press(mb_left, _focus)) {
 						_layer_dragging = _ind;
