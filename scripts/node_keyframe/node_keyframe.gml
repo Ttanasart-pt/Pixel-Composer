@@ -89,10 +89,12 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		length   = 1;
 		sep_axis = _sep_axis;
 		
-		index   = 0;           static setIndex = function(i) /*=>*/ { index = i; return self; }
-		prop    = _prop;
-		node    = prop.node;
-		y       = 0;
+		index = 0;           static setIndex = function(i) /*=>*/ { index = i; return self; }
+		prop  = _prop;
+		node  = prop.node;
+		y     = 0;
+		h     = 0;
+		
 		key_map = array_create(NODE_TOTAL_FRAMES);
 		key_map_mode = KEYFRAME_END.hold;
 		

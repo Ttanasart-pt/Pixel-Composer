@@ -30,16 +30,18 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		_initName   = _name;
 		name_custom = false;
 		
-		editWidget     = noone;
-		editWidgetRaw  = noone;
-		editWidgetMap  = {};
-		editable       = true;
+		editWidget         = noone;
+		editWidgetRaw      = noone;
+		editWidgetMap      = {};
+		editable           = true;
 		
 		graphWidget    = noone;
 		graphWidgetH   = 0;
 		graphWidgetP   = new widgetParam(0, 0, 0, 0, 0);
 		mapWidget      = noone;
 		inactive_tooltip = "";
+		
+		timelineWidget = noone;
 		
 		is_dummy       = false;
 		ghost_hover    = noone;
@@ -1291,10 +1293,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		editWidgetRaw = editWidget;
 		if(editWidget) {
-			graphWidget = editWidget.clone();
-			
 			editWidget.attributes  = attributes;
+			
+			graphWidget = editWidget.clone();
 			graphWidget.attributes = attributes;
+			
+			timelineWidget = editWidget.clone();
+			timelineWidget.attributes = attributes;
 		}
 		
 		for( var i = 0, n = array_length(animator.values); i < n; i++ ) {

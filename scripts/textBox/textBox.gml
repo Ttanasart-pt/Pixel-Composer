@@ -450,9 +450,6 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	
 	static display_text = function(_x, _y, _text, _w, _m = -1) {
 		draw_set_alpha(0.5 + 0.5 * interactable);
-		switch(yalign) {
-			case fa_top : _y += ui(1); break;
-		}
 		
 		var xx = _x + disp_x;
 		var cc = sliding == 2? COLORS._main_accent : color;
@@ -550,6 +547,9 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	
 	static drawParam = function(params) {
 		setParam(params);
+		hide  = params[$ "hide"]  ?? hide;
+		color = params[$ "color"] ?? color;
+		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m, params.halign, params.valign);
 	}
 	
@@ -674,7 +674,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			if(hide <= 0) draw_sprite_stretched_ext(THEME.textbox, 4, _x, _y, lw, _h, boxColor, 1);
 		}
 		
-		if(_w > ui(48)) {
+		// if(_w > ui(48)) {
 			if(sliding == 2 && hide < 3) {
 				var _ax0 = _x + ui(10);
 				var _ax1 = _x + _w - ui(10);
@@ -694,7 +694,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				var _ix = labelAlign == fa_left? _x + _h / 2 : _x + _w - _h / 2;
 				draw_sprite_ext(labelSpr, labelSprIndex, _ix, _y + _h / 2, 1, 1, 0, labelColor, 1);
 			}
-		}
+		// }
 		
 		var _dpx = disp_x;	
 		disp_x = lerp_float(disp_x, disp_x_to, 5);

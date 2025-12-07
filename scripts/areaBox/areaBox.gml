@@ -181,7 +181,7 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		x = _x;
 		y = _y;
 		w = _w;
-		h = _h * 2 + ui(4);
+		h = _h * 2;
 		mode = array_safe_get_fast(_data, 5);
 		
 		onSurfaceSize = struct_try_get(_display_data, "onSurfaceSize", -1);
@@ -218,7 +218,7 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 			if(b == 2) mode = setMode(_data, (mode + 1) % 3);
 			
 			var _bx   = _x + _w - _bs;
-			var _by   = _y + _h + ui(4) + _h / 2 - _bs / 2;
+			var _by   = _y + _h + _h / 2 - _bs / 2;
 			var _btxt = __txtx("widget_area_fill_surface", "Fill surface");
 			
 			if(buttonInstant_Pad(THEME.button_hide_fill, _bx, _by, _bs, _bs, _m, hover, active, _btxt, THEME.fill) == 2) { 
@@ -267,7 +267,7 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 			if(mode == AREA_MODE.padding) {
 				var cc    = link_value? COLORS._main_accent : COLORS._main_icon;
 				var _btxt = __txt("Link values");
-				var _bby  = useShape? _by + _h + ui(4) : _y + h / 2 - _bs / 2;
+				var _bby  = useShape? _by + _h : _y + h / 2 - _bs / 2;
 			
 				if(buttonInstant_Pad(THEME.button_hide_fill, _bx, _bby, _bs, _bs, _m, hover, active, _btxt, THEME.value_link, link_value, cc) == 2)
 					link_value = !link_value;
@@ -275,16 +275,13 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 			
 			if(useShape || mode == AREA_MODE.padding) {
 				_w -= _bs + ui(4);
-				_x +=_bs + ui(4);
+				_x += _bs + ui(4);
 			}
 			
 		} 
 		
-		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor, 1);
-		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor, 0.5 + 0.5 * interactable);	
-		
-		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y + _h + ui(4), _w, _h, boxColor, 1);
-		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y + _h + ui(4), _w, _h, boxColor, 0.5 + 0.5 * interactable);	
+		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, h, boxColor, 1);
+		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, h, boxColor, 0.5 + 0.5 * interactable);	
 		
 		for(var i = 0; i < 4; i++)
 			tb[i].setFocusHover(active, hover);
@@ -299,7 +296,7 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 			var tb_y0 = _y;
 			
 			var tb_x1 = _x + tb_w;
-			var tb_y1 = _y + _h + ui(4);
+			var tb_y1 = _y + _h;
 			
 			tb[0].label = "x";
 			tb[1].label = "y";
@@ -322,10 +319,10 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 			var tb_ry = _y;
 			
 			var tb_tx = _x;
-			var tb_ty = _y + _h + ui(4);
+			var tb_ty = _y + _h;
 			
 			var tb_bx = _x + tb_w;
-			var tb_by = _y + _h + ui(4);
+			var tb_by = _y + _h;
 			
 			tb[2].label = "l";
 			tb[0].label = "r";
@@ -345,7 +342,7 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 			var tb_y0 = _y;
 			
 			var tb_x1 = _x + tb_w;
-			var tb_y1 = _y + _h + ui(4);
+			var tb_y1 = _y + _h;
 			
 			tb[0].label = "x0";
 			tb[1].label = "y0";
