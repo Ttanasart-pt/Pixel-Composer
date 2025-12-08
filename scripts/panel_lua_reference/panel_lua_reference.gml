@@ -19,6 +19,7 @@ function Panel_Lua_Reference() : PanelContent() constructor {
 		
 		for( var i = 0; i < amo; i++ ) {
 			var _f = f[i];
+			
 			if(is_string(_f)) {
 				draw_set_text(f_p1b, fa_left, fa_top, COLORS._main_text_accent);
 				yy += ui(8);
@@ -33,9 +34,11 @@ function Panel_Lua_Reference() : PanelContent() constructor {
 			}
 			
 			draw_set_text(f_code, fa_left, fa_top, COLORS._main_text);
-			var _func = array_length(_f) > 2? _f[2] : _f[0];
-			var _desp = array_safe_get_fast(_f, 3, "");
-			var _args = array_safe_get_fast(_f, 4, []);
+			var _func = _f.syn;
+			var _desp = _f.desp;
+			var _args = _f.despArg;
+			var _outt = _f.typeOut;
+			
 			var hh = line_get_height();
 			if(is_open[i]) {
 				draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text);
@@ -59,7 +62,11 @@ function Panel_Lua_Reference() : PanelContent() constructor {
 			
 			draw_sprite_ui(THEME.arrow, is_open[i]? 3 : 0, ui(16), yy + pad + line_get_height() / 2,,,, COLORS._main_icon);
 			draw_set_text(f_code, fa_left, fa_top, COLORS._main_text);
-			draw_code_lua(ui(28), yy + pad, _func);
+			var tx = ui(28);
+			draw_code_lua(tx, yy + pad, _func); tx += string_width(_func) + ui(20);
+			draw_sprite_ui(THEME.arrow, 0, tx - ui(10), yy + pad + ui(8), .8, .8, 0, COLORS._main_icon);
+			draw_set_color(COLORS._main_text_sub);
+			draw_text_add(tx, yy + pad, _outt);
 			
 			if(is_open[i]) {
 				var ty = yy + pad + line_get_height() + ui(4);
