@@ -669,9 +669,11 @@ function Panel_Inspector() : PanelContent() constructor {
         prop_hover  = noone;
         var jun     = noone;
         var amoIn   = is_array(_inspecting.input_display_list)?  array_length(_inspecting.input_display_list)  : array_length(_inspecting.inputs);
+        var amoAttr = array_length(_inspecting.attributes_properties);
+        
         var amoOut  = is_array(_inspecting.output_display_list)? array_length(_inspecting.output_display_list) : array_length(_inspecting.outputs);
         var amoMeta = _inspecting.attributes.outp_meta? array_length(_inspecting.junc_meta) : 0;
-        var amo     = inspectGroup == 0? amoIn + 1 + amoOut + amoMeta : amoIn;
+        var amo     = inspectGroup == 0? amoIn + amoAttr + 1 + amoOut + amoMeta : amoIn + amoAttr;
         
         var color_picker_index = 0;
         var pickers = [];
@@ -682,6 +684,11 @@ function Panel_Inspector() : PanelContent() constructor {
         
         var currSec = "";
         var padd    = ui(6);
+        
+        var con_ww  = con_w - ui(20);
+        var rrx     = ui(16) + x;
+        var rry     = top_bar_h + y;
+        var _font   = viewMode == INSP_VIEW_MODE.spacious? f_p2 : f_p3;
         
         for(var i = 0; i < amo; i++) {
             var yy = hh + _y;
@@ -694,7 +701,10 @@ function Panel_Inspector() : PanelContent() constructor {
                 else if(is_real(_dsp))    jun = array_safe_get_fast(_inspecting.inputs, _dsp);
                 else                      jun = _dsp;
                 
-            } else if(i == amoIn) { // output label
+            } else if(i < amoIn + amoAttr) { // attributes
+            	jun = _inspecting.attributes_properties[i - amoIn];
+            	
+            } else if(i == amoIn + amoAttr) { // output label
                 hh += ui(8 + 32 + 8);
                 
                 draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, yy + ui(8), con_w, ui(32), COLORS.panel_inspector_output_label, 0.8);
@@ -702,8 +712,8 @@ function Panel_Inspector() : PanelContent() constructor {
                 draw_text_add(xc, yy + ui(8 + 16), __txt("Outputs"));
                 continue;
             
-            } else if(i < amoIn + 1 + amoOut) { // outputs
-                var _oi = i - amoIn - 1;
+            } else if(i < amoIn + amoAttr + 1 + amoOut) { // outputs
+                var _oi = i - (amoIn + amoAttr + 1);
                 var _dsl = _inspecting.output_display_list;
                 var _dsp = array_safe_get_fast(_dsl, _oi);
                 
@@ -712,7 +722,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 else                     jun = _dsp;
                 
             } else { // metadata
-                jun = _inspecting.junc_meta[i - (amoIn + 1 + amoOut)];
+                jun = _inspecting.junc_meta[i - (amoIn + amoAttr + 1 + amoOut)];
             }
             
                    if(is(jun, Inspector_Spacer)) {                    // SPACER
@@ -881,29 +891,62 @@ function Panel_Inspector() : PanelContent() constructor {
                 
                 if(!filtering && coll) { // skip 
                     _colsp   = true;
-                    var j    = i + 1;
-                    var _len = array_length(_inspecting.input_display_list);
-                    var _edt = 0;
-                    
-                    while(j < _len) {
-                        var j_jun = _inspecting.input_display_list[j];
-                        if(is_array(j_jun)) break;
-                        if(is(j_jun, Inspector_Spacer) && !j_jun.coll) break;
-                        
-                        jun = array_safe_get_fast(_inspecting.inputs, j_jun)
-                        if(is(jun, NodeValue) && jun.show_in_inspector && jun.is_modified) _edt++;
-                        
-                        j++;
+                    if(i == amoIn) { // skip attribute
+                    	i = amoIn + amoAttr - 1;
+                    	
+                    } else {
+	                    var j    = i + 1;
+	                    var _edt = 0;
+	                    
+	                    while(j < amoIn) {
+	                        var j_jun = _inspecting.input_display_list[j];
+	                        if(is_array(j_jun)) break;
+	                        if(is(j_jun, Inspector_Spacer) && !j_jun.coll) break;
+	                        
+	                        jun = array_safe_get_fast(_inspecting.inputs, j_jun)
+	                        if(is(jun, NodeValue) && jun.show_in_inspector && jun.is_modified) _edt++;
+	                        
+	                        j++;
+	                    }
+	                    
+	                    i = j - 1;
+	                    _edtMap[$ _key] = _edt;
                     }
-                    
-                    i = j - 1;
-                    _edtMap[$ _key] = _edt;
                 }
                 
                 continue;
             }
         	
-            if(!is(jun, NodeValue)) continue;
+        	if(is(jun, attribute_property)) {
+        		var _name = jun.name;
+				var _val  = jun.getter();
+				var _wdgt = jun.editWidget;
+				
+				var bs    = ui(15 + viewMode * 5);
+				var lb_h  = line_get_height(_font, 4 + viewMode * 2);
+				var lb_y  = yy + lb_h / 2;
+				var padx  = ui(16);
+				
+				draw_set_text(_font, fa_left, fa_center, COLORS._main_text);
+				draw_text_add(padx, lb_y, _name);
+				var ds_w = padx + string_width(_name);
+		
+				var labelWidth = max(ds_w, min(con_ww * 0.4, ui(200)));
+				var editBoxX   = ui(16)	+ labelWidth;
+				var editBoxY   = yy;
+				var editBoxW   = con_ww - labelWidth;
+				var editBoxH   = lb_h;
+				
+                var param = new widgetParam(editBoxX, editBoxY, editBoxW, editBoxH, _val, {}, _m, rrx, rry)
+                	.setFont(_font);
+                	
+            	_wdgt.setFocusHover(_focus, _hover);
+				var _widH = _wdgt.drawParam(param) ?? 0;
+				hh += widH + padd;
+        		continue;
+        	}
+        	
+            if(!is(jun, NodeValue))    continue;
             if(!jun.show_in_inspector) continue;
             
             if(currSec != "" && jun.is_modified) _edtMap[$ currSec]++;
@@ -913,11 +956,7 @@ function Panel_Inspector() : PanelContent() constructor {
             }
             
             #region ++++ draw widget ++++
-                var _font = viewMode == INSP_VIEW_MODE.spacious? f_p2 : f_p3;
-                var  rrx  = ui(16) + x;
-                var  rry  = top_bar_h + y;
-                
-                var widg    = drawWidget(ui(16), yy, con_w - ui(20), _m, jun, false, _hover, _focus, contentPane, rrx, rry);
+                var widg    = drawWidget(ui(16), yy, con_ww, _m, jun, false, _hover, _focus, contentPane, rrx, rry);
                 var widH    = widg[0];
                 var mbRight = widg[1];
                 var widHov  = widg[2];
@@ -950,7 +989,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 	var wdx = lb_x - pdx / 2;
                 	var wdy = yy;
                 	
-                	var wdw = (con_w - ui(20)) * .4;
+                	var wdw = con_ww * .4;
                 	var wdh = line_get_height(_font, 4 + viewMode * 2);
                 	
                 	tb_rename.setFocusHover(_focus, _hover);
@@ -1390,10 +1429,10 @@ function Panel_Inspector() : PanelContent() constructor {
                     break;
                     	
 				case "favorites" :
-					var fh = 0;
-					var con_w = contentPane.surface_w - ui(4); 	
-					var rrx   = ui(16) + x;
-            		var rry   = top_bar_h + y;
+					var con_ww = contentPane.surface_w - ui(24); 	
+					var fh  = 0;
+					var rrx = ui(16) + x;
+            		var rry = top_bar_h + y;
 	                
 					var _favs = PROJECT.favoritedValues;
 					for( var j = 0, m = array_length(_favs); j < m; j++ ) {
@@ -1413,7 +1452,7 @@ function Panel_Inspector() : PanelContent() constructor {
 						var _fv = _favs[j];
 						if(!is(_fv, NodeValue)) continue;
 						
-						var widg = drawWidget(ui(16), yy, con_w - ui(20), _m, _fv, false, _hover, _focus, contentPane, rrx, rry);
+						var widg = drawWidget(ui(16), yy, con_ww, _m, _fv, false, _hover, _focus, contentPane, rrx, rry);
                 		var widH = widg[0];
                 		
 	                    yy += widH + ui(6);

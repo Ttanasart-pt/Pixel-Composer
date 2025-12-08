@@ -48,7 +48,7 @@
 			var _form = _surface_format[i];
 			var _supp = _form < 0 || surface_format_is_supported(_form);
 			
-			array_push(global.SURFACE_FORMAT, _form);
+			array_push(global.SURFACE_FORMAT,      _form);
 			array_push(global.SURFACE_FORMAT_NAME, surface_format_name[i]);
 			array_push(global.SURFACE_FORMAT_SUPP, _supp);
 			
@@ -61,6 +61,12 @@
 #endregion
 	
 #region attribute
+	function attribute_property(_editor) constructor {
+		name       = _editor[0];
+		getter     = _editor[1];
+		editWidget = _editor[2];
+	}
+	
 	function __attribute_set(node, key, value) {
 		node.attributes[$ key] = value;
 		node.triggerRender();
@@ -89,6 +95,8 @@
 		if(label) array_push(attributeEditors, "Surface");
 		array_push(attributeEditors, color_depth_editor);
 		checkGroupAttribute(color_depth_editor);
+		
+		array_push(attributes_properties, new attribute_property(color_depth_editor));
 	}
 	
 	function attribute_interpolation(label = false) {
@@ -103,6 +111,8 @@
 		if(label) array_push(attributeEditors, "Surface");
 		array_push(attributeEditors, interpolate_editor);
 		checkGroupAttribute(interpolate_editor);
+		
+		array_push(attributes_properties, new attribute_property(interpolate_editor));
 	}
 	
 	function attribute_oversample(label = false) {
@@ -116,6 +126,8 @@
 		if(label) array_push(attributeEditors, "Surface");
 		array_push(attributeEditors, oversample_editor);
 		checkGroupAttribute(oversample_editor);
+		
+		array_push(attributes_properties, new attribute_property(oversample_editor));
 	}
 	
 	function attribute_auto_execute(label = false) {

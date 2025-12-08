@@ -187,7 +187,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	#endregion
 	
 	#region ---- Attributes ----
-		attributes.node_param_width = PREFERENCES.node_param_width;
+		attributes_properties        = [["Attributes", true]];
+		
+		attributes.node_param_width  = PREFERENCES.node_param_width;
 		attributes.node_width        = 0;
 		attributes.node_height       = 0;
 		attributes.outp_meta         = false;
