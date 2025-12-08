@@ -288,8 +288,10 @@ event_inherited();
 		
 		if(update_hover) {
 			UNDO_HOLDING = true;
-				 if(hovering != "") scrollbox.onModify(array_find(scrollbox.data, hovering));
-			else if(initVal > -1)   scrollbox.onModify(initVal);
+			
+			var _val = hovering == noone? initVal : array_find(scrollbox.data, hovering);
+			if(_val != -1) scrollbox.onModify(_val);
+				
 			UNDO_HOLDING = false;
 		}
 		

@@ -184,8 +184,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		visible = _connect == CONNECT_TYPE.output || _type == VALUE_TYPE.surface || _type == VALUE_TYPE.path || _type == VALUE_TYPE.PCXnode;
 		visible_def       = visible;
 		visible_manual    = 0;
-		show_in_inspector = true;
 		visible_in_list   = true;
+		show_in_inspector = true;
 		
 		display_type = VALUE_DISPLAY._default;
 		if(_type == VALUE_TYPE.curve)			display_type = VALUE_DISPLAY.curve;
@@ -193,6 +193,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		display_data		= {};
 		display_attribute	= noone;
+		inspector_timeline  = false;
 		
 		popup_dialog = noone;
 		type_array   = typeArray(self);
@@ -2564,6 +2565,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(connect_type == CONNECT_TYPE.output) return _map;
 		
+		if(inspector_timeline)  _map.insp_tm        = inspector_timeline;
 		if(graph_h != 96)       _map.graph_h        = graph_h;
 		if(show_graph)          _map.graph_sh       = show_graph;
 		if(array_any(show_graphs, function(v) /*=>*/ {return bool(v)})) 
@@ -2634,6 +2636,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			show_graphs    = array_clone(_map[$ "graph_shs"] ?? show_graphs);
 		}
 		
+		inspector_timeline = _map[$ "insp_tm"] ?? inspector_timeline;
 		drawValue	= _map[$ "drawValue"] ?? false;
 		
 		if(connect_type == CONNECT_TYPE.output) return;

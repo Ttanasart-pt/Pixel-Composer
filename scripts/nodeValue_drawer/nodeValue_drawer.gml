@@ -21,6 +21,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		
 		var _font     = _viewSpac? f_p2 : f_p3;
 		var breakLine = _viewSpac || jun.expUse;
+		var mbRight   = true;
 		
 		var con_w = ww - ui(4);
 		var xc	  = xx + ww / 2;
@@ -74,7 +75,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, ics, cc, .8 + .2 * _hov);
 			
 			if(_hov) {
-				cHov  = true;
+				mbRight = false;
+				cHov    = true;
 				
 				if(anim_hold != noone)
 					jun.setAnim(anim_hold, true);
@@ -82,7 +84,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, ics, index == 2? COLORS._main_accent : c_white, 1);
 				TOOLTIP = jun.hasJunctionFrom()? __txtx("panel_inspector_remove_link", "Remove link") : __txtx("panel_inspector_toggle_anim", "Toggle animation");
 						
-				if(mouse_press(mb_left, _focus)) {
+				if(mouse_lpress(_focus)) {
 					if(jun.value_from != noone)
 						jun.removeFrom();
 					else {
@@ -90,6 +92,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 						anim_hold = jun.is_anim;
 					}
 				}
+				
+				if(mouse_rpress(_focus)) jun.inspector_timeline = !jun.inspector_timeline;
 			}
 		} // Animation
 		
@@ -102,7 +106,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			
 			draw_sprite_ui_uniform(THEME.junc_visible, _visi, butx, lb_y, ics, c_white, .8);
 			if(_hover && point_in_circle(_m[0], _m[1], butx, lb_y, bs / 2)) {
-				cHov  = true;
+				mbRight = false;
+				cHov    = true;
 				
 				if(visi_hold != noone && jun.visible_manual != visi_hold) {
 					jun.setVisibleManual(visi_hold);
@@ -124,7 +129,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				lb_w += bs;
 				draw_sprite_ui_uniform(THEME.node_use_expression, jun.expUse, butx, lb_y, ics, c_white, .8);
 				if(_hover && point_in_circle(_m[0], _m[1], butx, lb_y, bs / 2)) {
-					cHov  = true;
+					mbRight = false;
+					cHov    = true;
 					
 					draw_sprite_ui_uniform(THEME.node_use_expression, jun.expUse, butx, lb_y, ics,, 1);
 					TOOLTIP = __txtx("panel_inspector_use_expression", "Use expression");
@@ -372,7 +378,6 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		var editBoxH   = breakLine? TEXTBOX_HEIGHT : lb_h;
 		
 		var _widH	   = breakLine? editBoxH : 0;
-		var mbRight	   = true;
 		
 		if(jun.expUse) {
 			var expValid = jun.expTree != noone && jun.expTree.validate();

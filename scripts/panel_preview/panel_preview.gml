@@ -316,17 +316,17 @@ function Panel_Preview() : PanelContent() constructor {
         preview_shader_alpha = true;
         preview_shader       = 0;
         preview_shaders      = [
-        	new scrollItem( "Raw"   ).setData(undefined), 
+        	new scrollItem( "Raw"        ).setData(undefined), 
         	-1,
-        	new scrollItem( "Red"   ).setData(sh_channel_R), 
-        	new scrollItem( "Green" ).setData(sh_channel_G), 
-        	new scrollItem( "Blue"  ).setData(sh_channel_B), 
+        	new scrollItem( "Red"        ).setData(sh_channel_R), 
+        	new scrollItem( "Green"      ).setData(sh_channel_G), 
+        	new scrollItem( "Blue"       ).setData(sh_channel_B), 
         	-1,
-        	new scrollItem( "Hue"   ).setData(sh_channel_H), 
-        	new scrollItem( "Sat"   ).setData(sh_channel_S), 
-        	new scrollItem( "Value" ).setData(sh_channel_V), 
+        	new scrollItem( "Hue"        ).setData(sh_channel_H), 
+        	new scrollItem( "Saturation" ).setData(sh_channel_S), 
+        	new scrollItem( "Value"      ).setData(sh_channel_V), 
         	-1,
-        	new scrollItem( "Alpha" ).setData(sh_channel_A), 
+        	new scrollItem( "Alpha"      ).setData(sh_channel_A), 
     	];
     	
     	sb_shader = new scrollBox(preview_shaders, function(i) /*=>*/ { preview_shader = i; }).setFont(f_p3);
@@ -2505,8 +2505,8 @@ function Panel_Preview() : PanelContent() constructor {
 		} else {
 			var m  = [mx,my];
 			
-            var cw = ui(100);
-            var ch = topbar_height - ui(10);
+            var cw = ui(132);
+            var ch = topbar_height - ui(11);
 			var cx = w - ui(6) - cw;
             var cy = ui(6);
             

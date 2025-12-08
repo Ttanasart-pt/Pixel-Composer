@@ -31,7 +31,7 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 	onModify  = _onModify;	
 	data_list = _data;
 	data      = _data;
-	curr_text = 0;
+	curr_val  = -1;
 	
 	arrow_spr = THEME.scroll_box_arrow;
 	arrow_ind = 0;
@@ -67,7 +67,7 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 	static trigger = function() {
 		data = is_method(data_list)? data_list() : data_list;
 		
-		var ind = array_find(data, curr_text);
+		var ind = curr_val;
 		open    = true;
 		
 		FOCUS_BEFORE = FOCUS;
@@ -123,10 +123,10 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 		
 		if(is_array(_val)) return 0;
 		if(is_numeric(_val)) _selVal = array_safe_get_fast(data, _val);
+		curr_val = _val;
 		
 		var _text = is_instanceof(_selVal, scrollItem)? _selVal.name : _selVal;
 		if(is_string(_text)) _text = string_trim_start(_text, ["-", ">", " "]);
-		curr_text = _text;
 		
 		w = _w;
 		draw_set_font(type == 1? f_p0b : font);
@@ -183,7 +183,7 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 		
 		var _arr = h > ui(16);
 		var _sps = min(1, h / 24);
-		var _ars = .6;
+		var _ars = .5;
 		var _arw = _arr * (sprite_get_width(arrow_spr) * _ars + ui(8));
 		var _spr = is(_selVal, scrollItem) && _selVal.spr;
 		
@@ -234,8 +234,11 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 		}
 		
 		if(_arr) {
-			if(type == 0) draw_sprite_ui_uniform(arrow_spr, arrow_ind, _x1 + _arw / 2, _yc, _ars, COLORS._main_icon, 0.5 + 0.5 * interactable);
-			if(type == 1) draw_sprite_ui_uniform(arrow_spr, arrow_ind, _tx1 + ui(16),  _yc, _ars, COLORS._main_icon, 0.5 + 0.5 * interactable);
+			var cc = COLORS._main_icon;
+			var aa = .4 + .4 * interactable;
+			
+			if(type == 0) draw_sprite_ui_uniform(arrow_spr, arrow_ind, _x1 + _arw / 2, _yc, _ars, cc, aa);
+			if(type == 1) draw_sprite_ui_uniform(arrow_spr, arrow_ind, _tx1 + ui(16),  _yc, _ars, cc, aa);
 		}
 		
 		gpu_set_scissor(_sci);

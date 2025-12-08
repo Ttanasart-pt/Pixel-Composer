@@ -172,9 +172,9 @@ event_inherited();
 		if(update_hover) {
 			UNDO_HOLDING = true;
 			
-			     if(hov != noone) scrollbox.onModify(array_find(scrollbox.data, hov));
-			else if(initVal > -1) scrollbox.onModify(initVal);
-				
+			var _val = hov == noone? initVal : array_find(scrollbox.data, hov);
+			if(_val != -1) scrollbox.onModify(_val);
+			
 			UNDO_HOLDING = false;
 		}
 		

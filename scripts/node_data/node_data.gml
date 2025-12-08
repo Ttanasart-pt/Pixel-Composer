@@ -29,6 +29,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		manual_ungroupable	 = true;
 		destroy_when_upgroup = false;
 		
+		node_database        = undefined;
+		run_in(1, function() /*=>*/ { node_database = ALL_NODES[$ instanceof(self)]; });
+		
 		if(NOT_LOAD) array_push(_group == noone? project.nodes : _group.getNodeList(), self);
 		
 		array_push(project.allNodes, self);
@@ -2636,12 +2639,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	clearCacheOnChange = true;
 	
 	static checkCache = function() {
-		if(use_cache == CACHE_USE.manual) return;
-		use_cache = attributes.cache? CACHE_USE.auto : CACHE_USE.none;
 		buttonCacheClear.visible = bool(use_cache);
+		if(use_cache == CACHE_USE.manual) return;
 		
+		use_cache = attributes.cache? CACHE_USE.auto : CACHE_USE.none;
 		if(!attributes.cache) clearCache();
-	}
+		
+	} run_in(1, function() /*=>*/ {return checkCache()});
 	
 	static setCacheManual = function() {
 		use_cache = CACHE_USE.manual;
