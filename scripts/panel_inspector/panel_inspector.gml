@@ -249,6 +249,9 @@ function Panel_Inspector() : PanelContent() constructor {
         attribute_hovering  = noone;
         
         timeline_scrubbing  = false;
+        
+        renaming  = undefined;
+		tb_rename = textBox_Text(function(_n) /*=>*/ { if(renaming != undefined) renaming.setName(_n, false); renaming = undefined; });
     #endregion
     
     drawWidgetInit();
@@ -296,6 +299,7 @@ function Panel_Inspector() : PanelContent() constructor {
             [ __txt("Global Layer"),        true,  "layers"     ], 
             [ __txt("Global Variables"),    false, "globalvar"  ], 
             [ __txt("Group Properties"),    false, "group prop" ], 
+            [ __txt("Favorited Proerties"), false, "favorites"  ], 
         ];
         
         meta_steam_avatar = new checkBox(function() /*=>*/ { STEAM_UGC_ITEM_AVATAR = !STEAM_UGC_ITEM_AVATAR; });
@@ -711,7 +715,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 jun = _inspecting.junc_meta[i - (amoIn + 1 + amoOut)];
             }
             
-            if(is(jun, Inspector_Spacer)) {                    // SPACER
+                   if(is(jun, Inspector_Spacer)) {                    // SPACER
             	if(!jun.active) continue;
                 var _hh = ui(jun.h);
                 var _yy = yy + _hh / 2 - jun.lshf;
@@ -910,34 +914,23 @@ function Panel_Inspector() : PanelContent() constructor {
             
             #region ++++ draw widget ++++
                 var _font = viewMode == INSP_VIEW_MODE.spacious? f_p2 : f_p3;
-                var  bs   = viewMode == INSP_VIEW_MODE.spacious? ui(20) : ui(16);
-                var _padx = viewMode == INSP_VIEW_MODE.spacious? ui(16) : ui(12);
+                var  rrx  = ui(16) + x;
+                var  rry  = top_bar_h + y;
                 
-                var lb_h = line_get_height(_font, 4 + viewMode * 2);
-                var lb_w = line_get_width(jun.getName(), _font) + _padx;
-                var lb_x = bs * 3 + ui(16) + (ui(24) * (jun.color != -1)) - _padx / 2;
-                
-                var lbHov = point_in_rectangle(_m[0], _m[1], lb_x, yy, lb_x + lb_w, yy + lb_h);
-                if(lbHov) {
-                    contentPane.hover_content = true;
-                    draw_sprite_stretched_ext(THEME.box_r2_clr, 0, lb_x, yy, lb_w, lb_h, c_white, 1);
-                }
-                
-                var widg    = drawWidget(ui(16), yy, con_w - ui(20), _m, jun, false, _hover, _focus, contentPane, ui(16) + x, top_bar_h + y);
+                var widg    = drawWidget(ui(16), yy, con_w - ui(20), _m, jun, false, _hover, _focus, contentPane, rrx, rry);
                 var widH    = widg[0];
                 var mbRight = widg[1];
                 var widHov  = widg[2];
+                var lbHov   = widg[3];
+                var lb_x    = widg[4];
                 
-                if(widHov) contentPane.hover_content = true;
-                
-            	var _selH = lb_h + widH;
-                hh += _selH + padd;
+                if(widHov || lbHov) contentPane.hover_content = true;
+                hh += widH + padd;
                 
                 if(jun == prop_highlight && prop_highlight_time) {
-                    if(prop_highlight_time == 60)
-                        contentPane.setScroll(_y - yy);
+                    if(prop_highlight_time == 60) contentPane.setScroll(_y - yy);
                     var aa = min(1, prop_highlight_time / 30);
-                    draw_sprite_stretched_ext(THEME.ui_panel, 1, ui(4), yy, con_w - ui(4), _selH, COLORS._main_accent, aa);
+                    draw_sprite_stretched_ext(THEME.ui_panel, 1, ui(4), yy, con_w - ui(4), widH, COLORS._main_accent, aa);
                 }
                 
                 if(_hover && lbHov && prop_dragging == noone && mouse_press(mb_left, pFOCUS)) {
@@ -945,6 +938,23 @@ function Panel_Inspector() : PanelContent() constructor {
                         
                     prop_sel_drag_x = mouse_mx;
                     prop_sel_drag_y = mouse_my;
+                }
+                
+                if(lbHov && DOUBLE_CLICK) {
+                	renaming = jun;
+					tb_rename.activate(jun.getName());
+                }
+                
+                if(renaming == jun) {
+                	var pdx = ui(12 + 4 * viewMode);
+                	var wdx = lb_x - pdx / 2;
+                	var wdy = yy;
+                	
+                	var wdw = (con_w - ui(20)) * .4;
+                	var wdh = line_get_height(_font, 4 + viewMode * 2);
+                	
+                	tb_rename.setFocusHover(_focus, _hover);
+                	tb_rename.drawParam(new widgetParam(wdx, wdy, wdw, wdh, jun.getName(), {}, _m).setFont(_font));
                 }
             #endregion
             
@@ -955,23 +965,23 @@ function Panel_Inspector() : PanelContent() constructor {
             }
             
             if(jun.editWidget && jun.editWidget.temp_hovering) {
-            	draw_sprite_stretched_ext(THEME.prop_selecting, 0, ui(4), yy, con_w - ui(4), _selH, COLORS._main_accent, 1);
+            	draw_sprite_stretched_ext(THEME.prop_selecting, 0, ui(4), yy, con_w - ui(4), widH, COLORS._main_accent, 1);
             	jun.editWidget.temp_hovering = false;
             }
             
             // Mouse interaction
-            if(_hover && point_in_rectangle(_m[0], _m[1], ui(4), yy, con_w - ui(4), yy + _selH)) {
+            if(_hover && point_in_rectangle(_m[0], _m[1], ui(4), yy, con_w - ui(4), yy + widH)) {
                 _HOVERING_ELEMENT = jun;
                 
                 var hov = PANEL_GRAPH.value_dragging != noone || (NODE_DROPPER_TARGET != noone && NODE_DROPPER_TARGET != jun);
                 
                 if(hov) {
-                    draw_sprite_stretched_ext(THEME.ui_panel, 1, ui(4), yy, con_w - ui(4), _selH, COLORS._main_value_positive, 1);
+                    draw_sprite_stretched_ext(THEME.ui_panel, 1, ui(4), yy, con_w - ui(4), widH, COLORS._main_value_positive, 1);
                     if(mouse_press(mb_left, NODE_DROPPER_TARGET_CAN)) {
                         NODE_DROPPER_TARGET.expression += $"{jun.node.internalName}.{jun.connect_type == CONNECT_TYPE.input? "inputs" : "outputs"}.{jun.internalName}";
                         NODE_DROPPER_TARGET.expressionUpdate(); 
                     }
-                } else draw_sprite_stretched_ext(THEME.prop_selecting, 0, ui(4), yy, con_w - ui(4), _selH, COLORS._main_accent, 1);
+                } else draw_sprite_stretched_ext(THEME.prop_selecting, 0, ui(4), yy, con_w - ui(4), widH, COLORS._main_accent, 1);
                 
                 if(anim_toggling) {
                     jun.setAnim(!jun.is_anim, true);
@@ -1144,15 +1154,18 @@ function Panel_Inspector() : PanelContent() constructor {
         
         var  con_w = contentPane.surface_w - ui(4);
         var _hover = pHOVER && contentPane.hover;
+        var _focus = pFOCUS && contentPane.active;
         var  spac  = viewMode == INSP_VIEW_MODE.spacious;
         
         var hh  = ui(40);
         var yy  = _y + hh;
         var rx  = x + ui(16);
         var ry  = y + top_bar_h;
-        var lbh = ui(26);
         var _cAll = 0;
-        var _font = spac? f_p1 : f_p2;
+        
+        var fnt   = spac? f_p1 : f_p3;
+        var _font = spac? f_p2 : f_p3;
+        var lbh   = spac? ui(26) : ui(22);
         
         attribute_hovering = noone;
         
@@ -1210,10 +1223,10 @@ function Panel_Inspector() : PanelContent() constructor {
                     else if(mouse_press(mb_left)) _meta[1] = !_meta[1];
                 }
             }
-            
+                
             draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, yy, _x1, lbh, cc, 1);
             draw_sprite_ui(THEME.arrow, _meta[1]? 0 : 3, ui(16), yy + lbh / 2, 1, 1, 0, COLORS.panel_inspector_group_bg, 1);    
-            draw_set_text(viewMode? f_p0 : f_p1, fa_left, fa_center, COLORS._main_text_inner);
+            draw_set_text(fnt, fa_left, fa_center, COLORS._main_text);
             draw_text_add(ui(32), yy + lbh / 2, _txt);
             
             /// Content
@@ -1237,7 +1250,7 @@ function Panel_Inspector() : PanelContent() constructor {
                         var widx = ui(8);
                         var widy = yy;
                         
-                        draw_set_text(_font, fa_left, fa_top, COLORS._main_text_inner);
+                        draw_set_text(_font, fa_left, fa_top, COLORS._main_text);
                         draw_text_add(ui(16), spac? yy : yy + ui(3), __txt(title));
                         
                         if(spac) {
@@ -1301,7 +1314,7 @@ function Panel_Inspector() : PanelContent() constructor {
                         var display = meta.displays[j];
                         var _wdgt   = meta_tb[j];
                         
-                        draw_set_text(_font, fa_left, fa_top, COLORS._main_text_inner);
+                        draw_set_text(_font, fa_left, fa_top, COLORS._main_text);
                         draw_text_add(ui(16), spac? yy : yy + ui(3), __txt(display[0]));
                         
                         if(spac) {
@@ -1332,7 +1345,7 @@ function Panel_Inspector() : PanelContent() constructor {
                     }
                     
                     if(STEAM_ENABLED && _edt) {
-                        draw_set_text(_font, fa_left, fa_top, COLORS._main_text_inner);
+                        draw_set_text(_font, fa_left, fa_top, COLORS._main_text);
                         draw_text_over(ui(16), spac? yy : yy + ui(3), __txt("Show Avatar"));
                         
                         if(spac) {
@@ -1358,6 +1371,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 case "globalvar" : 
                     // if(findPanel("Panel_Globalvar")) { yy += ui(4); hh += ui(4); continue; }
                     if(_m[1] > yy) contentPane.hover_content = true;
+                    if(array_empty(PROJECT.globalNode.inputs)) break;
                     
                     global_drawer.viewMode = viewMode;
                     var glPar = global_drawer.draw(ui(16), yy, contentPane.surface_w - ui(24), _m, pFOCUS, _hover, contentPane, ui(16) + x, top_bar_h + y);
@@ -1374,10 +1388,45 @@ function Panel_Inspector() : PanelContent() constructor {
                     yy += _h;
                     hh += _h;
                     break;
+                    	
+				case "favorites" :
+					var fh = 0;
+					var con_w = contentPane.surface_w - ui(4); 	
+					var rrx   = ui(16) + x;
+            		var rry   = top_bar_h + y;
+	                
+					var _favs = PROJECT.favoritedValues;
+					for( var j = 0, m = array_length(_favs); j < m; j++ ) {
+						var _fv = _favs[j];
+						if(is_array(_fv)) {
+							var _nid = _fv[0];
+							var _ind = _fv[1];
+							
+							var _nod = PROJECT.nodeMap[? _nid];
+							if(!is(_nod, Node)) continue;
+							
+							var _inp = array_safe_get_fast(_nod.inputs, _ind);
+							if(is(_inp, NodeValue))
+								_favs[j] = _inp;
+						}
+						
+						var _fv = _favs[j];
+						if(!is(_fv, NodeValue)) continue;
+						
+						var widg = drawWidget(ui(16), yy, con_w - ui(20), _m, _fv, false, _hover, _focus, contentPane, rrx, rry);
+                		var widH = widg[0];
+                		
+	                    yy += widH + ui(6);
+	                    hh += widH + ui(6);
+					}
+					
+                    yy += ui(8);
+                    hh += ui(8);
+            		break;
             }
             
-            yy += ui(2);
-            hh += ui(2);
+            // yy += ui(2);
+            // hh += ui(2);
         }
         
         	 if(_cAll ==  1) { for( var i = 0, n = array_length(meta_display); i < n; i++ ) meta_display[i][1] = false; }

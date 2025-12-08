@@ -44,13 +44,13 @@ function Project() constructor {
 	nodeMap	    = ds_map_create();
 	nodeNameMap = ds_map_create();
 	nodeTopoID  = "";
+	immediate_render = undefined;
 	
 	pathInputs  = [];
 	
 	composer        = noone;
 	animator	    = new AnimationManager();
-	globalNode	    = new Node_Global();
-	globalNode.project = self;
+	globalNode	    = new Node_Global().setProject(self);
 	
 	load_layout     = false;
 	previewNode     = "";
@@ -79,7 +79,12 @@ function Project() constructor {
 	tunnels_in_map = ds_map_create();
 	tunnels_out    = ds_map_create();
 	
-	immediate_render = undefined;
+	timelines  = new timelineItemGroup();
+	trackAnim  = new Process_Anim();
+	randomizer = new Project_Randomizer();
+	notes      = [];
+	
+	favoritedValues  = [];
 	
 	#region ===================== GLOBAL LAYER ====================
 		globalLayer_surface   = noone;
@@ -275,11 +280,6 @@ function Project() constructor {
 		} setPalette();
 	#endregion
 	
-	timelines  = new timelineItemGroup();
-	trackAnim  = new Process_Anim();
-	randomizer = new Project_Randomizer();
-	notes      = [];
-	
 	static stepBegin = function() { 
 		if(immediate_render != undefined) {
 			immediate_render.doUpdate();
@@ -444,8 +444,15 @@ function Project() constructor {
 		
 		_map.graph_display_parameter = graphDisplay;
 		
+		_map.favVal = [];
+		for( var i = 0, n = array_length(favoritedValues); i < n; i++ ) {
+			var _fa = favoritedValues[i];
+			if(!_fa.node.active) continue;
+			array_push(_map.favVal, [_fa.node.node_id, _fa.index]);
+		}
+		
 		__node_list = [];
-		array_foreach(allNodes, function(node) { if(node.active) array_push(__node_list, node.serialize()); })
+		array_foreach(allNodes, function(node) /*=>*/ { if(node.active) array_push(__node_list, node.serialize()); })
 		_map.nodes = __node_list;
 		
 		var prev = PANEL_PREVIEW.getNodePreviewSurface();
@@ -517,6 +524,14 @@ function Project() constructor {
 		
 		     if(has(_map, "global"))      globalNode.deserialize(_map.global);
 		else if(has(_map, "global_node")) globalNode.deserialize(_map.global_node);
+		
+		if(has(_map, "favVal")) {
+			var _favVal = _map.favVal;
+			favoritedValues = [];
+			
+			for( var i = 0, n = array_length(_favVal); i < n; i++ )
+				favoritedValues = _favVal[i];
+		}
 		
 		if(has(_map, "addon")) {
 			addons = _map.addon;

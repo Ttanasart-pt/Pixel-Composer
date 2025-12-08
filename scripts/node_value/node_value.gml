@@ -197,6 +197,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		popup_dialog = noone;
 		type_array   = typeArray(self);
+		
+		favorited    = false;
 	#endregion
 	
 	#region ---- Graph ----
@@ -2576,6 +2578,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(on_end != KEYFRAME_END.hold) _map.on_end		 = on_end;
 		if(loop_range != -1)            _map.loop_range	 = loop_range;
 		if(sep_axis)                    _map.sep_axis	 = sep_axis;
+		if(favorited)                   _map.favorited	 = favorited;
 		
 		if(draw_line_shift_x !=  0) _map.shift_x = draw_line_shift_x;
 		if(draw_line_shift_y !=  0) _map.shift_y = draw_line_shift_y;
@@ -2651,6 +2654,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		expTree    = evaluateFunctionList(expression); 
 		
 		sep_axis   = _map[$ "sep_axis"]  ?? false;
+		favorited  = _map[$ "favorited"] ?? false;
 		setAnim(_map[$ "anim"] ?? false);
 		
 		draw_line_shift_x = _map[$ "shift_x"]     ??  0;

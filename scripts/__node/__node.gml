@@ -3,7 +3,7 @@ function __Node_Base(_x, _y) constructor {
 	y = _y;
 	
 	node_id = 0;
-	project = PROJECT;
+	project = PROJECT;   static setProject = function(p) /*=>*/ { project = p; return self; }
 	active  = true;
 	
 	display_name    = "";

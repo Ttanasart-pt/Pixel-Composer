@@ -7,6 +7,7 @@ function drawWidgetInit() {
 	anim_toggling = false;
 	anim_hold     = noone;
 	visi_hold     = noone;
+	contentPane   = undefined;
 	
 	min_w = ui(160);
 	viewMode = PREFERENCES.inspector_view_default;
@@ -53,8 +54,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	#endregion
 	
 	#region left buttons
-		var bs   = _viewSpac? ui(20) : ui(16);
-		var ics  = _viewSpac? 1 : .8;
+		var bs   = _viewSpac? ui(20) : ui(15);
+		var ics  = _viewSpac? .9 : .75;
 		var butx = xx;
 		var lb_x = xx + bs;
 		
@@ -98,7 +99,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		} // Animation
 		
 		if(visi_hold != noone && mouse_lrelease()) visi_hold = noone;	
-		if(!global_var) { // Visibility
+		if(!global_var) { // Visibility & Expression
 			butx += bs;
 			lb_x += bs;
 			lb_w += bs;
@@ -127,20 +128,30 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				butx += bs;
 				lb_x += bs;
 				lb_w += bs;
-				draw_sprite_ui_uniform(THEME.node_use_expression, jun.expUse, butx, lb_y, ics, c_white, .8);
+				
+				var cc = jun.favorited? CDEF.yellow : c_white;
+				var aa = jun.favorited? 1 : .8;
+				
+				draw_sprite_ui_uniform(THEME.favorite, jun.favorited, butx, lb_y, ics, cc, aa);
 				if(_hover && point_in_circle(_m[0], _m[1], butx, lb_y, bs / 2)) {
 					mbRight = false;
 					cHov    = true;
 					
-					draw_sprite_ui_uniform(THEME.node_use_expression, jun.expUse, butx, lb_y, ics,, 1);
-					TOOLTIP = __txtx("panel_inspector_use_expression", "Use expression");
+					draw_sprite_ui_uniform(THEME.favorite, jun.favorited, butx, lb_y, ics, cc, 1);
+					TOOLTIP = __txt("Favorite");
 					
-					if(mouse_press(mb_left, _focus))
-						jun.setUseExpression(!jun.expUse);
+					if(mouse_press(mb_left, _focus)) {
+						jun.favorited = !jun.favorited;
+						var proj = jun.node.project;
+						
+						if(jun.favorited) 
+							 array_push_unique(proj.favoritedValues, jun);
+						else array_remove(proj.favoritedValues, jun);
+					}
 				}
 			}
 			
-		} // Visibility
+		} // Visibility & Expression
 			
 		var cc = COLORS._main_text;
 		if(jun.expUse) {
@@ -174,12 +185,17 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 					draw_sprite_ui(THEME.info, 0, tx, ty,,,, COLORS._main_icon_light, 0.75);
 			}
 			
-			return [ 0, true, cHov ];
+			return [ lb_h, true, cHov, false, lb_x ];
 		}
 	#endregion
 	
 	#region draw name
 		draw_set_text(_font, fa_left, fa_center, cc);
+		
+		var _padx = ui(12 + 4 * _viewSpac);
+		var lbHov = point_in_rectangle(_m[0], _m[1], lb_x - _padx / 2, yy, lb_x + ds_w + _padx, yy + lb_h);
+		if(lbHov) draw_sprite_stretched_ext(THEME.box_r2_clr, 0, lb_x - _padx / 2, yy, ds_w + _padx, lb_h, c_white, 1);
+        
 		draw_text_add(lb_x, lb_y, dispName);
 		
 		if(_input && jun.is_modified) {
@@ -219,12 +235,14 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	
 	#region right buttons
 		if(_input && breakLine) { 
+			var bb = THEME.button_hide_fill;
+			var bx = xx + ww - bs;
+			var by = lb_y - bs/2;
+			
 			if(jun.is_anim) { // Keyframe
 				var _anim = jun.animator;
-				var bx = xx + ww - ui(12);
-				var by = lb_y;
-				var b  = buttonInstant(THEME.button_hide_fill, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _hover, _focus, "", THEME.prop_keyframe, 2)
 				
+				var b = buttonInstant_Pad(bb, bx, by, bs, bs, _m, _hover, _focus, "", THEME.prop_keyframe, 2)
 				if(b) cHov = true;
 				if(b == 2) {
 					for(var j = 0; j < array_length(_anim.values); j++) {
@@ -235,11 +253,9 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 						}
 					}
 				}
-							
-				bx -= ui(26);
+				
 				var cc = COLORS.panel_animation_keyframe_unselected;
 				var kfFocus = false;
-				
 				for(var j = 0; j < array_length(_anim.values); j++) {
 					if(_anim.values[j].time == GLOBAL_CURRENT_FRAME) {
 						cc = COLORS.panel_animation_keyframe_selected;
@@ -249,8 +265,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				}
 				
 				var _tlp = kfFocus? __txtx("panel_inspector_remove_key", "Remove keyframe") : __txtx("panel_inspector_add_key", "Add keyframe");
-				var b    = buttonInstant(THEME.button_hide_fill, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _hover, _focus, _tlp, THEME.prop_keyframe, 1, cc)
-				
+				bx -= bs + ui(4);
+				var b    = buttonInstant_Pad(bb, bx, by, bs, bs, _m, _hover, _focus, _tlp, THEME.prop_keyframe, 1, cc)
 				if(b) cHov = true;
 				if(b == 2) {
 					var _remv = false;
@@ -267,9 +283,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 					if(!_remv) _anim.setValue(jun.showValue(), true, GLOBAL_CURRENT_FRAME);
 				}
 							
-				bx -= ui(26);
-				var b = buttonInstant(THEME.button_hide_fill, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _hover, _focus, "", THEME.prop_keyframe, 0)
-				
+				bx -= bs + ui(4);
+				var b = buttonInstant_Pad(bb, bx, by, bs, bs, _m, _hover, _focus, "", THEME.prop_keyframe, 0)
 				if(b) cHov = true;
 				if(b == 2) {
 					var _t = -1;
@@ -285,39 +300,28 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				var lhf = lb_h / 2 - 4;
 				draw_set_color(COLORS.panel_inspector_key_separator);
 				draw_line(bx - ui(20), by - lhf, bx - ui(20), by + lhf);
-						
-				draw_set_color(COLORS.panel_inspector_key_separator);
-				draw_line(bx - ui(20), by - lhf, bx - ui(20), by + lhf);
-						
-				bx -= ui(26 + 12);
+				
 				tooltip_loop_type.index = jun.on_end;
 				
-				var b = buttonInstant(THEME.button_hide_fill, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _hover, _focus, tooltip_loop_type, THEME.prop_on_end, jun.on_end)
+				bx -= bs + ui(16);
+				var b = buttonInstant_Pad(bb, bx, by, bs, bs, _m, _hover, _focus, tooltip_loop_type, THEME.prop_on_end, jun.on_end)
 				if(b) cHov = true;
-				
 				if(b == 1 && key_mod_press(SHIFT) && MOUSE_WHEEL != 0)   
 					jun.on_end = (jun.on_end + sign(MOUSE_WHEEL) + sprite_get_number(THEME.prop_on_end)) % sprite_get_number(THEME.prop_on_end);
 				if(b == 2) mod_inc_mf0 jun.on_end mod_inc_mf1 jun.on_end mod_inc_mf2  sprite_get_number(THEME.prop_on_end) mod_inc_mf3;
 				
 			} else if(!global_var) {
-				var bx  = xx + ww + ui(16);
-				var by  = lb_y;
-				var bs  = ui(24);
-				var bsh = bs / 2;
-				var bsp = THEME.button_hide_fill;
-				
-				bx -= bs + ui(4);
-				if(jun.is_modified) {
-					var b = buttonInstant(bsp, bx - bsh, by - bsh, bs, bs, _m, _hover, _focus, __txtx("panel_inspector_reset", "Reset value"), THEME.refresh_16, 0, COLORS._main_icon)
-					if(b)      cHov = true;
-					if(b == 2) jun.resetValue();
-					
-				} else 
-					draw_sprite_ui(THEME.refresh_16, 0, bx, by,,,, COLORS._main_icon, 0.5);
+				var bt = __txtx("panel_inspector_reset", "Reset value");
+				var ba = .5 + jun.is_modified * .5;
+				var bh = jun.is_modified && _hover;
+				var b  = buttonInstant_Pad(bb, bx, by, bs, bs, _m, bh, _focus, bt, THEME.refresh_16, 0, COLORS._main_icon, ba);
+				if(b)      cHov = true;
+				if(b == 2) jun.resetValue();
 				
 				bx -= bs + ui(4);
 				var ic_b = jun.expUse? c_white : COLORS._main_icon;
-				var b = buttonInstant(bsp, bx - bsh, by - bsh, bs, bs, _m, _hover, _focus, __txtx("panel_inspector_use_expression", "Use expression"), THEME.node_use_expression, jun.expUse, ic_b)
+				var bt = __txtx("panel_inspector_use_expression", "Use expression");
+				var b  = buttonInstant_Pad(bb, bx, by, bs, bs, _m, _hover, _focus, bt, THEME.node_use_expression, jun.expUse, ic_b)
 				
 				if(b) cHov = true;
 				if(b == 2) {
@@ -328,8 +332,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				if(jun.expUse) {
 					bx -= bs + ui(4);
 					var cc = NODE_DROPPER_TARGET == jun? COLORS._main_value_positive : COLORS._main_icon;
-					var t  = __txtx("panel_inspector_dropper", "Node Dropper");
-					var b  = buttonInstant(bsp, bx - bsh, by - bsh, bs, bs, _m, _hover, _focus, t, THEME.node_dropper, 0, cc);
+					var bt = __txtx("panel_inspector_dropper", "Node Dropper");
+					var b  = buttonInstant_Pad(bb, bx, by, bs, bs, _m, _hover, _focus, bt, THEME.node_dropper, 0, cc);
 					
 					if(b) cHov = true;
 					if(b == 2) NODE_DROPPER_TARGET = NODE_DROPPER_TARGET == jun? noone : jun;
@@ -339,7 +343,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 					bx -= bs + ui(4);
 					var cc = jun.popup_dialog == noone? COLORS._main_icon : COLORS._main_value_positive;
 					var t  = __txtx("panel_inspector_pop_text", "Pop up Editor");
-					var b  = buttonInstant_Pad(bsp, bx - bsh, by - bsh, bs, bs, _m, _hover, _focus, t, THEME.text_popup, 0, cc, 1, ui(8));
+					var b  = buttonInstant_Pad(bb, bx, by, bs, bs, _m, _hover, _focus, t, THEME.text_popup, 0, cc, 1);
 					
 					if(b) cHov = true;
 					if(b == 2) {
@@ -354,7 +358,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 					var ic_b = jun.bypass_junc.visible? COLORS._main_icon_light : COLORS._main_icon;
 					var t  = __txt("Bypass");
 					var si = jun.bypass_junc.visible;
-					var b  = buttonInstant_Pad(bsp, bx - bsh, by - bsh, bs, bs, _m, _hover, _focus, t, THEME.junction_bypass, si, ic_b)
+					var b  = buttonInstant_Pad(bb, bx, by, bs, bs, _m, _hover, _focus, t, THEME.junction_bypass, si, ic_b, 1, ui(2))
 					
 					if(b) cHov = true;
 					if(b == 2) {
@@ -367,7 +371,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		}
 	#endregion
 	
-	if(!is(wid, widget)) return [ 0, true, cHov ];
+	if(!is(wid, widget)) return [ lb_h, true, cHov, lbHov, lb_x ];
 	
 	#region draw widget
 		var labelWidth = max(lb_w, min(ww * 0.4, ui(200)));
@@ -462,5 +466,5 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		}
 	#endregion
 	
-	return [ _widH, mbRight, cHov ];
+	return [ lb_h + _widH, mbRight, cHov, lbHov, lb_x ];
 }	
