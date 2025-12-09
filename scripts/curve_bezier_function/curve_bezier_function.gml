@@ -13,7 +13,7 @@
 #macro CURVE_DEFN_10 [0, 1, 0, -1, 1, 0, /**/ 0, 0, 0, 1, 1/3, -1/3, /**/ -1/3,  1/3, 1, 0, 0, 0]
 #macro CURVE_DEFN_11 [0, 1, 0, -1, 1, 0, /**/ 0, 0, 0, 1, 1/3,    0, /**/ -1/3,    0, 1, 1, 0, 0]
 
-//////////////////////////////////////////////////////////////////////////////////////////// DRAW ////////////////////////////////////////////////////////////////////////////////////////////
+	////- DRAW
 
 function draw_curve(x0, y0, _w, _h, _bz, minx = 0, maxx = 1, miny = 0, maxy = 1, _shift = 0, _scale = 1) {
 	if(!is_array(_bz)) return;
@@ -94,19 +94,11 @@ function draw_curve(x0, y0, _w, _h, _bz, minx = 0, maxx = 1, miny = 0, maxy = 1,
 				var dx1 = _bz[ind + 6 + 0];
 				var dy1 = _bz[ind + 6 + 1];
 				
-				if(abs(dx0) + abs(dx1) > 1) {
-					var _td = abs(dx0) + abs(dx1);
-					dx0 /= _td;
-					dx1 /= _td;
-				}
-				
 				var ax0 = _x0 + dx0;
 				var ay0 = _y0 + dy0;
 				
 				var bx1 = _x1 + dx1;
 				var by1 = _y1 + dy1;
-				
-				var bbz = [ _y0, ax0, ay0, bx1, by1, _y1 ];
 				
 				for(var j = 0; j <= smp; j++) {
 					var _t  = j / smp;
@@ -117,13 +109,21 @@ function draw_curve(x0, y0, _w, _h, _bz, minx = 0, maxx = 1, miny = 0, maxy = 1,
 					var _T2 = _T * _T;
 					var _T3 = _T * _T * _T;
 					
-					var _r0 =                3 * _T2 * _t  * bbz[1] + 3 * _T  * _t2 * bbz[3] + _t3;
-					var _r1 = _T3 * bbz[0] + 3 * _T2 * _t  * bbz[2] + 3 * _T  * _t2 * bbz[4] + _t3 * bbz[5];
+					var _r0 =       _T3 *       _x0
+					          + 3 * _T2 * _t  * ax0
+					          + 3 * _T  * _t2 * bx1
+					          +           _t3 * _x1;
 					
-					_rx = _r0 * _xr + _x0;
+					_rx = _r0;
+					_rx = _rx * _scale + _shift;
+					
+					var _r1 =       _T3 *       _y0 
+					          + 3 * _T2 * _t  * ay0
+					          + 3 * _T  * _t2 * by1
+					          +           _t3 * _y1;
 					_ry = _r1;
 					
-					_rx = _rx * _scale + _shift;
+					////////////////////////////////////////////////
 					
 					_rx = ( _rx - minx ) / rngx;
 					_ry = ( _ry - miny ) / rngy;
@@ -175,16 +175,44 @@ function draw_curve(x0, y0, _w, _h, _bz, minx = 0, maxx = 1, miny = 0, maxy = 1,
 	}
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////// EVAL ////////////////////////////////////////////////////////////////////////////////////////////
+	////- EVAL
 
-function eval_curve_segment_t(_bz, t) {
-	if(_bz[1] == 0 && _bz[2] == 0 && _bz[3] == 0 && _bz[4] == 0)
-		return lerp(_bz[0], _bz[5], t);
+function eval_curve_segment_t(_y0, ax0, ay0, bx1, by1, _y1, t) {
+	var i = 1-t;
+	
+	return  _y0 *     i*i*i + 
+		    ay0 * 3 * i*i*t +
+		    by1 * 3 * i*t*t +
+		    _y1 *     t*t*t ;
+}
+
+function eval_curve_segment_x(_y0, ax0, ay0, bx1, by1, _y1, _x, _tolr = 0.00001) {
+	static _binRep = 16;
+	
+	if(_x <= 0) return _y0;
+	if(_x >= 1) return _y1;
+	if(_y0 == ay0 && _y0 == by1 && _y0 == _y1) return _y0;
+	
+	var st =  0;
+	var ed =  1;
+	var t  = .5;
+	
+	repeat(_binRep) {
+		var _t = 1-t;
+		var ft =  3 * _t * _t * t * ax0 
+			    + 3 * _t *  t * t * bx1
+			    +      t *  t * t;
 		
-	return         power(1 - t, 3)               * _bz[0]
-			 + 3 * power(1 - t, 2) * t           * _bz[2] 
-			 + 3 * (1 - t)         * power(t, 2) * _bz[4]
-			 +                       power(t, 3) * _bz[5];
+		if(abs(ft - _x) < _tolr)
+			return eval_curve_segment_t(_y0, ax0, ay0, bx1, by1, _y1, t);
+		
+		if(ft < _x) st = t;
+		else        ed = t;
+		
+		t = (st + ed) / 2;
+	}
+	
+	return eval_curve_segment_t(_y0, ax0, ay0, bx1, by1, _y1, t);
 }
 
 function eval_curve_x(_bz, _x, _tolr = 0.00001) {
@@ -223,28 +251,27 @@ function eval_curve_x(_bz, _x, _tolr = 0.00001) {
 				var _x1 = _bz[ind + 6 + 2];
 				var _y1 = _bz[ind + 6 + 3];
 				
+				if(_x < _x0) continue;
+				if(_x > _x1) continue;
+				
 				var dx0 = _bz[ind + 4];
 				var dy0 = _bz[ind + 5];
 				var dx1 = _bz[ind + 6 + 0];
 				var dy1 = _bz[ind + 6 + 1];
 				
-				if(abs(dx0) + abs(dx1) > 1) {
-					var _td = abs(dx0) + abs(dx1);
-					dx0 /= _td;
-					dx1 /= _td;
-				}
+				var _rx = _x1 - _x0;
+				var  t  = (_x - _x0) / _rx;
 				
-				var ax0 = _x0 + dx0;
+				if(dx0 == 0. && dy0 == 0. && dx1 == 0. && dy1 == 0.)
+                    return lerp(_y0, _y1, t);
+				
+				var ax0 = 0 + dx0 / _rx;
 				var ay0 = _y0 + dy0;
 				
-				var bx1 = _x1 + dx1;
+				var bx1 = 1 + dx1 / _rx;
 				var by1 = _y1 + dy1;
 				
-				if(_x < _x0) continue;
-				if(_x > _x1) continue;
-				
-				var _ev = eval_curve_segment_x([_y0, ax0, ay0, bx1, by1, _y1], (_x - _x0) / (_x1 - _x0), _tolr);
-				return lerp(_miny, _maxy, _ev);
+				return eval_curve_segment_x(_y0, ax0, ay0, bx1, by1, _y1, t, _tolr);
 			}
 			break;
 			
@@ -266,61 +293,7 @@ function eval_curve_x(_bz, _x, _tolr = 0.00001) {
 	return lerp(_miny, _maxy, _ev);
 }
 
-function eval_curve_segment_x(_bz, _x, _tolr = 0.00001) {
-	static _binRep = 8;
-	
-	if(_x <= 0) return _bz[0];
-	if(_x >= 1) return _bz[5];
-	if(_bz[0] == _bz[2] && _bz[0] == _bz[4] && _bz[0] == _bz[5]) return _bz[0];
-	
-	var  st = 0;
-	var  ed = 1;
-	var _xt = _x;
-	
-	repeat(_binRep) {
-		var _1xt = 1 - _xt;
-		
-		var _ftx =  3 * _1xt * _1xt * _xt * _bz[1] 
-			      + 3 * _1xt *  _xt * _xt * _bz[3]
-			      +      _xt *  _xt * _xt;
-		
-		if(abs(_ftx - _x) < _tolr)
-			return eval_curve_segment_t(_bz, _xt);
-		
-		if(_xt < _x) st = _xt;
-		else         ed = _xt;
-		
-		_xt = (st + ed) / 2;
-	}
-	
-	var _newRep = 8;
-	
-	repeat(_newRep) {
-		var _bz1 = _bz[1];
-		var _bz3 = _bz[3];
-		
-		var slope =   (  9 * _bz1 - 9 * _bz3 + 3) * _xt * _xt
-					+ (-12 * _bz1 + 6 * _bz3) * _xt
-					+    3 * _bz1;
-		
-		var _1xt = 1 - _xt;
-		
-		var _ftx = 3 * _1xt * _1xt * _xt * _bz1 
-				 + 3 * _1xt *  _xt * _xt * _bz3
-				 +      _xt *  _xt * _xt
-				 - _x;
-		
-		_xt -= _ftx / slope;
-		
-		if(abs(_ftx) < _tolr)
-			break;
-	}
-	
-	_xt = clamp(_xt, 0, 1);
-	return eval_curve_segment_t(_bz, _xt);
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////// CMF ////////////////////////////////////////////////////////////////////////////////////////////
+	////- CMF
 
 function eval_curve_cmf(_c, _res = 128) {
 	var _st  = 1 / (_res - 1);
@@ -341,8 +314,7 @@ function eval_curve_cmf(_c, _res = 128) {
 	return _cmf;
 }
 
-
-//////////////////////////////////////////////////////////////////////////////////////////// MISC ////////////////////////////////////////////////////////////////////////////////////////////
+	////- MISC
 
 function bezier_range(bz) { return [ min(bz[0], bz[2], bz[4], bz[5]), max(bz[0], bz[2], bz[4], bz[5]) ]; }
 

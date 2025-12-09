@@ -45,7 +45,7 @@ function Node_Anim_Curve(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		#endregion
 		
 		var time = _anim? CURRENT_FRAME / (TOTAL_FRAMES - 1) : _prog;
-		var val   = eval_curve_x(curve, time) * (_max - _min) + _min;
+		var val   = lerp(_min, _max, eval_curve_x(curve, time));
 		
 		disp_type = _disp;
 		disp_prog = time;

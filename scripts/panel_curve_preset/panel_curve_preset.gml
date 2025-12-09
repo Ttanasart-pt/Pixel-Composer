@@ -1,7 +1,7 @@
 function Panel_Curve_Presets(_curve, _onModify = undefined) : PanelContent() constructor {
 	title = "Curve Preset";
-	w = ui(480);
-	h = ui(360);
+	w = ui(400);
+	h = ui(480);
 	
 	curve    = _curve;
 	onModify = _onModify;
@@ -23,7 +23,7 @@ function Panel_Curve_Presets(_curve, _onModify = undefined) : PanelContent() con
 		contentPane.scroll_y_to	 = 0;
 	}
 
-	folderW = ui(160);
+	folderW = ui(140);
 	folderW_dragging = false;
 	folderW_drag_mx  = 0;
 	folderW_drag_sx  = 0;
@@ -82,7 +82,11 @@ function Panel_Curve_Presets(_curve, _onModify = undefined) : PanelContent() con
 			if(c.content == undefined)
 				c.content = json_load_struct(c.path, 0);
 		
-			if(yy + hg + ui(4) < -ui(8)) continue;
+			if(yy + hg + ui(4) < -ui(8)) {
+				yy += hg + ui(4);
+				continue;
+			}
+			
 			if(yy > sh + ui(8)) break;
 			
 			var _name = c.name;
@@ -194,7 +198,7 @@ function Panel_Curve_Presets(_curve, _onModify = undefined) : PanelContent() con
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, _cnt_x, pad, content_w + pad - ui(6), h - pad * 2);
 		
 		contentPane.setFocusHover(pFOCUS, pHOVER);
-		contentPane.verify(content_w, content_h);
-		contentPane.drawOffset(_cnt_x, pad, mx, my);
+		contentPane.verify(content_w, content_h - 2);
+		contentPane.drawOffset(_cnt_x, pad + 1, mx, my);
 	}
 }

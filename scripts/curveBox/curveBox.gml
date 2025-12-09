@@ -191,29 +191,26 @@ function curveBox(_onModify) : widget() constructor {
 				var _my = 1 - (_m[1] - _y) / ch;
 					_my = lerp(miny, maxy, _my);
 				
-				var _scax = scale_control? (node_drag_typ > 0? _data[node_dragging + 6] - _px : _px - _data[node_dragging - 6]) : control_zoom / cw;
-				var _scay = scale_control? _scax : control_zoom / ch;
-				
 				if(key_mod_press(CTRL) || grid_snap) _mx = value_snap(_mx, grid_step);
 				if(key_mod_press(CTRL) || grid_snap) _my = value_snap(_my, grid_step);
 					
 				if(node_drag_break) {
 					if(node_drag_typ == 1) {
-						_data[node_dragging + 2] = (_mx - _px) * node_drag_typ / _scax;
-						_data[node_dragging + 3] = clamp(_my - _py, -1, 1) * node_drag_typ / _scay;	
+						_data[node_dragging + 2] = (_mx - _px) * node_drag_typ;
+						_data[node_dragging + 3] = clamp(_my - _py, -1, 1) * node_drag_typ;	
 						
 					} else {
-						_data[node_dragging - 2] = (_px - _mx) * node_drag_typ / _scax;
-						_data[node_dragging - 1] = clamp(_py - _my, -1, 1) * node_drag_typ / _scay;
+						_data[node_dragging - 2] = (_px - _mx) * node_drag_typ;
+						_data[node_dragging - 1] = clamp(_py - _my, -1, 1) * node_drag_typ;
 						
 					}
 					
 				} else {
-					_data[node_dragging - 2] = (_px - _mx) * node_drag_typ / _scax;
-					_data[node_dragging + 2] = (_mx - _px) * node_drag_typ / _scax;
+					_data[node_dragging - 2] = (_px - _mx) * node_drag_typ;
+					_data[node_dragging + 2] = (_mx - _px) * node_drag_typ;
 					
-					_data[node_dragging - 1] = clamp(_py - _my, -1, 1) * node_drag_typ / _scay;
-					_data[node_dragging + 3] = clamp(_my - _py, -1, 1) * node_drag_typ / _scay;
+					_data[node_dragging - 1] = clamp(_py - _my, -1, 1) * node_drag_typ;
+					_data[node_dragging + 3] = clamp(_my - _py, -1, 1) * node_drag_typ;
 				}
 				
 				display_pos_x = node_drag_typ? _data[node_dragging - 2] : _data[node_dragging + 2];
@@ -298,21 +295,16 @@ function curveBox(_onModify) : widget() constructor {
 				draw_set_color(COLORS._main_accent);
 				draw_curve(0, 0, cw, ch, _data, minx, maxx, miny, maxy);
 				
+				var _sca = cw;
 				for( var i = 0; i < points; i++ ) {
 					var ind = CURVE_PADD + i * 6;
 					var _x0 = _data[ind + 2];
 					var _y0 = _data[ind + 3];
 					
-					var _sca_bx = scale_control? (i > 0?          _x0 - _data[ind - 6 + 2] : 1) : control_zoom / cw;
-					var _sca_by = scale_control? _sca_bx : control_zoom / ch;
-					
-					var _sca_ax = scale_control? (i < points - 1? _data[ind + 6 + 2] - _x0 : 1) : control_zoom / cw;
-					var _sca_ay = scale_control? _sca_ax : control_zoom / ch;
-					
-					var bx0 = _x0 + _data[ind + 0] * _sca_bx;
-					var by0 = _y0 + _data[ind + 1] * _sca_by;
-					var ax0 = _x0 + _data[ind + 4] * _sca_ax;
-					var ay0 = _y0 + _data[ind + 5] * _sca_ay;
+					var bx0 = _x0 + _data[ind + 0];
+					var by0 = _y0 + _data[ind + 1];
+					var ax0 = _x0 + _data[ind + 4];
+					var ay0 = _y0 + _data[ind + 5];
 					
 					bx0 = get_x(bx0);
 					by0 = get_y(by0);
@@ -706,8 +698,8 @@ function curveBox(_onModify) : widget() constructor {
 			}
 		}
 			
-		draw_surface(curve_surface, _x, _y);
 		draw_sprite_stretched_ext(THEME.box_r2, 1, _x, _y, cw, ch, COLORS.widget_curve_outline, 1);
+		draw_surface(curve_surface, _x, _y);
 		
 		if(show_coord) {
 			var ttx = undefined, llx = undefined;

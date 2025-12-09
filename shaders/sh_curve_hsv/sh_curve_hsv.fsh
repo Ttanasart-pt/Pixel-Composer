@@ -1,6 +1,6 @@
 #pragma use(curve)
 
-#region -- curve -- [1742009781.2228172]
+#region -- curve -- [1765284174.5318077]
 
     #ifdef _YY_HLSL11_ 
         #define CURVE_MAX  512
@@ -15,55 +15,38 @@
         float i = 1. - p;
         
         return _y0 *      i*i*i + 
-            ay0 * 3. * i*i*p + 
-            by1 * 3. * i*p*p + 
-            _y1 *      p*p*p;
+               ay0 * 3. * i*i*p + 
+               by1 * 3. * i*p*p + 
+               _y1 *      p*p*p;
     }
 
     float eval_curve_segment_x(in float _y0, in float ax0, in float ay0, in float bx1, in float by1, in float _y1, in float _x) {
-        float st = 0.;
-        float ed = 1.;
+        int _binRep = 16;
         float _prec = 0.0001;
-        
-        float _xt = _x;
-        int _binRep = 8;
+
+        float  st = 0.;
+        float  ed = 1.;
+        float _xt = .5;
         
         if(_x <= 0.) return _y0;
         if(_x >= 1.) return _y1;
         if(_y0 == ay0 && _y0 == by1 && _y0 == _y1) return _y0;
         
         for(int i = 0; i < _binRep; i++) {
-            float _ftx = 3. * pow(1. - _xt, 2.) * _xt * ax0 
-                    + 3. * (1. - _xt) * pow(_xt, 2.) * bx1
-                    + pow(_xt, 3.);
+            float _1ft = 1. - _xt;
+            float _ftx = 3. * _1ft * _1ft * _xt * ax0 
+                       + 3. * _1ft *  _xt * _xt * bx1
+                       +       _xt *  _xt * _xt;
             
             if(abs(_ftx - _x) < _prec)
                 return eval_curve_segment_t(_y0, ax0, ay0, bx1, by1, _y1, _xt);
             
-            if(_xt < _x) st = _xt;
-            else		 ed = _xt;
+            if(_ftx < _x) st = _xt;
+            else	  	  ed = _xt;
             
             _xt = (st + ed) / 2.;
         }
         
-        int _newRep = 16;
-        
-        for(int i = 0; i < _newRep; i++) {
-            float slope = (  9. * ax0 - 9. * bx1 + 3.) * _xt * _xt
-                        + (-12. * ax0 + 6. * bx1) * _xt
-                        +    3. * ax0;
-            float _ftx = 3. * pow(1. - _xt, 2.) * _xt * ax0 
-                    + 3. * (1. - _xt) * pow(_xt, 2.) * bx1
-                    + pow(_xt, 3.)
-                    - _x;
-            
-            _xt -= _ftx / slope;
-            
-            if(abs(_ftx) < _prec)
-                break;
-        }
-        
-        _xt = clamp(_xt, 0., 1.);
         return eval_curve_segment_t(_y0, ax0, ay0, bx1, by1, _y1, _xt);
     }
 
@@ -85,28 +68,25 @@
                 float _x1  = curve[ind + 6 + 2];
                 float _y1  = curve[ind + 6 + 3];
 
+                if(_x < _x0) continue;
+                if(_x > _x1) continue;
+
                 float _dx0 = curve[ind + 4];
                 float _dy0 = curve[ind + 5];
                 float _dx1 = curve[ind + 6 + 0];
                 float _dy1 = curve[ind + 6 + 1];
-
-                if(abs(_dx0) + abs(_dx1) > 1.) {
-                    float _total = abs(_dx0) + abs(_dx1);
-                    _dx0 /= _total;
-                    _dx1 /= _total;
-                }
-
-                float ax0  = _x0 + _dx0;
-                float ay0  = _y0 + _dy0;
-                float bx1  = _x1 + _dx1;
-                float by1  = _y1 + _dy1;
                 
-                if(_x < _x0) continue;
-                if(_x > _x1) continue;
+                float _rx  = _x1 - _x0;
+                float t = (_x - _x0) / _rx;
 
-                float t = (_x - _x0) / (_x1 - _x0);
-                if(curve[ind + 4] == 0. && curve[ind + 5] == 0. && curve[ind + 6 + 0] == 0. && curve[ind + 6 + 1] == 0.)
+                if(_dx0 == 0. && _dy0 == 0. && _dx1 == 0. && _dy1 == 0.)
                     return mix(_y0, _y1, t);
+                
+                float ax0  = 0. + _dx0 / _rx;
+                float ay0  = _y0 + _dy0;
+
+                float bx1  = 1. + _dx1 / _rx;
+                float by1  = _y1 + _dy1;
                 
                 return eval_curve_segment_x(_y0, ax0, ay0, bx1, by1, _y1, t);
             }
