@@ -54,8 +54,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	#endregion
 	
 	#region left buttons
-		var bs   = _viewSpac? ui(20) : ui(15);
-		var ics  = _viewSpac? .9 : .75;
+		var bs   = breakLine? ui(20) : ui(15);
+		var ics  = breakLine? .9 : .75;
 		var butx = xx;
 		var lb_x = xx + bs;
 		
@@ -375,6 +375,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	
 	#region draw widget
 		var labelWidth = max(lb_w, min(ww * 0.4, ui(200)));
+		var labelWidth = min(ww * 0.4, ui(200));
 		
 		var editBoxX   = xx	+ !breakLine * labelWidth;
 		var editBoxY   = breakLine? yy + lb_h + ui(4) : yy;
@@ -394,7 +395,10 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				
 			var wd_h = jun.express_edit.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.expression, _m);
 			_widH = wd_h - (TEXTBOX_HEIGHT * !breakLine);
-			cHov  = cHov || jun.express_edit.inBBOX(_m);
+			
+			var hvWid = jun.express_edit.inBBOX(_m);
+			cHov  = cHov  || hvWid;
+			lbHov = lbHov && !hvWid;
 			
 			var un = jun.unit;
 			if(un.reference != noone) {
@@ -458,9 +462,11 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			_widH = wid.drawParam(param) ?? 0;
 			if(breakLine) _widH += ui(4);
 			else          _widH -= lb_h;
-			
 			_widH = max(0, _widH);
-			cHov  = cHov || wid.inBBOX(_m);
+			
+			var hvWid = wid.inBBOX(_m);
+			cHov  = cHov  || hvWid;
+			lbHov = lbHov && !hvWid;
 			
 			mbRight = mbRight && wid.right_click_block;
 		}

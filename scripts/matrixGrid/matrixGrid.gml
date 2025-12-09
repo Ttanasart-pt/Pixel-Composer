@@ -85,43 +85,43 @@ function matrixGrid(_type, _onModify, _unit = noone) : widget() constructor {
 		w = _w;
 		h = _h * size[1];
 		
-		var ww = _w / size[0];
+		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, x, y, w, h, boxColor, 1);
 		
-		var _bs = min(_h, ui(32));
-		if((_w - _bs) / size[0] > ui(64)) {
-			if(extras && instanceof(extras) == "buttonClass") {
-				extras.setFocusHover(active, hover);			
-				extras.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
-				_w -= _bs + ui(8);
-			}
-		
-			if(unit != noone && unit.reference != noone) {
-				_w += ui(4);
+		var bs = min(_h, ui(32));
+		if((_w - bs) / size[0] > ui(64)) {
+			var bx = _x + _w - bs;
 			
-				unit.triggerButton.setFocusHover(iactive, ihover);
-				unit.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m);
-				_w -= _bs + ui(8);
+			if(is(extras, buttonClass)) {
+				if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, bx, _y, bs, h, CDEF.main_mdwhite, 1);
+				extras.setFocusHover(active, hover);			
+				extras.draw(bx, _y + _h / 2 - bs / 2, bs, bs, _m, THEME.button_hide_fill);
+				_w -= bs;
 			}
 		
 			b_link.setFocusHover(active, hover);
 			b_link.icon_index = linked;
 			b_link.icon_blend = linked? COLORS._main_accent : COLORS._main_icon;
 			b_link.tooltip = linked? __txt("Unlink values") : __txt("Link values");
-				
-			var th = _h * size[1] - ui(8);
-			var bx = _x;
-			var by = _y + th / 2 - _bs / 2;
-			b_link.draw(bx, by, _bs, _bs, _m, THEME.button_hide_fill);
 			
-			_x += _bs + ui(4);
-			_w -= _bs + ui(4);
+			var bx = _x;
+			var by = _y;
+			
+			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, bx, _y, bs, h, CDEF.main_mdwhite, 1);
+			b_link.draw(bx, by, bs, bs, _m, THEME.button_hide_fill);
+			
+			by += _h;
+			if(unit != noone && unit.reference != noone) {
+				unit.triggerButton.setFocusHover(iactive, ihover);
+				unit.draw(bx, by, bs, bs, _m);
+			}
+			
+			_x += bs;
+			_w -= bs;
 		
 		}
 		
-		if(hide == 0) {
-			draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, ww * size[0], _h * size[1], boxColor, 1);
-			draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, ww * size[0], _h * size[1], boxColor, 0.5 + 0.5 * interactable);	
-		}
+		var ww = _w / size[0];
+		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 0, x, y, w, h, boxColor, 0.5 + 0.5 * interactable);	
 		
 		var _raw = is(_data, Matrix)? _data.raw : _data;
 		

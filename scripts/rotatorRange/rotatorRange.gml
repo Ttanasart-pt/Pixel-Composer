@@ -42,21 +42,11 @@ function rotatorRange(_onModify) : widget() constructor {
 		
 		var _r  = _h;
 		var _drawRot = _w - _r > ui(64);
-		var _tx = _drawRot? _x + _r + ui(4) : _x;
-		var _tw = _drawRot? _w - _r - ui(4) : _w;
+		var _tx = _drawRot? _x + _r : _x;
+		var _tw = _drawRot? _w - _r : _w;
 		
-		if(hide == 0) {
-			draw_sprite_stretched_ext(THEME.textbox, 3, _tx, _y, _tw, _h, boxColor, 1);
-			draw_sprite_stretched_ext(THEME.textbox, 0, _tx, _y, _tw, _h, boxColor, 0.5 + 0.5 * interactable);	
-		}
-		
-		_tw /= 2;
-		
-		tb_min.setFocusHover(active, hover);
-		tb_min.draw(_tx, _y, _tw, _h, _data[0], _m);
-		
-		tb_max.setFocusHover(active, hover);
-		tb_max.draw(_tx + _tw, _y, _tw, _h, _data[1], _m);
+		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, x, y, w,  _h, boxColor, 1);
+		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, x, y, _r, _h, CDEF.main_mdwhite, 1);
 		
 		if(_drawRot) {
 			var _kx = _x + _r / 2;
@@ -87,7 +77,7 @@ function rotatorRange(_onModify) : widget() constructor {
 			
 				if(mouse_check_button_pressed(mb_right)) {
 					for( var i = 0; i < 2; i++ ) onModify(drag_dat[i], i);
-						
+					
 					instance_destroy(rotator_Rotator);
 					dragging       = noone;
 					dragging_index = -1;
@@ -99,10 +89,10 @@ function rotatorRange(_onModify) : widget() constructor {
 					dragging_index = -1;
 					UNDO_HOLDING   = false;
 				}
-		
+				
 			} else if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _r, _y + _r)) {
 				_kc = COLORS._main_icon_light;
-			
+				
 				if(mouse_press(mb_left, active)) {
 					dragging_index = 1;
 					drag_sv  = [ _data[0], _data[1] ];
@@ -122,6 +112,16 @@ function rotatorRange(_onModify) : widget() constructor {
 				draw_sprite_stretched(s_fx_pixel, 0, _x, _y, _r, _r);
 			shader_reset();
 		}
+		
+		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 0, x, y, w, _h, boxColor, 0.5 + 0.5 * interactable);	
+		
+		_tw /= 2;
+		
+		tb_min.setFocusHover(active, hover);
+		tb_min.draw(_tx, _y, _tw, _h, _data[0], _m);
+		
+		tb_max.setFocusHover(active, hover);
+		tb_max.draw(_tx + _tw, _y, _tw, _h, _data[1], _m);
 		
 		resetFocus();
 		

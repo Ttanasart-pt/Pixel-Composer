@@ -5,9 +5,9 @@ function fontScrollBox(_onModify) : widget() constructor {
 	open_ry  = 0;
 	
 	align = fa_center;
-	side_button = button(function() /*=>*/ {return shellOpenExplorer(DIRECTORY + "Fonts")})
+	setSideButton(button(function() /*=>*/ {return shellOpenExplorer(DIRECTORY + "Fonts")})
 						.setTooltip(__txtx("widget_font_open_folder", "Open font folder"))
-						.setIcon(THEME.folder_content, 0, COLORS._main_icon).iconPad();
+						.setIcon(THEME.folder_content, 0, COLORS._main_icon));
 	
 	refresh_button = button(function() /*=>*/ {return __initFontFolder(true)})
 						.setTooltip(__txt("Refresh"))
@@ -37,31 +37,34 @@ function fontScrollBox(_onModify) : widget() constructor {
 		open_ry = _ry;
 		
 		var _bs = min(_h, ui(32));
+		draw_sprite_stretched(THEME.textbox, 3, x, y, w, h);
 		
 		if(_w - _bs > ui(100) && side_button != noone) {
+			var _bx = _x + _w - _bs;
+			
+			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, _bx, _y, _bs, _h, CDEF.main_mdwhite, 1);
 			side_button.setFocusHover(active, hover);
-			side_button.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
-			_w -= _bs + ui(4);
+			side_button.draw(_bx, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
+			_w -= _bs;
 		}
 		
 		if(_w - _bs > ui(100) && refresh_button != noone) {
+			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _bs, _h, CDEF.main_mdwhite, 1);
 			refresh_button.setFocusHover(active, hover);
 			refresh_button.draw(_x, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
-			_x += _bs + ui(4);
-			_w -= _bs + ui(4);
+			_x += _bs;
+			_w -= _bs;
 		}
 		
 		if(open) { resetFocus(); return h; }
 		
-		draw_sprite_stretched(THEME.textbox, 3, _x, _y, _w, _h);
-		
 		if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
-			draw_sprite_stretched(THEME.textbox, 1, _x, _y, _w, _h);
+			draw_sprite_stretched(THEME.textbox, 1, x, y, w, h);
 			if(mouse_press(mb_left, active)) trigger();
-			if(mouse_click(mb_left, active)) draw_sprite_stretched_ext(THEME.textbox, 2, _x, _y, _w, _h, COLORS._main_accent, 1);	
+			if(mouse_click(mb_left, active)) draw_sprite_stretched_ext(THEME.textbox, 2, x, y, w, h, COLORS._main_accent, 1);	
 			
 		} else {
-			draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, c_white, 0.5 + 0.5 * interactable);
+			draw_sprite_stretched_ext(THEME.textbox, 0, x, y, w, h, c_white, 0.5 + 0.5 * interactable);
 			if(mouse_press(mb_left)) deactivate();
 		}
 		

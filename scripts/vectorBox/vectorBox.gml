@@ -99,10 +99,8 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		h = per_line? (_h + ui(4)) * size - ui(4) : _h;
 		
 		if(array_invalid(_data) || is_array(_data[0])) {
-			if(hide == 0) {
-				draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor,  1);
-				draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor, .5);	
-			}
+			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor,  1);
+			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor, .5);	
 			return _h;
 		}
 		
@@ -111,36 +109,43 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		tooltip.index = linked;
 		current_value = _data;
 		
-		var _bs = min(_h, ui(32));
-		var _bx = _x + _w - _bs;
-		var _by = _y + _h / 2 - _bs / 2;
+		var bs = min(_h, ui(32));
+		var bx = _x + _w - bs;
+		var by = _y + _h / 2 - bs / 2;
 		var _sz = min(size, array_length(_data));
 		
-		if((_w - _bs) / _sz > ui(48)) {
+		if(!per_line && hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, x, y, w, h, boxColor, 1);
+		
+		if((_w - bs) / _sz > ui(48)) {
 			if(side_button) {
+				if(!per_line && hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, bx, _y, bs, _h, CDEF.main_mdwhite, 1);
+				
 				if(is(side_button, buttonAnchor)) 
 					side_button.index = round(array_safe_get(_data, 0) * 2 + array_safe_get(_data, 1) * 6);
 				
 				side_button.setFocusHover(active, hover);
-				side_button.draw(_bx, _by, _bs, _bs, _m, THEME.button_hide_fill);
-				_bx -= _bs + ui(4);
-				_w  -= _bs + ui(4);
+				side_button.draw(bx, by, bs, bs, _m, THEME.button_hide_fill);
+				bx -= bs;
+				_w -= bs;
 			}
 			
 			if(unit != noone && unit.reference != noone) {
+				if(!per_line && hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, bx, _y, bs, _h, CDEF.main_mdwhite, 1);
+				
 				unit.triggerButton.setFocusHover(iactive, ihover);
-				unit.draw(_bx, _by, _bs, _bs, _m);
-				_bx -= _bs + ui(4);
-				_w  -= _bs + ui(4);
+				unit.draw(bx, by, bs, bs, _m);
+				bx -= bs;
+				_w -= bs;
 			}
 		}
 		
-		if((_w - _bs) / _sz > ui(48)) {
+		if((_w - bs) / _sz > ui(48)) {
 			if(linkable) {
 				var _icon_blend = linked? COLORS._main_accent : (link_inactive_color == noone? COLORS._main_icon : link_inactive_color);
 				var bx = _x;
-				var by = _y + _h / 2 - _bs / 2;
-				var b  = buttonInstant_Pad(THEME.button_hide_fill, bx, by, _bs, _bs, _m, hover, active, tooltip, THEME.value_link, linked, _icon_blend);
+				
+				if(!per_line && hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, bx, _y, bs, _h, CDEF.main_mdwhite, 1);
+				var b  = buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, _m, hover, active, tooltip, THEME.value_link, linked, _icon_blend);
 				
 				var tg = false;
 				if(b == 1 && key_mod_press(SHIFT) && MOUSE_WHEEL != 0) tg = true;
@@ -155,17 +160,14 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 						onModify(_data[0], i);
 				}
 				
-				_x += _bs + ui(4);
-				_w -= _bs + ui(4);
+				_x += bs;
+				_w -= bs;
 			}
 		}
 		
 		var ww = per_line? _w : _w / _sz;
 		
-		if(!per_line && hide == 0) {
-			draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor, 1);
-			draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor, 0.5 + 0.5 * interactable);
-		}
+		if(!per_line && hide == 0) draw_sprite_stretched_ext(THEME.textbox, 0, x, y, w, h, boxColor, 0.5 + 0.5 * interactable);
 			
 		for(var i = 0; i < _sz; i++) {
 			

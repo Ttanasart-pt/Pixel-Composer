@@ -547,7 +547,6 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	
 	static drawParam = function(params) {
 		setParam(params);
-		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m, params.halign, params.valign);
 	}
 	
@@ -587,33 +586,47 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		var _bx = _x + _w - _bs;
 		var _by = _y + _h / 2 - _bs / 2;
 		
+		var sb1 = (_w - _bs > ui(100) || always_side_button) && side_button;
+		var sb2 = (_w - _bs > ui(100) || always_side_button) && side_button2;
+		var unt = unit != noone && unit.reference != noone;
+		var sbw = _bs * (sb1 + sb2 + unt);
+		
+		if(hide <= 0) {
+			draw_sprite_stretched_ext(THEME.textbox, base_index, x, y, w, h, boxColor, 1);
+			if(sbw) draw_sprite_stretched_ext(THEME.textbox, 3, _x + _w - sbw, _y, sbw, _h, CDEF.main_mdwhite, 1);
+		}
+		
 		if(_w - _bs > ui(100) && front_button) {
+			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _bs, _h, CDEF.main_mdwhite, 1);
+			
 			front_button.setFocusHover(active, hover);
 			front_button.draw(_x, _by, _bs, _bs, _m, THEME.button_hide_fill);
 			
-			_x += _bs + ui(4);
-			_w -= _bs + ui(4);
+			_x += _bs;
+			_w -= _bs;
 		}
 		
-		if((_w - _bs > ui(100) || always_side_button) && side_button) {
+		if(sb1) {
 			side_button.setFocusHover(active, hover);
 			side_button.draw(_bx, _by, _bs, _bs, _m, THEME.button_hide_fill);
-			_bx -= _bs + ui(4);
-			_w  -= _bs + ui(4);
+			
+			_bx -= _bs;
+			_w  -= _bs;
 		}
 		
-		if((_w - _bs > ui(100) || always_side_button) && side_button2) {
+		if(sb2) {
 			side_button2.setFocusHover(active, hover);
 			side_button2.draw(_bx, _by, _bs, _bs, _m, THEME.button_hide_fill);
-			_bx -= _bs + ui(4);
-			_w  -= _bs + ui(4);
+			
+			_bx -= _bs;
+			_w  -= _bs;
 		}
 		
-		if(unit != noone && unit.reference != noone) {
+		if(unt) {
 			unit.triggerButton.setFocusHover(iactive, ihover);
 			unit.draw(_bx, _by, _bs, _bs, _m);
-			_bx -= _bs + ui(4);
-			_w  -= _bs + ui(4);
+			_bx -= _bs;
+			_w  -= _bs;
 		}
 		
 		if(format == TEXT_AREA_FORMAT.password) {
@@ -622,12 +635,13 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			if(password_show) cc = COLORS._main_accent;
 			
 			draw_sprite_ui(THEME.junc_visible, password_show, _bx+_bs/2, _by+_bs/2, 1, 1, 0, cc, 1);
+			
 			if(hov && mouse_lpress(active)) {
 				password_show = !password_show;
 				_update = true;
 			}
 			
-			_w -= _bs + ui(4);
+			_w -= _bs;
 		}
 		
 		////- Surface
@@ -655,8 +669,6 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		
 		var _scis = gpu_get_scissor();
 			
-		if(hide <= 0) draw_sprite_stretched_ext(THEME.textbox, base_index, _x, _y, _w, _h, boxColor, 1);
-			
 		if(slide_range != noone) {
 			var _minn    = slide_range[0];
 			var _maxx    = slide_range[1];
@@ -671,28 +683,6 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			var lw = _w * (_currVal - curr_range[0]) / (curr_range[1] - curr_range[0]);
 			if(hide <= 0) draw_sprite_stretched_ext(THEME.textbox, 4, _x, _y, lw, _h, boxColor, 1);
 		}
-		
-		// if(_w > ui(48)) {
-			if(sliding == 2 && hide < 3) {
-				var _ax0 = _x + ui(10);
-				var _ax1 = _x + _w - ui(10);
-				var _ay  = _y + _h / 2;
-			
-				draw_sprite_ui_uniform(THEME.arrow, 2, _ax0, _ay, 1, COLORS._main_accent, 1);
-				draw_sprite_ui_uniform(THEME.arrow, 0, _ax1, _ay, 1, COLORS._main_accent, 1);
-			
-			} else if(label != "") {
-				draw_set_text(font, fa_left, fa_center, labelColor);
-				
-				draw_set_alpha(0.5);
-				draw_text_add(_x + padding, _y + _h / 2, label);
-				draw_set_alpha(1);
-				
-			} else if(labelSpr != noone) {
-				var _ix = labelAlign == fa_left? _x + _h / 2 : _x + _w - _h / 2;
-				draw_sprite_ext(labelSpr, labelSprIndex, _ix, _y + _h / 2, 1, 1, 0, labelColor, 1);
-			}
-		// }
 		
 		var _dpx = disp_x;	
 		disp_x = lerp_float(disp_x, disp_x_to, 5);
@@ -816,8 +806,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 		
 		if(selecting) { 
 			if(hide < 2) {
-				if(sprite_index == -1) draw_sprite_stretched_ext(THEME.textbox, 2, _x, _y, _w, _h, COLORS._main_accent, 1);
-				else                   draw_sprite_stretched(THEME.textbox, sprite_index, _x, _y, _w, _h);
+				if(sprite_index == -1) draw_sprite_stretched_ext(THEME.textbox, 2, x, y, w, h, COLORS._main_accent, 1);
+				else                   draw_sprite_stretched(THEME.textbox, sprite_index, x, y, w, h);
 			}
 			
 			editText();
@@ -943,7 +933,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			
 			if(hover && hoverRect) {
 				hovering = true;
-				if(hide < 3) draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, _h, boxColor, 0.5 + (0.5 * interactable));	
+				if(hide < 3) draw_sprite_stretched_ext(THEME.textbox, 1, x, y, w, h, boxColor, 0.5 + (0.5 * interactable));	
 				
 				if(input == TEXTBOX_INPUT.number && key_mod_press(SHIFT)) {
 					var amo = slide_speed;
@@ -965,7 +955,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 					menuCall("textbox_context", context_menu);
 			
 			} else if(!hide && base_index == 3)
-				draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor, 0.5 + 0.5 * interactable);
+				draw_sprite_stretched_ext(THEME.textbox, 0, x, y, w, h, boxColor, 0.5 + 0.5 * interactable);
 			
 			if(drawText) {
 				draw_set_text(font, fa_left, fa_center);

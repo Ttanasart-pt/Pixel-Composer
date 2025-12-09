@@ -24,8 +24,8 @@ void main() {
 	bool  inside = dist < 0.;
 	
 	dist = abs(dist);
-	alp = max(alp, smoothstep(2. / side, 0.8 / side, dist));
-	alp = max(alp, smoothstep(2. / side, 0.8 / side, line_segment(angle)));
+	alp = max(alp, smoothstep(2. / side, .5 / side, dist));
+	alp = max(alp, smoothstep(2. / side, .5 / side, line_segment(angle)));
 	
 	gl_FragColor = vec4(color.rgb, alp);
 }

@@ -73,18 +73,22 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 		hovering      = hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h);
 		
 		var _cw = _w;
-		var _bs = min(_h, ui(32));
+		var  bs = min(_h, ui(32));
 		
-		if(_w - _bs > ui(128) && interactable) {
-			var bx = _x + _cw - _bs;
-			_cw -= _bs;
+		draw_sprite_stretched_ext(THEME.button_def, 0, x, y, w, h, boxColor);
+		
+		if(_w - bs > ui(128) && interactable) {
+			var bx = _x + _cw - bs;
+			_cw -= bs;
+			
+			draw_sprite_stretched_ext(THEME.textbox, 3, bx - bs, _y, bs * 2, _h, CDEF.main_mdwhite, 1);
 			
 			b_picker.setFocusHover(active && !instance_exists(o_dialog_color_quick_pick), hover);
 			
-			b_picker.draw(bx, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
+			b_picker.draw(bx, _y + _h / 2 - bs / 2, bs, bs, _m, THEME.button_hide_fill);
 			b_picker.icon_blend = COLORS._main_icon;
 			b_picker.icon_index = 0;
-			b_picker.icon_size  = min(1, _bs / ui(32));
+			b_picker.icon_size  = min(1, bs / ui(32));
 			
 			if(instance_exists(o_dialog_color_selector) && o_dialog_color_selector.selector.dropper_active && o_dialog_color_selector.drop_target != noone) {
 				if(o_dialog_color_selector.drop_target == self) {
@@ -93,17 +97,15 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 				}
 			}
 			
-			if(_cw > ui(128)) {
-				bx  -= _bs + ui(4)
-				_cw -= _bs + ui(4);
-				
-				b_quick_pick.icon_size = min(1, _bs / ui(32));
-				b_quick_pick.setFocusHover(active, hover);
-				b_quick_pick.draw(bx, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
-			}
+			bx  -= bs;
+			_cw -= bs;
 			
-			_cw -= ui(4);
+			b_quick_pick.icon_size = min(1, bs / ui(32));
+			b_quick_pick.setFocusHover(active, hover);
+			b_quick_pick.draw(bx, _y + _h / 2 - bs / 2, bs, bs, _m, THEME.button_hide_fill);
 		}
+		
+		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 0, x, y, w, h, boxColor, .5 + .5 * interactable);
 		
 		var _bx  = _x  + ui(2);
 		var _by  = _y  + ui(2);
@@ -114,19 +116,17 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 		var hoverRect = ihover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _bww, _y + _h);
 		
 		if(hoverRect) {
-			draw_sprite_stretched_ext(THEME.button_def, 1, _x, _y, _cw, _h, boxColor);	
+			draw_sprite_stretched_ext(THEME.button_def, 3, x, y, w, h, CDEF.main_grey);	
 			
-			if(mouse_press(mb_left, iactive)) 
+			if(mouse_lpress(iactive)) 
 				trigger();
 			
-			if(mouse_click(mb_left, iactive)) {
-				draw_sprite_stretched_ext(THEME.button_def, 2, _x, _y, _cw, _h, boxColor);
-				draw_sprite_stretched_ext(THEME.button_def, 3, _x, _y, _cw, _h, COLORS._main_accent);
+			if(mouse_lclick(iactive)) {
+				draw_sprite_stretched_ext(THEME.button_def, 2, x, y, w, h, boxColor);
+				draw_sprite_stretched_ext(THEME.button_def, 3, x, y, w, h, COLORS._main_accent);
 			}
-		} else {
-			draw_sprite_stretched_ext(THEME.button_def, 0, _x, _y, _cw, _h, boxColor);
-			if(mouse_press(mb_left)) deactivate();
-		}
+			
+		} else if(mouse_press(mb_left)) deactivate();
 		
 		if(is_array(current_color))
 			drawPalette(current_color, _bx, _by, _bw, _bh);
@@ -135,8 +135,8 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 			var _hvb  = ihover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _cw, _y + _h);
 			hover_hex = isSimple? 0 : lerp_float(hover_hex, _hvb, 4);
 			
-			var _bs  = min(_bh, ui(24));
-			var _bcx = _bx + _bw - _bs - ui(4);
+			var bs  = min(_bh, ui(24));
+			var _bcx = _bx + _bw - bs - ui(4);
 			var _bcy = _by + _bh / 2;
 			
 			var _baa = 0.5;
@@ -168,7 +168,7 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 				gpu_set_scissor(_scis);
 				
 				var _spr = interactable && key_mod_press(SHIFT)? THEME.paste_20 : THEME.copy_20;
-				draw_sprite_stretched_ext(_spr, 0, _bcx, _bcy - _bs / 2, _bs, _bs, _bcc, _baa);
+				draw_sprite_stretched_ext(_spr, 0, _bcx, _bcy - bs / 2, bs, bs, _bcc, _baa);
 			}
 			
 			hover_wid = lerp_float(hover_wid, _htg, 5);

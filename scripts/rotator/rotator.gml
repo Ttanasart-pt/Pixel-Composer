@@ -43,22 +43,19 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 		var _bs      = min(_h, ui(32));
 		var _drawRot = _w - _r > ui(64);
 		
+		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, x, y, w, h, boxColor, 1);
+		
 		if(_drawRot && side_button) {
+			var bx = _x + _w - _bs;
+			
+			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, bx, _y, _bs, _h, CDEF.main_mdwhite, 1);
 			side_button.setFocusHover(active, hover);
-			side_button.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
-			_w -= _bs + ui(4);
+			side_button.draw(bx, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
+			_w -= _bs;
 		}
 		
-		var _tx = _drawRot? _x + _r + ui(4) : _x;
-		var _tw = _drawRot? _w - _r - ui(4) : _w;
-		
-		if(hide == 0) {
-			draw_sprite_stretched_ext(THEME.textbox, 3, _tx, _y, _tw, _h, boxColor, 1);
-			draw_sprite_stretched_ext(THEME.textbox, 0, _tx, _y, _tw, _h, boxColor, 0.5 + 0.5 * interactable);	
-		}
-		
-		tb_value.setFocusHover(active, hover);
-		tb_value.draw(_tx, _y, _tw, _h, _data, _m);
+		var _tx = _drawRot? _x + _r : _x;
+		var _tw = _drawRot? _w - _r : _w;
 		
 		if(_drawRot) {
 			var _kx = _x + _r / 2;
@@ -67,6 +64,7 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 			var _kc = COLORS._main_icon;
 			hoverRot = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _r, _y + _r);
 			
+			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _r, _h, CDEF.main_mdwhite, 1);
 			if(dragging) {
 				_kc = COLORS._main_icon_light;
 			
@@ -117,6 +115,11 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 				draw_sprite_stretched(s_fx_pixel, 0, _x, _y, _r, _r);
 			shader_reset();
 		}
+		
+		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 0, x, y, w, h, boxColor, 0.5 + 0.5 * interactable);	
+		
+		tb_value.setFocusHover(active, hover);
+		tb_value.draw(_tx, _y, _tw, _h, _data, _m);
 		
 		resetFocus();
 		

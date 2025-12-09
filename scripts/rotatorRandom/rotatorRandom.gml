@@ -101,24 +101,24 @@ function rotatorRandom(_onModify) : widget() constructor {
 		
 		var _bs = min(_h, ui(32));
 		
+		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, x, y, w, h, boxColor, 1);
+		
 		if(side_button) {
+			var bx = _x + _w - _bs;
+			
+			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, bx, _y, _bs, _h, CDEF.main_mdwhite, 1);
 			side_button.setFocusHover(active, hover);
-			side_button.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
-			_w -= _bs + ui(4);
+			side_button.draw(bx, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
+			_w -= _bs;
 		}
 		
 		var _khv = dragging_index;
 		var _r   = _h;
 		var _drawRot = _w - _r > ui(64);
 		
-		var _tx = _drawRot? _x + _r + ui(4) : _x;
-		var _tw = _drawRot? _w - _r - ui(4) : _w;
+		var _tx = _drawRot? _x + _r : _x;
+		var _tw = _drawRot? _w - _r : _w;
 		var _ty = _y;
-		
-		if(hide == 0) {
-			draw_sprite_stretched_ext(THEME.textbox, 3, _tx, _y, _tw, h, boxColor, 1);
-			draw_sprite_stretched_ext(THEME.textbox, 0, _tx, _y, _tw, h, boxColor, 0.5 + 0.5 * interactable);	
-		}
 		
 		if(_drawRot) {
 			if((_w - _r) / 2 > ui(48)) {
@@ -126,6 +126,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 				var _bx = _x + _w - _bs;
 				var _by = _y + _h / 2 - _bs / 2;
 				
+				if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, _bx, _y, _bs, h, CDEF.main_mdwhite, 1);
 				var b = buttonInstant_Pad(noone, _bx, _by, _bs, _bs, _m, hover, active, tooltip, THEME.rotator_random_mode, mode, [ COLORS._main_icon, c_white ]);
 				if(b == 1) {
 					if(key_mod_press(SHIFT) && MOUSE_WHEEL > 0) mode = setMode(_data, (mode - 1 + 4) % 4);
@@ -133,7 +134,7 @@ function rotatorRandom(_onModify) : widget() constructor {
 				}
 				if(b == 2) mode = setMode(_data, (mode + 1) % 4);
 		
-				_tw -= _bs + ui(4);
+				_tw -= _bs;
 			}
 			
 			var _kx = _x + _r / 2;
@@ -141,6 +142,9 @@ function rotatorRandom(_onModify) : widget() constructor {
 			var _kr = (_r - ui(12)) / 2;
 			var _kc = COLORS._main_icon;
 		}
+		
+		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, x, y, _r, h, CDEF.main_mdwhite, 1);
+		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 0, x, y,  w, h, boxColor, 0.5 + 0.5 * interactable);	
 		
 		_tw /= 2;
 		

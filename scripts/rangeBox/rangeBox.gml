@@ -72,18 +72,25 @@ function rangeBox(_onModify) : widget() constructor {
 		tooltip.index = linked;
 		
 		var _icon_blend = linked? COLORS._main_accent : COLORS._main_icon;
-		var _bs = min(_h, ui(32));
+		var bs = min(_h, ui(32));
 		
-		if((_w - _bs) / 2 > ui(64)) {
+		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, x, y, w, h, boxColor,  1);
+		
+		if((_w - bs) / 2 > ui(64)) {
 			if(side_button) {
+				var bx = _x + _w - bs;
+				
+				if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, bx, _y, bs, _h, CDEF.main_mdwhite, 1);
 				side_button.setFocusHover(active, hover);
-				side_button.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
-				_w -= _bs + ui(4);
+				side_button.draw(bx, _y + _h / 2 - bs / 2, bs, bs, _m, THEME.button_hide_fill);
+				_w -= bs;
 			}
 			
 			var bx = _x;
-			var by = _y + _h / 2 - _bs / 2;
-			var b  = buttonInstant_Pad(THEME.button_hide_fill, bx, by, _bs, _bs, _m, hover, active, tooltip, THEME.value_link, linked, _icon_blend);
+			var by = _y + _h / 2 - bs / 2;
+			
+			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, bx, _y, bs, _h, CDEF.main_mdwhite, 1);
+			var b  = buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, _m, hover, active, tooltip, THEME.value_link, linked, _icon_blend);
 			var tg = false;
 			
 			if(b == 1 && key_mod_press(SHIFT) && MOUSE_WHEEL != 0) tg = true;
@@ -99,17 +106,13 @@ function rangeBox(_onModify) : widget() constructor {
 				}
 			}
 		
-			_x += _bs + ui(4);
-			_w -= _bs + ui(4);
+			_x += bs;
+			_w -= bs;
 		}
 		
+		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 0, x, y, w, h, boxColor, .5 + .5 * interactable);
 		disp_w = linked? _w : _w / 2;
 		
-		if(hide == 0) {
-			draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor, 1);
-			draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor, 0.5 + 0.5 * interactable);	
-		}
-			
 		if(linked) {
 			tb[0].setFocusHover(active, hover);
 			tb[0].draw(_x, _y, disp_w, _h, _data[0], _m);

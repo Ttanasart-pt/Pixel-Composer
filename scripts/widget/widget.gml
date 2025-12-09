@@ -52,10 +52,18 @@ function widget() constructor {
 	}
 	
 	static setSideButton = function(b,s=false) /*=>*/ { 
+		if(is(b, buttonClass)) b.iconPad(ui(4));
+		
 		if(side_button) side_button2 = b; 
 		else            side_button  = b; 
 		
 		always_side_button = s; 
+		return self; 
+	} 
+	
+	static setFrontButton = function(b) /*=>*/ { 
+		if(is(b, buttonClass)) b.iconPad(ui(4));
+		front_button = b; 
 		return self; 
 	} 
 	

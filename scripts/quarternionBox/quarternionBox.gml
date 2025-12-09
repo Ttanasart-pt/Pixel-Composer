@@ -86,7 +86,6 @@ function quarternionBox(_onModify) : widget() constructor {
 		if(array_empty(_data)) return 0;
 		if(is_array(_data[0])) return 0;
 		
-		var _bs   = min(_h, ui(32));
 		var _disp = struct_try_get(attributes, "angle_display");
 		
 		if(attributes.angle_display == QUARTERNION_DISPLAY.quarterion || (!tb[0].sliding && !tb[1].sliding && !tb[2].sliding)) {
@@ -96,13 +95,17 @@ function quarternionBox(_onModify) : widget() constructor {
 			current_value[3] = array_safe_get(_data, 3);
 		}
 		
-		if((_w - _bs) / 2 > ui(64)) {
-			var bx = _x + _w - _bs;
-			var by = _y + _h / 2 - _bs / 2;
+		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, x, y, w, h, boxColor, 1);
+		
+		var bs = min(_h, ui(32));
+		if((_w - bs) / 2 > ui(64)) {
+			var bx = _x + _w - bs;
+			var by = _y + _h / 2 - bs / 2;
 			var tg = false;
 			tooltip.index = _disp;
 			
-			var b = buttonInstant_Pad(THEME.button_hide_fill, bx, by, _bs, _bs, _m, ihover, iactive, tooltip, THEME.unit_angle, _disp, c_white);
+			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, bx, _y, bs, _h, CDEF.main_mdwhite, 1);
+			var b = buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, _m, ihover, iactive, tooltip, THEME.unit_angle, _disp, c_white);
 			if(b == 1 && key_mod_press(SHIFT) && MOUSE_WHEEL != 0) tg = true;
 			if(b == 2) tg = true;
 				
@@ -111,7 +114,7 @@ function quarternionBox(_onModify) : widget() constructor {
 				onModify([ 0, 0, 0, 1 ]);
 				clickable = false;
 			}
-			_w -= _bs + ui(8);
+			_w -= bs;
 		}
 		
 		current_unit = attributes.angle_display;
@@ -123,10 +126,7 @@ function quarternionBox(_onModify) : widget() constructor {
 		
 		var _dispDat = _data;
 		
-		if(hide == 0) {
-			draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor, 1);
-			draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor, 0.5 + 0.5 * interactable);	
-		}
+		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 0, x, y, w, h, boxColor, 0.5 + 0.5 * interactable);	
 		
 		for(var i = 0; i < size; i++) {
 			var _a = array_safe_get(_dispDat, i, 0);

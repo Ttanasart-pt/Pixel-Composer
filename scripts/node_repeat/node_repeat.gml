@@ -408,7 +408,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _cls    = _data[19];
 			var _bld_md = _data[34];
 			
-			inputs[3].editWidget.side_button = _pat == 1? b_gridFill : noone;
+			inputs[3].editWidget.setSideButton(_pat == 1? b_gridFill : noone);
 			
 			inputs[41].setVisible(!_scaUni);
 			inputs[42].setVisible(!_scaUni && _rscaY_curved);

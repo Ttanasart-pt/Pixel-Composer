@@ -775,7 +775,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		
 		var _drawB = is(side_button, buttonClass)  && _w - bw > ui(100);
 		var _drawF = is(front_button, buttonClass) && _w - bw > ui(100);
-		_w -= (bw + ui(4)) * (_drawB + _drawF);
+		_w -= bw * (_drawB + _drawF);
 		
 		var tx = ui(8);
 		var hh = _h;
@@ -812,7 +812,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			front_button.setFocusHover(active, hover);
 			front_button.draw(_x, _y, bw, bh, _m, THEME.button_hide_fill);
 			
-			_x += bw + ui(4);
+			_x += bw;
 		}
 		
 		////- Draw

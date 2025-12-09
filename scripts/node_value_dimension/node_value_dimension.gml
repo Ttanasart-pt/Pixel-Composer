@@ -3,10 +3,10 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 	def_length = 2;
 	
 	attributes.use_project_dimension = true;
-	editWidget.side_button = button(function() /*=>*/ {
+	editWidget.setSideButton(button(function() /*=>*/ {
 		attributes.use_project_dimension = !attributes.use_project_dimension;
 		node.triggerRender();
-	}).setIcon(THEME.node_use_project, 0, COLORS._main_icon).iconPad().setTooltip("Use project dimension");
+	}).setIcon(THEME.node_use_project, 0, COLORS._main_icon).iconPad().setTooltip("Use project dimension"));
 	
 	/////============== GET =============
 	

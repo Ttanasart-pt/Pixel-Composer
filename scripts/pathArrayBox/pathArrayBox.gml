@@ -10,7 +10,7 @@ function pathArrayBox(_target, _data, _onClick) : widget() constructor {
 		
 		var paths = string_splice(path, "\n");
 		onClick(paths);
-	}, THEME.button_path_icon);
+	}).setIcon(THEME.button_path_icon, 0, COLORS._main_icon).iconPad();
 	
 	static trigger = function() { 
 		dialogPanelCall(new Panel_Image_Array_Editor(target));
@@ -29,29 +29,33 @@ function pathArrayBox(_target, _data, _onClick) : widget() constructor {
 		
 		hovering = false;
 		
-		var _bs = min(_h, ui(32));
-		if(_w - _bs > ui(100)) {
+		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, x, y, w, h, boxColor);
+		
+		var bs = min(_h, ui(32));
+		if(_w - bs > ui(100)) {
+			var bx = _x + _w - bs;
+			
+			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, bx, _y, bs, _h, CDEF.main_mdwhite, 1);
 			openPath.setFocusHover(active, hover);
-			openPath.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
-			_w -= _bs + ui(4);
+			openPath.draw(bx, _y + _h / 2 - bs / 2, bs, bs, _m, THEME.button_hide_fill);
+			_w -= bs;
 		}
 		
 		var click = false;
-		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor);
 		
 		if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
 			hovering = true;
-			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, _h, boxColor);
+			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 1, x, y, w, h, boxColor);
 			
 			if(mouse_press(mb_left, active)) {
 				trigger();
 				click = true;
 			}
 			
-			if(mouse_click(mb_left, active))
-				draw_sprite_stretched(THEME.textbox, 2, _x, _y, _w, _h);
+			if(mouse_click(mb_left, active)) draw_sprite_stretched(THEME.textbox, 2, x, y, w, h);
+			
 		} else {
-			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor);
+			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 0, x, y, w, h, boxColor);
 			if(mouse_press(mb_left)) deactivate();
 		}
 		

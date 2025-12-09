@@ -50,7 +50,7 @@ function Node_Edge_Detect(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var filt  = _data[1];
 		var over  = getAttribute("oversample");
 		
-		inputs[1].editWidget.front_button = filt == 3? filter_button : noone;
+		inputs[1].editWidget.setFrontButton(filt == 3? filter_button : noone);
 		filter_button.index = attributes.filter;
 		
 		surface_set_shader(_outSurf, sh_edge_detect);

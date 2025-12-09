@@ -352,7 +352,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		  .setIcon(_icon, function(p) /*=>*/ {return getAttribute(p.key)}, COLORS._main_icon)
 		  .setTooltip(new tooltipSelector(_title, _choices, _val), function(p) /*=>*/ {return getAttribute(p.key)});
 		  
-		editWidget.side_button = optionButton;
+		editWidget.setSideButton(optionButton);
 		return optionButton;
 	}
 	
@@ -409,7 +409,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static setUnitRef = function(ref, mode = VALUE_UNIT.constant) {
-		express_edit.side_button = unit.triggerButton;
+		express_edit.setSideButton(unit.triggerButton);
 		display_data.onSurfaceSize = ref;
 		
 		if(editWidget) {
@@ -857,8 +857,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					case VALUE_DISPLAY._default :	
 						editWidget = new textBox(_txt, function(val) /*=>*/ {return setValueInspector(val)});
 						
-						if(struct_has(display_data, "unit"))		 editWidget.unit			= display_data.unit;
-						if(struct_has(display_data, "front_button")) editWidget.front_button	= display_data.front_button;
+						if(struct_has(display_data, "unit"))		 editWidget.unit = display_data.unit;
+						if(struct_has(display_data, "front_button")) editWidget.setFrontButton(display_data.front_button);
 						
 						extract_node = "Node_Number";
 						break;
@@ -1130,16 +1130,16 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						if(!is(node, Node_Global)) array_append(node.project.pathInputs, self);
 						
 						editWidget.align = fa_left;
-						editWidget.side_button = button(function() /*=>*/ { 
+						editWidget.setSideButton(button(function() /*=>*/ { 
 							var path = display_data.filter == "dir"? get_open_directory_compat(PREFERENCES.dialog_path) : get_open_filename_compat(display_data.filter, "");
 							key_release();
 							if(path == "") return noone;
 							
 							if(NOT_LOAD) check_directory_redirector(path);
 							return setValueInspector(path);
-						}).setIcon(THEME.button_path_icon, 0, COLORS._main_icon).setTooltip(__txt("Open Explorer..."));
+						}).setIcon(THEME.button_path_icon, 0, COLORS._main_icon).setTooltip(__txt("Open Explorer...")));
 						
-						editWidget.front_button = button(function() /*=>*/ { 
+						editWidget.setFrontButton(button(function() /*=>*/ { 
 							if(node.project.path == "") { noti_warning("Save the current project first."); return; }
 							
 							var _pth = getValue();
@@ -1152,7 +1152,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							file_copy(_pth, _newpath);
 							setValue("./" + _nam);
 							
-						}).setIcon(THEME.copy_20, 0, COLORS._main_icon).setTooltip(__txt("Copy to Project"));
+						}).setIcon(THEME.copy_20, 0, COLORS._main_icon).setTooltip(__txt("Copy to Project")));
 						
 						extract_node = "Node_String";
 						break;
@@ -1167,7 +1167,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						}
 						
 						editWidget.align = fa_left;
-						editWidget.side_button = button(function() { 
+						editWidget.setSideButton(button(function() { 
 							var _dir  = "";
 							var _path = "";
 							
@@ -1185,9 +1185,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							
 							if(_path == "") return noone;
 							return setValueInspector(_path);
-						}).setIcon(THEME.button_path_icon, 0, COLORS._main_icon).setTooltip(__txt("Open Explorer..."));
+						}).setIcon(THEME.button_path_icon, 0, COLORS._main_icon).setTooltip(__txt("Open Explorer...")));
 						
-						editWidget.front_button = button(function() { 
+						editWidget.setFrontButton(button(function() { 
 							var project = node.project;
 							if(project.path == "") {
 								noti_warning("Save the current project first.")
@@ -1199,7 +1199,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							var _dir = filename_dir(project.path);
 							setValue("./" + _nam);
 							
-						}).setIcon(THEME.copy_20, 0, COLORS._main_icon).setTooltip(__txt("Make Relative"));
+						}).setIcon(THEME.copy_20, 0, COLORS._main_icon).setTooltip(__txt("Make Relative")));
 						
 						extract_node = "Node_String";
 						break;
@@ -1292,7 +1292,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		if(is_struct(display_data) && struct_has(display_data, "side_button") && editWidget.side_button == noone)
-			editWidget.side_button = display_data.side_button;
+			editWidget.setSideButton(display_data.side_button);
 		
 		editWidgetRaw = editWidget;
 		if(editWidget) {

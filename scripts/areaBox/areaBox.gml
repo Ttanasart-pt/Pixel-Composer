@@ -195,22 +195,23 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		var _bhov = adjust_shape && hover;
 		var _bind = array_safe_get_fast(_data, 4);
 		  
+		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, x, y, w, h, boxColor, 1);
+		  
 		if(_w - _bs > ui(100) && onSurfaceSize != -1) {
 			tooltip.index = mode;
 			
-			if(unit != noone && unit.reference != noone) {
-				var _bx   = _x + _w - _bs;
-				var _by   = _y + h / 2 - _bs / 2;
+			var _bx = _x + _w - _bs;
+			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, _bx, _y, _bs, h, CDEF.main_mdwhite, 1);
 			
+			if(unit != noone && unit.reference != noone) {
+				var _by = _y + h / 2 - _bs / 2;
 				unit.triggerButton.setFocusHover(iactive, ihover);
 				unit.draw(_bx, _by, _bs, _bs, _m);
 				
 				_w -= _bs + ui(4);
 			}
 		
-			var _bx = _x + _w - _bs;
 			var _by = _y + _h / 2 - _bs / 2;
-			
 			var b = buttonInstant_Pad(THEME.button_hide_fill, _bx, _by, _bs, _bs, _m, hover, active, tooltip, THEME.inspector_area_type, mode);
 			if(b == 1) {
 				if(key_mod_press(SHIFT) && MOUSE_WHEEL > 0) mode = setMode(_data, (mode - 1 + 3) % 3);
@@ -218,7 +219,6 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 			}
 			if(b == 2) mode = setMode(_data, (mode + 1) % 3);
 			
-			var _bx   = _x + _w - _bs;
 			var _by   = _y + _h + _h / 2 - _bs / 2;
 			var _btxt = __txtx("widget_area_fill_surface", "Fill surface");
 			
@@ -256,8 +256,10 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		} 
 		
 		if(_w - _bs > ui(100)) { 
-			var _bx   = _x;
-			var _by   = _y + _h / 2 - _bs / 2;
+			var _bx = _x;
+			var _by = _y + _h / 2 - _bs / 2;
+			
+			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, _bx, _y, _bs, h, CDEF.main_mdwhite, 1);
 			
 			if(useShape && !is_array(_bind))	
 			if(buttonInstant_Pad(THEME.button_hide_fill, _bx, _by, _bs, _bs, _m, _bhov, _bact,, THEME.inspector_area, _bind) == 2) {
@@ -281,10 +283,7 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 			
 		} 
 		
-		if(hide == 0) {
-			draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, h, boxColor, 1);
-			draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, h, boxColor, 0.5 + 0.5 * interactable);	
-		}
+		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 0, x, y, w, h, boxColor, 0.5 + 0.5 * interactable);	
 		
 		for(var i = 0; i < 4; i++)
 			tb[i].setFocusHover(active, hover);
