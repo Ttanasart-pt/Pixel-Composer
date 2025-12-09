@@ -210,7 +210,7 @@ function Project() constructor {
 		attributes.oversample          = 0;
 		
 		attributeEditor = [
-			[ "Default Surface", "surface_dimension", new vectorBox(2, 
+			[ "Dimension", "surface_dimension", new vectorBox(2, 
 				function(val, index) /*=>*/ { 
 					attributes.surface_dimension[index] = val; 
 					PROJECT_ATTRIBUTES.surface_dimension = array_clone(attributes.surface_dimension);

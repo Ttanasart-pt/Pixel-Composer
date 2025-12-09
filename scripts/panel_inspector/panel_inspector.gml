@@ -680,6 +680,7 @@ function Panel_Inspector() : PanelContent() constructor {
         var _colsp  = false;
         var _colMap = _inspecting.inspector_collapse;
         var _edtMap = _inspecting.inspector_edited;
+        var _aniMap = _inspecting.inspector_animated;
         var _cAll   = 0;
         
         var currSec = "";
@@ -795,14 +796,15 @@ function Panel_Inspector() : PanelContent() constructor {
                 _colsp   = false;
                 var _key = array_safe_get_fast(jun, 0, "");
                 var coll = _colMap[$ _key] ?? array_safe_get_fast(jun, 1, false);
+                var togl = array_safe_get_fast(jun, 2, noone);
+                var righ = array_safe_get_fast(jun, 3, noone);
+                
                 currSec  = _key;
                 
                 var fnt = viewMode == INSP_VIEW_MODE.spacious? f_p1 : f_p3;
                 var lbh = viewMode == INSP_VIEW_MODE.spacious? ui(26) : ui(22);
                 var lbw = con_w;
                 var lbx = 0;
-                
-                var togl   = array_safe_get_fast(jun, 2, noone);
                 var toging = false;
                 
                 if(togl != noone) {
@@ -813,7 +815,6 @@ function Panel_Inspector() : PanelContent() constructor {
                     if(is_array(toging)) toging = false;
                 }
                 
-                var righ = array_safe_get_fast(jun, 3, noone);
                 if(righ != noone) lbw -= ui(32);
                 
                 if(_hover && point_in_rectangle(_m[0], _m[1], lbx, yy, lbx + lbw, yy + lbh)) {
@@ -849,8 +850,12 @@ function Panel_Inspector() : PanelContent() constructor {
                     righ.draw(_bx + ui(2), _by + ui(2), _bw - ui(4), _bh - ui(4), _m, THEME.button_hide_fill);
                 }
                 
-                if(!filtering) 
-                	draw_sprite_ui(THEME.arrow, 0, lbx + ui(16), yy + lbh / 2, 1, 1, -90 + coll * 90, COLORS.panel_inspector_group_bg, 1);
+                if(!filtering) {
+                	var _anim = _aniMap[$ _key] ?? false;
+                	
+                	var cc = _anim? COLORS._main_value_positive : COLORS.panel_inspector_group_bg;
+                	draw_sprite_ui(THEME.arrow, 0, lbx + ui(16), yy + lbh / 2, 1, 1, -90 + coll * 90, cc, 1);
+                }
                 
                 var cc, aa = 1;
                 
@@ -875,12 +880,11 @@ function Panel_Inspector() : PanelContent() constructor {
                 }
                 
                 var ltx = lbx + ui(32);
-                var edt = _edtMap[$ _key] ?? 0;
-                
                 draw_set_text(fnt, fa_left, fa_center, COLORS._main_text, aa);
                 draw_text_add(ltx, yy + lbh / 2, __txt(_key));
                 draw_set_alpha(1);
                 
+                var edt = _edtMap[$ _key] ?? 0;
                 if(edt > 0) {
                 	draw_set_color(COLORS._main_text_sub);
                 	draw_text_add(ltx + string_width(__txt(_key)) + ui(4), yy + lbh / 2, $"[{edt}*]");
@@ -888,6 +892,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 
                 hh += lbh + padd;
                 _edtMap[$ _key] = 0;
+                _aniMap[$ _key] = false;
                 
                 if(!filtering && coll) { // skip 
                     _colsp   = true;
@@ -897,6 +902,7 @@ function Panel_Inspector() : PanelContent() constructor {
                     } else {
 	                    var j    = i + 1;
 	                    var _edt = 0;
+	                    var _ani = false;
 	                    
 	                    while(j < amoIn) {
 	                        var j_jun = _inspecting.input_display_list[j];
@@ -904,13 +910,17 @@ function Panel_Inspector() : PanelContent() constructor {
 	                        if(is(j_jun, Inspector_Spacer) && !j_jun.coll) break;
 	                        
 	                        jun = array_safe_get_fast(_inspecting.inputs, j_jun)
-	                        if(is(jun, NodeValue) && jun.show_in_inspector && jun.is_modified) _edt++;
+	                        if(is(jun, NodeValue) && jun.show_in_inspector) {
+	                        	_edt += jun.is_modified;
+	                        	_ani |= jun.is_anim;
+	                        }
 	                        
 	                        j++;
 	                    }
 	                    
 	                    i = j - 1;
 	                    _edtMap[$ _key] = _edt;
+	                    _aniMap[$ _key] = _ani;
                     }
                 }
                 
@@ -949,7 +959,11 @@ function Panel_Inspector() : PanelContent() constructor {
             if(!is(jun, NodeValue))    continue;
             if(!jun.show_in_inspector) continue;
             
-            if(currSec != "" && jun.is_modified) _edtMap[$ currSec]++;
+            if(currSec != "") {
+            	_edtMap[$ currSec] += jun.is_modified;
+            	_aniMap[$ currSec] |= jun.is_anim;
+            }
+            
             if(filtering && filter_text != "") {
                 var pos = string_pos(string_lower(filter_text), string_lower(jun.getName()));
                 if(pos == 0) continue;
