@@ -3,6 +3,7 @@ function Node_FLIP_Destroy(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	color = COLORS.node_blend_fluid;
 	icon  = THEME.fluid_sim;
 	setDimension(96, 96);
+	setDrawIcon(s_node_flip_destroy);
 	
 	manual_ungroupable = false;
 	
@@ -60,11 +61,6 @@ function Node_FLIP_Destroy(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		     if(_shp == 0) FLIP_deleteParticle_circle(domain.domain, _pos[0], _pos[1], _rad, _rat);
 		else if(_shp == 1) FLIP_deleteParticle_rectangle(domain.domain, _pos[0], _pos[1], _siz[0], _siz[1], _rat);
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_fit(s_node_flip_destroy, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 	
 	static getPreviewValues = function() { var domain = getInputData(0); return instance_exists(domain)? domain.domain_preview : noone; }

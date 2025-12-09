@@ -39,6 +39,7 @@ function _Node_Strand_Affector(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	color = COLORS.node_blend_strand;
 	icon  = THEME.strandSim;
 	setDimension(96, 48);
+	setDrawIcon(s_node_strand_force_apply);
 	
 	newInput(0, nodeValue("Strand", self, CONNECT_TYPE.input, VALUE_TYPE.strands, noone))
 		.setVisible(true, true);
@@ -143,10 +144,5 @@ function _Node_Strand_Affector(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		STRAND_EFFECTOR_PRE
 			// add effect (pnt, mulp)
 		STRAND_EFFECTOR_POST
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_fit(s_node_strand_force_apply, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

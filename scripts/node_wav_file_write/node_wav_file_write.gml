@@ -2,6 +2,7 @@ function Node_WAV_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	name  = "WAV File Out";
 	color = COLORS.node_blend_input;
 	setDimension(, 72);
+	setDrawIcon(s_node_wav_file_write);
 	
 	newInput(0, nodeValue_Path("Path"))
 		.setDisplay(VALUE_DISPLAY.path_save, { filter: "audio file|*.wav" })
@@ -103,8 +104,4 @@ function Node_WAV_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		buffer_delete(buff);
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_fit(s_node_wav_file_write, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-	}
 }

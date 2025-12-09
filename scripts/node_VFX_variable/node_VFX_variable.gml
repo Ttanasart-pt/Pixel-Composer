@@ -2,8 +2,8 @@ function Node_VFX_Variable(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	name  = "VFX Variable";
 	color = COLORS.node_blend_vfx;
 	icon  = THEME.vfx;
-	node_draw_icon     = s_node_vfx_variable;
 	manual_ungroupable = false;
+	setDrawIcon(s_node_vfx_variable);
 	
 	setDimension(96, 48);
 	
@@ -54,11 +54,6 @@ function Node_VFX_Variable(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(outputs[ 9].visible_manual) array_map_ext(_vouts[ 9], function(_,i) /*=>*/  {return parts[i].seed}                     ); 
 		if(outputs[10].visible_manual) array_map_ext(_vouts[10], function(_,i) /*=>*/ {return [parts[i].startx, parts[i].starty]} ); 
 		
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_fit(node_draw_icon, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 	
 	static getPreviewingNode = function() { return is(inline_context, Node_VFX_Group_Inline)? inline_context.getPreviewingNode() : self; }

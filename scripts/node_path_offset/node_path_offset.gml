@@ -1,6 +1,7 @@
 function Node_Path_Offset(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Offset Path";
 	setDimension(96, 48);
+	setDrawIcon(s_node_path_offset);
 	
 	newInput(0, nodeValue_PathNode( "Path" ));
 	newInput(1, nodeValue_Slider(   "Offset", 0, [-1, 1, 0.01] ));
@@ -61,10 +62,5 @@ function Node_Path_Offset(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		_outData.clampRat  = _data[2];
 		
 		return _outData;
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_fit(s_node_path_offset, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

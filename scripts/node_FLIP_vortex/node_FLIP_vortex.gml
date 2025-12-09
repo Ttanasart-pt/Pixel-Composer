@@ -3,6 +3,7 @@ function Node_FLIP_Vortex(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	color = COLORS.node_blend_fluid;
 	icon  = THEME.fluid_sim;
 	setDimension(96, 96);
+	setDrawIcon(s_node_flip_vortex);
 	
 	manual_ungroupable = false;
 	
@@ -60,11 +61,6 @@ function Node_FLIP_Vortex(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _attr  = getInputData(4);
 		
 		FLIP_vortex(domain.domain, _posit[0], _posit[1], _rad, _str, _attr);
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_fit(s_node_flip_vortex, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 	
 	static getPreviewValues = function() { var domain = getInputData(0); return instance_exists(domain)? domain.domain_preview : noone; }

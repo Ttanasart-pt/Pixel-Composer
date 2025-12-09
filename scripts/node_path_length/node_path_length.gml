@@ -1,6 +1,7 @@
 function Node_Path_Length(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Path Length";
 	setDimension(96, 48);
+	setDrawIcon(s_node_path_length);
 	
 	newInput(0, nodeValue_PathNode( "Path" ));
 	
@@ -21,10 +22,5 @@ function Node_Path_Length(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		if(!is_path(_path)) return 0;
 		
 		return _path.getLength(); 
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_fit(s_node_path_length, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

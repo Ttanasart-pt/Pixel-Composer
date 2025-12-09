@@ -3,6 +3,7 @@ function Node_Strand_Break(_x, _y, _group = noone) : _Node_Strand_Affector(_x, _
 	color = COLORS.node_blend_strand;
 	icon  = THEME.strandSim;
 	setDimension(96, 48);
+	setDrawIcon(s_node_strand_break);
 	
 	manual_ungroupable	 = false;
 	
@@ -26,8 +27,4 @@ function Node_Strand_Break(_x, _y, _group = noone) : _Node_Strand_Affector(_x, _
 		STRAND_EFFECTOR_POST
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_fit(s_node_strand_break, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-	}
 }

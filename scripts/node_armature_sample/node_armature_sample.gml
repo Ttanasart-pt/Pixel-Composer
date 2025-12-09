@@ -1,6 +1,7 @@
 function Node_Armature_Sample(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Armature Sample";
 	setDimension(96, 72);
+	setDrawIcon(s_node_armature_sample);
 	
 	newInput(0, nodeValue_Armature()).setVisible(true, true).rejectArray();
 	newInput(1, nodeValue_Bone( "Bone", function() /*=>*/ {return toggleBoneTarget()} ));
@@ -47,10 +48,5 @@ function Node_Armature_Sample(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		var _p = _b.getPoint(_prog);
 		
 		outputs[0].setValue([_p.x, _p.y]);
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_fit(s_node_armature_sample, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

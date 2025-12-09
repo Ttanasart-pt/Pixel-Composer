@@ -2,6 +2,7 @@ function Node_PB_Box(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	name  = "PBBox";
 	color = COLORS.node_blend_feedback;
 	setDimension(96, 48);
+	setDrawIcon(s_node_pb_box);
 	
 	newInput(0, nodeValue_Pbbox("Base PBBOX"));
 	newInput(1, nodeValue_Pbbox("PBBOX"));
@@ -40,11 +41,6 @@ function Node_PB_Box(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		_pbbox.base_bbox = is(_pbase, __pbBox)? _pbase.getBBOX() : [ 0, 0, _dim[0], _dim[1] ];
 		return _pbbox;
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_fit(s_node_pb_box, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 	
 }

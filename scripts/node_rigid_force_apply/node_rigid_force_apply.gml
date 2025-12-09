@@ -4,6 +4,7 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	icon  = THEME.rigidSim;
 	update_on_frame    = true;
 	manual_ungroupable = false;
+	setDrawIcon(s_node_rigid_force_apply);
 	setDimension(96, 48);
 	
 	worldIndex = undefined;
@@ -199,10 +200,5 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			
 			array_foreach(_obj, function(obj) /*=>*/ { if(is(obj, __Box2DObject)) applyForce(obj.objId, __typ, __sco, __ppos, __ttor, __ffor, __rad, _str) });
 		}
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_fit(s_node_rigid_force_apply, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

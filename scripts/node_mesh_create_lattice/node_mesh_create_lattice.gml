@@ -1,6 +1,7 @@
 function Node_Mesh_Create_Lattice(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Lattice Mesh";
 	setDimension(96, 48);
+	setDrawIcon(s_node_mesh_create_lattice);
 	
 	////- =Area
 	newInput( 0, nodeValue_Area(  "Area", DEF_AREA_REF, { useShape : false } )).setUnitRef(function(i) /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
@@ -102,10 +103,5 @@ function Node_Mesh_Create_Lattice(_x, _y, _group = noone) : Node(_x, _y, _group)
 		mesh.triangles = triangles;
 		mesh.calcCoM();
 		outputs[0].setValue(mesh);
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_fit(s_node_mesh_create_lattice, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

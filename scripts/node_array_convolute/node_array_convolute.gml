@@ -1,6 +1,7 @@
 function Node_Array_Convolute(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Array Convolute";
 	setDimension(96, 48);
+	setDrawIcon(s_node_array_convolute);
 	
 	newInput(0, nodeValue_Float("Array", []))
 		.setArrayDepth(1)
@@ -80,10 +81,5 @@ function Node_Array_Convolute(_x, _y, _group = noone) : Node(_x, _y, _group) con
 			res = convolute(_arr, _ker);
 			
 		outputs[0].setValue(res);
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_fit(s_node_array_convolute, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

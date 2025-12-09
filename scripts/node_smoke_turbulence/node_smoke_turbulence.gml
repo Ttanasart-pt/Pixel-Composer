@@ -1,7 +1,7 @@
 function Node_Smoke_Turbulence(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) constructor {
 	name  = "Turbulence";
 	setDimension(96, 96);
-	
+	setDrawIcon(s_node_smoke_turbulence);
 	manual_ungroupable	 = false;
 	
 	////- =Domain
@@ -52,11 +52,5 @@ function Node_Smoke_Turbulence(_x, _y, _group = noone) : Node_Smoke(_x, _y, _gro
 		surface_reset_target();
 		
 		_dom.addVelocity(temp_surface[0]);
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		
-		draw_sprite_fit(s_node_smoke_turbulence, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

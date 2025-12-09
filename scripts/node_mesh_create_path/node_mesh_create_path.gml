@@ -1,6 +1,7 @@
 function Node_Mesh_Create_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Path to Mesh";
 	setDimension(96, 48);
+	setDrawIcon(s_node_mesh_create_path);
 	
 	newInput(0, nodeValue_PathNode(    "Path" ));
 	newInput(1, nodeValue_Int(         "Sample",    8 ));
@@ -73,10 +74,5 @@ function Node_Mesh_Create_Path(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		mesh.calcCoM();
 		
 		outputs[0].setValue(mesh);
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_fit(s_node_mesh_create_path, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

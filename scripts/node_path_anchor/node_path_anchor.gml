@@ -8,6 +8,7 @@ function Node_Path_Anchor(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	name  = "Path Anchor";
 	color = COLORS.node_blend_number;
 	setDimension(96, 48);
+	setDrawIcon(s_node_path_anchor);
 		
 	newInput(0, nodeValue_Vec2( "Postion",              [0,0]   )).setHotkey("G").setVisible(true, true);
 	newInput(1, nodeValue_Vec2( "Control point 1",      [-16,0] ));
@@ -58,10 +59,5 @@ function Node_Path_Anchor(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			return [_data[0][0], _data[0][1], _data[1][0], _data[1][1], -_data[1][0], -_data[1][1]];
 		else	
 			return [_data[0][0], _data[0][1], _data[1][0], _data[1][1], _data[2][0], _data[2][1]];
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_fit(s_node_path_anchor, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

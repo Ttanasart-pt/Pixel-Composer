@@ -1,6 +1,7 @@
 function Node_Cache_Value_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Cache Value Array";
 	setDimension(96, 48);
+	setDrawIcon(s_node_cache_value_array);
 	
 	newInput(0, nodeValue("Value", self, CONNECT_TYPE.input, VALUE_TYPE.any, noone))
 	    .setVisible(true, true);
@@ -41,10 +42,5 @@ function Node_Cache_Value_Array(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	    inputs[0].setType(inputs[0].value_from.type);    
         outputs[0].setType(inputs[0].value_from.type);
 		outputs[0].setValue(cache);
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_fit(s_node_cache_value_array, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

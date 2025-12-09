@@ -1,6 +1,7 @@
 function Node_PB_Dimension(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Dimension";
 	color = COLORS.node_blend_feedback;
+	setDrawIcon(s_node_pb_dimension);
 	setDimension(96, 48);
 	
 	newOutput(0, nodeValue_Output("Dimension", VALUE_TYPE.float, [ 1, 1 ] ))
@@ -16,11 +17,6 @@ function Node_PB_Dimension(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    outputs[0].setValue(group.dimension);
 	    outputs[1].setValue(group.dimension[0]);
 	    outputs[2].setValue(group.dimension[1]);
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_fit(s_node_pb_dimension, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 	
 }

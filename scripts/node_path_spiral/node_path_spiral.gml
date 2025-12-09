@@ -1,6 +1,7 @@
 function Node_Path_Spiral(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Spiral Path";
 	setDimension(96, 48);
+	setDrawIcon(s_node_path_spiral);
 	
 	////- =Path
 	
@@ -159,10 +160,5 @@ function Node_Path_Spiral(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		_outData.phase     = _data[4];
 		
 		return _outData;
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_fit(s_node_path_spiral, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

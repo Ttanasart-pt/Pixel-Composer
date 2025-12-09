@@ -1,6 +1,8 @@
 function Node_Path_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name   = "Blend Path";
 	setDimension(96, 48);
+	setDrawIcon(s_node_path_blend);
+	
 	length = 0;
 	
 	////- =Paths
@@ -208,10 +210,5 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		
 		return _outData;
 		
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_fit(s_node_path_blend, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

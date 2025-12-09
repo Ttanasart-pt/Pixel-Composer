@@ -2,7 +2,7 @@ function Node_VFX_Override(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	name  = "VFX Override";
 	color = COLORS.node_blend_vfx;
 	icon  = THEME.vfx;
-	node_draw_icon = s_node_vfx_override;
+	setDrawIcon(s_node_vfx_override);
 	
 	manual_ungroupable = false;
 	setDimension(96, 48);
@@ -147,11 +147,6 @@ function Node_VFX_Override(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		outputs[0].setValue(nParts);
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_fit(node_draw_icon, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-	}
-		
 	static getPreviewingNode = function() { return is(inline_context, Node_VFX_Group_Inline)? inline_context.getPreviewingNode() : self; }
 	static getPreviewValues  = function() { return is(inline_context, Node_VFX_Group_Inline)? inline_context.getPreviewValues()  : self; }
 }

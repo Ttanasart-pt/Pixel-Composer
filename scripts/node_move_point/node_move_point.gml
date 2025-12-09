@@ -1,7 +1,7 @@
 function Node_Move_Point(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name  = "Transform Point";
 	color = COLORS.node_blend_number;
-	
+	setDrawIcon(s_node_move_point);
 	setDimension(96, 48);
 	
 	////- =Points
@@ -56,10 +56,5 @@ function Node_Move_Point(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		_pnt[1] += _pos[1];
 		
 		return _pnt;
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_fit(s_node_move_point, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

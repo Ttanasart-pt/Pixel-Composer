@@ -2,6 +2,7 @@ function Node_PB_Box_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	name  = "PBBox Mirror";
 	color = COLORS.node_blend_feedback;
 	setDimension(96, 48);
+	setDrawIcon(s_node_pb_box_mirror);
 	
 	newInput(0, nodeValue_Pbbox("Mirror PBBOX"));
 	newInput(1, nodeValue_Pbbox("PBBOX"));
@@ -85,11 +86,6 @@ function Node_PB_Box_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		_mbox.setBBOX(_mirrbox);
 		
 		return _mbox;
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_fit(s_node_pb_box_mirror, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 	
 }

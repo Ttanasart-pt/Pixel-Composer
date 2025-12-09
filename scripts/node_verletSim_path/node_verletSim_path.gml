@@ -3,6 +3,7 @@ function Node_VerletSim_Path(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	color = COLORS.node_blend_verlet;
 	icon  = THEME.verletSim;
 	setDimension(96, 48);
+	setDrawIcon(s_node_verletsim_path);
 	
 	////- =Path
 	newInput(0, nodeValue_PathNode( "Path"         )).setVisible(true, true);
@@ -54,8 +55,4 @@ function Node_VerletSim_Path(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		outputs[0].setValue(_mesh);
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_fit(s_node_verletsim_path, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-	}
 }

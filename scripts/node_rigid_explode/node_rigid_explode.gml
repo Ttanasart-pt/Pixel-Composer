@@ -5,7 +5,7 @@ function Node_Rigid_Explode(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	update_on_frame    = true;
 	manual_ungroupable = false;
 	setDimension(96, 48);
-	
+	setDrawIcon(s_node_rigid_explode);
 	worldIndex = undefined;
 	worldScale = 100;
 	
@@ -118,10 +118,5 @@ function Node_Rigid_Explode(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			
 			array_foreach(_obj, function(obj) /*=>*/ { if(is(obj, __Box2DObject)) applyForce(obj.objId, __ppos, __rad, _str) });
 		}
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_fit(s_node_rigid_explode, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

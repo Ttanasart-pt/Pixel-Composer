@@ -1,6 +1,7 @@
 function Node_Array_Transpose(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Array Transpose";
 	setDimension(96, 48);
+	setDrawIcon(s_node_array_flattern);
 	
 	newInput(0, nodeValue("Array in", self, CONNECT_TYPE.input, VALUE_TYPE.any, []))
 		.setVisible(true, true);
@@ -40,10 +41,5 @@ function Node_Array_Transpose(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		}
 		
 		outputs[0].setValue(_arr);
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_fit(s_node_array_flattern, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

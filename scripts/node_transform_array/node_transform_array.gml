@@ -1,7 +1,7 @@
 function Node_Transform_Array(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name  = "Transform Array";
 	color = COLORS.node_blend_number;
-	
+	setDrawIcon(s_node_transform_array);
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue_Vec2("Postion", [ 0, 0 ] ))
@@ -31,8 +31,4 @@ function Node_Transform_Array(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		return [_data[0][0], _data[0][1], _data[1], _data[2][0], _data[2][0]];
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_fit(s_node_transform_array, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-	}
 }

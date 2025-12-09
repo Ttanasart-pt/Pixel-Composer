@@ -1,6 +1,6 @@
 function Node_Mesh_To_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Mesh to Path";
-	
+	setDrawIcon(s_node_mesh_create_path);
 	setDimension(96, 48);
 	
 	newInput(0, nodeValue("Mesh", self, CONNECT_TYPE.input, VALUE_TYPE.mesh, noone))
@@ -65,10 +65,5 @@ function Node_Mesh_To_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			}
 			op = np;
 		}
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_fit(s_node_mesh_create_path, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

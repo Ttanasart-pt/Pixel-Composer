@@ -2,7 +2,7 @@ function Node_Rigid_Variable(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	name  = "Rigidbody Variable";
 	color = COLORS.node_blend_simulation;
 	icon  = THEME.rigidSim;
-	node_draw_icon = s_node_rigid_variable;
+	setDrawIcon(s_node_rigid_variable);
 	setDimension(96, 48);
 	
 	worldIndex = undefined;
@@ -58,10 +58,5 @@ function Node_Rigid_Variable(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 		for( var i = 0; i < array_length(outputs); i++ )
 			if(_get[i]) outputs[i].setValue(_val[i]);
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_fit(node_draw_icon, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

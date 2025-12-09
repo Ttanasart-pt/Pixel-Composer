@@ -3,6 +3,7 @@ function Node_Strand_Gravity(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	color = COLORS.node_blend_strand;
 	icon  = THEME.strandSim;
 	setDimension(96, 48);
+	setDrawIcon(s_node_strand_gravity);
 	
 	manual_ungroupable	 = false;
 	
@@ -40,8 +41,4 @@ function Node_Strand_Gravity(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		outputs[0].setValue(_str);
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_fit(s_node_strand_gravity, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-	}
 }

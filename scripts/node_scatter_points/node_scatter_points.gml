@@ -9,6 +9,7 @@
 function Node_Scatter_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name  = "Scatter Points";
 	color = COLORS.node_blend_number;
+	setDrawIcon(s_node_scatter_points);
 	setDimension(96, 48);
 	
 	////- =Base
@@ -146,8 +147,4 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		return pos;
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_fit(s_node_scatter_points, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-	}
 }

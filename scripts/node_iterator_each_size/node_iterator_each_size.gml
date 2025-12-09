@@ -2,7 +2,7 @@ function Node_Iterator_Each_Length(_x, _y, _group = noone) : Node(_x, _y, _group
 	name  = "Array Length";
 	color = COLORS.node_blend_loop;
 	destroy_when_upgroup = true;
-	
+	setDrawIcon(s_node_iterator_amount);
 	setDimension(96, 48);
 	
 	newOutput(0, nodeValue_Output("Length", VALUE_TYPE.integer, 0));
@@ -13,12 +13,7 @@ function Node_Iterator_Each_Length(_x, _y, _group = noone) : Node(_x, _y, _group
 		outputs[0].setValue(array_length(val));
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_fit(s_node_iterator_amount, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-	}
-	
-	static onLoadGroup = function() { #region
+	static onLoadGroup = function() {
 		if(group == noone) destroy();
-	} #endregion
+	}
 }

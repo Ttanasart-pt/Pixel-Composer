@@ -1,6 +1,7 @@
 function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Path Builder";
 	setDimension(96, 48);
+	setDrawIcon(s_node_path_builder);
 	
 	newInput(0, nodeValue_Float("Point array", []))
 		.setVisible(true, true)
@@ -190,10 +191,5 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		updateLength();
 		
 		outputs[0].setValue(self);
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_fit(s_node_path_builder, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

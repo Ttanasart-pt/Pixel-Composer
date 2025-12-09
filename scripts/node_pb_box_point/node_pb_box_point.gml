@@ -2,6 +2,7 @@ function Node_PB_Box_Point(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	name  = "PBBOX Get Point";
 	color = COLORS.node_blend_feedback;
 	setDimension(96, 48);
+	setDrawIcon(s_node_pb_box_bbox);
 	
 	newInput(0, nodeValue_Pbbox());
 	
@@ -41,11 +42,6 @@ function Node_PB_Box_Point(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		var _p = [ x0 + _posit[0], y0 + _posit[1] ];
 		return _p;
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_fit(s_node_pb_box_bbox, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 	
 }

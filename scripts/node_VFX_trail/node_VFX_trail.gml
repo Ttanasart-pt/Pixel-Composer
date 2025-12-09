@@ -1,6 +1,7 @@
 function Node_VFX_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "VFX Trail";
 	setDimension(96, 48);
+	setDrawIcon(s_node_vfx_trail);
 	
 	manual_ungroupable	 = false;
 	
@@ -155,11 +156,6 @@ function Node_VFX_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		outputs[0].setValue(self);
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_fit(s_node_vfx_trail, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-	}
-
 	static getPreviewingNode = function() { return is(inline_context, Node_VFX_Group_Inline)? inline_context.getPreviewingNode() : self; }
 	static getPreviewValues  = function() { return is(inline_context, Node_VFX_Group_Inline)? inline_context.getPreviewValues()  : self; }
 }

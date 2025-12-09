@@ -2,7 +2,7 @@ function Node_Rigid_Override(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	name  = "Rigidbody Override";
 	color = COLORS.node_blend_simulation;
 	icon  = THEME.rigidSim;
-	node_draw_icon = s_node_rigid_override;
+	setDrawIcon(s_node_rigid_override);
 	
 	manual_ungroupable = false;
 	setDimension(96, 48);
@@ -165,10 +165,5 @@ function Node_Rigid_Override(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			}
 			
 		}
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_fit(node_draw_icon, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

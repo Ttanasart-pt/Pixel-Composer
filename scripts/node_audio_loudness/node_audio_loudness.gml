@@ -1,6 +1,7 @@
 function Node_Audio_Loudness(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Audio Loudness";
 	setDimension(96, 72);
+	setDrawIcon(s_node_audio_loudness);
 	
 	newInput(0, nodeValue_Float("Audio Data", []))
 		.setArrayDepth(1)
@@ -21,10 +22,5 @@ function Node_Audio_Loudness(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		
 		var dec = 10 * log10(val);
 		return dec;
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_fit(s_node_audio_loudness, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

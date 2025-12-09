@@ -3,6 +3,7 @@ function Node_Smoke_Update(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 	color = COLORS.node_blend_smoke;
 	icon  = THEME.smoke_sim;
 	setDimension(96, 96);
+	setDrawIcon(s_node_smoke_update);
 	
 	manual_ungroupable	 = false;
 	
@@ -27,11 +28,6 @@ function Node_Smoke_Update(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) 
 		outputs[0].setValue(_dom);
 		
 		if(_act) _dom.update();
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		var _act = getInputData(1);
-		draw_sprite_fit(_act? s_node_smoke_update : s_node_smoke_update_paused, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
+		setDrawIcon(_act? s_node_smoke_update : s_node_smoke_update_paused);
 	}
 }

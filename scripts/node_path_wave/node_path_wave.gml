@@ -7,6 +7,7 @@
 function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Wave Path";
 	setDimension(96, 48);
+	setDrawIcon(s_node_path_wave);
 	
 	newInput(5, nodeValueSeed());
 	
@@ -205,8 +206,4 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		return _outData;
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_fit(s_node_path_wave, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-	}
 }

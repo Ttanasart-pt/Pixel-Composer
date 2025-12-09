@@ -3,6 +3,7 @@ function Node_FLIP_to_VFX(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	color = COLORS.node_blend_fluid;
 	icon  = THEME.fluid_sim;
 	setDimension(96, 96);
+	setDrawIcon(s_node_flip_to_VFX);
 	
 	manual_ungroupable = false;
 	
@@ -45,11 +46,6 @@ function Node_FLIP_to_VFX(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		array_resize(_pa, _ind);
 		outputs[0].setValue(_pa);
-	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		draw_sprite_fit(s_node_flip_to_VFX, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 	
 }
