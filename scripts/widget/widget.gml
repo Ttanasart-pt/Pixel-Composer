@@ -62,7 +62,7 @@ function widget() constructor {
 	} 
 	
 	static setFrontButton = function(b) /*=>*/ { 
-		if(is(b, buttonClass)) b.iconPad(ui(4));
+		if(is(b, buttonClass)) b.iconPad(ui(8));
 		front_button = b; 
 		return self; 
 	} 

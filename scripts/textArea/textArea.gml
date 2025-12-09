@@ -770,12 +770,10 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		var c_h = line_get_height();
 		
 		w  = _w;
-		var bw = min(c_h + padding_v * 2, ui(32));
-		var bh = c_h + padding_v * 2;
-		
-		var _drawB = is(side_button, buttonClass)  && _w - bw > ui(100);
-		var _drawF = is(front_button, buttonClass) && _w - bw > ui(100);
-		_w -= bw * (_drawB + _drawF);
+		var bs = _h;
+		var _drawB = is(side_button, buttonClass)  && _w - bs > ui(100);
+		var _drawF = is(front_button, buttonClass) && _w - bs > ui(100);
+		_w -= bs * (_drawB + _drawF);
 		
 		var tx = ui(8);
 		var hh = _h;
@@ -803,16 +801,26 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			line_width -= 16;
 		}
 		
+		draw_sprite_stretched_ext(THEME.textbox, 3, x, y, w, hh, boxColor, 1);
+		
 		if(_drawB) {
+			var bx = _x + w - bs;
+			var by = _y + hh / 2 - bs / 2;
+			
+			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, bx, _y, bs, hh, CDEF.main_mdwhite, 1);
 			side_button.setFocusHover(active, hover);
-			side_button.draw(_x + w - bw, _y, bw, bh, _m, THEME.button_hide_fill);
+			side_button.draw(bx, by, bs, bs, _m, THEME.button_hide_fill);
 		}
 		
 		if(_drawF) {
-			front_button.setFocusHover(active, hover);
-			front_button.draw(_x, _y, bw, bh, _m, THEME.button_hide_fill);
+			var bx = _x;
+			var by = _y + hh / 2 - bs / 2;
 			
-			_x += bw;
+			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, bx, _y, bs, hh, CDEF.main_mdwhite, 1);
+			front_button.setFocusHover(active, hover);
+			front_button.draw(bx, by, bs, bs, _m, THEME.button_hide_fill);
+			
+			_x += bs;
 		}
 		
 		////- Draw
@@ -822,8 +830,6 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		var tsh       = hh;
 		var _update   = !surface_valid(text_surface, tsw, tsh);
 		if(_update) text_surface = surface_verify(text_surface, tsw, tsh);
-		
-		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, hh, boxColor, 1);
 		
 		var _scis = gpu_get_scissor();
 		
@@ -962,7 +968,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			
 			if(typing) typing--;
 			
-			draw_sprite_stretched_ext(THEME.textbox, 2, _x, _y, _w, hh, border_heightlight_color, 1);
+			draw_sprite_stretched_ext(THEME.textbox, 2, x, y, w, hh, border_heightlight_color, 1);
 			
 			if(o_dialog_textbox_autocomplete.textbox == self) {
 				o_dialog_textbox_autocomplete.dialog_x = rx + _x + cursor_pos_x + 1;
@@ -997,7 +1003,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 			if(hover && hoverRect) {
 				hovering = true;
 				
-				draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, hh, boxColor, 0.5 + 0.5 * (interactable && !hide));
+				draw_sprite_stretched_ext(THEME.textbox, 1, x, y, w, hh, boxColor, 0.5 + 0.5 * (interactable && !hide));
 				
 				if(mouse_press(mb_left, active))
 					activate();
@@ -1006,7 +1012,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 					menuCall("textbox_context", context_menu);
 					
 			} else if(!hide)
-				draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, hh, boxColor, 0.5 + 0.5 * interactable);
+				draw_sprite_stretched_ext(THEME.textbox, 0, x, y, w, hh, boxColor, 0.5 + 0.5 * interactable);
 				
 			o_dialog_textbox_autocomplete.deactivate(self);
 		}

@@ -75,6 +75,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	newInput( 2, nodeValue_Text(    "Template",        "%d%n" )).rejectArray();
 	inputs[2].editWidget.format		 = TEXT_AREA_FORMAT.path_template;
 	inputs[2].editWidget.auto_update = true;
+	
 	newInput(16, nodeValue_Bool(    "Export on Save",   false)).setTooltip("Automatically export when saving project.");
 	newInput(22, nodeValue_Bool(    "Export on Update", false));
 	
