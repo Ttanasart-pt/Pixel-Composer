@@ -191,7 +191,7 @@ function Panel_Presets(_node) : PanelContent() constructor {
 				}
 			}
 			
-			if(preset.content == -1) {
+			if(preset.content == undefined) {
 				preset.content        = json_load_struct(preset.path);
 				preset.thumbnail_data = struct_try_get(preset.content, "thumbnail", -1);
 			}

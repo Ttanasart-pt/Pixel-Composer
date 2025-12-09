@@ -6,7 +6,7 @@ function FileObject(_path) constructor {
 	ext  = filename_ext_raw(path);
 	type = FILE_TYPE.others;
 	size = file_size(path);
-	content    = -1;
+	content    = undefined;
 	
 	spr        = -1;
 	spr_data   = undefined;

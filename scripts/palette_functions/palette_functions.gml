@@ -76,33 +76,6 @@ function loadPalette(path) {
 	
 	return pal;
 }
-	
-globalvar PALETTES, PALETTE_LOSPEC;
-
-PALETTES = [];
-PALETTE_LOSPEC = 0;
-
-function __initPalette() {
-	PALETTES = [];
-	
-	var path = DIRECTORY + "Palettes/"
-	var file = file_find_first(path + "*", 0);
-	
-	while(file != "") {
-		if(isPaletteFile(file)) {
-			array_push(PALETTES, {
-				name:    filename_name_only(file),
-				path:    path + file,
-				palette: loadPalette(path + file)
-			});
-		}
-		file = file_find_next();
-	}
-	file_find_close();
-	
-	with(o_dialog_palette)  initPalette();
-	with(o_dialog_gradient) initPalette();
-}
 
 function palette_string_hex(palette, alpha = true) { //palette generate
 	var _str = "";

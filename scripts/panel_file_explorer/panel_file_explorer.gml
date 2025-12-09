@@ -289,7 +289,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 			var _ppw = _pw;
 			
 			if(point_in_rectangle(_m[0], _m[1], _px, _py, _px + _pw, _py + _ph)) {
-				if(buttonInstant(THEME.button_hide_fill, _px + _ppw - _ph, _py, _ph, _ph, _m, hov, foc, "Set as root", THEME.path_open_20) == 2)
+				if(buttonInstant(THEME.button_hide_fill, _px + _ppw - _ph, _py, _ph, _ph, _m, hov, foc, "Set as root", THEME.dPath_open_20) == 2)
 					setRoot(_dir.path);
 				_ppw -= _ph + ui(2);
 				
@@ -372,7 +372,7 @@ function Panel_File_Explorer() : PanelContent() constructor {
 						} _bx += _ph + ui(2);
 						
 					} else if(_fil.type == FILE_TYPE.project) {
-						if(buttonInstant(noone, _bx, _py, _ph, _ph, _m, hov, foc, "Open Project", THEME.path_open_20, 0, _butc) == 2) {
+						if(buttonInstant(noone, _bx, _py, _ph, _ph, _m, hov, foc, "Open Project", THEME.dPath_open_20, 0, _butc) == 2) {
 							LOAD_AT(_fil.path);
 							draggable = false;
 						} _bx += _ph + ui(2);

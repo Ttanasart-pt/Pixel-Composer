@@ -370,24 +370,3 @@ function evaluate_gradient_map(_x, gradient, surface, range, junc, fast = false)
 		
 	return surface_getpixel_ext(surface, _sx, _sy);
 }
-
-globalvar GRADIENTS;
-GRADIENTS = [];
-
-function __initGradient() {
-	GRADIENTS = [];
-	
-	var path = DIRECTORY + "Gradients/"
-	var file = file_find_first(path + "*", 0);
-	while(file != "") {
-		array_push(GRADIENTS, {
-			name:     filename_name_only(file),
-			path:     path + file,
-			gradient: loadGradient(path + file)
-		});
-		file = file_find_next();
-	}
-	file_find_close();
-	
-	with(o_dialog_gradient) initGradient();
-}

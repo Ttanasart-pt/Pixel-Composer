@@ -73,7 +73,6 @@ draggable = true;
 			
 			file_text_write_all(txt + ".txt", gradStr);
 			__initGradient();
-			initGradient();
 		};
 		dia.path = DIRECTORY + "Gradients/"
 	}
@@ -81,11 +80,11 @@ draggable = true;
 	bx -= ui(32);
 	
 	var b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Refresh"), THEME.refresh_20);
-	if(b == 2) { __initGradient(); initGradient(); }
+	if(b == 2) { __initGradient(); }
 	draggable = draggable && !b;
 	bx -= ui(32);
 	
-	var b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txtx("graident_editor_open_folder", "Open gradient folder"), THEME.path_open_20);
+	var b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txtx("graident_editor_open_folder", "Open gradient folder"), THEME.dPath_open_20);
 	if(b == 2) {
 		var _realpath = DIRECTORY + "Gradients";
 		shellOpenExplorer(_realpath)
@@ -304,8 +303,7 @@ draggable = true;
 	var col_x = content_x + ui(20);
 	var col_y = dialog_y + ui(128);
 	
-	if(palette_selecting > -1)
-		selector.palette = paletePresets[palette_selecting].palette;
+	if(palette_selecting != undefined) selector.palette = palette_selecting;
 	selector.draw(col_x, col_y, sFOCUS, sHOVER);
 #endregion
 

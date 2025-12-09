@@ -92,31 +92,23 @@ function __PaletteColor(_color = c_black) constructor {
 #endregion
 
 #region presets
-	function initPalette() { 
-		paletePresets  = array_clone(PALETTES); 
-		currentPresets = paletePresets;
-		return self; 
-	} initPalette();
-	
 	hovering_name    = "";
 	preset_show_name = true;
 	preset_expands   = {};
 	
 	pal_padding = ui(9);
 	sp_preset_w = ui(240) - pal_padding * 2 - ui(8);
-	sp_presets  = new scrollPane(sp_preset_w, dialog_h - ui(48 + 8 + 40) - pal_padding, function(_y, _m) {
-		draw_clear_alpha(COLORS.panel_bg_clear, 0);
+	
+	function drawPaletteDirectory(_dir, _x, _y, _m) {
+		var _hov = sp_presets.hover;
+		var _foc = sp_presets.active && interactable;
 		
-		var _hov = sp_presets.hover && sHOVER;
-		var _foc = interactable && sFOCUS;
-		
-		var ww = sp_presets.surface_w;
-		var pd = ui(4);
+		var ww = sp_presets.surface_w - _x;
+		var pd = ui(2);
 		var nh = preset_show_name? ui(20) : pd;
 		
 		var gs = ui(20);
-		var hh = ui(24);
-		var yy = _y;
+		var hh = 0;
 		
 		var pw  = ww - pd * 2;
 		var ph  = nh + gs + pd;
@@ -124,45 +116,85 @@ function __PaletteColor(_color = c_black) constructor {
 		
 		var _exp, _height, pre_amo, _palRes;
 		
-		for( var i = 0, n = array_length(paletePresets); i < n; i++ ) {
-			var pal  = paletePresets[i];
+		var lbh = ui(20);
+		var sch = search_string != "";
+		
+		for( var i = 0, n = array_length(_dir.subDir); i < n; i++ ) {
+			var _sub  = _dir.subDir[i];
+			var _open = sch || (_sub[$ "expanded"] ?? true);
+			if(_sub.name == "Mixer") continue;
 			
-			pre_amo  = array_length(pal.palette);
+			draw_sprite_stretched(THEME.ui_panel_bg, 3, _x, _y, ww, lbh);
+			if(!sch && _hov && point_in_rectangle(_m[0], _m[1], _x, _y, _x + ww, _y + lbh)) {
+				draw_sprite_stretched_ext(THEME.node_bg, 1, _x, _y, ww, lbh, COLORS._main_icon, 1);
+				if(mouse_lpress(_foc)) {
+					_open = !_open;
+					_sub[$ "expanded"] = _open;
+				}
+			}
+			
+			draw_sprite_ui_uniform(THEME.arrow, _open * 3, _x + ui(12), _y + lbh/2, .8, COLORS._main_icon);
+			draw_set_text(f_p4, fa_left, fa_center, COLORS._main_text);
+			draw_text_add(_x + ui(24), _y + lbh/2, _sub.name);
+			
+			hh += lbh + ui(4);
+			_y += lbh + ui(4);
+			
+			if(!_open) continue;
+			var _sh  = drawPaletteDirectory(_sub, _x + ui(8), _y, _m);
+			
+			_y += _sh;
+			hh += _sh;
+		}
+		
+		for( var i = 0, n = array_length(_dir.content); i < n; i++ ) {
+			var p = _dir.content[i];
+			if(p.content == undefined)
+				p.content = loadPalette(p.path);
+			
+			var _name = p.name;
+			var _path = p.path;
+			var _palt = p.content;
+			
+			if(sch && string_pos(palette_search_string, string_lower(_name)) == 0) continue;
+			if(!is_array(_palt)) continue;
+			
+			pre_amo  = array_length(_palt);
 			row      = ceil(pre_amo / col);
-			_exp     = preset_expands[$ i] || row <= 1;
+			_exp     = preset_expands[$ _path] || row <= 1;
 			_height  = _exp? nh + row * gs + pd : ph;
 			
-			var isHover = _hov && point_in_rectangle(_m[0], _m[1], 0, yy, ww, yy + _height);
+			var isHover = _hov && point_in_rectangle(_m[0], _m[1], _x, _y, _x + ww, _y + _height);
 			var select  = isHover;
-			draw_sprite_stretched(THEME.ui_panel_bg, 3, 0, yy, ww, _height);
+			draw_sprite_stretched(THEME.ui_panel_bg, 3, _x, _y, ww, _height);
 			
 			if(isHover) {
-				draw_sprite_stretched_ext(THEME.node_bg, 1, 0, yy, ww, _height, COLORS._main_accent, 1);
+				draw_sprite_stretched_ext(THEME.node_bg, 1, _x, _y, ww, _height, COLORS._main_accent, 1);
 				sp_presets.hover_content = true;
 			}
 			
 			if(preset_show_name) {
-				draw_sprite_ui(THEME.arrow, _exp * 3, ui(8), yy + nh / 2, .75, .75, 0, COLORS._main_text_sub);
+				draw_sprite_ui(THEME.arrow, _exp * 3, _x + ui(8), _y + nh / 2, .75, .75, 0, COLORS._main_text_sub);
 				draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text_sub);
-				draw_text_add(ui(16), yy + ui(2), pal.name);
+				draw_text_add(_x + ui(16), _y + ui(2), _name);
 				
 				var bs = nh - ui(4);
-				var bx = ww - bs - ui(2);
-				var by = yy + ui(2);
+				var bx = _x + ww - bs - ui(2);
+				var by = _y + ui(2);
 				var b  = buttonInstant_Pad(THEME.button_hide, bx, by, bs, bs, _m, _hov, _foc, "Set Palette", THEME.node_goto_16);
 				
 				if(b) select = false;
 				if(b == 2) {
-					setPalette(array_clone(pal.palette)); 
+					setPalette(array_clone(_palt)); 
 					onApply(palette);
 				}
 			}
 			
 			var _hoverColor = noone;
 			if(_exp) {
-				_palRes     = drawPaletteGrid(pal.palette, pd, yy + nh, pw, gs, { mx : _m[0], my : _m[1] });
+				_palRes     = drawPaletteGrid(_palt, _x + pd, _y + nh, pw, gs, { mx : _m[0], my : _m[1] });
 				_hoverColor = _palRes.hoverIndex > noone? _palRes.hoverColor : noone;
-			} else drawPalette(pal.palette, pd, yy + nh, pw, gs);
+			} else drawPalette(_palt, _x + pd, _y + nh, pw, gs);
 			
 			if(_hoverColor != noone) {
 				var _box = _palRes.hoverBBOX;
@@ -175,62 +207,37 @@ function __PaletteColor(_color = c_black) constructor {
 			}
 			
 			if(select && mouse_lpress(_foc)) {
-				preset_expands[$ i] = !_exp;
+				preset_expands[$ _path] = !_exp;
 				click_block = true;
 				onApply(palette);
 			}
 			
 			if(isHover && mouse_rpress(_foc)) {
-				hovering = pal;
-				
 				menuCall("palette_window_preset_menu", [
-					menuItem(__txt("Set Palette"), function() /*=>*/ { setPalette(array_clone(hovering.palette)); onApply(palette); }),
-					menuItem(__txtx("palette_editor_set_default", "Set as default"), function() /*=>*/ { PROJECT.setPalette(array_clone(hovering.palette)); }),
-					menuItem(__txtx("palette_editor_delete", "Delete palette"),      function() /*=>*/ { file_delete(hovering.path); __initPalette();       }),
+					menuItem(__txt("Set Palette"), function(p) /*=>*/ { setPalette(array_clone(p)); onApply(palette); }).setParam(_palt),
+					menuItem(__txtx("palette_editor_set_default", "Set as default"), function(p) /*=>*/ { PROJECT.setPalette(array_clone(p)); }).setParam(_palt),
+					menuItem(__txtx("palette_editor_delete", "Delete palette"),      function(p) /*=>*/ { file_delete(p); __initPalette(); }).setParam(_path),
 				]);
 			}
 			
-			yy += _height + ui(4);
+			_y += _height + ui(4);
 			hh += _height + ui(4);
 		}
 		
+		return hh;
+	}
+	
+	sp_presets  = new scrollPane(sp_preset_w, dialog_h - ui(48 + 8 + 40) - pal_padding, function(_y, _m) {
+		draw_clear_alpha(COLORS.panel_bg_clear, 0);
+		var hh = drawPaletteDirectory(PALETTES_FOLDER, 0, _y, _m);
 		return hh;
 	});
 	
 	//////////////////////// SEARCH ////////////////////////
 	
 	search_string = "";
-	tb_search = new textBox(TEXTBOX_INPUT.text, function(t) /*=>*/ {return searchPalette(t)} )
-	               .setFont(f_p2)
-	               .setHide(1)
-	               .setEmpty(false)
-	               .setPadding(ui(24))
-	               .setAutoUpdate();
-	
-	function searchPalette(t) {
-		search_string = t;
-		
-		if(search_string == "") {
-			paletePresets = currentPresets;
-			return;
-		}
-		
-		paletePresets = [];
-		var _pr = ds_priority_create();
-		
-		for( var i = 0, n = array_length(currentPresets); i < n; i++ ) {
-			var _prest = currentPresets[i];
-			var _match = string_partial_match(string_lower(_prest.name), string_lower(search_string));
-			if(_match <= -9999) continue;
-			
-			ds_priority_add(_pr, _prest, _match);
-		}
-		
-		repeat(ds_priority_size(_pr))
-			array_push(paletePresets, ds_priority_delete_max(_pr));
-		
-		ds_priority_destroy(_pr);
-	}
+	tb_search = new textBox(TEXTBOX_INPUT.text, function(t) /*=>*/ { search_string = string_lower(t) } )
+	               .setFont(f_p2).setHide(1).setEmpty(false).setPadding(ui(24)).setAutoUpdate();
 	
 	////////////////////////  SORT  ////////////////////////
 	

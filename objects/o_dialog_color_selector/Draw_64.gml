@@ -55,7 +55,7 @@ if !ready exit;
 		__initPalette();
 	bx -= ui(32);
 	
-	if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txtx("color_selector_open_palette", "Open palette folder"), THEME.path_open_20) == 2)
+	if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txtx("color_selector_open_palette", "Open palette folder"), THEME.dPath_open_20) == 2)
 		shellOpenExplorer($"{DIRECTORY}Palettes");
 	draw_sprite_ui_uniform(THEME.path_open_20, 1, bx + bs / 2, by + bs / 2, 1, c_white);
 	bx -= ui(32);
@@ -69,7 +69,7 @@ if !ready exit;
 	var col_x = content_x + ui(20);
 	var col_y = dialog_y  + ui(52);
 	
-	if(preset_selecting > -1) selector.palette = paletePresets[preset_selecting].palette;
+	if(preset_selecting != undefined) selector.palette = preset_selecting;
 	selector.draw(col_x, col_y, sFOCUS, sHOVER);
 #endregion
 
