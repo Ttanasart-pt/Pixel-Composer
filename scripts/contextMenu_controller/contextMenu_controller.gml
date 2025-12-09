@@ -101,7 +101,7 @@ function MenuItemGroup(_name, _group, _hotkey = noone) constructor {
 	spr     = noone;
 	
 	hoykeyObject = noone;
-	spacing = ui(36);
+	spacing      = ui(32);
 	
 	static setSpacing = function(_spacing) { spacing = _spacing; return self; }
 }

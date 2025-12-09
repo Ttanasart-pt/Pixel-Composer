@@ -191,14 +191,16 @@ DIALOG_WINCLEAR1
 						_clr = array_safe_get_fast(_sprs, 2, c_white);
 					} else _spr = _sprs;
 					
-					_sw = sprite_get_width(_spr)  + ui(8);
-					_sh = sprite_get_height(_spr) + ui(8);
+					_sw = sprite_get_width(_spr);
+					_sh = sprite_get_height(_spr);
 				}
 				
-				if(_hovering_ch && point_in_rectangle(mouse_mx, mouse_my, _bx - _sw / 2, _by - _sh / 2, _bx + _sw / 2, _by + _sh / 2)) {
+				var _hv = _hovering_ch && point_in_rectangle(mouse_mx, mouse_my, _bx - _sw/2, _by - _sh/2, _bx + _sw/2, _by + _sh/2);
+				
+				if(_hv) {
 					if(_tlp != "") TOOLTIP = _tlp;
-					draw_sprite_stretched_ext(THEME.textbox, 3, _bx - _sw / 2, _by - _sh / 2, _sw, _sh, COLORS.dialog_menubox_highlight, 1);
-					draw_sprite_stretched_ext(THEME.textbox, 1, _bx - _sw / 2, _by - _sh / 2, _sw, _sh, COLORS.dialog_menubox_highlight, 1);
+					draw_sprite_stretched_ext(THEME.textbox, 3, _bx - _sw/2, _by - _sh/2, _sw, _sh, COLORS.dialog_menubox_highlight, 1);
+					draw_sprite_stretched_ext(THEME.textbox, 1, _bx - _sw/2, _by - _sh/2, _sw, _sh, COLORS.dialog_menubox_highlight, 1);
 					
 					if(mouse_press(mb_left, sFOCUS)) {
 						DIALOG_POSTDRAW

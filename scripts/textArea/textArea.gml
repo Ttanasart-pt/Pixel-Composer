@@ -703,7 +703,7 @@ function textArea(_input, _onModify) : textInput(_input, _onModify) constructor 
 		
 		if(ch_y <= _my && !_found_char) target = char_run - 1;
 		
-		if(mouse_press(mb_right, active))
+		if(_hover && mouse_press(mb_right, active))
 			menuCall("textbox_context", context_menu_selecting);
 		
 		if(target != undefined && !click_block) {

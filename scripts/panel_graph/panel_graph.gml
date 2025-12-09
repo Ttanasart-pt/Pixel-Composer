@@ -1903,20 +1903,22 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	                    menuCall("graph_node_select", menuItems_gen("graph_node_select"));
 	                    
 	                } else if(node_hover == noone && junction_hovering == noone) {
-	                	var menu = menuItems_gen("graph_empty");
-		                    
 	                    var ctx     = is(frame_hovering, Node_Collection_Inline)? frame_hovering : getCurrentContext();
 	                    var _diaAdd = callAddDialog(ctx);
 	                    
-	                    var _dia = menuCall("graph_empty", menu, o_dialog_add_node.dialog_x - ui(8), o_dialog_add_node.dialog_y + ui(4), fa_right );
+	                	var menu = menuItems_gen("graph_empty");
+	                    var _dia = menuCall("graph_empty", menu, o_dialog_add_node.dialog_x - ui(8), 
+	                                                             o_dialog_add_node.dialog_y + ui(4), fa_right );
 	                    _dia.passthrough = true;
 	                    setFocus(_diaAdd, "Dialog");
 	                    
 	                } else if(node_hover == noone) {
 	                    __junction_hovering = junction_hovering;
 	                    
-	                    var menu = menuItems_gen("graph_connection_select");
+	                    var ctx     = is(frame_hovering, Node_Collection_Inline)? frame_hovering : getCurrentContext();
+	                    var _diaAdd = callAddDialog(ctx);
 	                    
+	                    var menu = menuItems_gen("graph_connection_select");
 	                    if(is(junction_hovering, Node_Feedback_Inline)) {
 	                        var _jun = junction_hovering.junc_out;
 	                        array_push(menu, menuItem($"[{_jun.node.display_name}] {_jun.getName()}", 
@@ -1928,10 +1930,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	                        	function(j) /*=>*/ { j.removeFrom(); }, THEME.cross).setParam(__junction_hovering));
 	                    }
 	                    
-	                    var ctx     = is(frame_hovering, Node_Collection_Inline)? frame_hovering : getCurrentContext();
-	                    var _diaAdd = callAddDialog(ctx);
-	                    
-	                    var _dia = menuCall("graph_connection_select", menu, o_dialog_add_node.dialog_x - ui(8), o_dialog_add_node.dialog_y + ui(4), fa_right );
+	                    var _dia = menuCall("graph_connection_select", menu, o_dialog_add_node.dialog_x - ui(8), 
+	                                                                         o_dialog_add_node.dialog_y + ui(4), fa_right );
 	                    _dia.passthrough = true;
 	                    setFocus(_diaAdd, "Dialog");
 	                }
