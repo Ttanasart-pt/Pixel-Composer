@@ -77,13 +77,6 @@ function __PaletteColor(_color = c_black) constructor {
 				txt = string_lower(txt);
 				txt = string_replace_all(txt, " ", "-");
 				
-				for( var i = 0, n = array_length(PALETTES); i < n; i++ ) {
-					if(PALETTES[i].name == txt) {
-						noti_warning($"Palette {txt} alerady existed.");
-						return;
-					}
-				}
-				
 				var _url = $"https://Lospec.com/palette-list{txt}.json";
 				PALETTE_LOSPEC = http_get(_url);
 			}).setName("Palette")

@@ -231,10 +231,11 @@ function DirectoryObject(_path) constructor {
 		}
 		
 		var _bx = _x + ui(32);
-		var _bw = _w - ui(36);
+		var _bw = _w - ui(32);
 		
 		if(_hover && point_in_rectangle(_m[0], _m[1], _bx, _y, _bx + _bw, _y + hg - 1)) {
 			draw_sprite_stretched_ext(THEME.button_hide_fill, 1, _bx - ui(4), _y, _bw + ui(4), hg, CDEF.main_white, 1);
+			
 			if(!triggered) {
 				if(mouse_lpress(_focus)) {
 					if(!empt && !open) {

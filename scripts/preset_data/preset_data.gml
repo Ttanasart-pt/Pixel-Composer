@@ -33,28 +33,13 @@
 #endregion
 
 #region palette
-	globalvar PALETTES; PALETTES       = [];
 	globalvar PALETTE_LOSPEC; PALETTE_LOSPEC = 0;
 	globalvar PALETTES_FOLDER;
 	
 	function __initPalette() {
-		PALETTES = [];
-		
 		var path = DIRECTORY + "Palettes/";
+		directory_verify(path);
 		PALETTES_FOLDER = new DirectoryObject(path).scan([".hex", ".gpl", ".pal", ".png"]);
-		
-		// var file = file_find_first(path + "*", 0);
-		// while(file != "") {
-			// if(isPaletteFile(file)) {
-		// 		array_push(PALETTES, {
-		// 			name:    filename_name_only(file),
-		// 			path:    path + file,
-		// 			palette: loadPalette(path + file)
-		// 		});
-		// 	}
-		// 	file = file_find_next();
-		// }
-		// file_find_close();
 	}
 #endregion
 
@@ -63,14 +48,17 @@
 	
 	function __initGradient() {
 		var path = DIRECTORY + "Gradients/"
+		directory_verify(path);
 		GRADIENTS_FOLDER = new DirectoryObject(path).scan([".txt"]);
 	}
 #endregion
 
 #region curves
-	globalvar CURVES; CURVES = [];
+	globalvar CURVES_FOLDER;
 	
 	function __initCurve() {
-		
+		var path = DIRECTORY + "Curves/"
+		directory_verify(path);
+		CURVES_FOLDER = new DirectoryObject(path).scan([".json"]);
 	}
 #endregion

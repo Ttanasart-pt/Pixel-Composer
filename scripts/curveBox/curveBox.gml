@@ -605,6 +605,7 @@ function curveBox(_onModify) : widget() constructor {
 							[ [THEME.curve_presets, 2], function() /*=>*/ {return replaceCurve(CURVE_DEF_01)} ],
 							[ [THEME.curve_presets, 3], function() /*=>*/ {return replaceCurve(CURVE_DEF_10)} ],
 						]),
+						menuItem(__txt("More Preset..."), function(d) /*=>*/ { dialogPanelCall(new Panel_Curve_Presets(d[0], d[1])) } ).setParam([_data, onModify]),
 						-1,
 						
 						menuItemGroup(__txt("Modes"), [ 
