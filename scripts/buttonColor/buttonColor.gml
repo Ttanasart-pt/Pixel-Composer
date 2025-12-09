@@ -20,12 +20,12 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 	
 	is_picking    = false;
 	current_color = c_black;
-	b_picker      = button(onColorPick).setIcon(THEME.color_picker_dropper, 0, COLORS._main_icon);
+	b_picker      = button(onColorPick).setIcon(THEME.color_picker_dropper, 0, COLORS._main_icon).iconPad(ui(6));
 	b_quick_pick  = button(function() /*=>*/ {
 		var pick = instance_create(mouse_mx, mouse_my, o_dialog_color_quick_pick);
 		array_insert(pick.palette, 0, current_color);
 		pick.onApply = onApply;
-	}).setIcon(THEME.color_wheel);
+	}).setIcon(THEME.color_wheel).iconPad(ui(6));
 	
 	b_quick_pick.activate_on_press = true;
 	
@@ -100,7 +100,6 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 			bx  -= bs;
 			_cw -= bs;
 			
-			b_quick_pick.icon_size = min(1, bs / ui(32));
 			b_quick_pick.setFocusHover(active, hover);
 			b_quick_pick.draw(bx, _y + _h / 2 - bs / 2, bs, bs, _m, THEME.button_hide_fill);
 		}

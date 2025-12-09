@@ -129,8 +129,8 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(37, nodeValue_Bool(           "Opacity",          false          ));
 	
 	////- =Background
-	newInput( 1, nodeValue_Bool(           "Background",       false          ));
-	newInput(11, nodeValue_Color(          "Background Color", ca_black       ));
+	newInput( 1, nodeValue_Bool(           "Bg",               false          ));
+	newInput(11, nodeValue_Color(          "Bg Color",         ca_black       ));
 	// 46
 	
 	/////////////////////////////////////////////

@@ -52,13 +52,18 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 		
 		right_click_block = true;
 		
-		var _bs = min(_h, ui(32));
+		var bs = min(_h, ui(32));
 		hovering = hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h);
 		
-		if(_w - _bs > ui(100) && side_button && instanceof(side_button) == "buttonClass") {
+		draw_sprite_stretched_ext(THEME.button_def, 0, x, y, w, h, boxColor);
+		
+		if(_w - bs > ui(100) && side_button && instanceof(side_button) == "buttonClass") {
+			var bx = _x + _w - bs;
+			
+			draw_sprite_stretched_ext(THEME.textbox, 3, bx, _y, bs, _h, CDEF.main_mdwhite, 1);
 			side_button.setFocusHover(active, hover);
-			side_button.draw(_x + _w - _bs, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
-			_w -= _bs + ui(8);
+			side_button.draw(bx, _y + _h / 2 - bs / 2, bs, bs, _m, THEME.button_hide_fill);
+			_w -= bs;
 		}
 		
 		var _gw = _w - ui(4);
@@ -79,8 +84,9 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 		if(!is(current_gradient, gradientObject)) return 0;
 		
 		var _drawSingle = !is_array(_gradient) && is(_gradient, gradientObject);
-		var _ggw = _drawSingle? _gw - ui(24) : _w;
-		var _ggx = _drawSingle? _x + ui(2) + ui(24) : _x;
+		var _bbw = _h;
+		var _ggw = _drawSingle? _gw - _bbw : _w;
+		var _ggx = _drawSingle? _x + ui(2) + _bbw : _x;
 		
 		var hoverRect = ihover && point_in_rectangle(_m[0], _m[1], _ggx, _y, _ggx + _ggw, _y + h);
 		
@@ -88,7 +94,6 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 			h = _h + ui(22);
 		
 		if(hoverRect) {
-			draw_sprite_stretched_ext(THEME.button_def, 1, _x, _y, _w, h, boxColor);	
 			if(mouse_press(mb_left, iactive)) 
 				trigger();
 			
@@ -96,30 +101,26 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 				draw_sprite_stretched_ext(THEME.button_def, 2, _x, _y, _w, h, boxColor);	
 				draw_sprite_stretched_ext(THEME.button_def, 3, _x, _y, _w, h, COLORS._main_accent, 1);	
 			}
-		} else {
-			draw_sprite_stretched_ext(THEME.button_def, 0, _x, _y, _w, h, boxColor);		
-			if(mouse_press(mb_left)) deactivate();
-		}
+		} else if(mouse_press(mb_left)) deactivate();
 		
 		if(_drawSingle) { 
 			var _ggh = _gh;
 			var _ggy = _y + ui(2);
-		
-			var _bbx = _x + ui(12);
+			
+			var _bbx = _x + _bbw / 2;
 			var _bby = _y + _ggh / 2 + ui(2);
 			
-			var _bba = 0.5;
+			var _bba = .4 + .4 * interactable;
 			var _bbc = COLORS._main_icon;
 			
-			if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + ui(24), _y + _ggh)) {
-				_bba = 1;
+			if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _bbw, _y + _ggh)) {
+				_bbc = COLORS._main_icon_light;
+				
 				if(mouse_press(mb_left))
 					expanded = !expanded;
-				
-				if(mouse_click(mb_left))
-					_bbc = COLORS._main_icon_light;
 			}
 			
+			draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _bbw, h, CDEF.main_mdwhite, 1);
 			draw_sprite_ui(THEME.arrow, expanded? 3 : 0, _bbx, _bby + ui(expanded), 1, 1, 0, _bbc, _bba);
 			
 			_gradient.draw(_ggx, _ggy, _ggw, _ggh);
@@ -236,6 +237,11 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 				if(is(_grad, gradientObject))
 					_grad.draw(_gx, _gy, _gw, _gh);
 			}
+		}
+		
+		if(hide == 0) {
+			if(hoverRect) draw_sprite_stretched_ext(THEME.button_def, 3, x, y, w, h, CDEF.main_grey);	
+			else draw_sprite_stretched_ext(THEME.textbox, 0, x, y, w, h, boxColor, .5 + .5 * interactable);
 		}
 		
 		if(WIDGET_CURRENT == self || (instance_exists(o_dialog_gradient) && o_dialog_gradient.drop_target == self))

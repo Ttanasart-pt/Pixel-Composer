@@ -16,9 +16,10 @@ function curveBox(_onModify) : widget() constructor {
 	height_my       = 0;
 	height_ss       = 0;
 	show_coord      = false;
+	show_coord_side = 0;
 	
-	minx = 0; maxx = 1;
-	miny = 0; maxy = 1;
+	minx = 0; maxx = 1; irangex = 1;
+	miny = 0; maxy = 1; irangey = 1;
 	
 	dragging       = 0;
 	drag_m         = 0;
@@ -57,8 +58,8 @@ function curveBox(_onModify) : widget() constructor {
 	tb_scale = textBox_Number(function(v) /*=>*/ { var _data = array_clone(curr_data); _data[1] = v; onModify(_data); }).setLabel("Scale");
 	tb_range = new rangeBox(function(v,i) /*=>*/ { var _data = array_clone(curr_data); _data[3+i] = v; onModify(_data); });
 	
-	static get_x = function(v) /*=>*/ { return cw *      (v - minx) / (maxx - minx) ; }
-	static get_y = function(v) /*=>*/ { return ch * (1 - (v - miny) / (maxy - miny)); }
+	static get_x = function(v) /*=>*/ {return cw * (    (v - minx) * irangex)};
+	static get_y = function(v) /*=>*/ {return ch * (1 - (v - miny) * irangey)};
 	
 	static replaceCurve = function(_c) {
 		var _crv = array_create(array_length(_c));
@@ -115,8 +116,8 @@ function curveBox(_onModify) : widget() constructor {
 		var _amo      = array_length(_data);
 		var points    = (_amo - CURVE_PADD) / 6;
 		
-		var zoom_size = ui(12);
-		var zoom_padd = zoom_size + ui(8);
+		var zoom_size = ui(6);
+		var zoom_padd = zoom_size + ui(4);
 		
 		cw = _w - zoom_padd;
 		ch = _h - zoom_padd - (tbh + ui(4)) * (1 + show_x_control);
@@ -235,9 +236,13 @@ function curveBox(_onModify) : widget() constructor {
 		var node_hover_typ = -1;
 		var point_insert   =  1;
 		var _x1 = 0;
+		var ac, ar;
 		
 		var msx = _m[0] - _x;
 		var msy = _m[1] - _y;
+		
+		irangex = 1 / (maxx - minx);
+		irangey = 1 / (maxy - miny);
 		
 		var _hover = point_in_rectangle(_m[0], _m[1], _x, _y, _x + w, _y + h);
 		if(_hover && is(parent, scrollPane)) parent.scroll_dragable = false;
@@ -247,17 +252,17 @@ function curveBox(_onModify) : widget() constructor {
 			surface_set_target(curve_surface);
 				DRAW_CLEAR
 				
-				draw_set_color(COLORS.widget_curve_line);
-				draw_set_alpha(0.5);
-				
 				if(grid_show) {
 					var st = max(grid_step, 0.02);
 					
+					draw_set_color(COLORS.widget_curve_line);
 					for( var i = st; i < 1; i += st ) {
 						var y0 = ch * (1 - (i - miny) / (maxy - miny));
+						draw_set_alpha(i == .5? .85 : .7);
 						draw_line(0, y0, cw, y0);
 						
 						var x0 = cw * (i - minx) / (maxx - minx);
+						draw_set_alpha(i == .5? .85 : .7);
 						draw_line(x0, get_y(0), x0, get_y(1));
 					}
 				}
@@ -276,7 +281,6 @@ function curveBox(_onModify) : widget() constructor {
 					}
 				draw_set_alpha(1);
 				
-				
 				if(progress_draw > -1) {
 					var _prg = clamp(progress_draw, 0, 1);
 					var _px  = get_x(_prg);
@@ -286,8 +290,13 @@ function curveBox(_onModify) : widget() constructor {
 					draw_set_alpha(1);
 				}
 				
-				draw_set_color(merge_color(COLORS._main_icon, COLORS._main_icon_dark, 0.5));
-				draw_curve(0, 0, cw, ch, _data, minx, maxx, miny, maxy, _shift, _scale);
+				if(_shift != 0 || _scale != 1) {
+					draw_set_color(merge_color(COLORS._main_icon, COLORS._main_icon_dark, 0.5));
+					draw_curve(0, 0, cw, ch, _data, minx, maxx, miny, maxy, _shift, _scale);
+				}
+				
+				draw_set_color(COLORS._main_accent);
+				draw_curve(0, 0, cw, ch, _data, minx, maxx, miny, maxy);
 				
 				for( var i = 0; i < points; i++ ) {
 					var ind = CURVE_PADD + i * 6;
@@ -305,52 +314,72 @@ function curveBox(_onModify) : widget() constructor {
 					var ax0 = _x0 + _data[ind + 4] * _sca_ax;
 					var ay0 = _y0 + _data[ind + 5] * _sca_ay;
 					
-					// print($"{_x0}, {_y0} | {_data[ind + 0]}, {_data[ind + 1]} | {_data[ind + 4]}, {_data[ind + 5]}");
-					
 					bx0 = get_x(bx0);
 					by0 = get_y(by0);
 					_x0 = get_x(_x0);
 					_y0 = get_y(_y0);
 					ax0 = get_x(ax0);
 					ay0 = get_y(ay0);
-				
-					draw_set_color(COLORS.widget_curve_line);
+					
 					if(_type == 0) {
 						if(i > 0) { //draw pre line
+							draw_set_color(COLORS.widget_curve_line);
+							draw_set_alpha(.95);
 							draw_line(bx0, by0, _x0, _y0);
-						
-							draw_circle_prec(bx0, by0, 3, false);
+							draw_set_alpha(1);
+							
+							ac = COLORS.widget_curve_line;
+							ar = ui(3);
+							
 							if(hover && point_in_circle(msx, msy, bx0, by0, 10)) {
-								draw_circle_prec(bx0, by0, 5, false);
-								node_hovering = ind + 2;
+								ac = COLORS._main_icon_light;
+								ar = ui(4);
+								
+								node_hovering  = ind + 2;
 								node_hover_typ = -1;
 								
 								display_pos_x = _data[ind + 0];
 								display_pos_y = _data[ind + 1];
 								display_sel   = 2;
 							}
+							
+							draw_set_color(ac);
+							draw_circle_prec(bx0, by0, ar, false);
 						}
 				
 						if(i < points - 1) { //draw post line
+							draw_set_color(COLORS.widget_curve_line);
+							draw_set_alpha(.95);
 							draw_line(ax0, ay0, _x0, _y0);
-					
-							draw_circle_prec(ax0, ay0, 3, false);
+							draw_set_alpha(1);
+							
+							ac = COLORS.widget_curve_line;
+							ar = ui(3);
+							
 							if(hover && point_in_circle(msx, msy, ax0, ay0, 10)) {
-								draw_circle_prec(ax0, ay0, 5, false);
-								node_hovering = ind + 2;
+								ac = COLORS._main_icon_light;
+								ar = ui(4);
+								
+								node_hovering  = ind + 2;
 								node_hover_typ = 1;
 								
 								display_pos_x = _data[ind + 4];
 								display_pos_y = _data[ind + 5];
 								display_sel   = 2;
 							}
+							
+							draw_set_color(ac);
+							draw_circle_prec(ax0, ay0, ar, false);
 						}
 					}
 					
-					draw_set_color(COLORS._main_accent);
-					draw_circle_prec(_x0, _y0, 3, false);
-					if(hover && point_in_circle(msx, msy, _x0, _y0, 10)) {
-						draw_circle_prec(_x0, _y0, 5, false);
+					ac = COLORS._main_accent;
+					ar = ui(4);
+					
+					if(hover && point_in_circle(msx, msy, _x0, _y0, ui(6))) {
+						ac = COLORS._main_accent;
+						ar = ui(5);
+						
 						node_hovering = ind + 2;
 						node_hover_typ = 0;
 							
@@ -358,21 +387,19 @@ function curveBox(_onModify) : widget() constructor {
 						display_pos_y = _data[ind + 3];
 						display_sel   = 1;
 					}
-			
+					
+					draw_set_color(ac);	
+					draw_circle_prec(_x0, _y0, ar, false);
+					
 					if(msx >= _x1 && msx <= _x0)
 						point_insert = i;
 					_x1 = _x0;
 				}
 				
-				draw_set_color(COLORS._main_accent);
-				draw_curve(0, 0, cw, ch, _data, minx, maxx, miny, maxy);
-			
-				// print("point_insert|", point_insert);
 			surface_reset_target();
 		#endregion
 		
 		#region ==== view controls ====
-			
 			var hov = 0;
 			var bs  = zoom_size;
 			
@@ -560,10 +587,7 @@ function curveBox(_onModify) : widget() constructor {
 						var _cbx = _data[node_dragging + 2];
 						var _cby = _data[node_dragging + 3];
 						
-						node_drag_break = key_mod_press(SHIFT);
-						
-						if(_cax != -_cbx || _cay != -_cby)
-							node_drag_break = true;
+						node_drag_break = key_mod_press(SHIFT) || _cax != -_cbx || _cay != -_cby;
 					}
 				}
 				
@@ -650,6 +674,16 @@ function curveBox(_onModify) : widget() constructor {
 						onModify(select_data);
 					}));
 					
+					array_push(_menu, menuItem(__txt("Break Control Mirror"), function() /*=>*/ { 
+						var _ind = selecting - 2;
+						
+						// select_data[@ _ind + 0] = -1/3;
+						select_data[@ _ind + 1] += 0.01;
+						// select_data[@ _ind + 4] =  1/3;
+						select_data[@ _ind + 5] += 0.01;
+						onModify(select_data);
+					}));
+					
 					array_push(_menu, menuItem(__txt("Remove Controls"), function() /*=>*/ { 
 						var _ind = selecting - 2;
 						
@@ -661,7 +695,10 @@ function curveBox(_onModify) : widget() constructor {
 					}));
 					
 					if(_pnt > 0 && _pnt < points - 1)
-						array_push(_menu, menuItem(__txt("Delete Anchor"), function() /*=>*/ { array_delete(select_data, selecting - 2, 6); onModify(select_data); }, THEME.cross));
+						array_push(_menu, -1, menuItem(__txt("Delete Anchor"), function() /*=>*/ { 
+							array_delete(select_data, selecting - 2, 6); 
+							onModify(select_data); 
+						}, THEME.cross));
 					
 					menuCall("widget_curve", _menu, rmx, rmy);
 				}
@@ -669,32 +706,73 @@ function curveBox(_onModify) : widget() constructor {
 		}
 			
 		draw_surface(curve_surface, _x, _y);
-		
-		draw_set_color(COLORS.widget_curve_outline);
-		draw_rectangle(_x, _y, _x + cw, _y + ch, true);
+		draw_sprite_stretched_ext(THEME.box_r2, 1, _x, _y, cw, ch, COLORS.widget_curve_outline, 1);
 		
 		if(show_coord) {
-			var tx = _x + cw - ui(6);
-			var ty = _y + ch - ui(6);
+			var ttx = undefined, llx = undefined;
+			var tty = undefined, lly = undefined;
 			
 			if(display_val == 0 || display_sel == 2) {
-				draw_set_text(f_p2, fa_right, fa_bottom, display_sel? COLORS._main_text: COLORS._main_text_sub);
-				draw_text_add(tx, ty, $"{display_sel == 2? "dy" : "y"}: {string_format(display_pos_y * 100, -1, 2)}%");
-				
-				ty -= line_get_height();
-				draw_text_add(tx, ty, $"{display_sel == 2? "dx" : "x"}: {string_format(display_pos_x * 100, -1, 2)}%");
+				llx = display_sel == 2? "dx" : "x";
+				lly = display_sel == 2? "dy" : "y";
+
+				ttx = $"{string_format(display_pos_x * 100, -1, 2)}%";
+				tty = $"{string_format(display_pos_y * 100, -1, 2)}%";
 				
 			} else if(display_val == 1) {
-				
 				var _spx = display_pos_x;
 				var _spy = lerp(display_min, display_max, lerp(curve_y_min, curve_y_max, display_pos_y));
 				
-				draw_set_text(f_p2, fa_right, fa_bottom, display_sel? COLORS._main_text: COLORS._main_text_sub);
-				draw_text_add(tx, ty, $"y: {string_format(_spy, -1, 2)}");
+				llx = "x";
+				lly = "y";
+
+				ttx = $"{string_format(_spx * 100, -1, 2)}%";
+				tty = $"{string_format(_spy, -1, 2)}";
+			}
 				
-				ty -= line_get_height();
-				draw_text_add(tx, ty, $"x: {string_format(_spx * 100, -1, 2)}%");
+			if(ttx != undefined) {
+				var llw = ui(18);
+				var ttw = ui(64);
+				var tth = ui(16);
 				
+				var tx1 = show_coord_side == 0? _x + cw - ui(4) : _x + ui(4) + ttw * 2 + ui(3);
+				var ty1 = show_coord_side == 0? _y + ch - ui(4) : _y + ui(4) + tth;
+				
+				var _ttx0 = _x + cw - ui(8) - ttw * 2;
+				var _tty0 = _y + ch - ui(8) - tth;
+				if(show_coord_side == 0 && point_in_rectangle(_m[0], _m[1], _ttx0, _tty0, _x + cw, _y + ch))
+					show_coord_side = 1;
+					
+				var _ttx1 = _x + ui(8) + ttw * 2;
+				var _tty1 = _y + ui(8) + tth;
+				if(show_coord_side == 1 && point_in_rectangle(_m[0], _m[1], _x, _y, _ttx1, _tty1))
+					show_coord_side = 0;
+				
+				var tx0 = tx1 - ttw;
+				var ty0 = ty1 - tth;
+				
+				var tc = display_sel? COLORS._main_text : COLORS._main_text_sub;
+				if(node_dragging > -1) tc = COLORS._main_accent;
+				
+				draw_sprite_stretched_ext(THEME.box_r5, 0, tx0, ty0, llw, tth, COLORS._main_icon, 1);
+				draw_sprite_stretched_add(THEME.box_r5, 1, tx0, ty0, ttw, tth, COLORS._main_icon, .5);
+				
+				draw_set_text(f_p4, fa_center, fa_bottom, CDEF.main_mdblack);
+				draw_text_add(tx0 + llw / 2, ty1 - ui(2), lly);
+				
+				draw_set_text(f_p4, fa_right, fa_bottom, tc);
+				draw_text_add(tx1 - ui(3), ty1 - ui(2), tty);
+				
+				tx0 -= ttw + ui(3);
+				tx1 -= ttw + ui(3);
+				draw_sprite_stretched_ext(THEME.box_r5, 0, tx0, ty0, llw, tth, COLORS._main_icon, 1);
+				draw_sprite_stretched_add(THEME.box_r5, 1, tx0, ty0, ttw, tth, COLORS._main_icon, .5);
+				
+				draw_set_text(f_p4, fa_center, fa_bottom, CDEF.main_mdblack);
+				draw_text_add(tx0 + llw / 2, ty1 - ui(2), llx);
+				
+				draw_set_text(f_p4, fa_right, fa_bottom, tc);
+				draw_text_add(tx1 - ui(3), ty1 - ui(2), ttx);
 			}
 			
 			show_coord = false;

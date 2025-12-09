@@ -952,7 +952,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 	
             	_wdgt.setFocusHover(_focus, _hover);
 				var _widH = _wdgt.drawParam(param) ?? 0;
-				hh += widH + padd;
+				hh += _widH + padd;
         		continue;
         	}
         	

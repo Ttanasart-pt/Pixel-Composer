@@ -61,7 +61,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		
 		draw_set_font(_font);
 		var ds_w = string_width(dispName);
-		var lb_w = ui(16) + ds_w;
+		var lb_w = ui(8) + ds_w;
 		
 		if(anim_hold != noone && mouse_lrelease()) anim_hold = noone;
 		if(_input && jun.isAnimable() && !jun.expUse) { // Animation
@@ -375,7 +375,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	
 	#region draw widget
 		var labelWidth = max(lb_w, min(ww * 0.4, ui(200)));
-		var labelWidth = min(ww * 0.4, ui(200));
+		// var labelWidth = min(ww * 0.4, ui(200));
 		
 		var editBoxX   = xx	+ !breakLine * labelWidth;
 		var editBoxY   = breakLine? yy + lb_h + ui(4) : yy;

@@ -133,28 +133,31 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 		var _txw = is_string(_text)? string_width(_text) : ui(32);
 		if(type == 1) w = _txw + padding * 2 + ui(24);
 		
-		var _bs = min(h, ui(32));
+		var bs = min(h, ui(32));
+		if(type == 0 && hide == 0) draw_sprite_stretched(THEME.textbox, 3, _x, _y, w, h);
 		
 		if(side_button != noone) {
+			var bx = _x + _w - bs;
+			
+			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, bx, _y, bs, _h, CDEF.main_mdwhite, 1);
 			side_button.setFocusHover(active, hover);
-			side_button.draw(_x + _w - _bs, _y + h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
-			w -= _bs + ui(4);
+			side_button.draw(bx, _y + h / 2 - bs / 2, bs, bs, _m, THEME.button_hide_fill);
+			w -= bs;
 		}
 		
-		if(_w - _bs > ui(100) && front_button) {
+		if(_w - bs > ui(100) && front_button) {
+			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, bs, _h, CDEF.main_mdwhite, 1);
 			front_button.setFocusHover(active, hover);
-			front_button.draw(_x, _y + h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
+			front_button.draw(_x, _y + h / 2 - bs / 2, bs, bs, _m, THEME.button_hide_fill);
 			
-			_x += _bs + ui(4);
-			 w -= _bs + ui(4);
+			_x += bs;
+			 w -= bs;
 		}
 		
 		if(open) { resetFocus(); return h; }
 		
-		if(type == 0 && hide == 0) draw_sprite_stretched(THEME.textbox, 3, _x, _y, w, h);
-		
-		if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + w, _y + h)) {
-			if(type == 0) draw_sprite_stretched(THEME.textbox, 1, _x, _y, w, h);
+		var _hovering = hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + w, _y + h);
+		if(_hovering) {
 			if(type == 1) draw_sprite_stretched(THEME.button_hide_fill, 1, _x, _y, w, h);
 			
 			if(mouse_press(mb_left, active))
@@ -234,14 +237,22 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 		}
 		
 		if(_arr) {
-			var cc = COLORS._main_icon;
+			var cc = _hovering? COLORS._main_icon_light : COLORS._main_icon;
 			var aa = .4 + .4 * interactable;
 			
-			if(type == 0) draw_sprite_ui_uniform(arrow_spr, arrow_ind, _x1 + _arw / 2, _yc, _ars, cc, aa);
-			if(type == 1) draw_sprite_ui_uniform(arrow_spr, arrow_ind, _tx1 + ui(16),  _yc, _ars, cc, aa);
+			if(type == 0) {
+				if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, _x1, _y, _arw, h, CDEF.main_mdwhite, 1);
+				draw_sprite_ui_uniform(arrow_spr, arrow_ind, _x1 + _arw / 2, _yc, _ars, cc, aa);
+			}
+			
+			if(type == 1) {
+				if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, _tx1, _y, ui(32), h, CDEF.main_mdwhite, 1);
+				draw_sprite_ui_uniform(arrow_spr, arrow_ind, _tx1 + ui(16),  _yc, _ars, cc, aa);
+			}
 		}
 		
 		gpu_set_scissor(_sci);
+		if(hide == 0 && type == 0) draw_sprite_stretched_ext(THEME.textbox, _hovering, _x, _y, w, h, boxColor, .5 + .5 * interactable);
 		
 		if(WIDGET_CURRENT == self)
 			draw_sprite_stretched_ext(THEME.widget_selecting, 0, _x - ui(3), _y - ui(3), _w + ui(6), h + ui(6), COLORS._main_accent, 1);	

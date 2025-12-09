@@ -683,7 +683,27 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			var lw = _w * (_currVal - curr_range[0]) / (curr_range[1] - curr_range[0]);
 			if(hide <= 0) draw_sprite_stretched_ext(THEME.textbox, 4, _x, _y, lw, _h, boxColor, 1);
 		}
+	
+		if(sliding == 2 && hide < 3) {
+			var _ax0 = _x + ui(10);
+			var _ax1 = _x + _w - ui(10);
+			var _ay  = _y + _h / 2;
 		
+			draw_sprite_ui_uniform(THEME.arrow, 2, _ax0, _ay, 1, COLORS._main_accent, 1);
+			draw_sprite_ui_uniform(THEME.arrow, 0, _ax1, _ay, 1, COLORS._main_accent, 1);
+		
+		} else if(label != "") {
+			draw_set_text(font, fa_left, fa_center, labelColor);
+			
+			draw_set_alpha(0.5);
+			draw_text_add(_x + padding, _y + _h / 2, label);
+			draw_set_alpha(1);
+			
+		} else if(labelSpr != noone) {
+			var _ix = labelAlign == fa_left? _x + _h / 2 : _x + _w - _h / 2;
+			draw_sprite_ext(labelSpr, labelSprIndex, _ix, _y + _h / 2, 1, 1, 0, labelColor, 1);
+		}
+			
 		var _dpx = disp_x;	
 		disp_x = lerp_float(disp_x, disp_x_to, 5);
 		if(_dpx != disp_x) _update = true;
