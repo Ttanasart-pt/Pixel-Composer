@@ -137,15 +137,15 @@
 	
 	#region NODES
 		
-		PREFERENCES.node_add_select			        = true;
+		PREFERENCES.node_add_select        = true;
 		
-		PREFERENCES.node_param_show					= false;
-		PREFERENCES.node_param_width				= 192;
-		PREFERENCES.node_3d_preview_size			= 256;
+		PREFERENCES.node_param_show        = false;
+		PREFERENCES.node_param_width       = 192;
+		PREFERENCES.node_3d_preview_size   = 256;
 		
-		PREFERENCES.node_default_depth				= 3;
-		PREFERENCES.node_default_oversample			= 1;
-		PREFERENCES.node_default_interpolation		= 1;
+		PREFERENCES.node_def_depth         = 1;
+		PREFERENCES.node_def_oversample    = 0;
+		PREFERENCES.node_def_interpolation = 0;
 	
 	#endregion
 	

@@ -471,6 +471,23 @@
 		else                         array_push(arr, value);
 	}
 
+	function array_copy_trim_start(arr, _amo) {
+		var len = array_length(arr);
+		if(_amo >= len) return [];
+
+		var _arr = array_create(len - _amo);
+		array_copy(_arr, 0, arr, _amo, len - _amo);
+		return _arr;
+	}
+	
+	function array_copy_trim_end(arr, _amo) {
+		var len = array_length(arr);
+		if(_amo >= len) return [];
+
+		var _arr = array_create(len - _amo);
+		array_copy(_arr, 0, arr, 0, len - _amo);
+		return _arr;
+	}
 #endregion
 
 #region binary opr

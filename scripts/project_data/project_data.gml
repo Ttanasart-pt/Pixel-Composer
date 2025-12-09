@@ -205,18 +205,21 @@ function Project() constructor {
 		attributes.autosave            = false;
 		attributes.auto_organize       = false;
 		
+		attributes.color_depth         = 1;
+		attributes.interpolate         = 0;
+		attributes.oversample          = 0;
+		
 		attributeEditor = [
 			[ "Default Surface", "surface_dimension", new vectorBox(2, 
-				function(val, index) { 
+				function(val, index) /*=>*/ { 
 					attributes.surface_dimension[index] = val; 
 					PROJECT_ATTRIBUTES.surface_dimension = array_clone(attributes.surface_dimension);
 					RENDER_ALL 
 					return true; 
 				}), 
 				
-				function(junc) {
-					if(!is_struct(junc)) return;
-					if(!is_instanceof(junc, NodeValue)) return;
+				function(junc) /*=>*/ {
+					if(!is(junc, NodeValue)) return;
 					
 					var attr = attributes.surface_dimension;
 					var _val = junc.getValue();
@@ -245,8 +248,32 @@ function Project() constructor {
 				} 
 			],
 			
+			[ "Color Depth", "color_depth", new scrollBox(array_copy_trim_start(global.SURFACE_FORMAT_NAME, 2), function(i) /*=>*/ {
+				attributes.color_depth         = i;
+				PROJECT_ATTRIBUTES.color_depth = i;
+				RENDER_ALL 
+				return true; 
+				
+			}).setUpdateHover(false) ], 
+			
+			[ "Interpolation", "interpolate", new scrollBox(array_copy_trim_start(global.SURFACE_INTERPOLATION, 1), function(i) /*=>*/ {
+				attributes.interpolate         = i;
+				PROJECT_ATTRIBUTES.interpolate = i;
+				RENDER_ALL 
+				return true; 
+				
+			}).setUpdateHover(false) ], 
+			
+			[ "Oversample", "oversample", new scrollBox(array_copy_trim_start(global.SURFACE_OVERSAMPLE, 1), function(i) /*=>*/ {
+				attributes.oversample         = i;
+				PROJECT_ATTRIBUTES.oversample = i;
+				RENDER_ALL 
+				return true; 
+				
+			}).setUpdateHover(false) ], 
+			
 			[ "Palette", "palette", new buttonPalette(function(pal) /*=>*/ { setPalette(pal); RENDER_ALL return true; }), 
-				function(junc) {
+				function(junc) /*=>*/ {
 					if(!is(junc, NodeValue)) return;
 					if(junc.type != VALUE_TYPE.color || junc.display_type != VALUE_DISPLAY.palette) return;
 					
@@ -255,11 +282,10 @@ function Project() constructor {
 			],
 			
 			[ "Export Directory", "export_dir", textBox_Text(function(str) /*=>*/ { attributes.export_dir = str; return true; })
-				.setSideButton(
-					button(function() /*=>*/ { 
-						var _fpath = get_open_directory_compat(attributes.export_dir); key_release();
-						if(_fpath != "") attributes.export_dir = _fpath;
-					}).setIcon(THEME.button_path_icon, 0, COLORS._main_icon)
+				.setSideButton( button(function() /*=>*/ { 
+					var _fpath = get_open_directory_compat(attributes.export_dir); key_release();
+					if(_fpath != "") attributes.export_dir = _fpath;
+				}).setIcon(THEME.button_path_icon, 0, COLORS._main_icon)
 				) ],
 			
 			[ "Autosave", "autosave", new checkBox(function() /*=>*/ { attributes.autosave = !attributes.autosave; return true; }) ],

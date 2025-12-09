@@ -187,8 +187,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	#endregion
 	
 	#region ---- Attributes ----
-		attributes_properties        = [["Attributes", true]];
-		
 		attributes.node_param_width  = PREFERENCES.node_param_width;
 		attributes.node_width        = 0;
 		attributes.node_height       = 0;
@@ -225,6 +223,47 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				refreshTimeline();
 			})],
 		]);
+			
+		static attrDepth = function() {
+			if(instanceBase) return instanceBase.attrDepth();
+			if(!has(attributes, "color_depth")) return surface_rgba8unorm;
+			
+			var form = global.SURFACE_FORMAT[attributes.color_depth];
+			if(form >= 0) return form;
+			
+			if(form == -1) { // input
+				var _s = getInputData(0);
+				while(is_array(_s) && array_length(_s)) _s = _s[0];
+				if(is_surface(_s)) return surface_get_format(_s);
+			}
+			
+			if(form == -2) {
+				if(group != noone) return group.attrDepth();
+				var _ind = project.attributes.color_depth + 2;
+				
+				return global.SURFACE_FORMAT[_ind];
+			} // inherited
+			
+			return surface_rgba8unorm;
+		}
+	
+		static getAttribute = function(_key) {
+			if(instanceBase) return instanceBase.getAttribute(_key);
+			
+			var _val = struct_try_get(attributes, _key, 0);
+			
+			switch(_key) {
+				case "interpolate" :
+				case "oversample" :
+					if(_val != 0)      return _val;
+					if(group != noone) return group.getAttribute(_key);
+					
+					return struct_try_get(project.attributes, _key, 0) + 1;
+					
+			}
+			
+			return _val;
+		}
 		
 	#endregion
 	
@@ -2901,6 +2940,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			_lattr.show_update_trigger = _lattr[$ "show_update_trigger"] ?? false;
 			_lattr.array_process       = _lattr[$ "array_process"]       ?? 0;
 			
+			if(LOADING_VERSION < 1_20_01_2) {
+				     if(_lattr.oversample == 2) _lattr.oversample = 3; // clamp
+				else if(_lattr.oversample == 3) _lattr.oversample = 4; // repeat
+				else if(_lattr.oversample == 4) _lattr.oversample = 2; // black
+			}
+			
 			attributeDeserialize(CLONING? variable_clone(_lattr) : _lattr);
 		}
 		
@@ -3237,65 +3282,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 		
 		return true;
-	}
-	
-	static getAttribute = function(_key) {
-		if(instanceBase) return instanceBase.getAttribute(_key);
-		
-		var _val = struct_try_get(attributes, _key, 0);
-		
-		switch(_key) {
-			case "interpolate" :
-			case "oversample" :
-				if(_val == 0 && group != noone) return group.getAttribute(_key);
-				return _val;
-		}
-		
-		return _val;
-	}
-	
-	static attrDepth = function() {
-		if(instanceBase) return instanceBase.attrDepth();
-		
-		var form = -1;
-		
-		if(struct_has(attributes, "color_depth")) {
-			form = global.SURFACE_FORMAT[attributes.color_depth];
-			if(form >= 0) return form;
-		}
-		
-		if(form == -1) { // input
-			var _s = getInputData(0);
-			while(is_array(_s) && array_length(_s)) _s = _s[0];
-			if(is_surface(_s)) return surface_get_format(_s);
-		}
-		
-		if(form == -2 && group != noone) // group
-			return group.attrDepth();
-		
-		return surface_rgba8unorm;
-	}
-	
-	static checkGroup = function() /*=>*/ { array_foreach(attributeEditors, function(_attr) /*=>*/ {return checkGroupAttribute(_attr)}); } 
-	static checkGroupAttribute = function(_attr) {
-		if(!is_array(_attr) || array_length(_attr) <= 3) return;
-		
-		var _grp = group != noone;
-		var _wid = _attr[2];
-		var _key = _attr[3];
-		
-		if(!is(_wid, scrollBox)) return;
-		var _l   = _wid.data_list;
-		
-		for( var i = 0, n = array_length(_l); i < n; i++ ) {
-			var _scl = _l[i];
-			
-			if(is(_scl, scrollItem) && _scl.name == "Group") {
-				_scl.active = _grp;
-				if(!_grp && attributes[$ _key] == i) // Reset value if select "group" while not in any group
-					attributes[$ _key] = _attr[0] == "Color depth"? 3 : 1;
-			}
-		}
 	}
 	
 	nextn = [];

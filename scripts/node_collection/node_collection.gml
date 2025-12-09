@@ -122,7 +122,6 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		recordAction(ACTION_TYPE.group_added, self, _node);
 		_node.group = self;
-		_node.checkGroup();
 		
 		will_refresh = true;
 		node_length  = array_length(nodes);
@@ -149,7 +148,6 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			
 		if(_hide) _node.disable();
 		else      _node.group = group;
-		_node.checkGroup();
 		
 		will_refresh = true;
 		node_length  = array_length(nodes);

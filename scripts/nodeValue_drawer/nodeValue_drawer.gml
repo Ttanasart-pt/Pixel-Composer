@@ -197,17 +197,18 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		if(lbHov) draw_sprite_stretched_ext(THEME.box_r2_clr, 0, lb_x - _padx / 2, yy, ds_w + _padx, lb_h, c_white, 1);
         
 		draw_text_add(lb_x, lb_y, dispName);
+		var dtx1 = lb_x + ds_w;
 		
 		if(_input && jun.is_modified) {
 			draw_set_color(COLORS._main_accent);
 			draw_text_add(lb_x + ds_w, lb_y, "*");
+			dtx1 += ui(8);
 		}
-		
 		var _tip = jun.tooltip;
 				
 		if(_tip != "") { // Tooltip
-			var ics = _viewSpac? 1 : .75;
-			var tx  = lb_x + ds_w + ui(16) * ics;
+			var ics = _viewSpac? .75 : .6;
+			var tx  = dtx1 + ui(16) * ics;
 			var ty  = lb_y;
 			var aa  = .75;
 			
@@ -217,11 +218,10 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			    if(is_string(_tip)) {
 			    	TOOLTIP = _tip;
 			    	
-				} else if(mouse_click(mb_left, _focus)) {
-					if(is_callable(_tip))
-						_tip();
-					else 
-						dialogCall(_tip);
+				} else if(mouse_lclick(_focus)) {
+					if(is_callable(_tip)) _tip();
+					else dialogCall(_tip);
+					
 				}
 				
 				aa = 1;

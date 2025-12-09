@@ -1,28 +1,18 @@
 function Node_Surface_data(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Surface data";
+	setDimension(96, 48);
 	setDrawIcon(s_node_surface_data);
 	
 	newInput(0, nodeValue_Surface("Surface"));
 	
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newOutput(0, nodeValue_Output("Dimension", VALUE_TYPE.integer, [ 1, 1 ]))
-		.setDisplay(VALUE_DISPLAY.vector);
-	
-	newOutput(1, nodeValue_Output("Width", VALUE_TYPE.integer, 1));
-	
-	newOutput(2, nodeValue_Output("Height", VALUE_TYPE.integer, 1));
-	
-	newOutput(3, nodeValue_Output("Format String", VALUE_TYPE.text, ""))
-		.setVisible(false);
-	
-	newOutput(4, nodeValue_Output("Bit Depth", VALUE_TYPE.integer, 8))
-		.setVisible(false);
-	
-	newOutput(5, nodeValue_Output("Channels", VALUE_TYPE.integer, 4))
-		.setVisible(false);
-	
-	setDimension(96, 48);
+	newOutput(0, nodeValue_Output( "Dimension",     VALUE_TYPE.integer, [1,1] )).setDisplay(VALUE_DISPLAY.vector);
+	newOutput(1, nodeValue_Output( "Width",         VALUE_TYPE.integer,  1    ));
+	newOutput(2, nodeValue_Output( "Height",        VALUE_TYPE.integer,  1    ));
+	newOutput(3, nodeValue_Output( "Format String", VALUE_TYPE.text,    ""    )).setVisible(false);
+	newOutput(4, nodeValue_Output( "Bit Depth",     VALUE_TYPE.integer,  8    )).setVisible(false);
+	newOutput(5, nodeValue_Output( "Channels",      VALUE_TYPE.integer,  4    )).setVisible(false);
 	
 	static processData = function(_outData, _data, _array_index = 0) { 
 		var _surf = _data[0];

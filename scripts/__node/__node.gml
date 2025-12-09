@@ -24,7 +24,8 @@ function __Node_Base(_x, _y) constructor {
 			color: -1,
 		};
 		
-		attributeEditors = [];
+		attributes_properties = [["Attributes", true]];
+		attributeEditors      = [];
 	#endregion
 	
 	#region ---- timeline ----

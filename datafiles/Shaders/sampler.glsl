@@ -45,28 +45,37 @@
 
 	const int LANCZOS_RADIUS = 3;
 	float lanczosWeight(float d, float n) { return d == 0.0 ? 1.0 : (d * d < n * n ? sinc(d) * sinc(d / n) : 0.0); }
-
+	
 	vec4 texture2D_lanczos3( sampler2D texture, vec2 uv ) {
-		vec2 center = uv - (mod(uv * sampleDimension, 1.0) - 0.5) / sampleDimension;
-		vec2 offset = (uv - center) * sampleDimension;
-		vec2 tx = 1. / sampleDimension;
-		
-		vec4  col = vec4(0.);
-		float wei = 0.;
-		
-		for(int x = -LANCZOS_RADIUS; x < LANCZOS_RADIUS; x++)
-		for(int y = -LANCZOS_RADIUS; y < LANCZOS_RADIUS; y++) {
-			
-			float wx = lanczosWeight(float(x) - offset.x, float(LANCZOS_RADIUS));
-			float wy = lanczosWeight(float(y) - offset.y, float(LANCZOS_RADIUS));
-			float w  = wx * wy;
-			
-			col += w * texture2D(texture, center + vec2(x, y) * tx);
-			wei += w;
-		}
-		
-		col /= wei;
-		return col;
+	    vec2 center = uv - (mod(uv * sampleDimension, 1.0) - 0.5) / sampleDimension;
+	    vec2 offset = (uv - center) * sampleDimension;
+	    vec2 tx = 1. / sampleDimension;
+	    
+	    vec4  col = vec4(0.);
+	    float wei = 0.;
+	    
+	    // Use 3x3 grid where each sample combines adjacent weights via bilinear
+	    for(int x = -1; x <= 1; x++)
+	    for(int y = -1; y <= 1; y++) {
+	        // Combine weights from 2 adjacent taps in each direction
+	        float wx_a = lanczosWeight(float(x * 2 - 1) - offset.x, float(LANCZOS_RADIUS));
+	        float wx_b = lanczosWeight(float(x * 2    ) - offset.x, float(LANCZOS_RADIUS));
+	        float wy_a = lanczosWeight(float(y * 2 - 1) - offset.y, float(LANCZOS_RADIUS));
+	        float wy_b = lanczosWeight(float(y * 2    ) - offset.y, float(LANCZOS_RADIUS));
+	        
+	        float wx_total = wx_a + wx_b;
+	        float wy_total = wy_a + wy_b;
+	        float w = wx_total * wy_total;
+	        
+	        // Offset for bilinear interpolation between the two taps
+	        vec2 samplePos = vec2(x * 2, y * 2) - vec2(.5, .5) + vec2(wx_b / wx_total, wy_b / wy_total);
+	        
+	        col += w * texture2D(texture, center + samplePos * tx);
+	        wei += w;
+	    }
+	    
+	    col /= wei;
+	    return col;
 	}
 
 	vec4 texture2Dintp( sampler2D texture, vec2 uv ) {
@@ -97,9 +106,17 @@
 			return texture2Dintp(texture, pos);
 		
 			 if(sampleMode <= 1) return vec4(0.);
-		else if(sampleMode == 2) return texture2Dintp(texture, clamp(pos, 0., 1.));
-		else if(sampleMode == 3) return texture2Dintp(texture, fract(pos));
-		else if(sampleMode == 4) return vec4(vec3(0.), 1.);
+		else if(sampleMode == 2) return vec4(0.,0.,0., 1.);
+		else if(sampleMode == 3) return texture2Dintp(texture, clamp(pos, 0., 1.));
+		else if(sampleMode == 4) return texture2Dintp(texture, fract(pos));
+		// 5
+		else if(sampleMode == 6) { vec2 sp = vec2(fract(pos.x), pos.y); return (sp.y < 0. || sp.y > 1.) ? vec4(0.) : texture2Dintp(texture, sp); } 
+		else if(sampleMode == 7) { vec2 sp = vec2(fract(pos.x), pos.y); return (sp.y < 0. || sp.y > 1.) ? vec4(0.,0.,0.,1.) : texture2Dintp(texture, sp); } 
+		else if(sampleMode == 8) return texture2Dintp(texture, vec2(fract(pos.x), clamp(pos.y, 0., 1.)));
+		// 9
+		else if(sampleMode == 10) { vec2 sp = vec2(pos.x, fract(pos.y)); return (sp.x < 0. || sp.x > 1.) ? vec4(0.) : texture2Dintp(texture, sp); } 
+		else if(sampleMode == 11) { vec2 sp = vec2(pos.x, fract(pos.y)); return (sp.x < 0. || sp.x > 1.) ? vec4(0.,0.,0.,1.) : texture2Dintp(texture, sp); } 
+		else if(sampleMode == 12) return texture2Dintp(texture, vec2(clamp(pos.x, 0., 1.), fract(pos.y)));
 		
 		return vec4(0.);
 	}

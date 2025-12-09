@@ -23,11 +23,19 @@
         if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
             return texture2D(texture, pos);
         
-             if(sampleMode <= 1) return vec4(0.);
-        else if(sampleMode == 2) return texture2D(texture, clamp(pos, 0., 1.));
-        else if(sampleMode == 3) return texture2D(texture, fract(pos));
-        else if(sampleMode == 4) return vec4(vec3(0.), 1.);
-        
+			 if(sampleMode <= 1) return vec4(0.);
+		else if(sampleMode == 2) return vec4(0.,0.,0., 1.);
+		else if(sampleMode == 3) return texture2D(texture, clamp(pos, 0., 1.));
+		else if(sampleMode == 4) return texture2D(texture, fract(pos));
+        // 5
+		else if(sampleMode == 6) { vec2 sp = vec2(fract(pos.x), pos.y); return (sp.y < 0. || sp.y > 1.) ? vec4(0.) : texture2D(texture, sp); } 
+		else if(sampleMode == 7) { vec2 sp = vec2(fract(pos.x), pos.y); return (sp.y < 0. || sp.y > 1.) ? vec4(0.,0.,0.,1.) : texture2D(texture, sp); } 
+		else if(sampleMode == 8) return texture2D(texture, vec2(fract(pos.x), clamp(pos.y, 0., 1.)));
+		// 9
+		else if(sampleMode == 10) { vec2 sp = vec2(pos.x, fract(pos.y)); return (sp.x < 0. || sp.x > 1.) ? vec4(0.) : texture2D(texture, sp); } 
+		else if(sampleMode == 11) { vec2 sp = vec2(pos.x, fract(pos.y)); return (sp.x < 0. || sp.x > 1.) ? vec4(0.,0.,0.,1.) : texture2D(texture, sp); } 
+		else if(sampleMode == 12) return texture2D(texture, vec2(clamp(pos.x, 0., 1.), fract(pos.y)));
+		
         return vec4(0.);
     }
     vec4 sampleTexture( sampler2D texture, vec2 pos) { return sampleTexture(texture, pos, 0.); }

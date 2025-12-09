@@ -1,6 +1,6 @@
 #region data
 	global.SURFACE_INTERPOLATION = [
-		new scrollItem("Group").setTooltip("Inherit from parent group.").setActive(false),
+		new scrollItem("Inherited").setTooltip("Inherit from parent (global if the node is not in any group)."), 
 		new scrollItem("Pixel"),
 		new scrollItem("Bilinear"),
 		new scrollItem("Bicubic"),
@@ -8,11 +8,19 @@
 	];
 	
 	global.SURFACE_OVERSAMPLE = [
-		new scrollItem("Group").setTooltip("Inherit from parent group.").setActive(false),
+		new scrollItem("Inherited").setTooltip("Inherit from parent (global if the node is not in any group)."), 
 		new scrollItem("Empty"), 
-		new scrollItem("Clamp"), 
-		new scrollItem("Repeat"),
 		new scrollItem("Black"),
+		new scrollItem("Clamp"), 
+		new scrollItem("Repeat XY"),
+		-1,
+		new scrollItem("Repeat X Empty Y"),
+		new scrollItem("Repeat X Black Y"),
+		new scrollItem("Repeat X Clamp Y"),
+		-1,
+		new scrollItem("Repeat Y Empty X"),
+		new scrollItem("Repeat Y Black X"),
+		new scrollItem("Repeat Y Clamp X"),
 	];
 	
 	function __initSurfaceFormat() {
@@ -30,7 +38,7 @@
 	
 		var surface_format_name = [
 			new scrollItem("Input"           ).setTooltip("Inherit from input surface.").setActive(false),
-			new scrollItem("Group"           ).setTooltip("Inherit from parent group.").setActive(false),
+			new scrollItem("Inherited"       ).setTooltip("Inherit from parent (global if the node is not in any group)."),
 			new scrollItem("4 bit RGBA"      ).setTooltip("Normalized 4 bit, 4 channels RGBA"), 
 			new scrollItem("8 bit RGBA"      ).setTooltip("Normalized 8 bit, 4 channels RGBA"), 
 			new scrollItem("16 bit RGBA"     ).setTooltip("16 bit float, 4 channels RGBA"), 
@@ -46,15 +54,17 @@
 	
 		for( var i = 0, n = array_length(_surface_format); i < n; i++ ) {
 			var _form = _surface_format[i];
+			var _scro = surface_format_name[i];
 			var _supp = _form < 0 || surface_format_is_supported(_form);
 			
 			array_push(global.SURFACE_FORMAT,      _form);
-			array_push(global.SURFACE_FORMAT_NAME, surface_format_name[i]);
+			array_push(global.SURFACE_FORMAT_NAME, _scro);
 			array_push(global.SURFACE_FORMAT_SUPP, _supp);
 			
 			if(!_supp) {
-				log_message("WARNING", $"Surface format [{surface_format_name[i].name}] not supported on this device.");
-				surface_format_name[i].setActive(false);
+				log_message("WARNING", $"Surface format [{_scro.name}] not supported on this device.");
+				_scro.setActive(false);
+				_scro.setTooltip(_scro.tooltip + " (Not supported on this device.)");
 			}
 		}
 	}
@@ -84,40 +94,37 @@
 	}
 	
 	function attribute_surface_depth(label = true) {
-		attributes.color_depth = PREFERENCES.node_default_depth;
+		attributes.color_depth = PREFERENCES.node_def_depth;
 		
 		attr_depth_array = variable_clone(global.SURFACE_FORMAT_NAME);
 		attr_depth_array[0].setActive(!array_empty(inputs) && inputs[0].type == VALUE_TYPE.surface);
 		
 		color_depth_selector = new scrollBox(attr_depth_array, function(val) /*=>*/ { attribute_set("color_depth", val); }, false);
-		color_depth_editor   = [ "Color depth", function() /*=>*/ {return attributes.color_depth}, color_depth_selector ];
+		color_depth_editor   = [ "Color Depth", function() /*=>*/ {return attributes.color_depth}, color_depth_selector ];
 		
 		if(label) array_push(attributeEditors, "Surface");
 		array_push(attributeEditors, color_depth_editor);
-		checkGroupAttribute(color_depth_editor);
 		
 		array_push(attributes_properties, new attribute_property(color_depth_editor));
 	}
 	
 	function attribute_interpolation(label = false) {
-		attributes.interpolate = PREFERENCES.node_default_interpolation;
-		attributes.oversample  = PREFERENCES.node_default_oversample;
+		attributes.interpolate = PREFERENCES.node_def_interpolation;
+		attributes.oversample  = PREFERENCES.node_def_oversample;
 		
 		attr_interpolate_array = variable_clone(global.SURFACE_INTERPOLATION);
 		
 		interpolate_selector   = new scrollBox(attr_interpolate_array, function(val) /*=>*/ { attribute_set("interpolate", val); }, false);
-		interpolate_editor     = [ "Texture interpolation", function() /*=>*/ {return attributes.interpolate}, interpolate_selector, new KeyCombination("I", MOD_KEY.alt) ];
+		interpolate_editor     = [ "Interpolation", function() /*=>*/ {return attributes.interpolate}, interpolate_selector, new KeyCombination("I", MOD_KEY.alt) ];
 		
 		if(label) array_push(attributeEditors, "Surface");
 		array_push(attributeEditors, interpolate_editor);
-		checkGroupAttribute(interpolate_editor);
-		
 		array_push(attributes_properties, new attribute_property(interpolate_editor));
 	}
 	
 	function attribute_oversample(label = false) {
-		attributes.interpolate = PREFERENCES.node_default_interpolation;
-		attributes.oversample  = PREFERENCES.node_default_oversample;
+		attributes.interpolate = PREFERENCES.node_def_interpolation;
+		attributes.oversample  = PREFERENCES.node_def_oversample;
 		
 		attr_oversample_array  = variable_clone(global.SURFACE_OVERSAMPLE);
 		oversample_selector    = new scrollBox(attr_oversample_array, function(val) /*=>*/ { attribute_set("oversample", val); }, false);
@@ -125,8 +132,6 @@
 		
 		if(label) array_push(attributeEditors, "Surface");
 		array_push(attributeEditors, oversample_editor);
-		checkGroupAttribute(oversample_editor);
-		
 		array_push(attributes_properties, new attribute_property(oversample_editor));
 	}
 	

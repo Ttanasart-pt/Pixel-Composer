@@ -675,7 +675,7 @@ function nodeClone(_nodes, _ctx = PANEL_GRAPH.getCurrentContext()) {
     	}
     	
     	for( var j = 0, m = array_length(node.outputs); j < m; j++ ) {
-    		var jn = node.inputs[j];
+    		var jn = node.outputs[j];
     		array_append(_nodes, jn.value_to_loop);
     	}
     }
