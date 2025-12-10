@@ -56,7 +56,7 @@ function curveBox(_onModify) : widget() constructor {
 	
 	tb_shift = textBox_Number(function(v) /*=>*/ { var _data = array_clone(curr_data); _data[0] = v; onModify(_data); }).setLabel("Shift");
 	tb_scale = textBox_Number(function(v) /*=>*/ { var _data = array_clone(curr_data); _data[1] = v; onModify(_data); }).setLabel("Scale");
-	tb_range = new rangeBox(function(v,i) /*=>*/ { var _data = array_clone(curr_data); _data[3+i] = v; onModify(_data); });
+	tb_range = new rangeBox(function(v,i) /*=>*/ { var _data = array_clone(curr_data); _data[3+i] = v; onModify(_data); }).setFont(f_p3);
 	
 	static get_x = function(v) /*=>*/ {return cw * (    (v - minx) * irangex)};
 	static get_y = function(v) /*=>*/ {return ch * (1 - (v - miny) * irangey)};
@@ -782,11 +782,13 @@ function curveBox(_onModify) : widget() constructor {
 			show_coord = false;
 		}
 		
+		var tbx;
 		var tby = _y + h;
 		var tbw = _w / 2;
 		
 		if(show_x_control) {
 			tby -= tbh;
+			tbw = _w / 2;
 			
 			tb_shift.setFocusHover(active, hover);
 			tb_scale.setFocusHover(active, hover);
@@ -806,9 +808,80 @@ function curveBox(_onModify) : widget() constructor {
 		}
 		
 		tby -= tbh;
-		tb_range.setFont(f_p3);
+		tbw = _w;
+		
+		var bb = THEME.button_hide_fill;
+		var bs = tbh;
+		var bx = _x + _w - bs;
+		var by = tby;
+		
+		if(buttonInstant_Pad(bb, bx, by, bs, bs, _m, hover, active, __txt("Presets"), THEME.preset,,,, ui(6)) == 2)
+			dialogPanelCall(new Panel_Curve_Presets(_data, onModify));
+		bx -= bs + ui(2); tbw -= bs + ui(2);
+		
+		bx = _x;
+		if(buttonInstant_Pad(bb, bx, by, bs, bs, _m, hover, active, __txt("Flip X"), THEME.flip_h,,,, ui(6)) == 2) {
+			var _idata = array_create(array_length(_data));
+			
+			for( var i = 0; i < CURVE_PADD; i++ ) 
+				_idata[i] = _data[i];
+			
+			for( var i = 0; i < points; i++ ) {
+				var ivd = CURVE_PADD + (points - i - 1) * 6;
+				var ind = CURVE_PADD + i * 6;
+				
+				var _x0 = _data[ivd + 2];
+				var _y0 = _data[ivd + 3];
+				
+				var bx0 = _data[ivd + 0];
+				var by0 = _data[ivd + 1];
+				var ax0 = _data[ivd + 4];
+				var ay0 = _data[ivd + 5];
+				
+				_idata[ind + 0] =  -ax0;
+				_idata[ind + 1] =   by0;
+				_idata[ind + 2] = 1-_x0;
+				_idata[ind + 3] =   _y0;
+				_idata[ind + 4] =  -bx0;
+				_idata[ind + 5] =   ay0;
+			}
+				
+			onModify(_idata);
+		}
+		bx += bs + ui(2); tbw -= bs + ui(2);
+		
+		if(buttonInstant_Pad(bb, bx, by, bs, bs, _m, hover, active, __txt("Flip Y"), THEME.flip_v,,,, ui(6)) == 2) {
+			var _idata = array_create(array_length(_data));
+			
+			for( var i = 0; i < CURVE_PADD; i++ ) 
+				_idata[i] = _data[i];
+			
+			for( var i = 0; i < points; i++ ) {
+				var ivd = CURVE_PADD + (points - i - 1) * 6;
+				var ind = CURVE_PADD + i * 6;
+				
+				var _x0 = _data[ind + 2];
+				var _y0 = _data[ind + 3];
+				
+				var bx0 = _data[ind + 0];
+				var by0 = _data[ind + 1];
+				var ax0 = _data[ind + 4];
+				var ay0 = _data[ind + 5];
+				
+				_idata[ind + 0] =   bx0;
+				_idata[ind + 1] =  -by0;
+				_idata[ind + 2] =   _x0;
+				_idata[ind + 3] = 1-_y0;
+				_idata[ind + 4] =   ax0;
+				_idata[ind + 5] =  -ay0;
+			}
+				
+			onModify(_idata);
+		}
+		bx += bs + ui(2); tbw -= bs + ui(2);
+		
 		tb_range.setFocusHover(active, hover);
-		tb_range.draw(_x, tby, _w, tbh, [_miny, _maxy], range_display_data, _m);
+		tb_range.draw(bx, tby, tbw, tbh, [_miny, _maxy], range_display_data, _m);
 		tby -= ui(4);
 		
 		resetFocus();
