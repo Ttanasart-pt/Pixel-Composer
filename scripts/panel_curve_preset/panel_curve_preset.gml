@@ -23,7 +23,7 @@ function Panel_Curve_Presets(_curve, _onModify = undefined) : PanelContent() con
 		contentPane.scroll_y_to	 = 0;
 	}
 
-	folderW = ui(140);
+	folderW = ui(160);
 	folderW_dragging = false;
 	folderW_drag_mx  = 0;
 	folderW_drag_sx  = 0;
@@ -31,7 +31,7 @@ function Panel_Curve_Presets(_curve, _onModify = undefined) : PanelContent() con
 	content_w = w - ui(26) - folderW;
 	content_h = h - ui(24);
 	
-	folderPane = new scrollPane(folderW - ui(12), content_h - ui(32), function(_y, _m) {
+	folderPane = new scrollPane(1, 1, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		
 		var hh = ui(8);
@@ -63,8 +63,11 @@ function Panel_Curve_Presets(_curve, _onModify = undefined) : PanelContent() con
 	});
 	folderPane.scroll_color_bg = CDEF.main_mdblack;
 	
-	contentPane = new scrollPane(content_w, content_h, function(_y, _m) {
+	contentPane = new scrollPane(1, 1, function(_y, _m) {
 		DRAW_CLEAR
+		
+		var hov = contentPane.hover;
+		var foc = contentPane.active;
 		
 		var amo = array_length(context.content);
 		var sw  = contentPane.surface_w;
@@ -77,11 +80,16 @@ function Panel_Curve_Presets(_curve, _onModify = undefined) : PanelContent() con
 		var yy = ui(8) + _y;
 		var ww = sw - ui(8);
 		
+		var nh = ui(16);
+		var bs = nh;
+		var bb = noone;
+		var bc = [COLORS._main_icon, COLORS._main_icon_light];
+		
 		for( var i = 0, n = array_length(context.content); i < n; i++ ) {
 			var c = context.content[i];
 			if(c.content == undefined)
 				c.content = json_load_struct(c.path, 0);
-		
+			
 			if(yy + hg + ui(4) < -ui(8)) {
 				yy += hg + ui(4);
 				continue;
@@ -99,23 +107,52 @@ function Panel_Curve_Presets(_curve, _onModify = undefined) : PanelContent() con
 			draw_text_add(xx + pd + ui(4), yy + pd - ui(2), _name);
 			
 			var cx = xx + pd;
-			var cy = yy + pd + ui(16);
+			var cy = yy + pd + nh;
 			var cw = ww - pd * 2;
-			var ch = hg - pd * 2 - ui(16);
+			var ch = hg - pd * 2 - nh;
+			
+			var hv = contentPane.hover && point_in_rectangle(_m[0], _m[1], xx, yy, xx + ww, yy + hg); 
+			var bx = xx + ww - ui(4) - bs;
+			var by = yy + ui(4);
 			
 			draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, cx, cy, cw, ch);
+			
+			if(hv) {
+				draw_sprite_stretched_ext(THEME.ui_panel, 1, xx, yy, ww, hg, COLORS._main_accent, 1);
+				contentPane.hover_content = true;
+			}
+			
+			var b  = buttonInstant_Pad(bb, bx, by, bs, bs, _m, hov, foc, "", THEME.flip_d, 0, bc, 1, ui(4));
+			if(b) { 
+				hv = false; 
+				_curv = c[$ "content_d"] ?? curve_flip_v(curve_flip_h(_curv)); 
+				c.content_d = _curv;
+				if(b == 2) { onModify(_curv); close(); } 
+				
+			} bx -= bs + 1;
+			
+			var b  = buttonInstant_Pad(bb, bx, by, bs, bs, _m, hov, foc, "", THEME.flip_v, 0, bc, 1, ui(4));
+			if(b) { 
+				hv = false; 
+				_curv = c[$ "content_v"] ?? curve_flip_v(_curv); 
+				c.content_v = _curv;
+				if(b == 2) { onModify(_curv); close(); } 
+				
+			} bx -= bs + 1;
+			
+			var b  = buttonInstant_Pad(bb, bx, by, bs, bs, _m, hov, foc, "", THEME.flip_h, 0, bc, 1, ui(4));
+			if(b) { 
+				hv = false; 
+				_curv = c[$ "content_h"] ?? curve_flip_h(_curv); 
+				c.content_h = _curv;
+				if(b == 2) { onModify(_curv); close(); } 
+				
+			} bx -= bs + 1;
+			
 			draw_set_color(COLORS._main_icon);
 			draw_curve(cx, cy, cw, ch, _curv);
 			
-			if(pHOVER && contentPane.hover && point_in_rectangle(_m[0], _m[1], xx, yy, xx + ww, yy + hg)) {
-				draw_sprite_stretched_ext(THEME.ui_panel, 1, xx, yy, ww, hg, COLORS._main_accent, 1);
-				contentPane.hover_content = true;
-				
-				if(mouse_press(mb_left, pFOCUS)) {
-					onModify(_curv);
-					close();
-				}
-			}
+			if(hv && mouse_press(mb_left, foc)) { onModify(_curv); close(); }
 			
 			yy += hg + ui(4);
 		}
@@ -138,7 +175,7 @@ function Panel_Curve_Presets(_curve, _onModify = undefined) : PanelContent() con
 		var pad = ui(8);
 		
 		draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_text);
-		draw_text(ui(24), pad + ui(18), __txt("Curves"));
+		draw_text(ui(16), pad + ui(16), __txt("Curves"));
 		
 		#region buttons
 			var m = [mx,my];
@@ -169,6 +206,11 @@ function Panel_Curve_Presets(_curve, _onModify = undefined) : PanelContent() con
 					context.scan([".json"]);
 				});
 				
+			} bx -= bs + ui(1);
+			
+			var cc = COLORS._main_icon;
+			if(buttonInstant_Pad(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "Open Explorer", THEME.dPath_open, 0, cc, 1, ui(2)) == 2) {
+				shellOpenExplorer(context.path);
 			} bx -= bs + ui(1);
 			
 		#endregion

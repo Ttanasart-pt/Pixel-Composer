@@ -2,22 +2,17 @@ function surfaceBox(_onModify, _def_path = "") : widget() constructor {
 	onModify = _onModify;	
 	def_path = _def_path;
 	
-	open   = false;
 	open_rx = 0;
 	open_ry = 0;
 	
 	align = fa_center;
 	display_data = {};
+	current_data = noone;
 	
 	cb_atlas_crop = new checkBox(function() /*=>*/ { display_data.atlas_crop = !display_data.atlas_crop; });
 	
 	static trigger = function() {
-		open = true;
-		
-		with(dialogCall(o_dialog_assetbox, x + open_rx, y + open_ry)) {
-			target = other;
-			gotoDir(other.def_path);
-		}
+		dialogPanelCall(new Panel_Asset_Selector(self, def_path), x + open_rx, y + open_ry);
 	}
 	
 	static setInteract = function(_interactable) { 
@@ -45,17 +40,11 @@ function surfaceBox(_onModify, _def_path = "") : widget() constructor {
 			_surf_single = _surf_single[0];
 		
 		draw_sprite_stretched(THEME.textbox, 3, _x, _y, _w, _h);
+		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h);
 		
-		if(hover && hoverRect) {
+		if(ihover && hoverRect) {
 			draw_sprite_stretched(THEME.textbox, 1, _x, _y, _w, _h);
-			if(!open) {
-				if(mouse_press(mb_left, active)) trigger();
-				if(mouse_click(mb_left, active)) draw_sprite_stretched_ext(THEME.textbox, 2, _x, _y, _w, _h, COLORS._main_accent, 1);	
-			}
-			
-		} else {
-			draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, c_white, 0.5 + 0.5 * interactable);
-			if(!open && mouse_press(mb_left)) deactivate();
+			if(mouse_press(mb_left, iactive)) trigger();
 		}
 			
 		var pad = ui(12);
@@ -69,6 +58,7 @@ function surfaceBox(_onModify, _def_path = "") : widget() constructor {
 		
 		var _arrLen = 0;
 		var _arrInd = 0;
+		current_data = undefined;
 		
 		if(is_array(_surface)) {
 			if(array_length(_surface)) {
@@ -86,6 +76,7 @@ function surfaceBox(_onModify, _def_path = "") : widget() constructor {
 		else if(is(_surface, dynaSurf))      _surface = array_safe_get_fast(_surface.surfaces, 0, noone);
 		else if(is(_surface, Atlas))         _surface = _surface.getSurface();
 		
+		current_data = _surface;
 		ui_rect(sx0, sy0, sx1, sy1, COLORS.widget_surface_frame);
 		
 		if(is(_surface, dynaDraw)) {
@@ -125,7 +116,7 @@ function surfaceBox(_onModify, _def_path = "") : widget() constructor {
 		var _arx = _x + _w - min(_h / 2, ui(20));
 		var _ary = _y + _h / 2;
 		var _ars = min(.5, (_h - ui(8)) / 64);
-		draw_sprite_ui_uniform(THEME.scroll_box_arrow, 0, _arx, _ary, _ars, COLORS._main_icon, .5 + .5 * interactable);
+		draw_sprite_ui_uniform(THEME.scroll_box_arrow, 0, _arx, _ary, _ars, COLORS._main_icon);
 		
 		if(WIDGET_CURRENT == self)
 			draw_sprite_stretched_ext(THEME.widget_selecting, 0, _x - ui(3), _y - ui(3), _w + ui(6), _h + ui(6), COLORS._main_accent, 1);	

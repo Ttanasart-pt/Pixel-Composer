@@ -906,7 +906,6 @@ function Panel_Animation_Dopesheet() {
                         draw_set_alpha(aa);
                         
                         ny[ki] = value_map(animator.interpolateValue(key, key_next, _kv[ki], _kn[ki], _r), _gy_val_min, _gy_val_max, _gy1, _gy0);
-                        
                         if(array_length(oy) > ki) draw_line(ox, oy[ki], nx, ny[ki]);
                             
                         oy[ki] = ny[ki];

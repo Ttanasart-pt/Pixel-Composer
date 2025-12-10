@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"panel_asset_select",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"panel_asset_select",
+  "parent":{
+    "name":"collection",
+    "path":"folders/panels/collection.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

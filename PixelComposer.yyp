@@ -3112,6 +3112,7 @@
     {"id":{"name":"panel_animation_settings","path":"scripts/panel_animation_settings/panel_animation_settings.yy",},},
     {"id":{"name":"panel_animation","path":"scripts/panel_animation/panel_animation.yy",},},
     {"id":{"name":"panel_array_sequence","path":"scripts/panel_array_sequence/panel_array_sequence.yy",},},
+    {"id":{"name":"panel_asset_select","path":"scripts/panel_asset_select/panel_asset_select.yy",},},
     {"id":{"name":"panel_capture_project","path":"scripts/panel_capture_project/panel_capture_project.yy",},},
     {"id":{"name":"panel_collection_manager","path":"scripts/panel_collection_manager/panel_collection_manager.yy",},},
     {"id":{"name":"panel_collection_runner","path":"scripts/panel_collection_runner/panel_collection_runner.yy",},},

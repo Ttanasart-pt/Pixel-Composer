@@ -72,6 +72,12 @@
                 float _dx1 = curve[ind + 6 + 0];
                 float _dy1 = curve[ind + 6 + 1];
                 
+				if(abs(_dx0) + abs(_dx1) > abs(_x0 - _x1) * 2.) {
+					float _rdx = (abs(_x0 - _x1) * 2.) / (abs(_dx0) + abs(_dx1));
+					_dx0 *= _rdx;
+					_dx1 *= _rdx;
+				}
+				
                 float _rx  = _x1 - _x0;
                 float t = (_x - _x0) / _rx;
 

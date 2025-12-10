@@ -315,11 +315,6 @@ function curveBox(_onModify) : widget() constructor {
 					
 					if(_type == 0) {
 						if(i > 0) { //draw pre line
-							draw_set_color(COLORS.widget_curve_line);
-							draw_set_alpha(.95);
-							draw_line(bx0, by0, _x0, _y0);
-							draw_set_alpha(1);
-							
 							ac = COLORS.widget_curve_line;
 							ar = ui(3);
 							
@@ -336,15 +331,14 @@ function curveBox(_onModify) : widget() constructor {
 							}
 							
 							draw_set_color(ac);
+							draw_set_alpha(.95);
+							draw_line(bx0, by0, _x0, _y0);
+							draw_set_alpha(1);
+							
 							draw_circle_prec(bx0, by0, ar, false);
 						}
 				
 						if(i < points - 1) { //draw post line
-							draw_set_color(COLORS.widget_curve_line);
-							draw_set_alpha(.95);
-							draw_line(ax0, ay0, _x0, _y0);
-							draw_set_alpha(1);
-							
 							ac = COLORS.widget_curve_line;
 							ar = ui(3);
 							
@@ -361,6 +355,10 @@ function curveBox(_onModify) : widget() constructor {
 							}
 							
 							draw_set_color(ac);
+							draw_set_alpha(.95);
+							draw_line(ax0, ay0, _x0, _y0);
+							draw_set_alpha(1);
+							
 							draw_circle_prec(ax0, ay0, ar, false);
 						}
 					}
@@ -820,64 +818,12 @@ function curveBox(_onModify) : widget() constructor {
 		bx -= bs + ui(2); tbw -= bs + ui(2);
 		
 		bx = _x;
-		if(buttonInstant_Pad(bb, bx, by, bs, bs, _m, hover, active, __txt("Flip X"), THEME.flip_h,,,, ui(6)) == 2) {
-			var _idata = array_create(array_length(_data));
-			
-			for( var i = 0; i < CURVE_PADD; i++ ) 
-				_idata[i] = _data[i];
-			
-			for( var i = 0; i < points; i++ ) {
-				var ivd = CURVE_PADD + (points - i - 1) * 6;
-				var ind = CURVE_PADD + i * 6;
-				
-				var _x0 = _data[ivd + 2];
-				var _y0 = _data[ivd + 3];
-				
-				var bx0 = _data[ivd + 0];
-				var by0 = _data[ivd + 1];
-				var ax0 = _data[ivd + 4];
-				var ay0 = _data[ivd + 5];
-				
-				_idata[ind + 0] =  -ax0;
-				_idata[ind + 1] =   by0;
-				_idata[ind + 2] = 1-_x0;
-				_idata[ind + 3] =   _y0;
-				_idata[ind + 4] =  -bx0;
-				_idata[ind + 5] =   ay0;
-			}
-				
-			onModify(_idata);
-		}
+		if(buttonInstant_Pad(bb, bx, by, bs, bs, _m, hover, active, __txt("Flip X"), THEME.flip_h,,,, ui(6)) == 2)
+			onModify(curve_flip_h(_data));
 		bx += bs + ui(2); tbw -= bs + ui(2);
 		
-		if(buttonInstant_Pad(bb, bx, by, bs, bs, _m, hover, active, __txt("Flip Y"), THEME.flip_v,,,, ui(6)) == 2) {
-			var _idata = array_create(array_length(_data));
-			
-			for( var i = 0; i < CURVE_PADD; i++ ) 
-				_idata[i] = _data[i];
-			
-			for( var i = 0; i < points; i++ ) {
-				var ivd = CURVE_PADD + (points - i - 1) * 6;
-				var ind = CURVE_PADD + i * 6;
-				
-				var _x0 = _data[ind + 2];
-				var _y0 = _data[ind + 3];
-				
-				var bx0 = _data[ind + 0];
-				var by0 = _data[ind + 1];
-				var ax0 = _data[ind + 4];
-				var ay0 = _data[ind + 5];
-				
-				_idata[ind + 0] =   bx0;
-				_idata[ind + 1] =  -by0;
-				_idata[ind + 2] =   _x0;
-				_idata[ind + 3] = 1-_y0;
-				_idata[ind + 4] =   ax0;
-				_idata[ind + 5] =  -ay0;
-			}
-				
-			onModify(_idata);
-		}
+		if(buttonInstant_Pad(bb, bx, by, bs, bs, _m, hover, active, __txt("Flip Y"), THEME.flip_v,,,, ui(6)) == 2) 
+			onModify(curve_flip_v(_data));
 		bx += bs + ui(2); tbw -= bs + ui(2);
 		
 		tb_range.setFocusHover(active, hover);

@@ -106,7 +106,6 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	
 	////- Getters
 	
-	__interpolate_curve = [ 0, 0, 0, 0, 0, 1 ];
 	static interpolate = function(from, to, rat) {
 		if(to.ease_in_type == CURVE_TYPE.linear && from.ease_out_type == CURVE_TYPE.linear) return rat;
 		if(rat == 0 || rat == 1) return rat;
@@ -116,14 +115,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		var eoy = from.ease_out[1];
 		var eiy = to.ease_in[1];
 		
-		__interpolate_curve[0] = 0;
-		__interpolate_curve[1] = eox;
-		__interpolate_curve[2] = eoy;
-		__interpolate_curve[3] = 1-eix;
-		__interpolate_curve[4] = eiy;
-		__interpolate_curve[5] = 1;
-		
-		return eval_curve_segment_x(__interpolate_curve, rat);
+		return eval_curve_segment_x(0, eox, eoy, 1-eix, eiy, 1, rat);
 	}
 	
 	static interpolateValue = function(from, to, vfrom, vto, rat) {
@@ -136,14 +128,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		var eoy = from.ease_out[1];
 		var eiy = to.ease_in[1];
 		
-		__interpolate_curve[0] = vfrom;
-		__interpolate_curve[1] = eox;
-		__interpolate_curve[2] = vfrom + eoy;
-		__interpolate_curve[3] = 1-eix;
-		__interpolate_curve[4] = vto - (1 - eiy);
-		__interpolate_curve[5] = vto;
-		
-		return eval_curve_segment_x(__interpolate_curve, rat);
+		return eval_curve_segment_x(vfrom, eox, vfrom + eoy, 1-eix, vto - (1 - eiy), vto, rat);
 	}
 	
 	static lerpValue = function(from, to, rat) {

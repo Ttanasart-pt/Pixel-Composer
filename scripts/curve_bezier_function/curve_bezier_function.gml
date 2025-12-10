@@ -68,7 +68,7 @@ function draw_curve(x0, y0, _w, _h, _bz, minx = 0, maxx = 1, miny = 0, maxy = 1,
 					
 					draw_line(x0 + _w, _ny, _nx, _ny);
 				}
-		
+				
 				if(_bz[ind + 4] == 0 && _bz[ind + 5] == 0 && _bz[ind + 6 + 0] == 0 && _bz[ind + 6 + 1] == 0) {
 					var _rx0 = ( _x0 - minx ) / rngx;
 					var _ry0 = ( _y0 - miny ) / rngy;
@@ -93,6 +93,12 @@ function draw_curve(x0, y0, _w, _h, _bz, minx = 0, maxx = 1, miny = 0, maxy = 1,
 				var dy0 = _bz[ind + 5];
 				var dx1 = _bz[ind + 6 + 0];
 				var dy1 = _bz[ind + 6 + 1];
+				
+				if(abs(dx0) + abs(dx1) > abs(_x0 - _x1) * 2) {
+					var _rdx = (abs(_x0 - _x1) * 2) / (abs(dx0) + abs(dx1));
+					dx0 *= _rdx;
+					dx1 *= _rdx;
+				}
 				
 				var ax0 = _x0 + dx0;
 				var ay0 = _y0 + dy0;
@@ -259,6 +265,12 @@ function eval_curve_x(_bz, _x, _tolr = 0.0001) {
 				var dx1 = _bz[ind + 6 + 0];
 				var dy1 = _bz[ind + 6 + 1];
 				
+				if(abs(dx0) + abs(dx1) > abs(_x0 - _x1) * 2) {
+					var _rdx = (abs(_x0 - _x1) * 2) / (abs(dx0) + abs(dx1));
+					dx0 *= _rdx;
+					dx1 *= _rdx;
+				}
+				
 				var _rx = _x1 - _x0;
 				var  t  = (_x - _x0) / _rx;
 				
@@ -378,4 +390,68 @@ function draw_curve_bezier(x0, y0, cx0, cy0, cx1, cy1, x1, y1, prec = 32) {
 		ox = nx;
 		oy = ny;
 	}
+}
+
+	////- MISC
+
+function curve_flip_h(_bz) {
+	var _amo   = array_length(_bz);
+	var points = (_amo - CURVE_PADD) / 6;
+	var _idata = array_create(_amo);
+	
+	for( var i = 0; i < CURVE_PADD; i++ ) 
+		_idata[i] = _bz[i];
+	
+	for( var i = 0; i < points; i++ ) {
+		var ivd = CURVE_PADD + (points - i - 1) * 6;
+		var ind = CURVE_PADD + i * 6;
+		
+		var _x0 = _bz[ivd + 2];
+		var _y0 = _bz[ivd + 3];
+		
+		var bx0 = _bz[ivd + 0];
+		var by0 = _bz[ivd + 1];
+		var ax0 = _bz[ivd + 4];
+		var ay0 = _bz[ivd + 5];
+		
+		_idata[ind + 0] =  -ax0;
+		_idata[ind + 1] =   ay0;
+		_idata[ind + 2] = 1-_x0;
+		_idata[ind + 3] =   _y0;
+		_idata[ind + 4] =  -bx0;
+		_idata[ind + 5] =   by0;
+	}
+	
+	return _idata;
+}
+
+function curve_flip_v(_bz) {
+	var _amo   = array_length(_bz);
+	var points = (_amo - CURVE_PADD) / 6;
+	var _idata = array_create(_amo);
+	
+	for( var i = 0; i < CURVE_PADD; i++ ) 
+		_idata[i] = _bz[i];
+	
+	for( var i = 0; i < points; i++ ) {
+		var ivd = CURVE_PADD + (points - i - 1) * 6;
+		var ind = CURVE_PADD + i * 6;
+		
+		var _x0 = _bz[ind + 2];
+		var _y0 = _bz[ind + 3];
+		
+		var bx0 = _bz[ind + 0];
+		var by0 = _bz[ind + 1];
+		var ax0 = _bz[ind + 4];
+		var ay0 = _bz[ind + 5];
+		
+		_idata[ind + 0] =   bx0;
+		_idata[ind + 1] =  -by0;
+		_idata[ind + 2] =   _x0;
+		_idata[ind + 3] = 1-_y0;
+		_idata[ind + 4] =   ax0;
+		_idata[ind + 5] =  -ay0;
+	}
+		
+	return _idata;
 }
