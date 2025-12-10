@@ -60,7 +60,8 @@ draggable = true;
 	var by = dialog_y + ui(12);
 	var bs = ui(28);
 	
-	var b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txtx("add_preset", "Add to preset"), THEME.add_16);
+	var bt = __txtx("add_preset", "Add to preset");
+	var b  = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, bt, THEME.add_16);
 	if(b == 2) {
 		var dia = dialogCall(o_dialog_file_name, mouse_mx + ui(8), mouse_my + ui(8));
 		dia.onModify = function (txt) {
@@ -79,12 +80,14 @@ draggable = true;
 	draggable = draggable && !b;
 	bx -= ui(32);
 	
-	var b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Refresh"), THEME.refresh_20);
+	var bt = __txt("Refresh");
+	var b  = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, bt, THEME.refresh_20);
 	if(b == 2) { __initGradient(); }
 	draggable = draggable && !b;
 	bx -= ui(32);
 	
-	var b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txtx("graident_editor_open_folder", "Open gradient folder"), THEME.dPath_open_20);
+	var bt = __txtx("graident_editor_open_folder", "Open gradient folder");
+	var b  = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, bt, THEME.dPath_open_20);
 	if(b == 2) {
 		var _realpath = DIRECTORY + "Gradients";
 		shellOpenExplorer(_realpath)

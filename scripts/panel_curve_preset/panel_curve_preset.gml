@@ -85,6 +85,8 @@ function Panel_Curve_Presets(_curve, _onModify = undefined) : PanelContent() con
 		var bb = noone;
 		var bc = [COLORS._main_icon, COLORS._main_icon_light];
 		
+		var fav = undefined;
+		
 		for( var i = 0, n = array_length(context.content); i < n; i++ ) {
 			var c = context.content[i];
 			if(c.content == undefined)
@@ -122,6 +124,15 @@ function Panel_Curve_Presets(_curve, _onModify = undefined) : PanelContent() con
 				contentPane.hover_content = true;
 			}
 			
+			var bt = __txt("Favorite");
+			var _c = c.fav? CDEF.yellow : COLORS._main_icon;
+			var b  = buttonInstant_Pad(bb, bx, by, bs, bs, _m, hov, foc, bt, THEME.favorite, c.fav, _c, .85, ui(4));
+			if(b) {
+				hv = false; 
+				if(b == 2) fav = c;
+				
+			} bx -= bs + 1;
+			
 			var b  = buttonInstant_Pad(bb, bx, by, bs, bs, _m, hov, foc, "", THEME.flip_d, 0, bc, 1, ui(4));
 			if(b) { 
 				hv = false; 
@@ -156,6 +167,8 @@ function Panel_Curve_Presets(_curve, _onModify = undefined) : PanelContent() con
 			
 			yy += hg + ui(4);
 		}
+		
+		if(fav) __toggleCurveFav(fav);
 		
 		return hh + ui(16);
 	});

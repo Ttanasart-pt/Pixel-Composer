@@ -101,6 +101,9 @@ event_inherited();
 		var lbh = ui(20);
 		var sch = gradient_search_string != "";
 		
+		var bs  = lbh - ui(4);
+		var fav = undefined;
+		
 		for( var i = 0, n = array_length(_dir.subDir); i < n; i++ ) {
 			var _sub  = _dir.subDir[i];
 			var _open = sch || (_sub[$ "expanded"] ?? true);
@@ -115,8 +118,13 @@ event_inherited();
 			}
 			
 			draw_sprite_ui_uniform(THEME.arrow, _open * 3, _x + ui(12), _y + lbh/2, .8, COLORS._main_icon);
+			var _tx = _x + ui(24);
+			if(_sub.path == "Favorites") {
+				draw_sprite_ui_uniform(THEME.favorite, 1, _tx + ui(4), _y + lbh/2, .5, CDEF.yellow, 1);
+				_tx += ui(12);
+			}
 			draw_set_text(f_p4, fa_left, fa_center, COLORS._main_text);
-			draw_text_add(_x + ui(24), _y + lbh/2, _sub.name);
+			draw_text_add(_tx, _y + lbh/2, _sub.name);
 			
 			hh += lbh + ui(4);
 			_y += lbh + ui(4);
@@ -151,6 +159,16 @@ event_inherited();
 			draw_text_add(_x + pd + ui(4), _y + ui(2), _name);
 			_grad.draw(_x + pd, _y + nh, ww - pd * 2, gh);
 			
+			var bx = _x + ww - ui(2) - bs;
+			var by = _y + ui(2);
+			
+			var bt = __txt("Favorite");
+			var bc = g.fav? CDEF.yellow : COLORS._main_icon;
+			var b  = buttonInstant_Pad(noone, bx, by, bs, bs, _m, _hover, _focus, bt, THEME.favorite, g.fav, bc, .85);
+			if(b) isHover = false;
+			if(b == 2) fav = g;
+			bx -= bs + 1;
+			
 			if(_hover && isHover) {
 				if(mouse_press(mb_left, _focus)) {
 					gradient.keys = [];
@@ -175,6 +193,8 @@ event_inherited();
 			_y += hg + ui(4);
 			hh += hg + ui(4);
 		}
+		
+		if(fav) __toggleGradientFav(fav);
 		
 		return hh;
 	} 
@@ -223,6 +243,9 @@ event_inherited();
 		var lbh = ui(20);
 		var sch = palette_search_string != "";
 		
+		var bs = lbh - ui(4);
+		var fav = undefined;
+		
 		for( var i = 0, n = array_length(_dir.subDir); i < n; i++ ) {
 			var _sub  = _dir.subDir[i];
 			var _open = sch || (_sub[$ "expanded"] ?? true);
@@ -238,8 +261,13 @@ event_inherited();
 			}
 			
 			draw_sprite_ui_uniform(THEME.arrow, _open * 3, _x + ui(12), _y + lbh/2, .8, COLORS._main_icon);
+			var _tx = _x + ui(24);
+			if(_sub.path == "Favorites") {
+				draw_sprite_ui_uniform(THEME.favorite, 1, _tx + ui(4), _y + lbh/2, .5, CDEF.yellow, 1);
+				_tx += ui(12);
+			}
 			draw_set_text(f_p4, fa_left, fa_center, COLORS._main_text);
-			draw_text_add(_x + ui(24), _y + lbh/2, _sub.name);
+			draw_text_add(_tx, _y + lbh/2, _sub.name);
 			
 			hh += lbh + ui(4);
 			_y += lbh + ui(4);
@@ -280,12 +308,22 @@ event_inherited();
 			}
 			
 			if(preset_show_name) {
-				var cc = _palt == palette_selecting? COLORS._main_accent : COLORS._main_text_sub;
+				var cc = _palt == palette_selecting? COLORS._main_accent : COLORS._main_text;
 				draw_sprite_ui(THEME.arrow, _exp * 3, _x + ui(8), _y + nh / 2, .75, .75, 0, COLORS._main_text_sub);
-				draw_set_text(f_p3, fa_left, fa_top, cc);
+				draw_set_text(f_p4, fa_left, fa_top, cc);
 				draw_text_add(_x + ui(16), _y + ui(2), _name);
 				
 				if(i == -1) { draw_set_color(cc); draw_circle_prec(_x + ww - ui(10), _y + ui(10), ui(4), false); }
+				
+				var bx = _x + ww - ui(2) - bs;
+				var by = _y + ui(2);
+				
+				var bt = __txt("Favorite");
+				var bc = p.fav? CDEF.yellow : COLORS._main_icon;
+				var b  = buttonInstant_Pad(noone, bx, by, bs, bs, _m, _hover, _focus, bt, THEME.favorite, p.fav, bc, .85);
+				if(b) isHover = false;
+				if(b == 2) fav = p;
+				bx -= bs + 1;
 			}
 			
 			var _hoverColor = noone;
@@ -379,6 +417,8 @@ event_inherited();
 			_y += _height + ui(4);
 			hh += _height + ui(4);
 		}
+		
+		if(fav) __togglePaletteFav(fav);
 		
 		return hh;
 	}

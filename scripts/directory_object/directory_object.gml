@@ -1,5 +1,8 @@
+globalvar FILEMAP; FILEMAP = {};
+
 function FileObject(_path) constructor {
 	static loadThumbnailAsync = true;
+	FILEMAP[$ _path] = self;
 	
 	path = _path;
 	name = filename_name_only(path);
@@ -18,6 +21,8 @@ function FileObject(_path) constructor {
 	retrive_data	= false;
 	thumbnail_data	= -1;
 	thumbnail		= noone;
+	
+	fav = false;
 	
 	switch(ext) {
 		case "png" :

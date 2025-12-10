@@ -112,6 +112,9 @@ function __PaletteColor(_color = c_black) constructor {
 		var lbh = ui(20);
 		var sch = search_string != "";
 		
+		var bs = lbh - ui(4);
+		var fav = undefined;
+		
 		for( var i = 0, n = array_length(_dir.subDir); i < n; i++ ) {
 			var _sub  = _dir.subDir[i];
 			var _open = sch || (_sub[$ "expanded"] ?? true);
@@ -127,8 +130,13 @@ function __PaletteColor(_color = c_black) constructor {
 			}
 			
 			draw_sprite_ui_uniform(THEME.arrow, _open * 3, _x + ui(12), _y + lbh/2, .8, COLORS._main_icon);
+			var _tx = _x + ui(24);
+			if(_sub.path == "Favorites") {
+				draw_sprite_ui_uniform(THEME.favorite, 1, _tx + ui(4), _y + lbh/2, .5, CDEF.yellow, 1);
+				_tx += ui(12);
+			}
 			draw_set_text(f_p4, fa_left, fa_center, COLORS._main_text);
-			draw_text_add(_x + ui(24), _y + lbh/2, _sub.name);
+			draw_text_add(_tx, _y + lbh/2, _sub.name);
 			
 			hh += lbh + ui(4);
 			_y += lbh + ui(4);
@@ -168,15 +176,21 @@ function __PaletteColor(_color = c_black) constructor {
 			
 			if(preset_show_name) {
 				draw_sprite_ui(THEME.arrow, _exp * 3, _x + ui(8), _y + nh / 2, .75, .75, 0, COLORS._main_text_sub);
-				draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text_sub);
+				draw_set_text(f_p4, fa_left, fa_top, COLORS._main_text);
 				draw_text_add(_x + ui(16), _y + ui(2), _name);
 				
-				var bs = nh - ui(4);
-				var bx = _x + ww - bs - ui(2);
+				var bx = _x + ww - ui(2) - bs;
 				var by = _y + ui(2);
-				var b  = buttonInstant_Pad(THEME.button_hide, bx, by, bs, bs, _m, _hov, _foc, "Set Palette", THEME.node_goto_16);
 				
-				if(b) select = false;
+				var bt = __txt("Favorite");
+				var bc = p.fav? CDEF.yellow : COLORS._main_icon;
+				var b  = buttonInstant_Pad(noone, bx, by, bs, bs, _m, _hov, _foc, bt, THEME.favorite, p.fav, bc, .85);
+				if(b) { select = false; isHover = false; };
+				if(b == 2) fav = p;
+				bx -= bs + 1;
+				
+				var b  = buttonInstant_Pad(noone, bx, by, bs, bs, _m, _hov, _foc, "Set Palette", THEME.node_goto_16,,, .85);
+				if(b) { select = false; isHover = false; };
 				if(b == 2) {
 					setPalette(array_clone(_palt)); 
 					onApply(palette);
@@ -216,6 +230,8 @@ function __PaletteColor(_color = c_black) constructor {
 			_y += _height + ui(4);
 			hh += _height + ui(4);
 		}
+		
+		if(fav) __togglePaletteFav(fav);
 		
 		return hh;
 	}
