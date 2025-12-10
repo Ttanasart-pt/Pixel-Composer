@@ -415,12 +415,6 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				wid.setInteract(jun.editable && !jun.hasJunctionFrom());
 				if(_focus) wid.register(_scrollPane);
 				
-				if(is_instanceof(jun, __NodeValue_Dimension)) {
-					var _proj = jun.attributes.use_project_dimension;
-					
-					wid.side_button.icon_index = _proj;
-					wid.side_button.icon_blend = _proj? c_white : COLORS._main_icon;
-				}
 			} else {
 				wid.setInteract(false);
 			}

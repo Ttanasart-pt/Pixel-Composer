@@ -319,9 +319,10 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(14, nodeValue_Slider( "Alpha", 1 ));
 	
 	////- =Echo
-	newInput(12, nodeValue_Bool( "Echo",        false ));
-	newInput(13, nodeValue_Int(  "Echo Amount", 8     ));
-	// input 16
+	newInput(12, nodeValue_Bool(    "Echo",        false ));
+	newInput(16, nodeValue_EButton( "Echo Type",   0, [ "Static", "Animated" ] ));
+	newInput(13, nodeValue_Int(     "Echo Amount", 8     ));
+	// input 17
 	
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone    ));
 	newOutput(2, nodeValue_Output( "Atlas data",  VALUE_TYPE.atlas,   []       ));
@@ -333,7 +334,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		["Rotation", false   ], 5, 8, 
 		["Scale",    false   ], 6, 
 		["Render",   false   ], 14, 
-		["Echo",     true, 12], 13, 
+		["Echo",     true, 12], 16, 13, 
 	];
 	
 	output_display_list = [ 0, 2, 1 ];
@@ -826,25 +827,28 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	}
 	
 	static processData = function(_outData, _data, _array_index) {
-		var surf      = _data[ 0];
-		
-		var out_type  = _data[ 9];
-		var dim		  = _data[ 1];
-		var dimScal   = _data[15];
-		var pos		  = _data[ 2]; pos = [ pos[0], pos[1] ];
-		var pos_exact = _data[10];
-		var anc		  = _data[ 3]; anc = [ anc[0], anc[1] ];
-		var rot_vel   = _data[ 8] * vel;
-		var rot		  = _data[ 5] + rot_vel;
-		var sca       = _data[ 6];
-		var mode      = _data[ 7];
-		
-		var echo      = _data[12];
-		var echo_amo  = _data[13];
-		var alp       = _data[14];
-		
-		var cDep = attrDepth();
-		
+		#region data
+			var surf      = _data[ 0];
+			
+			var out_type  = _data[ 9];
+			var dim		  = _data[ 1];
+			var dimScal   = _data[15];
+			var pos_raw   = _data[ 2], pos = [ pos_raw[0], pos_raw[1] ];
+			var pos_exact = _data[10];
+			var anc_raw	  = _data[ 3], anc = [ anc_raw[0], anc_raw[1] ];
+			var rot_vel   = _data[ 8] * vel;
+			var rot		  = _data[ 5] + rot_vel;
+			var sca       = _data[ 6];
+			var mode      = _data[ 7];
+			
+			var echo      = _data[12];
+			var echo_typ  = _data[16];
+			var echo_amo  = _data[13];
+			var alp       = _data[14];
+			
+			var cDep = attrDepth();
+		#endregion
+			
 		var  ww = surface_get_width_safe(surf);
 		var  hh = surface_get_height_safe(surf);
 		var _ww = ww;
@@ -908,10 +912,10 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		pos[0] -= anc[0];
 		pos[1] -= anc[1];
 		
-		pos = point_rotate(pos[0], pos[1], pos[0] + anc[0], pos[1] + anc[1], rot, __p);
+		__p = point_rotate(pos[0], pos[1], pos[0] + anc[0], pos[1] + anc[1], rot, __p);
 		
-		var draw_x = pos[0];
-		var draw_y = pos[1];
+		var draw_x = __p[0];
+		var draw_y = __p[1];
 				
 		if(pos_exact) {
 			draw_x = round(draw_x);
@@ -930,24 +934,47 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			surface_set_shader(_outSurf);
 			shader_set_interpolation(surf);
 			
-			if(echo && CURRENT_FRAME && prev_data != noone) {
-				var _pre = prev_data[_array_index];
-				
-				for( var i = 0; i <= echo_amo; i++ ) {
-					var rat = i / echo_amo;
-					var _px = lerp(_pre[0][0], draw_x, rat);
-					var _py = lerp(_pre[0][1], draw_y, rat);
-					var _rt = lerp(_pre[1],    rot,    rat);
-					var _sx = lerp(_pre[2][0], sca[0], rat);
-					var _sy = lerp(_pre[2][1], sca[1], rat);
-					
-					if(pos_exact) {
-						_px = round(_px);
-						_py = round(_py);
+			if(echo) {
+				if(echo_typ == 0) {
+					for( var i = 0; i <= echo_amo; i++ ) {
+						var rat = i / echo_amo;
+						var _px = lerp(_ww/2, pos_raw[0], rat);
+						var _py = lerp(_hh/2, pos_raw[1], rat);
+						var _rt = lerp(0,     rot,        rat);
+						var _sx = lerp(1,     sca[0],     rat);
+						var _sy = lerp(1,     sca[1],     rat);
+						
+						var ax = anc_raw[0] * ww * _sx;
+						var ay = anc_raw[1] * hh * _sy;
+						
+						_px -= ax;
+						_py -= ay;
+						__p = point_rotate(_px, _px, _px + ax, _px + ay, _rt, __p);
+						
+						_px = pos_exact? round(__p[0]) : __p[0];
+						_py = pos_exact? round(__p[1]) : __p[1];
+						
+						draw_surface_ext_safe(surf, _px, _py, _sx, _sy, _rt, c_white, alp);
 					}
 					
-					draw_surface_ext_safe(surf, _px, _py, _sx, _sy, _rt, c_white, alp);
+				} else if(echo_typ == 1 && CURRENT_FRAME && prev_data != noone) {
+					var _pre = prev_data[_array_index];
+					
+					for( var i = 0; i <= echo_amo; i++ ) {
+						var rat = i / echo_amo;
+						var _px = lerp(_pre[0][0], draw_x, rat);
+						var _py = lerp(_pre[0][1], draw_y, rat);
+						var _rt = lerp(_pre[1],    rot,    rat);
+						var _sx = lerp(_pre[2][0], sca[0], rat);
+						var _sy = lerp(_pre[2][1], sca[1], rat);
+						
+						_px = pos_exact? round(_px) : _px;
+						_py = pos_exact? round(_py) : _py;
+						
+						draw_surface_ext_safe(surf, _px, _py, _sx, _sy, _rt, c_white, alp);
+					}
 				}
+					
 			} else 
 				draw_surface_ext_safe(surf, draw_x, draw_y, sca[0], sca[1], rot, c_white, alp);
 			

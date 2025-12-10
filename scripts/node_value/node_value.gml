@@ -1839,9 +1839,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		edited = true;
 		
-		if(is(self, __NodeValue_Dimension)) 
-			attributes.use_project_dimension = false;
-		
 		if(index >= 0) {
 			var _val = getValue(time);
 			node.inputs_data[index]              = _val; // setInputData(index, _val);
