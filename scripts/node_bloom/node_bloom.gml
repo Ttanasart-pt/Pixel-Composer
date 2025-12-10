@@ -42,6 +42,8 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput(1, nodeValue_Output( "Bloom Mask", VALUE_TYPE.surface,  noone ));
 	
+	////- Nodes
+	
 	temp_surface = [ noone ];
 	
 	attribute_surface_depth();
@@ -55,8 +57,6 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var cy = _y + _dim[1] / 2 * _s;
 		
 		InputDrawOverlay(inputs[1].drawOverlay(w_hoverable, active, _x, _y,         _s, _mx, _my, _snx, _sny));
-		// InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y +  6*_s, _s, _mx, _my, _snx, _sny, 0, _dim[0]));
-		// InputDrawOverlay(inputs[3].drawOverlay(w_hoverable, active, _x, _y + 12*_s, _s, _mx, _my, _snx, _sny, 0, _dim[0]));
 		
 		if(_typ == 1) InputDrawOverlay(inputs[14].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		if(_typ == 2) InputDrawOverlay(inputs[12].drawOverlay(w_hoverable, active, cx, cy, _s, _mx, _my, _snx, _sny));
@@ -103,9 +103,24 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 		var pass1blur;
 		
-		     if(_type == 0) pass1blur = surface_apply_gaussian( temp_surface[0], _size, true, c_black, 1, noone, false, _ratio, _angle);
-		else if(_type == 1) pass1blur = surface_apply_blur_zoom(__blur_pass[0], new blur_zoom_args(temp_surface[0], _size, _zoom[0], _zoom[1], 2, 1));
-		else if(_type == 2) pass1blur = surface_apply_blur_directional(__blur_pass[0], new blur_directional_args(temp_surface[0], _size, _angle).setFadeDistance(true));
+		switch(_type) {
+			case 0 :
+				var args = new blur_gauss_args(temp_surface[0], _size).setBG(true, c_black)
+					.setRatio(_ratio).setAngle(_angle);
+				pass1blur = surface_apply_gaussian(args);
+				break;
+				
+			case 1 :
+				var args = new blur_zoom_args(temp_surface[0], _size, _zoom[0], _zoom[1], 2, 1);
+				pass1blur = surface_apply_blur_zoom(__blur_pass[0], args);
+				break;
+				
+			case 2 :
+				var args = new blur_directional_args(temp_surface[0], _size, _angle).setFadeDistance(true);
+				pass1blur = surface_apply_blur_directional(__blur_pass[0], args);
+				break;
+				
+		}
 		
 		surface_set_shader(temp_surface[0], sh_bloom_blend);
 			shader_set_c("blend",      _blnd);

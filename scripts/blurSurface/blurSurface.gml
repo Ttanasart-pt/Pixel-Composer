@@ -28,7 +28,31 @@ function __gaussian_get_kernel(size) {
 	return gau_array;
 }
 
-function surface_apply_gaussian(surface, size, bg = false, bg_c = c_white, sampleMode = 0, overColor = noone, gamma = false, ratio = 1, angle = 0) {
+function blur_gauss_args(_surface, _size, _sampleMode = 1) constructor {
+	surface    = _surface;
+	size       = _size;
+	sampleMode = _sampleMode;
+	
+	bg         = false;
+	bg_c       = c_black;      static setBG  = function(b,c) /*=>*/ { bg = b; bg_c = c; return self; }
+	
+	overColor  = noone;        static setOver  = function(c) /*=>*/ { overColor = c;    return self; }
+	gamma      = false;        static setGamma = function(g) /*=>*/ { gamma = g;        return self; }
+	
+	ratio      = 1;            static setRatio = function(r) /*=>*/ { ratio = r; return self; }
+	angle      = 0;            static setAngle = function(r) /*=>*/ { angle = r; return self; }
+}
+
+function surface_apply_gaussian(args) {
+	var surface    = args.surface;
+	var bg         = args.bg;
+	var bg_c       = args.bg_c;
+	var sampleMode = args.sampleMode;
+	var overColor  = args.overColor;
+	var gamma      = args.gamma;
+	var ratio      = args.ratio;
+	var angle      = args.angle;
+	
 	var format = surface_get_format(surface);
 	var _sw    = surface_get_width_safe(surface);
 	var _sh    = surface_get_height_safe(surface);
@@ -36,7 +60,12 @@ function surface_apply_gaussian(surface, size, bg = false, bg_c = c_white, sampl
 	__blur_pass[0] = surface_verify(__blur_pass[0], _sw, _sh, format);	
 	__blur_pass[1] = surface_verify(__blur_pass[1], _sw, _sh, format);	
 	
-	size = min(size, 128);
+	var _sizeArr   = is_array(args.size);
+	var _size      = _sizeArr? args.size[0] : args.size;
+	var _sizeSurf  = _sizeArr? args.size[1] : noone;
+	var _sizeJunc  = _sizeArr? args.size[2] : noone;
+	
+	_size = min(_size, 128);
 	var gau_array = __gaussian_get_kernel(size);
 	
 	BLEND_OVERRIDE
@@ -49,7 +78,7 @@ function surface_apply_gaussian(surface, size, bg = false, bg_c = c_white, sampl
 		shader_set_f("weight",    gau_array);
 		
 		shader_set_i("sampleMode", sampleMode);
-		shader_set_i("size",       size);
+		shader_set_f_map("size",   _size, _sizeSurf, _sizeJunc);
 		shader_set_i("horizontal", 1);
 		shader_set_i("gamma",      gamma);
 		shader_set_f("angle",      degtorad(angle));
@@ -67,7 +96,7 @@ function surface_apply_gaussian(surface, size, bg = false, bg_c = c_white, sampl
 			
 		shader_set(sh_blur_gaussian);
 		shader_set_f("weight",    __gaussian_get_kernel(_size_v));
-		shader_set_i("size",       _size_v);
+		shader_set_f_map("size",   _size, _sizeSurf, _sizeJunc);
 		shader_set_i("horizontal", 0);
 			
 		draw_surface_safe(__blur_pass[0]);
@@ -107,6 +136,7 @@ function blur_zoom_args(_surface, _size, _origin_x, _origin_y, _blurMode = 0, _s
 	spectralShift     = 0;
 	spectralScale     = 1;
 	spectralGrad      = noone;
+	
 	static setSpectral    = function(u,i,s,c,d) /*=>*/ { 
 		spectralUse       = u;
 		spectralIntensity = i;
@@ -137,7 +167,7 @@ function surface_apply_blur_zoom(outputSurf, args) {
 		
 		shader_set_2("dimension",   [_sw,_sh] );
 		shader_set_f("center",       args.origin_x / _sw, args.origin_y / _sh);
-		shader_set_f_map("strength", _size,  _sizeSurf,  _sizeJunc);
+		shader_set_f_map("strength", _size, _sizeSurf, _sizeJunc);
 		shader_set_curve("s",        args.sizeCurve);
 		
 		shader_set_i("blurMode",     args.blurMode);

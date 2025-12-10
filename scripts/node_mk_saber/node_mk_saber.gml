@@ -81,7 +81,7 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		if(!is_array(array_safe_get_fast(prev_points, _array_index)))
 			prev_points[_array_index] = [];
 		
-		if(_fixl) { #region
+		if(_fixl) {
 			var _prevArr = prev_points[_array_index];
 			
 			if(IS_FIRST_FRAME)
@@ -113,7 +113,7 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				_p2x = __p2x;
 				_p2y = __p2y;
 			}
-		} #endregion
+		}
 		
 		_cur = [[ _p1x, _p1y ], [ _p2x, _p2y ], [ _p1x, _p1y ], [ _p2x, _p2y ]];
 		if(_thck) {
@@ -131,7 +131,7 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			DRAW_CLEAR
 			
 			draw_set_color(_colr.eval(1));
-			if(_trac > 0 && CURRENT_FRAME > 0 && prev_points != noone) { #region Trace
+			if(_trac > 0 && CURRENT_FRAME > 0 && prev_points != noone) { // Trace
 				var _prevArr = prev_points[_array_index];
 				var _inds    = max(0, array_length(_prevArr) - _trac);
 				var useTex   = is_surface(_trcTex);
@@ -176,7 +176,7 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 							draw_vertex(_pp1x, _pp1y);
 							draw_vertex(_pp2x, _pp2y);
 						}
-					} else { #region circular // disabled
+					} else { // circular // disabled
 						var _side = point_distance(_inx[0], _inx[1], _pr1x, _pr1y) < point_distance(_inx[0], _inx[1], _pr2x, _pr2y);
 						var _stp  = 8;
 						
@@ -231,11 +231,11 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 							_oa = _na;
 							_oi = _ni;
 						}
-					} #endregion
+					}
 				}
 				
 				draw_primitive_end();
-			} #endregion
+			}
 			
 			if(_thck == 1) {
 				draw_set_color(_colr.eval(1));
@@ -248,16 +248,17 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			}
 		surface_reset_target();
 		
-		if(_gint > 0) { #region
+		if(_gint > 0) {
 			surface_set_target(temp_surface[1]);
 				draw_clear(c_black);
 				draw_surface_safe(temp_surface[0]);
 			surface_reset_target();	
+			
+			var args = new blur_gauss_args(temp_surface[1], _grad);
+			temp_surface[2] = surface_apply_gaussian(args);
+		}
 		
-			temp_surface[2] = surface_apply_gaussian(temp_surface[1], _grad, false, 0, 1);
-		} #endregion
-		
-		surface_set_target(_outSurf); #region
+		surface_set_target(_outSurf);
 			DRAW_CLEAR
 			
 			if(_gint > 0) {
@@ -273,7 +274,7 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			draw_surface_safe(temp_surface[0]);
 			
 			BLEND_NORMAL
-		surface_reset_target(); #endregion
+		surface_reset_target();
 		
 		array_push(prev_points[_array_index], _cur);
 		

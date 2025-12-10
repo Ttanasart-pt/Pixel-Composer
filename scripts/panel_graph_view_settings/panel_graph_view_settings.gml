@@ -21,7 +21,7 @@ function Panel_Graph_View_Setting(_graphPanel, _display) : Panel_Linear_Setting(
 		
 		new __Panel_Linear_Setting_Item(
 			__txt("Meta View"),
-			new buttonGroup(__txts([ "Center", "Compact" ]), function(val) /*=>*/ { dparam.node_meta_view = val; graphP.refreshDraw(); }),
+			new buttonGroup(__txts([ "Floating", "Compact", "Compact on Expands" ]), function(val) /*=>*/ { dparam.node_meta_view = val; graphP.refreshDraw(); }),
 			function()    /*=>*/   {return dparam.node_meta_view},
 			function(val) /*=>*/ { dparam.node_meta_view = val; },
 			PREFERENCES.project_graphDisplay.node_meta_view,

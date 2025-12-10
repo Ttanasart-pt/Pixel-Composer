@@ -50,8 +50,11 @@ varying vec4 v_vColour;
 uniform vec2 dimension;
 uniform int  horizontal;
 
+uniform vec2      size;
+uniform int       sizeUseSurf;
+uniform sampler2D sizeSurf;
+
 uniform float weight[128];
-uniform int	  size;
 uniform float angle;
 
 uniform int  overrideColor;
@@ -59,42 +62,63 @@ uniform vec4 overColor;
 
 uniform int  gamma;
 
-float wgh = 0.;
+float wgh  = 0.;
+float twgh = 0.;
 
-vec4 sample(in vec2 pos, in int index) {
-	float wg = weight[index];
-	vec4 col = sampleTexture( gm_BaseTexture, pos, float(index) / float(size) );
-	if(gamma == 1) col.rgb = pow(col.rgb, vec3(2.2));
+vec4 sample(in vec2 pos, in float index, in float tsize) {
+	float fr = fract(index);
+	int   fi = int(floor(index));
+	
+	float wg0 = weight[fi    ];
+	float wg1 = weight[fi + 1];
+	float wg  = mix(wg0, wg1, fr);
+	
+	vec4 col = sampleTexture( gm_BaseTexture, pos, index / tsize);
+	if(gamma == 1) col.rgb = pow(abs(col.rgb), vec3(2.2));
 	
 	col.rgb *= wg * col.a;
 	wgh     += wg * col.a;
+	twgh    += wg;
 	
 	return col;
 }
 
 void main() {
     vec2 tex_offset = 1.0 / dimension, pos;
-    vec4 result     = sample( v_vTexcoord, 0 );
     mat2 rot        = mat2(cos(angle), -sin(angle), sin(angle), cos(angle));
 	
+	float str    = size.x;
+	float strMax = max(size.x, size.y);
+	if(sizeUseSurf == 1) {
+		vec4 _vMap = texture2D( sizeSurf, v_vTexcoord );
+		str = mix(size.x, size.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	} 
+	
+	vec4 result = sample( v_vTexcoord, 0., str );
+	
     if(horizontal == 1) {
-        for(int i = 1; i < size; i++) {
-			pos = rot * vec2(tex_offset.x * float(i), 0.0);
+        for(float i = 1.; i < strMax; i++) {
+        	if(i > str) break;
+			pos = rot * vec2(tex_offset.x * i, 0.0);
 			
-			result += sample( v_vTexcoord + pos, i );
-			result += sample( v_vTexcoord - pos, i );
+			float _i = i / str * strMax;
+			result += sample( v_vTexcoord + pos, _i, str );
+			result += sample( v_vTexcoord - pos, _i, str );
         }
+    	
     } else {
-        for(int i = 1; i < size; i++) {
-			pos = rot * vec2(0.0, tex_offset.y * float(i));
+        for(float i = 1.; i < strMax; i++) {
+        	if(i > str) break;
+			pos = rot * vec2(0.0, tex_offset.y * i);
 			
-			result += sample( v_vTexcoord + pos, i );
-			result += sample( v_vTexcoord - pos, i );
+			float _i = i / str * strMax;
+			result += sample( v_vTexcoord + pos, _i, str );
+			result += sample( v_vTexcoord - pos, _i, str );
         }
     }
 	
 	result.rgb /=  wgh;
-	result.a    =  wgh;
+	result.a    =  wgh / twgh;
 	
 	if(gamma == 1) result.rgb = pow(result.rgb, vec3(1. / 2.2));
 	

@@ -108,7 +108,9 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		surface_set_target(_outSurf);
 			DRAW_CLEAR
 			BLEND_OVERRIDE
-				var _s = surface_apply_gaussian(temp_surface[0], _size+1, false, cl, 2);
+				var args = new blur_gauss_args(temp_surface[0], _size + 1, 2).setBG(false, cl);
+				var _s   = surface_apply_gaussian(args);
+				
 				draw_surface_ext_safe(_s, 0, 0, 1, 1, 0, cl, _stre * _color_get_alpha(cl));
 			BLEND_ALPHA_MULP
 				draw_surface_safe(_surf);

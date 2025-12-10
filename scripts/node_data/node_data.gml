@@ -1452,7 +1452,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static showMeta = function() { 
 		var d = project.graphDisplay;
-		return drawDimension != undefined && d.node_meta_view && (d.show_dimension || d.show_compute); 
+		return drawDimension != undefined 
+				&& (d.node_meta_view == 1 || d.node_meta_view == 2 && previewable)
+				&& (d.show_dimension || d.show_compute); 
 	} 
 	
 	static setHeight = function() {
@@ -1527,7 +1529,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static setShowParameter = function(showParam) {
 		show_parameter = showParam;
-		refreshNodeDisplay();
 		return self;
 	}
 	
@@ -2331,6 +2332,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		var hh = line_get_height() * ts;
 		var vv = showMeta();
+		if(!vv && project.graphDisplay.node_meta_view == 2) return;
+		
 		BLEND_ALPHA_MULP
 		
 		if(vv) {

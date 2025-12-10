@@ -91,14 +91,55 @@
     function panel_graph_swapConnection()          { CALL("graph_swapConnection");      PANEL_GRAPH.swapConnection();                           }
     function panel_graph_transferConnection()      { CALL("graph_transferConnection");  PANEL_GRAPH.transferConnection();                       }
 				                    
-	function panel_graph_topbar_toggle()           { PANEL_GRAPH.topbar_toggle(); }
-	function panel_graph_topbar_show()             { PANEL_GRAPH.topbar_show();   }
-	function panel_graph_topbar_hide()             { PANEL_GRAPH.topbar_hide();   }
+	function panel_graph_topbar_toggle()           { PANEL_GRAPH.topbar_toggle();       }
+	function panel_graph_topbar_show()             { PANEL_GRAPH.topbar_show();         }
+	function panel_graph_topbar_hide()             { PANEL_GRAPH.topbar_hide();         }
 	                                                         
 	function panel_graph_view_control_toggle()     { PANEL_GRAPH.view_control_toggle(); }
 	function panel_graph_view_control_show()       { PANEL_GRAPH.view_control_show();   }
 	function panel_graph_view_control_hide()       { PANEL_GRAPH.view_control_hide();   }
 	
+    function panel_graph_set_node_display_mini() { 
+    	var nodes = PANEL_GRAPH.nodes_selecting; 
+    	
+    	for( var i = 0, n = array_length(nodes); i < n; i++ ) {
+			if(!is(nodes[i], Node)) return;
+			
+			nodes[i].setPreviewable(false);
+	    	nodes[i].refreshNodeDisplay();
+    	}
+    	
+    	PANEL_GRAPH.refreshDraw(2);
+	}
+    
+    function panel_graph_set_node_display_default() { 
+    	var nodes = PANEL_GRAPH.nodes_selecting; 
+    	
+    	for( var i = 0, n = array_length(nodes); i < n; i++ ) {
+			if(!is(nodes[i], Node)) return;
+			
+			nodes[i].setPreviewable(true);
+			nodes[i].setShowParameter(false);
+	    	nodes[i].refreshNodeDisplay();
+    	}
+    	
+    	PANEL_GRAPH.refreshDraw(2);
+	}
+    
+    function panel_graph_set_node_display_parameter() { 
+    	var nodes = PANEL_GRAPH.nodes_selecting; 
+    	
+    	for( var i = 0, n = array_length(nodes); i < n; i++ ) {
+			if(!is(nodes[i], Node)) return;
+			
+			nodes[i].setPreviewable(true);
+			nodes[i].setShowParameter(true);
+	    	nodes[i].refreshNodeDisplay();
+    	}
+    	
+    	PANEL_GRAPH.refreshDraw(2);
+	}
+    
     function __fnInit_Graph() {
     	var g = "Graph";
     	var n = MOD_KEY.none;
@@ -171,6 +212,12 @@
         registerFunction(g, "Toggle Preview",        "H", n, panel_graph_toggle_preview      ).setMenu("graph_toggle_preview")
         registerFunction(g, "Toggle Render",         "R", n, panel_graph_toggle_render       ).setMenu("graph_toggle_render")
         registerFunction(g, "Toggle Parameters",     "M", n, panel_graph_toggle_parameter    ).setMenu("graph_toggle_parameters")
+        registerFunction(g, "Node Display",          "",  n, function(d) /*=>*/ {return submenuCall(d, [ 
+        	menuItem( "Minimized", panel_graph_set_node_display_mini      ), 
+        	menuItem( "Default",   panel_graph_set_node_display_default   ), 
+        	menuItem( "Parameter", panel_graph_set_node_display_parameter ), 
+    	])}).setMenu("graph_node_display", noone, true)
+        
         registerFunction(g, "Hide Disconnected",     "",  n, panel_graph_hide_disconnected   ).setMenu("graph_hide_disconnected")
         
         registerFunction(g, "Enter Group",           "",  n, panel_graph_enter_group         ).setMenu("graph_enter_group",     THEME.group)
@@ -308,7 +355,6 @@
         
         MENU_ITEMS.graph_group_junction_color = menuItemGroup(__txt("Connection Color"), _item, ["Graph", "Set Junction Color"]).setSpacing(ui(24));
         registerFunction("Graph", "Set Junction Color", "",  MOD_KEY.none, function() /*=>*/ { menuCall("", [ MENU_ITEMS.graph_group_junction_color ]); });
-        
     }
 #endregion
 
@@ -751,6 +797,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         array_foreach(nodes_selecting, function(node, index) {
             if(index == 0) __temp_show = !node.show_parameter;
             node.setShowParameter(__temp_show);
+            node.refreshNodeDisplay();
         });
     }
 
@@ -917,9 +964,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	    	"graph_inspect",
 	    	"graph_export_hover",
 	    	-1, 
-	    	"graph_toggle_preview", 
+	    	"graph_node_display", 
 	    	"graph_toggle_render", 
-	    	"graph_toggle_parameters", 
 	    	"graph_hide_disconnected",
 	    	{ cond : "graph_select_group",    items : [ -1, "graph_enter_group", "graph_open_in_new_tab", "graph_ungroup", "graph_update" ] },
 	    	{ cond : "graph_select_instance", items : [     "graph_uninstance"  ] },

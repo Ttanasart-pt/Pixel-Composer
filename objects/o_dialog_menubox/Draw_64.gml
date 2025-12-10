@@ -189,6 +189,7 @@ DIALOG_WINCLEAR1
 						_spr = _sprs[0];
 						_ind = _sprs[1];
 						_clr = array_safe_get_fast(_sprs, 2, c_white);
+						
 					} else _spr = _sprs;
 					
 					_sw = sprite_get_width(_spr);

@@ -95,7 +95,7 @@ function Node_MK_Blinker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			draw_surface_safe(temp_surface[2]);
 		surface_reset_shader();
 		
-		var lightBlur = _glow? surface_apply_gaussian(_lightData, _glsz, true, c_black, 1) : noone;
+		var lightBlur = _glow? surface_apply_gaussian(new blur_gauss_args(_lightData, _glsz).setBG(true, c_black)) : noone;
 		
 		surface_set_target(_baseSurf);
 			DRAW_CLEAR

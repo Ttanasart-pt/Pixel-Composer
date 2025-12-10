@@ -35,7 +35,7 @@ function mask_modify(mask, invert = false, feather = 0) {
 	surface_reset_shader();
 	
 	if(feather > 0) 
-		__temp_mask = surface_apply_gaussian(__temp_mask, feather, false, c_white, 1, noone);
+		__temp_mask = surface_apply_gaussian(new blur_gauss_args(__temp_mask, feather).setBG(false, c_white));
 	
 	return __temp_mask;
 }
@@ -50,7 +50,7 @@ function mask_apply(original, edited, mask, mix = 1) {
 	__mask_surface = surface_verify(__mask_surface, _w, _h, _f);
 	
 	if(is_surface(mask) && __mask_feather > 0)
-		mask = surface_apply_gaussian(mask, __mask_feather, false, c_white, 1, noone);
+		mask = surface_apply_gaussian(new blur_gauss_args(mask, __mask_feather).setBG(false, c_white));
 	
 	surface_set_shader(__mask_surface, sh_mask);
 		shader_set_surface("original", original);
