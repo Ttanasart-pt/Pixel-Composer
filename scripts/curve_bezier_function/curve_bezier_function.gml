@@ -177,7 +177,7 @@ function draw_curve(x0, y0, _w, _h, _bz, minx = 0, maxx = 1, miny = 0, maxy = 1,
 
 	////- EVAL
 
-function eval_curve_segment_t(_y0, ax0, ay0, bx1, by1, _y1, t) {
+function eval_curve_segment_t(_y0, ay0, by1, _y1, t) {
 	var i = 1-t;
 	
 	return  _y0 *     i*i*i + 
@@ -186,8 +186,8 @@ function eval_curve_segment_t(_y0, ax0, ay0, bx1, by1, _y1, t) {
 		    _y1 *     t*t*t ;
 }
 
-function eval_curve_segment_x(_y0, ax0, ay0, bx1, by1, _y1, _x, _tolr = 0.00001) {
-	static _binRep = 16;
+function eval_curve_segment_x(_y0, ax0, ay0, bx1, by1, _y1, _x, _tolr = 0.0001) {
+	static _binRep = 8;
 	
 	if(_x <= 0) return _y0;
 	if(_x >= 1) return _y1;
@@ -197,32 +197,32 @@ function eval_curve_segment_x(_y0, ax0, ay0, bx1, by1, _y1, _x, _tolr = 0.00001)
 	var ed =  1;
 	var t  = .5;
 	
+	var t = _x;
 	repeat(_binRep) {
 		var _t = 1-t;
 		var ft =  3 * _t * _t * t * ax0 
 			    + 3 * _t *  t * t * bx1
 			    +      t *  t * t;
 		
-		if(abs(ft - _x) < _tolr)
-			return eval_curve_segment_t(_y0, ax0, ay0, bx1, by1, _y1, t);
+		if(abs(ft - _x) < _tolr) 
+			return eval_curve_segment_t(_y0, ay0, by1, _y1, t);
 		
-		if(ft < _x) st = t;
-		else        ed = t;
+		var dfdt =  3 * _t * _t *  ax0
+				  + 6 * _t *  t * (bx1 - ax0)
+				  + 3 *  t *  t * (1 - bx1);
 		
-		t = (st + ed) / 2;
+		t = t - (ft - _x) / dfdt;
 	}
 	
-	return eval_curve_segment_t(_y0, ax0, ay0, bx1, by1, _y1, t);
+	return eval_curve_segment_t(_y0, ay0, by1, _y1, t);
 }
 
-function eval_curve_x(_bz, _x, _tolr = 0.00001) {
-	
+function eval_curve_x(_bz, _x, _tolr = 0.0001) {
 	static _CURVE_DEF_01 = [0, 1, 0, 0, 0, 0, /**/ 0, 0, 0, 0, 1/3,  1/3, /**/ -1/3, -1/3, 1, 1, 0, 0];
 	static _CURVE_DEF_10 = [0, 1, 0, 0, 0, 0, /**/ 0, 0, 0, 1, 1/3, -1/3, /**/ -1/3,  1/3, 1, 0, 0, 0];
 	static _CURVE_DEF_11 = [0, 1, 0, 0, 0, 0, /**/ 0, 0, 0, 1, 1/3,    0, /**/ -1/3,    0, 1, 1, 0, 0];
 	
-	if(!is_array(_bz)) return 0;
-	if(array_length(_bz) < CURVE_PADD) return 0;
+	if(!is_array(_bz) || array_length(_bz) < CURVE_PADD) return 0;
 	
 	var _shift = _bz[0];
 	var _scale = _bz[1];
@@ -236,9 +236,9 @@ function eval_curve_x(_bz, _x, _tolr = 0.00001) {
 	_x = _x / _scale - _shift;
 	_x = clamp(_x, 0, 1);
 	
-	if(array_equals_ext(_bz, _CURVE_DEF_11, CURVE_PADD)) return lerp(_miny, _maxy, 1     );
-	if(array_equals_ext(_bz, _CURVE_DEF_01, CURVE_PADD)) return lerp(_miny, _maxy,     _x);
-	if(array_equals_ext(_bz, _CURVE_DEF_10, CURVE_PADD)) return lerp(_miny, _maxy, 1 - _x);
+	if(array_equals_ext_fast(_bz, _CURVE_DEF_11, CURVE_PADD)) return lerp(_miny, _maxy, 1     );
+	if(array_equals_ext_fast(_bz, _CURVE_DEF_01, CURVE_PADD)) return lerp(_miny, _maxy,     _x);
+	if(array_equals_ext_fast(_bz, _CURVE_DEF_10, CURVE_PADD)) return lerp(_miny, _maxy, 1 - _x);
 	
 	var segments = (array_length(_bz) - CURVE_PADD) / 6 - 1;
 	

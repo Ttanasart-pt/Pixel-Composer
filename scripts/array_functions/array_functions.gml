@@ -529,6 +529,17 @@
 		return true;
 	}
 	
+	function array_equals_ext_fast(arr1, arr2, offset = 0) { 
+		var _l1 = array_length(arr1);
+		var _l2 = array_length(arr2);
+		if(_l1 != _l2) return false;
+		
+		for( var i = offset; i < _l1; i++ )
+			if(arr1[i] != arr2[i]) return false;
+		
+		return true;
+	}
+	
 	function array_substract(arr1, arr2) {
 		if(!is_array(arr1) || !is_array(arr2)) return [];
 		

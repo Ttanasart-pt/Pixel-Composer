@@ -178,7 +178,7 @@
 #endregion -- sampler_simple --
 #pragma use(curve)
 
-#region -- curve -- [1765284174.5318077]
+#region -- curve -- [1765328132.4851277]
 
     #ifdef _YY_HLSL11_ 
         #define CURVE_MAX  512
@@ -199,33 +199,32 @@
     }
 
     float eval_curve_segment_x(in float _y0, in float ax0, in float ay0, in float bx1, in float by1, in float _y1, in float _x) {
-        int _binRep = 16;
+        int _binRep = 8;
         float _prec = 0.0001;
 
-        float  st = 0.;
-        float  ed = 1.;
-        float _xt = .5;
-        
         if(_x <= 0.) return _y0;
         if(_x >= 1.) return _y1;
         if(_y0 == ay0 && _y0 == by1 && _y0 == _y1) return _y0;
-        
+
+        float t = _x;
+                
         for(int i = 0; i < _binRep; i++) {
-            float _1ft = 1. - _xt;
-            float _ftx = 3. * _1ft * _1ft * _xt * ax0 
-                       + 3. * _1ft *  _xt * _xt * bx1
-                       +       _xt *  _xt * _xt;
+            float _t = 1. - t;
+            float ft =   3. * _t * _t * t * ax0 
+                       + 3. * _t *  t * t * bx1
+                       +       t *  t * t;
             
-            if(abs(_ftx - _x) < _prec)
-                return eval_curve_segment_t(_y0, ax0, ay0, bx1, by1, _y1, _xt);
+            if(abs(ft - _x) < _prec)
+                return eval_curve_segment_t(_y0, ax0, ay0, bx1, by1, _y1, t);
             
-            if(_ftx < _x) st = _xt;
-            else	  	  ed = _xt;
+            float dfdt =  3. * _t * _t *  ax0
+				        + 6. * _t *  t * (bx1 - ax0)
+				        + 3. *  t *  t * (1. - bx1);
             
-            _xt = (st + ed) / 2.;
+            t = t - (ft - _x) / dfdt;
         }
         
-        return eval_curve_segment_t(_y0, ax0, ay0, bx1, by1, _y1, _xt);
+        return eval_curve_segment_t(_y0, ax0, ay0, bx1, by1, _y1, t);
     }
 
     float curveEval(in float[CURVE_MAX] curve, in int amo, in float _x) {

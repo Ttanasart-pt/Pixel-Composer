@@ -100,19 +100,19 @@ function curveBox(_onModify) : widget() constructor {
 		tb_shift.setParam(params);
 		tb_scale.setParam(params);
 		
-		return draw(params.x, params.y, params.w, params.data, params.m);
+		return draw(params.x, params.y, params.w, params.h, params.data, params.m);
 	}
 	
-	static draw = function(_x, _y, _w, _data, _m) {
+	static draw = function(_x, _y, _w, _h, _data, _m) {
 		     x = _x; 
 		     y = _y;
 		     w = _w; 
-		var _h =  h - ui(4);
+		var hh =  h - ui(4);
 		
 		if(!is_array(_data) || array_length(_data) == 0) return 0;
 		if(is_array(_data[0])) return 0;
 		
-		var tbh       = line_get_height(f_p3) + ui(4);
+		var tbh       = line_get_height(font);
 		var _amo      = array_length(_data);
 		var points    = (_amo - CURVE_PADD) / 6;
 		
@@ -120,7 +120,7 @@ function curveBox(_onModify) : widget() constructor {
 		var zoom_padd = zoom_size + ui(4);
 		
 		cw = _w - zoom_padd;
-		ch = _h - zoom_padd - (tbh + ui(4)) * (1 + show_x_control);
+		ch = hh - zoom_padd - (tbh + ui(4)) * (1 + show_x_control);
 		
 		hovering  = false;
 		curr_data = _data;
@@ -442,7 +442,7 @@ function curveBox(_onModify) : widget() constructor {
 			
 			var bxW = _w - zoom_padd;
 			var bx  = _x;
-			var by  = _y + _h - bs - (tbh + ui(4)) * (1 + show_x_control);
+			var by  = _y + hh - bs - (tbh + ui(4)) * (1 + show_x_control);
 			
 			var zx0 = bx + bs / 2 + (bxW - bs) * (minx - zminx) / (zmaxx - zminx);
 			var zx1 = bx + bs / 2 + (bxW - bs) * (maxx - zminx) / (zmaxx - zminx);
@@ -521,7 +521,7 @@ function curveBox(_onModify) : widget() constructor {
 			////- Height drag
 			
 			var _bhx = _x + _w - bs;
-			var _bhy = _y + _h - bs - (tbh + ui(4));
+			var _bhy = _y + hh - bs - (tbh + ui(4)) * (1 + show_x_control);
 			var _hov = false;
 			
 			if(point_in_rectangle(_m[0], _m[1], _bhx, _bhy, _bhx + bs, _bhy + bs)) {
@@ -550,17 +550,28 @@ function curveBox(_onModify) : widget() constructor {
 			show_coord = true;
 			hovering   = true;
 			
+			if(node_hovering != -1) {
+				CURSOR_SPRITE = THEME.cursor_move;
+				
+				if(node_hover_typ != 0) {
+					if(key_mod_press(SHIFT)) 
+						CURSOR_SPRITE = THEME.cursor_path_anchor_detach;
+					else
+						CURSOR_SPRITE = THEME.cursor_path_anchor_unmirror;
+				}
+			}
+			
 			if(mouse_press(mb_left, active)) {
 				if(node_hovering == -1) {
 					var _ind = CURVE_PADD + point_insert * 6;
 					var _px =     (_m[0] - _x) / cw;
 					var _py = 1 - (_m[1] - _y) / ch;
 					
-					array_insert(_data, _ind + 0, linear_mode? 0 : -1/3);
+					array_insert(_data, _ind + 0, linear_mode? 0 : -1/5);
 					array_insert(_data, _ind + 1, 0);
 					array_insert(_data, _ind + 2, _px);
 					array_insert(_data, _ind + 3, _py);
-					array_insert(_data, _ind + 4, linear_mode? 0 : 1/3);
+					array_insert(_data, _ind + 4, linear_mode? 0 : 1/5);
 					array_insert(_data, _ind + 5, 0);
 					
 					if(onModify(_data))
@@ -572,7 +583,7 @@ function curveBox(_onModify) : widget() constructor {
 				} else {
 					node_dragging = node_hovering;
 					node_drag_typ = node_hover_typ;
-					
+						
 					if(node_hover_typ != 0) {
 						var _cax = _data[node_dragging - 2];
 						var _cay = _data[node_dragging - 1];

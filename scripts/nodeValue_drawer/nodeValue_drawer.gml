@@ -299,11 +299,11 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 							
 				var lhf = lb_h / 2 - 4;
 				draw_set_color(COLORS.panel_inspector_key_separator);
-				draw_line(bx - ui(20), by - lhf, bx - ui(20), by + lhf);
+				draw_line(bx - ui(4), by, bx - ui(4), by + bs);
 				
 				tooltip_loop_type.index = jun.on_end;
 				
-				bx -= bs + ui(16);
+				bx -= bs + ui(8);
 				var b = buttonInstant_Pad(bb, bx, by, bs, bs, _m, _hover, _focus, tooltip_loop_type, THEME.prop_on_end, jun.on_end)
 				if(b) cHov = true;
 				if(b == 1 && key_mod_press(SHIFT) && MOUSE_WHEEL != 0)   
@@ -369,6 +369,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				
 			}
 		}
+		
+		
 	#endregion
 	
 	if(!is(wid, widget)) return [ lb_h, true, cHov, lbHov, lb_x ];
@@ -424,9 +426,9 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			}
 			
 			var _show = jun.showValue();
-			var param = new widgetParam(editBoxX, editBoxY, editBoxW, editBoxH, _show, jun.display_data, _m, rx, ry);
-			    param.font = _viewSpac? f_p2 : f_p3;
-			    param.sep_axis = jun.sep_axis;
+			var param = new widgetParam(editBoxX, editBoxY, editBoxW, editBoxH, _show, jun.display_data, _m, rx, ry)
+				.setFont(_viewSpac? f_p2 : f_p3)
+				.setSepAxis(jun.sep_axis);
 			
 			switch(jun.type) {
 				case VALUE_TYPE.float : 
@@ -440,7 +442,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 					break;
 				
 				case VALUE_TYPE.boolean : 
-					if(is_instanceof(wid, checkBoxActive)) break;
+					if(is(wid, checkBoxActive)) break;
 					
 					param.halign = breakLine? fa_left : fa_center;
 					param.s      = editBoxH;

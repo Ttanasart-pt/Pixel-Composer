@@ -192,6 +192,7 @@ function widgetParam(x, y, w, h, data, display_data = {}, m = mouse_ui, rx = 0, 
 	static setFont       = function( f) /*=>*/ { font  = f;   return self; }
 	static setHide       = function( h) /*=>*/ { hide  = h;   return self; }
 	static setScrollpane = function( s) /*=>*/ { scrollpane = s; return self; }
+	static setSepAxis    = function( s) /*=>*/ { sep_axis   = s; return self; }
 	
 	static setFocusHover = function(f, h, i = undefined) { 
 		focus = f; 
