@@ -115,7 +115,10 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		var eoy = from.ease_out[1];
 		var eiy = to.ease_in[1];
 		
-		return eval_curve_segment_x(0, eox, eoy, 1-eix, eiy, 1, rat);
+		eix = 1 - eix;
+		eiy = 1 - eiy;
+		
+		return eval_curve_segment_x(0, eox, eoy, eix, 1 - eiy, 1, rat);
 	}
 	
 	static interpolateValue = function(from, to, vfrom, vto, rat) {
@@ -124,11 +127,14 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		if(to.ease_in_type == CURVE_TYPE.linear && from.ease_out_type == CURVE_TYPE.linear) return lerp(vfrom, vto, rat);
 		
 		var eox = clamp(from.ease_out[0], 0, 0.9);
-		var eix = clamp(to.ease_in[0],    0, 0.9);
+		var eix = clamp(to.ease_in[0],    0, 0.9); 
 		var eoy = from.ease_out[1];
 		var eiy = to.ease_in[1];
 		
-		return eval_curve_segment_x(vfrom, eox, vfrom + eoy, 1-eix, vto - (1 - eiy), vto, rat);
+		eix = 1 - eix;
+		eiy = 1 - eiy;
+		
+		return eval_curve_segment_x(vfrom, eox, vfrom + eoy, eix, vto - eiy, vto, rat);
 	}
 	
 	static lerpValue = function(from, to, rat) {
