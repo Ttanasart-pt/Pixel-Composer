@@ -11,11 +11,11 @@ function Node_Blur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(8, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
 	////- =Surfaces
-	newInput( 0, nodeValue_Surface( "Surface In"));
+	newInput( 0, nodeValue_Surface( "Surface In" ));
 	newInput(14, nodeValue_Surface( "UV Map"     ));
 	newInput(15, nodeValue_Slider(  "UV Mix", 1  ));
-	newInput( 5, nodeValue_Surface( "Mask"));
-	newInput( 6, nodeValue_Slider(  "Mix", 1));
+	newInput( 5, nodeValue_Surface( "Mask"       ));
+	newInput( 6, nodeValue_Slider(  "Mix", 1     ));
 	__init_mask_modifier(5, 9); // inputs 9, 10
 	
 	////- =Blur
@@ -108,6 +108,8 @@ function Node_Blur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			shader_set_f("overColor",     colToVec4(_overc));
 			shader_set_f("angle",         degtorad(_dirr));
 			
+			shader_set_f("sizeModulate",  1);
+			
 			draw_surface_safe(_surf);
 			shader_reset();
 		surface_reset_target();
@@ -119,6 +121,8 @@ function Node_Blur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			shader_set_f("weight",    __gaussian_get_kernel(_msize));
 			shader_set_f_map("size",   _size, _data[16], inputs[1]);
 			shader_set_i("horizontal", 0);
+			
+			shader_set_f("sizeModulate",  _aspc);
 			
 			draw_surface_safe(temp_surface[0]);
 			shader_reset();

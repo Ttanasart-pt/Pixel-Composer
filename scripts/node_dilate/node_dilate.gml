@@ -10,13 +10,13 @@ function Node_Dilate(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(13, nodeValue_Surface( "UV Map"     ));
 	newInput(14, nodeValue_Slider(  "UV Mix", 1  ));
 	newInput( 5, nodeValue_Surface( "Mask"       ));
-	newInput( 6, nodeValue_Slider(  "Mix", 1     ));
+	newInput( 6, nodeValue_Slider(  "Mix",    1  ));
 	__init_mask_modifier(5, 9); // inputs 9, 10
 	
 	////- =Dilate
-	newInput(1, nodeValue_Vec2(   "Center",   [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput(2, nodeValue_Slider( "Strength",  1, [-3, 3, 0.01] )).setHotkey("S").setMappable(11);
-	newInput(3, nodeValue_Float(  "Radius",    16 )).setHotkey("R").setMappable(12);
+	newInput(1, nodeValue_Vec2(   "Center",   [.5,.5]        )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(2, nodeValue_Slider( "Strength",  1, [-3,3,.01] )).setHotkey("S").setMappable(11);
+	newInput(3, nodeValue_Float(  "Radius",    16            )).setHotkey("R").setMappable(12);
 	// input 15
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));

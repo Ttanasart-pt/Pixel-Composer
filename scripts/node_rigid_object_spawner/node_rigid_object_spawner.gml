@@ -22,7 +22,7 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 	
 	////- Color
 	
-	newInput(8, nodeValue_Gradient( "Random Color", new gradientObject(ca_white)));
+	newInput(8, nodeValue_Gradient( "Random Color", gra_white));
 	newInput(9, nodeValue_Range(    "Alpha", [ 1, 1 ], { linked : true }));
 	
 	// inputs 10

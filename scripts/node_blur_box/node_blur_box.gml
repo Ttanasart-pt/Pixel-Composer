@@ -19,14 +19,15 @@ function Node_Blur_Box(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	__init_mask_modifier(2, 6); // inputs 6, 7, 
 	
 	////- =Blur
-	newInput(1, nodeValue_Int(  "Size",           3     )).setHotkey("S").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
-	newInput(8, nodeValue_Bool( "Separate Axis",  false ));
-	newInput(9, nodeValue_Vec2( "2D Size",       [3,3]  ));
-	// input 12
+	newInput( 8, nodeValue_Bool(  "Separate Axis",  false ));
+	newInput( 1, nodeValue_Float( "Size",           3     )).setMappable(12).setHotkey("S").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput( 9, nodeValue_Float( "Size X",         3     )).setMappable(14);
+	newInput(13, nodeValue_Float( "Size Y",         3     )).setMappable(15);
+	// input 16
 	
 	input_display_list = [ 4, 5, 
-		["Surfaces", true], 0, 10, 11, 2, 3, 6, 7, 
-		["Blur",	false], 8, 1, 9, 
+		[ "Surfaces", true ], 0, 10, 11, 2, 3, 6, 7, 
+		[ "Blur",    false ], 8, 1, 12, 9, 14, 13, 15, 
 	]
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -52,16 +53,20 @@ function Node_Blur_Box(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _surf = _data[0];
-		var _mask = _data[2];
-		var _mix  = _data[3];
+		#region data
+			var _surf = _data[0];
+			var _mask = _data[2];
+			var _mix  = _data[3];
+			
+			var _sepa = _data[ 8];
+			var _size = _data[ 1];
+			var _sizX = _data[ 9];
+			var _sizY = _data[13];
 		
-		var _sepa = _data[8];
-		var _siz2 = _data[9];
-		var _size = _data[1];
-		
-		inputs[1].setVisible(!_sepa);
-		inputs[9].setVisible( _sepa);
+			inputs[ 1].setVisible(!_sepa);
+			inputs[ 9].setVisible( _sepa);
+			inputs[13].setVisible( _sepa);
+		#endregion
 		
 		var ww = surface_get_width_safe(_surf);
 		var hh = surface_get_height_safe(_surf);
@@ -73,16 +78,20 @@ function Node_Blur_Box(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 			shader_set_i("sampleMode", getAttribute("oversample"));
 			shader_set_2("dimension", [ ww, hh ]);
-			shader_set_f("size",      max(0, round(_sepa? _siz2[0] : _size)));
 			shader_set_i("axis",      0);
+			
+			if(_sepa) shader_set_f_map("size", _sizX, _data[14], inputs[9]);
+			else      shader_set_f_map("size", _size, _data[12], inputs[1]);
 			
 			draw_surface_safe(_surf);
 		surface_reset_shader();
 		
 		surface_set_shader(_outSurf, sh_blur_box);
 			shader_set_interpolation(_data[0]);
-			shader_set_f("size",      max(0, round(_sepa? _siz2[1] : _size)));
 			shader_set_i("axis",      1);
+			
+			if(_sepa) shader_set_f_map("size", _sizY, _data[13], inputs[13]);
+			else      shader_set_f_map("size", _size, _data[12], inputs[ 1]);
 			
 			draw_surface_safe(temp_surface[0]);
 		surface_reset_shader();

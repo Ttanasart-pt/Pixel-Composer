@@ -19,22 +19,22 @@ function Node_Flow_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(11, nodeValue_Bool(     "Apply Weight", false ));
 	
 	////- =Flow
-	newInput( 9, nodeValue_Slider( "Flow Rate",  1     ));
-	newInput(12, nodeValue_Int(    "Flow Speed", 1     ));
+	newInput( 9, nodeValue_Slider(   "Flow Rate",    1     ));
+	newInput(12, nodeValue_Int(      "Flow Speed",   1     ));
 	
 	////- =Flowmap
-	newInput(14, nodeValue_Bool(   "Tile",       false ));
-	newInput(15, nodeValue_Int(    "Blur",       1     ));
+	newInput(14, nodeValue_Bool(     "Tile",         false ));
+	newInput(15, nodeValue_Int(      "Blur",         1     ));
 	
 	// input 16
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 5, 6, 
-		["Surface", false], 0, 1, 2, 3, 4, 
-		["Path",    false], 7, 10, 13, 8, 11, 
-		["Flow",    false], 9, 12, 
-		["Flowmap", false], 14, 15, 
+		[ "Surface", false ],  0,  1,  2,  3,  4, 
+		[ "Path",    false ],  7, 10, 13,  8, 11, 
+		[ "Flow",    false ],  9, 12, 
+		[ "Flowmap", false ], 14, 15, 
 	];
 	
 	////- Nodes
@@ -48,8 +48,6 @@ function Node_Flow_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		return w_hovering;
 	}
-	
-	static step = function() {}
 	
 	static draw_circle_tile = function(_tile, _x, _y, _r, _dim) {
 		draw_circle_color(_x, _y, _r, c_white, c_black, false);

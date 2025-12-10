@@ -17,15 +17,18 @@ function Node_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	__init_mask_modifier(2, 6); // inputs 6, 7
 	
 	////- =Corner
-	newInput(1, nodeValue_ISlider( "Radius",     2, [1, 16, 0.1] ));
-	newInput(8, nodeValue_Slider(  "Thershold", .5 )).setHotkey("T");
-	
-	input_display_list = [ 4, 5, 
-		["Surfaces", true], 0, 2, 3, 6, 7, 
-		["Corner",	false], 1, 8, 
-	]
+	newInput(1, nodeValue_ISlider( "Radius",     2, [1, 16, 0.1] )).setMappable(9);
+	newInput(8, nodeValue_Slider(  "Threshold", .5 )).setHotkey("T").setMappable(10);
+	// 11
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	
+	input_display_list = [ 4, 5, 
+		[ "Surfaces", true ], 0, 2, 3, 6, 7, 
+		[ "Corner",	 false ], 1, 9, 8, 10, 
+	]
+	
+	////- Nodes
 	
 	attribute_surface_depth();
 	attribute_oversample();
@@ -77,11 +80,11 @@ function Node_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _sam = getAttribute("oversample");
 		
 		surface_set_shader(_outSurf, sh_corner_apply);
-			shader_set_2("dimension", _dim);
-			shader_set_f("radius",    _rad);
-			shader_set_f("thershold", _thr);
-			shader_set_surface("original", _surf);
-			shader_set_i("sampleMode", _sam);
+			shader_set_2(       "dimension",  _dim );
+			shader_set_f_map(   "radius",     _rad, _data[ 9], inputs[1] );
+			shader_set_f_map(   "threshold",  _thr, _data[10], inputs[8] );
+			shader_set_surface( "original",   _surf);
+			shader_set_i(       "sampleMode", _sam );
 			
 			draw_surface_safe(temp_surface[!_bg]);
 		surface_reset_shader();

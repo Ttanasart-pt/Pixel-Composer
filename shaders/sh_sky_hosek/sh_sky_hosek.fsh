@@ -48,8 +48,12 @@ varying vec4 v_vColour;
 uniform vec2 dimension;
 uniform int  mapping;
 
+uniform vec2      turbidity;
+uniform int       turbidityUseSurf;
+uniform sampler2D turbiditySurf;
+        float     turb;
+
 uniform float albedo;
-uniform float turbidity;
 uniform vec2  sunPosition;
 
 uniform vec2  position;
@@ -367,7 +371,7 @@ float angle(float z1, float a1, float z2, float a2) {
 vec3 sample_sky(float view_zenith, float view_azimuth, float sun_zenith, float sun_azimuth) {
 	float gamma = angle(view_zenith, view_azimuth, sun_zenith, sun_azimuth);
 	float theta = view_zenith; 
-	return spectral_radiance(theta, gamma, int(albedo), int(turbidity), sun_zenith) * mean_spectral_radiance(int(albedo), int(turbidity), sun_zenith);
+	return spectral_radiance(theta, gamma, int(albedo), int(turb), sun_zenith) * mean_spectral_radiance(int(albedo), int(turb), sun_zenith);
 }
 
 // CIE-XYZ to linear RGB
@@ -386,6 +390,12 @@ vec3 tonemap(vec3 color, float exposure) {
 }
 
 void main() {
+	turb = turbidity.x;
+	if(turbidityUseSurf == 1) {
+		vec4 _vMap = texture2D( turbiditySurf, v_vTexcoord );
+		turb = mix(turbidity.x, turbidity.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	}
+	
     init();
     
     vec2 vtx = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);

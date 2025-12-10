@@ -48,31 +48,60 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform vec2  dimension;
-uniform float radius;
-uniform float intensity;
 uniform int   blend;
 
+uniform vec2      radius;
+uniform int       radiusUseSurf;
+uniform sampler2D radiusSurf;
+
+uniform vec2      intensity;
+uniform int       intensityUseSurf;
+uniform sampler2D intensitySurf;
+
 void main() {
+	float rad    = radius.x;
+	float radMax = max(radius.x, radius.y);
+	if(radiusUseSurf == 1) {
+		vec4 _vMap = texture2D( radiusSurf, v_vTexcoord );
+		rad = mix(radius.x, radius.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	}
+	
+	float ins = intensity.x;
+	if(intensityUseSurf == 1) {
+		vec4 _vMap = texture2D( intensitySurf, v_vTexcoord );
+		ins = mix(intensity.x, intensity.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	}
+	
     vec2  tx = 1. / dimension;
     vec4  ss = vec4(0.);
     float ww = 0.;
     
-    for(float i = -radius; i <= radius; i++)
-    for(float j = -radius; j <= radius; j++) {
-        if(i == 0. && j == 0.) continue;
-        
-        vec2 sx = v_vTexcoord + vec2(i, j) * tx;
-        float w = (radius - (abs(i) + abs(j)) + 1.) / radius / 4.;
-        if(w <= 0.) continue;
-        
-        ss -= sampleTexture( gm_BaseTexture, sx ) * w;
-        ww += w;
+    rad    = floor(rad);
+    radMax = floor(radMax);
+    
+    for(float i = -radMax; i <= radMax; i++) {
+    	if(i < -rad) continue;
+    	if(i >  rad) break;
+    	
+	    for(float j = -radMax; j <= radMax; j++) {
+	    	if(j < -rad) continue;
+			if(j >  rad) break;
+    	
+	        if(i == 0. && j == 0.) continue;
+	        
+	        vec2 sx = v_vTexcoord + vec2(i, j) * tx;
+	        float w = (rad - (abs(i) + abs(j)) + 1.) / rad / 4.;
+	        if(w <= 0.) continue;
+	        
+	        ss -= sampleTexture( gm_BaseTexture, sx ) * w;
+	        ww += w;
+	    }
     }
     
     vec4 sc = sampleTexture( gm_BaseTexture, v_vTexcoord );
          ss += sc * ww;
     
-    vec4 res = ss * intensity;
+    vec4 res = ss * ins;
     if(blend == 1) res += sc;
     res.a = sc.a;
     

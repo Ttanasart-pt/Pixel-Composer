@@ -11,33 +11,33 @@ function Node_Fluffify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	__init_mask_modifier(1, 3); // inputs 3, 4
 	
 	////- =Fluff
-	newInput(16, nodeValue_Enum_Scroll( "Shape",  0, [ "Circle", "Diamond", "Square", "Surface" ] ));
-	newInput(27, nodeValue_Surface(     "Surface" ));
-	newInput( 6, nodeValue_Slider(      "Size",   1, [0, 2, .01] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput( 9, nodeValue_Slider(      "Radius", 1, [0, 2, .01] )).setMappable(15);
-	newInput( 8, nodeValue_Rotation(    "Phase",  0              ));
+	newInput(16, nodeValue_EScroll(  "Shape",  0, [ "Circle", "Diamond", "Square", "Surface" ] ));
+	newInput(27, nodeValue_Surface(  "Surface" ));
+	newInput( 6, nodeValue_Slider(   "Size",   1, [0, 2, .01] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput( 9, nodeValue_Slider(   "Radius", 1, [0, 2, .01] )).setMappable(15);
+	newInput( 8, nodeValue_Rotation( "Phase",  0              ));
 	
 	////- =Iteration
-	newInput(10, nodeValue_Float(  "Iteration",   10             ));
-	newInput(11, nodeValue_Slider( "Size Modify", 1, [0, 2, .01] ));
-	newInput(12, nodeValue_Slider( "Span Modify", 1, [0, 2, .01] ));
-	newInput(20, nodeValue_Vec2(   "Offset",     [0,0]           ));
+	newInput(10, nodeValue_Float(    "Iteration",     10             ));
+	newInput(11, nodeValue_Slider(   "Size Modify",   1, [0, 2, .01] ));
+	newInput(12, nodeValue_Slider(   "Span Modify",   1, [0, 2, .01] ));
+	newInput(20, nodeValue_Vec2(     "Offset",       [0,0]           ));
 	
 	////- =Rendering
-	newInput(13, nodeValue_Enum_Scroll( "Blend Mode", 0, [ "Maximum", "Override" ] ));
-	newInput(21, nodeValue_Slider(  "Substractive",         0       ));
-	newInput(22, nodeValue_Bool(    "Blend Original",       false   ));
-	newInput(14, nodeValue_Bool(    "Fade by Iteration",    false   ));
-	newInput(17, nodeValue_Bool(    "Skip First Iteration", false   ));
+	newInput(13, nodeValue_EScroll(  "Blend Mode", 0, [ "Maximum", "Override" ] ));
+	newInput(21, nodeValue_Slider(   "Substractive",         0       ));
+	newInput(22, nodeValue_Bool(     "Blend Original",       false   ));
+	newInput(14, nodeValue_Bool(     "Fade by Iteration",    false   ));
+	newInput(17, nodeValue_Bool(     "Skip First Iteration", false   ));
 	
 	////- =Coloring
-	newInput(18, nodeValue_Palette( "Iteration Blend", [ ca_white ] ));
-	newInput(23, nodeValue_Bool(    "Stretch Palette",      true    ));
-	newInput(19, nodeValue_Int(     "Blend Period",         1       ));
+	newInput(18, nodeValue_Palette(  "Iteration Blend", [ ca_white ] ));
+	newInput(23, nodeValue_Bool(     "Stretch Palette",      true    ));
+	newInput(19, nodeValue_Int(      "Blend Period",         1       ));
 	
 	////- =Decorner
-	newInput(24, nodeValue_Bool(    "Use Decorner",   true ));
-	newInput(25, nodeValue_Slider(  "Tolerance",      0    ));
+	newInput(24, nodeValue_Bool(     "Use Decorner",   true ));
+	newInput(25, nodeValue_Slider(   "Tolerance",      0    ));
 	//input 28
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));

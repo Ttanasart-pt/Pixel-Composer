@@ -11,16 +11,16 @@ function Node_De_Stray(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	////- =Effect
 	newInput(4, nodeValue_Enum_Button( "Strictness",  0, [ "Low", "High", "Stray-only" ] ));
-	newInput(1, nodeValue_Slider( "Tolerance",  0     ));
+	newInput(1, nodeValue_Slider( "Tolerance",  0     )).setMappable(10);
 	newInput(3, nodeValue_Int(    "Iteration",  2     ));
 	newInput(9, nodeValue_Bool(   "Fill Empty", false ));
-	// input 10
+	// input 11
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 2, 
-		["Surfaces",  true], 0, 5, 6, 7, 8, 
-		["Effect",	 false], 4, 1, 3, 9, 
+		[ "Surfaces", true ],  0,  5,  6,  7,  8, 
+		[ "Effect",  false ],  4,  1, 10,  3,  9, 
 	];
 	
 	////- Node
@@ -61,7 +61,7 @@ function Node_De_Stray(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		repeat(_itr) {
 			surface_set_shader(temp_surface[_bg], sh_de_stray);
 				shader_set_f("dimension", _sw, _sh);
-				shader_set_f("tolerance", _tol);
+				shader_set_f_map("tolerance", _tol, _data[10], inputs[2]);
 				shader_set_i("strict",    _str);
 				shader_set_i("fill",      _fil);
 			

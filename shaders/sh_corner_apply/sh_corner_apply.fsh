@@ -48,11 +48,29 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform vec2      dimension;
-uniform float     radius;
-uniform float     thershold;
 uniform sampler2D original;
 
+uniform vec2      radius;
+uniform int       radiusUseSurf;
+uniform sampler2D radiusSurf;
+
+uniform vec2      threshold;
+uniform int       thresholdUseSurf;
+uniform sampler2D thresholdSurf;
+
 void main() {
+	float rad = radius.x;
+	if(radiusUseSurf == 1) {
+		vec4 _vMap = texture2D( radiusSurf, v_vTexcoord );
+		rad = mix(radius.x, radius.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	}
+	
+	float thr = threshold.x;
+	if(thresholdUseSurf == 1) {
+		vec4 _vMap = texture2D( thresholdSurf, v_vTexcoord );
+		thr = mix(threshold.x, threshold.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	}
+	
 	gl_FragColor = vec4(0., 0., 0., 1.);
 	
 	vec4 cc = texture2D(gm_BaseTexture, v_vTexcoord);
@@ -64,7 +82,7 @@ void main() {
 	
 	for(float i = -16.; i <= 16.; i++)
 	for(float j = -16.; j <= 16.; j++) {
-		if(abs(i) > radius || abs(j) > radius) continue;
+		if(abs(i) > rad || abs(j) > rad) continue;
 		
 		vec4 samp = sampleTexture(gm_BaseTexture, v_vTexcoord + vec2(i, j) * tx);
 		ksize++;
@@ -73,7 +91,7 @@ void main() {
 		kfill += samp.a;
 	}
 	
-	bool isCorner = (kfill / ksize) < thershold;
+	bool isCorner = (kfill / ksize) < thr;
 	
 	if(!isCorner) gl_FragColor = texture2D(original, v_vTexcoord);
 }

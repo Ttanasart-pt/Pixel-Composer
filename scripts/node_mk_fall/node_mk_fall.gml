@@ -40,7 +40,7 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	newInput(21, nodeValue_Range(          "Scale",     [1,1], { linked : true } ));
 	
 	////- =Render
-	newInput(13, nodeValue_Gradient( "Color", new gradientObject(ca_white) ))
+	newInput(13, nodeValue_Gradient( "Color", gra_white ))
 	newInput(14, nodeValue_Curve(    "Alpha", CURVE_DEF_11 ));
 	
 	////- =Ground

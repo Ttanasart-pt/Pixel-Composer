@@ -21,7 +21,11 @@ function Node_Shader_Generator(_x, _y, _group = noone) : Node_Shader(_x, _y, _gr
 		return _outSurf;
 	}
 	
+	static onProcessData = function(_outSurf, _data, _array_index) {}
+	
 	static processData = function(_outSurf, _data, _array_index) {
+		onProcessData(_outSurf, _data, _array_index);
 		return generateShader(_outSurf, _data);
 	}
+	
 }

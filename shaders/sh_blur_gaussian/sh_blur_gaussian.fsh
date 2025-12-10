@@ -56,6 +56,7 @@ uniform sampler2D sizeSurf;
 
 uniform float weight[128];
 uniform float angle;
+uniform float sizeModulate;
 
 uniform int  overrideColor;
 uniform vec4 overColor;
@@ -92,7 +93,7 @@ void main() {
 	if(sizeUseSurf == 1) {
 		vec4 _vMap = texture2D( sizeSurf, v_vTexcoord );
 		str = mix(size.x, size.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
-	} 
+	} str *= sizeModulate;
 	
 	vec4 result = sample( v_vTexcoord, 0., str );
 	

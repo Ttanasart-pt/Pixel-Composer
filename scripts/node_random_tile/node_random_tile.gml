@@ -22,7 +22,7 @@ function Node_Random_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	////- =Render
 	newInput( 7, nodeValue_Enum_Scroll( "Render Type",  0, ["Colored tile", "Height map", "Texture grid"]));
 	newInput( 8, nodeValueSeed());
-	newInput( 5, nodeValue_Gradient(     "Tile Color", new gradientObject(ca_white))).setMappable(17);
+	newInput( 5, nodeValue_Gradient(     "Tile Color", gra_white)).setMappable(17);
 	newInput( 6, nodeValue_Color(        "Gap Color",  ca_black ));
 	newInput( 9, nodeValue_Surface(      "Texture" ));
 	newInput(10, nodeValue_Bool(         "Anti-aliasing", false ));

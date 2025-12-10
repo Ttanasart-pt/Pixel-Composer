@@ -26,19 +26,19 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 8, nodeValue_Surface( "Mask"       ));
 	
 	////- Gradient
-	newInput( 1, nodeValue_Gradient(    "Gradient", new gradientObject([ ca_black, ca_white ]))).setMappable(15);
-	newInput( 5, nodeValue_Slider(      "Shift", 0, [-2,2,.01] )).setMappable(12);
-	newInput( 9, nodeValue_Slider(      "Scale", 1, [ 0,5,.01] )).setHotkey("S").setMappable(13);
-	newInput( 7, nodeValue_Enum_Button( "Loop",  0, [ "None", "Loop", "Pingpong" ]));
+	newInput( 1, nodeValue_Gradient( "Gradient", gra_black_white)).setMappable(15);
+	newInput( 5, nodeValue_Slider(   "Shift", 0, [-2,2,.01] )).setMappable(12);
+	newInput( 9, nodeValue_Slider(   "Scale", 1, [ 0,5,.01] )).setHotkey("S").setMappable(13);
+	newInput( 7, nodeValue_EButton(  "Loop",  0, [ "None", "Loop", "Pingpong" ]));
 	
 	////- Shape
 	__gradTypes = __enum_array_gen(["Linear", "Circular", "Radial", "Diamond"], s_node_gradient_type);
-	newInput( 2, nodeValue_Enum_Scroll( "Type",           0, __gradTypes));
-	newInput( 3, nodeValue_Rotation(    "Angle",          0      )).setHotkey("R").setMappable(10).hideLabel();
-	newInput( 4, nodeValue_Float(       "Radius",        .5      )).setMappable(11);
-	newInput( 6, nodeValue_Vec2(        "Center",        [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput(17, nodeValue_Vec2(        "Shape",         [1,1]   ));
-	newInput(14, nodeValue_Bool(        "Uniform ratio",  true   ));
+	newInput( 2, nodeValue_EScroll(  "Type",           0, __gradTypes));
+	newInput( 3, nodeValue_Rotation( "Angle",          0      )).setHotkey("R").setMappable(10).hideLabel();
+	newInput( 4, nodeValue_Float(    "Radius",        .5      )).setMappable(11);
+	newInput( 6, nodeValue_Vec2(     "Center",        [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(17, nodeValue_Vec2(     "Shape",         [1,1]   ));
+	newInput(14, nodeValue_Bool(     "Uniform ratio",  true   ));
 	// inputs 20
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));

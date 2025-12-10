@@ -5,34 +5,28 @@ function Node_Active_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	newInput(12, nodeValueSeed());
 	
 	////- =Brush
-	
 	newActiveInput(7);
 	
 	////- =Brush Position
-	
 	newInput( 2, nodeValue_Vec2(  "Position",        [0,0] ));
 	newInput(13, nodeValue_Range( "Position Jitter", [0,0] ));
 	newInput( 8, nodeValue_Range( "Distance", [1,1], { linked : true } ));
 	
 	////- =Brush Rotation
-	
 	newInput( 3, nodeValue_Rotation( "Base Rotation",       0     ));
 	newInput( 9, nodeValue_Bool(     "Rotate by Direction", false ));
 	newInput(10, nodeValue_Rotation( "Direction Shift",     0     ));
 	newInput(11, nodeValue_Range(    "Rotation Jitter",    [0,0]  ));
 	
 	////- =Brush Scale
-	
 	newInput( 4, nodeValue_Vec2(  "Scale",        [1,1] ));
 	newInput(14, nodeValue_Range( "Scale Jitter", [0,0] ));
 	
 	////- =Brush Render
-	
 	newInput( 1, nodeValue_Surface(    "Texture"));
 	newInput( 5, nodeValue_Color(      "Color",        ca_white ));
 	/**/ newInput(6, nodeValue_Slider( "Alpha",        1 ))
-	newInput(15, nodeValue_Gradient(   "Color Jitter", new gradientObject(c_white) ));
-	
+	newInput(15, nodeValue_Gradient(   "Color Jitter", gra_white ));
 	// input 16
 	
 	newOutput(0, nodeValue_Output("Output", VALUE_TYPE.surface, noone ));

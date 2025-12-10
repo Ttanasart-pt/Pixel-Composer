@@ -32,10 +32,10 @@ function Node_Gradient_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
-		[ "Output",    true  ], 0, 17, 18, 
-		[ "Positions", false ], 1, 3, 5, 7,
+		[ "Output",    true  ],  0, 17, 18, 
+		[ "Positions", false ],  1,  3,  5,  7,
 		[ "Falloff",   true  ], 11, 12, 13, 14, 15, 
-		[ "Colors",    false ], 9, 10, 2, 4, 6, 8, 16, 
+		[ "Colors",    false ],  9, 10,  2,  4,  6,  8, 16, 
 	];
 	
 	////- Node

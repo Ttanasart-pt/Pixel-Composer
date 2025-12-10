@@ -14,8 +14,13 @@ uniform float seed;
 uniform float phase;
 uniform int   tile;
 
-uniform float itrScaling;
-uniform float itrAmplitude;
+uniform vec2      itrScaling;
+uniform int       itrScalingUseSurf;
+uniform sampler2D itrScalingSurf;
+
+uniform vec2      itrAmplitude;
+uniform int       itrAmplitudeUseSurf;
+uniform sampler2D itrAmplitudeSurf;
 
 uniform int  colored;
 uniform vec2 colorRanR;
@@ -26,7 +31,9 @@ uniform sampler2D uvMap;
 uniform int   useUvMap;
 uniform float uvMapMix;
 
-vec2 sca;
+vec2  sca;
+float itSca;
+float itAmp;
 
 vec3 hsv2rgb(vec3 c) {
     vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
@@ -35,7 +42,7 @@ vec3 hsv2rgb(vec3 c) {
 }
 
 float random  (in vec2 st) { return smoothstep(0., 1., abs(fract(sin(dot(st.xy + vec2(21.456, 46.856), vec2(12.989, 78.233))) * (43758.545 + seed)) * 2. - 1.)); }
-vec2  random2 (in vec2 st) { float a = fract(random(st) + phase) * 6.28319; return vec2(cos(a), sin(a)); }
+vec2  random2 (in vec2 st) { float a = fract(random(st) + phase / 360.) * 6.28319; return vec2(cos(a), sin(a)); }
 
 float noise (in vec2 st, in vec2 scale) {
     vec2 cellMin = floor(st);
@@ -71,7 +78,7 @@ float noise (in vec2 st, in vec2 scale) {
 }
 
 float perlin(in vec2 st) {
-	float inAmp = 1. / itrAmplitude;
+	float inAmp = 1. / itAmp;
 	float amp = pow(inAmp, float(iteration) - 1.)  / (pow(inAmp, float(iteration)) - 1.);
     float n   = 0.;
 	vec2  pos = st;
@@ -80,9 +87,9 @@ float perlin(in vec2 st) {
 	for(int i = 0; i < iteration; i++) {
 		n += noise(pos, sc) * amp;
 		
-		sc  *= itrScaling;
-		amp *= itrAmplitude;
-		pos *= itrScaling;
+		sc  *= itSca;
+		amp *= itAmp;
+		pos *= itSca;
 	}
 	
 	return n;
@@ -95,6 +102,19 @@ void main() {
 			vec4 _vMap = texture2D( scaleSurf, v_vTexcoord );
 			sca = vec2(mix(scale.x, scale.y, (_vMap.r + _vMap.g + _vMap.b) / 3.));
 		}
+		
+		itSca = itrScaling.x;
+		if(itrScalingUseSurf == 1) {
+			vec4 _vMap = texture2D( itrScalingSurf, v_vTexcoord );
+			itSca = mix(itrScaling.x, itrScaling.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+		
+		itAmp = itrAmplitude.x;
+		if(itrAmplitudeUseSurf == 1) {
+			vec4 _vMap = texture2D( itrAmplitudeSurf, v_vTexcoord );
+			itAmp = mix(itrAmplitude.x, itrAmplitude.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+		}
+		
 	#endregion
 	
 	vec2 st;
@@ -106,7 +126,8 @@ void main() {
 		st  = fract(vtx - pos) * sca;
 		
 	} else {
-		st  = (vtx - pos) * mat2(cos(rotation), -sin(rotation), sin(rotation), cos(rotation)) * sca;
+		float ang = radians(rotation);
+		st  = (vtx - pos) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca;
 	}
 	
 	if(colored == 0) {

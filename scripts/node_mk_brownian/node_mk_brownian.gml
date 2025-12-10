@@ -26,7 +26,7 @@ function Node_MK_Brownian(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	////- =Render
 	newInput(13, nodeValue_Range(    "Size", [ 1, 1 ], { linked : true }   ));
-	newInput( 6, nodeValue_Gradient( "Color", new gradientObject(ca_white) ));
+	newInput( 6, nodeValue_Gradient( "Color", gra_white ));
 	newInput( 7, nodeValue_Curve(    "Alpha", CURVE_DEF_11                 ));
 	// input 14
 	

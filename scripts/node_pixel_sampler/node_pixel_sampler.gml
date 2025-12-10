@@ -8,7 +8,7 @@ function Node_Pixel_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	////- =Surface
 	newInput(3, nodeValue_Surface(  "Surfaces", [])).setArrayDepth(1);
-	newInput(4, nodeValue_Gradient( "Gradient", new gradientObject([ ca_black, ca_white ]))).setMappable(5);
+	newInput(4, nodeValue_Gradient( "Gradient", gra_black_white)).setMappable(5);
 	
 	////- =Render
 	newInput(7, nodeValue_Enum_Scroll( "Color Blending",     0, [ "None", "Multiply" ]));

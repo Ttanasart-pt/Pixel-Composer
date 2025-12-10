@@ -78,7 +78,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	////- =Render
 	newInput(34, nodeValue_EScroll(        "Blend Mode",        0, [ "Normal", "Additive", "Maximum" ] ));
-	newInput(14, nodeValue_Gradient(       "Color Over Copy",   new gradientObject(ca_white)           )).setMappable(30);
+	newInput(14, nodeValue_Gradient(       "Color Over Copy",   gra_white           )).setMappable(30);
 	
 	////- =Deprecated
 	

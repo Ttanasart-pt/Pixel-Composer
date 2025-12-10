@@ -135,7 +135,6 @@ uniform sampler2D map2;
 uniform vec2  dimension;
 uniform vec2  map_dimension;
 uniform vec2  displace;
-uniform float middle;
 uniform int   mode;
 uniform int   sepAxis;
 
@@ -148,6 +147,12 @@ uniform int   reposition;
 uniform vec2      strength;
 uniform int       strengthUseSurf;
 uniform sampler2D strengthSurf;
+
+uniform vec2      middle;
+uniform int       middleUseSurf;
+uniform sampler2D middleSurf;
+
+float mid;
 
 float bright(in vec4 col) { return dot(col.rgb, vec3(0.2126, 0.7152, 0.0722)) * col.a; }
 
@@ -163,19 +168,19 @@ vec2 shiftMap(in vec2 pos, in float str) {
 	vec2  _disp;
 	
 	if(mode == 0) {
-		_str  = (bright(disP) - middle) * str;
+		_str  = (bright(disP) - mid) * str;
 		_disp = _str * raw_displace;
 		
 		sam_pos = pos + _disp;
 		
 	} else if(mode == 1) {
 		if(sepAxis == 0)
-			_disp = vec2(disP.r - middle, disP.g - middle) * vec2((disP.r + disP.g + disP.b) / 3. - middle) * str;
+			_disp = vec2(disP.r - mid, disP.g - mid) * vec2((disP.r + disP.g + disP.b) / 3. - mid) * str;
 		else if(sepAxis == 1) {
 			vec4  disP2 = texture2Dintp( map2, pos );
 			
-			_disp.x = (bright(disP)  - middle) * str;
-			_disp.y = (bright(disP2) - middle) * str;
+			_disp.x = (bright(disP)  - mid) * str;
+			_disp.y = (bright(disP2) - mid) * str;
 		}
 		
 		sam_pos = pos + _disp;
@@ -185,12 +190,12 @@ vec2 shiftMap(in vec2 pos, in float str) {
 		
 		if(sepAxis == 0) {
 			_ang = disP.r * PI * 2.;
-			_str = (disP.g - middle) * str;
+			_str = (disP.g - mid) * str;
 		} else if(sepAxis == 1) {
 			vec4  disP2 = texture2Dintp( map2, pos );
 			
 			_ang = bright(disP) * PI * 2.;
-			_str = (bright(disP2) - middle) * str;
+			_str = (bright(disP2) - mid) * str;
 		}
 		
 		sam_pos = pos + _str * vec2(cos(_ang), sin(_ang));
@@ -201,7 +206,7 @@ vec2 shiftMap(in vec2 pos, in float str) {
 		vec4  d2 = texture2Dintp( map, pos - vec2( tx.x, 0.) ); float h2 = (d2.r + d2.g + d2.b) / 3.;
 		vec4  d3 = texture2Dintp( map, pos + vec2( 0., tx.y) ); float h3 = (d3.r + d3.g + d3.b) / 3.;
 		
-		vec2 grad = vec2( h0 - h2, h3 - h1 ) - middle;
+		vec2 grad = vec2( h0 - h2, h3 - h1 ) - mid;
 		sam_pos = pos + grad * str;
 	}
 	
@@ -237,6 +242,12 @@ void main() {
 		vec4 strMap = texture2Dintp( strengthSurf, v_vTexcoord );
 		stren = mix(strength.x, strength.y, (strMap.r + strMap.g + strMap.b) / 3.);
 		stMax = strength.y;
+	}
+	
+	mid = middle.x;
+	if(middleUseSurf == 1) {
+		vec4 _vMap = texture2D( middleSurf, v_vTexcoord );
+		mid = mix(middle.x, middle.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 	}
 	
 	if(iterate == 1) {

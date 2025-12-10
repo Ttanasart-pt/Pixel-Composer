@@ -25,15 +25,15 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(21, nodeValue_Slider(      "Leaf Span", .5    ));
 	
 	////- =Color
-	newInput( 4, nodeValue_Gradient(    "Color Per Branch",  new gradientObject(ca_white) )).setMappableConst(12);
-	newInput(20, nodeValue_Gradient(    "Color Over Branch", new gradientObject(ca_white) ));
-	newInput( 6, nodeValue_Gradient(    "Color Per Leaf",    new gradientObject(ca_white) )).setMappableConst(13);
+	newInput( 4, nodeValue_Gradient(    "Color Per Branch",  gra_white )).setMappableConst(12);
+	newInput(20, nodeValue_Gradient(    "Color Over Branch", gra_white ));
+	newInput( 6, nodeValue_Gradient(    "Color Per Leaf",    gra_white )).setMappableConst(13);
 	
 	////- =Edge
 	newInput(14, nodeValue_Enum_Button( "Render Edge",       0, [ "None", "Override", "Multiply", "Screen" ] ));
-	newInput(11, nodeValue_Gradient(    "Edge Color",        new gradientObject(ca_white) )).setMappableConst(25);
+	newInput(11, nodeValue_Gradient(    "Edge Color",        gra_white )).setMappableConst(25);
 	newInput(23, nodeValue_Enum_Button( "Render Top Edge",   0, [ "None", "Override", "Multiply", "Screen" ] ));
-	newInput(24, nodeValue_Gradient(    "Top Edge Color",    new gradientObject(ca_white) )).setMappableConst(26);
+	newInput(24, nodeValue_Gradient(    "Top Edge Color",    gra_white )).setMappableConst(26);
 	
 	////- =Growth
 	newInput(22, nodeValue_Range( "Grow Delay", [0,0], true ));

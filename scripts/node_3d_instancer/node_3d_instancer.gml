@@ -41,7 +41,7 @@ function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D(_x, _y, _group) con
 	
 	////- =Render
 	newInput(12, nodeValue_Palette(  "Colors Per Index", [ca_white] )).setOptions("Select by:", "array_select", [ "Index Loop", "Index Ping-pong", "Random" ], THEME.array_select_type).iconPad();
-	newInput(11, nodeValue_Gradient( "Random Colors",    new gradientObject(ca_white) ));
+	newInput(11, nodeValue_Gradient( "Random Colors",    gra_white ));
 	// 27
 	
 	b_centeralize = button(function() /*=>*/ {return centralize()}).setText("Centralize");

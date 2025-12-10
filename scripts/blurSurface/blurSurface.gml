@@ -64,9 +64,9 @@ function surface_apply_gaussian(args) {
 	var _size      = _sizeArr? args.size[0] : args.size;
 	var _sizeSurf  = _sizeArr? args.size[1] : noone;
 	var _sizeJunc  = _sizeArr? args.size[2] : noone;
-	
-	_size = min(_size, 128);
-	var gau_array = __gaussian_get_kernel(size);
+	var _msize     = is_array(_size)? max(_size[0], _size[1]) : _size;
+		
+	var gau_array = __gaussian_get_kernel(_msize);
 	
 	BLEND_OVERRIDE
 	gpu_set_tex_filter(true);
@@ -86,18 +86,21 @@ function surface_apply_gaussian(args) {
 		shader_set_i("overrideColor", overColor != noone);
 		shader_set_f("overColor",     colToVec4(overColor));
 		
+		shader_set_f("sizeModulate",  1);
+		
 		draw_surface_safe(surface);
 		shader_reset();
 	surface_reset_target();
 	
 	surface_set_target(__blur_pass[1]);
 		draw_clear_alpha(bg_c, bg);
-		var _size_v = round(size * ratio);
-			
+		
 		shader_set(sh_blur_gaussian);
-		shader_set_f("weight",    __gaussian_get_kernel(_size_v));
+		shader_set_f("weight",     gau_array);
 		shader_set_f_map("size",   _size, _sizeSurf, _sizeJunc);
 		shader_set_i("horizontal", 0);
+			
+		shader_set_f("sizeModulate",  ratio);
 			
 		draw_surface_safe(__blur_pass[0]);
 		shader_reset();

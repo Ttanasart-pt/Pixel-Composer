@@ -3,9 +3,15 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform float seed;
-uniform float progress;
-uniform float intensity;
 uniform int   detail;
+
+uniform vec2      progress;
+uniform int       progressUseSurf;
+uniform sampler2D progressSurf;
+
+uniform vec2      intensity;
+uniform int       intensityUseSurf;
+uniform sampler2D intensitySurf;
 
 uniform vec2  dimension;
 uniform vec2  position;
@@ -83,6 +89,18 @@ vec4 snoise(vec3 v) {
 }
 
 void main() {
+	float prg = progress.x;
+	if(progressUseSurf == 1) {
+		vec4 _vMap = texture2D( progressSurf, v_vTexcoord );
+		prg = mix(progress.x, progress.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	}
+	
+	float its = intensity.x;
+	if(intensityUseSurf == 1) {
+		vec4 _vMap = texture2D( intensitySurf, v_vTexcoord );
+		its = mix(intensity.x, intensity.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	}
+	
 	vec2 vtx  = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
 	vec2 p    = vtx;
 	     p.x *= (dimension.x / dimension.y);
@@ -92,14 +110,14 @@ void main() {
     float cc  = 0.;
     
     for(int i = 0; i < detail; i++) {
-    	vec3 pos = vec3(p.x, progress, p.y);
+    	vec3 pos = vec3(p.x, prg, p.y);
 	    vec4 n   = snoise( pos );
 	    pos -= 0.07 * n.xyz;
 	    n = snoise( pos );
 	
 	    pos -= 0.07 * n.xyz;
 	    n = snoise( pos );
-	    cc += exp(n.w * 3. - 1.5) * intensity * amp;
+	    cc += exp(n.w * 3. - 1.5) * its * amp;
 	    
 		amp *= .5;
 		p   *= 2.;

@@ -10,7 +10,10 @@ varying vec4 v_vColour;
 uniform vec2  dimension;
 uniform int   mapping;
 
-uniform float turbidity;
+uniform vec2      turbidity;
+uniform int       turbidityUseSurf;
+uniform sampler2D turbiditySurf;
+
 uniform vec2  sunPosition;
 
 uniform vec2  position;
@@ -113,6 +116,12 @@ vec3 calculateSkyLuminanceRGB( in vec3 s, in vec3 e, in float t ) {
 }
 
 void main() {
+	float turb = turbidity.x;
+	if(turbidityUseSurf == 1) {
+		vec4 _vMap = texture2D( turbiditySurf, v_vTexcoord );
+		turb = mix(turbidity.x, turbidity.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	}
+	
 	vec2 vtx = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
     vec2 uv  = (vtx - position / dimension) * scale;
     vec2 sun = (sunPosition - position) * scale / dimension;
@@ -125,7 +134,7 @@ void main() {
     
     vec3 sunDir       = normalize( vec3( sin( inclination ) * cos( azimuth ), cos( inclination ), sin( inclination ) * sin(azimuth) ) );
     vec3 viewDir      = -computeSphericalCoordinates( uv ).xzy;
-    vec3 skyLuminance = calculateSkyLuminanceRGB( sunDir, viewDir, turbidity );
+    vec3 skyLuminance = calculateSkyLuminanceRGB( sunDir, viewDir, turb );
     
     gl_FragColor = vec4( skyLuminance * 0.05, 1.0 );
 }

@@ -16,7 +16,8 @@ function Node_Alpha_Cutoff(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	__init_mask_modifier(2, 5); // inputs 5, 6, 
 	
 	////- =Cutoff
-	newInput(1, nodeValue_Slider(  "Minimum", 0.2 )).setHotkey("S").setTooltip("Any pixel with less alpha (more transparent) than this will be removed.");
+	newInput(1, nodeValue_Slider(  "Minimum", 0.2 )).setHotkey("S")
+		.setTooltip("Any pixel with less alpha (more transparent) than this will be removed.");
 	// input 7
 	
 	input_display_list = [ 4, 

@@ -31,7 +31,7 @@ function Node_MK_Grass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	////- =Render
 	newInput(12, nodeValue_Enum_Scroll( "Render Type",    0, [ "Gradient", "Sample Multiply", "Sample Add" ] ));
-	newInput(13, nodeValue_Gradient(    "Colors",         new gradientObject([ca_black, ca_white]) ));
+	newInput(13, nodeValue_Gradient(    "Colors",         gra_black_white ));
 	newInput(16, nodeValue_Slider(      "Color Variance", 0 ));
 	
 	////- =Ground

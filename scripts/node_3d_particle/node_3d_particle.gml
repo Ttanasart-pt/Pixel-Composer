@@ -54,8 +54,8 @@ function Node_3D_Particle(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 	newInput(22, nodeValue_Range(       "Size",                 [1,1], true   )).setCurvable(23, CURVE_DEF_11, "Over Lifespan"); 
 	
 	////- =Color
-	newInput(24, nodeValue_Gradient(    "Color Over Lifetime",  new gradientObject(ca_white)  ));
-	newInput(25, nodeValue_Gradient(    "Random Blend",         new gradientObject(ca_white)  ));
+	newInput(24, nodeValue_Gradient(    "Color Over Lifetime",  gra_white  ));
+	newInput(25, nodeValue_Gradient(    "Random Blend",         gra_white  ));
 	newInput(26, nodeValue_Palette(     "Color by Index",       [ca_white]                    )).setOptions("Select by:", "array_select", [ "Index Loop", "Index Ping-pong", "Random" ], THEME.array_select_type).iconPad();
 	newInput(55, nodeValue_Range(       "Alpha",                [1,1], true                   )).setCurvable(53, CURVE_DEF_11, "Over Lifespan"); 
 	

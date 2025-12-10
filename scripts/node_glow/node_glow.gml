@@ -32,14 +32,14 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(14, nodeValue_Bool(  "Pixel Distance", true     ));
 	newInput(11, nodeValue_Bool(  "Draw Original",  true     ));
 	// input 18
-		
-	input_display_list = [ 7, 
-		["Surfaces", true], 0, 5, 6, 8, 9, 
-		["Glow",	false], 10, 12, 2, 16, 3, 17, 15, 
-		["Render",	false], 13, 4, 14, 11, 
-	]
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+		
+	input_display_list = [ 7, 
+		[ "Surfaces", true ], 0, 5, 6, 8, 9, 
+		[ "Glow",    false ], 10, 12, 2, 16, 3, 17, 15, 
+		[ "Render",  false ], 13, 4, 14, 11, 
+	]
 	
 	attribute_surface_depth();
 	
@@ -63,7 +63,7 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _side     = _data[12];
 		var _border   = _data[ 1];
 		var _size     = _data[ 2];
-		var _strn = _data[ 3];
+		var _strn     = _data[ 3];
 		var _fallCur  = _data[15];
 		
 		var _blend    = _data[13];

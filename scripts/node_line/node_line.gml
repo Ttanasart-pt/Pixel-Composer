@@ -30,16 +30,16 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(16, nodeValue_Bool(    "Width Pass",            false    ));
 	
 	////- =Line data
-	newInput(27, nodeValue_Enum_Scroll( "Data Type", 1, [ "None", "Path", "Segments", "Two points" ]));
-	newInput( 6, nodeValue_Rotation(    "Rotation",  0 ));
-	newInput( 7, nodeValue_PathNode(    "Path"    ));
-	newInput(28, nodeValue_Vector(      "Segment" )).setArrayDepth(2);
-	newInput(32, nodeValue_Vec2(        "Start Point",   [0,.5] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput(33, nodeValue_Vec2(        "End Point",     [1,.5] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput(35, nodeValue_Bool(        "Force Loop",     false ));
-	newInput(19, nodeValue_Bool(        "Fix Length",     false )).setTooltip("Fix length of each segment instead of segment count.");
-	newInput( 2, nodeValue_ISlider(     "Segment",        1, [1, 32, 0.1] ));
-	newInput(20, nodeValue_Float(       "Segment Length", 4 ));
+	newInput(27, nodeValue_EScroll(  "Data Type", 1, [ "None", "Path", "Segments", "Two points" ]));
+	newInput( 6, nodeValue_Rotation( "Rotation",  0 ));
+	newInput( 7, nodeValue_PathNode( "Path"    ));
+	newInput(28, nodeValue_Vector(   "Segment" )).setArrayDepth(2);
+	newInput(32, nodeValue_Vec2(     "Start Point",   [0,.5] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(33, nodeValue_Vec2(     "End Point",     [1,.5] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(35, nodeValue_Bool(     "Force Loop",     false ));
+	newInput(19, nodeValue_Bool(     "Fix Length",     false )).setTooltip("Fix length of each segment instead of segment count.");
+	newInput( 2, nodeValue_ISlider(  "Segment",        1, [1, 32, 0.1] ));
+	newInput(20, nodeValue_Float(    "Segment Length", 4 ));
 	
 	////- =Width
 	newInput(17, nodeValue_Bool(  "1px Mode",             false        )).setTooltip("Render pixel perfect 1px line.");
@@ -49,13 +49,13 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(36, nodeValue_Bool(  "Apply Weight",         true         ));
 	
 	////- =Line settings
-	newInput( 8, nodeValue_Slider_Range( "Range",        [0,1]  )).setTooltip("Range of the path to draw.");
-	newInput(25, nodeValue_Bool(         "Invert",        false ));
-	newInput( 9, nodeValue_Float(        "Shift",         0     ));
-	newInput(26, nodeValue_Bool(         "Clamp Range",   false ));
-	newInput(13, nodeValue_Enum_Button(  "Start Cap",     0, __enum_array_gen([ "None", "Round", "Tri", "Square" ], s_node_line_cap)));
-	newInput(43, nodeValue_Enum_Button(  "End Cap",       0, __enum_array_gen([ "None", "Round", "Tri", "Square" ], s_node_line_cap)));
-	newInput(14, nodeValue_ISlider(      "Round Segment", 8, [2, 32, 0.1] ));
+	newInput( 8, nodeValue_Slider_Range( "Range",    [0,1]  )).setTooltip("Range of the path to draw.");
+	newInput(25, nodeValue_Bool(     "Invert",        false ));
+	newInput( 9, nodeValue_Float(    "Shift",         0     ));
+	newInput(26, nodeValue_Bool(     "Clamp Range",   false ));
+	newInput(13, nodeValue_EButton(  "Start Cap",     0, __enum_array_gen([ "None", "Round", "Tri", "Square" ], s_node_line_cap)));
+	newInput(43, nodeValue_EButton(  "End Cap",       0, __enum_array_gen([ "None", "Round", "Tri", "Square" ], s_node_line_cap)));
+	newInput(14, nodeValue_ISlider(  "Round Segment", 8, [2, 32, 0.1] ));
 	
 	////- =Dash Line
 	newInput(46, nodeValue_Bool(  "Dash",       false ));
@@ -68,14 +68,14 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput( 5, nodeValue_Float(  "Random Seed",     0                ));
 	
 	////- =Color
-	newInput(10, nodeValue_Gradient( "Color over Length",    new gradientObject(ca_white) ));
-	newInput(24, nodeValue_Gradient( "Random Blend",         new gradientObject(ca_white) ));
+	newInput(10, nodeValue_Gradient( "Color over Length",    gra_white ));
+	newInput(24, nodeValue_Gradient( "Random Blend",         gra_white ));
 	newInput(15, nodeValue_Bool(     "Span Color over Path", false )).setTooltip("Apply the full 'color over length' to the trimmed path.");
-	newInput(37, nodeValue_Gradient( "Color Weight",         new gradientObject(ca_white) ));
+	newInput(37, nodeValue_Gradient( "Color Weight",         gra_white ));
 	newInput(38, nodeValue_Vec2(     "Color Range",          [0,1] ));
 	
 	////- =Texture
-	newInput(18, nodeValue_Surface(  "Texture"));
+	newInput(18, nodeValue_Surface(  "Texture" ));
 	newInput(21, nodeValue_Vec2(     "Texture Position",       [0,0] ));
 	newInput(22, nodeValue_Rotation( "Texture Rotation",        0    ));
 	newInput(23, nodeValue_Vec2(     "Texture Scale",          [1,1] ));
@@ -87,7 +87,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(42, nodeValue_Bool(    "Rotate Cap", true ));
 	
 	////- =Render
-	newInput(34, nodeValue_Enum_Scroll( "SSAA", 0, [ "None", "2x", "4x", "8x" ] ));
+	newInput(34, nodeValue_EScroll( "SSAA", 0, [ "None", "2x", "4x", "8x" ] ));
 	// Inputs 48
 	
 	input_display_list = [ 39, 

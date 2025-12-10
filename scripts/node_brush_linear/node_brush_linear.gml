@@ -13,16 +13,16 @@ function Node_Brush_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	////- =Effect
 	newInput(3, nodeValueSeed());
 	newInput(2, nodeValue_Int(    "Iteration",    10 )).setHotkey("I").setValidator(VV_min(1));
-	newInput(4, nodeValue_Float(  "Length",       10 )).setHotkey("L");
-	newInput(5, nodeValue_Slider( "Attenuation", .99 ));
-	newInput(6, nodeValue_Slider( "Circulation", .8  ));
-	// input 12
+	newInput(4, nodeValue_Float(  "Length",       10 )).setMappable(12).setHotkey("L");
+	newInput(5, nodeValue_Slider( "Attenuation", .99 )).setMappable(13);
+	newInput(6, nodeValue_Slider( "Circulation", .8  )).setMappable(14);
+	// input 15
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 1,
-		["Surface", false], 0, 7, 8, 9, 10, 11, 
-		["Effect",  false], 2, 4, 5, 6, 
+		["Surface", false],  0,  7,  8,  9, 10, 11, 
+		["Effect",  false],  2,  4, 12,  5, 13,  6, 14,  
 	];
 	
 	attribute_surface_depth();
@@ -41,14 +41,18 @@ function Node_Brush_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
+		#region data
+			var _seed = _data[3];
+			var _itr  = _data[2];
+		#endregion
 		
 		surface_set_shader(_outSurf, sh_brush_linear);
-			shader_set_f("dimension",             surface_get_dimension(_data[0]));
-			shader_set_f("seed",                  _data[3]);
-			shader_set_i("convStepNums",          _data[2]);
-			shader_set_f("itrStepPixLen",         _data[4]);
-			shader_set_f("distanceAttenuation",   _data[5]);
-			shader_set_f("vectorCirculationRate", _data[6]);
+			shader_set_f("dimension",  surface_get_dimension(_data[0]));
+			shader_set_f("seed",         _seed );
+			shader_set_i("iteration",    _itr  );
+			shader_set_f_map("brushLen", _data[4], _data[12], inputs[4] );
+			shader_set_f_map("brushAtn", _data[5], _data[13], inputs[5] );
+			shader_set_f_map("brushRot", _data[6], _data[14], inputs[6] );
 			
 			draw_surface_safe(_data[0]);
 		surface_reset_shader();

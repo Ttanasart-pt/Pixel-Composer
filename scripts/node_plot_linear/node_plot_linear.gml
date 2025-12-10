@@ -56,8 +56,8 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	b_setRange = button(function() /*=>*/ {setDataRange()}).setIcon(THEME.value_range, 1, COLORS._main_icon).iconPad().setTooltip(__txt("Use data range"));
 	
 	newInput( 6, nodeValue_Color(    "Base Color",        ca_white                     ));
-	newInput(13, nodeValue_Gradient( "Color Over Sample", new gradientObject(ca_white) )).setMappable(27);
-	newInput(24, nodeValue_Gradient( "Color Over Value",  new gradientObject(ca_white) )).setMappable(29);
+	newInput(13, nodeValue_Gradient( "Color Over Sample", gra_white )).setMappable(27);
+	newInput(24, nodeValue_Gradient( "Color Over Value",  gra_white )).setMappable(29);
 	newInput(25, nodeValue_Range(    "Value range",      [0,1]                         )).setSideButton(b_setRange);
 	newInput(26, nodeValue_Bool(     "Absolute",         false, "Use absolute value to calculate color." ));
 	

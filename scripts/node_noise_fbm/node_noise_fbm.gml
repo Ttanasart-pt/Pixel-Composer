@@ -27,13 +27,15 @@ function Node_Noise_FBM(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput( 8, nodeValue_Slider_Range( "Color B Range", [ 0, 1 ] ));
 	// input 10
 	
+	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	
 	input_display_list = [
 		["Output",	false], 0, 10, 11, 9, 
 		["Noise",	false], 1, 2, 3, 4, 
 		["Color",	false], 5, 6, 7, 8, 
 	];
 	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	////- Node
 	
 	attribute_surface_depth();
 	

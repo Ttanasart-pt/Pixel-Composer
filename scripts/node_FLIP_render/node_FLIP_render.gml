@@ -18,7 +18,7 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput( 9, nodeValue_Slider_Range( "Alpha",               [1,1] ));
 	
 	////- =Effect
-	newInput(11, nodeValue_Gradient( "Color Over Velocity", new gradientObject(ca_white)));
+	newInput(11, nodeValue_Gradient( "Color Over Velocity", gra_white));
 	newInput(12, nodeValue_Range(    "Velocity Map",        [0,10] ));
 	newInput( 2, nodeValue_Range(    "Lifespan",            [0, 0], { linked : true } ));
 	

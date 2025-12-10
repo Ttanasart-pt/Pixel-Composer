@@ -254,7 +254,6 @@ void main() {
 		res		+= col * bok;
 		alpha	+= sam.a * (bok.r + bok.g + bok.b) / 3.;
 		weight	+= bok;
-		
 	}
 	
 	res   += spec;

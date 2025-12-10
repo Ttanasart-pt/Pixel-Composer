@@ -27,7 +27,7 @@ function Node_RM_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	newInput(12, nodeValue_Bool("Use Fog", 0))
 	
-	newInput(13, nodeValue_Gradient("Colors", new gradientObject([ ca_black, ca_white ])))
+	newInput(13, nodeValue_Gradient("Colors", gra_black_white))
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	

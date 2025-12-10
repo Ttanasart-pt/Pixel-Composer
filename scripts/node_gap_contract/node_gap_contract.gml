@@ -12,13 +12,13 @@ function Node_Gap_Contract(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	////- =Gap
 	newInput(6, nodeValue_Int(  "Max Width", 8 )).setHotkey("S");
-	/// inputs 8
+	/// inputs 9
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 1, 
-		["Surfaces", false], 0, 2, 3, 4, 5, 7, 
-		["Gap",      false], 6, 
+		[ "Surfaces", false ], 0, 2, 3, 4, 5, 7, 
+		[ "Gap",      false ], 6, 
 	];
 	
 	////- Node

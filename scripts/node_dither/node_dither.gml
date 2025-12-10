@@ -40,8 +40,7 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	////- =Dither
 	newInput(6, nodeValue_Enum_Button( "Mode",     0, [ "Color", "Alpha" ] ));
-	newInput(4, nodeValue_Slider(      "Contrast", 1, [1, 5, 0.1]          )).setHotkey("C");
-	newInput(5, nodeValue_Surface(     "Contrast map" ));
+	newInput(4, nodeValue_Slider(      "Contrast", 1, [1, 5, 0.1]          )).setMappable(5).setHotkey("C");
 	
 	////- =Palette
 	newInput( 1, nodeValue_Palette( "Palette" ));
@@ -56,7 +55,9 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		["Pattern",	false], 2,  3, 
 		["Dither",	false], 6,  4,  5, 
 		["Palette", false, 14], 1, 15, 
-	]
+	];
+	
+	////- Nodes
 	
 	attribute_surface_depth();
 	
@@ -72,29 +73,26 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		return w_hovering;
 	}
 	
-	static step = function() {
-		var _type    = getInputData(2);
-		var _mode    = getInputData(6);
-		var _use_pal = getInputData(14);
-		
-		inputs[3].setVisible(_type == 4, _type == 4);
-		inputs[1].setVisible(_mode == 0 && _use_pal);
-		inputs[4].setVisible(_mode == 0);
-		inputs[5].setVisible(_mode == 0);
-		
-		inputs[15].setVisible(!_use_pal);
-	}
-	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _pal    = _data[1];
-		var _typ    = _data[2];
-		var _map    = _data[3];
-		var _con    = _data[4];
-		var _conMap = _data[5];
-		var _mode   = _data[6];
-		var _seed   = _data[13];
-		var _usepal = _data[14];
-		var _step   = _data[15];
+		#region data
+			var _seed   = _data[13];
+			
+			var _typ    = _data[ 2];
+			var _map    = _data[ 3];
+			
+			var _mode   = _data[ 6];
+			var _con    = _data[ 4];
+			
+			var _pal    = _data[ 1];
+			var _usepal = _data[14];
+			var _step   = _data[15];
+			
+			inputs[3].setVisible(_typ == 4, _typ == 4);
+			inputs[1].setVisible(_mode == 0 && _usepal);
+			inputs[4].setVisible(_mode == 0);
+			
+			inputs[15].setVisible(!_usepal);
+		#endregion
 		
 		surface_set_shader(_outSurf, _mode? sh_alpha_hash : sh_dither);
 			shader_set_f("dimension", surface_get_dimension(_data[0]));
@@ -133,14 +131,12 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			}
 			
 			if(_mode == 0) {
-				shader_set_f("contrast",     _con);
-				shader_set_i("useConMap",    is_surface(_conMap));
-				shader_set_surface("conMap", _conMap);
+				shader_set_f_map("contrast",   _con, _data[5], inputs[4]);
 				
-				shader_set_i("usePalette",	 _usepal);
-				shader_set_f("palette",		 paletteToArray(_pal));
-				shader_set_f("colors",		 _step);
-				shader_set_i("keys",		 array_length(_pal));
+				shader_set_i("usePalette", _usepal);
+				shader_set_f("colors",     _step);
+				shader_set_f("palette",    paletteToArray(_pal));
+				shader_set_i("keys",       array_length(_pal));
 			}
 			
 			draw_surface_safe(_data[0]);

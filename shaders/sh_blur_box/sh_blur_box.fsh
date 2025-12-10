@@ -130,17 +130,35 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform vec2  dimension;
-uniform float size;
 uniform int   axis;
 
+uniform vec2      size;
+uniform int       sizeUseSurf;
+uniform sampler2D sizeSurf;
+
 void main() {
+	float siz     = size.x;
+	float maxSize = max(size.x, size.y);
+	
+	if(sizeUseSurf == 1) {
+		vec4 _vMap = texture2D( sizeSurf, v_vTexcoord );
+		siz = mix(size.x, size.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	}
+	
 	vec2 tx = 1. / dimension;
 	vec2 ax = axis == 0? vec2(tx.x, 0.) : vec2(0., tx.y);
 	vec4 cc = vec4(0.);
+	float w = 0.;
 	
-	for(float i = -size; i <= size; i++)
-		cc += sampleTexture(gm_BaseTexture, v_vTexcoord + ax * i, abs(i) / size);
+	siz = floor(siz);
+	for(float i = -maxSize; i <= maxSize; i++) {
+		if(i < -siz) continue;
+		if(i >  siz) break;
+		
+		cc += sampleTexture(gm_BaseTexture, v_vTexcoord + ax * i, abs(i) / siz);
+		w  += 1.;
+	}
 	
-	cc /= size * 2. + 1.;
+	cc /= w;
 	gl_FragColor = cc;
 }

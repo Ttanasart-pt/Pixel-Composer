@@ -13,7 +13,7 @@ function Node_Colorize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	////- =Coloize
 	
-	newInput( 1, nodeValue_Gradient( "Gradient", new gradientObject([ ca_black, ca_white ]))).setMappable(11);
+	newInput( 1, nodeValue_Gradient( "Gradient", gra_black_white)).setMappable(11);
 	newInput( 2, nodeValue_Slider(   "Gradient Shift", 0, [ -1, 1, .01 ] )).setMappable(10);
 	newInput( 6, nodeValue_Bool(     "Multiply Alpha", true ));
 	newInput(13, nodeValue_Bool(     "Keep Alpha",     true ));

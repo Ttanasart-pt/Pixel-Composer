@@ -2,7 +2,7 @@ function Node_Gradient_Shift(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	name = "Gradient Shift";
 	setDimension(96);
 	
-	newInput(0, nodeValue_Gradient("Gradient", new gradientObject(ca_white)))
+	newInput(0, nodeValue_Gradient("Gradient", gra_white))
 		.setVisible(true, true);
 	
 	newInput(1, nodeValue_Slider("Shift", 0, [-1, 1, 0.01] ));

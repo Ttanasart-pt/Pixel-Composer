@@ -7,8 +7,8 @@ function Node_PB_FX_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(1, nodeValue_Int( "Height", 2 ));
 	
 	////- =Colors
-	newInput(2, nodeValue_Gradient( "Color Over Height", new gradientObject( ca_white )))
-	newInput(3, nodeValue_Gradient( "Color Over Angles", new gradientObject( [ ca_black, ca_white ] )))
+	newInput(2, nodeValue_Gradient( "Color Over Height", gra_white))
+	newInput(3, nodeValue_Gradient( "Color Over Angles", gra_black_white))
 	newInput(4, nodeValue_Rotation( "Shift Angle", 0 )).hideLabel();
 	
 	////- =Highlight

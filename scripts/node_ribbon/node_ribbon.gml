@@ -20,13 +20,13 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(15, nodeValue_Float(    "Thickness",  0 ));
 	
 	////- =Render
-	newInput( 6, nodeValue_Gradient( "Color over Length", new gradientObject(ca_white) ));
-	newInput( 7, nodeValue_Gradient( "Color Weight",      new gradientObject(ca_white) ));
-	newInput(12, nodeValue_Surface(  "Texture",           noone ));
-	newInput(13, nodeValue_Vec2(     "Texture Position",  [0,0] ));
-	newInput(16, nodeValue_Rotation( "Texture Rotation",   0    ));
-	newInput(14, nodeValue_Vec2(     "Texture Scale",     [1,1] ));
-	newInput( 9, nodeValue_Bool(     "Shade Side",        false ));
+	newInput( 6, nodeValue_Gradient( "Color over Length", gra_white ));
+	newInput( 7, nodeValue_Gradient( "Color Weight",      gra_white ));
+	newInput(12, nodeValue_Surface(  "Texture",           noone     ));
+	newInput(13, nodeValue_Vec2(     "Texture Position",  [0,0]     ));
+	newInput(16, nodeValue_Rotation( "Texture Rotation",   0        ));
+	newInput(14, nodeValue_Vec2(     "Texture Scale",     [1,1]     ));
+	newInput( 9, nodeValue_Bool(     "Shade Side",        false     ));
 	// input 17
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));

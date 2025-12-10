@@ -17,25 +17,27 @@ function Node_High_Pass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	__init_mask_modifier(2, 5); // inputs 5, 6, 
 	
 	////- =Effect
-	newInput(7, nodeValue_Int(   "Radius",    1 ));
-	newInput(8, nodeValue_Float( "Intensity", 1 ));
+	newInput(7, nodeValue_Int(   "Radius",    1 )).setMappable(10);
+	newInput(8, nodeValue_Float( "Intensity", 1 )).setMappable(11);
 	
 	////- =Render
 	newInput(9, nodeValue_Bool( "Blend Original", true ));
-	
-	input_display_list = [ 1, 4, 
-		["Surfaces",  true], 0, 2, 3, 5, 6, 
-		["Effect",   false], 7, 8, 
-		["Render",   false], 9, 
-	]
+	// 12
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	
+	input_display_list = [ 1, 4, 
+		[ "Surfaces",  true ],  0,  2,  3,  5,  6, 
+		[ "Effect",   false ],  7, 10,  8, 11, 
+		[ "Render",   false ],  9, 
+	]
+	
+	////- Nodes
 	
 	attribute_surface_depth();
 	attribute_oversample();
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		
 		var _rad = _data[7];
 		var _int = _data[8];
 		var _bnd = _data[9];
@@ -45,9 +47,9 @@ function Node_High_Pass(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		surface_set_shader(_outSurf, sh_high_pass, true, BLEND.over);
 			shader_set_i("sampleMode", getAttribute("oversample"));
 			shader_set_2("dimension",  _dim);
-			shader_set_f("radius",     _rad);
-			shader_set_f("intensity",  _int);
 			shader_set_i("blend",      _bnd);
+			shader_set_f_map("radius",     _rad, _data[10], inputs[7]);
+			shader_set_f_map("intensity",  _int, _data[11], inputs[8]);
 			
 			draw_surface_safe(_data[0]);
 		surface_reset_shader();

@@ -24,38 +24,35 @@
 function Node_Pixel_Math(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Pixel Math";
 	
-	newInput(0, nodeValue_Surface("Surface In"));
-	
 	newActiveInput(1);
-	
-	newInput(2, nodeValue_Surface("Mask"));
-	
-	newInput(3, nodeValue_Slider("Mix", 1));
-	
 	newInput(4, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
+	////- =Surfaces
+	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput(2, nodeValue_Surface( "Mask"       ));
+	newInput(3, nodeValue_Slider(  "Mix", 1     ));
 	__init_mask_modifier(2, 5); // inputs 5, 6, 
 	
+	////- =Operation
 	_scroll = array_clone(global.node_math_scroll, 1);
 	array_append(_scroll, ["Less than", "Less than equal", "Greater than", "Greater than equal"]);
-	newInput(7, nodeValue_Enum_Scroll("Operator", 0, _scroll));
 	
-	newInput(8, nodeValue_Vec4("Operand", [ 0, 0, 0, 0 ]));
-	
-	newInput(9, nodeValue_Vec2("Range", [ 0, 0 ]));
-	
-	newInput(10, nodeValue_Enum_Button("Operand Type", 0, [ "Vec4", "Surface" ]));
-	
-	newInput(11, nodeValue_Surface("Operand Surface"));
-	
-	newInput(12, nodeValue_Slider("Mix", .5));
+	newInput( 7, nodeValue_EScroll( "Operator",     0, _scroll ));
+	newInput(10, nodeValue_EButton( "Operand Type", 0, [ "Vec4", "Surface" ]));
+	newInput( 8, nodeValue_Vec4(    "Operand",     [0,0,0,0]   ));
+	newInput( 9, nodeValue_Vec2(    "Range",       [0,0]       ));
+	newInput(12, nodeValue_Slider(  "Mix",         .5          ));
+	newInput(11, nodeValue_Surface( "Operand Surface"          ));
+	// 13
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 1, 4, 
-		["Surfaces",  false], 0, 2, 3, 5, 6, 
-		["Operation", false], 7, 10, 8, 9, 12, 11, 
-	]
+		[ "Surfaces",  false ],  0,  2,  3,  5,  6, 
+		[ "Operation", false ],  7, 10,  8,  9, 12, 11, 
+	];
+	
+	////- Node
 	
 	attribute_surface_depth();
 	

@@ -23,12 +23,12 @@ function Node_MK_Tree_Path_Root(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	////- =Rendering
 	newInput( 3, nodeValue_Range(       "Thickness",       [4,4], true )).setCurvable(4, CURVE_DEF_11);
-	newInput( 5, nodeValue_Gradient(    "Base Color",      new gradientObject(ca_white) ));
+	newInput( 5, nodeValue_Gradient(    "Base Color",      gra_white ));
 	newInput(17, nodeValue_Enum_Button( "Length Blending",  0, [ "None", "Override", "Multiply", "Screen" ] ));
-	newInput(18, nodeValue_Gradient(    "Length Color",    new gradientObject(ca_white) ));
+	newInput(18, nodeValue_Gradient(    "Length Color",    gra_white ));
 	newInput( 6, nodeValue_Enum_Button( "Edge Blending",    0, [ "None", "Override", "Multiply", "Screen" ] ));
-	newInput( 7, nodeValue_Gradient(    "L Edge Color",    new gradientObject(ca_white) ));
-	newInput(19, nodeValue_Gradient(    "R Edge Color",    new gradientObject(ca_white) ));
+	newInput( 7, nodeValue_Gradient(    "L Edge Color",    gra_white ));
+	newInput(19, nodeValue_Gradient(    "R Edge Color",    gra_white ));
 	newInput(20, nodeValue_Surface(     "Texture" ));
 	// input 21
 	

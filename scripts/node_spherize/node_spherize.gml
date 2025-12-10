@@ -19,11 +19,11 @@ function Node_Spherize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	////- =Spherize
 	newInput( 1, nodeValue_Vec2(     "Center",    [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, UNIT_REF);
-	newInput(15, nodeValue_Vec2(     "Position",  [0,0]  )).setHotkey("P").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, UNIT_REF);
-	newInput(14, nodeValue_Rotation( "Rotation",   0     )).setHotkey("R");
-	newInput( 2, nodeValue_Slider(   "Strength",   1     )).setHotkey("S").setMappable(11);
-	newInput( 3, nodeValue_Slider(   "Radius",    .2     )).setMappable(12);
-	newInput(13, nodeValue_Slider(   "Trim Edge",  0     ));
+	newInput(15, nodeValue_Vec2(     "Position",  [0,0]   )).setHotkey("P").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, UNIT_REF);
+	newInput(14, nodeValue_Rotation( "Rotation",   0      )).setHotkey("R");
+	newInput( 2, nodeValue_Slider(   "Strength",   1      )).setHotkey("S").setMappable(11);
+	newInput( 3, nodeValue_Slider(   "Radius",    .2      )).setMappable(12);
+	newInput(13, nodeValue_Slider(   "Trim Edge",  0      ));
 	
 	////- =Rendering
 	newInput(16, nodeValue_Vec2( "Texture Offset", [0,0]  ));
@@ -64,19 +64,20 @@ function Node_Spherize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		return w_hovering;
 	}
 	
-	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _samp = getAttribute("oversample");
-		
-		var _surf = _data[0];
-		
-		var _cent = _data[ 1];
-		var _posi = _data[15];
-		var _trim = _data[13];
-		var _rota = _data[14];
-		
-		var _uoff = _data[16];
-		var _usca = _data[17];
+		#region data
+			var _samp = getAttribute("oversample");
+			
+			var _surf = _data[ 0];
+			
+			var _cent = _data[ 1];
+			var _posi = _data[15];
+			var _trim = _data[13];
+			var _rota = _data[14];
+			
+			var _uoff = _data[16];
+			var _usca = _data[17];
+		#endregion
 		
 		surface_set_shader(_outSurf, sh_spherize);
 		shader_set_interpolation(_surf);

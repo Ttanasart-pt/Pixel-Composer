@@ -9,7 +9,7 @@ function Node_Edge_Shade(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	////- =Effect
 	
-	newInput(2, nodeValue_Gradient("Colors", new gradientObject( [ ca_black, ca_white ] ))).setMappable(3);
+	newInput(2, nodeValue_Gradient("Colors", gra_black_white)).setMappable(3);
 	
 	// input 5
 	

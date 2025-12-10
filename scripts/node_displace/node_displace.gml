@@ -20,41 +20,41 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(22, nodeValue_Surface( "UV Map"     ));
 	newInput(23, nodeValue_Slider(  "UV Mix", 1  ));
 	newInput( 8, nodeValue_Surface( "Mask"       ));
-	newInput( 9, nodeValue_Slider(  "Mix",     1 ));
+	newInput( 9, nodeValue_Slider(  "Mix",    1  ));
 	__init_mask_modifier(8, 13); // inputs 13, 14
 	newInput(7, nodeValue_Enum_Scroll("Oversample Mode",  0, [ "Empty", "Clamp", "Repeat" ]));
 	
 	////- =Strength
-	newInput( 1, nodeValue_Surface( "Displace map"   ));
-	newInput(17, nodeValue_Surface( "Displace map 2" ));
-	newInput( 3, nodeValue_Float(   "Strength",   1  )).setHotkey("S").setMappable(15);
-	newInput( 4, nodeValue_Slider(  "Mid value", .5  )).setTooltip("Brightness value to be use as a basis for 'no displacement'.");
+	newInput( 1, nodeValue_Surface( "Displace Map"   ));
+	newInput(17, nodeValue_Surface( "Displace Map 2" ));
+	newInput( 3, nodeValue_Float(   "Strength",   1  )).setMappable(15).setHotkey("S");
+	newInput( 4, nodeValue_Slider(  "Mid Value", .5  )).setMappable(24).setTooltip("Brightness value to be use as a basis for 'no displacement'.");
 	
 	////- =Displacement
-	newInput( 5, nodeValue_Enum_Button("Mode", 0, [ "Linear", "Vector", "Angle", "Gradient" ]))
+	newInput( 5, nodeValue_EButton( "Mode", 0, [ "Linear", "Vector", "Angle", "Gradient" ]))
 		.setTooltip(@"Use color data for extra information.
     - Linear: Displace along a single line (defined by the position value).
     - Vector: Use red as X displacement, green as Y displacement.
     - Angle: Use red as angle, green as distance.
     - Gradient: Displace down the brightness value defined by the Displace map.");
     
-	newInput(16, nodeValue_Bool( "Separate axis", false ));
+	newInput(16, nodeValue_Bool( "Separate Axis", false ));
 	newInput( 2, nodeValue_Vec2( "Position",      [1,0] )).setTooltip("Vector to displace the pixel by.").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
 	
 	////- =Iterate
-	newInput( 6, nodeValue_Bool(        "Iterate",       false ));
-	newInput(11, nodeValue_Enum_Scroll( "Blend Mode",    0, [ "Overwrite", "Min", "Max" ]));
-	newInput(18, nodeValue_Int(         "Iteration",     16    ));
-	newInput(19, nodeValue_Bool(        "Fade Distance", false ));
-	newInput(20, nodeValue_Bool(        "Reposition",    false ));
-	newInput(21, nodeValue_Int(         "Repeat",        1     ));
-	// inputs 24
+	newInput( 6, nodeValue_Bool(    "Iterate",       false ));
+	newInput(11, nodeValue_EScroll( "Blend Mode",    0, [ "Overwrite", "Min", "Max" ]));
+	newInput(18, nodeValue_Int(     "Iteration",     16    ));
+	newInput(19, nodeValue_Bool(    "Fade Distance", false ));
+	newInput(20, nodeValue_Bool(    "Reposition",    false ));
+	newInput(21, nodeValue_Int(     "Repeat",        1     ));
+	// inputs 25
 	
 	input_display_list = [ 10, 12, 
-		["Surfaces",	  true], 0, 22, 23, 8, 9, 13, 14, 
-		["Strength",	 false], 1, 17, 3, 15, 4,
-		["Displacement", false], 5, 16, 2, 
-		["Iterate",	      true, 6], 11, 18, 19, 20, 21, 
+		[ "Surfaces",      true    ],  0, 22, 23,  8,  9, 13, 14, 
+		[ "Strength",     false    ],  1, 17,  3, 15,  4, 24, 
+		[ "Displacement", false    ],  5, 16,  2, 
+		[ "Iterate",       true, 6 ], 11, 18, 19, 20, 21, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -142,7 +142,7 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				shader_set_f("map_dimension", [mw, mh]);
 				shader_set_f("displace",      _data[ 2]);
 				shader_set_f_map("strength",  _data[ 3], _data[15], inputs[3]);
-				shader_set_f("middle",        _data[ 4]);
+				shader_set_f_map("middle",    _data[ 4], _data[24], inputs[4]);
 				shader_set_i("mode",          _data[ 5]);
 				shader_set_i("sepAxis",       _data[16]);
 				

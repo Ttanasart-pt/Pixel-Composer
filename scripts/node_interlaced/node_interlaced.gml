@@ -29,16 +29,16 @@ function Node_Interlaced(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	////- =Pattern
 	newInput(7, nodeValue_Enum_Button( "Axis", 0, [ "X", "Y" ] ));
-	newInput(8, nodeValue_Float( "Size",   1     )).setHotkey("S");
+	newInput(8, nodeValue_Float( "Size",   1     )).setMappable(12).setHotkey("S");
 	newInput(9, nodeValue_Bool(  "Invert", false ));
-	//input 12
+	//input 13
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 1, 
-		["Surface",   false], 0, 2, 3, 4, 
-		["Frame",     false], 10, 11, 
-		["Pattern",   false], 7, 8, 9, 
+		[ "Surface", false ],  0,  2,  3,  4, 
+		[ "Frame",   false ], 10, 11, 
+		[ "Pattern", false ],  7,  8, 12,  9, 
 	];
 	
 	attribute_surface_depth();
@@ -56,12 +56,16 @@ function Node_Interlaced(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _surf = _data[ 0];
-		var _axis = _data[ 7];
-		var _size = _data[ 8];
-		var _invt = _data[ 9];
-		var _back = _data[10];
-		var _loop = _data[11];
+		#region data
+			var _surf = _data[ 0];
+			
+			var _back = _data[10];
+			var _loop = _data[11];
+			
+			var _axis = _data[ 7];
+			var _size = _data[ 8];
+			var _invt = _data[ 9];
+		#endregion
 		
 		var _dim  = surface_get_dimension(_surf);
 		
@@ -71,12 +75,12 @@ function Node_Interlaced(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			
 		surface_set_shader(_outSurf, sh_interlaced);
 			shader_set_i("useSurf", is_surface(_prev));
-			shader_set_surface("prevFrame", _prev);
+			shader_set_s("prevFrame", _prev);
 			
 			shader_set_2("dimension", _dim);
 			shader_set_i("axis",      _axis);
 			shader_set_i("invert",    _invt);
-			shader_set_f("size",      _size);
+			shader_set_f_map("size",  _size, _data[12], inputs[6]);
 			
 			draw_surface_safe(_surf);
 		surface_reset_shader();

@@ -15,21 +15,21 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	newInput(0, nodeValue_Surface("Surface In"));
 	
 	////- =SDF
-	newInput(2, nodeValue_Enum_Button( "Side",         2, [ "Inside", "Outside", "Both" ]));
-	newInput(3, nodeValue_Slider(      "Max distance", 1, [ 0, 2, 0.01 ]));
-	newInput(6, nodeValue_Bool(        "Angle",        false));
+	newInput(2, nodeValue_EButton( "Side",         2, [ "Inside", "Outside", "Both" ]));
+	newInput(3, nodeValue_Slider(  "Max Distance", 1, [ 0, 2, 0.01 ])).setMappable(7);
+	newInput(6, nodeValue_Bool(    "Angle",        false));
 	
 	////- =Render
 	newInput(4, nodeValue_Bool( "Keep Alpha", false));
 	newInput(5, nodeValue_Bool( "Invert",     false));
-	// input 6
+	// input 7
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 1,
-		["Surfaces", false], 0, 
-		["SDF",		 false], 2, 3, 
-		["Render",	 false], 4, 5, 6, 
+		[ "Surfaces", false ], 0, 
+		[ "SDF",      false ], 2, 3, 7, 6,
+		[ "Render",	  false ], 4, 5, 
 	]
 	
 	////- Nodes
@@ -50,12 +50,16 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var inSurf = _data[0];
-		var _side  = _data[2];
-		var _dist  = _data[3];
-		var _alph  = _data[4];
-		var _invt  = _data[5];
-		var _angl  = _data[6];
+		#region data
+			var inSurf = _data[0];
+			
+			var _side  = _data[2];
+			var _dist  = _data[3];
+			var _angl  = _data[6];
+			
+			var _alph  = _data[4];
+			var _invt  = _data[5];
+		#endregion
 		
 		var sw	   = surface_get_width_safe(inSurf);
 		var sh	   = surface_get_height_safe(inSurf);
@@ -90,8 +94,8 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 		
 		surface_set_shader(_outSurf, sh_sdf_dist);
 			shader_set_surface("original", inSurf);
+			shader_set_f_map("max_distance", _dist, _data[7], inputs[3]);
 			shader_set_i("side",         _side);
-			shader_set_f("max_distance", _dist);
 			shader_set_i("alpha",        _alph);
 			shader_set_i("invert",       _invt);
 			shader_set_i("angle",        _angl);

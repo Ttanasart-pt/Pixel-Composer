@@ -19,8 +19,7 @@ function Node_Blur_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	////- =Blur
 	newInput( 2, nodeValue_Int(   "Resolution",   32 ));
-	newInput( 9, nodeValue_Float( "Intensity",    1  ));
-	newInput(10, nodeValue_Curve( "Intensity Along Path", CURVE_DEF_11 ));
+	newInput( 9, nodeValue_Float( "Intensity",    1  )).setCurvable(10, CURVE_DEF_11);
 	// input 15
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -44,10 +43,10 @@ function Node_Blur_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	static processData = function(_outSurf, _data, _array_index) {
 		if(!is_surface(_data[0])) return _outSurf;
 		
-		var _surf = _data[0];
-		var _path = _data[1];
-		var _reso = _data[2];
-		var _intn = _data[9];
+		var _surf = _data[ 0];
+		var _path = _data[ 1];
+		var _reso = _data[ 2];
+		var _intn = _data[ 9];
 		var _curv = _data[10];
 		var _rang = _data[11];
 		var _orig = _data[12];

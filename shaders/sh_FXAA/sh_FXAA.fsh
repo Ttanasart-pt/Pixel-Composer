@@ -6,22 +6,27 @@ varying vec4 v_vColour;
 
 //Texel size (1/resolution)
 uniform vec2 dimension;
-uniform float cornerDis;
 uniform float mixAmo;
+
+uniform vec2      cornerDis;
+uniform int       cornerDisUseSurf;
+uniform sampler2D cornerDisSurf;
 
 #define SPAN_MAX   (8.0)			//Maximum texel span
 //These are more technnical and probably don't need changing:
 #define REDUCE_MIN (1.0 / 128.0)		//Minimum "dir" reciprocal
 #define REDUCE_MUL (1.0 / 32.0)		//Luma multiplier for "dir" reciprocal
 
+float corn;
+
 vec4 textureFXAA(sampler2D tex, vec2 uv) {
 	vec2 u_texel = 1. / dimension;
 	//Sample center and 4 corners
     vec3 rgbCC = texture2D(tex, uv).rgb;
-    vec3 rgb00 = texture2D(tex, uv + vec2( -cornerDis, -cornerDis) * u_texel).rgb;
-    vec3 rgb10 = texture2D(tex, uv + vec2( +cornerDis, -cornerDis) * u_texel).rgb;
-    vec3 rgb01 = texture2D(tex, uv + vec2( -cornerDis, +cornerDis) * u_texel).rgb;
-    vec3 rgb11 = texture2D(tex, uv + vec2( +cornerDis, +cornerDis) * u_texel).rgb;
+    vec3 rgb00 = texture2D(tex, uv + vec2( -corn, -corn) * u_texel).rgb;
+    vec3 rgb10 = texture2D(tex, uv + vec2( +corn, -corn) * u_texel).rgb;
+    vec3 rgb01 = texture2D(tex, uv + vec2( -corn, +corn) * u_texel).rgb;
+    vec3 rgb11 = texture2D(tex, uv + vec2( +corn, +corn) * u_texel).rgb;
 	
 	//Luma coefficients
     const vec3 luma = vec3(0.299, 0.587, 0.114);
@@ -69,6 +74,12 @@ vec4 textureFXAA(sampler2D tex, vec2 uv) {
 }
 
 void main() {
+	corn = cornerDis.x;
+	if(cornerDisUseSurf == 1) {
+		vec4 _vMap = texture2D( cornerDisSurf, v_vTexcoord );
+		corn = mix(cornerDis.x, cornerDis.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	}
+	
 	vec4 base = texture2D(   gm_BaseTexture, v_vTexcoord );
 	vec4 fxaa = textureFXAA( gm_BaseTexture, v_vTexcoord );
 	

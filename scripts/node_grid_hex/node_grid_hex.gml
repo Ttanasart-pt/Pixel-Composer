@@ -22,7 +22,7 @@ function Node_Grid_Hex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	////- =Render
 	newInput( 7, nodeValue_Enum_Scroll( "Render Type",  0, ["Colored tile", "Height map", "Texture grid", "Texture sample"]));
 	newInput( 8, nodeValueSeed());
-	newInput( 5, nodeValue_Gradient(     "Tile Color",   new gradientObject(ca_white))).setMappable(17);
+	newInput( 5, nodeValue_Gradient(     "Tile Color",   gra_white)).setMappable(17);
 	newInput( 6, nodeValue_Color(        "Gap Color",    ca_black ));
 	newInput( 9, nodeValue_Surface(      "Texture"));
 	newInput(21, nodeValue_Bool(         "Use Texture Dimension", false ));

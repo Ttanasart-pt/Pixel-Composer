@@ -26,7 +26,7 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput( 8, nodeValue_Enum_Scroll(    "Fill Type",       0, [ "Random", "Color map", "Texture map", "Texture Coord", "Texture Index" ]));
 	newInput(15, nodeValue_Enum_Button(    "Source",          0, [ "Palette", "Gradient" ]));
 	newInput( 2, nodeValue_Palette(        "Fill Palette" ));
-	newInput(16, nodeValue_Gradient(       "Fill Gradient",  new gradientObject([ ca_black, ca_white ]) ));
+	newInput(16, nodeValue_Gradient(       "Fill Gradient",  gra_black_white ));
 	
 	newInput( 9, nodeValue_Surface(        "Color Map"              ));
 	newInput( 3, nodeValue_Bool(           "Fill",            true  ));

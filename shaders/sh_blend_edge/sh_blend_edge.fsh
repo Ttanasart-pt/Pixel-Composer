@@ -4,16 +4,15 @@ varying vec4 v_vColour;
 uniform vec2 dimension;
 uniform int  edge;
 
+uniform float blend;
+uniform float smooth;
+
 uniform vec2      width;
 uniform int       widthUseSurf;
 uniform sampler2D widthSurf;
 
-uniform float blend;
-uniform float smooth;
-
 void main() {
-	float wid    = width.x;
-	float widMax = max(width.x, width.y);
+	float wid = width.x;
 	if(widthUseSurf == 1) {
 		vec4 _vMap = texture2D( widthSurf, v_vTexcoord );
 		wid = mix(width.x, width.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);

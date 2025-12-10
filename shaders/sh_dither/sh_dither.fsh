@@ -14,7 +14,10 @@ uniform sampler2D map;
 uniform vec2 mapDimension;
 uniform int useMap;
 
-uniform float contrast;
+uniform vec2      contrast;
+uniform int       contrastUseSurf;
+uniform sampler2D contrastSurf;
+
 uniform sampler2D conMap;
 uniform int useConMap;
 
@@ -65,6 +68,12 @@ float random (in vec2 st, float seed) { return fract(sin(dot(st.xy, vec2(1892.98
 #endregion
 
 void main() {
+	float con = contrast.x;
+	if(contrastUseSurf == 1) {
+		vec4 _vMap = texture2D( contrastSurf, v_vTexcoord );
+		con = mix(contrast.x, contrast.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	}
+	
 	vec4 _col = texture2D( gm_BaseTexture, v_vTexcoord );
 	
 	bool exactColor = false;
@@ -119,10 +128,10 @@ void main() {
 		float rat = d1 / (d1 + d2);
 		
 		if(useConMap == 0) {
-			rat = (rat - 0.5) * contrast + 0.5;
+			rat = (rat - 0.5) * con + 0.5;
 		} else {
 			vec4 con_map_data = texture2D( conMap, v_vTexcoord );
-			float _cont = .1 + contrast * dot(con_map_data.rgb, vec3(0.2126, 0.7152, 0.0722));
+			float _cont = .1 + con * dot(con_map_data.rgb, vec3(0.2126, 0.7152, 0.0722));
 			rat = (rat - 0.5) * _cont + 0.5;
 		}
 		

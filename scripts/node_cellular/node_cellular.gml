@@ -17,30 +17,30 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(13, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
-	newInput( 4, nodeValue_Enum_Scroll( "Type",    0, [ "Point", "Edge", "Cell", "Crystal" ]));
-	newInput( 6, nodeValue_Enum_Button( "Pattern", 0, [ "Tiled", "Uniform", "Radial" ]));
+	newInput( 4, nodeValue_Enum_Scroll( "Type",    0, [ "Point", "Edge", "Cell", "Crystal" ] ));
+	newInput( 6, nodeValue_Enum_Button( "Pattern", 0, [ "Tiled", "Uniform", "Radial" ]       ));
 	newInput( 3, nodeValueSeed());
-	newInput(14, nodeValue_Rotation(    "Phase",     0 ));
+	newInput(14, nodeValue_Rotation(    "Phase",   0 ));
 	
 	////- =Transform
-	newInput( 1, nodeValue_Vec2(     "Position", [.5,.5])).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput(12, nodeValue_Rotation( "Rotation", 0 )).setHotkey("R");
-	newInput( 2, nodeValue_Float(    "Scale",    4 )).setHotkey("S").setMappable(11);
+	newInput( 1, nodeValue_Vec2(     "Position", [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(12, nodeValue_Rotation( "Rotation",   0     )).setHotkey("R");
+	newInput( 2, nodeValue_Float(    "Scale",      4     )).setHotkey("S").setMappable(11);
 	
 	////- =Radial
 	newInput( 8, nodeValue_Slider( "Radial scale",   2, [  1, 10, 0.01] ));
 	newInput( 9, nodeValue_Slider( "Radial shatter", 0, [-10, 10, 0.01] )).setVisible(false);
 	
 	////- =Iteration
-	newInput(16, nodeValue_Int(         "Iteration",        1 ));
-	newInput(18, nodeValue_Float(       "Iter Scale",       2 ));
-	newInput(19, nodeValue_Slider(      "Iter Amplitude",  .5 ));
-	newInput(17, nodeValue_Enum_Scroll( "Blend Mode", 0, [ "Additive", "Maximum", "Minimum" ] ));
+	newInput(16, nodeValue_Int(     "Iteration",       1 ));
+	newInput(18, nodeValue_Float(   "Iter Scale",      2 ));
+	newInput(19, nodeValue_Slider(  "Iter Amplitude", .5 ));
+	newInput(17, nodeValue_EScroll( "Blend Mode",      0, [ "Additive", "Maximum", "Minimum" ] ));
 	
 	////- =Rendering
 	newInput(15, nodeValue_Bool(   "Inverted",  false ))
-	newInput( 5, nodeValue_Slider( "Contrast",   1, [0, 4, 0.01] ));
-	newInput( 7, nodeValue_Slider( "Middle",    .5, [0, 1, 0.01] ));
+	newInput( 5, nodeValue_Slider( "Contrast",  1, [0, 4, 0.01] ));
+	newInput( 7, nodeValue_Slider( "Middle",   .5, [0, 1, 0.01] ));
 	newInput(10, nodeValue_Bool(   "Colored",   false ))
 	// input 22
 	

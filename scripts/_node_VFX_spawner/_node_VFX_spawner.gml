@@ -53,9 +53,9 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput(17, nodeValue_Range(      "Size",         [1,1],     { linked : true }  )).setCurvable(11, CURVE_DEF_11, "Over Lifespan");
 	
 	////- =Color
-	newInput(28, nodeValue_Gradient( "Color on Spawn",         new gradientObject(ca_white)  ));
+	newInput(28, nodeValue_Gradient( "Color on Spawn",         gra_white  ));
 	newInput(50, nodeValue_Palette(  "Color by Index",         [ca_white]                    )).setOptions("Select by:", "array_select", [ "Index Loop", "Index Ping-pong", "Random" ], THEME.array_select_type).iconPad();
-	newInput(12, nodeValue_Gradient( "Color Over Lifetime",    new gradientObject(ca_white)  ));
+	newInput(12, nodeValue_Gradient( "Color Over Lifetime",    gra_white  ));
 	newInput(13, nodeValue_Range(    "Alpha",                  [1,1], { linked : true }      )).setCurvable(14, CURVE_DEF_11, "Over Lifespan");
 	newInput(56, nodeValue_Surface(  "Sample Surface"                                        ));
 	

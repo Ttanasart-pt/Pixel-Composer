@@ -2,25 +2,30 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform vec2  dimension;
-uniform float tolerance;
 uniform int   strict;
 uniform int   inner;
 uniform int   side;
 
+uniform vec2      tolerance;
+uniform int       toleranceUseSurf;
+uniform sampler2D toleranceSurf;
+
+float tolr;
+
 float d(in vec4 c1, in vec4 c2) { return length(c1.rgb * c1.a - c2.rgb * c2.a) / sqrt(3.); }
 
 vec4  a4;
-bool  s(in vec4 c2) 			{ return d(a4, c2) <= tolerance; }
-bool  s(in bool b,  in vec4 c2) { return b || d(a4, c2) <= tolerance; }
+bool  s(in vec4 c2) 			{ return d(a4, c2) <= tolr; }
+bool  s(in bool b,  in vec4 c2) { return b || d(a4, c2) <= tolr; }
 
-bool  s(in vec4 c1, in vec4 c2) 			{ return d(c1, c2) <= tolerance; }
-bool  s(in bool b,  in vec4 c1, in vec4 c2) { return b || d(c1, c2) <= tolerance; }
+bool  s(in vec4 c1, in vec4 c2) 			{ return d(c1, c2) <= tolr; }
+bool  s(in bool b,  in vec4 c1, in vec4 c2) { return b || d(c1, c2) <= tolr; }
 
-bool ns(in vec4 c2) 			{ return d(a4, c2) > tolerance; }
-bool ns(in bool b,  in vec4 c2) { return b || d(a4, c2) > tolerance; }
+bool ns(in vec4 c2) 			{ return d(a4, c2) > tolr; }
+bool ns(in bool b,  in vec4 c2) { return b || d(a4, c2) > tolr; }
 
-bool ns(in vec4 c1, in vec4 c2) 			{ return d(c1, c2) > tolerance; }
-bool ns(in bool b,  in vec4 c1, in vec4 c2) { return b || d(c1, c2) > tolerance; }
+bool ns(in vec4 c1, in vec4 c2) 			{ return d(c1, c2) > tolr; }
+bool ns(in bool b,  in vec4 c1, in vec4 c2) { return b || d(c1, c2) > tolr; }
 
 float bright(in vec4 c) { return dot(c.rgb, vec3(0.2126, 0.7152, 0.0722)) * c.a; }
 
@@ -69,6 +74,11 @@ vec4 sample(vec2 st) {
 }
 
 void main() {
+	tolr = tolerance.x;
+	if(toleranceUseSurf == 1) {
+		vec4 _vMap = texture2D( toleranceSurf, v_vTexcoord );
+		tolr = mix(tolerance.x, tolerance.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	}
 	
 	// 0 1 2 
 	// 3 4 5

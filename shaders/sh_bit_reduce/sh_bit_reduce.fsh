@@ -1,15 +1,18 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform vec2 dimension;
-uniform int  space;
-uniform vec3 quantize;
+uniform vec2  dimension;
+uniform int   space;
+uniform vec3  quantize;
 uniform float alphaStep;
 
 uniform int   dithering;
-uniform float ditherContrast;
 uniform float ditherSize;
 uniform float dither[64];
+
+uniform vec2      ditherContrast;
+uniform int       ditherContrastUseSurf;
+uniform sampler2D ditherContrastSurf;
 
 #region =========================================== COLORS SPACES ===========================================
 	
@@ -65,6 +68,7 @@ uniform float dither[64];
 #endregion =========================================== COLORS SPACES ===========================================
 
 float ditherVal;
+float dcon;
 
 float min3(float a, float b, float c) { return min(min(a,b), min(a,c)); }
 float max3(float a, float b, float c) { return max(max(a,b), max(a,c)); }
@@ -87,13 +91,19 @@ float quant(float n, float q) {
 	dt1 *= q * 2.;
 	
 	float rat = min3(abs(dt), abs(dt0), abs(dt1));
-	      rat = 1. - rat * ditherContrast;
+	      rat = 1. - rat * dcon;
 	
 	if(sign(dt) == 1.) return rat * .5 >= ditherVal? qz - iq : qz;
 	else               return rat * .5 <= ditherVal? qz : qz + iq;
 }
 
 void main() {
+	dcon = ditherContrast.x;
+	if(ditherContrastUseSurf == 1) {
+		vec4 _vMap = texture2D( ditherContrastSurf, v_vTexcoord );
+		dcon = mix(ditherContrast.x, ditherContrast.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	}
+	
 	vec2 tx  = 1. / dimension;
 	vec2 px  = floor(v_vTexcoord * dimension);
 	vec4 cc  = texture2D(gm_BaseTexture, v_vTexcoord);

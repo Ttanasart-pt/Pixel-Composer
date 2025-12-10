@@ -12,26 +12,21 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	clearCacheOnChange = false;
 	setCacheManual();
 	
-	////- Surfaces
-	
+	////- =Surfaces
 	newInput(0, nodeValue_Surface("Surface In")).rejectArray();
 	
-	////- Trail
-	
+	////- =Trail
 	newInput(1, nodeValue_Int(  "Max Life", 5));
 	newInput(2, nodeValue_Bool( "Loop", false));
 	
-	////- Tracking
-	
+	////- =Tracking
 	newInput(3, nodeValue_Int(  "Max Distance", -1, "Maximum distance to search for movement, set to -1 to search the entire image."));
 	newInput(4, nodeValue_Bool( "Match Color", true, "Make trail track pixels of the same color, instead of the closet pixels."));
 	newInput(5, nodeValue_Bool( "Blend Color", true, "Blend color between two pixel smoothly."));
 	
-	////- Rendering
-	
+	////- =Rendering
 	newInput(6, nodeValue_Curve( "Alpha Over Life", CURVE_DEF_11));
-	
-	//// inputs 7
+	// inputs 7
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -40,6 +35,8 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		["Trail",     false], 1, 2, 3, 
 		["Rendering", false], 6, 
 	];
+	
+	////- Node
 	
 	temp_surface = array_create(5);
 	

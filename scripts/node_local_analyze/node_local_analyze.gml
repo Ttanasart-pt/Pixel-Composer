@@ -9,35 +9,32 @@
 function Node_Local_Analyze(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Local Analyze";
 	
-	newInput(0, nodeValue_Surface("Surface In"));
-	
-	newInput(1, nodeValue_Enum_Scroll("Algorithm",  0, [ "Average (Blur)", "Maximum", "Minimum" ]));
-	
-	newInput(2, nodeValue_Slider("Size", 1, [ 1, 16, 0.1] ));
-	
-	newInput(3, nodeValue_Enum_Scroll("Oversample mode",  0, [ "Empty", "Clamp", "Repeat" ]))
-		.setTooltip("How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.");
-	
-	newInput(4, nodeValue_Enum_Scroll("Shape",  0, [ new scrollItem("Square",  s_node_shape_rectangle, 0), 
-												           new scrollItem("Circle",  s_node_shape_circle,    0), 
-												           new scrollItem("Diamond", s_node_shape_misc,      0) ]));
-		
-	newInput(5, nodeValue_Surface("Mask"));
-	
-	newInput(6, nodeValue_Slider("Mix", 1));
-	
 	newActiveInput(7);
-	
 	newInput(8, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
-		
+	
+	////- =Surfaces
+	newInput(0, nodeValue_Surface("Surface In"));
+	newInput(5, nodeValue_Surface("Mask"));
+	newInput(6, nodeValue_Slider("Mix", 1));
 	__init_mask_modifier(5, 9); // inputs 9, 10
+	
+	////- =Effect
+	newInput(1, nodeValue_EScroll( "Algorithm",  0, [ "Average (Blur)", "Maximum", "Minimum" ] ));
+	newInput(2, nodeValue_Slider(  "Size",       1, [ 1, 16, 0.1] ));
+	/* UNUSED */ newInput(3, nodeValue_EScroll("Oversample mode",  0, [ "Empty", "Clamp", "Repeat" ])).setTooltip("How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.");
+	newInput(4, nodeValue_EScroll( "Shape",  0,  [ new scrollItem("Square",  s_node_shape_rectangle, 0), 
+												   new scrollItem("Circle",  s_node_shape_circle,    0), 
+												   new scrollItem("Diamond", s_node_shape_misc,      0) ] ));
+	// 11
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 7, 8, 
-		["Surfaces", true],	0, 5, 6, 9, 10, 
-		["Effect",	false],	1, 2, 4,
+		[ "Surfaces",  true ], 0, 5, 6, 9, 10, 
+		[ "Effect",   false ], 1, 2, 4,
 	];
+	
+	////- Node
 	
 	attribute_surface_depth();
 	attribute_oversample();

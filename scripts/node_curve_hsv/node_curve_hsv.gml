@@ -11,9 +11,9 @@ function Node_Curve_HSV(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	__init_mask_modifier(4, 8); // inputs 8, 9, 
 	
 	////- =Curve
-	newInput(1, nodeValue_Curve("Hue", CURVE_DEF_01));
-	newInput(2, nodeValue_Curve("Saturation", CURVE_DEF_01));
-	newInput(3, nodeValue_Curve("Value", CURVE_DEF_01));
+	newInput(1, nodeValue_Curve( "Hue",        CURVE_DEF_01 ));
+	newInput(2, nodeValue_Curve( "Saturation", CURVE_DEF_01 ));
+	newInput(3, nodeValue_Curve( "Value",      CURVE_DEF_01 ));
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	

@@ -17,7 +17,11 @@ uniform int  mapping;
 
 uniform vec2  sunPosition;
 uniform float sunRadius;
-uniform float sunRadiance;
+
+uniform vec2      sunRadiance;
+uniform int       sunRadianceUseSurf;
+uniform sampler2D sunRadianceSurf;
+        float     srad;
 
 uniform vec2  position;
 uniform vec2  scale;
@@ -192,7 +196,7 @@ vec4 ComputeSkyInscattering(vec3 eye, vec3 V, vec3 L) {
 	vec3 insctrTotalMie      = insctrMie * phaseMie;
 	vec3 insctrTotalRayleigh = insctrRayleigh * phaseRayleigh;
     
-	vec3 sky = (insctrTotalMie + insctrTotalRayleigh) * sunRadiance;
+	vec3 sky = (insctrTotalMie + insctrTotalRayleigh) * srad;
 
 	float angle    = saturate((1.0 - phaseTheta) * sunRadius);
 	float cosAngle = cos(angle * PI * 0.5);
@@ -220,6 +224,12 @@ float noise(vec2 uv) {
 }
 
 void main() {
+	srad = sunRadiance.x;
+	if(sunRadianceUseSurf == 1) {
+		vec4 _vMap = texture2D( sunRadianceSurf, v_vTexcoord );
+		srad = mix(sunRadiance.x, sunRadiance.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	}
+	
 	vec2 vtx = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
 	vec2 uv  = (vtx - position / dimension) * scale;
     vec2 sun = (sunPosition - position) * scale / dimension;

@@ -19,14 +19,14 @@ function Node_Blur_Contrast(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	__init_mask_modifier(3, 7); // inputs 7, 8
 	
 	////- =Blur
-	newInput(1, nodeValue_Float(  "Size",        3 )).setHotkey("S").setValidator(VV_min(0)).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
-	newInput(2, nodeValue_Slider( "Threshold",  .2 )).setTooltip("Brightness different to be blur together.");
-	newInput(9, nodeValue_Bool(   "Gamma Correction", false ));
-	// input 12
+	newInput( 1, nodeValue_Float(  "Size",        3 )).setMappable(12).setHotkey("S").setValidator(VV_min(0)).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput( 2, nodeValue_Slider( "Threshold",  .2 )).setMappable(13).setTooltip("Brightness different to be blur together.");
+	newInput( 9, nodeValue_Bool(   "Gamma Correction", false ));
+	// input 14
 	
 	input_display_list = [ 5, 6, 
-		["Surfaces", true], 0, 10, 11, 3, 4, 7, 8, 
-		["Blur",	false], 1, 2, 9, 
+		[ "Surfaces",  true ],  0, 10, 11,  3,  4,  7,  8, 
+		[ "Blur",     false ],  1, 12,  2, 13,  9, 
 	]
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -66,9 +66,9 @@ function Node_Blur_Contrast(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			shader_set_uv(_data[10], _data[11]);
 			
 			shader_set_f("dimension", [ ww, hh ]);
-			shader_set_f("size",      _size);
-			shader_set_f("treshold",  _tres);
-			shader_set_i("gamma",     _gam);
+			shader_set_f_map("size",     _size, _data[12], inputs[1] );
+			shader_set_f_map("treshold", _tres, _data[13], inputs[2] );
+			shader_set_i("gamma",        _gam);
 			
 			draw_surface_safe(_surf);
 		surface_reset_shader();

@@ -2,13 +2,18 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform vec2  dimension;
-uniform float tolerance;
 uniform int   strict;
 uniform int   fill;
 
+uniform vec2      tolerance;
+uniform int       toleranceUseSurf;
+uniform sampler2D toleranceSurf;
+
+float tolr;
+
 vec4  a4;
 float d(in vec4 c1, in vec4 c2)    { return length(c1 - c2) / sqrt(4.); }
-bool  s(in vec4 c1, in vec4 c2)    { return d(c1, c2) <= tolerance; }
+bool  s(in vec4 c1, in vec4 c2)    { return d(c1, c2) <= tolr; }
 
 #region select closet color
 	vec4  sel2(in vec4 c0, in vec4 c1) {
@@ -49,6 +54,12 @@ bool  s(in vec4 c1, in vec4 c2)    { return d(c1, c2) <= tolerance; }
 #endregion
 
 void main() {
+	tolr = tolerance.x;
+	if(toleranceUseSurf == 1) {
+		vec4 _vMap = texture2D( toleranceSurf, v_vTexcoord );
+		tolr = mix(tolerance.x, tolerance.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	}
+	
 	vec2 tx = 1. / dimension;
     
 	// 0 1 2

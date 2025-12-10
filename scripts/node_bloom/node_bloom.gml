@@ -17,9 +17,10 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	__init_mask_modifier(5, 9); // inputs 9, 10
 	
 	////- =Bloom
-	newInput(1, nodeValue_Slider(  "Size",        3,  [1, 32, 0.1] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}).setHotkey("S").setTooltip("Bloom blur radius.");
-	newInput(2, nodeValue_Slider(  "Tolerance",  .50               )).setTooltip("How bright a pixel should be to start blooming.");
-	newInput(3, nodeValue_Slider(  "Strength",   .25, [0, 2, 0.01] )).setTooltip("Blend intensity.");
+	newInput(1, nodeValue_Slider(  "Size",        3,  [1, 32, 0.1] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)})
+		.setMappable(17).setHotkey("S").setTooltip("Bloom blur radius.");
+	newInput(2, nodeValue_Slider(  "Tolerance",  .50               )).setMappable(18).setTooltip("How bright a pixel should be to start blooming.");
+	newInput(3, nodeValue_Slider(  "Strength",   .25, [0, 2, 0.01] )).setMappable(19).setTooltip("Blend intensity.");
 	newInput(4, nodeValue_Surface( "Bloom mask"));
 	
 	////- =Blur
@@ -31,10 +32,11 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	////- =Blend
 	newInput(15, nodeValue_Color(  "Blend",      ca_white));
 	newInput(16, nodeValue_Slider( "Saturation", 1, [ 0, 2, 0.01 ] ));
+	// 20
 	
 	input_display_list = [ 7, 8, 
 		["Surfaces",  true],  0,  5,  6,  9, 10, 
-		["Bloom",    false],  1,  2,  3,  4,
+		["Bloom",    false],  1, 17,  2, 18,  3, 19,  4,
 		["Blur",     false], 13, 11, 12, 14, 
 		["Blend",    false], 15, 16, 
 	]
@@ -65,19 +67,21 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	}
 	
 	static processData = function(_outData, _data, _array_index) {
-		var _surf  = _data[0];
-		var _size  = _data[1];
-		var _tole  = _data[2];
-		var _stre  = _data[3];
-		var _mask  = _data[4];
-		
-		var _type  = _data[13];
-		var _ratio = _data[11];
-		var _angle = _data[12];
-		var _zoom  = _data[14];
-		
-		var _blnd  = _data[15];
-		var _satr  = _data[16];
+		#region data
+			var _surf  = _data[0];
+			var _size  = _data[1];
+			var _tole  = _data[2];
+			var _stre  = _data[3];
+			var _mask  = _data[4];
+			
+			var _type  = _data[13];
+			var _ratio = _data[11];
+			var _angle = _data[12];
+			var _zoom  = _data[14];
+			
+			var _blnd  = _data[15];
+			var _satr  = _data[16];
+		#endregion
 		
 		inputs[11].setVisible(_type == 0);
 		inputs[12].setVisible(_type == 0 || _type == 2);
@@ -92,12 +96,10 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 		surface_set_shader(temp_surface[0], sh_bloom_pass);
 			draw_clear_alpha(c_black, 1);
-			shader_set_f("size",      _size);
-			shader_set_f("tolerance", _tole);
-				
-			shader_set_i("useMask",    is_surface(_mask));
-			shader_set_surface("mask", _mask);
-				
+			shader_set_f_map( "tolerance",  _tole, _data[18], inputs[2] );
+			shader_set_i( "useMask",    is_surface(_mask));
+			shader_set_s( "mask",       _mask );
+			
 			draw_surface_safe(_surf);
 		surface_reset_shader();
 		
@@ -105,18 +107,18 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 		switch(_type) {
 			case 0 :
-				var args = new blur_gauss_args(temp_surface[0], _size).setBG(true, c_black)
+				var args = new blur_gauss_args(temp_surface[0], [_size, _data[17], inputs[1]]).setBG(true, c_black)
 					.setRatio(_ratio).setAngle(_angle);
 				pass1blur = surface_apply_gaussian(args);
 				break;
 				
 			case 1 :
-				var args = new blur_zoom_args(temp_surface[0], _size, _zoom[0], _zoom[1], 2, 1);
+				var args = new blur_zoom_args(temp_surface[0], [_size, _data[17], inputs[1]], _zoom[0], _zoom[1], 2, 1);
 				pass1blur = surface_apply_blur_zoom(__blur_pass[0], args);
 				break;
 				
 			case 2 :
-				var args = new blur_directional_args(temp_surface[0], _size, _angle).setFadeDistance(true);
+				var args = new blur_directional_args(temp_surface[0], [_size, _data[17], inputs[1]], _angle).setFadeDistance(true);
 				pass1blur = surface_apply_blur_directional(__blur_pass[0], args);
 				break;
 				
@@ -130,8 +132,8 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		surface_reset_shader();
 		
 		surface_set_shader(_outSurf, sh_blend_add_alpha_adj);
-			shader_set_surface("fore", temp_surface[0]);
-			shader_set_f("opacity",	   _stre);
+			shader_set_surface("fore",  temp_surface[0]);
+			shader_set_f_map("opacity", _stre, _data[19], inputs[3]);
 			
 			draw_surface_safe(_surf);
 		surface_reset_shader();

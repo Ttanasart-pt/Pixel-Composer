@@ -55,10 +55,10 @@ function Node_Perlin_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 		return w_hovering;
 	}
 	
-	static step = function() {
-		var _typ = getInputData(10);
-		var _til = getInputData( 4);
-		var _col = getInputData( 6);
+	static onProcessData = function(_outSurf, _data, _array_index) {
+		var _typ = _data[10];
+		var _til = _data[ 4];
+		var _col = _data[ 6];
 		
 		inputs[16].setVisible(!_til);
 		inputs[ 2].type = _til? VALUE_TYPE.integer : VALUE_TYPE.float;

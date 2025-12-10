@@ -16,18 +16,18 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(12, nodeValue_Slider(      "Light Intensity",   1, [0, 2, 0.01] ));
 	newInput( 8, nodeValue_Float(       "Light Radius",      16  ));
 	newInput( 2, nodeValue_Vec2(        "Light Position",  [0,0] ))
-		.setUnitRef(function(index) { 
+		.setUnitRef(function(i) /*=>*/ { 
 			var _surf = getInputData(0);
-			if(is_array(_surf) && array_length(_surf) == 0)
+			if(is_array(_surf) && array_empty(_surf))
 				return [1, 1];
 				
 			if(is_array(_surf))
 				_surf = _surf[0];
 				
-			if(!is_surface(_surf))
+			if(!is_surface(_surf)) 
 				return [1, 1];
 			
-			return [ surface_get_width_safe(_surf), surface_get_height_safe(_surf) ];
+			return surface_get_dimension(_surf);
 		}, VALUE_UNIT.reference);
 		
 	////- =Soft Light
@@ -60,6 +60,8 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		["Ambient Occlusion", false], 15, 16,
 	];
 	
+	////- Node
+	
 	attribute_surface_depth();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
@@ -81,24 +83,30 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	}
 	
 	static processData = function(_outData, _data, _array_index) {
-		var _bg    = _data[0];
-		var _solid = _data[1];
-		var _pos   = _data[2];
-		var _rad   = _data[3];
-		var _den   = _data[4];
-		var _type  = _data[5];
-		var _lamb  = _data[6];
-		var _lclr  = _data[7];
-		var _lrad  = _data[8];
-		var _sol   = _data[9];
-		var _int   = _data[12];
-		var _band  = _data[13];
-		var _attn  = _data[14];
-		var _ao    = _data[15];
-		var _ao_str= _data[16];
-		
-		var _bg_use = _data[10];
-		var _bg_thr = _data[11];
+		#region data
+			var _bg     = _data[ 0];
+			var _solid  = _data[ 1];
+			
+			var _bg_use = _data[10];
+			var _bg_thr = _data[11];
+			
+			var _type   = _data[ 5];
+			var _int    = _data[12];
+			var _lrad   = _data[ 8];
+			var _pos    = _data[ 2];
+			
+			var _den    = _data[ 4];
+			var _rad    = _data[ 3];
+			
+			var _band   = _data[13];
+			var _attn   = _data[14];
+			var _lclr   = _data[ 7];
+			var _lamb   = _data[ 6];
+			var _sol    = _data[ 9];
+			
+			var _ao     = _data[15];
+			var _ao_str = _data[16];
+		#endregion
 		
 		inputs[8].setVisible(_type == 0);
 		
@@ -108,27 +116,31 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			var _outSurf = _outData[i];
 			
 			surface_set_shader(_outSurf, sh_shadow_cast);
-				shader_set_f("dimension",         surface_get_width_safe(_bg), surface_get_height_safe(_bg));
-				shader_set_2("lightPos",         _pos);
-				shader_set_color("lightAmb",     _lamb);
-				shader_set_color("lightClr",     _lclr);
-				shader_set_f("lightRadius",      _rad);
-				shader_set_f("pointLightRadius", _lrad);
-				shader_set_f("lightDensity",     _den);
-				shader_set_i("lightType",        _type);
-				shader_set_i("renderSolid",      _sol);
-				shader_set_f("lightInt",         _int);
-				shader_set_f("lightBand",        _band);
-				shader_set_f("lightAttn",        _attn);
-				shader_set_f("ao",               _ao);
-				shader_set_f("aoStr",            _ao_str);
+				shader_set_2("dimension", surface_get_dimension(_bg) );
+				shader_set_i("mask",      i );
 				
-				shader_set_i("mask",             i);
-				shader_set_i("bgUse",            _bg_use);
-				shader_set_f("bgThres",          _bg_thr);
+				shader_set_i("bgUse",            _bg_use );
+				shader_set_f("bgThres",          _bg_thr );
+				
+				shader_set_i("lightType",        _type   );
+				shader_set_f("lightInt",         _int    );
+				shader_set_f("pointLightRadius", _lrad   );
+				shader_set_2("lightPos",         _pos    );
+				
+				shader_set_f("lightDensity",     _den    );
+				shader_set_f("lightRadius",      _rad    );
+				
+				shader_set_f("lightBand",        _band   );
+				shader_set_f("lightAttn",        _attn   );
+				shader_set_color("lightClr",     _lclr   );
+				shader_set_color("lightAmb",     _lamb   );
+				shader_set_i("renderSolid",      _sol    );
+				
+				shader_set_f("ao",               _ao     );
+				shader_set_f("aoStr",            _ao_str );
 				
 				shader_set_i("useSolid",         is_surface(_solid));
-				shader_set_surface("solid",      _solid);
+				shader_set_s("solid",            _solid);
 					
 				draw_surface_safe(_bg);
 			surface_reset_shader();

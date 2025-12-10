@@ -12,15 +12,15 @@ function Node_De_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	////- =Effect
 	newInput(4, nodeValue_Enum_Button( "Type",  0, [ "Double", "Diagonal" ] ));
 	newInput(9, nodeValue_Toggle( "Include",    0b11, { data: [ "Inner", "Side" ] } ));
-	newInput(2, nodeValue_Slider( "Tolerance",  0 ));
+	newInput(2, nodeValue_Slider( "Tolerance",  0 )).setMappable(10);
 	newInput(3, nodeValue_Int(    "Iteration",  2 ));
-	// input 10
+	// input 12
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 1, 
-		["Surfaces",  true], 0, 5, 6, 7, 8, 
-		["Effect",	 false], 4, 9, 2, 3, 
+		[ "Surfaces", true ], 0, 5, 6, 7, 8, 
+		[ "Effect",  false ], 4, 9, 2, 10, 3, 
 	];
 	
 	////- Node
@@ -61,7 +61,7 @@ function Node_De_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		repeat(_itr) {
 			surface_set_shader(temp_surface[_bg], sh_de_corner);
 				shader_set_f("dimension", _sw, _sh);
-				shader_set_f("tolerance", _tol);
+				shader_set_f_map("tolerance", _tol, _data[10], inputs[2]);
 				shader_set_i("strict",    _str);
 				shader_set_i("inner",     bool(_inn & 0b01));
 				shader_set_i("side",      bool(_inn & 0b10));

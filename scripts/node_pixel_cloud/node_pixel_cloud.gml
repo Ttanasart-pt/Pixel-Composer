@@ -13,7 +13,7 @@ function Node_Pixel_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(3, nodeValue_Surface( "Strength map" ));
 	
 	////- =Color
-	newInput(4, nodeValue_Gradient( "Color over lifetime",  new gradientObject(ca_white))).setMappable(9);
+	newInput(4, nodeValue_Gradient( "Color over lifetime",  gra_white)).setMappable(9);
 	newInput(6, nodeValue_Curve(    "Alpha over lifetime",  CURVE_DEF_11 ));
 	newInput(7, nodeValue_Slider(   "Random blending",     .1 ));
 	// input 10

@@ -20,7 +20,7 @@ function Node_Strand_Render_Texture(_x, _y, _group = noone) : Node(_x, _y, _grou
 	////- Texture
 	
 	newInput(4, nodeValue_Surface("Texture"));
-	newInput(3, nodeValue_Gradient("Random color", new gradientObject(ca_white)));
+	newInput(3, nodeValue_Gradient("Random color", gra_white));
 	
 	// inputs 6
 	

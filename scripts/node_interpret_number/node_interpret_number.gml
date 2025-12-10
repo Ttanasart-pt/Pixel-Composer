@@ -14,7 +14,7 @@ function Node_Interpret_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	
 	newInput(1, nodeValue_Enum_Button( "Mode",      0, [ "Greyscale", "Gradient" ]));
 	newInput(2, nodeValue_Range(       "Range",    [0,1] ));
-	newInput(3, nodeValue_Gradient(    "Gradient", new gradientObject(ca_white))).setMappable(4);
+	newInput(3, nodeValue_Gradient(    "Gradient", gra_white)).setMappable(4);
 	
 	// input 6
 	

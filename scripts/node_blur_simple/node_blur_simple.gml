@@ -28,7 +28,7 @@ function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	////- =Effect
 	newInput(15, nodeValue_Bool(     "Use Gradient", false ));
-	newInput(12, nodeValue_Gradient( "Gradient", new gradientObject([ ca_black, ca_white ]) )).setMappable(13);
+	newInput(12, nodeValue_Gradient( "Gradient", gra_black_white )).setMappable(13);
 	// input 17
 	
 	input_display_list = [ 8, 9, 

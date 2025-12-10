@@ -2,7 +2,7 @@ function Node_Gradient_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	name = "Gradient Data";
 	setDimension(96);
 	
-	newInput(0, nodeValue_Gradient("Gradient", new gradientObject(ca_white))).setVisible(true, true);
+	newInput(0, nodeValue_Gradient("Gradient", gra_white)).setVisible(true, true);
 	
 	newOutput(0, nodeValue_Output( "Colors", VALUE_TYPE.color, [] )).setDisplay(VALUE_DISPLAY.palette);
 	newOutput(1, nodeValue_Output( "Positions", VALUE_TYPE.float, [] )).setArrayDepth(1);

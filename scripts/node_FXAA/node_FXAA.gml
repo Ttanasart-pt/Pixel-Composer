@@ -22,13 +22,13 @@ function Node_FXAA(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	__init_mask_modifier(5, 7); // inputs 7, 8, 
 	
 	////- =Effect
-	newInput(2, nodeValue_Slider( "Distance", .5 )).setHotkey("S");
+	newInput(2, nodeValue_Slider( "Distance", .5 )).setMappable(9).setHotkey("S");
 	newInput(3, nodeValue_Slider( "Mix",       1 ));
-	// input 9
+	// input 10
 	
 	input_display_list = [ 1, 4, 
 		["Surfaces", false], 0, 5, 6, 7, 8, 
-		["Effect",   false], 2, 3, 
+		["Effect",   false], 2, 9, 3, 
 	]
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -60,7 +60,7 @@ function Node_FXAA(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		surface_set_shader(_outData, sh_FXAA);
 			gpu_set_tex_filter(true);
 			shader_set_2("dimension", _dim);
-			shader_set_f("cornerDis", _data[2]);
+			shader_set_f_map("cornerDis", _data[2], _data[9], inputs[2]);
 			shader_set_f("mixAmo",    _data[3]);
 			
 			draw_surface_safe(_data[0]);

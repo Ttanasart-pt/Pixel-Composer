@@ -25,7 +25,7 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(12, nodeValue_Slider_Range( "Track Extension", [0,0], { range: [ 0, 10, 0.01 ] }));
 	
 	////- =Render
-	newInput( 5, nodeValue_Gradient(     "Color",      new gradientObject(ca_white)));
+	newInput( 5, nodeValue_Gradient(     "Color",      gra_white));
 	newInput( 6, nodeValue_Slider_Range( "Alpha",      [.5,1]));
 	newInput(17, nodeValue_Bool(         "Fade Alpha", false));
 	
