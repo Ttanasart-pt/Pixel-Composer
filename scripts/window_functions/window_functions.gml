@@ -1,8 +1,14 @@
-function close_program() {
+function Program_Close() {
 	PREF_SAVE();
-	//if(PREFERENCES.clear_temp_on_close) directory_destroy(TEMPDIR);
-	
 	game_end();
+}
+
+function Program_Restart() {
+	var _exePath = program_directory;
+	var _exeFile = filename_combine(_exePath, "PixelComposer.exe");
+	
+	shell_execute("", $"start {_exeFile}");
+	Program_Close();
 }
 
 function window_close() {
@@ -22,5 +28,5 @@ function window_close() {
 		}
 	}
 	
-	if(noSave) close_program();
+	if(noSave) Program_Close();
 }

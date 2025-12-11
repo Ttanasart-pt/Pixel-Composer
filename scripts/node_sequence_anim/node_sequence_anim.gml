@@ -86,10 +86,7 @@ function Node_Sequence_Anim(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var _sur = getInputData(0);
-		if(!is_array(_sur)) {
-			outputs[0].setValue(_sur);
-			return;
-		}
+		if(!is_array(_sur)) { outputs[0].setValue(_sur); return; }
 		
 		var _spd = getInputData(1);
 		var _seq = getInputData(2);
@@ -106,6 +103,7 @@ function Node_Sequence_Anim(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		if(_ovf == 0)
 			ind = clamp(ind, 0, array_length(_seq) - 1);
+			
 		else if(_ovf == 2) {
 			var _slen = array_length(_seq);
 			var _slpp = _slen * 2 - 2;

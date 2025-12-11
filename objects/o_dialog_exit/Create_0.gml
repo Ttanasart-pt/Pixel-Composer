@@ -9,8 +9,8 @@ event_inherited();
 	
 	buttonIndex = 0;
 	buttons = [
-		[ __txt("Save"),       function() /*=>*/ { SAVE(project); if(instance_number(o_dialog_exit) == 1) close_program(); }, COLORS._main_value_positive ],
-		[ __txt("Don't Save"), function() /*=>*/ { if(instance_number(o_dialog_exit) == 1) close_program(); }, COLORS._main_value_negative ],
+		[ __txt("Save"),       function() /*=>*/ { SAVE(project); if(instance_number(o_dialog_exit) == 1) Program_Close(); }, COLORS._main_value_positive ],
+		[ __txt("Don't Save"), function() /*=>*/ { if(instance_number(o_dialog_exit) == 1) Program_Close(); }, COLORS._main_value_negative ],
 		[ __txt("Cancel"),     function() /*=>*/ {}, c_white ],
 	];
 	

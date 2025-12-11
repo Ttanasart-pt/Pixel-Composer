@@ -50,8 +50,9 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(2, nodeValue_EScroll( "Canvas size",   0, [ "Individual", "Minimum", "Maximum" ] )).rejectArray();
 	newInput(3, nodeValue_EScroll( "Sizing method", 0, [ "Padding / Crop", "Scale" ]          )).rejectArray();
 	
-	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, [] ));
-	newOutput(1, nodeValue_Output( "Paths",       VALUE_TYPE.path,    [] )).setVisible(true, true);
+	newOutput(0, nodeValue_Output( "Surfaces Out", VALUE_TYPE.surface, []      ));
+	newOutput(1, nodeValue_Output( "Paths",        VALUE_TYPE.path,    []      )).setVisible(true, true);
+	newOutput(2, nodeValue_Output( "Dimensions",   VALUE_TYPE.integer, [[1,1]] )).setDisplay(VALUE_DISPLAY.vector);
 	
 	input_display_list = [
 		["Array settings", false], 0, 1, 2, 3
@@ -158,12 +159,15 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var _ww = -1, _hh = -1;
 		
 		var surfs = outputs[0].getValue();
+		var dims  = outputs[2].getValue();
+		
 		var _sprs = attributes.cache_use? cache_spr : spr;
 		var amo   = array_length(_sprs);
 		for(var i = amo; i < array_length(surfs); i++)
 			surface_free(surfs[i]);
 		
 		array_resize(surfs, amo);
+		dims = array_verify(dims, amo);
 		
 		if(can != CANVAS_SIZE.individual) {
 			for(var i = 0; i < amo; i++) {
@@ -203,6 +207,8 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 					hh = sprite_get_height(_spr) + pad[1] + pad[3];
 					
 					surfs[i] = surface_verify(surfs[i], ww, hh, attrDepth());
+					dims[i]  = [ww, hh];
+					
 					surface_set_target(surfs[i]);
 						DRAW_CLEAR
 						BLEND_OVERRIDE
@@ -214,6 +220,8 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				case CANVAS_SIZE.maximum :
 				case CANVAS_SIZE.minimum :
 					surfs[i] = surface_verify(surfs[i], ww, hh, attrDepth());
+					dims[i]  = [ww, hh];
+					
 					var _w = sprite_get_width(_spr);
 					var _h = sprite_get_height(_spr);
 						
@@ -246,6 +254,7 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		}
 		
 		outputs[0].setValue(surfs);
+		outputs[2].setValue(dims);
 	}
 	
 	static dropPath = function(path) { 

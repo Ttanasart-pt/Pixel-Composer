@@ -60,6 +60,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	// input 9	
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	newOutput(1, nodeValue_Output("Dimension",   VALUE_TYPE.integer, [1,1] )).setDisplay(VALUE_DISPLAY.vector);
 	
 	input_display_list = [
 		[ "Image",     false ], 0, 1, 8, 
@@ -199,6 +200,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var surfs = outputs[0].getValue();
 		surfs = surface_verify(surfs, ww, hh, attrDepth());
 		outputs[0].setValue(surfs);
+		outputs[1].setValue([ww, hh]);
 		
 		switch(_end) {
 			case ANIMATION_END.loop : _frame = safe_mod(_frame, _len); break;

@@ -28,15 +28,14 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Image";
 	color = COLORS.node_blend_input;
 	
-	newInput(0, nodeValue_Path("Path"))
-		.setDisplay(VALUE_DISPLAY.path_load, { filter: "image|*.png;*.jpg" })
-		.rejectArray();
+	newInput(0, nodeValue_Path( "Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "image|*.png;*.jpg" }).rejectArray();
+	newInput(1, nodeValue_Padding( "Padding", [0, 0, 0, 0] ));
 		
-	newInput(1, nodeValue_Padding("Padding", [0, 0, 0, 0]));
-		
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
-	newOutput(1, nodeValue_Output("Path", VALUE_TYPE.path, ""))
-		.setVisible(true, true);
+	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone ));
+	newOutput( 1, nodeValue_Output("Path",        VALUE_TYPE.path,    ""    )).setVisible(true, true);
+	newOutput( 2, nodeValue_Output("Dimension",   VALUE_TYPE.integer, [1,1] )).setDisplay(VALUE_DISPLAY.vector);
+	
+	////- Node
 	
 	attribute_surface_depth();
 	
@@ -129,12 +128,14 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var hh = sprite_get_height(_spr) + pad[1] + pad[3];
 		
 		var _outsurf = outputs[0].getValue();
-	    _outsurf = surface_verify(_outsurf, ww, hh, attrDepth());
-		outputs[0].setValue(_outsurf);
+	        _outsurf = surface_verify(_outsurf, ww, hh, attrDepth());
 		
 		surface_set_shader(_outsurf, noone);
 			draw_sprite(_spr, 0, pad[2], pad[1]);
 		surface_reset_shader();
+		
+		outputs[0].setValue(_outsurf);
+		outputs[2].setValue(surface_get_dimension(_outsurf));
 		
 		spliceImage();
 	}

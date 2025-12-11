@@ -1752,6 +1752,12 @@ function Panel_Preference() : PanelContent() constructor {
     		
     		draw_sprite_stretched_ext(THEME.box_r5_clr, 0, _rx, _ry, _rw, _rh, COLORS._main_accent, 1);
     		draw_text_ext_add(_rx + _rw / 2, _ry + _rh / 2, _txt, -1, _rw - ui(16));
+    		
+    		var _hh = pHOVER && point_in_rectangle(mx, my, _rx, _ry, _rx + _rw, _ry + _rh);
+    		if(_hh) {
+    			draw_sprite_stretched_add(THEME.box_r5, 1, _rx, _ry, _rw, _rh, COLORS._main_accent, .3);
+    			if(mouse_press(mb_left)) Program_Restart();
+    		}
     	}
         
     	section_current = "";

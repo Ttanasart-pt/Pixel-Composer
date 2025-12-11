@@ -57,6 +57,7 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone ));
 	newOutput(1, nodeValue_Output( "Path",        VALUE_TYPE.path,    ""    )).setVisible(true, true);
+	newOutput(2, nodeValue_Output( "Dimension",   VALUE_TYPE.integer, [1,1] )).setDisplay(VALUE_DISPLAY.vector);
 	
 	input_display_list = [ 
 		["Image",	  false], 0, detail, 
@@ -244,6 +245,7 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		_outsurf = surface_verify(_outsurf, ww, hh, attrDepth());
 		outputs[0].setValue(_outsurf);
+		outputs[2].setValue([ww, hh]);
 		
 		surface_set_shader(_outsurf);
 			if(_drw) draw_sprite(spr, _frm, 0, 0);

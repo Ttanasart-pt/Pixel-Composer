@@ -248,6 +248,15 @@ function Project() constructor {
 				} 
 			],
 			
+			[ "Palette", "palette", new buttonPalette(function(pal) /*=>*/ { setPalette(pal); RENDER_ALL return true; }), 
+				function(junc) /*=>*/ {
+					if(!is(junc, NodeValue)) return;
+					if(junc.type != VALUE_TYPE.color || junc.display_type != VALUE_DISPLAY.palette) return;
+					
+					setPalette(junc.getValue());
+				} 
+			],
+			
 			[ "Color Depth", "color_depth", new scrollBox(array_copy_trim_start(global.SURFACE_FORMAT_NAME, 2), function(i) /*=>*/ {
 				attributes.color_depth         = i;
 				PROJECT_ATTRIBUTES.color_depth = i;
@@ -271,15 +280,6 @@ function Project() constructor {
 				return true; 
 				
 			}).setUpdateHover(false) ], 
-			
-			[ "Palette", "palette", new buttonPalette(function(pal) /*=>*/ { setPalette(pal); RENDER_ALL return true; }), 
-				function(junc) /*=>*/ {
-					if(!is(junc, NodeValue)) return;
-					if(junc.type != VALUE_TYPE.color || junc.display_type != VALUE_DISPLAY.palette) return;
-					
-					setPalette(junc.getValue());
-				} 
-			],
 			
 			[ "Export Directory", "export_dir", textBox_Text(function(str) /*=>*/ { attributes.export_dir = str; return true; })
 				.setSideButton( button(function() /*=>*/ { 

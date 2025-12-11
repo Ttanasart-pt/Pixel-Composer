@@ -19,6 +19,7 @@ function Node_SVG(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface,  noone ));
 	newOutput(1, nodeValue_Output( "SVG Object",  VALUE_TYPE.dynaSurface, {} ));
+	newOutput(2, nodeValue_Output( "Dimension",   VALUE_TYPE.integer, [1,1] )).setDisplay(VALUE_DISPLAY.vector);
 	
 	input_display_list = [ 0, 
 		[ "Dimension", false ], 2, 1, 3, 
@@ -131,6 +132,7 @@ function Node_SVG(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		outputs[0].setValue(_outsurf);
 		outputs[1].setValue(content);
+		outputs[2].setValue([ww,hh]);
 	}
 	
 	static dropPath = function(path) {
