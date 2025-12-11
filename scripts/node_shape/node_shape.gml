@@ -63,6 +63,12 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(45, nodeValue_Slider(  "UV Mix", 1  ));
 	newInput( 6, nodeValue_Bool(    "Anti-Aliasing", false ));
 	
+	////- =Background
+	newInput( 1, nodeValue_EButton( "Background",  0, [ "None", "Solid", "Surface" ] ));
+	newInput(11, nodeValue_Color(   "BG Color",    ca_black ));
+	newInput(46, nodeValue_Surface( "BG Surface"            ));
+	newInput(47, nodeValue_EScroll( "BG Blend Mode", 0, [ "Override", "Max" ] ));
+	
 	////- =Transform
 	newInput(15, nodeValue_EScroll(  "Positioning Mode",    2, [ "Area", "Center + Scale", "Full Image" ]))
 	newInput( 3, nodeValue_Area(     "Position",          DEF_AREA_REF, { onSurfaceSize, useShape : false })).setHotkey("A").setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
@@ -128,11 +134,6 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(20, nodeValue_SliRange( "Level",            [0,1]          ));
 	newInput(37, nodeValue_Bool(     "Opacity",          false          ));
 	
-	////- =Background
-	newInput( 1, nodeValue_EButton( "Background",  0, [ "None", "Solid", "Surface" ] ));
-	newInput(11, nodeValue_Color(   "Bg Color",    ca_black ));
-	newInput(46, nodeValue_Surface( "Bg Surface"            ));
-	newInput(47, nodeValue_EScroll( "Bg Blend Mode", 0, [ "Override", "Max" ] ));
 	// 48
 	
 	/////////////////////////////////////////////
@@ -146,12 +147,12 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	input_display_list = [ b_replace_fast, 
 		[ "Output",    false     ],  0, 44, 45, 6, 
+		[ "Background",	true     ],  1, 11, 46, 47, 
 		[ "Transform", false     ], 15,  3, 16, 17, 19, 28, 
 		[ "Shape",	   false     ],  2, 32, 33, 35, 40, 34, 9, 4, 13, 5, 7, 8, 38, 39, 22, 23, 24, 25, 26, 27, 43, 30, 31, 36, 
 		[ "Deform",	    true     ], 41, 42, 
 		[ "Render",	    true     ], 10, 18,
 		[ "Height",	    true, 12 ], 29, 20, 37,  
-		[ "Background",	true     ],  1, 11, 46, 47, 
 	];
 	
 	////- Nodes

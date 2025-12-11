@@ -24,10 +24,15 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	////- =Output
 	newInput( 0, nodeValue_Dimension());
-	newInput( 1, nodeValue_Bool(    "Background",            false    ));
 	newInput(30, nodeValue_Bool(    "Use Path Bounding Box", false    ));
 	newInput(31, nodeValue_Padding( "Padding",              [0,0,0,0] ))
 	newInput(16, nodeValue_Bool(    "Width Pass",            false    ));
+	
+	////- =Background
+	newInput( 1, nodeValue_EButton( "Background",    0, [ "None", "Solid", "Surface" ] ));
+	newInput(48, nodeValue_Color(   "BG color",      ca_black ));
+	newInput(49, nodeValue_Surface( "BG Surface"              ));
+	newInput(50, nodeValue_EScroll( "BG Blend Mode", 0, [ "Override", "Max" ] ));
 	
 	////- =Line data
 	newInput(27, nodeValue_EScroll(  "Data Type", 1, [ "None", "Path", "Segments", "Two points" ]));
@@ -87,19 +92,20 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	////- =Render
 	newInput(34, nodeValue_EScroll( "SSAA", 0, [ "None", "2x", "4x", "8x" ] ));
-	// Inputs 48
+	// Inputs 51
 	
 	input_display_list = [ 39, 
-		["Output",         true], 0, 1, 30, 31, 16, 
-		["Line Data",     false], 27, 6, 7, 28, 32, 33, 35, 19, 2, 20, 
-		["Width",         false], 17, 3, 11, 12, 36, 
-		["Line Settings", false], 8, 25, 9, 26, 13, 43, 14, 
-		["Dash",          false, 46], 44, 45, 
-		["Wiggle",        false, 47], 4, 5, 
-		["Color",         false], 10, 24, 15, 37, 38, 
-		["Texture",       false], 18, 21, 22, 23, 29, 
-		["Textured Cap",  false], 40, 41, 42, 
-		["Render",        false], 34, 
+		[ "Output",         true     ],  0, 30, 31, 16, 
+		[ "Background",     true     ],  1, 48, 49, 50, 
+		[ "Line Data",     false     ], 27,  6,  7, 28, 32, 33, 35, 19,  2, 20, 
+		[ "Width",         false     ], 17,  3, 11, 12, 36, 
+		[ "Line Settings", false     ],  8, 25,  9, 26, 13, 43, 14, 
+		[ "Dash",          false, 46 ], 44, 45, 
+		[ "Wiggle",        false, 47 ],  4,  5, 
+		[ "Color",         false     ], 10, 24, 15, 37, 38, 
+		[ "Texture",       false     ], 18, 21, 22, 23, 29, 
+		[ "Textured Cap",  false     ], 40, 41, 42, 
+		[ "Render",         true     ], 34, 
 	];
 	
 	newOutput(0, nodeValue_Output( "Surface Out", VALUE_TYPE.surface, noone));
@@ -152,8 +158,12 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		#region data
 			var _seed     = _data[39];
 			
-			var _dim      = _data[ 0];
 			var _bg       = _data[ 1];
+			var _bgcol    = _data[48];
+			var _bgSurf   = _data[49];
+			var _bgBlnd   = _data[50];
+			
+			var _dim      = _data[ 0];
 			var _pbbox    = _data[30];
 			var _ppadd    = _data[31];
 			var _colW     = _data[16];
@@ -234,6 +244,10 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			inputs[32].setVisible(_dtype == 3);
 			inputs[33].setVisible(_dtype == 3);
+			
+			inputs[48].setVisible(_bg == 1);
+			inputs[49].setVisible(_bg == 2);
+			inputs[50].setVisible(_bg == 2);
 			
 			outputs[1].setVisible(_colW);
 			
@@ -698,8 +712,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _cPassAA = temp_surface[0];
 		
 		surface_set_target(_cPassAA);
-			if(_bg) draw_clear_alpha(0, 1);
-			else	DRAW_CLEAR
+			DRAW_CLEAR
 			
 			for( var i = 0, n = array_length(lines); i < n; i++ ) {
 				if(array_length(lines[i]) < 2) continue;
@@ -888,10 +901,27 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			}
 		surface_reset_target();
 		
-		surface_set_shader(_colorPass, sh_downsample, true, BLEND.over);
+		surface_set_shader(_colorPass, noone, true, BLEND.over);
+			switch(_bg) {
+				case 1 : 
+					draw_clear(_bgcol); 
+					BLEND_NORMAL
+					break;
+					
+				case 2 : 
+					BLEND_OVERRIDE
+					draw_surface_safe(_bgSurf, 0, 0); 
+					
+					     if(_bgBlnd == 0) { BLEND_NORMAL }
+					else if(_bgBlnd == 1) { BLEND_ADD    }
+					break;
+			}
+			
+			shader_set(sh_downsample);
 			shader_set_dim("dimension", _cPassAA);
 			shader_set_f("down", _aa);
 			draw_surface(_cPassAA, 0, 0);
+			shader_reset();
 		surface_reset_shader();
 		
 		if(_colW && !_1px) { // width pass

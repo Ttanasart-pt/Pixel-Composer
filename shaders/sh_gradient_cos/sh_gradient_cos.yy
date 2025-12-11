@@ -3,11 +3,10 @@
   "%Name":"sh_gradient_cos",
   "name":"sh_gradient_cos",
   "parent":{
-    "name":"drawer",
-    "path":"folders/nodes/data/generator/drawer.yy",
+    "name":"gradient",
+    "path":"folders/nodes/data/generator/drawer/gradient.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",
-  "tags":[],
   "type":1,
 }

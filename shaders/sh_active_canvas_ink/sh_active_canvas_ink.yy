@@ -4,7 +4,7 @@
   "name":"sh_active_canvas_ink",
   "parent":{
     "name":"active_canvas",
-    "path":"folders/nodes/data/generator/drawer/active_canvas.yy",
+    "path":"folders/nodes/data/canvas/active_canvas.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

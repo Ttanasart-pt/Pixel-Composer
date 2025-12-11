@@ -5,10 +5,9 @@
   "isDnD":false,
   "name":"node_gradient_cos",
   "parent":{
-    "name":"drawer",
-    "path":"folders/nodes/data/generator/drawer.yy",
+    "name":"gradient",
+    "path":"folders/nodes/data/generator/drawer/gradient.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
-  "tags":[],
 }

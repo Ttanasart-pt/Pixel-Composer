@@ -3,8 +3,8 @@
   "%Name":"sh_gradient",
   "name":"sh_gradient",
   "parent":{
-    "name":"drawer",
-    "path":"folders/nodes/data/generator/drawer.yy",
+    "name":"gradient",
+    "path":"folders/nodes/data/generator/drawer/gradient.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

@@ -4,7 +4,7 @@
   "name":"sh_rsh_erode",
   "parent":{
     "name":"random_shape",
-    "path":"folders/nodes/data/generator/drawer/random_shape.yy",
+    "path":"folders/nodes/data/generator/drawer/shape/random_shape.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

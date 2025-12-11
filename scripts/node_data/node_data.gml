@@ -634,7 +634,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		var _ind = input_fix_len + dynamic_input_inspecting * data_length;
 		for( var i = 0, n = array_length(input_display_dynamic); i < n; i++ ) {
-			var v = input_display_dynamic[i]; if(is_real(v)) v += _ind;
+			var v = input_display_dynamic[i]; 
+			if(is_real(v)) v += _ind;
+			
+			if(is_array(v) && array_length(v) > 2 && v[2] >= 0)
+				v = [v[0], v[1], v[2] + _ind];
+			
 			array_push(input_display_list, v);
 		}
 		
@@ -2412,9 +2417,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 	}
 	
-	static drawNodeBG = undefined; //static drawNodeBG = function(_x, _y, _mx, _my, _s) {
-	static drawNodeFG = undefined; //static drawNodeFG = function(_x, _y, _mx, _my, _s, _panel = noone) {
-	static drawNode   = function(_draw, _x, _y, _mx, _my, _s, _panel = noone) { 
+	static drawPreviewBackground = undefined; //static drawPreviewBackground = function(_x, _y, _mx, _my, _s) {
+	static drawNodeBehind        = undefined; //static drawNodeBehind = function(_x, _y, _mx, _my, _s) {
+	static onDrawNode  = undefined; //static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawHover = undefined; //static onDrawHover = function(xx, yy, _mx, _my, _s, _hover = false, _focus = false) {
+	static drawNodeBG  = undefined; //static drawNodeBG = function(_x, _y, _mx, _my, _s) {
+	static drawNodeFG  = undefined; //static drawNodeFG = function(_x, _y, _mx, _my, _s, _panel = noone) {
+	
+	static drawNode    = function(_draw, _x, _y, _mx, _my, _s, _panel = noone) { 
 		var xx = x * _s + _x + 1;
 		var yy = y * _s + _y + 1;
 		var hh = h + showMeta() * 16;
@@ -2488,12 +2498,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(drawNodeOverlay) drawNodeOverlay(xx, yy, _mx, _my, _s);
 	}
 	
-	static drawNodeBehind = undefined; //static drawNodeBehind = function(_x, _y, _mx, _my, _s) {
-	static onDrawNode     = undefined; //static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-	static onDrawHover    = undefined; //static onDrawHover = function(xx, yy, _mx, _my, _s, _hover = false, _focus = false) {
-	static drawPreviewBackground = undefined; //static drawPreviewBackground = function(_x, _y, _mx, _my, _s) {
-	
-	static drawBadge = function(_x, _y, _s) {
+	static drawBadge   = function(_x, _y, _s) {
 		var bPreview = bool(previewing);
 		var bInspect = bool(inspecting);
 		var bTool    = group != noone && group.toolNode == self;
@@ -2528,7 +2533,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		previewing = 0;
 	}
 	
-	static drawBranch = function(_depth = 0) {
+	static drawBranch  = function(_depth = 0) {
 		if(branch_drawing) return;
 		branch_drawing = true;
 		
@@ -2540,7 +2545,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		}
 	}
 	
-	static drawActive = function(ind = 0) {
+	static drawActive  = function(ind = 0) {
 		active_draw_index = max(active_draw_index, ind);
 		if(project.graphDisplay.highlight) drawBranch();
 	}

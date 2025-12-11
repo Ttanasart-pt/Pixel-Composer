@@ -420,10 +420,10 @@ function __read_node_folder(dir) {
 	var _info = dir + "/info.json";
 	if(!file_exists(_info)) return;
 	
-	var _data = json_load_struct(_info);
-	var _name = _data[$ "name"];
-	var _base = _data[$ "baseNode"];
-	var _inme = _data[$ "iname"] ?? _base;
+	var _data   = json_load_struct(_info);
+	var _name   = _data[$ "name"];
+	var _base   = _data[$ "baseNode"];
+	var _inme   = _data[$ "iname"] ?? _base;
 	var _custom = _data[$ "custom"] ?? false;
 	
 	if(is_undefined(_base)) {

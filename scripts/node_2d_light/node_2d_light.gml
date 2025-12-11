@@ -20,8 +20,8 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	newInput(0, nodeValue_Surface("Surface In"));
 	
-	typeList    = __enum_array_gen([ "Point", "Ellipse", "Line", "Line asymmetric", "Saber", "Spot", "Flame" ], s_node_2d_light_shape);
-	typeListStr = array_create_ext(array_length(typeList), function(i) /*=>*/ {return typeList[i].name});
+	typeListStr = [ "Point", "Ellipse", "Line", "Line asymmetric", "Saber", "Spot", "Flame" ];
+	typeList    = __enum_array_gen(typeListStr, s_node_2d_light_shape);
 	
 	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
@@ -143,17 +143,17 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	setDynamicInput(25, false);
 	if(!LOADING && !APPENDING) createNewInput();
 	
+	////- Node
+	
 	attribute_surface_depth();
 	temp_surface = [ noone, noone, noone ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		PROCESSOR_OVERLAY_CHECK
-
 		if(getInputAmount() == 0) return;
 		
 		dynamic_input_inspecting = clamp(dynamic_input_inspecting, 0, getInputAmount() - 1);
-		var _ind = input_fix_len + dynamic_input_inspecting * data_length;
-		
+		var _ind   = input_fix_len + dynamic_input_inspecting * data_length;
 		var _shape = current_data[_ind + 0];
 		
 		draw_set_circle_precision(64);

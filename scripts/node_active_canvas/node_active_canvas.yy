@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_active_canvas",
   "parent":{
-    "name":"drawer",
-    "path":"folders/nodes/data/generator/drawer.yy",
+    "name":"canvas",
+    "path":"folders/nodes/data/canvas.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
