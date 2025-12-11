@@ -1,8 +1,9 @@
-function __enum_array_gen(arr, spr, col = COLORS._main_icon) { 
+function __enum_array_gen(arr, spr, col = COLORS._main_icon, ind = undefined) { 
 	__spr = spr;
 	__c   = col;
+	__i   = ind;
 	
-	return array_map(arr, function(v,i) /*=>*/ {return new scrollItem(v, __spr, i).setBlend(__c)}); 
+	return array_map(arr, function(v,i) /*=>*/ {return new scrollItem(v, __spr, __i == undefined? i : __i[i]).setBlend(__c)}); 
 }
 
 function scrollItem(_name, _spr = noone, _spr_ind = 0, _spr_blend = COLORS._main_icon) constructor {
@@ -36,10 +37,10 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 	arrow_spr = THEME.scroll_box_arrow;
 	arrow_ind = 0;
 	
-	open    = false;
-	open_rx = 0;
-	open_ry = 0;
-	filter  = true;
+	open      = false;
+	open_rx   = 0;
+	open_ry   = 0;
+	filter    = true;
 	
 	align          = fa_center;
 	horizontal     = false;
@@ -50,19 +51,19 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 	show_icon      = true;
 	
 	minWidth = 0;
-	type = 0;
-	hide = 0;
+	type     = 0;
+	hide     = 0;
 	
-	static setType          = function(_l) /*=>*/ { type           = _l; return self; }
-	static setHorizontal    = function(_l) /*=>*/ { horizontal     = _l; return self; }
-	static setAlign         = function(_l) /*=>*/ { align          = _l; return self; }
-	static setTextColor     = function(_l) /*=>*/ { text_color     = _l; return self; }
-	static setUpdateHover   = function(_l) /*=>*/ { update_hover   = _l; return self; }
-	static setMinWidth      = function(_l) /*=>*/ { minWidth       = _l; return self; }
-	static setFilter        = function(_l) /*=>*/ { filter         = _l; return self; }
-	static setPadding       = function(_l) /*=>*/ { padding        = _l; return self; }
-	static setPaddingItem   = function(_l) /*=>*/ { item_pad       = _l; return self; }
-	static setPaddingScroll = function(_l) /*=>*/ { padding_scroll = _l; return self; }
+	static setType          = function(l) /*=>*/ { type           = l; return self; }
+	static setHorizontal    = function(l) /*=>*/ { horizontal     = l; return self; }
+	static setAlign         = function(l) /*=>*/ { align          = l; return self; }
+	static setTextColor     = function(l) /*=>*/ { text_color     = l; return self; }
+	static setUpdateHover   = function(l) /*=>*/ { update_hover   = l; return self; }
+	static setMinWidth      = function(l) /*=>*/ { minWidth       = l; return self; }
+	static setFilter        = function(l) /*=>*/ { filter         = l; return self; }
+	static setPadding       = function(l) /*=>*/ { padding        = l; return self; }
+	static setPaddingItem   = function(l) /*=>*/ { item_pad       = l; return self; }
+	static setPaddingScroll = function(l) /*=>*/ { padding_scroll = l; return self; }
 	
 	static trigger = function() {
 		data = is_method(data_list)? data_list() : data_list;
@@ -100,14 +101,15 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 	static draw = function(_x, _y, _w, _h, _val, _m = mouse_ui, _rx = 0, _ry = 0) {
 		x = _x;
 		y = _y;
+		w = _w;
+		h = _h;
+		
 		open_rx = _rx;
 		open_ry = _ry;
-		h = _h;
 		
 		if(horizontal == 2) h = ui(80);
 		
 		data = is_method(data_list)? data_list() : data_list;
-		
 		if(array_empty(data)) {
 			draw_sprite_stretched(THEME.textbox, 3, _x, _y, _w, h);
 			
@@ -125,24 +127,29 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 		if(is_numeric(_val)) _selVal = array_safe_get_fast(data, _val);
 		curr_val = _val;
 		
-		var _text = is_instanceof(_selVal, scrollItem)? _selVal.name : _selVal;
+		var _text = is(_selVal, scrollItem)? _selVal.name : _selVal;
 		if(is_string(_text)) _text = string_trim_start(_text, ["-", ">", " "]);
 		
-		w = _w;
 		draw_set_font(type == 1? f_p0b : font);
 		var _txw = is_string(_text)? string_width(_text) : ui(32);
-		if(type == 1) w = _txw + padding * 2 + ui(24);
+		if(type == 1) _w = _txw + padding * 2 + ui(24);
 		
 		var bs = min(h, ui(32));
 		if(type == 0 && hide == 0) draw_sprite_stretched(THEME.textbox, 3, _x, _y, w, h);
 		
+		var _arr = h > ui(16);
+		var _sps = min(1, h / 24);
+		var _ars = .5;
+		var _arw = _arr * (sprite_get_width(arrow_spr) * _ars + ui(8));
+		var _spr = is(_selVal, scrollItem) && _selVal.spr;
+		
 		if(side_button != noone) {
 			var bx = _x + _w - bs;
 			
-			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, bx, _y, bs, _h, CDEF.main_mdwhite, 1);
+			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, bx - _arw, _y, bs + _arw, _h, CDEF.main_mdwhite, 1);
 			side_button.setFocusHover(active, hover);
 			side_button.draw(bx, _y + h / 2 - bs / 2, bs, bs, _m, THEME.button_hide_fill);
-			w -= bs;
+			_w -= bs;
 		}
 		
 		if(_w - bs > ui(100) && front_button) {
@@ -151,21 +158,16 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 			front_button.draw(_x, _y + h / 2 - bs / 2, bs, bs, _m, THEME.button_hide_fill);
 			
 			_x += bs;
-			 w -= bs;
+			_w -= bs;
 		}
 		
 		if(open) { resetFocus(); return h; }
 		
-		var _hovering = hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + w, _y + h);
+		var _hovering = hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + h);
 		if(_hovering) {
-			if(type == 1) draw_sprite_stretched(THEME.button_hide_fill, 1, _x, _y, w, h);
-			
 			if(mouse_press(mb_left, active))
 				trigger();
 				
-			if(mouse_click(mb_left, active))
-				draw_sprite_stretched_ext(THEME.textbox, 2, _x, _y, w, h, COLORS._main_accent, 1);	
-			
 			if(is_array(data_list) && !array_empty(data_list) && MOUSE_WHEEL != 0 && key_mod_press(SHIFT)) {
 				var len = array_length(data_list);
 				var dir = sign(MOUSE_WHEEL);
@@ -173,25 +175,14 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 				
 				do {
 					ind = safe_mod(ind - dir + len, len);
-					
-				} until(data_list[ind] != -1);
+				} until(data_list[ind] != -1 || ind == _val);
 				
 				onModify(ind);
 			}
-			
-		} else {
-			if(type == 0 && hide == 0) draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, w, h, c_white, 0.5 + 0.5 * interactable);
-			if(mouse_press(mb_left)) deactivate();
 		}
 		
-		var _arr = h > ui(16);
-		var _sps = min(1, h / 24);
-		var _ars = .5;
-		var _arw = _arr * (sprite_get_width(arrow_spr) * _ars + ui(8));
-		var _spr = is(_selVal, scrollItem) && _selVal.spr;
-		
 		var _x0  = _x;
-		var _x1  = _x + w - _arw;
+		var _x1  = _x + _w - _arw;
 		var _yc  = _y + h / 2;
 		
 		if(_spr) _x0 += ui(32);

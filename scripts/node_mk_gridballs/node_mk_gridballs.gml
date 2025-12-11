@@ -98,8 +98,8 @@ function Node_MK_GridBalls(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		var _sw  = _dim[0];
 		var _sh  = _dim[1];
-		var _col = _bamo[0], _icol = 1 / _col;
-		var _row = _bamo[1], _irow = 1 / _row;
+		var _col = round(_bamo[0]), _icol = 1 / _col;
+		var _row = round(_bamo[1]), _irow = 1 / _row;
 		var _amo = _row * _col;
 		
 		var _grw = _sw * _icol;

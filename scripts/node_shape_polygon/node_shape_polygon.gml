@@ -28,7 +28,7 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput( 7, nodeValue_Vec2(     "Scale",    [.5,.5])).setHotkey("S").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	
 	////- =Shape
-	newInput( 4, nodeValue_Enum_Scroll("Shape",  0, { data: shapesArray, horizontal: true, text_pad: ui(16) }))
+	newInput( 4, nodeValue_Enum_Scroll("Shape",  0, { data: shapesArray, horizontal: 1, text_pad: ui(16) }))
 		.setHistory([ shapesArray, { cond: function() /*=>*/ {return LOADING_VERSION < 1_18_09_0}, list: global.node_shape_polygon_keys_1809 }, 
 		                           //{ cond: () => LOADING_VERSION < 1_19_02_0, list: global.node_shape_polygon_keys_1902 },
                     ]);

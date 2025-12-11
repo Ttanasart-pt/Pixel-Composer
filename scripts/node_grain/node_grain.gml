@@ -13,27 +13,26 @@ function Node_Grain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	////- =Brightness
 	newInput(22, nodeValue_Enum_Scroll( "Blend mode", 0, [ "Additive", "Multiply", "Screen", "Overlay" ]))
-	newInput( 7, nodeValue_Slider(      "Brightness", 0, [-1,1,.01] )).setHotkey("B").setMappable(8);
+	newInput( 7, nodeValue_Slider(      "Brightness", 0, [-1,1,.01] )).setHotkey("B").setMappable(8).setCurvable(25);
 	
 	////- =RGB
 	newInput(23, nodeValue_Enum_Scroll( "Blend mode", 0, [ "Additive", "Multiply", "Screen" ]))
-	newInput(10, nodeValue_Slider(      "Red",        0, [-1,1,.01] )).setMappable(11);
-	newInput(12, nodeValue_Slider(      "Green",      0, [-1,1,.01] )).setMappable(13);
-	newInput(14, nodeValue_Slider(      "Blue",       0, [-1,1,.01] )).setMappable(15);
+	newInput(10, nodeValue_Slider(      "Red",        0, [-1,1,.01] )).setMappable(11).setCurvable(26);
+	newInput(12, nodeValue_Slider(      "Green",      0, [-1,1,.01] )).setMappable(13).setCurvable(27);
+	newInput(14, nodeValue_Slider(      "Blue",       0, [-1,1,.01] )).setMappable(15).setCurvable(28);
 	
 	////- =HSV
 	newInput(24, nodeValue_Enum_Scroll( "Blend mode", 0, [ "Additive", "Multiply", "Screen" ]))
-	newInput(16, nodeValue_Slider(      "Hue",        0, [-1,1,.01] )).setMappable(17);
-	newInput(18, nodeValue_Slider(      "Saturation", 0, [-1,1,.01] )).setMappable(19);
-	newInput(20, nodeValue_Slider(      "Value",      0, [-1,1,.01] )).setMappable(21);
-		
-	// input 25
+	newInput(16, nodeValue_Slider(      "Hue",        0, [-1,1,.01] )).setMappable(17).setCurvable(29);
+	newInput(18, nodeValue_Slider(      "Saturation", 0, [-1,1,.01] )).setMappable(19).setCurvable(30);
+	newInput(20, nodeValue_Slider(      "Value",      0, [-1,1,.01] )).setMappable(21).setCurvable(31);
+	// input 32
 		
 	input_display_list = [ 3, 4, 9, 
-		["Surfaces",	 true], 0, 1, 2, 5, 6, 
-		["Brightness",	false], 22, /**/  7,  8, 
-		["RGB",			false], 23, /**/ 10, 11, 12, 13, 14, 15, 
-		["HSV",			false], 24, /**/ 16, 17, 18, 19, 20, 21, 
+		["Surfaces",	 true],  0,  1,  2,  5,  6, 
+		["Brightness",	false], 22, /**/  7,  8, 25, 
+		["RGB",			false], 23, /**/ 10, 11, 26, 12, 13, 27, 14, 15, 28, 
+		["HSV",			false], 24, /**/ 16, 17, 29, 18, 19, 30, 20, 21, 31, 
 	]
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -56,14 +55,15 @@ function Node_Grain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 		surface_set_shader(_outSurf, sh_grain);
 			shader_set_f("seed", _data[9]);
-			shader_set_f_map("brightness", _data[ 7], _data[ 8], inputs[ 7]);
-			shader_set_f_map("red",        _data[10], _data[11], inputs[10]);
-			shader_set_f_map("green",      _data[12], _data[13], inputs[12]);
-			shader_set_f_map("blue",       _data[14], _data[15], inputs[14]);
+			shader_set_f_map("brightness", _data[ 7], _data[ 8], inputs[ 7], _data[25]);
 			
-			shader_set_f_map("hue",        _data[16], _data[17], inputs[16]);
-			shader_set_f_map("sat",        _data[18], _data[19], inputs[18]);
-			shader_set_f_map("val",        _data[20], _data[21], inputs[20]);
+			shader_set_f_map("red",        _data[10], _data[11], inputs[10], _data[26]);
+			shader_set_f_map("green",      _data[12], _data[13], inputs[12], _data[27]);
+			shader_set_f_map("blue",       _data[14], _data[15], inputs[14], _data[28]);
+			
+			shader_set_f_map("hue",        _data[16], _data[17], inputs[16], _data[29]);
+			shader_set_f_map("sat",        _data[18], _data[19], inputs[18], _data[30]);
+			shader_set_f_map("val",        _data[20], _data[21], inputs[20], _data[31]);
 			
 			shader_set_i("bmBright", _data[22]);
 			shader_set_i("bmRGB",    _data[23]);

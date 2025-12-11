@@ -13,17 +13,19 @@ function Node_Skew(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	////- =Skew
 	newInput( 5, nodeValue_EScroll( "Oversample mode", 0, [ "Empty", "Clamp", "Repeat" ]));
 	newInput( 1, nodeValue_EButton( "Axis",       0, ["X", "Y"] ));
-	newInput( 2, nodeValue_Slider(  "Strength",   0, [-1, 1, 0.01] )).setMappable(12);
+	newInput( 2, nodeValue_Slider(  "Strength",   0, [-1, 1, 0.01] )).setMappable(12).setCurvable(13);
 	newInput( 4, nodeValue_Vec2(    "Center",   [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	newInput( 3, nodeValue_Bool(    "Wrap",      false  ));
-	// inputs 13
+	// inputs 14
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 8, 9, 
-		["Surfaces", true],	0, 6, 7, 10, 11, 
-		["Skew",	false],	1, 2, 12, 4,
-	]
+		[ "Surfaces", true ],  0,  6,  7, 10, 11, 
+		[ "Skew",    false ],  1,  2, 12, 13,  4,
+	];
+	
+	////- Nodes
 	
 	attribute_surface_depth();
 	attribute_oversample();
@@ -65,7 +67,7 @@ function Node_Skew(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			shader_set_dim("dimension",	_surf);
 			shader_set_2("center",		_cent);
 			shader_set_i("axis",		_axis);
-			shader_set_f_map("amount",  _data[2], _data[12], inputs[2]);
+			shader_set_f_map("amount",  _data[2], _data[12], inputs[2], _data[13]);
 			shader_set_i("sampleMode",	_samp);
 			
 			draw_surface_safe(_surf);

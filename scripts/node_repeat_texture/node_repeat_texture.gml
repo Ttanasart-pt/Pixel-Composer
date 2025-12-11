@@ -8,28 +8,34 @@ function Node_Repeat_Texture(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	name = "Repeat Texture";
 	dimension_index = 1;
 	
+	newInput(3, nodeValueSeed());
+	
+	////- =Surfaces
 	newInput(0, nodeValue_Surface("Surface In"));
 	
+	////- =Repeat
 	newInput(1, nodeValue_Vec2("Target dimension", DEF_SURF));
-		
 	newInput(2, nodeValue_Enum_Scroll("Type",  1, [ "Tile", "Scatter", "Cell" ]));
-	
-	newInput(3, nodeValueSeed());
+	// 4
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 3, 
-		["Surfaces",	false], 0, 
-		["Repeat",		false], 1, 2,
+		[ "Surfaces", false ], 0, 
+		[ "Repeat",   false ], 1, 2,
 	];
+	
+	////- Nodes
 	
 	attribute_surface_depth();
 		
 	static processData = function(_outSurf, _data, _array_index) {
-		var _surf = _data[0];
-		var _dim  = _data[1];
-		var _type = _data[2];
-		var _seed = _data[3];
+		#region data
+			var _surf = _data[0];
+			var _dim  = _data[1];
+			var _type = _data[2];
+			var _seed = _data[3];
+		#endregion
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		if(!is_surface(_surf)) return _outSurf;

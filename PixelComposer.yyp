@@ -436,6 +436,7 @@
     {"$GMIncludedFile":"","%Name":"Addons.zip","CopyToMask":-1,"filePath":"datafiles/data","name":"Addons.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Assets.zip","CopyToMask":-1,"filePath":"datafiles/data","name":"Assets.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Collections.zip","CopyToMask":-1,"filePath":"datafiles/data","name":"Collections.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"Curves.zip","CopyToMask":-1,"filePath":"datafiles/data","name":"Curves.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"icon.png","CopyToMask":-1,"filePath":"datafiles/data","name":"icon.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"layouts.zip","CopyToMask":-1,"filePath":"datafiles/data","name":"layouts.zip","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"Drawing.json","CopyToMask":-1,"filePath":"datafiles/data/layouts","name":"Drawing.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},

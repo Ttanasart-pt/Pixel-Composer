@@ -5,17 +5,18 @@ function Node_Ambient_Occlusion(_x, _y, _group = noone) : Node_Processor(_x, _y,
 	newInput(0, nodeValue_Surface("Height Map"));
 	
 	////- =Effect
-	newInput(3, nodeValue_Float(  "Height",      8    )).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
-	newInput(1, nodeValue_Slider( "Intensity",   4, [ 0, 8, 0.1 ] ));
+	newInput(3, nodeValue_Float(  "Height",      8    )).setMappable(9).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput(1, nodeValue_Slider( "Intensity",   4, [ 0, 8, 0.1 ] )).setMappable(8).setCurvable(10);
 	newInput(4, nodeValue_Bool(   "Pixel Sweep", true ));
 	
 	////- =Blend
 	newInput(5, nodeValue_Bool(    "Blend Original", false ));
 	newInput(6, nodeValue_EScroll( "Blendmode",      0, [ "Multiply", "Subtract" ] ));
 	newInput(7, nodeValue_Slider(  "Blend Strength", 1     ));
+	// 11
 	
 	input_display_list = [ 2, 0, 
-		[ "Effect",         false    ], 3, 1, 4, 
+		[ "Effect",         false    ], 3, 9, 1, 8, 10, 4, 
 		[ "Blend Original", false, 5 ], 6, 7, 
 	];
 	
@@ -40,21 +41,23 @@ function Node_Ambient_Occlusion(_x, _y, _group = noone) : Node_Processor(_x, _y,
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _map = _data[0];
-		var _int = _data[1];
-		var _hei = _data[3];
-		var _pxs = _data[4];
-		
-		var _bl  = _data[5];
-		var _blm = _data[6];
-		var _bls = _data[7];
+		#region data
+			var _map = _data[0];
+			var _int = _data[1];
+			var _hei = _data[3];
+			var _pxs = _data[4];
+			
+			var _bl  = _data[5];
+			var _blm = _data[6];
+			var _bls = _data[7];
+		#endregion
 		
 		surface_set_shader(_outSurf, sh_sao);
 			shader_set_interpolation(_map);
-			shader_set_dim("dimension", _map);
-			shader_set_f("intensity",   _int);
-			shader_set_f("height",      _hei);
-			shader_set_i("pixel",       _pxs);
+			shader_set_dim("dimension",   _map);
+			shader_set_f_map("intensity", _int, _data[8], inputs[1], _data[10]);
+			shader_set_f_map("height",    _hei, _data[9], inputs[3]);
+			shader_set_i("pixel",         _pxs);
 			
 			shader_set_i("blend",         _bl);
 			shader_set_i("blendMode",     _blm);

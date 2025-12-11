@@ -135,7 +135,6 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	];
 	
 	animator_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
-		
 		var bs = ui(24);
 		var bx = _x + ui(20);
 		var by = _y;
@@ -201,7 +200,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		["Surfaces",  true],  0, 35, 36, 37,  1, 16, 17,
 		["Pattern",	 false],  3,  9, 22, 32,  2, 18,  7,  8, 
 		["Path",	  true], 11, 12, 13, 40, 
-		["Position", false],  4, 26, 19, 38, 39, 
+		["Position", false],  4, 38, 26, 19, 39, 
 		["Rotation", false], 33,  5, 
 		["Scale",	 false], 29,  6, 10, 41, 42, 
 		["Render",	 false], 34, 14, 30, 
@@ -358,7 +357,6 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		inputs[19].setVisible( _pat == 1);
 		inputs[26].setVisible( _pat == 0);
 		inputs[32].setVisible( _pat == 2);
-		inputs[38].setVisible( _pat == 0);
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {	

@@ -57,12 +57,13 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		newInput(index + 13, nodeValue_Slider(   "Radial Band Ratio", 0.5               ));
 		
 		////- =Render
-		newInput(index + 10, nodeValue_Enum_Scroll("Attenuation",     0, __enum_array_gen([ "Quadratic", "Invert quadratic", "Linear" ], s_node_curve_type)))
+		newInput(index + 10, nodeValue_Enum_Scroll("Attenuation",     0, __enum_array_gen([ "Quadratic", "Invert quadratic", "Linear", "Curtom" ], s_node_curve_type)))
 			 .setTooltip("Control how light fade out over distance.");
+		newInput(index + 24, nodeValue_Curve(   "AttenCurve",         CURVE_DEF_01 ));
 		newInput(index +  9, nodeValue_ISlider( "Banding",            0,  [0, 16, 0.1] ));
 		newInput(index + 18, nodeValue_Float(    "Exponent",          2                ));
 		newInput(index + 19, nodeValue_Bool(     "Anti Aliasing",     false            ));
-		// input 24
+		// input 25
 		
 		refreshDynamicDisplay();
 		return inputs[index];
@@ -132,14 +133,14 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	});
 	
 	input_display_dynamic = [ // 14, 
-		["Shape",	false], 0, 1, 5, 6, 7, 8, 22, 23, 15, 16, 17, 20, 21,
-		["Light",	false], 2, 3, 4, 11, 12, 13,
-		["Render",	false], 10, 9, 18, 19, 
+		["Shape",	false],  0,  1,  5,  6,  7,  8, 22, 23, 15, 16, 17, 20, 21,
+		["Light",	false],  2,  3,  4, 11, 12, 13,
+		["Render",	false], 10, 24,  9, 18, 19, 
 	];
 	
 	input_display_list = [ 0, lights_renderer ];
 	
-	setDynamicInput(24, false);
+	setDynamicInput(25, false);
 	if(!LOADING && !APPENDING) createNewInput();
 	
 	attribute_surface_depth();
@@ -248,6 +249,7 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 			var _band  = _data[_ind +  9];
 			var _attn  = _data[_ind + 10];
+			var _attC  = _data[_ind + 24];
 			var _rbnd  = _data[_ind + 11];
 			var _rbns  = _data[_ind + 12];
 			var _rbnr  = _data[_ind + 13];
@@ -446,11 +448,12 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		surface_set_shader(temp_surface[1], sh_2d_light);
 			draw_clear(c_black);
 			
-			shader_set_color("color", _color);
-			shader_set_f("intensity", _inten * _color_get_alpha(_color));
-			shader_set_f("band",      _band);
-			shader_set_i("atten",     _attn);
-			shader_set_f("exponent",  _expo);
+			shader_set_color("color",      _color);
+			shader_set_f("intensity",      _inten * _color_get_alpha(_color));
+			shader_set_f("band",           _band);
+			shader_set_i("atten",          _attn);
+			shader_set_curve("attenCurve", _attC);
+			shader_set_f("exponent",       _expo);
 			
 			BLEND_OVERRIDE draw_surface_safe(_ls);
 		surface_reset_shader();
@@ -551,6 +554,7 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			}
 			
 			inputs[_ind + 18].setVisible(_attn == 0 || _attn == 1);
+			inputs[_ind + 24].setVisible(_attn == 3);
 		#endregion
 		
 		if(!is_surface(_surf)) return _outData;

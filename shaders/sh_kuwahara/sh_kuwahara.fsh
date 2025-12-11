@@ -60,11 +60,20 @@ varying vec4 v_vColour;
 const float q = 18.;
 
 uniform vec2 dimension;
-uniform int  radius;
+
+uniform vec2      radius;
+uniform int       radiusUseSurf;
+uniform sampler2D radiusSurf;
 
 void main () {
+	float rad = radius.x;
+	if(radiusUseSurf == 1) {
+		vec4 _vMap = texture2D( radiusSurf, v_vTexcoord );
+		rad = mix(radius.x, radius.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	}
+	
     vec2  tx        = 1. / dimension;
-    float zeta      = 2. / float(radius);
+    float zeta      = 2. / float(rad);
     float zeroCross = 2.;
 
     float sinZeroCross = sin(zeroCross);
@@ -79,13 +88,13 @@ void main () {
 	
     for (int y = -MAX_RAD; y <= MAX_RAD; y++)
     for (int x = -MAX_RAD; x <= MAX_RAD; x++) {
-		if(y < -radius) continue;
-		if(x < -radius) continue;
-		if(x >  radius) continue;
-		if(y >  radius) break;
+		if(y < -int(rad)) continue;
+		if(x < -int(rad)) continue;
+		if(x >  int(rad)) continue;
+		if(y >  int(rad)) break;
 		
-		float amp = length(vec2(x,y) / float(radius));
-        vec2  v   = vec2(x, y) / float(radius);
+		float amp = length(vec2(x,y) / float(rad));
+        vec2  v   = vec2(x, y) / float(rad);
         vec3  c   = sampleTexture( gm_BaseTexture, v_vTexcoord + vec2(x, y) * tx, amp).xyz;
 		      c   = clamp(c, 0., 1.);
         float sum = 0.;

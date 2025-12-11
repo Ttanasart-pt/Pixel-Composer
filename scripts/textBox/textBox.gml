@@ -476,7 +476,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				
 				draw_set_alpha(0.5 + (_inv) * 0.5);
 				draw_text_add(_tx, _y, "."); _tx += _dt_w;
-				draw_text_add(_tx, _y, _dc);
+				draw_text_add(_tx, _y, $"{_dc}{suffix}");
 				
 			} else
 				draw_text_add(xx, _y, $"{_text}{suffix}");

@@ -31,6 +31,8 @@ function __gaussian_get_kernel(size) {
 function blur_gauss_args(_surface, _size, _sampleMode = 1) constructor {
 	surface    = _surface;
 	size       = _size;
+	sizeCurve    = noone;      static setSizeCurve    = function(i) /*=>*/ { sizeCurve    = i; return self; }
+	
 	sampleMode = _sampleMode;
 	
 	bg         = false;
@@ -67,6 +69,16 @@ function surface_apply_gaussian(args) {
 	var _msize     = is_array(_size)? max(_size[0], _size[1]) : _size;
 		
 	var gau_array = __gaussian_get_kernel(_msize);
+	
+	if(args.sizeCurve != noone) {
+		var _klen = array_length(gau_array);
+		var _kern = array_create(_klen);
+		
+		for( var i = 0; i < _klen; i++ )
+			_kern[i] = gau_array[i] * eval_curve_x(args.sizeCurve, i / (_klen - 1));
+		
+		gau_array = _kern;
+	}
 	
 	BLEND_OVERRIDE
 	gpu_set_tex_filter(true);

@@ -20,7 +20,7 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(1, nodeValue_Slider(  "Size",        3,  [1, 32, 0.1] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)})
 		.setMappable(17).setHotkey("S").setTooltip("Bloom blur radius.");
 	newInput(2, nodeValue_Slider(  "Tolerance",  .50               )).setMappable(18).setTooltip("How bright a pixel should be to start blooming.");
-	newInput(3, nodeValue_Slider(  "Strength",   .25, [0, 2, 0.01] )).setMappable(19).setTooltip("Blend intensity.");
+	newInput(3, nodeValue_Slider(  "Strength",   .25, [0, 2, 0.01] )).setMappable(19).setCurvable(20).setTooltip("Blend intensity.");
 	newInput(4, nodeValue_Surface( "Bloom mask"));
 	
 	////- =Blur
@@ -32,11 +32,11 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	////- =Blend
 	newInput(15, nodeValue_Color(  "Blend",      ca_white));
 	newInput(16, nodeValue_Slider( "Saturation", 1, [ 0, 2, 0.01 ] ));
-	// 20
+	// 21
 	
 	input_display_list = [ 7, 8, 
 		["Surfaces",  true],  0,  5,  6,  9, 10, 
-		["Bloom",    false],  1, 17,  2, 18,  3, 19,  4,
+		["Bloom",    false],  1, 17,  2, 18,  3, 19, 20,  4,
 		["Blur",     false], 13, 11, 12, 14, 
 		["Blend",    false], 15, 16, 
 	]
@@ -109,16 +109,22 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			case 0 :
 				var args = new blur_gauss_args(temp_surface[0], [_size, _data[17], inputs[1]]).setBG(true, c_black)
 					.setRatio(_ratio).setAngle(_angle);
+				if(inputs[3].attributes.curved) args.setSizeCurve(_data[20]);
+				
 				pass1blur = surface_apply_gaussian(args);
 				break;
 				
 			case 1 :
 				var args = new blur_zoom_args(temp_surface[0], [_size, _data[17], inputs[1]], _zoom[0], _zoom[1], 2, 1);
+				if(inputs[3].attributes.curved) args.setSizeCurve(_data[20]);
+				
 				pass1blur = surface_apply_blur_zoom(__blur_pass[0], args);
 				break;
 				
 			case 2 :
 				var args = new blur_directional_args(temp_surface[0], [_size, _data[17], inputs[1]], _angle).setFadeDistance(true);
+				if(inputs[3].attributes.curved) args.setSizeCurve(_data[20]);
+				
 				pass1blur = surface_apply_blur_directional(__blur_pass[0], args);
 				break;
 				

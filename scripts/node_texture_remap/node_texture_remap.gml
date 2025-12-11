@@ -7,6 +7,7 @@ function Node_Texture_Remap(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput(0, nodeValue_Surface(     "Surface In" ));
 	newInput(1, nodeValue_Surface(     "RG Map"     )).setTooltip("Displacement map where red retermine the X position, and green determine the Y position.");
 	newInput(3, nodeValue_Enum_Button( "Dimension Source",  0, [ "Surface", "RG Map" ] ));
+	newInput(6, nodeValue_Slider(      "Blend", 1   ));
 	
 	////- =Index
 	newInput(4, nodeValue_Bool( "Array Index", false ));
@@ -16,9 +17,11 @@ function Node_Texture_Remap(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 2,
-		["Surfaces", false], 0, 1, 3, 
-		["Index",    false, 4], 5, 
-	]
+		[ "Surfaces", false    ], 0, 1, 3, 6, 
+		[ "Index",    false, 4 ], 5, 
+	];
+	
+	////- Node
 	
 	attribute_surface_depth();
 	attribute_interpolation();
@@ -38,6 +41,7 @@ function Node_Texture_Remap(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var _dim = _data[3];
 		var _arr = _data[4];
 		var _ist = _data[5];
+		var _bld = _data[6];
 		
 		var _sw = surface_get_width(_data[_dim]);
 		var _sh = surface_get_height(_data[_dim]);
@@ -61,6 +65,7 @@ function Node_Texture_Remap(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 					shader_set_surface("map", _data[1]);
 					shader_set_i("useIndex", _arr);
 					shader_set_f("index", (_ist + i) / 255);
+					shader_set_f("blend", _bld);
 					
 					draw_surface_stretched_safe(_s, 0, 0, _sw, _sh);
 				shader_reset();

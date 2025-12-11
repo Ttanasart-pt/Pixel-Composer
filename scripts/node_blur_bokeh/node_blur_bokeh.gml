@@ -19,7 +19,7 @@ function Node_Blur_Bokeh(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	__init_mask_modifier(2, 6); // inputs 6, 7
 	
 	////- =Blur
-	newInput( 1, nodeValue_Float( "Strength",     .2   )).setHotkey("S").setMappable(8);
+	newInput( 1, nodeValue_Float( "Strength",     .2   )).setHotkey("S").setMappable(8).setCurvable(21);
 	newInput( 9, nodeValue_Int(   "Iteration",     512 ));
 	
 	////- =Colorize
@@ -34,13 +34,13 @@ function Node_Blur_Bokeh(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	newInput(11, nodeValue_Float( "Contrast Factor", 9 ));
 	newInput(12, nodeValue_Float( "Smoothness",      2 ));
 	newInput(13, nodeValue_Float( "Rotation",        1 ));
-	// input 16
+	// input 21
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 4, 5, 
 		[ "Surfaces",    true ],  0, 14, 15,  2,  3,  6,  7, 
-		[ "Blur",       false ],  1,  8,  9, 
+		[ "Blur",       false ],  1,  8, 21,  9, 
 		// [ "Colorize",   false ], 16, 17, 18, 19, 20, 
 		[ "Processing", false ], 10, 11, 12, 13, 
 	];
@@ -89,7 +89,7 @@ function Node_Blur_Bokeh(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			shader_set_2( "dimension", _dim );
 		
 			shader_set_i( "sampleMode", getAttribute("oversample"));
-			shader_set_f_map( "strength", _data[1], _data[8], inputs[1]);
+			shader_set_f_map( "strength", _data[1], _data[8], inputs[1], _data[21]);
 			
 			shader_set_f( "iteration",      _itr  );
 			shader_set_f( "contrast",       _cont );

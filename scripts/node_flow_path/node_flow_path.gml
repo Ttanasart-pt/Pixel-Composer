@@ -13,10 +13,11 @@ function Node_Flow_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	////- =Path
 	newInput( 7, nodeValue_PathNode( "Path" ));
-	newInput(10, nodeValue_Int(      "Sample",       16    ));
-	newInput(13, nodeValue_Bool(     "Invert",       false ));
-	newInput( 8, nodeValue_Float(    "Radius",       4     ));
-	newInput(11, nodeValue_Bool(     "Apply Weight", false ));
+	newInput(10, nodeValue_Int(      "Sample",          16    ));
+	newInput(13, nodeValue_Bool(     "Invert",          false ));
+	newInput( 8, nodeValue_Float(    "Radius",          .25   )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(11, nodeValue_Bool(     "Apply Weight",    false ));
+	newInput(16, nodeValue_Curve(    "Weight Blending", CURVE_DEF_01 ));
 	
 	////- =Flow
 	newInput( 9, nodeValue_Slider(   "Flow Rate",    1     ));
@@ -25,14 +26,13 @@ function Node_Flow_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	////- =Flowmap
 	newInput(14, nodeValue_Bool(     "Tile",         false ));
 	newInput(15, nodeValue_Int(      "Blur",         1     ));
-	
 	// input 16
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 5, 6, 
 		[ "Surface", false ],  0,  1,  2,  3,  4, 
-		[ "Path",    false ],  7, 10, 13,  8, 11, 
+		[ "Path",    false ],  7, 10, 13,  8, 11, 16,
 		[ "Flow",    false ],  9, 12, 
 		[ "Flowmap", false ], 14, 15, 
 	];
@@ -128,23 +128,26 @@ function Node_Flow_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	}
 	
 	static processData = function(_outSurf, _data, _array_index = 0) {
-		var _surf = _data[0];
-		var _mask = _data[1];
-		var _mix  = _data[2];
-		
-		var _path = _data[ 7];
-		var _psam = _data[10];
-		var _pinv = _data[13];
-		var _weig = _data[11];
-		
-		var _rad  = _data[ 8];
-		var _rate = _data[ 9];
-		var _spd  = _data[12];
-		
-		var _tile = _data[14];
-		var _blur = _data[15];
-		
-		if(!is_path(_path) || !is_surface(_surf)) return _outSurf; 
+		#region data
+			var _surf = _data[0];
+			var _mask = _data[1];
+			var _mix  = _data[2];
+			
+			var _path = _data[ 7];
+			var _psam = _data[10];
+			var _pinv = _data[13];
+			var _weig = _data[11];
+			var _rcrv = _data[16];
+			
+			var _rad  = _data[ 8];
+			var _rate = _data[ 9];
+			var _spd  = _data[12];
+			
+			var _tile = _data[14];
+			var _blur = _data[15];
+			
+			if(!is_path(_path) || !is_surface(_surf)) return _outSurf; 
+		#endregion
 		
 		var _dim = surface_get_dimension(_surf);
 		temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1], surface_rgba16float);
@@ -159,6 +162,8 @@ function Node_Flow_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var nx, ny, nw;
 		
 		surface_set_shader(temp_surface[0], sh_flow_path_add, true, BLEND.add);
+			shader_set_curve("falloff", _rcrv);
+			
 			for( var i = 0; i <= _psam; i++ ) {
 				_prg = i * _t;
 				if(_pinv) _prg = 1 - _prg;

@@ -49,16 +49,15 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _surf = _data[ 0];
-		var _cent = _data[ 1];
-		var _type = _data[ 5];
-		var _reso = _data[14];
-		
-		var _sCurveUse = inputs[2].attributes.curved;
-		var _sCurve    = _data[19];
-		
-		inputs[15].setVisible(_type == 1);
-		inputs[17].setVisible(_type == 1);
+		#region data
+			var _surf = _data[ 0];
+			var _cent = _data[ 1];
+			var _type = _data[ 5];
+			var _reso = _data[14];
+			
+			inputs[15].setVisible(_type == 1);
+			inputs[17].setVisible(_type == 1);
+		#endregion
 		
 		surface_set_shader(_outSurf, sh_chromatic_aberration);
 			shader_set_interpolation(_surf);
@@ -68,14 +67,11 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 			shader_set_dim("dimension",   _surf );
 			shader_set_i("type",          _type );
 			shader_set_2("center",        _cent );
-			shader_set_f_map("strength",  _data[ 2], _data[ 4], inputs[ 2] );
+			shader_set_f_map("strength",  _data[ 2], _data[ 4], inputs[ 2], _data[19] );
 			shader_set_f_map("intensity", _data[ 6], _data[ 7], inputs[ 6] );
 			shader_set_f_map("chromaShf", _data[15], _data[16], inputs[15] );
 			shader_set_f_map("chromaSca", _data[17], _data[18], inputs[17] );
 			
-			shader_set_i("s_curve_use",   _sCurveUse);
-			shader_set_curve("s",         _sCurve);
-		
 			draw_surface_safe(_surf);
 		surface_reset_shader();
 		

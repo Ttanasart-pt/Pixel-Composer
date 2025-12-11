@@ -14,8 +14,7 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(10, nodeValue_Bool(     "Invert", false ));
 	
 	////- =Ribbon
-	newInput( 4, nodeValue_Float(    "Size",       8 )).setHotkey("S");
-	newInput( 8, nodeValue_Curve(    "Size Over Length",  CURVE_DEF_11 ));
+	newInput( 4, nodeValue_Float(    "Size",       8 )).setHotkey("S").setCurvable(8, CURVE_DEF_01);
 	newInput( 5, nodeValue_Rotation( "Direction", 90 ));
 	newInput(15, nodeValue_Float(    "Thickness",  0 ));
 	
@@ -69,7 +68,7 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _invp    = _data[10];
 			
 			var _size    = _data[ 4];
-			var _sizeLen = _data[ 8]; sizeLenMap.set(_sizeLen);
+			var _sizeLen = _data[ 8], _sizeLenUse = inputs[4].attributes.curved;
 			var _dirc    = _data[ 5];
 			var _thck    = _data[15];
 			
@@ -80,6 +79,8 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _textRot = _data[16];
 			var _textSca = _data[14];
 			var _shdSid  = _data[ 9];
+			
+			if(_sizeLenUse) sizeLenMap.set(_sizeLen);
 		#endregion
 		
 		if(!is_path(_path)) return _outSurf;
@@ -134,7 +135,9 @@ function Node_Ribbon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				var _cWei = _colWei.eval(__p.weight);
 				nc = colorMultiply(_cLen, _cWei);
 				
-				nw  = _size * sizeLenMap.get(prg);
+				nw  = _size;
+				if(_sizeLenUse) nw *= sizeLenMap.get(prg);
+				
 				ndx = lengthdir_x(nw, _dirc);
 				ndy = lengthdir_y(nw, _dirc);
 				

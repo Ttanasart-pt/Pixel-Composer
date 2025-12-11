@@ -15,17 +15,17 @@ function Node_Normal(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(0, nodeValue_Surface("Surface In"));
 	
 	////- =Normal
-	newInput(1, nodeValue_Float(  "Height",    1    ));
-	newInput(2, nodeValue_Slider( "Smooth",    0, [ 0, 4, .1 ] )).setTooltip("Include diagonal pixel in normal calculation, which leads to smoother output.");
+	newInput(1, nodeValue_Float(  "Height",    1           )).setMappable(6);
+	newInput(2, nodeValue_Slider( "Smooth",    0, [0,4,.1] )).setMappable(7).setTooltip("Include diagonal pixel in normal calculation, which leads to smoother output.");
 	newInput(5, nodeValue_Bool(   "Flip X",    true ));
 	newInput(4, nodeValue_Bool(   "Normalize", true ));
-	// inputs 6
+	// inputs 8
 		
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 3,
 		["Surfaces", false], 0,
-		["Normal",	 false], 1, 2, 5, 4, 
+		["Normal",	 false], 1, 6, 2, 7, 5, 4, 
 	];
 	
 	////- Node
@@ -55,10 +55,10 @@ function Node_Normal(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			gpu_set_texfilter(true);
 			
 			shader_set_f("dimension", surface_get_dimension(_data[0]), surface_get_height_safe(_data[0]));
-			shader_set_f("height",    _hei);
-			shader_set_f("smooth",    _smt);
-			shader_set_i("normal",    _nor);
-			shader_set_i("swapx",     _swx);
+			shader_set_f_map("height", _hei, _data[6], inputs[1]);
+			shader_set_f_map("smooth", _smt, _data[7], inputs[2]);
+			shader_set_i("normal",     _nor);
+			shader_set_i("swapx",      _swx);
 			
 			draw_surface_safe(_data[0]);
 			

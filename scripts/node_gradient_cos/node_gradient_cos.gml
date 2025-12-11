@@ -23,6 +23,7 @@ function Node_Gradient_Cos(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	////- Gradient
 	newInput(20, nodeValue_Float(  "Shift",  0 ));
 	newInput(21, nodeValue_Float(  "Scale",  1 ));
+	newInput(24, nodeValue_Curve(    "Progress Remap", CURVE_DEF_01 ));
 	
 	////- Shape
 	__gradTypes = __enum_array_gen(["Linear", "Circular", "Radial", "Diamond"], s_node_gradient_type);
@@ -32,7 +33,7 @@ function Node_Gradient_Cos(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput(17, nodeValue_Vec2(     "Center",        [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	newInput(18, nodeValue_Vec2(     "Shape",         [1,1]   ));
 	newInput(19, nodeValue_Bool(     "Uniform ratio",  true   ));
-	// inputs 24
+	// inputs 25
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
@@ -41,7 +42,7 @@ function Node_Gradient_Cos(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	input_display_list = [
 		[ "Output",		   true ], 0, 22, 23, 1, 
 		[ "Coefficients", false, noone, b_random ], 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 
-		[ "Gradient",     false ], 20, 21, 
+		[ "Gradient",     false ], 20, 21, 24, 
 		[ "Shape",        false ], 14, 15, 16, 17, 18, 19, 
 	];
 	
@@ -109,6 +110,7 @@ function Node_Gradient_Cos(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			
 			var _shf   = _data[20];
 			var _sca   = _data[21];
+			var _crv   = _data[24];
 			
 			var _typ   = _data[14];
 			var _ang   = _data[15];
@@ -149,8 +151,9 @@ function Node_Gradient_Cos(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			shader_set_i( "co_d_use",       inputs[11].isMapped() );
 			shader_set_surface( "co_d_map", _d_map );
 			
-			shader_set_f("shift",  _shf);
-			shader_set_f("scale",  _sca);
+			shader_set_f("shift",      _shf);
+			shader_set_f("scale",      _sca);
+			shader_set_curve("pCurve", _crv);
 			
 			shader_set_2("dimension", _dim);
 			shader_set_2("center",    _cnt);

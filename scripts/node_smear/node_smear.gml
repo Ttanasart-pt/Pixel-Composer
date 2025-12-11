@@ -25,7 +25,7 @@ function Node_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	////- Smear
 	newInput(11, nodeValue_Enum_Button( "Mode",       0, [ "Greyscale", "Alpha" ] ));
 	newInput(14, nodeValue_Bool(        "Invert",     false          ));
-	newInput( 1, nodeValue_Slider(      "Strength",  .2, [0,.5,.001] )).setHotkey("S").setMappable( 9);
+	newInput( 1, nodeValue_Slider(      "Strength",  .2, [0,.5,.001] )).setHotkey("S").setMappable( 9).setCurvable(20);
 	newInput( 2, nodeValue_Rotation(    "Direction",  0              )).setHotkey("R").setMappable(10).hideLabel();
 	newInput(13, nodeValue_Slider(      "Spread",     0, [0,30,1 ]   ));
 	newInput(12, nodeValue_Enum_Button( "Modulate strength", 0, [ "Distance", "Color", "None" ] ));
@@ -34,11 +34,11 @@ function Node_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(16, nodeValue_Enum_Scroll( "Render Mode", 0, [ "Distance", "Distance Normalized", "Base Color" ] ));
 	newInput(15, nodeValue_Enum_Scroll( "Blend Mode",  0, [ "Maximum", "Additive" ]));
 	newInput(17, nodeValue_Color(       "Blend Side",  ca_white));
-	//// Inputs 20
+	//// Inputs 21
 	
 	input_display_list = [ 5, 6, 
-		["Surfaces", true], 0, 18, 19, 3, 4, 7, 8, 
-		["Smear",	false], 11, 14, 1, 9, 2, 10, 13, 12, 
+		["Surfaces", true],  0, 18, 19,  3,  4,  7,  8, 
+		["Smear",	false], 11, 14,  1,  9, 20,  2, 10, 13, 12, 
 		["Render",  false], 16, 15, 17, 
 	]
 	
@@ -76,7 +76,7 @@ function Node_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			shader_set_f("dimension",     _dim);
 			shader_set_f("size",          max(_dim[0], _dim[1]));
 			
-			shader_set_f_map("strength",  _data[ 1], _data[ 9], inputs[ 1]);
+			shader_set_f_map("strength",  _data[ 1], _data[ 9], inputs[ 1], _data[20]);
 			shader_set_f_map("direction", _data[ 2], _data[10], inputs[ 2]);
 			shader_set_i("sampleMode",	  getAttribute("oversample"));
 			shader_set_i("alpha",	      _data[11]);

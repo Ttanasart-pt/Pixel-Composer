@@ -261,6 +261,9 @@ uniform sampler2D intensitySurf;
 uniform vec2      strength;
 uniform int       strengthUseSurf;
 uniform sampler2D strengthSurf;
+uniform float     strength_curve[CURVE_MAX];
+uniform int       strength_curve_use;
+uniform int       strength_amount;
 
 uniform vec2      chromaShf;
 uniform int       chromaShfUseSurf;
@@ -269,10 +272,6 @@ uniform sampler2D chromaShfSurf;
 uniform vec2      chromaSca;
 uniform int       chromaScaUseSurf;
 uniform sampler2D chromaScaSurf;
-
-uniform float     s_curve[CURVE_MAX];
-uniform int       s_curve_use;
-uniform int       s_amount;
 
 float saturate (float x) { return min(1.0, max(0.0,x)); }
 vec3  saturate (vec3  x) { return min(vec3(1.,1.,1.), max(vec3(0.,0.,0.),x)); }
@@ -321,7 +320,7 @@ vec4 chroma_continuous(vec2 uv, float str, float itns, float offset, float scale
     vec4  cv   = sampleTexture(gm_BaseTexture, uv);
     
     for (float i = 0.; i <= 1.; i += 1. / stp) {
-    	float str = s_curve_use == 1? curveEval(s_curve, s_amount, i) : 1.;
+    	float str = strength_curve_use == 1? curveEval(strength_curve, strength_amount, i) : 1.;
     	vec4  sam = sampleTexture(gm_BaseTexture, uv - cuv * strr * i * str, i); 
     	sam.rgb *= sam.a;
         o += pow(sam.rgb, vec3(2.2)) * spectral_zucconi6(fract(i * scale + offset));

@@ -45,12 +45,24 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 		
 		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, x, y, w, h, boxColor, 1);
 		
-		if(_drawRot && side_button) {
-			var bx = _x + _w - _bs;
-			
-			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, bx, _y, _bs, _h, CDEF.main_mdwhite, 1);
+		var sb1 = _drawRot && side_button;
+		var sb2 = _drawRot && side_button2;
+		var sbw = _bs * (sb1 + sb2);
+		var bx  = _x + _w - _bs;
+		
+		if(sbw && hide <= 0) draw_sprite_stretched_ext(THEME.textbox, 3, _x + _w - sbw, _y, sbw, _h, CDEF.main_mdwhite, 1);
+		
+		if(sb1) {
 			side_button.setFocusHover(active, hover);
 			side_button.draw(bx, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
+			bx -= _bs;
+			_w -= _bs;
+		}
+		
+		if(sb2) {
+			side_button2.setFocusHover(active, hover);
+			side_button2.draw(bx, _y + _h / 2 - _bs / 2, _bs, _bs, _m, THEME.button_hide_fill);
+			bx -= _bs;
 			_w -= _bs;
 		}
 		

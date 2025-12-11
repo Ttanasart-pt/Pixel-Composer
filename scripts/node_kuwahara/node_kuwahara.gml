@@ -22,18 +22,18 @@ function Node_Kuwahara(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	////- =Surfaces
 	newInput( 9, nodeValue_Enum_Scroll( "Types",  0, [ "Basic", "Anisotropics", "Generalized" ]));
-	newInput( 2, nodeValue_Int(         "Radius",         2  )).setHotkey("R").setValidator(VV_min(1));
+	newInput( 2, nodeValue_Int(         "Radius",         2  )).setMappable(16).setHotkey("R").setValidator(VV_min(1));
 	newInput(10, nodeValue_Slider(      "Alpha",          1  ));
 	newInput(11, nodeValue_Slider(      "Zero crossing", .58 ));
 	newInput(12, nodeValue_Float(       "Hardness",       8  ));
 	newInput(13, nodeValue_Float(       "Sharpness",      8  ));
-	// input 16
+	// input 17
 		
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 1, 6, 
-		["Surfaces",  true], 0, 14, 15, 3, 4, 7, 8, 
-		["Effects",  false], 9, 2, 10, 11, 12, 13, 
+		[ "Surfaces",  true ],  0, 14, 15,  3,  4,  7,  8, 
+		[ "Effects",  false ],  9,  2, 16, 10, 11, 12, 13, 
 	];
 	
 	temp_surface = array_create(4);
@@ -69,8 +69,8 @@ function Node_Kuwahara(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 					shader_set_interpolation(_surf);
 					shader_set_uv(_data[14], _data[15]);
 					
-					shader_set_2("dimension", _dim);
-					shader_set_i("radius",    _data[2]);
+					shader_set_2("dimension",  _dim);
+					shader_set_f_map("radius", _data[2], _data[16], inputs[2]);
 					
 					draw_surface_safe(_surf);
 				surface_reset_shader();
@@ -114,7 +114,7 @@ function Node_Kuwahara(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 					shader_set_2("dimension", _dim);
 					
 					shader_set_f("alpha",        _data[10]);
-					shader_set_i("kernelSize",   _data[2]);
+					shader_set_f_map("radius",   _data[2], _data[16], inputs[2]);
 					shader_set_f("zeroCrossing", _data[11]);
 					shader_set_f("hardness",     _data[12]);
 					shader_set_f("sharpness",    _data[13]);
@@ -130,7 +130,7 @@ function Node_Kuwahara(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 					shader_set_uv(_data[14], _data[15]);
 					
 					shader_set_2("dimension", _dim);
-					shader_set_i("kernelSize",   _data[2]);
+					shader_set_f_map("radius",   _data[2], _data[16], inputs[2]);
 					shader_set_f("zeroCrossing", _data[11]);
 					shader_set_f("hardness",     _data[12]);
 					shader_set_f("sharpness",    _data[13]);

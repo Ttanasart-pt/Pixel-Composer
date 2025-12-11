@@ -26,10 +26,11 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 8, nodeValue_Surface( "Mask"       ));
 	
 	////- Gradient
-	newInput( 1, nodeValue_Gradient( "Gradient", gra_black_white)).setMappable(15);
-	newInput( 5, nodeValue_Slider(   "Shift", 0, [-2,2,.01] )).setMappable(12);
-	newInput( 9, nodeValue_Slider(   "Scale", 1, [ 0,5,.01] )).setHotkey("S").setMappable(13);
-	newInput( 7, nodeValue_EButton(  "Loop",  0, [ "None", "Loop", "Pingpong" ]));
+	newInput( 1, nodeValue_Gradient( "Gradient", gra_black_white )).setMappable(15);
+	newInput( 5, nodeValue_Slider(   "Shift",    0, [-2,2,.01]   )).setMappable(12);
+	newInput( 9, nodeValue_Slider(   "Scale",    1, [ 0,5,.01]   )).setHotkey("S").setMappable(13);
+	newInput( 7, nodeValue_EButton(  "Loop",     0, [ "None", "Loop", "Pingpong" ] ));
+	newInput(20, nodeValue_Curve(    "Progress Remap", CURVE_DEF_01 ));
 	
 	////- Shape
 	__gradTypes = __enum_array_gen(["Linear", "Circular", "Radial", "Diamond"], s_node_gradient_type);
@@ -39,14 +40,14 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 6, nodeValue_Vec2(     "Center",        [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	newInput(17, nodeValue_Vec2(     "Shape",         [1,1]   ));
 	newInput(14, nodeValue_Bool(     "Uniform ratio",  true   ));
-	// inputs 20
+	// inputs 21
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [
-		["Output",		true],	0, 18, 19, 8, 
-		["Gradient",	false], 1, 15, 5, 12, 9, 13, 7, 
-		["Shape",		false], 2, 3, 10, 4, 11, 6, 17, 14, 
+		[ "Output",   true  ],  0, 18, 19,  8, 
+		[ "Gradient", false ],  1, 15,  5, 12,  9, 13,  7, 20, 
+		[ "Shape",    false ],  2,  3, 10,  4, 11,  6, 17, 14, 
 	];
 	
 	attribute_surface_depth();
@@ -74,18 +75,24 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _dim  = _data[ 0];
-		var _typ  = _data[ 2];
-		var _cnt  = _data[ 6];
-		var _lop  = _data[ 7];
-		var _msk  = _data[ 8];
-		var _uni  = _data[14];
-		var _csca = _data[17];
-		
-		inputs[ 3].setVisible(_typ != 1);
-		inputs[ 4].setVisible(_typ == 1);
-		inputs[14].setVisible(_typ);
-		inputs[17].setVisible(_typ == 1);
+		#region data
+			var _dim  = _data[ 0];
+			var _msk  = _data[ 8];
+			
+			var _lop  = _data[ 7];
+			var _crv  = _data[20];
+			
+			var _typ  = _data[ 2];
+			var _cnt  = _data[ 6];
+			var _csca = _data[17];
+			var _uni  = _data[14];
+			
+			inputs[ 3].setVisible(_typ != 1);
+			inputs[ 4].setVisible(_typ == 1);
+			
+			inputs[14].setVisible(_typ);
+			inputs[17].setVisible(_typ == 1);
+		#endregion
 		
 		var _sw = toNumber(_dim[0]);
 		var _sh = toNumber(_dim[1]);
@@ -97,6 +104,7 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			
 			shader_set_2("dimension",  _dim);
 			
+			shader_set_curve("pCurve",     _crv);
 			shader_set_i("gradient_loop",  _lop);
 			shader_set_2("center",   _cnt);
 			shader_set_i("type",     _typ);

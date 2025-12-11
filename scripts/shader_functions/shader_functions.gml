@@ -121,8 +121,7 @@
 		}
 	}
 	
-	function shader_set_f_map(uniform, value, surface = noone, junc = noone) {
-		
+	function shader_set_f_map(uniform, value, surface = noone, junc = noone, _curve = undefined) {
 		shader_set_f(uniform, is_array(value)? value : [ value, value ]); 
 		
 		if(surface == noone) {
@@ -131,6 +130,8 @@
 			shader_set_i(      uniform + "UseSurf", junc.attributes.mapped && is_surface(surface));
 			shader_set_surface(uniform + "Surf",    surface);
 		}
+		
+		if(_curve != undefined) shader_set_curve(uniform, _curve, junc);
 	}
 	
 	function shader_set_uniform_f_array_safe(uniform, array, max_length = 4096) {
@@ -191,16 +192,16 @@
 	function shader_set_c(uniform, col, alpha = 1) { shader_set_f(uniform, colToVec4(col, alpha)); }
 	function shader_set_color(uniform, col, alpha = 1) { shader_set_f(uniform, colToVec4(col, alpha)); }
 	
-	function shader_set_curve(uniform, curve) { 
+	function shader_set_curve(uniform, curve, curveJunc = undefined) { 
 		var _isCurv = is_array(curve);
+		if(curveJunc) _isCurv = _isCurv && curveJunc.attributes.curved;
 		
 		shader_set_i($"curve_offset",        CURVE_PADD);
 		shader_set_i($"{uniform}_curve_use", _isCurv);
-		if(!_isCurv) return;
 		
+		if(!_isCurv) return;
 		shader_set_f($"{uniform}_curve",     curve);
 		shader_set_i($"{uniform}_amount",    array_length(curve));
-		
 	}
 	
 	function shader_set_palette(pal, pal_uni = "palette", amo_uni = "paletteAmount", max_length = 1024) {

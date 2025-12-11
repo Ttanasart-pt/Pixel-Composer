@@ -132,6 +132,7 @@ varying vec4 v_vColour;
 uniform sampler2D map;
 uniform int   useIndex;
 uniform float index;
+uniform float blend;
 
 void main() {
 	vec4 map = texture2Dintp( map, v_vTexcoord );
@@ -140,8 +141,12 @@ void main() {
 	gl_FragColor = vec4(0.);
 	if(useIndex == 1 && map.z != index) return;
 	
-	vec4 samp = texture2Dintp( gm_BaseTexture, 1. - vec2(1. - pos.x, pos.y) );
-	samp.a *= map.a;
+	pos.x = 1. - pos.x;
+	pos   = 1. - pos;
+	
+	vec2 px   = mix(v_vTexcoord, pos, blend);
+	vec4 samp = texture2Dintp( gm_BaseTexture, px );
+	samp.a   *= map.a;
 	
     gl_FragColor = samp;
 }

@@ -20,14 +20,14 @@ function Node_Blur_Slope(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	////- =Blur
 	newInput( 2, nodeValue_Surface( "Slope Map" ));
-	newInput( 1, nodeValue_Slider(  "Strength",   4, [1, 32, 0.1 ] )).setHotkey("S").setMappable(9);
+	newInput( 1, nodeValue_Slider(  "Strength",   4, [1, 32, 0.1 ] )).setHotkey("S").setMappable(9).setCurvable(14);
 	newInput(10, nodeValue_Slider(  "Step",      .1, [0,  1, 0.01] ));
 	newInput(11, nodeValue_Bool(    "Gamma Correction", false ));
-	// input 14
+	// input 15
 	
 	input_display_list = [ 5, 6, 
-		["Surfaces", true], 0, 12, 13, 3, 4, 7, 8, 
-		["Blur",	false], 2, 1, 9, 10, 11, 
+		["Surfaces", true],  0, 12, 13,  3,  4,  7,  8, 
+		["Blur",	false],  2,  1,  9, 14, 10, 11, 
 	]
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -62,7 +62,7 @@ function Node_Blur_Slope(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			shader_set_uv(_data[12], _data[13]);
 			
 			shader_set_f("dimension",     surface_get_dimension(_surf));
-			shader_set_f_map("strength",  _data[1], _data[ 9], inputs[1]);
+			shader_set_f_map("strength",  _data[1], _data[ 9], inputs[1], _data[14]);
 			shader_set_f("stepSize",      _data[10]);
 			
 			shader_set_s("slopeMap",      _slop);

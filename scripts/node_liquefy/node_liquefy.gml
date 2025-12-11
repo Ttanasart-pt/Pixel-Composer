@@ -54,8 +54,7 @@ function Node_Liquefy(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		newInput(i+ 9, nodeValue_Int(      "Push resolution",  16 ));
 		newInput(i+ 3, nodeValue_Float(    "Radius",            8 )).hideLabel();
 		newInput(i+10, nodeValue_Float(    "Radius 2",          8 ));
-		newInput(i+ 5, nodeValue_Float(    "Falloff",           0 )).hideLabel();
-		newInput(i+ 6, nodeValue_Curve(    "Falloff Curve", CURVE_DEF_10 ));
+		newInput(i+ 5, nodeValue_Float(    "Falloff",           0 )).setCurvable(i + 6, CURVE_DEF_01).hideLabel();
 		
 		////- =Effect
 		newInput(i+ 4, nodeValue_Slider( "Intensity", .1, [ -1, 1, 0.01] ));
@@ -130,7 +129,7 @@ function Node_Liquefy(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	});
 	
 	input_display_dynamic = [ 0, 
-		["Regions", false], 1, 2, 8, 9, 3, 10, 5, 
+		["Regions", false], 1, 2, 8, 9, 3, 10, 5, 6, 
 		["Effect",  false], 4, 7, 
 	];
 	
@@ -252,6 +251,7 @@ function Node_Liquefy(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _rad  = _data[_ind + 3];
 		var _int  = _data[_ind + 4];
 		var _fall = _data[_ind + 5];
+		var _falC = _data[_ind + 6];
 		var _push = _data[_ind + 7];
 		var _path = _data[_ind + 8];
 		var _pthR = min(1024, _data[_ind + 9]);
@@ -275,6 +275,7 @@ function Node_Liquefy(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			shader_set_f("radius2",     _rad2);
 			shader_set_f("intensity",   _int);
 			shader_set_f("falloff",     _fall);
+			shader_set_curve("falloff", _falC, inputs[_ind + 5]);
 			shader_set_f("pushIntens",  _push);
 			
 			if(_type == LIQUEFY_TYPE.push) {

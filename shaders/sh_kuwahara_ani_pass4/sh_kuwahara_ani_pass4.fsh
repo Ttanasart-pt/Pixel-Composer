@@ -53,17 +53,26 @@ uniform sampler2D tfm;
 uniform vec2 dimension;
 
 uniform float alpha;
-uniform int   kernelSize;
 uniform float zeroCrossing;
 uniform float hardness;
 uniform float sharpness;
 
+uniform vec2      radius;
+uniform int       radiusUseSurf;
+uniform sampler2D radiusSurf;
+
 void main() {
+	float rad = radius.x;
+	if(radiusUseSurf == 1) {
+		vec4 _vMap = texture2D( radiusSurf, v_vTexcoord );
+		rad = mix(radius.x, radius.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	}
+	
 	vec2  tx = 1. / dimension;
 	float al = alpha;
 	vec4  t  = texture2D(tfm, v_vTexcoord);
 	
-	float kernelRadius = float(kernelSize / 2);
+	float kernelRadius = rad / 2.;
 	float a = kernelRadius * clamp((al + t.w) / al, 0.1, 2.0);
 	float b = kernelRadius * clamp(al / (al + t.w), 0.1, 2.0);
 	

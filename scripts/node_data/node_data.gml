@@ -2396,7 +2396,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		BLEND_NORMAL
 	}
 	
-	static groupCheck = undefined;//function(_x, _y, _s, _mx, _my) {}
+	static groupCheck = undefined; //function(_x, _y, _s, _mx, _my) {}
 	
 	static drawInputGroup = function(_x, _y, _mx, _my, _s) { 
 		var _js = 16 * _s;

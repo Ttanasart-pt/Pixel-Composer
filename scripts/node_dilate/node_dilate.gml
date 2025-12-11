@@ -15,15 +15,15 @@ function Node_Dilate(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	////- =Dilate
 	newInput(1, nodeValue_Vec2(   "Center",   [.5,.5]        )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput(2, nodeValue_Slider( "Strength",  1, [-3,3,.01] )).setHotkey("S").setMappable(11);
-	newInput(3, nodeValue_Float(  "Radius",    16            )).setHotkey("R").setMappable(12);
-	// input 15
+	newInput(2, nodeValue_Slider( "Strength",  1, [-3,3,.01] )).setHotkey("S").setMappable(11).setCurvable(15, CURVE_DEF_01);
+	newInput(3, nodeValue_Float(  "Radius",   .5             )).setHotkey("R").setMappable(12).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	// input 16
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 7, 8, 
 		["Surfaces", true],	 0, 13, 14,  5,  6,  9, 10, 
-		["Dilate",	false],	 1,  2, 11,  3, 12,
+		["Dilate",	false],	 1,  2, 11, 15,  3, 12,
 	];
 	
 	////- Node
@@ -63,7 +63,7 @@ function Node_Dilate(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			
 			shader_set_f("dimension", [ surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0]) ]);
 			shader_set_2("center",         _data[1]);
-			shader_set_f_map("strength",   _data[2], _data[11], inputs[2]);
+			shader_set_f_map("strength",   _data[2], _data[11], inputs[2], _data[15]);
 			shader_set_f_map("radius",     _data[3], _data[12], inputs[3]);
 			
 			shader_set_i("sampleMode", sam);

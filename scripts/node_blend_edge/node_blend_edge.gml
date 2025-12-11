@@ -17,17 +17,18 @@ function Node_Blend_Edge(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	////- =Blend
 	newInput(2, nodeValue_Enum_Button( "Types",       0, [ "Both", "Horizontal", "Vertical" ]));
 	newInput(1, nodeValue_Slider(      "Width",      .1 )).setHotkey("W").setMappable(5);
-	newInput(6, nodeValue_Slider(      "Blending",    1 )).setHotkey("B");
-	newInput(7, nodeValue_Slider(      "Smoothness",  0 )).setHotkey("S");
-	
-	// input 8
+	newInput(6, nodeValue_Slider(      "Blending",    1 )).setHotkey("B").setMappable(8);
+	newInput(7, nodeValue_Slider(      "Smoothness",  0 )).setHotkey("S").setMappable(9).setCurvable(10, CURVE_DEF_01);
+	// input 11
 		
 	input_display_list = [ 3, 4, 
-		["Surfaces", true], 0, 
-		["Blend",	false], 2, 1, 5, 6, 7, 
+		[ "Surfaces", true ], 0, 
+		[ "Blend",   false ], 2, 1, 5, 6, 8, 7, 9, 10, 
 	]
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	
+	////- Nodes
 	
 	temp_surface = array_create(1);
 	
@@ -59,10 +60,11 @@ function Node_Blend_Edge(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		if(_edg == 0) {
 			surface_set_shader(temp_surface[0], sh_blend_edge);
 				shader_set_f("dimension", _sw, _sh);
-				shader_set_f_map("width", _data[1], _data[5], inputs[1]);
-				shader_set_i("edge"     , 0);
-				shader_set_f("blend"    , clamp(_data[6], 0.001, 0.999));
-				shader_set_f("smooth"   , _data[7]);
+				shader_set_i("edge",      0);
+				
+				shader_set_f_map("width",  _data[1], _data[5], inputs[1]);
+				shader_set_f_map("blend",  _data[6], _data[8], inputs[6]);
+				shader_set_f_map("smooth", _data[7], _data[9], inputs[7], _data[10]);
 				
 				draw_surface_safe(_data[0]);
 			surface_reset_shader();
@@ -76,9 +78,11 @@ function Node_Blend_Edge(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		} else {
 			surface_set_shader(_outSurf, sh_blend_edge);
 				shader_set_f("dimension", _sw, _sh);
-				shader_set_f_map("width", _data[1], _data[5], inputs[1]);
-				shader_set_i("edge"     , _edg - 1);
-				shader_set_f("blend"    , clamp(_data[6], 0.001, 0.999));
+				shader_set_i("edge",      _edg - 1);
+				
+				shader_set_f_map("width",  _data[1], _data[5], inputs[1]);
+				shader_set_f_map("blend",  _data[6], _data[8], inputs[6]);
+				shader_set_f_map("smooth", _data[7], _data[9], inputs[7], _data[10]);
 				
 				draw_surface_safe(_data[0]);
 			surface_reset_shader();

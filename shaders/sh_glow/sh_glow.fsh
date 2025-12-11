@@ -132,9 +132,6 @@ uniform int   side;
 uniform int   render;
 uniform int   pixelDist;
 
-uniform float falloff_curve[CURVE_MAX];
-uniform int   falloff_amount;
-
 uniform vec2      size;
 uniform int       sizeUseSurf;
 uniform sampler2D sizeSurf;
@@ -142,6 +139,9 @@ uniform sampler2D sizeSurf;
 uniform vec2      strength;
 uniform int       strengthUseSurf;
 uniform sampler2D strengthSurf;
+uniform float     strength_curve[CURVE_MAX];
+uniform int       strength_curve_use;
+uniform int       strength_amount;
 
 #define TAU 6.283185307179586
 float bright(in vec4 col) { return dot(col.rgb, vec3(0.2126, 0.7152, 0.0722)) * col.a; }
@@ -215,8 +215,9 @@ void main() {
 	
 	vec4  cc   = color;
 	float str  = 1. - dist / siz;
-	      str  = curveEval(falloff_curve, falloff_amount, str);
-	      str *= strn;
+	if(strength_curve_use == 1) str  = curveEval(strength_curve, strength_amount, str);
+    
+    str *= strn;
 	
 	//blend
 	vec4 baseColor   = base;

@@ -23,11 +23,12 @@ function Node_Blur_Box(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 1, nodeValue_Float( "Size",           3     )).setMappable(12).setHotkey("S").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
 	newInput( 9, nodeValue_Float( "Size X",         3     )).setMappable(14);
 	newInput(13, nodeValue_Float( "Size Y",         3     )).setMappable(15);
-	// input 16
+	newInput(16, nodeValue_Curve( "Intensity Modulation", CURVE_DEF_11 ));
+	// input 17
 	
 	input_display_list = [ 4, 5, 
 		[ "Surfaces", true ], 0, 10, 11, 2, 3, 6, 7, 
-		[ "Blur",    false ], 8, 1, 12, 9, 14, 13, 15, 
+		[ "Blur",    false ], 8, 1, 12, 9, 14, 13, 15, 16, 
 	]
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -62,6 +63,8 @@ function Node_Blur_Box(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var _size = _data[ 1];
 			var _sizX = _data[ 9];
 			var _sizY = _data[13];
+			
+			var _intc = _data[16];
 		
 			inputs[ 1].setVisible(!_sepa);
 			inputs[ 9].setVisible( _sepa);
@@ -79,6 +82,7 @@ function Node_Blur_Box(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			shader_set_i("sampleMode", getAttribute("oversample"));
 			shader_set_2("dimension", [ ww, hh ]);
 			shader_set_i("axis",      0);
+			shader_set_curve("intensity", _intc);
 			
 			if(_sepa) shader_set_f_map("size", _sizX, _data[14], inputs[9]);
 			else      shader_set_f_map("size", _size, _data[12], inputs[1]);

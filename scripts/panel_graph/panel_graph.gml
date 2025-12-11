@@ -88,6 +88,7 @@
     function panel_graph_grid_snap()               { CALL("graph_grid_snap");           PANEL_GRAPH_PROJECT_CHECK PANEL_GRAPH.project.graphGrid.snap = !PANEL_GRAPH.project.graphGrid.snap;               }
     function panel_graph_show_origin()             { CALL("graph_grid_show_origin");    PANEL_GRAPH_PROJECT_CHECK PANEL_GRAPH.project.graphGrid.show_origin = !PANEL_GRAPH.project.graphGrid.show_origin; }
     function panel_graph_searchWiki()              { CALL("graph_searchWiki");          PANEL_GRAPH.searchWiki();                               }
+    function panel_graph_viewSource()              { CALL("graph_viewSource");          PANEL_GRAPH.viewSource();                               }
     function panel_graph_swapConnection()          { CALL("graph_swapConnection");      PANEL_GRAPH.swapConnection();                           }
     function panel_graph_transferConnection()      { CALL("graph_transferConnection");  PANEL_GRAPH.transferConnection();                       }
 				                    
@@ -236,6 +237,7 @@
         registerFunction(g, "Toggle Grid Snap",      "",  n, panel_graph_grid_snap           ).setMenu("graph_grid_snap")
         registerFunction(g, "Toggle Show Origin",    "",  n, panel_graph_show_origin         ).setMenu("graph_show_origin")
         registerFunction(g, "Search Wiki",         vk_f1, n, panel_graph_searchWiki          ).setMenu("graph_search_wiki")
+        registerFunction(g, "View Source",        vk_f12, c, panel_graph_viewSource          ).setMenu("graph_view_source")
         registerFunction(g, "Swap Connections",      "S", a, panel_graph_swapConnection      ).setMenu("graph_swap_connection")
         registerFunction(g, "Transfer Connections",  "T", a, panel_graph_transferConnection  ).setMenu("graph_transfer_connection")
 		
@@ -4231,22 +4233,34 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         var dia = dialogPanelCall(pan);
     }
     
-    function __searchWiki() {
-    	var _node = nodes_selecting[0];
-    	var _type = instanceof(_node);
-    	    _type = string_lower(_type);
-    	    _type = string_replace(_type, "node_", "");
-    	var _url  = $"https://docs.pixel-composer.com/nodes/_index/{_type}.html";
-    	URL_open(_url);
-    }
-    
     function searchWiki() {
     	if(array_empty(nodes_selecting)) return;
     	
     	var dia = dialogCall(o_dialog_generic)
     		.setContent("Open URL", "Open documentation in browser?")
     		.setButtons([
-				[ __txt("Open"),   function() /*=>*/ {return __searchWiki()} ],
+				[ __txt("Open"),   function() /*=>*/ {
+			    	var _node = nodes_selecting[0];
+			    	var _type = string_replace(string_lower(instanceof(_node)), "node_", "");
+			    	var _url  = $"https://docs.pixel-composer.com/nodes/_index/{_type}.html";
+			    	URL_open(_url);
+			    } ],
+				[ __txt("Cancel"), function() /*=>*/ {} ],
+			]);
+    }
+    
+    function viewSource() {
+    	if(array_empty(nodes_selecting)) return;
+    	
+    	var dia = dialogCall(o_dialog_generic)
+    		.setContent("Open URL", "Open source code in browser?")
+    		.setButtons([
+				[ __txt("Open"),   function() /*=>*/ {
+			    	var _node = nodes_selecting[0];
+			    	var _type = string_lower(instanceof(_node));
+			    	var _url  = $"https://github.com/Ttanasart-pt/Pixel-Composer/blob/main/scripts/{_type}/{_type}.gml";
+			    	URL_open(_url);
+			    } ],
 				[ __txt("Cancel"), function() /*=>*/ {} ],
 			]);
     }

@@ -27,7 +27,7 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	////- =Strength
 	newInput( 1, nodeValue_Surface( "Displace Map"   ));
 	newInput(17, nodeValue_Surface( "Displace Map 2" ));
-	newInput( 3, nodeValue_Float(   "Strength",   1  )).setMappable(15).setHotkey("S");
+	newInput( 3, nodeValue_Float(   "Strength",   1  )).setMappable(15).setCurvable(25).setHotkey("S");
 	newInput( 4, nodeValue_Slider(  "Mid Value", .5  )).setMappable(24).setTooltip("Brightness value to be use as a basis for 'no displacement'.");
 	
 	////- =Displacement
@@ -48,11 +48,11 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(19, nodeValue_Bool(    "Fade Distance", false ));
 	newInput(20, nodeValue_Bool(    "Reposition",    false ));
 	newInput(21, nodeValue_Int(     "Repeat",        1     ));
-	// inputs 25
+	// inputs 26
 	
 	input_display_list = [ 10, 12, 
 		[ "Surfaces",      true    ],  0, 22, 23,  8,  9, 13, 14, 
-		[ "Strength",     false    ],  1, 17,  3, 15,  4, 24, 
+		[ "Strength",     false    ],  1, 17,  3, 15, 25,  4, 24, 
 		[ "Displacement", false    ],  5, 16,  2, 
 		[ "Iterate",       true, 6 ], 11, 18, 19, 20, 21, 
 	];
@@ -141,7 +141,7 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				shader_set_f("dimension",     [ww, hh]);
 				shader_set_f("map_dimension", [mw, mh]);
 				shader_set_f("displace",      _data[ 2]);
-				shader_set_f_map("strength",  _data[ 3], _data[15], inputs[3]);
+				shader_set_f_map("strength",  _data[ 3], _data[15], inputs[3], _data[25]);
 				shader_set_f_map("middle",    _data[ 4], _data[24], inputs[4]);
 				shader_set_i("mode",          _data[ 5]);
 				shader_set_i("sepAxis",       _data[16]);

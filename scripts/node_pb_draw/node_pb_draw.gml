@@ -51,7 +51,7 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		newInput(index + 1, nodeValue_Color(  "Color", ca_white));
 		newInput(index + 2, nodeValue_Slider(  "Intensity", 1));
 		
-		newInput(index + 3, nodeValue_Enum_Scroll( "Pattern", 0, { data: fill_pattern_scroll_data, horizontal: true, text_pad: ui(16) } ));
+		newInput(index + 3, nodeValue_Enum_Scroll( "Pattern", 0, { data: fill_pattern_scroll_data, horizontal: 1, text_pad: ui(16) } ));
 		newInput(index + 4, nodeValue_Color(  "Color", ca_white));
 		newInput(index + 5, nodeValue_Slider(  "Intensity", 1));
 		newInput(index + 6, nodeValue_Vec2(  "Scale", [1,1])).setUnitRef(function(i) /*=>*/ {return group.dimension});

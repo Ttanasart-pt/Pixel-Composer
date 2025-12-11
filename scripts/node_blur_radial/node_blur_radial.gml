@@ -20,7 +20,7 @@ function Node_Blur_Radial(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	__init_mask_modifier(4, 8); // inputs 8, 9
 	
 	////- =Blur
-	newInput( 1, nodeValue_Rotation( "Strength",          45     )).setHotkey("R").setMappable(10);
+	newInput( 1, nodeValue_Rotation( "Strength",          45     )).setHotkey("R").setMappable(10).setCurvable(20);
 	newInput( 2, nodeValue_Vec2(     "Center",           [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
 	newInput(11, nodeValue_Bool(     "Gamma Correction", false   ));
 	newInput(19, nodeValue_Bool(     "Fade Distance",    false   ));
@@ -31,13 +31,13 @@ function Node_Blur_Radial(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(16, nodeValue_Float(    "Intensity",    1             ));
 	newInput(17, nodeValue_Float(    "Scale",        1             ));
 	newInput(18, nodeValue_Slider(   "Shift",        0, [-1,1,.01] ));
-	// input 20
+	// input 21
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 6, 7, 
 		[ "Surfaces",   true  ],  0, 12, 13,  4,  5,  8,  9, 
-		[ "Blur",       false ],  1, 10,  2, 11, 19, 
+		[ "Blur",       false ],  1, 10, 20,  2, 11, 19, 
 		[ "Colorize",   false ], 14, 15, 16, 17, 18, 
 	];
 	
@@ -84,7 +84,7 @@ function Node_Blur_Radial(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			shader_set_uv(_data[12], _data[13]);
 			
 			shader_set_f("dimension",    sw, sh);
-			shader_set_f_map("strength", _data[1], _data[10], inputs[1]);
+			shader_set_f_map("strength", _data[1], _data[10], inputs[1], _data[20]);
 			shader_set_2("center",       _cen);
 			shader_set_f("gamma",        _gam);
 			shader_set_i("fadeDistance", _fad);

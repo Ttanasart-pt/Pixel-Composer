@@ -19,7 +19,7 @@ function Node_Path_Shape_3D(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	    new scrollItem("Spring Sphere",   s_node_path_3d_shape,  5),
 	    new scrollItem("Spiral",          s_node_path_3d_shape,  6),
     ];
-	newInput(2, nodeValue_Enum_Scroll("Shape", 0, { data: shapeScroll, horizontal: true, text_pad: ui(8) }));
+	newInput(2, nodeValue_Enum_Scroll("Shape", 0, { data: shapeScroll, horizontal: 1, text_pad: ui(8) }));
 	
 	newInput(3, nodeValue_Enum_Button("Up Axis", 2, [ "X", "Y", "Z" ]));
 	

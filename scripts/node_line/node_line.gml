@@ -43,8 +43,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	////- =Width
 	newInput(17, nodeValue_Bool(  "1px Mode",             false        )).setTooltip("Render pixel perfect 1px line.");
-	newInput( 3, nodeValue_Range( "Width",               [2,2],   true ));
-	newInput(11, nodeValue_Curve( "Width over Length",    CURVE_DEF_11 ));
+	newInput( 3, nodeValue_Range( "Width",               [2,2],   true )).setCurvable(11, CURVE_DEF_11);
 	newInput(12, nodeValue_Bool(  "Span Width over Path", false        )).setTooltip("Apply the full 'width over length' to the trimmed path.");
 	newInput(36, nodeValue_Bool(  "Apply Weight",         true         ));
 	
@@ -172,7 +171,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			var _1px      = _data[17];
 			var _wid      = _data[ 3];
-			var _widc     = _data[11];
+			var _widc     = _data[11], _widcUse = inputs[3].attributes.curved;
 			var _widap    = _data[12];
 			var _wg2wid   = _data[36];
 			
@@ -215,7 +214,6 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _utex = inputs[18].value_from != noone;
 		
 			inputs[ 3].setVisible(!_1px);
-			inputs[11].setVisible(!_1px);
 			inputs[12].setVisible(!_1px);
 			inputs[13].setVisible(!_1px && !_utex);
 			inputs[14].setVisible(!_1px);
@@ -754,9 +752,12 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					var widProg = value_snap_real(_widap? prog : prgc, 0.01);
 					
 					_nw  = random_range(_wid[0], _wid[1]);
-					if(!ds_map_exists(widthMap, widProg))
-						widthMap[? widProg] = eval_curve_x(_widc, widProg, 0.1);
-					_nw *= widthMap[? widProg];
+					
+					if(_widcUse) {
+						if(!ds_map_exists(widthMap, widProg))
+							widthMap[? widProg] = eval_curve_x(_widc, widProg, 0.1);
+						_nw *= widthMap[? widProg];
+					}
 					
 					var _ww = lerp_invert(p0.weight, _wmin, _wmax);
 					if(_wg2wid) _nw *= _ww / 2;
@@ -925,9 +926,13 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						var _ww = lerp_invert(p0.weight, _wmin, _wmax);
 						
 						_nw  = random_range(_wid[0], _wid[1]);
-						if(!ds_map_exists(widthMap, widProg))
-							widthMap[? widProg] = eval_curve_x(_widc, widProg, 0.1);
-						_nw *= widthMap[? widProg];
+						
+						if(_widcUse) {
+							if(!ds_map_exists(widthMap, widProg))
+								widthMap[? widProg] = eval_curve_x(_widc, widProg, 0.1);
+							_nw *= widthMap[? widProg];
+						}
+						
 						if(_wg2wid) _nw *= _ww / 2;
 						
 						if(_capS && j == 1) {

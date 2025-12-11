@@ -23,8 +23,7 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(12, nodeValue_Enum_Button( "Side",  0,  [ "Outer", "Inner" ] ));
 	newInput( 1, nodeValue_Slider( "Border",     0,  [0,  4, .1 ] )).setHotkey("B");
 	newInput( 2, nodeValue_Slider( "Size",       3,  [1, 16, .1 ] )).setHotkey("S").setMappable(16);
-	newInput( 3, nodeValue_Slider( "Strength",   1,  [0,  4, .01] )).setHotkey("T").setMappable(17);
-	newInput(15, nodeValue_Curve(  "Strength Curve", CURVE_DEF_01 ));
+	newInput( 3, nodeValue_Slider( "Strength",   1,  [0,  4, .01] )).setHotkey("T").setMappable(17).setCurvable(15);
 	
 	////- =Render
 	newInput(13, nodeValue_Enum_Button( "Blend Mode",  3, [ "Normal", "Replace", -1, "Lighten", "Screen", -1, "Darken", "Multiply" ]));
@@ -64,7 +63,6 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _border   = _data[ 1];
 		var _size     = _data[ 2];
 		var _strn     = _data[ 3];
-		var _fallCur  = _data[15];
 		
 		var _blend    = _data[13];
 		var _color    = _data[ 4];
@@ -78,8 +76,7 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			shader_set_i("side",      _side);
 			shader_set_f("border",    _border);
 			shader_set_f_map("size",      _size, _data[16], inputs[2] );
-			shader_set_f_map("strength",  _strn, _data[17], inputs[3] );
-			shader_set_curve("falloff", _fallCur);
+			shader_set_f_map("strength",  _strn, _data[17], inputs[3], _data[15] );
 			
 			shader_set_i("blend",     _blend);
 			shader_set_color("color", _color);

@@ -24,23 +24,22 @@ function Node_Mirror_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput(10, nodeValue_Enum_Scroll( "Radial Scale",  0, [ "Linear", "Exponential" ] ));
 	
 	////- =Spokes
-	newInput( 4, nodeValue_Float( "Spokes",     4     ));
+	newInput( 4, nodeValue_Float( "Spokes",     4     )).setMappable(11).setCurvable(12);
 	newInput( 5, nodeValue_Bool(  "Reflective", false ));
-	// 11
+	// 13
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 3,
-		["Surfaces", false], 0, 7, 8, 9, 
-		["Mirror",	 false], 1, 2, 6, 10, 
-		["Spokes",	 false], 4, 5, 
+		[ "Surfaces", false ],  0,  7,  8,  9, 
+		[ "Mirror",   false ],  1,  2,  6, 10, 
+		[ "Spokes",   false ],  4, 11, 12,  5, 
 	]
 	
 	attribute_surface_depth();
 	attribute_interpolation();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-
 		PROCESSOR_OVERLAY_CHECK
 		
 		var _pos   = current_data[1];
@@ -83,33 +82,35 @@ function Node_Mirror_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	} 
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _suf = _data[0];
-		var _pos = _data[1];
-		var _ang = _data[2];
-		var _spk = _data[4];
-		var _ref = _data[5];
-		var _sca = _data[6];
-		
-		var _outt = _data[7];
-		var _relS = _data[8];
-		var _conS = _data[9];
-		
-		var _rsca = _data[10];
-		
-		inputs[8].setVisible(_outt == 1);
-		inputs[9].setVisible(_outt == 2);
-		
+		#region data
+			var _suf = _data[0];
+			var _pos = _data[1];
+			var _ang = _data[2];
+			var _spk = _data[4];
+			var _ref = _data[5];
+			var _sca = _data[6];
+			
+			var _outt = _data[7];
+			var _relS = _data[8];
+			var _conS = _data[9];
+			
+			var _rsca = _data[10];
+			
+			inputs[8].setVisible(_outt == 1);
+			inputs[9].setVisible(_outt == 2);
+		#endregion
+			
 		var _dim = surface_get_dimension(_outSurf);
 		
 		surface_set_shader(_outSurf, sh_mirror_polar);
 			shader_set_interpolation(_data[0]);
-			shader_set_f("dimension", _dim);
-			shader_set_2("position",  _pos);
-			shader_set_f("angle",     degtorad(_ang));
-			shader_set_f("spokes",    _spk);
-			shader_set_i("reflecc",   _ref);
-			shader_set_2("scale",     _sca);
-			shader_set_i("rscale",   _rsca);
+			shader_set_f( "dimension", _dim );
+			shader_set_2( "position",  _pos );
+			shader_set_f( "angle",     degtorad(_ang));
+			shader_set_f_map( "spokes",_spk, _data[11], inputs[4], _data[12] );
+			shader_set_i( "reflecc",   _ref );
+			shader_set_2( "scale",     _sca );
+			shader_set_i( "rscale",   _rsca );
 			
 			draw_surface_stretched_safe(_suf, 0, 0, _dim[0], _dim[1]);
 		surface_reset_shader();

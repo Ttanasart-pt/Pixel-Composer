@@ -51,17 +51,26 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform vec2 dimension;
-uniform int kernelSize;
 uniform float hardness, sharpness, zeroCrossing;
 
+uniform vec2      radius;
+uniform int       radiusUseSurf;
+uniform sampler2D radiusSurf;
+
 void main() {
+	float rad    = radius.x;
+	float radMax = max(radius.x, radius.y);
+	if(radiusUseSurf == 1) {
+		vec4 _vMap = texture2D( radiusSurf, v_vTexcoord );
+		rad = mix(radius.x, radius.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
+	}
+	
 	vec2 tx = 1. / dimension;
     vec4 m[8];
     vec3 s[8];
 
-    int kernelRadius = kernelSize / 2;
-
-    float zeta = 2.0 / float(kernelRadius);
+    float kernelRadius = rad / 2.;
+	float zeta = 2.0 / kernelRadius;
     //float zeta = _Zeta;
 
     float sinZeroCross = sin(zeroCrossing);
@@ -72,61 +81,68 @@ void main() {
         s[k] = vec3(0.0);
     }
 
-    for (int y = -kernelRadius; y <= kernelRadius; ++y)
-    for (int x = -kernelRadius; x <= kernelRadius; ++x) {
-        vec2 v = vec2(x, y) / float(kernelRadius);
-        vec3 c = sampleTexture(gm_BaseTexture, v_vTexcoord + vec2(x, y) * tx, length(v)).rgb;
-        c = clamp(c, 0., 1.);
-        
-        float sum = 0.;
-        float w[8];
-        float z, vxx, vyy;
-        
-        /* Calculate Polynomial Weights */
-        vxx = zeta - eta * v.x * v.x;
-        vyy = zeta - eta * v.y * v.y;
-        z = max(0., v.y + vxx); 
-        w[0] = z * z;
-        sum += w[0];
-        
-        z = max(0., -v.x + vyy); 
-        w[2] = z * z;
-        sum += w[2];
-        
-        z = max(0., -v.y + vxx); 
-        w[4] = z * z;
-        sum += w[4];
-        
-        z = max(0., v.x + vyy); 
-        w[6] = z * z;
-        sum += w[6];
-        
-        v = sqrt(2.0) / 2.0 * vec2(v.x - v.y, v.x + v.y);
-        vxx = zeta - eta * v.x * v.x;
-        vyy = zeta - eta * v.y * v.y;
-        z = max(0., v.y + vxx); 
-        w[1] = z * z;
-        sum += w[1];
-        
-        z = max(0., -v.x + vyy); 
-        w[3] = z * z;
-        sum += w[3];
-        
-        z = max(0., -v.y + vxx); 
-        w[5] = z * z;
-        sum += w[5];
-        
-        z = max(0., v.x + vyy); 
-        w[7] = z * z;
-        sum += w[7];
-        
-        float g = exp(-3.125 * dot(v,v)) / sum;
-        
-        for (int k = 0; k < 8; ++k) {
-            float wk = w[k] * g;
-            m[k] += vec4(c * wk, wk);
-            s[k] += c * c * wk;
-        }
+    for (float y = -radMax; y <= radMax; ++y) {
+    	if(y < -rad) continue;
+    	if(y >  rad) break;
+    	
+	    for (float x = -radMax; x <= radMax; ++x) {
+	    	if(x < -rad) continue;
+    		if(x >  rad) break;
+    		
+	        vec2 v = vec2(x, y) / kernelRadius;
+	        vec3 c = sampleTexture(gm_BaseTexture, v_vTexcoord + vec2(x, y) * tx, length(v)).rgb;
+	        c = clamp(c, 0., 1.);
+	        
+	        float sum = 0.;
+	        float w[8];
+	        float z, vxx, vyy;
+	        
+	        /* Calculate Polynomial Weights */
+	        vxx = zeta - eta * v.x * v.x;
+	        vyy = zeta - eta * v.y * v.y;
+	        z = max(0., v.y + vxx); 
+	        w[0] = z * z;
+	        sum += w[0];
+	        
+	        z = max(0., -v.x + vyy); 
+	        w[2] = z * z;
+	        sum += w[2];
+	        
+	        z = max(0., -v.y + vxx); 
+	        w[4] = z * z;
+	        sum += w[4];
+	        
+	        z = max(0., v.x + vyy); 
+	        w[6] = z * z;
+	        sum += w[6];
+	        
+	        v = sqrt(2.0) / 2.0 * vec2(v.x - v.y, v.x + v.y);
+	        vxx = zeta - eta * v.x * v.x;
+	        vyy = zeta - eta * v.y * v.y;
+	        z = max(0., v.y + vxx); 
+	        w[1] = z * z;
+	        sum += w[1];
+	        
+	        z = max(0., -v.x + vyy); 
+	        w[3] = z * z;
+	        sum += w[3];
+	        
+	        z = max(0., -v.y + vxx); 
+	        w[5] = z * z;
+	        sum += w[5];
+	        
+	        z = max(0., v.x + vyy); 
+	        w[7] = z * z;
+	        sum += w[7];
+	        
+	        float g = exp(-3.125 * dot(v,v)) / sum;
+	        
+	        for (int k = 0; k < 8; ++k) {
+	            float wk = w[k] * g;
+	            m[k] += vec4(c * wk, wk);
+	            s[k] += c * c * wk;
+	        }
+	    }
     }
 
     vec4 outp = vec4(0.);

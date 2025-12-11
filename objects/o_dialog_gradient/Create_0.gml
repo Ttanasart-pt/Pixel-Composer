@@ -103,6 +103,7 @@ event_inherited();
 		
 		var bs  = lbh - ui(4);
 		var fav = undefined;
+		var app = undefined;
 		
 		for( var i = 0, n = array_length(_dir.subDir); i < n; i++ ) {
 			var _sub  = _dir.subDir[i];
@@ -170,17 +171,8 @@ event_inherited();
 			bx -= bs + 1;
 			
 			if(_hover && isHover) {
-				if(mouse_press(mb_left, _focus)) {
-					gradient.keys = [];
-					for( var i = 0, n = array_length(_grad.keys); i < n; i++ ) {
-						var k = _grad.keys[i].clone();
-						gradient.keys[i] = k;
-						
-						if(is_real(k.value)) k.value = cola(k.value);
-					}
-					
-					onApply(gradient);
-				}
+				if(mouse_press(mb_left, _focus))
+					app = _grad;
 				
 				if(mouse_press(mb_right, _focus)) {
 					menuCall("gradient_window_preset_menu", [ 
@@ -192,6 +184,18 @@ event_inherited();
 			
 			_y += hg + ui(4);
 			hh += hg + ui(4);
+		}
+		
+		if(app != undefined) {
+			gradient.keys = [];
+			for( var i = 0, n = array_length(app.keys); i < n; i++ ) {
+				var k = app.keys[i].clone();
+				gradient.keys[i] = k;
+				
+				if(is_real(k.value)) k.value = cola(k.value);
+			}
+			
+			onApply(gradient);
 		}
 		
 		if(fav) __toggleGradientFav(fav);

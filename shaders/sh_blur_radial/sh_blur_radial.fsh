@@ -387,6 +387,9 @@ uniform int  fadeDistance;
 uniform vec2      strength;
 uniform int       strengthUseSurf;
 uniform sampler2D strengthSurf;
+uniform float     strength_curve[CURVE_MAX];
+uniform int       strength_curve_use;
+uniform int       strength_amount;
 
 uniform int   spectralUse;
 uniform float spectralIntensity;
@@ -443,10 +446,11 @@ void main() {
 		if(i >  str) break;
 		
 		float ang  = angle + i / 100.;
-		float inf  = abs(i) / strMax;
+		float inf  = abs(i) / str;
 		vec4  col  = sampleTexture( gm_BaseTexture, (pxCen + vec2(cos(ang), sin(ang)) * dist) / dimension, inf);
 		float fade = fadeDistance == 1? 1. - inf : 1.;
 		
+		if(strength_curve_use == 1) fade *= curveEval(strength_curve, strength_amount, 1. - inf);
 		if(gamma == 1) col.rgb = pow(col.rgb, vec3(2.2));
 		
 		col.rgb *= fade;
