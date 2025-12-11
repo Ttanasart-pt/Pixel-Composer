@@ -2505,26 +2505,25 @@ function Panel_Preview() : PanelContent() constructor {
 		} else {
 			var m  = [mx,my];
 			
-            var cw = ui(132);
+            var cw = ui(120);
             var ch = topbar_height - ui(11);
 			var cx = w - ui(6) - cw;
             var cy = ui(6);
             
+            sb_shader.setFocusHover(pFOCUS, pHOVER);
+            sb_shader.setTextColor(preview_shader? COLORS._main_accent : COLORS._main_text);
+			sb_shader.draw(cx, cy, cw, ch, preview_shader, m, x, y);
+			
 			if(preview_shader) {
-				var bs = topbar_height - ui(10);
-				var bx = w - ui(6) - bs;
+				var bs = ch;
+				var bx = cx - ui(4) - bs;
 				var by = cy;
 				var bb = THEME.button_hide;
 				
 				if(buttonInstant_Pad(bb, bx, by, bs, bs, m, pHOVER, pFOCUS, "Apply Alpha", THEME.shader_alpha, preview_shader_alpha) == 2)
 					preview_shader_alpha = !preview_shader_alpha;
-					
-				cw -= bs + ui(4);
 			}
 			
-            sb_shader.setFocusHover(pFOCUS, pHOVER);
-            sb_shader.setTextColor(preview_shader? COLORS._main_accent : COLORS._main_text);
-			sb_shader.draw(cx, cy, cw, ch, preview_shader, m, x, y);
 		}
         
         sample_data = noone;

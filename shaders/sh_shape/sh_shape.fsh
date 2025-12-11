@@ -121,12 +121,15 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform int shape;
-uniform int bg;
 uniform int aa;
 uniform int sides;
 uniform int tile;
 
-uniform int   drawBG;
+uniform int       drawBG;
+uniform sampler2D bgSurf;
+uniform vec4      bgColor;
+uniform int       bgBlend;
+
 uniform int   drawOpacity;
 uniform int   drawDF;
 uniform vec2  dfLevel;
@@ -171,7 +174,6 @@ uniform vec2  point1;
 uniform vec2  point2;
 uniform float thickness;
 
-uniform vec4 bgColor;
 uniform vec4 baseColor;
 uniform int  cornerShape;
 
@@ -527,19 +529,11 @@ void main() {
 	else if(shape == 21) { d = sdHalf(vtx, p1, -rotation);                                                                               }
 	else if(shape == 22) { d = sdSuperEllipse(coord, super_factor, super_sides) - corner;                                                }
 	
-	float cc;
-	
-	if(aa == 0) 
-		cc = step(d, 0.0);
-	else {
+	float cc = step(d, 0.0);
+	if(aa == 1) {
 		float _aa = 1. / max(dimension.x, dimension.y);
 		cc = smoothstep(_aa, -_aa, d);
 	}
-	
-	if(drawBG == 1) gl_FragData[0] = mix(bgColor, baseColor, cc);
-	else gl_FragData[0] = vec4(baseColor.rgb, baseColor.a * cc);
-	
-	gl_FragData[1] = vec4(cc, cc, cc, 1.);
 	
 	float intensity = cc;
 	intensity  = -d;
@@ -551,5 +545,12 @@ void main() {
 	else if(drawOpacity == 0) gl_FragData[2] = vec4(baseColor.rgb * intensity, baseColor.a * cc);
 	else                      gl_FragData[2] = vec4(baseColor.rgb, baseColor.a * intensity);
 	
-	if(drawDF == 1) gl_FragData[0] = gl_FragData[2];
+	vec4 bgPixel = drawBG == 2? texture2D(bgSurf, v_vTexcoord) : bgColor;
+	vec4 fgPixel = drawDF == 1? gl_FragData[2] : baseColor;
+	
+	     if(drawBG  == 0) gl_FragData[0] = vec4(fgPixel.rgb, fgPixel.a * cc);
+	else if(bgBlend == 0) gl_FragData[0] = mix(bgPixel, fgPixel, cc);
+	else if(bgBlend == 1) gl_FragData[0] = max(bgPixel, fgPixel);
+	
+	gl_FragData[1] = vec4(cc, cc, cc, 1.);
 }
