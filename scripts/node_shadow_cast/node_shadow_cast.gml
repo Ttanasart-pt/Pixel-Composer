@@ -134,6 +134,34 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		PROCESSOR_OVERLAY_CHECK
 		if(getInputAmount() == 0) return;
 		
+		var hvAny = false;
+		for( var i = 0, n = getInputAmount(); i < n; i++ ) {
+			if(i == dynamic_input_inspecting) continue;
+			
+			var _ind = input_fix_len + i * data_length;
+			var typ = current_data[_ind+0];
+			var col = current_data[_ind+1];
+			var pos = current_data[_ind+3];
+			var px = _x + pos[0] * _s;
+			var py = _y + pos[1] * _s;
+			
+			var hv = w_hoverable && point_in_circle(_mx, _my, px, py, ui(6));
+			var ss = 1 + .25 * hv;
+			draw_sprite_ext_add(s_node_shadow_type, typ, px, py, ss, ss, 0, c_white);
+			
+			BLEND_ALPHA_MULP
+			draw_sprite_ext(s_node_shadow_type, typ, px, py, ss, ss, 0, col, 1);
+			BLEND_NORMAL
+			
+			if(hv) {
+				hvAny = true;
+				if(mouse_lpress(active)) {
+					dynamic_input_inspecting = i;
+					refreshDynamicDisplay();
+				}
+			}
+		}
+		
 		dynamic_input_inspecting = clamp(dynamic_input_inspecting, 0, getInputAmount() - 1);
 		var _ind   = input_fix_len + dynamic_input_inspecting * data_length;
 		
@@ -151,6 +179,8 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			draw_circle_dash(px, py, rr/2);
 			InputDrawOverlay(inputs[_ind+4].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny, 0, 1/2, 1));
 		}
+		
+		if(hvAny) w_hoverable = false;
 		
 		return w_hovering;
 	}
