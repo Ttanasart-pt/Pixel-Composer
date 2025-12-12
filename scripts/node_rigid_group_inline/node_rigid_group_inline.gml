@@ -15,32 +15,30 @@ function Node_Rigid_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inlin
 	objects    = [];
 	
 	////- =World
-	
 	newInput(1, nodeValue_Dimension());
-	newInput(0, nodeValue_Vec2(     "Gravity", [ 0, 10 ]));
-	newInput(3, nodeValue_Rotation( "Gravity Direction", -90));
-	newInput(4, nodeValue_Float(    "Gravity Strength", 10));
+	newInput(0, nodeValue_Vec2(     "Gravity",           [0,10] ));
+	newInput(3, nodeValue_Rotation( "Gravity Direction", -90    ));
+	newInput(4, nodeValue_Float(    "Gravity Strength",   10    ));
 	
 	////- =Simulation
-	
-	newInput(2, nodeValue_Float( "Simulation Scale", 50 ));
-	newInput(5, nodeValue_Bool(  "Sleepable", true ));
-	newInput(6, nodeValue_Bool(  "Continuous", true ));
+	newInput(2, nodeValue_Float( "Simulation Scale", 50   ));
+	newInput(5, nodeValue_Bool(  "Sleepable",        true ));
+	newInput(6, nodeValue_Bool(  "Continuous",       true ));
 	
 	////- =Wall
-	
-	newInput( 7, nodeValue_Bool(   "Use Wall", false));
-	newInput( 8, nodeValue_Toggle( "Walls", 0b0010, { data : [ "T", "B", "L", "R" ] }));
-	newInput( 9, nodeValue_Float(  "Wall Friction", 0.2));
-	newInput(10, nodeValue_Slider( "Wall Bounciness", 0.2));
-	
+	newInput( 7, nodeValue_Bool(   "Use Wall",       false ));
+	newInput( 8, nodeValue_Toggle( "Walls",          0b0010, { data : [ "T", "B", "L", "R" ] } ));
+	newInput( 9, nodeValue_Float(  "Wall Friction",   .2   ));
+	newInput(10, nodeValue_Slider( "Wall Bounciness", .2   ));
 	// inputs 11
 	
 	input_display_list = [ 
-		["World",      false], 1, 3, 4, 
-		["Simulation", false], 2, 5, 6, 
-		["Wall",    false, 7], 8, 9, 10, 
+		[ "World",      false ],  1,  3,  4, 
+		[ "Simulation", false ],  2,  5,  6, 
+		[ "Wall",    false, 7 ],  8,  9, 10, 
 	];
+	
+	////- Nodes
 	
 	if(NODE_NEW_MANUAL) {
 		var _object = nodeBuild("Node_Rigid_Object", x,       y, self);
@@ -56,7 +54,7 @@ function Node_Rigid_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inlin
 		if(worldIndex == undefined) return undefined;
 		
 		var _dim = dimension;
-		var _frc = getInputData(9);
+		var _frc = getInputData( 9);
 		var _res = getInputData(10);
 		
 		var ww = _dim[0] / worldScale;
@@ -65,11 +63,10 @@ function Node_Rigid_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inlin
 		gmlBox2D_Object_Create_Begin(worldIndex, 0, 0, false);
 		
 		switch(side) {
-			case 0 : gmlBox2D_Object_Create_Shape_Segment( 0,  0, ww,  0); break;
-			case 1 : gmlBox2D_Object_Create_Shape_Segment( 0, hh, ww, hh); break;
-			case 2 : gmlBox2D_Object_Create_Shape_Segment( 0,  0,  0, hh); break;
-			case 3 : gmlBox2D_Object_Create_Shape_Segment(ww,  0, ww, hh); break;
-				
+			case 0 : gmlBox2D_Object_Create_Shape_Segment(  0,  0, ww,  0 ); break;
+			case 1 : gmlBox2D_Object_Create_Shape_Segment(  0, hh, ww, hh ); break;
+			case 2 : gmlBox2D_Object_Create_Shape_Segment(  0,  0,  0, hh ); break;
+			case 3 : gmlBox2D_Object_Create_Shape_Segment( ww,  0, ww, hh ); break;
 		}
 		
 		var objId  = gmlBox2D_Object_Create_Complete();

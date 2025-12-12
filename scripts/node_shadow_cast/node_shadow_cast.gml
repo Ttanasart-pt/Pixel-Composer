@@ -18,12 +18,14 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var inAmo = array_length(inputs);
 		dynamic_input_inspecting = getInputAmount();
 		
-		////- =Light
+		////- =Shape
 		newInput(index+ 0, nodeValue_EScroll( "Type",       0, __ltype   ));
-		newInput(index+ 1, nodeValue_Color(   "Color",      ca_white     ));
-		newInput(index+ 2, nodeValue_Slider(  "Intensity",  1, [0,2,.01] ));
 		newInput(index+ 3, nodeValue_Vec2(    "Position", [.5,.5]        )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference).hideLabel();
 		newInput(index+ 4, nodeValue_Float(   "Radius",    .5            )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference).hideLabel();
+		
+		////- =Light
+		newInput(index+ 2, nodeValue_Slider(  "Intensity",  1, [0,2,.01] ));
+		newInput(index+ 1, nodeValue_Color(   "Color",      ca_white     ));
 		
 		////- =Attenuation
 		newInput(index+ 5, nodeValue_EScroll( "Attenuation",0, __atype   )).setTooltip("Control how light fade out over distance.");
@@ -115,7 +117,8 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	];
 	
 	input_display_dynamic = [ 
-		[ "Light",             false     ],  0,  1, 2, 3, 4, 
+		[ "Shape",             false     ],  0,  3, 4, 
+		[ "Light",             false     ],  2,  1, 
 		[ "Attenuation",       false     ],  5, 13, 6, 
 		[ "Soft Light",        false, 7  ],  8,  9, 
 		[ "Ambient Occlusion", false, 10 ], 11, 12, 
@@ -147,7 +150,8 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			
 			var hv = w_hoverable && point_in_circle(_mx, _my, px, py, ui(6));
 			var ss = 1 + .25 * hv;
-			draw_sprite_ext_add(s_node_shadow_type, typ, px, py, ss, ss, 0, c_white);
+			draw_sprite_ext(     s_node_shadow_type, typ, px+1, py+1, ss, ss, 0, COLORS._main_icon );
+			draw_sprite_ext_add( s_node_shadow_type, typ, px,   py,   ss, ss, 0, c_white           );
 			
 			BLEND_ALPHA_MULP
 			draw_sprite_ext(s_node_shadow_type, typ, px, py, ss, ss, 0, col, 1);
@@ -163,7 +167,7 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		}
 		
 		dynamic_input_inspecting = clamp(dynamic_input_inspecting, 0, getInputAmount() - 1);
-		var _ind   = input_fix_len + dynamic_input_inspecting * data_length;
+		var _ind = input_fix_len + dynamic_input_inspecting * data_length;
 		
 		InputDrawOverlay(inputs[_ind+3].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, 1));
 		

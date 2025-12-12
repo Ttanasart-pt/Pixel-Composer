@@ -22,6 +22,7 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	typeListStr = [ "Point", "Ellipse", "Line", "Line asymmetric", "Saber", "Spot", "Flame" ];
 	typeList    = __enum_array_gen(typeListStr, s_node_2d_light_shape);
+	attnList    = __enum_array_gen([ "Quadratic", "Invert quadratic", "Linear", "Curtom" ], s_node_curve_type);
 	
 	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
@@ -35,34 +36,33 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		////- =Shape
 		newInput(index +  0, _val);
-		newInput(index +  1, nodeValue_Vec2(     "Center",           [16,16] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
-		newInput(index +  5, nodeValue_Vec2(     "Start",            [16,16] ));
-		newInput(index +  6, nodeValue_Vec2(     "Finish",           [32,16] ));
-		newInput(index +  7, nodeValue_ISlider(  "Sweep",             15, [-80, 80, 0.1] ));
-		newInput(index +  8, nodeValue_ISlider(  "Sweep End",         0,  [-80, 80, 0.1] ));
-		newInput(index + 22, nodeValue_Int(      "Sweep Soft",        1      ));
-		newInput(index + 23, nodeValue_Float(    "Sweep Spread",      1      ));
-		newInput(index + 15, nodeValue_Float(    "Radius x",          16     ));
-		newInput(index + 16, nodeValue_Float(    "Radius y",          16     ));
-		newInput(index + 17, nodeValue_Rotation( "Rotation",          0      ));
-		newInput(index + 20, nodeValue_Bool(     "Two Sides",         false  ));
-		newInput(index + 21, nodeValue_Float(    "Thickness",         2      ));
+		newInput(index +  1, nodeValue_Vec2(     "Position",    [16,16] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}).hideLabel();
+		newInput(index +  2, nodeValue_Float(    "Range",        16     )).hideLabel();
+		newInput(index +  5, nodeValue_Vec2(     "Start",       [16,16] )).hideLabel();
+		newInput(index +  6, nodeValue_Vec2(     "Finish",      [32,16] )).hideLabel();
+		newInput(index +  7, nodeValue_ISlider(  "Sweep",        15, [-80, 80, 0.1] )).hideLabel();
+		newInput(index +  8, nodeValue_ISlider(  "Sweep End",    0,  [-80, 80, 0.1] )).hideLabel();
+		newInput(index + 22, nodeValue_Int(      "Sweep Soft",   1      )).hideLabel();
+		newInput(index + 23, nodeValue_Float(    "Sweep Spread", 1      )).hideLabel();
+		newInput(index + 15, nodeValue_Float(    "Radius x",     16     )).hideLabel();
+		newInput(index + 16, nodeValue_Float(    "Radius y",     16     )).hideLabel();
+		newInput(index + 17, nodeValue_Rotation( "Rotation",     0      )).hideLabel();
+		newInput(index + 20, nodeValue_Bool(     "Two Sides",    false  )).hideLabel();
+		newInput(index + 21, nodeValue_Float(    "Thickness",    2      )).hideLabel();
 		
 		////- =Light
-		newInput(index +  2, nodeValue_Float(   "Range",              16                ));
-		newInput(index +  3, nodeValue_Slider(  "Intensity",          1, [ 0, 4, 0.01 ] ));
-		newInput(index +  4, nodeValue_Color(   "Color",              ca_white          ));
+		newInput(index +  3, nodeValue_Slider(   "Intensity",         1, [ 0, 4, 0.01 ] ));
+		newInput(index +  4, nodeValue_Color(    "Color",             ca_white          ));
 		newInput(index + 11, nodeValue_ISlider(  "Radial Banding",    0, [0, 16, 0.1]   ));
 		newInput(index + 12, nodeValue_Rotation( "Radial Start",      0                 ));
 		newInput(index + 13, nodeValue_Slider(   "Radial Band Ratio", 0.5               ));
 		
 		////- =Render
-		newInput(index + 10, nodeValue_Enum_Scroll("Attenuation",     0, __enum_array_gen([ "Quadratic", "Invert quadratic", "Linear", "Curtom" ], s_node_curve_type)))
-			 .setTooltip("Control how light fade out over distance.");
-		newInput(index + 24, nodeValue_Curve(   "AttenCurve",         CURVE_DEF_01 ));
-		newInput(index +  9, nodeValue_ISlider( "Banding",            0,  [0, 16, 0.1] ));
-		newInput(index + 18, nodeValue_Float(    "Exponent",          2                ));
-		newInput(index + 19, nodeValue_Bool(     "Anti Aliasing",     false            ));
+		newInput(index + 10, nodeValue_EScroll( "Attenuation",   0, attnList       )).setTooltip("Control how light fade out over distance.");
+		newInput(index + 24, nodeValue_Curve(   "AttenCurve",    CURVE_DEF_01      ));
+		newInput(index +  9, nodeValue_ISlider( "Banding",       0,  [0, 16, 0.1]  ));
+		newInput(index + 18, nodeValue_Float(   "Exponent",      2                 ));
+		newInput(index + 19, nodeValue_Bool(    "Anti Aliasing", false             ));
 		// input 25
 		
 		refreshDynamicDisplay();
@@ -133,12 +133,12 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	});
 	
 	input_display_dynamic = [ // 14, 
-		["Shape",	false],  0,  1,  5,  6,  7,  8, 22, 23, 15, 16, 17, 20, 21,
-		["Light",	false],  2,  3,  4, 11, 12, 13,
+		["Shape",	false],  0,  1,  2,  5,  6,  7,  8, 22, 23, 15, 16, 17, 20, 21,
+		["Light",	false],  3,  4, 11, 12, 13,
 		["Render",	false], 10, 24,  9, 18, 19, 
 	];
 	
-	input_display_list = [ 0, lights_renderer ];
+	input_display_list = [ 0, new Inspector_Spacer(ui(4), true, false), lights_renderer ];
 	
 	setDynamicInput(25, false);
 	if(!LOADING && !APPENDING) createNewInput();
@@ -171,8 +171,8 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				draw_circle_dash(px, py, rad * _s, 1, 8);
 				draw_set_alpha(1);
 				
-				InputDrawOverlay(inputs[_ind + 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
-				InputDrawOverlay(inputs[_ind + 2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
+				InputDrawOverlay(inputs[_ind + 1].drawOverlay( w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, 1       ));
+				InputDrawOverlay(inputs[_ind + 2].drawOverlay( w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny, 0, 1, 1 ));
 				break;
 			
 			case LIGHT_SHAPE_2D.ellipse :
@@ -189,23 +189,37 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				draw_ellipse_dash(px, py, rdx * _s, rdy * _s, 1, 8, ang);
 				draw_set_alpha(1);
 				
-				InputDrawOverlay(inputs[_ind +  1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
-				InputDrawOverlay(inputs[_ind + 15].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny, ang));
-				InputDrawOverlay(inputs[_ind + 16].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny, ang + 90));
-				InputDrawOverlay(inputs[_ind + 17].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
+				InputDrawOverlay(inputs[_ind +  1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, 1            ));
+				InputDrawOverlay(inputs[_ind + 15].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny, ang,    1, 1 ));
+				InputDrawOverlay(inputs[_ind + 16].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny, ang+90, 1, 1 ));
+				InputDrawOverlay(inputs[_ind + 17].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny, 64, 1        ));
 				break;
 			
 			case LIGHT_SHAPE_2D.line      :
 			case LIGHT_SHAPE_2D.line_asym :
 			case LIGHT_SHAPE_2D.spot      :
 			case LIGHT_SHAPE_2D.flame     :
-				InputDrawOverlay(inputs[_ind + 5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
-				InputDrawOverlay(inputs[_ind + 6].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+				var pos0 = current_data[_ind + 5];
+				var pos1 = current_data[_ind + 6];
+				
+				var px0 = _x + pos0[0] * _s;
+				var py0 = _y + pos0[1] * _s;
+				
+				var px1 = _x + pos1[0] * _s;
+				var py1 = _y + pos1[1] * _s;
+				
+				draw_set_color(COLORS._main_accent);
+				draw_set_alpha(0.5);
+				draw_line_dashed(px0, py0, px1, py1);
+				draw_set_alpha(1);
+				
+				InputDrawOverlay(inputs[_ind + 5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, 1 ));
+				InputDrawOverlay(inputs[_ind + 6].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, 1 ));
 				break;
 				
 			case LIGHT_SHAPE_2D.saber     :
-				InputDrawOverlay(inputs[_ind + 5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
-				InputDrawOverlay(inputs[_ind + 6].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
+				InputDrawOverlay(inputs[_ind + 5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, 1 ));
+				InputDrawOverlay(inputs[_ind + 6].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, 1 ));
 				
 				var pos = current_data[_ind +  5];
 				var rad = current_data[_ind +  2];
@@ -221,8 +235,8 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 				draw_set_alpha(1);
 				
 				inputs[_ind + 21].overlay_text_valign = fa_bottom;
-				InputDrawOverlay(inputs[_ind +  2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
-				InputDrawOverlay(inputs[_ind + 21].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
+				InputDrawOverlay(inputs[_ind +  2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny, 0, 1, 1 ));
+				InputDrawOverlay(inputs[_ind + 21].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny, 0, 1, 1 ));
 				break;
 		}
 		

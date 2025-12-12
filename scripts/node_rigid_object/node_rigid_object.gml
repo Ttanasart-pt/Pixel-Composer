@@ -26,60 +26,61 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	attributes.mesh = [];
 	
 	////- =Spawn
-	newInput( 8, nodeValue_Bool(  "Spawn", true, "Make object spawn when start."));
-	newInput(20, nodeValue_Int(   "Spawn Frame", 0));
+	newInput( 8, nodeValue_Bool(  "Spawn",       true, "Make object spawn when start." ));
+	newInput(20, nodeValue_Int(   "Spawn Frame", 0 ));
 	
 	////- =Physics
-	newInput(12, nodeValue_Int(    "Collision Group", 1));
-	newInput( 0, nodeValue_Bool(   "Affect by Force", true));
-	newInput( 1, nodeValue_Float(  "Mass", 10));
-	newInput( 2, nodeValue_Slider( "Friction", 0.2));
-	newInput( 3, nodeValue_Slider( "Air Resistance", 0.0));
-	newInput( 4, nodeValue_Slider( "Rotation Resistance", 0.1));
-	newInput(13, nodeValue_Slider( "Bounciness", 0.2));
-	newInput(22, nodeValue_Float(  "Gravity Scale", 1));
+	newInput(12, nodeValue_Int(    "Collision Group",     1    ));
+	newInput( 0, nodeValue_Bool(   "Affect by Force",     true ));
+	newInput( 1, nodeValue_Float(  "Mass",                10   ));
+	newInput( 2, nodeValue_Slider( "Friction",            .2   ));
+	newInput( 3, nodeValue_Slider( "Air Resistance",      .0   ));
+	newInput( 4, nodeValue_Slider( "Rotation Resistance", .1   ));
+	newInput(13, nodeValue_Slider( "Bounciness",          .2   ));
+	newInput(22, nodeValue_Float(  "Gravity Scale",        1   ));
 	
 	////- =Shape
-	newInput( 6, nodeValue_Surface(     "Texture"));
-	newInput( 5, nodeValue_Enum_Scroll( "Shape",  0, [ new scrollItem("Box",    s_node_shape_rectangle, 0), 
-	                                                           new scrollItem("Circle", s_node_shape_circle,    0), 
-	                                                           new scrollItem("Custom", s_node_shape_misc,      1) ]));
-	newInput( 9, nodeValue_Trigger(     "Generate Mesh" ));
-	b_gen_mesh = button(function() /*=>*/ {return generateAllMesh()}).setText("Generate Mesh");
-	newInput(10, nodeValue_Slider(      "Mesh Expansion", 0, [ -2, 2, 0.1 ]));
-	newInput(11, nodeValue_Bool(        "Add Pixel for Empty", true));
+	newInput( 6, nodeValue_Surface( "Texture" ));
+	newInput( 5, nodeValue_EScroll( "Shape",  0, [ new scrollItem("Box",    s_node_shape_rectangle, 0), 
+	                                               new scrollItem("Circle", s_node_shape_circle,    0), 
+	                                               new scrollItem("Custom", s_node_shape_misc,      1) ] ));
+	newInput( 9, nodeValue_Trigger( "Generate Mesh" ));
+	newInput(10, nodeValue_Slider(  "Mesh Expansion",      0, [ -2, 2, 0.1 ]));
+	newInput(11, nodeValue_Bool(    "Add Pixel for Empty", true ));
 	
 	////- =Transform
-	newInput( 7, nodeValue_Vec2(     "Start Position", [ 16, 16 ])).setHotkey("G");
-	newInput(17, nodeValue_Rotation( "Start Rotation", 0)).setHotkey("R");
+	newInput( 7, nodeValue_Vec2(     "Start Position", [16,16] )).setHotkey("G");
+	newInput(17, nodeValue_Rotation( "Start Rotation",  0      )).setHotkey("R");
 	
 	////- =Initial Velocity
-	newInput(18, nodeValue_Bool( "Use Initial Velocity", false));
-	newInput(19, nodeValue_Vec2( "Initial Velocity", [ 0, 0 ]));
+	newInput(18, nodeValue_Bool( "Use Initial Velocity", false ));
+	newInput(19, nodeValue_Vec2( "Initial Velocity",     [0,0] ));
 	
 	////- =Simulation
-	newInput(14, nodeValue_Bool( "Continuous", false));
-	newInput(15, nodeValue_Bool( "Fix Rotation", false));
-	newInput(16, nodeValue_Bool( "Sleepable",  true));
-	newInput(21, nodeValue_Bool( "Activate on Spawn",  true));
-	
+	newInput(14, nodeValue_Bool( "Continuous",        false ));
+	newInput(15, nodeValue_Bool( "Fix Rotation",      false ));
+	newInput(16, nodeValue_Bool( "Sleepable",          true ));
+	newInput(21, nodeValue_Bool( "Activate on Spawn",  true ));
 	// inputs 23
 	
 	newOutput(0, nodeValue_Output("Object", VALUE_TYPE.rigid, objects));
 	
 	array_foreach(inputs, function(inp, ind) /*=>*/ { 
-		if(ind == 6) inp.setAnimable(false);
-		else         inp.setAnimable(false).rejectArray();
+		inp.setAnimable(false)
+		if(ind != 6) inp.rejectArray();
 	})
 	
+	b_gen_mesh = button(function() /*=>*/ {return generateAllMesh()}).setText("Generate Mesh");
 	input_display_list = [ 
-		["Spawn",	   false, 8], 20, 
-		["Physics",	   false], 0, 1, 2, 3, 4, 13, 
-		["Shape",	   false], 6, 5, b_gen_mesh, 10, 11, 
-		["Transform",  false], 7, 17, 
-		["Initial Velocity", false, 18], 19, 
-		["Simulation",  true], 14, 15, 16, 21, 
+		[ "Spawn",            false,  8 ], 20, 
+		[ "Physics",          false     ], 0, 1, 2, 3, 4, 13, 
+		[ "Shape",            false     ], 6, 5, b_gen_mesh, 10, 11, 
+		[ "Transform",        false     ], 7, 17, 
+		[ "Initial Velocity", false, 18 ], 19, 
+		[ "Simulation",       true      ], 14, 15, 16, 21, 
 	];
+	
+	////- Node
 	
 	static newMesh = function(_index) {
 		var _tex  = inputs[6].getValue();
@@ -92,8 +93,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		mesh[_index] = [ [  0,   0], [_sw,   0], 
 						 [_sw, _sh], [  0, _sh] ];
 		attributes.mesh = mesh;
-	}
-	newMesh(0);
+		
+	} newMesh(0);
 	
 	tools = [];
 	
@@ -101,8 +102,10 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		new NodeTool( "Mesh edit",		THEME.mesh_tool_edit   ),
 		new NodeTool( "Anchor remove",  THEME.mesh_tool_delete ),
 	];
-		
-	is_convex = true;
+	
+	textures        = [];
+	
+	is_convex       = true;
 	hover_index     = -1;
 	anchor_dragging = -1;
 	anchor_drag_sx  = -1;
@@ -115,26 +118,18 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	static getPreviewValues = function() { return inputs[6].getValue(); }
 	
 	static generateAllMesh = function() {
-		var _tex = inputs[6].getValue();
-			
-		if(is_array(_tex)) {
-			for( var i = 0, n = array_length(_tex); i < n; i++ ) 
-				generateMesh(i);
-		} else 
-			generateMesh();
+		for( var i = 0, n = array_length(textures); i < n; i++ ) 
+			generateMesh(i);
+		
 		doUpdate();
 	}
 	
 	static generateMesh = function(index = 0) {
-		var _tex = inputs[6].getValue();
 		var _exp = inputs[10].getValue();
 		var _pix = inputs[11].getValue();
 		
-		if(is_array(_tex)) _tex = array_safe_get_fast(_tex, index);
-		
-		if(is(_tex, SurfaceAtlas))
-			_tex = _tex.getSurface();
-		
+		var _tex = array_safe_get_fast(textures, index);
+		if(is(_tex, SurfaceAtlas)) _tex = _tex.getSurface();
 		if(!is_surface(_tex)) return;
 		
 		var meshes = attributes.mesh;
@@ -372,8 +367,9 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		InputDrawOverlay(inputs[17].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny));
 		
 		var _shp = inputs[5].getValue();
-		var _tex = inputs[6].getValue();
 		var _pos = inputs[7].getValue();
+		
+		var _tex = array_safe_get(textures, preview_index);
 		var _dim = surface_get_dimension(_tex);
 		var hovering = false;
 		
@@ -497,7 +493,6 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(worldIndex == undefined) return undefined;
 		
 		var _shp  = inputs[ 5].getValue();
-		var _tex  = inputs[ 6].getValue();
 		var _spos = inputs[ 7].getValue();
 		var _srot = inputs[17].getValue();
 		var _spx, _spy;
@@ -513,14 +508,11 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		gmlBox2D_Object_Create_Begin(worldIndex, _spx, _spy, false);
 		
-		if(is_array(_tex)) { 
-			_index = safe_mod(_index, array_length(_tex)); 
-			_tex   = array_safe_get_fast(_tex, _index); 
-		}
+		_index   = safe_mod(_index, array_length(textures)); 
+		var _tex = array_safe_get_fast(textures, _index); 
+		if(is(_tex, SurfaceAtlas)) _tex = _tex.getSurface();
+		if(!is_surface(_tex)) return undefined;
 		
-		if(is(_tex, SurfaceAtlas))
-			_tex = _tex.getSurface();
-			
 		var ww = surface_get_width_safe(_tex);
 		var hh = surface_get_height_safe(_tex);
 		
@@ -553,11 +545,11 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var objId  = gmlBox2D_Object_Create_Complete(); 
 		var boxObj = new __Box2DObject(objId, _tex);
 		
-		var _mov	  = inputs[0].getValue();
-		var _weig     = inputs[1].getValue();
-		var _cnt_frc  = inputs[2].getValue();
-		var _air_res  = inputs[3].getValue();
-		var _rot_frc  = inputs[4].getValue();
+		var _mov	  = inputs[ 0].getValue();
+		var _weig     = inputs[ 1].getValue();
+		var _cnt_frc  = inputs[ 2].getValue();
+		var _air_res  = inputs[ 3].getValue();
+		var _rot_frc  = inputs[ 4].getValue();
 		var _bouncy   = inputs[13].getValue();
 		var collIndex = inputs[12].getValue();
 		var _conti    = inputs[14].getValue();
@@ -587,25 +579,27 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		return boxObj;
 	}
 	
-	static step = function() {
-		var _shp = inputs[5].getValue();
-		
-		inputs[ 9].setVisible(_shp == 2);
-		inputs[10].setVisible(_shp == 2);
-		inputs[11].setVisible(_shp == 2);
-		
-		tools = _shp == 2? mesh_tools : -1;
-		
-		var _tex  = inputs[6].getValue();
-		
-		if(is_array(_tex)) {
-			var meshes = attributes.mesh;
-			for( var i = array_length(meshes); i < array_length(_tex); i++ )
-				newMesh(i);
-		}
-	}
-	
 	static update = function(_frame = CURRENT_FRAME) {
+		#region data
+			var _shp  = inputs[5].getValue();
+			var _tex  = inputs[ 6].getValue();
+			var _spwn = inputs[ 8].getValue();
+			var _spfr = inputs[20].getValue();
+			
+			inputs[ 9].setVisible(_shp == 2);
+			inputs[10].setVisible(_shp == 2);
+			inputs[11].setVisible(_shp == 2);
+			
+			tools = _shp == 2? mesh_tools : -1;
+			
+			textures = is_array(_tex)? _tex : [_tex];
+		#endregion
+		
+		var meshes = attributes.mesh;
+		var mamo   = array_length(meshes);
+		var tamo   = array_length(textures);
+		for( var i = mamo; i < tamo; i++ ) newMesh(i);
+		
 		worldIndex = struct_try_get(inline_context, "worldIndex", undefined);
 		worldScale = struct_try_get(inline_context, "worldScale", 100);
 		if(worldIndex == undefined) return;
@@ -613,17 +607,12 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(IS_FIRST_FRAME) objects = [];
 		outputs[0].setValue(objects);
 		
-		var _tex  = inputs[ 6].getValue();
-		var _spwn = inputs[ 8].getValue();
-		var _spfr = inputs[20].getValue();
-		
 		if(!_spwn) return;
 		
 		if(_frame == _spfr) {
-			objects = _spwn? array_create_ext(is_array(_tex)? array_length(_tex) : 1, function(i) /*=>*/ {return spawn(i)}) : [];
+			objects    = array_create_ext(array_length(textures), function(i) /*=>*/ {return spawn(i)});
 			outputs[0].setValue(objects);
 		}
-		
 	}
 	
 	static getGraphPreviewSurface = function() /*=>*/ {return inputs[6].getValue()};
