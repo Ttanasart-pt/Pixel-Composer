@@ -64,7 +64,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	}
 	
 	static preUpdate = function() /*=>*/ {
-		var _dim = getInputData(input_len + 0);
+		var _dim = inputs[input_len + 0].getValue();
 		
 		if(curr_dimension[0] != _dim[0] || curr_dimension[1] != _dim[1]) {
 			clearCache();
@@ -78,7 +78,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		if(frame != render_frame && !IS_FIRST_FRAME) return;
 		
 		var _inSurf  = getInputData(0);
-		var _dim	 = getInputData(input_len + 0); __dim = _dim;
+		var _dim	 = getInputData(input_len + 0);
 		var _bg 	 = getInputData(input_len + 3);
 		var _typ     = getInputData(input_len + 4);
 		var _outSurf = outputs[0].getValue();
@@ -92,6 +92,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		
 		outputs[0].setValue(_outSurf);
 		
+		__dim = _dim;
 		array_foreach(parts, function(p) /*=>*/ { p.bound_w = __dim[0]; p.bound_h = __dim[1]; });
 		
 		if(IS_FIRST_FRAME) { 

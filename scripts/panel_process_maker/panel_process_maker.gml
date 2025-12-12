@@ -321,16 +321,17 @@ function Panel_Process_Maker() : PanelContent() constructor {
 			if(!is(_inp, NodeValue) || (!show_all_prop && !_inp.show_in_inspector)) continue;
 			
 			var _name = _inp.getName();
+			var _val  = array_safe_get(_vals, _ind, noone);
 			
 			var bx = ui(8);
 			var by = yy - ui(2);
-			var bc = _vals[_ind] == noone? _c : COLORS._main_accent;
+			var bc = _val == noone? _c : COLORS._main_accent;
 			var b  = buttonInstant(noone, bx, by, bs, bs, _m, hov, foc, "", THEME.animate_clock, 0, bc, .9);
-			if(b == 3) _vals[_ind] = noone;
+			if(b == 3) _val = noone;
 			if(b == 2) {
 				var _v = _inp.getValue();
 				
-				if(_vals[_ind] == noone)
+				if(_val == noone)
 					_vals[_ind] = { valueStart : _v, valueEnd : _v, }
 				else
 					_vals[_ind].valueStart = _v;
@@ -339,25 +340,25 @@ function Panel_Process_Maker() : PanelContent() constructor {
 			draw_set_text(f_p4, fa_left, fa_top, COLORS._main_text);
 			draw_text_add(ui(32), yy, _name);
 			
-			if(_vals[_ind] != noone) {
+			if(_val != noone) {
 				var bx = ww - bs;
 				var by = yy - ui(2);
 				var b  = buttonInstant(noone, bx, by, bs, bs, _m, hov, foc, "", THEME.gear_16, 0, _c, .9);
 				if(b == 2) {
-					editing       = _vals[_ind];
+					editing       = _val;
 					editing_type  = 0;
-					tb_value_edit.activate(_vals[_ind].valueStart);
+					tb_value_edit.activate(_val.valueStart);
 					
 				} bx -= ui(4);
 				
-				if(editing == _vals[_ind] && editing_type == 0) {
+				if(editing == _val && editing_type == 0) {
 					var bw = ui(100);
 					tb_value_edit.setFocusHover(foc, hov);
-					tb_value_edit.draw(bx - bw, yy - ui(4), bw, bs, _vals[_ind].valueStart, _m);
+					tb_value_edit.draw(bx - bw, yy - ui(4), bw, bs, _val.valueStart, _m);
 					
 				} else {
 					draw_set_text(f_p3, fa_right, fa_top, COLORS._main_text_sub);
-					draw_text_add(bx, yy, _vals[_ind].valueStart);
+					draw_text_add(bx, yy, _val.valueStart);
 				}
 			}
 			
@@ -401,16 +402,17 @@ function Panel_Process_Maker() : PanelContent() constructor {
 			if(!is(_inp, NodeValue) || (!show_all_prop && !_inp.show_in_inspector)) continue;
 			
 			var _name = _inp.getName();
+			var _val  = array_safe_get(_vals, _ind, noone);
 			
 			var bx = ui(8);
 			var by = yy - ui(2);
-			var bc = _vals[_ind] == noone? _c : COLORS._main_accent;
+			var bc = _val == noone? _c : COLORS._main_accent;
 			var b  = buttonInstant(noone, bx, by, bs, bs, _m, hov, foc, "", THEME.animate_clock, 0, bc, .9);
-			if(b == 3) _vals[_ind] = noone;
+			if(b == 3) _val = noone;
 			if(b == 2) {
 				var _v = _inp.getValue();
 				
-				if(_vals[_ind] == noone)
+				if(_val == noone)
 					_vals[_ind] = { valueStart : _v, valueEnd : _v, }
 				else
 					_vals[_ind].valueEnd = _v;
@@ -419,25 +421,25 @@ function Panel_Process_Maker() : PanelContent() constructor {
 			draw_set_text(f_p4, fa_left, fa_top, COLORS._main_text);
 			draw_text_add(ui(32), yy, _name);
 			
-			if(_vals[_ind] != noone) {
+			if(_val != noone) {
 				var bx = ww - bs;
 				var by = yy - ui(2);
 				var b  = buttonInstant(noone, bx, by, bs, bs, _m, hov, foc, "", THEME.gear_16, 0, _c, .9);
 				if(b == 2) {
-					editing       = _vals[_ind];
+					editing       = _val;
 					editing_type  = 1;
-					tb_value_edit.activate(_vals[_ind].valueEnd);
+					tb_value_edit.activate(_val.valueEnd);
 					
 				} bx -= ui(4);
 				
-				if(editing == _vals[_ind] && editing_type == 1) {
+				if(editing == _val && editing_type == 1) {
 					var bw = ui(100);
 					tb_value_edit.setFocusHover(foc, hov);
-					tb_value_edit.draw(bx - bw, yy - ui(4), bw, bs, _vals[_ind].valueEnd, _m);
+					tb_value_edit.draw(bx - bw, yy - ui(4), bw, bs, _val.valueEnd, _m);
 					
 				} else {
 					draw_set_text(f_p3, fa_right, fa_top, COLORS._main_text_sub);
-					draw_text_add(bx, yy, _vals[_ind].valueEnd);
+					draw_text_add(bx, yy, _val.valueEnd);
 				}
 			}
 			

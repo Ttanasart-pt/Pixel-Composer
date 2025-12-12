@@ -1069,6 +1069,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		render_timer = get_timer();
 		setRenderStatus(true);
+		if(preUpdate) preUpdate(frame); 
 		
 		if(use_cache == CACHE_USE.auto && recoverCache()) {
 			render_cached = true;
@@ -1085,7 +1086,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			});
 			
 			if(attributes.update_graph) {
-				try      { if(preUpdate) preUpdate(frame); update(frame);   } 
+				try      { update(frame);   } 
 				catch(e) { log_warning("RENDER", exception_print(e), self); }
 			}
 			
@@ -1103,6 +1104,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		render_timer = get_timer();
 		var _updateRender = !is(self, Node_Collection) || !managedRenderOrder;
 		if(_updateRender) setRenderStatus(true);
+		if(preUpdate) preUpdate(frame); 
 		
 		if(use_cache == CACHE_USE.auto && recoverCache()) {
 			render_cached = true;
@@ -1120,7 +1122,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			try { 
 				if(attributes.update_graph) { 
-					if(preUpdate) preUpdate(frame); 
 					update(frame); 
 				} 
 				
