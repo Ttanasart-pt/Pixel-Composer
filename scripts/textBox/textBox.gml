@@ -476,16 +476,19 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				
 				draw_set_alpha(0.5 + (_inv) * 0.5);
 				draw_text_add(_tx, _y, "."); _tx += _dt_w;
-				draw_text_add(_tx, _y, $"{_dc}{suffix}");
+				draw_text_add(_tx, _y, _dc);
+				xx = _tx + string_width(_dc); 
 				
-			} else
-				draw_text_add(xx, _y, $"{_text}{suffix}");
+			} else {
+				draw_text_add(xx, _y, _text);
+				xx += string_width(_text); 
+			}
 			
 		} else if(format == TEXT_AREA_FORMAT.password && !password_show) {
 			var _tx = xx;
 			var _ty = _y;
 			
-			for( var i = 1; i <= string_length(_text); i++ ) {
+			for( var i = 1, n = string_length(_text); i <= n; i++ ) {
 				var _ch  = string_char_at(_text, i);
 				var _chw = string_width(_ch);
 				var _chh = string_height(_ch);
@@ -500,7 +503,13 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			xx += string_width(prefix);
 			
 			draw_set_color(cc);
-			draw_text_add(xx, _y, $"{_text}{suffix}");
+			draw_text_add(xx, _y, _text);
+			xx += string_width(_text); 
+		}
+		
+		if(suffix != "") {
+			draw_set_color(COLORS._main_text_sub);
+			draw_text_add(xx, _y, suffix);
 		}
 		
 		draw_set_alpha(1);

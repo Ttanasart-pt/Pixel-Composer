@@ -10,30 +10,23 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	worldScale = 100;
 	
 	////- =Simulation
-	
-	newInput(3, nodeValue_Bool(  "Simulate",      true ));
-	newInput(1, nodeValue_Float( "Timestep (ms)", 20   ));
-	newInput(2, nodeValue_Int(   "Quality",       8    ));
+	newInput(3, nodeValue_Bool(  "Simulate", true ));
+	newInput(1, nodeValue_Float( "Timestep", 20   ));
+	newInput(2, nodeValue_Int(   "Quality",  8    ));
 	
 	////- =Outputs
-	
 	newInput(0, nodeValue_Bool("Round Position", false ));
-	
 	// inputs 4
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
-	attribute_surface_depth();
+	inputs[1].editWidget.setSuffix("ms");
 	
 	input_display_list = [ 
-		["Simulation", false, 3], 1, 2, 
-		["Rendering",  false], 0,
+		[ "Simulation", false, 3 ], 1, 2, 
+		[ "Rendering",  false    ], 0,
+		[ "Objects",    false    ], 
 	];
-	
-	attributes.show_debug   = false;
-	
-	array_push(attributeEditors, "Display");
-	array_push(attributeEditors, ["Debug",        function() /*=>*/ {return attributes.show_debug},   new checkBox(function() /*=>*/ {return toggleAttribute("show_debug")})]);
 	
 	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
@@ -45,6 +38,14 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	} 
 	
 	setDynamicInput(1, true, VALUE_TYPE.rigid);
+	
+	////- Node
+	
+	attribute_surface_depth();
+	
+	attributes.show_debug = false;
+	array_push(attributeEditors, "Display");
+	array_push(attributeEditors, ["Debug", function() /*=>*/ {return attributes.show_debug}, new checkBox(function() /*=>*/ {return toggleAttribute("show_debug")})]);
 	
 	////- Nodes
 	

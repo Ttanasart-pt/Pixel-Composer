@@ -26,8 +26,23 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	attributes.mesh = [];
 	
 	////- =Spawn
-	newInput( 8, nodeValue_Bool(  "Spawn",       true, "Make object spawn when start." ));
-	newInput(20, nodeValue_Int(   "Spawn Frame", 0 ));
+	newInput( 8, nodeValue_Bool(     "Spawn",            true, "Make object spawn when start." ));
+	newInput(20, nodeValue_Int(      "Spawn Frame",      0     ));
+	newInput( 7, nodeValue_Vec2(     "Spawn Position", [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(17, nodeValue_Rotation( "Spawn Rotation",   0     )).setHotkey("R");
+	
+	////- =Initial Velocity
+	newInput(18, nodeValue_Bool( "Use Initial Velocity", false ));
+	newInput(19, nodeValue_Vec2( "Initial Velocity",     [0,0] ));
+	
+	////- =Shape
+	newInput( 6, nodeValue_Surface( "Texture" ));
+	newInput( 5, nodeValue_EScroll( "Shape",  0, [ new scrollItem("Box",    s_node_shape_rectangle, 0), 
+	                                               new scrollItem("Circle", s_node_shape_circle,    0), 
+	                                               new scrollItem("Custom", s_node_shape_misc,      1) ] ));
+	newInput( 9, nodeValue_Trigger( "Generate Mesh" ));
+	newInput(10, nodeValue_Slider(  "Mesh Expansion",      0, [-2,2,.1] ));
+	newInput(11, nodeValue_Bool(    "Add Pixel for Empty", true         ));
 	
 	////- =Physics
 	newInput(12, nodeValue_Int(    "Collision Group",     1    ));
@@ -38,23 +53,6 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput( 4, nodeValue_Slider( "Rotation Resistance", .1   ));
 	newInput(13, nodeValue_Slider( "Bounciness",          .2   ));
 	newInput(22, nodeValue_Float(  "Gravity Scale",        1   ));
-	
-	////- =Shape
-	newInput( 6, nodeValue_Surface( "Texture" ));
-	newInput( 5, nodeValue_EScroll( "Shape",  0, [ new scrollItem("Box",    s_node_shape_rectangle, 0), 
-	                                               new scrollItem("Circle", s_node_shape_circle,    0), 
-	                                               new scrollItem("Custom", s_node_shape_misc,      1) ] ));
-	newInput( 9, nodeValue_Trigger( "Generate Mesh" ));
-	newInput(10, nodeValue_Slider(  "Mesh Expansion",      0, [ -2, 2, 0.1 ]));
-	newInput(11, nodeValue_Bool(    "Add Pixel for Empty", true ));
-	
-	////- =Transform
-	newInput( 7, nodeValue_Vec2(     "Start Position", [16,16] )).setHotkey("G");
-	newInput(17, nodeValue_Rotation( "Start Rotation",  0      )).setHotkey("R");
-	
-	////- =Initial Velocity
-	newInput(18, nodeValue_Bool( "Use Initial Velocity", false ));
-	newInput(19, nodeValue_Vec2( "Initial Velocity",     [0,0] ));
 	
 	////- =Simulation
 	newInput(14, nodeValue_Bool( "Continuous",        false ));
@@ -70,17 +68,20 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(ind != 6) inp.rejectArray();
 	})
 	
-	b_gen_mesh = button(function() /*=>*/ {return generateAllMesh()}).setText("Generate Mesh");
 	input_display_list = [ 
-		[ "Spawn",            false,  8 ], 20, 
-		[ "Physics",          false     ], 0, 1, 2, 3, 4, 13, 
-		[ "Shape",            false     ], 6, 5, b_gen_mesh, 10, 11, 
-		[ "Transform",        false     ], 7, 17, 
+		[ "Spawn",            false,  8 ], 20,  7, 17, 
 		[ "Initial Velocity", false, 18 ], 19, 
+		[ "Shape",            false     ],  6,  5, 10, 11, 
+		[ "Physics",          false     ],  0,  1,  2,  3,  4, 13, 
 		[ "Simulation",       true      ], 14, 15, 16, 21, 
 	];
 	
 	////- Node
+	
+	insp1button = button(function() /*=>*/ {return generateAllMesh()}).setTooltip(__txt("Generate Mesh"))
+		.setIcon(THEME.mesh, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
+	
+	static getDimension = function() /*=>*/ {return struct_try_get(inline_context, "dimension", [1,1])};
 	
 	static newMesh = function(_index) {
 		var _tex  = inputs[6].getValue();

@@ -202,7 +202,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		setAttribute = function(k, v, r = false) /*=>*/ { attributes[$ k] = v;                if(r) triggerRender(); project.modified = true; }
 		toggleAttribute = function(k, r = false) /*=>*/ { attributes[$ k] = !attributes[$ k]; if(r) triggerRender(); project.modified = true; }
 		
-		attrCacheEdit = ["Cache Data", function() /*=>*/ {return attributes.cache}, new checkBox(function() /*=>*/ { toggleAttribute("cache", true); checkCache(); }) ];
+		attrCacheEdit = ["Cache Output", function() /*=>*/ {return attributes.cache}, new checkBox(function() /*=>*/ { toggleAttribute("cache", true); checkCache(); }) ];
 		
 		array_append(attributeEditors, [
 			"Display",  

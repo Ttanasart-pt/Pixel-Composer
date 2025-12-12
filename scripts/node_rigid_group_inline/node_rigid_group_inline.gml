@@ -3,6 +3,7 @@ function Node_Rigid_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inlin
 	color = COLORS.node_blend_simulation;
 	icon  = THEME.rigidSim;
 	
+	update_on_frame    = true;
 	is_simulation      = true;
 	manual_ungroupable = false;
 	
@@ -50,6 +51,24 @@ function Node_Rigid_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inlin
 		addNode(_render);
 	}
 	
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
+		var _useWall = getInputData(7);
+		
+		if(_useWall) {
+			var _walls = getInputData(8);
+			var x0 = _x;
+			var y0 = _y;
+			var x1 = _x + dimension[0] * _s;
+			var y1 = _y + dimension[1] * _s;
+			
+			draw_set_color(COLORS._main_accent);
+			if(_walls & 0b0001) draw_line_width(x0, y0, x1, y0, 2);
+			if(_walls & 0b0010) draw_line_width(x0, y1, x1, y1, 2);
+			if(_walls & 0b0100) draw_line_width(x0, y0, x0, y1, 2);
+			if(_walls & 0b1000) draw_line_width(x1, y0, x1, y1, 2);
+		}
+	}
+	
 	static spawnWall = function(side = 0) {
 		if(worldIndex == undefined) return undefined;
 		
@@ -90,9 +109,9 @@ function Node_Rigid_Group_Inline(_x, _y, _group = noone) : Node_Collection_Inlin
 		var _conti  = getInputData(6);
 		
 		if(IS_FIRST_FRAME) {
-			if(worldIndex != undefined) 
+			if(worldIndex != undefined)
 				gmlBox2D_World_Destroy(worldIndex);
-				
+			
 			worldIndex = gmlBox2D_World_Create();
 			
 			var _useWall = getInputData(7);
