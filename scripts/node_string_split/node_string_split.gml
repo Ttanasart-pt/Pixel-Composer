@@ -9,13 +9,14 @@ function Node_String_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput( 2, nodeValue_EScroll( "Mode",       0, [ "Delimiter", "Periodic" ] ));
 	newInput( 1, nodeValue_Text(    "Delimiter", " " )).setTooltip("Character that used to split text,\nleave blank to create character array.");
 	newInput( 3, nodeValue_Int(     "Period",     1  ));
-	// 4
+	newInput( 4, nodeValue_Bool(    "Trim white-space", false ));
+	// 5
 	
 	newOutput(0, nodeValue_Output("Text", VALUE_TYPE.text, ""));
 	
 	inputs[1].editWidget.format = TEXT_AREA_FORMAT.delimiter;
 	input_display_list = [ 0, 
-		[ "Split", false ], 2, 1, 3, 
+		[ "Split", false ], 2, 1, 3, 4, 
 	];
 	
 	////- Node
@@ -27,8 +28,11 @@ function Node_String_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			var _mode = _data[2];
 			var _deli = _data[1];
 			var _peri = _data[3]; _peri = max(1, _peri);
+			var _trim = _data[4];
 			
 			inputs[1].setVisible(_mode == 0);
+			inputs[4].setVisible(_mode == 0);
+			
 			inputs[3].setVisible(_mode == 1);
 		#endregion
 		
@@ -39,6 +43,16 @@ function Node_String_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			_deli = string_replace_all(_deli, "\\t", "\t");
 			
 			var arr = string_split(_text, _deli);
+			
+			if(_trim) {
+				var d = [_deli];
+				
+				for( var i = 0, n = array_length(arr); i < n; i++ ) {
+					arr[i] = string_trim_end(arr[i]);
+					arr[i] = string_trim_end(arr[i], d);
+				}
+			}
+			
 			return arr;
 			
 		} else if(_mode == 1) {
