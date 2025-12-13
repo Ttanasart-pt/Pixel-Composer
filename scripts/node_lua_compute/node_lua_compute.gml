@@ -18,8 +18,8 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	argumentRenderer(global.lua_arguments);
 	
-	lb_pre = new Inspector_Label("", _f_code_s);
-	lb_pos = new Inspector_Label("", _f_code_s);
+	lb_pre = new Inspector_Label("", f_code);
+	lb_pos = new Inspector_Label("", f_code);
 	
 	input_display_list = [ 3, 4, 
 		[ "Function",  false ], 0, 1,
@@ -32,17 +32,16 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	argument_val  = [];
 	
 	lua_state = lua_create();
+	lua_dtype = [ "Number", "String", "Surface", "Struct" ];
 	
 	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
-		newInput(index + 0, nodeValue_Text("Argument name")).setDisplay(VALUE_DISPLAY.text_box);
+		newInput(index + 0, nodeValue_Text(    "Argument name")).setDisplay(VALUE_DISPLAY.text_box);
+		newInput(index + 1, nodeValue_EScroll( "Argument type", 0, { data: lua_dtype, update_hover: false }));
+		newInput(index + 2, nodeValue(         "Argument value", self, CONNECT_TYPE.input, VALUE_TYPE.float, 0 )).setVisible(true, true);
 		
-		newInput(index + 1, nodeValue_Enum_Scroll("Argument type",  0 , { data: [ "Number", "String", "Surface", "Struct" ], update_hover: false }));
 		inputs[index + 1].editWidget.interactable = false;
-		
-		newInput(index + 2, nodeValue("Argument value", self, CONNECT_TYPE.input, VALUE_TYPE.float, 0 ))
-			.setVisible(true, true);
 		inputs[index + 2].editWidget.interactable = false;
 		
 		array_push(input_display_list, inAmo, inAmo + 1, inAmo + 2);
