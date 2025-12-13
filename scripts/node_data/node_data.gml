@@ -1044,6 +1044,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(CURRENT_FRAME < 0 || CURRENT_FRAME >= array_length(preview_cache)) 
 			return;
 			
+		if(IS_RENDERING) 
+			return;
+			
 		var _prev = getGraphPreviewSurface();
 		var _size = 32;
 		if(!is_surface(_prev)) return;
@@ -1052,7 +1055,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		surface_set_shader(preview_cache[CURRENT_FRAME]);
 			draw_surface_fit(_prev, _size/2, _size/2, _size, _size);
 		surface_reset_shader();
-		
 	}
 	
 	static preUpdate = undefined

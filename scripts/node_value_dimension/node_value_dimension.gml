@@ -35,8 +35,7 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 		var _pdim = attributes.use_project_dimension;
 		editProjDim.icon_index = _pdim;
 		editProjDim.icon_blend = _pdim? c_white : COLORS._main_icon;
-		editWidget.tb[0].setSuffix(_pdim? "x" : "");
-		editWidget.tb[1].setSuffix(_pdim? "x" : "");
+		editWidget.setSuffix(_pdim? "x" : "");
 		
 		getValueRecursive(self.__curr_get_val, _time);
 		var val = __curr_get_val[0];

@@ -15,40 +15,31 @@ enum PUPPET_FORCE_MODE {
 }
 
 function controlPointBox(_onModify) : widget() constructor {
-	always_break_line  = true;
-	onModify = _onModify;
-	onSurfaceSize = -1;
+	always_break_line = true;
+	onModify          = _onModify;
+	onSurfaceSize     = -1;
 	
-	tbCx = textBox_Number(function(val) /*=>*/ { return onModify(toNumber(val),         PUPPET_CONTROL.cx    ); });	tbCx.hide = true; tbCx.slidable = true;
-	tbCy = textBox_Number(function(val) /*=>*/ { return onModify(toNumber(val),         PUPPET_CONTROL.cy    ); });	tbCy.hide = true; tbCy.slidable = true;
-	tbFx = textBox_Number(function(val) /*=>*/ { return onModify(toNumber(val),         PUPPET_CONTROL.fx    ); });	tbFx.hide = true; tbFx.slidable = true;
-	tbFy = textBox_Number(function(val) /*=>*/ { return onModify(toNumber(val),         PUPPET_CONTROL.fy    ); });	tbFy.hide = true; tbFy.slidable = true;
-	tbW  = textBox_Number(function(val) /*=>*/ { return onModify(max(0, toNumber(val)), PUPPET_CONTROL.width ); });	tbW.hide  = true; tbW.slidable  = true;
-	tbH  = textBox_Number(function(val) /*=>*/ { return onModify(max(0, toNumber(val)), PUPPET_CONTROL.height); });	tbH.hide  = true; tbH.slidable  = true;
-	rot  = new rotator(function(val) /*=>*/ { return onModify(toNumber(val), PUPPET_CONTROL.fy); });                rot.hide  = true;
-	
-	sW   = textBox_Number(function(val) /*=>*/ { onModify(toNumber(val), PUPPET_CONTROL.width); }); sW.hide  = true;
-	
-	tbCx.label = "cx";
-	tbCy.label = "cy";
-		
 	sMode = [
 		__txtx("widget_control_point_move",   "Move"), 
 		__txtx("widget_control_point_wind",   "Wind"), 
 	];
 	
-	scMode = new scrollBox(
-		sMode, 
-		function(val) { onModify(toNumber(val), PUPPET_CONTROL.mode); }
-	);
+	tbCx   = textBox_Number( function(val) /*=>*/ {return onModify(toNumber(val),         PUPPET_CONTROL.cx     )}).setHide(1).setLabel("cx");
+	tbCy   = textBox_Number( function(val) /*=>*/ {return onModify(toNumber(val),         PUPPET_CONTROL.cy     )}).setHide(1).setLabel("cy");
+	tbFx   = textBox_Number( function(val) /*=>*/ {return onModify(toNumber(val),         PUPPET_CONTROL.fx     )}).setHide(1);
+	tbFy   = textBox_Number( function(val) /*=>*/ {return onModify(toNumber(val),         PUPPET_CONTROL.fy     )}).setHide(1);
+	tbW    = textBox_Number( function(val) /*=>*/ {return onModify(max(0, toNumber(val)), PUPPET_CONTROL.width  )}).setHide(1);
+	tbH    = textBox_Number( function(val) /*=>*/ {return onModify(max(0, toNumber(val)), PUPPET_CONTROL.height )}).setHide(1);
+	sW     = textBox_Number( function(val) /*=>*/ {return onModify(toNumber(val),         PUPPET_CONTROL.width  )})//.setHide(1);
+	rot    = new rotator(    function(val) /*=>*/ {return onModify(toNumber(val),         PUPPET_CONTROL.fy     )})//.setHide(1);
+	scMode = new scrollBox( sMode, function(val) /*=>*/ {return onModify(toNumber(val),   PUPPET_CONTROL.mode   )});
 	
 	widgets = [ scMode, tbCx, tbCy, tbFx, tbFy, tbW, tbH, rot, sW ];
 	
-	static setInteract = function(interactable = noone) { 
-		self.interactable = interactable;
-		
+	static setInteract = function(_i = noone) { 
+		interactable = _i;
 		for( var i = 0, n = array_length(widgets); i < n; i++ ) 
-			widgets[i].setInteract(interactable);
+			widgets[i].setInteract(_i);
 	}
 	
 	static register = function(parent = noone) {
@@ -57,22 +48,16 @@ function controlPointBox(_onModify) : widget() constructor {
 	}
 	
 	static isHovering = function() { 
-		for( var i = 0, n = array_length(widgets); i < n; i++ ) if(widgets[i].isHovering()) return true;
+		for( var i = 0, n = array_length(widgets); i < n; i++ ) 
+			if(widgets[i].isHovering()) return true;
 		return false;
 	}
 	
-	static fetchHeight = function(params) { return params.h + ui(4) + params.h * (2 + (params.data[0] != PUPPET_FORCE_MODE.puppet)); }
+	static fetchHeight = function(params) { return params.h + ui(4) + params.h * (1 + (params.data[0] != PUPPET_FORCE_MODE.puppet)); }
 	static drawParam   = function(params) {
 		setParam(params);
-		tbCx.setParam(params);
-		tbCy.setParam(params);
-		tbFx.setParam(params);
-		tbFy.setParam(params);
-		tbW.setParam(params);
-		tbH.setParam(params);
-		rot.setParam(params);
-		sW.setParam(params);
-		scMode.setParam(params);
+		for( var i = 0, n = array_length(widgets); i < n; i++ ) 
+			widgets[i].setParam(params);
 		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m, params.rx, params.ry); 
 	}
@@ -81,67 +66,63 @@ function controlPointBox(_onModify) : widget() constructor {
 		x = _x;
 		y = _y;
 		
-		var _mode = array_safe_get_fast(_data, PUPPET_CONTROL.mode);
-		var _cx   = array_safe_get_fast(_data, PUPPET_CONTROL.cx);
-		var _cy   = array_safe_get_fast(_data, PUPPET_CONTROL.cy);
-		var _fx   = array_safe_get_fast(_data, PUPPET_CONTROL.fx);
-		var _fy   = array_safe_get_fast(_data, PUPPET_CONTROL.fy);
-		var _wid  = array_safe_get_fast(_data, PUPPET_CONTROL.width);
+		var _mode = array_safe_get_fast( _data, PUPPET_CONTROL.mode  );
+		var _cx   = array_safe_get_fast( _data, PUPPET_CONTROL.cx    );
+		var _cy   = array_safe_get_fast( _data, PUPPET_CONTROL.cy    );
+		var _fx   = array_safe_get_fast( _data, PUPPET_CONTROL.fx    );
+		var _fy   = array_safe_get_fast( _data, PUPPET_CONTROL.fy    );
+		var _wid  = array_safe_get_fast( _data, PUPPET_CONTROL.width );
 		
 		if(is_array(_mode) || is_array(_cx) || is_array(_cy) || is_array(_fx) || is_array(_fy) || is_array(_wid))
 			return 0;
 		
-		var lh = _h * (2 + (_mode != PUPPET_FORCE_MODE.puppet));
+		var yy = _y;
+		var w2 = _w / 2;
+		var ww = _w / 4;
+		var lh = _h;
 		h = _h + ui(4) + lh;
 		
 		for( var i = 0, n = array_length(widgets); i < n; i++ )
 			widgets[i].setFocusHover(active, hover);
 		
-		var yy = _y;
-		
-		scMode.draw(_x, yy, _w, _h, sMode[_mode], _m, _rx, _ry);
+		scMode.draw(_x, yy, w2 - ui(2), _h, sMode[_mode], _m, _rx, _ry);
 		yy += _h + ui(4);
 		
-		var _ww = _w / 2;
-		
 		if(hide == 0) {
-			draw_sprite_stretched_ext(THEME.textbox, 3, _x, yy, _w, lh, boxColor, 1);
-			draw_sprite_stretched_ext(THEME.textbox, 0, _x, yy, _w, lh, boxColor, 0.5 + 0.5 * interactable);	
+			draw_sprite_stretched_ext(THEME.textbox, 3, _x, yy, _w, lh, boxColor,  1);
+			draw_sprite_stretched_ext(THEME.textbox, 0, _x, yy, _w, lh, boxColor, .5 + .5 * interactable);	
 		}
 		
-		tbCx.draw(_x,	    yy, _ww, _h, _cx, _m);
-		tbCy.draw(_x + _ww, yy, _ww, _h, _cy, _m);
-		yy += _h;
+		tbCx.draw(_x,      yy, ww, _h, _cx, _m);
+		tbCy.draw(_x + ww, yy, ww, _h, _cy, _m);
 		
 		switch(_mode) {
-			case PUPPET_FORCE_MODE.move: 
-			case PUPPET_FORCE_MODE.puppet: 
-				
+			case PUPPET_FORCE_MODE.move   : 
+			case PUPPET_FORCE_MODE.puppet : 
 				tbFx.label = "fx";
 				tbFy.label = "fy";
 				
-				tbFx.draw(_x,		yy, _ww, _h, _fx, _m);
-				tbFy.draw(_x + _ww,	yy, _ww, _h, _fy, _m);
+				tbFx.draw(_x + ww * 2, yy, ww, _h, _fx, _m);
+				tbFy.draw(_x + ww * 3, yy, ww, _h, _fy, _m);
 				yy += _h;
 				
 				if(_mode == PUPPET_FORCE_MODE.move) {
 					sW.label = __txt("radius");
-					sW.draw(_x, yy, _w, _h, _wid, _m);
+					sW.draw(_x + w2, _y, w2, _h, _wid, _m);
 					
 					yy += _h;
 				}
 				break;
 				
-			case PUPPET_FORCE_MODE.wind: 
-				
+			case PUPPET_FORCE_MODE.wind : 
 				tbFx.label = __txt("strength");
 				tbW.label  = __txt("width");
 				
-				tbFx.draw(_x,       yy, _ww, _h, _fx, _m);
-				tbW.draw( _x + _ww, yy, _ww, _h, _wid, _m);
+				tbFx.draw(_x + ww * 2, yy, ww, _h, _fx,  _m);
+				tbW.draw( _x + ww * 3, yy, ww, _h, _wid, _m);
 				yy += _h;
 				
-				rot.draw(_x, yy, _w, _h, _fy, _m);
+				rot.draw(_x + w2, _y, w2, _h, _fy, _m);
 				yy += _h;
 				break;
 		}
@@ -150,20 +131,10 @@ function controlPointBox(_onModify) : widget() constructor {
 		return h;
 	}
 	
-	static clone = function() {
-		var cln = new controlPointBox(onModify);
-		
-		return cln;
-	}
+	static clone = function() { return new controlPointBox(onModify); }
 
 	static free = function() {
-		tbCx.free();
-		tbCy.free();
-		tbFx.free();
-		tbFy.free();
-		tbW.free();
-		tbH.free();
-		rot.free();
-		sW.free();
+		for( var i = 0, n = array_length(widgets); i < n; i++ ) 
+			widgets[i].free();
 	}
 }

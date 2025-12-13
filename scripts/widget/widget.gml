@@ -45,33 +45,40 @@ function widget() constructor {
 	color    = c_white;
 	boxColor = c_white;
 	
-	static setLua = function(_lua_thread, _lua_key, _lua_func) {
-		lua_thread = _lua_thread;
-		lua_thread_key = _lua_key;
-		onModify = method(self, _lua_func);
-	}
-	
-	static setSideButton = function(b,s=false) /*=>*/ { 
-		if(is(b, buttonClass)) b.iconPad(ui(4));
+	#region setters
+		static setLua = function(_lua_thread, _lua_key, _lua_func) {
+			lua_thread = _lua_thread;
+			lua_thread_key = _lua_key;
+			onModify = method(self, _lua_func);
+		}
 		
-		if(side_button) side_button2 = b; 
-		else            side_button  = b; 
+		static setSideButton = function(b,s=false) /*=>*/ { 
+			if(is(b, buttonClass)) b.iconPad(ui(4));
+			
+			if(side_button) side_button2 = b; 
+			else            side_button  = b; 
+			
+			always_side_button = s; 
+			return self; 
+		} 
 		
-		always_side_button = s; 
-		return self; 
-	} 
-	
-	static setFrontButton = function(b) /*=>*/ { 
-		if(is(b, buttonClass)) b.iconPad(ui(8));
-		front_button = b; 
-		return self; 
-	} 
-	
-	static setFont       = function(_f) /*=>*/ { font     = _f; return self; }
-	static setMinWidth   = function(_w) /*=>*/ { minWidth = _w; return self; }
-	static setVisible    = function(_v) /*=>*/ { visible  = _v; return self; }
-	
-	static setInteract = function(_i = noone) /*=>*/ { interactable = _i; return self; }
+		static setFrontButton = function(b) /*=>*/ { 
+			if(is(b, buttonClass)) b.iconPad(ui(8));
+			front_button = b; 
+			return self; 
+		} 
+		
+		static setSuffix     = function(v) /*=>*/ {               return self; }
+		static setHide       = function(v) /*=>*/ { hide     = v; return self; }
+		static setFont       = function(v) /*=>*/ { font     = v; return self; }
+		static setMinWidth   = function(v) /*=>*/ { minWidth = v; return self; }
+		static setVisible    = function(v) /*=>*/ { visible  = v; return self; }
+		
+		static setColor      = function(v) /*=>*/ { color    = v; return self; }
+		static setBoxColor   = function(v) /*=>*/ { boxColor = v; return self; }
+		
+		static setInteract = function(i=noone) /*=>*/ { interactable = i; return self; }
+	#endregion
 	
 	static register = function(_p = noone) {
 		if(!interactable) return self;

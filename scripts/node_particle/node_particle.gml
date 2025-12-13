@@ -142,7 +142,6 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 				
 				if(parts[i].active || _type) parts[i].draw(_exact, _dim[0], _dim[1]);
 			}
-			
 		surface_reset_shader();	
 	}
 	

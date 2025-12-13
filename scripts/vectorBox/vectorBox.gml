@@ -45,6 +45,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 	
 	////- Setters
 	
+	static setSuffix   = function(_v) /*=>*/ { for(var i = 0; i < 4; i++) tb[i].setSuffix(_v);   return self; }
 	static setLinkable = function(_l) /*=>*/ { linkable = _l;                                    return self; }
 	static setBoxColor = function(_v) /*=>*/ { for(var i = 0; i < 4; i++) tb[i].setBoxColor(_v); return self; }
 	static setFont     = function(_f) /*=>*/ { for(var i = 0; i < 4; i++) tb[i].setFont(_f);     return self; }

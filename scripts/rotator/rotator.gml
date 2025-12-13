@@ -7,11 +7,9 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 	hoverRot = false;
 	dragging = noone;
 	drag_sv  = 0;
+	halign   = fa_center;
 	
-	tb_value = new textBox(TEXTBOX_INPUT.number, onModify);
-	tb_value.hide = true;
-	
-	halign = fa_center;
+	tb_value = textBox_Number(function(v) /*=>*/ {return onModify(v)}).setHide(1);
 	
 	static setInteract = function(interactable = noone) {
 		self.interactable = interactable;
@@ -24,10 +22,12 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 	
 	static isHovering = function() { return hoverRot || tb_value.hovering; }
 	
+	static setParam = function(params) {
+		tb_value.setParam(params);
+	}
+	
 	static drawParam = function(params) {
 		setParam(params);
-		tb_value.setParam(params);
-		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m);
 	}
 	

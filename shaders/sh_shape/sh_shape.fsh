@@ -550,7 +550,7 @@ void main() {
 	
 	     if(drawBG  == 0) gl_FragData[0] = vec4(fgPixel.rgb, fgPixel.a * cc);
 	else if(bgBlend == 0) gl_FragData[0] = mix(bgPixel, fgPixel, cc);
-	else if(bgBlend == 1) gl_FragData[0] = max(bgPixel, fgPixel);
+	else if(bgBlend == 1) gl_FragData[0] = max(bgPixel, fgPixel * cc);
 	
 	gl_FragData[1] = vec4(cc, cc, cc, 1.);
 }

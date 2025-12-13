@@ -485,6 +485,8 @@ function Panel_Process_Maker() : PanelContent() constructor {
 	}
 	
 	function resetTracks() {
+		PROJECT.animator.is_rendering = false;
+		
 		stored_surface = [];
 		stored_map     = {};
 		
@@ -499,7 +501,7 @@ function Panel_Process_Maker() : PanelContent() constructor {
 		
 		play_speed = _speed;
 		exporting  = _export;
-				
+		
 		refreshTracks();
 		
 		if(!playing) resetTracks();
@@ -927,6 +929,8 @@ function Panel_Process_Maker() : PanelContent() constructor {
 			if(play_time < preview_speed) return;
 			play_time = play_time - preview_speed;
 		}
+		
+		PROJECT.animator.is_rendering = true;
 		
 		play_frame++;
 		PlayFrame(play_frame);

@@ -136,10 +136,8 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	static setPrefix     = function(_v) /*=>*/ { prefix      = _v;    return self; }
 	static setSuffix     = function(_v) /*=>*/ { suffix      = _v;    return self; }
 	
-	static setColor      = function(_v) /*=>*/ { color       = _v;    return self; }
 	static setAlign      = function(_v) /*=>*/ { align       = _v;    return self; }
 	static setVAlign     = function(_v) /*=>*/ { yalign      = _v;    return self; }
-	static setHide       = function(_v) /*=>*/ { hide        = _v;    return self; }
 	static setFont       = function(_v) /*=>*/ { font        = _v;    return self; }
 	static setLabel      = function(_v) /*=>*/ { label       = _v;    return self; }
 	static setPrecision  = function(_v) /*=>*/ { precision   = _v;    return self; }
@@ -1049,9 +1047,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	
 	////- Actions
 	
-	static clone = function() { 
-		return new textBox(input, onModify);
-	}
+	static clone = function() { return new textBox(input, onModify); }
 	
 	static free = function() {
 		surface_free_safe(text_surface);

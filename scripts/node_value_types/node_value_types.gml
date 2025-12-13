@@ -577,7 +577,8 @@ function nodeValueUnit(__nodeValue) constructor {
 	}
 	
 	tooltip       = new tooltipSelector("Unit", ["Pixel", "Fraction"]);
-	triggerButton = button(modeTrigger).setWheel(modeTrigger)
+	triggerButton = button(modeTrigger)
+						.setWheel(modeTrigger)
 						.setIcon(THEME.unit_ref, 0, COLORS._main_icon_light).iconPad()
 						.setTooltip(tooltip, function() /*=>*/ {return mode});
 	
@@ -592,6 +593,8 @@ function nodeValueUnit(__nodeValue) constructor {
 	}
 	
 	static draw = function(_x, _y, _w, _h, _m) {
+		_nodeValue.editWidget.setSuffix(mode? "x" : "");
+		
 		triggerButton.icon_index = mode;
 		triggerButton.draw(_x, _y, _w, _h, _m, THEME.button_hide_fill);
 	}

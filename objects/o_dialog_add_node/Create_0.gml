@@ -73,9 +73,9 @@ event_inherited();
 			case "Node_DynaSurf" : category = NODE_PCX_CATEGORY; break;
 		}
 		
-		draw_set_font(f_p0);
+		draw_set_font(f_p2);
 		var maxLen = 0;
-		for(var i = 0; i < array_length(category); i++) {
+		for(var i = 0, n = array_length(category); i < n; i++) {
 			var cat = category[i];
 			
 			if(cat[$ "filter"] != undefined && !array_exists(cat.filter, instanceof(context)))
@@ -85,7 +85,7 @@ event_inherited();
 			maxLen   = max(maxLen, string_width(name));
 		}
 		
-		category_width = maxLen + ui(48);
+		category_width = maxLen + ui(32);
 	#endregion
 	
 	function isTop() { return true; }
@@ -393,11 +393,12 @@ event_inherited();
 	catagory_pane = new scrollPane(category_width, dialog_h - ui(66), function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
-		var font  = f_p1;
-		var fontS = f_p1b;
+		var font  = f_p2;
+		var fontS = f_p2b;
+		
 		var ww    = catagory_pane.surface_w;
 		var hh    = 0;
-		var hg    = line_get_height(font, 6);
+		var hg    = line_get_height(font, 4);
 		var start = category == NODE_CATEGORY? -2 : 0;
 		
 		for(var i = start, n = array_length(category); i < n; i++) {
@@ -664,6 +665,7 @@ event_inherited();
 				
 				if(_node.getTooltip() != "" || _node.getTooltipSpr() != noone) {
 					gpu_set_tex_filter(true);
+					BLEND_ADD
 					if(_hoverContent && point_in_rectangle(_m[0], _m[1], _boxx, yy, _boxx + ui(16), yy + ui(16))) {
 						content_pane.hover_content = true;
 						
@@ -673,6 +675,7 @@ event_inherited();
 						node_tooltip_y = content_pane.y + yy;
 					} else 
 						draw_sprite_ui_uniform(THEME.info, 0, _boxx + ui(8), yy + ui(8), 0.7, COLORS._main_icon, 0.5);
+					BLEND_NORMAL
 					gpu_set_tex_filter(false);
 				}
 				
@@ -872,7 +875,9 @@ event_inherited();
 				var _hinfo = _hoverContent && point_in_circle(_m[0], _m[1], tx + ui(12), yy + list_height / 2, list_height / 2);
 				if(_node.getTooltip() != "" || _node.getTooltipSpr() != noone) {
 					gpu_set_tex_filter(true);
+					BLEND_ADD
 					draw_sprite_ui_uniform(THEME.info, 0, tx + ui(12), yy + list_height / 2, 0.7, COLORS._main_icon, .5 + _hinfo * .25);
+					BLEND_NORMAL
 					gpu_set_tex_filter(false);
 					
 					if(_hinfo) {
@@ -1173,6 +1178,7 @@ event_inherited();
 					}
 					
 					if(struct_has(_node, "tooltip") && (_node.getTooltip() != "" || _node.getTooltipSpr() != noone)) {
+						BLEND_ADD
 						if(_hover && point_in_rectangle(_m[0], _m[1], _boxx, yy, _boxx + ui(16), yy + ui(16))) {
 							search_pane.hover_content = true;
 							
@@ -1182,6 +1188,7 @@ event_inherited();
 							node_tooltip_y = search_pane.y + yy
 						} else 
 							draw_sprite_ui_uniform(THEME.info, 0, _boxx + ui(8), yy + ui(8), 0.7, COLORS._main_icon, 0.5);
+						BLEND_NORMAL
 					}
 				
 				}
@@ -1358,7 +1365,9 @@ event_inherited();
 				var _hinfo = _hover && point_in_circle(_m[0], _m[1], tx + ui(12), yc, list_height / 2);
 				if((struct_has(_node, "getTooltip") && _node.getTooltip() != "") || (struct_has(_node, "getTooltipSpr") && _node.getTooltipSpr() != noone)) {
 					gpu_set_tex_filter(true);
+					BLEND_ADD
 					draw_sprite_ui_uniform(THEME.info, 0, tx + ui(12), yc, 0.7, COLORS._main_icon, .5 + _hinfo * .25);
+					BLEND_NORMAL
 					gpu_set_tex_filter(false);
 					
 					if(_hinfo) {

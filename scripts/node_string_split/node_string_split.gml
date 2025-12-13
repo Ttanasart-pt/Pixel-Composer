@@ -3,37 +3,43 @@ function Node_String_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	always_pad = true;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Text("Text"))
-		.setVisible(true, true);
-		
-	newInput(1, nodeValue_Text("Delimiter", " ")).setTooltip("Character that used to split text,\nleave blank to create character array.");
-	inputs[1].editWidget.format = TEXT_AREA_FORMAT.delimiter;
+	newInput( 0, nodeValue_Text("Text")).setVisible(true, true);
 	
-	newInput(2, nodeValue_Enum_Scroll("Mode", 0, [ "Delimiter", "Periodic" ]))
-	
-	newInput(3, nodeValue_Int("Period", 1));
+	////- =Split
+	newInput( 2, nodeValue_EScroll( "Mode",       0, [ "Delimiter", "Periodic" ] ));
+	newInput( 1, nodeValue_Text(    "Delimiter", " " )).setTooltip("Character that used to split text,\nleave blank to create character array.");
+	newInput( 3, nodeValue_Int(     "Period",     1  ));
+	// 4
 	
 	newOutput(0, nodeValue_Output("Text", VALUE_TYPE.text, ""));
 	
+	inputs[1].editWidget.format = TEXT_AREA_FORMAT.delimiter;
 	input_display_list = [ 0, 
-		2, 1, 3, 
+		[ "Split", false ], 2, 1, 3, 
 	];
 	
+	////- Node
+	
 	static processData = function(_output, _data, _index = 0) { 
-		var _text = _data[0];
-		var _deli = _data[1];
-		var _mode = _data[2];
-		var _peri = max(1, _data[3]);
-		
-		inputs[1].setVisible(_mode == 0);
-		inputs[3].setVisible(_mode == 1);
+		#region data
+			var _text = _data[0];
+			
+			var _mode = _data[2];
+			var _deli = _data[1];
+			var _peri = _data[3]; _peri = max(1, _peri);
+			
+			inputs[1].setVisible(_mode == 0);
+			inputs[3].setVisible(_mode == 1);
+		#endregion
 		
 		if(_deli == "") return string_to_array(_text);
 			
 		if(_mode == 0) {
 			_deli = string_replace_all(_deli, "\\n", "\n");
 			_deli = string_replace_all(_deli, "\\t", "\t");
-			return string_splice(_text, _deli);
+			
+			var arr = string_split(_text, _deli);
+			return arr;
 			
 		} else if(_mode == 1) {
 			var _len = string_length(_text);
@@ -48,7 +54,6 @@ function Node_String_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			}
 			
 			return _arr;
-			
 		}
 		
 		return [ _text ];

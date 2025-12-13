@@ -7,7 +7,7 @@ function fontScrollBox(_onModify) : widget() constructor {
 	align = fa_center;
 	setSideButton(button(function() /*=>*/ {return shellOpenExplorer(DIRECTORY + "Fonts")})
 						.setTooltip(__txtx("widget_font_open_folder", "Open font folder"))
-						.setIcon(THEME.folder_content, 0, COLORS._main_icon));
+						.setIcon(THEME.folder_content, 0, COLORS._main_icon).iconPad());
 	
 	refresh_button = button(function() /*=>*/ {return __initFontFolder(true)})
 						.setTooltip(__txt("Refresh"))

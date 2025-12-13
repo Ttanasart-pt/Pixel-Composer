@@ -28,19 +28,18 @@ function Project_Randomizer_Value() constructor {
 		if(value != undefined) {
 			var _wdg = value.editWidget;
 			
-			if(is(_wdg, textBox)) {
-				editWmin = new textBox(_wdg.input, function(v) /*=>*/ { min_val = v; });
-				editWmax = new textBox(_wdg.input, function(v) /*=>*/ { max_val = v; });
-				
-			} else if(is(_wdg, textArea)) {
-				editWmin = new textArea(_wdg.input, function(v) /*=>*/ { min_val = v; });
-				editWmax = new textArea(_wdg.input, function(v) /*=>*/ { max_val = v; });
-				
-			} else if(is_array(min_val)) {
+			if(!is_array(min_val)) {
 				editWmin = _wdg.clone();
-				editWmin.onModify = function(v,i) /*=>*/ { min_val[i] = v; };
-				
 				editWmax = _wdg.clone();
+				
+				editWmin.onModify = function(v) /*=>*/ { min_val = v; };
+				editWmax.onModify = function(v) /*=>*/ { max_val = v; };
+				
+			} else {
+				editWmin = _wdg.clone();
+				editWmax = _wdg.clone();
+				
+				editWmin.onModify = function(v,i) /*=>*/ { min_val[i] = v; };
 				editWmax.onModify = function(v,i) /*=>*/ { max_val[i] = v; };
 			}
 			
@@ -170,7 +169,7 @@ function Panel_Randomizer() : PanelContent() constructor {
 				tx += ui(32);
 			}
 			
-			draw_set_text(f_p3, fa_left, fa_center);
+			draw_set_text(f_p4, fa_left, fa_center);
 			draw_set_color(COLORS._main_text_sub);
 			draw_text_add(tx, yy + hg / 2, _nnam);
 			tx += string_width(_nnam) + ui(4)
@@ -185,14 +184,14 @@ function Panel_Randomizer() : PanelContent() constructor {
 					_del = i;
 				} bx -= ui(4);
 				
-				yy += hgh + ui(4);
-				hh += hgh + ui(4);
+				yy += hgh + ui(0);
+				hh += hgh + ui(0);
 				continue;
 			}
 			
 			var bx = ww - bs;
 			var by = yy + hg / 2 - bs / 2;
-			if(buttonInstant_Pad(noone, bx, by, bs, bs, _m, hov, foc, __txt("Randomize"), THEME.icon_random, 0, bc) == 2) {
+			if(buttonInstant_Pad(noone, bx, by, bs, bs, _m, hov, foc, __txt("Randomize All"), THEME.icon_random, 0, bc) == 2) {
 				_trk.Random();
 			} bx -= ui(4);
 			
@@ -203,6 +202,7 @@ function Panel_Randomizer() : PanelContent() constructor {
 			if(is(_edt, widget)) {
 				var dp = new widgetParam(ex, ey, ew, eh, _trk.max_val, {}, _m, rx, ry).setFont(f_p3);
 				
+				_edt.register(sc_randomize);
 				_edt.setFocusHover(foc, hov);
 				var wh = _edt.drawParam(dp);
 				hgh = max(hg, wh);
@@ -213,13 +213,14 @@ function Panel_Randomizer() : PanelContent() constructor {
 			if(is(_edt, widget)) {
 				var dp = new widgetParam(ex, ey, ew, eh, _trk.min_val, {}, _m, rx, ry).setFont(f_p3);
 				
+				_edt.register(sc_randomize);
 				_edt.setFocusHover(foc, hov);
 				var wh = _edt.drawParam(dp);
 				hgh = max(hg, wh);
 			}
 			
-			yy += hgh + ui(4);
-			hh += hgh + ui(4);
+			yy += hgh + ui(0);
+			hh += hgh + ui(0);
 		}
 		
 		if(_del != undefined) array_delete(_trks, _del, 1);

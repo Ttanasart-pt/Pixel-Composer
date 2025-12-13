@@ -168,19 +168,19 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			shader_set_s("topmap",     temp_surface[1]);
 			shader_set_s("coordMap",   temp_surface[3]);
 			
-			shader_set_i("useSide",     _surfSu);
-			shader_set_s("sideTexture", _surfS);
+			shader_set_i("useSide",      _surfSu     );
+			shader_set_s("sideTexture",  _surfS      );
 			
-			shader_set_i("holeType",     _hType);
+			shader_set_i("holeType",     _hType      );
 			
-			shader_set_i("useHole1",     _surfO1u);
-			shader_set_s("holeTexture1", _surfO1);
+			shader_set_i("useHole1",     _surfO1u    );
+			shader_set_s("holeTexture1", _surfO1     );
 			
-			shader_set_i("useHole2",     _surfO2u);
-			shader_set_s("holeTexture2", _surfO2);
+			shader_set_i("useHole2",     _surfO2u    );
+			shader_set_s("holeTexture2", _surfO2     );
 			
-			shader_set_f("maxDepth",   _dept - 1);
-			shader_set_f("rotation",   _rota / 360);
+			shader_set_f("maxDepth",     _dept - 1   );
+			shader_set_f("rotation",     _rota / 360 );
 			
 			var ii = 0;
 			repeat(_dept) {
