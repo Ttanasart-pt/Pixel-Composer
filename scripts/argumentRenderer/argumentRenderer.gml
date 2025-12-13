@@ -4,6 +4,9 @@ function argumentRenderer(_typeArray = []) {
 		argument_renderer.y = _y;
 		argument_renderer.w = _w;
 		
+		var rx = argument_renderer.rx;
+		var ry = argument_renderer.ry;
+		
 		var spc = _panel.viewMode == INSP_VIEW_MODE.spacious;
 		var tx  = _x;
 		var ty  = _y + ui(8);
@@ -12,6 +15,7 @@ function argumentRenderer(_typeArray = []) {
 		var _fn = spc? f_p2 : f_p3;
 		var _th = line_get_height(_fn, 6);
 		var  w1 = ui(128), wh = 0;
+		var _tv = __txt("Value");
 		
 		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
 			var _jNam = inputs[i + 0];
@@ -42,7 +46,11 @@ function argumentRenderer(_typeArray = []) {
 			}
 			
 			if(argument_renderer.showValue && _wVal != undefined) {
-				var params = new widgetParam(tx, ty, _w, _th, _jVal.showValue(), {}, _m, argument_renderer.rx, argument_renderer.ry);
+				draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_sub);
+				draw_text_add(_x + ui(8), ty + _th / 2, _tv);
+				var _tw = string_width(_tv) + ui(24);
+				
+				var params = new widgetParam(tx + _tw, ty, _w - _tw, _th, _jVal.showValue(), {}, _m, rx, ry);
 				    params.setFont(_fn);
 				
 				_wVal.setFocusHover(_focus, _hover);
