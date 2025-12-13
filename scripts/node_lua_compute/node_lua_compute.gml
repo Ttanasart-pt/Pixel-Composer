@@ -2,22 +2,19 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	name = "Lua Compute";
 	update_on_frame = true;
 	
-	newInput(0, nodeValue_Text("Function name", $"render{irandom_range(100000, 999999)}"));
+	newInput(3, nodeValue(      "Execution thread", self, CONNECT_TYPE.input, VALUE_TYPE.node, noone )).setVisible(false, true);
+	newInput(4, nodeValue_Bool( "Execute on frame", true ));
 	
-	newInput(1, nodeValue_Enum_Scroll("Return type",  0, { data: [ "Number", "String", "Struct" ], update_hover: false }));
+	////- =Function
+	newInput(0, nodeValue_Text(    "Function name", $"render{irandom_range(100000, 999999)}" ));
+	newInput(1, nodeValue_EScroll( "Return type",  0, { data: [ "Number", "String", "Struct" ], update_hover: false } ));
 	
-	newInput(2, nodeValue_Text("Lua code"))
-		.setTooltip(function() /*=>*/ {return dialogPanelCall(new Panel_Lua_Reference())})
-		.setDisplay(VALUE_DISPLAY.codeLUA);
+	////- =Script
+	newInput(2, nodeValue_Text( "Lua code" )).setDisplay(VALUE_DISPLAY.codeLUA).setTooltip(function() /*=>*/ {return dialogPanelCall(new Panel_Lua_Reference())})
+	// 5
 	
-	newInput(3, nodeValue("Execution thread", self, CONNECT_TYPE.input, VALUE_TYPE.node, noone))
-		.setVisible(false, true);
-	
-	newInput(4, nodeValue_Bool("Execute on frame", true))
-	
-	newOutput(0, nodeValue_Output("Execution thread", VALUE_TYPE.node, noone ));
-	
-	newOutput(1, nodeValue_Output("Return value", VALUE_TYPE.any, noone));
+	newOutput(0, nodeValue_Output( "Execution thread", VALUE_TYPE.node, noone ));
+	newOutput(1, nodeValue_Output( "Return value",     VALUE_TYPE.any,  noone ));
 	
 	argumentRenderer(global.lua_arguments);
 	
@@ -25,10 +22,10 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	lb_pos = new Inspector_Label("", _f_code_s);
 	
 	input_display_list = [ 3, 4, 
-		["Function",	false], 0, 1,
-		["Arguments",	false], argument_renderer,
-		["Script",		false], lb_pre, 2, lb_pos,
-		["Inputs",		 true], 
+		[ "Function",  false ], 0, 1,
+		[ "Arguments", false ], argument_renderer,
+		[ "Script",    false ], lb_pre, 2, lb_pos,
+		[ "Inputs",     true ], 
 	];
 
 	argument_name = [];
@@ -39,7 +36,7 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
-		newInput(index + 0, nodeValue_Text("Argument name"));
+		newInput(index + 0, nodeValue_Text("Argument name")).setDisplay(VALUE_DISPLAY.text_box);
 		
 		newInput(index + 1, nodeValue_Enum_Scroll("Argument type",  0 , { data: [ "Number", "String", "Surface", "Struct" ], update_hover: false }));
 		inputs[index + 1].editWidget.interactable = false;
@@ -54,6 +51,8 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	setDynamicInput(3, false);
 	if(!LOADING && !APPENDING) createNewInput();
+	
+	////- Nodes
 	
 	static getState = function() {
 		if(inputs[3].value_from == noone) return lua_state;

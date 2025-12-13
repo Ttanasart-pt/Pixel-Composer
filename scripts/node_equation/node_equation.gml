@@ -45,48 +45,75 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	newOutput(0, nodeValue_Output("Result", VALUE_TYPE.float, 0));
 	
-	argument_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
+	argument_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus, _panel = noone) {
 		argument_renderer.x = _x;
 		argument_renderer.y = _y;
 		argument_renderer.w = _w;
 		
+		var tx = _x + ui(8);
+		var ty = _y + ui(8);
+		var hh = ui(8);
+		
 		var bw = _w / 2 - ui(4);
-		var bh = ui(36);
-		if(buttonTextIconInstant(true, THEME.button_hide_fill, _x, _y + ui(8), bw, bh, _m, _focus, _hover, "", THEME.add, __txt("Add"), COLORS._main_value_positive) == 2) {
+		var bh = ui(32);
+		var bb = THEME.button_hide_fill;
+		
+		var bx = _x;
+		var by = ty;
+		var bt = __txt("Add");
+		var bc = COLORS._main_value_positive;
+		if(buttonTextIconInstant(true, bb, bx, by, bw, bh, _m, _focus, _hover, "", THEME.add, bt, bc) == 2) {
 			attributes.size++;
 			refreshDynamicInput();
 			update();
 		}
 		
+		var bx = _x + _w - bw;
+		var bt = __txt("Remove");
+		var bc = COLORS._main_value_negative;
 		var amo = attributes.size;
-		if(buttonTextIconInstant(attributes.size > 0, THEME.button_hide_fill, _x + _w - bw, _y + ui(8), bw, bh, _m, _focus, _hover, "", THEME.minus, __txt("Remove"), COLORS._main_value_negative) == 2) {
+		if(buttonTextIconInstant(amo > 0, bb, bx, _y, bw, bh, _m, _focus, _hover, "", THEME.minus, bt, bc) == 2) {
 			attributes.size--;
 			refreshDynamicInput();
 			update();
 		}
 		
-		var tx  = _x + ui(8);
-		var ty  = _y + bh + ui(16);
-		var hh  = bh + ui(16);
-		var _th = TEXTBOX_HEIGHT;
+		ty += bh + ui(8);
+		hh += bh + ui(8);
 		
-		for( var i = input_fix_len; i < array_length(inputs); i += data_length ) {
-			var _h = 0;
+		var font = _panel != noone && _panel.viewMode == INSP_VIEW_MODE.compact? f_p3 : f_p2;
+		var th   = line_get_height(font, 6);
+		
+		var w1 = ui(128);
+		var w2 = _w - w1 - ui(24 + 16);
+		var _wh;
+		
+		for( var i = input_fix_len, n = array_length(inputs); i < n; i += data_length ) {
+			var _th = th;
 			
-			var _jName = inputs[i + 0];
-			_jName.editWidget.setFocusHover(_focus, _hover);
-			_jName.editWidget.draw(tx, ty, ui(128), _th, _jName.showValue(), _m, _jName.display_type);
+			var _jNam = inputs[i + 0];
+			var _jVal = inputs[i + 1];
 			
-			draw_set_text(f_p1, fa_center, fa_top, COLORS._main_text_sub);
-			draw_text_add(tx + ui(128 + 12), ty + ui(6), "=");
+			var _wNam = has(_jNam, "__inspWidget")? _jNam.__inspWidget : _jNam.editWidget.clone(); _jNam.__inspWidget = _wNam;
+			var _wVal = has(_jVal, "__inspWidget")? _jVal.__inspWidget : _jVal.editWidget.clone(); _jVal.__inspWidget = _wVal;
 			
-			var _jValue = inputs[i + 1];
-			_jValue.editWidget.setFocusHover(_focus, _hover);
-			_jValue.editWidget.draw(tx + ui(128 + 24), ty, _w - ui(128 + 24 + 16), _th, _jValue.showValue(), _m);
+			_wNam.setFocusHover(_focus, _hover);
+			_wVal.setFocusHover(_focus, _hover);
 			
-			_h += _th + ui(6);
-			hh += _h;
-			ty += _h;
+			_wNam.setFont(font);
+			_wVal.setFont(font);
+			
+			_wh = _wNam.draw(tx, ty, w1, th, _jNam.showValue(), _m, _jNam.display_type);
+			_th = max(_th, _wh);
+			
+			draw_set_text(font, fa_center, fa_top, COLORS._main_text_sub);
+			draw_text_add(tx + w1 + ui(12), ty + ui(6), "=");
+			
+			_wh = _wVal.draw(tx + w1 + ui(24), ty, w2, th, _jVal.showValue(), _m, _jVal.display_type);
+			_th = max(_th, _wh);
+			
+			hh += _th + ui(6);
+			ty += _th + ui(6);
 		}
 		
 		argument_renderer.h = hh;
@@ -99,9 +126,9 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	}
 	
 	input_display_list = [ 
-		["Function",	false], 0,
-		["Arguments",	false], argument_renderer,
-		["Inputs",		 true], 
+		[ "Function",  false ], 0,
+		[ "Arguments", false ], argument_renderer,
+		[ "Inputs",     true ], 
 	]
 	
 	function createNewInput(index = array_length(inputs)) {
@@ -118,6 +145,8 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	} 
 	
 	setDynamicInput(2, false);
+	
+	////- Nodes
 	
 	static refreshDynamicInput = function() {
 		var _l  = [];

@@ -12,12 +12,16 @@ function Node_String_Format(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		argument_renderer.y = _y;
 		argument_renderer.w = _w;
 		
+		var tx = _x + ui(8);
+		var ty = _y + ui(8);
+		var hh = ui(8);
+		
 		var bw = _w / 2 - ui(4);
 		var bh = ui(32);
 		var bb = THEME.button_hide_fill;
 		
 		var bx = _x;
-		var by = _y;
+		var by = ty;
 		var bt = __txt("Add");
 		var bc = COLORS._main_value_positive;
 		if(buttonTextIconInstant(true, bb, bx, by, bw, bh, _m, _focus, _hover, "", THEME.add, bt, bc) == 2) {
@@ -36,48 +40,42 @@ function Node_String_Format(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			update();
 		}
 		
+		ty += bh + ui(8);
+		hh += bh + ui(8);
+		
 		var font = _panel != noone && _panel.viewMode == INSP_VIEW_MODE.compact? f_p3 : f_p2;
-		var tx = _x + ui(8);
-		var ty = _y + bh + ui(16);
-		var hh = bh + ui(16);
-		var th = line_get_height(font);
+		var th   = line_get_height(font, 6);
 		
 		var w1 = ui(128);
 		var w2 = _w - w1 - ui(24 + 16);
 		var _wh;
 		
-		var _jNam, _jVal;
-		var _wNam, _wVal;
-		
 		for( var i = input_fix_len, n = array_length(inputs); i < n; i += data_length ) {
-			var _h  = 0;
 			var _th = th;
 			
-			_jNam = inputs[i + 0];
-			_jVal = inputs[i + 1];
+			var _jNam = inputs[i + 0];
+			var _jVal = inputs[i + 1];
 			
-			_wNam = has(_jNam, "__inspWidget")? _jNam.__inspWidget : _jNam.editWidget.clone();
-			_wVal = has(_jVal, "__inspWidget")? _jVal.__inspWidget : _jVal.editWidget.clone();
-			
-			_jNam.__inspWidget = _wNam;
-			_jVal.__inspWidget = _wVal;
+			var _wNam = has(_jNam, "__inspWidget")? _jNam.__inspWidget : _jNam.editWidget.clone(); _jNam.__inspWidget = _wNam;
+			var _wVal = has(_jVal, "__inspWidget")? _jVal.__inspWidget : _jVal.editWidget.clone(); _jVal.__inspWidget = _wVal;
 			
 			_wNam.setFocusHover(_focus, _hover);
+			_wVal.setFocusHover(_focus, _hover);
+			
 			_wNam.setFont(font);
+			_wVal.setFont(font);
+			
 			_wh = _wNam.draw(tx, ty, w1, th, _jNam.showValue(), _m, _jNam.display_type);
 			_th = max(_th, _wh);
 			
 			draw_set_text(font, fa_center, fa_top, COLORS._main_text_sub);
 			draw_text_add(tx + w1 + ui(12), ty + ui(6), "=");
 			
-			_wVal.setFocusHover(_focus, _hover);
-			_wVal.setFont(font);
 			_wh = _wVal.draw(tx + w1 + ui(24), ty, w2, th, _jVal.showValue(), _m, _jVal.display_type);
 			_th = max(_th, _wh);
 			
-			_h += _th + ui(6);
-			hh += _h;
-			ty += _h;
+			hh += _th + ui(6);
+			ty += _th + ui(6);
 		}
 		
 		argument_renderer.h = hh;

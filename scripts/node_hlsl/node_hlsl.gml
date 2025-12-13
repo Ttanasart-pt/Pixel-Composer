@@ -59,7 +59,7 @@ output.color = surfaceColor;"
 		static shader_vartype = [ "Float", "Int", "Vec2", "Vec3", "Vec4", "Mat3", "Mat4", "Sampler2D", "Color" ];
 		var inAmo = array_length(inputs);
 		
-		newInput(index + 0, nodeValue_Text(    "Argument name" ));
+		newInput(index + 0, nodeValue_Text(    "Argument name" )).setDisplay(VALUE_DISPLAY.text_box);
 		newInput(index + 1, nodeValue_EScroll( "Argument type",  0, { data: shader_vartype, update_hover: false }));
 		newInput(index + 2, nodeValue(         "Argument value", self, CONNECT_TYPE.input, VALUE_TYPE.float, 0 )).setVisible(true, true);
 		
