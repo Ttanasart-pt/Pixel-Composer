@@ -52,7 +52,7 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	draw_transforms = [];
 	static drawOverlayTransform = function(_node) { 
 		var _df  = draw_transforms;
-		var _amo = getInputAmount();
+		var _amo = min(array_length(draw_transforms), getInputAmount());
 		
 		for( var i = 0; i < _amo; i++ ) {
 			if(_node == inputs[input_fix_len + i].getNodeFrom())
