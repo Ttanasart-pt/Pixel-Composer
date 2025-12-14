@@ -2,7 +2,7 @@
 	globalvar PSYSTEM_OFF; PSYSTEM_OFF = {};
 	
 	PSYSTEM_OFF.active =   0;   // buffer_bool : Active             : 1
-	PSYSTEM_OFF._res   =   1;   // buffer_bool : _reserved          : 1
+	PSYSTEM_OFF.stat   =   1;   // buffer_bool : Static             : 1
 	PSYSTEM_OFF.dflag  =   2;   // buffer_u16  : Draw Flag          : 2
 	PSYSTEM_OFF.sindex =   4;   // buffer_u32  : Spawn Index        : 4
 

@@ -188,7 +188,6 @@ function Node_pSystem_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			}
 			
 			if(_fall_curved)    _inf = eval_curve_x(_fcrv, clamp(_inf, 0., 1.));
-			else if(_type != 2) _inf = _inf > 0;
 			
 			buffer_write(mask_buffer, buffer_f32, _inf);
 		}

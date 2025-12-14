@@ -20,11 +20,11 @@ function Node_Scatter_Point_Lattice(_x, _y, _group = noone) : Node_Processor(_x,
 	newInput( 2, nodeValue_IVec2( "Subdivision",  [2, 2] ));
 	// inputs 3
 	
+	newOutput(0, nodeValue_Output("Points", VALUE_TYPE.float, [ 0, 0 ])).setDisplay(VALUE_DISPLAY.vector);
+	
 	input_display_list = [ 
 		["Lattice", false], 1, 2, 
 	];
-	
-	newOutput(0, nodeValue_Output("Points", VALUE_TYPE.float, [ 0, 0 ])).setDisplay(VALUE_DISPLAY.vector);
 	
 	////- Nodes
 	

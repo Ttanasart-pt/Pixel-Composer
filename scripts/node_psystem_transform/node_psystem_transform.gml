@@ -67,23 +67,23 @@ function Node_pSystem_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		
 		var _seed = getInputData( 2);
 		
-		var _do_move = getInputData(14);
-		var _move = getInputData( 3), _move_curved = inputs[3].attributes.curved && curve_move != undefined;
+		var _do_move   = getInputData(14);
+		var _move      = getInputData( 3), _move_curved = inputs[3].attributes.curved && curve_move != undefined;
 		
-		var _do_vect = getInputData(15);
-		var _sped = getInputData( 9), _sped_curved = inputs[9].attributes.curved && curve_sped != undefined;
-		var _dirr = getInputData(11);
+		var _do_vect   = getInputData(15);
+		var _sped      = getInputData( 9), _sped_curved = inputs[9].attributes.curved && curve_sped != undefined;
+		var _dirr      = getInputData(11);
 		
-		var _do_rota = getInputData(16);
+		var _do_rota   = getInputData(16);
 		var _rota_mode = getInputData(13);
-		var _rota = getInputData( 5), _rota_curved = inputs[5].attributes.curved && curve_rota != undefined;
+		var _rota      = getInputData( 5), _rota_curved = inputs[5].attributes.curved && curve_rota != undefined;
 		
-		var _do_scal = getInputData(17);
+		var _do_scal   = getInputData(17);
 		var _scal_mode = getInputData(12);
-		var _scal = getInputData( 7), _scal_curved = inputs[7].attributes.curved && curve_scal != undefined;
+		var _scal      = getInputData( 7), _scal_curved = inputs[7].attributes.curved && curve_scal != undefined;
 		
-		var _partAmo  = _parts.maxCursor;
-		var _partBuff = _parts.buffer;
+		var _partAmo   = _parts.maxCursor;
+		var _partBuff  = _parts.buffer;
 		var _off = 0;
 		
 		repeat(_partAmo) {
@@ -93,20 +93,22 @@ function Node_pSystem_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			
 			var _mask   = use_mask? buffer_read(_masks, buffer_f32) : 1; if(_mask <= 0) continue;
 			var _act    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
+			var _stat   = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.stat,   buffer_bool );
 			if(!_act) continue;
 			
 			var _spwnId = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
 			
-			var _px     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posx, buffer_f64  );
-			var _py     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posy, buffer_f64  );
-			var _sx     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.scax, buffer_f64  );
-			var _sy     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.scay, buffer_f64  );
-			var _rot    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.rotx,  buffer_f64  );
+			var _px     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posx,   buffer_f64  );
+			var _py     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.posy,   buffer_f64  );
+			var _sx     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.scax,   buffer_f64  );
+			var _sy     = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.scay,   buffer_f64  );
+			var _rot    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.rotx,   buffer_f64  );
 			
-			var _lif    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.life,  buffer_f64  );
-			var _lifMax = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.mlife, buffer_f64  );
+			var _lif    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
+			var _lifMax = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
 			
-			var rat = _lif / (_lifMax - 1);
+			var rat = _stat? (_frame + _lif + _spwnId * _lifMax) / TOTAL_FRAMES : _lif / (_lifMax - 1);
+			    rat = clamp(rat, 0, 1);
 			random_set_seed(_seed + _spwnId);
 			
 			if(_do_move) {

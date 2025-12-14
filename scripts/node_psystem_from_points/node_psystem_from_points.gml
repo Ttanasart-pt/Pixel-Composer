@@ -7,12 +7,17 @@ function Node_pSystem_from_Points(_x, _y, _group = noone) : Node(_x, _y, _group)
 	
 	////- =Spawn
 	newInput( 0, nodeValue_Vec2( "Points Data", [0,0] )).setVisible(true, true).setArrayDepth(1);
-	// input
+	
+	////- =Animation
+	newInput( 1, nodeValue_Float( "Index Start", 0 ));
+	newInput( 2, nodeValue_Float( "Index Step",  1 ));
+	// input 3
 	
 	newOutput(0, nodeValue_Output("Particles",  VALUE_TYPE.particle, noone ));
 	
 	input_display_list = [ 
-		[ "Spawn", false ], 0, 
+		[ "Spawn",     false ], 0, 
+		[ "Animation", false ], 1, 2, 
 	];
 	
 	////- Nodes
@@ -28,7 +33,10 @@ function Node_pSystem_from_Points(_x, _y, _group = noone) : Node(_x, _y, _group)
 	
 	static update = function(_frame = CURRENT_FRAME) {
 		#region data
-			var _points = getInputData( 0);
+			var _points  = getInputData( 0);
+			
+			var _idStart = getInputData( 1);
+			var _idStep  = getInputData( 2);
 			
 			var _parts  = outputs[0].getValue();
 		#endregion	
@@ -54,7 +62,11 @@ function Node_pSystem_from_Points(_x, _y, _group = noone) : Node(_x, _y, _group)
 			var py = pp[1];
 			
 			buffer_write_at( b, o + PSYSTEM_OFF.active, buffer_bool, true );
+			buffer_write_at( b, o + PSYSTEM_OFF.stat,   buffer_bool, true );
 			buffer_write_at( b, o + PSYSTEM_OFF.sindex, buffer_u32,  i    );
+			
+			buffer_write_at( b, o + PSYSTEM_OFF.life,   buffer_f64,  _idStart );
+			buffer_write_at( b, o + PSYSTEM_OFF.mlife,  buffer_f64,  _idStep  );
 			
 			buffer_write_at( b, o + PSYSTEM_OFF.posx,   buffer_f64,  px   );
 			buffer_write_at( b, o + PSYSTEM_OFF.posy,   buffer_f64,  py   );

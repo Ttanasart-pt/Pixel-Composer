@@ -90,13 +90,13 @@
 			last_time      = 0;
 		}
 		
-		static pause = function() {
+		static pause  = function() {
 			is_playing     = false;
 			frame_progress = true;
 			last_time      = 0;
 		}
 		
-		static play = function() {
+		static play   = function() {
 			if(is_simulating)	setFrame(0);
 			else				firstFrame();
 			
@@ -127,14 +127,14 @@
 			last_time      = 0;
 		}
 		
-		static stop = function() {
+		static stop   = function() {
 			firstFrame();
 			
 			is_playing = false;
 			last_time  = 0;
 		}
 		
-		static step = function() {
+		static step   = function() {
 			if(frame_range_start || frame_range_end) {
 				var fr0 = frame_range_start ?? 0;
 				var fr1 = frame_range_end   ?? frames_total;
@@ -174,6 +174,7 @@
 				} else if(playback == ANIMATOR_END.pingpong) {
 					setFrame(max(0, frames_total - 2));
 					play_direction = -1;
+					
 				}
 				
 			} else if(current_frame <= 0) {

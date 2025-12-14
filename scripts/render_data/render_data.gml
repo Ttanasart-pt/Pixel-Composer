@@ -206,7 +206,7 @@ enum RENDER_TYPE {
 			render_time = 0;
 			leaf_time   = 0;
 			error       = 0;
-			reset_all   = !partial;
+			reset_all   = !partial || project.animator.isFirstFrame();
 			
 			if(reset_all) {
 				LOG_IF(global.FLAG.render == 1, $"xxxxxxxxxx Resetting {array_length(project.nodeTopo)} nodes xxxxxxxxxx");
