@@ -977,11 +977,6 @@ event_inherited();
 	dialog_h_max = ui(800);
 	
 	onResize = function() {
-		var _ch = dialog_h - ui(66);
-		
-		catagory_pane.resize(category_width, _ch);
-		search_pane.resize(dialog_w - ui(36), _ch);
-		
 		PREFERENCES.dialog_add_node_w = dialog_w;
 		PREFERENCES.dialog_add_node_h = dialog_h;
 	}

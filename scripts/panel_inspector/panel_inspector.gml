@@ -565,7 +565,7 @@ function Panel_Inspector() : PanelContent() constructor {
             var wx0 = wx1 - ww;
             
             var _att_h = viewMode == INSP_VIEW_MODE.spacious? hg : line_get_height(_font, 6);
-            var _pd    = viewMode == INSP_VIEW_MODE.spacious? ui(8) : ui(4);
+            var _pd    = viewMode == INSP_VIEW_MODE.spacious? ui(8) : ui(6);
             
             for( var i = 0, n = array_length(_inspecting.attributeEditors); i < n; i++ ) {
                 var edt = _inspecting.attributeEditors[i];

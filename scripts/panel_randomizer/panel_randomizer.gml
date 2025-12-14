@@ -191,7 +191,7 @@ function Panel_Randomizer() : PanelContent() constructor {
 			
 			var bx = ww - bs;
 			var by = yy + hg / 2 - bs / 2;
-			if(buttonInstant_Pad(noone, bx, by, bs, bs, _m, hov, foc, __txt("Randomize All"), THEME.icon_random, 0, bc) == 2) {
+			if(buttonInstant_Pad(noone, bx, by, bs, bs, _m, hov, foc, __txt("Randomize"), THEME.icon_random, 0, bc) == 2) {
 				_trk.Random();
 			} bx -= ui(4);
 			
@@ -257,7 +257,7 @@ function Panel_Randomizer() : PanelContent() constructor {
 		var by = ui(8);
 		var bc;
 		
-		if(buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, __txt("Randomize"), THEME.icon_random) == 2) {
+		if(buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, __txt("Randomize All"), THEME.icon_random) == 2) {
 			_rnd.Random();
 		} bx += bs + ui(4);
 		

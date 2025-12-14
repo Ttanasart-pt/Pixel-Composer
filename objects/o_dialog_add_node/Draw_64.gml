@@ -10,45 +10,83 @@ if(DIALOG_SHOW_FOCUS) {
 #region content
 	WIDGET_CURRENT = tb_search;
 	
+	var pd = ui(10);
+	
 	var tw = dialog_w - ui(96);
 	var th = ui(32);
 	var tx = dialog_x + ui(14);
 	var ty = dialog_y + ui(14);
-	var sy = ty + th  + ui(6);
+	
+	var _content_y = ty + th + pd;
+	
+	var _content_w = dialog_w - category_width - ui(20) - pd; 
+	var _content_h = dialog_h - ui(14) - th - pd - pd; 
 	
 	if(search_string == "") {
 		catagory_pane.setFocusHover(sFOCUS, sHOVER);
-		catagory_pane.draw(dialog_x + ui(12), sy);
+		catagory_pane.verify(category_width, _content_h);
+		catagory_pane.draw(dialog_x + ui(12), _content_y);
 		
-		var _x = dialog_x + category_width + ui(20);
-		draw_sprite_stretched(THEME.ui_panel_bg, 1, _x, sy, dialog_w - category_width - ui(34), dialog_h - ui(66));
+		var _content_x = dialog_x + category_width + ui(20);
+		draw_sprite_stretched(THEME.ui_panel_bg, 1, _content_x, _content_y, _content_w, _content_h);
 		
-		var _content_w = dialog_w - category_width - ui(40); 
-		var _content_h = dialog_h - ui(66); 
-		var _content_x = _x;
+		if(array_length(recent_nodes)) {
+			var _scis = gpu_get_scissor();
+			var _rcs  = ui(20);
+			var _rcx  = _content_x + ui(4);
+			var _rcy  = _content_y + ui(4);
+			var bb = noone;
+			var bc = [COLORS._main_icon, c_white];
+			var mm = [mouse_mx, mouse_my];
+			var hv = sHOVER && point_in_rectangle(mouse_mx, mouse_my, _content_x, _content_y, _content_x + _content_w, _content_y + _rcs);
+			
+			gpu_set_scissor(_content_x, _content_y, _content_w, _rcs + ui(8));
+			for( var i = 0, n = array_length(recent_nodes); i < n; i++ ) {
+				var _rec = recent_nodes[i];
+				var _nam = _rec.name;
+				var _spr = _rec.spr;
+				
+				if(buttonInstant_Pad(bb, _rcx, _rcy, _rcs, _rcs, mm, sFOCUS, hv, _nam, _spr, 0, bc, .75, ui(4)) == 2)
+					buildNode(_rec);
+				
+				_rcx += _rcs + ui(2);
+			}
+			
+			_content_y += _rcs + ui(4);
+			_content_h -= _rcs + ui(4);
+			gpu_set_scissor(_scis);
+			
+			draw_set_color(COLORS._main_icon);
+			draw_set_alpha(.3);
+			draw_line(_content_x + 1, _content_y + ui(2), _content_x + _content_w - 2, _content_y + ui(2))
+			draw_set_alpha(1);
+			
+			_content_y += ui(4);
+			_content_h -= ui(4);
+		}
 		
 		if(PREFERENCES.dialog_add_node_grouping == 2 && !array_empty(subgroups)) {
 			var _subw = ui(128);
+			subcatagory_pane.setFocusHover(sFOCUS, sHOVER);
+			subcatagory_pane.verify(_subw, _content_h);
+			subcatagory_pane.draw(_content_x, _content_y);
+			
 			_content_w -= _subw;
 			_content_x += _subw;
-			
-			subcatagory_pane.verify(_subw, _content_h);
-			subcatagory_pane.setFocusHover(sFOCUS, sHOVER);
-			subcatagory_pane.draw(_x, sy);
 		}
 		
-		content_pane.verify(_content_w, _content_h);
 		content_pane.setFocusHover(sFOCUS, sHOVER);
-		content_pane.draw(_content_x, sy);
+		content_pane.verify(_content_w - ui(6), _content_h);
+		content_pane.draw(_content_x, _content_y);
 		
 		node_selecting = 0;
 		
 	} else {
-		draw_sprite_stretched(THEME.ui_panel_bg, 1, dialog_x + ui(14), sy, dialog_w - ui(28), dialog_h - ui(66));
-		search_pane.setFocusHover(sFOCUS, sHOVER);
-		search_pane.draw(dialog_x + ui(16), sy);
+		draw_sprite_stretched(THEME.ui_panel_bg, 1, tx, _content_y, dialog_w - ui(28), _content_h - ui(2));
 		
-		tw -= ui(32);
+		search_pane.setFocusHover(sFOCUS, sHOVER);
+		search_pane.verify(dialog_w - ui(36), _content_h - ui(2));
+		search_pane.draw(dialog_x + ui(16), _content_y);
 	}
 	
 	if(junction_called != noone) tw -= ui(32);
@@ -102,12 +140,6 @@ if(DIALOG_SHOW_FOCUS) {
 		if(b == 2) node_show_connectable = !node_show_connectable;
 	}
 	
-	if(search_string != "") {
-		var txt = __txtx("add_node_highlight", "Highlight Query");
-		bx -= ui(32);
-		if(buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, sFOCUS, txt, THEME.add_node_search_high, PREFERENCES.dialog_add_node_search_high, COLORS._main_icon) == 2) 
-			PREFERENCES.dialog_add_node_search_high = !PREFERENCES.dialog_add_node_search_high;
-	}
 #endregion
 
 #region tooltip
