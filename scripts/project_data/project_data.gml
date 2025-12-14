@@ -13,6 +13,10 @@
 		palette           : [ ca_white, ca_black ],
 		palette_fix       : false,
 		export_dir        : "",
+		
+		color_depth       : 1,
+		interpolate       : 0,
+		oversample        : 3,
 	}
 	
 	#macro DEF_SURF_W  PROJECT.attributes.surface_dimension[0]
@@ -204,10 +208,6 @@ function Project() constructor {
 			
 		attributes.autosave            = false;
 		attributes.auto_organize       = false;
-		
-		attributes.color_depth         = 1;
-		attributes.interpolate         = 0;
-		attributes.oversample          = 0;
 		
 		attributeEditor = [
 			[ "Dimension", "surface_dimension", new vectorBox(2, 
