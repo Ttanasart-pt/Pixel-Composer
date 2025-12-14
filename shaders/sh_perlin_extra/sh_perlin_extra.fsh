@@ -1,3 +1,19 @@
+#pragma use(uv)
+
+#region -- uv -- [1765685937.0825768]
+    uniform sampler2D uvMap;
+    uniform int   useUvMap;
+    uniform float uvMapMix;
+
+    vec2 getUV(in vec2 uv) {
+        if(useUvMap == 0) return uv;
+
+        vec2 vtx = mix(uv, texture2D( uvMap, uv ).xy, uvMapMix);
+        vtx.y = 1.0 - vtx.y;
+        return vtx;
+    }
+#endregion -- uv --
+
 #define TAU 6.28318530718
 
 varying vec2 v_vTexcoord;
@@ -31,10 +47,6 @@ uniform int  colored;
 uniform vec2 colorRanR;
 uniform vec2 colorRanG;
 uniform vec2 colorRanB;
-
-uniform sampler2D uvMap;
-uniform int   useUvMap;
-uniform float uvMapMix;
 
 vec3 hsv2rgb(vec3 c) {
     vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
@@ -202,7 +214,7 @@ void main() {
 		}
 	#endregion
 	
-	vec2  vtx = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
+	vec2  vtx = getUV(v_vTexcoord);
 	vec2  ntx = vtx * vec2(1., dimension.y / dimension.x);
 	float ang = radians(rotation);
     vec2  uv  = (ntx - position / dimension) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * sca;

@@ -1,3 +1,19 @@
+#pragma use(uv)
+
+#region -- uv -- [1765685937.0825768]
+    uniform sampler2D uvMap;
+    uniform int   useUvMap;
+    uniform float uvMapMix;
+
+    vec2 getUV(in vec2 uv) {
+        if(useUvMap == 0) return uv;
+
+        vec2 vtx = mix(uv, texture2D( uvMap, uv ).xy, uvMapMix);
+        vtx.y = 1.0 - vtx.y;
+        return vtx;
+    }
+#endregion -- uv --
+
 //Caustic noise by jaybird
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
@@ -16,10 +32,6 @@ uniform sampler2D intensitySurf;
 uniform vec2  dimension;
 uniform vec2  position;
 uniform vec2  scale;
-
-uniform sampler2D uvMap;
-uniform int   useUvMap;
-uniform float uvMapMix;
 
 vec4 mod289(vec4 x) { return x - floor(x / 289.0) * 289.0; }
 vec4 permute(vec4 x) { return mod289((x * 34.0 + 1.0) * x); }
@@ -101,7 +113,7 @@ void main() {
 		its = mix(intensity.x, intensity.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 	}
 	
-	vec2 vtx  = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
+	vec2 vtx  = getUV(v_vTexcoord);
 	vec2 p    = vtx;
 	     p.x *= (dimension.x / dimension.y);
          p    = (p - position / dimension) * dimension / scale;

@@ -1,3 +1,19 @@
+#pragma use(uv)
+
+#region -- uv -- [1765685937.0825768]
+    uniform sampler2D uvMap;
+    uniform int   useUvMap;
+    uniform float uvMapMix;
+
+    vec2 getUV(in vec2 uv) {
+        if(useUvMap == 0) return uv;
+
+        vec2 vtx = mix(uv, texture2D( uvMap, uv ).xy, uvMapMix);
+        vtx.y = 1.0 - vtx.y;
+        return vtx;
+    }
+#endregion -- uv --
+
 #pragma use(curve)
 
 #region -- curve -- [1765334869.6409068]
@@ -176,10 +192,6 @@ uniform float thickness;
 
 uniform vec4 baseColor;
 uniform int  cornerShape;
-
-uniform sampler2D uvMap;
-uniform int   useUvMap;
-uniform float uvMapMix;
 
 #define PI  3.14159265359
 #define TAU 6.283185307179586
@@ -488,7 +500,7 @@ float sdGear(vec2 p, float s, int teeth, vec2 teethSize, float teethAngle, float
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void main() {
-	vec2 vtx      = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
+	vec2 vtx      = getUV(v_vTexcoord);
 	vec2 coordUni = (vtx - center) * mat2(cos(rotation), -sin(rotation), sin(rotation), cos(rotation));
 	vec2 coord    = coordUni / scale;
 	vec2 ratio    = dimension / dimension.y;

@@ -1,3 +1,18 @@
+#pragma use(uv)
+
+#region -- uv -- [1765685937.0825768]
+    uniform sampler2D uvMap;
+    uniform int   useUvMap;
+    uniform float uvMapMix;
+
+    vec2 getUV(in vec2 uv) {
+        if(useUvMap == 0) return uv;
+
+        vec2 vtx = mix(uv, texture2D( uvMap, uv ).xy, uvMapMix);
+        vtx.y = 1.0 - vtx.y;
+        return vtx;
+    }
+#endregion -- uv --
 #pragma use(curve)
 
 #region -- curve -- [1765334869.6409068]
@@ -280,10 +295,6 @@ uniform int uniAsp;
 
 uniform vec2 cirScale;
 
-uniform sampler2D uvMap;
-uniform int   useUvMap;
-uniform float uvMapMix;
-
 #define TAU 6.283185307179586
 
 float sLength(vec2 p) { return max(abs(p.x), abs(p.y)); }
@@ -318,7 +329,7 @@ void main() {
 		}
 	#endregion
 	
-	vec2  vtx  = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
+	vec2  vtx  = getUV(v_vTexcoord);
 	vec2  asp  = dimension / dimension.y;
 	vec2  cent = center / dimension;
 	float prog = 0.;

@@ -1,3 +1,19 @@
+#pragma use(uv)
+
+#region -- uv -- [1765685937.0825768]
+    uniform sampler2D uvMap;
+    uniform int   useUvMap;
+    uniform float uvMapMix;
+
+    vec2 getUV(in vec2 uv) {
+        if(useUvMap == 0) return uv;
+
+        vec2 vtx = mix(uv, texture2D( uvMap, uv ).xy, uvMapMix);
+        vtx.y = 1.0 - vtx.y;
+        return vtx;
+    }
+#endregion -- uv --
+
 //
 // Simple passthrough fragment shader
 //
@@ -10,10 +26,6 @@ uniform float rotation;
 uniform vec2  scale;
 uniform int   iteration;
 uniform float bright;
-
-uniform sampler2D uvMap;
-uniform int   useUvMap;
-uniform float uvMapMix;
 
 float random (in vec2 st) { return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123); }
 
@@ -52,7 +64,7 @@ float noise (in vec2 st) {
 }
 
 void main() {
-	vec2  vtx = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
+	vec2  vtx = getUV(v_vTexcoord);
 	float ang = radians(rotation);
 	vec2  pos = position / dimension;
 	vec2  st  = (vtx - pos) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * scale;

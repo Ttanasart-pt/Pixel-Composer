@@ -256,7 +256,7 @@ void main() {
 		}
 	#endregion
 	
-	vec2 ntx = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
+	vec2 ntx = getUV(v_vTexcoord);
 	vec2 asp = vec2(dimension.x / dimension.y, 1.);
 	
 	sca *= asp;

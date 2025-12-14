@@ -408,7 +408,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		attributes.mapped = false;
 	}
 	
-	static setUnitRef = function(ref, mode = VALUE_UNIT.constant) {
+	static setUnitSimple = function() { return setUnitRef(function(i) /*=>*/ {return node.getDimension(i)}, VALUE_UNIT.reference); }
+	static setUnitRef    = function(ref, mode = VALUE_UNIT.constant) {
 		express_edit.setSideButton(unit.triggerButton);
 		display_data.onSurfaceSize = ref;
 		

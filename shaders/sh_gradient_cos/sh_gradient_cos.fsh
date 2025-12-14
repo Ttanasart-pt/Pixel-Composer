@@ -1,3 +1,18 @@
+#pragma use(uv)
+
+#region -- uv -- [1765685937.0825768]
+    uniform sampler2D uvMap;
+    uniform int   useUvMap;
+    uniform float uvMapMix;
+
+    vec2 getUV(in vec2 uv) {
+        if(useUvMap == 0) return uv;
+
+        vec2 vtx = mix(uv, texture2D( uvMap, uv ).xy, uvMapMix);
+        vtx.y = 1.0 - vtx.y;
+        return vtx;
+    }
+#endregion -- uv --
 #pragma use(curve)
 
 #region -- curve -- [1765334869.6409068]
@@ -152,10 +167,6 @@ uniform vec3 co_d_max;
 uniform int  co_d_use;
 uniform sampler2D co_d_map;
 
-uniform sampler2D uvMap;
-uniform int   useUvMap;
-uniform float uvMapMix;
-
 uniform float pCurve_curve[CURVE_MAX];
 uniform int   pCurve_curve_use;
 uniform int   pCurve_amount;
@@ -201,7 +212,7 @@ void main() {
 		float sca = scale;
 	#endregion
 	
-	vec2  vtx  = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
+	vec2  vtx  = getUV(v_vTexcoord);
 	vec2  asp  = dimension / dimension.y;
 	vec2  cent = center / dimension;
 	float prog = 0.;

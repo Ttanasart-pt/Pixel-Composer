@@ -1,15 +1,27 @@
+#pragma use(uv)
+
+#region -- uv -- [1765685937.0825768]
+    uniform sampler2D uvMap;
+    uniform int   useUvMap;
+    uniform float uvMapMix;
+
+    vec2 getUV(in vec2 uv) {
+        if(useUvMap == 0) return uv;
+
+        vec2 vtx = mix(uv, texture2D( uvMap, uv ).xy, uvMapMix);
+        vtx.y = 1.0 - vtx.y;
+        return vtx;
+    }
+#endregion -- uv --
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform float down;
 uniform vec2  dimension;
 
-uniform sampler2D uvMap;
-uniform int   useUvMap;
-uniform float uvMapMix;
-
 void main() {
-	vec2 vtx  = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
+	vec2 vtx  = getUV(v_vTexcoord);
 	vec4 col  = vec4(0.);
 	vec2 tx   = 1. / dimension;
 	float wei = 0.;

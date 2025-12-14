@@ -1,3 +1,19 @@
+#pragma use(uv)
+
+#region -- uv -- [1765685937.0825768]
+    uniform sampler2D uvMap;
+    uniform int   useUvMap;
+    uniform float uvMapMix;
+
+    vec2 getUV(in vec2 uv) {
+        if(useUvMap == 0) return uv;
+
+        vec2 vtx = mix(uv, texture2D( uvMap, uv ).xy, uvMapMix);
+        vtx.y = 1.0 - vtx.y;
+        return vtx;
+    }
+#endregion -- uv --
+
 // Atmospheric Scattering
 // Author: cubi
 // https://www.shadertoy.com/view/XlBfRD
@@ -25,10 +41,6 @@ uniform sampler2D sunRadianceSurf;
 
 uniform vec2  position;
 uniform vec2  scale;
-
-uniform sampler2D uvMap;
-uniform int   useUvMap;
-uniform float uvMapMix;
 
 /*uniform*/ float mieG;
 /*uniform*/ float mieHeight;
@@ -230,7 +242,7 @@ void main() {
 		srad = mix(sunRadiance.x, sunRadiance.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 	}
 	
-	vec2 vtx = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
+	vec2 vtx = getUV(v_vTexcoord);
 	vec2 uv  = (vtx - position / dimension) * scale;
     vec2 sun = (sunPosition - position) * scale / dimension;
     

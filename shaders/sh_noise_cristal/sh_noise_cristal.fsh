@@ -1,3 +1,19 @@
+#pragma use(uv)
+
+#region -- uv -- [1765685937.0825768]
+    uniform sampler2D uvMap;
+    uniform int   useUvMap;
+    uniform float uvMapMix;
+
+    vec2 getUV(in vec2 uv) {
+        if(useUvMap == 0) return uv;
+
+        vec2 vtx = mix(uv, texture2D( uvMap, uv ).xy, uvMapMix);
+        vtx.y = 1.0 - vtx.y;
+        return vtx;
+    }
+#endregion -- uv --
+
 //Cristal noise by doolhong
 //https://www.shadertoy.com/view/XX33zs
 
@@ -17,10 +33,6 @@ uniform float seed;
 uniform vec4  color;
 uniform float gamma;
 uniform float phase;
-
-uniform sampler2D uvMap;
-uniform int   useUvMap;
-uniform float uvMapMix;
 
 mat2 rotMat(in float r){
     r = radians(r);
@@ -63,7 +75,7 @@ vec3 Oilnoise(in vec2 pos, in vec3 RGB) {
 }
 
 void main() {
-    vec2 vtx = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
+    vec2 vtx = getUV(v_vTexcoord);
     vec2 ntx = vtx * vec2(1., dimension.y / dimension.x);
     vec2 pos = ntx * scale + position;
     vec3 col = Oilnoise(pos, color.rgb * gamma);

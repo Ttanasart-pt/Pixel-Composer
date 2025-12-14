@@ -1,3 +1,18 @@
+#pragma use(uv)
+
+#region -- uv -- [1765685937.0825768]
+    uniform sampler2D uvMap;
+    uniform int   useUvMap;
+    uniform float uvMapMix;
+
+    vec2 getUV(in vec2 uv) {
+        if(useUvMap == 0) return uv;
+
+        vec2 vtx = mix(uv, texture2D( uvMap, uv ).xy, uvMapMix);
+        vtx.y = 1.0 - vtx.y;
+        return vtx;
+    }
+#endregion -- uv --
 #pragma use(gradient)
 
 #region -- gradient -- [1764901316.7213297]
@@ -162,10 +177,6 @@ uniform vec4  gapCol;
 uniform int   gradient_use;
 uniform vec2  level;
 
-uniform sampler2D uvMap;
-uniform int   useUvMap;
-uniform float uvMapMix;
-
 float random (in vec2 st) { return fract(sin(dot(st.xy + vec2(85.456034, 64.54065), vec2(12.9898, 78.233))) * (43758.5453123 + seed) ); }
 
 float sdLine(vec2 a, vec2 b, float r, vec2 p){
@@ -269,7 +280,7 @@ void main() {
 		wid -= 0.05;
 	#endregion
 	
-	vec2 vtx = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
+	vec2 vtx = getUV(v_vTexcoord);
 	mat2 rot = mat2(cos(ang), - sin(ang), sin(ang), cos(ang));
 	vec2 asp = vec2(dimension.x / dimension.y, 1.);
 	vec2 pos = (vtx - position) * asp;

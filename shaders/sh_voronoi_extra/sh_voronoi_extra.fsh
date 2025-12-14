@@ -1,3 +1,19 @@
+#pragma use(uv)
+
+#region -- uv -- [1765685937.0825768]
+    uniform sampler2D uvMap;
+    uniform int   useUvMap;
+    uniform float uvMapMix;
+
+    vec2 getUV(in vec2 uv) {
+        if(useUvMap == 0) return uv;
+
+        vec2 vtx = mix(uv, texture2D( uvMap, uv ).xy, uvMapMix);
+        vtx.y = 1.0 - vtx.y;
+        return vtx;
+    }
+#endregion -- uv --
+
 // The MIT License
 // Copyright © 2013 Inigo Quilez
 // https://www.youtube.com/c/InigoQuilez
@@ -16,10 +32,6 @@ uniform vec2  position;
 uniform float rotation;
 uniform vec2  scale;
 uniform int   mode;
-
-uniform sampler2D uvMap;
-uniform int   useUvMap;
-uniform float uvMapMix;
 
 float PI = 3.14159265359;
 float s3 = sin(PI / 3.);
@@ -219,7 +231,7 @@ vec3 squareVoronoi( in vec2 x ) { #region // IQ classic voronoi - shadertoy.com/
 #endregion
 
 void main() {
-	vec2  vtx = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
+	vec2  vtx = getUV(v_vTexcoord);
 	vec2  ntx = vtx * vec2(1., dimension.y / dimension.x);
 	float ang = radians(rotation);
     vec2  pos = (ntx - position / dimension) * mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * scale / 4.;

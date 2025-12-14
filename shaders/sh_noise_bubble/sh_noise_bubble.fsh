@@ -1,3 +1,19 @@
+#pragma use(uv)
+
+#region -- uv -- [1765685937.0825768]
+    uniform sampler2D uvMap;
+    uniform int   useUvMap;
+    uniform float uvMapMix;
+
+    vec2 getUV(in vec2 uv) {
+        if(useUvMap == 0) return uv;
+
+        vec2 vtx = mix(uv, texture2D( uvMap, uv ).xy, uvMapMix);
+        vtx.y = 1.0 - vtx.y;
+        return vtx;
+    }
+#endregion -- uv --
+
 #define TAU 6.28318530718
 
 varying vec2 v_vTexcoord;
@@ -13,14 +29,10 @@ uniform int   render;
 
 uniform float thickness;
 
-uniform sampler2D uvMap;
-uniform int   useUvMap;
-uniform float uvMapMix;
-
 float random  (in vec2 st) { return fract(sin(dot(st.xy + vec2(1., 6.), vec2(2., 7.))) * (1. + seed / 100.)); }
 
 void main() {
-	vec2 vtx = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
+	vec2 vtx = getUV(v_vTexcoord);
 	vec2 ntx = vtx * vec2(1., dimension.y / dimension.x);
 	vec2 tx  = 1. / dimension;
 	vec2 ps  = ntx;

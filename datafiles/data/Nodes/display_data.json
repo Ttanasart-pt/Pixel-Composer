@@ -820,6 +820,10 @@
             "Node_Region_Fill",
             "Node_Flood_Fill",
             
+            { "label": "UV" },
+            "Node_UV_Cartesian", 
+            "Node_UV_Polar", 
+            
             { "label": "MK Effects" },
             "Node_MK_Rain",
             "Node_MK_GridBalls",

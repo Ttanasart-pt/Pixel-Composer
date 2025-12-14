@@ -1,3 +1,19 @@
+#pragma use(uv)
+
+#region -- uv -- [1765685937.0825768]
+    uniform sampler2D uvMap;
+    uniform int   useUvMap;
+    uniform float uvMapMix;
+
+    vec2 getUV(in vec2 uv) {
+        if(useUvMap == 0) return uv;
+
+        vec2 vtx = mix(uv, texture2D( uvMap, uv ).xy, uvMapMix);
+        vtx.y = 1.0 - vtx.y;
+        return vtx;
+    }
+#endregion -- uv --
+
 //
 // Simple passthrough fragment shader
 //
@@ -17,10 +33,6 @@ uniform vec2 colorRanR;
 uniform vec2 colorRanG;
 uniform vec2 colorRanB;
 
-uniform sampler2D uvMap;
-uniform int   useUvMap;
-uniform float uvMapMix;
-
 vec3 hsv2rgb(vec3 c) {
     vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
     vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
@@ -32,7 +44,7 @@ float randomSeed (in vec2 st, float _seed) { return fract(sin(dot(st.xy + vec2(5
 float random (in vec2 st) { return mix(randomSeed(st, floor(seed)), randomSeed(st, floor(seed) + 1.), fract(seed)); }
 
 void main() {
-	vec2 vtx = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
+	vec2 vtx = getUV(v_vTexcoord);
 	vec2 st  = vtx - position / dimension;
     vec2 pos = vec2(st * scale);
 	

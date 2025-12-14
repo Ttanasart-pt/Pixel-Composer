@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_uv_polar",
+  "name":"sh_uv_polar",
+  "parent":{
+    "name":"uv",
+    "path":"folders/nodes/data/generator/uv.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

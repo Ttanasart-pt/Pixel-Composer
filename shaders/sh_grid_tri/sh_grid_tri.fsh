@@ -250,7 +250,7 @@ void main() {
 		}
 	#endregion
 	
-	vec2  vtx = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
+	vec2  vtx = getUV(v_vTexcoord);
     mat2  rot = mat2(cos(ang), - sin(ang), sin(ang), cos(ang));
 	vec2  asp = vec2(dimension.x / dimension.y, 1.);
     vec2  pos = (vtx - position) * asp;

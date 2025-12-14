@@ -1,3 +1,19 @@
+#pragma use(uv)
+
+#region -- uv -- [1765685937.0825768]
+    uniform sampler2D uvMap;
+    uniform int   useUvMap;
+    uniform float uvMapMix;
+
+    vec2 getUV(in vec2 uv) {
+        if(useUvMap == 0) return uv;
+
+        vec2 vtx = mix(uv, texture2D( uvMap, uv ).xy, uvMapMix);
+        vtx.y = 1.0 - vtx.y;
+        return vtx;
+    }
+#endregion -- uv --
+
 const int MAX_ITERATIONS = 128;
 
 varying vec2 v_vTexcoord;
@@ -11,10 +27,6 @@ uniform float diverge;
 uniform vec2  position;
 uniform float rotation;
 uniform vec2  scale;
-
-uniform sampler2D uvMap;
-uniform int   useUvMap;
-uniform float uvMapMix;
 
 vec2 sqrC(in vec2 c) { return vec2(c.x * c.x - c.y * c.y, 2. * c.y * c.x); }
 
@@ -30,7 +42,7 @@ int julia(in vec2 z) {
 }
 
 void main() {
-    vec2 vtx = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
+    vec2 vtx = getUV(v_vTexcoord);
     vec2 px  = (vtx - position / dimension) * 4. / scale;
          px *= mat2(cos(rotation), -sin(rotation), sin(rotation), cos(rotation));
     

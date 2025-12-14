@@ -1,3 +1,19 @@
+#pragma use(uv)
+
+#region -- uv -- [1765685937.0825768]
+    uniform sampler2D uvMap;
+    uniform int   useUvMap;
+    uniform float uvMapMix;
+
+    vec2 getUV(in vec2 uv) {
+        if(useUvMap == 0) return uv;
+
+        vec2 vtx = mix(uv, texture2D( uvMap, uv ).xy, uvMapMix);
+        vtx.y = 1.0 - vtx.y;
+        return vtx;
+    }
+#endregion -- uv --
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -22,14 +38,12 @@ uniform vec2      itrAmplitude;
 uniform int       itrAmplitudeUseSurf;
 uniform sampler2D itrAmplitudeSurf;
 
+uniform int  itrBlendMode;
+
 uniform int  colored;
 uniform vec2 colorRanR;
 uniform vec2 colorRanG;
 uniform vec2 colorRanB;
-
-uniform sampler2D uvMap;
-uniform int   useUvMap;
-uniform float uvMapMix;
 
 vec2  sca;
 float itSca;
@@ -78,19 +92,25 @@ float noise (in vec2 st, in vec2 scale) {
 }
 
 float perlin(in vec2 st) {
-	float inAmp = 1. / itAmp;
-	float amp = pow(inAmp, float(iteration) - 1.)  / (pow(inAmp, float(iteration)) - 1.);
-    float n   = 0.;
-	vec2  pos = st;
-	vec2  sc  = sca;
+	float amp   = 1.;
+	float ampt  = 0.;
+	
+    float n     = 0.;
+	vec2  pos   = st;
+	vec2  sc    = sca;
 	
 	for(int i = 0; i < iteration; i++) {
-		n += noise(pos, sc) * amp;
+		     if(itrBlendMode == 0) n += noise(pos, sc) * amp;
+		else if(itrBlendMode == 1) n  = max(n, noise(pos, sc) * amp);
+		
+		ampt += amp;
 		
 		sc  *= itSca;
-		amp *= itAmp;
 		pos *= itSca;
+		amp *= itAmp;
 	}
+	
+	if(itrBlendMode == 0) n /= ampt;
 	
 	return n;
 }
@@ -119,7 +139,7 @@ void main() {
 	
 	vec2 st;
 	vec2 pos = position / dimension;
-	vec2 vtx = useUvMap == 0? v_vTexcoord : mix(v_vTexcoord, texture2D( uvMap, v_vTexcoord ).xy, uvMapMix);
+	vec2 vtx = getUV(v_vTexcoord);
 	
 	if(tile == 1) {
 		sca = floor(sca);
