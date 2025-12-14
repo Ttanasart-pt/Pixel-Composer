@@ -54,8 +54,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	#endregion
 	
 	#region left buttons
-		var bs   = breakLine? ui(20) : ui(15);
-		var ics  = breakLine? .9 : .75;
+		var bs   = _viewSpac? ui(20) : ui(15);
+		var ics  = _viewSpac? .9 : .75;
 		var butx = xx;
 		var lb_x = xx + bs;
 		
@@ -95,9 +95,10 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				
 				if(mouse_rpress(_focus)) jun.inspector_timeline = !jun.inspector_timeline;
 			}
-		} else { // Animation
+			
+		} else // Animation
 			draw_sprite_ui_uniform(THEME.animate_clock, 0, butx, lb_y, ics, COLORS._main_icon_dark, 1);
-		}
+		
 		lb_w += bs;
 		
 		if(visi_hold != noone && mouse_lrelease()) visi_hold = noone;	
@@ -314,16 +315,16 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				
 			} else if(!global_var) {
 				var bt = __txtx("panel_inspector_reset", "Reset value");
-				var ba = .5 + jun.is_modified * .5;
+				var ba = .4 + jun.is_modified * .4;
 				var bh = jun.is_modified && _hover;
-				var b  = buttonInstant_Pad(bb, bx, by, bs, bs, _m, bh, _focus, bt, THEME.refresh_16, 0, COLORS._main_icon, ba);
+				var b  = buttonInstant(bb, bx, by, bs, bs, _m, bh, _focus, bt, THEME.refresh_16, 0, c_white, ba, ics);
 				if(b)      cHov = true;
 				if(b == 2) jun.resetValue();
 				
 				bx -= bs + ui(4);
-				var ic_b = jun.expUse? c_white : COLORS._main_icon;
+				var ic_b = c_white;
 				var bt = __txtx("panel_inspector_use_expression", "Use expression");
-				var b  = buttonInstant_Pad(bb, bx, by, bs, bs, _m, _hover, _focus, bt, THEME.node_use_expression, jun.expUse, ic_b)
+				var b  = buttonInstant(bb, bx, by, bs, bs, _m, _hover, _focus, bt, THEME.node_use_expression, jun.expUse, ic_b, .8, ics)
 				
 				if(b) cHov = true;
 				if(b == 2) {
@@ -333,9 +334,9 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 					
 				if(jun.expUse) {
 					bx -= bs + ui(4);
-					var cc = NODE_DROPPER_TARGET == jun? COLORS._main_value_positive : COLORS._main_icon;
+					var cc = NODE_DROPPER_TARGET == jun? COLORS._main_value_positive : c_white;
 					var bt = __txtx("panel_inspector_dropper", "Node Dropper");
-					var b  = buttonInstant_Pad(bb, bx, by, bs, bs, _m, _hover, _focus, bt, THEME.node_dropper, 0, cc);
+					var b  = buttonInstant(bb, bx, by, bs, bs, _m, _hover, _focus, bt, THEME.node_dropper, 0, cc, .8, ics);
 					
 					if(b) cHov = true;
 					if(b == 2) NODE_DROPPER_TARGET = NODE_DROPPER_TARGET == jun? noone : jun;
@@ -343,9 +344,9 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				
 				if(jun.expUse || is(jun.editWidget, textArea)) {
 					bx -= bs + ui(4);
-					var cc = jun.popup_dialog == noone? COLORS._main_icon : COLORS._main_value_positive;
+					var cc = jun.popup_dialog == noone? c_white : COLORS._main_value_positive;
 					var t  = __txtx("panel_inspector_pop_text", "Pop up Editor");
-					var b  = buttonInstant_Pad(bb, bx, by, bs, bs, _m, _hover, _focus, t, THEME.text_popup, 0, cc, 1);
+					var b  = buttonInstant(bb, bx, by, bs, bs, _m, _hover, _focus, t, THEME.text_popup, 0, cc, .8, ics);
 					
 					if(b) cHov = true;
 					if(b == 2) {
@@ -357,10 +358,10 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				
 				if(jun.bypass_junc) {
 					bx -= bs + ui(4);
-					var ic_b = jun.bypass_junc.visible? COLORS._main_icon_light : COLORS._main_icon;
+					var ic_b = jun.bypass_junc.visible? COLORS._main_accent : c_white;
 					var t  = __txt("Bypass");
 					var si = jun.bypass_junc.visible;
-					var b  = buttonInstant_Pad(bb, bx, by, bs, bs, _m, _hover, _focus, t, THEME.junction_bypass, si, ic_b, 1, ui(2))
+					var b  = buttonInstant(bb, bx, by, bs, bs, _m, _hover, _focus, t, THEME.junction_bypass, si, ic_b, .8, ics);
 					
 					if(b) cHov = true;
 					if(b == 2) {
@@ -371,8 +372,6 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				
 			}
 		}
-		
-		
 	#endregion
 	
 	if(!is(wid, widget)) return [ lb_h, true, cHov, lbHov, lb_x ];

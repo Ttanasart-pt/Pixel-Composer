@@ -1801,6 +1801,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         #endregion
         
         #region ++++++++++++ interaction ++++++++++++
+        	if(value_focus && !value_focus.node.active) value_focus = noone;
+        	
 	        if(mouse_on_graph && pHOVER) {
 	        	if(node_dragging == noone && value_dragging == noone) {
 	    			     if(value_focus)   addKeyOverlay("Select junction(s)", [[ "Shift", "Peek content"     ]]);
