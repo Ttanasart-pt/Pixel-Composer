@@ -2,7 +2,7 @@ function Node_pSystem_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	name  = "Render";
 	icon  = THEME.vfx;
 	color = COLORS.node_blend_vfx;
-	use_cache = CACHE_USE.auto;
+	setCacheAuto();
 	update_on_frame = true;
 	
 	newInput(2, nodeValueSeed());

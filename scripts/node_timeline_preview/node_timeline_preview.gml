@@ -1,6 +1,6 @@
 function Node_Timeline_Preview(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Timeline";
-	use_cache = CACHE_USE.auto;
+	setCacheAuto();
 	color = COLORS.node_blend_number;
 	
 	setDimension(96, 48);

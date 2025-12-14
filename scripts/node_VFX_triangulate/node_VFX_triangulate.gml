@@ -2,7 +2,7 @@ function Node_VFX_Triangulate(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	name      = "VFX Triangulate";
 	color     = COLORS.node_blend_vfx;
 	icon      = THEME.vfx;
-	use_cache = CACHE_USE.auto;
+	setCacheAuto();
 	
 	manual_ungroupable = false;
 	

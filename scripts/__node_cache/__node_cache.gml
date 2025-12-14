@@ -3,7 +3,7 @@
 #endregion
 
 function __node_cache() {
-	use_cache		= CACHE_USE.none;
+	setCacheAuto();
 	cached_output	= [];
 	cache_result	= [];
 	cache_group     = noone;

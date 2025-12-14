@@ -2,7 +2,7 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	name  = "Renderer";
 	color = COLORS.node_blend_vfx;
 	icon  = THEME.vfx;
-	use_cache = CACHE_USE.auto;
+	setCacheAuto();
 	
 	inline_output      = false;
 	manual_ungroupable = false;
@@ -48,8 +48,6 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	array_push(attributeEditors, [ "Cache Data", function() /*=>*/ {return attributes.cache}, new checkBox(function() /*=>*/ {return toggleAttribute("cache")}) ]);
 	
 	static step = function() {
-		use_cache = attributes.cache? CACHE_USE.auto : CACHE_USE.none;
-		
 		var _typ = getInputData(2);
 		
 		inputs[3].setVisible(_typ == PARTICLE_RENDER_TYPE.line);

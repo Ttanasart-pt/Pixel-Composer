@@ -1,7 +1,7 @@
 function Node_Cache(_x, _y, _group = noone) : __Node_Cache(_x, _y, _group) constructor {
 	name	  = "Cache";
-	use_cache = CACHE_USE.auto;
 	doUpdate  = doUpdateLite;
+	setCacheAuto();
 	
 	////- =Surfaces
 	newInput(0, nodeValue_Surface("Surface In"));

@@ -2,7 +2,7 @@ function Node_FLIP_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	name  = "Render";
 	color = COLORS.node_blend_fluid;
 	icon  = THEME.fluid_sim;
-	use_cache = CACHE_USE.auto;
+	setCacheAuto();
 	
 	inline_output      = false;
 	manual_ungroupable = false;

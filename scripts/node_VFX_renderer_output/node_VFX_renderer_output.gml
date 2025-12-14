@@ -2,7 +2,7 @@ function Node_VFX_Renderer_Output(_x, _y, _group = noone) : Node_Group_Output(_x
 	name  = "Renderer";
 	color = COLORS.node_blend_vfx;
 	icon  = THEME.vfx;
-	use_cache = CACHE_USE.auto;
+	setCacheAuto();
 	
 	manual_ungroupable = false;
 	previewable = true;

@@ -2,7 +2,7 @@ function Node_Strand_Render_Texture(_x, _y, _group = noone) : Node(_x, _y, _grou
 	name  = "Strand Render Texture";
 	color = COLORS.node_blend_strand;
 	icon  = THEME.strandSim;
-	use_cache = CACHE_USE.auto;
+	setCacheAuto();
 	
 	manual_ungroupable	 = false;
 	

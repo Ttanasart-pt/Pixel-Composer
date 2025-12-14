@@ -1028,7 +1028,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			var val = _inp.getValue(__frame);
 			
-			if(_inp.bypass_junc.visible) _inp.bypass_junc.setValue(val);
+			if(_inp.bypass_junc.visible) 
+				_inp.bypass_junc.setValue(val);
 			inputs_data[i] = val;
 			input_value_map[$ _inp.internalName] = val;
 		});
@@ -2699,6 +2700,12 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(!attributes.cache) clearCache();
 		
 	} run_in(1, function() /*=>*/ {return checkCache()});
+	
+	static setCacheAuto = function() {
+		use_cache = CACHE_USE.auto;
+		attributes.cache = true;
+		checkCache();
+	}
 	
 	static setCacheManual = function() {
 		use_cache = CACHE_USE.manual;

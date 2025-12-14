@@ -1,6 +1,6 @@
 function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _group) constructor {
 	name      = "Particle";
-	use_cache = CACHE_USE.auto;
+	setCacheAuto();
 	var i = input_len;
 	
 	////- =Output
