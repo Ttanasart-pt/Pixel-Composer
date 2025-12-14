@@ -552,8 +552,9 @@ function Panel_Inspector() : PanelContent() constructor {
         _inspecting.inspecting       = true;
         _inspecting.inspector_scroll = contentPane.scroll_y_to;
         
-        var hh = 0;
-        var xc = con_w / 2;
+        var hh    = 0;
+        var xc    = con_w / 2;
+        var _font = viewMode == INSP_VIEW_MODE.spacious? f_p2 : f_p3;
         
         if(prop_page == 1) { // attribute/settings editor
             hh += ui(8);
@@ -562,7 +563,9 @@ function Panel_Inspector() : PanelContent() constructor {
             var wx1 = con_w - ui(8);
             var ww  = max(ui(180), con_w / 3);
             var wx0 = wx1 - ww;
-            var font  = viewMode == INSP_VIEW_MODE.spacious? f_p1 : f_p2;
+            
+            var _att_h = viewMode == INSP_VIEW_MODE.spacious? hg : line_get_height(_font, 6);
+            var _pd    = viewMode == INSP_VIEW_MODE.spacious? ui(8) : ui(4);
             
             for( var i = 0, n = array_length(_inspecting.attributeEditors); i < n; i++ ) {
                 var edt = _inspecting.attributeEditors[i];
@@ -571,7 +574,7 @@ function Panel_Inspector() : PanelContent() constructor {
                 	var txt = __txt(edt);
                     var lby = yy + ui(12);
                     draw_set_alpha(0.5);
-                    draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_sub);
+                    draw_set_text(viewMode == INSP_VIEW_MODE.spacious? f_p1 : f_p3, fa_center, fa_center, COLORS._main_text_sub);
                     draw_text_add(xc, lby, txt);
                     
                     var lbw = string_width(txt) / 2;
@@ -580,8 +583,8 @@ function Panel_Inspector() : PanelContent() constructor {
                     draw_line_round(xc - lbw - ui(16), lby, ui(8), lby, 2);
                     draw_set_alpha(1.0);
                     
-                    yy += ui(32);
-                    hh += ui(32);
+                    yy += _att_h;
+                    hh += _att_h;
                     continue;
                 }
                 
@@ -589,9 +592,8 @@ function Panel_Inspector() : PanelContent() constructor {
                 var _att_val  = edt[1]();
                 var _att_wid  = edt[2];
                 var _att_key  = array_safe_get(edt, 3, 0);
-                var _att_h    = viewMode == INSP_VIEW_MODE.spacious? hg : line_get_height(font, 8);
                 
-                _att_wid.font = font;
+                _att_wid.font = _font;
                 _att_wid.register(contentPane);
                 _att_wid.setFocusHover(pFOCUS, pHOVER);
                 
@@ -600,22 +602,22 @@ function Panel_Inspector() : PanelContent() constructor {
                     _att_wid.draw(ui(8), yy, con_w - ui(16), _att_h, _m); 
                     
                     if(_att_wid.inBBOX(_m)) contentPane.hover_content = true;
-                    yy += _att_h + ui(8);
-                    hh += _att_h + ui(8);
+                    yy += _att_h + _pd;
+                    hh += _att_h + _pd;
                     continue;
                 } 
                 
-                draw_set_text(font, fa_left, fa_center, COLORS._main_text);
+                draw_set_text(_font, fa_left, fa_center, COLORS._main_text);
                 draw_text_add(ui(8), yy + _att_h / 2, _att_name);
                 
                 if(_att_key != 0) {
-	                draw_set_text(font, fa_right, fa_center, COLORS._main_text_sub);
+	                draw_set_text(_font, fa_right, fa_center, COLORS._main_text_sub);
 	                draw_text_add(wx0 - ui(8), yy + _att_h / 2, _att_key.toString());
                 }
                 
                 var _param = new widgetParam(wx0, yy, ww, _att_h, _att_val, {}, _m, x + contentPane.x, y + contentPane.y);
                     _param.s    = _att_h;
-                    _param.font = font;
+                    _param.font = _font;
                     
                 if(is(_att_wid, checkBox)) _param.halign = fa_center;
                 
@@ -624,11 +626,10 @@ function Panel_Inspector() : PanelContent() constructor {
                 if(_att_wid.inBBOX(_m)) contentPane.hover_content = true;
                 
                 var _hg = max(_att_h, _wh);
-                yy += _hg + ui(8);
-                hh += _hg + ui(8);
+                yy += _hg + _pd;
+                hh += _hg + _pd;
             }
             return hh;
-            
         } 
         
         if(prop_page == 2) { 
@@ -689,7 +690,6 @@ function Panel_Inspector() : PanelContent() constructor {
         var con_ww  = con_w - ui(20);
         var rrx     = ui(16) + x;
         var rry     = top_bar_h + y;
-        var _font   = viewMode == INSP_VIEW_MODE.spacious? f_p2 : f_p3;
         
         for(var i = 0; i < amo; i++) {
             var yy = hh + _y;
