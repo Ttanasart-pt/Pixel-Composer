@@ -198,11 +198,7 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		}
 		
 		var fav = struct_exists(NODE_FAV_MAP, nodeName);
-		if(fav) {
-			gpu_set_tex_filter(true);
-			draw_sprite_ui_uniform(THEME.star, 0, _x + grid_size - ui(10), _y + grid_size - ui(10), .8, COLORS._main_accent, 1.);
-			gpu_set_tex_filter(false);
-		}
+		if(fav) draw_sprite_ui_uniform(THEME.favorite, 1, _x + grid_size - ui(10), _y + grid_size - ui(10), .8, CDEF.yellow, 1.);
 		
 		var spr_x = _x + grid_size - 4;
 		var spr_y = _y + 4;
@@ -224,12 +220,8 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 	
 	static drawList = function(_x, _y, _mx, _my, _h, _w, _param = {}) {
 		var fav = struct_exists(NODE_FAV_MAP, nodeName);
-		if(fav) {
-			gpu_set_tex_filter(true);
-			draw_sprite_ui_uniform(THEME.star, 0, _x + ui(16), _y + _h / 2, .8, COLORS._main_accent, 1.);
-			gpu_set_tex_filter(false);
-		}
-				
+		if(fav) draw_sprite_ui_uniform(THEME.favorite, 1, _x + ui(16), _y + _h / 2, .8, CDEF.yellow, 1.);
+		
 		var spr_x = _x + ui(32) + _h / 2;
 		var spr_y = _y + _h / 2;
 				

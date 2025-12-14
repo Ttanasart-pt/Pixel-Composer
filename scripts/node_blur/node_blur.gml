@@ -19,12 +19,12 @@ function Node_Blur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	__init_mask_modifier(5, 9); // inputs 9, 10
 	
 	////- =Blur
-	newInput( 1, nodeValue_Int( "Size", 3 )).setHotkey("S").setMappable(16).setUnitRef(function(i) /*=>*/ {return getDimension(i)}).setValidator(VV_min(0))
-	/* UNUSED */ newInput( 2, nodeValue_EScroll( "Oversample mode",  0, [ "Empty", "Clamp", "Repeat" ]));
-	newInput(17, nodeValue_Curve( "Intensity Modulation", CURVE_DEF_11 ));
-	newInput( 3, nodeValue_Bool(  "Override color",       false        )).setTooltip("Replace all color while keeping the alpha. Used to\nfix grey outline when bluring transparent pixel.");
-	newInput( 4, nodeValue_Color( "Color",                ca_black     ));
-	newInput(11, nodeValue_Bool(  "Gamma Correction",     false        ));
+	newInput( 1, nodeValue_Int(     "Size",       3 )).setHotkey("S").setMappable(16).setUnitRef(function(i) /*=>*/ {return getDimension(i)}).setValidator(VV_min(0))
+	newInput( 2, nodeValue_EScroll( "Intensity",  0, [ "Gaussian", "Custom" ]));
+	newInput(17, nodeValue_Curve(   "Intensity Modulation", CURVE_DEF_11 ));
+	newInput( 3, nodeValue_Bool(    "Override color",       false        )).setTooltip("Replace all color while keeping the alpha. Used to\nfix grey outline when bluring transparent pixel.");
+	newInput( 4, nodeValue_Color(   "Color",                ca_black     ));
+	newInput(11, nodeValue_Bool(    "Gamma Correction",     false        ));
 	
 	////- =Directional
 	newInput(12, nodeValue_Slider(   "Aspect Ratio", 1));
@@ -35,7 +35,7 @@ function Node_Blur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	input_display_list = [  7,  8, 
 		[ "Surfaces",     true ],  0, 14, 15,  5,  6,  9, 10, 
-		[ "Blur",        false ],  1, 16, 17,  3,  4, 11, 
+		[ "Blur",        false ],  1, 16,  2, 17,  3,  4, 11, 
 		[ "Directional",  true ], 12, 13, 
 	];
 	
@@ -68,7 +68,8 @@ function Node_Blur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _mix   = _data[ 6];
 			
 			var _size  = _data[ 1];
-			var _ints  = _data[17];
+			var _ints  = _data[ 2];
+			var _intc  = _data[17];
 			var _isovr = _data[ 3];
 			
 			var _overc = _isovr? _data[4] : noone;
@@ -77,6 +78,8 @@ function Node_Blur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _dirr  = _data[13];
 			
 			var _clamp = getAttribute("oversample");
+			
+			inputs[17].setVisible(_ints == 1);
 		#endregion
 		
 		inputs[4].setVisible(_isovr);
@@ -87,18 +90,29 @@ function Node_Blur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _sh    = surface_get_height_safe(_surf);
 		var _msize = is_array(_size)? max(_size[0], _size[1]) : _size;
 		
-		for(var i = 0; i < 2; i++) 
-			temp_surface[i] = surface_verify(temp_surface[i], _sw, _sh, format);	
+		temp_surface[0] = surface_verify(temp_surface[0], _sw, _sh, format);	
+		temp_surface[1] = surface_verify(temp_surface[1], _sw, _sh, format);	
 		
 		BLEND_OVERRIDE
 		gpu_set_tex_filter(true);
 		
 		var _k    = __gaussian_get_kernel(_msize);
-		var _klen = array_length(_k);
-		var _kern = array_create(_klen);
+		var _kern = _k;
 		
-		for( var i = 0; i < _klen; i++ )
-			_kern[i] = _k[i] * eval_curve_x(_ints, i / (_klen - 1));
+		if(_ints == 1) {
+			var _klen = array_length(_k);
+			    _kern = array_create(_klen);
+			var _ktot = 0;
+			
+			for( var i = 0; i < _klen; i++ ) {
+				_kern[i] = eval_curve_x(_intc, i / (_klen - 1));
+				_ktot += _kern[i];
+			}
+			
+			if(_ktot != 0)
+			for( var i = 0; i < _klen; i++ )
+				_kern[i] /= _ktot;
+		}
 		
 		surface_set_target(temp_surface[0]);
 			draw_clear_alpha(c_white, false);

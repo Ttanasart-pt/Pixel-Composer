@@ -54,7 +54,7 @@ uniform vec2      size;
 uniform int       sizeUseSurf;
 uniform sampler2D sizeSurf;
 
-uniform float weight[128];
+uniform float weight[1024];
 uniform float angle;
 uniform float sizeModulate;
 

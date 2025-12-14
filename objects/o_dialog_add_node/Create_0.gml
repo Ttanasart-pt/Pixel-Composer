@@ -21,6 +21,18 @@ event_inherited();
 	node_selecting    =  0;
 	node_focusing     = -1;
 	
+	recent_nodes = [];
+	if(is_array(global.RECENT_NODES))
+	for( var i = 0, n = array_length(global.RECENT_NODES); i < n; i++ ) {
+		var _nodeIndex = global.RECENT_NODES[i];
+		if(!has(ALL_NODES, _nodeIndex)) continue;
+		
+		var _node = ALL_NODES[$ _nodeIndex];
+		if(!_node.show_in_recent) continue;
+		
+		array_push(recent_nodes, _node);
+	}
+	
 	node_show_connectable = false;
 	node_tooltip   = noone;
 	node_tooltip_x = 0;
@@ -55,16 +67,8 @@ event_inherited();
 	
 	menuDialog     = undefined;
 	
-	view_tooltip = new tooltipSelector("View", [
-		__txtx("view_grid", "Grid view"),
-		__txtx("view_list", "List view"),
-	]);
-	
-	group_tooltip = new tooltipSelector("Group", [
-		__txt("Disabled"),
-		__txt("Inline"),
-		__txt("Stacked"),
-	]);
+	view_tooltip   = new tooltipSelector("View",  [ __txtx("view_grid", "Grid view"), __txtx("view_list", "List view") ]);
+	group_tooltip  = new tooltipSelector("Group", [ __txt("Disabled"), __txt("Inline"), __txt("Stacked") ]);
 	
 	#region ---- category ----
 		category = NODE_CATEGORY;
@@ -173,7 +177,7 @@ event_inherited();
 				for( var i = 0, n = array_length(sug); i < n; i++ ) {
 					var k = array_safe_get_fast(sug, i);
 					if(k == 0) continue;
-					if(struct_has(ALL_NODES, k))
+					if(has(ALL_NODES, k))
 						array_push(node_list, ALL_NODES[$ k]);
 				}
 			}
@@ -183,7 +187,7 @@ event_inherited();
 			
 			for( var i = 0, n = array_length(NODE_FAV); i < n; i++ ) {
 				var _nodeFav = NODE_FAV[i];
-				if(!struct_has(ALL_NODES, _nodeFav)) continue;
+				if(!has(ALL_NODES, _nodeFav)) continue;
 				
 				var _node = ALL_NODES[$ _nodeFav];
 				if(!_node.show_in_recent) continue;
@@ -194,17 +198,9 @@ event_inherited();
 			for( var i = 0, n = array_length(_fvnd); i < n; i++ ) array_push(node_list, _fvnd[i]);
 			
 			array_push(node_list, "Recents");
-			if(is_array(global.RECENT_NODES))
-			for( var i = 0, n = array_length(global.RECENT_NODES); i < n; i++ ) {
-				var _nodeIndex = global.RECENT_NODES[i];
-				if(!struct_has(ALL_NODES, _nodeIndex)) continue;
+			for( var i = 0, n = array_length(recent_nodes); i < n; i++ )
+				array_push(node_list, recent_nodes[i]);
 				
-				var _node = ALL_NODES[$ _nodeIndex];
-				if(!_node.show_in_recent) continue;
-				
-				array_push(node_list, _node);
-			}
-			
 		} else {
 			var _l = category[ADD_NODE_PAGE].list;
 			for( var i = 0, n = array_length(_l); i < n; i++ ) 
@@ -338,7 +334,7 @@ event_inherited();
 				if(PREFERENCES.node_add_select && node_replace == noone) {
 					run_in(1, function(_new_node) /*=>*/ { PANEL_GRAPH.selectDragNode(_new_node, junction_called == noone) }, [_new_node]);
 					var _ins = instanceof(_new_node);
-					if(struct_has(HOTKEYS, _ins)) FOCUS_STR = _ins;
+					if(has(HOTKEYS, _ins)) FOCUS_STR = _ins;
 				}
 			}
 			
@@ -865,8 +861,10 @@ event_inherited();
 				}
 				
 				if(_hoverContent && point_in_rectangle(_m[0], _m[1], 0, yy, pd + ui(32), yy + list_height - 1)) {
+					var fav = struct_exists(NODE_FAV_MAP, _node.nodeName);
+					
 					gpu_set_tex_filter(true); BLEND_ADD
-					draw_sprite_ui_uniform(THEME.star, 0, pd + ui(16), yy + list_height / 2, .8, c_white, .5);
+					draw_sprite_ui_uniform(THEME.favorite, fav, pd + ui(16), yy + list_height / 2, .8, c_white, .5);
 					gpu_set_tex_filter(false); BLEND_NORMAL
 					
 					if(mouse_press(mb_left, sFOCUS)) trigger_favourite(_node.nodeName);
@@ -1008,7 +1006,7 @@ event_inherited();
 		for( var i = 0, n = array_length(category); i < n; i++ ) {
 			var cat = category[i];
 			
-			if(!struct_has(cat, "list")) continue;
+			if(!has(cat, "list")) continue;
 				
 			if(cat[$ "filter"] != undefined && !array_exists(cat.filter, instanceof(context)))
 				continue;
@@ -1142,7 +1140,7 @@ event_inherited();
 						if(mouse_release(mb_left, sFOCUS))
 							buildNode(_node, _param);
 							
-						else if(struct_has(_node, "node") && mouse_release(mb_right, right_free && sFOCUS))
+						else if(has(_node, "node") && mouse_release(mb_right, right_free && sFOCUS))
 							rightClick(_node);
 					}
 					
@@ -1177,7 +1175,7 @@ event_inherited();
 							draw_sprite_ui_uniform(THEME.play_action, 0, _boxx + grid_size - 16, yy + grid_size - 16, 1, COLORS.add_node_blend_action);
 					}
 					
-					if(struct_has(_node, "tooltip") && (_node.getTooltip() != "" || _node.getTooltipSpr() != noone)) {
+					if(has(_node, "tooltip") && (_node.getTooltip() != "" || _node.getTooltipSpr() != noone)) {
 						BLEND_ADD
 						if(_hover && point_in_rectangle(_m[0], _m[1], _boxx, yy, _boxx + ui(16), yy + ui(16))) {
 							search_pane.hover_content = true;
@@ -1292,7 +1290,7 @@ event_inherited();
 						if(mouse_release(mb_left))
 							buildNode(_node, _param);
 							
-						if(struct_has(_node, "node") && mouse_release(mb_right, right_free))
+						if(has(_node, "node") && mouse_release(mb_right, right_free))
 							rightClick(_node);
 					}
 				}
@@ -1313,7 +1311,7 @@ event_inherited();
 					}
 					
 				} else {
-					if(struct_has(_node, "getSpr")) _node.getSpr();
+					if(has(_node, "getSpr")) _node.getSpr();
 					if(sprite_exists(_node.spr)) {
 						var _si = current_time * PREFERENCES.collection_preview_speed / 3000;
 						var _sw = sprite_get_width(_node.spr);
@@ -1354,16 +1352,17 @@ event_inherited();
 				
 				if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, pd + ui(32), yy + list_height - 1)) {
 					node_selecting = noone;
+					var fav = struct_exists(NODE_FAV_MAP, _node.nodeName);
 					
 					gpu_set_tex_filter(true); BLEND_ADD
-					draw_sprite_ui_uniform(THEME.star, 0, pd + ui(16), yc, .8, c_white, .5);
+					draw_sprite_ui_uniform(THEME.favorite, fav, pd + ui(16), yc, .8, c_white, .5);
 					gpu_set_tex_filter(false); BLEND_NORMAL
 					
 					if(mouse_press(mb_left, sFOCUS)) trigger_favourite(_node.nodeName);
 				}
 				
 				var _hinfo = _hover && point_in_circle(_m[0], _m[1], tx + ui(12), yc, list_height / 2);
-				if((struct_has(_node, "getTooltip") && _node.getTooltip() != "") || (struct_has(_node, "getTooltipSpr") && _node.getTooltipSpr() != noone)) {
+				if((has(_node, "getTooltip") && _node.getTooltip() != "") || (has(_node, "getTooltipSpr") && _node.getTooltipSpr() != noone)) {
 					gpu_set_tex_filter(true);
 					BLEND_ADD
 					draw_sprite_ui_uniform(THEME.info, 0, tx + ui(12), yc, 0.7, COLORS._main_icon, .5 + _hinfo * .25);

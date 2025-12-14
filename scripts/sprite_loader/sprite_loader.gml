@@ -93,7 +93,7 @@ function loadGraphic(theme = "default") {
 	else {
 		var _meta = json_load_struct(_metaP);
 		if(_meta[$ "version"] < VERSION)
-			noti_warning("Init Theme: Loading theme made for older version.");
+			noti_warning($"Init Theme: Loading theme made for older version [{_meta[$ "version"]} < {VERSION}].");
 	}
 	
 	printDebug($"Loading theme {theme}");
@@ -110,17 +110,17 @@ function loadGraphic(theme = "default") {
 		THEME[$ key] = _sprite_load_from_struct(str, theme, key);
 	}
 	
-	THEME.dPath_open    = new sprite_drawer_white(THEME.path_open,    CDEF.blue);
-	THEME.dPath_open_20 = new sprite_drawer_white(THEME.path_open_20, CDEF.blue);
+	THEME.dPath_open                = new sprite_drawer_white(THEME.path_open,    CDEF.blue);
+	THEME.dPath_open_20             = new sprite_drawer_white(THEME.path_open_20, CDEF.blue);
 	
-	THEME.dFile_save    = new sprite_drawer_white(THEME.file_save);
-	THEME.dFile_load    = new sprite_drawer_white(THEME.file_load);
+	THEME.dFile_save                = new sprite_drawer_white(THEME.file_save);
+	THEME.dFile_load                = new sprite_drawer_white(THEME.file_load);
 	
 	THEME.dGradient_keys_blend      = new sprite_drawer_white(THEME.gradient_keys_blend);
 	THEME.dGradient_keys_distribute = new sprite_drawer_white(THEME.gradient_keys_distribute);
 	THEME.dGradient_keys_reverse    = new sprite_drawer_white(THEME.gradient_keys_reverse);
 	
-	THEME.dFolder_add    = new sprite_drawer_white(THEME.folder_add, COLORS._main_value_positive);
-	THEME.dCache_clear   = new sprite_drawer_white(THEME.cache_remove, COLORS._main_value_negative);
+	THEME.dFolder_add               = new sprite_drawer_white(THEME.folder_add, COLORS._main_value_positive);
+	THEME.dCache_clear              = new sprite_drawer_white(THEME.cache_remove, COLORS._main_value_negative);
 	
 }
