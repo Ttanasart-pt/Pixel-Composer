@@ -2692,10 +2692,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	clearCacheOnChange = true;
 	
 	static checkCache = function() {
-		buttonCacheClear.visible = bool(use_cache);
-		if(use_cache == CACHE_USE.manual) return;
-		
 		use_cache = attributes.cache? CACHE_USE.auto : CACHE_USE.none;
+		buttonCacheClear.visible = bool(use_cache);
+		
+		if(use_cache == CACHE_USE.manual) return;
 		if(!attributes.cache) clearCache();
 		
 	} run_in(1, function() /*=>*/ {return checkCache()});
