@@ -3,7 +3,7 @@ function Node_pSystem_3D_Inline(_x, _y, _group = noone) : Node_Collection_Inline
 	color = COLORS.node_blend_vfx;
 	icon  = THEME.vfx;
 	is_simulation      = true;
-	// update_on_frame    = true;
+	update_on_frame    = true;
 	// managedRenderOrder = true;
 	
 	is_root  = false;

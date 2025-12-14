@@ -201,16 +201,17 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 			tooltip.index = mode;
 			
 			var _bx = _x + _w - _bs;
-			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, _bx, _y, _bs, h, CDEF.main_mdwhite, 1);
+			var bww = (1 + (unit != noone && unit.reference != noone)) * _bs;
+			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, _x + _w - bww, _y, bww, h, CDEF.main_mdwhite, 1);
 			
 			if(unit != noone && unit.reference != noone) {
-				var _by = _y + h / 2 - _bs / 2;
 				unit.triggerButton.setFocusHover(iactive, ihover);
-				unit.draw(_bx, _by, _bs, _bs, _m);
+				unit.draw(_bx, _y, _bs, h, _m);
 				
-				_w -= _bs + ui(4);
+				_bx -= _bs;
+				_w  -= _bs;
 			}
-		
+			
 			var _by = _y + _h / 2 - _bs / 2;
 			var b = buttonInstant_Pad(THEME.button_hide_fill, _bx, _by, _bs, _bs, _m, hover, active, tooltip, THEME.inspector_area_type, mode);
 			if(b == 1) {
@@ -252,14 +253,14 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 				}
 			} 
 			
-			_w -= _bs + ui(4);
+			_w -= _bs;
 		} 
 		
 		if(_w - _bs > ui(100)) { 
 			var _bx = _x;
 			var _by = _y + _h / 2 - _bs / 2;
 			
-			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, _bx, _y, _bs, h, CDEF.main_mdwhite, 1);
+			if(useShape && hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, _bx, _y, _bs, h, CDEF.main_mdwhite, 1);
 			
 			if(useShape && !is_array(_bind))	
 			if(buttonInstant_Pad(THEME.button_hide_fill, _bx, _by, _bs, _bs, _m, _bhov, _bact,, THEME.inspector_area, _bind) == 2) {
@@ -277,8 +278,8 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 			}
 			
 			if(useShape || mode == AREA_MODE.padding) {
-				_w -= _bs + ui(4);
-				_x += _bs + ui(4);
+				_w -= _bs;
+				_x += _bs;
 			}
 			
 		} 
