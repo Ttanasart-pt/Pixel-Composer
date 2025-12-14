@@ -3,7 +3,7 @@ function Node_pSystem_3D_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	is_3D = NODE_3D.polygon;
 	icon  = THEME.vfx;
 	color = COLORS.node_blend_vfx;
-	node_draw_icon = s_node_psystem_3d_trail;
+	setDrawIcon(s_node_psystem_3d_trail);
 	
 	setDimension(96, 0);
 	update_on_frame = true;

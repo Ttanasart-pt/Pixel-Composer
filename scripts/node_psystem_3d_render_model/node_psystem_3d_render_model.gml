@@ -2,7 +2,7 @@ function Node_pSystem_3D_Render_Model(_x, _y, _group = noone) : Node_3D(_x, _y, 
 	name  = "Render Model";
 	icon  = THEME.vfx;
 	color = COLORS.node_blend_vfx;
-	update_on_frame = true;
+	// update_on_frame = true;
 	
 	newInput(2, nodeValueSeed());
 	

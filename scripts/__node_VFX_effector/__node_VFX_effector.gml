@@ -4,7 +4,7 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	icon   = THEME.vfx;
 	reloop = true;
 	
-	node_draw_icon = s_node_vfx_accelerate;
+	setDrawIcon(s_node_vfx_accelerate);
 	manual_ungroupable = false;
 
 	setDimension(96, 48);

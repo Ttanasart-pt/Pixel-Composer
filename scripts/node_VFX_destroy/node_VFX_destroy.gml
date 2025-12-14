@@ -1,6 +1,6 @@
 function Node_VFX_Destroy(_x, _y, _group = noone) : Node_VFX_effector(_x, _y, _group) constructor {
 	name = "Destroy";
-	node_draw_icon = s_node_vfx_destroy;
+	setDrawIcon(s_node_vfx_destroy);
 	
 	inputs[4].setVisible(false, false);
 	inputs[6].setVisible(false, false);

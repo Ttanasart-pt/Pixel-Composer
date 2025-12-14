@@ -1,4 +1,4 @@
-#region global
+#region offsets
 	globalvar PSYSTEM_OFF; PSYSTEM_OFF = {};
 	
 	PSYSTEM_OFF.active =   0;   // buffer_bool : Active             : 1
@@ -58,7 +58,9 @@
 
 	global.pSystem_data_length = 256;
 	global.pSystem_trig_length = 8*3 + 8*3; // px, py, pz, vx, vy, vz
-	
+#endregion
+
+#region global
 	function pSystem_Particles() constructor {
 		poolSize  = 1024;
 		cursor    = 0;
@@ -72,6 +74,16 @@
 			var _poolbSize = global.pSystem_data_length * poolSize;
 			buffer = buffer_create(_poolbSize, buffer_fixed, 1);
 			buffer_clear(buffer);
+			
+			return self;
+		}
+		
+		static verify = function(_poolSize) {
+			if(poolSize == _poolSize) return self;
+			
+			buffer_delete_safe(buffer);
+			init(_poolSize);
+			return self;
 		}
 		
 		static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) {
@@ -113,6 +125,10 @@
 			_n.buffer    = buffer_clone(buffer);
 			
 			return _n;
+		}
+	
+		static toString = function() {
+			return $"[{__txt("Particle Object")} ({maxCursor}/{poolSize}) ]";
 		}
 	}
 #endregion

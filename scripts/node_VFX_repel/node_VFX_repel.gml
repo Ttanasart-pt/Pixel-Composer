@@ -1,6 +1,6 @@
 function Node_VFX_Repel(_x, _y, _group = noone) : Node_VFX_effector(_x, _y, _group) constructor {
 	name = "Repel";
-	node_draw_icon = s_node_vfx_repel;
+	setDrawIcon(s_node_vfx_repel);
 	
 	inputs[4].setVisible(false, false);
 	

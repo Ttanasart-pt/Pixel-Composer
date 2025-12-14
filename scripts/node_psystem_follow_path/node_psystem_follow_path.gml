@@ -2,7 +2,7 @@ function Node_pSystem_Follow_Path(_x, _y, _group = noone) : Node(_x, _y, _group)
 	name  = "Follow Path";
 	icon  = THEME.vfx;
 	color = COLORS.node_blend_vfx;
-	node_draw_icon = s_node_psystem_follow_path;
+	setDrawIcon(s_node_psystem_follow_path);
 	
 	setDimension(96, 0);
 	update_on_frame = true;

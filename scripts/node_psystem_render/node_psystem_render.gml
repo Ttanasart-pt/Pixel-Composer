@@ -3,7 +3,6 @@ function Node_pSystem_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	icon  = THEME.vfx;
 	color = COLORS.node_blend_vfx;
 	setCacheAuto();
-	update_on_frame = true;
 	
 	newInput(2, nodeValueSeed());
 	
@@ -55,7 +54,6 @@ function Node_pSystem_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	////- Nodes
 	
-	attributes.cache = true;
 	array_push(attributeEditors,   "Cache" );
 	array_push(attributeEditors, [ "Cache Data", function() /*=>*/ {return attributes.cache}, new checkBox(function() /*=>*/ {return toggleAttribute("cache")}) ]);
 	
@@ -75,7 +73,6 @@ function Node_pSystem_Render(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	static update = function(_frame = CURRENT_FRAME) {
 		if(!is(inline_context, Node_pSystem_Inline) || inline_context.prerendering) return;
-		use_cache = attributes.cache? CACHE_USE.auto : CACHE_USE.none;
 		if(use_cache) {
 			var surf = getCacheFrame(_frame);
 			if(is_surface(surf)) {

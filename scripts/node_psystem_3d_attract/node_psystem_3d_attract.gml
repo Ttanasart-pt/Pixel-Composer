@@ -9,7 +9,7 @@ function Node_pSystem_3D_Attract(_x, _y, _group = noone) : Node_3D(_x, _y, _grou
 	name  = "Attract";
 	icon  = THEME.vfx;
 	color = COLORS.node_blend_vfx;
-	node_draw_icon = s_node_psystem_3d_attract;
+	setDrawIcon(s_node_psystem_3d_attract);
 	
 	setDimension(96, 0);
 	update_on_frame = true;

@@ -2,7 +2,7 @@ function Node_pSystem_3D_Mask(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _
 	name  = "Mask";
 	icon  = THEME.vfx;
 	color = COLORS.node_blend_vfx;
-	node_draw_icon = s_node_psystem_3d_mask;
+	setDrawIcon(s_node_psystem_3d_mask);
 	
 	setDimension(96, 0);
 	update_on_frame = true;

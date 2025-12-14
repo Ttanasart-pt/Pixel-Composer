@@ -13,38 +13,34 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	setDimension(96, 48);
 	
 	////- =Base
-	
 	newInput(5, nodeValueSeed()).rejectArray();
 	newInput(6, nodeValue_Bool( "Fixed Position",      false, "Fix point position, and only select point in the area."));
 	newInput(7, nodeValue_Vec2( "Reference Dimension", DEF_SURF ));
 	
 	////- =Scatter
-	
 	onSurfaceSize = function() /*=>*/ {return DEF_SURF}; 
-	newInput( 0, nodeValue_Area(        "Point area",   DEF_AREA_REF, { onSurfaceSize } )).setHotkey("A").setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
-	newInput( 1, nodeValue_Enum_Button( "Distribution", 0, [ "Area", "Border", "Map" ]  )).rejectArray();
-	newInput( 4, nodeValue_Surface(     "Distribution Map" ));
+	newInput( 0, nodeValue_Area(    "Point area",   DEF_AREA_REF, { onSurfaceSize } )).setHotkey("A").setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
+	newInput( 1, nodeValue_EButton( "Distribution", 0, [ "Area", "Border", "Map" ]  )).rejectArray();
+	newInput( 4, nodeValue_Surface( "Distribution Map" ));
 	
-	newInput( 2, nodeValue_Enum_Button( "Scatter",  1, [ "Uniform", "Random", "Poisson" ] )).rejectArray();
-	newInput( 3, nodeValue_Int(         "Amount",   2 ));
-	newInput(12, nodeValue_Float(       "Distance", 8 )).setValidator(VV_min(0));
+	newInput( 2, nodeValue_EButton( "Scatter",  1, [ "Uniform", "Random", "Poisson" ] )).rejectArray();
+	newInput( 3, nodeValue_Int(     "Amount",   2 ));
+	newInput(12, nodeValue_Float(   "Distance", 8 )).setValidator(VV_min(0));
 	
 	////- =3D
-	
-	newInput( 8, nodeValue_Surface(     "Reference Value"       ));
-	newInput( 9, nodeValue_Bool(        "Output 3D",      false ));
-	newInput(10, nodeValue_Enum_Button( "Normal",         0, [ "X", "Y", "Z" ] ));
-	newInput(11, nodeValue_Float(       "Plane Position", 0 ));
-	
+	newInput( 8, nodeValue_Surface( "Reference Value"       ));
+	newInput( 9, nodeValue_Bool(    "Output 3D",      false ));
+	newInput(10, nodeValue_EButton( "Normal",         0, [ "X", "Y", "Z" ] ));
+	newInput(11, nodeValue_Float(   "Plane Position", 0 ));
 	// inputs 13
 	
-	input_display_list = [ 
-		["Base",	false], 5, 6, 7, 
-		["Scatter",	false], 0, 1, 4, 2, 3, 12, 
-		["3D",		 true, 9], 10, 11
-	];
-	
 	newOutput(0, nodeValue_Output("Points", VALUE_TYPE.float, [ 0, 0 ])).setDisplay(VALUE_DISPLAY.vector);
+	
+	input_display_list = [ 
+		[ "Base",    false    ],  5,  6,  7, 
+		[ "Scatter", false    ],  0,  1,  4,  2,  3, 12, 
+		[ "3D",       true, 9 ], 10, 11
+	];
 	
 	////- Nodes
 	

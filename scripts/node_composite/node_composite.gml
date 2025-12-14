@@ -752,10 +752,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				for( var i = 0; i < data_length; i++ )
 					array_insert(inputs, targt + i, ext[i]);
 				
-				for( var i = 0, n = array_length(inputs); i < n; i++ ) {
-					inputs[i].__init_dynamic = true;
+				for( var i = 0, n = array_length(inputs); i < n; i++ )
 					inputs[i].index = i;
-				}
 				
 				triggerRender();
 			}
@@ -806,7 +804,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 		
 		refreshDynamicDisplay();
-		doUpdate();
+		triggerRender();
 	}
 	
 	////- Dynamic IO

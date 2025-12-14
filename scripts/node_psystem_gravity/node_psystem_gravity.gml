@@ -2,7 +2,7 @@ function Node_pSystem_Gravity(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	name  = "Gravity";
 	icon  = THEME.vfx;
 	color = COLORS.node_blend_vfx;
-	node_draw_icon = s_node_psystem_gravity;
+	setDrawIcon(s_node_psystem_gravity);
 	
 	setDimension(96, 0);
 	update_on_frame = true;

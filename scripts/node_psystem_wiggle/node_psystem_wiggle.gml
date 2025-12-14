@@ -2,7 +2,7 @@ function Node_pSystem_Wiggle(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	name  = "Wiggle";
 	icon  = THEME.vfx;
 	color = COLORS.node_blend_vfx;
-	node_draw_icon = s_node_psystem_wiggle;
+	setDrawIcon(s_node_psystem_wiggle);
 	
 	setDimension(96, 0);
 	update_on_frame = true;

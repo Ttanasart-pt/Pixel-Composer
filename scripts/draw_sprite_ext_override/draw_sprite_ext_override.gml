@@ -92,7 +92,14 @@ function draw_sprite_colored(spr, ind, _x, _y, scale = 1, rot = 0, color = COLOR
 	draw_sprite_ui(spr, ind, _x, _y, scale, scale, rot, c_white);
 	if(num % 2 == 0) draw_sprite_ui(spr, num / 2 + ind, _x, _y, scale, scale, rot, color);
 }
-	
+
+	////- UI Elements
+
+function draw_cross(_x, _y, _r) {
+	draw_line(_x - _r, _y, _x + _r, _y);
+	draw_line(_x, _y - _r, _x, _y + _r);
+}
+
 function draw_anchor(_index, _x, _y, _r = ui(10), _type = 0) {
 	shader_set(sh_node_widget_scalar);
 		shader_set_color("color", COLORS._main_accent);

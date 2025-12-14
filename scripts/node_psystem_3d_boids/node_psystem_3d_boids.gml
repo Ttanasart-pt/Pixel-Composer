@@ -9,7 +9,7 @@ function Node_pSystem_3D_Boids(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 	name  = "Boids";
 	icon  = THEME.vfx;
 	color = COLORS.node_blend_vfx;
-	node_draw_icon = s_node_psystem_3d_boid;
+	setDrawIcon(s_node_psystem_3d_boid);
 	
 	target_gizmo = new __3dGizmoAxis(.5, c_white, .75 );
 	

@@ -2,7 +2,7 @@ function Node_pSystem_Align_to_Velocity(_x, _y, _group = noone) : Node(_x, _y, _
 	name  = "Align Velocity";
 	icon  = THEME.vfx;
 	color = COLORS.node_blend_vfx;
-	node_draw_icon = s_node_psystem_align_to_velocity;
+	setDrawIcon(s_node_psystem_align_to_velocity);
 	
 	setDimension(96, 0);
 	update_on_frame = true;

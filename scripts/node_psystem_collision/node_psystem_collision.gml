@@ -2,7 +2,7 @@ function Node_pSystem_Collision(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	name  = "Collide";
 	icon  = THEME.vfx;
 	color = COLORS.node_blend_vfx;
-	node_draw_icon = s_node_psystem_collision;
+	setDrawIcon(s_node_psystem_collision);
 	
 	setDimension(96, 0);
 	update_on_frame = true;

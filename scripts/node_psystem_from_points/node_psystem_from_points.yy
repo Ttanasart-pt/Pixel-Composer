@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_psystem_from_points",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_psystem_from_points",
+  "parent":{
+    "name":"main",
+    "path":"folders/nodes/data/simulation/particleSystem/main.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

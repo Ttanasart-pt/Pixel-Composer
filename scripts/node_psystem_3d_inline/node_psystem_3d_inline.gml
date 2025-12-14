@@ -3,7 +3,7 @@ function Node_pSystem_3D_Inline(_x, _y, _group = noone) : Node_Collection_Inline
 	color = COLORS.node_blend_vfx;
 	icon  = THEME.vfx;
 	is_simulation      = true;
-	update_on_frame    = true;
+	// update_on_frame    = true;
 	// managedRenderOrder = true;
 	
 	is_root  = false;
@@ -12,7 +12,7 @@ function Node_pSystem_3D_Inline(_x, _y, _group = noone) : Node_Collection_Inline
 	newInput(0, nodeValue_Bool( "Loop",       true )).rejectArray();
 	newInput(1, nodeValue_Int(  "Pre-Render", -1   ));
 	
-	input_node_types   = [ Node_pSystem_3D_Spawn  ];
+	input_node_types   = [ Node_pSystem_3D_Spawn, Node_pSystem_3D_from_Points  ];
 	output_node_types  = [ Node_pSystem_3D_Render_Model, Node_pSystem_3D_Trail ];
 	input_display_list = [ 
 		[ "Loop", false, 0 ], 1,  

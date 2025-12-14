@@ -2,7 +2,7 @@ function Node_pSystem_3D_Transform(_x, _y, _group = noone) : Node_3D(_x, _y, _gr
 	name  = "Transform";
 	icon  = THEME.vfx;
 	color = COLORS.node_blend_vfx;
-	node_draw_icon = s_node_psystem_3d_transform;
+	setDrawIcon(s_node_psystem_3d_transform);
 	
 	setDimension(96, 0);
 	update_on_frame = true;

@@ -1,6 +1,6 @@
 function Node_VFX_Vortex(_x, _y, _group = noone) : Node_VFX_effector(_x, _y, _group) constructor {
 	name = "Vortex";
-	node_draw_icon = s_node_vfx_vortex;
+	setDrawIcon(s_node_vfx_vortex);
 	
 	inputs[4].setVisible(false, false);
 	
