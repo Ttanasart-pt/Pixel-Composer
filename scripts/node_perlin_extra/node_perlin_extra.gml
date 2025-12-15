@@ -23,7 +23,7 @@ function Node_Perlin_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	newInput(12, nodeValue_Float(       "Parameter B",      1    )).setShaderProp("paramB").setMappable(15);
 	
 	////- =Transform
-	newInput( 1, nodeValue_Vec2(     "Position",    [0,0] )).setHotkey("G").setShaderProp("position").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput( 1, nodeValue_Vec2(     "Position",    [0,0] )).setHotkey("G").setShaderProp("position").setUnitSimple();
 	newInput(16, nodeValue_Rotation( "Rotation",     0    )).setHotkey("R").setShaderProp("rotation");
 	newInput( 2, nodeValue_Vec2(     "Scale",       [4,4] )).setHotkey("S").setShaderProp("scale").setMappable(13);
 	

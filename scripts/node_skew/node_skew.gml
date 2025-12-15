@@ -14,7 +14,7 @@ function Node_Skew(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput( 5, nodeValue_EScroll( "Oversample mode", 0, [ "Empty", "Clamp", "Repeat" ]));
 	newInput( 1, nodeValue_EButton( "Axis",       0, ["X", "Y"] ));
 	newInput( 2, nodeValue_Slider(  "Strength",   0, [-1, 1, 0.01] )).setMappable(12).setCurvable(13);
-	newInput( 4, nodeValue_Vec2(    "Center",   [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput( 4, nodeValue_Vec2(    "Center",   [.5,.5] )).setHotkey("G").setUnitSimple();
 	newInput( 3, nodeValue_Bool(    "Wrap",      false  ));
 	// inputs 14
 	

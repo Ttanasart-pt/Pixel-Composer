@@ -12,7 +12,7 @@ function Node_VerletSim_Mesh(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	////- =UV
 	newInput(2, nodeValue_Bool( "Remap",  false  ));
-	newInput(3, nodeValue_Area( "UV Map", DEF_AREA_REF, { useShape : false } )).setUnitRef(function(i) /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
+	newInput(3, nodeValue_Area( "UV Map", DEF_AREA_REF, { useShape : false } )).setUnitSimple();
 	
 	// input 5
 	

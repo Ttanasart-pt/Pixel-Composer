@@ -7,8 +7,8 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	////- =Extrude
 	newInput( 1, nodeValue_Rotation( "Angle",     0             ));
-	newInput( 2, nodeValue_Float(    "Distance", .5             )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput( 8, nodeValue_Slider(   "Shift",     0, [-1,1,.01] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput( 2, nodeValue_Float(    "Distance", .5             )).setUnitSimple();
+	newInput( 8, nodeValue_Slider(   "Shift",     0, [-1,1,.01] )).setUnitSimple();
 	newInput( 7, nodeValue_Bool(     "Wrap",      false         ));
 	
 	////- =Render

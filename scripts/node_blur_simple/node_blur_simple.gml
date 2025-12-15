@@ -20,7 +20,7 @@ function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	__init_mask_modifier(6, 10); // inputs 10, 11, 
 	
 	////- =Blur
-	newInput( 1, nodeValue_Float(   "Size",   3 )).setHotkey("S").setValidator(VV_min(0)).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput( 1, nodeValue_Float(   "Size",   .25 )).setHotkey("S").setValidator(VV_min(0)).setUnitSimple();
 	newInput( 3, nodeValue_Surface( "Blur mask" ));
 	newInput( 4, nodeValue_Bool(    "Override color",   false, "Replace all color while keeping the alpha. Used to\nfix grey outline when bluring transparent pixel."));
 	newInput( 5, nodeValue_Color(   "Color",            ca_black ));

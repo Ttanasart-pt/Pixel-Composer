@@ -15,7 +15,7 @@ function Node_pSystem_Attract(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	////- =Attract
 	newInput( 3, nodeValue_Range( "Strength", [ 1, 1], true )).setCurvable( 4, CURVE_DEF_11, "Over Lifespan"); 
-	newInput( 5, nodeValue_Vec2(  "Target",   [.5,.5]       )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
+	newInput( 5, nodeValue_Vec2(  "Target",   [.5,.5]       )).setUnitSimple();
 	
 	////- =Vortex
 	newInput( 6, nodeValue_Range( "Vortex",       [ 0, 0], true )).setCurvable( 7, CURVE_DEF_11, "Over Lifespan"); 

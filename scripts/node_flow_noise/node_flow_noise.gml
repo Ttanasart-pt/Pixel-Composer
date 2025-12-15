@@ -11,7 +11,7 @@ function Node_Flow_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y,
 	newInput(4, nodeValue_Slider_Range( "Detail",     [1,8], [ 1, 16, 0.1 ])).setShaderProp("detail");
 	
 	////- =Transform
-	newInput(1, nodeValue_Vec2(         "Position",   [0,0] )).setHotkey("G").setShaderProp("position").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput(1, nodeValue_Vec2(         "Position",   [0,0] )).setHotkey("G").setShaderProp("position").setUnitSimple();
 	newInput(5, nodeValue_Rotation(     "Rotation",    0    )).setHotkey("R").setShaderProp("rotation");
 	newInput(2, nodeValue_Vec2(         "Scale",      [2,2] )).setHotkey("S").setShaderProp("scale");
 	// input 7

@@ -10,7 +10,7 @@ function Node_MK_GridBalls(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	////- =Grid
 	newInput( 2, nodeValue_Vec2(     "Amount",     [4,4]  ));
-	newInput( 8, nodeValue_Vec2(     "Position",   [0,0]  )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput( 8, nodeValue_Vec2(     "Position",   [0,0]  )).setUnitSimple();
 	newInput(19, nodeValue_Float(    "Ball Size",   1     )).setMappable(32);
 	
 	////- =Scatter

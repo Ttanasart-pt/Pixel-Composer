@@ -15,8 +15,8 @@ function Node_pSystem_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	////- =Mask
 	newInput( 3, nodeValue_Enum_Scroll( "Type",   0, [ "Area", "Linear", "Map" ] )); 
-	newInput( 4, nodeValue_Area(     "Area",      DEF_AREA_REF )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
-	newInput( 7, nodeValue_Vec2(     "Center",  [.5,.5]        )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
+	newInput( 4, nodeValue_Area(     "Area",      DEF_AREA_REF )).setUnitSimple();
+	newInput( 7, nodeValue_Vec2(     "Center",  [.5,.5]        )).setUnitSimple();
 	newInput( 8, nodeValue_Rotation( "Angle",     0            ));
 	newInput( 9, nodeValue_Surface(  "Map" ));
 	

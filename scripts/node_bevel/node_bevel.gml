@@ -17,7 +17,7 @@ function Node_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(12, nodeValue_Bool(    "Highres", false      ));
 	
 	////- =Transform
-	newInput( 2, nodeValue_Vec2( "Shift", [ 0, 0 ] )).hideLabel().setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput( 2, nodeValue_Vec2( "Shift", [ 0, 0 ] )).hideLabel().setUnitSimple();
 	newInput( 3, nodeValue_Vec2( "Scale", [ 1, 1 ] ));
 	// input 14
 	

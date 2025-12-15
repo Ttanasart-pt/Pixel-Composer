@@ -18,8 +18,8 @@ function Node_Spherize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	__init_mask_modifier(5, 9); // inputs 9, 10
 	
 	////- =Spherize
-	newInput( 1, nodeValue_Vec2(     "Center",    [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, UNIT_REF);
-	newInput(15, nodeValue_Vec2(     "Position",  [0,0]   )).setHotkey("P").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, UNIT_REF);
+	newInput( 1, nodeValue_Vec2(     "Center",    [.5,.5] )).setHotkey("G").setUnitSimple();
+	newInput(15, nodeValue_Vec2(     "Position",  [0,0]   )).setHotkey("P").setUnitSimple();
 	newInput(14, nodeValue_Rotation( "Rotation",   0      )).setHotkey("R");
 	newInput( 2, nodeValue_Slider(   "Strength",   1      )).setHotkey("S").setMappable(11);
 	newInput( 3, nodeValue_Slider(   "Radius",    .2      )).setMappable(12);

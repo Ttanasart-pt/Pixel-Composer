@@ -14,7 +14,7 @@ function Node_FLIP_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput( 7, nodeValue_Surface(     "Spawn Surface" ));
 	newInput( 8, nodeValue_Slider(      "Spawn Radius",    2, [1, 16, 0.1] ));
 	newInput(13, nodeValue_Vec2(        "Spawn Size",     [2,2]    ));
-	newInput( 2, nodeValue_Vec2(        "Spawn Position", [.5,.25] )).setHotkey("G").setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
+	newInput( 2, nodeValue_Vec2(        "Spawn Position", [.5,.25] )).setHotkey("G").setUnitSimple();
 	newInput( 3, nodeValue_Enum_Button( "Spawn Type",      0, [ "Stream", "Splash" ]));
 	newInput( 4, nodeValue_Int(         "Spawn Frame",     0 ));
 	newInput(12, nodeValue_Int(         "Spawn Duration",  1 ));

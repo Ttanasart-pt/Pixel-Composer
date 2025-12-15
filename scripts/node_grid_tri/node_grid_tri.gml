@@ -14,9 +14,9 @@ function Node_Grid_Tri(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(22, nodeValue_Surface( "Mask" ));
 	
 	////- =Pattern
-	newInput( 1, nodeValue_Vec2(     "Position", [.5,.5]   )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, UNIT_REF);
+	newInput( 1, nodeValue_Vec2(     "Position", [.5,.5]   )).setHotkey("G").setUnitSimple();
 	newInput( 4, nodeValue_Rotation( "Angle",     0        )).setHotkey("R").setMappable(13);
-	newInput( 2, nodeValue_Vec2(     "Scale",    [.25,.25] )).setHotkey("S").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, UNIT_REF).setMappable(11);
+	newInput( 2, nodeValue_Vec2(     "Scale",    [.25,.25] )).setHotkey("S").setUnitSimple().setMappable(11);
 	newInput( 3, nodeValue_Slider(   "Gap",      .1, [0, 0.5, 0.001] )).setMappable(12);
 	
 	////- =Render

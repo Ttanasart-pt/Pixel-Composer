@@ -8,7 +8,7 @@ function Node_VerletSim_Mesh_Pleat(_x, _y, _group = noone) : Node(_x, _y, _group
 	newInput(0, nodeValue_Mesh( "Mesh" )).setVisible(true, true);
 	
 	////- =Target
-	newInput(1, nodeValue_Area(   "Area", DEF_AREA_REF, { useShape : false } )).setHotkey("A").setUnitRef(function(i) /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
+	newInput(1, nodeValue_Area(   "Area", DEF_AREA_REF, { useShape : false } )).setHotkey("A").setUnitSimple();
 	
 	////- =Pleat
 	newInput(3, nodeValue_Slider( "Strength", .5, [0, 4, 0.01] ));

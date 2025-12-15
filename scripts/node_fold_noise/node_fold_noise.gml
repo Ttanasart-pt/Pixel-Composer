@@ -12,7 +12,7 @@ function Node_Fold_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y,
 	newInput(5, nodeValue_Slider(   "Amplitude",   1.3, [ 0, 2, 0.01 ] )).setShaderProp("amplitude");
 	
 	////- =Transform
-	newInput(1, nodeValue_Vec2(     "Position",   [0,0] )).setHotkey("G").setShaderProp("position").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput(1, nodeValue_Vec2(     "Position",   [0,0] )).setHotkey("G").setShaderProp("position").setUnitSimple();
 	newInput(7, nodeValue_Rotation( "Rotation",    0    )).setHotkey("R").setShaderProp("rotation");
 	newInput(2, nodeValue_Vec2(     "Scale",      [2,2] )).setHotkey("S").setShaderProp("scale");
 	

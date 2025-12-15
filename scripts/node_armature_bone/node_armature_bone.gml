@@ -9,12 +9,12 @@ function Node_Armature_Bone(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	newInput(8, nodeValue_Bool( "Connect", true ));
 	
 	////- =Bone
-	newInput(6, nodeValue_Text(        "Name",      "Bone" )).setDisplay(VALUE_DISPLAY.text_box);
-	newInput(0, nodeValue_Vec2(        "Origin",    [0,0]  )).setUnitRef(function() /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
-	newInput(1, nodeValue_Enum_Button( "Type",       0, [ "Polar", "Two Points" ] ));
-	newInput(2, nodeValue_Float(       "Length",     4     ));
-	newInput(3, nodeValue_Rotation(    "Direction",  0     ));
-	newInput(4, nodeValue_Vec2(        "Tail",      [0,0]  )).setUnitRef(function() /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
+	newInput(6, nodeValue_Text(     "Name",      "Bone" )).setDisplay(VALUE_DISPLAY.text_box);
+	newInput(0, nodeValue_Vec2(     "Origin",    [0,0]  )).setUnitSimple();
+	newInput(1, nodeValue_EButton(  "Type",       0, [ "Polar", "Two Points" ] ));
+	newInput(2, nodeValue_Float(    "Length",     4     ));
+	newInput(3, nodeValue_Rotation( "Direction",  0     ));
+	newInput(4, nodeValue_Vec2(     "Tail",      [0,0]  )).setUnitSimple();
 	// input 9
 	
 	newOutput(0, nodeValue_Output("Armature", VALUE_TYPE.armature, noone));

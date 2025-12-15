@@ -38,28 +38,28 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	////- =Scatter
 	onSurfaceSize = function() /*=>*/ {return getInputData(1, DEF_SURF)}; 
 	
-	newInput( 6, nodeValue_Enum_Scroll(    "Distribution",  5, [ "Area", "Border", "Map", "Direct Data", "Path", "Full image + Tile" ] ));
-	newInput( 5, nodeValue_Area(           "Area",          DEF_AREA_REF, { onSurfaceSize } )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
-	newInput(13, nodeValue_Surface(        "Distribution Map"      ));
-	newInput(14, nodeValue_Vector(         "Distribution Data", [] )).setArrayDepth(1);
-	newInput(17, nodeValue_Text(           "Extra Value",       [] ))
+	newInput( 6, nodeValue_EScroll(  "Distribution",  5, [ "Area", "Border", "Map", "Direct Data", "Path", "Full image + Tile" ] ));
+	newInput( 5, nodeValue_Area(     "Area",          DEF_AREA_REF, { onSurfaceSize } )).setUnitSimple();
+	newInput(13, nodeValue_Surface(  "Distribution Map"      ));
+	newInput(14, nodeValue_Vector(   "Distribution Data", [] )).setArrayDepth(1);
+	newInput(17, nodeValue_Text(     "Extra Value",       [] ))
 		.setTooltip("Apply the third and later values in each data point (if exist) on given properties.")
 		.setDisplay(VALUE_DISPLAY.text_array, { data: [ "Scale", "Rotation", "Color", "Alpha", "Array Index", "Depth" ] });
 		
-	newInput( 9, nodeValue_Enum_Button(    "Scatter",         1, [ "Uniform", "Random", "Poisson" ] ));
-	newInput(31, nodeValue_Bool(           "Auto Amount",     false  ));
-	newInput( 2, nodeValue_Int(            "Amount",          8      )).setValidator(VV_min(0));
-	newInput(30, nodeValue_Vec2(           "Uniform Amount", [4,4]   ));
-	newInput(35, nodeValue_Rotation_Range( "Angle Range",    [0,360] ));
-	newInput(44, nodeValue_Float(          "Distance",        8      )).setValidator(VV_min(0));
+	newInput( 9, nodeValue_EButton(  "Scatter",         1, [ "Uniform", "Random", "Poisson" ] ));
+	newInput(31, nodeValue_Bool(     "Auto Amount",     false  ));
+	newInput( 2, nodeValue_Int(      "Amount",          8      )).setValidator(VV_min(0));
+	newInput(30, nodeValue_Vec2(     "Uniform Amount", [4,4]   ));
+	newInput(35, nodeValue_RotRange( "Angle Range",    [0,360] ));
+	newInput(44, nodeValue_Float(    "Distance",        8      )).setValidator(VV_min(0));
 	
 	////- =Path
-	newInput(19, nodeValue_PathNode(    "Path" ));
-	newInput(38, nodeValue_Enum_Button( "Spacing",           0, [ "After", "Between", "Around" ] ));
-	newInput(20, nodeValue_Bool(        "Rotate Along Path", true ));
-	newInput(45, nodeValue_Range(       "Path Range",       [0,1] ));
-	newInput(21, nodeValue_Slider(      "Path Shift",        0    ));
-	newInput(22, nodeValue_Float(       "Scatter Distance",  0    ));
+	newInput(19, nodeValue_PathNode( "Path" ));
+	newInput(38, nodeValue_EButton(  "Spacing",           0, [ "After", "Between", "Around" ] ));
+	newInput(20, nodeValue_Bool(     "Rotate Along Path", true ));
+	newInput(45, nodeValue_Range(    "Path Range",       [0,1] ));
+	newInput(21, nodeValue_Slider(   "Path Shift",        0    ));
+	newInput(22, nodeValue_Float(    "Scatter Distance",  0    ));
 	
 	////- =Position
 	newInput(40, nodeValue_Anchor());
@@ -69,9 +69,9 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(39, nodeValue_Range(      "Shift Radial",    [0,0]     ));
 	
 	////- =Rotation
-	newInput( 7, nodeValue_Bool(            "Point at Center",    false, "Rotate each copy to face the spawn center."));
-	newInput( 4, nodeValue_Rotation_Random( "Angle",             [0,0,0,0,0] ));
-	newInput(32, nodeValue_Rotation(        "Rotate per Radius",  0          ));
+	newInput( 7, nodeValue_Bool(       "Point at Center",    false, "Rotate each copy to face the spawn center."));
+	newInput( 4, nodeValue_RotRand(    "Angle",             [0,0,0,0,0] ));
+	newInput(32, nodeValue_Rotation(   "Rotate per Radius",  0          ));
 	
 	////- =Scale
 	newInput( 3, nodeValue_Vec2_Range( "Scale",             [1,1,1,1] , { linked : true }));
@@ -87,8 +87,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput(42, nodeValue_Vec2_Range(   "Sample Wiggle",     [0,0,0,0] ));
 	
 	////- =Render
-	newInput(18, nodeValue_Enum_Scroll( "Blend Mode", 0, [ "Normal", "Add", "Max" ] ));
-	newInput(23, nodeValue_Bool(        "Sort Y",     false ));
+	newInput(18, nodeValue_EScroll( "Blend Mode", 0, [ "Normal", "Add", "Max" ] ));
+	newInput(23, nodeValue_Bool(    "Sort Y",     false ));
 	
 	// inputs: 46
 	
@@ -129,6 +129,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	scalSamp = new Surface_sampler();
 	
 	////- Nodes
+	
+	static getDimension = function() { return getInputData(1, DEF_SURF); }
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		PROCESSOR_OVERLAY_CHECK

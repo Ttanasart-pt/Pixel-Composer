@@ -8,7 +8,7 @@ function Node_Perlin_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput( 6, nodeValue_Surface( "Mask"       ));
 	
 	////- =Noise
-	newInput(1, nodeValue_Vec2(     "Position",   [0,0] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput(1, nodeValue_Vec2(     "Position",   [0,0] )).setHotkey("G").setUnitSimple();
 	newInput(5, nodeValue_Rotation( "Rotation",    0    )).setHotkey("R");
 	newInput(2, nodeValue_Vec2(     "Scale",      [4,6] )).setHotkey("S");
 	newInput(3, nodeValue_Int(      "Iteration",   3    ));

@@ -1035,7 +1035,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			if(gparent == noone) {
 				sib.x = PANEL_MAIN.x; sib.y = PANEL_MAIN.y;
 				sib.w = PANEL_MAIN.w; sib.h = PANEL_MAIN.h;
-						
+				
 				PANEL_MAIN = sib;
 				sib.parent = noone;
 				PANEL_MAIN.refreshSize();

@@ -13,7 +13,7 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 	
 	////- =Effect
 	newInput( 5, nodeValue_EButton( "Type",       0, [ "RGB", "Continuous" ] ));
-	newInput( 1, nodeValue_Vec2(    "Center",   [.5,.5] )).hideLabel().setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput( 1, nodeValue_Vec2(    "Center",   [.5,.5] )).hideLabel().setHotkey("G").setUnitSimple();
 	newInput( 2, nodeValue_Slider(  "Strength",   1, [-16, 16, 0.01] )).setHotkey("S").setMappable(4).setCurvable(19);
 	newInput( 6, nodeValue_Slider(  "Intensity",  1, [  0,  4, 0.01] )).setHotkey("I").setMappable(7);
 	newInput(15, nodeValue_Slider(  "Shift",      0, [ -1,  1, 0.01] )).setMappable(16);

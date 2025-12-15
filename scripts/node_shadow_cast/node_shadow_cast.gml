@@ -20,8 +20,8 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		
 		////- =Shape
 		newInput(index+ 0, nodeValue_EScroll( "Type",       0, __ltype   ));
-		newInput(index+ 3, nodeValue_Vec2(    "Position", [.5,.5]        )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference).hideLabel();
-		newInput(index+ 4, nodeValue_Float(   "Radius",    .5            )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference).hideLabel();
+		newInput(index+ 3, nodeValue_Vec2(    "Position", [.5,.5]        )).setUnitSimple().hideLabel();
+		newInput(index+ 4, nodeValue_Float(   "Radius",    .5            )).setUnitSimple().hideLabel();
 		
 		////- =Light
 		newInput(index+ 2, nodeValue_Slider(  "Intensity",  1, [0,2,.01] ));

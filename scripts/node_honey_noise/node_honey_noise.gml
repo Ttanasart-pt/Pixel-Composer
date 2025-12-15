@@ -19,7 +19,7 @@ function Node_Honeycomb_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x
 	newInput(6, nodeValue_Int(         "Iteration",  1)).setShaderProp("iteration");
 	
 	////- =Transform
-	newInput(1, nodeValue_Vec2(        "Position",  [0,0] )).setHotkey("G").setShaderProp("position").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput(1, nodeValue_Vec2(        "Position",  [0,0] )).setHotkey("G").setShaderProp("position").setUnitSimple();
 	newInput(3, nodeValue_Rotation(    "Rotation",   0    )).setHotkey("R").setShaderProp("rotation");
 	newInput(2, nodeValue_Vec2(        "Scale",     [2,2] )).setHotkey("S").setShaderProp("scale");
 	// input 8

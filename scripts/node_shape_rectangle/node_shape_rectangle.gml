@@ -13,9 +13,9 @@ function Node_Shape_Rectangle(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	newInput( 0, nodeValue_Dimension());
 	
 	////- =Transform
-	newInput( 1, nodeValue_Vec2(     "Position", [.5,.5] )).setHotkey("G").setUnitRef(getDimension, VALUE_UNIT.reference);
+	newInput( 1, nodeValue_Vec2(     "Position", [.5,.5] )).setHotkey("G").setUnitSimple();
 	newInput( 2, nodeValue_Rotation( "Rotation",   0     )).setHotkey("R");
-	newInput( 3, nodeValue_Vec2(     "Scale",    [.5,.5] )).setHotkey("S").setUnitRef(getDimension, VALUE_UNIT.reference);
+	newInput( 3, nodeValue_Vec2(     "Scale",    [.5,.5] )).setHotkey("S").setUnitSimple();
 	// 
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));

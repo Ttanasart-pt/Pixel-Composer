@@ -12,7 +12,7 @@ function Node_MK_Pile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput( 9, nodeValue_Float( "Depth Adjustment", 0 ));
 	
 	////- =Pile
-	newInput( 5, nodeValue_Vec2(   "Origin",             [.5,.8] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput( 5, nodeValue_Vec2(   "Origin",             [.5,.8] )).setUnitSimple();
 	newInput( 6, nodeValue_Int(    "Amount",              4            )).setValidator(VV_min(1));
 	newInput( 7, nodeValue_Range(  "Angles of Repose",   [45,45], true ));
 	newInput( 8, nodeValue_Vec2(   "Column Shift",       [0,0]         ));

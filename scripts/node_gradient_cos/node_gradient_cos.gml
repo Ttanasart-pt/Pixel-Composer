@@ -30,7 +30,7 @@ function Node_Gradient_Cos(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput(14, nodeValue_EScroll(  "Type",           0, __gradTypes));
 	newInput(15, nodeValue_Rotation( "Angle",          0      )).setHotkey("R");
 	newInput(16, nodeValue_Float(    "Radius",        .5      ));
-	newInput(17, nodeValue_Vec2(     "Center",        [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(17, nodeValue_Vec2(     "Center",        [.5,.5] )).setHotkey("G").setUnitSimple();
 	newInput(18, nodeValue_Vec2(     "Shape",         [1,1]   ));
 	newInput(19, nodeValue_Bool(     "Uniform ratio",  true   ));
 	// inputs 25

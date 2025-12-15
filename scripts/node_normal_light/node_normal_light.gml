@@ -18,9 +18,9 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		dynamic_input_inspecting = getInputAmount();
 		
 		newInput(index+0, nodeValue_Enum_Scroll("Type", 0, typeList ));
-		newInput(index+1, nodeValue_Vec2(  "Position",     [0,0]    )).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+		newInput(index+1, nodeValue_Vec2(  "Position",     [0,0]    )).setUnitSimple();
 		newInput(index+7, nodeValue_Float( "Distance",      0       ));
-		newInput(index+5, nodeValue_Vec2(  "End Position", [0,0]    )).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+		newInput(index+5, nodeValue_Vec2(  "End Position", [0,0]    )).setUnitSimple();
 		newInput(index+8, nodeValue_Float( "End Distance",  0       ));
 		newInput(index+2, nodeValue_Float( "Range",         16      ));
 		

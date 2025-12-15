@@ -8,9 +8,9 @@ function Node_Quasicrystal(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput(11, nodeValue_Surface( "Mask" ));
 	
 	////- =Pattern
-	newInput( 3, nodeValue_Vec2(      "Position", [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, UNIT_REF);
+	newInput( 3, nodeValue_Vec2(      "Position", [.5,.5] )).setHotkey("G").setUnitSimple();
 	newInput( 2, nodeValue_Rotation(  "Angle",      0     )).setHotkey("R").setMappable(7);
-	newInput( 1, nodeValue_Slider(    "Scale",     .25    )).setHotkey("S").setMappable(6).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, UNIT_REF);
+	newInput( 1, nodeValue_Slider(    "Scale",     .25    )).setHotkey("S").setMappable(6).setUnitSimple();
 	newInput( 8, nodeValue_Slider(    "Phase",      0     )).setMappable(9);
 	newInput(10, nodeValue_Rotation_Range( "Angle Range", [0,180] ));
 	

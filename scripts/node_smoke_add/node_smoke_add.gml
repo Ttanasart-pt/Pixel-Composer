@@ -14,8 +14,8 @@ function Node_Smoke_Add(_x, _y, _group = noone) : Node_Smoke(_x, _y, _group) con
 	newInput( 1, nodeValue_Surface(      "Fluid brush" ));
 	newInput(11, nodeValue_Enum_Scroll(  "Shape",       0, [ "Disk", "Ring" ]));
 	newInput(12, nodeValue_Slider_Range( "Level",      [0,1]   ));
-	newInput( 2, nodeValue_Vec2(         "Position",   [0,0]   )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
-	newInput( 9, nodeValue_Vec2(         "Scale",      [.5,.5] )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
+	newInput( 2, nodeValue_Vec2(         "Position",   [0,0]   )).setUnitSimple();
+	newInput( 9, nodeValue_Vec2(         "Scale",      [.5,.5] )).setUnitSimple();
 	
 	////- =Smoke
 	newInput( 5, nodeValue_Slider( "Density", 1 ));

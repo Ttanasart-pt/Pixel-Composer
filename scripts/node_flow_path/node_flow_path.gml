@@ -15,7 +15,7 @@ function Node_Flow_Path(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput( 7, nodeValue_PathNode( "Path" ));
 	newInput(10, nodeValue_Int(      "Sample",          16    ));
 	newInput(13, nodeValue_Bool(     "Invert",          false ));
-	newInput( 8, nodeValue_Float(    "Radius",          .25   )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput( 8, nodeValue_Float(    "Radius",          .25   )).setUnitSimple();
 	newInput(11, nodeValue_Bool(     "Apply Weight",    false ));
 	newInput(16, nodeValue_Curve(    "Weight Blending", CURVE_DEF_01 ));
 	

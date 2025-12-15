@@ -17,9 +17,9 @@ function Node_Checker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	////- =Pattern
 	newInput(9, nodeValue_Bool(     "Diagonal",  false  ));
-	newInput(1, nodeValue_Slider(   "Amount",   .5,     )).setMappable(6).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, UNIT_REF);
+	newInput(1, nodeValue_Slider(   "Amount",   .5,     )).setMappable(6).setUnitSimple();
 	newInput(2, nodeValue_Rotation( "Angle",     0      )).setHotkey("R").setMappable(7);
-	newInput(3, nodeValue_Vec2(     "Position", [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, UNIT_REF);
+	newInput(3, nodeValue_Vec2(     "Position", [.5,.5] )).setHotkey("G").setUnitSimple();
 	
 	////- =Render
 	newInput(8, nodeValue_Enum_Button( "Type",    0, [ "Solid", "Smooth", "AA" ] ));

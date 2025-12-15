@@ -40,7 +40,7 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	newInput(12, nodeValue_EScroll( "Shape",       0, [ "Rectangle", "Ellipse", "Arrow" ] ));
 	newInput(13, nodeValue_Surface( "Sprite"               ));
 	newInput(14, nodeValue_Vec2(    "Size",       [32,32]  ));
-	newInput( 9, nodeValue_Vec2(    "Offset",     [0,0]    )).setUnitRef(function(i) /*=>*/ {return DEF_SURF});
+	newInput( 9, nodeValue_Vec2(    "Offset",     [0,0]    )).setUnitSimple();
 	newInput(10, nodeValue_Float(   "Scale",       1       ));
 	newInput(17, nodeValue_Bool(    "Show Label",  0       ));
 	newInput(18, nodeValue_Text(    "Label",       "Value" ));

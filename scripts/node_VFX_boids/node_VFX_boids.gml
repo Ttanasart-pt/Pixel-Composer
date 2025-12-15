@@ -28,7 +28,7 @@ function Node_VFX_Boids(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	////- =Follow
 	newInput( 8, nodeValue_Bool(   "Follow point", false ));
-	newInput( 9, nodeValue_Vec2(   "Point",        [0,0] )).setUnitRef(function() /*=>*/ {return inline_context.dimension}, VALUE_UNIT.reference);
+	newInput( 9, nodeValue_Vec2(   "Point",        [0,0] )).setUnitSimple();
 	newInput(10, nodeValue_Slider( "Influence",    .1    )).setInternalName("fol_influence");
 	
 	input_display_list = [ 0, 7, 
@@ -48,6 +48,8 @@ function Node_VFX_Boids(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		if(_fol_pnt) InputDrawOverlay(inputs[9].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		return w_hovering;
 	}
+	
+	static getDimension = function() { return inline_context.dimension; }
 	
 	static update = function(frame = CURRENT_FRAME) {
 		var parts = getInputData(0);

@@ -36,7 +36,7 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		////- =Shape
 		newInput(index +  0, _val);
-		newInput(index +  1, nodeValue_Vec2(     "Position",    [16,16] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}).hideLabel();
+		newInput(index +  1, nodeValue_Vec2(     "Position",    [.5,.5] )).setUnitSimple().hideLabel();
 		newInput(index +  2, nodeValue_Float(    "Range",        16     )).hideLabel();
 		newInput(index +  5, nodeValue_Vec2(     "Start",       [16,16] )).hideLabel();
 		newInput(index +  6, nodeValue_Vec2(     "Finish",      [32,16] )).hideLabel();

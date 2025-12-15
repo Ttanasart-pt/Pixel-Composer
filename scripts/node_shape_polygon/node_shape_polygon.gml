@@ -29,9 +29,9 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput(29, nodeValue_EScroll( "BG Blend Mode", 0, [ "Override", "Max" ] ));
 	
 	////- =Transform
-	newInput( 5, nodeValue_Vec2(     "Position", [.5,.5])).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput( 5, nodeValue_Vec2(     "Position", [.5,.5])).setHotkey("G").setUnitSimple();
 	newInput( 6, nodeValue_Rotation( "Rotation", 0)).setHotkey("R");
-	newInput( 7, nodeValue_Vec2(     "Scale",    [.5,.5])).setHotkey("S").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput( 7, nodeValue_Vec2(     "Scale",    [.5,.5])).setHotkey("S").setUnitSimple();
 	
 	////- =Shape
 	newInput( 4, nodeValue_Enum_Scroll("Shape",  0, { data: shapesArray, horizontal: 1, text_pad: ui(16) }))

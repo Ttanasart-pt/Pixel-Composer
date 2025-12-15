@@ -6,8 +6,8 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	////- =Influence
 	
 	newInput(1, nodeValue_Enum_Scroll( "Influence Shape", 0, [ "Area", "Linear Wipe", "Map" ]));
-	newInput(2, nodeValue_Area(        "Area", DEF_AREA_REF   )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput(3, nodeValue_Vec2(        "Wipe Origin", [.5,.5] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(2, nodeValue_Area(        "Area", DEF_AREA_REF   )).setUnitSimple();
+	newInput(3, nodeValue_Vec2(        "Wipe Origin", [.5,.5] )).setUnitSimple();
 	newInput(4, nodeValue_Rotation(    "Wipe Angle",   0      ));
 	newInput(6, nodeValue_Surface(     "Influence Map"        ));
 	

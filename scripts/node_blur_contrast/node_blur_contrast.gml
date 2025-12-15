@@ -19,7 +19,7 @@ function Node_Blur_Contrast(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	__init_mask_modifier(3, 7); // inputs 7, 8
 	
 	////- =Blur
-	newInput( 1, nodeValue_Float(  "Size",        3 )).setMappable(12).setHotkey("S").setValidator(VV_min(0)).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput( 1, nodeValue_Float(  "Size",        .25 )).setMappable(12).setHotkey("S").setValidator(VV_min(0)).setUnitSimple();
 	newInput( 2, nodeValue_Slider( "Threshold",  .2 )).setMappable(13).setTooltip("Brightness different to be blur together.");
 	newInput( 9, nodeValue_Bool(   "Gamma Correction", false ));
 	// input 14

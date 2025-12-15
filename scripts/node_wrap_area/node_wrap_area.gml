@@ -3,9 +3,8 @@ function Node_Wrap_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	newInput(0, nodeValue_Surface("Surface In"));
 
-	onSurfaceSize = function() { return surface_get_dimension(getInputData(0)); };
-	newInput(1, nodeValue_Area("Area", DEF_AREA_REF, { onSurfaceSize, useShape : false })).setHotkey("A")
-		.setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
+	onSurfaceSize = function() /*=>*/ {return surface_get_dimension(getInputData(0))};
+	newInput(1, nodeValue_Area("Area", DEF_AREA_REF, { onSurfaceSize, useShape : false })).setHotkey("A").setUnitSimple();
 	
 	newActiveInput(2);
 		
@@ -15,6 +14,8 @@ function Node_Wrap_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		["Surfaces", false], 0, 
 		["Area",	 false], 1, 
 	]
+	
+	////- Nodes
 	
 	attribute_surface_depth();
 	attribute_interpolation();

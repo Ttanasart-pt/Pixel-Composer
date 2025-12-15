@@ -14,7 +14,7 @@ function Node_VerletSim_Drag(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(4, nodeValue_Vec2( "Anchor",      [0,0] ));
 	
 	////- =Transform
-	newInput(2, nodeValue_Vec2(     "Drag",    [0,0] )).setUnitRef(function(i) /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
+	newInput(2, nodeValue_Vec2(     "Drag",    [0,0] )).setUnitSimple();
 	newInput(5, nodeValue_Rotation( "Rotation", 0    ));
 	// input 6
 	

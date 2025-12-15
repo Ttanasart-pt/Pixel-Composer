@@ -35,8 +35,8 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(2, nodeValue_Dimension());
 	
 	////- =Positions
-	newInput(1, nodeValue_Vec2( "Origin", [ 0, 0] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput(6, nodeValue_Vec2( "Focus",  [.5,.5] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(1, nodeValue_Vec2( "Origin", [ 0, 0] )).setUnitSimple();
+	newInput(6, nodeValue_Vec2( "Focus",  [.5,.5] )).setUnitSimple();
 	
 	////- =Flare
 	newInput(5, nodeValue_Struct("Flares", [

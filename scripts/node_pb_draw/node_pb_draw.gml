@@ -12,16 +12,16 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	color = COLORS.node_blend_feedback;
 	preview_channel = 1;
 	
-	newInput(0, nodeValue_Pbbox("Base PBBOX"));
-	newInput(1, nodeValue_Pbbox("PBBOX"));
+	newInput(0, nodeValue_Pbbox( "Base PBBOX" ));
+	newInput(1, nodeValue_Pbbox( "PBBOX"      ));
 	inputs[0].editWidget = noone;
 	
-	newInput(2, nodeValue_Float("PBBOX Left", 0));
-	newInput(3, nodeValue_Float("PBBOX Top", 0));
-	newInput(4, nodeValue_Float("PBBOX Right", 0));
-	newInput(5, nodeValue_Float("PBBOX Bottom", 0));
-	newInput(6, nodeValue_Float("PBBOX Width", 0));
-	newInput(7, nodeValue_Float("PBBOX Height", 0));
+	newInput(2, nodeValue_Float( "PBBOX Left",   0 ));
+	newInput(3, nodeValue_Float( "PBBOX Top",    0 ));
+	newInput(4, nodeValue_Float( "PBBOX Right",  0 ));
+	newInput(5, nodeValue_Float( "PBBOX Bottom", 0 ));
+	newInput(6, nodeValue_Float( "PBBOX Width",  0 ));
+	newInput(7, nodeValue_Float( "PBBOX Height", 0 ));
 	
 	typeList = [ "Fill", "Stroke", "Corner", "Highlight", "Extrude", "Shine" ];
 	
@@ -46,45 +46,44 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		dynamic_input_inspecting = getInputAmount();
 		
-		newInput(index + 0, nodeValue_Enum_Scroll("Effect Type", 0, typeList));
+		newInput(index + 0, nodeValue_EScroll( "Effect Type", 0, typeList ));
 		
-		newInput(index + 1, nodeValue_Color(  "Color", ca_white));
-		newInput(index + 2, nodeValue_Slider(  "Intensity", 1));
+		newInput(index + 1, nodeValue_Color(   "Color",       ca_white ));
+		newInput(index + 2, nodeValue_Slider(  "Intensity",   1        ));
 		
-		newInput(index + 3, nodeValue_Enum_Scroll( "Pattern", 0, { data: fill_pattern_scroll_data, horizontal: 1, text_pad: ui(16) } ));
-		newInput(index + 4, nodeValue_Color(  "Color", ca_white));
-		newInput(index + 5, nodeValue_Slider(  "Intensity", 1));
-		newInput(index + 6, nodeValue_Vec2(  "Scale", [1,1])).setUnitRef(function(i) /*=>*/ {return group.dimension});
-		newInput(index + 7, nodeValue_Vec2(  "Position", [0,0])).setUnitRef(function(i) /*=>*/ {return group.dimension});
-		newInput(index + 8, nodeValue_Bool(  "Map BBOX", false));
+		newInput(index + 3, nodeValue_EScroll( "Pattern",     0, { data: fill_pattern_scroll_data, horizontal: 1, text_pad: ui(16) } ));
+		newInput(index + 4, nodeValue_Color(   "Color",       ca_white ));
+		newInput(index + 5, nodeValue_Slider(  "Intensity",   1        ));
+		newInput(index + 6, nodeValue_Vec2(    "Scale",      [1,1]     )).setUnitSimple();
+		newInput(index + 7, nodeValue_Vec2(    "Position",   [0,0]     )).setUnitSimple();
+		newInput(index + 8, nodeValue_Bool(    "Map BBOX",   false     ));
 		
 		// Stroke
-		newInput(index +  9, nodeValue_Int(  "Thickness", 1));
-		newInput(index + 10, nodeValue_Enum_Button( "Position", 1, array_create(3, THEME.stroke_position) ));
-		newInput(index + 11, nodeValue_Enum_Button( "Corner", 0, array_create(2, THEME.stroke_profile)  ));
+		newInput(index +  9, nodeValue_Int(     "Thickness", 1 ));
+		newInput(index + 10, nodeValue_EButton( "Position",  1, array_create(3, THEME.stroke_position) ));
+		newInput(index + 11, nodeValue_EButton( "Corner",    0, array_create(2, THEME.stroke_profile)  ));
 		
 		// Corner
-		newInput(index + 12, nodeValue_Int(  "Radius", 1));
+		newInput(index + 12, nodeValue_Int(     "Radius",    1 ));
 		
 		// Highlight
-		newInput(index + 13, nodeValue_Int(  "Widths", [ 0, 0, 0, 0 ])).setDisplay(VALUE_DISPLAY.padding);
-		newInput(index + 14, nodeValue_Color(  "Color Left", ca_white));
-		newInput(index + 15, nodeValue_Color(  "Color Right", ca_white));
-		newInput(index + 16, nodeValue_Color(  "Color Top", ca_white));
-		newInput(index + 17, nodeValue_Color(  "Color Bottom", ca_white));
+		newInput(index + 13, nodeValue_Int(     "Widths",      [0,0,0,0] )).setDisplay(VALUE_DISPLAY.padding);
+		newInput(index + 14, nodeValue_Color(   "Color Left",   ca_white ));
+		newInput(index + 15, nodeValue_Color(   "Color Right",  ca_white ));
+		newInput(index + 16, nodeValue_Color(   "Color Top",    ca_white ));
+		newInput(index + 17, nodeValue_Color(   "Color Bottom", ca_white ));
 		
 		// Generic Props
-		newInput(index + 18, nodeValue_Float(  "Modify", 4));
-		newInput(index + 19, nodeValue_Bool(  "Subtract", false));
-		newInput(index + 20, nodeValue_Rotation(  "Direction", -90));
+		newInput(index + 18, nodeValue_Float(    "Modify",     4     ));
+		newInput(index + 19, nodeValue_Bool(     "Subtract",   false ));
+		newInput(index + 20, nodeValue_Rotation( "Direction", -90    ));
 		
 		// Shines
-		newInput(index + 21, nodeValue_Float(  "Shines", [ 2, 1, 1 ]))
-	    	.setDisplay(VALUE_DISPLAY.number_array);
-		newInput(index + 22, nodeValue_Slider(  "Progress", .5));
-		newInput(index + 23, nodeValue_Float(  "Slope",  1));
-		newInput(index + 24, nodeValue_Enum_Button( "Axis",  0, [ "X", "Y" ]));
-		newInput(index + 25, nodeValue_Float(  "Seed",  seed_random()));
+		newInput(index + 21, nodeValue_Float(    "Shines",   [2,1,1] )).setDisplay(VALUE_DISPLAY.number_array);
+		newInput(index + 22, nodeValue_Slider(   "Progress", .5      ));
+		newInput(index + 23, nodeValue_Float(    "Slope",     1      ));
+		newInput(index + 24, nodeValue_EButton(  "Axis",      0, [ "X", "Y" ] ));
+		newInput(index + 25, nodeValue_Float(    "Seed",      seed_random()   ));
 		
 		refreshDynamicDisplay();
 		return inputs[index];
@@ -214,7 +213,11 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	setDynamicInput(26, false);
 	if(!LOADING && !APPENDING) run_in(1, function() /*=>*/ {return createNewInput()});
 	
+	////- Nodes
+	
 	temp_surface = [ noone, noone ];
+	
+	static getDimension = function() { return group.dimension; }
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _pbase = getSingleValue(0);

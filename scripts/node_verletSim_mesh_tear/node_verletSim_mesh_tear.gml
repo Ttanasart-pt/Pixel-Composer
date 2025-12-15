@@ -10,7 +10,7 @@ function Node_VerletSim_Mesh_Tear(_x, _y, _group = noone) : Node(_x, _y, _group)
 	
 	////- =Target
 	newInput(1, nodeValue_Enum_Scroll( "Source",  0, [ "Area", "Surface" ] ));
-	newInput(2, nodeValue_Area(        "Area",    DEF_AREA_REF, { useShape : false } )).setHotkey("A").setUnitRef(function(i) /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
+	newInput(2, nodeValue_Area(        "Area",    DEF_AREA_REF, { useShape : false } )).setHotkey("A").setUnitSimple();
 	newInput(3, nodeValue_Surface(     "Surface", noone ));
 	// input 5
 	

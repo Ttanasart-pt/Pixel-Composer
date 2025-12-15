@@ -6,7 +6,7 @@ function Node_MK_Panels(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput( 2, nodeValueSeed());
 	
 	////- =Panels
-	newInput( 0, nodeValue_Area(    "Area",         DEF_AREA_REF, { useShape : false } )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
+	newInput( 0, nodeValue_Area(    "Area",         DEF_AREA_REF, { useShape : false } )).setUnitSimple();
 	newInput( 3, nodeValue_Text(    "Panel Pattern",  "xxyyi-"     )).setDisplay(VALUE_DISPLAY.text_box)
 		.setSideButton(button(function() /*=>*/ {return randomPanel()}).setIcon(THEME.icon_random, 0, COLORS._main_icon).iconPad());
 	newInput(27, nodeValue_Int(     "Min Iteration",   2           ));

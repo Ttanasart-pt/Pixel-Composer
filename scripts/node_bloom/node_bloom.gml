@@ -17,7 +17,7 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	__init_mask_modifier(5, 9); // inputs 9, 10
 	
 	////- =Bloom
-	newInput(1, nodeValue_Slider(  "Size",        3,  [1, 32, 0.1] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)})
+	newInput(1, nodeValue_Slider(  "Size",        .25,  [1, 32, 0.1] )).setUnitSimple()
 		.setMappable(17).setHotkey("S").setTooltip("Bloom blur radius.");
 	newInput(2, nodeValue_Slider(  "Tolerance",  .50               )).setMappable(18).setTooltip("How bright a pixel should be to start blooming.");
 	newInput(3, nodeValue_Slider(  "Strength",   .25, [0, 2, 0.01] )).setMappable(19).setCurvable(20).setTooltip("Blend intensity.");
@@ -27,7 +27,7 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	newInput(13, nodeValue_EScroll(  "Type",          0, [ "Gaussian", "Zoom", "Directional" ]));
 	newInput(11, nodeValue_Slider(   "Aspect Ratio",  1     ));
 	newInput(12, nodeValue_Rotation( "Direction",     0     ));
-	newInput(14, nodeValue_Vec2(     "Zoom Origin", [.5,.5] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(14, nodeValue_Vec2(     "Zoom Origin", [.5,.5] )).setUnitSimple();
 	
 	////- =Blend
 	newInput(15, nodeValue_Color(  "Blend",      ca_white));

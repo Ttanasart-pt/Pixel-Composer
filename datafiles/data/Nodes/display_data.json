@@ -146,6 +146,7 @@
             { "label": "/Mask" },
             "Node_pSystem_Mask",
             "Node_pSystem_Mask_Data",
+            "Node_pSystem_Mask_Distance",
             
             { "label": "/Event" },
             "Node_pSystem_Trigger_Event",

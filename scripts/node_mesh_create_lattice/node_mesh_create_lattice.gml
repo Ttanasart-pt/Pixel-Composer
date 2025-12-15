@@ -4,7 +4,7 @@ function Node_Mesh_Create_Lattice(_x, _y, _group = noone) : Node(_x, _y, _group)
 	setDrawIcon(s_node_mesh_create_lattice);
 	
 	////- =Area
-	newInput( 0, nodeValue_Area(  "Area", DEF_AREA_REF, { useShape : false } )).setUnitRef(function(i) /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
+	newInput( 0, nodeValue_Area(  "Area", DEF_AREA_REF, { useShape : false } )).setUnitSimple();
 	
 	////- =Mesh
 	newInput( 1, nodeValue_IVec2( "Sample", [8,8] ));

@@ -10,7 +10,7 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	__init_mask_modifier(1, 8); // inputs 8, 9
 	
 	////- =Fill
-	newInput( 4, nodeValue_Vec2(        "Position",   [.5,.5]   )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput( 4, nodeValue_Vec2(        "Position",   [.5,.5]   )).setHotkey("G").setUnitSimple();
 	newInput( 6, nodeValue_Slider(      "Threshold",   .1       ));
 	newInput( 5, nodeValue_Color(       "Colors",      ca_black ));
 	newInput( 7, nodeValue_Bool(        "Diagonal",    false    ));

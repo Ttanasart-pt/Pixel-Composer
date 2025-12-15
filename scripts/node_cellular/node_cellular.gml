@@ -23,7 +23,7 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(14, nodeValue_Rotation(    "Phase",   0 ));
 	
 	////- =Transform
-	newInput( 1, nodeValue_Vec2(     "Position", [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput( 1, nodeValue_Vec2(     "Position", [.5,.5] )).setHotkey("G").setUnitSimple();
 	newInput(12, nodeValue_Rotation( "Rotation",   0     )).setHotkey("R");
 	newInput( 2, nodeValue_Float(    "Scale",      4     )).setHotkey("S").setMappable(11);
 	

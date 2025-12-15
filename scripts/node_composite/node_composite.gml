@@ -818,7 +818,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			.setHistory([ BLEND_TYPES, { cond: function() /*=>*/ {return LOADING_VERSION < 1_18_00_0}, list: global.BLEND_TYPES_18 } ]);
 		newInput(index + 5, nodeValue_Slider(      $"Opacity {_s}",   1));
 		
-		newInput(index + 1, nodeValue_Vec2(        $"Position {_s}", [.5,.5] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+		newInput(index + 1, nodeValue_Vec2(        $"Position {_s}", [.5,.5] )).setUnitSimple();
 		newInput(index + 6, nodeValue_Anchor());
 		newInput(index + 2, nodeValue_Rotation(    $"Rotation {_s}",  0));
 		newInput(index + 3, nodeValue_Vec2(        $"Scale {_s}",    [1,1] ));

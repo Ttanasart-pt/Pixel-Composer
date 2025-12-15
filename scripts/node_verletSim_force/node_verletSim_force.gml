@@ -10,7 +10,7 @@ function Node_VerletSim_Force(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	newInput(0, nodeValue_Mesh( "Mesh" )).setVisible(true, true);
 	
 	////- =Target
-	newInput(1, nodeValue_Area(  "Area", DEF_AREA_REF )).setHotkey("A").setUnitRef(function(i) /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
+	newInput(1, nodeValue_Area(  "Area", DEF_AREA_REF )).setHotkey("A").setUnitSimple();
 	newInput(2, nodeValue_Float( "Falloff", 0 ));
 	newInput(4, nodeValue_Curve( "Falloff Curve", CURVE_DEF_01 ));
 	

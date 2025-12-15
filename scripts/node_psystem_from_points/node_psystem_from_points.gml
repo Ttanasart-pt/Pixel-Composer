@@ -8,7 +8,7 @@ function Node_pSystem_from_Points(_x, _y, _group = noone) : Node(_x, _y, _group)
 	////- =Spawn
 	newInput( 0, nodeValue_Vec2( "Points Data", [0,0] )).setVisible(true, true).setArrayDepth(1);
 	
-	////- =Animation
+	////- =Indexing
 	newInput( 1, nodeValue_Float( "Index Start", 0 ));
 	newInput( 2, nodeValue_Float( "Index Step",  1 ));
 	// input 3
@@ -16,8 +16,8 @@ function Node_pSystem_from_Points(_x, _y, _group = noone) : Node(_x, _y, _group)
 	newOutput(0, nodeValue_Output("Particles",  VALUE_TYPE.particle, noone ));
 	
 	input_display_list = [ 
-		[ "Spawn",     false ], 0, 
-		[ "Animation", false ], 1, 2, 
+		[ "Spawn",    false ], 0, 
+		[ "Indexing", false ], 1, 2, 
 	];
 	
 	////- Nodes

@@ -39,8 +39,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput( 6, nodeValue_Rotation( "Rotation",  0 ));
 	newInput( 7, nodeValue_PathNode( "Path"    ));
 	newInput(28, nodeValue_Vector(   "Segment" )).setArrayDepth(2);
-	newInput(32, nodeValue_Vec2(     "Start Point",   [0,.5] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput(33, nodeValue_Vec2(     "End Point",     [1,.5] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(32, nodeValue_Vec2(     "Start Point",   [0,.5] )).setUnitSimple();
+	newInput(33, nodeValue_Vec2(     "End Point",     [1,.5] )).setUnitSimple();
 	newInput(35, nodeValue_Bool(     "Force Loop",     false ));
 	newInput(19, nodeValue_Bool(     "Fix Length",     false )).setTooltip("Fix length of each segment instead of segment count.");
 	newInput( 2, nodeValue_ISlider(  "Segment",        1, [1, 32, 0.1] ));

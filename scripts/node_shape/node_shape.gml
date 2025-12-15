@@ -71,9 +71,9 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	////- =Transform
 	newInput(15, nodeValue_EScroll(  "Positioning Mode",    2, [ "Area", "Center + Scale", "Full Image" ]))
-	newInput( 3, nodeValue_Area(     "Position",          DEF_AREA_REF, { onSurfaceSize, useShape : false })).setHotkey("A").setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
-	newInput(16, nodeValue_Vec2(     "Center",            [.5,.5] )).setHotkey("G").setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
-	newInput(17, nodeValue_Vec2(     "Half Size",         [.5,.5] )).setHotkey("S").setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
+	newInput( 3, nodeValue_Area(     "Position",          DEF_AREA_REF, { onSurfaceSize, useShape : false })).setHotkey("A").setUnitSimple();
+	newInput(16, nodeValue_Vec2(     "Center",            [.5,.5] )).setHotkey("G").setUnitSimple();
+	newInput(17, nodeValue_Vec2(     "Half Size",         [.5,.5] )).setHotkey("S").setUnitSimple();
 	newInput(19, nodeValue_Rotation( "Shape Rotation",      0     )).setHotkey("R");
 	newInput(28, nodeValue_Slider(   "Shape Scale",         1     )).hideLabel();
 	
@@ -93,10 +93,10 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			{ cond: function() /*=>*/ {return LOADING_VERSION < 1_20_01_0}, list: global.node_shape_keys_20 }, 
 		]);
 		
-	newInput(32, nodeValue_Vec2(     "Point 1",       [ 0, 0]   )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
-	newInput(33, nodeValue_Vec2(     "Point 2",       [ 1, 1]   )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
-	newInput(35, nodeValue_Vec2(     "Point 3",       [ 1, 0]   )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
-	newInput(40, nodeValue_Vec2(     "Half Point",    [.5,.5]   )).setUnitRef(onSurfaceSize, VALUE_UNIT.reference).hideLabel();
+	newInput(32, nodeValue_Vec2(     "Point 1",       [ 0, 0]   )).setUnitSimple();
+	newInput(33, nodeValue_Vec2(     "Point 2",       [ 1, 1]   )).setUnitSimple();
+	newInput(35, nodeValue_Vec2(     "Point 3",       [ 1, 0]   )).setUnitSimple();
+	newInput(40, nodeValue_Vec2(     "Half Point",    [.5,.5]   )).setUnitSimple().hideLabel();
 	newInput(34, nodeValue_Slider(   "Thickness",      .1       )).hideLabel();
 	
 	newInput( 9, nodeValue_Slider(   "Corner Radius",   0, [0, 0.5, 0.001] )).hideLabel().setValidator(VV_clamp(0, .5));

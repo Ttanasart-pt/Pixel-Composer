@@ -15,9 +15,9 @@ function Node_pSystem_Collision(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	////- =Collider
 	newInput( 3, nodeValue_Enum_Scroll( "Shape",       0, [ "Ground", "Rectangle", "Ellipse" ] )); 
-	newInput( 4, nodeValue_Vec2(        "Position",  [.5,.5] )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
-	newInput( 5, nodeValue_Vec2(        "Size",      [.5,.5] )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
-	newInput( 6, nodeValue_Rotation(    "Rotation",    0     )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
+	newInput( 4, nodeValue_Vec2(        "Position",  [.5,.5] )).setUnitSimple();
+	newInput( 5, nodeValue_Vec2(        "Size",      [.5,.5] )).setUnitSimple();
+	newInput( 6, nodeValue_Rotation(    "Rotation",    0     )).setUnitSimple();
 	newInput( 7, nodeValue_Slider(      "Chance",      1     )); 
 	
 	////- =Physics

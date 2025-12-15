@@ -10,7 +10,7 @@ function Node_Maze_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	////- =Maze
 	newInput( 2, nodeValue_EScroll( "Algorithm",      0, [ "Backtrack", "Prim" ] ));
 	newInput( 4, nodeValue_Int(     "Max Iteration", -1 ));
-	newInput( 5, nodeValue_Vec2(    "Origin",   [.5,.5] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput( 5, nodeValue_Vec2(    "Origin",   [.5,.5] )).setUnitSimple();
 	newInput( 9, nodeValue_EButton( "Bias",           0, [ "None", "X", "Y" ] ));
 	newInput(10, nodeValue_Slider(  "Bias Weight",   .5 ));
 	

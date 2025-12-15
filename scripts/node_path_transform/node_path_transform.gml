@@ -5,10 +5,10 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	
 	newInput(0, nodeValue_PathNode( "Path" ));
 	
-	newInput(1, nodeValue_Vec2(     "Position", [0,0] )).setHotkey("G").setUnitRef(function() /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
+	newInput(1, nodeValue_Vec2(     "Position", [0,0] )).setHotkey("G").setUnitSimple();
 	newInput(2, nodeValue_Rotation( "Rotation",  0    )).setHotkey("R");
 	newInput(3, nodeValue_Vec2(     "Scale",    [1,1] ));
-	newInput(4, nodeValue_Vec2(     "Anchor",   [0,0] )).setUnitRef(function() /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
+	newInput(4, nodeValue_Vec2(     "Anchor",   [0,0] )).setUnitSimple();
 	//input 5
 	
 	newOutput(0, nodeValue_Output("Path", VALUE_TYPE.pathnode, noone));

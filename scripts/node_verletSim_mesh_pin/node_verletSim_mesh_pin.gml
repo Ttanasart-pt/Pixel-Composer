@@ -15,7 +15,7 @@ function Node_VerletSim_Mesh_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	////- =Target
 	
 	newInput(3, nodeValue_Enum_Scroll( "Source",  0, [ "Area", "Surface" ] ));
-	newInput(1, nodeValue_Area(        "Area",    DEF_AREA_REF, { useShape : false } )).setUnitRef(function(i) /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
+	newInput(1, nodeValue_Area(        "Area",    DEF_AREA_REF, { useShape : false } )).setUnitSimple();
 	newInput(4, nodeValue_Surface(     "Surface", noone ));
 	// input 6
 	

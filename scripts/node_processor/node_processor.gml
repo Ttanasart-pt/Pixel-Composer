@@ -58,18 +58,15 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	} 
 	
 	static getDimension = function(arr = 0) { 
-		if(dimension_index == -1) return [ 1, 1 ];
+		if(dimension_index == -1) return DEF_SURF;
 		
 		var _ip = array_safe_get(inputs, dimension_index, noone);
-		if(_ip == noone) return [ 1, 1 ];
+		if(_ip == noone) return DEF_SURF;
 		
 		var _in = getSingleValue(dimension_index, arr);
 		
-		if(_ip.type == VALUE_TYPE.surface && is_surface(_in)) {
-			var ww = surface_get_width_safe(_in);
-			var hh = surface_get_height_safe(_in);
-			return [ww, hh];
-		}
+		if(_ip.type == VALUE_TYPE.surface && is_surface(_in))
+			return surface_get_dimension(_in);
 		
 		if(is_array(_in) && array_length(_in) == 2)
 			return _in;

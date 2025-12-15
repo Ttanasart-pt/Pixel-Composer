@@ -15,8 +15,8 @@ function Node_Zigzag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput( 9, nodeValue_Surface( "Mask"       ));
 	
 	////- =Pattern
-	newInput( 1, nodeValue_Slider(   "Amount",      1     )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, UNIT_REF).setMappable(6);
-	newInput( 2, nodeValue_Vec2(     "Position",  [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, UNIT_REF);
+	newInput( 1, nodeValue_Slider(   "Amount",      1     )).setUnitSimple().setMappable(6);
+	newInput( 2, nodeValue_Vec2(     "Position",  [.5,.5] )).setHotkey("G").setUnitSimple();
 	newInput( 8, nodeValue_Rotation( "Angle",       0     )).setHotkey("R").setMappable(7);
 	newInput(10, nodeValue_Slider(   "Threshold",  .5     ));
 	

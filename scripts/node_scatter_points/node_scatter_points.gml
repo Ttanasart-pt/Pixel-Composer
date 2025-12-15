@@ -12,6 +12,8 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	setDrawIcon(s_node_scatter_points);
 	setDimension(96, 48);
 	
+	dimension_index = -1;
+	
 	////- =Base
 	newInput(5, nodeValueSeed()).rejectArray();
 	newInput(6, nodeValue_Bool( "Fixed Position",      false, "Fix point position, and only select point in the area."));
@@ -19,7 +21,7 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	
 	////- =Scatter
 	onSurfaceSize = function() /*=>*/ {return DEF_SURF}; 
-	newInput( 0, nodeValue_Area(    "Point area",   DEF_AREA_REF, { onSurfaceSize } )).setHotkey("A").setUnitRef(onSurfaceSize, VALUE_UNIT.reference);
+	newInput( 0, nodeValue_Area(    "Point area",   DEF_AREA_REF, { onSurfaceSize } )).setHotkey("A").setUnitSimple();
 	newInput( 1, nodeValue_EButton( "Distribution", 0, [ "Area", "Border", "Map" ]  )).rejectArray();
 	newInput( 4, nodeValue_Surface( "Distribution Map" ));
 	

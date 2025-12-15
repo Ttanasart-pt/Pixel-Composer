@@ -14,7 +14,7 @@ function Node_Voronoi_Extra(_x, _y, _group = noone) : Node_Shader_Generator(_x, 
 	newInput(6, nodeValue_Slider(      "Parameter A",  0, [ -1, 1, 0.01 ])).setShaderProp("paramA");
 	
 	////- =Transform
-	newInput(1, nodeValue_Vec2(     "Position",  [0,0] )).setHotkey("G").setShaderProp("position").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput(1, nodeValue_Vec2(     "Position",  [0,0] )).setHotkey("G").setShaderProp("position").setUnitSimple();
 	newInput(7, nodeValue_Rotation( "Rotation",   0    )).setHotkey("R").setShaderProp("rotation");
 	newInput(2, nodeValue_Vec2(     "Scale",     [4,4] )).setHotkey("S").setShaderProp("scale");
 	// input 9

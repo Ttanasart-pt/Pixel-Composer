@@ -12,7 +12,7 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(0, nodeValue_Particle()).setVisible(true, true);
 	
 	////- =Area
-	newInput(1, nodeValue_Area(  "Area",             DEF_AREA_REF )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
+	newInput(1, nodeValue_Area(  "Area",             DEF_AREA_REF )).setUnitSimple();
 	newInput(2, nodeValue_Curve( "Falloff",          CURVE_DEF_01 ));
 	newInput(3, nodeValue_Float( "Falloff distance", 4            ));
 	

@@ -19,9 +19,9 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
     __ind = 0; shapeScroll = array_map(shape_types, function(v, i) /*=>*/ {return v == -1? -1 : new scrollItem(v, s_node_shape_path_type, __ind++)});
     
     ////- =Transform
-	newInput( 0, nodeValue_Vec2(     "Position",  [.5,.5] )).setHotkey("G").setUnitRef(function() /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
+	newInput( 0, nodeValue_Vec2(     "Position",  [.5,.5] )).setHotkey("G").setUnitSimple();
 	newInput( 2, nodeValue_Rotation( "Rotation",    0     )).setHotkey("R");
-	newInput( 1, nodeValue_Vec2(     "Half Size", [.5,.5] )).setUnitRef(function() /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
+	newInput( 1, nodeValue_Vec2(     "Half Size", [.5,.5] )).setUnitSimple();
 	
     ////- =Shape
 	newInput( 3, nodeValue_Enum_Scroll(    "Shape",          0, { data: shapeScroll, horizontal: 1, text_pad: ui(16) } ))
@@ -32,7 +32,7 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	newInput( 6, nodeValue_Float(          "Factor",         4             ));
 	newInput( 7, nodeValue_Int(            "Sides",          4             ));
 	newInput( 8, nodeValue_Float(          "Inner Radius",  .5             ));
-	newInput( 9, nodeValue_Corner(         "Corner Radius", [0,0,0,0]      )).setUnitRef(function() /*=>*/ {return DEF_SURF}, VALUE_UNIT.constant);
+	newInput( 9, nodeValue_Corner(         "Corner Radius", [0,0,0,0]      )).setUnitSimple();
 	newInput(12, nodeValue_Rotation(       "Angle",          0             ));
 	newInput(10, nodeValue_Float(          "Revolution",     4             ));
 	newInput(11, nodeValue_Float(          "Pitch",         .2             )).setCurvable(13, CURVE_DEF_11);

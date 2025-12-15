@@ -9,12 +9,12 @@ function Node_Julia_Set(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	newInput(7, nodeValue_Surface( "Mask"       ));
 	
 	////- =Julia
-	newInput(1, nodeValue_Vec2(  "C", [ -1, 0 ] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, UNIT_REF);
+	newInput(1, nodeValue_Vec2(  "C", [ -1, 0 ] )).setUnitSimple();
 	newInput(5, nodeValue_Int(   "Max Iteration",     128  ));
 	newInput(6, nodeValue_Float( "Diverge Threshold", 4    ));
 	
 	////- =Transform
-	newInput(2, nodeValue_Vec2(     "Position", [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, UNIT_REF);
+	newInput(2, nodeValue_Vec2(     "Position", [.5,.5] )).setHotkey("G").setUnitSimple();
 	newInput(4, nodeValue_Rotation( "Rotation",   0     )).setHotkey("R");
 	newInput(3, nodeValue_Vec2(     "Scale",     [1,1]  ));
 	// input 8

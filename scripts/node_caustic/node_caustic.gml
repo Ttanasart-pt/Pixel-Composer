@@ -14,8 +14,8 @@ function Node_Caustic(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y, _g
 	newInput(5, nodeValue_Int(    "Detail",    1            )).setShaderProp("detail"   );
 	
 	////- =Transform
-	newInput(1, nodeValue_Vec2(   "Position", [0,0]   )).setHotkey("G").setShaderProp("position").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
-	newInput(2, nodeValue_Vec2(   "Scale",    [.5,.5] )).setHotkey("S").setShaderProp("scale").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(1, nodeValue_Vec2(   "Position", [0,0]   )).setHotkey("G").setShaderProp("position").setUnitSimple();
+	newInput(2, nodeValue_Vec2(   "Scale",    [.5,.5] )).setHotkey("S").setShaderProp("scale").setUnitSimple();
 	// 12
 	
 	input_display_list = [

@@ -25,9 +25,9 @@ function Node_pSystem_Spawn(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	newInput(23, nodeValue_Enum_Scroll( "Distribution", 0, [ "Random", "Uniform Burst", "Uniform Period" ] ));
 	newInput(28, nodeValue_Int(         "Period",       4 ));
 	newInput(29, nodeValue_Slider(      "Shift",        0 ));
-	newInput( 8, nodeValue_Area(        "Area", DEF_AREA_REF, { useShape : false } )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
-	newInput(26, nodeValue_Vec2(        "Line Start", [0,0] )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
-	newInput(27, nodeValue_Vec2(        "Line End",   [1,1] )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
+	newInput( 8, nodeValue_Area(        "Area", DEF_AREA_REF, { useShape : false } )).setUnitSimple();
+	newInput(26, nodeValue_Vec2(        "Line Start", [0,0] )).setUnitSimple();
+	newInput(27, nodeValue_Vec2(        "Line End",   [1,1] )).setUnitSimple();
 	newInput( 9, nodeValue_PathNode(    "Path"       ));
 	newInput(10, nodeValue_Mesh(        "Mesh"       ));
 	newInput(11, nodeValue_Surface(     "Spawn Map"  ));

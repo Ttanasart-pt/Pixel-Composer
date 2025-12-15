@@ -363,7 +363,7 @@ function Node_Grid_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var index = array_length(inputs);
 		var i = index - input_fix_len;
 		
-		newInput(index, nodeValue_Vec2($"Anchor {i}", [ 0, 0 ])).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+		newInput(index, nodeValue_Vec2($"Anchor {i}", [ 0, 0 ])).setUnitSimple();
 		
 		array_push(input_display_list, index);
 		inputs[index].overlay_draw_text = false;

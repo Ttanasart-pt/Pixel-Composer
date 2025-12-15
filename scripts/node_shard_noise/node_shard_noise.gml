@@ -13,7 +13,7 @@ function Node_Shard_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y
 	newInput( 4, nodeValue_Slider( "Sharpness", 1, [ 0, 2, 0.01 ])).setShaderProp("sharpness").setMappable(7);
 	
 	////- =Transform
-	newInput( 1, nodeValue_Vec2(     "Position", [0,0] )).setHotkey("G").setShaderProp("position").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput( 1, nodeValue_Vec2(     "Position", [0,0] )).setHotkey("G").setShaderProp("position").setUnitSimple();
 	newInput( 9, nodeValue_Rotation( "Rotation",  0    )).setHotkey("R").setShaderProp("rotation");
 	newInput( 2, nodeValue_Vec2(     "Scale",    [4,4] )).setHotkey("S").setShaderProp("scale").setMappable(6);
 	// input 11

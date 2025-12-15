@@ -39,10 +39,10 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	////- =Plot
 	newInput(11, nodeValue_EScroll(  "Type",              0, __enum_array_gen([ "Bar chart", "Graph"], s_node_plot_linear_type)));
-	newInput( 4, nodeValue_Vec2(     "Origin",          [ 0,.5 ] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput( 4, nodeValue_Vec2(     "Origin",          [ 0,.5 ] )).setUnitSimple();
 	newInput(10, nodeValue_Rotation( "Direction",         0      ));
 	newInput(20, nodeValue_PathNode( "Path"                      ));
-	newInput( 5, nodeValue_Float(    "Scale",             .5     )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput( 5, nodeValue_Float(    "Scale",             .5     )).setUnitSimple();
 	newInput(22, nodeValue_Bool(     "Loop",              false  ));
 	newInput(23, nodeValue_Slider(   "Smooth",            0      ));
 	

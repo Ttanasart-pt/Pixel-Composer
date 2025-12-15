@@ -2,15 +2,14 @@ function Node_Project_Layer(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name = "Layer";
 	if(NODE_NEW_MANUAL) name = $"Layer {array_length(project.globalLayer_nodes)}";
 	
-	newInput(0, nodeValue_Surface( "Surface In"    ));
-	newInput(1, nodeValue_Int(     "Depth",      0 ));
+	newInput( 0, nodeValue_Surface( "Surface In"    ));
+	newInput( 1, nodeValue_Int(     "Depth",      0 ));
 	
 	////- =Transform
-	
-	newInput(2, nodeValue_Vec2(     "Position",  [.5,.5] )).setUnitRef(function(i) /*=>*/ {return project.attributes.surface_dimension}, VALUE_UNIT.reference);
-	newInput(3, nodeValue_Anchor());
-	newInput(4, nodeValue_Rotation( "Rotation",   0      ));
-	newInput(5, nodeValue_Vec2(     "Scale",     [1,1]   ));
+	newInput( 2, nodeValue_Vec2(     "Position",  [.5,.5] )).setUnitSimple();
+	newInput( 3, nodeValue_Anchor());
+	newInput( 4, nodeValue_Rotation( "Rotation",   0      ));
+	newInput( 5, nodeValue_Vec2(     "Scale",     [1,1]   ));
 		
 	input_display_list = [ 0, 1, 
 		["Transform", false], 2, 3, 4, 5, 
@@ -108,6 +107,8 @@ function Node_Project_Layer(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		return _hov;
 	}
+	
+	static getDimension = function() { return project.attributes.surface_dimension; }
 	
 	static update = function() {
 		layer_surf = inputs[0].getValue();

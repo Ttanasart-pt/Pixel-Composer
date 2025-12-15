@@ -28,7 +28,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	////- =Spawn
 	newInput( 8, nodeValue_Bool(     "Spawn",            true, "Make object spawn when start." ));
 	newInput(20, nodeValue_Int(      "Spawn Frame",      0     ));
-	newInput( 7, nodeValue_Vec2(     "Spawn Position", [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput( 7, nodeValue_Vec2(     "Spawn Position", [.5,.5] )).setHotkey("G").setUnitSimple();
 	newInput(17, nodeValue_Rotation( "Spawn Rotation",   0     )).setHotkey("R");
 	
 	////- =Initial Velocity

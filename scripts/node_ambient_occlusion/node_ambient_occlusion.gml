@@ -5,7 +5,7 @@ function Node_Ambient_Occlusion(_x, _y, _group = noone) : Node_Processor(_x, _y,
 	newInput(0, nodeValue_Surface("Height Map"));
 	
 	////- =Effect
-	newInput(3, nodeValue_Float(  "Height",      8    )).setMappable(9).setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput(3, nodeValue_Float(  "Height",      8    )).setMappable(9).setUnitSimple();
 	newInput(1, nodeValue_Slider( "Intensity",   4, [ 0, 8, 0.1 ] )).setMappable(8).setCurvable(10);
 	newInput(4, nodeValue_Bool(   "Pixel Sweep", true ));
 	

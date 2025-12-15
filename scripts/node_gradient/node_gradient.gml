@@ -37,7 +37,7 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput( 2, nodeValue_EScroll(  "Type",           0, __gradTypes));
 	newInput( 3, nodeValue_Rotation( "Angle",          0      )).setHotkey("R").setMappable(10).hideLabel();
 	newInput( 4, nodeValue_Float(    "Radius",        .5      )).setMappable(11);
-	newInput( 6, nodeValue_Vec2(     "Center",        [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput( 6, nodeValue_Vec2(     "Center",        [.5,.5] )).setHotkey("G").setUnitSimple();
 	newInput(17, nodeValue_Vec2(     "Shape",         [1,1]   ));
 	newInput(14, nodeValue_Bool(     "Uniform ratio",  true   ));
 	// inputs 21

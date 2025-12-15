@@ -47,7 +47,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	////- =Pattern
 	newInput( 3, nodeValue_EScroll(        "Pattern",          0, __enum_array_gen([ "Linear", "Grid", "Circular"], s_node_repeat_axis) ));
-	newInput( 9, nodeValue_Vec2(           "Start Position",  [.5,.5] )).setHotkey("G").setUnitRef(function() /*=>*/ {return getInputData(1)}, VALUE_UNIT.reference);
+	newInput( 9, nodeValue_Vec2(           "Start Position",  [.5,.5] )).setHotkey("G").setUnitSimple();
 	newInput(22, nodeValue_Anchor(         "Global Anchor",   [ 0, 0] ));
 	newInput(32, nodeValue_Rotation(       "Start Rotation",   0      )).setHotkey("R");
 	newInput( 2, nodeValue_Int(            "Amount",           2      )).rejectArray();
@@ -62,9 +62,9 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput(40, nodeValue_Bool(           "Rotate Along Path", false ));
 	
 	////- =Position
-	newInput( 4, nodeValue_Vec2(           "Shift Position",  [.5,0]  )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference).setCurvable(38, CURVE_DEF_11, "Over Copy");
+	newInput( 4, nodeValue_Vec2(           "Shift Position",  [.5,0]  )).setUnitSimple().setCurvable(38, CURVE_DEF_11, "Over Copy");
 	newInput(26, nodeValue_EButton(        "Stack",             0,    )).setChoices([ "None", "X", "Y" ]).setTooltip("Place each copy next to each other, taking surface dimension into account.");
-	newInput(19, nodeValue_Vec2(           "Shift Column",     [0,.5] )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
+	newInput(19, nodeValue_Vec2(           "Shift Column",     [0,.5] )).setUnitSimple();
 	newInput(39, nodeValue_Anchor(         "Anchor" ));
 	
 	////- =Rotation
@@ -106,7 +106,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		////- =Selection
 		
 		newInput(i+ 1, nodeValue_EScroll(  "Select mode",             0, enum_select_mode ));
-		newInput(i+ 9, nodeValue_Area(     "Selection area",          DEF_AREA_REF        )).setUnitRef(function() /*=>*/ {return getDimension()}, VALUE_UNIT.reference);
+		newInput(i+ 9, nodeValue_Area(     "Selection area",          DEF_AREA_REF        )).setUnitSimple();
 		newInput(i+10, nodeValue_Float(    "Selection i",             0                   ));
 		newInput(i+11, nodeValue_Float(    "Selection range",         2                   ));
 		newInput(i+12, nodeValue_Float(    "Selection falloff",       0                   ));
@@ -271,6 +271,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		inputs[ 4].setValue([_sdim[0], 0]);
 		inputs[19].setValue([0, _sdim[1]]);
 	}
+	
+	static getDimension = function() { return getInputData(1); }
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		PROCESSOR_OVERLAY_CHECK

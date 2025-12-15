@@ -29,7 +29,7 @@ function Node_FLIP_Apply_Force(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	newInput(2, nodeValue_Slider( "Radius",      4, [1, 16, 0.1] ));
 	newInput(4, nodeValue_Vec2(   "Size",      [ 4, 4 ] ));
 	
-	newInput(1, nodeValue_Vec2(    "Position", [ 0, 0 ] )).setHotkey("G").setUnitRef(function() /*=>*/ {return getDimension()});
+	newInput(1, nodeValue_Vec2(    "Position", [ 0, 0 ] )).setHotkey("G").setUnitSimple();
 	newInput(5, nodeValue_Surface( "Texture" ));
 	// input 6
 	

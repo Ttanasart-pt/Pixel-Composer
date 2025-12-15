@@ -18,9 +18,9 @@ function Node_Noise_Simplex(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput( 3, nodeValue_ISlider(  "Iteration",   1, [1, 16, 0.1] )).setMappable(9);
 	
 	////- =Transform
-	newInput( 1, nodeValue_Vec2(     "Position",   [0,0]   )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput( 1, nodeValue_Vec2(     "Position",   [0,0]   )).setHotkey("G").setUnitSimple();
 	newInput(10, nodeValue_Rotation( "Rotation",    0      )).setHotkey("R");
-	newInput( 2, nodeValue_Vec2(     "Scale",    [.25,.25] )).setHotkey("S").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference).setMappable(8);
+	newInput( 2, nodeValue_Vec2(     "Scale",    [.25,.25] )).setHotkey("S").setUnitSimple().setMappable(8);
 	
 	////- =Iteration
 	newInput(11, nodeValue_Float(  "Scaling",    2));

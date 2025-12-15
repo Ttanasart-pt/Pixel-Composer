@@ -39,7 +39,7 @@ function Node_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
     - Gradient: Displace down the brightness value defined by the Displace map.");
     
 	newInput(16, nodeValue_Bool( "Separate Axis", false ));
-	newInput( 2, nodeValue_Vec2( "Position",      [1,0] )).setTooltip("Vector to displace the pixel by.").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput( 2, nodeValue_Vec2( "Position",      [1,0] )).setTooltip("Vector to displace the pixel by.").setUnitSimple();
 	
 	////- =Iterate
 	newInput( 6, nodeValue_Bool(    "Iterate",       false ));

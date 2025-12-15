@@ -21,7 +21,7 @@ function Node_Noise_Strand(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	newInput( 4, nodeValue_Slider(      "Slope",   .5 )).setShaderProp("slope");
 	
 	////- =Transform
-	newInput( 1, nodeValue_Vec2( "Position", [ 0, 0 ] )).setHotkey("G").setShaderProp("position").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput( 1, nodeValue_Vec2( "Position", [ 0, 0 ] )).setHotkey("G").setShaderProp("position").setUnitSimple();
 	
 	////- =Curve
 	newInput( 5, nodeValue_Slider_Range( "Curve",       [0,0], [ 0, 4, 0.01 ] )).setShaderProp("curve");

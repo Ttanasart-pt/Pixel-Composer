@@ -10,7 +10,7 @@ function Node_VerletSim_Wind(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	newInput(0, nodeValue_Mesh( "Mesh" )).setVisible(true, true);
 	
 	////- =Wind
-	newInput(1, nodeValue_Vec2(     "Center",      [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return DEF_SURF}, VALUE_UNIT.reference);
+	newInput(1, nodeValue_Vec2(     "Center",      [.5,.5] )).setHotkey("G").setUnitSimple();
 	newInput(2, nodeValue_Rotation( "Direction",     0     )).setHotkey("R");
 	newInput(3, nodeValue_Float(    "Width",         8     ));
 	newInput(4, nodeValue_Float(    "Falloff",       4     ));

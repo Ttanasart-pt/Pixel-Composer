@@ -18,7 +18,7 @@ function Node_Mirror_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput( 9, nodeValue_Vec2(        "Constant Dimension",  DEF_SURF ));
 	
 	////- =Mirror
-	newInput( 1, nodeValue_Vec2(        "Position",    [.5,.5] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput( 1, nodeValue_Vec2(        "Position",    [.5,.5] )).setHotkey("G").setUnitSimple();
 	newInput( 2, nodeValue_Rotation(    "Angle",         0     )).setHotkey("R");
 	newInput( 6, nodeValue_Vec2(        "Scale",        [1,1]  ));
 	newInput(10, nodeValue_Enum_Scroll( "Radial Scale",  0, [ "Linear", "Exponential" ] ));

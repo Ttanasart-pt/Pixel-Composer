@@ -15,7 +15,7 @@ function Node_Gabor_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y
 	newInput( 6, nodeValue_Vec2(     "Augment",   [11,31]            )).setShaderProp("augment");
 	
 	////- =Transform
-	newInput( 1, nodeValue_Vec2(     "Position",  [0,0] )).setHotkey("G").setShaderProp("position").setUnitRef(function(i) /*=>*/ {return getDimension(i)});
+	newInput( 1, nodeValue_Vec2(     "Position",  [0,0] )).setHotkey("G").setShaderProp("position").setUnitSimple();
 	newInput(12, nodeValue_Rotation( "Rotation",   0    )).setHotkey("R").setShaderProp("trRotation");
 	newInput( 2, nodeValue_Vec2(     "Scale",     [4,4] )).setHotkey("S").setShaderProp("scale").setMappable(8);
 	// input 16

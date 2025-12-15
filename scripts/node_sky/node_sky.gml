@@ -16,7 +16,7 @@ function Node_Sky(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	newInput(10, nodeValue_Surface( "Mask"       ));
 	
 	////- =Transform
-	newInput(1, nodeValue_Vec2( "Offset", [0,0] )).setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(1, nodeValue_Vec2( "Offset", [0,0] )).setUnitSimple();
 	newInput(2, nodeValue_Vec2( "Scale",  [1,1] ));
 	
 	////- =Sky
@@ -25,7 +25,7 @@ function Node_Sky(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	newInput(8, nodeValue_Float(   "Albedo",    1 ));
 	
 	////- =Sun
-	newInput(5, nodeValue_Vec2(    "Sun",          [.2,.2] )).setHotkey("G").setUnitRef(function(i) /*=>*/ {return getDimension(i)}, VALUE_UNIT.reference);
+	newInput(5, nodeValue_Vec2(    "Sun",          [.2,.2] )).setHotkey("G").setUnitSimple();
 	newInput(6, nodeValue_Float(   "Sun Radius",     500   ));
 	newInput(7, nodeValue_Float(   "Sun Radiance",   20    )).setMappable(14);
 	newInput(9, nodeValue_EScroll( "Coordinate",     0, [ "Rectangular", "Polar" ] ));

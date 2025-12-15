@@ -6,28 +6,28 @@ function Node_Warp_Perspective(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	newActiveInput(1);
 		
 	newInput(2, nodeValue_Vec2("Top left", [ 0, 0 ] ))
-		.setUnitRef(function(index) /*=>*/ {return getDimension(index)}, VALUE_UNIT.reference);
+		.setUnitSimple();
 	
 	newInput(3, nodeValue_Vec2("Top right", [ 1, 0 ] ))
-		.setUnitRef(function(index) /*=>*/ {return getDimension(index)}, VALUE_UNIT.reference);
+		.setUnitSimple();
 	
 	newInput(4, nodeValue_Vec2("Bottom left", [ 0, 1 ] ))
-		.setUnitRef(function(index) /*=>*/ {return getDimension(index)}, VALUE_UNIT.reference);
+		.setUnitSimple();
 	
 	newInput(5, nodeValue_Vec2("Bottom right", [ 1, 1 ] ))
-		.setUnitRef(function(index) /*=>*/ {return getDimension(index)}, VALUE_UNIT.reference);
+		.setUnitSimple();
 		
 	newInput(6, nodeValue_Vec2("Top left", [ 0, 0 ] ))
-		.setUnitRef(function(index) /*=>*/ {return getDimension(index)}, VALUE_UNIT.reference);
+		.setUnitSimple();
 	
 	newInput(7, nodeValue_Vec2("Top right", [ 1, 0 ] ))
-		.setUnitRef(function(index) /*=>*/ {return getDimension(index)}, VALUE_UNIT.reference);
+		.setUnitSimple();
 	
 	newInput(8, nodeValue_Vec2("Bottom left", [ 0, 1 ] ))
-		.setUnitRef(function(index) /*=>*/ {return getDimension(index)}, VALUE_UNIT.reference);
+		.setUnitSimple();
 	
 	newInput(9, nodeValue_Vec2("Bottom right", [ 1, 1 ] ))
-		.setUnitRef(function(index) /*=>*/ {return getDimension(index)}, VALUE_UNIT.reference);
+		.setUnitSimple();
 		
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	

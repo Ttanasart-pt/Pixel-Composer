@@ -1,6 +1,6 @@
 function Panel_Nodes_Manager() : PanelContent() constructor {
 	w = ui(1200);
-	h = ui(640);
+	h = ui(900);
 	
 	edit_w = ui(400);
 	
@@ -48,6 +48,7 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 		[ "alias",      tb_alias,  function() /*=>*/ {return selectNode.info[$ "alias"]          ?? []}    ], 
 		[ "deprecated", cb_dep,    function() /*=>*/ {return selectNode.info[$ "deprecated"]     ?? false} ], 
 	];
+	font = f_p3;
 	
 	array_foreach(editWidgets, function(e) /*=>*/ {return e[1].setFont(f_p2)});
 	
@@ -63,7 +64,7 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 		
 		var sw = sc_folder.surface_w;
 		var ww = sw / col;
-		var hg = ui(20);
+		var hg = line_get_height(font, 2);
 		var hh = hg;
 		
 	    for( var i = 0, n = array_length(_list); i < n; i++ ) {
@@ -91,7 +92,7 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 	        if(toSelectDir == dr.path) selectDir = dr;
 	        if(selectDir == dr) cc = COLORS._main_accent;
 		    
-		    draw_set_text(f_p2, fa_left, fa_center, cc);
+		    draw_set_text(font, fa_left, fa_center, cc);
     		draw_text_add(xx + ui(8 + 8 * _ind), yy + hg / 2, dr.name);
             
             if(!array_empty(dr.subDir)) {
@@ -139,7 +140,7 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 		
 		var ww = sc_content.surface_w;
 		var _h = 0;
-		var hg = ui(20);
+		var hg = line_get_height(font, 2);
 		var yy = _y;
 		var xx = 0;
 		
@@ -162,7 +163,7 @@ function Panel_Nodes_Manager() : PanelContent() constructor {
 	        if(toSelectNode == _con.path) selectNode = _con;
 	        if(selectNode == _con) cc = COLORS._main_accent;
 		        
-		    draw_set_text(f_p2, fa_left, fa_center, cc);
+		    draw_set_text(font, fa_left, fa_center, cc);
 		    draw_text_add(xx, yy + hg / 2, _con.name);
 		    
 		    _h += hg;
