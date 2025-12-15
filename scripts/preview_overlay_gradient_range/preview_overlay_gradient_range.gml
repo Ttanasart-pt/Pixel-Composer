@@ -27,7 +27,7 @@ function preview_overlay_gradient_range(interact, active, _x, _y, _s, _mx, _my, 
 	if(surface_exists(_surf) && (__overlay_hover[0] > 0 || __overlay_hover[1] > 0))
 		draw_surface_stretched_ext(_surf, _x, _y, _sw * _s, _sh * _s, c_white, 0.25);
 	
-	draw_set_text(f_p1, fa_left, fa_bottom, cc);
+	draw_set_text(f_p4, fa_left, fa_bottom, cc);
 	draw_text_add(_ax0 + ui(4), _ay0 - ui(4), "1");
 	draw_text_add(_ax1 + ui(4), _ay1 - ui(4), "2");
 	
@@ -44,7 +44,7 @@ function preview_overlay_gradient_range(interact, active, _x, _y, _s, _mx, _my, 
 	var dir = point_direction(tx0, ty0, tx1, ty1);
 	var dis = point_distance( tx0, ty0, tx1, ty1);
 	
-	draw_set_text(f_p2b, fa_center, fa_center, cc);
+	draw_set_text(f_p4, fa_center, fa_center, cc);
 	var txt = string_cut(mappedJunc.name, dis - ui(16));
 	draw_text_transformed((tx0 + tx1) / 2, (ty0 + ty1) / 2, txt, 1, 1, dir);
 	

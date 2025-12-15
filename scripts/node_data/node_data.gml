@@ -281,8 +281,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		previewable		 = true;
 		preview_draw     = true;
 		preview_index	 = 0;
-		preview_channel  = 0;
-		preview_channel_temp = undefined;
+		preview_channel  = 0; preview_channel_temp = undefined;
 		preview_alpha	 = 1;
 		
 		preview_is_surface = false;

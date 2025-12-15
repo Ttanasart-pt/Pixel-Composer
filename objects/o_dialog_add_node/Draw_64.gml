@@ -46,7 +46,7 @@ if(DIALOG_SHOW_FOCUS) {
 				var _nam = _rec.name;
 				var _spr = _rec.spr;
 				
-				if(buttonInstant_Pad(bb, _rcx, _rcy, _rcs, _rcs, mm, sFOCUS, hv, _nam, _spr, 0, bc, .75, ui(4)) == 2)
+				if(buttonInstant_Pad(bb, _rcx, _rcy, _rcs, _rcs, mm, hv, sFOCUS, _nam, _spr, 0, bc, .75, ui(4)) == 2)
 					buildNode(_rec);
 				
 				_rcx += _rcs + ui(2);

@@ -1027,10 +1027,10 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		FOCUS = noone;
 		
 		if(!array_empty(content)) return;
-		var ind = !array_find(parent.childs, self); //index of the other child
+		var ind = !array_find(parent.childs, self); // index of the sibling
 		var sib = parent.childs[ind];
 		
-		if(!array_empty(sib.content) && array_length(sib.childs) == 2) { //other child is compound panel
+		if(array_length(sib.childs) == 2) { // sibling is compound panel
 			var gparent = parent.parent;
 			if(gparent == noone) {
 				sib.x = PANEL_MAIN.x; sib.y = PANEL_MAIN.y;
@@ -1039,13 +1039,15 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				PANEL_MAIN = sib;
 				sib.parent = noone;
 				PANEL_MAIN.refreshSize();
+				
 			} else {
 				var pind    = array_find(gparent.childs, parent); //index of parent in grandparent object
 				gparent.childs[pind] = sib; //replace parent with sibling
 				sib.parent = gparent;
 				gparent.refreshSize();
 			}
-		} else if(!array_empty(sib.content)) { //other child is content panel, set parent to content panel
+			
+		} else if(!array_empty(sib.content)) { // sibling is content panel, move sibling's content to parent panel
 			parent.setContent(sib.content);
 			parent.childs = [];
 		}

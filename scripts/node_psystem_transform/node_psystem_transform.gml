@@ -138,7 +138,7 @@ function Node_pSystem_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) c
 					
 					case 1 : _sx_t = _sx * _sx_d;
 					         _sy_t = _sy * _sy_d; break;
-						
+					
 					case 2 : _sx_t = _sx_d;
 					         _sy_t = _sy_d;       break;
 				}

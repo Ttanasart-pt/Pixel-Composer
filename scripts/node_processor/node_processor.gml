@@ -247,16 +247,19 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				
 			if(dimension_index > -1) {
 				var _dim  = getDimension(l);
-				for(var i = 0; i < _os; i++) {
+				var i = 0;
+				
+				repeat(_os) {
 					_outa[i] = array_safe_get(_out[i], l);
 					
 					if(outputs[i].type != VALUE_TYPE.surface) continue;
 					_outa[i] = surface_verify(_outa[i], _dim[0], _dim[1], attrDepth());
+					i++;
 				}
 				
 			} else {
-				for(var i = 0; i < _os; i++)
-					_outa[i] = array_safe_get(_out[i], l);
+				var i = 0;
+				repeat(_os) { _outa[i] = array_safe_get(_out[i], l); i++; }
 			}
 			
 			if(_os == 1) {
@@ -265,7 +268,9 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				
 			} else {
 				data = processData(_outa, _inputs, l, frame);
-				for(var i = 0; i < _os; i++) _outputs[i][l] = data[i];
+				
+				var i = 0;
+				repeat(_os) { _outputs[i][l] = data[i]; i++; }
 			}
 		}
 		

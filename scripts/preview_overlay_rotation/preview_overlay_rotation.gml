@@ -96,7 +96,7 @@ function preview_overlay_rotation(interact, active, _x, _y, _s, _mx, _my, _snx, 
 	shader_reset();
 	
 	if(overlay_draw_text) {
-		draw_set_text(f_p2b, fa_center, fa_bottom, COLORS._main_accent);
+		draw_set_text(f_p4, fa_center, fa_bottom, COLORS._main_accent);
 		draw_text_add(round(_ax), round(_ay - ui(4)), overlay_label == ""? name : overlay_label);
 	}
 	

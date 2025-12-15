@@ -858,7 +858,7 @@ function Node_Shape_drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny,
 		draw_arc(cx, cy, _cor, ar, ar + 90);
 		
 		InputDrawOverlay(inputs[9].drawOverlay(w_hoverable, active, _x0, _y0, _s, _mx, _my, _snx, _sny, aa, _max_s, 2));
-	}
+	} // corner
 	
 	switch(_posMode) {
 		case 0 : 
