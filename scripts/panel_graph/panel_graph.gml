@@ -3267,10 +3267,14 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        tb_zoom_level.setFocusHover(pFOCUS, pHOVER);
 	        tb_zoom_level.postBlend = _zmc;
 	        tb_zoom_level.draw(_zmx, ovy, _zmw, _zmh, string(graph_s_to), [ mx, my ], fa_right);
-	        
+	        if(tb_zoom_level.hovering) {
+            	mouse_on_graph = false;
+            	CURSOR_SPRITE  = THEME.view_zoom;
+            }
+            
 	    	draw_set_text(f_p2, fa_right, fa_top, _zmc);
 	        if(!tb_zoom_level.selecting && !tb_zoom_level.sliding)
-		    	draw_text(_zmx - _zmw + ui(14), ovy + ui(1), "x");
+		    	draw_text(_zmx - _zmw + ui(14), ovy, "x");
         }
     	
         drawToolBar();

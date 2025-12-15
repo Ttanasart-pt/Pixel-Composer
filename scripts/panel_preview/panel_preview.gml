@@ -2057,20 +2057,20 @@ function Panel_Preview() : PanelContent() constructor {
                     var _zmw  = string_width(_zms) + ui(16);
                     var _zmx  = right_menu_x + ui(8);
                     var _zmc  = _zmsl? COLORS._main_text : COLORS._main_text_sub;
-                    if(tb_zoom_level.hovering) {
-                    	mouse_on_preview = false;
-                    	CURSOR_SPRITE    = THEME.view_zoom;
-                    }
                     
                     if(_zmsl) draw_sprite_stretched(THEME.textbox, 3, _zmx - _zmw + ui(4), right_menu_y + ui(2), _zmw - ui(10), _lh - ui(2));
                     
                     tb_zoom_level.postBlend = _zmc;
                     tb_zoom_level.setFocusHover(pFOCUS, pHOVER);
                     tb_zoom_level.draw(_zmx, right_menu_y, _zmw, _lh, string(canvas_s), [mx,my], fa_right);
+                    if(tb_zoom_level.hovering) {
+                    	mouse_on_preview = false;
+                    	CURSOR_SPRITE    = THEME.view_zoom;
+                    }
                     
                 	draw_set_text(f_p2, fa_right, fa_top, _zmc);
                     if(!tb_zoom_level.selecting && !tb_zoom_level.sliding)
-	                	draw_text(_zmx - _zmw + ui(14), right_menu_y + ui(1), "x");
+	                	draw_text(_zmx - _zmw + ui(14), right_menu_y, "x");
                     
                 	draw_set_color(COLORS._main_text_sub);
                 	
