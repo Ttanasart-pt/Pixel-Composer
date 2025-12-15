@@ -12,7 +12,7 @@ function Node_Fluffify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	////- =Fluff
 	newInput(16, nodeValue_EScroll(  "Shape",  0, [ "Circle", "Diamond", "Square", "Surface" ] ));
-	newInput(27, nodeValue_Surface(  "Surface" ));
+	newInput(26, nodeValue_Surface(  "Surface" ));
 	newInput( 6, nodeValue_Slider(   "Size",   1, [0, 2, .01] )).setUnitSimple();
 	newInput( 9, nodeValue_Slider(   "Radius", 1, [0, 2, .01] )).setMappable(15);
 	newInput( 8, nodeValue_Rotation( "Phase",  0              ));
@@ -38,13 +38,13 @@ function Node_Fluffify(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	////- =Decorner
 	newInput(24, nodeValue_Bool(     "Use Decorner",   true ));
 	newInput(25, nodeValue_Slider(   "Tolerance",      0    ));
-	//input 28
+	//input 27
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 5, 7, 
 		[ "Surfaces",   true     ],  0,  1,  2,  3,  4,  
-		[ "Fluff",     false     ], 16, 27,  6,  9,  8, 15, 
+		[ "Fluff",     false     ], 16, 26,  6,  9,  8, 15, 
 		[ "Iteration", false     ], 10, 11, 12, 20, 
 		[ "Rendering", false     ], 13, 21, 22, 14, 17, 
 		[ "Coloring",  false     ], 18, 23, 19, 
