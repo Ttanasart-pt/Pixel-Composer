@@ -64,7 +64,7 @@ function Node_pSystem_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				draw_set_color(COLORS._main_accent);
 				draw_set_alpha(.5);
 				switch(cs) {
-					case AREA_SHAPE.elipse :	draw_ellipse_dash(cx, cy, cw + _fall, ch + _fall); break;	
+					case AREA_SHAPE.elipse :	draw_ellipse_dash(cx, cy, cw - _fall, ch - _fall); break;	
 					case AREA_SHAPE.rectangle :	draw_rectangle_dashed(x0, y0, x1, y1); break;	
 				}
 				draw_set_alpha(1);
@@ -79,7 +79,7 @@ function Node_pSystem_Mask(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				draw_set_color(COLORS._main_accent);
 				draw_set_alpha(.5);
 				switch(cs) {
-					case AREA_SHAPE.elipse :	draw_ellipse_dash(cx, cy, cw - _fall, ch - _fall); break;	
+					case AREA_SHAPE.elipse :	draw_ellipse_dash(cx, cy, cw + _fall, ch + _fall); break;	
 					case AREA_SHAPE.rectangle :	draw_rectangle_dashed(x0, y0, x1, y1); break;	
 				}
 				draw_set_alpha(1);

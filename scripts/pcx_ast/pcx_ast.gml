@@ -39,8 +39,8 @@
     PXC_FN("irandom",  [ ["min = 0","max = 1"],    function(n=0,m=1) /*=>*/ {return irandom_range(n, m)} ]);
     PXC_FN("range",    [ ["length","start = 0","step = 1"],   
     	function(l=0,s=0,e=1) /*=>*/ { 
-			var arr = array_create(a);
-			for( var i = 0; i < a; i++ ) arr[i] = s + i * e;
+			var arr = array_create(l);
+			for( var i = 0; i < l; i++ ) arr[i] = s + i * e;
 			return arr;
 		} ]);
     
@@ -331,8 +331,7 @@
         }
         
         static eval = function(params = {}, isLeft = false) {
-            //print($"{symbol}, {l} | {r}")
-            //print(params);
+            // print($"[eval] {symbol}, {l} | {r}");
             
             if(ds_map_exists(global.PCX_FUNCTIONS, symbol)) {
                 if(!is_array(l)) return 0;

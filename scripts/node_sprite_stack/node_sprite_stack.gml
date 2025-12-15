@@ -300,14 +300,14 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			} else if(is_array(_surf)) {
 				for(var i = 0; i < _amo; i++) {
 					var index = clamp(i, 0, array_length(_surf) - 1);
-					var _surf = _surf[index];
-					if(!is_surface(_surf)) continue;
+					var _s    = _surf[index];
+					if(!is_surface(_s)) continue;
 					
-					var _ww = surface_get_width_safe(_surf);
-					var _hh = surface_get_height_safe(_surf);
+					var _ww = surface_get_width_safe(_s);
+					var _hh = surface_get_height_safe(_s);
 					var _po = point_rotate(0, 0, _ww / 2, _hh / 2, _rot);
 					
-					draw_surface_ext_safe(_surf, _po[0] + _pos[0], _po[1] + _pos[1], 1, 1, _rot, _col, _color_get_alpha(_col));
+					draw_surface_ext_safe(_s, _po[0] + _pos[0], _po[1] + _pos[1], 1, 1, _rot, _col, _color_get_alpha(_col));
 					_pos[0] += _shf[0];
 					_pos[1] += _shf[1];
 				}

@@ -1568,6 +1568,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			};
 			
 			var _exp_res = undefined;
+			// print(expTree);
 			
 			try { 
 				_exp_res = expTree.eval({
@@ -1577,7 +1578,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					node_values : node.input_value_map,
 				});
 				
-			} catch(e) noti_warning(e[$ "message"] ?? "");
+			} catch(e) {
+				// noti_warning(e[$ "message"]    ?? "");
+				// noti_warning(e[$ "stacktrace"] ?? "");
+				log_warning("PCX", exception_print(e));
+			}
 			
 			printIf(global.LOG_EXPRESSION, $">>>> Result = {_exp_res}");
 			
