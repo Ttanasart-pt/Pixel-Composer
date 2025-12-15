@@ -1,7 +1,7 @@
 {
   "$GMShader":"",
-  "%Name":"sh_chromatic_aberration",
-  "name":"sh_chromatic_aberration",
+  "%Name":"sh_chromatic_aberration_cont",
+  "name":"sh_chromatic_aberration_cont",
   "parent":{
     "name":"chromatic_abb",
     "path":"folders/nodes/data/filter/effects/chromatic_abb.yy",

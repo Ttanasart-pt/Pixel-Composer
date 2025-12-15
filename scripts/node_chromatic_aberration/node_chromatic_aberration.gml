@@ -12,7 +12,7 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 	__init_mask_modifier(10, 12); // inputs 12, 13, 
 	
 	////- =Effect
-	newInput( 5, nodeValue_EButton( "Type",       0, [ "RGB", "Continuous" ] ));
+	newInput( 5, nodeValue_EButton( "Type",       0, [ "Scale", "Continuous" ] ));
 	newInput( 1, nodeValue_Vec2(    "Center",   [.5,.5] )).hideLabel().setHotkey("G").setUnitSimple();
 	newInput( 2, nodeValue_Slider(  "Strength",   1, [-16, 16, 0.01] )).setHotkey("S").setMappable(4).setCurvable(19);
 	newInput( 6, nodeValue_Slider(  "Intensity",  1, [  0,  4, 0.01] )).setHotkey("I").setMappable(7);
@@ -20,6 +20,7 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 	newInput(17, nodeValue_Slider(  "Scale",      1, [  0, 16, 0.01] )).setMappable(18);
 	
 	////- =Processing
+	newInput(20, nodeValue_Int( "Iteration",  1  ));
 	newInput(14, nodeValue_Int( "Resolution", 64 ));
 	// input 20
 	
@@ -28,7 +29,7 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 	input_display_list = [ 3, 
 		[ "Surface",    false ], 0, 8, 9, 10, 11, 12, 13, 
 		[ "Effect",     false ], 5, 1, 2, 4, 19, 6, 7, 15, 16, 17, 18,
-		[ "Processing", false ], 14, 
+		[ "Processing", false ], 20, 14, 
 	];
 	
 	////- Node
@@ -53,24 +54,37 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 			var _surf = _data[ 0];
 			var _cent = _data[ 1];
 			var _type = _data[ 5];
+			
+			var _iter = _data[20];
 			var _reso = _data[14];
 			
 			inputs[15].setVisible(_type == 1);
 			inputs[17].setVisible(_type == 1);
+			
+			inputs[20].setVisible(_type == 0);
+			inputs[14].setVisible(_type == 1);
 		#endregion
 		
-		surface_set_shader(_outSurf, sh_chromatic_aberration);
+		var sh = sh_chromatic_aberration;
+		switch(_type) {
+			case 0 : sh = sh_chromatic_aberration;      break;
+			case 1 : sh = sh_chromatic_aberration_cont; break;
+		}
+		
+		surface_set_shader(_outSurf, sh);
 			shader_set_interpolation(_surf);
 			shader_set_uv(_data[8], _data[9]);
 			
-			shader_set_f("resolution",    _reso );
 			shader_set_dim("dimension",   _surf );
-			shader_set_i("type",          _type );
 			shader_set_2("center",        _cent );
+			
 			shader_set_f_map("strength",  _data[ 2], _data[ 4], inputs[ 2], _data[19] );
 			shader_set_f_map("intensity", _data[ 6], _data[ 7], inputs[ 6] );
 			shader_set_f_map("chromaShf", _data[15], _data[16], inputs[15] );
 			shader_set_f_map("chromaSca", _data[17], _data[18], inputs[17] );
+			
+			shader_set_f("resolution",    _reso );
+			shader_set_i("iteration",     _iter );
 			
 			draw_surface_safe(_surf);
 		surface_reset_shader();

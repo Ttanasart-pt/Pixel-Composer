@@ -46,21 +46,25 @@ function Node_Normal(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _hei = _data[1];
-		var _smt = _data[2];
-		var _nor = _data[4];
-		var _swx = _data[5];
+		#region data
+			var _surf = _data[0];
+			
+			var _hei  = _data[1];
+			var _smt  = _data[2];
+			var _nor  = _data[4];
+			var _swx  = _data[5];
+		#endregion
 		
 		surface_set_shader(_outSurf, sh_normal);
 			gpu_set_texfilter(true);
+			shader_set_f("dimension", surface_get_dimension(_surf));
 			
-			shader_set_f("dimension", surface_get_dimension(_data[0]), surface_get_height_safe(_data[0]));
 			shader_set_f_map("height", _hei, _data[6], inputs[1]);
 			shader_set_f_map("smooth", _smt, _data[7], inputs[2]);
 			shader_set_i("normal",     _nor);
 			shader_set_i("swapx",      _swx);
 			
-			draw_surface_safe(_data[0]);
+			draw_surface_safe(_surf);
 			
 			gpu_set_texfilter(false);
 		surface_reset_shader();

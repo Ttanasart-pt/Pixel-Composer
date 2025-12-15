@@ -114,6 +114,8 @@
     }
 
 #endregion -- curve --
+// continuous chromatic aberration
+// by 01000001
 
 #pragma use(sampler)
 
@@ -270,20 +272,46 @@ uniform vec2      chromaSca;
 uniform int       chromaScaUseSurf;
 uniform sampler2D chromaScaSurf;
 
-uniform int       iteration;
+float saturate (float x) { return min(1.0, max(0.0,x)); }
+vec3  saturate (vec3  x) { return min(vec3(1.,1.,1.), max(vec3(0.,0.,0.),x)); }
 
-vec4 chroma_scaling(vec2 uv, float str, float itns) {
-	vec2 tx = 1.0 / dimension;
-    vec2 co = (uv - center * tx) * 2.0;
-    vec2 pp = vec2(0.);
-	
-	pp = dot(co, co) * co;
-	pp *= str * tx;
-	
-    vec4 cr = sampleTexture(gm_BaseTexture, uv-pp, .5 ); cr.rgb *= cr.a;
-    vec4 cb = sampleTexture(gm_BaseTexture, uv+pp, 1. ); cb.rgb *= cb.a;
-    vec4 cv = sampleTexture(gm_BaseTexture, uv        ); cv.rgb *= cv.a;
-    vec4 res = vec4(cr.r, cv.g, cb.b, cv.a + cr.a + cb.a);
+vec3 bump3y(vec3 x, vec3 yoffset) {
+	vec3 y = vec3(1.) - x * x;
+	y = saturate(y - yoffset);
+	return y;
+}
+
+vec3 spectral_zucconi6(float x) {
+	const vec3 c1 = vec3(3.54585104, 2.93225262, 2.41593945);
+	const vec3 x1 = vec3(0.69549072, 0.49228336, 0.27699880);
+	const vec3 y1 = vec3(0.02312639, 0.15225084, 0.52607955);
+
+	const vec3 c2 = vec3(3.90307140, 3.21182957, 3.96587128);
+	const vec3 x2 = vec3(0.11748627, 0.86755042, 0.66077860);
+	const vec3 y2 = vec3(0.84897130, 0.88445281, 0.73949448);
+
+	return bump3y(c1 * (x - x1), y1) +
+		   bump3y(c2 * (x - x2), y2) ;
+}
+
+vec4 chroma_continuous(vec2 uv, float str, float itns, float offset, float scale) {
+	float stp  = resolution;
+	vec2  tx   = 1.0 / dimension;
+	float strr = str / 16. * .2;
+	vec2  cuv  = (uv - center * tx) * 2.0;
+    vec3  o    = vec3(0.);
+    vec4  cv   = sampleTexture(gm_BaseTexture, uv);
+    
+    for (float i = 0.; i <= 1.; i += 1. / stp) {
+    	float str = strength_curve_use == 1? curveEval(strength_curve, strength_amount, i) : 1.;
+    	vec4  sam = sampleTexture(gm_BaseTexture, uv - cuv * strr * i * str, i); 
+    	sam.rgb *= sam.a;
+        o += pow(sam.rgb, vec3(2.2)) * spectral_zucconi6(fract(i * scale + offset));
+    }
+    
+    o /= stp * vec3(.386, .372, .23);
+    o  = pow(o, vec3(1. / 2.2));
+    vec4 res = vec4(o, 1.);
     
     return mix(cv, res, itns);
 }
@@ -313,15 +341,5 @@ void main() {
 		chrS = mix(chromaSca.x, chromaSca.y, (_vMap.r + _vMap.g + _vMap.b) / 3.);
 	}
 	
-	// gl_FragColor = chroma_scaling(v_vTexcoord, str, itns);
-	
-	vec4  res = vec4(0.);
-	float itr = float(iteration);
-	
-	for(float i = 0.; i < itr; i++) {
-		float rat = (i + 1.) / itr;
-		res += chroma_scaling(v_vTexcoord, str * rat, itns) / itr;
-	}
-	
-	gl_FragColor = res;
+	gl_FragColor = chroma_continuous(v_vTexcoord, str, itns, chrO, chrS);
 }

@@ -30,7 +30,7 @@ void main() {
 	
 	vec2 tx = 1. / dimension;
     
-	vec4 c    = texture2D(gm_BaseTexture, v_vTexcoord);
+	vec4  c   = texture2D(gm_BaseTexture, v_vTexcoord);
 	float siz = 1. + smt;
 	
     float col = bright(c);
