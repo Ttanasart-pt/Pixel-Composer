@@ -803,6 +803,7 @@
             { "label": "Populate" },
             "Node_Repeat",
             "Node_Scatter",
+            "Node_Scatter_Sampler",
             "Node_Repeat_Texture",
             
             { "label": "Simulation" },

@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_scatter_sampler",
+  "name":"sh_scatter_sampler",
+  "parent":{
+    "name":"generator",
+    "path":"folders/nodes/data/generator.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}
