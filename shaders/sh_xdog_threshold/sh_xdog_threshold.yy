@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_xdog_threshold",
+  "name":"sh_xdog_threshold",
+  "parent":{
+    "name":"xdog",
+    "path":"folders/nodes/data/filter/colors/xdog.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

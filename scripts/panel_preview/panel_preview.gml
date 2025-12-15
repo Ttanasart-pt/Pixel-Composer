@@ -366,7 +366,8 @@ function Panel_Preview() : PanelContent() constructor {
         
         sbChannel = new scrollBox([], function(i) /*=>*/ {
             var node = __getNodePreview();
-            if(node == noone) return;
+            if(node == noone)  return;
+            if(!is_numeric(i)) return;
             
             var _ind = array_safe_get(sbChannelIndex, i, -1);
             if(_ind == -1) return;

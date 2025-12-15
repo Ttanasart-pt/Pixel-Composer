@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_xdog_different",
+  "name":"sh_xdog_different",
+  "parent":{
+    "name":"xdog",
+    "path":"folders/nodes/data/filter/colors/xdog.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

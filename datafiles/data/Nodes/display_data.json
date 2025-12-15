@@ -647,6 +647,7 @@
             "Node_Normalize",
             "Node_Gamma_Map",
             "Node_Tonemap_ACE",
+            "Node_XDoG_Threshold",
             
             { "label": "Fixes" },
             "Node_De_Corner",
