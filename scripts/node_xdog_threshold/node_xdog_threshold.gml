@@ -11,10 +11,10 @@ function Node_XDoG_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	__init_mask_modifier(1, 3); // inputs 3, 4
 	
 	////- =XDoG
-	newInput( 7, nodeValue_Float(  "Radius",  4   ));
-	newInput( 8, nodeValue_Float(  "k",       1.6 ));
-	newInput( 9, nodeValue_Float(  "Gamma",   1   ));
-	newInput(10, nodeValue_Float(  "Epsilon", 1   ));
+	newInput( 7, nodeValue_Float(  "Radius",   4 ));
+	newInput( 8, nodeValue_Float(  "k",        8 ));
+	newInput( 9, nodeValue_Float(  "Gamma",    1 ));
+	newInput(10, nodeValue_Slider( "Epsilon", .1 ));
 	// inputs 8
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone ));
