@@ -473,6 +473,20 @@ function Project() constructor {
 		_map.favVal = [];
 		for( var i = 0, n = array_length(favoritedValues); i < n; i++ ) {
 			var _fa = favoritedValues[i];
+			
+			if(is_array(_fa)) {
+				var _nid = _fa[0];
+				var _ind = _fa[1];
+				
+				var _nod = PROJECT.nodeMap[? _nid];
+				if(!is(_nod, Node)) continue;
+				
+				var _inp = array_safe_get_fast(_nod.inputs, _ind);
+				if(is(_inp, NodeValue))
+					favoritedValues[i] = _inp;
+			}
+			
+			var _fa = favoritedValues[i];
 			if(!_fa.node.active) continue;
 			array_push(_map.favVal, [_fa.node.node_id, _fa.index]);
 		}
@@ -556,7 +570,7 @@ function Project() constructor {
 			favoritedValues = [];
 			
 			for( var i = 0, n = array_length(_favVal); i < n; i++ )
-				favoritedValues = _favVal[i];
+				favoritedValues[i] = _favVal[i];
 		}
 		
 		if(has(_map, "addon")) {
