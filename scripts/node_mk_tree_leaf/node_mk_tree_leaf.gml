@@ -82,7 +82,7 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 			var _amou = getInputData( 2);
 			var _auni = inputs[2].attributes.unit;
-			inputs[2].setName(_auni? "Density" : "Amount");
+			inputs[2].setName(_auni? "Distance" : "Amount");
 			amountUnitToggle.icon_index = _auni;
 			
 			var _pos  = getInputData( 1);
