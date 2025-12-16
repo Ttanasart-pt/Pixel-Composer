@@ -1,14 +1,21 @@
 function Node_Offset(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Offset";
 	
-	newInput(0, nodeValue_Surface( "Surface In"   ));
+	newActiveInput(3);
+	
+	////- Surfaces
+	newInput(0, nodeValue_Surface( "Surface In" ));
+	newInput(4, nodeValue_Surface( "Mask"       ));
+	newInput(5, nodeValue_Slider(  "Mix", 1     ));
+	__init_mask_modifier(4, 6); // inputs 6, 7
+	
+	////- Offset
 	newInput(1, nodeValue_Slider(  "X Offset", .5 ));
 	newInput(2, nodeValue_Slider(  "Y Offset", .5 ));
-	
-	newActiveInput(3);
+	// 8
 		
 	input_display_list = [ 3, 
-		["Surfaces", true],	0, 
+		["Surfaces", true],	0, 4, 5, 6, 7, 
 		["Offset",	false],	1, 2, 
 	]
 	
@@ -70,12 +77,16 @@ function Node_Offset(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
+		var _surf = _data[0];
 		
 		surface_set_shader(_outSurf, sh_offset);
 			shader_set_f("offset", -_data[1], -_data[2]);
 			
-			draw_surface_safe(_data[0]);
+			draw_surface_safe(_surf);
 		surface_reset_shader();
+		
+		__process_mask_modifier(_data);
+		_outSurf = mask_apply(_surf, _outSurf, _data[4], _data[5]);
 		
 		return _outSurf;
 	}
