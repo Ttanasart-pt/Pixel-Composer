@@ -74,6 +74,12 @@ function Node_pSystem_from_Points(_x, _y, _group = noone) : Node(_x, _y, _group)
 			buffer_write_at( b, o + PSYSTEM_OFF.scax,   buffer_f64,  1    );
 			buffer_write_at( b, o + PSYSTEM_OFF.scay,   buffer_f64,  1    );
 			
+			buffer_write_at( b, o + PSYSTEM_OFF.pospx,   buffer_f64, px   );
+			buffer_write_at( b, o + PSYSTEM_OFF.pospy,   buffer_f64, py   );
+			
+			buffer_write_at( b, o + PSYSTEM_OFF.velx,   buffer_f64,  0    );
+			buffer_write_at( b, o + PSYSTEM_OFF.vely,   buffer_f64,  0    );
+			
 			buffer_write_at( b, o + PSYSTEM_OFF.blnr,   buffer_u8,   255  );
 			buffer_write_at( b, o + PSYSTEM_OFF.blng,   buffer_u8,   255  );
 			buffer_write_at( b, o + PSYSTEM_OFF.blnb,   buffer_u8,   255  );

@@ -15,14 +15,15 @@ function Node_pSystem_Gravity(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	////- =Gravity
 	newInput( 3, nodeValue_Range(    "Strength",  [1,1], true )).setCurvable( 4, CURVE_DEF_11, "Over Lifespan"); 
-	newInput( 5, nodeValue_Rotation( "Direction", -90 ));
-	// 6
+	newInput( 5, nodeValue_Rotation( "Direction", -90   ));
+	newInput( 6, nodeValue_Bool(     "Apply",     false ));
+	// 7
 	
 	newOutput(0, nodeValue_Output("Particles", VALUE_TYPE.particle, noone ));
 	
 	input_display_list = [ 2, 
 		[ "Particles", false ], 0, 1, 
-		[ "Gravity",   false ], 3, 4, 5, 
+		[ "Gravity",   false ], 3, 4, 5, 6, 
 	];
 	
 	////- Nodes
@@ -53,6 +54,7 @@ function Node_pSystem_Gravity(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		var _seed = getInputData( 2);
 		var _strn = getInputData( 3), _strn_curved = inputs[3].attributes.curved && curve_strn != undefined;
 		var _dirr = getInputData( 5);
+		var _aply = getInputData( 6);
 		
 		var _partAmo  = _parts.maxCursor;
 		var _partBuff = _parts.buffer;
@@ -91,6 +93,15 @@ function Node_pSystem_Gravity(_x, _y, _group = noone) : Node(_x, _y, _group) con
 			
 			buffer_write_at( _partBuff, _start + PSYSTEM_OFF.velx, buffer_f64, _vx );
 			buffer_write(    _partBuff,                            buffer_f64, _vy );
+				
+			if(_aply) {
+				_px += _vx;
+				_py += _vy;
+				
+				buffer_write_at( _partBuff, _start + PSYSTEM_OFF.posx, buffer_f64, _px );
+				buffer_write(    _partBuff,                            buffer_f64, _py );
+				
+			}
 		}
 		
 	}
