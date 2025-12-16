@@ -76,6 +76,10 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 				draw_surface_ext_safe(surface, x, y, sx * scale, sy * scale, dir, color); 
 				break;
 			
+			case 3 : 
+				draw_set_color(color);
+				draw_line(x0, y0, x2, y2);
+				break;
 		}
 	}
 	

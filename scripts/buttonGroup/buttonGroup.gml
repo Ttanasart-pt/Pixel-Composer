@@ -99,7 +99,7 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 			}
 		}
 		
-		display_button = !collapsable || total_width < _w;
+		display_button = !collapsable || total_width <= _w;
 		var ww  = (_mx? _tw : _w) / tamo;
 		
 		if(display_button) {

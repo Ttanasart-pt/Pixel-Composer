@@ -330,6 +330,7 @@ function Panel_Preview() : PanelContent() constructor {
     	];
     	
     	sb_shader = new scrollBox(preview_shaders, function(i) /*=>*/ { preview_shader = i; }).setFont(f_p3);
+    	bb_shader = new buttonGroup(array_create(8, THEME.preview_channels), function(i) /*=>*/ { preview_shader = i; }).setFont(f_p3);
     #endregion
     
     #region ---- tool ----
@@ -2506,14 +2507,22 @@ function Panel_Preview() : PanelContent() constructor {
 		} else {
 			var m  = [mx,my];
 			
-            var cw = ui(120);
-            var ch = topbar_height - ui(11);
+			var cw = ui(120);
+			var ch = topbar_height - ui(11);
 			var cx = w - ui(6) - cw;
-            var cy = ui(6);
+			var cy = ui(6);
             
-            sb_shader.setFocusHover(pFOCUS, pHOVER);
-            sb_shader.setTextColor(preview_shader? COLORS._main_accent : COLORS._main_text);
+			sb_shader.setFocusHover(pFOCUS, pHOVER);
+			sb_shader.setTextColor(preview_shader? COLORS._main_accent : COLORS._main_text);
 			sb_shader.draw(cx, cy, cw, ch, preview_shader, m, x, y);
+			
+			// var cw = ui(240);
+			// var ch = topbar_height - ui(11);
+			// var cx = w - ui(6) - cw;
+			// var cy = ui(6);
+
+   //         bb_shader.setFocusHover(pFOCUS, pHOVER);
+			// bb_shader.draw(cx, cy, cw, ch, preview_shader, m, x, y);
 			
 			if(preview_shader) {
 				var bs = ch;

@@ -9,7 +9,7 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(0, nodeValue_Struct("Branches", noone)).setVisible(true, true).setCustomData(global.MKTREE_JUNC);
 	
 	////- =Leaf
-	newInput( 1, nodeValue_Slider_Range( "Branch Position", [.5,1] ));
+	newInput( 1, nodeValue_Slider_Range( "Leaf Position", [.5,1] ));
 	newInput(19, nodeValue_Enum_Button(  "Distribution",     0, [ "Random", "Uniform" ] ));
 	
 	newInput( 2, nodeValue_Range( "Amount",  [8,16]        ));
@@ -19,7 +19,7 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(15, nodeValue_Bool(  "Pair",    false         ));
 	
 	////- =Shape
-	newInput( 8, nodeValue_Enum_Button( "Shape",      0, [ "Leaf", "Circle", "Surface" ] ));
+	newInput( 8, nodeValue_Enum_Button( "Shape",      0, [ "Leaf", "Circle", "Surface", "Line" ] ));
 	newInput( 3, nodeValue_Vec2_Range(  "Size",      [4,4,2,2] )).setCurvable(18, CURVE_DEF_11, "Over Branch");
 	newInput( 9, nodeValue_Surface(     "Texture",   noone ));
 	newInput(21, nodeValue_Slider(      "Leaf Span", .5    ));
@@ -48,6 +48,14 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		[ "Growth", false ], 22, 
 	];
 	
+	amountUnitToggle = button(function() /*=>*/ {
+		inputs[2].attributes.unit = !inputs[2].attributes.unit;
+		triggerRender();
+	}).setIcon(THEME.mk_tree_leaf_unit).iconPad();
+	
+	inputs[2].attributes.unit = VALUE_UNIT.constant;
+	inputs[2].editWidget.setSideButton(amountUnitToggle);
+	
 	////- Nodes
 	
 	static getDimension = function() /*=>*/ {return is(inline_context, Node_MK_Tree_Inline)? inline_context.dimension : [1,1]};
@@ -70,11 +78,15 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _gDir = inline_context.gravityDir;
 			random_set_seed(_seed);
 			
-			var _tree = getInputData(0);
+			var _tree = getInputData( 0);
+			
+			var _amou = getInputData( 2);
+			var _auni = inputs[2].attributes.unit;
+			inputs[2].setName(_auni? "Density" : "Amount");
+			amountUnitToggle.icon_index = _auni;
 			
 			var _pos  = getInputData( 1);
 			var _dist = getInputData(19);
-			var _amou = getInputData( 2);
 			var _sprd = getInputData( 7);
 			var _sprC = getInputData(16), curve_spread = inputs[ 7].attributes.curved? new curveMap(_sprC)  : undefined;
 			var _grav = getInputData(27);
@@ -133,6 +145,8 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _sn = array_length(_sg);
 			
 			var _amoR = random_range(_amou[0], _amou[1]);
+			if(_auni) _amoR = _br.totalLength / _amoR; // density
+			
 			var _amo  = _amoR / _sn;
 			var _amf  = floor(_amo);
 			var _aml  = frac(_amo);

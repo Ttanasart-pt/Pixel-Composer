@@ -36,7 +36,7 @@ if(DIALOG_SHOW_FOCUS) {
 			var _rcx  = _content_x + ui(4);
 			var _rcy  = _content_y + ui(4);
 			var bb = noone;
-			var bc = [COLORS._main_icon, c_white];
+			var bc = [COLORS._main_icon_light, c_white];
 			var mm = [mouse_mx, mouse_my];
 			var hv = sHOVER && point_in_rectangle(mouse_mx, mouse_my, _content_x, _content_y, _content_x + _content_w, _content_y + _rcs);
 			
