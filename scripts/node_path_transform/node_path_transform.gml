@@ -1,6 +1,7 @@
 function Node_Path_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Transform Path";
 	setDimension(96, 48);
+	dimension_index = -1;
 	setDrawIcon(s_node_path_transform);
 	
 	newInput(0, nodeValue_PathNode( "Path" ));

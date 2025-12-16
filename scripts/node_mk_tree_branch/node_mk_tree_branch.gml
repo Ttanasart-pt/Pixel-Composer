@@ -58,6 +58,14 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		[ "Growth",    false ], 20, 
 	];
 	
+	amountUnitToggle = button(function() /*=>*/ {
+		inputs[5].attributes.unit = !inputs[5].attributes.unit;
+		triggerRender();
+	}).setIcon(THEME.mk_tree_leaf_unit).iconPad();
+	
+	inputs[5].attributes.unit = VALUE_UNIT.constant;
+	inputs[5].editWidget.setSideButton(amountUnitToggle);
+	
 	////- Nodes
 	
 	static getDimension = function() /*=>*/ {return is(inline_context, Node_MK_Tree_Inline)? inline_context.dimension : [1,1]};
@@ -81,6 +89,10 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			var _tree = getInputData(0);
 			
 			var _bran = getInputData( 5);
+			var _auni = inputs[5].attributes.unit;
+			inputs[5].setName(_auni? "Distance" : "Amount");
+			amountUnitToggle.icon_index = _auni;
+			
 			var _dist = getInputData(19);
 			var _oriR = getInputData( 8);
 			
@@ -131,6 +143,8 @@ function Node_MK_Tree_Branch(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		for( var i = 0, n = array_length(_tree); i < n; i++ ) {
 			var _tr  = _tree[i];
 			var _amo = irandom_range(_bran[0], _bran[1]);
+			if(_auni) _amo = _tr.totalLength / _amo; // density
+			
 			var  rat, j = 0;
 			
 			repeat(_amo) {
