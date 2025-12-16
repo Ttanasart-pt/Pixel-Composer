@@ -31,6 +31,7 @@ function Node_MK_Pile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
+	newOutput(1, nodeValue_Output("Positions",   VALUE_TYPE.float,   [0,0])).setDisplay(VALUE_DISPLAY.vector);
 	
 	////- Nodes
 	
@@ -40,7 +41,7 @@ function Node_MK_Pile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		InputDrawOverlay(inputs[5].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny));
 	}
 	
-	static processData = function(_outSurf, _data, _array_index) {
+	static processData = function(_outData, _data, _array_index) {
 		#region data
 			var _dim  = _data[1];
 			var _seed = _data[2];
@@ -60,13 +61,17 @@ function Node_MK_Pile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _scat    = _data[11];
 			var _scatRng = _data[12];
 			
-			if(!is_surface(_surf)) return _outSurf;
+			if(!is_surface(_surf)) return _outData;
 		#endregion
 		
 		var _sw   = surface_get_width_safe(_surf);
 		var _sh   = surface_get_height_safe(_surf);
 		var _grid = sqrt(_amou * 2);
 	    var pile_height = array_create(_grid * _grid);
+		
+		var _outSurf = _outData[0];
+		var _outPoin = _outData[1];
+		var _pointL  = 0;
 		
 		surface_set_target(_outSurf);
 			DRAW_CLEAR
@@ -148,6 +153,7 @@ function Node_MK_Pile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					
 					repeat(_hh) {
 						draw_surface(_surf, _colX, _colY);
+						_outPoin[_pointL++] = [_colX, _colY];
 						_colY -= _dept;
 					}
 		    	}
@@ -164,6 +170,8 @@ function Node_MK_Pile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		    
 		surface_reset_target();
 		
-		return _outSurf;
+		array_resize(_outPoin, _pointL);
+		
+		return _outData;
 	}
 }
