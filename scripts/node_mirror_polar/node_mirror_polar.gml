@@ -22,19 +22,22 @@ function Node_Mirror_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	newInput( 2, nodeValue_Rotation(    "Angle",         0     )).setHotkey("R");
 	newInput( 6, nodeValue_Vec2(        "Scale",        [1,1]  ));
 	newInput(10, nodeValue_Enum_Scroll( "Radial Scale",  0, [ "Linear", "Exponential" ] ));
+	newInput(13, nodeValue_Float(       "Trim Radius",   0 ));
 	
 	////- =Spokes
 	newInput( 4, nodeValue_Float( "Spokes",     4     )).setMappable(11).setCurvable(12);
 	newInput( 5, nodeValue_Bool(  "Reflective", false ));
-	// 13
+	// 14
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 3,
 		[ "Surfaces", false ],  0,  7,  8,  9, 
-		[ "Mirror",   false ],  1,  2,  6, 10, 
+		[ "Mirror",   false ],  1,  2,  6, 10, 13, 
 		[ "Spokes",   false ],  4, 11, 12,  5, 
-	]
+	];
+	
+	////- Node
 	
 	attribute_surface_depth();
 	attribute_interpolation();
@@ -95,6 +98,7 @@ function Node_Mirror_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			var _conS = _data[9];
 			
 			var _rsca = _data[10];
+			var _trim = _data[13];
 			
 			inputs[8].setVisible(_outt == 1);
 			inputs[9].setVisible(_outt == 2);
@@ -103,7 +107,7 @@ function Node_Mirror_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _dim = surface_get_dimension(_outSurf);
 		
 		surface_set_shader(_outSurf, sh_mirror_polar);
-			shader_set_interpolation(_data[0]);
+			shader_set_interpolation(_suf);
 			shader_set_f( "dimension", _dim );
 			shader_set_2( "position",  _pos );
 			shader_set_f( "angle",     degtorad(_ang));
@@ -111,6 +115,7 @@ function Node_Mirror_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			shader_set_i( "reflecc",   _ref );
 			shader_set_2( "scale",     _sca );
 			shader_set_i( "rscale",   _rsca );
+			shader_set_f( "trim",     _trim );
 			
 			draw_surface_stretched_safe(_suf, 0, 0, _dim[0], _dim[1]);
 		surface_reset_shader();

@@ -254,6 +254,7 @@ uniform vec2  scale;
 uniform float angle;
 uniform int   reflecc;
 uniform int   rscale;
+uniform float trim;
 
 uniform vec2      spokes;
 uniform int       spokesUseSurf;
@@ -288,6 +289,11 @@ void main() {
 	float dist = length(px);
 		 if(rscale == 0) dist = dist * scale.y;
 	else if(rscale == 1) dist = pow(dist, scale.y);
+	
+	if(trim > 0. && dist > trim * .5 * dimension.x) {
+		gl_FragColor = vec4(0.);
+		return;
+	}
 	
 	float _alpha = (angle + PI) - (_angle + angle);
 	float iangle = (angle + PI) + _alpha * scale.x;

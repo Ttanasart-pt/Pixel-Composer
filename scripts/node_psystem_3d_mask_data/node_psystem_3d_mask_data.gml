@@ -84,6 +84,8 @@ function Node_pSystem_3D_Mask_Data(_x, _y, _group = noone) : Node_3D(_x, _y, _gr
 		var _clam = _data[ 9];
 		var _clmr = _data[10];
 		
+		if(inputs[6].isAnimated) curve_modi = new curveMap(getInputData(6));
+		
 		if(!is(_parts, pSystem_Particles)) return;
 		
 		var _pools = _parts.poolSize;
