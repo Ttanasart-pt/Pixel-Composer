@@ -29,7 +29,7 @@ function Node_Composite_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var _df = array_safe_get(draw_transforms, preview_index, noone);
 		if(_df == noone) return noone;
 		
-		var _amo = getInputAmount();
+		var _amo = min(array_length(_df), getInputAmount());
 		for( var i = 0; i < _amo; i++ ) {
 			if(_node == inputs[input_fix_len + i].getNodeFrom())
 				return _df[i];
