@@ -19,7 +19,7 @@ function Node_Blur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	__init_mask_modifier(5, 9); // inputs 9, 10
 	
 	////- =Blur
-	newInput( 1, nodeValue_Int(     "Size",       .25 )).setHotkey("S").setMappable(16).setUnitSimple().setValidator(VV_min(0))
+	newInput( 1, nodeValue_Float(     "Size",       .25 )).setHotkey("S").setMappable(16).setUnitSimple().setValidator(VV_min(0))
 	newInput( 2, nodeValue_EScroll( "Intensity",  0, [ "Gaussian", "Custom" ]));
 	newInput(17, nodeValue_Curve(   "Intensity Modulation", CURVE_DEF_11 ));
 	newInput( 3, nodeValue_Bool(    "Override color",       false        )).setTooltip("Replace all color while keeping the alpha. Used to\nfix grey outline when bluring transparent pixel.");

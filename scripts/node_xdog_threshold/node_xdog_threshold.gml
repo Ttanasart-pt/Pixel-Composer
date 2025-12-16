@@ -11,7 +11,7 @@ function Node_XDoG_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	__init_mask_modifier(1, 3); // inputs 3, 4
 	
 	////- =XDoG
-	newInput( 7, nodeValue_Float(  "Radius",   4 )).setUnitSimple();
+	newInput( 7, nodeValue_Float(  "Radius", .25 )).setUnitSimple();
 	newInput( 8, nodeValue_Float(  "k",        8 ));
 	newInput( 9, nodeValue_Float(  "Gamma",    1 )).setMappable(12);
 	newInput(10, nodeValue_Slider( "Epsilon", .1 )).setMappable(13);
