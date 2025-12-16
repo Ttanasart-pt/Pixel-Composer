@@ -861,13 +861,14 @@ event_inherited();
 				}
 				
 				if(_hoverContent && point_in_rectangle(_m[0], _m[1], 0, yy, pd + ui(32), yy + list_height - 1)) {
-					var fav = struct_exists(NODE_FAV_MAP, _node.nodeName);
-					
-					gpu_set_tex_filter(true); BLEND_ADD
-					draw_sprite_ui_uniform(THEME.favorite, fav, pd + ui(16), yy + list_height / 2, .8, c_white, .5);
-					gpu_set_tex_filter(false); BLEND_NORMAL
-					
-					if(mouse_press(mb_left, sFOCUS)) trigger_favourite(_node.nodeName);
+					if(is(_node, NodeObject)) {
+						var fav = struct_exists(NODE_FAV_MAP, _node.nodeName);
+						gpu_set_tex_filter(true); BLEND_ADD
+						draw_sprite_ui_uniform(THEME.favorite, fav, pd + ui(16), yy + list_height / 2, .8, c_white, .5);
+						gpu_set_tex_filter(false); BLEND_NORMAL
+						
+						if(mouse_press(mb_left, sFOCUS)) trigger_favourite(_node.nodeName);
+					}
 				}
 				
 				var _hinfo = _hoverContent && point_in_circle(_m[0], _m[1], tx + ui(12), yy + list_height / 2, list_height / 2);
@@ -1347,13 +1348,15 @@ event_inherited();
 				
 				if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, pd + ui(32), yy + list_height - 1)) {
 					node_selecting = noone;
-					var fav = struct_exists(NODE_FAV_MAP, _node.nodeName);
 					
-					gpu_set_tex_filter(true); BLEND_ADD
-					draw_sprite_ui_uniform(THEME.favorite, fav, pd + ui(16), yc, .8, c_white, .5);
-					gpu_set_tex_filter(false); BLEND_NORMAL
-					
-					if(mouse_press(mb_left, sFOCUS)) trigger_favourite(_node.nodeName);
+					if(is(_node, NodeObject)) {
+						var fav = struct_exists(NODE_FAV_MAP, _node.nodeName);
+						gpu_set_tex_filter(true); BLEND_ADD
+						draw_sprite_ui_uniform(THEME.favorite, fav, pd + ui(16), yc, .8, c_white, .5);
+						gpu_set_tex_filter(false); BLEND_NORMAL
+						
+						if(mouse_press(mb_left, sFOCUS)) trigger_favourite(_node.nodeName);
+					}
 				}
 				
 				var _hinfo = _hover && point_in_circle(_m[0], _m[1], tx + ui(12), yc, list_height / 2);
