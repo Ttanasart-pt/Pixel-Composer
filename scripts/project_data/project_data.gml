@@ -484,10 +484,13 @@ function Project() constructor {
 				var _inp = array_safe_get_fast(_nod.inputs, _ind);
 				if(is(_inp, NodeValue))
 					favoritedValues[i] = _inp;
+				
+				_fa = favoritedValues[i];
 			}
 			
-			var _fa = favoritedValues[i];
-			if(!_fa.node.active) continue;
+			if(!is(_fa, NodeValue)) continue;
+			if(!_fa.node.active)    continue;
+			
 			array_push(_map.favVal, [_fa.node.node_id, _fa.index]);
 		}
 		
