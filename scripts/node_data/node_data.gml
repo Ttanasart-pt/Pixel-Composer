@@ -891,7 +891,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			}
 		}
 		
-		if(_inline_input != noone && _inline_output != noone && _inline_input != inline_context) {
+		if(_inline_input == _inline_output && _inline_input != noone && _inline_input != inline_context) {
 			noti_warning($"Node {getDisplayName()} connected between two inline nodes, but the node itself is not part of the group. The program has automatically add the node back to inline group.", noone, self);
 			_inline_input.addNode(self);
 		}

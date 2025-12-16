@@ -58,15 +58,16 @@ function Node_pSystem_Render_Path(_x, _y, _group = noone) : Node(_x, _y, _group)
 		}
 		
 		static getLineCount    = function(   ) /*=>*/ {return array_length(paths)};
-		static getSegmentCount = function(i=0) /*=>*/ {return array_length(paths[i])};
-		static getLength       = function(i=0) /*=>*/ {return lengthTotal[i]};
-		static getAccuLength   = function(i=0) /*=>*/ {return lengthAccs[i]};
-		static getBoundary     = function(i=0) /*=>*/ {return bboxs[i]};
+		static getSegmentCount = function(i=0) /*=>*/ {return array_length(array_safe_get_fast(paths, i, []))};
+		static getLength       = function(i=0) /*=>*/ {return array_safe_get_fast(lengthTotal, i, 0)};
+		static getAccuLength   = function(i=0) /*=>*/ {return array_safe_get_fast(lengthAccs,  i, [])};
+		static getBoundary     = function(i=0) /*=>*/ {return array_safe_get_fast(bboxs,       i, noone)};
 		
 		static getPointRatio = function(_rat, ind = 0, out = undefined) { return getPointDistance(_rat * getLength(ind), ind, out); }
 		
 		static getPointDistance = function(_dist, ind = 0, out = undefined) { 
 			if(out == undefined) out = new __vec2P(); else { out.x = 0; out.y = 0; }
+			if(array_empty(paths)) return out;
 			
 			var ll = getLength(ind);
 			_dist = clamp(_dist, 0, ll);
