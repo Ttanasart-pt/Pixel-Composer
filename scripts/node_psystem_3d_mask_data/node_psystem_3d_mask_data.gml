@@ -19,6 +19,7 @@ function Node_pSystem_3D_Mask_Data(_x, _y, _group = noone) : Node_3D(_x, _y, _gr
 		"Scale X", "Scale Y", "Scale Z", "Velocity X", "Velocity Y", "Velocity Z", "Speed", -1, 
 		"Life (frame)", "Max life (frame)", "Life Progress (ratio)", -1, 
 		"Blending Red (0-255)", "Blending Green (0-255)", "Blending Blue (0-255)", "Blending Alpha (0-255)", "Blending Brightness (0-1)", -1, 
+		"Spawn Index", 
 	];
 	
 	newInput( 3, nodeValue_Enum_Scroll( "Data", 0, data_type_keys)); 
@@ -164,7 +165,9 @@ function Node_pSystem_3D_Mask_Data(_x, _y, _group = noone) : Node_3D(_x, _y, _gr
 				case 20 : _val = _bldB; break; // "Blending Blue (0-255)",
 				case 21 : _val = _bldA; break; // "Blending Alpha (0-255)",
 				case 22 : _val = 0.299 * _bldR/255 + 0.587 * _bldG/255 + 0.114 * _bldB/255; break; // "Blending Brightness (0-1)",
-				case 23 : break; // -1, 
+				case 23 : break; // -1,
+				
+				case 24 : _val = _spwnId; break; // "Spawn Index"
 			}
 			
 			var _inf = lerp(_mapt[0], _mapt[1], lerp_invert(_val, _mapf[0], _mapf[1]));

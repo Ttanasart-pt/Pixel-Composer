@@ -92,6 +92,7 @@ function Node_pSystem_Follow_Path(_x, _y, _group = noone) : Node(_x, _y, _group)
 				
 			var _mask   = use_mask? buffer_read(_masks, buffer_f32) : 1; if(_mask <= 0) continue;
 			var _act    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
+			var _stat   = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.stat,   buffer_bool );
 			var _spwnId = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
 			if(!_act) continue;
 			
@@ -104,7 +105,8 @@ function Node_pSystem_Follow_Path(_x, _y, _group = noone) : Node(_x, _y, _group)
 			var _lif    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
 			var _lifMax = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
 			
-			var rat = _lif / (_lifMax - 1);
+			var rat = _stat? (_frame + _lif + _spwnId * _lifMax) / TOTAL_FRAMES : _lif / (_lifMax - 1);
+			    rat = clamp(rat, 0, 1);
 			random_set_seed(_seed + _spwnId);
 			
 			var _st = random_range(_rang[0], _rang[1]);

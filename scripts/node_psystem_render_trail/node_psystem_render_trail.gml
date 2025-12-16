@@ -139,6 +139,7 @@ function Node_pSystem_Render_Trail(_x, _y, _group = noone) : Node(_x, _y, _group
 				
 				var _mask   = use_mask? buffer_read(_masks, buffer_f32) : 1; if(_mask <= 0) continue;
 				var _act    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
+				var _stat   = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.stat,   buffer_bool );
 				var _lif    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
 				
 				if(!_act && (_lif == 0 || !_endt)) continue;
@@ -147,7 +148,8 @@ function Node_pSystem_Render_Trail(_x, _y, _group = noone) : Node(_x, _y, _group
 				var _lifMax = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
 				
 				random_set_seed(_seed + _spwnId);
-				var rat = clamp(_lif / (_lifMax - 1), 0, 1);
+				var rat = _stat? (_frame + _lif + _spwnId * _lifMax) / TOTAL_FRAMES : _lif / (_lifMax - 1);
+				    rat = clamp(rat, 0, 1);
 				var _fram_mod = _fram_curved? curve_fram.get(rat) : 1;
 				var _fram_cur = round(random_range(_fram[0], _fram[1]) * _fram_mod * _mask);
 				

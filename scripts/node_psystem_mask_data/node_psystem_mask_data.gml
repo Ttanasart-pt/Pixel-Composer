@@ -18,6 +18,7 @@ function Node_pSystem_Mask_Data(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		"Position X", "Position Y", "Rotation (degree)", "Scale X", "Scale Y", "Velocity X", "Velocity Y", "Speed", "Direction", -1, 
 		"Life (frame)", "Max life (frame)", "Life Progress (ratio)", -1, 
 		"Blending Red (0-255)", "Blending Green (0-255)", "Blending Blue (0-255)", "Blending Alpha (0-255)", "Blending Brightness (0-1)", -1, 
+		"Spawn Index", 
 	];
 	
 	newInput( 3, nodeValue_Enum_Scroll( "Data", 0, data_type_keys)); 
@@ -148,6 +149,8 @@ function Node_pSystem_Mask_Data(_x, _y, _group = noone) : Node(_x, _y, _group) c
 				case 17 : _val = _bldA; break; // "Blending Alpha (0-255)",
 				case 18 : _val = 0.299 * _bldR/255 + 0.587 * _bldG/255 + 0.114 * _bldB/255; break; // "Blending Brightness (0-1)",
 				case 19 : break; // -1, 
+				
+				case 20 : _val = _spwnId; break; // "Spawn Index"
 			}
 			
 			var _inf = lerp(_mapt[0], _mapt[1], lerp_invert(_val, _mapf[0], _mapf[1]));

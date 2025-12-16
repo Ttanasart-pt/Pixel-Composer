@@ -93,6 +93,7 @@ function Node_pSystem_Snap_Transform(_x, _y, _group = noone) : Node(_x, _y, _gro
 			
 			var _mask   = use_mask? buffer_read(_masks, buffer_f32) : 1; if(_mask <= 0) continue;
 			var _act    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.active, buffer_bool );
+			var _stat   = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.stat,   buffer_bool );
 			if(!_act) continue;
 			
 			var _spwnId = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.sindex, buffer_u32  );
@@ -108,8 +109,9 @@ function Node_pSystem_Snap_Transform(_x, _y, _group = noone) : Node(_x, _y, _gro
 			var _lif    = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.life,   buffer_f64  );
 			var _lifMax = buffer_read_at( _partBuff, _start + PSYSTEM_OFF.mlife,  buffer_f64  );
 			
+			var rat = _stat? (_frame + _lif + _spwnId * _lifMax) / TOTAL_FRAMES : _lif / (_lifMax - 1);
+			    rat = clamp(rat, 0, 1);
 			random_set_seed(_seed + _spwnId);
-			var rat = _lif / (_lifMax - 1);
 			
 			if(_posi) {
 				var _posi_snap_mod    = _posi_snap_curved? curve_posi_snap.get(rat) : 1;
