@@ -6,6 +6,7 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput( 6, nodeValue_Surface( "Surface Side" ));
 	newInput( 3, nodeValue_Surface( "Surface Top"  ));
 	newInput( 5, nodeValue_Surface( "Height Map"   ));
+	newInput(14, nodeValue_Surface( "Bottom Map"   ));
 	
 	////- =Isoextrude
 	newInput( 4, nodeValue_EButton( "Side",      0, [ "Top", "Left", "Right" ] ));
@@ -17,28 +18,30 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newInput( 8, nodeValue_Vec2(     "Scale",    [1,1] ));
 	
 	////- =Hole
-	newInput(12, nodeValue_EButton( "Mixing", 0, [ "Subtractive", "Additive" ] ));
-	newInput(10, nodeValue_Surface( "Hole Map 1" ));
-	newInput(11, nodeValue_Surface( "Hole Map 2" ));
+	newInput(13, nodeValue_Bool(    "Use Hole",  false ));
+	newInput(12, nodeValue_EButton( "Mixing",    0, [ "Subtractive", "Additive" ] ));
+	newInput(10, nodeValue_Surface( "Hole Map 1"       ));
+	newInput(11, nodeValue_Surface( "Hole Map 2"       ));
 	
 	////- =Rendering
 	newInput( 2, nodeValue_Color( "Blending", ca_white ));
-	// input 13
+	// input 15
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	newOutput(1, nodeValue_Output("Depth",       VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 
-		[ "Surface",   false ], 0, 6, 3, 5, 
-		[ "Depth",     false ], 4, 1, 9, 
-		[ "Transform", false ], 7, 8, 
-		[ "Hole",      false ], 12, 10, 11, 
-		[ "Rendering", false ], 2, 
+		[ "Surfaces",    false     ], 0, 6, 3, 
+		[ "Height Maps", false     ], 5, 14, 
+		[ "Depth",       false     ], 4, 1, 9, 
+		[ "Transform",   false     ], 7, 8, 
+		[ "Hole",         true, 13 ], 12, 10, 11, 
+		[ "Rendering",   false     ], 2, 
 	];
 	
 	////- Nodes
 	
-	temp_surface = [ noone, noone, noone, noone ];
+	temp_surface = [ noone, noone, noone, noone, noone ];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		
@@ -50,6 +53,7 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var _surfS = _data[ 6], _surfSu = is_surface(_surfS);
 			var _surfT = _data[ 3], _surfTu = is_surface(_surfT);
 			var _surfH = _data[ 5], _surfHu = is_surface(_surfH);
+			var _surfB = _data[14], _surfBu = is_surface(_surfB);
 			
 			var _side    = _data[ 4]; 
 			var _dept    = _data[ 1]; 
@@ -58,12 +62,16 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var _rota  = _data[ 7]; 
 			var _scal  = _data[ 8]; 
 			
+			var _hUse   = _data[13]; 
 			var _hType  = _data[12]; 
-			var _surfO1 = _data[10], _surfO1u = is_surface(_surfO1);
-			var _surfO2 = _data[11], _surfO2u = is_surface(_surfO2);
+			var _surfO1 = _data[10], _surfO1u = _hUse && is_surface(_surfO1);
+			var _surfO2 = _data[11], _surfO2u = _hUse && is_surface(_surfO2);
 			
 			var _colr  = _data[ 2]; 
 			
+			inputs[10].setVisible(_hUse, _hUse);
+			inputs[11].setVisible(_hUse, _hUse);
+
 			if(!is_surface(_surf)) return _outData;
 		#endregion
 		
@@ -153,6 +161,12 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			surface_reset_shader();
 		}
 		
+		if(_surfBu) {
+			surface_set_shader(temp_surface[4], sh_mk_isoextrude_transform);
+				draw_rectangle_pr_surf(x0, y0, x1, y1, x2, y2, x3, y3, _surfB);
+			surface_reset_shader();
+		}
+		
 		surface_set_shader(temp_surface[3], sh_mk_isoextrude_coordinate);
 			draw_rectangle_pr_surf(x0, y0, x1, y1, x2, y2, x3, y3, _surf);
 		surface_reset_shader();
@@ -165,6 +179,10 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			
 			shader_set_i("useHeight",  _surfHu);
 			shader_set_s("heightmap",  temp_surface[2]);
+			
+			shader_set_i("useBottom",  _surfBu);
+			shader_set_s("bottommap",  temp_surface[4]);
+			
 			shader_set_s("topmap",     temp_surface[1]);
 			shader_set_s("coordMap",   temp_surface[3]);
 			

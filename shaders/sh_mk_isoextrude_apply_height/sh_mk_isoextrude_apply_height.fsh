@@ -8,6 +8,10 @@ uniform float rotation;
 
 uniform int useHeight;
 uniform sampler2D heightmap;
+
+uniform int useBottom;
+uniform sampler2D bottommap;
+
 uniform sampler2D topmap;
 uniform sampler2D coordMap;
 
@@ -27,23 +31,38 @@ void main() {
 	float rh  = curDepth / maxDepth;
 	float hh  = 1.;
 	
+	gl_FragData[0] = base;
 	gl_FragData[1] = vec4(0.);
 	
 	if(useHeight == 0) {
-		gl_FragData[0] = base;
 		if(curDepth == maxDepth)
 			gl_FragData[0] = texture2D(topmap, v_vTexcoord);
 		
 		if(base.a > 0.) gl_FragData[1] = vec4(vec3(rh), 1.);
 		
 	} else {
-		gl_FragData[0] = vec4(0.);
-		
 		vec4 heig = texture2D(heightmap, v_vTexcoord);
 		hh  = (heig.r + heig.g + heig.b) / 3. * heig.a;
 		
-		if(rh > hh) return;
-		gl_FragData[0] = base;
+		if(rh > hh) { 
+			gl_FragData[0] = vec4(0.); 
+			gl_FragData[1] = vec4(0.); 
+			return; 
+		}
+		
+		if(base.a > 0.) gl_FragData[1] = vec4(vec3(rh), 1.);
+	}
+	
+	if(useBottom == 1) {
+		vec4 heig = texture2D(bottommap, v_vTexcoord);
+		float bb  = 1. - (heig.r + heig.g + heig.b) / 3. * heig.a;
+		
+		if(rh < bb) { 
+			gl_FragData[0] = vec4(0.); 
+			gl_FragData[1] = vec4(0.); 
+			return; 
+		}
+		
 		if(base.a > 0.) gl_FragData[1] = vec4(vec3(rh), 1.);
 	}
 	
