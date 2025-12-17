@@ -267,6 +267,14 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		return isHovering? inputs[1] : noone;
 	}
 	
+	static drawJunctionsFast = function(_x, _y, _mx, _my, _s) {
+		var s1 = _s * 1.5, s4 = _s * 4.0;
+		var jun = inputs[1];
+		
+		draw_set_color(jun.custom_color == noone? jun.draw_fg : jun.custom_color);
+		draw_rectangle(jun.x - s1, jun.y - s4, jun.x + s1, jun.y + s4, false);
+	}
+	
 	static drawJunctions = function(_x, _y, _mx, _my, _s) {
 		gpu_set_tex_filter(true);
 		junction_hover = inputs[1].drawJunction(_s, _mx, _my);
