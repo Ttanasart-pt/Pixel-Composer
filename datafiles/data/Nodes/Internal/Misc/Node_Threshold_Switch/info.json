@@ -1,0 +1,6 @@
+{
+    "name":          "Threshold Switch",
+    "spr":           "s_node_switch",
+    "baseNode":      "Node_Threshold_Switch",
+    "pxc_version":    120020,
+}

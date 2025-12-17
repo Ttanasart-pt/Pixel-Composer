@@ -240,6 +240,8 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		draw_set_alpha(1);
 	}
 	
+	static drawDimension = undefined;
+	
 	////- Actions
 	
 	static postConnect = function() { onValueUpdate(0); }

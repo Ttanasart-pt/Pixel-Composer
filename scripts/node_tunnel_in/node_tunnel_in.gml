@@ -337,6 +337,8 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		draw_set_alpha(1);
 	}
 	
+	static drawDimension = undefined;
+	
 	////- Actions
 	
 	static postConnect = function() { 

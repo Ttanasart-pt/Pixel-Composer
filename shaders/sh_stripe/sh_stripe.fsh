@@ -219,7 +219,7 @@ void main() {
 		}
 	#endregion
 	
-	vec2  vtx = getUV(v_vTexcoord);
+	vec2  vtx     = getUV(v_vTexcoord);
 	vec2  pos     = vtx - position;
 	float aspect  = dimension.x / dimension.y;
 	float prog    = pos.x * aspect * cos(ang) - pos.y * sin(ang);

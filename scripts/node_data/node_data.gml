@@ -131,6 +131,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		outputMap        = {};
 		input_value_map  = {};
 		dimension_index  = 0;
+		dimension_input  = -1;
 		active_index     = -1;
 		
 		use_display_list		= true;

@@ -1197,6 +1197,7 @@
             { "label": "Control" },
             "Node_Condition",
             "Node_Switch",
+            "Node_Threshold_Switch",
             "Node_Animation_Control",
             
             { "label": "Groups" },

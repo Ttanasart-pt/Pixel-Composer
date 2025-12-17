@@ -2,7 +2,7 @@ function nodeValue_Surface(_name, _value = noone, _tooltip = "") { return new __
 function __NodeValue_Surface(_name, _node, _value = noone, _tooltip = "") : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.surface, _value, _tooltip) constructor {
 	animable = false;
 	if(_name == "Mask") {
-		var _dimTarget = array_safe_get(node.inputs, node.dimension_index);
+		var _dimTarget = array_safe_get(node.inputs, node.dimension_input);
 		if(is(_dimTarget, __NodeValue_Dimension)) {
 			_dimTarget.use_mask   = true;
 			_dimTarget.mask_input = self;

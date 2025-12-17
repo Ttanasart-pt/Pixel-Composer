@@ -5,7 +5,7 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 	use_mask    = false;
 	mask_input  = undefined;
 	unitTooltip = new tooltipSelector("Unit", ["Pixel", "Global"]);
-	node.dimension_index = index;
+	node.dimension_input = index;
 	attributes.use_project_dimension = 1;
 	
 	editProjDim = button(function() /*=>*/ {
@@ -13,23 +13,35 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 		var nt = (ot + 1) % (2 + use_mask);
 		attributes.use_project_dimension = nt;
 		
-		if(ot == 1 && nt == 2) { node.triggerRender(); return; }
+		var sw;
+		var sh;
 		
-		var mx = 1;
-		var my = 1;
-		
-		if(!use_mask || ot == 0) {
-			mx = DEF_SURF_W;
-			my = DEF_SURF_H;
+		if(!use_mask) {
+			sw = ot? DEF_SURF_W : 1 / DEF_SURF_W;
+			sh = ot? DEF_SURF_H : 1 / DEF_SURF_H;
 			
 		} else {
 			var _msk = mask_input.getValue();
-			mx = surface_get_width_safe(_msk);
-			my = surface_get_height_safe(_msk);
+			var mx = surface_get_width_safe(_msk);
+			var my = surface_get_height_safe(_msk);
+			
+			switch(ot) {
+				case 0 : 
+					sw = 1 / DEF_SURF_W;
+					sh = 1 / DEF_SURF_H;
+					break;
+				
+				case 1 : 
+					sw = DEF_SURF_W / mx;
+					sh = DEF_SURF_H / my;
+					break;
+				
+				case 2 : 
+					sw = mx;
+					sh = my;
+					break;
+			}
 		}
-		
-		var sw = ot? mx : 1 / mx;
-		var sh = ot? my : 1 / my;
 		
 		for( var i = 0, n = array_length(animator.values); i < n; i++ ) {
 			var v = animator.values[i];
@@ -56,7 +68,6 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 		
 		var _pdim = attributes.use_project_dimension;
 		editProjDim.icon_index = _pdim;
-		editProjDim.icon_blend = _pdim? c_white : COLORS._main_icon;
 		unitTooltip.index = attributes.use_project_dimension;
 		editWidget.setSuffix(_pdim? "x" : "");
 		
