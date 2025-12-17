@@ -2,11 +2,34 @@ function nodeValue_Dimension(name = "Dimension") { return new __NodeValue_Dimens
 function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_Vec2("Dimension", _node, value, { linked: true }) constructor {
 	def_length = 2;
 	
-	attributes.use_project_dimension = true;
+	use_mask    = false;
+	mask_input  = undefined;
+	unitTooltip = new tooltipSelector("Unit", ["Pixel", "Global"]);
+	node.dimension_index = index;
+	attributes.use_project_dimension = 1;
 	
 	editProjDim = button(function() /*=>*/ {
-		var sw = attributes.use_project_dimension? DEF_SURF_W : 1 / DEF_SURF_W;
-		var sh = attributes.use_project_dimension? DEF_SURF_H : 1 / DEF_SURF_H;
+		var ot = attributes.use_project_dimension;
+		var nt = (ot + 1) % (2 + use_mask);
+		attributes.use_project_dimension = nt;
+		
+		if(ot == 1 && nt == 2) { node.triggerRender(); return; }
+		
+		var mx = 1;
+		var my = 1;
+		
+		if(!use_mask || ot == 0) {
+			mx = DEF_SURF_W;
+			my = DEF_SURF_H;
+			
+		} else {
+			var _msk = mask_input.getValue();
+			mx = surface_get_width_safe(_msk);
+			my = surface_get_height_safe(_msk);
+		}
+		
+		var sw = ot? mx : 1 / mx;
+		var sh = ot? my : 1 / my;
 		
 		for( var i = 0, n = array_length(animator.values); i < n; i++ ) {
 			var v = animator.values[i];
@@ -20,10 +43,9 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 		for( var i = 0, n = array_length(animators[1].values); i < n; i++ )
 			animators[1].values[i].value *= sh;
 		
-		attributes.use_project_dimension = !attributes.use_project_dimension;
 		node.triggerRender();
 		
-	}).setIcon(THEME.node_use_project, 0, COLORS._main_icon).iconPad().setTooltip("Use project dimension");
+	}).setIcon(THEME.node_use_project, 0, COLORS._main_icon).iconPad().setTooltip(unitTooltip);
 	
 	editWidget.setSideButton(editProjDim);
 	
@@ -35,16 +57,28 @@ function __NodeValue_Dimension(_node, value, _name = "Dimension") : __NodeValue_
 		var _pdim = attributes.use_project_dimension;
 		editProjDim.icon_index = _pdim;
 		editProjDim.icon_blend = _pdim? c_white : COLORS._main_icon;
+		unitTooltip.index = attributes.use_project_dimension;
 		editWidget.setSuffix(_pdim? "x" : "");
 		
 		getValueRecursive(self.__curr_get_val, _time);
 		var val = __curr_get_val[0];
 		var nod = __curr_get_val[1]; if(!is(nod, NodeValue)) return val;
 		
-		if(applyUnit && attributes.use_project_dimension && nod == self) {
-			val[0] *= DEF_SURF_W;
-			val[1] *= DEF_SURF_H;
-			return val;
+		if(applyUnit && nod == self) {
+			switch(_pdim) {
+				case 1 : 
+					val[0] *= DEF_SURF_W;
+					val[1] *= DEF_SURF_H;
+					return val;
+				
+				case 2 : 
+					var _msk = mask_input.getValue(_time);
+					val[0] *= surface_get_width_safe(_msk);
+					val[1] *= surface_get_height_safe(_msk);
+					return val;
+						
+			}
+			
 		}
 		
 		var typ = nod.type;

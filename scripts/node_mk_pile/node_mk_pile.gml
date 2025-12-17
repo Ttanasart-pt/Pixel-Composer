@@ -6,28 +6,29 @@ function Node_MK_Pile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	newInput( 2, nodeValueSeed());
 	
 	////- =Object
-	newInput( 0, nodeValue_Surface(     "Surface In"    ));
-	newInput( 3, nodeValue_Enum_Scroll( "Pattern",    0, [ "Auto", "Manual" ] ));
-	newInput( 4, nodeValue_Float( "Depth",            2 ));
-	newInput( 9, nodeValue_Float( "Depth Adjustment", 0 ));
+	newInput( 0, nodeValue_Surface( "Surface In" )).setArrayDepth(1);
+	newInput(14, nodeValue_EScroll( "Array Select",     0, [ "Ordered", "Random" ] ));
+	newInput( 3, nodeValue_EScroll( "Pattern",          0, [ "Auto", "Manual"    ] ));
+	newInput( 4, nodeValue_Float(   "Depth",           .2 )).setUnitSimple();
+	newInput( 9, nodeValue_Float(   "Depth Adjustment", 0 )).setUnitSimple();
 	
 	////- =Pile
 	newInput( 5, nodeValue_Vec2(   "Origin",             [.5,.8] )).setUnitSimple();
 	newInput( 6, nodeValue_Int(    "Amount",              4            )).setValidator(VV_min(1));
 	newInput( 7, nodeValue_Range(  "Angles of Repose",   [45,45], true ));
-	newInput( 8, nodeValue_Vec2(   "Column Shift",       [0,0]         ));
+	newInput( 8, nodeValue_Vec2(   "Column Shift",       [0,0]         )).setUnitSimple();
 	newInput(10, nodeValue_Float(  "Center Bias",         0            ));
 	newInput(13, nodeValue_Slider( "Shuffle",             0            ));
 	
 	////- =Scatter
 	newInput(11, nodeValue_Int(   "Amount", 0 )).setValidator(VV_min(0));
 	newInput(12, nodeValue_Range( "Range",  [.75, 1.5] ));
-	// inputs 14
+	// inputs 15
 		
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 1, 2, 
-		["Object",  false ], 0, 3, 4, 9, 
-		["Pile",    false ], 5, 6, 7, 8, 10, 13, 
-		["Scatter", false ], 11, 12, 
+		[ "Object",  false ],  0, 14,  3,  4,  9, 
+		[ "Pile",    false ],  5,  6,  7,  8, 10, 13, 
+		[ "Scatter", false ], 11, 12, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -47,6 +48,8 @@ function Node_MK_Pile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _seed = _data[2];
 			
 			var _surf = _data[ 0];
+			var _arro = _data[14];
+			
 			var _patt = _data[ 3];
 			var _dept = _data[ 4];
 			var _depj = _data[ 9];
@@ -60,12 +63,15 @@ function Node_MK_Pile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			
 			var _scat    = _data[11];
 			var _scatRng = _data[12];
-			
-			if(!is_surface(_surf)) return _outData;
 		#endregion
 		
-		var _sw   = surface_get_width_safe(_surf);
-		var _sh   = surface_get_height_safe(_surf);
+		if(!is_array(_surf)) _surf = [_surf];
+		if(array_empty(_surf)) return _outData;
+		var fSurf = _surf[0];
+		var _samo = array_length(_surf);
+		
+		var _sw   = surface_get_width_safe(fSurf);
+		var _sh   = surface_get_height_safe(fSurf);
 		var _grid = sqrt(_amou * 2);
 	    var pile_height = array_create(_grid * _grid);
 		
@@ -141,6 +147,8 @@ function Node_MK_Pile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		    }
 		    
 		    var _row = 0, _col = 0;
+		    var _ind = 0;
+		    
 		    repeat(_amou) {
 		    	var _hh = pile_height[_row * _grid + _col];
 		    	
@@ -152,9 +160,17 @@ function Node_MK_Pile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					_colY -= _sh / 2;
 					
 					repeat(_hh) {
-						draw_surface(_surf, _colX, _colY);
+						var _sind = 0;
+						
+						switch(_arro) {
+							case 0 : _sind = _ind % _samo;       break;
+							case 1 : _sind = irandom(_samo - 1); break;
+						}
+						
+						draw_surface(_surf[_sind], _colX, _colY);
 						_outPoin[_pointL++] = [_colX, _colY];
 						_colY -= _dept;
+						_ind++;
 					}
 		    	}
 		    	

@@ -171,7 +171,7 @@ function Node_Path_Bridge(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		random_set_seed(seed);
 				
 		for( var i = 0; i < curr_amount; i++ ) {
-			_a   = array_create(_lines);
+			_a = array_create(_lines);
 			
 			switch(curr_type) {
 				case 0  : _rat = curr_amount == 1? 0.5 : i / (curr_amount - 1); break;

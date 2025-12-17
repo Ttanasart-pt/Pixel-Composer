@@ -1,7 +1,14 @@
 function nodeValue_Surface(_name, _value = noone, _tooltip = "") { return new __NodeValue_Surface(_name, self, _value, _tooltip); }
 function __NodeValue_Surface(_name, _node, _value = noone, _tooltip = "") : NodeValue(_name, _node, CONNECT_TYPE.input, VALUE_TYPE.surface, _value, _tooltip) constructor {
-	
 	animable = false;
+	if(_name == "Mask") {
+		var _dimTarget = array_safe_get(node.inputs, node.dimension_index);
+		if(is(_dimTarget, __NodeValue_Dimension)) {
+			_dimTarget.use_mask   = true;
+			_dimTarget.mask_input = self;
+			array_push(_dimTarget.unitTooltip.data, "Mask");
+		}
+	}
 	
 	/////============== GET =============
 	
