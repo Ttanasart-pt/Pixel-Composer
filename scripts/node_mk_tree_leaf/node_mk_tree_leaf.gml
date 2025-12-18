@@ -33,9 +33,10 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(30, nodeValue_Int(         "Resolution",     6           ));
 	
 	////- =Color
-	newInput( 4, nodeValue_Gradient(    "Color Per Branch",  gra_white )).setMappableConst(12);
-	newInput(20, nodeValue_Gradient(    "Color Over Branch", gra_white ));
-	newInput( 6, nodeValue_Gradient(    "Color Per Leaf",    gra_white )).setMappableConst(13);
+	newInput( 4, nodeValue_Gradient(    "Per Branch",  gra_white )).setMappableConst(12);
+	newInput(20, nodeValue_Gradient(    "Over Branch", gra_white ));
+	newInput( 6, nodeValue_Gradient(    "Per Leaf",    gra_white )).setMappableConst(13);
+	newInput(34, nodeValue_Gradient(    "Along Leaf",  gra_white ));
 	
 	////- =Edge
 	newInput(14, nodeValue_Enum_Button( "Render Edge",       0, [ "None", "Override", "Multiply", "Screen" ] ));
@@ -45,14 +46,14 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	////- =Growth
 	newInput(22, nodeValue_Range( "Grow Delay", [0,0], true ));
-	// input 34
+	// input 35
 	
 	newOutput(0, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 5, 0, 
 		[ "Leaf",   false ],  1, 19,  2,  7, 16, 27, 28, 10, 17, 15, 32, 33, 
 		[ "Shape",  false ],  8,  3, 18,  9, 21, 29, 31, 30, 
-		[ "Color",  false ],  4, 20, 12,  6, 13, new Inspector_Spacer(ui(4), true, true, ui(6)), 14, 11, 25, 23, 24, 26, 
+		[ "Color",  false ],  4, 20, 12,  6, 13, 34, new Inspector_Spacer(ui(4), true, true, ui(6)), 14, 11, 25, 23, 24, 26, 
 		[ "Growth", false ], 22, 
 	];
 	
@@ -123,6 +124,7 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _cLef     = getInputData( 6);
 			var _cLefMap  = getInputData(13);
 			var _cLefM    = inputs[ 6].attributes.mapped && is_surface(_cLefMap), _cLefSamp = _cLefM? new Surface_sampler(_cLefMap) : undefined;
+			var _cLefAlo  = getInputData(34);
 			
 			var _edg      = getInputData(14);
 			var _edgC     = getInputData(11);
@@ -153,99 +155,87 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				for( var i = 0; i <= _lres; i++ )
 					_geo[i] = eval_curve_x(_lgeo, i/_lres);
 			}
+			
+			_cLefAlo.cache();
 		#endregion
 		
 		var ox, oy, nx, ny;
-		var _pst = min(_pos[0], _pos[1]);
-		var _ped = max(_pos[0], _pos[1]);
-		var _prn = _ped - _pst;
+		__p0 = min(_pos[0], _pos[1]);
+		__p1 = max(_pos[0], _pos[1]);
 		
 		_tree = variable_clone(_tree);
 		
 		for( var i = 0, n = array_length(_tree); i < n; i++ ) {
 			random_set_seed(_seed + i * 100);
-			
 			var _br = _tree[i];
-			var _sg = _br.segments;
-			var _sn = array_length(_sg);
 			
 			var _amoR = random_range(_amou[0], _amou[1]);
 			if(_auni) _amoR = _br.totalLength / _amoR; // density
+			_amoR = round(_amoR);
+			if(_amoR <= 0) continue;
 			
-			var _amo  = _amoR / _sn;
-			var _amf  = floor(_amo);
-			var _aml  = frac(_amo);
-			var ox    = _sg[0].x;
-			var oy    = _sg[0].y;
-			var cc    = _cBraM? _cBraSamp.getPixel(round(ox), round(oy)) : _cBra.eval(random(1));
+			var _positions = array_create(_amoR);
+			var _posCursor = 0;
 			
-			var _sprdB    = random_range(_sprd[0], _sprd[1]);
-			var _uniSpace = _prn / max(1, _amoR - 1); 
-			var _uniRun   = _pst;
+			for( var j = 0; j < _amoR; j++ ) {
+				var _p = 0;
+				     if(_dist == 0) _p = random_range(__p0, __p1);
+				else if(_dist == 1) _p = _amoR == 1? .5 : lerp(__p0, __p1, j / (_amoR - 1));
+				_positions[j] = _p;
+			}
+			
+			if(_dist == 0) array_sort(_positions, true);
+			
+			var _sg = _br.segments;
+			var _sn = array_length(_sg);
+			var  cc = _cBraM? _cBraSamp.getPixel(round(ox), round(oy)) : _cBra.eval(random(1));
+			
+			var _sprdB = random_range(_sprd[0], _sprd[1]);
 			
 			for( var j = 1; j < _sn; j++ ) {
-				var _r0 = _br.segmentRatio[j-1];
-				var _r1 = _br.segmentRatio[j];
-				var rng = _r1 - _r0;
+				var _r0 = _br.segmentRatio[j - 1];
+				var _r1 = _br.segmentRatio[j    ];
 				
-				var _rSt = max(_r0, _pst);
-				var _rEd = min(_r1, _ped);
+				if(_r1 <= _r0) continue;
+				if(_r1 < _positions[_posCursor]) continue;
+				
+				ox = _sg[j-1].x;
+				oy = _sg[j-1].y;
 				
 				nx = _sg[j].x;
 				ny = _sg[j].y;
 				
-				if(_rEd <= _rSt) { ox = nx; oy = ny; continue; }
-				
-				var _sSt = (_rSt - _r0) / rng;
-				var _sEd = (_rEd - _r0) / rng;
-				
-				if(_dist == 0) {
-					var amoSeg = _amf + (random(1) < _aml);
-					
-				} else if(_dist == 1) {
-					var amoSeg = ceil(rng / _uniSpace) + 1;
-					if(_uniRun > _r1) { ox = nx; oy = ny; continue; }
-				}
-				
 				var brnDir = point_direction(ox, oy, nx, ny);
 				
-				repeat(amoSeg) {
-					if(_dist == 0) {
-						var _rr = random_range(_sSt, _sEd);
-						
-					} else if(_dist == 1) {
-						var _rr = (_uniRun - _r0) / rng;
-						_uniRun += _uniSpace;
-					}
-						
-					_rr = clamp(_rr, 0, 1);
-					var _rBrn  = lerp(_r0, _r1, _rr);
-					var _rBrns = (_rBrn - _pst) / _prn;
+				while(_positions[_posCursor] <= _r1) {
+					var _rPos  = _positions[_posCursor];
 					
+					var _rr = (_rPos - _r0) / (_r1 - _r0);
 					var _lx = lerp(ox, nx, _rr); 
 					var _ly = lerp(oy, ny, _rr); 
 					
-					var _spra = _sprdB * choose(-1, 1) * (curve_spread? curve_spread.get(_rBrns) : 1);
+					var _spra = _sprdB * choose(-1, 1) * (curve_spread? curve_spread.get(_rPos) : 1);
 					var _dr   = brnDir + _spra;
 					
 					var _ggv  = random_range(_grav[0], _grav[1]);
-					var _grv  = _ggv * (curve_garvit? curve_garvit.get(_rBrns) : 1);
+					var _grv  = _ggv * (curve_garvit? curve_garvit.get(_rPos) : 1);
 					    _grv  = clamp(_grv, 0, 1);
 					_dr = lerp_angle_direct(_dr, _gDir, _grv);
 					
-					var _sh = random_range(_offs[0], _offs[1]) * (curve_offset? curve_offset.get(_rBrns) : 1);
+					var _sh = random_range(_offs[0], _offs[1]) * (curve_offset? curve_offset.get(_rPos) : 1);
 					_lx += lengthdir_x(_sh, brnDir + 90);
 					_ly += lengthdir_y(_sh, brnDir + 90);
 					
-					var lss = curve_size? curve_size.get(_rBrns) : 1;
+					var lss = curve_size? curve_size.get(_rPos) : 1;
 					var lsx = random_range(_siz[0], _siz[1]) * lss;
 					var lsy = random_range(_siz[2], _siz[3]) * lss;
 					var lc  = _cLefM? _cLefSamp.getPixel(round(_lx), round(_ly)) : _cLef.eval(random(1));
-					    lc  = colorMultiply(lc, _cOvrBra.eval(_rBrns));
+					    lc  = colorMultiply(lc, _cOvrBra.eval(_rPos));
 					
-					var _l = new __MK_Tree_Leaf(_rBrn, _shap, _lx, _ly, _dr, lsx, lsy, _lspn);
+					var _l = new __MK_Tree_Leaf(_rPos, _shap, _lx, _ly, _dr, lsx, lsy, _lspn);
 					    _l.surface   = _tex;
 					    _l.color     = colorMultiply(cc, lc);
+					    _l.colorLeaf = _cLefAlo;
 					    _l.growShift = random_range(_grow[0], _grow[1]);
 					    _l.geometry  = _geo;
 					    _l.geoGrav   = _geoG;
@@ -279,23 +269,23 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					array_push(_br.leaves, _l);
 					
 					if(_whor > 0) {
-						var _whrla = _whra * (curve_whorl? curve_whorl.get(_rBrns) : 1);
+						var _whrla = _whra * (curve_whorl? curve_whorl.get(_rPos) : 1);
 						
 						var _astep = _spra * 4 / (2 + (_whor - 1) * _whrla);
 						for( var k = 0; k < _whor; k++ ) {
 							var _d2 = brnDir + _spra - _astep * (k + 1);
 							    _d2 = lerp_angle_direct(_d2, _gDir, _grv);
 							
-							var _l2 = new __MK_Tree_Leaf(_rBrn, _shap, _lx, _ly, _d2, lsx, lsy, _lspn).copy(_l);
+							var _l2 = new __MK_Tree_Leaf(_rPos, _shap, _lx, _ly, _d2, lsx, lsy, _lspn).copy(_l);
 							array_push(_br.leaves, _l2);
 						}
 					}
 					
-					if(_dist == 1 && _uniRun > _r1) break;
+					_posCursor++;
+					if(_posCursor >= _amoR) break;
 				}
 				
-				ox = nx;
-				oy = ny;
+				if(_posCursor >= _amoR) break;
 			}
 		}
 		

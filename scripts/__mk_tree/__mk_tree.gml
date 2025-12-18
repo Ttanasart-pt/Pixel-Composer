@@ -40,6 +40,7 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 	color     = c_white;
 	colorE    = c_white;
 	colorU    = undefined;
+	colorLeaf = undefined;
 	
 	growShift = 0;
 	growSpeed = 1;
@@ -63,7 +64,7 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 		
 		var _cTop = colorU? colorU : colorE;
 		var _cBot = colorE;
-				
+						
 		switch(shape) {
 			case MKLEAF_TYPE.Leaf : 
 				var _sg   = -sign(dsy);
@@ -89,6 +90,7 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 				var os = geometry[0], ns = os;
 				var ox = x0,          nx = ox;
 				var oy = y0,          ny = oy;
+				var oc = colorLeaf.evalFast(0), nc = oc;
 				var gg = geoGrav / _samp;
 				var rr;
 				
@@ -98,6 +100,7 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 						nx = ox + lengthdir_x(ds, nd);
 						ny = oy + lengthdir_y(ds, nd);
 						nd = lerp_angle_direct(nd, -90, gg);
+						nc = colorLeaf.evalFast(i/_samp);
 						
 						var _odx = lengthdir_x(sy, od + 90);
 						var _ody = lengthdir_y(sy, od + 90);
@@ -117,28 +120,38 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 						var x11 = nx - _ndx * ns;
 						var y11 = ny - _ndy * ns;
 						
-						draw_vertex_color(x00, y00, _cTop, 1);
-						draw_vertex_color( ox,  oy, color, 1);
-						draw_vertex_color( nx,  ny, color, 1);
+						var occ = colorMultiply(color, oc);
+						var ncc = colorMultiply(color, nc);
 						
-						draw_vertex_color(x00, y00, _cTop, 1);
-						draw_vertex_color( nx,  ny, color, 1);
-						draw_vertex_color(x10, y10, _cTop, 1);
+						var otc = colorMultiply(_cTop, oc);
+						var ntc = colorMultiply(_cTop, nc);
+						
+						var obc = colorMultiply(_cBot, oc);
+						var nbc = colorMultiply(_cBot, nc);
+						
+						draw_vertex_color(x00, y00, otc, 1);
+						draw_vertex_color( ox,  oy, occ, 1);
+						draw_vertex_color( nx,  ny, ncc, 1);
+						
+						draw_vertex_color(x00, y00, otc, 1);
+						draw_vertex_color( nx,  ny, ncc, 1);
+						draw_vertex_color(x10, y10, ntc, 1);
 						
 						//////////////////////////////////////
 						
-						draw_vertex_color(x01, y01, _cBot, 1);
-						draw_vertex_color( ox,  oy, color, 1);
-						draw_vertex_color( nx,  ny, color, 1);
+						draw_vertex_color(x01, y01, obc, 1);
+						draw_vertex_color( ox,  oy, occ, 1);
+						draw_vertex_color( nx,  ny, ncc, 1);
 						
-						draw_vertex_color(x01, y01, _cBot, 1);
-						draw_vertex_color( nx,  ny, color, 1);
-						draw_vertex_color(x11, y11, _cBot, 1);
+						draw_vertex_color(x01, y01, obc, 1);
+						draw_vertex_color( nx,  ny, ncc, 1);
+						draw_vertex_color(x11, y11, nbc, 1);
 						
 						od = nd;
 						os = ns;
 						ox = nx;
 						oy = ny;
+						oc = nc;
 					}
 				draw_primitive_end();
 				break;
@@ -165,6 +178,7 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 		color   = _l.color;
 		colorE  = _l.colorE;
 		colorU  = _l.colorU;
+		colorLeaf = _l.colorLeaf;
 		
 		growShift = _l.growShift;
 		geometry  = _l.geometry;
