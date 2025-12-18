@@ -1,5 +1,6 @@
 function Node_Mesh_Create_Lattice(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Lattice Mesh";
+	dimension_index = -1;
 	setDimension(96, 48);
 	setDrawIcon(s_node_mesh_create_lattice);
 	

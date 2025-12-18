@@ -17,6 +17,7 @@ function __3dWall_builder() : __3dObject() constructor {
 		var ofl = [];
         var ofr = [];
         var len = array_length(points);
+        if(len < 2) return;
         
         for (var i = 0; i < len - 1; i++) {
             var p1 = points[i];

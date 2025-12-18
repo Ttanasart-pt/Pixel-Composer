@@ -2,6 +2,7 @@ function Node_Armature_Bone(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name = "Armature Bone";
 	setDimension(96, 96);
 	draw_padding = 8;
+	dimension_index = -1;
 	
 	////- =Parent
 	newInput(5, nodeValue_Armature()).setVisible(true, true);

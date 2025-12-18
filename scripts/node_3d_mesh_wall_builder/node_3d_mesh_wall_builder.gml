@@ -1,35 +1,29 @@
 function Node_3D_Mesh_Wall_Builder(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group) constructor {
 	name = "3D Wall";
 	object_class = __3dWall_builder;
+	var i = in_mesh;
 	
-	newInput(in_mesh + 0, nodeValue_PathNode("Path"));
+	newInput(i+0, nodeValue_PathNode( "Path" ));
+	newInput(i+6, nodeValue_Float(    "Path Scale", .01    ));
+	newInput(i+9, nodeValue_Bool(     "Loop",        false ));
+	newInput(i+1, nodeValue_Int(      "Segments",    16    ));
+	newInput(i+2, nodeValue_Float(    "Height",      1     ));
+	newInput(i+3, nodeValue_Slider(   "Thickness",  .1     ));
 	
-	newInput(in_mesh + 1, nodeValue_Int("Segments", 16 ));
-	
-	newInput(in_mesh + 2, nodeValue_Float("Height", 1 ));
-	
-	newInput(in_mesh + 3, nodeValue_Slider("Thickness", 0.1 ));
-	
-	newInput(in_mesh + 4, nodeValue_Bool("Material per side", false ));
-	
-	newInput(in_mesh + 5, nodeValue_D3Material("Side Material", new __d3dMaterial()))
-		.setVisible(true, true);
-	
-	newInput(in_mesh + 6, nodeValue_Float("Path Scale", .01 ));
-	
-	newInput(in_mesh + 7, nodeValue_D3Material("Side Material 2", new __d3dMaterial()))
-		.setVisible(true, true);
-	
-	newInput(in_mesh + 8, nodeValue_D3Material("Cap Material", new __d3dMaterial()))
-		.setVisible(true, true);
-	
-	newInput(in_mesh + 9, nodeValue_Bool("Loop", false ));
+	////- =Material
+	newInput(i+4, nodeValue_Bool(       "Material per side", false ));
+	newInput(i+5, nodeValue_D3Material( "Side Material",     new __d3dMaterial() )).setVisible(true, true);
+	newInput(i+7, nodeValue_D3Material( "Side Material 2",   new __d3dMaterial() )).setVisible(true, true);
+	newInput(i+8, nodeValue_D3Material( "Cap Material",      new __d3dMaterial() )).setVisible(true, true);
+	// i+10
 	
 	input_display_list = [
-		__d3d_input_list_mesh, in_mesh + 0, in_mesh + 6, in_mesh + 9, in_mesh + 1, in_mesh + 2, in_mesh + 3,  
+		__d3d_input_list_mesh, i+0, i+6, i+9, i+1, i+2, i+3,  
 		__d3d_input_list_transform,
-		["Material",	false], in_mesh + 4, in_mesh + 5, in_mesh + 7, in_mesh + 8, 
-	]
+		["Material",	false], i+4, i+5, i+7, i+8, 
+	];
+	
+	////- Node
 	
 	static processData = function(_output, _data, _array_index = 0, _frame = CURRENT_FRAME) {
 		var _paths   = _data[in_mesh + 0];
@@ -53,6 +47,7 @@ function Node_3D_Mesh_Wall_Builder(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 		
 		for( var i = 0; i <= _segment; i++ ) {
 			p = _paths.getPointRatio(i / _segment, 0, p);
+			
 			points[i] = [ p.x * _pscale, -p.y * _pscale ];
 		}
 		

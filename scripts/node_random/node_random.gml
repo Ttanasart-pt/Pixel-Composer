@@ -124,14 +124,16 @@ function Node_Random(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		random_set_seed(seed[_array_index]);
 		
 		if(_shuffle) {
+			var reshuffle = false;
+			
 			switch(_shfMode) {
-				case 0 :                                              seed[_array_index] = seed_random(); break;
-				case 1 : if((CURRENT_FRAME - _shfSft) % _shfPer == 0) seed[_array_index] = seed_random(); break;
-				case 2 : if(_shfTrig)                                 seed[_array_index] = seed_random(); break;
+				case 0 : reshuffle = true;                                     break;
+				case 1 : reshuffle = (CURRENT_FRAME - _shfSft) % _shfPer == 0; break;
+				case 2 : reshuffle = bool(_shfTrig);                           break;
 				
 				case 3 : 
 					random_set_seed(seed[_array_index] + CURRENT_FRAME);
-					if(random(1) <= _shfProb) seed[_array_index] = seed_random(); 
+					if(random(1) <= _shfProb) reshuffle = true;
 					break;
 					
 				case 4 : 
@@ -139,9 +141,16 @@ function Node_Random(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 					var _acfr = random_gaussian(_shfAcAg, _shfAcVa);
 					if(_acfr > 0) accPool[_array_index] += 1 / _acfr;
 					
-					if(accPool[_array_index] > 1) seed[_array_index] = seed_random();
+					if(accPool[_array_index] > 1) reshuffle = true;
 					accPool[_array_index] = frac(accPool[_array_index]);
 					break;
+					
+				case 5 : reshuffle = IS_FIRST_FRAME; break;
+			}
+			
+			if(reshuffle) {
+				randomize();
+				seed[_array_index] = seed_random();
 			}
 		}
 		

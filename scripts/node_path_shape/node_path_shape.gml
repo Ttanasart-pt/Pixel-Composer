@@ -7,6 +7,7 @@
 
 function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Path Shape";
+	dimension_index = -1;
 	setDimension(96, 48);
 	
 	shape_types = [ 
@@ -27,16 +28,16 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	newInput( 3, nodeValue_Enum_Scroll(    "Shape",          0, { data: shapeScroll, horizontal: 1, text_pad: ui(16) } ))
 		.setHistory([ shape_types, { cond: function() /*=>*/ {return LOADING_VERSION < 1_19_06_0}, list: global.node_path_shape_keys_195 } ]);
 		
-	newInput( 4, nodeValue_Slider(         "Skew",          .5, [-1,1,.01] ));
-	newInput( 5, nodeValue_Rotation_Range( "Angle Range",   [0,90]         ));
-	newInput( 6, nodeValue_Float(          "Factor",         4             ));
-	newInput( 7, nodeValue_Int(            "Sides",          4             ));
-	newInput( 8, nodeValue_Float(          "Inner Radius",  .5             ));
-	newInput( 9, nodeValue_Corner(         "Corner Radius", [0,0,0,0]      )).setUnitSimple();
-	newInput(12, nodeValue_Rotation(       "Angle",          0             ));
-	newInput(10, nodeValue_Float(          "Revolution",     4             ));
-	newInput(11, nodeValue_Float(          "Pitch",         .2             )).setCurvable(13, CURVE_DEF_11);
-	newInput(14, nodeValue_Int(            "Resolution",     64            ));
+	newInput( 4, nodeValue_Slider(   "Skew",          .5, [-1,1,.01] ));
+	newInput( 5, nodeValue_RotRange( "Angle Range",   [0,90]         ));
+	newInput( 6, nodeValue_Float(    "Factor",         4             ));
+	newInput( 7, nodeValue_Int(      "Sides",          4             ));
+	newInput( 8, nodeValue_Float(    "Inner Radius",  .5             ));
+	newInput( 9, nodeValue_Corner(   "Corner Radius", [0,0,0,0]      )).setUnitSimple();
+	newInput(12, nodeValue_Rotation( "Angle",          0             ));
+	newInput(10, nodeValue_Float(    "Revolution",     4             ));
+	newInput(11, nodeValue_Float(    "Pitch",         .2             )).setCurvable(13, CURVE_DEF_11);
+	newInput(14, nodeValue_Int(      "Resolution",     64            ));
 	// input 15
 	
 	newOutput(0, nodeValue_Output("Path data", VALUE_TYPE.pathnode, noone ));
@@ -115,6 +116,8 @@ function Node_Path_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		    
 		    for( var i = 0, n = array_length(lengths); i < n; i++ ) {
 		        l = lengths[i];
+		        
+		        if(l == 0) continue;
 		        if(_d > l) { _d -= l; continue; }
 		        
 	            var p0 = points[(i + 0) % np];
