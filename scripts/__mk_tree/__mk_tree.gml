@@ -1,8 +1,18 @@
-global.MKTREE_JUNC = {
-	icon:  function() /*=>*/ {return THEME.node_junction_mktree},
-	color: function() /*=>*/ {return COLORS.node_blend_mktree},
-	widg:  function() /*=>*/ {return new mktreeBox()},
-}
+#region global
+	global.MKTREE_JUNC = {
+		icon:  function() /*=>*/ {return THEME.node_junction_mktree},
+		color: function() /*=>*/ {return COLORS.node_blend_mktree},
+		widg:  function() /*=>*/ {return new mktreeBox()},
+	}
+	
+	enum MKLEAF_TYPE {
+		Leaf, 
+		Complex_Leaf, 
+		Line, 
+		Circle, 
+		Surface
+	}
+#endregion
 
 function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 	rootPosition = _pos;
@@ -34,6 +44,8 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 	growShift = 0;
 	growSpeed = 1;
 	
+	geometry  = [];
+	
 	static drawOverlay = function(_x, _y, _s) { draw_circle(_x + x * _s, _y + y * _s, 3, false); }
 	
 	static draw = function() {
@@ -49,7 +61,7 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 		var y2 = y + dy * sp * scale;
 		
 		switch(shape) {
-			case 0 : 
+			case MKLEAF_TYPE.Leaf : 
 				var _sg   = -sign(dsy);
 				var _cTop = colorU? colorU : colorE;
 				var _cBot = colorE;
@@ -64,22 +76,66 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 					draw_vertex_color(x1, y1, _cBot, 1);
 					draw_vertex_color(x2 - dsx * _scsg, y2 - dsy * _scsg, _cBot, 1);
 				draw_primitive_end();
-				
 				break;
 				
-			case 1 : 
+			case MKLEAF_TYPE.Complex_Leaf : 
+				var _samp = array_length(geometry);
+				var od, nd;
+				
+				draw_primitive_begin(pr_trianglelist);
+					for( var i = 0; i < _samp; i++ ) {
+						nd = geometry[i];
+						
+						if(i) {
+							var r0 = (i - 1) / _samp;
+							var r1 =  i      / _samp;
+							
+							var _x0 = lerp(x0, x1, r0);
+							var _y0 = lerp(y0, y1, r0);
+							
+							var _x1 = lerp(x0, x1, r1);
+							var _y1 = lerp(y0, y1, r1);
+							
+							var x00 = _x0 + dsx * od;
+							var y00 = _y0 + dsy * od;
+							
+							var x01 = _x0 - dsx * od;
+							var y01 = _y0 - dsy * od;
+							
+							var x10 = _x1 + dsx * nd;
+							var y10 = _y1 + dsy * nd;
+							
+							var x11 = _x1 - dsx * nd;
+							var y11 = _y1 - dsy * nd;
+							
+							draw_vertex_color(x00, y00, color, 1);
+							draw_vertex_color(x01, y01, color, 1);
+							draw_vertex_color(x11, y11, color, 1);
+							
+							draw_vertex_color(x00, y00, color, 1);
+							draw_vertex_color(x11, y11, color, 1);
+							draw_vertex_color(x10, y10, color, 1);
+						}
+						
+						od = nd;
+					}
+				draw_primitive_end();
+				break;
+				
+			case MKLEAF_TYPE.Line : 
+				draw_set_color(color);
+				draw_line_round(x0, y0, x1, y1, sy);
+				break;
+				
+			case MKLEAF_TYPE.Circle : 
 				draw_set_circle_precision(16)
 				draw_circle_color(x2, y2, sx * scale, color, colorE, false);
 				break;
 				
-			case 2 : 
+			case MKLEAF_TYPE.Surface : 
 				draw_surface_ext_safe(surface, x, y, sx * scale, sy * scale, dir, color); 
 				break;
 			
-			case 3 : 
-				draw_set_color(color);
-				draw_line(x0, y0, x2, y2);
-				break;
 		}
 	}
 	
@@ -90,6 +146,7 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 		colorU  = _l.colorU;
 		
 		growShift = _l.growShift;
+		geometry  = _l.geometry;
 		return self;
 	}
 }

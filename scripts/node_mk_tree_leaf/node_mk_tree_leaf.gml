@@ -19,10 +19,16 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(15, nodeValue_Bool(  "Pair",    false         ));
 	
 	////- =Shape
-	newInput( 8, nodeValue_Enum_Button( "Shape",      0, [ "Leaf", "Circle", "Surface", "Line" ] ));
-	newInput( 3, nodeValue_Vec2_Range(  "Size",      [4,4,2,2] )).setCurvable(18, CURVE_DEF_11, "Over Branch");
-	newInput( 9, nodeValue_Surface(     "Texture",   noone ));
-	newInput(21, nodeValue_Slider(      "Leaf Span", .5    ));
+	shape_types = [ "Leaf", "Complex Leaf", "Line", "Circle", "Surface" ];
+	newInput( 8, nodeValue_EScroll( "Shape", MKLEAF_TYPE.Leaf, shape_types ))
+		.setHistory([ shape_types, 
+			{ cond: function() /*=>*/ {return LOADING_VERSION < 1_20_02_0}, list: [ "Leaf", "Circle", "Surface", "Line" ] }, 
+		]);
+	newInput( 3, nodeValue_Vec2_Range(  "Size",       [4,4,2,2] )).setCurvable(18, CURVE_DEF_11, "Over Branch");
+	newInput( 9, nodeValue_Surface(     "Texture",    noone        ));
+	newInput(21, nodeValue_Slider(      "Leaf Span",  .5           ));
+	newInput(29, nodeValue_Curve(       "Geomatry",   CURVE_DEF_01 ));
+	newInput(30, nodeValue_Int(         "Resolution",  6           ));
 	
 	////- =Color
 	newInput( 4, nodeValue_Gradient(    "Color Per Branch",  gra_white )).setMappableConst(12);
@@ -37,14 +43,14 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	////- =Growth
 	newInput(22, nodeValue_Range( "Grow Delay", [0,0], true ));
-	// input 29
+	// input 31
 	
 	newOutput(0, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 5, 0, 
-		[ "Leaf",   false ], 1, 19, 2, 7, 16, 27, 28, 10, 17, 15, 
-		[ "Shape",  false ], 8, 3, 18, 9, 21, 
-		[ "Color",  false ], 4, 20, 12, 6, 13, new Inspector_Spacer(ui(4), true, true, ui(6)), 14, 11, 25, 23, 24, 26, 
+		[ "Leaf",   false ],  1, 19,  2,  7, 16, 27, 28, 10, 17, 15, 
+		[ "Shape",  false ],  8,  3, 18,  9, 21, 29, 30, 
+		[ "Color",  false ],  4, 20, 12,  6, 13, new Inspector_Spacer(ui(4), true, true, ui(6)), 14, 11, 25, 23, 24, 26, 
 		[ "Growth", false ], 22, 
 	];
 	
@@ -100,6 +106,8 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _sizC = getInputData(18), curve_size   = inputs[ 3].attributes.curved? new curveMap(_sizC)  : undefined;
 			var _tex  = getInputData( 9);
 			var _lspn = getInputData(21);
+			var _lgeo = getInputData(29);
+			var _lres = getInputData(30);
 			
 			var _cBra     = getInputData( 4);
 			var _cBraMap  = getInputData(12);
@@ -123,11 +131,22 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 			var _grow = getInputData(22);
 			
-			inputs[ 9].setVisible(_shap == 2, _shap == 2);
-			inputs[21].setVisible(_shap == 0);
-			inputs[11].setVisible(_shap != 2 && _edg);
-			inputs[23].setVisible(_shap == 0);
-			inputs[24].setVisible(_shap == 0 && _edt);
+			inputs[21].setVisible(_shap == MKLEAF_TYPE.Leaf);
+			inputs[23].setVisible(_shap == MKLEAF_TYPE.Leaf);
+			inputs[24].setVisible(_shap == MKLEAF_TYPE.Leaf && _edt);
+			
+			inputs[29].setVisible(_shap == MKLEAF_TYPE.Complex_Leaf);
+			inputs[30].setVisible(_shap == MKLEAF_TYPE.Complex_Leaf);
+			
+			inputs[ 9].setVisible(_shap == MKLEAF_TYPE.Surface, _shap == MKLEAF_TYPE.Surface);
+			inputs[11].setVisible(_shap != MKLEAF_TYPE.Surface && _edg);
+			
+			var _geo = [];
+			if(_shap == MKLEAF_TYPE.Complex_Leaf) {
+				_geo = array_create(_lres + 1);
+				for( var i = 0; i <= _lres; i++ )
+					_geo[i] = eval_curve_x(_lgeo, i/_lres);
+			}
 		#endregion
 		
 		var ox, oy, nx, ny;
@@ -222,6 +241,7 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					    _l.surface   = _tex;
 					    _l.color     = colorMultiply(cc, lc);
 					    _l.growShift = random_range(_grow[0], _grow[1]);
+					    _l.geometry  = _geo;
 					
 					if(_edg == 0) {
 						_l.colorE = _l.color;

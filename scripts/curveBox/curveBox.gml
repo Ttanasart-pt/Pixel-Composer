@@ -393,7 +393,7 @@ function curveBox(_onModify) : widget() constructor {
 			var hov = 0;
 			var bs  = zoom_size;
 			
-			////- Height
+			////- =Height
 			
 			var zminy = 0 - 1;
 			var zmaxy = 1 + 1;
@@ -433,7 +433,7 @@ function curveBox(_onModify) : widget() constructor {
 			draw_sprite_stretched_ext(THEME.box_r2, 0, bx, zy0 - bs / 2, bs, bs, drag_h == 1? COLORS._main_icon_light : COLORS._main_icon, 1);
 			draw_sprite_stretched_ext(THEME.box_r2, 0, bx, zy1 - bs / 2, bs, bs, drag_h == 2? COLORS._main_icon_light : COLORS._main_icon, 1);
 			
-			////- Width
+			////- =Width
 			
 			var zminx = 0;
 			var zmaxx = 1;
@@ -473,7 +473,7 @@ function curveBox(_onModify) : widget() constructor {
 			draw_sprite_stretched_ext(THEME.box_r2, 0, zx0 - bs / 2, by, bs, bs, drag_h == 4? COLORS._main_icon_light : COLORS._main_icon, 1);
 			draw_sprite_stretched_ext(THEME.box_r2, 0, zx1 - bs / 2, by, bs, bs, drag_h == 5? COLORS._main_icon_light : COLORS._main_icon, 1);
 			
-			////- Pan
+			////- =Pan
 			
 			drag_h = hov;
 			
@@ -516,7 +516,7 @@ function curveBox(_onModify) : widget() constructor {
 			if(mouse_release(mb_left) || mouse_release(mb_middle))
 				dragging = false;
 			
-			////- Height drag
+			////- =Height drag
 			
 			var _bhx = _x + _w - bs;
 			var _bhy = _y + hh - bs - (tbh + ui(4)) * (1 + show_x_control);
@@ -544,6 +544,11 @@ function curveBox(_onModify) : widget() constructor {
 			}
 		#endregion
 		
+		draw_sprite_stretched_ext(THEME.box_r2, 1, _x, _y, cw, ch, COLORS.widget_curve_outline, 1);
+		draw_surface(curve_surface, _x, _y);
+		
+		////- =Interaction
+		
 		if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + cw, _y + ch)) {
 			show_coord = true;
 			hovering   = true;
@@ -565,11 +570,16 @@ function curveBox(_onModify) : widget() constructor {
 					var _px =     (_m[0] - _x) / cw;
 					var _py = 1 - (_m[1] - _y) / ch;
 					
-					array_insert(_data, _ind + 0, linear_mode? 0 : -1/5);
+					var _xc = _data[_ind     + 2];
+					var _xp = _data[_ind - 6 + 2];
+					var _xn = _data[_ind + 6 + 2];
+					var _sp = min(_xc - _xp, _xn - _xc) / 3;
+					
+					array_insert(_data, _ind + 0, linear_mode? 0 : -_sp);
 					array_insert(_data, _ind + 1, 0);
 					array_insert(_data, _ind + 2, _px);
 					array_insert(_data, _ind + 3, _py);
-					array_insert(_data, _ind + 4, linear_mode? 0 : 1/5);
+					array_insert(_data, _ind + 4, linear_mode? 0 : _sp);
 					array_insert(_data, _ind + 5, 0);
 					
 					if(onModify(_data))
@@ -707,8 +717,7 @@ function curveBox(_onModify) : widget() constructor {
 			}
 		}
 			
-		draw_sprite_stretched_ext(THEME.box_r2, 1, _x, _y, cw, ch, COLORS.widget_curve_outline, 1);
-		draw_surface(curve_surface, _x, _y);
+		////- =Bottom Bar
 		
 		if(show_coord) {
 			var ttx = undefined, llx = undefined;

@@ -31,12 +31,12 @@ function Node_MK_Isoextrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	newOutput(1, nodeValue_Output("Depth",       VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 
-		[ "Surfaces",    false     ], 0, 6, 3, 
-		[ "Height Maps", false     ], 5, 14, 
-		[ "Depth",       false     ], 4, 1, 9, 
-		[ "Transform",   false     ], 7, 8, 
+		[ "Surfaces",    false     ],  0,  6,  3, 
+		[ "Height Maps", false     ],  5, 14, 
+		[ "Depth",       false     ],  4,  1,  9, 
+		[ "Transform",   false     ],  7,  8, 
 		[ "Hole",         true, 13 ], 12, 10, 11, 
-		[ "Rendering",   false     ], 2, 
+		[ "Rendering",   false     ],  2, 
 	];
 	
 	////- Nodes
