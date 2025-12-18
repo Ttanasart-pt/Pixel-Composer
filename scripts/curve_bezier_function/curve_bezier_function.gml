@@ -275,7 +275,7 @@ function eval_curve_x(_bz, _x, _tolr = 0.0001) {
 				var  t  = (_x - _x0) / _rx;
 				
 				if(dx0 == 0. && dy0 == 0. && dx1 == 0. && dy1 == 0.)
-                    return lerp(_y0, _y1, t);
+                    return lerp(_miny, _maxy, lerp(_y0, _y1, t));
 				
 				var ax0 = 0 + dx0 / _rx;
 				var ay0 = _y0 + dy0;
@@ -283,7 +283,7 @@ function eval_curve_x(_bz, _x, _tolr = 0.0001) {
 				var bx1 = 1 + dx1 / _rx;
 				var by1 = _y1 + dy1;
 				
-				return eval_curve_segment_x(_y0, ax0, ay0, bx1, by1, _y1, t, _tolr);
+				return lerp(_miny, _maxy, eval_curve_segment_x(_y0, ax0, ay0, bx1, by1, _y1, t, _tolr));
 			}
 			break;
 			

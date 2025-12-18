@@ -17,6 +17,7 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newInput(27, nodeValue_Range( "Gravity", [0,0],   true )).setCurvable(28, CURVE_DEF_11, "Over Branch");
 	newInput(10, nodeValue_Range( "Offset",  [0,0],   true )).setCurvable(17, CURVE_DEF_11, "Over Branch");
 	newInput(15, nodeValue_Int(   "Whorled",  0            ));
+	newInput(32, nodeValue_Float( "Whorled Angle",  0.1    )).setCurvable(33, CURVE_DEF_11, "Over Branch");
 	
 	////- =Shape
 	shape_types = [ "Leaf", "Complex Leaf", "Line", "Circle", "Surface" ];
@@ -44,12 +45,12 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	////- =Growth
 	newInput(22, nodeValue_Range( "Grow Delay", [0,0], true ));
-	// input 32
+	// input 34
 	
 	newOutput(0, nodeValue_Output("Branches", VALUE_TYPE.struct, noone)).setCustomData(global.MKTREE_JUNC);
 	
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 5, 0, 
-		[ "Leaf",   false ],  1, 19,  2,  7, 16, 27, 28, 10, 17, 15, 
+		[ "Leaf",   false ],  1, 19,  2,  7, 16, 27, 28, 10, 17, 15, 32, 33, 
 		[ "Shape",  false ],  8,  3, 18,  9, 21, 29, 31, 30, 
 		[ "Color",  false ],  4, 20, 12,  6, 13, new Inspector_Spacer(ui(4), true, true, ui(6)), 14, 11, 25, 23, 24, 26, 
 		[ "Growth", false ], 22, 
@@ -101,6 +102,8 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _offs = getInputData(10);
 			var _offC = getInputData(17), curve_offset = inputs[10].attributes.curved? new curveMap(_offC)  : undefined;
 			var _whor = getInputData(15);
+			var _whra = getInputData(32), 
+			var _whrC = getInputData(33), curve_whorl  = inputs[32].attributes.curved? new curveMap(_whrC)  : undefined;
 			
 			var _shap = getInputData( 8);
 			var _siz  = getInputData( 3);
@@ -276,9 +279,11 @@ function Node_MK_Tree_Leaf(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					array_push(_br.leaves, _l);
 					
 					if(_whor > 0) {
-						var _astep = 360 / _whor;
+						var _whrla = _whra * (curve_whorl? curve_whorl.get(_rBrns) : 1);
+						
+						var _astep = _spra * 4 / (2 + (_whor - 1) * _whrla);
 						for( var k = 0; k < _whor; k++ ) {
-							var _d2 = brnDir + _spra + _astep * k;
+							var _d2 = brnDir + _spra - _astep * (k + 1);
 							    _d2 = lerp_angle_direct(_d2, _gDir, _grv);
 							
 							var _l2 = new __MK_Tree_Leaf(_rBrn, _shap, _lx, _ly, _d2, lsx, lsy, _lspn).copy(_l);
