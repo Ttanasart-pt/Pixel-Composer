@@ -570,10 +570,9 @@ function curveBox(_onModify) : widget() constructor {
 					var _px =     (_m[0] - _x) / cw;
 					var _py = 1 - (_m[1] - _y) / ch;
 					
-					var _xc = _data[_ind     + 2];
 					var _xp = _data[_ind - 6 + 2];
-					var _xn = _data[_ind + 6 + 2];
-					var _sp = min(_xc - _xp, _xn - _xc) / 3;
+					var _xn = _data[_ind     + 2];
+					var _sp = (_xn - _xp) / 4;
 					
 					array_insert(_data, _ind + 0, linear_mode? 0 : -_sp);
 					array_insert(_data, _ind + 1, 0);
