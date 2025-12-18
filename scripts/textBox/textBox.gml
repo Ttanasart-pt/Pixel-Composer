@@ -795,15 +795,13 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 						slider_dx      += _mdx / w;
 						slider_cur_del += _mdx;
 						slider_cur_val  = slider_def_val + slider_cur_del * _s;
-					
-						if(slide_range != noone)
-							slider_cur_val = clamp(slider_cur_val, curr_range[0], curr_range[1]);
 						
-						var _val = value_snap(slider_cur_val, _sc / 100);
+						if(slide_range != noone) slider_cur_val = clamp(slider_cur_val, curr_range[0], curr_range[1]);
 						
-						if(slide_snap > 0) _val = value_snap(slider_cur_val, slide_snap);
+						var _val = slider_cur_val;
+						if(slide_snap > 0) _val = value_snap(_val, _sc / 100);
 						if(slide_int)      _val = round(_val);
-	
+						
 						_input_text  = string_real(_val);
 					}
 					

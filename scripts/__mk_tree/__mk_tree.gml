@@ -20,6 +20,7 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 	
 	x  = _x;
 	y  = _y;
+	gravity = -90;
 	
 	startx = _x;
 	starty = _y;
@@ -45,8 +46,9 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 	growShift = 0;
 	growSpeed = 1;
 	
-	geometry  = [];
-	geoGrav   = .1;
+	geometry   = [];
+	geoGrav    = .1;
+	resolution = 0;
 	
 	static drawOverlay = function(_x, _y, _s) { draw_circle(_x + x * _s, _y + y * _s, 3, false); }
 	
@@ -70,14 +72,29 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 				var _sg   = -sign(dsy);
 				var _scsg = scale * _sg;
 				
+				var _dsx = dsx * _scsg;
+				var _dsy = dsy * _scsg;
+		
+				var c0 = colorLeaf.evalFast(  0 );
+				var c2 = colorLeaf.evalFast( .5 );
+				var c1 = colorLeaf.evalFast(  1 );
+				
+				var oc  = colorMultiply(color, c0);
+				
+				var tc2 = colorMultiply(_cTop, c2);
+				var bc2 = colorMultiply(_cBot, c2);
+				
+				var tc1 = colorMultiply(_cTop, c1);
+				var bc1 = colorMultiply(_cBot, c1);
+				
 				draw_primitive_begin(pr_trianglelist);
-					draw_vertex_color(x0, y0, color, 1);
-					draw_vertex_color(x1, y1, _cTop, 1);
-					draw_vertex_color(x2 + dsx * _scsg, y2 + dsy * _scsg, _cTop, 1);
+					draw_vertex_color(x0,        y0,        oc,  1);
+					draw_vertex_color(x1,        y1,        tc1, 1);
+					draw_vertex_color(x2 + _dsx, y2 + _dsy, tc2, 1);
 					
-					draw_vertex_color(x0, y0, color, 1);
-					draw_vertex_color(x1, y1, _cBot, 1);
-					draw_vertex_color(x2 - dsx * _scsg, y2 - dsy * _scsg, _cBot, 1);
+					draw_vertex_color(x0,        y0,        oc,  1);
+					draw_vertex_color(x1,        y1,        bc1, 1);
+					draw_vertex_color(x2 - _dsx, y2 - _dsy, bc2, 1);
 				draw_primitive_end();
 				break;
 				
@@ -86,8 +103,8 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 				
 				var _samp = array_length(geometry);
 				var ds = sx / _samp;
-				var od = dir,         nd = od;
 				var os = geometry[0], ns = os;
+				var od = dir,         nd = od;
 				var ox = x0,          nx = ox;
 				var oy = y0,          ny = oy;
 				var oc = colorLeaf.evalFast(0), nc = oc;
@@ -99,7 +116,7 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 						ns = geometry[i];
 						nx = ox + lengthdir_x(ds, nd);
 						ny = oy + lengthdir_y(ds, nd);
-						nd = lerp_angle_direct(nd, -90, gg);
+						nd = lerp_angle_direct(nd, gravity, gg);
 						nc = colorLeaf.evalFast(i/_samp);
 						
 						var _odx = lengthdir_x(sy, od + 90);
@@ -157,8 +174,26 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 				break;
 				
 			case MKLEAF_TYPE.Line : 
-				draw_set_color(color);
-				draw_line_round(x0, y0, x1, y1, sy);
+				var _samp = resolution;
+				var ds = sx / _samp;
+				var od = dir,         nd = od;
+				var ox = x0,          nx = ox;
+				var oy = y0,          ny = oy;
+				var oc = colorLeaf.evalFast(0), nc = oc;
+				var gg = geoGrav / _samp;
+				
+				for( var i = 1; i < _samp; i++ ) {
+					nx = ox + lengthdir_x(ds, nd);
+					ny = oy + lengthdir_y(ds, nd);
+					nd = lerp_angle_direct(nd, gravity, gg);
+					nc = colorLeaf.evalFast(i/_samp);
+					
+					draw_line_round_color(ox, oy, nx, ny, sy, oc, nc);
+					
+					ox = nx;
+					oy = ny;
+					oc = nc;
+				}
 				break;
 				
 			case MKLEAF_TYPE.Circle : 
@@ -174,15 +209,18 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 	}
 	
 	static copy = function(_l) {
-		surface = _l.surface;
-		color   = _l.color;
-		colorE  = _l.colorE;
-		colorU  = _l.colorU;
-		colorLeaf = _l.colorLeaf;
+		gravity    = _l.gravity;
+		surface    = _l.surface;
+		color      = _l.color;
+		colorE     = _l.colorE;
+		colorU     = _l.colorU;
+		colorLeaf  = _l.colorLeaf;
 		
-		growShift = _l.growShift;
-		geometry  = _l.geometry;
-		geoGrav   = _l.geoGrav;
+		growShift  = _l.growShift;
+		geometry   = _l.geometry;
+		geoGrav    = _l.geoGrav;
+		
+		resolution = _l.resolution;
 		return self;
 	}
 }
