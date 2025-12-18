@@ -288,7 +288,7 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			if(rot_use) {
 				var _or = _a.rotation;
 				var _nr = rot_mod? _or + rot_amo : rot_amo;
-				    _nr = lerp_float_angle(_or, _nr, _inf);
+				    _nr = lerp_angle_direct(_or, _nr, _inf);
 				_a.rotation = _nr;
 				
 				if(rot_cal) {

@@ -204,7 +204,7 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 						
 						for( var j = 0; j <= _stp; j++ ) {
 							_nd = lerp(_d0, _d1, j / _stp);
-							_na = lerp_float_angle(_a0, _a1, j / _stp);
+							_na = lerp_angle_direct(_a0, _a1, j / _stp);
 							_ni = lerp(_i0, _i1, j / _stp);
 							
 							if(j) {

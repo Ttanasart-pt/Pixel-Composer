@@ -29,10 +29,6 @@ function lerp_angle_linear(from, to, speed) {
 	return from + sign(angle_difference(to, from)) * speed;
 }
 
-function lerp_float_angle(from, to, ratio) {
-	return from + angle_difference(to, from) * ratio;
-}
-
 function lerp_color(from, to, ratio) {
 	if(abs(from - to) < 1) return to;
 	return merge_color(from, to, ratio);

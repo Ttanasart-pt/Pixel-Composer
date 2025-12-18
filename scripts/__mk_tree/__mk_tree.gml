@@ -45,6 +45,7 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 	growSpeed = 1;
 	
 	geometry  = [];
+	geoGrav   = .1;
 	
 	static drawOverlay = function(_x, _y, _s) { draw_circle(_x + x * _s, _y + y * _s, 3, false); }
 	
@@ -60,11 +61,12 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 		var x2 = x + dx * sp * scale;
 		var y2 = y + dy * sp * scale;
 		
+		var _cTop = colorU? colorU : colorE;
+		var _cBot = colorE;
+				
 		switch(shape) {
 			case MKLEAF_TYPE.Leaf : 
 				var _sg   = -sign(dsy);
-				var _cTop = colorU? colorU : colorE;
-				var _cBot = colorE;
 				var _scsg = scale * _sg;
 				
 				draw_primitive_begin(pr_trianglelist);
@@ -79,45 +81,64 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 				break;
 				
 			case MKLEAF_TYPE.Complex_Leaf : 
+				if(array_empty(geometry)) break;
+				
 				var _samp = array_length(geometry);
-				var od, nd;
+				var ds = sx / _samp;
+				var od = dir,         nd = od;
+				var os = geometry[0], ns = os;
+				var ox = x0,          nx = ox;
+				var oy = y0,          ny = oy;
+				var gg = geoGrav / _samp;
+				var rr;
 				
 				draw_primitive_begin(pr_trianglelist);
-					for( var i = 0; i < _samp; i++ ) {
-						nd = geometry[i];
+					for( var i = 1; i < _samp; i++ ) {
+						ns = geometry[i];
+						nx = ox + lengthdir_x(ds, nd);
+						ny = oy + lengthdir_y(ds, nd);
+						nd = lerp_angle_direct(nd, -90, gg);
 						
-						if(i) {
-							var r0 = (i - 1) / _samp;
-							var r1 =  i      / _samp;
-							
-							var _x0 = lerp(x0, x1, r0);
-							var _y0 = lerp(y0, y1, r0);
-							
-							var _x1 = lerp(x0, x1, r1);
-							var _y1 = lerp(y0, y1, r1);
-							
-							var x00 = _x0 + dsx * od;
-							var y00 = _y0 + dsy * od;
-							
-							var x01 = _x0 - dsx * od;
-							var y01 = _y0 - dsy * od;
-							
-							var x10 = _x1 + dsx * nd;
-							var y10 = _y1 + dsy * nd;
-							
-							var x11 = _x1 - dsx * nd;
-							var y11 = _y1 - dsy * nd;
-							
-							draw_vertex_color(x00, y00, color, 1);
-							draw_vertex_color(x01, y01, color, 1);
-							draw_vertex_color(x11, y11, color, 1);
-							
-							draw_vertex_color(x00, y00, color, 1);
-							draw_vertex_color(x11, y11, color, 1);
-							draw_vertex_color(x10, y10, color, 1);
-						}
+						var _odx = lengthdir_x(sy, od + 90);
+						var _ody = lengthdir_y(sy, od + 90);
+						
+						var _ndx = lengthdir_x(sy, nd + 90);
+						var _ndy = lengthdir_y(sy, nd + 90);
+						
+						var x00 = ox + _odx * os;
+						var y00 = oy + _ody * os;
+						
+						var x01 = ox - _odx * os;
+						var y01 = oy - _ody * os;
+						
+						var x10 = nx + _ndx * ns;
+						var y10 = ny + _ndy * ns;
+						
+						var x11 = nx - _ndx * ns;
+						var y11 = ny - _ndy * ns;
+						
+						draw_vertex_color(x00, y00, _cTop, 1);
+						draw_vertex_color( ox,  oy, color, 1);
+						draw_vertex_color( nx,  ny, color, 1);
+						
+						draw_vertex_color(x00, y00, _cTop, 1);
+						draw_vertex_color( nx,  ny, color, 1);
+						draw_vertex_color(x10, y10, _cTop, 1);
+						
+						//////////////////////////////////////
+						
+						draw_vertex_color(x01, y01, _cBot, 1);
+						draw_vertex_color( ox,  oy, color, 1);
+						draw_vertex_color( nx,  ny, color, 1);
+						
+						draw_vertex_color(x01, y01, _cBot, 1);
+						draw_vertex_color( nx,  ny, color, 1);
+						draw_vertex_color(x11, y11, _cBot, 1);
 						
 						od = nd;
+						os = ns;
+						ox = nx;
+						oy = ny;
 					}
 				draw_primitive_end();
 				break;
@@ -147,6 +168,7 @@ function __MK_Tree_Leaf(_pos, _shp, _x, _y, _dir, _sx, _sy, _span) constructor {
 		
 		growShift = _l.growShift;
 		geometry  = _l.geometry;
+		geoGrav   = _l.geoGrav;
 		return self;
 	}
 }

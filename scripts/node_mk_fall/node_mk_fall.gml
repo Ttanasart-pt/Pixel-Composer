@@ -229,7 +229,7 @@ function Node_MK_Fall(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 			var __vvdr = point_direction(0, 0, _vx, _vy);
 			
 			_vds = lerp(            _vds, __vvds, 0.5);
-			_vdr = lerp_float_angle(_vdr, __vvdr, 0.5);
+			_vdr = lerp_angle_direct(_vdr, __vvdr, 0.5);
 			
 			var _vvx = lengthdir_x(_vds, _vdr);
 			var _vvy = lengthdir_y(_vds, _vdr);
