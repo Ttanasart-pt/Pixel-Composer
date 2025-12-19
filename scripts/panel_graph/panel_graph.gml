@@ -1498,12 +1498,12 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
         var _node = getFocusingNode();
         
-        if(!_focus || !mouse_on_graph
-                   || _node == noone
-    	           || cache_group_edit != noone
-                   || value_focus != noone
-                   || !_node.draggable
-    	           || key_mod_press_any()) return;
+		if(!_focus || !mouse_on_graph) return;
+		if(cache_group_edit != noone)  return;
+		if(value_focus != noone)       return;
+		
+		if(_node == noone || !_node.draggable)          return;
+		if(key_mod_press(CTRL) || key_mod_press(SHIFT)) return;
         
         if(mouse_press(mb_left)) {
             node_dragging = _node;
@@ -1809,7 +1809,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	        		else if(node_hovering) addKeyOverlay("Select node(s)",     [[ "Shift", "Toggle selection" ]]);
 	        	}
             	
-	            // select
+	            // Select
                 var _anc = nodes_select_anchor;
                 if(mouse_press(mb_left, _focus)) _anc = noone;
                 
@@ -1819,19 +1819,16 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                         NODE_DROPPER_TARGET.expression += node_hovering.internalName;
                         NODE_DROPPER_TARGET.expressionUpdate(); 
                     }
+                    
                 } else if(mouse_press(mb_left, _focus)) {
+                	if(array_valid(frame_hovering)) array_foreach(frame_hovering, function(f) /*=>*/ {return f.getCoveringNodes(nodes_list)});
+                	if(is(node_hovering, Node_Frame)) node_hovering.getCoveringNodes(nodes_list);
                 	
-                	for( var i = 0, n = array_length(frame_hoverings); i < n; i++ ) 
-                		frame_hoverings[i].getCoveringNodes(nodes_list);
-                	
-                	if(is(node_hovering, Node_Frame)) 
-                		node_hovering.getCoveringNodes(nodes_list);
-                	
-                    if(key_mod_press(SHIFT)) {
+                    if(key_mod_press(SHIFT)) { // Select Multiple
                         if(node_hovering) array_toggle(nodes_selecting, node_hovering);
                         else nodes_selecting = [];
                             
-                    } else if(value_focus || node_hovering == noone) {
+                    } else if(value_focus || node_hovering == noone) { // Select Nothing
                         nodes_selecting = [];
                         
                         if(DOUBLE_CLICK) {
@@ -1841,8 +1838,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                         	if(_ctx || !array_empty(project.globalLayer_nodes)) PANEL_PREVIEW.setNodePreview(_ctx);
                         }
                     
-                    } else if(cache_group_edit != noone) {
-                    	
+                    } else if(cache_group_edit != noone) { // Edit Cache Group
                     	var _cache = cache_group_edit;
                     	if(node_hovering == _cache) {
                     		cache_group_edit = noone;
@@ -1857,43 +1853,34 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	                    	_cache.refreshGroupBG(true);
                     	}
                     	
-                    } else {
-                        if(DOUBLE_CLICK) {
-                            PANEL_PREVIEW.setNodePreview(node_hovering);
-                            
-                            if(PREFERENCES.inspector_focus_on_double_click) {
-                                if(PANEL_INSPECTOR.panel && struct_has(PANEL_INSPECTOR.panel, "switchContent"))
-                                    PANEL_INSPECTOR.panel.switchContent(PANEL_INSPECTOR);
-                            }
-                            
-                        } else {
-                            var hover_selected = false;    
-                            for( var i = 0; i < array_length(nodes_selecting); i++ ) {
-                                if(nodes_selecting[i] != node_hovering) continue;
-                                    
-                                hover_selected = true;
-                                break;
-                            }
-                            
-                            if(!hover_selected)
-                                nodes_selecting = [ node_hovering ];
-                                
-                            if(array_length(nodes_selecting) > 1)
-                                _anc = nodes_select_anchor == node_hovering? noone : node_hovering;
-                                
-                            if(is(node_hovering, Node_Frame)) {
-	                            if(key_mod_press(CTRL)) {
-	                            	nodes_selecting = [ node_hovering ];
-	                            	for( var i = 0, n = array_length(node_hovering.__nodes); i < n; i++ ) 
-	                            		array_push(nodes_selecting, node_hovering.__nodes[i]);
-	                            }
-	                            
-	                        }
+                    } else if(DOUBLE_CLICK) { // Double Click on Node
+                        PANEL_PREVIEW.setNodePreview(node_hovering);
+                        
+                        if(PREFERENCES.inspector_focus_on_double_click) {
+                            if(PANEL_INSPECTOR.panel && struct_has(PANEL_INSPECTOR.panel, "switchContent"))
+                                PANEL_INSPECTOR.panel.switchContent(PANEL_INSPECTOR);
                         }
                         
-                        if(WIDGET_CURRENT) WIDGET_CURRENT.deactivate();
-                        array_foreach(nodes_selecting, function(n) /*=>*/ { bringNodeToFront(n) });
+                    } else { // Single Click on Node
+                        var hover_selected = array_exists(nodes_selecting, node_hovering);
+                        if(!hover_selected) nodes_selecting = [ node_hovering ];
+                        
+                        if(array_length(nodes_selecting) > 1)
+                            _anc = nodes_select_anchor == node_hovering? noone : node_hovering;
+                            
+                        if(is(node_hovering, Node_Frame) && key_mod_press(CTRL)) { // Select Everything in Frame
+                        	nodes_selecting = [ node_hovering ];
+                        	array_append(nodes_selecting, node_hovering.__nodes);
+                        }
+                        
+                        if(key_mod_press(ALT) && !array_empty(nodes_selecting)) { // Alt copy
+	                    	var cln = nodeClone(nodes_selecting);
+                    		nodes_selecting = array_clone(cln, 1);
+	                    } 
                     }
+                    
+                    if(WIDGET_CURRENT) WIDGET_CURRENT.deactivate();
+                    if(array_valid(nodes_selecting)) array_foreach(nodes_selecting, function(n) /*=>*/ { bringNodeToFront(n) });
                 }
                 
                 nodes_select_anchor = _anc;
