@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_cache_results",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_cache_results",
+  "parent":{
+    "name":"cache",
+    "path":"folders/nodes/data/misc/cache.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

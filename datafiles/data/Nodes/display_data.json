@@ -1227,6 +1227,7 @@
             
             { "label": "Cache" },
             "Node_Cache",
+            "Node_Cache_Results",
             "Node_Cache_Array",
             "Node_Cache_Value_Array",
             

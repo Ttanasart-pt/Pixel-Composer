@@ -2202,8 +2202,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 	                    
 	                    var _x = (_node.x + graph_x) * graph_s;
 	                    var _y = (_node.y + graph_y) * graph_s;
-	                    var _w = _node.w * graph_s;
-	                    var _h = _node.h * graph_s;
+	                    var _w = (_node.w) * graph_s;
+	                    var _h = (_node.h + _node.showMeta() * 16) * graph_s;
 	                    
 	                    var _sel = _w && _h && rectangle_in_rectangle(_x, _y, _x + _w, _y + _h, nodes_select_mx, nodes_select_my, mx, my);
 	                    var _selecting = array_exists(nodes_selecting, _node);

@@ -925,6 +925,7 @@
     {"name":"node_byte_file_read","order":18,"path":"scripts/node_byte_file_read/node_byte_file_read.yy",},
     {"name":"node_byte_file_write","order":17,"path":"scripts/node_byte_file_write/node_byte_file_write.yy",},
     {"name":"node_cache_array","order":2,"path":"scripts/node_cache_array/node_cache_array.yy",},
+    {"name":"node_cache_results","order":3,"path":"scripts/node_cache_results/node_cache_results.yy",},
     {"name":"node_cache_value_array","order":12,"path":"scripts/node_cache_value_array/node_cache_value_array.yy",},
     {"name":"node_cache","order":1,"path":"scripts/node_cache/node_cache.yy",},
     {"name":"node_camera","order":2,"path":"scripts/node_camera/node_camera.yy",},
