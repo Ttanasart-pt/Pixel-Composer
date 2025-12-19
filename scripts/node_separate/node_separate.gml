@@ -23,20 +23,18 @@ function Node_Separate(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	static step = function() {}
 	
 	static processData = function(_outData, _data, _array_index = 0) { 
-		var _surf = _data[0];
-		var _mask = _data[1];
-		var _thr  = _data[2];
+		#region data
+			var _surf = _data[0];
+			var _mask = _data[1];
+			var _thr  = _data[2];
+		#endregion
 		
-		surface_set_target_ext(0, _outData[0]);
-		surface_set_target_ext(1, _outData[1]);
-			DRAW_CLEAR
-			shader_set(sh_separate);
-			shader_set_surface("mask", _mask);
-			shader_set_f("threshold",  _thr);
+		surface_set_shader(_outData, sh_separate);
+			shader_set_s( "mask",      _mask );
+			shader_set_f( "threshold", _thr  );
 			
 			draw_surface_safe(_surf);
-			shader_reset();
-		surface_reset_target();
+		surface_reset_shader();
 		
 		return _outData; 
 	}

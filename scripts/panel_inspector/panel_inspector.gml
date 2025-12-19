@@ -299,7 +299,7 @@ function Panel_Inspector() : PanelContent() constructor {
             [ __txt("Global Layer"),        true,  "layers"     ], 
             [ __txt("Global Variables"),    false, "globalvar"  ], 
             [ __txt("Group Properties"),    false, "group prop" ], 
-            [ __txt("Favorited Proerties"), false, "favorites"  ], 
+            [ __txt("Favorited Properties"), false, "favorites"  ], 
         ];
         
         meta_steam_avatar = new checkBox(function() /*=>*/ { STEAM_UGC_ITEM_AVATAR = !STEAM_UGC_ITEM_AVATAR; });

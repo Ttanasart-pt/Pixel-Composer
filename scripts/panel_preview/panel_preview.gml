@@ -52,8 +52,9 @@
     function panel_preview_set_reset_view_on()          { CALL("preview_set_reset_view_on");         PANEL_PREVIEW.set_reset_view_on();                }
     function panel_preview_toggle_reset_view(d=1)       { CALL("preview_toggle_reset_view");         mod_del_mf0 PANEL_PREVIEW.resetViewOnDoubleClick mod_del_mf1 PANEL_PREVIEW.resetViewOnDoubleClick mod_del_mf2  2 mod_del_mf3  2 mod_del_mf4; }
     
-    function panel_preview_toggle_lock()                { CALL("preview_toggle_lock");               PANEL_PREVIEW.toggle_lock(); }
-    function panel_preview_toggle_mini()                { CALL("preview_toggle_mini");               PANEL_PREVIEW.toggle_mini(); }
+    function panel_preview_toggle_lock()                { CALL("preview_toggle_lock");               PANEL_PREVIEW.toggle_lock();  }
+    function panel_preview_toggle_mini()                { CALL("preview_toggle_mini");               PANEL_PREVIEW.toggle_mini();  }
+    function panel_preview_toggle_gizmo()               { CALL("preview_toggle_gizmo");              PANEL_PREVIEW.toggle_gizmo(); }
     
     function panel_preview_toggle_tool_lock_l()         { CALL("preview_toggle_tool_lock_l");        PANEL_PREVIEW.tool_always_l = !PANEL_PREVIEW.tool_always_l; }
     function panel_preview_toggle_tool_lock_r()         { CALL("preview_toggle_tool_lock_r");        PANEL_PREVIEW.tool_always_r = !PANEL_PREVIEW.tool_always_r; }
@@ -153,10 +154,11 @@
         
         registerFunction(p, "Toggle Onion Skin",        "", n, panel_preview_onion_enabled             ).setMenu("preview_onion_enabled")
         registerFunction(p, "Toggle Onion Skin view",   "", n, panel_preview_onion_on_top              ).setMenu("preview_onion_on_top")
-        registerFunction(p, "Toggle Lock",              "", n, panel_preview_toggle_lock               ).setMenu("preview_toggle_lock",  THEME.lock).setSpriteInd(function() /*=>*/ {return !PANEL_PREVIEW.locked} )
-        registerFunction(p, "Toggle Minimap",           "", n, panel_preview_toggle_mini               ).setMenu("preview_toggle_mini",  THEME.icon_minimap).setSpriteInd(function() /*=>*/ {return PANEL_PREVIEW.minimap_show} )
-        registerFunction(p, "Lock Left Toolbar",        "", n, panel_preview_toggle_tool_lock_l        ).setMenu("preview_toggle_tool_l",  THEME.lock).setSpriteInd(function() /*=>*/ {return !PANEL_PREVIEW.tool_always_l} )
-        registerFunction(p, "Lock Right Toolbar",       "", n, panel_preview_toggle_tool_lock_r        ).setMenu("preview_toggle_tool_r",  THEME.lock).setSpriteInd(function() /*=>*/ {return !PANEL_PREVIEW.tool_always_r} )
+        registerFunction(p, "Toggle Lock",              "", n, panel_preview_toggle_lock               ).setMenu("preview_toggle_lock",   THEME.lock         ).setSpriteInd(function() /*=>*/ {return !PANEL_PREVIEW.locked}       )
+        registerFunction(p, "Toggle Minimap",           "", n, panel_preview_toggle_mini               ).setMenu("preview_toggle_mini",   THEME.icon_minimap ).setSpriteInd(function() /*=>*/  {return PANEL_PREVIEW.minimap_show} )
+        registerFunction(p, "Toggle Gizmo",             "", n, panel_preview_toggle_gizmo              ).setMenu("preview_toggle_gizmo",  THEME.icon_gizmo   ).setSpriteInd(function() /*=>*/  {return PANEL_PREVIEW.gizmo_show}   )
+        registerFunction(p, "Lock Left Toolbar",        "", n, panel_preview_toggle_tool_lock_l        ).setMenu("preview_toggle_tool_l", THEME.lock         ).setSpriteInd(function() /*=>*/ {return !PANEL_PREVIEW.tool_always_l} )
+        registerFunction(p, "Lock Right Toolbar",       "", n, panel_preview_toggle_tool_lock_r        ).setMenu("preview_toggle_tool_r", THEME.lock         ).setSpriteInd(function() /*=>*/ {return !PANEL_PREVIEW.tool_always_r} )
         
         registerFunction(p, "Popup",            		"", n, function() /*=>*/ { create_preview_window(PANEL_PREVIEW.getNodePreview());         }).setMenu("preview_popup",          THEME.node_goto_thin    )
         registerFunction(p, "Grid Settings...",         "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_Grid_Setting())  }).setMenu("preview_grid_settings",  THEME.icon_grid_setting )
@@ -449,7 +451,11 @@ function Panel_Preview() : PanelContent() constructor {
         
     #endregion
     
-    #region // ---- minimap ----
+    #region ---- gizmo ----
+    	gizmo_show       = true;
+    #endregion
+    
+    #region ---- minimap ----
         minimap_show     = false;
         minimap_w        = ui(160);
         minimap_h        = ui(160);
@@ -477,6 +483,7 @@ function Panel_Preview() : PanelContent() constructor {
         
         static toggle_lock         = function() /*=>*/ { locked = !locked }
         static toggle_mini         = function() /*=>*/ { minimap_show = !minimap_show; }
+        static toggle_gizmo        = function() /*=>*/ { gizmo_show   = !gizmo_show; }
         
         static d3_view_action_front  = function() /*=>*/ { d3_camLerp = 1; d3_camLerp_x =   0; d3_camLerp_y =   0; d3_camera.projection = 1; }
         static d3_view_action_back   = function() /*=>*/ { d3_camLerp = 1; d3_camLerp_x = 180; d3_camLerp_y =   0; d3_camera.projection = 1; }
@@ -525,6 +532,7 @@ function Panel_Preview() : PanelContent() constructor {
         	"preview_save_current_frame",
         	"preview_toggle_lock",
         	"preview_focus_content",
+        	"preview_toggle_gizmo",
         	"preview_toggle_mini",
         	"preview_view_settings",
         	"preview_popup", 
@@ -2359,7 +2367,7 @@ function Panel_Preview() : PanelContent() constructor {
         params.panel = self;
         
         var _nlist = PANEL_GRAPH.nodes_list;
-        if(!CAPTURING)
+        if(gizmo_show && !CAPTURING)
         for( var i = 0, n = array_length(_nlist); i < n; i++ ) {
         	var _n = _nlist[i];
         	if(!is(_n, Node))     continue;
@@ -2368,7 +2376,7 @@ function Panel_Preview() : PanelContent() constructor {
         	var _h = _n.doDrawOverlay(overHover, overActive, cx, cy, canvas_s, _mx, _my, _snx, _sny, params);
         	
         	if(_h == true) {
-        		overHover = false;
+        		overHover  = false;
         		overActive = false;
         	}
         }
@@ -2402,38 +2410,39 @@ function Panel_Preview() : PanelContent() constructor {
             _params.panel = self;
             _params.scene = d3_scene;
         
-        if(_node.is_3D == NODE_3D.none) {
-            
-            if(key_mod_press(CTRL)) {
-                _snx = PROJECT.previewGrid.show? PROJECT.previewGrid.size[0] : 1;
-                _sny = PROJECT.previewGrid.show? PROJECT.previewGrid.size[1] : 1;
-                
-            } else if(PROJECT.previewGrid.snap) {
-                _snx = PROJECT.previewGrid.size[0];
-                _sny = PROJECT.previewGrid.size[1];
-            }
-            
-            var _ovx = cx;
-            var _ovy = cy;
-            var _ovs = canvas_s;
-            
-            var _prevNode = getNodePreview();
-            if(_prevNode != _node && is(_prevNode, Node)) {
-            	var _trans = _prevNode.drawOverlayChainTransform(_node);
-            	_ovx += _trans[0] * _ovs;
-				_ovy += _trans[1] * _ovs;
-				_ovs *= _trans[2];
-            }
-            
-            if(!CAPTURING) hoveringGizmo = _node.doDrawOverlay(overHover, overActive, _ovx, _ovy, _ovs, _mx, _my, _snx, _sny, _params);
-	    	 
-        } else {
-            if(key_mod_press(CTRL) || PROJECT.previewSetting.d3_tool_snap) {
-                _snx = PROJECT.previewSetting.d3_tool_snap_position;
-                _sny = PROJECT.previewSetting.d3_tool_snap_rotation;
-            }
-            
-            if(!CAPTURING) hoveringGizmo = _node.drawOverlay3D(overActive, _mx, _my, _snx, _sny, _params) ?? true;
+        if(gizmo_show && !CAPTURING) {
+	        if(_node.is_3D == NODE_3D.none) {
+	            if(key_mod_press(CTRL)) {
+	                _snx = PROJECT.previewGrid.show? PROJECT.previewGrid.size[0] : 1;
+	                _sny = PROJECT.previewGrid.show? PROJECT.previewGrid.size[1] : 1;
+	                
+	            } else if(PROJECT.previewGrid.snap) {
+	                _snx = PROJECT.previewGrid.size[0];
+	                _sny = PROJECT.previewGrid.size[1];
+	            }
+	            
+	            var _ovx = cx;
+	            var _ovy = cy;
+	            var _ovs = canvas_s;
+	            
+	            var _prevNode = getNodePreview();
+	            if(_prevNode != _node && is(_prevNode, Node)) {
+	            	var _trans = _prevNode.drawOverlayChainTransform(_node);
+	            	_ovx += _trans[0] * _ovs;
+					_ovy += _trans[1] * _ovs;
+					_ovs *= _trans[2];
+	            }
+	            
+	            hoveringGizmo = _node.doDrawOverlay(overHover, overActive, _ovx, _ovy, _ovs, _mx, _my, _snx, _sny, _params);
+		    	 
+	        } else {
+	            if(key_mod_press(CTRL) || PROJECT.previewSetting.d3_tool_snap) {
+	                _snx = PROJECT.previewSetting.d3_tool_snap_position;
+	                _sny = PROJECT.previewSetting.d3_tool_snap_rotation;
+	            }
+	            
+	            hoveringGizmo = _node.drawOverlay3D(overActive, _mx, _my, _snx, _sny, _params) ?? true;
+	        }
         }
         
         overlay_hovering = false;
