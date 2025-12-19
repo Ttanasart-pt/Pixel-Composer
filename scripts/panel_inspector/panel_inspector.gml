@@ -484,7 +484,7 @@ function Panel_Inspector() : PanelContent() constructor {
     	__index = index;
     	
     	array_foreach(inspectings, function(ins) /*=>*/ {return ins.triggerInsp(__index)});
-        if(inspecting) inspecting.triggerInsp(__index);
+        // if(inspecting) inspecting.triggerInsp(__index);
     }
     
     ////- Property actions

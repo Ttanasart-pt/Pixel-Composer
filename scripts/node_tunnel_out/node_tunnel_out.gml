@@ -47,6 +47,7 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	label_alpha = 1;
 	
 	__key = noone;
+	__hov = undefined;
 	
 	////- Update
 	
@@ -160,13 +161,17 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static checkJunctions = function(_x, _y, _mx, _my, _s, _fast = false) {
 		var _hov = point_in_circle(_mx, _my, _x, _y, _s * 24);
+		if(__hov != _hov) PANEL_GRAPH.refreshDraw();
+		__hov = _hov;
+		
 		if(!_hov) { isHovering = false; return noone; }
 		
-		CURSOR_SPRITE = THEME.view_pan;
 		var _dy = junction_draw_hei_y * _s / 2;
 		var _dx = _fast? 6  * _s : _dy;
 		
 		isHovering = outputs[0].isHovering(_s, _dx, _dy, _mx, _my);
+		if(!isHovering) CURSOR_SPRITE = THEME.view_pan;
+		
 		return isHovering? outputs[0] : noone;
 	}
 	
@@ -210,17 +215,16 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			shader_reset();
 		#endregion
 			
+		var _r = _s * 16;
 		if(active_draw_index > -1) {
-			var _r = _s * 16;
-			shader_set(sh_node_circle);
-				shader_set_color("color", COLORS._main_accent, 1);
-				draw_sprite_stretched(s_fx_pixel, 0, xx - _r, yy - _r, _r * 2, _r * 2);
-			shader_reset();
 			active_draw_index = -1;
-		}
+			draw_circle_ui(xx, yy, _r, .03, COLORS._main_accent, 1);
+			
+		} else if(__hov && !isHovering) 
+			draw_circle_ui(xx, yy, _r, .03, COLORS._main_accent, .75);
 		
 		var aa = label_alpha * _color_get_alpha(label_color);
-		var ss = _s * .3 * label_scale;
+		var ss = _s * .2 * label_scale;
 		var tt = string(inputs[0].getValue());
 		
 		switch(label_ori) {
