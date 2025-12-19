@@ -4,6 +4,7 @@ varying vec4 v_vColour;
 uniform vec2  dimension;
 uniform int   normal;
 uniform int   swapx;
+uniform int   swapy;
 
 uniform vec2      height;
 uniform int       heightUseSurf;
@@ -66,6 +67,7 @@ void main() {
 	}
 	
 	if(swapx == 1) _n.x = -_n.x;
+	if(swapy == 1) _n.y = -_n.y;
 	_n  = _n * hei;
 	
 	vec3 n3 = vec3(_n, 1.);
