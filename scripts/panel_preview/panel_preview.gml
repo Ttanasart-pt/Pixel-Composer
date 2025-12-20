@@ -140,7 +140,7 @@
         registerFunction(p, "Set Reset View Off",       "", n, panel_preview_set_reset_view_off        ).setMenu("preview_set_reset_view_off")
         registerFunction(p, "Set Reset View On",        "", n, panel_preview_set_reset_view_on         ).setMenu("preview_set_reset_view_on")
         registerFunction(p, "Toggle Reset View",        "", n, panel_preview_toggle_reset_view         )
-        	.setMenu("preview_toggle_reset_view", THEME.icon_reset_when_preview).setSpriteInd(function() /*=>*/ {return PANEL_PREVIEW.resetViewOnDoubleClick} )
+        	.setMenu("preview_toggle_reset_view", THEME.icon_reset_when_preview).setSpriteInd(function() /*=>*/ {return !PANEL_PREVIEW.resetViewOnDoubleClick} )
         	.setTooltip(new tooltipSelector(__txtx("panel_preview_on_preview", "On preview"), [ __txt("Center view"), __txt("Keep view") ]))
         
         registerFunction(p, "New Preview Window",       "",  n, panel_preview_new_preview_window        ).setMenu("preview_new_preview_window")
