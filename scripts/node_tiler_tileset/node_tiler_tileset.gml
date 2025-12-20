@@ -279,10 +279,8 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		    				tile_select_ss = [ _mtx, _mty ];
 							
 						} else if(is(object_selecting, tiler_brush_animated) && object_select_id != noone) {
-							object_selecting.index[object_select_id] = _mid;
-							do { object_select_id++; } until(array_safe_get_fast(object_selecting.index, object_select_id, -1) == -1)
-		    				if(object_select_id >= array_length(object_selecting.index))
-		    					object_select_id = noone;
+							tile_selecting = true;
+		    				tile_select_ss = [ _mtx, _mty ];
 							
 						} else if(is(object_selecting, tiler_rule)) {
 							if(object_select_id != noone)
@@ -364,7 +362,17 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 							object_selecting.index[_repInd] = _tilInd;
 						}
 					
-					} else if(is(object_selecting, tiler_rule_replacement)) {
+					} else if(is(object_selecting, tiler_brush_animated)) {
+						var _size = object_selecting.size;
+						var _ind  = object_select_id;
+						
+						for( var i = _ts_sy; i <= _ts_ey; i++ ) 
+						for( var j = _ts_sx; j <= _ts_ex; j++ ) {
+							if(_ind >= _size) break;
+							object_selecting.index[_ind++] = i * _tileAmo[0] + j;
+						}
+							
+	    			} else if(is(object_selecting, tiler_rule_replacement)) {
 						object_select_id.size[0] = max(object_select_id.size[0], brush.brush_width);
 						object_select_id.size[1] = max(object_select_id.size[1], brush.brush_height);
 						
@@ -688,12 +696,13 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    	draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _yy, _w, autoterrain_selector_h, COLORS.node_composite_bg_blend, 1);
 	    	_yy += _pd;
 	    	
+    		var _hg = ui(32);
+    		var _pw = ui(24);
+    		var _ph = ui(24);
+    		
 	    	for( var i = 0, n = array_length(autoterrain); i < n; i++ ) {
-	    		var _hg = ui(32);
 	    		var _at = autoterrain[i];
 	    		
-	    		var _pw = ui(24);
-	    		var _ph = ui(24);
 	    		var _px = _x  + ui(8);
 	    		var _py = _yy + ui(4);
 	    		
@@ -1447,15 +1456,17 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		aTilesLength = [];
 		
 		function refreshAnimatedData() {
-		    aTiles       = [];
-			aTilesIndex  = array_create(array_length(animatedTiles));
-			aTilesLength = array_create(array_length(animatedTiles));
+			var _alen = array_length(animatedTiles);
 			
-			for( var i = 0, n = array_length(animatedTiles); i < n; i++ ) {
+		    aTiles       = [];
+			aTilesIndex  = array_verify(aTilesIndex,  _alen);
+			aTilesLength = array_verify(aTilesLength, _alen);
+			
+			for( var i = 0; i < _alen; i++ ) {
 				var _at = animatedTiles[i];
 				
+				aTilesLength[i] = _at.size;
 				aTilesIndex[i]  = array_length(aTiles);
-				aTilesLength[i] = array_length(_at.index);
 				array_append(aTiles, _at.index);
 			}
 		}
@@ -1479,23 +1490,20 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 			if(_brush_tiles < 1) draw_sprite_ui(THEME.add_16, 0, bx + bs / 2, by + bs / 2, 1, 1, 0, COLORS._main_icon);
 			else if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, "New animated tiles", THEME.add_16, 0, COLORS._main_value_positive) == 2) {
-				var _new_at = noone;
-				var _indx   = array_create(brush.brush_width * brush.brush_height);
+				var _indx  = array_create(brush.brush_width * brush.brush_height);
 				
 				for( var i = 0, n = brush.brush_height; i < n; i++ ) 
 	    		for( var j = 0, m = brush.brush_width;  j < m; j++ )
 	    			_indx[i * brush.brush_width + j] = brush.brush_indices[i][j][0];
 	    		
-	    		_new_at = new tiler_brush_animated(_indx);
-				if(_new_at != noone) {
-					object_selecting = _new_at;
-					object_select_id = noone;
-					array_push(animatedTiles, _new_at);
-					
-					brush.brush_indices = [[ [ -(array_length(animatedTiles) + 1), 0 ] ]];
-	    			brush.brush_width   = 1;
-					brush.brush_height  = 1;
-				}
+	    		var _new_at = new tiler_brush_animated(refreshAnimatedData, _indx);
+				object_selecting = _new_at;
+				object_select_id = noone;
+				array_push(animatedTiles, _new_at);
+				
+				brush.brush_indices = [[ [ -(array_length(animatedTiles) + 1), 0 ] ]];
+    			brush.brush_width   = 1;
+				brush.brush_height  = 1;
 				
 				refreshAnimatedData();
 			}
@@ -1512,18 +1520,19 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    	
 	    	_yy += _pd;
 	    	
+    		var _hg = ui(32);
+    		var _pw = ui(24);
+    		var _ph = ui(24);
+    		
 	    	for( var i = 0, n = array_length(animatedTiles); i < n; i++ ) {
-	    		var _hg = ui(32);
 	    		var _at = animatedTiles[i];
 	    		
 	    		#region header
-	    		var _pw = ui(24);
-	    		var _ph = ui(24);
-	    		var _px = _x + ui(8);
+	    		var _px = _x  + ui(8);
 	    		var _py = _yy + ui(4);
 	    		
 	    		var _atIdx = _at.index;
-	    		var _animl = array_length(_at.index);
+	    		var _animl = _at.size;
 	    		var _prin  = array_safe_get(_atIdx, safe_mod(current_time / 1000 * 2, _animl), undefined);
 	    		
 	    		var _hov = _hover && point_in_rectangle(_m[0], _m[1], _px, _yy, _px + _pw, _yy + _hg - 1);
@@ -1536,7 +1545,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    		var _hov = _hover && point_in_rectangle(_m[0], _m[1], _px, _yy, _x + _w - ui(36), _yy + _hg - 1);
 	    		var _cc  = object_selecting == _at? COLORS._main_accent : (_hov? COLORS._main_text : COLORS._main_text_sub);
 	    		
-	    		if(_prin) drawTile(_prin, _px, _py, _pw, _ph);
+	    		if(_prin != undefined) drawTile(_prin, _px, _py, _pw, _ph);
 	    		draw_sprite_stretched_ext(THEME.ui_panel, 1, _px, _py, _pw, _ph, _cc);
 	    		
 	    		if(renaming == _at) {
@@ -1553,6 +1562,13 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					var bc = CARRAY.button_negative;
 					if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, "", THEME.minus_16, 0, bc) == 2) 
 						del = i;	
+						
+					var wdg = _at.tb_length;
+					var bw  = _w * .3;
+					bx -= ui(4) + bw;
+					
+					wdg.setFocusHover(_focus, _hover);
+					wdg.draw(bx, by, bw, bs, _at.size, _m);
 				}
 				
 	    		if(_hov) {
@@ -1726,14 +1742,14 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	////- Update
 	
 	static shader_submit = function() {
-        shader_set_2("tileSize",  tileSize);
+        shader_set_2("tileSize",            tileSize     );
         
-        shader_set_s("tileTexture",    texture);
-        shader_set_2("tileTextureDim", textureSize);
+        shader_set_s("tileTexture",         texture      );
+        shader_set_2("tileTextureDim",      textureSize  );
         
-		shader_set_f("animatedTiles",       aTiles);
-		shader_set_f("animatedTilesIndex",  aTilesIndex);
-		shader_set_f("animatedTilesLength", aTilesLength);
+		shader_set_f("animatedTiles",       aTiles       );
+		shader_set_f("animatedTilesIndex",  aTilesIndex  );
+		shader_set_f("animatedTilesLength", aTilesLength );
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
@@ -1797,31 +1813,27 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static attributeSerialize = function() {
 		var _attr = {
-			autoterrain, 
-			animatedTiles, 
-			ruleTiles : rules.ruleTiles,
-			palette   : surface_encode(brush_palette),
-			gm_key    : gmTile == noone? noone : gmTile.key,
+			autoterrain   : array_map(autoterrain,   function(a) /*=>*/ {return a.serialize()}), 
+			animatedTiles : array_map(animatedTiles, function(a) /*=>*/ {return a.serialize()}), 
+			ruleTiles     : rules.ruleTiles,
+			palette       : surface_encode(brush_palette),
+			gm_key        : gmTile == noone? noone : gmTile.key,
 		};
 		
 		return _attr; 
 	}
 	
 	static attributeDeserialize = function(attr) {
-		var _auto = struct_try_get(attr, "autoterrain",   []);
-		var _anim = struct_try_get(attr, "animatedTiles", []);
-		var _rule = struct_try_get(attr, "ruleTiles",     []);
-		var _palt = struct_try_get(attr, "palette",       noone);
+		var _auto = attr[$ "autoterrain"]   ?? [];
+		var _anim = attr[$ "animatedTiles"] ?? [];
+		var _rule = attr[$ "ruleTiles"]     ?? [];
+		var _palt = attr[$ "palette"]       ?? noone;
 		
-		for( var i = 0, n = array_length(_auto); i < n; i++ ) {
-			autoterrain[i] = new tiler_brush_autoterrain(_auto[i].type, _auto[i].index);
-			autoterrain[i].name = _auto[i].name;
-		}
+		for( var i = 0, n = array_length(_auto); i < n; i++ )
+			autoterrain[i] = new tiler_brush_autoterrain().deserialize(_auto[i]);
 		
-		for( var i = 0, n = array_length(_anim); i < n; i++ ) {
-			animatedTiles[i] = new tiler_brush_animated(_anim[i].index);
-			animatedTiles[i].name = _anim[i].name;
-		}
+		for( var i = 0, n = array_length(_anim); i < n; i++ )
+			animatedTiles[i] = new tiler_brush_animated(refreshAnimatedData).deserialize(_anim[i]);
 		
 		for( var i = 0, n = array_length(_rule); i < n; i++ )
 			rules.ruleTiles[i] = new tiler_rule().deserialize(_rule[i]);

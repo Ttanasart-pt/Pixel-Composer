@@ -8,7 +8,7 @@ enum AUTOTERRAIN_TYPE {
 
 global.autoterrain_amount = [ 9, 16, 15, 48, 55, ];
 
-function tiler_brush_autoterrain(_type, _index) constructor {
+function tiler_brush_autoterrain(_type = -1, _index = []) constructor {
 	name    = "autoterrain";
     index   = _index;
     size    = [1,1];
@@ -26,8 +26,8 @@ function tiler_brush_autoterrain(_type, _index) constructor {
     
     open = false;
     
-    sc_type = new scrollBox(["Simple box (3x3)", "Corner box (5x5)", "Side platform (5x3)", "Godot tile (12x4)", "Gamemaker tileset (11x5)"], function(ind) /*=>*/ { setType(ind); }, false);
-    sc_type.font = f_p3;
+    sc_type = new scrollBox(["Simple box (3x3)", "Corner box (5x5)", "Side platform (5x3)", "Godot tile (12x4)", "Gamemaker tileset (11x5)"], function(ind) /*=>*/ { setType(ind); }, false)
+    	.setFont(f_p3);
     
     static indexMap48 = [ 
     	 8, 10, 11,  0, /**/  1,  6,  5,  3, /**/  2, 34, 22,
@@ -146,5 +146,27 @@ function tiler_brush_autoterrain(_type, _index) constructor {
             draw_surface(update_surface, 0, 0);
             BLEND_NORMAL
         surface_reset_target();
+    }
+    
+    ////- Serialize
+    
+    static serialize = function() {
+    	var m = {
+    		name, 
+    		index, 
+    		type, 
+    	};
+    	
+    	return m;
+    }
+    
+    static deserialize = function(m) {
+    	name  = m[$ "name"]  ?? name;
+    	index = m[$ "index"] ?? index;
+    	
+    	type  = m[$ "type"]  ?? type;
+    	setType(type);
+    	
+    	return self;
     }
 }
