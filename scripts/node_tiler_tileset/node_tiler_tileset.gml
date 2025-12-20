@@ -710,7 +710,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    		var _hov = _hover && point_in_rectangle(_m[0], _m[1], _px, _yy, _x + _w - ui(36), _yy + _hg - 1);
 	    		var _cc  = object_selecting == _at? COLORS._main_accent : (_hov? COLORS._main_text : COLORS._main_text_sub);
 	    		
-	    		if(_prin) drawTile(_prin, _px, _py, _pw, _ph);
+	    		if(_prin != undefined) drawTile(_prin, _px, _py, _pw, _ph);
 	    		draw_sprite_stretched_ext(THEME.ui_panel, 1, _px, _py, _pw, _ph, _cc);
 	    		
 	    		if(renaming == _at) {
