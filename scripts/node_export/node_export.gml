@@ -114,6 +114,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		["%f",     "Frame"],
 		["%i",     "Array index"],
 		["%{i+1}", "Array index + 1"],
+		["%s",     "Scale Factor"],
 	];
 	
 	export_template = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
@@ -151,6 +152,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					case "n" :   draw_set_color(COLORS.widget_text_dec_n); break;	
 					case "f" :   draw_set_color(COLORS.widget_text_dec_f); break;	
 					case "i" :   draw_set_color(COLORS.widget_text_dec_i); break;
+					case "s" :   draw_set_color(COLORS.widget_text_dec_i); break;
 					case "ext" : draw_set_color(COLORS._main_text_sub);    break;
 				}
 				
@@ -350,10 +352,12 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				switch(cmd) {
 					case "f" :
 					case "i" :
+					case "s" :
 						
 						switch(cmd) {
 							case "f": val = CURRENT_FRAME + 1 + strt; break;
-							case "i": val = index; break;
+							case "i": val = index;                    break;
+							case "s": val = getInputData(19);         break;
 						}
 						
 						if(cmx != "") {
@@ -398,6 +402,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 						if(_array)	array_push(s, [ "n", _txt ]);
 						else		s += _txt;
 						break;
+						
 				}
 			} else {
 				if(_array)	array_push(s, ch);

@@ -1554,7 +1554,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				
 				} else {
 		    		draw_set_text(f_p2, fa_left, fa_center, _cc);
-		    		draw_text_add(_tx, _yy + _hg / 2, $"{_at.name} [{_animl}]");
+		    		draw_text_add(_tx, _yy + _hg / 2, _at.name);
 		    		
 		    		var bs = ui(24);
 					var bx = _w  - bs - ui(4);
@@ -1564,7 +1564,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 						del = i;	
 						
 					var wdg = _at.tb_length;
-					var bw  = _w * .3;
+					var bw  = max(_w * .25, ui(32));
 					bx -= ui(4) + bw;
 					
 					wdg.setFocusHover(_focus, _hover);
