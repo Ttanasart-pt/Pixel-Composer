@@ -1422,8 +1422,11 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             node_drag_add   = false;
         }
         
-        for( var i = 0, n = array_length(nodes_list); i < n; i++ ) 
-            if(nodes_list[i].groupCheck) nodes_list[i].groupCheck(gr_x, gr_y, graph_s, mx, my);
+        for( var i = 0, n = array_length(nodes_list); i < n; i++ ) {
+        	var _node = nodes_list[i];
+            if(is(_node, Node_Collection_Inline)) 
+            	_node.groupCheck(gr_x, gr_y, graph_s, mx, my);
+        }
         
         if(node_dragging) {
             addKeyOverlay("Dragging node(s)", [[ "Ctrl", "Disable snapping" ]]);

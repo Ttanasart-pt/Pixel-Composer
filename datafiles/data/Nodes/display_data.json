@@ -644,11 +644,12 @@
             "Node_Curve_HSV",
             "Node_Invert",
             "Node_Threshold",
+            "Node_XDoG_Threshold",
             "Node_Alpha_Cutoff",
             "Node_Normalize",
             "Node_Gamma_Map",
             "Node_Tonemap_ACE",
-            "Node_XDoG_Threshold",
+            "Node_Color_Blind",
             
             { "label": "Fixes" },
             "Node_De_Corner",

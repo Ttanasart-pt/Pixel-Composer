@@ -39,7 +39,8 @@ function draw_text_path(_x, _y, _text) {
 			switch(cmd) {
 				case "d" :	
 				case "n" :	
-				case "e" :	
+				case "e" :
+				
 				case "f" :	
 				case "i" : 
 				case "s" : 

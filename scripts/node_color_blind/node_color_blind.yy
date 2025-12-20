@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_color_blind",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_color_blind",
+  "parent":{
+    "name":"colors",
+    "path":"folders/nodes/data/filter/colors.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

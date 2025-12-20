@@ -182,11 +182,6 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		}
 	}
 	
-	static groupCheck = function(_x, _y, _s, _mx, _my) {
-		if(array_length(group_vertex) < 3) return;
-		
-	}
-	
 	static drawNodeBG = function(_x, _y, _mx, _my, _s) {
 		if(PANEL_GRAPH.cache_group_edit == self) {
 			draw_droppable = true;
