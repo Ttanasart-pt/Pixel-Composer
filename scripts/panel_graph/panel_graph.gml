@@ -416,12 +416,12 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     icon        = THEME.panel_graph_icon;
     pause_when_rendering = true;
     
-    applyGlobal = true; function setLocalOnly() { applyGlobal = false; return self; }
-    hasGlobal   = true; function noGlobal()     { hasGlobal   = false; return self; }
-    
+    auto_pin = true;
     w = ui(800);
     h = ui(640);
-    auto_pin = true;
+    
+    applyGlobal = true; setLocalOnly = function() /*=>*/ { applyGlobal = false; return self; }
+    hasGlobal   = true; noGlobal     = function() /*=>*/ { hasGlobal   = false; return self; }
     
     function setTitle() {
         title_raw = project.path == ""? "New project" : filename_name_only(project.path);
@@ -1496,12 +1496,11 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
         ////- Start Drag
         
-        var _node = getFocusingNode();
-        
 		if(!_focus || !mouse_on_graph) return;
 		if(cache_group_edit != noone)  return;
 		if(value_focus != noone)       return;
 		
+        var _node = getFocusingNode();
 		if(_node == noone || !_node.draggable)          return;
 		if(key_mod_press(CTRL) || key_mod_press(SHIFT)) return;
         
@@ -1666,8 +1665,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
         for( var i = 0, n = array_length(nodes_list); i < n; i++ ) {
         	if(nodes_list[i].drawPreviewBackground == undefined) continue;
-            var h = nodes_list[i].drawPreviewBackground(gr_x, gr_y, mx, my, graph_s);
-            _hov = _hov || h;
+            var hh = nodes_list[i].drawPreviewBackground(gr_x, gr_y, mx, my, graph_s);
+            _hov = _hov || hh;
         }
         
         return _hov;

@@ -11,6 +11,7 @@ global.autoterrain_amount = [ 9, 16, 15, 48, 55, ];
 function tiler_brush_autoterrain(_type, _index) constructor {
 	name    = "autoterrain";
     index   = _index;
+    size    = [1,1];
     prevInd =  0;
     type    = -1;
     
@@ -72,11 +73,11 @@ function tiler_brush_autoterrain(_type, _index) constructor {
     	}
     	
     	switch(_type) {
-    		case 0 : index = array_verify_ext(index,  9, function() /*=>*/ {return -1}); prevInd = 0; break;
-    		case 1 : index = array_verify_ext(index, 25, function() /*=>*/ {return -1}); prevInd = 1; break;
-    		case 2 : index = array_verify_ext(index, 15, function() /*=>*/ {return -1}); prevInd = 0; break;
-    		case 3 : index = array_verify_ext(index, 48, function() /*=>*/ {return -1}); prevInd = 8; break;
-    		case 4 : index = array_verify_ext(index, 55, function() /*=>*/ {return -1}); prevInd = 0; break;
+    		case 0 : index = array_verify_ext(index,  9, function() /*=>*/ {return -1}); prevInd = 0; size = [ 3, 3]; break;
+    		case 1 : index = array_verify_ext(index, 25, function() /*=>*/ {return -1}); prevInd = 1; size = [ 5, 5]; break;
+    		case 2 : index = array_verify_ext(index, 15, function() /*=>*/ {return -1}); prevInd = 0; size = [ 5, 3]; break;
+    		case 3 : index = array_verify_ext(index, 48, function() /*=>*/ {return -1}); prevInd = 8; size = [12, 4]; break;
+    		case 4 : index = array_verify_ext(index, 55, function() /*=>*/ {return -1}); prevInd = 0; size = [11, 5]; break;
     	}
     	
     	if(type != -1) {

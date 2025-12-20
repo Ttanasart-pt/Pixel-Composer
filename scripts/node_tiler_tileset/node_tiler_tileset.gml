@@ -14,14 +14,15 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	tb_rename.font = f_p2;
 	tb_rename.hide = true;
 	
-    gmTile     = noone;
-    texture    = noone;
-    tileSize   = [ 1, 1 ];
-    tileAmount = [ 1, 1 ];
-	rules      = new Tileset_Rule(self);
+    gmTile      = noone;
+    texture     = noone;
+    textureSize = [ 1, 1 ];
+    tileSize    = [ 1, 1 ];
+    tileAmount  = [ 1, 1 ];
+	rules       = new Tileset_Rule(self);
     
-    newInput( 0, nodeValue_Surface("Texture"));
-    newInput( 1, nodeValue_Vec2("Tile size", [ 16, 16 ]));
+    newInput( 0, nodeValue_Surface( "Texture" ));
+    newInput( 1, nodeValue_Vec2(    "Tile size", [ 16, 16 ] ));
     
 	newOutput(0, nodeValue_Output("Tileset", VALUE_TYPE.tileset, self));
 	
@@ -51,6 +52,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	static setPencil = function() {
 		var _n = PANEL_INSPECTOR.getInspecting(); 
 		if(!is(_n, Node_Tile_Drawer)) return;
+		
 		if(PANEL_PREVIEW.tool_current != _n.node_tool_pencil) 
 			_n.node_tool_pencil.toggle();
 	}
@@ -96,6 +98,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    
 	    tile_selector = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus, _panel = noone) { 
 	    	var _tileSet = texture;
+	    	var _tileDim = textureSize;
 	    	var _tileSiz = tileSize;
 	    	
 	    	var _pd  = ui(4);
@@ -119,16 +122,15 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				bx = _x + _w - bs;
 				if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, "Zoom to fit", THEME.path_tools_transform, 0, COLORS._main_icon_light) == 2) {
 				    if(is_surface(_tileSet)) {
-				        var _tdim = surface_get_dimension(_tileSet);
-						var _sw   = _w - _pd * 2;
+						var _sw   = _w   - _pd * 2;
 			    	    var _sh   = _tsh - _pd * 2;
 			    	    
-			    	    var _ss = min(_sw / (_tdim[0] + 16), _sh / (_tdim[1] + 16));
+			    	    var _ss = min(_sw / (_tileDim[0] + 16), _sh / (_tileDim[1] + 16));
 			    	    tile_selector_s    = _ss;
 			    	    tile_selector_s_to = _ss;
 			    	    
-			    	    tile_selector_x =   _w / 2 - _tdim[0] * _ss / 2;
-		                tile_selector_y = _tsh / 2 - _tdim[1] * _ss / 2;
+			    	    tile_selector_x =   _w / 2 - _tileDim[0] * _ss / 2;
+		                tile_selector_y = _tsh / 2 - _tileDim[1] * _ss / 2;
 				    }
 				}
 				
@@ -196,8 +198,8 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		    	autoterrain_selector_mask = surface_verify(autoterrain_selector_mask, _sw, _sh);
 		    	
 		    	if(!is_surface(_tileSet)) return _h;
-		    	var _tdim    = surface_get_dimension(_tileSet);
-		    	var _tileAmo = [ floor(_tdim[0] / _tileSiz[0]), floor(_tdim[1] / _tileSiz[1]) ];
+		    	
+		    	var _tileAmo = [ floor(_tileDim[0] / _tileSiz[0]), floor(_tileDim[1] / _tileSiz[1]) ];
 		    	
 		    	var _tileSel_w = _tileSiz[0] * tile_selector_s;
 		    	var _tileSel_h = _tileSiz[1] * tile_selector_s;
@@ -233,8 +235,8 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					var _gw = _tileSiz[0] * tile_selector_s;
 			        var _gh = _tileSiz[1] * tile_selector_s;
 			        
-			        var gw = _tdim[0] / _tileSiz[0];
-			        var gh = _tdim[1] / _tileSiz[1];
+			        var gw = _tileDim[0] / _tileSiz[0];
+			        var gh = _tileDim[1] / _tileSiz[1];
 			    	
 			        var cx = tile_selector_x;
 			        var cy = tile_selector_y;
@@ -244,19 +246,20 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			        
 			        for( var i = 1; i < gw; i++ ) {
 			            var _lxx = cx + i * _gw;
-			            draw_line(_lxx, cy, _lxx, cy + _tdim[1] * tile_selector_s);
+			            draw_line(_lxx, cy, _lxx, cy + _tileDim[1] * tile_selector_s);
 			        }
 			    
 			        for( var i = 1; i < gh; i++ ) {
 			            var _lyy = cy + i * _gh;
-			            draw_line(cx, _lyy, cx + _tdim[0] * tile_selector_s, _lyy);
+			            draw_line(cx, _lyy, cx + _tileDim[0] * tile_selector_s, _lyy);
 			        }
 			        
 			        draw_set_alpha(1);
 				}
 				
 				draw_set_color(COLORS.panel_preview_surface_outline);
-		    	draw_rectangle(tile_selector_x, tile_selector_y, tile_selector_x + _tdim[0] * tile_selector_s - 1, tile_selector_y + _tdim[1] * tile_selector_s - 1, true);
+		    	draw_rectangle(tile_selector_x, tile_selector_y, tile_selector_x + _tileDim[0] * tile_selector_s - 1, 
+		    	                                                 tile_selector_y + _tileDim[1] * tile_selector_s - 1, true);
 				
 				if(_hov && _mid > noone) {
 		    		
@@ -270,9 +273,14 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					else if(is(object_selecting, tilemap_convert_object))  TOOLTIP = "Set Replacement target";
 					
 					if(mouse_press(mb_left, _focus)) {
-						if((is(object_selecting, tiler_brush_autoterrain) || is(object_selecting, tiler_brush_animated)) && object_select_id != noone) {
+						
+						if(is(object_selecting, tiler_brush_autoterrain) && object_select_id != noone) {
+							tile_selecting = true;
+		    				tile_select_ss = [ _mtx, _mty ];
+							
+						} else if(is(object_selecting, tiler_brush_animated) && object_select_id != noone) {
 							object_selecting.index[object_select_id] = _mid;
-							do { object_select_id++; } until(object_select_id == array_length(object_selecting.index) || object_selecting.index[object_select_id] == -1)
+							do { object_select_id++; } until(array_safe_get_fast(object_selecting.index, object_select_id, -1) == -1)
 		    				if(object_select_id >= array_length(object_selecting.index))
 		    					object_select_id = noone;
 							
@@ -337,26 +345,42 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					brush.brush_height  = _ts_ey - _ts_sy + 1;
 					
 					for( var i = _ts_sy; i <= _ts_ey; i++ ) 
-					for( var j = _ts_sx; j <= _ts_ex; j++ )
+					for( var j = _ts_sx; j <= _ts_ex; j++ ) 
 						brush.brush_indices[i - _ts_sy][j - _ts_sx] = [ i * _tileAmo[0] + j, 0 ];
 						
+					if(is(object_selecting, tiler_brush_autoterrain)) {
+						var _size = object_selecting.size;
+						var _selx = object_select_id % _size[0];
+						var _sely = floor(object_select_id % _size[0]);
+						
+						for( var i = _ts_sy; i <= _ts_ey; i++ ) 
+						for( var j = _ts_sx; j <= _ts_ex; j++ ) {
+							var _posx = _selx + j - _ts_sx;
+							var _posy = _sely + i - _ts_sy;
+							if(_posx >= _size[0] || _posy >= _size[1]) continue;
+							
+							var _tilInd = i * _tileAmo[0] + j;
+							var _repInd = _posy * _size[0] + _posx;
+							object_selecting.index[_repInd] = _tilInd;
+						}
+					
+					} else if(is(object_selecting, tiler_rule_replacement)) {
+						object_select_id.size[0] = max(object_select_id.size[0], brush.brush_width);
+						object_select_id.size[1] = max(object_select_id.size[1], brush.brush_height);
+						
+						var _ind = 0;
+						for( var i = _ts_sy; i <= _ts_ey; i++ ) 
+						for( var j = _ts_sx; j <= _ts_ex; j++ )
+							object_selecting.index[_ind++] = i * _tileAmo[0] + j;
+	    			}
+					
 					if(mouse_release(mb_left)) {
-						if(is(object_selecting, tiler_rule_replacement)) {
-							object_select_id.size[0] = max(object_select_id.size[0], brush.brush_width);
-							object_select_id.size[1] = max(object_select_id.size[1], brush.brush_height);
-							
-							var _ind = 0;
-							for( var i = _ts_sy; i <= _ts_ey; i++ ) 
-							for( var j = _ts_sx; j <= _ts_ex; j++ )
-								object_selecting.index[_ind++] = i * _tileAmo[0] + j;
-							object_selecting = noone;
-							object_select_id = noone;
-							triggerRender();
-							
-		    			}
+						object_selecting = noone;
+						object_select_id = noone;
+		    			tile_selecting   = false;
 		    			
 		    			setPencil();
-		    			tile_selecting = false;
+						triggerRender();
 					}
 				}
 			#endregion
@@ -402,8 +426,8 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		    		}
 		    	}
 		    	
-		    	var _tdim_ws = _tdim[0] * tile_selector_s;
-		    	var _tdim_hs = _tdim[1] * tile_selector_s;
+		    	var _tdim_ws = _tileDim[0] * tile_selector_s;
+		    	var _tdim_hs = _tileDim[1] * tile_selector_s;
 		    	var _minx = -(_tdim_ws - _w) - 32;
 		    	var _miny = -(_tdim_hs - _tsh) - 32;
 		    	var _maxx = 32;
@@ -559,9 +583,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		    			shader_set_f("varient", _var);
 		    			draw_point(0, 0);
 			    	surface_reset_shader();
-			    	    	
-				    var _tileSetDim = surface_get_dimension(_tileSet);
-				    
+	    	    	
 				    surface_set_shader(selecting_surface_tile, sh_draw_tile_map, true, BLEND.over);
 				        shader_set_2("dimension", [ _sel_sw, _sel_sh ]);
 				        
@@ -609,13 +631,14 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    	var _h  = 0;
 	    	
 	    	var _tileSet = texture;
+	    	var _tileDim = textureSize;
 	    	var _tileSiz = tileSize;
 	    	
 	    	if(!is_surface(_tileSet)) return _h;
-	    	var _tdim    = surface_get_dimension(_tileSet);
-	    	var _tileAmo = [ floor(_tdim[0] / _tileSiz[0]), floor(_tdim[1] / _tileSiz[1]) ];
+	    	var _tileAmo = [ floor(_tileDim[0] / _tileSiz[0]), floor(_tileDim[1] / _tileSiz[1]) ];
 	    	
 	    	#region top bar
+				var bb = THEME.button_hide_fill;
 				var bx = _x;
 				var by = _yy;
 				var bs = ui(24);
@@ -624,7 +647,8 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				
 				var _spr = _fromSel? THEME.add_16_select : THEME.add_16;
 				var _txt = _fromSel? "New autoterrain from selection" : "New autoterrain";
-				if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, _txt, _spr, 0, COLORS._main_value_positive) == 2) {
+				
+				if(buttonInstant(bb, bx, by, bs, bs, _m, _hover, _focus, _txt, _spr, 0, COLORS._main_value_positive) == 2) {
 					var _indx   = array_create(brush.brush_width * brush.brush_height);
 					
 					for( var i = 0, n = brush.brush_height; i < n; i++ ) 
@@ -641,6 +665,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		    		}
 		    		
 				    var _new_at = new tiler_brush_autoterrain(_typ,   _indx);
+				    
 					object_selecting = _new_at;
 					object_select_id = noone;
 					array_push(autoterrain, _new_at);
@@ -819,7 +844,12 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			        draw_empty();
 			    surface_reset_shader();
     			
-    			if(_over != noone) draw_sprite_ext(_over, 0, _pre_sx, _pre_sy, _ss * _tileSiz[0] / 4, _ss * _tileSiz[1] / 4, 0, COLORS._main_icon, 0.5);
+    			if(_over != noone) {
+    				var _ovsx = _ss * _tileSiz[0] / 4;
+    				var _ovsy = _ss * _tileSiz[1] / 4;
+    				draw_sprite_ext(_over, 0, _pre_sx, _pre_sy, _ovsx, _ovsy, 0, COLORS._main_icon, 0.5);
+    			}
+				
 	    		draw_surface_ext(_at.preview_surface_tile, _pre_sx, _pre_sy, _ss, _ss, 0, c_white, 1);
     			
     			draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text);
@@ -848,15 +878,10 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			        draw_set_color(PROJECT.previewGrid.color);
 			        draw_set_alpha(PROJECT.previewGrid.opacity);
 			        
-			        for( var j = 1; j < gw; j++ ) {
-			            var _lxx = cx + j * _gw;
-			            draw_line(_lxx, cy, _lxx, cy + _pre_sh * _ss);
-			        }
-			    
-			        for( var j = 1; j < gh; j++ ) {
-			            var _lyy = cy + j * _gh;
-			            draw_line(cx, _lyy, cx + _pre_sw * _ss, _lyy);
-			        }
+			        var _lxx = cx + _gw;
+		            var _lyy = cy + _gh;
+		            repeat( gw - 1 ) { draw_line(_lxx, cy, _lxx, cy + _pre_sh * _ss); _lxx += _gw; }
+			    	repeat( gh - 1 ) { draw_line(cx, _lyy, cx + _pre_sw * _ss, _lyy); _lyy += _gh; }
 			        
 			        draw_set_alpha(1);
 	    		}
@@ -962,6 +987,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    	var _pd = ui(4);
 	    	
 	    	var _tileSet = texture;
+	    	var _tileDim = textureSize;
 	    	var _tileSiz = tileSize;
 	    	
 	    	#region top bar
@@ -992,16 +1018,16 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				bx = _x + _w - bs;
 				if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, "Zoom to fit", THEME.path_tools_transform, 0, COLORS._main_icon_light) == 2) {
 				    if(is_surface(brush_palette_tile)) {
-				        var _tdim = surface_get_dimension(brush_palette_tile);
-	    				var _sw   = _w - _pd * 2;
+				        var _pdim = surface_get_dimension(brush_palette_tile);
+	    				var _sw   = _w   - _pd * 2;
 	    	    	    var _sh   = _tsh - _pd * 2;
 	    	    	    
-	    	    	    var _ss = min(_sw / (_tdim[0] + 16), _sh / (_tdim[1] + 16));
+	    	    	    var _ss = min(_sw / (_pdim[0] + 16), _sh / (_pdim[1] + 16));
 	    	    	    palette_selector_s    = _ss;
 	    	    	    palette_selector_s_to = _ss;
 	    	    	    
-	    	    	    palette_selector_x = _w / 2              - _tdim[0] * _ss / 2;
-	                    palette_selector_y = _tsh / 2 - _tdim[1] * _ss / 2;
+	    	    	    palette_selector_x = _w / 2   - _pdim[0] * _ss / 2;
+	                    palette_selector_y = _tsh / 2 - _pdim[1] * _ss / 2;
 				    }
 				}
 				
@@ -1077,11 +1103,9 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    			brush_palette = surface_create(64, 64, surface_rgba16float);
 	    	}
 	    	
-    		var _bpdim      = surface_get_dimension(brush_palette);
-		    var _tileSetDim = surface_get_dimension(_tileSet);
-		    
-		    var _bptw = _bpdim[0] * _tileSiz[0];
-		    var _bpth = _bpdim[1] * _tileSiz[1];
+    		var _bpdim = surface_get_dimension(brush_palette);
+		    var _bptw  = _bpdim[0] * _tileSiz[0];
+		    var _bpth  = _bpdim[1] * _tileSiz[1];
 		    
 		    brush_palette_tile      = surface_verify(brush_palette_tile, _bptw, _bpth);
 		    brush_palette_prev      = surface_verify(brush_palette_prev, _bpdim[0], _bpdim[1], surface_rgba16float);
@@ -1098,8 +1122,8 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		        draw_empty();
 		    surface_reset_shader();
     	
-	    	var _tdim    = surface_get_dimension(brush_palette_tile);
-	    	var _tileAmo = [ floor(_tdim[0] / _tileSiz[0]), floor(_tdim[1] / _tileSiz[1]) ];
+	    	var _pdim    = surface_get_dimension(brush_palette_tile);
+	    	var _tileAmo = [ floor(_pdim[0] / _tileSiz[0]), floor(_pdim[1] / _tileSiz[1]) ];
 	    	
 	    	var _tileSel_w = _tileSiz[0] * palette_selector_s;
 	    	var _tileSel_h = _tileSiz[1] * palette_selector_s;
@@ -1128,8 +1152,8 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    			var _gw = _tileSiz[0] * palette_selector_s;
 			        var _gh = _tileSiz[1] * palette_selector_s;
 			        
-			        var gw = _tdim[0] / _tileSiz[0];
-			        var gh = _tdim[1] / _tileSiz[1];
+			        var gw = _pdim[0] / _tileSiz[0];
+			        var gh = _pdim[1] / _tileSiz[1];
 			    	
 			        var cx = palette_selector_x - 1;
 			        var cy = palette_selector_y - 1;
@@ -1139,19 +1163,20 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			        
 			        for( var i = 1; i < gw; i++ ) {
 			            var _xx = cx + i * _gw;
-			            draw_line(_xx, cy, _xx, cy + _tdim[1] * palette_selector_s);
+			            draw_line(_xx, cy, _xx, cy + _pdim[1] * palette_selector_s);
 			        }
 			    
 			        for( var i = 1; i < gh; i++ ) {
 			            var _yy = cy + i * _gh;
-			            draw_line(cx, _yy, cx + _tdim[0] * palette_selector_s, _yy);
+			            draw_line(cx, _yy, cx + _pdim[0] * palette_selector_s, _yy);
 			        }
 			        
 			        draw_set_alpha(1);
 	    		}
 	    		
 	    		draw_set_color(COLORS.panel_preview_surface_outline);
-            	draw_rectangle(palette_selector_x, palette_selector_y, palette_selector_x + _tdim[0] * palette_selector_s - 1, palette_selector_y + _tdim[1] * palette_selector_s - 1, true);
+            	draw_rectangle(palette_selector_x, palette_selector_y, palette_selector_x + _pdim[0] * palette_selector_s - 1, 
+            	                                                       palette_selector_y + _pdim[1] * palette_selector_s - 1, true);
             	
 	    		if(_hov && _mid > noone) {
 		    		
@@ -1237,8 +1262,8 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    		}
 	    	}
 	    	
-	    	var _tdim_ws = _tdim[0] * palette_selector_s;
-	    	var _tdim_hs = _tdim[1] * palette_selector_s;
+	    	var _tdim_ws = _pdim[0] * palette_selector_s;
+	    	var _tdim_hs = _pdim[1] * palette_selector_s;
 	    	var _minx = -(_tdim_ws - _w) - 32;
 	    	var _miny = -(_tdim_hs - _tsh) - 32;
 	    	var _maxx = 32;
@@ -1440,11 +1465,11 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    	var _h  = 0;
 	    	
 	    	var _tileSet = texture;
+	    	var _tileDim = textureSize;
 	    	var _tileSiz = tileSize;
 	    	
 	    	if(!is_surface(_tileSet)) return _h;
-	    	var _tdim    = surface_get_dimension(_tileSet);
-	    	var _tileAmo = [ floor(_tdim[0] / _tileSiz[0]), floor(_tdim[1] / _tileSiz[1]) ];
+	    	var _tileAmo = [ floor(_tileDim[0] / _tileSiz[0]), floor(_tileDim[1] / _tileSiz[1]) ];
 	    	
 	    	#region top bar
 			var bx = _x;
@@ -1617,9 +1642,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    			draw_point(_til_col, _til_row);
     			}
 		    	surface_reset_shader();
-    			    	
-			    var _tileSetDim = surface_get_dimension(_tileSet);
-			    
+		    	
 			    surface_set_shader(_at.preview_surface_tile, sh_draw_tile_map, true, BLEND.over);
 			        shader_set_2("dimension", surface_get_dimension(_at.preview_surface_tile));
 			        
@@ -1705,8 +1728,8 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	static shader_submit = function() {
         shader_set_2("tileSize",  tileSize);
         
-        shader_set_surface("tileTexture", texture);
-        shader_set_2("tileTextureDim", surface_get_dimension(texture));
+        shader_set_s("tileTexture",    texture);
+        shader_set_2("tileTextureDim", textureSize);
         
 		shader_set_f("animatedTiles",       aTiles);
 		shader_set_f("animatedTilesIndex",  aTilesIndex);
@@ -1714,8 +1737,9 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {
-    	texture  = inputs[0].getValue();
-		tileSize = inputs[1].getValue();
+    	texture     = inputs[0].getValue();
+		tileSize    = inputs[1].getValue();
+		textureSize = surface_get_dimension(texture);
 		
 		if(gmTile != noone) {
 			inputs[0].setVisible(false, false);
@@ -1739,21 +1763,20 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
             tileSize = [ gmTile.raw.tileWidth, gmTile.raw.tileHeight ];
 		}
 		
-		var _tdim  = surface_get_dimension(texture);
-		tileAmount = [ floor(_tdim[0] / tileSize[0]), floor(_tdim[1] / tileSize[1]) ];
+		tileAmount = [ floor(textureSize[0] / tileSize[0]), floor(textureSize[1] / tileSize[1]) ];
 		
 	    outputs[0].setValue(self);
 	}
 	
 	////- Draw
 	
-	static getPreviewValues       = function() { return texture; }
-	static getGraphPreviewSurface = function() { return texture; }
+	static getPreviewValues       = function() /*=>*/ {return texture};
+	static getGraphPreviewSurface = function() /*=>*/ {return texture};
 	
     ////- GM
     
 	static droppable = function(obj) { return struct_try_get(obj, "type", "") == "GMTileSet"; }
-	static onDrop = function(obj) { 
+	static onDrop    = function(obj) { 
 		if(!droppable(obj)) return;
 		bindTile(obj.data);
 	}
@@ -1776,9 +1799,9 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _attr = {
 			autoterrain, 
 			animatedTiles, 
-			ruleTiles: rules.ruleTiles,
-			palette: surface_encode(brush_palette),
-			gm_key: gmTile == noone? noone : gmTile.key,
+			ruleTiles : rules.ruleTiles,
+			palette   : surface_encode(brush_palette),
+			gm_key    : gmTile == noone? noone : gmTile.key,
 		};
 		
 		return _attr; 
