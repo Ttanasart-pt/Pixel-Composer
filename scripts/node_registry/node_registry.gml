@@ -736,7 +736,7 @@ function nodeReplace(_old, _new, _select = false) {
 			
 			if(_newIn.type == _inp.type && _newIn.name == _inp.name) {
 				_newIn.visible_manual = _inp.visible_manual;
-				_newIn.setValue(_inp.getValue());
+				_newIn.setValue(_inp.getValue(, false));
 				break;
 			}
 		}

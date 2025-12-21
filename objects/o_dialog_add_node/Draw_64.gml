@@ -12,10 +12,10 @@ if(DIALOG_SHOW_FOCUS) {
 	
 	var pd = ui(10);
 	
-	var tw = dialog_w - ui(96);
-	var th = ui(32);
 	var tx = dialog_x + ui(14);
 	var ty = dialog_y + ui(14);
+	var tw = dialog_w - ui(28);
+	var th = ui(28);
 	
 	var _content_y = ty + th + pd;
 	
@@ -89,7 +89,58 @@ if(DIALOG_SHOW_FOCUS) {
 		search_pane.draw(dialog_x + ui(16), _content_y);
 	}
 	
-	if(junction_called != noone) tw -= ui(32);
+	#region buttons
+		var bb = THEME.button_hide_fill;
+		var bc = COLORS._main_icon;
+		var bs = ui(28);
+		
+		var bx = dialog_x + dialog_w - ui(44);
+		var by = ty;
+		var mm = mouse_ui;
+		
+		view_tooltip.index  = PREFERENCES.dialog_add_node_view;
+		var bi = PREFERENCES.dialog_add_node_view;
+		var b  = buttonInstant_Pad(bb, bx, by, bs, bs, mm, sHOVER, sFOCUS, view_tooltip, THEME.view_mode, bi, bc, 1, ui(4));
+		if(b == 1) {
+			if(key_mod_press(SHIFT) && MOUSE_WHEEL > 0) mod_dec_mf0 PREFERENCES.dialog_add_node_view mod_dec_mf1 PREFERENCES.dialog_add_node_view mod_dec_mf2  2 mod_dec_mf3  2 mod_dec_mf4;
+			if(key_mod_press(SHIFT) && MOUSE_WHEEL < 0) mod_inc_mf0 PREFERENCES.dialog_add_node_view mod_inc_mf1 PREFERENCES.dialog_add_node_view mod_inc_mf2  2 mod_inc_mf3;
+		}
+		if(b == 2) mod_inc_mf0 PREFERENCES.dialog_add_node_view mod_inc_mf1 PREFERENCES.dialog_add_node_view mod_inc_mf2  2 mod_inc_mf3;
+		tw -= bs + ui(4);
+		
+		bx -= bs + ui(4);
+		group_tooltip.index = PREFERENCES.dialog_add_node_grouping;
+		var bi = PREFERENCES.dialog_add_node_grouping;
+		var b  = buttonInstant_Pad(bb, bx, by, bs, bs, mm, sHOVER, sFOCUS, group_tooltip, THEME.view_group, bi, bc, 1, ui(4));
+		if(b == 1) {
+			if(key_mod_press(SHIFT) && MOUSE_WHEEL > 0) mod_dec_mf0 PREFERENCES.dialog_add_node_grouping mod_dec_mf1 PREFERENCES.dialog_add_node_grouping mod_dec_mf2  3 mod_dec_mf3  3 mod_dec_mf4;
+			if(key_mod_press(SHIFT) && MOUSE_WHEEL < 0) mod_inc_mf0 PREFERENCES.dialog_add_node_grouping mod_inc_mf1 PREFERENCES.dialog_add_node_grouping mod_inc_mf2  3 mod_inc_mf3;
+		}
+		if(b == 2) mod_inc_mf0 PREFERENCES.dialog_add_node_grouping mod_inc_mf1 PREFERENCES.dialog_add_node_grouping mod_inc_mf2  3 mod_inc_mf3;
+		tw -= bs + ui(4);
+		
+		if(search_string != "") {
+			bx -= bs + ui(4);
+			var bt = __txt("Prioritize Favourite");
+			var bi = PREFERENCES.dialog_add_node_search_fav;
+			var b  = buttonInstant_Pad(bb, bx, by, bs, bs, mm, sHOVER, sFOCUS, bt, THEME.favorite, bi, bc, 1, ui(12));
+			if(b == 2) PREFERENCES.dialog_add_node_search_fav = !PREFERENCES.dialog_add_node_search_fav;
+			tw -= bs + ui(4);
+		}
+		
+		if(junction_called != noone) {
+			var txt = node_show_connectable? __txtx("add_node_show_connect", "Showing connectable") : 
+			                                 __txtx("add_node_show_all", "Showing all");
+			var cc  = node_show_connectable? COLORS._main_accent : COLORS._main_icon;
+			
+			bx -= bs + ui(4);
+			var b = buttonInstant_Pad(bb, bx, by, bs, bs, mm, sHOVER, sFOCUS, txt, THEME.filter_type, node_show_connectable, cc, 1, ui(8));
+			if(b == 2) node_show_connectable = !node_show_connectable;
+			tw -= bs + ui(4);
+		}
+		
+		tw -= ui(4);
+	#endregion
 	
 	if(hk_editing == noone) {
 		tb_search.setFocusHover(sFOCUS, sHOVER);
@@ -109,35 +160,6 @@ if(DIALOG_SHOW_FOCUS) {
 		var _key  = hk_editing.getName();
 		draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
 		draw_text(_txx, ty + th / 2, _key);
-	}
-	
-	view_tooltip.index  = PREFERENCES.dialog_add_node_view;
-	group_tooltip.index = PREFERENCES.dialog_add_node_grouping;
-	
-	var bx = dialog_x + dialog_w - ui(44);
-	var by = dialog_y + ui(16);
-	var b = buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, sFOCUS, view_tooltip, THEME.view_mode, PREFERENCES.dialog_add_node_view, COLORS._main_icon);
-	if(b == 1) {
-		if(key_mod_press(SHIFT) && MOUSE_WHEEL > 0) mod_dec_mf0 PREFERENCES.dialog_add_node_view mod_dec_mf1 PREFERENCES.dialog_add_node_view mod_dec_mf2  2 mod_dec_mf3  2 mod_dec_mf4;
-		if(key_mod_press(SHIFT) && MOUSE_WHEEL < 0) mod_inc_mf0 PREFERENCES.dialog_add_node_view mod_inc_mf1 PREFERENCES.dialog_add_node_view mod_inc_mf2  2 mod_inc_mf3;
-	}
-	if(b == 2) mod_inc_mf0 PREFERENCES.dialog_add_node_view mod_inc_mf1 PREFERENCES.dialog_add_node_view mod_inc_mf2  2 mod_inc_mf3;
-	
-	bx -= ui(32);
-	var b = buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, sFOCUS, group_tooltip, THEME.view_group, PREFERENCES.dialog_add_node_grouping, COLORS._main_icon);
-	if(b == 1) {
-		if(key_mod_press(SHIFT) && MOUSE_WHEEL > 0) mod_dec_mf0 PREFERENCES.dialog_add_node_grouping mod_dec_mf1 PREFERENCES.dialog_add_node_grouping mod_dec_mf2  3 mod_dec_mf3  3 mod_dec_mf4;
-		if(key_mod_press(SHIFT) && MOUSE_WHEEL < 0) mod_inc_mf0 PREFERENCES.dialog_add_node_grouping mod_inc_mf1 PREFERENCES.dialog_add_node_grouping mod_inc_mf2  3 mod_inc_mf3;
-	}
-	if(b == 2) mod_inc_mf0 PREFERENCES.dialog_add_node_grouping mod_inc_mf1 PREFERENCES.dialog_add_node_grouping mod_inc_mf2  3 mod_inc_mf3;
-	
-	if(junction_called != noone) {
-		var txt = node_show_connectable? __txtx("add_node_show_connect", "Showing connectable") : __txtx("add_node_show_all", "Showing all");
-		var cc  = node_show_connectable? COLORS._main_accent : COLORS._main_icon;
-		bx -= ui(32);
-		
-		var b = buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, sFOCUS, txt, THEME.filter_type, node_show_connectable, cc);
-		if(b == 2) node_show_connectable = !node_show_connectable;
 	}
 	
 #endregion

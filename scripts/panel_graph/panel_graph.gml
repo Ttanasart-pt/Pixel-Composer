@@ -244,7 +244,7 @@
 		registerFunction(g, "Export Hovering Node",   "",  n, panel_graph_send_to_export ).setMenu("graph_export_hover")
         registerFunction(g, "Export As Image...",     "",  n, function() /*=>*/ { PANEL_GRAPH.subDialogCall(new Panel_Graph_Export_Image(PANEL_GRAPH)) }).setMenu("graph_export_image",        THEME.icon_preview_export   )
         registerFunction(g, "Connection Settings...", "",  n, function() /*=>*/ { PANEL_GRAPH.subDialogCall(new Panel_Graph_Connection_Setting())      }).setMenu("graph_connection_settings", THEME.icon_curve_connection ).setSpriteInd(function() /*=>*/ {return PANEL_GRAPH.project.graphConnection.type})
-        registerFunction(g, "Grid Settings...",       "",  n, function() /*=>*/ { PANEL_GRAPH.subDialogCall(new Panel_Graph_Grid_Setting())            }).setMenu("graph_grid_settings",       THEME.icon_grid_setting     )
+        registerFunction(g, "Grid Settings...",       "",  n, function() /*=>*/ { PANEL_GRAPH.subDialogCall(new Panel_Graph_Grid_Setting())            }).setMenu("graph_grid_settings",       THEME.icon_grid_setting     ).setSpriteInd(function() /*=>*/ {return 1})
         registerFunction(g, "View Settings...",       "",  n, function() /*=>*/ { PANEL_GRAPH.subDialogCall(new Panel_Graph_View_Setting(PANEL_GRAPH, PROJECT.graphDisplay)) }).setMenu("graph_view_settings", THEME.icon_visibility )
         
 		registerFunction(g, "Toggle Topbar",       "", n, panel_graph_topbar_toggle  ).setMenu("graph_topbar_toggle", noone, false, function() /*=>*/ {return PROJECT.graphDisplay.show_topbar});
@@ -438,7 +438,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         bg_color          = c_black;
         slider_width      = 0;
         tooltip_overlay   = {};
-        toolbar_height    = ui(36);
+        toolbar_height    = ui(32);
         toolbar_left      = 0;
         
         topbar_height  = ui(32);
@@ -2576,8 +2576,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     
     function drawContext() { //
         draw_set_text(f_p2, fa_left, fa_center);
-        var xx  = ui(16), tt, tw, th;
-        var bh  = toolbar_height - ui(12);
+        var xx  = ui(10), tt, tw, th;
+        var bh  = toolbar_height - ui(8);
         var tbh = h - toolbar_height / 2;
         var cnt = noone;
         
@@ -2620,7 +2620,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             }
             
             var _aa = i < n - 1? 0.33 : 1;
-            draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text, _aa);
+            draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text, _aa);
             draw_text_add(xx, tbh, tt);
             draw_set_alpha(1);
             xx += tw + ui(4);
@@ -2638,6 +2638,34 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         }
         
         return xx;
+    } 
+    
+    function drawContextFrame() { 
+        if(!context_framing) return;
+        context_frame_progress = lerp_float(context_frame_progress, 1, 8);
+        if(context_frame_progress == 1) 
+            context_framing = false;
+        
+        var _fr_x0 = 0; 
+        var _fr_y0 = 0;
+        var _fr_x1 = w;
+        var _fr_y1 = h - toolbar_height;
+        
+        var _to_x0 = context_frame_sx;
+        var _to_y0 = context_frame_sy;
+        var _to_x1 = context_frame_ex;
+        var _to_y1 = context_frame_ey;
+        
+        var prog = context_frame_direct? context_frame_progress : 1 - context_frame_progress;
+        var frm_x0 = lerp(_fr_x0, _to_x0, prog);
+        var frm_y0 = lerp(_fr_y0, _to_y0, prog);
+        var frm_x1 = lerp(_fr_x1, _to_x1, prog);
+        var frm_y1 = lerp(_fr_y1, _to_y1, prog);
+        
+        draw_set_color(COLORS._main_accent);
+        draw_set_alpha(0.8);
+        draw_roundrect_ext(frm_x0, frm_y0, frm_x1, frm_y1, THEME_VALUE.panel_corner_radius, THEME_VALUE.panel_corner_radius, true);
+        draw_set_alpha(1);
     } 
     
     function drawToolBar() { //
@@ -2672,7 +2700,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 				draw_set_color(COLORS.panel_toolbar_separator);
 				draw_line_width(tbx + bs - ui(2), tby - _lh, tbx + bs - ui(2), tby + _lh, 2);
 				
-				tbx -= ui(8);
+				tbx -= ui(6);
 				continue;
 			} 
 			
@@ -2680,7 +2708,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             var by = tby - bs / 2;
             
 			_menu.draw(bx, by, bs, bs, _m, hov, foc, tbs);
-			tbx -= bs + ui(4);
+			tbx -= bs + ui(2);
 			
 			if(i == n - 1) {
 				draw_set_color(COLORS.panel_toolbar_separator);
@@ -2688,7 +2716,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 			}
         }
         
-        tbx -= ui(8);
+        tbx -= ui(6);
         gpu_set_scissor(scs);
         
         if(hk_editing != noone) { 
@@ -2949,34 +2977,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         if(point_in_rectangle(mx, my, x0, y0, x1, y1))
             mouse_on_graph = false;
     }
-    
-    function drawContextFrame() { 
-        if(!context_framing) return;
-        context_frame_progress = lerp_float(context_frame_progress, 1, 8);
-        if(context_frame_progress == 1) 
-            context_framing = false;
-        
-        var _fr_x0 = 0; 
-        var _fr_y0 = 0;
-        var _fr_x1 = w;
-        var _fr_y1 = h - toolbar_height;
-        
-        var _to_x0 = context_frame_sx;
-        var _to_y0 = context_frame_sy;
-        var _to_x1 = context_frame_ex;
-        var _to_y1 = context_frame_ey;
-        
-        var prog = context_frame_direct? context_frame_progress : 1 - context_frame_progress;
-        var frm_x0 = lerp(_fr_x0, _to_x0, prog);
-        var frm_y0 = lerp(_fr_y0, _to_y0, prog);
-        var frm_x1 = lerp(_fr_x1, _to_x1, prog);
-        var frm_y1 = lerp(_fr_y1, _to_y1, prog);
-        
-        draw_set_color(COLORS._main_accent);
-        draw_set_alpha(0.8);
-        draw_roundrect_ext(frm_x0, frm_y0, frm_x1, frm_y1, THEME_VALUE.panel_corner_radius, THEME_VALUE.panel_corner_radius, true);
-        draw_set_alpha(1);
-    } 
     
     function drawSlideShow() {
         if(!project.useSlideShow) return;

@@ -161,8 +161,8 @@
         registerFunction(p, "Lock Right Toolbar",       "", n, panel_preview_toggle_tool_lock_r        ).setMenu("preview_toggle_tool_r", THEME.lock         ).setSpriteInd(function() /*=>*/ {return !PANEL_PREVIEW.tool_always_r} )
         
         registerFunction(p, "Popup",            		"", n, function() /*=>*/ { create_preview_window(PANEL_PREVIEW.getNodePreview());         }).setMenu("preview_popup",          THEME.node_goto_thin    )
-        registerFunction(p, "Grid Settings...",         "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_Grid_Setting())  }).setMenu("preview_grid_settings",  THEME.icon_grid_setting )
-        registerFunction(p, "Onion Skin Settings...",   "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_Onion_Setting()) }).setMenu("preview_onion_settings", THEME.onion_skin        )
+        registerFunction(p, "Grid Settings...",         "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_Grid_Setting())  }).setMenu("preview_grid_settings",  THEME.icon_grid_setting ).setSpriteInd(function() /*=>*/ {return PROJECT.previewGrid.show} )
+        registerFunction(p, "Onion Skin Settings...",   "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_Onion_Setting()) }).setMenu("preview_onion_settings", THEME.onion_skin        ).setSpriteInd(function() /*=>*/ {return PROJECT.onion_skin.enabled} )
         registerFunction(p, "3D View Settings...",      "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_3D_Setting(PANEL_PREVIEW))     }).setMenu("preview_3D_settings",    THEME.d3d_preview_settings )
         registerFunction(p, "3D SDF View Settings...",  "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_3D_SDF_Setting(PANEL_PREVIEW)) }).setMenu("preview_3D_SDF_settings",THEME.d3d_preview_settings )
         registerFunction(p, "3D Snap Settings...",      "", n, function() /*=>*/ { PANEL_PREVIEW.subDialogCall(new Panel_Preview_Snap_Setting(PANEL_PREVIEW))   }).setMenu("preview_snap_settings",  THEME.d3d_snap_settings )
@@ -504,7 +504,7 @@ function Panel_Preview() : PanelContent() constructor {
         hk_selecting   = noone;
         
         topbar_height  = ui(32);
-        toolbar_height = ui(36);
+        toolbar_height = ui(32);
         
     	global.menuItems_preview_toolbar_context = [ "preview_edit_toolbar", "preview_edit_preview_actions" ];
         global.menuItems_preview_toolbar = [
@@ -2447,14 +2447,18 @@ function Panel_Preview() : PanelContent() constructor {
         
         overlay_hovering = false;
         
-        if(_node.drawPreviewToolOverlay(pHOVER, pFOCUS, _mx, _my, { x, y, w, h, toolbar_height, 
-            x0: _node.showTool() * ui(40),
-            x1: w,
-            y0: toolbar_height - ui(8), 
-            y1: h - toolbar_height 
-        })) {
-            canvas_hover     = false;
-            overlay_hovering = true;
+        if(_node.drawPreviewToolOverlay != undefined) {
+        	var _param = { x, y, w, h, toolbar_height, 
+	            x0: _node.showTool() * ui(40),
+	            x1: w,
+	            y0: toolbar_height - ui(8), 
+	            y1: h - toolbar_height 
+	        };
+        	
+	        if(_node.drawPreviewToolOverlay(pHOVER, pFOCUS, _mx, _my, _param)) {
+	            canvas_hover     = false;
+	            overlay_hovering = true;
+	        }
         }
         
         drawToolsLeft(_node);
@@ -2590,7 +2594,7 @@ function Panel_Preview() : PanelContent() constructor {
 				draw_set_color(COLORS.panel_toolbar_separator);
 				draw_line_width(tbx + ui(2), by + ui(2), tbx + ui(2), by + bs - ui(2), 2);
 				
-				tbx += ui(8);
+				tbx += ui(6);
 				continue;
 			} 
 			
@@ -2598,10 +2602,10 @@ function Panel_Preview() : PanelContent() constructor {
             var by = tby - bs / 2;
             
 			_menu.draw(bx, by, bs, bs, _m, hov, foc, _toolbars);
-			tbx += bs + ui(4);
+			tbx += bs + ui(2);
 		}
 		
-        toolbar_left = tbx + ui(4);
+        toolbar_left = tbx + ui(2);
         gpu_set_scissor(scs);
         
         if(toolbar_right < toolbar_left) return;
@@ -2617,7 +2621,7 @@ function Panel_Preview() : PanelContent() constructor {
 				draw_set_color(COLORS.panel_toolbar_separator);
 				draw_line_width(tbx - ui(2), by + ui(2), tbx - ui(2), by + bs - ui(2), 2);
 				
-				tbx -= ui(8);
+				tbx -= ui(6);
 				continue;
 			} 
 			
@@ -2625,7 +2629,7 @@ function Panel_Preview() : PanelContent() constructor {
             var by = tby - bs / 2;
             
 			_menu.draw(bx, by, bs, bs, _m, hov, foc, _toolbars);
-			tbx -= bs + ui(4);
+			tbx -= bs + ui(2);
         }
         
         gpu_set_scissor(scs);

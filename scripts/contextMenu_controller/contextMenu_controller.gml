@@ -71,7 +71,7 @@ function MenuItem(_name, _func, _spr = noone, _hotkey = noone, _toggle = noone, 
 		var _spri = getSprInd();
 		var _cc   = COLORS._main_icon;
 		
-		var b = buttonInstant_Pad(THEME.button_hide, bx, by, bw, bh, m, hov, foc, _tool, _spr, _spri, _cc, 1, ui(4));
+		var b = buttonInstant_Pad(THEME.button_hide_fill, bx, by, bw, bh, m, hov, foc, _tool, _spr, _spri, _cc, 1, ui(4));
 		
 		if(b == 2) toggleFunction();
 		if(b == 3) {

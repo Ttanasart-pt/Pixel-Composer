@@ -593,7 +593,8 @@ function Panel_Animation() : PanelContent() constructor {
             draw_text_add(bar_line_x, ui(16), cf);
         #endregion
            
-        if(inspecting) inspecting.drawAnimationTimeline(timeline_shift, bar_w, bar_h, timeline_scale);
+        if(inspecting && inspecting.drawAnimationTimeline != undefined) 
+        	inspecting.drawAnimationTimeline(timeline_shift, bar_w, bar_h, timeline_scale);
         
         var ky = ui(12) + (bar_h - ui(12)) / 2;
         var ks = THEME.timeline_keyframe;

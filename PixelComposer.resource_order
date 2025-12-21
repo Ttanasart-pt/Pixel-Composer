@@ -2466,6 +2466,7 @@
     {"name":"s_node_cellular","order":10,"path":"sprites/s_node_cellular/s_node_cellular.yy",},
     {"name":"s_node_chromatic_aberration","order":23,"path":"sprites/s_node_chromatic_aberration/s_node_chromatic_aberration.yy",},
     {"name":"s_node_color_adjust","order":1,"path":"sprites/s_node_color_adjust/s_node_color_adjust.yy",},
+    {"name":"s_node_color_blind","order":96,"path":"sprites/s_node_color_blind/s_node_color_blind.yy",},
     {"name":"s_node_color_data_label","order":19,"path":"sprites/s_node_color_data_label/s_node_color_data_label.yy",},
     {"name":"s_node_color_data","order":2,"path":"sprites/s_node_color_data/s_node_color_data.yy",},
     {"name":"s_node_color_from_hsv","order":3,"path":"sprites/s_node_color_from_hsv/s_node_color_from_hsv.yy",},

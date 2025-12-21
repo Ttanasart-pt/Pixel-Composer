@@ -1042,12 +1042,15 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static projectPostUpdate = function() {
-		if(CURRENT_FRAME < 0 || CURRENT_FRAME >= array_length(preview_cache)) 
-			return;
-			
 		if(IS_RENDERING) 
 			return;
 			
+		if(CURRENT_FRAME < 0 || CURRENT_FRAME >= array_length(preview_cache)) 
+			return;
+		
+		if(!inspecting) 
+			return;
+		
 		var _prev = getGraphPreviewSurface();
 		var _size = 32;
 		if(!is_surface(_prev)) return;
@@ -2581,13 +2584,17 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params = {}) {}
 	
+	static drawOverlayTransform = undefined; // function(_node) { return noone; }
 	static drawOverlayChainTransform = function(_node) {
 		var _ch = getNodeChildList(_node);
 		var _tr = [ 0, 0, 1, 1, 0 ];
 		if(_ch == noone) return _tr;
 		
 		for( var i = 0, n = array_length(_ch) - 1; i < n; i++ ) {
-			var _trn = _ch[i + 1].drawOverlayTransform(_ch[i]);
+			var _nod = _ch[i + 1];
+			if(_nod.drawOverlayTransform == undefined) continue;
+			
+			var _trn = _nod.drawOverlayTransform(_ch[i]);
 			if(_trn == noone) continue;
 			
 			_tr[0]  = (_trn[0] + _tr[0]) * _tr[2];
@@ -2598,13 +2605,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		return _tr;
 	}
 	
-	static drawOverlayTransform = function(_node) { return noone; }
-	
-	static drawPreviewToolOverlay = function(hover, active, _mx, _my, _panel) { return false; }
-	
-	static drawAnimationTimeline = function(_w, _h, _s) {}
-	
-	static drawProcessShort = undefined;
+	static drawPreviewToolOverlay = undefined; // function(hover, active, _mx, _my, _panel) { return false; }
+	static drawAnimationTimeline  = undefined; // function(_w, _h, _s) {}
+	static drawProcessShort       = undefined; // function(cx, cy, cw, ch, _prog) {}
 	
 	////- PREVIEW
 	

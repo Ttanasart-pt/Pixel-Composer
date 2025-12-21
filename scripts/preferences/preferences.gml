@@ -74,6 +74,7 @@
 		PREFERENCES.dialog_add_node_w           = 600;
 		PREFERENCES.dialog_add_node_h           = 400;
 		PREFERENCES.dialog_add_node_search_high = true;
+		PREFERENCES.dialog_add_node_search_fav  = true;
 		
 		PREFERENCES.add_node_page               = 0;
 		PREFERENCES.add_node_subpage            = 0;
