@@ -5,7 +5,6 @@ event_inherited();
 	dialog_w = ui(500);
 	dialog_h = ui(600);
 	
-	thank_h = dialog_h - ui(220);
 	destroy_on_click_out = true;
 #endregion
 
@@ -31,7 +30,7 @@ event_inherited();
 	if(os_is_network_connected())
 		patron_list_id = http_get("https://gist.githubusercontent.com/Ttanasart-pt/573ab1dea80606616cac5ba497e528fd/raw/patreon");
 	
-	sc_thank = new scrollPane(dialog_w - ui(64), thank_h, function(_y, _m) {
+	sc_thank = new scrollPane(1, 1, function(_y, _m) {
 		var cx = sc_thank.surface_w / 2;
 		var _h = _y;
 		var yy = _y;

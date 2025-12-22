@@ -1161,8 +1161,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	doUpdate     = doUpdateFull;
 	getInputData = function(i,d=0) /*=>*/ {return array_safe_get_fast(inputs_data, i, d)};
 	
-	static valueUpdate     = function(index = noone) { onValueUpdate(index); cacheCheck(); }
-	static valueFromUpdate = function(index = noone) {
+	static valueUpdate       = function(index = noone) { onValueUpdate(index); cacheCheck(); }
+	static valueFromUpdate   = function(index = noone) {
 		onValueFromUpdate(index);
 		onValueUpdate(index);
 		

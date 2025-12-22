@@ -8,19 +8,21 @@ function Node_UV_Cartesian(_x, _y, _group = noone) : Node_Shader_Generator(_x, _
 	newInput( 3, nodeValue_Surface( "Mask"       ));
 	
 	////- =UV
-	newInput( 4, nodeValue_Vec2(     "Position", [0,0] )).setUnitSimple().setShaderProp("position");
-	newInput( 5, nodeValue_Rotation( "Rotation",  0    )).setShaderProp("rotation");
-	newInput( 6, nodeValue_Vec2(     "Tiling",   [1,1] )).setShaderProp("tile");
+	newInput( 4, nodeValue_Vec2(     "Position",   [0,0] )).setUnitSimple().setShaderProp("position");
+	newInput(10, nodeValue_Anchor(   "Anchor",     [0,0] )).setShaderProp("anchor");
+	newInput( 5, nodeValue_Rotation( "Rotation",    0    )).setShaderProp("rotation");
+	newInput( 6, nodeValue_Vec2(     "Tile Scale", [1,1] )).setShaderProp("tile");
+	newInput(11, nodeValue_Bool(     "Repeat",     true  )).setShaderProp("repeat");
 	
 	////- =Channels
 	newInput( 7, nodeValue_Slider_Range( "X",   [0,1] )).setShaderProp("xRange");
 	newInput( 8, nodeValue_Slider_Range( "Y",   [1,0] )).setShaderProp("yRange");
 	newInput( 9, nodeValue_Slider(     "Blue",   0    )).setShaderProp("blue");
-	// 10
+	// 12
 	
 	input_display_list = [
 		[ "Output",    true ],  0,  1,  2,  3, 
-		[ "UV",       false ],  4,  5,  6, 
+		[ "UV",       false ],  4, 10,  5,  6, 11, 
 		[ "Channels", false ],  7,  8,  9, 
 	];
 	

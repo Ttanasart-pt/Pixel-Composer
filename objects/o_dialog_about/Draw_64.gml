@@ -22,8 +22,14 @@ if !ready exit;
 	draw_set_text(f_p0, fa_center, fa_top, COLORS._main_text_sub);
 	draw_text(cx, ly, "2025, MakhamDev");
 	
+	var _padd   = ui(20);
+	var thank_x = dialog_x + _padd;
 	var thank_y = dialog_y + ui(188);
-	draw_sprite_stretched(THEME.ui_panel_bg, 1, dialog_x + ui(24), thank_y - ui(8), dialog_w - ui(48), thank_h + ui(16));
+	var thank_w = dialog_w - _padd * 2;
+	var thank_h = dialog_h - ui(188) - _padd;
+	
+	draw_sprite_stretched(THEME.ui_panel_bg, 1, thank_x - ui(8), thank_y - ui(8), thank_w + ui(16), thank_h + ui(16));
 	sc_thank.setFocusHover(sFOCUS, sHOVER);
-	sc_thank.draw(dialog_x + ui(32), thank_y);
+	sc_thank.verify(thank_w, thank_h);
+	sc_thank.draw(thank_x, thank_y);
 #endregion

@@ -19,8 +19,10 @@ varying vec4 v_vColour;
 
 uniform vec2  dimension;
 uniform vec2  position;
+uniform vec2  anchor;
 uniform float rotation;
 uniform vec2  tile;
+uniform int   repeat;
 
 uniform vec2  xRange;
 uniform vec2  yRange;
@@ -32,7 +34,11 @@ void main() {
 	vec2 vtx  = getUV(v_vTexcoord);
 	     vtx -= position / dimension;
 	     vtx *= mat2(cos(ang), -sin(ang), sin(ang), cos(ang));
-	     vtx  = fract(fract(vtx * tile) + 1.);
+		 vtx *= tile;
+		 vtx -= anchor;
+		 
+	     if(repeat == 0) vtx  = clamp(vtx, 0., 1.);
+	else if(repeat == 1) vtx  = fract(fract(vtx) + 1.);
 	
 	float x = mix(xRange[0], xRange[1], vtx.x);
 	float y = mix(yRange[0], yRange[1], vtx.y);

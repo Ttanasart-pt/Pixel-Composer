@@ -74,7 +74,7 @@
         registerFunction("", "Undo",                "Z",    MOD_KEY.ctrl,                 UNDO     ).setMenu("undo"            )
         registerFunction("", "Redo",                "Z",    MOD_KEY.ctrl | MOD_KEY.shift, REDO     ).setMenu("redo"            )
         
-        registerFunction("", "Full panel",          "`",    MOD_KEY.none, set_focus_fullscreen     ).setMenu("full_panel"      )
+        registerFunction("", "Full panel",          vk_f9,  MOD_KEY.none, set_focus_fullscreen     ).setMenu("full_panel"      )
         registerFunction("", "Reset layout",        vk_f10, MOD_KEY.ctrl, resetPanel               ).setMenu("reset_layout"    )
         
         registerFunction("", "Fullscreen",          vk_f11, MOD_KEY.none, global_fullscreen        ).setMenu("fullscreen"      )
@@ -328,6 +328,8 @@ function Panel_Menu() : PanelContent() constructor {
             -1,
             menuItem(__txtx("panel_menu_connect_patreon", "Connect to Patreon"),               function() /*=>*/ {return dialogCall(o_dialog_patreon)},         THEME.patreon),
             menuItem(__txtx("panel_menu_connect_patreon", "Connect to Patreon (legacy)"),      function() /*=>*/ {return dialogPanelCall(new Panel_Patreon())}, THEME.patreon),
+            -1,
+            menuItem(__txt("About Pixel Composer"), function() /*=>*/ {return dialogCall(o_dialog_about)}),
         ]];
         
         if(steam_initialised()) array_push(menu_help[1], -1, menuItem(__txtx("panel_menu_steam_workshop", "Steam Workshop"), function() /*=>*/ {return steam_activate_overlay_browser("https://steamcommunity.com/app/2299510/workshop/")}, THEME.steam) );
@@ -452,21 +454,26 @@ function Panel_Menu() : PanelContent() constructor {
                 }
         
                 var bx = _right? xx : w - ui(24);
-                draw_sprite_ui_uniform(THEME.icon_24, 0, bx, h / 2, 1, c_white);
                 if(pHOVER && point_in_rectangle(mx, my, bx - ui(16), 0, bx + ui(16), ui(32))) {
+                    draw_sprite_ui_uniform(THEME.icon_24, 0, bx, h / 2);
                     _draggable = false;
-                    if(mouse_press(mb_left, pFOCUS)) dialogCall(o_dialog_about);
-                }
+                    if(mouse_press(mb_left, pFOCUS)) dialogCall(o_dialog_splash);
+                    
+                } else 
+                    draw_sprite_ui_uniform(THEME.icon_24_grey, 0, bx, h / 2);
                 
             } else {
                 var bx = ui(20);
                 var by = h - ui(20);
                 
-                draw_sprite_ui_uniform(THEME.icon_24, 0, bx, by, 1, c_white);
                 if(pHOVER && point_in_rectangle(mx, my, bx - ui(16), by - ui(16), bx + ui(16), by + ui(16))) {
+                    draw_sprite_ui_uniform(THEME.icon_24, 0, bx, by);
                     _draggable = false;
-                    if(mouse_press(mb_left, pFOCUS)) dialogCall(o_dialog_about);
-                }
+                    if(mouse_press(mb_left, pFOCUS)) dialogCall(o_dialog_splash);
+                    
+                } else 
+                    draw_sprite_ui_uniform(THEME.icon_24_grey, 0, bx, by);
+                    
             }
         #endregion
         
@@ -1079,7 +1086,7 @@ function Panel_Menu() : PanelContent() constructor {
                 _cx = tcx - _tw / 2 - ui(16);
                 _cy = (ty0 + ty1) / 2;
                 
-                if(RECORDING) draw_sprite_ui(THEME.video, 0, _cx, _cy, .8, .8, 0, COLORS._main_icon);
+                draw_sprite_ui(THEME.video, 0, _cx, _cy, .8, .8, 0, COLORS._main_icon);
             }
         #endregion
         

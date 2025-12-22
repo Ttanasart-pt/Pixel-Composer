@@ -28,14 +28,7 @@ function Panel_Palette() : PanelContent() constructor {
 			}),
 			
 			menuItem(__txt("Lospec..."), function() /*=>*/ {
-				fileNameCall("", function(txt) /*=>*/ {
-					if(txt == "") return;
-					
-					txt = string_lower(txt);
-					txt = string_replace_all(txt, " ", "-");
-					var _url = $"https://Lospec.com/palette-list{txt}.json";
-					PALETTE_LOSPEC = http_get(_url);
-				}).setName("Palette")
+				fileNameCall("", function(txt) /*=>*/ { addPalette_LoSpec(txt); }).setName("Palette")
 			}),
 		]);
 	});
@@ -174,21 +167,6 @@ function Panel_Palette() : PanelContent() constructor {
 					__initPalette();
 				});
 			}
-			
-			yy += _add_h + ui(8);
-			hh += _add_h + ui(8);
-		}
-		
-		if(PALETTE_LOSPEC) {
-			var _add_h = ui(28);
-			var _add_w = ui(64);
-			var _add_x = ww / 2 + sin(current_time / 400) * (ww - _add_w) / 2 - _add_w / 2;
-			
-			draw_sprite_stretched_ext(THEME.ui_panel, 0, 0, yy, ww, _add_h, COLORS._main_value_positive, .4);
-			draw_sprite_stretched_ext(THEME.ui_panel, 0, _add_x, yy, _add_w, _add_h, COLORS._main_value_positive, .3);
-			draw_sprite_stretched_ext(THEME.ui_panel, 1, 0, yy, ww, _add_h, COLORS._main_value_positive, .7);
-			draw_set_text(f_p2, fa_center, fa_center, COLORS._main_value_positive);
-			draw_text_add(ww / 2, yy + _add_h / 2, __txt("Loading Lospec Palette..."));
 			
 			yy += _add_h + ui(8);
 			hh += _add_h + ui(8);

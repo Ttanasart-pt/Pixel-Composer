@@ -41,6 +41,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		new MenuItem("Sort Blue",		function() /*=>*/ { sortPalette(7) }),
 	];
 	
+	render_palette_h = 0;
 	render_palette = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		var bx = _x;
 		var by = _y;
@@ -67,13 +68,13 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		var _from = getInputData(1);
 		var _to   = getInputData(2);
 		
-		var ss  = TEXTBOX_HEIGHT;
+		var ss  = ui(18);
 		var amo = array_length(_from);
-		var top = bs + ui(8);
-		var hh  = top + (amo * (ss + ui(8)) + ui(8));
+		var top = bs  + ui(8);
+		var hh  = top + ui(4);
 		var _yy = _y + top;
 		
-		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _yy, _w, hh - top, COLORS.node_composite_bg_blend, 1);
+		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _yy, _w, render_palette_h - top, COLORS.node_composite_bg_blend, 1);
 		
 		var _selecting_y = 0;
 		var _selecting_h = 0;
@@ -84,38 +85,39 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		var _sel_y0 = 0;
 		var _sel_y1 = 0;
 		
+		var  bb = THEME.button_hide_fill;
+		var  bs = ss;
+		
+		var _x0 = _x  + ui(8);
+		var _y0 = _yy + ui(8);
+		
 		for( var i = 0; i < amo; i++ ) {
 			var fr = array_safe_get_fast(_from, i);
 			var to = array_safe_get_fast(_to,   i);
 			
-			var _x0 = _x  + ui(8);
-			var _y0 = _yy + ui(8) + i * (ss + ui(8));
+			var cc = _sample == fr? c_white : COLORS._main_icon;
+			var aa = 0.5 + (_sample == fr) * 0.5;
 			
-			var _cc = _sample == fr? c_white : COLORS._main_icon;
-			var _aa = 0.5 + (_sample == fr) * 0.5;
+			draw_sprite_stretched_ext(THEME.box_r5, 0, _x0, _y0, ss, ss, fr,  1);
+			draw_sprite_stretched_add(THEME.box_r5, 1, _x0, _y0, ss, ss, cc, aa);
 			
-			draw_sprite_stretched_ext(THEME.color_picker_box, 0, _x0, _y0, ss, ss, _cc, _aa);
-			draw_sprite_stretched_ext(THEME.color_picker_box, 1, _x0, _y0, ss, ss, fr, 1);
+			var _x1 = _x0 + ss + ui(16);
+			var _x2 = _x + _w  - ui(8);
 			
-			var _x1 = _x0 + ss + ui(32);
-			var _x2 = _x + _w - ui(8);
-			
-			bx   = _x2 - ui(32);
-			_x2 -= ui(32 + 4);
-			by   = _y0 + ss / 2 - ui(32) / 2;
-			if(buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(32), _m, _hover, _focus,, THEME.color_picker_dropper,, c_white) == 2) {
-				var dialog = dialogCall(o_dialog_color_selector)
-								.setApply(setColor);
-								
+			bx   = _x2 - bs;
+			_x2 -= bs + ui(4);
+			by   = _y0 + ss / 2 - bs / 2;
+			if(buttonInstant_Pad(bb, bx, by, bs, bs, _m, _hover, _focus, "", THEME.color_picker_dropper, 0, c_white) == 2) {
+				var dialog = dialogCall(o_dialog_color_selector).setApply(setColor);
 				dialog.selector.dropper_active = true;
 				dialog.selector.dropper_close  = true;
-			
+				
 				palette_select = [ i, i ];
 			}
 			
-			bx   = _x2 - ui(32);
-			_x2 -= ui(32 + 4);
-			if(buttonInstant(THEME.button_hide_fill, bx, by, ui(32), ui(32), _m, _hover, _focus,, THEME.color_wheel,, c_white) == 2) {
+			bx   = _x2 - bs;
+			_x2 -= bs + ui(4);
+			if(buttonInstant_Pad(bb, bx, by, bs, bs, _m, _hover, _focus, "", THEME.color_wheel, 0, c_white) == 2) {
 				var pick = instance_create(mouse_mx, mouse_my, o_dialog_color_quick_pick);
 				array_insert(pick.palette, 0, to);
 				pick.onApply = setColor;
@@ -126,13 +128,13 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			
 			var _xw = _x2 - _x1;
 			
-			draw_sprite_ui(THEME.arrow, 0, (_x0 + ss + _x1) / 2, _y0 + ss / 2, 1, 1, 0, c_white, 0.5);
-			draw_sprite_stretched_ext(THEME.color_picker_box, 1, _x1, _y0, _xw, ss, to, 1);
-			draw_sprite_stretched_ext(THEME.color_picker_box, 0, _x1, _y0, _xw, ss, COLORS._main_icon, 0.5);
+			draw_sprite_ui(THEME.arrow, 0, (_x0 + ss + _x1) / 2, _y0 + ss / 2, .75, .75, 0, c_white, 0.5);
+			draw_sprite_stretched_ext(THEME.box_r5, 0, _x1, _y0, _xw, ss, to, 1);
+			draw_sprite_stretched_add(THEME.box_r5, 1, _x1, _y0, _xw, ss, COLORS._main_icon, .5);
 			
 			if(_hover && point_in_rectangle(_m[0], _m[1], _x1, _y0, _x1 + _xw, _y0 + ss)) {
 				if(palette_selecting == noone)
-					draw_sprite_stretched_ext(THEME.color_picker_box, 0, _x1, _y0, _xw, ss, c_white, 1);
+					draw_sprite_stretched_add(THEME.box_r5, 1, _x1, _y0, _xw, ss, c_white, .5);
 				
 				if(palette_selecting == noone && mouse_press(mb_left, _focus)) {
 					palette_selecting = 1;
@@ -152,13 +154,16 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 				_sel_x1 = _x1 + _xw;
 				_sel_y1 = _y0 + ss;
 			}
+			
+			_y0 += ss + ui(4);
+			 hh += ss + ui(4);
 		}
 		
 		if(palette_selecting) {
 			var _mn = min(palette_select[0], palette_select[1]);
 			var _mx = max(palette_select[0], palette_select[1]);
 			
-			draw_sprite_stretched_ext(THEME.color_picker_box, 0, _sel_x0, _sel_y0, _sel_x1 - _sel_x0, _sel_y1 - _sel_y0, c_white, 1);
+			draw_sprite_stretched_add(THEME.ui_panel, 2, _sel_x0, _sel_y0, _sel_x1 - _sel_x0, _sel_y1 - _sel_y0, COLORS._main_accent, 1);
 			
 			if(palette_selecting == 1 && mouse_release(mb_left, _focus)) {
 				palette_selecting = 2;
@@ -170,6 +175,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			}
 		}
 		
+		render_palette_h = hh;
 		return hh;
 	});
 	

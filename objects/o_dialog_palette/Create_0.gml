@@ -71,15 +71,7 @@ function __PaletteColor(_color = c_black) constructor {
 		}),
 		
 		menuItem(__txt("Lospec"), function() /*=>*/ {
-			fileNameCall("", function(txt) /*=>*/ {
-				if(txt == "") return;
-				
-				txt = string_lower(txt);
-				txt = string_replace_all(txt, " ", "-");
-				
-				var _url = $"https://Lospec.com/palette-list{txt}.json";
-				PALETTE_LOSPEC = http_get(_url);
-			}).setName("Palette")
+			fileNameCall("", function(txt) /*=>*/ { addPalette_LoSpec(txt); }).setName("Palette")
 		}),
 	];
 #endregion
@@ -157,7 +149,7 @@ function __PaletteColor(_color = c_black) constructor {
 			var _path = p.path;
 			var _palt = p.content;
 			
-			if(sch && string_pos(palette_search_string, string_lower(_name)) == 0) continue;
+			if(sch && string_pos(search_string, string_lower(_name)) == 0) continue;
 			if(!is_array(_palt)) continue;
 			
 			pre_amo  = array_length(_palt);

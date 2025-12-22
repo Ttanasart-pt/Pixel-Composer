@@ -33,8 +33,6 @@
 #endregion
 
 #region palette
-	globalvar PALETTE_LOSPEC; PALETTE_LOSPEC = 0;
-	
 	globalvar PALETTES_FOLDER;
 	globalvar PALETTES_FAV, PALETTES_FAV_DIR;
 	
@@ -86,6 +84,40 @@
 		
 		json_save_struct(fpath, PALETTES_FAV);
 	} 
+	
+	function addPalette_LoSpec(txt) {
+		if(txt == "") return;
+		txt = string_lower(txt);
+		txt = string_replace_all(txt, " ", "-");
+		
+		var _url = $"https://Lospec.com/palette-list{txt}.json";
+		
+		asyncCall(http_get(_url), function(_param, _data) /*=>*/ {
+		    var res     = _data[? "result"];
+		    var resJson = json_try_parse(res, -1);
+		    
+		    if(resJson == -1)                  exit;
+		    if(!is_struct(resJson))            exit;
+		    if(!struct_has(resJson, "colors")) exit;
+		    
+		    var _name = resJson.name;
+		    var _auth = resJson.author;
+		    var _colr = resJson.colors;
+		    
+		    if(!is_array(_colr)) exit;
+		    
+		    _name = string_replace_all(_name, "-", " ");
+		    
+		    var _path = $"{DIRECTORY}Palettes/{_name}.hex"
+		    var _f = file_text_open_write(_path);
+		    	for (var i = 0, n = array_length(_colr); i < n; i++)
+		    		file_text_write_string(_f, $"{_colr[i]}\n");
+		    file_text_close(_f);
+		    __initPalette();
+		    
+		    noti_status($"Loaded palette: {_name} by {_auth} completed.", noone, COLORS._main_value_positive);	
+		});
+	}
 #endregion
 
 #region gradient

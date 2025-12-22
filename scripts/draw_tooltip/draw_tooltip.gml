@@ -4,7 +4,7 @@ function draw_tooltip_text(txt) {
 	if(string_length(txt) > 1024)
 		txt = string_copy(txt, 1, 1024) + "...";
 	
-	draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
+	draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text);
 	
 	var tw = min(max(320, WIN_W * 0.4), string_width(txt));
 	var th = string_height_ext(txt, -1, tw);
@@ -445,17 +445,17 @@ function tooltip_modifiers(title, keys) constructor {
 		draw_sprite_stretched(THEME.textbox, 3, mx, my, tw + ui(16), th + ui(16));
 		draw_sprite_stretched(THEME.textbox, 0, mx, my, tw + ui(16), th + ui(16));
 		
-		draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
+		draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text);
 		draw_text(mx + ui(8), my + ui(8), title);
 		
-		draw_set_font(f_p2);
+		draw_set_font(f_p3);
 		
 		for( var i = 0, n = array_length(keys); i < n; i++ ) {
 			var _hx = mx + ui(12) + string_width(keys[i][0]);
 			var _hy = my + ui(8) + h1 + ui(4) + h2 / 2 + ui(4);
 			hotkey_draw(keys[i][0], _hx, _hy);
 			
-			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text);
+			draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text);
 			draw_text(_hx + ui(8), my + ui(8) + h1 + ui(6), keys[i][1]);
 		}
 	}
@@ -484,10 +484,10 @@ function tooltip_two_lines(title, content) constructor {
 		draw_sprite_stretched(THEME.textbox, 3, mx, my, tw + ui(16), th + ui(16));
 		draw_sprite_stretched(THEME.textbox, 0, mx, my, tw + ui(16), th + ui(16));
 		
-		draw_set_text(f_p1b, fa_left, fa_top, COLORS._main_text_accent);
+		draw_set_text(f_p2b, fa_left, fa_top, COLORS._main_text_accent);
 		draw_text(mx + ui(8), my + ui(8), title);
 		
-		draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text);
+		draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text);
 		draw_text(mx + ui(8), my + ui(8) + h1, content);
 	}
 }

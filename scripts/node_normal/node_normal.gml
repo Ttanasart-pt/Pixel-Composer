@@ -18,9 +18,9 @@ function Node_Normal(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput( 1, nodeValue_Float(  "Height",    1           )).setMappable(6);
 	newInput( 2, nodeValue_Slider( "Smooth",    0, [0,4,.1] )).setMappable(7).setTooltip("Include diagonal pixel in normal calculation, which leads to smoother output.");
 	
-	newInput( 5, nodeValue_Bool(   "Flip X",    true ));
-	newInput( 8, nodeValue_Bool(   "Flip Y",    true ));
-	newInput( 4, nodeValue_Bool(   "Normalize", true ));
+	newInput( 5, nodeValue_Bool(   "Flip X",     true ));
+	newInput( 8, nodeValue_Bool(   "Flip Y",    false ));
+	newInput( 4, nodeValue_Bool(   "Normalize",  true ));
 	// inputs 9
 		
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));

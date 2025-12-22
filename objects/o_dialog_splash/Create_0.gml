@@ -4,7 +4,7 @@ event_inherited();
 #region data
 	destroy_on_click_out = true;
 	
-	dialog_w = ui(960);
+	dialog_w = min(WIN_W - ui(160), ui(960));
 	dialog_h = ui(600);
 	
 	pages = ["News", "Welcome Files"];
@@ -187,51 +187,49 @@ event_inherited();
 		}
 		
 		var grid_width = ui(104);
-		var grid_heigh = txt == "Workshop"? grid_width : grid_width * 0.75;
-		var grid_space = grid_width / 8;
-		var grid_line  = ui(4);
+		var grid_padd  = ui(6);
+		var label_h    = ui(24);
 		
 		var node_count = array_length(list);
-		var col = floor(ww / (grid_width + grid_space));
+		var col = floor(ww / (grid_width + grid_padd));
 		var row = ceil(node_count / col);
-		var xx  = grid_space;
-		var name_height = 0;
 		
-		grid_space = (ww - col * grid_width) / (col + 1);
+		var grid_width = (ww - col * grid_padd) / col;
+		var grid_heigh = txt == "Workshop"? grid_width : grid_width * 0.75;
+		
+		var contentRow = false;
+		
 		var group_labels = [];
 		var _curr_tag    = "";
 		var _cur_col     = 0;
 		var _nx, _boxx;
 		var _meta;
+		var _scis = gpu_get_scissor();
 		
 		for(var i = 0; i < node_count; i++) {
 			var _project = list[i];
 			
 			if(_group_label) {
+				var _coll = array_exists(PREFERENCES.welcome_file_closed, _project.tag);
+				
 				if(_curr_tag != _project.tag) {
-					if(name_height) {
-						var hght = grid_heigh + name_height + grid_line;
+					if(contentRow) {
+						var hght = grid_heigh + grid_padd;
 						hh += hght;
 						yy += hght;
 					}
 					
-					array_push(group_labels, { y: yy, text: _project.tag });
-					hh += ui(24 + 6);
-					yy += ui(24 + 6);
+					array_push(group_labels, { y: yy + ui(2), text: _project.tag });
+					hh += label_h + ui(4) + (!_coll) * ui(4);
+					yy += label_h + ui(4) + (!_coll) * ui(4);
 					
-					if(!array_exists(PREFERENCES.welcome_file_closed, _project.tag)) {
-						hh += ui(6);
-						yy += ui(6);
-					}
-					
-					_nx = xx;
+					_nx         = grid_padd;
 					_curr_tag   = _project.tag;
 					_cur_col    = 0;
-					name_height = 0;
+					contentRow  = false;
 				}
 				
-				if(array_exists(PREFERENCES.welcome_file_closed, _project.tag))
-					continue;
+				if(_coll) continue;
 			} 
 			
 			if(txt == "Workshop" && !array_empty(meta_filter)) {
@@ -240,7 +238,7 @@ event_inherited();
 					continue;
 			}
 			
-			_nx = xx + (grid_width + grid_space) * _cur_col;
+			_nx   = grid_padd + (grid_width + grid_padd) * _cur_col;
 			_boxx = _nx;
 			
 			if(yy > -grid_heigh && yy < sp_sample.surface_h) {
@@ -249,23 +247,17 @@ event_inherited();
 				var gridY = yy;
 				var gridW = grid_width;
 				var gridH = grid_heigh;
+				var ss    = 1;
 				
 				if(sprite_exists(spr)) {
-					var gw = grid_width - ui(4);
-					var gh = grid_heigh - ui(4);
+					var gw = grid_width;
+					var gh = grid_heigh;
 					
 					var sw = sprite_get_width(spr);
 					var sh = sprite_get_height(spr);
 					
-					var s = min(gw / sw, gh / sh);
-					if(abs(s - 1) < 0.1) s = 1;
-					
-					gridW = sw * s + ui(4);
-					gridX = gridX + grid_width / 2 - gridW / 2;
-					
-				} else {
-					gridW = gridH;
-					gridX = gridX + grid_width / 2 - gridW / 2;
+					ss = max(gw / sw, gh / sh);
+					if(abs(ss - 1) < 0.1) ss = 1;
 				}
 				
 				draw_sprite_stretched_ext(THEME.node_bg, 0, gridX, gridY, gridW, gridH, COLORS.node_base_bg);
@@ -291,18 +283,21 @@ event_inherited();
 				}
 				
 				if(sprite_exists(spr)) {
-					var _spw = sw * s;
-					var _sph = sh * s;
+					var _spw = sw * ss;
+					var _sph = sh * ss;
 					
 					var _sx = _boxx + grid_width / 2 - _spw / 2;
 					var _sy = yy    + grid_heigh / 2 - _sph / 2;
 					
-					var ox = sprite_get_xoffset(spr) * s;
-					var oy = sprite_get_yoffset(spr) * s;
+					var ox = sprite_get_xoffset(spr) * ss;
+					var oy = sprite_get_yoffset(spr) * ss;
 					
+					gpu_set_scissor(gridX + ui(2), gridY + ui(2), gridW - ui(4), gridH - ui(4));
 					gpu_set_tex_filter(_curr_tag == "Getting started");
-					draw_sprite_uniform(spr, 0, _sx + ox, _sy + oy, s);
+					draw_sprite_uniform(spr, 0, _sx + ox, _sy + oy, ss);
 					gpu_set_tex_filter(false);
+					draw_sprite_stretched_ext(s_fade_up, 0, gridX, gridY + gridH - ui(32), gridW, ui(32), COLORS._main_icon_dark, 1);
+					gpu_set_scissor(_scis);
 					
 				} else {
 					var _sx = _boxx + grid_width / 2;
@@ -312,31 +307,31 @@ event_inherited();
 				}
 			}
 			
-			var tx    = _boxx + grid_width / 2;
-			var ty    = yy + grid_heigh + ui(4);
+			var tx    = _boxx + ui(4);
+			var ty    = yy + grid_heigh - ui(4);
 			var _name = _project.name;
-			if(string_digits(string_char_at(_name, 1)) != "")
+			if(string_digits(string_char_at(_name, 1)) != "") // ???
 				_name = string_copy(_name, string_pos(" ", _name), string_length(_name) - string_pos(" ", _name) + 1);
 			
-			draw_set_text(f_p3, fa_center, fa_top, COLORS._main_text);
-			name_height = max(name_height, string_height_ext(_name, -1, grid_width) + ui(8));
-			draw_text_ext_add(tx, ty - ui(2), _name, -1, grid_width);
+			draw_set_text(f_p4, fa_left, fa_bottom, COLORS._main_text);
+			draw_text_ext_add(round(tx), round(ty), _name, -1, grid_width - ui(8));
+			contentRow = true;
 			
 			if(++_cur_col >= col) {
-				if(name_height) {
-					var hght = grid_heigh + name_height + grid_line;
+				if(contentRow) {
+					var hght = grid_heigh + grid_padd;
 					hh += hght;
 					yy += hght;
 				}
 				
-				name_height = 0;
+				contentRow  = false;
 				_cur_col    = 0;
 			}
 			
 		}
 		
-		if(name_height) {
-			var hght = grid_heigh + name_height + grid_line;
+		if(contentRow) {
+			var hght = grid_heigh + grid_padd;
 			hh += hght;
 			yy += hght;
 		}
@@ -350,21 +345,21 @@ event_inherited();
 				gpu_set_blendmode(bm_normal);
 			}
 			
-			var pd = grid_space / 2;
+			var pd    = grid_padd;
 			var _cAll = 0;
 			
 			for( var i = 0; i < len; i++ ) {
-				var lb = group_labels[i];
+				var lb  = group_labels[i];
 				var _yy = max(lb.y, i == len - 1? ui(8) : min(ui(8), group_labels[i + 1].y - ui(32)));
 				
-				var _hov = sHOVER && point_in_rectangle(_m[0], _m[1], pd, _yy, pd + ww, _yy + ui(24));
+				var _hov = sHOVER && point_in_rectangle(_m[0], _m[1], pd, _yy, pd + ww, _yy + label_h);
 				
 				BLEND_OVERRIDE
-				draw_sprite_stretched_ext(THEME.box_r5_clr, _hov, pd, _yy, ww - pd * 2, ui(24), c_white, 0.3 + _hov * 0.2);
+				draw_sprite_stretched_ext(THEME.box_r5_clr, _hov, pd, _yy, ww - pd, label_h, c_white, 0.3 + _hov * 0.2);
 				BLEND_NORMAL
 				
 				var _coll = array_exists(PREFERENCES.welcome_file_closed, lb.text);
-				draw_sprite_ui(THEME.arrow, _coll? 0 : 3, pd + ui(16), _yy + ui(12), 1, 1, 0, CDEF.main_ltgrey, 1);	
+				draw_sprite_ui(THEME.arrow, _coll? 0 : 3, pd + ui(16), _yy + label_h / 2, 1, 1, 0, CDEF.main_ltgrey, 1);	
 				
 				if(_hov) {
 					sp_sample.hover_content = true;
@@ -377,7 +372,7 @@ event_inherited();
 				}
 				
 				draw_set_text(f_p2, fa_left, fa_center, CDEF.main_ltgrey);
-				draw_text_add(pd + ui(32), _yy + ui(12), string_titlecase(lb.text));
+				draw_text_add(pd + ui(32), _yy + label_h / 2, string_titlecase(lb.text));
 			}
 			
 			if(_cAll !=  0) PREFERENCES.welcome_file_closed = [];

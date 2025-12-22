@@ -42,6 +42,7 @@ draw_clear(COLORS.bg);
 	var surf = surface_get_target();
 	try {
 		PANEL_MAIN.draw();
+		
 	} catch(e) { 
 		while(surface_get_target() != surf)
 			surface_reset_target();

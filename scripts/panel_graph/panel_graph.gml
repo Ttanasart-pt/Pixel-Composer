@@ -1864,7 +1864,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                         }
                         
                     } else { // Single Click on Node
-                        var hover_selected = array_exists(nodes_selecting, node_hovering);
+                    	var hover_selected = array_exists(nodes_selecting, node_hovering);
                         if(!hover_selected) nodes_selecting = [ node_hovering ];
                         
                         if(array_length(nodes_selecting) > 1)
