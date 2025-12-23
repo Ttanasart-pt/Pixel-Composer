@@ -84,6 +84,7 @@ function __PaletteColor(_color = c_black) constructor {
 	
 	pal_padding = ui(9);
 	sp_preset_w = ui(240) - pal_padding * 2 - ui(8);
+	palCollAll  = 0;
 	
 	function drawPaletteDirectory(_dir, _x, _y, _m) {
 		var _hov = sp_presets.hover;
@@ -110,15 +111,18 @@ function __PaletteColor(_color = c_black) constructor {
 		
 		for( var i = 0, n = array_length(_dir.subDir); i < n; i++ ) {
 			var _sub  = _dir.subDir[i];
-			var _open = sch || (_sub[$ "expanded"] ?? true);
+			var _open = sch || _sub.open;
 			if(_sub.name == "Mixer") continue;
 			
 			draw_sprite_stretched(THEME.ui_panel_bg, 3, _x, _y, ww, lbh);
 			if(!sch && _hov && point_in_rectangle(_m[0], _m[1], _x, _y, _x + ww, _y + lbh)) {
 				draw_sprite_stretched_ext(THEME.node_bg, 1, _x, _y, ww, lbh, COLORS._main_icon, 1);
-				if(mouse_lpress(_foc)) {
+				if(DOUBLE_CLICK && _foc) {
+					palCollAll = _open? 1 : -1;
+					
+				} else if(mouse_lpress(_foc)) {
 					_open = !_open;
-					_sub[$ "expanded"] = _open;
+					_sub.open = _open;
 				}
 			}
 			
@@ -232,6 +236,11 @@ function __PaletteColor(_color = c_black) constructor {
 	sp_presets  = new scrollPane(sp_preset_w, dialog_h - ui(48 + 8 + 40) - pal_padding, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		var hh = drawPaletteDirectory(PALETTES_FOLDER, 0, _y, _m);
+		
+		if(palCollAll ==  1) PALETTES_FOLDER.openAll();
+		if(palCollAll == -1) PALETTES_FOLDER.closeAll();
+		palCollAll = 0;
+		
 		return hh;
 	});
 	
@@ -253,8 +262,8 @@ function __PaletteColor(_color = c_black) constructor {
 	sortPreset_name_a = function() /*=>*/ { sortPalettePreset(function(p0, p1) /*=>*/ {return string_compare(p0.name, p1.name)}, true); }
 	sortPreset_name_d = function() /*=>*/ { sortPalettePreset(function(p0, p1) /*=>*/ {return string_compare(p1.name, p0.name)}, true); }
 	
-	sortPreset_size_a = function() /*=>*/ { sortPalettePreset(function(p0, p1) /*=>*/ { return array_length(p0.content) - array_length(p1.content); }); }
-	sortPreset_size_d = function() /*=>*/ { sortPalettePreset(function(p0, p1) /*=>*/ { return array_length(p1.content) - array_length(p0.content); }); }
+	sortPreset_size_a = function() /*=>*/ { sortPalettePreset(function(p0, p1) /*=>*/ {return array_length(p0.content) - array_length(p1.content)}); }
+	sortPreset_size_d = function() /*=>*/ { sortPalettePreset(function(p0, p1) /*=>*/ {return array_length(p1.content) - array_length(p0.content)}); }
 	
 	sortPreset_hue_a  = function() /*=>*/ { sortPalettePreset(function(p0, p1) /*=>*/ {return palette_compare_hue_var(p0.content, p1.content)}); }
 	sortPreset_hue_d  = function() /*=>*/ { sortPalettePreset(function(p0, p1) /*=>*/ {return palette_compare_hue_var(p1.content, p0.content)}); }

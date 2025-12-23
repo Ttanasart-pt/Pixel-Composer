@@ -312,6 +312,9 @@ function DirectoryObject(_path) constructor {
 		if(_recur) for( var i = 0, n = array_length(subDir); i < n; i++ ) subDir[i].sort(fn, true);
 	}
 	
+	static openAll  = function() /*=>*/ { open =  true; array_foreach(subDir, function(s) /*=>*/ {return s.openAll()});  }
+	static closeAll = function() /*=>*/ { open = false; array_foreach(subDir, function(s) /*=>*/ {return s.closeAll()}); }
+	
 	static destroy = function() { }
 	
 	static free = function() {

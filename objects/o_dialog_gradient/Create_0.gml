@@ -60,6 +60,23 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 	b_apply = button(function() /*=>*/ { onApply(gradient); instance_destroy(); })
 		.setIcon(THEME.accept, 0, COLORS._main_icon_dark);
 	
+	sb_blending = new scrollBox([
+		__txtx("gradient_editor_blend_hard",  "Solid"),
+		__txtx("gradient_editor_blend_RGB",   "RGB"),  
+		__txtx("gradient_editor_blend_HSV",   "HSV"),  
+		__txtx("gradient_editor_blend_OKLAB", "OKLAB"),
+		
+	], function(i) /*=>*/ {
+		switch(i) {
+			case 0 :  gradient.type = 1; break;
+			case 1 :  gradient.type = 0; break;
+			case 2 :  gradient.type = 2; break;
+			case 3 :  gradient.type = 3; break;
+		}
+		onApply(gradient);
+		
+	}).setFont(f_p2);
+	
 	function setKeyPosition(key, position) {
 		key.time = position;
 		
@@ -88,6 +105,7 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 	hovering_name = "";
 	pal_padding   = ui(9);
 	sp_preset_w   = ui(240) - pal_padding * 2 - ui(8);
+	graCollAll    = 0;
 	
 	function drawGradientDirectory(_dir, _x, _y, _m) {
 		var _hover = sp_presets.hover;
@@ -109,14 +127,17 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 		
 		for( var i = 0, n = array_length(_dir.subDir); i < n; i++ ) {
 			var _sub  = _dir.subDir[i];
-			var _open = sch || (_sub[$ "expanded"] ?? true);
+			var _open = sch || _sub.open;
 			
 			draw_sprite_stretched(THEME.ui_panel_bg, 3, _x, _y, ww, lbh);
 			if(!sch && _hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + ww, _y + lbh)) {
 				draw_sprite_stretched_ext(THEME.node_bg, 1, _x, _y, ww, lbh, COLORS._main_icon, 1);
-				if(mouse_lpress(_focus)) {
+				if(DOUBLE_CLICK && _focus) {
+					graCollAll = _open? 1 : -1;
+					
+				} else if(mouse_lpress(_focus)) {
 					_open = !_open;
-					_sub[$ "expanded"] = _open;
+					_sub.open = _open;
 				}
 			}
 			
@@ -209,6 +230,11 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
 		var hh = drawGradientDirectory(GRADIENTS_FOLDER, 0, _y, _m);
+		
+		if(graCollAll ==  1) GRADIENTS_FOLDER.openAll();
+		if(graCollAll == -1) GRADIENTS_FOLDER.closeAll();
+		graCollAll = 0;
+		
 		return hh;
 	});
 	
@@ -256,6 +282,7 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 	sp_palette_w    = ui(240) - pal_padding * 2 - ui(8);
 	sp_palette_size = ui(20);
 	click_block     = true;
+	palCollAll      = 0;
 	
 	palette_spread  = undefined;
 	palette_spread_index = 0;
@@ -282,15 +309,18 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 		
 		for( var i = 0, n = array_length(_dir.subDir); i < n; i++ ) {
 			var _sub  = _dir.subDir[i];
-			var _open = sch || (_sub[$ "expanded"] ?? true);
+			var _open = sch || _sub.open;
 			if(_sub.name == "Mixer") continue;
 			
 			draw_sprite_stretched(THEME.ui_panel_bg, 3, _x, _y, ww, lbh);
 			if(!sch && _hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + ww, _y + lbh)) {
 				draw_sprite_stretched_ext(THEME.node_bg, 1, _x, _y, ww, lbh, COLORS._main_icon, 1);
-				if(mouse_lpress(_focus)) {
+				if(DOUBLE_CLICK && _focus) {
+					palCollAll = _open? 1 : -1;
+					
+				} else if(mouse_lpress(_focus)) {
 					_open = !_open;
-					_sub[$ "expanded"] = _open;
+					_sub.open = _open;
 				}
 			}
 			
@@ -466,6 +496,10 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 			palette_spread = undefined;
 		}
 		
+		if(palCollAll ==  1) PALETTES_FOLDER.openAll();
+		if(palCollAll == -1) PALETTES_FOLDER.closeAll();
+		palCollAll = 0;
+		
 		return hh;
 	});
 	
@@ -487,8 +521,8 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 	sortPreset_name_a = function() /*=>*/ { sortPalettePreset(function(p0, p1) /*=>*/ {return string_compare(p0.name, p1.name)}, true); }
 	sortPreset_name_d = function() /*=>*/ { sortPalettePreset(function(p0, p1) /*=>*/ {return string_compare(p1.name, p0.name)}, true); }
 	
-	sortPreset_size_a = function() /*=>*/ { sortPalettePreset(function(p0, p1) /*=>*/ { return array_length(p0.content) - array_length(p1.content); }); }
-	sortPreset_size_d = function() /*=>*/ { sortPalettePreset(function(p0, p1) /*=>*/ { return array_length(p1.content) - array_length(p0.content); }); }
+	sortPreset_size_a = function() /*=>*/ { sortPalettePreset(function(p0, p1) /*=>*/ {return array_length(p0.content) - array_length(p1.content)}); }
+	sortPreset_size_d = function() /*=>*/ { sortPalettePreset(function(p0, p1) /*=>*/ {return array_length(p1.content) - array_length(p0.content)}); }
 	
 	sortPreset_hue_a  = function() /*=>*/ { sortPalettePreset(function(p0, p1) /*=>*/ {return palette_compare_hue_var(p0.content, p1.content)}); }
 	sortPreset_hue_d  = function() /*=>*/ { sortPalettePreset(function(p0, p1) /*=>*/ {return palette_compare_hue_var(p1.content, p0.content)}); }

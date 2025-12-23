@@ -24,7 +24,7 @@ draggable = true;
 	draw_sprite_stretched(THEME.dialog, 0, content_x - p, dialog_y - p, content_w + p2, dialog_h + p2);
 	if(sFOCUS) draw_sprite_stretched_ext(THEME.dialog, 1, content_x - p, dialog_y - p, content_w + p2, dialog_h + p2, COLORS._main_accent, 1);
 	
-	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
+	draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
 	draw_text(presets_x + ui(24), dialog_y + ui(16), __txt("Presets"));
 	draw_text(content_x + (!interactable * ui(32)) + ui(24), dialog_y + ui(16), name);
 	if(!interactable)

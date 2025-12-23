@@ -32,7 +32,7 @@ draggable = true;
 	draw_sprite_stretched(THEME.dialog, 0, palette_x - p, dialog_y - p, presets_w + p2, dialog_h + p2);
 	if(sFOCUS) draw_sprite_stretched_ext(THEME.dialog, 1, palette_x - p, dialog_y - p, presets_w + p2, dialog_h + p2, COLORS._main_accent, 1);
 	
-	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
+	draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
 	draw_text(presets_x + ui(24), dialog_y + ui(16), __txt("Presets"));
 	draw_text(content_x + (!interactable * ui(32)) + ui(24), dialog_y + ui(16), name);
 	if(!interactable)
@@ -147,22 +147,29 @@ draggable = true;
 	var _foc = interactable && sFOCUS;
 	
 	var bs  = ui(24);
-	var bx = content_x + content_w - bs - ui(12);
+	var bx = content_x + content_w - ui(12);
 	var by = dialog_y + ui(14);
 	
-	var t = __txtx("gradient_editor_key_blend", "Key blending");
-	var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, _hov, _foc, t, THEME.dGradient_keys_blend, 0, bc, 1, 0);
-	draggable = draggable && !b;
+	var sw = ui(104);
+	var tt = gradient.type < 2? !gradient.type : gradient.type; 
+	bx -= sw;
+	sb_blending.setFocusHover(foc, hov);
+	sb_blending.draw(bx, by, sw, bs, tt);
+	bx -= bs + ui(4);
 	
-	if(b == 2) {
-		menuCall("gradient_window_blend_menu", [ 
-			menuItem(__txtx("gradient_editor_blend_hard",  "Solid"), function() /*=>*/ { gradient.type = 1; onApply(gradient); }), 
-			menuItem(__txtx("gradient_editor_blend_RGB",   "RGB"),   function() /*=>*/ { gradient.type = 0; onApply(gradient); }), 
-			menuItem(__txtx("gradient_editor_blend_HSV",   "HSV"),   function() /*=>*/ { gradient.type = 2; onApply(gradient); }), 
-			menuItem(__txtx("gradient_editor_blend_OKLAB", "OKLAB"), function() /*=>*/ { gradient.type = 3; onApply(gradient); }), 
-		], bx + ui(32), by, fa_left, gradient);
-	}
-	bx -= bs + ui(2);
+	// var t = __txtx("gradient_editor_key_blend", "Key blending...");
+	// var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, _hov, _foc, t, THEME.dGradient_keys_blend, 0, bc, 1, 0);
+	// draggable = draggable && !b;
+	
+	// if(b == 2) {
+	// 	menuCall("gradient_window_blend_menu", [ 
+	// 		menuItem(__txtx("gradient_editor_blend_hard",  "Solid"), () => { gradient.type = 1; onApply(gradient); }), 
+	// 		menuItem(__txtx("gradient_editor_blend_RGB",   "RGB"),   () => { gradient.type = 0; onApply(gradient); }), 
+	// 		menuItem(__txtx("gradient_editor_blend_HSV",   "HSV"),   () => { gradient.type = 2; onApply(gradient); }), 
+	// 		menuItem(__txtx("gradient_editor_blend_OKLAB", "OKLAB"), () => { gradient.type = 3; onApply(gradient); }), 
+	// 	], bx + ui(32), by, fa_left, gradient);
+	// }
+	// bx -= bs + ui(2);
 	
 	var t = __txtx("gradient_editor_reverse", "Reverse");
 	var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, _hov, _foc, t, THEME.dGradient_keys_reverse, 0, bc, 1, 0);
@@ -302,14 +309,14 @@ draggable = true;
 		}
 	}
 	
-	var op_x = content_x + ui(20);
+	var op_x = content_x + ui(22);
 	var op_y = gr_y + gr_h + ui(12);
 	
 	var txt = key_selecting? key_selecting.time * 100 : 0;
 	sl_position.setFocusHover(sFOCUS, sHOVER);
 	sl_position.register();
 	sl_position.setFont(f_p2);
-	sl_position.draw(op_x, op_y, content_w - ui(40), ui(24), txt, mouse_ui);
+	sl_position.draw(op_x, op_y, content_w - ui(44), ui(24), txt, mouse_ui);
 #endregion
 
 #region selector
