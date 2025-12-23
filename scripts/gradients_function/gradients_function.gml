@@ -14,6 +14,8 @@
 	#macro gra_white_black new gradientObject([ca_white, ca_black])
 	#macro gra_black_white new gradientObject([ca_black, ca_white])
 #endregion
+	
+	////- Object
 
 function gradientKey(_time, _value) constructor {
 	time   = _time;
@@ -311,6 +313,8 @@ function gradientCache(    grad, res ) { if(is(grad, gradientObject)) grad.cache
 function gradientEval(     grad, pos ) { return is(grad, gradientObject)? grad.eval(pos)     : grad; }
 function gradientEvalFast( grad, pos ) { return is(grad, gradientObject)? grad.evalFast(pos) : grad; }
 
+	////- File
+
 function loadGradient(path) {
 	if(path == "") return noone;
 	if(!file_exists_empty(path)) return noone;
@@ -344,6 +348,8 @@ function loadGradient(path) {
 	return grad;
 }
 	
+	////- Shader
+
 function shader_set_gradient(gradient, surface, range, junc) {
 	var use_map = junc.attributes.mapped && is_surface(surface);
 	
@@ -357,7 +363,6 @@ function shader_set_gradient(gradient, surface, range, junc) {
 }
 	
 function evaluate_gradient_map(_x, gradient, surface, range, junc, fast = false) {
-	
 	var use_map = junc.attributes.mapped;
 	if(!use_map) return fast? gradient.evalFast(_x) : gradient.eval(_x);
 	
@@ -370,3 +375,23 @@ function evaluate_gradient_map(_x, gradient, surface, range, junc, fast = false)
 		
 	return surface_getpixel_ext(surface, _sx, _sy);
 }
+
+	////- Comparison
+	
+function gradient_compare_hue(g0, g1) { return gradient_hue(g0) - gradient_hue(g1); }
+function gradient_hue(g) { 
+	var K = g.keys; 
+	return array_empty(K)? 0 : array_reduce(K, function(h, k) /*=>*/ {return h + color_get_hue(k.value)}, 0) / array_length(K); 
+} 
+
+function gradient_compare_sat(g0, g1) { return gradient_sat(g0) - gradient_sat(g1); }
+function gradient_sat(g) { 
+	var K = g.keys; 
+	return array_empty(K)? 0 : array_reduce(K, function(h, k) /*=>*/ {return h + color_get_saturation(k.value)}, 0) / array_length(K); 
+} 
+
+function gradient_compare_val(g0, g1) { return gradient_val(g0) - gradient_val(g1); }
+function gradient_val(g) { 
+	var K = g.keys; 
+	return array_empty(K)? 0 : array_reduce(K, function(h, k) /*=>*/ {return h + color_get_value(k.value)}, 0) / array_length(K); 
+} 

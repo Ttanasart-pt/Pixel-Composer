@@ -1,3 +1,6 @@
+	
+	////- File
+
 function isPaletteFile(path) {
 	var ext = string_lower(filename_ext(path));
 	switch(ext) {
@@ -88,21 +91,20 @@ function palette_string_hex(palette, alpha = true) { //palette generate
 	return _str;
 }
 
-#region comparison
-	function palette_hue(p)  { return array_empty(p)? 0 : array_reduce(p, function(h, c) /*=>*/ {return h + color_get_hue(c)}, 0) / array_length(p); }
-	function palette_hue_var(p) { 
-		if(array_empty(p)) return 0;
-		
-		__avg = palette_hue(p);
-		return array_reduce(p, function(h, c) /*=>*/ {return h + sqr(color_get_hue(c) - __avg)}, 0);
-	}
+	////- Comparison
+
+function palette_compare_hue_var(p0, p1) { return palette_hue(p0) - palette_hue(p1); }
+function palette_hue(p)  { return array_empty(p)? 0 : array_reduce(p, function(h, c) /*=>*/ {return h + color_get_hue(c)}, 0) / array_length(p); }
+function palette_hue_var(p) { 
+	if(array_empty(p)) return 0;
 	
-	function palette_compare_hue_var(p0, p1) { return palette_hue(p0) - palette_hue(p1); }
-	
-	function palette_sat(p)  { return array_empty(p)? 0 : array_reduce(p, function(h, c) /*=>*/ {return h + color_get_saturation(c)}, 0) / array_length(p); }
-	function palette_compare_sat(p0, p1) { return palette_sat(p0) - palette_sat(p1); }
-	
-	function palette_val(p)  { return array_empty(p)? 0 : array_reduce(p, function(h, c) /*=>*/ {return h + color_get_value(c)}, 0) / array_length(p); }
-	function palette_compare_val(p0, p1) { return palette_val(p0) - palette_val(p1); }
-	
-#endregion
+	__avg = palette_hue(p);
+	return array_reduce(p, function(h, c) /*=>*/ {return h + sqr(color_get_hue(c) - __avg)}, 0);
+}
+
+
+function palette_compare_sat(p0, p1) { return palette_sat(p0) - palette_sat(p1); }
+function palette_sat(p)  { return array_empty(p)? 0 : array_reduce(p, function(h, c) /*=>*/ {return h + color_get_saturation(c)}, 0) / array_length(p); }
+
+function palette_compare_val(p0, p1) { return palette_val(p0) - palette_val(p1); }
+function palette_val(p)  { return array_empty(p)? 0 : array_reduce(p, function(h, c) /*=>*/ {return h + color_get_value(c)}, 0) / array_length(p); }

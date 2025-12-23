@@ -297,6 +297,21 @@ function DirectoryObject(_path) constructor {
 	
 	////- Actions
 	
+	static forEach = function(fn) {
+		for( var i = 0, n = array_length(content); i < n; i++ )
+			fn(content[i]);
+		
+		for( var i = 0, n = array_length(subDir); i < n; i++ ) 
+			subDir[i].forEach(fn);
+	}
+	
+	static sort = function(fn, _sub = false, _recur = false) {
+		array_sort(content, fn);
+		if(_sub) array_sort(subDir,  fn);
+		
+		if(_recur) for( var i = 0, n = array_length(subDir); i < n; i++ ) subDir[i].sort(fn, true);
+	}
+	
 	static destroy = function() { }
 	
 	static free = function() {

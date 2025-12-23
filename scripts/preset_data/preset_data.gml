@@ -63,6 +63,7 @@
 			array_push(PALETTES_FAV_DIR.content, _file);
 		}
 		
+		PALETTES_FOLDER.sort(function(p0, p1) /*=>*/ {return string_compare(p0.name, p1.name)});
 		array_insert(PALETTES_FOLDER.subDir, 0, PALETTES_FAV_DIR);
 	}
 	

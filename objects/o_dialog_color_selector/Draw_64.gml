@@ -1,5 +1,6 @@
 /// @description init
 if !ready exit;
+draggable = true;
 
 #region dropper
 	selector.interactable = interactable;
@@ -47,22 +48,36 @@ if !ready exit;
 	sp_presets.verify(_pw, dialog_h - ui(72 + 24));
 	sp_presets.draw(_px, _py + ui(24 + 8));
 	
-	var bx = presets_x + presets_w - ui(44);
-	var by = dialog_y + ui(12);
-	var bs = ui(28);
+	var bs  = ui(24);
+	var bx  = presets_x + presets_w - bs - ui(12);
+	var by  = dialog_y + ui(14);
+	var bb  = THEME.button_hide_fill;
+	var hov = sHOVER, foc = sFOCUS;
+	var m   = mouse_ui;
+	var bc  = COLORS._main_icon;
 	
-	if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Refresh"), THEME.refresh_20) == 2)
-		__initPalette();
-	bx -= ui(32);
+	var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, __txt("Refresh"), THEME.refresh_icon, 0, bc, 1, ui(4));
+	if(b == 2) __initPalette();
+	draggable = draggable && !b;
+	bx -= bs + ui(2);
 	
-	if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txtx("color_selector_open_palette", "Open palette folder"), THEME.dPath_open_20) == 2)
-		shellOpenExplorer($"{DIRECTORY}Palettes");
-	draw_sprite_ui_uniform(THEME.path_open_20, 1, bx + bs / 2, by + bs / 2, 1, c_white);
-	bx -= ui(32);
+	var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, __txt("View settings..."), THEME.sort_v, 0, bc, 1, ui(4));
+	if(b == 2) with menuCall("", menu_preset_sort, bx + bs, by + bs) close_on_trigger = false;
+	draggable = draggable && !b;
+	bx -= bs + ui(2);
 	
-	if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Show on Selector"), THEME.display_palette, NODE_COLOR_SHOW_PALETTE, c_white) == 2)
-		NODE_COLOR_SHOW_PALETTE = !NODE_COLOR_SHOW_PALETTE;
-	bx -= ui(32);
+	var t = __txtx("color_selector_open_palette", "Open palette folder");
+	var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, t, THEME.dPath_open_20, 0, bc, 1, 0);
+	if(b == 2) shellOpenExplorer($"{DIRECTORY}Palettes");
+	draggable = draggable && !b;
+	bx -= bs + ui(2);
+	
+	var t = __txt("Show on Selector");
+	var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, t, THEME.display_palette, NODE_COLOR_SHOW_PALETTE, c_white, 1, ui(4));
+	if(b == 2) NODE_COLOR_SHOW_PALETTE = !NODE_COLOR_SHOW_PALETTE;
+	draggable = draggable && !b;
+	bx -= bs + ui(2);
+	
 #endregion
 
 #region selector

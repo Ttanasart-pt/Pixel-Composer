@@ -56,12 +56,16 @@ draggable = true;
 	sp_presets.verify(_pw, dialog_h - ui(72 + 24));
 	sp_presets.draw(_px, _py + ui(24 + 8));
 	
-	var bx = presets_x + presets_w - ui(44);
-	var by = dialog_y + ui(12);
-	var bs = ui(28);
+	var bs  = ui(24);
+	var bx  = presets_x + presets_w - bs - ui(12);
+	var by  = dialog_y + ui(14);
+	var bb  = THEME.button_hide_fill;
+	var hov = sHOVER, foc = sFOCUS;
+	var m   = mouse_ui;
+	var bc  = COLORS._main_icon;
 	
 	var bt = __txtx("add_preset", "Add to preset");
-	var b  = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, bt, THEME.add_16);
+	var b  = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, bt, THEME.add);
 	if(b == 2) {
 		var dia = dialogCall(o_dialog_file_name, mouse_mx + ui(8), mouse_my + ui(8));
 		dia.onModify = function (txt) {
@@ -78,23 +82,27 @@ draggable = true;
 		dia.path = DIRECTORY + "Gradients/"
 	}
 	draggable = draggable && !b;
-	bx -= ui(32);
+	bx -= bs + ui(2);
+	
+	var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, __txt("View settings..."), THEME.sort_v);
+	if(b == 2) with menuCall("", menu_grad_preset_sort, bx + bs, by + bs) close_on_trigger = false;
+	draggable = draggable && !b;
+	bx -= bs + ui(2);
 	
 	var bt = __txt("Refresh");
-	var b  = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, bt, THEME.refresh_20);
+	var b  = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, bt, THEME.refresh_icon);
 	if(b == 2) { __initGradient(); }
 	draggable = draggable && !b;
-	bx -= ui(32);
+	bx -= bs + ui(2);
 	
 	var bt = __txtx("graident_editor_open_folder", "Open gradient folder");
-	var b  = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, bt, THEME.dPath_open_20);
+	var b  = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, bt, THEME.dPath_open_20, 0, bc, 1, 0);
 	if(b == 2) {
 		var _realpath = DIRECTORY + "Gradients";
 		shellOpenExplorer(_realpath)
 	}
-	draw_sprite_ui_uniform(THEME.path_open_20, 1, bx + bs / 2, by + bs / 2, 1, c_white);
 	draggable = draggable && !b;
-	bx -= ui(32);
+	bx -= bs + ui(2);
 #endregion
 
 #region palette
@@ -113,74 +121,76 @@ draggable = true;
 	sp_palettes.verify(_pw, dialog_h - ui(72 + 24));
 	sp_palettes.draw(_px, _py + ui(24 + 8));
 	
-	var bx = palette_x + palette_w - ui(44);
-	var by = dialog_y + ui(12);
-	var bs = ui(28);
+	var bs  = ui(24);
+	var bx  = palette_x + palette_w - bs - ui(12);
+	var by  = dialog_y + ui(14);
+	var bb  = THEME.button_hide_fill;
+	var hov = sHOVER, foc = sFOCUS;
+	var m   = mouse_ui;
+	var bc  = COLORS._main_icon;
 	
-	var b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Show on Selector"), THEME.display_palette, NODE_COLOR_SHOW_PALETTE, c_white);
+	var t = __txt("Show on Selector");
+	var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, t, THEME.display_palette, NODE_COLOR_SHOW_PALETTE, c_white);
 	if(b == 2) NODE_COLOR_SHOW_PALETTE = !NODE_COLOR_SHOW_PALETTE;
 	draggable = draggable && !b;
-	bx -= ui(32);
+	bx -= bs + ui(2);
 	
-	var b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("View settings..."), THEME.sort_v);
-	if(b == 2) {
-		var _menu = menuCall("", menu_preset_sort, bx + bs, by + bs);
-		_menu.close_on_trigger = false;
-	}
+	var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, __txt("View settings..."), THEME.sort_v);
+	if(b == 2) with menuCall("", menu_preset_sort, bx + bs, by + bs) close_on_trigger = false;
 	draggable = draggable && !b;
-	bx -= ui(32);
+	bx -= bs + ui(2);
 	
 #endregion
 
+#region gradient tools
+	var _hov = sHOVER;
+	var _foc = interactable && sFOCUS;
+	
+	var bs  = ui(24);
+	var bx = content_x + content_w - bs - ui(12);
+	var by = dialog_y + ui(14);
+	
+	var t = __txtx("gradient_editor_key_blend", "Key blending");
+	var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, _hov, _foc, t, THEME.dGradient_keys_blend, 0, bc, 1, 0);
+	draggable = draggable && !b;
+	
+	if(b == 2) {
+		menuCall("gradient_window_blend_menu", [ 
+			menuItem(__txtx("gradient_editor_blend_hard",  "Solid"), function() /*=>*/ { gradient.type = 1; onApply(gradient); }), 
+			menuItem(__txtx("gradient_editor_blend_RGB",   "RGB"),   function() /*=>*/ { gradient.type = 0; onApply(gradient); }), 
+			menuItem(__txtx("gradient_editor_blend_HSV",   "HSV"),   function() /*=>*/ { gradient.type = 2; onApply(gradient); }), 
+			menuItem(__txtx("gradient_editor_blend_OKLAB", "OKLAB"), function() /*=>*/ { gradient.type = 3; onApply(gradient); }), 
+		], bx + ui(32), by, fa_left, gradient);
+	}
+	bx -= bs + ui(2);
+	
+	var t = __txtx("gradient_editor_reverse", "Reverse");
+	var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, _hov, _foc, t, THEME.dGradient_keys_reverse, 0, bc, 1, 0);
+	draggable = draggable && !b;
+	
+	if(b == 2) {
+		for( var i = 0, n = array_length(gradient.keys); i < n; i++ )
+			gradient.keys[i].time = 1 - gradient.keys[i].time;
+		gradient.keys = array_reverse(gradient.keys);
+		onApply(gradient);
+	}
+	bx -= bs + ui(2);
+	
+	var t = __txt("Distribute");
+	var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, _hov, _foc, t, THEME.dGradient_keys_distribute, 0, bc, 1, 0);
+	draggable = draggable && !b;
+	
+	if(b == 2) {
+		var _stp = 1 / (array_length(gradient.keys) - (gradient.type != 1));
+		
+		for( var i = 0, n = array_length(gradient.keys); i < n; i++ )
+			gradient.keys[i].time = _stp * i;
+		onApply(gradient);
+	}
+	bx -= bs + ui(2);
+#endregion
+
 #region gradient
-	
-	#region tools
-		var _hov = sHOVER;
-		var _foc = interactable && sFOCUS;
-		
-		var bx = content_x + content_w - ui(50);
-		var by = dialog_y + ui(16);
-		
-		var t = __txtx("gradient_editor_key_blend", "Key blending");
-		var b = buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, _hov, _foc, t, THEME.dGradient_keys_blend);
-		draggable = draggable && !b;
-		
-		if(b == 2) {
-			menuCall("gradient_window_blend_menu", [ 
-				menuItem(__txtx("gradient_editor_blend_hard",  "Solid"), function() /*=>*/ { gradient.type = 1; onApply(gradient); }), 
-				menuItem(__txtx("gradient_editor_blend_RGB",   "RGB"),   function() /*=>*/ { gradient.type = 0; onApply(gradient); }), 
-				menuItem(__txtx("gradient_editor_blend_HSV",   "HSV"),   function() /*=>*/ { gradient.type = 2; onApply(gradient); }), 
-				menuItem(__txtx("gradient_editor_blend_OKLAB", "OKLAB"), function() /*=>*/ { gradient.type = 3; onApply(gradient); }), 
-			], bx + ui(32), by, fa_left, gradient);
-		}
-		bx -= ui(32);
-		
-		var t = __txtx("gradient_editor_reverse", "Reverse");
-		var b = buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, _hov, _foc, t, THEME.dGradient_keys_reverse);
-		draggable = draggable && !b;
-		
-		if(b == 2) {
-			for( var i = 0, n = array_length(gradient.keys); i < n; i++ )
-				gradient.keys[i].time = 1 - gradient.keys[i].time;
-			gradient.keys = array_reverse(gradient.keys);
-			onApply(gradient);
-		}
-		bx -= ui(32);
-		
-		var t = __txt("Distribute");
-		var b = buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, _hov, _foc, t, THEME.dGradient_keys_distribute);
-		draggable = draggable && !b;
-		
-		if(b == 2) {
-			var _stp = 1 / (array_length(gradient.keys) - (gradient.type != 1));
-			
-			for( var i = 0, n = array_length(gradient.keys); i < n; i++ )
-				gradient.keys[i].time = _stp * i;
-			onApply(gradient);
-		}
-		bx -= ui(32);
-	#endregion
-	
 	var gr_x = content_x + ui(22);
 	var gr_y = dialog_y + ui(54);
 	var gr_w = content_w - ui(44);

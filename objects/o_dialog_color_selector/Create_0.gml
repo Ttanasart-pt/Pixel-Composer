@@ -1,5 +1,6 @@
 /// @description init
 event_inherited();
+PALETTES_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.content = loadPalette(f.path); }); // Load all presets
 
 #region data
 	dialog_w = ui(812);
@@ -23,6 +24,7 @@ event_inherited();
 #endregion
 
 #region presets
+	preset_show_name = true;
 	preset_selecting = undefined;
 	preset_expands   = {};
 	
@@ -36,14 +38,17 @@ event_inherited();
 		var _foc = sp_presets.active && interactable;
 		
 		var ww  = sp_presets.surface_w - _x;
-		var _gs = sp_preset_size;
-		var hh  = 0;
-		var nh  = ui(20);
 		var pd  = ui(2);
+		var nh  = preset_show_name? ui(20) : pd;
+		
+		var _gs = sp_preset_size;
+		var  hh = 0;
+		
 		var _ww = ww - pd * 2;
 		var _bh = nh + _gs + pd;
-		var col = max(1, floor(_ww / _gs)), row, _exp;
-		var _height, pre_amo, _palRes;
+		var col = max(1, floor(_ww / _gs)), row;
+		
+		var _exp, _height, pre_amo, _palRes;
 		
 		var lbh = ui(20);
 		var sch = search_string != "";
@@ -93,7 +98,7 @@ event_inherited();
 			var _path = p.path;
 			var _palt = p.content;
 			
-			if(sch && string_pos(palette_search_string, string_lower(_name)) == 0) continue;
+			if(sch && string_pos(search_string, string_lower(_name)) == 0) continue;
 			if(!is_array(_palt)) continue;
 			
 			pre_amo  = array_length(_palt);
@@ -109,21 +114,21 @@ event_inherited();
 				sp_presets.hover_content = true;
 			}
 			
-			var cc = _palt == preset_selecting? COLORS._main_accent : COLORS._main_text;
-			draw_sprite_ui(THEME.arrow, _exp * 3, _x + ui(8), _y + nh / 2, .75, .75, 0, COLORS._main_text_sub);
-			draw_set_text(f_p4, fa_left, fa_top, cc);
-			draw_text_add(_x + ui(16), _y + ui(2), _name);
-			
-			var bx = _x + ww - ui(2) - bs;
-			var by = _y + ui(2);
-			
-			var bt = __txt("Favorite");
-			var bc = p.fav? CDEF.yellow : COLORS._main_icon;
-			var b  = buttonInstant_Pad(noone, bx, by, bs, bs, _m, _hov, _foc, bt, THEME.favorite, p.fav, bc, .85);
-			if(b) isHover = false;
-			if(b == 2) fav = p;
-			
-			if(i == -1) { draw_set_color(cc); draw_circle_prec(_x + ww - ui(10), _y + ui(10), ui(4), false); }
+			if(preset_show_name) {
+				draw_sprite_ui(THEME.arrow, _exp * 3, _x + ui(8), _y + nh / 2, .75, .75, 0, COLORS._main_text_sub);
+				draw_set_text(f_p4, fa_left, fa_top, COLORS._main_text);
+				draw_text_add(_x + ui(16), _y + ui(2), _name);
+				
+				var bx = _x + ww - ui(2) - bs;
+				var by = _y + ui(2);
+				
+				var bt = __txt("Favorite");
+				var bc = p.fav? CDEF.yellow : COLORS._main_icon;
+				var b  = buttonInstant_Pad(noone, bx, by, bs, bs, _m, _hov, _foc, bt, THEME.favorite, p.fav, bc, .85);
+				if(b) isHover = false; 
+				if(b == 2) fav = p;
+				bx -= bs + 1;
+			}
 			
 			var _hoverColor = noone;
 			if(_exp) {
@@ -185,9 +190,43 @@ event_inherited();
 	//////////////////////// SEARCH ////////////////////////
 	
 	search_string = "";
-	tb_search = new textBox(TEXTBOX_INPUT.text, function(t) /*=>*/ { search_string = string_lower(t) } )
+	tb_search = textBox_Text(function(t) /*=>*/ { search_string = string_lower(t) } )
 	               .setFont(f_p2).setHide(1).setEmpty(false).setPadding(ui(24)).setAutoUpdate();
 	
+	////////////////////////  SORT  ////////////////////////
+	
+	function sortPalettePreset(fn, _sub = false) {
+		array_remove(PALETTES_FOLDER.subDir, PALETTES_FAV_DIR);
+		PALETTES_FAV_DIR.sort(fn);
+		PALETTES_FOLDER.sort(fn, _sub, true);
+		array_insert(PALETTES_FOLDER.subDir, 0, PALETTES_FAV_DIR);
+	}
+	
+	sortPreset_name_a = function() /*=>*/ { sortPalettePreset(function(p0, p1) /*=>*/ {return string_compare(p0.name, p1.name)}, true); }
+	sortPreset_name_d = function() /*=>*/ { sortPalettePreset(function(p0, p1) /*=>*/ {return string_compare(p1.name, p0.name)}, true); }
+	
+	sortPreset_size_a = function() /*=>*/ { sortPalettePreset(function(p0, p1) /*=>*/ { return array_length(p0.content) - array_length(p1.content); }); }
+	sortPreset_size_d = function() /*=>*/ { sortPalettePreset(function(p0, p1) /*=>*/ { return array_length(p1.content) - array_length(p0.content); }); }
+	
+	sortPreset_hue_a  = function() /*=>*/ { sortPalettePreset(function(p0, p1) /*=>*/ {return palette_compare_hue_var(p0.content, p1.content)}); }
+	sortPreset_hue_d  = function() /*=>*/ { sortPalettePreset(function(p0, p1) /*=>*/ {return palette_compare_hue_var(p1.content, p0.content)}); }
+	
+	sortPreset_sat_a  = function() /*=>*/ { sortPalettePreset(function(p0, p1) /*=>*/ {return palette_compare_sat(p0.content, p1.content)}); }
+	sortPreset_sat_d  = function() /*=>*/ { sortPalettePreset(function(p0, p1) /*=>*/ {return palette_compare_sat(p1.content, p0.content)}); }
+	
+	sortPreset_val_a  = function() /*=>*/ { sortPalettePreset(function(p0, p1) /*=>*/ {return palette_compare_val(p0.content, p1.content)}); }
+	sortPreset_val_d  = function() /*=>*/ { sortPalettePreset(function(p0, p1) /*=>*/ {return palette_compare_val(p1.content, p0.content)}); }
+	
+	menu_preset_sort = [
+		menuItem(__txt("Display Name"), function() /*=>*/ { preset_show_name = !preset_show_name; }, noone, noone, function() /*=>*/ {return preset_show_name}),
+		-1,
+		new MenuItem_Sort(__txt("Name"), [ sortPreset_name_a, sortPreset_name_d ]),
+		new MenuItem_Sort(__txt("Size"), [ sortPreset_size_a, sortPreset_size_d ]),
+		-1,
+		new MenuItem_Sort(__txt("Hue Flex"),    [ sortPreset_hue_a,  sortPreset_hue_d ]),
+		new MenuItem_Sort(__txt("Sat Average"), [ sortPreset_sat_a,  sortPreset_sat_d ]),
+		new MenuItem_Sort(__txt("Val Average"), [ sortPreset_val_a,  sortPreset_val_d ]),
+	];
 #endregion
 
 #region action

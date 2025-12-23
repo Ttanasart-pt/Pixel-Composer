@@ -1,5 +1,7 @@
 /// @description init
 event_inherited();
+PALETTES_FOLDER.forEach(function(f)  /*=>*/ { if(f.content == undefined) f.content = loadPalette(f.path); }); // Load all presets
+GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.content = loadGradient(f.path); }); // Load all presets
 
 #region data
 	dialog_w = ui(1068);
@@ -214,8 +216,36 @@ event_inherited();
 	
 	gradient_search_string = "";
 	tb_preset_search       = textBox_Text(function(t) /*=>*/ { gradient_search_string = string_lower(t) } ).setFont(f_p2).setHide(1)
-									.setEmpty(false).setPadding(ui(24)).setAutoUpdate();
-									
+		.setEmpty(false).setPadding(ui(24)).setAutoUpdate();
+				
+	////////////////////////  SORT  ////////////////////////
+	
+	function sortGradientPreset(fn, _sub = false) {
+		array_remove(GRADIENTS_FOLDER.subDir, GRADIENTS_FAV_DIR);
+		GRADIENTS_FAV_DIR.sort(fn);
+		GRADIENTS_FOLDER.sort(fn, _sub, true);
+		array_insert(GRADIENTS_FOLDER.subDir, 0, GRADIENTS_FAV_DIR);
+	}
+	
+	sortGradPreset_name_a = function() /*=>*/ { sortGradientPreset(function(p0, p1) /*=>*/ {return string_compare(p0.name, p1.name)}, true); }
+	sortGradPreset_name_d = function() /*=>*/ { sortGradientPreset(function(p0, p1) /*=>*/ {return string_compare(p1.name, p0.name)}, true); }
+	
+	sortGradPreset_hue_a  = function() /*=>*/ { sortGradientPreset(function(p0, p1) /*=>*/ {return gradient_compare_hue(p0.content, p1.content)}); }
+	sortGradPreset_hue_d  = function() /*=>*/ { sortGradientPreset(function(p0, p1) /*=>*/ {return gradient_compare_hue(p1.content, p0.content)}); }
+	
+	sortGradPreset_sat_a  = function() /*=>*/ { sortGradientPreset(function(p0, p1) /*=>*/ {return gradient_compare_sat(p0.content, p1.content)}); }
+	sortGradPreset_sat_d  = function() /*=>*/ { sortGradientPreset(function(p0, p1) /*=>*/ {return gradient_compare_sat(p1.content, p0.content)}); }
+	
+	sortGradPreset_val_a  = function() /*=>*/ { sortGradientPreset(function(p0, p1) /*=>*/ {return gradient_compare_val(p0.content, p1.content)}); }
+	sortGradPreset_val_d  = function() /*=>*/ { sortGradientPreset(function(p0, p1) /*=>*/ {return gradient_compare_val(p1.content, p0.content)}); }
+	
+	menu_grad_preset_sort = [
+		new MenuItem_Sort(__txt("Name"), [ sortGradPreset_name_a, sortGradPreset_name_d ]),
+		-1,
+		new MenuItem_Sort(__txt("Hue Average"), [ sortGradPreset_hue_a,  sortGradPreset_hue_d ]),
+		new MenuItem_Sort(__txt("Sat Average"), [ sortGradPreset_sat_a,  sortGradPreset_sat_d ]),
+		new MenuItem_Sort(__txt("Val Average"), [ sortGradPreset_val_a,  sortGradPreset_val_d ]),
+	];					
 #endregion
 
 #region palette
@@ -447,20 +477,27 @@ event_inherited();
 	
 	////////////////////////  SORT  ////////////////////////
 	
-	sortPreset_name_a = function() /*=>*/ { array_sort(paletePresets, function(p0, p1) /*=>*/ {return string_compare(p0.name, p1.name)}); }
-	sortPreset_name_d = function() /*=>*/ { array_sort(paletePresets, function(p0, p1) /*=>*/ {return string_compare(p1.name, p0.name)}); }
+	function sortPalettePreset(fn, _sub = false) {
+		array_remove(PALETTES_FOLDER.subDir, PALETTES_FAV_DIR);
+		PALETTES_FAV_DIR.sort(fn);
+		PALETTES_FOLDER.sort(fn, _sub, true);
+		array_insert(PALETTES_FOLDER.subDir, 0, PALETTES_FAV_DIR);
+	}
 	
-	sortPreset_size_a = function() /*=>*/ { array_sort(paletePresets, function(p0, p1) /*=>*/ { return array_length(p0.palette) - array_length(p1.palette); }); }
-	sortPreset_size_d = function() /*=>*/ { array_sort(paletePresets, function(p0, p1) /*=>*/ { return array_length(p1.palette) - array_length(p0.palette); }); }
+	sortPreset_name_a = function() /*=>*/ { sortPalettePreset(function(p0, p1) /*=>*/ {return string_compare(p0.name, p1.name)}, true); }
+	sortPreset_name_d = function() /*=>*/ { sortPalettePreset(function(p0, p1) /*=>*/ {return string_compare(p1.name, p0.name)}, true); }
 	
-	sortPreset_hue_a  = function() /*=>*/ { array_sort(paletePresets, function(p0, p1) /*=>*/ {return palette_compare_hue_var(p0.palette, p1.palette)}); }
-	sortPreset_hue_d  = function() /*=>*/ { array_sort(paletePresets, function(p0, p1) /*=>*/ {return palette_compare_hue_var(p1.palette, p0.palette)}); }
+	sortPreset_size_a = function() /*=>*/ { sortPalettePreset(function(p0, p1) /*=>*/ { return array_length(p0.content) - array_length(p1.content); }); }
+	sortPreset_size_d = function() /*=>*/ { sortPalettePreset(function(p0, p1) /*=>*/ { return array_length(p1.content) - array_length(p0.content); }); }
 	
-	sortPreset_sat_a  = function() /*=>*/ { array_sort(paletePresets, function(p0, p1) /*=>*/ {return palette_compare_sat(p0.palette, p1.palette)}); }
-	sortPreset_sat_d  = function() /*=>*/ { array_sort(paletePresets, function(p0, p1) /*=>*/ {return palette_compare_sat(p1.palette, p0.palette)}); }
+	sortPreset_hue_a  = function() /*=>*/ { sortPalettePreset(function(p0, p1) /*=>*/ {return palette_compare_hue_var(p0.content, p1.content)}); }
+	sortPreset_hue_d  = function() /*=>*/ { sortPalettePreset(function(p0, p1) /*=>*/ {return palette_compare_hue_var(p1.content, p0.content)}); }
 	
-	sortPreset_val_a  = function() /*=>*/ { array_sort(paletePresets, function(p0, p1) /*=>*/ {return palette_compare_val(p0.palette, p1.palette)}); }
-	sortPreset_val_d  = function() /*=>*/ { array_sort(paletePresets, function(p0, p1) /*=>*/ {return palette_compare_val(p1.palette, p0.palette)}); }
+	sortPreset_sat_a  = function() /*=>*/ { sortPalettePreset(function(p0, p1) /*=>*/ {return palette_compare_sat(p0.content, p1.content)}); }
+	sortPreset_sat_d  = function() /*=>*/ { sortPalettePreset(function(p0, p1) /*=>*/ {return palette_compare_sat(p1.content, p0.content)}); }
+	
+	sortPreset_val_a  = function() /*=>*/ { sortPalettePreset(function(p0, p1) /*=>*/ {return palette_compare_val(p0.content, p1.content)}); }
+	sortPreset_val_d  = function() /*=>*/ { sortPalettePreset(function(p0, p1) /*=>*/ {return palette_compare_val(p1.content, p0.content)}); }
 	
 	menu_preset_sort = [
 		menuItem(__txt("Display Name"), function() /*=>*/ { preset_show_name = !preset_show_name; }, noone, noone, function() /*=>*/ {return preset_show_name}),

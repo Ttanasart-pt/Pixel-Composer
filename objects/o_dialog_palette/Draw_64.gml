@@ -47,42 +47,43 @@ draggable = true;
 	sp_presets.verify(_pw, dialog_h - ui(72 + 24));
 	sp_presets.draw(_px, _py + ui(24 + 8));
 	
-	var bx = presets_x + presets_w - ui(44);
-	var by = dialog_y + ui(12);
-	var bs = ui(28);
+	var bs = ui(24);
+	var bx = presets_x + presets_w - bs - ui(12);
+	var by = dialog_y + ui(14);
+	var bb  = THEME.button_hide_fill;
+	var hov = sHOVER, foc = sFOCUS;
+	var m   = mouse_ui;
+	var bc  = COLORS._main_icon;
 	
-	var b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Add preset..."), THEME.add_16);
+	var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, __txt("Add preset..."), THEME.add);
 	if(b == 2) menuCall("", menu_add, bx + bs, by + bs);
 	draggable = draggable && !b;
-	bx -= ui(32);
+	bx -= bs + ui(2);
 	
-	var b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("View settings..."), THEME.sort_v);
-	if(b == 2) {
-		var _menu = menuCall("", menu_preset_sort, bx + bs, by + bs);
-		_menu.close_on_trigger = false;
-	}
+	var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, __txt("View settings..."), THEME.sort_v);
+	if(b == 2) with menuCall("", menu_preset_sort, bx + bs, by + bs) close_on_trigger = false;
 	draggable = draggable && !b;
-	bx -= ui(32);
+	bx -= bs + ui(2);
 	
-	var b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Refresh"), THEME.refresh_20);
+	var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, __txt("Refresh"), THEME.refresh_icon);
 	if(b == 2) __initPalette();
 	draggable = draggable && !b;
-	bx -= ui(32);
+	bx -= bs + ui(2);
 	
 	var bt = __txtx("color_selector_open_palette", "Open palette folder...");
-	var b  = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, bt, THEME.dPath_open_20);
+	var b  = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, bt, THEME.dPath_open_20, 0, bc, 1, 0);
 	if(b == 2) shellOpenExplorer(DIRECTORY + "Palettes")
 	draggable = draggable && !b;
-	bx -= ui(32);
+	bx -= bs + ui(2);
 #endregion
 
 #region palette
 	#region tools
-		var bx = content_x + content_w - ui(50);
-		var by = dialog_y + ui(16);
+		var bx = content_x + content_w - bs - ui(12);
+		var by = dialog_y + ui(14);
 		
 		var _txt = index_selecting[1] < 2? __txtx("palette_editor_sort", "Sort palette...") : __txtx("palette_editor_sort_selected", "Sort selected...");
-		var b = buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, interactable && sFOCUS, _txt, THEME.sort);
+		var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, interactable && foc, _txt, THEME.sort);
 		if(b) {
 			mouse_draggable = false;
 			draggable       = false;
@@ -92,10 +93,10 @@ draggable = true;
 			var _menu = menuCall("palette_window_sort_menu", menu_palette_sort, bx + ui(32), by);
 			_menu.close_on_trigger = false;
 		}
-		bx -= ui(32);
+		bx -= bs + ui(2);
 		
 		var _txt = index_selecting[1] < 2? __txtx("palette_editor_reverse", "Reverse palette") : __txtx("palette_editor_reverse_selected", "Reverse selected");
-		var b = buttonInstant(THEME.button_hide_fill, bx, by, ui(28), ui(28), mouse_ui, sHOVER, interactable && sFOCUS, _txt, THEME.reverse);
+		var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, interactable && foc, _txt, THEME.reverse);
 		if(b) {
 			mouse_draggable = false;
 			draggable       = false;
@@ -117,10 +118,10 @@ draggable = true;
 			
 			refreshPalette();
 		}
-		bx -= ui(32);
+		bx -= bs + ui(2);
 		
 		var cc = mixer == noone? COLORS._main_icon : COLORS._main_accent;
-		var b = buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, mouse_ui, sHOVER, sFOCUS, __txt("Palette Mixer"), THEME.icon_canvas_24, 0, cc);
+		var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, __txt("Palette Mixer"), THEME.icon_canvas_24, 0, cc);
 		if(b == 2) {
 			if(mixer) {
 				mixer = noone;
@@ -132,7 +133,7 @@ draggable = true;
 			}
 		}
 		draggable = draggable && !b;
-		bx -= ui(32);
+		bx -= bs + ui(2);
 		
 	#endregion
 	
