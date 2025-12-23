@@ -179,13 +179,15 @@ function DirectoryObject(_path) constructor {
 	open      = false;
 	triggered = false;
 	scanned   = false;
+	scanType  = [];
 	
 	static getName = function() /*=>*/ {return name};
 	
-	static scan = function(file_type) {
+	static scan = function(file_type = scanType, _subDir = true) {
 		if(path == "") return;
 		
-		scanned = true;
+		scanned  = true;
+		scanType = file_type;
 		
 		var _temp_name = [];
 		var _file      = file_find_first(path + "/*", fa_directory);
@@ -195,7 +197,7 @@ function DirectoryObject(_path) constructor {
 		}
 		file_find_close();
 		
-		subDir  = [];
+		if(_subDir) subDir = [];
 		content = [];
 		
 		array_sort(_temp_name, true);
@@ -208,13 +210,20 @@ function DirectoryObject(_path) constructor {
 				array_push(content, _ndir);
 				
 			} else if(directory_exists(_path)) {
-				var fol = new DirectoryObject(_path).scan(file_type);
-				array_push(subDir, fol);
+				if(_subDir) {
+					var fol = new DirectoryObject(_path).scan(file_type);
+					array_push(subDir, fol);
+				}
 				
 			} else if(array_exists(file_type, filename_ext(file))) {
 				var f = new FileObject(_path);
 				array_push(content, f);
 			}
+		}
+		
+		if(!_subDir) {
+			for( var i = 0, n = array_length(subDir); i < n; i++ ) 
+				subDir[i].scan(file_type, false);
 		}
 		
 		return self;
@@ -296,6 +305,10 @@ function DirectoryObject(_path) constructor {
 	}
 	
 	////- Actions
+	
+	static refresh = function() {
+		scan(scanType, false);
+	}
 	
 	static forEach = function(fn) {
 		for( var i = 0, n = array_length(content); i < n; i++ )

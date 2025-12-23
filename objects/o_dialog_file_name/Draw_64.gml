@@ -1,6 +1,6 @@
 /// @description init
 #region base UI
-	draw_set_font(f_p1);
+	draw_set_font(f_p2);
 	var lbw = string_width(label) + ui(8);
 	dialog_w = lbw + tb_width + padding * 2;
 
@@ -35,7 +35,7 @@
 	bx -= bs + ui(4); tw -= bs + ui(4);
 	
 	tw -= ui(4);
-	draw_set_text(f_p1, fa_left, fa_center, COLORS._main_icon);
+	draw_set_text(f_p2, fa_left, fa_center, COLORS._main_icon);
 	draw_text(dialog_x + padding, dialog_y + dialog_h / 2, label);
 	
 	tb_name.setFocusHover(sFOCUS, sHOVER);

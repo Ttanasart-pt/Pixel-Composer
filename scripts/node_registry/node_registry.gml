@@ -526,6 +526,7 @@ function __read_node_display(_list) {
 
 function __read_node_display_folder(dir) {
 	if(!directory_exists(dir)) return;
+	// print($"Checking display: {dir}");
 	
 	var _dirs = [];
 	var _f = file_find_first(dir + "/*", fa_directory);
@@ -542,6 +543,7 @@ function __read_node_display_folder(dir) {
 		if(_f == "display_data.json") {
 			var _dpth = dir + "/" + _f;
 			var _data = json_load_struct(_dpth);
+			// print($"Read node display file: {_dpth}");
 			
 			__read_node_display(_data);
 		}
@@ -586,11 +588,8 @@ function __initNodes(unzip = true) {
 	
 	////- DISPLAY
 	
-	if(unzip) {
-		var _relFrom = $"{working_directory}data/nodes/display_data.json";
-		var _relTo   = $"{DIRECTORY}Nodes/display_data.json";
-		file_copy_override(_relFrom, _relTo);
-	}
+	var _relOld = $"{DIRECTORY}Nodes/display_data.json";
+	file_delete_safe(_relOld);
 	
 	__read_node_display_folder($"{DIRECTORY}Nodes");
 	

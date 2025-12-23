@@ -56,7 +56,10 @@ draggable = true;
 	var bc  = COLORS._main_icon;
 	
 	var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, __txt("Add preset..."), THEME.add);
-	if(b == 2) menuCall("", menu_add, bx + bs, by + bs);
+	if(b == 2) {
+		menu_add_target = "";
+		menuCall("", menu_add, bx + bs, by + bs);
+	}
 	draggable = draggable && !b;
 	bx -= bs + ui(2);
 	
@@ -66,7 +69,7 @@ draggable = true;
 	bx -= bs + ui(2);
 	
 	var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, __txt("Refresh"), THEME.refresh_icon);
-	if(b == 2) __initPalette();
+	if(b == 2) __refreshPalette();
 	draggable = draggable && !b;
 	bx -= bs + ui(2);
 	

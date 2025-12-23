@@ -57,7 +57,7 @@ draggable = true;
 	var bc  = COLORS._main_icon;
 	
 	var b = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, __txt("Refresh"), THEME.refresh_icon, 0, bc, 1, ui(4));
-	if(b == 2) __initPalette();
+	if(b == 2) __refreshPalette();
 	draggable = draggable && !b;
 	bx -= bs + ui(2);
 	

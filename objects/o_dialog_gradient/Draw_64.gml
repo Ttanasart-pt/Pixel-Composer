@@ -77,7 +77,7 @@ draggable = true;
 			}
 			
 			file_text_write_all(txt + ".txt", gradStr);
-			__initGradient();
+			__refreshGradient();
 		};
 		dia.path = DIRECTORY + "Gradients/"
 	}
@@ -91,7 +91,7 @@ draggable = true;
 	
 	var bt = __txt("Refresh");
 	var b  = buttonInstant_Pad(bb, bx, by, bs, bs, m, hov, foc, bt, THEME.refresh_icon);
-	if(b == 2) { __initGradient(); }
+	if(b == 2) { __refreshGradient(); }
 	draggable = draggable && !b;
 	bx -= bs + ui(2);
 	

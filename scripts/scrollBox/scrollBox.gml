@@ -107,6 +107,7 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 		open_rx = _rx;
 		open_ry = _ry;
 		
+		var _f = type == 1? f_p0b : font;
 		if(horizontal == 2) h = ui(80);
 		
 		data = is_method(data_list)? data_list() : data_list;
@@ -130,7 +131,7 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 		var _text = is(_selVal, scrollItem)? _selVal.name : _selVal;
 		if(is_string(_text)) _text = string_trim_start(_text, ["-", ">", " "]);
 		
-		draw_set_font(type == 1? f_p0b : font);
+		draw_set_font(_f);
 		var _txw = is_string(_text)? string_width(_text) : ui(32);
 		if(type == 1) _w = _txw + padding * 2 + ui(24);
 		
@@ -138,7 +139,7 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 		if(type == 0 && hide == 0) draw_sprite_stretched(THEME.textbox, 3, _x, _y, w, h);
 		
 		var _arr = h > ui(16);
-		var _sps = min(1, h / 24);
+		var _sps = min(1, (h - ui(4)) / line_get_height(_f));
 		var _ars = .5;
 		var _arw = _arr * (sprite_get_width(arrow_spr) * _ars + ui(8));
 		var _spr = is(_selVal, scrollItem) && _selVal.spr;
@@ -205,10 +206,9 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 			draw_text_add(_xc, _y + h - ui(4), _text);
 			
 		} else {
-			draw_set_text(type == 1? f_p0b : font, align, fa_center, text_color);
+			draw_set_text(_f, align, fa_center, text_color);
 			
 			if(is_string(_text))  {
-				
 				draw_set_alpha(0.5 + 0.5 * interactable);
 						 if(align == fa_center) { draw_text_add(_xc, _yc, _text, _sps);           _tx1 = _xc + _txw / 2;       }
 					else if(align == fa_left)   { draw_text_add(_x0 + padding, _yc, _text, _sps); _tx1 = _x0 + padding + _txw; }

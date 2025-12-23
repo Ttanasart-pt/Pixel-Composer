@@ -44,6 +44,10 @@
 		__refreshPaletteFav();
 	}
 	
+	function __refreshPalette() {
+		PALETTES_FOLDER.refresh();
+	}
+	
 	function __refreshPaletteFav() {
 		var root  = DIRECTORY + "Palettes/";
 		var fpath = root + "fav.json";
@@ -86,12 +90,13 @@
 		json_save_struct(fpath, PALETTES_FAV);
 	} 
 	
-	function addPalette_LoSpec(txt) {
+	function addPalette_LoSpec(txt, _path = "") {
 		if(txt == "") return;
 		txt = string_lower(txt);
 		txt = string_replace_all(txt, " ", "-");
 		
 		var _url = $"https://Lospec.com/palette-list{txt}.json";
+		var path = _path == ""? DIRECTORY + "Palettes/" : _path;
 		
 		asyncCall(http_get(_url), function(_param, _data) /*=>*/ {
 		    var res     = _data[? "result"];
@@ -109,14 +114,16 @@
 		    
 		    _name = string_replace_all(_name, "-", " ");
 		    
-		    var _path = $"{DIRECTORY}Palettes/{_name}.hex"
-		    var _f = file_text_open_write(_path);
+		    var _path = filename_combine(_param.path, $"{_name}.hex");
+		    var _f    = file_text_open_write(_path);
 		    	for (var i = 0, n = array_length(_colr); i < n; i++)
 		    		file_text_write_string(_f, $"{_colr[i]}\n");
 		    file_text_close(_f);
 		    __initPalette();
 		    
 		    noti_status($"Loaded palette: {_name} by {_auth} completed.", noone, COLORS._main_value_positive);	
+		}, {
+			path
 		});
 	}
 #endregion
@@ -131,6 +138,10 @@
 		
 		GRADIENTS_FOLDER = new DirectoryObject(root).scan([".txt"]);
 		__refreshGradientFav();
+	}
+	
+	function __refreshGradient() {
+		GRADIENTS_FOLDER.refresh();
 	}
 	
 	function __refreshGradientFav() {

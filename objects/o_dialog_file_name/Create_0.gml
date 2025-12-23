@@ -17,7 +17,7 @@ event_inherited();
 #region text
 	onModify = -1;
 	tb_width = ui(280);
-	tb_name  = textBox_Text(function(t) /*=>*/ { name = t; onModify(path + filename_name_validate(t)); instance_destroy(); });
+	tb_name  = textBox_Text(function(t) /*=>*/ { name = t; onModify(filename_combine(path, filename_name_validate(t))); instance_destroy(); });
 	
 	function setLabel(  _l ) { label    = _l; return self; }
 	function setName(   _n ) { name     = _n; return self; }
@@ -27,6 +27,6 @@ event_inherited();
 	
 	function setPrefix( _l ) { tb_name.setPrefix(_l); return self; }
 	
-	WIDGET_CURRENT  = tb_name;
 	KEYBOARD_RESET
+	tb_name.activate(name);
 #endregion

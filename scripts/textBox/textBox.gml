@@ -4,116 +4,130 @@ function textBox_Text(_onModify)   { return new textBox(TEXTBOX_INPUT.text,   _o
 function textBox_Number(_onModify) { return new textBox(TEXTBOX_INPUT.number, _onModify); }
 
 function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
-	onRelease = noone;
-	
-	align     = _input == TEXTBOX_INPUT.number? fa_center : fa_left;
-	yalign    = fa_top;
-	
-	hide      = false;
-	color     = COLORS._main_text;
-	postBlend = c_white;
-	postAlpha = 1;
-	format    = TEXT_AREA_FORMAT._default;
-	precision = 5;
-	padding   = ui(8);
-	base_index = 3;
-	
-	unit   = noone;
-	prefix = "";
-	suffix = "";
-	
-	no_empty    = true;
-	
-	slidable    = true;
-	sliding     = false;
-	slidePen    = false;
-	slide_delta = 0;
-	slide_int   = false;
-	slide_speed = 1 / 250;
-	
-	slide_snap  = 0;
-	slide_range = noone;
-	curr_range  = [ 0, 1 ];
-	
-	slider_dx      = 0;
-	slider_dy      = 0;
-	slider_my      = 0;
-	slider_mulp    = 0;
-	slider_def_val = 0;
-	slider_cur_val = 0;
-	slider_cur_del = 0;
-	slider_object  = noone;
-	
-	label           = "";
-	labelColor      = COLORS._main_text_sub;
-	labelSpr        = noone;
-	labelSprIndex   = 0;
-	labelAlign      = fa_left;
-	highlight_color = -1; 
-	highlight_alpha = 1;
-	
-	starting_char = 1;
-	
-	_current_text = "";
-	_input_text   = "";
-	_input_value  = 0;
-	_last_text    = "";
-	current_value = "";
-	_disp_text    = "";
-	
-	cursor			= 0;
-	cursor_pos		= 0;
-	cursor_pos_y	= 0;
-	cursor_pos_to	= 0;
-	cursor_select	= -1;
-	
-	disp_x		= 0;
-	disp_x_to	= 0;
-	disp_x_min	= 0;
-	disp_x_max	= 0;
-	
-	click_block = 0;
-	
-	use_range = false;
-	range_min = 0;
-	range_max = 0;
-	
-	disp_text_fx = [];
-	
-	sprite_index = -1;
-	
-	text_surface  = noone;
-	shake_amount  = 0;
+	onRelease     = noone;
 	onDeactivate  = -1;
-	password_show = false;
-	mouse_lhold   = false;
 	
-	undoable   = true;
-	undo_stack = ds_stack_create();
-	redo_stack = ds_stack_create();
-	
-	context_menu = [
-		menuItem("Copy",  function() /*=>*/ { clipboard_set_text(_current_text); }, THEME.copy),
-		menuItem("Paste", function() /*=>*/ { 
-			var _text = clipboard_get_text();
-			if(input == TEXTBOX_INPUT.number) _text = toNumber(_text);
-			modifyValue(_text);
-		}, THEME.paste),
-	];
-	
-	context_menu_selecting = [
-		menuItem("Copy",  function() /*=>*/ { 
-			var minc = min(cursor, cursor_select);
-			var maxc = max(cursor, cursor_select);
-			clipboard_set_text(string_copy(cursor_select, minc + 1, maxc - minc));
-		}, THEME.copy),
+	#region display
+		sprite_index = -1;
 		
-		menuItem("Paste", function() /*=>*/ { 
-			var _text = clipboard_get_text();
-			if(input == TEXTBOX_INPUT.number) _text = toNumber(_text);
-			modifyValue(_text);
-		}, THEME.paste),
-	];
+		align     = _input == TEXTBOX_INPUT.number? fa_center : fa_left;
+		yalign    = fa_top;
+		
+		hide      = false;
+		color     = COLORS._main_text;
+		postBlend = c_white;
+		postAlpha = 1;
+		format    = TEXT_AREA_FORMAT._default;
+		precision = 5;
+		padding   = ui(8);
+		base_index = 3;
+		
+		unit   = noone;
+		prefix = "";
+		suffix = "";
+	
+		disp_x		= 0;
+		disp_x_to	= 0;
+		disp_x_min	= 0;
+		disp_x_max	= 0;
+		
+		text_surface  = noone;
+		password_show = false;
+		
+		clearable = false;
+	#endregion
+	
+	#region slide
+		slidable    = true;
+		sliding     = false;
+		slidePen    = false;
+		slide_delta = 0;
+		slide_int   = false;
+		slide_speed = 1 / 250;
+		slide_snap  = 0;
+		
+		slider_dx      = 0;
+		slider_dy      = 0;
+		slider_my      = 0;
+		slider_mulp    = 0;
+		slider_def_val = 0;
+		slider_cur_val = 0;
+		slider_cur_del = 0;
+		slider_object  = noone;
+		
+		use_range   = false;
+		range_min   = 0;
+		range_max   = 0;
+		slide_range = noone;
+		curr_range  = [ 0, 1 ];
+	#endregion
+	
+	#region label
+		label           = "";
+		labelColor      = COLORS._main_text_sub;
+		labelSpr        = noone;
+		labelSprIndex   = 0;
+		labelAlign      = fa_left;
+		highlight_color = -1; 
+		highlight_alpha = 1;
+	#endregion
+	
+	#region text data
+		no_empty = true;
+		
+		_current_text = "";
+		_input_text   = "";
+		_input_value  = 0;
+		_last_text    = "";
+		current_value = "";
+		_disp_text    = "";
+	#endregion
+	
+	#region cursor
+		cursor			= 0;
+		cursor_pos		= 0;
+		cursor_pos_y	= 0;
+		cursor_pos_to	= 0;
+		cursor_select	= -1;
+	#endregion
+	
+	#region interact
+		click_block   = 0;
+		mouse_lhold   = false;
+		
+		shake_amount  = 0;
+	#endregion
+	
+	#region history
+		undoable   = true;
+		undo_stack = ds_stack_create();
+		redo_stack = ds_stack_create();
+	#endregion
+	
+	#region context menu
+		context_menu = [
+			menuItem("Copy",  function() /*=>*/ { clipboard_set_text(_current_text); }, THEME.copy),
+			menuItem("Paste", function() /*=>*/ { 
+				var _text = clipboard_get_text();
+				if(input == TEXTBOX_INPUT.number) _text = toNumber(_text);
+				modifyValue(_text);
+			}, THEME.paste),
+		];
+		
+		context_menu_selecting = [
+			menuItem("Copy",  function() /*=>*/ { 
+				var minc = min(cursor, cursor_select);
+				var maxc = max(cursor, cursor_select);
+				clipboard_set_text(string_copy(cursor_select, minc + 1, maxc - minc));
+			}, THEME.copy),
+			
+			menuItem("Paste", function() /*=>*/ { 
+				var _text = clipboard_get_text();
+				if(input == TEXTBOX_INPUT.number) _text = toNumber(_text);
+				modifyValue(_text);
+			}, THEME.paste),
+		];
+	#endregion
 	
 	////- Setters
 	
@@ -145,6 +159,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	static setEmpty      = function(  ) /*=>*/ { no_empty    = false; return self; }
 	static setFormat     = function(_f) /*=>*/ { format      = _f;    return self; }
 	static setAutoupdate = function(  ) /*=>*/ { auto_update = true;  return self; }
+	static setClearable  = function(  ) /*=>*/ { clearable   = true;  return self; }
 	static setDeactivate = function(_d) /*=>*/ { onDeactivate = _d;   return self; }
 	
 	////- Actives
@@ -1010,6 +1025,21 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				BLEND_ALPHA
 				draw_surface_ext(text_surface, tb_surf_x, tb_surf_y, 1, 1, 0, postBlend, postAlpha);
 				BLEND_NORMAL
+			}
+		}
+		
+		if(clearable && _current_text != "") {
+			var bs = min(_h - ui(6), ui(24));
+			var bx = _x + _w - ui(4) - bs / 2;
+			var by = _y + _h / 2;
+			
+			var hv = hoverRect && point_in_circle(_m[0], _m[1], bx, by, bs/2);
+			var aa = .5 + hv * .5;
+			draw_sprite_ui_uniform(THEME.cross_16, 0, bx, by, 1, COLORS._main_icon, aa);
+			
+			if(hv && mouse_lpress(active)) {
+				_input_text = "";
+				apply();
 			}
 		}
 		

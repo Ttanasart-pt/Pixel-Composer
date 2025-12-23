@@ -167,7 +167,7 @@ PALETTES_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conten
 					} else if(isHover) {
 						menuCall("palette_window_preset_menu", [
 							menuItem(__txtx("palette_editor_set_default", "Set as default"), function(p) /*=>*/ { PROJECT.setPalette(array_clone(p)); }).setParam(_palt),
-							menuItem(__txtx("palette_editor_delete",      "Delete palette"), function(p) /*=>*/ { file_delete(p); __initPalette(); }).setParam(_path),
+							menuItem(__txtx("palette_editor_delete",      "Delete palette"), function(p) /*=>*/ { file_delete(p); __refreshPalette(); }).setParam(_path),
 						]);
 					}
 				}
@@ -199,7 +199,7 @@ PALETTES_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conten
 	
 	search_string = "";
 	tb_search = textBox_Text(function(t) /*=>*/ { search_string = string_lower(t) } )
-	               .setFont(f_p2).setHide(1).setEmpty(false).setPadding(ui(24)).setAutoUpdate();
+	               .setFont(f_p2).setHide(1).setEmpty(false).setPadding(ui(24)).setAutoUpdate().setClearable();
 	
 	////////////////////////  SORT  ////////////////////////
 	

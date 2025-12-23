@@ -129,8 +129,40 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 			var _sub  = _dir.subDir[i];
 			var _open = sch || _sub.open;
 			
+			var _favFol = _sub.path == "Favorites";
+			var _hovSec = _hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + ww, _y + lbh);
 			draw_sprite_stretched(THEME.ui_panel_bg, 3, _x, _y, ww, lbh);
-			if(!sch && _hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + ww, _y + lbh)) {
+			
+			#region buttons
+				var bx = _x + ww - ui(2) - bs;
+				var by = _y + ui(2);
+				
+				if(!_favFol) {
+					var bt = __txt("Add preset to folder...");
+					var bc = [COLORS._main_icon, COLORS._main_value_positive];
+					var b  = buttonInstant_Pad(noone, bx, by, bs, bs, _m, _hover, _focus, bt, THEME.add, 0, bc, .85);
+					if(b) { _hovSec = false; isHover = false; };
+					if(b == 2) {
+						var dia = dialogCall(o_dialog_file_name, mouse_mx + ui(8), mouse_my + ui(8));
+						dia.onModify = function (txt) {
+							var gradStr = "";
+							
+							for(var i = 0; i < array_length(gradient.keys); i++) {
+								var gr = gradient.keys[i];
+								gradStr += $"{gr.value},{gr.time}\n";
+							}
+							
+							file_text_write_all(txt + ".txt", gradStr);
+							__refreshGradient();
+						};
+						dia.path = _sub.path;
+					}
+				}
+				
+				bx -= bs + 1;
+			#endregion
+			
+			if(!sch && _hovSec) {
 				draw_sprite_stretched_ext(THEME.node_bg, 1, _x, _y, ww, lbh, COLORS._main_icon, 1);
 				if(DOUBLE_CLICK && _focus) {
 					graCollAll = _open? 1 : -1;
@@ -143,7 +175,7 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 			
 			draw_sprite_ui_uniform(THEME.arrow, _open * 3, _x + ui(12), _y + lbh/2, .8, COLORS._main_icon);
 			var _tx = _x + ui(24);
-			if(_sub.path == "Favorites") {
+			if(_favFol) {
 				draw_sprite_ui_uniform(THEME.favorite, 1, _tx + ui(4), _y + lbh/2, .5, CDEF.yellow, 1);
 				_tx += ui(12);
 			}
@@ -200,7 +232,7 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 				if(mouse_press(mb_right, _focus)) {
 					menuCall("gradient_window_preset_menu", [ 
 						menuItem(__txtx("gradient_editor_delete", "Delete gradient"), 
-							function(p) /*=>*/ { file_delete(p); __initGradient(); }).setParam(g.path)
+							function(p) /*=>*/ { file_delete(p); __refreshGradient(); }).setParam(g.path)
 					]);
 				}
 			}
@@ -242,7 +274,7 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 	
 	gradient_search_string = "";
 	tb_preset_search       = textBox_Text(function(t) /*=>*/ { gradient_search_string = string_lower(t) } ).setFont(f_p2).setHide(1)
-		.setEmpty(false).setPadding(ui(24)).setAutoUpdate();
+		.setEmpty(false).setPadding(ui(24)).setAutoUpdate().setClearable();
 				
 	////////////////////////  SORT  ////////////////////////
 	
@@ -507,7 +539,7 @@ GRADIENTS_FOLDER.forEach(function(f) /*=>*/ { if(f.content == undefined) f.conte
 	
 	palette_search_string = "";
 	tb_palette_search = textBox_Text(function(t) /*=>*/ { palette_search_string = string_lower(t) } )
-		.setFont(f_p2).setHide(1).setEmpty(false).setPadding(ui(24)).setAutoUpdate();
+		.setFont(f_p2).setHide(1).setEmpty(false).setPadding(ui(24)).setAutoUpdate().setClearable();
 	
 	////////////////////////  SORT  ////////////////////////
 	

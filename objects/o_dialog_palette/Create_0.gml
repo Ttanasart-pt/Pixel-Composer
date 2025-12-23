@@ -57,6 +57,7 @@ function __PaletteColor(_color = c_black) constructor {
 	                                                                           .setTooltip(__txtx("dialog_revert_and_exit", "Revert and exit"));
 	b_apply  = button(function() /*=>*/ { onApply(palette);          instance_destroy(); }).setIcon(THEME.accept, 0, COLORS._main_icon_dark);
 	
+	menu_add_target = "";
 	menu_add = [
 		menuItem(__txt("Current Palette"), function() /*=>*/ {
 			var dia = dialogCall(o_dialog_file_name, mouse_mx + ui(8), mouse_my + ui(8));
@@ -66,13 +67,14 @@ function __PaletteColor(_color = c_black) constructor {
 					file_text_write_string(file,  $"{color_get_hex(palette[i])}\n");
 				file_text_close(file);
 				
-				__initPalette();
+				__refreshPalette();
 			};
-			dia.path = DIRECTORY + "Palettes/"
+			
+			dia.path = menu_add_target == ""? DIRECTORY + "Palettes/" : menu_add_target;
 		}),
 		
 		menuItem(__txt("Lospec"), function() /*=>*/ {
-			fileNameCall("", function(txt) /*=>*/ { addPalette_LoSpec(txt); }).setName("Palette")
+			fileNameCall("", function(txt) /*=>*/ { addPalette_LoSpec(txt, menu_add_target); }).setName("Palette")
 		}),
 	];
 #endregion
@@ -114,8 +116,28 @@ function __PaletteColor(_color = c_black) constructor {
 			var _open = sch || _sub.open;
 			if(_sub.name == "Mixer") continue;
 			
+			var _favFol = _sub.path == "Favorites";
+			var _hovSec = _hov && point_in_rectangle(_m[0], _m[1], _x, _y, _x + ww, _y + lbh);
 			draw_sprite_stretched(THEME.ui_panel_bg, 3, _x, _y, ww, lbh);
-			if(!sch && _hov && point_in_rectangle(_m[0], _m[1], _x, _y, _x + ww, _y + lbh)) {
+			
+			#region buttons
+				var bx = _x + ww - ui(2) - bs;
+				var by = _y + ui(2);
+				
+				if(!_favFol) {
+					var bt = __txt("Add preset to folder...");
+					var bc = [COLORS._main_icon, COLORS._main_value_positive];
+					var b  = buttonInstant_Pad(noone, bx, by, bs, bs, _m, _hov, _foc, bt, THEME.add, 0, bc, .85);
+					if(b) { _hovSec = false; isHover = false; };
+					if(b == 2) {
+						menu_add_target = _sub.path;
+						menuCall("", menu_add);
+					}
+					bx -= bs + 1;
+				}
+			#endregion
+			
+			if(!sch && _hovSec) {
 				draw_sprite_stretched_ext(THEME.node_bg, 1, _x, _y, ww, lbh, COLORS._main_icon, 1);
 				if(DOUBLE_CLICK && _foc) {
 					palCollAll = _open? 1 : -1;
@@ -128,13 +150,14 @@ function __PaletteColor(_color = c_black) constructor {
 			
 			draw_sprite_ui_uniform(THEME.arrow, _open * 3, _x + ui(12), _y + lbh/2, .8, COLORS._main_icon);
 			var _tx = _x + ui(24);
-			if(_sub.path == "Favorites") {
+			if(_favFol) {
 				draw_sprite_ui_uniform(THEME.favorite, 1, _tx + ui(4), _y + lbh/2, .5, CDEF.yellow, 1);
 				_tx += ui(12);
 			}
+			
 			draw_set_text(f_p4, fa_left, fa_center, COLORS._main_text);
 			draw_text_add(_tx, _y + lbh/2, _sub.name);
-			
+
 			hh += lbh + ui(4);
 			_y += lbh + ui(4);
 			
@@ -220,7 +243,7 @@ function __PaletteColor(_color = c_black) constructor {
 				menuCall("palette_window_preset_menu", [
 					menuItem(__txt("Set Palette"), function(p) /*=>*/ { setPalette(array_clone(p)); onApply(palette); }).setParam(_palt),
 					menuItem(__txtx("palette_editor_set_default", "Set as default"), function(p) /*=>*/ { PROJECT.setPalette(array_clone(p)); }).setParam(_palt),
-					menuItem(__txtx("palette_editor_delete", "Delete palette"),      function(p) /*=>*/ { file_delete(p); __initPalette(); }).setParam(_path),
+					menuItem(__txtx("palette_editor_delete", "Delete palette"),      function(p) /*=>*/ { file_delete(p); __refreshPalette(); }).setParam(_path),
 				]);
 			}
 			
@@ -248,7 +271,7 @@ function __PaletteColor(_color = c_black) constructor {
 	
 	search_string = "";
 	tb_search = textBox_Text(function(t) /*=>*/ { search_string = string_lower(t); } )
-	               .setFont(f_p2).setHide(1).setEmpty(false).setPadding(ui(24)).setAutoUpdate();
+	               .setFont(f_p2).setHide(1).setEmpty(false).setPadding(ui(24)).setAutoUpdate().setClearable();
 	
 	////////////////////////  SORT  ////////////////////////
 	
