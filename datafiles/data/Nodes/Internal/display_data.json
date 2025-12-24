@@ -614,6 +614,8 @@
             { "label": "/Animations" },
             "Node_Interlaced",
             "Node_Trail",
+            { "label": "/Analyze" },
+            "Node_Hough_Transform",
             
             { "label": "Colors" },
             { "label": "/Replacements" },

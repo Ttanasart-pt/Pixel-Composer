@@ -1,6 +1,8 @@
 function nodeValue_Output(_name, _type, _value, _tooltip = "") { return new __NodeValue_Output(_name, self, _type, _value, _tooltip); }
 function __NodeValue_Output(_name, _node, _type, _value, _tooltip = "") : NodeValue(_name, _node, CONNECT_TYPE.output, _type, _value, _tooltip) constructor {
 	
+	parameters.skip_verify = false; skipVerify = function() /*=>*/ { parameters.skip_verify = true; return self; }
+	
 	index = array_length(node.outputs);
 	
 	/////============== GET =============

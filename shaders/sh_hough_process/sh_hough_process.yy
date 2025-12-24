@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_hough_process",
+  "name":"sh_hough_process",
+  "parent":{
+    "name":"hough",
+    "path":"folders/nodes/data/filter/effects/hough.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

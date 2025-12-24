@@ -1,0 +1,6 @@
+{
+    "name":          "Hough Transform",
+    "spr":           "s_node_hough_transform",
+    "baseNode":      "Node_Hough_Transform",
+    "pxc_version":    120031,
+}
