@@ -244,7 +244,7 @@ function Node_Point_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _
 	static getPreviewObject = function() { return noone; }
 	
 	static getPreviewObjects = function() { 
-		var _posm = getSingleValue(in_d3d + 4);
+		var _posm = getInputSingle(in_d3d + 4);
 		switch(_posm) {
 			case 0 : return [ object ];
 			case 1 : return [ object, lookat, lookLine ];

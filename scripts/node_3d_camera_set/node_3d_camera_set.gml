@@ -53,7 +53,7 @@ function Node_3D_Camera_Set(_x, _y, _group = noone) : Node_3D_Camera(_x, _y, _gr
 	}
 	
 	static getPreviewObjects = function() { 
-		var _scene = getSingleValue(in_d3d + 4);
+		var _scene = getInputSingle(in_d3d + 4);
 		return [ object, lookat, lookLine, lookRad, _scene, light_key, light_fill ];
 	}
 	

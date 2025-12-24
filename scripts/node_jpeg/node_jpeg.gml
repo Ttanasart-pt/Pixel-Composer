@@ -32,7 +32,7 @@ function Node_JPEG(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	attribute_surface_depth();
 	
 	static step = function() {
-		var _reall = getSingleValue(13);
+		var _reall = getInputSingle(13);
 		inputs[4].setVisible(!_reall);
 	}
 	

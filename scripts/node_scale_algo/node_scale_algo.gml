@@ -50,8 +50,8 @@ function Node_Scale_Algo(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	static drawOverlayTransform = function(_node) { return array_safe_get(draw_transforms, preview_index, noone); }
 	
 	static step = function() {
-		var _surf = getSingleValue(0);
-		var _type = getSingleValue(1);
+		var _surf = getInputSingle(0);
+		var _type = getInputSingle(1);
 		
 		var _atlas = is_instanceof(_surf, SurfaceAtlas);
 		inputs[4].setVisible(_atlas);

@@ -72,8 +72,8 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	}
 	
 	static setGeometry = function() {
-		var _pinn = getSingleValue(3);
-		var _subd = getSingleValue(4); _subd = max(2, _subd);
+		var _pinn = getInputSingle(3);
+		var _subd = getInputSingle(4); _subd = max(2, _subd);
 		
 		points = array_create((_subd + 1) * (_subd + 1));
 		links  = array_create(2 * _subd * (_subd + 1));
@@ -125,12 +125,12 @@ function Node_MK_Flag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	}
 	
 	static stepFlag = function() {
-		var _pinn  = getSingleValue(3);
-		var _wspd  = getSingleValue(5);
-		var _wave  = getSingleValue(6);
-		var _wavz  = getSingleValue(7);
-		var _wphs  = getSingleValue(8);
-		var _clip  = getSingleValue(9);
+		var _pinn  = getInputSingle(3);
+		var _wspd  = getInputSingle(5);
+		var _wave  = getInputSingle(6);
+		var _wavz  = getInputSingle(7);
+		var _wphs  = getInputSingle(8);
+		var _clip  = getInputSingle(9);
 		
 		var _tps = CURRENT_FRAME / TOTAL_FRAMES * _wspd * pi * 2;
 		var _wve = _wave * pi;

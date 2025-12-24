@@ -744,12 +744,12 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	////- Nodes
 	
 	static getDimension = function(arr = 0) {
-		var _surf     = getSingleValue( 0, arr);
-		var _out_type = getSingleValue( 9, arr);
-		var _dim      = getSingleValue( 1, arr);
-		var _dimScal  = getSingleValue(15, arr);
-		var _rotate   = getSingleValue( 5, arr);
-		var _scale    = getSingleValue( 6, arr);
+		var _surf     = getInputSingle( 0, arr);
+		var _out_type = getInputSingle( 9, arr);
+		var _dim      = getInputSingle( 1, arr);
+		var _dimScal  = getInputSingle(15, arr);
+		var _rotate   = getInputSingle( 5, arr);
+		var _scale    = getInputSingle( 6, arr);
 		var ww, hh;
 		
 		var sw  = surface_get_width_safe(_surf);
@@ -811,7 +811,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	static step = function() {
 		if(!PROJECT.animator.frame_progress) return;
-		var pos = getSingleValue(2);
+		var pos = getInputSingle(2);
 		
 		if(IS_FIRST_FRAME) {
 			vel = 0;

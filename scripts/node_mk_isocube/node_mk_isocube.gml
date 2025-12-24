@@ -61,14 +61,14 @@ function Node_MK_IsoCube(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		draw_set_color(COLORS._main_accent);
 		
-		var _base  = getSingleValue(0);
-		var _basOf = getSingleValue(8);
+		var _base  = getInputSingle(0);
+		var _basOf = getInputSingle(8);
 		
-		var _dept  = getSingleValue(1);
-		var _depOf = getSingleValue(2);
-		var _depRf = getSingleValue(3);
+		var _dept  = getInputSingle(1);
+		var _depOf = getInputSingle(2);
+		var _depRf = getInputSingle(3);
 		
-		var _padd  = getSingleValue(7);
+		var _padd  = getInputSingle(7);
 		
 		__x = _x + _padd[2] * _s; 
 		__y = _y + _padd[1] * _s; 

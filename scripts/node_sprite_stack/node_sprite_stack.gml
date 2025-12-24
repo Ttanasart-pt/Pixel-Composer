@@ -153,15 +153,15 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	}
 	
 	static drawPreviewCustom = function() {
-		var _in  = getSingleValue(0);
-		var _dim = getSingleValue(1);
-		var _shf = getSingleValue(3);
+		var _in  = getInputSingle(0);
+		var _dim = getInputSingle(1);
+		var _shf = getInputSingle(3);
 		
-		var _pos = getSingleValue(4);
-		var _rot = getSingleValue(5);
-		var _col = getSingleValue(6);
-		var _alp = getSingleValue(7);
-		var _mov = getSingleValue(8);
+		var _pos = getInputSingle(4);
+		var _rot = getInputSingle(5);
+		var _col = getInputSingle(6);
+		var _alp = getInputSingle(7);
+		var _mov = getInputSingle(8);
 		
 		_pos     = [ _pos[0], _pos[1] ];
 		

@@ -56,10 +56,10 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 
 		PROCESSOR_OVERLAY_CHECK
 		
-		var  dim = getSingleValue(0);
-		var  typ = getSingleValue(2);
-		var  rot = getSingleValue(3);
-		var  pos = getSingleValue(6);
+		var  dim = getInputSingle(0);
+		var  typ = getInputSingle(2);
+		var  rot = getInputSingle(3);
+		var  pos = getInputSingle(6);
 		
 		InputDrawOverlay(inputs[ 6].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		InputDrawOverlay(inputs[16].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, current_data[0]));

@@ -165,9 +165,9 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		if(!attributes.show_tile_index) return;
 		
-		var _tex = getSingleValue(0);
-		var _typ = getSingleValue(2);
-		var _out = getSingleValue(0,, true);
+		var _tex = getInputSingle(0);
+		var _typ = getInputSingle(2);
+		var _out = getInputSingle(0,, true);
 		
 		if(!is_surface(_tex)) return;
 		if(!is_surface(_out)) return;

@@ -25,7 +25,7 @@ function Node_Shard_Noise(_x, _y, _group = noone) : Node_Shader_Generator(_x, _y
 	];
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		var _pos = getSingleValue(1);
+		var _pos = getInputSingle(1);
 		var  px  = _x + _pos[0] * _s;
 		var  py  = _y + _pos[1] * _s;
 		

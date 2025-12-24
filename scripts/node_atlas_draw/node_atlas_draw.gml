@@ -29,7 +29,7 @@ function Node_Atlas_Draw(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	temp_surface = [0,0,0];
 	
 	static preGetInputs = function() {
-		var _comb = getSingleValue(2);
+		var _comb = getInputSingle(2);
 		inputs[1].setArrayDepth(_comb);
 	}
 	

@@ -61,7 +61,7 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	}
 	
 	static processData_prebatch = function() {
-		var _type = getSingleValue(12);
+		var _type = getInputSingle(12);
 		
 		inputs[ 0].setVisible(_type == 0, _type == 0);
 		inputs[ 8].setVisible(_type == 0, _type == 0);

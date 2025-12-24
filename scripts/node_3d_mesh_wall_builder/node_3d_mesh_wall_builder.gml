@@ -65,5 +65,5 @@ function Node_3D_Mesh_Wall_Builder(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y
 		return object;
 	}
 	
-	static getPreviewValues = function() { return getSingleValue(in_mesh + 5); }
+	static getPreviewValues = function() { return getInputSingle(in_mesh + 5); }
 }

@@ -27,9 +27,9 @@ function Node_3D_Mesh_Vertex_Points(_x, _y, _group = noone) : Node_Processor(_x,
 		
 		////////////////////////////////////////////////// DRAW POINTS //////////////////////////////////////////////////
 		
-		var _center = getSingleValue(1);
-		var _hsize  = getSingleValue(2);
-		var _points = getSingleValue(0, preview_index, true);
+		var _center = getInputSingle(1);
+		var _hsize  = getInputSingle(2);
+		var _points = getInputSingle(0, preview_index, true);
 		
 		var _v3 = new __vec3();
 		draw_set_circle_precision(32);

@@ -35,9 +35,9 @@ function Node_Array_Range(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
-		var str = getSingleValue(0);
-		var edd = getSingleValue(1);
-		var stp = getSingleValue(2);
+		var str = getInputSingle(0);
+		var edd = getInputSingle(1);
+		var stp = getInputSingle(2);
 		var arr = outputs[0].getValue();
 		
 		var str	= "";

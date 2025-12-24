@@ -32,8 +32,8 @@ function Node_3D_Set_Material(_x, _y, _group = noone) : Node_3D_Modifier(_x, _y,
 	}
 	
 	static getPreviewValues = function() {
-		var res = getSingleValue(in_mesh + 0);
-		var sng = getSingleValue(in_mesh + 1);
+		var res = getInputSingle(in_mesh + 0);
+		var sng = getInputSingle(in_mesh + 1);
 		if(sng) return res; 
 		
 		var _r = array_create(array_length(res));

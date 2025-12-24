@@ -15,7 +15,7 @@ function Node_PB_Box_Point(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		var _pbbox = getSingleValue(0);
+		var _pbbox = getInputSingle(0);
 		if(is(_pbbox, __pbBox)) {
 			draw_set_color(COLORS._main_icon);
 			_pbbox.drawOverlayBBOX(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, self);
@@ -23,7 +23,7 @@ function Node_PB_Box_Point(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	}
 	
 	static getDimension = function() {
-	    var _pbbox = getSingleValue(0);
+	    var _pbbox = getInputSingle(0);
 	    var _bbox  = _pbbox.getBBOX();
 	    return [ _bbox[2] - _bbox[0], _bbox[3] - _bbox[1] ];
 	}

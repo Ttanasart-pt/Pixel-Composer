@@ -24,17 +24,17 @@ function Node_PB_Box_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	]
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		var _pbase = getSingleValue(0);
+		var _pbase = getInputSingle(0);
 		
 		if(is(_pbase, __pbBox)) {
 			draw_set_color(COLORS._main_icon_light);
 			_pbase.drawOverlayBBOX(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, self);
 		}
 		
-		var _pbres = getSingleValue(0,, true);
+		var _pbres = getInputSingle(0,, true);
 		if(is(_pbres, __pbBox)) _pbres.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, self);
 		
-		var _pbres = getSingleValue(1,, true);
+		var _pbres = getInputSingle(1,, true);
 		if(is(_pbres, __pbBox)) _pbres.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, self);
 	}
 	

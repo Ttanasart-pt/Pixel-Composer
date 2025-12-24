@@ -44,8 +44,8 @@ function Node_2D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var _px  = _x + _dim[0] / 2 * _s;
 		var _py  = _y + _dim[1] / 2 * _s;
 		
-		var _ang  = getSingleValue(1);
-		var _dist = getSingleValue(2);
+		var _ang  = getInputSingle(1);
+		var _dist = getInputSingle(2);
 		
 		var _dx = lengthdir_x(_dist, _ang) * _s;
 		var _dy = lengthdir_y(_dist, _ang) * _s;

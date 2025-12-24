@@ -57,8 +57,8 @@ function Node_MK_Rain(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		draw_set_color(COLORS._main_accent);
 		
 		var _dim = getDimension();
-		var _grdUse = getSingleValue(18);
-		var _grpRng = getSingleValue(19);
+		var _grdUse = getInputSingle(18);
+		var _grpRng = getInputSingle(19);
 		
 		if(_grdUse) {
 			var _x0 = 0;

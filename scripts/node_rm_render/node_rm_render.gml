@@ -52,7 +52,7 @@ function Node_RM_Render(_x, _y, _group = noone) : Node_RM(_x, _y, _group) constr
 	static drawOverlay3D = function(active, _mx, _my, _snx, _sny, _params) {}
 	
 	static step = function() {
-		var _pro = getSingleValue( 1);
+		var _pro = getInputSingle( 1);
 		
 		inputs[3].setVisible(_pro == 1);
 	}

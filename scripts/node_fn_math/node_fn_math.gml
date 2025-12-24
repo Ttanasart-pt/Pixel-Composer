@@ -35,8 +35,8 @@ function Node_Fn_Math(_x, _y, _group = noone) : Node_Fn(_x, _y, _group) construc
 	}
 	
 	static refreshDisplayX = function(i) { 
-		var _v0 = getSingleValue(inl + 1);
-		var _v1 = getSingleValue(inl + 2);
+		var _v0 = getInputSingle(inl + 1);
+		var _v1 = getInputSingle(inl + 2);
 		
 		var _f0 = inputs[inl + 1].value_from;
 		if(_f0 != noone && is_instanceof(_f0.node, Node_Fn)) 

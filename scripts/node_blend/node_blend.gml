@@ -99,9 +99,9 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		if(is_struct(_surf)) return;
 		if(!surface_exists(_surf)) return;
 		
-		var _fore = getSingleValue( 1);
-		var _fill = getSingleValue( 5);
-		var _posi = getSingleValue(14);
+		var _fore = getInputSingle( 1);
+		var _fill = getInputSingle( 5);
+		var _posi = getInputSingle(14);
 		if(_fill) return;
 		
 		var hovering = false;
@@ -158,10 +158,10 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	}
 	
 	static processData_prebatch  = function() {
-		var _back = getSingleValue(0);
-		var _fore = getSingleValue(1);
-		var _fill = getSingleValue(5);
-		var _outp = getSingleValue(6);
+		var _back = getInputSingle(0);
+		var _fore = getInputSingle(1);
+		var _fill = getInputSingle(5);
+		var _outp = getInputSingle(6);
 		
 		var _atlas  = is(_fore, SurfaceAtlas);
 		

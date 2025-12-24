@@ -40,7 +40,7 @@ function Node_Path_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		InputDrawOverlay(outputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params));
 		
-		var _pos = getSingleValue(2);
+		var _pos = getInputSingle(2);
 		var _px = _x + _pos[0] * _s;
 		var _py = _y + _pos[1] * _s;
 		

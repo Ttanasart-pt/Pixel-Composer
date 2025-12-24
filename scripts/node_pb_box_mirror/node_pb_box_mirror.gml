@@ -17,9 +17,9 @@ function Node_PB_Box_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	]
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		var _pbase = getSingleValue(0);
-		var _pbbox = getSingleValue(1);
-		var _axis  = getSingleValue(2);
+		var _pbase = getInputSingle(0);
+		var _pbbox = getInputSingle(1);
+		var _axis  = getInputSingle(2);
 		
 		if(is(_pbase, __pbBox)) {
 			draw_set_color(COLORS._main_icon);
@@ -53,7 +53,7 @@ function Node_PB_Box_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			_pbbox.drawOverlayBBOX(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, self);
 		}
 		
-		var _pbres = getSingleValue(0,, true);
+		var _pbres = getInputSingle(0,, true);
 		if(is(_pbres, __pbBox)) _pbres.drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, self);
 	}
 	

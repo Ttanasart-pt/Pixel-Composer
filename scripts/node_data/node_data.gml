@@ -494,7 +494,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static checkMask = function() {
-		var _msk = is_surface(getSingleValue(__mask_index));
+		var _msk = is_surface(getInputSingle(__mask_index));
 		inputs[__mask_mod_index + 0].setVisible(_msk);
 		inputs[__mask_mod_index + 1].setVisible(_msk);
 	}
@@ -3157,8 +3157,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	////- CLEAN UP
 	
 	static cleanUp = function() {
-		for( var i = 0; i < array_length(inputs);  i++ ) { inputs[i].cleanUp();  delete inputs[i];  }
-		for( var i = 0; i < array_length(outputs); i++ ) { outputs[i].cleanUp(); delete outputs[i]; }
+		for( var i = 0, n = array_length(inputs); i < n;  i++ ) { inputs[i].cleanUp();  delete inputs[i];  }
+		for( var i = 0, n = array_length(outputs); i < n; i++ ) { outputs[i].cleanUp(); delete outputs[i]; }
 		
 		if(struct_has(self, "__blur_pass")) {
 			surface_free_safe(__blur_pass[0]);

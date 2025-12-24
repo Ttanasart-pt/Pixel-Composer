@@ -43,24 +43,24 @@ function Node_Grid_Pentagonal(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	attribute_surface_depth();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		var _pos = getSingleValue(1);
-		var _rot = getSingleValue(4);
+		var _pos = getInputSingle(1);
+		var _rot = getInputSingle(4);
 		var  px  = _x + _pos[0] * _s;
 		var  py  = _y + _pos[1] * _s;
 		
 		InputDrawOverlay(inputs[ 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny                    ));
 		InputDrawOverlay(inputs[ 2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny, 1, 1, _rot        ));
 		InputDrawOverlay(inputs[ 4].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny                    ));
-		InputDrawOverlay(inputs[15].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, getSingleValue(0) ));
+		InputDrawOverlay(inputs[15].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, getInputSingle(0) ));
 		
 		return w_hovering;
 	}
 	
 	static getDimension = function(_arr = 0) {
-		var _dim = getSingleValue( 0, _arr);
-		var _sam = getSingleValue( 7, _arr);
-		var _mod = getSingleValue( 8, _arr);
-		var _txd = getSingleValue(17, _arr);
+		var _dim = getInputSingle( 0, _arr);
+		var _sam = getInputSingle( 7, _arr);
+		var _mod = getInputSingle( 8, _arr);
+		var _txd = getInputSingle(17, _arr);
 		var _tex = _mod == 2 || _mod == 3;
 		
 		if(is_surface(_sam) && _tex && _txd) 

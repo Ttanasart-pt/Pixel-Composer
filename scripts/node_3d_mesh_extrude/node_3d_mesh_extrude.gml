@@ -113,5 +113,5 @@ function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 		return _object;
 	}
 	
-	static getPreviewValues = function() /*=>*/ {return getSingleValue(in_mesh + 0)};
+	static getPreviewValues = function() /*=>*/ {return getInputSingle(in_mesh + 0)};
 }

@@ -29,7 +29,7 @@ function Node_Texture_Remap(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	static processData_prebatch  = function() { 
 		shader_preset_interpolation(sh_texture_remap);  
 		
-		var _arr = getSingleValue(4);
+		var _arr = getInputSingle(4);
 		inputs[0].setArrayDepth(_arr);
 	}
 	

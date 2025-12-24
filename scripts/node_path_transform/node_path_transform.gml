@@ -114,7 +114,7 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	}
 	
 	static setCenter = function() /*=>*/ {
-		var _path = getSingleValue(0);
+		var _path = getInputSingle(0);
 		if(!is_path(_path)) return;
 		
 		var _bbox = _path.getBoundary();
@@ -129,11 +129,11 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		InputDrawOverlay(outputs[0].drawOverlay(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params));
 		
-		var _ori = getSingleValue(4);
+		var _ori = getInputSingle(4);
 		var ox = _x + _ori[0] * _s;
 		var oy = _y + _ori[1] * _s;
 		
-		var _pos = getSingleValue(1);
+		var _pos = getInputSingle(1);
 		var  px  = ox + _pos[0] * _s;
 		var  py  = oy + _pos[1] * _s;
 		

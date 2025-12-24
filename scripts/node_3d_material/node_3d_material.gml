@@ -69,5 +69,5 @@ function Node_3D_Material(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 	}
 	
 	static getPreviewValues       = function() /*=>*/ {return inputs[0].getValue()};
-	static getGraphPreviewSurface = function() /*=>*/ {return getSingleValue(0)};
+	static getGraphPreviewSurface = function() /*=>*/ {return getInputSingle(0)};
 }

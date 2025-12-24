@@ -37,7 +37,7 @@ function Node_Matrix(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var siz  = getSingleValue(0);
+		var siz  = getInputSingle(0);
 		var str  = $"[{siz[0]}x{siz[1]}]";
 		var bbox = draw_bbox;
 		

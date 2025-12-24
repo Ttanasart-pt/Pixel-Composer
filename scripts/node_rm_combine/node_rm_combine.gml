@@ -64,8 +64,8 @@ function Node_RM_Combine(_x, _y, _group = noone) : Node_RM(_x, _y, _group) const
 	static drawOverlay3D = function(active, _mx, _my, _snx, _sny, _params) {}
 	
 	static step = function() {
-		var _type = getSingleValue(15);
-		var _ren  = getSingleValue(17);
+		var _type = getInputSingle(15);
+		var _ren  = getInputSingle(17);
 		
 		inputs[16].setVisible(_type > 0);
 		

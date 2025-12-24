@@ -449,8 +449,8 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	dis = 0;
 		
 	static drawOverlay    = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		var _flares = getSingleValue(5);
-		var _sca    = getSingleValue(3);
+		var _flares = getInputSingle(5);
+		var _sca    = getInputSingle(3);
 		
 		draw_set_circle_precision(32);
 		for( var i = 0, n = array_length(_flares); i < n; i++ ) {
@@ -496,8 +496,8 @@ function Node_MK_Flare(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	}
 	
 	static getDimension   = function(arr = 0) {
-		var _sr = getSingleValue(0, arr);
-		var _dm = getSingleValue(2, arr);
+		var _sr = getInputSingle(0, arr);
+		var _dm = getInputSingle(2, arr);
 		
 		if(is_surface(_sr)) 
 			return surface_get_dimension(_sr);

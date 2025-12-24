@@ -47,10 +47,10 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	warp_surface = array_create(2);
 	
 	static getDimension = function(arr = 0) {
-		var _surfF  = getSingleValue(0);
-		var _dimTyp = getSingleValue(6);
-		var _dim    = getSingleValue(7);
-		var _sdim   = getSingleValue(9);
+		var _surfF  = getInputSingle(0);
+		var _dimTyp = getInputSingle(6);
+		var _dim    = getInputSingle(7);
+		var _sdim   = getInputSingle(9);
 			
 		var sw = 1;
 		var sh = 1;

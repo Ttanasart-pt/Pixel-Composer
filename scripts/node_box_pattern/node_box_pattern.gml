@@ -54,7 +54,7 @@ function Node_Box_Pattern(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	}
 	
 	static step = function() {
-		var _pat = getSingleValue(11);
+		var _pat = getInputSingle(11);
 		inputs[ 9].setVisible(_pat == 0);
 		inputs[12].setVisible(_pat == 1);
 	}

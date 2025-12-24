@@ -45,10 +45,10 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var cx   = _x + ww / 2;
 		var cy   = _y + ww / 2;
 		
-		var _typ = getSingleValue(11);
+		var _typ = getInputSingle(11);
 		
 		if(_typ == 0) {
-			var shf = getSingleValue(3);
+			var shf = getInputSingle(3);
 			var sx  = cx + shf[0] * _s;
 			var sy  = cy + shf[1] * _s;
 			
@@ -58,7 +58,7 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	 		InputDrawOverlay(inputs[ 3].drawOverlay(w_hoverable, active, cx, cy, _s, _mx, _my, _snx, _sny, 1));
 	 		
 		} else if(_typ == 1) {
-			var shf = getSingleValue(12);
+			var shf = getInputSingle(12);
 			var sx  = _x + shf[0] * _s;
 			var sy  = _y + shf[1] * _s;
 			

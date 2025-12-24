@@ -65,10 +65,10 @@ function Node_Mirror_Polar(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	}
 	
 	static getDimension = function(arr = 0) { 
-		var _surf = getSingleValue(0, arr);
-		var _outt = getSingleValue(7, arr);
-		var _relS = getSingleValue(8, arr);
-		var _conS = getSingleValue(9, arr);
+		var _surf = getInputSingle(0, arr);
+		var _outt = getInputSingle(7, arr);
+		var _relS = getInputSingle(8, arr);
+		var _conS = getInputSingle(9, arr);
 		
 		var _dim = surface_get_dimension(_surf);
 		

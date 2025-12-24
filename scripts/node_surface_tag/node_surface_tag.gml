@@ -198,7 +198,7 @@ function Node_Surface_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _amo  = getInputAmount();
 	    for( var i = 0; i < _amo; i++ ) {
 	        var _ind = input_fix_len + i * data_length;
-	        var _tag_name = getSingleValue(_ind + 0);
+	        var _tag_name = getInputSingle(_ind + 0);
 	        inputs[_ind + 1].setName($"{_tag_name} positions");
 	    }
 	}

@@ -40,7 +40,7 @@ function Node_Noise_Aniso(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	attribute_surface_depth();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		var _pos = getSingleValue(3);
+		var _pos = getInputSingle(3);
 		var  px  = _x + _pos[0] * _s;
 		var  py  = _y + _pos[1] * _s;
 		

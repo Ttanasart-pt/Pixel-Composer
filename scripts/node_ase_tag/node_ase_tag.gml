@@ -23,7 +23,7 @@ function Node_ASE_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			return ui(32);
 		}
 		
-		var _tag = getSingleValue(1);
+		var _tag = getInputSingle(1);
 		var _amo = array_length(ase_data.tags);
 		var hh   = ui(24);
 		var _h   = hh * _amo + ui(16);

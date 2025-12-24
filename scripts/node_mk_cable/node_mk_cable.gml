@@ -51,14 +51,14 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	gravy = 0; gravsy = 0;
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		var _type = getSingleValue(15);
+		var _type = getInputSingle(15);
 		
 		if(_type == 0) {
-			var _pos1 = getSingleValue( 1);
-			var _pos2 = getSingleValue( 2);
+			var _pos1 = getInputSingle( 1);
+			var _pos2 = getInputSingle( 2);
 			
-			var _rad1 = getSingleValue( 9);
-			var _rad2 = getSingleValue(10);
+			var _rad1 = getInputSingle( 9);
+			var _rad2 = getInputSingle(10);
 			
 			var _p1x = _x + _pos1[0]*_s;
 			var _p1y = _y + _pos1[1]*_s;
@@ -131,8 +131,8 @@ function Node_MK_Cable(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	}
 	
 	static getDimension = function(arr = 0) { 
-		var _surf = getSingleValue(0, arr);
-		var _dimm = getSingleValue(19, arr);
+		var _surf = getInputSingle(0, arr);
+		var _dimm = getInputSingle(19, arr);
 		
 		return is_surface(_surf)? surface_get_dimension(_surf) : _dimm;
 	} 

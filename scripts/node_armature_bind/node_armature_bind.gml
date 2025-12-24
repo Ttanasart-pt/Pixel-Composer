@@ -325,7 +325,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		surfMap = {};
 		
 		var amo      = min(array_length(inputs) - data_length, array_length(current_data));
-		var _bind    = getSingleValue(2);
+		var _bind    = getInputSingle(2);
 		var use_data = _bind != noone;
 		var _surfAmo = getInputAmount();
 		
@@ -1210,7 +1210,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	////- Update
 	
 	static processData_prebatch = function() {
-		var _dim_type = getSingleValue(1);
+		var _dim_type = getInputSingle(1);
 		inputs[2].setVisible(_dim_type == COMPOSE_OUTPUT_SCALING.constant);
 		
 		for( var i = input_fix_len, n = array_length(inputs); i < n; i += data_length ) {

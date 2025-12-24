@@ -38,8 +38,8 @@ function Node_MK_Saber(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	surface_blur_init();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		var _p1 = getSingleValue(1);
-		var _p2 = getSingleValue(2);
+		var _p1 = getInputSingle(1);
+		var _p2 = getInputSingle(2);
 		
 		var _p1x = _x + _p1[0] * _s;
 		var _p1y = _y + _p1[1] * _s;

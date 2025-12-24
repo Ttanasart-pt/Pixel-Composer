@@ -385,7 +385,7 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	} #endregion
 	
 	static drawOverlay3D = function(active, _mx, _my, _snx, _sny, _params) {
-		var _pos    = getSingleValue(2);
+		var _pos    = getInputSingle(2);
 		var _camera = _params.scene.camera;
 		var _vpos   = new __vec3( -_pos[0], _pos[2], -_pos[1] );
 		
@@ -399,9 +399,9 @@ function Node_RM_Primitive(_x, _y, _group = noone) : Node_RM(_x, _y, _group) con
 	}
 	
 	static step = function() {
-		var _shp = getSingleValue( 1);
-		var _ort = getSingleValue(13);
-		var _ren = getSingleValue(44);
+		var _shp = getInputSingle( 1);
+		var _ort = getInputSingle(13);
+		var _ren = getInputSingle(44);
 		
 		inputs[21].setVisible(false);
 		inputs[22].setVisible(false);

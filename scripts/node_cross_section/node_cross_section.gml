@@ -34,9 +34,9 @@ function Node_Cross_Section(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, params) {
 		PROCESSOR_OVERLAY_CHECK
 		
-		var _surf = getSingleValue(0);
-		var _iaxs = getSingleValue(1);
-		var _posi = getSingleValue(2);
+		var _surf = getInputSingle(0);
+		var _iaxs = getInputSingle(1);
+		var _posi = getInputSingle(2);
 		var _dim  = getDimension();
 		
 		if(_iaxs == 0) {

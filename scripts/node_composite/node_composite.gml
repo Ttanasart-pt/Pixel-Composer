@@ -897,7 +897,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		PROCESSOR_OVERLAY_CHECK
 		
 		var pad   = current_data[0];
-		var outs  = getSingleValue(0, preview_index, true);
+		var outs  = getInputSingle(0, preview_index, true);
 		var ww    = surface_get_width_safe(outs);
 		var hh    = surface_get_height_safe(outs);
 		var panel = _params[$ "panel"] ?? noone;
@@ -1658,10 +1658,10 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	static getDimension = function(arr = 0) { 
 		if(getInputAmount() == 0) return [1,1];
 		
-		var _pad  = getSingleValue(0, arr);
-		var _dimt = getSingleValue(1, arr);
-		var _dim  = getSingleValue(2, arr);
-		var base  = getSingleValue(3, arr);
+		var _pad  = getInputSingle(0, arr);
+		var _dimt = getInputSingle(1, arr);
+		var _dim  = getInputSingle(2, arr);
+		var base  = getInputSingle(3, arr);
 		
 		var ww = 0, hh = 0;
 		
@@ -1673,7 +1673,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				
 			case COMPOSE_OUTPUT_SCALING.largest :
 				for(var i = input_fix_len; i < array_length(inputs) - data_length; i += data_length) {
-					var _s = getSingleValue(i, arr);
+					var _s = getInputSingle(i, arr);
 					ww = max(ww, surface_get_width_safe(_s));
 					hh = max(hh, surface_get_height_safe(_s));
 				}

@@ -33,7 +33,7 @@ function Node_Delay_Value(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		for( var i = 0; i < process_amount; i++ ) 
 			data_indexes[i] = array_verify(data_indexes[i], TOTAL_FRAMES);
 			
-		var _ovr = getSingleValue(2);
+		var _ovr = getInputSingle(2);
 		inputs[3].setVisible(_ovr == 2, _ovr == 2);
 		
 		var _frm = inputs[0].value_from;
@@ -66,7 +66,7 @@ function Node_Delay_Value(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var str  = getSingleValue(0, preview_index, true);
+		var str  = getInputSingle(0, preview_index, true);
 		var bbox = draw_bbox;
 		
 		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);

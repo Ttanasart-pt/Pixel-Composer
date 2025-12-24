@@ -456,11 +456,11 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {}
 	
-	static getPreviewObject = function() {  return getSingleValue(in_d3d + 4); }
+	static getPreviewObject = function() {  return getInputSingle(in_d3d + 4); }
 	
 	static getPreviewObjects = function() { 
 		var _posm  = getInputData(in_d3d + 9);
-		var _scene = getSingleValue(in_d3d + 4);
+		var _scene = getInputSingle(in_d3d + 4);
 		
 		switch(_posm) {
 			case 0 : return [ object, _scene ];

@@ -116,7 +116,7 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var sp_t = _y + _splice[1] * _s;
 			var sp_b = _y + (dim[1] - _splice[3]) * _s;
 			
-			var _out = getSingleValue(0,, true);
+			var _out = getInputSingle(0,, true);
 			draw_surface_ext_safe(_out, sp_l, sp_t, _s, _s);
 			
 			if(isUsingTool(0)) {
@@ -317,7 +317,7 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _px1 = _px0 + _width  * _s;
 			var _py1 = _py0 + _height * _s;
 			
-			var _out = getSingleValue(0,, true);
+			var _out = getInputSingle(0,, true);
 			draw_surface_ext_safe(_out, _px0, _py0, _s, _s);
 			
 			draw_set_color(COLORS._main_accent);
@@ -331,7 +331,7 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 		} else {
 			var _idim = surface_get_dimension(_inSurf);
-			var _out  = getSingleValue(0,, true);
+			var _out  = getInputSingle(0,, true);
 			var _odim = surface_get_dimension(_out);
 			
 			var _x0 = _idim[0] / 2 - _odim[0] / 2;

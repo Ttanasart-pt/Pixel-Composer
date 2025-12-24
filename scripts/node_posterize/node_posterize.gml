@@ -161,10 +161,10 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	}
 
 	static drawProcessShort = function(cx, cy, cw, ch, _prog) {
-		var _usepal = getSingleValue(2);
+		var _usepal = getInputSingle(2);
 		if(!_usepal) return undefined;
 		
-		var _pal   = getSingleValue(1);
+		var _pal   = getInputSingle(1);
 		var _pname = attributes.annotation;
 		var  un    = _pname != "";
 		

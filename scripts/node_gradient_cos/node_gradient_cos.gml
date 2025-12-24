@@ -70,10 +70,10 @@ function Node_Gradient_Cos(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		PROCESSOR_OVERLAY_CHECK
 		
-		var  dim = getSingleValue( 0);
-		var  typ = getSingleValue(14);
-		var  rot = getSingleValue(15);
-		var  pos = getSingleValue(17);
+		var  dim = getInputSingle( 0);
+		var  typ = getInputSingle(14);
+		var  rot = getInputSingle(15);
+		var  pos = getInputSingle(17);
 		
 		InputDrawOverlay(inputs[17].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		

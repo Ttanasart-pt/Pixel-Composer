@@ -185,7 +185,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
 		
-		var _out = getSingleValue(0, preview_index, true);
+		var _out = getInputSingle(0, preview_index, true);
 		if(!is_struct(_out)) return w_hovering;
 		
 		draw_set_color(COLORS._main_accent);
@@ -211,7 +211,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	static drawOverlay3D = function(active, _mx, _my, _snx, _sny, _params) {
 		
-		var _out = getSingleValue(0, preview_index, true);
+		var _out = getInputSingle(0, preview_index, true);
 		if(!is_struct(_out)) return;
 		
 		var _qinv  = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), 90);

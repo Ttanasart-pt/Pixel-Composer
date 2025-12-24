@@ -282,8 +282,8 @@ function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 		var _data = json_load_struct(_path);
 		if(!has(_data, "elements")) return;
 		
-		model_scale   = getSingleValue(in_mesh + 2);
-		model_axis    = getSingleValue(in_mesh + 3);
+		model_scale   = getInputSingle(in_mesh + 2);
+		model_axis    = getInputSingle(in_mesh + 3);
 		var _rootPath = project.getVar("json_asset_dir");
 		
 		material_map  = has(_data, "textures")? _data.textures : (has(_data, "texture")? _data.texture : {});
@@ -378,7 +378,7 @@ function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 	}
 	
 	static step = function() {
-		var _path = getSingleValue(in_mesh);
+		var _path = getInputSingle(in_mesh);
 		if(attributes.file_checker && file_get_modify_s(_path) > edit_time) {
 			readJson(_path); 
 			triggerRender();
@@ -386,7 +386,7 @@ function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 	}
 	
 	static processData_prebatch = function() {
-		var _path = getSingleValue(in_mesh);
+		var _path = getInputSingle(in_mesh);
 		if(_path != current_path) readJson(_path);
 	}
 	
@@ -415,7 +415,7 @@ function Node_3D_Mesh_Json(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 		return object;
 	}
 	
-	static getPreviewValues = function() { return getSingleValue(in_mesh + 3); }
+	static getPreviewValues = function() { return getInputSingle(in_mesh + 3); }
 	
 	static onDrawNodeOver = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		

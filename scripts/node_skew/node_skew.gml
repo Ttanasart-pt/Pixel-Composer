@@ -42,8 +42,8 @@ function Node_Skew(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		PROCESSOR_OVERLAY_CHECK
 		
-		var _axis = getSingleValue(1);
-		var _cent = getSingleValue(4);
+		var _axis = getInputSingle(1);
+		var _cent = getInputSingle(4);
 		var _cx = _x + _cent[0] * _s;
 		var _cy = _y + _cent[1] * _s;
 		

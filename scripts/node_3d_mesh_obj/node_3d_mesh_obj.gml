@@ -232,7 +232,7 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		return _object;
 	}
 	
-	static getPreviewValues = function() { return getSingleValue(in_mesh + 3); }
+	static getPreviewValues = function() { return getInputSingle(in_mesh + 3); }
 	
 	static onDrawNodeOver = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		if(!obj_reading) return;

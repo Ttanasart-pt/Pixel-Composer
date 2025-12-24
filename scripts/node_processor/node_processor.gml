@@ -33,7 +33,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	static getInputData = function(index, def = 0) { INLINE return array_safe_get_fast(inputs_data, index, def); }
 	
-	static getSingleValue = function(_index, _arr = preview_index, output = false) { 
+	static getInputSingle = function(_index, _arr = preview_index, output = false) { 
 		if(output) {
 			var _val = outputs[_index].getValue();
 			return process_amount <= 1? _val : array_safe_get_fast(_val, _arr);
@@ -63,7 +63,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _ip = array_safe_get(inputs, dimension_index, noone);
 		if(_ip == noone) return DEF_SURF;
 		
-		var _in = getSingleValue(dimension_index, arr);
+		var _in = getInputSingle(dimension_index, arr);
 		
 		if(_ip.type == VALUE_TYPE.surface && is_surface(_in))
 			return surface_get_dimension(_in);

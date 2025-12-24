@@ -52,24 +52,24 @@ function Node_Grid_Hex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	attribute_oversample();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		var _rot = getSingleValue(3);
-		var _pos = getSingleValue(1);
+		var _rot = getInputSingle(3);
+		var _pos = getInputSingle(1);
 		var  px  = _x + _pos[0] * _s;
 		var  py  = _y + _pos[1] * _s;
 		
 		InputDrawOverlay(inputs[ 1].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny                    ));
 		InputDrawOverlay(inputs[ 2].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny, 1, [.5,.5], _rot  ));
 		InputDrawOverlay(inputs[ 3].drawOverlay(w_hoverable, active, px, py, _s, _mx, _my, _snx, _sny                    ));
-		InputDrawOverlay(inputs[18].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, getSingleValue(0) ));
+		InputDrawOverlay(inputs[18].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, getInputSingle(0) ));
 		
 		return w_hovering;
 	}
 	
 	static getDimension = function(_arr = 0) {
-		var _dim = getSingleValue( 0, _arr);
-		var _sam = getSingleValue( 9, _arr);
-		var _mod = getSingleValue( 7, _arr);
-		var _txd = getSingleValue(21, _arr);
+		var _dim = getInputSingle( 0, _arr);
+		var _sam = getInputSingle( 9, _arr);
+		var _mod = getInputSingle( 7, _arr);
+		var _txd = getInputSingle(21, _arr);
 		var _tex = _mod == 2 || _mod == 3;
 		
 		if(is_surface(_sam) && _tex && _txd) 

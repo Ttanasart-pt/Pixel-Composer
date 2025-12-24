@@ -1,13 +1,12 @@
 {
   "$GMShader":"",
-  "%Name":"sh_separate",
-  "name":"sh_separate",
+  "%Name":"sh_separate_preview_outline",
+  "name":"sh_separate_preview_outline",
   "parent":{
     "name":"separate",
     "path":"folders/nodes/data/compose/separate.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",
-  "tags":[],
   "type":1,
 }

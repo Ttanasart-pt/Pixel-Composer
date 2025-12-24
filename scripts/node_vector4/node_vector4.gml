@@ -54,7 +54,7 @@ function Node_Vector4(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
-		var vec = getSingleValue(0,, true);
+		var vec = getInputSingle(0,, true);
 		var v0 = array_safe_get_fast(vec, 0);
 		var v1 = array_safe_get_fast(vec, 1);
 		var v2 = array_safe_get_fast(vec, 2);

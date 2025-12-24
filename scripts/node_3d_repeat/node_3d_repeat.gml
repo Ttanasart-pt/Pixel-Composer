@@ -69,7 +69,7 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	}
 	
 	static preGetInputs = function() {
-		var _mode = getSingleValue(1);
+		var _mode = getInputSingle(1);
 		inputs[0].setArrayDepth(_mode == 1);
 	}
 	

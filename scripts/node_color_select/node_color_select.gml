@@ -46,11 +46,11 @@ function Node_Color_Select(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var ww = _w + ui(12);
 		var hh = ui(12);
 		
-		var _Shf  = getSingleValue(20);
-		var _Min  = getSingleValue( 7);
-		var _MinR = getSingleValue( 8);
-		var _Max  = getSingleValue( 9);
-		var _MaxR = getSingleValue(10);
+		var _Shf  = getInputSingle(20);
+		var _Min  = getInputSingle( 7);
+		var _MinR = getInputSingle( 8);
+		var _Max  = getInputSingle( 9);
+		var _MaxR = getInputSingle(10);
 		
 		bar_surface = surface_verify(bar_surface, ww, hh);
 		surface_set_shader(bar_surface);
@@ -101,10 +101,10 @@ function Node_Color_Select(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var ww = _w + ui(12);
 		var hh = ui(12);
 		
-		var _Min  = getSingleValue(12);
-		var _MinR = getSingleValue(13);
-		var _Max  = getSingleValue(14);
-		var _MaxR = getSingleValue(15);
+		var _Min  = getInputSingle(12);
+		var _MinR = getInputSingle(13);
+		var _Max  = getInputSingle(14);
+		var _MaxR = getInputSingle(15);
 		
 		bar_surface = surface_verify(bar_surface, ww, hh);
 		surface_set_shader(bar_surface);
@@ -154,10 +154,10 @@ function Node_Color_Select(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var ww = _w + ui(12);
 		var hh = ui(12);
 		
-		var _Min  = getSingleValue(16);
-		var _MinR = getSingleValue(17);
-		var _Max  = getSingleValue(18);
-		var _MaxR = getSingleValue(19);
+		var _Min  = getInputSingle(16);
+		var _MinR = getInputSingle(17);
+		var _Max  = getInputSingle(18);
+		var _MaxR = getInputSingle(19);
 		
 		bar_surface = surface_verify(bar_surface, ww, hh);
 		surface_set_shader(bar_surface);

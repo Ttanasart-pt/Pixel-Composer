@@ -94,7 +94,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		tools = [
 			new NodeTool( "Edit Text", THEME.text_tools_edit ).setOnToggle(function() /*=>*/ { 
 				KEYBOARD_RESET
-				var _currStr    = getSingleValue(0);
+				var _currStr    = getInputSingle(0);
 				edit_cursor     = 0;
 				edit_cursor_sel = string_length(_currStr);
 			}),
@@ -156,7 +156,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		if(_dat == 0) return _hov;
 		
 		var _cr_hover = noone;
-		var _currStr  = getSingleValue(0);
+		var _currStr  = getInputSingle(0);
 		var _crx0 = 0, _cry0 = 0;
 		var _crx1 = 0, _cry1 = 0;
 		
@@ -214,7 +214,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		}
 		
 		edit_cursor_hov = _cr_hover;
-		var _out = getSingleValue(0, preview_index, true);
+		var _out = getInputSingle(0, preview_index, true);
 		draw_surface_ext_safe(_out, _x, _y, _s, _s);
 		
 		if(edit_cursor != noone) {

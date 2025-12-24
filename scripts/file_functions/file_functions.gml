@@ -244,6 +244,7 @@ function filename_combine(_p1, _p2) {
 
 function file_copy_override(src, dest) {
 	if(!file_exists(src)) return;
+	
 	if(file_exists_empty(dest)) file_delete(dest);
 	file_copy(src, dest);
 }

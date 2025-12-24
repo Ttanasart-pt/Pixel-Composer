@@ -23,7 +23,7 @@ function Node_PB_Box_BBOX(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		.setVisible(false)
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
-		var _pbase = getSingleValue(0);
+		var _pbase = getInputSingle(0);
 		
 		if(is(_pbase, __pbBox)) {
 			draw_set_color(COLORS._main_icon);

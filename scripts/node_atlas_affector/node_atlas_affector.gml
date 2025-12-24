@@ -67,7 +67,7 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	__p1 = [ 0, 0 ];
 	
 	static getDimension = function(arr = 0) { 
-		var _atlas = getSingleValue(0, arr);
+		var _atlas = getInputSingle(0, arr);
 		    _atlas = array_safe_get_fast(_atlas, 0);
 		
 		if(!is(_atlas, Atlas)) return [1,1];
@@ -96,13 +96,13 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			draw_line(_xc, _yc - 8, _xc, _yc + 8);
 		}
 		
-		var _inf_shp  = getSingleValue(1);
-		var _inf_fall = getSingleValue(5) * _s;
+		var _inf_shp  = getInputSingle(1);
+		var _inf_fall = getInputSingle(5) * _s;
 		
 		switch(_inf_shp) {
 			case 0 :
 				InputDrawOverlay(inputs[2].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny));
-				var _inf_are  = getSingleValue(2);
+				var _inf_are  = getInputSingle(2);
 				
 				var cx = _x + _inf_are[0] * _s;
 				var cy = _y + _inf_are[1] * _s;
@@ -135,8 +135,8 @@ function Node_Atlas_Affector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 				break;
 				
 			case 1 :
-				var _inf_wori = getSingleValue(3);
-				var _inf_wrot = getSingleValue(4);
+				var _inf_wori = getInputSingle(3);
+				var _inf_wrot = getInputSingle(4);
 				
 				var _ox = _x + _inf_wori[0] * _s;
 				var _oy = _y + _inf_wori[1] * _s;

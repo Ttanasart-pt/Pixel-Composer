@@ -153,7 +153,7 @@ function Node_3D_Transform_Image(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 	static getPreviewObjects = function() /*=>*/ {return [ camGizmo, objectPreview ]};
 	static getPreviewValues  = function() /*=>*/ {return outputs[1].getValue()};
 	
-	static getGraphPreviewSurface = function() /*=>*/ {return getSingleValue(1, preview_index, true)};
+	static getGraphPreviewSurface = function() /*=>*/ {return getInputSingle(1, preview_index, true)};
 	
 	// static onDrawNode = function(xx, yy, _mx, _my, _s, _hover = false, _focus = false) {
 	// 	if(!previewable) return;
