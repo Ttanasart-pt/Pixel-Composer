@@ -18,8 +18,15 @@ function Node_Separate(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	////- Nodes
 	
+	attributes.display_mask = true;
+	array_push(attributeEditors,  "Display" );
+	array_push(attributeEditors, ["Display Mask", function() /*=>*/ {return attributes.display_mask}, new checkBox(function() /*=>*/ {
+		toggleAttribute("display_mask");
+		PANEL_GRAPH.refreshDraw();
+	})]);
+	
 	preview_size = 256;
-	temp_surface = [ noone, noone, noone, noone ];
+	temp_surface = array_create(4, noone);
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		var _mask = getInputSingle(1);
@@ -85,8 +92,6 @@ function Node_Separate(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var bbox = draw_bbox;
-		
-		draw_surface_bbox(temp_surface[3], bbox);
+		if(attributes.display_mask) draw_surface_bbox(temp_surface[3], draw_bbox);
 	}
 }
