@@ -196,7 +196,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		draw_set_text(_font, fa_left, fa_center, cc);
 		
 		var _padx = ui(12 + 4 * _viewSpac);
-		var lbHov = point_in_rectangle(_m[0], _m[1], lb_x - _padx / 2, yy, lb_x + ds_w + _padx, yy + lb_h);
+		var lbHov = _hover && point_in_rectangle(_m[0], _m[1], lb_x - _padx / 2, yy, lb_x + ds_w + _padx, yy + lb_h);
 		if(lbHov) draw_sprite_stretched_ext(THEME.box_r2_clr, 0, lb_x - _padx / 2, yy, ds_w + _padx, lb_h, c_white, 1);
         
 		draw_text_add(lb_x, lb_y, dispName);

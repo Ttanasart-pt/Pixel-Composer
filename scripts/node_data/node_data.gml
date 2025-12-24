@@ -3311,7 +3311,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		_node.node_id = _nid;
 		
 		project.nodeMap[? node_id] = self;
-		project.nodeMap[? _nid] = _node;
+		project.nodeMap[? _nid]    = _node;
 		CLONING = false;
 		refreshTimeline();
 		

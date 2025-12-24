@@ -825,6 +825,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return visible_in_list;
 	}
 	
+	static isBypassed = function() { return bypass_junc? bypass_junc.visible : false; }
+	
 	static setDisplay = function(_type = VALUE_DISPLAY._default, _data = {}) {
 		display_type = _type;
 		display_data = _data;

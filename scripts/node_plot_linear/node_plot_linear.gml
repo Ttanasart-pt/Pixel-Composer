@@ -28,50 +28,56 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	newInput(0, nodeValue_Dimension());
 	
 	////- =Data
-	newInput( 1, nodeValue_Float(    "Data",              []                           )).setArrayDepth(1).setVisible(true, true);
-	newInput(12, nodeValue_Float(    "Value Offset",      0                            ));
-	newInput(21, nodeValue_Bool(     "Flip Value",        false                        ));
-	newInput(14, nodeValue_EScroll(  "Trim mode",         0, [ "Range", "Window" ]     ));
-	newInput( 2, nodeValue_Slider_Range( "Range",        [0,1]                         ));
-	newInput( 3, nodeValue_Float(    "Sample frequency",  1                            ));
-	newInput(15, nodeValue_Int(      "Window Size",       8                            ));
-	newInput(16, nodeValue_Float(    "Window Offset",     0                            ));
+	newInput( 1, nodeValue_Float(    "Data",              []    )).setArrayDepth(1).setVisible(true, true);
+	newInput(12, nodeValue_Float(    "Value Offset",      0     ));
+	newInput(21, nodeValue_Bool(     "Flip Value",        false ));
+	newInput(14, nodeValue_EScroll(  "Trim mode",         0, [ "Range", "Window" ] ));
+	newInput( 2, nodeValue_Slider_Range( "Range",        [0,1]  ));
+	newInput( 3, nodeValue_Float(    "Sample frequency",  1     ));
+	newInput(15, nodeValue_Int(      "Window Size",       8     ));
+	newInput(16, nodeValue_Float(    "Window Offset",     0     ));
 	
 	////- =Plot
-	newInput(11, nodeValue_EScroll(  "Type",              0, __enum_array_gen([ "Bar chart", "Graph"], s_node_plot_linear_type)));
-	newInput( 4, nodeValue_Vec2(     "Origin",          [ 0,.5 ] )).setUnitSimple();
-	newInput(10, nodeValue_Rotation( "Direction",         0      ));
-	newInput(20, nodeValue_PathNode( "Path"                      ));
-	newInput( 5, nodeValue_Float(    "Scale",             .5     )).setUnitSimple();
-	newInput(22, nodeValue_Bool(     "Loop",              false  ));
-	newInput(23, nodeValue_Slider(   "Smooth",            0      ));
+	newInput(11, nodeValue_EScroll(  "Type",        0, __enum_array_gen([ "Bar chart", "Graph", "Pie" ], s_node_plot_linear_type)));
+	newInput( 4, nodeValue_Vec2(     "Origin",    [ 0,.5 ] )).setUnitSimple();
+	newInput(10, nodeValue_Rotation( "Direction",   0      ));
+	newInput(20, nodeValue_PathNode( "Path"                ));
+	newInput( 5, nodeValue_Float(    "Scale",       .5     )).setUnitSimple();
+	newInput(31, nodeValue_Float(    "Radius",      .5     )).setUnitSimple();
+	newInput(22, nodeValue_Bool(     "Loop",        false  ));
+	newInput(23, nodeValue_Slider(   "Smooth",      0      ));
+	newInput(32, nodeValue_Bool(     "Clockwise",   false  ));
 	
 	////- =Shape
-	newInput( 7, nodeValue_Float(    "Graph Thickness",   1      ));
-	newInput(18, nodeValue_Float(    "Bar Width",         4      ));
-	newInput(17, nodeValue_Float(    "Spacing",           1      ));
-	newInput(19, nodeValue_Bool(     "Rounded Bar",       false  ));
+	newInput( 7, nodeValue_Float(    "Graph Thickness", 1      ));
+	newInput(18, nodeValue_Float(    "Bar Width",       4      ));
+	newInput(17, nodeValue_Float(    "Spacing",         1      ));
+	newInput(19, nodeValue_Bool(     "Rounded Bar",     false  ));
+	newInput(33, nodeValue_Float(    "Exploded",        0      ));
+	newInput(34, nodeValue_Slider(   "Donut Radius",    0      ));
+	newInput(35, nodeValue_Float(    "Donut Separation",0      ));
 	
 	////- =Color
-	b_setRange = button(function() /*=>*/ {setDataRange()}).setIcon(THEME.value_range, 1, COLORS._main_icon).iconPad().setTooltip(__txt("Use data range"));
+	b_setRange = button(function() /*=>*/ { setDataRange(); }).setIcon(THEME.value_range, 1, COLORS._main_icon).iconPad()
+		.setTooltip(__txt("Use data range"));
 	
-	newInput( 6, nodeValue_Color(    "Base Color",        ca_white                     ));
+	newInput( 6, nodeValue_Color(    "Base Color",        ca_white  ));
 	newInput(13, nodeValue_Gradient( "Color Over Sample", gra_white )).setMappable(27);
 	newInput(24, nodeValue_Gradient( "Color Over Value",  gra_white )).setMappable(29);
-	newInput(25, nodeValue_Range(    "Value range",      [0,1]                         )).setSideButton(b_setRange);
+	newInput(25, nodeValue_Range(    "Value range",      [0,1]      )).setSideButton(b_setRange);
 	newInput(26, nodeValue_Bool(     "Absolute",         false, "Use absolute value to calculate color." ));
 	
 	////- =Background
 	newInput( 8, nodeValue_Bool(     "Background",        false    ));
 	newInput( 9, nodeValue_Color(    "Background Color",  ca_black ));
-	// inputs 31
+	// inputs 36
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0, 
 		[ "Data", 	    true    ],  1, 12, 21, 14,  2,  3, 15, 16, 
-		[ "Plot",	   false    ], 11,  4, 10, 20,  5, 22, 23, 
-		[ "Shape",	   false    ],  7, 18, 17, 19, 
+		[ "Plot",	   false    ], 11,  4, 10, 20,  5, 31, 22, 23, 32, 
+		[ "Shape",	   false    ],  7, 18, 17, 19, 33, 34, 35, 
 		[ "Color",	   false    ],  6, 13, 27, 24, 29, 25, 26, 
 		[ "Background",	true, 8 ],  9, 
 	];
@@ -128,13 +134,18 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			var _ang  = _data[10];
 			var _path = _data[20];
 			var _amp  = _data[ 5];
+			var _rad  = _data[31];
 			var _loop = _data[22];
 			var _smt  = _data[23];
+			var _cw   = _data[32];
 			
 			var _lineth   = _data[ 7];
 			var _bar_wid  = _data[18];
-			var _bar_rnd  = _data[19];
 			var _pnt_spac = _data[17];
+			var _bar_rnd  = _data[19];
+			var _pie_expl = _data[33];
+			var _pie_dont = _data[34];
+			var _pie_sepa = _data[35];
 			
 			var _lcl     = _data[ 6];
 			var _cls     = _data[13], _cls_map = _data[27], _cls_rng = _data[28];
@@ -151,32 +162,35 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			inputs[15].setVisible(_trim == 1);
 			inputs[16].setVisible(_trim == 1);
 			
-			inputs[ 9].setVisible(_ubg);
-			inputs[ 7].setVisible(_typ == 1);
-			inputs[18].setVisible(_typ == 0);
-			inputs[19].setVisible(_typ == 0);
+			inputs[ 4].setVisible(!_use_path || _typ == 2);
+			inputs[10].setVisible(!_use_path || _typ == 2);
+			inputs[20].setVisible(_typ != 2);
+			inputs[ 5].setVisible(_typ != 2);
 			inputs[22].setVisible(_typ == 1);
 			inputs[23].setVisible(_typ == 1);
+			inputs[31].setVisible(_typ == 2);
+			inputs[32].setVisible(_typ == 2);
 			
-			inputs[ 4].setVisible(!_use_path);
-			inputs[10].setVisible(!_use_path);
+			inputs[ 7].setVisible(_typ == 1);
+			inputs[18].setVisible(_typ == 0);
+			inputs[17].setVisible(_typ != 2);
+			inputs[19].setVisible(_typ == 0);
+			inputs[33].setVisible(_typ == 2);
+			inputs[34].setVisible(_typ == 2);
+			inputs[35].setVisible(_typ == 2);
+			
+			inputs[ 9].setVisible(_ubg);
 		#endregion
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
-		surface_set_target(_outSurf);
-			if(_ubg) draw_clear(_bgc);
-			else	 DRAW_CLEAR
-			
+		#region preprocess
 			var _len = array_length(_dat);
 			var _st  = clamp(_ran[0], 0, 1) * _len;
 			var _ed  = clamp(_ran[1], 0, 1) * _len;
 			var ox, oy, nx, ny, fx, fy;
 			
-			if(_typ == 1)
-				draw_set_circle_precision(4);
-			
-			var _dat_amo = array_length(_dat);
+			var _dat_amo  = array_length(_dat);
 			var _smp_data = [];
 			var _ind = 0;
 			
@@ -200,51 +214,60 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			}
 			
 			var amo = array_length(_smp_data);
-			var _px, _py, _ang_nor, _val, _col_sam, _col_val;
-			var _pnt, _ppnt = undefined;
-			var _bar_spc = _typ == 1? _pnt_spac + 1 : _pnt_spac + _bar_wid;
-			var _oc;
+		#endregion
+		
+		surface_set_target(_outSurf);
+			if(_ubg) draw_clear(_bgc);
+			else	 DRAW_CLEAR
 			
-			for( var i = 0; i < amo; i++ ) {
-				if(_use_path) {
-					_pnt    = _path.getPointRatio(i / amo);
-					_ppnt ??= _path.getPointRatio(i / amo - 0.001);
+			if(_typ < 2) {
+				var _pnt, _px, _py, _ang_nor, _val, _col_sam, _col_val, oc;
+				var _ppnt    = undefined;
+				var _bar_spc = _typ == 1? _pnt_spac + 1 : _pnt_spac + _bar_wid;
+				
+				if(_typ == 1) draw_set_circle_precision(4);
+				
+				for( var i = 0; i < amo; i++ ) {
+					if(_use_path) {
+						_pnt    = _path.getPointRatio(i / amo);
+						_ppnt ??= _path.getPointRatio(i / amo - 0.001);
+						
+						_px = _pnt.x;
+						_py = _pnt.y;
+						_ang = point_direction(_ppnt.x, _ppnt.y, _pnt.x, _pnt.y)
+						
+						_ppnt = _pnt;
+						
+					} else {
+						_px = _ori[0] + lengthdir_x(i * _bar_spc, _ang);
+						_py = _ori[1] + lengthdir_y(i * _bar_spc, _ang);
+					}
 					
-					_px = _pnt.x;
-					_py = _pnt.y;
-					_ang = point_direction(_ppnt.x, _ppnt.y, _pnt.x, _pnt.y)
+					_ang_nor = _ang + 90;
+					_val	 = _smp_data[i] + _off;
+					_col_sam = evaluate_gradient_map(i / amo, _cls, _cls_map, _cls_rng, inputs[13]);
 					
-					_ppnt = _pnt;
+					var _val_p    = _clv_a? abs(_val) : _val;
+					var _val_prog = (_val_p - _clv_r[0]) / (_clv_r[1] - _clv_r[0]);
+					_col_val = evaluate_gradient_map(_val_prog, _clv, _clv_map, _clv_rng, inputs[24]);
 					
-				} else {
-					_px = _ori[0] + lengthdir_x(i * _bar_spc, _ang);
-					_py = _ori[1] + lengthdir_y(i * _bar_spc, _ang);
-				}
-				
-				_ang_nor = _ang + 90;
-				_val	 = _smp_data[i] + _off;
-				_col_sam = evaluate_gradient_map(i / amo, _cls, _cls_map, _cls_rng, inputs[13]);
-				
-				var _val_p = _clv_a? abs(_val) : _val;
-				var _val_prog = (_val_p - _clv_r[0]) / (_clv_r[1] - _clv_r[0]);
-				_col_val = evaluate_gradient_map(_val_prog, _clv, _clv_map, _clv_rng, inputs[24]);
-				
-				var _c1 = colorMultiply(_lcl, _col_sam);
-				var _c2 = _col_val;
-				var _col_final = colorMultiply(_c1, _c2);
-				
-				draw_set_color(_col_final);
-				
-				nx = _px + lengthdir_x(_amp * _val, _ang_nor);
-				ny = _py + lengthdir_y(_amp * _val, _ang_nor);
-				
-				switch(_typ) {
-					case 0 :
-						if(_bar_rnd) draw_line_round(_px, _py, nx, ny, _bar_wid);
-						else		 draw_line_width(_px, _py, nx, ny, _bar_wid);
-						break;
-					case 1 :
-						if(i > _st) {
+					var _c1 = colorMultiply(_lcl, _col_sam);
+					var _c2 = _col_val;
+					var _col_final = colorMultiply(_c1, _c2);
+					draw_set_color(_col_final);
+					
+					nx = _px + lengthdir_x(_amp * _val, _ang_nor);
+					ny = _py + lengthdir_y(_amp * _val, _ang_nor);
+					
+					switch(_typ) {
+						case 0 :
+							if(_bar_rnd) draw_line_round(_px, _py, nx, ny, _bar_wid);
+							else		 draw_line_width(_px, _py, nx, ny, _bar_wid);
+							break;
+							
+						case 1 :
+							if(i <= _st) break;
+							
 							if(_smt > 0) {
 								var dist = dot_product(nx - ox, ny - oy, lengthdir_x(1, _ang), lengthdir_y(1, _ang));
 								var _b0x = ox + lengthdir_x(dist * _smt, _ang);
@@ -266,27 +289,114 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 									_oy = _ny;
 								}
 							} else {
-								if(_lineth > 1) draw_line_round_color(ox, oy, nx, ny, _lineth, _oc, _col_final);
-								else		 draw_line_color(ox, oy, nx, ny, _oc, _col_final);
+								if(_lineth > 1) draw_line_round_color(ox, oy, nx, ny, _lineth, oc, _col_final);
+								else		 draw_line_color(ox, oy, nx, ny, oc, _col_final);
 							}
-						}
-						break;
+							break;
+					}
+					
+					ox = nx;
+					oy = ny;
+					oc = _col_final;
+					
+					if(i == 0) {
+						fx = nx;
+						fy = ny;
+					}
 				}
 				
-				ox = nx;
-				oy = ny;
-				_oc = _col_final;
+				if(_loop && amo > 1 && _typ == 1) 
+					draw_line_round(fx, fy, nx, ny, _lineth);
 				
-				if(i == 0) {
-					fx = nx;
-					fy = ny;
+			} else if(_typ == 2) {
+				draw_set_circle_precision(64);
+				
+				var _totalVal = array_sum(_smp_data);
+				var _radVal   = 360 / _totalVal;
+				var _radCurr  = _ang;
+				var _radDir   = _cw? -1 : 1;
+				
+				for( var i = 0; i < amo; i++ ) {
+					_val = _smp_data[i];
+					var _sgAng = _val * _radVal;
+					var _angSt = _radCurr;
+					var _angEd = _radCurr + _sgAng * _radDir;
+					_radCurr   = _angEd;
+					
+					_col_sam = evaluate_gradient_map(i / amo, _cls, _cls_map, _cls_rng, inputs[13]);
+					
+					var _val_p    = _clv_a? abs(_val) : _val;
+					var _val_prog = (_val_p - _clv_r[0]) / (_clv_r[1] - _clv_r[0]);
+					_col_val = evaluate_gradient_map(_val_prog, _clv, _clv_map, _clv_rng, inputs[24]);
+					
+					var _c1 = colorMultiply(_lcl, _col_sam);
+					var _c2 = _col_val;
+					var _col_final = colorMultiply(_c1, _c2);
+					draw_set_color(_col_final);
+					
+					var ox, oy, nx, ny;
+					var ar = ceil(_sgAng / 3);
+					if(ar <= 0) continue;
+					
+					var ca = _angSt + _sgAng * _radDir / 2;
+					var cx = _ori[0] + lengthdir_x(_pie_expl, ca);
+					var cy = _ori[1] + lengthdir_y(_pie_expl, ca);
+					
+ 					draw_primitive_begin(pr_trianglelist);
+					for( var j = 0; j <= ar; j++ ) {
+						var a = lerp(_angSt, _angEd, j / ar);
+						
+						nx = cx + lengthdir_x(_rad, a);
+						ny = cy + lengthdir_y(_rad, a);
+						
+						if(j) {
+							draw_vertex(cx, cy);
+							draw_vertex(ox, oy);
+							draw_vertex(nx, ny);
+						}
+						
+						ox = nx;
+						oy = ny;
+					}
+					draw_primitive_end();
+					
+					if(_pie_dont > 0) {
+						BLEND_SUBTRACT
+						draw_set_color(c_white);
+	 					draw_primitive_begin(pr_trianglelist);
+	 					
+						for( var j = 0; j <= ar; j++ ) {
+							var a = lerp(_angSt, _angEd, j / ar);
+							
+							nx = cx + lengthdir_x(_rad * _pie_dont, a);
+							ny = cy + lengthdir_y(_rad * _pie_dont, a);
+							
+							if(j) {
+								draw_vertex(cx, cy);
+								draw_vertex(ox, oy);
+								draw_vertex(nx, ny);
+							}
+							
+							ox = nx;
+							oy = ny;
+						}
+						
+						draw_primitive_end();
+						BLEND_NORMAL
+					}
+					
+					if(_pie_sepa > 0) {
+						BLEND_SUBTRACT
+						draw_set_color(c_white);
+						
+						draw_line_round(cx-1, cy-1, cx-1 + lengthdir_x(_rad, _angSt), cy-1 + lengthdir_y(_rad, _angSt), _pie_sepa);
+						draw_line_round(cx-1, cy-1, cx-1 + lengthdir_x(_rad, _angEd), cy-1 + lengthdir_y(_rad, _angEd), _pie_sepa);
+						
+						BLEND_NORMAL
+					}
 				}
 			}
 			
-			if(_loop && amo > 1 && _typ == 1)
-				draw_line_round(fx, fy, nx, ny, _lineth);
-			
-			draw_set_circle_precision(64);
 		surface_reset_target();
 		return _outSurf;
 	}
