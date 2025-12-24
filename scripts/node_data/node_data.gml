@@ -3293,6 +3293,34 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static dropPath = noone;  
 	 
+	static clone = function(_group = PANEL_GRAPH.getCurrentContext()) {
+		CLONING = true;
+		var _type = instanceof(self);
+		var _node = nodeBuild(_type, x, y, _group).skipDefault();
+		CLONING = false;
+		
+		LOADING_VERSION = SAVE_VERSION;
+		
+		if(!_node) return undefined;
+		
+		CLONING = true;
+		var _nid = _node.node_id;
+		_node.deserialize(serialize());
+		_node.postDeserialize();
+		_node.applyDeserialize();
+		_node.node_id = _nid;
+		
+		project.nodeMap[? node_id] = self;
+		project.nodeMap[? _nid] = _node;
+		CLONING = false;
+		refreshTimeline();
+		
+		if(instanceBase != undefined) _node.setInstance(instanceBase);
+		if(onClone != undefined) onClone(_node, _group);
+		
+		return _node;
+	}
+	
 	static onClone = undefined
 	
 	////- MISC
