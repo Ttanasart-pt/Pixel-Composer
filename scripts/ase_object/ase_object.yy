@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"ase_object",
   "parent":{
-    "name":"importers",
-    "path":"folders/functions/importers.yy",
+    "name":"importer",
+    "path":"folders/nodes/data/io/aseprite/importer.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

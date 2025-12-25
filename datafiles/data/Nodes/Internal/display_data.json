@@ -478,6 +478,7 @@
             "Node_ASE_File_Read",
             "Node_ASE_layer",
             "Node_ASE_Tag",
+            "Node_ASE_Tileset",
             
             { "label": "Krita" },
             "Node_Krita_File_Read",

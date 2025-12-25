@@ -1,6 +1,6 @@
 /*
 * ASE file reader
-* File spec from: https://github.com/aseprite/aseprite/blob/main/docs/ase-file-specs.md
+* File spec: https://github.com/aseprite/aseprite/blob/main/docs/ase-file-specs.md
 */
 
 enum _BIN_TYPE {
@@ -101,7 +101,7 @@ globalvar __ase_format_chunk_layer; __ase_format_chunk_layer = [
 	[_BIN_TYPE.byte,	"Opacity"],
 	[_BIN_TYPE.byte,	"Unused", 3],
 	[_BIN_TYPE.string,	"Name"],
-	[_BIN_TYPE.dword,	"Tileset index", 1, function(chunk) { return chunk[$ "Layer type"] == 2; }],
+	[_BIN_TYPE.dword,	"Tileset index", 1, function(chunk) /*=>*/ {return chunk[$ "Layer type"] == 2}],
 ];
 
 globalvar __ase_format_chunk_cel; __ase_format_chunk_cel = [
@@ -116,7 +116,7 @@ globalvar __ase_format_chunk_cel; __ase_format_chunk_cel = [
 globalvar __ase_format_chunk_cel_raw_image; __ase_format_chunk_cel_raw_image = [
 	[_BIN_TYPE.word,	"Width"],
 	[_BIN_TYPE.word,	"Height"],
-	[_BIN_TYPE.pixel,	"Pixels", function(chunk) { return chunk[$ "Width"] * chunk[$ "Width"]; }],
+	[_BIN_TYPE.pixel,	"Pixels", function(chunk) /*=>*/ {return chunk[$ "Width"] * chunk[$ "Width"]} ],
 ];
 
 globalvar __ase_format_chunk_cel_linked; __ase_format_chunk_cel_linked = [
@@ -255,10 +255,10 @@ globalvar __ase_format_chunk_tileset; __ase_format_chunk_tileset = [
 	[_BIN_TYPE.short,	"Base index"],
 	[_BIN_TYPE.byte,	"Reserved", 14],
 	[_BIN_TYPE.string,	"Name"],
-	[_BIN_TYPE.dword,	"ID of external file", 1,          function(c) /*=>*/ {return c[$ "Flag"] & (1 << 1)} ],
-	[_BIN_TYPE.dword,	"Tileset ID",		   1,          function(c) /*=>*/ {return c[$ "Flag"] & (1 << 1)} ],
-	[_BIN_TYPE.dword,	"Data length",		   1,          function(c) /*=>*/ {return c[$ "Flag"] & (1 << 2)} ],
-	[_BIN_TYPE.pixel,	"Compressed image", "Data length", function(c) /*=>*/ {return c[$ "Flag"] & (1 << 2)} ],
+	[_BIN_TYPE.dword,	"ID of external file", 1,          function(c) /*=>*/ {return c[$ "Flag"] & (1 << 0)} ],
+	[_BIN_TYPE.dword,	"Tileset ID",		   1,          function(c) /*=>*/ {return c[$ "Flag"] & (1 << 0)} ],
+	[_BIN_TYPE.dword,	"Data length",		   1,          function(c) /*=>*/ {return c[$ "Flag"] & (1 << 1)} ],
+	// [_BIN_TYPE.pixel,	"Compressed image", "Data length", (c) => c[$ "Flag"] & (1 << 1) ],
 ];
 
 function read_format_type(_bin, datType, outMap) {
@@ -286,8 +286,8 @@ function read_format_type(_bin, datType, outMap) {
 }
 
 function read_format(_bin, format, outMap) {
-	var datType = array_safe_get_fast(format, 0, 0);
-	var key     = array_safe_get_fast(format, 1, "");
+	var datType = array_safe_get_fast(format, 0, _BIN_TYPE.byte);
+	var key     = array_safe_get_fast(format, 1, "undefined");
 	var amount  = array_safe_get_fast(format, 2, 1);
 	
 	     if(is_string(amount)) amount = struct_has(outMap, amount)? outMap[$ amount] : 1;
@@ -424,6 +424,21 @@ function read_ase_chunk(file) {
 					
 				case 3 : 
 					read_format_array(file, __ase_format_chunk_cel_compress_tilemap, chunk);
+					chunk[$ "Surface"] = noone;
+					
+					var compressLength = (skipPos - file_bin_position(file));
+					var _compBuff = buffer_create(compressLength * buffer_sizeof(buffer_u8), buffer_grow, 1);
+					buffer_seek(_compBuff, buffer_seek_start, 0);
+					
+					repeat(compressLength) {
+						var byte = file_bin_read_byte(file);
+						buffer_write(_compBuff, buffer_u8, byte);
+					}
+					
+					var _rawBuff = buffer_decompress(_compBuff);
+					if(_rawBuff != -1) chunk[$ "Tile Buffer"] = _rawBuff;
+					printIf(global.FLAG.ase_import, $"    Buffer size: {compressLength}");
+					buffer_delete(_compBuff);
 					//TILE READ
 					break;
 			}
@@ -466,7 +481,29 @@ function read_ase_chunk(file) {
 			
 		case 0x2020: break; //user data
 		case 0x2022: break; //slice
-		case 0x2023: break; //tileset
+		
+		case 0x2023: 
+			printIf(global.FLAG.ase_import, "\n -- Reading chunk [Tile] -- "); 
+			read_format_array(file, __ase_format_chunk_tileset, chunk);
+			
+			var type = chunk[$ "Flag"];
+			if(type & (1 << 1)) { // internally stored tileset
+				var compressLength = (skipPos - file_bin_position(file));
+				var _compBuff = buffer_create(compressLength * buffer_sizeof(buffer_u8), buffer_grow, 1);
+				buffer_seek(_compBuff, buffer_seek_start, 0);
+				
+				repeat(compressLength) {
+					var byte = file_bin_read_byte(file);
+					buffer_write(_compBuff, buffer_u8, byte);
+				}
+				
+				var _rawBuff = buffer_decompress(_compBuff);
+				if(_rawBuff != -1) chunk[$ "Buffer"] = _rawBuff;
+				printIf(global.FLAG.ase_import, $"    Buffer size: {compressLength}");
+				buffer_delete(_compBuff);
+			}
+			
+			break; //tileset
 	}
 	
 	file_bin_seek(file, skipPos - file_bin_position(file));

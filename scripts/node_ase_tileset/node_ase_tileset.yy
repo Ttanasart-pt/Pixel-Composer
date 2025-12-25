@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_ase_tileset",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_ase_tileset",
+  "parent":{
+    "name":"aseprite",
+    "path":"folders/nodes/data/io/aseprite.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
