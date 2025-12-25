@@ -47,7 +47,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	newOutput( 8, nodeValue_Output( "Tilesets",     VALUE_TYPE.struct,  []    )).setVisible(false);
 	newOutput( 6, nodeValue_Output( "Raw data",     VALUE_TYPE.struct,  {}    )).setVisible(false);
 	newOutput( 7, nodeValue_Output( "Frame Amount", VALUE_TYPE.integer, 1     )).setVisible(false);
-	// 9
+	// outputs 9
 	
 	b_set_frame = button(function() /*=>*/ {return setFrames()}).setText("Match Animation Length")
 	b_gen_layer = button(function() /*=>*/ {return refreshLayers()}).setIcon(THEME.generate_layers).iconPad().setTooltip("Generate Layers");
