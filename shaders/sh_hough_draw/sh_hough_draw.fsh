@@ -5,6 +5,7 @@ uniform sampler2D hough;
 uniform vec2  dimension;
 uniform int   type;
 
+uniform int   scanRadius;
 uniform float targetRadius;
 uniform float threshold;
 uniform float intensity;
@@ -16,11 +17,13 @@ uniform float fadeDistance;
 #define SQRT2 1.414
 
 void main() {
-    vec3 color   = texture2D(gm_BaseTexture, v_vTexcoord).rgb;
+    vec3 color   = texture2D(gm_BaseTexture, v_vTexcoord).rgb * v_vColour.rgb;
     vec2 normPos = v_vTexcoord * 2. - 1.;
     
     vec2  tx  = 1. / dimension;
+    vec2  px  = v_vTexcoord * dimension;
     float thr = threshold;
+    float rad = float(scanRadius) / dimension.x;
     
     for(int t = 0; t < int(dimension.x); t++)
     for(int r = 0; r < int(dimension.y); r++) {
@@ -35,7 +38,7 @@ void main() {
             float fade  = distance(v_vTexcoord, houghPos);
             
             if(dist < lineDist / 10.) 
-            	color = mix(color, lineColor.rgb, lineColor.a * (1. - fade * fadeDistance));
+            	color = mix(color, lineColor.rgb, lineColor.a * (rad - fade * fadeDistance));
             	
     	} else if(type == 1) {
     		float dist = distance(v_vTexcoord, houghPos);

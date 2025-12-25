@@ -185,27 +185,31 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 		var _x0  = _x;
 		var _x1  = _x + _w - _arw;
 		var _yc  = _y + h / 2;
-		
-		if(_spr) _x0 += ui(32);
-		var _xc  = (_x0 + _x1) / 2;
 		var _tx1 = _x;
 		
 		var _sci = gpu_get_scissor();
 		gpu_set_scissor(_x, _y, _w, h);
 		
 		if(show_icon && horizontal == 2) {
+			var _xc = (_x0 + _x1) / 2;
+			
 			if(_spr) {
-				var _ss = (h - ui(32)) / sprite_get_height(_selVal.spr);
+				var _hh = h - ui(32);
+				var _ss = _hh / sprite_get_height(_selVal.spr);
+				var _yy = _y + ui(4) + _hh / 2;
 				
 				gpu_set_tex_filter(filter);
-				draw_sprite_uniform(_selVal.spr, _selVal.spr_ind, _xc, _y + ui(4) + (h - ui(32)) / 2, _ss, _selVal.spr_blend);
+				draw_sprite_uniform(_selVal.spr, _selVal.spr_ind, _xc, _yy, _ss, _selVal.spr_blend);
 				gpu_set_tex_filter(false);
 			}
 			
-			draw_set_text(f_p2, fa_center, fa_bottom, text_color);
+			draw_set_text(_f, fa_center, fa_bottom, text_color);
 			draw_text_add(_xc, _y + h - ui(4), _text);
 			
 		} else {
+			if(_spr) _x0 += ui(32);
+			var _xc = (_x0 + _x1) / 2;
+			
 			draw_set_text(_f, align, fa_center, text_color);
 			
 			if(is_string(_text))  {
