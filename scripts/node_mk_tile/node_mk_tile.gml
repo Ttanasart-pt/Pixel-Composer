@@ -19,8 +19,9 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		new scrollItem("Godot Blob (48 sprites)",        s_mk_tile_sprite_type_2).setBlend(c_white),
 	];
 	
-	newInput(2, nodeValue_EScroll( "Type",  0, { data: _tile_sprite_types, horizontal: 2, text_pad: ui(16) }));
-	newInput(4, nodeValue_Padding( "Crop", [8,8,8,8] )).setType(VALUE_TYPE.integer);
+	newInput( 2, nodeValue_EScroll( "Type",  0, { data: _tile_sprite_types, horizontal: 2, text_pad: ui(16) }));
+	newInput( 4, nodeValue_Padding( "Crop", [8,8,8,8] )).setType(VALUE_TYPE.integer);
+	newInput(17, nodeValue_Bool(    "Exclude Empty", false ));
 	
 	////- =Edge
 	var _edge_types        = __enum_array_gen([ "Uniform", "Individual" ],           s_mk_tile_edge_type,      c_white);
@@ -45,11 +46,11 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	////- =Output
 	newInput( 3, nodeValue_EButton( "Output type",       0, [ "Sheet", "Array" ] ));
 	newInput(14, nodeValue_Bool(    "Sort Array by Bit", true))
-	// input 17
+	// input 18
 		
 	input_display_list = [ new Inspector_Sprite(s_MKFX), 
 		[ "Surfaces",      true ],  0,  1, 
-		[ "Tileset",      false ],  2,  4, 
+		[ "Tileset",      false ],  2,  4, 17, 
 		[ "Edge",         false ],  5, 12, 13, 10, 11, __inspc(ui(4), true, true, ui(6)), 15, 16, 
 		[ "Edge Textures", true ],  6,  7,  8,  9, 
 		[ "Output",       false ],  3, 14, 
@@ -449,8 +450,9 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _tex0    = _data[0];
 			var _tex1    = _data[1];
 			
-			var _type    = _data[2];
-			var _crop    = _data[4];
+			var _type    = _data[ 2];
+			var _crop    = _data[ 4];
+			var _empty   = _data[17];
 			
 			var _edgType = _data[ 5];
 			var _edgSprt = _data[12];
@@ -466,6 +468,8 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _edgeT   = _data[6], _eB = _data[7], _eL = _data[8], _eR = _data[9];
 			var _edges   = _edgType == MK_TILE_EDGE_TYPE.uniform? [ _edgeT, _edgeT, _edgeT, _edgeT ] : [ _edgeT, _eB, _eL, _eR ];
 			var _edgeUse = is_surface(_edgeT);
+			
+			inputs[17].setVisible(_type == 0);
 			
 			inputs[ 6].name = _edgType == 1? "Edge top" : "Edge"
 			inputs[ 7].setVisible(_edgType == 1, _edgType == 1);
@@ -620,7 +624,19 @@ function Node_MK_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _row   = 1;
 		
 		switch(_type) {
-			case 0 : _surfs = generate18(_data, _tex0, _tex1, edge_surface, _crop); _col =  6; _row = 3; break;
+			case 0 : 
+				_surfs = generate18(_data, _tex0, _tex1, edge_surface, _crop); 
+				_col = 6; 
+				_row = 3; 
+				
+				if(_empty) {
+					array_delete(_surfs, 12, 1);
+					array_delete(_surfs,  6, 1);
+					array_delete(_surfs,  0, 1);
+					_col = 5;
+				}
+				break;
+				
 			case 1 : _surfs = generate55(_data, _tex0, _tex1, edge_surface, _crop); _col = 11; _row = 5; break;
 			case 2 : _surfs = generate48(_data, _tex0, _tex1, edge_surface, _crop); _col = 12; _row = 4; break;
 		}
