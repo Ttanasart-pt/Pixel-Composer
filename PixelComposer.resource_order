@@ -2217,6 +2217,7 @@
     {"name":"sh_texture_remap","order":5,"path":"shaders/sh_texture_remap/sh_texture_remap.yy",},
     {"name":"sh_texture_repeat","order":26,"path":"shaders/sh_texture_repeat/sh_texture_repeat.yy",},
     {"name":"sh_threshold_adaptive","order":1,"path":"shaders/sh_threshold_adaptive/sh_threshold_adaptive.yy",},
+    {"name":"sh_tile_draw","order":5,"path":"shaders/sh_tile_draw/sh_tile_draw.yy",},
     {"name":"sh_tile_random","order":29,"path":"shaders/sh_tile_random/sh_tile_random.yy",},
     {"name":"sh_tile_rule_apply","order":9,"path":"shaders/sh_tile_rule_apply/sh_tile_rule_apply.yy",},
     {"name":"sh_tile_rule_select","order":10,"path":"shaders/sh_tile_rule_select/sh_tile_rule_select.yy",},

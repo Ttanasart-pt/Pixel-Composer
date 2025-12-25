@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_tile_draw",
+  "name":"sh_tile_draw",
+  "parent":{
+    "name":"importer",
+    "path":"folders/nodes/data/io/aseprite/importer.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

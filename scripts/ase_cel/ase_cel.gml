@@ -64,7 +64,7 @@ function ase_cel(_layer, _data, _file) constructor {
 		data[$ "Surface"] = surface_verify(data[$ "Surface"], width, height);
 		
 		buffer_to_start(_tbuff);
-		surface_set_shader(data[$ "Surface"]);
+		surface_set_shader(data[$ "Surface"], sh_tile_draw);
 			var _tamo = twidth * theight;
 			var _col  = 0;
 			var _row  = 0;
@@ -81,6 +81,9 @@ function ase_cel(_layer, _data, _file) constructor {
 				var tileR = ti & bitR;
 				
 				var _tile = _tileset.getTile(tileT);
+				shader_set_i("tileX", bool(tileX));
+				shader_set_i("tileY", bool(tileY));
+				shader_set_i("tileR", bool(tileR));
 				draw_surface_ext_safe(_tile, dx, dy, 1, 1, 0);
 				
 				_col++;
