@@ -1003,8 +1003,9 @@ event_inherited();
 		for( var i = 0, n = array_length(category); i < n; i++ ) {
 			var cat = category[i];
 			
-			if(!has(cat, "list")) continue;
-				
+			if(!has(cat, "list"))
+				continue;
+			
 			if(cat[$ "filter"] != undefined && !array_exists(cat.filter, instanceof(context)))
 				continue;
 			
@@ -1015,8 +1016,10 @@ event_inherited();
 				if(is_string(_node))                 continue;
 				if(ds_map_exists(search_map, _node)) continue;
 				
-				var match = string_partial_match_res(string_lower(_node.getName()), search_lower, search_split);
+				var match  = string_partial_match_res(string_lower(_node.getName()), search_lower, search_split);
+				var fmatch = match;
 								
+				// Fav
 				if(is(_node, NodeObject)) {
 					if(_node.deprecated) continue;
 					
@@ -1027,7 +1030,7 @@ event_inherited();
 				var param = "";
 				for( var k = 0, p = array_length(_node.tags); k < p; k++ ) {
 					var mat = string_partial_match_res(_node.tags[k], search_lower, search_split);
-					mat[0] -= 100;
+					mat[0] -= 50;
 					
 					if(mat[0] > match[0]) {
 						match = mat;
@@ -1044,10 +1047,33 @@ event_inherited();
 		
 		ds_map_destroy(search_map);
 		
-		searchCollection(pr_list, search_string, false);
+		searchCollectionData(pr_list, search_string);
 		
-		repeat(ds_priority_size(pr_list))
-			array_push(search_list, ds_priority_delete_max(pr_list));
+		var _curr_weight = undefined;
+		var _curr_arr    = [];
+		
+		repeat(ds_priority_size(pr_list)) {
+			var _data = ds_priority_delete_max(pr_list);
+			var _wigh = _data[2][0];
+			
+			if(_curr_weight != _wigh) {
+				if(!array_empty(_curr_arr)) {
+					array_sort(_curr_arr, function(a,b) /*=>*/ {return string_compare(a[0].name, b[0].name)});
+					array_append(search_list, _curr_arr);
+				}
+				
+				_curr_arr    = [_data];
+				_curr_weight = _wigh;
+				
+			} else
+				array_push(_curr_arr, _data);
+				
+		}
+		
+		if(!array_empty(_curr_arr)) {
+			array_sort(_curr_arr, function(a,b) /*=>*/ {return string_compare(a[0].name, b[0].name)});
+			array_append(search_list, _curr_arr);
+		}
 		
 		ds_priority_destroy(pr_list);
 	}

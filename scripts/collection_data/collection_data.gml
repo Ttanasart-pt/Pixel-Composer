@@ -59,6 +59,30 @@ function searchCollection(_arr, _search_str, _inputArray = true) {
 	ds_stack_destroy(st);
 }
 
+function searchCollectionData(pr_list, _search_str) {
+	if(_search_str == "") return;
+	var search_lower = string_lower(_search_str);
+	
+	var st = ds_stack_create();
+	ds_stack_push(st, COLLECTIONS);
+		
+	while(!ds_stack_empty(st)) {
+		var _st = ds_stack_pop(st);
+		for( var i = 0; i < array_length(_st.content); i++ ) {
+			var _nd   = _st.content[i];
+			var match = string_partial_match_res(string_lower(_nd.name), search_lower);
+			if(match[0] == -9999) continue;
+			
+			ds_priority_add(pr_list, [ _nd, "", match ], match[0]);
+		}
+			
+		for( var i = 0; i < array_length(_st.subDir); i++ )
+			ds_stack_push(st, _st.subDir[i]);
+	}
+	
+	ds_stack_destroy(st);
+}
+
 function saveCollection(_node, _path, save_surface = true, metadata = noone) {
 	if(_node == noone) return;
 		

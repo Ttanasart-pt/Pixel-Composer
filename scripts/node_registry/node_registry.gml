@@ -383,6 +383,8 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		
 		return self;
 	}
+	
+	static toString = function() /*=>*/ {return $"NodeObject {name} [{nodeName}]"};
 }
 
 	////- Nodes
