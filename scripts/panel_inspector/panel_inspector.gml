@@ -676,7 +676,7 @@ function Panel_Inspector() : PanelContent() constructor {
         var amoOut  = is_array(_inspecting.output_display_list)? array_length(_inspecting.output_display_list) : array_length(_inspecting.outputs);
         var amoMeta = _inspecting.attributes.outp_meta? array_length(_inspecting.junc_meta) : 0;
         var amo     = inspectGroup == 0? amoIn + amoAttr + 1 + amoOut + amoMeta : amoIn + amoAttr;
-        if(_flag | INSPECTOR_FLAG.input_only) amo = amoIn;
+        if(_flag == INSPECTOR_FLAG.input_only) amo = amoIn;
         
         var color_picker_index = 0;
         var pickers = [];

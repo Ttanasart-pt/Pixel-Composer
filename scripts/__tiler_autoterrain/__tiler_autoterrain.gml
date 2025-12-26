@@ -8,12 +8,12 @@ enum AUTOTERRAIN_TYPE {
 
 global.autoterrain_amount = [ 9, 16, 15, 48, 55, ];
 
-function tiler_brush_autoterrain(_type = -1, _index = []) constructor {
+function tiler_brush_autoterrain() constructor {
 	name    = "autoterrain";
-    index   = _index;
+    type    = -1;
+    index   = [];
     size    = [1,1];
     prevInd =  0;
-    type    = -1;
     
     mask_surface      = noone;
     update_surface    = noone;
@@ -59,6 +59,21 @@ function tiler_brush_autoterrain(_type = -1, _index = []) constructor {
     	array_create_ext(55, function(i) /*=>*/ {return i}),
 	];
     
+    static init = function(_index, _type) {
+    	index = _index;
+    	type  = _type;
+    	
+    	switch(_type) {
+    		case 0 : prevInd = 0; size = [ 3, 3]; break;
+    		case 1 : prevInd = 1; size = [ 5, 5]; break;
+    		case 2 : prevInd = 0; size = [ 5, 3]; break;
+    		case 3 : prevInd = 8; size = [12, 4]; break;
+    		case 4 : prevInd = 0; size = [11, 5]; break;
+    	}
+    	
+    	return self;
+    }
+    
     static setType = function(_type) {
     	if(type == _type) return;
     	
@@ -88,12 +103,11 @@ function tiler_brush_autoterrain(_type = -1, _index = []) constructor {
     	}
     	
     	type = _type;
-    	
-    } setType(_type);
+    } 
     
     static drawing_start = function(surface, _erase = false) {
-        target_surface  = surface;
-        eraseMode       = _erase;
+        target_surface    = surface;
+        eraseMode         = _erase;
         
         var _dim          = surface_get_dimension(surface);
         draw_surface_mask = surface_verify(draw_surface_mask, _dim[0], _dim[1], surface_r8unorm);
@@ -118,9 +132,9 @@ function tiler_brush_autoterrain(_type = -1, _index = []) constructor {
         // #FFFFFF : part of autoterrain, writable
         
         surface_set_shader(mask_surface, sh_tiler_autoterrain_mask); 
-            shader_set_surface("drawSurface", draw_surface_mask);
-            shader_set_i("indexes",   index);
-            shader_set_i("indexSize", array_length(index));
+            shader_set_s("drawSurface", draw_surface_mask);
+            shader_set_i("indexes",     index);
+            shader_set_i("indexSize",   array_length(index));
             
             draw_surface(target_surface, 0, 0);
         surface_reset_shader();
@@ -128,7 +142,7 @@ function tiler_brush_autoterrain(_type = -1, _index = []) constructor {
         surface_set_shader(update_surface, sh_tiler_autoterrain_apply); 
             shader_set_2("dimension",    surface_get_dimension(update_surface));
             
-            shader_set_surface("maskSurface", mask_surface);   
+            shader_set_s("maskSurface",   mask_surface);   
             shader_set_i("bitmaskType",   type);
             shader_set_i("indexMapper48", indexMap48);
             
@@ -163,9 +177,7 @@ function tiler_brush_autoterrain(_type = -1, _index = []) constructor {
     static deserialize = function(m) {
     	name  = m[$ "name"]  ?? name;
     	index = m[$ "index"] ?? index;
-    	
     	type  = m[$ "type"]  ?? type;
-    	setType(type);
     	
     	return self;
     }

@@ -55,12 +55,10 @@ float matchTexture(int ori) {
 		}
 		
 		vec4 baseCol = texture2D(gm_BaseTexture, basePx / dimension);
-		if(matchCol == matchGroup[0]) {
+		if(matchCol.rgb == matchGroup[0].rgb) {
 			float thrMin = 999999.;
-			for(int i = 0; i < matchGroupCount; i++) {
-				vec4  col = matchGroup[i];
-				thrMin = min(thrMin, distance(col.rgb, baseCol.rgb) / s3);
-			}
+			for(int i = 0; i < matchGroupCount; i++)
+				thrMin = min(thrMin, distance(matchGroup[i].rgb, baseCol.rgb) / s3);
 			
 			if(thrMin > threshold)
 				return 0.;

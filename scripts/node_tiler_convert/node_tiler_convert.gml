@@ -4,26 +4,20 @@ function tilemap_convert_object(_color, _target = undefined) constructor {
 }
 
 function Node_Tile_Convert(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
-    name = "Convert to Tilemap";
-    
+    name    = "Convert to Tilemap";
     tileset = noone;
-	attributes.colorMap  = {};
-	attributes.colorList = [];
-	
+    
+    newInput( 1, nodeValue_Tileset()).setVisible(true, true);
     newInput( 0, nodeValue_Surface("Surface"));
     
-    newInput( 1, nodeValue_Tileset())
-    	.setVisible(true, true);
-    
-    newInput( 2, nodeValue_Bool("Animated", false));
-    
+    ////- Tile Map
     newInput( 3, nodeValueSeed());
+    newInput( 2, nodeValue_Bool("Animated", false));
+    // 4
     
-	newOutput(0, nodeValue_Output("Rendered", VALUE_TYPE.surface, noone));
-	
-	newOutput(1, nodeValue_Output("Tilemap", VALUE_TYPE.surface, noone));
-	
-	newOutput(2, nodeValue_Output("Tileset", VALUE_TYPE.tileset, noone));
+	newOutput(0, nodeValue_Output( "Rendered", VALUE_TYPE.surface, noone ));
+	newOutput(1, nodeValue_Output( "Tilemap",  VALUE_TYPE.surface, noone ));
+	newOutput(2, nodeValue_Output( "Tileset",  VALUE_TYPE.tileset, noone ));
 	
 	tile_mapper = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus, _panel = noone) {
 	    var bx = _x;
@@ -93,12 +87,15 @@ function Node_Tile_Convert(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			    draw_sprite_stretched_ext(THEME.ui_panel, 1, _px, _py, _pw, _ph, COLORS._main_icon);
 			    
 			} else if(is_array(_targ)) {
-			    var _at   = tileset.autoterrain[_targ[1]];
-			    var _prin = array_safe_get(_at.index, _at.prevInd, undefined);
-			    if(_prin != undefined) tileset.drawTile(_prin, _px, _py, _pw, _ph);
-			    
-			    draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text_sub);
-			    draw_text_add(_x1 + ss + ui(8), _y0 + ss / 2, _at.name);
+				var _indx = _targ[1];
+			    var _at   = array_safe_get_fast(tileset.autoterrain, _indx);
+			    if(is(_at, tiler_brush_autoterrain)) {
+				    var _prin = array_safe_get(_at.index, _at.prevInd, undefined);
+				    if(_prin != undefined) tileset.drawTile(_prin, _px, _py, _pw, _ph);
+				    
+				    draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text_sub);
+				    draw_text_add(_x1 + ss + ui(8), _y0 + ss / 2, _at.name);
+			    }
 			    
 			} else {
 			    tileset.drawTile(_targ, _px, _py, _pw, _ph);
@@ -113,12 +110,18 @@ function Node_Tile_Convert(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	});
 	
 	input_display_list  = [ 1, 0, 
-	    ["Tile map",     false], 3, 2, 
-	    ["Tile convert", false], tile_mapper, 
+	    ["Tile Map",     false], 3, 2, 
+	    ["Tile Convert", false], tile_mapper, 
     ];
 	
 	output_display_list = [ 2, 1, 0 ];
-	temp_surface        = [ noone, noone, noone ];
+	
+	////- Node
+	
+	attributes.colorMap  = {};
+	attributes.colorList = [];
+	
+	temp_surface = [ noone, noone, noone ];
 	
 	static refreshPalette = function() {
 		var _surf = inputs[0].getValue();
@@ -171,10 +174,12 @@ function Node_Tile_Convert(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	}
 	
 	static processData = function(_outData, _data, _array_index) { 
-	    var _surf     = _data[0];
-	    tileset       = _data[1];
-	    var _animated = _data[2];
-	    var _seed     = _data[3];
+		#region data
+		    var _surf     = _data[0];
+		    tileset       = _data[1];
+		    var _animated = _data[2];
+		    var _seed     = _data[3];
+		#endregion
 	    
 	    _outData[2] = tileset;
 	    update_on_frame = _animated;
@@ -183,9 +188,10 @@ function Node_Tile_Convert(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	    if(!is_surface(_surf)) return _outData;
 	    
 		var _mapSize    = surface_get_dimension(_surf);
-		temp_surface[0] = surface_verify(temp_surface[0], _mapSize[0], _mapSize[1], surface_rgba16float);
-		temp_surface[1] = surface_verify(temp_surface[1], _mapSize[0], _mapSize[1], surface_rgba16float);
-		temp_surface[2] = surface_verify(temp_surface[2], _mapSize[0], _mapSize[1], surface_rgba16float);
+		for( var i = 0, n = array_length(temp_surface); i < n; i++ ) {
+			temp_surface[i] = surface_verify(temp_surface[i], _mapSize[0], _mapSize[1], surface_rgba16float);
+			surface_clear(temp_surface[i]);
+		}
 		
 		var _cmap = attributes.colorMap;
 		var _clrs = attributes.colorList;
@@ -193,9 +199,9 @@ function Node_Tile_Convert(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _rpFr = [];
 		var _rpTo = [];
 		
-		surface_set_target(temp_surface[1]);
-		    DRAW_CLEAR BLEND_OVERRIDE draw_surface(_surf, 0, 0); BLEND_NORMAL
-		surface_reset_target();
+		surface_set_shader(temp_surface[!_bg], noone, true, BLEND.over);
+		    draw_surface(_surf, 0, 0);
+		surface_reset_shader();
 		
 		for( var i = 0, n = array_length(_clrs); i < n; i++ ) {
 		    var cc = _clrs[i];
@@ -209,19 +215,22 @@ function Node_Tile_Convert(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			    continue;
 			}
 			
-			var _at = tileset.autoterrain[tg[1]];
+			var _ai = tg[1];
+			var _at = array_safe_get(tileset.autoterrain, _ai);
 			if(!is(_at, tiler_brush_autoterrain)) continue;
+			
+			var _prin = array_safe_get(_at.index, _at.prevInd, 0);
 			
 			surface_set_shader(temp_surface[_bg], sh_tiler_convert_mask);
 			    shader_set_color("target",  cc);
-			    shader_set_f("replace", _at.index[_at.prevInd]);
+			    shader_set_f("replace",    _prin + 1);
 			    
 			    draw_surface(temp_surface[!_bg], 0, 0);
 			surface_reset_shader();
 			
-    		surface_set_target(temp_surface[!_bg]);
-    		    DRAW_CLEAR BLEND_OVERRIDE draw_surface(temp_surface[_bg], 0, 0); BLEND_NORMAL
-    		surface_reset_target();
+    		surface_set_shader(temp_surface[!_bg], noone, true, BLEND.over);
+    		    draw_surface(temp_surface[_bg], 0, 0);
+    		surface_reset_shader();
 		    
 			_at.drawing_start(temp_surface[!_bg]);
 			    draw_surface(temp_surface[_bg], 0, 0);
@@ -230,28 +239,31 @@ function Node_Tile_Convert(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			_bg = !_bg;
 		}
 		
-		surface_set_shader(temp_surface[!_bg], sh_tiler_convert);
-		    shader_set_palette(_rpFr, "colorFrom", "colorAmount");
-		    shader_set_f("colorTo", _rpTo);
-		    
-		    draw_surface(temp_surface[_bg], 0, 0);
-		surface_reset_shader();
+		if(!array_empty(_rpTo)) {
+			surface_set_shader(temp_surface[_bg], sh_tiler_convert, noone, true, BLEND.over);
+			    shader_set_palette(_rpFr, "colorFrom", "colorAmount");
+			    shader_set_f("colorTo", _rpTo);
+			    
+			    draw_surface(temp_surface[!_bg], 0, 0);
+			surface_reset_shader();
+			_bg = !_bg;
+		}
 		
 		var _tileSiz = tileset.tileSize;
 	    var _outDim  = [ _tileSiz[0] * _mapSize[0], _tileSiz[1] * _mapSize[1] ];
 	    var _tileOut = surface_verify(_outData[0], _outDim[0],  _outDim[1]);
 	    var _tileMap = surface_verify(_outData[1], _mapSize[0], _mapSize[1], surface_rgba16float);
-	    var _applied = tileset.rules.apply(temp_surface[!_bg], _seed);
+	    var _applied = tileset.rules.apply(temp_surface[_bg], _seed);
 	    
 	    surface_set_shader(_tileMap, sh_sample, true, BLEND.over);
 	        draw_surface(_applied, 0, 0);
 	    surface_reset_shader();
 	    
 	    surface_set_shader(_tileOut, sh_draw_tile_map, true, BLEND.over);
-	        shader_set_2("dimension", _outDim);
+	        shader_set_2( "dimension", _outDim );
 	        
-	        shader_set_surface("indexTexture", _tileMap);
-	        shader_set_2("indexTextureDim", surface_get_dimension(_tileMap));
+	        shader_set_s( "indexTexture",    _tileMap );
+	        shader_set_2( "indexTextureDim", _mapSize );
 	        
 			shader_set_f("frame", CURRENT_FRAME);
 	        tileset.shader_submit();

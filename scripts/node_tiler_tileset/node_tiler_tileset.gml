@@ -672,7 +672,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		    			case 55 : _typ = AUTOTERRAIN_TYPE.top55;  break;
 		    		}
 		    		
-				    var _new_at = new tiler_brush_autoterrain(_typ,   _indx);
+				    var _new_at = new tiler_brush_autoterrain().init(_indx, _typ);
 				    
 					object_selecting = _new_at;
 					object_select_id = noone;

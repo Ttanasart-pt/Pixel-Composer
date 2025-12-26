@@ -24,7 +24,8 @@ void main() {
     
     vec2 tileAmo  = floor(tileTextureDim / tileSize);
     vec4 samIdx   = texture2D( indexTexture, floor(px / tileSize) / (indexTextureDim - 1.) );
-    if(samIdx.r == 0.) return;
+    if(samIdx.r == 0.) 
+        return;
     
     if(samIdx.r > 0.) {
         index  = samIdx.r - 1.;
