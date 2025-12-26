@@ -27,8 +27,7 @@ function Node_Feedback_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	////- Rendering
 	
-	static isActiveFrame    = function() /*=>*/ {return feedback_active || CURRENT_FRAME == 0};
-	static bypassConnection = function() /*=>*/ {return feedback_active && value_buffer != undefined};
+	static bypassConnection = function() /*=>*/ {return value_buffer != undefined};
 	static bypassNextNode   = function() /*=>*/ {return false};
 	static getNextNode      = function() /*=>*/ {return []};
 	
@@ -67,7 +66,8 @@ function Node_Feedback_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	}
 	
 	static updateValue = function() {
-		if(!IS_PLAYING && !isActiveFrame() && CURRENT_FRAME != buffered_frame + 1) return;
+		if(!feedback_active) return;
+		if(!IS_PLAYING && CURRENT_FRAME != 0 && CURRENT_FRAME != buffered_frame + 1) return;
 		
 		var type = junc_out.type;
 		var val  = junc_out.getValue();
@@ -94,7 +94,6 @@ function Node_Feedback_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	static update = function() {
 		if(IS_FIRST_FRAME) value_buffer = undefined;
 		feedback_active = inputs[0].getValue();
-		update_on_frame = feedback_active;
 	}
 	
 	////- Draw

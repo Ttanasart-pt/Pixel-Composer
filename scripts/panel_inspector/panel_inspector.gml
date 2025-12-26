@@ -1056,8 +1056,8 @@ function Panel_Inspector() : PanelContent() constructor {
             	var _tlw = con_w - ui(8);
             	var _tlh = ui(20);
             	
-            	draw_sprite_stretched(THEME.ui_panel_bg, 1, _tlx, _tly, _tlw, _tlh);
         		draw_sprite_stretched_ext(THEME.ui_panel_bg, 2, _tlx, _tly, _tlw, _tlh, COLORS.panel_animation_timeline_blend, 1);
+        		draw_sprite_stretched_add(THEME.ui_panel,    1, _tlx, _tly, _tlw, _tlh, COLORS._main_icon, .25);
         		
         		var hhov = _hover && point_in_rectangle(_m[0], _m[1], _tlx, _tly, _tlx + _tlw, _tly + _tlh);
             	var scis = gpu_get_scissor();
@@ -1134,8 +1134,8 @@ function Panel_Inspector() : PanelContent() constructor {
             	var _tlw = con_w - ui(8);
             	var _tlh = frNode.inspector_draw_height;
             	
-            	draw_sprite_stretched(THEME.ui_panel_bg, 1, _tlx, _tly, _tlw, _tlh);
-        		draw_sprite_stretched_ext(THEME.ui_panel_bg, 2, _tlx, _tly, _tlw, _tlh, COLORS.panel_animation_timeline_blend, 1);
+        		draw_sprite_stretched_ext(THEME.ui_panel_bg, 2, _tlx, _tly, _tlw, _tlh, COLORS.panel_animation_timeline_blend, .5);
+        		draw_sprite_stretched_add(THEME.ui_panel,    1, _tlx, _tly, _tlw, _tlh, COLORS._main_icon, .25);
         		
         		var _flg = INSPECTOR_FLAG.input_only;
         		var _fhh = drawNodeProperties(_x + ui(4), _tly + ui(4), _w - ui(8), _m, frNode, _flg) + ui(2);
