@@ -2323,12 +2323,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			ghost_hover = noone;
 			
 		} else if(type == VALUE_TYPE.action) {
-			var _cbg = c_white;
-			
-			if(draw_blend != -1)
-				_cbg = merge_color(draw_blend_color, _cbg, draw_blend);
-		
-			__draw_sprite_ext(THEME.node_junction_inspector, _hov, x, y, _s, _s, 0, _cbg, 1);
+			__draw_sprite_ext(THEME.node_junction_inspector, _hov, x, y, _s, _s, 0, c_white, 1);
 			
 		} else {
 			var _cbg = draw_bg;

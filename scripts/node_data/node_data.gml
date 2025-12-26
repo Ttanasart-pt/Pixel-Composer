@@ -2142,8 +2142,36 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			jun.drawJunction(_s, _mx, _my);
 		}
 		
-		if(insp1button && insp1button.visible) inspectInput1.drawJunction(_s, _mx, _my);
-		if(insp2button && insp2button.visible) inspectInput2.drawJunction(_s, _mx, _my);
+		var a = key_mod_press(ALT);
+		if(insp1button && insp1button.visible) {
+			var _jh = inspectInput1.hover_in_graph;
+			var _jx = inspectInput1.x;
+			var _jy = inspectInput1.y;
+			var _js = a? THEME.node_junction_inspector_button : THEME.node_junction_inspector;
+			
+			var  ss = _s / (2 * THEME_SCALE);
+			if(_jh && mouse_click(mb_left) && a)
+				ss *= .8;
+			
+			__draw_sprite_ext(_js, _jh, _jx, _jy, ss, ss, 0, c_white, 1);
+			if(_jh && mouse_press(mb_left) && a)
+				insp1button.onClick();
+		}
+		
+		if(insp2button && insp2button.visible) {
+			var _jh = inspectInput2.hover_in_graph;
+			var _jx = inspectInput2.x;
+			var _jy = inspectInput2.y;
+			var _js = a? THEME.node_junction_inspector_button : THEME.node_junction_inspector;
+			
+			var  ss = _s / (2 * THEME_SCALE);
+			if(_jh && mouse_click(mb_left) && a)
+				ss *= .8;
+				
+			__draw_sprite_ext(_js, _jh, _jx, _jy, ss, ss, 0, c_white, 1);
+			if(_jh && mouse_press(mb_left) && a)
+				insp2button.onClick();
+		}
 		
 		if(attributes.show_update_trigger) {
 			updatedInTrigger.drawJunction(_s, _mx, _my);

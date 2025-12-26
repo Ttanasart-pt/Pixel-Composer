@@ -1706,6 +1706,8 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		
 		_upd = _upd || connection_cache[$ "frame"]     != GLOBAL_CURRENT_FRAME;
 				       connection_cache[$ "frame"]     =  GLOBAL_CURRENT_FRAME;
+				       
+    	_upd = _upd || key_mod_up(ALT) || key_mod_press(ALT);
 		node_surface_update    = node_surface_update || _upd;
     }
     
