@@ -1,5 +1,7 @@
 function Node_Trigger(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Trigger";
+	always_pad        = true;
+	reactive_on_hover = true;
 	setDimension(96, 56);
 	
 	newInput(0, nodeValue_Trigger("Trigger" ))
@@ -16,19 +18,23 @@ function Node_Trigger(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
 		var bbox = draw_bbox;
-		var trg  = outputs[0].getValue();
+		var bx = bbox.x0 + 4 * _s; 
+		var by = bbox.y0 + 4 * _s; 
+		var bw = bbox.w  - 8 * _s;
+		var bh = bbox.h  - 8 * _s;
 		
-		var cc = trg? COLORS._main_accent : COLORS._main_icon;
-		var rr = min(bbox.w, bbox.h) / 2 - 6;
+		var _hov = _hover && !PANEL_GRAPH.node_dragging;
+		var b = buttonInstant(THEME.button_def, bx, by, bw, bh, [_mx,_my], _hov, _focus)
 		
-		draw_set_color(cc);
+		if(b) draggable = false;
+		if(b == 2) {
+			inputs[0].setAnim(true); 
+			inputs[0].setValue(true);
+		}
 		
-		draw_set_circle_precision(32);
-		draw_circle_border(bbox.xc, bbox.yc, rr, 4);
-		
-		draw_set_circle_precision(32);
-		if(trg) draw_circle(bbox.xc - 1, bbox.yc - 1, rr - 6, false);
+		var ts = .2 * _s;
+		draw_set_text(f_sdf, fa_center, fa_center, COLORS._main_text);
+		draw_text_transformed(bbox.xc, bbox.yc, __txt("Trigger"), ts, ts, 0);
 	}
 }
