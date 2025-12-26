@@ -144,7 +144,10 @@ if(DIALOG_SHOW_FOCUS) {
 	
 	if(hk_editing == noone) {
 		tb_search.setFocusHover(sFOCUS, sHOVER);
+		
+		draw_sprite_stretched_ext(THEME.textbox, 3, tx, ty, tw, th, COLORS._main_icon_light);
 		tb_search.draw(tx, ty, tw, th, search_string, mouse_ui);
+		draw_sprite_stretched_ext(THEME.textbox, 2, tx, ty, tw, th, COLORS._main_icon, .5);
 		
 	} else {
 		draw_sprite_stretched_ext(THEME.textbox, 5, tx, ty, tw, th);

@@ -7,7 +7,7 @@ function Node_Markov(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	////- =Matching
 	newInput( 1, nodeValue_Surface( "Match" ));
-	newInput( 8, nodeValue_Palette( "Match Group", [ca_black] ));
+	newInput( 8, nodeValue_Palette( "Match Group", [ca_black] )).setTooltip("Colors in these group will be treat as the same color.");
 	newInput( 3, nodeValue_Slider(  "Threshold",  .1          ));
 	newInput(15, nodeValue_EScroll( "Transform",   0, [ "None", "Rotate 90 Random", "Rotate 90x4" ] ));
 	newInput( 6, nodeValue_EScroll( "Boundary",    1, [ "Ignore", "Stop", "Clamp" ] ));
@@ -85,8 +85,7 @@ function Node_Markov(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			shader_set_2("tileOffset",     _toff );
 			shader_set_2("tileSize",       _tsiz );
 			
-			shader_set_f_array("matchGroup", paletteToArray(_matg) );
-			shader_set_i("matchGroupCount",  array_length(_matg)   );
+			shader_set_palette(_matg, "matchGroup", "matchGroupCount", 256 );
 			
 			draw_surface(_surf, 0, 0);
 		surface_reset_shader();

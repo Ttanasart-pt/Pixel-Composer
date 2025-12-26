@@ -1,38 +1,38 @@
 function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name   = "Frame";
-	w      = 240;
-	h      = 160;
-	bg_spr = THEME.node_frame_bg;
+	name    = "Frame";
+	bg_spr  = THEME.node_frame_bg;
+	__nodes = [];
+	w = 240;
+	h = 160;
 	
-	size_dragging    = false;
-	size_dragging_x  = x;
-	size_dragging_y  = y;
-	size_dragging_w  = w;
-	size_dragging_h  = h;
-	size_dragging_mx = w;
-	size_dragging_my = h;
+	#region ---- draw ----
+		size_dragging    = false;
+		size_dragging_x  = x;
+		size_dragging_y  = y;
+		size_dragging_w  = w;
+		size_dragging_h  = h;
+		size_dragging_mx = w;
+		size_dragging_my = h;
+		
+		auto_height      = false;
+		name_hover       = false;
+		hover_progress   = 0;
+		
+		color  = ca_white;
+		lAlpha = 1;
+		tColor = ca_white;
+		
+		reframe = true;
+		repadd  = 32;
+		
+		tb_name     = textBox_Text(function(txt) /*=>*/ { setDisplayName(txt); }).setFont(f_p2).setHide(true).setAlign(fa_center);
+		name_height = 18;
+		
+		draw_x0 = 0; draw_y0 = 0;
+		draw_x1 = 0; draw_y1 = 0;
+	#endregion
 	
-	auto_height      = false;
-	name_hover       = false;
-	hover_progress   = 0;
-	
-	color  = ca_white;
-	lAlpha = 1;
-	tColor = ca_white;
-	
-	reframe = true;
-	repadd  = 32;
-	
-	tb_name     = textBox_Text(function(txt) /*=>*/ { setDisplayName(txt); }).setFont(f_p2).setHide(true).setAlign(fa_center);
-	name_height = 18;
-	__nodes     = [];
-	
-	draw_x0 = 0;
-	draw_y0 = 0;
-	draw_x1 = 0;
-	draw_y1 = 0;
-	
-	newInput(0, nodeValue_Vec2(   "Size",     [240,160] ));
+	/*UNUSED*/ newInput(0, nodeValue_Vec2(   "Size",     [240,160] ));
 	
 	////- =Reframe
 	newInput(4, nodeValue_Bool(   "Reframe",   true     ));
@@ -58,7 +58,7 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	attributes.w = 0;
 	attributes.h = 0;
 	
-	static move = function(_x, _y) {
+	static move = function(_x, _y, _direct = true) {
 		moved = true;
 		if(x == _x && y == _y) return;
 		
@@ -68,12 +68,13 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		x = _x; 
 		y = _y; 
 		
+		if(_direct)
 		for( var i = 0, n = array_length(__nodes); i < n; i++ ) {
 			var _n  = __nodes[i];
 			var _nx = _n.x + _dx;
 			var _ny = _n.y + _dy;
 			
-			_n.move(_nx, _ny);
+			_n.move(_nx, _ny, false);
 		}
 		
 		if(!LOADING) project.setModified();

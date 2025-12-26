@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_markov_gradient",
+  "name":"sh_markov_gradient",
+  "parent":{
+    "name":"markov",
+    "path":"folders/nodes/data/simulation/markov.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

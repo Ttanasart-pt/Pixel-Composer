@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"node_markov",
   "parent":{
-    "name":"effects",
-    "path":"folders/nodes/data/filter/effects.yy",
+    "name":"markov",
+    "path":"folders/nodes/data/simulation/markov.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

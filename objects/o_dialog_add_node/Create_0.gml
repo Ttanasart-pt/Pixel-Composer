@@ -988,7 +988,8 @@ event_inherited();
 	search_list   = [];
 	KEYBOARD_RESET
 	
-	tb_search = textBox_Text(function(str) /*=>*/ { search_string = string(str); searchNodes(); }).setAlign(fa_left).setAutoupdate();
+	tb_search = textBox_Text(function(str) /*=>*/ { search_string = string(str); searchNodes(); })
+		.setAlign(fa_left).setAutoupdate().setHide(2);
 	WIDGET_CURRENT = tb_search;
 	
 	function searchNodes() { 

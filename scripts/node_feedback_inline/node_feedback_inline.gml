@@ -10,9 +10,7 @@ function Node_Feedback_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	is_root         = false;
 	selectable      = false;
 	update_on_frame = true;
-	
-	previous_active = false;
-	feedback_active = true;
+	loop_active     = true;
 	
 	newInput( 0, nodeValue_Bool( "Active", true ));
 	
@@ -66,7 +64,7 @@ function Node_Feedback_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	}
 	
 	static updateValue = function() {
-		if(!feedback_active) return;
+		if(!loop_active) return;
 		if(!IS_PLAYING && CURRENT_FRAME != 0 && CURRENT_FRAME != buffered_frame + 1) return;
 		
 		var type = junc_out.type;
@@ -93,7 +91,7 @@ function Node_Feedback_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	static update = function() {
 		if(IS_FIRST_FRAME) value_buffer = undefined;
-		feedback_active = inputs[0].getValue();
+		loop_active = inputs[0].getValue();
 	}
 	
 	////- Draw

@@ -771,8 +771,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static getAnim = function() { return instanceBase != undefined? instanceBase.is_anim : is_anim; }
 	
 	static isAnimated = function() {
-		if(value_from_loop)       return true;
-		if(value_from != noone)   return value_from.node.isAnimated();
+		if(value_from_loop && value_from_loop.loop_active) return true;
+		if(value_from != noone)       return value_from.node.isAnimated();
 		if(instanceBase != undefined) return instanceBase.isAnimated();
 		return is_anim;
 	}
@@ -1339,8 +1339,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static isActiveDynamic = function() {
 		INLINE
 		
-		if(value_from_loop)       return true;
-		if(value_from != noone)   return false;
+		if(value_from_loop && value_from_loop.loop_active) return true;
+		if(value_from != noone)       return false;
 		if(instanceBase != undefined) return instanceBase.isActiveDynamic();
 		
 		if(expUse) {
@@ -1364,10 +1364,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(__init_dynamic)             { __init_dynamic = false;      return true; }
 		if(value_from != __value_from) { __value_from   = value_from; return true; }
 		
-		if(!node.project.animator.is_playing) return true;
-		if(value_from_loop)       return true;
-		if(value_from != noone)   return true;
-		if(instanceBase != undefined) return instanceBase.isDynamic();
+		if(!node.project.animator.is_playing)              return true;
+		if(value_from_loop && value_from_loop.loop_active) return true;
+		if(value_from != noone)                            return true;
+		if(instanceBase != undefined)                      return instanceBase.isDynamic();
 		
 		if(expUse) {
 			if(!is_struct(expTree)) return false;

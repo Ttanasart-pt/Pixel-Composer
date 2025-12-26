@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"node_markov_gradient",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"node_markov_gradient",
+  "parent":{
+    "name":"markov",
+    "path":"folders/nodes/data/simulation/markov.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

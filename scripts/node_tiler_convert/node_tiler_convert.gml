@@ -71,9 +71,11 @@ function Node_Tile_Convert(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			    
 			    if(mouse_press(mb_left, _focus))
 			        tileset.object_selecting = tileset.object_selecting == mp? noone : mp;
-			        
-		        if(mouse_press(mb_right, _focus))
+			       
+		        if(mouse_press(mb_right, _focus)) {
 		            mp.target = undefined;
+		            triggerRender();
+		        }
 			}
 			
 			var _targ = mp.target;
@@ -206,7 +208,7 @@ function Node_Tile_Convert(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		for( var i = 0, n = array_length(_clrs); i < n; i++ ) {
 		    var cc = _clrs[i];
 			var mp = _cmap[$ cc];
-			var tg = mp.target;
+			var tg = mp[$ "target"];
 			
 			if(tg == undefined) continue;
 			if(!is_array(tg)) {
@@ -221,9 +223,9 @@ function Node_Tile_Convert(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			
 			var _prin = array_safe_get(_at.index, _at.prevInd, 0);
 			
-			surface_set_shader(temp_surface[_bg], sh_tiler_convert_mask);
-			    shader_set_color("target",  cc);
-			    shader_set_f("replace",    _prin + 1);
+			surface_set_shader(temp_surface[_bg], sh_tiler_convert_mask, true, BLEND.over);
+			    shader_set_c("target",   cc);
+			    shader_set_f("replace", _prin + 1);
 			    
 			    draw_surface(temp_surface[!_bg], 0, 0);
 			surface_reset_shader();
@@ -232,19 +234,21 @@ function Node_Tile_Convert(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
     		    draw_surface(temp_surface[_bg], 0, 0);
     		surface_reset_shader();
 		    
-			_at.drawing_start(temp_surface[!_bg]);
-			    draw_surface(temp_surface[_bg], 0, 0);
+			_bg = !_bg;
+			
+			_at.drawing_start(temp_surface[_bg]);
+			    draw_surface(temp_surface[!_bg], 0, 0);
 			_at.drawing_end();
 			
 			_bg = !_bg;
 		}
 		
 		if(!array_empty(_rpTo)) {
-			surface_set_shader(temp_surface[_bg], sh_tiler_convert, noone, true, BLEND.over);
+			surface_set_shader(temp_surface[!_bg], sh_tiler_convert, true, BLEND.over);
 			    shader_set_palette(_rpFr, "colorFrom", "colorAmount");
 			    shader_set_f("colorTo", _rpTo);
 			    
-			    draw_surface(temp_surface[!_bg], 0, 0);
+			    draw_surface(temp_surface[_bg], 0, 0);
 			surface_reset_shader();
 			_bg = !_bg;
 		}
@@ -253,7 +257,7 @@ function Node_Tile_Convert(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	    var _outDim  = [ _tileSiz[0] * _mapSize[0], _tileSiz[1] * _mapSize[1] ];
 	    var _tileOut = surface_verify(_outData[0], _outDim[0],  _outDim[1]);
 	    var _tileMap = surface_verify(_outData[1], _mapSize[0], _mapSize[1], surface_rgba16float);
-	    var _applied = tileset.rules.apply(temp_surface[_bg], _seed);
+	    var _applied = tileset.rules.apply(temp_surface[!_bg], _seed);
 	    
 	    surface_set_shader(_tileMap, sh_sample, true, BLEND.over);
 	        draw_surface(_applied, 0, 0);

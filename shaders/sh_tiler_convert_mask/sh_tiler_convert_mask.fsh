@@ -6,5 +6,9 @@ uniform float replace;
 
 void main() {
     vec4 base = texture2D( gm_BaseTexture, v_vTexcoord );
-    gl_FragColor = base == target? vec4(replace, 0., 0., 1.) : vec4(0.);
+    gl_FragColor = base;
+    if(base.a == 2.) return;
+    
+    if(distance(base.rgb, target.rgb) < .01)
+        gl_FragColor = vec4(replace, 0., 0., 2.);
 }

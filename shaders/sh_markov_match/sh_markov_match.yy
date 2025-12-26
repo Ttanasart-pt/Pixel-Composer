@@ -4,7 +4,7 @@
   "name":"sh_markov_match",
   "parent":{
     "name":"markov",
-    "path":"folders/nodes/data/filter/effects/markov.yy",
+    "path":"folders/nodes/data/simulation/markov/markov.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

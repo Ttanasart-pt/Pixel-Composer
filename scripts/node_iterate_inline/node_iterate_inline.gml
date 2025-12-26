@@ -8,6 +8,7 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	newInput(0, nodeValue_Int("Repeat", 1 )).uncache();
 	
 	managedRenderOrder = true;
+	loop_active = true;
 	
 	attributes.junc_in  = [ "", 0 ];
 	attributes.junc_out = [ "", 0 ];

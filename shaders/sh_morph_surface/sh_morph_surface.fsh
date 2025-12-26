@@ -131,7 +131,7 @@ varying vec4 v_vColour;
 
 uniform sampler2D sFrom;
 uniform sampler2D sTo;
-uniform vec2 dimension;
+uniform vec2  dimension;
 uniform float amount;
 uniform float threshold;
 
@@ -156,10 +156,8 @@ void main() {
 		float base = 1.;
 		float top  = 0.;
 		
-		if(amount > 0.5)
-			dist = i / dimension.x * (1. / amount);
-		else 
-			dist = i / dimension.x * (1. / (1. - amount));
+		if(amount > 0.5) dist = i / dimension.x * (1. / amount);
+		else             dist = i / dimension.x * (1. / (1. - amount));
 		
 		for(float j = 0.; j <= 64.; j++) {
 			float ang = top / base * TAU;

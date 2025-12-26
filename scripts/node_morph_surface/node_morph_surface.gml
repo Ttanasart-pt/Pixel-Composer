@@ -42,15 +42,17 @@ function Node_Morph_Surface(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		if(!is_surface(sFrom)) return _outSurf;
 		if(!is_surface(sTo)) return _outSurf;
 		
+		var _dim = surface_get_dimension(sFrom);
+		
 		surface_set_shader(_outSurf, sh_morph_surface);
-		shader_set_interpolation(_data[0]);
-			shader_set_surface("sFrom", sFrom);
-			shader_set_surface("sTo",   sTo);
-			shader_set_f("dimension",   surface_get_width_safe(sFrom), surface_get_height_safe(sTo));
-			shader_set_f("amount",      amo);
-			shader_set_f("threshold",   thres);
+			shader_set_interpolation(sFrom);
+			shader_set_s("sFrom",     sFrom );
+			shader_set_s("sTo",       sTo   );
+			shader_set_2("dimension", _dim  );
+			shader_set_f("amount",    amo   );
+			shader_set_f("threshold", thres );
 			
-			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, surface_get_width_safe(sFrom), surface_get_height_safe(sTo));
+			draw_empty();
 		surface_reset_shader();
 		
 		return _outSurf;

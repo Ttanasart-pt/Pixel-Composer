@@ -1,4 +1,4 @@
-#region
+#region 
 	FN_NODE_CONTEXT_INVOKE {
 		addHotkey("Node_Transform", "Rotation > Rotate CCW", "R", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[5].setValue((_n.inputs[5].getValue() + 90) % 360); });
 		addHotkey("Node_Transform", "Render Mode > Toggle",  "M", MOD_KEY.none, function() /*=>*/ { GRAPH_FOCUS _n.inputs[7].setValue((_n.inputs[7].getValue() + 1) % 3); });
@@ -856,7 +856,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		var _outSurf  = _outData[0];
 		
-		if(!is_surface(surf)) {
+		if(!is_surface(surf)) { 
 			surface_free_safe(_outSurf);
 			_outSurf = noone;
 		}
@@ -900,7 +900,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				break;
 		}
 		
-		if(_ww <= 1 || _hh <= 1) return _outData;
+		if(_ww < 1 || _hh < 1) return _outData;
 		_outData[1] = [ _ww, _hh ];
 		
 		_outSurf = surface_verify(_outSurf, _ww, _hh, cDep);

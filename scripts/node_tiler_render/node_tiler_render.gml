@@ -14,6 +14,9 @@ function Node_Tile_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	    ["Tile data", false], 0, 1, 2, 
 	];
 	
+	////- Node
+	
+	temp_surface = [noone];
 	output_display_list = [ 0 ];
 	
 	static update = function(frame = CURRENT_FRAME) {
@@ -27,18 +30,15 @@ function Node_Tile_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _mapSize = surface_get_dimension(tilemap);
 		
 		var _outDim  = [ _tileSiz[0] * _mapSize[0], _tileSiz[1] * _mapSize[1] ];
-	    var _tileOut = surface_verify(outputs[0].getValue(), _outDim[0],  _outDim[1]);
-	    var _tileMap = surface_verify(outputs[1].getValue(), _mapSize[0], _mapSize[1], surface_rgba16float);
+		
+		var _outSurf = outputs[0].getValue();
+	        _outSurf = surface_verify(_outSurf, _outDim[0],  _outDim[1]);
 	    
-	    surface_set_shader(_tileMap, sh_sample, true, BLEND.over);
-	        draw_surface(_applied, 0, 0);
-	    surface_reset_shader();
-	    
-	    surface_set_shader(_tileOut, sh_draw_tile_map, true, BLEND.over);
+	    surface_set_shader(_outSurf, sh_draw_tile_map, true, BLEND.over);
 	        shader_set_2("dimension", _outDim);
 	        
-	        shader_set_surface("indexTexture", _tileMap);
-	        shader_set_2("indexTextureDim", surface_get_dimension(_tileMap));
+	        shader_set_surface("indexTexture", tilemap);
+	        shader_set_2("indexTextureDim", surface_get_dimension(tilemap));
 	        
 			shader_set_f("frame", CURRENT_FRAME);
 	        tileset.shader_submit();
@@ -46,6 +46,6 @@ function Node_Tile_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	        draw_empty();
 	    surface_reset_shader();
 	    
-	    outputs[0].setValue(_tileOut);
+	    outputs[0].setValue(_outSurf);
 	}
 }
