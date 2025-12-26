@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_markov_replace",
+  "name":"sh_markov_replace",
+  "parent":{
+    "name":"markov",
+    "path":"folders/nodes/data/filter/effects/markov.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

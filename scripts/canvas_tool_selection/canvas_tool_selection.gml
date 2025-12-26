@@ -73,6 +73,9 @@ function canvas_selection() : canvas_tool() constructor {
 		selection_aa = 0;
 		selection_sampler.setSurface(selection_mask);
 		
+		if(!is_surface(selection_surface)) return;
+		if(!is_surface(selection_mask))    return;
+		
 		selection_surface_base = surface_verify(selection_surface_base, selection_size[0], selection_size[1]); 
 		surface_copy(selection_surface_base, 0, 0, selection_surface);
 		

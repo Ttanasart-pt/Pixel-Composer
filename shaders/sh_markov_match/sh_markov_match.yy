@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_markov_match",
+  "name":"sh_markov_match",
+  "parent":{
+    "name":"markov",
+    "path":"folders/nodes/data/filter/effects/markov.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

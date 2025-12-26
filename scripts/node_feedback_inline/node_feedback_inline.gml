@@ -11,16 +11,24 @@ function Node_Feedback_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	selectable      = false;
 	update_on_frame = true;
 	
+	previous_active = false;
+	feedback_active = true;
+	
+	newInput( 0, nodeValue_Bool( "Active", true ));
+	
 	attributes.junc_in  = [ "", 0 ];
 	attributes.junc_out = [ "", 0 ];
 	
 	junc_in  = noone;
 	junc_out = noone;
 	
-	value_buffer   = noone;
+	value_buffer   = undefined;
 	buffered_frame = noone;
 	
-	static bypassConnection = function() /*=>*/ {return CURRENT_FRAME > 0};
+	////- Rendering
+	
+	static isActiveFrame    = function() /*=>*/ {return feedback_active || CURRENT_FRAME == 0};
+	static bypassConnection = function() /*=>*/ {return feedback_active && value_buffer != undefined};
 	static bypassNextNode   = function() /*=>*/ {return false};
 	static getNextNode      = function() /*=>*/ {return []};
 	
@@ -59,7 +67,7 @@ function Node_Feedback_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	}
 	
 	static updateValue = function() {
-		if(!IS_PLAYING && CURRENT_FRAME != 0 && CURRENT_FRAME != buffered_frame + 1) return;
+		if(!IS_PLAYING && !isActiveFrame() && CURRENT_FRAME != buffered_frame + 1) return;
 		
 		var type = junc_out.type;
 		var val  = junc_out.getValue();
@@ -83,9 +91,16 @@ function Node_Feedback_Inline(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		arr[@ 1] = junc_out;
 	}
 	
+	static update = function() {
+		if(IS_FIRST_FRAME) value_buffer = undefined;
+		feedback_active = inputs[0].getValue();
+		update_on_frame = feedback_active;
+	}
+	
 	////- Draw
 	
 	static drawDimension = undefined
+	static drawBadge     = function(_x, _y, _s) {}
 	
 	static drawConnections = function(params = {}) {
 		if( junc_out == noone    ||  junc_in == noone)    return noone;

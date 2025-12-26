@@ -313,6 +313,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		reactive_on_hover  = false;
 	#endregion
 	
+	#region ---- Inspector ----
+		inspector_draw_height = 0;
+	#endregion
+	
 	#region ---- Rendering ------
 		rendered         = false;
 		update_on_frame  = false;

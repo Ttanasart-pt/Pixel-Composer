@@ -64,7 +64,34 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		var lb_w = ui(8) + ds_w;
 		
 		if(anim_hold != noone && mouse_lrelease()) anim_hold = noone;
-		if(_input && jun.isAnimable() && !jun.expUse) { // Animation
+		if(jun.value_from_loop) { // Feedback / Loop
+			var fr = jun.value_from_loop;
+			
+			var cc = COLORS.node_blend_loop;
+			var ss = THEME.loop;
+			
+		    if(is(fr, Node_Feedback_Inline)) { 
+		     	ss = THEME.feedback; 
+		     	cc = COLORS.node_blend_feedback;
+		     	
+	     	} else if(is(fr, Node_Iterate_Inline)) { 
+				ss = THEME.loop;
+				cc = COLORS.node_blend_loop;
+	     		
+	     	}
+			
+			var _hov = _hover && point_in_circle(_m[0], _m[1], butx, lb_y, bs / 2);
+			draw_sprite_ui_uniform(ss, 0, butx, lb_y, ics, cc, .8 + .2 * _hov);
+			
+			if(_hov) {
+				TOOLTIP = __txt("Open Node");
+				mbRight = false;
+				cHov    = true;
+				
+				if(mouse_lpress(_focus)) jun.inspector_loopDetail = !jun.inspector_loopDetail;
+			}
+			
+		} else if(_input && jun.isAnimable() && !jun.expUse) { // Animation
 			var index = jun.hasJunctionFrom()? 2 : jun.is_anim;
 			
 			var cc = c_white;
@@ -78,7 +105,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				mbRight = false;
 				cHov    = true;
 				
-				if(anim_hold != noone)
+				if(anim_hold != noone) 
 					jun.setAnim(anim_hold, true);
 					
 				draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, ics, index == 2? COLORS._main_accent : c_white, 1);
@@ -87,6 +114,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				if(mouse_lpress(_focus)) {
 					if(jun.value_from != noone)
 						jun.removeFrom();
+						
 					else {
 						jun.setAnim(!jun.is_anim, true);
 						anim_hold = jun.is_anim;
@@ -96,8 +124,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				if(mouse_rpress(_focus)) jun.inspector_timeline = !jun.inspector_timeline;
 			}
 			
-		} else // Animation
-			draw_sprite_ui_uniform(THEME.animate_clock, 0, butx, lb_y, ics, COLORS._main_icon_dark, 1);
+		} // Animation
 		
 		lb_w += bs;
 		
@@ -162,8 +189,12 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			cc = expValid? COLORS._main_value_positive : COLORS._main_value_negative;
 		}
 		
-		if(jun.is_anim)				cc = COLORS._main_value_positive;
-		if(jun.hasJunctionFrom())	cc = COLORS._main_accent;
+		var fr = jun.value_from_loop;
+		
+		if(jun.is_anim)                  cc = COLORS._main_value_positive;
+		if(jun.hasJunctionFrom())        cc = COLORS._main_accent;
+		if(is(fr, Node_Feedback_Inline)) cc = COLORS.node_blend_feedback;
+		if(is(fr, Node_Iterate_Inline))  cc = COLORS.node_blend_loop;
 		
 		if(jun.color != -1) {
 			draw_sprite_ui(THEME.timeline_color, 1, lb_x + ui(8), lb_y, 1, 1, 0, jun.color, 1);

@@ -191,9 +191,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(_type == VALUE_TYPE.curve)			display_type = VALUE_DISPLAY.curve;
 		else if(_type == VALUE_TYPE.d3vertex)	display_type = VALUE_DISPLAY.d3vertex;
 		
-		display_data		= {};
-		display_attribute	= noone;
-		inspector_timeline  = false;
+		display_data		 = {};
+		display_attribute	 = noone;
+		inspector_timeline   = false;
+		inspector_loopDetail = false;
 		
 		popup_dialog = noone;
 		type_array   = typeArray(self);

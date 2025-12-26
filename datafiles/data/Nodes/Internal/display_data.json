@@ -824,6 +824,7 @@
             "Node_VerletSim_Inline",
             "Node_Diffuse",
             "Node_RD",
+            "Node_Markov", 
             
             { "label": "Region" },
             "Node_Seperate_Shape",
