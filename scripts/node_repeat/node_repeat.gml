@@ -367,7 +367,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			
 			var _dimt = _data[35];
 			var _dimc = _data[ 1];
-			var _dims = _data[36];
+			var _dimr = _data[36];
 			var _padd = _data[37];
 			
 			var _amo  = _data[ 2];
@@ -473,6 +473,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _baseSurface = _surf;
 		var _use_array   = is_array(_surf);
 		var _arr_length  = _use_array? array_length(_surf) : 1;
+		if(_arr_length < 1) return _outSurf;
 		
 		var minx =  999999, miny =  999999;
 		var maxx = -999999, maxy = -999999;
@@ -489,7 +490,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		} else if(is_surface(_surf))
 			_sdim = surface_get_dimension(_surf);
 		
-		if(!is_surface(_baseSurface) || _arr_length < 1) return _outSurf;
+		if(!is_surface(_baseSurface)) return _outSurf;
 		
 		random_set_seed(_sed);
 		
@@ -771,7 +772,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			case OUTPUT_SCALING.relative :
 				inputs[36].setVisible(true);
 				
-				_dim = [ _sdim[0] * _dims[0], _sdim[1] * _dims[1] ];
+				_dim = [ _sdim[0] * _dimr[0], _sdim[1] * _dimr[1] ];
 				break;
 				
 			case OUTPUT_SCALING.scale :

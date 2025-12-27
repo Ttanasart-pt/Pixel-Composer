@@ -53,8 +53,6 @@ function string_quote(str)             { INLINE return $"\"{str}\""; }
 function string_multiply(str, amo) { var s = ""; repeat(amo) s += str; return s; }
 
 function string_compare(s1, s2) {
-	    s1 = string_lower(s1);
-	    s2 = string_lower(s2);
     var l1 = string_length(s1);
     var l2 = string_length(s2);
 	var l  = min(l1, l2);
@@ -63,15 +61,14 @@ function string_compare(s1, s2) {
     var c1, c2;
 	
     repeat(l) {
-        c1 = string_char_at(s1, i);
-        c2 = string_char_at(s2, i);
+        c1 = string_ord_at(s1, i) | 0b100000; // case-insensitive thing (to lower = +32)
+        c2 = string_ord_at(s2, i) | 0b100000; // case-insensitive thing (to lower = +32)
+        if(c1 != c2) return sign(c1 - c2); 
+        
 		i++;
-		
-        if(c1 == c2) continue;
-        return ord(c1) - ord(c2);
     }
 
-    return l1 - l2;
+    return sign(l1 - l2);
 }
 
 function string_compare_file(s1, s2) {

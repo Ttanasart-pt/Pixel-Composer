@@ -105,9 +105,9 @@ function Panel_Release_Note() : PanelContent() constructor {
 				draw_sprite_stretched(THEME.ui_panel_bg, 0, xx, yy, ww, hh);
 				draw_sprite_stretched_ext(THEME.ui_panel, 1, xx, yy, ww, hh, COLORS.node_display_text_frame_outline, 1);
 				
-				var hv_os = 0;
+				var hv_os   = 0;
+				var hv_link = dl.link;
 				switch(OS) {
-					case os_windows : hv_os = 0; break;
 					case os_linux :   if(osL) hv_os = 1; break;
 					case os_macosx :  if(osM) hv_os = 2; break;
 				}
@@ -129,16 +129,29 @@ function Panel_Release_Note() : PanelContent() constructor {
 				tx += ui(16);
 				ty += string_height(vers) / 2;
 				
-				if(       hov && point_in_circle(_m[0], _m[1], tx,              ty, ui(12))) { hv_os = 0; TOOLTIP = "Download for Windows"; }
-				if(osL && hov && point_in_circle(_m[0], _m[1], tx + ui(24 * 1), ty, ui(12))) { hv_os = 1; TOOLTIP = "Download for Linux";   }
-				if(osM && hov && point_in_circle(_m[0], _m[1], tx + ui(24 * 2), ty, ui(12))) { hv_os = 2; TOOLTIP = "Download for Mac OS";  }
+				if(hov && point_in_circle(_m[0], _m[1], tx, ty, ui(12))) { 
+					TOOLTIP = "Download for Windows"; 
+					hv_link = dl.link;
+					hv_os   = 0; 
+				}
+				
+				if(osL && hov && point_in_circle(_m[0], _m[1], tx + ui(24 * 1), ty, ui(12))) { 
+					TOOLTIP = "Download for Linux";   
+					hv_link = dl.links.linux;
+					hv_os   = 1; 
+				}
+				
+				if(osM && hov && point_in_circle(_m[0], _m[1], tx + ui(24 * 2), ty, ui(12))) { 
+					TOOLTIP = "Download for Mac OS";  
+					hv_link = dl.links.mac;
+					hv_os   = 2; 
+				}
 				
 				var _cc = (hov && hv_os == 0)? COLORS._main_icon_light : COLORS._main_icon;
 				draw_sprite_ui_uniform(THEME.icon_os_windows, 0, tx, ty, .6, _cc, .75 + (hov && hv_os == 0) * .25);
 				tx += ui(24);
 					
 				if(oss) {
-					
 					if(struct_has(dl.links, "linux")) {
 						var _cc = (hov && hv_os == 1)? COLORS._main_icon_light : COLORS._main_icon;
 						draw_sprite_ui_uniform(THEME.icon_os_linux, 0, tx, ty, .6, _cc, .75 + (hov && hv_os == 1) * .25);
@@ -168,7 +181,7 @@ function Panel_Release_Note() : PanelContent() constructor {
 						if(mouse_press(mb_right, pFOCUS)) {
 							var _menu = array_clone(dl.dMenu);
 							
-							array_push(_menu, -1, menuItem("Open URL", function(p) /*=>*/ {return url_open(p)}).setParam(dl.link));
+							array_push(_menu, -1, menuItem("Open URL", function(p) /*=>*/ {return url_open(p)}).setParam(hv_link));
 							menuCall("", _menu);
 						}
 					}
@@ -187,6 +200,7 @@ function Panel_Release_Note() : PanelContent() constructor {
 								dl_selecting.download_path = "";
 								dl_selecting.status = 0;
 							}),
+							menuItem("Open URL", function(p) /*=>*/ {return url_open(p)}).setParam(hv_link), 
 							-1,
 						];
 						
@@ -197,7 +211,7 @@ function Panel_Release_Note() : PanelContent() constructor {
 				} else if(dl.status == -1 && hov) {
 					draw_sprite_stretched_ext(THEME.ui_panel, 1, xx, yy, ww, hh, COLORS._main_accent, 1);
 					if(mouse_press(mb_left, pFOCUS)) 
-						url_open(dl.link);
+						url_open(hv_link);
 					
 				}
 				
