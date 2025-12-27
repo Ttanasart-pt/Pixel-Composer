@@ -24,6 +24,8 @@ function __NodeValue_Surface(_name, _node, _value = noone, _tooltip = "") : Node
 			draw_junction_index = VALUE_TYPE.atlas;
 		
 		if(is(val, dynaDraw)) val.node = node;
+		
+		if(is(val, dynaDraw_canvas)) return val.surfaces[0];
 		return val;
 	}
 	
@@ -31,7 +33,12 @@ function __NodeValue_Surface(_name, _node, _value = noone, _tooltip = "") : Node
 		var _anim  = animator;
 		var _anims = animators;
 		
-		return array_empty(_anim.values)? noone : _anim.processValue(_anim.values[0].value); 
+		if(array_empty(_anim.values)) return noone;
+		
+		var _val = _anim.values[0].value;
+		if(is_string(_val)) return get_asset(_val);
+		
+		return _val; 
 	}
 	
 	static arrayLength = arrayLengthSimple;

@@ -78,9 +78,9 @@ function Panel_Asset_Selector(_target, _defPath) : PanelContent() constructor {
 		var surfh = contentPane.surface_h + 4;
 		var frame = current_time * PREFERENCES.collection_preview_speed / 8000;
 		
-		var grid_size = ui(64);
-		var img_size  = grid_size - ui(16);
-		var grid_space = ui(12);
+		var grid_size  = ui(64);
+		var img_size   = grid_size - ui(16);
+		var grid_space = ui(6);
 		var col = max(1, floor(contentPane.surface_w / (grid_size + grid_space)));
 		var row = ceil(amo / col);
 		var yy  = _y + grid_space;
@@ -101,11 +101,20 @@ function Panel_Asset_Selector(_target, _defPath) : PanelContent() constructor {
 				
 				BLEND_OVERRIDE
 				draw_sprite_stretched_ext(THEME.node_bg, 0, xx, yy, grid_size, grid_size, COLORS.node_base_bg);
+				BLEND_ADD
+				draw_sprite_stretched_ext(THEME.node_bg, 1, xx, yy, grid_size, grid_size, COLORS._main_icon, .25);
 				BLEND_NORMAL
 				
 				var spr = -1;
 				
-				if(is(content, dynaSurf)) {
+				if(is(content, dynaDraw_canvas)) {
+					var ss = img_size / 64;
+					var sx = xx + grid_size / 2;
+					var sy = yy + grid_size / 2;
+					
+					draw_sprite_ext(s_node_canvas, frame, sx, sy, ss, ss, 0, c_white, 1);
+					
+				} else if(is(content, dynaSurf)) {
 					var _sw = grid_size - ui(16);
 					var _sh = grid_size - ui(16);
 					
@@ -195,7 +204,7 @@ function Panel_Asset_Selector(_target, _defPath) : PanelContent() constructor {
 			
 			var iss = is_surface(target.current_data) && context != DYNADRAW_FOLDER;
 			
-			var cc = iss? COLORS._main_value_positive : COLORS._main_icon;
+			var cc = iss? COLORS._main_value_positive : COLORS._main_icon_dark;
 			if(buttonInstant_Pad(bb, bx, by, bs, bs, m, iss && pHOVER, pFOCUS, "Add to Asset", THEME.add, 0, cc, 1, ui(6)) == 2) {
 				fileNameCall(context.path, function(f) /*=>*/ {
 					if(f == "") return;

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"dynaDraw_canvas",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"dynaDraw_canvas",
+  "parent":{
+    "name":"dynaDraw",
+    "path":"folders/functions/surface/dynaDraw.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

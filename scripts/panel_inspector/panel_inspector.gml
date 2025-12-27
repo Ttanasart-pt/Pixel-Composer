@@ -1127,7 +1127,7 @@ function Panel_Inspector() : PanelContent() constructor {
             }
             
             // Loop detail
-            var frNode = jun.value_from_loop;
+            var frNode = jun.connect_type == CONNECT_TYPE.input? jun.value_from_loop : array_safe_get_fast(jun.value_to_loop, 0);
             if(frNode && jun.inspector_loopDetail) {
             	var _tlx = _x + ui(4);
             	var _tly = _y + hh;

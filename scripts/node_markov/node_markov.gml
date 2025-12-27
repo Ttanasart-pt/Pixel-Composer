@@ -108,7 +108,7 @@ function Node_Markov(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		random_set_seed(_seed + CURRENT_FRAME);
 		surface_set_target(_outSurf);
 			DRAW_CLEAR
-			draw_surface(_surf, 0, 0);
+			draw_surface_safe(_surf, 0, 0);
 			
 			repeat(_ssize) {
 				var _matRes = buffer_read(buff_match, buffer_u8);
@@ -137,7 +137,7 @@ function Node_Markov(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 							case 270 : dx++;       break;
 						}
 						
-						draw_surface_ext(_s, dx, dy, _scx, _scy, _rot, c_white, 1);
+						draw_surface_ext_safe(_s, dx, dy, _scx, _scy, _rot, c_white, 1);
 						
 						_amo--;
 						if(_maxr && _amo == 0) break;
