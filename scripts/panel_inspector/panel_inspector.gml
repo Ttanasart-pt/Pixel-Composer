@@ -1587,9 +1587,10 @@ function Panel_Inspector() : PanelContent() constructor {
     }
     
     static drawHeader_Node = function() {
-        var txt = inspecting.renamed? inspecting.display_name : inspecting.name;
-             if(inspectGroup ==  1) txt = $"[{array_length(PANEL_GRAPH.nodes_selecting)}] {txt}"; 
-        else if(inspectGroup == -1) txt = $"[{array_length(PANEL_GRAPH.nodes_selecting)}] Multiple nodes"; 
+    	var amo = array_length(PANEL_GRAPH.nodes_selecting);
+        var txt = inspecting.getDisplayName();
+             if(inspectGroup ==  1) txt = $"[{amo}] {txt}"; 
+        else if(inspectGroup == -1) txt = $"[{amo}] Multiple nodes"; 
         
         var tb_x = ui(64);
         var tb_y = ui(14);
@@ -1605,6 +1606,17 @@ function Panel_Inspector() : PanelContent() constructor {
         
         tb_node_name.setFocusHover(foc, hov);
         tb_node_name.draw(tb_x, tb_y, tb_w, tb_h, txt, m);
+        
+        if(is(inspecting, Node) && inspectGroup == 0) {
+        	var _col = inspecting.attributes.color;
+        	if(_col != -1) {
+        		draw_set_font(f_h5);
+        		var colx = tb_x + tb_w / 2 - string_width(txt) / 2 - tb_h / 2;
+        		var coly = tb_y + tb_h / 2;
+        		
+        		draw_sprite_ui(THEME.timeline_color, 1, colx, coly, 1, 1, 0, _col, 1);
+        	}
+        }
         
         if(inspectGroup >= 0) {
             draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_sub);
