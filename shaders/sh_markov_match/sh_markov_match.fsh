@@ -80,7 +80,7 @@ void main() {
 	}
 	
 	gl_FragColor = vec4(0.);
-	if(random(v_vTexcoord, seed) > chn) return;
+	if(random(v_vTexcoord, seed) >= chn) return;
 	
 	vec2 px = floor(v_vTexcoord * dimension);
 	

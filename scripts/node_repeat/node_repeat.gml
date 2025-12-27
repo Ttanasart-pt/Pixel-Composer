@@ -50,7 +50,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput( 9, nodeValue_Vec2(           "Start Position",  [.5,.5] )).setHotkey("G").setUnitSimple();
 	newInput(22, nodeValue_Anchor(         "Global Anchor",   [ 0, 0] ));
 	newInput(32, nodeValue_Rotation(       "Start Rotation",   0      )).setHotkey("R");
-	newInput( 2, nodeValue_Int(            "Amount",           2      )).rejectArray();
+	newInput( 2, nodeValue_Int(            "Amount",           2      ));
 	newInput(18, nodeValue_Int(            "Column",           4      ));
 	newInput( 7, nodeValue_Rotation_Range( "Angle Range",     [0,360] ));
 	newInput( 8, nodeValue_Float(          "Radius",           8      ));
