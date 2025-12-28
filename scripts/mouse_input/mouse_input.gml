@@ -37,9 +37,24 @@
 	function setMouseWrap() { INLINE MOUSE_WRAP = true; }
 #endregion
 
-function global_mouse_pool_step() {
+function mouse_step() {
+	MOUSE_WHEEL      = 0;
+	if(mouse_wheel_up())   MOUSE_WHEEL =  1;
+	if(mouse_wheel_down()) MOUSE_WHEEL = -1;
+	
+	MOUSE_WHEEL_H    = 0;//mouse_wheel_get_h();
+	
+	// MOUSE_PAN_X   = mouse_pan_x();
+	// MOUSE_PAN_Y   = mouse_pan_y();
+	// MOUSE_ZOOM_X  = mouse_zoom_x();
+	// MOUSE_ZOOM_Y  = mouse_zoom_y();
+	
 	var _focus  = window_has_focus();
-	var _fclick = !MOUSE_EVENT.wfocus && _focus;
+	var _fclick = !MOUSE_EVENT.wfocus && _focus && point_in_rectangle(
+			display_mouse_get_x(),               display_mouse_get_y(), 
+			window_get_x(),                      window_get_y(), 
+			window_get_x() + window_get_width(), window_get_y() + window_get_height()
+	);
 	
 	MOUSE_EVENT.wfocus   = _focus;
 	
@@ -56,19 +71,6 @@ function global_mouse_pool_step() {
 	MOUSE_EVENT.mrelease = device_mouse_check_button_released(0, mb_middle);
 	
 	MOUSE_EVENT.lrelease_supp = _fclick;
-}
-
-function mouse_step() {
-	MOUSE_WHEEL      = 0;
-	if(mouse_wheel_up())   MOUSE_WHEEL =  1;
-	if(mouse_wheel_down()) MOUSE_WHEEL = -1;
-	
-	MOUSE_WHEEL_H    = 0;//mouse_wheel_get_h();
-	
-	// MOUSE_PAN_X   = mouse_pan_x();
-	// MOUSE_PAN_Y   = mouse_pan_y();
-	// MOUSE_ZOOM_X  = mouse_zoom_x();
-	// MOUSE_ZOOM_Y  = mouse_zoom_y();
 }
 
 function mouse_click(mouse, focus = true, bypass = false) {
