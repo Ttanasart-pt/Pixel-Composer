@@ -12,6 +12,7 @@ function Matrix(_size = 1) constructor {
     	
     	return self;
     }
+    setSize(_size);
     
     static setArray = function(_arr) {
     	var _l = min(array_length(_arr), isize);
@@ -28,8 +29,6 @@ function Matrix(_size = 1) constructor {
     	
     	return self;
     }
-    
-    setSize(_size);
     
 	static lerpTo = function(_mat, _t) {
 	    if(!is(_mat, Matrix)) return self;

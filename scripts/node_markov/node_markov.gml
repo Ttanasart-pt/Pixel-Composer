@@ -21,15 +21,16 @@ function Node_Markov(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	newInput( 2, nodeValue_Surface( "Replace"           )).setArrayDepth(1);
 	newInput( 4, nodeValue_Slider(  "Replace Chance", 1 )).setMappable(11);
 	newInput(14, nodeValue_Float(   "Maximum Count",  0 ));
-	newInput( 7, nodeValue_EScroll( "Transform", 0, [ "None", "Rotate 90" ] ));
-	// inputs 16
+	newInput( 7, nodeValue_EScroll( "Transform",      0, [ "None", "Rotate 90" ] ));
+	newInput(16, nodeValue_Bool(    "Reverse Order",  false ));
+	// inputs 17
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 9, 5, 0, 
 		[ "Matching",    false ],  1,  8,  3, 15,  6, 
 		[ "Tiling",      false ], 10, 12, 13, 
-		[ "Replacement", false ],  2,  4, 11, 14,  7,  
+		[ "Replacement", false ],  2,  4, 11, 14,  7, 16, 
 	];
 	
 	////- Nodes
@@ -40,6 +41,7 @@ function Node_Markov(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	temp_surface = [noone];
 	buff_match   = undefined;
+	buff_data    = [];
 	
 	static processData = function(_outSurf, _data, _array_index = 0) { 
 		#region data
@@ -60,6 +62,7 @@ function Node_Markov(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var _schc = _data[ 4];
 			var _maxr = _data[14];
 			var _rota = _data[ 7];
+			var _revr = _data[16];
 			
 			inputs[12].setVisible(_tile == 2);
 			
@@ -94,9 +97,11 @@ function Node_Markov(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		buff_match = buffer_verify(buff_match, _ssize);
 		buffer_get_surface(buff_match, temp_surface[0], 0);
 		buffer_to_start(buff_match);
+		buff_data = array_verify(buff_data, _ssize);
 		
-		var _x = 0;
-		var _y = 0;
+		var i = 0;
+		repeat(_ssize) buff_data[i++] = buffer_read(buff_match, buffer_u8);
+		
 		var _repArr = is_array(_srep)? _srep : [_srep];
 		var _repAmo = array_length(_repArr);
 		
@@ -110,10 +115,17 @@ function Node_Markov(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			DRAW_CLEAR
 			draw_surface_safe(_surf, 0, 0);
 			
+			var b  = _revr? _ssize - 1 : 0;
+			var db = _revr? -1 : 1;
+			var sw = _sdim[0];
+			
 			repeat(_ssize) {
-				var _matRes = buffer_read(buff_match, buffer_u8);
-				var i = 0;
+				var _matRes = buff_data[b];
+				var _x = b % sw;
+				var _y = b div sw;
+				b += db;
 				
+				var i = 0;
 				repeat(4) {
 					if(_matRes & (1 << i)) {
 						var _s   = _repArr[irandom(_repAmo - 1)];
@@ -147,12 +159,6 @@ function Node_Markov(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				}
 				
 				if(_maxr && _amo == 0) break;
-				
-				_x++;
-				if(_x >= _sdim[0]) {
-					_x = 0;
-					_y++;
-				}
 			}
 		surface_reset_target();
 		

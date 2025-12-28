@@ -4,21 +4,25 @@ function Node_Matrix(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	always_pad = true;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_IVec2("Size", [ 3, 3 ]));
+	newInput(0, nodeValue_IVec2(  "Size", [ 3, 3 ]      ));
+	newInput(1, nodeValue_Matrix( "Data", new Matrix(3) ));
 	
-	newInput(1, nodeValue_Matrix("Data", new Matrix(3)));
-		
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newOutput(0, nodeValue_Output("Matrix", VALUE_TYPE.float, new Matrix(3)))
-		.setDisplay(VALUE_DISPLAY.matrix);
+	newOutput(0, nodeValue_Output("Matrix", VALUE_TYPE.float, new Matrix(3))).setDisplay(VALUE_DISPLAY.matrix);
 		
 	input_display_list = [ 0, 1 ];
+	
+	////- Nodes
+	
 	__prev_size = [ 0, 0 ];
 	
 	static processData = function(_outData, _data, _array_index = 0) {
-		var _siz  = _data[0];
-		var _dat  = _data[1];
+		#region data
+			var _siz = _data[0];
+			var _dat = _data[1];
+		#endregion
+		
 		var _outp = is(_outData, Matrix)? _outData : new Matrix();
 		
 		if(__prev_size[0] != _siz[0] || __prev_size[1] != _siz[1]) {

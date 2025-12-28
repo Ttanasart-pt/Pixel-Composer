@@ -5,10 +5,12 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	icon_24 = THEME.loop_24;
 	is_root = false;
 	
-	newInput(0, nodeValue_Int("Repeat", 1 )).uncache();
-	
 	managedRenderOrder = true;
-	loop_active = true;
+	loop_active        = true;
+	
+	newInput(0, nodeValue_Int(  "Repeat", 1    )).uncache();
+	newInput(1, nodeValue_Bool( "Active", true ));
+	input_display_list = [ 1,0 ];
 	
 	attributes.junc_in  = [ "", 0 ];
 	attributes.junc_out = [ "", 0 ];
@@ -19,6 +21,8 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	value_buffer    = undefined;
 	iteration_count = 0;
 	iterated        = 0;
+	
+	////- Rendering
 	
 	static getIterationCount = function() /*=>*/ {return getInputData(0)};
 	static bypassConnection  = function() /*=>*/ {return iterated > 1 && !is_undefined(value_buffer)};
@@ -103,7 +107,10 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 	}
 	
 	static update = function() {
-		var _itc = inputs[0].getValue();
+		loop_active = inputs[1].getValue();
+		var _itc    = inputs[0].getValue();
+		if(!loop_active) _itc = 0;
+		
 		if(_itc != iteration_count) RENDER_ALL_REORDER
 		
 		iteration_count = _itc;

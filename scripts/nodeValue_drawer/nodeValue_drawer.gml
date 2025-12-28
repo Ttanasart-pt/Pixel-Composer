@@ -73,11 +73,10 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			draw_sprite_ui_uniform(ss, 0, butx, lb_y, ics, cc, .8 + .2 * _hov);
 			
 			if(_hov) {
-				TOOLTIP = __txt("Open Node");
 				mbRight = false;
 				cHov    = true;
 				
-				if(mouse_lpress(_focus)) jun.inspector_loopDetail = !jun.inspector_loopDetail;
+				if(mouse_rpress(_focus)) jun.inspector_loopDetail = !jun.inspector_loopDetail;
 			}
 			
 		} else if(_input && jun.isAnimable() && !jun.expUse) { // Animation

@@ -18,7 +18,7 @@ function __NodeValue_Matrix(_name, _node, _value, _data = {}) : NodeValue(_name,
 		    var _len = array_length(val);
 		    var _siz = floor(sqrt(_len));
 		    
-		    __temp_matrix_object.setSize(_len);
+		    __temp_matrix_object.setSize(_siz);
 		    __temp_matrix_object.setArray(val);
 		}
 		

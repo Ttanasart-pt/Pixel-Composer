@@ -206,8 +206,8 @@ void main() {
 	
 	float b1 = b0;
 	float added_distance, _b1;
-	vec2 shf, pxs;
 	float stp = 1. / 4.;
+	vec2  shf, pxs;
 	
 	for(float i = 0.; i < heiMax; i += stp) {
 		if(i > hei) break;
@@ -224,14 +224,14 @@ void main() {
 			
 			added_distance = 1. + cos(abs(shift_angle - ang)) * shift_distance;
 				
-			shf = vec2( cos(ang),  sin(ang)) * (i * added_distance) / scale;
+			shf = vec2( cos(ang),  sin(ang)) * (floor(i + .5) * added_distance) / scale;
 			pxs = v_vTexcoord + shf * pixelStep;
 				
 			col1 = sampleTexture( gm_BaseTexture, pxs );
 			_b1  = bright(col1);
 				
 			if(_b1 < b1) {
-				slope_distance = min(slope_distance, i);
+				slope_distance = min(slope_distance, floor(i + .5));
 				max_distance   = min(max_distance, (b0 - _b1) * hei);
 				b1 = min(b1, _b1);
 				

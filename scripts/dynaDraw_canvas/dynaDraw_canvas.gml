@@ -16,6 +16,7 @@ function dynaDraw_canvas() : dynaDraw() constructor {
 	tool_scroll     = 0;
 	tool_scroll_to  = 0;
 	tool_scroll_max = 0;
+	wheel_tooltip   = 0;
 	
 	////- Data
 	
@@ -171,8 +172,11 @@ function dynaDraw_canvas() : dynaDraw() constructor {
 			gpu_set_scissor(scis);
 			
 			tool_scroll = lerp_float(tool_scroll, tool_scroll_to, 2);
-			if(phov && key_mod_press(CTRL) && MOUSE_WHEEL != 0)
-				tool_scroll_to = clamp(tool_scroll_to - MOUSE_WHEEL * 32, 0, tool_scroll_max);
+			if(phov && MOUSE_WHEEL != 0) {
+				if(key_mod_press(CTRL))
+					 tool_scroll_to = clamp(tool_scroll_to - MOUSE_WHEEL * 32, 0, tool_scroll_max);
+				else wheel_tooltip = 3;
+			}
 			
 			var _arx = _x + _w - _arw / 2;
 			var _ary = _y + _h - _arw / 2;
@@ -182,6 +186,17 @@ function dynaDraw_canvas() : dynaDraw() constructor {
 		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h);
 		draw_sprite_stretched_ext(THEME.textbox, 0, _canvas_x, _canvas_y, _canvas_w, _canvas_h);
 		if(hv) draw_sprite_stretched(THEME.textbox, 1, _canvas_x, _canvas_y, _canvas_w, _canvas_h);
+		
+		if(wheel_tooltip > 0) {
+			wheel_tooltip -= DELTA_TIME;
+			
+			draw_set_text(f_p4, fa_left, fa_top, COLORS._main_text_sub);
+			var tt = "Ctrl + Wheel to scroll";
+			var tw = string_width(tt)  + ui(8);
+			var th = string_height(tt) + ui(8);
+			draw_sprite_stretched_ext(THEME.ui_panel_bg, 3, _x + ui(4), _y + ui(4), tw, th);
+			draw_text_add(_x + ui(8), _y + ui(8), tt);
+		}
 		
 		return _h;
 	}
