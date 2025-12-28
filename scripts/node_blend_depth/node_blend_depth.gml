@@ -25,13 +25,24 @@ function Node_Blend_Depth(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	static step = function() {}
 	
 	static processData = function(_outData, _data, _array_index = 0) { 
-		var _surf1 = _data[0];
-		var _dept1 = _data[1];
-		var _rang1 = _data[4];
-		
-		var _surf2 = _data[2];
-		var _dept2 = _data[3];
-		var _rang2 = _data[5];
+		#region data
+			var _surf1 = _data[0];
+			var _dept1 = _data[1];
+			var _rang1 = _data[4];
+			
+			var _surf2 = _data[2];
+			var _dept2 = _data[3];
+			var _rang2 = _data[5];
+			
+			if(!is_surface(_surf1) || !is_surface(_dept1)) return _outData;
+			
+			if(!is_surface(_surf2) || !is_surface(_dept2)) {
+				surface_set_shader(_outData);
+				draw_surface_safe(_surf1);
+				surface_reset_shader();
+				return _outData;
+			}
+		#endregion
 		
 		surface_set_shader(_outData, sh_blend_depth);
 			shader_set_s( "surface_1", _surf1 );
