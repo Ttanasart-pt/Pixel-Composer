@@ -73,7 +73,17 @@ function searchCollectionData(pr_list, _search_str) {
 			var match = string_partial_match_res(string_lower(_nd.name), search_lower);
 			if(match[0] == -9999) continue;
 			
-			ds_priority_add(pr_list, [ _nd, "", match ], match[0]);
+			var searchData = { 
+				search : true, 
+				name   : _nd.name, 
+				node   : _nd, 
+				param  : "", 
+				match  : match, 
+				weight : match[0], 
+				path   : undefined, 
+			};
+			
+			ds_priority_add(pr_list, searchData, match[0]);
 		}
 			
 		for( var i = 0; i < array_length(_st.subDir); i++ )

@@ -41,6 +41,10 @@ event_inherited();
 	node_icon_x    = 0;
 	node_icon_y    = 0;
 	
+	node_goto      = undefined;
+	node_goto_draw = undefined;
+	node_goto_fade = 0;
+	
 	anchor = ANCHOR.left | ANCHOR.top;
 	node_menu_selecting = noone;
 	
@@ -105,7 +109,7 @@ event_inherited();
 		PREF_SAVE();
 	}
 	
-	function rightClick(node) {
+	function rightClick(node, path = undefined) {
 		if(!is(node, NodeObject)) return;
 		
 		node_menu_selecting = node;
@@ -113,9 +117,20 @@ event_inherited();
 		var fvt = fav? __txtx("add_node_remove_favourite", "Remove from favourite") : __txtx("add_node_add_favourite", "Add to favourite");
 		hk_selecting = struct_try_get(GRAPH_ADD_NODE_MAPS, node.nodeName, noone);
 		
-		var menu = [
-			menuItem(fvt, trigger_favourite, THEME.star),
-			-1,
+		var menu = [ menuItem(fvt, trigger_favourite, THEME.star) ];
+		if(path != undefined)
+			array_push(menu, menuItem("View original path", function(p) /*=>*/ {
+				search_string           = "";
+				tb_search._input_text   = "";
+				tb_search._current_text = "";
+				
+				searchNodes();
+				setPage(p.categoryId, max(0, p.groupId));
+				node_goto = p.node;
+			}).setParam(path));
+		array_push(menu, -1);
+		
+		array_append(menu, [
 			menuItem(__txt("Edit Hotkey"),  function() /*=>*/ { 
 				var _n  = node_menu_selecting.nodeName;
 				var _hk = __fnGraph_BuildNode(_n);
@@ -124,7 +139,7 @@ event_inherited();
 				hk_editing   = _hk.modify();
 			}),
 			menuItem(__txt("Reset Hotkey"), function() /*=>*/ {return hk_selecting.reset(true)}, THEME.refresh_20).setActive(hk_selecting != noone && hk_selecting.isModified()),
-		];
+		]);
 		
 		menuCall("add_node_window_menu", menu, 0, 0, fa_left);
 	}
@@ -645,6 +660,19 @@ event_inherited();
 					}
 				}
 				
+				if(_node == node_goto) {
+					content_pane.setScroll(-hh + content_pane.surface_h / 2);
+					node_goto      = undefined;
+					node_goto_draw = _node;
+					node_goto_fade = 1;
+				}
+				
+				if(_node == node_goto_draw && node_goto_fade > 0) {
+					var aa = node_goto_fade * 1;
+					draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size, COLORS._main_accent, aa);
+					node_goto_fade = lerp_float(node_goto_fade, 0, 50);
+				}
+				
 				if(is(_node, NodeObject)) {
 					_node.drawGrid(_boxx, yy, _m[0], _m[1], grid_size);
 				} else {
@@ -809,7 +837,7 @@ event_inherited();
 				}
 				
 				if(is(_node, NodeObject)) {
-					if(_node.patreon && !IS_PATREON) continue;
+					if(_node.patreon && !IS_PATREON)       continue;
 					if(is_global && !_node.show_in_global) continue;
 				}
 				
@@ -832,6 +860,19 @@ event_inherited();
 				}
 				
 				var tx = 0;
+				
+				if(_node == node_goto) {
+					content_pane.setScroll(-hh + content_pane.surface_h / 2);
+					node_goto      = undefined;
+					node_goto_draw = _node;
+					node_goto_fade = 1;
+				}
+				
+				if(_node == node_goto_draw && node_goto_fade > 0) {
+					var aa = node_goto_fade * 1;
+					draw_sprite_stretched_ext(THEME.node_bg, 0, pd, yy, list_width - pd * 2, list_height, COLORS._main_accent, aa);
+					node_goto_fade = lerp_float(node_goto_fade, 0, 50);
+				}
 				
 				if(is(_node, NodeObject)) {
 					tx = _node.drawList(pd, yy, _m[0], _m[1], list_height, list_width - pd);
@@ -1000,9 +1041,17 @@ event_inherited();
 		var search_split = string_split(search_lower, " ", true);
 		var search_map	 = ds_map_create();
 		
+		var curr_group    = "";
+		var curr_groupi   = 0;
+		var curr_subgroup = "";
+		
 		for( var i = 0, n = array_length(category); i < n; i++ ) {
 			var cat = category[i];
 			
+			curr_group    = "";
+			curr_groupi   = 0;
+			curr_subgroup = "";
+
 			if(!has(cat, "list"))
 				continue;
 			
@@ -1013,7 +1062,16 @@ event_inherited();
 			for( var j = 0, m = array_length(_content); j < m; j++ ) {
 				var _node = _content[j];
 				
-				if(is_string(_node))                 continue;
+				if(is_string(_node)) {
+					if(string_starts_with(_node, "/")) 
+						curr_subgroup = _node;
+					else {
+						curr_group = _node;
+						curr_groupi++;
+					}
+					continue;
+				}
+				
 				if(ds_map_exists(search_map, _node)) continue;
 				
 				var match  = string_partial_match_res(string_lower(_node.getName()), search_lower, search_split);
@@ -1040,7 +1098,26 @@ event_inherited();
 				
 				if(match[0] == -9999) continue;
 				
-				ds_priority_add(pr_list, [ _node, param, match ], match[0]);
+				var _path = {
+					node       : _node, 
+					category   : cat,
+					categoryId : i, 
+					group      : curr_group, 
+					groupId    : curr_groupi - 1, 
+					subgroup   : curr_subgroup, 
+				};
+				
+				var searchData = { 
+					search : true, 
+					name   : _node.name, 
+					node   : _node, 
+					param  : param, 
+					match  : match, 
+					weight : match[0], 
+					path   : _path, 
+				};
+				
+				ds_priority_add(pr_list, searchData, match[0]);
 				search_map[? _node] = 1;
 			}
 		}
@@ -1054,11 +1131,11 @@ event_inherited();
 		
 		repeat(ds_priority_size(pr_list)) {
 			var _data = ds_priority_delete_max(pr_list);
-			var _wigh = _data[2][0];
+			var _wigh = _data.weight;
 			
 			if(_curr_weight != _wigh) {
 				if(!array_empty(_curr_arr)) {
-					array_sort(_curr_arr, function(a,b) /*=>*/ {return string_compare(a[0].name, b[0].name)});
+					array_sort(_curr_arr, function(a,b) /*=>*/ {return string_compare(a.name, b.name)});
 					array_append(search_list, _curr_arr);
 				}
 				
@@ -1071,7 +1148,7 @@ event_inherited();
 		}
 		
 		if(!array_empty(_curr_arr)) {
-			array_sort(_curr_arr, function(a,b) /*=>*/ {return string_compare(a[0].name, b[0].name)});
+			array_sort(_curr_arr, function(a,b) /*=>*/ {return string_compare(a.name, b.name)});
 			array_append(search_list, _curr_arr);
 		}
 		
@@ -1122,18 +1199,19 @@ event_inherited();
 			
 			for(var i = 0; i < amo; i++) {
 				var s_res  = search_list[i];
-				var _node  = noone;
+				var _node  = s_res;
 				var _param = {};
 				var _query = "";
 				var _mrng  = noone;
+				var _path  = undefined;
 				
-				if(is_array(s_res)) {
-					_node        = s_res[0];
-					_query       = s_res[1];
-					_mrng        = s_res[2][1];
-				} else
-					_node = s_res;
-					
+				if(s_res[$ "search"]) {
+					_node  = s_res.node;
+					_query = s_res.param;
+					_mrng  = s_res.match[1];
+					_path  = s_res.path;
+				}
+				
 				if(!checkValid(_node, false)) continue;
 				
 				_param.search_string = highlight? search_string : 0;
@@ -1144,7 +1222,6 @@ event_inherited();
 				var _drw  = yy > -grid_size && yy < search_pane.h;
 				
 				if(_drw) {
-					
 						 if(is(_node, NodeObject))	cc = c_white;
 					else if(is(_node, NodeAction))	cc = COLORS.add_node_blend_action;
 					else if(is(_node, AddNodeItem))	cc = COLORS.add_node_blend_generic;
@@ -1165,7 +1242,7 @@ event_inherited();
 							buildNode(_node, _param);
 							
 						else if(has(_node, "node") && mouse_release(mb_right, right_free && sFOCUS))
-							rightClick(_node);
+							rightClick(_node, _path);
 					}
 					
 					if(node_selecting == i) {
@@ -1279,13 +1356,15 @@ event_inherited();
 				var _node  = s_res;
 				var _query = "";
 				var _mrng  = noone;
+				var _path  = undefined;
 				var _param = {};
 				
-				if(is_array(s_res)) {
-					_node  = s_res[0];
-					_query = s_res[1];
-					_mrng  = s_res[2][1];
-				} 
+				if(s_res[$ "search"]) {
+					_node  = s_res.node;
+					_query = s_res.param;
+					_mrng  = s_res.match[1];
+					_path  = s_res.path;
+				}
 				
 				if(!checkValid(_node, false)) continue;
 				ind++;
@@ -1315,7 +1394,7 @@ event_inherited();
 							buildNode(_node, _param);
 							
 						if(has(_node, "node") && mouse_release(mb_right, right_free))
-							rightClick(_node);
+							rightClick(_node, _path);
 					}
 				}
 				
@@ -1387,19 +1466,42 @@ event_inherited();
 					}
 				}
 				
-				var _hinfo = _hover && point_in_circle(_m[0], _m[1], tx + ui(12), yc, list_height / 2);
-				if((has(_node, "getTooltip") && _node.getTooltip() != "") || (has(_node, "getTooltipSpr") && _node.getTooltipSpr() != noone)) {
-					gpu_set_tex_filter(true);
+				var _toolt = false;
+				if(has(_node, "getTooltip"))    _toolt = _toolt || _node.getTooltip()    != "";
+				if(has(_node, "getTooltipSpr")) _toolt = _toolt || _node.getTooltipSpr() != noone;
+				
+				if(_toolt) {
+					var _hinfo = _hover && point_in_circle(_m[0], _m[1], tx + ui(12), yc, list_height / 2);
+					
 					BLEND_ADD
 					draw_sprite_ui_uniform(THEME.info, 0, tx + ui(12), yc, 0.7, COLORS._main_icon, .5 + _hinfo * .25);
 					BLEND_NORMAL
-					gpu_set_tex_filter(false);
 					
 					if(_hinfo) {
 						node_tooltip   = _node;
 						node_tooltip_x = search_pane.x + pd;
 						node_tooltip_y = search_pane.y + yy;
 					}
+					
+					tx += ui(24);
+				} else 
+					tx += ui(8);
+				
+				if(_path) {
+					var catg = _path.category.name;
+					var grop = _path.group;
+					var sgrp = _path.subgroup;
+					
+					draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_sub);
+					var _txt = catg;
+					if(grop != "") _txt += "/" + grop;
+					if(sgrp != "") _txt += ""  + sgrp;
+					
+					var tww = string_width(_txt) + ui(10);
+					var thh = list_height - ui(6);
+					draw_sprite_stretched_ext(THEME.box_r2_clr, 0, tx, yc - thh / 2, tww, thh, COLORS._main_icon);
+					draw_sprite_stretched_add(THEME.box_r2, 1, tx, yc - thh / 2, tww, thh, COLORS._main_icon, .1);
+					draw_text_add(tx + ui(5), yc, _txt);
 				}
 			}
 			
