@@ -26,7 +26,7 @@ function zoom_area_draw() {
 	
 	if(_zoomStart) ZOOM_AREA = 0;
 	if(_zoomHold) {
-		if(mouse_check_button_pressed(mb_left)) {
+		if(mouse_lpress()) {
 			ZOOM_AREA_MX = mouse_mx;
 			ZOOM_AREA_MY = mouse_my;
 		}
@@ -39,7 +39,7 @@ function zoom_area_draw() {
 		var _ww = _x1 - _x0;
 		var _hh = _y1 - _y0;
 		
-		if(mouse_check_button_released(mb_left)) {
+		if(mouse_lrelease()) {
 			if(_ww > 5 && _hh > 5) {
 				ZOOM_AREA         = 1;
 				ZOOM_AREA_REGION  = [_x0,_y0,_x1,_y1];
@@ -49,9 +49,8 @@ function zoom_area_draw() {
 			}
 		}
 		
-		if(mouse_check_button(mb_left)) {
+		if(mouse_lclick())
 			draw_sprite_stretched_ext(THEME.ui_panel, 1, _x0, _y0, _ww, _hh, COLORS._main_accent);
-		}
 	}
 }
 

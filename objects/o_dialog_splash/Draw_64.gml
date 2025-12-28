@@ -148,7 +148,7 @@ if !ready exit;
 			draw_sprite_stretched_ext(THEME.ui_panel_tab, 0, bx, y0 - ui(32), _tabW, th, COLORS.panel_tab_hover, 1);
 			draw_sprite_stretched_add(THEME.ui_panel_tab, 0, bx, y0 - ui(32), _tabW, th, COLORS.panel_tab_hover, 0.1);
 			
-			if(mouse_click(mb_left, sFOCUS)) {
+			if(mouse_press(mb_left, sFOCUS)) {
 				project_page = i;
 				
 				if(txt == "Contests" && PREFERENCES.splash_expand_recent) {

@@ -645,7 +645,7 @@ event_inherited();
 				
 				if(!struct_try_get(_node, "hide_bg", false)) {
 					BLEND_OVERRIDE
-					var nc = colorMultiply(cc, COLORS._main_icon_dark);
+					var nc = colorMultiply(cc, CDEF.main_black);
 					draw_sprite_stretched_ext(THEME.node_bg, 0, _nx, yy, grid_width, grid_size, nc, 1);
 					BLEND_NORMAL
 				}
@@ -1229,7 +1229,7 @@ event_inherited();
 					
 					if(!struct_try_get(_node, "hide_bg", false)) {
 						BLEND_OVERRIDE
-						var nc = colorMultiply(cc, COLORS._main_icon_dark);
+						var nc = colorMultiply(cc, CDEF.main_black);
 						draw_sprite_stretched_ext(THEME.node_bg, 0, _nx, yy, grid_width, grid_size, nc, 1);
 						BLEND_NORMAL
 					}

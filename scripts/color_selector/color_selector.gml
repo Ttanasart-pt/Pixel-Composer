@@ -379,7 +379,7 @@ function colorSelector(_onApply = noone) constructor {
 	}
 	
 	static drawDropper = function(instance) {
-		if(mouse_check_button_pressed(mb_left)) {
+		if(mouse_lpress(true, true)) {
 			setColor(dropper_color);
 			dropper_active = false;
 			MOUSE_BLOCK    = true;
@@ -394,7 +394,7 @@ function colorSelector(_onApply = noone) constructor {
 			return;
 		}
 		
-		if((dropper_active && mouse_check_button_pressed(mb_right)) || keyboard_check_released(vk_alt)) 
+		if((dropper_active && mouse_rpress(true, true)) || keyboard_check_released(vk_alt)) 
 			instance_destroy(instance);
 		
 		if(is_surface(APP_SURF)) {

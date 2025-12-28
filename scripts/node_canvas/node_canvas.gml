@@ -845,7 +845,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _sw   = surface_get_width_safe(_surf);
 		var _sh   = surface_get_height_safe(_surf);
 		
-		if(mx >= 0 && my >= 0 && mx < _sw && my < _sh && mouse_check_button(mb_left)) {
+		if(mx >= 0 && my >= 0 && mx < _sw && my < _sh && mouse_lclick(true, true)) {
 			var c = surface_getpixel(_surf, mx, my);
 			setToolColor(cola(c));
 		}

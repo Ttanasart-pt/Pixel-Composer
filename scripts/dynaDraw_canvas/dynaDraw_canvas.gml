@@ -6,7 +6,7 @@ function dynaDraw_canvas() : dynaDraw() constructor {
 	parameters = [ "dimension" ];
 	dimension  = [1,1];
 	editors    = [
-		[ "Dimension", new vectorBox(2, function(n,i) /*=>*/ { dimension[i] = n; resizeSurface(); updateNode(); }), function() /*=>*/ {return dimension} ],
+		[ "Dimension", new vectorBox(2, function(n,i) /*=>*/ { dimension[i] = max(1, round(n)); resizeSurface(); updateNode(); }), function() /*=>*/ {return dimension} ],
 	];
 	
 	widgetH       = ui(160);
@@ -21,7 +21,14 @@ function dynaDraw_canvas() : dynaDraw() constructor {
 	////- Data
 	
 	static resizeSurface = function() {
-		surfaces[0] = surface_verify(surfaces[0], dimension[0], dimension[1]);
+		var os = surfaces[0];
+		var ns = surface_create(dimension[0], dimension[1]);
+		surface_set_shader(ns, noone, true, BLEND.over);
+			draw_surface_safe(os);
+		surface_reset_shader();
+		surface_free_safe(os);
+		
+		surfaces[0] = ns;
 		updateBuffer();
 		return self;
 	}
@@ -89,17 +96,6 @@ function dynaDraw_canvas() : dynaDraw() constructor {
 			surface_reset_target();
 			draw_surface_ext(_surf, _canvas_x, _canvas_y, _canvas_s, _canvas_s, 0, c_white, 1);
 			
-			if(hv && current_tool != undefined) {
-				var px = _canvas_x + pixel_x * _canvas_s;
-				var py = _canvas_y + pixel_y * _canvas_s;
-				draw_sprite_stretched_add(THEME.textbox, 1, px, py, _canvas_s, _canvas_s);
-				
-				if(mouse_release(mb_left)) {
-					updateBuffer();
-					updateNode();
-				}
-			}
-			
 			if(key_press(vk_escape)) current_tool = undefined;
 		#endregion
 		
@@ -115,6 +111,12 @@ function dynaDraw_canvas() : dynaDraw() constructor {
 			var cc = current_tool == -1? COLORS._main_accent : COLORS._main_icon;
 			if(buttonInstant_Pad(bs, tx, ty, ts, ts, _m, hover, active, "Eraser", THEME.canvas_tools_eraser, 0, cc) == 2)
 				current_tool = current_tool == -1? undefined : -1;
+			ty += ts + ui(2); th -= ts + ui(2);
+			
+			var cc = current_tool == 1? COLORS._main_accent : COLORS._main_icon;
+			if(buttonInstant_Pad(bs, tx, ty, ts, ts, _m, hover, active, "Pencil", THEME.canvas_tools_pencil, 0, cc) == 2)
+				current_tool = current_tool == 1? undefined : 1;
+			draw_sprite_ui(THEME.canvas_tools_pencil, 1, tx + ts/2, ty + ts/2, .75, .75, 0, current_color);
 			ty += ts + ui(2); th -= ts + ui(2);
 			
 			draw_sprite_stretched_ext(THEME.ui_panel, 0, tx, ty, ts, ts, current_color, 1);
@@ -177,16 +179,22 @@ function dynaDraw_canvas() : dynaDraw() constructor {
 					 tool_scroll_to = clamp(tool_scroll_to - MOUSE_WHEEL * 32, 0, tool_scroll_max);
 				else wheel_tooltip = 3;
 			}
-			
-			var _arx = _x + _w - _arw / 2;
-			var _ary = _y + _h - _arw / 2;
-			draw_sprite_ui_uniform(THEME.scroll_box_arrow, 0, _arx, _ary, _ars, COLORS._main_icon);
 		#endregion
 		
 		draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h);
 		draw_sprite_stretched_ext(THEME.textbox, 0, _canvas_x, _canvas_y, _canvas_w, _canvas_h);
-		if(hv) draw_sprite_stretched(THEME.textbox, 1, _canvas_x, _canvas_y, _canvas_w, _canvas_h);
 		
+		if(hv && current_tool != undefined) {
+			var px = _canvas_x + pixel_x * _canvas_s;
+			var py = _canvas_y + pixel_y * _canvas_s;
+			draw_sprite_stretched_add(THEME.textbox, 1, px, py, _canvas_s, _canvas_s);
+			
+			if(mouse_release(mb_left)) {
+				updateBuffer();
+				updateNode();
+			}
+		}
+			
 		if(wheel_tooltip > 0) {
 			wheel_tooltip -= DELTA_TIME;
 			

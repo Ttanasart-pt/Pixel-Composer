@@ -90,7 +90,7 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 			
 				MOUSE_BLOCK = true;
 			
-				if(mouse_check_button_pressed(mb_right)) {
+				if(mouse_rpress(true, true)) {
 					onModify(drag_sv);
 					instance_destroy(dragging);
 					dragging     = noone;

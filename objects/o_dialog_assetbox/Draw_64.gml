@@ -12,7 +12,7 @@
 		folderW = w;
 		onResize();
 		
-		if(mouse_check_button_released(mb_left)) 
+		if(mouse_lrelease(true, true)) 
 			folderW_dragging = -1;
 	}
 	

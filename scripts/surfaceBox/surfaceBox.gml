@@ -69,6 +69,12 @@ function surfaceBox(_onModify, _def_path = "") : widget() constructor {
 			 h   = boxh; //?? just choose which var to use
 			
 			hoverRect = point_in_rectangle(_m[0], _m[1], _x + _w - _arw, _y + _h - _arw, _x + _w, _y + _h);
+			var _arx = _x + _w - _arw / 2;
+			var _ary = _y + _h - _arw / 2;
+			
+			var cc = ihover && hoverRect? COLORS._main_icon_light : COLORS._main_icon;
+			var aa = .4 + .4 * interactable;
+			draw_sprite_ui_uniform(THEME.scroll_box_arrow, 0, _arx, _ary, _ars, cc, aa);
 			
 			if(ihover && hoverRect) {
 				draw_sprite_stretched(THEME.textbox, 1, _x + _w - _arw, _y + _h - _arw, _arw, _arw);
@@ -128,11 +134,13 @@ function surfaceBox(_onModify, _def_path = "") : widget() constructor {
 				draw_sprite_stretched_ext(THEME.ui_panel, 0, _nx, _ny, _tw, _th, COLORS.panel_bg_clear_inner, 0.85);
 				draw_text_add(sx1 - ui(3), sy1 + ui(1), _txt);
 			}
-		
+			
 			var _arx = _x + _w - _arw / 2;
 			var _ary = _y + _h / 2;
+			var cc = ihover && hoverRect? COLORS._main_icon_light : COLORS._main_icon;
+			var aa = .4 + .4 * interactable;
 			draw_sprite_stretched_ext(THEME.textbox, 3, _x + _w - _arw, _y, _arw, _h, CDEF.main_mdwhite, 1);
-			draw_sprite_ui_uniform(THEME.scroll_box_arrow, 0, _arx, _ary, _ars, COLORS._main_icon);
+			draw_sprite_ui_uniform(THEME.scroll_box_arrow, 0, _arx, _ary, _ars, cc, aa);
 			
 			draw_sprite_stretched_ext(THEME.textbox, 0, boxx, boxy, boxw, boxh);
 			if(ihover && hoverRect) {

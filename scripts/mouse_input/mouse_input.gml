@@ -2,12 +2,18 @@
 	globalvar CURSOR, CURSOR_SPRITE;
 	globalvar CURSOR_LOCK, CURSOR_IS_LOCK, CURSOR_LOCK_X, CURSOR_LOCK_Y;
 	globalvar MOUSE_WRAP, MOUSE_WRAPPING, MOUSE_BLOCK, _MOUSE_BLOCK;
-	globalvar MOUSE_POOL;
 	
 	globalvar MOUSE_WHEEL,  MOUSE_WHEEL_H, __MOUSE_WHEEL_HOOK;
 	globalvar MOUSE_PAN_X,  MOUSE_PAN_Y;
 	globalvar MOUSE_ZOOM_X, MOUSE_ZOOM_Y;
 	globalvar MOUSE_PAN;
+	
+	globalvar MOUSE_EVENT; MOUSE_EVENT = {
+		wfocus: window_has_focus(),
+		lclick: false, lpress: false, lrelease: false, lrelease_supp: false, 
+		rclick: false, rpress: false, rrelease: false,
+		mclick: false, mpress: false, mrelease: false,
+	}
 	
 	CURSOR_SPRITE  = noone;
 	MOUSE_WRAP     = false;
@@ -15,11 +21,6 @@
 	MOUSE_BLOCK    = false;
 	_MOUSE_BLOCK   = false;
 	PEN_RELEASED   = false;
-	MOUSE_POOL = {
-		lclick: false, lpress: false, lrelease: false,
-		rclick: false, rpress: false, rrelease: false,
-		mclick: false, mpress: false, mrelease: false,
-	}
 	
 	MOUSE_WHEEL      = 0;
 	MOUSE_WHEEL_H    = 0;
@@ -36,18 +37,25 @@
 	function setMouseWrap() { INLINE MOUSE_WRAP = true; }
 #endregion
 
-function global_mouse_pool_init() {
-	MOUSE_POOL.lclick = mouse_check_button(mb_left);
-	MOUSE_POOL.rclick = mouse_check_button(mb_right);
-	MOUSE_POOL.mclick = mouse_check_button(mb_middle);
+function global_mouse_pool_step() {
+	var _focus  = window_has_focus();
+	var _fclick = !MOUSE_EVENT.wfocus && _focus;
 	
-	MOUSE_POOL.lpress = mouse_check_button_pressed(mb_left);
-	MOUSE_POOL.rpress = mouse_check_button_pressed(mb_right);
-	MOUSE_POOL.mpress = mouse_check_button_pressed(mb_middle);
+	MOUSE_EVENT.wfocus   = _focus;
 	
-	MOUSE_POOL.lrelease = mouse_check_button_released(mb_left);
-	MOUSE_POOL.rrelease = mouse_check_button_released(mb_right);
-	MOUSE_POOL.mrelease = mouse_check_button_released(mb_middle);
+	MOUSE_EVENT.lclick   = device_mouse_check_button(0, mb_left) || _fclick;
+	MOUSE_EVENT.rclick   = device_mouse_check_button(0, mb_right);
+	MOUSE_EVENT.mclick   = device_mouse_check_button(0, mb_middle);
+	
+	MOUSE_EVENT.lpress   = device_mouse_check_button_pressed(0, mb_left) || _fclick;
+	MOUSE_EVENT.rpress   = device_mouse_check_button_pressed(0, mb_right);
+	MOUSE_EVENT.mpress   = device_mouse_check_button_pressed(0, mb_middle);
+	
+	MOUSE_EVENT.lrelease = device_mouse_check_button_released(0, mb_left) && !MOUSE_EVENT.lrelease_supp;
+	MOUSE_EVENT.rrelease = device_mouse_check_button_released(0, mb_right);
+	MOUSE_EVENT.mrelease = device_mouse_check_button_released(0, mb_middle);
+	
+	MOUSE_EVENT.lrelease_supp = _fclick;
 }
 
 function mouse_step() {
@@ -63,87 +71,98 @@ function mouse_step() {
 	// MOUSE_ZOOM_Y  = mouse_zoom_y();
 }
 
-function mouse_click(mouse, focus = true) {
+function mouse_click(mouse, focus = true, bypass = false) {
 	INLINE
-	if(MOUSE_BLOCK)		return false;
-	if(!focus)			return false;
+	if((!bypass && MOUSE_BLOCK) || !focus) return false;
+	if(PEN_RIGHT_CLICK)                    return mouse == mb_right;
 	
-	if(PEN_RIGHT_CLICK) return mouse == mb_right;
+	switch(mouse) {
+		case mb_left   : return MOUSE_EVENT.lclick;
+		case mb_middle : return MOUSE_EVENT.mclick;
+		case mb_right  : return MOUSE_EVENT.rclick;
+		case mb_any    : return MOUSE_EVENT.lclick || MOUSE_EVENT.rclick || MOUSE_EVENT.mclick;
+	}
 	
-	return mouse_check_button(mouse);
+	return false;
 }
 
-function mouse_press(mouse, focus = true, pass = false) {
+function mouse_press(mouse, focus = true, bypass = false) {
 	INLINE
-	if(!pass && MOUSE_BLOCK) return false;
-	if(!focus)				 return false;
+	if((!bypass && MOUSE_BLOCK) || !focus) return false;
+	if(PEN_RIGHT_PRESS)                    return mouse == mb_right;
 	
-	if(PEN_RIGHT_PRESS)      return mouse == mb_right;
+	switch(mouse) {
+		case mb_left   : return MOUSE_EVENT.lpress;
+		case mb_middle : return MOUSE_EVENT.mpress;
+		case mb_right  : return MOUSE_EVENT.rpress;
+		case mb_any    : return MOUSE_EVENT.lpress || MOUSE_EVENT.rpress || MOUSE_EVENT.mpress;
+	}
 	
-	return mouse_check_button_pressed(mouse);
+	return false;
 }
 
-function mouse_release(mouse, focus = true) {
+function mouse_release(mouse, focus = true, bypass = false) {
 	INLINE
-	if(!focus)			return false;
+	if((!bypass && MOUSE_BLOCK) || !focus) return false;
+	if(PEN_RIGHT_RELEASE)                  return mouse == mb_right;
 	
-	if(PEN_RIGHT_RELEASE) return mouse == mb_right;
+	var rl = false;
+	switch(mouse) {
+		case mb_left   : rl = MOUSE_EVENT.lrelease; break;
+		case mb_middle : rl = MOUSE_EVENT.mrelease; break;
+		case mb_right  : rl = MOUSE_EVENT.rrelease; break;
+		case mb_any    : rl = MOUSE_EVENT.lrelease || MOUSE_EVENT.rrelease || MOUSE_EVENT.mrelease; break;
+	}
 	
-	var rl = mouse_check_button_released(mouse);
 	return rl || ((mouse == mb_left || mouse == mb_any) && PEN_RELEASED);
 }
 
-function mouse_lclick(focus = true) {
+function mouse_lclick(focus = true, bypass = false) {
 	INLINE
-	if(MOUSE_BLOCK)		return false;
-	if(!focus)			return false;
+	if((!bypass && MOUSE_BLOCK) || !focus)   return false;
 	if(PEN_RIGHT_CLICK || PEN_RIGHT_RELEASE) return false;
 	
-	return mouse_check_button(mb_left);
+	return MOUSE_EVENT.lclick;
 }
 
-function mouse_lpress(focus = true) {
+function mouse_lpress(focus = true, bypass = false) {
 	INLINE
-	if(MOUSE_BLOCK)		return false;
-	if(!focus)			return false;
-	if(PEN_RIGHT_PRESS) return false;
+	if((!bypass && MOUSE_BLOCK) || !focus) return false;
+	if(PEN_RIGHT_PRESS)                    return false;
 	
-	return mouse_check_button_pressed(mb_left);
+	return MOUSE_EVENT.lpress;
 }
 
-function mouse_lrelease(focus = true) {
+function mouse_lrelease(focus = true, bypass = false) {
 	INLINE
-	if(!focus)			  return false;
-	if(PEN_RIGHT_RELEASE) return false;
-	if(PEN_RELEASED)	  return true;
+	if(!focus || PEN_RIGHT_RELEASE) return false;
+	if(PEN_RELEASED)                return true;
 	
-	return mouse_check_button_released(mb_left);
+	return MOUSE_EVENT.lrelease;
 }
 
-function mouse_rclick(focus = true) {
+function mouse_rclick(focus = true, bypass = false) {
 	INLINE
-	if(MOUSE_BLOCK)		return false;
-	if(!focus)			return false;
-	if(PEN_RIGHT_CLICK) return true;
+	if((!bypass && MOUSE_BLOCK) || !focus) return false;
+	if(PEN_RIGHT_CLICK)                    return true;
 	
-	return mouse_check_button(mb_right);
+	return MOUSE_EVENT.rclick;
 }
 
-function mouse_rpress(focus = true) {
+function mouse_rpress(focus = true, bypass = false) {
 	INLINE
-	if(MOUSE_BLOCK)		return false;
-	if(!focus)			return false;
-	if(PEN_RIGHT_PRESS) return true;
+	if((!bypass && MOUSE_BLOCK) || !focus) return false;
+	if(PEN_RIGHT_PRESS)                    return true;
 	
-	return mouse_check_button_pressed(mb_right);
+	return MOUSE_EVENT.rpress;
 }
 
-function mouse_rrelease(focus = true) {
+function mouse_rrelease(focus = true, bypass = false) {
 	INLINE
 	if(!focus)			  return false;
 	if(PEN_RIGHT_RELEASE) return true;
 	
-	return mouse_check_button_released(mb_right);
+	return MOUSE_EVENT.rrelease;
 }
 	
 function mouse_lock(mx = CURSOR_LOCK_X, my = CURSOR_LOCK_Y) {

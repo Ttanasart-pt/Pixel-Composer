@@ -260,7 +260,7 @@
 		if(!DIALOG_CLICK) return;
 		if(init_pressing) return;
 		
-		if(MOUSE_POOL.lpress || MOUSE_POOL.rpress) { 
+		if(MOUSE_EVENT.lpress || MOUSE_EVENT.rpress) { 
 			if(!volatile && !isTop()) return;
 			
 			for( var i = 0, n = array_length(children); i < n; i++ )

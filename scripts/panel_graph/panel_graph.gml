@@ -1495,6 +1495,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             	node_dragging   = noone;
             	frame_draggings = [];
             }
+            
         }
         
         ////- Start Drag
@@ -1508,7 +1509,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
 		if(key_mod_press(CTRL) || key_mod_press(SHIFT)) return;
         
         if(mouse_press(mb_left)) {
-            node_dragging = _node;
+        	node_dragging = _node;
             node_drag_mx  = mouse_graph_x;
             node_drag_my  = mouse_graph_y;
             node_drag_sx  = _node.x;
@@ -2252,7 +2253,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
             drag_locking = false;
         }
         
-    } 
+    }  ////- Draw node
     
     function connectDraggingValueTo(target) {
         var _connect = [ 0, noone, noone ];
