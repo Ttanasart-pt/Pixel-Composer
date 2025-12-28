@@ -1,28 +1,29 @@
 function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Crop Content";
 	
-	newInput(0, nodeValue_Surface("Surface In"));
-	
 	newActiveInput(1);
 	
-	newInput(2, nodeValue_Enum_Scroll("Array Sizing",  1, [ "Largest, same size", "Independent" ]))
+	////- =Surfaces
+	newInput(0, nodeValue_Surface( "Surface In" )).setArrayDepth(1);
+	newInput(2, nodeValue_EScroll( "Array Sizing",  1, [ "Largest, same size", "Independent" ]))
 		.setTooltip("Cropping mode for dealing with image array.");
+		
+	newInput(4, nodeValue_Color( "Background", cola(c_black, 0) ));
 	
-	newInput(3, nodeValue_Padding("Padding", [ 0, 0, 0, 0 ], "Add padding back after crop."));
+	////- =Padding
+	newInput(3, nodeValue_Padding( "Padding", [0,0,0,0], "Add padding back after crop."));
+	// 5
 	
-	newInput(4, nodeValue_Color("Background", cola(c_black, 0)));
-	
-	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
-	
-	newOutput(1, nodeValue_Output("Crop distance", VALUE_TYPE.integer, [ 0, 0, 0, 0 ]))
-		.setDisplay(VALUE_DISPLAY.padding);
-	
-	newOutput(2, nodeValue_Output("Atlas", VALUE_TYPE.atlas, []));
+	newOutput(0, nodeValue_Output( "Surface Out",   VALUE_TYPE.surface, noone     )).setArrayDepth(1);
+	newOutput(1, nodeValue_Output( "Crop distance", VALUE_TYPE.integer, [0,0,0,0] )).setDisplay(VALUE_DISPLAY.padding).setArrayDepth(1);
+	newOutput(2, nodeValue_Output( "Atlas",         VALUE_TYPE.atlas,   []        )).setArrayDepth(1);
 	
 	input_display_list = [ 1,
-		["Surfaces", false], 0, 2, 4, 
-		["Padding",	 false], 3, 
-	]
+		[ "Surfaces", false ], 0, 2, 4, 
+		[ "Padding",  false ], 3, 
+	];
+	
+	////- Node
 	
 	attribute_surface_depth();
 	
@@ -36,27 +37,17 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	draw_transforms = [];
 	static drawOverlayTransform = function(_node) { return array_safe_get(draw_transforms, preview_index, noone); }
 	
-	static update = function() {
-		var _inSurf	= getInputData(0);
-		var _active	= getInputData(1);
-		var _array	= getInputData(2);
-		var _padd	= getInputData(3);
-		var _bg 	= getInputData(4);
-		
-		var _outSurf = outputs[0].getValue();
-		surface_array_free(_outSurf);
-		
-		if(!_active) {			
-			_outSurf = surface_array_clone(_inSurf);
-			outputs[0].setValue(_outSurf);
-			return;
-		}
+	static update = function() { 
+		#region data
+			var _inSurf	= getInputData(0);
+			var _array	= getInputData(2);
+			var _bg 	= getInputData(4);
+			
+			var _padd	= getInputData(3);
+		#endregion
 		
 		var _arr = is_array(_inSurf);
-		_array  = _array && _arr;
-		
-		if(!is_array(_inSurf) && !is_surface(_inSurf)) return;
-		if( is_array(_inSurf) && array_empty(_inSurf)) return;
+		_array   = _array && _arr;
 		
 		if(!_arr) _inSurf = [ _inSurf ];
 		var _amo = array_length(_inSurf);
@@ -69,37 +60,21 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		for( var j = 0; j < _amo; j++ ) {
 			var _surf = _inSurf[j];
+			var  sw   = surface_get_width_safe(_surf);
+			var  sh   = surface_get_height_safe(_surf);
 			
-			var _dim  = [ surface_get_width_safe(_surf), surface_get_height_safe(_surf) ]; 
-			var _minx = 0, _miny = 0, _maxx = _dim[0] - 1, _maxy = _dim[1] - 1;
-			
-			temp_surface[0] = surface_verify(temp_surface[0], _dim[0], _dim[1], surface_r8unorm);
-			temp_surface[1] = surface_verify(temp_surface[1], _dim[0], _dim[1], surface_r8unorm);
-			
-			surface_set_shader(temp_surface[0], sh_find_boundary_stretch_x);
-				shader_set_color("background", _bg);
-				shader_set_f("dimension", _dim);
-				
+			temp_surface[0] = surface_verify(temp_surface[0], sw, sh);
+			var _sclr = temp_surface[0];
+			surface_set_shader(_sclr, sh_crop_content_replace_color);
+				shader_set_c("target", _bg);
 				draw_surface_safe(_surf);
 			surface_reset_shader();
 			
-			surface_set_shader(temp_surface[1], sh_find_boundary_stretch_y);
-				shader_set_color("background", _bg);
-				shader_set_f("dimension", _dim);
-				
-				draw_surface_safe(_surf);
-			surface_reset_shader();
-			
-			var _buff0 = buffer_from_surface(temp_surface[0], false);
-			var _buff1 = buffer_from_surface(temp_surface[1], false);
-			
-			for( ; _minx < _dim[0]; _minx++ ) if(buffer_read_at(_buff0, _minx, buffer_u8) > 0) break;
-			for( ; _maxx >= 0; _maxx-- )      if(buffer_read_at(_buff0, _maxx, buffer_u8) > 0) break;
-			for( ; _miny < _dim[1]; _miny++ ) if(buffer_read_at(_buff1, _dim[0] * _miny, buffer_u8) > 0) break;
-			for( ; _maxy >= 0; _maxy-- )      if(buffer_read_at(_buff1, _dim[0] * _maxy, buffer_u8) > 0) break;
-			
-			buffer_delete(_buff0);
-			buffer_delete(_buff1);
+			var  bbox = surface_get_bbox(_sclr);
+			var _minx = bbox[0];
+			var _miny = bbox[1];
+			var _maxx = bbox[0] + bbox[2];
+			var _maxy = bbox[1] + bbox[3];
 			
 			if(_array) {
 				minx[j] = _minx;
@@ -117,40 +92,39 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			}
 		}
 		
-		var res   = [];
-		var crop  = [];
-		var atlas = [];
+		var _outSurfs = outputs[0].getValue();
+		
+		var resl = [];
+		var crop = [];
+		var atls = [];
 		
 		for( var i = 0; i < _amo; i++ ) {
 			var _surf = _inSurf[i];
 			var _ind  = _array == 0? 0 : i;
+			var  sw   = surface_get_width_safe(_surf);
+			var  sh   = surface_get_height_safe(_surf);
 			
-			var resDim  = [maxx[_ind] - minx[_ind] + 1, maxy[_ind] - miny[_ind] + 1];
-			resDim[DIMENSION.width]  += _padd[PADDING.left] + _padd[PADDING.right];
-			resDim[DIMENSION.height] += _padd[PADDING.top]  + _padd[PADDING.bottom];
+			var resDim = [maxx[_ind] - minx[_ind], maxy[_ind] - miny[_ind]];
+			resDim[0] += _padd[PADDING.left] + _padd[PADDING.right];
+			resDim[1] += _padd[PADDING.top]  + _padd[PADDING.bottom];
 			
-			res[i]  = surface_create_valid(resDim[DIMENSION.width], resDim[DIMENSION.height], cDep);
-			crop[i] = [ surface_get_width_safe(_surf) - maxx[_ind] - 1, miny[_ind], minx[_ind], surface_get_height_safe(_surf) - maxy[_ind] - 1 ];
+			var _out = array_safe_get_fast(_outSurfs, i);
+			resl[i] = surface_verify(_out, resDim[0], resDim[1], cDep);
+			crop[i] = [ sw - maxx[_ind], miny[_ind], minx[_ind], sh - maxy[_ind] ];
 			
 			var _sx = -minx[_ind] + _padd[PADDING.left];
 			var _sy = -miny[_ind] + _padd[PADDING.top];
 			
-			surface_set_shader(res[i], noone);
+			surface_set_shader(resl[i], noone);
 				draw_surface_safe(_surf, _sx, _sy);
 			surface_reset_shader();
 			
-			atlas[i] = new SurfaceAtlas(res[i], minx[_ind], miny[_ind]);
+			atls[i] = new SurfaceAtlas(resl[i], minx[_ind], miny[_ind]);
 			draw_transforms[i] = [_sx, _sy, 1, 1, 0];
 		}
 		
-		if(!_arr) {
-			res   = res[0];
-			crop  = crop[0];
-			atlas = atlas[0];
-		}
-		
-		outputs[0].setValue(res);
-		outputs[1].setValue(crop);
-		outputs[2].setValue(atlas);
+		outputs[0].setValue(_arr? resl : resl[0]);
+		outputs[1].setValue(_arr? crop : crop[0]);
+		outputs[2].setValue(_arr? atls : atls[0]);
 	}
 }

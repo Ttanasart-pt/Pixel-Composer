@@ -105,7 +105,8 @@ function mouse_press(mouse, focus = true, bypass = false) {
 
 function mouse_release(mouse, focus = true, bypass = false) {
 	INLINE
-	if((!bypass && MOUSE_BLOCK) || !focus) return false;
+	// if((!bypass && MOUSE_BLOCK) || !focus) return false;
+	if(!focus)                             return false;
 	if(PEN_RIGHT_RELEASE)                  return mouse == mb_right;
 	
 	var rl = false;

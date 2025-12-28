@@ -75,7 +75,7 @@
 			var mp = 0;
 			if(DOUBLE_CLICK)				 mp = 2;
 			else if(mouse_lpress(mb_left))	 mp = 1.3;
-			else if(mouse_lrelease(mb_left)) mp = 1.3;
+			else if(mouse_lrelease()) mp = 1.3;
 			else if(mouse_lclick(mb_left))	 mp = 1;
 		
 			array_push(mouse_left, mp);
