@@ -645,14 +645,14 @@ event_inherited();
 				
 				if(!struct_try_get(_node, "hide_bg", false)) {
 					BLEND_OVERRIDE
-					draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size, colorMultiply(cc, COLORS.node_base_bg), 1);
+					var nc = colorMultiply(cc, COLORS._main_icon_dark);
+					draw_sprite_stretched_ext(THEME.node_bg, 0, _nx, yy, grid_width, grid_size, nc, 1);
 					BLEND_NORMAL
 				}
 				
 				if(_hoverContent && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
 					content_pane.hover_content = true;
-					
-					draw_sprite_stretched_ext(THEME.node_bg, 1, _boxx, yy, grid_size, grid_size, COLORS._main_accent, 1);
+					draw_sprite_stretched_ext(THEME.node_bg, 1, _nx, yy, grid_width, grid_size, COLORS._main_accent, 1);
 					
 					if(sFOCUS) {
 						if(mouse_release(mb_left,  left_free))  buildNode(_node);
@@ -669,12 +669,12 @@ event_inherited();
 				
 				if(_node == node_goto_draw && node_goto_fade > 0) {
 					var aa = node_goto_fade * 1;
-					draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size, COLORS._main_accent, aa);
+					draw_sprite_stretched_ext(THEME.node_bg, 0, _nx, yy, grid_width, grid_size, COLORS._main_accent, aa);
 					node_goto_fade = lerp_float(node_goto_fade, 0, 50);
 				}
 				
 				if(is(_node, NodeObject)) {
-					_node.drawGrid(_boxx, yy, _m[0], _m[1], grid_size);
+					_node.drawGrid(_nx, yy, _m[0], _m[1], grid_width, grid_size);
 				} else {
 					var spr_x = _boxx + grid_size / 2;
 					var spr_y = yy + grid_size / 2;
@@ -690,15 +690,15 @@ event_inherited();
 				if(_node.getTooltip() != "" || _node.getTooltipSpr() != noone) {
 					gpu_set_tex_filter(true);
 					BLEND_ADD
-					if(_hoverContent && point_in_rectangle(_m[0], _m[1], _boxx, yy, _boxx + ui(16), yy + ui(16))) {
+					if(_hoverContent && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + ui(16), yy + ui(16))) {
 						content_pane.hover_content = true;
 						
-						draw_sprite_ui_uniform(THEME.info, 0, _boxx + ui(8), yy + ui(8), 0.7, COLORS._main_icon, 1.0);
+						draw_sprite_ui_uniform(THEME.info, 0, _nx + ui(8), yy + ui(8), 0.7, COLORS._main_icon, 1.0);
 						node_tooltip   = _node;
 						node_tooltip_x = content_pane.x + _nx;
 						node_tooltip_y = content_pane.y + yy;
 					} else 
-						draw_sprite_ui_uniform(THEME.info, 0, _boxx + ui(8), yy + ui(8), 0.7, COLORS._main_icon, 0.5);
+						draw_sprite_ui_uniform(THEME.info, 0, _nx + ui(8), yy + ui(8), 0.7, COLORS._main_icon, 0.5);
 					BLEND_NORMAL
 					gpu_set_tex_filter(false);
 				}
@@ -1166,7 +1166,7 @@ event_inherited();
 		
 		var grid_size  = ui(56);
 		var grid_width = ui(80);
-		var grid_space = ui(16);
+		var grid_space = ui(12);
 		
 		var highlight  = PREFERENCES.dialog_add_node_search_high;
 		
@@ -1229,12 +1229,13 @@ event_inherited();
 					
 					if(!struct_try_get(_node, "hide_bg", false)) {
 						BLEND_OVERRIDE
-						draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size, colorMultiply(cc, COLORS.node_base_bg), 1);
+						var nc = colorMultiply(cc, COLORS._main_icon_dark);
+						draw_sprite_stretched_ext(THEME.node_bg, 0, _nx, yy, grid_width, grid_size, nc, 1);
 						BLEND_NORMAL
 					}
 					
 					var _minput = _hover && (MOUSE_MOVED || mouse_release(mb_any));
-					if(_minput && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_size, yy + grid_size)) {
+					if(_minput && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
 						search_pane.hover_content = true;
 						node_selecting = i;
 						
@@ -1246,13 +1247,13 @@ event_inherited();
 					}
 					
 					if(node_selecting == i) {
-						draw_sprite_stretched_ext(THEME.node_bg, 1, _boxx, yy, grid_size, grid_size, COLORS._main_accent, 1);
+						draw_sprite_stretched_ext(THEME.node_bg, 1, _nx, yy, grid_width, grid_size, COLORS._main_accent, 1);
 						if(hk_editing == noone && KEYBOARD_ENTER)
 							buildNode(_node, _param);
 					}
 					
 					if(is(_node, NodeObject)) {
-						_node.drawGrid(_boxx, yy, _m[0], _m[1], grid_size, _param);
+						_node.drawGrid(_nx, yy, _m[0], _m[1], grid_width, grid_size, _param);
 					} else {
 						if(variable_struct_exists(_node, "getSpr")) _node.getSpr();
 						if(sprite_exists(_node.spr)) {
@@ -1278,15 +1279,15 @@ event_inherited();
 					
 					if(has(_node, "tooltip") && (_node.getTooltip() != "" || _node.getTooltipSpr() != noone)) {
 						BLEND_ADD
-						if(_hover && point_in_rectangle(_m[0], _m[1], _boxx, yy, _boxx + ui(16), yy + ui(16))) {
+						if(_hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + ui(16), yy + ui(16))) {
 							search_pane.hover_content = true;
 							
-							draw_sprite_ui_uniform(THEME.info, 0, _boxx + ui(8), yy + ui(8), 0.7, COLORS._main_icon, 1.0);
+							draw_sprite_ui_uniform(THEME.info, 0, _nx + ui(8), yy + ui(8), 0.7, COLORS._main_icon, 1.0);
 							node_tooltip   = _node;
 							node_tooltip_x = search_pane.x + _nx;
 							node_tooltip_y = search_pane.y + yy
 						} else 
-							draw_sprite_ui_uniform(THEME.info, 0, _boxx + ui(8), yy + ui(8), 0.7, COLORS._main_icon, 0.5);
+							draw_sprite_ui_uniform(THEME.info, 0, _nx + ui(8), yy + ui(8), 0.7, COLORS._main_icon, 0.5);
 						BLEND_NORMAL
 					}
 				

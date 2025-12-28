@@ -175,9 +175,9 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		return _node;
 	}
 	
-	static drawGrid = function(_x, _y, _mx, _my, grid_size, _param = {}) {
-		var spr_x = _x + grid_size / 2;
-		var spr_y = _y + grid_size / 2;
+	static drawGrid = function(_x, _y, _mx, _my, grid_width, grid_size, _param = {}) {
+		var spr_x = _x + grid_width / 2;
+		var spr_y = _y + grid_size  / 2;
 		
 		var _spw = sprite_get_width(spr);
 		var _sph = sprite_get_height(spr);
@@ -188,19 +188,19 @@ function NodeObject(_name, _node, _tooltip = "") constructor {
 		gpu_set_tex_filter(false);
 				
 		if(new_node) {
-			draw_sprite_ui_uniform(THEME.node_new_badge, 0, _x + grid_size - ui(12), _y + ui(6),, COLORS._main_accent);
-			draw_sprite_ui_uniform(THEME.node_new_badge, 1, _x + grid_size - ui(12), _y + ui(6));
+			draw_sprite_ui_uniform(THEME.node_new_badge, 0, _x + grid_width - ui(12), _y + ui(6),, COLORS._main_accent);
+			draw_sprite_ui_uniform(THEME.node_new_badge, 1, _x + grid_width - ui(12), _y + ui(6));
 		}
 				
 		if(deprecated) {
-			draw_sprite_ui_uniform(THEME.node_deprecated_badge, 0, _x + grid_size - ui(12), _y + ui(6),, COLORS._main_value_negative);
-			draw_sprite_ui_uniform(THEME.node_deprecated_badge, 1, _x + grid_size - ui(12), _y + ui(6));
+			draw_sprite_ui_uniform(THEME.node_deprecated_badge, 0, _x + grid_width - ui(12), _y + ui(6),, COLORS._main_value_negative);
+			draw_sprite_ui_uniform(THEME.node_deprecated_badge, 1, _x + grid_width - ui(12), _y + ui(6));
 		}
 		
 		var fav = struct_exists(NODE_FAV_MAP, nodeName);
-		if(fav) draw_sprite_ui_uniform(THEME.favorite, 1, _x + grid_size - ui(10), _y + grid_size - ui(10), .8, CDEF.yellow, 1.);
+		if(fav) draw_sprite_ui_uniform(THEME.favorite, 1, _x + grid_width - ui(10), _y + grid_size - ui(10), .8, CDEF.yellow, 1.);
 		
-		var spr_x = _x + grid_size - 4;
+		var spr_x = _x + grid_width - 4;
 		var spr_y = _y + 4;
 				
 		if(IS_PATREON && patreon) {
@@ -440,8 +440,11 @@ function __read_node_folder(dir) {
 	return _n;
 }
 
-function __read_node_display(_list) {
-	var _currLab = "";
+function __read_node_display(_list, _dir) {
+	var _currLab  = "";
+	var _dname    = filename_name_only(_dir);
+	var _internal = _dname == "Internal";
+	if(_internal) NODE_PAGE_LAST = 0;
 	
 	for( var i = 0, n = array_length(_list); i < n; i++ ) {
 		var _dl     = _list[i];
@@ -528,7 +531,6 @@ function __read_node_display(_list) {
 
 function __read_node_display_folder(dir) {
 	if(!directory_exists(dir)) return;
-	// print($"Checking display: {dir}");
 	
 	var _dirs = [];
 	var _f = file_find_first(dir + "/*", fa_directory);
@@ -545,9 +547,8 @@ function __read_node_display_folder(dir) {
 		if(_f == "display_data.json") {
 			var _dpth = dir + "/" + _f;
 			var _data = json_load_struct(_dpth);
-			// print($"Read node display file: {_dpth}");
 			
-			__read_node_display(_data);
+			__read_node_display(_data, dir);
 		}
 		
 		_f = file_find_next();
