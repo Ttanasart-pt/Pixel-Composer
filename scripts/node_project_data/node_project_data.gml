@@ -1,5 +1,5 @@
 function Node_Project_Data(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name = "Project Data";
+	name       = "Project Data";
 	always_pad = true;
 	setDimension(96, 48);
 	
@@ -14,7 +14,6 @@ function Node_Project_Data(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		outputs[1].setValue(PROJECT.meta.description);
 		outputs[2].setValue(PROJECT.meta.author);
 		outputs[3].setValue(PROJECT.meta.contact);
-		
 		outputs[4].setValue(PROJECT.path);
 	}
 	
@@ -22,7 +21,13 @@ function Node_Project_Data(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var bbox = draw_bbox;
 		var txt  = outputs[0].getValue();
 		
-		draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text);
-		draw_text_bbox(bbox, txt);
+		if(txt == "") {
+			draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text_sub);
+			draw_text_bbox(bbox, "untitled");
+			
+		} else {
+			draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text);
+			draw_text_bbox(bbox, txt);
+		}
 	}
 }

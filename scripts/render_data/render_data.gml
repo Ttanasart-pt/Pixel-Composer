@@ -235,7 +235,15 @@ enum RENDER_TYPE {
 				n.forwardPassiveDynamic();
 			});
 			
-			profile_log(1, $"Found {RENDER_QUEUE.size()} leaves");
+			if(PROFILER_STAT) {
+				var ll = "";
+				for( var i = 0, n = array_length(RENDER_QUEUE.data); i < n; i++ ) {
+					var _n = RENDER_QUEUE.data[i];
+					ll +=  + $"{_n.getFullName()}\n";
+				}
+				
+				profile_log(1, $"Found {RENDER_QUEUE.size()} leaves", ll);
+			}
 			
 			leaf_time = get_timer() - t;
 			LOG_IF(global.FLAG.render >= 1, $"Get leaf complete: found {RENDER_QUEUE.size()} leaves in {(get_timer() - t) / 1000} ms."); t = get_timer();

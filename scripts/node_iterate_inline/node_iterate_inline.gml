@@ -38,7 +38,7 @@ function Node_Iterate_Inline(_x, _y, _group = noone) : Node_Collection_Inline(_x
 		iterated++;
 		
 		LOG_BLOCK_END();
-		logNodeDebug($"Loop restart: iteration {iterated}");
+		logNodeDebug($"Loop [{getDisplayName()}] restart: iteration {iterated}", 1, icon);
 		
 		return _nodes;
 	}

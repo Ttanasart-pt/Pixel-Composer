@@ -248,7 +248,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			render_time = array_reduce(getNodeList(), function(val, node) /*=>*/ { val += node.render_time; return val; }, 0);
 	}
 	
-	static getNextNodes = function(checkLoop = false) { return isPure? getNextNodesExternal() : getNextNodesInternal(); } 
+	static getNextNodes = function(checkLoop = false) { return isPure? getNextNodesExternal(checkLoop) : getNextNodesInternal(checkLoop); } 
 	
 	static getNextNodesInternal = function() { //get node inside the group
 		LOG_BLOCK_START();

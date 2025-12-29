@@ -1,26 +1,33 @@
 function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Struct";
-	
 	setDimension(96, 48);
+	
+	////- IO
+	
+	newOutput(0, nodeValue_Output("Struct", VALUE_TYPE.struct, {}));
 	
 	size_adjust_tool = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		var _h = ui(48);
 		
+		var bs = THEME.button_hide_fill;
 		var bw = _w / 2 - ui(4);
 		var bh = ui(36);
-		if(buttonTextIconInstant(true, THEME.button_hide_fill, _x, _y + ui(8), bw, bh, _m, _focus, _hover, "", THEME.add, __txt("Add"), COLORS._main_value_positive) == 2)
+		var bc = COLORS._main_value_positive;
+		
+		var bx = _x;
+		var by = _y + ui(8);
+		if(buttonTextIconInstant(true, bs, bx, by, bw, bh, _m, _focus, _hover, "", THEME.add, __txt("Add"), bc) == 2)
 			addInput();
 		
+		var bx = _x + _w - bw;
+		var bc  = COLORS._main_value_negative;
 		var amo = attributes.size;
-		if(buttonTextIconInstant(attributes.size > 0, THEME.button_hide_fill, _x + _w - bw, _y + ui(8), bw, bh, _m, _focus, _hover, "", THEME.minus, __txt("Remove"), COLORS._main_value_negative) == 2)
+		if(buttonTextIconInstant(attributes.size > 0, bs, bx, by, bw, bh, _m, _focus, _hover, "", THEME.minus, __txt("Remove"), bc) == 2)
 			deleteInput(array_length(inputs) - data_length);
 		
 		return _h;
 	});
-	
-	input_display_list = [ size_adjust_tool, ];
-	
-	newOutput(0, nodeValue_Output("Struct", VALUE_TYPE.struct, {}));
+	input_display_list = [ size_adjust_tool ];
 	
 	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
@@ -37,8 +44,9 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 		return inputs[index + 0];
 	} 
-	
 	setDynamicInput(2, false);
+	
+	////- Inputs
 	
 	static addInput = function() {
 		var index = array_length(inputs);
@@ -99,6 +107,8 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		getJunctionList();
 	}
 
+	////- Update
+	
 	static onValueUpdate = function(index = 0) {
 		if(LOADING || APPENDING) return;
 		if(index < 0) return;
@@ -144,17 +154,20 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		draw_set_text(f_sdf, fa_left, fa_center, COLORS._main_text);
 		
-		for(var i = input_fix_len; i < array_length(inputs); i += data_length) {
+		for(var i = input_fix_len, n = array_length(inputs); i < n; i += data_length) {
 			var key = getInputData(i, "");
 			var val = inputs[i + 1];
 			if(!val.visible) continue;
 			
-			var _ss = min(_s * .4, string_scale(key, bbox.w - 12 * _s, 9999));
+			var _ts = string_scale(key, bbox.w - 12 * _s, 9999);
+			var _ss = min(_s * .4 / THEME_SCALE, _ts);
 			
 			draw_set_color(value_color(val.type));
 			draw_text_transformed(bbox.x0 + 6 * _s, val.y, key, _ss, _ss, 0);
 		}
 	}
+	
+	////- Serialize
 	
 	static postApplyDeserialize = function() {
 		refreshDynamicInput();

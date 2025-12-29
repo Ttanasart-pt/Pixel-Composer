@@ -373,16 +373,14 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			if(_bubble) messages_bub = true;
 		}
 		
-		static logNodeDebug = function(text, level = 1) { 
+		static logNodeDebug = function(text, level = 1, _icon = THEME.noti_icon_log) { 
 			LOG_IF(global.FLAG.render >= level, text);
-			if(PROFILER_STAT == 0) return;
+			if(PROFILER_STAT == 0) return undefined;
 			
-			_report = {
-				type : "message",
-				text, level,	
-			};
-			_report.node  = self;
+			var _report = new profile_message(level, text)
+				.setIcon(_icon).setNode(self);
 			array_push(PROFILER_DATA, _report); 
+			return _report;
 		}
 	#endregion
 	
@@ -1333,9 +1331,13 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	__nextNodesToLoop = noone;
 	
 	static getNextNodes = function(checkLoop = false) {
-		if(checkLoop) { if(__nextNodesToLoop != noone && __nextNodesToLoop.bypassNextNode()) __nextNodesToLoop.getNextNodes(); return; }
-		__nextNodesToLoop = noone;
+		if(checkLoop) { 
+			if(__nextNodesToLoop != noone && __nextNodesToLoop.bypassNextNode()) 
+				__nextNodesToLoop.getNextNodes(); 
+			return; 
+		}
 		
+		__nextNodesToLoop = noone;
 		for( var i = 0, n = array_length(outputs); i < n; i++ ) {
 			var _ot = outputs[i];
 			if(is(_ot, NodeValue) && !_ot.forward) continue;

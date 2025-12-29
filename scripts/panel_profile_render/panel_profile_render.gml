@@ -8,41 +8,115 @@ function profile_log(_level, _text, _desc = "") {
 
 function profile_message(_level, _text, _desc = "") constructor {
 	type  = "message";
-	node  = undefined;
 	level = _level; 
 	text  = _text;
+	node  = undefined;           static setNode = function(n) /*=>*/ { node = n; return self; }
+	icon  = THEME.noti_icon_log; static setIcon = function(i) /*=>*/ { icon = i; return self; }
 	
 	desc  = _desc;
 }
 
 function Panel_Profile_Render() : PanelContent() constructor {
-    title      = __txt("Render Profiler");
-	showHeader = true;
-	auto_pin   = true;
+	#region ---- data ----
+	    title      = __txt("Render Profiler");
+		showHeader = true;
+		auto_pin   = true;
+		
+		w = ui(800);
+		h = ui(500);
 	
-	w = ui(800);
-	h = ui(500);
+		list_w     = ui(320);
+		detail_w   = w - list_w - padding * 2 - ui(8);
+		content_h  = h - ui(40) - padding;
+		io_label_y = 0;
+	#endregion
 	
-	list_w     = ui(320);
-	detail_w   = w - list_w - padding * 2 - ui(8);
-	content_h  = h - ui(40) - padding;
-	io_label_y = 0;
+	#region ---- render ----
+		run = 0;
+		render_time      = 0;
+		render_drag      = false;
+		report_selecting = noone;
+		report_clicked   = noone;
 	
-	run = 0;
-	render_time      = 0;
-	render_drag      = false;
-	report_selecting = noone;
-	report_clicked   = noone;
+		filter_node         = noone;
+		set_selecting_node  = false;
+		graph_set_latest    = noone;
 	
-	filter_node         = noone;
-	set_selecting_node  = false;
-	graph_set_latest    = noone;
+		show_io             = true;
+		show_log_level      = 1;
+		
+		filter_list_string    = "";
+		filter_content_string = "";
+	#endregion
 	
-	show_io             = true;
-	show_log_level      = 1;
-	
-	filter_list_string    = "";
-	filter_content_string = "";
+	#region ---- summary ----
+		count_render_event    = 0;
+		count_message_event   = 0;
+		node_render_time      = 0;
+		node_render_time_type = {};
+		node_render_rtim_type = {};
+		node_render_time_amo  = {};
+		node_render_time_type_sorted = [];
+		pie_selecting = noone;
+		
+		function summarize() {
+			count_render_event    = 0;
+			count_message_event   = 0;
+			node_render_time      = 0;
+			node_render_rtime     = 0;
+			node_render_time_type = {};
+			node_render_rtim_type = {};
+			node_render_time_amo  = {};
+			node_render_time_type_sorted = [];
+			
+			for( var i = 0, n = array_length(PROFILER_DATA); i < n; i++ ) {
+			    var _report  = PROFILER_DATA[i];
+			    var _rtype  = _report.type;
+			    
+				switch(_rtype) {
+					case "render"  : 
+					    var _node = _report.node;
+					    var _time = _report.time;
+					    
+					    node_render_time  += _report.time;
+					    node_render_rtime += _report.renderTime;
+						
+						count_render_event++;
+						
+						var _typ = instanceof(_node);
+						node_render_time_type[$ _typ] = struct_try_get(node_render_time_type, _typ, 0) + _time;
+						node_render_rtim_type[$ _typ] = struct_try_get(node_render_rtim_type, _typ, 0) + _report.renderTime;
+						node_render_time_amo[$ _typ]  = struct_try_get(node_render_time_amo,  _typ, 0) + 1;
+						break;
+						
+					case "message" : count_message_event++; break;
+				}
+			}
+			
+			var _pr = ds_priority_create();
+			var _nods = variable_struct_get_names(node_render_time_type);
+			for( var i = 0, n = array_length(_nods); i < n; i++ ) {
+				var _t = _nods[i];
+				var _c = make_color_hsv(random(255), 160, 160);
+				var _d = {
+					node   : _t, 
+					color  : _c,
+					
+					amount : node_render_time_amo[$  _t],
+					time   : node_render_time_type[$ _t], 
+					rtime  : node_render_rtim_type[$ _t],
+				};
+				
+				ds_priority_add(_pr, _d, node_render_time_type[$ _t]);
+			}
+			
+			var sz = ds_priority_size(_pr);
+			var i  = 0;
+			
+			repeat(sz) node_render_time_type_sorted[i++] = ds_priority_delete_max(_pr);
+			ds_priority_destroy(_pr);
+		}
+	#endregion
 	
 	tb_list    = textBox_Text(function(str) /*=>*/ { filter_list_string    = str; searchData(); }).setFont(f_p3).setAutoUpdate().setEmpty()
 	tb_content = textBox_Text(function(str) /*=>*/ { filter_content_string = str;               }).setFont(f_p3).setAutoUpdate().setEmpty()
@@ -101,74 +175,10 @@ function Panel_Profile_Render() : PanelContent() constructor {
 			PANEL_GRAPH.setFocusingNode(_report.node);
 	}
 	
-	count_render_event    = 0;
-	count_message_event   = 0;
-	node_render_time      = 0;
-	node_render_time_type = {};
-	node_render_rtim_type = {};
-	node_render_time_amo  = {};
-	node_render_time_type_sorted = [];
-	pie_selecting = noone;
+	__sp_ih = 0;
+	__sp_oh = 0;
 	
-	function summarize() {
-		count_render_event    = 0;
-		count_message_event   = 0;
-		node_render_time      = 0;
-		node_render_rtime     = 0;
-		node_render_time_type = {};
-		node_render_rtim_type = {};
-		node_render_time_amo  = {};
-		node_render_time_type_sorted = [];
-		
-		for( var i = 0, n = array_length(PROFILER_DATA); i < n; i++ ) {
-		    var _report  = PROFILER_DATA[i];
-		    var _rtype  = _report.type;
-		    
-			switch(_rtype) {
-				case "render"  : 
-				    var _node = _report.node;
-				    var _time = _report.time;
-				    
-				    node_render_time  += _report.time;
-				    node_render_rtime += _report.renderTime;
-					
-					count_render_event++;
-					
-					var _typ = instanceof(_node);
-					node_render_time_type[$ _typ] = struct_try_get(node_render_time_type, _typ, 0) + _time;
-					node_render_rtim_type[$ _typ] = struct_try_get(node_render_rtim_type, _typ, 0) + _report.renderTime;
-					node_render_time_amo[$ _typ]  = struct_try_get(node_render_time_amo,  _typ, 0) + 1;
-					break;
-					
-				case "message" : count_message_event++; break;
-			}
-		}
-		
-		var _pr = ds_priority_create();
-		var _nods = variable_struct_get_names(node_render_time_type);
-		for( var i = 0, n = array_length(_nods); i < n; i++ ) {
-			var _t = _nods[i];
-			var _c = make_color_hsv(random(255), 160, 160);
-			var _d = {
-				node   : _t, 
-				color  : _c,
-				
-				amount : node_render_time_amo[$  _t],
-				time   : node_render_time_type[$ _t], 
-				rtime  : node_render_rtim_type[$ _t],
-			};
-			
-			ds_priority_add(_pr, _d, node_render_time_type[$ _t]);
-		}
-		
-		var sz = ds_priority_size(_pr);
-		var i  = 0;
-		
-		repeat(sz) node_render_time_type_sorted[i++] = ds_priority_delete_max(_pr);
-		ds_priority_destroy(_pr);
-	}
-	
-	sc_profile_list = new scrollPane(list_w - ui(8), content_h - ui(8), function(_y, _m) {
+	sc_profile_list   = new scrollPane(1,1, function(_y, _m) {
 	    draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 	    var _h  = ui(8);
 	    var yy  = _y;
@@ -221,7 +231,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 		        if(_draw) {
 		        	var _text = _report.text;
 			        
-		        	draw_sprite_ui(THEME.noti_icon_log, 0, ui(16), _cy, .75, .75, 0, c_white, 1);
+		        	draw_sprite_ui(_report.icon, 0, ui(16), _cy, .75, .75, 0, COLORS._main_icon, 1);
 			        draw_set_text(f_p3, fa_left, fa_center, _sel? COLORS._main_text_accent : COLORS._main_text);
 			        draw_text_add(ui(32), _cy, _text);
 		        }
@@ -247,10 +257,7 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	    return _h;
 	});
 	
-	__sp_ih = 0;
-	__sp_oh = 0;
-	
-	sc_profile_detail = new scrollPane(detail_w - ui(8), content_h - ui(8), function(_y, _m) {
+	sc_profile_detail = new scrollPane(1,1, function(_y, _m) {
 	    draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 	    var _h   = 0;
 	    var _ww  = sc_profile_detail.surface_w;
@@ -603,7 +610,8 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	        
 	    } else if(_rtype == "message") {
-	    	var _mesg = _report.text;
+	    	var _mesg = _report[$ "text"] ?? "";
+	    	var _desc = _report[$ "desc"] ?? "";
 	    	
 	    	var _tx   = ui(8);
 	    	var _ty   = ui(8);
@@ -611,14 +619,24 @@ function Panel_Profile_Render() : PanelContent() constructor {
 	    	draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
 	        draw_text_ext_add(ui(8), _ty, _mesg, -1, _ww - ui(16));
 	        
+	        draw_set_color_alpha(COLORS._main_text_sub, .5);
+	        _ty += ui(24);
+	        draw_line(_tx, _ty, _tx + _ww - ui(8), _ty);
+	        _ty += ui(4);
+	        draw_set_alpha(1);
+	        
 	        if(is(_report.node, Node)) {
 	        	var _node = _report.node;
-	        	
-		        _ty += ui(24);
 		        draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
 		        draw_text_add(_tx, _ty, $"From : {_node.getFullName()}");
+		        _ty += line_get_height() + ui(4);
 	        }
 	        
+	        if(_desc != "") {
+	        	draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text);
+		        draw_text_ext_add(_tx + ui(16), _ty, _desc, -1, _ww - ui(24));
+		        _ty += string_height_ext(_desc, -1, _ww - ui(24)) + ui(4);
+	        }
 	    }
 	    
 	    return _h;
