@@ -2911,7 +2911,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 }
 
 #region FUNCTIONS
-	
 	function checkJuncConnection(from, to, params) {
 		if(from == noone || to == noone) return noone;
 		if(!params.active || !PANEL_GRAPH.pHOVER) return noone;

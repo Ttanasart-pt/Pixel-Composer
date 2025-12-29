@@ -613,31 +613,12 @@ function Panel_Preference() : PanelContent() constructor {
 		ds_list_add(pref_node, __txt("Rendering"));
 			
 			ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
-				__txtx("pref_render_max_time", "Render time per frame"),
+				__txtx("pref_render_max_time", "Max render time per frame"),
 				"render_max_time",
 				textBox_Number(function(val) /*=>*/ {return prefSet("render_max_time", val)})
 			));
 				
 		ds_list_add(pref_node, __txt("Defaults"));
-			
-			ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
-				__txtx("pref_node_default_depth", "Default surface depth"),
-				"node_default_depth",
-				new scrollBox(global.SURFACE_FORMAT_NAME, function(val) /*=>*/ {return prefSet("node_default_depth", val)})
-			));
-			
-			ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
-				__txtx("pref_node_default_interpolation", "Default interpolation"),
-				"node_default_interpolation",
-				new scrollBox(global.SURFACE_INTERPOLATION, function(val) /*=>*/ {return prefSet("node_default_interpolation", val)})
-			));
-			
-			ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
-				__txtx("pref_node_default_oversample", "Default oversample"),
-				"node_default_oversample",
-				new scrollBox(global.SURFACE_OVERSAMPLE, function(val) /*=>*/ {return prefSet("node_default_oversample", val)})
-			));
-			
 			ds_list_add(pref_node, new __Panel_Linear_Setting_Item_Preference(
 				__txtx("pref_node_param_width", "Default param width"),
 				"node_param_width",

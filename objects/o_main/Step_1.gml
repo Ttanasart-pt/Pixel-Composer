@@ -74,7 +74,6 @@ _FILE_DROPPED       = false;
 #endregion
 
 #region window & mouse
-	//if(keyboard_check_pressed(vk_f12)) DEBUG = !DEBUG;
 	mouse_step();
 	
 	if(_cursor != CURSOR) {
@@ -122,7 +121,6 @@ _FILE_DROPPED       = false;
 	
 	with(_p_dialog) doResize();
 	with(_p_dialog) doDrag();
-	
 #endregion
 
 #region auto save
@@ -274,11 +272,4 @@ _FILE_DROPPED       = false;
 		cmd_submit(cmd);
 		file_delete(_resPath);
 	}
-#endregion
-
-#region random debug
-	//print(typeof(WIDGET_CURRENT), instanceof(WIDGET_CURRENT));
-	//if(global.cache_call) print($"CACHE called: {global.cache_call} | hit: {global.cache_hit} ({global.cache_hit / global.cache_call * 100}%)");
-	//print($"{is_struct(HOVER)? instanceof(HOVER) : HOVER}, {is_struct(FOCUS)? instanceof(FOCUS) : FOCUS}");
-	//print($"{mouse_mx}, {mouse_my}");
 #endregion

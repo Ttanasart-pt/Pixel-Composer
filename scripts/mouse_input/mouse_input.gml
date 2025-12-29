@@ -10,7 +10,7 @@
 	
 	globalvar MOUSE_EVENT; MOUSE_EVENT = {
 		wfocus: window_has_focus(),
-		lclick: false, lpress: false, lrelease: false, lrelease_supp: false, 
+		lclick: false, lpress: false, lrelease: false, toPress: false, 
 		rclick: false, rpress: false, rrelease: false,
 		mclick: false, mpress: false, mrelease: false,
 	}
@@ -38,6 +38,8 @@
 #endregion
 
 function mouse_step() {
+	global_mouse_step();
+	
 	MOUSE_WHEEL      = 0;
 	if(mouse_wheel_up())   MOUSE_WHEEL =  1;
 	if(mouse_wheel_down()) MOUSE_WHEEL = -1;
@@ -50,27 +52,55 @@ function mouse_step() {
 	// MOUSE_ZOOM_Y  = mouse_zoom_y();
 	
 	var _focus  = window_has_focus();
-	var _fclick = !MOUSE_EVENT.wfocus && _focus && point_in_rectangle(
-			display_mouse_get_x(),               display_mouse_get_y(), 
-			window_get_x(),                      window_get_y(), 
-			window_get_x() + window_get_width(), window_get_y() + window_get_height()
+	var _mouse  = _focus && point_in_rectangle(
+		display_mouse_get_x(),               display_mouse_get_y(), 
+		window_get_x(),                      window_get_y(), 
+		window_get_x() + window_get_width(), window_get_y() + window_get_height()
 	);
+	
+	var _fclick = !MOUSE_EVENT.wfocus && _mouse;
 	
 	MOUSE_EVENT.wfocus   = _focus;
 	
-	MOUSE_EVENT.lclick   = device_mouse_check_button(0, mb_left) || _fclick;
-	MOUSE_EVENT.rclick   = device_mouse_check_button(0, mb_right);
-	MOUSE_EVENT.mclick   = device_mouse_check_button(0, mb_middle);
+	if(OS == os_windows) {
+		MOUSE_EVENT.lclick   = _mouse && global_mouse_left_is_pressing();
+		MOUSE_EVENT.lpress   = _mouse && global_mouse_left_is_pressed();
+		MOUSE_EVENT.lrelease = _mouse && global_mouse_left_is_released();
+		
+		MOUSE_EVENT.rclick   = _mouse && global_mouse_right_is_pressing();
+		MOUSE_EVENT.rpress   = _mouse && global_mouse_right_is_pressed();
+		MOUSE_EVENT.rrelease = _mouse && global_mouse_right_is_released();
+		
+		MOUSE_EVENT.mclick   = _mouse && global_mouse_middle_is_pressing();
+		MOUSE_EVENT.mpress   = _mouse && global_mouse_middle_is_pressed();
+		MOUSE_EVENT.mrelease = _mouse && global_mouse_middle_is_released();
+		
+	} else {
+		MOUSE_EVENT.lclick   = mouse_check_button(mb_left);
+		MOUSE_EVENT.rclick   = mouse_check_button(mb_right);
+		MOUSE_EVENT.mclick   = mouse_check_button(mb_middle);
+		
+		MOUSE_EVENT.lpress   = mouse_check_button_pressed(mb_left);
+		MOUSE_EVENT.rpress   = mouse_check_button_pressed(mb_right);
+		MOUSE_EVENT.mpress   = mouse_check_button_pressed(mb_middle);
+		
+		MOUSE_EVENT.lrelease = mouse_check_button_released(mb_left);
+		MOUSE_EVENT.rrelease = mouse_check_button_released(mb_right);
+		MOUSE_EVENT.mrelease = mouse_check_button_released(mb_middle);
+		
+		if(MOUSE_EVENT.toPress) {
+			if(MOUSE_EVENT.lrelease) {
+				MOUSE_EVENT.lclick   = true;
+				MOUSE_EVENT.lpress   = true;
+				MOUSE_EVENT.lrelease = false;
+			}
+		}
+		
+	}
 	
-	MOUSE_EVENT.lpress   = device_mouse_check_button_pressed(0, mb_left) || _fclick;
-	MOUSE_EVENT.rpress   = device_mouse_check_button_pressed(0, mb_right);
-	MOUSE_EVENT.mpress   = device_mouse_check_button_pressed(0, mb_middle);
+	if(MOUSE_EVENT.toPress) MOUSE_EVENT.toPress--;
+	else MOUSE_EVENT.toPress = _fclick;
 	
-	MOUSE_EVENT.lrelease = device_mouse_check_button_released(0, mb_left) && !MOUSE_EVENT.lrelease_supp;
-	MOUSE_EVENT.rrelease = device_mouse_check_button_released(0, mb_right);
-	MOUSE_EVENT.mrelease = device_mouse_check_button_released(0, mb_middle);
-	
-	MOUSE_EVENT.lrelease_supp = _fclick;
 }
 
 function mouse_click(mouse, focus = true, bypass = false) {

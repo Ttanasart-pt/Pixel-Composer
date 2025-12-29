@@ -422,6 +422,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				refreshSize();
 				dragging = -1;
 			}
+			
 		} else if(dragging == 2) {
 			var _my = clamp(mouse_my, ui(16), WIN_H - ui(16));
 			var dh  = round(_my - drag_sm);
@@ -460,6 +461,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				refreshSize();
 				dragging = -1;
 			}
+			
 		} else {
 			var _mx = mouse_mxs;
 			var _my = mouse_mys;
