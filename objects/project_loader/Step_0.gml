@@ -148,6 +148,7 @@ switch(load_process) {
         
         for (var i = 0, n = array_length(PROJECT.allNodes); i < n; i++) {
 			var node = PROJECT.allNodes[i];
+			node.onValueRefresh();
 			node.onValidate();
 			node.onIOValidate();
 			node.refreshNodeDisplay();

@@ -21,12 +21,20 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		LOG_LINE_IF(global.FLAG.render == 1, $"Set render status for {getInternalName()} : {result}");
 		
 		rendered = result;
-		if(group) group.setRenderStatus(result);
+		if(result && group) {
+			var _allRendered = array_all(group.outputs, function(o) /*=>*/ {return o.from.rendered});
+			if(_allRendered)
+				group.setRenderStatus(result);
+		}
 	}
 	
 	static onValueUpdate = function(index = 0) { if(is_undefined(outParent)) return; }
 	
 	static getNextNodes = function(checkLoop = false) {
+		return is(group, Node_Collection)? group.getNextNodesExternal(checkLoop) : [];
+	}
+	
+	static __getNextNodes = function(checkLoop = false) {
 		if(is_undefined(outParent)) return [];
 		if(checkLoop) {
 			if(__nextNodesToLoop != noone && __nextNodesToLoop.bypassNextNode()) 
@@ -46,7 +54,7 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		LOG_BLOCK_START();
 		var nodes = [];
-		for(var j = 0; j < array_length(outParent.value_to); j++) {
+		for(var j = 0, m = array_length(outParent.value_to); j < m; j++) {
 			var _to = outParent.value_to[j];
 			
 			if(!_to.node.isRenderActive())					continue;

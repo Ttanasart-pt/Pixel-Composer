@@ -30,7 +30,10 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		destroy_when_upgroup = false;
 		
 		node_database        = undefined;
-		run_in(1, function() /*=>*/ { node_database = ALL_NODES[$ instanceof(self)]; });
+		run_in(1, function() /*=>*/ { 
+			node_database = ALL_NODES[$ instanceof(self)]; 
+			onValueRefresh();
+		});
 		
 		if(NOT_LOAD) array_push(_group == noone? project.nodes : _group.getNodeList(), self);
 		
@@ -1163,10 +1166,11 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	doUpdate     = doUpdateFull;
 	getInputData = function(i,d=0) /*=>*/ {return array_safe_get_fast(inputs_data, i, d)};
 	
-	static valueUpdate       = function(index = noone) { onValueUpdate(index); cacheCheck(); }
+	static valueUpdate       = function(index = noone) { onValueUpdate(index); onValueRefresh(); cacheCheck(); }
 	static valueFromUpdate   = function(index = noone) {
 		onValueFromUpdate(index);
 		onValueUpdate(index);
+		onValueRefresh();
 		
 		if(auto_input && !LOADING && !APPENDING) 
 			refreshDynamicInput();
@@ -1174,6 +1178,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		cacheCheck();
 	}
 	
+	static onValueRefresh    = function(index = noone) {}
 	static onValueUpdate     = function(index = noone) {}
 	static onValueFromUpdate = function(index = noone) {}
 	
@@ -3020,6 +3025,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			triggerRender();
 			postLoad();
+			onValueRefresh();
 		}
 		
 		anim_timeline = attributes[$ "show_timeline"] ?? false;

@@ -250,7 +250,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static getNextNodes = function(checkLoop = false) { return isPure? getNextNodesExternal(checkLoop) : getNextNodesInternal(checkLoop); } 
 	
-	static getNextNodesInternal = function() { //get node inside the group
+	static getNextNodesInternal = function(checkLoop = false) { //get node inside the group
 		LOG_BLOCK_START();
 		LOG_IF(global.FLAG.render == 1, $"→→→→→ Call get next node from group: {getInternalName()}");
 		
@@ -275,18 +275,40 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		return _nodes;
 	}
 	
-	static getNextNodesExternal = function() { //get node connected to the parent object
+	static getNextNodesExternal = function(checkLoop = false) { //get node connected to the parent object
+		if(!rendered) return [];
 		LOG_IF(global.FLAG.render == 1, $"Checking next node external for {getInternalName()}");
 		LOG_BLOCK_START();
 		
+		if(checkLoop) { 
+			if(__nextNodesToLoop != noone && __nextNodesToLoop.bypassNextNode()) 
+				__nextNodesToLoop.getNextNodes(); 
+			return; 
+		}
+		
+		__nextNodesToLoop = noone;
+		for( var i = 0, n = array_length(outputs); i < n; i++ ) {
+			var _ot = outputs[i];
+			if(is(_ot, NodeValue) && !_ot.forward) continue;
+			
+			for( var j = 0, m = array_length(_ot.value_to_loop); j < m; j++ ) {
+				var _to = _ot.value_to_loop[j];
+				if(!_to.active) continue;
+				
+				__nextNodesToLoop = _to;
+				if(!_to.bypassNextNode()) continue;
+				return _to.getNextNodes();
+			}
+		}
+		
 		var nextNodes = [];
-		for( var i = 0; i < array_length(outputs); i++ ) {
+		for( var i = 0, n = array_length(outputs); i < n; i++ ) {
 			var _ot = outputs[i];
 			if(!_ot.forward) continue;
 			if(_ot.type == VALUE_TYPE.node) continue;
-				
+			
 			var _tos = _ot.getJunctionTo();
-			for( var j = 0, n = array_length(_tos); j < n; j++ ) {
+			for( var j = 0, m = array_length(_tos); j < m; j++ ) {
 				var _to   = _tos[j];
 				var _node = _to.node;
 				

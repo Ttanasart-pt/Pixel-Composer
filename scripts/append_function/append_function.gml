@@ -163,5 +163,8 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext(), appended_
 		array_append(PROJECT.timelines.contents, _time.contents);
 	}
 	
+	for(var i = 0; i < _append_len; i++)
+		appended_list[i].onValueRefresh();
+	
 	return node_create;
 }

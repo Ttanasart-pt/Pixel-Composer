@@ -166,19 +166,8 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		return w_hovering;
 	}
 	
-	static processNumber = function(_val, _int) { 
-		if(is_numeric(_val)) return _int? round(_val) : _val;
-		
-		if(is_array(_val))
-		for (var i = 0, n = array_length(_val); i < n; i++)
-			_val[i] = processNumber(_val[i], _int);
-		
-		return _val;
-	}
-	
-	static update = function() {
+	static onValueRefresh = function(index = noone) {
 		#region data
-			draw_raw  = inputs[ 0].getValue();
 			draw_int  = inputs[ 1].getValue();
 			draw_disp = inputs[ 2].getValue();
 			
@@ -216,17 +205,9 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			gz_style1     = inputs[19].getValue();
 			
 			switch(gz_style) {
-				case 0 : 
-					gz_size   = inputs[14].getValue();
-					break;
-				
-				case 1 : 	
-					gz_shape  = inputs[12].getValue();
-					break;
-					
-				case 2 : 	
-					gz_sprite = inputs[13].getValue();
-					break;
+				case 0 : gz_size   = inputs[14].getValue(); break;
+				case 1 : gz_shape  = inputs[12].getValue(); break;
+				case 2 : gz_sprite = inputs[13].getValue(); break;
 			}
 			
 			gz_pos        = inputs[ 9].getValue();
@@ -282,6 +263,21 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			inputs[0].overlay_draw_text = gz_label_show;
 			inputs[0].overlay_label     = gz_label;
 		#endregion
+	}
+	
+	static processNumber = function(_val, _int) { 
+		if(is_numeric(_val)) return _int? round(_val) : _val;
+		
+		if(is_array(_val))
+		for (var i = 0, n = array_length(_val); i < n; i++)
+			_val[i] = processNumber(_val[i], _int);
+		
+		return _val;
+	}
+	
+	static update = function() {
+		draw_raw = inputs[ 0].getValue();
+		draw_int = inputs[ 1].getValue();
 		
 		var _res = processNumber(draw_raw, draw_int);
 		outputs[0].setValue(_res);
