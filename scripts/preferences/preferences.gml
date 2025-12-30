@@ -243,11 +243,11 @@
 		}
 		
 		PREFERENCES.project_graphConnection = {
-			type : 1, 
+			type : 0, 
 			
-			line_width			: 2,
+			line_width			: 1,
 			line_sample			: 1,
-			line_corner			: 8,
+			line_corner			: 4,
 			line_aa				: 2,
 			line_highlight		: 0,
 			line_highlight_fade	: 0.75,

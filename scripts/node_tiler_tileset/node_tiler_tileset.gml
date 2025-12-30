@@ -144,7 +144,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				
 				if(_zw) { //zoom
 					var _zcc = (tile_selector_s_to - 0.5) / 3.5;
-					var _zcw = _zw * _zcc;
+					var _zcw = _zw * clamp(_zcc, 0, 1);
 					
 					draw_sprite_stretched_ext(THEME.textbox, 3, _zx0, _zy, _zw,  _zh, c_white, 1);
 					draw_sprite_stretched_ext(THEME.textbox, 4, _zx0, _zy, _zcw, _zh, c_white, 1);
@@ -224,6 +224,45 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				
 				draw_surface_ext(_tileSet, tile_selector_x, tile_selector_y, tile_selector_s, tile_selector_s, 0, c_white, 1);
 				
+				// Overflow
+				draw_set_color_alpha(COLORS._main_value_negative, .5);
+				var tdw = _tileDim[0] * tile_selector_s;
+				var tdh = _tileDim[1] * tile_selector_s;
+				var ttw = _tileSiz[0] * _tileAmo[0] * tile_selector_s;
+				var tth = _tileSiz[1] * _tileAmo[1] * tile_selector_s;
+				
+				if(ttw < tdw) {
+					var _fx0 = tile_selector_x + ttw;
+					var _fx1 = tile_selector_x + tdw;
+					
+					var _fy0 = tile_selector_y;
+					var _fy1 = tile_selector_y + tth;
+					
+					draw_rectangle(_fx0, _fy0, _fx1, _fy1, false);	
+				}
+				
+				if(tth < tdh) {
+					var _fx0 = tile_selector_x;
+					var _fx1 = tile_selector_x + ttw;
+					
+					var _fy0 = tile_selector_y + tth;
+					var _fy1 = tile_selector_y + tdh;
+					
+					draw_rectangle(_fx0, _fy0, _fx1, _fy1, false);	
+				}
+				
+				if(ttw < tdw && tth < tdh) {
+					var _fx0 = tile_selector_x + ttw;
+					var _fx1 = tile_selector_x + tdw;
+					
+					var _fy0 = tile_selector_y + tth;
+					var _fy1 = tile_selector_y + tdh;
+					
+					draw_rectangle(_fx0, _fy0, _fx1, _fy1, false);	
+				}
+				
+				draw_set_alpha(1);
+				
 				if(gmTile != noone) {
 					var ssw = _tileSel_w / 16; 
 					var ssh = _tileSel_h / 16; // non uniform tile size anyone?
@@ -257,15 +296,27 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			        draw_set_alpha(1);
 				}
 				
+				var _fx0 = tile_selector_x;
+				var _fy0 = tile_selector_y;
+				var _fx1 = tile_selector_x + _tileDim[0] * tile_selector_s - 1;
+				var _fy1 = tile_selector_y + _tileDim[1] * tile_selector_s - 1;
 				draw_set_color(COLORS.panel_preview_surface_outline);
-		    	draw_rectangle(tile_selector_x, tile_selector_y, tile_selector_x + _tileDim[0] * tile_selector_s - 1, 
-		    	                                                 tile_selector_y + _tileDim[1] * tile_selector_s - 1, true);
+		    	draw_rectangle(_fx0, _fy0, _fx1, _fy1, true);
 				
 				if(_hov && _mid > noone) {
-		    		
-		    		draw_set_color(c_white); draw_rectangle_width(_tileHov_x,     _tileHov_y,     _tileHov_x + _tileSel_w,     _tileHov_y + _tileSel_h,     1);
-		    		draw_set_color(c_black); draw_rectangle_width(_tileHov_x + 1, _tileHov_y + 1, _tileHov_x + _tileSel_w - 1, _tileHov_y + _tileSel_h - 1, 1);
-		    		
+					var _hx0 = _tileHov_x;
+					var _hy0 = _tileHov_y;
+					var _hx1 = _tileHov_x + _tileSel_w;
+					var _hy1 = _tileHov_y + _tileSel_h;
+					
+		    		draw_set_color(c_white); draw_rectangle_width(_hx0,   _hy0,   _hx1,   _hy1,   1);
+		    		draw_set_color(c_black); draw_rectangle_width(_hx0+1, _hy0+1, _hx1-1, _hy1-1, 1);
+				}
+				surface_reset_target();
+			#endregion
+			
+			#region interaction
+				if(_hov && _mid > noone) {
 		    		     if(is(object_selecting, tiler_brush_autoterrain) && object_select_id != noone) TOOLTIP = "Set Autoterrain";
 					else if(is(object_selecting, tiler_brush_animated)    && object_select_id != noone) TOOLTIP = "Set Animated tile";
 					else if(is(object_selecting, tiler_rule)              && object_select_id != noone) TOOLTIP = "Set Rule selector";
@@ -273,7 +324,6 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					else if(is(object_selecting, tilemap_convert_object))  TOOLTIP = "Set Replacement target";
 					
 					if(mouse_press(mb_left, _focus)) {
-						
 						if(is(object_selecting, tiler_brush_autoterrain) && object_select_id != noone) {
 							tile_selecting = true;
 		    				tile_select_ss = [ _mtx, _mty ];
@@ -308,7 +358,6 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		    			palette_using = false;
 					}
 				}
-		    	surface_reset_target();
 			#endregion
 		    	
 			#region draw selector mask
