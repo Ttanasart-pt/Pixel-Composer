@@ -8,14 +8,10 @@ function Panel_Custom_Inspector(_title, _inspector) : PanelContent() constructor
 	
 	sc_content = new scrollPane(w - padding * 2, h - title_height + padding + ui(40), function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
-        var _wdh = inspector.draw(0, _y, sc_content.surface_w, [ mx, my ], pHOVER, pFOCUS, self);
+        var _wdh = inspector.draw(0, _y, sc_content.surface_w, _m, pHOVER, pFOCUS, self);
+        
         return _wdh;
 	});
-	
-	function onResize() {
-		var pd = padding;
-		sc_content.resize(w - pd * 2, h - pd * 2);
-	}
 	
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
@@ -26,8 +22,9 @@ function Panel_Custom_Inspector(_title, _inspector) : PanelContent() constructor
         inspector.ry        = y + pd;
         inspector.fixHeight = sc_content.surface_h;
         
+        sc_content.verify(w - pd * 2, h - pd * 2);
         sc_content.setFocusHover(pFOCUS, pHOVER);
-		sc_content.draw(pd, pd, mx - pd, my - pd);
+		sc_content.drawOffset(pd, pd, mx, my);
 	}
 	
 	static onClose = function() {
