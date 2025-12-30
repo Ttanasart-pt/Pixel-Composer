@@ -2103,6 +2103,8 @@
     {"name":"sh_node_widget_rotator","order":1,"path":"shaders/sh_node_widget_rotator/sh_node_widget_rotator.yy",},
     {"name":"sh_node_widget_scalar_cross","order":2,"path":"shaders/sh_node_widget_scalar_cross/sh_node_widget_scalar_cross.yy",},
     {"name":"sh_node_widget_scalar_line","order":3,"path":"shaders/sh_node_widget_scalar_line/sh_node_widget_scalar_line.yy",},
+    {"name":"sh_noise_blue_energy","order":3,"path":"shaders/sh_noise_blue_energy/sh_noise_blue_energy.yy",},
+    {"name":"sh_noise_blue_initial","order":2,"path":"shaders/sh_noise_blue_initial/sh_noise_blue_initial.yy",},
     {"name":"sh_noise_blue_iterate","order":1,"path":"shaders/sh_noise_blue_iterate/sh_noise_blue_iterate.yy",},
     {"name":"sh_noise_bubble","order":39,"path":"shaders/sh_noise_bubble/sh_noise_bubble.yy",},
     {"name":"sh_noise_cristal","order":43,"path":"shaders/sh_noise_cristal/sh_noise_cristal.yy",},

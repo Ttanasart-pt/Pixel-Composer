@@ -770,6 +770,7 @@
             { "label": "Noises" },
             { "label": "/Basics" },
             "Node_Noise",
+            "Node_Noise_Blue",
             "Node_Perlin",
             "Node_Noise_Simplex",
             "Node_Cellular",

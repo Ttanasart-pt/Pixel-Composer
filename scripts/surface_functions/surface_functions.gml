@@ -15,6 +15,15 @@
 		double max;
 	};
 	
+	struct rangePosition {
+	    double min;
+		double max;
+	    uint16_t minx;
+	    uint16_t miny;
+	    uint16_t maxx;
+	    uint16_t maxy;
+	};
+	
 	cfunction double surface_is_empty_c(void* pixelArrayBuffer, double _size, double _emptyMode) {
 	    pixel* pixelArray = (pixel*)pixelArrayBuffer;
 		size_t size       = (size_t)_size;
@@ -96,6 +105,22 @@
 	    return amount;
 	}
 	
+	cfunction double surface_get_white_c(void* pixelArrayBuffer, double width, double height) {
+		pixel* pixelArray = (pixel*)pixelArrayBuffer;
+		size_t widthInt   = (size_t)width;
+		size_t heightInt  = (size_t)height;
+		size_t size       = widthInt * heightInt;
+		
+	    int amount = 0;
+	    
+		for (size_t i = 0; i < size; ++i) {
+			if (pixelArray[i].r == 0) continue;
+			amount++;
+	    }
+		
+	    return amount;
+	}
+	
 	cfunction double surface_get_range_c(void* pixelArrayBuffer, void* outputBuffer, double width, double height) {
 		pixel*    pixelArray  = (pixel*)pixelArrayBuffer;
 		uint16_t* outputArray = (uint16_t*)outputBuffer;
@@ -163,6 +188,49 @@
 		outputArray[3] = (double)(maxY - minY + 1);
 		
 	    return 1;
+	}
+	
+	cfunction double surface_get_min_max_c(void* pixelArrayBuffer, void* outputBuffer, double width, double height) {
+		pixel*    pixelArray  = (pixel*)pixelArrayBuffer;
+		uint16_t* outputArray = (uint16_t*)outputBuffer;
+	
+		size_t widthInt  = (size_t)width;
+		size_t heightInt = (size_t)height;
+		size_t size      = widthInt * heightInt;
+		
+		rangePosition* outputRange = (rangePosition*)outputArray;
+	
+		double _min =  999999;
+		double _max = -999999;
+	
+		uint16_t min_x = 0, min_y = 0;
+		uint16_t max_x = 0, max_y = 0;
+		
+		for (size_t i = 0; i < size; ++i) {
+			double vr = (double)(pixelArray[i].r);
+			double vg = (double)(pixelArray[i].g);
+	
+			if(vr < _min) {
+				_min = vr;
+				min_x = (uint16_t)(i % widthInt);
+				min_y = (uint16_t)(i / widthInt);
+			}
+	
+			if(vg > _max) {
+				_max = vg;
+				max_x = (uint16_t)(i % widthInt);
+				max_y = (uint16_t)(i / widthInt);
+			}
+		}
+	
+		outputRange->min = _min;
+		outputRange->max = _max;
+		outputRange->minx = min_x;
+		outputRange->miny = min_y;
+		outputRange->maxx = max_x;
+		outputRange->maxy = max_y;
+		
+		return 0;
 	}
 */
 #endregion
@@ -439,6 +507,21 @@
 		return sz;
 	}
 	
+	function surface_get_white(surface) {
+		if(!is_surface(surface)) return true;
+		
+		var _sw   = surface_get_width(surface);
+		var _sh   = surface_get_height(surface);
+		var _size = surface_get_byte_size(surface);
+		
+		buffer_resize(      global.__surface_is_empty_buffer, _size);
+		buffer_get_surface( global.__surface_is_empty_buffer,  surface, 0);
+		buffer_to_start(    global.__surface_is_empty_buffer);
+		
+		var _amo  = surface_get_white_c(buffer_get_address(global.__surface_is_empty_buffer), _sw, _sh);
+		return _amo;
+	}
+	
 	function surface_get_nonempty(surface) {
 		if(!is_surface(surface)) return true;
 		
@@ -487,6 +570,33 @@
 		buffer_delete(_outB);
 		
 		return [ _min / 255, _max / 255 ];
+	}
+	
+	function surface_get_min_max(surface) {
+		static __surface_get_range_buffer = buffer_create(1, buffer_grow,  1);
+		if(!is_surface(surface)) return [0,1,0,0,1,1];
+		
+		var _sw   = surface_get_width(surface);
+		var _sh   = surface_get_height(surface);
+		var _size = surface_get_byte_size(surface);
+		
+		buffer_resize(      __surface_get_range_buffer, _size);
+		buffer_get_surface( __surface_get_range_buffer,  surface, 0);
+		buffer_to_start(    __surface_get_range_buffer);
+		
+		var _outB = buffer_create(24, buffer_fixed, 2);
+		var _amo  = surface_get_min_max_c(buffer_get_address(__surface_get_range_buffer), buffer_get_address(_outB), _sw, _sh);
+		
+		buffer_to_start(_outB);
+		var _min  = buffer_read(_outB, buffer_f64);
+		var _max  = buffer_read(_outB, buffer_f64);
+		var _minx = buffer_read(_outB, buffer_u16);
+		var _miny = buffer_read(_outB, buffer_u16);
+		var _maxx = buffer_read(_outB, buffer_u16);
+		var _maxy = buffer_read(_outB, buffer_u16);
+		buffer_delete(_outB);
+		
+		return [ _min / 255, _max / 255, _minx, _miny, _maxx, _maxy ];
 	}
 	
 	function surface_get_bbox(surface) {

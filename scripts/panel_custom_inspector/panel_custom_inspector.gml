@@ -6,7 +6,7 @@ function Panel_Custom_Inspector(_title, _inspector) : PanelContent() constructor
 	inspector   = _inspector;
 	inspector.popupPanel  = self;
 	
-	sc_content = new scrollPane(w - padding * 2, h - title_height + padding + ui(40), function(_y, _m) {
+	sc_content = new scrollPane(1, 1, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
         var _wdh = inspector.draw(0, _y, sc_content.surface_w, _m, pHOVER, pFOCUS, self);
         
@@ -15,7 +15,7 @@ function Panel_Custom_Inspector(_title, _inspector) : PanelContent() constructor
 	
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
-		var pd = padding;
+		var pd = ui(8);
 		
         inspector.panel     = self;
         inspector.rx        = x + pd;

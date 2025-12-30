@@ -69,6 +69,9 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    tile_selector_s_to = 2;
 	    tile_selector_fx   = false;
 	    
+	    tile_selector_s_min = .5;
+	    tile_selector_s_max =  8;
+	    
 	    tile_dragging = false;
 	    tile_drag_sx  = 0;
 	    tile_drag_sy  = 0;
@@ -144,7 +147,10 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				var _zy  = by + bs / 2 - _zh / 2;
 				
 				if(_zw) { //zoom
-					var _zcc = (tile_selector_s_to - 0.5) / 3.5;
+					var z0 = tile_selector_s_min;
+					var z1 = tile_selector_s_max;
+					
+					var _zcc = (tile_selector_s_to - z0) / (z1 - z0);
 					var _zcw = _zw * clamp(_zcc, 0, 1);
 					
 					draw_sprite_stretched_ext(THEME.textbox, 3, _zx0, _zy, _zw,  _zh, c_white, 1);
@@ -162,7 +168,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					}
 					
 					if(tile_zoom_drag) {
-						var _zl = clamp(tile_zoom_sx + (_m[0] - tile_zoom_mx) / _zw * 3.5, .5, 4);
+						var _zl = clamp(tile_zoom_sx + (_m[0] - tile_zoom_mx) / _zw * (z1 - z0), z0, z1);
 						
 						var _s = tile_selector_s;
 						tile_selector_s_to = _zl;
@@ -221,7 +227,9 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		    	
 		    	surface_set_target(tile_selector_surface); 
 				draw_clear(_bg0);
-				draw_sprite_tiled_ext(s_transparent, 0, tile_selector_x, tile_selector_y, tile_selector_s, tile_selector_s, _bg1, 1);
+				var _tileSx = tile_selector_s * _tileSiz[0] / 16;
+				var _tileSy = tile_selector_s * _tileSiz[1] / 16;
+				draw_sprite_tiled_ext(s_transparent, 0, tile_selector_x, tile_selector_y, _tileSx, _tileSy, _bg1, 1);
 				
 				draw_surface_ext(_tileSet, tile_selector_x, tile_selector_y, tile_selector_s, tile_selector_s, 0, c_white, 1);
 				
@@ -468,9 +476,12 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		    		}
 		    		
 		    		var _s = tile_selector_s;
+		    		var z0 = tile_selector_s_min;
+					var z1 = tile_selector_s_max;
+					
 		    		if(MOUSE_WHEEL != 0) {
 			    		if(key_mod_press(CTRL) || tile_selector.popupPanel != noone)
-				    		tile_selector_s_to = clamp(tile_selector_s_to * (1 + .2 * MOUSE_WHEEL), 0.5, 4);
+				    		tile_selector_s_to = clamp(tile_selector_s_to * (1 + .2 * MOUSE_WHEEL), z0, z1);
 				    	else
 				    		tile_selector_zoom_tooltip = 3;
 		    		}
@@ -520,7 +531,8 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				shader_set(sh_brush_outline);
 					var _brush_tiles = brush.brush_width * brush.brush_height;
 					var _cc = c_white;
-					if(_brush_tiles == 9 || _brush_tiles == 15 || _brush_tiles == 48 || _brush_tiles == 55) _cc = COLORS._main_value_positive;
+					if(_brush_tiles == 9 || _brush_tiles == 15 || _brush_tiles == 48 || _brush_tiles == 55) 
+						_cc = COLORS._main_value_positive;
 					
 					shader_set_f("dimension", _sw, _sh);
 					draw_surface_ext(tile_selector_mask, _sx, _sy, 1, 1, 0, _cc, 1);
@@ -559,7 +571,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				var _sx =  _x + ui(8);
 				var _sy = _ty + ui(8);
 				
-				var _ss = ui(32) / _sel_sh;
+				var _ss = ui(32) / max(_sel_sw, _sel_sh);
 				var _sw = _ss * _sel_sw;
 				var _sh = _ss * _sel_sh;
 				
@@ -572,13 +584,15 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				_h += ui(8) + _th;
 				
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _ty, _w, _th, COLORS.node_composite_bg_blend, 1);
+				var _is = min(_sw, _sh) / ui(32);
 				
 				////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				
 				var _shov = _hover && point_in_rectangle(_m[0], _m[1], _sx, _sy, _sx + _sw, _sy + _sh);
 				var _aa   = .75 + .25 * _shov;
+				var _cc   = _shov? COLORS._main_value_negative : COLORS._main_icon;
 				draw_sprite_stretched_ext(THEME.ui_panel, 1, _sx, _sy, _sw, _sh, COLORS._main_icon, _aa);
-				draw_sprite_uniform(THEME.cross, 0, _sx + _sw / 2, _sy + _sh / 2, 1, _shov? COLORS._main_value_negative : COLORS._main_icon, _aa);
+				draw_sprite_uniform(THEME.cross, 0, _sx + _sw / 2, _sy + _sh / 2, _is, _cc, _aa);
 				_sx += _sw + ui(8);
 				
 				if(_shov) {
@@ -610,8 +624,9 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				var _fpx  = tile_selector_fx;
 				var _shov = _hover && point_in_rectangle(_m[0], _m[1], _sx, _sy, _sx + _sw, _sy + _sh);
 				var _aa   = .75 + .25 * _shov;
+				var _cc   = _fpx? COLORS._main_accent : COLORS._main_icon;
 				draw_sprite_stretched_ext(THEME.ui_panel, 1, _sx, _sy, _sw, _sh, COLORS._main_icon, _aa);
-				draw_sprite_ui(THEME.flip_h, 0, _sx + _sw / 2, _sy + _sh / 2, _fpx? -1 : 1, 1, 0, _fpx? COLORS._main_accent : COLORS._main_icon, _aa);
+				draw_sprite_ui(THEME.flip_h, 0, _sx + _sw / 2, _sy + _sh / 2, _fpx? -_is : _is, _is, 0, _cc, _aa);
 				_sx += _sw + ui(8);
 				
 				if(_shov) {
@@ -1176,8 +1191,11 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				    _zw  = _zx1 - _zx0;
 				var _zy  = by + bs / 2 - _zh / 2;
 				
+				var z0 = tile_selector_s_min;
+				var z1 = tile_selector_s_max;
+				
 				if(_zw) { //zoom
-					var _zcc = (palette_selector_s_to - 0.5) / 3.5;
+					var _zcc = (palette_selector_s_to - z0) / (z1 - z0);
 					var _zcw = _zw * _zcc;
 					
 					draw_sprite_stretched_ext(THEME.textbox, 3, _zx0, _zy, _zw,  _zh, c_white, 1);
@@ -1195,7 +1213,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					}
 					
 					if(palette_zoom_drag) {
-						var _zl = clamp(palette_zoom_sx + (_m[0] - palette_zoom_mx) / _zw * 3.5, .5, 4);
+						var _zl = clamp(palette_zoom_sx + (_m[0] - palette_zoom_mx) / _zw * (z1 - z0), z0, z1);
 						
 						var _s = palette_selector_s;
 						palette_selector_s_to = _zl;
@@ -1383,9 +1401,12 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    		}
 	    		
 	    		var _s = palette_selector_s;
+	    		var z0 = tile_selector_s_min;
+				var z1 = tile_selector_s_max;
+				
 	    		if(MOUSE_WHEEL != 0) {
 		    		if(key_mod_press(CTRL) || palette_viewer.popupPanel != noone)
-			    		palette_selector_s_to = clamp(palette_selector_s_to * (1 + .2 * MOUSE_WHEEL), 0.5, 4);
+			    		palette_selector_s_to = clamp(palette_selector_s_to * (1 + .2 * MOUSE_WHEEL), z0, z1);
 			    	else
 			    		palette_selector_zoom_tooltip = 3;
 	    		}

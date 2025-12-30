@@ -15,7 +15,7 @@ void main() {
 	float p7 = texture2D( gm_BaseTexture, v_vTexcoord + vec2(0., tx.y) ).a > 0.? 1. : 0.;
 	
 	if(p1 != p7 || p3 != p5) {
-		if(p == 0.) gl_FragColor = vec4(1., 1., 1., 1.);
+		if(p == 0.) gl_FragColor = vec4(v_vColour.rgb, 1.);
 		if(p == 1.) gl_FragColor = vec4(0., 0., 0., 1.);
 	}
 }

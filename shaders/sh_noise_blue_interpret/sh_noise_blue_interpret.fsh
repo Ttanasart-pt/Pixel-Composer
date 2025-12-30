@@ -1,5 +1,6 @@
 // Cheap BLuenoise by FabriceNeyret2 
 // https://www.shadertoy.com/view/tllcR2
+// Don't use in production due to license
 
 #define hash(p)  fract(sin(dot(p, vec2(11.9898, 78.233))) * 43758.5453) // iq suggestion, for Windows
 
