@@ -1090,11 +1090,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			
 			if(frameInput.value_from != noone) frame = frameInput.getValue() - 1;
 			__frame = frame;
-			
-			array_foreach(inputs, function(_inp, i) /*=>*/ {
-				if(!is(_inp, NodeValue) || !_inp.bypass_junc.visible || !_inp.isDynamic()) return;
-				_inp.bypass_junc.setValue(_inp.getValue(__frame));
-			});
+			array_foreach(input_bypass, function(i) /*=>*/ {return i.setValue(i.from_junc.getValue(__frame))});
 			
 			if(attributes.update_graph) {
 				try      { update(frame);   } 
@@ -1473,7 +1469,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		if(use_cache == CACHE_USE.auto && !isAllCached()) clearCache();
 	}
 	
-	static postRender = function() {}
+	static postRender = undefined;
 	
 	////- DRAW
 	

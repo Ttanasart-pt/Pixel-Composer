@@ -45,21 +45,21 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput(12, nodeValue_Bool(         "Anti-aliasing",         false ));
 	newInput(24, nodeValue_Slider_Range( "Level",                 [0,1] ));
 	
-	////- =Truchet
-	newInput(17, nodeValue_Bool(           "Truchet",         false ));
-	newInput(18, nodeValue_Int(            "Truchet Seed",    seed_random()));
-	newInput(19, nodeValue_Slider(         "Flip Horizontal", .5    ));
-	newInput(22, nodeValue_Slider(         "Flip Vertical",   .5    ));
-	newInput(23, nodeValue_Rotation_Range( "Texture Angle",   [0,0] ));
+	////- =Texture Transform
+	newInput(17, nodeValue_Bool(     "Truchet",         false ));
+	newInput(18, nodeValue_Int(      "Texture Seed",    seed_random()));
+	newInput(19, nodeValue_Slider(   "Flip Horizontal", .5    ));
+	newInput(22, nodeValue_Slider(   "Flip Vertical",   .5    ));
+	newInput(23, nodeValue_RotRange( "Random Angle",    [0,0] ));
 	// input 39
 	
 	input_display_list = [
-		[ "Output",  false     ],  0, 37, 38, 35, 
-		[ "Pattern", false     ],  1,  4, 15, 36,  2, 13, 28,  3, 26, 27, 14, 
-		[ "Shift",   false     ],  9,  8, 16, 31, 32, 30, 
-		[ "Scale",   false     ], 33, 34, 29, 
-		[ "Render",  false     ], 10, 11,  5, 20,  6,  7, 25, 12, 24, 
-		[ "Truchet",  true, 17 ], 18, 19, 22, 23, 
+		[ "Output",  false ],  0, 37, 38, 35, 
+		[ "Pattern", false ],  1,  4, 15, 36,  2, 13, 28,  3, 26, 27, 14, 
+		[ "Shift",   false ],  9,  8, 16, 31, 32, 30, 
+		[ "Scale",   false ], 33, 34, 29, 
+		[ "Render",  false ], 10, 11,  5, 20,  6,  7, 25, 12, 24, 
+		[ "Texture Transform",  true, 17 ], 18, 19, 22, 23, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -98,60 +98,64 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		var _dim  = surface_get_dimension(_outSurf);
-		var _pos  = _data[ 1];
-		var _sam  = _data[ 7];
-		var _mode = _data[10];
-		
-		var _col_gap  = _data[6];
-		var _tex_mode = _mode == 3 || _mode == 4;
-		
-		inputs[ 5].setVisible(_mode == 0 || _mode == 1);
-		inputs[ 3].setVisible(_mode == 0 || _mode == 3 || _mode == 4);
-		inputs[24].setVisible(_mode == 2);
-		inputs[26].setVisible(_mode == 1);
-		
-		inputs[ 4].setVisible(_mode != 1);
-		inputs[ 8].setVisible(_mode != 1);
-		inputs[ 9].setVisible(_mode != 1);
-		inputs[27].setVisible(_mode == 1);
-		
-		inputs[ 7].setVisible(_tex_mode, _tex_mode);
-		inputs[25].setVisible(_tex_mode, _tex_mode);
+		#region data
+			var _dim  = surface_get_dimension(_outSurf);
+			var _pos  = _data[ 1];
+			var _sam  = _data[ 7];
+			var _mode = _data[10];
+			
+			var _col_gap  = _data[6];
+			var _tex_mode = _mode == 3 || _mode == 4;
+			
+			inputs[ 5].setVisible(_mode == 0 || _mode == 1);
+			inputs[ 3].setVisible(_mode == 0 || _mode == 3 || _mode == 4);
+			inputs[24].setVisible(_mode == 2);
+			inputs[26].setVisible(_mode == 1);
+			
+			inputs[ 4].setVisible(_mode != 1);
+			inputs[ 8].setVisible(_mode != 1);
+			inputs[ 9].setVisible(_mode != 1);
+			inputs[27].setVisible(_mode == 1);
+			
+			inputs[ 7].setVisible(_tex_mode, _tex_mode);
+			inputs[25].setVisible(_tex_mode, _tex_mode);
+		#endregion
 		
 		surface_set_shader(_outSurf, sh_grid);
 			shader_set_uv(_data[37], _data[38]);
 		    shader_set_interpolation(_sam);
 		    
-			shader_set_f("position",	_pos[0] / _dim[0], _pos[1] / _dim[1]);
-			shader_set_f("dimension",	_dim[0], _dim[1]);
+			shader_set_f("position",  _pos[0] / _dim[0], _pos[1] / _dim[1]);
+			shader_set_f("dimension", _dim[0], _dim[1]);
 			
-			shader_set_f_map("scale",	_data[ 2], _data[13], inputs[2]);
-			shader_set_f_map("width",	_data[ 3], _data[14], inputs[3]);
-			shader_set_f_map("angle",	_data[ 4], _data[15], inputs[4]);
-			shader_set_f_map("shift",	_data[ 8], _data[16], inputs[8]);
+			shader_set_f_map("scale", _data[ 2], _data[13], inputs[2]);
+			shader_set_f_map("width", _data[ 3], _data[14], inputs[3]);
+			shader_set_f_map("angle", _data[ 4], _data[15], inputs[4]);
+			shader_set_f_map("shift", _data[ 8], _data[16], inputs[8]);
 			
-			shader_set_i("mode",           _mode);
-			shader_set_i("scaleMode",      _data[36]);
-			shader_set_f("seed",           _data[11]);
-			shader_set_i("shiftAxis",      _data[ 9]);
-			shader_set_i("aa",             _data[12]);
-			shader_set_i("textureTruchet", _data[17]);
-			shader_set_f("truchetSeed",    _data[18]);
-			shader_set_f("truchetThresX",  _data[19]);
-			shader_set_f("truchetThresY",  _data[22]);
-			shader_set_2("truchetAngle",   _data[23]);
-			shader_set_2("level",          _data[24]);
-			shader_set_f("gapAcc",         _data[26]);
-			shader_set_i("diagonal",       _data[27]);
-			shader_set_i("uniformSize",    _data[28]);
-			shader_set_f("secScale",       _data[29]);
-			shader_set_f("secShift",       _data[30]);
+			shader_set_i( "mode",           _mode     );
+			shader_set_i( "scaleMode",      _data[36] );
+			shader_set_f( "seed",           _data[11] );
+			shader_set_i( "shiftAxis",      _data[ 9] );
+			shader_set_i( "aa",             _data[12] );
 			
-			shader_set_f("randShift",      _data[31]);
-			shader_set_f("randShiftSeed",  _data[32]);
-			shader_set_f("randScale",      _data[33]);
-			shader_set_f("randScaleSeed",  _data[34]);
+			shader_set_2( "level",          _data[24] );
+			shader_set_f( "gapAcc",         _data[26] );
+			shader_set_i( "diagonal",       _data[27] );
+			shader_set_i( "uniformSize",    _data[28] );
+			shader_set_f( "secScale",       _data[29] );
+			shader_set_f( "secShift",       _data[30] );
+			
+			shader_set_f( "randShift",      _data[31] );
+			shader_set_f( "randShiftSeed",  _data[32] );
+			shader_set_f( "randScale",      _data[33] );
+			shader_set_f( "randScaleSeed",  _data[34] );
+			
+			shader_set_i( "textureTruchet", _data[17] );
+			shader_set_f( "truchetSeed",    _data[18] );
+			shader_set_f( "truchetThresX",  _data[19] );
+			shader_set_f( "truchetThresY",  _data[22] );
+			shader_set_2( "truchetAngle",   _data[23] );
 			
 			shader_set_color("gapCol", _col_gap);
 			

@@ -353,7 +353,8 @@ function Project() constructor {
 		array_foreach(allNodes, function(n) /*=>*/ { 
 			if(!n.active) return; 
 			n.projectPostUpdate();
-			n.postRender(); 
+			
+			if(n.postRender) n.postRender(); 
 		});
 		
 		globalLayer_compose();

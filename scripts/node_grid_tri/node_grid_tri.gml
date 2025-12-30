@@ -29,18 +29,18 @@ function Node_Grid_Tri(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(10, nodeValue_Bool(         "Anti-aliasing",         false ));
 	newInput(20, nodeValue_Slider_Range( "Level",                 [0,1] ));
 	
-	////- =Truchet
-	newInput(14, nodeValue_Bool(           "Truchet",           false         ));
-	newInput(15, nodeValue_Int(            "Truchet Seed",      seed_random() ));
-	newInput(16, nodeValue_Slider(         "Truchet Threshold", .5            ));
-	newInput(19, nodeValue_Rotation_Range( "Texture Angle",     [0,0]         ));
+	////- =Texture Transform
+	newInput(14, nodeValue_Bool(     "Truchet",        false         ));
+	newInput(15, nodeValue_Int(      "Texture Seed",   seed_random() ));
+	newInput(16, nodeValue_Slider(   "Flip Threshold", .5            ));
+	newInput(19, nodeValue_RotRange( "Random Angle",   [0,0]         ));
 	// input 23
 	
 	input_display_list = [
-		["Output",  false], 0, 23, 24, 22, 
-		["Pattern",	false], 1, 4, 13, 2, 11, 3, 12, 
-		["Render",	false], 8, 9, 5, 17, 6, 7, 21, 10, 20, 
-		["Truchet",  true, 14], 15, 16, 19, 
+		[ "Output",  false ], 0, 23, 24, 22, 
+		[ "Pattern", false ], 1, 4, 13, 2, 11, 3, 12, 
+		[ "Render",	 false ], 8, 9, 5, 17, 6, 7, 21, 10, 20, 
+		[ "Texture Transform", true, 14], 15, 16, 19, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));

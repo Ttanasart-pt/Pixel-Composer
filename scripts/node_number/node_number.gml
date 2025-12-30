@@ -46,6 +46,8 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	newInput(18, nodeValue_Text(    "Label",       "Value" ));
 	// input 20
 	
+	array_foreach(inputs, function(i) /*=>*/ {return i.setAnimable()}, 1);
+	
 	newOutput(0, nodeValue_Output("Number", VALUE_TYPE.float, 0));
 	
 	b_fast = button(function() /*=>*/ { nodeReplace(self, nodeBuild("Node_Number_Simple", x, y, group), true); })
@@ -265,21 +267,18 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		#endregion
 	}
 	
-	static processNumber = function(_val, _int) { 
-		if(is_numeric(_val)) return _int? round(_val) : _val;
-		
-		if(is_array(_val))
-		for (var i = 0, n = array_length(_val); i < n; i++)
-			_val[i] = processNumber(_val[i], _int);
-		
-		return _val;
-	}
-	
 	static update = function() {
 		draw_raw = inputs[ 0].getValue();
 		draw_int = inputs[ 1].getValue();
 		
-		var _res = processNumber(draw_raw, draw_int);
+		var _res = draw_raw;
+		if(draw_int) {
+			if(is_array(_res))
+				_res = array_map(_res, function(r) /*=>*/ {return round(r)});
+			else 
+				_res = round(_res);
+		}
+		
 		outputs[0].setValue(_res);
 	}
 	

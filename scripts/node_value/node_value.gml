@@ -20,8 +20,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		node   = _node;
 		tags   = VALUE_TAG.none; static setTags = function(t) /*=>*/ { tags = t; return self; }
 		
-		x	= node.x; rx  = node.x; 
-		y   = node.y; ry  = node.y;
+		x = node.x; rx = x; 
+		y = node.y; ry = y;
 		
 		index       = array_length(_connect == CONNECT_TYPE.input? node.inputs : node.outputs);
 		lIndex      = index;
@@ -255,7 +255,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			
 			if(connect_type == CONNECT_TYPE.input) {
 				bypass_junc.setIndex(index);
-				node.input_bypass[index] = bypass_junc;
 				node.inputs_data[index]  = def_val;
 				
 				if(node.is_dynamic_input) lIndex = (lIndex - node.input_fix_len) % node.data_length;
@@ -433,9 +432,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return self;
 	}
 	
-	static rejectArray     = function()       { accept_array = false; return self; } 
-	static setArrayDepth   = function(aDepth) { array_depth = aDepth; return self; }
-	static setArrayDynamic = function()       { dynamic_array = true; return self; }
+	static rejectArray     = function( ) { accept_array  = false; return self; } 
+	static setArrayDepth   = function(a) { array_depth   = a;     return self; }
+	static setArrayDynamic = function( ) { dynamic_array = true;  return self; }
 	
 	static rejectArrayProcess = function() {
 		process_array = false;
@@ -715,7 +714,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	////- ANIMATION
 	
-	static setAnimable = function(_anim) { animable = _anim; return self; }
+	static setAnimable = function(_anim = false) { animable = _anim; return self; } 
 	
 	static isAnimable = function() {
 		if(instanceBase != undefined) return instanceBase.isAnimable();
@@ -826,7 +825,15 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return visible_in_list;
 	}
 	
-	static isBypassed = function() { return bypass_junc? bypass_junc.visible : false; }
+	static isBypassed = function( ) { return bypass_junc? bypass_junc.visible : false; }
+	static setBypass  = function(v) {
+		if(bypass_junc == noone) return self;
+		bypass_junc.visible = v;
+		
+		if(v) array_push(   node.input_bypass, bypass_junc );
+		else  array_remove( node.input_bypass, bypass_junc );
+		return self;
+	}
 	
 	static setDisplay = function(_type = VALUE_DISPLAY._default, _data = {}) {
 		display_type = _type;
@@ -2689,7 +2696,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(has(_map, "raw_value")) animator.deserialize(_map[$ "raw_value"], scale);
 		if(has(_map, "r"))         animator.deserialize(_map[$ "r"],         scale);
 			
-		if(bypass_junc) bypass_junc.visible = _map[$ "bypass"] ?? false;
+		if(bypass_junc) setBypass(_map[$ "bypass"] ?? false);
 		
 		if(has(_map, "animators")) {
 			var anims = _map.animators;
