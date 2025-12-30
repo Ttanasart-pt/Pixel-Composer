@@ -69,3 +69,14 @@ function __NodeValue_Float_Simple(_name, _node, _value, _tooltip = "") : NodeVal
 	
 	static arrayLength = arrayLengthSimple;
 }
+
+function nodeValueSeedFloat( _name = "Seed" ) { return nodeValueSeed(VALUE_TYPE.float,   _name); }
+function nodeValueSeedInt(   _name = "Seed" ) { return nodeValueSeed(VALUE_TYPE.integer, _name); }
+function nodeValueSeed(_type = VALUE_TYPE.float, _name = "Seed") { 
+	var _val  = new NodeValue(_name, self, CONNECT_TYPE.input, _type, seed_random(6), "");
+	var _rFun = function() /*=>*/ { randomize(); setValue(seed_random(6)); };
+	    _rFun = method(_val, _rFun);
+	
+	_val.setDisplay(VALUE_DISPLAY._default, { side_button : button(_rFun).setIcon(THEME.icon_random, 0, COLORS._main_icon).iconPad() });
+	return _val; 
+}

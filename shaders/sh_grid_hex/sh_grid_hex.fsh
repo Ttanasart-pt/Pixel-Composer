@@ -204,14 +204,17 @@ uniform vec4  gapCol;
 uniform int   gradient_use;
 uniform vec2  level;
 
-uniform int   textureTruchet;
-uniform float truchetSeed;
-uniform float truchetThres;
-uniform vec2  truchetAngle;
+uniform int   textureTransform;
+uniform float textureSeed;
+uniform vec4  texturePosition;
+uniform vec2  textureAngle;
+uniform vec4  textureScale;
+uniform float textureFlip;
 
 #define PI 3.14159265359
 
-float random (in vec2 st) {	return fract(sin(dot(st.xy + vec2(85.456034, 64.54065), vec2(12.9898, 78.233))) * (43758.5453123 + seed) ); }
+float random (in vec2  st) { return fract(sin(dot(st.xy + vec2(85.456034, 64.54065), vec2(12.9898, 78.233))) * (43758.5453123 + seed) ); }
+float random (in float sd) { return random(vec2(sd)); }
 
 float HexDist(vec2 p) {
 	p = abs(p);
@@ -285,26 +288,38 @@ void main() {
 		colr = gradientEval(random(uv));
 		
 	} else if(mode == 2) {
-		vec2 uv = fract(_pos - hc.zw + vec2(0.5, 0.5));
+		vec2 dx = hc.zw;
+		vec2 uv = _pos - dx + vec2(0.5, 0.5);
 		
-		if(textureTruchet == 1) { // lmao wtf is this code?
-			float rx = random(hc.zw + truchetSeed / 100.);
-			float ry = random(hc.zw + truchetSeed / 100. + vec2(0.4864, 0.6879));
-			float rz = random(hc.zw + truchetSeed / 100. + vec2(0.1638, 0.8974));
-			float ra = random(hc.zw + truchetSeed / 100. + vec2(0.8432, 0.0568));
-			float rb = random(hc.zw + truchetSeed / 100. + vec2(0.3757, 0.7463));
+		if(textureTransform == 1) { // lmao wtf is this code?
+			float rx = random(dx + textureSeed / 100.);
+			float ry = random(dx + textureSeed / 100. + vec2(0.4864, 0.6879));
+			float rz = random(dx + textureSeed / 100. + vec2(0.1638, 0.8974));
+			float ra = random(dx + textureSeed / 100. + vec2(0.8432, 0.0568));
+			float rb = random(dx + textureSeed / 100. + vec2(0.3757, 0.7463));
 			
 			float ang = 0.;
-			if(rx > truchetThres) ang += 60.;
-			if(ry > truchetThres) ang += 60.;
-			if(rz > truchetThres) ang += 60.;
-			if(ra > truchetThres) ang += 60.;
-			if(rb > truchetThres) ang += 60.;
+			if(rx > textureFlip) ang += 60.;
+			if(ry > textureFlip) ang += 60.;
+			if(rz > textureFlip) ang += 60.;
+			if(ra > textureFlip) ang += 60.;
+			if(rb > textureFlip) ang += 60.;
 			
-			ang += truchetAngle.x + (truchetAngle.y - truchetAngle.x) * random(hc.zw + truchetSeed / 100. + vec2(0.9843, 0.1636));
-			ang = radians(ang);
+			float tseed = random(dx + textureSeed / 100. + vec2(0.9843, 0.1636));
+			ang += textureAngle.x + (textureAngle.y - textureAngle.x) * random(tseed + 0.);
+			ang  = radians(ang);
 			
-			uv = 0.5 + mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * (uv - 0.5);
+			vec2  tpos  = vec2( mix(texturePosition[0], texturePosition[2], random(tseed + 1.)),
+				                mix(texturePosition[1], texturePosition[3], random(tseed + 2.)));
+				                
+			vec2  tsca  = vec2( mix(textureScale[0], textureScale[1], random(tseed + 3.)),
+				                mix(textureScale[2], textureScale[3], random(tseed + 4.)));
+			
+			uv -= .5;
+			uv *= mat2(cos(ang), -sin(ang), sin(ang), cos(ang));
+			uv /= tsca;
+			uv += .5;
+			uv -= tpos;
 		}
 		
 		colr = sampleTexture( gm_BaseTexture, uv );

@@ -30,17 +30,19 @@ function Node_Grid_Tri(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	newInput(20, nodeValue_Slider_Range( "Level",                 [0,1] ));
 	
 	////- =Texture Transform
-	newInput(14, nodeValue_Bool(     "Truchet",        false         ));
-	newInput(15, nodeValue_Int(      "Texture Seed",   seed_random() ));
-	newInput(16, nodeValue_Slider(   "Flip Threshold", .5            ));
-	newInput(19, nodeValue_RotRange( "Random Angle",   [0,0]         ));
-	// input 23
+	newInput(14, nodeValue_Bool(       "Truchet",         false           ));
+	newInput(15, nodeValue_Int(        "Texture Seed",    seed_random()   ));
+	newInput(25, nodeValue_Vec2_Range( "Random Position", [0,0,0,0]       ));
+	newInput(19, nodeValue_RotRange(   "Random Angle",    [0,0]           ));
+	newInput(26, nodeValue_Vec2_Range( "Random Scale",    [1,1,1,1], true ));
+	newInput(16, nodeValue_Slider(     "Flip Threshold",  .5              ));
+	// input 27
 	
 	input_display_list = [
 		[ "Output",  false ], 0, 23, 24, 22, 
 		[ "Pattern", false ], 1, 4, 13, 2, 11, 3, 12, 
 		[ "Render",	 false ], 8, 9, 5, 17, 6, 7, 21, 10, 20, 
-		[ "Texture Transform", true, 14], 15, 16, 19, 
+		[ "Texture Transform", true, 14], 15, 25, 19, 26, 16, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -112,11 +114,14 @@ function Node_Grid_Tri(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			shader_set_i("aa",        _aa);
 			shader_set_color("gapCol",_col_gap);
 			
-			shader_set_i("textureTruchet", _data[14]);
-			shader_set_f("truchetSeed",    _data[15]);
-			shader_set_f("truchetThres",   _data[16]);
-			shader_set_2("truchetAngle",   _data[19]);
 			shader_set_2("level",          _data[20]);
+			
+			shader_set_i( "textureTransform", _data[14] );
+			shader_set_f( "textureSeed",      _data[15] );
+			shader_set_4( "texturePosition",  _data[25] );
+			shader_set_2( "textureAngle",     _data[19] );
+			shader_set_4( "textureScale",     _data[26] );
+			shader_set_f( "textureFlip",      _data[16] );
 			
 			shader_set_gradient(_data[5], _data[17], _data[18], inputs[5]);
 			

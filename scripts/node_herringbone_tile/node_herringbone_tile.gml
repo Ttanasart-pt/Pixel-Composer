@@ -30,17 +30,19 @@ function Node_Herringbone_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	newInput(21, nodeValue_Slider_Range( "Level",         [0,1] ));
 	
 	////- =Texture Transform
-	newInput(14, nodeValue_Bool(     "Truchet",        false         ));
-	newInput(15, nodeValue_Int(      "Texture Seed",   seed_random() ));
-	newInput(16, nodeValue_Slider(   "Flip Threshold", .5            ));
-	newInput(20, nodeValue_RotRange( "Random Angle",   [0,0]         ));
-	// input 25
+	newInput(14, nodeValue_Bool(       "Truchet",         false           ));
+	newInput(15, nodeValue_Int(        "Texture Seed",    seed_random()   ));
+	newInput(25, nodeValue_Vec2_Range( "Random Position", [0,0,0,0]       ));
+	newInput(20, nodeValue_RotRange(   "Random Angle",    [0,0]           ));
+	newInput(26, nodeValue_Vec2_Range( "Random Scale",    [1,1,1,1], true ));
+	newInput(16, nodeValue_Slider(     "Flip Threshold",  .5              ));
+	// input 27
 	
 	input_display_list = [
 		[ "Output",  false], 0, 23, 24, 22, 
 		[ "Pattern", false], 1, 3, 12, 2, 11, 17, 4, 13,
 		[ "Render",  false], 7, 8, 5, 18, 6, 9, 10, 21, 
-		[ "Texture Transform", true, 14], 15, 16, 20, 
+		[ "Texture Transform", true, 14], 15, 25, 20, 26, 16, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -97,11 +99,14 @@ function Node_Herringbone_Tile(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 			shader_set_f("tileLength", _data[17]);
 			shader_set_color("gapCol", _col_gap);
 			
-			shader_set_i("textureTruchet", _data[14]);
-			shader_set_f("truchetSeed",    _data[15]);
-			shader_set_f("truchetThres",   _data[16]);
-			shader_set_2("truchetAngle",   _data[20]);
 			shader_set_2("level",          _data[21]);
+			
+			shader_set_i( "textureTransform", _data[14] );
+			shader_set_f( "textureSeed",      _data[15] );
+			shader_set_4( "texturePosition",  _data[25] );
+			shader_set_2( "textureAngle",     _data[20] );
+			shader_set_4( "textureScale",     _data[26] );
+			shader_set_f( "textureFlip",      _data[16] );
 			
 			shader_set_gradient(_data[5], _data[18], _data[19], inputs[5]);
 			

@@ -24,34 +24,36 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	newInput( 3, nodeValue_Slider(   "Gap",           .2, [0, 0.5, 0.001] )).setMappable(14);
 	
 	////- =Shift
-	newInput( 9, nodeValue_Enum_Button(          "Shift Axis",      0, ["X", "Y"] ));
-	newInput( 8, nodeValue_Slider(               "Shift",           0, [-0.5, 0.5, 0.01] )).setMappable(16);
-	newInput(31, nodeValue_Slider(               "Random Shift",    0 ));
-	newInput(32, nodeValueSeed(VALUE_TYPE.float, "Shift Seed"         ));
-	newInput(30, nodeValue_Slider(               "Secondary Shift", 0 ));
+	newInput( 9, nodeValue_EButton(  "Shift Axis",      0, ["X", "Y"]        ));
+	newInput( 8, nodeValue_Slider(   "Shift",           0, [-0.5, 0.5, 0.01] )).setMappable(16);
+	newInput(31, nodeValue_Slider(   "Random Shift",    0 ));
+	newInput(32, nodeValueSeedFloat( "Shift Seed"         ));
+	newInput(30, nodeValue_Slider(   "Secondary Shift", 0 ));
 	
 	////- =Scale
-	newInput(33, nodeValue_Slider(               "Random Scale", 0    ));
-	newInput(34, nodeValueSeed(VALUE_TYPE.float, "Scale Seed"         ));
-	newInput(29, nodeValue_Float(                "Secondary Scale", 0 ));
+	newInput(33, nodeValue_Slider(   "Random Scale",    0 ));
+	newInput(34, nodeValueSeedFloat( "Scale Seed"         ));
+	newInput(29, nodeValue_Float(    "Secondary Scale", 0 ));
 	
 	////- =Render
-	newInput(10, nodeValue_Enum_Scroll( "Render Type",  0, ["Colored tile", "Colored tile (Accurate)", "Height map", "Texture grid", "Texture sample"]));
+	newInput(10, nodeValue_EScroll(  "Render Type",  0, ["Colored tile", "Colored tile (Accurate)", "Height map", "Texture grid", "Texture sample"]));
 	newInput(11, nodeValueSeed());
-	newInput( 5, nodeValue_Gradient(     "Tile Color", gra_white)).setMappable(20);
-	newInput( 6, nodeValue_Color(        "Gap Color",  ca_black ));
-	newInput( 7, nodeValue_Surface(      "Texture" ));
-	newInput(25, nodeValue_Bool(         "Use Texture Dimension", false ));
-	newInput(12, nodeValue_Bool(         "Anti-aliasing",         false ));
-	newInput(24, nodeValue_Slider_Range( "Level",                 [0,1] ));
+	newInput( 5, nodeValue_Gradient( "Tile Color",            gra_white )).setMappable(20);
+	newInput( 6, nodeValue_Color(    "Gap Color",             ca_black  ));
+	newInput( 7, nodeValue_Surface(  "Texture"                          ));
+	newInput(25, nodeValue_Bool(     "Use Texture Dimension", false     ));
+	newInput(12, nodeValue_Bool(     "Anti-aliasing",         false     ));
+	newInput(24, nodeValue_SliRange( "Level",                 [0,1]     ));
 	
 	////- =Texture Transform
-	newInput(17, nodeValue_Bool(     "Truchet",         false ));
-	newInput(18, nodeValue_Int(      "Texture Seed",    seed_random()));
-	newInput(19, nodeValue_Slider(   "Flip Horizontal", .5    ));
-	newInput(22, nodeValue_Slider(   "Flip Vertical",   .5    ));
-	newInput(23, nodeValue_RotRange( "Random Angle",    [0,0] ));
-	// input 39
+	newInput(17, nodeValue_Bool(       "Truchet",         false           ));
+	newInput(18, nodeValueSeedFloat(   "Texture Seed"                     ));
+	newInput(39, nodeValue_Vec2_Range( "Random Position", [0,0,0,0]       ));
+	newInput(23, nodeValue_RotRange(   "Random Angle",    [0,0]           ));
+	newInput(40, nodeValue_Vec2_Range( "Random Scale",    [1,1,1,1], true ));
+	newInput(19, nodeValue_Slider(     "Flip Horizontal", .5              ));
+	newInput(22, nodeValue_Slider(     "Flip Vertical",   .5              ));
+	// input 41
 	
 	input_display_list = [
 		[ "Output",  false ],  0, 37, 38, 35, 
@@ -59,7 +61,7 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		[ "Shift",   false ],  9,  8, 16, 31, 32, 30, 
 		[ "Scale",   false ], 33, 34, 29, 
 		[ "Render",  false ], 10, 11,  5, 20,  6,  7, 25, 12, 24, 
-		[ "Texture Transform",  true, 17 ], 18, 19, 22, 23, 
+		[ "Texture Transform", true, 17 ],18, 39, 23, 40, 19, 22, 
 	];
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
@@ -151,11 +153,13 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			shader_set_f( "randScale",      _data[33] );
 			shader_set_f( "randScaleSeed",  _data[34] );
 			
-			shader_set_i( "textureTruchet", _data[17] );
-			shader_set_f( "truchetSeed",    _data[18] );
-			shader_set_f( "truchetThresX",  _data[19] );
-			shader_set_f( "truchetThresY",  _data[22] );
-			shader_set_2( "truchetAngle",   _data[23] );
+			shader_set_i( "textureTransform", _data[17] );
+			shader_set_f( "textureSeed",      _data[18] );
+			shader_set_4( "texturePosition",  _data[39] );
+			shader_set_2( "textureAngle",     _data[23] );
+			shader_set_4( "textureScale",     _data[40] );
+			shader_set_f( "textureThresX",    _data[19] );
+			shader_set_f( "textureThresY",    _data[22] );
 			
 			shader_set_color("gapCol", _col_gap);
 			

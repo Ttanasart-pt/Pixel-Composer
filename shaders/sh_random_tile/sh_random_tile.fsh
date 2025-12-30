@@ -201,16 +201,20 @@ uniform sampler2D thickSurf;
 uniform vec4  gapCol;
 uniform int   gradient_use;
 
-uniform int   textureTruchet;
-uniform float truchetSeed;
-uniform float truchetThres;
-uniform vec2  truchetAngle;
 uniform vec2  level;
+
+uniform int   textureTransform;
+uniform float textureSeed;
+uniform vec4  texturePosition;
+uniform vec2  textureAngle;
+uniform vec4  textureScale;
+uniform float textureFlip;
 
 #define PI  3.14159265359
 #define TAU 6.28318530718
 
 float random (in vec2 st) {	return fract(sin(dot(st.xy + vec2(85.456034, 64.54065), vec2(12.9898, 78.233))) * (43758.5453123 + seed) ); }
+float random (in float sd) { return random(vec2(sd)); }
 
 float round(float val) { return fract(val) >= 0.5? ceil(val) : floor(val); }
 
@@ -293,18 +297,33 @@ void main() {
 	
 	if(mode == 0) {
 		colr = gradientEval(hc.x);
+		
 	} else if(mode == 2) {
 		vec2 uv = hc.zw;
+		vec2 dx = hc.xx;
 		
-		if(textureTruchet == 1) { 
-			float rx = random(floor(hc.zw / sca) + truchetSeed / 1000.);
-			float ry = random(floor(hc.zw / sca) + truchetSeed / 1000. + vec2(0.4864, 0.6879));
+		if(textureTransform == 1) { 
+			float rx = random(dx + textureSeed / 1000.);
+			float ry = random(dx + textureSeed / 1000. + vec2(0.4864, 0.6879));
 			
-			if(rx > truchetThres) uv.x = 1. - uv.x;
-			if(ry > truchetThres) uv.y = 1. - uv.y;
+			if(rx > textureFlip) uv.x = 1. - uv.x;
+			if(ry > textureFlip) uv.y = 1. - uv.y;
 			
-			float ang = radians(truchetAngle.x + (truchetAngle.y - truchetAngle.x) * random(floor(hc.zw / sca) + truchetSeed / 100. + vec2(0.9843, 0.1636)));
-			uv = 0.5 + mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * (uv - 0.5);
+			float tseed = random(dx + textureSeed / 100. + vec2(0.9843, 0.1636));
+			float ang   = mix(textureAngle.x, textureAngle.y, random(tseed + 0.));
+			      ang   = radians(ang);
+			
+			vec2  tpos  = vec2( mix(texturePosition[0], texturePosition[2], random(tseed + 1.)),
+				                mix(texturePosition[1], texturePosition[3], random(tseed + 2.)));
+				                
+			vec2  tsca  = vec2( mix(textureScale[0], textureScale[1], random(tseed + 3.)),
+				                mix(textureScale[2], textureScale[3], random(tseed + 4.)));
+			
+			uv -= .5;
+			uv *= mat2(cos(ang), -sin(ang), sin(ang), cos(ang));
+			uv /= tsca;
+			uv += .5;
+			uv -= tpos;
 		}
 		
 		colr = sampleTexture( gm_BaseTexture, uv );

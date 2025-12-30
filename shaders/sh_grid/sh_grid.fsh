@@ -214,18 +214,21 @@ uniform vec2  level;
 uniform int   diagonal;
 uniform int   uniformSize;
 
-uniform int   textureTruchet;
-uniform float truchetSeed;
-uniform float truchetThresX;
-uniform float truchetThresY;
-uniform vec2  truchetAngle;
+uniform int   textureTransform;
+uniform float textureSeed;
+uniform vec4  texturePosition;
+uniform vec2  textureAngle;
+uniform vec4  textureScale;
+uniform float textureThresX;
+uniform float textureThresY;
 
 uniform float randShift;
 uniform float randShiftSeed;
 uniform float randScale;
 uniform float randScaleSeed;
 
-float random (in vec2 st) { return fract(sin(dot(st.xy + vec2(85.456034, 64.54065), vec2(12.9898, 78.233))) * (43758.5453123 + seed) ); }
+float random (in vec2  st) { return fract(sin(dot(st.xy + vec2(85.456034, 64.54065), vec2(12.9898, 78.233))) * (43758.5453123 + seed) ); }
+float random (in float sd) { return random(vec2(sd)); }
 
 void main() {
 	#region params
@@ -340,15 +343,27 @@ void main() {
 	} else if(mode == 3) {
 		vec2 uv = fract(_pos * sca);
 		
-		if(textureTruchet == 1) {
-			float rx = random(floor(_pos * sca) + truchetSeed / 100.);
-			float ry = random(floor(_pos * sca) + truchetSeed / 100. + vec2(0.4864, 0.6879));
+		if(textureTransform == 1) {
+			float rx = random(floor(_pos * sca) + textureSeed / 100.);
+			float ry = random(floor(_pos * sca) + textureSeed / 100. + vec2(0.4864, 0.6879));
 			
-			if(rx >= truchetThresX) uv.x = 1. - uv.x;
-			if(ry >= truchetThresY) uv.y = 1. - uv.y;
+			if(rx >= textureThresX) uv.x = 1. - uv.x;
+			if(ry >= textureThresY) uv.y = 1. - uv.y;
 			
-			float ang = radians(truchetAngle.x + (truchetAngle.y - truchetAngle.x) * random(floor(_pos * sca) + truchetSeed / 100. + vec2(0.9843, 0.1636)));
-			uv = 0.5 + mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * (uv - 0.5);
+			float tseed = random(floor(_pos * sca) + textureSeed / 100. + vec2(0.9843, 0.1636));
+			float tang  = radians(textureAngle.x + (textureAngle.y - textureAngle.x) * random(tseed + 0.));
+			
+			vec2  tpos  = vec2( mix(texturePosition[0], texturePosition[2], random(tseed + 1.)),
+				                mix(texturePosition[1], texturePosition[3], random(tseed + 2.)));
+				                
+			vec2  tsca  = vec2( mix(textureScale[0], textureScale[1], random(tseed + 3.)),
+				                mix(textureScale[2], textureScale[3], random(tseed + 4.)));
+			
+			uv -= .5;
+			uv *= mat2(cos(tang), -sin(tang), sin(tang), cos(tang));
+			uv /= tsca;
+			uv += .5;
+			uv -= tpos;
 		}
 		
 		colr = sampleTexture( gm_BaseTexture, uv );
