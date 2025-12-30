@@ -67,8 +67,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    tile_selector_y    = 0;
 	    tile_selector_s    = 2;
 	    tile_selector_s_to = 2;
-	    
-	    tile_selector_vm   = 0;
+	    tile_selector_fx   = false;
 	    
 	    tile_dragging = false;
 	    tile_drag_sx  = 0;
@@ -84,12 +83,13 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	    tile_zoom_sx   = noone;
 	    
 	    tile_selector_zoom_tooltip = 0;
+	    brush_varient_base = undefined;
 	    
 	    object_selecting = noone;
 	    object_select_id = noone;
 	    
-	    selecting_surface      = noone;
-	    selecting_surface_tile = noone;
+	    selecting_surface      = [noone, noone];
+	    selecting_surface_tile = [noone, noone];
 	    
 	    autoterrain_selector_mask = 0;
 	    
@@ -113,6 +113,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				
 				if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, _m, _hover, _focus, "Clear selection", THEME.canvas_tools_selection_rectangle, 0, COLORS._main_icon_light) == 2) {
 					brush.brush_indices = [[]];
+					brush_varient_base  = undefined;
 					brush.brush_width   = 0;
 					brush.brush_height  = 0;
 				}
@@ -224,44 +225,44 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				
 				draw_surface_ext(_tileSet, tile_selector_x, tile_selector_y, tile_selector_s, tile_selector_s, 0, c_white, 1);
 				
-				// Overflow
-				draw_set_color_alpha(COLORS._main_value_negative, .5);
-				var tdw = _tileDim[0] * tile_selector_s;
-				var tdh = _tileDim[1] * tile_selector_s;
-				var ttw = _tileSiz[0] * _tileAmo[0] * tile_selector_s;
-				var tth = _tileSiz[1] * _tileAmo[1] * tile_selector_s;
-				
-				if(ttw < tdw) {
-					var _fx0 = tile_selector_x + ttw;
-					var _fx1 = tile_selector_x + tdw;
+				#region Overflow
+					draw_set_color_alpha(COLORS._main_value_negative, .6);
+					var tdw = _tileDim[0] * tile_selector_s;
+					var tdh = _tileDim[1] * tile_selector_s;
+					var ttw = _tileSiz[0] * _tileAmo[0] * tile_selector_s;
+					var tth = _tileSiz[1] * _tileAmo[1] * tile_selector_s;
 					
-					var _fy0 = tile_selector_y;
-					var _fy1 = tile_selector_y + tth;
+					if(ttw < tdw) {
+						var _fx0 = tile_selector_x + ttw;
+						var _fx1 = tile_selector_x + tdw;
+						
+						var _fy0 = tile_selector_y;
+						var _fy1 = tile_selector_y + tth;
+						
+						draw_rectangle(_fx0, _fy0, _fx1, _fy1, false);	
+					}
 					
-					draw_rectangle(_fx0, _fy0, _fx1, _fy1, false);	
-				}
-				
-				if(tth < tdh) {
-					var _fx0 = tile_selector_x;
-					var _fx1 = tile_selector_x + ttw;
+					if(tth < tdh) {
+						var _fx0 = tile_selector_x;
+						var _fx1 = tile_selector_x + ttw;
+						
+						var _fy0 = tile_selector_y + tth;
+						var _fy1 = tile_selector_y + tdh;
+						
+						draw_rectangle(_fx0, _fy0, _fx1, _fy1, false);	
+					}
 					
-					var _fy0 = tile_selector_y + tth;
-					var _fy1 = tile_selector_y + tdh;
-					
-					draw_rectangle(_fx0, _fy0, _fx1, _fy1, false);	
-				}
-				
-				if(ttw < tdw && tth < tdh) {
-					var _fx0 = tile_selector_x + ttw;
-					var _fx1 = tile_selector_x + tdw;
-					
-					var _fy0 = tile_selector_y + tth;
-					var _fy1 = tile_selector_y + tdh;
-					
-					draw_rectangle(_fx0, _fy0, _fx1, _fy1, false);	
-				}
-				
-				draw_set_alpha(1);
+					if(ttw < tdw && tth < tdh) {
+						var _fx0 = tile_selector_x + ttw;
+						var _fx1 = tile_selector_x + tdw;
+						
+						var _fy0 = tile_selector_y + tth;
+						var _fy1 = tile_selector_y + tdh;
+						
+						draw_rectangle(_fx0, _fy0, _fx1, _fy1, false);	
+					}
+					draw_set_alpha(1);
+				#endregion
 				
 				if(gmTile != noone) {
 					var ssw = _tileSel_w / 16; 
@@ -387,6 +388,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					var _ts_ex = clamp(max(tile_select_ss[0], _mtx), 0, _tileAmo[0] - 1);
 					var _ts_ey = clamp(max(tile_select_ss[1], _mty), 0, _tileAmo[1] - 1);
 					
+					brush_varient_base  = undefined;
 					brush.brush_indices = [];
 					brush.brush_width   = _ts_ex - _ts_sx + 1;
 					brush.brush_height  = _ts_ey - _ts_sy + 1;
@@ -549,14 +551,9 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			#endregion
 				
 			#region varients
-				var _bw = 1;
-				var _bh = 1;
 				var _sel_sw = _tileSiz[0];
 				var _sel_sh = _tileSiz[1];
 				
-				selecting_surface      = surface_verify(selecting_surface, _bw, _bh, surface_rgba16float);
-		    	selecting_surface_tile = surface_verify(selecting_surface_tile, _sel_sw, _sel_sh);
-		    	
 				var _ty = _yy + _tsh + ui(8);
 				
 				var _sx =  _x + ui(8);
@@ -590,6 +587,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 						
 						if(mouse_press(mb_left, _focus)) {
 							brush.brush_indices = [[[ -1, 0 ]]];
+							brush_varient_base  = undefined;
 			    			brush.brush_width   = 1;
 							brush.brush_height  = 1;
 						}
@@ -609,7 +607,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				
 				////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				
-				var _fpx  = bool(tile_selector_vm);
+				var _fpx  = tile_selector_fx;
 				var _shov = _hover && point_in_rectangle(_m[0], _m[1], _sx, _sy, _sx + _sw, _sy + _sh);
 				var _aa   = .75 + .25 * _shov;
 				draw_sprite_stretched_ext(THEME.ui_panel, 1, _sx, _sy, _sw, _sh, COLORS._main_icon, _aa);
@@ -620,56 +618,135 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					TOOLTIP = "Flip X";
 					
 					if(mouse_press(mb_left, _focus)) {
-						tile_selector_vm = _fpx? 0 : 0b0100;
-						brush_action_flip(0);
+						tile_selector_fx = !tile_selector_fx;
+						// brush_action_flip(0);
 					}
 				}
 				
 				////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				
-				if(brush.brush_width * brush.brush_height != 1) return _h;
+				if(brush.brush_width * brush.brush_height < 1) return _h;
 				
-				var _bb = brush.brush_indices[0][0];
+				var fx  = tile_selector_fx;
+				var bw  = brush.brush_width;
+				var bh  = brush.brush_height;
+				var bv  = brush.brush_indices[0][0][1];
+				var arr = brush.brush_indices;
+				
+				if(brush_varient_base != undefined) {
+					arr = brush_varient_base;
+					bh  = array_length( arr    );
+					bw  = array_length( arr[0] );
+				}
+				
+				var bbw = bw*_sel_sw;
+				var bbh = bh*_sel_sh;
 				var _vi = 1;
 				
+				selecting_surface[0]   = surface_verify(selecting_surface[0], bw, bh, surface_rgba16float);
+				selecting_surface[1]   = surface_verify(selecting_surface[1], bh, bw, surface_rgba16float);
+				
+		    	selecting_surface_tile[0] = surface_verify(selecting_surface_tile[0], bbw, bbh);
+		    	selecting_surface_tile[1] = surface_verify(selecting_surface_tile[1], bbh, bbw);
+		    	
+		    	var __s = ui(28) / _sel_sh / max(bw, bh);
+		    	var setBrush = undefined;
+		    	
 				for( var v = 0; v < p; v++ ) {
-					var _var = _vv[v] | tile_selector_vm;
+					var _i = v % 2;
 					
-			    	surface_set_shader(selecting_surface, sh_draw_tile_brush, true, BLEND.over);
-			    		shader_set_f("index",   _bb[0]);
-		    			shader_set_f("varient", _var);
-		    			draw_point(0, 0);
+					var sels = selecting_surface[_i];
+					var selt = selecting_surface_tile[_i];
+					var _var = _vv[v];
+					
+					if(_i) _var |= fx? 0b1000 : 0;
+					else   _var |= fx? 0b0100 : 0;
+					
+					surface_set_shader(sels, sh_draw_tile_brush, true, BLEND.over);
+					for( var by = 0; by < bh; by++ ) 
+					for( var bx = 0; bx < bw; bx++ ) {
+						var _bb  = arr[by][bx];
+			    		shader_set_f( "index",   _bb[0]);
+		    			shader_set_f( "varient", _var );
+		    			
+		    			switch(v) {
+		    				case 0 : if(fx) draw_point(bw-bx-1, by);
+                                     else   draw_point(bx,      by);      break;
+		    					
+		    				case 1 : if(fx) draw_point(bh-by-1, bw-bx-1); 
+                                     else   draw_point(bh-by-1, bx);      break;
+		    					
+		    				case 2 : if(fx) draw_point(bx,      bh-by-1); 
+                                     else   draw_point(bw-bx-1, bh-by-1); break;
+		    				
+		    				case 3 : if(fx) draw_point(by, bx); 
+                                     else   draw_point(by, bw-bx-1);      break;
+		    			}
+					}
 			    	surface_reset_shader();
-	    	    	
-				    surface_set_shader(selecting_surface_tile, sh_draw_tile_map, true, BLEND.over);
-				        shader_set_2("dimension", [ _sel_sw, _sel_sh ]);
-				        
-				        shader_set_surface("indexTexture", selecting_surface);
-				        shader_set_2("indexTextureDim", surface_get_dimension(selecting_surface));
-				        
+					
+				    surface_set_shader(selt, sh_draw_tile_map, true, BLEND.over);
+				        shader_set_2( "dimension",       surface_get_dimension(selt) );
+				        shader_set_2( "indexTextureDim", surface_get_dimension(sels) );
+				        shader_set_s( "indexTexture",    sels );
 						shader_submit();
 						
 				        draw_empty();
 				    surface_reset_shader();
 		    		
 		    		var _shov = _hover && point_in_rectangle(_m[0], _m[1], _sx, _sy, _sx + _sw, _sy + _sh);
-		    		var _aa   = _bb[1] == _var? 1 : 0.5 + 0.5 * _shov;
+		    		var _aa   = bv == _var? 1 : 0.5 + 0.5 * _shov;
+		    		var _ssw  = surface_get_width(selt)  * __s;
+		    		var _ssh  = surface_get_height(selt) * __s;
+		    		draw_surface_ext(selt, _sx+_sw/2 - _ssw/2, _sy+_sh/2 - _ssh/2, __s, __s, 0, c_white, _aa);
 		    		
-		    		draw_surface_ext(selecting_surface_tile, _sx, _sy, _ss, _ss, 0, c_white, _aa);
+		    		var cc = bv == _var? COLORS._main_accent : COLORS._main_icon;
+		    		draw_sprite_stretched_ext(THEME.ui_panel, 1, _sx, _sy, _sw, _sh, cc, 1);
 		    		
-		    		if(_bb[1] == _var)
-		    			draw_sprite_stretched_ext(THEME.ui_panel, 1, _sx, _sy, _sw, _sh, COLORS._main_accent);
-		    		
-		    		if(_shov && mouse_press(mb_left, _focus))
-		    			_bb[1] = _var;
+		    		if(_shov && mouse_press(mb_left, _focus)) {
+		    			if(brush_varient_base == undefined)
+		    				brush_varient_base  = array_clone(brush.brush_indices);
+		    			brush.brush_width   = _i? bh:bw;
+						brush.brush_height  = _i? bw:bh;
+						
+						var bi = array_create(brush.brush_height);
+						for( var i = 0; i < brush.brush_height; i++ ) 
+							bi[i] = array_create(brush.brush_width);
+						
+						for( var by = 0; by < bh; by++ ) 
+						for( var bx = 0; bx < bw; bx++ ) {
+							var _bb = brush_varient_base[by][bx];
+							var _ii = [_bb[0], _var];
+							
+			    			switch(v) {
+			    				case 0 : if(fx) bi[by][bw-bx-1]      = _ii;
+                                         else   bi[by][bx]           = _ii; break;
+			    					
+			    				case 1 : if(fx) bi[bw-bx-1][bh-by-1] = _ii;
+                                         else   bi[bx][bh-by-1]      = _ii; break;
+			    					
+			    				case 2 : if(fx) bi[by][bx]           = _ii;
+                                         else   bi[by][bw-bx-1]      = _ii; break;
+			    				
+			    				case 3 : if(fx) bi[bx][by]           = _ii;
+                                         else   bi[bw-bx-1][by]      = _ii; break;
+			    			}
+			    			
+						}
+						
+						setBrush = bi;
+		    		}
 		    		
 					_sx += _sw + ui(8);
+					
 					// if(++_vi >= _col) {
 					// 	_sx  = _x + ui(8);
 					// 	_sy += _sh + ui(8);
 					// 	_vi  = 0;
 					// }
 				}
+				
+				if(setBrush != undefined) brush.brush_indices = setBrush;
 			#endregion
 		    	
 	    	return _h;
@@ -729,6 +806,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					
 					if(!array_empty(_indx)) {
 						brush.brush_indices = [[ [ _new_at.index[0], 0 ] ]];
+						brush_varient_base  = undefined;
 		    			brush.brush_width   = 1;
 						brush.brush_height  = 1;
 					}
@@ -821,6 +899,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			    			object_select_id = noone;
 			    			
 		    				brush.brush_indices = [[ [ _prin, 0 ] ]];
+		    				brush_varient_base  = undefined;
 			    			brush.brush_width   = 1;
 		    				brush.brush_height  = 1;
 		    				palette_using = false;
@@ -1263,6 +1342,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
     			var _ts_ey = clamp(max(palette_select_ss[1], _mty), 0, _tileAmo[1] - 1);
     			
 				brush.brush_indices = [];
+				brush_varient_base  = undefined;
 				brush.brush_width   = _ts_ex - _ts_sx + 1;
 				brush.brush_height  = _ts_ey - _ts_sy + 1;
 				var _ind = 0;
@@ -1551,6 +1631,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				array_push(animatedTiles, _new_at);
 				
 				brush.brush_indices = [[ [ -(array_length(animatedTiles) + 1), 0 ] ]];
+				brush_varient_base  = undefined;
     			brush.brush_width   = 1;
 				brush.brush_height  = 1;
 				
@@ -1660,6 +1741,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		    				object_select_id = noone;
 		    				
 		    				brush.brush_indices = [[ [ -(i + 2), 0 ] ]];
+		    				brush_varient_base  = undefined;
 			    			brush.brush_width   = 1;
 		    				brush.brush_height  = 1;
 		    				palette_using = false;
@@ -1923,6 +2005,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			}
 			
 			brush.brush_indices = bid;
+			brush_varient_base  = undefined;
 			
 			var _t = brush.brush_width;
 			brush.brush_width  = brush.brush_height;
@@ -1944,6 +2027,7 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			}
 			
 			brush.brush_indices = bid;
+			brush_varient_base  = undefined;
 		}
 	#endregion
 	
