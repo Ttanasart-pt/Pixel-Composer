@@ -4,11 +4,8 @@ function Node_Matrix_Math(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	always_pad = true;
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Matrix("Matrix 1", new Matrix(3)))
-		.setVisible(true, true);
-		
-	newInput(1, nodeValue_Matrix("Matrix 2", new Matrix(3)))
-		.setVisible(true, true);
+	newInput( 0, nodeValue_Matrix("Matrix 1", new Matrix(3))).setVisible(true, true);
+	newInput( 1, nodeValue_Matrix("Matrix 2", new Matrix(3))).setVisible(true, true);
 	
 	operation_scroll = [
 		new scrollItem("Add",             s_node_math_operators, 0),
@@ -19,26 +16,28 @@ function Node_Matrix_Math(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		new scrollItem("Multiply Matrix", s_node_math_operators, 2),
 	];
 	
-	newInput(2, nodeValue_Enum_Scroll("Operation", 0, operation_scroll));
-	
-	newInput(3, nodeValue_Float("Scala", 0));
+	newInput( 2, nodeValue_EScroll( "Operation", 0, operation_scroll ));
+	newInput( 3, nodeValue_Float(   "Scala",     0 ));
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newOutput(0, nodeValue_Output("Matrix", VALUE_TYPE.float, new Matrix(3)))
-		.setDisplay(VALUE_DISPLAY.matrix);
-		
+	newOutput(0, nodeValue_Output("Matrix", VALUE_TYPE.float, new Matrix(3))).setDisplay(VALUE_DISPLAY.matrix);
+	
 	input_display_list = [ 2, 0, 1, 3 ];
 	
+	////- Node
+	
 	static processData = function(_outData, _data, _array_index = 0) {
-		var _mat1 = _data[0];
-		var _mat2 = _data[1];
-		var _opr  = _data[2];
-		var _sca  = _data[3];
-		var _res;
-		
-		inputs[1].setVisible(false);
-		inputs[3].setVisible(false);
+		#region data
+			var _mat1 = _data[0];
+			var _mat2 = _data[1];
+			var _opr  = _data[2];
+			var _sca  = _data[3];
+			var _res;
+			
+			inputs[1].setVisible(false);
+			inputs[3].setVisible(false);
+		#endregion
 		
 		switch(operation_scroll[_opr].name) {
 			case "Add" : 

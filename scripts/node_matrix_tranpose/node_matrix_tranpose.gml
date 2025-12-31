@@ -4,13 +4,11 @@ function Node_Matrix_Transpose(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	setDrawIcon(s_node_matrix_transpose);
 	setDimension(96, 48);
 	
-	newInput(0, nodeValue_Matrix("Matrix", new Matrix(3)))
-		.setVisible(true, true);
+	newInput(0, nodeValue_Matrix("Matrix", new Matrix(3))).setVisible(true, true);
 		
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	newOutput(0, nodeValue_Output("Matrix", VALUE_TYPE.float, new Matrix(3)))
-		.setDisplay(VALUE_DISPLAY.matrix);
+	newOutput(0, nodeValue_Output("Matrix", VALUE_TYPE.float, new Matrix(3))).setDisplay(VALUE_DISPLAY.matrix);
 		
 	input_display_list = [ 0 ];
 	

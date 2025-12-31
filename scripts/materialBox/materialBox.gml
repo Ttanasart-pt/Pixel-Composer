@@ -6,44 +6,24 @@ function materialBox(_onModify) : widget() constructor {
 	
 	sb_filtering = new scrollBox(["Pixel", "Bilinear"], function(val) { currMat.texFilter = val; onModify(currMat); })
 	
-	for(var i = 0; i < 5; i++) tb[i] = new textBox(TEXTBOX_INPUT.number, noone);
+	tb[0] = textBox_Number(function(val) /*=>*/ { currMat.diffuse    = val; onModify(currMat); }).setLabel("diffuse");
+	tb[1] = textBox_Number(function(val) /*=>*/ { currMat.specular   = val; onModify(currMat); }).setLabel("specular");
+	tb[2] = textBox_Number(function(val) /*=>*/ { currMat.metalic    = val; onModify(currMat); }).setLabel("metalic");
+	tb[3] = textBox_Number(function(val) /*=>*/ { currMat.shine      = val; onModify(currMat); }).setLabel("shine");
+	tb[4] = textBox_Number(function(val) /*=>*/ { currMat.reflective = val; onModify(currMat); }).setLabel("reflective");
 	
-	tb[0].onModify = function(val) { currMat.diffuse    = val; onModify(currMat); }
-	tb[1].onModify = function(val) { currMat.specular   = val; onModify(currMat); }
-	tb[2].onModify = function(val) { currMat.metalic    = val; onModify(currMat); }
-	tb[3].onModify = function(val) { currMat.shine      = val; onModify(currMat); }
-	tb[4].onModify = function(val) { currMat.reflective = val; onModify(currMat); }
-	
-	tb[0].setLabel("diffuse");
-	tb[1].setLabel("specular");
-	tb[2].setLabel("metalic");
-	tb[3].setLabel("shine");
-	tb[4].setLabel("reflective");
-	
-	static setInteract = function(interactable) { #region
+	static setInteract = function(interactable) {
 		self.interactable = interactable;
-		
-		//sb_filtering.interactable = true;
-		//for( var i = 0; i < array_length(tb); i++ ) 
-		//	tb[i].interactable = true;
-	} #endregion
+	}
 	
-	static register = function(parent = noone) { #region
-		//sb_filtering.register(parent);
-		//for( var i = 0; i < array_length(tb); i++ ) 
-		//	tb[i].register(parent);
-	} #endregion
+	static register = function(parent = noone) {}
 	
-	static drawParam = function(params) { #region
+	static drawParam = function(params) {
 		setParam(params);
-		//sb_filtering.setParam(params);
-		//for(var i = 0; i < array_length(tb); i++) 
-		//	tb[i].setParam(params);
-		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.display_data, params.m, params.rx, params.ry);
-	} #endregion
+	}
 	
-	static draw = function(_x, _y, _w, _h, _surface, _display_data, _m, _rx, _ry) { #region
+	static draw = function(_x, _y, _w, _h, _surface, _display_data, _m, _rx, _ry) {
 		x = _x;
 		y = _y;
 		w = _w;
@@ -139,11 +119,7 @@ function materialBox(_onModify) : widget() constructor {
 		resetFocus();
 		
 		return h;
-	} #endregion
+	}
 	
-	static clone = function() { #region
-		var cln = new materialBox(onModify);
-		
-		return cln;
-	} #endregion
+	static clone = function() { return new materialBox(onModify); }
 }

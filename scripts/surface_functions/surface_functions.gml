@@ -205,21 +205,23 @@
 	
 		uint16_t min_x = 0, min_y = 0;
 		uint16_t max_x = 0, max_y = 0;
+		size_t of = (size_t)outputRange->min;
 		
 		for (size_t i = 0; i < size; ++i) {
-			double vr = (double)(pixelArray[i].r);
-			double vg = (double)(pixelArray[i].g);
+			size_t ix = (i + of) % size;
+			double vr = (double)(pixelArray[ix].r);
+			double vg = (double)(pixelArray[ix].g);
 	
 			if(vr < _min) {
 				_min = vr;
-				min_x = (uint16_t)(i % widthInt);
-				min_y = (uint16_t)(i / widthInt);
+				min_x = (uint16_t)(ix % widthInt);
+				min_y = (uint16_t)(ix / widthInt);
 			}
 	
 			if(vg > _max) {
 				_max = vg;
-				max_x = (uint16_t)(i % widthInt);
-				max_y = (uint16_t)(i / widthInt);
+				max_x = (uint16_t)(ix % widthInt);
+				max_y = (uint16_t)(ix / widthInt);
 			}
 		}
 	
@@ -572,7 +574,7 @@
 		return [ _min / 255, _max / 255 ];
 	}
 	
-	function surface_get_min_max(surface) {
+	function surface_get_min_max(surface, offset = 0) {
 		static __surface_get_range_buffer = buffer_create(1, buffer_grow,  1);
 		if(!is_surface(surface)) return [0,1,0,0,1,1];
 		
@@ -585,6 +587,9 @@
 		buffer_to_start(    __surface_get_range_buffer);
 		
 		var _outB = buffer_create(24, buffer_fixed, 2);
+		buffer_to_start(_outB);
+		buffer_write(_outB, buffer_f64, offset);
+		
 		var _amo  = surface_get_min_max_c(buffer_get_address(__surface_get_range_buffer), buffer_get_address(_outB), _sw, _sh);
 		
 		buffer_to_start(_outB);

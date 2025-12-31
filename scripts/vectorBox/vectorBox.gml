@@ -86,9 +86,13 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		return false;
 	}
 	
+	static onSetParam = function(params) {
+		for(var i = 0; i < 4; i++) 
+			tb[i].setParam(params);
+	}
+	
 	static drawParam = function(params) {
 		setParam(params);
-		for(var i = 0; i < 4; i++) tb[i].setParam(params);
 		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.display_data, params.m);
 	}

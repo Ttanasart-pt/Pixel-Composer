@@ -16,8 +16,9 @@ void main() {
 	for(int j = -radius; j <= radius; j++) {
 		vec2  offset = vec2(float(i), float(j)) * tx;
 		float weight = exp(-(float(i*i + j*j)) / sg);
+		vec2  tx = fract(fract(v_vTexcoord + offset) + 1.);
 		
-		ss += texture2D(gm_BaseTexture, fract(v_vTexcoord + offset)).r * weight;
+		ss += texture2D(gm_BaseTexture, tx).r * weight;
 		ww += weight;
 	}
 	

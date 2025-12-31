@@ -54,7 +54,8 @@
 		if(shader == -1) return;
 		
 		if(is_array(value)) {
-			shader_set_i_array(shader, uniform, value);
+			if(array_length(value) == 0) return;
+			shader_set_uniform_i_array(shader_get_uniform(shader, uniform), value);
 			return;
 		}
 		
@@ -66,11 +67,10 @@
 				var array = array_create(argument_count - 1);
 				for( var i = 1; i < argument_count; i++ )
 					array[i - 1] = argument[i];
-				shader_set_i_array(shader, uniform, array)
+					
+				shader_set_uniform_i_array(shader_get_uniform(shader, uniform), array);
 		}
 	}
-	
-	function shader_set_i_array(shader, uniform, array) { shader_set_uniform_i_array(shader_get_uniform(shader, uniform), array); }
 	
 	function shader_u(u) { return shader_get_uniform(shader_current(),u); }
 	

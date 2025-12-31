@@ -88,7 +88,8 @@ function widget() constructor {
 		return self;
 	}
 	
-	static setParam = function(params) {
+	static onSetParam = undefined;
+	static setParam   = function(params) {
 		font = params.font;
 		rx   = params.rx;
 		ry   = params.ry;
@@ -109,6 +110,8 @@ function widget() constructor {
 			if(inBBOX(params.m))
 				params.scrollpane.hover_content = true;
 		}
+		
+		if(onSetParam) onSetParam(params);
 	}
 	
 	static trigger = function() { }

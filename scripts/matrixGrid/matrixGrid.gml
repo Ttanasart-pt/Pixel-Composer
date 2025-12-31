@@ -4,16 +4,28 @@ function matrixGrid(_type, _onModify, _unit = noone) : widget() constructor {
 	vsize    = 0;
 	onModify = _onModify;
 	unit	 = _unit;
+	current_data = undefined;
 	
-	tb = [];
+	tb     = [];
 	linked = false;
+	tbsize = new vectorBox(2, function(v,i) /*=>*/ { 
+		if(current_data == undefined) return;
+		
+		_size    = [size[0], size[1]]; 
+		_size[i] = max(1, v); 
+		setSize(_size); 
+		
+		current_data.setSize(_size);
+		onModify(current_data.raw[0], 0); 
+	});
+		
 	b_link = button(function() /*=>*/ { linked = !linked; }).setIcon(THEME.value_link).iconPad();
 	
 	onModifyIndex = function(val, index) { 
 		var modi = false;
 		
 		if(linked) {
-			for( var i = 0; i < vsize; i++ )
+			for( var i = 0; i < vsize; i++ ) 
 				modi = onModify(toNumber(val), i) || modi;
 			return modi;
 		}
@@ -42,6 +54,7 @@ function matrixGrid(_type, _onModify, _unit = noone) : widget() constructor {
 	static setInteract = function(interactable = false) { 
 		self.interactable   = interactable;
 		b_link.interactable = interactable;
+		tbsize.interactable = interactable;
 		
 		for( var i = 0; i < vsize; i++ )
 			tb[i].interactable = interactable;
@@ -69,30 +82,45 @@ function matrixGrid(_type, _onModify, _unit = noone) : widget() constructor {
 	}
 	
 	static fetchHeight = function(params) { if(is(params.data, Matrix)) setSize(params.data.size); return params.h * size[1]; }
-	static drawParam   = function(params) {
-		setParam(params);
+	
+	static onSetParam = function(params) {
+		tbsize.setParam(params);
 		for(var i = 0; i < vsize; i++)
 			tb[i].setParam(params);
-	
-		return draw(params.x, params.y, params.w, params.h, params.data, params.m);
 	}
 	
-	static draw = function(_x, _y, _w, _h, _data, _m) {
+	static drawParam   = function(params) {
+		setParam(params);
+		return draw(params.x, params.y, params.w, params.h, params.data, params.display_data, params.m);
+	}
+	
+	static draw = function(_x, _y, _w, _h, _data, _display_data, _m) {
 		if(is(_data, Matrix)) setSize(_data.size);
+		
+		var gridh  = _h * size[1];
+		var resize = _display_data[$ "resizeable"] ?? true;
+		    resize = resize && interactable;
+		current_data = _data;
 		
 		x = _x;
 		y = _y;
 		w = _w;
-		h = _h * size[1];
+		h = gridh + resize * (_h + ui(4));
 		
-		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, x, y, w, h, boxColor, 1);
+		if(resize) {
+			tbsize.setFocusHover(active, hover);
+			tbsize.draw(_x, _y, _w, _h, size, {}, _m);
+			_y += _h + ui(4);
+		}
+		
+		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, gridh, boxColor, 1);
 		
 		var bs = min(_h, ui(32));
 		if((_w - bs) / size[0] > ui(64)) {
 			var bx = _x + _w - bs;
 			
 			if(is(extras, buttonClass)) {
-				if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, bx, _y, bs, h, CDEF.main_mdwhite, 1);
+				if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, bx, _y, bs, gridh, CDEF.main_mdwhite, 1);
 				extras.setFocusHover(active, hover);			
 				extras.draw(bx, _y + _h / 2 - bs / 2, bs, bs, _m, THEME.button_hide_fill);
 				_w -= bs;
@@ -106,7 +134,7 @@ function matrixGrid(_type, _onModify, _unit = noone) : widget() constructor {
 			var bx = _x;
 			var by = _y;
 			
-			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, bx, _y, bs, h, CDEF.main_mdwhite, 1);
+			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, bx, _y, bs, gridh, CDEF.main_mdwhite, 1);
 			b_link.draw(bx, by, bs, bs, _m, THEME.button_hide_fill);
 			
 			by += _h;
@@ -121,7 +149,7 @@ function matrixGrid(_type, _onModify, _unit = noone) : widget() constructor {
 		}
 		
 		var ww = _w / size[0];
-		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 0, x, y, w, h, boxColor, 0.5 + 0.5 * interactable);	
+		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, gridh, boxColor, 0.5 + 0.5 * interactable);	
 		
 		var _raw = is(_data, Matrix)? _data.raw : _data;
 		

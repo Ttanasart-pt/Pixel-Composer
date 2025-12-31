@@ -10,48 +10,54 @@ uniform vec2 tileTextureDim;
 uniform sampler2D indexTexture;
 uniform vec2 indexTextureDim;
 
-uniform float animatedTiles[1024];
-uniform float animatedTilesIndex[128];
-uniform float animatedTilesLength[128];
+uniform int animatedTiles[1024];
+uniform int animatedTilesIndex[128];
+uniform int animatedTilesLength[128];
 uniform float frame;
+
+int imod(int a, int b) { return a - (a/b) * b; }
 
 void main() {
     gl_FragColor = vec4(0.);
     
-    vec2  px = v_vTexcoord * dimension;
-    vec2  tileTx, texTx;
-    float index = 0.;
+    vec2 px    = v_vTexcoord * dimension;
+    int  index = 0;
     
-    vec2 tileAmo  = floor(tileTextureDim / tileSize);
-    vec4 samIdx   = texture2D( indexTexture, floor(px / tileSize) / (indexTextureDim - 1.) );
-    if(samIdx.r == 0.) 
+    ivec2 tileAmo = ivec2(tileTextureDim / tileSize);
+    vec4  samIdx  = texture2D( indexTexture, floor(px / tileSize) / (indexTextureDim - 1.) );
+    int   tileid  = int(samIdx.r + .1 * sign(samIdx.r));
+    
+    if(tileid == 0) 
         return;
     
-    if(samIdx.r > 0.) {
-        index  = samIdx.r - 1.;
+    if(tileid > 0) {
+        index  = tileid - 1;
         
-    } if(samIdx.r < 0.) { // animated tiles
-        int aId = int(-samIdx.r - 1.);
-        float aIndex  = animatedTilesIndex[aId];
-        float aLength = animatedTilesLength[aId];
-        float animL   = mod(frame, float(aLength));
-        index = animatedTiles[int(aIndex + animL)];
+    } else if(tileid < 0) { // animated tiles
+        int aId     = -tileid - 1;
+        int aIndex  = animatedTilesIndex[aId];
+        int aLength = animatedTilesLength[aId];
+        int animL   = imod(int(frame), aLength);
+        index = animatedTiles[aIndex + animL];
     }
     
-    texTx  = vec2(mod(index, tileAmo.x), floor(index / tileAmo.x)) * tileSize;
-    tileTx = mod(px, tileSize) / tileSize;
+    int tx = imod(index, tileAmo.x);
+    int ty = index / tileAmo.x;
     
-    float vari   = samIdx.g + 0.1;
-    float mRot   = mod(floor(vari),      4.);
-    float mFlipH = mod(floor(vari / 4.), 2.);
-    float mFlipV = mod(floor(vari / 8.), 2.);
+    vec2 texTx  = vec2(tx, ty) * tileSize;
+    vec2 tileTx = mod(px, tileSize) / tileSize;
     
-    if(mFlipH == 1.) tileTx.x = 1. - tileTx.x;
-    if(mFlipV == 1.) tileTx.y = 1. - tileTx.y;
+    int vari   = int(samIdx.g + .1);
+    int mRot   = imod(vari,   4);
+    int mFlipH = imod(vari/4, 2);
+    int mFlipV = imod(vari/8, 2);
     
-    if(mRot   == 1.) tileTx = vec2(tileTx.y, 1. - tileTx.x);
-    if(mRot   == 2.) tileTx = 1. - tileTx;
-    if(mRot   == 3.) tileTx = vec2(1. - tileTx.y, tileTx.x);
+    if(mFlipH == 1) tileTx.x = 1. - tileTx.x;
+    if(mFlipV == 1) tileTx.y = 1. - tileTx.y;
+    
+    if(mRot   == 1) tileTx = vec2(tileTx.y, 1. - tileTx.x);
+    if(mRot   == 2) tileTx = 1. - tileTx;
+    if(mRot   == 3) tileTx = vec2(1. - tileTx.y, tileTx.x);
     
     vec2  samTx = texTx + tileTx * tileSize;
     gl_FragColor = texture2D( tileTexture, samTx / tileTextureDim );

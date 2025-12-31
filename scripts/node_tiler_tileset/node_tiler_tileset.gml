@@ -1899,9 +1899,9 @@ function Node_Tile_Tileset(_x, _y, _group = noone) : Node(_x, _y, _group) constr
         shader_set_s("tileTexture",         texture      );
         shader_set_2("tileTextureDim",      textureSize  );
         
-		shader_set_f("animatedTiles",       aTiles       );
-		shader_set_f("animatedTilesIndex",  aTilesIndex  );
-		shader_set_f("animatedTilesLength", aTilesLength );
+		shader_set_i("animatedTiles",       aTiles       );
+		shader_set_i("animatedTilesIndex",  aTilesIndex  );
+		shader_set_i("animatedTilesLength", aTilesLength );
 	}
 	
 	static update = function(frame = CURRENT_FRAME) {

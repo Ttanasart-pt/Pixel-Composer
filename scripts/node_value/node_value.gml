@@ -321,7 +321,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static setTooltip = function(_tip) { tooltip = _tip; return self; }
 	
-	static setIcon = function(_ico, _colr) { custom_icon = _ico; custom_color = _colr; return self; }
+	static setIcon = function(_ico, _colr = noone) { custom_icon = _ico; custom_color = _colr; return self; }
 	
 	static setCustomData = function(param) {
 		custom_icon  = param.icon(); 
@@ -1037,6 +1037,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						for( var i = 0, n = animVector; i < n; i++ )
 							animators[i].suffix = $" {i}";
 						
+						setIcon(THEME.node_junction_matrix);
 						extract_node = "";
 						break;
 						
