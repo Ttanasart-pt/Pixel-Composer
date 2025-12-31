@@ -1,0 +1,6 @@
+{
+    "name":          "Identity Matrix",
+    "spr":           "s_node_matrix_identity",
+    "baseNode":      "Node_Matrix_Identity",
+    "pxc_version":    120031,
+}

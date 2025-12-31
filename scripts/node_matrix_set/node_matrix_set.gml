@@ -36,8 +36,8 @@ function Node_Matrix_Set(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			_pos = [_pos];
 			_val = [_val];
 		}
-			
-		var _amo = min(array_length(_pos), array_length(_val))
+		
+		var _amo = min(array_length(_pos), array_length(_val));
 		for( var i = 0; i < _amo; i++ ) {
 			var p = _pos[i];
 			var v = _val[i];
