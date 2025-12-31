@@ -2188,19 +2188,43 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static drawPreviewOverlay = function(_x, _y, _s, _panel) {
 		var _raw = getValue();
-		
 		var _txt = _raw;
+		
+		var _sw = DEF_SURF_W * _s;
+		var _sh = DEF_SURF_H * _s;
 		var _x0 = _x;
 		var _y0 = _y;
-		var _x1 = _x + DEF_SURF_W * _s;
-		var _y1 = _y + DEF_SURF_H * _s;
+		var _x1 = _x + _sw;
+		var _y1 = _y + _sh;
 		
 		var _bbox = BBOX().fromPoints(_x0 + ui(16), _y0 + ui(16), _x1 - ui(16), _y1 - ui(16));
 		var _tc   = COLORS._main_text;
+		draw_set_text(f_sdf, fa_center, fa_center, _tc);
 		
 		switch(type) {
 			case VALUE_TYPE.integer : 
 			case VALUE_TYPE.float  : 
+				if(display_type == VALUE_DISPLAY.matrix) {
+					if(!is(_raw, Matrix)) return;
+					var _siz = _raw.size;
+					var _mw = _sw / _siz[0];
+					var _mh = _sh / _siz[1];
+					
+					for( var i = 0; i < _siz[1]; i++ )
+					for( var j = 0; j < _siz[0]; j++ ) {
+						var _ind = i * _siz[0] + j;
+						var _val = _raw.raw[_ind];
+						
+						var xx0 = _x + j * _mw;
+						var xx1 = xx0 + _mw;
+						var yy0 = _y + i * _mh;
+						var yy1 = yy0 + _mh;
+						
+						draw_text_bbox(BBOX().fromPoints(xx0, yy0, xx1, yy1), _val);
+					}
+					return;
+				}
+				
 				if(display_type == VALUE_DISPLAY.vector) {
 					if(array_empty(_raw)) return;
 					
@@ -2268,26 +2292,18 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			case VALUE_TYPE.path: 
 			case VALUE_TYPE.curve: 
 			case VALUE_TYPE.struct:
-				return;
-				
 			case VALUE_TYPE.atlas:
-				return;
-			
 			case VALUE_TYPE.audioBit:
-				return;
-			
 			case VALUE_TYPE.font:
 				return;
-			
+				
 			case VALUE_TYPE.text: 
 				break;
 				
 			default: return;
 		}
 		
-		if(string_length(_txt) > 64)
-			_txt = string_copy(_txt, 1, 64) + "...";
-			
+		if(string_length(_txt) > 64) _txt = $"{string_copy(_txt, 1, 64)}...";
 		draw_set_text(f_sdf, fa_center, fa_center, _tc);
 		draw_text_bbox(_bbox, _txt);
 	}

@@ -1,31 +1,30 @@
 function Node_Matrix_Color_Apply(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name  = "Matrix Color Apply";
 	
-	newInput(0, nodeValue_Surface("Surface In"));
-	
-	newInput(1, nodeValue_Matrix("Matrix", new Matrix(3)))
-		.setVisible(true, true);
-	
-	newInput(2, nodeValue_Slider("Intensity", 1));
-	
-	newInput(3, nodeValue_Surface("Mask"));
-	
-	newInput(4, nodeValue_Slider("Mix", 1));
-	
 	newActiveInput(5);
+	newInput( 6, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
 	
-	newInput(6, nodeValue_Toggle("Channel", 0b1111, { data: array_create(4, THEME.inspector_channel) }));
-	
+	////- =Surfaces
+	newInput( 0, nodeValue_Surface( "Surface In" ));
+	newInput( 3, nodeValue_Surface( "Mask"       ));
+	newInput( 4, nodeValue_Slider(  "Mix",     1 ));
 	__init_mask_modifier(3, 7); // inputs 7, 8 
+	
+	////- =Effect
+	newInput( 1, nodeValue_Matrix( "Matrix"       )).setVisible(true, true);
+	newInput( 2, nodeValue_Slider( "Intensity", 1 ));
+	// inputs 9
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 		
 	input_display_list = [ 5, 6, 
-		["Surfaces", true], 0, 3, 4, 7, 8, 
-		["Effect", 	false], 1, 2, 
-	]
+		[ "Surfaces",  true ], 0, 3, 4, 7, 8, 
+		[ "Effect",   false ], 1, 2, 
+	];
+	
+	////- Node
 	
 	attribute_surface_depth();
 	
@@ -37,9 +36,9 @@ function Node_Matrix_Color_Apply(_x, _y, _group = noone) : Node_Processor(_x, _y
 		var _dat  = array_verify(_matx.raw, 9);
 		
 		surface_set_shader(_outSurf, sh_matrix_color_apply);
-		    shader_set_dim("dimension", _surf)
-			shader_set_f("matrix",      _dat);
-			shader_set_f("intensity",   _ints);
+		    shader_set_dim( "dimension", _surf )
+			shader_set_f(   "matrix",    _dat  );
+			shader_set_f(   "intensity", _ints );
 			
 			draw_surface_safe(_surf);
 		surface_reset_shader();
