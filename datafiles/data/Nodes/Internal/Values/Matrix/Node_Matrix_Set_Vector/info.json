@@ -1,0 +1,6 @@
+{
+    "name":          "Matrix Set Vector",
+    "spr":           "s_node_matrix_set_vector",
+    "baseNode":      "Node_Matrix_Set_Vector",
+    "pxc_version":    120031,
+}

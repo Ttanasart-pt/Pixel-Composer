@@ -483,6 +483,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			lbHov = lbHov && !hvWid;
 			
 			mbRight = mbRight && wid.right_click_block;
+		
 		}
 	#endregion
 	

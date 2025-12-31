@@ -33,21 +33,17 @@ function Node_Matrix_Set(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var _mh = _mat.size[1];
 		
 		if(!is_array(_pos[0])) {
-			var p = _pos;
-			var v = _val;
+			_pos = [_pos];
+			_val = [_val];
+		}
+			
+		var _amo = min(array_length(_pos), array_length(_val))
+		for( var i = 0; i < _amo; i++ ) {
+			var p = _pos[i];
+			var v = _val[i];
 			
 			if(p[0] >= 0 && p[0] < _mw && p[1] >= 0 && p[1] < _mh)
 			    _m.raw[p[1] * _mw + p[0]] = v;
-			    
-		} else {
-			var _amo = min(array_length(_pos), array_length(_val))
-			for( var i = 0; i < _amo; i++ ) {
-				var p = _pos[i];
-				var v = _val[i];
-				
-				if(p[0] >= 0 && p[0] < _mw && p[1] >= 0 && p[1] < _mh)
-				    _m.raw[p[1] * _mw + p[0]] = v;
-			}
 		}
 		
 		outputs[0].setValue(_m);

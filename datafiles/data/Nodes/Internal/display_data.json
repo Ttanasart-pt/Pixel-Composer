@@ -977,6 +977,7 @@
             "Node_Matrix",
             {"label": "/Operators"},
             "Node_Matrix_Set",
+            "Node_Matrix_Set_Vector",
             "Node_Matrix_Math",
             "Node_Matrix_Multiply_Vector",
             "Node_Matrix_Det",

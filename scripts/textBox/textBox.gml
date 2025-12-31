@@ -842,7 +842,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 			}
 		}
 		
-		////- Interaction
+		////- Main Draw
 		
 		if(selecting) { 
 			if(hide < 2) {
@@ -970,7 +970,6 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				menuCall("textbox_context", context_menu_selecting);
 			
 		} else {
-			
 			if(hover && hoverRect) {
 				hovering = true;
 				if(hide < 3) draw_sprite_stretched_ext(THEME.textbox, 1, x, y, w, h, boxColor, 0.5 + (0.5 * interactable));	
@@ -1003,7 +1002,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				
 				if(input == TEXTBOX_INPUT.number) {
 					var dig       = floor(_w / ui(8)) - 3;
-					_display_text = string_real(_display_text, dig, precision);
+					_display_text = is_numeric(_display_text)? string_real(_display_text, dig, precision) : string(_display_text);
 				}
 				
 				if(_update || _display_text != _disp_text) {
@@ -1025,6 +1024,7 @@ function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 				BLEND_ALPHA
 				draw_surface_ext(text_surface, tb_surf_x, tb_surf_y, 1, 1, 0, postBlend, postAlpha);
 				BLEND_NORMAL
+				
 			}
 		}
 		

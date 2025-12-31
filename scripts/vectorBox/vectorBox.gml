@@ -93,7 +93,6 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 	
 	static drawParam = function(params) {
 		setParam(params);
-		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.display_data, params.m);
 	}
 	
@@ -106,6 +105,10 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		if(array_invalid(_data) || is_array(_data[0])) {
 			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor,  1);
 			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor, .5);	
+			
+			draw_set_text(font, fa_center, fa_center, COLORS._main_text, .5);
+			draw_text(_x + _w / 2, _y + _h / 2, _data);
+			draw_set_alpha(1);
 			return _h;
 		}
 		
