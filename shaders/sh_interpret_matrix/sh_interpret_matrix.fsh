@@ -144,10 +144,10 @@ uniform float matrix[1024];
 
 void main() {
 	vec2 px = floor(v_vTexcoord * dimension);
-	vec2 matPos = mod(px, size);
-	int  matInd = int(matPos.y * size.x + matPos.x);
+	vec2 mp = mod(px, size);
+	int  mi = int(mp.y * size.x + mp.x);
 	
-	float value = matrix[matInd];
+	float value = matrix[mi];
 	float grey  = (value - range[0]) / (range[1] - range[0]);
 	
 	gl_FragColor = vec4(0.);

@@ -3332,9 +3332,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                     _tip = "Drop on node";
                     if(mouse_release(mb_left)) _node_hover.onDrop(DRAGGING);
                     
-                } else {
-                    if(mouse_release(mb_left)) checkDropItem();
-                }
+                } else if(mouse_release(mb_left)) checkDropItem();
             }
             
             if(FILE_IS_DROPPING && _node_hover && _node_hover.dropPath != noone) {
@@ -4000,6 +3998,14 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
     
     static checkDropItem = function() { //
         var node = noone;
+        
+        if(is(DRAGGING.from, NodeValue)) {
+        	var _j = DRAGGING.from;
+        	if(_j.extract_node != "") { 
+        		_j.extractNode(_j.extract_node, mouse_grid_x, mouse_grid_y); 
+        		return; 
+        	}
+        }
         
         switch(DRAGGING.type) {
             case "Color":

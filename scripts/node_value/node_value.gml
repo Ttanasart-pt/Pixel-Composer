@@ -1038,7 +1038,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							animators[i].suffix = $" {i}";
 						
 						setIcon(THEME.node_junction_matrix);
-						extract_node = "";
+						extract_node = "Node_Matrix";
 						break;
 						
 					case VALUE_DISPLAY.boolean_grid :
@@ -2829,7 +2829,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return _newVal;
 	}
 	
-	static extractNode = function(_type = extract_node) {
+	static extractNode = function(_type = extract_node, _x = node.x, _y = node.y) {
+		if(is_array(_type)) _type = _type[0];
 		if(_type == "") return noone;
 		
 		var ext = nodeBuild(_type, node.x, node.y).skipDefault();
