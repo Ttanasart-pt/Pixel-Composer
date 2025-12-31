@@ -11,35 +11,36 @@ function Node_Interpret_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	newInput(0, nodeValue_Float( "Number", [] )).setVisible(true, true).setArrayDepth(1);
 	
 	////- =Interpret
-	
-	newInput(1, nodeValue_Enum_Button( "Mode",      0, [ "Greyscale", "Gradient" ]));
-	newInput(2, nodeValue_Range(       "Range",    [0,1] ));
-	newInput(3, nodeValue_Gradient(    "Gradient", gra_white)).setMappable(4);
-	
+	newInput(1, nodeValue_EButton(  "Mode",      0, [ "Greyscale", "Gradient" ] ));
+	newInput(2, nodeValue_Range(    "Range",    [0,1]     ));
+	newInput(3, nodeValue_Gradient( "Gradient", gra_white )).setMappable(4);
 	// input 6
 	
 	newOutput(0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone));
 	
 	input_display_list = [ 0,
-		["Interpret",	false], 1, 2, 3, 4, 
+		[ "Interpret", false ], 1, 2, 3, 4, 
 	];
+	
+	////- Node
 	
 	attribute_surface_depth();
 	
 	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _params) { 
 		InputDrawOverlay(inputs[5].drawOverlay(w_hoverable, active, _x, _y, _s, _mx, _my, _snx, _sny, getDimension()));
-		
 		return w_hovering;
 	}
 	
 	static processData = function(_outSurf, _data, _array_index) {
-		static BATCH_SIZE = 128;
-		
-		var _val = _data[0];
-		var _mod = _data[1];
-		var _ran = _data[2];
-		
-		inputs[3].setVisible(_mod == 1);
+		#region data
+			static BATCH_SIZE = 128;
+			
+			var _val = _data[0];
+			var _mod = _data[1];
+			var _ran = _data[2];
+			
+			inputs[3].setVisible(_mod == 1);
+		#endregion
 		
 		if(is_array(_val) && array_empty(_val)) return _outSurf;
 		if(!is_array(_val)) _val = [ _val ];
@@ -50,8 +51,8 @@ function Node_Interpret_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		if(_amo == 0) return _outSurf;
 		
 		surface_set_shader(_outSurf, sh_interpret_number);
-			shader_set_i("mode", _mod);
-			shader_set_f("range", _ran);
+			shader_set_i( "mode",  _mod );
+			shader_set_f( "range", _ran );
 			
 			shader_set_gradient(_data[3], _data[4], _data[5], inputs[3]);
 			

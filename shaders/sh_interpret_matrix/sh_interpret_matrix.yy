@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"sh_interpret_matrix",
+  "name":"sh_interpret_matrix",
+  "parent":{
+    "name":"generator",
+    "path":"folders/nodes/data/generator.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}
