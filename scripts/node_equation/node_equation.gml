@@ -41,7 +41,7 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	attributes.size = 0;
 	
-	newInput(0, nodeValue_Text("Equation"));
+	newInput(0, nodeValue_Text( "Equation" ));
 	
 	newOutput(0, nodeValue_Output("Result", VALUE_TYPE.float, 0));
 	
@@ -220,6 +220,8 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var ss	 = string_scale(str, bbox.w, bbox.h);
 		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
 	}
+	
+	////- Serialize
 	
 	static postApplyDeserialize = function() { refreshDynamicInput(); }
 }

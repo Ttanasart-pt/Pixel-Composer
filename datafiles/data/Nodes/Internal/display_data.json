@@ -510,6 +510,7 @@
             "Node_Downscale",
             "Node_Scale_Algo",
             "Node_Offset",
+            "Node_Align_Content",
             { "label": "/Mirror" },
             "Node_Flip",
             "Node_Mirror",
@@ -995,6 +996,7 @@
             {"label": "/Convertors"},
             "Node_Matrix_To_Array",
             {"label": "/Surfaces"},
+            "Node_Interpret_Matrix",
             "Node_Matrix_Color_Apply",
             "Node_Convolution",
             

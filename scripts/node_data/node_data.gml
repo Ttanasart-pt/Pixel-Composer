@@ -1299,7 +1299,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 				array_push(prev, _n);
 				prMp[$ _n.node_id] = 1;
 			}
-			
 		}
 		
 		for( var i = 0, n = array_length(inputs); i < n; i++ ) {
@@ -1311,7 +1310,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 					array_push(prev, _n);
 					prMp[$ _n.node_id] = 1;
 				}
-				
 			}
 				
 			if(_in.value_from_loop != noone) {
