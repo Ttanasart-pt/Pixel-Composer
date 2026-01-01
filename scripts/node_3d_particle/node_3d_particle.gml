@@ -17,7 +17,7 @@ function Node_3D_Particle(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 	newInput( 1, nodeValueSeed());
 	
 	////- =Object
-	newInput( 0, nodeValue_D3Mesh("Mesh", noone)).setVisible(true, true);
+	newInput( 0, nodeValue_D3Mesh("Mesh" ));
 	
 	////- =Spawn
 	newInput( 2, nodeValue_Bool(        "Spawn",             true       ));

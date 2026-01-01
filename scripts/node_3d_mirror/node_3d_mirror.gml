@@ -4,7 +4,7 @@ function Node_3D_Mirror(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	gizmo_object = [ new __3dGizmoPlane() ];
 	
 	var i = in_d3d;
-	newInput(i+0, nodeValue_D3Mesh(      "Mesh", noone )).setVisible(true, true);
+	newInput(i+0, nodeValue_D3Mesh(      "Mesh" ));
 	newInput(i+1, nodeValue_Enum_Button( "Axis", 0, [ "X", "Y", "Z" ] ));
 	// i+2
 	

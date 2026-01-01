@@ -1,7 +1,7 @@
 function Node_3D_Mesh_Stack_Slice(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Slice Stack";
 	
-	newInput(0, nodeValue_D3Mesh("Mesh", noone))
+	newInput(0, nodeValue_D3Mesh("Mesh"))
 		.setVisible(true, true);
 	
 	newInput(1, nodeValue_Vec2("Output Dimension", [ 16, 16 ]));

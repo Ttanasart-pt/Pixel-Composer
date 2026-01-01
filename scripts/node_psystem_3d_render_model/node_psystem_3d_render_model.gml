@@ -11,7 +11,7 @@ function Node_pSystem_3D_Render_Model(_x, _y, _group = noone) : Node_3D(_x, _y, 
 	newInput( 1, nodeValue_Buffer(   "Mask"      ));
 	
 	////- =Mesh
-	newInput( 3, nodeValue_D3Mesh("Mesh", noone)).setVisible(true, true);
+	newInput( 3, nodeValue_D3Mesh("Mesh" ));
 	
 	////- =Render
 	newInput( 4, nodeValue_Enum_Scroll( "Blend Mode",     0, [ "Normal", "Alpha", "Additive", "Maximum" ]));

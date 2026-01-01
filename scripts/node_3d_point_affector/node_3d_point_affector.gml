@@ -18,9 +18,12 @@ function Node_3D_Point_Affector(_x, _y, _group = noone) : Node_3D_Object(_x, _y,
 	newOutput(0, nodeValue_Output("Output", VALUE_TYPE.float, [ 0, 0, 0 ])).setDisplay(VALUE_DISPLAY.vector);
 	
 	input_display_list = [ 
-		["Affectors", false], in_d3d + 5, 0, 1, 2, in_d3d + 3, in_d3d + 4, 
-		["Points",    false], in_d3d + 0, in_d3d + 1, in_d3d + 2, 
+		[ "Affectors", false ], in_d3d + 5, 0, 1, 2, 
+		[ "Falloff",   false ], in_d3d + 3, in_d3d + 4, 
+		[ "Points",    false ], in_d3d + 0, in_d3d + 1, in_d3d + 2, 
 	];
+	
+	////- Node
 	
 	curve_falloff = noone;
 	plane_normal  = [ 0, 0, 1 ];

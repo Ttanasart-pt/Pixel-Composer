@@ -10,7 +10,7 @@ function Node_3D_Scene(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constru
 	function createNewInput(index = array_length(inputs)) {
 		var inAmo = array_length(inputs);
 		
-		newInput(index, nodeValue_D3Mesh("Object", noone))
+		newInput(index, nodeValue_D3Mesh("Object" ))
 			.setVisible(true, true);
 		
 		return inputs[index];

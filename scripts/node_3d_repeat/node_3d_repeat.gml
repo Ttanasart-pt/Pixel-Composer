@@ -4,7 +4,7 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	newInput(21, nodeValueSeed());
 	
 	////- =Objects
-	newInput( 0, nodeValue_D3Mesh(      "Objects",           noone      )).setArrayDepth(1).setVisible(true, true);
+	newInput( 0, nodeValue_D3Mesh(      "Objects" )).setArrayDepth(1);
 	newInput( 3, nodeValue_Vec3(        "Starting Position", [0,0,0]    ));
 	newInput( 4, nodeValue_Quaternion(  "Starting Rotation", [0,0,0,1 ] ));
 	newInput( 5, nodeValue_Vec3(        "Starting Scale",    [1,1,1]    ));
@@ -24,7 +24,7 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	newInput(10, nodeValue_Vec3( "Rotations", [] )).setArrayDepth(1);
 	newInput(11, nodeValue_Vec3( "Scales",    [] )).setArrayDepth(1);
 	
-	////- =Shift
+	////- =Per Copy
 	newInput( 6, nodeValue_Vec3(       "Shift Position",   [1,0,0]   ));
 	newInput(15, nodeValue_Vec3(       "Shift Position Y", [0,1,0]   ));
 	newInput(16, nodeValue_Vec3(       "Shift Position Z", [0,0,1]   ));
@@ -37,7 +37,6 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	newInput(22, nodeValue_Vec3_Range( "Position Scatter", array_create(6,0) ));
 	newInput(23, nodeValue_Vec3_Range( "Rotation Scatter", array_create(6,0) ));
 	newInput(24, nodeValue_Vec3_Range( "Scale Scatter",    array_create(6,0) ));
-	
 	// input 26
 	
 	newOutput(0, nodeValue_Output("Scene", VALUE_TYPE.d3Scene, noone));
@@ -48,7 +47,7 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		[ "Objects",        false ],  0,  3,  4,  5, b_centeralize, 
 		[ "Repeat",         false ],  1, 13,  2, 14, 17, 19, 18, 20, 
 		[ "Transforms Data", true ],  9, 10, 11, 
-		[ "Shift",          false ],  6, 15, 16,  7,  8, 25, 
+		[ "Per Copy",       false ],  6, 15, 16,  7,  8, 25, 
 		[ "Scatter",        false ], 22, 23, 24, 
 	]
 	

@@ -4,7 +4,7 @@ function Node_3D_Instancer(_x, _y, _group = noone) : Node_3D(_x, _y, _group) con
 	newInput( 9, nodeValueSeed());
 	
 	////- =Object
-	newInput( 0, nodeValue_D3Mesh("Mesh", noone)).setVisible(true, true);
+	newInput( 0, nodeValue_D3Mesh("Mesh"));
 	
 	////- =Objects
 	newInput(16, nodeValue_Vec3(        "Starting Position", [0,0,0]    ));

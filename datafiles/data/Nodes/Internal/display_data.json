@@ -718,6 +718,7 @@
             "Node_3D_Mirror",
             "Node_3D_Round_Vertex",
             "Node_3D_Displace",
+            "Node_3D_Set_Origin",
             "Node_3D_Subdivide",
             { "label": "/Instances" },
             "Node_3D_Repeat",

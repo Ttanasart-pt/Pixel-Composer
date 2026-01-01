@@ -1,7 +1,7 @@
 function Node_3D_Transform(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group) constructor {
 	name   = "Transform 3D";
 	
-	newInput(in_d3d + 0, nodeValue_D3Mesh("Mesh", noone)).setVisible(true, true);
+	newInput(in_d3d + 0, nodeValue_D3Mesh("Mesh" ));
 	
 	newOutput(0, nodeValue_Output("Mesh", VALUE_TYPE.d3Mesh, noone));
 	

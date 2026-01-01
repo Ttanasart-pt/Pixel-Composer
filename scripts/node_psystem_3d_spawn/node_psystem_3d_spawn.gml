@@ -37,7 +37,7 @@ function Node_pSystem_3D_Spawn(_x, _y, _group = noone) : Node_3D(_x, _y, _group)
 	newInput(10, nodeValue_Vec3(        "Span",     [1,1,1]     ));
 	newInput(11, nodeValue_Quaternion(  "Rotation", [0,0,0,1]   ));
 	newInput(12, nodeValue_PathNode(    "Path"                  ));
-	newInput(13, nodeValue_D3Mesh(      "Mesh"                  ));
+	newInput(13, nodeValue_D3Mesh(      "Mesh" ));
 	newInput(14, nodeValue_Vector(      "Data"                  )).setArrayDepth(1);
 	
 	////- =Transform
