@@ -1278,7 +1278,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		rendered = result;
 	}
 	
-	static getPreviousNodes = function() {
+	static onGetPreviousNodes = undefined;
+	static getPreviousNodes   = function() {
 		var prev = [];
 		var prMp = {};
 		var _n;
@@ -1322,11 +1323,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			}
 		}
 		
-		onGetPreviousNodes(prev);
+		if(onGetPreviousNodes) onGetPreviousNodes(prev);
 		return prev;
 	}
-	
-	static onGetPreviousNodes = function(arr) {}
 	
 	__nextNodes       = noone;
 	__nextNodesToLoop = noone;

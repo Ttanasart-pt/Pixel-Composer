@@ -140,11 +140,23 @@ uniform vec2  dimension;
 uniform int   mode;
 uniform vec2  size;
 uniform vec2  range;
+
 uniform float matrix[1024];
+uniform vec2  offset;
+
+#ifdef _YY_HLSL11_ 
+	#define PALETTE_LIMIT 1024 
+#else 
+	#define PALETTE_LIMIT 256 
+#endif
+uniform vec4  palette[PALETTE_LIMIT];
+uniform float paletteAmount;
+
+int imod(int a, int b) { return a - (a/b) * b; }
 
 void main() {
 	vec2 px = floor(v_vTexcoord * dimension);
-	vec2 mp = mod(px, size);
+	vec2 mp = mod(mod(px - offset, size) + size, size);
 	int  mi = int(mp.y * size.x + mp.x);
 	
 	float value = matrix[mi];
@@ -153,6 +165,7 @@ void main() {
 	gl_FragColor = vec4(0.);
 	
 	     if(mode == 0) gl_FragColor = vec4(vec3(grey), 1.);
-	else if(mode == 1) gl_FragColor = gradientEval(grey);
+	else if(mode == 1) gl_FragColor = palette[imod(int(value), int(paletteAmount))];
+	else if(mode == 2) gl_FragColor = gradientEval(grey);
 	
 }

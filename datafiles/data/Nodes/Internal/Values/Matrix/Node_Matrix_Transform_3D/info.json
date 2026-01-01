@@ -1,1 +1,7 @@
-{"name":"3D Transform Matrix","spr":"s_node_matrix_transform_3d","baseNode":"Node_Matrix_Transform_3D","pxc_version":120031}
+{
+    "name":          "3D Transform Matrix",
+    "tooltip":       "Create a 3d transformation matrix.",
+    "spr":           "s_node_matrix_transform_3d",
+    "baseNode":      "Node_Matrix_Transform_3D",
+    "pxc_version":    120031,
+}

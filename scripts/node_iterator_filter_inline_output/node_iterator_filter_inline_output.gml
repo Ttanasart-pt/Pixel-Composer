@@ -19,13 +19,13 @@ function Node_Iterator_Filter_Inline_Output(_x, _y, _group = noone) : Node(_x, _
 		
 	newOutput(0, nodeValue_Output("Array out", VALUE_TYPE.any, [] ));
 	
-	static getNextNodes = function(checkLoop = false) { #region
+	static getNextNodes = function(checkLoop = false) {
 		if(loop.bypassNextNode())
 			return loop.getNextNodes();
 		return getNextNodesRaw();
-	} #endregion
+	}
 	
-	static update = function(frame = CURRENT_FRAME) { #region
+	static update = function(frame = CURRENT_FRAME) {
 		if(!is_instanceof(loop, Node_Iterate_Filter_Inline)) return;
 		
 		var _typ = inputs[0].value_from == noone? VALUE_TYPE.any : inputs[0].value_from.type;
@@ -39,5 +39,5 @@ function Node_Iterator_Filter_Inline_Output(_x, _y, _group = noone) : Node(_x, _
 		
 		if(res) array_push(arr, val);
 		outputs[0].setValue(arr);
-	} #endregion
+	}
 }

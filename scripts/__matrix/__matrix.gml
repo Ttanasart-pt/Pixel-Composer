@@ -30,52 +30,9 @@ function Matrix(_size = 1) constructor {
     	return self;
     }
     
-	static lerpTo = function(_mat, _t) {
-	    if(!is(_mat, Matrix)) return self;
-	    if(_mat.size[0] != size[0] || _mat.size[1] != size[1]) return self;
-	    
-	    var _m = new Matrix();
-	    _m.size  = [ size[0], size[1] ];
-	    _m.isize = isize;
-	    _m.raw   = array_create(isize);
-	    
-	    for( var i = 0; i < isize; i++ ) 
-	        _m.raw[i] = lerp(raw[i], _mat.raw[i], _t);
-	        
-	    return _m;
-	}
-	
-    static serialize = function() {
-        return { size, isize, raw };
-    }
+    static set = function(_x, _y, v) { raw[_y * size[0] + _x] = v; return self; }
+    static get = function(_x, _y)    { return array_safe_get_fast(raw, _y * size[0] + _x); }
     
-    static deserialize = function(dat) {
-        if(is_array(dat)) {
-            var _len = array_length(dat);
-            var _siz = floor(sqrt(_len));
-            size  = [ _siz, _siz ];
-            isize = _siz * _siz;
-            raw   = dat;
-            return self;
-        }
-        
-        size  = dat[$ "size"]  ?? size;
-        isize = dat[$ "isize"] ?? isize;
-        raw   = dat[$ "raw"]   ?? raw;
-        
-        return self;
-    }
-	
-	static clone = function() {
-		var _m = new Matrix(size);
-		_m.setArray(raw);
-		return _m;
-	}
-	
-	static to_string = function() { return $"{raw}"; }
-	
-	static to_real = function() { return raw; }
-	
 	////- Unary
 	
 	static isSquare = function() { return size[0] == size[1]; }
@@ -165,5 +122,51 @@ function Matrix(_size = 1) constructor {
         var _mat = new Matrix([rowsA, colsB]).setArray(result);
 		return _mat;
 	}
+	
+	////- Actions
+	
+	static lerpTo = function(_mat, _t) {
+	    if(!is(_mat, Matrix)) return self;
+	    if(_mat.size[0] != size[0] || _mat.size[1] != size[1]) return self;
+	    
+	    var _m = new Matrix();
+	    _m.size  = [ size[0], size[1] ];
+	    _m.isize = isize;
+	    _m.raw   = array_create(isize);
+	    
+	    for( var i = 0; i < isize; i++ ) 
+	        _m.raw[i] = lerp(raw[i], _mat.raw[i], _t);
+	        
+	    return _m;
+	}
+	
+	static clone = function() { return new Matrix(size).setArray(raw); }
+	
+	static to_string = function() { return $"{raw}"; }
+	
+	static to_real = function() { return raw; }
+	
+	////- Serialize
+	
+    static serialize = function() {
+        return { size, isize, raw };
+    }
+    
+    static deserialize = function(dat) {
+        if(is_array(dat)) {
+            var _len = array_length(dat);
+            var _siz = floor(sqrt(_len));
+            size  = [ _siz, _siz ];
+            isize = _siz * _siz;
+            raw   = dat;
+            return self;
+        }
+        
+        size  = dat[$ "size"]  ?? size;
+        isize = dat[$ "isize"] ?? isize;
+        raw   = dat[$ "raw"]   ?? raw;
+        
+        return self;
+    }
 	
 }

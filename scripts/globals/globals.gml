@@ -74,6 +74,14 @@ gml_pragma("UnityBuild", "true");
 #endregion
 
 #region macro
+	#macro DELTA_TIME delta_time / 1_000_000
+	
+	#macro INLINE gml_pragma("forceinline");
+	#macro is __is_instanceof
+	function  __is_instanceof(a,b) { return is_struct(a) && is_instanceof(a,b) };
+	
+	#macro super static_get(static_get(self))
+	
 	#macro TEMPDIR filepath_resolve(PREFERENCES.temp_path)
 	
 	#macro NOT_LOAD !LOADING && !APPENDING
@@ -101,12 +109,6 @@ gml_pragma("UnityBuild", "true");
 	#macro sFOCUS (FOCUS == self.id)
 	#macro sHOVER (!CURSOR_IS_LOCK && (HOVER == self.id))
 	#macro DIALOG_SHOW_FOCUS (FOCUS == self.id || (instance_exists(o_dialog_menubox) && o_dialog_menubox.getContextPanel() == self))
-	
-	#macro DELTA_TIME delta_time / 1_000_000
-	
-	#macro INLINE gml_pragma("forceinline");
-	#macro is __is_instanceof
-	function  __is_instanceof(a,b) { return is_struct(a) && is_instanceof(a,b) };
 	
 	#macro CONF_TESTING false
 	globalvar TESTING; TESTING    = CONF_TESTING;

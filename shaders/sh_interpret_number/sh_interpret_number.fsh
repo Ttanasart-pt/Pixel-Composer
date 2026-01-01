@@ -137,9 +137,19 @@ varying vec4 v_vColour;
 
 #define BATCH_SIZE 128
 
-uniform int mode;
-uniform vec2 range;
+uniform int   mode;
+uniform vec2  range;
 uniform float number[BATCH_SIZE];
+
+#ifdef _YY_HLSL11_ 
+	#define PALETTE_LIMIT 1024 
+#else 
+	#define PALETTE_LIMIT 256 
+#endif
+uniform vec4  palette[PALETTE_LIMIT];
+uniform float paletteAmount;
+
+int imod(int a, int b) { return a - (a/b) * b; }
 
 void main() {
 	vec2 px = v_vTexcoord;
@@ -149,9 +159,8 @@ void main() {
 	
 	gl_FragColor = vec4(0.);
 	
-	if(mode == 0)
-	    gl_FragColor = vec4(vec3(grey), 1.);
-	else if(mode == 1)
-		gl_FragColor = gradientEval(grey);
+	     if(mode == 0) gl_FragColor = vec4(vec3(grey), 1.);
+	else if(mode == 1) gl_FragColor = palette[imod(int(value), int(paletteAmount))];
+	else if(mode == 2) gl_FragColor = gradientEval(grey);
 	
 }

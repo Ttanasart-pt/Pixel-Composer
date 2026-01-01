@@ -11,9 +11,9 @@ void main() {
 	vec4 cb = texture2D(gm_BaseTexture, v_vTexcoord);
 	vec4 cc = cb;
 	
-	cc.r = cc.r * matrix[0] + cc.g * matrix[1] + cc.b * matrix[2];
-	cc.g = cc.r * matrix[3] + cc.g * matrix[4] + cc.b * matrix[5];
-	cc.b = cc.r * matrix[6] + cc.g * matrix[7] + cc.b * matrix[8];
+	cc.r = cb.r * matrix[0] + cb.g * matrix[1] + cb.b * matrix[2];
+	cc.g = cb.r * matrix[3] + cb.g * matrix[4] + cb.b * matrix[5];
+	cc.b = cb.r * matrix[6] + cb.g * matrix[7] + cb.b * matrix[8];
 	
 	gl_FragColor = vec4(mix(cb.rgb, cc.rgb, intensity), cb.a);
 }

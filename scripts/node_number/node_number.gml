@@ -169,6 +169,8 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		return w_hovering;
 	}
 	
+	////- Update
+	
 	static onValueRefresh = function(index = noone) {
 		#region data
 			draw_int  = inputs[ 1].getValue();
@@ -282,6 +284,8 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		outputs[0].setValue(_res);
 	}
+	
+	////- Draw
 	
 	__m = [0,0];
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
@@ -535,5 +539,5 @@ function Node_Number(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				
 		}
 	}
-
+	
 }

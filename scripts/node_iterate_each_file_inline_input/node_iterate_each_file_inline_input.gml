@@ -16,9 +16,7 @@ function Node_Iterate_Each_File_Inline_Input(_x, _y, _group = noone) : Node(_x, 
 	
 	temp_surface = [ noone ];
 	
-	static onGetPreviousNodes = function(arr) {
-		array_push(arr, loop);
-	}
+	static onGetPreviousNodes = function(arr) /*=>*/ { array_push(arr, loop); }
 	
 	static update = function() {
 		if(!is(loop, Node_Iterate_Each_File_Inline)) return;

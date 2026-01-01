@@ -991,6 +991,7 @@
             "Node_Matrix_Multiply_Vector",
             "Node_Matrix_Invert",
             "Node_Matrix_Transpose",
+            "Node_Matrix_Crop",
             {"label": "/Convertors"},
             "Node_Matrix_To_Array",
             {"label": "/Surfaces"},

@@ -34,11 +34,12 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 	static setTime   = function(t) /*=>*/ { time  = t; return self; }
 	
 	static clone = function(target = noone) {
-		var key = new valueKey(time, value, target);
-		key.ease_in			= [ ease_in[0],  ease_in[1] ];
-		key.ease_out		= [ ease_out[0], ease_out[1] ];
-		key.ease_in_type	= ease_in_type;
-		key.ease_out_type	= ease_out_type;
+		var val = has(value, "clone")? value.clone() : value;
+		var key = new valueKey(time, val, target);
+		key.ease_in       = [ ease_in[0],  ease_in[1]  ];
+		key.ease_out      = [ ease_out[0], ease_out[1] ];
+		key.ease_in_type  = ease_in_type;
+		key.ease_out_type = ease_out_type;
 		
 		return key;
 	}

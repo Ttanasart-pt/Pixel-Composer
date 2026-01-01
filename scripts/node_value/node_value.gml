@@ -2829,30 +2829,28 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return _newVal;
 	}
 	
-	static extractNode = function(_type = extract_node, _x = node.x, _y = node.y) {
+	static extractNode = function(_type = extract_node, _x = undefined, _y = undefined) {
 		if(is_array(_type)) _type = _type[0];
 		if(_type == "") return noone;
 		
-		var ext = nodeBuild(_type, node.x, node.y).skipDefault();
-		ext.x -= ext.w + 32;
+		var ext = nodeBuild(_type, _x ?? node.x, _y ?? node.y).skipDefault();
+		if(_x == undefined) ext.x -= ext.w + 32;
 		
 		for( var i = 0; i < array_length(ext.outputs); i++ )
 			if(setFrom(ext.outputs[i])) break;
 		
 		var len = 2;
-		
 		switch(_type) {
-			case "Node_Vector4": len++;
-			case "Node_Vector3": len++;
-			case "Node_Vector2": 
+			case "Node_Vector4" : len++;
+			case "Node_Vector3" : len++;
+			case "Node_Vector2" : 
 				for( var j = 0; j < len; j++ ) {
 					var _in = ext.inputs[j];
-					
 					_in.setAnim(is_anim);
 					_in.animator.values = [];
 				}
 				
-				for( var i = 0; i < array_length(animator.values); i++ ) {
+				for( var i = 0, n = array_length(animator.values); i < n; i++ ) {
 					var _arrVal = animator.values[i];
 					
 					for( var j = 0; j < len; j++ ) {
@@ -2862,9 +2860,37 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 						array_push(_in.animator.values, _kf);
 					}
-					
 				}
+				break;
 				
+			case "Node_Matrix" : 
+				var _in = ext.inputs[1];
+				_in.setAnim(is_anim);
+				_in.animator.values = [];
+				
+				for( var i = 0, n = array_length(animator.values); i < n; i++ ) {
+					var _vl = animator.values[i];
+					var _kf = _vl.clone(_in.animator);
+					_kf.value = _kf.value.clone();
+					
+					array_push(_in.animator.values, _kf);
+				}
+				break;
+			
+			default :
+				var _in = undefined;
+				for( var i = 0, n = array_length(ext.inputs); i < n; i++ )
+					if(ext.inputs[i].type == type) { _in = ext.inputs[i]; break; }
+					
+				if(_in == undefined) break;
+				_in.setAnim(is_anim);
+				_in.animator.values = [];
+				
+				for( var i = 0, n = array_length(animator.values); i < n; i++ ) {
+					var _vl = animator.values[i];
+					var _kf = _vl.clone(_in.animator);
+					array_push(_in.animator.values, _kf);
+				}
 				break;
 		}
 		
