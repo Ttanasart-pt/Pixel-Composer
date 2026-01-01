@@ -2188,10 +2188,9 @@ function Panel_Preview() : PanelContent() constructor {
 	        	draw_surface_ext_safe(prev, ssx, ssy, ss, ss, 0, c_white, .5 + .5 * (sel || hov));
 	        	
 	        	if(sel) draw_sprite_stretched_ext(THEME.box_r2, 1, ssx, ssy, pw, ph, COLORS._main_accent);
-            } else {
-            	if(sel) draw_sprite_stretched_ext(THEME.box_r2, 1, xx, yy, siz, siz, COLORS._main_accent);
-            }
-        	
+	        	
+            } else if(sel) draw_sprite_stretched_ext(THEME.box_r2, 1, xx, yy, siz, siz, COLORS._main_accent);
+            
             if((hov && mouse_press(mb_left, pFOCUS)) || (preview_selecting && mx > xx && mx <= xx + siz)) {
                 _node.preview_index = i;
                 _node.onValueUpdate(0);

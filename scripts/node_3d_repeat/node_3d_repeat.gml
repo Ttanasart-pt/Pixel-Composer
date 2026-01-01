@@ -30,13 +30,13 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	newInput(16, nodeValue_Vec3(       "Shift Position Z", [0,0,1]   ));
 	newInput( 7, nodeValue_Quaternion( "Shift Rotation",   [0,0,0,1] ));
 	newInput( 8, nodeValue_Vec3(       "Shift Scale",      [0,0,0]   ));
+	newInput(25, nodeValue_Bool(       "Scale Uniform",    true              ));
 	/* UNUSED */ newInput(12, nodeValue_Bool( "Use Instance", true ))
 	
 	////- =Scatter
 	newInput(22, nodeValue_Vec3_Range( "Position Scatter", array_create(6,0) ));
 	newInput(23, nodeValue_Vec3_Range( "Rotation Scatter", array_create(6,0) ));
 	newInput(24, nodeValue_Vec3_Range( "Scale Scatter",    array_create(6,0) ));
-	newInput(25, nodeValue_Bool(       "Scale Uniform",    true              ));
 	
 	// input 26
 	
@@ -45,11 +45,11 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	b_centeralize = button(function() /*=>*/ {return centralize()}).setText("Centralize");
 	
 	input_display_list = [ 21, 
-		["Objects",    false], 0, 3, 4, 5, b_centeralize, 
-		["Repeat",     false], 1, 13, 2, 14, 17, 19, 18, 20, 
-		["Transforms Data", true], 9, 10, 11, 
-		["Shift",      false], 6, 15, 16, 7, 8, 
-		["Scatter",    false], 22, 23, 24, 25, 
+		[ "Objects",        false ],  0,  3,  4,  5, b_centeralize, 
+		[ "Repeat",         false ],  1, 13,  2, 14, 17, 19, 18, 20, 
+		[ "Transforms Data", true ],  9, 10, 11, 
+		[ "Shift",          false ],  6, 15, 16,  7,  8, 25, 
+		[ "Scatter",        false ], 22, 23, 24, 
 	]
 	
 	////- Nodes
@@ -147,9 +147,9 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			var _SCposy0 = _posh[2], _SCposy1 = _posh[3];
 			var _SCposz0 = _posh[4], _SCposz1 = _posh[5];
 			
-			var _SCrotx0 = degtorad(_roth[0]), _SCrotx1 = degtorad(_roth[1]);
-			var _SCroty0 = degtorad(_roth[2]), _SCroty1 = degtorad(_roth[3]);
-			var _SCrotz0 = degtorad(_roth[4]), _SCrotz1 = degtorad(_roth[5]);
+			var _SCrotx0 = _roth[0], _SCrotx1 = _roth[1];
+			var _SCroty0 = _roth[2], _SCroty1 = _roth[3];
+			var _SCrotz0 = _roth[4], _SCrotz1 = _roth[5];
 			
 			var _SCscax0 = _scah[0], _SCscax1 = _scah[1];
 			var _SCscay0 = _scah[2], _SCscay1 = _scah[3];
