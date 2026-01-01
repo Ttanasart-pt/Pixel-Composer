@@ -462,7 +462,7 @@ function Panel_Inspector() : PanelContent() constructor {
         focusable  = _focus;
         
         if(inspecting != noone) {
-        	inspecting.onInspect();
+        	if(inspecting.onInspect) inspecting.onInspect();
         	contentPane.scroll_y_to = inspecting.inspector_scroll;
         	
         } else 
@@ -1766,7 +1766,10 @@ function Panel_Inspector() : PanelContent() constructor {
             if(is(inspecting, Node_Frame)) inspectGroup = 0;
             
             title = inspecting.getDisplayName();
-            inspecting.inspectorStep();
+            
+            if(is(inspecting, __Node_Cache))
+            	inspecting.insp1button.icon_blend = PANEL_GRAPH.cache_group_edit == inspecting? COLORS._main_value_positive : COLORS._main_icon;
+            
             drawHeader_Node();
             
         } else {

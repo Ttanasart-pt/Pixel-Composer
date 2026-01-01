@@ -2129,6 +2129,7 @@ function Panel_Preview() : PanelContent() constructor {
     
     function drawSurfaceArray() {
         if(mouse_release(mb_left)) preview_selecting = false;
+        var _preview_x_max = preview_x_max;
         preview_x_max = 0;
         
         var _node = getNodePreview();
@@ -2147,7 +2148,7 @@ function Panel_Preview() : PanelContent() constructor {
             canvas_hover = false;
             
             if(MOUSE_WHEEL != 0 && !key_mod_press_any()) 
-            	preview_x_to = clamp(preview_x_to + array_preview_size * MOUSE_WHEEL, - preview_x_max, 0);
+            	preview_x_to = clamp(preview_x_to + array_preview_size * MOUSE_WHEEL, -_preview_x_max, 0);
         }
         
         var pseql = array_length(pseq);

@@ -440,6 +440,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	insp1button = undefined;
 	insp2button = undefined;
 	
+	static onInspect = undefined;
+	
 	static triggerInsp = function(i) {
 		var b = undefined;
 		
@@ -509,9 +511,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 			inputMappable[i].mappableStep();
 	}
 	
-	static step          = undefined
-	static focusStep     = function() /*=>*/ {}
-	static inspectorStep = function() /*=>*/ {}
+	static step = undefined
 	
 	////- DYNAMIC IO
 	
@@ -1561,8 +1561,6 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 	
 	static setVisible = function(vis) { visible = vis; return self; }
 	
-	static onInspect = function() {}
-	
 	static pointIn = function(_x, _y, _mx, _my, _s) {
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
@@ -1609,8 +1607,9 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		av: undefined,
 		force: false, 
 	};
-		
-	static preDraw = function(_x, _y, _mx, _my, _s) {
+	
+	static onPreDraw = undefined; // onPreDraw = function(_x, _y, _s, _iny, _outy)
+	static preDraw   = function(_x, _y, _mx, _my, _s) {
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
@@ -1651,7 +1650,7 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		
 		if(!_upd && !_dummy) { // cache
 			if(SHOW_PARAM) h = h_param;
-			onPreDraw(_x, _y, _s, _iy, _oy);
+			if(onPreDraw) onPreDraw(_x, _y, _s, _iy, _oy);
 			return;
 		}
 		
@@ -1808,10 +1807,8 @@ function Node(_x, _y, _group = noone) : __Node_Base(_x, _y) constructor {
 		array_foreach(junc_meta, function(jun) /*=>*/ { jun.x = _ox; jun.y = _oy; _oy += junction_draw_hei_y * jun.isVisible() * __s; });
 		
 		if(SHOW_PARAM) h = h_param;
-		onPreDraw(_x, _y, _s, _iy, _oy);
+		if(onPreDraw) onPreDraw(_x, _y, _s, _iy, _oy);
 	}
-	
-	static onPreDraw = function(_x, _y, _s, _iny, _outy) {}
 	
 	static isHighlightingInGraph = function() { return !project.graphDisplay.highlight || active_draw_index == 0 || branch_drawing; }
 	

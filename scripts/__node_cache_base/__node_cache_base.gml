@@ -101,12 +101,6 @@ function __Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		refreshCacheGroup();
 	}
 	
-	////- Update
-	
-	static inspectorStep = function() /*=>*/ {
-		insp1button.icon_blend = PANEL_GRAPH.cache_group_edit == self? COLORS._main_value_positive : COLORS._main_icon;
-	}
-	
 	////- Draw
 	
 	static ccw = function(a, b, c) { return (b[0] - a[0]) * (c[1] - a[1]) - (c[0] - a[0]) * (b[1] - a[1]); }

@@ -3275,8 +3275,6 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
         
         drawViewController();
         
-        if(pFOCUS && !view_hovering) array_foreach(nodes_selecting, function(n) /*=>*/ {return n.focusStep()});
-        
         graph_dragging_key = false;
         graph_zooming_key  = false;
         
