@@ -621,9 +621,8 @@ function Panel_Preview() : PanelContent() constructor {
             
         for( var i = 0; i < 2; i++ ) {
             var node = preview_node[i];
-            
             if(node == noone) continue;
-            if(!node.active)  { resetNodePreview(); continue; }
+            if(!node.active) { resetNodePreview(); continue; }
             
             var value = node.getPreviewValues();
             
@@ -2170,22 +2169,28 @@ function Panel_Preview() : PanelContent() constructor {
         	if(xx > w + ui(16)) break;
             
             if(is(prev, __d3dMaterial)) prev = prev.surface;
-            if(!is_surface(prev)) continue;
         	
-            var prev_w  = surface_get_width_safe(prev);
-            var prev_h  = surface_get_height_safe(prev);
-            var ss = siz / max(prev_w, prev_h);
-            var pw = prev_w * ss;
-            var ph = prev_h * ss;
-            
+        	draw_sprite_stretched_ext(THEME.box_r2, 1, xx, yy, siz, siz, COLORS.panel_preview_surface_outline, .5);
     		var hov = hoverable && point_in_rectangle(mx, my, xx, yy, xx + siz, yy + siz);
     		var sel = i == _node.preview_index;
     		
-            var ssx = xx + siz / 2 - pw / 2;
-            var ssy = yy + siz / 2 - ph / 2;
-            draw_sprite_stretched_ext(THEME.box_r2, 1, xx, yy, siz, siz, COLORS.panel_preview_surface_outline, .5);
-            draw_sprite_stretched_ext(THEME.box_r2, 1, ssx, ssy, pw, ph, COLORS.panel_preview_surface_outline, 1.);
-        	draw_surface_ext_safe(prev, ssx, ssy, ss, ss, 0, c_white, .5 + .5 * (sel || hov));
+            if(is_surface(prev)) {
+	            var prev_w  = surface_get_width_safe(prev);
+	            var prev_h  = surface_get_height_safe(prev);
+	            var ss = siz / max(prev_w, prev_h);
+	            var pw = prev_w * ss;
+	            var ph = prev_h * ss;
+	            
+	            var ssx = xx + siz / 2 - pw / 2;
+	            var ssy = yy + siz / 2 - ph / 2;
+	            
+	            draw_sprite_stretched_ext(THEME.box_r2, 1, ssx, ssy, pw, ph, COLORS.panel_preview_surface_outline, 1.);
+	        	draw_surface_ext_safe(prev, ssx, ssy, ss, ss, 0, c_white, .5 + .5 * (sel || hov));
+	        	
+	        	if(sel) draw_sprite_stretched_ext(THEME.box_r2, 1, ssx, ssy, pw, ph, COLORS._main_accent);
+            } else {
+            	if(sel) draw_sprite_stretched_ext(THEME.box_r2, 1, xx, yy, siz, siz, COLORS._main_accent);
+            }
         	
             if((hov && mouse_press(mb_left, pFOCUS)) || (preview_selecting && mx > xx && mx <= xx + siz)) {
                 _node.preview_index = i;
@@ -2195,9 +2200,6 @@ function Panel_Preview() : PanelContent() constructor {
                 
                 preview_selecting = true;
             }
-        
-            if(sel) draw_sprite_stretched_ext(THEME.box_r2, 1, ssx, ssy, pw, ph, COLORS._main_accent);
-            
         }
         
         preview_x_max = max((siz + ui(8)) * pseql - ui(100), 0);
