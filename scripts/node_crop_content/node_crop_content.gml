@@ -32,7 +32,7 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	drag_my   = 0;
 	drag_sv   = 0;
 	
-	temp_surface = [ noone, noone ];
+	temp_surface = [ noone, noone, noone ];
 	
 	draw_transforms = [];
 	static drawOverlayTransform = function(_node) { return array_safe_get(draw_transforms, preview_index, noone); }
@@ -58,19 +58,60 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var maxy = array_create(_amo, -infinity);
 		var cDep = attrDepth();
 		
+		var _scaFactor = 4;
+		var _maxSurf   = 64;
+		
 		for( var j = 0; j < _amo; j++ ) {
 			var _surf = _inSurf[j];
 			var  sw   = surface_get_width_safe(_surf);
 			var  sh   = surface_get_height_safe(_surf);
+			var _bgs  = _surf;
+			var _emp  = false;
+			var  bbox = [0,0,1,1];
 			
 			temp_surface[0] = surface_verify(temp_surface[0], sw, sh);
-			var _sclr = temp_surface[0];
-			surface_set_shader(_sclr, sh_crop_content_replace_color);
-				shader_set_c("target", _bg);
-				draw_surface_safe(_surf);
-			surface_reset_shader();
 			
-			var  bbox = surface_get_bbox(_sclr);
+			var _itr = ceil(logn(4, max(sw, sh) / _maxSurf));
+			if(_itr > 0) {
+				var bg  = 0;
+				var ssw = sw;
+				var ssh = sh;
+				
+				temp_surface[1 +!bg] = surface_verify(temp_surface[1 +!bg], ssw, ssh);
+				
+				surface_set_shader(temp_surface[1 +!bg]);
+					draw_surface_safe(_surf);
+				surface_reset_shader();
+					
+				repeat(_itr) {
+					ssw = ceil(ssw / _scaFactor);
+					ssh = ceil(ssh / _scaFactor);
+
+					temp_surface[1 + bg] = surface_verify(temp_surface[1 + bg], ssw, ssh);
+					
+					surface_set_shader(temp_surface[1 + bg], sh_crop_conent_downsample);
+						shader_set_2("dimension",   [ssw, ssh] );
+						shader_set_f("scaleFactor", _scaFactor );
+						
+						draw_surface_ext(temp_surface[1 + !bg], 0, 0, 1/_scaFactor, 1/_scaFactor, 0, c_white, 1);
+					surface_reset_shader();
+					
+					bg = !bg;
+				}
+				
+				_emp = surface_is_empty(temp_surface[1 + !bg]);
+			}
+			
+			if(!_emp) {
+				var _sclr = temp_surface[0];
+				surface_set_shader(_sclr, sh_crop_content_replace_color);
+					shader_set_c("target", _bg);
+					draw_surface_safe(_bgs);
+				surface_reset_shader();
+				
+				bbox = surface_get_bbox(_sclr);
+			}
+			
 			var _minx = bbox[0];
 			var _miny = bbox[1];
 			var _maxx = bbox[0] + bbox[2];

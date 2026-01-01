@@ -1936,6 +1936,7 @@
     {"name":"sh_corner_coord","order":4,"path":"shaders/sh_corner_coord/sh_corner_coord.yy",},
     {"name":"sh_corner_erode","order":2,"path":"shaders/sh_corner_erode/sh_corner_erode.yy",},
     {"name":"sh_corner_iterate","order":3,"path":"shaders/sh_corner_iterate/sh_corner_iterate.yy",},
+    {"name":"sh_crop_conent_downsample","order":4,"path":"shaders/sh_crop_conent_downsample/sh_crop_conent_downsample.yy",},
     {"name":"sh_cross_section","order":22,"path":"shaders/sh_cross_section/sh_cross_section.yy",},
     {"name":"sh_curve_hsv","order":5,"path":"shaders/sh_curve_hsv/sh_curve_hsv.yy",},
     {"name":"sh_curve","order":3,"path":"shaders/sh_curve/sh_curve.yy",},

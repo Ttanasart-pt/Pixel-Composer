@@ -167,11 +167,11 @@
 	
 			double x = (double)(i % widthInt);
 			double y = (double)(i / widthInt);
-	
-			minX = x < minX ? x : minX;
-			minY = y < minY ? y : minY;
-			maxX = x > maxX ? x : maxX;
-			maxY = y > maxY ? y : maxY;
+			
+			minX = x < minX? x : minX;
+			minY = y < minY? y : minY;
+			maxX = x > maxX? x : maxX;
+			maxY = y > maxY? y : maxY;
 	    }
 	
 		if (maxX == -1 || maxY == -1) {
