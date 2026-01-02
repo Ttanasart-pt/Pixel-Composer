@@ -4084,7 +4084,7 @@ function Panel_Graph(_project = PROJECT) : PanelContent() constructor {
                         app[i].y = app[i].y - cy + mouse_grid_y;
                     }
                     
-                } else if(is_struct(app) && is(app, Node)) {
+                } else if(is(app, Node)) {
                     if(is(app, Node_Collection)) {
                     	app.metadata = data.getMetadata();
                     	app.collPath = path;

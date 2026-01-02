@@ -33,11 +33,15 @@ function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 		["Texture",	 false], in_mesh+9,  in_mesh+10, in_mesh+11, 
 	]
 	
+	////- Nodes
+	
+	toRefresh    = false;
 	temp_surface = [ noone ];
 	
 	insp1button = button(function() /*=>*/ { 
-		for(var i = 0; i < process_amount; i++) getObject(i).initModel(); 
+		toRefresh = true;
 		triggerRender();
+		
 	}).setTooltip(__txt("Refresh"))
 		.setIcon(THEME.refresh_icon, 1, COLORS._main_value_positive).iconPad(ui(6)).setBaseSprite(THEME.button_hide_fill);
 	
@@ -83,6 +87,13 @@ function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 		surface_reset_target();
 		
 		var _object = getObject(_array_index);
+		
+		if(toRefresh) {
+			_object.destroy();
+			_object = new __3dSurfaceExtrude();
+			toRefresh = false;
+		}
+		
 		_object.checkParameter( { 
 			smooth  : _smt,
 			
@@ -113,6 +124,4 @@ function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 		return _object;
 	}
 	
-	// static getPreviewValues = () => getInputSingle(in_mesh + 0);
-	static getPreviewValues = function() /*=>*/ {return outputs[0].getValue()};
 }

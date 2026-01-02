@@ -9,22 +9,24 @@ function Node_3D_Affector(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _grou
 	newInput(i+0, nodeValue_D3Scene("Scene")).setVisible(true, true);
 	
 	////- =Affectors
-	newInput(i+1, nodeValue_Enum_Scroll( "Shape", 0, [ new scrollItem("Sphere", s_node_3d_affector_shape, 0), 
-	                                                   new scrollItem("Plane",  s_node_3d_affector_shape, 1), ]));
-	newInput(i+2, nodeValue_Float( "Falloff distance",   0.5    ));
-	newInput(i+3, nodeValue_Curve( "Falloff curve",      CURVE_DEF_01 ));
+	newInput(i+1, nodeValue_EScroll( "Shape",             0, __enum_array_gen( [ "Sphere", "Plane", ], s_node_3d_affector_shape )));
+	
+	////- =Falloff
+	newInput(i+2, nodeValue_Float(   "Falloff Distance", .5            ));
+	newInput(i+3, nodeValue_Curve(   "Falloff Curve",     CURVE_DEF_01 ));
 	
 	////- =Transform
-	newInput(i+4, nodeValue_Vec3(        "Affect Position", [0,0,0]    ));
-	newInput(i+5, nodeValue_Quaternion(  "Affect Rotation", [0,0,0,1 ] ));
-	newInput(i+6, nodeValue_Vec3(        "Affect Scale",    [1,1,1]    ));
+	newInput(i+4, nodeValue_Vec3(       "Affect Position", [0,0,0]    ));
+	newInput(i+5, nodeValue_Quaternion( "Affect Rotation", [0,0,0,1 ] ));
+	newInput(i+6, nodeValue_Vec3(       "Affect Scale",    [1,1,1]    ));
 	// i+7
 	
 	newOutput(0, nodeValue_Output("Scene", VALUE_TYPE.d3Scene, noone));
 	
 	input_display_list = [ i+0, 
-		["Affectors", false], i+1, 0, 1, 2, i+2, i+3, 
-		["Transform", false], i+4, i+5, i+6, 
+		[ "Affectors", false ], i+1, 0, 1, 2, 
+		[ "Falloff",   false ], i+2, i+3, 
+		[ "Transform", false ], i+4, i+5, i+6, 
 	];
 	
 	curve_falloff = noone;

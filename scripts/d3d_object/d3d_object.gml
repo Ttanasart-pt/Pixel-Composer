@@ -391,5 +391,5 @@ function __3dObject() : __3dInstance() constructor {
 	
 	static onDestroy = function() { } 
 	
-	static toString = function() { return $"[D3D Object]\n\t({array_length(vertex)} vertex groups\n\tPosition: {transform.position}\n\tRotation: {transform.rotation}\n\tScale: {transform.scale})" }
+	static toString = function() { return $"[D3D Object ({name})]\n\t({array_length(vertex)} vertex groups\n\tPosition: {transform.position}\n\tRotation: {transform.rotation}\n\tScale: {transform.scale})" }
 }

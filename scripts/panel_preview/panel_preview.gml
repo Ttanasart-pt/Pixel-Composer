@@ -2123,10 +2123,10 @@ function Panel_Preview() : PanelContent() constructor {
             right_menu_x = w - ui(8);
         #endregion
         
-        drawSurfaceArray();
+        drawDataArray();
     }
     
-    function drawSurfaceArray() {
+    function drawDataArray() {
         if(mouse_release(mb_left)) preview_selecting = false;
         var _preview_x_max = preview_x_max;
         preview_x_max = 0;
@@ -2168,6 +2168,7 @@ function Panel_Preview() : PanelContent() constructor {
         	if(xx + siz < -ui(16)) continue;
         	if(xx > w + ui(16)) break;
             
+            if(is(prev, __3dObject))    prev = array_safe_get(prev.materials, 0);
             if(is(prev, __d3dMaterial)) prev = prev.surface;
         	
         	draw_sprite_stretched_ext(THEME.box_r2, 1, xx, yy, siz, siz, COLORS.panel_preview_surface_outline, .5);

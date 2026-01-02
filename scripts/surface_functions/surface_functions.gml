@@ -776,7 +776,7 @@
 	function surface_clone(surface, destination = noone, format = noone) {
 		INLINE
 	
-		if(is_struct(surface) && is(surface, dynaSurf)) 
+		if(is(surface, dynaSurf)) 
 			return surface.clone();
 		if(!is_surface(surface)) return noone;
 	

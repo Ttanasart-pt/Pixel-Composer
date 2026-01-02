@@ -96,7 +96,8 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		
 		if(_obj == noone) {
 			_obj = new class();
-		} else if(!is_instanceof(_obj, class)) {
+			
+		} else if(!is(_obj, class)) {
 			_obj.destroy();
 			_obj = new class();
 		}

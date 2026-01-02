@@ -32,5 +32,4 @@ function Node_3D_Mesh_Cone(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 		return object;
 	}
 	
-	static getPreviewValues = function() { return getInputSingle(in_mesh + 1); }
 }
