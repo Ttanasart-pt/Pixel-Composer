@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"__panel_custom_button",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__panel_custom_button",
+  "parent":{
+    "name":"elements",
+    "path":"folders/panels/custom/elements.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

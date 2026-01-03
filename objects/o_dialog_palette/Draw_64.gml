@@ -447,7 +447,7 @@ draggable = true;
 		draw_surface(mixer_surface, con_x, con_y);
 		
 	} else {
-		selector.draw(con_x, con_y, sFOCUS, sHOVER);
+		selector.draw(con_x, con_y, [mouse_mx, mouse_my], sFOCUS, sHOVER);
 		
 	}
 #endregion

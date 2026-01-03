@@ -1,0 +1,1 @@
+function __panel_custom_frame_tab() {}

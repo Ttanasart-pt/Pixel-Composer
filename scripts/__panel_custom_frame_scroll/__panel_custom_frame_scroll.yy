@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"__panel_custom_frame_scroll",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"__panel_custom_frame_scroll",
+  "parent":{
+    "name":"frames",
+    "path":"folders/panels/custom/frames.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

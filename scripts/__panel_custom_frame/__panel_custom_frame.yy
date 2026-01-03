@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"__panel_custom_frame",
   "parent":{
-    "name":"elements",
-    "path":"folders/panels/custom/elements.yy",
+    "name":"frames",
+    "path":"folders/panels/custom/frames.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

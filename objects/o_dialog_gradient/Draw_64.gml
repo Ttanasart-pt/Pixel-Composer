@@ -324,7 +324,7 @@ draggable = true;
 	var col_y = dialog_y + ui(128);
 	
 	if(palette_selecting != undefined) selector.palette = palette_selecting;
-	selector.draw(col_x, col_y, sFOCUS, sHOVER);
+	selector.draw(col_x, col_y, [mouse_mx, mouse_my], sFOCUS, sHOVER);
 #endregion
 
 #region controls

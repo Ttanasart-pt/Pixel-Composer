@@ -10,14 +10,17 @@ function Panel_Custom_Data() constructor {
 	w = ui(600);
 	h = ui(400);
 	
+	focus = false;
+	hover = false;
+	
 	auto_pin   = true;
 	open_start = false;
 	
-	#region root
+	#region ---- root ----
 		rootData = undefined;
 		
 		root = new Panel_Custom_Frame();
-		root.name      = "root";
+		root.name      = "Home";
 		root.style     = 1;
 		root.draggable = false;
 		
@@ -27,31 +30,30 @@ function Panel_Custom_Data() constructor {
 		root.pbBox.anchor_h = 1; root.pbBox.anchor_h_fract = true;
 	#endregion
 	
-	focus = false;
-	hover = false;
-	
-	pbBox = new __pbBox();
+	#region ---- io redirect ----
+		io_redirect = {};
+	#endregion
 	
 	////- Draw
 	
-	static setSize = function(_w, _h) {
+	static setSize = function(_x, _y, _w, _h) {
 		w = _w;
 		h = _h;
+		
+		root.setSize([0,0,w,h], _x, _y);
 		return self;
 	}
 	
 	static setFocusHover = function(_focus, _hover) {
 		focus = _focus;
 		hover = _hover;
+		root.setFocusHover(_focus, _hover);
 		return self;
 	}
 	
 	static draw = function(panel, _m) {
-		pbBox.base_bbox = [0,0,w,h];
-		root.setSize(pbBox, panel.x, panel.y);
-		
 		root.setFocusHover(focus, hover);
-		root.draw(panel, _m);
+		root.doDraw(panel, _m);
 	}
 	
 	////- Serialize

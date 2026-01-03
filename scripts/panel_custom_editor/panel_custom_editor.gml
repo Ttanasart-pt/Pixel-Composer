@@ -5,54 +5,81 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 	w = min(WIN_W - ui(64), ui(1400));
 	h = min(WIN_H - ui(64), ui(800));
 	
-	data_surface = undefined;
-	
-	#region ---- elements ----
-		elements = [
-			[ "Frames", false ], 
-			{
-				name: "Frame", 
-				fn:   Panel_Custom_Frame, 
-				spr:  THEME.panel_icon_element_frame,  
-				prevsize: [64,64], 
-			}, 
-			{
-				name: "Split Frame", 
-				fn:   Panel_Custom_Frame_Split, 
-				spr:  THEME.panel_icon_element_frame_split,  
-				prevsize: [64,64], 
-			}, 
-			
-			[ "Basics", false ], 
-			{
-				name: "Text", 
-				fn:   Panel_Custom_Text, 
-				spr:  THEME.panel_icon_element_text, 
-				prevsize: [80,32], 
-			}, 
-			[ "Nodes", false ], 
-			{
-				name: "Node Input", 
-				fn:   Panel_Custom_Node_Input, 
-				spr:  THEME.panel_icon_element_node_input, 
-				prevsize: [80,32], 
-			}, 
-			{
-				name: "Node Ouput", 
-				fn:   Panel_Custom_Node_Output, 
-				spr:  THEME.panel_icon_element_node_output, 
-				prevsize: [64,64], 
-			}, 
-		];
+	elements = [
+		[ "Frames", false ], 
+		{
+			name: "Frame", 
+			fn:   Panel_Custom_Frame, 
+			spr:  THEME.panel_icon_element_frame,  
+			prevsize: [64,64], 
+		}, 
+		{
+			name: "Split Frame", 
+			fn:   Panel_Custom_Frame_Split, 
+			spr:  THEME.panel_icon_element_frame_split,  
+			prevsize: [64,64], 
+		}, 
 		
-		element_adding    = undefined;
-		hovering_frame    = undefined;
-		_hovering_frame   = undefined;
-		hovering_element  = undefined;
-		_hovering_element = undefined;
-	#endregion
+		[ "Nodes", false ], 
+		{
+			name: "Node Input", 
+			fn:   Panel_Custom_Node_Input, 
+			spr:  THEME.panel_icon_element_node_input, 
+			prevsize: [80,32], 
+		}, 
+		{
+			name: "Node Output", 
+			fn:   Panel_Custom_Node_Output, 
+			spr:  THEME.panel_icon_element_node_output, 
+			prevsize: [64,64], 
+		}, 
+		[ "Widgets", false ], 
+		{
+			name: "Button", 
+			fn:   Panel_Custom_Button, 
+			spr:  THEME.panel_icon_element_button, 
+			prevsize: [64,64], 
+		}, 
+		// {
+		// 	name: "Choices", 
+		// 	fn:   Panel_Custom_Choices, 
+		// 	spr:  THEME.panel_icon_element_choices, 
+		// 	prevsize: [120,64], 
+		// }, 
+		{
+			name: "Color", 
+			fn:   Panel_Custom_Color, 
+			spr:  THEME.panel_icon_element_color, 
+			prevsize: [160,160], 
+		}, 
+		{
+			name: "Knob", 
+			fn:   Panel_Custom_Knob, 
+			spr:  THEME.panel_icon_element_knob, 
+			prevsize: [64,64], 
+		}, 
+		{
+			name: "Slider", 
+			fn:   Panel_Custom_Slider, 
+			spr:  THEME.panel_icon_element_slider, 
+			prevsize: [120,32], 
+		}, 
+		{
+			name: "Text", 
+			fn:   Panel_Custom_Text, 
+			spr:  THEME.panel_icon_element_text, 
+			prevsize: [80,32], 
+		}, 
+		{
+			name: "Textbox", 
+			fn:   Panel_Custom_Textbox, 
+			spr:  THEME.panel_icon_element_textbox, 
+			prevsize: [80,32], 
+		}, 
+	];
 	
 	#region ---- selection ----
+		element_adding    = undefined;
 		element_selecting = undefined;
 		
 		element_drag = undefined;
@@ -62,9 +89,21 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 		drag_mx   = 0;
 		drag_my   = 0;
 		
+		hovering_frame    = undefined;
+		_hovering_frame   = undefined;
+		hovering_element  = undefined;
+		_hovering_element = undefined;
+		
+		_HOVER_WIDGET = undefined;
+		 HOVER_WIDGET = undefined;
+	#endregion
+	
+	#region ---- outline ----
 		outline_drag       = undefined;
 		outline_drag_side  = 0;
 		outline_drag_frame = undefined;
+		
+		outline_hover      = undefined;
 	#endregion
 	
 	#region ---- editor ----
@@ -76,28 +115,45 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 		
 		globalEditors = [
 			[ "Global", false ], 
-			new Panel_Custom_Element_Editor("Panel Name", textBox_Text( function(t) /*=>*/ { data.name = t; } ), function() /*=>*/ {return data.name}, function(t) /*=>*/ { data.name = t; }),
+			Simple_Editor("Panel Name", textBox_Text( function(t) /*=>*/ { data.name = t; } ), function() /*=>*/ {return data.name}, function(t) /*=>*/ { data.name = t; }),
 			
-			new Panel_Custom_Element_Editor("Prefered Size", new vectorBox( 2, function(v,i) /*=>*/ { 
+			Simple_Editor("Prefered Size", new vectorBox( 2, function(v,i) /*=>*/ { 
 				if(i == 0) data.prew = v; 
 				else       data.preh = v; 
 			} ), function() /*=>*/ {return [data.prew,data.preh]}, function(v) /*=>*/ { data.prew = v[0]; data.preh = v[1] }),
 			
-			new Panel_Custom_Element_Editor("Minimum Size", new vectorBox( 2, function(v,i) /*=>*/ { 
+			Simple_Editor("Minimum Size", new vectorBox( 2, function(v,i) /*=>*/ { 
 				if(i == 0) data.minw = v; 
 				else       data.minh = v; 
 			} ), function() /*=>*/ {return [data.minw,data.minh]}, function(v) /*=>*/ { data.minw = v[0]; data.minh = v[1] }), 
 			
-			new Panel_Custom_Element_Editor("Auto Pin", new checkBox( function() /*=>*/ { 
+			Simple_Editor("Auto Pin", new checkBox( function() /*=>*/ { 
 				data.auto_pin = !data.auto_pin;
 			} ), function() /*=>*/ {return data.auto_pin}, function(v) /*=>*/ { data.auto_pin = v; }), 
 			
-			new Panel_Custom_Element_Editor("Open on Load", new checkBox( function() /*=>*/ { 
+			Simple_Editor("Open on Load", new checkBox( function() /*=>*/ { 
 				data.open_start = !data.open_start;
 			} ), function() /*=>*/ {return data.open_start}, function(v) /*=>*/ { data.open_start = v; }), 
 		];
 	#endregion
-
+	
+	#region ---- preview ----
+		preview_surface = undefined;
+		preview_mode    = false;
+	
+		topbar_height = ui(24);
+		
+		topbar_buttons = [
+			[
+				/*0*/ __txt("Preview Mode"), 
+				/*1*/ function() /*=>*/ {return THEME.sequence_control},
+				/*2*/ function() /*=>*/ {return preview_mode? 0 : 1}, 
+				/*3*/ function() /*=>*/ {return preview_mode? COLORS._main_value_positive : COLORS._main_icon},
+				/*4*/ function() /*=>*/ { preview_mode = !preview_mode; }, 
+			]
+		];
+	#endregion
+	
 	sc_add_elements = new scrollPane(1,1, function(_y, _m) /*=>*/ {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
 		var _h = 0;
@@ -161,7 +217,7 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 			
 			var sx = xx + grs / 2;
 			var sy = yy + grs / 2 - ui(8);
-			draw_sprite_ui(spr, 0, sx, sy);
+			draw_sprite_ui_uniform(spr, 0, sx, sy, .5);
 			
 			draw_set_text(f_p4, fa_center, fa_bottom, COLORS._main_text);
 			draw_text_add(xx + grs / 2, yy + grs - ui(2), nam);
@@ -182,6 +238,8 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 			}
 		}
 		
+		if(col) _h += grs + ui(4);
+		
 		if(_cAll ==  1) for( var i = 0, n = array_length(elements); i < n; i++ ) if(is_array(elements[i])) elements[i][1] = false; 
 		if(_cAll == -1) for( var i = 0, n = array_length(elements); i < n; i++ ) if(is_array(elements[i])) elements[i][1] =  true; 
 		
@@ -190,9 +248,12 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 	
 	sc_outline = new scrollPane(1,1, function(_y, _m) /*=>*/ {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 1);
-		var ww = sc_outline.surface_w;
+		var ww  = sc_outline.surface_w;
+		var hov = sc_outline.hover;
+		var foc = sc_outline.active;
 		
 		outline_drag_frame = undefined;
+		outline_hover      = undefined;
 		var _h = data.root.drawOutline(0, self, ui(4), _y, ww - ui(4), _m);
 		
 		if(outline_drag && mouse_lrelease()) {
@@ -205,10 +266,18 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 			    
 				array_remove(outline_drag.parent.contents, outline_drag);
 				array_insert(hovering_element.parent.contents, _ind, outline_drag);
+				
+				outline_drag.parent = hovering_element.parent;
 			}
 			
 			outline_drag = undefined;
 		}
+		
+		if(hov && outline_hover == undefined) {
+			if(mouse_lpress(foc)) 
+				element_selecting = undefined;
+		}
+		
 		return _h;
 	});
 	
@@ -227,6 +296,7 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 		
 		var lbh = ui(22);
 		var wdh = ui(24);
+		var bs  = wdh-ui(4);
 		var wdw = ww * .6;
 		
 		var _cAll = 0;
@@ -281,36 +351,59 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 			}
 			
 			var _name = _edt.name;
-			var _widg = _edt.editWidget;
-			var _gett = _edt.getter;
-			var _sett = _edt.setter;
 			var _wpd  = ui(4);
 			
 			draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text);
 			draw_text_add(ui(8), _y + wdh / 2, _name);
 			
-			if(_name == "Position") {
+			if(is(_edt, JuncLister)) {
+				var wdx = ww - wdw;
+				var wdy = _y;
+				
+				var _hh = _edt.draw(wdx, wdy, wdw, wdh, _m, foc, hov, rx, ry);
+				
+				_y += _hh + ui(4);
+				_h += _hh + ui(4);
+				continue;
+			}
+			
+			var _widg = _edt.editWidget;
+			var _data = _edt.getter();
+			
+			if(is(_data, __pbBox)) {
 				if(element_selecting && !element_selecting.draggable) {
 					var _tx = ui(8) + string_width(_name) + ui(4);
 					draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_sub);
 					draw_text_add(_tx, _y + wdh / 2, "[locked]");
 					
 					_widg.setInteract(false);
-				} else 
+					
+				} else {
+					var bx = ww - bs;
+					var by = _y + ui(2);
+					
+					if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, hov, foc, "Pad mode", THEME.fill, 0,,, .75) == 2) {
+						_widg.linked = true;
+						_data.anchor_x_type = PB_AXIS_ANCHOR.bounded;
+						_data.anchor_y_type = PB_AXIS_ANCHOR.bounded;
+						
+						_data.anchor_l = 0; _data.anchor_t = 0;
+						_data.anchor_r = 0; _data.anchor_b = 0;
+					}
+					
 					_widg.setInteract(true);
+				}
 				
 				_y += ui(24);
 				_h += ui(24);
 				_wpd = ui(0);
 				
-				var _param = new widgetParam(ui(8), _y, ww - ui(16), wdh, _gett(), {}, _m, rx, ry)
-					.setFont(f_p3);
+				var _param = new widgetParam(ui(8), _y, ww - ui(16), wdh, _data, {}, _m, rx, ry).setFont(f_p3);
 					
 			} else {
 				var wdx = ww - wdw;
 				var wdy = _y;
-				var _param = new widgetParam(wdx, wdy, wdw, wdh, _gett(), {}, _m, rx, ry)
-					.setFont(f_p3);
+				var _param = new widgetParam(wdx, wdy, wdw, wdh, _data, {}, _m, rx, ry).setFont(f_p3);
 			}
 			
 			_widg.register(sc_properties);
@@ -344,38 +437,67 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 		var edt_r = editor_toolbar_width_r;
 		var edt_h = h - pd - pd;
 		
-		var bx = pd;
-		var by = pd;
-		var bw = edt_l;
-		var bh = edt_h / 2;
-		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, bx, by, bw, bh);
+		var add_x = pd;
+		var add_y = pd;
+		var add_w = edt_l;
+		var add_h = edt_h * 2 / 3;
+		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, add_x, add_y, add_w, add_h);
 		sc_add_elements.setFocusHover(pFOCUS, pHOVER);
-		sc_add_elements.verify(bw - ui(8), bh - ui(8));
-		sc_add_elements.drawOffset(bx + ui(4), by + ui(4), mx, my);
+		sc_add_elements.verify(add_w - ui(8), add_h - ui(8));
+		sc_add_elements.drawOffset(add_x + ui(4), add_y + ui(4), mx, my);
 		
-		var bx = pd;
-		var by = pd + edt_h / 2 + pd;
-		var bw = edt_l;
-		var bh = edt_h / 2 - pd;
-		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, bx, by, bw, bh);
+		var out_x = pd;
+		var out_y = pd + add_h + pd;
+		var out_w = edt_l;
+		var out_h = (edt_h - add_h) - pd;
+		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, out_x, out_y, out_w, out_h);
 		sc_outline.setFocusHover(pFOCUS, pHOVER);
-		sc_outline.verify(bw - ui(8), bh - ui(8));
-		sc_outline.drawOffset(bx + ui(4), by + ui(4), mx, my);
+		sc_outline.verify(out_w - ui(8), out_h - ui(8));
+		sc_outline.drawOffset(out_x + ui(4), out_y + ui(4), mx, my);
 		
-		var bx = w - edt_r - pd;
-		var by = pd;
-		var bw = edt_r;
-		var bh = edt_h;
-		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, bx, by, bw, bh);
+		var prp_x = w - edt_r - pd;
+		var prp_y = pd;
+		var prp_w = edt_r;
+		var prp_h = edt_h;
+		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, prp_x, prp_y, prp_w, prp_h);
 		sc_properties.setFocusHover(pFOCUS, pHOVER);
-		sc_properties.verify(bw - ui(8), bh - ui(8));
-		sc_properties.drawOffset(bx + ui(4), by + ui(4), mx, my);
+		sc_properties.verify(prp_w - ui(8), prp_h - ui(8));
+		sc_properties.drawOffset(prp_x + ui(4), prp_y + ui(4), mx, my);
+		
+		#region topbar
+			var _top_x0 = pd + edt_l + pd ;
+			var _top_x1 = w - pd - edt_r - pd;
+			var _top_xc = (_top_x0 + _top_x1) / 2;
+			
+			var _top_y0 = pd;
+			var _top_y1 = pd + topbar_height;
+			var _top_yc = (_top_y0 + _top_y1) / 2;
+			
+			var ts = topbar_height;
+			var tx = _top_xc - (array_length(topbar_buttons) * (ts + ui(2) - ui(2))) / ui(2);
+			var ty = _top_y0;
+			
+			for( var i = 0, n = array_length(topbar_buttons); i < n; i++ ) {
+				var tb = topbar_buttons[i];
+				var _tooltip = tb[0];
+				var _spr     = tb[1]();
+				var _sind    = tb[2]();
+				var _color   = tb[3]();
+				var _onClick = tb[4];
+				
+				if(buttonInstant_Pad(THEME.button_hide, tx, ty, ts, ts, [mx,my], pHOVER, pFOCUS, _tooltip, _spr, _sind, _color, 1, ui(6)) == 2)
+					_onClick();
+					
+				tx += ts + ui(2);
+			}
+		#endregion
 		
 		#region display content
 			var _con_x0 = pd + edt_l + pd ;
 			var _con_x1 = w - pd - edt_r - pd;
 			var _con_xc = (_con_x0 + _con_x1) / 2;
-			var _con_y0 = pd;
+			
+			var _con_y0 = pd + topbar_height + pd;
 			var _con_y1 = h - pd;
 			var _con_yc = (_con_y0 + _con_y1) / 2;
 			
@@ -389,32 +511,44 @@ function Panel_Custom_Editor(_data = undefined) : PanelContent() constructor {
 			var ph = data.preh;
 			
 			var ss = min(1, (_con_w - ui(16)) / pw, (_con_h - ui(16)) / ph);
-			var dw = ss * pw;
-			var dh = ss * ph;
+			var dw = round(ss * pw);
+			var dh = round(ss * ph);
 			
-			var dx0 = _con_xc - dw / 2;
-			var dy0 = _con_yc - dh / 2;
-			var dx1 = _con_xc + dw / 2;
-			var dy1 = _con_yc + dh / 2;
+			var dx0 = round(_con_xc - dw / 2);
+			var dy0 = round(_con_yc - dh / 2);
+			var dx1 = dx0 + dw;
+			var dy1 = dy0 + dh;
 			
-			data_surface = surface_verify(data_surface, dw, dh);
-			surface_set_target(data_surface);
+			preview_surface = surface_verify(preview_surface, dw, dh);
+			surface_set_target(preview_surface);
 				draw_clear_alpha(COLORS.panel_bg_clear, 0);
-				data.setSize(dw, dh);
-				data.setFocusHover(pFOCUS, pHOVER);
-				data.draw(self, [mx - dx0, my - dy0]);
-				data.root.drawBox(self);
+				data.setSize(x, y, dw, dh);
+				
+				if(preview_mode) {
+					data.setFocusHover(pFOCUS, pHOVER);
+					data.root.checkMouse(self, [mx - dx0, my - dy0]);
+					data.draw(self, [mx - dx0, my - dy0]);
+					
+				} else {
+					data.setFocusHover(false, pHOVER);
+					data.root.checkMouse(self, [mx - dx0, my - dy0]);
+					data.draw(self, [mx - dx0, my - dy0]);
+					data.root.drawBox(self);
+				}
 			surface_reset_target();
 			
-			draw_surface_ext(data_surface, dx0, dy0, 1, 1, 0, c_white, 1);
+			draw_surface_ext(preview_surface, dx0, dy0, 1, 1, 0, c_white, 1);
 			draw_sprite_stretched_add(THEME.ui_panel, 1, dx0, dy0, dw, dh, COLORS._main_icon, .25);
+			if(preview_mode) draw_sprite_stretched_ext(THEME.ui_panel, 1, dx0, dy0, dw, dh, COLORS._main_value_positive, 1);
 			
 			draw_set_text(f_p3, fa_left, fa_bottom, COLORS._main_text);
-			draw_text_add(dx0, dy0 - ui(2), __txt("Home"));
+			draw_text_add(dx0, dy0 - ui(2), data.root.name);
 			
 			draw_set_text(f_p4, fa_right, fa_bottom, COLORS._main_text_sub);
 			draw_text_add(dx1, dy0 - ui(2), $"{dw}x{dh} [{ss * 100}%]");
 		#endregion
+		
+		if(preview_mode) return;
 		
 		if(hover_preview && element_selecting == undefined && mouse_lpress(pFOCUS)) {
 			if(hovering_frame)   element_selecting = hovering_frame;

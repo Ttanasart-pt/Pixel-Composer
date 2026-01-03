@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"__panel_custom_element",
   "parent":{
-    "name":"elements",
-    "path":"folders/panels/custom/elements.yy",
+    "name":"custom",
+    "path":"folders/panels/custom.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

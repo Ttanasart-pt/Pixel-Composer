@@ -5,14 +5,14 @@ function Panel_Custom_Text() : Panel_Custom_Element() constructor {
 	
 	text   = "Text";
 	font   = 4;
-	color  = ca_white;
 	halign = fa_left;
 	valign = fa_top;
+	color  = ca_white;
 	
 	array_append(editors, [
 		[ "Text", false ], 
-		new Panel_Custom_Element_Editor("Text", textArea_Text( function(t) /*=>*/ { text = t; } ), function() /*=>*/ {return text}, function(t) /*=>*/ { text = t; }), 
-		new Panel_Custom_Element_Editor("Font", new scrollBox( [ 
+		Simple_Editor("Text", textArea_Text( function(t) /*=>*/ { text = t; } ), function() /*=>*/ {return text}, function(t) /*=>*/ { text = t; }), 
+		Simple_Editor("Font", new scrollBox( [ 
 			"Header 1", 
 			"Header 3", 
 			"Header 5", 
@@ -23,11 +23,11 @@ function Panel_Custom_Text() : Panel_Custom_Element() constructor {
 			"Content 4", 
 		], function(t) /*=>*/ { font = t; } ), function() /*=>*/ {return font}, function(t) /*=>*/ { font = t; }), 
 		
-		new Panel_Custom_Element_Editor("H Align", new buttonGroup( array_create(3, THEME.inspector_text_halign), function(c) /*=>*/ { halign = c; }), function() /*=>*/ {return halign}, function(c) /*=>*/ { halign = c; }), 
-		new Panel_Custom_Element_Editor("V Align", new buttonGroup( array_create(3, THEME.inspector_text_valign), function(c) /*=>*/ { valign = c; }), function() /*=>*/ {return valign}, function(c) /*=>*/ { valign = c; }), 
+		Simple_Editor("H Align", new buttonGroup( array_create(3, THEME.inspector_text_halign), function(c) /*=>*/ { halign = c; }), function() /*=>*/ {return halign}, function(c) /*=>*/ { halign = c; }), 
+		Simple_Editor("V Align", new buttonGroup( array_create(3, THEME.inspector_text_valign), function(c) /*=>*/ { valign = c; }), function() /*=>*/ {return valign}, function(c) /*=>*/ { valign = c; }), 
 		
 		[ "Display", false ], 
-		new Panel_Custom_Element_Editor("Color", new buttonColor( function(c) /*=>*/ { color = c; }), function() /*=>*/ {return color}, function(c) /*=>*/ { color = c; }), 
+		Simple_Editor("Color", new buttonColor( function(c) /*=>*/ { color = c; }), function() /*=>*/ {return color}, function(c) /*=>*/ { color = c; }), 
 	]);
 	
 	////- Draw
@@ -62,9 +62,6 @@ function Panel_Custom_Text() : Panel_Custom_Element() constructor {
 		draw_set_text(_font, halign, valign, color, _color_get_a(color));
 		draw_text(tx, ty, text);
 		draw_set_alpha(1);
-		
-		var _hov = hover && point_in_rectangle(_m[0], _m[1], x, y, x + w, y + h);
-		if(_hov) panel.hovering_element = self;
 	}
 	
 	////- Serialize

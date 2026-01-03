@@ -98,7 +98,7 @@ function paddingBox(_onModify, _unit = noone) : widget() constructor {
 			
 			if(unit != noone && unit.reference != noone) {
 				unit.triggerButton.setFocusHover(iactive, ihover);			
-				unit.draw(_bx, _by + ui(4) + _h, _bs, _bs, _m);
+				unit.draw(_bx, _by + _h, _bs, _bs, _m);
 			}
 		}
 		

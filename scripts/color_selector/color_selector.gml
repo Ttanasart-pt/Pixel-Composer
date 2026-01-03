@@ -31,6 +31,7 @@ function colorSelector(_onApply = noone) constructor {
 	#region display
 		disp_mode     = 0;
 		draw_selector = true;
+		show_textbox  = true;
 	
 		palette = PROJECT.attributes.palette;
 		discretize_pal = true;
@@ -162,7 +163,7 @@ function colorSelector(_onApply = noone) constructor {
 		DROPPER_DROPPING = true;
 	}
 	
-	function drawValueBox(_label, _type, dtx, dty, tb, _range = [0,255], _int = true) {
+	function drawValueBox(_label, _type, dtx, dty, tb, _m, _range = [0,255], _int = true) {
 		var wdw = ui(40);
 		var wdx = dtx + ui(24 + 160) - wdw;
 		var wdh = ui(27);
@@ -252,7 +253,7 @@ function colorSelector(_onApply = noone) constructor {
 			var _bx = bgx + bgw * _vv;
 			var _cc = COLORS._main_icon;
 			
-			var _hovBar = interactable && hover && point_in_rectangle(mouse_mx, mouse_my, bgx, dty, bgx + bgw, dty + wdh);
+			var _hovBar = interactable && hover && point_in_rectangle(_m[0], _m[1], bgx, dty, bgx + bgw, dty + wdh);
 			if(_hovBar) {
 				_cc = COLORS._main_icon_light;
 				
@@ -262,7 +263,7 @@ function colorSelector(_onApply = noone) constructor {
 			
 			if(value_dragging == _type) {
 				_cc = COLORS._main_accent;
-				var v = clamp((mouse_mx - bgx) / bgw, 0, 1) * _range[1];
+				var v = clamp((_m[0] - bgx) / bgw, 0, 1) * _range[1];
 				if(_int) v = round(v);
 				
 				switch(_type) {
@@ -361,7 +362,7 @@ function colorSelector(_onApply = noone) constructor {
 				
 				draw_sprite_stretched_ext(THEME.palette_mask, _i, ax, ay, aw, ah, cc, _color_get_alpha(cc));
 				
-				var _hovBar = interactable && hover && point_in_rectangle(mouse_mx, mouse_my, ax, ay, ax + aw, ay + ah);
+				var _hovBar = interactable && hover && point_in_rectangle(_m[0], _m[1], ax, ay, ax + aw, ay + ah);
 				if(_hovBar) {
 					if((PREFERENCES.color_selector_range_type == 0 && mouse_lclick(focus)) || (PREFERENCES.color_selector_range_type == 1 && mouse_lpress(focus))) setColor(cc);
 				}
@@ -442,7 +443,206 @@ function colorSelector(_onApply = noone) constructor {
 		}
 	}
 	
-	static draw = function(_x, _y, _focus, _hover) {
+	static drawSelector = function(_x, _y, _w, _h, _m, _focus, _hover) {
+		focus = _focus;
+		hover = _hover;
+		
+		var pd = ui(8);
+		
+		var sel_w = ui(16);
+		var sel_h = _h - pd*2;
+		
+		var cont_w = _w - pd*2 - sel_w - pd*2;
+		var cont_h = _h - pd*2;
+		
+		var cont_x = _x + pd;
+		var cont_y = _y + pd;
+		
+		var sel_x = cont_x + cont_w + pd*2;
+		var sel_y = cont_y;
+		
+		var discr = NODE_COLOR_SHOW_PALETTE && discretize_pal;
+		
+		var sel_sw = cont_w / 256;
+		var sel_sh = cont_h / 256;
+		
+		#region content
+			content_surface = surface_verify(content_surface, cont_w, cont_h);
+			surface_set_target(content_surface);			
+				DRAW_CLEAR
+				
+				draw_sprite_stretched(THEME.box_r2, 0, 0, 0, cont_w, cont_h);
+				gpu_set_colorwriteenable(1, 1, 1, 0);
+				shader_set(sh_color_select_content);
+					shader_set_i("mode", disp_mode);
+					shader_set_f("hue",  hue / 256);
+					shader_set_f("sat",  sat / 256);
+					shader_set_f("val",  val / 256);
+					
+					shader_set_i("discretize",	  discr);
+					shader_set_palette(palette);
+					
+					draw_empty();
+				shader_reset();
+				gpu_set_colorwriteenable(1, 1, 1, 1);
+			surface_reset_target();
+			
+			side_surface = surface_verify(side_surface,    sel_w,  sel_h);
+			surface_set_target(side_surface);
+				DRAW_CLEAR
+				
+				draw_sprite_stretched(THEME.box_r2, 0, 0, 0, sel_w, sel_h);
+				gpu_set_colorwriteenable(1, 1, 1, 0);
+				shader_set(sh_color_select_side);
+					shader_set_i("mode", disp_mode);
+					shader_set_f("hue",  hue / 256);
+					shader_set_f("sat",  sat / 256);
+					shader_set_f("val",  val / 256);
+					
+					shader_set_i("discretize", discr);
+					shader_set_palette(palette);
+					
+					draw_empty();
+				shader_reset();
+				gpu_set_colorwriteenable(1, 1, 1, 1);
+			surface_reset_target();
+			
+			// draw_sprite_stretched(THEME.ui_panel_bg, 1, cont_x - pd, cont_y - pd, cont_w + pd*2, cont_h + pd*2);
+			// draw_sprite_stretched(THEME.ui_panel_bg, 1, sel_x  - pd, sel_y  - pd, sel_w  + pd*2, sel_h  + pd*2);
+			
+			draw_surface(content_surface, cont_x, cont_y);
+			draw_surface(side_surface,    sel_x,  sel_y);
+			
+			draw_sprite_stretched_add(THEME.box_r2, 1, cont_x, cont_y, cont_w, cont_h, c_white, 0.2);
+			draw_sprite_stretched_add(THEME.box_r2, 1, sel_x,  sel_y,  sel_w,  sel_h,  c_white, 0.2);
+		#endregion
+	
+		#region control
+			var _cs = ui(12);
+			var _p2 = _cs / 2;
+			var _p  = _p2 / 2;
+			var _sc;
+			
+			var _cx = disp_mode == 0? cont_x + sel_sw * (      sat) - _p2 : cont_x + sel_sw * (      hue) - _p2;
+			var _cy = disp_mode == 0? cont_y + sel_sh * (256 - val) - _p2 : cont_y + sel_sh * (256 - sat) - _p2;
+			
+			var _sw = _p2 + sel_w;
+			var _sh = _cs;
+			var _sx = sel_x - _p;
+			var _sy = (disp_mode == 0? sel_y + sel_sh * (hue) : sel_y + sel_sh * (256 - val)) - _sh / 2;
+			
+			if(discr) _sc = current_color;
+			else      _sc = disp_mode == 0? make_color_hsv(hue, 255, 255) : make_color_hsv(hue, 255, val);
+			
+			if(current_colors != noone) {
+				var _csz = ui(8);
+				var _ssx = sel_x + sel_w / 2 - _csz / 2;
+				
+				BLEND_ADD
+				for (var i = 0, n = array_length(current_colors); i < n; i++) {
+					var _cc  = current_colors[i];
+					var _cch = round(color_get_hue(_cc));
+					var _ccs = round(color_get_saturation(_cc));
+					var _ccv = round(color_get_value(_cc));
+					
+					var _csy = disp_mode == 0? cont_y + sel_sh * (_cch) : cont_y + sel_sh * (256 - _ccv);
+					
+					draw_sprite_stretched_ext(THEME.box_r2, 1, _ssx, _csy - _csz / 2, _csz, _csz, c_white, 0.75);
+					
+					var _sel  = 1 - abs(disp_mode == 0? _cch - hue : _ccv - val) / 32;
+					
+					if(_sel <= 0) continue;
+					var _ccx  = disp_mode == 0? cont_x + sel_sw * (      _ccs) : cont_x + sel_sw * (      _cch);
+					var _ccy  = disp_mode == 0? cont_y + sel_sh * (256 - _ccv) : cont_y + sel_sh * (256 - _ccs);
+					var _cszz = _sel == 1? ui(16) : lerp(ui(6), ui(12), _sel);
+					var _caa  = _sel == 1? 1 : lerp(0.25, 0.75, _sel);
+					
+					draw_sprite_stretched_ext(THEME.box_r2, 1, _ccx - _cszz / 2, _ccy - _cszz / 2, _cszz, _cszz, c_white, _caa);
+				}
+				BLEND_NORMAL
+				
+				draw_sprite_stretched_ext(THEME.box_r2, 0, _sx - 1, _sy - 1, _sw + 2, _sh + 2, c_black, 0.5);
+				draw_sprite_stretched_ext(THEME.box_r2, 0, _sx, _sy, _sw, _sh, _sc, 1);
+				
+			} else {
+				draw_sprite_stretched_ext(THEME.box_r2, 0, _cx - 1, _cy - 1, _cs + 2, _cs + 2, c_black, 0.5);
+				draw_sprite_stretched_ext(THEME.box_r2, 0, _sx - 1, _sy - 1, _sw + 2, _sh + 2, c_black, 0.5);
+				
+				draw_sprite_stretched_ext(THEME.box_r2, 0, _sx, _sy, _sw, _sh, _sc, 1);
+				draw_sprite_stretched_ext(THEME.box_r2, 0, _cx, _cy, _cs, _cs, current_color, 1);
+				
+				draw_sprite_stretched_add(THEME.box_r2, 1, _sx, _sy, _sw, _sh, c_white, 0.75);
+				draw_sprite_stretched_add(THEME.box_r2, 1, _cx, _cy, _cs, _cs, c_white, 0.75);
+			}
+			
+			if(mouse_press(mb_left, interactable && focus)) {
+				if(point_in_rectangle(_m[0], _m[1], sel_x, sel_y, sel_x + ui(16), sel_y + cont_h))
+					side_dragging = true;
+					
+				else if(point_in_rectangle(_m[0], _m[1], cont_x, cont_y, cont_x + cont_w, cont_y + cont_h))
+					area_dragging = true;
+			}
+			
+			if(side_dragging) {
+				var _my = clamp((_m[1] - sel_y) / sel_sh, 0, 256);
+				
+				     if(disp_mode == 0) hue = _my;
+				else if(disp_mode == 1) val = 256 - _my;
+				
+				setHSV();
+				
+				if(discr) {
+					current_color = disp_mode == 0? surface_getpixel(content_surface, ui(sat), ui(256 - val)) : 
+													surface_getpixel(content_surface, ui(hue), ui(256 - sat));
+					current_color = cola(current_color, 1);
+					
+					if(onApply != noone) {
+						onApply(current_color);
+						UNDO_HOLDING = true;
+					}
+				}
+				
+				if(mouse_release(mb_left)) {
+					side_dragging = false;
+					UNDO_HOLDING  = false;
+				}
+			}
+		
+			if(area_dragging) {
+				var _mx = clamp((_m[0] - cont_x) / sel_sw, 0, 256);
+				var _my = clamp((_m[1] - cont_y) / sel_sh, 0, 256);
+				
+				if(disp_mode == 0) {
+					sat = _mx;
+					val = 256 - _my;
+					
+				} else if(disp_mode == 1) {
+					hue = _mx;
+					sat = 256 - _my;	
+				}
+				
+				setHSV();
+				
+				if(discr) {
+					current_color = disp_mode == 0? surface_getpixel(content_surface, ui(sat), ui(256 - val)) : 
+													surface_getpixel(content_surface, ui(hue), ui(256 - sat));
+					current_color = cola(current_color, 1);
+					
+					if(onApply != noone) {
+						onApply(current_color);
+						UNDO_HOLDING = true;
+					}
+				}
+				
+				if(mouse_release(mb_left)) {
+					area_dragging = false;
+					UNDO_HOLDING  = false;
+				}
+			}
+		#endregion
+	}
+	
+	static draw = function(_x, _y, _m, _focus, _hover) {
 		var cont_x = _x + ui(8);
 		var cont_y = _y + ui(8);
 		
@@ -506,12 +706,12 @@ function colorSelector(_onApply = noone) constructor {
 			draw_sprite_stretched_add(THEME.box_r2, 1, sel_x - ui(4), sel_y - mix_h / 2, ui(8), mix_h, c_white, 0.75);
 			
 			if(mouse_press(mb_left, interactable && focus)) {
-				if(point_in_rectangle(mouse_mx, mouse_my, gra_x, gra_y, gra_x + gra_w, gra_y + gra_h))
+				if(point_in_rectangle(_m[0], _m[1], gra_x, gra_y, gra_x + gra_w, gra_y + gra_h))
 					mix_dragging = true;
 			}
 			
 			if(mix_dragging) {
-				var _prg = clamp((mouse_mx - gra_x) / gra_w, 0, 1);
+				var _prg = clamp((_m[0] - gra_x) / gra_w, 0, 1);
 				mixing_colors.ratio = _prg;
 				
 				current_color = merge_color(mixing_colors.from, mixing_colors.to, mixing_colors.ratio);
@@ -645,15 +845,15 @@ function colorSelector(_onApply = noone) constructor {
 			}
 			
 			if(mouse_press(mb_left, interactable && focus)) {
-				if(point_in_rectangle(mouse_mx, mouse_my, sel_x, sel_y, sel_x + ui(16), sel_y + cont_h))
+				if(point_in_rectangle(_m[0], _m[1], sel_x, sel_y, sel_x + ui(16), sel_y + cont_h))
 					side_dragging = true;
 					
-				else if(point_in_rectangle(mouse_mx, mouse_my, cont_x, cont_y, cont_x + cont_w, cont_y + cont_h))
+				else if(point_in_rectangle(_m[0], _m[1], cont_x, cont_y, cont_x + cont_w, cont_y + cont_h))
 					area_dragging = true;
 			}
 			
 			if(side_dragging) {
-				var _my = clamp((mouse_my - sel_y) / sel_sh, 0, 256);
+				var _my = clamp((_m[1] - sel_y) / sel_sh, 0, 256);
 				
 				     if(disp_mode == 0) hue = _my;
 				else if(disp_mode == 1) val = 256 - _my;
@@ -678,8 +878,8 @@ function colorSelector(_onApply = noone) constructor {
 			}
 		
 			if(area_dragging) {
-				var _mx = clamp((mouse_mx - cont_x) / sel_sw, 0, 256);
-				var _my = clamp((mouse_my - cont_y) / sel_sh, 0, 256);
+				var _mx = clamp((_m[0] - cont_x) / sel_sw, 0, 256);
+				var _my = clamp((_m[1] - cont_y) / sel_sh, 0, 256);
 				
 				if(disp_mode == 0) {
 					sat = _mx;
@@ -709,6 +909,8 @@ function colorSelector(_onApply = noone) constructor {
 				}
 			}
 		#endregion
+		
+		if(!show_textbox) return;
 		
 		#region register
 			for( var i = 0, n = array_length(tbs); i < n; i++ ) {
@@ -783,23 +985,23 @@ function colorSelector(_onApply = noone) constructor {
 				shader_set_palette(palette);
 			shader_reset();
 			
-			drawValueBox("H", 0, dtx, dty + txh*0, tb_hue);
-			drawValueBox("S", 1, dtx, dty + txh*1, tb_sat);
-			drawValueBox("V", 2, dtx, dty + txh*2, tb_val);
+			drawValueBox("H", 0, dtx, dty + txh*0, tb_hue, _m);
+			drawValueBox("S", 1, dtx, dty + txh*1, tb_sat, _m);
+			drawValueBox("V", 2, dtx, dty + txh*2, tb_val, _m);
 			
-			// drawValueBox("L", 6, dtx, dty + txh*0, tb_hue, [0, 1],  false);
-			// drawValueBox("C", 7, dtx, dty + txh*1, tb_sat, [0, 1],  false);
-			// drawValueBox("H", 8, dtx, dty + txh*2, tb_val, [0, 43], false);
+			// drawValueBox("L", 6, dtx, dty + txh*0, tb_hue, _m, [0, 1],  false);
+			// drawValueBox("C", 7, dtx, dty + txh*1, tb_sat, _m, [0, 1],  false);
+			// drawValueBox("H", 8, dtx, dty + txh*2, tb_val, _m, [0, 43], false);
 			
 			////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			
 			dty = dty + txh*3 + ui(8);
 			
-			drawValueBox("R", 3, dtx, dty + txh*0, tb_red);
-			drawValueBox("G", 4, dtx, dty + txh*1, tb_grn);
-			drawValueBox("B", 5, dtx, dty + txh*2, tb_blu);
+			drawValueBox("R", 3, dtx, dty + txh*0, tb_red, _m);
+			drawValueBox("G", 4, dtx, dty + txh*1, tb_grn, _m);
+			drawValueBox("B", 5, dtx, dty + txh*2, tb_blu, _m);
 			
-			drawValueBox("A", 99, dtx, dty + txh*3, tb_alp);
+			drawValueBox("A", 99, dtx, dty + txh*3, tb_alp, _m);
 			
 			////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			

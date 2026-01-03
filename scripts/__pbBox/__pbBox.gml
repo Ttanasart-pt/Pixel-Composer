@@ -178,6 +178,14 @@ function __pbBox() constructor {
 	
 	////- BBOX
 	
+	static setBase = function(baseBbox) {
+		base_bbox[0] = baseBbox[0];
+		base_bbox[1] = baseBbox[1];
+		base_bbox[2] = baseBbox[2];
+		base_bbox[3] = baseBbox[3];
+		return self;
+	}
+	
 	static setBBOX = function(_bbox) {
 		var _x0 = base_bbox[0]; 
 		var _y0 = base_bbox[1];
@@ -293,6 +301,30 @@ function __pbBox() constructor {
 	
 	static serialize   = function(   ) { return variable_clone(self); }
 	static deserialize = function(map) { struct_override(self, map); return self; }
+	
+	static uiScale = function(_div = false) {
+		var _sca = _div? 1 / UI_SCALE : UI_SCALE;
+		
+		if(!anchor_l_fract) anchor_l *= _sca;
+		if(!anchor_t_fract) anchor_t *= _sca;
+		
+		if(!anchor_r_fract) anchor_r *= _sca;
+		if(!anchor_b_fract) anchor_b *= _sca;
+		
+		if(!anchor_w_fract) {
+			anchor_w     *= _sca;
+			anchor_w_min *= _sca;
+			anchor_w_max *= _sca;
+		}
+			
+		if(!anchor_h_fract) {
+			anchor_h     *= _sca;
+			anchor_h_min *= _sca;
+			anchor_h_max *= _sca;
+		}
+		
+		return self;
+	}
 	
 	static clone = function() /*=>*/ {return variable_clone(self)};
 	
