@@ -29,7 +29,7 @@ function Node_Widget_Test(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	newInput(21, nodeValue_Palette("buttonPalette" )                     .setDisplay(VALUE_DISPLAY.palette))
 	newInput(22, nodeValue_Gradient("buttonGradient", gra_white)  .setDisplay(VALUE_DISPLAY._default))
 
-	newInput(23, nodeValue("pathArrayBox", self, CONNECT_TYPE.input, VALUE_TYPE.path, [])                                 .setDisplay(VALUE_DISPLAY.path_array, { filter: [ "image|*.png;*.jpg", "" ] }))
+	newInput(23, nodeValue("pathArrayBox", self, CONNECT_TYPE.input, VALUE_TYPE.path, [])                                 .setDisplay(VALUE_DISPLAY.path_array, { filter: [ FILE_SEL_IMAGE, "" ] }))
 	newInput(24, nodeValue("pathLoad",     self, CONNECT_TYPE.input, VALUE_TYPE.path, "")                                 .setDisplay(VALUE_DISPLAY.path_load))
 	newInput(25, nodeValue("pathSave",     self, CONNECT_TYPE.input, VALUE_TYPE.path, "")                                 .setDisplay(VALUE_DISPLAY.path_save))
 	newInput(26, nodeValue("font",         self, CONNECT_TYPE.input, VALUE_TYPE.font, ""));

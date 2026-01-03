@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"panel_custom_editor",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"panel_custom_editor",
+  "parent":{
+    "name":"custom",
+    "path":"folders/panels/custom.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

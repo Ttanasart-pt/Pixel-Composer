@@ -1,19 +1,20 @@
-function pbBoxBox(_junction) : widget() constructor {
+function pbBoxBox(_junction = undefined) : widget() constructor {
 	always_break_line  = true;
-	junction   = _junction;
-	node       = junction.node;
 	curr_pbbox = noone;
+	node       = _junction? _junction.node : undefined;
 	
 	locked = false;
 	linked = false;
 	var t = TEXTBOX_INPUT.number;
 	
-	tb_anchor_w = new textBox(t, function(v) /*=>*/ { if(linked) setLinked(v); else { curr_pbbox.anchor_w = v; node.triggerRender(); } }).setLabel("w");
-	tb_anchor_h = new textBox(t, function(v) /*=>*/ { if(linked) setLinked(v); else { curr_pbbox.anchor_h = v; node.triggerRender(); } }).setLabel("h");
-	tb_anchor_l = new textBox(t, function(v) /*=>*/ { if(linked) setLinked(v); else { curr_pbbox.anchor_l = v; node.triggerRender(); } });
-	tb_anchor_t = new textBox(t, function(v) /*=>*/ { if(linked) setLinked(v); else { curr_pbbox.anchor_t = v; node.triggerRender(); } });
-	tb_anchor_r = new textBox(t, function(v) /*=>*/ { if(linked) setLinked(v); else { curr_pbbox.anchor_r = v; node.triggerRender(); } });
-	tb_anchor_b = new textBox(t, function(v) /*=>*/ { if(linked) setLinked(v); else { curr_pbbox.anchor_b = v; node.triggerRender(); } });
+	trigRender = function() /*=>*/ { if(node) node.triggerRender(); }
+	
+	tb_anchor_w = new textBox(t, function(v) /*=>*/ { if(linked) setLinked(v); else { curr_pbbox.anchor_w = v; trigRender(); } }).setLabel("w");
+	tb_anchor_h = new textBox(t, function(v) /*=>*/ { if(linked) setLinked(v); else { curr_pbbox.anchor_h = v; trigRender(); } }).setLabel("h");
+	tb_anchor_l = new textBox(t, function(v) /*=>*/ { if(linked) setLinked(v); else { curr_pbbox.anchor_l = v; trigRender(); } });
+	tb_anchor_t = new textBox(t, function(v) /*=>*/ { if(linked) setLinked(v); else { curr_pbbox.anchor_t = v; trigRender(); } });
+	tb_anchor_r = new textBox(t, function(v) /*=>*/ { if(linked) setLinked(v); else { curr_pbbox.anchor_r = v; trigRender(); } });
+	tb_anchor_b = new textBox(t, function(v) /*=>*/ { if(linked) setLinked(v); else { curr_pbbox.anchor_b = v; trigRender(); } });
 		
 	tbs = [ tb_anchor_w, tb_anchor_h, tb_anchor_l, tb_anchor_t, tb_anchor_r, tb_anchor_b ];
 	array_foreach(tbs, function(t) /*=>*/ { t.setFont(f_p3).setAlign(fa_center).setAutoUpdate(); });
@@ -23,7 +24,7 @@ function pbBoxBox(_junction) : widget() constructor {
 		curr_pbbox.anchor_t = v;
 		curr_pbbox.anchor_r = v;
 		curr_pbbox.anchor_b = v; 
-		node.triggerRender();
+		trigRender();
 	}
 	
 	tb_draw = [];
@@ -35,17 +36,14 @@ function pbBoxBox(_junction) : widget() constructor {
 			tb_draw[i].register(parent);
 	}
 	
+	static onSetParam = function(params) {
+		for( var i = 0, n = array_length(tbs); i < n; i++ ) 
+			tbs[i].setParam(params);
+	}
+	
 	static fetchHeight = function(params) { return ui(240); }
 	static drawParam   = function(params) {
 		setParam(params);
-		
-		tb_anchor_w.setParam(params);
-        tb_anchor_h.setParam(params);
-        tb_anchor_l.setParam(params);
-        tb_anchor_t.setParam(params);
-        tb_anchor_r.setParam(params);
-        tb_anchor_b.setParam(params);
-		
 		return draw(params.x, params.y, params.w, params.data, params.m);
 	}
 	
@@ -90,12 +88,12 @@ function pbBoxBox(_junction) : widget() constructor {
         #endregion
         
         #region link
-        	var bs = ui(28);
+        	var bs = ui(24);
 			var bx = _x0 + ui(8);
 			var by = _y0 + ui(8);
 			var bb = linked? COLORS._main_accent : COLORS._main_icon;
 			
-			var b  = buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, _m, hover, active, "", THEME.value_link, linked, bb);
+			var b  = buttonInstant_Pad(THEME.button_hide_fill, bx, by, bs, bs, _m, hover, active, "", THEME.value_link, linked, bb, 1, ui(6));
 			if(b == 2) linked = !linked;
         #endregion
         
@@ -105,7 +103,7 @@ function pbBoxBox(_junction) : widget() constructor {
                 
             if(_pbbox.anchor_x_type != PB_AXIS_ANCHOR.bounded) {
                 tb_anchor_w.setFocusHover(active, hover);
-                tb_anchor_w.draw(_tbcx, _yc - (_tbh / 2 + ui(4)), _tbw, _tbh, _pbbox.anchor_w, _m, fa_center, fa_center);
+                tb_anchor_w.draw(_tbcx - _tbw/2, _yc - (_tbh / 2 + ui(4)) - _tbh/2, _tbw, _tbh, _pbbox.anchor_w, _m);
                 array_push(tb_draw, tb_anchor_w);
                 
                 var _bx = _tbcx + _tbw / 2 + ui(8);
@@ -115,7 +113,7 @@ function pbBoxBox(_junction) : widget() constructor {
                         _pbbox.anchor_w_fract = !_pbbox.anchor_w_fract;
                     _pbbox.setBBOX(_bbox);
                     
-                    node.triggerRender();
+                    trigRender();
                 }
                     
             }
@@ -127,7 +125,7 @@ function pbBoxBox(_junction) : widget() constructor {
             
             if(_pbbox.anchor_y_type != PB_AXIS_ANCHOR.bounded) {
                 tb_anchor_h.setFocusHover(active, hover);
-                tb_anchor_h.draw(_tbcx, _yc + (_tbh / 2 + ui(4)), _tbw, _tbh, _pbbox.anchor_h, _m, fa_center, fa_center);
+                tb_anchor_h.draw(_tbcx - _tbw/2, _yc + (_tbh / 2 + ui(4)) - _tbh/2, _tbw, _tbh, _pbbox.anchor_h, _m);
                 array_push(tb_draw, tb_anchor_h);
                 
                 var _bx = _tbcx + _tbw / 2 + ui(8);
@@ -137,7 +135,7 @@ function pbBoxBox(_junction) : widget() constructor {
                         _pbbox.anchor_h_fract = !_pbbox.anchor_h_fract;
                     _pbbox.setBBOX(_bbox);
                     
-                    node.triggerRender();
+                    trigRender();
                 }
             }
         #endregion
@@ -148,7 +146,7 @@ function pbBoxBox(_junction) : widget() constructor {
             
             if(_pbbox.anchor_y_type != PB_AXIS_ANCHOR.maximum) {
                 tb_anchor_t.setFocusHover(active, hover);
-                tb_anchor_t.draw(_xc, (_y0 + _iy0) / 2, _tbw, _tbh, _pbbox.anchor_t, _m, fa_center, fa_center);
+                tb_anchor_t.draw(_xc - _tbw/2, (_y0 + _iy0) / 2 - _tbh/2, _tbw, _tbh, _pbbox.anchor_t, _m);
                 array_push(tb_draw, tb_anchor_t);
                 
                 ////////////////////////////////////////////////////////////////////////////////
@@ -160,7 +158,7 @@ function pbBoxBox(_junction) : widget() constructor {
                         _pbbox.anchor_t_fract = !_pbbox.anchor_t_fract;
                     _pbbox.setBBOX(_bbox);
                     
-                    node.triggerRender();
+                    trigRender();
                 }
             }
                 
@@ -172,7 +170,7 @@ function pbBoxBox(_junction) : widget() constructor {
                     _pbbox.anchor_y_type ^= 0b10;
                 _pbbox.setBBOX(_bbox);
                 
-                node.triggerRender();
+                trigRender();
             }
             
         #endregion
@@ -183,7 +181,7 @@ function pbBoxBox(_junction) : widget() constructor {
             
             if(_pbbox.anchor_x_type != PB_AXIS_ANCHOR.maximum) {
                 tb_anchor_l.setFocusHover(active, hover);
-                tb_anchor_l.draw((_x0 + _ix0) / 2, _yc, _tbw, _tbh, _pbbox.anchor_l, _m, fa_center, fa_center);
+                tb_anchor_l.draw((_x0 + _ix0) / 2 - _tbw/2, _yc - _tbh/2, _tbw, _tbh, _pbbox.anchor_l, _m);
                 array_push(tb_draw, tb_anchor_l);
                 
                 ////////////////////////////////////////////////////////////////////////////////
@@ -195,7 +193,7 @@ function pbBoxBox(_junction) : widget() constructor {
                         _pbbox.anchor_l_fract = !_pbbox.anchor_l_fract;
                     _pbbox.setBBOX(_bbox);
                     
-                    node.triggerRender();
+                    trigRender();
                 }
             }
             
@@ -207,7 +205,7 @@ function pbBoxBox(_junction) : widget() constructor {
                     _pbbox.anchor_x_type ^= 0b10;
                 _pbbox.setBBOX(_bbox);
                 
-                node.triggerRender();
+                trigRender();
             }
                 
         #endregion
@@ -218,7 +216,7 @@ function pbBoxBox(_junction) : widget() constructor {
             
             if(_pbbox.anchor_x_type != PB_AXIS_ANCHOR.minimum) {
                 tb_anchor_r.setFocusHover(active, hover);
-                tb_anchor_r.draw((_x1 + _ix1) / 2, _yc, _tbw, _tbh, _pbbox.anchor_r, _m, fa_center, fa_center);
+                tb_anchor_r.draw((_x1 + _ix1) / 2 - _tbw/2, _yc - _tbh/2, _tbw, _tbh, _pbbox.anchor_r, _m);
                 array_push(tb_draw, tb_anchor_r);
                 
                 ////////////////////////////////////////////////////////////////////////////////
@@ -230,7 +228,7 @@ function pbBoxBox(_junction) : widget() constructor {
                         _pbbox.anchor_r_fract = !_pbbox.anchor_r_fract;
                     _pbbox.setBBOX(_bbox);
                     
-                    node.triggerRender();
+                    trigRender();
                 }
             }
                 
@@ -242,7 +240,7 @@ function pbBoxBox(_junction) : widget() constructor {
                     _pbbox.anchor_x_type ^= 0b01;
                 _pbbox.setBBOX(_bbox);
                 
-                node.triggerRender();
+                trigRender();
             }
             
         #endregion
@@ -253,7 +251,7 @@ function pbBoxBox(_junction) : widget() constructor {
             
             if(_pbbox.anchor_y_type != PB_AXIS_ANCHOR.minimum) {
                 tb_anchor_b.setFocusHover(active, hover);
-                tb_anchor_b.draw(_xc, (_y1 + _iy1) / 2, _tbw, _tbh, _pbbox.anchor_b, _m, fa_center, fa_center);
+                tb_anchor_b.draw(_xc - _tbw/2, (_y1 + _iy1) / 2 - _tbh/2, _tbw, _tbh, _pbbox.anchor_b, _m);
                 array_push(tb_draw, tb_anchor_b);
                 
                 ////////////////////////////////////////////////////////////////////////////////
@@ -265,7 +263,7 @@ function pbBoxBox(_junction) : widget() constructor {
                         _pbbox.anchor_b_fract = !_pbbox.anchor_b_fract;
                     _pbbox.setBBOX(_bbox);
                     
-                    node.triggerRender();
+                    trigRender();
                 }
             }
                 
@@ -277,7 +275,7 @@ function pbBoxBox(_junction) : widget() constructor {
                     _pbbox.anchor_y_type ^= 0b01;
                 _pbbox.setBBOX(_bbox);
                 
-                node.triggerRender();
+                trigRender();
             }
                 
         #endregion

@@ -298,11 +298,12 @@ function Panel_Inspector() : PanelContent() constructor {
         								.setTooltip("Use Steam username"));
         
         meta_display = [ 
-            [ __txt("Project Settings"),    false, "settings"   ], 
-            [ __txt("Metadata"),            true , "metadata"   ], 
-            [ __txt("Global Layer"),        true,  "layers"     ], 
-            [ __txt("Global Variables"),    false, "globalvar"  ], 
-            [ __txt("Group Properties"),    false, "group prop" ], 
+            [ __txt("Project Settings"),     false, "settings"   ], 
+            [ __txt("Metadata"),             true , "metadata"   ], 
+            [ __txt("Global Layer"),         true,  "layers"     ], 
+            [ __txt("Custom Panels"),        false, "panels"     ], 
+            [ __txt("Global Variables"),     false, "globalvar"  ], 
+            [ __txt("Group Properties"),     false, "group prop" ], 
             [ __txt("Favorited Properties"), false, "favorites"  ], 
         ];
         
@@ -332,6 +333,14 @@ function Panel_Inspector() : PanelContent() constructor {
         globallayer_buttons = [ button(function() /*=>*/ {return dialogPanelCall(new Panel_Global_Layer())} )
         	.setIcon(THEME.text_popup, 1, COLORS._main_icon_light, .75)
         	.setTooltip(__txt("Pop-up")) ];
+    	
+        customPanel_buttons = [ button(function() /*=>*/ {
+        	var _panelData = new Panel_Custom_Data();
+        	array_push(PROJECT.customPanels, _panelData);
+        	dialogPanelCall(new Panel_Custom_Editor(_panelData));
+        	
+    	}).setIcon(THEME.add_16,  0, COLORS._main_value_positive)
+        	.setTooltip(__txt("New Custom Panel")) ];
     #endregion
     
     #region ---- Workshop ----
@@ -1219,7 +1228,6 @@ function Panel_Inspector() : PanelContent() constructor {
     }
     
     static drawContentMeta_PXC = function(_y, _m) {
-    	
         var context = PANEL_GRAPH.getCurrentContext();
         var meta    = context == noone? PROJECT.meta : context.metadata;
         if(meta == noone) return 0;
@@ -1248,7 +1256,9 @@ function Panel_Inspector() : PanelContent() constructor {
             var _tag   = array_safe_get_fast(_meta, 2);
             
             if(_tag == "group prop" && PANEL_GRAPH.getCurrentContext() == noone) continue;
-            
+            if(_tag == "layers" && !PROJECT.attributes.global_layer)             continue;
+            // if(_tag == "panels" && array_empty(PROJECT.customPanels))            continue;
+             
             var _x1    = con_w;
             var _y1    = yy + ui(2);
             
@@ -1257,6 +1267,7 @@ function Panel_Inspector() : PanelContent() constructor {
             var _butts = noone;
             switch(_tag) { // buttons
             	case "settings"  : _butts = variables_buttons;   break;
+            	case "panels"    : _butts = customPanel_buttons; break;
             	case "layers"    : _butts = globallayer_buttons; break;
             	case "metadata"  : _butts = metadata_buttons;    break;
                 case "globalvar" : _butts = global_drawer.editing? global_buttons_editing : global_buttons; break;
@@ -1300,7 +1311,35 @@ function Panel_Inspector() : PanelContent() constructor {
             draw_sprite_stretched_ext(THEME.box_r5_clr, 0, 0, yy, _x1, lbh, cc, 1);
             draw_sprite_ui(THEME.arrow, _meta[1]? 0 : 3, ui(16), yy + lbh / 2, 1, 1, 0, COLORS.panel_inspector_group_bg, 1);    
             draw_set_text(fnt, fa_left, fa_center, COLORS._main_text);
-            draw_text_add(ui(32), yy + lbh / 2, _txt);
+            
+            var tx = ui(32);
+            draw_text_add(tx, yy + lbh / 2, _txt);
+            tx += string_width(_txt) + ui(4);
+    		draw_set_color(COLORS._main_text_sub);
+    		
+            switch(_tag) {
+            	case "globalvar": 
+            		var amo = array_length(PROJECT.globalNode.inputs);
+            		if(amo == 0) break;
+            		
+            		draw_text_add(tx, yy + lbh / 2, $"[{amo}]");
+            		break;
+            		
+            	case "favorites": 
+            		var amo = array_length(PROJECT.favoritedValues);
+            		if(amo == 0) break;
+            		
+            		draw_text_add(tx, yy + lbh / 2, $"[{amo}]");
+            		break;
+            		
+            	case "panels": 
+            		var amo = array_length(PROJECT.customPanels);
+            		if(amo == 0) break;
+            		
+            		draw_text_add(tx, yy + lbh / 2, $"[{amo}]");
+            		break;
+            		
+            }
             
             /// Content
             
@@ -1441,6 +1480,44 @@ function Panel_Inspector() : PanelContent() constructor {
                     
                     break;
                     
+                case "panels":
+                	var _pans = PROJECT.customPanels;
+                	var _ph   = ui(24);
+                	var pbw   = con_w * .4;
+                	var pbx, pby, pbh;
+                	
+                	for( var j = 0, m = array_length(_pans); j < m; j++ ) {
+                		var _p = _pans[j];
+                		
+                		if(_p.open_start) draw_sprite_ui(THEME.favorite, 1, ui(16), yy + _ph / 2, .75, .75, 0, COLORS._main_value_positive);
+                		
+                		draw_set_text(_font, fa_left, fa_center, COLORS._main_text);
+                		draw_text_add(ui(32), yy + _ph / 2, _p.name);
+                		
+                		pbx  = con_w - _ph - ui(8);
+                		pby  = yy;
+                		pbh  = _ph;
+                		
+                		var _bt = __txt("Edit");
+                		if(buttonInstant_Pad(THEME.button_hide, pbx, pby, _ph, _ph, _m, _hover, _focus, _bt, THEME.gear,,,, ui(6)) == 2)
+                			dialogPanelCall(new Panel_Custom_Editor(_p));
+                		
+                		pbx -= pbw + ui(4);
+                		draw_set_font(_font);
+                		var _bt = __txt("Open");
+                		if(buttonTextInstant(true, THEME.button_def, pbx, pby, pbw, pbh, _m, _hover, _focus, "", _bt) == 2) 
+                			dialogPanelCall(new Panel_Custom(_p));
+                		
+	                    yy += _ph + ui(4);
+	                    hh += _ph + ui(4);
+                	}
+                	
+                	if(!array_empty(_pans)) {
+	                    yy += ui(4);
+	                    hh += ui(4);
+                	}
+                	break;
+                	
                 case "globalvar" : 
                     // if(findPanel("Panel_Globalvar")) { yy += ui(4); hh += ui(4); continue; }
                     if(_m[1] > yy) contentPane.hover_content = true;
@@ -1463,8 +1540,7 @@ function Panel_Inspector() : PanelContent() constructor {
                     break;
                     	
 				case "favorites" :
-					var con_ww = contentPane.surface_w - ui(24); 	
-					var fh  = 0;
+					var con_ww = con_w - ui(20);
 					var rrx = ui(16) + x;
             		var rry = top_bar_h + y;
 	                

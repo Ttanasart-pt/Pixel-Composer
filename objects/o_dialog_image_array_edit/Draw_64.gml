@@ -29,7 +29,7 @@ if !target exit;
 	
 	if(buttonInstant(THEME.button_hide_fill, bx, by, bw, bh, mouse_ui, sHOVER, sFOCUS, __txt("Add") + "...", THEME.add,, COLORS._main_value_positive) == 2) {
 		
-		var path = get_open_filenames_compat("image|*.png;*.jpg", "");
+		var path = get_open_filenames_compat(FILE_SEL_IMAGE, "");
 		key_release();
 		
 		if(path != "") {

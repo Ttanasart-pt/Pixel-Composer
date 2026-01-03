@@ -16,13 +16,13 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		var bx = _x;
 		var by = _y + ui(8);
-		if(buttonTextIconInstant(true, bs, bx, by, bw, bh, _m, _focus, _hover, "", THEME.add, __txt("Add"), bc) == 2)
+		if(buttonTextIconInstant(true, bs, bx, by, bw, bh, _m, _hover, _focus, "", THEME.add, __txt("Add"), bc) == 2)
 			addInput();
 		
 		var bx = _x + _w - bw;
 		var bc  = COLORS._main_value_negative;
 		var amo = attributes.size;
-		if(buttonTextIconInstant(attributes.size > 0, bs, bx, by, bw, bh, _m, _focus, _hover, "", THEME.minus, __txt("Remove"), bc) == 2)
+		if(buttonTextIconInstant(attributes.size > 0, bs, bx, by, bw, bh, _m, _hover, _focus, "", THEME.minus, __txt("Remove"), bc) == 2)
 			deleteInput(array_length(inputs) - data_length);
 		
 		return _h;

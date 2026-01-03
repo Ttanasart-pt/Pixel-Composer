@@ -17,6 +17,8 @@
 		color_depth       : 1,
 		interpolate       : 0,
 		oversample        : 3,
+		
+		global_layer      : false, 
 	}
 	
 	#macro DEF_SURF_W  PROJECT.attributes.surface_dimension[0]
@@ -88,7 +90,8 @@ function Project() constructor {
 	randomizer = new Project_Randomizer();
 	notes      = [];
 	
-	favoritedValues  = [];
+	favoritedValues = [];
+	customPanels    = [];
 	
 	#region ===================== GLOBAL LAYER ====================
 		globalLayer_surface   = noone;
@@ -288,7 +291,8 @@ function Project() constructor {
 				}).setIcon(THEME.button_path_icon, 0, COLORS._main_icon)
 				) ],
 			
-			[ "Autosave", "autosave", new checkBox(function() /*=>*/ { attributes.autosave = !attributes.autosave; return true; }) ],
+			[ "Autosave", "autosave",     new checkBox(function() /*=>*/ { attributes.autosave     = !attributes.autosave;     return true; }) ],
+			[ "Layers",   "global_layer", new checkBox(function() /*=>*/ { attributes.global_layer = !attributes.global_layer; return true; }) ],
 			
 		];
 		
@@ -334,6 +338,10 @@ function Project() constructor {
 	}
 	
 	static postStep = function() { slideShowPostStep(); }
+	
+	////- Node
+	
+	static getNodeFromID = function(_id) { return ds_map_try_get(nodeMap, _id, noone); }
 	
 	////- Render
 	
@@ -495,6 +503,8 @@ function Project() constructor {
 			array_push(_map.favVal, [_fa.node.node_id, _fa.index]);
 		}
 		
+		_map.cPanels = array_map(customPanels, function(p) /*=>*/ {return p.serialize()});
+		
 		__node_list = [];
 		array_foreach(allNodes, function(node) /*=>*/ { if(node.active) array_push(__node_list, node.serialize()); })
 		_map.nodes = __node_list;
@@ -582,6 +592,12 @@ function Project() constructor {
 			struct_foreach(addons, function(_name, _value) /*=>*/ { addonLoad(_name, false); });
 		}
 		
+		if(has(_map, "cPanels")) {
+			customPanels = array_create(array_length(_map.cPanels));
+			for( var i = 0, n = array_length(_map.cPanels); i < n; i++ )
+				customPanels[i] = new Panel_Custom_Data().deserialize(_map.cPanels[i]);
+		}
+		
 		bind_gamemaker = Binder_Gamemaker(attributes.bind_gamemaker_path);
 		if(bind_gamemaker == noone) attributes.bind_gamemaker_path = "";
 		
@@ -602,6 +618,10 @@ function Project() constructor {
 			if(_node) PANEL_INSPECTOR.setInspecting(_node);
 		}
 		
+		for( var i = 0, n = array_length(customPanels); i < n; i++ ) {
+			var _p = customPanels[i];
+			if(_p.open_start) dialogPanelCall(new Panel_Custom(_p));
+		}
 	}
 }
 

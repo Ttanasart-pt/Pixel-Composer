@@ -1,7 +1,7 @@
 function Node_create_Image_Animated(_x, _y, _group = noone) {
 	var path = "";
 	if(NODE_NEW_MANUAL) {
-		path = get_open_filenames_compat("image|*.png;*.jpg", "");
+		path = get_open_filenames_compat(FILE_SEL_IMAGE, "");
 		key_release();
 		if(path == "") return noone;
 	}
@@ -42,7 +42,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	update_on_frame = true;
 	
 	////- =Image
-	newInput(0, nodeValue_Path(        "Path",        []        )).setDisplay(VALUE_DISPLAY.path_array, { filter: ["image|*.png;*.jpg", ""] });
+	newInput(0, nodeValue_Path(        "Path",        []        )).setDisplay(VALUE_DISPLAY.path_array, { filter: [FILE_SEL_IMAGE, ""] });
 	newInput(1, nodeValue_Padding(     "Padding",     [0,0,0,0] )).rejectArray();
 	newInput(8, nodeValue_Enum_Scroll( "Canvas Size", 2, [ "First", "Minimum", "Maximum" ])).rejectArray();
 	

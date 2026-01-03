@@ -193,6 +193,7 @@ function widgetParam(x, y, w, h, data, display_data = {}, m = mouse_ui, rx = 0, 
 	scrollpane = undefined;
 	
 	static setHalign     = function(_a) /*=>*/ { halign = _a; return self; }
+	static setValign     = function(_a) /*=>*/ { valign = _a; return self; }
 	
 	static setX          = function(_x) /*=>*/ { x     = _x;  return self; }
 	static setY          = function(_y) /*=>*/ { y     = _y;  return self; }

@@ -262,3 +262,132 @@ function scrollBox(_data, _onModify, _update_hover = true) : widget() constructo
 		return cln;
 	}
 }
+
+function scrollBoxFn(_fn, _onModify, _update_hover = true) : widget() constructor {
+	update_hover = _update_hover;
+	
+	onModify    = _onModify;	
+	data_getter = _fn;
+	
+	open      = false;
+	open_rx   = 0;
+	open_ry   = 0;
+	filter    = true;
+	
+	horizontal     = false;
+	padding        = ui(8);
+	padding_scroll = ui(8);
+	item_pad       = ui(8);
+	text_color     = COLORS._main_text;
+	show_icon      = true;
+	
+	minWidth = 0;
+	hide     = 0;
+	
+	static setUpdateHover   = function(l) /*=>*/ { update_hover   = l; return self; }
+	static setMinWidth      = function(l) /*=>*/ { minWidth       = l; return self; }
+	
+	static trigger = function() {
+		data = data_getter();
+		open = true;
+		
+		FOCUS_BEFORE = FOCUS;
+		with(dialogCall(o_dialog_scrollbox, x + open_rx, y + open_ry)) {
+			initVal      = -1;
+			font         = other.font;
+			update_hover = other.update_hover;
+			minWidth     = other.minWidth;
+			align        = fa_center;
+			text_pad     = ui(8);
+			item_pad     = ui(8);
+			
+			initScroll(other);
+		}
+	}
+	
+	static drawParam = function(params) {
+		setParam(params);
+		return draw(params.x, params.y, params.w, params.h, params.data, params.m, params.rx, params.ry);
+	}
+	
+	static draw = function(_x, _y, _w, _h, _val, _m = mouse_ui, _rx = 0, _ry = 0) {
+		x = _x;
+		y = _y;
+		w = _w;
+		h = _h;
+		
+		open_rx = _rx;
+		open_ry = _ry;
+		
+		if(horizontal == 2) h = ui(80);
+		
+		draw_set_font(font);
+		var _txw = string_width(_val);
+		
+		var bs = min(h, ui(32));
+		if(hide == 0) draw_sprite_stretched(THEME.textbox, 3, _x, _y, w, h);
+		
+		var _arr = h > ui(16);
+		var _sps = min(1, (h - ui(4)) / line_get_height(font));
+		var _ars = .5;
+		var _arw = _arr * (sprite_get_width(THEME.scroll_box_arrow) * _ars + ui(8));
+		
+		if(side_button != noone) {
+			var bx = _x + _w - bs;
+			
+			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, bx - _arw, _y, bs + _arw, _h, CDEF.main_mdwhite, 1);
+			side_button.setFocusHover(active, hover);
+			side_button.draw(bx, _y + h / 2 - bs / 2, bs, bs, _m, THEME.button_hide_fill);
+			_w -= bs;
+		}
+		
+		if(_w - bs > ui(100) && front_button) {
+			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, bs, _h, CDEF.main_mdwhite, 1);
+			front_button.setFocusHover(active, hover);
+			front_button.draw(_x, _y + h / 2 - bs / 2, bs, bs, _m, THEME.button_hide_fill);
+			
+			_x += bs;
+			_w -= bs;
+		}
+		
+		if(open) { resetFocus(); return h; }
+		
+		var _hovering = hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + h);
+		if(_hovering) {
+			if(mouse_press(mb_left, active))
+				trigger();
+		}
+		
+		var _x0 = _x;
+		var _x1 = _x + _w - _arw;
+		var _xc = (_x0 + _x1) / 2;
+		var _yc = _y + h / 2;
+		
+		var _sci = gpu_get_scissor();
+		gpu_set_scissor(_x, _y, _w, h);
+		
+		draw_set_text(font, fa_center, fa_center, text_color, 0.5 + 0.5 * interactable);
+		draw_text_add(_xc, _yc, _val, _sps);
+		draw_set_alpha(1);
+		
+		if(_arr) {
+			var cc = _hovering? COLORS._main_icon_light : COLORS._main_icon;
+			var aa = .4 + .4 * interactable;
+			
+			if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, 3, _x1, _y, _arw, h, CDEF.main_mdwhite, 1);
+			draw_sprite_ui_uniform(THEME.scroll_box_arrow, 0, _x1 + _arw / 2, _yc, _ars, cc, aa);
+		}
+		
+		gpu_set_scissor(_sci);
+		if(hide == 0) draw_sprite_stretched_ext(THEME.textbox, _hovering, _x, _y, w, h, boxColor, .5 + .5 * interactable);
+		
+		if(WIDGET_CURRENT == self)
+			draw_sprite_stretched_ext(THEME.widget_selecting, 0, _x - ui(3), _y - ui(3), _w + ui(6), h + ui(6), COLORS._main_accent, 1);	
+		
+		resetFocus();
+		
+		return h;
+	}
+	
+	static clone = function() { return new scrollBoxFn(data_getter, onModify, update_hover); }
+}

@@ -62,7 +62,7 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var by = ty;
 		var bt = __txt("Add");
 		var bc = COLORS._main_value_positive;
-		if(buttonTextIconInstant(true, bb, bx, by, bw, bh, _m, _focus, _hover, "", THEME.add, bt, bc) == 2) {
+		if(buttonTextIconInstant(true, bb, bx, by, bw, bh, _m, _hover, _focus, "", THEME.add, bt, bc) == 2) {
 			attributes.size++;
 			refreshDynamicInput();
 			update();
@@ -72,7 +72,7 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var bt = __txt("Remove");
 		var bc = COLORS._main_value_negative;
 		var amo = attributes.size;
-		if(buttonTextIconInstant(amo > 0, bb, bx, _y, bw, bh, _m, _focus, _hover, "", THEME.minus, bt, bc) == 2) {
+		if(buttonTextIconInstant(amo > 0, bb, bx, _y, bw, bh, _m, _hover, _focus, "", THEME.minus, bt, bc) == 2) {
 			attributes.size--;
 			refreshDynamicInput();
 			update();

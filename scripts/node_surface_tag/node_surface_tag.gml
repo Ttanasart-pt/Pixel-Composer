@@ -34,7 +34,7 @@ function Node_Surface_Tag(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		
 		var bw = _w;
 		var bh = ui(36);
-		if(buttonTextIconInstant(true, THEME.button_hide_fill, _x, _yy, bw, bh, _m, _focus, _hover, "", THEME.add, __txt("Add"), COLORS._main_value_positive) == 2) {
+		if(buttonTextIconInstant(true, THEME.button_hide_fill, _x, _yy, bw, bh, _m, _hover, _focus, "", THEME.add, __txt("Add"), COLORS._main_value_positive) == 2) {
 			createNewInput();
 			triggerRender();
 		}

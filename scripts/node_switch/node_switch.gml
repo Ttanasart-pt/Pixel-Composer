@@ -14,7 +14,7 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var bh = ui(36);
 		var bc = COLORS._main_value_positive;
 		
-		if(buttonTextIconInstant(true, THEME.button_hide_fill, bx, by, bw, bh, _m, _focus, _hover, "", THEME.add, __txt("Add"), bc) == 2)
+		if(buttonTextIconInstant(true, THEME.button_hide_fill, bx, by, bw, bh, _m, _hover, _focus, "", THEME.add, __txt("Add"), bc) == 2)
 			addInput();
 		
 		var bx = _x + _w - bw;
@@ -23,7 +23,7 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var amo = attributes.size;
 		var act = attributes.size > 0;
 		
-		if(buttonTextIconInstant(act, THEME.button_hide_fill, bx, by, bw, bh, _m, _focus, _hover, "", THEME.minus, __txt("Remove"), bc) == 2)
+		if(buttonTextIconInstant(act, THEME.button_hide_fill, bx, by, bw, bh, _m, _hover, _focus, "", THEME.minus, __txt("Remove"), bc) == 2)
 			deleteInput(array_length(inputs) - data_length);
 		
 		return _h;

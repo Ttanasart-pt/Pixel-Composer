@@ -181,7 +181,7 @@ function Panel_Image_Array_Editor(_junction) : PanelContent() constructor {
 		    if(inb_hover == -1) {
 		        menuCall("image_array_edit_menu_empty", [
     				menuItem(__txt("Add") + "...", function() /*=>*/ { 
-    				    var path = get_open_filenames_compat("image|*.png;*.jpg", "");
+    				    var path = get_open_filenames_compat(FILE_SEL_IMAGE, "");
                 		if(path == "") return;
                 		
             			var paths = string_splice(path, "\n");
@@ -240,7 +240,7 @@ function Panel_Image_Array_Editor(_junction) : PanelContent() constructor {
 		
 		var bc = COLORS._main_value_positive;
 		if(buttonInstant(THEME.button_hide_fill, bx, by, bs, bs, [mx, my], pHOVER, pFOCUS, "Add...", THEME.add, 0, bc, 1, .75) == 2) {
-			var path = get_open_filenames_compat("image|*.png;*.jpg", "");
+			var path = get_open_filenames_compat(FILE_SEL_IMAGE, "");
     		if(path == "") return;
     		
 			var paths = string_splice(path, "\n");

@@ -308,7 +308,7 @@ function buttonInstant_Icon(_cx, _cy, _s, _m, _hvr, _act, _tip = "",
 	return res;
 }
 
-function buttonTextIconInstant(active, spr, _x, _y, _w, _h, _m, _act, _hvr, _tip = "", _icon = noone, _icon_label = "", _icon_blend = COLORS._main_icon_light, _icon_alpha = 1) {
+function buttonTextIconInstant(active, spr, _x, _y, _w, _h, _m, _hvr, _act, _tip = "", _icon = noone, _icon_label = "", _icon_blend = COLORS._main_icon_light, _icon_alpha = 1) {
 	var _b = 0;
 	
 	if(active) _b = buttonInstant(spr, _x, _y, _w, _h, _m, _hvr, _act, _tip);
@@ -332,12 +332,14 @@ function buttonTextIconInstant(active, spr, _x, _y, _w, _h, _m, _act, _hvr, _tip
 	return _b;
 }
 
-function buttonTextInstant(active, spr, _x, _y, _w, _h, _m, _act, _hvr, _tip = "", _label = "") {
+function buttonTextInstant(active, spr, _x, _y, _w, _h, _m, _hvr, _act, _tip = "", _label = "") {
 	var _b = 0;
 	
 	if(active) _b = buttonInstant(spr, _x, _y, _w, _h, _m, _hvr, _act, _tip);
 	
-	draw_set_text(f_p2, fa_center, fa_center, active? COLORS._main_text : COLORS._main_text_sub);
+	draw_set_halign(fa_center);
+	draw_set_valign(fa_center);
+	draw_set_color(active? COLORS._main_text : COLORS._main_text_sub);
 	var bxc = _x + _w / 2;
 	var byc = _y + _h / 2;
 	

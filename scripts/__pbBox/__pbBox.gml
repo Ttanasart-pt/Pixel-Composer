@@ -12,6 +12,7 @@ enum PB_DIM_BOUND {
 function __pbBox() constructor {
 	
 	base_bbox = [ 0, 0, 32, 32 ];
+	fixed_box = 0;
 	
 	anchor_x_type = PB_AXIS_ANCHOR.minimum;
 	anchor_y_type = PB_AXIS_ANCHOR.minimum;
@@ -58,8 +59,10 @@ function __pbBox() constructor {
 		draw_rectangle(_x0, _y0, _x1, _y1, true);
 	}
 	
-	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx, _sny, _node) {
+	static drawOverlay = function(hover, active, _x, _y, _s, _mx, _my, _snx = 0, _sny = 0, _node = undefined) {
+		if(fixed_box) return;
 		var _bbox = getBBOX();
+		var _hov  = false;
 		
 		var _x0 = _x + _bbox[0] * _s;
 		var _y0 = _y + _bbox[1] * _s;
@@ -72,26 +75,28 @@ function __pbBox() constructor {
 		draw_rectangle(_x0, _y0, _x1, _y1, true);
 		
 		if(drag_anchor == noone) {
-			     if(hover && point_in_circle(_mx, _my, _x0, _y0, 12)) { _h0 = 1; if(mouse_press(mb_left, active)) drag_anchor = 0; } 
-			else if(hover && point_in_circle(_mx, _my, _x1, _y0, 12)) { _h1 = 1; if(mouse_press(mb_left, active)) drag_anchor = 1; } 
-			else if(hover && point_in_circle(_mx, _my, _x0, _y1, 12)) { _h2 = 1; if(mouse_press(mb_left, active)) drag_anchor = 2; } 
-			else if(hover && point_in_circle(_mx, _my, _x1, _y1, 12)) { _h3 = 1; if(mouse_press(mb_left, active)) drag_anchor = 3; } 
-			else if(hover && point_in_rectangle(_mx, _my, _x0, _y0, _x1, _y1)) { _h9 = 1; if(mouse_press(mb_left, active)) drag_anchor = 9; } 
+			     if(hover && point_in_circle(_mx, _my, _x0, _y0, 12)) { _h0 = 1; if(mouse_lpress(active)) drag_anchor = 0; } 
+			else if(hover && point_in_circle(_mx, _my, _x1, _y0, 12)) { _h1 = 1; if(mouse_lpress(active)) drag_anchor = 1; } 
+			else if(hover && point_in_circle(_mx, _my, _x0, _y1, 12)) { _h2 = 1; if(mouse_lpress(active)) drag_anchor = 2; } 
+			else if(hover && point_in_circle(_mx, _my, _x1, _y1, 12)) { _h3 = 1; if(mouse_lpress(active)) drag_anchor = 3; } 
+			else if(hover && point_in_rectangle(_mx, _my, _x0, _y0, _x1, _y1)) { _h9 = 1; if(mouse_lpress(active)) drag_anchor = 9; } 
 			
-			draw_anchor(_h0, _x0, _y0, ui(10));
-			draw_anchor(_h1, _x1, _y0, ui(10));
-			draw_anchor(_h2, _x0, _y1, ui(10));
-			draw_anchor(_h3, _x1, _y1, ui(10));
-			draw_anchor(_h9, (_x0 + _x1) / 2, (_y0 + _y1) / 2, ui(8));
+			draw_anchor(_h0, _x0, _y0, ui(8), 2);
+			draw_anchor(_h1, _x1, _y0, ui(8), 2);
+			draw_anchor(_h2, _x0, _y1, ui(8), 2);
+			draw_anchor(_h3, _x1, _y1, ui(8), 2);
+			draw_anchor_cross(_h9, (_x0 + _x1) / 2, (_y0 + _y1) / 2, ui(8), 1);
 			
 			if(drag_anchor != noone) {
+				_hov = true;
 				drag_anchor_sv = variable_clone(_bbox);
 				drag_anchor_mx = _mx;
 				drag_anchor_my = _my;
 				
-				_node.w_hovering = true;
+				if(_node) _node.w_hovering = true;
 			}
-			return;
+			
+			return _hov || _h0 || _h1 || _h2 || _h3 || _h9;
 		}
 		
 		var _xx = base_bbox[0]; 
@@ -103,11 +108,11 @@ function __pbBox() constructor {
 		var _mdy = (_my - drag_anchor_my) / _s;
 		
 		switch(drag_anchor) {
-			case 0 : draw_anchor(1, _x0, _y0, ui(10)); break;
-			case 1 : draw_anchor(1, _x1, _y0, ui(10)); break;
-			case 2 : draw_anchor(1, _x0, _y1, ui(10)); break;
-			case 3 : draw_anchor(1, _x1, _y1, ui(10)); break;
-			case 9 : draw_anchor(_h9, (_x0 + _x1) / 2, (_y0 + _y1) / 2, ui(8));
+			case 0 : draw_anchor(1, _x0, _y0, ui(8), 2); break;
+			case 1 : draw_anchor(1, _x1, _y0, ui(8), 2); break;
+			case 2 : draw_anchor(1, _x0, _y1, ui(8), 2); break;
+			case 3 : draw_anchor(1, _x1, _y1, ui(8), 2); break;
+			case 9 : draw_anchor_cross(_h9, (_x0 + _x1) / 2, (_y0 + _y1) / 2, ui(8), 1);
 		}
 		
 		if(drag_anchor == 9) {
@@ -164,15 +169,16 @@ function __pbBox() constructor {
 			}
 		}
 		
-		_node.w_hovering = true;
-		_node.triggerRender();
+		if(_node) _node.w_hovering = true;
+		if(_node) _node.triggerRender();
 		if(mouse_release(mb_left)) drag_anchor = noone;
+		
+		return true;
 	}
 	
 	////- BBOX
 	
 	static setBBOX = function(_bbox) {
-		
 		var _x0 = base_bbox[0]; 
 		var _y0 = base_bbox[1];
 		var _x1 = base_bbox[2];
@@ -202,7 +208,16 @@ function __pbBox() constructor {
 		return self;
 	}
 	
-	static getBBOX = function() {
+	static getBBOX = function(_bbox = undefined) {
+		_bbox = _bbox ?? [0,0,1,1];
+		
+		if(fixed_box != 0) {
+			_bbox[0] = fixed_box[0];
+			_bbox[1] = fixed_box[1];
+			_bbox[2] = fixed_box[2];
+			_bbox[3] = fixed_box[3];
+			return _bbox;
+		}
 		
 		var _xx = base_bbox[0]; 
 		var _yy = base_bbox[1];
@@ -251,7 +266,12 @@ function __pbBox() constructor {
 				break;
 		}
 		
-		return [ floor(_x0), floor(_y0), ceil(_x1), ceil(_y1) ];
+		_bbox[0] = floor(_x0);
+		_bbox[1] = floor(_y0);
+		_bbox[2] = ceil(_x1);
+		_bbox[3] = ceil(_y1);
+		
+		return _bbox;
 	}
 	
 	////- Lerp

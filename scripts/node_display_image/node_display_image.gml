@@ -1,7 +1,7 @@
 function Node_create_Display_Image(_x, _y, _group = noone) {
 	var path = "";
 	if(NODE_NEW_MANUAL) {
-		path = get_open_filename_compat("image|*.png;*.jpg", "");
+		path = get_open_filename_compat(FILE_SEL_IMAGE, "");
 		key_release();
 		if(path == "") return noone;
 	}
@@ -27,7 +27,7 @@ function Node_Display_Image(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name		= "Display Image";
 	auto_height	= false;
 	
-	newInput(0, nodeValue_Path( "Path")).setVisible(false).setDisplay(VALUE_DISPLAY.path_load, { filter: "image|*.png;*.jpg" }).rejectArray();
+	newInput(0, nodeValue_Path( "Path")).setVisible(false).setDisplay(VALUE_DISPLAY.path_load, { filter: FILE_SEL_IMAGE }).rejectArray();
 	newInput(1, nodeValue_Vec2( "Position", [x,y] )).rejectArray();
 	newInput(2, nodeValue_Vec2( "Scale",    [1,1] )).rejectArray();
 	newInput(3, nodeValue_Bool( "Smooth transform", true )).rejectArray();

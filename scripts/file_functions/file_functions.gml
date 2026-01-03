@@ -1,3 +1,7 @@
+#region global
+	#macro FILE_SEL_IMAGE "image|*.png;*.jpg;*.bmp"
+#endregion
+
 
 	////- Verify
 

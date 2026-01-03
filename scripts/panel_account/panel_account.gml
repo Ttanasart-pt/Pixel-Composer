@@ -84,7 +84,7 @@ function Panel_Account_Sign_In() : PanelContent() constructor {
 			}
 			
 			_y0 += TEXTBOX_HEIGHT + ui(8);
-			if(buttonTextInstant(true, THEME.button_hide, _x0, _y0, _cnw, TEXTBOX_HEIGHT, _m, _focus, _hover, "", "Sign-up") == 2) {
+			if(buttonTextInstant(true, THEME.button_hide, _x0, _y0, _cnw, TEXTBOX_HEIGHT, _m, _hover, _focus, "", "Sign-up") == 2) {
 				page = 1;
 			}
 			
@@ -183,7 +183,7 @@ function Panel_Account_Sign_In() : PanelContent() constructor {
 			}
 			
 			_y0 += TEXTBOX_HEIGHT + ui(8);
-			if(buttonTextInstant(true, THEME.button_hide, _x0, _y0, _cnw, TEXTBOX_HEIGHT, _m, _focus, _hover, "", "Back") == 2) {
+			if(buttonTextInstant(true, THEME.button_hide, _x0, _y0, _cnw, TEXTBOX_HEIGHT, _m, _hover, _focus, "", "Back") == 2) {
 				page = 0;
 			}
 			

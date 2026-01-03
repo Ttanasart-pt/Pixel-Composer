@@ -1,7 +1,7 @@
 function Node_create_Image(_x, _y, _group = noone) {
 	var path = "";
 	if(NODE_NEW_MANUAL) {
-		path = get_open_filename_compat("image|*.png;*.jpg", "");
+		path = get_open_filename_compat(FILE_SEL_IMAGE, "");
 		key_release();
 		if(path == "") return noone;
 	}
@@ -28,7 +28,7 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Image";
 	color = COLORS.node_blend_input;
 	
-	newInput(0, nodeValue_Path( "Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: "image|*.png;*.jpg" }).rejectArray();
+	newInput(0, nodeValue_Path( "Path" )).setDisplay(VALUE_DISPLAY.path_load, { filter: FILE_SEL_IMAGE }).rejectArray();
 	newInput(1, nodeValue_Padding( "Padding", [0, 0, 0, 0] ));
 		
 	newOutput( 0, nodeValue_Output("Surface Out", VALUE_TYPE.surface, noone ));
